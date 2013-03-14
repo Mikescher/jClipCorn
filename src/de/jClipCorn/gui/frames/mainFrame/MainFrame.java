@@ -25,6 +25,8 @@ import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.gui.CachedResourceLoader;
 import de.jClipCorn.gui.Resources;
 import de.jClipCorn.gui.actionTree.CCActionTree;
+import de.jClipCorn.gui.frames.mainFrame.clipCharSelector.ClipCharSortSelector;
+import de.jClipCorn.gui.frames.mainFrame.clipMenuBar.ClipMenuBar;
 import de.jClipCorn.gui.frames.mainFrame.clipStatusbar.ClipStatusBar;
 import de.jClipCorn.gui.frames.mainFrame.clipTable.ClipTable;
 import de.jClipCorn.gui.frames.mainFrame.clipTable.RowFilterSource;

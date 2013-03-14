@@ -16,7 +16,7 @@ public class SearchField extends JTextField implements FocusListener, DocumentLi
 	private static final long serialVersionUID = -93240990085507647L;
 
 	private final static String EMPTY_VAL = LocaleBundle.getString("MainFrame.searchTerm_standard"); //$NON-NLS-1$
-	private final static Color RESET_COLOR = Color.GRAY;
+	private final static Color RESET_COLOR = Color.GRAY; //TODO USE Colors from Look'n'Feel
 
 	private final MainFrame owner;
 
@@ -33,7 +33,7 @@ public class SearchField extends JTextField implements FocusListener, DocumentLi
 	public void focusGained(FocusEvent arg0) {
 		if (getText().equals(EMPTY_VAL)) {
 			setText(""); //$NON-NLS-1$
-			setForeground(Color.BLACK);
+			setForeground(Color.BLACK); //TODO USE Colors from Look'n'Feel
 			setHorizontalAlignment(LEFT);
 		}
 	}
@@ -59,7 +59,7 @@ public class SearchField extends JTextField implements FocusListener, DocumentLi
 			public void run() {
 				if (!getText().equals(EMPTY_VAL)) {
 					owner.startSearch();
-					setForeground(Color.BLACK);
+					setForeground(Color.BLACK); //TODO USE Colors from Look'n'Feel
 					setHorizontalAlignment(LEFT);
 				}
 			}

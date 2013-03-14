@@ -679,7 +679,7 @@ public class FindCoverDialog extends JDialog {
 
 		switch (row) {
 		case 1:
-			currentSelectedImage = thread_1_images.get(column);
+			currentSelectedImage = thread_1_images.get(column); //TODO Draw Border around Selected Cover
 			break;
 		case 2:
 			currentSelectedImage = thread_2_images.get(column);

@@ -187,7 +187,7 @@ public class ScanFolderFrame extends JFrame implements Runnable, MouseListener {
 			ArrayList<String> filelist = new ArrayList<>();
 			searchFiles(dir, filelist);
 			for (int i = 0; i < filelist.size(); i++) {
-				filelist.set(i, filelist.get(i).toLowerCase());
+				filelist.set(i, filelist.get(i).toLowerCase()); //TODO Jetzt ist alles Lowercase -> auch in der Liste (und dass Regex failt auchnoch)
 			}
 			
 			// List of Files in in Database

@@ -63,6 +63,8 @@ public abstract class AutomaticSettingsFrame extends JFrame {
 		setLocationRelativeTo(owner);
 		
 		setValues();
+		
+		//TODO Bei manchen Look'nFeel reicht die Breite nicht aus - vllt sollte ich ein pack aufrufen ??
 	}
 	
 	private void initGUI() {

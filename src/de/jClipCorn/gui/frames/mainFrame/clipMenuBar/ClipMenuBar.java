@@ -1,4 +1,4 @@
-package de.jClipCorn.gui.frames.mainFrame;
+package de.jClipCorn.gui.frames.mainFrame.clipMenuBar;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

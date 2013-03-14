@@ -355,7 +355,7 @@ public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener 
 	private void updateFields() {
 		setTitle(movie.getCompleteTitle());
 		lblCover.setIcon(movie.getCoverIcon());
-		label.setText(movie.getCompleteTitle());
+		label.setText(movie.getCompleteTitle()); //TODO sieht sch*** aus wenn der Titel zu lang ist
 		
 		lblViewed.setIcon(movie.isViewed()?CachedResourceLoader.getImageIcon(Resources.ICN_TABLE_VIEWED_TRUE):null);
 		

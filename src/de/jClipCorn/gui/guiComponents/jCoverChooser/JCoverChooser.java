@@ -38,6 +38,10 @@ public class JCoverChooser extends JComponent implements MouseListener {
 		addMouseListener(this);
 		update(false);
 	}
+	
+	//TODO Add 2D Mode
+	//TODO Rahmen um alle over (sp 1px)
+	//TODO Rahmen um selektierten (so 2px)
 
 	public void inc() {
 		setCurrSelected(currSelected + 1);

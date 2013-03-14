@@ -57,12 +57,7 @@ public class Main {
 	}
 }
 
-//##########  BEFORE 1.0  ###########
-//(Mass Location Change)
-//###################################
-
-//TODO GitHUb
-
+//TODO Logg ALL EXCEPTIONS (under UNDEFINIED)
 //http://www.themoviedb.org/search/movie?query=lazarus%20projekt
 
 //TODO Faster Load
@@ -77,3 +72,4 @@ public class Main {
 //TODO [other] Better jQCCounter ;)
 //TODO Test if everything works with Metal UI
 //TODO Testen ob die Button größen mit allen 3 Sprachen so passen
+//TODO About Screen

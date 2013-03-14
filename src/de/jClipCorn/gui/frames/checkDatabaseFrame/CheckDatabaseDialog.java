@@ -135,7 +135,7 @@ public class CheckDatabaseDialog extends JDialog {
 		}
 	}
 	
-	private void startValidate() {
+	private void startValidate() { //TODO FAILT: ZEigt an FileNotFound und WrongFilesize bei ALLEM
 		memoMain.setText(""); //$NON-NLS-1$
 		
 		btnValidate.setEnabled(false);

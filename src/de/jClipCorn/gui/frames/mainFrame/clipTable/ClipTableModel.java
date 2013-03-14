@@ -176,7 +176,7 @@ public class ClipTableModel extends AbstractTableModel implements TableModelRowC
 		case 1:
 			return (row%2==0) ? (Color.WHITE) : (COLOR_BACKGROUNDGRAY);
 		case 2:
-			return COLOR_ONLINESCORE[movielist.getDatabaseElementBySort(row).getOnlinescore().asInt()];
+			return COLOR_ONLINESCORE[movielist.getDatabaseElementBySort(row).getOnlinescore().asInt()]; //TODO harmonische Farben benutzen
 		default:
 			return Color.MAGENTA;
 		}

@@ -1,4 +1,4 @@
-package de.jClipCorn.gui.frames.mainFrame;
+package de.jClipCorn.gui.frames.mainFrame.clipCharSelector;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -10,6 +10,7 @@ import javax.swing.JButton;
 import javax.swing.JToolBar;
 import javax.swing.LayoutStyle;
 
+import de.jClipCorn.gui.frames.mainFrame.MainFrame;
 import de.jClipCorn.gui.frames.mainFrame.clipTable.RowFilterSource;
 import de.jClipCorn.gui.guiComponents.tableFilter.TableCharFilter;
 import de.jClipCorn.util.LookAndFeelManager;

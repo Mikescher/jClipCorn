@@ -91,6 +91,9 @@ public class CCActionTree {
 				onClickDatabaseClear();
 			}
 		});
+		
+		//TODO Add "create BackupNow"
+		//TODO Add "create BackupNow To File"
 
 		// #######################################################################################################
 		CCActionElement movies = root.addChild(new CCActionElement("Movies", "ClipMenuBar.Movies", ""));

@@ -94,7 +94,7 @@ public class BackupManager {
 		CCDate lastBackup = CCProperties.getInstance().PROP_BACKUP_LASTBACKUP.getValue();
 		CCDate now = new CCDate();
 		
-		if (lastBackup.getDayDifferenceTo(now) > minDiff) {
+		if (lastBackup.getDayDifferenceTo(now) > minDiff && movielist.getDatabaseDirectory().exists()) {
 			createBackup();
 		}
 	}

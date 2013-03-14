@@ -1,0 +1,3 @@
+Cover Size : 182 x 254
+IconSet : FatCow + FamFam's Silk + Betelgeuse v1 + other
+Databse : JavaDB (Derby)

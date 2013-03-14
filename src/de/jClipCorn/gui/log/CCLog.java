@@ -1,0 +1,256 @@
+package de.jClipCorn.gui.log;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.RandomAccessFile;
+import java.util.ArrayList;
+
+import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.properties.CCProperties;
+import de.jClipCorn.util.CCDate;
+import de.jClipCorn.util.DialogHelper;
+
+public class CCLog {
+	private static ArrayList<CCLogElement> log = new ArrayList<CCLogElement>();
+	private static ArrayList<CCLogChangedListener> listener = new ArrayList<CCLogChangedListener>();
+	
+	private static String path = null;
+	private static boolean changed = false;
+
+	public static void setPath(String p) {
+		path = p;
+	}
+
+	public static void addInformation(String e) {
+		add(e, CCLogType.LOG_ELEM_INFORMATION);
+	}
+
+	public static void addWarning(String e) {
+		add(e, CCLogType.LOG_ELEM_WARNING);
+	}
+
+	public static void addError(String e) {
+		add(e, CCLogType.LOG_ELEM_ERROR);
+	}
+	
+	public static void addError(String e, StackTraceElement[] trace) {
+		add(e, CCLogType.LOG_ELEM_ERROR, trace);
+	}
+
+	public static void addError(Exception e) {
+		add(e.toString(), CCLogType.LOG_ELEM_ERROR, e.getStackTrace());
+	}
+	
+	public static void addError(String s, Exception e) {
+		add(s + '\n' + "\tcaused by" + e.toString(), CCLogType.LOG_ELEM_ERROR, e.getStackTrace()); //$NON-NLS-1$
+	}
+	
+	public static void addFatalError(Exception e) {
+		add(e.toString(), CCLogType.LOG_ELEM_FATALERROR, e.getStackTrace());
+	}
+	
+	public static void addFatalError(String e) {
+		add(e, CCLogType.LOG_ELEM_FATALERROR);
+	}
+	
+	public static void addFatalError(String e, StackTraceElement[] trace) {
+		add(e, CCLogType.LOG_ELEM_FATALERROR, trace);
+	}
+	
+	public static void addFatalError(String s, Exception e) {
+		add(s + '\n' + "\tcaused by" + e.toString(), CCLogType.LOG_ELEM_FATALERROR, e.getStackTrace()); //$NON-NLS-1$
+	}
+
+	private static void add(String txt, CCLogType type) {
+		add(txt, type, new Throwable().getStackTrace());
+	}
+
+	private static void add(String txt, CCLogType type, StackTraceElement[] trace) {
+		CCLogElement cle = new CCLogElement(txt, type, trace);
+		log.add(cle);
+		
+		System.out.println(cle.getFormatted()); // This is desired - let it be
+		
+		if (type == CCLogType.LOG_ELEM_FATALERROR) {
+			DialogHelper.showDispatchError(LocaleBundle.getString("Main.AbortCaption"), LocaleBundle.getString("Main.AbortMessage")); //$NON-NLS-1$ //$NON-NLS-2$
+			fatalabort();
+		}
+		setChangedFlag();
+	}
+
+	public static void save() {
+		FileWriter file = null;
+		PrintWriter out = null;
+		try {
+			file = new FileWriter(path, CCProperties.getInstance().PROP_LOG_APPEND.getValue());
+			out = new PrintWriter(file);
+			
+			if (CCProperties.getInstance().PROP_LOG_APPEND.getValue()) {
+				out.print('\n');
+				out.print("--------------------------------  " + (new CCDate()).getSimpleStringRepresentation() + "  --------------------------------" + '\n'); //$NON-NLS-1$ //$NON-NLS-2$
+				out.print('\n');
+			}
+
+			for (CCLogElement el : log) {
+				out.print(el.getFormatted(CCLogElement.FORMAT_LEVEL_FULL) + '\n');
+			}
+		} catch (IOException e) {
+			addError(e);
+		} finally {
+			if (out != null) {
+				out.close();
+			}
+			if (file != null) {
+				try {
+					file.close();
+				} catch (IOException e) {
+					addError(e);
+				}
+			}
+		}
+		
+		if (CCProperties.getInstance().PROP_LOG_APPEND.getValue()) {
+			try {
+				BufferedReader reader = new BufferedReader(new FileReader(path));
+				int lines = 0;
+				while (reader.readLine() != null) {
+					lines++;
+				}
+				reader.close();
+				
+				lines -= CCProperties.getInstance().PROP_LOG_MAX_LINECOUNT.getValue();
+				
+				removeFirstNLine(new File(path), lines);
+			} catch (IOException e) {
+				addError(e);
+			}
+		}
+	}
+	
+	public static void removeFirstNLine(File f, int toRemove) throws IOException {
+	    RandomAccessFile raf = new RandomAccessFile(f, "rw"); //$NON-NLS-1$
+
+	    long writePos = raf.getFilePointer();
+	    
+	    for (int i = 0; i < toRemove; i++) {
+	    	raf.readLine();
+	    }
+	    
+	    raf.readLine();
+	    long readPos = raf.getFilePointer();
+
+	    byte[] buf = new byte[2048];
+	    int n;
+	    while (-1 != (n = raf.read(buf))) {
+	        raf.seek(writePos);
+	        raf.write(buf, 0, n);
+	        readPos += n;
+	        writePos += n;
+	        raf.seek(readPos);
+	    }
+
+	    raf.setLength(writePos);
+	    raf.close();
+	}
+	
+	public static int getCount(CCLogType type) {
+		int r = 0;
+		for(CCLogElement el : log) {
+			if (el.type == type) r++;
+		}
+		
+		return r;
+	}
+	
+	public static CCLogElement getElement(CCLogType type, int position) {
+		int r = 0;
+		for(CCLogElement el : log) {
+			if (el.type == type) {
+				if (r == position) return el;
+				r++;
+			}
+		}
+		
+		return null;
+	}
+	
+	private static void fatalabort() {
+		save();
+		System.exit(-1);
+	}
+	
+	public static void addChangeListener (CCLogChangedListener lst) {
+		listener.add(lst);
+	}
+	
+	public static void setChangedFlag() {
+		changed = true;
+		for(CCLogChangedListener ls : listener) {
+			ls.onChanged();
+		}
+	}
+	
+	public static boolean isChanged() {
+		if (changed) {
+			changed = false;
+			return true;
+		}
+		return false;
+	}
+	
+	public static boolean hasErrors() {
+		for (CCLogElement e : log) {
+			if (e.type.equals(CCLogType.LOG_ELEM_ERROR)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public static boolean hasWarnings() {
+		for (CCLogElement e : log) {
+			if (e.type.equals(CCLogType.LOG_ELEM_WARNING)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public static boolean hasInformations() {
+		for (CCLogElement e : log) {
+			if (e.type.equals(CCLogType.LOG_ELEM_INFORMATION)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public static boolean hasUndefinieds() {
+		for (CCLogElement e : log) {
+			if (e.type.equals(CCLogType.LOG_ELEM_UNDEFINED)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public static CCLogType getHighestType() {
+		if (hasErrors()) {
+			return CCLogType.LOG_ELEM_ERROR;
+		}
+		
+		if (hasUndefinieds()) {
+			return CCLogType.LOG_ELEM_UNDEFINED;
+		}
+		
+		if (hasWarnings()) {
+			return CCLogType.LOG_ELEM_WARNING;
+		}
+		
+		return CCLogType.LOG_ELEM_INFORMATION;
+	}
+}

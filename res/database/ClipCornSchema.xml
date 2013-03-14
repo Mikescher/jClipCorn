@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<!DOCTYPE database SYSTEM "http://db.apache.org/torque/dtd/database.dtd">
+<database name="CLIPCORN">
+  <table name="MOVIES">
+        <column name="LOCALID" 		type="INTEGER"  required="true" primaryKey="true" autoIncrement="true"/> 	<!-- ALSO USED FOR SERIES-->
+		
+        <column name="NAME" 		type="VARCHAR"  required="true" size="128"/>								<!-- ALSO USED FOR SERIES-->
+        <column name="VIEWED" 		type="BIT" 		required="true"/>
+        <column name="ZYKLUS" 		type="VARCHAR" 	required="true" size="128"/>
+        <column name="ZYKLUSNUMBER" type="TINYINT" 	required="true"/>
+        <column name="QUALITY" 		type="TINYINT" 	required="true"/>
+        <column name="LANGUAGE" 	type="TINYINT" 	required="true"/>											<!-- ALSO USED FOR SERIES-->
+        <column name="GENRE" 		type="BIGINT" 	required="true"/>											<!-- ALSO USED FOR SERIES-->
+        <column name="LENGTH" 		type="INTEGER" 	required="true"/>
+        <column name="ADDDATE"     	type="DATE" 	required="true"/>
+        <column name="ONLINESCORE" 	type="TINYINT" 	required="true"/>											<!-- ALSO USED FOR SERIES-->
+        <column name="FSK"         	type="TINYINT" 	required="true"/>											<!-- ALSO USED FOR SERIES-->
+        <column name="FORMAT"      	type="TINYINT" 	required="true"/>
+        <column name="MOVIEYEAR" 	type="SMALLINT" required="true"/>
+        <column name="FILESIZE" 	type="BIGINT" 	required="true"/>
+        <column name="STATUS" 		type="TINYINT" 	required="true"/>
+        <column name="PART1" 		type="VARCHAR" 	required="true" size="512"/>
+        <column name="PART2" 		type="VARCHAR" 	required="true" size="512"/>
+        <column name="PART3" 		type="VARCHAR" 	required="true" size="512"/>
+        <column name="PART4" 		type="VARCHAR" 	required="true" size="512"/>
+        <column name="PART5" 		type="VARCHAR" 	required="true" size="512"/>
+        <column name="PART6" 		type="VARCHAR" 	required="true" size="512"/>
+        <column name="SCORE" 		type="TINYINT" 	required="true"/>											<!-- ALSO USED FOR SERIES-->
+        <column name="COVERNAME" 	type="VARCHAR"  required="true" size="256"/>								<!-- ALSO USED FOR SERIES-->
+		<column name="TYPE" 		type="TINYINT" 	required="true"/>
+		<column name="SERIESID" 	type="INTEGER" 	required="true"/>
+  </table>
+  
+  <table name="SEASONS">
+		<column name="SEASONID"		type="INTEGER"  required="true" primaryKey="true"/>
+		
+		<column name="SERIESID"		type="INTEGER"  required="true"/>
+		<column name="NAME"			type="VARCHAR"  required="true" size="128"/>
+		<column name="SEASONYEAR" 	type="SMALLINT" required="true"/>
+		<column name="COVERNAME" 	type="VARCHAR"  required="true" size="256"/>
+  </table>
+  
+  <table name="EPISODES">
+		<column name="LOCALID" 		type="INTEGER"  required="true" primaryKey="true"/>
+		
+		<column name="SEASONID"		type="INTEGER"  required="true"/>
+		<column name="EPISODE" 		type="SMALLINT" required="true"/>
+		<column name="NAME" 		type="VARCHAR"  required="true" size="128"/>
+		<column name="VIEWED" 		type="BIT" 		required="true"/>
+		<column name="QUALITY" 		type="TINYINT" 	required="true"/>
+		<column name="LENGTH" 		type="INTEGER" 	required="true"/>
+		<column name="FORMAT"      	type="TINYINT" 	required="true"/>
+		<column name="FILESIZE" 	type="BIGINT" 	required="true"/>
+		<column name="PART1" 		type="VARCHAR" 	required="true" size="512"/>
+		<column name="STATUS" 		type="TINYINT" 	required="true"/>
+		<column name="LASTVIEWED"  	type="DATE" 	required="true"/>
+		<column name="ADDDATE"     	type="DATE" 	required="true"/>
+  </table>
+</database>

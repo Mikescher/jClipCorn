@@ -1,0 +1,716 @@
+package de.jClipCorn.gui.frames.parseImDBFrame;
+
+import java.awt.Component;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.image.BufferedImage;
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.DefaultListModel;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.JProgressBar;
+import javax.swing.JScrollPane;
+import javax.swing.JSpinner;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
+import javax.swing.border.BevelBorder;
+import javax.swing.border.EtchedBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+
+import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFSK;
+import de.jClipCorn.database.databaseElement.columnTypes.CCMovieGenre;
+import de.jClipCorn.database.databaseElement.columnTypes.CCMovieGenreList;
+import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTyp;
+import de.jClipCorn.gui.CachedResourceLoader;
+import de.jClipCorn.gui.Resources;
+import de.jClipCorn.gui.frames.allRatingsFrame.AllRatingsDialog;
+import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.util.DoubleString;
+import de.jClipCorn.util.HTTPUtilities;
+import de.jClipCorn.util.ImageUtilities;
+import de.jClipCorn.util.parser.ImDBParser;
+import de.jClipCorn.util.parser.ParseResultHandler;
+
+@SuppressWarnings({ "unchecked", "rawtypes" })
+public class ParseImDBDialog extends JDialog implements Runnable {
+	private static final long serialVersionUID = 3777677368743220383L;
+	
+	private final static int THREAD_TASK_NOTASK = 0;
+	private final static int THREAD_TASK_SEARCH = 1;
+	private final static int THREAD_TASK_PARSE = 2;
+	
+	private Thread thisThread;
+	private int threadTask = THREAD_TASK_NOTASK;
+	
+	private DefaultListModel mdlLsDBList;
+	private ArrayList<String> lsDBListPaths = new ArrayList<>();
+	private BufferedImage imgCoverBI = null;
+	private HashMap<String, Integer> cbFSKlsAll = null;
+	
+	private final ParseResultHandler owner;
+	private final CCMovieTyp typ;
+	
+	private JList lsDBList;
+	private JPanel panel;
+	private JTextField edSearchName;
+	private JButton btnParse;
+	private JPanel pnlMain;
+	private JTextField edTitle;
+	private JCheckBox cbTitle;
+	private JCheckBox cbYear;
+	private JCheckBox cbScore;
+	private JCheckBox cbLength;
+	private JCheckBox cbFSK;
+	private JLabel lblTitle;
+	private JLabel lblYear;
+	private JLabel lblScore;
+	private JLabel lblLength;
+	private JLabel lblFsk;
+	private JComboBox cbxFSK;
+	private JSpinner spnLength;
+	private JSpinner spnScore;
+	private JSpinner spnYear;
+	private JCheckBox cbGenre0;
+	private JLabel lblGenre;
+	private JComboBox cbxGenre0;
+	private JComboBox cbxGenre2;
+	private JLabel lblGenre_2;
+	private JCheckBox cbGenre2;
+	private JComboBox cbxGenre3;
+	private JLabel lblGenre_3;
+	private JCheckBox cbGenre3;
+	private JComboBox cbxGenre1;
+	private JLabel lblGenre_1;
+	private JCheckBox cbGenre1;
+	private JComboBox cbxGenre4;
+	private JComboBox cbxGenre5;
+	private JComboBox cbxGenre6;
+	private JComboBox cbxGenre7;
+	private JLabel lblGenre_7;
+	private JCheckBox cbGenre7;
+	private JCheckBox cbGenre6;
+	private JLabel lblGenre_6;
+	private JLabel lblGenre_5;
+	private JCheckBox cbGenre5;
+	private JCheckBox cbGenre4;
+	private JLabel lblGenre_4;
+	private JLabel imgCover;
+	private JLabel lblCover;
+	private JCheckBox cbCover;
+	private JProgressBar pbarSearch;
+	private JButton btnCancel;
+	private JScrollPane scrollPane;
+	private JButton btnIMDB;
+	private JButton btnOk;
+	private JButton btnFSKAll;
+
+	public ParseImDBDialog(Component owner, ParseResultHandler handler, CCMovieTyp typ) {
+		setResizable(false);
+		this.owner = handler;
+		this.typ = typ;
+		
+		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+		initGUI();
+		setLocationRelativeTo(owner);
+		resetAll();
+		initComboboxes();
+		
+		edSearchName.setText(handler.getFullTitle());
+	}
+	
+	private void initGUI() {
+		setTitle(LocaleBundle.getString("parseImDBFrame.this.title")); //$NON-NLS-1$
+		setIconImage(CachedResourceLoader.getImage(Resources.IMG_FRAME_ICON));
+		setModal(true);
+		setBounds(0, 0, 807, 538);
+		getContentPane().setLayout(null);
+		
+		
+		scrollPane = new JScrollPane();
+		scrollPane.setBounds(10, 53, 217, 412);
+		getContentPane().add(scrollPane);
+		
+		lsDBList = new JList(mdlLsDBList = new DefaultListModel());
+		lsDBList.addListSelectionListener(new ListSelectionListener() {
+			@Override
+			public void valueChanged(ListSelectionEvent e) {
+				if (! e.getValueIsAdjusting()) {
+					updateMainPanel();
+				}
+			}
+		});
+		scrollPane.setViewportView(lsDBList);
+		
+		panel = new JPanel();
+		panel.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
+		panel.setBounds(0, 0, 803, 42);
+		getContentPane().add(panel);
+		panel.setLayout(null);
+		
+		edSearchName = new JTextField();
+		edSearchName.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+					startGetImDBList();
+				}
+			}
+		});
+		edSearchName.setBounds(10, 11, 684, 20);
+		panel.add(edSearchName);
+		edSearchName.setColumns(10);
+		
+		btnParse = new JButton(LocaleBundle.getString("parseImDBFrame.btnParse.text")); //$NON-NLS-1$
+		btnParse.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				startGetImDBList();
+			}
+		});
+		btnParse.setBounds(704, 10, 89, 23);
+		panel.add(btnParse);
+		
+		pnlMain = new JPanel();
+		pnlMain.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
+		pnlMain.setBounds(237, 53, 556, 448);
+		getContentPane().add(pnlMain);
+		pnlMain.setLayout(null);
+		
+		edTitle = new JTextField();
+		edTitle.setEditable(false);
+		edTitle.setBounds(120, 10, 169, 20);
+		pnlMain.add(edTitle);
+		edTitle.setColumns(10);
+		
+		cbTitle = new JCheckBox();
+		cbTitle.setBounds(6, 7, 21, 23);
+		pnlMain.add(cbTitle);
+		
+		cbYear = new JCheckBox();
+		cbYear.setBounds(6, 37, 21, 23);
+		pnlMain.add(cbYear);
+		
+		cbScore = new JCheckBox();
+		cbScore.setBounds(6, 67, 21, 23);
+		pnlMain.add(cbScore);
+		
+		cbLength = new JCheckBox();
+		cbLength.setBounds(6, 97, 21, 23);
+		pnlMain.add(cbLength);
+		
+		cbFSK = new JCheckBox();
+		cbFSK.setBounds(6, 127, 21, 23);
+		pnlMain.add(cbFSK);
+		
+		lblTitle = new JLabel(LocaleBundle.getString("AddMovieFrame.label_1.text")); //$NON-NLS-1$
+		lblTitle.setBounds(33, 10, 46, 14);
+		pnlMain.add(lblTitle);
+		
+		lblYear = new JLabel(LocaleBundle.getString("AddMovieFrame.lblYear.text")); //$NON-NLS-1$
+		lblYear.setBounds(33, 40, 46, 14);
+		pnlMain.add(lblYear);
+		
+		lblScore = new JLabel(LocaleBundle.getString("AddMovieFrame.lblOnlinescore.text")); //$NON-NLS-1$
+		lblScore.setBounds(33, 70, 77, 14);
+		pnlMain.add(lblScore);
+		
+		lblLength = new JLabel(LocaleBundle.getString("AddMovieFrame.lblLength.text")); //$NON-NLS-1$
+		lblLength.setBounds(33, 98, 46, 18);
+		pnlMain.add(lblLength);
+		
+		lblFsk = new JLabel(LocaleBundle.getString("AddMovieFrame.lblFsk.text")); //$NON-NLS-1$
+		lblFsk.setBounds(33, 130, 46, 14);
+		pnlMain.add(lblFsk);
+		
+		cbxFSK = new JComboBox();
+		cbxFSK.setEnabled(false);
+		cbxFSK.setBounds(120, 130, 169, 20);
+		pnlMain.add(cbxFSK);
+		
+		spnLength = new JSpinner();
+		spnLength.setEnabled(false);
+		spnLength.setBounds(120, 100, 169, 20);
+		spnLength.setEditor(new JSpinner.NumberEditor(spnLength, "0")); //$NON-NLS-1$
+		pnlMain.add(spnLength);
+		
+		spnScore = new JSpinner();
+		spnScore.setEnabled(false);
+		spnScore.setBounds(120, 70, 169, 20);
+		spnScore.setEditor(new JSpinner.NumberEditor(spnScore, "0")); //$NON-NLS-1$
+		pnlMain.add(spnScore);
+		
+		spnYear = new JSpinner();
+		spnYear.setEnabled(false);
+		spnYear.setBounds(120, 40, 169, 20);
+		spnYear.setEditor(new JSpinner.NumberEditor(spnYear, "0")); //$NON-NLS-1$
+		pnlMain.add(spnYear);
+		
+		cbGenre0 = new JCheckBox();
+		cbGenre0.setBounds(295, 7, 21, 23);
+		pnlMain.add(cbGenre0);
+		
+		lblGenre = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGenre.text")); //$NON-NLS-1$
+		lblGenre.setBounds(322, 10, 46, 14);
+		pnlMain.add(lblGenre);
+		
+		cbxGenre0 = new JComboBox();
+		cbxGenre0.setEnabled(false);
+		cbxGenre0.setBounds(377, 10, 169, 20);
+		pnlMain.add(cbxGenre0);
+		
+		cbxGenre2 = new JComboBox();
+		cbxGenre2.setEnabled(false);
+		cbxGenre2.setBounds(377, 70, 169, 20);
+		pnlMain.add(cbxGenre2);
+		
+		lblGenre_2 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGenre_2.text")); //$NON-NLS-1$
+		lblGenre_2.setBounds(322, 70, 46, 14);
+		pnlMain.add(lblGenre_2);
+		
+		cbGenre2 = new JCheckBox();
+		cbGenre2.setBounds(295, 67, 21, 23);
+		pnlMain.add(cbGenre2);
+		
+		cbxGenre3 = new JComboBox();
+		cbxGenre3.setEnabled(false);
+		cbxGenre3.setBounds(377, 100, 169, 20);
+		pnlMain.add(cbxGenre3);
+		
+		lblGenre_3 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGenre_3.text")); //$NON-NLS-1$
+		lblGenre_3.setBounds(322, 100, 46, 14);
+		pnlMain.add(lblGenre_3);
+		
+		cbGenre3 = new JCheckBox();
+		cbGenre3.setBounds(295, 97, 21, 23);
+		pnlMain.add(cbGenre3);
+		
+		cbxGenre1 = new JComboBox();
+		cbxGenre1.setEnabled(false);
+		cbxGenre1.setBounds(377, 40, 169, 20);
+		pnlMain.add(cbxGenre1);
+		
+		lblGenre_1 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGenre_1.text")); //$NON-NLS-1$
+		lblGenre_1.setBounds(322, 40, 46, 14);
+		pnlMain.add(lblGenre_1);
+		
+		cbGenre1 = new JCheckBox();
+		cbGenre1.setBounds(295, 37, 21, 23);
+		pnlMain.add(cbGenre1);
+		
+		cbxGenre4 = new JComboBox();
+		cbxGenre4.setEnabled(false);
+		cbxGenre4.setBounds(377, 130, 169, 20);
+		pnlMain.add(cbxGenre4);
+		
+		cbxGenre5 = new JComboBox();
+		cbxGenre5.setEnabled(false);
+		cbxGenre5.setBounds(377, 160, 169, 20);
+		pnlMain.add(cbxGenre5);
+		
+		cbxGenre6 = new JComboBox();
+		cbxGenre6.setEnabled(false);
+		cbxGenre6.setBounds(377, 190, 169, 20);
+		pnlMain.add(cbxGenre6);
+		
+		cbxGenre7 = new JComboBox();
+		cbxGenre7.setEnabled(false);
+		cbxGenre7.setBounds(377, 220, 169, 20);
+		pnlMain.add(cbxGenre7);
+		
+		lblGenre_7 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGenre_7.text")); //$NON-NLS-1$
+		lblGenre_7.setBounds(322, 220, 46, 14);
+		pnlMain.add(lblGenre_7);
+		
+		cbGenre7 = new JCheckBox();
+		cbGenre7.setBounds(295, 217, 21, 23);
+		pnlMain.add(cbGenre7);
+		
+		cbGenre6 = new JCheckBox();
+		cbGenre6.setBounds(295, 187, 21, 23);
+		pnlMain.add(cbGenre6);
+		
+		lblGenre_6 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGenre_6.text")); //$NON-NLS-1$
+		lblGenre_6.setBounds(322, 190, 46, 14);
+		pnlMain.add(lblGenre_6);
+		
+		lblGenre_5 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGenre_5.text")); //$NON-NLS-1$
+		lblGenre_5.setBounds(322, 160, 46, 14);
+		pnlMain.add(lblGenre_5);
+		
+		cbGenre5 = new JCheckBox();
+		cbGenre5.setBounds(295, 157, 21, 23);
+		pnlMain.add(cbGenre5);
+		
+		cbGenre4 = new JCheckBox();
+		cbGenre4.setBounds(295, 127, 21, 23);
+		pnlMain.add(cbGenre4);
+		
+		lblGenre_4 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGenre_4.text")); //$NON-NLS-1$
+		lblGenre_4.setBounds(322, 130, 46, 14);
+		pnlMain.add(lblGenre_4);
+		
+		imgCover = new JLabel();
+		imgCover.setHorizontalAlignment(SwingConstants.CENTER);
+		imgCover.setBounds(107, 164, ImageUtilities.COVER_WIDTH, ImageUtilities.COVER_HEIGHT);
+		pnlMain.add(imgCover);
+		
+		lblCover = new JLabel(LocaleBundle.getString("AddMovieFrame.lblCover.text")); //$NON-NLS-1$
+		lblCover.setBounds(33, 160, 46, 14);
+		pnlMain.add(lblCover);
+		
+		cbCover = new JCheckBox();
+		cbCover.setBounds(6, 157, 21, 23);
+		pnlMain.add(cbCover);
+		
+		btnIMDB = new JButton(CachedResourceLoader.getImageIcon(Resources.ICN_FRAMES_IMDB));
+		btnIMDB.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				if (lsDBList.getSelectedIndex() >= 0) {
+					HTTPUtilities.openInBrowser(lsDBListPaths.get(lsDBList.getSelectedIndex()));
+				}
+			}
+		});
+		btnIMDB.setBounds(6, 190, 83, 23);
+		pnlMain.add(btnIMDB);
+		
+		btnOk = new JButton(LocaleBundle.getString("parseImDBFrame.btnOK.text")); //$NON-NLS-1$
+		btnOk.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				insertDataIntoFrame();
+				dispose();
+			}
+		});
+		btnOk.setBounds(469, 414, 77, 23);
+		pnlMain.add(btnOk);
+		
+		btnFSKAll = new JButton(LocaleBundle.getString("parseImDBFrame.btnFSKAll.text")); //$NON-NLS-1$
+		btnFSKAll.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				showAllRatingsDialog();
+			}
+		});
+		btnFSKAll.setBounds(6, 219, 83, 23);
+		pnlMain.add(btnFSKAll);
+		
+		pbarSearch = new JProgressBar();
+		pbarSearch.setBounds(10, 478, 119, 23);
+		getContentPane().add(pbarSearch);
+		
+		btnCancel = new JButton(LocaleBundle.getString("parseImDBFrame.btnCancel.text")); //$NON-NLS-1$
+		btnCancel.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				stopThread();
+			}
+		});
+		btnCancel.setEnabled(false);
+		btnCancel.setBounds(138, 478, 89, 23);
+		getContentPane().add(btnCancel);
+	}
+	
+	private void showAllRatingsDialog() {
+		if (lsDBList.getSelectedIndex() >= 0 && cbFSKlsAll != null) {
+			(new AllRatingsDialog(cbFSKlsAll, this)).setVisible(true);
+		}
+	}
+	
+	private void startThread(int task) {
+		threadTask = task;
+		(thisThread = new Thread(this)).start();
+	}
+	
+	private void startGetImDBList() {
+		startThread(THREAD_TASK_SEARCH);
+	}
+	
+	@SuppressWarnings("deprecation")
+	private void stopThread() {
+		if (thisThread != null) {
+			thisThread.suspend();
+			
+			pbarSearch.setIndeterminate(false);
+			btnParse.setEnabled(true);
+			btnCancel.setEnabled(false);
+			resetAll();
+			lsDBList.setSelectedIndex(-1);
+		}
+	}
+	
+	private void initComboboxes() {
+		cbxFSK.setModel(new DefaultComboBoxModel(CCMovieFSK.getList()));
+		
+		cbxGenre0.setModel(new DefaultComboBoxModel(CCMovieGenre.getTrimmedList()));
+		cbxGenre1.setModel(new DefaultComboBoxModel(CCMovieGenre.getTrimmedList()));
+		cbxGenre2.setModel(new DefaultComboBoxModel(CCMovieGenre.getTrimmedList()));
+		cbxGenre3.setModel(new DefaultComboBoxModel(CCMovieGenre.getTrimmedList()));
+		cbxGenre4.setModel(new DefaultComboBoxModel(CCMovieGenre.getTrimmedList()));
+		cbxGenre5.setModel(new DefaultComboBoxModel(CCMovieGenre.getTrimmedList()));
+		cbxGenre6.setModel(new DefaultComboBoxModel(CCMovieGenre.getTrimmedList()));
+		cbxGenre7.setModel(new DefaultComboBoxModel(CCMovieGenre.getTrimmedList()));
+	}
+	
+	private void resetAll() {
+		resetFields();
+		resetCheckboxes();
+	}
+	
+	private void resetFields() {
+		edTitle.setText(""); //$NON-NLS-1$
+		spnLength.setValue(0);
+		spnScore.setValue(0);
+		spnYear.setValue(0);
+		cbxFSK.setSelectedIndex(-1);
+		imgCover.setIcon(null);
+		
+		cbxGenre0.setSelectedIndex(-1);
+		cbxGenre1.setSelectedIndex(-1);
+		cbxGenre2.setSelectedIndex(-1);
+		cbxGenre3.setSelectedIndex(-1);
+		cbxGenre4.setSelectedIndex(-1);
+		cbxGenre5.setSelectedIndex(-1);
+		cbxGenre6.setSelectedIndex(-1);
+		cbxGenre7.setSelectedIndex(-1);
+	}
+	
+	private void resetCheckboxes() {
+		cbCover.setSelected(false);
+		cbFSK.setSelected(false);
+		cbLength.setSelected(false);
+		cbScore.setSelected(false);
+		cbTitle.setSelected(false);
+		cbYear.setSelected(false);
+		
+		cbGenre0.setSelected(false);
+		cbGenre1.setSelected(false);
+		cbGenre2.setSelected(false);
+		cbGenre3.setSelected(false);
+		cbGenre4.setSelected(false);
+		cbGenre5.setSelected(false);
+		cbGenre6.setSelected(false);
+		cbGenre7.setSelected(false);
+	}
+	
+	private void updateCheckBoxes() {
+		cbCover.setSelected(imgCover.getIcon() != null);
+		cbFSK.setSelected(cbxFSK.getSelectedIndex() >= 0);
+		cbLength.setSelected((int)spnLength.getValue() > 0);
+		cbScore.setSelected((int)spnScore.getValue() > 0);
+		cbTitle.setSelected(! edTitle.getText().isEmpty());
+		cbYear.setSelected((int)spnYear.getValue() > 0);
+		
+		cbGenre0.setSelected(cbxGenre0.getSelectedIndex() > 0);
+		cbGenre1.setSelected(cbxGenre1.getSelectedIndex() > 0);
+		cbGenre2.setSelected(cbxGenre2.getSelectedIndex() > 0);
+		cbGenre3.setSelected(cbxGenre3.getSelectedIndex() > 0);
+		cbGenre4.setSelected(cbxGenre4.getSelectedIndex() > 0);
+		cbGenre5.setSelected(cbxGenre5.getSelectedIndex() > 0);
+		cbGenre6.setSelected(cbxGenre6.getSelectedIndex() > 0);
+		cbGenre7.setSelected(cbxGenre7.getSelectedIndex() > 0);
+	}
+	
+	@Override
+	public void run() {
+		switch (threadTask) {
+		case THREAD_TASK_SEARCH:
+			runSearch();
+			break;
+		case THREAD_TASK_PARSE:
+			runParse();
+			break;
+		case THREAD_TASK_NOTASK:
+		default:
+			break;
+		}
+	}
+	
+	private void runSearch() {
+		try {
+			SwingUtilities.invokeAndWait(new Runnable() {
+				@Override
+				public void run() {
+					btnCancel.setEnabled(true);
+					btnParse.setEnabled(false);
+					pbarSearch.setIndeterminate(true);
+				}
+			});
+		} catch (InvocationTargetException | InterruptedException e) {
+			e.printStackTrace();
+			return;
+		}
+		
+		
+		String url = ImDBParser.getSearchURL(edSearchName.getText(), typ);
+		String html = HTTPUtilities.getHTML(url, true);
+		final ArrayList<DoubleString> res = ImDBParser.extractImDBLinks(html);
+		
+		try {
+			SwingUtilities.invokeAndWait(new Runnable() {
+				@Override
+				public void run() {
+					mdlLsDBList.clear();
+					lsDBListPaths.clear();
+					lsDBList.setSelectedIndex(-1);
+
+					for (DoubleString sm : res) {
+						lsDBListPaths.add(sm.get1());
+						mdlLsDBList.addElement(sm.get2());
+					}
+
+					pbarSearch.setIndeterminate(false);
+					btnParse.setEnabled(true);
+					btnCancel.setEnabled(false);
+				}
+			});
+		} catch (InvocationTargetException | InterruptedException e) {
+			e.printStackTrace();
+			return;
+		}
+	}
+	
+	private void runParse() {
+		try {
+			SwingUtilities.invokeAndWait(new Runnable() {
+				@Override
+				public void run() {
+					resetFields();
+				}
+			});
+		} catch (InvocationTargetException | InterruptedException e) {
+			e.printStackTrace();
+			return;
+		}
+		
+		
+		int idx = lsDBList.getSelectedIndex();
+		
+		if (idx < 0) return;
+		
+		String url = lsDBListPaths.get(idx);
+		String html = HTTPUtilities.getHTML(url, true);
+
+		final String title = ImDBParser.getTitle(html);
+		final int year = ImDBParser.getYear(html);
+		final int score = ImDBParser.getRating(html);
+		final int length = ImDBParser.getLength(html);
+		final CCMovieFSK mfsk = ImDBParser.getFSK(html, url);
+		final CCMovieGenreList mgl = ImDBParser.getGenres(html);
+		final BufferedImage bci = ImDBParser.getCover(html);
+		cbFSKlsAll = ImDBParser.getFSKList(html, url);
+		
+		try {
+			SwingUtilities.invokeAndWait(new Runnable() {
+				@Override
+				public void run() {
+					edTitle.setText(title);
+					spnYear.setValue(year);
+					spnScore.setValue(score);
+					spnLength.setValue(length);
+
+					if (mfsk != null) {
+						cbxFSK.setSelectedIndex(mfsk.asInt());
+					}
+					
+					if (bci != null) {
+						imgCover.setIcon(new ImageIcon(bci));
+					} else {
+						imgCover.setIcon(null);
+					}
+					imgCoverBI = bci;
+					
+					cbxGenre0.setSelectedIndex(mgl.getGenre(0).asInt());
+					cbxGenre1.setSelectedIndex(mgl.getGenre(1).asInt());
+					cbxGenre2.setSelectedIndex(mgl.getGenre(2).asInt());
+					cbxGenre3.setSelectedIndex(mgl.getGenre(3).asInt());
+					cbxGenre4.setSelectedIndex(mgl.getGenre(4).asInt());
+					cbxGenre5.setSelectedIndex(mgl.getGenre(5).asInt());
+					cbxGenre6.setSelectedIndex(mgl.getGenre(6).asInt());
+					cbxGenre7.setSelectedIndex(mgl.getGenre(7).asInt());
+					
+					updateCheckBoxes();
+				}
+			});
+		} catch (InvocationTargetException | InterruptedException e) {
+			e.printStackTrace();
+			return;
+		}		
+	}
+	
+	private void updateMainPanel() {
+		startThread(THREAD_TASK_PARSE);
+	}
+	
+	private void insertDataIntoFrame() {
+		if (cbTitle.isSelected()) {
+			owner.setMovieName(edTitle.getText());
+		}
+		
+		if (cbYear.isSelected()) {
+			owner.setYear((int) spnYear.getValue());
+		}
+		
+		if (cbScore.isSelected()) {
+			owner.setScore((int) spnScore.getValue());
+		}
+		
+		if (cbLength.isSelected()) {
+			owner.setLength((int) spnLength.getValue());
+		}
+		
+		if (cbFSK.isSelected()) {
+			owner.setFSK(cbxFSK.getSelectedIndex());
+		}
+		
+		if (cbCover.isSelected()) {
+			owner.setCover(imgCoverBI);
+		}
+		
+		if (cbGenre0.isSelected()) {
+			owner.setGenre(0, cbxGenre0.getSelectedIndex());
+		}
+		
+		if (cbGenre1.isSelected()) {
+			owner.setGenre(1, cbxGenre1.getSelectedIndex());
+		}
+		
+		if (cbGenre2.isSelected()) {
+			owner.setGenre(2, cbxGenre2.getSelectedIndex());
+		}
+		
+		if (cbGenre3.isSelected()) {
+			owner.setGenre(3, cbxGenre3.getSelectedIndex());
+		}
+		
+		if (cbGenre4.isSelected()) {
+			owner.setGenre(4, cbxGenre4.getSelectedIndex());
+		}
+		
+		if (cbGenre5.isSelected()) {
+			owner.setGenre(5, cbxGenre5.getSelectedIndex());
+		}
+		
+		if (cbGenre6.isSelected()) {
+			owner.setGenre(6, cbxGenre6.getSelectedIndex());
+		}
+		
+		if (cbGenre7.isSelected()) {
+			owner.setGenre(7, cbxGenre7.getSelectedIndex());
+		}
+	}
+}

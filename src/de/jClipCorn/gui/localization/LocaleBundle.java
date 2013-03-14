@@ -1,0 +1,45 @@
+package de.jClipCorn.gui.localization;
+
+import java.util.Locale;
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
+
+import de.jClipCorn.gui.log.CCLog;
+import de.jClipCorn.properties.CCProperties;
+
+public class LocaleBundle {
+	private final static int DEFAULT = 3;
+	private final static String DEFAULT_BASENAME = "de.jClipCorn.gui.localization.locale"; //$NON-NLS-1$
+	private final static Locale[] myloc = {Locale.getDefault(), new Locale("dl", "DL"), Locale.GERMAN, Locale.US}; //$NON-NLS-1$ //$NON-NLS-2$
+	
+	private static ResourceBundle bundle = null; 
+	
+	private static Locale getLocale() {
+		return myloc[CCProperties.getInstance().PROP_UI_LANG.getValue()];
+	}
+	
+	private static Locale getDefaultLocale() {
+		return myloc[DEFAULT];
+	}
+	
+	public static String getString(String ident) {
+		try {
+			if (bundle == null) {
+				return ResourceBundle.getBundle(DEFAULT_BASENAME, getDefaultLocale()).getString(ident);
+			} else {
+				return bundle.getString(ident);
+			}
+		} catch (MissingResourceException e) {
+			CCLog.addError(e);
+			return ""; //$NON-NLS-1$
+		}
+	}
+	
+	public static String getFormattedString(String ident, Object... args) {
+		return String.format(getString(ident), args);
+	}
+
+	public static void updateLang() {
+		bundle = ResourceBundle.getBundle(DEFAULT_BASENAME, getLocale());
+	}
+}

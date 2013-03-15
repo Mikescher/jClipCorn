@@ -39,4 +39,8 @@ public class CombinedMovieQuality {
 		return CCMovieQuality.compare(o1.getQuality(), o2.getQuality());
 	}
 
+	public CCMovieStatus getStatus() {
+		return status;
+	}
+
 }

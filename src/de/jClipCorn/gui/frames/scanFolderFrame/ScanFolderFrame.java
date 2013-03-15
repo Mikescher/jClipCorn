@@ -207,6 +207,7 @@ public class ScanFolderFrame extends JFrame implements Runnable, MouseListener {
 				btnRemoveAdditionalParts.setEnabled(true);
 				btnAddAll.setEnabled(true);
 				cbIncludeSeries.setEnabled(false);
+				cbExcludeIfo.setEnabled(false);
 				progressBar.setIndeterminate(false);
 				updateCount();
 			}

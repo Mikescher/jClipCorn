@@ -68,6 +68,10 @@ public class CCLog {
 	private static void add(String txt, CCLogType type) {
 		add(txt, type, new Throwable().getStackTrace());
 	}
+	
+	public static void addUndefinied(Thread thread, Throwable throwable) {
+		add('[' + thread.toString() + ']' + ' ' + throwable.toString(), CCLogType.LOG_ELEM_UNDEFINED, throwable.getStackTrace());
+	}
 
 	private static void add(String txt, CCLogType type, StackTraceElement[] trace) {
 		CCLogElement cle = new CCLogElement(txt, type, trace);

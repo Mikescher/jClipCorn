@@ -28,6 +28,8 @@ public class ClipSeriesPopup extends ClipPopupMenu {
 		
 		addAction("OpenFolder");
 		
+		addAction("MoveSeries");
+		
 		//#############
 		addSeparator();
 		//#############

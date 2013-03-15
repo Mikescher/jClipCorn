@@ -23,6 +23,7 @@ import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
+import javax.swing.UIManager;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -183,6 +184,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		edPart0 = new JTextField();
 		edPart0.setEditable(false);
 		edPart0.setColumns(10);
+		edPart0.setBackground(UIManager.getColor("TextField.background")); //$NON-NLS-1$
 		edPart0.setBounds(74, 12, 281, 22);
 		getContentPane().add(edPart0);
 		
@@ -199,6 +201,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		edPart1 = new JTextField();
 		edPart1.setEditable(false);
 		edPart1.setColumns(10);
+		edPart1.setBackground(UIManager.getColor("TextField.background")); //$NON-NLS-1$
 		edPart1.setBounds(74, 48, 191, 22);
 		getContentPane().add(edPart1);
 		
@@ -229,6 +232,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		edPart2 = new JTextField();
 		edPart2.setEditable(false);
 		edPart2.setColumns(10);
+		edPart2.setBackground(UIManager.getColor("TextField.background")); //$NON-NLS-1$
 		edPart2.setBounds(74, 84, 191, 22);
 		getContentPane().add(edPart2);
 		
@@ -255,6 +259,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		edPart3 = new JTextField();
 		edPart3.setEditable(false);
 		edPart3.setColumns(10);
+		edPart3.setBackground(UIManager.getColor("TextField.background")); //$NON-NLS-1$
 		edPart3.setBounds(74, 120, 191, 22);
 		getContentPane().add(edPart3);
 		
@@ -281,6 +286,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		edPart4 = new JTextField();
 		edPart4.setEditable(false);
 		edPart4.setColumns(10);
+		edPart4.setBackground(UIManager.getColor("TextField.background")); //$NON-NLS-1$
 		edPart4.setBounds(74, 156, 191, 22);
 		getContentPane().add(edPart4);
 		
@@ -307,6 +313,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		edPart5 = new JTextField();
 		edPart5.setEditable(false);
 		edPart5.setColumns(10);
+		edPart5.setBackground(UIManager.getColor("TextField.background")); //$NON-NLS-1$
 		edPart5.setBounds(74, 192, 191, 22);
 		getContentPane().add(edPart5);
 		
@@ -720,27 +727,27 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 	
 	private void testPaths() {
 		if (! edPart0.getText().isEmpty()) {
-			edPart0.setBackground(new File(PathFormatter.getAbsolute(edPart0.getText())).exists()?Color.WHITE:Color.RED);
+			edPart0.setBackground(new File(PathFormatter.getAbsolute(edPart0.getText())).exists()?UIManager.getColor("TextField.background"):Color.RED); //$NON-NLS-1$
 		}
 		
 		if (! edPart1.getText().isEmpty()) {
-			edPart1.setBackground(new File(PathFormatter.getAbsolute(edPart1.getText())).exists()?Color.WHITE:Color.RED);
+			edPart1.setBackground(new File(PathFormatter.getAbsolute(edPart1.getText())).exists()?UIManager.getColor("TextField.background"):Color.RED); //$NON-NLS-1$
 		}
 		
 		if (! edPart2.getText().isEmpty()) {
-			edPart2.setBackground(new File(PathFormatter.getAbsolute(edPart2.getText())).exists()?Color.WHITE:Color.RED);
+			edPart2.setBackground(new File(PathFormatter.getAbsolute(edPart2.getText())).exists()?UIManager.getColor("TextField.background"):Color.RED); //$NON-NLS-1$
 		}
 		
 		if (! edPart3.getText().isEmpty()) {
-			edPart3.setBackground(new File(PathFormatter.getAbsolute(edPart3.getText())).exists()?Color.WHITE:Color.RED);
+			edPart3.setBackground(new File(PathFormatter.getAbsolute(edPart3.getText())).exists()?UIManager.getColor("TextField.background"):Color.RED); //$NON-NLS-1$
 		}
 		
 		if (! edPart4.getText().isEmpty()) {
-			edPart4.setBackground(new File(PathFormatter.getAbsolute(edPart4.getText())).exists()?Color.WHITE:Color.RED);
+			edPart4.setBackground(new File(PathFormatter.getAbsolute(edPart4.getText())).exists()?UIManager.getColor("TextField.background"):Color.RED); //$NON-NLS-1$
 		}
 		
 		if (! edPart5.getText().isEmpty()) {
-			edPart5.setBackground(new File(PathFormatter.getAbsolute(edPart5.getText())).exists()?Color.WHITE:Color.RED);
+			edPart5.setBackground(new File(PathFormatter.getAbsolute(edPart5.getText())).exists()?UIManager.getColor("TextField.background"):Color.RED); //$NON-NLS-1$
 		}
 	}
 	

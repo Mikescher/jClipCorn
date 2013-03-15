@@ -12,16 +12,21 @@ import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieScore;
+import de.jClipCorn.database.databaseElement.columnTypes.CCMovieStatus;
 import de.jClipCorn.database.xml.CCBXMLReader;
 import de.jClipCorn.gui.Resources;
+import de.jClipCorn.gui.frames.aboutFrame.AboutFrame;
 import de.jClipCorn.gui.frames.addMovieFrame.AddMovieFrame;
 import de.jClipCorn.gui.frames.addSeasonFrame.AddSeasonFrame;
 import de.jClipCorn.gui.frames.addSeriesFrame.AddSeriesFrame;
+import de.jClipCorn.gui.frames.changeScoreFrame.ChangeScoreFrame;
+import de.jClipCorn.gui.frames.changeViewedFrame.ChangeViewedFrame;
 import de.jClipCorn.gui.frames.checkDatabaseFrame.CheckDatabaseDialog;
 import de.jClipCorn.gui.frames.editMovieFrame.EditMovieFrame;
 import de.jClipCorn.gui.frames.editSeriesFrame.EditSeriesFrame;
 import de.jClipCorn.gui.frames.logFrame.LogFrame;
 import de.jClipCorn.gui.frames.mainFrame.MainFrame;
+import de.jClipCorn.gui.frames.moveSeriesFrame.MoveSeriesFrame;
 import de.jClipCorn.gui.frames.previewMovieFrame.PreviewMovieFrame;
 import de.jClipCorn.gui.frames.previewSeriesFrame.PreviewSeriesFrame;
 import de.jClipCorn.gui.frames.scanFolderFrame.ScanFolderFrame;
@@ -91,9 +96,6 @@ public class CCActionTree {
 				onClickDatabaseClear();
 			}
 		});
-		
-		//TODO Add "create BackupNow"
-		//TODO Add "create BackupNow To File"
 
 		// #######################################################################################################
 		CCActionElement movies = root.addChild(new CCActionElement("Movies", "ClipMenuBar.Movies", ""));
@@ -150,6 +152,14 @@ public class CCActionTree {
 				onClickSeriesPreview();
 			}
 		});
+		
+		temp = series.addChild(new CCActionElement("MoveSeries", "ClipMenuBar.Series.MoveSeries", Resources.ICN_MENUBAR_MOVESERIES));
+		temp.addListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				onClickSeriesMove();
+			}
+		});
 
 		temp = series.addChild(new CCActionElement("AddSeries", "ClipMenuBar.Series.Add", Resources.ICN_MENUBAR_ADD_SER));
 		temp.addListener(new ActionListener() {
@@ -202,6 +212,30 @@ public class CCActionTree {
 				onClickExtrasScanFolder();
 			}
 		});
+		
+		temp = extras.addChild(new CCActionElement("MassChangeViewed", "ClipMenuBar.Extras.MassChangeViewed", Resources.ICN_MENUBAR_MCHANGE_VIEWED));
+		temp.addListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				onClickExtrasMassChangeViewed();
+			}
+		});
+		
+		temp = extras.addChild(new CCActionElement("MassChangeScore", "ClipMenuBar.Extras.MassChangeScore", Resources.ICN_MENUBAR_MCHANGE_SCORE));
+		temp.addListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				onClickExtrasMassChangeScore();
+			}
+		});
+		
+		temp = extras.addChild(new CCActionElement("ResetViewed", "ClipMenuBar.Extras.ResetViewed", Resources.ICN_MENUBAR_RESETVIEWED));
+		temp.addListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				onClickExtrasResetViewed();
+			}
+		});
 
 		temp = extras.addChild(new CCActionElement("ShowSettings", "ClipMenuBar.Extras.Settings", Resources.ICN_MENUBAR_SETTINGS));
 		temp.addListener(new ActionListener() {
@@ -223,6 +257,14 @@ public class CCActionTree {
 			}
 		});
 		
+		temp = help.addChild(new CCActionElement("ShowAbout", "ClipMenuBar.Help.About", Resources.ICN_MENUBAR_ABOUT));
+		temp.addListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				onClickHelpShowAbout();
+			}
+		});
+		
 		// #######################################################################################################
 		CCActionElement other = root.addChild(new CCActionElement("Other", "", "", false));
 		// #######################################################################################################
@@ -230,6 +272,8 @@ public class CCActionTree {
 		temp = other.addChild(new CCActionElement("SetMovieRating", "ClipMenuBar.Other.SetMovieRating", Resources.ICN_SIDEBAR_SCORE));
 		
 		temp = other.addChild(new CCActionElement("SetSeriesRating", "ClipMenuBar.Other.SetSeriesRating", Resources.ICN_SIDEBAR_SCORE));
+		
+		temp = other.addChild(new CCActionElement("SetMovieStatus", "ClipMenuBar.Other.SetMovieStatus", Resources.ICN_SIDEBAR_STATUS));
 		
 		temp = other.addChild(new CCActionElement("SetRating0", "CCMovieScore.R0", CCMovieScore.RATING_0.getIconName()));
 		temp.addListener(new ActionListener() {
@@ -303,6 +347,30 @@ public class CCActionTree {
 			}
 		});
 		
+		temp = other.addChild(new CCActionElement("SetStatus0", "CCMovieStatus.Status0", CCMovieStatus.STATUS_OK.getIconName()));
+		temp.addListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				onClickOtherSetStatus(CCMovieStatus.STATUS_OK);
+			}
+		});
+		
+		temp = other.addChild(new CCActionElement("SetStatus1", "CCMovieStatus.Status1", CCMovieStatus.STATUS_LOWQUALITY.getIconName()));
+		temp.addListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				onClickOtherSetStatus(CCMovieStatus.STATUS_LOWQUALITY);
+			}
+		});
+		
+		temp = other.addChild(new CCActionElement("SetStatus2", "CCMovieStatus.Status2", CCMovieStatus.STATUS_MISSINGVIDEOTIME.getIconName()));
+		temp.addListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				onClickOtherSetStatus(CCMovieStatus.STATUS_MISSINGVIDEOTIME);
+			}
+		});
+		
 		temp = other.addChild(new CCActionElement("OpenFolder", "ClipMenuBar.Other.OpenFolder", Resources.ICN_MENUBAR_FOLDER));
 		temp.addListener(new ActionListener() {
 			@Override
@@ -370,7 +438,23 @@ public class CCActionTree {
 		ScanFolderFrame sff = new ScanFolderFrame(owner);
 		sff.setVisible(true);
 	}
-
+	
+	private void onClickExtrasResetViewed() {
+		if (DialogHelper.showLocaleYesNo(owner, "Dialogs.ResetViewed")) { //$NON-NLS-1$
+			owner.getMovielist().resetAllMovieViewed(false);
+		}
+	}
+	
+	private void onClickExtrasMassChangeViewed() {
+		ChangeViewedFrame cvf = new ChangeViewedFrame(owner, owner.getMovielist());
+		cvf.setVisible(true);
+	}
+	
+	private void onClickExtrasMassChangeScore() {
+		ChangeScoreFrame csf = new ChangeScoreFrame(owner, owner.getMovielist());
+		csf.setVisible(true);
+	}
+	
 	private void onClickMoviesPlay() {
 		CCDatabaseElement element = owner.getSelectedElement();
 
@@ -426,6 +510,15 @@ public class CCActionTree {
 			psf.setVisible(true);
 		}
 	}
+	
+	private void onClickSeriesMove() {
+		CCDatabaseElement el = owner.getSelectedElement();
+
+		if (el.isSeries()) {
+			MoveSeriesFrame msf = new MoveSeriesFrame(owner, (CCSeries) el);
+			msf.setVisible(true);
+		}
+	}
 
 	private void onClickSeriesAdd() {
 		(new AddSeriesFrame(owner, movielist)).setVisible(true);
@@ -471,6 +564,11 @@ public class CCActionTree {
 		lf.setVisible(true);
 	}
 	
+	private void onClickHelpShowAbout() {
+		AboutFrame af = new AboutFrame(owner);
+		af.setVisible(true);
+	}
+	
 	private void onClickOtherOpenFolder() {
 		CCDatabaseElement el = owner.getSelectedElement();
 		if (el.isMovie()) {
@@ -501,6 +599,13 @@ public class CCActionTree {
 		CCDatabaseElement el = owner.getSelectedElement();
 		if (el != null) {
 			el.setScore(rating);
+		}
+	}
+	
+	private void onClickOtherSetStatus(CCMovieStatus status) {
+		CCDatabaseElement el = owner.getSelectedElement();
+		if (el != null && el.isMovie()) {
+			((CCMovie)el).setStatus(status);
 		}
 	}
 }

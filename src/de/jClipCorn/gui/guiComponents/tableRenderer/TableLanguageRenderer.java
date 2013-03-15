@@ -1,10 +1,8 @@
 package de.jClipCorn.gui.guiComponents.tableRenderer;
 
-import org.pushingpixels.substance.api.renderers.SubstanceDefaultTableCellRenderer;
-
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieLanguage;
 
-public class TableLanguageRenderer extends SubstanceDefaultTableCellRenderer {
+public class TableLanguageRenderer extends TableRenderer {
 	private static final long serialVersionUID = 5357005350195701739L;
 
 	public TableLanguageRenderer() {

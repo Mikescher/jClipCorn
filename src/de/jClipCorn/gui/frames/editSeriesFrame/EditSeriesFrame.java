@@ -29,6 +29,7 @@ import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
+import javax.swing.UIManager;
 import javax.swing.border.LineBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -655,7 +656,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		edEpisodePart = new JTextField();
 		edEpisodePart.setEditable(false);
 		edEpisodePart.setColumns(10);
-		edEpisodePart.setBackground(Color.WHITE);
+		edEpisodePart.setBackground(UIManager.getColor("TextField.background")); //$NON-NLS-1$
 		edEpisodePart.setBounds(74, 406, 212, 20);
 		pnlEpisode.add(edEpisodePart);
 		
@@ -1210,7 +1211,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		}
 		
 		if (new File(episode.getAbsolutePart()).exists()) {
-			edEpisodePart.setBackground(Color.WHITE);
+			edEpisodePart.setBackground(UIManager.getColor("TextField.background")); //$NON-NLS-1$
 		} else {
 			edEpisodePart.setBackground(Color.RED);
 		}

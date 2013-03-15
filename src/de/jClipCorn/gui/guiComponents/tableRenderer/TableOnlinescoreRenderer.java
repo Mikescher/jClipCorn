@@ -1,11 +1,9 @@
 package de.jClipCorn.gui.guiComponents.tableRenderer;
 
-import org.pushingpixels.substance.api.renderers.SubstanceDefaultTableCellRenderer;
-
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieOnlineScore;
 import de.jClipCorn.gui.localization.LocaleBundle;
 
-public class TableOnlinescoreRenderer extends SubstanceDefaultTableCellRenderer {
+public class TableOnlinescoreRenderer extends TableRenderer {
 	private static final long serialVersionUID = 1L;
 	
 	public TableOnlinescoreRenderer() {

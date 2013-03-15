@@ -117,7 +117,7 @@ public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener 
 		
 		edPart0 = new JTextField();
 		edPart0.setEditable(false);
-		edPart0.setBounds(201, 53, 483, 20);
+		edPart0.setBounds(201, 53, 416, 20);
 		getContentPane().add(edPart0);
 		edPart0.setColumns(10);
 		
@@ -168,7 +168,7 @@ public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener 
 		getContentPane().add(lblAdded);
 		
 		lblScore = new JLabel(LocaleBundle.getString("AddMovieFrame.lblOnlinescore.text")); //$NON-NLS-1$
-		lblScore.setBounds(202, 270, 63, 14);
+		lblScore.setBounds(202, 270, 88, 14);
 		getContentPane().add(lblScore);
 		
 		lblFsk = new JLabel(LocaleBundle.getString("AddMovieFrame.lblFsk.text")); //$NON-NLS-1$
@@ -194,7 +194,7 @@ public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener 
 				openImDB();
 			}
 		});
-		btnImDB.setBounds(627, 11, 57, 23);
+		btnImDB.setBounds(627, 50, 57, 23);
 		getContentPane().add(btnImDB);
 		
 		lblGenre = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGenre.text")); //$NON-NLS-1$
@@ -252,7 +252,7 @@ public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener 
 		getContentPane().add(lbl_Size);
 		
 		lbl_OnlineScore = new JLabel();
-		lbl_OnlineScore.setBounds(275, 269, 82, 16);
+		lbl_OnlineScore.setBounds(300, 269, 82, 16);
 		getContentPane().add(lbl_OnlineScore);
 		
 		lbl_Score = new JLabel();
@@ -355,7 +355,7 @@ public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener 
 	private void updateFields() {
 		setTitle(movie.getCompleteTitle());
 		lblCover.setIcon(movie.getCoverIcon());
-		label.setText(movie.getCompleteTitle()); //TODO sieht sch*** aus wenn der Titel zu lang ist
+		label.setText(movie.getCompleteTitle());
 		
 		lblViewed.setIcon(movie.isViewed()?CachedResourceLoader.getImageIcon(Resources.ICN_TABLE_VIEWED_TRUE):null);
 		

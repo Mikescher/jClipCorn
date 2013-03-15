@@ -16,25 +16,30 @@ public class Resources {
 	
 	
 	// #############################################  <MENUBAR>  #############################################
-	public final static String ICN_MENUBAR_CLOSE	 	= registerICN("/icons/toolbar/door_open.png");
-	public final static String ICN_MENUBAR_PARSEXML 	= registerICN("/icons/toolbar/blueprint.png");
-	public final static String ICN_MENUBAR_PLAY			= registerICN("/icons/toolbar/control_play.png");
-	public final static String ICN_MENUBAR_ADD_MOV		= registerICN("/icons/toolbar/add.png");
-	public final static String ICN_MENUBAR_ADD_SER		= registerICN("/icons/toolbar/addSer.png");
-	public final static String ICN_MENUBAR_ADD_SEA		= registerICN("/icons/toolbar/addSea.png");
-	public final static String ICN_MENUBAR_DBCHECK		= registerICN("/icons/toolbar/fishfinder.png");
-	public final static String ICN_MENUBAR_CLEARDB		= registerICN("/icons/toolbar/fire_damage.png");
-	public final static String ICN_MENUBAR_SETTINGS		= registerICN("/icons/toolbar/gear_in.png");
-	public final static String ICN_MENUBAR_PREVIEW_MOV	= registerICN("/icons/toolbar/magnifier.png");
-	public final static String ICN_MENUBAR_PREVIEW_SER	= registerICN("/icons/toolbar/magnifier_ser.png");
-	public final static String ICN_MENUBAR_REMOVE		= registerICN("/icons/toolbar/recycle.png");
-	public final static String ICN_MENUBAR_EDIT_MOV		= registerICN("/icons/toolbar/screwdriver_mov.png");
-	public final static String ICN_MENUBAR_EDIT_SER		= registerICN("/icons/toolbar/screwdriver_ser.png");
-	public final static String ICN_MENUBAR_LOG			= registerICN("/icons/toolbar/system_monitor.png");
-	public final static String ICN_MENUBAR_FOLDER		= registerICN("/icons/toolbar/folder.png");
-	public final static String ICN_MENUBAR_VIEWED		= registerICN("/icons/toolbar/viewed.png");
-	public final static String ICN_MENUBAR_UNVIEWED		= registerICN("/icons/toolbar/unviewed.png");
-	public final static String ICN_MENUBAR_SCANFOLDER	= registerICN("/icons/toolbar/scanner.png");
+	public final static String ICN_MENUBAR_CLOSE		 	= registerICN("/icons/toolbar/door_open.png");
+	public final static String ICN_MENUBAR_PARSEXML 		= registerICN("/icons/toolbar/blueprint.png");
+	public final static String ICN_MENUBAR_PLAY				= registerICN("/icons/toolbar/control_play.png");
+	public final static String ICN_MENUBAR_ADD_MOV			= registerICN("/icons/toolbar/add.png");
+	public final static String ICN_MENUBAR_ADD_SER			= registerICN("/icons/toolbar/addSer.png");
+	public final static String ICN_MENUBAR_ADD_SEA			= registerICN("/icons/toolbar/addSea.png");
+	public final static String ICN_MENUBAR_DBCHECK			= registerICN("/icons/toolbar/fishfinder.png");
+	public final static String ICN_MENUBAR_CLEARDB			= registerICN("/icons/toolbar/fire_damage.png");
+	public final static String ICN_MENUBAR_SETTINGS			= registerICN("/icons/toolbar/gear_in.png");
+	public final static String ICN_MENUBAR_PREVIEW_MOV		= registerICN("/icons/toolbar/magnifier.png");
+	public final static String ICN_MENUBAR_PREVIEW_SER		= registerICN("/icons/toolbar/magnifier_ser.png");
+	public final static String ICN_MENUBAR_REMOVE			= registerICN("/icons/toolbar/recycle.png");
+	public final static String ICN_MENUBAR_EDIT_MOV			= registerICN("/icons/toolbar/screwdriver_mov.png");
+	public final static String ICN_MENUBAR_EDIT_SER			= registerICN("/icons/toolbar/screwdriver_ser.png");
+	public final static String ICN_MENUBAR_LOG				= registerICN("/icons/toolbar/system_monitor.png");
+	public final static String ICN_MENUBAR_FOLDER			= registerICN("/icons/toolbar/folder.png");
+	public final static String ICN_MENUBAR_VIEWED			= registerICN("/icons/toolbar/viewed.png");
+	public final static String ICN_MENUBAR_UNVIEWED			= registerICN("/icons/toolbar/unviewed.png");
+	public final static String ICN_MENUBAR_SCANFOLDER		= registerICN("/icons/toolbar/scanner.png");
+	public final static String ICN_MENUBAR_ABOUT			= registerICN("/icons/toolbar/info_rhombus.png");
+	public final static String ICN_MENUBAR_MCHANGE_VIEWED	= registerICN("/icons/toolbar/knot.png");
+	public final static String ICN_MENUBAR_MCHANGE_SCORE	= registerICN("/icons/toolbar/knotscore.png");
+	public final static String ICN_MENUBAR_RESETVIEWED		= registerICN("/icons/toolbar/script.png");
+	public final static String ICN_MENUBAR_MOVESERIES		= registerICN("/icons/toolbar/move_to_folder.png");
 	// #############################################  </MENUBAR>  ############################################
 	
 
@@ -52,6 +57,8 @@ public class Resources {
 	public final static String ICN_TABLE_QUALITY_3 		= registerICN("/icons/table/quality_3.png");
 	public final static String ICN_TABLE_QUALITY_4 		= registerICN("/icons/table/quality_4.png");
 	public final static String ICN_TABLE_QUALITY_STATUS	= registerICN("/icons/table/exclamation.png");
+	
+	public final static String ICN_TABLE_STATUS_OK		= registerICN("/icons/sidebar/accept.png");
 	
 	public final static String ICN_TABLE_ONLINESCORE_0  = registerICN("/icons/table/stars_0.png");
 	public final static String ICN_TABLE_ONLINESCORE_1  = registerICN("/icons/table/stars_1.png");
@@ -98,7 +105,8 @@ public class Resources {
 	
 	// ############################################  </FRAMES>  ##############################################
 	public final static String ICN_FRAMES_IMDB 			= registerICN("/icons/addMovieFrame/imdb.png");	
-	public final static String ICN_FRAMES_SEARCH 		= registerICN("/icons/previewSeriesFrame/magnifier.png");	
+	public final static String ICN_FRAMES_SEARCH 		= registerICN("/icons/previewSeriesFrame/magnifier.png");
+	public final static String IMG_FRAMES_ABOUT 		= registerICN("/UberDialog.png");	
 	// #############################################  <FRAMES>  ##############################################
 
 	
@@ -124,6 +132,7 @@ public class Resources {
 	public final static String ICN_SIDEBAR_TYP	 		= registerICN("/icons/sidebar/color_swatch.png");
 	public final static String ICN_SIDEBAR_VIEWED 		= registerICN("/icons/sidebar/viewed.png");
 	public final static String ICN_SIDEBAR_UNVIEWED		= registerICN("/icons/sidebar/unviewed.png");
+	public final static String ICN_SIDEBAR_STATUS		= registerICN("/icons/sidebar/dashboard.png");
 	// ##############################################  <SIDEBAR>  ############################################
 	
 	

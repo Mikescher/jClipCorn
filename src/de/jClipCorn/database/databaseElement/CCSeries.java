@@ -1,5 +1,6 @@
 package de.jClipCorn.database.databaseElement;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Vector;
 
@@ -7,7 +8,9 @@ import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFormat;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieQuality;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieSize;
+import de.jClipCorn.database.databaseElement.columnTypes.CCMovieStatus;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTyp;
+import de.jClipCorn.database.databaseElement.columnTypes.CombinedMovieQuality;
 import de.jClipCorn.util.CCDate;
 import de.jClipCorn.util.YearRange;
 
@@ -185,8 +188,8 @@ public class CCSeries extends CCDatabaseElement {
 		return null;
 	}
 	
-	public ArrayList<String> getAbsolutePathList() {
-		ArrayList<String> result = new ArrayList<>();
+	public ArrayList<File> getAbsolutePathList() {
+		ArrayList<File> result = new ArrayList<>();
 		
 		for (int i = 0; i < seasons.size(); i++) {
 			result.addAll(getSeason(i).getAbsolutePathList());
@@ -204,5 +207,9 @@ public class CCSeries extends CCDatabaseElement {
 		}
 		
 		return false;
+	}
+
+	public CombinedMovieQuality getCombinedQuality() {
+		return new CombinedMovieQuality(getQuality(), CCMovieStatus.STATUS_OK);
 	}
 }

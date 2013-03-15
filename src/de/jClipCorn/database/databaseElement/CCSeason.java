@@ -1,6 +1,7 @@
 package de.jClipCorn.database.databaseElement;
 
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Vector;
 
@@ -269,11 +270,11 @@ public class CCSeason {
 		}
 	}
 	
-	public ArrayList<String> getAbsolutePathList() {
-		ArrayList<String> result = new ArrayList<>();
+	public ArrayList<File> getAbsolutePathList() {
+		ArrayList<File> result = new ArrayList<>();
 		
 		for (int i = 0; i < episodes.size(); i++) {
-			result.add(getEpisode(i).getAbsolutePart());
+			result.add(new File(getEpisode(i).getAbsolutePart()));
 		}
 		
 		return result;

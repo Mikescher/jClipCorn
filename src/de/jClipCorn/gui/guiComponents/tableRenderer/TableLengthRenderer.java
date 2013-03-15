@@ -1,10 +1,8 @@
 package de.jClipCorn.gui.guiComponents.tableRenderer;
 
-import org.pushingpixels.substance.api.renderers.SubstanceDefaultTableCellRenderer;
-
 import de.jClipCorn.util.TimeIntervallFormatter;
 
-public class TableLengthRenderer extends SubstanceDefaultTableCellRenderer {
+public class TableLengthRenderer extends TableRenderer {
 	private static final long serialVersionUID = 1L;
 
 	public TableLengthRenderer() {

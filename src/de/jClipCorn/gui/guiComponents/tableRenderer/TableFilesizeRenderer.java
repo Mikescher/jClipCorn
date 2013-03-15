@@ -1,10 +1,8 @@
 package de.jClipCorn.gui.guiComponents.tableRenderer;
 
-import org.pushingpixels.substance.api.renderers.SubstanceDefaultTableCellRenderer;
-
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieSize;
 
-public class TableFilesizeRenderer extends SubstanceDefaultTableCellRenderer {
+public class TableFilesizeRenderer extends TableRenderer {
 	private static final long serialVersionUID = 1L;
 
 	public TableFilesizeRenderer() {

@@ -6,6 +6,7 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFormat;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieQuality;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieSize;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieStatus;
+import de.jClipCorn.database.databaseElement.columnTypes.CombinedMovieQuality;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.util.CCDate;
@@ -235,5 +236,9 @@ public class CCEpisode {
 		setViewed(true);
 		
 		setLastViewed(new CCDate());
+	}
+
+	public CombinedMovieQuality getCombinedQuality() {
+		return new CombinedMovieQuality(getQuality(), getStatus());
 	}
 }

@@ -1,10 +1,8 @@
 package de.jClipCorn.gui.guiComponents.tableRenderer;
 
-import org.pushingpixels.substance.api.renderers.SubstanceDefaultTableCellRenderer;
-
 import de.jClipCorn.util.CCDate;
 
-public class TableDateRenderer extends SubstanceDefaultTableCellRenderer {
+public class TableDateRenderer extends TableRenderer {
 	private static final long serialVersionUID = 1L;
 
 	public TableDateRenderer() {

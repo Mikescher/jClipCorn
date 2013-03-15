@@ -1,10 +1,8 @@
 package de.jClipCorn.gui.guiComponents.tableRenderer;
 
-import org.pushingpixels.substance.api.renderers.SubstanceDefaultTableCellRenderer;
-
 import de.jClipCorn.util.YearRange;
 
-public class TableYearRenderer extends SubstanceDefaultTableCellRenderer {
+public class TableYearRenderer extends TableRenderer {
 	private static final long serialVersionUID = 1L;
 
 	public TableYearRenderer() {

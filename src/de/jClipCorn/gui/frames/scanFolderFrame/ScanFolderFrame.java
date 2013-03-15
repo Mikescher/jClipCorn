@@ -26,6 +26,8 @@ import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
 
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFormat;
+import de.jClipCorn.gui.CachedResourceLoader;
+import de.jClipCorn.gui.Resources;
 import de.jClipCorn.gui.frames.addMovieFrame.AddMovieFrame;
 import de.jClipCorn.gui.frames.mainFrame.MainFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
@@ -73,6 +75,7 @@ public class ScanFolderFrame extends JFrame implements Runnable, MouseListener {
 	
 	private void initGUI() {
 		setTitle(LocaleBundle.getString("ScanFolderFrame.this.title")); //$NON-NLS-1$
+		setIconImage(CachedResourceLoader.getImage(Resources.IMG_FRAME_ICON));
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		
 		scrollPane = new JScrollPane();
@@ -184,21 +187,15 @@ public class ScanFolderFrame extends JFrame implements Runnable, MouseListener {
 		
 		if (dir.isDirectory()) {
 			// List of Files in Directory
-			ArrayList<String> filelist = new ArrayList<>();
+			ArrayList<File> filelist = new ArrayList<>();
 			searchFiles(dir, filelist);
-			for (int i = 0; i < filelist.size(); i++) {
-				filelist.set(i, filelist.get(i).toLowerCase()); //TODO Jetzt ist alles Lowercase -> auch in der Liste (und dass Regex failt auchnoch)
-			}
 			
 			// List of Files in in Database
-			ArrayList<String> movielist = owner.getMovielist().getAbsolutePathList(includeSeries); // is this threadsafe ??
-			for (int i = 0; i < movielist.size(); i++) {
-				movielist.set(i, movielist.get(i).toLowerCase());
-			}
+			ArrayList<File> movielist = owner.getMovielist().getAbsolutePathList(includeSeries);
 			
 			filelist.removeAll(movielist);
 
-			for (String f : filelist) {
+			for (File f : filelist) {
 				addToList(f);
 			}
 
@@ -216,7 +213,7 @@ public class ScanFolderFrame extends JFrame implements Runnable, MouseListener {
 		});
 	}
 
-	private void searchFiles(File dir, ArrayList<String> filelist) {
+	private void searchFiles(File dir, ArrayList<File> filelist) {
 		File[] files = dir.listFiles(new FileFilter() {
 			@Override
 			public boolean accept(File f) {
@@ -227,16 +224,16 @@ public class ScanFolderFrame extends JFrame implements Runnable, MouseListener {
 			if (f.isDirectory()) {
 				searchFiles(f, filelist);
 			} else {
-				filelist.add(f.getAbsolutePath());
+				filelist.add(f);
 			}
 		}
 	}
 	
-	private void addToList(final String f) {
+	private void addToList(final File f) {
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				lsModel.addElement(f);
+				lsModel.addElement(f.getAbsolutePath());
 			}
 		});
 	}

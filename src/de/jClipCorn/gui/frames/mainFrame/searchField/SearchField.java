@@ -6,6 +6,7 @@ import java.awt.event.FocusListener;
 
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
@@ -16,7 +17,6 @@ public class SearchField extends JTextField implements FocusListener, DocumentLi
 	private static final long serialVersionUID = -93240990085507647L;
 
 	private final static String EMPTY_VAL = LocaleBundle.getString("MainFrame.searchTerm_standard"); //$NON-NLS-1$
-	private final static Color RESET_COLOR = Color.GRAY; //TODO USE Colors from Look'n'Feel
 
 	private final MainFrame owner;
 
@@ -33,7 +33,7 @@ public class SearchField extends JTextField implements FocusListener, DocumentLi
 	public void focusGained(FocusEvent arg0) {
 		if (getText().equals(EMPTY_VAL)) {
 			setText(""); //$NON-NLS-1$
-			setForeground(Color.BLACK); //TODO USE Colors from Look'n'Feel
+			setForeground(UIManager.getColor("TextField.foreground")); //$NON-NLS-1$
 			setHorizontalAlignment(LEFT);
 		}
 	}
@@ -44,11 +44,26 @@ public class SearchField extends JTextField implements FocusListener, DocumentLi
 			reset();
 		}
 	}
+	
+	private Color getInactiveColor() {
+		Color c = UIManager.getColor("TextField.foreground"); //$NON-NLS-1$
+		int r = c.getRed();
+		int g = c.getGreen();
+		int b = c.getBlue();
+		
+		Color c2 = UIManager.getColor("TextPane.background"); //$NON-NLS-1$
+		int r2 = c2.getRed();
+		int g2 = c2.getGreen();
+		int b2 = c2.getBlue();
+		
+		return new Color((r+r2)/2, (g+g2)/2, (b+b2)/2);
+	}
 
 	public void reset() {
 		if (!hasFocus()) {
 			setText(EMPTY_VAL);
-			setForeground(RESET_COLOR);
+			
+			setForeground(getInactiveColor());
 			setHorizontalAlignment(CENTER);
 		}
 	}
@@ -59,7 +74,7 @@ public class SearchField extends JTextField implements FocusListener, DocumentLi
 			public void run() {
 				if (!getText().equals(EMPTY_VAL)) {
 					owner.startSearch();
-					setForeground(Color.BLACK); //TODO USE Colors from Look'n'Feel
+					setForeground(UIManager.getColor("TextField.foreground")); //$NON-NLS-1$
 					setHorizontalAlignment(LEFT);
 				}
 			}

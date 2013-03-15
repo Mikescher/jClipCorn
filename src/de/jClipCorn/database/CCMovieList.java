@@ -448,14 +448,14 @@ public class CCMovieList {
 		return new File(PathFormatter.getRealSelfDirectory() + CCProperties.getInstance().PROP_DATABASE_NAME.getValue() + '\\');
 	}
 	
-	public ArrayList<String> getAbsolutePathList(boolean includeSeries) {
-		ArrayList<String> result = new ArrayList<>();
+	public ArrayList<File> getAbsolutePathList(boolean includeSeries) {
+		ArrayList<File> result = new ArrayList<>();
 		
 		for (int i = 0; i < list.size(); i++) {
 			CCDatabaseElement dbe = getDatabaseElementBySort(i);
 			if (dbe.isMovie()) {
 				for (int j = 0; j < ((CCMovie)dbe).getPartcount(); j++) {
-					result.add(((CCMovie)dbe).getAbsolutePart(j));
+					result.add(new File(((CCMovie)dbe).getAbsolutePart(j)));
 				}
 			} else if (includeSeries){
 				result.addAll(((CCSeries)dbe).getAbsolutePathList());
@@ -482,5 +482,14 @@ public class CCMovieList {
 		}
 		
 		return false;
+	}
+
+	public void resetAllMovieViewed(boolean to) {
+		for (int i = 0; i < getElementCount(); i++) {
+			CCDatabaseElement d = getDatabaseElementBySort(i);
+			if (d.isMovie()) {
+				((CCMovie)d).setViewed(to);
+			}
+		}
 	}
 }

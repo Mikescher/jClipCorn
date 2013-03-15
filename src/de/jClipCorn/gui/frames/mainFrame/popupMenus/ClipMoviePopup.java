@@ -18,7 +18,7 @@ public class ClipMoviePopup extends ClipPopupMenu {
 		//#############
 		
 		addActionMenu("SetMovieRating").add("SetRatingNO").add("SetRating0").add("SetRating1").add("SetRating2").add("SetRating3").add("SetRating4").add("SetRating5");
-		//TODO Set Status
+		addActionMenu("SetMovieStatus").add("SetStatus0").add("SetStatus1").add("SetStatus2");
 		
 		addAction("SetMovieViewed");
 		addAction("SetMovieUnviewed");

@@ -1,12 +1,10 @@
 package de.jClipCorn.gui.guiComponents.tableRenderer;
 
-import org.pushingpixels.substance.api.renderers.SubstanceDefaultTableCellRenderer;
-
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.gui.CachedResourceLoader;
 import de.jClipCorn.gui.Resources;
 
-public class TableTitleRenderer extends SubstanceDefaultTableCellRenderer {
+public class TableTitleRenderer extends TableRenderer {
 	private static final long serialVersionUID = 1L;
 
 	public TableTitleRenderer() {

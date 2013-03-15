@@ -3,11 +3,12 @@ package de.jClipCorn.gui.guiComponents.tableRenderer;
 import java.awt.Component;
 
 import javax.swing.JTable;
-import javax.swing.table.DefaultTableCellRenderer;
+
+import org.pushingpixels.substance.api.renderers.SubstanceDefaultTableCellRenderer;
 
 import de.jClipCorn.util.LookAndFeelManager;
 
-public class TableRenderer extends DefaultTableCellRenderer {
+public class TableRenderer extends SubstanceDefaultTableCellRenderer {
 	private static final long serialVersionUID = -5742763325569140076L;
 
 	public TableRenderer() {

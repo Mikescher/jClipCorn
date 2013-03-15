@@ -44,6 +44,8 @@ public class CCLogElement {
 			return getFormatted(FORMAT_LEVEL_FULL);
 		} else if (type == CCLogType.LOG_ELEM_WARNING) {
 			return getFormatted(FORMAT_LEVEL_MID);
+		} else if (type == CCLogType.LOG_ELEM_UNDEFINED) {
+			return getFormatted(FORMAT_LEVEL_FULL);
 		} else {
 			return getFormatted(FORMAT_LEVEL_SHORT);
 		}

@@ -6,13 +6,14 @@ import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.gui.Resources;
 import de.jClipCorn.gui.frames.mainFrame.MainFrame;
 import de.jClipCorn.gui.log.CCLog;
+import de.jClipCorn.gui.log.ExceptionHandler;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.DriveMap;
 import de.jClipCorn.util.LookAndFeelManager;
 
 public class Main {
 	public final static String TITLE = "jClipCorn"; //$NON-NLS-1$
-	public final static String VERSION = "1.0";	//$NON-NLS-1$
+	public final static String VERSION = "1.1";	//$NON-NLS-1$
 	public final static String DBVERSION = "1.5"; 	//$NON-NLS-1$
 	
 	private final static String PROPERTIES_PATH = "jClipcorn.properties"; //$NON-NLS-1$
@@ -23,6 +24,8 @@ public class Main {
 		new CCProperties(PROPERTIES_PATH); // MUSS ALS ERSTES CREATED WERDEN - FUCKING IMPORTANT
 		
 		CCLog.setPath(CCProperties.getInstance().PROP_LOG_PATH.getValue());
+		
+		Thread.setDefaultUncaughtExceptionHandler(ExceptionHandler.getInstance()); // For Main Thread
 		
 		LookAndFeelManager.setLookAndFeel(CCProperties.getInstance().PROP_UI_LOOKANDFEEL.getValue());
 		
@@ -57,11 +60,8 @@ public class Main {
 	}
 }
 
-//TODO Logg ALL EXCEPTIONS (under UNDEFINIED)
 //http://www.themoviedb.org/search/movie?query=lazarus%20projekt
 
-//TODO Faster Load
-//TODO Fast way to change viewed | score state (frame - shows over - you press key for yes or no -> next cover)
 //TODO Possibilty to mass change series File Location (4 my series)
 //TODO statistics page
 //TODO Auto parse Summary 
@@ -72,4 +72,3 @@ public class Main {
 //TODO [other] Better jQCCounter ;)
 //TODO Test if everything works with Metal UI
 //TODO Testen ob die Button größen mit allen 3 Sprachen so passen
-//TODO About Screen

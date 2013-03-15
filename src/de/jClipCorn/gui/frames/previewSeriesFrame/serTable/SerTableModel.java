@@ -64,7 +64,7 @@ public class SerTableModel extends AbstractTableModel implements TableModelRowCo
 		case 3: // Last Viewed
 			return ep.getLastViewed();
 		case 4: // Quality
-			return ep.getQuality();
+			return ep.getCombinedQuality();
 		case 5: // Length
 			return ep.getLength();
 		case 6: // Add Date

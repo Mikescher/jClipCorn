@@ -20,17 +20,17 @@ public class ClipTableModel extends AbstractTableModel implements TableModelRowC
 	private final static Color COLOR_BACKGROUNDGRAY = new Color(240, 240, 240); // F0F0F0 (clBtnFace)
 
 	private final static Color[] COLOR_ONLINESCORE = {
-		new Color(0xFF0000),
-		new Color(0xE80C00),
-		new Color(0xD31900),
-		new Color(0xBD2600),
-		new Color(0xA83200),
-		new Color(0x923F00),
-		new Color(0x7C4C00),
-		new Color(0x665900),
-		new Color(0x516500),
-		new Color(0x3B7200),
-		new Color(0x267F00)
+		new Color(0xFF4900),
+		new Color(0xFF7400),
+		new Color(0xFF9200),
+		new Color(0xFFAA00),
+		new Color(0xFFBF00),
+		new Color(0xFFD300),
+		new Color(0xFFE800),
+		new Color(0xFFFF00),
+		new Color(0xCCF600),
+		new Color(0x9FEE00),
+		new Color(0x67E300)
 	};
 	
 	private static final String[] columnNames = {
@@ -94,7 +94,7 @@ public class ClipTableModel extends AbstractTableModel implements TableModelRowC
 			case 3: // Zyklus
 				return mov.getZyklus();
 			case 4: // Quality
-				return mov;
+				return mov.getCombinedQuality();
 			case 5: // Language
 				return mov.getLanguage();
 			case 6: // Genres
@@ -130,7 +130,7 @@ public class ClipTableModel extends AbstractTableModel implements TableModelRowC
 			case 3: // Zyklus
 				return new CCMovieZyklus();
 			case 4: // Quality
-				return ser.getQuality();
+				return ser.getCombinedQuality();
 			case 5: // Language
 				return ser.getLanguage();
 			case 6: // Genres
@@ -176,7 +176,7 @@ public class ClipTableModel extends AbstractTableModel implements TableModelRowC
 		case 1:
 			return (row%2==0) ? (Color.WHITE) : (COLOR_BACKGROUNDGRAY);
 		case 2:
-			return COLOR_ONLINESCORE[movielist.getDatabaseElementBySort(row).getOnlinescore().asInt()]; //TODO harmonische Farben benutzen
+			return COLOR_ONLINESCORE[movielist.getDatabaseElementBySort(row).getOnlinescore().asInt()];
 		default:
 			return Color.MAGENTA;
 		}

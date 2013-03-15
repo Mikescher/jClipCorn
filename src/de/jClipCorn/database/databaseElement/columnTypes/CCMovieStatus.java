@@ -1,5 +1,9 @@
 package de.jClipCorn.database.databaseElement.columnTypes;
 
+import javax.swing.ImageIcon;
+
+import de.jClipCorn.gui.CachedResourceLoader;
+import de.jClipCorn.gui.Resources;
 import de.jClipCorn.gui.localization.LocaleBundle;
 
 public enum CCMovieStatus {
@@ -38,4 +42,27 @@ public enum CCMovieStatus {
 		return null;
 	}
 
+	public ImageIcon getIcon() {
+		switch (this) {
+		case STATUS_LOWQUALITY:
+		case STATUS_MISSINGVIDEOTIME:
+			return CachedResourceLoader.getImageIcon(Resources.ICN_TABLE_QUALITY_STATUS);
+		case STATUS_OK:
+			return CachedResourceLoader.getImageIcon(Resources.ICN_TABLE_STATUS_OK);
+		default:
+			return null;
+		}
+	}
+
+	public String getIconName() {
+		switch (this) {
+		case STATUS_LOWQUALITY:
+		case STATUS_MISSINGVIDEOTIME:
+			return Resources.ICN_TABLE_QUALITY_STATUS;
+		case STATUS_OK:
+			return Resources.ICN_TABLE_STATUS_OK;
+		default:
+			return ""; //$NON-NLS-1$
+		}
+	}
 }

@@ -1,8 +1,6 @@
 package de.jClipCorn.gui.guiComponents.tableRenderer;
 
-import org.pushingpixels.substance.api.renderers.SubstanceDefaultTableCellRenderer;
-
-public class TableStringTitleRenderer extends SubstanceDefaultTableCellRenderer {
+public class TableStringTitleRenderer extends TableRenderer {
 	private static final long serialVersionUID = -2857849315740108323L;
 
 	public TableStringTitleRenderer() {

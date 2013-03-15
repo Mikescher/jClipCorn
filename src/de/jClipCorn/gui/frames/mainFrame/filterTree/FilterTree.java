@@ -13,6 +13,7 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCMovieLanguage;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieOnlineScore;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieQuality;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieScore;
+import de.jClipCorn.database.databaseElement.columnTypes.CCMovieStatus;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTyp;
 import de.jClipCorn.gui.CachedResourceLoader;
 import de.jClipCorn.gui.Resources;
@@ -25,6 +26,7 @@ import de.jClipCorn.gui.guiComponents.tableFilter.TableLanguageFilter;
 import de.jClipCorn.gui.guiComponents.tableFilter.TableOnlinescoreFilter;
 import de.jClipCorn.gui.guiComponents.tableFilter.TableQualityFilter;
 import de.jClipCorn.gui.guiComponents.tableFilter.TableScoreFilter;
+import de.jClipCorn.gui.guiComponents.tableFilter.TableStatusFilter;
 import de.jClipCorn.gui.guiComponents.tableFilter.TableTypFilter;
 import de.jClipCorn.gui.guiComponents.tableFilter.TableViewedFilter;
 import de.jClipCorn.gui.guiComponents.tableFilter.TableYearFilter;
@@ -43,6 +45,7 @@ public class FilterTree extends AbstractFilterTree {
 	private DefaultMutableTreeNode node_year;
 	private DefaultMutableTreeNode node_format;
 	private DefaultMutableTreeNode node_quality;
+	private DefaultMutableTreeNode node_status;
 	private DefaultMutableTreeNode node_language;
 	private DefaultMutableTreeNode node_typ;
 	private DefaultMutableTreeNode node_viewed;
@@ -63,7 +66,7 @@ public class FilterTree extends AbstractFilterTree {
 			public void actionPerformed(ActionEvent arg0) {
 				table.setRowFilter(null, RowFilterSource.SIDEBAR);
 			}
-		}; //TODO Add Status
+		};
 		
 		node_all = addNodeI(null, null, null, null);
 		initAll();
@@ -91,6 +94,9 @@ public class FilterTree extends AbstractFilterTree {
 		
 		node_quality = addNode(null, Resources.ICN_SIDEBAR_QUALITY, LocaleBundle.getString("FilterTree.Quality"), reset); //$NON-NLS-1$
 		initQuality();
+		
+		node_status = addNode(null, Resources.ICN_SIDEBAR_STATUS, LocaleBundle.getString("FilterTree.Status"), reset); //$NON-NLS-1$
+		initStatus();
 		
 		node_language = addNode(null, Resources.ICN_SIDEBAR_LANGUAGE, LocaleBundle.getString("FilterTree.Language"), reset); //$NON-NLS-1$
 		initLanguage();
@@ -178,6 +184,17 @@ public class FilterTree extends AbstractFilterTree {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					table.setRowFilter(new TableQualityFilter(quality), RowFilterSource.SIDEBAR);
+				}
+			});
+		}
+	}
+	
+	private void initStatus() {
+		for (final CCMovieStatus status : CCMovieStatus.values()) {
+			addNodeI(node_status, status.getIcon(), status.asString(), new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					table.setRowFilter(new TableStatusFilter(status), RowFilterSource.SIDEBAR);
 				}
 			});
 		}

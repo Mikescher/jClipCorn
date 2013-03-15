@@ -5,17 +5,15 @@ import javax.swing.RowFilter;
 import org.apache.commons.lang.StringUtils;
 
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
-import de.jClipCorn.database.databaseElement.CCMovie;
+import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFormat;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieGenreList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieLanguage;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieQuality;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieZyklus;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFormat;
+import de.jClipCorn.database.databaseElement.columnTypes.CombinedMovieQuality;
 import de.jClipCorn.gui.frames.mainFrame.clipTable.ClipTableModel;
 import de.jClipCorn.util.YearRange;
 
 public class TableSearchFilter extends RowFilter<ClipTableModel, Object> {
-
 	private final String searchTerm;
 	
 	public TableSearchFilter(String term) {
@@ -36,16 +34,9 @@ public class TableSearchFilter extends RowFilter<ClipTableModel, Object> {
 			return true;
 		}
 		
-		if (e.getValue(4) instanceof CCMovieQuality) {
-			if (((CCMovieQuality)e.getValue(4)).asString().equalsIgnoreCase(searchTerm)) {
-				return true;
-			}
-		} else {
-			if (((CCMovie)e.getValue(4)).getQuality().asString().equalsIgnoreCase(searchTerm)) {
-				return true;
-			}
+		if (((CombinedMovieQuality)e.getValue(4)).asString().equalsIgnoreCase(searchTerm)) {
+			return true;
 		}
-		
 		
 		if (((CCMovieLanguage)e.getValue(5)).asString().equalsIgnoreCase(searchTerm)) {
 			return true;

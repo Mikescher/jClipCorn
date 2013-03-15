@@ -9,6 +9,7 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCMovieSize;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieStatus;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTyp;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieZyklus;
+import de.jClipCorn.database.databaseElement.columnTypes.CombinedMovieQuality;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.util.CCDate;
@@ -239,5 +240,9 @@ public class CCMovie extends CCDatabaseElement {
 		MoviePlayer.play(this);
 		
 		setViewed(true);
+	}
+
+	public CombinedMovieQuality getCombinedQuality() {
+		return new CombinedMovieQuality(getQuality(), getStatus());
 	}
 }

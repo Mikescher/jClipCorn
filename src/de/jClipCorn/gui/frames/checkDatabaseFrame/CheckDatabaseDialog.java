@@ -64,7 +64,7 @@ public class CheckDatabaseDialog extends JDialog {
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		setIconImage(CachedResourceLoader.getImage(Resources.IMG_FRAME_ICON));
 		setTitle(LocaleBundle.getString("CheckDatabaseDialog.this.title")); //$NON-NLS-1$
-		setModal(true);
+		setModal(false); //Modality is sucking ***
 		setBounds(100, 100, 750, 400);
 		setLocationRelativeTo(owner);
 		

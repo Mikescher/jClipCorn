@@ -114,6 +114,7 @@ public class InputErrorDialog extends JDialog {
 	
 	private void onIgnoreClicked() {
 		owner.onAMIEDIgnoreClicked();
+		dispose();
 	}
 }
 

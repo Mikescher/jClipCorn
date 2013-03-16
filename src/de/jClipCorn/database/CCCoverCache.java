@@ -3,7 +3,6 @@ package de.jClipCorn.database;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -139,26 +138,24 @@ public class CCCoverCache {
 	}
 
 	public String addCover(BufferedImage newCover) {
-		if (cache.containsValue(newCover)) { // Abfangen ob Cover (DAS EXAKT GLEICHE OBJEKT) bereits in Liste ist.
-			for (Entry<String, BufferedImage> e : cache.entrySet()) {
-				if (e.getValue() == newCover) { // Hier wird ABSICHTLICH mit == verglichen, ich will wissen ob es das gleiche Objekt ist
-					return e.getKey();
-				}
-			}
-		}
 		return addNewCoverToFolder(newCover, MAX_COVER_CREATE_TRYS); 
 	}
 
 	private String addNewCoverToFolder(BufferedImage cov, int tryc) {
-		biggestCoverId = 1000;
-
+		biggestCoverId++;
+		
 		int id = biggestCoverId;
 
 		String fname = CCProperties.getInstance().PROP_COVER_PREFIX.getValue() + id + '.' + CCProperties.getInstance().PROP_COVER_TYPE.getValue();
 		String path = databasePath + fname;
 
 		try {
-			ImageIO.write(cov, CCProperties.getInstance().PROP_COVER_TYPE.getValue(), new File(path));
+			File f = new File(path);
+			if (! f.exists()) {
+				ImageIO.write(cov, CCProperties.getInstance().PROP_COVER_TYPE.getValue(), f);
+			} else {
+				CCLog.addError(LocaleBundle.getFormattedString("LogMessage.TryOverwriteFile", path)); //$NON-NLS-1$
+			}
 
 			return fname;
 		} catch (IOException e) {
@@ -184,5 +181,7 @@ public class CCCoverCache {
 		if (!f.delete()) {
 			CCLog.addWarning(LocaleBundle.getFormattedString("LogMessage.DeleteCover", covername)); //$NON-NLS-1$
 		}
+		
+		cache.remove(covername);
 	}
 }

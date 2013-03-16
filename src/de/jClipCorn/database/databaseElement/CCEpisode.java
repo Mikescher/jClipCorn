@@ -73,6 +73,10 @@ public class CCEpisode {
 	public void setViewed(boolean v) {
 		this.isViewed = v;
 		
+		if (! v) {
+			resetLastViewed();
+		}
+		
 		updateDB();
 	}
 	
@@ -130,6 +134,12 @@ public class CCEpisode {
 
 	public void setLastViewed(CCDate date) {
 		this.lastViewed = date;
+		
+		updateDB();
+	}
+	
+	public void resetLastViewed() {
+		this.lastViewed = CCDate.getNewMinimumDate();
 		
 		updateDB();
 	}
@@ -240,5 +250,21 @@ public class CCEpisode {
 
 	public CombinedMovieQuality getCombinedQuality() {
 		return new CombinedMovieQuality(getQuality(), getStatus());
+	}
+	
+	/**
+	 * @return the Number of the Season (as it is in the Series-List) (NOT THE ID)
+	 */
+	public int getEpisodeNumber() {
+		return getSeason().findEpisode(this);
+	}
+	
+	public void delete() {
+		getSeason().deleteEpisode(this);
+	}
+	
+	@Override
+	public String toString() {
+		return getTitle();
 	}
 }

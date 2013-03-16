@@ -102,17 +102,48 @@ public class SerTable extends JScrollPane implements ListSelectionListener, Mous
 	}
 
 	@Override
-	public void mousePressed(MouseEvent arg0) {
-		// Do Nothing
-	}
-
-	@Override
-	public void mouseReleased(MouseEvent arg0) {
-		// Do Nothing
-	}
-
-	@Override
 	public void valueChanged(ListSelectionEvent arg0) {
 		// Do Nothing
+	}
+
+	public void select(CCEpisode e) {
+		if (e == null) {
+			changeSeason(null);
+			table.getSelectionModel().clearSelection();
+		} else {
+			changeSeason(e.getSeason());
+			table.getSelectionModel().setSelectionInterval(e.getEpisodeNumber(), e.getEpisodeNumber());
+			table.scrollRectToVisible(table.getCellRect(table.getSelectedRow(), table.getSelectedColumn(), false));
+		}
+	}
+	
+	@Override
+	public void mousePressed(MouseEvent e) {
+		onMouseAction(e);
+	}
+	
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		onMouseAction(e);
+	}
+
+	private void onMouseAction(MouseEvent e) {
+		if (e.getClickCount() == 1 && e.getButton() == MouseEvent.BUTTON3) {
+			int r = table.rowAtPoint(e.getPoint());
+			if (r >= 0 && r < table.getRowCount()) {
+				table.setRowSelectionInterval(r, r);
+			} else {
+				table.clearSelection();
+			}
+
+			int rowindex = table.getSelectedRow();
+			if (rowindex >= 0) {
+				if (e.isPopupTrigger()) {
+					if (getSelectedEpisode() != null) {
+						(new SerTablePopupMenu(getSelectedEpisode(), owner)).show(e.getComponent(), e.getX(), e.getY());
+					}
+				}
+			}
+		}
 	}
 }

@@ -27,7 +27,7 @@ public class CombinedMovieQuality {
 		if (status == CCMovieStatus.STATUS_OK) {
 			return quality.getIcon();
 		} else {
-			return quality.getIcon();
+			return status.getIcon();
 		}
 	}
 

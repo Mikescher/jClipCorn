@@ -252,7 +252,7 @@ public class CCSeason {
 	
 	public int getNewUnusedEpisodeNumber() {
 		for (int i = 1;; i++) {
-			if (getEpisode(i) == null) {
+			if (getEpisodebyNumber(i) == null) {
 				return i;
 			}
 		}
@@ -288,5 +288,20 @@ public class CCSeason {
 		}
 		
 		return false;
+	}
+
+	public Vector<CCEpisode> getEpisodeList() {
+		return episodes;
+	}
+	
+	/**
+	 * @return the Number of the Season (as it is in the Series-List) (NOT THE ID)
+	 */
+	public int getSeasonNumber() {
+		return getSeries().findSeason(this);
+	}
+
+	public int findEpisode(CCEpisode ccEpisode) {
+		return episodes.indexOf(ccEpisode);
 	}
 }

@@ -210,6 +210,72 @@ public class CCSeries extends CCDatabaseElement {
 	}
 
 	public CombinedMovieQuality getCombinedQuality() {
-		return new CombinedMovieQuality(getQuality(), CCMovieStatus.STATUS_OK);
+		return new CombinedMovieQuality(getQuality(), CCMovieStatus.STATUS_OK); //TODO Calculate STatus for Series
+	}
+	
+	public ArrayList<CCEpisode> getEpisodeList() {
+		ArrayList<CCEpisode> result = new ArrayList<>();
+		
+		for (int i = 0; i < getSeasonCount(); i++) {
+			result.addAll(getSeason(i).getEpisodeList());
+		}
+		
+		return result;
+	}
+	
+	public CCEpisode getRandomEpisode() {
+		ArrayList<CCEpisode> eplist = getEpisodeList();
+		if (eplist.size() > 0) {
+			return eplist.get((int) (Math.random()*eplist.size()));
+		}
+		return null;
+	}
+	
+	public CCEpisode getRandomEpisodeWithViewState(boolean viewed) {
+		ArrayList<CCEpisode> eplist = getEpisodeList();
+		
+		for (int i = eplist.size() - 1; i >= 0; i--) {
+			if (eplist.get(i).isViewed() ^ viewed) {
+				eplist.remove(i);
+			}
+		}
+		
+		if (eplist.size() > 0) {
+			return eplist.get((int) (Math.random()*eplist.size()));
+		}
+		return null;
+	}
+	
+	public CCEpisode getNextEpisode() {
+		ArrayList<CCEpisode> el = getEpisodeList();
+		
+		if (el.size() == 0) {
+			return null;
+		}
+		
+		if (isViewed()) {
+			CCDate d = CCDate.getNewMinimumDate();
+			
+			for (int i = 0; i < el.size(); i++) {
+				if (d.isGreaterThan(el.get(i).getLastViewed())) {
+					return el.get(i);
+				}
+				d = el.get(i).getLastViewed();
+			}
+			
+			return el.get(0);
+		} else {
+			for (int i = 0; i < el.size(); i++) {
+				if (! el.get(i).isViewed()) {
+					return el.get(i);
+				}
+			}
+		}
+		
+		return null;
+	}
+
+	public int findSeason(CCSeason ccSeason) {
+		return seasons.indexOf(ccSeason);
 	}
 }

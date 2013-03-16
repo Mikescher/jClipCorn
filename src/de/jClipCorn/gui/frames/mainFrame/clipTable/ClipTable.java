@@ -123,25 +123,15 @@ public class ClipTable extends JScrollPane implements CCDBUpdateListener, ListSe
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		if (e.getClickCount() == 1 && e.getButton() == MouseEvent.BUTTON3) {
-			int r = table.rowAtPoint(e.getPoint());
-			if (r >= 0 && r < table.getRowCount()) {
-				table.setRowSelectionInterval(r, r);
-			} else {
-				table.clearSelection();
-			}
-
-			int rowindex = table.getSelectedRow();
-			if (rowindex >= 0) {
-				if (e.isPopupTrigger()) {
-					owner.onClipTableSecondaryExecute(getSelectedDatabaseElement(), e);
-				}
-			}
-		}
+		onMouseAction(e);
 	}
-
+	
 	@Override
 	public void mouseReleased(MouseEvent e) {
+		onMouseAction(e);
+	}
+
+	private void onMouseAction(MouseEvent e) {
 		if (e.getClickCount() == 1 && e.getButton() == MouseEvent.BUTTON3) {
 			int r = table.rowAtPoint(e.getPoint());
 			if (r >= 0 && r < table.getRowCount()) {

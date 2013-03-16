@@ -7,6 +7,7 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -26,6 +27,8 @@ import javax.swing.border.BevelBorder;
 import javax.swing.border.SoftBevelBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+
+import org.apache.commons.lang.StringUtils;
 
 import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.CCSeason;
@@ -53,9 +56,7 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 	private static final long serialVersionUID = 5484205983855802992L;
 
 	private CCSeries dispSeries;
-	//TODO Episode Search
-	//TODO Resume Play
-	//TODO Rightclick-popup-menu (change status, open folder, set viewed/uniewed, edit, delete, )
+	
 	private JPanel pnlTop;
 	private JPanel pnlInfo;
 	private JPanel pnlMainIntern;
@@ -108,6 +109,7 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 	private JMenuItem mntmGesehene;
 	private JMenuItem mntmNewMenuItem;
 	private Component vStrut_9;
+	private JMenuItem mntmResumePlaying;
 
 	public PreviewSeriesFrame(Component owner, CCSeries ser) {
 		this.dispSeries = ser;
@@ -148,10 +150,22 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 		pnlTopInfo.add(pnlSearch, BorderLayout.EAST);
 
 		edSearch = new JTextField();
+		edSearch.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				startSearch();
+			}
+		});
 		pnlSearch.add(edSearch);
 		edSearch.setColumns(16);
 
 		btnSearch = new JButton();
+		btnSearch.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				startSearch();
+			}
+		});
 		btnSearch.setIcon(CachedResourceLoader.getSmallImageIcon(Resources.ICN_FRAMES_SEARCH));
 		pnlSearch.add(btnSearch);
 
@@ -271,7 +285,7 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 		mntmAlle.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				//TODO Play random Episode
+				playRandomEpisode();
 			}
 		});
 		mnZuflligeEpisodeAbspielen.add(mntmAlle);
@@ -280,7 +294,7 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 		mntmGesehene.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				//TODO Play random viewed Episode 
+				playRandomViewedStateEpisode(true);
 			}
 		});
 		mnZuflligeEpisodeAbspielen.add(mntmGesehene);
@@ -289,7 +303,7 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 		mntmNewMenuItem.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				//TODO Play random not viewed Episode 
+				playRandomViewedStateEpisode(false);
 			}
 		});
 		mnZuflligeEpisodeAbspielen.add(mntmNewMenuItem);
@@ -301,6 +315,15 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 				HTTPUtilities.openInBrowser(ImDBImageParser.getSearchURL(dispSeries.getTitle(), CCMovieTyp.SERIES));
 			}
 		});
+		
+		mntmResumePlaying = new JMenuItem(LocaleBundle.getString("PreviewSeriesFrame.Menu.Extras.ResumePlay")); //$NON-NLS-1$
+		mntmResumePlaying.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				resumePlaying();
+			}
+		});
+		mnExtras.add(mntmResumePlaying);
 		mnExtras.add(mntmAufImdbAnzeigen);
 
 		pnlLeft = new JPanel();
@@ -451,9 +474,9 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 		}
 
 		if (dispSeries.getScore() == CCMovieScore.RATING_NO) {
-			lblScore.setText(LocaleBundle.getString("PreviewSeriesFrame.lblScore.text")); //$NON-NLS-1$
-		} else {
 			lblScore.setText(LocaleBundle.getString("PreviewSeriesFrame.lblScore.text") + " - "); //$NON-NLS-1$ //$NON-NLS-2$
+		} else {
+			lblScore.setText(LocaleBundle.getString("PreviewSeriesFrame.lblScore.text") + " " + dispSeries.getScore().asString()); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 
 		lblScore.setIcon(dispSeries.getScore().getIcon());
@@ -476,6 +499,10 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 		lblStaffel.setText(String.format("%s (%d)", s.getTitle(), s.getYear())); //$NON-NLS-1$
 		tabSeason.changeSeason(s);
 	}
+	
+	public void updateSeason() {
+		changeSeason(tabSeason.getSeason());
+	}
 
 	@Override
 	public void onUpdate(Object o) {
@@ -490,5 +517,59 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 		if (ep != null) {
 			ep.play();
 		}
+	}
+	
+	private void playRandomEpisode() {
+		CCEpisode e = dispSeries.getRandomEpisode();
+		
+		if (e != null) {
+			cvrChooser.setCurrSelected(e.getSeason().getSeasonNumber());
+			tabSeason.select(e);
+			e.play();
+		}
+	}
+	
+	private void playRandomViewedStateEpisode(boolean v) {
+		CCEpisode e = dispSeries.getRandomEpisodeWithViewState(v);
+		
+		if (e != null) {
+			cvrChooser.setCurrSelected(e.getSeason().getSeasonNumber());
+			tabSeason.select(e);
+			e.play();
+		}
+	}
+	
+	private void resumePlaying() {
+		CCEpisode e = dispSeries.getNextEpisode();
+		
+		if (e != null) {
+			cvrChooser.setCurrSelected(e.getSeason().getSeasonNumber());
+			tabSeason.select(e);
+			e.play();
+		}
+	}
+	
+	private void startSearch() {
+		ArrayList<CCEpisode> el = dispSeries.getEpisodeList();
+		
+		boolean found = false;
+		
+		for (int a = 0; a < 2; a++) {
+			for (int i = 0; i < el.size(); i++) {
+				if (found) {
+					if (StringUtils.containsIgnoreCase(el.get(i).getTitle(), edSearch.getText())) {
+						cvrChooser.setCurrSelected(el.get(i).getSeason().getSeasonNumber());
+						tabSeason.select(el.get(i));
+						return;
+					}
+				}
+				if (el.get(i) == tabSeason.getSelectedEpisode()) {
+					found  = true;
+				}
+			}
+			found = true;
+		}
+		
+		tabSeason.select(null);
 	}
 }

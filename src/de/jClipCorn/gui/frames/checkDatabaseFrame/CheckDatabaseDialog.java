@@ -430,5 +430,7 @@ public class CheckDatabaseDialog extends JDialog {
 		if (getRelativeDifference(size.getBytes(), episode.getFilesize().getBytes()) > MAX_SIZEDRIFT) {
 			addError(LocaleBundle.getString("CheckDatabaseDialog.Error.ERR_03"), episode); //$NON-NLS-1$
 		}
+		
+		//TODO LastViewed is Set but Viewed == false
 	}
 }

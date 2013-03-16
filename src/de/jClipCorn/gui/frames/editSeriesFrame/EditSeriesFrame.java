@@ -193,6 +193,37 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		addWindowListener(this);
 	}
 	
+	public EditSeriesFrame(Component owner, CCEpisode ep, UpdateCallbackListener ucl) {
+		super();
+		this.series = ep.getSeries();
+		this.listener = ucl;
+		this.videoFileChooser = new JFileChooser(PathFormatter.getAbsoluteSelfDirectory());
+		this.coverFileChooser = new JFileChooser(PathFormatter.getAbsoluteSelfDirectory());
+		
+		initGUI();
+		setDefaultValues();
+		initFileChooser();
+		
+		if (series != null) { //Sonst mag mich der WindowBuilder nicht mehr  :'(
+			updateSeriesPanel();
+		}
+		
+		setLocationRelativeTo(owner);
+		
+		addWindowListener(this);
+		
+		selectSeason(ep.getSeason());
+		selectEpisode(ep);
+	}
+	
+	private void selectEpisode(CCEpisode e) {
+		lsEpisodes.setSelectedIndex(e.getEpisodeNumber()); // Calls the Listener
+	}
+
+	private void selectSeason(CCSeason s) {
+		lsSeasons.setSelectedIndex(s.getSeasonNumber()); // Calls the Listener
+	}
+
 	private void initGUI() {
 		setSize(new Dimension(1200, 700));
 		setIconImage(CachedResourceLoader.getImage(Resources.IMG_FRAME_ICON));

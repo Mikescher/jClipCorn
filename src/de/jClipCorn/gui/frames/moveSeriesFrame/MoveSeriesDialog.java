@@ -1,8 +1,15 @@
 package de.jClipCorn.gui.frames.moveSeriesFrame;
 
 import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
+import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JTextField;
 
 import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.CCSeason;
@@ -12,14 +19,7 @@ import de.jClipCorn.gui.Resources;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.DialogHelper;
 
-import javax.swing.JLabel;
-import javax.swing.JTextField;
-import javax.swing.JButton;
-import java.awt.Dimension;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-
-public class MoveSeriesFrame extends JFrame {
+public class MoveSeriesDialog extends JDialog {
 	private static final long serialVersionUID = 8795232362998343872L;
 	
 	private final CCSeries series;
@@ -30,7 +30,7 @@ public class MoveSeriesFrame extends JFrame {
 	private JTextField edReplace;
 	private JButton btnNewButton;
 
-	public MoveSeriesFrame(Component owner, CCSeries series) {
+	public MoveSeriesDialog(Component owner, CCSeries series) {
 		super();
 		setSize(new Dimension(225, 185));
 		this.series = series;
@@ -46,6 +46,7 @@ public class MoveSeriesFrame extends JFrame {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setIconImage(CachedResourceLoader.getImage(Resources.IMG_FRAME_ICON));
 		setResizable(false);
+		setModal(true);
 		getContentPane().setLayout(null);
 		
 		lblReplace = new JLabel(LocaleBundle.getString("MoveSeriesFrame.lblReplace.text")); //$NON-NLS-1$

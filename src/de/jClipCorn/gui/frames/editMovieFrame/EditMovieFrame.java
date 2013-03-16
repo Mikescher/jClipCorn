@@ -394,7 +394,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		cbxGenre3.setBounds(506, 118, 212, 22);
 		getContentPane().add(cbxGenre3);
 		
-		label_10 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGenre_1.text")); //$NON-NLS-1$
+		label_10 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGenre_3.text")); //$NON-NLS-1$
 		label_10.setBounds(418, 121, 52, 16);
 		getContentPane().add(label_10);
 		
@@ -805,7 +805,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		currentCoverImage = movie.getCover();
 		lblCover.setIcon(new ImageIcon(currentCoverImage));
 		
-		updateFilesize();
+		updateByteDisp();
 		testPaths();
 	}
 	

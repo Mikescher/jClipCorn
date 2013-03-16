@@ -26,7 +26,7 @@ import de.jClipCorn.gui.frames.editMovieFrame.EditMovieFrame;
 import de.jClipCorn.gui.frames.editSeriesFrame.EditSeriesFrame;
 import de.jClipCorn.gui.frames.logFrame.LogFrame;
 import de.jClipCorn.gui.frames.mainFrame.MainFrame;
-import de.jClipCorn.gui.frames.moveSeriesFrame.MoveSeriesFrame;
+import de.jClipCorn.gui.frames.moveSeriesFrame.MoveSeriesDialog;
 import de.jClipCorn.gui.frames.previewMovieFrame.PreviewMovieFrame;
 import de.jClipCorn.gui.frames.previewSeriesFrame.PreviewSeriesFrame;
 import de.jClipCorn.gui.frames.scanFolderFrame.ScanFolderFrame;
@@ -515,7 +515,7 @@ public class CCActionTree {
 		CCDatabaseElement el = owner.getSelectedElement();
 
 		if (el.isSeries()) {
-			MoveSeriesFrame msf = new MoveSeriesFrame(owner, (CCSeries) el);
+			MoveSeriesDialog msf = new MoveSeriesDialog(owner, (CCSeries) el);
 			msf.setVisible(true);
 		}
 	}

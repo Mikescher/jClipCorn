@@ -57,6 +57,7 @@ import de.jClipCorn.gui.guiComponents.CCDateEditor;
 import de.jClipCorn.gui.guiComponents.SpinnerCCDateModel;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
+import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.CCDate;
 import de.jClipCorn.util.DialogHelper;
 import de.jClipCorn.util.FileChooserHelper;
@@ -173,6 +174,9 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 	private JButton btnEpisodeOK;
 	private JButton btnResetAllStatus;
 
+	/**
+	 * @wbp.parser.constructor
+	 */
 	public EditSeriesFrame(Component owner, CCSeries ser, UpdateCallbackListener ucl) {
 		super();
 		this.series = ser;
@@ -1235,13 +1239,9 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 	}
 	
 	private void testEpisodePart() {
-		CCEpisode episode = getSelectedEpisode();
+		String path = PathFormatter.getAbsolute(edEpisodePart.getText());
 		
-		if (episode == null) {
-			return;
-		}
-		
-		if (new File(episode.getAbsolutePart()).exists()) {
+		if (new File(path).exists()) {
 			edEpisodePart.setBackground(UIManager.getColor("TextField.background")); //$NON-NLS-1$
 		} else {
 			edEpisodePart.setBackground(Color.RED);
@@ -1249,13 +1249,9 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 	}
 	
 	private void recalcEpisodeFilesize() {
-		CCEpisode episode = getSelectedEpisode();
+		String path = PathFormatter.getAbsolute(edEpisodePart.getText());
 		
-		if (episode == null) {
-			return;
-		}
-		
-		spnEpisodeSize.setValue(FileSizeFormatter.getFileSize(episode.getAbsolutePart()));
+		spnEpisodeSize.setValue(FileSizeFormatter.getFileSize(path));
 	}
 	
 	private void openEpisodePart() {
@@ -1265,7 +1261,15 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 			return;
 		}
 		
-		edEpisodePart.setText(videoFileChooser.getSelectedFile().getAbsolutePath());
+		String t = videoFileChooser.getSelectedFile().getAbsolutePath();
+		String pt;
+		if (CCProperties.getInstance().PROP_ADD_MOVIE_RELATIVE_AUTO.getValue()) {
+			pt = PathFormatter.getRelative(t);
+		} else {
+			pt = t;
+		}
+		
+		edEpisodePart.setText(pt);
 		
 		recalcEpisodeFilesize();
 		

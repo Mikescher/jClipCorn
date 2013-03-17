@@ -102,6 +102,8 @@ public class FilenameParser {
 		
 		// ###################  NAME  ###################
 		
+		mName = mName.replaceFirst(" - ", ": ");
+		
 		frame.setMovieName(mName);
 		
 		// ###################  SIZE  ###################

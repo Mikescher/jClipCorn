@@ -130,7 +130,9 @@ public abstract class CCDatabaseElement {
 	}
 	
 	public void setCover(BufferedImage name) {
-		movielist.getCoverCache().deleteCover(this);
+		if (! covername.isEmpty()) {
+			movielist.getCoverCache().deleteCover(this);
+		}
 		
 		this.covername = movielist.getCoverCache().addCover(name);
 		

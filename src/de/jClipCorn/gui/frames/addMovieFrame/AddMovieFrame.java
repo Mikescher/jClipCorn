@@ -131,6 +131,9 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 	private JButton btnOpenIMDb;
 	private JLabel lblFileSizeDisp;
 
+	/**
+	 * @wbp.parser.constructor
+	 */
 	public AddMovieFrame(Component owner, CCMovieList mlist) {		
 		super();
 		this.movieList = mlist;
@@ -1017,27 +1020,27 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		CCMovieSize size = new CCMovieSize();
 		
 		if (! ed_Part0.getText().isEmpty()) {
-			size.add(FileSizeFormatter.getFileSize(ed_Part0.getText()));
+			size.add(FileSizeFormatter.getFileSize(PathFormatter.getAbsolute(ed_Part0.getText())));
 		}
 		
 		if (! ed_Part1.getText().isEmpty()) {
-			size.add(FileSizeFormatter.getFileSize(ed_Part1.getText()));
+			size.add(FileSizeFormatter.getFileSize(PathFormatter.getAbsolute(ed_Part1.getText())));
 		}
 		
 		if (! ed_Part2.getText().isEmpty()) {
-			size.add(FileSizeFormatter.getFileSize(ed_Part3.getText()));
+			size.add(FileSizeFormatter.getFileSize(PathFormatter.getAbsolute(ed_Part3.getText())));
 		}
 		
 		if (! ed_Part3.getText().isEmpty()) {
-			size.add(FileSizeFormatter.getFileSize(ed_Part3.getText()));
+			size.add(FileSizeFormatter.getFileSize(PathFormatter.getAbsolute(ed_Part3.getText())));
 		}
 		
 		if (! ed_Part4.getText().isEmpty()) {
-			size.add(FileSizeFormatter.getFileSize(ed_Part4.getText()));
+			size.add(FileSizeFormatter.getFileSize(PathFormatter.getAbsolute(ed_Part4.getText())));
 		}
 		
 		if (! ed_Part5.getText().isEmpty()) {
-			size.add(FileSizeFormatter.getFileSize(ed_Part5.getText()));
+			size.add(FileSizeFormatter.getFileSize(PathFormatter.getAbsolute(ed_Part5.getText())));
 		}
 		
 		setFilesize(size.getBytes());

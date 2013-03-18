@@ -2,10 +2,14 @@ package de.jClipCorn.gui.frames.mainFrame.clipTable;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.ArrayList;
 
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.RowFilter;
+import javax.swing.RowSorter;
+import javax.swing.RowSorter.SortKey;
+import javax.swing.SortOrder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableRowSorter;
@@ -14,6 +18,7 @@ import de.jClipCorn.database.CCDBUpdateListener;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.gui.frames.mainFrame.MainFrame;
+import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.TableColumnAdjuster;
 
 public class ClipTable extends JScrollPane implements CCDBUpdateListener, ListSelectionListener, MouseListener {
@@ -78,7 +83,29 @@ public class ClipTable extends JScrollPane implements CCDBUpdateListener, ListSe
 	@Override
 	public void onAfterLoad() {
 		model.fireTableDataChanged();
+		initialSort();
 		autoResize();
+	}
+	
+	private void initialSort() {
+		@SuppressWarnings("unchecked")
+		TableRowSorter<ClipTableModel> sorter = ((TableRowSorter<ClipTableModel>)table.getRowSorter());
+    	ArrayList<SortKey> list = new ArrayList<>();	
+		
+		switch (CCProperties.getInstance().PROP_VIEW_DB_START_SORT.getValue()) {
+		case 0:
+			//DO nothing
+			return;
+		case 1:
+			list.add( new RowSorter.SortKey(1, SortOrder.ASCENDING) );
+			break;
+		case 2:
+			list.add( new RowSorter.SortKey(9, SortOrder.DESCENDING) );
+			break;
+		}
+		
+		sorter.setSortKeys(list);
+    	sorter.sort();
 	}
 
 	@Override

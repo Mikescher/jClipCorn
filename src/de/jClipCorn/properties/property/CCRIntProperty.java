@@ -25,11 +25,18 @@ public class CCRIntProperty extends CCIntProperty {
 		this.values = values;
 	}
 	
-	public CCRIntProperty(int cat, CCProperties prop, String ident, Integer standard, int max, Vector<String> values) {
+	public CCRIntProperty(int cat, CCProperties prop, String ident, Integer standard, Vector<String> values) {
+		super(cat, prop, ident, standard);
+		this.min = 0;
+		this.max = values.size();
+		this.values = values;
+	}
+	
+	public CCRIntProperty(int cat, CCProperties prop, String ident, Integer standard, Integer max) {
 		super(cat, prop, ident, standard);
 		this.min = 0;
 		this.max = max;
-		this.values = values;
+		this.values = null;
 	}
 	
 	@Override

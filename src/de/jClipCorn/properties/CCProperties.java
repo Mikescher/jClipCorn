@@ -78,6 +78,7 @@ public class CCProperties {
 	public CCPintProperty PROP_BACKUP_LIFETIME;
 	public CCBoolProperty PROP_LOG_APPEND;
 	public CCPintProperty PROP_LOG_MAX_LINECOUNT;
+	public CCRIntProperty PROP_VIEW_DB_START_SORT; //TODO
 	
 	private Properties properties;
 	String path;
@@ -95,8 +96,6 @@ public class CCProperties {
 	
 	@SuppressWarnings("nls")
 	private void createProperties() {
-		int lfc = LookAndFeelManager.getLookAndFeelCount();
-		
 		LocalizedVector vd = new LocalizedVector();
 		vd.add("CCProperties.DblClickMove.Opt0"); //$NON-NLS-1$
 		vd.add("CCProperties.DblClickMove.Opt1"); //$NON-NLS-1$
@@ -114,13 +113,19 @@ public class CCProperties {
 		vb.add("CCProperties.TabBackground.Opt1"); //$NON-NLS-1$
 		vb.add("CCProperties.TabBackground.Opt2"); //$NON-NLS-1$
 		
-		PROP_ADD_MOVIE_RELATIVE_AUTO 			= new CCBoolProperty(CAT_DIALOGS, 	this,   "PROP_ADD_MOVIE_RELATIVE_AUTO", 		true);
+		LocalizedVector vs = new LocalizedVector();
+		vs.add("ClipTableModel.LocalID"); //$NON-NLS-1$
+		vs.add("ClipTableModel.Title"); //$NON-NLS-1$
+		vs.add("ClipTableModel.Added"); //$NON-NLS-1$
+		
+		
+		PROP_ADD_MOVIE_RELATIVE_AUTO 			= new CCBoolProperty(CAT_DIALOGS, 		this,   "PROP_ADD_MOVIE_RELATIVE_AUTO", 		true);
 		PROP_DATABASE_NAME 						= new CCStringProperty(CAT_DATABASE, 	this,	"PROP_DATABASE_NAME",					"ClipCornDB");
 		PROP_LOG_PATH							= new CCStringProperty(CAT_DATABASE, 	this,	"PROP_LOG_PATH",						"jClipcorn.log");
-		PROP_UI_LANG							= new CCRIntProperty(CAT_COMMON, 		this, 	"PROP_UI_LANG", 						1, 					4,		vl);
-		PROP_ON_DBLCLICK_MOVE					= new CCRIntProperty(CAT_COMMON, 		this, 	"PROP_ON_DBLCLICK_MOVE", 				0, 					2,		vd);
-		PROP_UI_LOOKANDFEEL						= new CCRIntProperty(CAT_VIEW, 			this,	"PROP_UI_LOOKANDFEEL", 					0, 					lfc,	vlf);
-		PROP_MAINFRAME_TABLEBACKGROUND			= new CCRIntProperty(CAT_VIEW, 			this,	"PROP_MAINFRAME_TABLEBACKGROUND",		0, 					3,		vb);
+		PROP_UI_LANG							= new CCRIntProperty(CAT_COMMON, 		this, 	"PROP_UI_LANG", 						1, 					vl);
+		PROP_ON_DBLCLICK_MOVE					= new CCRIntProperty(CAT_COMMON, 		this, 	"PROP_ON_DBLCLICK_MOVE", 				0, 					vd);
+		PROP_UI_LOOKANDFEEL						= new CCRIntProperty(CAT_VIEW, 			this,	"PROP_UI_LOOKANDFEEL", 					0, 					vlf);
+		PROP_MAINFRAME_TABLEBACKGROUND			= new CCRIntProperty(CAT_VIEW, 			this,	"PROP_MAINFRAME_TABLEBACKGROUND",		0, 					vb);
 		PROP_SELF_DIRECTORY						= new CCStringProperty(CAT_DATABASE, 	this,	"PROP_SELF_DIRECTORY",					"");
 		PROP_COVER_PREFIX						= new CCStringProperty(CAT_DATABASE, 	this,	"PROP_COVER_PREFIX",					"cover_");
 		PROP_COVER_TYPE							= new CCStringProperty(CAT_DATABASE, 	this,	"PROP_COVER_TYPE",						"png");
@@ -145,11 +150,12 @@ public class CCProperties {
 		PROP_BACKUP_CREATEBACKUPS				= new CCBoolProperty(CAT_BACKUP, 		this, 	"PROP_BACKUP_CREATEBACKUPS", 			true);
 		PROP_BACKUP_FOLDERNAME					= new CCStringProperty(CAT_BACKUP,	 	this,	"PROP_BACKUP_FOLDERNAME",				"jClipCorn_backup");
 		PROP_BACKUP_BACKUPTIME					= new CCPintProperty(CAT_BACKUP, 		this, 	"PROP_BACKUP_BACKUPTIME", 				7);
-		PROP_BACKUP_COMPRESSION					= new CCRIntProperty(CAT_BACKUP, 		this, 	"PROP_BACKUP_COMPRESSION", 				0,					10,		null);
+		PROP_BACKUP_COMPRESSION					= new CCRIntProperty(CAT_BACKUP, 		this, 	"PROP_BACKUP_COMPRESSION", 				0,					10);
 		PROP_BACKUP_AUTODELETEBACKUPS			= new CCBoolProperty(CAT_BACKUP, 		this,   "PROP_BACKUP_AUTODELETEBACKUPS", 		true);
 		PROP_BACKUP_LIFETIME					= new CCPintProperty(CAT_BACKUP, 		this, 	"PROP_BACKUP_LIFETIME", 				56);
 		PROP_LOG_APPEND							= new CCBoolProperty(CAT_COMMON, 		this,   "PROP_LOG_APPEND", 						true);
 		PROP_LOG_MAX_LINECOUNT 					= new CCPintProperty(CAT_COMMON, 		this, 	"PROP_LOG_MAX_LINECOUNT", 				1048576); // 2^20
+		PROP_VIEW_DB_START_SORT					= new CCRIntProperty(CAT_VIEW, 			this, 	"PROP_VIEW_DB_START_SORT", 				0,					vs);
 	}
 	
 	public static CCProperties getInstance() {

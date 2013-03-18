@@ -248,7 +248,7 @@ public class Statements {
 		SQLSelectHelper sh = new SQLSelectHelper(CCDatabase.TAB_MAIN);
 		
 		sh.setOrderBy(CCDatabase.TAB_MAIN_COLUMN_LOCALID);
-		sh.setOrder(SQLOrder.ASC);
+		sh.setOrder(SQLOrder.ASC);		
 		
 		selectMainTabStatement = d.createPreparedStatement(sh.get());
 	}

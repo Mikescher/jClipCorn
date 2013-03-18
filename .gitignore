@@ -50,7 +50,7 @@ jClipCorn_backup/
 *.bat
 *.jar
 *.log
-*.properties
+*jClipCorn.properties
 *.lnk
 *.avi
 *.exe

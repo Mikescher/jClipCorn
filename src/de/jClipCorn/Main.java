@@ -72,5 +72,5 @@ public class Main {
 //TODO [other] Better jQCCounter ;)
 //TODO Test if everything works with Metal UI
 //TODO Testen ob die Button größen mit allen 3 Sprachen so passen
-
+//TODO Nach was ist das am Anfang sortiert (Hinzugef am wäre nett - besser wäre ne Setting)
 //TODO Frame: Guide zu Filetitel benennung

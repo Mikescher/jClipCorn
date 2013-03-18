@@ -84,7 +84,9 @@ public class CCSeason {
 	}
 	
 	public void setCover(BufferedImage name) {
-		getSeries().getMovieList().getCoverCache().deleteCover(this.covername);
+		if (! covername.isEmpty()) {
+			getSeries().getMovieList().getCoverCache().deleteCover(this.covername);
+		}
 		
 		this.covername = getSeries().getMovieList().getCoverCache().addCover(name);
 		

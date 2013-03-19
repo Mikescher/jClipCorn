@@ -20,7 +20,7 @@ public class Main {
 	
 	public final static boolean DEBUG = false;
 	
-	public static void main(String[] args) {		
+	public static void main(String[] arg) {		
 		new CCProperties(PROPERTIES_PATH); // MUSS ALS ERSTES CREATED WERDEN - FUCKING IMPORTANT
 		
 		CCLog.setPath(CCProperties.getInstance().PROP_LOG_PATH.getValue());
@@ -61,15 +61,8 @@ public class Main {
 
 //http://www.themoviedb.org/search/movie?query=lazarus%20projekt
 
-//TODO Possibilty to mass change series File Location (4 my series)
 //TODO statistics page
 //TODO Auto parse Summary 
 //TODO import old ClipCorn features
 //TODO Recheck all Texts - improve DL-Language (what EN / What GER)
-//TODO UserDataErrorTexts (DL -> German Text ??)
 //TODO TESTING [!!!] (Adding / editing / deleting) (series / movies)
-//TODO [other] Better jQCCounter ;)
-//TODO Test if everything works with Metal UI
-//TODO Testen ob die Button größen mit allen 3 Sprachen so passen
-//TODO Nach was ist das am Anfang sortiert (Hinzugef am wäre nett - besser wäre ne Setting)
-//TODO Frame: Guide zu Filetitel benennung

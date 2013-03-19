@@ -492,4 +492,8 @@ public class CCDate {
 	public boolean isMinimum() {
 		return 1 == getDay() && 1 == getMonth() && YEAR_MIN == getYear(); //FAST - PERFORMANCE - SMACK YOU LIKE A BITCH
 	}
+
+	public CCDate copy() {
+		return new CCDate(this);
+	}
 }

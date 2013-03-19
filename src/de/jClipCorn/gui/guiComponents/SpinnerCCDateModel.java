@@ -18,21 +18,25 @@ public class SpinnerCCDateModel extends AbstractSpinnerModel {
 	}
 
 	@Override
-	public CCDate getNextValue() { //TODO failt wenn value = MIN_DATE (springt über 1 Date (02.01.1900))
+	public CCDate getNextValue() {
+		CCDate c = current.copy();
+		
 		if (max == null || current.isLessThan(max)) {
-			current.addDay(1);
+			c.addDay(1);
 		}
 		
-		return current;
+		return c;
 	}
 
 	@Override
 	public CCDate getPreviousValue() {
-		if (min == null || current.isGreaterThan(min)) {
-			current.remDay(1);
+		CCDate c = current.copy();
+		
+		if (min == null || c.isGreaterThan(min)) {
+			c.remDay(1);
 		}
 		
-		return current;
+		return c;
 	}
 
 	@Override

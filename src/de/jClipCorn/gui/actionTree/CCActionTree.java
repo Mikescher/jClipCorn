@@ -24,6 +24,7 @@ import de.jClipCorn.gui.frames.changeViewedFrame.ChangeViewedFrame;
 import de.jClipCorn.gui.frames.checkDatabaseFrame.CheckDatabaseDialog;
 import de.jClipCorn.gui.frames.editMovieFrame.EditMovieFrame;
 import de.jClipCorn.gui.frames.editSeriesFrame.EditSeriesFrame;
+import de.jClipCorn.gui.frames.filenameRulesFrame.FilenameRuleFrame;
 import de.jClipCorn.gui.frames.logFrame.LogFrame;
 import de.jClipCorn.gui.frames.mainFrame.MainFrame;
 import de.jClipCorn.gui.frames.moveSeriesFrame.MoveSeriesDialog;
@@ -254,6 +255,14 @@ public class CCActionTree {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				onClickHelpShowLog();
+			}
+		});
+		
+		temp = help.addChild(new CCActionElement("ShowRules", "ClipMenuBar.Help.Filenamerules", Resources.ICN_MENUBAR_FILENAMERULES));
+		temp.addListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				onClickHelpShowRules();
 			}
 		});
 		
@@ -562,6 +571,11 @@ public class CCActionTree {
 	private void onClickHelpShowLog() {
 		LogFrame lf = new LogFrame(owner);
 		lf.setVisible(true);
+	}
+	
+	private void onClickHelpShowRules() {
+		FilenameRuleFrame frf = new FilenameRuleFrame(owner);
+		frf.setVisible(true);
 	}
 	
 	private void onClickHelpShowAbout() {

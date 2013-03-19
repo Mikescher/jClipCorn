@@ -849,8 +849,8 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		cbxEpisodeQuality.setSelectedIndex(episode.getQuality().asInt());
 		spnEpisodeLength.setValue(episode.getLength());
 		spnEpisodeSize.setValue(episode.getFilesize().getBytes());
-		spnEpisodeAdded.setValue(episode.getAddDate());
-		spnEpisodeLastViewed.setValue(episode.getLastViewed());
+		spnEpisodeAdded.setValue(episode.getAddDate().copy());
+		spnEpisodeLastViewed.setValue(episode.getLastViewed().copy());
 		edEpisodePart.setText(episode.getPart());
 		cbxEpisodeStatus.setSelectedIndex(episode.getStatus().asInt());
 		

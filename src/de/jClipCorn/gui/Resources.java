@@ -40,6 +40,7 @@ public class Resources {
 	public final static String ICN_MENUBAR_MCHANGE_SCORE	= registerICN("/icons/toolbar/knotscore.png");
 	public final static String ICN_MENUBAR_RESETVIEWED		= registerICN("/icons/toolbar/script.png");
 	public final static String ICN_MENUBAR_MOVESERIES		= registerICN("/icons/toolbar/move_to_folder.png");
+	public final static String ICN_MENUBAR_FILENAMERULES	= registerICN("/icons/toolbar/books.png");
 	// #############################################  </MENUBAR>  ############################################
 	
 

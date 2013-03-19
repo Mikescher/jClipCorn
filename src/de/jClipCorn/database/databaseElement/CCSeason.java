@@ -11,6 +11,7 @@ import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFormat;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieQuality;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieSize;
+import de.jClipCorn.database.databaseElement.columnTypes.CCMovieStatus;
 import de.jClipCorn.util.CCDate;
 
 public class CCSeason {
@@ -157,6 +158,18 @@ public class CCSeason {
 		}
 	}
 	
+	public CCMovieStatus getStatus() {
+		CCMovieStatus i = CCMovieStatus.STATUS_OK;
+		
+		for (int j = 0; j < getEpisodeCount(); j++) {
+			CCMovieStatus i2 = getEpisode(j).getStatus();
+			if (i2.asInt() > i.asInt()) {
+				i = i2;
+			}
+		}
+		return i;
+	}
+	
 	public int getEpisodeCount() {
 		return episodes.size();
 	}
@@ -176,7 +189,7 @@ public class CCSeason {
 				cd = ep.getAddDate();
 			}
 		}
-		return cd;
+		return cd.copy();
 	}
 	
 	public CCMovieFormat getFormat() {

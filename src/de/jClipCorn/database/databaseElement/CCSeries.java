@@ -149,6 +149,18 @@ public class CCSeries extends CCDatabaseElement {
 		}
 		return new YearRange(miny, maxy);
 	}
+	
+	public CCMovieStatus getStatus() {
+		CCMovieStatus i = CCMovieStatus.STATUS_OK;
+		
+		for (int j = 0; j < getSeasonCount(); j++) {
+			CCMovieStatus i2 = getSeason(j).getStatus();
+			if (i2.asInt() > i.asInt()) {
+				i = i2;
+			}
+		}
+		return i;
+	}
 
 	public CCSeason getSeason(int ss) {
 		return seasons.get(ss);
@@ -210,7 +222,7 @@ public class CCSeries extends CCDatabaseElement {
 	}
 
 	public CombinedMovieQuality getCombinedQuality() {
-		return new CombinedMovieQuality(getQuality(), CCMovieStatus.STATUS_OK); //TODO Calculate STatus for Series
+		return new CombinedMovieQuality(getQuality(), getStatus()); //TODO Calculate STatus for Series
 	}
 	
 	public ArrayList<CCEpisode> getEpisodeList() {

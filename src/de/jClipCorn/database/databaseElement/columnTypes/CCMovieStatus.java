@@ -9,7 +9,7 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 public enum CCMovieStatus {
 	STATUS_OK(0),
 	STATUS_LOWQUALITY(1),
-	STATUS_MISSINGVIDEOTIME(2);
+	STATUS_MISSINGVIDEOTIME(2); // Höherer Wert  =>  Höhere Priorität
 	
 	private final static String names[] = {
 		LocaleBundle.getString("CCMovieStatus.Status0"),  //$NON-NLS-1$

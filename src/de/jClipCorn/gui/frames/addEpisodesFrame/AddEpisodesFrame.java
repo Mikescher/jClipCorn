@@ -815,8 +815,8 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler {
 			cbxFormat.setSelectedIndex(episode.getFormat().asInt());
 			spnLength.setValue(episode.getLength());
 			spnSize.setValue(episode.getFilesize().getBytes());
-			spnAddDate.setValue(episode.getAddDate());
-			spnLastViewed.setValue(episode.getLastViewed());
+			spnAddDate.setValue(episode.getAddDate().copy());
+			spnLastViewed.setValue(episode.getLastViewed().copy());
 			edPart.setText(episode.getPart());
 			cbxQuality.setSelectedIndex(episode.getQuality().asInt());
 

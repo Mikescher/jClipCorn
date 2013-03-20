@@ -1,21 +1,19 @@
 package de.jClipCorn.gui.frames.filenameRulesFrame;
 
-import javax.swing.JFrame;
-import javax.swing.JScrollPane;
 import java.awt.BorderLayout;
 import java.awt.Component;
-
-import javax.swing.JTextPane;
-import javax.swing.JPanel;
-import javax.swing.JButton;
-
-import de.jClipCorn.gui.localization.LocaleBundle;
-
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+
+import de.jClipCorn.gui.localization.LocaleBundle;
 
 public class FilenameRuleFrame extends JFrame {
 	private static final long serialVersionUID = 692779597355844596L;
@@ -39,7 +37,7 @@ public class FilenameRuleFrame extends JFrame {
 		getContentPane().add(scrollPane, BorderLayout.CENTER);
 		
 		memoMain = new JTextArea();
-		memoMain.setFont(new Font("Courier New", Font.PLAIN, 12));
+		memoMain.setFont(new Font("Courier New", Font.PLAIN, 12)); //$NON-NLS-1$
 		memoMain.setEditable(false);
 		scrollPane.setViewportView(memoMain);
 		

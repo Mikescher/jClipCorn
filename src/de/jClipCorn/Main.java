@@ -65,4 +65,5 @@ public class Main {
 //TODO Auto parse Summary 
 //TODO import old ClipCorn features
 //TODO Recheck all Texts - improve DL-Language (what EN / What GER)
-//TODO TESTING [!!!] (Adding / editing / deleting) (series / movies)
+//TODO xml
+//TODO Auto rename Files nach Richtlinien

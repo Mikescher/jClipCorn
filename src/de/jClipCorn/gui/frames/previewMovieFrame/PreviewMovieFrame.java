@@ -104,7 +104,7 @@ public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener 
 		label = new JLabel();
 		label.setHorizontalAlignment(SwingConstants.CENTER);
 		label.setFont(new Font("Tahoma", Font.BOLD, 28)); //$NON-NLS-1$
-		label.setBounds(0, 0, 694, 42);
+		label.setBounds(44, 0, 650, 42);
 		getContentPane().add(label);
 		
 		lblViewed = new JLabel();

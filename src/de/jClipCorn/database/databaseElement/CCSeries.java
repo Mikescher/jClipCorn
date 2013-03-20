@@ -222,7 +222,7 @@ public class CCSeries extends CCDatabaseElement {
 	}
 
 	public CombinedMovieQuality getCombinedQuality() {
-		return new CombinedMovieQuality(getQuality(), getStatus()); //TODO Calculate STatus for Series
+		return new CombinedMovieQuality(getQuality(), getStatus());
 	}
 	
 	public ArrayList<CCEpisode> getEpisodeList() {

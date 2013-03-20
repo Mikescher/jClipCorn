@@ -14,6 +14,7 @@ import de.jClipCorn.gui.Resources;
 import de.jClipCorn.gui.frames.editSeriesFrame.EditSeriesFrame;
 import de.jClipCorn.gui.frames.previewSeriesFrame.PreviewSeriesFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.util.DialogHelper;
 import de.jClipCorn.util.PathFormatter;
 
 public class SerTablePopupMenu extends JPopupMenu {
@@ -81,14 +82,15 @@ public class SerTablePopupMenu extends JPopupMenu {
 			}
 		});
 		add(edit);
-		
+
 		JMenuItem delete = new JMenuItem(LocaleBundle.getString("PreviewSeriesFrame.PopupMenu.Delete"), CachedResourceLoader.getSmallImageIcon(Resources.ICN_MENUBAR_REMOVE)); //$NON-NLS-1$
 		delete.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				//TODO Dialog
-				episode.delete();
-				owner.updateSeason();
+				if (DialogHelper.showLocaleYesNo(owner, "Dialogs.DeleteEpisode")) { //$NON-NLS-1$
+					episode.delete();
+					owner.updateSeason();
+				}
 			}
 		});
 		add(delete);

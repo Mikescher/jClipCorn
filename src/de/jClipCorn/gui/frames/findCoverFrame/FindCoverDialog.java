@@ -276,7 +276,7 @@ public class FindCoverDialog extends JDialog {
 			}
 		}));
 
-		thread_3 = (new Thread(new Runnable() {
+		thread_3 = (new Thread(new Runnable() { //TODO was macht denn die 3. zeile ?
 			@Override
 			public void run() {
 				parseCoverSearch();

@@ -10,7 +10,7 @@ public class ClipSeriesPopup extends ClipPopupMenu {
 
 	@SuppressWarnings("nls")
 	@Override
-	protected void init() {
+	protected void init() { //TODO Watch on ImDB
 		addAction("PrevSeries");
 		addAction("PrevMovie");
 		

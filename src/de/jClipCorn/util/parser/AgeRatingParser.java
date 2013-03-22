@@ -20,7 +20,9 @@ public class AgeRatingParser {
 		// put all in lowercase !!!
 		
 		ratingsMap.put("unrated", -1); 
-		ratingsMap.put("not rated", -1); 
+		ratingsMap.put("not rated", -1);
+		ratingsMap.put("(banned)", -1); 
+		ratingsMap.put("banned", -1); 
 		
 		ratingsMap.put("t", 0); 
 		ratingsMap.put("a", 0);

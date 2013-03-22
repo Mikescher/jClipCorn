@@ -504,44 +504,7 @@ public class AddSeriesFrame extends JFrame implements ParseResultHandler, UserDa
 		int gen6 = cbxGenre6.getSelectedIndex();
 		int gen7 = cbxGenre7.getSelectedIndex();
 		
-		//################################################################################################################
-		
-		if (title.isEmpty()) {
-			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_EMPTY_TITLE));
-		}
-		
-		//################################################################################################################
-		
-		if (oscore <= 0 || oscore >= 10) {
-			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_INVALID_ONLINESCORE));
-		}
-		
-		//################################################################################################################
-		
-		if (fskidx == (cbxFSK.getModel().getSize() - 1)) {
-			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_FSK_NOT_SET));
-		}
-		
-		//################################################################################################################
-		
-		int gc = gen0 + gen1 + gen2 + gen3 + gen4 + gen5 + gen6 + gen7;
-
-		if (gc <= 0) {
-			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_NO_GENRE_SET));
-		}
-		//################################################################################################################
-		
-		if ((gen0 == 0 && gen1 != 0) || (gen1 == 0 && gen2 != 0) || (gen2 == 0 && gen3 != 0) || (gen3 == 0 && gen4 != 0) || (gen4 == 0 && gen5 != 0) || (gen5 == 0 && gen6 != 0) || (gen6 == 0 && gen7 != 0)) {
-			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_HOLE_IN_GENRE));
-		}
-		
-		//################################################################################################################
-		
-		if (currentCoverImage == null) {
-			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_NO_COVER_SET));
-		}
-		
-		//################################################################################################################
+		UserDataProblem.testSeriesData(ret, currentCoverImage, title, oscore, gen0, gen1, gen2, gen3, gen4, gen5, gen6, gen7, fskidx);
 		
 		return ret.isEmpty();
 	}

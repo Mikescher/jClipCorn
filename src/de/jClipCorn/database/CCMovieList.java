@@ -16,6 +16,7 @@ import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieGenre;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieSize;
+import de.jClipCorn.database.databaseElement.columnTypes.CCMovieZyklus;
 import de.jClipCorn.gui.frames.mainFrame.MainFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
@@ -32,7 +33,7 @@ public class CCMovieList {
 
 	private long loadTime = -1;
 
-	public CCMovieList() {
+	public CCMovieList() { //TODO Add iterator() iteratorMovies() iteratorSeries() and replace alle Loops with them (if possible)
 		this.database = null;
 		this.list = new Vector<>();
 		this.listener = new Vector<>();
@@ -491,5 +492,18 @@ public class CCMovieList {
 				((CCMovie)d).setViewed(to);
 			}
 		}
+	}
+	
+	public CCMovie findfirst(CCMovieZyklus zyklus) {
+		for (int i = 0; i < getElementCount(); i++) {
+			CCDatabaseElement d = getDatabaseElementBySort(i);
+			if (d.isMovie()) {
+				if (((CCMovie)d).getZyklus().equals(zyklus)) {
+					return (CCMovie) d;
+				}
+			}
+		}
+		
+		return null;
 	}
 }

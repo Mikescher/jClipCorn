@@ -62,4 +62,13 @@ public class CCMovieZyklus {
 		setNumber(-1);
 		setTitle(""); //$NON-NLS-1$
 	}
+	
+	@Override
+	public boolean equals(Object z) {
+		if (z instanceof CCMovieZyklus) {
+			return ((CCMovieZyklus)z).getNumber() == getNumber() && ((CCMovieZyklus)z).getTitle().equals(getTitle());
+		} else {
+			return false;
+		}
+	}
 }

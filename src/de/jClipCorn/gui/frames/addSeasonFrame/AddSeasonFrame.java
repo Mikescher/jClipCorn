@@ -26,7 +26,6 @@ import de.jClipCorn.gui.Resources;
 import de.jClipCorn.gui.frames.inputErrorFrame.InputErrorDialog;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
-import de.jClipCorn.util.CCDate;
 import de.jClipCorn.util.FileChooserHelper;
 import de.jClipCorn.util.ImageUtilities;
 import de.jClipCorn.util.PathFormatter;
@@ -199,25 +198,7 @@ public class AddSeasonFrame extends JFrame implements UserDataProblemHandler{
 		String title = edTitle.getText();
 		int year = (int) spnYear.getValue();
 
-		//################################################################################################################
-		
-		if (title.isEmpty()) {
-			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_EMPTY_TITLE));
-		}
-		
-		//################################################################################################################
-		
-		if (year <= CCDate.YEAR_MIN) {
-			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_INVALID_YEAR));
-		}
-		
-		//################################################################################################################
-		
-		if (currentCoverImage == null) {
-			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_NO_COVER_SET));
-		}
-		
-		//################################################################################################################
+		UserDataProblem.testSeasonData(ret, currentCoverImage, title, year);
 		
 		return ret.isEmpty();
 	}

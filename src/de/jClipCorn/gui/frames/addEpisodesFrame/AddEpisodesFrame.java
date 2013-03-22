@@ -727,56 +727,7 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler {
 
 		String part = edPart.getText();
 
-		// ################################################################################################################
-
-		if (title.isEmpty()) {
-			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_EMPTY_TITLE));
-		}
-
-		// ################################################################################################################
-
-		CCEpisode eqEp = parent.getEpisodebyNumber(epNum);
-		if (eqEp != null && eqEp != sel) {
-			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_EPISODENUMBER_ALREADY_EXISTS));
-		}
-
-		// ################################################################################################################
-
-		if (len <= 0) {
-			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_INVALID_LENGTH));
-		}
-
-		// ################################################################################################################
-
-		if (adddate.isLessEqualsThan(MIN_DATE)) {
-			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_DATE_TOO_LESS));
-		}
-
-		// ################################################################################################################
-
-		if (lvdate.isLessThan(MIN_DATE)) {
-			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_DATE_TOO_LESS));
-		}
-
-		// ################################################################################################################
-
-		if (!(PathFormatter.getExtension(part).equals(csExtn) || PathFormatter.getExtension(part).equals(csExta))) {
-			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_EXTENSION_UNEQUALS_FILENAME));
-		}
-
-		// ################################################################################################################
-
-		if (fsize <= 0) {
-			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_INVALID_FILESIZE));
-		}
-
-		// ################################################################################################################
-
-		if (part.isEmpty()) {
-			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_NO_PATH));
-		}
-
-		// ################################################################################################################
+		UserDataProblem.testEpisodeData(ret, parent, sel, title, len, epNum, adddate, lvdate, fsize, csExtn, csExta, part);
 
 		return ret.isEmpty();
 	}

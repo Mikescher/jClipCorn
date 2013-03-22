@@ -245,4 +245,8 @@ public class CCMovie extends CCDatabaseElement {
 	public CombinedMovieQuality getCombinedQuality() {
 		return new CombinedMovieQuality(getQuality(), getStatus());
 	}
+
+	public CCMovieList getMovieList() {
+		return movielist;
+	}
 }

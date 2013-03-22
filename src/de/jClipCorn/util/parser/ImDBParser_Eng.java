@@ -176,7 +176,10 @@ public class ImDBParser_Eng {
 			}
 			
 			if (count <= 0) {
-				CCLog.addWarning(LocaleBundle.getFormattedString("LogMessage.CouldNotFindFSK", RegExHelper.find(REGEX_FSK, url)));
+				String regexhtmlfsk = RegExHelper.find(REGEX_FSK, url).trim();
+				if (! regexhtmlfsk.isEmpty()) {
+					CCLog.addWarning(LocaleBundle.getFormattedString("LogMessage.CouldNotFindFSK", RegExHelper.find(REGEX_FSK, url)));
+				}
 				return null;
 			}
 			
@@ -219,6 +222,10 @@ public class ImDBParser_Eng {
 		String curl;
 		curl = RegExHelper.find(REGEX_COVER_DIREKT_1, html);
 		curl = RegExHelper.find(REGEX_COVER_DIREKT_2, curl);
+		
+		if (curl.trim().isEmpty()) {
+			return null;
+		}
 		
 		BufferedImage result = HTTPUtilities.getImage(curl);
 		

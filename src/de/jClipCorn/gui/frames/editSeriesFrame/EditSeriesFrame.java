@@ -1087,6 +1087,8 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		
 		int oscore = (int) spnSeriesOnlineScore.getValue();
 		
+		int fskidx = cbxSeriesFSK.getSelectedIndex();
+		
 		int gen0 = cbxSeriesGenre_0.getSelectedIndex();
 		int gen1 = cbxSeriesGenre_1.getSelectedIndex();
 		int gen2 = cbxSeriesGenre_2.getSelectedIndex();
@@ -1096,38 +1098,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		int gen6 = cbxSeriesGenre_6.getSelectedIndex();
 		int gen7 = cbxSeriesGenre_7.getSelectedIndex();
 		
-		//################################################################################################################
-		
-		if (title.isEmpty()) {
-			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_EMPTY_TITLE));
-		}
-		
-		//################################################################################################################
-		
-		if (oscore <= 0 || oscore >= 10) {
-			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_INVALID_ONLINESCORE));
-		}
-		
-		//################################################################################################################
-		
-		int gc = gen0 + gen1 + gen2 + gen3 + gen4 + gen5 + gen6 + gen7;
-
-		if (gc <= 0) {
-			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_NO_GENRE_SET));
-		}
-		//################################################################################################################
-		
-		if ((gen0 == 0 && gen1 != 0) || (gen1 == 0 && gen2 != 0) || (gen2 == 0 && gen3 != 0) || (gen3 == 0 && gen4 != 0) || (gen4 == 0 && gen5 != 0) || (gen5 == 0 && gen6 != 0) || (gen6 == 0 && gen7 != 0)) {
-			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_HOLE_IN_GENRE));
-		}
-		
-		//################################################################################################################
-		
-		if (currentSeriesCoverImage == null) {
-			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_NO_COVER_SET));
-		}
-		
-		//################################################################################################################
+		UserDataProblem.testSeriesData(ret, currentSeriesCoverImage, title, oscore, gen0, gen1, gen2, gen3, gen4, gen5, gen6, gen7, fskidx);
 		
 		return ret.isEmpty();
 	}
@@ -1215,25 +1186,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		String title = edSeasonTitle.getText();
 		int year = (int) spnSeasonYear.getValue();
 
-		//################################################################################################################
-		
-		if (title.isEmpty()) {
-			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_EMPTY_TITLE));
-		}
-		
-		//################################################################################################################
-		
-		if (year <= CCDate.YEAR_MIN) {
-			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_INVALID_YEAR));
-		}
-		
-		//################################################################################################################
-		
-		if (currentSeasonCoverImage == null) {
-			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_NO_COVER_SET));
-		}
-		
-		//################################################################################################################
+		UserDataProblem.testSeasonData(ret, currentSeasonCoverImage, title, year);
 		
 		return ret.isEmpty();
 	}
@@ -1338,56 +1291,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		
 		String part = edEpisodePart.getText();
 		
-		//################################################################################################################
-		
-		if (title.isEmpty()) {
-			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_EMPTY_TITLE));
-		}
-		
-		//################################################################################################################
-		
-		CCEpisode eqEp = season.getEpisodebyNumber(epNum);
-		if (eqEp != null && eqEp != episode) {
-			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_EPISODENUMBER_ALREADY_EXISTS));
-		}
-		
-		//################################################################################################################
-		
-		if (len <= 0) {
-			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_INVALID_LENGTH));
-		}
-		
-		//################################################################################################################
-
-		if (adddate.isLessEqualsThan(MIN_DATE)) {
-			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_DATE_TOO_LESS));
-		}
-		
-		//################################################################################################################
-
-		if (lvdate.isLessThan(MIN_DATE)) {
-			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_DATE_TOO_LESS));
-		}
-
-		//################################################################################################################
-
-		if (! (PathFormatter.getExtension(part).equals(csExtn) || PathFormatter.getExtension(part).equals(csExta))) {
-			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_EXTENSION_UNEQUALS_FILENAME));
-		}
-		
-		//################################################################################################################
-		
-		if (fsize <= 0) {
-			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_INVALID_FILESIZE));
-		}
-		
-		//################################################################################################################
-		
-		if (part.isEmpty()) {
-			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_NO_PATH));
-		}
-		
-		//################################################################################################################
+		UserDataProblem.testEpisodeData(ret, season, episode, title, len, epNum, adddate, lvdate, fsize, csExtn, csExta, part);
 		
 		return ret.isEmpty();
 	}

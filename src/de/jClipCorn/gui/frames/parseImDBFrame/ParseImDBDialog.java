@@ -512,7 +512,7 @@ public class ParseImDBDialog extends JDialog implements Runnable {
 		cbFSK.setSelected(cbxFSK.getSelectedIndex() >= 0);
 		cbLength.setSelected((int)spnLength.getValue() > 0);
 		cbScore.setSelected((int)spnScore.getValue() > 0);
-		cbTitle.setSelected(! edTitle.getText().isEmpty());
+		cbTitle.setSelected(false);
 		cbYear.setSelected((int)spnYear.getValue() > 0);
 		
 		cbGenre0.setSelected(cbxGenre0.getSelectedIndex() > 0);
@@ -590,6 +590,7 @@ public class ParseImDBDialog extends JDialog implements Runnable {
 				@Override
 				public void run() {
 					resetFields();
+					pbarSearch.setIndeterminate(true);
 				}
 			});
 		} catch (InvocationTargetException | InterruptedException e) {
@@ -644,6 +645,8 @@ public class ParseImDBDialog extends JDialog implements Runnable {
 					cbxGenre7.setSelectedIndex(mgl.getGenre(7).asInt());
 					
 					updateCheckBoxes();
+					
+					pbarSearch.setIndeterminate(false);
 				}
 			});
 		} catch (InvocationTargetException | InterruptedException e) {

@@ -1111,6 +1111,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		CCDate adddate = (CCDate) spnAddDate.getValue();
 		int oscore = (int) spnOnlineScore.getValue();
 		
+		int fskidx = cbxFSK.getSelectedIndex();
 		int year = (int) spnYear.getValue();
 		long fsize = (long) spnSize.getValue();
 		String csExtn  = CCMovieFormat.find(cbxFormat.getSelectedIndex()).asString();
@@ -1125,118 +1126,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		int gen6 = cbxGenre6.getSelectedIndex();
 		int gen7 = cbxGenre7.getSelectedIndex();
 		
-		//################################################################################################################
-		
-		if (path0.isEmpty() && path1.isEmpty() && path2.isEmpty() && path3.isEmpty() && path4.isEmpty() && path5.isEmpty()) {
-			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_NO_PATH));
-		}
-		
-		//################################################################################################################
-		
-		if ((path0.isEmpty() && ! path1.isEmpty()) || (path1.isEmpty() && ! path2.isEmpty()) || (path2.isEmpty() && ! path3.isEmpty()) || (path3.isEmpty() && ! path4.isEmpty()) || (path4.isEmpty() && ! path5.isEmpty())) {
-			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_HOLE_IN_PATH));
-		}
-		
-		//################################################################################################################
-		
-		if (title.isEmpty()) {
-			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_EMPTY_TITLE));
-		}
-		
-		//################################################################################################################
-		
-		if (zyklus.isEmpty() && zyklusID != -1) {
-			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_ZYKLUSID_IS_SET));
-		}
-		
-		//################################################################################################################
-		
-		if (! zyklus.isEmpty() && zyklusID == 0) {
-			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_ZYKLUSID_IS_ZERO));
-		}
-		
-		//################################################################################################################
-		
-		if (len <= 0) {
-			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_INVALID_LENGTH));
-		}
-		
-		//################################################################################################################
-
-		if (adddate.isLessEqualsThan(MIN_DATE)) {
-			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_DATE_TOO_LESS));
-		}
-		
-		//################################################################################################################
-		
-		if (oscore <= 0 || oscore >= 10) {
-			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_INVALID_ONLINESCORE));
-		}
-		
-		//################################################################################################################
-		
-		ArrayList<String> extensions = new ArrayList<>();
-		
-		if (! edPart0.getText().isEmpty()) {
-			extensions.add(PathFormatter.getExtension(path0));
-		}
-		
-		if (! edPart1.getText().isEmpty()) {
-			extensions.add(PathFormatter.getExtension(path1));
-		}
-		
-		if (! edPart2.getText().isEmpty()) {
-			extensions.add(PathFormatter.getExtension(path2));
-		}
-		
-		if (! edPart3.getText().isEmpty()) {
-			extensions.add(PathFormatter.getExtension(path3));
-		}
-		
-		if (! edPart4.getText().isEmpty()) {
-			extensions.add(PathFormatter.getExtension(path4));
-		}
-		
-		if (! edPart5.getText().isEmpty()) {
-			extensions.add(PathFormatter.getExtension(path5));
-		}
-		
-		if (! (extensions.contains(csExtn) || extensions.contains(csExta))) {
-			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_EXTENSION_UNEQUALS_FILENAME));
-		}
-		
-		//################################################################################################################
-		
-		if (year <= CCDate.YEAR_MIN) {
-			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_INVALID_YEAR));
-		}
-		
-		//################################################################################################################
-		
-		if (fsize <= 0) {
-			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_INVALID_FILESIZE));
-		}
-		
-		//################################################################################################################
-		
-		int gc = gen0 + gen1 + gen2 + gen3 + gen4 + gen5 + gen6 + gen7;
-
-		if (gc <= 0) {
-			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_NO_GENRE_SET));
-		}
-		//################################################################################################################
-		
-		if ((gen0 == 0 && gen1 != 0) || (gen1 == 0 && gen2 != 0) || (gen2 == 0 && gen3 != 0) || (gen3 == 0 && gen4 != 0) || (gen4 == 0 && gen5 != 0) || (gen5 == 0 && gen6 != 0) || (gen6 == 0 && gen7 != 0)) {
-			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_HOLE_IN_GENRE));
-		}
-		
-		//################################################################################################################
-		
-		if (currentCoverImage == null) {
-			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_NO_COVER_SET));
-		}
-		
-		//################################################################################################################
+		UserDataProblem.testMovieData(ret, currentCoverImage, movie.getMovieList(), path0, path1, path2, path3, path4, path5, title, zyklus, zyklusID, len, adddate, oscore, fskidx, year, fsize, csExtn, csExta, gen0, gen1, gen2, gen3, gen4, gen5, gen6, gen7);
 		
 		return ret.isEmpty();
 	}

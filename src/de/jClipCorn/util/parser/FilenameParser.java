@@ -87,11 +87,12 @@ public class FilenameParser {
 		String mZyklus = "";
 		String mRoman = "";
 		int iRoman = -1;
-		if (mName.indexOf(" - ") >= 0) {
+		if (mName.indexOf(" - ") >= 0) { // There is A Zyklus
+			iRoman = 0;
 			mZyklus = mName.substring(0, mName.indexOf(" - "));
 			mName = mName.substring(mName.indexOf(" - ") + 3);
 			mRoman = mZyklus.substring(mZyklus.lastIndexOf(' ') + 1);
-			if (RomanNumberFormatter.isRoman(mRoman)) {
+			if (RomanNumberFormatter.isRoman(mRoman)) { // There is a Zyklus with an Roman Number
 				iRoman = RomanNumberFormatter.romToDec(mRoman);
 				mZyklus = mZyklus.substring(0, mZyklus.lastIndexOf(' '));
 			}

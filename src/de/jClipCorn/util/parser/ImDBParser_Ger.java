@@ -175,7 +175,10 @@ public class ImDBParser_Ger {
 			}
 			
 			if (count <= 0) {
-				CCLog.addWarning(LocaleBundle.getFormattedString("LogMessage.CouldNotFindFSK", RegExHelper.find(REGEX_FSK, html)));
+				String regexhtmlfsk = RegExHelper.find(REGEX_FSK, html).trim();
+				if (! regexhtmlfsk.isEmpty()) {
+					CCLog.addWarning(LocaleBundle.getFormattedString("LogMessage.CouldNotFindFSK", RegExHelper.find(REGEX_FSK, html)));
+				}
 				return null;
 			}
 			

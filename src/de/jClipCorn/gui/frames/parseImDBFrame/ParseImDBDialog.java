@@ -46,7 +46,7 @@ import de.jClipCorn.util.parser.ImDBParser;
 import de.jClipCorn.util.parser.ParseResultHandler;
 
 @SuppressWarnings({ "unchecked", "rawtypes" })
-public class ParseImDBDialog extends JDialog implements Runnable {
+public class ParseImDBDialog extends JDialog implements Runnable { //TODO Schrift schlecht lesbar da zB die Comboboxen disabled sind (auf jedenfall in Substance Graphite Aqua)
 	private static final long serialVersionUID = 3777677368743220383L;
 	
 	private final static int THREAD_TASK_NOTASK = 0;

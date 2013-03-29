@@ -361,7 +361,7 @@ public class DatabaseValidator {
 		
 		for (int i = 1; i < cvrList.size(); i++) {
 			if (cvrList.get(i).equalsCover(cvrList.get(i-1))) {
-				e.add(DatabaseError.createDouble(DatabaseError.ERROR_DUPLICATE_COVERLINK, cvrList.get(i-1), cvrList.get(i)));
+				e.add(DatabaseError.createDouble(DatabaseError.ERROR_DUPLICATE_COVERLINK, cvrList.get(i-1).getElement(), cvrList.get(i).getElement()));
 			}
 			
 			pcl.step();

@@ -65,6 +65,22 @@ public class DatabaseError {
 	public String getFullErrorString() {
 		String r = ""; //$NON-NLS-1$
 		
+		r = convertToString(r);
+		
+		r += " "; //$NON-NLS-1$
+		
+		if (el2 != null) {
+			r += convertToString(r);
+			
+			r += " "; //$NON-NLS-1$
+		}
+		
+		r += getErrorString();
+		
+		return r;
+	}
+
+	private String convertToString(String r) {
 		if (el1 instanceof CCMovie) {
 			r += "[" + ((CCMovie)el1).getLocalID() + "] (" + ((CCMovie)el1).getCompleteTitle() + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		} else if (el1 instanceof CCSeries) {
@@ -73,26 +89,9 @@ public class DatabaseError {
 			r += "[" + ((CCSeason)el1).getSeasonID() + "] (" + ((CCSeason)el1).getSeries().getTitle() + ")(" + ((CCSeason)el1).getTitle() + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 		} else if (el1 instanceof CCEpisode) {
 			r += "[" + ((CCEpisode)el1).getEpisode() + "] (" + ((CCEpisode)el1).getSeries().getTitle() + ")(" + ((CCEpisode)el1).getSeason().getTitle() + ")(" + ((CCEpisode)el1).getTitle() + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+		} else {
+			r += "[?]"; //$NON-NLS-1$
 		}
-		
-		r += " "; //$NON-NLS-1$
-		
-		if (el2 != null) {
-			if (el2 instanceof CCMovie) {
-				r += "[" + ((CCMovie) el1).getLocalID() + "] (" + ((CCMovie) el1).getCompleteTitle() + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-			} else if (el2 instanceof CCSeries) {
-				r += "[" + ((CCSeries) el1).getLocalID() + "] (" + ((CCSeries) el1).getTitle() + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-			} else if (el2 instanceof CCSeason) {
-				r += "[" + ((CCSeason) el1).getSeasonID() + "] (" + ((CCSeason) el1).getSeries().getTitle() + ")(" + ((CCSeason) el1).getTitle() + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-			} else if (el2 instanceof CCEpisode) {
-				r += "[" + ((CCEpisode) el1).getEpisode() + "] (" + ((CCEpisode) el1).getSeries().getTitle() + ")(" + ((CCEpisode) el1).getSeason().getTitle() + ")(" + ((CCEpisode) el1).getTitle() + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
-			}
-			
-			r += " "; //$NON-NLS-1$
-		}
-		
-		r += getErrorString();
-		
 		return r;
 	}
 }

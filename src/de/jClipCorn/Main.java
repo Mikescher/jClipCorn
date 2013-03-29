@@ -13,7 +13,7 @@ import de.jClipCorn.util.LookAndFeelManager;
 
 public class Main {
 	public final static String TITLE = "jClipCorn"; //$NON-NLS-1$
-	public final static String VERSION = "1.2";	//$NON-NLS-1$
+	public final static String VERSION = "1.3";	//$NON-NLS-1$
 	public final static String DBVERSION = "1.5"; 	//$NON-NLS-1$
 	
 	private final static String PROPERTIES_PATH = "jClipcorn.properties"; //$NON-NLS-1$
@@ -67,3 +67,6 @@ public class Main {
 //TODO Recheck all Texts - improve DL-Language (what EN / What GER)
 //TODO xml
 //TODO Auto rename Files nach Richtlinien
+
+//TODO Improve Time until Mainframe is shown (it now takes 500 ms before geting to the create MainFrame Thing)
+//TODO Add Score to AddMovieFrame (and perhaps AddSeriesFrame)

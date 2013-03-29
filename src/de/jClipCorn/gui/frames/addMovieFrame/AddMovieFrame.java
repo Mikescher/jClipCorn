@@ -39,6 +39,7 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFormat;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieGenre;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieLanguage;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieQuality;
+import de.jClipCorn.database.databaseElement.columnTypes.CCMovieScore;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieSize;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTyp;
 import de.jClipCorn.gui.CachedResourceLoader;
@@ -128,6 +129,8 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 	private JButton btnParseIMDB;
 	private JButton btnOpenIMDb;
 	private JLabel lblFileSizeDisp;
+	private JComboBox cbxScore;
+	private JLabel lblScore;
 
 	/**
 	 * @wbp.parser.constructor
@@ -641,6 +644,14 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		lblFileSizeDisp = new JLabel();
 		lblFileSizeDisp.setBounds(343, 649, 129, 16);
 		contentPane.add(lblFileSizeDisp);
+		
+		cbxScore = new JComboBox();
+		cbxScore.setBounds(76, 678, 212, 20);
+		contentPane.add(cbxScore);
+		
+		lblScore = new JLabel(LocaleBundle.getString("EditSeriesFrame.lblScore.text")); //$NON-NLS-1$
+		lblScore.setBounds(12, 681, 52, 16);
+		contentPane.add(lblScore);
 	}
 	
 	private void onBtnOK(boolean check) {
@@ -696,6 +707,8 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		newM.setGenre(CCMovieGenre.find(cbxGenre5.getSelectedIndex()), 5);
 		newM.setGenre(CCMovieGenre.find(cbxGenre6.getSelectedIndex()), 6);
 		newM.setGenre(CCMovieGenre.find(cbxGenre7.getSelectedIndex()), 7);
+		
+		newM.setScore(cbxScore.getSelectedIndex());
 		
 		newM.setCover(currentCoverImage);
 		
@@ -762,6 +775,9 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		
 		cbxLanguage.setModel(new DefaultComboBoxModel(CCMovieLanguage.getList()));
 		
+		cbxScore.setModel(new DefaultComboBoxModel(CCMovieScore.getList()));
+		cbxScore.setSelectedIndex(cbxScore.getModel().getSize() - 1);
+		
 		DefaultComboBoxModel cbFSKdcbm;
 		cbxFSK.setModel(cbFSKdcbm = new DefaultComboBoxModel(CCMovieFSK.getList()));
 		cbFSKdcbm.addElement(" "); //$NON-NLS-1$
@@ -823,6 +839,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		btnCancel.setEnabled(e);
 		edTitle.setEnabled(e);
 		spnZyklus.setEnabled(e);
+		cbxScore.setEnabled(e);
 	}
 	
 	private void onBtnChooseClicked(int cNmbr) {

@@ -19,7 +19,7 @@ import de.jClipCorn.util.PathFormatter;
 import de.jClipCorn.util.ProgressCallbackListener;
 
 public class DatabaseValidator {
-	private final static double MAX_SIZEDRIFT = 0.05; // 5%
+	private final static double MAX_SIZEDRIFT = 0.05; // 5% //TODO Make this 5% into a setting (and will perhaps even 0% work ?)
 	private final static CCDate MIN_DATE = CCDate.getNewMinimumDate();
 	
 	public static void startValidate(ArrayList<DatabaseError> e, CCMovieList ml, ProgressCallbackListener pcl) {

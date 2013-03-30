@@ -18,7 +18,7 @@ public class Main {
 	
 	private final static String PROPERTIES_PATH = "jClipcorn.properties"; //$NON-NLS-1$
 	
-	public final static boolean DEBUG = false;
+	public final static boolean DEBUG = "true".equals(System.getProperty("ineclipse"));  //$NON-NLS-1$//$NON-NLS-2$
 	
 	public static void main(String[] arg) {		
 		new CCProperties(PROPERTIES_PATH); // MUSS ALS ERSTES CREATED WERDEN - FUCKING IMPORTANT
@@ -69,4 +69,4 @@ public class Main {
 //TODO Auto rename Files nach Richtlinien
 
 //TODO Improve Time until Mainframe is shown (it now takes 500 ms before geting to the create MainFrame Thing)
-//TODO Add Score to AddMovieFrame (and perhaps AddSeriesFrame)
+//TODO Organize All Cover Files

@@ -79,6 +79,7 @@ public class CCProperties {
 	public CCBoolProperty PROP_LOG_APPEND;
 	public CCPintProperty PROP_LOG_MAX_LINECOUNT;
 	public CCRIntProperty PROP_VIEW_DB_START_SORT;
+	//TODO Hidden Debug Mode
 	
 	private Properties properties;
 	String path;

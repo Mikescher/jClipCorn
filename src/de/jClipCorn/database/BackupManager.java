@@ -100,6 +100,8 @@ public class BackupManager {
 	}
 	
 	public void createBackup() {
+		CCLog.addInformation(LocaleBundle.getString("LogMessage.BackupStarted")); //$NON-NLS-1$
+		
 		CCDate now = new CCDate();
 		
 		File b = new File(getBackupDirectory().getAbsolutePath() + '\\' + String.format(NAME, CCProperties.getInstance().PROP_DATABASE_NAME.getValue(), now.getSimpleStringRepresentation()) + '.' + EXTENSION);

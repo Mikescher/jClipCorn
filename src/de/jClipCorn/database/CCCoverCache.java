@@ -22,7 +22,6 @@ import de.jClipCorn.util.PathFormatter;
 
 public class CCCoverCache {
 	private final static String COVER_DIRECTORY = "\\cover\\"; //$NON-NLS-1$
-	private final static int MAX_COVER_CREATE_TRYS = 8;
 
 	private CachedHashMap<String, BufferedImage> cache; //TODO Precaching
 
@@ -138,13 +137,17 @@ public class CCCoverCache {
 	}
 
 	public String addCover(BufferedImage newCover) {
-		return addNewCoverToFolder(newCover, MAX_COVER_CREATE_TRYS); 
+		return addNewCoverToFolder(newCover); 
 	}
 
-	private String addNewCoverToFolder(BufferedImage cov, int tryc) {
+	private String addNewCoverToFolder(BufferedImage cov) {
 		biggestCoverId++;
 		
 		int id = biggestCoverId;
+		
+		if (Main.DEBUG) {
+			System.out.println("addingCoverToFolder: " + id); //$NON-NLS-1$
+		}
 
 		String fname = CCProperties.getInstance().PROP_COVER_PREFIX.getValue() + id + '.' + CCProperties.getInstance().PROP_COVER_TYPE.getValue();
 		String path = databasePath + fname;
@@ -159,15 +162,9 @@ public class CCCoverCache {
 
 			return fname;
 		} catch (IOException e) {
-			if (tryc <= 0) {
-				CCLog.addError("LogMessage.ErrorCreatingCoverFile"); //$NON-NLS-1$
+			CCLog.addError("LogMessage.ErrorCreatingCoverFile"); //$NON-NLS-1$
 
-				return ""; //$NON-NLS-1$
-			} else {
-				CCLog.addWarning("LogMessage.InfoCreatingCoverFile"); //$NON-NLS-1$
-
-				return addNewCoverToFolder(cov, tryc - 1); // retry
-			}
+			return ""; //$NON-NLS-1$
 		}
 	}
 
@@ -183,5 +180,9 @@ public class CCCoverCache {
 		}
 		
 		cache.remove(covername);
+		
+		if (Main.DEBUG) {
+			System.out.println("removing Cover from Folder: " + covername); //$NON-NLS-1$
+		}
 	}
 }

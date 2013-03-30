@@ -18,7 +18,7 @@ public class Main {
 	
 	private final static String PROPERTIES_PATH = "jClipcorn.properties"; //$NON-NLS-1$
 	
-	public final static boolean DEBUG = "true".equals(System.getProperty("ineclipse"));  //$NON-NLS-1$//$NON-NLS-2$
+	public static boolean DEBUG = "true".equals(System.getProperty("ineclipse"));  //$NON-NLS-1$//$NON-NLS-2$
 	
 	public static void main(String[] arg) {		
 		new CCProperties(PROPERTIES_PATH); // MUSS ALS ERSTES CREATED WERDEN - FUCKING IMPORTANT
@@ -56,6 +56,8 @@ public class Main {
 		if (CCProperties.getInstance().PROP_LOADING_PRELOADRESOURCES.getValue()) {
 			Resources.preload();
 		}
+		
+		DEBUG |= CCProperties.getInstance().PROP_OTHER_DEBUGMODE.getValue();
 	}
 }
 
@@ -69,4 +71,4 @@ public class Main {
 //TODO Auto rename Files nach Richtlinien
 
 //TODO Improve Time until Mainframe is shown (it now takes 500 ms before geting to the create MainFrame Thing)
-//TODO Organize All Cover Files
+//TODO Organize All Cover Files - Mode(no gaps between filenames)

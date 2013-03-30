@@ -13,13 +13,14 @@ import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFormat;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieSize;
 import de.jClipCorn.gui.frames.checkDatabaseFrame.DatabaseCoverElement;
+import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.CCDate;
 import de.jClipCorn.util.FileSizeFormatter;
 import de.jClipCorn.util.PathFormatter;
 import de.jClipCorn.util.ProgressCallbackListener;
 
 public class DatabaseValidator {
-	private final static double MAX_SIZEDRIFT = 0.05; // 5% //TODO Make this 5% into a setting (and will perhaps even 0% work ?)
+	private final static double MAX_SIZEDRIFT = CCProperties.getInstance().PROP_VALIDATE_FILESIEDRIFT.getValue() / 100d;
 	private final static CCDate MIN_DATE = CCDate.getNewMinimumDate();
 	
 	public static void startValidate(ArrayList<DatabaseError> e, CCMovieList ml, ProgressCallbackListener pcl) {

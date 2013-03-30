@@ -42,44 +42,45 @@ public class CCProperties {
 	
 	private Vector<CCProperty<Object>> propertylist = new Vector<>();
 	
-	public CCBoolProperty PROP_ADD_MOVIE_RELATIVE_AUTO;
+	public CCBoolProperty 	PROP_ADD_MOVIE_RELATIVE_AUTO;
 	public CCStringProperty PROP_DATABASE_NAME;
 	public CCStringProperty PROP_LOG_PATH;
-	public CCRIntProperty PROP_UI_LANG;
+	public CCRIntProperty 	PROP_UI_LANG;
 	public CCStringProperty PROP_SELF_DIRECTORY;
 	public CCStringProperty PROP_COVER_PREFIX;
 	public CCStringProperty PROP_COVER_TYPE;
-	public CCBoolProperty PROP_LOADING_LIVEUPDATE;
-	public CCBoolProperty PROP_STATUSBAR_CALC_SERIES_IN_LENGTH;
-	public CCBoolProperty PROP_STATUSBAR_CALC_SERIES_IN_SIZE;
-	public CCRIntProperty PROP_UI_LOOKANDFEEL;
+	public CCBoolProperty 	PROP_LOADING_LIVEUPDATE;
+	public CCBoolProperty 	PROP_STATUSBAR_CALC_SERIES_IN_LENGTH;
+	public CCBoolProperty 	PROP_STATUSBAR_CALC_SERIES_IN_SIZE;
+	public CCRIntProperty 	PROP_UI_LOOKANDFEEL;
 	public CCStringProperty PROP_PLAY_VLC_PATH;
-	public CCBoolProperty PROP_PLAY_VLC_FULLSCREEN;
-	public CCBoolProperty PROP_PLAY_VLC_AUTOPLAY;
-	public CCBoolProperty PROP_PLAY_USESTANDARDONMISSINGVLC; // Use Standard Player on missing VLC
-	public CCRIntProperty PROP_ON_DBLCLICK_MOVE; //0=Play | 1=Preview
-	public CCBoolProperty PROP_USE_INTELLISORT;
-	public CCBoolProperty PROP_INCLUDE_SERIES_IN_VIEWEDCOUNT;
-	public CCPintProperty PROP_MAINFRAME_SCROLLSPEED;
-	public CCRIntProperty PROP_MAINFRAME_TABLEBACKGROUND; //0=WHITE | 1=GRAY-WHITE | 2=Score
-	public CCBoolProperty PROP_LOADING_PRELOADRESOURCES;
-	public CCBoolProperty PROP_DATABASE_CREATELOGFILE;
-	public CCPintProperty PROP_DATABASE_COVERCACHESIZE;
-	public CCBoolProperty PROP_COMMON_CHECKFORUPDATES;
-	public CCBoolProperty PROP_COMMON_PRESCANFILESYSTEM;
-	public CCBoolProperty PROP_SCANFOLDER_INCLUDESERIES;
-	public CCBoolProperty PROP_SCANFOLDER_EXCLUDEIFOS;
-	public CCDateProperty PROP_BACKUP_LASTBACKUP;
-	public CCBoolProperty PROP_BACKUP_CREATEBACKUPS;
+	public CCBoolProperty 	PROP_PLAY_VLC_FULLSCREEN;
+	public CCBoolProperty 	PROP_PLAY_VLC_AUTOPLAY;
+	public CCBoolProperty 	PROP_PLAY_USESTANDARDONMISSINGVLC; // Use Standard Player on missing VLC
+	public CCRIntProperty 	PROP_ON_DBLCLICK_MOVE; //0=Play | 1=Preview
+	public CCBoolProperty 	PROP_USE_INTELLISORT;
+	public CCBoolProperty 	PROP_INCLUDE_SERIES_IN_VIEWEDCOUNT;
+	public CCPintProperty 	PROP_MAINFRAME_SCROLLSPEED;
+	public CCRIntProperty 	PROP_MAINFRAME_TABLEBACKGROUND; //0=WHITE | 1=GRAY-WHITE | 2=Score
+	public CCBoolProperty 	PROP_LOADING_PRELOADRESOURCES;
+	public CCBoolProperty 	PROP_DATABASE_CREATELOGFILE;
+	public CCPintProperty 	PROP_DATABASE_COVERCACHESIZE;
+	public CCBoolProperty 	PROP_COMMON_CHECKFORUPDATES;
+	public CCBoolProperty 	PROP_COMMON_PRESCANFILESYSTEM;
+	public CCBoolProperty 	PROP_SCANFOLDER_INCLUDESERIES;
+	public CCBoolProperty 	PROP_SCANFOLDER_EXCLUDEIFOS;
+	public CCDateProperty 	PROP_BACKUP_LASTBACKUP;
+	public CCBoolProperty 	PROP_BACKUP_CREATEBACKUPS;
 	public CCStringProperty PROP_BACKUP_FOLDERNAME;
-	public CCPintProperty PROP_BACKUP_BACKUPTIME;
-	public CCRIntProperty PROP_BACKUP_COMPRESSION;
-	public CCBoolProperty PROP_BACKUP_AUTODELETEBACKUPS;
-	public CCPintProperty PROP_BACKUP_LIFETIME;
-	public CCBoolProperty PROP_LOG_APPEND;
-	public CCPintProperty PROP_LOG_MAX_LINECOUNT;
-	public CCRIntProperty PROP_VIEW_DB_START_SORT;
-	//TODO Hidden Debug Mode
+	public CCPintProperty 	PROP_BACKUP_BACKUPTIME;
+	public CCRIntProperty 	PROP_BACKUP_COMPRESSION;
+	public CCBoolProperty 	PROP_BACKUP_AUTODELETEBACKUPS;
+	public CCPintProperty 	PROP_BACKUP_LIFETIME;
+	public CCBoolProperty 	PROP_LOG_APPEND;
+	public CCPintProperty 	PROP_LOG_MAX_LINECOUNT;
+	public CCRIntProperty 	PROP_VIEW_DB_START_SORT;
+	public CCRIntProperty	PROP_VALIDATE_FILESIEDRIFT;
+	public CCBoolProperty	PROP_OTHER_DEBUGMODE;
 	
 	private Properties properties;
 	String path;
@@ -157,6 +158,8 @@ public class CCProperties {
 		PROP_LOG_APPEND							= new CCBoolProperty(CAT_COMMON, 		this,   "PROP_LOG_APPEND", 						true);
 		PROP_LOG_MAX_LINECOUNT 					= new CCPintProperty(CAT_COMMON, 		this, 	"PROP_LOG_MAX_LINECOUNT", 				1048576); // 2^20
 		PROP_VIEW_DB_START_SORT					= new CCRIntProperty(CAT_VIEW, 			this, 	"PROP_VIEW_DB_START_SORT", 				0,					vs);
+		PROP_OTHER_DEBUGMODE					= new CCBoolProperty(NONVISIBLE, 		this,   "PROP_OTHER_DEBUGMODE", 				false);
+		PROP_VALIDATE_FILESIEDRIFT				= new CCRIntProperty(CAT_DIALOGS, 		this, 	"PROP_VALIDATE_FILESIEDRIFT", 			5,					100);
 	}
 	
 	public static CCProperties getInstance() {

@@ -47,7 +47,7 @@ public class ClipStatusBar extends AbstractClipStatusbar implements CCDBUpdateLi
 		}
 	}
 	
-	private void intializeGUI() { //TODO Settings for SHowing columns
+	private void intializeGUI() { //TODO Settings for Showing columns
 		//##################################################
 		startInitColumns();
 		//##################################################

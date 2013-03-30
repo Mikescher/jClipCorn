@@ -111,7 +111,7 @@ public class PathFormatter {
 	
 	public static void showInExplorer(String abspath) {
 		try {
-			Runtime.getRuntime().exec(String.format("explorer.exe /select,\"%s\"", abspath)); //TODO öffnet zwar - selected aber nicht :'(
+			Runtime.getRuntime().exec(String.format("explorer.exe /select,\"%s\"", abspath)); //TODO öffnet zwar - selected aber nicht :'( // Manchmal aber doch
 		} catch (IOException e) {
 			CCLog.addError(e);
 		}

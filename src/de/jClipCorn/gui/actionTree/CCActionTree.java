@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 
+import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 
 import de.jClipCorn.database.CCMovieList;
@@ -24,6 +25,7 @@ import de.jClipCorn.gui.frames.changeViewedFrame.ChangeViewedFrame;
 import de.jClipCorn.gui.frames.checkDatabaseFrame.CheckDatabaseDialog;
 import de.jClipCorn.gui.frames.editMovieFrame.EditMovieFrame;
 import de.jClipCorn.gui.frames.editSeriesFrame.EditSeriesFrame;
+import de.jClipCorn.gui.frames.exportJxmlBKPFrame.ExportJxmlBKPDialog;
 import de.jClipCorn.gui.frames.filenameRulesFrame.FilenameRuleFrame;
 import de.jClipCorn.gui.frames.logFrame.LogFrame;
 import de.jClipCorn.gui.frames.mainFrame.MainFrame;
@@ -95,6 +97,14 @@ public class CCActionTree {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				onClickDatabaseClear();
+			}
+		});
+		
+		temp = database.addChild(new CCActionElement("Export Database", "ClipMenuBar.Database.ExportDB", Resources.ICN_MENUBAR_CREATE_JXMLBKP));
+		temp.addListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				onClickDatabaseExportAsJxmBKP();
 			}
 		});
 
@@ -509,6 +519,11 @@ public class CCActionTree {
 				}
 			}).start();
 		}
+	}
+	
+	private void onClickDatabaseExportAsJxmBKP() {
+		JDialog ejf = new ExportJxmlBKPDialog(owner, owner.getMovielist());
+		ejf.setVisible(true);
 	}
 
 	private void onClickSeriesPreview() {

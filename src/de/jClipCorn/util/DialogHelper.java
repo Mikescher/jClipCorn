@@ -39,6 +39,8 @@ public class DialogHelper {
 			} catch (InvocationTargetException | InterruptedException e) {
 				CCLog.addError(e);
 			}
+		} else {
+			showError(new JFrame(), caption, text);
 		}
 	}
 }

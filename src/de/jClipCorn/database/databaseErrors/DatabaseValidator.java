@@ -226,7 +226,7 @@ public class DatabaseValidator {
 		// Wrong AddDate
 		// ###############################################
 		
-		if (mov.getDate().isLessEqualsThan(MIN_DATE) || mov.getDate().isGreaterThan(new CCDate())) {
+		if (mov.getAddDate().isLessEqualsThan(MIN_DATE) || mov.getAddDate().isGreaterThan(new CCDate())) {
 			e.add(DatabaseError.createSingle(DatabaseError.ERROR_WRONG_ADDDATE, mov));
 		}
 

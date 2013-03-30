@@ -132,7 +132,7 @@ public class CCDatabase extends DerbyDatabase {
 			mov.setLanguage(rs.getInt(TAB_MAIN_COLUMN_LANGUAGE));
 			mov.setGenres(rs.getLong(TAB_MAIN_COLUMN_GENRE));
 			mov.setLength(rs.getInt(TAB_MAIN_COLUMN_LENGTH));
-			mov.setDate(rs.getDate(TAB_MAIN_COLUMN_ADDDATE));
+			mov.setAddDate(rs.getDate(TAB_MAIN_COLUMN_ADDDATE));
 			mov.setOnlinescore(rs.getInt(TAB_MAIN_COLUMN_ONLINESCORE));
 			mov.setFsk(rs.getInt(TAB_MAIN_COLUMN_FSK));
 			mov.setFormat(rs.getInt(TAB_MAIN_COLUMN_FORMAT));
@@ -436,7 +436,7 @@ public class CCDatabase extends DerbyDatabase {
 			s.setInt(6, mov.getLanguage().asInt());
 			s.setLong(7, mov.getGenres().getAllGenres());
 			s.setInt(8, mov.getLength());
-			s.setString(9, mov.getDate().getSQLStringRepresentation());
+			s.setString(9, mov.getAddDate().getSQLStringRepresentation());
 			s.setInt(10, mov.getOnlinescore().asInt());
 			s.setInt(11, mov.getFSK().asInt());
 			s.setInt(12, mov.getFormat().asInt());

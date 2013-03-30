@@ -2,6 +2,8 @@ package de.jClipCorn.database.databaseElement;
 
 import java.sql.Date;
 
+import org.jdom2.Element;
+
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFormat;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieQuality;
@@ -27,7 +29,7 @@ public class CCMovie extends CCDatabaseElement {
 	private CCMovieZyklus zyklus;			// LEN = 128 + INTEGER
 	private CCMovieQuality quality;			// TINYINT
 	private int length;						// INTEGER - in minutes
-	private CCDate date;					// DATE
+	private CCDate addDate;					// DATE
 	private CCMovieFormat format;			// TINYINT
 	private	int year;						// SMALLINT
 	private CCMovieSize filesize;			// BIGINT - signed (unfortunately)
@@ -49,7 +51,7 @@ public class CCMovie extends CCDatabaseElement {
 		zyklus.reset();
 		quality = CCMovieQuality.STREAM;
 		length = 0;
-		date = new CCDate(1, 1, CCDate.YEAR_MIN);
+		addDate = new CCDate(1, 1, CCDate.YEAR_MIN);
 		format = CCMovieFormat.MKV;
 		year = 1900;
 		filesize.setBytes(0);
@@ -148,18 +150,18 @@ public class CCMovie extends CCDatabaseElement {
 		updateDB();
 	}
 
-	public CCDate getDate() {
-		return date;
+	public CCDate getAddDate() {
+		return addDate;
 	}
 
-	public void setDate(CCDate date) {
-		this.date = date;
+	public void setAddDate(CCDate date) {
+		this.addDate = date;
 		
 		updateDB();
 	}
 	
-	public void setDate(Date sqldate) {
-		this.date = new CCDate(sqldate);
+	public void setAddDate(Date sqldate) {
+		this.addDate = new CCDate(sqldate);
 		
 		updateDB();
 	}
@@ -248,5 +250,25 @@ public class CCMovie extends CCDatabaseElement {
 
 	public CCMovieList getMovieList() {
 		return movielist;
+	}
+	
+	@SuppressWarnings("nls")
+	@Override
+	protected void setXMLAttributes(Element e) {
+		super.setXMLAttributes(e);
+		
+		e.setAttribute("adddate", addDate.getSimpleStringRepresentation() + "");
+		e.setAttribute("filesize", filesize.getBytes() + "");
+		e.setAttribute("format", format.asInt() + "");
+		e.setAttribute("length", length  + "");
+		for (int i = 0; i < parts.length; i++) {
+			e.setAttribute("part_"+i, parts[i]);
+		}
+		e.setAttribute("quality", quality.asInt() + "");
+		e.setAttribute("status", status.asInt() + "");
+		e.setAttribute("viewed", viewed + "");
+		e.setAttribute("year", year + "");
+		e.setAttribute("zyklus", zyklus.getTitle());
+		e.setAttribute("zyklusnumber", zyklus.getNumber() + "");
 	}
 }

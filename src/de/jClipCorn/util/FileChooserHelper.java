@@ -10,7 +10,6 @@ public class FileChooserHelper {
 	//TODO Diese ganze Klasse löschen und überall FileNameExtensionFilter nehmen
 	public static FileFilter createFileFilter(final String description, final String[] extensions) {
 		return new FileFilter() {
-
 			@Override
 			public String getDescription() {
 				return description; 

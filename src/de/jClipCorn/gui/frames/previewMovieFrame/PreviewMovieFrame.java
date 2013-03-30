@@ -367,7 +367,7 @@ public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener 
 		
 		lbl_Length.setText(TimeIntervallFormatter.formatPointed(movie.getLength()));
 		
-		lbl_Added.setText(movie.getDate().getSimpleStringRepresentation());
+		lbl_Added.setText(movie.getAddDate().getSimpleStringRepresentation());
 		
 		lbl_FSK.setIcon(movie.getFSK().getIcon());
 		lbl_FSK.setText(movie.getFSK().asString());

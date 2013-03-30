@@ -9,6 +9,10 @@ import java.util.Vector;
 
 import javax.swing.SwingUtilities;
 
+import org.jdom2.Document;
+import org.jdom2.Element;
+
+import de.jClipCorn.Main;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.CCMovie;
@@ -21,6 +25,7 @@ import de.jClipCorn.gui.frames.mainFrame.MainFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.properties.CCProperties;
+import de.jClipCorn.util.CCDate;
 import de.jClipCorn.util.PathFormatter;
 
 public class CCMovieList {
@@ -505,5 +510,24 @@ public class CCMovieList {
 		}
 		
 		return null;
+	}
+	
+	@SuppressWarnings("nls")
+	public Document getAsXML() {
+		Document xml = new Document(new Element("database"));
+		
+		Element root = xml.getRootElement();
+		
+		root.setAttribute("version", Main.VERSION);
+		root.setAttribute("dbversion", Main.DBVERSION);
+		root.setAttribute("date", new CCDate().getSimpleStringRepresentation());
+		root.setAttribute("elementcount", getElementCount() + "");
+		
+		for (int i = 0; i < list.size(); i++) {
+			CCDatabaseElement dbe = getDatabaseElementBySort(i);
+			dbe.generateXML(root);
+		}
+		
+		return xml;
 	}
 }

@@ -783,7 +783,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		cbxQuality.setSelectedIndex(movie.getQuality().asInt());
 		cbxLanguage.setSelectedIndex(movie.getLanguage().asInt());
 		spnLength.setValue(movie.getLength());
-		spnAddDate.setValue(movie.getDate().copy());
+		spnAddDate.setValue(movie.getAddDate().copy());
 		spnOnlineScore.setValue(movie.getOnlinescore().asInt());
 		cbxFSK.setSelectedIndex(movie.getFSK().asInt());
 		cbxFormat.setSelectedIndex(movie.getFormat().asInt());
@@ -1060,7 +1060,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		
 		movie.setLength((int) spnLength.getValue());
 		
-		movie.setDate((CCDate) spnAddDate.getValue());
+		movie.setAddDate((CCDate) spnAddDate.getValue());
 		
 		movie.setOnlinescore((int) spnOnlineScore.getValue());
 		

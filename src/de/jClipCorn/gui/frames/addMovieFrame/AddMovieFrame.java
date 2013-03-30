@@ -689,7 +689,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		
 		newM.setLength((int) spnLength.getValue());
 		
-		newM.setDate((CCDate) spnAddDate.getValue());
+		newM.setAddDate((CCDate) spnAddDate.getValue());
 		
 		newM.setOnlinescore((int) spnOnlineScore.getValue());
 		

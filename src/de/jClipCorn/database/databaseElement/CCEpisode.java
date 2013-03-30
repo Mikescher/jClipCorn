@@ -2,6 +2,8 @@ package de.jClipCorn.database.databaseElement;
 
 import java.sql.Date;
 
+import org.jdom2.Element;
+
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFormat;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieQuality;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieSize;
@@ -19,7 +21,7 @@ public class CCEpisode {
 	
 	private int episodeNumber;
 	private String title;
-	private boolean isViewed;
+	private boolean viewed;
 	private CCMovieQuality quality;
 	private int length;
 	private CCMovieStatus status;
@@ -71,7 +73,7 @@ public class CCEpisode {
 	}
 
 	public void setViewed(boolean v) {
-		this.isViewed = v;
+		this.viewed = v;
 		
 		if (! v) {
 			resetLastViewed();
@@ -173,7 +175,7 @@ public class CCEpisode {
 	public void setDefaultValues(boolean updateDB) {
 		episodeNumber = 0;
 		title = ""; //$NON-NLS-1$
-		isViewed = false;
+		viewed = false;
 		quality = CCMovieQuality.STREAM;
 		length = 0;
 		format = CCMovieFormat.MKV;
@@ -201,7 +203,7 @@ public class CCEpisode {
 	}
 
 	public boolean isViewed() {
-		return isViewed;
+		return viewed;
 	}
 
 	public CCMovieQuality getQuality() {
@@ -266,5 +268,32 @@ public class CCEpisode {
 	@Override
 	public String toString() {
 		return getTitle();
+	}
+
+	@SuppressWarnings("nls")
+	protected void setXMLAttributes(Element e) {
+		e.setAttribute("localid", localID + "");
+		e.setAttribute("title", title);
+		e.setAttribute("viewed", viewed + "");
+		e.setAttribute("adddate", addDate.getSimpleStringRepresentation());
+		e.setAttribute("episodenumber", episodeNumber + "");
+		e.setAttribute("filesize", filesize.getBytes() + "");
+		e.setAttribute("format", format.asInt() + "");
+		e.setAttribute("lastviewed", lastViewed.getSimpleStringRepresentation());
+		e.setAttribute("length", length + "");
+		e.setAttribute("part", part);
+		e.setAttribute("quality", quality.asInt() + "");
+		e.setAttribute("status", status.asInt() + "");
+	}
+
+	@SuppressWarnings("nls")
+	public Element generateXML(Element el) {
+		Element epis = new Element("episode");
+		
+		setXMLAttributes(epis);
+		
+		el.addContent(epis);
+		
+		return epis;
 	}
 }

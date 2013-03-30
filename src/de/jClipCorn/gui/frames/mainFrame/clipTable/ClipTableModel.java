@@ -104,7 +104,7 @@ public class ClipTableModel extends AbstractTableModel implements TableModelRowC
 			case 8: // Length
 				return mov.getLength();
 			case 9: // Date
-				return mov.getDate();
+				return mov.getAddDate();
 			case 10: // OnlineScore
 				return mov.getOnlinescore();
 			case 11: // FSK

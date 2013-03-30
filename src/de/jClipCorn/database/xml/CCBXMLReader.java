@@ -106,7 +106,7 @@ public class CCBXMLReader {
 		newMov.setLength(Integer.parseInt(e.getChildText("länge")));
 		CCDate d = new CCDate();
 		d.parse(e.getChildText("adddate"), "D.M.Y");
-		newMov.setDate(d);
+		newMov.setAddDate(d);
 		newMov.setOnlinescore(Integer.parseInt(e.getChildText("imdbscore")));
 		newMov.setFsk(e.getChild("usk").getAttribute("dec").getIntValue());
 		newMov.setFormat(e.getChild("format").getAttribute("dec").getIntValue());

@@ -4,6 +4,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Vector;
 
+import org.jdom2.Element;
+
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFormat;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieQuality;
@@ -289,5 +291,23 @@ public class CCSeries extends CCDatabaseElement {
 
 	public int findSeason(CCSeason ccSeason) {
 		return seasons.indexOf(ccSeason);
+	}
+	
+	@Override
+	protected void setXMLAttributes(Element e) {
+		super.setXMLAttributes(e);
+		
+		// Add additional Attributes here pls
+	}
+	
+	@Override
+	public Element generateXML(Element el) {
+		Element ser = super.generateXML(el);
+		
+		for (int i = 0; i < seasons.size(); i++) {
+			seasons.get(i).generateXML(ser);
+		}
+		
+		return ser;
 	}
 }

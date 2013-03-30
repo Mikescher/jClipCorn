@@ -25,13 +25,13 @@ public class CCCoverCache {
 
 	private CachedHashMap<String, BufferedImage> cache; //TODO Precaching
 
-	private String databasePath;
+	private String coverPath;
 	private int biggestCoverId;
 
 	public CCCoverCache(CCMovieList ml) {
 		cache = new CachedHashMap<>(CCProperties.getInstance().PROP_DATABASE_COVERCACHESIZE.getValue());
 		
-		databasePath = PathFormatter.getRealSelfDirectory() + ml.getDatabasePath() + COVER_DIRECTORY;
+		coverPath = PathFormatter.getRealSelfDirectory() + ml.getDatabasePath() + COVER_DIRECTORY;
 
 		tryCreatePath();
 
@@ -59,7 +59,7 @@ public class CCCoverCache {
 
 		if (res == null) {
 			try {
-				res = ImageIO.read(new File(databasePath + name));
+				res = ImageIO.read(new File(coverPath + name));
 				cache.put(name, res);
 			} catch (IOException e) {
 				if (! Main.DEBUG) {
@@ -83,11 +83,11 @@ public class CCCoverCache {
 
 		if (res == null) {
 			try {
-				res = ImageIO.read(new File(databasePath + name));
+				res = ImageIO.read(new File(coverPath + name));
 				res = CachedResourceLoader.resize(res, ImageUtilities.COVER_WIDTH / 2, ImageUtilities.COVER_HEIGHT / 2);
 				cache.put(name + "_halfsize", res); //$NON-NLS-1$
 			} catch (IOException e) {
-				CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CoverNotFound", databasePath + name)); //$NON-NLS-1$
+				CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CoverNotFound", coverPath + name)); //$NON-NLS-1$
 				return CachedResourceLoader.getImage(Resources.IMG_COVER_NOTFOUND);
 			}
 		}
@@ -96,7 +96,7 @@ public class CCCoverCache {
 	}
 	
 	public boolean coverExists(String name) {
-		return new File(databasePath + name).exists();
+		return new File(coverPath + name).exists();
 	}
 
 	public void preloadCover(String name) {
@@ -104,19 +104,19 @@ public class CCCoverCache {
 
 		if (res == null) {
 			try {
-				res = ImageIO.read(new File(databasePath + name));
+				res = ImageIO.read(new File(coverPath + name));
 				cache.put(name, res);
 			} catch (IOException e) {
-				CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CoverNotFoundPreload", databasePath + name)); //$NON-NLS-1$
+				CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CoverNotFoundPreload", coverPath + name)); //$NON-NLS-1$
 			}
 		}
 	}
 
 	private void tryCreatePath() {
-		File dbpF = new File(databasePath);
+		File dbpF = new File(coverPath);
 
 		if (!dbpF.exists() && !dbpF.mkdirs()) { // Only mkdir if not exists
-			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.ErrorMKDIRCovers", databasePath)); //$NON-NLS-1$
+			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.ErrorMKDIRCovers", coverPath)); //$NON-NLS-1$
 		}
 	}
 
@@ -150,7 +150,7 @@ public class CCCoverCache {
 		}
 
 		String fname = CCProperties.getInstance().PROP_COVER_PREFIX.getValue() + id + '.' + CCProperties.getInstance().PROP_COVER_TYPE.getValue();
-		String path = databasePath + fname;
+		String path = coverPath + fname;
 
 		try {
 			File f = new File(path);
@@ -173,7 +173,7 @@ public class CCCoverCache {
 	}
 	
 	public void deleteCover(String covername) {
-		File f = new File(databasePath + covername);
+		File f = new File(coverPath + covername);
 
 		if (!f.delete()) {
 			CCLog.addWarning(LocaleBundle.getFormattedString("LogMessage.DeleteCover", covername)); //$NON-NLS-1$
@@ -184,5 +184,9 @@ public class CCCoverCache {
 		if (Main.DEBUG) {
 			System.out.println("removing Cover from Folder: " + covername); //$NON-NLS-1$
 		}
+	}
+
+	public File getCoverDirectory() {
+		return new File(coverPath);
 	}
 }

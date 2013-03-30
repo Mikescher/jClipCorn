@@ -4,6 +4,8 @@ import java.awt.image.BufferedImage;
 
 import javax.swing.ImageIcon;
 
+import org.jdom2.Element;
+
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFSK;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieGenre;
@@ -217,5 +219,39 @@ public abstract class CCDatabaseElement {
 	
 	public boolean isSeries() {
 		return getType().equals(CCMovieTyp.SERIES);
+	}
+	
+	@SuppressWarnings("nls")
+	protected void setXMLAttributes(Element e) {
+		e.setAttribute("localid", localID + "");
+		e.setAttribute("typ", typ.asInt() + "");
+		e.setAttribute("title", title);
+		e.setAttribute("language", language.asInt() + "");
+		e.setAttribute("genres", genres.getAllGenres() + "");
+		e.setAttribute("onlinescore", onlinescore.asInt() + "");
+		e.setAttribute("fsk", fsk.asInt() + "");
+		e.setAttribute("score", score.asInt() + "");
+		e.setAttribute("covername", covername);
+		e.setAttribute("seriesid", seriesID + "");
+	}
+
+	@SuppressWarnings("nls")
+	public Element generateXML(Element el) {
+		Element dbelement = null;
+		
+		switch (typ) {
+		case MOVIE:
+			dbelement = new Element("movie");
+			break;
+		case SERIES:
+			dbelement = new Element("series");
+			break;
+		}
+		
+		setXMLAttributes(dbelement);
+		
+		el.addContent(dbelement);
+		
+		return dbelement;
 	}
 }

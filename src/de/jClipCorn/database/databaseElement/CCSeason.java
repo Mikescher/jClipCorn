@@ -7,6 +7,8 @@ import java.util.Vector;
 
 import javax.swing.ImageIcon;
 
+import org.jdom2.Element;
+
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFormat;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieQuality;
@@ -318,5 +320,28 @@ public class CCSeason {
 
 	public int findEpisode(CCEpisode ccEpisode) {
 		return episodes.indexOf(ccEpisode);
+	}
+
+	@SuppressWarnings("nls")
+	protected void setXMLAttributes(Element e) {
+		e.setAttribute("seasonid", seasonID + "");
+		e.setAttribute("title", title);
+		e.setAttribute("year", year + "");
+		e.setAttribute("covername", covername);
+	}
+
+	@SuppressWarnings("nls")
+	public Element generateXML(Element el) {
+		Element sea = new Element("season");
+		
+		setXMLAttributes(sea);
+		
+		el.addContent(sea);
+		
+		for (int i = 0; i < episodes.size(); i++) {
+			episodes.get(i).generateXML(sea);
+		}
+		
+		return sea;
 	}
 }

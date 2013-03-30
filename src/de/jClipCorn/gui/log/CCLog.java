@@ -9,6 +9,8 @@ import java.io.PrintWriter;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
 
+import javax.swing.SwingUtilities;
+
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.CCDate;
@@ -193,8 +195,20 @@ public class CCLog {
 	
 	public static void setChangedFlag() {
 		changed = true;
-		for(CCLogChangedListener ls : listener) {
-			ls.onChanged();
+		
+		if (! SwingUtilities.isEventDispatchThread()) {
+			SwingUtilities.invokeLater(new Runnable() {
+				@Override
+				public void run() {
+					for(CCLogChangedListener ls : listener) {
+						ls.onChanged();
+					}
+				}
+			});
+		} else {
+			for(CCLogChangedListener ls : listener) {
+				ls.onChanged();
+			}
 		}
 	}
 	

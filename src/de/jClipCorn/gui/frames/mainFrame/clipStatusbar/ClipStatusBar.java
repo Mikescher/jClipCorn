@@ -7,9 +7,9 @@ import javax.swing.JLabel;
 import javax.swing.JProgressBar;
 import javax.swing.SwingUtilities;
 
-import de.jClipCorn.database.CCDBUpdateListener;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
+import de.jClipCorn.database.util.CCDBUpdateListener;
 import de.jClipCorn.gui.actionTree.CCActionTree;
 import de.jClipCorn.gui.frames.mainFrame.MainFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;

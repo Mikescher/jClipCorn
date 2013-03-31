@@ -48,7 +48,7 @@ public class CCDate {
 	private int month = 1;
 	private int year = YEAR_MIN;
 	
-	public CCDate() {
+	public CCDate() { //TODO Make add / rem etc Methods FASTER (AND TEST THE SHIT OUT OF THEM (after the performance-boost))
 		Calendar c = Calendar.getInstance();
 		set(c.get(Calendar.DAY_OF_MONTH), c.get(Calendar.MONTH)+1, c.get(Calendar.YEAR));
 	}

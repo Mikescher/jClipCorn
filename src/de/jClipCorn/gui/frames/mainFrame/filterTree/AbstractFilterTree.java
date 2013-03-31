@@ -14,9 +14,9 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
-import de.jClipCorn.database.CCDBUpdateListener;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
+import de.jClipCorn.database.util.CCDBUpdateListener;
 import de.jClipCorn.gui.CachedResourceLoader;
 
 public abstract class AbstractFilterTree extends JScrollPane implements TreeSelectionListener, CCDBUpdateListener, TreeExpansionListener {

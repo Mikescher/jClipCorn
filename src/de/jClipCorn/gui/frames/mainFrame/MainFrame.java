@@ -19,9 +19,9 @@ import javax.swing.JProgressBar;
 import javax.swing.SwingUtilities;
 
 import de.jClipCorn.Main;
-import de.jClipCorn.database.CCDBUpdateListener;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
+import de.jClipCorn.database.util.CCDBUpdateListener;
 import de.jClipCorn.gui.CachedResourceLoader;
 import de.jClipCorn.gui.Resources;
 import de.jClipCorn.gui.actionTree.CCActionTree;
@@ -52,7 +52,7 @@ public class MainFrame extends JFrame implements CCDBUpdateListener {
 	private ClipToolbar toolbar;
 	private JPanel leftPanel;
 	private FilterTree filterTree;
-	private JLabel coverImage;
+	private JLabel coverImage; //TODO Rechtsklick -> Save Cover as
 	private JPanel middlePanel;
 	private ClipTable clipTable;
 	private ClipCharSortSelector charSelector;

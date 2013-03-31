@@ -87,6 +87,10 @@ public class CCSeason {
 	}
 	
 	public void setCover(BufferedImage name) {
+		if (! covername.isEmpty() && name.equals(getCover())) {
+			return;
+		}
+		
 		if (! covername.isEmpty()) {
 			getSeries().getMovieList().getCoverCache().deleteCover(this.covername);
 		}

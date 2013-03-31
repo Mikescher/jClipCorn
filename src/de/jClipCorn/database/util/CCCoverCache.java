@@ -1,4 +1,4 @@
-package de.jClipCorn.database;
+package de.jClipCorn.database.util;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -10,6 +10,7 @@ import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 
 import de.jClipCorn.Main;
+import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.gui.CachedResourceLoader;
 import de.jClipCorn.gui.Resources;

@@ -440,7 +440,7 @@ public class ParseImDBDialog extends JDialog implements Runnable { //TODO Schrif
 		startThread(THREAD_TASK_SEARCH);
 	}
 	
-	@SuppressWarnings("deprecation")
+	@SuppressWarnings("deprecation") //TODO Non-Deprecated way
 	private void stopThread() {
 		if (thisThread != null) {
 			thisThread.suspend();

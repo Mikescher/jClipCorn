@@ -259,7 +259,7 @@ public class FindCoverDialog extends JDialog {
 		return thread_1_finished && thread_2_finished && thread_3_finished;
 	}
 
-	private void startParsing() {
+	private void startParsing() { //TODO Sometimes the programm freezes (eg parsing  underworld 1 or terminator 1 - not alwys ...)
 		onStartThreads();
 
 		thread_1 = (new Thread(new Runnable() {
@@ -276,7 +276,7 @@ public class FindCoverDialog extends JDialog {
 			}
 		}));
 
-		thread_3 = (new Thread(new Runnable() { //TODO was macht denn die 3. zeile ?
+		thread_3 = (new Thread(new Runnable() { //TODO was macht denn die 3. zeile ? - Auser nichts ...
 			@Override
 			public void run() {
 				parseCoverSearch();
@@ -288,7 +288,7 @@ public class FindCoverDialog extends JDialog {
 		thread_3.start();
 	}
 
-	@SuppressWarnings("deprecation")
+	@SuppressWarnings("deprecation") //TODO Non-Deprecated way
 	private void stopParsing() {
 		if (thread_1 != null) {
 			thread_1.suspend();

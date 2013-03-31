@@ -5,6 +5,7 @@ import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.Vector;
 
 import javax.swing.SwingUtilities;
@@ -21,6 +22,11 @@ import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieGenre;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieSize;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieZyklus;
+import de.jClipCorn.database.util.BackupManager;
+import de.jClipCorn.database.util.CCCoverCache;
+import de.jClipCorn.database.util.CCDBUpdateListener;
+import de.jClipCorn.database.util.MovieIterator;
+import de.jClipCorn.database.util.SeriesIterator;
 import de.jClipCorn.gui.frames.mainFrame.MainFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
@@ -34,11 +40,11 @@ public class CCMovieList {
 	private CCCoverCache coverCache;
 	private CCDatabase database;
 
-	private Vector<CCDBUpdateListener> listener;;
+	private Vector<CCDBUpdateListener> listener;
 
 	private long loadTime = -1;
 
-	public CCMovieList() { //TODO Add iterator() iteratorMovies() iteratorSeries() and replace alle Loops with them (if possible)
+	public CCMovieList() {
 		this.database = null;
 		this.list = new Vector<>();
 		this.listener = new Vector<>();
@@ -392,13 +398,11 @@ public class CCMovieList {
 	public ArrayList<String> getZyklusList() {
 		ArrayList<String> result = new ArrayList<>();
 
-		for (int i = 0; i < getElementCount(); i++) {
-			CCDatabaseElement el = getDatabaseElementBySort(i);
-			if (el.isMovie()) {
-				String zyklus = ((CCMovie) el).getZyklus().getTitle();
-				if (!result.contains(zyklus) && !zyklus.isEmpty()) {
-					result.add(zyklus);
-				}
+		for (Iterator<CCMovie> it = iteratorMovies(); it.hasNext();) {
+			CCMovie mov = it.next();
+			String zyklus = mov.getZyklus().getTitle();
+			if (!result.contains(zyklus) && !zyklus.isEmpty()) {
+				result.add(zyklus);
 			}
 		}
 
@@ -410,13 +414,11 @@ public class CCMovieList {
 	public ArrayList<Integer> getYearList() {
 		ArrayList<Integer> result = new ArrayList<>();
 
-		for (int i = 0; i < getElementCount(); i++) {
-			CCDatabaseElement el = getDatabaseElementBySort(i);
-			if (el.isMovie()) {
-				Integer year = ((CCMovie) el).getYear();
-				if (!result.contains(year)) {
-					result.add(year);
-				}
+		for (Iterator<CCMovie> it = iteratorMovies(); it.hasNext();) {
+			CCMovie mov = it.next();
+			Integer year = mov.getYear();
+			if (!result.contains(year)) {
+				result.add(year);
 			}
 		}
 
@@ -428,8 +430,7 @@ public class CCMovieList {
 	public ArrayList<CCMovieGenre> getGenreList() {
 		ArrayList<CCMovieGenre> result = new ArrayList<>();
 
-		for (int i = 0; i < getElementCount(); i++) {
-			CCDatabaseElement el = getDatabaseElementBySort(i);
+		for (CCDatabaseElement el : list) {
 			for (int j = 0; j < el.getGenreCount(); j++) {
 				if (!result.contains(el.getGenre(j))) {
 					result.add(el.getGenre(j));
@@ -457,14 +458,13 @@ public class CCMovieList {
 	public ArrayList<File> getAbsolutePathList(boolean includeSeries) {
 		ArrayList<File> result = new ArrayList<>();
 		
-		for (int i = 0; i < list.size(); i++) {
-			CCDatabaseElement dbe = getDatabaseElementBySort(i);
-			if (dbe.isMovie()) {
-				for (int j = 0; j < ((CCMovie)dbe).getPartcount(); j++) {
-					result.add(new File(((CCMovie)dbe).getAbsolutePart(j)));
+		for (CCDatabaseElement el : list) {
+			if (el.isMovie()) {
+				for (int j = 0; j < ((CCMovie) el).getPartcount(); j++) {
+					result.add(new File(((CCMovie) el).getAbsolutePart(j)));
 				}
 			} else if (includeSeries){
-				result.addAll(((CCSeries)dbe).getAbsolutePathList());
+				result.addAll(((CCSeries)el).getAbsolutePathList());
 			}
 		}
 		
@@ -472,16 +472,15 @@ public class CCMovieList {
 	}
 	
 	public boolean isFileInList(String path, boolean includeSeries) {
-		for (int i = 0; i < list.size(); i++) {
-			CCDatabaseElement dbe = getDatabaseElementBySort(i);
-			if (dbe.isMovie()) {
-				for (int j = 0; j < ((CCMovie)dbe).getPartcount(); j++) {
-					if (((CCMovie)dbe).getAbsolutePart(j).equals(path)) {
+		for (CCDatabaseElement el : list) {
+			if (el.isMovie()) {
+				for (int j = 0; j < ((CCMovie) el).getPartcount(); j++) {
+					if (((CCMovie) el).getAbsolutePart(j).equals(path)) {
 						return true;
 					}
 				}
 			} else if (includeSeries){
-				if (((CCSeries)dbe).isFileInList(path)) {
+				if (((CCSeries) el).isFileInList(path)) {
 					return true;
 				}
 			}
@@ -491,25 +490,32 @@ public class CCMovieList {
 	}
 
 	public void resetAllMovieViewed(boolean to) {
-		for (int i = 0; i < getElementCount(); i++) {
-			CCDatabaseElement d = getDatabaseElementBySort(i);
-			if (d.isMovie()) {
-				((CCMovie)d).setViewed(to);
-			}
+		for (Iterator<CCMovie> it = iteratorMovies(); it.hasNext();) {
+			it.next().setViewed(to);
 		}
 	}
 	
 	public CCMovie findfirst(CCMovieZyklus zyklus) {
-		for (int i = 0; i < getElementCount(); i++) {
-			CCDatabaseElement d = getDatabaseElementBySort(i);
-			if (d.isMovie()) {
-				if (((CCMovie)d).getZyklus().equals(zyklus)) {
-					return (CCMovie) d;
-				}
+		for (Iterator<CCMovie> it = iteratorMovies(); it.hasNext();) {
+			CCMovie mov = it.next();
+			if (mov.getZyklus().equals(zyklus)) {
+				return mov;
 			}
 		}
 		
 		return null;
+	}
+	
+	public Iterator<CCDatabaseElement> iterator() {
+		return list.iterator();
+	}
+	
+	public Iterator<CCMovie> iteratorMovies() {
+		return new MovieIterator(list);
+	}
+	
+	public Iterator<CCSeries> iteratorSeries() {
+		return new SeriesIterator(list);
 	}
 	
 	@SuppressWarnings("nls")
@@ -523,9 +529,8 @@ public class CCMovieList {
 		root.setAttribute("date", new CCDate().getSimpleStringRepresentation());
 		root.setAttribute("elementcount", getElementCount() + "");
 		
-		for (int i = 0; i < list.size(); i++) {
-			CCDatabaseElement dbe = getDatabaseElementBySort(i);
-			dbe.generateXML(root);
+		for (CCDatabaseElement el : list) {
+			el.generateXML(root);
 		}
 		
 		return xml;

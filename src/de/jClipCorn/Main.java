@@ -67,8 +67,8 @@ public class Main {
 //TODO Auto parse Summary 
 //TODO import old ClipCorn features
 //TODO Recheck all Texts - improve DL-Language (what EN / What GER)
-//TODO xml
+//TODO WatchItLaterFeature
 //TODO Auto rename Files nach Richtlinien
-
+//TODO Generate a usable (non Erroring Test DB)
 //TODO Improve Time until Mainframe is shown (it now takes 500 ms before geting to the create MainFrame Thing)
 //TODO Organize All Cover Files - Mode(no gaps between filenames)

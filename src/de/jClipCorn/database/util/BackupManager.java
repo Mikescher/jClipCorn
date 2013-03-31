@@ -1,4 +1,4 @@
-package de.jClipCorn.database;
+package de.jClipCorn.database.util;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.properties.CCProperties;

@@ -1,8 +1,9 @@
-package de.jClipCorn.database;
+package de.jClipCorn.database.util;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
+import de.jClipCorn.database.CCDatabase;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.util.DoubleString;

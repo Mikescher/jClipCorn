@@ -1,4 +1,4 @@
-package de.jClipCorn.database;
+package de.jClipCorn.database.util;
 
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 

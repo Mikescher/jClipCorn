@@ -14,9 +14,9 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableRowSorter;
 
-import de.jClipCorn.database.CCDBUpdateListener;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
+import de.jClipCorn.database.util.CCDBUpdateListener;
 import de.jClipCorn.gui.frames.mainFrame.MainFrame;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.TableColumnAdjuster;

@@ -1,5 +1,6 @@
 package de.jClipCorn.database.databaseElement;
 
+import java.io.File;
 import java.sql.Date;
 
 import org.jdom2.Element;
@@ -15,6 +16,7 @@ import de.jClipCorn.database.databaseElement.columnTypes.CombinedMovieQuality;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.util.CCDate;
+import de.jClipCorn.util.LargeMD5Calculator;
 import de.jClipCorn.util.MoviePlayer;
 import de.jClipCorn.util.PathFormatter;
 
@@ -270,5 +272,13 @@ public class CCMovie extends CCDatabaseElement {
 		e.setAttribute("year", year + "");
 		e.setAttribute("zyklus", zyklus.getTitle());
 		e.setAttribute("zyklusnumber", zyklus.getNumber() + "");
+	}
+	
+	public String getFastMD5() {
+		File[] f = new File[getPartcount()];
+		for (int i = 0; i < getPartcount(); i++) {
+			f[i] = new File(getAbsolutePart(i));
+		}
+		return LargeMD5Calculator.getMD5(f);
 	}
 }

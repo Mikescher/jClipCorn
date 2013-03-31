@@ -19,7 +19,7 @@ import de.jClipCorn.util.LookAndFeelManager;
  * @author ZEUS
  *
  */
-public class ClipCharSortSelector extends JToolBar {
+public class ClipCharSortSelector extends JToolBar { //TODO Buttons too wide in Substance L'n'F
 	private static final long serialVersionUID = -8270219279263812975L;
 	
 	private final MainFrame owner;

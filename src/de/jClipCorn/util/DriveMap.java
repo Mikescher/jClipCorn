@@ -13,6 +13,7 @@ public class DriveMap {
 	
 	private static HashMap<Character, String> driveNameMap = null;
 	private static HashMap<String, Character> driveLetterMap = null;
+	private static boolean created = false;
 	
 	public static Character getDriveLetter(String name) {
 		if (driveLetterMap == null) {
@@ -36,6 +37,8 @@ public class DriveMap {
 	}
 
 	private static void createMap() {
+		created = false;
+		
 		long sss = System.currentTimeMillis();
 		driveNameMap = new HashMap<>();
 		driveLetterMap = new HashMap<>();
@@ -49,6 +52,7 @@ public class DriveMap {
 			}
 		}
 		
+		created = true;
 		if (Main.DEBUG) {
 			System.out.println("[DBG] FileSystem scanned in " + ((System.currentTimeMillis() - sss)/100)/10.0 + "s"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
@@ -70,5 +74,9 @@ public class DriveMap {
 				createMap();
 			}
 		})).start();
+	}
+
+	public static  boolean isCreated() {
+		return created;
 	}
 }

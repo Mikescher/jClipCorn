@@ -20,15 +20,15 @@ public class Main {
 	
 	public static boolean DEBUG = "true".equals(System.getProperty("ineclipse"));  //$NON-NLS-1$//$NON-NLS-2$
 	
-	public static void main(String[] arg) {		
+	public static void main(String[] arg) {
 		new CCProperties(PROPERTIES_PATH); // MUSS ALS ERSTES CREATED WERDEN - FUCKING IMPORTANT
 		
 		CCLog.setPath(CCProperties.getInstance().PROP_LOG_PATH.getValue());
 		
 		Thread.setDefaultUncaughtExceptionHandler(ExceptionHandler.getInstance()); // For Main Thread
-		
+
 		LookAndFeelManager.setLookAndFeel(CCProperties.getInstance().PROP_UI_LOOKANDFEEL.getValue());
-		
+
 		final CCMovieList mList = new CCMovieList();
 		
 		init();
@@ -69,6 +69,4 @@ public class Main {
 //TODO Recheck all Texts - improve DL-Language (what EN / What GER)
 //TODO WatchItLaterFeature
 //TODO Auto rename Files nach Richtlinien
-//TODO Generate a usable (non Erroring Test DB)
-//TODO Improve Time until Mainframe is shown (it now takes 500 ms before geting to the create MainFrame Thing)
 //TODO Organize All Cover Files - Mode(no gaps between filenames)

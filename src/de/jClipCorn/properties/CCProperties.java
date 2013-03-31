@@ -89,6 +89,7 @@ public class CCProperties {
 		properties = new Properties();
 		this.path = path;
 		load(path);
+		
 		createProperties();
 		
 		mainInstance = this;
@@ -98,6 +99,7 @@ public class CCProperties {
 	
 	@SuppressWarnings("nls")
 	private void createProperties() {
+		
 		LocalizedVector vd = new LocalizedVector();
 		vd.add("CCProperties.DblClickMove.Opt0"); //$NON-NLS-1$
 		vd.add("CCProperties.DblClickMove.Opt1"); //$NON-NLS-1$
@@ -107,7 +109,7 @@ public class CCProperties {
 		vl.add("CCProperties.Language.Opt1"); //$NON-NLS-1$
 		vl.add("CCProperties.Language.Opt2"); //$NON-NLS-1$
 		vl.add("CCProperties.Language.Opt3"); //$NON-NLS-1$
-		
+
 		Vector<String> vlf = LookAndFeelManager.getLookAndFeelList();
 		
 		LocalizedVector vb = new LocalizedVector();
@@ -119,7 +121,6 @@ public class CCProperties {
 		vs.add("ClipTableModel.LocalID"); //$NON-NLS-1$
 		vs.add("ClipTableModel.Title"); //$NON-NLS-1$
 		vs.add("ClipTableModel.Added"); //$NON-NLS-1$
-		
 		
 		PROP_ADD_MOVIE_RELATIVE_AUTO 			= new CCBoolProperty(CAT_DIALOGS, 		this,   "PROP_ADD_MOVIE_RELATIVE_AUTO", 		true);
 		PROP_DATABASE_NAME 						= new CCStringProperty(CAT_DATABASE, 	this,	"PROP_DATABASE_NAME",					"ClipCornDB");

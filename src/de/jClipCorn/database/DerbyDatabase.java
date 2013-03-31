@@ -322,7 +322,7 @@ public class DerbyDatabase {
 			return true;
 		} catch (SQLException e) {
 			lastError = e;
-			e.printStackTrace();
+			CCLog.addError(e);
 			return false;
 		}
 	}

@@ -174,7 +174,7 @@ public class CCMovieList {
 				}
 			});
 		} catch (InvocationTargetException | InterruptedException e) {
-			e.printStackTrace();
+			CCLog.addError(e);
 			return;
 		}
 	}
@@ -189,7 +189,7 @@ public class CCMovieList {
 				}
 			});
 		} catch (InvocationTargetException | InterruptedException e) {
-			e.printStackTrace();
+			CCLog.addError(e);
 			return;
 		}
 	}
@@ -342,7 +342,7 @@ public class CCMovieList {
 					}
 				});
 			} catch (InvocationTargetException | InterruptedException e) {
-				e.printStackTrace();
+				CCLog.addError(e);
 			}
 			return;
 		}

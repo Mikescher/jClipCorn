@@ -27,6 +27,7 @@ import de.jClipCorn.gui.CachedResourceLoader;
 import de.jClipCorn.gui.Resources;
 import de.jClipCorn.gui.frames.mainFrame.MainFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.util.ProgressCallbackListener;
 
 public class CheckDatabaseDialog extends JDialog {
@@ -99,7 +100,7 @@ public class CheckDatabaseDialog extends JDialog {
 				}
 			});
 		} catch (InvocationTargetException | InterruptedException e) {
-			e.printStackTrace();
+			CCLog.addError(e);
 		}
 	}
 	
@@ -113,7 +114,7 @@ public class CheckDatabaseDialog extends JDialog {
 				}
 			});
 		} catch (InvocationTargetException | InterruptedException e) {
-			e.printStackTrace();
+			CCLog.addError(e);
 		}
 	}
 	
@@ -126,7 +127,7 @@ public class CheckDatabaseDialog extends JDialog {
 				}
 			});
 		} catch (InvocationTargetException | InterruptedException e) {
-			e.printStackTrace();
+			CCLog.addError(e);
 		}
 	}
 	

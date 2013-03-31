@@ -15,9 +15,7 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JProgressBar;
-import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
 
 import org.apache.commons.lang.StringUtils;
 import org.jdom2.Document;
@@ -25,6 +23,7 @@ import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
 
 import de.jClipCorn.database.CCMovieList;
+import de.jClipCorn.gui.guiComponents.ReadableTextField;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.util.FileChooserHelper;
@@ -35,7 +34,7 @@ public class ExportJxmlBKPDialog extends JDialog implements Runnable {
 	
 	private JProgressBar progressBar;
 	private JButton btnSave;
-	private JTextField edPath;
+	private ReadableTextField edPath;
 	private JButton button;
 	
 	private String savepath = ""; //$NON-NLS-1$
@@ -76,10 +75,8 @@ public class ExportJxmlBKPDialog extends JDialog implements Runnable {
 		btnSave.setBounds(102, 42, 89, 23);
 		getContentPane().add(btnSave);
 		
-		edPath = new JTextField();
-		edPath.setEditable(false);
+		edPath = new ReadableTextField();
 		edPath.setBounds(10, 11, 224, 20);
-		edPath.setBackground(UIManager.getColor("TextField.background")); //$NON-NLS-1$
 		getContentPane().add(edPath);
 		edPath.setColumns(10);
 		

@@ -15,7 +15,6 @@ import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -38,7 +37,11 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTyp;
 import de.jClipCorn.gui.CachedResourceLoader;
 import de.jClipCorn.gui.Resources;
 import de.jClipCorn.gui.frames.allRatingsFrame.AllRatingsDialog;
+import de.jClipCorn.gui.guiComponents.ReadableCombobox;
+import de.jClipCorn.gui.guiComponents.ReadableSpinner;
+import de.jClipCorn.gui.guiComponents.ReadableTextField;
 import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.util.DoubleString;
 import de.jClipCorn.util.HTTPUtilities;
 import de.jClipCorn.util.ImageUtilities;
@@ -46,7 +49,7 @@ import de.jClipCorn.util.parser.ImDBParser;
 import de.jClipCorn.util.parser.ParseResultHandler;
 
 @SuppressWarnings({ "unchecked", "rawtypes" })
-public class ParseImDBDialog extends JDialog implements Runnable { //TODO Schrift schlecht lesbar da zB die Comboboxen disabled sind (auf jedenfall in Substance Graphite Aqua)
+public class ParseImDBDialog extends JDialog implements Runnable {
 	private static final long serialVersionUID = 3777677368743220383L;
 	
 	private final static int THREAD_TASK_NOTASK = 0;
@@ -69,7 +72,7 @@ public class ParseImDBDialog extends JDialog implements Runnable { //TODO Schrif
 	private JTextField edSearchName;
 	private JButton btnParse;
 	private JPanel pnlMain;
-	private JTextField edTitle;
+	private ReadableTextField edTitle;
 	private JCheckBox cbTitle;
 	private JCheckBox cbYear;
 	private JCheckBox cbScore;
@@ -80,26 +83,26 @@ public class ParseImDBDialog extends JDialog implements Runnable { //TODO Schrif
 	private JLabel lblScore;
 	private JLabel lblLength;
 	private JLabel lblFsk;
-	private JComboBox cbxFSK;
-	private JSpinner spnLength;
-	private JSpinner spnScore;
-	private JSpinner spnYear;
+	private ReadableCombobox cbxFSK;
+	private ReadableSpinner spnLength;
+	private ReadableSpinner spnScore;
+	private ReadableSpinner spnYear;
 	private JCheckBox cbGenre0;
 	private JLabel lblGenre;
-	private JComboBox cbxGenre0;
-	private JComboBox cbxGenre2;
+	private ReadableCombobox cbxGenre0;
+	private ReadableCombobox cbxGenre2;
 	private JLabel lblGenre_2;
 	private JCheckBox cbGenre2;
-	private JComboBox cbxGenre3;
+	private ReadableCombobox cbxGenre3;
 	private JLabel lblGenre_3;
 	private JCheckBox cbGenre3;
-	private JComboBox cbxGenre1;
+	private ReadableCombobox cbxGenre1;
 	private JLabel lblGenre_1;
 	private JCheckBox cbGenre1;
-	private JComboBox cbxGenre4;
-	private JComboBox cbxGenre5;
-	private JComboBox cbxGenre6;
-	private JComboBox cbxGenre7;
+	private ReadableCombobox cbxGenre4;
+	private ReadableCombobox cbxGenre5;
+	private ReadableCombobox cbxGenre6;
+	private ReadableCombobox cbxGenre7;
 	private JLabel lblGenre_7;
 	private JCheckBox cbGenre7;
 	private JCheckBox cbGenre6;
@@ -126,8 +129,8 @@ public class ParseImDBDialog extends JDialog implements Runnable { //TODO Schrif
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		initGUI();
 		setLocationRelativeTo(owner);
-		resetAll();
 		initComboboxes();
+		resetAll();
 		
 		edSearchName.setText(handler.getFullTitle());
 	}
@@ -190,8 +193,7 @@ public class ParseImDBDialog extends JDialog implements Runnable { //TODO Schrif
 		getContentPane().add(pnlMain);
 		pnlMain.setLayout(null);
 		
-		edTitle = new JTextField();
-		edTitle.setEditable(false);
+		edTitle = new ReadableTextField();
 		edTitle.setBounds(120, 10, 169, 20);
 		pnlMain.add(edTitle);
 		edTitle.setColumns(10);
@@ -236,25 +238,23 @@ public class ParseImDBDialog extends JDialog implements Runnable { //TODO Schrif
 		lblFsk.setBounds(33, 130, 46, 14);
 		pnlMain.add(lblFsk);
 		
-		cbxFSK = new JComboBox();
+		cbxFSK = new ReadableCombobox();
 		cbxFSK.setEnabled(false);
 		cbxFSK.setBounds(120, 130, 169, 20);
 		pnlMain.add(cbxFSK);
 		
-		spnLength = new JSpinner();
-		spnLength.setEnabled(false);
+		spnLength = new ReadableSpinner();
 		spnLength.setBounds(120, 100, 169, 20);
 		spnLength.setEditor(new JSpinner.NumberEditor(spnLength, "0")); //$NON-NLS-1$
 		pnlMain.add(spnLength);
 		
-		spnScore = new JSpinner();
+		spnScore = new ReadableSpinner();
 		spnScore.setEnabled(false);
 		spnScore.setBounds(120, 70, 169, 20);
 		spnScore.setEditor(new JSpinner.NumberEditor(spnScore, "0")); //$NON-NLS-1$
 		pnlMain.add(spnScore);
 		
-		spnYear = new JSpinner();
-		spnYear.setEnabled(false);
+		spnYear = new ReadableSpinner();
 		spnYear.setBounds(120, 40, 169, 20);
 		spnYear.setEditor(new JSpinner.NumberEditor(spnYear, "0")); //$NON-NLS-1$
 		pnlMain.add(spnYear);
@@ -267,12 +267,12 @@ public class ParseImDBDialog extends JDialog implements Runnable { //TODO Schrif
 		lblGenre.setBounds(322, 10, 46, 14);
 		pnlMain.add(lblGenre);
 		
-		cbxGenre0 = new JComboBox();
+		cbxGenre0 = new ReadableCombobox();
 		cbxGenre0.setEnabled(false);
 		cbxGenre0.setBounds(377, 10, 169, 20);
 		pnlMain.add(cbxGenre0);
 		
-		cbxGenre2 = new JComboBox();
+		cbxGenre2 = new ReadableCombobox();
 		cbxGenre2.setEnabled(false);
 		cbxGenre2.setBounds(377, 70, 169, 20);
 		pnlMain.add(cbxGenre2);
@@ -285,7 +285,7 @@ public class ParseImDBDialog extends JDialog implements Runnable { //TODO Schrif
 		cbGenre2.setBounds(295, 67, 21, 23);
 		pnlMain.add(cbGenre2);
 		
-		cbxGenre3 = new JComboBox();
+		cbxGenre3 = new ReadableCombobox();
 		cbxGenre3.setEnabled(false);
 		cbxGenre3.setBounds(377, 100, 169, 20);
 		pnlMain.add(cbxGenre3);
@@ -298,7 +298,7 @@ public class ParseImDBDialog extends JDialog implements Runnable { //TODO Schrif
 		cbGenre3.setBounds(295, 97, 21, 23);
 		pnlMain.add(cbGenre3);
 		
-		cbxGenre1 = new JComboBox();
+		cbxGenre1 = new ReadableCombobox();
 		cbxGenre1.setEnabled(false);
 		cbxGenre1.setBounds(377, 40, 169, 20);
 		pnlMain.add(cbxGenre1);
@@ -311,22 +311,22 @@ public class ParseImDBDialog extends JDialog implements Runnable { //TODO Schrif
 		cbGenre1.setBounds(295, 37, 21, 23);
 		pnlMain.add(cbGenre1);
 		
-		cbxGenre4 = new JComboBox();
+		cbxGenre4 = new ReadableCombobox();
 		cbxGenre4.setEnabled(false);
 		cbxGenre4.setBounds(377, 130, 169, 20);
 		pnlMain.add(cbxGenre4);
 		
-		cbxGenre5 = new JComboBox();
+		cbxGenre5 = new ReadableCombobox();
 		cbxGenre5.setEnabled(false);
 		cbxGenre5.setBounds(377, 160, 169, 20);
 		pnlMain.add(cbxGenre5);
 		
-		cbxGenre6 = new JComboBox();
+		cbxGenre6 = new ReadableCombobox();
 		cbxGenre6.setEnabled(false);
 		cbxGenre6.setBounds(377, 190, 169, 20);
 		pnlMain.add(cbxGenre6);
 		
-		cbxGenre7 = new JComboBox();
+		cbxGenre7 = new ReadableCombobox();
 		cbxGenre7.setEnabled(false);
 		cbxGenre7.setBounds(377, 220, 169, 20);
 		pnlMain.add(cbxGenre7);
@@ -551,10 +551,9 @@ public class ParseImDBDialog extends JDialog implements Runnable { //TODO Schrif
 				}
 			});
 		} catch (InvocationTargetException | InterruptedException e) {
-			e.printStackTrace();
+			CCLog.addError(e);
 			return;
 		}
-		
 		
 		String url = ImDBParser.getSearchURL(edSearchName.getText(), typ);
 		String html = HTTPUtilities.getHTML(url, true);
@@ -579,7 +578,7 @@ public class ParseImDBDialog extends JDialog implements Runnable { //TODO Schrif
 				}
 			});
 		} catch (InvocationTargetException | InterruptedException e) {
-			e.printStackTrace();
+			CCLog.addError(e);
 			return;
 		}
 	}
@@ -594,7 +593,7 @@ public class ParseImDBDialog extends JDialog implements Runnable { //TODO Schrif
 				}
 			});
 		} catch (InvocationTargetException | InterruptedException e) {
-			e.printStackTrace();
+			CCLog.addError(e);
 			return;
 		}
 		
@@ -650,7 +649,7 @@ public class ParseImDBDialog extends JDialog implements Runnable { //TODO Schrif
 				}
 			});
 		} catch (InvocationTargetException | InterruptedException e) {
-			e.printStackTrace();
+			CCLog.addError(e);
 			return;
 		}		
 	}

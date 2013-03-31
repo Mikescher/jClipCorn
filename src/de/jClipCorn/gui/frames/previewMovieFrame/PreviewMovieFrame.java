@@ -3,6 +3,8 @@ package de.jClipCorn.gui.frames.previewMovieFrame;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -12,7 +14,6 @@ import javax.swing.JList;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
 import de.jClipCorn.database.databaseElement.CCMovie;
@@ -21,6 +22,7 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTyp;
 import de.jClipCorn.gui.CachedResourceLoader;
 import de.jClipCorn.gui.Resources;
 import de.jClipCorn.gui.frames.editMovieFrame.EditMovieFrame;
+import de.jClipCorn.gui.guiComponents.ReadableTextField;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.DialogHelper;
 import de.jClipCorn.util.FileSizeFormatter;
@@ -28,9 +30,6 @@ import de.jClipCorn.util.HTTPUtilities;
 import de.jClipCorn.util.TimeIntervallFormatter;
 import de.jClipCorn.util.UpdateCallbackListener;
 import de.jClipCorn.util.parser.ImDBParser;
-
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 
 public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener {
 	private static final long serialVersionUID = 7483476533745432416L;
@@ -40,12 +39,12 @@ public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener 
 	private JLabel label;
 	private JLabel lblViewed;
 	private JList<String> lsGenres;
-	private JTextField edPart0;
-	private JTextField edPart1;
-	private JTextField edPart2;
-	private JTextField edPart3;
-	private JTextField edPart4;
-	private JTextField edPart5;
+	private ReadableTextField edPart0;
+	private ReadableTextField edPart1;
+	private ReadableTextField edPart2;
+	private ReadableTextField edPart3;
+	private ReadableTextField edPart4;
+	private ReadableTextField edPart5;
 	private JLabel lblQuality;
 	private JLabel lblLanguage;
 	private JLabel lblLength;
@@ -115,38 +114,32 @@ public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener 
 		lsGenres.setBounds(202, 343, 482, 87);
 		getContentPane().add(lsGenres);
 		
-		edPart0 = new JTextField();
-		edPart0.setEditable(false);
+		edPart0 = new ReadableTextField();
 		edPart0.setBounds(201, 53, 416, 20);
 		getContentPane().add(edPart0);
 		edPart0.setColumns(10);
 		
-		edPart1 = new JTextField();
-		edPart1.setEditable(false);
+		edPart1 = new ReadableTextField();
 		edPart1.setColumns(10);
 		edPart1.setBounds(202, 84, 483, 20);
 		getContentPane().add(edPart1);
 		
-		edPart2 = new JTextField();
-		edPart2.setEditable(false);
+		edPart2 = new ReadableTextField();
 		edPart2.setColumns(10);
 		edPart2.setBounds(202, 115, 483, 20);
 		getContentPane().add(edPart2);
 		
-		edPart3 = new JTextField();
-		edPart3.setEditable(false);
+		edPart3 = new ReadableTextField();
 		edPart3.setColumns(10);
 		edPart3.setBounds(202, 146, 483, 20);
 		getContentPane().add(edPart3);
 		
-		edPart4 = new JTextField();
-		edPart4.setEditable(false);
+		edPart4 = new ReadableTextField();
 		edPart4.setColumns(10);
 		edPart4.setBounds(202, 177, 483, 20);
 		getContentPane().add(edPart4);
 		
-		edPart5 = new JTextField();
-		edPart5.setEditable(false);
+		edPart5 = new ReadableTextField();
 		edPart5.setColumns(10);
 		edPart5.setBounds(201, 208, 483, 20);
 		getContentPane().add(edPart5);

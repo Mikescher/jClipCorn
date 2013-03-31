@@ -54,6 +54,7 @@ import de.jClipCorn.gui.frames.addSeasonFrame.AddSeasonFrame;
 import de.jClipCorn.gui.frames.findCoverFrame.FindCoverDialog;
 import de.jClipCorn.gui.frames.inputErrorFrame.InputErrorDialog;
 import de.jClipCorn.gui.guiComponents.CCDateEditor;
+import de.jClipCorn.gui.guiComponents.ReadableTextField;
 import de.jClipCorn.gui.guiComponents.SpinnerCCDateModel;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
@@ -156,7 +157,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 	private JLabel label_27;
 	private JLabel label_28;
 	private JLabel label_29;
-	private JTextField edEpisodePart;
+	private ReadableTextField edEpisodePart;
 	private JButton btnEpisodeOpenPart;
 	private JLabel lblStatus;
 	private JComboBox cbxEpisodeStatus;
@@ -688,10 +689,8 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		label_29.setBounds(12, 409, 46, 14);
 		pnlEpisode.add(label_29);
 		
-		edEpisodePart = new JTextField();
-		edEpisodePart.setEditable(false);
+		edEpisodePart = new ReadableTextField();
 		edEpisodePart.setColumns(10);
-		edEpisodePart.setBackground(UIManager.getColor("TextField.background")); //$NON-NLS-1$
 		edEpisodePart.setBounds(74, 406, 212, 20);
 		pnlEpisode.add(edEpisodePart);
 		

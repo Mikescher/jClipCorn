@@ -18,6 +18,7 @@ import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieGenre;
+import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.util.CCDate;
 import de.jClipCorn.util.RomanNumberFormatter;
 
@@ -59,10 +60,10 @@ public class CCBXMLReader {
 		try {
 			document = new SAXBuilder().build(filename);
 		} catch (JDOMException e) {
-			e.printStackTrace();
+			CCLog.addError(e);
 			return false;
 		} catch (IOException e) {
-			e.printStackTrace();
+			CCLog.addError(e);
 			return false;
 		}
 		
@@ -126,7 +127,7 @@ public class CCBXMLReader {
 				}
 			});
 		} catch (InvocationTargetException | InterruptedException e1) {
-			e1.printStackTrace();
+			CCLog.addError(e1);
 		}
 	}
 	
@@ -166,7 +167,7 @@ public class CCBXMLReader {
 				}
 			});
 		} catch (InvocationTargetException | InterruptedException e1) {
-			e1.printStackTrace();
+			CCLog.addError(e1);
 		}
 	}
 	
@@ -198,7 +199,7 @@ public class CCBXMLReader {
 				}
 			});
 		} catch (InvocationTargetException | InterruptedException e) {
-			e.printStackTrace();
+			CCLog.addError(e);
 		}
 	}
 	
@@ -229,7 +230,7 @@ public class CCBXMLReader {
 				}
 			});
 		} catch (InvocationTargetException | InterruptedException e) {
-			e.printStackTrace();
+			CCLog.addError(e);
 		}
 	}
 	

@@ -146,7 +146,7 @@ public class MainFrame extends JFrame implements CCDBUpdateListener {
 				}
 			});
 		} catch (InvocationTargetException | InterruptedException e) {
-			e.printStackTrace(); //BAD
+			CCLog.addError(e);
 		}
 		
 	}
@@ -161,7 +161,7 @@ public class MainFrame extends JFrame implements CCDBUpdateListener {
 				}
 			});
 		} catch (InvocationTargetException | InterruptedException e) {
-			e.printStackTrace(); //BAD
+			CCLog.addError(e);
 		}
 	}
 

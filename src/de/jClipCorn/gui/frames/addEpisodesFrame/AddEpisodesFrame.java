@@ -42,6 +42,7 @@ import de.jClipCorn.gui.CachedResourceLoader;
 import de.jClipCorn.gui.Resources;
 import de.jClipCorn.gui.frames.inputErrorFrame.InputErrorDialog;
 import de.jClipCorn.gui.guiComponents.CCDateEditor;
+import de.jClipCorn.gui.guiComponents.ReadableTextField;
 import de.jClipCorn.gui.guiComponents.SpinnerCCDateModel;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.properties.CCProperties;
@@ -123,7 +124,7 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler {
 	private JSpinner spnLastViewed;
 	private JLabel lblLastviewed;
 	private JButton btnToday;
-	private JTextField edPart;
+	private ReadableTextField edPart;
 	private JLabel lblNewLabel;
 	private JComboBox<Object> cbxQuality;
 	private JLabel lblQuality;
@@ -323,9 +324,7 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler {
 		btnToday.setBounds(276, 329, 71, 23);
 		pnlInfo.add(btnToday);
 
-		edPart = new JTextField();
-		edPart.setEditable(false);
-		edPart.setBackground(Color.WHITE);
+		edPart = new ReadableTextField();
 		edPart.setBounds(74, 404, 212, 20);
 		pnlInfo.add(edPart);
 		edPart.setColumns(10);

@@ -1,6 +1,5 @@
 package de.jClipCorn.gui.frames.addMovieFrame;
 
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
 import java.awt.GridLayout;
@@ -26,6 +25,7 @@ import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
+import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
@@ -48,6 +48,7 @@ import de.jClipCorn.gui.frames.findCoverFrame.FindCoverDialog;
 import de.jClipCorn.gui.frames.inputErrorFrame.InputErrorDialog;
 import de.jClipCorn.gui.frames.parseImDBFrame.ParseImDBDialog;
 import de.jClipCorn.gui.guiComponents.CCDateEditor;
+import de.jClipCorn.gui.guiComponents.ReadableTextField;
 import de.jClipCorn.gui.guiComponents.SpinnerCCDateModel;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
@@ -79,12 +80,12 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 	private CCMovieList movieList;
 	
 	private JPanel contentPane;
-	private JTextField ed_Part0;
-	private JTextField ed_Part1;
-	private JTextField ed_Part2;
-	private JTextField ed_Part3;
-	private JTextField ed_Part4;
-	private JTextField ed_Part5;
+	private ReadableTextField ed_Part0;
+	private ReadableTextField ed_Part1;
+	private ReadableTextField ed_Part2;
+	private ReadableTextField ed_Part3;
+	private ReadableTextField ed_Part4;
+	private ReadableTextField ed_Part5;
 	private JTextField edZyklus;
 	private final ButtonGroup bgrpRelPaths = new ButtonGroup();
 	private JPanel pnlRelPaths;
@@ -182,8 +183,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		ed_Part0 = new JTextField();
-		ed_Part0.setEditable(false);
+		ed_Part0 = new ReadableTextField();
 		ed_Part0.setBounds(76, 14, 281, 22);
 		contentPane.add(ed_Part0);
 		ed_Part0.setColumns(10);
@@ -198,8 +198,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		btnChoose0.setBounds(369, 13, 41, 25);
 		contentPane.add(btnChoose0);
 		
-		ed_Part1 = new JTextField();
-		ed_Part1.setEditable(false);
+		ed_Part1 = new ReadableTextField();
 		ed_Part1.setColumns(10);
 		ed_Part1.setBounds(76, 50, 191, 22);
 		contentPane.add(ed_Part1);
@@ -228,8 +227,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		lblPart.setBounds(12, 17, 52, 16);
 		contentPane.add(lblPart);
 		
-		ed_Part2 = new JTextField();
-		ed_Part2.setEditable(false);
+		ed_Part2 = new ReadableTextField();
 		ed_Part2.setColumns(10);
 		ed_Part2.setBounds(76, 86, 191, 22);
 		contentPane.add(ed_Part2);
@@ -254,8 +252,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		btnClear2.setBounds(332, 85, 78, 25);
 		contentPane.add(btnClear2);
 		
-		ed_Part3 = new JTextField();
-		ed_Part3.setEditable(false);
+		ed_Part3 = new ReadableTextField();
 		ed_Part3.setColumns(10);
 		ed_Part3.setBounds(76, 122, 191, 22);
 		contentPane.add(ed_Part3);
@@ -280,8 +277,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		btnClear3.setBounds(332, 121, 78, 25);
 		contentPane.add(btnClear3);
 		
-		ed_Part4 = new JTextField();
-		ed_Part4.setEditable(false);
+		ed_Part4 = new ReadableTextField();
 		ed_Part4.setColumns(10);
 		ed_Part4.setBounds(76, 158, 191, 22);
 		contentPane.add(ed_Part4);
@@ -306,8 +302,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		btnClear4.setBounds(332, 157, 78, 25);
 		contentPane.add(btnClear4);
 		
-		ed_Part5 = new JTextField();
-		ed_Part5.setEditable(false);
+		ed_Part5 = new ReadableTextField();
 		ed_Part5.setColumns(10);
 		ed_Part5.setBounds(76, 194, 191, 22);
 		contentPane.add(ed_Part5);
@@ -362,7 +357,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		contentPane.add(lblZyklus);
 		
 		pnlRelPaths = new JPanel();
-		pnlRelPaths.setBorder(new TitledBorder(new LineBorder(new Color(0, 0, 0)), LocaleBundle.getString("AddMovieFrame.pnlRelPaths.borderTitle"), TitledBorder.LEFT, TitledBorder.TOP, null, Color.BLACK)); //$NON-NLS-1$
+		pnlRelPaths.setBorder(new TitledBorder(new LineBorder(UIManager.getColor("TitledBorder.titleColor")), LocaleBundle.getString("AddMovieFrame.pnlRelPaths.borderTitle"), TitledBorder.LEFT, TitledBorder.TOP, null, UIManager.getColor("TitledBorder.titleColor"))); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		pnlRelPaths.setBounds(420, 5, 300, 73);
 		contentPane.add(pnlRelPaths);
 		pnlRelPaths.setLayout(new GridLayout(0, 1, 0, 0));

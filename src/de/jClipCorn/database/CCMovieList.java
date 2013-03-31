@@ -32,9 +32,7 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.CCDate;
-import de.jClipCorn.util.DriveMap;
 import de.jClipCorn.util.PathFormatter;
-import de.jClipCorn.util.TimeKeeper;
 
 public class CCMovieList {
 	private Vector<CCDatabaseElement> list;

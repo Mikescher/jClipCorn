@@ -276,7 +276,7 @@ public class FindCoverDialog extends JDialog {
 			}
 		}));
 
-		thread_3 = (new Thread(new Runnable() { //TODO was macht denn die 3. zeile ? - Auser nichts ...
+		thread_3 = (new Thread(new Runnable() {
 			@Override
 			public void run() {
 				parseCoverSearch();
@@ -351,7 +351,7 @@ public class FindCoverDialog extends JDialog {
 		progBar3.setValue(0);
 	}
 
-	private void parseGoogleImages() {
+	private void parseGoogleImages() { // Parse the Google Image Search
 		thread_1_images = new ArrayList<>();
 
 		// #################################################################################
@@ -388,7 +388,7 @@ public class FindCoverDialog extends JDialog {
 		}
 	}
 
-	private void parseImDBImages() {
+	private void parseImDBImages() { // Parses the Images from the first Result of ImDB CoverSearch
 		thread_2_images = new ArrayList<>();
 
 		// #################################################################################
@@ -473,7 +473,7 @@ public class FindCoverDialog extends JDialog {
 		}
 	}
 
-	private void parseCoverSearch() {
+	private void parseCoverSearch() { // Parses the Images from the second Result of ImDB CoverSearch
 		thread_3_images = new ArrayList<>();
 
 		// #################################################################################

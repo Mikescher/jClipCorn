@@ -109,8 +109,6 @@ public class ExportJxmlBKPDialog extends JDialog implements Runnable {
 			
 			savepath = p;
 		}
-		
-		
 	}
 
 	@Override

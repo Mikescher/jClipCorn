@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
@@ -30,7 +31,7 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.util.ProgressCallbackListener;
 
-public class CheckDatabaseDialog extends JDialog {
+public class CheckDatabaseDialog extends JFrame {
 	private static final long serialVersionUID = 8481907373850170115L;
 
 	private final CCMovieList movielist;
@@ -59,7 +60,6 @@ public class CheckDatabaseDialog extends JDialog {
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		setIconImage(CachedResourceLoader.getImage(Resources.IMG_FRAME_ICON));
 		setTitle(LocaleBundle.getString("CheckDatabaseDialog.this.title")); //$NON-NLS-1$
-		setModal(false); //Modality is sucking ***
 		setBounds(100, 100, 750, 400);
 		setLocationRelativeTo(owner);
 		

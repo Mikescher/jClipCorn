@@ -547,7 +547,7 @@ public class CCMovieList {
 		root.setAttribute("elementcount", getElementCount() + "");
 		
 		for (CCDatabaseElement el : list) {
-			el.generateXML(root);
+			el.generateXML(root, false, false);
 		}
 		
 		return xml;

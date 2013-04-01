@@ -20,7 +20,6 @@ import de.jClipCorn.util.PathFormatter;
 import de.jClipCorn.util.ProgressCallbackListener;
 
 public class DatabaseValidator {
-	private final static double MAX_SIZEDRIFT = CCProperties.getInstance().PROP_VALIDATE_FILESIEDRIFT.getValue() / 100d;
 	private final static CCDate MIN_DATE = CCDate.getNewMinimumDate();
 	
 	public static void startValidate(ArrayList<DatabaseError> e, CCMovieList ml, ProgressCallbackListener pcl) {
@@ -50,6 +49,10 @@ public class DatabaseValidator {
 		}
 		
 		validateCover(e, ml, pcl);
+	}
+	
+	private static double getMaxSizeFileDrift() {
+		return CCProperties.getInstance().PROP_VALIDATE_FILESIEDRIFT.getValue() / 100d;
 	}
 	
 	private static double getRelativeDifference(long size1, long size2) {
@@ -138,7 +141,7 @@ public class DatabaseValidator {
 			size.add(FileSizeFormatter.getFileSize(mov.getAbsolutePart(i)));
 		}
 
-		if (getRelativeDifference(size.getBytes(), mov.getFilesize().getBytes()) > MAX_SIZEDRIFT) {
+		if (getRelativeDifference(size.getBytes(), mov.getFilesize().getBytes()) > getMaxSizeFileDrift()) {
 			e.add(DatabaseError.createSingle(DatabaseError.ERROR_WRONG_FILESIZE, mov));
 		}
 
@@ -304,7 +307,7 @@ public class DatabaseValidator {
 
 		CCMovieSize size = new CCMovieSize(FileSizeFormatter.getFileSize(episode.getAbsolutePart()));
 
-		if (getRelativeDifference(size.getBytes(), episode.getFilesize().getBytes()) > MAX_SIZEDRIFT) {
+		if (getRelativeDifference(size.getBytes(), episode.getFilesize().getBytes()) > getMaxSizeFileDrift()) {
 			e.add(DatabaseError.createSingle(DatabaseError.ERROR_WRONG_FILESIZE, episode));
 		}
 		

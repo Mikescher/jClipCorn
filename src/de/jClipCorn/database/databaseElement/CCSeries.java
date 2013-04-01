@@ -14,6 +14,7 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCMovieStatus;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTyp;
 import de.jClipCorn.database.databaseElement.columnTypes.CombinedMovieQuality;
 import de.jClipCorn.util.CCDate;
+import de.jClipCorn.util.LargeMD5Calculator;
 import de.jClipCorn.util.YearRange;
 
 public class CCSeries extends CCDatabaseElement {
@@ -293,19 +294,26 @@ public class CCSeries extends CCDatabaseElement {
 		return seasons.indexOf(ccSeason);
 	}
 	
+	@SuppressWarnings("nls")
 	@Override
-	protected void setXMLAttributes(Element e) {
-		super.setXMLAttributes(e);
+	protected void setXMLAttributes(Element e, boolean fileHash, boolean coverHash) {
+		super.setXMLAttributes(e, fileHash, coverHash);
 		
-		// Add additional Attributes here pls
+		if (coverHash) {
+			e.setAttribute("coverhash", getCoverMD5());
+		}
+	}
+	
+	public String getCoverMD5() {
+		return LargeMD5Calculator.calcMD5(getCover());
 	}
 	
 	@Override
-	public Element generateXML(Element el) {
-		Element ser = super.generateXML(el);
+	public Element generateXML(Element el, boolean fileHash, boolean coverHash) {
+		Element ser = super.generateXML(el, fileHash, coverHash);
 		
 		for (int i = 0; i < seasons.size(); i++) {
-			seasons.get(i).generateXML(ser);
+			seasons.get(i).generateXML(ser, fileHash, coverHash);
 		}
 		
 		return ser;

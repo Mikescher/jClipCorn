@@ -256,22 +256,32 @@ public class CCMovie extends CCDatabaseElement {
 	
 	@SuppressWarnings("nls")
 	@Override
-	protected void setXMLAttributes(Element e) {
-		super.setXMLAttributes(e);
+	protected void setXMLAttributes(Element e, boolean fileHash, boolean coverHash) {
+		super.setXMLAttributes(e, fileHash, coverHash);
 		
 		e.setAttribute("adddate", addDate.getSimpleStringRepresentation() + "");
 		e.setAttribute("filesize", filesize.getBytes() + "");
 		e.setAttribute("format", format.asInt() + "");
 		e.setAttribute("length", length  + "");
+		
 		for (int i = 0; i < parts.length; i++) {
 			e.setAttribute("part_"+i, parts[i]);
 		}
+		
 		e.setAttribute("quality", quality.asInt() + "");
 		e.setAttribute("status", status.asInt() + "");
 		e.setAttribute("viewed", viewed + "");
 		e.setAttribute("year", year + "");
 		e.setAttribute("zyklus", zyklus.getTitle());
 		e.setAttribute("zyklusnumber", zyklus.getNumber() + "");
+		
+		if (fileHash) {
+			e.setAttribute("filehash", getFastMD5());
+		}
+		
+		if (coverHash) {
+			e.setAttribute("coverhash", getCoverMD5());
+		}
 	}
 	
 	public String getFastMD5() {
@@ -280,5 +290,9 @@ public class CCMovie extends CCDatabaseElement {
 			f[i] = new File(getAbsolutePart(i));
 		}
 		return LargeMD5Calculator.getMD5(f);
+	}
+	
+	public String getCoverMD5() {
+		return LargeMD5Calculator.calcMD5(getCover());
 	}
 }

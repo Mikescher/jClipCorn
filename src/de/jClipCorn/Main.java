@@ -71,3 +71,8 @@ public class Main {
 //TODO Auto rename Files nach Richtlinien
 //TODO Organize All Cover Files - Mode(no gaps between filenames)
 //TODO Keyboard Shortcuts
+//TODO AtbOrder for (important) Frames
+
+//TODO Parsd die Lang hieraus net: "Last Samurai [Eng] (Part 1).avi"
+
+//TODO Title von Fenster mit Grossbuchstaben anfangen (addMov, getCover)

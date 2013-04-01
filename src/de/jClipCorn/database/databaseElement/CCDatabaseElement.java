@@ -221,8 +221,8 @@ public abstract class CCDatabaseElement {
 		return getType().equals(CCMovieTyp.SERIES);
 	}
 	
-	@SuppressWarnings("nls")
-	protected void setXMLAttributes(Element e) {
+	@SuppressWarnings({ "nls", "unused" })
+	protected void setXMLAttributes(Element e, boolean fileHash, boolean coverHash) {
 		e.setAttribute("localid", localID + "");
 		e.setAttribute("typ", typ.asInt() + "");
 		e.setAttribute("title", title);
@@ -236,7 +236,7 @@ public abstract class CCDatabaseElement {
 	}
 
 	@SuppressWarnings("nls")
-	public Element generateXML(Element el) {
+	public Element generateXML(Element el, boolean fileHash, boolean coverHash) {
 		Element dbelement = null;
 		
 		switch (typ) {
@@ -248,7 +248,7 @@ public abstract class CCDatabaseElement {
 			break;
 		}
 		
-		setXMLAttributes(dbelement);
+		setXMLAttributes(dbelement, fileHash, coverHash);
 		
 		el.addContent(dbelement);
 		

@@ -1,5 +1,6 @@
 package de.jClipCorn.database.databaseElement;
 
+import java.io.File;
 import java.sql.Date;
 
 import org.jdom2.Element;
@@ -12,6 +13,7 @@ import de.jClipCorn.database.databaseElement.columnTypes.CombinedMovieQuality;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.util.CCDate;
+import de.jClipCorn.util.LargeMD5Calculator;
 import de.jClipCorn.util.MoviePlayer;
 import de.jClipCorn.util.PathFormatter;
 
@@ -271,7 +273,7 @@ public class CCEpisode {
 	}
 
 	@SuppressWarnings("nls")
-	protected void setXMLAttributes(Element e) {
+	protected void setXMLAttributes(Element e, boolean fileHash) {
 		e.setAttribute("localid", localID + "");
 		e.setAttribute("title", title);
 		e.setAttribute("viewed", viewed + "");
@@ -284,16 +286,27 @@ public class CCEpisode {
 		e.setAttribute("part", part);
 		e.setAttribute("quality", quality.asInt() + "");
 		e.setAttribute("status", status.asInt() + "");
+		
+		if (fileHash) {
+			e.setAttribute("filehash", getFastMD5());
+		}
 	}
 
 	@SuppressWarnings("nls")
-	public Element generateXML(Element el) {
+	public Element generateXML(Element el, boolean fileHash) {
 		Element epis = new Element("episode");
 		
-		setXMLAttributes(epis);
+		setXMLAttributes(epis, fileHash);
 		
 		el.addContent(epis);
 		
 		return epis;
+	}
+	
+	public String getFastMD5() {
+		File[] f = new File[1];
+		f[0] = new File(getAbsolutePart());
+		
+		return LargeMD5Calculator.getMD5(f);
 	}
 }

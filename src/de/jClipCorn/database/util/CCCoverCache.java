@@ -22,7 +22,6 @@ import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.CachedHashMap;
 import de.jClipCorn.util.ImageUtilities;
 import de.jClipCorn.util.PathFormatter;
-import de.jClipCorn.util.TimeKeeper;
 
 public class CCCoverCache {
 	private final static String COVER_DIRECTORY = "\\cover\\"; //$NON-NLS-1$
@@ -126,7 +125,6 @@ public class CCCoverCache {
 	}
 
 	private void calculateBiggestCID() {
-		TimeKeeper.start();
 		usedCoverIDs = new Vector<>();
 		
 		String[] files = getCoverDirectory().list();
@@ -141,7 +139,6 @@ public class CCCoverCache {
 		}
 		
 		Collections.sort(usedCoverIDs);
-		TimeKeeper.stop();
 	}
 	
 	public int getNewCoverID() {

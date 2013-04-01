@@ -1,5 +1,7 @@
 package de.jClipCorn.util;
 
+import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferByte;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -33,7 +35,7 @@ public class LargeMD5Calculator {
 		return md5.asHex().toUpperCase();
 	}
 	
-	public static boolean calcMD5(MD5 md5, File f) {
+	private static boolean calcMD5(MD5 md5, File f) {
 		if (! f.exists() || f.length() < BLOCKSIZE*3) {
 			return false;
 		}
@@ -54,5 +56,13 @@ public class LargeMD5Calculator {
 		}
 		
 		return true;
+	}
+	
+	public static String calcMD5(BufferedImage f) {
+		MD5 md5 = new MD5();
+		
+		md5.Update(((DataBufferByte)f.getData().getDataBuffer()).getData());
+		
+		return md5.asHex().toUpperCase();
 	}
 }

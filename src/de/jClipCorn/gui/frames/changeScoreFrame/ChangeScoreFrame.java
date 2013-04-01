@@ -45,7 +45,7 @@ public class ChangeScoreFrame extends JFrame implements KeyListener {
 	private JButton btnScoreNo;
 	private JLabel lblbackspace;
 
-	public ChangeScoreFrame(Component owner, CCMovieList list) {
+	public ChangeScoreFrame(Component owner, CCMovieList list) { //TODO Option skip already rated movies
 		super();
 		this.movielist = list;
 		

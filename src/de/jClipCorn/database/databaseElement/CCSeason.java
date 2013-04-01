@@ -15,6 +15,7 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCMovieQuality;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieSize;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieStatus;
 import de.jClipCorn.util.CCDate;
+import de.jClipCorn.util.LargeMD5Calculator;
 
 public class CCSeason {
 	private final CCSeries owner;
@@ -327,23 +328,31 @@ public class CCSeason {
 	}
 
 	@SuppressWarnings("nls")
-	protected void setXMLAttributes(Element e) {
+	protected void setXMLAttributes(Element e, boolean coverHash) {
 		e.setAttribute("seasonid", seasonID + "");
 		e.setAttribute("title", title);
 		e.setAttribute("year", year + "");
 		e.setAttribute("covername", covername);
+		
+		if (coverHash) {
+			e.setAttribute("coverhash", getCoverMD5());
+		}
+	}
+	
+	public String getCoverMD5() {
+		return LargeMD5Calculator.calcMD5(getCover());
 	}
 
 	@SuppressWarnings("nls")
-	public Element generateXML(Element el) {
+	public Element generateXML(Element el, boolean fileHash, boolean coverHash) {
 		Element sea = new Element("season");
 		
-		setXMLAttributes(sea);
+		setXMLAttributes(sea, coverHash);
 		
 		el.addContent(sea);
 		
 		for (int i = 0; i < episodes.size(); i++) {
-			episodes.get(i).generateXML(sea);
+			episodes.get(i).generateXML(sea, fileHash);
 		}
 		
 		return sea;

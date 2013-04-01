@@ -23,6 +23,7 @@ import de.jClipCorn.gui.frames.addSeriesFrame.AddSeriesFrame;
 import de.jClipCorn.gui.frames.changeScoreFrame.ChangeScoreFrame;
 import de.jClipCorn.gui.frames.changeViewedFrame.ChangeViewedFrame;
 import de.jClipCorn.gui.frames.checkDatabaseFrame.CheckDatabaseDialog;
+import de.jClipCorn.gui.frames.compareDatabaseFrame.CompareDatabaseFrame;
 import de.jClipCorn.gui.frames.editMovieFrame.EditMovieFrame;
 import de.jClipCorn.gui.frames.editSeriesFrame.EditSeriesFrame;
 import de.jClipCorn.gui.frames.exportJxmlBKPFrame.ExportJxmlBKPDialog;
@@ -221,6 +222,14 @@ public class CCActionTree {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				onClickExtrasScanFolder();
+			}
+		});
+		
+		temp = extras.addChild(new CCActionElement("CompareDBs", "", null));
+		temp.addListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				onClickExtrasCompareDBs();
 			}
 		});
 		
@@ -458,6 +467,11 @@ public class CCActionTree {
 		sff.setVisible(true);
 	}
 	
+	private void onClickExtrasCompareDBs() {
+		CompareDatabaseFrame cdf = new CompareDatabaseFrame(owner, movielist);
+		cdf.setVisible(true);
+	}
+	
 	private void onClickExtrasResetViewed() {
 		if (DialogHelper.showLocaleYesNo(owner, "Dialogs.ResetViewed")) { //$NON-NLS-1$
 			owner.getMovielist().resetAllMovieViewed(false);
@@ -465,12 +479,12 @@ public class CCActionTree {
 	}
 	
 	private void onClickExtrasMassChangeViewed() {
-		ChangeViewedFrame cvf = new ChangeViewedFrame(owner, owner.getMovielist());
+		ChangeViewedFrame cvf = new ChangeViewedFrame(owner, movielist);
 		cvf.setVisible(true);
 	}
 	
 	private void onClickExtrasMassChangeScore() {
-		ChangeScoreFrame csf = new ChangeScoreFrame(owner, owner.getMovielist());
+		ChangeScoreFrame csf = new ChangeScoreFrame(owner, movielist);
 		csf.setVisible(true);
 	}
 	
@@ -497,7 +511,7 @@ public class CCActionTree {
 	}
 
 	private void onClickMoviesRem() {
-		if (owner.getSelectedElement().isMovie()) {
+		if (owner.getSelectedElement() != null && owner.getSelectedElement().isMovie()) {
 			if (DialogHelper.showLocaleYesNo(owner, "Dialogs.DeleteMovie")) { //$NON-NLS-1$
 				movielist.remove(owner.getSelectedElement());
 			}
@@ -529,7 +543,7 @@ public class CCActionTree {
 	private void onClickSeriesPreview() {
 		CCDatabaseElement el = owner.getSelectedElement();
 
-		if (el.isSeries()) {
+		if (el != null && el.isSeries()) {
 			PreviewSeriesFrame psf = new PreviewSeriesFrame(owner, (CCSeries) el);
 			psf.setVisible(true);
 		}
@@ -538,7 +552,7 @@ public class CCActionTree {
 	private void onClickSeriesMove() {
 		CCDatabaseElement el = owner.getSelectedElement();
 
-		if (el.isSeries()) {
+		if (el != null && el.isSeries()) {
 			MoveSeriesDialog msf = new MoveSeriesDialog(owner, (CCSeries) el);
 			msf.setVisible(true);
 		}
@@ -551,7 +565,7 @@ public class CCActionTree {
 	private void onClickSeriesEdit() {
 		CCDatabaseElement el = owner.getSelectedElement();
 
-		if (el.isSeries()) {
+		if (el != null && el.isSeries()) {
 			EditSeriesFrame esf = new EditSeriesFrame(owner, (CCSeries) el, null);
 			esf.setVisible(true);
 		}
@@ -560,7 +574,7 @@ public class CCActionTree {
 	private void onClickSeasonAdd() {
 		CCDatabaseElement el = owner.getSelectedElement();
 
-		if (el.isSeries()) {
+		if (el != null && el.isSeries()) {
 			AddSeasonFrame asf = new AddSeasonFrame(owner, (CCSeries) el, null);
 			asf.setVisible(true);
 		}
@@ -569,14 +583,14 @@ public class CCActionTree {
 	private void onClickMoviesEdit() {
 		CCDatabaseElement el = owner.getSelectedElement();
 
-		if (el.isMovie()) {
+		if (el != null && el.isMovie()) {
 			EditMovieFrame emf = new EditMovieFrame(owner, (CCMovie) el, null);
 			emf.setVisible(true);
 		}
 	}
 
 	private void onClickSeriesRem() {
-		if (owner.getSelectedElement().isSeries()) {
+		if (owner.getSelectedElement() != null && owner.getSelectedElement().isSeries()) {
 			if (DialogHelper.showLocaleYesNo(owner, "Dialogs.DeleteSeries")) {//$NON-NLS-1$
 				movielist.remove(owner.getSelectedElement());
 			}
@@ -600,6 +614,11 @@ public class CCActionTree {
 	
 	private void onClickOtherOpenFolder() {
 		CCDatabaseElement el = owner.getSelectedElement();
+		
+		if (el == null) {
+			return;
+		}
+		
 		if (el.isMovie()) {
 			PathFormatter.showInExplorer(((CCMovie)el).getAbsolutePart(0));
 		} else {
@@ -612,14 +631,14 @@ public class CCActionTree {
 
 	private void onClickOtherSetUnviewed() {
 		CCDatabaseElement el = owner.getSelectedElement();
-		if (el.isMovie()) {
+		if (el != null && el.isMovie()) {
 			((CCMovie)el).setViewed(false);
 		}
 	}
 
 	private void onClickOtherSetViewed() {
 		CCDatabaseElement el = owner.getSelectedElement();
-		if (el.isMovie()) {
+		if (el != null && el.isMovie()) {
 			((CCMovie)el).setViewed(true);
 		}
 	}

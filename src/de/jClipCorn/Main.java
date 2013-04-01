@@ -70,3 +70,4 @@ public class Main {
 //TODO WatchItLaterFeature
 //TODO Auto rename Files nach Richtlinien
 //TODO Organize All Cover Files - Mode(no gaps between filenames)
+//TODO Keyboard Shortcuts

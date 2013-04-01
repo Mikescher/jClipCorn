@@ -83,6 +83,10 @@ public class PathFormatter {
 		return path.substring(path.lastIndexOf('.') + 1, path.length()); // ganz neat, returned den ganzen string wenn kein '.' gefunden ;)
 	}
 	
+	public static String getFilenameWithExt(String path) {
+		return path.substring(path.lastIndexOf(BACKSLASH) + 1);
+	}
+	
 	public static String getFilename(String path) {
 		int liop = path.lastIndexOf('.');
 		if (liop > 0) {

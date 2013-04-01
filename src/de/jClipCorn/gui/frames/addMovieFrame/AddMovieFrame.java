@@ -704,9 +704,10 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		newM.setGenre(CCMovieGenre.find(cbxGenre7.getSelectedIndex()), 7);
 		
 		newM.setScore(cbxScore.getSelectedIndex());
-		
+//		!!! FATAL !!!
 		newM.setCover(currentCoverImage);
-		
+		//TODO Trys to over-save the new cover !!! (nur hier oder auch bei neuen serien/episoden/seasons ...) - FATAL
+		//vllt mal den covercache überarbeiten - auch dass der nicht iimmer am ende die cover added - einfach ne liste mit allen benutzen ids - und dann unbenutzte suchen - und die neuen i  die liste - !!!!!
 		//#####################################################################################
 		
 		newM.endUpdating();

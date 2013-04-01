@@ -3,6 +3,8 @@ package de.jClipCorn.database.util;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Collections;
+import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -20,6 +22,7 @@ import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.CachedHashMap;
 import de.jClipCorn.util.ImageUtilities;
 import de.jClipCorn.util.PathFormatter;
+import de.jClipCorn.util.TimeKeeper;
 
 public class CCCoverCache {
 	private final static String COVER_DIRECTORY = "\\cover\\"; //$NON-NLS-1$
@@ -27,7 +30,8 @@ public class CCCoverCache {
 	private CachedHashMap<String, BufferedImage> cache; //TODO Precaching
 
 	private String coverPath;
-	private int biggestCoverId;
+	
+	private Vector<Integer> usedCoverIDs;
 
 	public CCCoverCache(CCMovieList ml) {
 		cache = new CachedHashMap<>(CCProperties.getInstance().PROP_DATABASE_COVERCACHESIZE.getValue());
@@ -36,7 +40,7 @@ public class CCCoverCache {
 
 		tryCreatePath();
 
-		calculateBiggestCID(ml);
+		calculateBiggestCID();
 	}
 
 	public BufferedImage getCover(String name) {
@@ -121,20 +125,33 @@ public class CCCoverCache {
 		}
 	}
 
-	private void calculateBiggestCID(CCMovieList ml) {
-		int max = 0;
+	private void calculateBiggestCID() {
+		TimeKeeper.start();
+		usedCoverIDs = new Vector<>();
+		
+		String[] files = getCoverDirectory().list();
 		
 		Pattern p = Pattern.compile(String.format("(?<=%s)[0-9]+(?=\\.%s)", Pattern.quote(CCProperties.getInstance().PROP_COVER_PREFIX.getValue()), Pattern.quote(CCProperties.getInstance().PROP_COVER_TYPE.getValue()))); //$NON-NLS-1$
 		
-		for (int i = 0; i < ml.getElementCount(); i++) {
-			Matcher m = p.matcher(ml.getDatabaseElementBySort(i).getCoverName());
+		for (String f : files) {
+			Matcher m = p.matcher(PathFormatter.getFilenameWithExt(f));
 			if (m.find()){
-				max = Math.max(max, Integer.parseInt(m.group()));
+				usedCoverIDs.add(Integer.parseInt(m.group()));
 			}
-			
 		}
-
-		biggestCoverId = max;
+		
+		Collections.sort(usedCoverIDs);
+		TimeKeeper.stop();
+	}
+	
+	public int getNewCoverID() {
+		int i = 0;
+		while(usedCoverIDs.size() > i && usedCoverIDs.get(i).equals(i)) {
+			i++;
+		}
+		usedCoverIDs.add(i, i);
+		
+		return i;
 	}
 
 	public String addCover(BufferedImage newCover) {
@@ -142,9 +159,7 @@ public class CCCoverCache {
 	}
 
 	private String addNewCoverToFolder(BufferedImage cov) {
-		biggestCoverId++;
-		
-		int id = biggestCoverId;
+		int id = getNewCoverID();
 		
 		if (Main.DEBUG) {
 			System.out.println("addingCoverToFolder: " + id); //$NON-NLS-1$

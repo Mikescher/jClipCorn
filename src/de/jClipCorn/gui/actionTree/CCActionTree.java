@@ -225,7 +225,7 @@ public class CCActionTree {
 			}
 		});
 		
-		temp = extras.addChild(new CCActionElement("CompareDBs", "", null));
+		temp = extras.addChild(new CCActionElement("CompareDBs", "ClipMenuBar.Extras.CompareDBs", Resources.ICN_MENUBAR_COMPARE));
 		temp.addListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {

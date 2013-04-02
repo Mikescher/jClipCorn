@@ -46,9 +46,14 @@ ClipCornDB/
 ClipCornDB*/
 data/
 jClipCorn_backup/
+build/
+javadoc/
+jClipCorn_backup/
+
+DerbManager*.jar
 
 *.bat
-*.jar
+
 *.log
 *jClipCorn.properties
 *.lnk

@@ -32,6 +32,7 @@ public class UserDataProblem {
 	public final static int PROBLEM_EPISODENUMBER_ALREADY_EXISTS = 16;
 	public final static int PROBLEM_ZYKLUSORTITLE_HAS_LEADINGORTRAILING_SPACES = 17;
 	public final static int PROBLEM_ZYKLUS_ALREADY_EXISTS = 18;
+	//TODO Zylus ends with an Roman Letter
 	
 	private final int pid; // Problem ID
 	

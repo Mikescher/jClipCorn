@@ -17,7 +17,7 @@ import de.jClipCorn.gui.log.CCLog;
 
 public class DatabaseComparator {
 	@SuppressWarnings("nls")
-	public static ArrayList<CompareElement> compare(File db1f, File db2f, final JProgressBar prog) {
+	public static ArrayList<CompareElement> compare(File db1f, File db2f, final JProgressBar prog) throws Exception{
 		ArrayList<CompareElement> resultlist = new ArrayList<>();
 		
 		SAXBuilder builder = new SAXBuilder();
@@ -34,7 +34,7 @@ public class DatabaseComparator {
 		}
 		
 		Element root1 = db1.getRootElement();
-		Element root2 = db1.getRootElement();
+		Element root2 = db2.getRootElement();
 
 		final List<Element> childs1 = root1.getChildren();
 		final List<Element> childs2 = root2.getChildren();
@@ -76,6 +76,13 @@ public class DatabaseComparator {
 			
 			stepBar(prog);
 		}
+		
+		SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				prog.setValue(0);
+			}
+		});
 		
 		return resultlist;
 	}

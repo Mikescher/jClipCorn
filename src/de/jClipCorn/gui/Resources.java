@@ -42,7 +42,7 @@ public class Resources {
 	public final static String ICN_MENUBAR_MOVESERIES		= registerICN("/icons/toolbar/move_to_folder.png");
 	public final static String ICN_MENUBAR_FILENAMERULES	= registerICN("/icons/toolbar/books.png");
 	public final static String ICN_MENUBAR_CREATE_JXMLBKP	= registerICN("/icons/toolbar/source_code.png");
-	
+	public final static String ICN_MENUBAR_COMPARE			= registerICN("/icons/toolbar/balance_unbalance.png");
 	// #############################################  </MENUBAR>  ############################################
 	
 

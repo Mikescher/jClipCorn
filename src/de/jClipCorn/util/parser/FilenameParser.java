@@ -58,7 +58,7 @@ public class FilenameParser {
 		
 		String flang = mName.substring(mName.lastIndexOf(' ') + 1);
 		String lang = "";
-		if ((! flang.equals(mName)) && flang.startsWith("]") && flang.endsWith("[")) {
+		if ((! flang.equals(mName)) && flang.startsWith("[") && flang.endsWith("]")) {
 			lang = flang.substring(1, flang.length() - 1);
 			boolean succ = false;
 			if (lang.equalsIgnoreCase("ENG")) {

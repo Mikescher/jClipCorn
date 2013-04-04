@@ -88,9 +88,9 @@ public class DatabaseComparator {
 	}
 	
 	@SuppressWarnings("nls")
-	private static CompareElement findInList(Element e, ArrayList<CompareElement> list) {
+	private static CompareElement findInList(Element e, ArrayList<CompareElement> list) { //TODO COmpare with Language
 		for (int i = 0; i < list.size(); i++) {
-			if (list.get(i).getTitle().equals(e.getAttributeValue("title")) && list.get(i).getZyklus().getTitle().equals(e.getAttributeValue("zyklus")) && list.get(i).getZyklus().getNumber() == Integer.parseInt(e.getAttributeValue("zyklusnumber"))) {
+			if (list.get(i).getTitle().equals(e.getAttributeValue("title")) && list.get(i).getZyklus().getTitle().equals(e.getAttributeValue("zyklus")) && list.get(i).getZyklus().getNumber() == Integer.parseInt(e.getAttributeValue("zyklusnumber"))) { //TODO Sometimes this throws an Nullpointer
 				return list.get(i);
 			}
 		}

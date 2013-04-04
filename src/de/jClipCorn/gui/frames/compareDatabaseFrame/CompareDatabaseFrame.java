@@ -555,11 +555,11 @@ public class CompareDatabaseFrame extends JFrame {
 		}
 	}
 	
-	private void onSelection(JList<CompareElement> list, ListSelectionEvent e) {
+	private void onSelection(JList<CompareElement> list, ListSelectionEvent e) { //TODO More Infos (Filename / Language)
 		if (! e.getValueIsAdjusting()) {
 			CompareElement scel = list.getModel().getElementAt(e.getFirstIndex());
 
-			if (scel.isInDB1()) {
+			if (scel.isInDB1()) { //TODO CLear other side
 				lblNameDB1.setText(scel.getCompleteTitle());
 				lblCheckSumDB1File.setText(scel.getCS_File_DB1());
 				lblCheckSumDB1Cover.setText(scel.getCS_Cover_DB1());

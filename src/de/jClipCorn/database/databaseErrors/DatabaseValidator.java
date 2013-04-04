@@ -46,6 +46,8 @@ public class DatabaseValidator {
 			pcl.step();
 			
 			//TODO: Check internal Database (Double SeriesID, Doubel SeasonID, SeriesID without seasons, Season with SeriesID but without Series etc etc etc)
+			//TODO Search for Dubletten (case Insensitive)
+			//TODO FInd 2Movs use Same File
 		}
 		
 		validateCover(e, ml, pcl);
@@ -181,8 +183,8 @@ public class DatabaseValidator {
 		// zyklusID == 0
 		// ###############################################
 
-		if (!mov.getZyklus().getTitle().isEmpty() && mov.getZyklus().getNumber() == 0) {
-			e.add(DatabaseError.createSingle(DatabaseError.ERROR_ZYKLUSNUMBER_IS_ZERO, mov));
+		if (!mov.getZyklus().getTitle().isEmpty() && mov.getZyklus().getNumber() == -1) {
+			e.add(DatabaseError.createSingle(DatabaseError.ERROR_ZYKLUSNUMBER_IS_NEGONE, mov));
 		}
 
 		// ###############################################
@@ -190,7 +192,7 @@ public class DatabaseValidator {
 		// ###############################################
 
 		if (mov.getZyklus().getTitle().isEmpty() && mov.getZyklus().getNumber() != -1) {
-			e.add(DatabaseError.createSingle(DatabaseError.ERROR_ZYKLUSNUMBER_IS_NEGONE, mov));
+			e.add(DatabaseError.createSingle(DatabaseError.ERROR_ZYKLUSTITLE_IS_EMPTY, mov));
 		}
 
 		// ###############################################

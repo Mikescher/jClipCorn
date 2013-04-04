@@ -30,9 +30,10 @@ public class UserDataProblem {
 	public final static int PROBLEM_NO_GENRE_SET = 14;
 	public final static int PROBLEM_HOLE_IN_GENRE = 15;
 	public final static int PROBLEM_EPISODENUMBER_ALREADY_EXISTS = 16;
-	public final static int PROBLEM_ZYKLUSORTITLE_HAS_LEADINGORTRAILING_SPACES = 17;
+	public final static int PROBLEM_ZYKLUSORTITLE_HAS_LEADINGORTRAILING_SPACES = 17; //TODO Check this 
 	public final static int PROBLEM_ZYKLUS_ALREADY_EXISTS = 18;
 	//TODO Zylus ends with an Roman Letter
+	//TODO Add Wrong QUality (Auch 1Part aber MultiCD's Quali)
 	
 	private final int pid; // Problem ID
 	
@@ -88,7 +89,7 @@ public class UserDataProblem {
 		
 		CCMovie foundM;
 		if (! zyklus.isEmpty() && (foundM = l.findfirst(new CCMovieZyklus(zyklus, zyklusID))) != null) {
-			if (! foundM.getPart(0).equals(path0)) {
+			if (! foundM.getPart(0).equals(path0)) { //TODO What when you change the files ??
 				ret.add(new UserDataProblem(UserDataProblem.PROBLEM_ZYKLUS_ALREADY_EXISTS));
 			}
 		}

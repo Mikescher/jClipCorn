@@ -38,7 +38,7 @@ public class ScanFolderFrame extends JFrame implements Runnable, MouseListener {
 	private static final long serialVersionUID = 7341007586104986521L;
 	
 	@SuppressWarnings("nls")
-	private final static String REGEX_PART_N = ".*\\(Part [2-9]\\)\\.[A-Za-z]{2,4}"; // .*\(Part [2-9]\)\.[A-Za-z]{2,4}
+	private final static String REGEX_PART_N = ".*\\(Part [2-9]\\)\\.[A-Za-z0-9]{2,4}"; // .*\(Part [2-9]\)\.[A-Za-z0-9]{2,4}
 	
 	private final JFileChooser folderchooser;
 	private final MainFrame owner;
@@ -263,7 +263,7 @@ public class ScanFolderFrame extends JFrame implements Runnable, MouseListener {
 	}
 
 	@Override
-	public void mouseClicked(MouseEvent e) {
+	public void mouseClicked(MouseEvent e) { //TODO Update Btn
 		if (e.getButton() == MouseEvent.BUTTON1 && e.getClickCount() == 2 && lsFiles.getSelectedIndex() >= 0) {
 			String path = lsFiles.getSelectedValue();
 			lsModel.remove(lsFiles.getSelectedIndex());

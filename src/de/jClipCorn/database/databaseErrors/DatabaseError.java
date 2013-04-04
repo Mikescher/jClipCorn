@@ -14,8 +14,8 @@ public class DatabaseError {
 	public static int ERROR_NOCOVERSET = 5;
 	public static int ERROR_COVER_NOT_FOUND = 6;
 	public static int ERROR_TITLE_NOT_SET = 7;
-	public static int ERROR_ZYKLUSNUMBER_IS_ZERO = 8;
-	public static int ERROR_ZYKLUSNUMBER_IS_NEGONE = 9;
+	public static int ERROR_ZYKLUSNUMBER_IS_NEGONE = 8;
+	public static int ERROR_ZYKLUSTITLE_IS_EMPTY = 9;
 	public static int ERROR_INCONTINUOUS_PARTS = 10;
 	public static int ERROR_FORMAT_NOT_FOUND_IN_PARTS = 11;
 	public static int ERROR_PATH_NOT_FOUND = 12;
@@ -24,6 +24,7 @@ public class DatabaseError {
 	public static int ERROR_LASTVIEWED_AND_ISVIEWED_IS_PARADOX = 15;
 	public static int ERROR_NOT_TRIMMED = 16;
 	public static int ERROR_DUPLICATE_COVERLINK = 17;
+	//TODO Add Wrong QUality (Auch 1Part aber MultiCD's Quali)
 	
 	private final int error;
 	private final Object el1;

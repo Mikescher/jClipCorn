@@ -25,7 +25,7 @@ public class FilenameParser {
 		this.frame  = amf;
 	}
 	
-	public void parse(String filepath) {
+	public void parse(String filepath) { //TODO Make "MenInBlack II" to "Men in Black II Men in Black"
 		String path = PathFormatter.getFilepath(filepath);
 		String name = PathFormatter.getFilename(filepath); // Filename
 		String ext = PathFormatter.getExtension(filepath);

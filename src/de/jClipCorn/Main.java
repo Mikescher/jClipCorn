@@ -69,12 +69,9 @@ public class Main {
 //TODO Recheck all Texts - improve DL-Language (what EN / What GER)
 //TODO WatchItLaterFeature
 //TODO Auto rename Files nach Richtlinien
-//TODO Organize All Cover Files - Mode(no gaps between filenames)
 //TODO Keyboard Shortcuts
-//TODO AtbOrder for (important) Frames
-
-//TODO Parsd die Lang hieraus net: "Last Samurai [Eng] (Part 1).avi"
-
-//TODO Title von Fenster mit Grossbuchstaben anfangen (addMov, getCover)
-
+//TODO TabOrder for (important) Frames
 //TODO Apache Commons hacken und duplicate entry removen
+
+//TODO Add Frame (o smth other) Search for Filename
+//TODO "Calculate all FilesizesNew" - Option

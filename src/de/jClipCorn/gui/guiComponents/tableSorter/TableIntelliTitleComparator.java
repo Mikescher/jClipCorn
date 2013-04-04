@@ -5,7 +5,7 @@ import de.jClipCorn.database.databaseElement.CCMovie;
 
 public class TableIntelliTitleComparator extends TableTitleComparator {
 	@Override
-	public int compare(CCDatabaseElement arg0, CCDatabaseElement arg1) {
+	public int compare(CCDatabaseElement arg0, CCDatabaseElement arg1) { //TODO When Zyklus sort after Zyklus - Make Zykli sorted
 		String a = arg0.getTitle();
 		String b = arg1.getTitle();
 		

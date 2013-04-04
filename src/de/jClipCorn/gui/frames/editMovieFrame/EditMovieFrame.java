@@ -714,7 +714,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		}
 	}
 	
-	private void testPaths() {
+	private void testPaths() { //TODO Reset color of empty edits
 		Color c1 = UIManager.getColor("TextField.background"); //$NON-NLS-1$
 		Color c2 = Color.RED;
 		

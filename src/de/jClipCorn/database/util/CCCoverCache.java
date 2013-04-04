@@ -141,7 +141,7 @@ public class CCCoverCache {
 		Collections.sort(usedCoverIDs);
 	}
 	
-	public int getNewCoverID() {
+	public int getNewCoverID() { //TODO Sometimes new Movies override old CoverIDs
 		int i = 0;
 		while(usedCoverIDs.size() > i && usedCoverIDs.get(i).equals(i)) {
 			i++;

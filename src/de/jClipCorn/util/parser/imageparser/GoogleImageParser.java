@@ -28,7 +28,7 @@ public class GoogleImageParser {
 	public static ArrayList<String> extractImageLinks(String json) {
 		ArrayList<String> result = new ArrayList<>();
 		
-		JSONObject jobj;
+		JSONObject jobj; //TODO No Errors on Bad JSON (only Warnings ?)
 		try {
 			jobj = new JSONObject(json);
 		} catch (JSONException e) {

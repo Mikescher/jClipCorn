@@ -100,7 +100,7 @@ public class CCProperties {
 	@SuppressWarnings("nls")
 	private void createProperties() {
 		
-		LocalizedVector vd = new LocalizedVector();
+		LocalizedVector vd = new LocalizedVector(); //TODO Add Edit on DblClick
 		vd.add("CCProperties.DblClickMove.Opt0"); //$NON-NLS-1$
 		vd.add("CCProperties.DblClickMove.Opt1"); //$NON-NLS-1$
 		

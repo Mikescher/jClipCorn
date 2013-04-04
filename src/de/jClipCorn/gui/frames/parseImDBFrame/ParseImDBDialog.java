@@ -655,7 +655,7 @@ public class ParseImDBDialog extends JDialog implements Runnable {
 	}
 	
 	private void updateMainPanel() {
-		startThread(THREAD_TASK_PARSE);
+		startThread(THREAD_TASK_PARSE); //TODO Sometimes a deadlock appears here -.-
 	}
 	
 	private void insertDataIntoFrame() {

@@ -132,7 +132,7 @@ public class CCSeason {
 	public boolean isViewed() { // All parts viewed
 		boolean v = true;
 		for (CCEpisode ep : episodes) {
-			v &= ep.isViewed();
+			v &= ep.isViewed(); // Shortcut Evaluation ftw
 		}
 		return v;
 	}
@@ -140,7 +140,7 @@ public class CCSeason {
 	public boolean isUnviewed() { // All parts not viewed
 		boolean v = true;
 		for (CCEpisode ep : episodes) {
-			v &= ! ep.isViewed();
+			v &= ! ep.isViewed(); // Shortcut Evaluation ftw
 		}
 		return v;
 	}

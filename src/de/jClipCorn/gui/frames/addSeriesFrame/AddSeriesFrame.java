@@ -48,7 +48,6 @@ import de.jClipCorn.util.parser.ParseResultHandler;
 import de.jClipCorn.util.userdataProblem.UserDataProblem;
 import de.jClipCorn.util.userdataProblem.UserDataProblemHandler;
 
-@SuppressWarnings({ "unchecked", "rawtypes" })
 public class AddSeriesFrame extends JFrame implements ParseResultHandler, UserDataProblemHandler {
 	private static final long serialVersionUID = -4500039578109890172L;
 	
@@ -59,21 +58,21 @@ public class AddSeriesFrame extends JFrame implements ParseResultHandler, UserDa
 	private CCMovieList movieList;
 	
 	private JLabel label;
-	private JComboBox cbxGenre0;
-	private JComboBox cbxGenre1;
-	private JComboBox cbxGenre2;
+	private JComboBox<String> cbxGenre0;
+	private JComboBox<String> cbxGenre1;
+	private JComboBox<String> cbxGenre2;
 	private JLabel label_1;
 	private JLabel label_2;
 	private JLabel label_3;
-	private JComboBox cbxGenre3;
-	private JComboBox cbxGenre4;
+	private JComboBox<String> cbxGenre3;
+	private JComboBox<String> cbxGenre4;
 	private JLabel label_4;
 	private JLabel label_5;
-	private JComboBox cbxGenre5;
-	private JComboBox cbxGenre6;
+	private JComboBox<String> cbxGenre5;
+	private JComboBox<String> cbxGenre6;
 	private JLabel label_6;
 	private JLabel label_7;
-	private JComboBox cbxGenre7;
+	private JComboBox<String> cbxGenre7;
 	private JButton btnParse;
 	private JLabel label_8;
 	private JTextField edTitle;
@@ -81,9 +80,9 @@ public class AddSeriesFrame extends JFrame implements ParseResultHandler, UserDa
 	private JButton btnFind;
 	private JButton btnOpen;
 	private JLabel label_10;
-	private JComboBox cbxLanguage;
+	private JComboBox<String> cbxLanguage;
 	private JLabel label_11;
-	private JComboBox cbxFSK;
+	private JComboBox<String> cbxFSK;
 	private JLabel label_12;
 	private JSpinner spnOnlinescore;
 	private JLabel label_13;
@@ -115,15 +114,15 @@ public class AddSeriesFrame extends JFrame implements ParseResultHandler, UserDa
 		label.setBounds(10, 159, 52, 16);
 		getContentPane().add(label);
 
-		cbxGenre0 = new JComboBox();
+		cbxGenre0 = new JComboBox<>();
 		cbxGenre0.setBounds(74, 153, 212, 22);
 		getContentPane().add(cbxGenre0);
 
-		cbxGenre1 = new JComboBox();
+		cbxGenre1 = new JComboBox<>();
 		cbxGenre1.setBounds(74, 189, 212, 22);
 		getContentPane().add(cbxGenre1);
 
-		cbxGenre2 = new JComboBox();
+		cbxGenre2 = new JComboBox<>();
 		cbxGenre2.setBounds(74, 225, 212, 22);
 		getContentPane().add(cbxGenre2);
 
@@ -139,11 +138,11 @@ public class AddSeriesFrame extends JFrame implements ParseResultHandler, UserDa
 		label_3.setBounds(10, 266, 52, 16);
 		getContentPane().add(label_3);
 
-		cbxGenre3 = new JComboBox();
+		cbxGenre3 = new JComboBox<>();
 		cbxGenre3.setBounds(74, 260, 212, 22);
 		getContentPane().add(cbxGenre3);
 
-		cbxGenre4 = new JComboBox();
+		cbxGenre4 = new JComboBox<>();
 		cbxGenre4.setBounds(74, 295, 212, 22);
 		getContentPane().add(cbxGenre4);
 
@@ -155,11 +154,11 @@ public class AddSeriesFrame extends JFrame implements ParseResultHandler, UserDa
 		label_5.setBounds(10, 337, 52, 16);
 		getContentPane().add(label_5);
 
-		cbxGenre5 = new JComboBox();
+		cbxGenre5 = new JComboBox<>();
 		cbxGenre5.setBounds(74, 331, 212, 22);
 		getContentPane().add(cbxGenre5);
 
-		cbxGenre6 = new JComboBox();
+		cbxGenre6 = new JComboBox<>();
 		cbxGenre6.setBounds(74, 367, 212, 22);
 		getContentPane().add(cbxGenre6);
 
@@ -171,7 +170,7 @@ public class AddSeriesFrame extends JFrame implements ParseResultHandler, UserDa
 		label_7.setBounds(10, 408, 52, 16);
 		getContentPane().add(label_7);
 
-		cbxGenre7 = new JComboBox();
+		cbxGenre7 = new JComboBox<>();
 		cbxGenre7.setBounds(74, 402, 212, 22);
 		getContentPane().add(cbxGenre7);
 
@@ -224,7 +223,7 @@ public class AddSeriesFrame extends JFrame implements ParseResultHandler, UserDa
 		label_10.setBounds(10, 50, 52, 16);
 		getContentPane().add(label_10);
 
-		cbxLanguage = new JComboBox();
+		cbxLanguage = new JComboBox<>();
 		cbxLanguage.setBounds(74, 47, 212, 22);
 		getContentPane().add(cbxLanguage);
 
@@ -232,7 +231,7 @@ public class AddSeriesFrame extends JFrame implements ParseResultHandler, UserDa
 		label_11.setBounds(10, 121, 52, 16);
 		getContentPane().add(label_11);
 
-		cbxFSK = new JComboBox();
+		cbxFSK = new JComboBox<>();
 		cbxFSK.setBounds(74, 118, 212, 22);
 		getContentPane().add(cbxFSK);
 
@@ -289,21 +288,21 @@ public class AddSeriesFrame extends JFrame implements ParseResultHandler, UserDa
 	private void setDefaultValues() {		
 		lblCover.setIcon(CachedResourceLoader.getImageIcon(Resources.IMG_COVER_STANDARD));
 		
-		cbxLanguage.setModel(new DefaultComboBoxModel(CCMovieLanguage.getList()));
+		cbxLanguage.setModel(new DefaultComboBoxModel<>(CCMovieLanguage.getList()));
 		
-		DefaultComboBoxModel cbFSKdcbm;
-		cbxFSK.setModel(cbFSKdcbm = new DefaultComboBoxModel(CCMovieFSK.getList()));
+		DefaultComboBoxModel<String> cbFSKdcbm;
+		cbxFSK.setModel(cbFSKdcbm = new DefaultComboBoxModel<>(CCMovieFSK.getList()));
 		cbFSKdcbm.addElement(" "); //$NON-NLS-1$
 		cbxFSK.setSelectedIndex(cbFSKdcbm.getSize() - 1);
 		
-		cbxGenre0.setModel(new DefaultComboBoxModel(CCMovieGenre.getTrimmedList()));
-		cbxGenre1.setModel(new DefaultComboBoxModel(CCMovieGenre.getTrimmedList()));
-		cbxGenre2.setModel(new DefaultComboBoxModel(CCMovieGenre.getTrimmedList()));
-		cbxGenre3.setModel(new DefaultComboBoxModel(CCMovieGenre.getTrimmedList()));
-		cbxGenre4.setModel(new DefaultComboBoxModel(CCMovieGenre.getTrimmedList()));
-		cbxGenre5.setModel(new DefaultComboBoxModel(CCMovieGenre.getTrimmedList()));
-		cbxGenre6.setModel(new DefaultComboBoxModel(CCMovieGenre.getTrimmedList()));
-		cbxGenre7.setModel(new DefaultComboBoxModel(CCMovieGenre.getTrimmedList()));
+		cbxGenre0.setModel(new DefaultComboBoxModel<>(CCMovieGenre.getTrimmedList()));
+		cbxGenre1.setModel(new DefaultComboBoxModel<>(CCMovieGenre.getTrimmedList()));
+		cbxGenre2.setModel(new DefaultComboBoxModel<>(CCMovieGenre.getTrimmedList()));
+		cbxGenre3.setModel(new DefaultComboBoxModel<>(CCMovieGenre.getTrimmedList()));
+		cbxGenre4.setModel(new DefaultComboBoxModel<>(CCMovieGenre.getTrimmedList()));
+		cbxGenre5.setModel(new DefaultComboBoxModel<>(CCMovieGenre.getTrimmedList()));
+		cbxGenre6.setModel(new DefaultComboBoxModel<>(CCMovieGenre.getTrimmedList()));
+		cbxGenre7.setModel(new DefaultComboBoxModel<>(CCMovieGenre.getTrimmedList()));
 
 	}
 	

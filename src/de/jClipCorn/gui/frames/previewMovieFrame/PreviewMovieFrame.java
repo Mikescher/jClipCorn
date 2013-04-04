@@ -57,7 +57,6 @@ public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener 
 	private JButton btnImDB;
 	private JLabel lblGenre;
 	private JLabel lblScore_1;
-	private JButton btnChange;
 	private JLabel lblStatus;
 	private JLabel lbl_Quality;
 	private JLabel lbl_Language;
@@ -197,16 +196,6 @@ public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener 
 		lblScore_1 = new JLabel(LocaleBundle.getString("PreviewMovieFrame.btnScore.text")); //$NON-NLS-1$
 		lblScore_1.setBounds(202, 441, 46, 14);
 		getContentPane().add(lblScore_1);
-		
-		btnChange = new JButton(LocaleBundle.getString("PreviewMovieFrame.btnChange.text")); //$NON-NLS-1$
-		btnChange.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				//TODO Change Score
-			}
-		});
-		btnChange.setBounds(332, 439, 80, 23);
-		getContentPane().add(btnChange);
 		
 		lblStatus = new JLabel(LocaleBundle.getString("EditSeriesFrame.lblStatus.text")); //$NON-NLS-1$
 		lblStatus.setBounds(202, 466, 46, 14);

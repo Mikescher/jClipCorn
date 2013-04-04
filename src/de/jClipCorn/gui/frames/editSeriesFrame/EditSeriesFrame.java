@@ -73,7 +73,6 @@ import de.jClipCorn.util.parser.ParseResultHandler;
 import de.jClipCorn.util.userdataProblem.UserDataProblem;
 import de.jClipCorn.util.userdataProblem.UserDataProblemHandler;
 
-@SuppressWarnings({ "unchecked", "rawtypes" })
 public class EditSeriesFrame extends JFrame implements ParseResultHandler, WindowListener {
 	private static final long serialVersionUID = -3694533463871522503L;
 	
@@ -89,12 +88,12 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 	
 	private final UpdateCallbackListener listener;
 	
-	private JList lsSeasons;
+	private JList<String> lsSeasons;
 	private JLabel lblSeriesCover;
 	private JButton btnSeriesOpenCover;
 	private JLabel label_1;
 	private JTextField edSeriesTitle;
-	private JComboBox<Object> cbxSeriesGenre_7;
+	private JComboBox<String> cbxSeriesGenre_7;
 	private JLabel label_2;
 	private JLabel label_3;
 	private JLabel label_4;
@@ -103,24 +102,24 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 	private JLabel label_7;
 	private JLabel label_8;
 	private JLabel label_9;
-	private JComboBox<Object> cbxSeriesGenre_0;
-	private JComboBox<Object> cbxSeriesGenre_1;
-	private JComboBox<Object> cbxSeriesGenre_2;
-	private JComboBox<Object> cbxSeriesGenre_3;
-	private JComboBox<Object> cbxSeriesGenre_4;
-	private JComboBox<Object> cbxSeriesGenre_5;
-	private JComboBox<Object> cbxSeriesGenre_6;
-	private JComboBox<Object> cbxSeriesLanguage;
+	private JComboBox<String> cbxSeriesGenre_0;
+	private JComboBox<String> cbxSeriesGenre_1;
+	private JComboBox<String> cbxSeriesGenre_2;
+	private JComboBox<String> cbxSeriesGenre_3;
+	private JComboBox<String> cbxSeriesGenre_4;
+	private JComboBox<String> cbxSeriesGenre_5;
+	private JComboBox<String> cbxSeriesGenre_6;
+	private JComboBox<String> cbxSeriesLanguage;
 	private JLabel label_10;
 	private JLabel label_11;
 	private JSpinner spnSeriesOnlineScore;
 	private JLabel label_12;
 	private JLabel label_13;
-	private JComboBox<Object> cbxSeriesFSK;
+	private JComboBox<String> cbxSeriesFSK;
 	private JPanel pnlSeries;
 	private JButton btnSeriesFindCover;
 	private JScrollPane scrollPane;
-	private JComboBox cbxSeriesScore;
+	private JComboBox<String> cbxSeriesScore;
 	private JLabel lblScore;
 	private JPanel pnlSeason;
 	private JLabel lblSeasonCover;
@@ -129,7 +128,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 	private JTextField edSeasonTitle;
 	private JLabel label_16;
 	private JSpinner spnSeasonYear;
-	private JList lsEpisodes;
+	private JList<String> lsEpisodes;
 	private JScrollPane scrollPane_1;
 	private JPanel pnlEpisode;
 	private JLabel label_17;
@@ -139,9 +138,9 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 	private JLabel label_19;
 	private JCheckBox cbEpisodeViewed;
 	private JLabel label_20;
-	private JComboBox<Object> cbxEpisodeFormat;
+	private JComboBox<String> cbxEpisodeFormat;
 	private JLabel label_21;
-	private JComboBox<Object> cbxEpisodeQuality;
+	private JComboBox<String> cbxEpisodeQuality;
 	private JLabel label_22;
 	private JSpinner spnEpisodeLength;
 	private JLabel label_23;
@@ -160,7 +159,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 	private ReadableTextField edEpisodePart;
 	private JButton btnEpisodeOpenPart;
 	private JLabel lblStatus;
-	private JComboBox cbxEpisodeStatus;
+	private JComboBox<String> cbxEpisodeStatus;
 	private JLabel lblSeriesSeriesID;
 	private JLabel lblSeasonID;
 	private JButton btnSeriesIMDB;
@@ -196,6 +195,28 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		setLocationRelativeTo(owner);
 		
 		addWindowListener(this);
+	}
+	
+	public EditSeriesFrame(Component owner, CCSeason sea, UpdateCallbackListener ucl) {
+		super();
+		this.series = sea.getSeries();
+		this.listener = ucl;
+		this.videoFileChooser = new JFileChooser(PathFormatter.getAbsoluteSelfDirectory());
+		this.coverFileChooser = new JFileChooser(PathFormatter.getAbsoluteSelfDirectory());
+		
+		initGUI();
+		setDefaultValues();
+		initFileChooser();
+		
+		if (series != null) { //Sonst mag mich der WindowBuilder nicht mehr  :'(
+			updateSeriesPanel();
+		}
+		
+		setLocationRelativeTo(owner);
+		
+		addWindowListener(this);
+		
+		selectSeason(sea);
 	}
 	
 	public EditSeriesFrame(Component owner, CCEpisode ep, UpdateCallbackListener ucl) {
@@ -258,7 +279,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		pnlSeries.add(edSeriesTitle);
 		edSeriesTitle.setColumns(10);
 		
-		cbxSeriesGenre_7 = new JComboBox<Object>();
+		cbxSeriesGenre_7 = new JComboBox<>();
 		cbxSeriesGenre_7.setBounds(294, 262, 110, 22);
 		pnlSeries.add(cbxSeriesGenre_7);
 		
@@ -294,35 +315,35 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		label_9.setBounds(206, 16, 52, 16);
 		pnlSeries.add(label_9);
 		
-		cbxSeriesGenre_0 = new JComboBox<Object>();
+		cbxSeriesGenre_0 = new JComboBox<>();
 		cbxSeriesGenre_0.setBounds(294, 13, 110, 22);
 		pnlSeries.add(cbxSeriesGenre_0);
 		
-		cbxSeriesGenre_1 = new JComboBox<Object>();
+		cbxSeriesGenre_1 = new JComboBox<>();
 		cbxSeriesGenre_1.setBounds(294, 49, 110, 22);
 		pnlSeries.add(cbxSeriesGenre_1);
 		
-		cbxSeriesGenre_2 = new JComboBox<Object>();
+		cbxSeriesGenre_2 = new JComboBox<>();
 		cbxSeriesGenre_2.setBounds(294, 85, 110, 22);
 		pnlSeries.add(cbxSeriesGenre_2);
 		
-		cbxSeriesGenre_3 = new JComboBox<Object>();
+		cbxSeriesGenre_3 = new JComboBox<>();
 		cbxSeriesGenre_3.setBounds(294, 120, 110, 22);
 		pnlSeries.add(cbxSeriesGenre_3);
 		
-		cbxSeriesGenre_4 = new JComboBox<Object>();
+		cbxSeriesGenre_4 = new JComboBox<>();
 		cbxSeriesGenre_4.setBounds(294, 155, 110, 22);
 		pnlSeries.add(cbxSeriesGenre_4);
 		
-		cbxSeriesGenre_5 = new JComboBox<Object>();
+		cbxSeriesGenre_5 = new JComboBox<>();
 		cbxSeriesGenre_5.setBounds(294, 191, 110, 22);
 		pnlSeries.add(cbxSeriesGenre_5);
 		
-		cbxSeriesGenre_6 = new JComboBox<Object>();
+		cbxSeriesGenre_6 = new JComboBox<>();
 		cbxSeriesGenre_6.setBounds(294, 227, 110, 22);
 		pnlSeries.add(cbxSeriesGenre_6);
 		
-		cbxSeriesLanguage = new JComboBox<Object>();
+		cbxSeriesLanguage = new JComboBox<>();
 		cbxSeriesLanguage.setBounds(76, 345, 118, 22);
 		pnlSeries.add(cbxSeriesLanguage);
 		
@@ -343,7 +364,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		label_13.setBounds(12, 413, 52, 16);
 		pnlSeries.add(label_13);
 		
-		cbxSeriesFSK = new JComboBox<Object>();
+		cbxSeriesFSK = new JComboBox<>();
 		cbxSeriesFSK.setBounds(76, 410, 118, 22);
 		pnlSeries.add(cbxSeriesFSK);
 		
@@ -355,7 +376,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		scrollPane.setBounds(12, 475, 182, 126);
 		pnlSeries.add(scrollPane);
 		
-		lsSeasons = new JList();
+		lsSeasons = new JList<>();
 		lsSeasons.addListSelectionListener(new ListSelectionListener() {
 			@Override
 			public void valueChanged(ListSelectionEvent arg0) {
@@ -383,7 +404,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		btnSeriesFindCover.setBounds(95, 14, 55, 23);
 		pnlSeries.add(btnSeriesFindCover);
 		
-		cbxSeriesScore = new JComboBox();
+		cbxSeriesScore = new JComboBox<>();
 		cbxSeriesScore.setBounds(74, 442, 120, 20);
 		pnlSeries.add(cbxSeriesScore);
 		
@@ -488,7 +509,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		scrollPane_1.setBounds(12, 378, 182, 223);
 		pnlSeason.add(scrollPane_1);
 		
-		lsEpisodes = new JList();
+		lsEpisodes = new JList<>();
 		lsEpisodes.addListSelectionListener(new ListSelectionListener() {
 			@Override
 			public void valueChanged(ListSelectionEvent e) {
@@ -587,7 +608,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		label_20.setBounds(12, 127, 52, 16);
 		pnlEpisode.add(label_20);
 		
-		cbxEpisodeFormat = new JComboBox<Object>();
+		cbxEpisodeFormat = new JComboBox<>();
 		cbxEpisodeFormat.setBounds(74, 123, 212, 22);
 		pnlEpisode.add(cbxEpisodeFormat);
 		
@@ -595,7 +616,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		label_21.setBounds(12, 164, 46, 14);
 		pnlEpisode.add(label_21);
 		
-		cbxEpisodeQuality = new JComboBox<Object>();
+		cbxEpisodeQuality = new JComboBox<>();
 		cbxEpisodeQuality.setBounds(74, 160, 212, 22);
 		pnlEpisode.add(cbxEpisodeQuality);
 		
@@ -708,7 +729,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		lblStatus.setBounds(12, 440, 52, 14);
 		pnlEpisode.add(lblStatus);
 		
-		cbxEpisodeStatus = new JComboBox();
+		cbxEpisodeStatus = new JComboBox<>();
 		cbxEpisodeStatus.setBounds(74, 436, 212, 20);
 		pnlEpisode.add(cbxEpisodeStatus);
 		
@@ -728,18 +749,18 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		
 		lblSeriesCover.setIcon(CachedResourceLoader.getImageIcon(Resources.IMG_COVER_STANDARD));
 		
-		cbxSeriesGenre_0.setModel(new DefaultComboBoxModel(CCMovieGenre.getTrimmedList()));
-		cbxSeriesGenre_1.setModel(new DefaultComboBoxModel(CCMovieGenre.getTrimmedList()));
-		cbxSeriesGenre_2.setModel(new DefaultComboBoxModel(CCMovieGenre.getTrimmedList()));
-		cbxSeriesGenre_3.setModel(new DefaultComboBoxModel(CCMovieGenre.getTrimmedList()));
-		cbxSeriesGenre_4.setModel(new DefaultComboBoxModel(CCMovieGenre.getTrimmedList()));
-		cbxSeriesGenre_5.setModel(new DefaultComboBoxModel(CCMovieGenre.getTrimmedList()));
-		cbxSeriesGenre_6.setModel(new DefaultComboBoxModel(CCMovieGenre.getTrimmedList()));
-		cbxSeriesGenre_7.setModel(new DefaultComboBoxModel(CCMovieGenre.getTrimmedList()));
-		
-		cbxSeriesFSK.setModel(new DefaultComboBoxModel(CCMovieFSK.getList()));
-		cbxSeriesLanguage.setModel(new DefaultComboBoxModel(CCMovieLanguage.getList()));
-		cbxSeriesScore.setModel(new DefaultComboBoxModel(CCMovieScore.getList()));
+		cbxSeriesGenre_0.setModel(new DefaultComboBoxModel<>(CCMovieGenre.getTrimmedList()));
+		cbxSeriesGenre_1.setModel(new DefaultComboBoxModel<>(CCMovieGenre.getTrimmedList()));
+		cbxSeriesGenre_2.setModel(new DefaultComboBoxModel<>(CCMovieGenre.getTrimmedList()));
+		cbxSeriesGenre_3.setModel(new DefaultComboBoxModel<>(CCMovieGenre.getTrimmedList()));
+		cbxSeriesGenre_4.setModel(new DefaultComboBoxModel<>(CCMovieGenre.getTrimmedList()));
+		cbxSeriesGenre_5.setModel(new DefaultComboBoxModel<>(CCMovieGenre.getTrimmedList()));
+		cbxSeriesGenre_6.setModel(new DefaultComboBoxModel<>(CCMovieGenre.getTrimmedList()));
+		cbxSeriesGenre_7.setModel(new DefaultComboBoxModel<>(CCMovieGenre.getTrimmedList()));
+	
+		cbxSeriesFSK.setModel(new DefaultComboBoxModel<>(CCMovieFSK.getList()));
+		cbxSeriesLanguage.setModel(new DefaultComboBoxModel<>(CCMovieLanguage.getList()));
+		cbxSeriesScore.setModel(new DefaultComboBoxModel<>(CCMovieScore.getList()));
 		
 		//#########################   SEASON   ############################################################
 		
@@ -747,9 +768,9 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		
 		//#########################   EPISODE   ###########################################################
 		
-		cbxEpisodeFormat.setModel(new DefaultComboBoxModel(CCMovieFormat.getList()));
-		cbxEpisodeQuality.setModel(new DefaultComboBoxModel(CCMovieQuality.getList()));
-		cbxEpisodeStatus.setModel(new DefaultComboBoxModel(CCMovieStatus.getList()));
+		cbxEpisodeFormat.setModel(new DefaultComboBoxModel<>(CCMovieFormat.getList()));
+		cbxEpisodeQuality.setModel(new DefaultComboBoxModel<>(CCMovieQuality.getList()));
+		cbxEpisodeStatus.setModel(new DefaultComboBoxModel<>(CCMovieStatus.getList()));
 	}
 	
 	private CCSeason getSelectedSeason() {
@@ -798,7 +819,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		cbxSeriesGenre_7.setSelectedIndex(series.getGenre(7).asInt());
 		
 		lsSeasons.setSelectedIndex(-1);
-		DefaultListModel ml;
+		DefaultListModel<String> ml;
 		lsSeasons.setModel(ml = new DefaultListModel<>());
 		for (int i = 0; i < series.getSeasonCount(); i++) {
 			ml.addElement(series.getSeason(i).getTitle());
@@ -821,7 +842,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 			spnSeasonYear.setValue(season.getYear());
 			
 			lsEpisodes.setSelectedIndex(-1);
-			DefaultListModel ml;
+			DefaultListModel<String> ml;
 			lsEpisodes.setModel(ml = new DefaultListModel<>());
 			for (int i = 0; i < season.getEpisodeCount(); i++) {
 				ml.addElement(season.getEpisode(i).getTitle());
@@ -1285,12 +1306,13 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		CCDate lvdate = (CCDate) spnEpisodeLastViewed.getValue();
 
 		long fsize = (long) spnEpisodeSize.getValue();
+		int quality = cbxEpisodeQuality.getSelectedIndex();
 		String csExtn  = CCMovieFormat.find(cbxEpisodeFormat.getSelectedIndex()).asString();
 		String csExta = CCMovieFormat.find(cbxEpisodeFormat.getSelectedIndex()).asString_Alt();
 		
 		String part = edEpisodePart.getText();
 		
-		UserDataProblem.testEpisodeData(ret, season, episode, title, len, epNum, adddate, lvdate, fsize, csExtn, csExta, part);
+		UserDataProblem.testEpisodeData(ret, season, episode, title, len, epNum, adddate, lvdate, fsize, csExtn, csExta, part, quality);
 		
 		return ret.isEmpty();
 	}

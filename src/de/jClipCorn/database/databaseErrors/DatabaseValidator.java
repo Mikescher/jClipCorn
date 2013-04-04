@@ -3,6 +3,9 @@ package de.jClipCorn.database.databaseErrors;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
+
+import org.apache.commons.lang.StringUtils;
 
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
@@ -11,23 +14,26 @@ import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFormat;
+import de.jClipCorn.database.databaseElement.columnTypes.CCMovieQuality;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieSize;
-import de.jClipCorn.gui.frames.checkDatabaseFrame.DatabaseCoverElement;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.CCDate;
 import de.jClipCorn.util.FileSizeFormatter;
 import de.jClipCorn.util.PathFormatter;
 import de.jClipCorn.util.ProgressCallbackListener;
+import de.jClipCorn.util.RomanNumberFormatter;
 
 public class DatabaseValidator {
 	private final static CCDate MIN_DATE = CCDate.getNewMinimumDate();
 	
 	public static void startValidate(ArrayList<DatabaseError> e, CCMovieList ml, ProgressCallbackListener pcl) {
+		pcl.setMax(ml.getElementCount() * 5); // 1x Normal  +  2x  checkCover  +  2x CheckFiles
+		pcl.reset();
+		
 		for (CCDatabaseElement el : ml.getRawList()) {
 			if (el.isMovie()) {
 				CCMovie mov = (CCMovie) el;
 				validateMovie(e, ml, mov);
-				
 			} else { // is Series
 				CCSeries series = (CCSeries) el;
 				validateSeries(e, ml, series);
@@ -44,13 +50,12 @@ public class DatabaseValidator {
 			}
 			
 			pcl.step();
-			
-			//TODO: Check internal Database (Double SeriesID, Doubel SeasonID, SeriesID without seasons, Season with SeriesID but without Series etc etc etc)
-			//TODO Search for Dubletten (case Insensitive)
-			//TODO FInd 2Movs use Same File
 		}
 		
-		validateCover(e, ml, pcl);
+		findDuplicateCover(e, ml, pcl);
+		findDuplicateFiles(e, ml, pcl);
+		
+		pcl.reset();
 	}
 	
 	private static double getMaxSizeFileDrift() {
@@ -242,6 +247,37 @@ public class DatabaseValidator {
 		if (mov.getTitle().startsWith(" ") || mov.getTitle().endsWith(" ") || mov.getZyklus().getTitle().startsWith(" ") || mov.getZyklus().getTitle().endsWith(" ")) {  //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 			e.add(DatabaseError.createSingle(DatabaseError.ERROR_NOT_TRIMMED, mov));
 		}
+		
+		// ###############################################
+		// Zyklus ends with Roman
+		// ###############################################
+		
+		if (RomanNumberFormatter.endsWithRoman(mov.getZyklus().getTitle())) {
+			e.add(DatabaseError.createSingle(DatabaseError.ERROR_ZYKLUS_ENDS_WITH_ROMAN, mov));
+		}
+		
+		// ###############################################
+		// Wrong Quality
+		// ###############################################
+		
+		if (CCMovieQuality.getQualityForSize(mov.getFilesize(), mov.getPartcount()) != mov.getQuality()) {
+			e.add(DatabaseError.createSingle(DatabaseError.ERROR_WRONG_QUALITY, mov));
+		}
+		
+		// ###############################################
+		// Duplicate Name
+		// ###############################################
+		
+		for (Iterator<CCMovie> it = movielist.iteratorMovies(); it.hasNext();) {
+			CCMovie imov = it.next();
+			
+			if (StringUtils.equalsIgnoreCase(imov.getCompleteTitle(), mov.getCompleteTitle()) && imov.getLanguage() == mov.getLanguage()) {
+				if (mov.getLocalID() != imov.getLocalID()) {
+					e.add(DatabaseError.createDouble(DatabaseError.ERROR_DUPLICATE_TITLE, mov, imov));
+				}
+				break;
+			}
+		}
 	}
 
 	private static void validateSeason(ArrayList<DatabaseError> e, CCMovieList movielist, CCSeason season) {
@@ -338,19 +374,27 @@ public class DatabaseValidator {
 		//}
 
 		// ###############################################
-		// Zyklus/Title ends/starts with a space
+		// Zyklus ends/starts with a space
 		// ###############################################
 		
 		if (episode.getTitle().startsWith(" ") || episode.getTitle().endsWith(" ")) {  //$NON-NLS-1$//$NON-NLS-2$
 			e.add(DatabaseError.createSingle(DatabaseError.ERROR_NOT_TRIMMED, episode));
 		}
+		
+		// ###############################################
+		// Wrong Quality
+		// ###############################################
+		
+		if (CCMovieQuality.getQualityForSize(episode.getFilesize(), 1) != episode.getQuality()) {
+			e.add(DatabaseError.createSingle(DatabaseError.ERROR_WRONG_QUALITY, episode));
+		}
 	}
 
-	private static void validateCover(ArrayList<DatabaseError> e, CCMovieList movielist, ProgressCallbackListener pcl) {
+	private static void findDuplicateCover(ArrayList<DatabaseError> e, CCMovieList movielist, ProgressCallbackListener pcl) {
 		ArrayList<DatabaseCoverElement> cvrList = new ArrayList<>();
 		
-		for (int i = 0; i < movielist.getElementCount(); i++) {
-			CCDatabaseElement el = movielist.getDatabaseElementBySort(i);
+		for (Iterator<CCDatabaseElement> it = movielist.iterator(); it.hasNext();) {
+			CCDatabaseElement el = it.next();
 			
 			cvrList.add(new DatabaseCoverElement(el.getCoverName(), el));
 			
@@ -368,6 +412,49 @@ public class DatabaseValidator {
 		for (int i = 1; i < cvrList.size(); i++) {
 			if (cvrList.get(i).equalsCover(cvrList.get(i-1))) {
 				e.add(DatabaseError.createDouble(DatabaseError.ERROR_DUPLICATE_COVERLINK, cvrList.get(i-1).getElement(), cvrList.get(i).getElement()));
+			}
+			
+			pcl.step();
+		}
+	}
+
+	private static void findDuplicateFiles(ArrayList<DatabaseError> e, CCMovieList movielist, ProgressCallbackListener pcl) {
+		boolean ignIFO = CCProperties.getInstance().PROP_VALIDATE_DUP_IGNORE_IFO.getValue();
+		
+		ArrayList<DatabaseFileElement> flList = new ArrayList<>();
+		
+		for (Iterator<CCDatabaseElement> it = movielist.iterator(); it.hasNext();) {
+			CCDatabaseElement el = it.next();
+			if (el.isMovie()) {
+				for (int i = 0; i < ((CCMovie)el).getPartcount(); i++) {
+					if (ignIFO && CCMovieFormat.getMovieFormat(PathFormatter.getExtension(((CCMovie)el).getAbsolutePart(i))) == CCMovieFormat.IFO) {
+						continue;
+					}
+					
+					flList.add(new DatabaseFileElement(((CCMovie)el).getAbsolutePart(i), ((CCMovie)el)));
+				}
+			} else if (el.isSeries()) {
+				CCSeries s = ((CCSeries)el);
+				for (int i = 0; i < s.getSeasonCount(); i++) {
+					CCSeason se = s.getSeason(i);
+					for (int j = 0; j < se.getEpisodeCount(); j++) {
+						if (ignIFO && CCMovieFormat.getMovieFormat(PathFormatter.getExtension(se.getEpisode(j).getAbsolutePart())) == CCMovieFormat.IFO) {
+							continue;
+						}
+						
+						flList.add(new DatabaseFileElement(se.getEpisode(j).getAbsolutePart(), se.getEpisode(j)));
+					}
+				}
+			}
+			
+			pcl.step();
+		}
+		
+		Collections.sort(flList);
+		
+		for (int i = 1; i < flList.size(); i++) {
+			if (flList.get(i).equalsPath(flList.get(i-1))) {
+				e.add(DatabaseError.createDouble(DatabaseError.ERROR_DUPLICATE_FILELINK, flList.get(i-1).getElement(), flList.get(i).getElement()));
 			}
 			
 			pcl.step();

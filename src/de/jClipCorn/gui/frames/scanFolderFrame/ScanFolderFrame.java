@@ -263,12 +263,14 @@ public class ScanFolderFrame extends JFrame implements Runnable, MouseListener {
 	}
 
 	@Override
-	public void mouseClicked(MouseEvent e) { //TODO Update Btn
+	public void mouseClicked(MouseEvent e) {
 		if (e.getButton() == MouseEvent.BUTTON1 && e.getClickCount() == 2 && lsFiles.getSelectedIndex() >= 0) {
 			String path = lsFiles.getSelectedValue();
 			lsModel.remove(lsFiles.getSelectedIndex());
 			AddMovieFrame amf = new AddMovieFrame(this, owner.getMovielist(), path);
 			amf.setVisible(true);
+			
+			updateCount();
 		}
 	}
 

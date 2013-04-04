@@ -1,6 +1,7 @@
 package de.jClipCorn.util.parser;
 
 import java.io.File;
+import java.util.ArrayList;
 
 import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFormat;
@@ -15,37 +16,38 @@ import de.jClipCorn.util.RomanNumberFormatter;
 
 @SuppressWarnings("nls")
 public class FilenameParser {
-	private static long FSIZE_MAX_STREAM = 512L * 1024 * 1024;	 // 500 MB
-	private static long FSIZE_MAX_CD = 1024L * 1024 * 1024;		 // 1 GB
-	private static long FSIZE_MAX_DVD = 4L * 1024 * 1024 * 1024; // 4 GB
-	
 	private AddMovieFrame frame;
 	
 	public FilenameParser(AddMovieFrame amf) {
 		this.frame  = amf;
 	}
 	
-	public void parse(String filepath) { //TODO Make "MenInBlack II" to "Men in Black II Men in Black"
+	public void parse(String filepath) {
+		ArrayList<File> files = new ArrayList<>();
+		files.add(new File(filepath));
+		
 		String path = PathFormatter.getFilepath(filepath);
-		String name = PathFormatter.getFilename(filepath); // Filename
+		String filename = PathFormatter.getFilename(filepath); // Filename
 		String ext = PathFormatter.getExtension(filepath);
 		int partCount = 1;
 		
-		if (path.equals(filepath) || name.equals(filepath) || ext.equals(filepath)) {
+		if (path.equals(filepath) || filename.equals(filepath) || ext.equals(filepath)) {
 			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.ErrorParsingFN", filepath));
 			return;
 		}
 		
 		// ###################  PART  ###################
 		
-		String mName = name; // Moviename
+		String moviename = filename; // Moviename
 		
-		if (name.endsWith(" (Part 1)")) {
-			mName = mName.substring(0, name.indexOf(" (Part 1)"));
+		if (filename.endsWith(" (Part 1)")) {
+			moviename = moviename.substring(0, filename.indexOf(" (Part 1)"));
 			
 			for (int p = 2; p <= CCMovie.PARTCOUNT_MAX; p++) {
-				String newFP = path + '\\' + mName + " (Part " + p + ")" + '.' + ext;
-				if (checkFileExists(newFP)) {
+				String newFP = path + '\\' + moviename + " (Part " + p + ")" + '.' + ext;
+				File f = new File(newFP);
+				if (f.exists()) {
+					files.add(f);
 					frame.setFilepath(p - 1, newFP);
 					partCount++;
 				} else {
@@ -56,9 +58,9 @@ public class FilenameParser {
 		
 		// ###################  LANGUAGE  ###################
 		
-		String flang = mName.substring(mName.lastIndexOf(' ') + 1);
+		String flang = moviename.substring(moviename.lastIndexOf(' ') + 1);
 		String lang = "";
-		if ((! flang.equals(mName)) && flang.startsWith("[") && flang.endsWith("]")) {
+		if ((! flang.equals(moviename)) && flang.startsWith("[") && flang.endsWith("]")) {
 			lang = flang.substring(1, flang.length() - 1);
 			boolean succ = false;
 			if (lang.equalsIgnoreCase("ENG")) {
@@ -76,7 +78,7 @@ public class FilenameParser {
 			}
 			
 			if (succ) {
-				mName = mName.substring(0, mName.length() - (flang.length() + 1));
+				moviename = moviename.substring(0, moviename.length() - (flang.length() + 1));
 			}
 		} else {
 			frame.setMovieLanguage(CCMovieLanguage.GERMAN);
@@ -87,14 +89,17 @@ public class FilenameParser {
 		String mZyklus = "";
 		String mRoman = "";
 		int iRoman = -1;
-		if (mName.indexOf(" - ") >= 0) { // There is A Zyklus
+		if (moviename.indexOf(" - ") >= 0) { // There is A Zyklus
 			iRoman = 0;
-			mZyklus = mName.substring(0, mName.indexOf(" - "));
-			mName = mName.substring(mName.indexOf(" - ") + 3);
+			mZyklus = moviename.substring(0, moviename.indexOf(" - "));
 			mRoman = mZyklus.substring(mZyklus.lastIndexOf(' ') + 1);
 			if (RomanNumberFormatter.isRoman(mRoman)) { // There is a Zyklus with an Roman Number
+				moviename = moviename.substring(moviename.indexOf(" - ") + 3);
 				iRoman = RomanNumberFormatter.romToDec(mRoman);
 				mZyklus = mZyklus.substring(0, mZyklus.lastIndexOf(' '));
+			} else { //Doch kein Zyklus
+				mZyklus = "";
+				iRoman = -1;
 			}
 		}
 		
@@ -103,30 +108,30 @@ public class FilenameParser {
 		
 		// ###################  NAME  ###################
 		
-		mName = mName.replaceFirst(" - ", ": ");
-		
-		frame.setMovieName(mName);
+		if (RomanNumberFormatter.endsWithRoman(moviename)) {
+			mRoman = moviename.substring(moviename.lastIndexOf(' ') + 1);
+			iRoman = RomanNumberFormatter.romToDec(mRoman);
+			mZyklus = moviename.substring(0, moviename.lastIndexOf(' '));
+			
+			frame.setMovieName(mZyklus);
+			frame.setZyklus(mZyklus);
+			frame.setZyklusNumber(iRoman);
+		} else {
+			moviename = moviename.replaceFirst(" - ", ": ");
+			
+			frame.setMovieName(moviename);
+		}
 		
 		// ###################  SIZE  ###################
 		
-		long size = FileSizeFormatter.getFileSize(filepath); // from first file
+		long size = 0;
+		for (File f : files) {
+			size += FileSizeFormatter.getFileSize(f);
+		}
 		
 		// ###################  QUALITY  ###################
 		
-		if (size <= FSIZE_MAX_STREAM) {
-			frame.setQuality(CCMovieQuality.STREAM);
-		} else if (size <= FSIZE_MAX_CD) {
-			if (partCount == 1) {
-				frame.setQuality(CCMovieQuality.ONE_CD);
-			} else {
-				frame.setQuality(CCMovieQuality.MULTIPLE_CD);
-			}
-				
-		} else if (size <= FSIZE_MAX_DVD) {
-			frame.setQuality(CCMovieQuality.DVD);
-		} else {
-			frame.setQuality(CCMovieQuality.BLURAY);
-		}
+		frame.setQuality(CCMovieQuality.getQualityForSize(size, partCount));
 		
 		// ###################  FORMAT  ###################
 		
@@ -134,9 +139,5 @@ public class FilenameParser {
 		if (cmf != null) {
 			frame.setMovieFormat(cmf);
 		}
-	}
-	
-	private static boolean checkFileExists(String filepath) {
-		return new File(filepath).exists();
 	}
 }

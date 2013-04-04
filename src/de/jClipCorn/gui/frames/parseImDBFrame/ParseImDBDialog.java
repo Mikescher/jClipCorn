@@ -48,18 +48,12 @@ import de.jClipCorn.util.ImageUtilities;
 import de.jClipCorn.util.parser.ImDBParser;
 import de.jClipCorn.util.parser.ParseResultHandler;
 
-@SuppressWarnings({ "unchecked", "rawtypes" })
-public class ParseImDBDialog extends JDialog implements Runnable {
+public class ParseImDBDialog extends JDialog {
 	private static final long serialVersionUID = 3777677368743220383L;
 	
-	private final static int THREAD_TASK_NOTASK = 0;
-	private final static int THREAD_TASK_SEARCH = 1;
-	private final static int THREAD_TASK_PARSE = 2;
-	
 	private Thread thisThread;
-	private int threadTask = THREAD_TASK_NOTASK;
 	
-	private DefaultListModel mdlLsDBList;
+	private DefaultListModel<String> mdlLsDBList;
 	private ArrayList<String> lsDBListPaths = new ArrayList<>();
 	private BufferedImage imgCoverBI = null;
 	private HashMap<String, Integer> cbFSKlsAll = null;
@@ -67,7 +61,9 @@ public class ParseImDBDialog extends JDialog implements Runnable {
 	private final ParseResultHandler owner;
 	private final CCMovieTyp typ;
 	
-	private JList lsDBList;
+	private String selectedURL = ""; //$NON-NLS-1$
+	
+	private JList<String> lsDBList;
 	private JPanel panel;
 	private JTextField edSearchName;
 	private JButton btnParse;
@@ -83,26 +79,26 @@ public class ParseImDBDialog extends JDialog implements Runnable {
 	private JLabel lblScore;
 	private JLabel lblLength;
 	private JLabel lblFsk;
-	private ReadableCombobox cbxFSK;
+	private ReadableCombobox<String> cbxFSK;
 	private ReadableSpinner spnLength;
 	private ReadableSpinner spnScore;
 	private ReadableSpinner spnYear;
 	private JCheckBox cbGenre0;
 	private JLabel lblGenre;
-	private ReadableCombobox cbxGenre0;
-	private ReadableCombobox cbxGenre2;
+	private ReadableCombobox<String> cbxGenre0;
+	private ReadableCombobox<String> cbxGenre2;
 	private JLabel lblGenre_2;
 	private JCheckBox cbGenre2;
-	private ReadableCombobox cbxGenre3;
+	private ReadableCombobox<String> cbxGenre3;
 	private JLabel lblGenre_3;
 	private JCheckBox cbGenre3;
-	private ReadableCombobox cbxGenre1;
+	private ReadableCombobox<String> cbxGenre1;
 	private JLabel lblGenre_1;
 	private JCheckBox cbGenre1;
-	private ReadableCombobox cbxGenre4;
-	private ReadableCombobox cbxGenre5;
-	private ReadableCombobox cbxGenre6;
-	private ReadableCombobox cbxGenre7;
+	private ReadableCombobox<String> cbxGenre4;
+	private ReadableCombobox<String> cbxGenre5;
+	private ReadableCombobox<String> cbxGenre6;
+	private ReadableCombobox<String> cbxGenre7;
 	private JLabel lblGenre_7;
 	private JCheckBox cbGenre7;
 	private JCheckBox cbGenre6;
@@ -147,7 +143,7 @@ public class ParseImDBDialog extends JDialog implements Runnable {
 		scrollPane.setBounds(10, 53, 217, 412);
 		getContentPane().add(scrollPane);
 		
-		lsDBList = new JList(mdlLsDBList = new DefaultListModel());
+		lsDBList = new JList<>(mdlLsDBList = new DefaultListModel<>());
 		lsDBList.addListSelectionListener(new ListSelectionListener() {
 			@Override
 			public void valueChanged(ListSelectionEvent e) {
@@ -238,7 +234,7 @@ public class ParseImDBDialog extends JDialog implements Runnable {
 		lblFsk.setBounds(33, 130, 46, 14);
 		pnlMain.add(lblFsk);
 		
-		cbxFSK = new ReadableCombobox();
+		cbxFSK = new ReadableCombobox<>();
 		cbxFSK.setEnabled(false);
 		cbxFSK.setBounds(120, 130, 169, 20);
 		pnlMain.add(cbxFSK);
@@ -267,12 +263,12 @@ public class ParseImDBDialog extends JDialog implements Runnable {
 		lblGenre.setBounds(322, 10, 46, 14);
 		pnlMain.add(lblGenre);
 		
-		cbxGenre0 = new ReadableCombobox();
+		cbxGenre0 = new ReadableCombobox<>();
 		cbxGenre0.setEnabled(false);
 		cbxGenre0.setBounds(377, 10, 169, 20);
 		pnlMain.add(cbxGenre0);
 		
-		cbxGenre2 = new ReadableCombobox();
+		cbxGenre2 = new ReadableCombobox<>();
 		cbxGenre2.setEnabled(false);
 		cbxGenre2.setBounds(377, 70, 169, 20);
 		pnlMain.add(cbxGenre2);
@@ -285,7 +281,7 @@ public class ParseImDBDialog extends JDialog implements Runnable {
 		cbGenre2.setBounds(295, 67, 21, 23);
 		pnlMain.add(cbGenre2);
 		
-		cbxGenre3 = new ReadableCombobox();
+		cbxGenre3 = new ReadableCombobox<>();
 		cbxGenre3.setEnabled(false);
 		cbxGenre3.setBounds(377, 100, 169, 20);
 		pnlMain.add(cbxGenre3);
@@ -298,7 +294,7 @@ public class ParseImDBDialog extends JDialog implements Runnable {
 		cbGenre3.setBounds(295, 97, 21, 23);
 		pnlMain.add(cbGenre3);
 		
-		cbxGenre1 = new ReadableCombobox();
+		cbxGenre1 = new ReadableCombobox<>();
 		cbxGenre1.setEnabled(false);
 		cbxGenre1.setBounds(377, 40, 169, 20);
 		pnlMain.add(cbxGenre1);
@@ -311,22 +307,22 @@ public class ParseImDBDialog extends JDialog implements Runnable {
 		cbGenre1.setBounds(295, 37, 21, 23);
 		pnlMain.add(cbGenre1);
 		
-		cbxGenre4 = new ReadableCombobox();
+		cbxGenre4 = new ReadableCombobox<>();
 		cbxGenre4.setEnabled(false);
 		cbxGenre4.setBounds(377, 130, 169, 20);
 		pnlMain.add(cbxGenre4);
 		
-		cbxGenre5 = new ReadableCombobox();
+		cbxGenre5 = new ReadableCombobox<>();
 		cbxGenre5.setEnabled(false);
 		cbxGenre5.setBounds(377, 160, 169, 20);
 		pnlMain.add(cbxGenre5);
 		
-		cbxGenre6 = new ReadableCombobox();
+		cbxGenre6 = new ReadableCombobox<>();
 		cbxGenre6.setEnabled(false);
 		cbxGenre6.setBounds(377, 190, 169, 20);
 		pnlMain.add(cbxGenre6);
 		
-		cbxGenre7 = new ReadableCombobox();
+		cbxGenre7 = new ReadableCombobox<>();
 		cbxGenre7.setEnabled(false);
 		cbxGenre7.setBounds(377, 220, 169, 20);
 		pnlMain.add(cbxGenre7);
@@ -431,13 +427,13 @@ public class ParseImDBDialog extends JDialog implements Runnable {
 		}
 	}
 	
-	private void startThread(int task) {
-		threadTask = task;
-		(thisThread = new Thread(this)).start();
-	}
-	
 	private void startGetImDBList() {
-		startThread(THREAD_TASK_SEARCH);
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				runSearch();
+			}
+		}).start();
 	}
 	
 	@SuppressWarnings("deprecation") //TODO Non-Deprecated way
@@ -454,21 +450,23 @@ public class ParseImDBDialog extends JDialog implements Runnable {
 	}
 	
 	private void initComboboxes() {
-		cbxFSK.setModel(new DefaultComboBoxModel(CCMovieFSK.getList()));
+		cbxFSK.setModel(new DefaultComboBoxModel<>(CCMovieFSK.getList()));
 		
-		cbxGenre0.setModel(new DefaultComboBoxModel(CCMovieGenre.getTrimmedList()));
-		cbxGenre1.setModel(new DefaultComboBoxModel(CCMovieGenre.getTrimmedList()));
-		cbxGenre2.setModel(new DefaultComboBoxModel(CCMovieGenre.getTrimmedList()));
-		cbxGenre3.setModel(new DefaultComboBoxModel(CCMovieGenre.getTrimmedList()));
-		cbxGenre4.setModel(new DefaultComboBoxModel(CCMovieGenre.getTrimmedList()));
-		cbxGenre5.setModel(new DefaultComboBoxModel(CCMovieGenre.getTrimmedList()));
-		cbxGenre6.setModel(new DefaultComboBoxModel(CCMovieGenre.getTrimmedList()));
-		cbxGenre7.setModel(new DefaultComboBoxModel(CCMovieGenre.getTrimmedList()));
+		cbxGenre0.setModel(new DefaultComboBoxModel<>(CCMovieGenre.getTrimmedList()));
+		cbxGenre1.setModel(new DefaultComboBoxModel<>(CCMovieGenre.getTrimmedList()));
+		cbxGenre2.setModel(new DefaultComboBoxModel<>(CCMovieGenre.getTrimmedList()));
+		cbxGenre3.setModel(new DefaultComboBoxModel<>(CCMovieGenre.getTrimmedList()));
+		cbxGenre4.setModel(new DefaultComboBoxModel<>(CCMovieGenre.getTrimmedList()));
+		cbxGenre5.setModel(new DefaultComboBoxModel<>(CCMovieGenre.getTrimmedList()));
+		cbxGenre6.setModel(new DefaultComboBoxModel<>(CCMovieGenre.getTrimmedList()));
+		cbxGenre7.setModel(new DefaultComboBoxModel<>(CCMovieGenre.getTrimmedList()));
 	}
 	
 	private void resetAll() {
 		resetFields();
 		resetCheckboxes();
+		
+		btnOk.setEnabled(false);
 	}
 	
 	private void resetFields() {
@@ -525,21 +523,6 @@ public class ParseImDBDialog extends JDialog implements Runnable {
 		cbGenre7.setSelected(cbxGenre7.getSelectedIndex() > 0);
 	}
 	
-	@Override
-	public void run() {
-		switch (threadTask) {
-		case THREAD_TASK_SEARCH:
-			runSearch();
-			break;
-		case THREAD_TASK_PARSE:
-			runParse();
-			break;
-		case THREAD_TASK_NOTASK:
-		default:
-			break;
-		}
-	}
-	
 	private void runSearch() {
 		try {
 			SwingUtilities.invokeAndWait(new Runnable() {
@@ -584,12 +567,15 @@ public class ParseImDBDialog extends JDialog implements Runnable {
 	}
 	
 	private void runParse() {
+		final String url = selectedURL;
+		
 		try {
 			SwingUtilities.invokeAndWait(new Runnable() {
 				@Override
 				public void run() {
-					resetFields();
+					resetAll();
 					pbarSearch.setIndeterminate(true);
+					
 				}
 			});
 		} catch (InvocationTargetException | InterruptedException e) {
@@ -597,12 +583,6 @@ public class ParseImDBDialog extends JDialog implements Runnable {
 			return;
 		}
 		
-		
-		int idx = lsDBList.getSelectedIndex();
-		
-		if (idx < 0) return;
-		
-		String url = lsDBListPaths.get(idx);
 		String html = HTTPUtilities.getHTML(url, true);
 
 		final String title = ImDBParser.getTitle(html);
@@ -643,6 +623,8 @@ public class ParseImDBDialog extends JDialog implements Runnable {
 					cbxGenre6.setSelectedIndex(mgl.getGenre(6).asInt());
 					cbxGenre7.setSelectedIndex(mgl.getGenre(7).asInt());
 					
+					btnOk.setEnabled(true);
+					
 					updateCheckBoxes();
 					
 					pbarSearch.setIndeterminate(false);
@@ -655,7 +637,18 @@ public class ParseImDBDialog extends JDialog implements Runnable {
 	}
 	
 	private void updateMainPanel() {
-		startThread(THREAD_TASK_PARSE); //TODO Sometimes a deadlock appears here -.-
+		if (lsDBList.getSelectedIndex() < 0) {
+			return;
+		}
+		
+		selectedURL = lsDBListPaths.get(lsDBList.getSelectedIndex());
+		
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				runParse();
+			}
+		}).start();
 	}
 	
 	private void insertDataIntoFrame() {

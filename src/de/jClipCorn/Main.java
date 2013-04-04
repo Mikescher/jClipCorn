@@ -74,4 +74,3 @@ public class Main {
 //TODO Apache Commons hacken und duplicate entry removen
 
 //TODO Add Frame (o smth other) Search for Filename
-//TODO "Calculate all FilesizesNew" - Option

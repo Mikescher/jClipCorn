@@ -5,19 +5,25 @@ import de.jClipCorn.database.databaseElement.CCMovie;
 
 public class TableIntelliTitleComparator extends TableTitleComparator {
 	@Override
-	public int compare(CCDatabaseElement arg0, CCDatabaseElement arg1) { //TODO When Zyklus sort after Zyklus - Make Zykli sorted
-		String a = arg0.getTitle();
-		String b = arg1.getTitle();
+	public int compare(CCDatabaseElement ma, CCDatabaseElement mb) {
+		String a = ma.getTitle();
+		String b = mb.getTitle();
 		
-		if (arg0.isMovie()) {
-			if (((CCMovie)arg0).getZyklus().isSet()) {
-				a = ((CCMovie)arg0).getZyklus().getTitle() + ((CCMovie)arg0).getZyklus().getNumber();
+		if (ma.isMovie() && mb.isMovie() && ((CCMovie)ma).getZyklus().isSet() && ((CCMovie)mb).getZyklus().isSet()) {
+			if (((CCMovie)ma).getZyklus().getTitle().equals(((CCMovie)mb).getZyklus().getTitle())) { //In the same Zyklus
+				return Integer.compare(((CCMovie)ma).getZyklus().getNumber(), ((CCMovie)mb).getZyklus().getNumber());
 			}
 		}
 		
-		if (arg1.isMovie()) {
-			if (((CCMovie)arg1).getZyklus().isSet()) {
-				b = ((CCMovie)arg1).getZyklus().getTitle() + ((CCMovie)arg1).getZyklus().getNumber();
+		if (ma.isMovie()) {
+			if (((CCMovie)ma).getZyklus().isSet()) {
+				a = ((CCMovie)ma).getZyklus().getTitle();
+			}
+		}
+		
+		if (mb.isMovie()) {
+			if (((CCMovie)mb).getZyklus().isSet()) {
+				b = ((CCMovie)mb).getZyklus().getTitle();
 			}
 		}
 		

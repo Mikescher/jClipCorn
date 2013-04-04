@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.JProgressBar;
 import javax.swing.SwingUtilities;
 
 import org.jdom2.Document;
@@ -14,10 +13,11 @@ import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
 
 import de.jClipCorn.gui.log.CCLog;
+import de.jClipCorn.util.ProgressCallbackListener;
 
 public class DatabaseComparator {
 	@SuppressWarnings("nls")
-	public static ArrayList<CompareElement> compare(File db1f, File db2f, final JProgressBar prog) throws Exception{
+	public static ArrayList<CompareElement> compare(File db1f, File db2f, final ProgressCallbackListener pcl) throws Exception{
 		ArrayList<CompareElement> resultlist = new ArrayList<>();
 		
 		SAXBuilder builder = new SAXBuilder();
@@ -39,48 +39,43 @@ public class DatabaseComparator {
 		final List<Element> childs1 = root1.getChildren();
 		final List<Element> childs2 = root2.getChildren();
 		
-		SwingUtilities.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-				prog.setValue(0);
-				prog.setMaximum(childs1.size() + childs2.size());
-			}
-		});
+		pcl.reset();
+		pcl.setMax(childs1.size() + childs2.size());
 		
 		for (int i = 0; i < childs1.size(); i++) {
 			CompareElement ce = findInList(childs1.get(i), resultlist);
 			
 			if (ce == null) {
-				ce = new CompareElement(childs1.get(i).getAttributeValue("title"), childs1.get(i).getAttributeValue("zyklus"), Integer.parseInt(childs1.get(i).getAttributeValue("zyklusnumber")));
-				ce.setDB1(childs1.get(i).getAttributeValue("coverhash"), childs1.get(i).getAttributeValue("filehash"));
+				ce = new CompareElement(childs1.get(i).getAttributeValue("title"), childs1.get(i).getAttributeValue("zyklus"), Integer.parseInt(childs1.get(i).getAttributeValue("zyklusnumber")), Integer.parseInt(childs1.get(i).getAttributeValue("language")));
+				ce.setDB1(childs1.get(i).getAttributeValue("coverhash"), childs1.get(i).getAttributeValue("filehash"), childs1.get(i).getAttributeValue("part_0"));
 				
 				resultlist.add(ce);
 			} else {
-				ce.setDB1(childs1.get(i).getAttributeValue("coverhash"), childs1.get(i).getAttributeValue("filehash"));
+				ce.setDB1(childs1.get(i).getAttributeValue("coverhash"), childs1.get(i).getAttributeValue("filehash"), childs1.get(i).getAttributeValue("part_0"));
 			}
 			
-			stepBar(prog);
+			pcl.step();
 		}
 		
 		for (int i = 0; i < childs2.size(); i++) {
 			CompareElement ce = findInList(childs2.get(i), resultlist);
 			
 			if (ce == null) {
-				ce = new CompareElement(childs2.get(i).getAttributeValue("title"), childs2.get(i).getAttributeValue("zyklus"), Integer.parseInt(childs2.get(i).getAttributeValue("zyklusnumber")));
-				ce.setDB2(childs2.get(i).getAttributeValue("coverhash"), childs2.get(i).getAttributeValue("filehash"));
+				ce = new CompareElement(childs2.get(i).getAttributeValue("title"), childs2.get(i).getAttributeValue("zyklus"), Integer.parseInt(childs2.get(i).getAttributeValue("zyklusnumber")), Integer.parseInt(childs2.get(i).getAttributeValue("language")));
+				ce.setDB2(childs2.get(i).getAttributeValue("coverhash"), childs2.get(i).getAttributeValue("filehash"), childs2.get(i).getAttributeValue("part_0"));
 				
 				resultlist.add(ce);
 			} else {
-				ce.setDB2(childs2.get(i).getAttributeValue("coverhash"), childs2.get(i).getAttributeValue("filehash"));
+				ce.setDB2(childs2.get(i).getAttributeValue("coverhash"), childs2.get(i).getAttributeValue("filehash"), childs2.get(i).getAttributeValue("part_0"));
 			}
 			
-			stepBar(prog);
+			pcl.step();
 		}
 		
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				prog.setValue(0);
+				pcl.reset();
 			}
 		});
 		
@@ -88,22 +83,33 @@ public class DatabaseComparator {
 	}
 	
 	@SuppressWarnings("nls")
-	private static CompareElement findInList(Element e, ArrayList<CompareElement> list) { //TODO COmpare with Language
+	private static CompareElement findInList(Element e, ArrayList<CompareElement> list) {
 		for (int i = 0; i < list.size(); i++) {
-			if (list.get(i).getTitle().equals(e.getAttributeValue("title")) && list.get(i).getZyklus().getTitle().equals(e.getAttributeValue("zyklus")) && list.get(i).getZyklus().getNumber() == Integer.parseInt(e.getAttributeValue("zyklusnumber"))) { //TODO Sometimes this throws an Nullpointer
+			CompareElement ce = list.get(i);
+			
+			String title = e.getAttributeValue("title");
+			String zyklus = e.getAttributeValue("zyklus");
+			String sZyklusID = e.getAttributeValue("zyklusnumber");
+			int zyklusID;
+			if (sZyklusID == null) {
+				zyklusID = Integer.MIN_VALUE;
+			} else {
+				zyklusID = Integer.parseInt(sZyklusID);
+			}
+			String sLanguage = e.getAttributeValue("language");
+			int language;
+			if (sLanguage == null) {
+				language = Integer.MIN_VALUE;
+			} else {
+				language = Integer.parseInt(sLanguage);
+			}
+			
+			
+			if (ce.getTitle().equals(title) && ce.getZyklus().getTitle().equals(zyklus) && ce.getZyklus().getNumber() == zyklusID && ce.getLanguage() == language) {
 				return list.get(i);
 			}
 		}
 		
 		return null;
-	}
-	
-	private static void stepBar(final JProgressBar p) {
-		SwingUtilities.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-				p.setValue(p.getValue() + 1);
-			}
-		});
 	}
 }

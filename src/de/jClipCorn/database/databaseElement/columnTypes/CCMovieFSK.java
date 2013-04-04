@@ -30,7 +30,7 @@ public enum CCMovieFSK {
 	}
 
 	public static CCMovieFSK find(int val) {
-		if (val >= 0 && val < CCMovieFormat.values().length) {
+		if (val >= 0 && val < CCMovieFSK.values().length) {
 			return CCMovieFSK.values()[val]; // Geht nur wenn alle Zahlen nach der Reihe da sind
 		}
 		return null;

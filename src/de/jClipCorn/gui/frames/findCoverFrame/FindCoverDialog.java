@@ -47,6 +47,8 @@ public class FindCoverDialog extends JDialog {
 	private final CCMovieTyp typ;
 
 	private BufferedImage currentSelectedImage = null;
+	
+	private String searchText = ""; //$NON-NLS-1$
 
 	private Thread thread_1;
 	private Thread thread_2;
@@ -259,8 +261,10 @@ public class FindCoverDialog extends JDialog {
 		return thread_1_finished && thread_2_finished && thread_3_finished;
 	}
 
-	private void startParsing() { //TODO Sometimes the programm freezes (eg parsing  underworld 1 or terminator 1 - not alwys ...)
+	private void startParsing() {
 		onStartThreads();
+		
+		searchText = edSearchValue.getText();
 
 		thread_1 = (new Thread(new Runnable() {
 			@Override
@@ -356,7 +360,7 @@ public class FindCoverDialog extends JDialog {
 
 		// #################################################################################
 
-		String url = GoogleImageParser.getSearchURL(edSearchValue.getText());
+		String url = GoogleImageParser.getSearchURL(searchText);
 		String json = HTTPUtilities.getHTML(url, false);
 		ArrayList<String> links = GoogleImageParser.extractImageLinks(json);
 
@@ -396,7 +400,7 @@ public class FindCoverDialog extends JDialog {
 		setProgressbarMaxThreadsafe(2, 24);
 		int pbpos = 1;
 
-		String searchurl = ImDBImageParser.getSearchURL(edSearchValue.getText(), typ);
+		String searchurl = ImDBImageParser.getSearchURL(searchText, typ);
 		String searchhtml = HTTPUtilities.getHTML(searchurl, true);
 		String direkturl = ImDBImageParser.getFirstSearchResult(searchhtml);
 		if (!direkturl.isEmpty()) {
@@ -481,7 +485,7 @@ public class FindCoverDialog extends JDialog {
 		setProgressbarMaxThreadsafe(3, 24);
 		int pbpos = 1;
 
-		String searchurl = ImDBImageParser.getSearchURL(edSearchValue.getText(), typ);
+		String searchurl = ImDBImageParser.getSearchURL(searchText, typ);
 		String searchhtml = HTTPUtilities.getHTML(searchurl, true);
 		String direkturl = ImDBImageParser.getSecondSearchResult(searchhtml);
 		if (!direkturl.isEmpty()) {

@@ -55,7 +55,6 @@ import de.jClipCorn.util.Validator;
 import de.jClipCorn.util.userdataProblem.UserDataProblem;
 import de.jClipCorn.util.userdataProblem.UserDataProblemHandler;
 
-@SuppressWarnings({ "unchecked", "rawtypes" })
 public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler {
 	private static final long serialVersionUID = 8825373383589912037L;
 
@@ -67,7 +66,7 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler {
 
 	private final UpdateCallbackListener listener;
 
-	private JList lsEpisodes;
+	private JList<String> lsEpisodes;
 	private JLabel label;
 	private JTextField edTitle;
 	private JLabel label_1;
@@ -77,7 +76,7 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler {
 	private JLabel label_3;
 	private JLabel label_4;
 	private JLabel label_5;
-	private JComboBox<Object> cbxFormat;
+	private JComboBox<String> cbxFormat;
 	private JLabel label_6;
 	private JSpinner spnSize;
 	private JLabel label_7;
@@ -116,7 +115,7 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler {
 	private JButton btnSide_12;
 	private JSpinner spnSideLength;
 	private JButton btnSide_13;
-	private JComboBox<Object> cbxSideFormat;
+	private JComboBox<String> cbxSideFormat;
 	private JButton btnClear;
 	private JButton btnSide_09;
 	private JButton btnRecalcSize;
@@ -126,9 +125,9 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler {
 	private JButton btnToday;
 	private ReadableTextField edPart;
 	private JLabel lblNewLabel;
-	private JComboBox<Object> cbxQuality;
+	private JComboBox<String> cbxQuality;
 	private JLabel lblQuality;
-	private JComboBox cbxSideQuality;
+	private JComboBox<String> cbxSideQuality;
 	private JButton btnSide_14;
 	private JButton btnOpen;
 
@@ -213,7 +212,7 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler {
 		label_5.setBounds(12, 127, 52, 16);
 		pnlInfo.add(label_5);
 
-		cbxFormat = new JComboBox<Object>();
+		cbxFormat = new JComboBox<>();
 		cbxFormat.setBounds(74, 123, 212, 22);
 		pnlInfo.add(cbxFormat);
 
@@ -333,7 +332,7 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler {
 		lblNewLabel.setBounds(12, 407, 46, 14);
 		pnlInfo.add(lblNewLabel);
 
-		cbxQuality = new JComboBox<Object>();
+		cbxQuality = new JComboBox<>();
 		cbxQuality.setBounds(74, 160, 212, 22);
 		pnlInfo.add(cbxQuality);
 
@@ -355,7 +354,7 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler {
 		scrollPane.setBounds(12, 47, 329, 530);
 		getContentPane().add(scrollPane);
 
-		lsEpisodes = new JList();
+		lsEpisodes = new JList<>();
 		lsEpisodes.addListSelectionListener(new ListSelectionListener() {
 			@Override
 			public void valueChanged(ListSelectionEvent arg0) {
@@ -565,7 +564,7 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler {
 		btnSide_13.setBounds(12, 502, 210, 23);
 		pnlEdit.add(btnSide_13);
 
-		cbxSideFormat = new JComboBox<Object>();
+		cbxSideFormat = new JComboBox<>();
 		cbxSideFormat.setBounds(234, 501, 112, 22);
 		pnlEdit.add(cbxSideFormat);
 
@@ -579,7 +578,7 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler {
 		btnSide_09.setBounds(12, 304, 334, 23);
 		pnlEdit.add(btnSide_09);
 
-		cbxSideQuality = new JComboBox();
+		cbxSideQuality = new JComboBox<>();
 		cbxSideQuality.setBounds(234, 536, 112, 20);
 		pnlEdit.add(cbxSideQuality);
 
@@ -641,11 +640,11 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler {
 	}
 
 	private void setDefaultValues() {
-		cbxQuality.setModel(new DefaultComboBoxModel(CCMovieQuality.getList()));
-		cbxSideQuality.setModel(new DefaultComboBoxModel(CCMovieQuality.getList()));
+		cbxQuality.setModel(new DefaultComboBoxModel<>(CCMovieQuality.getList()));
+		cbxSideQuality.setModel(new DefaultComboBoxModel<>(CCMovieQuality.getList()));
 
-		cbxFormat.setModel(new DefaultComboBoxModel(CCMovieFormat.getList()));
-		cbxSideFormat.setModel(new DefaultComboBoxModel(CCMovieFormat.getList()));
+		cbxFormat.setModel(new DefaultComboBoxModel<>(CCMovieFormat.getList()));
+		cbxSideFormat.setModel(new DefaultComboBoxModel<>(CCMovieFormat.getList()));
 	}
 
 	private void onBtnNext() {
@@ -721,12 +720,13 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler {
 		CCDate lvdate = (CCDate) spnLastViewed.getValue();
 
 		long fsize = (long) spnSize.getValue();
+		int quality = cbxQuality.getSelectedIndex();
 		String csExtn = CCMovieFormat.find(cbxFormat.getSelectedIndex()).asString();
 		String csExta = CCMovieFormat.find(cbxFormat.getSelectedIndex()).asString_Alt();
 
 		String part = edPart.getText();
 
-		UserDataProblem.testEpisodeData(ret, parent, sel, title, len, epNum, adddate, lvdate, fsize, csExtn, csExta, part);
+		UserDataProblem.testEpisodeData(ret, parent, sel, title, len, epNum, adddate, lvdate, fsize, csExtn, csExta, part, quality);
 
 		return ret.isEmpty();
 	}
@@ -737,7 +737,7 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler {
 	}
 
 	private void updateList() {
-		DefaultListModel model = new DefaultListModel<>();
+		DefaultListModel<String> model = new DefaultListModel<>();
 		lsEpisodes.setModel(model);
 
 		model.clear();

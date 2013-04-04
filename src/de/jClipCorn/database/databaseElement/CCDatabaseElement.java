@@ -195,6 +195,12 @@ public abstract class CCDatabaseElement {
 		updateDB();
 	}
 	
+	public void setGenres(CCMovieGenreList grs) {
+		genres =  new CCMovieGenreList(grs);
+		
+		updateDB();
+	}
+	
 	public CCMovieGenreList getGenres() {
 		return genres;
 	}
@@ -221,7 +227,7 @@ public abstract class CCDatabaseElement {
 		return getType().equals(CCMovieTyp.SERIES);
 	}
 	
-	@SuppressWarnings({ "nls" })
+	@SuppressWarnings({ "nls", "unused" })
 	protected void setXMLAttributes(Element e, boolean fileHash, boolean coverHash) {
 		e.setAttribute("localid", localID + "");
 		e.setAttribute("typ", typ.asInt() + "");

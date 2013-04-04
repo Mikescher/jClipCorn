@@ -131,6 +131,12 @@ public class CCMovie extends CCDatabaseElement {
 		
 		updateDB();
 	}
+	
+	public void setQuality(CCMovieQuality quality) {
+		this.quality = quality;
+		
+		updateDB();
+	}
 
 	public int getPartcount() {
 		int pc = 0;
@@ -177,6 +183,12 @@ public class CCMovie extends CCDatabaseElement {
 		
 		updateDB();
 	}
+	
+	public void setFormat(CCMovieFormat format) {
+		this.format = format;
+		
+		updateDB();
+	}
 
 	public int getYear() {
 		return year;
@@ -196,6 +208,10 @@ public class CCMovie extends CCDatabaseElement {
 		this.filesize.setBytes(filesize);
 		
 		updateDB();
+	}
+	
+	public void setFilesize(CCMovieSize filesize) {
+		setFilesize(filesize.getBytes());
 	}
 	
 	public CCMovieStatus getStatus() {
@@ -224,6 +240,10 @@ public class CCMovie extends CCDatabaseElement {
 		parts[idx] = path;
 		
 		updateDB();
+	}
+	
+	public void resetPart(int idx) {
+		setPart(idx, ""); //$NON-NLS-1$
 	}
 
 	public boolean hasHoleInParts() {

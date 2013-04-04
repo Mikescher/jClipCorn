@@ -2,16 +2,23 @@ package de.jClipCorn.util.userdataProblem;
 
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.Iterator;
+
+import org.apache.commons.lang.StringUtils;
 
 import de.jClipCorn.database.CCMovieList;
+import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.CCSeason;
+import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFSK;
+import de.jClipCorn.database.databaseElement.columnTypes.CCMovieQuality;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieZyklus;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.CCDate;
 import de.jClipCorn.util.PathFormatter;
+import de.jClipCorn.util.RomanNumberFormatter;
 
 public class UserDataProblem {
 	public final static int PROBLEM_NO_PATH = 1;
@@ -30,10 +37,12 @@ public class UserDataProblem {
 	public final static int PROBLEM_NO_GENRE_SET = 14;
 	public final static int PROBLEM_HOLE_IN_GENRE = 15;
 	public final static int PROBLEM_EPISODENUMBER_ALREADY_EXISTS = 16;
-	public final static int PROBLEM_ZYKLUSORTITLE_HAS_LEADINGORTRAILING_SPACES = 17; //TODO Check this 
+	public final static int PROBLEM_ZYKLUSORTITLE_HAS_LEADINGORTRAILING_SPACES = 17;
 	public final static int PROBLEM_ZYKLUS_ALREADY_EXISTS = 18;
-	//TODO Zylus ends with an Roman Letter
-	//TODO Add Wrong QUality (Auch 1Part aber MultiCD's Quali)
+	public final static int PROBLEM_ZYKLUS_ENDS_WITH_ROMAN = 19;
+	public final static int PROBLEM_WRONG_QUALITY = 20;
+	public final static int PROBLEM_TITLE_ALREADYEXISTS = 21;
+	public final static int PROBLEM_FILE_ALREADYEXISTS = 22;
 	
 	private final int pid; // Problem ID
 	
@@ -42,7 +51,8 @@ public class UserDataProblem {
 	}
 	
 	public String getText() {
-		return LocaleBundle.getString("UserDataErrors.ERROR_" + getPID()); //$NON-NLS-1$
+		
+		return LocaleBundle.getString(String.format("UserDataErrors.ERROR_%02d", getPID())); //$NON-NLS-1$
 	}
 	
 	public int getPID() {
@@ -53,17 +63,28 @@ public class UserDataProblem {
 	//####################################################################################################################################################
 	//####################################################################################################################################################
 	
-	public static void testMovieData(ArrayList<UserDataProblem> ret, BufferedImage cvr, CCMovieList l, String path0, String path1, String path2, String path3, String path4, String path5, 
+	public static void testMovieData(ArrayList<UserDataProblem> ret, CCMovie mov, BufferedImage cvr, CCMovieList l, String p0, String p1, String p2, String p3, String p4, String p5, 
 									String title, String zyklus, int zyklusID, int len, CCDate adddate, int oscore, int fskidx, int year, long fsize, String csExtn, 
-									String csExta, int gen0, int gen1, int gen2, int gen3, int gen4, int gen5, int gen6, int gen7) {
+									String csExta, int gen0, int gen1, int gen2, int gen3, int gen4, int gen5, int gen6, int gen7, int quality, int language) {
 		
-		if (path0.isEmpty() && path1.isEmpty() && path2.isEmpty() && path3.isEmpty() && path4.isEmpty() && path5.isEmpty()) {
+		int partcount = 0;
+		
+		if (! p0.isEmpty()) partcount++;
+		if (! p1.isEmpty()) partcount++;
+		if (! p2.isEmpty()) partcount++;
+		if (! p3.isEmpty()) partcount++;
+		if (! p4.isEmpty()) partcount++;
+		if (! p5.isEmpty()) partcount++;
+		
+		//################################################################################################################
+		
+		if (p0.isEmpty() && p1.isEmpty() && p2.isEmpty() && p3.isEmpty() && p4.isEmpty() && p5.isEmpty()) {
 			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_NO_PATH));
 		}
 		
 		//################################################################################################################
 		
-		if ((path0.isEmpty() && ! path1.isEmpty()) || (path1.isEmpty() && ! path2.isEmpty()) || (path2.isEmpty() && ! path3.isEmpty()) || (path3.isEmpty() && ! path4.isEmpty()) || (path4.isEmpty() && ! path5.isEmpty())) {
+		if ((p0.isEmpty() && ! p1.isEmpty()) || (p1.isEmpty() && ! p2.isEmpty()) || (p2.isEmpty() && ! p3.isEmpty()) || (p3.isEmpty() && ! p4.isEmpty()) || (p4.isEmpty() && ! p5.isEmpty())) {
 			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_HOLE_IN_PATH));
 		}
 		
@@ -89,7 +110,7 @@ public class UserDataProblem {
 		
 		CCMovie foundM;
 		if (! zyklus.isEmpty() && (foundM = l.findfirst(new CCMovieZyklus(zyklus, zyklusID))) != null) {
-			if (! foundM.getPart(0).equals(path0)) { //TODO What when you change the files ??
+			if (mov == null || mov.getLocalID() != foundM.getLocalID()) {
 				ret.add(new UserDataProblem(UserDataProblem.PROBLEM_ZYKLUS_ALREADY_EXISTS));
 			}
 		}
@@ -122,28 +143,28 @@ public class UserDataProblem {
 		
 		ArrayList<String> extensions = new ArrayList<>();
 		
-		if (! path0.isEmpty()) {
-			extensions.add(PathFormatter.getExtension(path0));
+		if (! p0.isEmpty()) {
+			extensions.add(PathFormatter.getExtension(p0));
 		}
 		
-		if (! path1.isEmpty()) {
-			extensions.add(PathFormatter.getExtension(path1));
+		if (! p1.isEmpty()) {
+			extensions.add(PathFormatter.getExtension(p1));
 		}
 		
-		if (! path2.isEmpty()) {
-			extensions.add(PathFormatter.getExtension(path2));
+		if (! p2.isEmpty()) {
+			extensions.add(PathFormatter.getExtension(p2));
 		}
 		
-		if (! path3.isEmpty()) {
-			extensions.add(PathFormatter.getExtension(path3));
+		if (! p3.isEmpty()) {
+			extensions.add(PathFormatter.getExtension(p3));
 		}
 		
-		if (! path4.isEmpty()) {
-			extensions.add(PathFormatter.getExtension(path4));
+		if (! p4.isEmpty()) {
+			extensions.add(PathFormatter.getExtension(p4));
 		}
 		
-		if (! path5.isEmpty()) {
-			extensions.add(PathFormatter.getExtension(path5));
+		if (! p5.isEmpty()) {
+			extensions.add(PathFormatter.getExtension(p5));
 		}
 		
 		if (! (extensions.contains(csExtn) || extensions.contains(csExta))) {
@@ -179,6 +200,61 @@ public class UserDataProblem {
 		
 		if (cvr == null) {
 			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_NO_COVER_SET));
+		}
+		
+		//################################################################################################################
+		
+		if (title.startsWith(" ") || title.endsWith(" ") || zyklus.startsWith(" ") || zyklus.endsWith(" ")) {  //$NON-NLS-1$ //$NON-NLS-2$//$NON-NLS-3$ //$NON-NLS-4$
+			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_ZYKLUSORTITLE_HAS_LEADINGORTRAILING_SPACES));
+		}
+		
+		//################################################################################################################
+		
+		if (RomanNumberFormatter.endsWithRoman(zyklus)) {
+			ret.add(new UserDataProblem(PROBLEM_ZYKLUS_ENDS_WITH_ROMAN));
+		}
+		
+		//################################################################################################################
+		
+		if (CCMovieQuality.getQualityForSize(fsize, partcount).asInt() != quality) {
+			ret.add(new UserDataProblem(PROBLEM_WRONG_QUALITY));
+		}
+		
+		//################################################################################################################
+		
+		for (Iterator<CCMovie> it = l.iteratorMovies(); it.hasNext();) {
+			CCMovie imov = it.next();
+			
+			if (StringUtils.equalsIgnoreCase(imov.getTitle(), title) && StringUtils.equalsIgnoreCase(imov.getZyklus().getTitle(), zyklus)  && imov.getLanguage().asInt() == language) {
+				if (mov == null || mov.getLocalID() != imov.getLocalID()) {
+					ret.add(new UserDataProblem(PROBLEM_TITLE_ALREADYEXISTS));
+				}
+				break;
+			}
+		}
+		
+		//################################################################################################################
+		
+		for (Iterator<CCDatabaseElement> it = l.iterator(); it.hasNext();) {
+			CCDatabaseElement idel = it.next();
+			
+			if (idel.isMovie()) {
+				if (isPathIncluded((CCMovie)idel, p0, p1, p2, p3, p4, p5)) {
+					ret.add(new UserDataProblem(PROBLEM_FILE_ALREADYEXISTS));
+					break;
+				}
+			} else if (idel.isSeries()) {
+				CCSeries ss = (CCSeries) idel;
+				for (int i = 0; i < ss.getSeasonCount(); i++) {
+					CCSeason seas = ss.getSeason(i);
+					for (int j = 0; j < seas.getEpisodeCount(); j++) {
+						if (isPathIncluded(seas.getEpisode(j), p0, p1, p2, p3, p4, p5)) {
+							ret.add(new UserDataProblem(PROBLEM_FILE_ALREADYEXISTS));
+							break;
+						}
+					}
+				}
+			}
 		}
 	}
 	
@@ -237,7 +313,7 @@ public class UserDataProblem {
 		}
 	}
 	
-	public static void testEpisodeData(ArrayList<UserDataProblem> ret, CCSeason season, CCEpisode episode, String title, int len, int epNum, CCDate adddate, CCDate lvdate, long fsize, String csExtn, String csExta, String part) {
+	public static void testEpisodeData(ArrayList<UserDataProblem> ret, CCSeason season, CCEpisode episode, String title, int len, int epNum, CCDate adddate, CCDate lvdate, long fsize, String csExtn, String csExta, String part, int quality) {
 		if (title.isEmpty()) {
 			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_EMPTY_TITLE));
 		}
@@ -284,5 +360,97 @@ public class UserDataProblem {
 		if (part.isEmpty()) {
 			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_NO_PATH));
 		}
+		
+		//################################################################################################################
+		
+		if (CCMovieQuality.getQualityForSize(fsize, 1).asInt() != quality) {
+			ret.add(new UserDataProblem(PROBLEM_WRONG_QUALITY));
+		}
+		
+		//################################################################################################################
+		
+		for (Iterator<CCDatabaseElement> it = season.getMovieList().iterator(); it.hasNext();) {
+			CCDatabaseElement idel = it.next();
+			
+			if (idel.isMovie()) {
+				if (isPathIncluded((CCMovie)idel, part)) {
+					ret.add(new UserDataProblem(PROBLEM_FILE_ALREADYEXISTS));
+					break;
+				}
+			} else if (idel.isSeries()) {
+				CCSeries ss = (CCSeries) idel;
+				for (int i = 0; i < ss.getSeasonCount(); i++) {
+					CCSeason seas = ss.getSeason(i);
+					for (int j = 0; j < seas.getEpisodeCount(); j++) {
+						if (isPathIncluded(seas.getEpisode(j), part)) {
+							ret.add(new UserDataProblem(PROBLEM_FILE_ALREADYEXISTS));
+							break;
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	private static boolean isPathIncluded(CCMovie m, String p0) {
+		for (int i = 0; i < m.getPartcount(); i++) {
+			if (StringUtils.equalsIgnoreCase(m.getPart(i), p0)) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	private static boolean isPathIncluded(CCEpisode m, String p0) {
+		return StringUtils.equalsIgnoreCase(m.getPart(), p0);
+	}
+
+	private static boolean isPathIncluded(CCMovie m, String p0, String p1, String p2, String p3, String p4, String p5) {
+		for (int i = 0; i < m.getPartcount(); i++) {
+			if (StringUtils.equalsIgnoreCase(m.getPart(i), p0)) {
+				return true;
+			}
+			if (StringUtils.equalsIgnoreCase(m.getPart(i), p1)) {
+				return true;
+			}
+			if (StringUtils.equalsIgnoreCase(m.getPart(i), p2)) {
+				return true;
+			}
+			if (StringUtils.equalsIgnoreCase(m.getPart(i), p3)) {
+				return true;
+			}
+			if (StringUtils.equalsIgnoreCase(m.getPart(i), p4)) {
+				return true;
+			}
+			if (StringUtils.equalsIgnoreCase(m.getPart(i), p5)) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	private static boolean isPathIncluded(CCEpisode m, String p0, String p1, String p2, String p3, String p4, String p5) {
+		if (StringUtils.equalsIgnoreCase(m.getPart(), p0)) {
+			return true;
+		}
+		if (StringUtils.equalsIgnoreCase(m.getPart(), p1)) {
+			return true;
+		}
+		if (StringUtils.equalsIgnoreCase(m.getPart(), p2)) {
+			return true;
+		}
+		if (StringUtils.equalsIgnoreCase(m.getPart(), p3)) {
+			return true;
+		}
+		if (StringUtils.equalsIgnoreCase(m.getPart(), p4)) {
+			return true;
+		}
+		if (StringUtils.equalsIgnoreCase(m.getPart(), p5)) {
+			return true;
+		}
+
+		return false;
 	}
 }

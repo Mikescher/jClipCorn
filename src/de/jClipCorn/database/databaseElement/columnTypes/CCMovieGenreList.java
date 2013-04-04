@@ -22,6 +22,10 @@ public class CCMovieGenreList {
 		genres = lrep;
 	}
 	
+	public CCMovieGenreList(CCMovieGenreList l) {
+		genres = l.getAllGenres();
+	}
+	
 	public CCMovieGenreList(CCMovieGenre genre1) {
 		genres = 0x0000000000000000L;
 		addGenre(genre1);
@@ -175,5 +179,9 @@ public class CCMovieGenreList {
 
 	public void clear() {
 		genres = 0;
+	}
+	
+	public static int getMaxListSize() {
+		return SIZE;
 	}
 }

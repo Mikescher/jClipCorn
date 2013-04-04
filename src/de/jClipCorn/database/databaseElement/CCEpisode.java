@@ -94,6 +94,12 @@ public class CCEpisode {
 		updateDB();
 	}
 	
+	public void setQuality(CCMovieQuality quality) {
+		this.quality = quality;
+		
+		updateDB();
+	}
+	
 	public void setLength(int length) {
 		this.length = length;
 		

@@ -23,7 +23,6 @@ import de.jClipCorn.gui.log.CCLogType;
 import java.awt.Color;
 import java.awt.Font;
 
-@SuppressWarnings({ "unchecked", "rawtypes" })
 public class LogFrame extends JFrame implements CCLogChangedListener{
 	private static final long serialVersionUID = -8838227410250810646L;
 		
@@ -32,12 +31,12 @@ public class LogFrame extends JFrame implements CCLogChangedListener{
 	private JPanel tabWarnings;
 	private JPanel tabInformations;
 	private JPanel tabUndefinied;
-	private JList lsErrors;
+	private JList<String> lsErrors;
 	private JTextArea memoErrors;
 	private JScrollPane spnErrors;
-	private JList lsWarnings;
-	private JList lsInformations;
-	private JList lsUndefinied;
+	private JList<String> lsWarnings;
+	private JList<String> lsInformations;
+	private JList<String> lsUndefinied;
 	private JTextArea memoWarnings;
 	private JScrollPane spnWarnings;
 	private JTextArea memoInformations;
@@ -74,7 +73,7 @@ public class LogFrame extends JFrame implements CCLogChangedListener{
 		spnErrorList = new JScrollPane();
 		tabErrors.add(spnErrorList);
 		
-		lsErrors = new JList();
+		lsErrors = new JList<>();
 		spnErrorList.setViewportView(lsErrors);
 		lsErrors.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		lsErrors.setVisibleRowCount(16);
@@ -97,7 +96,7 @@ public class LogFrame extends JFrame implements CCLogChangedListener{
 		spnWarningsList = new JScrollPane();
 		tabWarnings.add(spnWarningsList);
 		
-		lsWarnings = new JList();
+		lsWarnings = new JList<>();
 		spnWarningsList.setViewportView(lsWarnings);
 		lsWarnings.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		lsWarnings.setVisibleRowCount(16);
@@ -120,7 +119,7 @@ public class LogFrame extends JFrame implements CCLogChangedListener{
 		spnInformationsList = new JScrollPane();
 		tabInformations.add(spnInformationsList);
 		
-		lsInformations = new JList();
+		lsInformations = new JList<>();
 		spnInformationsList.setViewportView(lsInformations);
 		lsInformations.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		lsInformations.setVisibleRowCount(16);
@@ -143,7 +142,7 @@ public class LogFrame extends JFrame implements CCLogChangedListener{
 		spnUndefiniedList = new JScrollPane();
 		tabUndefinied.add(spnUndefiniedList);
 		
-		lsUndefinied = new JList();
+		lsUndefinied = new JList<>();
 		spnUndefiniedList.setViewportView(lsUndefinied);
 		lsUndefinied.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		lsUndefinied.setVisibleRowCount(16);

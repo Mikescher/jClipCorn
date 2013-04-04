@@ -28,11 +28,11 @@ public class GoogleImageParser {
 	public static ArrayList<String> extractImageLinks(String json) {
 		ArrayList<String> result = new ArrayList<>();
 		
-		JSONObject jobj; //TODO No Errors on Bad JSON (only Warnings ?)
+		JSONObject jobj;
 		try {
 			jobj = new JSONObject(json);
 		} catch (JSONException e) {
-			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CouldNotParseJSON", json), e); //$NON-NLS-1$
+			CCLog.addWarning(LocaleBundle.getFormattedString("LogMessage.CouldNotParseJSON", json), e); //$NON-NLS-1$
 			return result;
 		}
 		
@@ -40,7 +40,7 @@ public class GoogleImageParser {
 		try {
 			jsonresults = jobj.getJSONObject(KEY_DATA).getJSONArray(KEY_RESULTS);
 		} catch (JSONException e) {
-			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CouldNotParseJSON", json), e); //$NON-NLS-1$
+			CCLog.addWarning(LocaleBundle.getFormattedString("LogMessage.CouldNotParseJSON", json), e); //$NON-NLS-1$
 			return result;
 		}
 		
@@ -49,7 +49,7 @@ public class GoogleImageParser {
 				String nurl = jsonresults.getJSONObject(i).getString(KEY_URL);
 				result.add(nurl);
 			} catch (JSONException e) {
-				CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CouldNotParseJSON", json), e); //$NON-NLS-1$
+				CCLog.addWarning(LocaleBundle.getFormattedString("LogMessage.CouldNotParseJSON", json), e); //$NON-NLS-1$
 				return result;
 			}
 		}

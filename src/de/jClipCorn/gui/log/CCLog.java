@@ -34,6 +34,10 @@ public class CCLog {
 	public static void addWarning(String e) {
 		add(e, CCLogType.LOG_ELEM_WARNING);
 	}
+	
+	public static void addWarning(String s, Exception e) {
+		add(s + '\n' + "\tcaused by" + e.toString(), CCLogType.LOG_ELEM_WARNING, e.getStackTrace()); //$NON-NLS-1$
+	}
 
 	public static void addError(String e) {
 		add(e, CCLogType.LOG_ELEM_ERROR);

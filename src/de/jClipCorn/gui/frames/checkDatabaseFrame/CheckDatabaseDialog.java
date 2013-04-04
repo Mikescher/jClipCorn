@@ -1,10 +1,11 @@
 package de.jClipCorn.gui.frames.checkDatabaseFrame;
 
 import java.awt.BorderLayout;
-import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 
@@ -22,6 +23,7 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingUtilities;
 
 import de.jClipCorn.database.CCMovieList;
+import de.jClipCorn.database.databaseErrors.DatabaseAutofixer;
 import de.jClipCorn.database.databaseErrors.DatabaseError;
 import de.jClipCorn.database.databaseErrors.DatabaseValidator;
 import de.jClipCorn.gui.CachedResourceLoader;
@@ -29,39 +31,41 @@ import de.jClipCorn.gui.Resources;
 import de.jClipCorn.gui.frames.mainFrame.MainFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
-import de.jClipCorn.util.ProgressCallbackListener;
+import de.jClipCorn.util.DialogHelper;
+import de.jClipCorn.util.ProgressCallbackHelper;
 
 public class CheckDatabaseDialog extends JFrame {
 	private static final long serialVersionUID = 8481907373850170115L;
 
 	private final CCMovieList movielist;
 	
+	private ArrayList<DatabaseError> errorList;
+	
 	private final JPanel contentPanel = new JPanel();
 	private JPanel pnlTop;
 	private JScrollPane scrollPane;
-	private JList<String> lsMain;
+	private JList<DatabaseError> lsMain;
 	private JButton btnValidate;
 	private JLabel lblInfo;
 	private JProgressBar pBar;
+	private JButton btnAutofix;
 	
 	public CheckDatabaseDialog(CCMovieList ml, MainFrame owner) {
 		super();
-		this.movielist = ml;
+		this.movielist = ml; 
 		
-		initGUI(owner);
+		initGUI();
+		
+		setLocationRelativeTo(owner);
 		
 		lblInfo.setText(LocaleBundle.getFormattedString("CheckDatabaseDialog.lblInfo.text", ml.getElementCount())); //$NON-NLS-1$
-		
-		pBar = new JProgressBar();
-		contentPanel.add(pBar, BorderLayout.SOUTH);
 	}
 	
-	private void initGUI(Component owner) {
+	private void initGUI() {
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		setIconImage(CachedResourceLoader.getImage(Resources.IMG_FRAME_ICON));
 		setTitle(LocaleBundle.getString("CheckDatabaseDialog.this.title")); //$NON-NLS-1$
 		setBounds(100, 100, 750, 400);
-		setLocationRelativeTo(owner);
 		
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		contentPanel.setLayout(new BorderLayout(0, 0));
@@ -80,45 +84,104 @@ public class CheckDatabaseDialog extends JFrame {
 		});
 		pnlTop.add(btnValidate);
 		
-		lblInfo = new JLabel();
-		pnlTop.add(lblInfo);
-		
 		scrollPane = new JScrollPane();
 		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		contentPanel.add(scrollPane, BorderLayout.CENTER);
 		
 		lsMain = new JList<>();
 		scrollPane.setViewportView(lsMain);
+		lsMain.addMouseListener(new MouseListener() {			
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if (e.getClickCount() == 2) {
+					onDblClick();
+				}
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent arg0) {
+				// nothing
+			}
+
+			@Override
+			public void mouseExited(MouseEvent arg0) {
+				// nothing
+			}
+
+			@Override
+			public void mousePressed(MouseEvent arg0) {
+				// nothing
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent arg0) {
+				// nothing
+			}
+		});
+		
+		pBar = new JProgressBar();
+		contentPanel.add(pBar, BorderLayout.SOUTH);
+		
+		lblInfo = new JLabel();
+		pnlTop.add(lblInfo);
+		
+		btnAutofix = new JButton(LocaleBundle.getString("CheckDatabaseDialog.btnAutofix.text")); //$NON-NLS-1$
+		btnAutofix.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				autoFix();
+			}
+		});
+		btnAutofix.setEnabled(false);
+		pnlTop.add(btnAutofix);
 	}
 	
-	private void stepProgress() {
-		try {
-			SwingUtilities.invokeAndWait(new Runnable() {
-				@Override
-				public void run() {
-					pBar.setValue(pBar.getValue() + 1);
-				}
-			});
-		} catch (InvocationTargetException | InterruptedException e) {
-			CCLog.addError(e);
+	private void onDblClick() {
+		if (lsMain.getSelectedIndex() >= 0) {
+			lsMain.getSelectedValue().startEditing(this);
 		}
+	}
+	
+	private void autoFix() {
+		btnValidate.setEnabled(false);
+		btnAutofix.setEnabled(false);
+		
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				boolean succ = DatabaseAutofixer.fixErrors(errorList, new ProgressCallbackHelper(pBar));
+				endFixThread(succ);
+			}
+		}).start();
 	}
 	
 	private void endThread() {
-		try {
-			SwingUtilities.invokeAndWait(new Runnable() {
-				@Override
-				public void run() {
-					pBar.setValue(0);
-					btnValidate.setEnabled(true);
-				}
-			});
-		} catch (InvocationTargetException | InterruptedException e) {
-			CCLog.addError(e);
-		}
+		SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				btnValidate.setEnabled(true);
+				btnAutofix.setEnabled(true);
+			}
+		});
 	}
 	
-	private void setListModel(final ListModel<String> lm) {
+	private void endFixThread(final boolean success) {
+		SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				btnValidate.setEnabled(true);
+				btnAutofix.setEnabled(true);
+				
+				if (success) {
+					DialogHelper.showLocalInformation(CheckDatabaseDialog.this, "CheckDatabaseDialog.Autofix.dialogSuccessfull"); //$NON-NLS-1$
+				} else {
+					DialogHelper.showLocalInformation(CheckDatabaseDialog.this, "CheckDatabaseDialog.Autofix.dialogUnsuccessfull"); //$NON-NLS-1$
+				}
+			}
+		});
+	}
+	
+	private void setListModel(final ListModel<DatabaseError> lm) {
 		try {
 			SwingUtilities.invokeAndWait(new Runnable() {
 				@Override
@@ -133,28 +196,24 @@ public class CheckDatabaseDialog extends JFrame {
 	
 	private void startValidate() {
 		btnValidate.setEnabled(false);
-		pBar.setMaximum(movielist.getElementCount() * 3);
-		pBar.setValue(0);
+		btnAutofix.setEnabled(false);
 		
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
 				ArrayList<DatabaseError> errors = new ArrayList<>();
 				
-				DatabaseValidator.startValidate(errors, movielist, new ProgressCallbackListener() {
-					@Override
-					public void step() {
-						stepProgress();
-					}
-				});
+				DatabaseValidator.startValidate(errors, movielist, new ProgressCallbackHelper(pBar));
 				
-				DefaultListModel<String> dlm = new DefaultListModel<>();
+				DefaultListModel<DatabaseError> dlm = new DefaultListModel<>();
 				
 				for (DatabaseError de : errors) {
-					dlm.addElement(de.getFullErrorString());
+					dlm.addElement(de);
 				}
 				
 				setListModel(dlm);
+				
+				errorList = errors;
 				
 				endThread();
 			}

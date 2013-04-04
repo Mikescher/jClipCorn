@@ -36,6 +36,10 @@ public class RomanNumberFormatter {
 	}
 
 	public static boolean isRoman(String rom) {
+		if (rom.isEmpty()) {
+			return false;
+		}
+		
 		for (int x = rom.length() - 1; x >= 0; x--) {
 			switch (rom.charAt(x)) {
 			case 'M':
@@ -52,5 +56,14 @@ public class RomanNumberFormatter {
 		}
 		return true;
 	}
-
+	
+	public static boolean endsWithRoman(String s) {
+		s = s.substring(s.lastIndexOf(" ") + 1); //$NON-NLS-1$
+		
+		if (isRoman(s)) {
+			return isRoman(s);
+		} else {
+			return isRoman(s);
+		}
+	}
 }

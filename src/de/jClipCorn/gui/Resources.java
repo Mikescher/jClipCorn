@@ -27,7 +27,7 @@ public class Resources {
 	public final static String ICN_MENUBAR_SETTINGS			= registerICN("/icons/toolbar/gear_in.png");
 	public final static String ICN_MENUBAR_PREVIEW_MOV		= registerICN("/icons/toolbar/magnifier.png");
 	public final static String ICN_MENUBAR_PREVIEW_SER		= registerICN("/icons/toolbar/magnifier_ser.png");
-	public final static String ICN_MENUBAR_REMOVE			= registerICN("/icons/toolbar/recycle.png"); //TODO Better Icon
+	public final static String ICN_MENUBAR_REMOVE			= registerICN("/icons/toolbar/recycle.png");
 	public final static String ICN_MENUBAR_EDIT_MOV			= registerICN("/icons/toolbar/screwdriver_mov.png");
 	public final static String ICN_MENUBAR_EDIT_SER			= registerICN("/icons/toolbar/screwdriver_ser.png");
 	public final static String ICN_MENUBAR_LOG				= registerICN("/icons/toolbar/system_monitor.png");

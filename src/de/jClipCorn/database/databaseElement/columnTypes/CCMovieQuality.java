@@ -6,12 +6,16 @@ import de.jClipCorn.gui.CachedResourceLoader;
 import de.jClipCorn.gui.Resources;
 import de.jClipCorn.gui.localization.LocaleBundle;
 
-public enum CCMovieQuality {	
+public enum CCMovieQuality {
 	STREAM(0), 
 	ONE_CD(1), 
 	MULTIPLE_CD(2), 
 	DVD(3),
 	BLURAY(4);
+	
+	private static long FSIZE_MAX_STREAM = 512L * 1024 * 1024;	 	// 500 MB
+	private static long FSIZE_MAX_CD = 2L * 1024 * 1024 * 1024;		// 2 GB
+	private static long FSIZE_MAX_DVD = 5L * 1024 * 1024 * 1024; 	// 5 GB
 	
 	private final static String names[] = {
 		LocaleBundle.getString("CCMovieQuality.Quality0"),  //$NON-NLS-1$
@@ -64,6 +68,27 @@ public enum CCMovieQuality {
 			return CachedResourceLoader.getImageIcon(Resources.ICN_TABLE_QUALITY_4);
 		default:
 			return null;
+		}
+	}
+	
+	public static CCMovieQuality getQualityForSize(CCMovieSize size, int partCount) {
+		return getQualityForSize(size.getBytes(), partCount);
+	}
+
+	public static CCMovieQuality getQualityForSize(long size, int partCount) {
+		if (size <= FSIZE_MAX_STREAM) {
+			return CCMovieQuality.STREAM;
+		} else if (size <= FSIZE_MAX_CD) {
+			if (partCount == 1) {
+				return CCMovieQuality.ONE_CD;
+			} else {
+				return CCMovieQuality.MULTIPLE_CD;
+			}
+
+		} else if (size <= FSIZE_MAX_DVD) {
+			return CCMovieQuality.DVD;
+		} else {
+			return CCMovieQuality.BLURAY;
 		}
 	}
 }

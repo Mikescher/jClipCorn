@@ -129,10 +129,10 @@ public class CCCoverCache {
 		
 		String[] files = getCoverDirectory().list();
 		
-		Pattern p = Pattern.compile(String.format("(?<=%s)[0-9]+(?=\\.%s)", Pattern.quote(CCProperties.getInstance().PROP_COVER_PREFIX.getValue()), Pattern.quote(CCProperties.getInstance().PROP_COVER_TYPE.getValue()))); //$NON-NLS-1$
+		Pattern p = Pattern.compile(String.format("(?<=%s)[0-9]+(?=\\.%s)", Pattern.quote(CCProperties.getInstance().PROP_COVER_PREFIX.getValue().toLowerCase()), Pattern.quote(CCProperties.getInstance().PROP_COVER_TYPE.getValue().toLowerCase()))); //$NON-NLS-1$
 		
 		for (String f : files) {
-			Matcher m = p.matcher(PathFormatter.getFilenameWithExt(f));
+			Matcher m = p.matcher(PathFormatter.getFilenameWithExt(f).toLowerCase());
 			if (m.find()){
 				usedCoverIDs.add(Integer.parseInt(m.group()));
 			}
@@ -141,7 +141,7 @@ public class CCCoverCache {
 		Collections.sort(usedCoverIDs);
 	}
 	
-	public int getNewCoverID() { //TODO Sometimes new Movies override old CoverIDs
+	public int getNewCoverID() {
 		int i = 0;
 		while(usedCoverIDs.size() > i && usedCoverIDs.get(i).equals(i)) {
 			i++;

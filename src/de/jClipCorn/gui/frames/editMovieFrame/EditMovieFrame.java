@@ -60,7 +60,6 @@ import de.jClipCorn.util.parser.ParseResultHandler;
 import de.jClipCorn.util.userdataProblem.UserDataProblem;
 import de.jClipCorn.util.userdataProblem.UserDataProblemHandler;
 
-@SuppressWarnings({ "rawtypes", "unchecked" })
 public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDataProblemHandler{
 	private static final long serialVersionUID = 4392838185334567222L;
 	
@@ -100,22 +99,22 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 	private JLabel label_5;
 	private JTextField edZyklus;
 	private JLabel label_6;
-	private JComboBox<Object> cbxGenre0;
+	private JComboBox<String> cbxGenre0;
 	private JLabel label_7;
-	private JComboBox<Object> cbxGenre1;
+	private JComboBox<String> cbxGenre1;
 	private JLabel label_8;
-	private JComboBox<Object> cbxGenre2;
+	private JComboBox<String> cbxGenre2;
 	private JLabel label_9;
-	private JComboBox<Object> cbxGenre3;
+	private JComboBox<String> cbxGenre3;
 	private JLabel label_10;
-	private JComboBox<Object> cbxGenre7;
+	private JComboBox<String> cbxGenre7;
 	private JLabel label_11;
 	private JLabel label_12;
 	private JLabel label_13;
 	private JLabel label_14;
-	private JComboBox<Object> cbxGenre4;
-	private JComboBox<Object> cbxGenre5;
-	private JComboBox<Object> cbxGenre6;
+	private JComboBox<String> cbxGenre4;
+	private JComboBox<String> cbxGenre5;
+	private JComboBox<String> cbxGenre6;
 	private JLabel lblCover;
 	private JButton btnOpencover;
 	private JButton btnFindcover;
@@ -123,8 +122,8 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 	private JLabel label_17;
 	private JLabel label_18;
 	private JCheckBox cbViewed;
-	private JComboBox<Object> cbxQuality;
-	private JComboBox<Object> cbxLanguage;
+	private JComboBox<String> cbxQuality;
+	private JComboBox<String> cbxLanguage;
 	private JSpinner spnLength;
 	private JLabel label_19;
 	private JSpinner spnAddDate;
@@ -133,9 +132,9 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 	private JSpinner spnOnlineScore;
 	private JLabel label_22;
 	private JLabel label_23;
-	private JComboBox<Object> cbxFSK;
+	private JComboBox<String> cbxFSK;
 	private JLabel label_24;
-	private JComboBox<Object> cbxFormat;
+	private JComboBox<String> cbxFormat;
 	private JLabel label_25;
 	private JSpinner spnYear;
 	private JLabel label_26;
@@ -151,9 +150,9 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 	private JLabel lblFileSizeDisp;
 	private JLabel lblMID;
 	private JButton btnRecalculateSize;
-	private JComboBox<Object> cbxScore;
+	private JComboBox<String> cbxScore;
 	private JLabel label_32;
-	private JComboBox<Object> cbxStatus;
+	private JComboBox<String> cbxStatus;
 	private JLabel label_33;
 	private JButton btnToday;
 	private JButton btnTestParts;
@@ -355,7 +354,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		label_6.setBounds(10, 303, 52, 16);
 		getContentPane().add(label_6);
 		
-		cbxGenre0 = new JComboBox<Object>();
+		cbxGenre0 = new JComboBox<>();
 		cbxGenre0.setBounds(506, 11, 212, 22);
 		getContentPane().add(cbxGenre0);
 		
@@ -363,7 +362,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		label_7.setBounds(418, 14, 52, 16);
 		getContentPane().add(label_7);
 		
-		cbxGenre1 = new JComboBox<Object>();
+		cbxGenre1 = new JComboBox<>();
 		cbxGenre1.setBounds(506, 47, 212, 22);
 		getContentPane().add(cbxGenre1);
 		
@@ -371,7 +370,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		label_8.setBounds(418, 50, 52, 16);
 		getContentPane().add(label_8);
 		
-		cbxGenre2 = new JComboBox<Object>();
+		cbxGenre2 = new JComboBox<>();
 		cbxGenre2.setBounds(506, 83, 212, 22);
 		getContentPane().add(cbxGenre2);
 		
@@ -379,7 +378,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		label_9.setBounds(418, 86, 52, 16);
 		getContentPane().add(label_9);
 		
-		cbxGenre3 = new JComboBox<Object>();
+		cbxGenre3 = new JComboBox<>();
 		cbxGenre3.setBounds(506, 118, 212, 22);
 		getContentPane().add(cbxGenre3);
 		
@@ -387,7 +386,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		label_10.setBounds(418, 121, 52, 16);
 		getContentPane().add(label_10);
 		
-		cbxGenre7 = new JComboBox<Object>();
+		cbxGenre7 = new JComboBox<>();
 		cbxGenre7.setBounds(506, 260, 212, 22);
 		getContentPane().add(cbxGenre7);
 		
@@ -407,15 +406,15 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		label_14.setBounds(418, 156, 52, 16);
 		getContentPane().add(label_14);
 		
-		cbxGenre4 = new JComboBox<Object>();
+		cbxGenre4 = new JComboBox<>();
 		cbxGenre4.setBounds(506, 153, 212, 22);
 		getContentPane().add(cbxGenre4);
 		
-		cbxGenre5 = new JComboBox<Object>();
+		cbxGenre5 = new JComboBox<>();
 		cbxGenre5.setBounds(506, 189, 212, 22);
 		getContentPane().add(cbxGenre5);
 		
-		cbxGenre6 = new JComboBox<Object>();
+		cbxGenre6 = new JComboBox<>();
 		cbxGenre6.setBounds(506, 225, 212, 22);
 		getContentPane().add(cbxGenre6);
 		
@@ -460,11 +459,11 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		cbViewed.setBounds(74, 335, 212, 25);
 		getContentPane().add(cbViewed);
 		
-		cbxQuality = new JComboBox<Object>();
+		cbxQuality = new JComboBox<>();
 		cbxQuality.setBounds(74, 372, 212, 22);
 		getContentPane().add(cbxQuality);
 		
-		cbxLanguage = new JComboBox<Object>();
+		cbxLanguage = new JComboBox<>();
 		cbxLanguage.setBounds(74, 407, 212, 22);
 		getContentPane().add(cbxLanguage);
 		
@@ -504,7 +503,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		label_23.setBounds(303, 509, 52, 16);
 		getContentPane().add(label_23);
 		
-		cbxFSK = new JComboBox<Object>();
+		cbxFSK = new JComboBox<>();
 		cbxFSK.setBounds(74, 539, 212, 22);
 		getContentPane().add(cbxFSK);
 		
@@ -512,7 +511,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		label_24.setBounds(10, 542, 52, 16);
 		getContentPane().add(label_24);
 		
-		cbxFormat = new JComboBox<Object>();
+		cbxFormat = new JComboBox<>();
 		cbxFormat.setBounds(74, 574, 212, 22);
 		getContentPane().add(cbxFormat);
 		
@@ -611,7 +610,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		btnRecalculateSize.setBounds(74, 676, 212, 23);
 		getContentPane().add(btnRecalculateSize);
 		
-		cbxScore = new JComboBox<Object>();
+		cbxScore = new JComboBox<>();
 		cbxScore.setBounds(506, 336, 212, 22);
 		getContentPane().add(cbxScore);
 		
@@ -619,7 +618,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		label_32.setBounds(418, 339, 46, 18);
 		getContentPane().add(label_32);
 		
-		cbxStatus = new JComboBox<Object>();
+		cbxStatus = new JComboBox<>();
 		cbxStatus.setBounds(506, 373, 212, 22);
 		getContentPane().add(cbxStatus);
 		
@@ -651,24 +650,24 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 	private void setDefaultValues() {
 		lblCover.setIcon(CachedResourceLoader.getImageIcon(Resources.IMG_COVER_STANDARD));
 		
-		cbxQuality.setModel(new DefaultComboBoxModel(CCMovieQuality.getList()));
+		cbxQuality.setModel(new DefaultComboBoxModel<>(CCMovieQuality.getList()));
 		
-		cbxLanguage.setModel(new DefaultComboBoxModel(CCMovieLanguage.getList()));
+		cbxLanguage.setModel(new DefaultComboBoxModel<>(CCMovieLanguage.getList()));
 		
-		cbxFSK.setModel(new DefaultComboBoxModel(CCMovieFSK.getList()));
+		cbxFSK.setModel(new DefaultComboBoxModel<>(CCMovieFSK.getList()));
 		
-		cbxFormat.setModel(new DefaultComboBoxModel(CCMovieFormat.getList()));
-		cbxScore.setModel(new DefaultComboBoxModel(CCMovieScore.getList()));
-		cbxStatus.setModel(new DefaultComboBoxModel(CCMovieStatus.getList()));
+		cbxFormat.setModel(new DefaultComboBoxModel<>(CCMovieFormat.getList()));
+		cbxScore.setModel(new DefaultComboBoxModel<>(CCMovieScore.getList()));
+		cbxStatus.setModel(new DefaultComboBoxModel<>(CCMovieStatus.getList()));
 		
-		cbxGenre0.setModel(new DefaultComboBoxModel(CCMovieGenre.getTrimmedList()));
-		cbxGenre1.setModel(new DefaultComboBoxModel(CCMovieGenre.getTrimmedList()));
-		cbxGenre2.setModel(new DefaultComboBoxModel(CCMovieGenre.getTrimmedList()));
-		cbxGenre3.setModel(new DefaultComboBoxModel(CCMovieGenre.getTrimmedList()));
-		cbxGenre4.setModel(new DefaultComboBoxModel(CCMovieGenre.getTrimmedList()));
-		cbxGenre5.setModel(new DefaultComboBoxModel(CCMovieGenre.getTrimmedList()));
-		cbxGenre6.setModel(new DefaultComboBoxModel(CCMovieGenre.getTrimmedList()));
-		cbxGenre7.setModel(new DefaultComboBoxModel(CCMovieGenre.getTrimmedList()));
+		cbxGenre0.setModel(new DefaultComboBoxModel<>(CCMovieGenre.getTrimmedList()));
+		cbxGenre1.setModel(new DefaultComboBoxModel<>(CCMovieGenre.getTrimmedList()));
+		cbxGenre2.setModel(new DefaultComboBoxModel<>(CCMovieGenre.getTrimmedList()));
+		cbxGenre3.setModel(new DefaultComboBoxModel<>(CCMovieGenre.getTrimmedList()));
+		cbxGenre4.setModel(new DefaultComboBoxModel<>(CCMovieGenre.getTrimmedList()));
+		cbxGenre5.setModel(new DefaultComboBoxModel<>(CCMovieGenre.getTrimmedList()));
+		cbxGenre6.setModel(new DefaultComboBoxModel<>(CCMovieGenre.getTrimmedList()));
+		cbxGenre7.setModel(new DefaultComboBoxModel<>(CCMovieGenre.getTrimmedList()));
 		
 		spnAddDate.setValue(new CCDate());
 		spnZyklus.setValue(-1);
@@ -714,32 +713,44 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		}
 	}
 	
-	private void testPaths() { //TODO Reset color of empty edits
+	private void testPaths() {
 		Color c1 = UIManager.getColor("TextField.background"); //$NON-NLS-1$
 		Color c2 = Color.RED;
 		
 		if (! edPart0.getText().isEmpty()) {
 			edPart0.setBackground(new File(PathFormatter.getAbsolute(edPart0.getText())).exists()?c1:c2); 
+		} else {
+			edPart0.setBackground(c1);
 		}
 		
 		if (! edPart1.getText().isEmpty()) {
 			edPart1.setBackground(new File(PathFormatter.getAbsolute(edPart1.getText())).exists()?c1:c2); 
+		} else {
+			edPart1.setBackground(c1);
 		}
 		
 		if (! edPart2.getText().isEmpty()) {
 			edPart2.setBackground(new File(PathFormatter.getAbsolute(edPart2.getText())).exists()?c1:c2); 
+		} else {
+			edPart2.setBackground(c1);
 		}
 		
 		if (! edPart3.getText().isEmpty()) {
 			edPart3.setBackground(new File(PathFormatter.getAbsolute(edPart3.getText())).exists()?c1:c2); 
+		} else {
+			edPart3.setBackground(c1);
 		}
 		
 		if (! edPart4.getText().isEmpty()) {
 			edPart4.setBackground(new File(PathFormatter.getAbsolute(edPart4.getText())).exists()?c1:c2); 
+		} else {
+			edPart4.setBackground(c1);
 		}
 		
 		if (! edPart5.getText().isEmpty()) {
 			edPart5.setBackground(new File(PathFormatter.getAbsolute(edPart5.getText())).exists()?c1:c2); 
+		} else {
+			edPart5.setBackground(c1);
 		}
 	}
 	
@@ -1088,12 +1099,14 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 	}
 	
 	public boolean checkUserData(ArrayList<UserDataProblem> ret) {
-		String path0 = edPart0.getText();
-		String path1 = edPart1.getText();
-		String path2 = edPart2.getText();
-		String path3 = edPart3.getText();
-		String path4 = edPart4.getText();
-		String path5 = edPart5.getText();
+		BufferedImage i = currentCoverImage;
+		
+		String p0 = edPart0.getText();
+		String p1 = edPart1.getText();
+		String p2 = edPart2.getText();
+		String p3 = edPart3.getText();
+		String p4 = edPart4.getText();
+		String p5 = edPart5.getText();
 		
 		String title = edTitle.getText();
 		String zyklus = edZyklus.getText();
@@ -1106,19 +1119,21 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		int fskidx = cbxFSK.getSelectedIndex();
 		int year = (int) spnYear.getValue();
 		long fsize = (long) spnSize.getValue();
+		int quality = cbxQuality.getSelectedIndex();
+		int lang = cbxLanguage.getSelectedIndex();
 		String csExtn  = CCMovieFormat.find(cbxFormat.getSelectedIndex()).asString();
 		String csExta = CCMovieFormat.find(cbxFormat.getSelectedIndex()).asString_Alt();
 		
-		int gen0 = cbxGenre0.getSelectedIndex();
-		int gen1 = cbxGenre1.getSelectedIndex();
-		int gen2 = cbxGenre2.getSelectedIndex();
-		int gen3 = cbxGenre3.getSelectedIndex();
-		int gen4 = cbxGenre4.getSelectedIndex();
-		int gen5 = cbxGenre5.getSelectedIndex();
-		int gen6 = cbxGenre6.getSelectedIndex();
-		int gen7 = cbxGenre7.getSelectedIndex();
+		int g0 = cbxGenre0.getSelectedIndex();
+		int g1 = cbxGenre1.getSelectedIndex();
+		int g2 = cbxGenre2.getSelectedIndex();
+		int g3 = cbxGenre3.getSelectedIndex();
+		int g4 = cbxGenre4.getSelectedIndex();
+		int g5 = cbxGenre5.getSelectedIndex();
+		int g6 = cbxGenre6.getSelectedIndex();
+		int g7 = cbxGenre7.getSelectedIndex();
 		
-		UserDataProblem.testMovieData(ret, currentCoverImage, movie.getMovieList(), path0, path1, path2, path3, path4, path5, title, zyklus, zyklusID, len, adddate, oscore, fskidx, year, fsize, csExtn, csExta, gen0, gen1, gen2, gen3, gen4, gen5, gen6, gen7);
+		UserDataProblem.testMovieData(ret, movie, i, movie.getMovieList(), p0, p1, p2, p3, p4, p5, title, zyklus, zyklusID, len, adddate, oscore, fskidx, year, fsize, csExtn, csExta, g0, g1, g2, g3, g4, g5, g6, g7, quality, lang);
 		
 		return ret.isEmpty();
 	}

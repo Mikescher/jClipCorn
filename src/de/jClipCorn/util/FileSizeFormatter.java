@@ -31,4 +31,8 @@ public class FileSizeFormatter {
 	public static long getFileSize(String filepath) {
 		return new File(filepath).length();
 	}
+	
+	public static long getFileSize(File f) {
+		return f.length();
+	}
 }

@@ -76,23 +76,6 @@ public class CCMovieList {
 				fireOnAfterLoad();
 
 				mf.endBlockingIntermediate();
-				
-//				while (! DriveMap.isCreated()) { //TODO Remove ME
-//					System.out.print('#');
-//					try {
-//						Thread.sleep(100);
-//					} catch (InterruptedException e) {
-//						e.printStackTrace();
-//					}
-//				}
-//				
-//				TimeKeeper.start();
-//				for (Iterator<CCMovie> it = iteratorMovies(); it.hasNext();) {
-//					CCMovie mov = it.next();
-//					mov.getFastMD5();
-////					System.out.println(mov.getFastMD5() + "  -->  " + mov.getCompleteTitle());
-//				}
-//				TimeKeeper.stop();
 			}
 		};
 

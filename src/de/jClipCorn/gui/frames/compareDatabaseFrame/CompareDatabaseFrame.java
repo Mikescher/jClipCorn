@@ -50,6 +50,7 @@ import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.util.CCDate;
 import de.jClipCorn.util.FileChooserHelper;
 import de.jClipCorn.util.PathFormatter;
+import de.jClipCorn.util.ProgressCallbackHelper;
 import de.jClipCorn.util.TextFileUtils;
 
 public class CompareDatabaseFrame extends JFrame {
@@ -104,6 +105,8 @@ public class CompareDatabaseFrame extends JFrame {
 	private JList<CompareElement> lsMissDB2;
 	private JList<CompareElement> lsDiffFiles;
 	private JList<CompareElement> lsDiffCover;
+	private JLabel lblPathDB1;
+	private JLabel lblPathDB2;
 
 	public CompareDatabaseFrame(Component owner, CCMovieList mlist) {
 		super();
@@ -329,6 +332,8 @@ public class CompareDatabaseFrame extends JFrame {
 				FormFactory.RELATED_GAP_ROWSPEC,
 				FormFactory.DEFAULT_ROWSPEC,
 				FormFactory.RELATED_GAP_ROWSPEC,
+				FormFactory.DEFAULT_ROWSPEC,
+				FormFactory.RELATED_GAP_ROWSPEC,
 				RowSpec.decode("default:grow"), //$NON-NLS-1$
 				FormFactory.RELATED_GAP_ROWSPEC,}));
 
@@ -352,6 +357,9 @@ public class CompareDatabaseFrame extends JFrame {
 
 		lblCheckSumDB1Cover = new JLabel(""); //$NON-NLS-1$
 		pnlInfoDB1.add(lblCheckSumDB1Cover, "4, 8"); //$NON-NLS-1$
+		
+		lblPathDB1 = new JLabel(""); //$NON-NLS-1$
+		pnlInfoDB1.add(lblPathDB1, "2, 10, 3, 1"); //$NON-NLS-1$
 
 		pnlInfoDB2 = new JPanel();
 		pnlInfo.add(pnlInfoDB2);
@@ -362,6 +370,8 @@ public class CompareDatabaseFrame extends JFrame {
 				ColumnSpec.decode("default:grow"), //$NON-NLS-1$
 				FormFactory.RELATED_GAP_COLSPEC,},
 			new RowSpec[] {
+				FormFactory.RELATED_GAP_ROWSPEC,
+				FormFactory.DEFAULT_ROWSPEC,
 				FormFactory.RELATED_GAP_ROWSPEC,
 				FormFactory.DEFAULT_ROWSPEC,
 				FormFactory.RELATED_GAP_ROWSPEC,
@@ -394,6 +404,9 @@ public class CompareDatabaseFrame extends JFrame {
 
 		lblCheckSumDB2Cover = new JLabel(""); //$NON-NLS-1$
 		pnlInfoDB2.add(lblCheckSumDB2Cover, "4, 8"); //$NON-NLS-1$
+		
+		lblPathDB2 = new JLabel(""); //$NON-NLS-1$
+		pnlInfoDB2.add(lblPathDB2, "2, 10, 3, 1"); //$NON-NLS-1$
 		
 		setSize(850, 500);
 	}
@@ -494,7 +507,7 @@ public class CompareDatabaseFrame extends JFrame {
 				ArrayList<CompareElement> l = null;
 
 				try {
-					l = DatabaseComparator.compare(new File(edDB1.getText()), new File(edDB2.getText()), progressBar);
+					l = DatabaseComparator.compare(new File(edDB1.getText()), new File(edDB2.getText()), new ProgressCallbackHelper(progressBar));
 				} catch (Exception e) {
 					CCLog.addError(e);
 				}
@@ -555,20 +568,32 @@ public class CompareDatabaseFrame extends JFrame {
 		}
 	}
 	
-	private void onSelection(JList<CompareElement> list, ListSelectionEvent e) { //TODO More Infos (Filename / Language)
+	private void onSelection(JList<CompareElement> list, ListSelectionEvent e) {
 		if (! e.getValueIsAdjusting()) {
 			CompareElement scel = list.getModel().getElementAt(e.getFirstIndex());
-
-			if (scel.isInDB1()) { //TODO CLear other side
+			
+			if (scel.isInDB1()) {
 				lblNameDB1.setText(scel.getCompleteTitle());
 				lblCheckSumDB1File.setText(scel.getCS_File_DB1());
 				lblCheckSumDB1Cover.setText(scel.getCS_Cover_DB1());
+				lblPathDB1.setText(scel.getPath_DB1());
+			} else {
+				lblNameDB1.setText(""); //$NON-NLS-1$
+				lblCheckSumDB1File.setText(""); //$NON-NLS-1$
+				lblCheckSumDB1Cover.setText(""); //$NON-NLS-1$
+				lblPathDB1.setText(""); //$NON-NLS-1$
 			}
 			
 			if (scel.isInDB2()) {
 				lblNameDB2.setText(scel.getCompleteTitle());
 				lblCheckSumDB2File.setText(scel.getCS_File_DB2());
 				lblCheckSumDB2Cover.setText(scel.getCS_Cover_DB2());
+				lblPathDB2.setText(scel.getPath_DB2());
+			} else {
+				lblNameDB2.setText(""); //$NON-NLS-1$
+				lblCheckSumDB2File.setText(""); //$NON-NLS-1$
+				lblCheckSumDB2Cover.setText(""); //$NON-NLS-1$
+				lblPathDB2.setText(""); //$NON-NLS-1$
 			}
 		}
 	}

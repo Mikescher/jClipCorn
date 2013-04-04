@@ -1,0 +1,3 @@
+Run
+git log --pretty=format:'>>>>> %ad: %B' --date=short >changelog.txt
+in Git Console

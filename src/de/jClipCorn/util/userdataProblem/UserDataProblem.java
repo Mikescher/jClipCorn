@@ -240,7 +240,9 @@ public class UserDataProblem {
 			
 			if (idel.isMovie()) {
 				if (isPathIncluded((CCMovie)idel, p0, p1, p2, p3, p4, p5)) {
-					ret.add(new UserDataProblem(PROBLEM_FILE_ALREADYEXISTS));
+					if (mov == null || mov.getLocalID() != idel.getLocalID()) {
+						ret.add(new UserDataProblem(PROBLEM_FILE_ALREADYEXISTS));
+					}
 					break;
 				}
 			} else if (idel.isSeries()) {
@@ -383,7 +385,9 @@ public class UserDataProblem {
 					CCSeason seas = ss.getSeason(i);
 					for (int j = 0; j < seas.getEpisodeCount(); j++) {
 						if (isPathIncluded(seas.getEpisode(j), part)) {
-							ret.add(new UserDataProblem(PROBLEM_FILE_ALREADYEXISTS));
+							if (episode == null || episode != seas.getEpisode(j)) {
+								ret.add(new UserDataProblem(PROBLEM_FILE_ALREADYEXISTS));
+							}
 							break;
 						}
 					}

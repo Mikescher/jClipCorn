@@ -337,7 +337,7 @@ public class MainFrame extends JFrame implements CCDBUpdateListener {
 						@Override
 						public void run() {
 							if (Main.DEBUG) {
-								System.out.println("!! [DBG] Update found !!"); //$NON-NLS-1$
+								System.out.println("[DBG] Update found"); //$NON-NLS-1$
 							} else {
 								ShowUpdateFrame suf = new ShowUpdateFrame(MainFrame.this, (UpdateConnector) e.getSource());
 								suf.setVisible(true);

@@ -1,5 +1,7 @@
 package de.jClipCorn.util;
 
+import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.RenderingHints;
@@ -100,5 +102,14 @@ public class ImageUtilities {
 			}
 		}
 		return new Point(i.getWidth() - 1, i.getHeight() - 1);
+	}
+	
+	public static void drawBorder(BufferedImage i, Color c, int thick) {
+		Graphics ig = i.getGraphics();
+		ig.setColor(c);
+		ig.fillRect(0, 0, thick, i.getHeight());
+		ig.fillRect(0, 0, i.getWidth(), thick);
+		ig.fillRect(i.getWidth() - thick, 0, thick, i.getHeight());
+		ig.fillRect(0, i.getHeight() - thick, i.getWidth(), thick);
 	}
 }

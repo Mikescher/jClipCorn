@@ -5,6 +5,7 @@ import java.awt.Point;
 import java.awt.image.BufferedImage;
 
 import de.jClipCorn.properties.CCProperties;
+import de.jClipCorn.util.ImageUtilities;
 
 public class TransformRectangle3D extends TransformRectangle{
 	private final static double FLEEDEPTH = 2.0;
@@ -39,19 +40,9 @@ public class TransformRectangle3D extends TransformRectangle{
 		
 		if (CCProperties.getInstance().PROP_PREVSERIES_COVERBORDER.getValue()) {
 			if (focused) {
-				Graphics ig = i.getGraphics();
-				ig.setColor(FOCUSBORDERCOLOR);
-				ig.fillRect(0, 0, FOCUSBORDERWIDTH, i.getHeight());
-				ig.fillRect(0, 0, i.getWidth(), FOCUSBORDERWIDTH);
-				ig.fillRect(i.getWidth() - FOCUSBORDERWIDTH, 0, FOCUSBORDERWIDTH, i.getHeight());
-				ig.fillRect(0, i.getHeight() - FOCUSBORDERWIDTH, i.getWidth(), FOCUSBORDERWIDTH);
+				ImageUtilities.drawBorder(i, FOCUSBORDERCOLOR, FOCUSBORDERWIDTH);
 			} else {
-				Graphics ig = i.getGraphics();
-				ig.setColor(BORDERCOLOR);
-				ig.fillRect(0, 0, BORDERWIDTH, i.getHeight());
-				ig.fillRect(0, 0, i.getWidth(), BORDERWIDTH);
-				ig.fillRect(i.getWidth() - BORDERWIDTH, 0, BORDERWIDTH, i.getHeight());
-				ig.fillRect(0, i.getHeight() - BORDERWIDTH, i.getWidth(), BORDERWIDTH);
+				ImageUtilities.drawBorder(i, BORDERCOLOR, BORDERWIDTH);
 			}
 		}
 		

@@ -318,4 +318,9 @@ public class CCSeries extends CCDatabaseElement {
 		
 		return ser;
 	}
+	
+	@Override
+	public String toString() {
+		return getTitle();
+	}
 }

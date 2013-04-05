@@ -157,7 +157,7 @@ public abstract class AutomaticSettingsFrame extends JFrame {
 		int c = 1;
 		for (final CCProperty<Object> p : properties.getPropertyList()) {
 			if (p.getCategory() == pnlNumber) {
-				JLabel info = new JLabel(LocaleBundle.getString("Settingsframe.tabbedPnl." + p.getIdentifier())); //$NON-NLS-1$
+				JLabel info = new JLabel(p.getDescription());
 				pnlTab.add(info, "2, " + c*2 + ", right, default"); //$NON-NLS-1$ //$NON-NLS-2$
 
 				final Component comp = p.getComponent();

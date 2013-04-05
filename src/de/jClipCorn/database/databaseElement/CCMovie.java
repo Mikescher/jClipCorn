@@ -315,4 +315,9 @@ public class CCMovie extends CCDatabaseElement {
 	public String getCoverMD5() {
 		return LargeMD5Calculator.calcMD5(getCover());
 	}
+	
+	@Override
+	public String toString() {
+		return getCompleteTitle();
+	}
 }

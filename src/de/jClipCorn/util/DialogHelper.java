@@ -24,7 +24,7 @@ public class DialogHelper {
 	}
 	
 	public static void showLocalInformation(Component frame, String id) {
-		JOptionPane.showMessageDialog(frame, LocaleBundle.getString(id+"_caption"), LocaleBundle.getString(id), JOptionPane.INFORMATION_MESSAGE); //$NON-NLS-1$
+		JOptionPane.showMessageDialog(frame, LocaleBundle.getString(id), LocaleBundle.getString(id+"_caption"), JOptionPane.INFORMATION_MESSAGE); //$NON-NLS-1$
 	}
 	
 	public static void showInformation(Component frame, String caption, String text) {

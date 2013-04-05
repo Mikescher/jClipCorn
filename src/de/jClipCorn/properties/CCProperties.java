@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.Properties;
 import java.util.Vector;
 
+import de.jClipCorn.Main;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.localization.util.LocalizedVector;
 import de.jClipCorn.gui.log.CCLog;
@@ -35,8 +36,8 @@ public class CCProperties {
 	private final static int CAT_DATABASE 		= 2;
 	private final static int CAT_SERIES 		= 3;
 	private final static int CAT_PLAY 			= 4;
-	private final static int CAT_DIALOGS 		= 5;
-	private final static int CAT_BACKUP 		= 6;
+	private final static int CAT_BACKUP 		= 5;
+	private final static int CAT_OTHERFRAMES 	= 6;
 	
 	private static CCProperties mainInstance = null;
 	
@@ -82,9 +83,12 @@ public class CCProperties {
 	public CCRIntProperty	PROP_VALIDATE_FILESIEDRIFT;
 	public CCBoolProperty	PROP_OTHER_DEBUGMODE;
 	public CCBoolProperty	PROP_VALIDATE_DUP_IGNORE_IFO;
+	public CCBoolProperty	PROP_PREVSERIES_3DCOVER;
+	public CCBoolProperty	PROP_PREVSERIES_COVERBORDER;
+	public CCBoolProperty	PROP_MASSCHANGESCORE_SKIPRATED;
 	
 	private Properties properties;
-	String path;
+	private String path;
 	
 	public CCProperties(String path) {
 		properties = new Properties();
@@ -93,6 +97,10 @@ public class CCProperties {
 		
 		createProperties();
 		
+		if (Main.DEBUG) {
+			System.out.println("[DBG] " + propertylist.size() + " Properties in List intialized"); //$NON-NLS-1$ //$NON-NLS-2$
+		}
+		
 		mainInstance = this;
 
 		LocaleBundle.updateLang();
@@ -100,7 +108,6 @@ public class CCProperties {
 	
 	@SuppressWarnings("nls")
 	private void createProperties() {
-		
 		LocalizedVector vd = new LocalizedVector();
 		vd.add("CCProperties.DblClickMove.Opt0"); //$NON-NLS-1$
 		vd.add("CCProperties.DblClickMove.Opt1"); //$NON-NLS-1$
@@ -124,7 +131,7 @@ public class CCProperties {
 		vs.add("ClipTableModel.Title"); //$NON-NLS-1$
 		vs.add("ClipTableModel.Added"); //$NON-NLS-1$
 		
-		PROP_ADD_MOVIE_RELATIVE_AUTO 			= new CCBoolProperty(CAT_DIALOGS, 		this,   "PROP_ADD_MOVIE_RELATIVE_AUTO", 			true);
+		PROP_ADD_MOVIE_RELATIVE_AUTO 			= new CCBoolProperty(CAT_OTHERFRAMES, 	this,   "PROP_ADD_MOVIE_RELATIVE_AUTO", 			true);
 		PROP_DATABASE_NAME 						= new CCStringProperty(CAT_DATABASE, 	this,	"PROP_DATABASE_NAME",						"ClipCornDB");
 		PROP_LOG_PATH							= new CCStringProperty(CAT_DATABASE, 	this,	"PROP_LOG_PATH",							"jClipcorn.log");
 		PROP_UI_LANG							= new CCRIntProperty(CAT_COMMON, 		this, 	"PROP_UI_LANG", 							1, 					vl);
@@ -149,8 +156,8 @@ public class CCProperties {
 		PROP_DATABASE_COVERCACHESIZE			= new CCPintProperty(CAT_DATABASE, 		this, 	"PROP_DATABASE_COVERCACHESIZE", 			128);
 		PROP_COMMON_CHECKFORUPDATES				= new CCBoolProperty(CAT_COMMON, 		this, 	"PROP_COMMON_CHECKFORUPDATES", 				true);
 		PROP_COMMON_PRESCANFILESYSTEM			= new CCBoolProperty(CAT_COMMON, 		this, 	"PROP_COMMON_PRESCANFILESYSTEM", 			true);
-		PROP_SCANFOLDER_INCLUDESERIES			= new CCBoolProperty(CAT_DIALOGS, 		this, 	"PROP_SCANFOLDER_INCLUDESERIES", 			false);
-		PROP_SCANFOLDER_EXCLUDEIFOS 			= new CCBoolProperty(CAT_DIALOGS, 		this, 	"PROP_SCANFOLDER_EXCLUDEIFOS", 				false);
+		PROP_SCANFOLDER_INCLUDESERIES			= new CCBoolProperty(CAT_OTHERFRAMES, 	this, 	"PROP_SCANFOLDER_INCLUDESERIES", 			false);
+		PROP_SCANFOLDER_EXCLUDEIFOS 			= new CCBoolProperty(CAT_OTHERFRAMES, 	this, 	"PROP_SCANFOLDER_EXCLUDEIFOS", 				false);
 		PROP_BACKUP_LASTBACKUP					= new CCDateProperty(NONVISIBLE, 		this, 	"PROP_BACKUP_LASTBACKUP", 					CCDate.getNewMinimumDate());
 		PROP_BACKUP_CREATEBACKUPS				= new CCBoolProperty(CAT_BACKUP, 		this, 	"PROP_BACKUP_CREATEBACKUPS", 				true);
 		PROP_BACKUP_FOLDERNAME					= new CCStringProperty(CAT_BACKUP,	 	this,	"PROP_BACKUP_FOLDERNAME",					"jClipCorn_backup");
@@ -162,8 +169,11 @@ public class CCProperties {
 		PROP_LOG_MAX_LINECOUNT 					= new CCPintProperty(CAT_COMMON, 		this, 	"PROP_LOG_MAX_LINECOUNT", 					1048576); // 2^20
 		PROP_VIEW_DB_START_SORT					= new CCRIntProperty(CAT_VIEW, 			this, 	"PROP_VIEW_DB_START_SORT", 					0,					vs);
 		PROP_OTHER_DEBUGMODE					= new CCBoolProperty(NONVISIBLE, 		this,   "PROP_OTHER_DEBUGMODE", 					false);
-		PROP_VALIDATE_FILESIEDRIFT				= new CCRIntProperty(CAT_DIALOGS, 		this, 	"PROP_VALIDATE_FILESIEDRIFT", 				5,					100);
-		PROP_VALIDATE_DUP_IGNORE_IFO			= new CCBoolProperty(CAT_DIALOGS, 		this,   "PROP_VALIDATE_DUP_IGNORE_IFO",				true);
+		PROP_VALIDATE_FILESIEDRIFT				= new CCRIntProperty(CAT_OTHERFRAMES, 	this, 	"PROP_VALIDATE_FILESIEDRIFT", 				5,					100);
+		PROP_VALIDATE_DUP_IGNORE_IFO			= new CCBoolProperty(CAT_OTHERFRAMES, 	this,   "PROP_VALIDATE_DUP_IGNORE_IFO",				true);
+		PROP_PREVSERIES_3DCOVER					= new CCBoolProperty(CAT_OTHERFRAMES, 	this,   "PROP_PREVSERIES_3DCOVER",					true);
+		PROP_PREVSERIES_COVERBORDER				= new CCBoolProperty(CAT_OTHERFRAMES, 	this,   "PROP_PREVSERIES_COVERBORDER",				true);
+		PROP_MASSCHANGESCORE_SKIPRATED			= new CCBoolProperty(NONVISIBLE,	 	this,   "PROP_MASSCHANGESCORE_SKIPRATED",			false);
 	}
 	
 	public static CCProperties getInstance() {

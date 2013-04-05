@@ -22,7 +22,7 @@ public class Resources {
 	public final static String ICN_MENUBAR_ADD_MOV			= registerICN("/icons/toolbar/add.png");
 	public final static String ICN_MENUBAR_ADD_SER			= registerICN("/icons/toolbar/addSer.png");
 	public final static String ICN_MENUBAR_ADD_SEA			= registerICN("/icons/toolbar/addSea.png");
-	public final static String ICN_MENUBAR_DBCHECK			= registerICN("/icons/toolbar/fishfinder.png");
+	public final static String ICN_MENUBAR_DBCHECK			= registerICN("/icons/toolbar/application_osx_terminal.png");
 	public final static String ICN_MENUBAR_CLEARDB			= registerICN("/icons/toolbar/fire_damage.png");
 	public final static String ICN_MENUBAR_SETTINGS			= registerICN("/icons/toolbar/gear_in.png");
 	public final static String ICN_MENUBAR_PREVIEW_MOV		= registerICN("/icons/toolbar/magnifier.png");
@@ -43,6 +43,7 @@ public class Resources {
 	public final static String ICN_MENUBAR_FILENAMERULES	= registerICN("/icons/toolbar/books.png");
 	public final static String ICN_MENUBAR_CREATE_JXMLBKP	= registerICN("/icons/toolbar/source_code.png");
 	public final static String ICN_MENUBAR_COMPARE			= registerICN("/icons/toolbar/balance_unbalance.png");
+	public final static String ICN_MENUBAR_SEARCH			= registerICN("/icons/toolbar/bubblechart.png");
 	// #############################################  </MENUBAR>  ############################################
 	
 

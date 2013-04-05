@@ -1,9 +1,11 @@
 package de.jClipCorn.gui.frames.findCoverFrame;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -42,6 +44,8 @@ import de.jClipCorn.util.parser.imageparser.ImDBImageParser;
 
 public class FindCoverDialog extends JDialog {
 	private static final long serialVersionUID = -2582872730470224144L;
+	
+	private final static int FOCUSBORDERWIDTH = 2;
 
 	private final ParseResultHandler owner;
 	private final CCMovieTyp typ;
@@ -61,6 +65,10 @@ public class FindCoverDialog extends JDialog {
 	private ArrayList<BufferedImage> thread_1_images;
 	private ArrayList<BufferedImage> thread_2_images;
 	private ArrayList<BufferedImage> thread_3_images;
+	
+	private ArrayList<JLabel> thread_1_labels = new ArrayList<>();
+	private ArrayList<JLabel> thread_2_labels = new ArrayList<>();
+	private ArrayList<JLabel> thread_3_labels = new ArrayList<>();
 
 	private JPanel contentPane;
 	private JLabel imgMain;
@@ -100,6 +108,10 @@ public class FindCoverDialog extends JDialog {
 		this.typ = typ;
 		initGUI(parent);
 	}
+	
+	//TODO Wouldn't be the worst idea to completely redo this whole frame ... optical and codewise
+	//TODO Use ProgressCallbackListener here
+	
 
 	private void initGUI(Component parent) {
 		setTitle(LocaleBundle.getString("FindCoverDialog.this.title")); //$NON-NLS-1$
@@ -617,6 +629,8 @@ public class FindCoverDialog extends JDialog {
 					pnlList1.setPreferredSize(new Dimension(thread_1_images.size() * 101 + 10, 0));
 					pnlList1.validate();
 					scrlbx1.revalidate();
+					
+					thread_1_labels.add(newlbl);
 
 					break;
 				case 2:
@@ -629,6 +643,8 @@ public class FindCoverDialog extends JDialog {
 					pnlList2.setPreferredSize(new Dimension(thread_2_images.size() * 101 + 10, 0));
 					pnlList2.validate();
 					scrlbx2.revalidate();
+					
+					thread_2_labels.add(newlbl);
 
 					break;
 				case 3:
@@ -641,6 +657,8 @@ public class FindCoverDialog extends JDialog {
 					pnlList3.setPreferredSize(new Dimension(thread_3_images.size() * 101 + 10, 0));
 					pnlList3.validate();
 					scrlbx3.revalidate();
+					
+					thread_3_labels.add(newlbl);
 
 					break;
 				default:
@@ -680,10 +698,20 @@ public class FindCoverDialog extends JDialog {
 	private void onCoverClicked(int row, int column) {
 		if (!threadsAreFinished())
 			return;
-
+		
+		for (int i = 0; i < thread_1_labels.size(); i++) {
+			thread_1_labels.get(i).setIcon(new ImageIcon(ImageUtilities.resizeHalfCoverImage(thread_1_images.get(i))));
+		}
+		for (int i = 0; i < thread_2_labels.size(); i++) {
+			thread_2_labels.get(i).setIcon(new ImageIcon(ImageUtilities.resizeHalfCoverImage(thread_2_images.get(i))));
+		}
+		for (int i = 0; i < thread_3_labels.size(); i++) {
+			thread_3_labels.get(i).setIcon(new ImageIcon(ImageUtilities.resizeHalfCoverImage(thread_3_images.get(i))));
+		}
+		
 		switch (row) {
 		case 1:
-			currentSelectedImage = thread_1_images.get(column); //TODO Draw Border around Selected Cover
+			currentSelectedImage = thread_1_images.get(column);
 			break;
 		case 2:
 			currentSelectedImage = thread_2_images.get(column);
@@ -694,6 +722,29 @@ public class FindCoverDialog extends JDialog {
 		default:
 			return;
 		}
+		
+		BufferedImage b = ImageUtilities.resizeHalfCoverImage(currentSelectedImage);
+		Graphics g = b.getGraphics();
+		g.setColor(Color.BLUE);
+		g.fillRect(0, 0, FOCUSBORDERWIDTH, b.getHeight());
+		g.fillRect(0, 0, b.getWidth(), FOCUSBORDERWIDTH);
+		g.fillRect(b.getWidth() - FOCUSBORDERWIDTH, 0, FOCUSBORDERWIDTH, b.getHeight());
+		g.fillRect(0, b.getHeight() - FOCUSBORDERWIDTH, b.getWidth(), FOCUSBORDERWIDTH);
+		
+		switch (row) {
+		case 1:
+			thread_1_labels.get(column).setIcon(new ImageIcon(b));
+			break;
+		case 2:
+			thread_2_labels.get(column).setIcon(new ImageIcon(b));
+			break;
+		case 3:
+			thread_3_labels.get(column).setIcon(new ImageIcon(b));
+			break;
+		default:
+			return;
+		}	
+		
 		imgMain.setIcon(new ImageIcon(currentSelectedImage));
 	}
 }

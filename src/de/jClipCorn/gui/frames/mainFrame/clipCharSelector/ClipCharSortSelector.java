@@ -19,18 +19,19 @@ import de.jClipCorn.util.LookAndFeelManager;
  * @author ZEUS
  *
  */
-public class ClipCharSortSelector extends JToolBar { //TODO Buttons too wide in Substance L'n'F
+public class ClipCharSortSelector extends JToolBar {
 	private static final long serialVersionUID = -8270219279263812975L;
 	
-	private final MainFrame owner;
+	private final MainFrame owner;	
 	
-	private static int BUTTONCOUNT = 26;
 	@SuppressWarnings("nls")
-	private static String  captions[] = {"All",  "#",  "A",  "B",  "C",  "D",  "E",  "F",  "G",  "H",  "I",  "J",  "K",  "L",  "M",  "N",  "O",  "P",  "Q",  "R",  "S",  "T",  "U",  "V",  "W",  "XYZ"};
+	private static String  captions[] = {"All",  "#",  "AB", "CD", "EF",  "GH", "IJ", "KL",  "MN", "OP", "QR",  "ST", "UV", "WX", "YZ"};
 	private static int  sizes[] = {32,  30,  30,  30,  30,  30,  30,  30,  30,  30,  30,  30,  30,  30,  30,  30,  30,  30,  30,  30,  30,  30,  30,  30,  30,  42};
 	@SuppressWarnings("nls")
-	private static String  searches[] = {"",  "0123456789",  "A",  "B",  "C",  "D",  "E",  "F",  "G",  "H",  "I",  "J",  "K",  "L",  "M",  "N",  "O",  "P",  "Q",  "R",  "S",  "T",  "U",  "V",  "W",  "XYZ"};
+	private static String  searches[] = {"",  "0123456789", "AB", "CD", "EF",  "GH", "IJ", "KL",  "MN", "OP", "QR",  "ST", "UV", "WX", "YZ"};
 	
+	private static int BUTTONCOUNT = captions.length;
+
 	private GroupLayout layout;
 	
 	private JButton buttons[] = new JButton[BUTTONCOUNT];

@@ -109,6 +109,10 @@ public abstract class CCProperty<T extends Object> {
 		return category;
 	}
 	
+	public String getDescription() {
+		return LocaleBundle.getString("Settingsframe.tabbedPnl." + getIdentifier()); //$NON-NLS-1$
+	}
+	
 	public abstract Component getComponent();
 	public abstract void setComponentValueToValue(Component c, T val);
 	public abstract T getComponentValue(Component c);

@@ -30,6 +30,7 @@ import javax.swing.event.ListSelectionListener;
 
 import org.apache.commons.lang.StringUtils;
 
+import de.jClipCorn.Main;
 import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.database.databaseElement.CCSeries;
@@ -125,13 +126,54 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 		
 		setLocationRelativeTo(owner);
 	}
+	
+	public PreviewSeriesFrame(Component owner, CCSeason sea) {
+		this.dispSeries = sea.getSeries();
+		initGUI();
+		setSize(new Dimension(1000, 700));
+		setMinimumSize(new Dimension(750, 680));
+
+		intialize();
+
+		if (dispSeries.getSeasonCount() > 0) {
+			changeSeason(dispSeries.getSeason(0));
+		}
+		
+		cvrChooser.setCurrSelected(sea.getSeasonNumber());
+		
+		setLocationRelativeTo(owner);
+	}
+	
+	public PreviewSeriesFrame(Component owner, CCEpisode epi) {
+		this.dispSeries = epi.getSeries();
+		initGUI();
+		setSize(new Dimension(1000, 700));
+		setMinimumSize(new Dimension(750, 680));
+
+		intialize();
+
+		if (dispSeries.getSeasonCount() > 0) {
+			changeSeason(dispSeries.getSeason(0));
+		}
+		
+		cvrChooser.setCurrSelected(epi.getSeason().getSeasonNumber());
+		
+		tabSeason.select(epi);
+		
+		setLocationRelativeTo(owner);
+	}
 
 	private void initGUI() {
 		setIconImage(CachedResourceLoader.getImage(Resources.IMG_FRAME_ICON));
 
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setTitle(dispSeries.getTitle());
-
+		
+		if (Main.DEBUG) {
+			setTitle("<LID:" + dispSeries.getLocalID() + "><SID:" + dispSeries.getSeriesID() + "> " + dispSeries.getTitle() + " (" + dispSeries.getCoverName() + ")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+		} else {
+			setTitle(dispSeries.getTitle());
+		}
+		
 		pnlTop = new JPanel();
 		getContentPane().add(pnlTop, BorderLayout.NORTH);
 		pnlTop.setLayout(new BorderLayout(0, 0));
@@ -496,7 +538,12 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 	}
 
 	public void changeSeason(CCSeason s) {
-		lblStaffel.setText(String.format("%s (%d)", s.getTitle(), s.getYear())); //$NON-NLS-1$
+		if (Main.DEBUG) {
+			lblStaffel.setText(String.format("<%d> %s (%d) (%s)", s.getSeasonID(), s.getTitle(), s.getYear(), s.getCoverName())); //$NON-NLS-1$
+		} else {
+			lblStaffel.setText(String.format("%s (%d)", s.getTitle(), s.getYear())); //$NON-NLS-1$
+		}
+		
 		tabSeason.changeSeason(s);
 	}
 	

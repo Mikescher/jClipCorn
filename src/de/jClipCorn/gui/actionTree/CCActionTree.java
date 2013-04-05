@@ -22,7 +22,7 @@ import de.jClipCorn.gui.frames.addSeasonFrame.AddSeasonFrame;
 import de.jClipCorn.gui.frames.addSeriesFrame.AddSeriesFrame;
 import de.jClipCorn.gui.frames.changeScoreFrame.ChangeScoreFrame;
 import de.jClipCorn.gui.frames.changeViewedFrame.ChangeViewedFrame;
-import de.jClipCorn.gui.frames.checkDatabaseFrame.CheckDatabaseDialog;
+import de.jClipCorn.gui.frames.checkDatabaseFrame.CheckDatabaseFrame;
 import de.jClipCorn.gui.frames.compareDatabaseFrame.CompareDatabaseFrame;
 import de.jClipCorn.gui.frames.editMovieFrame.EditMovieFrame;
 import de.jClipCorn.gui.frames.editSeriesFrame.EditSeriesFrame;
@@ -34,6 +34,7 @@ import de.jClipCorn.gui.frames.moveSeriesFrame.MoveSeriesDialog;
 import de.jClipCorn.gui.frames.previewMovieFrame.PreviewMovieFrame;
 import de.jClipCorn.gui.frames.previewSeriesFrame.PreviewSeriesFrame;
 import de.jClipCorn.gui.frames.scanFolderFrame.ScanFolderFrame;
+import de.jClipCorn.gui.frames.searchFrame.SearchFrame;
 import de.jClipCorn.gui.frames.settingsFrame.SettingsFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
@@ -102,11 +103,19 @@ public class CCActionTree {
 			}
 		});
 		
-		temp = database.addChild(new CCActionElement("Export Database", "ClipMenuBar.Database.ExportDB", Resources.ICN_MENUBAR_CREATE_JXMLBKP));
+		temp = database.addChild(new CCActionElement("ExportDatabase", "ClipMenuBar.Database.ExportDB", Resources.ICN_MENUBAR_CREATE_JXMLBKP));
 		temp.addListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				onClickDatabaseExportAsJxmBKP();
+			}
+		});
+		
+		temp = database.addChild(new CCActionElement("SearchDatabase", "ClipMenuBar.Database.SearchDB", Resources.ICN_MENUBAR_SEARCH));
+		temp.addListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				onClickDatabaseSearchDatabase();
 			}
 		});
 
@@ -520,7 +529,7 @@ public class CCActionTree {
 	}
 
 	private void onClickDatabaseCheck() {
-		CheckDatabaseDialog cdd = new CheckDatabaseDialog(movielist, owner);
+		CheckDatabaseFrame cdd = new CheckDatabaseFrame(movielist, owner);
 
 		cdd.setVisible(true);
 	}
@@ -540,7 +549,12 @@ public class CCActionTree {
 		JDialog ejf = new ExportJxmlBKPDialog(owner, owner.getMovielist());
 		ejf.setVisible(true);
 	}
-
+	
+	private void onClickDatabaseSearchDatabase() {
+		SearchFrame sf = new SearchFrame(movielist, owner);
+		sf.setVisible(true);
+	}
+	
 	private void onClickSeriesPreview() {
 		CCDatabaseElement el = owner.getSelectedElement();
 

@@ -2,6 +2,7 @@ package de.jClipCorn.gui.frames.mainFrame.clipTable;
 
 import java.awt.Color;
 
+import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
 
 import de.jClipCorn.database.CCMovieList;
@@ -51,11 +52,16 @@ public class ClipTableModel extends AbstractTableModel implements TableModelRowC
 			LocaleBundle.getString("ClipTableModel.Size")  //$NON-NLS-1$
 	};
 
-	private CCMovieList movielist;
+	private final CCMovieList movielist;
+	private JTable owner;
 
 	public ClipTableModel(CCMovieList ml) {
 		super();
-		movielist = ml;
+		this.movielist = ml;
+	}
+	
+	public void setTable(JTable t) {
+		this.owner = t;
 	}
 
 	@Override
@@ -175,7 +181,7 @@ public class ClipTableModel extends AbstractTableModel implements TableModelRowC
 		case 1:
 			return (row%2==0) ? (Color.WHITE) : (COLOR_BACKGROUNDGRAY);
 		case 2:
-			return COLOR_ONLINESCORE[movielist.getDatabaseElementBySort(row).getOnlinescore().asInt()];
+			return COLOR_ONLINESCORE[movielist.getDatabaseElementBySort(owner.convertRowIndexToModel(row)).getOnlinescore().asInt()];
 		default:
 			return Color.MAGENTA;
 		}

@@ -16,6 +16,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.SwingConstants;
 
+import de.jClipCorn.Main;
 import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieStatus;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTyp;
@@ -335,7 +336,12 @@ public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener 
 	}
 	
 	private void updateFields() {
-		setTitle(movie.getCompleteTitle());
+		if (Main.DEBUG) {
+			setTitle("<" + movie.getLocalID() + "> " + movie.getCompleteTitle() + " (" + movie.getCoverName() + ")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+		} else {
+			setTitle(movie.getCompleteTitle());
+		}
+		
 		lblCover.setIcon(movie.getCoverIcon());
 		label.setText(movie.getCompleteTitle());
 		

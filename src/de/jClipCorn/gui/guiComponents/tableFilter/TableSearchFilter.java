@@ -11,6 +11,7 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCMovieLanguage;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieZyklus;
 import de.jClipCorn.database.databaseElement.columnTypes.CombinedMovieQuality;
 import de.jClipCorn.gui.frames.mainFrame.clipTable.ClipTableModel;
+import de.jClipCorn.util.CCDate;
 import de.jClipCorn.util.YearRange;
 
 public class TableSearchFilter extends RowFilter<ClipTableModel, Object> {
@@ -43,6 +44,10 @@ public class TableSearchFilter extends RowFilter<ClipTableModel, Object> {
 		}
 		
 		if (((CCMovieFormat)e.getValue(12)).asString().equalsIgnoreCase(searchTerm)) {
+			return true;
+		}
+		
+		if (((CCDate)e.getValue(9)).getSimpleStringRepresentation().equalsIgnoreCase(searchTerm)) {
 			return true;
 		}
 		

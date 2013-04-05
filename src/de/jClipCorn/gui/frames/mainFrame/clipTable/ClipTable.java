@@ -39,6 +39,7 @@ public class ClipTable extends JScrollPane implements CCDBUpdateListener, ListSe
 		model = new ClipTableModel(ml);
 
 		table = new SFixClipTable(model);
+		model.setTable(table);
 		configureTable();
 
 		this.setViewportView(table);

@@ -19,6 +19,9 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCMovieScore;
 import de.jClipCorn.gui.CachedResourceLoader;
 import de.jClipCorn.gui.Resources;
 import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.properties.CCProperties;
+
+import javax.swing.JCheckBox;
 
 public class ChangeScoreFrame extends JFrame implements KeyListener {
 	private static final long serialVersionUID = 9048482551231383355L;
@@ -44,8 +47,9 @@ public class ChangeScoreFrame extends JFrame implements KeyListener {
 	private JLabel label_3;
 	private JButton btnScoreNo;
 	private JLabel lblbackspace;
+	private JCheckBox cbSkipRated;
 
-	public ChangeScoreFrame(Component owner, CCMovieList list) { //TODO Option skip already rated movies
+	public ChangeScoreFrame(Component owner, CCMovieList list) {
 		super();
 		this.movielist = list;
 		
@@ -61,7 +65,7 @@ public class ChangeScoreFrame extends JFrame implements KeyListener {
 	private void initGUI() {
 		setTitle(LocaleBundle.getString("ChangedScoreFrame.this.title")); //$NON-NLS-1$
 		setIconImage(CachedResourceLoader.getImage(Resources.IMG_FRAME_ICON));
-		setSize(new Dimension(430, 330));
+		setSize(new Dimension(430, 355));
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		getContentPane().setLayout(null);
@@ -185,6 +189,17 @@ public class ChangeScoreFrame extends JFrame implements KeyListener {
 		lblbackspace.setHorizontalAlignment(SwingConstants.CENTER);
 		lblbackspace.setBounds(332, 244, 80, 14);
 		getContentPane().add(lblbackspace);
+		
+		cbSkipRated = new JCheckBox(CCProperties.getInstance().PROP_MASSCHANGESCORE_SKIPRATED.getDescription());
+		cbSkipRated.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				CCProperties.getInstance().PROP_MASSCHANGESCORE_SKIPRATED.setValue(cbSkipRated.isSelected());
+			}
+		});
+		cbSkipRated.setBounds(10, 297, 402, 23);
+		cbSkipRated.setSelected(CCProperties.getInstance().PROP_MASSCHANGESCORE_SKIPRATED.getValue());
+		getContentPane().add(cbSkipRated);
 	}
 	
 	private void init() {
@@ -212,6 +227,14 @@ public class ChangeScoreFrame extends JFrame implements KeyListener {
 			CCDatabaseElement del = movielist.getDatabaseElementBySort(position);
 			if (del.isMovie()) {
 				CCMovie m = (CCMovie) del;
+				
+				if (cbSkipRated.isSelected()) {
+					if (m.getScore() != CCMovieScore.RATING_NO) {
+						nextMovie();
+						return;
+					}
+				}
+				
 				lblCover.setIcon(m.getCoverIcon());
 				lblCurrent.setIcon(m.getScore().getIcon());
 				lblTitle.setText(m.getCompleteTitle());

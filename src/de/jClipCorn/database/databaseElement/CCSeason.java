@@ -357,4 +357,9 @@ public class CCSeason {
 		
 		return sea;
 	}
+	
+	@Override
+	public String toString() {
+		return getTitle();
+	}
 }

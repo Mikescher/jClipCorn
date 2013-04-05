@@ -34,7 +34,7 @@ import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.util.DialogHelper;
 import de.jClipCorn.util.ProgressCallbackHelper;
 
-public class CheckDatabaseDialog extends JFrame {
+public class CheckDatabaseFrame extends JFrame {
 	private static final long serialVersionUID = 8481907373850170115L;
 
 	private final CCMovieList movielist;
@@ -50,7 +50,7 @@ public class CheckDatabaseDialog extends JFrame {
 	private JProgressBar pBar;
 	private JButton btnAutofix;
 	
-	public CheckDatabaseDialog(CCMovieList ml, MainFrame owner) {
+	public CheckDatabaseFrame(CCMovieList ml, MainFrame owner) {
 		super();
 		this.movielist = ml; 
 		
@@ -161,6 +161,7 @@ public class CheckDatabaseDialog extends JFrame {
 			public void run() {
 				btnValidate.setEnabled(true);
 				btnAutofix.setEnabled(true);
+				lblInfo.setText(LocaleBundle.getFormattedString("CheckDatabaseDialog.lblInfo.text_2", errorList.size())); //$NON-NLS-1$
 			}
 		});
 	}
@@ -173,9 +174,9 @@ public class CheckDatabaseDialog extends JFrame {
 				btnAutofix.setEnabled(true);
 				
 				if (success) {
-					DialogHelper.showLocalInformation(CheckDatabaseDialog.this, "CheckDatabaseDialog.Autofix.dialogSuccessfull"); //$NON-NLS-1$
+					DialogHelper.showLocalInformation(CheckDatabaseFrame.this, "CheckDatabaseDialog.Autofix.dialogSuccessfull"); //$NON-NLS-1$
 				} else {
-					DialogHelper.showLocalInformation(CheckDatabaseDialog.this, "CheckDatabaseDialog.Autofix.dialogUnsuccessfull"); //$NON-NLS-1$
+					DialogHelper.showLocalInformation(CheckDatabaseFrame.this, "CheckDatabaseDialog.Autofix.dialogUnsuccessfull"); //$NON-NLS-1$
 				}
 			}
 		});

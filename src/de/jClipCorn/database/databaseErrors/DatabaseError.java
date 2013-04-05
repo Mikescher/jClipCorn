@@ -220,6 +220,11 @@ public class DatabaseError {
 			for (int i = 0; i < ((CCMovie) el1).getPartcount(); i++) {
 				size.add(FileSizeFormatter.getFileSize(((CCMovie) el1).getAbsolutePart(i)));
 			}
+			
+			if (size.getBytes() == 0) {
+				return false;
+			}
+			
 			((CCMovie) el1).setFilesize(size);
 			
 			return true;
@@ -228,7 +233,13 @@ public class DatabaseError {
 		} else if (el1 instanceof CCSeason) {
 			return false;
 		} else if (el1 instanceof CCEpisode) {
-			((CCEpisode)el1).setFilesize(FileSizeFormatter.getFileSize(((CCEpisode) el1).getPart()));
+			long size = FileSizeFormatter.getFileSize(((CCEpisode) el1).getAbsolutePart());
+			
+			if (size == 0) {
+				return false;
+			}
+			
+			((CCEpisode)el1).setFilesize(size);
 			
 			return true;
 		}

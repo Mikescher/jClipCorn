@@ -13,6 +13,7 @@ import javax.swing.JComponent;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.ImageUtilities;
 
 public class JCoverChooser extends JComponent implements MouseListener {
@@ -30,6 +31,8 @@ public class JCoverChooser extends JComponent implements MouseListener {
 	private int padding_bottom = 5;
 	private int coverGap = 10;
 	private int circleRadius = 500;
+	
+	private boolean mode3d = CCProperties.getInstance().PROP_PREVSERIES_3DCOVER.getValue();
 
 	private ArrayList<BufferedImage> images = new ArrayList<>();
 	private int currSelected = 0;
@@ -38,10 +41,6 @@ public class JCoverChooser extends JComponent implements MouseListener {
 		addMouseListener(this);
 		update(false);
 	}
-	
-	//TODO Add 2D Mode
-	//TODO Rahmen um alle over (sp 1px)
-	//TODO Rahmen um selektierten (so 2px)
 
 	public void inc() {
 		setCurrSelected(currSelected + 1);
@@ -110,7 +109,11 @@ public class JCoverChooser extends JComponent implements MouseListener {
 	}
 
 	private int getComponentWidth() {
-		return circleRadius * 2 + 16;
+		if (mode3d) {
+			return circleRadius * 2 + 16;
+		} else {
+			return (EXTRACOVERCOUNT*2 + 1) * (getCoverWidth() + coverGap);
+		}
 	}
 
 	private int getCoverHeight() {
@@ -152,7 +155,7 @@ public class JCoverChooser extends JComponent implements MouseListener {
 			TransformRectangle tr = rectangles.get(i);
 
 			if (coverIsSet(imgid)) {
-				tr.draw(g, images.get(imgid));
+				tr.draw(g, images.get(imgid), i == 0);
 			}
 		}
 	}
@@ -169,8 +172,15 @@ public class JCoverChooser extends JComponent implements MouseListener {
 		int y2 = ch / 2;
 
 		for (int i = -EXTRACOVERCOUNT; i <= EXTRACOVERCOUNT; i++) {
-			TransformRectangle tr = new TransformRectangle(new Point(getCoverX(i), y1), new Point(getCoverX(i) + cw, y2));
+			TransformRectangle tr;
 
+			if (mode3d) {
+				tr = new TransformRectangle3D(new Point(getCoverX(i), y1), new Point(getCoverX(i) + cw, y2));
+			} else {
+				tr = new TransformRectangle2D(new Point(getCoverX(i), y1), new Point(getCoverX(i) + cw, y2));
+			}
+				
+			
 			tr.transform(circleRadius);
 
 			rectangles.put(i, tr);
@@ -232,5 +242,9 @@ public class JCoverChooser extends JComponent implements MouseListener {
 		rectangles.clear();
 		
 		update();
+	}
+
+	public void set3DMode(boolean mode3d) {
+		this.mode3d = mode3d;
 	}
 }

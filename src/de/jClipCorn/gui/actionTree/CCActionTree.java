@@ -14,6 +14,7 @@ import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieScore;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieStatus;
+import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTyp;
 import de.jClipCorn.database.xml.CCBXMLReader;
 import de.jClipCorn.gui.Resources;
 import de.jClipCorn.gui.frames.aboutFrame.AboutFrame;
@@ -41,7 +42,9 @@ import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.DialogHelper;
 import de.jClipCorn.util.FileChooserHelper;
+import de.jClipCorn.util.HTTPUtilities;
 import de.jClipCorn.util.PathFormatter;
+import de.jClipCorn.util.parser.ImDBParser;
 
 public class CCActionTree {
 	public final static String EVENT_ON_MOVIE_EXECUTED_0 = "PlayMovie"; //$NON-NLS-1$
@@ -416,6 +419,14 @@ public class CCActionTree {
 				onClickOtherOpenFolder();
 			}
 		});
+		
+		temp = other.addChild(new CCActionElement("ShowInIMDB", "ClipMenuBar.Other.ShowInIMDB", Resources.ICN_MENUBAR_IMDB));
+		temp.addListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				onClickOtherShowInIMDB();
+			}
+		});
 	}
 
 	public CCActionElement getRoot() {
@@ -669,6 +680,15 @@ public class CCActionTree {
 		CCDatabaseElement el = owner.getSelectedElement();
 		if (el != null && el.isMovie()) {
 			((CCMovie)el).setStatus(status);
+		}
+	}
+	
+	private void onClickOtherShowInIMDB() {
+		CCDatabaseElement el = owner.getSelectedElement();
+		if (el != null && el.isMovie()) {
+			HTTPUtilities.openInBrowser(ImDBParser.getSearchURL(((CCMovie)el).getCompleteTitle(), CCMovieTyp.MOVIE));
+		} else if (el != null && el.isSeries()) {
+			HTTPUtilities.openInBrowser(ImDBParser.getSearchURL(((CCSeries)el).getTitle(), CCMovieTyp.SERIES));
 		}
 	}
 }

@@ -44,6 +44,7 @@ public class Resources {
 	public final static String ICN_MENUBAR_CREATE_JXMLBKP	= registerICN("/icons/toolbar/source_code.png");
 	public final static String ICN_MENUBAR_COMPARE			= registerICN("/icons/toolbar/balance_unbalance.png");
 	public final static String ICN_MENUBAR_SEARCH			= registerICN("/icons/toolbar/bubblechart.png");
+	public final static String ICN_MENUBAR_IMDB				= registerICN("/icons/toolbar/imdb.png");
 	// #############################################  </MENUBAR>  ############################################
 	
 

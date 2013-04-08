@@ -9,7 +9,7 @@ public class ClipMoviePopup extends ClipPopupMenu {
 
 	@SuppressWarnings("nls")
 	@Override
-	protected void init() { //TODO Watch on ImDB
+	protected void init() {
 		addAction("PlayMovie");
 		addAction("PrevMovie");
 		
@@ -28,6 +28,7 @@ public class ClipMoviePopup extends ClipPopupMenu {
 		//#############
 		
 		addAction("OpenFolder");
+		addAction("ShowInIMDB");
 		
 		//#############
 		addSeparator();

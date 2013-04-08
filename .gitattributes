@@ -23,5 +23,5 @@
 
 # CLIPCORN
 
-changelog.txt  text
-*.txt  text
+changelog.txt  text diff
+*.txt  text diff

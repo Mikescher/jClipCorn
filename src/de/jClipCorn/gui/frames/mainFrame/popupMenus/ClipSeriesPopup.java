@@ -10,7 +10,8 @@ public class ClipSeriesPopup extends ClipPopupMenu {
 
 	@SuppressWarnings("nls")
 	@Override
-	protected void init() { //TODO Watch on ImDB
+	protected void init() {
+		
 		addAction("PrevSeries");
 		addAction("PrevMovie");
 		
@@ -25,9 +26,8 @@ public class ClipSeriesPopup extends ClipPopupMenu {
 		//#############
 		
 		addActionMenu("SetSeriesRating").add("SetRatingNO").add("SetRating0").add("SetRating1").add("SetRating2").add("SetRating3").add("SetRating4").add("SetRating5");
-		
 		addAction("OpenFolder");
-		
+		addAction("ShowInIMDB");
 		addAction("MoveSeries");
 		
 		//#############

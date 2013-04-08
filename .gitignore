@@ -49,6 +49,7 @@ jClipCorn_backup/
 build/
 javadoc/
 jClipCorn_backup/
+bin*/
 
 DerbManager*.jar
 
@@ -59,3 +60,5 @@ DerbManager*.jar
 *.lnk
 *.avi
 *.exe
+*.7z
+*.zip

@@ -37,6 +37,7 @@ import de.jClipCorn.gui.frames.editSeriesFrame.EditSeriesFrame;
 import de.jClipCorn.gui.frames.findCoverFrame.FindCoverDialog;
 import de.jClipCorn.gui.frames.inputErrorFrame.InputErrorDialog;
 import de.jClipCorn.gui.frames.parseImDBFrame.ParseImDBDialog;
+import de.jClipCorn.gui.guiComponents.CoverLabel;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.util.FileChooserHelper;
@@ -76,7 +77,7 @@ public class AddSeriesFrame extends JFrame implements ParseResultHandler, UserDa
 	private JButton btnParse;
 	private JLabel label_8;
 	private JTextField edTitle;
-	private JLabel lblCover;
+	private CoverLabel lblCover;
 	private JButton btnFind;
 	private JButton btnOpen;
 	private JLabel label_10;
@@ -194,7 +195,7 @@ public class AddSeriesFrame extends JFrame implements ParseResultHandler, UserDa
 		edTitle.setBounds(74, 12, 212, 20);
 		getContentPane().add(edTitle);
 
-		lblCover = new JLabel();
+		lblCover = new CoverLabel(false);
 		lblCover.setHorizontalAlignment(SwingConstants.CENTER);
 		lblCover.setBounds(381, 105, 182, 254);
 		getContentPane().add(lblCover);
@@ -434,7 +435,7 @@ public class AddSeriesFrame extends JFrame implements ParseResultHandler, UserDa
 
 	@Override
 	public void setScore(int s) {
-		// No such field
+		spnOnlinescore.setValue(s);
 	}
 	
 	private void cancel() {

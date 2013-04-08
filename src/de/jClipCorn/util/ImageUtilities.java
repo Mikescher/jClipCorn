@@ -7,6 +7,8 @@ import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 
+import javax.swing.ImageIcon;
+
 import de.jClipCorn.gui.CachedResourceLoader;
 import de.jClipCorn.gui.Resources;
 
@@ -111,5 +113,11 @@ public class ImageUtilities {
 		ig.fillRect(0, 0, i.getWidth(), thick);
 		ig.fillRect(i.getWidth() - thick, 0, thick, i.getHeight());
 		ig.fillRect(0, i.getHeight() - thick, i.getWidth(), thick);
+	}
+	
+	public static BufferedImage IconToImage(ImageIcon ic) {
+		BufferedImage bi = new BufferedImage(ic.getIconWidth(), ic.getIconHeight(), BufferedImage.TYPE_4BYTE_ABGR);
+		bi.getGraphics().drawImage(ic.getImage(), 0, 0, null);
+		return bi;
 	}
 }

@@ -115,7 +115,7 @@ public class DatabaseValidator {
 		// Zyklus/Title ends/starts with a space
 		// ###############################################
 		
-		if (series.getTitle().startsWith(" ") || series.getTitle().endsWith(" ")) { //$NON-NLS-1$ //$NON-NLS-2$
+		if (PathFormatter.isUntrimmed(series.getTitle())) {
 			e.add(DatabaseError.createSingle(DatabaseError.ERROR_NOT_TRIMMED, series));
 		}
 	}
@@ -244,7 +244,8 @@ public class DatabaseValidator {
 		// Zyklus/Title ends/starts with a space
 		// ###############################################
 		
-		if (mov.getTitle().startsWith(" ") || mov.getTitle().endsWith(" ") || mov.getZyklus().getTitle().startsWith(" ") || mov.getZyklus().getTitle().endsWith(" ")) {  //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+		
+		if (PathFormatter.isUntrimmed(mov.getTitle()) || PathFormatter.isUntrimmed(mov.getZyklus().getTitle())) {
 			e.add(DatabaseError.createSingle(DatabaseError.ERROR_NOT_TRIMMED, mov));
 		}
 		
@@ -309,7 +310,7 @@ public class DatabaseValidator {
 		// Zyklus/Title ends/starts with a space
 		// ###############################################
 		
-		if (season.getTitle().startsWith(" ") || season.getTitle().endsWith(" ")) {  //$NON-NLS-1$//$NON-NLS-2$
+		if (PathFormatter.isUntrimmed(season.getTitle())) {
 			e.add(DatabaseError.createSingle(DatabaseError.ERROR_NOT_TRIMMED, season));
 		}
 	}
@@ -377,7 +378,7 @@ public class DatabaseValidator {
 		// Zyklus ends/starts with a space
 		// ###############################################
 		
-		if (episode.getTitle().startsWith(" ") || episode.getTitle().endsWith(" ")) {  //$NON-NLS-1$//$NON-NLS-2$
+		if (PathFormatter.isUntrimmed(episode.getTitle())) {
 			e.add(DatabaseError.createSingle(DatabaseError.ERROR_NOT_TRIMMED, episode));
 		}
 		

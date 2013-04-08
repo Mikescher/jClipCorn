@@ -23,6 +23,7 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTyp;
 import de.jClipCorn.gui.CachedResourceLoader;
 import de.jClipCorn.gui.Resources;
 import de.jClipCorn.gui.frames.editMovieFrame.EditMovieFrame;
+import de.jClipCorn.gui.guiComponents.CoverLabel;
 import de.jClipCorn.gui.guiComponents.ReadableTextField;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.DialogHelper;
@@ -36,7 +37,7 @@ public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener 
 	private static final long serialVersionUID = 7483476533745432416L;
 	
 	private final CCMovie movie;
-	private JLabel lblCover;
+	private CoverLabel lblCover;
 	private JLabel label;
 	private JLabel lblViewed;
 	private JList<String> lsGenres;
@@ -96,7 +97,7 @@ public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener 
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		getContentPane().setLayout(null);
 		
-		lblCover = new JLabel();
+		lblCover = new CoverLabel(false);
 		lblCover.setBounds(10, 53, 182, 254);
 		getContentPane().add(lblCover);
 		

@@ -204,7 +204,7 @@ public class UserDataProblem {
 		
 		//################################################################################################################
 		
-		if (title.startsWith(" ") || title.endsWith(" ") || zyklus.startsWith(" ") || zyklus.endsWith(" ")) {  //$NON-NLS-1$ //$NON-NLS-2$//$NON-NLS-3$ //$NON-NLS-4$
+		if (PathFormatter.isUntrimmed(title) || PathFormatter.isUntrimmed(zyklus)) {
 			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_ZYKLUSORTITLE_HAS_LEADINGORTRAILING_SPACES));
 		}
 		

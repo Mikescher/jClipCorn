@@ -48,6 +48,7 @@ import de.jClipCorn.gui.frames.findCoverFrame.FindCoverDialog;
 import de.jClipCorn.gui.frames.inputErrorFrame.InputErrorDialog;
 import de.jClipCorn.gui.frames.parseImDBFrame.ParseImDBDialog;
 import de.jClipCorn.gui.guiComponents.CCDateEditor;
+import de.jClipCorn.gui.guiComponents.CoverLabel;
 import de.jClipCorn.gui.guiComponents.ReadableTextField;
 import de.jClipCorn.gui.guiComponents.SpinnerCCDateModel;
 import de.jClipCorn.gui.localization.LocaleBundle;
@@ -109,7 +110,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 	private JComboBox<String> cbxGenre4;
 	private JComboBox<String> cbxGenre5;
 	private JComboBox<String> cbxGenre6;
-	private JLabel lblCover;
+	private CoverLabel lblCover;
 	private JButton btnOpenCover;
 	private JButton btnFindCover;
 	private JCheckBox cbxViewed;
@@ -450,7 +451,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		cbxGenre6.setBounds(508, 300, 212, 22);
 		contentPane.add(cbxGenre6);
 		
-		lblCover = new JLabel(""); //$NON-NLS-1$
+		lblCover = new CoverLabel(false);
 		lblCover.setHorizontalAlignment(SwingConstants.CENTER);
 		lblCover.setBounds(508, 459, ImageUtilities.COVER_WIDTH, ImageUtilities.COVER_HEIGHT);
 		contentPane.add(lblCover);
@@ -760,8 +761,6 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		} else {
 			rdbtnDisableAutomRelative.setSelected(true);
 		}
-		
-		lblCover.setIcon(CachedResourceLoader.getImageIcon(Resources.IMG_COVER_STANDARD));
 		
 		cbxQuality.setModel(new DefaultComboBoxModel<>(CCMovieQuality.getList()));
 		

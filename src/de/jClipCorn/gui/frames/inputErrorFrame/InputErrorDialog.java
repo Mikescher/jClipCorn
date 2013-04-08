@@ -30,10 +30,15 @@ public class InputErrorDialog extends JDialog {
 	private static final long serialVersionUID = 2988199599783528024L;
 
 	private final JPanel contentPanel = new JPanel();
-
-	private UserDataProblemHandler owner;
+	JScrollPane scrollPane;
+	JLabel lblYouHaveErrors;
+	JPanel buttonPane;
+	JButton okButton;
+	JButton cancelButton;
 	private JList<String> lsErrors;
 	DefaultListModel<String> lsErrorModel;
+	
+	private UserDataProblemHandler owner;
 	
 	public InputErrorDialog(ArrayList<UserDataProblem> problems, UserDataProblemHandler owner, Component parent) {
 		super();
@@ -49,61 +54,56 @@ public class InputErrorDialog extends JDialog {
 		setResizable(false);
 		setBounds(100, 100, 500, 300);
 		setLocationRelativeTo(owner);
-		
+
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		contentPanel.setLayout(new BorderLayout(0, 0));
-		{
-			JScrollPane scrollPane = new JScrollPane();
-			scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-			contentPanel.add(scrollPane);
-			{
-				lsErrors = new JList<>(lsErrorModel = new DefaultListModel<String>());
-				scrollPane.setViewportView(lsErrors);
+
+		scrollPane = new JScrollPane();
+		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		contentPanel.add(scrollPane);
+
+		lsErrors = new JList<>(lsErrorModel = new DefaultListModel<String>());
+		scrollPane.setViewportView(lsErrors);
+
+		lblYouHaveErrors = new JLabel(LocaleBundle.getString("AddMovieInputErrorDialog.lblErrors.text")); //$NON-NLS-1$
+		lblYouHaveErrors.setFont(new Font("Tahoma", Font.BOLD, 11)); //$NON-NLS-1$
+		lblYouHaveErrors.setForeground(Color.RED);
+		lblYouHaveErrors.setHorizontalAlignment(SwingConstants.CENTER);
+		contentPanel.add(lblYouHaveErrors, BorderLayout.NORTH);
+
+		buttonPane = new JPanel();
+		buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
+		getContentPane().add(buttonPane, BorderLayout.SOUTH);
+
+		okButton = new JButton(LocaleBundle.getString("AddMovieInputErrorDialog.btnOK.text")); //$NON-NLS-1$
+		okButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				dispose();
 			}
-		}
-		{
-			JLabel lblYouHaveErrors = new JLabel(LocaleBundle.getString("AddMovieInputErrorDialog.lblErrors.text")); //$NON-NLS-1$
-			lblYouHaveErrors.setFont(new Font("Tahoma", Font.BOLD, 11)); //$NON-NLS-1$
-			lblYouHaveErrors.setForeground(Color.RED);
-			lblYouHaveErrors.setHorizontalAlignment(SwingConstants.CENTER);
-			contentPanel.add(lblYouHaveErrors, BorderLayout.NORTH);
-		}
-		{
-			JPanel buttonPane = new JPanel();
-			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
-			getContentPane().add(buttonPane, BorderLayout.SOUTH);
-			{
-				JButton okButton = new JButton(LocaleBundle.getString("AddMovieInputErrorDialog.btnOK.text")); //$NON-NLS-1$
-				okButton.addActionListener(new ActionListener() {
-					
-					@Override
-					public void actionPerformed(ActionEvent arg0) {
-						dispose();
-					}
-				});
-				buttonPane.add(okButton);
-				getRootPane().setDefaultButton(okButton);
+		});
+		buttonPane.add(okButton);
+		getRootPane().setDefaultButton(okButton);
+
+		cancelButton = new JButton(LocaleBundle.getString("AddMovieInputErrorDialog.btnIgnore.text")); //$NON-NLS-1$
+		cancelButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				onIgnoreClicked();
 			}
-			{
-				JButton cancelButton = new JButton(LocaleBundle.getString("AddMovieInputErrorDialog.btnIgnore.text")); //$NON-NLS-1$
-				cancelButton.addActionListener(new ActionListener() {
-					
-					@Override
-					public void actionPerformed(ActionEvent arg0) {
-						onIgnoreClicked();
-					}
-				});
-				buttonPane.add(cancelButton);
-			}
-		}
+		});
+		buttonPane.add(cancelButton);
 	}
 	
 	private void fillMemo(ArrayList<UserDataProblem> problems) {
-		if (problems == null)
+		if (problems == null) {
 			return;
+		}
+		
+		lblYouHaveErrors.setText(LocaleBundle.getFormattedString("AddMovieInputErrorDialog.lblErrors.text", problems.size())); //$NON-NLS-1$
 		
 		lsErrorModel.clear();
 		

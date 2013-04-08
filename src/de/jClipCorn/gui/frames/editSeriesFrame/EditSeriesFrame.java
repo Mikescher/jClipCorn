@@ -54,6 +54,7 @@ import de.jClipCorn.gui.frames.addSeasonFrame.AddSeasonFrame;
 import de.jClipCorn.gui.frames.findCoverFrame.FindCoverDialog;
 import de.jClipCorn.gui.frames.inputErrorFrame.InputErrorDialog;
 import de.jClipCorn.gui.guiComponents.CCDateEditor;
+import de.jClipCorn.gui.guiComponents.CoverLabel;
 import de.jClipCorn.gui.guiComponents.ReadableTextField;
 import de.jClipCorn.gui.guiComponents.SpinnerCCDateModel;
 import de.jClipCorn.gui.localization.LocaleBundle;
@@ -89,7 +90,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 	private final UpdateCallbackListener listener;
 	
 	private JList<String> lsSeasons;
-	private JLabel lblSeriesCover;
+	private CoverLabel lblSeriesCover;
 	private JButton btnSeriesOpenCover;
 	private JLabel label_1;
 	private JTextField edSeriesTitle;
@@ -122,7 +123,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 	private JComboBox<String> cbxSeriesScore;
 	private JLabel lblScore;
 	private JPanel pnlSeason;
-	private JLabel lblSeasonCover;
+	private CoverLabel lblSeasonCover;
 	private JButton btnSeasonOpenCover;
 	private JLabel label_15;
 	private JTextField edSeasonTitle;
@@ -385,7 +386,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		});
 		scrollPane.setViewportView(lsSeasons);
 		
-		lblSeriesCover = new JLabel();
+		lblSeriesCover = new CoverLabel(false);
 		lblSeriesCover.setBounds(12, 49, 182, 254);
 		pnlSeries.add(lblSeriesCover);
 		lblSeriesCover.setHorizontalAlignment(SwingConstants.CENTER);
@@ -472,7 +473,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		getContentPane().add(pnlSeason);
 		pnlSeason.setLayout(null);
 		
-		lblSeasonCover = new JLabel();
+		lblSeasonCover = new CoverLabel(false);
 		lblSeasonCover.setHorizontalAlignment(SwingConstants.CENTER);
 		lblSeasonCover.setBounds(12, 49, 182, 254);
 		pnlSeason.add(lblSeasonCover);
@@ -747,8 +748,6 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 	private void setDefaultValues() {
 		//#########################   SERIES   ###########################################################
 		
-		lblSeriesCover.setIcon(CachedResourceLoader.getImageIcon(Resources.IMG_COVER_STANDARD));
-		
 		cbxSeriesGenre_0.setModel(new DefaultComboBoxModel<>(CCMovieGenre.getTrimmedList()));
 		cbxSeriesGenre_1.setModel(new DefaultComboBoxModel<>(CCMovieGenre.getTrimmedList()));
 		cbxSeriesGenre_2.setModel(new DefaultComboBoxModel<>(CCMovieGenre.getTrimmedList()));
@@ -763,8 +762,6 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		cbxSeriesScore.setModel(new DefaultComboBoxModel<>(CCMovieScore.getList()));
 		
 		//#########################   SEASON   ############################################################
-		
-		lblSeasonCover.setIcon(CachedResourceLoader.getImageIcon(Resources.IMG_COVER_STANDARD));
 		
 		//#########################   EPISODE   ###########################################################
 		

@@ -843,7 +843,6 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler {
 			ep.setTitle(PathFormatter.getFilename(p));
 			ep.setEpisodeNumber(epid);
 			ep.setViewed(false);
-			ep.setQuality(CCMovieQuality.ONE_CD.asInt());
 			ep.setLength(0);
 			ep.setFormat(CCMovieFormat.getMovieFormat(PathFormatter.getExtension(p)));
 			ep.setFilesize(ff[i].length());
@@ -852,6 +851,7 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler {
 			} else {
 				ep.setPart(p);
 			}
+			ep.setQuality(CCMovieQuality.getQualityForSize(ep.getFilesize(), 1));
 			ep.setAddDate(new CCDate());
 			ep.setLastViewed(CCDate.getNewMinimumDate());
 

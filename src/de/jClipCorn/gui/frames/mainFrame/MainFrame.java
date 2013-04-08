@@ -13,7 +13,6 @@ import java.lang.reflect.InvocationTargetException;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.SwingUtilities;
@@ -36,6 +35,7 @@ import de.jClipCorn.gui.frames.mainFrame.popupMenus.ClipMoviePopup;
 import de.jClipCorn.gui.frames.mainFrame.popupMenus.ClipSeriesPopup;
 import de.jClipCorn.gui.frames.mainFrame.searchField.SearchField;
 import de.jClipCorn.gui.frames.showUpdateFrame.ShowUpdateFrame;
+import de.jClipCorn.gui.guiComponents.CoverLabel;
 import de.jClipCorn.gui.guiComponents.tableFilter.TableSearchFilter;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.properties.CCProperties;
@@ -52,7 +52,7 @@ public class MainFrame extends JFrame implements CCDBUpdateListener {
 	private ClipToolbar toolbar;
 	private JPanel leftPanel;
 	private FilterTree filterTree;
-	private JLabel coverImage; //TODO Rechtsklick -> Save Cover as
+	private CoverLabel coverImage;
 	private JPanel middlePanel;
 	private ClipTable clipTable;
 	private ClipCharSortSelector charSelector;
@@ -124,7 +124,7 @@ public class MainFrame extends JFrame implements CCDBUpdateListener {
 		coverPanel.add(gapPanel, BorderLayout.NORTH);
 		gapPanel.setLayout(null);
 
-		coverImage = new JLabel(CachedResourceLoader.getImageIcon(Resources.IMG_COVER_STANDARD));
+		coverImage = new CoverLabel(false);
 		coverPanel.add(coverImage);
 		
 		statusbar = new ClipStatusBar(this, movielist);

@@ -37,6 +37,7 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTyp;
 import de.jClipCorn.gui.CachedResourceLoader;
 import de.jClipCorn.gui.Resources;
 import de.jClipCorn.gui.frames.allRatingsFrame.AllRatingsDialog;
+import de.jClipCorn.gui.guiComponents.CoverLabel;
 import de.jClipCorn.gui.guiComponents.ReadableCombobox;
 import de.jClipCorn.gui.guiComponents.ReadableSpinner;
 import de.jClipCorn.gui.guiComponents.ReadableTextField;
@@ -107,7 +108,7 @@ public class ParseImDBDialog extends JDialog {
 	private JCheckBox cbGenre5;
 	private JCheckBox cbGenre4;
 	private JLabel lblGenre_4;
-	private JLabel imgCover;
+	private CoverLabel imgCover;
 	private JLabel lblCover;
 	private JCheckBox cbCover;
 	private JProgressBar pbarSearch;
@@ -359,7 +360,7 @@ public class ParseImDBDialog extends JDialog {
 		lblGenre_4.setBounds(322, 130, 46, 14);
 		pnlMain.add(lblGenre_4);
 		
-		imgCover = new JLabel();
+		imgCover = new CoverLabel(false);
 		imgCover.setHorizontalAlignment(SwingConstants.CENTER);
 		imgCover.setBounds(107, 164, ImageUtilities.COVER_WIDTH, ImageUtilities.COVER_HEIGHT);
 		pnlMain.add(imgCover);

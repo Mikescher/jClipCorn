@@ -13,7 +13,6 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -43,6 +42,7 @@ import de.jClipCorn.gui.frames.addSeasonFrame.AddSeasonFrame;
 import de.jClipCorn.gui.frames.displayGenresDialog.DisplayGenresDialog;
 import de.jClipCorn.gui.frames.editSeriesFrame.EditSeriesFrame;
 import de.jClipCorn.gui.frames.previewSeriesFrame.serTable.SerTable;
+import de.jClipCorn.gui.guiComponents.CoverLabel;
 import de.jClipCorn.gui.guiComponents.jCoverChooser.JCoverChooser;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.DialogHelper;
@@ -61,7 +61,7 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 	private JPanel pnlTop;
 	private JPanel pnlInfo;
 	private JPanel pnlMainIntern;
-	private JLabel lblCover;
+	private CoverLabel lblCover;
 	private JCoverChooser cvrChooser;
 	private JLabel lblStaffel;
 	private SerTable tabSeason;
@@ -112,6 +112,9 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 	private Component vStrut_9;
 	private JMenuItem mntmResumePlaying;
 
+	/**
+	 * @wbp.parser.constructor
+	 */
 	public PreviewSeriesFrame(Component owner, CCSeries ser) {
 		this.dispSeries = ser;
 		initGUI();
@@ -376,8 +379,7 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 		pnlLeft.add(pnlInfo);
 		pnlInfo.setLayout(new BoxLayout(pnlInfo, BoxLayout.Y_AXIS));
 
-		lblCover = new JLabel();
-		lblCover.setIcon(new ImageIcon(CachedResourceLoader.getImage(Resources.IMG_COVER_NOTFOUND)));
+		lblCover = new CoverLabel(false);
 		pnlInfo.add(lblCover);
 
 		vStrut_2 = Box.createVerticalStrut(4);

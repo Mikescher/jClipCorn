@@ -21,19 +21,26 @@ import javax.swing.SwingConstants;
 
 import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.database.databaseElement.CCSeries;
+import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFormat;
+import de.jClipCorn.database.databaseElement.columnTypes.CCMovieLanguage;
+import de.jClipCorn.database.databaseElement.columnTypes.CCMovieQuality;
+import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTyp;
 import de.jClipCorn.gui.CachedResourceLoader;
 import de.jClipCorn.gui.Resources;
+import de.jClipCorn.gui.frames.findCoverFrame.FindCoverDialog;
 import de.jClipCorn.gui.frames.inputErrorFrame.InputErrorDialog;
+import de.jClipCorn.gui.guiComponents.CoverLabel;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.util.FileChooserHelper;
 import de.jClipCorn.util.ImageUtilities;
 import de.jClipCorn.util.PathFormatter;
 import de.jClipCorn.util.UpdateCallbackListener;
+import de.jClipCorn.util.parser.ParseResultHandler;
 import de.jClipCorn.util.userdataProblem.UserDataProblem;
 import de.jClipCorn.util.userdataProblem.UserDataProblemHandler;
 
-public class AddSeasonFrame extends JFrame implements UserDataProblemHandler{
+public class AddSeasonFrame extends JFrame implements UserDataProblemHandler, ParseResultHandler {
 	private static final long serialVersionUID = -5479523926638394942L;
 	
 	private final CCSeries parent;
@@ -46,11 +53,12 @@ public class AddSeasonFrame extends JFrame implements UserDataProblemHandler{
 	private JLabel label;
 	private JTextField edTitle;
 	private JButton btnOpen;
-	private JLabel lblCover;
+	private CoverLabel lblCover;
 	private JButton button_2;
 	private JButton button_3;
 	private JLabel label_2;
 	private JSpinner spnYear;
+	private JButton btnFind;
 
 	public AddSeasonFrame(Component owner, CCSeries ser, UpdateCallbackListener ucl){
 		super();
@@ -92,7 +100,7 @@ public class AddSeasonFrame extends JFrame implements UserDataProblemHandler{
 		btnOpen.setBounds(435, 15, 47, 25);
 		getContentPane().add(btnOpen);
 		
-		lblCover = new JLabel();
+		lblCover = new CoverLabel(false);
 		lblCover.setHorizontalAlignment(SwingConstants.CENTER);
 		lblCover.setBounds(300, 53, 182, 254);
 		getContentPane().add(lblCover);
@@ -122,9 +130,20 @@ public class AddSeasonFrame extends JFrame implements UserDataProblemHandler{
 		getContentPane().add(label_2);
 		
 		spnYear = new JSpinner();
-		spnYear.setModel(new SpinnerNumberModel(new Long(0), new Long(0), null, new Long(1)));
+		spnYear.setModel(new SpinnerNumberModel(new Integer(1900), new Integer(1900), null, new Integer(1)));
+		spnYear.setEditor(new JSpinner.NumberEditor(spnYear, "0")); //$NON-NLS-1$
 		spnYear.setBounds(76, 44, 212, 20);
 		getContentPane().add(spnYear);
+		
+		btnFind = new JButton(LocaleBundle.getString("AddMovieFrame.btnFindCover.text")); //$NON-NLS-1$
+		btnFind.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				findCover();
+			}
+		});
+		btnFind.setBounds(365, 16, 60, 23);
+		getContentPane().add(btnFind);
 	}
 	
 	private void initFileChooser() {
@@ -133,6 +152,7 @@ public class AddSeasonFrame extends JFrame implements UserDataProblemHandler{
 		coverFileChooser.setDialogTitle(LocaleBundle.getString("AddMovieFrame.coverFileChooser.title")); //$NON-NLS-1$
 	}
 	
+	@Override
 	public void setCover(BufferedImage nci) {
 		nci = ImageUtilities.resizeCoverImage(nci);
 		
@@ -206,5 +226,79 @@ public class AddSeasonFrame extends JFrame implements UserDataProblemHandler{
 	@Override
 	public void onAMIEDIgnoreClicked() {
 		onBtnOK(false);
+	}
+	
+	private void findCover() {
+		(new FindCoverDialog(this, this, CCMovieTyp.SERIES)).setVisible(true);
+	}
+
+	@Override
+	public String getFullTitle() {
+		return parent.getTitle() + ": " + edTitle.getText(); //$NON-NLS-1$
+	}
+
+	@Override
+	public void setMovieFormat(CCMovieFormat cmf) {
+		// NO SUCH ELEMENT
+	}
+
+	@Override
+	public void setFilepath(int p, String t) {
+		// NO SUCH ELEMENT
+	}
+
+	@Override
+	public void setMovieName(String name) {
+		// NO SUCH ELEMENT
+	}
+
+	@Override
+	public void setZyklus(String mZyklusTitle) {
+		// NO SUCH ELEMENT
+	}
+
+	@Override
+	public void setZyklusNumber(int iRoman) {
+		// NO SUCH ELEMENT
+	}
+
+	@Override
+	public void setFilesize(long size) {
+		// NO SUCH ELEMENT
+	}
+
+	@Override
+	public void setMovieLanguage(CCMovieLanguage lang) {
+		// NO SUCH ELEMENT
+	}
+
+	@Override
+	public void setQuality(CCMovieQuality q) {
+		// NO SUCH ELEMENT
+	}
+
+	@Override
+	public void setYear(int y) {
+		// NO SUCH ELEMENT
+	}
+
+	@Override
+	public void setGenre(int gid, int movGenre) {
+		// NO SUCH ELEMENT
+	}
+
+	@Override
+	public void setFSK(int fsk) {
+		// NO SUCH ELEMENT
+	}
+
+	@Override
+	public void setLength(int l) {
+		// NO SUCH ELEMENT
+	}
+
+	@Override
+	public void setScore(int s) {
+		// NO SUCH ELEMENT
 	}
 }

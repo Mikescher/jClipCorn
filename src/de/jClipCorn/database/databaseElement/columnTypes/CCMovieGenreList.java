@@ -111,8 +111,12 @@ public class CCMovieGenreList {
 	}
 	
 	public boolean setGenre(int idx, CCMovieGenre val) {
+		return setGenre(idx, val.asInt());
+	}
+	
+	public boolean setGenre(int idx, int val) {
 		if (idx >= 0 && idx < SIZE) {
-			setGenreInt(idx, val.asInt());
+			setGenreInt(idx, val);
 			return true;
 		} else {
 			return false;
@@ -129,6 +133,10 @@ public class CCMovieGenreList {
 	}
 	
 	public boolean addGenre(CCMovieGenre val) {
+		return addGenre(val.asInt());
+	}
+	
+	public boolean addGenre(int val) {
 		int size = getGenreCount();
 		if (size < GSIZE) {
 			setGenre(size, val);
@@ -164,6 +172,50 @@ public class CCMovieGenreList {
 		return r;
 	}
 	
+	public String asSimpleString() {
+		String r = ""; //$NON-NLS-1$
+		int sz = getGenreCount();
+		for(int i = 0; i < sz; i++) {
+			r += getGenre(i)+""; //$NON-NLS-1$
+			if ((i+1) < sz) {
+				r += '|';
+			}
+		}
+		return r;
+	}
+	
+	public CCMovieGenreList getSorted() {
+		CCMovieGenreList result = new CCMovieGenreList();
+		
+		int count = getGenreCount();
+		
+		int actual = getGenre(0).asInt();
+		
+		for (int i = 0; i < count; i++) {
+			if (getGenre(i).asInt() < actual) {
+				actual = getGenre(i).asInt();
+			}
+		}
+		
+		result.addGenre(actual);
+		int last = actual;
+		
+		for (int i = 0; i < (count-1); i++) {
+			actual = Integer.MAX_VALUE;
+			for (int j = 0; j < count; j++) {
+				if (getGenre(j).asInt() > last) {
+					if (getGenre(j).asInt() < actual) {
+						actual = getGenre(j).asInt();
+					}
+				}
+			}
+			result.addGenre(actual);
+			last = actual;
+		}
+		
+		return result;
+	}
+	
 	public long getAllGenres() {
 		return genres;
 	}
@@ -174,7 +226,7 @@ public class CCMovieGenreList {
 	}
 
 	public static int compare(CCMovieGenreList o1, CCMovieGenreList o2) {
-		return Long.compare(o1.genres, o2.genres); //TODO BETTER SORT (PERFORMANCEEEEEE) !!!!
+		return Long.compare(o1.getSorted().getAllGenres(), o2.getSorted().getAllGenres());
 	}
 
 	public void clear() {

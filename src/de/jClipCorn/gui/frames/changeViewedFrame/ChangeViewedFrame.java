@@ -17,6 +17,7 @@ import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.gui.CachedResourceLoader;
 import de.jClipCorn.gui.Resources;
+import de.jClipCorn.gui.guiComponents.CoverLabel;
 import de.jClipCorn.gui.localization.LocaleBundle;
 
 public class ChangeViewedFrame extends JFrame implements KeyListener {
@@ -26,7 +27,7 @@ public class ChangeViewedFrame extends JFrame implements KeyListener {
 	private int position;
 	private boolean running = false;
 	
-	private JLabel lblCover;
+	private CoverLabel lblCover;
 	private JButton btnViewed;
 	private JButton btnUnviewed;
 	private JLabel lblCurrent;
@@ -55,7 +56,7 @@ public class ChangeViewedFrame extends JFrame implements KeyListener {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		getContentPane().setLayout(null);
 		
-		lblCover = new JLabel();
+		lblCover = new CoverLabel(false);
 		lblCover.setIcon(CachedResourceLoader.getImageIcon(Resources.IMG_COVER_STANDARD));
 		lblCover.setBounds(100, 47, 182, 254);
 		getContentPane().add(lblCover);

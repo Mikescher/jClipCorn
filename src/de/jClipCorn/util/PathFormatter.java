@@ -120,4 +120,8 @@ public class PathFormatter {
 			CCLog.addError(e);
 		}
 	}
+	
+	public static boolean isUntrimmed(String s) {
+		return ! s.equals(s.trim());
+	}
 }

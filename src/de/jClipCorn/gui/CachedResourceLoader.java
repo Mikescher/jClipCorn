@@ -63,6 +63,10 @@ public class CachedResourceLoader {
 		return resize(getImage(name), w, h);
 	}
 	
+	public static ImageIcon getResizedImageIcon(String name, int w, int h) {
+		return new ImageIcon(resize(getImage(name), w, h));
+	}
+	
 	public static BufferedImage resize(BufferedImage bi, int width, int height) {
 		BufferedImage resizedImage = new BufferedImage(width, height, bi.getType());
 		Graphics2D g = resizedImage.createGraphics();

@@ -299,13 +299,13 @@ public class DatabaseError {
 			((CCMovie)el1).setZyklusTitle(((CCMovie)el1).getZyklus().getTitle().trim());
 			return true;
 		} else if (el1 instanceof CCSeries) {
-			((CCSeries)el1).setTitle(((CCSeries)el1).getTitle());
+			((CCSeries)el1).setTitle(((CCSeries)el1).getTitle().trim());
 			return true;
 		} else if (el1 instanceof CCSeason) {
-			((CCSeason)el1).setTitle(((CCSeason)el1).getTitle());
+			((CCSeason)el1).setTitle(((CCSeason)el1).getTitle().trim());
 			return true;
 		} else if (el1 instanceof CCEpisode) {
-			((CCEpisode)el1).setTitle(((CCEpisode)el1).getTitle());
+			((CCEpisode)el1).setTitle(((CCEpisode)el1).getTitle().trim());
 			return true;
 		}
 		

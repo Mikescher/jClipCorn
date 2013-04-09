@@ -72,3 +72,9 @@ public class Main {
 //TODO Keyboard Shortcuts
 //TODO TabOrder for (important) Frames
 //TODO Apache Commons hacken und duplicate entry removen
+
+//TODO MassChange Score (Wenn Fenster kein Focus hat bug (zb checkbox/buttons focused))
+//TODO MassChange Score Option only viewed movs
+//TODO MassChange Score Option Use Numpad Keys
+//TODO MassChange Viewed Option Use Numpad Keys
+//TODO MassChange Viewed Option only viewed movs

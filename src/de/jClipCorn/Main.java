@@ -78,3 +78,4 @@ public class Main {
 //TODO MassChange Score Option Use Numpad Keys
 //TODO MassChange Viewed Option Use Numpad Keys
 //TODO MassChange Viewed Option only viewed movs
+//TODO UNDEFINIED (20:53:48): [Thread[Thread-12,6,main]] java.lang.NullPointerException at de.jClipCorn.gui.frames.scanFolderFrame.ScanFolderFrame.searchFiles (ScanFolderFrame.java:224) at de.jClipCorn.gui.frames.scanFolderFrame.ScanFolderFrame.searchFiles (ScanFolderFrame.java:226) at de.jClipCorn.gui.frames.scanFolderFrame.ScanFolderFrame.run (ScanFolderFrame.java:191)

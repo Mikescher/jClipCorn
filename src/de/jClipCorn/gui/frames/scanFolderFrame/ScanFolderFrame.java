@@ -1,6 +1,7 @@
 package de.jClipCorn.gui.frames.scanFolderFrame;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -32,6 +33,7 @@ import de.jClipCorn.gui.frames.addMovieFrame.AddMovieFrame;
 import de.jClipCorn.gui.frames.mainFrame.MainFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.properties.CCProperties;
+import de.jClipCorn.util.ExtendedFocusTraversalOnArray;
 import de.jClipCorn.util.PathFormatter;
 
 public class ScanFolderFrame extends JFrame implements Runnable, MouseListener {
@@ -69,6 +71,7 @@ public class ScanFolderFrame extends JFrame implements Runnable, MouseListener {
 		cbExcludeIfo.setSelected(CCProperties.getInstance().PROP_SCANFOLDER_EXCLUDEIFOS.getValue());
 		
 		setLocationRelativeTo(mf);
+		setFocusTraversalPolicy(new ExtendedFocusTraversalOnArray(new Component[]{btnOpenFolder, btnRemoveAdditionalParts, btnAddAll, cbIncludeSeries, cbExcludeIfo}));
 		
 		initFileChooser();
 	}

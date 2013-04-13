@@ -44,6 +44,7 @@ import de.jClipCorn.gui.guiComponents.ReadableTextField;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.util.DoubleString;
+import de.jClipCorn.util.ExtendedFocusTraversalOnArray;
 import de.jClipCorn.util.HTTPUtilities;
 import de.jClipCorn.util.ImageUtilities;
 import de.jClipCorn.util.parser.ImDBParser;
@@ -130,6 +131,7 @@ public class ParseImDBDialog extends JDialog {
 		resetAll();
 		
 		edSearchName.setText(handler.getFullTitle());
+		setFocusTraversalPolicy(new ExtendedFocusTraversalOnArray(new Component[]{btnParse, lsDBList, cbTitle, cbYear, cbScore, cbLength, cbFSK, cbCover, cbGenre0, cbGenre1, cbGenre2, cbGenre3, cbGenre4, cbGenre5, cbGenre6, cbGenre7, btnIMDB, btnFSKAll, btnOk}));
 	}
 	
 	private void initGUI() {

@@ -55,6 +55,7 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.CCDate;
+import de.jClipCorn.util.ExtendedFocusTraversalOnArray;
 import de.jClipCorn.util.FileChooserHelper;
 import de.jClipCorn.util.FileSizeFormatter;
 import de.jClipCorn.util.HTTPUtilities;
@@ -132,6 +133,35 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 	private JLabel lblFileSizeDisp;
 	private JComboBox<String> cbxScore;
 	private JLabel lblScore;
+	private JLabel lblPart;
+	private JLabel lblPart_1;
+	private JLabel lblPart_2;
+	private JLabel lblPart_3;
+	private JLabel lblPart_4;
+	private JLabel lblPart_5;
+	private JLabel lblZyklus;
+	private JLabel lblGenre;
+	private JLabel lblGenre_1;
+	private JLabel lblGenre_2;
+	private JLabel lblGenre_3;
+	private JLabel lblGenre_7;
+	private JLabel lblGenre_6;
+	private JLabel lblGenre_5;
+	private JLabel lblGenre_4;
+	private JLabel lblGesehen;
+	private JLabel lblQuality;
+	private JLabel lblLanguage;
+	private JLabel lblLength;
+	private JLabel lblMin;
+	private JLabel lblEinfgDatum;
+	private JLabel lblOnlinescore;
+	private JLabel label;
+	private JLabel lblFsk;
+	private JLabel lblFormat;
+	private JLabel lblYear;
+	private JLabel lblGre;
+	private JLabel lblNewLabel;
+	private JLabel label_1;
 
 	/**
 	 * @wbp.parser.constructor
@@ -169,6 +199,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		setEnabledAll(false);
 
 		setLocationRelativeTo(owner);
+		setFocusTraversalPolicy(new ExtendedFocusTraversalOnArray(new Component[]{btnChoose0, btnChoose1, btnChoose2, btnChoose3, btnChoose4, btnChoose5, edTitle, edZyklus, spnZyklus, cbxViewed, cbxQuality, cbxLanguage, spnLength, spnAddDate, spnOnlineScore, cbxFSK, cbxFormat, spnYear, spnSize, cbxScore, cbxGenre0, cbxGenre1, cbxGenre2, cbxGenre3, cbxGenre4, cbxGenre5, cbxGenre6, cbxGenre7, btnParseIMDB, btnFindCover, btnOpenCover, btnOK, btnCancel, btnOpenIMDb, btnClear1, btnClear2, btnClear3, btnClear4, btnClear5}));
 
 		btnChoose0.setEnabled(true);
 	}
@@ -223,7 +254,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		btnClear1.setBounds(332, 49, 78, 25);
 		contentPane.add(btnClear1);
 		
-		JLabel lblPart = new JLabel(LocaleBundle.getString("AddMovieFrame.lblPart.text")); //$NON-NLS-1$
+		lblPart = new JLabel(LocaleBundle.getString("AddMovieFrame.lblPart.text")); //$NON-NLS-1$
 		lblPart.setBounds(12, 17, 52, 16);
 		contentPane.add(lblPart);
 		
@@ -327,23 +358,23 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		btnClear5.setBounds(332, 193, 78, 25);
 		contentPane.add(btnClear5);
 		
-		JLabel lblPart_1 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblPart_1.text")); //$NON-NLS-1$
+		lblPart_1 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblPart_1.text")); //$NON-NLS-1$
 		lblPart_1.setBounds(12, 53, 52, 16);
 		contentPane.add(lblPart_1);
 		
-		JLabel lblPart_2 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblPart_2.text")); //$NON-NLS-1$
+		lblPart_2 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblPart_2.text")); //$NON-NLS-1$
 		lblPart_2.setBounds(12, 89, 52, 16);
 		contentPane.add(lblPart_2);
 		
-		JLabel lblPart_3 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblPart_3.text")); //$NON-NLS-1$
+		lblPart_3 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblPart_3.text")); //$NON-NLS-1$
 		lblPart_3.setBounds(12, 125, 52, 16);
 		contentPane.add(lblPart_3);
 		
-		JLabel lblPart_4 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblPart_4.text")); //$NON-NLS-1$
+		lblPart_4 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblPart_4.text")); //$NON-NLS-1$
 		lblPart_4.setBounds(12, 161, 52, 16);
 		contentPane.add(lblPart_4);
 		
-		JLabel lblPart_5 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblPart_5.text")); //$NON-NLS-1$
+		lblPart_5 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblPart_5.text")); //$NON-NLS-1$
 		lblPart_5.setBounds(12, 197, 52, 16);
 		contentPane.add(lblPart_5);
 		
@@ -352,7 +383,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		contentPane.add(edZyklus);
 		edZyklus.setColumns(10);
 		
-		JLabel lblZyklus = new JLabel(LocaleBundle.getString("AddMovieFrame.lblZyklus.text")); //$NON-NLS-1$
+		lblZyklus = new JLabel(LocaleBundle.getString("AddMovieFrame.lblZyklus.text")); //$NON-NLS-1$
 		lblZyklus.setBounds(12, 305, 52, 16);
 		contentPane.add(lblZyklus);
 		
@@ -391,7 +422,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		cbxGenre0.setBounds(508, 86, 212, 22);
 		contentPane.add(cbxGenre0);
 		
-		JLabel lblGenre = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGenre.text")); //$NON-NLS-1$
+		lblGenre = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGenre.text")); //$NON-NLS-1$
 		lblGenre.setBounds(420, 89, 52, 16);
 		contentPane.add(lblGenre);
 		
@@ -399,7 +430,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		cbxGenre1.setBounds(508, 122, 212, 22);
 		contentPane.add(cbxGenre1);
 		
-		JLabel lblGenre_1 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGenre_1.text")); //$NON-NLS-1$
+		lblGenre_1 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGenre_1.text")); //$NON-NLS-1$
 		lblGenre_1.setBounds(420, 125, 52, 16);
 		contentPane.add(lblGenre_1);
 		
@@ -407,7 +438,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		cbxGenre2.setBounds(508, 158, 212, 22);
 		contentPane.add(cbxGenre2);
 		
-		JLabel lblGenre_2 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGenre_2.text")); //$NON-NLS-1$
+		lblGenre_2 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGenre_2.text")); //$NON-NLS-1$
 		lblGenre_2.setBounds(420, 161, 52, 16);
 		contentPane.add(lblGenre_2);
 		
@@ -415,7 +446,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		cbxGenre3.setBounds(508, 193, 212, 22);
 		contentPane.add(cbxGenre3);
 		
-		JLabel lblGenre_3 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGenre_3.text")); //$NON-NLS-1$
+		lblGenre_3 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGenre_3.text")); //$NON-NLS-1$
 		lblGenre_3.setBounds(420, 196, 52, 16);
 		contentPane.add(lblGenre_3);
 		
@@ -423,19 +454,19 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		cbxGenre7.setBounds(508, 335, 212, 22);
 		contentPane.add(cbxGenre7);
 		
-		JLabel lblGenre_7 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGenre_7.text")); //$NON-NLS-1$
+		lblGenre_7 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGenre_7.text")); //$NON-NLS-1$
 		lblGenre_7.setBounds(420, 338, 52, 16);
 		contentPane.add(lblGenre_7);
 		
-		JLabel lblGenre_6 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGenre_6.text")); //$NON-NLS-1$
+		lblGenre_6 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGenre_6.text")); //$NON-NLS-1$
 		lblGenre_6.setBounds(420, 303, 52, 16);
 		contentPane.add(lblGenre_6);
 		
-		JLabel lblGenre_5 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGenre_5.text")); //$NON-NLS-1$
+		lblGenre_5 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGenre_5.text")); //$NON-NLS-1$
 		lblGenre_5.setBounds(420, 267, 52, 16);
 		contentPane.add(lblGenre_5);
 		
-		JLabel lblGenre_4 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGenre_4.text")); //$NON-NLS-1$
+		lblGenre_4 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGenre_4.text")); //$NON-NLS-1$
 		lblGenre_4.setBounds(420, 231, 52, 16);
 		contentPane.add(lblGenre_4);
 		
@@ -476,15 +507,15 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		btnFindCover.setBounds(560, 421, 71, 25);
 		contentPane.add(btnFindCover);
 		
-		JLabel lblGesehen = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGesehen.text")); //$NON-NLS-1$
+		lblGesehen = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGesehen.text")); //$NON-NLS-1$
 		lblGesehen.setBounds(12, 341, 52, 16);
 		contentPane.add(lblGesehen);
 		
-		JLabel lblQuality = new JLabel(LocaleBundle.getString("AddMovieFrame.lblQuality.text")); //$NON-NLS-1$
+		lblQuality = new JLabel(LocaleBundle.getString("AddMovieFrame.lblQuality.text")); //$NON-NLS-1$
 		lblQuality.setBounds(12, 377, 52, 16);
 		contentPane.add(lblQuality);
 		
-		JLabel lblLanguage = new JLabel(LocaleBundle.getString("AddMovieFrame.lblSprache.text")); //$NON-NLS-1$
+		lblLanguage = new JLabel(LocaleBundle.getString("AddMovieFrame.lblSprache.text")); //$NON-NLS-1$
 		lblLanguage.setBounds(12, 412, 52, 16);
 		contentPane.add(lblLanguage);
 		
@@ -505,7 +536,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		spnLength.setBounds(76, 442, 212, 20);
 		contentPane.add(spnLength);
 		
-		JLabel lblLength = new JLabel(LocaleBundle.getString("AddMovieFrame.lblLength.text")); //$NON-NLS-1$
+		lblLength = new JLabel(LocaleBundle.getString("AddMovieFrame.lblLength.text")); //$NON-NLS-1$
 		lblLength.setBounds(12, 442, 52, 16);
 		contentPane.add(lblLength);
 		
@@ -515,11 +546,11 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		spnAddDate.setBounds(95, 473, 193, 20);
 		contentPane.add(spnAddDate);
 		
-		JLabel lblMin = new JLabel("min."); //$NON-NLS-1$
+		lblMin = new JLabel("min."); //$NON-NLS-1$
 		lblMin.setBounds(305, 444, 52, 16);
 		contentPane.add(lblMin);
 		
-		JLabel lblEinfgDatum = new JLabel(LocaleBundle.getString("AddMovieFrame.lblEinfgDatum.text")); //$NON-NLS-1$
+		lblEinfgDatum = new JLabel(LocaleBundle.getString("AddMovieFrame.lblEinfgDatum.text")); //$NON-NLS-1$
 		lblEinfgDatum.setBounds(12, 474, 71, 16);
 		contentPane.add(lblEinfgDatum);
 		
@@ -528,11 +559,11 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		spnOnlineScore.setBounds(95, 506, 193, 20);
 		contentPane.add(spnOnlineScore);
 		
-		JLabel lblOnlinescore = new JLabel(LocaleBundle.getString("AddMovieFrame.lblOnlinescore.text")); //$NON-NLS-1$
+		lblOnlinescore = new JLabel(LocaleBundle.getString("AddMovieFrame.lblOnlinescore.text")); //$NON-NLS-1$
 		lblOnlinescore.setBounds(12, 507, 71, 16);
 		contentPane.add(lblOnlinescore);
 		
-		JLabel label = new JLabel("/ 10"); //$NON-NLS-1$
+		label = new JLabel("/ 10"); //$NON-NLS-1$
 		label.setBounds(305, 511, 52, 16);
 		contentPane.add(label);
 		
@@ -540,7 +571,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		cbxFSK.setBounds(76, 541, 212, 22);
 		contentPane.add(cbxFSK);
 		
-		JLabel lblFsk = new JLabel(LocaleBundle.getString("AddMovieFrame.lblFsk.text")); //$NON-NLS-1$
+		lblFsk = new JLabel(LocaleBundle.getString("AddMovieFrame.lblFsk.text")); //$NON-NLS-1$
 		lblFsk.setBounds(12, 544, 52, 16);
 		contentPane.add(lblFsk);
 		
@@ -548,7 +579,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		cbxFormat.setBounds(76, 576, 212, 22);
 		contentPane.add(cbxFormat);
 		
-		JLabel lblFormat = new JLabel(LocaleBundle.getString("AddMovieFrame.lblFormat.text")); //$NON-NLS-1$
+		lblFormat = new JLabel(LocaleBundle.getString("AddMovieFrame.lblFormat.text")); //$NON-NLS-1$
 		lblFormat.setBounds(12, 579, 52, 16);
 		contentPane.add(lblFormat);
 		
@@ -558,7 +589,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		spnYear.setBounds(76, 611, 212, 20);
 		contentPane.add(spnYear);
 		
-		JLabel lblYear = new JLabel(LocaleBundle.getString("AddMovieFrame.lblYear.text")); //$NON-NLS-1$
+		lblYear = new JLabel(LocaleBundle.getString("AddMovieFrame.lblYear.text")); //$NON-NLS-1$
 		lblYear.setBounds(12, 615, 52, 16);
 		contentPane.add(lblYear);
 		
@@ -573,11 +604,11 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		spnSize.setBounds(76, 647, 212, 20);
 		contentPane.add(spnSize);
 		
-		JLabel lblGre = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGre.text")); //$NON-NLS-1$
+		lblGre = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGre.text")); //$NON-NLS-1$
 		lblGre.setBounds(12, 651, 52, 16);
 		contentPane.add(lblGre);
 		
-		JLabel lblNewLabel = new JLabel("Byte = "); //$NON-NLS-1$
+		lblNewLabel = new JLabel("Byte = "); //$NON-NLS-1$
 		lblNewLabel.setBounds(296, 649, 37, 16);
 		contentPane.add(lblNewLabel);
 		
@@ -606,7 +637,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		edTitle.setBounds(76, 266, 212, 20);
 		contentPane.add(edTitle);
 		
-		JLabel label_1 = new JLabel(LocaleBundle.getString("AddMovieFrame.label_1.text")); //$NON-NLS-1$
+		label_1 = new JLabel(LocaleBundle.getString("AddMovieFrame.label_1.text")); //$NON-NLS-1$
 		label_1.setBounds(12, 267, 52, 16);
 		contentPane.add(label_1);
 		

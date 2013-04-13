@@ -31,6 +31,7 @@ import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.property.CCPathProperty;
 import de.jClipCorn.properties.property.CCProperty;
 import de.jClipCorn.util.DialogHelper;
+import de.jClipCorn.util.ExtendedFocusTraversalOnArray;
 import de.jClipCorn.util.FileChooserHelper;
 import de.jClipCorn.util.Validator;
 
@@ -44,7 +45,7 @@ public abstract class AutomaticSettingsFrame extends JFrame {
 	private JPanel pnlBottom;
 	private JButton btnOk;
 	private JButton btnCancel;
-	private JButton btnErweitert;
+	private JButton btnExtended;
 	
 	private int pnlCount = 0;
 	private int rowCount = 10;
@@ -68,6 +69,8 @@ public abstract class AutomaticSettingsFrame extends JFrame {
 	}
 	
 	private void initGUI() {
+		ArrayList<Component> tabOrder = new ArrayList<>();
+		
 		setIconImage(CachedResourceLoader.getImage(Resources.IMG_FRAME_ICON));
 		
 		setSize(new Dimension(525, 440));
@@ -80,7 +83,7 @@ public abstract class AutomaticSettingsFrame extends JFrame {
 		getContentPane().add(tpnlSettings, BorderLayout.CENTER);
 		
 		for (int i = 0; i < pnlCount; i++) {
-			initPanel(i);
+			tabOrder.addAll(initPanel(i));
 		}
 
 		pnlBottom = new JPanel();
@@ -116,6 +119,7 @@ public abstract class AutomaticSettingsFrame extends JFrame {
 			}
 		});
 		pnlBottom.add(btnOk, "4, 2, fill, top"); //$NON-NLS-1$
+		tabOrder.add(btnOk);
 		
 		btnCancel = new JButton(LocaleBundle.getString("Settingsframe.btnCancel.title")); //$NON-NLS-1$
 		btnCancel.addActionListener(new ActionListener() {
@@ -125,19 +129,25 @@ public abstract class AutomaticSettingsFrame extends JFrame {
 			}
 		});
 		pnlBottom.add(btnCancel, "6, 2, fill, top"); //$NON-NLS-1$
+		tabOrder.add(btnCancel);
 		
-		btnErweitert = new JButton(LocaleBundle.getString("Settingsframe.btnExtended.title")); //$NON-NLS-1$
-		btnErweitert.addActionListener(new ActionListener() {
+		btnExtended = new JButton(LocaleBundle.getString("Settingsframe.btnExtended.title")); //$NON-NLS-1$
+		btnExtended.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				(new ExtendedSettingsFrame(AutomaticSettingsFrame.this, properties)).setVisible(true);
 				dispose();
 			}
 		});
-		pnlBottom.add(btnErweitert, "10, 2"); //$NON-NLS-1$
+		pnlBottom.add(btnExtended, "10, 2"); //$NON-NLS-1$
+		tabOrder.add(btnExtended);
+		
+		setFocusTraversalPolicy(new ExtendedFocusTraversalOnArray(tabOrder));
 	}
 
-	private void initPanel(int pnlNumber) {
+	private ArrayList<Component> initPanel(int pnlNumber) {
+		ArrayList<Component> tabOrder = new ArrayList<>();
+		
 		JPanel pnlTab = new JPanel();
 		tpnlSettings.addTab(LocaleBundle.getString("Settingsframe.tabbedCpt.Caption_" + pnlNumber), null, pnlTab, null); //$NON-NLS-1$
 		
@@ -162,6 +172,7 @@ public abstract class AutomaticSettingsFrame extends JFrame {
 
 				final Component comp = p.getComponent();
 				pnlTab.add(comp, "4, " + c*2 + ", fill, default"); //$NON-NLS-1$ //$NON-NLS-2$
+				tabOrder.add(comp);
 				
 				if (((CCProperty<?>)p) instanceof CCPathProperty) {
 					JButton btnChoose = new JButton("..."); //$NON-NLS-1$
@@ -184,6 +195,7 @@ public abstract class AutomaticSettingsFrame extends JFrame {
 							}
 						}
 					});
+					tabOrder.add(btnChoose);
 				}
 
 				JButton btnReset = new JButton(LocaleBundle.getString("Settingsframe.btnReset.title")); //$NON-NLS-1$
@@ -194,12 +206,15 @@ public abstract class AutomaticSettingsFrame extends JFrame {
 					}
 				});
 				pnlTab.add(btnReset, "9, " + c*2); //$NON-NLS-1$
+				tabOrder.add(btnReset);
 				
 				elements.add(new PropertyElement(p, comp));
 				
 				c++;
 			}
 		}
+		
+		return tabOrder;
 	}
 
 	private void setValues() {

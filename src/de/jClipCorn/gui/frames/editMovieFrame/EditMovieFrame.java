@@ -49,6 +49,7 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.CCDate;
+import de.jClipCorn.util.ExtendedFocusTraversalOnArray;
 import de.jClipCorn.util.FileChooserHelper;
 import de.jClipCorn.util.FileSizeFormatter;
 import de.jClipCorn.util.HTTPUtilities;
@@ -173,6 +174,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		initFields();
 		
 		setLocationRelativeTo(owner);
+		setFocusTraversalPolicy(new ExtendedFocusTraversalOnArray(new Component[]{btnChoose0, btnChoose1, btnChoose2, btnChoose3, btnChoose4, btnChoose5, edTitle, edZyklus, spnZyklus, cbViewed, cbxQuality, cbxLanguage, spnLength, spnAddDate, spnOnlineScore, cbxFSK, cbxFormat, spnYear, spnSize, cbxGenre0, cbxGenre1, cbxGenre2, cbxGenre3, cbxGenre4, cbxGenre5, cbxGenre6, cbxGenre7, cbxScore, cbxStatus, btnFindcover, btnOpencover, btnOK, btnCancel, btnToday, btnIMDB, btnClear1, btnClear2, btnClear3, btnClear4, btnClear5, btnTestParts}));
 	}
 	
 	private void initGUI() {
@@ -590,7 +592,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 				HTTPUtilities.openInBrowser(ImDBParser.getSearchURL(getFullTitle(), CCMovieTyp.MOVIE));
 			}
 		});
-		btnIMDB.setBounds(351, 261, 57, 23);
+		btnIMDB.setBounds(294, 262, 57, 23);
 		getContentPane().add(btnIMDB);
 		
 		lblFileSizeDisp = new JLabel();

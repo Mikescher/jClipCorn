@@ -40,6 +40,7 @@ import de.jClipCorn.gui.frames.parseImDBFrame.ParseImDBDialog;
 import de.jClipCorn.gui.guiComponents.CoverLabel;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
+import de.jClipCorn.util.ExtendedFocusTraversalOnArray;
 import de.jClipCorn.util.FileChooserHelper;
 import de.jClipCorn.util.HTTPUtilities;
 import de.jClipCorn.util.ImageUtilities;
@@ -87,9 +88,9 @@ public class AddSeriesFrame extends JFrame implements ParseResultHandler, UserDa
 	private JLabel label_12;
 	private JSpinner spnOnlinescore;
 	private JLabel label_13;
-	private JButton button_3;
-	private JButton button_4;
-	private JButton button;
+	private JButton btnOK;
+	private JButton btnCancel;
+	private JButton btnIMDB;
 
 	public AddSeriesFrame(Component owner, CCMovieList mlist) {
 		setSize(new Dimension(620, 545));
@@ -103,6 +104,7 @@ public class AddSeriesFrame extends JFrame implements ParseResultHandler, UserDa
 		setDefaultValues();
 		
 		setLocationRelativeTo(owner);
+		setFocusTraversalPolicy(new ExtendedFocusTraversalOnArray(new Component[]{edTitle, cbxLanguage, spnOnlinescore, cbxFSK, cbxGenre0, cbxGenre1, cbxGenre2, cbxGenre3, cbxGenre4, cbxGenre5, cbxGenre6, cbxGenre7, btnParse, btnFind, btnOpen, btnIMDB, btnOK, btnCancel}));
 	}
 
 	private void initGUI() {
@@ -249,35 +251,35 @@ public class AddSeriesFrame extends JFrame implements ParseResultHandler, UserDa
 		label_13.setBounds(298, 86, 52, 16);
 		getContentPane().add(label_13);
 
-		button_3 = new JButton(LocaleBundle.getString("AddMovieFrame.btnOK.text")); //$NON-NLS-1$
-		button_3.addActionListener(new ActionListener() {
+		btnOK = new JButton(LocaleBundle.getString("AddMovieFrame.btnOK.text")); //$NON-NLS-1$
+		btnOK.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				onBtnOK(true);
 			}
 		});
-		button_3.setBounds(197, 484, 95, 25);
-		getContentPane().add(button_3);
+		btnOK.setBounds(197, 484, 95, 25);
+		getContentPane().add(btnOK);
 
-		button_4 = new JButton(LocaleBundle.getString("AddMovieFrame.btnCancel.text")); //$NON-NLS-1$
-		button_4.addActionListener(new ActionListener() {
+		btnCancel = new JButton(LocaleBundle.getString("AddMovieFrame.btnCancel.text")); //$NON-NLS-1$
+		btnCancel.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				cancel();
 			}
 		});
-		button_4.setBounds(311, 484, 95, 25);
-		getContentPane().add(button_4);
+		btnCancel.setBounds(311, 484, 95, 25);
+		getContentPane().add(btnCancel);
 		
-		button = new JButton(CachedResourceLoader.getImageIcon(Resources.ICN_FRAMES_IMDB));
-		button.addActionListener(new ActionListener() {
+		btnIMDB = new JButton(CachedResourceLoader.getImageIcon(Resources.ICN_FRAMES_IMDB));
+		btnIMDB.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				HTTPUtilities.openInBrowser(ImDBParser.getSearchURL(edTitle.getText(), CCMovieTyp.SERIES));
 			}
 		});
-		button.setBounds(298, 12, 57, 23);
-		getContentPane().add(button);
+		btnIMDB.setBounds(298, 12, 57, 23);
+		getContentPane().add(btnIMDB);
 	}
 
 	private void initFileChooser() {

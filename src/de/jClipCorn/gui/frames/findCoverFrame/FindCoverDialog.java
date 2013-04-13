@@ -18,6 +18,7 @@ import javax.swing.SwingUtilities;
 
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTyp;
 import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.util.ExtendedFocusTraversalOnArray;
 import de.jClipCorn.util.ProgressCallbackHelper;
 import de.jClipCorn.util.UpdateCallbackListener;
 import de.jClipCorn.util.parser.ParseResultHandler;
@@ -53,6 +54,7 @@ public class FindCoverDialog extends JDialog {
 		initGUI();
 		
 		setLocationRelativeTo(owner);
+		setFocusTraversalPolicy(new ExtendedFocusTraversalOnArray(new Component[]{edSearchTerm, btnParse, btnStop, btnOk}));
 	}
 	
 	private void initGUI() {

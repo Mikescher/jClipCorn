@@ -48,6 +48,7 @@ import de.jClipCorn.gui.guiComponents.ReadableTextField;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.util.CCDate;
+import de.jClipCorn.util.ExtendedFocusTraversalOnArray;
 import de.jClipCorn.util.FileChooserHelper;
 import de.jClipCorn.util.PathFormatter;
 import de.jClipCorn.util.ProgressCallbackHelper;
@@ -64,8 +65,8 @@ public class CompareDatabaseFrame extends JFrame {
 	private JLabel lblDatabase;
 	private ReadableTextField edDB1;
 	private ReadableTextField edDB2;
-	private JButton button;
-	private JButton button_1;
+	private JButton btnOpenDB1;
+	private JButton btnOpenDB2;
 	private JButton btnGenerate;
 	private JProgressBar progressBar;
 	private JButton btnCompare;
@@ -114,6 +115,7 @@ public class CompareDatabaseFrame extends JFrame {
 
 		initGUI();
 		setLocationRelativeTo(owner);
+		setFocusTraversalPolicy(new ExtendedFocusTraversalOnArray(new Component[]{btnOpenDB1, btnOpenDB2, btnGenerate, btnCompare}));
 
 		initFileChooser();
 	}
@@ -151,14 +153,14 @@ public class CompareDatabaseFrame extends JFrame {
 		pnlTop.add(edDB1, "4, 2, fill, default"); //$NON-NLS-1$
 		edDB1.setColumns(10);
 		
-				button = new JButton("..."); //$NON-NLS-1$
-				button.addActionListener(new ActionListener() {
+				btnOpenDB1 = new JButton("..."); //$NON-NLS-1$
+				btnOpenDB1.addActionListener(new ActionListener() {
 					@Override
 					public void actionPerformed(ActionEvent arg0) {
 						openFile1();
 					}
 				});
-				pnlTop.add(button, "6, 2"); //$NON-NLS-1$
+				pnlTop.add(btnOpenDB1, "6, 2"); //$NON-NLS-1$
 		
 				btnGenerate = new JButton(LocaleBundle.getString("CompareDatabaseFrame.BtnGenerateCompareFile.text")); //$NON-NLS-1$
 				btnGenerate.addActionListener(new ActionListener() {
@@ -176,14 +178,14 @@ public class CompareDatabaseFrame extends JFrame {
 		pnlTop.add(edDB2, "4, 4, fill, default"); //$NON-NLS-1$
 		edDB2.setColumns(10);
 
-		button_1 = new JButton("..."); //$NON-NLS-1$
-		button_1.addActionListener(new ActionListener() {
+		btnOpenDB2 = new JButton("..."); //$NON-NLS-1$
+		btnOpenDB2.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				openFile2();
 			}
 		});
-		pnlTop.add(button_1, "6, 4"); //$NON-NLS-1$
+		pnlTop.add(btnOpenDB2, "6, 4"); //$NON-NLS-1$
 		
 				btnCompare = new JButton(LocaleBundle.getString("CompareDatabaseFrame.BtnCompare.text")); //$NON-NLS-1$
 				btnCompare.addActionListener(new ActionListener() {

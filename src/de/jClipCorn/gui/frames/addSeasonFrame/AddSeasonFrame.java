@@ -32,6 +32,7 @@ import de.jClipCorn.gui.frames.inputErrorFrame.InputErrorDialog;
 import de.jClipCorn.gui.guiComponents.CoverLabel;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
+import de.jClipCorn.util.ExtendedFocusTraversalOnArray;
 import de.jClipCorn.util.FileChooserHelper;
 import de.jClipCorn.util.ImageUtilities;
 import de.jClipCorn.util.PathFormatter;
@@ -54,8 +55,8 @@ public class AddSeasonFrame extends JFrame implements UserDataProblemHandler, Pa
 	private JTextField edTitle;
 	private JButton btnOpen;
 	private CoverLabel lblCover;
-	private JButton button_2;
-	private JButton button_3;
+	private JButton btnCancel;
+	private JButton btnOK;
 	private JLabel label_2;
 	private JSpinner spnYear;
 	private JButton btnFind;
@@ -71,6 +72,7 @@ public class AddSeasonFrame extends JFrame implements UserDataProblemHandler, Pa
 		initFileChooser();
 		
 		setLocationRelativeTo(owner);
+		setFocusTraversalPolicy(new ExtendedFocusTraversalOnArray(new Component[]{edTitle, spnYear, btnFind, btnOpen, btnOK, btnCancel}));
 	}
 	
 	private void initGUI() {
@@ -105,25 +107,25 @@ public class AddSeasonFrame extends JFrame implements UserDataProblemHandler, Pa
 		lblCover.setBounds(300, 53, 182, 254);
 		getContentPane().add(lblCover);
 		
-		button_2 = new JButton(LocaleBundle.getString("AddMovieFrame.btnCancel.text")); //$NON-NLS-1$
-		button_2.addActionListener(new ActionListener() {
+		btnCancel = new JButton(LocaleBundle.getString("AddMovieFrame.btnCancel.text")); //$NON-NLS-1$
+		btnCancel.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				cancel();
 			}
 		});
-		button_2.setBounds(244, 334, 95, 25);
-		getContentPane().add(button_2);
+		btnCancel.setBounds(244, 334, 95, 25);
+		getContentPane().add(btnCancel);
 		
-		button_3 = new JButton(LocaleBundle.getString("AddMovieFrame.btnOK.text")); //$NON-NLS-1$
-		button_3.addActionListener(new ActionListener() {
+		btnOK = new JButton(LocaleBundle.getString("AddMovieFrame.btnOK.text")); //$NON-NLS-1$
+		btnOK.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				onBtnOK(true);
 			}
 		});
-		button_3.setBounds(137, 334, 95, 25);
-		getContentPane().add(button_3);
+		btnOK.setBounds(137, 334, 95, 25);
+		getContentPane().add(btnOK);
 		
 		label_2 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblYear.text")); //$NON-NLS-1$
 		label_2.setBounds(12, 48, 52, 16);

@@ -62,6 +62,7 @@ import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.CCDate;
 import de.jClipCorn.util.DialogHelper;
+import de.jClipCorn.util.ExtendedFocusTraversalOnArray;
 import de.jClipCorn.util.FileChooserHelper;
 import de.jClipCorn.util.FileSizeFormatter;
 import de.jClipCorn.util.HTTPUtilities;
@@ -196,6 +197,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		setLocationRelativeTo(owner);
 		
 		addWindowListener(this);
+		setFocusTraversalPolicy(new ExtendedFocusTraversalOnArray(new Component[]{btnSeriesFindCover, btnSeriesOpenCover, edSeriesTitle, cbxSeriesLanguage, spnSeriesOnlineScore, cbxSeriesFSK, cbxSeriesScore, cbxSeriesGenre_0, cbxSeriesGenre_1, cbxSeriesGenre_2, cbxSeriesGenre_3, cbxSeriesGenre_4, cbxSeriesGenre_5, cbxSeriesGenre_6, cbxSeriesGenre_7, btnAddEmptySeason, btnAddSeason, btnRemoveSeason, btnSeriesOk, btnSeasonOpenCover, edSeasonTitle, spnSeasonYear, btnResetAllStatus, btnAddEpisode, btnAddMultipleEpisodes, btnRemoveEpisode, btnSeasonOK, edEpisodeTitle, spnEpisodeEpisode, cbEpisodeViewed, cbxEpisodeFormat, cbxEpisodeQuality, spnEpisodeLength, spnEpisodeSize, spnEpisodeAdded, spnEpisodeLastViewed, edEpisodePart, cbxEpisodeStatus, btnEpisodeOK, btnEpisodeToday, btnEpisodeClear, btnEpisodeOpenPart}));
 	}
 	
 	public EditSeriesFrame(Component owner, CCSeason sea, UpdateCallbackListener ucl) {

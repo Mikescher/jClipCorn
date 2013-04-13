@@ -26,6 +26,7 @@ import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.gui.guiComponents.ReadableTextField;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
+import de.jClipCorn.util.ExtendedFocusTraversalOnArray;
 import de.jClipCorn.util.FileChooserHelper;
 import de.jClipCorn.util.PathFormatter;
 
@@ -47,6 +48,7 @@ public class ExportJxmlBKPDialog extends JDialog implements Runnable {
 		initGUI();
 		
 		setLocationRelativeTo(owner);
+		setFocusTraversalPolicy(new ExtendedFocusTraversalOnArray(new Component[]{button, btnSave}));
 	}
 	
 	private void initGUI() {

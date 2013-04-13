@@ -47,6 +47,7 @@ import de.jClipCorn.gui.guiComponents.SpinnerCCDateModel;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.CCDate;
+import de.jClipCorn.util.ExtendedFocusTraversalOnArray;
 import de.jClipCorn.util.FileChooserHelper;
 import de.jClipCorn.util.FileSizeFormatter;
 import de.jClipCorn.util.PathFormatter;
@@ -54,7 +55,6 @@ import de.jClipCorn.util.UpdateCallbackListener;
 import de.jClipCorn.util.Validator;
 import de.jClipCorn.util.userdataProblem.UserDataProblem;
 import de.jClipCorn.util.userdataProblem.UserDataProblemHandler;
-import org.eclipse.wb.swing.FocusTraversalOnArray;
 
 public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler {
 	private static final long serialVersionUID = 8825373383589912037L;
@@ -143,7 +143,7 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler {
 		initGUI();
 
 		setLocationRelativeTo(owner);
-		setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{btnAddEpisodes, edTitle, spnEpisode, cbViewed, cbxFormat, cbxQuality, spnLength, spnSize, spnAddDate, spnLastViewed, edPart, btnNext, btnEpCancel, btnEpOk, btnRecalcSize, btnToday, btnClear, btnOpen, spnSide_01, btnSide_01, spnSide_02, btnSide_02, edSide_01, edSide_02, btnSide_03, btnSide_04, edSide_03, btnSide_05, edSide_04, btnSide_06, spnSide_03, spnSide_04, btnSide_07, edSide_05, btnSide_08, btnSide_09, btnSide_10, btnSide_11, spnSideLength, btnSide_12, cbxSideFormat, btnSide_13, cbxSideQuality, btnSide_14, btnOK}));
+		setFocusTraversalPolicy(new ExtendedFocusTraversalOnArray(new Component[]{btnAddEpisodes, edTitle, spnEpisode, cbViewed, cbxFormat, cbxQuality, spnLength, spnSize, spnAddDate, spnLastViewed, btnOpen, edPart, btnNext, btnEpCancel, btnEpOk, btnRecalcSize, btnToday, btnClear, spnSide_01, btnSide_01, spnSide_02, btnSide_02, edSide_01, edSide_02, btnSide_03, btnSide_04, edSide_03, btnSide_05, edSide_04, btnSide_06, spnSide_03, spnSide_04, btnSide_07, edSide_05, btnSide_08, btnSide_09, btnSide_10, btnSide_11, spnSideLength, btnSide_12, cbxSideFormat, btnSide_13, cbxSideQuality, btnSide_14, btnOK}));
 
 		updateList();
 		initFileChooser();

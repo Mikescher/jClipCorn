@@ -70,11 +70,13 @@ public class MainFrame extends JFrame implements CCDBUpdateListener {
 		
 		movielist.addChangeListener(this);
 		
-		new CCActionTree(this);
+		CCActionTree actionTree = new CCActionTree(this);
 
 		initGUI();
 
 		createWindowListener();
+		
+		actionTree.implementKeyListener((JPanel) getContentPane());
 	}
 
 	private void initGUI() {

@@ -10,6 +10,7 @@ import de.jClipCorn.gui.actionTree.CCActionElement;
 import de.jClipCorn.gui.actionTree.CCActionTree;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
+import de.jClipCorn.util.KeyStrokeUtil;
 
 public class AbstractClipToolbar extends JToolBar {
 	private static final long serialVersionUID = -8713389540339519009L;
@@ -23,7 +24,13 @@ public class AbstractClipToolbar extends JToolBar {
 		}
 		
 		JButton tmp = new JButton(el.getIcon());
-		tmp.setToolTipText(el.getCaption());
+
+		if (el.getKeyStroke() != null) {
+			tmp.setToolTipText("<html>" + el.getCaption() + "&nbsp;&nbsp;&nbsp;&nbsp;<small>" + KeyStrokeUtil.keyStroke2String(el.getKeyStroke()) + "</small></html>"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		} else {
+			tmp.setToolTipText(el.getCaption());
+		}
+		
 		tmp.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {

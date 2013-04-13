@@ -12,7 +12,6 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 
 public class ActionMenuWrapper {
-
 	private final JMenu menu;
 	
 	public ActionMenuWrapper(JMenu menu) {
@@ -29,6 +28,10 @@ public class ActionMenuWrapper {
 		JMenuItem item = menu.add(el.getCaption());
 		
 		item.setIcon(el.getSmallIcon());
+		
+		if (el.getKeyStroke() != null) {
+			item.setAccelerator(el.getKeyStroke());
+		}
 		
 		item.addActionListener(new ActionListener() {
 			@Override

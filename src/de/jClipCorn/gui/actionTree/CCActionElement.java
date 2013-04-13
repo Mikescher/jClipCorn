@@ -5,7 +5,12 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import javax.swing.AbstractAction;
+import javax.swing.ActionMap;
 import javax.swing.ImageIcon;
+import javax.swing.InputMap;
+import javax.swing.JComponent;
+import javax.swing.KeyStroke;
 
 import de.jClipCorn.gui.CachedResourceLoader;
 import de.jClipCorn.gui.localization.LocaleBundle;
@@ -14,27 +19,30 @@ public class CCActionElement {
 	private final String name;
 	private final String captionIdent;
 	private final String iconRes;
-	
-	private boolean visible = true;
+	private final boolean visible;
+	private final KeyStroke keyStroke;
 	
 	private final ArrayList<ActionListener> listener;
 	private final ArrayList<CCActionElement> children;
 	
-	public CCActionElement(String name, String caption, String iconRes) {
+	public CCActionElement(String name, KeyStroke stroke, String caption, String iconRes) {
 		this.name = name;
 		this.captionIdent = caption;
 		this.iconRes = iconRes;
 		this.listener = new ArrayList<>();
 		this.children = new ArrayList<>();
+		this.visible = true;
+		this.keyStroke = stroke;
 	}
 	
-	public CCActionElement(String name, String caption, String iconRes, boolean vis) {
+	public CCActionElement(String name, KeyStroke stroke, String caption, String iconRes, boolean vis) {
 		this.name = name;
 		this.captionIdent = caption;
 		this.iconRes = iconRes;
 		this.listener = new ArrayList<>();
 		this.children = new ArrayList<>();
 		this.visible = vis;
+		this.keyStroke = stroke;
 	}
 
 	public String getName() {
@@ -95,6 +103,18 @@ public class CCActionElement {
 		return children.iterator();
 	}
 	
+	public ArrayList<CCActionElement> getAllChildren() {
+		ArrayList<CCActionElement> childs = new ArrayList<>();
+		
+		childs.addAll(children);
+		
+		for (int i = 0; i < children.size(); i++) {
+			childs.addAll(children.get(i).getAllChildren());
+		}
+		
+		return childs;
+	}
+	
 	public CCActionElement addChild(CCActionElement cae) {
 		children.add(cae);
 		return cae;
@@ -123,7 +143,61 @@ public class CCActionElement {
 		return visible;
 	}
 
-	public void setVisible(boolean visible) {
-		this.visible = visible;
+	public void testTree() {
+		ArrayList<CCActionElement> childs = getAllChildren();
+		
+		childs.add(this);
+		
+		for (int i = 0; i < childs.size(); i++) {
+			for (int j = 0; j < childs.size(); j++) {
+				if (i != j && childs.get(i).getName().equals(childs.get(j).getName())) {
+					System.out.println(String.format("[DBG] Duplicate Item (%s) in ActionTree found", childs.get(j).getCaptionIdent())); //$NON-NLS-1$
+				}
+			}
+		}
+	}
+	
+	public KeyStroke getKeyStroke() {
+		return keyStroke;
+	}
+	
+	private void implementKeyListener(JComponent comp, final CCActionElement e) {
+		if (keyStroke == null) {
+			return;
+		}
+		
+		InputMap map = comp.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+		ActionMap act = comp.getActionMap();
+		
+		map.put(keyStroke, name);
+		act.put(name, new AbstractAction() {
+			private static final long serialVersionUID = 19873468234L;
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				e.onKeyPressed(keyStroke);
+			}
+		});
+	}
+	
+	private void onKeyPressed(KeyStroke stroke) {
+		ArrayList<CCActionElement> childs = getAllChildren();
+		childs.add(this);
+		
+		for (int i = 0; i < childs.size(); i++) {
+			if (childs.get(i).getKeyStroke() != null && childs.get(i).getKeyStroke().equals(stroke)) {
+				childs.get(i).execute();
+			}
+		}
+	}
+	
+	public void implementAllKeyListener(JComponent comp) {
+		ArrayList<CCActionElement> childs = getAllChildren();
+		
+		implementKeyListener(comp, this);
+		
+		for (int i = 0; i < childs.size(); i++) {
+			childs.get(i).implementKeyListener(comp, this);
+		}
 	}
 }

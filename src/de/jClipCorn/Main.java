@@ -69,5 +69,4 @@ public class Main {
 //TODO Recheck all Texts - improve DL-Language (what EN / What GER)
 //TODO WatchItLaterFeature
 //TODO Auto rename Files nach Richtlinien
-//TODO Keyboard Shortcuts
 //TODO Apache Commons hacken und duplicate entry removen

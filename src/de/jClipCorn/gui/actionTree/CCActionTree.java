@@ -2,11 +2,16 @@ package de.jClipCorn.gui.actionTree;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
 import java.io.File;
 
+import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
+import javax.swing.KeyStroke;
 
+import de.jClipCorn.Main;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.databaseElement.CCEpisode;
@@ -72,13 +77,13 @@ public class CCActionTree {
 	private void createStructure() {
 		CCActionElement temp;
 
-		root = new CCActionElement("ROOT", "", "");
+		root = new CCActionElement("ROOT", null, "", "");
 
 		// #######################################################################################################
-		CCActionElement file = root.addChild(new CCActionElement("File", "ClipMenuBar.File", ""));
+		CCActionElement file = root.addChild(new CCActionElement("File", null, "ClipMenuBar.File", ""));
 		// #######################################################################################################
 
-		temp = file.addChild(new CCActionElement("Exit", "ClipMenuBar.File.Exit", Resources.ICN_MENUBAR_CLOSE));
+		temp = file.addChild(new CCActionElement("Exit", null, "ClipMenuBar.File.Exit", Resources.ICN_MENUBAR_CLOSE));
 		temp.addListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -87,10 +92,10 @@ public class CCActionTree {
 		});
 
 		// #######################################################################################################
-		CCActionElement database = root.addChild(new CCActionElement("Database", "ClipMenuBar.Database", ""));
+		CCActionElement database = root.addChild(new CCActionElement("Database", null, "ClipMenuBar.Database", ""));
 		// #######################################################################################################
 
-		temp = database.addChild(new CCActionElement("CheckDatabase", "ClipMenuBar.Database.CheckDB", Resources.ICN_MENUBAR_DBCHECK));
+		temp = database.addChild(new CCActionElement("CheckDatabase", null, "ClipMenuBar.Database.CheckDB", Resources.ICN_MENUBAR_DBCHECK));
 		temp.addListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -98,7 +103,7 @@ public class CCActionTree {
 			}
 		});
 
-		temp = database.addChild(new CCActionElement("ClearDatabase", "ClipMenuBar.Database.ClearDB", Resources.ICN_MENUBAR_CLEARDB));
+		temp = database.addChild(new CCActionElement("ClearDatabase", null, "ClipMenuBar.Database.ClearDB", Resources.ICN_MENUBAR_CLEARDB));
 		temp.addListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -106,7 +111,7 @@ public class CCActionTree {
 			}
 		});
 		
-		temp = database.addChild(new CCActionElement("ExportDatabase", "ClipMenuBar.Database.ExportDB", Resources.ICN_MENUBAR_CREATE_JXMLBKP));
+		temp = database.addChild(new CCActionElement("ExportDatabase", null, "ClipMenuBar.Database.ExportDB", Resources.ICN_MENUBAR_CREATE_JXMLBKP));
 		temp.addListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -114,7 +119,7 @@ public class CCActionTree {
 			}
 		});
 		
-		temp = database.addChild(new CCActionElement("SearchDatabase", "ClipMenuBar.Database.SearchDB", Resources.ICN_MENUBAR_SEARCH));
+		temp = database.addChild(new CCActionElement("SearchDatabase", KeyStroke.getKeyStroke(KeyEvent.VK_F, InputEvent.CTRL_DOWN_MASK), "ClipMenuBar.Database.SearchDB", Resources.ICN_MENUBAR_SEARCH));
 		temp.addListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -123,10 +128,10 @@ public class CCActionTree {
 		});
 
 		// #######################################################################################################
-		CCActionElement movies = root.addChild(new CCActionElement("Movies", "ClipMenuBar.Movies", ""));
+		CCActionElement movies = root.addChild(new CCActionElement("Movies", null, "ClipMenuBar.Movies", ""));
 		// #######################################################################################################
 
-		temp = movies.addChild(new CCActionElement("PlayMovie", "ClipMenuBar.Movies.Play", Resources.ICN_MENUBAR_PLAY));
+		temp = movies.addChild(new CCActionElement("PlayMovie", null, "ClipMenuBar.Movies.Play", Resources.ICN_MENUBAR_PLAY));
 		temp.addListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -134,7 +139,7 @@ public class CCActionTree {
 			}
 		});
 
-		temp = movies.addChild(new CCActionElement("PrevMovie", "ClipMenuBar.Movies.Preview", Resources.ICN_MENUBAR_PREVIEW_MOV));
+		temp = movies.addChild(new CCActionElement("PrevMovie", KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "ClipMenuBar.Movies.Preview", Resources.ICN_MENUBAR_PREVIEW_MOV));
 		temp.addListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -142,7 +147,7 @@ public class CCActionTree {
 			}
 		});
 
-		temp = movies.addChild(new CCActionElement("AddMovie", "ClipMenuBar.Movies.Add", Resources.ICN_MENUBAR_ADD_MOV));
+		temp = movies.addChild(new CCActionElement("AddMovie", KeyStroke.getKeyStroke(KeyEvent.VK_I, InputEvent.CTRL_DOWN_MASK), "ClipMenuBar.Movies.Add", Resources.ICN_MENUBAR_ADD_MOV));
 		temp.addListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -150,7 +155,7 @@ public class CCActionTree {
 			}
 		});
 
-		temp = movies.addChild(new CCActionElement("EditMovie", "ClipMenuBar.Movies.Edit", Resources.ICN_MENUBAR_EDIT_MOV));
+		temp = movies.addChild(new CCActionElement("EditMovie", KeyStroke.getKeyStroke(KeyEvent.VK_E, InputEvent.CTRL_DOWN_MASK), "ClipMenuBar.Movies.Edit", Resources.ICN_MENUBAR_EDIT_MOV));
 		temp.addListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -158,7 +163,7 @@ public class CCActionTree {
 			}
 		});
 
-		temp = movies.addChild(new CCActionElement("RemMovie", "ClipMenuBar.Movies.Remove", Resources.ICN_MENUBAR_REMOVE));
+		temp = movies.addChild(new CCActionElement("RemMovie", KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0), "ClipMenuBar.Movies.Remove", Resources.ICN_MENUBAR_REMOVE));
 		temp.addListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -167,10 +172,10 @@ public class CCActionTree {
 		});
 
 		// #######################################################################################################
-		CCActionElement series = root.addChild(new CCActionElement("Serien", "ClipMenuBar.Series", ""));
+		CCActionElement series = root.addChild(new CCActionElement("Serien", null, "ClipMenuBar.Series", ""));
 		// #######################################################################################################
 
-		temp = series.addChild(new CCActionElement("PrevSeries", "ClipMenuBar.Series.Preview", Resources.ICN_MENUBAR_PREVIEW_SER));
+		temp = series.addChild(new CCActionElement("PrevSeries", KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "ClipMenuBar.Series.Preview", Resources.ICN_MENUBAR_PREVIEW_SER));
 		temp.addListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -178,7 +183,7 @@ public class CCActionTree {
 			}
 		});
 		
-		temp = series.addChild(new CCActionElement("MoveSeries", "ClipMenuBar.Series.MoveSeries", Resources.ICN_MENUBAR_MOVESERIES));
+		temp = series.addChild(new CCActionElement("MoveSeries", null, "ClipMenuBar.Series.MoveSeries", Resources.ICN_MENUBAR_MOVESERIES));
 		temp.addListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -186,7 +191,7 @@ public class CCActionTree {
 			}
 		});
 
-		temp = series.addChild(new CCActionElement("AddSeries", "ClipMenuBar.Series.Add", Resources.ICN_MENUBAR_ADD_SER));
+		temp = series.addChild(new CCActionElement("AddSeries", KeyStroke.getKeyStroke(KeyEvent.VK_I, InputEvent.CTRL_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK), "ClipMenuBar.Series.Add", Resources.ICN_MENUBAR_ADD_SER));
 		temp.addListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -194,7 +199,7 @@ public class CCActionTree {
 			}
 		});
 
-		temp = series.addChild(new CCActionElement("EditSeries", "ClipMenuBar.Series.Edit", Resources.ICN_MENUBAR_EDIT_SER));
+		temp = series.addChild(new CCActionElement("EditSeries", KeyStroke.getKeyStroke(KeyEvent.VK_E, InputEvent.CTRL_DOWN_MASK), "ClipMenuBar.Series.Edit", Resources.ICN_MENUBAR_EDIT_SER));
 		temp.addListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -202,7 +207,7 @@ public class CCActionTree {
 			}
 		});
 
-		temp = series.addChild(new CCActionElement("AddSeason", "ClipMenuBar.Series.AddSeason", Resources.ICN_MENUBAR_ADD_SEA));
+		temp = series.addChild(new CCActionElement("AddSeason", null, "ClipMenuBar.Series.AddSeason", Resources.ICN_MENUBAR_ADD_SEA));
 		temp.addListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -210,7 +215,7 @@ public class CCActionTree {
 			}
 		});
 
-		temp = series.addChild(new CCActionElement("RemSeries", "ClipMenuBar.Series.Remove", Resources.ICN_MENUBAR_REMOVE));
+		temp = series.addChild(new CCActionElement("RemSeries", KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0), "ClipMenuBar.Series.Remove", Resources.ICN_MENUBAR_REMOVE));
 		temp.addListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -219,10 +224,10 @@ public class CCActionTree {
 		});
 
 		// #######################################################################################################
-		CCActionElement extras = root.addChild(new CCActionElement("Extras", "ClipMenuBar.Extras", ""));
+		CCActionElement extras = root.addChild(new CCActionElement("Extras", null, "ClipMenuBar.Extras", ""));
 		// #######################################################################################################
 
-		temp = extras.addChild(new CCActionElement("XML", "ClipMenuBar.Extras.XML", Resources.ICN_MENUBAR_PARSEXML));
+		temp = extras.addChild(new CCActionElement("XML", null, "ClipMenuBar.Extras.XML", Resources.ICN_MENUBAR_PARSEXML));
 		temp.addListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -230,7 +235,7 @@ public class CCActionTree {
 			}
 		});
 		
-		temp = extras.addChild(new CCActionElement("ScanFolder", "ClipMenuBar.Extras.ScanFolder", Resources.ICN_MENUBAR_SCANFOLDER));
+		temp = extras.addChild(new CCActionElement("ScanFolder", KeyStroke.getKeyStroke(KeyEvent.VK_O, InputEvent.CTRL_DOWN_MASK), "ClipMenuBar.Extras.ScanFolder", Resources.ICN_MENUBAR_SCANFOLDER));
 		temp.addListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -238,7 +243,7 @@ public class CCActionTree {
 			}
 		});
 		
-		temp = extras.addChild(new CCActionElement("CompareDBs", "ClipMenuBar.Extras.CompareDBs", Resources.ICN_MENUBAR_COMPARE));
+		temp = extras.addChild(new CCActionElement("CompareDBs", null, "ClipMenuBar.Extras.CompareDBs", Resources.ICN_MENUBAR_COMPARE));
 		temp.addListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -246,7 +251,7 @@ public class CCActionTree {
 			}
 		});
 		
-		temp = extras.addChild(new CCActionElement("MassChangeViewed", "ClipMenuBar.Extras.MassChangeViewed", Resources.ICN_MENUBAR_MCHANGE_VIEWED));
+		temp = extras.addChild(new CCActionElement("MassChangeViewed", null, "ClipMenuBar.Extras.MassChangeViewed", Resources.ICN_MENUBAR_MCHANGE_VIEWED));
 		temp.addListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -254,7 +259,7 @@ public class CCActionTree {
 			}
 		});
 		
-		temp = extras.addChild(new CCActionElement("MassChangeScore", "ClipMenuBar.Extras.MassChangeScore", Resources.ICN_MENUBAR_MCHANGE_SCORE));
+		temp = extras.addChild(new CCActionElement("MassChangeScore", null, "ClipMenuBar.Extras.MassChangeScore", Resources.ICN_MENUBAR_MCHANGE_SCORE));
 		temp.addListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -262,7 +267,7 @@ public class CCActionTree {
 			}
 		});
 		
-		temp = extras.addChild(new CCActionElement("ResetViewed", "ClipMenuBar.Extras.ResetViewed", Resources.ICN_MENUBAR_RESETVIEWED));
+		temp = extras.addChild(new CCActionElement("ResetViewed", null, "ClipMenuBar.Extras.ResetViewed", Resources.ICN_MENUBAR_RESETVIEWED));
 		temp.addListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -270,7 +275,7 @@ public class CCActionTree {
 			}
 		});
 
-		temp = extras.addChild(new CCActionElement("ShowSettings", "ClipMenuBar.Extras.Settings", Resources.ICN_MENUBAR_SETTINGS));
+		temp = extras.addChild(new CCActionElement("ShowSettings", null, "ClipMenuBar.Extras.Settings", Resources.ICN_MENUBAR_SETTINGS));
 		temp.addListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -279,10 +284,10 @@ public class CCActionTree {
 		});
 		
 		// #######################################################################################################
-		CCActionElement help = root.addChild(new CCActionElement("Help", "ClipMenuBar.Help", ""));
+		CCActionElement help = root.addChild(new CCActionElement("Help", null, "ClipMenuBar.Help", ""));
 		// #######################################################################################################
 		
-		temp = help.addChild(new CCActionElement("ShowLog", "ClipMenuBar.Help.Log", Resources.ICN_MENUBAR_LOG));
+		temp = help.addChild(new CCActionElement("ShowLog", null, "ClipMenuBar.Help.Log", Resources.ICN_MENUBAR_LOG));
 		temp.addListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -290,7 +295,7 @@ public class CCActionTree {
 			}
 		});
 		
-		temp = help.addChild(new CCActionElement("ShowRules", "ClipMenuBar.Help.Filenamerules", Resources.ICN_MENUBAR_FILENAMERULES));
+		temp = help.addChild(new CCActionElement("ShowRules", null, "ClipMenuBar.Help.Filenamerules", Resources.ICN_MENUBAR_FILENAMERULES));
 		temp.addListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -298,7 +303,7 @@ public class CCActionTree {
 			}
 		});
 		
-		temp = help.addChild(new CCActionElement("ShowAbout", "ClipMenuBar.Help.About", Resources.ICN_MENUBAR_ABOUT));
+		temp = help.addChild(new CCActionElement("ShowAbout", KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0), "ClipMenuBar.Help.About", Resources.ICN_MENUBAR_ABOUT));
 		temp.addListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -307,16 +312,16 @@ public class CCActionTree {
 		});
 		
 		// #######################################################################################################
-		CCActionElement other = root.addChild(new CCActionElement("Other", "", "", false));
+		CCActionElement other = root.addChild(new CCActionElement("Other", null, "", "", false));
 		// #######################################################################################################
 		
-		temp = other.addChild(new CCActionElement("SetMovieRating", "ClipMenuBar.Other.SetMovieRating", Resources.ICN_SIDEBAR_SCORE));
+		temp = other.addChild(new CCActionElement("SetMovieRating", null, "ClipMenuBar.Other.SetMovieRating", Resources.ICN_SIDEBAR_SCORE));
 		
-		temp = other.addChild(new CCActionElement("SetSeriesRating", "ClipMenuBar.Other.SetSeriesRating", Resources.ICN_SIDEBAR_SCORE));
+		temp = other.addChild(new CCActionElement("SetSeriesRating", null, "ClipMenuBar.Other.SetSeriesRating", Resources.ICN_SIDEBAR_SCORE));
 		
-		temp = other.addChild(new CCActionElement("SetMovieStatus", "ClipMenuBar.Other.SetMovieStatus", Resources.ICN_SIDEBAR_STATUS));
+		temp = other.addChild(new CCActionElement("SetMovieStatus", null, "ClipMenuBar.Other.SetMovieStatus", Resources.ICN_SIDEBAR_STATUS));
 		
-		temp = other.addChild(new CCActionElement("SetRating0", "CCMovieScore.R0", CCMovieScore.RATING_0.getIconName()));
+		temp = other.addChild(new CCActionElement("SetRating0", null, "CCMovieScore.R0", CCMovieScore.RATING_0.getIconName()));
 		temp.addListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -324,7 +329,7 @@ public class CCActionTree {
 			}
 		});
 		
-		temp = other.addChild(new CCActionElement("SetRating1", "CCMovieScore.R1", CCMovieScore.RATING_I.getIconName()));
+		temp = other.addChild(new CCActionElement("SetRating1", null, "CCMovieScore.R1", CCMovieScore.RATING_I.getIconName()));
 		temp.addListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -332,7 +337,7 @@ public class CCActionTree {
 			}
 		});
 		
-		temp = other.addChild(new CCActionElement("SetRating2", "CCMovieScore.R2", CCMovieScore.RATING_II.getIconName()));
+		temp = other.addChild(new CCActionElement("SetRating2", null, "CCMovieScore.R2", CCMovieScore.RATING_II.getIconName()));
 		temp.addListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -340,7 +345,7 @@ public class CCActionTree {
 			}
 		});
 		
-		temp = other.addChild(new CCActionElement("SetRating3", "CCMovieScore.R3", CCMovieScore.RATING_III.getIconName()));
+		temp = other.addChild(new CCActionElement("SetRating3", null, "CCMovieScore.R3", CCMovieScore.RATING_III.getIconName()));
 		temp.addListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -348,7 +353,7 @@ public class CCActionTree {
 			}
 		});
 		
-		temp = other.addChild(new CCActionElement("SetRating4", "CCMovieScore.R4", CCMovieScore.RATING_IV.getIconName()));
+		temp = other.addChild(new CCActionElement("SetRating4", null, "CCMovieScore.R4", CCMovieScore.RATING_IV.getIconName()));
 		temp.addListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -356,7 +361,7 @@ public class CCActionTree {
 			}
 		});
 		
-		temp = other.addChild(new CCActionElement("SetRating5", "CCMovieScore.R5", CCMovieScore.RATING_V.getIconName()));
+		temp = other.addChild(new CCActionElement("SetRating5", null, "CCMovieScore.R5", CCMovieScore.RATING_V.getIconName()));
 		temp.addListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -364,7 +369,7 @@ public class CCActionTree {
 			}
 		});
 		
-		temp = other.addChild(new CCActionElement("SetRatingNO", "CCMovieScore.RNO", CCMovieScore.RATING_NO.getIconName()));
+		temp = other.addChild(new CCActionElement("SetRatingNO", null, "CCMovieScore.RNO", CCMovieScore.RATING_NO.getIconName()));
 		temp.addListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -372,7 +377,7 @@ public class CCActionTree {
 			}
 		});
 		
-		temp = other.addChild(new CCActionElement("SetMovieViewed", "ClipMenuBar.Other.SetViewed", Resources.ICN_MENUBAR_VIEWED));
+		temp = other.addChild(new CCActionElement("SetMovieViewed", null, "ClipMenuBar.Other.SetViewed", Resources.ICN_MENUBAR_VIEWED));
 		temp.addListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -380,7 +385,7 @@ public class CCActionTree {
 			}
 		});
 		
-		temp = other.addChild(new CCActionElement("SetMovieUnviewed", "ClipMenuBar.Other.SetUnviewed", Resources.ICN_MENUBAR_UNVIEWED));
+		temp = other.addChild(new CCActionElement("SetMovieUnviewed", null, "ClipMenuBar.Other.SetUnviewed", Resources.ICN_MENUBAR_UNVIEWED));
 		temp.addListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -388,7 +393,7 @@ public class CCActionTree {
 			}
 		});
 		
-		temp = other.addChild(new CCActionElement("SetStatus0", "CCMovieStatus.Status0", CCMovieStatus.STATUS_OK.getIconName()));
+		temp = other.addChild(new CCActionElement("SetStatus0", null, "CCMovieStatus.Status0", CCMovieStatus.STATUS_OK.getIconName()));
 		temp.addListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -396,7 +401,7 @@ public class CCActionTree {
 			}
 		});
 		
-		temp = other.addChild(new CCActionElement("SetStatus1", "CCMovieStatus.Status1", CCMovieStatus.STATUS_LOWQUALITY.getIconName()));
+		temp = other.addChild(new CCActionElement("SetStatus1", null, "CCMovieStatus.Status1", CCMovieStatus.STATUS_LOWQUALITY.getIconName()));
 		temp.addListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -404,7 +409,7 @@ public class CCActionTree {
 			}
 		});
 		
-		temp = other.addChild(new CCActionElement("SetStatus2", "CCMovieStatus.Status2", CCMovieStatus.STATUS_MISSINGVIDEOTIME.getIconName()));
+		temp = other.addChild(new CCActionElement("SetStatus2", null, "CCMovieStatus.Status2", CCMovieStatus.STATUS_MISSINGVIDEOTIME.getIconName()));
 		temp.addListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -412,7 +417,7 @@ public class CCActionTree {
 			}
 		});
 		
-		temp = other.addChild(new CCActionElement("OpenFolder", "ClipMenuBar.Other.OpenFolder", Resources.ICN_MENUBAR_FOLDER));
+		temp = other.addChild(new CCActionElement("OpenFolder", null, "ClipMenuBar.Other.OpenFolder", Resources.ICN_MENUBAR_FOLDER));
 		temp.addListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -420,13 +425,19 @@ public class CCActionTree {
 			}
 		});
 		
-		temp = other.addChild(new CCActionElement("ShowInIMDB", "ClipMenuBar.Other.ShowInIMDB", Resources.ICN_MENUBAR_IMDB));
+		temp = other.addChild(new CCActionElement("ShowInIMDB", null, "ClipMenuBar.Other.ShowInIMDB", Resources.ICN_MENUBAR_IMDB));
 		temp.addListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				onClickOtherShowInIMDB();
 			}
 		});
+		
+		// #######################################################################################################
+		
+		if (Main.DEBUG) {
+			root.testTree();
+		}
 	}
 
 	public CCActionElement getRoot() {
@@ -439,6 +450,10 @@ public class CCActionTree {
 
 	public CCActionElement find(String name) {
 		return root.find(name);
+	}
+	
+	public void implementKeyListener(JComponent comp) {
+		getRoot().implementAllKeyListener(comp);
 	}
 
 	// #######################################################################################################

@@ -34,6 +34,10 @@ public abstract class ClipPopupMenu extends JPopupMenu {
 		
 		item.setIcon(el.getSmallIcon());
 		
+		if (el.getKeyStroke() != null) {
+			item.setAccelerator(el.getKeyStroke());
+		}
+		
 		item.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -55,6 +59,10 @@ public abstract class ClipPopupMenu extends JPopupMenu {
 		add(item);
 		
 		item.setIcon(el.getSmallIcon());
+		
+		if (el.getKeyStroke() != null) {
+			item.setAccelerator(el.getKeyStroke());
+		}
 		
 		item.addActionListener(new ActionListener() {
 			@Override

@@ -30,6 +30,10 @@ public class ClipMenuBar extends JMenuBar {
 
 			if (el.isVisible()) {
 				JMenu newm = add(new JMenu(el.getCaption()));
+				
+				if (el.getKeyStroke() != null) {
+					newm.setAccelerator(el.getKeyStroke());
+				}
 
 				newm.addActionListener(new ActionListener() {
 					@Override
@@ -51,6 +55,10 @@ public class ClipMenuBar extends JMenuBar {
 
 			if (el.isVisible()) {
 				JMenuItem mi = new JMenuItem(el.getCaption(), el.getSmallIcon());
+				
+				if (el.getKeyStroke() != null) {
+					mi.setAccelerator(el.getKeyStroke());
+				}
 
 				mi.addActionListener(new ActionListener() {
 					@Override

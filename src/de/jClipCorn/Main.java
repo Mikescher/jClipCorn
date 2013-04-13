@@ -13,7 +13,7 @@ import de.jClipCorn.util.LookAndFeelManager;
 
 public class Main {
 	public final static String TITLE = "jClipCorn"; //$NON-NLS-1$
-	public final static String VERSION = "1.5";	//$NON-NLS-1$
+	public final static String VERSION = "1.6";	//$NON-NLS-1$
 	public final static String DBVERSION = "1.5"; 	//$NON-NLS-1$
 	
 	private final static String PROPERTIES_PATH = "jClipcorn.properties"; //$NON-NLS-1$
@@ -67,11 +67,9 @@ public class Main {
 //TODO Auto parse Summary 
 //TODO import old ClipCorn features
 //TODO Recheck all Texts - improve DL-Language (what EN / What GER)
-//TODO WatchItLaterFeature
+//TODO WatchItLaterFeature (And Download inHigherQuality)
 //TODO Auto rename Files nach Richtlinien
 //TODO Apache Commons hacken und duplicate entry removen
-
-//TODO Jtable steals the Enter Shortcut grml...
 
 //TODO Find Unused Classes
 //TODO Find Unused Methods

@@ -7,9 +7,14 @@ import javax.swing.KeyStroke;
 
 @SuppressWarnings("nls")
 public class KeyStrokeUtil {
-
+	private final static KeyStroke EMPTY_STROKE = KeyStroke.getKeyStroke(0, 0);
+	
 	public static String keyStrokeToString(KeyStroke key) {
 		if (key == null) {
+			return "";
+		}
+		
+		if (isEmpty(key)) {
 			return "";
 		}
 		
@@ -40,14 +45,14 @@ public class KeyStrokeUtil {
 
 		switch (key.getKeyEventType()) {
 		case KeyEvent.KEY_TYPED:
-			s.append(key.getKeyChar() + " ");
+			s.append(key.getKeyChar());
 			break;
 		case KeyEvent.KEY_PRESSED:
 		case KeyEvent.KEY_RELEASED:
-			s.append(getKeyText(key.getKeyCode()) + " ");
+			s.append(getKeyText(key.getKeyCode()));
 			break;
 		default:
-			s.append("unknown-event-type ");
+			s.append("unknown-event-type");
 			break;
 		}
 
@@ -273,7 +278,7 @@ public class KeyStrokeUtil {
 		case KeyEvent.VK_LEFT_PARENTHESIS:
 			return "LEFT_PARENTHESIS";
 		case KeyEvent.VK_NUMBER_SIGN:
-			return "NUMBER_SIGN";
+			return "#";
 		case KeyEvent.VK_MINUS:
 			return "MINUS";
 		case KeyEvent.VK_PLUS:
@@ -355,5 +360,17 @@ public class KeyStrokeUtil {
 		}
 
 		return "unknown(0x" + Integer.toString(keyCode, 16) + ")";
+	}
+	
+	public static boolean isEmpty(KeyStroke ks) {
+		return ks == null || (ks.getKeyCode() | ks.getModifiers()) == 0;
+	}
+	
+	public static KeyStroke getEmptyKeyStroke() {
+		return EMPTY_STROKE;
+	}
+	
+	public static String keyStrokeToDirectString(KeyStroke ks) {
+		return ks.toString().replace("pressed ", "").replace("released ", "");
 	}
 }

@@ -8,11 +8,15 @@ import javax.swing.JComboBox;
 import javax.swing.JSpinner;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.KeyStroke;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.table.TableCellEditor;
 
 import de.jClipCorn.gui.guiComponents.CCDateEditor;
+import de.jClipCorn.gui.guiComponents.KeyStrokeTextfield;
 import de.jClipCorn.gui.guiComponents.SpinnerCCDateModel;
+import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.property.CCBoolProperty;
 import de.jClipCorn.properties.property.CCIntProperty;
@@ -29,6 +33,7 @@ public class SettingsTableEditor extends AbstractCellEditor implements TableCell
 	private JComboBox<String> cbxBoolean;
 	private JSpinner spinner;
 	private JTextField edit;
+	private KeyStrokeTextfield	ksEdit;
 
 	private int currMode = -1;
 
@@ -44,6 +49,8 @@ public class SettingsTableEditor extends AbstractCellEditor implements TableCell
 		spinner = new JSpinner();
 
 		edit = new JTextField();
+		
+		ksEdit = new KeyStrokeTextfield();
 	}
 
 	@Override
@@ -57,7 +64,10 @@ public class SettingsTableEditor extends AbstractCellEditor implements TableCell
 			return spinner.getValue();
 		case 3:
 			return spinner.getValue();
+		case 4:
+			return ksEdit.getKeyStroke();
 		default:
+			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.STEUnknownPropertyType", currMode + "")); //$NON-NLS-1$ //$NON-NLS-2$
 			return null;
 		}
 	}
@@ -100,8 +110,16 @@ public class SettingsTableEditor extends AbstractCellEditor implements TableCell
 			spinner.setEditor(new CCDateEditor(spinner));
 			
 			return spinner;
+		} else if (prop.getValue().getClass().equals(KeyStroke.class)) {
+			currMode = 4;
+			
+			ksEdit.setKeyStroke((KeyStroke) prop.getValue());
+			
+			return ksEdit;
+		} else {
+			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.STEUnknownPropertyType", prop.getValue().getClass().getSimpleName())); //$NON-NLS-1$
+			return null;
 		}
-		return null;
 	}
 
 }

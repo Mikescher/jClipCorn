@@ -12,6 +12,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 
 import org.apache.commons.lang.StringUtils;
@@ -46,9 +47,6 @@ public abstract class AutomaticSettingsFrame extends JFrame {
 	private JButton btnOk;
 	private JButton btnCancel;
 	private JButton btnExtended;
-	
-	private int pnlCount = 0;
-	private int rowCount = 10;
 
 	private ArrayList<PropertyElement> elements = new ArrayList<>();
 	
@@ -64,8 +62,6 @@ public abstract class AutomaticSettingsFrame extends JFrame {
 		setLocationRelativeTo(owner);
 		
 		setValues();
-		
-		pack();
 	}
 	
 	private void initGUI() {
@@ -73,14 +69,16 @@ public abstract class AutomaticSettingsFrame extends JFrame {
 		
 		setIconImage(CachedResourceLoader.getImage(Resources.IMG_FRAME_ICON));
 		
-		setSize(new Dimension(525, 440));
-		setMinimumSize(new Dimension(525, 440));
+		setSize(new Dimension(675, 440));
+		setMinimumSize(new Dimension(650, 400));
 		setTitle(LocaleBundle.getString("Settingsframe.this.title")); //$NON-NLS-1$
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		
 		tpnlSettings = new JTabbedPane(JTabbedPane.TOP);
 		tpnlSettings.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
 		getContentPane().add(tpnlSettings, BorderLayout.CENTER);
+		
+		int pnlCount = properties.getHighestCategory() + 1;
 		
 		for (int i = 0; i < pnlCount; i++) {
 			tabOrder.addAll(initPanel(i));
@@ -148,8 +146,17 @@ public abstract class AutomaticSettingsFrame extends JFrame {
 	private ArrayList<Component> initPanel(int pnlNumber) {
 		ArrayList<Component> tabOrder = new ArrayList<>();
 		
+		JPanel pnlRoot = new JPanel();
+		JScrollPane scrlPane = new JScrollPane();
+		
 		JPanel pnlTab = new JPanel();
-		tpnlSettings.addTab(LocaleBundle.getString("Settingsframe.tabbedCpt.Caption_" + pnlNumber), null, pnlTab, null); //$NON-NLS-1$
+		tpnlSettings.addTab(LocaleBundle.getString("Settingsframe.tabbedCpt.Caption_" + pnlNumber), null, pnlRoot, null); //$NON-NLS-1$
+		
+		pnlRoot.setLayout(new BorderLayout());
+		pnlRoot.add(scrlPane, BorderLayout.CENTER);
+		
+		scrlPane.setViewportView(pnlTab);
+		scrlPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		
 		pnlTab.setLayout(new FormLayout(new ColumnSpec[] {
 				FormFactory.RELATED_GAP_COLSPEC,
@@ -162,7 +169,7 @@ public abstract class AutomaticSettingsFrame extends JFrame {
 				FormFactory.RELATED_GAP_COLSPEC,
 				FormFactory.DEFAULT_COLSPEC,
 				FormFactory.RELATED_GAP_COLSPEC},
-			getRowSpec()));
+			getRowSpec(properties.getCategoryCount(pnlNumber))));
 
 		int c = 1;
 		for (final CCProperty<Object> p : properties.getPropertyList()) {
@@ -228,17 +235,9 @@ public abstract class AutomaticSettingsFrame extends JFrame {
 			pe.setPropertyValue();
 		}		
 	}
-
-	protected void setPanelCount(int i) {
-		this.pnlCount = i;
-	}
 	
-	protected void setRowCount(int i) {
-		this.rowCount = i;
-	}
-	
-	private RowSpec[] getRowSpec() {
-		int c = rowCount*2 + 1;
+	private RowSpec[] getRowSpec(int rowCount) {
+		int c = rowCount * 2 + 1;
 		RowSpec[] spec = new RowSpec[c];
 		
 		for (int i = 0; i < c; i++) {

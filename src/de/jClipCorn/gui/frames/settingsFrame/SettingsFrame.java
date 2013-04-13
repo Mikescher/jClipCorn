@@ -9,9 +9,6 @@ public class SettingsFrame extends AutomaticSettingsFrame {
 	public SettingsFrame(MainFrame owner, CCProperties properties){
 		super(owner, properties);
 		
-		setPanelCount(7);
-		setRowCount(12);
-		
 		init();
 	}
 }

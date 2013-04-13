@@ -11,6 +11,7 @@ import de.jClipCorn.gui.actionTree.CCActionElement;
 import de.jClipCorn.gui.actionTree.CCActionTree;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
+import de.jClipCorn.util.KeyStrokeUtil;
 
 public abstract class ClipPopupMenu extends JPopupMenu {
 	private static final long serialVersionUID = -3924972933691119441L;
@@ -34,7 +35,7 @@ public abstract class ClipPopupMenu extends JPopupMenu {
 		
 		item.setIcon(el.getSmallIcon());
 		
-		if (el.getKeyStroke() != null) {
+		if (! KeyStrokeUtil.isEmpty(el.getKeyStroke())) {
 			item.setAccelerator(el.getKeyStroke());
 		}
 		
@@ -60,7 +61,7 @@ public abstract class ClipPopupMenu extends JPopupMenu {
 		
 		item.setIcon(el.getSmallIcon());
 		
-		if (el.getKeyStroke() != null) {
+		if (! KeyStrokeUtil.isEmpty(el.getKeyStroke())) {
 			item.setAccelerator(el.getKeyStroke());
 		}
 		

@@ -10,6 +10,7 @@ import de.jClipCorn.gui.actionTree.CCActionElement;
 import de.jClipCorn.gui.actionTree.CCActionTree;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
+import de.jClipCorn.util.KeyStrokeUtil;
 
 public class ActionMenuWrapper {
 	private final JMenu menu;
@@ -29,7 +30,7 @@ public class ActionMenuWrapper {
 		
 		item.setIcon(el.getSmallIcon());
 		
-		if (el.getKeyStroke() != null) {
+		if (! KeyStrokeUtil.isEmpty(el.getKeyStroke())) {
 			item.setAccelerator(el.getKeyStroke());
 		}
 		

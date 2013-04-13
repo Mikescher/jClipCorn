@@ -2,9 +2,9 @@ package de.jClipCorn.properties.property;
 
 import java.awt.Component;
 
-import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 
+import de.jClipCorn.gui.guiComponents.KeyStrokeTextfield;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.properties.CCProperties;
@@ -17,17 +17,17 @@ public class CCKeyStrokeProperty  extends CCProperty<KeyStroke>{
 
 	@Override
 	public Component getComponent() {
-		return new JTextField();
+		return new KeyStrokeTextfield();
 	}
 
 	@Override
 	public void setComponentValueToValue(Component c, KeyStroke val) {
-		((JTextField)c).setText(KeyStrokeUtil.keyStrokeToString(val));
+		((KeyStrokeTextfield)c).setKeyStroke(val);
 	}
 
 	@Override
 	public KeyStroke getComponentValue(Component c) {
-		return null;
+		return ((KeyStrokeTextfield)c).getKeyStroke();
 	}
 
 	@Override
@@ -40,7 +40,12 @@ public class CCKeyStrokeProperty  extends CCProperty<KeyStroke>{
 			return standard;
 		}
 		
-		KeyStroke kval = KeyStroke.getKeyStroke(val);
+		KeyStroke kval;
+		if (val.isEmpty()) {
+			kval = KeyStrokeUtil.getEmptyKeyStroke();
+		} else {
+			kval = KeyStroke.getKeyStroke(val);
+		}
 		
 		if (kval == null) {
 			CCLog.addWarning(LocaleBundle.getFormattedString("LogMessage.PropFormatErrorBool", identifier, mclass.getName())); //$NON-NLS-1$
@@ -53,8 +58,17 @@ public class CCKeyStrokeProperty  extends CCProperty<KeyStroke>{
 
 	@Override
 	public KeyStroke setValue(KeyStroke val) {
-		properties.setProperty(identifier, val.toString());
-
+		if (KeyStrokeUtil.isEmpty(val)) {
+			properties.setProperty(identifier, ""); //$NON-NLS-1$
+		} else {
+			properties.setProperty(identifier, KeyStrokeUtil.keyStrokeToDirectString(val));
+		}
+		
 		return getValue();
+	}
+	
+	@Override
+	public String getValueAsString() {
+		return KeyStrokeUtil.keyStrokeToString(getValue());
 	}
 }

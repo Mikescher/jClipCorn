@@ -24,14 +24,15 @@ import de.jClipCorn.util.LookAndFeelManager;
 public class CCProperties {
 	private final static String HEADER = "jClipCorn Configuration File"; //$NON-NLS-1$
 	
-	private final static int NONVISIBLE			= -1;
-	private final static int CAT_COMMON 		= 0;
-	private final static int CAT_VIEW 			= 1;
-	private final static int CAT_DATABASE 		= 2;
-	private final static int CAT_SERIES 		= 3;
-	private final static int CAT_PLAY 			= 4;
-	private final static int CAT_BACKUP 		= 5;
-	private final static int CAT_OTHERFRAMES 	= 6;
+	public final static int NONVISIBLE			= -1;
+	public final static int CAT_COMMON 			= 0;
+	public final static int CAT_VIEW 			= 1;
+	public final static int CAT_DATABASE 		= 2;
+	public final static int CAT_SERIES 			= 3;
+	public final static int CAT_PLAY 			= 4;
+	public final static int CAT_BACKUP 			= 5;
+	public final static int CAT_OTHERFRAMES 	= 6;
+	public final static int CAT_KEYSTROKES 		= 7;
 	
 	private static CCProperties mainInstance = null;
 	
@@ -162,7 +163,7 @@ public class CCProperties {
 		PROP_BACKUP_AUTODELETEBACKUPS			= new CCBoolProperty(CAT_BACKUP, 		this,   "PROP_BACKUP_AUTODELETEBACKUPS", 			true);
 		PROP_BACKUP_LIFETIME					= new CCPintProperty(CAT_BACKUP, 		this, 	"PROP_BACKUP_LIFETIME", 					56);
 		PROP_LOG_APPEND							= new CCBoolProperty(CAT_COMMON, 		this,   "PROP_LOG_APPEND", 							true);
-		PROP_LOG_MAX_LINECOUNT 					= new CCPintProperty(CAT_COMMON, 		this, 	"PROP_LOG_MAX_LINECOUNT", 					1048576); // 2^20
+		PROP_LOG_MAX_LINECOUNT 					= new CCPintProperty(CAT_DATABASE, 		this, 	"PROP_LOG_MAX_LINECOUNT", 					1048576); // 2^20
 		PROP_VIEW_DB_START_SORT					= new CCRIntProperty(CAT_VIEW, 			this, 	"PROP_VIEW_DB_START_SORT", 					0,					vs);
 		PROP_OTHER_DEBUGMODE					= new CCBoolProperty(NONVISIBLE, 		this,   "PROP_OTHER_DEBUGMODE", 					false);
 		PROP_VALIDATE_FILESIEDRIFT				= new CCRIntProperty(CAT_OTHERFRAMES, 	this, 	"PROP_VALIDATE_FILESIEDRIFT", 				5,					100);
@@ -219,5 +220,39 @@ public class CCProperties {
 		for (CCProperty<?> prop : propertylist) {
 			prop.setDefault();
 		}
+	}
+	
+	public CCProperty<?> findProperty(String ident) {
+		for (CCProperty<?> prop : propertylist) {
+			if (prop.getIdentifier().equals(ident)) {
+				return prop;
+			}
+		}
+		
+		return null;
+	}
+	
+	public int getCategoryCount(int cat) {
+		int c = 0;
+		
+		for (CCProperty<?> p : propertylist) {
+			if (p.getCategory() == cat) {
+				c++;
+			}
+		}
+		
+		return c;
+	}
+	
+	public int getHighestCategory() {
+		int cat = -1;
+		
+		for (CCProperty<?> p : propertylist) {
+			if (p.getCategory() > cat) {
+				cat = p.getCategory();
+			}
+		}
+		
+		return cat;
 	}
 }

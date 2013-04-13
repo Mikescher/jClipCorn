@@ -435,8 +435,13 @@ public class CCActionTree {
 		
 		// #######################################################################################################
 		
+		createProperties();
+		
+		// #######################################################################################################
+		
 		if (Main.DEBUG) {
 			root.testTree();
+			System.out.println(String.format("[DBG] %d Elements in ActionTree intialized", root.getAllChildren().size())); //$NON-NLS-1$
 		}
 	}
 
@@ -454,6 +459,10 @@ public class CCActionTree {
 	
 	public void implementKeyListener(JComponent comp) {
 		getRoot().implementAllKeyListener(comp);
+	}
+	
+	private void createProperties() {
+		getRoot().createAllProperties(CCProperties.getInstance());
 	}
 
 	// #######################################################################################################

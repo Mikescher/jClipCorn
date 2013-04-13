@@ -25,7 +25,7 @@ public class AbstractClipToolbar extends JToolBar {
 		
 		JButton tmp = new JButton(el.getIcon());
 
-		if (el.getKeyStroke() != null) {
+		if (! KeyStrokeUtil.isEmpty(el.getKeyStroke())) {
 			tmp.setToolTipText("<html>" + el.getCaption() + "&nbsp;&nbsp;&nbsp;&nbsp;<small>" + KeyStrokeUtil.keyStrokeToString(el.getKeyStroke()) + "</small></html>"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		} else {
 			tmp.setToolTipText(el.getCaption());

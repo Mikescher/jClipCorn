@@ -1,5 +1,6 @@
 package de.jClipCorn.gui.frames.extendedSettingsFrame.settingsTable;
 
+import javax.swing.KeyStroke;
 import javax.swing.table.AbstractTableModel;
 
 import de.jClipCorn.gui.localization.LocaleBundle;
@@ -9,6 +10,7 @@ import de.jClipCorn.properties.property.CCBoolProperty;
 import de.jClipCorn.properties.property.CCDateProperty;
 import de.jClipCorn.properties.property.CCDoubleProperty;
 import de.jClipCorn.properties.property.CCIntProperty;
+import de.jClipCorn.properties.property.CCKeyStrokeProperty;
 import de.jClipCorn.properties.property.CCProperty;
 import de.jClipCorn.properties.property.CCStringProperty;
 import de.jClipCorn.util.CCDate;
@@ -41,7 +43,9 @@ public class SettingsTableModel extends AbstractTableModel{
 			((CCStringProperty)p).setValue((String)value);
 		} else if (p instanceof CCDateProperty) {
 			((CCDateProperty)p).setValue((CCDate)value);
-		} else {
+		} else if (p instanceof CCKeyStrokeProperty) {
+			((CCKeyStrokeProperty)p).setValue((KeyStroke)value);
+		}  else {
 			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.STEUnknownPropertyType", p.getClass().getSimpleName())); //$NON-NLS-1$
 		}
 		
@@ -69,7 +73,7 @@ public class SettingsTableModel extends AbstractTableModel{
 		case 0:
 			return properties.getPropertyList().get(row).getIdentifier();
 		case 1:
-			return properties.getPropertyList().get(row).getValue();
+			return properties.getPropertyList().get(row).getValueAsString();
 		default:
 			return null;
 		}

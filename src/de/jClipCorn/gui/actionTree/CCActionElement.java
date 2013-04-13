@@ -12,15 +12,24 @@ import javax.swing.InputMap;
 import javax.swing.JComponent;
 import javax.swing.KeyStroke;
 
+import org.apache.commons.lang.StringUtils;
+
+import de.jClipCorn.Main;
 import de.jClipCorn.gui.CachedResourceLoader;
 import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.properties.CCProperties;
+import de.jClipCorn.properties.property.CCCaptionedKeyStrokeProperty;
+import de.jClipCorn.properties.property.CCKeyStrokeProperty;
+import de.jClipCorn.util.KeyStrokeUtil;
 
 public class CCActionElement {
 	private final String name;
 	private final String captionIdent;
 	private final String iconRes;
 	private final boolean visible;
-	private final KeyStroke keyStroke;
+	private final KeyStroke defaultKeyStroke;
+	
+	private CCKeyStrokeProperty keyStrokeProperty = null;
 	
 	private final ArrayList<ActionListener> listener;
 	private final ArrayList<CCActionElement> children;
@@ -32,7 +41,7 @@ public class CCActionElement {
 		this.listener = new ArrayList<>();
 		this.children = new ArrayList<>();
 		this.visible = true;
-		this.keyStroke = stroke;
+		this.defaultKeyStroke = stroke;
 	}
 	
 	public CCActionElement(String name, KeyStroke stroke, String caption, String iconRes, boolean vis) {
@@ -42,7 +51,7 @@ public class CCActionElement {
 		this.listener = new ArrayList<>();
 		this.children = new ArrayList<>();
 		this.visible = vis;
-		this.keyStroke = stroke;
+		this.defaultKeyStroke = stroke;
 	}
 
 	public String getName() {
@@ -150,7 +159,7 @@ public class CCActionElement {
 		
 		for (int i = 0; i < childs.size(); i++) {
 			for (int j = 0; j < childs.size(); j++) {
-				if (i != j && childs.get(i).getName().equals(childs.get(j).getName())) {
+				if (i != j && StringUtils.equalsIgnoreCase(childs.get(i).getName(), childs.get(j).getName())) {
 					System.out.println(String.format("[DBG] Duplicate Item (%s) in ActionTree found", childs.get(j).getCaptionIdent())); //$NON-NLS-1$
 				}
 			}
@@ -158,24 +167,29 @@ public class CCActionElement {
 	}
 	
 	public KeyStroke getKeyStroke() {
-		return keyStroke;
+		if (keyStrokeProperty == null) {
+			return null;
+		}
+		return keyStrokeProperty.getValue();
 	}
 	
 	private void implementKeyListener(JComponent comp, final CCActionElement e) {
-		if (keyStroke == null) {
+		final KeyStroke stroke = getKeyStroke();
+		
+		if (KeyStrokeUtil.isEmpty(stroke)) {
 			return;
 		}
 		
-		InputMap map = comp.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+		InputMap map = comp.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 		ActionMap act = comp.getActionMap();
 		
-		map.put(keyStroke, name);
+		map.put(stroke, name);
 		act.put(name, new AbstractAction() {
 			private static final long serialVersionUID = 19873468234L;
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				e.onKeyPressed(keyStroke);
+				e.onKeyPressed(stroke);
 			}
 		});
 	}
@@ -185,7 +199,7 @@ public class CCActionElement {
 		childs.add(this);
 		
 		for (int i = 0; i < childs.size(); i++) {
-			if (childs.get(i).getKeyStroke() != null && childs.get(i).getKeyStroke().equals(stroke)) {
+			if (stroke.equals(childs.get(i).getKeyStroke())) {
 				childs.get(i).execute();
 			}
 		}
@@ -198,6 +212,30 @@ public class CCActionElement {
 		
 		for (int i = 0; i < childs.size(); i++) {
 			childs.get(i).implementKeyListener(comp, this);
+		}
+	}
+	
+	private void createProperty(CCProperties props) {
+		if (defaultKeyStroke == null) {
+			keyStrokeProperty = new CCCaptionedKeyStrokeProperty(CCProperties.CAT_KEYSTROKES, props, "PROP_KEYSTROKE_" + name.toUpperCase(), captionIdent, KeyStrokeUtil.getEmptyKeyStroke()); //$NON-NLS-1$
+		} else {
+			keyStrokeProperty = new CCCaptionedKeyStrokeProperty(CCProperties.CAT_KEYSTROKES, props, "PROP_KEYSTROKE_" + name.toUpperCase(), captionIdent, defaultKeyStroke); //$NON-NLS-1$
+		}
+	}
+	
+	public void createAllProperties(CCProperties props) {
+		ArrayList<CCActionElement> childs = new ArrayList<>();
+		
+		for (int i = 0; i < children.size(); i++) {
+			childs.addAll(children.get(i).getAllChildren());
+		}
+		
+		for (int i = 0; i < childs.size(); i++) {
+			childs.get(i).createProperty(props);
+		}
+		
+		if (Main.DEBUG) {
+			System.out.println(String.format("[DBG] %d Properties in ActionTree intialized", childs.size())); //$NON-NLS-1$
 		}
 	}
 }

@@ -70,3 +70,9 @@ public class Main {
 //TODO WatchItLaterFeature
 //TODO Auto rename Files nach Richtlinien
 //TODO Apache Commons hacken und duplicate entry removen
+
+//TODO Jtable steals the Enter Shortcut grml...
+
+//TODO Find Unused Classes
+//TODO Find Unused Methods
+//TODO Find Unused LocalizedStrings (i think i must code that myself)

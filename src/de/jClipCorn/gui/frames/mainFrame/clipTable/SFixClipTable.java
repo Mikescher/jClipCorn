@@ -1,6 +1,7 @@
 package de.jClipCorn.gui.frames.mainFrame.clipTable;
 
 import java.awt.Rectangle;
+import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 
 import javax.swing.KeyStroke;
@@ -82,7 +83,9 @@ public class SFixClipTable extends SFixTable {
 	public SFixClipTable(TableModel dm) {
 		super(dm);
 		init();
+		
 		getInputMap(WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "null"); //$NON-NLS-1$
+		getInputMap(WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(KeyStroke.getKeyStroke(KeyEvent.VK_A, InputEvent.CTRL_DOWN_MASK), "null"); //$NON-NLS-1$
 	}
 	
 	private void init() {

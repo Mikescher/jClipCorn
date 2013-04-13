@@ -51,6 +51,9 @@ javadoc/
 jClipCorn_backup/
 bin*/
 
+launch4j.cfg.xml
+launch4j*
+
 DerbManager*.jar
 
 *.bat

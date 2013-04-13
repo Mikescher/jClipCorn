@@ -5,11 +5,17 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 
+import javax.swing.AbstractAction;
+import javax.swing.ActionMap;
+import javax.swing.InputMap;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
 
 import de.jClipCorn.database.CCMovieList;
@@ -21,9 +27,7 @@ import de.jClipCorn.gui.Resources;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.properties.CCProperties;
 
-import javax.swing.JCheckBox;
-
-public class ChangeScoreFrame extends JFrame implements KeyListener {
+public class ChangeScoreFrame extends JFrame {
 	private static final long serialVersionUID = 9048482551231383355L;
 	
 	private final CCMovieList movielist;
@@ -48,6 +52,7 @@ public class ChangeScoreFrame extends JFrame implements KeyListener {
 	private JButton btnScoreNo;
 	private JLabel lblbackspace;
 	private JCheckBox cbSkipRated;
+	private JCheckBox cbOnlyViewed;
 
 	public ChangeScoreFrame(Component owner, CCMovieList list) {
 		super();
@@ -55,8 +60,7 @@ public class ChangeScoreFrame extends JFrame implements KeyListener {
 		
 		initGUI();
 		
-		addKeyListener(this);
-		setFocusable(true);
+		initMap();
 		
 		setLocationRelativeTo(owner);
 		init();
@@ -65,7 +69,7 @@ public class ChangeScoreFrame extends JFrame implements KeyListener {
 	private void initGUI() {
 		setTitle(LocaleBundle.getString("ChangedScoreFrame.this.title")); //$NON-NLS-1$
 		setIconImage(CachedResourceLoader.getImage(Resources.IMG_FRAME_ICON));
-		setSize(new Dimension(430, 355));
+		setSize(new Dimension(430, 375));
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		getContentPane().setLayout(null);
@@ -200,6 +204,17 @@ public class ChangeScoreFrame extends JFrame implements KeyListener {
 		cbSkipRated.setBounds(10, 297, 402, 23);
 		cbSkipRated.setSelected(CCProperties.getInstance().PROP_MASSCHANGESCORE_SKIPRATED.getValue());
 		getContentPane().add(cbSkipRated);
+		
+		cbOnlyViewed = new JCheckBox(CCProperties.getInstance().PROP_MASSCHANGESCORE_ONLYVIEWED.getDescription());
+		cbOnlyViewed.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				CCProperties.getInstance().PROP_MASSCHANGESCORE_ONLYVIEWED.setValue(cbOnlyViewed.isSelected());
+			}
+		});
+		cbOnlyViewed.setBounds(10, 323, 402, 23);
+		cbOnlyViewed.setSelected(CCProperties.getInstance().PROP_MASSCHANGESCORE_ONLYVIEWED.getValue());
+		getContentPane().add(cbOnlyViewed);
 	}
 	
 	private void init() {
@@ -235,6 +250,13 @@ public class ChangeScoreFrame extends JFrame implements KeyListener {
 					}
 				}
 				
+				if (cbOnlyViewed.isSelected()) {
+					if (! m.isViewed()) {
+						nextMovie();
+						return;
+					}
+				}
+				
 				lblCover.setIcon(m.getCoverIcon());
 				lblCurrent.setIcon(m.getScore().getIcon());
 				lblTitle.setText(m.getCompleteTitle());
@@ -254,33 +276,68 @@ public class ChangeScoreFrame extends JFrame implements KeyListener {
 			return;
 		}
 	}
-
-	@Override
-	public void keyPressed(KeyEvent e) {
-		if (e.getKeyCode() == KeyEvent.VK_1) {
-			actionNextMovie(CCMovieScore.RATING_0);
-		} else if (e.getKeyCode() == KeyEvent.VK_2) {
-			actionNextMovie(CCMovieScore.RATING_I);
-		} else if (e.getKeyCode() == KeyEvent.VK_3) {
-			actionNextMovie(CCMovieScore.RATING_II);
-		} else if (e.getKeyCode() == KeyEvent.VK_4) {
-			actionNextMovie(CCMovieScore.RATING_III);
-		} else if (e.getKeyCode() == KeyEvent.VK_5) {
-			actionNextMovie(CCMovieScore.RATING_IV);
-		} else if (e.getKeyCode() == KeyEvent.VK_6) {
-			actionNextMovie(CCMovieScore.RATING_V);
-		} else if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
-			actionNextMovie(CCMovieScore.RATING_NO);
-		}
-	}
-
-	@Override
-	public void keyReleased(KeyEvent arg0) {
-		// nothing
-	}
-
-	@Override
-	public void keyTyped(KeyEvent arg0) {
-		// nothing
+	
+	@SuppressWarnings("nls")
+	private void initMap() {
+		InputMap map = ((JPanel) getContentPane()).getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+		ActionMap act = ((JPanel) getContentPane()).getActionMap();
+		
+		map.put(KeyStroke.getKeyStroke('1'), "KEYPRESSED_1");
+		map.put(KeyStroke.getKeyStroke('2'), "KEYPRESSED_2");
+		map.put(KeyStroke.getKeyStroke('3'), "KEYPRESSED_3");
+		map.put(KeyStroke.getKeyStroke('4'), "KEYPRESSED_4");
+		map.put(KeyStroke.getKeyStroke('5'), "KEYPRESSED_5");
+		map.put(KeyStroke.getKeyStroke('6'), "KEYPRESSED_6");
+		map.put(KeyStroke.getKeyStroke(KeyEvent.VK_BACK_SPACE, 0), "KEYPRESSED_B");
+		
+		act.put("KEYPRESSED_1", new AbstractAction() {
+			private static final long serialVersionUID = -4772892852387370715L;
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				actionNextMovie(CCMovieScore.RATING_0);
+			}
+		});
+		act.put("KEYPRESSED_2", new AbstractAction() {
+			private static final long serialVersionUID = -4772892852387370715L;
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				actionNextMovie(CCMovieScore.RATING_I);
+			}
+		});
+		act.put("KEYPRESSED_3", new AbstractAction() {
+			private static final long serialVersionUID = -4772892852387370715L;
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				actionNextMovie(CCMovieScore.RATING_II);
+			}
+		});
+		act.put("KEYPRESSED_4", new AbstractAction() {
+			private static final long serialVersionUID = -4772892852387370715L;
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				actionNextMovie(CCMovieScore.RATING_III);
+			}
+		});
+		act.put("KEYPRESSED_5", new AbstractAction() {
+			private static final long serialVersionUID = -4772892852387370715L;
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				actionNextMovie(CCMovieScore.RATING_IV);
+			}
+		});
+		act.put("KEYPRESSED_6", new AbstractAction() {
+			private static final long serialVersionUID = -4772892852387370715L;
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				actionNextMovie(CCMovieScore.RATING_V);
+			}
+		});
+		act.put("KEYPRESSED_B", new AbstractAction() {
+			private static final long serialVersionUID = -4772892852387370715L;
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				actionNextMovie(CCMovieScore.RATING_NO);
+			}
+		});
 	}
 }

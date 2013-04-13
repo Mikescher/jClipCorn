@@ -86,6 +86,8 @@ public class CCProperties {
 	public CCBoolProperty	PROP_PREVSERIES_3DCOVER;
 	public CCBoolProperty	PROP_PREVSERIES_COVERBORDER;
 	public CCBoolProperty	PROP_MASSCHANGESCORE_SKIPRATED;
+	public CCBoolProperty	PROP_MASSCHANGESCORE_ONLYVIEWED;
+	public CCBoolProperty	PROP_MASSCHANGEVIEWED_ONLYUNVIEWED;
 	
 	private Properties properties;
 	private String path;
@@ -174,6 +176,8 @@ public class CCProperties {
 		PROP_PREVSERIES_3DCOVER					= new CCBoolProperty(CAT_OTHERFRAMES, 	this,   "PROP_PREVSERIES_3DCOVER",					true);
 		PROP_PREVSERIES_COVERBORDER				= new CCBoolProperty(CAT_OTHERFRAMES, 	this,   "PROP_PREVSERIES_COVERBORDER",				true);
 		PROP_MASSCHANGESCORE_SKIPRATED			= new CCBoolProperty(NONVISIBLE,	 	this,   "PROP_MASSCHANGESCORE_SKIPRATED",			false);
+		PROP_MASSCHANGESCORE_ONLYVIEWED			= new CCBoolProperty(NONVISIBLE,	 	this,   "PROP_MASSCHANGESCORE_ONLYVIEWED",			false);
+		PROP_MASSCHANGEVIEWED_ONLYUNVIEWED		= new CCBoolProperty(NONVISIBLE,	 	this,   "PROP_MASSCHANGEVIEWED_ONLYUNVIEWED",		false);
 	}
 	
 	public static CCProperties getInstance() {

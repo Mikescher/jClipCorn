@@ -224,6 +224,11 @@ public class ScanFolderFrame extends JFrame implements Runnable, MouseListener {
 				return (CCMovieFormat.isValidMovieFormat(PathFormatter.getExtension(f.getAbsolutePath())) && !(excludeIfos && PathFormatter.getExtension(f.getAbsolutePath()).equalsIgnoreCase("ifo"))) || f.isDirectory(); //$NON-NLS-1$
 			}
 		});
+		
+		if (files == null) {
+			return;
+		}
+		
 		for (File f : files) {
 			if (f.isDirectory()) {
 				searchFiles(f, filelist);

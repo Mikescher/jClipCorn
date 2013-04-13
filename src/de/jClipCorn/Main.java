@@ -70,12 +70,4 @@ public class Main {
 //TODO WatchItLaterFeature
 //TODO Auto rename Files nach Richtlinien
 //TODO Keyboard Shortcuts
-//TODO TabOrder for (important) Frames
 //TODO Apache Commons hacken und duplicate entry removen
-
-//TODO MassChange Score (Wenn Fenster kein Focus hat bug (zb checkbox/buttons focused))
-//TODO MassChange Score Option only viewed movs
-//TODO MassChange Score Option Use Numpad Keys
-//TODO MassChange Viewed Option Use Numpad Keys
-//TODO MassChange Viewed Option only viewed movs
-//TODO UNDEFINIED (20:53:48): [Thread[Thread-12,6,main]] java.lang.NullPointerException at de.jClipCorn.gui.frames.scanFolderFrame.ScanFolderFrame.searchFiles (ScanFolderFrame.java:224) at de.jClipCorn.gui.frames.scanFolderFrame.ScanFolderFrame.searchFiles (ScanFolderFrame.java:226) at de.jClipCorn.gui.frames.scanFolderFrame.ScanFolderFrame.run (ScanFolderFrame.java:191)

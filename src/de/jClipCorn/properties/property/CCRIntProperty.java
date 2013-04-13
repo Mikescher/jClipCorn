@@ -61,15 +61,13 @@ public class CCRIntProperty extends CCIntProperty {
 	@Override
 	public Integer setValue(Integer val) {
 		if (val >= min && val < max) {
-			properties.setInt(identifier, val);
+			super.setValue(val);
 		} else if (val < min) {
-			setValue(min);
+			super.setValue(min);
 			CCLog.addWarning(LocaleBundle.getFormattedString("LogMessage.PropRangeExceeded", min, max, identifier, val)); //$NON-NLS-1$
-			properties.setInt(identifier, min);
 		} else if (val >= max) {
-			setValue(max - 1);
+			super.setValue(max - 1);
 			CCLog.addWarning(LocaleBundle.getFormattedString("LogMessage.PropRangeExceeded", min, max, identifier, val)); //$NON-NLS-1$
-			properties.setInt(identifier, max - 1);
 		} else {
 			System.out.println("Should never be reached [CCRIntProperty]"); //$NON-NLS-1$
 		}

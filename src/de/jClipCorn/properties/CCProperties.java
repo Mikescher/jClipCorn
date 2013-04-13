@@ -10,9 +10,6 @@ import de.jClipCorn.Main;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.localization.util.LocalizedVector;
 import de.jClipCorn.gui.log.CCLog;
-import de.jClipCorn.properties.exceptions.BooleanFormatException;
-import de.jClipCorn.properties.exceptions.CCDateFormatException;
-import de.jClipCorn.properties.exceptions.PropertyNotFoundException;
 import de.jClipCorn.properties.property.CCBoolProperty;
 import de.jClipCorn.properties.property.CCDateProperty;
 import de.jClipCorn.properties.property.CCPathProperty;
@@ -26,9 +23,6 @@ import de.jClipCorn.util.LookAndFeelManager;
 
 public class CCProperties {
 	private final static String HEADER = "jClipCorn Configuration File"; //$NON-NLS-1$
-	
-	public final static String TYPE_BOOL_TRUE = "true"; //$NON-NLS-1$
-	public final static String TYPE_BOOL_FALSE = "false"; //$NON-NLS-1$
 	
 	private final static int NONVISIBLE			= -1;
 	private final static int CAT_COMMON 		= 0;
@@ -184,20 +178,6 @@ public class CCProperties {
 		return mainInstance;
 	}
 	
-	private static String boolToString(boolean b) {
-		return (b) ? (TYPE_BOOL_TRUE) : (TYPE_BOOL_FALSE);
-	}
-	
-	private static boolean stringToBool(String b) throws BooleanFormatException{
-		if (TYPE_BOOL_TRUE.equals(b)) {
-			return true;
-		} else if (TYPE_BOOL_FALSE.equals(b)) {
-			return false;
-		} else {
-			throw new BooleanFormatException();
-		}
-	}
-	
 	public void load(String path) {
 		try {
 			properties.load( new FileInputStream( path ) );
@@ -214,71 +194,20 @@ public class CCProperties {
 		}
 	}
 	
-	public void setString(String ident, String val) {
+	public void setProperty(String ident, String val) {
 		properties.setProperty(ident, val);
-		changed();
+		fireChangedEvent();
 	}
 	
-	public void setInt(String ident, int val) {
-		properties.setProperty(ident, "" + val); //$NON-NLS-1$
-		changed();
-	}
-	
-	public void setDouble(String ident, double val) {
-		properties.setProperty(ident, "" + val); //$NON-NLS-1$
-		changed();
-	}
-	
-	public void setBoolean(String ident, boolean val) {
-		properties.setProperty(ident, boolToString(val));
-		changed();
-	}
-	
-	public void setCCDate(String ident, CCDate val) {
-		properties.setProperty(ident, val.getSimpleStringRepresentation());
-		changed();
-	}
-	
-	public String getString(String ident) throws PropertyNotFoundException{
-		String val = properties.getProperty(ident);
-		if (val == null) throw new PropertyNotFoundException();
-		return val;
-	}
-	
-	public Integer getInt(String ident) throws PropertyNotFoundException, NumberFormatException {
-		String val = properties.getProperty(ident);
-		if (val == null) throw new PropertyNotFoundException();
-		return Integer.parseInt(val);
-	}
-	
-	public Double getDouble(String ident) throws PropertyNotFoundException, NumberFormatException {
-		String val = properties.getProperty(ident);
-		if (val == null) throw new PropertyNotFoundException();
-		return Double.parseDouble(val);
-	}
-	
-	public Boolean getBoolean(String ident) throws PropertyNotFoundException, BooleanFormatException {
-		String val = properties.getProperty(ident);
-		if (val == null) throw new PropertyNotFoundException();
-		return stringToBool(val);
-	}
-	
-	public CCDate getCCDate(String ident) throws PropertyNotFoundException, CCDateFormatException {
-		String val = properties.getProperty(ident);
-		if (val == null) throw new PropertyNotFoundException();
-		CCDate d = CCDate.getNewMinimumDate();
-		if (! d.parse(val, "D.M.Y")) { //$NON-NLS-1$
-			throw new CCDateFormatException();
-		}
-		
-		return d;
+	public String getProperty(String ident) {
+		return properties.getProperty(ident);
 	}
 	
 	public void addPropertyToList(CCProperty<Object> p) {
 		propertylist.add(p);
 	}
 	
-	private void changed() {
+	private void fireChangedEvent() {
 		save();
 	}
 	

@@ -4,6 +4,8 @@ import java.awt.Component;
 
 import javax.swing.JTextField;
 
+import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.properties.CCProperties;
 
 public class CCStringProperty extends CCProperty<String> {
@@ -24,5 +26,25 @@ public class CCStringProperty extends CCProperty<String> {
 	@Override
 	public String getComponentValue(Component c) {
 		return ((JTextField)c).getText();
+	}
+
+	@Override
+	public String getValue() {
+		String val = properties.getProperty(identifier);
+		
+		if (val == null) {
+			CCLog.addInformation(LocaleBundle.getFormattedString("LogMessage.PropNotFound", identifier)); //$NON-NLS-1$
+			setDefault();
+			return standard;
+		}
+		
+		return val;
+	}
+
+	@Override
+	public String setValue(String val) {
+		properties.setProperty(identifier, val);
+		
+		return getValue();
 	}
 }

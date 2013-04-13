@@ -5,6 +5,8 @@ import java.awt.Component;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 
+import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.properties.CCProperties;
 
 public class CCIntProperty extends CCProperty<Integer> {
@@ -25,5 +27,35 @@ public class CCIntProperty extends CCProperty<Integer> {
 	@Override
 	public Integer getComponentValue(Component c) {
 		return (Integer) ((JSpinner)c).getValue();
+	}
+
+	@Override
+	public Integer getValue() {
+		String val = properties.getProperty(identifier);
+		
+		if (val == null) {
+			CCLog.addInformation(LocaleBundle.getFormattedString("LogMessage.PropNotFound", identifier)); //$NON-NLS-1$
+			setDefault();
+			return standard;
+		}
+		
+		int ival;
+		
+		try {
+			ival = Integer.parseInt(val);
+		} catch(NumberFormatException e) {
+			CCLog.addWarning(LocaleBundle.getFormattedString("LogMessage.PropFormatErrorNumber", identifier, mclass.getName())); //$NON-NLS-1$
+			setDefault();
+			return standard;
+		}
+		
+		return ival;
+	}
+
+	@Override
+	public Integer setValue(Integer val) {
+		properties.setProperty(identifier, "" + val); //$NON-NLS-1$
+		
+		return getValue();
 	}
 }

@@ -13,7 +13,6 @@ public class ClipSeriesPopup extends ClipPopupMenu {
 	protected void init() {
 		
 		addAction("PrevSeries");
-		addAction("PrevMovie");
 		
 		//#############
 		addSeparator();

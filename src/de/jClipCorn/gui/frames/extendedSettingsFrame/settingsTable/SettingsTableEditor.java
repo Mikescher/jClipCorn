@@ -14,6 +14,7 @@ import javax.swing.table.TableCellEditor;
 import de.jClipCorn.gui.guiComponents.CCDateEditor;
 import de.jClipCorn.gui.guiComponents.SpinnerCCDateModel;
 import de.jClipCorn.properties.CCProperties;
+import de.jClipCorn.properties.property.CCBoolProperty;
 import de.jClipCorn.properties.property.CCIntProperty;
 import de.jClipCorn.properties.property.CCProperty;
 import de.jClipCorn.properties.property.CCRIntProperty;
@@ -22,7 +23,7 @@ import de.jClipCorn.util.CCDate;
 public class SettingsTableEditor extends AbstractCellEditor implements TableCellEditor {
 	private static final long serialVersionUID = 1087066424626302463L;
 
-	private final static String[] BOOL_LIST = { CCProperties.TYPE_BOOL_FALSE, CCProperties.TYPE_BOOL_TRUE };
+	private final static String[] BOOL_LIST = { CCBoolProperty.TYPE_BOOL_FALSE, CCBoolProperty.TYPE_BOOL_TRUE };
 
 	private final CCProperties properties;
 	private JComboBox<String> cbxBoolean;

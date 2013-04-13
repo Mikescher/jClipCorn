@@ -8,7 +8,7 @@ import javax.swing.KeyStroke;
 @SuppressWarnings("nls")
 public class KeyStrokeUtil {
 
-	public static String keyStroke2String(KeyStroke key) {
+	public static String keyStrokeToString(KeyStroke key) {
 		if (key == null) {
 			return "";
 		}

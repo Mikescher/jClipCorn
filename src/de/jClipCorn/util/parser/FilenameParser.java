@@ -63,13 +63,13 @@ public class FilenameParser {
 		if ((! flang.equals(moviename)) && flang.startsWith("[") && flang.endsWith("]")) {
 			lang = flang.substring(1, flang.length() - 1);
 			boolean succ = false;
-			if (lang.equalsIgnoreCase("ENG")) {
+			if (lang.equalsIgnoreCase(CCMovieLanguage.ENGLISH.getShortString())) {
 				frame.setMovieLanguage(CCMovieLanguage.ENGLISH);
 				succ = true;
-			} else if (lang.equalsIgnoreCase("FR")) {
+			} else if (lang.equalsIgnoreCase(CCMovieLanguage.FRENCH.getShortString())) {
 				frame.setMovieLanguage(CCMovieLanguage.FRENCH);
 				succ = true;
-			} else if (lang.equalsIgnoreCase("MUT")) {
+			} else if (lang.equalsIgnoreCase(CCMovieLanguage.MUTED.getShortString())) {
 				frame.setMovieLanguage(CCMovieLanguage.MUTED);
 				succ = true;
 			} else { // auch wen "GER"

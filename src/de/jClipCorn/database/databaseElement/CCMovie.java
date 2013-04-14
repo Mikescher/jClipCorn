@@ -7,6 +7,7 @@ import org.jdom2.Element;
 
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFormat;
+import de.jClipCorn.database.databaseElement.columnTypes.CCMovieLanguage;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieQuality;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieSize;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieStatus;
@@ -319,5 +320,32 @@ public class CCMovie extends CCDatabaseElement {
 	@Override
 	public String toString() {
 		return getCompleteTitle();
+	}
+	
+	@SuppressWarnings("nls")
+	public String generateFilename(int part) { //Test if database has no errors
+		String filename = "";
+		
+		if (getZyklus().isSet()) {
+			filename += getZyklus().getFormatted() + " - ";
+			
+			filename += getTitle().replace(": ", " - ");
+		} else {
+			filename += getTitle().replace(": ", " ");
+		}
+				
+		if (getLanguage() != CCMovieLanguage.GERMAN) {
+			filename += " [" + getLanguage().asString() + "]";
+		}
+		
+		if (getPartcount() > 1) {
+			filename += " (Part " + (part+1) + ")";
+		}
+		
+		filename += "." + getFormat().asString();
+		
+		filename = PathFormatter.fixStringToFilename(filename);
+		
+		return filename;
 	}
 }

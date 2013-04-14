@@ -1,6 +1,7 @@
 package de.jClipCorn.database.databaseErrors;
 
 import java.awt.Component;
+import java.io.File;
 import java.util.ArrayList;
 
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
@@ -40,6 +41,7 @@ public class DatabaseError {
 	public static int ERROR_WRONG_QUALITY = 19;
 	public static int ERROR_DUPLICATE_TITLE = 20;
 	public static int ERROR_DUPLICATE_FILELINK = 21;
+	public static int ERROR_WRONG_FILENAME = 22;
 	
 	private final int errorcode;
 	private final Object el1;
@@ -168,6 +170,8 @@ public class DatabaseError {
 			return true;
 		} else if (errorcode == ERROR_WRONG_QUALITY) {
 			return true;
+		} else if (errorcode == ERROR_WRONG_FILENAME) {
+			return true;
 		}
 		
 		return false;
@@ -190,6 +194,8 @@ public class DatabaseError {
 			return fixError_Not_Trimmed();
 		} else if (errorcode == ERROR_WRONG_QUALITY) {
 			return fixError_Wrong_Quality();
+		} else if (errorcode == ERROR_WRONG_FILENAME) {
+			return fixError_Wrong_Filename();
 		}
 		
 		return false;
@@ -323,6 +329,39 @@ public class DatabaseError {
 		} else if (el1 instanceof CCEpisode) {
 			((CCEpisode)el1).setQuality(CCMovieQuality.getQualityForSize(((CCEpisode)el1).getFilesize(), 1));
 			return true;
+		}
+		
+		return false;
+	}
+	
+	private boolean fixError_Wrong_Filename() {
+		if (el1 instanceof CCMovie) {
+			CCMovie mov = ((CCMovie)el1);
+			
+			for (int i = 0; i < mov.getPartcount(); i++) {
+				String opath = mov.getAbsolutePart(i);
+				File fold = new File(opath);
+				if (! fold.exists()) {
+					return false;
+				}
+				String npath = PathFormatter.rename(opath, mov.generateFilename(i));
+				File fnew = new File(npath);
+				
+				boolean succ = fold.renameTo(fnew);
+				mov.setPart(i, PathFormatter.getRelative(npath));
+				
+				if (! succ) {
+					return false;
+				}
+			}
+
+			return true;
+		} else if (el1 instanceof CCSeries) {
+			return false;
+		} else if (el1 instanceof CCSeason) {
+			return false;
+		} else if (el1 instanceof CCEpisode) {
+			return false;
 		}
 		
 		return false;

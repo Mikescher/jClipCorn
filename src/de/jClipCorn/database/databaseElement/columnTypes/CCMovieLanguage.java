@@ -19,6 +19,13 @@ public enum CCMovieLanguage {
 		LocaleBundle.getString("CCMovieLanguage.French")   //$NON-NLS-1$
 	};
 	
+	private final static String shortnames[] = {
+		"GER",  //$NON-NLS-1$
+		"ENG", //$NON-NLS-1$
+		"MUT",   //$NON-NLS-1$
+		"FR"   //$NON-NLS-1$
+	};
+	
 	private int id;
 	
 	CCMovieLanguage(int val) {
@@ -61,5 +68,9 @@ public enum CCMovieLanguage {
 		default:
 			return null;
 		}
+	}
+
+	public String getShortString() {
+		return shortnames[asInt()];
 	}
 }

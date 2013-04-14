@@ -2,6 +2,8 @@ package de.jClipCorn.util;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
@@ -10,6 +12,13 @@ import de.jClipCorn.properties.CCProperties;
 @SuppressWarnings("nls")
 public class PathFormatter {
 	private final static char BACKSLASH = '\\';
+	
+	private final static ArrayList<Character> filenameChars = new ArrayList<>(Arrays.asList(
+		'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'Ä', 'Ö', 'Ü',
+		'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'ä', 'ö', 'ü',
+		'0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+		' ', '!', '#', '&', '\'', '(', ')', '+', ',', '-', '.', ';', '=', '@', '[', ']', '^', '_', '`', '{', '}', 'ß'
+	));
 	
 	private final static String REGEX_SELF = "\\<\\?self\\>"; // \<\?self\>
 	private final static String REGEX_DRIVENAME = "\\<\\?vLabel=\"[^\\\"]+?\"\\>"; // <\?vLabel="[^\"]+?"\>
@@ -115,7 +124,7 @@ public class PathFormatter {
 	
 	public static void showInExplorer(String abspath) {
 		try {
-			Runtime.getRuntime().exec(String.format("explorer.exe /select,\"%s\"", abspath)); //TODO öffnet zwar - selected aber nicht :'( // Manchmal aber doch
+			Runtime.getRuntime().exec(String.format("explorer.exe /select,\"%s\"", abspath)); //TODO Öffnet zwar - selected aber nicht :'( // Manchmal aber doch // Vielleicht doch immer ??
 		} catch (IOException e) {
 			CCLog.addError(e);
 		}
@@ -123,5 +132,21 @@ public class PathFormatter {
 	
 	public static boolean isUntrimmed(String s) {
 		return ! s.equals(s.trim());
+	}
+	
+	public static String fixStringToFilename(String fn) {
+		String r = "";
+		
+		for (int i = 0; i < fn.length(); i++) {
+			if (filenameChars.contains(fn.charAt(i))) {
+				r = r + fn.charAt(i);
+			}
+		}
+		
+		return r;
+	}
+	
+	public static String rename(String fn, String newFilename) {
+		return getFilepath(fn) + BACKSLASH + newFilename;
 	}
 }

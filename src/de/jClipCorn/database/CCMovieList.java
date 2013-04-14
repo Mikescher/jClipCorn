@@ -387,11 +387,13 @@ public class CCMovieList {
 
 	public int getEpisodeCount() {
 		int c = 0;
-		for (CCDatabaseElement dbe : list) {
-			if (dbe.isSeries()) {
-				c += ((CCSeries) dbe).getEpisodeCount();
-			}
+		
+		for (Iterator<CCSeries> it = iteratorSeries(); it.hasNext();) {
+			CCSeries ser = it.next();
+			
+			c += ser.getEpisodeCount();
 		}
+		
 		return c;
 	}
 

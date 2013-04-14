@@ -4,10 +4,15 @@ import java.util.ArrayList;
 
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
+import de.jClipCorn.util.DriveMap;
 import de.jClipCorn.util.ProgressCallbackListener;
 
 public class DatabaseAutofixer {
 	public static boolean fixErrors(ArrayList<DatabaseError> list, ProgressCallbackListener pcl) {
+		if (! DriveMap.isCreated()) {
+			return false;
+		}
+		
 		pcl.setMax(list.size());
 		pcl.reset();
 		

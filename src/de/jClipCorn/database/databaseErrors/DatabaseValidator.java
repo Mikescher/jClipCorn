@@ -279,6 +279,20 @@ public class DatabaseValidator {
 				break;
 			}
 		}
+		
+		// ###############################################
+		// Wrong filename
+		// ###############################################
+		
+		boolean wrongfn = false;
+		for (int i = 0; i < mov.getPartcount(); i++) {
+			if (! PathFormatter.getFilenameWithExt(mov.getAbsolutePart(i)).equals(mov.generateFilename(i))) {
+				wrongfn = true;
+			}
+		}
+		if (wrongfn) {
+			e.add(DatabaseError.createSingle(DatabaseError.ERROR_WRONG_FILENAME, mov));
+		}
 	}
 
 	private static void validateSeason(ArrayList<DatabaseError> e, CCMovieList movielist, CCSeason season) {

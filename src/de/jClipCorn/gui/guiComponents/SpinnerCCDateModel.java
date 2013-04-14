@@ -33,7 +33,7 @@ public class SpinnerCCDateModel extends AbstractSpinnerModel {
 		CCDate c = current.copy();
 		
 		if (min == null || c.isGreaterThan(min)) {
-			c.remDay(1);
+			c.subDay(1);
 		}
 		
 		return c;

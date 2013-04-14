@@ -48,7 +48,7 @@ public class CCDate {
 	private int month = 1;
 	private int year = YEAR_MIN;
 	
-	public CCDate() { //TODO Make add / rem etc Methods FASTER (AND TEST THE SHIT OUT OF THEM (after the performance-boost))
+	public CCDate() {
 		Calendar c = Calendar.getInstance();
 		set(c.get(Calendar.DAY_OF_MONTH), c.get(Calendar.MONTH)+1, c.get(Calendar.YEAR));
 	}
@@ -84,9 +84,9 @@ public class CCDate {
 	}
 	
 	private int getWeekdayInt() {
-	    int wkd = (((year - ((month<3)?1:0)) + (year - ((month<3)?1:0))/4 - (year - ((month<3)?1:0))/100 + (year - ((month<3)?1:0))/400 + monvaltab[month - 1] + day) % 7) - 1;
+	    int wkd = (((year - ((month<3)?1:0)) + (year - ((month<3)?1:0))/4 - (year - ((month<3)?1:0))/100 + (year - ((month<3)?1:0))/400 + monvaltab[month - 1] + day) % 7);
 	    
-	    return (wkd < 0) ? (wkd+7) : (wkd);
+	    return (wkd < 1) ? (wkd+7) : (wkd);
 	}
 	
 	public String getWeekday() {
@@ -295,15 +295,15 @@ public class CCDate {
 		addDay(d);
 	}
 	
-	public void rem(int d, int m, int y) {
-		remYear(y);
-		remMonth(m);
-		remDay(d);
+	public void sub(int d, int m, int y) {
+		subYear(y);
+		subMonth(m);
+		subDay(d);
 	}
 	
 	public void addDay(int d) {
 		if (d < 0) {
-			remDay(-d);
+			subDay(-d);
 			return;
 		}
 		
@@ -315,7 +315,7 @@ public class CCDate {
 		}
 	}
 	
-	public void remDay(int d) {
+	public void subDay(int d) {
 		if (d < 0) {
 			addDay(-d);
 			return;
@@ -324,14 +324,14 @@ public class CCDate {
 		day -= d;
 		
 		while (day <= 0) {
-			remMonth(1);
+			subMonth(1);
 			day += getDaysOfMonth();
 		}
 	}
 	
 	public void addMonth(int m) {
 		if (m < 0) {
-			remMonth(-m);
+			subMonth(-m);
 			return;
 		}
 		
@@ -342,7 +342,7 @@ public class CCDate {
 		}
 	}
 	
-	public void remMonth(int m) {
+	public void subMonth(int m) {
 		if (m < 0) {
 			addMonth(-m);
 			return;
@@ -352,20 +352,20 @@ public class CCDate {
 		
 		while(month < 1) {
 			month += 12;
-			remYear(1);
+			subYear(1);
 		}
 	}
 	
 	public void addYear(int y) {
 		if (y < 0) {
-			remYear(-y);
+			subYear(-y);
 			return;
 		}
 		
 		year += y;
 	}
 	
-	public void remYear(int y) {
+	public void subYear(int y) {
 		if (y < 0) {
 			addYear(-y);
 			return;
@@ -403,7 +403,7 @@ public class CCDate {
 		}
 		
 		while (temp.isGreaterThan(other)) {
-			temp.remDay(1);
+			temp.subDay(1);
 			c--;
 		}
 		
@@ -473,6 +473,60 @@ public class CCDate {
 		}
 	}
 	
+	public static boolean test() {
+		boolean succ = true;
+		
+		CCDate tdate = new CCDate(1, 1, 1900);
+		succ &= tdate.getDay() == 1 && tdate.getMonth() == 1 && tdate.getYear() == 1900;
+		
+		tdate.addDay(1);
+		succ &= tdate.getDay() == 2 && tdate.getMonth() == 1 && tdate.getYear() == 1900;
+		
+		tdate.subDay(1);
+		succ &= tdate.getDay() == 1 && tdate.getMonth() == 1 && tdate.getYear() == 1900;
+		
+		tdate.addMonth(1);
+		succ &= tdate.getDay() == 1 && tdate.getMonth() == 2 && tdate.getYear() == 1900;
+		
+		tdate.subMonth(1);
+		succ &= tdate.getDay() == 1 && tdate.getMonth() == 1 && tdate.getYear() == 1900;
+		
+		tdate.addYear(1);
+		succ &= tdate.getDay() == 1 && tdate.getMonth() == 1 && tdate.getYear() == 1901;
+		
+		tdate.subYear(1);
+		succ &= tdate.getDay() == 1 && tdate.getMonth() == 1 && tdate.getYear() == 1900;
+		
+		tdate.addDay(365);
+		succ &= tdate.getDay() == 1 && tdate.getMonth() == 1 && tdate.getYear() == 1901;
+		
+		tdate.addDay(150);
+		succ &= tdate.getDay() == 31 && tdate.getMonth() == 5 && tdate.getYear() == 1901;
+		succ &= tdate.getWeekdayInt() == 5;
+		
+		tdate.addDay(1096);
+		succ &= tdate.getDay() == 31 && tdate.getMonth() == 5 && tdate.getYear() == 1904;
+		succ &= tdate.isLeapYear();
+		
+		tdate.add(215, 12, 94);
+		succ &= tdate.getDay() == 1 && tdate.getMonth() == 1 && tdate.getYear() == 2000;
+		
+		tdate.setDay(2);
+		succ &= tdate.getDay() == 2 && tdate.getMonth() == 1 && tdate.getYear() == 2000;
+		succ &= tdate.getWeekdayInt() == 7;
+		
+		tdate.addDay(1);
+		succ &= tdate.getDay() == 3 && tdate.getMonth() == 1 && tdate.getYear() == 2000;
+		succ &= tdate.getWeekdayInt() == 1;
+		succ &= tdate.isLeapYear();
+		
+		tdate.addMonth(12);
+		succ &= tdate.getDay() == 3 && tdate.getMonth() == 1 && tdate.getYear() == 2001;
+		succ &= ! tdate.isLeapYear();
+		
+		return succ;
+	}
+	
 	public boolean isEquals(CCDate other) {
 		return equals(other);
 	}
@@ -490,7 +544,7 @@ public class CCDate {
 	}
 
 	public boolean isMinimum() {
-		return 1 == getDay() && 1 == getMonth() && YEAR_MIN == getYear(); //FAST - PERFORMANCE - SMACK YOU LIKE A BITCH
+		return 1 == getDay() && 1 == getMonth() && YEAR_MIN == getYear();
 	}
 
 	public CCDate copy() {

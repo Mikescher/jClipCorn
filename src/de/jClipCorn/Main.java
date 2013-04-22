@@ -61,16 +61,34 @@ public class Main {
 	}
 }
 
-//http://www.themoviedb.org/search/movie?query=lazarus%20projekt
+//TODO Parse that (eventually ?): http://www.themoviedb.org/search/movie?query=lazarus%20projekt
 
 //TODO statistics page
+
 //TODO Auto parse Summary 
-//TODO import old ClipCorn features
+//TODO Parse Cover from more sources (coverparadies, darktown ...) ((Erst mal sehehn ob die was taugen))
+//TODO Search for Trailer
+
 //TODO Recheck all Texts - improve DL-Language (what EN / What GER)
 //TODO WatchItLaterFeature (And Download inHigherQuality)
-//TODO Auto rename Files nach Richtlinien
 //TODO Apache Commons hacken und duplicate entry removen
+
+//TODO Read Only - Mode
+//TODO DB als HTML "exportieren"
+//TODO Episodenguide in HTML/RTF/TXT exportieren
+
+//TODO Film als XML Exportieren (mit cover als data in xml)
+//TODO Mehrere Film als XML Exportieren (mit cover als data in xml)
+//TODO Alle geänderten Filme (CompareDBFrame) als XML Exportieren (mit cover als data in xml)
+//TODO Filme aus XML reimportieren
+
+//TODO DB aus jxmlbkp wiederherstellen
+
+//TODO Filmtrommel (mit netter Animation)
+
 
 //TODO Find Unused Classes
 //TODO Find Unused Methods
 //TODO Find Unused LocalizedStrings (i think i must code that myself)
+
+//TODO (2.0) ONLINE SYNCHRONISATION / Online Profiles / View Ratings + Viewed from others ... ...

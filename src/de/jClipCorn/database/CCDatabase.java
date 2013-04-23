@@ -349,7 +349,7 @@ public class CCDatabase extends DerbyDatabase {
 			return true;
 		} catch (SQLException e) {
 			lastError = e;
-			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.NoNewSeasonRow", eid, sid), e); //$NON-NLS-1$
+			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.NoNewEpisodeRow", eid, sid), e); //$NON-NLS-1$
 			return false;
 		}
 	}

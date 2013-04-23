@@ -586,7 +586,7 @@ public class CCActionTree {
 	
 	private void onClickDatabaseExportAsJxmBKP() {
 		final JFileChooser chooser = new JFileChooser();
-		chooser.setFileFilter(FileChooserHelper.createLocalFileFilter("ExportJxmlBKPDialog.filechooser.description", "jxmlbkp"));  //$NON-NLS-1$//$NON-NLS-2$
+		chooser.setFileFilter(FileChooserHelper.createLocalFileFilter("JXMLExport.filechooser.description", "jxmlbkp"));  //$NON-NLS-1$//$NON-NLS-2$
 		chooser.setCurrentDirectory(new File(PathFormatter.getRealSelfDirectory()));
 		
 		int returnval = chooser.showSaveDialog(owner);
@@ -607,7 +607,7 @@ public class CCActionTree {
 	
 	private void onClickDatabaseImportAsJxmBKP() {
 		final JFileChooser chooser = new JFileChooser();
-		chooser.setFileFilter(FileChooserHelper.createLocalFileFilter("ExportJxmlBKPDialog.filechooser.description", "jxmlbkp"));  //$NON-NLS-1$//$NON-NLS-2$
+		chooser.setFileFilter(FileChooserHelper.createLocalFileFilter("JXMLExport.filechooser.description", "jxmlbkp"));  //$NON-NLS-1$//$NON-NLS-2$
 		chooser.setCurrentDirectory(new File(PathFormatter.getRealSelfDirectory()));
 
 		int returnval = chooser.showOpenDialog(owner);

@@ -82,8 +82,6 @@ public class Main {
 //TODO Alle geänderten Filme (CompareDBFrame) als XML Exportieren (mit cover als data in xml)
 //TODO Filme aus XML reimportieren
 
-//TODO DB aus jxmlbkp wiederherstellen
-
 //TODO Filmtrommel (mit netter Animation)
 
 

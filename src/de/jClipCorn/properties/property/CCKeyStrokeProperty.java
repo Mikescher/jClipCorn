@@ -48,7 +48,7 @@ public class CCKeyStrokeProperty  extends CCProperty<KeyStroke>{
 		}
 		
 		if (kval == null) {
-			CCLog.addWarning(LocaleBundle.getFormattedString("LogMessage.PropFormatErrorBool", identifier, mclass.getName())); //$NON-NLS-1$
+			CCLog.addWarning(LocaleBundle.getFormattedString("LogMessage.PropFormatErrorStroke", identifier, mclass.getName())); //$NON-NLS-1$
 			setDefault();
 			return standard;
 		}

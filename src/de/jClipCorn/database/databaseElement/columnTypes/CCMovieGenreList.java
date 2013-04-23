@@ -99,7 +99,7 @@ public class CCMovieGenreList {
 	}
 	
 	private void setGenreInt(int idx, int val) {
-		genres = (genres & ~MASK[idx]) | ((val*1l) << (idx*GSIZE));
+		genres = (genres & ~MASK[idx]) | ((val*1L) << (idx*GSIZE));
 	}
 
 	public CCMovieGenre getGenre(int idx) {

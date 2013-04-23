@@ -507,7 +507,7 @@ public class CCActionTree {
 
 					owner.endBlockingIntermediate();
 				}
-			}).start();
+			}, "THREAD_PARSE_XML").start(); //$NON-NLS-1$
 		}
 	}
 	
@@ -580,7 +580,7 @@ public class CCActionTree {
 				public void run() {
 					movielist.clear();
 				}
-			}).start();
+			}, "THREAD_CLEAR_DATABASE").start(); //$NON-NLS-1$
 		}
 	}
 	
@@ -601,7 +601,7 @@ public class CCActionTree {
 
 					owner.endBlockingIntermediate();
 				}
-			}).start();
+			}, "THREAD_EXPORT_JXMLBKP").start(); //$NON-NLS-1$
 		}
 	}
 	
@@ -623,7 +623,7 @@ public class CCActionTree {
 					
 					owner.endBlockingIntermediate();
 				}
-			}).start();
+			}, "THREAD_IMPORT_JXMLBKP").start(); //$NON-NLS-1$
 		}
 	}
 	

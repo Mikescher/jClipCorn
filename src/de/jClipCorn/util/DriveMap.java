@@ -73,7 +73,7 @@ public class DriveMap {
 			public void run() {
 				createMap();
 			}
-		})).start();
+		}, "THREAD_SCAN_FILESYSTEM")).start(); //$NON-NLS-1$
 	}
 
 	public static  boolean isCreated() {

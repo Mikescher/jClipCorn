@@ -244,7 +244,7 @@ public class CCBXMLReader {
 		
 		for (int i = fullz.length()-1; i > 0; i--) {
 			String s = fullz.substring(i);
-			if (s.startsWith(" ")) {
+			if (s.charAt(0) == ' ') {
 				s = s.substring(1);
 				if (RomanNumberFormatter.isRoman(s)) {
 					return fullz.substring(0, i);
@@ -259,7 +259,7 @@ public class CCBXMLReader {
 		
 		for (int i = fullz.length()-1; i > 0; i--) {
 			String s = fullz.substring(i);
-			if (s.startsWith(" ")) {
+			if (s.charAt(0) == ' ') {
 				s = s.substring(1);
 				if (RomanNumberFormatter.isRoman(s)) {
 					return RomanNumberFormatter.romToDec(s);

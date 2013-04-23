@@ -87,6 +87,6 @@ public class Main {
 
 //TODO Find Unused Classes
 //TODO Find Unused Methods
-//TODO Find Unused LocalizedStrings (i think i must code that myself)
+//TODO CodePro AnalytiX (check dat all)
 
 //TODO (2.0) ONLINE SYNCHRONISATION / Online Profiles / View Ratings + Viewed from others ... ...

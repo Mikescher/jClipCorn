@@ -425,8 +425,14 @@ public class CCDate {
 		}
 	}
 	
-	public boolean equals(CCDate other) {
-		return other.getDay() == getDay() && other.getMonth() == getMonth() && other.getYear() == getYear();
+	@Override
+	public boolean equals(Object other) {
+		return (other instanceof CCDate) && ((CCDate)other).getDay() == getDay() && ((CCDate)other).getMonth() == getMonth() && ((CCDate)other).getYear() == getYear();
+	}
+	
+	@Override
+	public int hashCode() {
+		return (((year << 4) + month) << 5) + day; // Yep - thats right
 	}
 	
 	public boolean isGreaterThan(CCDate other) {

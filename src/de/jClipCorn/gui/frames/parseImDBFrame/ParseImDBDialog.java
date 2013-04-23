@@ -436,7 +436,7 @@ public class ParseImDBDialog extends JDialog {
 			public void run() {
 				runSearch();
 			}
-		}).start();
+		}, "THREAD_SEARCH_IN_IMDB").start(); //$NON-NLS-1$
 	}
 	
 	@SuppressWarnings("deprecation") //TODO Non-Deprecated way
@@ -651,7 +651,7 @@ public class ParseImDBDialog extends JDialog {
 			public void run() {
 				runParse();
 			}
-		}).start();
+		}, "THREAD_PARSE_IMDB_MOVIE").start(); //$NON-NLS-1$
 	}
 	
 	private void insertDataIntoFrame() {

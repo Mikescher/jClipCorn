@@ -6,7 +6,7 @@ import java.awt.event.ActionListener;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 
-public class UpdateConnector implements Runnable{
+public class UpdateConnector implements Runnable {
 	private final static String HIGHSCORE_URL = "http://www.mikescher.de/update.php?Name=jClipCorn"; //$NON-NLS-1$
 	
 	private final ActionListener listener;
@@ -23,7 +23,7 @@ public class UpdateConnector implements Runnable{
 		this.title = title;
 		this.version = version;
 		
-		Thread t = new Thread(this);
+		Thread t = new Thread(this, "THREAD_CHECK_FOR_UPDATES"); //$NON-NLS-1$
 		t.start();
 	}
 

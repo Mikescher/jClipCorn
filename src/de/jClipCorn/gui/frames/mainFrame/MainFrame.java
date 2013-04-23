@@ -347,7 +347,7 @@ public class MainFrame extends JFrame implements CCDBUpdateListener {
 							} else {
 								ShowUpdateFrame suf = new ShowUpdateFrame(MainFrame.this, (UpdateConnector) e.getSource());
 								suf.setVisible(true);
-							};
+							}
 						}
 					});
 				}

@@ -71,4 +71,9 @@ public class CCMovieZyklus {
 			return false;
 		}
 	}
+	
+	@Override 
+	public int hashCode() {
+		return title.hashCode()*(zyklusNmbr+2);
+	}
 }

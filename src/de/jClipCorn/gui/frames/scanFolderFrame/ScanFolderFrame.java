@@ -117,7 +117,7 @@ public class ScanFolderFrame extends JFrame implements Runnable, MouseListener {
 					includeSeries = cbIncludeSeries.isSelected();
 					excludeIfos = cbExcludeIfo.isSelected();
 					
-					Thread run = new Thread(ScanFolderFrame.this);
+					Thread run = new Thread(ScanFolderFrame.this, "THREAD_SCAN_FOLDER_FOR_MOVIES"); //$NON-NLS-1$
 					run.start();
 				}
 			}

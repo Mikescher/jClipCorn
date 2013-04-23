@@ -81,7 +81,7 @@ public class CCMovieList {
 			}
 		};
 
-		(new Thread(r)).start();
+		(new Thread(r, "THREAD_LOAD_DATABASE")).start(); //$NON-NLS-1$
 	}
 
 	public CCDatabaseElement getDatabaseElementBySort(int row) { // WARNIG SORT <> MOVIEID || SORT IN DATABASE (SORTED BY MOVIEID)

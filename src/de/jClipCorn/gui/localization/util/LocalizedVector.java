@@ -25,7 +25,7 @@ public class LocalizedVector extends Vector<String> {
 	}
 
 	@Override
-	public String elementAt(int i) {
+	public synchronized String elementAt(int i) {
 		return LocaleBundle.getString(super.elementAt(i));
 	}
 }

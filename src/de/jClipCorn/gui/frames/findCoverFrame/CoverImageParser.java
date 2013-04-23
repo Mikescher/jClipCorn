@@ -45,21 +45,21 @@ public class CoverImageParser {
 			public void run() {
 				parseGoogleImages();
 			}
-		}).start();
+		}, "THREAD_IMGPARSER_GOOGLE").start(); //$NON-NLS-1$
 		
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
 				parseCoverSearch();
 			}
-		}).start();
+		}, "THREAD_IMGPARSER_IMDB_1").start(); //$NON-NLS-1$
 		
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
 				parseImDBImages();
 			}
-		}).start();
+		}, "THREAD_IMGPARSE_IMDB_2").start(); //$NON-NLS-1$
 	}
 	
 	public void stop() {

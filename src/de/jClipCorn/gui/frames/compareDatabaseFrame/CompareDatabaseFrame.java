@@ -27,7 +27,6 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import org.apache.commons.lang.StringUtils;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.output.Format;
@@ -457,7 +456,7 @@ public class CompareDatabaseFrame extends JFrame {
 						}
 					});
 				}
-			});
+			}, "THREAD_GENERATE_DBCOMPARE_FILE"); //$NON-NLS-1$
 
 			t.start();
 		}
@@ -519,7 +518,7 @@ public class CompareDatabaseFrame extends JFrame {
 					}
 				});
 			}
-		}).start();
+		}, "THREAD_COMPARE_DATABASES").start(); //$NON-NLS-1$
 	}
 
 	private void updateGUI(ArrayList<CompareElement> list) {

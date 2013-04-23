@@ -152,7 +152,7 @@ public class CheckDatabaseFrame extends JFrame {
 				boolean succ = DatabaseAutofixer.fixErrors(errorList, new ProgressCallbackHelper(pBar));
 				endFixThread(succ);
 			}
-		}).start();
+		}, "THREAD_AUTOFIX_DB").start(); //$NON-NLS-1$
 	}
 	
 	private void endThread() {
@@ -218,6 +218,6 @@ public class CheckDatabaseFrame extends JFrame {
 				
 				endThread();
 			}
-		}).start();
+		}, "THREAD_VALIDATE_DATABASE").start(); //$NON-NLS-1$
 	}
 }

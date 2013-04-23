@@ -60,7 +60,7 @@ public class FilenameParser {
 		
 		String flang = moviename.substring(moviename.lastIndexOf(' ') + 1);
 		String lang = "";
-		if ((! flang.equals(moviename)) && flang.startsWith("[") && flang.endsWith("]")) {
+		if ((! flang.equals(moviename)) && (flang.charAt(0) =='[') && flang.endsWith("]")) {
 			lang = flang.substring(1, flang.length() - 1);
 			boolean succ = false;
 			if (lang.equalsIgnoreCase(CCMovieLanguage.ENGLISH.getShortString())) {

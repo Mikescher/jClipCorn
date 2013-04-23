@@ -598,7 +598,7 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 		}
 	}
 	
-	private void startSearch() {
+	private void startSearch() { // TODO implement better search (like the old CC-Search)
 		ArrayList<CCEpisode> el = dispSeries.getEpisodeList();
 		
 		boolean found = false;

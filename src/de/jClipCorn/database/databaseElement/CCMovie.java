@@ -305,6 +305,54 @@ public class CCMovie extends CCDatabaseElement {
 		}
 	}
 	
+	@Override
+	@SuppressWarnings("nls")
+	public void parseFromXML(Element e) {
+		beginUpdating();
+		
+		super.parseFromXML(e);
+		
+		if (e.getAttributeValue("adddate") != null) {
+			CCDate d = new CCDate();
+			d.parse(e.getAttributeValue("adddate"), "D.M.Y");
+			setAddDate(d);
+		}
+		
+		if (e.getAttributeValue("filesize") != null)
+			setFilesize(Long.parseLong(e.getAttributeValue("filesize")));
+		
+		if (e.getAttributeValue("format") != null)
+			setFormat(Integer.parseInt(e.getAttributeValue("format")));
+		
+		if (e.getAttributeValue("length") != null)
+			setLength(Integer.parseInt(e.getAttributeValue("length")));
+		
+		for (int i = 0; i < PARTCOUNT_MAX; i++) {
+			if (e.getAttributeValue("part_"+i) != null)
+				setPart(i, e.getAttributeValue("part_"+i));
+		}
+		
+		if (e.getAttributeValue("quality") != null)
+			setQuality(Integer.parseInt(e.getAttributeValue("quality")));
+		
+		if (e.getAttributeValue("status") != null)
+			setStatus(Integer.parseInt(e.getAttributeValue("status")));
+		
+		if (e.getAttributeValue("viewed") != null)
+			setViewed(e.getAttributeValue("viewed").equals(true + ""));
+		
+		if (e.getAttributeValue("year") != null)
+			setYear(Integer.parseInt(e.getAttributeValue("year")));
+		
+		if (e.getAttributeValue("zyklus") != null)
+			setZyklusTitle(e.getAttributeValue("zyklus"));
+		
+		if (e.getAttributeValue("zyklusnumber") != null)
+			setZyklusID(Integer.parseInt(e.getAttributeValue("zyklusnumber")));
+		
+		endUpdating();
+	}
+	
 	public String getFastMD5() {
 		File[] f = new File[getPartcount()];
 		for (int i = 0; i < getPartcount(); i++) {

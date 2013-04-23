@@ -240,6 +240,30 @@ public abstract class CCDatabaseElement {
 		e.setAttribute("covername", covername);
 		e.setAttribute("seriesid", seriesID + "");
 	}
+	
+	@SuppressWarnings("nls")
+	public void parseFromXML(Element e) {
+		if (e.getAttributeValue("title") != null)
+			setTitle(e.getAttributeValue("title"));
+		
+		if (e.getAttributeValue("language") != null)
+			setLanguage(Integer.parseInt(e.getAttributeValue("language")));
+		
+		if (e.getAttributeValue("genres") != null)
+			setGenres(Long.parseLong(e.getAttributeValue("genres")));
+		
+		if (e.getAttributeValue("onlinescore") != null)
+			setOnlinescore(Integer.parseInt(e.getAttributeValue("onlinescore")));
+		
+		if (e.getAttributeValue("fsk") != null)
+			setFsk(Integer.parseInt(e.getAttributeValue("fsk")));
+		
+		if (e.getAttributeValue("score") != null)
+			setScore(Integer.parseInt(e.getAttributeValue("score")));
+		
+		if (e.getAttributeValue("covername") != null)
+			setCover(e.getAttributeValue("covername"));
+	}
 
 	@SuppressWarnings("nls")
 	public Element generateXML(Element el, boolean fileHash, boolean coverHash) {

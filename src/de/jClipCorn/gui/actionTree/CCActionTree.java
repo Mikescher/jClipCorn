@@ -20,6 +20,7 @@ import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieScore;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieStatus;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTyp;
+import de.jClipCorn.database.util.ExportHelper;
 import de.jClipCorn.database.xml.CCBXMLReader;
 import de.jClipCorn.gui.Resources;
 import de.jClipCorn.gui.frames.aboutFrame.AboutFrame;
@@ -116,6 +117,14 @@ public class CCActionTree {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				onClickDatabaseExportAsJxmBKP();
+			}
+		});
+		
+		temp = database.addChild(new CCActionElement("ImportDatabase", null, "ClipMenuBar.Database.ImportDB", null)); //TODO ICON !!!!!!1111einseinself
+		temp.addListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				onClickDatabaseImportAsJxmBKP();
 			}
 		});
 		
@@ -581,8 +590,37 @@ public class CCActionTree {
 	}
 	
 	private void onClickDatabaseExportAsJxmBKP() {
-		JDialog ejf = new ExportJxmlBKPDialog(owner, owner.getMovielist());
+		JDialog ejf = new ExportJxmlBKPDialog(owner, owner.getMovielist()); //TODO Why do we need an extra Frame for this ??? (seejxmbkp import)
 		ejf.setVisible(true);
+	}
+	
+	private void onClickDatabaseImportAsJxmBKP() {
+		final JFileChooser chooser = new JFileChooser();
+
+		chooser.setFileFilter(FileChooserHelper.createLocalFileFilter("ExportJxmlBKPDialog.filechooser.description", "jxmlbkp"));  //$NON-NLS-1$//$NON-NLS-2$
+
+		chooser.setCurrentDirectory(new File(PathFormatter.getRealSelfDirectory()));
+
+		int returnval = chooser.showOpenDialog(owner);
+
+		if (returnval == JFileChooser.APPROVE_OPTION && DialogHelper.showLocaleYesNo(owner, "Dialogs.LoadBackup")) { //$NON-NLS-1$
+			new Thread(new Runnable() {
+				@Override
+				public void run() {
+					owner.startBlockingIntermediate();
+
+					try {
+						ExportHelper.restoreFromBackup(chooser.getSelectedFile(), movielist);
+					} catch (Exception e) {
+						CCLog.addError(e);
+					}
+					
+					owner.getClipTable().autoResize();
+
+					owner.endBlockingIntermediate();
+				}
+			}).start();
+		}
 	}
 	
 	private void onClickDatabaseSearchDatabase() {

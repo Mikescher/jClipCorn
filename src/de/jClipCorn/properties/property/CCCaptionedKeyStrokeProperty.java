@@ -15,6 +15,10 @@ public class CCCaptionedKeyStrokeProperty extends CCKeyStrokeProperty {
 
 	@Override
 	public String getDescription() {
+		if (captionIdent.isEmpty()) {
+			return ""; //$NON-NLS-1$
+		}
+		
 		return LocaleBundle.getString(captionIdent);
 	}
 }

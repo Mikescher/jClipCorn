@@ -304,6 +304,21 @@ public class CCSeries extends CCDatabaseElement {
 		}
 	}
 	
+	
+	@Override
+	@SuppressWarnings("nls")
+	public void parseFromXML(Element e) {
+		beginUpdating();
+		
+		super.parseFromXML(e);
+		
+		for (Element e2 : e.getChildren("season")) {
+			createNewEmptySeason().parseFromXML(e2);
+		}
+		
+		endUpdating();
+	}
+	
 	public String getCoverMD5() {
 		return LargeMD5Calculator.calcMD5(getCover());
 	}

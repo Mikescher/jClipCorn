@@ -194,7 +194,7 @@ public class CCMovieList {
 		}
 	}
 
-	public void clear() {
+	public void clear() { // Serious method is doing serious business
 		while (!list.isEmpty()) {
 			remove(list.get(0));
 		}

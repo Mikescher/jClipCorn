@@ -297,6 +297,52 @@ public class CCEpisode {
 			e.setAttribute("filehash", getFastMD5());
 		}
 	}
+	
+	@SuppressWarnings("nls")
+	public void parseFromXML(Element e) {
+		beginUpdating();
+		
+		if (e.getAttributeValue("title") != null)
+			setTitle(e.getAttributeValue("title"));
+		
+		if (e.getAttributeValue("viewed") != null)
+			setViewed(e.getAttributeValue("viewed").equals(true + ""));
+		
+		if (e.getAttributeValue("adddate") != null) {
+			CCDate d = new CCDate();
+			d.parse(e.getAttributeValue("adddate"), "D.M.Y");
+			setAddDate(d);
+		}
+		
+		if (e.getAttributeValue("episodenumber") != null)
+			setEpisodeNumber(Integer.parseInt(e.getAttributeValue("episodenumber")));
+		
+		if (e.getAttributeValue("filesize") != null)
+			setFilesize(Long.parseLong(e.getAttributeValue("filesize")));
+		
+		if (e.getAttributeValue("format") != null)
+			setFormat(Integer.parseInt(e.getAttributeValue("format")));
+		
+		if (e.getAttributeValue("lastviewed") != null) {
+			CCDate d = new CCDate();
+			d.parse(e.getAttributeValue("lastviewed"), "D.M.Y");
+			setLastViewed(d);
+		}
+		
+		if (e.getAttributeValue("length") != null)
+			setLength(Integer.parseInt(e.getAttributeValue("length")));
+		
+		if (e.getAttributeValue("part") != null)
+			setPart(e.getAttributeValue("part"));
+		
+		if (e.getAttributeValue("quality") != null)
+			setQuality(Integer.parseInt(e.getAttributeValue("quality")));
+		
+		if (e.getAttributeValue("status") != null)
+			setStatus(Integer.parseInt(e.getAttributeValue("status")));
+
+		endUpdating();
+	}
 
 	@SuppressWarnings("nls")
 	public Element generateXML(Element el, boolean fileHash) {

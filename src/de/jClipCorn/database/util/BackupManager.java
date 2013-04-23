@@ -2,11 +2,9 @@ package de.jClipCorn.database.util;
 
 import java.io.File;
 import java.io.FileFilter;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import de.jClipCorn.database.CCMovieList;
@@ -112,7 +110,7 @@ public class BackupManager {
 			ZipOutputStream zos = new ZipOutputStream(os);
 			zos.setLevel(CCProperties.getInstance().PROP_BACKUP_COMPRESSION.getValue());
 			
-			zipDir(movielist.getDatabaseDirectory().getParentFile(), movielist.getDatabaseDirectory(), zos);
+			ExportHelper.zipDir(movielist.getDatabaseDirectory().getParentFile(), movielist.getDatabaseDirectory(), zos, true);
 			
 			zos.close();
 		} catch (FileNotFoundException e) {
@@ -123,31 +121,5 @@ public class BackupManager {
 		
 		CCLog.addInformation(LocaleBundle.getString("LogMessage.BackupCreated")); //$NON-NLS-1$
 		CCProperties.getInstance().PROP_BACKUP_LASTBACKUP.setValue(new CCDate());
-	}
-	
-	private static void zipDir(File owner, File zipDir, ZipOutputStream zos) {
-		try {
-			String[] dirList = zipDir.list();
-			byte[] readBuffer = new byte[2156];
-			int bytesIn = 0;
-			for (int i = 0; i < dirList.length; i++) {
-				File f = new File(zipDir, dirList[i]);
-				if (f.isDirectory()) {
-					zipDir(owner, f, zos);
-					continue;
-				}
-				
-				FileInputStream fis = new FileInputStream(f);
-				ZipEntry anEntry = new ZipEntry(f.getAbsolutePath().replace(owner.getAbsolutePath() + '\\', "")); //$NON-NLS-1$
-				zos.putNextEntry(anEntry);
-				
-				while ((bytesIn = fis.read(readBuffer)) != -1) {
-					zos.write(readBuffer, 0, bytesIn);
-				}
-				fis.close();
-			}
-		} catch (Exception e) {
-			CCLog.addError(e);
-		}
 	}
 }

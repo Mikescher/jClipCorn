@@ -5,11 +5,6 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -18,19 +13,16 @@ import javax.swing.JProgressBar;
 import javax.swing.SwingUtilities;
 
 import org.apache.commons.lang.StringUtils;
-import org.jdom2.Document;
-import org.jdom2.output.Format;
-import org.jdom2.output.XMLOutputter;
 
 import de.jClipCorn.database.CCMovieList;
+import de.jClipCorn.database.util.ExportHelper;
 import de.jClipCorn.gui.guiComponents.ReadableTextField;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.util.ExtendedFocusTraversalOnArray;
 import de.jClipCorn.util.FileChooserHelper;
 import de.jClipCorn.util.PathFormatter;
 
-public class ExportJxmlBKPDialog extends JDialog implements Runnable {
+public class ExportJxmlBKPDialog extends JDialog implements Runnable { //TODO Test me please
 	private static final long serialVersionUID = 8171441711402095045L;
 	
 	private JProgressBar progressBar;
@@ -38,7 +30,7 @@ public class ExportJxmlBKPDialog extends JDialog implements Runnable {
 	private ReadableTextField edPath;
 	private JButton button;
 	
-	private String savepath = ""; //$NON-NLS-1$
+	private File savefile;
 	private final CCMovieList movielist;
 	
 	public ExportJxmlBKPDialog(Component owner, CCMovieList list) {
@@ -109,30 +101,13 @@ public class ExportJxmlBKPDialog extends JDialog implements Runnable {
 			edPath.setText(p);
 			btnSave.setEnabled(true);
 			
-			savepath = p;
+			savefile = new File(p);
 		}
 	}
 
 	@Override
 	public void run() {
-		Document xml = movielist.getAsXML();
-		
-		try {
-			FileOutputStream ostream = new FileOutputStream(savepath);
-			ZipOutputStream zos = new ZipOutputStream(ostream);
-			
-			ZipEntry xmlentry = new ZipEntry("database.xml"); //$NON-NLS-1$
-			zos.putNextEntry(xmlentry);
-			XMLOutputter xout = new XMLOutputter();
-			xout.setFormat(Format.getPrettyFormat());
-			xout.output(xml, zos);
-			
-			zipDir(movielist.getCoverCache().getCoverDirectory().getParentFile(), movielist.getCoverCache().getCoverDirectory(), zos);
-			
-			zos.close();
-		} catch (IOException e) {
-			CCLog.addError(e);
-		}
+		ExportHelper.export(savefile, movielist);
 		
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
@@ -143,30 +118,5 @@ public class ExportJxmlBKPDialog extends JDialog implements Runnable {
 				edPath.setText(""); //$NON-NLS-1$
 			}
 		});
-	}
-	
-	private static void zipDir(File owner, File zipDir, ZipOutputStream zos) {
-		try {
-			String[] dirList = zipDir.list();
-			byte[] readBuffer = new byte[2156];
-			int bytesIn = 0;
-			for (int i = 0; i < dirList.length; i++) {
-				File f = new File(zipDir, dirList[i]);
-				if (f.isDirectory()) {
-					continue;
-				}
-				
-				FileInputStream fis = new FileInputStream(f);
-				ZipEntry anEntry = new ZipEntry(f.getAbsolutePath().replace(owner.getAbsolutePath() + '\\', "")); //$NON-NLS-1$
-				zos.putNextEntry(anEntry);
-				
-				while ((bytesIn = fis.read(readBuffer)) != -1) {
-					zos.write(readBuffer, 0, bytesIn);
-				}
-				fis.close();
-			}
-		} catch (Exception e) {
-			CCLog.addError(e);
-		}
 	}
 }

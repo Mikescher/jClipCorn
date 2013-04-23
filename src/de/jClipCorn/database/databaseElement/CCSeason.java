@@ -339,6 +339,26 @@ public class CCSeason {
 		}
 	}
 	
+	@SuppressWarnings("nls")
+	public void parseFromXML(Element e) {
+		beginUpdating();
+		
+		if (e.getAttributeValue("title") != null)
+			setTitle(e.getAttributeValue("title"));
+		
+		if (e.getAttributeValue("year") != null)
+			setYear(Integer.parseInt(e.getAttributeValue("year")));
+		
+		if (e.getAttributeValue("covername") != null)
+			setCover(e.getAttributeValue("covername"));
+		
+		for (Element e2 : e.getChildren("episode")) {
+			createNewEmptyEpisode().parseFromXML(e2);
+		}
+		
+		endUpdating();
+	}
+	
 	public String getCoverMD5() {
 		return LargeMD5Calculator.calcMD5(getCover());
 	}

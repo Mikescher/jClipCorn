@@ -198,8 +198,12 @@ public class CCCoverCache {
 			System.out.println("removing Cover from Folder: " + covername); //$NON-NLS-1$
 		}
 	}
+	
+	public String getCoverPath() {
+		return coverPath;
+	}
 
 	public File getCoverDirectory() {
-		return new File(coverPath);
+		return new File(getCoverPath());
 	}
 }

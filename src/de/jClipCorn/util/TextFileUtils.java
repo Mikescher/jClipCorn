@@ -12,13 +12,14 @@ import java.io.OutputStreamWriter;
 
 public class TextFileUtils {
 	public static String readTextFile(String filename) throws IOException {
-		File file = new File(filename);
+		return readTextFile(new BufferedReader(new FileReader(new File(filename))));
+	}
+	
+	public static String readTextFile(BufferedReader reader) throws IOException {
 		StringBuffer content = new StringBuffer();
-		BufferedReader reader = null;
 		boolean first = true;
 
 		try {
-			reader = new BufferedReader(new FileReader(file));
 			String s = null;
 
 			while ((s = reader.readLine()) != null) {

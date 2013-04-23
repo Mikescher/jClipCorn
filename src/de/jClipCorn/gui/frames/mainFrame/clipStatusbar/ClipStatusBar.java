@@ -119,6 +119,10 @@ public class ClipStatusBar extends AbstractClipStatusbar implements CCDBUpdateLi
 	}
 	
 	private void updateLabels() {
+		if (movielist.isBlocked()) {
+			return;
+		}
+		
 		updateLables_Movies();
 		lblViewed.setText(LocaleBundle.getFormattedString("ClipStatusBar.Viewed", movielist.getViewedCount())); //$NON-NLS-1$
 		lblSeries.setText(LocaleBundle.getFormattedString("ClipStatusBar.Series", movielist.getEpisodeCount())); //$NON-NLS-1$
@@ -148,6 +152,11 @@ public class ClipStatusBar extends AbstractClipStatusbar implements CCDBUpdateLi
 
 	@Override
 	public void onChangeDatabaseElement(CCDatabaseElement el) {
+		updateLabels();
+	}
+	
+	@Override
+	public void onRefresh() {
 		updateLabels();
 	}
 

@@ -497,7 +497,7 @@ public class CCActionTree {
 			new Thread(new Runnable() {
 				@Override
 				public void run() {
-					owner.startBlockingIntermediate();
+					owner.beginBlockingIntermediate();
 
 					CCBXMLReader xmlreader = new CCBXMLReader(chooser.getSelectedFile().getAbsolutePath(), owner.getMovielist());
 					if (!xmlreader.parse()) {
@@ -595,9 +595,9 @@ public class CCActionTree {
 			new Thread(new Runnable() {
 				@Override
 				public void run() {
-					owner.startBlockingIntermediate();
+					owner.beginBlockingIntermediate();
 
-					ExportHelper.export(chooser.getSelectedFile(), movielist);
+					ExportHelper.export(PathFormatter.forceExtension(chooser.getSelectedFile(), "jxmlbkp"), movielist); //$NON-NLS-1$
 
 					owner.endBlockingIntermediate();
 				}
@@ -616,7 +616,7 @@ public class CCActionTree {
 			new Thread(new Runnable() {
 				@Override
 				public void run() {
-					owner.startBlockingIntermediate();
+					owner.beginBlockingIntermediate();
 					
 					ExportHelper.restoreFromBackup(chooser.getSelectedFile(), movielist);
 					owner.getClipTable().autoResize();

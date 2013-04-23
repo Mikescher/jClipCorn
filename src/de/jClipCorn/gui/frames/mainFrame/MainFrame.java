@@ -137,7 +137,9 @@ public class MainFrame extends JFrame implements CCDBUpdateListener {
 		setSize(875, 640);
 	}
 	
-	public void startBlockingIntermediate() {
+	public void beginBlockingIntermediate() {
+		movielist.beginBlocking();
+		
 		try {
 			SwingUtilities.invokeAndWait(new Runnable() {
 				@Override
@@ -154,6 +156,8 @@ public class MainFrame extends JFrame implements CCDBUpdateListener {
 	}
 	
 	public void endBlockingIntermediate() {
+		movielist.endBlocking();
+		
 		try {
 			SwingUtilities.invokeAndWait(new Runnable() {
 				@Override
@@ -349,5 +353,10 @@ public class MainFrame extends JFrame implements CCDBUpdateListener {
 				}
 			});
 		}
+	}
+
+	@Override
+	public void onRefresh() {
+		// -
 	}
 }

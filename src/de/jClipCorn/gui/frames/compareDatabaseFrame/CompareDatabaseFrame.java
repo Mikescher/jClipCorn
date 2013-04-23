@@ -435,11 +435,7 @@ public class CompareDatabaseFrame extends JFrame {
 
 	private void saveCompareFile() {
 		if (fchooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
-			String path = fchooser.getSelectedFile().getAbsolutePath();
-
-			if (!StringUtils.endsWithIgnoreCase(path, '.' + EXTENSION)) {
-				path += '.' + EXTENSION;
-			}
+			String path = PathFormatter.forceExtension(fchooser.getSelectedFile().getAbsolutePath(), EXTENSION);
 
 			setEnabled(false);
 

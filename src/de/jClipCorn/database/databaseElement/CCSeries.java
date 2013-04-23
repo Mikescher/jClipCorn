@@ -133,6 +133,10 @@ public class CCSeries extends CCDatabaseElement {
 	}
 	
 	public CCMovieSize getFilesize() {
+		if (getMovieList().isBlocked()) {
+			return new CCMovieSize();
+		}
+		
 		CCMovieSize sz = new CCMovieSize();
 		
 		for (CCSeason se: seasons) {
@@ -178,7 +182,9 @@ public class CCSeries extends CCDatabaseElement {
 		
 		getMovieList().removeSeasonDatabase(season);
 		
-		getMovieList().getCoverCache().deleteCover(getCoverName());
+		if (! season.getCoverName().isEmpty()) {
+			getMovieList().getCoverCache().deleteCover(season.getCoverName());
+		}
 		
 		getMovieList().fireOnChangeDatabaseElement(this);
 	}

@@ -119,6 +119,11 @@ public abstract class AbstractFilterTree extends JScrollPane implements TreeSele
 	}
 	
 	@Override
+	public void onRefresh() {
+		updateTree();
+	}
+	
+	@Override
 	public void treeCollapsed(TreeExpansionEvent e) {
 		// nothing
 	}

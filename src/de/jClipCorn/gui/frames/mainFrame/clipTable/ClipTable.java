@@ -80,6 +80,11 @@ public class ClipTable extends JScrollPane implements CCDBUpdateListener, ListSe
 	public void onChangeDatabaseElement(CCDatabaseElement el) {
 		model.fireTableDataChanged();
 	}
+	
+	@Override
+	public void onRefresh() {
+		model.fireTableDataChanged();
+	}
 
 	@Override
 	public void onAfterLoad() {

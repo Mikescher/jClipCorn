@@ -149,4 +149,16 @@ public class PathFormatter {
 	public static String rename(String fn, String newFilename) {
 		return getFilepath(fn) + BACKSLASH + newFilename;
 	}
+	
+	public static String forceExtension(String fn, String ext) {
+		if (getExtension(fn).equalsIgnoreCase(ext)) {
+			return fn;
+		} else {
+			return fn + '.' + ext;
+		}
+	}
+	
+	public static File forceExtension(File f, String ext) {
+		return new File(forceExtension(f.getAbsolutePath(), ext));
+	}
 }

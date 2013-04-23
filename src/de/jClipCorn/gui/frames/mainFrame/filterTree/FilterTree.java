@@ -234,6 +234,10 @@ public class FilterTree extends AbstractFilterTree {
 	}
 	
 	private void initGenre() {
+		if (movielist.isBlocked()) {
+			return;
+		}
+		
 		for (final CCMovieGenre genre : movielist.getGenreList()) {
 			addNodeI(node_genre, null, genre.asString(), new ActionListener() {
 				@Override

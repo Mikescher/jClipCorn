@@ -1,29 +1,6 @@
 package de.jClipCorn.gui.guiComponents;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.io.File;
-import java.io.IOException;
-
-import javax.imageio.ImageIO;
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
-import javax.swing.JFileChooser;
-import javax.swing.JLabel;
-import javax.swing.JMenuItem;
-import javax.swing.JPopupMenu;
-import javax.swing.filechooser.FileFilter;
-
-import org.apache.commons.lang.StringUtils;
-
-import de.jClipCorn.gui.CachedResourceLoader;
-import de.jClipCorn.gui.Resources;
-import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.gui.log.CCLog;
-import de.jClipCorn.util.FileChooserHelper;
-import de.jClipCorn.util.ImageUtilities;
+import java.awt.event.ActionEvent;import java.awt.event.ActionListener;import java.awt.event.MouseEvent;import java.awt.event.MouseListener;import java.io.File;import java.io.IOException;import javax.imageio.ImageIO;import javax.swing.Icon;import javax.swing.ImageIcon;import javax.swing.JFileChooser;import javax.swing.JLabel;import javax.swing.JMenuItem;import javax.swing.JPopupMenu;import javax.swing.filechooser.FileFilter;import de.jClipCorn.gui.CachedResourceLoader;import de.jClipCorn.gui.Resources;import de.jClipCorn.gui.localization.LocaleBundle;import de.jClipCorn.gui.log.CCLog;import de.jClipCorn.util.FileChooserHelper;import de.jClipCorn.util.ImageUtilities;import de.jClipCorn.util.PathFormatter;
 
 public class CoverLabel extends JLabel implements MouseListener {
 	private static final long serialVersionUID = -1565590903873295610L;
@@ -114,31 +91,21 @@ public class CoverLabel extends JLabel implements MouseListener {
 		fc.addChoosableFileFilter(filter_jpg = FileChooserHelper.createFileFilter("JPEG-Image (*.jpg)", "jpg", "jpeg")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		fc.addChoosableFileFilter(filter_bmp = FileChooserHelper.createFileFilter("Bitmap-Image (*.bmp)", "bmp")); //$NON-NLS-1$ //$NON-NLS-2$
 		
-		if (fc.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
-			FileFilter choosen = fc.getFileFilter();
-			String path = fc.getSelectedFile().getAbsolutePath();
+		if (fc.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
+			FileFilter choosen = fc.getFileFilter();
+			String path = fc.getSelectedFile().getAbsolutePath();
 			String format = ""; //$NON-NLS-1$
-			
-			if (choosen.equals(filter_png)) {
-				if (! StringUtils.endsWithIgnoreCase(path, ".png")) { //$NON-NLS-1$
-					path += ".png"; //$NON-NLS-1$
-				}
+			if (choosen.equals(filter_png)) {
 				format = "png"; //$NON-NLS-1$
-			} else if (choosen.equals(filter_jpg)) {
-				if (! (StringUtils.endsWithIgnoreCase(path, ".jpg") || StringUtils.endsWithIgnoreCase(path, ".jpeg"))) { //$NON-NLS-1$ //$NON-NLS-2$
-					path += ".jpg"; //$NON-NLS-1$
-				}
+			} else if (choosen.equals(filter_jpg)) {
 				format = "jpg"; //$NON-NLS-1$
-			} else if (choosen.equals(filter_bmp)) {
-				if (! StringUtils.endsWithIgnoreCase(path, ".bmp")) { //$NON-NLS-1$
-					path += ".bmp"; //$NON-NLS-1$
-				}
-				format = "bmp"; //$NON-NLS-1$
-			}
-			try {
-				ImageIO.write(ImageUtilities.IconToImage((ImageIcon)getIcon()), format, new File(path));
-			} catch (IOException e) {
-				CCLog.addError(e);
+			} else if (choosen.equals(filter_bmp)) {
+				format = "bmp"; //$NON-NLS-1$
+			}						path = PathFormatter.forceExtension(path, format);
+			try {
+				ImageIO.write(ImageUtilities.IconToImage((ImageIcon)getIcon()), format, new File(path));
+			} catch (IOException e) {
+				CCLog.addError(e);
 			}
 		}
 	}

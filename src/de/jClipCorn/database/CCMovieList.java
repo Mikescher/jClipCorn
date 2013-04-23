@@ -43,6 +43,8 @@ public class CCMovieList {
 	private Vector<CCDBUpdateListener> listener;
 
 	private long loadTime = -1;
+	
+	private boolean blocked = false;
 
 	public CCMovieList() {
 		this.database = null;
@@ -59,7 +61,7 @@ public class CCMovieList {
 				
 				long starttime = System.currentTimeMillis();
 
-				mf.startBlockingIntermediate();
+				mf.beginBlockingIntermediate();
 
 				database = new CCDatabase();
 
@@ -267,6 +269,22 @@ public class CCMovieList {
 			l.onAfterLoad();
 		}
 	}
+	
+	private void fireOnRefresh() {
+		if (!EventQueue.isDispatchThread()) {
+			SwingUtilities.invokeLater(new Runnable() {
+				@Override
+				public void run() {
+					fireOnRefresh();
+				}
+			});
+			return;
+		}
+
+		for (CCDBUpdateListener l : listener) {
+			l.onRefresh();
+		}
+	}
 
 	public void update(CCMovie el) {
 		database.updateMovie(el);
@@ -361,7 +379,10 @@ public class CCMovieList {
 	private void removeMovie(CCMovie m) {
 		list.remove(m);
 		database.removeFromMain(m.getLocalID());
-		coverCache.deleteCover(m);
+		
+		if (! m.getCoverName().isEmpty()) {
+			coverCache.deleteCover(m);
+		}
 	}
 
 	private void removeSeries(CCSeries s) {
@@ -370,7 +391,11 @@ public class CCMovieList {
 			s.deleteSeason(s.getSeason(i));
 		}
 		database.removeFromMain(s.getLocalID());
-		coverCache.deleteCover(s);
+		
+		if (! s.getCoverName().isEmpty()) {
+			coverCache.deleteCover(s);
+		}
+		
 	}
 
 	public Vector<CCDatabaseElement> getRawList() {
@@ -431,7 +456,7 @@ public class CCMovieList {
 
 	public ArrayList<CCMovieGenre> getGenreList() {
 		ArrayList<CCMovieGenre> result = new ArrayList<>();
-
+		
 		for (CCDatabaseElement el : list) {
 			for (int j = 0; j < el.getGenreCount(); j++) {
 				if (!result.contains(el.getGenre(j))) {
@@ -536,5 +561,19 @@ public class CCMovieList {
 		}
 		
 		return xml;
+	}
+	
+	public boolean isBlocked() {
+		return blocked;
+	}
+	
+	public void beginBlocking() {
+		blocked = true;
+	}
+	
+	public void endBlocking() {
+		blocked = false;
+		
+		fireOnRefresh();
 	}
 }

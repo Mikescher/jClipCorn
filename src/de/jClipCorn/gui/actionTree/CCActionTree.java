@@ -7,7 +7,6 @@ import java.awt.event.KeyEvent;
 import java.io.File;
 
 import javax.swing.JComponent;
-import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.KeyStroke;
 
@@ -33,7 +32,6 @@ import de.jClipCorn.gui.frames.checkDatabaseFrame.CheckDatabaseFrame;
 import de.jClipCorn.gui.frames.compareDatabaseFrame.CompareDatabaseFrame;
 import de.jClipCorn.gui.frames.editMovieFrame.EditMovieFrame;
 import de.jClipCorn.gui.frames.editSeriesFrame.EditSeriesFrame;
-import de.jClipCorn.gui.frames.exportJxmlBKPFrame.ExportJxmlBKPDialog;
 import de.jClipCorn.gui.frames.filenameRulesFrame.FilenameRuleFrame;
 import de.jClipCorn.gui.frames.logFrame.LogFrame;
 import de.jClipCorn.gui.frames.mainFrame.MainFrame;
@@ -490,9 +488,7 @@ public class CCActionTree {
 
 	private void onClickExtrasXML() {
 		final JFileChooser chooser = new JFileChooser();
-
 		chooser.setFileFilter(FileChooserHelper.createFileFilter("CCBackup-XML-File", "xml"));  //$NON-NLS-1$//$NON-NLS-2$
-
 		chooser.setCurrentDirectory(new File(PathFormatter.getRealSelfDirectory()));
 
 		int returnval = chooser.showOpenDialog(owner);
@@ -507,7 +503,6 @@ public class CCActionTree {
 					if (!xmlreader.parse()) {
 						CCLog.addError(LocaleBundle.getString("LogMessage.CouldNotParseCCBXML")); //$NON-NLS-1$
 					}
-
 					owner.getClipTable().autoResize();
 
 					owner.endBlockingIntermediate();
@@ -590,15 +585,29 @@ public class CCActionTree {
 	}
 	
 	private void onClickDatabaseExportAsJxmBKP() {
-		JDialog ejf = new ExportJxmlBKPDialog(owner, owner.getMovielist()); //TODO Why do we need an extra Frame for this ??? (seejxmbkp import)
-		ejf.setVisible(true);
+		final JFileChooser chooser = new JFileChooser();
+		chooser.setFileFilter(FileChooserHelper.createLocalFileFilter("ExportJxmlBKPDialog.filechooser.description", "jxmlbkp"));  //$NON-NLS-1$//$NON-NLS-2$
+		chooser.setCurrentDirectory(new File(PathFormatter.getRealSelfDirectory()));
+		
+		int returnval = chooser.showSaveDialog(owner);
+
+		if (returnval == JFileChooser.APPROVE_OPTION) {
+			new Thread(new Runnable() {
+				@Override
+				public void run() {
+					owner.startBlockingIntermediate();
+
+					ExportHelper.export(chooser.getSelectedFile(), movielist);
+
+					owner.endBlockingIntermediate();
+				}
+			}).start();
+		}
 	}
 	
 	private void onClickDatabaseImportAsJxmBKP() {
 		final JFileChooser chooser = new JFileChooser();
-
 		chooser.setFileFilter(FileChooserHelper.createLocalFileFilter("ExportJxmlBKPDialog.filechooser.description", "jxmlbkp"));  //$NON-NLS-1$//$NON-NLS-2$
-
 		chooser.setCurrentDirectory(new File(PathFormatter.getRealSelfDirectory()));
 
 		int returnval = chooser.showOpenDialog(owner);
@@ -608,15 +617,10 @@ public class CCActionTree {
 				@Override
 				public void run() {
 					owner.startBlockingIntermediate();
-
-					try {
-						ExportHelper.restoreFromBackup(chooser.getSelectedFile(), movielist);
-					} catch (Exception e) {
-						CCLog.addError(e);
-					}
 					
+					ExportHelper.restoreFromBackup(chooser.getSelectedFile(), movielist);
 					owner.getClipTable().autoResize();
-
+					
 					owner.endBlockingIntermediate();
 				}
 			}).start();

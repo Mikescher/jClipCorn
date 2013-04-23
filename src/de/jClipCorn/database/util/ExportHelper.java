@@ -138,28 +138,32 @@ public class ExportHelper {
 		return content;
 	}
 	
-	public static void restoreFromBackup(File backup, CCMovieList movielist) throws Exception {
-		movielist.clear();
-		
-		copyAllCoverFromBackup(backup, movielist);
-		String content = getXMLContentFromBackup(backup);
-		
-		if (content == null) {
-			throw new Exception("File not found: database.xml"); //$NON-NLS-1$
-		}
-		
-		Document doc = new SAXBuilder().build(new StringReader(content));
-		
-		Element root = doc.getRootElement();
-		
-		for (Element e : root.getChildren()) {
-			if (e.getName().equals("movie")) { //$NON-NLS-1$
-				CCMovie m = movielist.createNewEmptyMovie();
-				m.parseFromXML(e);
-			} else if (e.getName().equals("series")) { //$NON-NLS-1$
-				CCSeries s = movielist.createNewEmptySeries();
-				s.parseFromXML(e);
+	public static void restoreFromBackup(File backup, CCMovieList movielist) {
+		try {
+			movielist.clear();
+
+			copyAllCoverFromBackup(backup, movielist);
+			String content = getXMLContentFromBackup(backup);
+
+			if (content == null) {
+				throw new Exception("File not found: database.xml"); //$NON-NLS-1$
 			}
+
+			Document doc = new SAXBuilder().build(new StringReader(content));
+
+			Element root = doc.getRootElement();
+
+			for (Element e : root.getChildren()) {
+				if (e.getName().equals("movie")) { //$NON-NLS-1$
+					CCMovie m = movielist.createNewEmptyMovie();
+					m.parseFromXML(e);
+				} else if (e.getName().equals("series")) { //$NON-NLS-1$
+					CCSeries s = movielist.createNewEmptySeries();
+					s.parseFromXML(e);
+				}
+			}
+		} catch (Exception e) {
+			CCLog.addError(e);
 		}
 	}
 }

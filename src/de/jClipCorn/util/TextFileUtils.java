@@ -10,9 +10,17 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 
-public class TextFileUtils {
+public class TextFileUtils {	
 	public static String readTextFile(String filename) throws IOException {
-		return readTextFile(new BufferedReader(new FileReader(new File(filename))));
+		return readTextFile(new File(filename));
+	}
+	
+	public static String readTextFile(File file) throws IOException {
+		return readTextFile(new FileReader(file));
+	}
+	
+	public static String readTextFile(FileReader reader) throws IOException {
+		return readTextFile(new BufferedReader(reader));
 	}
 	
 	public static String readTextFile(BufferedReader reader) throws IOException {

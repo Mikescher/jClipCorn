@@ -2,7 +2,7 @@
 <!DOCTYPE database SYSTEM "http://db.apache.org/torque/dtd/database.dtd">
 <database name="CLIPCORN">
   <table name="MOVIES">
-        <column name="LOCALID" 		type="INTEGER"  required="true" primaryKey="true" autoIncrement="true"/> 	<!-- ALSO USED FOR SERIES-->
+        <column name="LOCALID" 		type="INTEGER"  required="true" primaryKey="true"/> 	<!-- ALSO USED FOR SERIES-->
 		
         <column name="NAME" 		type="VARCHAR"  required="true" size="128"/>								<!-- ALSO USED FOR SERIES-->
         <column name="VIEWED" 		type="BIT" 		required="true"/>

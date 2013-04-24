@@ -228,7 +228,7 @@ public abstract class CCDatabaseElement {
 	}
 	
 	@SuppressWarnings({ "nls"})
-	protected void setXMLAttributes(Element e, boolean fileHash, boolean coverHash) {
+	protected void setXMLAttributes(Element e, boolean fileHash, boolean coverHash, boolean coverData) {
 		e.setAttribute("localid", localID + "");
 		e.setAttribute("typ", typ.asInt() + "");
 		e.setAttribute("title", title);
@@ -242,7 +242,7 @@ public abstract class CCDatabaseElement {
 	}
 	
 	@SuppressWarnings("nls")
-	public void parseFromXML(Element e) {
+	public void parseFromXML(Element e, boolean resetAddDate, boolean resetViewed) {
 		if (e.getAttributeValue("title") != null)
 			setTitle(e.getAttributeValue("title"));
 		
@@ -266,7 +266,7 @@ public abstract class CCDatabaseElement {
 	}
 
 	@SuppressWarnings("nls")
-	public Element generateXML(Element el, boolean fileHash, boolean coverHash) {
+	public Element generateXML(Element el, boolean fileHash, boolean coverHash, boolean coverData) {
 		Element dbelement = null;
 		
 		switch (typ) {
@@ -278,7 +278,7 @@ public abstract class CCDatabaseElement {
 			break;
 		}
 		
-		setXMLAttributes(dbelement, fileHash, coverHash);
+		setXMLAttributes(dbelement, fileHash, coverHash, coverData);
 		
 		el.addContent(dbelement);
 		

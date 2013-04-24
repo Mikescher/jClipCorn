@@ -33,11 +33,14 @@ import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import org.jdom2.Element;
+
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFSK;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFormat;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieGenre;
+import de.jClipCorn.database.databaseElement.columnTypes.CCMovieGenreList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieLanguage;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieQuality;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieScore;
@@ -55,6 +58,7 @@ import de.jClipCorn.gui.guiComponents.SpinnerCCDateModel;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.properties.CCProperties;
+import de.jClipCorn.util.ByteUtilies;
 import de.jClipCorn.util.CCDate;
 import de.jClipCorn.util.ExtendedFocusTraversalOnArray;
 import de.jClipCorn.util.FileChooserHelper;
@@ -681,6 +685,80 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		contentPane.add(lblScore);
 	}
 	
+	@SuppressWarnings("nls")
+	public void parseFromXML(Element e, boolean resetAddDate, boolean resetViewed) {
+		
+		if (e.getAttributeValue("adddate") != null) {
+			CCDate d = new CCDate();
+			d.parse(e.getAttributeValue("adddate"), "D.M.Y");
+			spnAddDate.setValue(d);
+		}
+		
+		if (resetAddDate) {
+			spnAddDate.setValue(new CCDate());
+		}
+		
+		if (e.getAttributeValue("filesize") != null)
+			setFilesize(Long.parseLong(e.getAttributeValue("filesize")));
+		
+		if (e.getAttributeValue("format") != null)
+			cbxFormat.setSelectedIndex(Integer.parseInt(e.getAttributeValue("format")));
+		
+		if (e.getAttributeValue("length") != null)
+			setLength(Integer.parseInt(e.getAttributeValue("length")));
+		
+		for (int i = 0; i < CCMovie.PARTCOUNT_MAX; i++) {
+			if (e.getAttributeValue("part_"+i) != null)
+				setDirectFilepath(i, e.getAttributeValue("part_"+i));
+		}
+		
+		if (e.getAttributeValue("quality") != null)
+			setQuality(CCMovieQuality.find(Integer.parseInt(e.getAttributeValue("quality"))));
+		
+		if (e.getAttributeValue("viewed") != null)
+			cbxViewed.setSelected(e.getAttributeValue("viewed").equals(true + ""));
+		
+		if (resetViewed)
+			cbxViewed.setSelected(false);
+		
+		if (e.getAttributeValue("year") != null)
+			setYear(Integer.parseInt(e.getAttributeValue("year")));
+		
+		if (e.getAttributeValue("zyklus") != null)
+			setZyklus(e.getAttributeValue("zyklus"));
+		
+		if (e.getAttributeValue("zyklusnumber") != null)
+			setZyklusNumber(Integer.parseInt(e.getAttributeValue("zyklusnumber")));
+		
+		if (e.getAttributeValue("coverdata") != null)
+			setCover(ImageUtilities.byteArrayToImage(ByteUtilies.hexStringToByteArray(e.getAttributeValue("coverdata"))));
+		
+		if (e.getAttributeValue("title") != null)
+			edTitle.setText(e.getAttributeValue("title"));
+		
+		if (e.getAttributeValue("language") != null)
+			cbxLanguage.setSelectedIndex(Integer.parseInt(e.getAttributeValue("language")));
+		
+		if (e.getAttributeValue("genres") != null) {
+			CCMovieGenreList mgl = new CCMovieGenreList(Long.parseLong(e.getAttributeValue("genres")));
+			for (int i = 0; i < CCMovieGenreList.getMaxListSize(); i++) {
+				setGenre(i, mgl.getGenre(i).asInt());
+			}
+		}
+		
+		if (e.getAttributeValue("onlinescore") != null)
+			setScore(Integer.parseInt(e.getAttributeValue("onlinescore"))); // Yap, stimmt. seScore setzt den Onlinescore
+		
+		if (e.getAttributeValue("fsk") != null)
+			setFSK(Integer.parseInt(e.getAttributeValue("fsk")));
+		
+		if (e.getAttributeValue("score") != null)
+			cbxScore.setSelectedIndex(Integer.parseInt(e.getAttributeValue("score")));
+		
+		setEnabledAll(true);
+		firstChooseClick = false;
+	}
+	
 	private void onBtnOK(boolean check) {
 		List<UserDataProblem> problems = new ArrayList<>();
 		
@@ -916,12 +994,16 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 
 	@Override
 	public void setFilepath(int p, String t) {
-		String pt = t;
-		
 		if (CCProperties.getInstance().PROP_ADD_MOVIE_RELATIVE_AUTO.getValue()) {
-			pt = PathFormatter.getRelative(t);
+			t = PathFormatter.getRelative(t);
 		}
 				
+		setDirectFilepath(p, t);
+		
+		updateFilesize();
+	}
+	
+	private void setDirectFilepath(int p, String pt) {
 		switch (p) {
 		case 0:
 			ed_Part0.setText(pt);
@@ -948,8 +1030,6 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 			ed_Part5.setCaretPosition(0);
 			break;
 		}
-		
-		updateFilesize();
 	}
 
 	@Override

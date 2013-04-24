@@ -474,7 +474,7 @@ public class CompareDatabaseFrame extends JFrame {
 		for (Iterator<CCMovie> it = movielist.iteratorMovies(); it.hasNext();) {
 			CCDatabaseElement del = it.next();
 
-			del.generateXML(root, true, true);
+			del.generateXML(root, true, true, false);
 
 			SwingUtilities.invokeLater(new Runnable() {
 				@Override

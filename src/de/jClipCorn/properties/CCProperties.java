@@ -84,6 +84,9 @@ public class CCProperties {
 	public CCBoolProperty	PROP_MASSCHANGESCORE_SKIPRATED;
 	public CCBoolProperty	PROP_MASSCHANGESCORE_ONLYVIEWED;
 	public CCBoolProperty	PROP_MASSCHANGEVIEWED_ONLYUNVIEWED;
+	public CCBoolProperty	PROP_IMPORT_RESETVIEWED;
+	public CCBoolProperty	PROP_IMPORT_ONLYWITHCOVER;
+	public CCBoolProperty	PROP_IMPORT_RESETADDDATE;
 	
 	private Properties properties;
 	private String path;
@@ -174,6 +177,9 @@ public class CCProperties {
 		PROP_MASSCHANGESCORE_SKIPRATED			= new CCBoolProperty(NONVISIBLE,	 	this,   "PROP_MASSCHANGESCORE_SKIPRATED",			false);
 		PROP_MASSCHANGESCORE_ONLYVIEWED			= new CCBoolProperty(NONVISIBLE,	 	this,   "PROP_MASSCHANGESCORE_ONLYVIEWED",			false);
 		PROP_MASSCHANGEVIEWED_ONLYUNVIEWED		= new CCBoolProperty(NONVISIBLE,	 	this,   "PROP_MASSCHANGEVIEWED_ONLYUNVIEWED",		false);
+		PROP_IMPORT_RESETVIEWED					= new CCBoolProperty(NONVISIBLE,	 	this,   "PROP_IMPORT_RESETVIEWED",					true);
+		PROP_IMPORT_ONLYWITHCOVER				= new CCBoolProperty(NONVISIBLE,	 	this,   "PROP_IMPORT_ONLYWITHCOVER",				true);
+		PROP_IMPORT_RESETADDDATE				= new CCBoolProperty(NONVISIBLE,	 	this,   "PROP_IMPORT_RESETADDDATE",					true);
 	}
 	
 	public static CCProperties getInstance() {

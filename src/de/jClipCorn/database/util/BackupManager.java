@@ -16,7 +16,6 @@ import de.jClipCorn.util.PathFormatter;
 import de.jClipCorn.util.RegExHelper;
 
 public class BackupManager {
-	private final static String EXTENSION = "jccbkp";  //$NON-NLS-1$
 	private final static String NAME = "%s [%s]"; //$NON-NLS-1$
 	@SuppressWarnings("nls")
 	private final static String REGEXNAME = "(?<= \\[)[0-9]{1,2}\\.[0-9]{1,2}\\.[0-9]{4}(?=\\])"; // (?<= \[)[0-9]{1,2}\.[0-9]{1,2}\.[0-9]{4}(?=\])
@@ -65,7 +64,7 @@ public class BackupManager {
 		File[] backups = getBackupDirectory().listFiles(new FileFilter() {
 			@Override
 			public boolean accept(File f) {
-				return PathFormatter.getExtension(f.getAbsolutePath()).equalsIgnoreCase("jccbkp"); //$NON-NLS-1$
+				return PathFormatter.getExtension(f.getAbsolutePath()).equalsIgnoreCase(ExportHelper.EXTENSION_BACKUP);
 			}
 		});
 		
@@ -103,7 +102,7 @@ public class BackupManager {
 		
 		CCDate now = new CCDate();
 		
-		File file = new File(getBackupDirectory().getAbsolutePath() + '\\' + String.format(NAME, CCProperties.getInstance().PROP_DATABASE_NAME.getValue(), now.getSimpleStringRepresentation()) + '.' + EXTENSION);
+		File file = new File(getBackupDirectory().getAbsolutePath() + '\\' + String.format(NAME, CCProperties.getInstance().PROP_DATABASE_NAME.getValue(), now.getSimpleStringRepresentation()) + '.' + ExportHelper.EXTENSION_BACKUP);
 		
 		try {
 			FileOutputStream os = new FileOutputStream(file);

@@ -6,11 +6,20 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
+
+import com.sun.image.codec.jpeg.ImageFormatException;
+import com.sun.image.codec.jpeg.JPEGCodec;
+import com.sun.image.codec.jpeg.JPEGImageEncoder;
 
 import de.jClipCorn.gui.CachedResourceLoader;
 import de.jClipCorn.gui.Resources;
+import de.jClipCorn.gui.log.CCLog;
 
 public class ImageUtilities {
 	public final static int COVER_WIDTH  = 182;
@@ -119,5 +128,27 @@ public class ImageUtilities {
 		BufferedImage bi = new BufferedImage(ic.getIconWidth(), ic.getIconHeight(), BufferedImage.TYPE_4BYTE_ABGR);
 		bi.getGraphics().drawImage(ic.getImage(), 0, 0, null);
 		return bi;
+	}
+	
+	public static byte[] imageToByteArray(BufferedImage bi) {
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder( baos );
+		try {
+			encoder.encode(bi);
+		} catch (ImageFormatException | IOException e) {
+			CCLog.addError(e);
+			return null;
+		}
+		
+		return baos.toByteArray();
+	}
+	
+	public static BufferedImage byteArrayToImage(byte[] imgarr) {
+		try {
+			return ImageIO.read(new ByteArrayInputStream(imgarr));
+		} catch (IOException e) {
+			CCLog.addError(e);
+			return null;
+		}
 	}
 }

@@ -140,12 +140,17 @@ public class SearchFrame extends JFrame {
 	}
 	
 	private void onUpdate() {
-		String searchString = edSearch.getText();
+		String searchString = edSearch.getText().trim();
 		
 		lsmdl.clear();
 		
 		for (Iterator<CCMovie> it = movielist.iteratorMovies(); it.hasNext();) {
 			CCMovie mov = it.next();
+			
+			if ((mov.getLocalID() + "").equals(searchString)) { //$NON-NLS-1$
+				addToList(mov);
+				continue;
+			}
 			
 			if (StringUtils.containsIgnoreCase(mov.getTitle(), searchString)) {
 				addToList(mov);

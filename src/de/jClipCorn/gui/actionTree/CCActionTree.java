@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.io.File;
+import java.io.IOException;
 
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
@@ -33,6 +34,7 @@ import de.jClipCorn.gui.frames.compareDatabaseFrame.CompareDatabaseFrame;
 import de.jClipCorn.gui.frames.editMovieFrame.EditMovieFrame;
 import de.jClipCorn.gui.frames.editSeriesFrame.EditSeriesFrame;
 import de.jClipCorn.gui.frames.filenameRulesFrame.FilenameRuleFrame;
+import de.jClipCorn.gui.frames.importElementsFrame.ImportElementsFrame;
 import de.jClipCorn.gui.frames.logFrame.LogFrame;
 import de.jClipCorn.gui.frames.mainFrame.MainFrame;
 import de.jClipCorn.gui.frames.moveSeriesFrame.MoveSeriesDialog;
@@ -48,6 +50,7 @@ import de.jClipCorn.util.DialogHelper;
 import de.jClipCorn.util.FileChooserHelper;
 import de.jClipCorn.util.HTTPUtilities;
 import de.jClipCorn.util.PathFormatter;
+import de.jClipCorn.util.TextFileUtils;
 import de.jClipCorn.util.parser.ImDBParser;
 
 public class CCActionTree {
@@ -159,6 +162,22 @@ public class CCActionTree {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				onClickMoviesAdd();
+			}
+		});
+		
+		temp = movies.addChild(new CCActionElement("ExportMovie", null, "", null)); //TODO Please give me information :3
+		temp.addListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				onClickMoviesExport();
+			}
+		});
+		
+		temp = movies.addChild(new CCActionElement("ImportMovie", null, "", null)); //TODO Please give me information :3
+		temp.addListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				onClickMoviesImport();
 			}
 		});
 
@@ -488,7 +507,7 @@ public class CCActionTree {
 
 	private void onClickExtrasXML() {
 		final JFileChooser chooser = new JFileChooser();
-		chooser.setFileFilter(FileChooserHelper.createFileFilter("CCBackup-XML-File", "xml"));  //$NON-NLS-1$//$NON-NLS-2$
+		chooser.setFileFilter(FileChooserHelper.createFileFilter("CCBackup-XML-File", ExportHelper.EXTENSION_CCBACKUP));  //$NON-NLS-1$
 		chooser.setCurrentDirectory(new File(PathFormatter.getRealSelfDirectory()));
 
 		int returnval = chooser.showOpenDialog(owner);
@@ -540,7 +559,7 @@ public class CCActionTree {
 	private void onClickMoviesPlay() {
 		CCDatabaseElement element = owner.getSelectedElement();
 
-		if (element.isMovie()) {
+		if (element != null && element.isMovie()) {
 			((CCMovie) element).play();
 		}
 	}
@@ -557,6 +576,52 @@ public class CCActionTree {
 		AddMovieFrame nFrame = new AddMovieFrame(owner, movielist);
 
 		nFrame.setVisible(true);
+	}
+	
+	private void onClickMoviesExport() {
+		final CCDatabaseElement element = owner.getSelectedElement();
+
+		if (element != null && element.isMovie()) {
+			final JFileChooser chooser = new JFileChooser();
+			chooser.setFileFilter(FileChooserHelper.createLocalFileFilter("ExportHelper.filechooser_jsccexport.description", ExportHelper.EXTENSION_SINGLEEXPORT)); //$NON-NLS-1$
+			chooser.setCurrentDirectory(new File(PathFormatter.getRealSelfDirectory()));
+
+			int returnval = chooser.showSaveDialog(owner);
+
+			if (returnval == JFileChooser.APPROVE_OPTION) {
+				final boolean includeCover = 0 == DialogHelper.showLocaleOptions(owner, "ExportHelper.dialogs.exportCover"); //$NON-NLS-1$
+
+				new Thread(new Runnable() {
+					@Override
+					public void run() {
+						owner.beginBlockingIntermediate();
+
+						ExportHelper.exportMovie(PathFormatter.forceExtension(chooser.getSelectedFile(), ExportHelper.EXTENSION_SINGLEEXPORT), movielist, (CCMovie) element, includeCover);
+						
+						owner.endBlockingIntermediate();
+					}
+				}, "THREAD_EXPORT_JSCCEXPORT").start(); //$NON-NLS-1$
+			}
+		}
+	}
+	
+	private void onClickMoviesImport() {
+		final JFileChooser chooser = new JFileChooser();
+		chooser.setFileFilter(FileChooserHelper.createLocalFileFilter("ExportHelper.filechooser_jsccexport.description", ExportHelper.EXTENSION_SINGLEEXPORT)); //$NON-NLS-1$
+		chooser.setCurrentDirectory(new File(PathFormatter.getRealSelfDirectory()));
+
+		int returnval = chooser.showOpenDialog(owner);
+
+		if (returnval == JFileChooser.APPROVE_OPTION) {
+			try {
+				String xml = TextFileUtils.readTextFile(chooser.getSelectedFile());
+
+				ImportElementsFrame elf = new ImportElementsFrame(xml, movielist);
+				elf.setVisible(true);
+			} catch (IOException e) {
+				CCLog.addError(e);
+			}
+		}
 	}
 
 	private void onClickMoviesRem() {
@@ -586,7 +651,7 @@ public class CCActionTree {
 	
 	private void onClickDatabaseExportAsJxmBKP() {
 		final JFileChooser chooser = new JFileChooser();
-		chooser.setFileFilter(FileChooserHelper.createLocalFileFilter("JXMLExport.filechooser.description", "jxmlbkp"));  //$NON-NLS-1$//$NON-NLS-2$
+		chooser.setFileFilter(FileChooserHelper.createLocalFileFilter("ExportHelper.filechooser_jxmlbkp.description", ExportHelper.EXTENSION_FULLEXPORT));  //$NON-NLS-1$
 		chooser.setCurrentDirectory(new File(PathFormatter.getRealSelfDirectory()));
 		
 		int returnval = chooser.showSaveDialog(owner);
@@ -597,7 +662,7 @@ public class CCActionTree {
 				public void run() {
 					owner.beginBlockingIntermediate();
 
-					ExportHelper.export(PathFormatter.forceExtension(chooser.getSelectedFile(), "jxmlbkp"), movielist); //$NON-NLS-1$
+					ExportHelper.exportDatabase(PathFormatter.forceExtension(chooser.getSelectedFile(), ExportHelper.EXTENSION_FULLEXPORT), movielist);
 
 					owner.endBlockingIntermediate();
 				}
@@ -607,7 +672,7 @@ public class CCActionTree {
 	
 	private void onClickDatabaseImportAsJxmBKP() {
 		final JFileChooser chooser = new JFileChooser();
-		chooser.setFileFilter(FileChooserHelper.createLocalFileFilter("JXMLExport.filechooser.description", "jxmlbkp"));  //$NON-NLS-1$//$NON-NLS-2$
+		chooser.setFileFilter(FileChooserHelper.createLocalFileFilter("ExportHelper.filechooser_jxmlbkp.description", ExportHelper.EXTENSION_FULLEXPORT));  //$NON-NLS-1$
 		chooser.setCurrentDirectory(new File(PathFormatter.getRealSelfDirectory()));
 
 		int returnval = chooser.showOpenDialog(owner);
@@ -618,7 +683,7 @@ public class CCActionTree {
 				public void run() {
 					owner.beginBlockingIntermediate();
 					
-					ExportHelper.restoreFromBackup(chooser.getSelectedFile(), movielist);
+					ExportHelper.restoreDatabaseFromBackup(chooser.getSelectedFile(), movielist);
 					owner.getClipTable().autoResize();
 					
 					owner.endBlockingIntermediate();

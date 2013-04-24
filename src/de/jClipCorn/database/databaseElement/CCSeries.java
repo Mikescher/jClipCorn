@@ -14,7 +14,9 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCMovieSize;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieStatus;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTyp;
 import de.jClipCorn.database.databaseElement.columnTypes.CombinedMovieQuality;
+import de.jClipCorn.util.ByteUtilies;
 import de.jClipCorn.util.CCDate;
+import de.jClipCorn.util.ImageUtilities;
 import de.jClipCorn.util.LargeMD5Calculator;
 import de.jClipCorn.util.YearRange;
 
@@ -303,24 +305,28 @@ public class CCSeries extends CCDatabaseElement {
 	
 	@SuppressWarnings("nls")
 	@Override
-	protected void setXMLAttributes(Element e, boolean fileHash, boolean coverHash) {
-		super.setXMLAttributes(e, fileHash, coverHash);
+	protected void setXMLAttributes(Element e, boolean fileHash, boolean coverHash, boolean coverData) {
+		super.setXMLAttributes(e, fileHash, coverHash, coverData);
 		
 		if (coverHash) {
 			e.setAttribute("coverhash", getCoverMD5());
+		}
+		
+		if (coverData) {
+			e.setAttribute("coverdata", ByteUtilies.byteArrayToHexString(ImageUtilities.imageToByteArray(getCover())));
 		}
 	}
 	
 	
 	@Override
 	@SuppressWarnings("nls")
-	public void parseFromXML(Element e) {
+	public void parseFromXML(Element e, boolean resetAddDate, boolean resetViewed) {
 		beginUpdating();
 		
-		super.parseFromXML(e);
+		super.parseFromXML(e, resetAddDate, resetViewed);
 		
 		for (Element e2 : e.getChildren("season")) {
-			createNewEmptySeason().parseFromXML(e2);
+			createNewEmptySeason().parseFromXML(e2, resetAddDate, resetViewed);
 		}
 		
 		endUpdating();
@@ -331,11 +337,11 @@ public class CCSeries extends CCDatabaseElement {
 	}
 	
 	@Override
-	public Element generateXML(Element el, boolean fileHash, boolean coverHash) {
-		Element ser = super.generateXML(el, fileHash, coverHash);
+	public Element generateXML(Element el, boolean fileHash, boolean coverHash, boolean coverData) {
+		Element ser = super.generateXML(el, fileHash, coverHash, coverData);
 		
 		for (int i = 0; i < seasons.size(); i++) {
-			seasons.get(i).generateXML(ser, fileHash, coverHash);
+			seasons.get(i).generateXML(ser, fileHash, coverHash, coverData);
 		}
 		
 		return ser;

@@ -16,7 +16,9 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCMovieZyklus;
 import de.jClipCorn.database.databaseElement.columnTypes.CombinedMovieQuality;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
+import de.jClipCorn.util.ByteUtilies;
 import de.jClipCorn.util.CCDate;
+import de.jClipCorn.util.ImageUtilities;
 import de.jClipCorn.util.LargeMD5Calculator;
 import de.jClipCorn.util.MoviePlayer;
 import de.jClipCorn.util.PathFormatter;
@@ -277,8 +279,8 @@ public class CCMovie extends CCDatabaseElement {
 	
 	@SuppressWarnings("nls")
 	@Override
-	protected void setXMLAttributes(Element e, boolean fileHash, boolean coverHash) {
-		super.setXMLAttributes(e, fileHash, coverHash);
+	protected void setXMLAttributes(Element e, boolean fileHash, boolean coverHash, boolean coverData) {
+		super.setXMLAttributes(e, fileHash, coverHash, coverData);
 		
 		e.setAttribute("adddate", addDate.getSimpleStringRepresentation() + "");
 		e.setAttribute("filesize", filesize.getBytes() + "");
@@ -303,19 +305,27 @@ public class CCMovie extends CCDatabaseElement {
 		if (coverHash) {
 			e.setAttribute("coverhash", getCoverMD5());
 		}
+		
+		if (coverData) {
+			e.setAttribute("coverdata", ByteUtilies.byteArrayToHexString(ImageUtilities.imageToByteArray(getCover())));
+		}
 	}
 	
 	@Override
 	@SuppressWarnings("nls")
-	public void parseFromXML(Element e) {
+	public void parseFromXML(Element e, boolean resetAddDate, boolean resetViewed) {
 		beginUpdating();
 		
-		super.parseFromXML(e);
+		super.parseFromXML(e, resetAddDate, resetViewed);
 		
 		if (e.getAttributeValue("adddate") != null) {
 			CCDate d = new CCDate();
 			d.parse(e.getAttributeValue("adddate"), "D.M.Y");
 			setAddDate(d);
+		}
+		
+		if (resetAddDate) {
+			setAddDate(new CCDate());
 		}
 		
 		if (e.getAttributeValue("filesize") != null)
@@ -341,6 +351,9 @@ public class CCMovie extends CCDatabaseElement {
 		if (e.getAttributeValue("viewed") != null)
 			setViewed(e.getAttributeValue("viewed").equals(true + ""));
 		
+		if (resetViewed)
+			setViewed(false);
+		
 		if (e.getAttributeValue("year") != null)
 			setYear(Integer.parseInt(e.getAttributeValue("year")));
 		
@@ -349,6 +362,11 @@ public class CCMovie extends CCDatabaseElement {
 		
 		if (e.getAttributeValue("zyklusnumber") != null)
 			setZyklusID(Integer.parseInt(e.getAttributeValue("zyklusnumber")));
+		
+		if (e.getAttributeValue("coverdata") != null) {
+			setCover(""); //Damit er nicht probiert was zu löschen
+			setCover(ImageUtilities.byteArrayToImage(ByteUtilies.hexStringToByteArray(e.getAttributeValue("coverdata"))));
+		}
 		
 		endUpdating();
 	}

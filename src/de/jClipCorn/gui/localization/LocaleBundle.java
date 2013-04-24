@@ -8,7 +8,7 @@ import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.properties.CCProperties;
 
 public class LocaleBundle {
-	private final static int DEFAULT = 3;
+	private final static int DEFAULT = 1;
 	private final static String DEFAULT_BASENAME = "de.jClipCorn.gui.localization.locale"; //$NON-NLS-1$
 	private final static Locale[] LOCALES = {Locale.getDefault(), new Locale("dl", "DL"), Locale.GERMAN, Locale.US}; //$NON-NLS-1$ //$NON-NLS-2$
 	

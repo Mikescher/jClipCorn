@@ -15,7 +15,9 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFormat;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieQuality;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieSize;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieStatus;
+import de.jClipCorn.util.ByteUtilies;
 import de.jClipCorn.util.CCDate;
+import de.jClipCorn.util.ImageUtilities;
 import de.jClipCorn.util.LargeMD5Calculator;
 
 public class CCSeason {
@@ -329,7 +331,7 @@ public class CCSeason {
 	}
 
 	@SuppressWarnings("nls")
-	protected void setXMLAttributes(Element e, boolean coverHash) {
+	protected void setXMLAttributes(Element e, boolean coverHash, boolean coverData) {
 		e.setAttribute("seasonid", seasonID + "");
 		e.setAttribute("title", title);
 		e.setAttribute("year", year + "");
@@ -338,10 +340,14 @@ public class CCSeason {
 		if (coverHash) {
 			e.setAttribute("coverhash", getCoverMD5());
 		}
+		
+		if (coverData) {
+			e.setAttribute("coverdata", ByteUtilies.byteArrayToHexString(ImageUtilities.imageToByteArray(getCover())));
+		}
 	}
 	
 	@SuppressWarnings("nls")
-	public void parseFromXML(Element e) {
+	public void parseFromXML(Element e, boolean resetAddDate, boolean resetViewed) {
 		beginUpdating();
 		
 		if (e.getAttributeValue("title") != null)
@@ -354,7 +360,12 @@ public class CCSeason {
 			setCover(e.getAttributeValue("covername"));
 		
 		for (Element e2 : e.getChildren("episode")) {
-			createNewEmptyEpisode().parseFromXML(e2);
+			createNewEmptyEpisode().parseFromXML(e2, resetAddDate, resetViewed);
+		}
+		
+		if (e.getAttributeValue("coverdata") != null) {
+			setCover(""); //Damit er nicht probiert was zu löschen
+			setCover(ImageUtilities.byteArrayToImage(ByteUtilies.hexStringToByteArray(e.getAttributeValue("coverdata"))));
 		}
 		
 		endUpdating();
@@ -365,10 +376,10 @@ public class CCSeason {
 	}
 
 	@SuppressWarnings("nls")
-	public Element generateXML(Element el, boolean fileHash, boolean coverHash) {
+	public Element generateXML(Element el, boolean fileHash, boolean coverHash, boolean coverData) {
 		Element sea = new Element("season");
 		
-		setXMLAttributes(sea, coverHash);
+		setXMLAttributes(sea, coverHash, coverData);
 		
 		el.addContent(sea);
 		

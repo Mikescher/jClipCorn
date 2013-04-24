@@ -47,4 +47,13 @@ public class DialogHelper {
 			showError(new JFrame(), caption, text);
 		}
 	}
+	
+	public static int showOptions(Component frame, String caption, String text, String option1, String option2) {
+		String[] oplist = {option1, option2};
+		return JOptionPane.showOptionDialog(frame, text, caption, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, oplist, oplist[0]);
+	}
+	
+	public static int showLocaleOptions(Component frame, String ident) {
+		return showOptions(frame, LocaleBundle.getString(ident + "_caption"), LocaleBundle.getString(ident), LocaleBundle.getString(ident + "_option1"), LocaleBundle.getString(ident + "_option2")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+	}
 }

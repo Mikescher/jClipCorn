@@ -299,7 +299,7 @@ public class CCEpisode {
 	}
 	
 	@SuppressWarnings("nls")
-	public void parseFromXML(Element e) {
+	public void parseFromXML(Element e, boolean resetAddDate, boolean resetViewed) {
 		beginUpdating();
 		
 		if (e.getAttributeValue("title") != null)
@@ -308,10 +308,17 @@ public class CCEpisode {
 		if (e.getAttributeValue("viewed") != null)
 			setViewed(e.getAttributeValue("viewed").equals(true + ""));
 		
+		if (resetViewed)
+			setViewed(false);
+		
 		if (e.getAttributeValue("adddate") != null) {
 			CCDate d = new CCDate();
 			d.parse(e.getAttributeValue("adddate"), "D.M.Y");
 			setAddDate(d);
+		}
+		
+		if (resetAddDate) {
+			setAddDate(new CCDate());
 		}
 		
 		if (e.getAttributeValue("episodenumber") != null)

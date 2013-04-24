@@ -545,7 +545,7 @@ public class CCMovieList {
 	}
 	
 	@SuppressWarnings("nls")
-	public Document getAsXML() {
+	public Document getEmptyXML() {
 		Document xml = new Document(new Element("database"));
 		
 		Element root = xml.getRootElement();
@@ -553,10 +553,20 @@ public class CCMovieList {
 		root.setAttribute("version", Main.VERSION);
 		root.setAttribute("dbversion", Main.DBVERSION);
 		root.setAttribute("date", new CCDate().getSimpleStringRepresentation());
+		
+		return xml;
+	}
+	
+	@SuppressWarnings("nls")
+	public Document getAsXML() {
+		Document xml = getEmptyXML();
+		
+		Element root = xml.getRootElement();
+		
 		root.setAttribute("elementcount", getElementCount() + "");
 		
 		for (CCDatabaseElement el : list) {
-			el.generateXML(root, false, false);
+			el.generateXML(root, false, false, false);
 		}
 		
 		return xml;

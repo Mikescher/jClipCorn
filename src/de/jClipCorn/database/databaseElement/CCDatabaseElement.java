@@ -227,7 +227,7 @@ public abstract class CCDatabaseElement {
 		return getType().equals(CCMovieTyp.SERIES);
 	}
 	
-	@SuppressWarnings({ "nls", "unused" })
+	@SuppressWarnings({ "nls"})
 	protected void setXMLAttributes(Element e, boolean fileHash, boolean coverHash) {
 		e.setAttribute("localid", localID + "");
 		e.setAttribute("typ", typ.asInt() + "");

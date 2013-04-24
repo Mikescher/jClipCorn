@@ -6,6 +6,7 @@ import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Map;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -15,8 +16,8 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 
 public class CachedResourceLoader {
-	private static HashMap<String, BufferedImage> mapImages = new HashMap<>();
-	private static HashMap<String, ImageIcon> mapIcon = new HashMap<>();
+	private static Map<String, BufferedImage> mapImages = new HashMap<>();
+	private static Map<String, ImageIcon> mapIcon = new HashMap<>();
 	
 	public static void preload(String name) {
 		getImageIcon(name);
@@ -69,14 +70,14 @@ public class CachedResourceLoader {
 	
 	public static BufferedImage resize(BufferedImage bi, int width, int height) {
 		BufferedImage resizedImage = new BufferedImage(width, height, bi.getType());
-		Graphics2D g = resizedImage.createGraphics();
-		g.drawImage(bi, 0, 0, width, height, null);
-		g.dispose();
+		Graphics2D graphics = resizedImage.createGraphics();
+		graphics.drawImage(bi, 0, 0, width, height, null);
+		graphics.dispose();
 		
-		g.setComposite(AlphaComposite.Src);
-		g.setRenderingHint(RenderingHints.KEY_INTERPOLATION,RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-		g.setRenderingHint(RenderingHints.KEY_RENDERING,RenderingHints.VALUE_RENDER_QUALITY);
-		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
+		graphics.setComposite(AlphaComposite.Src);
+		graphics.setRenderingHint(RenderingHints.KEY_INTERPOLATION,RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+		graphics.setRenderingHint(RenderingHints.KEY_RENDERING,RenderingHints.VALUE_RENDER_QUALITY);
+		graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
 
 		return resizedImage;
 	}

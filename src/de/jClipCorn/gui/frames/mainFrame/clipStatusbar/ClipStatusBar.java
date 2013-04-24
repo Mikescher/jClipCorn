@@ -128,7 +128,7 @@ public class ClipStatusBar extends AbstractClipStatusbar implements CCDBUpdateLi
 		lblSeries.setText(LocaleBundle.getFormattedString("ClipStatusBar.Series", movielist.getEpisodeCount())); //$NON-NLS-1$
 		lblLength.setText(LocaleBundle.getFormattedString("ClipStatusBar.Length", TimeIntervallFormatter.formatPointed(movielist.getTotalLength(CCProperties.getInstance().PROP_STATUSBAR_CALC_SERIES_IN_LENGTH.getValue())))); //$NON-NLS-1$
 		lblSize.setText(  LocaleBundle.getFormattedString("ClipStatusBar.Size", FileSizeFormatter.format(movielist.getTotalSize(CCProperties.getInstance().PROP_STATUSBAR_CALC_SERIES_IN_SIZE.getValue())))); //$NON-NLS-1$
-		lblStarttime.setText(LocaleBundle.getFormattedString("ClipStatusBar.Starttime", movielist.getLoadTime()/1000, movielist.getTotalDatabaseCount())); //$NON-NLS-1$
+		lblStarttime.setText(LocaleBundle.getFormattedString("ClipStatusBar.Starttime", movielist.getLoadTime() / 1000, movielist.getTotalDatabaseCount())); //$NON-NLS-1$
 		updateLabels_Log();
 	}
 	

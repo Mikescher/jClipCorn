@@ -34,7 +34,7 @@ public class ClipTableModel extends AbstractTableModel implements TableModelRowC
 		new Color(0x67E300)
 	};
 	
-	private static final String[] columnNames = {
+	private static final String[] COLIMN_NAMES = {
 			"", // Score	 								//$NON-NLS-1$
 			LocaleBundle.getString("ClipTableModel.Title"), //$NON-NLS-1$
 			"", // Gesehen								//$NON-NLS-1$
@@ -66,25 +66,27 @@ public class ClipTableModel extends AbstractTableModel implements TableModelRowC
 
 	@Override
 	public String getColumnName(int col) {
-		return columnNames[col].toString();
+		return COLIMN_NAMES[col].toString();
 	}
 
 	@Override
 	public int getRowCount() {
-		if (movielist == null)
+		if (movielist == null) {
 			return 0;
+		}
 		return movielist.getElementCount();
 	}
 
 	@Override
 	public int getColumnCount() {
-		return columnNames.length;
+		return COLIMN_NAMES.length;
 	}
 
 	@Override
 	public Object getValueAt(int row, int col) {
-		if (movielist == null)
+		if (movielist == null) {
 			return ""; //$NON-NLS-1$
+		}
 
 		CCDatabaseElement el = movielist.getDatabaseElementBySort(row);
 		

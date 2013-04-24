@@ -23,11 +23,11 @@ public class MovieIterator implements Iterator<CCMovie> {
 
 	@Override
 	public CCMovie next() {
-		CCMovie m = (CCMovie)it.get(pos);
+		CCMovie mov = (CCMovie)it.get(pos);
 		
 		skip();
 		
-		return m;
+		return mov;
 	}
 	
 	private void skip() {

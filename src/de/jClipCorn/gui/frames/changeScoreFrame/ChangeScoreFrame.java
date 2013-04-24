@@ -229,8 +229,8 @@ public class ChangeScoreFrame extends JFrame {
 			return;
 		}
 		
-		CCMovie m = (CCMovie) movielist.getDatabaseElementBySort(position);
-		m.setScore(score);
+		CCMovie mov = (CCMovie) movielist.getDatabaseElementBySort(position);
+		mov.setScore(score);
 		
 		nextMovie();
 	}
@@ -241,25 +241,25 @@ public class ChangeScoreFrame extends JFrame {
 		if (position < movielist.getElementCount()) {
 			CCDatabaseElement del = movielist.getDatabaseElementBySort(position);
 			if (del.isMovie()) {
-				CCMovie m = (CCMovie) del;
+				CCMovie mov = (CCMovie) del;
 				
 				if (cbSkipRated.isSelected()) {
-					if (m.getScore() != CCMovieScore.RATING_NO) {
+					if (mov.getScore() != CCMovieScore.RATING_NO) {
 						nextMovie();
 						return;
 					}
 				}
 				
 				if (cbOnlyViewed.isSelected()) {
-					if (! m.isViewed()) {
+					if (! mov.isViewed()) {
 						nextMovie();
 						return;
 					}
 				}
 				
-				lblCover.setIcon(m.getCoverIcon());
-				lblCurrent.setIcon(m.getScore().getIcon());
-				lblTitle.setText(m.getCompleteTitle());
+				lblCover.setIcon(mov.getCoverIcon());
+				lblCurrent.setIcon(mov.getScore().getIcon());
+				lblTitle.setText(mov.getCompleteTitle());
 			} else {
 				nextMovie();
 				return;

@@ -1,13 +1,14 @@
 package de.jClipCorn.util.sql;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import de.jClipCorn.util.DoubleString;
 
 public class SQLUpdateHelper extends SQLHelper {
 	private DoubleString whereClauses;
 	
-	private ArrayList<DoubleString> fields = new ArrayList<>();
+	private List<DoubleString> fields = new ArrayList<>();
 	
 	public SQLUpdateHelper(String tabName, DoubleString whereClauses) {
 		super(tabName);
@@ -23,14 +24,16 @@ public class SQLUpdateHelper extends SQLHelper {
 	public String get() {
 		String rformat = "UPDATE %s SET %s WHERE %s=%s";
 		
-		String cnames = "";
+		StringBuilder cnames = new StringBuilder();
 		for (int i = 0; i < fields.size(); i++) {
 			if (i > 0) {
-				cnames += ", ";
+				cnames.append(", ");
 			}
-			cnames += fields.get(i).get1() + "=" + fields.get(i).get2();
+			cnames.append(fields.get(i).get1());
+			cnames.append("=");
+			cnames.append(fields.get(i).get2());
 		}
 		
-		return String.format(rformat, tabname, cnames, whereClauses.get1(), whereClauses.get2());
+		return String.format(rformat, tabname, cnames.toString(), whereClauses.get1(), whereClauses.get2());
 	}
 }

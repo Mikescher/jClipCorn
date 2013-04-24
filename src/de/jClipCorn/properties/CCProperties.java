@@ -3,6 +3,7 @@ package de.jClipCorn.properties;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.List;
 import java.util.Properties;
 import java.util.Vector;
 
@@ -36,7 +37,7 @@ public class CCProperties {
 	
 	private static CCProperties mainInstance = null;
 	
-	private Vector<CCProperty<Object>> propertylist = new Vector<>();
+	private List<CCProperty<Object>> propertylist = new Vector<>();
 	
 	public CCBoolProperty 	PROP_ADD_MOVIE_RELATIVE_AUTO;
 	public CCStringProperty PROP_DATABASE_NAME;
@@ -116,7 +117,7 @@ public class CCProperties {
 		vl.add("CCProperties.Language.Opt2"); //$NON-NLS-1$
 		vl.add("CCProperties.Language.Opt3"); //$NON-NLS-1$
 
-		Vector<String> vlf = LookAndFeelManager.getLookAndFeelList();
+		Vector<String> vlf = new Vector<>(LookAndFeelManager.getLookAndFeelList());
 		
 		LocalizedVector vb = new LocalizedVector();
 		vb.add("CCProperties.TabBackground.Opt0"); //$NON-NLS-1$
@@ -212,7 +213,7 @@ public class CCProperties {
 		save();
 	}
 	
-	public Vector<CCProperty<Object>> getPropertyList() {
+	public List<CCProperty<Object>> getPropertyList() {
 		return propertylist;
 	}
 

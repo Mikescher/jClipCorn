@@ -8,6 +8,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -39,7 +40,7 @@ public class CheckDatabaseFrame extends JFrame {
 
 	private final CCMovieList movielist;
 	
-	private ArrayList<DatabaseError> errorList;
+	private List<DatabaseError> errorList;
 	
 	private final JPanel contentPanel = new JPanel();
 	private JPanel pnlTop;
@@ -202,7 +203,7 @@ public class CheckDatabaseFrame extends JFrame {
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
-				ArrayList<DatabaseError> errors = new ArrayList<>();
+				List<DatabaseError> errors = new ArrayList<>();
 				
 				DatabaseValidator.startValidate(errors, movielist, new ProgressCallbackHelper(pBar));
 				

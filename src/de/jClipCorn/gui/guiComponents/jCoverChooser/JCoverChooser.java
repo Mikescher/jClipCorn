@@ -8,6 +8,7 @@ import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import javax.swing.JComponent;
 import javax.swing.event.ListSelectionEvent;
@@ -23,7 +24,7 @@ public class JCoverChooser extends JComponent implements MouseListener {
 
 	private HashMap<Integer, TransformRectangle> rectangles = new HashMap<>();
 	
-	private ArrayList<ListSelectionListener> listener = new ArrayList<>();
+	private List<ListSelectionListener> listener = new ArrayList<>();
 
 	private int coverWidth = ImageUtilities.COVER_WIDTH;
 	private int coverHeight = ImageUtilities.COVER_HEIGHT;
@@ -34,7 +35,7 @@ public class JCoverChooser extends JComponent implements MouseListener {
 	
 	private boolean mode3d = CCProperties.getInstance().PROP_PREVSERIES_3DCOVER.getValue();
 
-	private ArrayList<BufferedImage> images = new ArrayList<>();
+	private List<BufferedImage> images = new ArrayList<>();
 	private int currSelected = 0;
 
 	public JCoverChooser() {

@@ -17,7 +17,7 @@ public enum CCMovieQuality {
 	private static long FSIZE_MAX_CD = 2L * 1024 * 1024 * 1024;		// 2 GB
 	private static long FSIZE_MAX_DVD = 5L * 1024 * 1024 * 1024; 	// 5 GB
 	
-	private final static String names[] = {
+	private final static String NAMES[] = {
 		LocaleBundle.getString("CCMovieQuality.Quality0"),  //$NON-NLS-1$
 		LocaleBundle.getString("CCMovieQuality.Quality1"),  //$NON-NLS-1$
 		LocaleBundle.getString("CCMovieQuality.Quality2"),  //$NON-NLS-1$
@@ -27,7 +27,7 @@ public enum CCMovieQuality {
 	
 	private int id;
 	
-	CCMovieQuality(int val) {
+	private CCMovieQuality(int val) {
 		id = val;
 	}
 	
@@ -36,7 +36,7 @@ public enum CCMovieQuality {
 	}
 	
 	public String asString() {
-		return names[asInt()];
+		return NAMES[asInt()];
 	}
 	
 	public static CCMovieQuality find(int val) {
@@ -47,7 +47,7 @@ public enum CCMovieQuality {
 	}
 	
 	public static String[] getList() {
-		return names;
+		return NAMES;
 	}
 
 	public static int compare(CCMovieQuality o1, CCMovieQuality o2) {

@@ -8,6 +8,7 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.imageio.ImageIO;
 import javax.swing.DefaultComboBoxModel;
@@ -445,7 +446,7 @@ public class AddSeriesFrame extends JFrame implements ParseResultHandler, UserDa
 	}
 	
 	private void onBtnOK(boolean check) {
-		ArrayList<UserDataProblem> problems = new ArrayList<>();
+		List<UserDataProblem> problems = new ArrayList<>();
 		
 		boolean probvalue = (! check) || checkUserData(problems);
 		
@@ -490,7 +491,7 @@ public class AddSeriesFrame extends JFrame implements ParseResultHandler, UserDa
 		dispose();
 	}
 	
-	public boolean checkUserData(ArrayList<UserDataProblem> ret) {
+	public boolean checkUserData(List<UserDataProblem> ret) {
 		String title = edTitle.getText();
 		
 		int oscore = (int) spnOnlinescore.getValue();

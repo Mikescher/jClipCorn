@@ -10,7 +10,7 @@ public abstract class CCProperty<T extends Object> {
 	protected final String identifier;
 	protected final T standard;
 	protected final int category;
-	public final Class<T> mclass;
+	protected final Class<T> mclass;
 
 	@SuppressWarnings("unchecked")
 	CCProperty(int cat, Class<T> pclass, CCProperties prop, String ident, T std) {

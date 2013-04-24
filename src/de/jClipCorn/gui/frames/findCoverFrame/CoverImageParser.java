@@ -1,7 +1,7 @@
 package de.jClipCorn.gui.frames.findCoverFrame;
 
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
+import java.util.List;
 
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTyp;
 import de.jClipCorn.util.HTTPUtilities;
@@ -69,7 +69,7 @@ public class CoverImageParser {
 	private void parseGoogleImages() { // Parse the Google Image Search
 		String url = GoogleImageParser.getSearchURL(searchText);
 		String json = HTTPUtilities.getHTML(url, false);
-		ArrayList<String> links = GoogleImageParser.extractImageLinks(json);
+		List<String> links = GoogleImageParser.extractImageLinks(json);
 
 		for (String s : links) {
 			proglistener.step();
@@ -115,7 +115,7 @@ public class CoverImageParser {
 			String posterurl = ImDBImageParser.getCoverUrlPoster(direkturl);
 			String posterhtml = HTTPUtilities.getHTML(posterurl, true);
 
-			ArrayList<String> posterlinks = ImDBImageParser.extractImageLinks(posterhtml);
+			List<String> posterlinks = ImDBImageParser.extractImageLinks(posterhtml);
 
 			if (posterlinks.size() > 0) {
 				int currCID = 0;
@@ -141,7 +141,7 @@ public class CoverImageParser {
 				String allurl = ImDBImageParser.getCoverUrlAll(direkturl);
 				String allhtml = HTTPUtilities.getHTML(allurl, true);
 
-				ArrayList<String> alllinks = ImDBImageParser.extractImageLinks(allhtml);
+				List<String> alllinks = ImDBImageParser.extractImageLinks(allhtml);
 
 				int currCID = 0;
 				for (String url : alllinks) {
@@ -196,7 +196,7 @@ public class CoverImageParser {
 			String posterurl = ImDBImageParser.getCoverUrlPoster(direkturl);
 			String posterhtml = HTTPUtilities.getHTML(posterurl, true);
 
-			ArrayList<String> posterlinks = ImDBImageParser.extractImageLinks(posterhtml);
+			List<String> posterlinks = ImDBImageParser.extractImageLinks(posterhtml);
 
 			if (posterlinks.size() > 0) {
 				int currCID = 0;
@@ -222,7 +222,7 @@ public class CoverImageParser {
 				String allurl = ImDBImageParser.getCoverUrlAll(direkturl);
 				String allhtml = HTTPUtilities.getHTML(allurl, true);
 
-				ArrayList<String> alllinks = ImDBImageParser.extractImageLinks(allhtml);
+				List<String> alllinks = ImDBImageParser.extractImageLinks(allhtml);
 
 				int currCID = 0;
 				for (String url : alllinks) {

@@ -3,6 +3,7 @@ package de.jClipCorn.gui.frames.mainFrame.clipTable;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
@@ -96,7 +97,7 @@ public class ClipTable extends JScrollPane implements CCDBUpdateListener, ListSe
 	private void initialSort() {
 		@SuppressWarnings("unchecked")
 		TableRowSorter<ClipTableModel> sorter = ((TableRowSorter<ClipTableModel>)table.getRowSorter());
-    	ArrayList<SortKey> list = new ArrayList<>();	
+		List<SortKey> list = new ArrayList<>();	
 		
 		switch (CCProperties.getInstance().PROP_VIEW_DB_START_SORT.getValue()) {
 		case 0:
@@ -166,9 +167,9 @@ public class ClipTable extends JScrollPane implements CCDBUpdateListener, ListSe
 
 	private void onMouseAction(MouseEvent e) {
 		if (e.getClickCount() == 1 && e.getButton() == MouseEvent.BUTTON3) {
-			int r = table.rowAtPoint(e.getPoint());
-			if (r >= 0 && r < table.getRowCount()) {
-				table.setRowSelectionInterval(r, r);
+			int row = table.rowAtPoint(e.getPoint());
+			if (row >= 0 && row < table.getRowCount()) {
+				table.setRowSelectionInterval(row, row);
 			} else {
 				table.clearSelection();
 			}

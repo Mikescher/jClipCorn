@@ -13,7 +13,7 @@ import de.jClipCorn.properties.CCProperties;
 public class PathFormatter {
 	private final static char BACKSLASH = '\\';
 	
-	private final static ArrayList<Character> filenameChars = new ArrayList<>(Arrays.asList(
+	private final static ArrayList<Character> VALIDFILENAMECHARS = new ArrayList<>(Arrays.asList(
 		'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'Ä', 'Ö', 'Ü',
 		'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'ä', 'ö', 'ü',
 		'0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
@@ -31,7 +31,7 @@ public class PathFormatter {
 	private final static String WILDCARD_DRIVELETTER = "<?vLetter=\"%s\">";
 	private final static String WILDCARD_SELFDRIVE = "<?self[dir]>";
 	
-	private final static String workingDir = getWorkingDir();
+	private final static String WORKINGDIR = getWorkingDir();
 	
 	private static String getWorkingDir() {// Dafuq - wasn code (wird ja nur 1mal executed)
 		return new File(new PathFormatter().getClass().getProtectionDomain().getCodeSource().getLocation().getPath()).getParent().replace("%20", " ");  //$NON-NLS-1$ //$NON-NLS-2$
@@ -40,7 +40,7 @@ public class PathFormatter {
 	public static String getAbsoluteSelfDirectory() {
 		String sDir = CCProperties.getInstance().PROP_SELF_DIRECTORY.getValue();
 		
-		String ret = workingDir + BACKSLASH + sDir;
+		String ret = WORKINGDIR + BACKSLASH + sDir;
 		
 		if (! sDir.isEmpty()) {
 			ret += BACKSLASH;
@@ -50,7 +50,7 @@ public class PathFormatter {
 	}
 	
 	public static String getRealSelfDirectory() {
-		return workingDir + BACKSLASH;
+		return WORKINGDIR + BACKSLASH;
 	}
 	
 	public static String getAbsolute(String rPath) {
@@ -58,7 +58,7 @@ public class PathFormatter {
 			return RegExHelper.replace(REGEX_SELF, rPath, getAbsoluteSelfDirectory());
 		} else if (RegExHelper.startsWithRegEx(REGEX_DRIVENAME, rPath)) {
 			String card = RegExHelper.find(REGEX_DRIVENAME, rPath);
-			String name = card.substring(10, card.length()-2);
+			String name = card.substring(10, card.length() - 2);
 			char letter = DriveMap.getDriveLetter(name);
 			if (letter != '#') {
 				return RegExHelper.replace(REGEX_DRIVENAME, rPath, letter + ":\\");
@@ -71,7 +71,7 @@ public class PathFormatter {
 			char letter = card.charAt(11);
 			return RegExHelper.replace(REGEX_DRIVELETTER, rPath, letter + ":\\");
 		} else if (RegExHelper.startsWithRegEx(REGEX_SELFDRIVE, rPath)) {
-			char letter = workingDir.charAt(0);
+			char letter = WORKINGDIR.charAt(0);
 			return RegExHelper.replace(REGEX_SELFDRIVE, rPath, letter + ":\\");
 		} else {
 			return rPath;
@@ -81,7 +81,7 @@ public class PathFormatter {
 	public static String getRelative(String aPath) {
 		if (aPath.startsWith(getAbsoluteSelfDirectory())) {
 			return aPath.replace(getAbsoluteSelfDirectory(), WILDCARD_SELF);
-		} else if (aPath.charAt(0) == workingDir.charAt(0)) {
+		} else if (aPath.charAt(0) == WORKINGDIR.charAt(0)) {
 			return WILDCARD_SELFDRIVE.concat(aPath.substring(3));
 		} else {
 			return String.format(WILDCARD_DRIVENAME, DriveMap.getDriveName(aPath.charAt(0))).concat(aPath.substring(3));
@@ -135,15 +135,15 @@ public class PathFormatter {
 	}
 	
 	public static String fixStringToFilename(String fn) {
-		String r = "";
+		StringBuilder fnbuilder = new StringBuilder();
 		
 		for (int i = 0; i < fn.length(); i++) {
-			if (filenameChars.contains(fn.charAt(i))) {
-				r = r + fn.charAt(i);
+			if (VALIDFILENAMECHARS.contains(fn.charAt(i))) {
+				fnbuilder.append(fn.charAt(i));
 			}
 		}
 		
-		return r;
+		return fnbuilder.toString();
 	}
 	
 	public static String rename(String fn, String newFilename) {

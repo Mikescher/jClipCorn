@@ -8,9 +8,9 @@ import de.jClipCorn.gui.frames.mainFrame.clipTable.ClipTableModel;
 public class TableLanguageFilter extends RowFilter<ClipTableModel, Object> {
 	private CCMovieLanguage defLanguage;
 	
-	public TableLanguageFilter(CCMovieLanguage Language) {
+	public TableLanguageFilter(CCMovieLanguage language) {
 		super();
-		this.defLanguage = Language;
+		this.defLanguage = language;
 	}
 
 	@Override

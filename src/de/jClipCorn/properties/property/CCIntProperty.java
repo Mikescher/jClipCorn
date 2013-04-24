@@ -38,18 +38,15 @@ public class CCIntProperty extends CCProperty<Integer> {
 			setDefault();
 			return standard;
 		}
-		
-		int ival;
-		
+
 		try {
-			ival = Integer.parseInt(val);
+			int ival = Integer.parseInt(val);
+			return ival;
 		} catch(NumberFormatException e) {
 			CCLog.addWarning(LocaleBundle.getFormattedString("LogMessage.PropFormatErrorNumber", identifier, mclass.getName())); //$NON-NLS-1$
 			setDefault();
 			return standard;
 		}
-		
-		return ival;
 	}
 
 	@Override

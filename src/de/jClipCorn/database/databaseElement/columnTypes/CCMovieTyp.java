@@ -10,14 +10,14 @@ public enum CCMovieTyp {
 	MOVIE(0),
 	SERIES(1);
 	
-	private final static String names[] = {
+	private final static String NAMES[] = {
 		LocaleBundle.getString("CCMovieTyp.Movie"),  //$NON-NLS-1$
 		LocaleBundle.getString("CCMovieTyp.Series") //$NON-NLS-1$
 	};
 	
 	private int id;
 	
-	CCMovieTyp(int val) {
+	private CCMovieTyp(int val) {
 		id = val;
 	}
 	
@@ -26,7 +26,7 @@ public enum CCMovieTyp {
 	}
 	
 	public String asString() {
-		return names[asInt()];
+		return NAMES[asInt()];
 	}
 	
 	public static CCMovieTyp find(int val) {
@@ -37,7 +37,7 @@ public enum CCMovieTyp {
 	}
 	
 	public static String[] getList() {
-		return names;
+		return NAMES;
 	}
 	
 	public ImageIcon getIcon() {

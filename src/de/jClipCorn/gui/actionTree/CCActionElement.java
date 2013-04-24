@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import javax.swing.AbstractAction;
 import javax.swing.ActionMap;
@@ -31,8 +32,8 @@ public class CCActionElement {
 	
 	private CCKeyStrokeProperty keyStrokeProperty = null;
 	
-	private final ArrayList<ActionListener> listener;
-	private final ArrayList<CCActionElement> children;
+	private final List<ActionListener> listener;
+	private final List<CCActionElement> children;
 	
 	public CCActionElement(String name, KeyStroke stroke, String caption, String iconRes) {
 		this.name = name;
@@ -112,8 +113,8 @@ public class CCActionElement {
 		return children.iterator();
 	}
 	
-	public ArrayList<CCActionElement> getAllChildren() {
-		ArrayList<CCActionElement> childs = new ArrayList<>();
+	public List<CCActionElement> getAllChildren() {
+		List<CCActionElement> childs = new ArrayList<>();
 		
 		childs.addAll(children);
 		
@@ -153,7 +154,7 @@ public class CCActionElement {
 	}
 
 	public void testTree() {
-		ArrayList<CCActionElement> childs = getAllChildren();
+		List<CCActionElement> childs = getAllChildren();
 		
 		childs.add(this);
 		
@@ -195,7 +196,7 @@ public class CCActionElement {
 	}
 	
 	private void onKeyPressed(KeyStroke stroke) {
-		ArrayList<CCActionElement> childs = getAllChildren();
+		List<CCActionElement> childs = getAllChildren();
 		childs.add(this);
 		
 		for (int i = 0; i < childs.size(); i++) {
@@ -206,7 +207,7 @@ public class CCActionElement {
 	}
 	
 	public void implementAllKeyListener(JComponent comp) {
-		ArrayList<CCActionElement> childs = getAllChildren();
+		List<CCActionElement> childs = getAllChildren();
 		
 		implementKeyListener(comp, this);
 		
@@ -224,7 +225,7 @@ public class CCActionElement {
 	}
 	
 	public void createAllProperties(CCProperties props) {
-		ArrayList<CCActionElement> childs = new ArrayList<>();
+		List<CCActionElement> childs = new ArrayList<>();
 		
 		for (int i = 0; i < children.size(); i++) {
 			childs.addAll(children.get(i).getAllChildren());

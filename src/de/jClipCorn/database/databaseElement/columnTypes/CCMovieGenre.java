@@ -42,7 +42,7 @@ public enum CCMovieGenre {
 	public final static int NO_GENRE = GENRE_000.asInt();
 	
 	@SuppressWarnings("nls")
-	private static final String[] names = {	
+	private static final String[] NAMES = {	
 		LocaleBundle.getString("CCMovieGenre.Genre000"), LocaleBundle.getString("CCMovieGenre.Genre001"), LocaleBundle.getString("CCMovieGenre.Genre002"), LocaleBundle.getString("CCMovieGenre.Genre003"), 
 		LocaleBundle.getString("CCMovieGenre.Genre004"), LocaleBundle.getString("CCMovieGenre.Genre005"), LocaleBundle.getString("CCMovieGenre.Genre006"), LocaleBundle.getString("CCMovieGenre.Genre007"),
 		LocaleBundle.getString("CCMovieGenre.Genre008"), LocaleBundle.getString("CCMovieGenre.Genre009"), LocaleBundle.getString("CCMovieGenre.Genre010"), LocaleBundle.getString("CCMovieGenre.Genre011"),
@@ -59,7 +59,7 @@ public enum CCMovieGenre {
 	
 	private int id;
 	
-	CCMovieGenre(int val) {
+	private CCMovieGenre(int val) {
 		id = val;
 	}
 	
@@ -75,8 +75,8 @@ public enum CCMovieGenre {
 	}
 
 	public String asString() {
-		if (id < names.length) {
-			return names[id];
+		if (id < NAMES.length) {
+			return NAMES[id];
 		} else {
 			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.UnknownGenreFound", id)); //$NON-NLS-1$
 			return "Unknown Genre"; //$NON-NLS-1$
@@ -84,7 +84,7 @@ public enum CCMovieGenre {
 	}
 
 	public static String[] getList() {
-		return names;
+		return NAMES;
 	}
 
 	public static String[] getTrimmedList() {
@@ -235,6 +235,6 @@ public enum CCMovieGenre {
 	}
 
 	public boolean isValid() {
-		return id >= 0 && id < CCMovieGenre.values().length && id < names.length;
+		return id >= 0 && id < CCMovieGenre.values().length && id < NAMES.length;
 	}
 }

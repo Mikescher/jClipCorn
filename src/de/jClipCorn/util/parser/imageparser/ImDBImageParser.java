@@ -1,14 +1,14 @@
 package de.jClipCorn.util.parser.imageparser;
 
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
+import java.util.List;
 
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTyp;
 import de.jClipCorn.util.DoubleString;
 import de.jClipCorn.util.parser.ImDBParser;
 @SuppressWarnings("nls")
 public class ImDBImageParser {
-	public static String getSearchURL(String title, CCMovieTyp typ) {
+	public static String getSearchURL(String title, CCMovieTyp typ) { // TODO Invisible Setting for German / Englisch
 		switch (ImDBParser.LANGUAGE) {
 		case GERMAN:
 			return ImDBImageParser_Ger.getSearchURL(title, typ);
@@ -42,7 +42,7 @@ public class ImDBImageParser {
 	}
 	
 	public static String getFirstSearchResult(String html) {
-		ArrayList<DoubleString> alds = ImDBParser.extractImDBLinks(html);
+		List<DoubleString> alds = ImDBParser.extractImDBLinks(html);
 		if (!alds.isEmpty()) {
 			return alds.get(0).get1();
 		} else {
@@ -83,7 +83,7 @@ public class ImDBImageParser {
 		}
 	}
 	
-	public static ArrayList<String> extractImageLinks(String html) {
+	public static List<String> extractImageLinks(String html) {
 		switch (ImDBParser.LANGUAGE) {
 		case GERMAN:
 			return ImDBImageParser_Ger.extractImageLinks(html);

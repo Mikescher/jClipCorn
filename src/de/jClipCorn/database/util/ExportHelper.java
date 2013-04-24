@@ -33,16 +33,16 @@ public class ExportHelper {
 			byte[] readBuffer = new byte[2156];
 			int bytesIn = 0;
 			for (int i = 0; i < dirList.length; i++) {
-				File f = new File(zipDir, dirList[i]);
-				if (f.isDirectory()) {
+				File file = new File(zipDir, dirList[i]);
+				if (file.isDirectory()) {
 					if (recursively) {
-						zipDir(owner, f, zos, recursively);
+						zipDir(owner, file, zos, recursively);
 					}
 					continue;
 				}
 				
-				FileInputStream fis = new FileInputStream(f);
-				ZipEntry anEntry = new ZipEntry(f.getAbsolutePath().replace(owner.getAbsolutePath() + '\\', "")); //$NON-NLS-1$
+				FileInputStream fis = new FileInputStream(file);
+				ZipEntry anEntry = new ZipEntry(file.getAbsolutePath().replace(owner.getAbsolutePath() + '\\', "")); //$NON-NLS-1$
 				zos.putNextEntry(anEntry);
 				
 				while ((bytesIn = fis.read(readBuffer)) != -1) {
@@ -123,9 +123,9 @@ public class ExportHelper {
 					continue;
 				}
 				
-				BufferedReader b = new BufferedReader(new InputStreamReader(stream, "UTF-8")); //$NON-NLS-1$
-				content = TextFileUtils.readTextFile(b);
-				b.close();
+				BufferedReader reader = new BufferedReader(new InputStreamReader(stream, "UTF-8")); //$NON-NLS-1$
+				content = TextFileUtils.readTextFile(reader);
+				reader.close();
 				
 				return content;
 			}
@@ -155,11 +155,11 @@ public class ExportHelper {
 
 			for (Element e : root.getChildren()) {
 				if (e.getName().equals("movie")) { //$NON-NLS-1$
-					CCMovie m = movielist.createNewEmptyMovie();
-					m.parseFromXML(e);
+					CCMovie mov = movielist.createNewEmptyMovie();
+					mov.parseFromXML(e);
 				} else if (e.getName().equals("series")) { //$NON-NLS-1$
-					CCSeries s = movielist.createNewEmptySeries();
-					s.parseFromXML(e);
+					CCSeries ser = movielist.createNewEmptySeries();
+					ser.parseFromXML(e);
 				}
 			}
 		} catch (Exception e) {

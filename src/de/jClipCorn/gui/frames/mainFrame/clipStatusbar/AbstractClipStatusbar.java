@@ -6,6 +6,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -19,7 +20,7 @@ public class AbstractClipStatusbar extends JPanel {
 	
 	private final static int HEIGHT = 16;
 	
-	private ArrayList<ClipStatusbarColumn> columns = new ArrayList<>();;
+	private List<ClipStatusbarColumn> columns = new ArrayList<>();;
 
 	public AbstractClipStatusbar() {
 		super();

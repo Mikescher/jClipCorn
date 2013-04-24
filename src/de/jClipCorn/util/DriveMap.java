@@ -2,6 +2,7 @@ package de.jClipCorn.util;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.filechooser.FileSystemView;
 
@@ -11,8 +12,8 @@ import de.jClipCorn.Main;
 public class DriveMap {
 	private final static String REGEX_DRIVENAME_ESCAPE = " \\([A-Z]:\\)"; //$NON-NLS-1$
 	
-	private static HashMap<Character, String> driveNameMap = null;
-	private static HashMap<String, Character> driveLetterMap = null;
+	private static Map<Character, String> driveNameMap = null;
+	private static Map<String, Character> driveLetterMap = null;
 	private static boolean created = false;
 	
 	public static Character getDriveLetter(String name) {
@@ -22,7 +23,7 @@ public class DriveMap {
 		
 		Character letter = driveLetterMap.get(name);
 		
-		return (letter == null) ? (new Character('#')) : (letter);
+		return (letter == null) ? ('#') : (letter);
 	}
 	
 	@SuppressWarnings("nls")
@@ -54,7 +55,7 @@ public class DriveMap {
 		
 		created = true;
 		if (Main.DEBUG) {
-			System.out.println("[DBG] FileSystem scanned in " + ((System.currentTimeMillis() - sss)/100)/10.0 + "s"); //$NON-NLS-1$ //$NON-NLS-2$
+			System.out.println("[DBG] FileSystem scanned in " + ((System.currentTimeMillis() - sss) / 100) / 10.0 + "s"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 	

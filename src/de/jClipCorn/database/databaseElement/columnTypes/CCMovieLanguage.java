@@ -12,14 +12,14 @@ public enum CCMovieLanguage {
 	MUTED(2),
 	FRENCH(3);
 
-	private final static String names[] = {
+	private final static String NAMES[] = {
 		LocaleBundle.getString("CCMovieLanguage.German"),  //$NON-NLS-1$
 		LocaleBundle.getString("CCMovieLanguage.English"), //$NON-NLS-1$
 		LocaleBundle.getString("CCMovieLanguage.Muted"),   //$NON-NLS-1$
 		LocaleBundle.getString("CCMovieLanguage.French")   //$NON-NLS-1$
 	};
 	
-	private final static String shortnames[] = {
+	private final static String SHORTNAMES[] = {
 		"GER",  //$NON-NLS-1$
 		"ENG", //$NON-NLS-1$
 		"MUT",   //$NON-NLS-1$
@@ -28,7 +28,7 @@ public enum CCMovieLanguage {
 	
 	private int id;
 	
-	CCMovieLanguage(int val) {
+	private CCMovieLanguage(int val) {
 		id = val;
 	}
 	
@@ -37,7 +37,7 @@ public enum CCMovieLanguage {
 	}
 	
 	public String asString() {
-		return names[asInt()];
+		return NAMES[asInt()];
 	}
 	
 	public static CCMovieLanguage find(int val) {
@@ -48,7 +48,7 @@ public enum CCMovieLanguage {
 	}
 	
 	public static String[] getList() {
-		return names;
+		return NAMES;
 	}
 
 	public static int compare(CCMovieLanguage o1, CCMovieLanguage o2) {
@@ -71,6 +71,6 @@ public enum CCMovieLanguage {
 	}
 
 	public String getShortString() {
-		return shortnames[asInt()];
+		return SHORTNAMES[asInt()];
 	}
 }

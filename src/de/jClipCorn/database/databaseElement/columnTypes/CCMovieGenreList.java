@@ -161,27 +161,31 @@ public class CCMovieGenreList {
 	}
 	
 	public String asString() {
-		String r = ""; //$NON-NLS-1$
+		StringBuilder sb = new StringBuilder();
+		
 		int sz = getGenreCount();
 		for(int i = 0; i < sz; i++) {
-			r += getGenre(i).asString();
+			sb.append(getGenre(i).asString());
 			if ((i+1) < sz) {
-				r += '|';
+				sb.append('|');
 			}
 		}
-		return r;
+		
+		return sb.toString();
 	}
 	
 	public String asSimpleString() {
-		String r = ""; //$NON-NLS-1$
+		StringBuilder sb = new StringBuilder();
+		
 		int sz = getGenreCount();
 		for(int i = 0; i < sz; i++) {
-			r += getGenre(i)+""; //$NON-NLS-1$
+			sb.append(getGenre(i)+""); //$NON-NLS-1$
 			if ((i+1) < sz) {
-				r += '|';
+				sb.append('|');
 			}
 		}
-		return r;
+		
+		return sb.toString();
 	}
 	
 	public CCMovieGenreList getSorted() {

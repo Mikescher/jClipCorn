@@ -1,6 +1,7 @@
 package de.jClipCorn.util.parser.imageparser;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -25,8 +26,8 @@ public class GoogleImageParser {
 		return String.format(BASE_URL + SEARCH_URL, HTTPUtilities.escapeURL(title + SEARCH_APPENDIX));
 	}
 	
-	public static ArrayList<String> extractImageLinks(String json) {
-		ArrayList<String> result = new ArrayList<>();
+	public static List<String> extractImageLinks(String json) {
+		List<String> result = new ArrayList<>();
 		
 		JSONObject jobj;
 		try {

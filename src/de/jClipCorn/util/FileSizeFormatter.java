@@ -6,7 +6,7 @@ import java.text.DecimalFormat;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieSize;
 
 public class FileSizeFormatter {
-	private static final String[] units = new String[] { 
+	private static final String[] UNITS = new String[] { 
 		"B", 	//$NON-NLS-1$
 		"KB", 	//$NON-NLS-1$
 		"MB", 	//$NON-NLS-1$
@@ -21,7 +21,7 @@ public class FileSizeFormatter {
 			return "0"; //$NON-NLS-1$
 		}
 		int digitGroups = (int) (Math.log10(bytes) / Math.log10(1024));
-		return new DecimalFormat("#,##0.#").format(bytes / Math.pow(1024, digitGroups)) + " " + units[digitGroups]; //$NON-NLS-1$ //$NON-NLS-2$
+		return new DecimalFormat("#,##0.#").format(bytes / Math.pow(1024, digitGroups)) + " " + UNITS[digitGroups]; //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	public static String format(CCMovieSize size) {

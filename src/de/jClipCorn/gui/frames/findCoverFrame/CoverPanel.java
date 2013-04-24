@@ -5,6 +5,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -21,8 +22,8 @@ public class CoverPanel extends JPanel implements UpdateCallbackListener {
 	
 	private final JScrollPane scrollpane;
 	
-	private ArrayList<BufferedImage> images = new ArrayList<>();
-	private ArrayList<JLabel> labels = new ArrayList<>();
+	private List<BufferedImage> images = new ArrayList<>();
+	private List<JLabel> labels = new ArrayList<>();
 	private int selctionID = -1;
 	
 	public CoverPanel(JScrollPane pane) {

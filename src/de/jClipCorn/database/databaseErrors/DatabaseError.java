@@ -3,6 +3,7 @@ package de.jClipCorn.database.databaseErrors;
 import java.awt.Component;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.databaseElement.CCEpisode;
@@ -89,21 +90,21 @@ public class DatabaseError {
 	}
 
 	public String getFullErrorString() {
-		String r = ""; //$NON-NLS-1$
+		StringBuilder errstr = new StringBuilder();
 		
-		r = getElement1Name();
+		errstr.append(getElement1Name());
 		
-		r += " "; //$NON-NLS-1$
+		errstr.append(" "); //$NON-NLS-1$
 		
 		if (el2 != null) {
-			r += getElement2Name();
+			errstr.append(getElement2Name());
 			
-			r += " "; //$NON-NLS-1$
+			errstr.append(" "); //$NON-NLS-1$
 		}
 		
-		r += getErrorString();
+		errstr.append(getErrorString());
 		
-		return r;
+		return errstr.toString();
 	}
 
 	private String convertToString(Object el) {
@@ -203,16 +204,16 @@ public class DatabaseError {
 	
 	private boolean fixError_Incontinous_Genrelist() {
 		if (el1 instanceof CCDatabaseElement) {
-			CCDatabaseElement m = (CCDatabaseElement) getElement1();
+			CCDatabaseElement elem = (CCDatabaseElement) getElement1();
 			CCMovieGenreList ls = new CCMovieGenreList();
 			
 			for (int i = 0; i < CCMovieGenreList.getMaxListSize(); i++) {
-				if (! m.getGenre(i).isEmpty()) {
-					ls.addGenre(m.getGenre(i));
+				if (! elem.getGenre(i).isEmpty()) {
+					ls.addGenre(elem.getGenre(i));
 				}
 			}
 			
-			m.setGenres(ls);
+			elem.setGenres(ls);
 			
 			return true;
 		}
@@ -255,7 +256,7 @@ public class DatabaseError {
 	
 	private boolean fixError_Incontinous_Parts() {
 		if (el1 instanceof CCMovie) {
-			ArrayList<String> parts = new ArrayList<>();
+			List<String> parts = new ArrayList<>();
 			
 			for (int i = 0; i < ((CCMovie)el1).getPartcount(); i++) {
 				if (! ((CCMovie)el1).getPart(i).isEmpty()) {

@@ -1,16 +1,17 @@
 package de.jClipCorn.util;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @SuppressWarnings("nls")
 public class RegExHelper {
 	public static boolean startsWithRegEx(String regEx, String input) {
-		Matcher m = Pattern.compile(regEx).matcher(input);
+		Matcher matcher = Pattern.compile(regEx).matcher(input);
 
-		while (m.find()) {
-			if (m.start() == 0) {
+		while (matcher.find()) {
+			if (matcher.start() == 0) {
 				return true;
 			}
 		}
@@ -19,20 +20,20 @@ public class RegExHelper {
 	}
 
 	public static String find(String regEx, String input) {
-		Matcher m = Pattern.compile(regEx).matcher(input);
-		if (m.find()) {
-			return m.group();
+		Matcher matcher = Pattern.compile(regEx).matcher(input);
+		if (matcher.find()) {
+			return matcher.group();
 		}
 		return "";
 	}
 
-	public static ArrayList<String> findAll(String regEx, String input) {
-		ArrayList<String> result = new ArrayList<>();
+	public static List<String> findAll(String regEx, String input) {
+		List<String> result = new ArrayList<>();
 
-		Matcher m = Pattern.compile(regEx).matcher(input);
+		Matcher matcher = Pattern.compile(regEx).matcher(input);
 
-		while (m.find()) {
-			result.add(m.group());
+		while (matcher.find()) {
+			result.add(matcher.group());
 		}
 
 		return result;
@@ -51,10 +52,10 @@ public class RegExHelper {
 	}
 
 	public static String replace(String regEx, String input, String replace) {
-		Matcher m = Pattern.compile(regEx).matcher(input);
+		Matcher matcher = Pattern.compile(regEx).matcher(input);
 
-		if (m.find()) {
-			return stringReplace(input, m.start(), m.end(), replace);
+		if (matcher.find()) {
+			return stringReplace(input, matcher.start(), matcher.end(), replace);
 		} else {
 			return input;
 		}

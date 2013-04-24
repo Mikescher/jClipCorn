@@ -2,6 +2,7 @@ package de.jClipCorn.util.parser.imageparser;
 
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -31,7 +32,7 @@ public class ImDBImageParser_Ger {
 	}
 	
 	public static String getFirstSearchResult(String html) {
-		ArrayList<DoubleString> alds = ImDBParser.extractImDBLinks(html);
+		List<DoubleString> alds = ImDBParser.extractImDBLinks(html);
 		if (!alds.isEmpty()) {
 			return alds.get(0).get1();
 		} else {
@@ -40,7 +41,7 @@ public class ImDBImageParser_Ger {
 	}
 	
 	public static String getSecondSearchResult(String html) {
-		ArrayList<DoubleString> alds = ImDBParser.extractImDBLinks(html);
+		List<DoubleString> alds = ImDBParser.extractImDBLinks(html);
 		if (alds.size() >= 2) {
 			return alds.get(1).get1();
 		} else {
@@ -56,17 +57,17 @@ public class ImDBImageParser_Ger {
 		return ImDBParser.getCoverDirekt(html);
 	}
 	
-	public static ArrayList<String> extractImageLinks(String html) {
-		ArrayList<String> result = new ArrayList<>();
+	public static List<String> extractImageLinks(String html) {
+		List<String> result = new ArrayList<>();
 		
 		String shortened = RegExHelper.find(REGEX_THUMBLIST, html);
 		
 		Pattern pat = Pattern.compile(REGEX_IMAGELINK);
 		
-		Matcher m = pat.matcher(shortened);
+		Matcher matcher = pat.matcher(shortened);
 		
-		while (m.find()) {
-			result.add(ImDBParser_Ger.BASE_URL + m.group());
+		while (matcher.find()) {
+			result.add(ImDBParser_Ger.BASE_URL + matcher.group());
 		}
 		
 		return result;

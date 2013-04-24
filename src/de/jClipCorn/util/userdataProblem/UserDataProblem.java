@@ -3,6 +3,7 @@ package de.jClipCorn.util.userdataProblem;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -63,7 +64,7 @@ public class UserDataProblem {
 	//####################################################################################################################################################
 	//####################################################################################################################################################
 	
-	public static void testMovieData(ArrayList<UserDataProblem> ret, CCMovie mov, BufferedImage cvr, CCMovieList l, String p0, String p1, String p2, String p3, String p4, String p5, 
+	public static void testMovieData(List<UserDataProblem> ret, CCMovie mov, BufferedImage cvr, CCMovieList l, String p0, String p1, String p2, String p3, String p4, String p5, 
 									String title, String zyklus, int zyklusID, int len, CCDate adddate, int oscore, int fskidx, int year, long fsize, String csExtn, 
 									String csExta, int gen0, int gen1, int gen2, int gen3, int gen4, int gen5, int gen6, int gen7, int quality, int language) {
 		
@@ -141,7 +142,7 @@ public class UserDataProblem {
 		
 		//################################################################################################################
 		
-		ArrayList<String> extensions = new ArrayList<>();
+		List<String> extensions = new ArrayList<>();
 		
 		if (! p0.isEmpty()) {
 			extensions.add(PathFormatter.getExtension(p0));
@@ -260,7 +261,7 @@ public class UserDataProblem {
 		}
 	}
 	
-	public static void testSeriesData(ArrayList<UserDataProblem> ret, BufferedImage cvr, String title, int oscore, int gen0, int gen1, int gen2, int gen3, int gen4, int gen5, int gen6, int gen7, int fskidx) {
+	public static void testSeriesData(List<UserDataProblem> ret, BufferedImage cvr, String title, int oscore, int gen0, int gen1, int gen2, int gen3, int gen4, int gen5, int gen6, int gen7, int fskidx) {
 		if (title.isEmpty()) {
 			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_EMPTY_TITLE));
 		}
@@ -297,7 +298,7 @@ public class UserDataProblem {
 		}
 	}
 	
-	public static void testSeasonData(ArrayList<UserDataProblem> ret, BufferedImage cvr, String title, int year) {
+	public static void testSeasonData(List<UserDataProblem> ret, BufferedImage cvr, String title, int year) {
 		if (title.isEmpty()) {
 			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_EMPTY_TITLE));
 		}
@@ -315,7 +316,7 @@ public class UserDataProblem {
 		}
 	}
 	
-	public static void testEpisodeData(ArrayList<UserDataProblem> ret, CCSeason season, CCEpisode episode, String title, int len, int epNum, CCDate adddate, CCDate lvdate, long fsize, String csExtn, String csExta, String part, int quality) {
+	public static void testEpisodeData(List<UserDataProblem> ret, CCSeason season, CCEpisode episode, String title, int len, int epNum, CCDate adddate, CCDate lvdate, long fsize, String csExtn, String csExta, String part, int quality) {
 		if (title.isEmpty()) {
 			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_EMPTY_TITLE));
 		}

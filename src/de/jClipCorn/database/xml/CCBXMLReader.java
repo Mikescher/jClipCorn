@@ -74,8 +74,8 @@ public class CCBXMLReader {
 		Element root = document.getRootElement().getChild("database");
 		if (root == null) return false;
 		
-		Iterator<Element> it = root.getChildren().iterator();
-		while(it.hasNext()) {
+		
+		for (Iterator<Element> it = root.getChildren().iterator(); it.hasNext();) {
 			Element e = it.next();
 			if (e.getName().equals("movie")) {
 				createMovie(e);
@@ -115,8 +115,8 @@ public class CCBXMLReader {
 		newMov.setFilesize(e.getChild("größe").getAttribute("dec").getLongValue() * 1024);
 		newMov.setPart(0, e.getChildText("pathpart1"));
 		newMov.setPart(1, e.getChildText("pathpart2"));
-		String n = e.getChildText("cover");
-		newMov.setCover(n.substring(0, n.length() - 3) + "png");
+		String cvrval = e.getChildText("cover");
+		newMov.setCover(cvrval.substring(0, cvrval.length() - 3) + "png");
 		
 		final CCMovie finmov = newMov;
 		try {
@@ -146,12 +146,12 @@ public class CCBXMLReader {
 		newSer.setGenre(translateGenre(e.getChild("info").getChild("genre").getChild("genre06").getAttribute("dec").getIntValue()), 6);
 		newSer.setOnlinescore(Integer.parseInt(e.getChild("info").getChildText("imdbscore")));
 		newSer.setFsk(e.getChild("info").getChild("usk").getAttribute("dec").getIntValue());
-		String n = e.getChild("info").getChildText("cover");
-		newSer.setCover(n.substring(0, n.length() - 3) + "png");
+		String cvrval = e.getChild("info").getChildText("cover");
+		newSer.setCover(cvrval.substring(0, cvrval.length() - 3) + "png");
 		
-		Iterator<Element> itseries = e.getChildren().iterator();
 		
-		while (itseries.hasNext()) {
+		
+		for (Iterator<Element> itseries = e.getChildren().iterator(); itseries.hasNext();) {
 			Element eseries = itseries.next();
 			if (eseries.getName().equals("season")) {
 				createSeason(newSer, eseries);
@@ -178,12 +178,12 @@ public class CCBXMLReader {
 		
 		newSeas.setTitle(owner.getChild("info").getChildText("staffeltitel"));
 		newSeas.setYear(Integer.parseInt(owner.getChild("info").getChildText("jahr")));
-		String n = owner.getChild("info").getChildText("cover");
-		newSeas.setCover(n.substring(0, n.length() - 3) + "png");
+		String cvrval = owner.getChild("info").getChildText("cover");
+		newSeas.setCover(cvrval.substring(0, cvrval.length() - 3) + "png");
 		
-		Iterator<Element> itseason = owner.getChildren().iterator();
 		
-		while (itseason.hasNext()) {
+		
+		for (Iterator<Element> itseason = owner.getChildren().iterator(); itseason.hasNext();) {
 			Element eseason = itseason.next();
 			if (eseason.getName().equals("episode")) {
 				createEpisode(newSeas, eseason);

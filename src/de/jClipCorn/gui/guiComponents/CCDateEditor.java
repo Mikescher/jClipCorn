@@ -42,7 +42,7 @@ public class CCDateEditor extends JSpinner.DefaultEditor {
 
 	@Override
 	public void commitEdit() {
-		if (owner != null && owner.getModel() !=null && owner.getModel() instanceof SpinnerCCDateModel) {
+		if (owner != null && owner.getModel() != null && owner.getModel() instanceof SpinnerCCDateModel) {
 			SpinnerCCDateModel model = (SpinnerCCDateModel) owner.getModel();
 			CCDate d = new CCDate();
 			if (d.parse(getTextField().getText(), CCDate.STRINGREP_SIMPLE)) {

@@ -1,6 +1,7 @@
 package de.jClipCorn.util.sql;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import de.jClipCorn.util.DoubleString;
 
@@ -9,7 +10,7 @@ public class SQLSelectHelper extends SQLHelper {
 	private String target = "*"; //$NON-NLS-1$
 	private SQLOrder order = SQLOrder.ASC;
 	private String orderBy = null;
-	private ArrayList<DoubleString> wheres = new ArrayList<>();
+	private List<DoubleString> wheres = new ArrayList<>();
 
 	public SQLSelectHelper(String tabname) {
 		super(tabname);
@@ -22,22 +23,26 @@ public class SQLSelectHelper extends SQLHelper {
 	@SuppressWarnings("nls")
 	@Override
 	public String get() {
-		String sql = String.format("SELECT %s FROM %s", target, tabname);
+		StringBuilder sqlbuilder = new StringBuilder();
+		sqlbuilder.append(String.format("SELECT %s FROM %s", target, tabname));
 		if (!wheres.isEmpty()) {
-			sql += " WHERE";
+			sqlbuilder.append(" WHERE");
 			for (int i = 0; i < wheres.size(); i++) {
 				if (i > 0) {
-					sql += " AND";
+					sqlbuilder.append(" AND");
 				}
-				sql += " " + wheres.get(i).get1() + "=" + wheres.get(i).get2();
+				sqlbuilder.append(" ");
+				sqlbuilder.append(wheres.get(i).get1());
+				sqlbuilder.append("=");
+				sqlbuilder.append(wheres.get(i).get2());
 			}
 		}
 
 		if (orderBy != null) {
-			sql += String.format(" ORDER BY %s %s", orderBy, order == SQLOrder.ASC ? "ASC" : "DESC"); //Note that you CAN compare enums with == , RTFM !!!
+			sqlbuilder.append(String.format(" ORDER BY %s %s", orderBy, order == SQLOrder.ASC ? "ASC" : "DESC")); //Note that you CAN compare enums with == , RTFM !!!
 		}
 		
-		return sql;
+		return sqlbuilder.toString();
 	}
 
 	public void setTarget(String target) {

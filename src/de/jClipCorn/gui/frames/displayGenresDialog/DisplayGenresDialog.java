@@ -57,15 +57,15 @@ public class DisplayGenresDialog extends JDialog {
 	}
 	
 	private void initDisplay() {
-		int h = Math.max(genreList.getGenreCount(), 1);
+		int count = Math.max(genreList.getGenreCount(), 1);
 		
 		DefaultListModel<Object> dlm = new DefaultListModel<>();
-		for (int i = 0; i < h; i++) {
+		for (int i = 0; i < count; i++) {
 			dlm.addElement(genreList.getGenre(i).asString());
 		}
 		lsGenres.setModel(dlm);
 		
-		lsGenres.setVisibleRowCount(h);
+		lsGenres.setVisibleRowCount(count);
 		
 		pack();
 		

@@ -129,9 +129,9 @@ public class SerTable extends JScrollPane implements ListSelectionListener, Mous
 
 	private void onMouseAction(MouseEvent e) {
 		if (e.getClickCount() == 1 && e.getButton() == MouseEvent.BUTTON3) {
-			int r = table.rowAtPoint(e.getPoint());
-			if (r >= 0 && r < table.getRowCount()) {
-				table.setRowSelectionInterval(r, r);
+			int row = table.rowAtPoint(e.getPoint());
+			if (row >= 0 && row < table.getRowCount()) {
+				table.setRowSelectionInterval(row, row);
 			} else {
 				table.clearSelection();
 			}

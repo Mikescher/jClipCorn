@@ -17,11 +17,11 @@ public enum CCMovieFormat {
 	FLV(8);
 	
 	// Names sind gleichzeitig die extensions
-	private final static String names[] = {"mkv", "avi", "mpeg", "img", "ifo", "wmv", "mp4", "divx", "flv"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$
-	private final static String altnames[] = {"mkv", "avi", "mpg", "img", "ifo", "wmv", "mp4", "divx", "flv"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$
+	private final static String NAMES[] = {"mkv", "avi", "mpeg", "img", "ifo", "wmv", "mp4", "divx", "flv"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$
+	private final static String ALTNAMES[] = {"mkv", "avi", "mpg", "img", "ifo", "wmv", "mp4", "divx", "flv"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$
 	private int id;
 	
-	CCMovieFormat(int val) {
+	private CCMovieFormat(int val) {
 		id = val;
 	}
 	
@@ -37,24 +37,24 @@ public enum CCMovieFormat {
 	}
 
 	public String asString() {
-		return names[asInt()];
+		return NAMES[asInt()];
 	}
 	
-	public String asString_Alt() {
-		return altnames[asInt()];
+	public String asStringAlt() {
+		return ALTNAMES[asInt()];
 	}
 	
 	public static String[] getList() {
-		return names;
+		return NAMES;
 	}
 	
 	public static boolean isValidMovieFormat(String ext) {
-		for (String se : names) {
+		for (String se : NAMES) {
 			if (se.equalsIgnoreCase(ext)) {
 				return true;
 			}
 		}
-		for (String se : altnames) {
+		for (String se : ALTNAMES) {
 			if (se.equalsIgnoreCase(ext)) {
 				return true;
 			}
@@ -64,14 +64,14 @@ public enum CCMovieFormat {
 	}
 	
 	public static CCMovieFormat getMovieFormat(String ext) {
-		for (int i = 0; i < names.length; i++) {
-			if (names[i].equalsIgnoreCase(ext)) {
+		for (int i = 0; i < NAMES.length; i++) {
+			if (NAMES[i].equalsIgnoreCase(ext)) {
 				return CCMovieFormat.find(i);
 			}
 		}
 		
-		for (int i = 0; i < altnames.length; i++) {
-			if (altnames[i].equalsIgnoreCase(ext)) {
+		for (int i = 0; i < ALTNAMES.length; i++) {
+			if (ALTNAMES[i].equalsIgnoreCase(ext)) {
 				return CCMovieFormat.find(i);
 			}
 		}

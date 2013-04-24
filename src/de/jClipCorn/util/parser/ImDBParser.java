@@ -1,8 +1,8 @@
 package de.jClipCorn.util.parser;
 
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFSK;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieGenreList;
@@ -12,7 +12,7 @@ import de.jClipCorn.util.DoubleString;
 public class ImDBParser {
 	public final static ImDBLanguage LANGUAGE = ImDBLanguage.ENGLISH;
 	
-	public static String getSearchURL(String title, CCMovieTyp typ) {
+	public static String getSearchURL(String title, CCMovieTyp typ) { // TODO Invisible Setting for German / Englisch
 		switch (LANGUAGE) {
 		case GERMAN:
 			return ImDBParser_Ger.getSearchURL(title, typ);
@@ -23,7 +23,7 @@ public class ImDBParser {
 		}
 	}
 	
-	public static ArrayList<DoubleString> extractImDBLinks(String html) {
+	public static List<DoubleString> extractImDBLinks(String html) {
 		switch (LANGUAGE) {
 		case GERMAN:
 			return ImDBParser_Ger.extractImDBLinks(html);
@@ -78,7 +78,7 @@ public class ImDBParser {
 		}
 	}
 	
-	public static HashMap<String, Integer> getFSKList(String html, String url) {
+	public static Map<String, Integer> getFSKList(String html, String url) {
 		switch (LANGUAGE) {
 		case GERMAN:
 			return ImDBParser_Ger.getFSKList(html);

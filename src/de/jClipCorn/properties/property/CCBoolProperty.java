@@ -42,17 +42,14 @@ public class CCBoolProperty extends CCProperty<Boolean> {
 			return standard;
 		}
 		
-		boolean bval;
-		
 		try {
-			bval = stringToBool(val);
+			boolean bval = stringToBool(val);
+			return bval;
 		} catch (BooleanFormatException e) {
 			CCLog.addWarning(LocaleBundle.getFormattedString("LogMessage.PropFormatErrorBool", identifier, mclass.getName())); //$NON-NLS-1$
 			setDefault();
 			return standard;
 		}
-		
-		return bval;
 	}
 	
 	private static String boolToString(boolean b) {

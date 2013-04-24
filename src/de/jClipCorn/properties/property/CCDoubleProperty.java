@@ -39,17 +39,14 @@ public class CCDoubleProperty extends CCProperty<Double> {
 			return standard;
 		}
 		
-		double ival;
-		
 		try {
-			ival = Double.parseDouble(val);
+			double ival = Double.parseDouble(val);
+			return ival;
 		} catch(NumberFormatException e) {
 			CCLog.addWarning(LocaleBundle.getFormattedString("LogMessage.PropFormatErrorNumber", identifier, mclass.getName())); //$NON-NLS-1$
 			setDefault();
 			return standard;
 		}
-		
-		return ival;
 	}
 
 	@Override

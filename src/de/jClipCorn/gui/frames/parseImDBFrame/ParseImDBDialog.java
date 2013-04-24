@@ -8,7 +8,8 @@ import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
@@ -56,9 +57,9 @@ public class ParseImDBDialog extends JDialog {
 	private Thread thisThread;
 	
 	private DefaultListModel<String> mdlLsDBList;
-	private ArrayList<String> lsDBListPaths = new ArrayList<>();
+	private List<String> lsDBListPaths = new ArrayList<>();
 	private BufferedImage imgCoverBI = null;
-	private HashMap<String, Integer> cbFSKlsAll = null;
+	private Map<String, Integer> cbFSKlsAll = null;
 	
 	private final ParseResultHandler owner;
 	private final CCMovieTyp typ;
@@ -543,7 +544,7 @@ public class ParseImDBDialog extends JDialog {
 		
 		String url = ImDBParser.getSearchURL(edSearchName.getText(), typ);
 		String html = HTTPUtilities.getHTML(url, true);
-		final ArrayList<DoubleString> res = ImDBParser.extractImDBLinks(html);
+		final List<DoubleString> res = ImDBParser.extractImDBLinks(html);
 		
 		try {
 			SwingUtilities.invokeAndWait(new Runnable() {

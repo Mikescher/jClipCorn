@@ -4,6 +4,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.databaseElement.CCEpisode;
@@ -556,7 +557,7 @@ public class CCDatabase extends DerbyDatabase {
 					ml.directlyInsert(createDatabaseElementFromDatabase(rs, ml));
 				}
 			} else {
-				ArrayList<CCDatabaseElement> temp = new ArrayList<>();
+				List<CCDatabaseElement> temp = new ArrayList<>();
 				while (rs.next()) {
 					temp.add(createDatabaseElementFromDatabase(rs, ml));
 				}

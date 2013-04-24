@@ -1,11 +1,12 @@
 package de.jClipCorn.util.sql;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import de.jClipCorn.util.DoubleString;
 
 public class SQLInsertHelper extends SQLHelper {
-	private ArrayList<DoubleString> fields = new ArrayList<>();
+	private List<DoubleString> fields = new ArrayList<>();
 
 	public SQLInsertHelper(String tabName) {
 		super(tabName);
@@ -20,17 +21,17 @@ public class SQLInsertHelper extends SQLHelper {
 	public String get() {
 		String rformat = "INSERT INTO %s (%s) VALUES (%s)";
 
-		String cnames = "";
-		String cvals = "";
+		StringBuilder cnames = new StringBuilder();
+		StringBuilder cvals = new StringBuilder();
 		for (int i = 0; i < fields.size(); i++) {
 			if (i > 0) {
-				cnames += ", ";
-				cvals += ", ";
+				cnames.append(", ");
+				cvals.append(", ");
 			}
-			cnames += fields.get(i).get1();
-			cvals += fields.get(i).get2();
+			cnames.append(fields.get(i).get1());
+			cvals.append(fields.get(i).get2());
 		}
 
-		return String.format(rformat, tabname, cnames, cvals);
+		return String.format(rformat, tabname, cnames.toString(), cvals.toString());
 	}
 }

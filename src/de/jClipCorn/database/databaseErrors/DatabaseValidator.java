@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -26,7 +27,7 @@ import de.jClipCorn.util.RomanNumberFormatter;
 public class DatabaseValidator {
 	private final static CCDate MIN_DATE = CCDate.getNewMinimumDate();
 	
-	public static void startValidate(ArrayList<DatabaseError> e, CCMovieList ml, ProgressCallbackListener pcl) {
+	public static void startValidate(List<DatabaseError> e, CCMovieList ml, ProgressCallbackListener pcl) {
 		pcl.setMax(ml.getElementCount() * 5); // 1x Normal  +  2x  checkCover  +  2x CheckFiles
 		pcl.reset();
 		
@@ -68,7 +69,7 @@ public class DatabaseValidator {
 		return diff / average;
 	}
 	
-	private static void validateSeries(ArrayList<DatabaseError> e, CCMovieList movielist, CCSeries series) {
+	private static void validateSeries(List<DatabaseError> e, CCMovieList movielist, CCSeries series) {
 		// ###############################################
 		// no title set
 		// ###############################################
@@ -120,7 +121,7 @@ public class DatabaseValidator {
 		}
 	}
 
-	private static void validateMovie(ArrayList<DatabaseError> e, CCMovieList movielist, CCMovie mov) {
+	private static void validateMovie(List<DatabaseError> e, CCMovieList movielist, CCMovie mov) {
 		// ###############################################
 		// Hole in Genres
 		// ###############################################
@@ -295,7 +296,7 @@ public class DatabaseValidator {
 		}
 	}
 
-	private static void validateSeason(ArrayList<DatabaseError> e, CCMovieList movielist, CCSeason season) {
+	private static void validateSeason(List<DatabaseError> e, CCMovieList movielist, CCSeason season) {
 		// ###############################################
 		// no title set
 		// ###############################################
@@ -329,7 +330,7 @@ public class DatabaseValidator {
 		}
 	}
 
-	private static void validateEpisode(ArrayList<DatabaseError> e, CCEpisode episode) {
+	private static void validateEpisode(List<DatabaseError> e, CCEpisode episode) {
 		// ###############################################
 		// no title set
 		// ###############################################
@@ -405,8 +406,8 @@ public class DatabaseValidator {
 		}
 	}
 
-	private static void findDuplicateCover(ArrayList<DatabaseError> e, CCMovieList movielist, ProgressCallbackListener pcl) {
-		ArrayList<DatabaseCoverElement> cvrList = new ArrayList<>();
+	private static void findDuplicateCover(List<DatabaseError> e, CCMovieList movielist, ProgressCallbackListener pcl) {
+		List<DatabaseCoverElement> cvrList = new ArrayList<>();
 		
 		for (Iterator<CCDatabaseElement> it = movielist.iterator(); it.hasNext();) {
 			CCDatabaseElement el = it.next();
@@ -433,10 +434,10 @@ public class DatabaseValidator {
 		}
 	}
 
-	private static void findDuplicateFiles(ArrayList<DatabaseError> e, CCMovieList movielist, ProgressCallbackListener pcl) {
+	private static void findDuplicateFiles(List<DatabaseError> e, CCMovieList movielist, ProgressCallbackListener pcl) {
 		boolean ignIFO = CCProperties.getInstance().PROP_VALIDATE_DUP_IGNORE_IFO.getValue();
 		
-		ArrayList<DatabaseFileElement> flList = new ArrayList<>();
+		List<DatabaseFileElement> flList = new ArrayList<>();
 		
 		for (Iterator<CCDatabaseElement> it = movielist.iterator(); it.hasNext();) {
 			CCDatabaseElement el = it.next();

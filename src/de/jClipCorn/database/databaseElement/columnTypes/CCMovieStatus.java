@@ -11,7 +11,7 @@ public enum CCMovieStatus {
 	STATUS_LOWQUALITY(1),
 	STATUS_MISSINGVIDEOTIME(2); // Höherer Wert  =>  Höhere Priorität
 	
-	private final static String names[] = {
+	private final static String NAMES[] = {
 		LocaleBundle.getString("CCMovieStatus.Status0"),  //$NON-NLS-1$
 		LocaleBundle.getString("CCMovieStatus.Status1"),  //$NON-NLS-1$
 		LocaleBundle.getString("CCMovieStatus.Status2")   //$NON-NLS-1$
@@ -19,7 +19,7 @@ public enum CCMovieStatus {
 	
 	private int id;
 
-	CCMovieStatus(int val) {
+	private CCMovieStatus(int val) {
 		id = val;
 	}
 	
@@ -28,11 +28,11 @@ public enum CCMovieStatus {
 	}
 	
 	public String asString() {
-		return names[asInt()];
+		return NAMES[asInt()];
 	}
 	
 	public static String[] getList() {
-		return names;
+		return NAMES;
 	}
 
 	public static CCMovieStatus find(int val) {

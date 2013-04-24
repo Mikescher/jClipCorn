@@ -20,7 +20,7 @@ public enum CCMovieOnlineScore {
 	
 	private int id;
 	
-	CCMovieOnlineScore(int val) {
+	private CCMovieOnlineScore(int val) {
 		id = val;
 	}
 	

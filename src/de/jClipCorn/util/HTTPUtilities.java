@@ -23,8 +23,9 @@ public class HTTPUtilities {
 	private final static int MAX_CONNECTION_TRY = 6;
 	
 	public static String getHTML(String urlToRead, boolean stripLineBreaks) {
-		if (urlToRead.isEmpty())
+		if (urlToRead.isEmpty()) {
 			return "";
+		}
 		
 		try {
 			URL url = new URL(urlToRead);
@@ -50,7 +51,7 @@ public class HTTPUtilities {
 		HttpURLConnection conn = null;
 		BufferedReader rd = null;
 		String line;
-		String result = "";
+		StringBuilder resultbuilder = new StringBuilder();
 		boolean first = true;
 		try {
 			conn = (HttpURLConnection) url.openConnection();
@@ -65,9 +66,9 @@ public class HTTPUtilities {
 			rd = new BufferedReader(new InputStreamReader(conn.getInputStream(), encoding));
 			while ((line = rd.readLine()) != null) {
 				if (! first && ! stripLineBreaks) {
-					result += "\n";
+					resultbuilder.append("\n");
 				}
-				result += line;
+				resultbuilder.append(line);
 				first = false;
 			}
 			rd.close();
@@ -77,7 +78,7 @@ public class HTTPUtilities {
 				rd.close();
 			}
 		}
-		return descapeHTML(result);
+		return descapeHTML(resultbuilder.toString());
 	}
 	
 	public static String escapeURL(String url) {
@@ -99,9 +100,9 @@ public class HTTPUtilities {
 	public static boolean openInBrowser(String url) {
 		if (java.awt.Desktop.isDesktopSupported()) {
 			java.awt.Desktop desktop = java.awt.Desktop.getDesktop();
-			java.net.URI uri;
+			
 			try {
-				uri = new java.net.URI(url);
+				java.net.URI uri = new java.net.URI(url);
 				desktop.browse(uri);
 			} catch (URISyntaxException e) {
 				CCLog.addError(LocaleBundle.getString("LogMessage.WrongFormattedURI"), e);

@@ -23,11 +23,11 @@ public class SeriesIterator implements Iterator<CCSeries> {
 
 	@Override
 	public CCSeries next() {
-		CCSeries m = (CCSeries)it.get(pos);
+		CCSeries ser = (CCSeries)it.get(pos);
 		
 		skip();
 		
-		return m;
+		return ser;
 	}
 	
 	private void skip() {

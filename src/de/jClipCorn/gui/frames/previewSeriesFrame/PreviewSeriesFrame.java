@@ -7,7 +7,7 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -599,7 +599,7 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 	}
 	
 	private void startSearch() { // TODO implement better search (like the old CC-Search)
-		ArrayList<CCEpisode> el = dispSeries.getEpisodeList();
+		List<CCEpisode> el = dispSeries.getEpisodeList();
 		
 		boolean found = false;
 		

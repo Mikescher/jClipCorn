@@ -152,7 +152,8 @@ public class CCTime {
 	 * @return
 	 */
 	public String getStringRepresentation(String fmt) {
-		String rst = ""; //$NON-NLS-1$
+		StringBuilder repbuilder = new StringBuilder();
+		
 		char actualCounter = '-';
 		int counter = 0;
 		char c;
@@ -178,7 +179,7 @@ public class CCTime {
 						tmpformat = String.format("%0" + counter + "d", getAMPMString()); //$NON-NLS-1$ //$NON-NLS-2$
 					}
 					
-					rst += tmpformat;
+					repbuilder.append(tmpformat);
 					
 					counter = 1;
 					actualCounter = c;
@@ -199,9 +200,9 @@ public class CCTime {
 						tmpformat = String.format("%0" + counter + "d", getAMPMString()); //$NON-NLS-1$ //$NON-NLS-2$
 					}
 					
-					rst += tmpformat;
+					repbuilder.append(tmpformat);
 				}
-				rst += c;
+				repbuilder.append(c);
 				counter = 0;
 				actualCounter = '-';
 			}
@@ -222,10 +223,10 @@ public class CCTime {
 				tmpformat = String.format("%0" + counter + "d", getAMPMString()); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 			
-			rst += tmpformat;
+			repbuilder.append(tmpformat);
 		}
 		
-		return rst;
+		return repbuilder.toString();
 	}
 	
 	/**

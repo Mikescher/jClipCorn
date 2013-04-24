@@ -187,9 +187,8 @@ public class AgeRatingParser {
 		
 		//################## STEP 2 ##################
 		
-		int dcAge;
 		try {
-			dcAge = Integer.parseInt(rate);
+			int dcAge = Integer.parseInt(rate);
 			return dcAge;
 		} catch (NumberFormatException e) {
 			//no problemos
@@ -198,7 +197,7 @@ public class AgeRatingParser {
 		//################## STEP 3 ##################
 
 		try {
-			dcAge = Integer.parseInt(RegExHelper.find(REGEX_FSK_VALUE, rate));
+			int dcAge = Integer.parseInt(RegExHelper.find(REGEX_FSK_VALUE, rate));
 			return dcAge;
 		} catch (NumberFormatException e) {
 			//no problemos

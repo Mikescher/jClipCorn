@@ -11,6 +11,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.imageio.ImageIO;
 import javax.swing.DefaultComboBoxModel;
@@ -595,7 +596,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		pnlEpisode.add(label_18);
 		
 		spnEpisodeEpisode = new JSpinner();
-		spnEpisodeEpisode.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(1)));
+		spnEpisodeEpisode.setModel(new SpinnerNumberModel(0, 0, null, 1));
 		spnEpisodeEpisode.setBounds(74, 49, 212, 20);
 		pnlEpisode.add(spnEpisodeEpisode);
 		
@@ -628,7 +629,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		pnlEpisode.add(label_22);
 		
 		spnEpisodeLength = new JSpinner();
-		spnEpisodeLength.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(1)));
+		spnEpisodeLength.setModel(new SpinnerNumberModel(0, 0, null, 1));
 		spnEpisodeLength.setBounds(74, 197, 212, 20);
 		pnlEpisode.add(spnEpisodeLength);
 		
@@ -651,7 +652,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 				updateEpisodesFilesizeDisplay();
 			}
 		});
-		spnEpisodeSize.setModel(new SpinnerNumberModel(new Long(0), new Long(0), null, new Long(1)));
+		spnEpisodeSize.setModel(new SpinnerNumberModel(0L, 0L, null, 1L));
 		spnEpisodeSize.setBounds(74, 234, 193, 20);
 		pnlEpisode.add(spnEpisodeSize);
 		
@@ -1059,7 +1060,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 	}
 	
 	private void onOKSeries(boolean check) {
-		ArrayList<UserDataProblem> problems = new ArrayList<>();
+		List<UserDataProblem> problems = new ArrayList<>();
 		
 		boolean probvalue = (! check) || checkUserDataSeries(problems);
 		
@@ -1101,7 +1102,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		updateSeriesPanel();
 	}
 	
-	public boolean checkUserDataSeries(ArrayList<UserDataProblem> ret) {
+	public boolean checkUserDataSeries(List<UserDataProblem> ret) {
 		String title = edSeriesTitle.getText();
 		
 		int oscore = (int) spnSeriesOnlineScore.getValue();
@@ -1171,7 +1172,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 			return;
 		}
 		
-		ArrayList<UserDataProblem> problems = new ArrayList<>();
+		List<UserDataProblem> problems = new ArrayList<>();
 		
 		boolean probvalue = (! check) || checkUserDataSeason(problems);
 		
@@ -1201,7 +1202,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		updateSeasonPanel();
 	}
 	
-	public boolean checkUserDataSeason(ArrayList<UserDataProblem> ret) {
+	public boolean checkUserDataSeason(List<UserDataProblem> ret) {
 		String title = edSeasonTitle.getText();
 		int year = (int) spnSeasonYear.getValue();
 
@@ -1233,15 +1234,13 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 			return;
 		}
 		
-		String t = videoFileChooser.getSelectedFile().getAbsolutePath();
-		String pt;
+		String abspath = videoFileChooser.getSelectedFile().getAbsolutePath();
+		String path = abspath;
 		if (CCProperties.getInstance().PROP_ADD_MOVIE_RELATIVE_AUTO.getValue()) {
-			pt = PathFormatter.getRelative(t);
-		} else {
-			pt = t;
+			path = PathFormatter.getRelative(abspath);
 		}
 		
-		edEpisodePart.setText(pt);
+		edEpisodePart.setText(path);
 		
 		recalcEpisodeFilesize();
 		
@@ -1255,7 +1254,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 			return;
 		}
 		
-		ArrayList<UserDataProblem> problems = new ArrayList<>();
+		List<UserDataProblem> problems = new ArrayList<>();
 		
 		boolean probvalue = (! check) || checkUserDataEpisode(problems);
 		
@@ -1293,7 +1292,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		updateEpisodePanel();
 	}
 	
-	public boolean checkUserDataEpisode(ArrayList<UserDataProblem> ret) {
+	public boolean checkUserDataEpisode(List<UserDataProblem> ret) {
 		CCSeason season = getSelectedSeason();
 		CCEpisode episode = getSelectedEpisode();
 		
@@ -1307,7 +1306,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		long fsize = (long) spnEpisodeSize.getValue();
 		int quality = cbxEpisodeQuality.getSelectedIndex();
 		String csExtn  = CCMovieFormat.find(cbxEpisodeFormat.getSelectedIndex()).asString();
-		String csExta = CCMovieFormat.find(cbxEpisodeFormat.getSelectedIndex()).asString_Alt();
+		String csExta = CCMovieFormat.find(cbxEpisodeFormat.getSelectedIndex()).asStringAlt();
 		
 		String part = edEpisodePart.getText();
 		

@@ -17,8 +17,8 @@ import de.jClipCorn.util.ProgressCallbackListener;
 
 public class DatabaseComparator {
 	@SuppressWarnings("nls")
-	public static ArrayList<CompareElement> compare(File db1f, File db2f, final ProgressCallbackListener pcl) throws Exception{
-		ArrayList<CompareElement> resultlist = new ArrayList<>();
+	public static List<CompareElement> compare(File db1f, File db2f, final ProgressCallbackListener pcl) {
+		List<CompareElement> resultlist = new ArrayList<>();
 		
 		SAXBuilder builder = new SAXBuilder();
 		
@@ -83,24 +83,20 @@ public class DatabaseComparator {
 	}
 	
 	@SuppressWarnings("nls")
-	private static CompareElement findInList(Element e, ArrayList<CompareElement> list) {
+	private static CompareElement findInList(Element e, List<CompareElement> list) {
 		for (int i = 0; i < list.size(); i++) {
 			CompareElement ce = list.get(i);
 			
 			String title = e.getAttributeValue("title");
 			String zyklus = e.getAttributeValue("zyklus");
 			String sZyklusID = e.getAttributeValue("zyklusnumber");
-			int zyklusID;
-			if (sZyklusID == null) {
-				zyklusID = Integer.MIN_VALUE;
-			} else {
+			int zyklusID = Integer.MIN_VALUE;
+			if (sZyklusID != null) {
 				zyklusID = Integer.parseInt(sZyklusID);
 			}
 			String sLanguage = e.getAttributeValue("language");
-			int language;
-			if (sLanguage == null) {
-				language = Integer.MIN_VALUE;
-			} else {
+			int language = Integer.MIN_VALUE;
+			if (sLanguage != null) {
 				language = Integer.parseInt(sLanguage);
 			}
 			

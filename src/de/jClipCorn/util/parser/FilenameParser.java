@@ -2,6 +2,7 @@ package de.jClipCorn.util.parser;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFormat;
@@ -23,7 +24,7 @@ public class FilenameParser {
 	}
 	
 	public void parse(String filepath) {
-		ArrayList<File> files = new ArrayList<>();
+		List<File> files = new ArrayList<>();
 		files.add(new File(filepath));
 		
 		String path = PathFormatter.getFilepath(filepath);

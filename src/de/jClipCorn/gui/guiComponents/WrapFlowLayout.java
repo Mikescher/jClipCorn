@@ -35,10 +35,10 @@ public class WrapFlowLayout extends FlowLayout {
 		synchronized (target.getTreeLock()) {
 			int hgap = getHgap();
 			int vgap = getVgap();
-			int w = target.getWidth();
+			int wid = target.getWidth();
 
-			if (w == 0) {
-				w = Integer.MAX_VALUE;
+			if (wid == 0) {
+				wid = Integer.MAX_VALUE;
 			}
 
 			Insets insets = target.getInsets();
@@ -47,13 +47,13 @@ public class WrapFlowLayout extends FlowLayout {
 			}
 			int reqdWidth = 0;
 
-			int maxwidth = w - (insets.left + insets.right + hgap * 2);
-			int n = target.getComponentCount();
+			int maxwidth = wid - (insets.left + insets.right + hgap * 2);
+			int compcount = target.getComponentCount();
 			int x = 0;
 			int y = insets.top + vgap;
 			int rowHeight = 0;
 
-			for (int i = 0; i < n; i++) {
+			for (int i = 0; i < compcount; i++) {
 				Component c = target.getComponent(i);
 				if (c.isVisible()) {
 					Dimension d = c.getPreferredSize();
@@ -81,19 +81,19 @@ public class WrapFlowLayout extends FlowLayout {
 		synchronized (target.getTreeLock()) {
 			int minx = Integer.MAX_VALUE;
 			int miny = Integer.MIN_VALUE;
-			boolean found_one = false;
-			int n = target.getComponentCount();
+			boolean found = false;
+			int compcount = target.getComponentCount();
 
-			for (int i = 0; i < n; i++) {
+			for (int i = 0; i < compcount; i++) {
 				Component c = target.getComponent(i);
 				if (c.isVisible()) {
-					found_one = true;
+					found = true;
 					Dimension d = c.getPreferredSize();
 					minx = Math.min(minx, d.width);
 					miny = Math.min(miny, d.height);
 				}
 			}
-			if (found_one) {
+			if (found) {
 				return new Dimension(minx, miny);
 			}
 			return new Dimension(0, 0);

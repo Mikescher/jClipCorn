@@ -6,6 +6,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Vector;
 
 import javax.swing.SwingUtilities;
@@ -35,12 +36,12 @@ import de.jClipCorn.util.CCDate;
 import de.jClipCorn.util.PathFormatter;
 
 public class CCMovieList {
-	private Vector<CCDatabaseElement> list;
+	private List<CCDatabaseElement> list;
 
 	private CCCoverCache coverCache;
 	private CCDatabase database;
 
-	private Vector<CCDBUpdateListener> listener;
+	private List<CCDBUpdateListener> listener;
 
 	private long loadTime = -1;
 	
@@ -53,7 +54,7 @@ public class CCMovieList {
 	}
 
 	public void connect(final MainFrame mf) {
-		Runnable r = new Runnable() {
+		new Thread(new Runnable() {
 			@Override
 			public void run() {
 				BackupManager bm = new BackupManager(CCMovieList.this);
@@ -79,9 +80,7 @@ public class CCMovieList {
 
 				mf.endBlockingIntermediate();
 			}
-		};
-
-		(new Thread(r, "THREAD_LOAD_DATABASE")).start(); //$NON-NLS-1$
+		}, "THREAD_LOAD_DATABASE").start(); //$NON-NLS-1$
 	}
 
 	public CCDatabaseElement getDatabaseElementBySort(int row) { // WARNIG SORT <> MOVIEID || SORT IN DATABASE (SORTED BY MOVIEID)
@@ -130,12 +129,12 @@ public class CCMovieList {
 	}
 
 	public CCMovie createNewEmptyMovie() { // Does this make getMovieBySort fail (id changes etc ??)
-		CCMovie m = database.createNewEmptyMovie(this);
-		list.add(m);
+		CCMovie mov = database.createNewEmptyMovie(this);
+		list.add(mov);
 
-		fireOnAddDatabaseElement(m);
+		fireOnAddDatabaseElement(mov);
 
-		return m;
+		return mov;
 	}
 
 	public CCSeries createNewEmptySeries() { // Does this make getMovieBySort fail (id changes etc ??)
@@ -182,7 +181,7 @@ public class CCMovieList {
 	}
 
 	// Only used by CCDatabase.fillMovieList
-	public void directlyInsert(final ArrayList<CCDatabaseElement> m) {
+	public void directlyInsert(final List<CCDatabaseElement> m) {
 		try {
 			SwingUtilities.invokeAndWait(new Runnable() {
 				@Override
@@ -398,7 +397,7 @@ public class CCMovieList {
 		
 	}
 
-	public Vector<CCDatabaseElement> getRawList() {
+	public List<CCDatabaseElement> getRawList() {
 		return list;
 	}
 
@@ -422,8 +421,8 @@ public class CCMovieList {
 		return c;
 	}
 
-	public ArrayList<String> getZyklusList() {
-		ArrayList<String> result = new ArrayList<>();
+	public List<String> getZyklusList() {
+		List<String> result = new ArrayList<>();
 
 		for (Iterator<CCMovie> it = iteratorMovies(); it.hasNext();) {
 			CCMovie mov = it.next();
@@ -438,8 +437,8 @@ public class CCMovieList {
 		return result;
 	}
 
-	public ArrayList<Integer> getYearList() {
-		ArrayList<Integer> result = new ArrayList<>();
+	public List<Integer> getYearList() {
+		List<Integer> result = new ArrayList<>();
 
 		for (Iterator<CCMovie> it = iteratorMovies(); it.hasNext();) {
 			CCMovie mov = it.next();
@@ -454,8 +453,8 @@ public class CCMovieList {
 		return result;
 	}
 
-	public ArrayList<CCMovieGenre> getGenreList() {
-		ArrayList<CCMovieGenre> result = new ArrayList<>();
+	public List<CCMovieGenre> getGenreList() {
+		List<CCMovieGenre> result = new ArrayList<>();
 		
 		for (CCDatabaseElement el : list) {
 			for (int j = 0; j < el.getGenreCount(); j++) {
@@ -482,8 +481,8 @@ public class CCMovieList {
 		return new File(PathFormatter.getRealSelfDirectory() + CCProperties.getInstance().PROP_DATABASE_NAME.getValue() + '\\');
 	}
 	
-	public ArrayList<File> getAbsolutePathList(boolean includeSeries) {
-		ArrayList<File> result = new ArrayList<>();
+	public List<File> getAbsolutePathList(boolean includeSeries) {
+		List<File> result = new ArrayList<>();
 		
 		for (CCDatabaseElement el : list) {
 			if (el.isMovie()) {

@@ -25,7 +25,7 @@ public class ImageUtilities {
 	}
 	
 	public static BufferedImage resizeHalfCoverImage(BufferedImage bi) {
-		return resizeImageProportional(bi, COVER_WIDTH/2, COVER_HEIGHT/2, COVER_RATIO);
+		return resizeImageProportional(bi, COVER_WIDTH / 2, COVER_HEIGHT / 2, COVER_RATIO);
 	}
 	
 	public static boolean isCorrectlySized(BufferedImage bb) {
@@ -35,21 +35,21 @@ public class ImageUtilities {
 	private static BufferedImage resizeImageProportional(BufferedImage bi, final int newWidth, final int newHeight, final double newRatio) {
 		if (isCorrectlySized(bi, newWidth, newHeight)) return bi;
 		
-		double ratio = bi.getWidth() / (bi.getHeight()*1d);
+		double ratio = bi.getWidth() / (bi.getHeight() * 1d);
 		
 		int nW;
 		int nH;
 		
 		if (ratio > newRatio) {
 			nW = newWidth;
-			nH = (int) Math.round(1/ratio * newWidth);
+			nH = (int) Math.round(1 / ratio * newWidth);
 		} else {
 			nH = newHeight;
 			nW = (int) Math.round(ratio * newHeight);
 		}
 		
-		int nX = (newWidth - nW)/2;
-		int nY = (newHeight - nH)/2;
+		int nX = (newWidth - nW) / 2;
+		int nY = (newHeight - nH) / 2;
 		
 		BufferedImage result = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_ARGB);
 		
@@ -59,14 +59,14 @@ public class ImageUtilities {
 	}
 	
 	private static BufferedImage progressiveResize(BufferedImage source, int width, int height) {
-        int w = Math.max(source.getWidth()/2, width);
-        int h = Math.max(source.getHeight()/2, height);
-        BufferedImage img = commonResize(source, w, h);
-        while (w != width || h != height) {
+        int imgw = Math.max(source.getWidth() / 2, width);
+        int imgh = Math.max(source.getHeight() / 2, height);
+        BufferedImage img = commonResize(source, imgw, imgh);
+        while (imgw != width || imgh != height) {
             BufferedImage prev = img;
-            w = Math.max(w/2, width);
-            h = Math.max(h/2, height);
-            img = commonResize(prev, w, h);
+            imgw = Math.max(imgw / 2, width);
+            imgh = Math.max(imgh / 2, height);
+            img = commonResize(prev, imgw, imgh);
             prev.flush();
         }
         return img;
@@ -74,12 +74,12 @@ public class ImageUtilities {
 	
     private static BufferedImage commonResize(BufferedImage source, int width, int height) {
         BufferedImage img = new BufferedImage(width, height, source.getType());
-        Graphics2D g = img.createGraphics();
+        Graphics2D graphics = img.createGraphics();
         try {
-            g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-            g.drawImage(source, 0, 0, width, height, null);
+            graphics.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+            graphics.drawImage(source, 0, 0, width, height, null);
         } finally {
-            g.dispose();
+            graphics.dispose();
         }
         return img;
     }
@@ -115,7 +115,7 @@ public class ImageUtilities {
 		ig.fillRect(0, i.getHeight() - thick, i.getWidth(), thick);
 	}
 	
-	public static BufferedImage IconToImage(ImageIcon ic) {
+	public static BufferedImage iconToImage(ImageIcon ic) {
 		BufferedImage bi = new BufferedImage(ic.getIconWidth(), ic.getIconHeight(), BufferedImage.TYPE_4BYTE_ABGR);
 		bi.getGraphics().drawImage(ic.getImage(), 0, 0, null);
 		return bi;

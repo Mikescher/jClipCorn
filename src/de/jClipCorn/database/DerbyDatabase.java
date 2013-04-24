@@ -12,6 +12,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 import org.apache.ddlutils.Platform;
@@ -183,18 +184,16 @@ public class DerbyDatabase {
 	 * @return List of all Tables or NULL if not connected
 	 * @throws SQLException Throws an Exception if getTables fails
 	 */
-	public ArrayList<String> getAllTables(String type) throws SQLException {
-		ArrayList<String> result = new ArrayList<String>();
-		
-		String s[];
-		if (type != null) {
-			s = new String[1];
-			s[0] = type;
-		} else {
-			s = null;
-		}
+	public List<String> getAllTables(String type) throws SQLException {
+		List<String> result = new ArrayList<String>();
 		
 		if (isConnected()) {
+			String s[] = null;
+			if (type != null) {
+				s = new String[1];
+				s[0] = type;
+			}
+			
 			DatabaseMetaData md = connection.getMetaData();
 			ResultSet rs = md.getTables(null, null, "%", s);
 			while (rs.next()) {
@@ -213,8 +212,8 @@ public class DerbyDatabase {
 	 * @return an AraryList of All Column-Names
 	 * @throws SQLException Throws Exception if Table is non existent
 	 */
-	public ArrayList<String> getColumns(String table) throws SQLException {
-		ArrayList<String> result = new ArrayList<String>();
+	public List<String> getColumns(String table) throws SQLException {
+		List<String> result = new ArrayList<String>();
 		
 		if (isConnected()) {
 			DatabaseMetaData md = connection.getMetaData();
@@ -235,7 +234,7 @@ public class DerbyDatabase {
 	 * @return an AraryList of All Column-Types
 	 * @throws SQLException Throws Exception if Table is non existent
 	 */
-	public ArrayList<Integer> getColumnTypes(String table) throws SQLException {
+	public List<Integer> getColumnTypes(String table) throws SQLException {
 		ArrayList<Integer> result = new ArrayList<Integer>();
 		
 		if (isConnected()) {
@@ -257,21 +256,26 @@ public class DerbyDatabase {
 	 * @throws SQLException Throws an exception if the table is non-existent
 	 */
 	public void addEmptyRow(String table) throws Exception {
-		String sql = "INSERT INTO " + table + " VALUES (";
-		ArrayList<Integer> s = getColumnTypes(table);
+		StringBuilder sqlbuilder = new StringBuilder();
+		
+		sqlbuilder.append("INSERT INTO ");
+		sqlbuilder.append(table);
+		sqlbuilder.append(" VALUES (");
+		
+		List<Integer> s = getColumnTypes(table);
 		
 		for (int i = 0; i < s.size(); i++) {
 			if (s.get(i) == FIELDTYPE_VARCHAR || s.get(i) == FIELDTYPE_LONGVARCHAR) {
-				sql += "''";
+				sqlbuilder.append("''");
 			} else {
-				sql += "0";
+				sqlbuilder.append("0");
 			}
 			if (i+1 < s.size()) {
-				sql += ", ";
+				sqlbuilder.append(", ");
 			}
 		}
-		sql += ")";
-		if (! executeSQL(sql)) {
+		sqlbuilder.append(")");
+		if (! executeSQL(sqlbuilder.toString())) {
 			throw getLastError();
 		}
 	}
@@ -314,9 +318,8 @@ public class DerbyDatabase {
 	 * @param sql The SQL-Statement
 	 */
 	public boolean executeSQL(String sql) {
-		Statement s;
 		try {
-			s = connection.createStatement();
+			Statement s = connection.createStatement();
 			s.execute(sql);
 			s.close();
 			return true;
@@ -335,15 +338,13 @@ public class DerbyDatabase {
 	 * @return The return Value
 	 */
 	public Object querySingleSQL(String sql, int column) {
-		Object ret;
-		Statement s;
 		try {
-			s = connection.createStatement();
+			Statement s = connection.createStatement();
 			ResultSet rs = s.executeQuery(sql);
+			
+			Object ret = null;
 			if (rs.next()) {
 				ret = rs.getObject(column + 1);
-			} else {
-				ret = null;
 			}
 			s.close();
 			return ret;
@@ -383,8 +384,8 @@ public class DerbyDatabase {
 	 * @param ascend true if the table is sorted ASCEND
 	 * @return an ArrayList of the Row
 	 */
-	public ArrayList<Object> getSingleRow(String table, int row, String orderColumn, boolean ascend) {
-		ArrayList<Object> result = new ArrayList<Object>();
+	public List<Object> getSingleRow(String table, int row, String orderColumn, boolean ascend) {
+		List<Object> result = new ArrayList<Object>();
 		int actRow = -1;
 		String sql = "SELECT * FROM " + table + " ORDER BY " + orderColumn + ((ascend)?" ASC":" DESC");
 		
@@ -422,37 +423,38 @@ public class DerbyDatabase {
 	 * @return false on error
 	 */
 	public boolean alterTableRowField(String table, int row, String orderColumn, boolean ascend, String changedColumm, Object newVal) {
-		ArrayList<Object> comprow = getSingleRow(table, row, orderColumn, ascend);
-		String sql;
+		List<Object> comprow = getSingleRow(table, row, orderColumn, ascend);
+		
+		StringBuilder sqlbuilder = new StringBuilder();
 		
 		if(newVal instanceof String) {
-			sql = String.format("UPDATE %s SET %s='%s' WHERE", table, changedColumm, newVal);
+			sqlbuilder.append(String.format("UPDATE %s SET %s='%s' WHERE", table, changedColumm, newVal));
 		} else {
-			sql = String.format("UPDATE %s SET %s=%s WHERE", table, changedColumm, newVal);
+			sqlbuilder.append(String.format("UPDATE %s SET %s=%s WHERE", table, changedColumm, newVal));
 		}
 		
 		for(int i = 0; i < comprow.size(); i++) {
 			if (comprow.get(i) instanceof String) {
 				try {
-					sql += String.format(" %s='%s'", getColumns(table).get(i), comprow.get(i));
+					sqlbuilder.append(String.format(" %s='%s'", getColumns(table).get(i), comprow.get(i)));
 				} catch (SQLException e) {
 					CCLog.addError(e);
 					return false;
 				}
 			} else {
 				try {
-					sql += String.format(" %s=%s", getColumns(table).get(i), comprow.get(i));
+					sqlbuilder.append(String.format(" %s=%s", getColumns(table).get(i), comprow.get(i)));
 				} catch (SQLException e) {
 					CCLog.addError(e);
 					return false;
 				}
 			}
 			if (i+1 < comprow.size()) {
-				sql += " AND";
+				sqlbuilder.append(" AND");
 			}
 		}
 		
-		if (! executeSQL(sql)) {
+		if (! executeSQL(sqlbuilder.toString())) {
 			CCLog.addError(getLastError());
 			return false;
 		}
@@ -470,40 +472,41 @@ public class DerbyDatabase {
 	 * @return false on error
 	 */
 	public boolean deleteTableRow(String table, int row, String orderColumn, boolean ascend) {
-		ArrayList<Object> comprow = getSingleRow(table, row, orderColumn, ascend);
-		ArrayList<Integer> types;
+		List<Object> comprow = getSingleRow(table, row, orderColumn, ascend);
+		List<Integer> types;
+		
 		try {
 			types = getColumnTypes(table);
 		} catch (SQLException e1) {
 			return false;
 		}
 		
-		String sql;
+		StringBuilder sqlbuilder = new StringBuilder();
 
-		sql = String.format("DELETE FROM %s WHERE", table);
+		sqlbuilder.append(String.format("DELETE FROM %s WHERE", table));
 
 		for (int i = 0; i < comprow.size(); i++) {
 			if (types.get(i) == FIELDTYPE_LONGVARCHAR || types.get(i) == FIELDTYPE_VARCHAR || types.get(i) == FIELDTYPE_DATE) {
 				try {
-					sql += String.format(" %s='%s'", getColumns(table).get(i), comprow.get(i));
+					sqlbuilder.append(String.format(" %s='%s'", getColumns(table).get(i), comprow.get(i)));
 				} catch (SQLException e) {
 					CCLog.addError(e);
 					return false;
 				}
 			} else {
 				try {
-					sql += String.format(" %s=%s", getColumns(table).get(i), comprow.get(i));
+					sqlbuilder.append(String.format(" %s=%s", getColumns(table).get(i), comprow.get(i)));
 				} catch (SQLException e) {
 					CCLog.addError(e);
 					return false;
 				}
 			}
 			if (i + 1 < comprow.size()) {
-				sql += " AND";
+				sqlbuilder.append(" AND");
 			}
 		}
 
-		if (! executeSQL(sql)) {
+		if (! executeSQL(sqlbuilder.toString())) {
 			CCLog.addError(getLastError());
 			return false;
 		}

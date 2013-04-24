@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -59,15 +60,15 @@ public class ImDBParser_Ger {
 		
 	}
 	
-	public static ArrayList<DoubleString> extractImDBLinks(String html) {
-		ArrayList<DoubleString> result = new ArrayList<>();
+	public static List<DoubleString> extractImDBLinks(String html) {
+		List<DoubleString> result = new ArrayList<>();
 		
 		Pattern pat = Pattern.compile(REGEX_SEARCH_HTMl_A);
 		
-		Matcher m = pat.matcher(html);
+		Matcher matcher = pat.matcher(html);
 		
-		while (m.find()) {
-			result.add(new DoubleString(getLinkFromHREF(m.group()), getNameFromHREF(m.group())));
+		while (matcher.find()) {
+			result.add(new DoubleString(getLinkFromHREF(matcher.group()), getNameFromHREF(matcher.group())));
 		}
 		
 		removeDuplicate(result);
@@ -83,7 +84,7 @@ public class ImDBParser_Ger {
 		return RegExHelper.find(REGEX_SEARCH_HREF_NAME, href.trim()).trim();
 	}
 	
-	private static <T> void removeDuplicate(ArrayList<T> arlList) {
+	private static <T> void removeDuplicate(List<T> arlList) {
 		Set<T> set = new HashSet<T>();
 		List<T> newList = new ArrayList<T>();
 		
@@ -132,7 +133,7 @@ public class ImDBParser_Ger {
 		}
 	}
 	
-	public static HashMap<String, Integer> getFSKList(String html) {
+	public static Map<String, Integer> getFSKList(String html) {
 		String allg = RegExHelper.find(REGEX_FSK, html);
 		String[] genarr = allg.split(REGEX_FSK_SPLIT);
 		
@@ -160,7 +161,7 @@ public class ImDBParser_Ger {
 	}
 	
 	public static CCMovieFSK getFSK(String html) {
-		HashMap<String, Integer> genmap = getFSKList(html);
+		Map<String, Integer> genmap = getFSKList(html);
 		
 		if (genmap.get(FSK_STANDARD_1) != null) {
 			return CCMovieFSK.getNearest(genmap.get(FSK_STANDARD_1));
@@ -196,9 +197,9 @@ public class ImDBParser_Ger {
 		String[] genres = regfind.split(REGEX_GENRE_SPLIT);
 		
 		for (String ng : genres) {
-			CCMovieGenre r = CCMovieGenre.parseFromIMDBName(ng);
-			if (! r.isEmpty()) {
-				result.addGenre(r);
+			CCMovieGenre genre = CCMovieGenre.parseFromIMDBName(ng);
+			if (! genre.isEmpty()) {
+				result.addGenre(genre);
 			}
 		}
 		
@@ -218,8 +219,7 @@ public class ImDBParser_Ger {
 	}
 
 	public static BufferedImage getCoverDirekt(String html) {
-		String curl;
-		curl = RegExHelper.find(REGEX_COVER_DIREKT_1, html);
+		String curl = RegExHelper.find(REGEX_COVER_DIREKT_1, html);
 		curl = RegExHelper.find(REGEX_COVER_DIREKT_2, curl);
 		
 		BufferedImage result = HTTPUtilities.getImage(curl);

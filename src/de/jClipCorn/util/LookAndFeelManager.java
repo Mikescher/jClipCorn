@@ -46,6 +46,7 @@ public class LookAndFeelManager {
 				SubstanceLookAndFeel.setSkin(subLNF);
 			}
 			isSubstance = true;
+			break;
 		}
 	}
 	
@@ -63,16 +64,16 @@ public class LookAndFeelManager {
 		return null;
 	}
 	
-	public static Vector<String> getLookAndFeelList() {
-		Vector<String> v = new Vector<>();
+	public static List<String> getLookAndFeelList() {
+		List<String> v = new Vector<>();
 		v.add(LocaleBundle.getString("CCProperties.LoonAndFeel.Opt0")); //$NON-NLS-1$
 		v.add(LocaleBundle.getString("CCProperties.LoonAndFeel.Opt1")); //$NON-NLS-1$
 		v.addAll(getSubstanceLookAndFeelList());
 		return v;
 	}
 	
-	private static Vector<String> getSubstanceLookAndFeelList() {
-		Vector<String> v = new Vector<>();
+	private static List<String> getSubstanceLookAndFeelList() {
+		List<String> v = new Vector<>();
 		
 		for (Entry<String, SkinInfo> entry : SubstanceLookAndFeel.getAllSkins().entrySet()) {
 			v.add(entry.getValue().getDisplayName());

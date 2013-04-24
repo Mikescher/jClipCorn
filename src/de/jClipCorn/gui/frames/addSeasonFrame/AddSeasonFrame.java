@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -132,7 +133,7 @@ public class AddSeasonFrame extends JFrame implements UserDataProblemHandler, Pa
 		getContentPane().add(label_2);
 		
 		spnYear = new JSpinner();
-		spnYear.setModel(new SpinnerNumberModel(new Integer(1900), new Integer(1900), null, new Integer(1)));
+		spnYear.setModel(new SpinnerNumberModel(1900, 1900, null, 1));
 		spnYear.setEditor(new JSpinner.NumberEditor(spnYear, "0")); //$NON-NLS-1$
 		spnYear.setBounds(76, 44, 212, 20);
 		getContentPane().add(spnYear);
@@ -185,7 +186,7 @@ public class AddSeasonFrame extends JFrame implements UserDataProblemHandler, Pa
 	}
 
 	private void onBtnOK(boolean check) {
-		ArrayList<UserDataProblem> problems = new ArrayList<>();
+		List<UserDataProblem> problems = new ArrayList<>();
 		
 		boolean probvalue = (! check) || checkUserData(problems);
 		
@@ -216,7 +217,7 @@ public class AddSeasonFrame extends JFrame implements UserDataProblemHandler, Pa
 		dispose();
 	}
 	
-	public boolean checkUserData(ArrayList<UserDataProblem> ret) {
+	public boolean checkUserData(List<UserDataProblem> ret) {
 		String title = edTitle.getText();
 		int year = (int) spnYear.getValue();
 

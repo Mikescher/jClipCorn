@@ -36,7 +36,7 @@ public class Main {
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				MainFrame myFrame = new MainFrame(mList);
+				final MainFrame myFrame = new MainFrame(mList);
 				myFrame.start();
 				
 				mList.connect(myFrame);
@@ -66,7 +66,7 @@ public class Main {
 //TODO statistics page
 
 //TODO Auto parse Summary 
-//TODO Parse Cover from more sources (coverparadies, darktown ...) ((Erst mal sehehn ob die was taugen))
+//TODO Parse Cover from more sources (coverparadies, darktown ...) ((Erst mal sehen ob die was taugen))
 //TODO Search for Trailer
 
 //TODO Recheck all Texts - improve DL-Language (what EN / What GER)
@@ -84,6 +84,7 @@ public class Main {
 
 //TODO Filmtrommel (mit netter Animation)
 
+//TODO Allgemeiner Öffnen Dialog (öffnet alles)
 
 //TODO Find Unused Classes
 //TODO Find Unused Methods

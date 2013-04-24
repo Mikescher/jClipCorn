@@ -11,7 +11,7 @@ import com.twmacinta.util.MD5;
 import de.jClipCorn.gui.log.CCLog;
 
 public class LargeMD5Calculator {
-	private final static int BLOCKSIZE = 1 *1024 * 1024; // 1MB
+	private final static int BLOCKSIZE = 1 * 1024 * 1024; // 1MB
 	private static byte[] block = new byte[BLOCKSIZE];
 	
 	public static String getMD5(String[] s) {
@@ -36,7 +36,7 @@ public class LargeMD5Calculator {
 	}
 	
 	private static boolean calcMD5(MD5 md5, File f) {
-		if (! f.exists() || f.length() < BLOCKSIZE*3) {
+		if (! f.exists() || f.length() < BLOCKSIZE * 3) {
 			return false;
 		}
 		
@@ -44,7 +44,7 @@ public class LargeMD5Calculator {
 		
         try {
         	FileInputStream i = new FileInputStream(f);
-        	i.skip(len/2);
+        	i.skip(len / 2);
 
         	i.read(block);
 			md5.Update(block);

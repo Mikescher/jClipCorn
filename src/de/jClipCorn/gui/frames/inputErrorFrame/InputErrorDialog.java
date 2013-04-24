@@ -7,7 +7,7 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -30,17 +30,17 @@ public class InputErrorDialog extends JDialog {
 	private static final long serialVersionUID = 2988199599783528024L;
 
 	private final JPanel contentPanel = new JPanel();
-	JScrollPane scrollPane;
-	JLabel lblYouHaveErrors;
-	JPanel buttonPane;
-	JButton okButton;
-	JButton cancelButton;
+	private JScrollPane scrollPane;
+	private JLabel lblYouHaveErrors;
+	private JPanel buttonPane;
+	private JButton okButton;
+	private JButton cancelButton;
 	private JList<String> lsErrors;
-	DefaultListModel<String> lsErrorModel;
+	private DefaultListModel<String> lsErrorModel;
 	
 	private UserDataProblemHandler owner;
 	
-	public InputErrorDialog(ArrayList<UserDataProblem> problems, UserDataProblemHandler owner, Component parent) {
+	public InputErrorDialog(List<UserDataProblem> problems, UserDataProblemHandler owner, Component parent) {
 		super();
 		this.owner = owner;
 		initGUI(parent);
@@ -98,7 +98,7 @@ public class InputErrorDialog extends JDialog {
 		buttonPane.add(cancelButton);
 	}
 	
-	private void fillMemo(ArrayList<UserDataProblem> problems) {
+	private void fillMemo(List<UserDataProblem> problems) {
 		if (problems == null) {
 			return;
 		}

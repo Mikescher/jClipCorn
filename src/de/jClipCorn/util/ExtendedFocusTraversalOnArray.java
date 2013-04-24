@@ -3,7 +3,7 @@ package de.jClipCorn.util;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.FocusTraversalPolicy;
-import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JSpinner;
 
@@ -16,7 +16,7 @@ public class ExtendedFocusTraversalOnArray extends FocusTraversalPolicy {
 		fixSpinner();
 	}
 	
-	public ExtendedFocusTraversalOnArray(ArrayList<Component> components) {
+	public ExtendedFocusTraversalOnArray(List<Component> components) {
 		m_Components = new Component[components.size()];
 		
 		for (int i = 0; i < components.size(); i++) {
@@ -47,7 +47,7 @@ public class ExtendedFocusTraversalOnArray extends FocusTraversalPolicy {
 		loop: for (int i = 0; i < m_Components.length; i++) {
 			Component component = m_Components[i];
 			for (Component c = currentComponent; c != null; c = c.getParent()) {
-				if (component == c) {
+				if (component == c) { // Das == sollte stimmen - sagt der GoogleCode ...
 					index = i;
 					break loop;
 				}

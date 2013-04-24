@@ -8,8 +8,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -443,7 +443,7 @@ public class CompareDatabaseFrame extends JFrame {
 
 			final String fpath = path;
 
-			Thread t = new Thread(new Runnable() {
+			new Thread(new Runnable() {
 				@Override
 				public void run() {
 					generateCompareFile(fpath);
@@ -456,9 +456,7 @@ public class CompareDatabaseFrame extends JFrame {
 						}
 					});
 				}
-			}, "THREAD_GENERATE_DBCOMPARE_FILE"); //$NON-NLS-1$
-
-			t.start();
+			}, "THREAD_GENERATE_DBCOMPARE_FILE").start();; //$NON-NLS-1$
 		}
 	}
 
@@ -501,15 +499,7 @@ public class CompareDatabaseFrame extends JFrame {
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
-				ArrayList<CompareElement> l = null;
-
-				try {
-					l = DatabaseComparator.compare(new File(edDB1.getText()), new File(edDB2.getText()), new ProgressCallbackHelper(progressBar));
-				} catch (Exception e) {
-					CCLog.addError(e);
-				}
-
-				final ArrayList<CompareElement> fl = l;
+				final List<CompareElement> fl = DatabaseComparator.compare(new File(edDB1.getText()), new File(edDB2.getText()), new ProgressCallbackHelper(progressBar));
 
 				SwingUtilities.invokeLater(new Runnable() {
 					@Override
@@ -521,7 +511,7 @@ public class CompareDatabaseFrame extends JFrame {
 		}, "THREAD_COMPARE_DATABASES").start(); //$NON-NLS-1$
 	}
 
-	private void updateGUI(ArrayList<CompareElement> list) {
+	private void updateGUI(List<CompareElement> list) {
 		DefaultListModel<CompareElement> lmDB1 = new DefaultListModel<>();
 		DefaultListModel<CompareElement> lmDB2 = new DefaultListModel<>();
 		DefaultListModel<CompareElement> lmMissDB1 = new DefaultListModel<>();
@@ -571,9 +561,9 @@ public class CompareDatabaseFrame extends JFrame {
 			
 			if (scel.isInDB1()) {
 				lblNameDB1.setText(scel.getCompleteTitle());
-				lblCheckSumDB1File.setText(scel.getCS_File_DB1());
-				lblCheckSumDB1Cover.setText(scel.getCS_Cover_DB1());
-				lblPathDB1.setText(scel.getPath_DB1());
+				lblCheckSumDB1File.setText(scel.getCSFileDB1());
+				lblCheckSumDB1Cover.setText(scel.getCSCoverDB1());
+				lblPathDB1.setText(scel.getPathDB1());
 			} else {
 				lblNameDB1.setText(""); //$NON-NLS-1$
 				lblCheckSumDB1File.setText(""); //$NON-NLS-1$
@@ -583,9 +573,9 @@ public class CompareDatabaseFrame extends JFrame {
 			
 			if (scel.isInDB2()) {
 				lblNameDB2.setText(scel.getCompleteTitle());
-				lblCheckSumDB2File.setText(scel.getCS_File_DB2());
-				lblCheckSumDB2Cover.setText(scel.getCS_Cover_DB2());
-				lblPathDB2.setText(scel.getPath_DB2());
+				lblCheckSumDB2File.setText(scel.getCSFileDB2());
+				lblCheckSumDB2Cover.setText(scel.getCSCoverDB2());
+				lblPathDB2.setText(scel.getPathDB2());
 			} else {
 				lblNameDB2.setText(""); //$NON-NLS-1$
 				lblCheckSumDB2File.setText(""); //$NON-NLS-1$

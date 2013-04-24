@@ -41,6 +41,7 @@ public class CCKeyStrokeProperty  extends CCProperty<KeyStroke>{
 		}
 		
 		KeyStroke kval;
+		
 		if (val.isEmpty()) {
 			kval = KeyStrokeUtil.getEmptyKeyStroke();
 		} else {

@@ -9,6 +9,7 @@ import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.FileFilter;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -190,11 +191,11 @@ public class ScanFolderFrame extends JFrame implements Runnable, MouseListener {
 		
 		if (dir.isDirectory()) {
 			// List of Files in Directory
-			ArrayList<File> filelist = new ArrayList<>();
+			List<File> filelist = new ArrayList<>();
 			searchFiles(dir, filelist);
 			
 			// List of Files in in Database
-			ArrayList<File> movielist = owner.getMovielist().getAbsolutePathList(includeSeries);
+			List<File> movielist = owner.getMovielist().getAbsolutePathList(includeSeries);
 			
 			filelist.removeAll(movielist);
 
@@ -217,7 +218,7 @@ public class ScanFolderFrame extends JFrame implements Runnable, MouseListener {
 		});
 	}
 
-	private void searchFiles(File dir, ArrayList<File> filelist) {
+	private void searchFiles(File dir, List<File> filelist) {
 		File[] files = dir.listFiles(new FileFilter() {
 			@Override
 			public boolean accept(File f) {

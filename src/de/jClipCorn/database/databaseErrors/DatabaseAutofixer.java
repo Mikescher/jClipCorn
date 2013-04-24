@@ -1,6 +1,7 @@
 package de.jClipCorn.database.databaseErrors;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
@@ -8,7 +9,7 @@ import de.jClipCorn.util.DriveMap;
 import de.jClipCorn.util.ProgressCallbackListener;
 
 public class DatabaseAutofixer {
-	public static boolean fixErrors(ArrayList<DatabaseError> list, ProgressCallbackListener pcl) {
+	public static boolean fixErrors(List<DatabaseError> list, ProgressCallbackListener pcl) {
 		if (! DriveMap.isCreated()) {
 			return false;
 		}
@@ -27,7 +28,7 @@ public class DatabaseAutofixer {
 				continue;
 			}
 			
-			ArrayList<DatabaseError> errlist = getAllWithSameElement(list, error); // Test if all Errors with this File are Fixable
+			List<DatabaseError> errlist = getAllWithSameElement(list, error); // Test if all Errors with this File are Fixable
 			boolean succ = true;
 			for (int j = 0; j < errlist.size(); j++) {
 				DatabaseError lerror = errlist.get(i);
@@ -50,8 +51,8 @@ public class DatabaseAutofixer {
 		return fullsuccess;
 	}
 	
-	private static ArrayList<DatabaseError> getAllWithSameElement(ArrayList<DatabaseError> list, DatabaseError element) {
-		ArrayList<DatabaseError> result = new ArrayList<>();
+	private static List<DatabaseError> getAllWithSameElement(List<DatabaseError> list, DatabaseError element) {
+		List<DatabaseError> result = new ArrayList<>();
 		
 		for (int i = 0; i < list.size(); i++) {
 			if (list.get(i).elementsEquals(element)) {

@@ -15,7 +15,7 @@ public enum CCMovieScore {
 	RATING_V(5),	// I f*** love this piece of movie-artwork
 	RATING_NO(6);	// Unrated
 	
-	private final static String names[] = {
+	private final static String NAMES[] = {
 		LocaleBundle.getString("CCMovieScore.R0"),   //$NON-NLS-1$
 		LocaleBundle.getString("CCMovieScore.R1"),   //$NON-NLS-1$
 		LocaleBundle.getString("CCMovieScore.R2"),   //$NON-NLS-1$
@@ -27,7 +27,7 @@ public enum CCMovieScore {
 	
 	private int id;
 	
-	CCMovieScore(int val) {
+	private CCMovieScore(int val) {
 		id = val;
 	}
 	
@@ -47,11 +47,11 @@ public enum CCMovieScore {
 	}
 	
 	public static String[] getList() {
-		return names;
+		return NAMES;
 	}
 	
 	public String asString() {
-		return names[asInt()];
+		return NAMES[asInt()];
 	}
 	
 	public ImageIcon getIcon() {

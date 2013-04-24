@@ -4,6 +4,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
+import java.util.Map;
 import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -26,7 +27,7 @@ import de.jClipCorn.util.PathFormatter;
 public class CCCoverCache {
 	private final static String COVER_DIRECTORY = "\\cover\\"; //$NON-NLS-1$
 
-	private CachedHashMap<String, BufferedImage> cache; //TODO Precaching
+	private Map<String, BufferedImage> cache; //TODO Precaching
 
 	private String coverPath;
 	
@@ -129,12 +130,12 @@ public class CCCoverCache {
 		
 		String[] files = getCoverDirectory().list();
 		
-		Pattern p = Pattern.compile(String.format("(?<=%s)[0-9]+(?=\\.%s)", Pattern.quote(CCProperties.getInstance().PROP_COVER_PREFIX.getValue().toLowerCase()), Pattern.quote(CCProperties.getInstance().PROP_COVER_TYPE.getValue().toLowerCase()))); //$NON-NLS-1$
+		Pattern pattern = Pattern.compile(String.format("(?<=%s)[0-9]+(?=\\.%s)", Pattern.quote(CCProperties.getInstance().PROP_COVER_PREFIX.getValue().toLowerCase()), Pattern.quote(CCProperties.getInstance().PROP_COVER_TYPE.getValue().toLowerCase()))); //$NON-NLS-1$
 		
 		for (String f : files) {
-			Matcher m = p.matcher(PathFormatter.getFilenameWithExt(f).toLowerCase());
-			if (m.find()){
-				usedCoverIDs.add(Integer.parseInt(m.group()));
+			Matcher matcher = pattern.matcher(PathFormatter.getFilenameWithExt(f).toLowerCase());
+			if (matcher.find()){
+				usedCoverIDs.add(Integer.parseInt(matcher.group()));
 			}
 		}
 		

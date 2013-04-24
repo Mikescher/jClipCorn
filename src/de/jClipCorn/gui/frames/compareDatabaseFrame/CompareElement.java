@@ -9,13 +9,13 @@ public class CompareElement {
 	private final int language;
 	
 	
-	private String cs_File_DB1 = null;
-	private String cs_Cover_DB1 = null;
-	private String filename_DB1 = null;
+	private String csFileDB1 = null;
+	private String csCoverDB1 = null;
+	private String filenameDB1 = null;
 	
-	private String cs_File_DB2 = null;
-	private String cs_Cover_DB2 = null;
-	private String filename_DB2 = null;
+	private String csFileDB2 = null;
+	private String csCoverDB2 = null;
+	private String filenameDB2 = null;
 	
 	public CompareElement(String title, String zyklus, int zid, int lid) {
 		this.title = title;
@@ -23,40 +23,40 @@ public class CompareElement {
 		this.language = lid;
 	}
 
-	public String getCS_File_DB1() {
-		return cs_File_DB1;
+	public String getCSFileDB1() {
+		return csFileDB1;
 	}
 
-	public String getCS_Cover_DB1() {
-		return cs_Cover_DB1;
+	public String getCSCoverDB1() {
+		return csCoverDB1;
 	}
 	
-	public String getPath_DB1() {
-		return filename_DB1;
+	public String getPathDB1() {
+		return filenameDB1;
 	}
 	
-	public String getCS_File_DB2() {
-		return cs_File_DB2;
+	public String getCSFileDB2() {
+		return csFileDB2;
 	}
 
-	public String getCS_Cover_DB2() {
-		return cs_Cover_DB2;
+	public String getCSCoverDB2() {
+		return csCoverDB2;
 	}
 	
-	public String getPath_DB2() {
-		return filename_DB2;
+	public String getPathDB2() {
+		return filenameDB2;
 	}
 	
-	public void setDB1(String cs_cover, String cs_file, String path) {
-		this.cs_Cover_DB1 = cs_cover;
-		this.cs_File_DB1 = cs_file;
-		this.filename_DB1 = path;
+	public void setDB1(String csCover, String csFile, String path) {
+		this.csCoverDB1 = csCover;
+		this.csFileDB1 = csFile;
+		this.filenameDB1 = path;
 	}
 
-	public void setDB2(String cs_cover, String cs_file, String path) {
-		this.cs_Cover_DB2 = cs_cover;
-		this.cs_File_DB2 = cs_file;
-		this.filename_DB2 = path;
+	public void setDB2(String csCover, String csFile, String path) {
+		this.csCoverDB2 = csCover;
+		this.csFileDB2 = csFile;
+		this.filenameDB2 = path;
 	}
 
 	public CCMovieZyklus getZyklus() {
@@ -80,19 +80,19 @@ public class CompareElement {
 	}
 	
 	public boolean isInDB1() {
-		return cs_Cover_DB1 != null;
+		return csCoverDB1 != null;
 	}
 	
 	public boolean isInDB2() {
-		return cs_Cover_DB2 != null;
+		return csCoverDB2 != null;
 	}
 	
 	public boolean isDifferentCover() {
-		return isInDB1() && isInDB2() && !cs_Cover_DB1.equals(cs_Cover_DB2);
+		return isInDB1() && isInDB2() && !csCoverDB1.equals(csCoverDB2);
 	}
 	
 	public boolean isDifferentFiles() {
-		return isInDB1() && isInDB2() && !cs_File_DB1.equals(cs_File_DB2);
+		return isInDB1() && isInDB2() && !csFileDB1.equals(csFileDB2);
 	}
 	
 	@Override

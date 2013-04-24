@@ -18,9 +18,9 @@ public class CCDateProperty extends CCProperty<CCDate> {
 
 	@Override
 	public Component getComponent() {
-		JSpinner p = new JSpinner(new SpinnerCCDateModel(getValue(), CCDate.getNewMinimumDate(), null));
-		p.setEditor(new CCDateEditor(p));
-		return p;
+		JSpinner spinner = new JSpinner(new SpinnerCCDateModel(getValue(), CCDate.getNewMinimumDate(), null));
+		spinner.setEditor(new CCDateEditor(spinner));
+		return spinner;
 	}
 
 	@Override

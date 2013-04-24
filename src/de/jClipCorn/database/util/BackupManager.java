@@ -38,13 +38,13 @@ public class BackupManager {
 	}
 	
 	private File getBackupDirectory() {
-		File f = new File(PathFormatter.getRealSelfDirectory() + CCProperties.getInstance().PROP_BACKUP_FOLDERNAME.getValue() + '\\');
+		File file = new File(PathFormatter.getRealSelfDirectory() + CCProperties.getInstance().PROP_BACKUP_FOLDERNAME.getValue() + '\\');
 		
-		if (! f.exists()) {
-			f.mkdirs();
+		if (! file.exists()) {
+			file.mkdirs();
 		}
 		
-		return f;
+		return file;
 	}
 	
 	private CCDate getBackupDate(File f) {
@@ -103,10 +103,10 @@ public class BackupManager {
 		
 		CCDate now = new CCDate();
 		
-		File b = new File(getBackupDirectory().getAbsolutePath() + '\\' + String.format(NAME, CCProperties.getInstance().PROP_DATABASE_NAME.getValue(), now.getSimpleStringRepresentation()) + '.' + EXTENSION);
+		File file = new File(getBackupDirectory().getAbsolutePath() + '\\' + String.format(NAME, CCProperties.getInstance().PROP_DATABASE_NAME.getValue(), now.getSimpleStringRepresentation()) + '.' + EXTENSION);
 		
 		try {
-			FileOutputStream os = new FileOutputStream(b);
+			FileOutputStream os = new FileOutputStream(file);
 			ZipOutputStream zos = new ZipOutputStream(os);
 			zos.setLevel(CCProperties.getInstance().PROP_BACKUP_COMPRESSION.getValue());
 			

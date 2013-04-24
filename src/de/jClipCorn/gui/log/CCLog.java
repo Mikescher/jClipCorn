@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.SwingUtilities;
 
@@ -17,8 +18,8 @@ import de.jClipCorn.util.CCDate;
 import de.jClipCorn.util.DialogHelper;
 
 public class CCLog {
-	private static ArrayList<CCLogElement> log = new ArrayList<CCLogElement>();
-	private static ArrayList<CCLogChangedListener> listener = new ArrayList<CCLogChangedListener>();
+	private static List<CCLogElement> log = new ArrayList<CCLogElement>();
+	private static List<CCLogChangedListener> listener = new ArrayList<CCLogChangedListener>();
 	
 	private static String path = null;
 	private static boolean changed = false;
@@ -154,12 +155,12 @@ public class CCLog {
 	    long readPos = raf.getFilePointer();
 
 	    byte[] buf = new byte[2048];
-	    int n;
-	    while (-1 != (n = raf.read(buf))) {
+	    int bufbyte;
+	    while (-1 != (bufbyte = raf.read(buf))) {
 	        raf.seek(writePos);
-	        raf.write(buf, 0, n);
-	        readPos += n;
-	        writePos += n;
+	        raf.write(buf, 0, bufbyte);
+	        readPos += bufbyte;
+	        writePos += bufbyte;
 	        raf.seek(readPos);
 	    }
 
@@ -168,20 +169,20 @@ public class CCLog {
 	}
 	
 	public static int getCount(CCLogType type) {
-		int r = 0;
+		int count = 0;
 		for(CCLogElement el : log) {
-			if (el.type == type) r++;
+			if (el.isType(type)) count++;
 		}
 		
-		return r;
+		return count;
 	}
 	
 	public static CCLogElement getElement(CCLogType type, int position) {
-		int r = 0;
+		int count = 0;
 		for(CCLogElement el : log) {
-			if (el.type == type) {
-				if (r == position) return el;
-				r++;
+			if (el.isType(type)) {
+				if (count == position) return el;
+				count++;
 			}
 		}
 		
@@ -226,7 +227,7 @@ public class CCLog {
 	
 	public static boolean hasErrors() {
 		for (CCLogElement e : log) {
-			if (e.type.equals(CCLogType.LOG_ELEM_ERROR)) {
+			if (e.isType(CCLogType.LOG_ELEM_ERROR)) {
 				return true;
 			}
 		}
@@ -235,7 +236,7 @@ public class CCLog {
 
 	public static boolean hasWarnings() {
 		for (CCLogElement e : log) {
-			if (e.type.equals(CCLogType.LOG_ELEM_WARNING)) {
+			if (e.isType(CCLogType.LOG_ELEM_WARNING)) {
 				return true;
 			}
 		}
@@ -244,7 +245,7 @@ public class CCLog {
 	
 	public static boolean hasInformations() {
 		for (CCLogElement e : log) {
-			if (e.type.equals(CCLogType.LOG_ELEM_INFORMATION)) {
+			if (e.isType(CCLogType.LOG_ELEM_INFORMATION)) {
 				return true;
 			}
 		}
@@ -253,7 +254,7 @@ public class CCLog {
 
 	public static boolean hasUndefinieds() {
 		for (CCLogElement e : log) {
-			if (e.type.equals(CCLogType.LOG_ELEM_UNDEFINED)) {
+			if (e.isType(CCLogType.LOG_ELEM_UNDEFINED)) {
 				return true;
 			}
 		}

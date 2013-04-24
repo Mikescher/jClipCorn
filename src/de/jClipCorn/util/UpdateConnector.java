@@ -23,8 +23,7 @@ public class UpdateConnector implements Runnable {
 		this.title = title;
 		this.version = version;
 		
-		Thread t = new Thread(this, "THREAD_CHECK_FOR_UPDATES"); //$NON-NLS-1$
-		t.start();
+		new Thread(this, "THREAD_CHECK_FOR_UPDATES").start(); //$NON-NLS-1$
 	}
 
 	@Override

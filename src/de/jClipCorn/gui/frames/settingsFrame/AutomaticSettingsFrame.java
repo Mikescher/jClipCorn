@@ -6,6 +6,7 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -48,7 +49,7 @@ public abstract class AutomaticSettingsFrame extends JFrame {
 	private JButton btnCancel;
 	private JButton btnExtended;
 
-	private ArrayList<PropertyElement> elements = new ArrayList<>();
+	private List<PropertyElement> elements = new ArrayList<>();
 	
 	public AutomaticSettingsFrame(MainFrame owner, CCProperties properties){
 		super();
@@ -65,7 +66,7 @@ public abstract class AutomaticSettingsFrame extends JFrame {
 	}
 	
 	private void initGUI() {
-		ArrayList<Component> tabOrder = new ArrayList<>();
+		List<Component> tabOrder = new ArrayList<>();
 		
 		setIconImage(CachedResourceLoader.getImage(Resources.IMG_FRAME_ICON));
 		
@@ -143,8 +144,8 @@ public abstract class AutomaticSettingsFrame extends JFrame {
 		setFocusTraversalPolicy(new ExtendedFocusTraversalOnArray(tabOrder));
 	}
 
-	private ArrayList<Component> initPanel(int pnlNumber) {
-		ArrayList<Component> tabOrder = new ArrayList<>();
+	private List<Component> initPanel(int pnlNumber) {
+		List<Component> tabOrder = new ArrayList<>();
 		
 		JPanel pnlRoot = new JPanel();
 		JScrollPane scrlPane = new JScrollPane();

@@ -4,6 +4,7 @@ import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.CCMovie;
@@ -24,7 +25,7 @@ public class MoviePlayer {
 	private final static String DRIVE_2 = "H:\\"; //$NON-NLS-1$
 	
 	public static void play(CCMovie mov) {
-		ArrayList<String> al = new ArrayList<>();
+		List<String> al = new ArrayList<>();
 		for (int i = 0; i < mov.getPartcount(); i++) {
 			al.add(mov.getAbsolutePart(i));
 		}
@@ -36,14 +37,14 @@ public class MoviePlayer {
 	}
 	
 	public static void play(String abspath) {
-		ArrayList<String> al = new ArrayList<>();
+		List<String> al = new ArrayList<>();
 		al.add(abspath);
 		play(al);
 	}
 	
 	@SuppressWarnings("nls")
-	public static void play(ArrayList<String> abspaths) {
-		ArrayList<String> parameters = new ArrayList<>();
+	public static void play(List<String> abspaths) {
+		List<String> parameters = new ArrayList<>();
 		
 		String vlc = getVLCPath();
 		
@@ -83,34 +84,34 @@ public class MoviePlayer {
 	
 	@SuppressWarnings("nls")
 	private static String getVLCPath() {
-		String pp = CCProperties.getInstance().PROP_PLAY_VLC_PATH.getValue();
+		String vlcpath = CCProperties.getInstance().PROP_PLAY_VLC_PATH.getValue();
 		
-		if (! pp.isEmpty()) {
-			if (new File(pp).exists()) {
-				return pp;
+		if (! vlcpath.isEmpty()) {
+			if (new File(vlcpath).exists()) {
+				return vlcpath;
 			}
 		}
 		
 		for (String ss : PATHS) { //TODO remember results of VLC Path Search (SPEED) (Its a cache)
-			String p = DRIVE_1 + ss;
-			if (new File(p).exists()) {
-				return p;
+			String path = DRIVE_1 + ss;
+			if (new File(path).exists()) {
+				return path;
 			}
 		}
 		
 		for (String ss : PATHS) {
-			String p = DRIVE_2 + ss;
-			if (new File(p).exists()) {
-				return p;
+			String path = DRIVE_2 + ss;
+			if (new File(path).exists()) {
+				return path;
 			}
 		}
 		
 		for (File f : File.listRoots()) {
 			if (! (f.getAbsolutePath().equals(DRIVE_1) | f.getAbsolutePath().equals(DRIVE_2))) {
 				for (String ss : PATHS) {
-					String p = f.getAbsolutePath() + ss;
-					if (new File(p).exists()) {
-						return p;
+					String path = f.getAbsolutePath() + ss;
+					if (new File(path).exists()) {
+						return path;
 					}
 				}
 			}

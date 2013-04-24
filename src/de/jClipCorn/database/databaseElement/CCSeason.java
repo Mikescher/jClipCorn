@@ -3,6 +3,7 @@ package de.jClipCorn.database.databaseElement;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
 
 import javax.swing.ImageIcon;
@@ -21,7 +22,7 @@ public class CCSeason {
 	private final CCSeries owner;
 	private final int seasonID;
 	
-	private Vector<CCEpisode> episodes = new Vector<>();
+	private List<CCEpisode> episodes = new Vector<>();
 	private String title;
 	private int year;
 	private String covername;
@@ -154,12 +155,12 @@ public class CCSeason {
 		}
 		
 		if (qc > 0) {
-			int q = (int) Math.round((qs*1d) / qc);
+			int qual = (int) Math.round((qs*1d) / qc);
 			
-			q = Math.max(0, q);
-			q = Math.min(q, CCMovieQuality.values().length - 1);
+			qual = Math.max(0, qual);
+			qual = Math.min(qual, CCMovieQuality.values().length - 1);
 			
-			return CCMovieQuality.find(q);
+			return CCMovieQuality.find(qual);
 		} else {
 			return CCMovieQuality.STREAM;
 		}
@@ -292,8 +293,8 @@ public class CCSeason {
 		}
 	}
 	
-	public ArrayList<File> getAbsolutePathList() {
-		ArrayList<File> result = new ArrayList<>();
+	public List<File> getAbsolutePathList() {
+		List<File> result = new ArrayList<>();
 		
 		for (int i = 0; i < episodes.size(); i++) {
 			result.add(new File(getEpisode(i).getAbsolutePart()));
@@ -312,7 +313,7 @@ public class CCSeason {
 		return false;
 	}
 
-	public Vector<CCEpisode> getEpisodeList() {
+	public List<CCEpisode> getEpisodeList() {
 		return episodes;
 	}
 	

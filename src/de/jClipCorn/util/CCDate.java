@@ -14,7 +14,7 @@ public class CCDate {
 	
 	public static final int YEAR_MIN = 1900; 
 	
-	private static final String[] monNames = {
+	private static final String[] MONTHNAMES = {
 		LocaleBundle.getString("CCDate.Month0"), //$NON-NLS-1$
 		LocaleBundle.getString("CCDate.Month1"), //$NON-NLS-1$
 		LocaleBundle.getString("CCDate.Month2"), //$NON-NLS-1$
@@ -30,7 +30,7 @@ public class CCDate {
 		LocaleBundle.getString("CCDate.Month12") //$NON-NLS-1$
 	};
 	
-	private static final String[] weekDays = {		
+	private static final String[] WEEKDAYS = {		
 		LocaleBundle.getString("CCDate.Month0"), //$NON-NLS-1$
 		LocaleBundle.getString("CCDate.Day1"), //$NON-NLS-1$
 		LocaleBundle.getString("CCDate.Day2"), //$NON-NLS-1$
@@ -41,8 +41,8 @@ public class CCDate {
 		LocaleBundle.getString("CCDate.Day7") //$NON-NLS-1$
 	};
 
-	private static final int[][] monLims = {{0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31}, {0, 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31}};
-	private static final int[] monvaltab = {0, 3, 2, 5, 0, 3, 5, 1, 4, 6, 2, 4};
+	private static final int[][] MONTHLIMITS = {{0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31}, {0, 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31}};
+	private static final int[] MONTHVALUES = {0, 3, 2, 5, 0, 3, 5, 1, 4, 6, 2, 4};
 	
 	private int day = 1;
 	private int month = 1;
@@ -72,11 +72,11 @@ public class CCDate {
 	}
 
 	public String getMonthName() {
-		return monNames[month];
+		return MONTHNAMES[month];
 	}
 	
 	public int getDaysOfMonth() {
-		return monLims[ (isLeapYear()) ? (1) : (0) ][ month ];
+		return MONTHLIMITS[ (isLeapYear()) ? (1) : (0) ][ month ];
 	}
 	
 	public boolean isLeapYear() {
@@ -84,13 +84,13 @@ public class CCDate {
 	}
 	
 	private int getWeekdayInt() {
-	    int wkd = (((year - ((month<3)?1:0)) + (year - ((month<3)?1:0))/4 - (year - ((month<3)?1:0))/100 + (year - ((month<3)?1:0))/400 + monvaltab[month - 1] + day) % 7);
+	    int wkd = (((year - ((month<3)?1:0)) + (year - ((month<3)?1:0))/4 - (year - ((month<3)?1:0))/100 + (year - ((month<3)?1:0))/400 + MONTHVALUES[month - 1] + day) % 7);
 	    
 	    return (wkd < 1) ? (wkd+7) : (wkd);
 	}
 	
 	public String getWeekday() {
-		return weekDays[getWeekdayInt()];
+		return WEEKDAYS[getWeekdayInt()];
 	}
 	
 	/**
@@ -105,7 +105,7 @@ public class CCDate {
 	 * @return
 	 */
 	public String getStringRepresentation(String fmt) {
-		String rst = ""; //$NON-NLS-1$
+		StringBuilder repbuilder = new StringBuilder();
 		char actualCounter = '-';
 		int counter = 0;
 		char c;
@@ -131,7 +131,7 @@ public class CCDate {
 						tmpformat = getWeekday();
 					}
 					
-					rst += tmpformat;
+					repbuilder.append(tmpformat);
 					
 					counter = 1;
 					actualCounter = c;
@@ -152,9 +152,9 @@ public class CCDate {
 						tmpformat = getWeekday();
 					}
 					
-					rst += tmpformat;
+					repbuilder.append(tmpformat);
 				}
-				rst += c;
+				repbuilder.append(c);
 				counter = 0;
 				actualCounter = '-';
 			}
@@ -175,10 +175,10 @@ public class CCDate {
 				tmpformat = getWeekday();
 			}
 			
-			rst += tmpformat;
+			repbuilder.append(tmpformat);
 		}
 		
-		return rst;
+		return repbuilder.toString();
 	}
 	
 	public String getSimpleStringRepresentation() {

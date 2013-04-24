@@ -4,8 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Map.Entry;
 
 import javax.swing.JDialog;
@@ -34,7 +34,7 @@ public class AllRatingsDialog extends JDialog {
 	/**
 	 * Create the frame.
 	 */
-	public AllRatingsDialog(HashMap<String, Integer> list, Component owner) {
+	public AllRatingsDialog(Map<String, Integer> list, Component owner) {
 		initGUI(owner);
 		createContent(list);
 	}
@@ -73,17 +73,17 @@ public class AllRatingsDialog extends JDialog {
 		pnlBottom.add(lblAverage);
 	}
 	
-	private void createContent(HashMap<String, Integer> list) {
+	private void createContent(Map<String, Integer> list) {
 		JProgressBar progressBar;
 		JLabel lblLand;
 		JLabel lblRating;
 		
-		Iterator<Entry<String, Integer>> it = list.entrySet().iterator();
+		
 		
 		int y = 0;
 		int count = 0;
 		int sum = 0;
-		while (it.hasNext()) {
+		for (Iterator<Entry<String, Integer>> it = list.entrySet().iterator(); it.hasNext();) {
 			Entry<String, Integer> element = it.next();
 			int cy = 11 + y++ * 25;
 			
@@ -97,7 +97,7 @@ public class AllRatingsDialog extends JDialog {
 			lblLand.setBounds(10, cy, 80, 14);
 			panel.add(lblLand);
 			
-			lblRating = new JLabel(element.getValue()+""); //$NON-NLS-1$
+			lblRating = new JLabel(element.getValue() + ""); //$NON-NLS-1$
 			lblRating.setBounds(100, cy, 46, 14);
 			panel.add(lblRating);
 			
@@ -107,7 +107,7 @@ public class AllRatingsDialog extends JDialog {
 		panel.setPreferredSize(new Dimension(0,11 + y * 25));
 		
 		if (count > 0) {
-			lblAverage.setText(((int)((sum/(count*1d))*10))/10d + ""); //$NON-NLS-1$
+			lblAverage.setText(((int)((sum / (count * 1d)) * 10)) / 10d + ""); //$NON-NLS-1$
 		} else {
 			lblAverage.setText("  -  "); //$NON-NLS-1$
 		}

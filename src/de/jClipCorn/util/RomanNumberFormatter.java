@@ -8,15 +8,15 @@ public class RomanNumberFormatter {
 	private static final int[] BFVAL = { 1000, 500, 100, 50, 10, 5, 1 };
 
 	public static String decToRom(int dec) {
-		String roman = ""; //$NON-NLS-1$
+		StringBuilder romanbuilder = new StringBuilder();
 
 		for (int i = 0; i < RCODE.length; i++) {
 			while (dec >= BVAL[i]) {
 				dec -= BVAL[i];
-				roman += RCODE[i];
+				romanbuilder.append(RCODE[i]);
 			}
 		}
-		return roman;
+		return romanbuilder.toString();
 	}
 
 	public static int romToDec(String rom) {

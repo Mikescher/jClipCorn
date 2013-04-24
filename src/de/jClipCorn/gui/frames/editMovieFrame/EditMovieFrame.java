@@ -9,6 +9,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.imageio.ImageIO;
 import javax.swing.DefaultComboBoxModel;
@@ -471,7 +472,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		getContentPane().add(cbxLanguage);
 		
 		spnLength = new JSpinner();
-		spnLength.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(1)));
+		spnLength.setModel(new SpinnerNumberModel(0, 0, null, 1));
 		spnLength.setBounds(74, 440, 212, 20);
 		getContentPane().add(spnLength);
 		
@@ -523,7 +524,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		getContentPane().add(label_25);
 		
 		spnYear = new JSpinner();
-		spnYear.setModel(new SpinnerNumberModel(new Integer(1900), new Integer(1900), null, new Integer(1)));
+		spnYear.setModel(new SpinnerNumberModel(1900, 1900, null, 1));
 		spnYear.setEditor(new JSpinner.NumberEditor(spnYear, "0")); //$NON-NLS-1$
 		spnYear.setBounds(74, 609, 212, 20);
 		getContentPane().add(spnYear);
@@ -539,7 +540,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 				updateByteDisp();
 			}
 		});
-		spnSize.setModel(new SpinnerNumberModel(new Long(0), new Long(0), null, new Long(1)));
+		spnSize.setModel(new SpinnerNumberModel(0L, 0L, null, 1L));
 		spnSize.setBounds(74, 645, 212, 20);
 		getContentPane().add(spnSize);
 		
@@ -581,7 +582,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		getContentPane().add(label_29);
 		
 		spnZyklus = new JSpinner();
-		spnZyklus.setModel(new SpinnerNumberModel(new Integer(0), new Integer(-1), null, new Integer(1)));
+		spnZyklus.setModel(new SpinnerNumberModel(0, new Integer(-1), null, 1));
 		spnZyklus.setBounds(234, 302, 52, 20);
 		getContentPane().add(spnZyklus);
 		
@@ -869,11 +870,9 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 
 	@Override
 	public void setFilepath(int p, String t) {
-		String pt;
+		String pt = t;
 		if (CCProperties.getInstance().PROP_ADD_MOVIE_RELATIVE_AUTO.getValue()) {
 			pt = PathFormatter.getRelative(t);
-		} else {
-			pt = t;
 		}
 				
 		switch (p) {
@@ -1032,7 +1031,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 	}
 	
 	private void onBtnOK(boolean check) {
-		ArrayList<UserDataProblem> problems = new ArrayList<>();
+		List<UserDataProblem> problems = new ArrayList<>();
 		
 		boolean probvalue = (! check) || checkUserData(problems);
 		
@@ -1099,7 +1098,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		dispose();
 	}
 	
-	public boolean checkUserData(ArrayList<UserDataProblem> ret) {
+	public boolean checkUserData(List<UserDataProblem> ret) {
 		BufferedImage i = currentCoverImage;
 		
 		String p0 = edPart0.getText();
@@ -1123,7 +1122,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		int quality = cbxQuality.getSelectedIndex();
 		int lang = cbxLanguage.getSelectedIndex();
 		String csExtn  = CCMovieFormat.find(cbxFormat.getSelectedIndex()).asString();
-		String csExta = CCMovieFormat.find(cbxFormat.getSelectedIndex()).asString_Alt();
+		String csExta = CCMovieFormat.find(cbxFormat.getSelectedIndex()).asStringAlt();
 		
 		int g0 = cbxGenre0.getSelectedIndex();
 		int g1 = cbxGenre1.getSelectedIndex();

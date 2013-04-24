@@ -2,6 +2,7 @@ package de.jClipCorn.database.databaseElement;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
 
 import org.jdom2.Element;
@@ -18,7 +19,7 @@ import de.jClipCorn.util.LargeMD5Calculator;
 import de.jClipCorn.util.YearRange;
 
 public class CCSeries extends CCDatabaseElement {
-	private Vector<CCSeason> seasons = new Vector<>();
+	private List<CCSeason> seasons = new Vector<>();
 	
 	public CCSeries(CCMovieList ml, int id, int seriesID) {
 		super(ml, CCMovieTyp.SERIES, id, seriesID);
@@ -68,12 +69,12 @@ public class CCSeries extends CCDatabaseElement {
 		}
 		
 		if (qc > 0) {
-			int q = (int) Math.round((qs*1d) / qc);
+			int qual = (int) Math.round((qs*1d) / qc);
 			
-			q = Math.max(0, q);
-			q = Math.min(q, CCMovieQuality.values().length - 1);
+			qual = Math.max(0, qual);
+			qual = Math.min(qual, CCMovieQuality.values().length - 1);
 			
-			return CCMovieQuality.find(q);
+			return CCMovieQuality.find(qual);
 		} else {
 			return CCMovieQuality.STREAM;
 		}
@@ -209,8 +210,8 @@ public class CCSeries extends CCDatabaseElement {
 		return null;
 	}
 	
-	public ArrayList<File> getAbsolutePathList() {
-		ArrayList<File> result = new ArrayList<>();
+	public List<File> getAbsolutePathList() {
+		List<File> result = new ArrayList<>();
 		
 		for (int i = 0; i < seasons.size(); i++) {
 			result.addAll(getSeason(i).getAbsolutePathList());
@@ -234,8 +235,8 @@ public class CCSeries extends CCDatabaseElement {
 		return new CombinedMovieQuality(getQuality(), getStatus());
 	}
 	
-	public ArrayList<CCEpisode> getEpisodeList() {
-		ArrayList<CCEpisode> result = new ArrayList<>();
+	public List<CCEpisode> getEpisodeList() {
+		List<CCEpisode> result = new ArrayList<>();
 		
 		for (int i = 0; i < getSeasonCount(); i++) {
 			result.addAll(getSeason(i).getEpisodeList());
@@ -245,7 +246,7 @@ public class CCSeries extends CCDatabaseElement {
 	}
 	
 	public CCEpisode getRandomEpisode() {
-		ArrayList<CCEpisode> eplist = getEpisodeList();
+		List<CCEpisode> eplist = getEpisodeList();
 		if (eplist.size() > 0) {
 			return eplist.get((int) (Math.random()*eplist.size()));
 		}
@@ -253,7 +254,7 @@ public class CCSeries extends CCDatabaseElement {
 	}
 	
 	public CCEpisode getRandomEpisodeWithViewState(boolean viewed) {
-		ArrayList<CCEpisode> eplist = getEpisodeList();
+		List<CCEpisode> eplist = getEpisodeList();
 		
 		for (int i = eplist.size() - 1; i >= 0; i--) {
 			if (eplist.get(i).isViewed() ^ viewed) {
@@ -268,7 +269,7 @@ public class CCSeries extends CCDatabaseElement {
 	}
 	
 	public CCEpisode getNextEpisode() {
-		ArrayList<CCEpisode> el = getEpisodeList();
+		List<CCEpisode> el = getEpisodeList();
 		
 		if (el.size() == 0) {
 			return null;

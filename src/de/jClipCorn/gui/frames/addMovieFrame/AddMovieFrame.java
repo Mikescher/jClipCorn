@@ -8,6 +8,7 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.imageio.ImageIO;
 import javax.swing.ButtonGroup;
@@ -532,7 +533,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		contentPane.add(cbxLanguage);
 		
 		spnLength = new JSpinner();
-		spnLength.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(1)));
+		spnLength.setModel(new SpinnerNumberModel(0, 0, null, 1));
 		spnLength.setBounds(76, 442, 212, 20);
 		contentPane.add(spnLength);
 		
@@ -584,7 +585,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		contentPane.add(lblFormat);
 		
 		spnYear = new JSpinner();
-		spnYear.setModel(new SpinnerNumberModel(new Integer(1900), new Integer(1900), null, new Integer(1)));
+		spnYear.setModel(new SpinnerNumberModel(1900, 1900, null, 1));
 		spnYear.setEditor(new JSpinner.NumberEditor(spnYear, "0")); //$NON-NLS-1$
 		spnYear.setBounds(76, 611, 212, 20);
 		contentPane.add(spnYear);
@@ -600,7 +601,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 				updateByteDisp();
 			}
 		});
-		spnSize.setModel(new SpinnerNumberModel(new Long(0), new Long(0), null, new Long(1)));
+		spnSize.setModel(new SpinnerNumberModel(0L, 0L, null, 1L));
 		spnSize.setBounds(76, 647, 212, 20);
 		contentPane.add(spnSize);
 		
@@ -681,7 +682,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 	}
 	
 	private void onBtnOK(boolean check) {
-		ArrayList<UserDataProblem> problems = new ArrayList<>();
+		List<UserDataProblem> problems = new ArrayList<>();
 		
 		boolean probvalue = (! check) || checkUserData(problems);
 		
@@ -915,11 +916,10 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 
 	@Override
 	public void setFilepath(int p, String t) {
-		String pt;
+		String pt = t;
+		
 		if (CCProperties.getInstance().PROP_ADD_MOVIE_RELATIVE_AUTO.getValue()) {
 			pt = PathFormatter.getRelative(t);
-		} else {
-			pt = t;
 		}
 				
 		switch (p) {
@@ -1095,7 +1095,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		}
 	}
 	
-	public boolean checkUserData(ArrayList<UserDataProblem> ret) { 
+	public boolean checkUserData(List<UserDataProblem> ret) { 
 		BufferedImage i = currentCoverImage;
 		
 		String p0 = ed_Part0.getText();
@@ -1119,7 +1119,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		int quality = cbxQuality.getSelectedIndex();
 		int lang = cbxLanguage.getSelectedIndex();
 		String csExtn  = CCMovieFormat.find(cbxFormat.getSelectedIndex()).asString();
-		String csExta = CCMovieFormat.find(cbxFormat.getSelectedIndex()).asString_Alt();
+		String csExta = CCMovieFormat.find(cbxFormat.getSelectedIndex()).asStringAlt();
 		
 		int g0 = cbxGenre0.getSelectedIndex();
 		int g1 = cbxGenre1.getSelectedIndex();

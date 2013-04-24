@@ -2,6 +2,7 @@ package de.jClipCorn.gui.log;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.CCTime;
@@ -16,10 +17,10 @@ public class CCLogElement {
 	private final static String EXCLUSION_CLASS = "CCLog"; //$NON-NLS-1$
 	private final static String FATAL_ERROR_MSG = LocaleBundle.getString("LogMessage.ErrorTerminating"); //$NON-NLS-1$
 
-	public String text;
-	public CCLogType type;
-	public ArrayList<StackTraceElement> sTrace;
-	public CCTime time;
+	private String text;
+	private CCLogType type;
+	private List<StackTraceElement> sTrace;
+	private CCTime time;
 
 	public CCLogElement() {
 		type = CCLogType.LOG_ELEM_UNDEFINED;
@@ -95,13 +96,16 @@ public class CCLogElement {
 	}
 
 	private String getFormattedStackTrace() {
-		String s = ""; //$NON-NLS-1$
+		StringBuilder stbuilder = new StringBuilder();
 		for (StackTraceElement ste : sTrace) {
 			if (! ste.getClassName().endsWith("." + EXCLUSION_CLASS)) { //$NON-NLS-1$
-				s += formatStackTraceElement(ste);
+				stbuilder.append(formatStackTraceElement(ste));
 			}
 		}
-		return s.substring(0, s.length() - 1);
+		
+		stbuilder.deleteCharAt(stbuilder.length() - 1);
+		
+		return stbuilder.toString();
 	}
 
 	private String getCallerTrace() {
@@ -119,5 +123,9 @@ public class CCLogElement {
 		} else {
 			return "\tat " + ste.getClassName() + "." + ste.getMethodName() + "\n";   //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
 		}
+	}
+	
+	public boolean isType(CCLogType t) {
+		return type == t;
 	}
 }

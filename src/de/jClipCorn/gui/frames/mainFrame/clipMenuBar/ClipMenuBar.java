@@ -24,9 +24,8 @@ public class ClipMenuBar extends JMenuBar {
 	private void createMenuBar() {
 		CCActionTree aTree = CCActionTree.getInstance();
 
-		Iterator<CCActionElement> it = aTree.getRoot().getChildren();
 
-		while (it.hasNext()) {
+		for (Iterator<CCActionElement> it = aTree.getRoot().getChildren(); it.hasNext();) {
 			final CCActionElement el = it.next();
 
 			if (el.isVisible()) {
@@ -45,9 +44,9 @@ public class ClipMenuBar extends JMenuBar {
 	}
 
 	private void createSubMenu(JMenu owner, CCActionElement oel) {
-		Iterator<CCActionElement> it = oel.getChildren();
+		
 
-		while (it.hasNext()) {
+		for (Iterator<CCActionElement> it = oel.getChildren(); it.hasNext();) {
 			final CCActionElement el = it.next();
 
 			if (el.isVisible()) {

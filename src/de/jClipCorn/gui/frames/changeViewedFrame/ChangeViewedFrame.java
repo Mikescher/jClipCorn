@@ -133,8 +133,8 @@ public class ChangeViewedFrame extends JFrame {
 			return;
 		}
 		
-		CCMovie m = (CCMovie) movielist.getDatabaseElementBySort(position);
-		m.setViewed(viewed);
+		CCMovie mov = (CCMovie) movielist.getDatabaseElementBySort(position);
+		mov.setViewed(viewed);
 		
 		nextMovie();
 	}
@@ -145,18 +145,18 @@ public class ChangeViewedFrame extends JFrame {
 		if (position < movielist.getElementCount()) {
 			CCDatabaseElement del = movielist.getDatabaseElementBySort(position);
 			if (del.isMovie()) {
-				CCMovie m = (CCMovie) del;
+				CCMovie mov = (CCMovie) del;
 				
 				if (cbOnlyUnviewed.isSelected()) {
-					if (m.isViewed()) {
+					if (mov.isViewed()) {
 						nextMovie();
 						return;
 					}
 				}
 				
-				lblCover.setIcon(m.getCoverIcon());
-				lblCurrent.setIcon(CachedResourceLoader.getImageIcon((m.isViewed() ? (Resources.ICN_TABLE_VIEWED_TRUE) : (Resources.ICN_TABLE_VIEWED_FALSE))));
-				lblTitle.setText(m.getCompleteTitle());
+				lblCover.setIcon(mov.getCoverIcon());
+				lblCurrent.setIcon(CachedResourceLoader.getImageIcon((mov.isViewed() ? (Resources.ICN_TABLE_VIEWED_TRUE) : (Resources.ICN_TABLE_VIEWED_FALSE))));
+				lblTitle.setText(mov.getCompleteTitle());
 			} else {
 				nextMovie();
 				return;

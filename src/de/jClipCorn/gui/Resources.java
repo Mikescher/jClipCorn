@@ -1,10 +1,11 @@
 package de.jClipCorn.gui;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @SuppressWarnings("nls")
 public class Resources {
-	private static ArrayList<String> icn_ressources = new ArrayList<>();
+	private static List<String> icn_ressources = new ArrayList<>();
 	
 	// ##############################################  <COMMON>  #############################################
 	public final static String IMG_FRAME_ICON 			= registerIMG("/app.png");

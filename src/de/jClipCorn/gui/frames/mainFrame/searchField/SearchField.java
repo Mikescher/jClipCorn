@@ -46,17 +46,17 @@ public class SearchField extends JTextField implements FocusListener, DocumentLi
 	}
 	
 	private Color getInactiveColor() {
-		Color c = UIManager.getColor("TextField.foreground"); //$NON-NLS-1$
-		int r = c.getRed();
-		int g = c.getGreen();
-		int b = c.getBlue();
+		Color c1 = UIManager.getColor("TextField.foreground"); //$NON-NLS-1$
+		int r1 = c1.getRed();
+		int g1 = c1.getGreen();
+		int b1 = c1.getBlue();
 		
 		Color c2 = UIManager.getColor("TextPane.background"); //$NON-NLS-1$
 		int r2 = c2.getRed();
 		int g2 = c2.getGreen();
 		int b2 = c2.getBlue();
 		
-		return new Color((r+r2)/2, (g+g2)/2, (b+b2)/2);
+		return new Color((r1 + r2) / 2, (g1 + g2) / 2, (b1 + b2) / 2);
 	}
 
 	public void reset() {

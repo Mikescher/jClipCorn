@@ -45,16 +45,12 @@ public class ClipCharSortSelector extends JToolBar {
 	}
 	
 	private void createButtons() {
-		int i;	
-		
-		for(i = 0; i < BUTTONCOUNT; i++) {
+		for(int i = 0; i < BUTTONCOUNT; i++) {
 			buttons[i] = new JButton(captions[i]);
 		}
 	}
 	
 	private void createLayout() {
-		int i;
-		
 		this.setLayout(layout = new GroupLayout(this));
 
 		setFloatable(false);
@@ -64,7 +60,7 @@ public class ClipCharSortSelector extends JToolBar {
 		
 		boolean isSubst = LookAndFeelManager.isSubstance();
 		
-		for(i = 0; i < BUTTONCOUNT; i++) {
+		for(int i = 0; i < BUTTONCOUNT; i++) {
 			if (isSubst) {
 				hGroup.addComponent(buttons[i], sizes[i], buttons[i].getPreferredSize().width, Short.MAX_VALUE);
 				pGroup.addComponent(buttons[i], 0, buttons[i].getPreferredSize().height, Short.MAX_VALUE);

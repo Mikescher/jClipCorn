@@ -12,7 +12,7 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 public class SerTableModel extends AbstractTableModel implements TableModelRowColorInterface{
 	private static final long serialVersionUID = -2056843389761330885L;
 
-	private static final String[] columnNames = { LocaleBundle.getString("PreviewSeriesFrame.serTable.Episode"), //$NON-NLS-1$
+	private static final String[] COLUMN_NAMES = { LocaleBundle.getString("PreviewSeriesFrame.serTable.Episode"), //$NON-NLS-1$
 			LocaleBundle.getString("PreviewSeriesFrame.serTable.Name"), //$NON-NLS-1$
 			"", //$NON-NLS-1$
 			LocaleBundle.getString("PreviewSeriesFrame.serTable.Lastviewed"), //$NON-NLS-1$
@@ -32,25 +32,27 @@ public class SerTableModel extends AbstractTableModel implements TableModelRowCo
 
 	@Override
 	public String getColumnName(int col) {
-		return columnNames[col].toString();
+		return COLUMN_NAMES[col].toString();
 	}
 
 	@Override
 	public int getColumnCount() {
-		return columnNames.length;
+		return COLUMN_NAMES.length;
 	}
 
 	@Override
 	public int getRowCount() {
-		if (season == null)
+		if (season == null) {
 			return 0;
+		}
 		return season.getEpisodeCount();
 	}
 
 	@Override
 	public Object getValueAt(int row, int col) {
-		if (season == null)
+		if (season == null) {
 			return ""; //$NON-NLS-1$
+		}
 
 		CCEpisode ep = season.getEpisode(row);
 

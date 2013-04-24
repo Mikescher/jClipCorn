@@ -74,6 +74,6 @@ public class CCMovieZyklus {
 	
 	@Override 
 	public int hashCode() {
-		return title.hashCode()*(zyklusNmbr+2);
+		return title.hashCode() * (zyklusNmbr + 2);
 	}
 }

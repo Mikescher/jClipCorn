@@ -11,8 +11,8 @@ import javax.swing.table.TableModel;
 public class SFixTable extends JTable {
 	private static final long serialVersionUID = 1082882838948078289L;
 	
-	boolean pressed = false;
-	int  currSRow = -100;
+	private boolean pressed = false;
+	private int currSRow = -100;
 	
 	public SFixTable(TableModel dm) {
 		super(dm);

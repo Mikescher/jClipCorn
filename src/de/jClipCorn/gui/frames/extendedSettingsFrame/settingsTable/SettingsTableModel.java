@@ -18,7 +18,7 @@ import de.jClipCorn.util.CCDate;
 public class SettingsTableModel extends AbstractTableModel{
 	private static final long serialVersionUID = 1222130050102832876L;
 
-	private static final String[] columnNames = {
+	private static final String[] COLUMN_NAMES = {
 		LocaleBundle.getString("extendedSettingsFrame.COL_1"),  //$NON-NLS-1$
 		LocaleBundle.getString("extendedSettingsFrame.COL_2")   //$NON-NLS-1$
 	};
@@ -31,22 +31,22 @@ public class SettingsTableModel extends AbstractTableModel{
 	}
 	
 	@Override
-	public void setValueAt(Object value, int row, int col) {
-		CCProperty<?> p = properties.getPropertyList().get(row);
-		if (p instanceof CCBoolProperty) {
-			((CCBoolProperty)p).setValue((Boolean)value);
-		} else if (p instanceof CCDoubleProperty) {
-			((CCDoubleProperty)p).setValue((Double)value);
-		} else if (p instanceof CCIntProperty) {
-			((CCIntProperty)p).setValue((Integer)value);
-		} else if (p instanceof CCStringProperty) {
-			((CCStringProperty)p).setValue((String)value);
-		} else if (p instanceof CCDateProperty) {
-			((CCDateProperty)p).setValue((CCDate)value);
-		} else if (p instanceof CCKeyStrokeProperty) {
-			((CCKeyStrokeProperty)p).setValue((KeyStroke)value);
+	public void setValueAt(Object value, int row, int col) { //TODO Replace Code like this in ExtendedSettingsFrame with better Code (use CCProperty Methods)
+		CCProperty<?> prop = properties.getPropertyList().get(row);
+		if (prop instanceof CCBoolProperty) {
+			((CCBoolProperty)prop).setValue((Boolean)value);
+		} else if (prop instanceof CCDoubleProperty) {
+			((CCDoubleProperty)prop).setValue((Double)value);
+		} else if (prop instanceof CCIntProperty) {
+			((CCIntProperty)prop).setValue((Integer)value);
+		} else if (prop instanceof CCStringProperty) {
+			((CCStringProperty)prop).setValue((String)value);
+		} else if (prop instanceof CCDateProperty) {
+			((CCDateProperty)prop).setValue((CCDate)value);
+		} else if (prop instanceof CCKeyStrokeProperty) {
+			((CCKeyStrokeProperty)prop).setValue((KeyStroke)value);
 		}  else {
-			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.STEUnknownPropertyType", p.getClass().getSimpleName())); //$NON-NLS-1$
+			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.STEUnknownPropertyType", prop.getClass().getSimpleName())); //$NON-NLS-1$
 		}
 		
 		fireTableDataChanged();
@@ -54,7 +54,7 @@ public class SettingsTableModel extends AbstractTableModel{
 	
 	@Override
 	public String getColumnName(int col) {
-		return columnNames[col].toString();
+		return COLUMN_NAMES[col].toString();
 	}
 
 	@Override

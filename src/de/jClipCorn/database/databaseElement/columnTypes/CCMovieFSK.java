@@ -13,15 +13,15 @@ public enum CCMovieFSK {
 	RATING_III(3), // ab 16 Jahren
 	RATING_IV(4); // keine Jugendfreigabe
 
-	private final static String names[] = { LocaleBundle.getString("CCMovieFSK.FSK0"), //$NON-NLS-1$
+	private final static String NAMES[] = { LocaleBundle.getString("CCMovieFSK.FSK0"), //$NON-NLS-1$
 			LocaleBundle.getString("CCMovieFSK.FSK1"), //$NON-NLS-1$
 			LocaleBundle.getString("CCMovieFSK.FSK2"), //$NON-NLS-1$
 			LocaleBundle.getString("CCMovieFSK.FSK3"), //$NON-NLS-1$
 			LocaleBundle.getString("CCMovieFSK.FSK4") }; //$NON-NLS-1$
-	private final static int ages[] = { 0, 6, 12, 16, 18 };
+	private final static int AGES[] = { 0, 6, 12, 16, 18 };
 	private int id;
 
-	CCMovieFSK(int val) {
+	private CCMovieFSK(int val) {
 		id = val;
 	}
 
@@ -37,21 +37,21 @@ public enum CCMovieFSK {
 	}
 
 	public String asString() {
-		return names[asInt()];
+		return NAMES[asInt()];
 	}
 
 	public static String[] getList() {
-		return names;
+		return NAMES;
 	}
 
 	public static CCMovieFSK getNearest(int age) {
 		int val = -1;
 		int max = Integer.MAX_VALUE;
 
-		for (int i = 0; i < ages.length; i++) {
-			if (Math.abs(age - ages[i]) <= max) { // <= is used to prioritize the higher Ratings (Age=9 will result in FSK-12, rathrer than FSK-6)
+		for (int i = 0; i < AGES.length; i++) {
+			if (Math.abs(age - AGES[i]) <= max) { // <= is used to prioritize the higher Ratings (Age=9 will result in FSK-12, rathrer than FSK-6)
 				val = i;
-				max = Math.abs(age - ages[i]);
+				max = Math.abs(age - AGES[i]);
 			}
 		}
 

@@ -10,6 +10,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
@@ -251,7 +252,7 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler {
 		pnlInfo.add(lblEpisode);
 
 		spnEpisode = new JSpinner();
-		spnEpisode.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(1)));
+		spnEpisode.setModel(new SpinnerNumberModel(0, 0, null, 1));
 		spnEpisode.setBounds(74, 49, 212, 20);
 		pnlInfo.add(spnEpisode);
 
@@ -409,7 +410,7 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler {
 		pnlEdit.add(btnSide_01);
 
 		spnSide_01 = new JSpinner();
-		spnSide_01.setModel(new SpinnerNumberModel(new Integer(1), new Integer(0), null, new Integer(1)));
+		spnSide_01.setModel(new SpinnerNumberModel(1, 0, null, 1));
 		spnSide_01.setBounds(271, 24, 75, 20);
 		pnlEdit.add(spnSide_01);
 
@@ -424,7 +425,7 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler {
 		pnlEdit.add(btnSide_02);
 
 		spnSide_02 = new JSpinner();
-		spnSide_02.setModel(new SpinnerNumberModel(new Integer(1), null, null, new Integer(1)));
+		spnSide_02.setModel(new SpinnerNumberModel(1, null, null, 1));
 		spnSide_02.setBounds(271, 60, 75, 20);
 		pnlEdit.add(spnSide_02);
 
@@ -552,7 +553,7 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler {
 		pnlEdit.add(btnSide_12);
 
 		spnSideLength = new JSpinner();
-		spnSideLength.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(1)));
+		spnSideLength.setModel(new SpinnerNumberModel(0, 0, null, 1));
 		spnSideLength.setBounds(234, 468, 112, 20);
 		pnlEdit.add(spnSideLength);
 
@@ -681,7 +682,7 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler {
 			return false;
 		}
 
-		ArrayList<UserDataProblem> problems = new ArrayList<>();
+		List<UserDataProblem> problems = new ArrayList<>();
 		boolean probvalue = (!check) || checkUserData(problems);
 
 		if (!probvalue) {
@@ -711,7 +712,7 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler {
 		return true;
 	}
 
-	public boolean checkUserData(ArrayList<UserDataProblem> ret) {
+	public boolean checkUserData(List<UserDataProblem> ret) {
 		CCEpisode sel = getSelectedEpisode();
 
 		String title = edTitle.getText();
@@ -724,7 +725,7 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler {
 		long fsize = (long) spnSize.getValue();
 		int quality = cbxQuality.getSelectedIndex();
 		String csExtn = CCMovieFormat.find(cbxFormat.getSelectedIndex()).asString();
-		String csExta = CCMovieFormat.find(cbxFormat.getSelectedIndex()).asString_Alt();
+		String csExta = CCMovieFormat.find(cbxFormat.getSelectedIndex()).asStringAlt();
 
 		String part = edPart.getText();
 
@@ -788,11 +789,9 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler {
 	}
 
 	public void setFilepath(String t) {
-		String pt;
+		String pt = t;
 		if (CCProperties.getInstance().PROP_ADD_MOVIE_RELATIVE_AUTO.getValue()) {
 			pt = PathFormatter.getRelative(t);
-		} else {
-			pt = t;
 		}
 
 		edPart.setText(pt);
@@ -834,7 +833,7 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler {
 		File[] ff = massVideoFileChooser.getSelectedFiles();
 
 		for (int i = 0; i < ff.length; i++) {
-			String p = ff[i].getAbsolutePath();
+			String abspath = ff[i].getAbsolutePath();
 
 			int epid = parent.getNewUnusedEpisodeNumber();
 
@@ -842,16 +841,16 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler {
 
 			ep.beginUpdating();
 
-			ep.setTitle(PathFormatter.getFilename(p));
+			ep.setTitle(PathFormatter.getFilename(abspath));
 			ep.setEpisodeNumber(epid);
 			ep.setViewed(false);
 			ep.setLength(0);
-			ep.setFormat(CCMovieFormat.getMovieFormat(PathFormatter.getExtension(p)));
+			ep.setFormat(CCMovieFormat.getMovieFormat(PathFormatter.getExtension(abspath)));
 			ep.setFilesize(ff[i].length());
 			if (CCProperties.getInstance().PROP_ADD_MOVIE_RELATIVE_AUTO.getValue()) {
-				ep.setPart(PathFormatter.getRelative(p));
+				ep.setPart(PathFormatter.getRelative(abspath));
 			} else {
-				ep.setPart(p);
+				ep.setPart(abspath);
 			}
 			ep.setQuality(CCMovieQuality.getQualityForSize(ep.getFilesize(), 1));
 			ep.setAddDate(new CCDate());

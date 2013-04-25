@@ -79,6 +79,4 @@ public class Main {
 
 //TODO Filmtrommel (mit netter Animation)
 
-//TODO Allgemeiner Öffnen Dialog (öffnet alles)
-
 //TODO (2.0) ONLINE SYNCHRONISATION / Online Profiles / View Ratings + Viewed from others ... ...

@@ -214,8 +214,8 @@ public class ExtendedSettingsFrame extends JFrame implements ListSelectionListen
 
 	@Override
 	public void valueChanged(ListSelectionEvent e) {
-		int sel = tabSettings.convertRowIndexToModel(tabSettings.getSelectedRow());
-		if (!e.getValueIsAdjusting() && sel >= 0) {
+		int sel;
+		if (tabSettings.getSelectedRow() >= 0 && !e.getValueIsAdjusting() && (sel = tabSettings.convertRowIndexToModel(tabSettings.getSelectedRow())) >= 0) {
 			CCProperty<?> prop = properties.getPropertyList().get(sel);
 			edName.setText(prop.getIdentifier());
 			edTyp.setText(prop.getTypeName());

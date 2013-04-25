@@ -2,7 +2,9 @@ package de.jClipCorn.properties.property;
 
 import java.awt.Component;
 
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
@@ -12,6 +14,7 @@ import de.jClipCorn.properties.exceptions.BooleanFormatException;
 public class CCBoolProperty extends CCProperty<Boolean> {
 	public final static String TYPE_BOOL_TRUE = "true"; //$NON-NLS-1$
 	public final static String TYPE_BOOL_FALSE = "false"; //$NON-NLS-1$
+	private final static String[] BOOL_LIST = { TYPE_BOOL_FALSE, TYPE_BOOL_TRUE };
 	
 	public CCBoolProperty(int cat, CCProperties prop, String ident, boolean standard) {
 		super(cat, Boolean.class, prop, ident, standard);
@@ -30,6 +33,23 @@ public class CCBoolProperty extends CCProperty<Boolean> {
 	@Override
 	public Boolean getComponentValue(Component c) {
 		return ((JCheckBox)c).isSelected();
+	}
+	
+	@Override
+	public Component getAlternativeComponent() {
+		return new JComboBox<>(new DefaultComboBoxModel<>(BOOL_LIST));
+	}
+	
+	@Override
+	@SuppressWarnings("unchecked")
+	public void setAlternativeComponentValueToValue(Component c, Boolean val) {
+		((JComboBox<String>)c).setSelectedIndex((val) ? (1) : (0));
+	}
+	
+	@Override
+	@SuppressWarnings("unchecked")
+	public Boolean getAlternativeComponentValue(Component c) {
+		return ((JComboBox<String>)c).getSelectedIndex() == 1;
 	}
 
 	@Override

@@ -1,19 +1,12 @@
 package de.jClipCorn.gui.frames.extendedSettingsFrame.settingsTable;
 
-import javax.swing.KeyStroke;
+import java.awt.Component;
+
 import javax.swing.table.AbstractTableModel;
 
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.properties.CCProperties;
-import de.jClipCorn.properties.property.CCBoolProperty;
-import de.jClipCorn.properties.property.CCDateProperty;
-import de.jClipCorn.properties.property.CCDoubleProperty;
-import de.jClipCorn.properties.property.CCIntProperty;
-import de.jClipCorn.properties.property.CCKeyStrokeProperty;
 import de.jClipCorn.properties.property.CCProperty;
-import de.jClipCorn.properties.property.CCStringProperty;
-import de.jClipCorn.util.CCDate;
 
 public class SettingsTableModel extends AbstractTableModel{
 	private static final long serialVersionUID = 1222130050102832876L;
@@ -31,25 +24,13 @@ public class SettingsTableModel extends AbstractTableModel{
 	}
 	
 	@Override
-	public void setValueAt(Object value, int row, int col) { //TODO Replace Code like this in ExtendedSettingsFrame with better Code (use CCProperty Methods)
-		CCProperty<?> prop = properties.getPropertyList().get(row);
-		if (prop instanceof CCBoolProperty) {
-			((CCBoolProperty)prop).setValue((Boolean)value);
-		} else if (prop instanceof CCDoubleProperty) {
-			((CCDoubleProperty)prop).setValue((Double)value);
-		} else if (prop instanceof CCIntProperty) {
-			((CCIntProperty)prop).setValue((Integer)value);
-		} else if (prop instanceof CCStringProperty) {
-			((CCStringProperty)prop).setValue((String)value);
-		} else if (prop instanceof CCDateProperty) {
-			((CCDateProperty)prop).setValue((CCDate)value);
-		} else if (prop instanceof CCKeyStrokeProperty) {
-			((CCKeyStrokeProperty)prop).setValue((KeyStroke)value);
-		}  else {
-			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.STEUnknownPropertyType", prop.getClass().getSimpleName())); //$NON-NLS-1$
-		}
+	public void setValueAt(Object value, int row, int col) {
+		CCProperty<Object> prop = properties.getPropertyList().get(row);
+		if (prop != null) {
+			prop.setValue(prop.getAlternativeComponentValue((Component)value));
 		
-		fireTableDataChanged();
+			fireTableDataChanged();
+		}
 	}
 	
 	@Override

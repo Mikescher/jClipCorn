@@ -58,6 +58,18 @@ public abstract class CCProperty<T extends Object> {
 		return LocaleBundle.getString("Settingsframe.tabbedPnl." + getIdentifier()); //$NON-NLS-1$
 	}
 	
+	public Component getAlternativeComponent() {
+		return getComponent();
+	}
+	
+	public void setAlternativeComponentValueToValue(Component c, T val) {
+		setComponentValueToValue(c, val);
+	}
+	
+	public T getAlternativeComponentValue(Component c) {
+		return getComponentValue(c);
+	}
+	
 	public abstract Component getComponent();
 	public abstract void setComponentValueToValue(Component c, T val);
 	public abstract T getComponentValue(Component c);

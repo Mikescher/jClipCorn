@@ -4,4 +4,4 @@ in Git Console
 
 Open in Notepad++
 go to Hex View -> Remove BOM (if there)
-Convert to UTF8 (with BOM)
+Convert to ANSI

@@ -1,4 +1,4 @@
-﻿############ 2013-04-25: 1.7 Features
+############ 2013-04-25: 1.7 Features
 
 Add Cache-Function to Movieplayer (it remembers the VLC-Path)
 Removed the Cancel-Button from ParseImDBDialog

@@ -1,5 +1,6 @@
 package de.jClipCorn.gui.frames.compareDatabaseFrame;
 
+import java.awt.Component;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -12,6 +13,7 @@ import org.jdom2.Element;
 import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
 
+import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.util.ProgressCallbackListener;
 
@@ -47,11 +49,11 @@ public class DatabaseComparator {
 			
 			if (ce == null) {
 				ce = new CompareElement(childs1.get(i).getAttributeValue("title"), childs1.get(i).getAttributeValue("zyklus"), Integer.parseInt(childs1.get(i).getAttributeValue("zyklusnumber")), Integer.parseInt(childs1.get(i).getAttributeValue("language")));
-				ce.setDB1(childs1.get(i).getAttributeValue("coverhash"), childs1.get(i).getAttributeValue("filehash"), childs1.get(i).getAttributeValue("part_0"));
+				ce.setDB1(childs1.get(i).getAttributeValue("coverhash"), childs1.get(i).getAttributeValue("filehash"), childs1.get(i).getAttributeValue("part_0"), Integer.parseInt(childs1.get(i).getAttributeValue("localid")));
 				
 				resultlist.add(ce);
 			} else {
-				ce.setDB1(childs1.get(i).getAttributeValue("coverhash"), childs1.get(i).getAttributeValue("filehash"), childs1.get(i).getAttributeValue("part_0"));
+				ce.setDB1(childs1.get(i).getAttributeValue("coverhash"), childs1.get(i).getAttributeValue("filehash"), childs1.get(i).getAttributeValue("part_0"), Integer.parseInt(childs1.get(i).getAttributeValue("localid")));
 			}
 			
 			pcl.step();
@@ -62,11 +64,11 @@ public class DatabaseComparator {
 			
 			if (ce == null) {
 				ce = new CompareElement(childs2.get(i).getAttributeValue("title"), childs2.get(i).getAttributeValue("zyklus"), Integer.parseInt(childs2.get(i).getAttributeValue("zyklusnumber")), Integer.parseInt(childs2.get(i).getAttributeValue("language")));
-				ce.setDB2(childs2.get(i).getAttributeValue("coverhash"), childs2.get(i).getAttributeValue("filehash"), childs2.get(i).getAttributeValue("part_0"));
+				ce.setDB2(childs2.get(i).getAttributeValue("coverhash"), childs2.get(i).getAttributeValue("filehash"), childs2.get(i).getAttributeValue("part_0"), Integer.parseInt(childs2.get(i).getAttributeValue("localid")));
 				
 				resultlist.add(ce);
 			} else {
-				ce.setDB2(childs2.get(i).getAttributeValue("coverhash"), childs2.get(i).getAttributeValue("filehash"), childs2.get(i).getAttributeValue("part_0"));
+				ce.setDB2(childs2.get(i).getAttributeValue("coverhash"), childs2.get(i).getAttributeValue("filehash"), childs2.get(i).getAttributeValue("part_0"), Integer.parseInt(childs2.get(i).getAttributeValue("localid")));
 			}
 			
 			pcl.step();
@@ -107,5 +109,9 @@ public class DatabaseComparator {
 		}
 		
 		return null;
+	}
+	
+	public static void openFile(File f, Component owner, CCMovieList mlist) {
+		new CompareDatabaseFrame(owner, mlist, f).setVisible(true);
 	}
 }

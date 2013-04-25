@@ -26,8 +26,13 @@ import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTyp;
+import de.jClipCorn.gui.frames.addMovieFrame.AddMovieFrame;
+import de.jClipCorn.gui.frames.importElementsFrame.ImportElementsFrame;
+import de.jClipCorn.gui.frames.mainFrame.MainFrame;
+import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.properties.CCProperties;
+import de.jClipCorn.util.DialogHelper;
 import de.jClipCorn.util.PathFormatter;
 import de.jClipCorn.util.TextFileUtils;
 
@@ -38,7 +43,8 @@ public class ExportHelper {
 	public final static String EXTENSION_FULLEXPORT = "jxmlbkp"; // = jXMLBackup   						//$NON-NLS-1$ 
 	public final static String EXTENSION_SINGLEEXPORT = "jsccexport"; // = jSingleClipCornExport 		//$NON-NLS-1$
 	public final static String EXTENSION_MULTIPLEEXPORT = "jmccexport"; // = jMultipleClipCornExport 	//$NON-NLS-1$
-	public final static String EXTENSION_CCBACKUP = "xml"; // OLD Clipcorn Backup   					//$NON-NLS-1$ 
+	public final static String EXTENSION_CCBACKUP = "xml"; // OLD Clipcorn Backup   					//$NON-NLS-1$
+	public final static String EXTENSION_COMPAREFILE = "jcccf"; //$NON-NLS-1$
 	
 	public static void zipDir(File owner, File zipDir, ZipOutputStream zos, boolean recursively) {
 		try {
@@ -267,5 +273,62 @@ public class ExportHelper {
 		}
 		
 		return null;
+	}
+	
+	public static void openSingleElementFile(File f, MainFrame owner, CCMovieList movielist, CCMovieTyp forceTyp) {
+		try {
+			String xml = TextFileUtils.readTextFile(f);
+			CCMovieTyp type = null;
+			if (forceTyp != null && (type = ExportHelper.getTypOfFirstElementOfExport(xml)) != forceTyp) {
+				CCLog.addError(LocaleBundle.getString("LogMessage.FormatErrorInExport")); //$NON-NLS-1$
+				return;
+			}
+			
+			int methodval = 0;
+			if (type == CCMovieTyp.MOVIE) {
+				methodval = DialogHelper.showLocaleOptions(owner, "ExportHelper.dialogs.importDirect", 1); //$NON-NLS-1$
+			}
+			
+			boolean resetDate = DialogHelper.showLocaleYesNo(owner, "ExportHelper.dialogs.resetDate"); //$NON-NLS-1$
+			boolean resetViewed = DialogHelper.showLocaleYesNo(owner, "ExportHelper.dialogs.resetViewed"); //$NON-NLS-1$
+			
+			if (methodval == 0) { // Direct
+				ExportHelper.importSingleElement(movielist, xml, resetDate, resetViewed);
+			} else if (methodval == 1) { // Edit & Add
+				Element value = ExportHelper.getFirstElementOfExport(xml);
+				AddMovieFrame amf = new AddMovieFrame(owner, movielist);
+				amf.parseFromXML(value, resetDate, resetViewed);
+				amf.setVisible(true);
+			}
+		} catch (IOException e) {
+			CCLog.addError(LocaleBundle.getString("LogMessage.FormatErrorInExport"), e); //$NON-NLS-1$
+		}
+	}
+	
+	public static void openFullBackupFile(final File f, final MainFrame owner, final CCMovieList movielist) {
+		if (DialogHelper.showLocaleYesNo(owner, "Dialogs.LoadBackup")) { //$NON-NLS-1$
+			new Thread(new Runnable() {
+				@Override
+				public void run() {
+					owner.beginBlockingIntermediate();
+					
+					ExportHelper.restoreDatabaseFromBackup(f, movielist);
+					owner.getClipTable().autoResize();
+					
+					owner.endBlockingIntermediate();
+				}
+			}, "THREAD_IMPORT_JXMLBKP").start(); //$NON-NLS-1$
+		}
+	}
+	
+	public static void openMultipleElementFile(File f, MainFrame owner, CCMovieList movielist) {
+		try {
+			String xml = TextFileUtils.readTextFile(f);
+			
+			ImportElementsFrame ief = new ImportElementsFrame(owner, xml, movielist);
+			ief.setVisible(true);
+		} catch (IOException e) {
+			CCLog.addError(e);
+		}
 	}
 }

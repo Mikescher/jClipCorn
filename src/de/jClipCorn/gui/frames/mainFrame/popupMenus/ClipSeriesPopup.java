@@ -10,7 +10,7 @@ public class ClipSeriesPopup extends ClipPopupMenu {
 
 	@SuppressWarnings("nls")
 	@Override
-	protected void init() { //TODO Add Things from ActionTree
+	protected void init() {
 		
 		addAction("PrevSeries");
 		
@@ -19,6 +19,13 @@ public class ClipSeriesPopup extends ClipPopupMenu {
 		//#############
 		
 		addAction("AddSeason");
+		
+		//#############
+		addSeparator();
+		//#############
+		
+		addAction("ExportSingleSeries");
+		addAction("AddSeriesToExportList");
 		
 		//#############
 		addSeparator();

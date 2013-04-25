@@ -9,7 +9,7 @@ public class ClipMoviePopup extends ClipPopupMenu {
 
 	@SuppressWarnings("nls")
 	@Override
-	protected void init() { //TODO Add Things from ActionTree
+	protected void init() {
 		addAction("PlayMovie");
 		addAction("PrevMovie");
 		
@@ -22,6 +22,13 @@ public class ClipMoviePopup extends ClipPopupMenu {
 		
 		addAction("SetMovieViewed");
 		addAction("SetMovieUnviewed");
+		
+		//#############
+		addSeparator();
+		//#############
+		
+		addAction("ExportSingleMovie");
+		addAction("AddMovieToExportList");
 		
 		//#############
 		addSeparator();

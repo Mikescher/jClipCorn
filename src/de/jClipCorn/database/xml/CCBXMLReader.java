@@ -1,5 +1,6 @@
 package de.jClipCorn.database.xml;
 
+import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Iterator;
@@ -18,8 +19,11 @@ import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieGenre;
+import de.jClipCorn.gui.frames.mainFrame.MainFrame;
+import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.util.CCDate;
+import de.jClipCorn.util.DialogHelper;
 import de.jClipCorn.util.RomanNumberFormatter;
 
 @SuppressWarnings("nls")
@@ -267,5 +271,24 @@ public class CCBXMLReader {
 			}
 		}
 		return -1;
+	}
+	
+	public static void openFile(final File f, final MainFrame owner) {
+		if (DialogHelper.showLocaleYesNo(owner, "Dialogs.LoadXML")) { //$NON-NLS-1$
+			new Thread(new Runnable() {
+				@Override
+				public void run() {
+					owner.beginBlockingIntermediate();
+
+					CCBXMLReader xmlreader = new CCBXMLReader(f.getAbsolutePath(), owner.getMovielist());
+					if (!xmlreader.parse()) {
+						CCLog.addError(LocaleBundle.getString("LogMessage.CouldNotParseCCBXML")); //$NON-NLS-1$
+					}
+					owner.getClipTable().autoResize();
+
+					owner.endBlockingIntermediate();
+				}
+			}, "THREAD_PARSE_XML").start(); //$NON-NLS-1$
+		}
 	}
 }

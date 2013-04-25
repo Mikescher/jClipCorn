@@ -77,17 +77,8 @@ public class Main {
 //TODO DB als HTML "exportieren"
 //TODO Episodenguide in HTML/RTF/TXT exportieren
 
-//TODO Film als XML Exportieren (mit cover als data in xml)
-//TODO Mehrere Film als XML Exportieren (mit cover als data in xml)
-//TODO Alle geänderten Filme (CompareDBFrame) als XML Exportieren (mit cover als data in xml)
-//TODO Filme aus XML reimportieren
-
 //TODO Filmtrommel (mit netter Animation)
 
 //TODO Allgemeiner Öffnen Dialog (öffnet alles)
-
-//TODO Find Unused Classes
-//TODO Find Unused Methods
-//TODO CodePro AnalytiX (check dat all)
 
 //TODO (2.0) ONLINE SYNCHRONISATION / Online Profiles / View Ratings + Viewed from others ... ...

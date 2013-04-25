@@ -6,6 +6,8 @@ import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.Box;
 import javax.swing.JButton;
@@ -15,8 +17,12 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
+import javax.swing.RowSorter;
+import javax.swing.RowSorter.SortKey;
+import javax.swing.SortOrder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.table.TableRowSorter;
 
 import com.jgoodies.forms.factories.FormFactory;
 import com.jgoodies.forms.layout.ColumnSpec;
@@ -44,6 +50,7 @@ public class ExtendedSettingsFrame extends JFrame implements ListSelectionListen
 	private JScrollPane pnlScroll;
 	private JTable tabSettings;
 	private SettingsTableModel lsModel = null;
+	private TableRowSorter<SettingsTableModel> rowsorter;
 	private	SettingsTableEditor lsEditor;
 	private JPanel pnlBottomTopInside;
 	private JPanel pnlBottomBottom;
@@ -189,6 +196,12 @@ public class ExtendedSettingsFrame extends JFrame implements ListSelectionListen
 		tabSettings.setFillsViewportHeight(true);
 		tabSettings.getSelectionModel().addListSelectionListener(this);
 		tabSettings.getColumnModel().getColumn(1).setCellEditor(lsEditor = new SettingsTableEditor(properties));
+		tabSettings.setRowSorter(rowsorter = new TableRowSorter<>());
+		rowsorter.setModel(lsModel);
+		List<SortKey> sk = new ArrayList<>();
+    	sk.add( new RowSorter.SortKey(0, SortOrder.ASCENDING) );
+		rowsorter.setSortKeys(sk);
+		rowsorter.sort();
 		pnlScroll.setViewportView(tabSettings);
 
 		pack();

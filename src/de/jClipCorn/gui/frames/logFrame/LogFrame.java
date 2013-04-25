@@ -49,7 +49,6 @@ public class LogFrame extends JFrame implements CCLogChangedListener{ //TODO Fir
 	private JScrollPane spnUndefiniedList;
 
 	public LogFrame(Component owner) {
-		setMinimumSize(new Dimension(1000, 350));
 		initGUI();
 		setLocationRelativeTo(owner);
 		setModels();
@@ -62,6 +61,8 @@ public class LogFrame extends JFrame implements CCLogChangedListener{ //TODO Fir
 		setIconImage(CachedResourceLoader.getImage(Resources.IMG_FRAME_ICON));
 		setTitle(LocaleBundle.getString("CCLogFrame.this.title")); //$NON-NLS-1$
 		getContentPane().setLayout(new BorderLayout(0, 0));
+		
+		setMinimumSize(new Dimension(1000, 350));
 		
 		tpnlMainPanel = new JTabbedPane(JTabbedPane.TOP);
 		getContentPane().add(tpnlMainPanel);

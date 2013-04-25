@@ -167,17 +167,17 @@ public class CCActionElement {
 		}
 	}
 	
-	public void printTree() {
-		//TODO PrintTree
-		//|>AAAAA
-		//     |>BBB
-		// 	  	  |>BBB
-		// 	  	  |>BBB
-		// 	  |>CCC
-		// 	  |>DDD
-		// 	  	  |-BBB
-		// 	  |>EEE
-		//|>FFF
+	public void printTree(int deep) {
+		StringBuilder build = new StringBuilder();
+		for (int i = 0; i < deep; i++) {
+			build.append("    "); //$NON-NLS-1$
+		}
+		build.append("|>"); //$NON-NLS-1$
+		build.append(name);
+		System.out.println(build.toString());
+		for (CCActionElement el : children) {
+			el.printTree(deep+1);
+		}
 	}
 	
 	public KeyStroke getKeyStroke() {

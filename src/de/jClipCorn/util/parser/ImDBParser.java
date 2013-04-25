@@ -7,12 +7,13 @@ import java.util.Map;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFSK;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieGenreList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTyp;
+import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.DoubleString;
 
 public class ImDBParser {
-	public final static ImDBLanguage LANGUAGE = ImDBLanguage.ENGLISH;
+	public final static ImDBLanguage LANGUAGE = ImDBLanguage.find(CCProperties.getInstance().PROP_PARSEIMDB_LANGUAGE.getValue());
 	
-	public static String getSearchURL(String title, CCMovieTyp typ) { // TODO Invisible Setting for German / Englisch
+	public static String getSearchURL(String title, CCMovieTyp typ) {
 		switch (LANGUAGE) {
 		case GERMAN:
 			return ImDBParser_Ger.getSearchURL(title, typ);

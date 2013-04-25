@@ -5,13 +5,10 @@ import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.io.File;
-import java.io.IOException;
 
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.KeyStroke;
-
-import org.jdom2.Element;
 
 import de.jClipCorn.Main;
 import de.jClipCorn.database.CCMovieList;
@@ -33,11 +30,11 @@ import de.jClipCorn.gui.frames.changeScoreFrame.ChangeScoreFrame;
 import de.jClipCorn.gui.frames.changeViewedFrame.ChangeViewedFrame;
 import de.jClipCorn.gui.frames.checkDatabaseFrame.CheckDatabaseFrame;
 import de.jClipCorn.gui.frames.compareDatabaseFrame.CompareDatabaseFrame;
+import de.jClipCorn.gui.frames.compareDatabaseFrame.DatabaseComparator;
 import de.jClipCorn.gui.frames.editMovieFrame.EditMovieFrame;
 import de.jClipCorn.gui.frames.editSeriesFrame.EditSeriesFrame;
 import de.jClipCorn.gui.frames.exportElementsFrame.ExportElementsFrame;
 import de.jClipCorn.gui.frames.filenameRulesFrame.FilenameRuleFrame;
-import de.jClipCorn.gui.frames.importElementsFrame.ImportElementsFrame;
 import de.jClipCorn.gui.frames.logFrame.LogFrame;
 import de.jClipCorn.gui.frames.mainFrame.MainFrame;
 import de.jClipCorn.gui.frames.moveSeriesFrame.MoveSeriesDialog;
@@ -46,14 +43,11 @@ import de.jClipCorn.gui.frames.previewSeriesFrame.PreviewSeriesFrame;
 import de.jClipCorn.gui.frames.scanFolderFrame.ScanFolderFrame;
 import de.jClipCorn.gui.frames.searchFrame.SearchFrame;
 import de.jClipCorn.gui.frames.settingsFrame.SettingsFrame;
-import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.DialogHelper;
 import de.jClipCorn.util.FileChooserHelper;
 import de.jClipCorn.util.HTTPUtilities;
 import de.jClipCorn.util.PathFormatter;
-import de.jClipCorn.util.TextFileUtils;
 import de.jClipCorn.util.parser.ImDBParser;
 
 public class CCActionTree {
@@ -88,6 +82,14 @@ public class CCActionTree {
 		CCActionElement file = root.addChild(new CCActionElement("File", null, "ClipMenuBar.File", ""));
 		// #######################################################################################################
 
+		temp = file.addChild(new CCActionElement("Open", null, "ClipMenuBar.File.Open", null));
+		temp.addListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				onClickFileOpen();
+			}
+		});
+		
 		temp = file.addChild(new CCActionElement("Exit", null, "ClipMenuBar.File.Exit", Resources.ICN_MENUBAR_CLOSE));
 		temp.addListener(new ActionListener() {
 			@Override
@@ -184,7 +186,7 @@ public class CCActionTree {
 			}
 		});
 		
-		temp = movies.addChild(new CCActionElement("AddMovieToExportList", null, "ClipMenuBar.Movies.ExportMultiple", null)); //TODO Please give me icon :3
+		temp = movies.addChild(new CCActionElement("AddMovieToExportList", KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_DOWN_MASK), "ClipMenuBar.Movies.ExportMultiple", null)); //TODO Please give me icon :3
 		temp.addListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -252,7 +254,7 @@ public class CCActionTree {
 			}
 		});
 		
-		temp = series.addChild(new CCActionElement("AddSeriesToExportList", null, "ClipMenuBar.Series.ExportMultiple", null)); //TODO Please give me icon :3
+		temp = series.addChild(new CCActionElement("AddSeriesToExportList", KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_DOWN_MASK), "ClipMenuBar.Series.ExportMultiple", null)); //TODO Please give me icon :3
 		temp.addListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -537,10 +539,38 @@ public class CCActionTree {
 	// #######################################################################################################
 	// ############################################### EVENTS ################################################
 	// #######################################################################################################
-
-	private void onClickExtrasSettings() {
-		SettingsFrame sf = new SettingsFrame(owner, CCProperties.getInstance());
-		sf.setVisible(true);
+	
+	private void onClickFileOpen() {
+		final JFileChooser chooser = new JFileChooser();
+		chooser.setAcceptAllFileFilterUsed(false);
+		
+		chooser.setFileFilter(FileChooserHelper.createLocalFileFilter("ExportHelper.filechooser_all.description", ExportHelper.EXTENSION_FULLEXPORT, ExportHelper.EXTENSION_SINGLEEXPORT, ExportHelper.EXTENSION_MULTIPLEEXPORT, ExportHelper.EXTENSION_CCBACKUP, ExportHelper.EXTENSION_COMPAREFILE)); //$NON-NLS-1$
+		chooser.addChoosableFileFilter(FileChooserHelper.createLocalFileFilter("ExportHelper.filechooser_jxmlbkp.description", ExportHelper.EXTENSION_FULLEXPORT)); //$NON-NLS-1$
+		chooser.addChoosableFileFilter(FileChooserHelper.createLocalFileFilter("ExportHelper.filechooser_jsccexport.description", ExportHelper.EXTENSION_SINGLEEXPORT)); //$NON-NLS-1$
+		chooser.addChoosableFileFilter(FileChooserHelper.createLocalFileFilter("ExportHelper.filechooser_jmccexport.description", ExportHelper.EXTENSION_MULTIPLEEXPORT)); //$NON-NLS-1$
+		chooser.addChoosableFileFilter(FileChooserHelper.createLocalFileFilter("ExportHelper.filechooser_ccbxml.description", ExportHelper.EXTENSION_CCBACKUP)); //$NON-NLS-1$
+		chooser.addChoosableFileFilter(FileChooserHelper.createLocalFileFilter("ExportHelper.filechooser_jcccf.description", ExportHelper.EXTENSION_COMPAREFILE)); //$NON-NLS-1$
+		
+		chooser.setCurrentDirectory(new File(PathFormatter.getRealSelfDirectory()));
+		
+		int returnval = chooser.showOpenDialog(owner);
+		
+		if (returnval == JFileChooser.APPROVE_OPTION) {
+			File file = chooser.getSelectedFile();
+			String extension = PathFormatter.getExtension(file.getAbsolutePath());
+			
+			if (extension.equalsIgnoreCase(ExportHelper.EXTENSION_FULLEXPORT)) {
+				ExportHelper.openFullBackupFile(chooser.getSelectedFile(), owner, movielist);
+			} else if (extension.equalsIgnoreCase(ExportHelper.EXTENSION_SINGLEEXPORT)) {
+				ExportHelper.openSingleElementFile(chooser.getSelectedFile(), owner, movielist, null);
+			} else if (extension.equalsIgnoreCase(ExportHelper.EXTENSION_MULTIPLEEXPORT)) {
+				ExportHelper.openMultipleElementFile(chooser.getSelectedFile(), owner, movielist);
+			} else if (extension.equalsIgnoreCase(ExportHelper.EXTENSION_CCBACKUP)) {
+				CCBXMLReader.openFile(chooser.getSelectedFile(), owner);
+			} else if (extension.equalsIgnoreCase(ExportHelper.EXTENSION_COMPAREFILE)) {
+				DatabaseComparator.openFile(chooser.getSelectedFile(), owner, movielist);
+			}
+		}
 	}
 	
 	private void onClickFileExit() {
@@ -550,27 +580,19 @@ public class CCActionTree {
 
 	private void onClickExtrasXML() {
 		final JFileChooser chooser = new JFileChooser();
-		chooser.setFileFilter(FileChooserHelper.createFileFilter("CCBackup-XML-File", ExportHelper.EXTENSION_CCBACKUP));  //$NON-NLS-1$
+		chooser.setFileFilter(FileChooserHelper.createLocalFileFilter("ExportHelper.filechooser_ccbxml.description", ExportHelper.EXTENSION_CCBACKUP));  //$NON-NLS-1$
 		chooser.setCurrentDirectory(new File(PathFormatter.getRealSelfDirectory()));
 
 		int returnval = chooser.showOpenDialog(owner);
 
-		if (returnval == JFileChooser.APPROVE_OPTION && DialogHelper.showLocaleYesNo(owner, "Dialogs.LoadXML")) { //$NON-NLS-1$
-			new Thread(new Runnable() {
-				@Override
-				public void run() {
-					owner.beginBlockingIntermediate();
-
-					CCBXMLReader xmlreader = new CCBXMLReader(chooser.getSelectedFile().getAbsolutePath(), owner.getMovielist());
-					if (!xmlreader.parse()) {
-						CCLog.addError(LocaleBundle.getString("LogMessage.CouldNotParseCCBXML")); //$NON-NLS-1$
-					}
-					owner.getClipTable().autoResize();
-
-					owner.endBlockingIntermediate();
-				}
-			}, "THREAD_PARSE_XML").start(); //$NON-NLS-1$
+		if (returnval == JFileChooser.APPROVE_OPTION) {
+			CCBXMLReader.openFile(chooser.getSelectedFile(), owner);
 		}
+	}
+	
+	private void onClickExtrasSettings() {
+		SettingsFrame sf = new SettingsFrame(owner, CCProperties.getInstance());
+		sf.setVisible(true);
 	}
 	
 	private void onClickExtrasScanFolder() {
@@ -666,29 +688,7 @@ public class CCActionTree {
 		int returnval = chooser.showOpenDialog(owner);
 
 		if (returnval == JFileChooser.APPROVE_OPTION) {
-			try {
-				String xml = TextFileUtils.readTextFile(chooser.getSelectedFile());
-				
-				if (ExportHelper.getTypOfFirstElementOfExport(xml) != CCMovieTyp.MOVIE) {
-					CCLog.addError(LocaleBundle.getString("LogMessage.FormatErrorInExport")); //$NON-NLS-1$
-					return;
-				}
-				int methodval = DialogHelper.showLocaleOptions(owner, "ExportHelper.dialogs.importDirect", 1); //$NON-NLS-1$
-				
-				boolean resetDate = DialogHelper.showLocaleYesNo(owner, "ExportHelper.dialogs.resetDate"); //$NON-NLS-1$
-				boolean resetViewed = DialogHelper.showLocaleYesNo(owner, "ExportHelper.dialogs.resetViewed"); //$NON-NLS-1$
-				
-				if (methodval == 0) { // Direct
-					ExportHelper.importSingleElement(movielist, xml, resetDate, resetViewed);
-				} else if (methodval == 1) { // Edit & Add
-					Element value = ExportHelper.getFirstElementOfExport(xml);
-					AddMovieFrame amf = new AddMovieFrame(owner, movielist);
-					amf.parseFromXML(value, resetDate, resetViewed);
-					amf.setVisible(true);
-				}
-			} catch (IOException e) {
-				CCLog.addError(LocaleBundle.getString("LogMessage.FormatErrorInExport"), e); //$NON-NLS-1$
-			}
+			ExportHelper.openSingleElementFile(chooser.getSelectedFile(), owner, movielist, CCMovieTyp.MOVIE);
 		}
 	}
 
@@ -745,18 +745,8 @@ public class CCActionTree {
 
 		int returnval = chooser.showOpenDialog(owner);
 
-		if (returnval == JFileChooser.APPROVE_OPTION && DialogHelper.showLocaleYesNo(owner, "Dialogs.LoadBackup")) { //$NON-NLS-1$
-			new Thread(new Runnable() {
-				@Override
-				public void run() {
-					owner.beginBlockingIntermediate();
-					
-					ExportHelper.restoreDatabaseFromBackup(chooser.getSelectedFile(), movielist);
-					owner.getClipTable().autoResize();
-					
-					owner.endBlockingIntermediate();
-				}
-			}, "THREAD_IMPORT_JXMLBKP").start(); //$NON-NLS-1$
+		if (returnval == JFileChooser.APPROVE_OPTION) {
+			ExportHelper.openFullBackupFile(chooser.getSelectedFile(), owner, movielist);
 		}
 	}
 	
@@ -768,14 +758,7 @@ public class CCActionTree {
 		int returnval = chooser.showOpenDialog(owner);
 
 		if (returnval == JFileChooser.APPROVE_OPTION) {
-			try {
-				String xml = TextFileUtils.readTextFile(chooser.getSelectedFile());
-				
-				ImportElementsFrame ief = new ImportElementsFrame(owner, xml, movielist);
-				ief.setVisible(true);
-			} catch (IOException e) {
-				CCLog.addError(e);
-			}
+			ExportHelper.openMultipleElementFile(chooser.getSelectedFile(), owner, movielist);
 		}
 	}
 	
@@ -849,29 +832,7 @@ public class CCActionTree {
 		int returnval = chooser.showOpenDialog(owner);
 
 		if (returnval == JFileChooser.APPROVE_OPTION) {
-			try {
-				String xml = TextFileUtils.readTextFile(chooser.getSelectedFile());
-				
-				int methodval = 0;
-				if (ExportHelper.getTypOfFirstElementOfExport(xml) != CCMovieTyp.SERIES) {
-					CCLog.addError(LocaleBundle.getString("LogMessage.FormatErrorInExport")); //$NON-NLS-1$
-					return;
-				}
-				
-				boolean resetDate = DialogHelper.showLocaleYesNo(owner, "ExportHelper.dialogs.resetDate"); //$NON-NLS-1$
-				boolean resetViewed = DialogHelper.showLocaleYesNo(owner, "ExportHelper.dialogs.resetViewed"); //$NON-NLS-1$
-				
-				if (methodval == 0) { // Direct
-					ExportHelper.importSingleElement(movielist, xml, resetDate, resetViewed);
-				} else if (methodval == 1) { // Edit & Add
-					Element value = ExportHelper.getFirstElementOfExport(xml);
-					AddMovieFrame amf = new AddMovieFrame(owner, movielist);
-					amf.parseFromXML(value, resetDate, resetViewed);
-					amf.setVisible(true);
-				}
-			} catch (IOException e) {
-				CCLog.addError(LocaleBundle.getString("LogMessage.FormatErrorInExport"), e); //$NON-NLS-1$
-			}
+			ExportHelper.openSingleElementFile(chooser.getSelectedFile(), owner, movielist, CCMovieTyp.SERIES);
 		}
 	}
 

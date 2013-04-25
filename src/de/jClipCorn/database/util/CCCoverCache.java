@@ -70,7 +70,7 @@ public class CCCoverCache {
 				if (! Main.DEBUG) {
 					CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CoverNotFound", name)); //$NON-NLS-1$
 				} else {
-					System.out.println("[DBG] Cover not found"); //$NON-NLS-1$
+					System.out.println(String.format("[DBG] Cover not found (%s)", name)); //$NON-NLS-1$
 				}
 				return CachedResourceLoader.getImage(Resources.IMG_COVER_NOTFOUND);
 			}

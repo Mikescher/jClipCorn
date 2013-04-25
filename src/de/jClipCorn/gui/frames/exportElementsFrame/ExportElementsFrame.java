@@ -20,6 +20,8 @@ import javax.swing.border.EmptyBorder;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.util.ExportHelper;
+import de.jClipCorn.gui.CachedResourceLoader;
+import de.jClipCorn.gui.Resources;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.DialogHelper;
 import de.jClipCorn.util.FileChooserHelper;
@@ -49,6 +51,7 @@ public class ExportElementsFrame extends JFrame {
 
 	private void initGUI() {
 		setTitle(LocaleBundle.getString("ExportElementsFrame.this.title")); //$NON-NLS-1$
+		setIconImage(CachedResourceLoader.getImage(Resources.IMG_FRAME_ICON));
 		setType(Type.UTILITY);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		contentPane = new JPanel();
@@ -127,5 +130,12 @@ public class ExportElementsFrame extends JFrame {
 	
 	public static void addElementToList(Component owner, CCMovieList movielist, CCDatabaseElement el) {
 		getVisibleInstance(owner, movielist).addElement(el);
+	}
+	
+	public static void clearAndDispose() {
+		if (instance != null) {
+			instance.dispose();
+			instance = null;
+		}
 	}
 }

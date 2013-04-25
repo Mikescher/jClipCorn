@@ -9,10 +9,12 @@ public class CompareElement {
 	private final int language;
 	
 	
+	private int csLIDDB1 = -1;
 	private String csFileDB1 = null;
 	private String csCoverDB1 = null;
 	private String filenameDB1 = null;
 	
+	private int csLIDDB2 = -1;
 	private String csFileDB2 = null;
 	private String csCoverDB2 = null;
 	private String filenameDB2 = null;
@@ -21,6 +23,10 @@ public class CompareElement {
 		this.title = title;
 		this.zyklus = new CCMovieZyklus(zyklus, zid);
 		this.language = lid;
+	}
+	
+	public int getCSLIDDB1() {
+		return csLIDDB1;
 	}
 
 	public String getCSFileDB1() {
@@ -35,6 +41,10 @@ public class CompareElement {
 		return filenameDB1;
 	}
 	
+	public int getCSLIDDB2() {
+		return csLIDDB2;
+	}
+	
 	public String getCSFileDB2() {
 		return csFileDB2;
 	}
@@ -47,13 +57,15 @@ public class CompareElement {
 		return filenameDB2;
 	}
 	
-	public void setDB1(String csCover, String csFile, String path) {
+	public void setDB1(String csCover, String csFile, String path, int lid) {
+		this.csLIDDB1 = lid;
 		this.csCoverDB1 = csCover;
 		this.csFileDB1 = csFile;
 		this.filenameDB1 = path;
 	}
 
-	public void setDB2(String csCover, String csFile, String path) {
+	public void setDB2(String csCover, String csFile, String path, int lid) {
+		this.csLIDDB2 = lid;
 		this.csCoverDB2 = csCover;
 		this.csFileDB2 = csFile;
 		this.filenameDB2 = path;

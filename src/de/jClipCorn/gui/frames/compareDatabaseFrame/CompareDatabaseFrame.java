@@ -41,8 +41,10 @@ import de.jClipCorn.Main;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.databaseElement.CCMovie;
+import de.jClipCorn.database.util.ExportHelper;
 import de.jClipCorn.gui.CachedResourceLoader;
 import de.jClipCorn.gui.Resources;
+import de.jClipCorn.gui.frames.exportElementsFrame.ExportElementsFrame;
 import de.jClipCorn.gui.guiComponents.ReadableTextField;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
@@ -55,8 +57,6 @@ import de.jClipCorn.util.TextFileUtils;
 
 public class CompareDatabaseFrame extends JFrame {
 	private static final long serialVersionUID = 5114410004487986632L;
-
-	private static final String EXTENSION = "jcccf"; //$NON-NLS-1$
 
 	private JPanel pnlTop;
 	private JPanel pnlMain;
@@ -107,6 +107,16 @@ public class CompareDatabaseFrame extends JFrame {
 	private JList<CompareElement> lsDiffCover;
 	private JLabel lblPathDB1;
 	private JLabel lblPathDB2;
+	private JLabel lblLocalIdDB1;
+	private JLabel lblLocalIdDB2;
+	private JLabel lblLocalId;
+	private JLabel lblLocalId_1;
+	private JPanel pnlTabMissingDB1Inner;
+	private JPanel pnlTabMissingDB1Bottom;
+	private JButton btnExportAllDB1;
+	private JPanel pnlTabMissingDB2Inner;
+	private JPanel pnlTabMissingDB2Bottom;
+	private JButton btnExportAllDB2;
 
 	public CompareDatabaseFrame(Component owner, CCMovieList mlist) {
 		super();
@@ -117,6 +127,19 @@ public class CompareDatabaseFrame extends JFrame {
 		setFocusTraversalPolicy(new ExtendedFocusTraversalOnArray(new Component[]{btnOpenDB1, btnOpenDB2, btnGenerate, btnCompare}));
 
 		initFileChooser();
+	}
+	
+	public CompareDatabaseFrame(Component owner, CCMovieList mlist, File f) {
+		super();
+		this.movielist = mlist;
+
+		initGUI();
+		setLocationRelativeTo(owner);
+		setFocusTraversalPolicy(new ExtendedFocusTraversalOnArray(new Component[]{btnOpenDB1, btnOpenDB2, btnGenerate, btnCompare}));
+
+		initFileChooser();
+		
+		edDB1.setText(f.getAbsolutePath());
 	}
 
 	private void initGUI() {
@@ -151,24 +174,24 @@ public class CompareDatabaseFrame extends JFrame {
 		edDB1 = new ReadableTextField();
 		pnlTop.add(edDB1, "4, 2, fill, default"); //$NON-NLS-1$
 		edDB1.setColumns(10);
-		
-				btnOpenDB1 = new JButton("..."); //$NON-NLS-1$
-				btnOpenDB1.addActionListener(new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent arg0) {
-						openFile1();
-					}
-				});
-				pnlTop.add(btnOpenDB1, "6, 2"); //$NON-NLS-1$
-		
-				btnGenerate = new JButton(LocaleBundle.getString("CompareDatabaseFrame.BtnGenerateCompareFile.text")); //$NON-NLS-1$
-				btnGenerate.addActionListener(new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						saveCompareFile();
-					}
-				});
-				pnlTop.add(btnGenerate, "8, 2"); //$NON-NLS-1$
+
+		btnOpenDB1 = new JButton("..."); //$NON-NLS-1$
+		btnOpenDB1.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				openFile1();
+			}
+		});
+		pnlTop.add(btnOpenDB1, "6, 2"); //$NON-NLS-1$
+
+		btnGenerate = new JButton(LocaleBundle.getString("CompareDatabaseFrame.BtnGenerateCompareFile.text")); //$NON-NLS-1$
+		btnGenerate.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				saveCompareFile();
+			}
+		});
+		pnlTop.add(btnGenerate, "8, 2"); //$NON-NLS-1$
 
 		lblDatabase = new JLabel(LocaleBundle.getString("CompareDatabaseFrame.LblDatabase2.text")); //$NON-NLS-1$
 		pnlTop.add(lblDatabase, "2, 4, right, default"); //$NON-NLS-1$
@@ -185,15 +208,16 @@ public class CompareDatabaseFrame extends JFrame {
 			}
 		});
 		pnlTop.add(btnOpenDB2, "6, 4"); //$NON-NLS-1$
-		
-				btnCompare = new JButton(LocaleBundle.getString("CompareDatabaseFrame.BtnCompare.text")); //$NON-NLS-1$
-				btnCompare.addActionListener(new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						startCompare();
-					}
-				});
-				pnlTop.add(btnCompare, "8, 4"); //$NON-NLS-1$
+
+		btnCompare = new JButton(LocaleBundle.getString("CompareDatabaseFrame.BtnCompare.text")); //$NON-NLS-1$
+		btnCompare.setEnabled(false);
+		btnCompare.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				startCompare();
+			}
+		});
+		pnlTop.add(btnCompare, "8, 4"); //$NON-NLS-1$
 
 		progressBar = new JProgressBar();
 		pnlTop.add(progressBar, "2, 6, 7, 1"); //$NON-NLS-1$
@@ -246,26 +270,48 @@ public class CompareDatabaseFrame extends JFrame {
 		pnlTabMissingDB1 = new JPanel();
 		tabPnlMain.addTab(LocaleBundle.getString("CompareDatabaseFrame.tabPnlMain.missingdb1.caption"), null, pnlTabMissingDB1, null); //$NON-NLS-1$
 		pnlTabMissingDB1.setLayout(new BorderLayout(0, 0));
+		
+		pnlTabMissingDB1Inner = new JPanel();
+		pnlTabMissingDB1.add(pnlTabMissingDB1Inner, BorderLayout.CENTER);
+		pnlTabMissingDB1Inner.setLayout(new BorderLayout(0, 0));
 
 		scrollPane_2 = new JScrollPane();
-		pnlTabMissingDB1.add(scrollPane_2, BorderLayout.CENTER);
+		pnlTabMissingDB1Inner.add(scrollPane_2, BorderLayout.CENTER);
 
 		lsMissDB1 = new JList<>();
 		lsMissDB1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		lsMissDB1.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+		lsMissDB1.getSelectionModel().addListSelectionListener(
+				new ListSelectionListener() {
+					@Override
+					public void valueChanged(ListSelectionEvent e) {
+						onSelection(lsMissDB1, e);
+					}
+				});
+		scrollPane_2.setViewportView(lsMissDB1);
+
+		pnlTabMissingDB1Bottom = new JPanel();
+		pnlTabMissingDB1Inner.add(pnlTabMissingDB1Bottom, BorderLayout.SOUTH);
+
+		btnExportAllDB1 = new JButton(LocaleBundle.getString("CompareDatabaseFrame.btnExport.caption")); //$NON-NLS-1$
+		btnExportAllDB1.addActionListener(new ActionListener() {
 			@Override
-			public void valueChanged(ListSelectionEvent e) {
-				onSelection(lsMissDB1, e);
+			public void actionPerformed(ActionEvent arg0) {
+				exportMoviesDB2(); // Sie fehlen in DB1, deshalb DB2 exportieren
 			}
 		});
-		scrollPane_2.setViewportView(lsMissDB1);
+		btnExportAllDB1.setEnabled(false);
+		pnlTabMissingDB1Bottom.add(btnExportAllDB1);
 
 		pnlTabMissingDB2 = new JPanel();
 		tabPnlMain.addTab(LocaleBundle.getString("CompareDatabaseFrame.tabPnlMain.missingdb2.caption"), null, pnlTabMissingDB2, null); //$NON-NLS-1$
 		pnlTabMissingDB2.setLayout(new BorderLayout(0, 0));
+		
+		pnlTabMissingDB2Inner = new JPanel();
+		pnlTabMissingDB2.add(pnlTabMissingDB2Inner, BorderLayout.CENTER);
+		pnlTabMissingDB2Inner.setLayout(new BorderLayout(0, 0));
 
 		scrollPane_3 = new JScrollPane();
-		pnlTabMissingDB2.add(scrollPane_3, BorderLayout.CENTER);
+		pnlTabMissingDB2Inner.add(scrollPane_3);
 
 		lsMissDB2 = new JList<>();
 		lsMissDB2.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -276,6 +322,19 @@ public class CompareDatabaseFrame extends JFrame {
 			}
 		});
 		scrollPane_3.setViewportView(lsMissDB2);
+
+		pnlTabMissingDB2Bottom = new JPanel();
+		pnlTabMissingDB2.add(pnlTabMissingDB2Bottom, BorderLayout.SOUTH);
+
+		btnExportAllDB2 = new JButton(LocaleBundle.getString("CompareDatabaseFrame.btnExport.caption")); //$NON-NLS-1$
+		btnExportAllDB2.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				exportMoviesDB1();// Sie fehlen in DB2, deshalb DB1 exportieren
+			}
+		});
+		btnExportAllDB2.setEnabled(false);
+		pnlTabMissingDB2Bottom.add(btnExportAllDB2);
 
 		pnlTabDifferentFiles = new JPanel();
 		tabPnlMain.addTab(LocaleBundle.getString("CompareDatabaseFrame.tabPnlMain.differentfiles.caption"), null, pnlTabDifferentFiles, null); //$NON-NLS-1$
@@ -335,6 +394,8 @@ public class CompareDatabaseFrame extends JFrame {
 				FormFactory.RELATED_GAP_ROWSPEC,
 				FormFactory.DEFAULT_ROWSPEC,
 				FormFactory.RELATED_GAP_ROWSPEC,
+				FormFactory.DEFAULT_ROWSPEC,
+				FormFactory.RELATED_GAP_ROWSPEC,
 				RowSpec.decode("default:grow"), //$NON-NLS-1$
 				FormFactory.RELATED_GAP_ROWSPEC,}));
 
@@ -343,24 +404,30 @@ public class CompareDatabaseFrame extends JFrame {
 		lblDatabase_1.setHorizontalAlignment(SwingConstants.CENTER);
 		pnlInfoDB1.add(lblDatabase_1, "2, 2, 3, 1"); //$NON-NLS-1$
 
-		lblNameDB1 = new JLabel(""); //$NON-NLS-1$
+		lblNameDB1 = new JLabel();
 		lblNameDB1.setHorizontalAlignment(SwingConstants.CENTER);
 		pnlInfoDB1.add(lblNameDB1, "2, 4, 3, 1"); //$NON-NLS-1$
 
 		lblChecksumFile = new JLabel(LocaleBundle.getString("CompareDatabaseFrame.LblChecksumFile.text")); //$NON-NLS-1$
 		pnlInfoDB1.add(lblChecksumFile, "2, 6"); //$NON-NLS-1$
 
-		lblCheckSumDB1File = new JLabel(""); //$NON-NLS-1$
+		lblCheckSumDB1File = new JLabel();
 		pnlInfoDB1.add(lblCheckSumDB1File, "4, 6"); //$NON-NLS-1$
 
 		lblChecksumCover = new JLabel(LocaleBundle.getString("CompareDatabaseFrame.LblChecksumCover.text")); //$NON-NLS-1$
 		pnlInfoDB1.add(lblChecksumCover, "2, 8"); //$NON-NLS-1$
 
-		lblCheckSumDB1Cover = new JLabel(""); //$NON-NLS-1$
+		lblCheckSumDB1Cover = new JLabel();
 		pnlInfoDB1.add(lblCheckSumDB1Cover, "4, 8"); //$NON-NLS-1$
 		
-		lblPathDB1 = new JLabel(""); //$NON-NLS-1$
-		pnlInfoDB1.add(lblPathDB1, "2, 10, 3, 1"); //$NON-NLS-1$
+		lblPathDB1 = new JLabel();
+		pnlInfoDB1.add(lblPathDB1, "2, 12, 3, 1"); //$NON-NLS-1$
+		
+		lblLocalId = new JLabel(LocaleBundle.getString("CompareDatabaseFrame.LblLocalID.text")); //$NON-NLS-1$
+		pnlInfoDB1.add(lblLocalId, "2, 10"); //$NON-NLS-1$
+		
+		lblLocalIdDB1 = new JLabel();
+		pnlInfoDB1.add(lblLocalIdDB1, "4, 10"); //$NON-NLS-1$
 
 		pnlInfoDB2 = new JPanel();
 		pnlInfo.add(pnlInfoDB2);
@@ -382,6 +449,8 @@ public class CompareDatabaseFrame extends JFrame {
 				FormFactory.RELATED_GAP_ROWSPEC,
 				FormFactory.DEFAULT_ROWSPEC,
 				FormFactory.RELATED_GAP_ROWSPEC,
+				FormFactory.DEFAULT_ROWSPEC,
+				FormFactory.RELATED_GAP_ROWSPEC,
 				RowSpec.decode("default:grow"), //$NON-NLS-1$
 				FormFactory.RELATED_GAP_ROWSPEC,}));
 
@@ -390,24 +459,30 @@ public class CompareDatabaseFrame extends JFrame {
 		lblDatabase_2.setFont(new Font("Tahoma", Font.BOLD, 11)); //$NON-NLS-1$
 		pnlInfoDB2.add(lblDatabase_2, "2, 2, 3, 1"); //$NON-NLS-1$
 
-		lblNameDB2 = new JLabel(""); //$NON-NLS-1$
+		lblNameDB2 = new JLabel();
 		lblNameDB2.setHorizontalAlignment(SwingConstants.CENTER);
 		pnlInfoDB2.add(lblNameDB2, "2, 4, 3, 1"); //$NON-NLS-1$
 
 		label_2 = new JLabel(LocaleBundle.getString("CompareDatabaseFrame.LblChecksumFile.text")); //$NON-NLS-1$
 		pnlInfoDB2.add(label_2, "2, 6"); //$NON-NLS-1$
 
-		lblCheckSumDB2File = new JLabel(""); //$NON-NLS-1$
+		lblCheckSumDB2File = new JLabel();
 		pnlInfoDB2.add(lblCheckSumDB2File, "4, 6"); //$NON-NLS-1$
 
 		label_3 = new JLabel(LocaleBundle.getString("CompareDatabaseFrame.LblChecksumCover.text")); //$NON-NLS-1$
 		pnlInfoDB2.add(label_3, "2, 8"); //$NON-NLS-1$
 
-		lblCheckSumDB2Cover = new JLabel(""); //$NON-NLS-1$
+		lblCheckSumDB2Cover = new JLabel();
 		pnlInfoDB2.add(lblCheckSumDB2Cover, "4, 8"); //$NON-NLS-1$
 		
-		lblPathDB2 = new JLabel(""); //$NON-NLS-1$
-		pnlInfoDB2.add(lblPathDB2, "2, 10, 3, 1"); //$NON-NLS-1$
+		lblPathDB2 = new JLabel();
+		pnlInfoDB2.add(lblPathDB2, "2, 12, 3, 1"); //$NON-NLS-1$
+		
+		lblLocalId_1 = new JLabel(LocaleBundle.getString("CompareDatabaseFrame.LblLocalID.text")); //$NON-NLS-1$
+		pnlInfoDB2.add(lblLocalId_1, "2, 10"); //$NON-NLS-1$
+		
+		lblLocalIdDB2 = new JLabel();
+		pnlInfoDB2.add(lblLocalIdDB2, "4, 10"); //$NON-NLS-1$
 		
 		setSize(850, 500);
 	}
@@ -415,7 +490,7 @@ public class CompareDatabaseFrame extends JFrame {
 	private void initFileChooser() {
 		fchooser = new JFileChooser(PathFormatter.getRealSelfDirectory());
 
-		fchooser.setFileFilter(FileChooserHelper.createFileFilter("jClipcorn-Compare-File (*.jcccf)", EXTENSION)); //$NON-NLS-1$
+		fchooser.setFileFilter(FileChooserHelper.createLocalFileFilter("ExportHelper.filechooser_jcccf.description", ExportHelper.EXTENSION_COMPAREFILE)); //$NON-NLS-1$
 
 		fchooser.setAcceptAllFileFilterUsed(false);
 	}
@@ -424,17 +499,21 @@ public class CompareDatabaseFrame extends JFrame {
 		if (fchooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
 			edDB1.setText(fchooser.getSelectedFile().getAbsolutePath());
 		}
+		
+		btnCompare.setEnabled((! (edDB1.getText().isEmpty() || edDB2.getText().isEmpty())));
 	}
 
 	private void openFile2() {
 		if (fchooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
 			edDB2.setText(fchooser.getSelectedFile().getAbsolutePath());
 		}
+		
+		btnCompare.setEnabled((! (edDB1.getText().isEmpty() || edDB2.getText().isEmpty())));
 	}
 
 	private void saveCompareFile() {
 		if (fchooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
-			String path = PathFormatter.forceExtension(fchooser.getSelectedFile().getAbsolutePath(), EXTENSION);
+			String path = PathFormatter.forceExtension(fchooser.getSelectedFile().getAbsolutePath(), ExportHelper.EXTENSION_COMPAREFILE);
 
 			setEnabled(false);
 
@@ -553,6 +632,9 @@ public class CompareDatabaseFrame extends JFrame {
 				lmDiffFiles.addElement(cel);
 			}
 		}
+		
+		btnExportAllDB1.setEnabled(true);
+		btnExportAllDB2.setEnabled(true);
 	}
 	
 	private void onSelection(JList<CompareElement> list, ListSelectionEvent e) {
@@ -560,11 +642,13 @@ public class CompareDatabaseFrame extends JFrame {
 			CompareElement scel = list.getModel().getElementAt(e.getFirstIndex());
 			
 			if (scel.isInDB1()) {
+				lblLocalIdDB1.setText(scel.getCSLIDDB1() + ""); //$NON-NLS-1$
 				lblNameDB1.setText(scel.getCompleteTitle());
 				lblCheckSumDB1File.setText(scel.getCSFileDB1());
 				lblCheckSumDB1Cover.setText(scel.getCSCoverDB1());
 				lblPathDB1.setText(scel.getPathDB1());
 			} else {
+				lblLocalIdDB1.setText(""); //$NON-NLS-1$
 				lblNameDB1.setText(""); //$NON-NLS-1$
 				lblCheckSumDB1File.setText(""); //$NON-NLS-1$
 				lblCheckSumDB1Cover.setText(""); //$NON-NLS-1$
@@ -572,15 +656,41 @@ public class CompareDatabaseFrame extends JFrame {
 			}
 			
 			if (scel.isInDB2()) {
+				lblLocalIdDB2.setText(scel.getCSLIDDB2() + ""); //$NON-NLS-1$
 				lblNameDB2.setText(scel.getCompleteTitle());
 				lblCheckSumDB2File.setText(scel.getCSFileDB2());
 				lblCheckSumDB2Cover.setText(scel.getCSCoverDB2());
 				lblPathDB2.setText(scel.getPathDB2());
 			} else {
+				lblLocalIdDB2.setText(""); //$NON-NLS-1$
 				lblNameDB2.setText(""); //$NON-NLS-1$
 				lblCheckSumDB2File.setText(""); //$NON-NLS-1$
 				lblCheckSumDB2Cover.setText(""); //$NON-NLS-1$
 				lblPathDB2.setText(""); //$NON-NLS-1$
+			}
+		}
+	}
+	
+	private void exportMoviesDB1() {
+		ExportElementsFrame.clearAndDispose();
+		
+		for (int i = 0; i < lsMissDB2.getModel().getSize(); i++) {
+			int id = lsMissDB2.getModel().getElementAt(i).getCSLIDDB1();
+			CCDatabaseElement d = movielist.findDatabaseElement(id);
+			if (d != null) {
+				ExportElementsFrame.addElementToList(this, movielist, d);
+			}
+		}
+	}
+	
+	private void exportMoviesDB2() {
+		ExportElementsFrame.clearAndDispose();
+		
+		for (int i = 0; i < lsMissDB1.getModel().getSize(); i++) {
+			int id = lsMissDB1.getModel().getElementAt(i).getCSLIDDB2();
+			CCDatabaseElement d = movielist.findDatabaseElement(id);
+			if (d != null) {
+				ExportElementsFrame.addElementToList(this, movielist, d);
 			}
 		}
 	}

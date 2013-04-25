@@ -15,6 +15,8 @@ public class ClipToolbar extends AbstractClipToolbar{
 	@SuppressWarnings("nls")
 	private void create() {
 		//TODO Make Toolbar changeable in Settings
+		addAction("Open");
+		addSeparator();
 		addAction("PlayMovie");
 		addSeparator();
 		addAction("AddMovie");

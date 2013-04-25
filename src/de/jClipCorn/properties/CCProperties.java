@@ -87,6 +87,7 @@ public class CCProperties {
 	public CCBoolProperty	PROP_IMPORT_RESETVIEWED;
 	public CCBoolProperty	PROP_IMPORT_ONLYWITHCOVER;
 	public CCBoolProperty	PROP_IMPORT_RESETADDDATE;
+	public CCRIntProperty 	PROP_PARSEIMDB_LANGUAGE;
 	
 	private Properties properties;
 	private String path;
@@ -180,6 +181,7 @@ public class CCProperties {
 		PROP_IMPORT_RESETVIEWED					= new CCBoolProperty(NONVISIBLE,	 	this,   "PROP_IMPORT_RESETVIEWED",					true);
 		PROP_IMPORT_ONLYWITHCOVER				= new CCBoolProperty(NONVISIBLE,	 	this,   "PROP_IMPORT_ONLYWITHCOVER",				true);
 		PROP_IMPORT_RESETADDDATE				= new CCBoolProperty(NONVISIBLE,	 	this,   "PROP_IMPORT_RESETADDDATE",					true);
+		PROP_PARSEIMDB_LANGUAGE					= new CCRIntProperty(NONVISIBLE,	 	this,   "PROP_PARSEIMDB_LANGUAGE",					1, 					2);
 	}
 	
 	public static CCProperties getInstance() {

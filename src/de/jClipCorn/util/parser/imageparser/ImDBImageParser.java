@@ -8,7 +8,7 @@ import de.jClipCorn.util.DoubleString;
 import de.jClipCorn.util.parser.ImDBParser;
 @SuppressWarnings("nls")
 public class ImDBImageParser {
-	public static String getSearchURL(String title, CCMovieTyp typ) { // TODO Invisible Setting for German / Englisch
+	public static String getSearchURL(String title, CCMovieTyp typ) {
 		switch (ImDBParser.LANGUAGE) {
 		case GERMAN:
 			return ImDBImageParser_Ger.getSearchURL(title, typ);

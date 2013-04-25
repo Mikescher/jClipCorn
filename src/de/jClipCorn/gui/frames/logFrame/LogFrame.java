@@ -23,7 +23,7 @@ import de.jClipCorn.gui.log.CCLogType;
 import java.awt.Color;
 import java.awt.Font;
 
-public class LogFrame extends JFrame implements CCLogChangedListener{ //TODO First Display then load things in GUI (instant show when click on toolbar)
+public class LogFrame extends JFrame implements CCLogChangedListener{ 
 	private static final long serialVersionUID = -8838227410250810646L;
 		
 	private JTabbedPane tpnlMainPanel;

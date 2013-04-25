@@ -24,6 +24,8 @@ public class MoviePlayer {
 	private final static String DRIVE_1 = "C:\\"; //$NON-NLS-1$
 	private final static String DRIVE_2 = "H:\\"; //$NON-NLS-1$
 	
+	private static String lastVLCPath = null;
+	
 	public static void play(CCMovie mov) {
 		List<String> al = new ArrayList<>();
 		for (int i = 0; i < mov.getPartcount(); i++) {
@@ -48,7 +50,7 @@ public class MoviePlayer {
 		
 		String vlc = getVLCPath();
 		
-		if (vlc.isEmpty()) {
+		if (vlc == null || vlc.isEmpty()) {
 			CCLog.addWarning(LocaleBundle.getString("LogMessage.VLCNotFound"));
 			
 			if (CCProperties.getInstance().PROP_PLAY_USESTANDARDONMISSINGVLC.getValue()) {
@@ -82,27 +84,32 @@ public class MoviePlayer {
 		}
 	}
 	
-	@SuppressWarnings("nls")
 	private static String getVLCPath() {
 		String vlcpath = CCProperties.getInstance().PROP_PLAY_VLC_PATH.getValue();
 		
-		if (! vlcpath.isEmpty()) {
-			if (new File(vlcpath).exists()) {
-				return vlcpath;
+		if (lastVLCPath != null) {
+			if (new File(lastVLCPath).exists()) {
+				return lastVLCPath;
 			}
 		}
 		
-		for (String ss : PATHS) { //TODO remember results of VLC Path Search (SPEED) (Its a cache)
+		if (! vlcpath.isEmpty()) {
+			if (new File(vlcpath).exists()) {
+				return lastVLCPath = vlcpath;
+			}
+		}
+		
+		for (String ss : PATHS) {
 			String path = DRIVE_1 + ss;
 			if (new File(path).exists()) {
-				return path;
+				return lastVLCPath = path;
 			}
 		}
 		
 		for (String ss : PATHS) {
 			String path = DRIVE_2 + ss;
 			if (new File(path).exists()) {
-				return path;
+				return lastVLCPath = path;
 			}
 		}
 		
@@ -111,12 +118,12 @@ public class MoviePlayer {
 				for (String ss : PATHS) {
 					String path = f.getAbsolutePath() + ss;
 					if (new File(path).exists()) {
-						return path;
+						return lastVLCPath = path;
 					}
 				}
 			}
 		}
-
-		return "";
+		lastVLCPath = null;
+		return null;
 	}
 }

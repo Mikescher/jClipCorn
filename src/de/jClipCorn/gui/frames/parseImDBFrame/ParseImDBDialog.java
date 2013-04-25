@@ -54,8 +54,6 @@ import de.jClipCorn.util.parser.ParseResultHandler;
 public class ParseImDBDialog extends JDialog {
 	private static final long serialVersionUID = 3777677368743220383L;
 	
-	private Thread thisThread;
-	
 	private DefaultListModel<String> mdlLsDBList;
 	private List<String> lsDBListPaths = new ArrayList<>();
 	private BufferedImage imgCoverBI = null;
@@ -114,7 +112,6 @@ public class ParseImDBDialog extends JDialog {
 	private JLabel lblCover;
 	private JCheckBox cbCover;
 	private JProgressBar pbarSearch;
-	private JButton btnCancel;
 	private JScrollPane scrollPane;
 	private JButton btnIMDB;
 	private JButton btnOk;
@@ -144,7 +141,7 @@ public class ParseImDBDialog extends JDialog {
 		
 		
 		scrollPane = new JScrollPane();
-		scrollPane.setBounds(10, 53, 217, 412);
+		scrollPane.setBounds(10, 53, 217, 421);
 		getContentPane().add(scrollPane);
 		
 		lsDBList = new JList<>(mdlLsDBList = new DefaultListModel<>());
@@ -410,19 +407,8 @@ public class ParseImDBDialog extends JDialog {
 		pnlMain.add(btnFSKAll);
 		
 		pbarSearch = new JProgressBar();
-		pbarSearch.setBounds(10, 478, 119, 23);
+		pbarSearch.setBounds(10, 485, 217, 16);
 		getContentPane().add(pbarSearch);
-		
-		btnCancel = new JButton(LocaleBundle.getString("parseImDBFrame.btnCancel.text")); //$NON-NLS-1$
-		btnCancel.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				stopThread();
-			}
-		});
-		btnCancel.setEnabled(false);
-		btnCancel.setBounds(138, 478, 89, 23);
-		getContentPane().add(btnCancel);
 	}
 	
 	private void showAllRatingsDialog() {
@@ -438,19 +424,6 @@ public class ParseImDBDialog extends JDialog {
 				runSearch();
 			}
 		}, "THREAD_SEARCH_IN_IMDB").start(); //$NON-NLS-1$
-	}
-	
-	@SuppressWarnings("deprecation") //TODO Non-Deprecated way
-	private void stopThread() {
-		if (thisThread != null) {
-			thisThread.suspend();
-			
-			pbarSearch.setIndeterminate(false);
-			btnParse.setEnabled(true);
-			btnCancel.setEnabled(false);
-			resetAll();
-			lsDBList.setSelectedIndex(-1);
-		}
 	}
 	
 	private void initComboboxes() {
@@ -532,7 +505,6 @@ public class ParseImDBDialog extends JDialog {
 			SwingUtilities.invokeAndWait(new Runnable() {
 				@Override
 				public void run() {
-					btnCancel.setEnabled(true);
 					btnParse.setEnabled(false);
 					pbarSearch.setIndeterminate(true);
 				}
@@ -541,7 +513,7 @@ public class ParseImDBDialog extends JDialog {
 			CCLog.addError(e);
 			return;
 		}
-		
+
 		String url = ImDBParser.getSearchURL(edSearchName.getText(), typ);
 		String html = HTTPUtilities.getHTML(url, true);
 		final List<DoubleString> res = ImDBParser.extractImDBLinks(html);
@@ -561,7 +533,6 @@ public class ParseImDBDialog extends JDialog {
 
 					pbarSearch.setIndeterminate(false);
 					btnParse.setEnabled(true);
-					btnCancel.setEnabled(false);
 				}
 			});
 		} catch (InvocationTargetException | InterruptedException e) {

@@ -61,6 +61,8 @@ public class Main {
 	}
 }
 
+//TODO Add guiComonent for Checkboxes which are snychronized with a property, change them everywhere
+
 //TODO Parse that (eventually ?): http://www.themoviedb.org/search/movie?query=lazarus%20projekt
 
 //TODO statistics page
@@ -74,8 +76,6 @@ public class Main {
 //TODO Apache Commons hacken und duplicate entry removen
 
 //TODO Read Only - Mode
-//TODO DB als HTML "exportieren"
-//TODO Episodenguide in HTML/RTF/TXT exportieren
 
 //TODO Filmtrommel (mit netter Animation)
 

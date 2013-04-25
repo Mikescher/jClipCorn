@@ -1,3 +1,7 @@
 Run
-git log --pretty=format:'#>>>>> %ad: %B' --date=short >changelog.txt
+git log --pretty=format:'############ %ad: %B' --date=short >changelog.txt
 in Git Console
+
+Open in Notepad++
+go to Hex View -> Remove BOM (if there)
+Convert to UTF8 (with BOM)

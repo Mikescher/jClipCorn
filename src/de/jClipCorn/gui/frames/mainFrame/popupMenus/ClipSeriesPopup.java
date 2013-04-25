@@ -26,6 +26,7 @@ public class ClipSeriesPopup extends ClipPopupMenu {
 		
 		addAction("ExportSingleSeries");
 		addAction("AddSeriesToExportList");
+		addAction("SaveTXTEpisodeguide");
 		
 		//#############
 		addSeparator();

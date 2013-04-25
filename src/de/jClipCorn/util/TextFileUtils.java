@@ -72,12 +72,16 @@ public class TextFileUtils {
 	}
 	
 	public static void writeTextFile(String filename, String text) throws IOException {
+		writeTextFile(new File(filename), text);
+	}
+	
+	public static void writeTextFile(File file, String text) throws IOException {
 		FileOutputStream fos = null;
 		OutputStreamWriter osw = null;
 		BufferedWriter bw = null;
 		
 		try {
-			fos = new FileOutputStream(filename);
+			fos = new FileOutputStream(file);
 			osw = new OutputStreamWriter(fos, "UTF8"); //$NON-NLS-1$
 			bw = new BufferedWriter(osw);
 		

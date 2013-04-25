@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.io.File;
+import java.io.IOException;
 
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
@@ -43,11 +44,13 @@ import de.jClipCorn.gui.frames.previewSeriesFrame.PreviewSeriesFrame;
 import de.jClipCorn.gui.frames.scanFolderFrame.ScanFolderFrame;
 import de.jClipCorn.gui.frames.searchFrame.SearchFrame;
 import de.jClipCorn.gui.frames.settingsFrame.SettingsFrame;
+import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.DialogHelper;
 import de.jClipCorn.util.FileChooserHelper;
 import de.jClipCorn.util.HTTPUtilities;
 import de.jClipCorn.util.PathFormatter;
+import de.jClipCorn.util.TextFileUtils;
 import de.jClipCorn.util.parser.ImDBParser;
 
 public class CCActionTree {
@@ -259,6 +262,14 @@ public class CCActionTree {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				onClickSeriesAddToExportList();
+			}
+		});
+		
+		temp = series.addChild(new CCActionElement("SaveTXTEpisodeguide", null, "ClipMenuBar.Series.SaveTXTEpisodeguide", null)); //TODO Please give me icon :3
+		temp.addListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				onClickSeriesCreateTXTEpisodeguide();
 			}
 		});
 		
@@ -821,6 +832,26 @@ public class CCActionTree {
 
 		if (element != null && element.isSeries()) {
 			ExportElementsFrame.addElementToList(owner, movielist, element);
+		}
+	}
+	
+	private void onClickSeriesCreateTXTEpisodeguide() {
+		CCDatabaseElement element = owner.getSelectedElement();
+
+		if (element != null && element.isSeries()) {
+			final JFileChooser chooser = new JFileChooser();
+			chooser.setFileFilter(FileChooserHelper.createLocalFileFilter("ExportHelper.filechooser_txtguide.description", ExportHelper.EXTENSION_EPISODEGUIDE)); //$NON-NLS-1$
+			chooser.setCurrentDirectory(new File(PathFormatter.getRealSelfDirectory()));
+
+			int returnval = chooser.showSaveDialog(owner);
+
+			if (returnval == JFileChooser.APPROVE_OPTION) {
+				try {
+					TextFileUtils.writeTextFile(PathFormatter.forceExtension(chooser.getSelectedFile(), ExportHelper.EXTENSION_EPISODEGUIDE), ((CCSeries)element).getEpisodeGuide());
+				} catch (IOException e) {
+					CCLog.addError(e);
+				}
+			}
 		}
 	}
 	

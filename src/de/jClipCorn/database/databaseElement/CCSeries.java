@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
+import org.apache.commons.lang.text.StrBuilder;
 import org.jdom2.Element;
 
 import de.jClipCorn.database.CCMovieList;
@@ -18,9 +19,13 @@ import de.jClipCorn.util.ByteUtilies;
 import de.jClipCorn.util.CCDate;
 import de.jClipCorn.util.ImageUtilities;
 import de.jClipCorn.util.LargeMD5Calculator;
+import de.jClipCorn.util.TimeIntervallFormatter;
 import de.jClipCorn.util.YearRange;
 
 public class CCSeries extends CCDatabaseElement {
+	private final static int GUIDE_W_BORDER = 2;
+	private final static int GUIDE_W_PADDING = 6;
+	
 	private List<CCSeason> seasons = new Vector<>();
 	
 	public CCSeries(CCMovieList ml, int id, int seriesID) {
@@ -350,5 +355,56 @@ public class CCSeries extends CCDatabaseElement {
 	@Override
 	public String toString() {
 		return getTitle();
+	}
+	
+	public String getEpisodeGuide() {
+		
+		
+		StrBuilder guide = new StrBuilder();
+		
+		int titlewidth = GUIDE_W_BORDER + GUIDE_W_PADDING + getTitle().length() + GUIDE_W_PADDING + GUIDE_W_BORDER;
+		
+		guide.appendNewLine();
+		guide.appendPadding(titlewidth, '#');
+		guide.appendNewLine();
+		guide.appendPadding(GUIDE_W_BORDER, '#');
+		guide.appendPadding(titlewidth - (GUIDE_W_BORDER + GUIDE_W_BORDER), ' ');
+		guide.appendPadding(GUIDE_W_BORDER, '#');
+		guide.appendNewLine();
+		guide.appendPadding(GUIDE_W_BORDER, '#');
+		guide.appendPadding(GUIDE_W_PADDING, ' ');
+		guide.append(getTitle());
+		guide.appendPadding(GUIDE_W_PADDING, ' ');
+		guide.appendPadding(GUIDE_W_BORDER, '#');
+		guide.appendNewLine();
+		guide.appendPadding(GUIDE_W_BORDER, '#');
+		guide.appendPadding(titlewidth - (GUIDE_W_BORDER + GUIDE_W_BORDER), ' ');
+		guide.appendPadding(GUIDE_W_BORDER, '#');
+		guide.appendNewLine();
+		guide.appendPadding(titlewidth, '#');
+		
+		for (int i = 0; i < getSeasonCount(); i++) {
+			CCSeason season = getSeason(i);
+			String seasontitle = season.getTitle() + ' ' + '(' + season.getYear() + ')';
+			
+			guide.appendNewLine();
+			guide.appendNewLine();
+			guide.appendNewLine();
+			guide.appendNewLine();
+			
+			guide.appendPadding(GUIDE_W_BORDER + GUIDE_W_PADDING, ' ');
+			guide.append(seasontitle);
+			guide.appendNewLine();
+			guide.appendPadding(GUIDE_W_BORDER + GUIDE_W_PADDING + seasontitle.length() + GUIDE_W_PADDING + GUIDE_W_BORDER, '#');
+			guide.appendNewLine();
+			guide.appendNewLine();
+			for (int j = 0; j < season.getEpisodeCount(); j++) {
+				CCEpisode episode = season.getEpisode(j);
+				guide.appendPadding(GUIDE_W_BORDER, ' ');
+				guide.appendln(String.format("> [%02d] %s (%s)", episode.getEpisodeNumber(), episode.getTitle(), TimeIntervallFormatter.formatPointed(episode.getLength()))); //$NON-NLS-1$
+			}
+		}
+
+		return guide.toString();
 	}
 }

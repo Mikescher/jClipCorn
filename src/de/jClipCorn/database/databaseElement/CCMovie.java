@@ -363,11 +363,6 @@ public class CCMovie extends CCDatabaseElement {
 		if (e.getAttributeValue("zyklusnumber") != null)
 			setZyklusID(Integer.parseInt(e.getAttributeValue("zyklusnumber")));
 		
-		if (e.getAttributeValue("coverdata") != null) {
-			setCover(""); //Damit er nicht probiert was zu löschen
-			setCover(ImageUtilities.byteArrayToImage(ByteUtilies.hexStringToByteArray(e.getAttributeValue("coverdata"))));
-		}
-		
 		endUpdating();
 	}
 	

@@ -16,6 +16,8 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCMovieScore;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTyp;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
+import de.jClipCorn.util.ByteUtilies;
+import de.jClipCorn.util.ImageUtilities;
 
 public abstract class CCDatabaseElement {
 	private final int localID;				// INTEGER
@@ -263,6 +265,11 @@ public abstract class CCDatabaseElement {
 		
 		if (e.getAttributeValue("covername") != null)
 			setCover(e.getAttributeValue("covername"));
+		
+		if (e.getAttributeValue("coverdata") != null) {
+			setCover(""); //Damit er nicht probiert was zu löschen
+			setCover(ImageUtilities.byteArrayToImage(ByteUtilies.hexStringToByteArray(e.getAttributeValue("coverdata"))));
+		}
 	}
 
 	@SuppressWarnings("nls")

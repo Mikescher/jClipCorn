@@ -1,6 +1,7 @@
 package de.jClipCorn.gui.frames.importElementsFrame;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -61,8 +62,8 @@ public class ImportElementsFrame extends JFrame {
 	private JLabel lblNewLabel_1;
 	private JLabel lblTXT;
 	private JButton btnAdd;
-	private JPanel panel;
-	private JPanel panel_1;
+	private JPanel pnlTopRight;
+	private JPanel pnlTopRightInner;
 	private JCheckBox chcbxResetViewed;
 	private JCheckBox chckbxOnlyCover;
 	private JLabel lblCover;
@@ -74,12 +75,12 @@ public class ImportElementsFrame extends JFrame {
 	private CCMovieList movielist;
 	private JCheckBox chckbxResetDate;
 
-	public ImportElementsFrame(String xmlcontent, CCMovieList movielist) {
+	public ImportElementsFrame(Component owner, String xmlcontent, CCMovieList movielist) {
 		super();
 		this.movielist = movielist;
 		
 		initGUI();
-		setLocationRelativeTo(null);
+		setLocationRelativeTo(owner);
 		
 		initData(xmlcontent);
 	}
@@ -103,9 +104,9 @@ public class ImportElementsFrame extends JFrame {
 		lblElementsFound.setVerticalAlignment(SwingConstants.TOP);
 		pnlTop.add(lblElementsFound);
 		
-		panel = new JPanel();
-		pnlTop.add(panel, BorderLayout.EAST);
-		panel.setLayout(new BorderLayout(0, 0));
+		pnlTopRight = new JPanel();
+		pnlTop.add(pnlTopRight, BorderLayout.EAST);
+		pnlTopRight.setLayout(new BorderLayout(0, 0));
 		
 		btnAddAll = new JButton(LocaleBundle.getString("ImportElementsFrame.btnAddAll.caption")); //$NON-NLS-1$
 		btnAddAll.addActionListener(new ActionListener() {
@@ -114,11 +115,11 @@ public class ImportElementsFrame extends JFrame {
 				onAddAll();
 			}
 		});
-		panel.add(btnAddAll);
+		pnlTopRight.add(btnAddAll);
 		
-		panel_1 = new JPanel();
-		panel.add(panel_1, BorderLayout.EAST);
-		panel_1.setLayout(new BorderLayout(0, 0));
+		pnlTopRightInner = new JPanel();
+		pnlTopRight.add(pnlTopRightInner, BorderLayout.EAST);
+		pnlTopRightInner.setLayout(new BorderLayout(0, 0));
 		
 		chckbxOnlyCover = new JCheckBox(CCProperties.getInstance().PROP_IMPORT_ONLYWITHCOVER.getDescription());
 		chckbxOnlyCover.addActionListener(new ActionListener() {
@@ -128,7 +129,7 @@ public class ImportElementsFrame extends JFrame {
 			}
 		});
 		chckbxOnlyCover.setSelected(CCProperties.getInstance().PROP_IMPORT_ONLYWITHCOVER.getValue());
-		panel_1.add(chckbxOnlyCover, BorderLayout.EAST);
+		pnlTopRightInner.add(chckbxOnlyCover, BorderLayout.EAST);
 		
 		pnlCenter = new JPanel();
 		contentPane.add(pnlCenter, BorderLayout.CENTER);

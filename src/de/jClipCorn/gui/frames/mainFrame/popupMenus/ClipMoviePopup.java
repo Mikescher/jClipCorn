@@ -9,7 +9,7 @@ public class ClipMoviePopup extends ClipPopupMenu {
 
 	@SuppressWarnings("nls")
 	@Override
-	protected void init() {
+	protected void init() { //TODO Add Things from ActionTree
 		addAction("PlayMovie");
 		addAction("PrevMovie");
 		

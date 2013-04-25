@@ -16,6 +16,7 @@ import java.util.zip.ZipOutputStream;
 
 import org.jdom2.Document;
 import org.jdom2.Element;
+import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
@@ -24,6 +25,7 @@ import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.CCSeries;
+import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTyp;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.PathFormatter;
@@ -219,5 +221,51 @@ public class ExportHelper {
 				}
 			}
 		}
+	}
+	
+	public static Element getFirstElementOfExport(String xmlcontent) {
+		Document doc = null;
+		try {
+			doc = new SAXBuilder().build(new StringReader(xmlcontent));
+		} catch (JDOMException | IOException e) {
+			CCLog.addError(e);
+			return null;
+		}
+
+		Element root = doc.getRootElement();
+		
+		List<Element> elements = root.getChildren();
+		
+		if (elements.size() > 0) {
+			return elements.get(0);
+		}
+		
+		return null;
+	}
+	
+	public static void importSingleElement(CCMovieList movielist, String xmlcontent, boolean resetAddDate, boolean resetViewed) {
+		Element value = getFirstElementOfExport(xmlcontent);
+		
+		if (value != null) {
+			if (value.getName().equalsIgnoreCase("movie")) {  //$NON-NLS-1$
+				CCMovie mov = movielist.createNewEmptyMovie();
+				mov.parseFromXML(value, resetAddDate, resetViewed);
+			} else if (value.getName().equalsIgnoreCase("series")) { //$NON-NLS-1$
+				CCSeries ser = movielist.createNewEmptySeries();
+				ser.parseFromXML(value, resetAddDate, resetViewed);
+			}
+		}
+	}
+	
+	public static CCMovieTyp getTypOfFirstElementOfExport(String xmlcontent) {
+		Element value = getFirstElementOfExport(xmlcontent);
+		
+		if (value.getName().equalsIgnoreCase("movie")) {  //$NON-NLS-1$
+			return CCMovieTyp.MOVIE;
+		} else if (value.getName().equalsIgnoreCase("series")) { //$NON-NLS-1$
+			return CCMovieTyp.SERIES;
+		}
+		
+		return null;
 	}
 }

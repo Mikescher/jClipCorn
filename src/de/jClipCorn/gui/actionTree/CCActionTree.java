@@ -11,6 +11,8 @@ import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.KeyStroke;
 
+import org.jdom2.Element;
+
 import de.jClipCorn.Main;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
@@ -33,6 +35,7 @@ import de.jClipCorn.gui.frames.checkDatabaseFrame.CheckDatabaseFrame;
 import de.jClipCorn.gui.frames.compareDatabaseFrame.CompareDatabaseFrame;
 import de.jClipCorn.gui.frames.editMovieFrame.EditMovieFrame;
 import de.jClipCorn.gui.frames.editSeriesFrame.EditSeriesFrame;
+import de.jClipCorn.gui.frames.exportElementsFrame.ExportElementsFrame;
 import de.jClipCorn.gui.frames.filenameRulesFrame.FilenameRuleFrame;
 import de.jClipCorn.gui.frames.importElementsFrame.ImportElementsFrame;
 import de.jClipCorn.gui.frames.logFrame.LogFrame;
@@ -129,6 +132,14 @@ public class CCActionTree {
 			}
 		});
 		
+		temp = database.addChild(new CCActionElement("ImportMultipleElements", null, "ClipMenuBar.Database.ImportMultiple", null)); //TODO Gib mir icon
+		temp.addListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				onClickDatabaseImportMultipleElements();
+			}
+		});
+		
 		temp = database.addChild(new CCActionElement("SearchDatabase", KeyStroke.getKeyStroke(KeyEvent.VK_F, InputEvent.CTRL_DOWN_MASK), "ClipMenuBar.Database.SearchDB", Resources.ICN_MENUBAR_SEARCH));
 		temp.addListener(new ActionListener() {
 			@Override
@@ -165,19 +176,27 @@ public class CCActionTree {
 			}
 		});
 		
-		temp = movies.addChild(new CCActionElement("ExportMovie", null, "", null)); //TODO Please give me information :3
+		temp = movies.addChild(new CCActionElement("ExportSingleMovie", null, "ClipMenuBar.Movies.ExportSingle", null)); //TODO Please give me icon :3
 		temp.addListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				onClickMoviesExport();
+				onClickMoviesExportSingle();
 			}
 		});
 		
-		temp = movies.addChild(new CCActionElement("ImportMovie", null, "", null)); //TODO Please give me information :3
+		temp = movies.addChild(new CCActionElement("AddMovieToExportList", null, "ClipMenuBar.Movies.ExportMultiple", null)); //TODO Please give me icon :3
 		temp.addListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				onClickMoviesImport();
+				onClickMoviesAddToExportList();
+			}
+		});
+		
+		temp = movies.addChild(new CCActionElement("ImportSingleMovie", null, "ClipMenuBar.Movies.ImportSingle", null)); //TODO Please give me icon :3
+		temp.addListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				onClickMoviesImportSingle();
 			}
 		});
 
@@ -222,6 +241,30 @@ public class CCActionTree {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				onClickSeriesAdd();
+			}
+		});
+		
+		temp = series.addChild(new CCActionElement("ExportSingleSeries", null, "ClipMenuBar.Series.ExportSingle", null)); //TODO Please give me icon :3
+		temp.addListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				onClickSeriesExportSingle();
+			}
+		});
+		
+		temp = series.addChild(new CCActionElement("AddSeriesToExportList", null, "ClipMenuBar.Series.ExportMultiple", null)); //TODO Please give me icon :3
+		temp.addListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				onClickSeriesAddToExportList();
+			}
+		});
+		
+		temp = series.addChild(new CCActionElement("ImportSingleSeries", null, "ClipMenuBar.Series.ImportSingle", null)); //TODO Please give me icon :3
+		temp.addListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				onClickSeriesImportSingle();
 			}
 		});
 
@@ -565,8 +608,10 @@ public class CCActionTree {
 	}
 
 	private void onClickMoviesPrev() {
-		if (owner.getSelectedElement().isMovie()) {
-			PreviewMovieFrame frame = new PreviewMovieFrame(owner, (CCMovie) owner.getSelectedElement());
+		CCDatabaseElement element = owner.getSelectedElement();
+		
+		if (element != null && element.isMovie()) {
+			PreviewMovieFrame frame = new PreviewMovieFrame(owner, (CCMovie) element);
 
 			frame.setVisible(true);
 		}
@@ -578,7 +623,7 @@ public class CCActionTree {
 		nFrame.setVisible(true);
 	}
 	
-	private void onClickMoviesExport() {
+	private void onClickMoviesExportSingle() {
 		final CCDatabaseElement element = owner.getSelectedElement();
 
 		if (element != null && element.isMovie()) {
@@ -600,12 +645,20 @@ public class CCActionTree {
 						
 						owner.endBlockingIntermediate();
 					}
-				}, "THREAD_EXPORT_JSCCEXPORT").start(); //$NON-NLS-1$
+				}, "THREAD_EXPORT_JSCCEXPORT_MOVIE").start(); //$NON-NLS-1$
 			}
 		}
 	}
 	
-	private void onClickMoviesImport() {
+	private void onClickMoviesAddToExportList() {
+		CCDatabaseElement element = owner.getSelectedElement();
+
+		if (element != null && element.isMovie()) {
+			ExportElementsFrame.addElementToList(owner, movielist, element);
+		}
+	}
+	
+	private void onClickMoviesImportSingle() {
 		final JFileChooser chooser = new JFileChooser();
 		chooser.setFileFilter(FileChooserHelper.createLocalFileFilter("ExportHelper.filechooser_jsccexport.description", ExportHelper.EXTENSION_SINGLEEXPORT)); //$NON-NLS-1$
 		chooser.setCurrentDirectory(new File(PathFormatter.getRealSelfDirectory()));
@@ -615,11 +668,26 @@ public class CCActionTree {
 		if (returnval == JFileChooser.APPROVE_OPTION) {
 			try {
 				String xml = TextFileUtils.readTextFile(chooser.getSelectedFile());
-
-				ImportElementsFrame elf = new ImportElementsFrame(xml, movielist);
-				elf.setVisible(true);
+				
+				if (ExportHelper.getTypOfFirstElementOfExport(xml) != CCMovieTyp.MOVIE) {
+					CCLog.addError(LocaleBundle.getString("LogMessage.FormatErrorInExport")); //$NON-NLS-1$
+					return;
+				}
+				int methodval = DialogHelper.showLocaleOptions(owner, "ExportHelper.dialogs.importDirect", 1); //$NON-NLS-1$
+				
+				boolean resetDate = DialogHelper.showLocaleYesNo(owner, "ExportHelper.dialogs.resetDate"); //$NON-NLS-1$
+				boolean resetViewed = DialogHelper.showLocaleYesNo(owner, "ExportHelper.dialogs.resetViewed"); //$NON-NLS-1$
+				
+				if (methodval == 0) { // Direct
+					ExportHelper.importSingleElement(movielist, xml, resetDate, resetViewed);
+				} else if (methodval == 1) { // Edit & Add
+					Element value = ExportHelper.getFirstElementOfExport(xml);
+					AddMovieFrame amf = new AddMovieFrame(owner, movielist);
+					amf.parseFromXML(value, resetDate, resetViewed);
+					amf.setVisible(true);
+				}
 			} catch (IOException e) {
-				CCLog.addError(e);
+				CCLog.addError(LocaleBundle.getString("LogMessage.FormatErrorInExport"), e); //$NON-NLS-1$
 			}
 		}
 	}
@@ -692,6 +760,25 @@ public class CCActionTree {
 		}
 	}
 	
+	private void onClickDatabaseImportMultipleElements() {
+		final JFileChooser chooser = new JFileChooser();
+		chooser.setFileFilter(FileChooserHelper.createLocalFileFilter("ExportHelper.filechooser_jmccexport.description", ExportHelper.EXTENSION_MULTIPLEEXPORT)); //$NON-NLS-1$
+		chooser.setCurrentDirectory(new File(PathFormatter.getRealSelfDirectory()));
+
+		int returnval = chooser.showOpenDialog(owner);
+
+		if (returnval == JFileChooser.APPROVE_OPTION) {
+			try {
+				String xml = TextFileUtils.readTextFile(chooser.getSelectedFile());
+				
+				ImportElementsFrame ief = new ImportElementsFrame(owner, xml, movielist);
+				ief.setVisible(true);
+			} catch (IOException e) {
+				CCLog.addError(e);
+			}
+		}
+	}
+	
 	private void onClickDatabaseSearchDatabase() {
 		SearchFrame sf = new SearchFrame(movielist, owner);
 		sf.setVisible(true);
@@ -717,6 +804,75 @@ public class CCActionTree {
 
 	private void onClickSeriesAdd() {
 		(new AddSeriesFrame(owner, movielist)).setVisible(true);
+	}
+	
+	private void onClickSeriesExportSingle() {
+		final CCDatabaseElement element = owner.getSelectedElement();
+
+		if (element != null && element.isSeries()) {
+			final JFileChooser chooser = new JFileChooser();
+			chooser.setFileFilter(FileChooserHelper.createLocalFileFilter("ExportHelper.filechooser_jsccexport.description", ExportHelper.EXTENSION_SINGLEEXPORT)); //$NON-NLS-1$
+			chooser.setCurrentDirectory(new File(PathFormatter.getRealSelfDirectory()));
+
+			int returnval = chooser.showSaveDialog(owner);
+
+			if (returnval == JFileChooser.APPROVE_OPTION) {
+				final boolean includeCover = 0 == DialogHelper.showLocaleOptions(owner, "ExportHelper.dialogs.exportCover"); //$NON-NLS-1$
+
+				new Thread(new Runnable() {
+					@Override
+					public void run() {
+						owner.beginBlockingIntermediate();
+
+						ExportHelper.exportSeries(PathFormatter.forceExtension(chooser.getSelectedFile(), ExportHelper.EXTENSION_SINGLEEXPORT), movielist, (CCSeries) element, includeCover);
+						
+						owner.endBlockingIntermediate();
+					}
+				}, "THREAD_EXPORT_JSCCEXPORT_SERIES").start(); //$NON-NLS-1$
+			}
+		}
+	}
+	
+	private void onClickSeriesAddToExportList() {
+		CCDatabaseElement element = owner.getSelectedElement();
+
+		if (element != null && element.isSeries()) {
+			ExportElementsFrame.addElementToList(owner, movielist, element);
+		}
+	}
+	
+	private void onClickSeriesImportSingle() {
+		final JFileChooser chooser = new JFileChooser();
+		chooser.setFileFilter(FileChooserHelper.createLocalFileFilter("ExportHelper.filechooser_jsccexport.description", ExportHelper.EXTENSION_SINGLEEXPORT)); //$NON-NLS-1$
+		chooser.setCurrentDirectory(new File(PathFormatter.getRealSelfDirectory()));
+
+		int returnval = chooser.showOpenDialog(owner);
+
+		if (returnval == JFileChooser.APPROVE_OPTION) {
+			try {
+				String xml = TextFileUtils.readTextFile(chooser.getSelectedFile());
+				
+				int methodval = 0;
+				if (ExportHelper.getTypOfFirstElementOfExport(xml) != CCMovieTyp.SERIES) {
+					CCLog.addError(LocaleBundle.getString("LogMessage.FormatErrorInExport")); //$NON-NLS-1$
+					return;
+				}
+				
+				boolean resetDate = DialogHelper.showLocaleYesNo(owner, "ExportHelper.dialogs.resetDate"); //$NON-NLS-1$
+				boolean resetViewed = DialogHelper.showLocaleYesNo(owner, "ExportHelper.dialogs.resetViewed"); //$NON-NLS-1$
+				
+				if (methodval == 0) { // Direct
+					ExportHelper.importSingleElement(movielist, xml, resetDate, resetViewed);
+				} else if (methodval == 1) { // Edit & Add
+					Element value = ExportHelper.getFirstElementOfExport(xml);
+					AddMovieFrame amf = new AddMovieFrame(owner, movielist);
+					amf.parseFromXML(value, resetDate, resetViewed);
+					amf.setVisible(true);
+				}
+			} catch (IOException e) {
+				CCLog.addError(LocaleBundle.getString("LogMessage.FormatErrorInExport"), e); //$NON-NLS-1$
+			}
+		}
 	}
 
 	private void onClickSeriesEdit() {

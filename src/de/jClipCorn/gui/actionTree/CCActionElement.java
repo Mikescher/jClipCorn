@@ -167,6 +167,19 @@ public class CCActionElement {
 		}
 	}
 	
+	public void printTree() {
+		//TODO PrintTree
+		//|>AAAAA
+		//     |>BBB
+		// 	  	  |>BBB
+		// 	  	  |>BBB
+		// 	  |>CCC
+		// 	  |>DDD
+		// 	  	  |-BBB
+		// 	  |>EEE
+		//|>FFF
+	}
+	
 	public KeyStroke getKeyStroke() {
 		if (keyStrokeProperty == null) {
 			return null;

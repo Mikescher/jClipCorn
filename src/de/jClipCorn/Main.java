@@ -69,7 +69,7 @@ public class Main {
 //TODO Parse Cover from more sources (coverparadies, darktown ...) ((Erst mal sehen ob die was taugen))
 //TODO Search for Trailer
 
-//TODO Recheck all Texts - improve DL-Language (what EN / What GER)
+//TODO Recheck all Texts - improve DL-Language (what EN / What GER) => Sihee MoviePopup (mal deutsch/mal englisch)
 //TODO WatchItLaterFeature (And Download inHigherQuality)
 //TODO Apache Commons hacken und duplicate entry removen
 

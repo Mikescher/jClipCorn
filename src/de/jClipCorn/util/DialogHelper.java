@@ -48,12 +48,16 @@ public class DialogHelper {
 		}
 	}
 	
-	public static int showOptions(Component frame, String caption, String text, String option1, String option2) {
+	public static int showOptions(Component frame, String caption, String text, String option1, String option2, int standard) {
 		String[] oplist = {option1, option2};
-		return JOptionPane.showOptionDialog(frame, text, caption, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, oplist, oplist[0]);
+		return JOptionPane.showOptionDialog(frame, text, caption, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, oplist, oplist[standard]);
+	}
+	
+	public static int showLocaleOptions(Component frame, String ident, int standard) {
+		return showOptions(frame, LocaleBundle.getString(ident + "_caption"), LocaleBundle.getString(ident), LocaleBundle.getString(ident + "_option1"), LocaleBundle.getString(ident + "_option2"), standard); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
 	
 	public static int showLocaleOptions(Component frame, String ident) {
-		return showOptions(frame, LocaleBundle.getString(ident + "_caption"), LocaleBundle.getString(ident), LocaleBundle.getString(ident + "_option1"), LocaleBundle.getString(ident + "_option2")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		return showLocaleOptions(frame, ident, 0);
 	}
 }

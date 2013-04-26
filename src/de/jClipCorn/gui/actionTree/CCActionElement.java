@@ -16,6 +16,7 @@ import javax.swing.KeyStroke;
 import org.apache.commons.lang.StringUtils;
 
 import de.jClipCorn.Main;
+import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.gui.CachedResourceLoader;
 import de.jClipCorn.gui.frames.mainFrame.clipToolbar.ClipToolbar;
 import de.jClipCorn.gui.localization.LocaleBundle;
@@ -210,6 +211,10 @@ public class CCActionElement {
 	}
 	
 	private void onKeyPressed(KeyStroke stroke) {
+		if (CCMovieList.isBlocked()) {
+			return;
+		}
+		
 		List<CCActionElement> childs = getAllChildren();
 		childs.add(this);
 		

@@ -34,7 +34,14 @@ public class PathFormatter {
 	private final static String WORKINGDIR = getWorkingDir();
 	
 	private static String getWorkingDir() {// Dafuq - wasn code (wird ja nur 1mal executed)
-		return new File(new PathFormatter().getClass().getProtectionDomain().getCodeSource().getLocation().getPath()).getParent().replace("%20", " ");  //$NON-NLS-1$ //$NON-NLS-2$
+		try {
+			return new File(".").getCanonicalPath();
+		} catch (IOException e) {
+			e.printStackTrace();
+			return new File("").getAbsolutePath();
+		}
+//		Funny old way: 
+//		return new File(new PathFormatter().getClass().getProtectionDomain().getCodeSource().getLocation().getPath()).getParent().replace("%20", " ");  //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	public static String getAbsoluteSelfDirectory() {

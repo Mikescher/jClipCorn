@@ -119,7 +119,7 @@ public class ClipStatusBar extends AbstractClipStatusbar implements CCDBUpdateLi
 	}
 	
 	private void updateLabels() {
-		if (movielist.isBlocked()) {
+		if (CCMovieList.isBlocked()) {
 			return;
 		}
 		

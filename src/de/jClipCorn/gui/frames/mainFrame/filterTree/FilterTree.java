@@ -234,7 +234,7 @@ public class FilterTree extends AbstractFilterTree {
 	}
 	
 	private void initGenre() {
-		if (movielist.isBlocked()) {
+		if (CCMovieList.isBlocked()) {
 			return;
 		}
 		

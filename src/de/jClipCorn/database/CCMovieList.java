@@ -36,6 +36,8 @@ import de.jClipCorn.util.CCDate;
 import de.jClipCorn.util.PathFormatter;
 
 public class CCMovieList {
+	private static CCMovieList instance = null;
+	
 	private List<CCDatabaseElement> list;
 
 	private CCCoverCache coverCache;
@@ -51,6 +53,8 @@ public class CCMovieList {
 		this.database = null;
 		this.list = new Vector<>();
 		this.listener = new Vector<>();
+		
+		instance = this;
 	}
 
 	public void connect(final MainFrame mf) {
@@ -470,7 +474,9 @@ public class CCMovieList {
 	}
 
 	public void shutdown() {
-		database.shutdown();
+		if (database != null) { // Close even after Intialize AV's
+			database.shutdown();
+		}
 	}
 	
 	public String getDatabasePath() {
@@ -572,17 +578,21 @@ public class CCMovieList {
 		return xml;
 	}
 	
-	public boolean isBlocked() {
-		return blocked;
+	public static boolean isBlocked() {
+		return getInstance().blocked;
 	}
 	
-	public void beginBlocking() {
-		blocked = true;
+	public static void beginBlocking() {
+		getInstance().blocked = true;
 	}
 	
-	public void endBlocking() {
-		blocked = false;
+	public static void endBlocking() {
+		getInstance().blocked = false;
 		
-		fireOnRefresh();
+		getInstance().fireOnRefresh();
+	}
+	
+	public static CCMovieList getInstance() {
+		return instance;
 	}
 }

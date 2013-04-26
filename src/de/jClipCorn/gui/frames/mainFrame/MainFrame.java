@@ -138,7 +138,7 @@ public class MainFrame extends JFrame implements CCDBUpdateListener {
 	}
 	
 	public void beginBlockingIntermediate() {
-		movielist.beginBlocking();
+		CCMovieList.beginBlocking();
 		
 		try {
 			SwingUtilities.invokeAndWait(new Runnable() {
@@ -156,7 +156,7 @@ public class MainFrame extends JFrame implements CCDBUpdateListener {
 	}
 	
 	public void endBlockingIntermediate() {
-		movielist.endBlocking();
+		CCMovieList.endBlocking();
 		
 		try {
 			SwingUtilities.invokeAndWait(new Runnable() {

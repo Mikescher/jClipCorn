@@ -141,7 +141,7 @@ public class CCSeries extends CCDatabaseElement {
 	}
 	
 	public CCMovieSize getFilesize() {
-		if (getMovieList().isBlocked()) {
+		if (CCMovieList.isBlocked()) {
 			return new CCMovieSize();
 		}
 		

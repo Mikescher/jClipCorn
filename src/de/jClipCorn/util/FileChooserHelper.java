@@ -7,7 +7,6 @@ import javax.swing.filechooser.FileFilter;
 import de.jClipCorn.gui.localization.LocaleBundle;
 
 public class FileChooserHelper {
-	//TODO Diese ganze Klasse löschen und überall FileNameExtensionFilter nehmen (really ? geht doch auch so ... )
 	public static FileFilter createFileFilter(final String description, final String[] extensions) {
 		return new FileFilter() {
 			@Override

@@ -61,9 +61,7 @@ public class Main {
 	}
 }
 
-//TODO Add small (16x16) icons for toolbar icons in ressources (use them  if their there, otherwise use old method)
-
-//FIXME old beanutils class (fehlernde conversionexception bei 2 instancen)
+//TODO Add small (16x16) icons for toolbar icons in ressources (functionality is there - only missing are the icons)
 
 //TODO Parse that (eventually ?): http://www.themoviedb.org/search/movie?query=lazarus%20projekt
 
@@ -73,7 +71,7 @@ public class Main {
 //TODO Parse Cover from more sources (coverparadies, darktown ...) ((Erst mal sehen ob die was taugen))
 //TODO Search for Trailer
 
-//TODO Recheck all Texts - improve DL-Language (what EN / What GER) => Sihee MoviePopup (mal deutsch/mal englisch)
+//TODO Recheck all Texts - improve DL-Language (what EN / What GER) => Siehe MoviePopup (mal deutsch/mal englisch)
 //TODO WatchItLaterFeature (And Download inHigherQuality)
 
 //TODO Read Only - Mode

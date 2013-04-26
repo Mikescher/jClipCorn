@@ -7,9 +7,14 @@ import java.util.Arrays;
 import java.util.List;
 
 import javax.swing.JButton;
+import javax.swing.JTextField;
 
+import de.jClipCorn.gui.actionTree.CCActionTree;
 import de.jClipCorn.gui.frames.editToolbarFrame.EditToolbarFrame;
+import de.jClipCorn.gui.frames.mainFrame.clipToolbar.ClipToolbar;
 import de.jClipCorn.gui.guiComponents.ToolbarConfigPanel;
+import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.properties.CCProperties;
 
 public class CCToolbarProperty extends CCStringProperty {
@@ -42,6 +47,21 @@ public class CCToolbarProperty extends CCStringProperty {
 	}
 	
 	@Override
+	public Component getAlternativeComponent() {
+		return new JTextField(1);
+	}
+	
+	@Override
+	public void setAlternativeComponentValueToValue(Component c, String val) {
+		((JTextField)c).setText(val);
+	}
+	
+	@Override
+	public String getAlternativeComponentValue(Component c) {
+		return ((JTextField)c).getText();
+	}
+	
+	@Override
 	public Component getSecondaryComponent(final Component firstComponent) {
 		JButton b = new JButton("..."); //$NON-NLS-1$
 		b.addActionListener(new ActionListener() {
@@ -53,6 +73,41 @@ public class CCToolbarProperty extends CCStringProperty {
 		return b;
 	}
 	
-	//TODO Add Alternative Component (edit)
-	//TODO Add Integrity check on load
+	@Override
+	public String getValue() {
+		String val = super.getValue();
+		if (isValid(val)) {
+			return val;
+		} else  {
+			setValue(getStandard());
+			CCLog.addWarning(LocaleBundle.getFormattedString("LogMessage.PropFormatErrorToolbar", identifier, mclass.getName())); //$NON-NLS-1$
+			return standard;
+		}
+	}
+	
+	@Override
+	public String setValue(String val) {
+		if (isValid(val)) {
+			properties.setProperty(identifier, val);
+		} else {
+			CCLog.addWarning(LocaleBundle.getFormattedString("LogMessage.PropFormatErrorToolbar", identifier, mclass.getName())); //$NON-NLS-1$
+			properties.setProperty(identifier, standard);
+			return standard;
+		}
+		
+		return getValue();
+	}
+	
+	private boolean isValid(String str) {
+		List<String> list= splitStringList(str);
+		
+		for (int i = 0; i < list.size(); i++) {
+			String el = list.get(i);
+			if (el.isEmpty() || !(el.equals(ClipToolbar.IDENT_SEPERATOR) || CCActionTree.getInstance() == null || CCActionTree.getInstance().find(el) != null)) {
+				return false;
+			}
+		}
+		return true;
+		
+	}
 }

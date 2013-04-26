@@ -63,7 +63,7 @@ public class PathFormatter {
 			if (letter != '#') {
 				return RegExHelper.replace(REGEX_DRIVENAME, rPath, letter + ":\\");
 			} else {
-				CCLog.addError(LocaleBundle.getFormattedString("LogMessage.DriveNotFound", name));
+				CCLog.addWarning(LocaleBundle.getFormattedString("LogMessage.DriveNotFound", name));
 				return "";
 			}
 		} else if (RegExHelper.startsWithRegEx(REGEX_DRIVELETTER, rPath)) {
@@ -124,7 +124,7 @@ public class PathFormatter {
 	
 	public static void showInExplorer(String abspath) {
 		try {
-			Runtime.getRuntime().exec(String.format("explorer.exe /select,\"%s\"", abspath)); //TODO Öffnet zwar - selected aber nicht :'( // Manchmal aber doch // Vielleicht doch immer ??
+			Runtime.getRuntime().exec(String.format("explorer.exe /select,\"%s\"", abspath));
 		} catch (IOException e) {
 			CCLog.addError(e);
 		}

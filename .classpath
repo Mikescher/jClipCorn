@@ -54,11 +54,11 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/jgoodies-forms-1.4.2.jar"/>
 	<classpathentry kind="lib" path="lib/derby-10.10.1.1.jar"/>
-	<classpathentry kind="lib" path="lib/commons-beanutils-bean-collections-1.8.3.jar">
+	<classpathentry kind="lib" path="lib/jgoodies-common-1.2.1.jar"/>
+	<classpathentry kind="lib" path="lib/commons-beanutils-1.8.3-custombuild.jar">
 		<attributes>
 			<attribute name="javadoc_location" value="jar:platform:/resource/jClipCorn/javadoc/commons-beanutils-1.8.3-javadoc.jar!/"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="lib/jgoodies-common-1.2.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

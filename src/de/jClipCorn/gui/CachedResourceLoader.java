@@ -50,7 +50,7 @@ public class CachedResourceLoader {
 	}
 	
 	public static ImageIcon getSmallImageIcon(String name) {
-		String shortFN = name.substring(0,name.lastIndexOf(46)) + "_16x16" + name.substring(name.lastIndexOf(46), name.length()); //$NON-NLS-1$
+		String shortFN = name.substring(0, name.lastIndexOf(46)) + "_16x16" + name.substring(name.lastIndexOf(46), name.length()); //$NON-NLS-1$
 		//ASCII 46 = '.'
 		
 		if (Main.class.getResource(shortFN) != null) {

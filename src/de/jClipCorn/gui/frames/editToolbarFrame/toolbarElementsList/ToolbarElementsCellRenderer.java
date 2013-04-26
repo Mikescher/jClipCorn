@@ -20,42 +20,39 @@ import de.jClipCorn.gui.frames.mainFrame.clipToolbar.ClipToolbar;
 public class ToolbarElementsCellRenderer extends JLabel implements ListCellRenderer<String> {
 	private static final long serialVersionUID = -4383588005689445693L;
 
-	protected static Border noFocusBorder = new EmptyBorder(1, 1, 1, 1);
-	private static final Border SAFE_NO_FOCUS_BORDER = new EmptyBorder(1, 1, 1, 1);
+	private final static Border NO_FOCUS_BORDER = new EmptyBorder(1, 1, 1, 1);
 
+	private final JPanel SEPERATOR_PANEL = new JPanel(new BorderLayout());
+	
 	public ToolbarElementsCellRenderer() {
 		super();
 		setOpaque(true);
 		setBorder(getNoFocusBorder());
+		
+		init();
+	}
+	
+	private void init() {
+		SEPERATOR_PANEL.setBorder(new EmptyBorder(0, 7, 0, 7));
+		JSeparator sep = new JSeparator(JSeparator.HORIZONTAL);
+		sep.setPreferredSize(new Dimension(0, 2));
+		SEPERATOR_PANEL.add(sep, BorderLayout.CENTER);
 	}
 
 	private static Border getNoFocusBorder() {
-		if (System.getSecurityManager() != null) {
-			return SAFE_NO_FOCUS_BORDER;
-		} else {
-			return noFocusBorder;
-		}
+		return NO_FOCUS_BORDER;
 	}
 
 	@Override
 	public Component getListCellRendererComponent(JList<? extends String> list, String value, int index, boolean isSelected, boolean cellHasFocus) {
-		if (value.equals(ClipToolbar.IDENT_SEPERATOR)) {
-			JPanel p = new JPanel(new BorderLayout());
-			p.setBorder(new EmptyBorder(0, 10, 0, 10));
-			
-			JSeparator sep = new JSeparator(JSeparator.HORIZONTAL);
-			sep.setPreferredSize(new Dimension(0, 2));
-			p.add(sep, BorderLayout.CENTER);
-			
+		if (value.equals(ClipToolbar.IDENT_SEPERATOR)) {	
 			if (isSelected) {
-				p.setBackground(list.getSelectionBackground());
+				SEPERATOR_PANEL.setBackground(list.getSelectionBackground());
 			} else {
-				p.setBackground(list.getBackground());
+				SEPERATOR_PANEL.setBackground(list.getBackground());
 			}
 			
-			p.setBorder(new EmptyBorder(7, 0, 7, 0));
-			
-			return p;
+			return SEPERATOR_PANEL;
 		}
 
 		CCActionElement element = CCActionTree.getInstance().find(value);

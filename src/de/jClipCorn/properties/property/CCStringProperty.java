@@ -15,7 +15,7 @@ public class CCStringProperty extends CCProperty<String> {
 
 	@Override
 	public Component getComponent() {
-		return new JTextField();
+		return new JTextField(1);
 	}
 
 	@Override

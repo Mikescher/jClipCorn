@@ -17,6 +17,7 @@ import org.apache.commons.lang.StringUtils;
 
 import de.jClipCorn.Main;
 import de.jClipCorn.gui.CachedResourceLoader;
+import de.jClipCorn.gui.frames.mainFrame.clipToolbar.ClipToolbar;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.property.CCCaptionedKeyStrokeProperty;
@@ -250,6 +251,40 @@ public class CCActionElement {
 		
 		if (Main.DEBUG) {
 			System.out.println(String.format("[DBG] %d Properties in ActionTree intialized", childs.size())); //$NON-NLS-1$
+		}
+	}
+	
+	public String getRootToolbarConfig() {
+		StringBuilder b = new StringBuilder();
+		
+		for (int i = 0; i < children.size(); i++) {
+			b.append(children.get(i).getToolbarConfig());
+			
+			if (i+1 < children.size()) {
+				b.append('|');
+				b.append(ClipToolbar.IDENT_SEPERATOR);
+				b.append('|');
+			}
+		}
+		
+		return b.toString();
+	}
+	
+	public String getToolbarConfig() {
+		if (hasChildren()) {
+			StringBuilder b = new StringBuilder();
+			
+			for (int i = 0; i < children.size(); i++) {
+				b.append(children.get(i).getToolbarConfig());
+				
+				if (i+1 < children.size()) {
+					b.append('|');
+				}
+			}
+			
+			return b.toString();
+		} else {
+			return getName();
 		}
 	}
 }

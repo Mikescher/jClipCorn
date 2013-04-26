@@ -11,7 +11,6 @@ import java.util.List;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -41,6 +40,7 @@ import de.jClipCorn.gui.CachedResourceLoader;
 import de.jClipCorn.gui.Resources;
 import de.jClipCorn.gui.frames.addMovieFrame.AddMovieFrame;
 import de.jClipCorn.gui.frames.importElementsFrame.contentList.ElementCellRenderer;
+import de.jClipCorn.gui.guiComponents.PropertyCheckbox;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.properties.CCProperties;
@@ -64,8 +64,8 @@ public class ImportElementsFrame extends JFrame {
 	private JButton btnAdd;
 	private JPanel pnlTopRight;
 	private JPanel pnlTopRightInner;
-	private JCheckBox chcbxResetViewed;
-	private JCheckBox chckbxOnlyCover;
+	private PropertyCheckbox chcbxResetViewed;
+	private PropertyCheckbox chckbxOnlyCover;
 	private JLabel lblCover;
 	private JLabel lblViewed;
 	private JLabel lblChilds;
@@ -73,7 +73,7 @@ public class ImportElementsFrame extends JFrame {
 	
 	private DefaultListModel<Element> listModel;
 	private CCMovieList movielist;
-	private JCheckBox chckbxResetDate;
+	private PropertyCheckbox chckbxResetDate;
 
 	public ImportElementsFrame(Component owner, String xmlcontent, CCMovieList movielist) {
 		super();
@@ -121,14 +121,7 @@ public class ImportElementsFrame extends JFrame {
 		pnlTopRight.add(pnlTopRightInner, BorderLayout.EAST);
 		pnlTopRightInner.setLayout(new BorderLayout(0, 0));
 		
-		chckbxOnlyCover = new JCheckBox(CCProperties.getInstance().PROP_IMPORT_ONLYWITHCOVER.getDescription());
-		chckbxOnlyCover.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				CCProperties.getInstance().PROP_IMPORT_ONLYWITHCOVER.setValue(chckbxOnlyCover.isSelected());
-			}
-		});
-		chckbxOnlyCover.setSelected(CCProperties.getInstance().PROP_IMPORT_ONLYWITHCOVER.getValue());
+		chckbxOnlyCover = new PropertyCheckbox(CCProperties.getInstance().PROP_IMPORT_ONLYWITHCOVER);
 		pnlTopRightInner.add(chckbxOnlyCover, BorderLayout.EAST);
 		
 		pnlCenter = new JPanel();
@@ -225,25 +218,11 @@ public class ImportElementsFrame extends JFrame {
 		btnAdd.setEnabled(false);
 		pnlInfo.add(btnAdd, "7, 12"); //$NON-NLS-1$
 		
-		chckbxResetDate = new JCheckBox(CCProperties.getInstance().PROP_IMPORT_RESETADDDATE.getDescription());
+		chckbxResetDate = new PropertyCheckbox(CCProperties.getInstance().PROP_IMPORT_RESETADDDATE);
 		pnlInfo.add(chckbxResetDate, "2, 14, 6, 1"); //$NON-NLS-1$
-		chckbxResetDate.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				CCProperties.getInstance().PROP_IMPORT_RESETADDDATE.setValue(chckbxResetDate.isSelected());
-			}
-		});
-		chckbxResetDate.setSelected(CCProperties.getInstance().PROP_IMPORT_RESETADDDATE.getValue());
 		
-		chcbxResetViewed = new JCheckBox(CCProperties.getInstance().PROP_IMPORT_RESETVIEWED.getDescription());
+		chcbxResetViewed = new PropertyCheckbox(CCProperties.getInstance().PROP_IMPORT_RESETVIEWED);
 		pnlInfo.add(chcbxResetViewed, "2, 16, 6, 1"); //$NON-NLS-1$
-		chcbxResetViewed.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				CCProperties.getInstance().PROP_IMPORT_RESETVIEWED.setValue(chcbxResetViewed.isSelected());
-			}
-		});
-		chcbxResetViewed.setSelected(CCProperties.getInstance().PROP_IMPORT_RESETVIEWED.getValue());
 		
 		setSize(new Dimension(650, 350));
 		setMinimumSize(new Dimension(550, 250));

@@ -22,10 +22,9 @@ import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.gui.CachedResourceLoader;
 import de.jClipCorn.gui.Resources;
 import de.jClipCorn.gui.guiComponents.CoverLabel;
+import de.jClipCorn.gui.guiComponents.PropertyCheckbox;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.properties.CCProperties;
-
-import javax.swing.JCheckBox;
 
 public class ChangeViewedFrame extends JFrame {
 	private static final long serialVersionUID = 9048482551231383355L;
@@ -41,7 +40,7 @@ public class ChangeViewedFrame extends JFrame {
 	private JLabel lblKeyViewed;
 	private JLabel lblKeyUnviewed;
 	private JLabel lblTitle;
-	private JCheckBox cbOnlyUnviewed;
+	private PropertyCheckbox cbOnlyUnviewed;
 
 	public ChangeViewedFrame(Component owner, CCMovieList list) {
 		super();
@@ -109,15 +108,8 @@ public class ChangeViewedFrame extends JFrame {
 		lblTitle.setBounds(10, 11, 356, 14);
 		getContentPane().add(lblTitle);
 		
-		cbOnlyUnviewed = new JCheckBox(CCProperties.getInstance().PROP_MASSCHANGEVIEWED_ONLYUNVIEWED.getDescription());
-		cbOnlyUnviewed.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				CCProperties.getInstance().PROP_MASSCHANGEVIEWED_ONLYUNVIEWED.setValue(cbOnlyUnviewed.isSelected());
-			}
-		});
+		cbOnlyUnviewed = new PropertyCheckbox(CCProperties.getInstance().PROP_MASSCHANGEVIEWED_ONLYUNVIEWED);
 		cbOnlyUnviewed.setBounds(10, 388, 356, 23);
-		cbOnlyUnviewed.setSelected(CCProperties.getInstance().PROP_MASSCHANGEVIEWED_ONLYUNVIEWED.getValue());
 		getContentPane().add(cbOnlyUnviewed);
 	}
 	

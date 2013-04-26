@@ -9,14 +9,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JButton;
-import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
-
-import org.apache.commons.lang.StringUtils;
 
 import com.jgoodies.forms.factories.FormFactory;
 import com.jgoodies.forms.layout.ColumnSpec;
@@ -30,12 +27,9 @@ import de.jClipCorn.gui.frames.extendedSettingsFrame.ExtendedSettingsFrame;
 import de.jClipCorn.gui.frames.mainFrame.MainFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.properties.CCProperties;
-import de.jClipCorn.properties.property.CCPathProperty;
 import de.jClipCorn.properties.property.CCProperty;
 import de.jClipCorn.util.DialogHelper;
 import de.jClipCorn.util.ExtendedFocusTraversalOnArray;
-import de.jClipCorn.util.FileChooserHelper;
-import de.jClipCorn.util.Validator;
 
 public abstract class AutomaticSettingsFrame extends JFrame {
 	private static final long serialVersionUID = 4681197289662529891L;
@@ -165,8 +159,7 @@ public abstract class AutomaticSettingsFrame extends JFrame {
 				FormFactory.RELATED_GAP_COLSPEC,
 				ColumnSpec.decode("default:grow"), //$NON-NLS-1$
 				FormFactory.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("25dlu"), //$NON-NLS-1$
-				ColumnSpec.decode("25dlu"), //$NON-NLS-1$
+				ColumnSpec.decode("50dlu"), //$NON-NLS-1$
 				FormFactory.RELATED_GAP_COLSPEC,
 				FormFactory.DEFAULT_COLSPEC,
 				FormFactory.RELATED_GAP_COLSPEC},
@@ -178,45 +171,28 @@ public abstract class AutomaticSettingsFrame extends JFrame {
 				JLabel info = new JLabel(p.getDescription());
 				pnlTab.add(info, "2, " + c*2 + ", right, default"); //$NON-NLS-1$ //$NON-NLS-2$
 
-				final Component comp = p.getComponent();
-				pnlTab.add(comp, "4, " + c*2 + ", fill, default"); //$NON-NLS-1$ //$NON-NLS-2$
-				tabOrder.add(comp);
+				final Component comp1 = p.getComponent();
+				pnlTab.add(comp1, "4, " + c*2 + ", fill, default"); //$NON-NLS-1$ //$NON-NLS-2$
+				tabOrder.add(comp1);
 				
-				if (((CCProperty<?>)p) instanceof CCPathProperty) {
-					JButton btnChoose = new JButton("..."); //$NON-NLS-1$
-					pnlTab.add(btnChoose, "6, " + c*2 + ", right, default"); //$NON-NLS-1$ //$NON-NLS-2$
-					btnChoose.addActionListener(new ActionListener() {
-						@Override
-						public void actionPerformed(ActionEvent arg0) {
-							final String end = ((CCPathProperty) ((CCProperty<?>) p)).getFilterEnding();
-							JFileChooser vc = new JFileChooser();
-							vc.setFileFilter(FileChooserHelper.createFullValidateFileFilter("Filter: " + end, new Validator<String>() { //$NON-NLS-1$
-										@Override
-										public boolean validate(String val) {
-											return StringUtils.endsWithIgnoreCase(val, end);
-										}
-									}));
-							vc.setDialogTitle(LocaleBundle.getString("Settingsframe.dlg.title")); //$NON-NLS-1$
-
-							if (vc.showOpenDialog(AutomaticSettingsFrame.this) == JFileChooser.APPROVE_OPTION) {
-								p.setComponentValueToValue(comp, vc.getSelectedFile().getAbsolutePath());
-							}
-						}
-					});
-					tabOrder.add(btnChoose);
+				Component comp2 = p.getSecondaryComponent(comp1);
+				
+				if (comp2 != null) {
+					pnlTab.add(comp2, "6, " + c*2 + ", left, default"); //$NON-NLS-1$ //$NON-NLS-2$
+					tabOrder.add(comp2);
 				}
 
 				JButton btnReset = new JButton(LocaleBundle.getString("Settingsframe.btnReset.title")); //$NON-NLS-1$
 				btnReset.addActionListener(new ActionListener() {
 					@Override
 					public void actionPerformed(ActionEvent e) {
-						p.setComponentValueToValue(comp, p.getDefault());
+						p.setComponentValueToValue(comp1, p.getDefault());
 					}
 				});
-				pnlTab.add(btnReset, "9, " + c*2); //$NON-NLS-1$
+				pnlTab.add(btnReset, "8, " + c*2); //$NON-NLS-1$
 				tabOrder.add(btnReset);
 				
-				elements.add(new PropertyElement(p, comp));
+				elements.add(new PropertyElement(p, comp1));
 				
 				c++;
 			}

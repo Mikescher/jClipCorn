@@ -546,6 +546,10 @@ public class CCActionTree {
 	private void createProperties() {
 		getRoot().createAllProperties(CCProperties.getInstance());
 	}
+	
+	public String getCompleteToolbarConfig() {
+		return getRoot().getRootToolbarConfig();
+	}
 
 	// #######################################################################################################
 	// ############################################### EVENTS ################################################

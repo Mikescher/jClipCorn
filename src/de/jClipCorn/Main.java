@@ -61,7 +61,9 @@ public class Main {
 	}
 }
 
-//TODO Add guiComonent for Checkboxes which are snychronized with a property, change them everywhere
+//TODO Add small (16x16) icons for toolbar icons in ressources (use them  if their there, otherwise use old method)
+
+//FIXME old beanutils class (fehlernde conversionexception bei 2 instancen)
 
 //TODO Parse that (eventually ?): http://www.themoviedb.org/search/movie?query=lazarus%20projekt
 
@@ -73,7 +75,6 @@ public class Main {
 
 //TODO Recheck all Texts - improve DL-Language (what EN / What GER) => Sihee MoviePopup (mal deutsch/mal englisch)
 //TODO WatchItLaterFeature (And Download inHigherQuality)
-//TODO Apache Commons hacken und duplicate entry removen
 
 //TODO Read Only - Mode
 

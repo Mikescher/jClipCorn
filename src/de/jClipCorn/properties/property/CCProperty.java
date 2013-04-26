@@ -13,7 +13,7 @@ public abstract class CCProperty<T extends Object> {
 	protected final Class<T> mclass;
 
 	@SuppressWarnings("unchecked")
-	CCProperty(int cat, Class<T> pclass, CCProperties prop, String ident, T std) {
+	public CCProperty(int cat, Class<T> pclass, CCProperties prop, String ident, T std) {
 		prop.addPropertyToList((CCProperty<Object>)this);
 		
 		this.category = cat;
@@ -68,6 +68,10 @@ public abstract class CCProperty<T extends Object> {
 	
 	public T getAlternativeComponentValue(Component c) {
 		return getComponentValue(c);
+	}
+	
+	public Component getSecondaryComponent(Component firstComp) {
+		return null;
 	}
 	
 	public abstract Component getComponent();

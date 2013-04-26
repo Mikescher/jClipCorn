@@ -10,7 +10,6 @@ import javax.swing.AbstractAction;
 import javax.swing.ActionMap;
 import javax.swing.InputMap;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -24,6 +23,7 @@ import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieScore;
 import de.jClipCorn.gui.CachedResourceLoader;
 import de.jClipCorn.gui.Resources;
+import de.jClipCorn.gui.guiComponents.PropertyCheckbox;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.properties.CCProperties;
 
@@ -51,8 +51,8 @@ public class ChangeScoreFrame extends JFrame {
 	private JLabel label_3;
 	private JButton btnScoreNo;
 	private JLabel lblbackspace;
-	private JCheckBox cbSkipRated;
-	private JCheckBox cbOnlyViewed;
+	private PropertyCheckbox cbSkipRated;
+	private PropertyCheckbox cbOnlyViewed;
 
 	public ChangeScoreFrame(Component owner, CCMovieList list) {
 		super();
@@ -194,26 +194,12 @@ public class ChangeScoreFrame extends JFrame {
 		lblbackspace.setBounds(332, 244, 80, 14);
 		getContentPane().add(lblbackspace);
 		
-		cbSkipRated = new JCheckBox(CCProperties.getInstance().PROP_MASSCHANGESCORE_SKIPRATED.getDescription());
-		cbSkipRated.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				CCProperties.getInstance().PROP_MASSCHANGESCORE_SKIPRATED.setValue(cbSkipRated.isSelected());
-			}
-		});
+		cbSkipRated = new PropertyCheckbox(CCProperties.getInstance().PROP_MASSCHANGESCORE_SKIPRATED);
 		cbSkipRated.setBounds(10, 297, 402, 23);
-		cbSkipRated.setSelected(CCProperties.getInstance().PROP_MASSCHANGESCORE_SKIPRATED.getValue());
 		getContentPane().add(cbSkipRated);
 		
-		cbOnlyViewed = new JCheckBox(CCProperties.getInstance().PROP_MASSCHANGESCORE_ONLYVIEWED.getDescription());
-		cbOnlyViewed.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				CCProperties.getInstance().PROP_MASSCHANGESCORE_ONLYVIEWED.setValue(cbOnlyViewed.isSelected());
-			}
-		});
+		cbOnlyViewed = new PropertyCheckbox(CCProperties.getInstance().PROP_MASSCHANGESCORE_ONLYVIEWED);
 		cbOnlyViewed.setBounds(10, 323, 402, 23);
-		cbOnlyViewed.setSelected(CCProperties.getInstance().PROP_MASSCHANGESCORE_ONLYVIEWED.getValue());
 		getContentPane().add(cbOnlyViewed);
 	}
 	

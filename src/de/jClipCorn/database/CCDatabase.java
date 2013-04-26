@@ -563,6 +563,9 @@ public class CCDatabase extends DerbyDatabase {
 				}
 				ml.directlyInsert(temp);
 			}
+			
+			rs.close();
+			
 		} catch (SQLException e) {
 			CCLog.addError(e);
 		}
@@ -584,6 +587,9 @@ public class CCDatabase extends DerbyDatabase {
 			}
 
 			ser.abortUpdating();
+			
+			rs.close();
+			
 		} catch (SQLException e) {
 			CCLog.addError(e);
 		}
@@ -605,6 +611,9 @@ public class CCDatabase extends DerbyDatabase {
 			}
 
 			se.abortUpdating();
+			
+			rs.close();
+			
 		} catch (SQLException e) {
 			CCLog.addError(e);
 		}

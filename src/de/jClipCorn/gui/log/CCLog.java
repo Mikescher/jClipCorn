@@ -18,8 +18,8 @@ import de.jClipCorn.util.CCDate;
 import de.jClipCorn.util.DialogHelper;
 
 public class CCLog {
-	private static List<CCLogElement> log = new ArrayList<CCLogElement>();
-	private static List<CCLogChangedListener> listener = new ArrayList<CCLogChangedListener>();
+	private static List<CCLogElement> log = new ArrayList<>();
+	private static List<CCLogChangedListener> listener = new ArrayList<>();
 	
 	private static String path = null;
 	private static boolean changed = false;

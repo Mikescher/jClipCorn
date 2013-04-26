@@ -15,6 +15,7 @@ public class TextFileUtils {
 		return readTextFile(new File(filename));
 	}
 	
+	@SuppressWarnings("resource")
 	public static String readTextFile(File file) throws IOException {
 		return readTextFile(new FileReader(file));
 	}

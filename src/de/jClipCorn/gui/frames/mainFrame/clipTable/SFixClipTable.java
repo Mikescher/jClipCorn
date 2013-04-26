@@ -136,7 +136,7 @@ public class SFixClipTable extends SFixTable {
 	}
 	
 	private void setRowSorter() {
-		sorter = new TableRowSorter<ClipTableModel>((ClipTableModel) getModel());
+		sorter = new TableRowSorter<>((ClipTableModel) getModel());
 		setRowSorter(sorter);
 		
 		sorter.setComparator(0,  sorter_score);

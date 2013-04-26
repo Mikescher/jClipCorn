@@ -111,7 +111,7 @@ public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener 
 		lblViewed.setBounds(10, 11, 24, 16);
 		getContentPane().add(lblViewed);
 		
-		lsGenres = new JList<String>();
+		lsGenres = new JList<>();
 		lsGenres.setBounds(202, 343, 482, 87);
 		getContentPane().add(lsGenres);
 		

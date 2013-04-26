@@ -84,8 +84,8 @@ public class ImDBParser_Eng {
 	}
 	
 	private static <T> void removeDuplicate(List<T> arlList) {
-		Set<T> set = new HashSet<T>();
-		List<T> newList = new ArrayList<T>();
+		Set<T> set = new HashSet<>();
+		List<T> newList = new ArrayList<>();
 		
 		for (Iterator<T> iter = arlList.iterator(); iter.hasNext();) {
 			T element = iter.next();

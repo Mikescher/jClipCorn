@@ -18,9 +18,9 @@ import javax.swing.border.EtchedBorder;
 public class AbstractClipStatusbar extends JPanel {
 	private static final long serialVersionUID = -7508283304287773899L;
 	
-	private final static int HEIGHT = 16;
+	private final static int SB_HEIGHT = 16;
 	
-	private List<ClipStatusbarColumn> columns = new ArrayList<>();;
+	private List<ClipStatusbarColumn> columns = new ArrayList<>();
 
 	public AbstractClipStatusbar() {
 		super();
@@ -37,7 +37,7 @@ public class AbstractClipStatusbar extends JPanel {
 		
 		setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		
-		setPreferredSize(new Dimension(-1, HEIGHT));
+		setPreferredSize(new Dimension(-1, SB_HEIGHT));
 		
 		for (int i = 0; i < columns.size(); i++) {
 			add(columns.get(i).getComponent(), columns.get(i).getConstraints(i));
@@ -57,7 +57,7 @@ public class AbstractClipStatusbar extends JPanel {
 		gbl.columnWeights[columns.size()] = Double.MIN_VALUE;
 		
 		
-		gbl.rowHeights = new int[] {HEIGHT};
+		gbl.rowHeights = new int[] {SB_HEIGHT};
 		gbl.rowWeights = new double[]{0.0};
 		
 		return gbl;

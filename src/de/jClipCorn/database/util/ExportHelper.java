@@ -150,9 +150,8 @@ public class ExportHelper {
 				return content;
 			}
 		} finally {
-			if (stream != null) {
-				stream.close();
-			}
+			stream.close();
+			theFile.close();
 		}
 		
 		return content;

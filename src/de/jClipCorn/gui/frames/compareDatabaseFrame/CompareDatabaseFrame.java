@@ -118,6 +118,9 @@ public class CompareDatabaseFrame extends JFrame {
 	private JPanel pnlTabMissingDB2Bottom;
 	private JButton btnExportAllDB2;
 
+	/**
+	 * @wbp.parser.constructor
+	 */
 	public CompareDatabaseFrame(Component owner, CCMovieList mlist) {
 		super();
 		this.movielist = mlist;
@@ -535,7 +538,7 @@ public class CompareDatabaseFrame extends JFrame {
 						}
 					});
 				}
-			}, "THREAD_GENERATE_DBCOMPARE_FILE").start();; //$NON-NLS-1$
+			}, "THREAD_GENERATE_DBCOMPARE_FILE").start(); //$NON-NLS-1$
 		}
 	}
 

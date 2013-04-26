@@ -76,7 +76,7 @@ import de.jClipCorn.util.userdataProblem.UserDataProblemHandler;
 public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDataProblemHandler {
 	private static final long serialVersionUID = -5912378114066741528L;
 	
-	private boolean firstChooseClick = true;;
+	private boolean firstChooseClick = true;
 	
 	private final JFileChooser videoFileChooser;
 	private final JFileChooser coverFileChooser;

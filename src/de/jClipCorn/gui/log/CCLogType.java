@@ -45,4 +45,4 @@ public enum CCLogType {
 			return null;
 		}
 	}
-};
+}

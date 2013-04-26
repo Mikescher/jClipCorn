@@ -85,7 +85,7 @@ public class CCRIntProperty extends CCIntProperty {
 		if (values == null) {
 			return new JSpinner(new SpinnerNumberModel(min, min, max, 1));
 		} else {
-			return new JComboBox<String>(new DefaultComboBoxModel<String>(values));
+			return new JComboBox<>(new DefaultComboBoxModel<>(values));
 		}
 	}
 	

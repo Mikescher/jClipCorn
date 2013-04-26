@@ -1,6 +1,7 @@
 package de.jClipCorn.database;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -185,7 +186,7 @@ public class DerbyDatabase {
 	 * @throws SQLException Throws an Exception if getTables fails
 	 */
 	public List<String> getAllTables(String type) throws SQLException {
-		List<String> result = new ArrayList<String>();
+		List<String> result = new ArrayList<>();
 		
 		if (isConnected()) {
 			String s[] = null;
@@ -199,6 +200,8 @@ public class DerbyDatabase {
 			while (rs.next()) {
 				result.add(rs.getString(3));
 			}
+			rs.close();
+			
 			return result;
 		} else {
 			return null;
@@ -213,7 +216,7 @@ public class DerbyDatabase {
 	 * @throws SQLException Throws Exception if Table is non existent
 	 */
 	public List<String> getColumns(String table) throws SQLException {
-		List<String> result = new ArrayList<String>();
+		List<String> result = new ArrayList<>();
 		
 		if (isConnected()) {
 			DatabaseMetaData md = connection.getMetaData();
@@ -221,6 +224,8 @@ public class DerbyDatabase {
 			while (rs.next()) {
 				result.add(rs.getString(4));
 			}
+			rs.close();
+			
 			return result;
 		} else {
 			return null;
@@ -235,7 +240,7 @@ public class DerbyDatabase {
 	 * @throws SQLException Throws Exception if Table is non existent
 	 */
 	public List<Integer> getColumnTypes(String table) throws SQLException {
-		ArrayList<Integer> result = new ArrayList<Integer>();
+		ArrayList<Integer> result = new ArrayList<>();
 		
 		if (isConnected()) {
 			DatabaseMetaData md = connection.getMetaData();
@@ -243,6 +248,8 @@ public class DerbyDatabase {
 			while (rs.next()) {
 				result.add(rs.getInt(5));
 			}
+			rs.close();
+			
 			return result;
 		} else {
 			return null;
@@ -295,6 +302,8 @@ public class DerbyDatabase {
 			while (rs.next()) {
 				c++;
 			}
+			rs.close();
+			
 			return c;
 		} else {
 			return -1;
@@ -346,7 +355,9 @@ public class DerbyDatabase {
 			if (rs.next()) {
 				ret = rs.getObject(column + 1);
 			}
+			rs.close();
 			s.close();
+			
 			return ret;
 		} catch (SQLException e) {
 			return null;
@@ -385,7 +396,7 @@ public class DerbyDatabase {
 	 * @return an ArrayList of the Row
 	 */
 	public List<Object> getSingleRow(String table, int row, String orderColumn, boolean ascend) {
-		List<Object> result = new ArrayList<Object>();
+		List<Object> result = new ArrayList<>();
 		int actRow = -1;
 		String sql = "SELECT * FROM " + table + " ORDER BY " + orderColumn + ((ascend)?" ASC":" DESC");
 		
@@ -395,6 +406,8 @@ public class DerbyDatabase {
 			
 			while(actRow < row) {
 				if (! rs.next()) {
+					rs.close();
+					s.close();
 					return null;
 				}
 				actRow++;
@@ -404,7 +417,9 @@ public class DerbyDatabase {
 			for(int i = 0; i < colCount; i++) {
 				result.add(rs.getObject(i+1));
 			}
+			rs.close();
 			s.close();
+			
 			return result;
 		} catch (SQLException e) {
 			return null;
@@ -537,11 +552,17 @@ public class DerbyDatabase {
 	 * parses the structure from an XML-Resource
 	 * @param xmlPath Path to the descriptive XML-Resource
 	 */
-	private void parseXMLfromResource(String xmlResPath) {
+	private boolean parseXMLfromResource(String xmlResPath) {
 		InputStream is = this.getClass().getResourceAsStream(xmlResPath);
 		InputStreamReader isr = new InputStreamReader(is);
 		BufferedReader bf = new BufferedReader(isr);
 		structure = new DatabaseIO().read( bf );
+		try {
+			bf.close();
+		} catch (IOException e) {
+			return false;
+		}
+		return true;
 	}
 
 	/**

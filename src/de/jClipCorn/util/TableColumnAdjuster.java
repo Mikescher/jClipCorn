@@ -30,7 +30,7 @@ public class TableColumnAdjuster implements PropertyChangeListener, TableModelLi
 	private boolean isOnlyAdjustLarger;
 	private boolean isDynamicAdjustment;
 	private boolean isResizeAdjuster;
-	private Map<TableColumn, Integer> columnSizes = new HashMap<TableColumn, Integer>();
+	private Map<TableColumn, Integer> columnSizes = new HashMap<>();
 
 	/*
 	 * Specify the table and use default spacing

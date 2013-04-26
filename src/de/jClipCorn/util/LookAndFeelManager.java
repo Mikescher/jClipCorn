@@ -87,7 +87,7 @@ public class LookAndFeelManager {
 	}
 	
 	public static void printAllColorKeys() {
-		List<String> colorKeys = new ArrayList<String>();
+		List<String> colorKeys = new ArrayList<>();
 		Set<Entry<Object, Object>> entries = UIManager.getLookAndFeelDefaults().entrySet();
 		for (Entry<?, ?> entry : entries) {
 			if (entry.getValue() instanceof Color) {

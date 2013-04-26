@@ -33,8 +33,8 @@ public class ReadableCombobox<T> extends JComboBox<T> {
 	
 	private void setReadable() {
 		setEditable(true);
-		ComboBoxEditor editor = getEditor();
-		JTextField     etf    = (JTextField)editor.getEditorComponent();
+		ComboBoxEditor cbxEditor = getEditor();
+		JTextField     etf    = (JTextField)cbxEditor.getEditorComponent();
 		etf.setDisabledTextColor(UIManager.getColor("ComboBox.foreground")); //$NON-NLS-1$
 		etf.setBackground(UIManager.getColor("ComboBox.background")); //$NON-NLS-1$
 		super.setEnabled(false);

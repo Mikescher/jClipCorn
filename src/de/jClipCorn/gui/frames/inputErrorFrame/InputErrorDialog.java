@@ -47,13 +47,13 @@ public class InputErrorDialog extends JDialog {
 		fillMemo(problems);
 	}
 
-	private void initGUI(Component owner) {
+	private void initGUI(Component parent) {
 		setTitle(LocaleBundle.getString("AddMovieInputErrorDialog.this.title")); //$NON-NLS-1$
 		setIconImage(CachedResourceLoader.getImage(Resources.IMG_FRAME_ICON));
 		setModal(true);
 		setResizable(false);
 		setBounds(100, 100, 500, 300);
-		setLocationRelativeTo(owner);
+		setLocationRelativeTo(parent);
 
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -65,7 +65,7 @@ public class InputErrorDialog extends JDialog {
 		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		contentPanel.add(scrollPane);
 
-		lsErrors = new JList<>(lsErrorModel = new DefaultListModel<String>());
+		lsErrors = new JList<>(lsErrorModel = new DefaultListModel<>());
 		scrollPane.setViewportView(lsErrors);
 
 		lblYouHaveErrors = new JLabel(LocaleBundle.getString("AddMovieInputErrorDialog.lblErrors.text")); //$NON-NLS-1$

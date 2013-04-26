@@ -35,7 +35,7 @@ public class CCLogElement {
 		type = tp;
 		time = new CCTime();
 
-		sTrace = new ArrayList<StackTraceElement>(Arrays.asList(stackTrace));
+		sTrace = new ArrayList<>(Arrays.asList(stackTrace));
 	}
 
 	public String getFormatted() {

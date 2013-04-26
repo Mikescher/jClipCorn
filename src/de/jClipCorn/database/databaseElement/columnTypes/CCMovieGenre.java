@@ -88,7 +88,7 @@ public enum CCMovieGenre {
 	}
 
 	public static String[] getTrimmedList() {
-		ArrayList<String> res = new ArrayList<String>();
+		ArrayList<String> res = new ArrayList<>();
 		for (String s : getList()) {
 			if (s.equals(LocaleBundle.getString("CCMovieGenre.Genre000"))) { //$NON-NLS-1$
 				res.add(" "); //$NON-NLS-1$

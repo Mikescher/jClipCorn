@@ -14,6 +14,7 @@ import de.jClipCorn.gui.Resources;
 import de.jClipCorn.gui.frames.editSeriesFrame.EditSeriesFrame;
 import de.jClipCorn.gui.frames.previewSeriesFrame.PreviewSeriesFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.util.CCDate;
 import de.jClipCorn.util.DialogHelper;
 import de.jClipCorn.util.PathFormatter;
 
@@ -58,6 +59,7 @@ public class SerTablePopupMenu extends JPopupMenu {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				episode.setViewed(true);
+				episode.setLastViewed(new CCDate());
 				owner.updateSeason();
 			}
 		});

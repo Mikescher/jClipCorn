@@ -56,7 +56,7 @@ public class CCCoverCache {
 	}
 
 	private BufferedImage loadCover(String name) {
-		if (name.isEmpty()) {
+		if ((name == null) || name.isEmpty()) {
 			return CachedResourceLoader.getImage(Resources.IMG_COVER_NOTFOUND);
 		}
 
@@ -80,7 +80,7 @@ public class CCCoverCache {
 	}
 	
 	private BufferedImage loadHalfsizeCover(String name) {
-		if (name.isEmpty()) {
+		if ((name == null) || name.isEmpty()) {
 			return CachedResourceLoader.getImage(Resources.IMG_COVER_NOTFOUND);
 		}
 

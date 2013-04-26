@@ -190,7 +190,7 @@ public class CCSeries extends CCDatabaseElement {
 		
 		getMovieList().removeSeasonDatabase(season);
 		
-		if (! season.getCoverName().isEmpty()) {
+		if ((! (season.getCoverName() == null)) && (!season.getCoverName().isEmpty())) {
 			getMovieList().getCoverCache().deleteCover(season.getCoverName());
 		}
 		

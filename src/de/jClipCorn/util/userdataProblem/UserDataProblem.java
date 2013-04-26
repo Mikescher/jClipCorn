@@ -296,6 +296,12 @@ public class UserDataProblem {
 		if (cvr == null) {
 			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_NO_COVER_SET));
 		}
+		
+		//################################################################################################################
+		
+		if (PathFormatter.isUntrimmed(title)) {
+			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_ZYKLUSORTITLE_HAS_LEADINGORTRAILING_SPACES));
+		}
 	}
 	
 	public static void testSeasonData(List<UserDataProblem> ret, BufferedImage cvr, String title, int year) {
@@ -313,6 +319,12 @@ public class UserDataProblem {
 		
 		if (cvr == null) {
 			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_NO_COVER_SET));
+		}
+		
+		//################################################################################################################
+		
+		if (PathFormatter.isUntrimmed(title)) {
+			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_ZYKLUSORTITLE_HAS_LEADINGORTRAILING_SPACES));
 		}
 	}
 	
@@ -394,6 +406,12 @@ public class UserDataProblem {
 					}
 				}
 			}
+		}
+		
+		//################################################################################################################
+		
+		if (PathFormatter.isUntrimmed(title)) {
+			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_ZYKLUSORTITLE_HAS_LEADINGORTRAILING_SPACES));
 		}
 	}
 	

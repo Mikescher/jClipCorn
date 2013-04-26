@@ -28,6 +28,7 @@ import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
+import javax.swing.UIManager;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
@@ -357,7 +358,7 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler {
 		scrollPane.setBounds(12, 47, 329, 530);
 		getContentPane().add(scrollPane);
 
-		lsEpisodes = new JList<>();
+		lsEpisodes = new JList<>(); //TODO Auch wenn eine Episode Name = "" hat ein Element anzeigen (mit richtiger Höhe, nicht so 4 px) ==> Auch beie anderen JList's in anderen Forms
 		lsEpisodes.addListSelectionListener(new ListSelectionListener() {
 			@Override
 			public void valueChanged(ListSelectionEvent arg0) {
@@ -396,7 +397,7 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler {
 		pnlEdit = new JPanel();
 		pnlEdit.setBounds(725, 3, 358, 569);
 		getContentPane().add(pnlEdit);
-		pnlEdit.setBorder(new TitledBorder(new LineBorder(new Color(0, 0, 0)), LocaleBundle.getString("AddEpisodeFrame.pnlEdit.caption"), TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0))); //$NON-NLS-1$
+		pnlEdit.setBorder(new TitledBorder(new LineBorder(UIManager.getColor("TitledBorder.titleColor")), LocaleBundle.getString("AddEpisodeFrame.pnlEdit.caption"), TitledBorder.LEFT, TitledBorder.TOP, null, UIManager.getColor("TitledBorder.titleColor"))); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		pnlEdit.setLayout(null);
 
 		btnSide_01 = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnDeleteFirst.text")); //$NON-NLS-1$
@@ -661,6 +662,8 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler {
 				lsEpisodes.setSelectedIndex(curr);
 
 				edTitle.requestFocus();
+				
+				edTitle.selectAll();
 			}
 		}
 	}
@@ -817,7 +820,7 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler {
 		part = PathFormatter.getAbsolute(part);
 
 		if (new File(part).exists()) {
-			edPart.setBackground(Color.WHITE);
+			edPart.setBackground(UIManager.getColor("TextField.background")); //$NON-NLS-1$
 		} else {
 			edPart.setBackground(Color.RED);
 		}
@@ -1007,7 +1010,7 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler {
 		for (int i = 0; i < parent.getEpisodeCount(); i++) {
 			CCEpisode ep = parent.getEpisode(i);
 
-			ep.setLength((int) spnLength.getValue());
+			ep.setLength((int) spnSideLength.getValue());
 		}
 
 		updateList();

@@ -249,6 +249,22 @@ public class CCActionTree {
 			}
 		});
 		
+		temp = series.addChild(new CCActionElement("EditSeries", KeyStroke.getKeyStroke(KeyEvent.VK_E, InputEvent.CTRL_DOWN_MASK), "ClipMenuBar.Series.Edit", Resources.ICN_MENUBAR_EDIT_SER));
+		temp.addListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				onClickSeriesEdit();
+			}
+		});
+
+		temp = series.addChild(new CCActionElement("AddSeason", null, "ClipMenuBar.Series.AddSeason", Resources.ICN_MENUBAR_ADD_SEA));
+		temp.addListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				onClickSeasonAdd();
+			}
+		});
+		
 		temp = series.addChild(new CCActionElement("ExportSingleSeries", null, "ClipMenuBar.Series.ExportSingle", null)); //TODO Please give me icon :3
 		temp.addListener(new ActionListener() {
 			@Override
@@ -278,22 +294,6 @@ public class CCActionTree {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				onClickSeriesImportSingle();
-			}
-		});
-
-		temp = series.addChild(new CCActionElement("EditSeries", KeyStroke.getKeyStroke(KeyEvent.VK_E, InputEvent.CTRL_DOWN_MASK), "ClipMenuBar.Series.Edit", Resources.ICN_MENUBAR_EDIT_SER));
-		temp.addListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onClickSeriesEdit();
-			}
-		});
-
-		temp = series.addChild(new CCActionElement("AddSeason", null, "ClipMenuBar.Series.AddSeason", Resources.ICN_MENUBAR_ADD_SEA));
-		temp.addListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onClickSeasonAdd();
 			}
 		});
 

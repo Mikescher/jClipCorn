@@ -40,6 +40,7 @@ public class CCSeason {
 		episodes.clear();
 		title = ""; //$NON-NLS-1$
 		year = 0;
+		covername = ""; //$NON-NLS-1$
 		
 		if (updateDB) {
 			updateDB();

@@ -53,7 +53,7 @@ public class EditToolbarFrame extends JFrame {
 	private CCToolbarProperty property;
 	private ToolbarConfigPanel display;
 	
-	public EditToolbarFrame(Component owner, ToolbarConfigPanel pnl, CCToolbarProperty property) {
+	public EditToolbarFrame(Component owner, ToolbarConfigPanel pnl, CCToolbarProperty property) { //TODO Layout so configen dass beide Lists gleich breit sind
 		super();
 		this.property = property;
 		this.display = pnl;

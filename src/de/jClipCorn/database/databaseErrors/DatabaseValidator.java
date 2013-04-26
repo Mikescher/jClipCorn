@@ -51,6 +51,8 @@ public class DatabaseValidator {
 			}
 			
 			pcl.step();
+			
+			//TODO Check for cover in folder that are not in DB
 		}
 		
 		findDuplicateCover(e, ml, pcl);

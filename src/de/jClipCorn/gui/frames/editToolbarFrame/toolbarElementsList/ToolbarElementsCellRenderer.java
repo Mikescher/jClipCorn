@@ -33,7 +33,7 @@ public class ToolbarElementsCellRenderer extends JLabel implements ListCellRende
 	}
 	
 	private void init() {
-		SEPERATOR_PANEL.setBorder(new EmptyBorder(0, 7, 0, 7));
+		SEPERATOR_PANEL.setBorder(new EmptyBorder(7, 0, 7, 0));
 		JSeparator sep = new JSeparator(JSeparator.HORIZONTAL);
 		sep.setPreferredSize(new Dimension(0, 2));
 		SEPERATOR_PANEL.add(sep, BorderLayout.CENTER);

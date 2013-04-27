@@ -61,8 +61,6 @@ public class Main {
 	}
 }
 
-//TODO Add small (16x16) icons for toolbar icons in ressources (functionality is there - only missing are the icons)
-
 //TODO Parse that (eventually ?): http://www.themoviedb.org/search/movie?query=lazarus%20projekt
 
 //TODO statistics page

@@ -85,7 +85,7 @@ public class CCActionTree {
 		CCActionElement file = root.addChild(new CCActionElement("File", null, "ClipMenuBar.File", ""));
 		// #######################################################################################################
 
-		temp = file.addChild(new CCActionElement("Open", null, "ClipMenuBar.File.Open", null));
+		temp = file.addChild(new CCActionElement("Open", null, "ClipMenuBar.File.Open", Resources.ICN_MENUBAR_OPENFILE));
 		temp.addListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -129,7 +129,7 @@ public class CCActionTree {
 			}
 		});
 		
-		temp = database.addChild(new CCActionElement("ImportDatabase", null, "ClipMenuBar.Database.ImportDB", null)); //TODO ICON !!!!!!1111einseinself
+		temp = database.addChild(new CCActionElement("ImportDatabase", null, "ClipMenuBar.Database.ImportDB", Resources.ICN_MENUBAR_IMPORTDB));
 		temp.addListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -137,7 +137,7 @@ public class CCActionTree {
 			}
 		});
 		
-		temp = database.addChild(new CCActionElement("ImportMultipleElements", null, "ClipMenuBar.Database.ImportMultiple", null)); //TODO Gib mir icon
+		temp = database.addChild(new CCActionElement("ImportMultipleElements", null, "ClipMenuBar.Database.ImportMultiple", Resources.ICN_MENUBAR_IMPORMULTIPLEELEMENTS));
 		temp.addListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -181,7 +181,7 @@ public class CCActionTree {
 			}
 		});
 		
-		temp = movies.addChild(new CCActionElement("ExportSingleMovie", null, "ClipMenuBar.Movies.ExportSingle", null)); //TODO Please give me icon :3
+		temp = movies.addChild(new CCActionElement("ExportSingleMovie", null, "ClipMenuBar.Movies.ExportSingle", Resources.ICN_MENUBAR_EXPORTMOVIE));
 		temp.addListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -189,7 +189,7 @@ public class CCActionTree {
 			}
 		});
 		
-		temp = movies.addChild(new CCActionElement("AddMovieToExportList", KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_DOWN_MASK), "ClipMenuBar.Movies.ExportMultiple", null)); //TODO Please give me icon :3
+		temp = movies.addChild(new CCActionElement("AddMovieToExportList", KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_DOWN_MASK), "ClipMenuBar.Movies.ExportMultiple", Resources.ICN_MENUBAR_EXPORTELEMENTS));
 		temp.addListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -197,7 +197,7 @@ public class CCActionTree {
 			}
 		});
 		
-		temp = movies.addChild(new CCActionElement("ImportSingleMovie", null, "ClipMenuBar.Movies.ImportSingle", null)); //TODO Please give me icon :3
+		temp = movies.addChild(new CCActionElement("ImportSingleMovie", null, "ClipMenuBar.Movies.ImportSingle", Resources.ICN_MENUBAR_IMPORTMOVIE));
 		temp.addListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -265,7 +265,7 @@ public class CCActionTree {
 			}
 		});
 		
-		temp = series.addChild(new CCActionElement("ExportSingleSeries", null, "ClipMenuBar.Series.ExportSingle", null)); //TODO Please give me icon :3
+		temp = series.addChild(new CCActionElement("ExportSingleSeries", null, "ClipMenuBar.Series.ExportSingle", Resources.ICN_MENUBAR_EXPORTSERIES));
 		temp.addListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -273,7 +273,7 @@ public class CCActionTree {
 			}
 		});
 		
-		temp = series.addChild(new CCActionElement("AddSeriesToExportList", KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_DOWN_MASK), "ClipMenuBar.Series.ExportMultiple", null)); //TODO Please give me icon :3
+		temp = series.addChild(new CCActionElement("AddSeriesToExportList", KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_DOWN_MASK), "ClipMenuBar.Series.ExportMultiple", Resources.ICN_MENUBAR_EXPORTELEMENTS));
 		temp.addListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -281,19 +281,19 @@ public class CCActionTree {
 			}
 		});
 		
-		temp = series.addChild(new CCActionElement("SaveTXTEpisodeguide", null, "ClipMenuBar.Series.SaveTXTEpisodeguide", null)); //TODO Please give me icon :3
-		temp.addListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onClickSeriesCreateTXTEpisodeguide();
-			}
-		});
-		
-		temp = series.addChild(new CCActionElement("ImportSingleSeries", null, "ClipMenuBar.Series.ImportSingle", null)); //TODO Please give me icon :3
+		temp = series.addChild(new CCActionElement("ImportSingleSeries", null, "ClipMenuBar.Series.ImportSingle", Resources.ICN_MENUBAR_IMPORTSERIES));
 		temp.addListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				onClickSeriesImportSingle();
+			}
+		});
+		
+		temp = series.addChild(new CCActionElement("SaveTXTEpisodeguide", null, "ClipMenuBar.Series.SaveTXTEpisodeguide", Resources.ICN_MENUBAR_EPISODEGUIDE));
+		temp.addListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				onClickSeriesCreateTXTEpisodeguide();
 			}
 		});
 

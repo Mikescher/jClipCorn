@@ -3,6 +3,7 @@ package de.jClipCorn.util;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
 
 import de.jClipCorn.gui.localization.LocaleBundle;
 
@@ -63,6 +64,10 @@ public class CCDate {
 	
 	public static CCDate getNewMinimumDate() {
 		return new CCDate(1, 1, YEAR_MIN);
+	}
+	
+	public static CCDate getNewMaximumDate() { //Not really Maximum - just extreme high
+		return new CCDate(31, 12, 9999);
 	}
 
 	public CCDate(Date d) {
@@ -555,5 +560,33 @@ public class CCDate {
 
 	public CCDate copy() {
 		return new CCDate(this);
+	}
+	
+	public static CCDate getMinDate(List<CCDate> datelist) {
+		CCDate min = getNewMaximumDate();
+		
+		for (int i = 0; i < datelist.size(); i++) {
+			if (datelist.get(i).isLessThan(min)) {
+				min = datelist.get(i);
+			}
+		}
+		
+		return min;
+	}
+	
+	public static CCDate getAverageDate(List<CCDate> datelist) {
+		CCDate min = getMinDate(datelist);
+		int sum = 0;
+		
+		for (int i = 0; i < datelist.size(); i++) {
+			sum += min.getDayDifferenceTo(datelist.get(i));
+		}
+		
+		sum /= datelist.size();
+		
+		CCDate result = new CCDate(min);
+		result.addDay(sum);
+		
+		return result;
 	}
 }

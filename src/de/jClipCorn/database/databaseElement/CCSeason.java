@@ -15,6 +15,7 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFormat;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieQuality;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieSize;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieStatus;
+import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.ByteUtilies;
 import de.jClipCorn.util.CCDate;
 import de.jClipCorn.util.ImageUtilities;
@@ -194,6 +195,19 @@ public class CCSeason {
 	}
 	
 	public CCDate getAddDate() {
+		switch (CCProperties.getInstance().PROP_SERIES_ADDDATECALCULATION.getValue()) {
+		case 0:
+			return calcMinimumAddDate();
+		case 1:
+			return calcMaximumAddDate();
+		case 2:
+			return calcAverageAddDate();
+		default:
+			return null;
+		}
+	}
+	
+	public CCDate calcMaximumAddDate() {
 		CCDate cd = CCDate.getNewMinimumDate();
 		for (CCEpisode ep : episodes) {
 			if (ep.getAddDate().isGreaterThan(cd)) {
@@ -201,6 +215,24 @@ public class CCSeason {
 			}
 		}
 		return cd.copy();
+	}
+	
+	public CCDate calcMinimumAddDate() {
+		CCDate cd = CCDate.getNewMaximumDate();
+		for (CCEpisode ep : episodes) {
+			if (ep.getAddDate().isLessThan(cd)) {
+				cd = ep.getAddDate();
+			}
+		}
+		return cd.copy();
+	}
+	
+	public CCDate calcAverageAddDate() {
+		List<CCDate> dlist = new ArrayList<>();
+		for (CCEpisode ep : episodes) {
+			dlist.add(ep.getAddDate());
+		}
+		return CCDate.getAverageDate(dlist);
 	}
 	
 	public CCMovieFormat getFormat() {

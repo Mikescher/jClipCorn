@@ -56,6 +56,9 @@ public class CachedResourceLoader {
 		if (Main.class.getResource(shortFN) != null) {
 			return getImageIcon(shortFN);
 		} else {
+			if (Main.DEBUG) {
+				System.out.println("[DBG] (Possible) Missing 16x16 Icon: " + name); //$NON-NLS-1$
+			}
 			return new ImageIcon(getResizedImage(name, 16, 16));
 		}
 	}

@@ -56,6 +56,7 @@ import de.jClipCorn.gui.frames.findCoverFrame.FindCoverDialog;
 import de.jClipCorn.gui.frames.inputErrorFrame.InputErrorDialog;
 import de.jClipCorn.gui.guiComponents.CCDateEditor;
 import de.jClipCorn.gui.guiComponents.CoverLabel;
+import de.jClipCorn.gui.guiComponents.HFixListCellRenderer;
 import de.jClipCorn.gui.guiComponents.ReadableTextField;
 import de.jClipCorn.gui.guiComponents.SpinnerCCDateModel;
 import de.jClipCorn.gui.localization.LocaleBundle;
@@ -381,6 +382,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		pnlSeries.add(scrollPane);
 		
 		lsSeasons = new JList<>();
+		lsSeasons.setCellRenderer(new HFixListCellRenderer());
 		lsSeasons.addListSelectionListener(new ListSelectionListener() {
 			@Override
 			public void valueChanged(ListSelectionEvent arg0) {
@@ -514,6 +516,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		pnlSeason.add(scrollPane_1);
 		
 		lsEpisodes = new JList<>();
+		lsEpisodes.setCellRenderer(new HFixListCellRenderer());
 		lsEpisodes.addListSelectionListener(new ListSelectionListener() {
 			@Override
 			public void valueChanged(ListSelectionEvent e) {

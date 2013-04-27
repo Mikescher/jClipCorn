@@ -1,6 +1,7 @@
 package de.jClipCorn.database.databaseErrors;
 
 import java.io.File;
+import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -51,11 +52,9 @@ public class DatabaseValidator {
 			}
 			
 			pcl.step();
-			
-			//TODO Check for cover in folder that are not in DB
 		}
 		
-		findDuplicateCover(e, ml, pcl);
+		findCoverErrors(e, ml, pcl);
 		findDuplicateFiles(e, ml, pcl);
 		
 		pcl.reset();
@@ -408,7 +407,11 @@ public class DatabaseValidator {
 		}
 	}
 
-	private static void findDuplicateCover(List<DatabaseError> e, CCMovieList movielist, ProgressCallbackListener pcl) {
+	private static void findCoverErrors(List<DatabaseError> e, CCMovieList movielist, ProgressCallbackListener pcl) {
+		// ###############################################
+		// Duplicate Covers
+		// ###############################################
+		
 		List<DatabaseCoverElement> cvrList = new ArrayList<>();
 		
 		for (Iterator<CCDatabaseElement> it = movielist.iterator(); it.hasNext();) {
@@ -433,6 +436,32 @@ public class DatabaseValidator {
 			}
 			
 			pcl.step();
+		}
+		
+		// ###############################################
+		// Too much Cover in Folder
+		// ###############################################
+		
+		final String prefix = CCProperties.getInstance().PROP_COVER_PREFIX.getValue();
+		final String suffix = "." + CCProperties.getInstance().PROP_COVER_TYPE.getValue();  //$NON-NLS-1$
+		
+		String[] files = movielist.getCoverCache().getCoverDirectory().list(new FilenameFilter() {
+			
+			@Override
+			public boolean accept(File path, String name) {
+				return name.startsWith(prefix) && name.endsWith(suffix);
+			}
+		});
+		
+		for (int i = 0; i < files.length; i++) {
+			String cvrname = PathFormatter.getFilenameWithExt(files[i]);
+			boolean found = false;
+			for (int j = 0; j < cvrList.size(); j++) {
+				found |= cvrList.get(j).getCover().equalsIgnoreCase(cvrname); // All hayl the Shortcut evaluation
+			}
+			if (! found) {
+				e.add(DatabaseError.createSingle(DatabaseError.ERROR_NONLINKED_COVERFILE, new File(movielist.getCoverCache().getCoverPath() + files[i])));
+			}
 		}
 	}
 

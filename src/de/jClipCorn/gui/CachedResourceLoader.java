@@ -56,22 +56,33 @@ public class CachedResourceLoader {
 		if (Main.class.getResource(shortFN) != null) {
 			return getImageIcon(shortFN);
 		} else {
-			if (Main.DEBUG) {
-				System.out.println("[DBG] (Possible) Missing 16x16 Icon: " + name); //$NON-NLS-1$
-			}
 			return new ImageIcon(getResizedImage(name, 16, 16));
 		}
 	}
 	
 	public static BufferedImage getResizedImage(String name, int w, int h) {
+		BufferedImage bi = getImage(name);
+		
+		if (bi.getWidth() == w && bi.getHeight() == h) {
+			return bi;
+		}
+		
+		if (Main.DEBUG) {
+			System.out.println("[DBG] (Possible) Missing 16x16 Icon: " + name); //$NON-NLS-1$
+		}
+		
 		return resize(getImage(name), w, h);
 	}
 	
-	public static ImageIcon getResizedImageIcon(String name, int w, int h) {
-		return new ImageIcon(resize(getImage(name), w, h));
+	public static ImageIcon getResizedImageIcon(String name, int w, int h) {		
+		return new ImageIcon(getResizedImage(name, w, h));
 	}
 	
 	public static BufferedImage resize(BufferedImage bi, int width, int height) {
+		if (bi.getWidth() == width && bi.getHeight() == height) {
+			return bi;
+		}
+		
 		BufferedImage resizedImage = new BufferedImage(width, height, bi.getType());
 		Graphics2D graphics = resizedImage.createGraphics();
 		graphics.drawImage(bi, 0, 0, width, height, null);

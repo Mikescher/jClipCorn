@@ -44,6 +44,7 @@ import de.jClipCorn.gui.CachedResourceLoader;
 import de.jClipCorn.gui.Resources;
 import de.jClipCorn.gui.frames.inputErrorFrame.InputErrorDialog;
 import de.jClipCorn.gui.guiComponents.CCDateEditor;
+import de.jClipCorn.gui.guiComponents.HFixListCellRenderer;
 import de.jClipCorn.gui.guiComponents.ReadableTextField;
 import de.jClipCorn.gui.guiComponents.SpinnerCCDateModel;
 import de.jClipCorn.gui.localization.LocaleBundle;
@@ -358,7 +359,8 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler {
 		scrollPane.setBounds(12, 47, 329, 530);
 		getContentPane().add(scrollPane);
 
-		lsEpisodes = new JList<>(); //TODO Auch wenn eine Episode Name = "" hat ein Element anzeigen (mit richtiger Höhe, nicht so 4 px) ==> Auch beie anderen JList's in anderen Forms
+		lsEpisodes = new JList<>();
+		lsEpisodes.setCellRenderer(new HFixListCellRenderer());
 		lsEpisodes.addListSelectionListener(new ListSelectionListener() {
 			@Override
 			public void valueChanged(ListSelectionEvent arg0) {

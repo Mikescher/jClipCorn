@@ -129,6 +129,10 @@ public class PathFormatter {
 		return result;
 	}
 	
+	public static void showInExplorer(File file) {
+		showInExplorer(file.getAbsolutePath());
+	}
+	
 	public static void showInExplorer(String abspath) {
 		try {
 			Runtime.getRuntime().exec(String.format("explorer.exe /select,\"%s\"", abspath));

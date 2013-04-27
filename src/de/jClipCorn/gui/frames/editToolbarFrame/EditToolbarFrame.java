@@ -3,6 +3,7 @@ package de.jClipCorn.gui.frames.editToolbarFrame;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -14,12 +15,8 @@ import javax.swing.JFrame;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.border.EmptyBorder;
-
-import com.jgoodies.forms.factories.FormFactory;
-import com.jgoodies.forms.layout.ColumnSpec;
-import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.RowSpec;
 
 import de.jClipCorn.gui.CachedResourceLoader;
 import de.jClipCorn.gui.Resources;
@@ -45,15 +42,18 @@ public class EditToolbarFrame extends JFrame {
 	private JPanel panel;
 	private JButton btnOk;
 	private JButton btnCancel;
-	private JPanel pnlMid;
 	private JButton btnAdd;
 	private JButton btnDelete;
 	private JButton btnAddSep;
 	
 	private CCToolbarProperty property;
 	private ToolbarConfigPanel display;
+	private JPanel pnlRightBottom;
+	private JPanel pnlLeft;
+	private JPanel pnlLeftBottom;
+	private JPanel pnlRight;
 	
-	public EditToolbarFrame(Component owner, ToolbarConfigPanel pnl, CCToolbarProperty property) { //TODO Layout so configen dass beide Lists gleich breit sind
+	public EditToolbarFrame(Component owner, ToolbarConfigPanel pnl, CCToolbarProperty property) {
 		super();
 		this.property = property;
 		this.display = pnl;
@@ -78,31 +78,28 @@ public class EditToolbarFrame extends JFrame {
 		
 		pnlMain = new JPanel();
 		contentPane.add(pnlMain, BorderLayout.CENTER);
-		pnlMain.setLayout(new FormLayout(new ColumnSpec[] {
-				FormFactory.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("default:grow"), //$NON-NLS-1$
-				FormFactory.RELATED_GAP_COLSPEC,
-				FormFactory.DEFAULT_COLSPEC,
-				FormFactory.LABEL_COMPONENT_GAP_COLSPEC,
-				ColumnSpec.decode("default:grow"), //$NON-NLS-1$
-				FormFactory.RELATED_GAP_COLSPEC,},
-			new RowSpec[] {
-				FormFactory.LINE_GAP_ROWSPEC,
-				RowSpec.decode("fill:min:grow"),})); //$NON-NLS-1$
+		pnlMain.setLayout(new GridLayout(1, 2, 5, 5));
+		
+		pnlLeft = new JPanel();
+		pnlMain.add(pnlLeft);
+		pnlLeft.setLayout(new BorderLayout(0, 4));
 		
 		scpnAll = new JScrollPane();
-		pnlMain.add(scpnAll, "2, 2"); //$NON-NLS-1$
+		scpnAll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		pnlLeft.add(scpnAll);
 		
 		lbAll = new JList<>();
 		lbAll.setVisibleRowCount(0);
 		lbAll.setCellRenderer(new ToolbarElementsCellRenderer());
 		scpnAll.setViewportView(lbAll);
 		
-		pnlMid = new JPanel();
-		pnlMain.add(pnlMid, "4, 2, fill, center"); //$NON-NLS-1$
-		pnlMid.setLayout(new GridLayout(0, 1, 0, 0));
+		pnlLeftBottom = new JPanel();
+		FlowLayout fl_pnlLeftBottom = (FlowLayout) pnlLeftBottom.getLayout();
+		fl_pnlLeftBottom.setVgap(0);
+		pnlLeft.add(pnlLeftBottom, BorderLayout.SOUTH);
 		
 		btnAdd = new JButton(">"); //$NON-NLS-1$
+		pnlLeftBottom.add(btnAdd);
 		btnAdd.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -111,9 +108,36 @@ public class EditToolbarFrame extends JFrame {
 				}
 			}
 		});
-		pnlMid.add(btnAdd);
+		
+		pnlRight = new JPanel();
+		pnlMain.add(pnlRight);
+		pnlRight.setLayout(new BorderLayout(0, 4));
+		
+		scpnChoosen = new JScrollPane();
+		scpnChoosen.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		pnlRight.add(scpnChoosen);
+		
+		lbChoosen = new DnDList<>();
+		lbChoosen.setVisibleRowCount(0);
+		lbChoosen.setCellRenderer(new ToolbarElementsCellRenderer());
+		scpnChoosen.setViewportView(lbChoosen);
+		
+		pnlRightBottom = new JPanel();
+		pnlRight.add(pnlRightBottom, BorderLayout.SOUTH);
+		FlowLayout flowLayout = (FlowLayout) pnlRightBottom.getLayout();
+		flowLayout.setVgap(0);
 		
 		btnDelete = new JButton("<"); //$NON-NLS-1$
+		pnlRightBottom.add(btnDelete);
+		
+		btnAddSep = new JButton("-"); //$NON-NLS-1$
+		pnlRightBottom.add(btnAddSep);
+		btnAddSep.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				lmChoosen.addElement(ClipToolbar.IDENT_SEPERATOR);
+			}
+		});
 		btnDelete.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -122,24 +146,6 @@ public class EditToolbarFrame extends JFrame {
 				}
 			}
 		});
-		pnlMid.add(btnDelete);
-		
-		btnAddSep = new JButton("-"); //$NON-NLS-1$
-		btnAddSep.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				lmChoosen.addElement(ClipToolbar.IDENT_SEPERATOR);
-			}
-		});
-		pnlMid.add(btnAddSep);
-		
-		scpnChoosen = new JScrollPane();
-		pnlMain.add(scpnChoosen, "6, 2"); //$NON-NLS-1$
-		
-		lbChoosen = new DnDList<>();
-		lbChoosen.setVisibleRowCount(0);
-		lbChoosen.setCellRenderer(new ToolbarElementsCellRenderer());
-		scpnChoosen.setViewportView(lbChoosen);
 		
 		panel = new JPanel();
 		contentPane.add(panel, BorderLayout.SOUTH);

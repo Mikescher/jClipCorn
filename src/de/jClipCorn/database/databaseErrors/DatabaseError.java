@@ -43,6 +43,7 @@ public class DatabaseError {
 	public static int ERROR_DUPLICATE_TITLE = 20;
 	public static int ERROR_DUPLICATE_FILELINK = 21;
 	public static int ERROR_WRONG_FILENAME = 22;
+	public static int ERROR_NONLINKED_COVERFILE = 23;
 	
 	private final int errorcode;
 	private final Object el1;
@@ -116,6 +117,8 @@ public class DatabaseError {
 			return "[" + ((CCSeason)el).getSeries().getTitle() + " (" + ((CCSeason)el).getTitle() + ")]"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		} else if (el instanceof CCEpisode) {
 			return "[" + ((CCEpisode)el).getSeries().getTitle() + " (" + ((CCEpisode)el).getSeason().getTitle() + ")(" + ((CCEpisode)el).getTitle() + ")]"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+		} else if (el1 instanceof File) {
+			return "[" + ((File)el).getName() + "]"; //$NON-NLS-1$ //$NON-NLS-2$
 		} else {
 			return "[?]"; //$NON-NLS-1$
 		}
@@ -139,6 +142,8 @@ public class DatabaseError {
 		} else if (el1 instanceof CCEpisode) {
 			EditSeriesFrame esf = new EditSeriesFrame(owner, (CCEpisode) el1, null);
 			esf.setVisible(true);
+		} else if (el1 instanceof File) {
+			PathFormatter.showInExplorer((File) el1);
 		}
 	}
 	

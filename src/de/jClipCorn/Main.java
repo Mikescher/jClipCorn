@@ -62,20 +62,13 @@ public class Main {
 }
 
 //TODO Parse that (eventually ?): http://www.themoviedb.org/search/movie?query=lazarus%20projekt
-
-//TODO statistics page
-
 //TODO Auto parse Summary 
 //TODO Parse Cover from more sources (coverparadies, darktown ...) ((Erst mal sehen ob die was taugen))
 //TODO Search for Trailer
 
-//TODO Recheck all Texts - improve DL-Language (what EN / What GER) => Siehe MoviePopup (mal deutsch/mal englisch)
+//TODO statistics page
+
 //TODO WatchItLaterFeature (And Download inHigherQuality)
-
 //TODO Read Only - Mode
-
-//TODO Filmtrommel (mit netter Animation)
-
-//TODO Clickable Zyklus
 
 //TODO (2.0) ONLINE SYNCHRONISATION / Online Profiles / View Ratings + Viewed from others ... ...

@@ -139,7 +139,7 @@ public class SFixClipTable extends SFixTable {
 		sorter = new TableRowSorter<>((ClipTableModel) getModel());
 		setRowSorter(sorter);
 		
-		sorter.setComparator(0,  sorter_score);
+		sorter.setComparator(0,  sorter_score); //TODO Remove them Magic Numbers (there are -unfortunately- everywhere)
 		sorter.setComparator(1,  sorter_title);
 		sorter.setComparator(2,  sorter_viewed);
 		sorter.setComparator(3,  sorter_zyklus);

@@ -188,7 +188,7 @@ public class ClipTable extends JScrollPane implements CCDBUpdateListener, ListSe
 			int row = table.rowAtPoint(e.getPoint());
 			int col = table.columnAtPoint(e.getPoint());
 			
-			if (row >= 0 && col == 3) { //Col 3 = Zyklus
+			if (row >= 0 && table.convertColumnIndexToModel(col) == 3) { //Col 3 = Zyklus
 				CCDatabaseElement del = movielist.getDatabaseElementBySort(table.convertRowIndexToModel(row));
 				if ((del instanceof CCMovie) && ((CCMovie)del).hasZyklus()) {
 					setRowFilter(new TableZyklusFilter(((CCMovie)del).getZyklus()), null);

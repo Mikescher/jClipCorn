@@ -155,6 +155,10 @@ public abstract class CCDatabaseElement {
 		return movielist.getCoverCache().getCover(covername);
 	}
 	
+	public BufferedImage getHalfsizeCover() {
+		return movielist.getCoverCache().getHalfsizeCover(covername);
+	}
+	
 	public ImageIcon getCoverIcon() {
 		return movielist.getCoverCache().getCoverIcon(covername);
 	}

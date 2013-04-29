@@ -55,6 +55,7 @@ public class Resources {
 	public final static String ICN_MENUBAR_IMPORTSERIES				= registerICN("/icons/toolbar/script_bullet_add_ser.png");
 	public final static String ICN_MENUBAR_EXPORTSERIES				= registerICN("/icons/toolbar/script_bullet_save_ser.png");
 	public final static String ICN_MENUBAR_EPISODEGUIDE				= registerICN("/icons/toolbar/document_quote.png");
+	public final static String ICN_MENUBAR_RANDOMMOVIE				= registerICN("/icons/toolbar/magic_wand_2.png");
 	// #############################################  </MENUBAR>  ############################################
 	
 

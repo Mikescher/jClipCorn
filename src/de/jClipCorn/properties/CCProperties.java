@@ -34,8 +34,9 @@ public class CCProperties {
 	public final static int CAT_SERIES 			= 3;
 	public final static int CAT_PLAY 			= 4;
 	public final static int CAT_BACKUP 			= 5;
-	public final static int CAT_OTHERFRAMES 	= 6;
-	public final static int CAT_KEYSTROKES 		= 7;
+	public final static int CAT_STATUSBAR		= 6;
+	public final static int CAT_OTHERFRAMES 	= 7;
+	public final static int CAT_KEYSTROKES 		= 8;
 	
 	private static CCProperties mainInstance = null;
 	
@@ -92,6 +93,14 @@ public class CCProperties {
 	public CCRIntProperty 		PROP_PARSEIMDB_LANGUAGE;
 	public CCToolbarProperty	PROP_TOOLBAR_ELEMENTS;
 	public CCRIntProperty		PROP_SERIES_ADDDATECALCULATION; //0 = Lowest EpisdenAddDate || 1 = Highest EpisdenAddDate || 2 = Average EpisdenAddDate
+	public CCBoolProperty		PROP_STATBAR_ELCOUNT;
+	public CCBoolProperty		PROP_STATBAR_PROGRESSBAR;
+	public CCBoolProperty		PROP_STATBAR_LOG;
+	public CCBoolProperty		PROP_STATBAR_VIEWEDCOUNT;
+	public CCBoolProperty		PROP_STATBAR_SERIESCOUNT;
+	public CCBoolProperty		PROP_STATBAR_LENGTH;
+	public CCBoolProperty		PROP_STATBAR_SIZE;
+	public CCBoolProperty		PROP_STATBAR_STARTTIME;
 	
 	private Properties properties;
 	private String path;
@@ -193,6 +202,15 @@ public class CCProperties {
 		PROP_PARSEIMDB_LANGUAGE					= new CCRIntProperty(NONVISIBLE,	 	this,   "PROP_PARSEIMDB_LANGUAGE",					1, 					2);
 		PROP_TOOLBAR_ELEMENTS					= new CCToolbarProperty(CAT_VIEW, 		this, 	"PROP_TOOLBAR_ELEMENTS", 					ClipToolbar.STANDARD_CONFIG);
 		PROP_SERIES_ADDDATECALCULATION			= new CCRIntProperty(CAT_SERIES, 		this, 	"PROP_SERIES_ADDDATECALCULATION", 			1, 					va);
+	
+		PROP_STATBAR_ELCOUNT					= new CCBoolProperty(CAT_STATUSBAR,	 	this,   "PROP_STATBAR_ELCOUNT",						true);
+		PROP_STATBAR_PROGRESSBAR				= new CCBoolProperty(CAT_STATUSBAR,	 	this,   "PROP_STATBAR_PROGRESSBAR",					true);
+		PROP_STATBAR_LOG						= new CCBoolProperty(CAT_STATUSBAR,	 	this,   "PROP_STATBAR_LOG",							true);
+		PROP_STATBAR_VIEWEDCOUNT				= new CCBoolProperty(CAT_STATUSBAR,	 	this,   "PROP_STATBAR_VIEWEDCOUNT",					true);
+		PROP_STATBAR_SERIESCOUNT				= new CCBoolProperty(CAT_STATUSBAR,	 	this,   "PROP_STATBAR_SERIESCOUNT",					true);
+		PROP_STATBAR_LENGTH						= new CCBoolProperty(CAT_STATUSBAR,	 	this,   "PROP_STATBAR_LENGTH",						true);
+		PROP_STATBAR_SIZE						= new CCBoolProperty(CAT_STATUSBAR,	 	this,   "PROP_STATBAR_SIZE",						true);
+		PROP_STATBAR_STARTTIME					= new CCBoolProperty(CAT_STATUSBAR,	 	this,   "PROP_STATBAR_STARTTIME",					true);
 	}
 	
 	public static CCProperties getInstance() {

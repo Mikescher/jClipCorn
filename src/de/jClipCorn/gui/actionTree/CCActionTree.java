@@ -41,6 +41,7 @@ import de.jClipCorn.gui.frames.mainFrame.MainFrame;
 import de.jClipCorn.gui.frames.moveSeriesFrame.MoveSeriesDialog;
 import de.jClipCorn.gui.frames.previewMovieFrame.PreviewMovieFrame;
 import de.jClipCorn.gui.frames.previewSeriesFrame.PreviewSeriesFrame;
+import de.jClipCorn.gui.frames.randomMovieFrame.RandomMovieFrame;
 import de.jClipCorn.gui.frames.scanFolderFrame.ScanFolderFrame;
 import de.jClipCorn.gui.frames.searchFrame.SearchFrame;
 import de.jClipCorn.gui.frames.settingsFrame.SettingsFrame;
@@ -356,6 +357,14 @@ public class CCActionTree {
 				onClickExtrasResetViewed();
 			}
 		});
+		
+		temp = extras.addChild(new CCActionElement("RandomMovie", null, "ClipMenuBar.Extras.RandomMovie", Resources.ICN_MENUBAR_RANDOMMOVIE));
+		temp.addListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				onClickExtrasRandomMovie();
+			}
+		});
 
 		temp = extras.addChild(new CCActionElement("ShowSettings", null, "ClipMenuBar.Extras.Settings", Resources.ICN_MENUBAR_SETTINGS));
 		temp.addListener(new ActionListener() {
@@ -624,6 +633,11 @@ public class CCActionTree {
 		if (DialogHelper.showLocaleYesNo(owner, "Dialogs.ResetViewed")) { //$NON-NLS-1$
 			owner.getMovielist().resetAllMovieViewed(false);
 		}
+	}
+	
+	private void onClickExtrasRandomMovie() {
+		RandomMovieFrame rmf = new RandomMovieFrame(owner, movielist);
+		rmf.setVisible(true);
 	}
 	
 	private void onClickExtrasMassChangeViewed() {

@@ -7,6 +7,7 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.Box;
@@ -40,12 +41,14 @@ import de.jClipCorn.gui.Resources;
 import de.jClipCorn.gui.frames.addEpisodesFrame.AddEpisodesFrame;
 import de.jClipCorn.gui.frames.addSeasonFrame.AddSeasonFrame;
 import de.jClipCorn.gui.frames.displayGenresDialog.DisplayGenresDialog;
+import de.jClipCorn.gui.frames.displaySearchResultsDialog.DisplaySearchResultsDialog;
 import de.jClipCorn.gui.frames.editSeriesFrame.EditSeriesFrame;
 import de.jClipCorn.gui.frames.previewSeriesFrame.serTable.SerTable;
 import de.jClipCorn.gui.guiComponents.CoverLabel;
 import de.jClipCorn.gui.guiComponents.jCoverChooser.JCoverChooser;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.DialogHelper;
+import de.jClipCorn.util.EpisodeSearchCallbackListener;
 import de.jClipCorn.util.FileSizeFormatter;
 import de.jClipCorn.util.HTTPUtilities;
 import de.jClipCorn.util.ImageUtilities;
@@ -202,7 +205,7 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 			}
 		});
 		pnlSearch.add(edSearch);
-		edSearch.setColumns(16);
+		edSearch.setColumns(24);
 
 		btnSearch = new JButton();
 		btnSearch.addActionListener(new ActionListener() {
@@ -536,7 +539,7 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 	
 	@Override
 	public void valueChanged(ListSelectionEvent e) {
-		changeSeason(dispSeries.getSeason(cvrChooser.getCurrentSelected()));
+		changeSeason(dispSeries.getSeason(cvrChooser.getSelectedIndex()));
 	}
 
 	public void changeSeason(CCSeason s) {
@@ -598,27 +601,30 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 		}
 	}
 	
-	private void startSearch() { // TODO implement better search (like the old CC-Search)
+	private void startSearch() {
 		List<CCEpisode> el = dispSeries.getEpisodeList();
+		List<CCEpisode> found = new ArrayList<>();
 		
-		boolean found = false;
-		
-		for (int a = 0; a < 2; a++) {
-			for (int i = 0; i < el.size(); i++) {
-				if (found) {
-					if (StringUtils.containsIgnoreCase(el.get(i).getTitle(), edSearch.getText())) {
-						cvrChooser.setCurrSelected(el.get(i).getSeason().getSeasonNumber());
-						tabSeason.select(el.get(i));
-						return;
-					}
-				}
-				if (el.get(i) == tabSeason.getSelectedEpisode()) {
-					found  = true;
-				}
+		for (int i = 0; i < el.size(); i++) {
+			if (StringUtils.containsIgnoreCase(el.get(i).getTitle(), edSearch.getText())) {
+					found.add(el.get(i));
 			}
-			found = true;
 		}
 		
-		tabSeason.select(null);
+		if (found.isEmpty()) {
+			DisplaySearchResultsDialog.disposeInstance();
+		} else {
+			DisplaySearchResultsDialog dsrd = new DisplaySearchResultsDialog(found, edSearch);
+			dsrd.addListener(new EpisodeSearchCallbackListener() {
+				@Override
+				public void show(CCEpisode episode) {
+					cvrChooser.setCurrSelected(episode.getSeason().getSeasonNumber());
+					tabSeason.select(episode);
+				}
+			});
+			dsrd.setVisible(true);
+		}
+		
+		
 	}
 }

@@ -36,6 +36,7 @@ public class JCoverChooser extends JComponent implements MouseListener {
 	private boolean mode3d = CCProperties.getInstance().PROP_PREVSERIES_3DCOVER.getValue();
 
 	private List<BufferedImage> images = new ArrayList<>();
+	private List<Object> objects = new ArrayList<>();
 	private int currSelected = 0;
 
 	public JCoverChooser() {
@@ -67,8 +68,16 @@ public class JCoverChooser extends JComponent implements MouseListener {
 		listener.add(l);
 	}
 	
-	public int getCurrentSelected() {
+	public int getSelectedIndex() {
 		return currSelected;
+	}
+	
+	public BufferedImage getSelectedImage() {
+		return images.get(getSelectedIndex());
+	}
+	
+	public Object getSelectedObject() {
+		return objects.get(getSelectedIndex());
 	}
 
 	public void setCircleRadius(int rad) {
@@ -126,7 +135,12 @@ public class JCoverChooser extends JComponent implements MouseListener {
 	}
 
 	public void addCover(BufferedImage bi) {
+		addCover(bi, null);
+	}
+	
+	public void addCover(BufferedImage bi, Object obj) {
 		images.add(bi);
+		objects.add(obj);
 		
 		update();
 	}
@@ -193,17 +207,19 @@ public class JCoverChooser extends JComponent implements MouseListener {
 	}
 
 	@Override
-	public void mouseClicked(MouseEvent e) {		
-		int x = e.getX() - getComponentWidth()/2;
-		int y = e.getY() - getComponentHeight()/2;
+	public void mouseClicked(MouseEvent e) {
+		if (isEnabled()) {
+			int x = e.getX() - getComponentWidth()/2;
+			int y = e.getY() - getComponentHeight()/2;
 
-		for (int i = -EXTRACOVERCOUNT; i <= EXTRACOVERCOUNT; i++) {
-			int imgid = currSelected + i;
-			if (coverIsSet(imgid)) {
-				TransformRectangle tr = rectangles.get(i);
-				if (tr.includesPoint(x, y)) {
-					setCurrSelected(imgid);
-					return;
+			for (int i = -EXTRACOVERCOUNT; i <= EXTRACOVERCOUNT; i++) {
+				int imgid = currSelected + i;
+				if (coverIsSet(imgid)) {
+					TransformRectangle tr = rectangles.get(i);
+					if (tr.includesPoint(x, y)) {
+						setCurrSelected(imgid);
+						return;
+					}
 				}
 			}
 		}
@@ -240,6 +256,7 @@ public class JCoverChooser extends JComponent implements MouseListener {
 	public void clear() {
 		currSelected = 0;
 		images.clear();
+		objects.clear();
 		rectangles.clear();
 		
 		update();

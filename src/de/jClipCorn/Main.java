@@ -39,7 +39,7 @@ public class Main {
 				final MainFrame myFrame = new MainFrame(mList);
 				myFrame.start();
 				
-				mList.connect(myFrame);
+				mList.connect(myFrame);				
 			}
 		});
 	}
@@ -75,5 +75,7 @@ public class Main {
 //TODO Read Only - Mode
 
 //TODO Filmtrommel (mit netter Animation)
+
+//TODO Clickable Zyklus
 
 //TODO (2.0) ONLINE SYNCHRONISATION / Online Profiles / View Ratings + Viewed from others ... ...

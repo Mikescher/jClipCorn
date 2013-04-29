@@ -47,38 +47,47 @@ public class ClipStatusBar extends AbstractClipStatusbar implements CCDBUpdateLi
 		}
 	}
 	
-	private void intializeGUI() { //TODO Settings for Showing columns
+	private void intializeGUI() {
+		boolean propMov  = CCProperties.getInstance().PROP_STATBAR_ELCOUNT.getValue();
+		boolean propBar  = CCProperties.getInstance().PROP_STATBAR_PROGRESSBAR.getValue();
+		boolean propLog  = CCProperties.getInstance().PROP_STATBAR_LOG.getValue();
+		boolean propView = CCProperties.getInstance().PROP_STATBAR_VIEWEDCOUNT.getValue();
+		boolean propSer  = CCProperties.getInstance().PROP_STATBAR_SERIESCOUNT.getValue();
+		boolean propLen  = CCProperties.getInstance().PROP_STATBAR_LENGTH.getValue();
+		boolean propSize = CCProperties.getInstance().PROP_STATBAR_SIZE.getValue();
+		boolean propTime = CCProperties.getInstance().PROP_STATBAR_STARTTIME.getValue();
+		
 		//##################################################
 		startInitColumns();
 		//##################################################
 		
-		lblMovies = addLabel(""); //$NON-NLS-1$
+		lblMovies = addLabel("", propMov); //$NON-NLS-1$
 		
-		progressBar = addProgressbar(100);
+		progressBar = addProgressbar(100, propBar);
 		
-		addPlaceholder();
+		addPlaceholder(propMov || propBar);
 		
-		lblLog = addLabel(""); //$NON-NLS-1$
+		lblLog = addLabel("", propLog); //$NON-NLS-1$
 		
-		addSeparator();
+		addSeparator(propLog);
 		
-		lblViewed = addLabel(""); //$NON-NLS-1$
+		lblViewed = addLabel("", propView); //$NON-NLS-1$
 		
-		addSeparator();
+		addSeparator(propView);
 		
-		lblSeries = addLabel(""); //$NON-NLS-1$
+		lblSeries = addLabel("", propSer); //$NON-NLS-1$
 		
-		addSeparator();
+		addSeparator(propSer);
 		
-		lblLength = addLabel(""); //$NON-NLS-1$
+		lblLength = addLabel("", propLen); //$NON-NLS-1$
 		
-		addSeparator();
+		addSeparator(propLen);
 		
-		lblSize = addLabel(""); //$NON-NLS-1$
+		lblSize = addLabel("", propSize); //$NON-NLS-1$
 		
-		addSeparator();
+		addSeparator(propSize);
 		
-		lblStarttime = addLabel(""); //$NON-NLS-1$
+		lblStarttime = addLabel("", propTime); //$NON-NLS-1$
 		
 		//##################################################
 		endInitColumns();
@@ -133,7 +142,9 @@ public class ClipStatusBar extends AbstractClipStatusbar implements CCDBUpdateLi
 	}
 	
 	private void updateLabels_Log() {
-		lblLog.setIcon(CCLog.getHighestType().getSmallIcon());
+		if (lblLog != null) {
+			lblLog.setIcon(CCLog.getHighestType().getSmallIcon());
+		}
 	}
 	
 	public void updateLables_Movies() {

@@ -67,7 +67,11 @@ public class AbstractClipStatusbar extends JPanel {
 		columns.add(new ClipStatusbarColumn(c, gbc, w));
 	}
 	
-	protected void addSeparator() {
+	protected void addSeparator(boolean visible) {
+		if (! visible) {
+			return;
+		}
+		
 		JSeparator separator = new JSeparator();
 		separator.setOrientation(SwingConstants.VERTICAL);
 		
@@ -79,7 +83,11 @@ public class AbstractClipStatusbar extends JPanel {
 		addColumn(separator, gbc, 10);
 	}
 
-	protected void addPlaceholder() {
+	protected void addPlaceholder(boolean visible) {
+		if (! visible) {
+			return;
+		}
+		
 		JLabel lbl = new JLabel();
 		
 		GridBagConstraints gbc = new GridBagConstraints();
@@ -90,7 +98,11 @@ public class AbstractClipStatusbar extends JPanel {
 		addColumn(lbl, gbc, 5);
 	}
 	
-	protected JLabel addLabel(String txt) {
+	protected JLabel addLabel(String txt, boolean visible) {
+		if (! visible) {
+			return new JLabel(txt);
+		}
+		
 		JLabel lbl = new JLabel(txt);
 		
 		GridBagConstraints gbc = new GridBagConstraints();
@@ -103,7 +115,11 @@ public class AbstractClipStatusbar extends JPanel {
 		return lbl;
 	}
 	
-	protected JProgressBar addProgressbar(int width) {
+	protected JProgressBar addProgressbar(int width, boolean visible) {
+		if (! visible) {
+			return new JProgressBar();
+		}
+		
 		JProgressBar progress = new JProgressBar();
 		progress.setIndeterminate(true);
 		

@@ -13,6 +13,11 @@ public class TableZyklusFilter extends RowFilter<ClipTableModel, Object> {
 		this.defZyklus = zyklus;
 	}
 
+	public TableZyklusFilter(CCMovieZyklus zyklus) {
+		super();
+		this.defZyklus = zyklus.getTitle();
+	}
+
 	@Override
 	public boolean include(Entry<? extends ClipTableModel, ? extends Object> e) {
 		return defZyklus.equals(((CCMovieZyklus)e.getValue(3)).getTitle());

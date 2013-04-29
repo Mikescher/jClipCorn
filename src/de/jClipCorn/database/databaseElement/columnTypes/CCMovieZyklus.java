@@ -59,6 +59,18 @@ public class CCMovieZyklus {
 			return ""; //$NON-NLS-1$
 		}
 	}
+	
+	public String getSimpleHTMLFormatted() {
+		if (isSet()) {
+			if (zyklusNmbr != 0) {
+				return "<html><u>" + title + "</u> " + RomanNumberFormatter.decToRom(zyklusNmbr) + "</html>"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			} else {
+				return "<html><u>" + title + "</u></html>"; //$NON-NLS-1$ //$NON-NLS-2$
+			}
+		} else {
+			return ""; //$NON-NLS-1$
+		}
+	}
 
 	public static int compare(CCMovieZyklus o1, CCMovieZyklus o2) {
 		int rv = o1.getTitle().compareToIgnoreCase(o2.getTitle());

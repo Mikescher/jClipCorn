@@ -17,8 +17,10 @@ import javax.swing.table.TableRowSorter;
 
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
+import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.util.CCDBUpdateListener;
 import de.jClipCorn.gui.frames.mainFrame.MainFrame;
+import de.jClipCorn.gui.guiComponents.tableFilter.TableZyklusFilter;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.TableColumnAdjuster;
 
@@ -181,10 +183,22 @@ public class ClipTable extends JScrollPane implements CCDBUpdateListener, ListSe
 				}
 			}
 		}
+		
+		if (e.getButton() == MouseEvent.BUTTON1 && CCProperties.getInstance().PROP_MAINFRAME_CLICKABLEZYKLUS.getValue()) {
+			int row = table.rowAtPoint(e.getPoint());
+			int col = table.columnAtPoint(e.getPoint());
+			
+			if (row >= 0 && col == 3) { //Col 3 = Zyklus
+				CCDatabaseElement del = movielist.getDatabaseElementBySort(table.convertRowIndexToModel(row));
+				if ((del instanceof CCMovie) && ((CCMovie)del).hasZyklus()) {
+					setRowFilter(new TableZyklusFilter(((CCMovie)del).getZyklus()), null);
+				}
+			}
+		}
 	}
 
 	@SuppressWarnings("unchecked")
-	public void setRowFilter(RowFilter<ClipTableModel, Object> filter, RowFilterSource source) {
+	public void setRowFilter(RowFilter<ClipTableModel, Object> filter, RowFilterSource source) { // Source kann null sein
 		((TableRowSorter<ClipTableModel>) table.getRowSorter()).setRowFilter(filter);
 
 		owner.getStatusBar().updateLables_Movies();

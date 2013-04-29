@@ -409,4 +409,8 @@ public class CCMovie extends CCDatabaseElement {
 		
 		return filename;
 	}
+
+	public boolean hasZyklus() {
+		return getZyklus().isSet();
+	}
 }

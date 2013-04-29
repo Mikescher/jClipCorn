@@ -101,6 +101,8 @@ public class CCProperties {
 	public CCBoolProperty		PROP_STATBAR_LENGTH;
 	public CCBoolProperty		PROP_STATBAR_SIZE;
 	public CCBoolProperty		PROP_STATBAR_STARTTIME;
+	public CCBoolProperty		PROP_MAINFRAME_CLICKABLEZYKLUS;
+	public CCBoolProperty		PROP_MAINFRAME_DONTCHANGEZYKLUSCOLOR;
 	
 	private Properties properties;
 	private String path;
@@ -202,7 +204,6 @@ public class CCProperties {
 		PROP_PARSEIMDB_LANGUAGE					= new CCRIntProperty(NONVISIBLE,	 	this,   "PROP_PARSEIMDB_LANGUAGE",					1, 					2);
 		PROP_TOOLBAR_ELEMENTS					= new CCToolbarProperty(CAT_VIEW, 		this, 	"PROP_TOOLBAR_ELEMENTS", 					ClipToolbar.STANDARD_CONFIG);
 		PROP_SERIES_ADDDATECALCULATION			= new CCRIntProperty(CAT_SERIES, 		this, 	"PROP_SERIES_ADDDATECALCULATION", 			1, 					va);
-	
 		PROP_STATBAR_ELCOUNT					= new CCBoolProperty(CAT_STATUSBAR,	 	this,   "PROP_STATBAR_ELCOUNT",						true);
 		PROP_STATBAR_PROGRESSBAR				= new CCBoolProperty(CAT_STATUSBAR,	 	this,   "PROP_STATBAR_PROGRESSBAR",					true);
 		PROP_STATBAR_LOG						= new CCBoolProperty(CAT_STATUSBAR,	 	this,   "PROP_STATBAR_LOG",							true);
@@ -211,6 +212,8 @@ public class CCProperties {
 		PROP_STATBAR_LENGTH						= new CCBoolProperty(CAT_STATUSBAR,	 	this,   "PROP_STATBAR_LENGTH",						true);
 		PROP_STATBAR_SIZE						= new CCBoolProperty(CAT_STATUSBAR,	 	this,   "PROP_STATBAR_SIZE",						true);
 		PROP_STATBAR_STARTTIME					= new CCBoolProperty(CAT_STATUSBAR,	 	this,   "PROP_STATBAR_STARTTIME",					true);
+		PROP_MAINFRAME_CLICKABLEZYKLUS			= new CCBoolProperty(CAT_VIEW,		 	this,   "PROP_MAINFRAME_CLICKABLEZYKLUS",			false);
+		PROP_MAINFRAME_DONTCHANGEZYKLUSCOLOR	= new CCBoolProperty(CAT_VIEW,		 	this,   "PROP_MAINFRAME_DONTCHANGEZYKLUSCOLOR",		false);
 	}
 	
 	public static CCProperties getInstance() {

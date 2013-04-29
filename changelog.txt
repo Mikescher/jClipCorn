@@ -1,3 +1,110 @@
+############ 2013-04-29: 1.7 RELEASE
+
+Updated Version to "1.7"
+
+############ 2013-04-29: 1.7 Fixes
+
+Fixed Translation
+Fixed a few Bugs
+Oragnized ToDos
+
+############ 2013-04-29: 1.7 Features
+
+Added Option for Clickable Zyklus
+
+############ 2013-04-29: 1.7 Features
+
+Improved the Search in PreviewSeriesFrame
+Added Settings for displaying Columns in Statusbar
+Added the RabdomMovieFrame ("Filmtrommel")
+
+############ 2013-04-27: 1.7 Features+Bugfix
+
+Fixed Zero-Height Lines in JList (on empty elements)
+Fixed Layout (Wrong Widths) of Lists in editToolbarFrame
+Added Non-Linked-Cover DatabaseError
+
+############ 2013-04-27: 1.7 Features
+
+Added Option for Add-Date Calculation-Method in Settings
+Added Missing
+Icons
+Added 16x16 Icons (now there should no Icons get down-sized in
+runtime)
+
+############ 2013-04-26: 1.7 Bugfixes
+
+Fixed too small seperator in editToolbarFrame
+Fixed Nullpointer when adding/previewing/deleting season
+Fixed MassSetLength in addMultipleEpisodesFrame
+Fixed NonSelection TitleEdit in addMultipleEpisodesFrame
+Fixed non setting LastViewed when man. changing Viewed of an Episode
+Added UserDataProblem "Untrimmed" to CCSeries
+Added UserDataProblem "Untrimmed" to CCSeason
+Added UserDataProblem "Untrimmed" to CCEpisode
+Fixed Color of CaptionedPanel in addMultipleEpisodesFrame
+Fixed Backgroundcolor of PathEdit in addMultipleEpisodesFrame
+
+############ 2013-04-26: 1.7 Libraryfix
+
+Fixed BeanUtils Library (again)
+- Removed duplicate files in jar
+
+############ 2013-04-26: 1.7 Bugfix
+
+Removed Test-Ressource-File (*_16x16.png)
+Fixed Fatal AV when Searching for Directory
+Fixed the possibility to open Windows while in an blocking call (through
+Screenshots)
+
+############ 2013-04-26: 1.7 Features
+
+Fixed Missing BeanUtils-Exception Bug (now using custom compiled
+beanutils.jar)
+Added support for prerenderered 16x16 Icons
+Fixed Border around Seperator in EditToolbarFrame
+Updated ToDos
+
+############ 2013-04-26: 1.7 Features
+
+Added PropertyCheckbox
+Added Option to change the Toolbar
+added ToolbarConfigPanel to show ToolbarConfig
+Added EditToolbarFrame to change the Toolbar visual
+
+############ 2013-04-26: 1.7 Bugfix
+
+Fixed missing jGoodies-Commons Library
+
+############ 2013-04-26: Export Fix (BeanUtils)
+
+Fixed the Duplicate-Entry Bug when exporting
+
+############ 2013-04-26: 1.7 Possible Bugfixes
+
+Fixed new Warnnings due to new Eclipse Settings
+- Fixed a few ressourceleaks
+
+############ 2013-04-26: Git cleanup
+
+Added Eclipse Files to Repository
+Configured Project specific settings
+Added javadoc to repository
+Updated Derby and jGoodies Library
+
+############ 2013-04-25: Added gitcommands
+
+Added gitcommands - a list of Commands for git
+
+############ 2013-04-25: Changelog Fix 2
+
+Changed Changelog Encoding from UTF-8 (BOM) to ANSI
+
+############ 2013-04-25: Changelog Fix
+
+Fixed Wrong Encoding in Changelog (removed BOM,, Encoding from UCS-2 to
+UTF-8)
+
 ############ 2013-04-25: 1.7 Features
 
 Add Cache-Function to Movieplayer (it remembers the VLC-Path)

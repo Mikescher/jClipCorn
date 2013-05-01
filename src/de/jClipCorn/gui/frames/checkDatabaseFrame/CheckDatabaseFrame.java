@@ -161,7 +161,7 @@ public class CheckDatabaseFrame extends JFrame {
 			@Override
 			public void run() {
 				btnValidate.setEnabled(true);
-				btnAutofix.setEnabled(true);
+				btnAutofix.setEnabled(errorList.size() > 0);
 				lblInfo.setText(LocaleBundle.getFormattedString("CheckDatabaseDialog.lblInfo.text_2", errorList.size())); //$NON-NLS-1$
 			}
 		});

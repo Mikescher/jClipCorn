@@ -931,14 +931,15 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 	}
 	
 	private void setSeriesCover(BufferedImage nci) {
-		nci = ImageUtilities.resizeCoverImage(nci);
-		
-		ImageUtilities.makeSeriesCover(nci);
-		
-		this.currentSeriesCoverImage = nci;
 		if (nci != null) {
+			nci = ImageUtilities.resizeCoverImage(nci);
+			ImageUtilities.makeSeriesCover(nci);
+			this.currentSeriesCoverImage = nci;
+			
 			lblSeriesCover.setIcon(new ImageIcon(currentSeriesCoverImage));
 		} else {
+			this.currentSeriesCoverImage = null;
+			
 			lblSeriesCover.setIcon(null);
 		}
 	}

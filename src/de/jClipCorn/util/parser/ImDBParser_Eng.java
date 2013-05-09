@@ -26,6 +26,7 @@ import de.jClipCorn.util.RegExHelper;
 public class ImDBParser_Eng {
 	public final static String BASE_URL = "http://www.imdb.com";
 	
+	private final static String SEARCH_URL_A = "/find?s=tt&q=%s";
 	private final static String SEARCH_URL_M = "/find?s=tt&ttype=ft&q=%s";
 	private final static String SEARCH_URL_S = "/find?s=tt&ttype=tv&q=%s";
 	private final static String REGEX_SEARCH_HTMl_A = "<a href[ ]*=[ ]*\"/title/tt[0-9]+/[^>]+\"[ ]*>(?![ ]*<.+>).+?</a>"; // <a href[ ]*=[ ]*"/title/tt[0-9]+/[^>]+"[ ]*>(?![ ]*<.+>).+?</a>
@@ -49,6 +50,10 @@ public class ImDBParser_Eng {
 	private final static String FSK_URL = "%sparentalguide";
 	
 	public static String getSearchURL(String title, CCMovieTyp typ) {
+		if (typ == null) {
+			return String.format(BASE_URL + SEARCH_URL_A, HTTPUtilities.escapeURL(title));
+		}
+		
 		switch (typ) {
 		case MOVIE:
 			return String.format(BASE_URL + SEARCH_URL_M, HTTPUtilities.escapeURL(title));

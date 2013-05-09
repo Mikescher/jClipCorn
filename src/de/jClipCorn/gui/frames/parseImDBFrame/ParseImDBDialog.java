@@ -116,6 +116,7 @@ public class ParseImDBDialog extends JDialog {
 	private JButton btnIMDB;
 	private JButton btnOk;
 	private JButton btnFSKAll;
+	private JButton btnExtendedParse;
 
 	public ParseImDBDialog(Component owner, ParseResultHandler handler, CCMovieTyp typ) {
 		setResizable(false);
@@ -129,7 +130,8 @@ public class ParseImDBDialog extends JDialog {
 		resetAll();
 		
 		edSearchName.setText(handler.getFullTitle());
-		setFocusTraversalPolicy(new ExtendedFocusTraversalOnArray(new Component[]{btnParse, lsDBList, cbTitle, cbYear, cbScore, cbLength, cbFSK, cbCover, cbGenre0, cbGenre1, cbGenre2, cbGenre3, cbGenre4, cbGenre5, cbGenre6, cbGenre7, btnIMDB, btnFSKAll, btnOk}));
+
+		setFocusTraversalPolicy(new ExtendedFocusTraversalOnArray(new Component[]{btnParse, btnExtendedParse, lsDBList, cbTitle, cbYear, cbScore, cbLength, cbFSK, cbCover, cbGenre0, cbGenre1, cbGenre2, cbGenre3, cbGenre4, cbGenre5, cbGenre6, cbGenre7, btnIMDB, btnFSKAll, btnOk}));
 	}
 	
 	private void initGUI() {
@@ -138,7 +140,6 @@ public class ParseImDBDialog extends JDialog {
 		setModal(true);
 		setBounds(0, 0, 807, 538);
 		getContentPane().setLayout(null);
-		
 		
 		scrollPane = new JScrollPane();
 		scrollPane.setBounds(10, 53, 217, 421);
@@ -166,11 +167,11 @@ public class ParseImDBDialog extends JDialog {
 			@Override
 			public void keyPressed(KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-					startGetImDBList();
+					startGetImDBList(false);
 				}
 			}
 		});
-		edSearchName.setBounds(10, 11, 684, 20);
+		edSearchName.setBounds(10, 11, 552, 20);
 		panel.add(edSearchName);
 		edSearchName.setColumns(10);
 		
@@ -178,10 +179,10 @@ public class ParseImDBDialog extends JDialog {
 		btnParse.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				startGetImDBList();
+				startGetImDBList(false);
 			}
 		});
-		btnParse.setBounds(704, 10, 89, 23);
+		btnParse.setBounds(572, 10, 89, 23);
 		panel.add(btnParse);
 		
 		pnlMain = new JPanel();
@@ -409,6 +410,16 @@ public class ParseImDBDialog extends JDialog {
 		pbarSearch = new JProgressBar();
 		pbarSearch.setBounds(10, 485, 217, 16);
 		getContentPane().add(pbarSearch);
+		
+		btnExtendedParse = new JButton(LocaleBundle.getString("parseImDBFrame.btnParseExtended.text")); //$NON-NLS-1$
+		btnExtendedParse.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				startGetImDBList(true);
+			}
+		});
+		btnExtendedParse.setBounds(671, 10, 122, 23);
+		panel.add(btnExtendedParse);
 	}
 	
 	private void showAllRatingsDialog() {
@@ -417,13 +428,13 @@ public class ParseImDBDialog extends JDialog {
 		}
 	}
 	
-	private void startGetImDBList() {
+	private void startGetImDBList(final boolean parseAll) {
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
-				runSearch();
+				runSearch(parseAll);
 			}
-		}, "THREAD_SEARCH_IN_IMDB").start(); //$NON-NLS-1$
+		}, "THREAD_SEARCH_IN_IMDB_PA").start(); //$NON-NLS-1$
 	}
 	
 	private void initComboboxes() {
@@ -483,7 +494,7 @@ public class ParseImDBDialog extends JDialog {
 	}
 	
 	private void updateCheckBoxes() {
-		cbCover.setSelected(imgCover.getIcon() != null);
+		cbCover.setSelected((imgCover.getIcon() != null) && (imgCoverBI != null));
 		cbFSK.setSelected(cbxFSK.getSelectedIndex() >= 0);
 		cbLength.setSelected((int)spnLength.getValue() > 0);
 		cbScore.setSelected((int)spnScore.getValue() > 0);
@@ -500,7 +511,7 @@ public class ParseImDBDialog extends JDialog {
 		cbGenre7.setSelected(cbxGenre7.getSelectedIndex() > 0);
 	}
 	
-	private void runSearch() {
+	private void runSearch(boolean parseAll) {
 		try {
 			SwingUtilities.invokeAndWait(new Runnable() {
 				@Override
@@ -514,7 +525,7 @@ public class ParseImDBDialog extends JDialog {
 			return;
 		}
 
-		String url = ImDBParser.getSearchURL(edSearchName.getText(), typ);
+		String url = ImDBParser.getSearchURL(edSearchName.getText(), (parseAll)?(null):(typ));
 		String html = HTTPUtilities.getHTML(url, true);
 		final List<DoubleString> res = ImDBParser.extractImDBLinks(html);
 		

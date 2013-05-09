@@ -76,7 +76,9 @@ public class TransformRectangle3D extends TransformRectangle{
 
 	@Override
 	public void draw(Graphics g, BufferedImage i, boolean focused) {
-		g.drawImage(transformImg(i, focused), (int)topLeft.getX(), getTop(), null);
+		if (g != null && i != null) {
+			g.drawImage(transformImg(i, focused), (int)topLeft.getX(), getTop(), null);
+		}
 	}
 	
 	@Override

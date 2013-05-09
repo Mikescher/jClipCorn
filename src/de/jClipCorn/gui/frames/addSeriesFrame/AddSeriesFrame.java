@@ -330,14 +330,15 @@ public class AddSeriesFrame extends JFrame implements ParseResultHandler, UserDa
 
 	@Override
 	public void setCover(BufferedImage nci) {
-		nci = ImageUtilities.resizeCoverImage(nci);
-		
-		ImageUtilities.makeSeriesCover(nci);
-		
-		this.currentCoverImage = nci;
 		if (nci != null) {
+			nci = ImageUtilities.resizeCoverImage(nci);
+			ImageUtilities.makeSeriesCover(nci);
+			this.currentCoverImage = nci;
+			
 			lblCover.setIcon(new ImageIcon(currentCoverImage));
 		} else {
+			this.currentCoverImage = null;
+			
 			lblCover.setIcon(null);
 		}
 	}

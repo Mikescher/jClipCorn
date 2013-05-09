@@ -90,6 +90,10 @@ public class CCMovieList {
 	public CCDatabaseElement getDatabaseElementBySort(int row) { // WARNIG SORT <> MOVIEID || SORT IN DATABASE (SORTED BY MOVIEID)
 		return list.get(row);
 	}
+	
+	public int getSortByDatabaseElement(CCDatabaseElement el) {
+		return list.indexOf(el);
+	}
 
 	public int getElementCount() {
 		return list.size();

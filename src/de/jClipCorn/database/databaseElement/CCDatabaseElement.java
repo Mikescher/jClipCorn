@@ -295,4 +295,8 @@ public abstract class CCDatabaseElement {
 		
 		return dbelement;
 	}
+	
+	public int getMovieListPosition() {
+		return movielist.getSortByDatabaseElement(this);
+	}
 }

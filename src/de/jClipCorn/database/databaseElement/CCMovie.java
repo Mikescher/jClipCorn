@@ -396,7 +396,7 @@ public class CCMovie extends CCDatabaseElement {
 		}
 				
 		if (getLanguage() != CCMovieLanguage.GERMAN) {
-			filename += " [" + getLanguage().asString() + "]";
+			filename += " [" + getLanguage().getShortString() + "]";
 		}
 		
 		if (getPartcount() > 1) {

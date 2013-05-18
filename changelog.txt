@@ -1,3 +1,30 @@
+############ 2013-05-18: 1.7.2 Code Cleanup
+
+Removed "Magic Numbers" for Column-Indizies
+
+############ 2013-05-18: 1.7.2 Bugfix
+
+Fixed Wrong renaming for English/France or Muted Movies
+
+############ 2013-05-09: 1.7.1 RELEASE
+
+Bugfix Release
+
+############ 2013-05-09: 1.7.1 Bugfixes
+
+Fixed Null-Cover Bug
+Fixed Element-Changed-Listener resetting TableSelection
+Fixed jCoverChooser drawing an null-Image (i hope so ...)
+
+############ 2013-05-01: 1.7.1 Bugfixes
+
+Fixed Translations
+Fixed Button Enablation in CheckDatabaseFrame
+
+############ 2013-04-29: 1.7 Changelog
+
+Updated Changelog for 1.7
+
 ############ 2013-04-29: 1.7 RELEASE
 
 Updated Version to "1.7"

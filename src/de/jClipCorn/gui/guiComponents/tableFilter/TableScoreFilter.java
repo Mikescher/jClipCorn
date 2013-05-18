@@ -15,6 +15,6 @@ public class TableScoreFilter extends RowFilter<ClipTableModel, Object> {
 
 	@Override
 	public boolean include(Entry<? extends ClipTableModel, ? extends Object> e) {
-		return defScore.equals(e.getValue(0));
+		return defScore.equals(e.getValue(ClipTableModel.COLUMN_SCORE));
 	}
 }

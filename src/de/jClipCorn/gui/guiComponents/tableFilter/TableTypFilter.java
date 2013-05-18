@@ -16,6 +16,6 @@ public class TableTypFilter extends RowFilter<ClipTableModel, Object> {
 
 	@Override
 	public boolean include(Entry<? extends ClipTableModel, ? extends Object> e) {
-		return ((CCDatabaseElement)e.getValue(1)).getType() == defTyp;
+		return ((CCDatabaseElement)e.getValue(ClipTableModel.COLUMN_TITLE)).getType() == defTyp;
 	}
 }

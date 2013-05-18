@@ -15,6 +15,6 @@ public class TableYearFilter extends RowFilter<ClipTableModel, Object> {
 
 	@Override
 	public boolean include(Entry<? extends ClipTableModel, ? extends Object> e) {
-		return ((YearRange)e.getValue(13)).includes(defYear);
+		return ((YearRange)e.getValue(ClipTableModel.COLUMN_YEAR)).includes(defYear);
 	}
 }

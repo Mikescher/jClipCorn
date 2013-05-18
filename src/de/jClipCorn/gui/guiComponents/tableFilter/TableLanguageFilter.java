@@ -15,6 +15,6 @@ public class TableLanguageFilter extends RowFilter<ClipTableModel, Object> {
 
 	@Override
 	public boolean include(Entry<? extends ClipTableModel, ? extends Object> e) {
-		return defLanguage.equals(e.getValue(5));
+		return defLanguage.equals(e.getValue(ClipTableModel.COLUMN_LANGUAGE));
 	}
 }

@@ -15,6 +15,6 @@ public class TableFormatFilter extends RowFilter<ClipTableModel, Object> {
 
 	@Override
 	public boolean include(Entry<? extends ClipTableModel, ? extends Object> e) {
-		return defFormat.equals(e.getValue(12));
+		return defFormat.equals(e.getValue(ClipTableModel.COLUMN_FORMAT));
 	}
 }

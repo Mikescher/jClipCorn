@@ -20,6 +20,6 @@ public class TableZyklusFilter extends RowFilter<ClipTableModel, Object> {
 
 	@Override
 	public boolean include(Entry<? extends ClipTableModel, ? extends Object> e) {
-		return defZyklus.equals(((CCMovieZyklus)e.getValue(3)).getTitle());
+		return defZyklus.equals(((CCMovieZyklus)e.getValue(ClipTableModel.COLUMN_ZYKLUS)).getTitle());
 	}
 }

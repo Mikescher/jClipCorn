@@ -16,6 +16,6 @@ public class TableStatusFilter extends RowFilter<ClipTableModel, Object> {
 
 	@Override
 	public boolean include(Entry<? extends ClipTableModel, ? extends Object> e) {
-		return defStatus.equals(((CombinedMovieQuality)e.getValue(4)).getStatus());
+		return defStatus.equals(((CombinedMovieQuality)e.getValue(ClipTableModel.COLUMN_QUALITY)).getStatus());
 	}
 }

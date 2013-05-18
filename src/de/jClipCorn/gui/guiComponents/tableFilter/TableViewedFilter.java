@@ -14,6 +14,6 @@ public class TableViewedFilter extends RowFilter<ClipTableModel, Object> {
 
 	@Override
 	public boolean include(Entry<? extends ClipTableModel, ? extends Object> e) {
-		return ! defViewed ^ ((Boolean)e.getValue(2));
+		return ! defViewed ^ ((Boolean)e.getValue(ClipTableModel.COLUMN_VIEWED));
 	}
 }

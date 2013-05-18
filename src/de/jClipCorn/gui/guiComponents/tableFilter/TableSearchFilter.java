@@ -24,41 +24,41 @@ public class TableSearchFilter extends RowFilter<ClipTableModel, Object> {
 
 	@Override
 	public boolean include(Entry<? extends ClipTableModel, ? extends Object> e) {
-		String title = ((CCDatabaseElement)e.getValue(1)).getTitle();
+		String title = ((CCDatabaseElement)e.getValue(ClipTableModel.COLUMN_TITLE)).getTitle();
 		
 		if (StringUtils.containsIgnoreCase(title, searchTerm)) {
 			return true;
 		}
 		
-		String zyklus = ((CCMovieZyklus)e.getValue(3)).getTitle();
+		String zyklus = ((CCMovieZyklus)e.getValue(ClipTableModel.COLUMN_ZYKLUS)).getTitle();
 		if (StringUtils.containsIgnoreCase(zyklus, searchTerm)) {
 			return true;
 		}
 		
-		if (((CombinedMovieQuality)e.getValue(4)).asString().equalsIgnoreCase(searchTerm)) {
+		if (((CombinedMovieQuality)e.getValue(ClipTableModel.COLUMN_QUALITY)).asString().equalsIgnoreCase(searchTerm)) {
 			return true;
 		}
 		
-		if (((CCMovieLanguage)e.getValue(5)).asString().equalsIgnoreCase(searchTerm)) {
+		if (((CCMovieLanguage)e.getValue(ClipTableModel.COLUMN_LANGUAGE)).asString().equalsIgnoreCase(searchTerm)) {
 			return true;
 		}
 		
-		if (((CCMovieFormat)e.getValue(12)).asString().equalsIgnoreCase(searchTerm)) {
+		if (((CCMovieFormat)e.getValue(ClipTableModel.COLUMN_FORMAT)).asString().equalsIgnoreCase(searchTerm)) {
 			return true;
 		}
 		
-		if (((CCDate)e.getValue(9)).getSimpleStringRepresentation().equalsIgnoreCase(searchTerm)) {
+		if (((CCDate)e.getValue(ClipTableModel.COLUMN_DATE)).getSimpleStringRepresentation().equalsIgnoreCase(searchTerm)) {
 			return true;
 		}
 		
-		CCMovieGenreList gl = (CCMovieGenreList) e.getValue(6);
+		CCMovieGenreList gl = (CCMovieGenreList) e.getValue(ClipTableModel.COLUMN_GENRE);
 		for (int i = 0; i < gl.getGenreCount(); i++) {
 			if (gl.getGenre(i).asString().equalsIgnoreCase(searchTerm)) {
 				return true;
 			}
 		}
 		
-		if (((YearRange)e.getValue(13)).asString().equalsIgnoreCase(searchTerm)) {
+		if (((YearRange)e.getValue(ClipTableModel.COLUMN_YEAR)).asString().equalsIgnoreCase(searchTerm)) {
 			return true;
 		}
 		

@@ -108,10 +108,10 @@ public class ClipTable extends JScrollPane implements CCDBUpdateListener, ListSe
 			//DO nothing
 			return;
 		case 1:
-			list.add( new RowSorter.SortKey(1, SortOrder.ASCENDING) );
+			list.add( new RowSorter.SortKey(ClipTableModel.COLUMN_TITLE, SortOrder.ASCENDING) );
 			break;
 		case 2:
-			list.add( new RowSorter.SortKey(9, SortOrder.DESCENDING) );
+			list.add( new RowSorter.SortKey(ClipTableModel.COLUMN_DATE, SortOrder.DESCENDING) );
 			break;
 		}
 		
@@ -190,7 +190,7 @@ public class ClipTable extends JScrollPane implements CCDBUpdateListener, ListSe
 			int row = table.rowAtPoint(e.getPoint());
 			int col = table.columnAtPoint(e.getPoint());
 			
-			if (row >= 0 && table.convertColumnIndexToModel(col) == 3) { //Col 3 = Zyklus
+			if (row >= 0 && table.convertColumnIndexToModel(col) == ClipTableModel.COLUMN_ZYKLUS) {
 				CCDatabaseElement del = movielist.getDatabaseElementBySort(table.convertRowIndexToModel(row));
 				if ((del instanceof CCMovie) && ((CCMovie)del).hasZyklus()) {
 					setRowFilter(new TableZyklusFilter(((CCMovie)del).getZyklus()), null);

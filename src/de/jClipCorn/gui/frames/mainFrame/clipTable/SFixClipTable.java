@@ -41,6 +41,7 @@ import de.jClipCorn.gui.guiComponents.tableSorter.TableTitleComparator;
 import de.jClipCorn.gui.guiComponents.tableSorter.TableViewedComparator;
 import de.jClipCorn.gui.guiComponents.tableSorter.TableYearComparator;
 import de.jClipCorn.gui.guiComponents.tableSorter.TableZyklusComparator;
+import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.properties.CCProperties;
 
 public class SFixClipTable extends SFixTable {
@@ -139,21 +140,21 @@ public class SFixClipTable extends SFixTable {
 		sorter = new TableRowSorter<>((ClipTableModel) getModel());
 		setRowSorter(sorter);
 		
-		sorter.setComparator(0,  sorter_score); //TODO Remove them Magic Numbers (there are -unfortunately- everywhere)
-		sorter.setComparator(1,  sorter_title);
-		sorter.setComparator(2,  sorter_viewed);
-		sorter.setComparator(3,  sorter_zyklus);
-		sorter.setComparator(4,  sorter_quality);
-		sorter.setComparator(5,  sorter_language);
-		sorter.setComparator(6,  sorter_genre);
-		sorter.setComparator(7,  sorter_parts);
-		sorter.setComparator(8,  sorter_length);
-		sorter.setComparator(9,  sorter_date);
-		sorter.setComparator(10, sorter_onlinescore);
-		sorter.setComparator(11, sorter_fsk);
-		sorter.setComparator(12, sorter_format);
-		sorter.setComparator(13, sorter_year);
-		sorter.setComparator(14, sorter_size);
+		sorter.setComparator(ClipTableModel.COLUMN_SCORE,  sorter_score); //TODO Remove them Magic Numbers (there are -unfortunately- everywhere)
+		sorter.setComparator(ClipTableModel.COLUMN_TITLE,  sorter_title);
+		sorter.setComparator(ClipTableModel.COLUMN_VIEWED,  sorter_viewed);
+		sorter.setComparator(ClipTableModel.COLUMN_ZYKLUS,  sorter_zyklus);
+		sorter.setComparator(ClipTableModel.COLUMN_QUALITY,  sorter_quality);
+		sorter.setComparator(ClipTableModel.COLUMN_LANGUAGE,  sorter_language);
+		sorter.setComparator(ClipTableModel.COLUMN_GENRE,  sorter_genre);
+		sorter.setComparator(ClipTableModel.COLUMN_PARTCOUNT,  sorter_parts);
+		sorter.setComparator(ClipTableModel.COLUMN_LENGTH,  sorter_length);
+		sorter.setComparator(ClipTableModel.COLUMN_DATE,  sorter_date);
+		sorter.setComparator(ClipTableModel.COLUMN_ONLINESCORE, sorter_onlinescore);
+		sorter.setComparator(ClipTableModel.COLUMN_FSK, sorter_fsk);
+		sorter.setComparator(ClipTableModel.COLUMN_FORMAT, sorter_format);
+		sorter.setComparator(ClipTableModel.COLUMN_YEAR, sorter_year);
+		sorter.setComparator(ClipTableModel.COLUMN_SIZE, sorter_size);
 	}
 
 	@Override
@@ -161,38 +162,38 @@ public class SFixClipTable extends SFixTable {
 		column = convertColumnIndexToModel(column); // So you can move the positions of the Columns ...
 		
 		switch (column) {
-		case 0:		// Score
+		case ClipTableModel.COLUMN_SCORE:		// Score
 			return renderer_score;
-		case 1:		// Name
+		case ClipTableModel.COLUMN_TITLE:		// Name
 			return renderer_title;
-		case 2:		// Viewed
+		case ClipTableModel.COLUMN_VIEWED:		// Viewed
 			return renderer_viewed;
-		case 3:		// Zyklus
+		case ClipTableModel.COLUMN_ZYKLUS:		// Zyklus
 			return renderer_zyklus;
-		case 4:		// Quality
+		case ClipTableModel.COLUMN_QUALITY:		// Quality
 			return renderer_quality;
-		case 5:		// Language
+		case ClipTableModel.COLUMN_LANGUAGE:		// Language
 			return renderer_language;
-		case 6:		// Genres
+		case ClipTableModel.COLUMN_GENRE:		// Genres
 			return renderer_genre;
-		case 7:		// Partcount
+		case ClipTableModel.COLUMN_PARTCOUNT:		// Partcount
 			return renderer_parts;
-		case 8:		// Length
+		case ClipTableModel.COLUMN_LENGTH:		// Length
 			return renderer_length;
-		case 9:		// Date
+		case ClipTableModel.COLUMN_DATE:		// Date
 			return renderer_date;
-		case 10:	// OnlineScore
+		case ClipTableModel.COLUMN_ONLINESCORE:	// OnlineScore
 			return renderer_onlinescore;
-		case 11:	// FSK
+		case ClipTableModel.COLUMN_FSK:	// FSK
 			return renderer_fsk;
-		case 12:	// Format
+		case ClipTableModel.COLUMN_FORMAT:	// Format
 			return renderer_format;
-		case 13:	// Year
+		case ClipTableModel.COLUMN_YEAR:	// Year
 			return renderer_year;
-		case 14:	// Filesize
+		case ClipTableModel.COLUMN_SIZE:	// Filesize
 			return renderer_filesize;
 		default:
-			System.out.println("Mysterious switch jump in [SFixTable.java]"); //$NON-NLS-1$
+			CCLog.addError(new Exception("Mysterious switch jump in [SFixTable.java]")); //$NON-NLS-1$
 			return super.getCellRenderer(row, column);//renderer_default;
 		}
 	}

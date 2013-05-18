@@ -18,8 +18,42 @@ import de.jClipCorn.util.YearRange;
 public class ClipTableModel extends AbstractTableModel implements TableModelRowColorInterface {
 	private static final long serialVersionUID = -3060547018013428568L;
 	
+	public final static int COLUMN_SCORE = 0;
+	public final static int COLUMN_TITLE = 1;
+	public final static int COLUMN_VIEWED = 2;
+	public final static int COLUMN_ZYKLUS = 3;
+	public final static int COLUMN_QUALITY = 4;
+	public final static int COLUMN_LANGUAGE = 5;
+	public final static int COLUMN_GENRE = 6;
+	public final static int COLUMN_PARTCOUNT = 7;
+	public final static int COLUMN_LENGTH = 8;
+	public final static int COLUMN_DATE = 9;
+	public final static int COLUMN_ONLINESCORE = 10;
+	public final static int COLUMN_FSK = 11;
+	public final static int COLUMN_FORMAT = 12;
+	public final static int COLUMN_YEAR = 13;
+	public final static int COLUMN_SIZE = 14;
+	
+	private static final String[] COLUMN_NAMES = {
+			"", 			 									//$NON-NLS-1$
+			LocaleBundle.getString("ClipTableModel.Title"), 	//$NON-NLS-1$
+			"", 												//$NON-NLS-1$
+			LocaleBundle.getString("ClipTableModel.Zyklus"),  	//$NON-NLS-1$
+			LocaleBundle.getString("ClipTableModel.Quality"),  	//$NON-NLS-1$
+			LocaleBundle.getString("ClipTableModel.Language"),  //$NON-NLS-1$
+			LocaleBundle.getString("ClipTableModel.Genre"),  	//$NON-NLS-1$
+			LocaleBundle.getString("ClipTableModel.Parts"), 	//$NON-NLS-1$
+			LocaleBundle.getString("ClipTableModel.Length"),  	//$NON-NLS-1$
+			LocaleBundle.getString("ClipTableModel.Added"),  	//$NON-NLS-1$
+			LocaleBundle.getString("ClipTableModel.Score"),  	//$NON-NLS-1$
+			LocaleBundle.getString("ClipTableModel.FSK"),  		//$NON-NLS-1$
+			LocaleBundle.getString("ClipTableModel.Format"), 	//$NON-NLS-1$
+			LocaleBundle.getString("ClipTableModel.Year"),  	//$NON-NLS-1$
+			LocaleBundle.getString("ClipTableModel.Size")  		//$NON-NLS-1$
+	};
+	
 	private final static Color COLOR_BACKGROUNDGRAY = new Color(240, 240, 240); // F0F0F0 (clBtnFace)
-
+	
 	private final static Color[] COLOR_ONLINESCORE = {
 		new Color(0xFF4900),
 		new Color(0xFF7400),
@@ -32,24 +66,6 @@ public class ClipTableModel extends AbstractTableModel implements TableModelRowC
 		new Color(0xCCF600),
 		new Color(0x9FEE00),
 		new Color(0x67E300)
-	};
-	
-	private static final String[] COLUMN_NAMES = {
-			"", // Score	 								//$NON-NLS-1$
-			LocaleBundle.getString("ClipTableModel.Title"), //$NON-NLS-1$
-			"", // Gesehen								//$NON-NLS-1$
-			LocaleBundle.getString("ClipTableModel.Zyklus"),  //$NON-NLS-1$
-			LocaleBundle.getString("ClipTableModel.Quality"),  //$NON-NLS-1$
-			LocaleBundle.getString("ClipTableModel.Language"),  //$NON-NLS-1$
-			LocaleBundle.getString("ClipTableModel.Genre"),  //$NON-NLS-1$
-			LocaleBundle.getString("ClipTableModel.Parts"), //$NON-NLS-1$
-			LocaleBundle.getString("ClipTableModel.Length"),  //$NON-NLS-1$
-			LocaleBundle.getString("ClipTableModel.Added"),  //$NON-NLS-1$
-			LocaleBundle.getString("ClipTableModel.Score"),  //$NON-NLS-1$
-			LocaleBundle.getString("ClipTableModel.FSK"),  //$NON-NLS-1$
-			LocaleBundle.getString("ClipTableModel.Format"), //$NON-NLS-1$
-			LocaleBundle.getString("ClipTableModel.Year"),  //$NON-NLS-1$
-			LocaleBundle.getString("ClipTableModel.Size")  //$NON-NLS-1$
 	};
 
 	private final CCMovieList movielist;
@@ -93,35 +109,35 @@ public class ClipTableModel extends AbstractTableModel implements TableModelRowC
 		if (el.isMovie()) {
 			CCMovie mov = (CCMovie) el;
 			switch (col) {
-			case 0: // Score
+			case COLUMN_SCORE: // Score
 				return mov.getScore();
-			case 1: // Name
+			case COLUMN_TITLE: // Name
 				return mov;
-			case 2: // Viewed
+			case COLUMN_VIEWED: // Viewed
 				return mov.isViewed();
-			case 3: // Zyklus
+			case COLUMN_ZYKLUS: // Zyklus
 				return mov.getZyklus();
-			case 4: // Quality
+			case COLUMN_QUALITY: // Quality
 				return mov.getCombinedQuality();
-			case 5: // Language
+			case COLUMN_LANGUAGE: // Language
 				return mov.getLanguage();
-			case 6: // Genres
+			case COLUMN_GENRE: // Genres
 				return mov.getGenres();
-			case 7: // Partcount
+			case COLUMN_PARTCOUNT: // Partcount
 				return mov.getPartcount();
-			case 8: // Length
+			case COLUMN_LENGTH: // Length
 				return mov.getLength();
-			case 9: // Date
+			case COLUMN_DATE: // Date
 				return mov.getAddDate();
-			case 10: // OnlineScore
+			case COLUMN_ONLINESCORE: // OnlineScore
 				return mov.getOnlinescore();
-			case 11: // FSK
+			case COLUMN_FSK: // FSK
 				return mov.getFSK();
-			case 12: // Format
+			case COLUMN_FORMAT: // Format
 				return mov.getFormat();
-			case 13: // Year
+			case COLUMN_YEAR: // Year
 				return new YearRange(mov.getYear());
-			case 14: // Filesize
+			case COLUMN_SIZE: // Filesize
 				return mov.getFilesize();
 			default:
 				return null; 
@@ -129,35 +145,35 @@ public class ClipTableModel extends AbstractTableModel implements TableModelRowC
 		} else {
 			CCSeries ser = (CCSeries) el;
 			switch (col) {
-			case 0: // Score
+			case COLUMN_SCORE: // Score
 				return ser.getScore();
-			case 1: // Name
+			case COLUMN_TITLE: // Name
 				return ser;
-			case 2: // Viewed
+			case COLUMN_VIEWED: // Viewed
 				return ser.isViewed();
-			case 3: // Zyklus
+			case COLUMN_ZYKLUS: // Zyklus
 				return new CCMovieZyklus();
-			case 4: // Quality
+			case COLUMN_QUALITY: // Quality
 				return ser.getCombinedQuality();
-			case 5: // Language
+			case COLUMN_LANGUAGE: // Language
 				return ser.getLanguage();
-			case 6: // Genres
+			case COLUMN_GENRE: // Genres
 				return ser.getGenres();
-			case 7: // Partcount
+			case COLUMN_PARTCOUNT: // Partcount
 				return ser.getEpisodeCount();
-			case 8: // Length
+			case COLUMN_LENGTH: // Length
 				return ser.getLength();
-			case 9: // Date
+			case COLUMN_DATE: // Date
 				return ser.getAddDate();
-			case 10: // OnlineScore
+			case COLUMN_ONLINESCORE: // OnlineScore
 				return ser.getOnlinescore();
-			case 11: // FSK
+			case COLUMN_FSK: // FSK
 				return ser.getFSK();
-			case 12: // Format
+			case COLUMN_FORMAT: // Format
 				return ser.getFormat();
-			case 13: // Year
+			case COLUMN_YEAR: // Year
 				return ser.getYearRange();
-			case 14: // Filesize
+			case COLUMN_SIZE: // Filesize
 				return ser.getFilesize();
 			default:
 				return null; 

@@ -9,7 +9,7 @@ import de.jClipCorn.gui.frames.mainFrame.clipTable.ClipTableModel;
 
 public class TableCharFilter extends RowFilter<ClipTableModel, Object> {
 	@SuppressWarnings("nls")
-	private final static String[] EXCLUSIONS = {"Der", "Die", "Das", "The", "Den"};
+	private final static String[] EXCLUSIONS = {"Der", "Die", "Das", "The", "Den", "Le"};
 	
 	private String charset;
 	
@@ -20,7 +20,7 @@ public class TableCharFilter extends RowFilter<ClipTableModel, Object> {
 
 	@Override
 	public boolean include(Entry<? extends ClipTableModel, ? extends Object> e) {
-		String first = ((CCDatabaseElement)e.getValue(1)).getTitle();
+		String first = ((CCDatabaseElement)e.getValue(ClipTableModel.COLUMN_TITLE)).getTitle();
 		
 		for (String s : EXCLUSIONS) {
 			if (first.startsWith(s + " ")) { //$NON-NLS-1$

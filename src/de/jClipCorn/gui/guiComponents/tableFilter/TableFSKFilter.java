@@ -15,6 +15,6 @@ public class TableFSKFilter extends RowFilter<ClipTableModel, Object> {
 
 	@Override
 	public boolean include(Entry<? extends ClipTableModel, ? extends Object> e) {
-		return defFSK.equals(e.getValue(11));
+		return defFSK.equals(e.getValue(ClipTableModel.COLUMN_FSK));
 	}
 }

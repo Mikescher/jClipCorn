@@ -75,7 +75,7 @@ public enum CCMovieQuality {
 		return getQualityForSize(size.getBytes(), partCount);
 	}
 
-	public static CCMovieQuality getQualityForSize(long size, int partCount) {
+	public static CCMovieQuality getQualityForSize(long size, int partCount) { //TODO Calculate Quality = (SIZE / LENGTH) = (MB / MIN) || Aber so dass nur minimale anzahl von errors entstehen
 		if (size <= FSIZE_MAX_STREAM) {
 			return CCMovieQuality.STREAM;
 		} else if (size <= FSIZE_MAX_CD) {

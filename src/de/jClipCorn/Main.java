@@ -72,3 +72,7 @@ public class Main {
 //TODO Read Only - Mode
 
 //TODO (2.0) ONLINE SYNCHRONISATION / Online Profiles / View Ratings + Viewed from others ... ...
+
+//TODO FETURE REQUESTS / BUGS (Benjamin):
+//TODO Add Empty SEason -> Der Serie einen Titel geben ("<untitled>") - ist sonst schwer zu sehen
+//TODO Change Title of Season -> Listbox on Left not updated

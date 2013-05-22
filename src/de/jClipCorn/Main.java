@@ -76,3 +76,6 @@ public class Main {
 //TODO FETURE REQUESTS / BUGS (Benjamin):
 //TODO Add Empty SEason -> Der Serie einen Titel geben ("<untitled>") - ist sonst schwer zu sehen
 //TODO Change Title of Season -> Listbox on Left not updated
+//TODO Flags 4 Movie
+//TODO Serien batch renamen (Als Batch - von  serien - ordner auswählen - ordnerstruktur mit namen und so erzeugen, ACHTUNG nur neue ordner (schutz vor overriding), evtl vorher alle in temp ordner kopieren, möglichkeit bestehende ordnerstruktur zu vervollständigen)
+//TODO Shortcuts für SerienWindow

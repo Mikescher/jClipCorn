@@ -36,4 +36,9 @@ public class CCMovieSize {
 	public static int compare(CCMovieSize o1, CCMovieSize o2) {
 		return Long.compare(o1.getBytes(), o2.getBytes());
 	}
+	
+	@Override
+	public String toString() {
+		return getFormatted();
+	}
 }

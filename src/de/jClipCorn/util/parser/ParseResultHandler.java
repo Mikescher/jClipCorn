@@ -23,4 +23,6 @@ public interface ParseResultHandler {
 	public void setLength(int l);
 	public void setScore(int s);
 	public void setCover(BufferedImage nci);
+	
+	public void onFinishInserting();
 }

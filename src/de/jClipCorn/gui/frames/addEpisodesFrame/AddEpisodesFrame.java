@@ -134,6 +134,7 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler {
 	private JComboBox<String> cbxSideQuality;
 	private JButton btnSide_14;
 	private JButton btnOpen;
+	private JButton btnSide_15;
 
 	public AddEpisodesFrame(Component owner, CCSeason ss, UpdateCallbackListener ucl) {
 		super();
@@ -146,7 +147,7 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler {
 		initGUI();
 
 		setLocationRelativeTo(owner);
-		setFocusTraversalPolicy(new ExtendedFocusTraversalOnArray(new Component[]{btnAddEpisodes, edTitle, spnEpisode, cbViewed, cbxFormat, cbxQuality, spnLength, spnSize, spnAddDate, spnLastViewed, btnOpen, edPart, btnNext, btnEpCancel, btnEpOk, btnRecalcSize, btnToday, btnClear, spnSide_01, btnSide_01, spnSide_02, btnSide_02, edSide_01, edSide_02, btnSide_03, btnSide_04, edSide_03, btnSide_05, edSide_04, btnSide_06, spnSide_03, spnSide_04, btnSide_07, edSide_05, btnSide_08, btnSide_09, btnSide_10, btnSide_11, spnSideLength, btnSide_12, cbxSideFormat, btnSide_13, cbxSideQuality, btnSide_14, btnOK}));
+		setFocusTraversalPolicy(new ExtendedFocusTraversalOnArray(new Component[]{btnAddEpisodes, edTitle, spnEpisode, cbViewed, cbxFormat, cbxQuality, spnLength, spnSize, spnAddDate, spnLastViewed, btnOpen, edPart, btnNext, btnEpCancel, btnEpOk, btnRecalcSize, btnToday, btnClear, spnSide_01, btnSide_01, spnSide_02, btnSide_02, edSide_01, edSide_02, btnSide_03, btnSide_04, edSide_03, btnSide_05, edSide_04, btnSide_06, spnSide_03, spnSide_04, btnSide_07, edSide_05, btnSide_08, btnSide_09, btnSide_10, btnSide_11, spnSideLength, btnSide_12, cbxSideFormat, btnSide_13, cbxSideQuality, btnSide_14, btnSide_15, btnOK}));
 
 		updateList();
 		initFileChooser();
@@ -532,7 +533,7 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler {
 				massSetViewed(true);
 			}
 		});
-		btnSide_10.setBounds(12, 430, 163, 23);
+		btnSide_10.setBounds(12, 397, 163, 23);
 		pnlEdit.add(btnSide_10);
 
 		btnSide_11 = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnSetUnviewed.text")); //$NON-NLS-1$
@@ -542,7 +543,7 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler {
 				massSetViewed(false);
 			}
 		});
-		btnSide_11.setBounds(183, 431, 163, 23);
+		btnSide_11.setBounds(183, 398, 163, 23);
 		pnlEdit.add(btnSide_11);
 
 		btnSide_12 = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnSetEpLength.text")); //$NON-NLS-1$
@@ -552,12 +553,12 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler {
 				massSetLength();
 			}
 		});
-		btnSide_12.setBounds(12, 466, 210, 23);
+		btnSide_12.setBounds(12, 433, 210, 23);
 		pnlEdit.add(btnSide_12);
 
 		spnSideLength = new JSpinner();
 		spnSideLength.setModel(new SpinnerNumberModel(0, 0, null, 1));
-		spnSideLength.setBounds(234, 468, 112, 20);
+		spnSideLength.setBounds(234, 435, 112, 20);
 		pnlEdit.add(spnSideLength);
 
 		btnSide_13 = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnSetEpFormat.text")); //$NON-NLS-1$
@@ -567,11 +568,11 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler {
 				massSetFormat();
 			}
 		});
-		btnSide_13.setBounds(12, 502, 210, 23);
+		btnSide_13.setBounds(12, 469, 210, 23);
 		pnlEdit.add(btnSide_13);
 
 		cbxSideFormat = new JComboBox<>();
-		cbxSideFormat.setBounds(234, 501, 112, 22);
+		cbxSideFormat.setBounds(234, 468, 112, 22);
 		pnlEdit.add(cbxSideFormat);
 
 		btnSide_09 = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnSetEpSize.text")); //$NON-NLS-1$
@@ -585,7 +586,7 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler {
 		pnlEdit.add(btnSide_09);
 
 		cbxSideQuality = new JComboBox<>();
-		cbxSideQuality.setBounds(234, 536, 112, 20);
+		cbxSideQuality.setBounds(234, 503, 112, 20);
 		pnlEdit.add(cbxSideQuality);
 
 		btnSide_14 = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnSetEpQuality.text")); //$NON-NLS-1$
@@ -595,8 +596,18 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler {
 				massSetQuality();
 			}
 		});
-		btnSide_14.setBounds(12, 535, 210, 23);
+		btnSide_14.setBounds(12, 502, 210, 23);
 		pnlEdit.add(btnSide_14);
+		
+		btnSide_15 = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnCalcEpQuality.text")); //$NON-NLS-1$
+		btnSide_15.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				massCalcQuality();
+			}
+		});
+		btnSide_15.setBounds(12, 536, 334, 23);
+		pnlEdit.add(btnSide_15);
 	}
 
 	private void initFileChooser() {
@@ -857,7 +868,7 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler {
 			} else {
 				ep.setPart(abspath);
 			}
-			ep.setQuality(CCMovieQuality.getQualityForSize(ep.getFilesize(), 1));
+			ep.setQuality(CCMovieQuality.STREAM);
 			ep.setAddDate(new CCDate());
 			ep.setLastViewed(CCDate.getNewMinimumDate());
 
@@ -1037,6 +1048,17 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler {
 			CCEpisode ep = parent.getEpisode(i);
 
 			ep.setQuality(cbxSideQuality.getSelectedIndex());
+		}
+
+		updateList();
+	}
+	
+	private void massCalcQuality() {
+		lsEpisodes.setSelectedIndex(-1);
+
+		for (int i = 0; i < parent.getEpisodeCount(); i++) {
+			CCEpisode ep = parent.getEpisode(i);
+			ep.setQuality(CCMovieQuality.calculateQuality(ep.getFilesize(), ep.getLength(), 1));
 		}
 
 		updateList();

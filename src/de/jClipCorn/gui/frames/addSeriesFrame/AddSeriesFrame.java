@@ -436,6 +436,11 @@ public class AddSeriesFrame extends JFrame implements ParseResultHandler, UserDa
 	public void setLength(int l) {
 		// No such field
 	}
+	
+	@Override
+	public void onFinishInserting() {
+		// nothing
+	}
 
 	@Override
 	public void setScore(int s) {

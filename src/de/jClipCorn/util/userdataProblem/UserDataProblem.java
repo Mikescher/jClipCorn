@@ -217,7 +217,7 @@ public class UserDataProblem {
 		
 		//################################################################################################################
 		
-		if (CCMovieQuality.getQualityForSize(fsize, partcount).asInt() != quality) {
+		if (CCMovieQuality.calculateQuality(fsize, len, partcount).asInt() != quality) {
 			ret.add(new UserDataProblem(PROBLEM_WRONG_QUALITY));
 		}
 		
@@ -378,7 +378,7 @@ public class UserDataProblem {
 		
 		//################################################################################################################
 		
-		if (CCMovieQuality.getQualityForSize(fsize, 1).asInt() != quality) {
+		if (CCMovieQuality.calculateQuality(fsize, len, 1).asInt() != quality) {
 			ret.add(new UserDataProblem(PROBLEM_WRONG_QUALITY));
 		}
 		

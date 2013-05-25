@@ -326,14 +326,14 @@ public class DatabaseError {
 	
 	private boolean fixError_Wrong_Quality() {
 		if (el1 instanceof CCMovie) {
-			((CCMovie)el1).setQuality(CCMovieQuality.getQualityForSize(((CCMovie)el1).getFilesize(), ((CCMovie)el1).getPartcount()));
+			((CCMovie)el1).setQuality(CCMovieQuality.calculateQuality(((CCMovie)el1).getFilesize(), ((CCMovie)el1).getLength(), ((CCMovie)el1).getPartcount()));
 			return true;
 		} else if (el1 instanceof CCSeries) {
 			return false;
 		} else if (el1 instanceof CCSeason) {
 			return false;
 		} else if (el1 instanceof CCEpisode) {
-			((CCEpisode)el1).setQuality(CCMovieQuality.getQualityForSize(((CCEpisode)el1).getFilesize(), 1));
+			((CCEpisode)el1).setQuality(CCMovieQuality.calculateQuality(((CCEpisode)el1).getFilesize(), ((CCMovie)el1).getLength(), 1));
 			return true;
 		}
 		

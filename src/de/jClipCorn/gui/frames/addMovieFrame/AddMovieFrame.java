@@ -167,6 +167,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 	private JLabel lblGre;
 	private JLabel lblNewLabel;
 	private JLabel label_1;
+	private JButton btnCalcQuality;
 
 	/**
 	 * @wbp.parser.constructor
@@ -204,7 +205,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		setEnabledAll(false);
 
 		setLocationRelativeTo(owner);
-		setFocusTraversalPolicy(new ExtendedFocusTraversalOnArray(new Component[]{btnChoose0, btnChoose1, btnChoose2, btnChoose3, btnChoose4, btnChoose5, edTitle, edZyklus, spnZyklus, cbxViewed, cbxQuality, cbxLanguage, spnLength, spnAddDate, spnOnlineScore, cbxFSK, cbxFormat, spnYear, spnSize, cbxScore, cbxGenre0, cbxGenre1, cbxGenre2, cbxGenre3, cbxGenre4, cbxGenre5, cbxGenre6, cbxGenre7, btnParseIMDB, btnFindCover, btnOpenCover, btnOK, btnCancel, btnOpenIMDb, btnClear1, btnClear2, btnClear3, btnClear4, btnClear5}));
+		setFocusTraversalPolicy(new ExtendedFocusTraversalOnArray(new Component[]{btnChoose0, btnChoose1, btnChoose2, btnChoose3, btnChoose4, btnChoose5, edTitle, edZyklus, spnZyklus, cbxViewed, spnLength, cbxLanguage, cbxQuality, btnCalcQuality, spnAddDate, spnOnlineScore, cbxFSK, cbxFormat, spnYear, spnSize, cbxScore, cbxGenre0, cbxGenre1, cbxGenre2, cbxGenre3, cbxGenre4, cbxGenre5, cbxGenre6, cbxGenre7, btnParseIMDB, btnFindCover, btnOpenCover, btnOK, btnCancel, btnOpenIMDb, btnClear1, btnClear2, btnClear3, btnClear4, btnClear5}));
 
 		btnChoose0.setEnabled(true);
 	}
@@ -517,11 +518,11 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		contentPane.add(lblGesehen);
 		
 		lblQuality = new JLabel(LocaleBundle.getString("AddMovieFrame.lblQuality.text")); //$NON-NLS-1$
-		lblQuality.setBounds(12, 377, 52, 16);
+		lblQuality.setBounds(12, 436, 52, 16);
 		contentPane.add(lblQuality);
 		
 		lblLanguage = new JLabel(LocaleBundle.getString("AddMovieFrame.lblSprache.text")); //$NON-NLS-1$
-		lblLanguage.setBounds(12, 412, 52, 16);
+		lblLanguage.setBounds(12, 405, 52, 16);
 		contentPane.add(lblLanguage);
 		
 		cbxViewed = new JCheckBox(""); //$NON-NLS-1$
@@ -529,73 +530,73 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		contentPane.add(cbxViewed);
 		
 		cbxQuality = new JComboBox<>();
-		cbxQuality.setBounds(76, 374, 212, 22);
+		cbxQuality.setBounds(76, 433, 212, 22);
 		contentPane.add(cbxQuality);
 		
 		cbxLanguage = new JComboBox<>();
-		cbxLanguage.setBounds(76, 409, 212, 22);
+		cbxLanguage.setBounds(76, 402, 212, 22);
 		contentPane.add(cbxLanguage);
 		
 		spnLength = new JSpinner();
 		spnLength.setModel(new SpinnerNumberModel(0, 0, null, 1));
-		spnLength.setBounds(76, 442, 212, 20);
+		spnLength.setBounds(76, 371, 212, 20);
 		contentPane.add(spnLength);
 		
 		lblLength = new JLabel(LocaleBundle.getString("AddMovieFrame.lblLength.text")); //$NON-NLS-1$
-		lblLength.setBounds(12, 442, 52, 16);
+		lblLength.setBounds(12, 373, 52, 16);
 		contentPane.add(lblLength);
 		
 		spnAddDate = new JSpinner();
 		spnAddDate.setModel(new SpinnerCCDateModel(CCDate.getNewMinimumDate(), CCDate.getNewMinimumDate(), null));
 		spnAddDate.setEditor(new CCDateEditor(spnAddDate));
-		spnAddDate.setBounds(95, 473, 193, 20);
+		spnAddDate.setBounds(95, 466, 193, 20);
 		contentPane.add(spnAddDate);
 		
 		lblMin = new JLabel("min."); //$NON-NLS-1$
-		lblMin.setBounds(305, 444, 52, 16);
+		lblMin.setBounds(305, 373, 52, 16);
 		contentPane.add(lblMin);
 		
 		lblEinfgDatum = new JLabel(LocaleBundle.getString("AddMovieFrame.lblEinfgDatum.text")); //$NON-NLS-1$
-		lblEinfgDatum.setBounds(12, 474, 71, 16);
+		lblEinfgDatum.setBounds(12, 467, 71, 16);
 		contentPane.add(lblEinfgDatum);
 		
 		spnOnlineScore = new JSpinner();
 		spnOnlineScore.setModel(new SpinnerNumberModel(0, 0, 10, 1));
-		spnOnlineScore.setBounds(95, 506, 193, 20);
+		spnOnlineScore.setBounds(95, 499, 193, 20);
 		contentPane.add(spnOnlineScore);
 		
 		lblOnlinescore = new JLabel(LocaleBundle.getString("AddMovieFrame.lblOnlinescore.text")); //$NON-NLS-1$
-		lblOnlinescore.setBounds(12, 507, 71, 16);
+		lblOnlinescore.setBounds(12, 500, 71, 16);
 		contentPane.add(lblOnlinescore);
 		
 		label = new JLabel("/ 10"); //$NON-NLS-1$
-		label.setBounds(305, 511, 52, 16);
+		label.setBounds(305, 504, 52, 16);
 		contentPane.add(label);
 		
 		cbxFSK = new JComboBox<>();
-		cbxFSK.setBounds(76, 541, 212, 22);
+		cbxFSK.setBounds(76, 534, 212, 22);
 		contentPane.add(cbxFSK);
 		
 		lblFsk = new JLabel(LocaleBundle.getString("AddMovieFrame.lblFsk.text")); //$NON-NLS-1$
-		lblFsk.setBounds(12, 544, 52, 16);
+		lblFsk.setBounds(12, 537, 52, 16);
 		contentPane.add(lblFsk);
 		
 		cbxFormat = new JComboBox<>();
-		cbxFormat.setBounds(76, 576, 212, 22);
+		cbxFormat.setBounds(76, 569, 212, 22);
 		contentPane.add(cbxFormat);
 		
 		lblFormat = new JLabel(LocaleBundle.getString("AddMovieFrame.lblFormat.text")); //$NON-NLS-1$
-		lblFormat.setBounds(12, 579, 52, 16);
+		lblFormat.setBounds(12, 572, 52, 16);
 		contentPane.add(lblFormat);
 		
 		spnYear = new JSpinner();
 		spnYear.setModel(new SpinnerNumberModel(1900, 1900, null, 1));
 		spnYear.setEditor(new JSpinner.NumberEditor(spnYear, "0")); //$NON-NLS-1$
-		spnYear.setBounds(76, 611, 212, 20);
+		spnYear.setBounds(76, 604, 212, 20);
 		contentPane.add(spnYear);
 		
 		lblYear = new JLabel(LocaleBundle.getString("AddMovieFrame.lblYear.text")); //$NON-NLS-1$
-		lblYear.setBounds(12, 615, 52, 16);
+		lblYear.setBounds(12, 608, 52, 16);
 		contentPane.add(lblYear);
 		
 		spnSize = new JSpinner();
@@ -606,15 +607,15 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 			}
 		});
 		spnSize.setModel(new SpinnerNumberModel(0L, 0L, null, 1L));
-		spnSize.setBounds(76, 647, 212, 20);
+		spnSize.setBounds(76, 640, 212, 20);
 		contentPane.add(spnSize);
 		
 		lblGre = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGre.text")); //$NON-NLS-1$
-		lblGre.setBounds(12, 651, 52, 16);
+		lblGre.setBounds(12, 644, 52, 16);
 		contentPane.add(lblGre);
 		
 		lblNewLabel = new JLabel("Byte = "); //$NON-NLS-1$
-		lblNewLabel.setBounds(296, 649, 37, 16);
+		lblNewLabel.setBounds(296, 642, 37, 16);
 		contentPane.add(lblNewLabel);
 		
 		btnOK = new JButton(LocaleBundle.getString("AddMovieFrame.btnOK.text")); //$NON-NLS-1$
@@ -673,16 +674,27 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		contentPane.add(btnOpenIMDb);
 		
 		lblFileSizeDisp = new JLabel();
-		lblFileSizeDisp.setBounds(343, 649, 129, 16);
+		lblFileSizeDisp.setBounds(343, 642, 129, 16);
 		contentPane.add(lblFileSizeDisp);
 		
 		cbxScore = new JComboBox<>();
-		cbxScore.setBounds(76, 678, 212, 20);
+		cbxScore.setBounds(76, 671, 212, 20);
 		contentPane.add(cbxScore);
 		
 		lblScore = new JLabel(LocaleBundle.getString("EditSeriesFrame.lblScore.text")); //$NON-NLS-1$
-		lblScore.setBounds(12, 681, 52, 16);
+		lblScore.setBounds(12, 674, 52, 16);
 		contentPane.add(lblScore);
+		
+		btnCalcQuality = new JButton(LocaleBundle.getString("AddMovieFrame.btnCalcQuality.text")); //$NON-NLS-1$
+		btnCalcQuality.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				onCalcQuality();
+			}
+		});
+		btnCalcQuality.setEnabled(false);
+		btnCalcQuality.setBounds(305, 433, 95, 23);
+		contentPane.add(btnCalcQuality);
 	}
 	
 	@SuppressWarnings("nls")
@@ -941,6 +953,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		edTitle.setEnabled(e);
 		spnZyklus.setEnabled(e);
 		cbxScore.setEnabled(e);
+		btnCalcQuality.setEnabled(e);
 	}
 	
 	private void onBtnChooseClicked(int cNmbr) {
@@ -985,6 +998,10 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		}
 		
 		updateFilesize();
+	}
+	
+	private void onCalcQuality() {
+		setQuality(CCMovieQuality.calculateQuality((long)spnSize.getValue(), (int) spnLength.getValue(), getPartCount()));
 	}
 
 	@Override
@@ -1112,6 +1129,11 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		spnOnlineScore.setValue(s);
 	}
 	
+	@Override
+	public void onFinishInserting() {
+		onCalcQuality();
+	}
+	
 	private void updateByteDisp() {
 		lblFileSizeDisp.setText(FileSizeFormatter.format((long) spnSize.getValue()));
 	}
@@ -1215,6 +1237,17 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		UserDataProblem.testMovieData(ret, null, i, movieList, p0, p1, p2, p3, p4, p5, title, zyklus, zyklusID, len, adddate, oscore, fskidx, year, fsize, csExtn, csExta, g0, g1, g2, g3, g4, g5, g6, g7, quality, lang);
 	
 		return ret.isEmpty();
+	}
+	
+	private int getPartCount() {
+		int c = 0;
+		c += ed_Part0.getText().isEmpty() ? 0 : 1;
+		c += ed_Part1.getText().isEmpty() ? 0 : 1;
+		c += ed_Part2.getText().isEmpty() ? 0 : 1;
+		c += ed_Part3.getText().isEmpty() ? 0 : 1;
+		c += ed_Part4.getText().isEmpty() ? 0 : 1;
+		c += ed_Part5.getText().isEmpty() ? 0 : 1;
+		return c;
 	}
 
 	@Override

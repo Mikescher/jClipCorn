@@ -263,7 +263,7 @@ public class DatabaseValidator {
 		// Wrong Quality
 		// ###############################################
 		
-		if (CCMovieQuality.getQualityForSize(mov.getFilesize(), mov.getPartcount()) != mov.getQuality()) {
+		if (CCMovieQuality.calculateQuality(mov.getFilesize(), mov.getLength(), mov.getPartcount()) != mov.getQuality()) {
 			e.add(DatabaseError.createSingle(DatabaseError.ERROR_WRONG_QUALITY, mov));
 		}
 		
@@ -402,7 +402,7 @@ public class DatabaseValidator {
 		// Wrong Quality
 		// ###############################################
 		
-		if (CCMovieQuality.getQualityForSize(episode.getFilesize(), 1) != episode.getQuality()) {
+		if (CCMovieQuality.calculateQuality(episode.getFilesize(), episode.getLength(), 1) != episode.getQuality()) {
 			e.add(DatabaseError.createSingle(DatabaseError.ERROR_WRONG_QUALITY, episode));
 		}
 	}

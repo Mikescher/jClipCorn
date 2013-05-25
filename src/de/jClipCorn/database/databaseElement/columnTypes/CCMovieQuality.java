@@ -12,10 +12,10 @@ public enum CCMovieQuality {
 	MULTIPLE_CD(2), 
 	DVD(3),
 	BLURAY(4);
-	
-	private static long FSIZE_MAX_STREAM = 512L * 1024 * 1024;	 	// 500 MB
-	private static long FSIZE_MAX_CD = 2L * 1024 * 1024 * 1024;		// 2 GB
-	private static long FSIZE_MAX_DVD = 5L * 1024 * 1024 * 1024; 	// 5 GB
+
+	private static long FSIZE_MAX_STREAM = 	5 * 1024 * 1024;	// 5 MB/min
+	private static long FSIZE_MAX_CD = 		20 * 1024 * 1024;	// 20 MB/min
+	private static long FSIZE_MAX_DVD = 	50 * 1024 * 1024; 	// 50 MB/min
 	
 	private final static String NAMES[] = {
 		LocaleBundle.getString("CCMovieQuality.Quality0"),  //$NON-NLS-1$
@@ -71,21 +71,26 @@ public enum CCMovieQuality {
 		}
 	}
 	
-	public static CCMovieQuality getQualityForSize(CCMovieSize size, int partCount) {
-		return getQualityForSize(size.getBytes(), partCount);
+	public static CCMovieQuality calculateQuality(CCMovieSize size, int length, int partCount) {
+		return calculateQuality(size.getBytes(), length, partCount);
 	}
 
-	public static CCMovieQuality getQualityForSize(long size, int partCount) { //TODO Calculate Quality = (SIZE / LENGTH) = (MB / MIN) || Aber so dass nur minimale anzahl von errors entstehen
-		if (size <= FSIZE_MAX_STREAM) {
+	public static CCMovieQuality calculateQuality(long size, int length, int partCount) {
+		if (length == 0) {
+			return STREAM;
+		}
+		
+		long qualityIdent = size / length;
+		
+		if (qualityIdent <= FSIZE_MAX_STREAM) {
 			return CCMovieQuality.STREAM;
-		} else if (size <= FSIZE_MAX_CD) {
+		} else if (qualityIdent <= FSIZE_MAX_CD) {
 			if (partCount == 1) {
 				return CCMovieQuality.ONE_CD;
 			} else {
 				return CCMovieQuality.MULTIPLE_CD;
 			}
-
-		} else if (size <= FSIZE_MAX_DVD) {
+		} else if (qualityIdent <= FSIZE_MAX_DVD) {
 			return CCMovieQuality.DVD;
 		} else {
 			return CCMovieQuality.BLURAY;

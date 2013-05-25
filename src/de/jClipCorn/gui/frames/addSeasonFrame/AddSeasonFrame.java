@@ -306,4 +306,9 @@ public class AddSeasonFrame extends JFrame implements UserDataProblemHandler, Pa
 	public void setScore(int s) {
 		// NO SUCH ELEMENT
 	}
+	
+	@Override
+	public void onFinishInserting() {
+		// nothing
+	}
 }

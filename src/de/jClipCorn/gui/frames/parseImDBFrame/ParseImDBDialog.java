@@ -693,5 +693,7 @@ public class ParseImDBDialog extends JDialog {
 		if (cbGenre7.isSelected()) {
 			owner.setGenre(7, cbxGenre7.getSelectedIndex());
 		}
+		
+		owner.onFinishInserting();
 	}
 }

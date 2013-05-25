@@ -7,11 +7,9 @@ import java.util.List;
 import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFormat;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieLanguage;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieQuality;
 import de.jClipCorn.gui.frames.addMovieFrame.AddMovieFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
-import de.jClipCorn.util.FileSizeFormatter;
 import de.jClipCorn.util.PathFormatter;
 import de.jClipCorn.util.RomanNumberFormatter;
 
@@ -30,7 +28,6 @@ public class FilenameParser {
 		String path = PathFormatter.getFilepath(filepath);
 		String filename = PathFormatter.getFilename(filepath); // Filename
 		String ext = PathFormatter.getExtension(filepath);
-		int partCount = 1;
 		
 		if (path.equals(filepath) || filename.equals(filepath) || ext.equals(filepath)) {
 			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.ErrorParsingFN", filepath));
@@ -50,7 +47,6 @@ public class FilenameParser {
 				if (f.exists()) {
 					files.add(f);
 					frame.setFilepath(p - 1, newFP);
-					partCount++;
 				} else {
 					break;
 				}
@@ -122,17 +118,6 @@ public class FilenameParser {
 			
 			frame.setMovieName(moviename);
 		}
-		
-		// ###################  SIZE  ###################
-		
-		long size = 0;
-		for (File f : files) {
-			size += FileSizeFormatter.getFileSize(f);
-		}
-		
-		// ###################  QUALITY  ###################
-		
-		frame.setQuality(CCMovieQuality.getQualityForSize(size, partCount));
 		
 		// ###################  FORMAT  ###################
 		

@@ -159,6 +159,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 	private JLabel label_33;
 	private JButton btnToday;
 	private JButton btnTestParts;
+	private JButton btnCAlcQuality;
 
 	public EditMovieFrame(Component owner, CCMovie movie, UpdateCallbackListener ucl) {
 		super();
@@ -649,6 +650,16 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		});
 		btnTestParts.setBounds(277, 227, 131, 23);
 		getContentPane().add(btnTestParts);
+		
+		btnCAlcQuality = new JButton(LocaleBundle.getString("AddMovieFrame.btnCalcQuality.text")); //$NON-NLS-1$
+		btnCAlcQuality.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				onCalcQuality();
+			}
+		});
+		btnCAlcQuality.setBounds(296, 372, 78, 23);
+		getContentPane().add(btnCAlcQuality);
 	}
 
 	private void setDefaultValues() {
@@ -987,6 +998,26 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 	@Override
 	public void setScore(int s) {
 		spnOnlineScore.setValue(s);
+	}
+	
+	@Override
+	public void onFinishInserting() {
+		// nothing
+	}
+	
+	private void onCalcQuality() {
+		setQuality(CCMovieQuality.calculateQuality((long)spnSize.getValue(), (int) spnLength.getValue(), getPartCount()));
+	}
+	
+	private int getPartCount() {
+		int c = 0;
+		c += edPart0.getText().isEmpty() ? 0 : 1;
+		c += edPart1.getText().isEmpty() ? 0 : 1;
+		c += edPart2.getText().isEmpty() ? 0 : 1;
+		c += edPart3.getText().isEmpty() ? 0 : 1;
+		c += edPart4.getText().isEmpty() ? 0 : 1;
+		c += edPart5.getText().isEmpty() ? 0 : 1;
+		return c;
 	}
 	
 	private void onBtnChooseClicked(int cNmbr) {

@@ -66,7 +66,7 @@ public class Main {
 //TODO Parse Cover from more sources (coverparadies, darktown ...) ((Erst mal sehen ob die was taugen))
 //TODO Search for Trailer
 
-//TODO statistics page
+//TODO statistics page (JFreeChart)
 
 //TODO WatchItLaterFeature (And Download inHigherQuality)
 //TODO Read Only - Mode
@@ -74,8 +74,6 @@ public class Main {
 //TODO (2.0) ONLINE SYNCHRONISATION / Online Profiles / View Ratings + Viewed from others ... ...
 
 //TODO FETURE REQUESTS / BUGS (Benjamin):
-//TODO Add Empty SEason -> Der Serie einen Titel geben ("<untitled>") - ist sonst schwer zu sehen
-//TODO Change Title of Season -> Listbox on Left not updated
 //TODO Flags 4 Movie (wieviel bit habe die zahlen ? ist das immer so ? bleibt das immer so ? auch wegen den genrelists)
 //TODO Serien batch renamen (Als Batch - von  serien - ordner auswählen - ordnerstruktur mit namen und so erzeugen, ACHTUNG nur neue ordner (schutz vor overriding), evtl vorher alle in temp ordner kopieren, möglichkeit bestehende ordnerstruktur zu vervollständigen)
 //TODO Shortcuts für SerienWindow

@@ -199,7 +199,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		setLocationRelativeTo(owner);
 		
 		addWindowListener(this);
-		setFocusTraversalPolicy(new ExtendedFocusTraversalOnArray(new Component[]{btnSeriesFindCover, btnSeriesOpenCover, edSeriesTitle, cbxSeriesLanguage, spnSeriesOnlineScore, cbxSeriesFSK, cbxSeriesScore, cbxSeriesGenre_0, cbxSeriesGenre_1, cbxSeriesGenre_2, cbxSeriesGenre_3, cbxSeriesGenre_4, cbxSeriesGenre_5, cbxSeriesGenre_6, cbxSeriesGenre_7, btnAddEmptySeason, btnAddSeason, btnRemoveSeason, btnSeriesOk, btnSeasonOpenCover, edSeasonTitle, spnSeasonYear, btnResetAllStatus, btnAddEpisode, btnAddMultipleEpisodes, btnRemoveEpisode, btnSeasonOK, edEpisodeTitle, spnEpisodeEpisode, cbEpisodeViewed, cbxEpisodeFormat, cbxEpisodeQuality, spnEpisodeLength, spnEpisodeSize, spnEpisodeAdded, spnEpisodeLastViewed, edEpisodePart, cbxEpisodeStatus, btnEpisodeOK, btnEpisodeToday, btnEpisodeClear, btnEpisodeOpenPart}));
+		updateFocusTraversalPolicy();
 	}
 	
 	public EditSeriesFrame(Component owner, CCSeason sea, UpdateCallbackListener ucl) {
@@ -220,6 +220,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		setLocationRelativeTo(owner);
 		
 		addWindowListener(this);
+		updateFocusTraversalPolicy();
 		
 		selectSeason(sea);
 	}
@@ -242,9 +243,14 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		setLocationRelativeTo(owner);
 		
 		addWindowListener(this);
+		updateFocusTraversalPolicy();
 		
 		selectSeason(ep.getSeason());
 		selectEpisode(ep);
+	}
+	
+	private void updateFocusTraversalPolicy() {
+		setFocusTraversalPolicy(new ExtendedFocusTraversalOnArray(new Component[]{btnSeriesFindCover, btnSeriesOpenCover, edSeriesTitle, cbxSeriesLanguage, spnSeriesOnlineScore, cbxSeriesFSK, cbxSeriesScore, cbxSeriesGenre_0, cbxSeriesGenre_1, cbxSeriesGenre_2, cbxSeriesGenre_3, cbxSeriesGenre_4, cbxSeriesGenre_5, cbxSeriesGenre_6, cbxSeriesGenre_7, btnAddEmptySeason, btnAddSeason, btnRemoveSeason, btnSeriesOk, btnSeasonOpenCover, edSeasonTitle, spnSeasonYear, btnResetAllStatus, btnAddEpisode, btnAddMultipleEpisodes, btnRemoveEpisode, btnSeasonOK, edEpisodeTitle, spnEpisodeEpisode, cbEpisodeViewed, cbxEpisodeFormat, cbxEpisodeQuality, spnEpisodeLength, spnEpisodeSize, spnEpisodeAdded, spnEpisodeLastViewed, edEpisodePart, cbxEpisodeStatus, btnEpisodeOK, btnEpisodeToday, btnEpisodeClear, btnEpisodeOpenPart}));
 	}
 	
 	private void selectEpisode(CCEpisode e) {
@@ -1034,8 +1040,13 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		setSeriesCover(nci);
 	}
 	
+	@Override
+	public void onFinishInserting() {
+		// nothing
+	}
+	
 	private void addEmptySeason() {
-		series.createNewEmptySeason();
+		series.createNewEmptySeason().setTitle("<untitled>"); //$NON-NLS-1$
 		
 		updateSeriesPanel();
 	}
@@ -1134,7 +1145,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 			return;
 		}
 		
-		season.createNewEmptyEpisode();
+		season.createNewEmptyEpisode().setTitle("<untitled>"); //$NON-NLS-1$
 		
 		updateSeasonPanel();
 	}
@@ -1191,6 +1202,8 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 			return;
 		}
 		
+		String prevTitle = season.getTitle();
+		
 		season.beginUpdating();
 		
 		//#####################################################################################
@@ -1204,6 +1217,11 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		season.endUpdating();
 		
 		updateSeasonPanel();
+		
+		if (! prevTitle.equals(season.getTitle())) {
+			updateSeriesPanel();
+			selectSeason(season);
+		}
 	}
 	
 	public boolean checkUserDataSeason(List<UserDataProblem> ret) {

@@ -8,8 +8,8 @@ import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFormat;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieGenreList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieLanguage;
+import de.jClipCorn.database.databaseElement.columnTypes.CCMovieQuality;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieZyklus;
-import de.jClipCorn.database.databaseElement.columnTypes.CombinedMovieQuality;
 import de.jClipCorn.gui.frames.mainFrame.clipTable.ClipTableModel;
 import de.jClipCorn.util.CCDate;
 import de.jClipCorn.util.YearRange;
@@ -35,7 +35,7 @@ public class TableSearchFilter extends RowFilter<ClipTableModel, Object> {
 			return true;
 		}
 		
-		if (((CombinedMovieQuality)e.getValue(ClipTableModel.COLUMN_QUALITY)).asString().equalsIgnoreCase(searchTerm)) {
+		if (((CCMovieQuality)e.getValue(ClipTableModel.COLUMN_QUALITY)).asString().equalsIgnoreCase(searchTerm)) {
 			return true;
 		}
 		

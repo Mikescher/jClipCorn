@@ -18,7 +18,6 @@ import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieScore;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieStatus;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTyp;
 import de.jClipCorn.database.util.ExportHelper;
 import de.jClipCorn.database.xml.CCBXMLReader;
@@ -410,7 +409,7 @@ public class CCActionTree {
 		
 		temp = other.addChild(new CCActionElement("SetSeriesRating", null, "ClipMenuBar.Other.SetSeriesRating", Resources.ICN_SIDEBAR_SCORE));
 		
-		temp = other.addChild(new CCActionElement("SetMovieStatus", null, "ClipMenuBar.Other.SetMovieStatus", Resources.ICN_SIDEBAR_STATUS));
+		temp = other.addChild(new CCActionElement("SetTags", null, "ClipMenuBar.Other.SetTags", Resources.ICN_MENUBAR_TAGS));
 		
 		temp = other.addChild(new CCActionElement("SetRating0", null, "CCMovieScore.R0", CCMovieScore.RATING_0.getIconName()));
 		temp.addListener(new ActionListener() {
@@ -484,30 +483,6 @@ public class CCActionTree {
 			}
 		});
 		
-		temp = other.addChild(new CCActionElement("SetStatus0", null, "CCMovieStatus.Status0", CCMovieStatus.STATUS_OK.getIconName()));
-		temp.addListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onClickOtherSetStatus(CCMovieStatus.STATUS_OK);
-			}
-		});
-		
-		temp = other.addChild(new CCActionElement("SetStatus1", null, "CCMovieStatus.Status1", CCMovieStatus.STATUS_LOWQUALITY.getIconName()));
-		temp.addListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onClickOtherSetStatus(CCMovieStatus.STATUS_LOWQUALITY);
-			}
-		});
-		
-		temp = other.addChild(new CCActionElement("SetStatus2", null, "CCMovieStatus.Status2", CCMovieStatus.STATUS_MISSINGVIDEOTIME.getIconName()));
-		temp.addListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onClickOtherSetStatus(CCMovieStatus.STATUS_MISSINGVIDEOTIME);
-			}
-		});
-		
 		temp = other.addChild(new CCActionElement("OpenFolder", null, "ClipMenuBar.Other.OpenFolder", Resources.ICN_MENUBAR_FOLDER));
 		temp.addListener(new ActionListener() {
 			@Override
@@ -521,6 +496,46 @@ public class CCActionTree {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				onClickOtherShowInIMDB();
+			}
+		});
+		
+		temp = other.addChild(new CCActionElement("SwitchTag_00", null, "CCMovieTags.TAG_00", Resources.ICN_MENUBAR_TAG_0_1));
+		temp.addListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				onSwitchTag(0);
+			}
+		});
+		
+		temp = other.addChild(new CCActionElement("SwitchTag_01", null, "CCMovieTags.TAG_01", Resources.ICN_MENUBAR_TAG_1_1));
+		temp.addListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				onSwitchTag(1);
+			}
+		});
+		
+		temp = other.addChild(new CCActionElement("SwitchTag_02", null, "CCMovieTags.TAG_02", Resources.ICN_MENUBAR_TAG_2_1));
+		temp.addListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				onSwitchTag(2);
+			}
+		});
+		
+		temp = other.addChild(new CCActionElement("SwitchTag_03", null, "CCMovieTags.TAG_03", Resources.ICN_MENUBAR_TAG_3_1));
+		temp.addListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				onSwitchTag(3);
+			}
+		});
+		
+		temp = other.addChild(new CCActionElement("SwitchTag_04", null, "CCMovieTags.TAG_04", Resources.ICN_MENUBAR_TAG_4_1));
+		temp.addListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				onSwitchTag(4);
 			}
 		});
 		
@@ -973,19 +988,19 @@ public class CCActionTree {
 		}
 	}
 	
-	private void onClickOtherSetStatus(CCMovieStatus status) {
-		CCDatabaseElement el = owner.getSelectedElement();
-		if (el != null && el.isMovie()) {
-			((CCMovie)el).setStatus(status);
-		}
-	}
-	
 	private void onClickOtherShowInIMDB() {
 		CCDatabaseElement el = owner.getSelectedElement();
 		if (el != null && el.isMovie()) {
 			HTTPUtilities.openInBrowser(ImDBParser.getSearchURL(((CCMovie)el).getCompleteTitle(), CCMovieTyp.MOVIE));
 		} else if (el != null && el.isSeries()) {
 			HTTPUtilities.openInBrowser(ImDBParser.getSearchURL(((CCSeries)el).getTitle(), CCMovieTyp.SERIES));
+		}
+	}
+	
+	private void onSwitchTag(int c) {
+		CCDatabaseElement el = owner.getSelectedElement();
+		if (el != null && el.isMovie()) {
+			((CCMovie)el).switchTag(c);
 		}
 	}
 }

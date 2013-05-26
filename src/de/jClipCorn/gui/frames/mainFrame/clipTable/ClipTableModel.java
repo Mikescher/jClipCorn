@@ -29,10 +29,11 @@ public class ClipTableModel extends AbstractTableModel implements TableModelRowC
 	public final static int COLUMN_LENGTH = 8;
 	public final static int COLUMN_DATE = 9;
 	public final static int COLUMN_ONLINESCORE = 10;
-	public final static int COLUMN_FSK = 11;
-	public final static int COLUMN_FORMAT = 12;
-	public final static int COLUMN_YEAR = 13;
-	public final static int COLUMN_SIZE = 14;
+	public final static int COLUMN_TAGS = 11;
+	public final static int COLUMN_FSK = 12;
+	public final static int COLUMN_FORMAT = 13;
+	public final static int COLUMN_YEAR = 14;
+	public final static int COLUMN_SIZE = 15;
 	
 	private static final String[] COLUMN_NAMES = {
 			"", 			 									//$NON-NLS-1$
@@ -46,6 +47,7 @@ public class ClipTableModel extends AbstractTableModel implements TableModelRowC
 			LocaleBundle.getString("ClipTableModel.Length"),  	//$NON-NLS-1$
 			LocaleBundle.getString("ClipTableModel.Added"),  	//$NON-NLS-1$
 			LocaleBundle.getString("ClipTableModel.Score"),  	//$NON-NLS-1$
+			LocaleBundle.getString("ClipTableModel.Tags"),  	//$NON-NLS-1$
 			LocaleBundle.getString("ClipTableModel.FSK"),  		//$NON-NLS-1$
 			LocaleBundle.getString("ClipTableModel.Format"), 	//$NON-NLS-1$
 			LocaleBundle.getString("ClipTableModel.Year"),  	//$NON-NLS-1$
@@ -118,7 +120,7 @@ public class ClipTableModel extends AbstractTableModel implements TableModelRowC
 			case COLUMN_ZYKLUS: // Zyklus
 				return mov.getZyklus();
 			case COLUMN_QUALITY: // Quality
-				return mov.getCombinedQuality();
+				return mov.getQuality();
 			case COLUMN_LANGUAGE: // Language
 				return mov.getLanguage();
 			case COLUMN_GENRE: // Genres
@@ -131,6 +133,8 @@ public class ClipTableModel extends AbstractTableModel implements TableModelRowC
 				return mov.getAddDate();
 			case COLUMN_ONLINESCORE: // OnlineScore
 				return mov.getOnlinescore();
+			case COLUMN_TAGS: // Tags
+				return mov.getTags();
 			case COLUMN_FSK: // FSK
 				return mov.getFSK();
 			case COLUMN_FORMAT: // Format
@@ -154,7 +158,7 @@ public class ClipTableModel extends AbstractTableModel implements TableModelRowC
 			case COLUMN_ZYKLUS: // Zyklus
 				return new CCMovieZyklus();
 			case COLUMN_QUALITY: // Quality
-				return ser.getCombinedQuality();
+				return ser.getQuality();
 			case COLUMN_LANGUAGE: // Language
 				return ser.getLanguage();
 			case COLUMN_GENRE: // Genres
@@ -167,6 +171,8 @@ public class ClipTableModel extends AbstractTableModel implements TableModelRowC
 				return ser.getAddDate();
 			case COLUMN_ONLINESCORE: // OnlineScore
 				return ser.getOnlinescore();
+			case COLUMN_TAGS: // Tags
+				return ser.getTags();
 			case COLUMN_FSK: // FSK
 				return ser.getFSK();
 			case COLUMN_FORMAT: // Format

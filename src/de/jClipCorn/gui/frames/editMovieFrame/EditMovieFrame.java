@@ -36,7 +36,6 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCMovieLanguage;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieQuality;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieScore;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieSize;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieStatus;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTyp;
 import de.jClipCorn.gui.CachedResourceLoader;
 import de.jClipCorn.gui.Resources;
@@ -46,6 +45,7 @@ import de.jClipCorn.gui.guiComponents.CCDateEditor;
 import de.jClipCorn.gui.guiComponents.CoverLabel;
 import de.jClipCorn.gui.guiComponents.ReadableTextField;
 import de.jClipCorn.gui.guiComponents.SpinnerCCDateModel;
+import de.jClipCorn.gui.guiComponents.TagPanel;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.properties.CCProperties;
@@ -155,7 +155,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 	private JButton btnRecalculateSize;
 	private JComboBox<String> cbxScore;
 	private JLabel label_32;
-	private JComboBox<String> cbxStatus;
+	private TagPanel tagPnl;
 	private JLabel label_33;
 	private JButton btnToday;
 	private JButton btnTestParts;
@@ -176,7 +176,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		initFields();
 		
 		setLocationRelativeTo(owner);
-		setFocusTraversalPolicy(new ExtendedFocusTraversalOnArray(new Component[]{btnChoose0, btnChoose1, btnChoose2, btnChoose3, btnChoose4, btnChoose5, edTitle, edZyklus, spnZyklus, cbViewed, cbxQuality, cbxLanguage, spnLength, spnAddDate, spnOnlineScore, cbxFSK, cbxFormat, spnYear, spnSize, cbxGenre0, cbxGenre1, cbxGenre2, cbxGenre3, cbxGenre4, cbxGenre5, cbxGenre6, cbxGenre7, cbxScore, cbxStatus, btnFindcover, btnOpencover, btnOK, btnCancel, btnToday, btnIMDB, btnClear1, btnClear2, btnClear3, btnClear4, btnClear5, btnTestParts}));
+		setFocusTraversalPolicy(new ExtendedFocusTraversalOnArray(new Component[]{btnChoose0, btnChoose1, btnChoose2, btnChoose3, btnChoose4, btnChoose5, edTitle, edZyklus, spnZyklus, cbViewed, cbxQuality, cbxLanguage, spnLength, spnAddDate, spnOnlineScore, cbxFSK, cbxFormat, spnYear, spnSize, cbxGenre0, cbxGenre1, cbxGenre2, cbxGenre3, cbxGenre4, cbxGenre5, cbxGenre6, cbxGenre7, cbxScore, tagPnl, btnFindcover, btnOpencover, btnOK, btnCancel, btnToday, btnIMDB, btnClear1, btnClear2, btnClear3, btnClear4, btnClear5, btnTestParts}));
 	}
 	
 	private void initGUI() {
@@ -623,11 +623,11 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		label_32.setBounds(418, 339, 46, 18);
 		getContentPane().add(label_32);
 		
-		cbxStatus = new JComboBox<>();
-		cbxStatus.setBounds(506, 373, 212, 22);
-		getContentPane().add(cbxStatus);
+		tagPnl = new TagPanel();
+		tagPnl.setBounds(506, 373, 212, 22);
+		getContentPane().add(tagPnl);
 		
-		label_33 = new JLabel(LocaleBundle.getString("EditSeriesFrame.lblStatus.text")); //$NON-NLS-1$
+		label_33 = new JLabel(LocaleBundle.getString("EditSeriesFrame.lblTags.text")); //$NON-NLS-1$
 		label_33.setBounds(418, 376, 52, 16);
 		getContentPane().add(label_33);
 		
@@ -671,7 +671,6 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		
 		cbxFormat.setModel(new DefaultComboBoxModel<>(CCMovieFormat.getList()));
 		cbxScore.setModel(new DefaultComboBoxModel<>(CCMovieScore.getList()));
-		cbxStatus.setModel(new DefaultComboBoxModel<>(CCMovieStatus.getList()));
 		
 		cbxGenre0.setModel(new DefaultComboBoxModel<>(CCMovieGenre.getTrimmedList()));
 		cbxGenre1.setModel(new DefaultComboBoxModel<>(CCMovieGenre.getTrimmedList()));
@@ -816,7 +815,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		cbxGenre7.setSelectedIndex(movie.getGenre(7).asInt());
 		
 		cbxScore.setSelectedIndex(movie.getScore().asInt());
-		cbxStatus.setSelectedIndex(movie.getStatus().asInt());
+		tagPnl.setValue(movie.getTags());
 		
 		currentCoverImage = movie.getCover();
 		lblCover.setIcon(new ImageIcon(currentCoverImage));
@@ -1115,7 +1114,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		movie.setGenre(CCMovieGenre.find(cbxGenre6.getSelectedIndex()), 6);
 		movie.setGenre(CCMovieGenre.find(cbxGenre7.getSelectedIndex()), 7);
 		
-		movie.setStatus(cbxStatus.getSelectedIndex());
+		movie.setTags(tagPnl.getValue()); // TODOD TEST THIS FRAME
 		movie.setScore(cbxScore.getSelectedIndex());
 		
 		movie.setCover(currentCoverImage);

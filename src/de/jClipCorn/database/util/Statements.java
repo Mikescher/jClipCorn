@@ -106,7 +106,7 @@ public class Statements {
 		ih.addField(CCDatabase.TAB_MAIN_COLUMN_FORMAT, "?");
 		ih.addField(CCDatabase.TAB_MAIN_COLUMN_MOVIEYEAR, "?");
 		ih.addField(CCDatabase.TAB_MAIN_COLUMN_FILESIZE, "?");
-		ih.addField(CCDatabase.TAB_MAIN_COLUMN_STATUS, "?");
+		ih.addField(CCDatabase.TAB_MAIN_COLUMN_TAGS, "?");
 		ih.addField(CCDatabase.TAB_MAIN_COLUMN_PART_1, "?");
 		ih.addField(CCDatabase.TAB_MAIN_COLUMN_PART_2, "?");
 		ih.addField(CCDatabase.TAB_MAIN_COLUMN_PART_3, "?");
@@ -148,7 +148,7 @@ public class Statements {
 		ih.addField(CCDatabase.TAB_EPISODES_COLUMN_FORMAT, "?");
 		ih.addField(CCDatabase.TAB_EPISODES_COLUMN_FILESIZE, "?");
 		ih.addField(CCDatabase.TAB_EPISODES_COLUMN_PART_1, "?");
-		ih.addField(CCDatabase.TAB_EPISODES_COLUMN_STATUS, "?");
+		ih.addField(CCDatabase.TAB_EPISODES_COLUMN_TAGS, "?");
 		ih.addField(CCDatabase.TAB_EPISODES_COLUMN_LASTVIEWED, "?");
 		ih.addField(CCDatabase.TAB_EPISODES_COLUMN_ADDDATE, "?");
 		
@@ -181,7 +181,7 @@ public class Statements {
 		uh.addField(CCDatabase.TAB_MAIN_COLUMN_FORMAT, "?");
 		uh.addField(CCDatabase.TAB_MAIN_COLUMN_MOVIEYEAR, "?");
 		uh.addField(CCDatabase.TAB_MAIN_COLUMN_FILESIZE, "?");
-		uh.addField(CCDatabase.TAB_MAIN_COLUMN_STATUS, "?");
+		uh.addField(CCDatabase.TAB_MAIN_COLUMN_TAGS, "?");
 		uh.addField(CCDatabase.TAB_MAIN_COLUMN_PART_1, "?");
 		uh.addField(CCDatabase.TAB_MAIN_COLUMN_PART_2, "?");
 		uh.addField(CCDatabase.TAB_MAIN_COLUMN_PART_3, "?");
@@ -238,7 +238,7 @@ public class Statements {
 		uh.addField(CCDatabase.TAB_EPISODES_COLUMN_FORMAT, "?");
 		uh.addField(CCDatabase.TAB_EPISODES_COLUMN_FILESIZE, "?");
 		uh.addField(CCDatabase.TAB_EPISODES_COLUMN_PART_1, "?");
-		uh.addField(CCDatabase.TAB_EPISODES_COLUMN_STATUS, "?");
+		uh.addField(CCDatabase.TAB_EPISODES_COLUMN_TAGS, "?");
 		uh.addField(CCDatabase.TAB_EPISODES_COLUMN_LASTVIEWED, "?");
 		uh.addField(CCDatabase.TAB_EPISODES_COLUMN_ADDDATE, "?");
 		

@@ -10,10 +10,9 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFormat;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieLanguage;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieQuality;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieSize;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieStatus;
+import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTags;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTyp;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieZyklus;
-import de.jClipCorn.database.databaseElement.columnTypes.CombinedMovieQuality;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.util.ByteUtilies;
@@ -38,7 +37,7 @@ public class CCMovie extends CCDatabaseElement {
 	private CCMovieFormat format;			// TINYINT
 	private	int year;						// SMALLINT
 	private CCMovieSize filesize;			// BIGINT - signed (unfortunately)
-	private CCMovieStatus status;			// TINYINT
+	private CCMovieTags tags;				// SMALLINT
 	private String[] parts;					// [0..5] -> LEN = 512
 	
 	public CCMovie(CCMovieList ml, int id) {
@@ -47,6 +46,8 @@ public class CCMovie extends CCDatabaseElement {
 		
 		zyklus = new CCMovieZyklus();
 		filesize = new CCMovieSize();
+		tags = new CCMovieTags();
+		addDate = CCDate.getNewMinimumDate();
 	}
 	
 	@Override
@@ -56,11 +57,11 @@ public class CCMovie extends CCDatabaseElement {
 		zyklus.reset();
 		quality = CCMovieQuality.STREAM;
 		length = 0;
-		addDate = new CCDate(1, 1, CCDate.YEAR_MIN);
+		addDate.reset();
 		format = CCMovieFormat.MKV;
 		year = 1900;
 		filesize.setBytes(0);
-		status = CCMovieStatus.STATUS_OK;
+		tags.clear();
 		parts[0] = ""; //$NON-NLS-1$
 		parts[1] = ""; //$NON-NLS-1$
 		parts[2] = ""; //$NON-NLS-1$
@@ -217,18 +218,34 @@ public class CCMovie extends CCDatabaseElement {
 		setFilesize(filesize.getBytes());
 	}
 	
-	public CCMovieStatus getStatus() {
-		return status;
+	public CCMovieTags getTags() {
+		return tags;
 	}
 	
-	public void setStatus(int status) {
-		setStatus(CCMovieStatus.find(status));
+	public void setTags(short ptags) {
+		tags.parseFromShort(ptags);
 	}
 	
-	public void setStatus(CCMovieStatus status) {
-		this.status = status;
+	public void setTags(CCMovieTags ptags) {
+		this.tags = ptags;
 		
 		updateDB();
+	}
+	
+	public void switchTag(int c) {
+		tags.switchTag(c);
+		
+		updateDB();
+	}
+	
+	public void setTag(int c, boolean v) {
+		tags.setTag(c, v);
+		
+		updateDB();
+	}
+	
+	public boolean getTag(int c) {
+		return tags.getTag(c);
 	}
 
 	public String getPart(int idx) {
@@ -269,10 +286,6 @@ public class CCMovie extends CCDatabaseElement {
 		setViewed(true);
 	}
 
-	public CombinedMovieQuality getCombinedQuality() {
-		return new CombinedMovieQuality(getQuality(), getStatus());
-	}
-
 	public CCMovieList getMovieList() {
 		return movielist;
 	}
@@ -292,7 +305,7 @@ public class CCMovie extends CCDatabaseElement {
 		}
 		
 		e.setAttribute("quality", quality.asInt() + "");
-		e.setAttribute("status", status.asInt() + "");
+		e.setAttribute("tags", tags.asShort() + "");
 		e.setAttribute("viewed", viewed + "");
 		e.setAttribute("year", year + "");
 		e.setAttribute("zyklus", zyklus.getTitle());
@@ -345,8 +358,8 @@ public class CCMovie extends CCDatabaseElement {
 		if (e.getAttributeValue("quality") != null)
 			setQuality(Integer.parseInt(e.getAttributeValue("quality")));
 		
-		if (e.getAttributeValue("status") != null)
-			setStatus(Integer.parseInt(e.getAttributeValue("status")));
+		if (e.getAttributeValue("tags") != null)
+			setTags(Short.parseShort(e.getAttributeValue("tags")));
 		
 		if (e.getAttributeValue("viewed") != null)
 			setViewed(e.getAttributeValue("viewed").equals(true + ""));

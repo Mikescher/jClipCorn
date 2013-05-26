@@ -21,6 +21,7 @@ import de.jClipCorn.gui.guiComponents.tableRenderer.TableOnlinescoreRenderer;
 import de.jClipCorn.gui.guiComponents.tableRenderer.TablePartRenderer;
 import de.jClipCorn.gui.guiComponents.tableRenderer.TableQualityRenderer;
 import de.jClipCorn.gui.guiComponents.tableRenderer.TableScoreRenderer;
+import de.jClipCorn.gui.guiComponents.tableRenderer.TableTagsRenderer;
 import de.jClipCorn.gui.guiComponents.tableRenderer.TableTitleRenderer;
 import de.jClipCorn.gui.guiComponents.tableRenderer.TableViewedRenderer;
 import de.jClipCorn.gui.guiComponents.tableRenderer.TableYearRenderer;
@@ -37,6 +38,7 @@ import de.jClipCorn.gui.guiComponents.tableSorter.TablePartComparator;
 import de.jClipCorn.gui.guiComponents.tableSorter.TableQualityComparator;
 import de.jClipCorn.gui.guiComponents.tableSorter.TableScoreComparator;
 import de.jClipCorn.gui.guiComponents.tableSorter.TableSizeComparator;
+import de.jClipCorn.gui.guiComponents.tableSorter.TableTagsComparator;
 import de.jClipCorn.gui.guiComponents.tableSorter.TableTitleComparator;
 import de.jClipCorn.gui.guiComponents.tableSorter.TableViewedComparator;
 import de.jClipCorn.gui.guiComponents.tableSorter.TableYearComparator;
@@ -58,6 +60,7 @@ public class SFixClipTable extends SFixTable {
 	private TableGenreRenderer renderer_genre;
 	private TablePartRenderer renderer_parts;
 	private TableLengthRenderer renderer_length;
+	private TableTagsRenderer renderer_tags;
 	private TableDateRenderer renderer_date;
 	private TableOnlinescoreRenderer renderer_onlinescore;
 	private TableFSKRenderer renderer_fsk;
@@ -74,6 +77,7 @@ public class SFixClipTable extends SFixTable {
 	private TableGenreComparator sorter_genre;
 	private TablePartComparator sorter_parts;
 	private TableLengthComparator sorter_length;
+	private TableTagsComparator sorter_tags;
 	private TableDateComparator sorter_date;
 	private TableOnlineScoreComparator sorter_onlinescore;
 	private TableFSKComparator sorter_fsk;
@@ -106,6 +110,7 @@ public class SFixClipTable extends SFixTable {
 		renderer_genre = new TableGenreRenderer();
 		renderer_parts = new TablePartRenderer();
 		renderer_length = new TableLengthRenderer();
+		renderer_tags = new TableTagsRenderer();
 		renderer_date = new TableDateRenderer();
 		renderer_onlinescore = new TableOnlinescoreRenderer();
 		renderer_fsk = new TableFSKRenderer();
@@ -128,6 +133,7 @@ public class SFixClipTable extends SFixTable {
 		sorter_genre = new TableGenreComparator();
 		sorter_parts = new TablePartComparator();
 		sorter_length = new TableLengthComparator();
+		sorter_tags = new TableTagsComparator();
 		sorter_date = new TableDateComparator();
 		sorter_onlinescore = new TableOnlineScoreComparator();
 		sorter_fsk = new TableFSKComparator();
@@ -149,6 +155,7 @@ public class SFixClipTable extends SFixTable {
 		sorter.setComparator(ClipTableModel.COLUMN_GENRE,  sorter_genre);
 		sorter.setComparator(ClipTableModel.COLUMN_PARTCOUNT,  sorter_parts);
 		sorter.setComparator(ClipTableModel.COLUMN_LENGTH,  sorter_length);
+		sorter.setComparator(ClipTableModel.COLUMN_TAGS, sorter_tags);
 		sorter.setComparator(ClipTableModel.COLUMN_DATE,  sorter_date);
 		sorter.setComparator(ClipTableModel.COLUMN_ONLINESCORE, sorter_onlinescore);
 		sorter.setComparator(ClipTableModel.COLUMN_FSK, sorter_fsk);
@@ -184,6 +191,8 @@ public class SFixClipTable extends SFixTable {
 			return renderer_date;
 		case ClipTableModel.COLUMN_ONLINESCORE:	// OnlineScore
 			return renderer_onlinescore;
+		case ClipTableModel.COLUMN_TAGS:	// OnlineScore
+			return renderer_tags;
 		case ClipTableModel.COLUMN_FSK:	// FSK
 			return renderer_fsk;
 		case ClipTableModel.COLUMN_FORMAT:	// Format

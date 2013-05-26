@@ -1,6 +1,6 @@
 package de.jClipCorn.gui.guiComponents.tableRenderer;
 
-import de.jClipCorn.database.databaseElement.columnTypes.CombinedMovieQuality;
+import de.jClipCorn.database.databaseElement.columnTypes.CCMovieQuality;
 
 public class TableQualityRenderer extends TableRenderer {
 	private static final long serialVersionUID = 5357005350195701739L;
@@ -11,8 +11,7 @@ public class TableQualityRenderer extends TableRenderer {
 
 	@Override
     public void setValue(Object value) {
-		setText(((CombinedMovieQuality)value).asString());
-		setToolTipText(((CombinedMovieQuality)value).getToltipText());
-		setIcon(((CombinedMovieQuality)value).getIcon());
+		setText(((CCMovieQuality)value).asString());
+		setIcon(((CCMovieQuality)value).getIcon());
     }
 }

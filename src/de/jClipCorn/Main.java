@@ -68,16 +68,14 @@ public class Main {
 
 //TODO statistics page (JFreeChart)
 
-//TODO WatchItLaterFeature (And Download inHigherQuality)
 //TODO Read Only - Mode
 
 //TODO (2.0) ONLINE SYNCHRONISATION / Online Profiles / View Ratings + Viewed from others ... ...
 
 //TODO FETURE REQUESTS / BUGS (Benjamin):
-//TODO Flags 4 Movie (wieviel bit habe die zahlen ? ist das immer so ? bleibt das immer so ? auch wegen den genrelists)
 //TODO Serien batch renamen (Als Batch - von  serien - ordner auswählen - ordnerstruktur mit namen und so erzeugen, ACHTUNG nur neue ordner (schutz vor overriding), evtl vorher alle in temp ordner kopieren, möglichkeit bestehende ordnerstruktur zu vervollständigen)
 //TODO Shortcuts für SerienWindow
-//TODO Integrity Check -> Database Structure -> Fatal Error
 //TODO Better Display in AUtofixer - FilterList for ErrorTypes - (ErrName1 (10) \r\n ErrName2 (12) \r\n ErrName5 (1) ...)
 //TODO Better Move Series DIalog -> Preview / Error Catching / Better INput etc etc
 //TODO Compare Series in CompareDialog
+//TODO ADd Features to PreviewSeries Things 

@@ -40,7 +40,7 @@ public class CCDatabase extends DerbyDatabase {
 	public final static String TAB_MAIN_COLUMN_FORMAT = "FORMAT"; //$NON-NLS-1$
 	public final static String TAB_MAIN_COLUMN_MOVIEYEAR = "MOVIEYEAR"; //$NON-NLS-1$
 	public final static String TAB_MAIN_COLUMN_FILESIZE = "FILESIZE"; //$NON-NLS-1$
-	public final static String TAB_MAIN_COLUMN_STATUS = "STATUS"; //$NON-NLS-1$
+	public final static String TAB_MAIN_COLUMN_TAGS = "TAGS"; //$NON-NLS-1$
 	public final static String TAB_MAIN_COLUMN_PART_1 = "PART1"; //$NON-NLS-1$
 	public final static String TAB_MAIN_COLUMN_PART_2 = "PART2"; //$NON-NLS-1$
 	public final static String TAB_MAIN_COLUMN_PART_3 = "PART3"; //$NON-NLS-1$
@@ -68,7 +68,7 @@ public class CCDatabase extends DerbyDatabase {
 	public final static String TAB_EPISODES_COLUMN_FORMAT = "FORMAT"; //$NON-NLS-1$
 	public final static String TAB_EPISODES_COLUMN_FILESIZE = "FILESIZE"; //$NON-NLS-1$
 	public final static String TAB_EPISODES_COLUMN_PART_1 = "PART1"; //$NON-NLS-1$
-	public final static String TAB_EPISODES_COLUMN_STATUS = "STATUS"; //$NON-NLS-1$
+	public final static String TAB_EPISODES_COLUMN_TAGS = "TAGS"; //$NON-NLS-1$
 	public final static String TAB_EPISODES_COLUMN_LASTVIEWED = "LASTVIEWED"; //$NON-NLS-1$
 	public final static String TAB_EPISODES_COLUMN_ADDDATE = "ADDDATE"; //$NON-NLS-1$
 
@@ -140,7 +140,7 @@ public class CCDatabase extends DerbyDatabase {
 			mov.setFormat(rs.getInt(TAB_MAIN_COLUMN_FORMAT));
 			mov.setYear(rs.getInt(TAB_MAIN_COLUMN_MOVIEYEAR));
 			mov.setFilesize(rs.getLong(TAB_MAIN_COLUMN_FILESIZE));
-			mov.setStatus(rs.getInt(TAB_MAIN_COLUMN_STATUS));
+			mov.setTags(rs.getShort(TAB_MAIN_COLUMN_TAGS));
 			mov.setPart(0, rs.getString(TAB_MAIN_COLUMN_PART_1));
 			mov.setPart(1, rs.getString(TAB_MAIN_COLUMN_PART_2));
 			mov.setPart(2, rs.getString(TAB_MAIN_COLUMN_PART_3));
@@ -207,7 +207,7 @@ public class CCDatabase extends DerbyDatabase {
 		ep.setPart(rs.getString(TAB_EPISODES_COLUMN_PART_1));
 		ep.setAddDate(rs.getDate(TAB_EPISODES_COLUMN_ADDDATE));
 		ep.setLastViewed(rs.getDate(TAB_EPISODES_COLUMN_LASTVIEWED));
-		ep.setStatus(rs.getInt(TAB_EPISODES_COLUMN_STATUS));
+		ep.setTags(rs.getShort(TAB_EPISODES_COLUMN_TAGS));
 
 		ep.abortUpdating();
 
@@ -444,7 +444,7 @@ public class CCDatabase extends DerbyDatabase {
 			s.setInt(12, mov.getFormat().asInt());
 			s.setInt(13, mov.getYear());
 			s.setLong(14, mov.getFilesize().getBytes());
-			s.setInt(15, mov.getStatus().asInt());
+			s.setShort(15, mov.getTags().asShort());
 			s.setString(16, mov.getPart(0));
 			s.setString(17, mov.getPart(1));
 			s.setString(18, mov.getPart(2));
@@ -530,7 +530,7 @@ public class CCDatabase extends DerbyDatabase {
 			s.setInt(7, ep.getFormat().asInt());
 			s.setLong(8, ep.getFilesize().getBytes());
 			s.setString(9, ep.getPart());
-			s.setInt(10, ep.getStatus().asInt());
+			s.setShort(10, ep.getTags().asShort());
 			s.setString(11, ep.getLastViewed().getSQLStringRepresentation());
 			s.setString(12, ep.getAddDate().getSQLStringRepresentation());
 			

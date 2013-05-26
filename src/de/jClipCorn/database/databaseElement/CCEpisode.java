@@ -8,8 +8,7 @@ import org.jdom2.Element;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFormat;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieQuality;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieSize;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieStatus;
-import de.jClipCorn.database.databaseElement.columnTypes.CombinedMovieQuality;
+import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTags;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.util.CCDate;
@@ -26,7 +25,7 @@ public class CCEpisode {
 	private boolean viewed;
 	private CCMovieQuality quality;
 	private int length;
-	private CCMovieStatus status;
+	private CCMovieTags tags;
 	private CCMovieFormat format;
 	private CCMovieSize filesize;
 	private String part;
@@ -40,6 +39,9 @@ public class CCEpisode {
 		this.localID = localID;
 		
 		filesize = new CCMovieSize();
+		tags = new CCMovieTags();
+		addDate = CCDate.getNewMinimumDate();
+		lastViewed = CCDate.getNewMinimumDate();
 	}
 
 	public void beginUpdating() {
@@ -160,16 +162,32 @@ public class CCEpisode {
 		updateDB();
 	}
 	
-	public void setStatus(CCMovieStatus stat) {
-		status = stat;
+	public void setTags(CCMovieTags stat) {
+		tags = stat;
 		
 		updateDB();
 	}
 	
-	public void setStatus(int stat) {
-		status = CCMovieStatus.find(stat);
+	public void setTags(short stat) {
+		tags.parseFromShort(stat);
 		
 		updateDB();
+	}
+	
+	public void switchTag(int c) {
+		tags.switchTag(c);
+		
+		updateDB();
+	}
+	
+	public void setTag(int c, boolean v) {
+		tags.setTag(c, v);
+		
+		updateDB();
+	}
+	
+	public boolean getTag(int c) {
+		return tags.getTag(c);
 	}
 	
 	public CCSeason getSeason() {
@@ -188,10 +206,10 @@ public class CCEpisode {
 		length = 0;
 		format = CCMovieFormat.MKV;
 		filesize.setBytes(0);
-		status = CCMovieStatus.STATUS_OK;
+		tags.clear();
 		part = ""; //$NON-NLS-1$
-		addDate = CCDate.getNewMinimumDate();
-		lastViewed = CCDate.getNewMinimumDate();
+		addDate.reset();
+		lastViewed.reset();
 		
 		if (updateDB) {
 			updateDB();
@@ -238,8 +256,8 @@ public class CCEpisode {
 		return PathFormatter.getAbsolute(getPart());
 	}
 
-	public CCMovieStatus getStatus() {
-		return status;
+	public CCMovieTags getTags() {
+		return tags;
 	}
 
 	public CCDate getLastViewed() {
@@ -256,10 +274,6 @@ public class CCEpisode {
 		setViewed(true);
 		
 		setLastViewed(new CCDate());
-	}
-
-	public CombinedMovieQuality getCombinedQuality() {
-		return new CombinedMovieQuality(getQuality(), getStatus());
 	}
 	
 	/**
@@ -291,7 +305,7 @@ public class CCEpisode {
 		e.setAttribute("length", length + "");
 		e.setAttribute("part", part);
 		e.setAttribute("quality", quality.asInt() + "");
-		e.setAttribute("status", status.asInt() + "");
+		e.setAttribute("tags", tags.asShort() + "");
 		
 		if (fileHash) {
 			e.setAttribute("filehash", getFastMD5());
@@ -345,8 +359,8 @@ public class CCEpisode {
 		if (e.getAttributeValue("quality") != null)
 			setQuality(Integer.parseInt(e.getAttributeValue("quality")));
 		
-		if (e.getAttributeValue("status") != null)
-			setStatus(Integer.parseInt(e.getAttributeValue("status")));
+		if (e.getAttributeValue("short") != null)
+			setTags(Short.parseShort(e.getAttributeValue("short")));
 
 		endUpdating();
 	}

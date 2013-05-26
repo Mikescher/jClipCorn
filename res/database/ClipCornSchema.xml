@@ -18,7 +18,7 @@
         <column name="FORMAT"      	type="TINYINT" 	required="true"/>
         <column name="MOVIEYEAR" 	type="SMALLINT" required="true"/>
         <column name="FILESIZE" 	type="BIGINT" 	required="true"/>
-        <column name="STATUS" 		type="TINYINT" 	required="true"/>
+        <column name="TAGS" 		type="SMALLINT" required="true"/>
         <column name="PART1" 		type="VARCHAR" 	required="true" size="512"/>
         <column name="PART2" 		type="VARCHAR" 	required="true" size="512"/>
         <column name="PART3" 		type="VARCHAR" 	required="true" size="512"/>

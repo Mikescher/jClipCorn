@@ -2,6 +2,7 @@ package de.jClipCorn.gui.frames.mainFrame.clipStatusbar;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.ConcurrentModificationException;
 
 import javax.swing.JLabel;
 import javax.swing.JProgressBar;
@@ -187,6 +188,10 @@ public class ClipStatusBar extends AbstractClipStatusbar implements CCDBUpdateLi
 
 	@Override
 	public void onChanged() {
-		updateLabels_Log();
+		try {
+			updateLabels_Log();
+		} catch (ConcurrentModificationException e) {
+			// Not so bad ...
+		}
 	}
 }

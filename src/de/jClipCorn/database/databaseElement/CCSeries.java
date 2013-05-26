@@ -12,9 +12,8 @@ import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFormat;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieQuality;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieSize;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieStatus;
+import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTags;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTyp;
-import de.jClipCorn.database.databaseElement.columnTypes.CombinedMovieQuality;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.ByteUtilies;
 import de.jClipCorn.util.CCDate;
@@ -197,15 +196,13 @@ public class CCSeries extends CCDatabaseElement {
 		return new YearRange(miny, maxy);
 	}
 	
-	public CCMovieStatus getStatus() {
-		CCMovieStatus i = CCMovieStatus.STATUS_OK;
+	public CCMovieTags getTags() {
+		CCMovieTags i = new CCMovieTags();
 		
 		for (int j = 0; j < getSeasonCount(); j++) {
-			CCMovieStatus i2 = getSeason(j).getStatus();
-			if (i2.asInt() > i.asInt()) {
-				i = i2;
-			}
+			i.doUnion(getSeason(j).getTags());
 		}
+		
 		return i;
 	}
 
@@ -268,10 +265,6 @@ public class CCSeries extends CCDatabaseElement {
 		}
 		
 		return false;
-	}
-
-	public CombinedMovieQuality getCombinedQuality() {
-		return new CombinedMovieQuality(getQuality(), getStatus());
 	}
 	
 	public List<CCEpisode> getEpisodeList() {

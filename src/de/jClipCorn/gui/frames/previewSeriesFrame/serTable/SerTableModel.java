@@ -12,12 +12,25 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 public class SerTableModel extends AbstractTableModel implements TableModelRowColorInterface{
 	private static final long serialVersionUID = -2056843389761330885L;
 
-	private static final String[] COLUMN_NAMES = { LocaleBundle.getString("PreviewSeriesFrame.serTable.Episode"), //$NON-NLS-1$
+	public final static int COLUMN_EPISODE = 0;
+	public final static int COLUMN_NAME = 1;
+	public final static int COLUMN_VIEWED = 2;
+	public final static int COLUMN_LASTVIEWED = 3;
+	public final static int COLUMN_QUALITY = 4;
+	public final static int COLUMN_LENGTH = 5;
+	public final static int COLUMN_TAGS = 6;
+	public final static int COLUMN_ADDDATE = 7;
+	public final static int COLUMN_FORMAT = 8;
+	public final static int COLUMN_SIZE = 9;
+	
+	private static final String[] COLUMN_NAMES = { 
+			LocaleBundle.getString("PreviewSeriesFrame.serTable.Episode"), //$NON-NLS-1$
 			LocaleBundle.getString("PreviewSeriesFrame.serTable.Name"), //$NON-NLS-1$
 			"", //$NON-NLS-1$
 			LocaleBundle.getString("PreviewSeriesFrame.serTable.Lastviewed"), //$NON-NLS-1$
 			LocaleBundle.getString("PreviewSeriesFrame.serTable.Quality"), //$NON-NLS-1$
 			LocaleBundle.getString("PreviewSeriesFrame.serTable.Length"), //$NON-NLS-1$
+			LocaleBundle.getString("PreviewSeriesFrame.serTable.Tags"), //$NON-NLS-1$
 			LocaleBundle.getString("PreviewSeriesFrame.serTable.Added"), //$NON-NLS-1$
 			LocaleBundle.getString("PreviewSeriesFrame.serTable.Format"), //$NON-NLS-1$
 			LocaleBundle.getString("PreviewSeriesFrame.serTable.Size"), //$NON-NLS-1$
@@ -57,23 +70,25 @@ public class SerTableModel extends AbstractTableModel implements TableModelRowCo
 		CCEpisode ep = season.getEpisode(row);
 
 		switch (col) {
-		case 0: // Score
+		case COLUMN_EPISODE: // Episode
 			return ep.getEpisode();
-		case 1: // Name
+		case COLUMN_NAME: // Name
 			return ep.getTitle();
-		case 2: // Viewed
+		case COLUMN_VIEWED: // Viewed
 			return ep.isViewed();
-		case 3: // Last Viewed
+		case COLUMN_LASTVIEWED: // Last Viewed
 			return ep.getLastViewed();
-		case 4: // Quality
-			return ep.getCombinedQuality();
-		case 5: // Length
+		case COLUMN_QUALITY: // Quality
+			return ep.getQuality();
+		case COLUMN_LENGTH: // Length
 			return ep.getLength();
-		case 6: // Add Date
+		case COLUMN_TAGS: // Tags
+			return ep.getTags();
+		case COLUMN_ADDDATE: // Add Date
 			return ep.getAddDate();
-		case 7: // Format
+		case COLUMN_FORMAT: // Format
 			return ep.getFormat();
-		case 8: // Size
+		case COLUMN_SIZE: // Size
 			return ep.getFilesize();
 		default:
 			return null;

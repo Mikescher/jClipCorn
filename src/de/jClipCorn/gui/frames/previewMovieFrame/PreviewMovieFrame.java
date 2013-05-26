@@ -18,13 +18,13 @@ import javax.swing.SwingConstants;
 
 import de.jClipCorn.Main;
 import de.jClipCorn.database.databaseElement.CCMovie;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieStatus;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTyp;
 import de.jClipCorn.gui.CachedResourceLoader;
 import de.jClipCorn.gui.Resources;
 import de.jClipCorn.gui.frames.editMovieFrame.EditMovieFrame;
 import de.jClipCorn.gui.guiComponents.CoverLabel;
 import de.jClipCorn.gui.guiComponents.ReadableTextField;
+import de.jClipCorn.gui.guiComponents.TagPanel;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.DialogHelper;
 import de.jClipCorn.util.FileSizeFormatter;
@@ -59,7 +59,6 @@ public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener 
 	private JButton btnImDB;
 	private JLabel lblGenre;
 	private JLabel lblScore_1;
-	private JLabel lblStatus;
 	private JLabel lbl_Quality;
 	private JLabel lbl_Language;
 	private JLabel lbl_Length;
@@ -70,8 +69,6 @@ public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener 
 	private JLabel lbl_Size;
 	private JLabel lbl_OnlineScore;
 	private JLabel lbl_Score;
-	private JLabel lbl_Status;
-	private JButton btnReset;
 	private JMenuBar menuBar;
 	private JMenu mnMovie;
 	private JMenuItem mntmEditMovie;
@@ -80,6 +77,8 @@ public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener 
 	private JMenuItem mntmShowInImdb;
 	private JButton btnPlay;
 	private JMenuItem mntmPlayMovie;
+	private TagPanel pnlTags;
+	private JLabel lblTags;
 	
 	public PreviewMovieFrame(Component owner, CCMovie m) {
 		super();
@@ -199,10 +198,6 @@ public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener 
 		lblScore_1.setBounds(202, 441, 46, 14);
 		getContentPane().add(lblScore_1);
 		
-		lblStatus = new JLabel(LocaleBundle.getString("EditSeriesFrame.lblStatus.text")); //$NON-NLS-1$
-		lblStatus.setBounds(202, 466, 46, 14);
-		getContentPane().add(lblStatus);
-		
 		lbl_Quality = new JLabel();
 		lbl_Quality.setBounds(93, 317, 99, 16);
 		getContentPane().add(lbl_Quality);
@@ -242,20 +237,6 @@ public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener 
 		lbl_Score = new JLabel();
 		lbl_Score.setBounds(258, 440, 16, 16);
 		getContentPane().add(lbl_Score);
-		
-		lbl_Status = new JLabel();
-		lbl_Status.setBounds(258, 465, 80, 16);
-		getContentPane().add(lbl_Status);
-		
-		btnReset = new JButton(LocaleBundle.getString("PreviewMovieFrame.btnStatusReset.text")); //$NON-NLS-1$
-		btnReset.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				resetStatus();
-			}
-		});
-		btnReset.setBounds(332, 464, 80, 23);
-		getContentPane().add(btnReset);
 		
 		menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
@@ -311,6 +292,15 @@ public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener 
 		});
 		btnPlay.setBounds(619, 466, 65, 41);
 		getContentPane().add(btnPlay);
+		
+		pnlTags = new TagPanel();
+		pnlTags.setReadOnly(true);
+		pnlTags.setBounds(268, 468, 341, 22);
+		getContentPane().add(pnlTags);
+		
+		lblTags = new JLabel(LocaleBundle.getString("EditSeriesFrame.lblTags.text")); //$NON-NLS-1$
+		lblTags.setBounds(202, 468, 46, 14);
+		getContentPane().add(lblTags);
 	}
 	
 	private void playMovie() {
@@ -329,11 +319,6 @@ public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener 
 		EditMovieFrame emf =  new EditMovieFrame(this, movie, this);
 		
 		emf.setVisible(true);
-	}
-
-	private void resetStatus() {
-		movie.setStatus(CCMovieStatus.STATUS_OK);
-		updateFields();
 	}
 	
 	private void updateFields() {
@@ -369,9 +354,9 @@ public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener 
 		lbl_Score.setIcon(movie.getScore().getIcon());
 		lbl_Score.setToolTipText(movie.getScore().asString());
 		
-		lbl_Status.setText(movie.getStatus().asString());
-		
 		lbl_Size.setText(FileSizeFormatter.format(movie.getFilesize()));
+		
+		pnlTags.setValue(movie.getTags());
 		
 		lbl_OnlineScore.setIcon(movie.getOnlinescore().getIcon());
 		

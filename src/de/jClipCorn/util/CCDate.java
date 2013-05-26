@@ -589,4 +589,8 @@ public class CCDate {
 		
 		return result;
 	}
+
+	public void reset() {
+		set(1, 1, YEAR_MIN);
+	}
 }

@@ -201,13 +201,13 @@ public class CCMovieTags {
 			return;
 		}
 		
-		BufferedImage bi = new BufferedImage(count*16, 16, BufferedImage.TYPE_INT_ARGB);
+		BufferedImage bi = new BufferedImage(count*18, 16, BufferedImage.TYPE_INT_ARGB);
 		Graphics g = bi.getGraphics();
 		
 		int  pos = 0;
 		for (int i = 0; i < ACTIVETAGS; i++) {
 			if (tags[i]) {
-				g.drawImage(getTagImage(i), pos*16, 0, null);
+				g.drawImage(getTagImage(i), pos*18, 0, null);
 				
 				pos++;
 			}

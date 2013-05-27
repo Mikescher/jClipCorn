@@ -33,6 +33,7 @@ public class CachedResourceLoader {
 			}
 			return result;
 		} catch (IOException e) {
+			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.RessourceNotFound", name)); //$NON-NLS-1$
 			return new BufferedImage(1, 1, BufferedImage.TYPE_4BYTE_ABGR);
 		} catch (IllegalArgumentException e) {
 			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.RessourceNotFound", name)); //$NON-NLS-1$

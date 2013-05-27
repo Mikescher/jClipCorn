@@ -34,6 +34,7 @@ public class TagPanel extends JPanel {
 
 		for (int i = 0; i < CCMovieTags.ACTIVETAGS; i++) {
 			JLabel l = new JLabel(value.getTagIcon(i));
+			l.setToolTipText(CCMovieTags.getName(i));
 
 			final int pos = i;
 			l.addMouseListener(new MouseListener() {

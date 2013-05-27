@@ -3,6 +3,8 @@ package de.jClipCorn.gui;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.jClipCorn.util.PathFormatter;
+
 @SuppressWarnings("nls")
 public class Resources {
 	private static List<String> icn_ressources = new ArrayList<>();
@@ -57,16 +59,16 @@ public class Resources {
 	public final static String ICN_MENUBAR_EPISODEGUIDE				= registerICN("/icons/toolbar/document_quote.png");
 	public final static String ICN_MENUBAR_RANDOMMOVIE				= registerICN("/icons/toolbar/magic_wand_2.png");
 	public final static String ICN_MENUBAR_TAGS						= registerICN("/icons/toolbar/tags_cloud.png");
-	public final static String ICN_MENUBAR_TAG_0_0 					= registerICN("/icons/toolbar/tag_0_off.png");
-	public final static String ICN_MENUBAR_TAG_0_1 					= registerICN("/icons/toolbar/tag_0_on.png");
-	public final static String ICN_MENUBAR_TAG_1_0 					= registerICN("/icons/toolbar/tag_1_off.png");
-	public final static String ICN_MENUBAR_TAG_1_1 					= registerICN("/icons/toolbar/tag_1_on.png");
-	public final static String ICN_MENUBAR_TAG_2_0 					= registerICN("/icons/toolbar/tag_2_off.png");
-	public final static String ICN_MENUBAR_TAG_2_1 					= registerICN("/icons/toolbar/tag_2_on.png");
-	public final static String ICN_MENUBAR_TAG_3_0 					= registerICN("/icons/toolbar/tag_3_off.png");
-	public final static String ICN_MENUBAR_TAG_3_1 					= registerICN("/icons/toolbar/tag_3_on.png");
-	public final static String ICN_MENUBAR_TAG_4_0 					= registerICN("/icons/toolbar/tag_4_off.png");
-	public final static String ICN_MENUBAR_TAG_4_1 					= registerICN("/icons/toolbar/tag_4_on.png");
+	public final static String ICN_MENUBAR_TAG_0_0 					= registerICN("/icons/tags/tag_0_off.png");
+	public final static String ICN_MENUBAR_TAG_0_1 					= registerICN("/icons/tags/tag_0_on.png");
+	public final static String ICN_MENUBAR_TAG_1_0 					= registerICN("/icons/tags/tag_1_off.png");
+	public final static String ICN_MENUBAR_TAG_1_1 					= registerICN("/icons/tags/tag_1_on.png");
+	public final static String ICN_MENUBAR_TAG_2_0 					= registerICN("/icons/tags/tag_2_off.png");
+	public final static String ICN_MENUBAR_TAG_2_1 					= registerICN("/icons/tags/tag_2_on.png");
+	public final static String ICN_MENUBAR_TAG_3_0 					= registerICN("/icons/tags/tag_3_off.png");
+	public final static String ICN_MENUBAR_TAG_3_1 					= registerICN("/icons/tags/tag_3_on.png");
+	public final static String ICN_MENUBAR_TAG_4_0 					= registerICN("/icons/tags/tag_4_off.png");
+	public final static String ICN_MENUBAR_TAG_4_1 					= registerICN("/icons/tags/tag_4_on.png");
 	// #############################################  </MENUBAR>  ############################################
 	
 
@@ -124,16 +126,16 @@ public class Resources {
 	public final static String ICN_TABLE_FORMAT_7 		= registerICN("/icons/table/ext7.png");
 	public final static String ICN_TABLE_FORMAT_8 		= registerICN("/icons/table/ext8.png");
 	
-	public final static String ICN_TABLE_TAG_0_0 		= registerICN("/icons/table/tag_0_off.png");
-	public final static String ICN_TABLE_TAG_0_1 		= registerICN("/icons/table/tag_0_on.png");
-	public final static String ICN_TABLE_TAG_1_0 		= registerICN("/icons/table/tag_1_off.png");
-	public final static String ICN_TABLE_TAG_1_1 		= registerICN("/icons/table/tag_1_on.png");
-	public final static String ICN_TABLE_TAG_2_0 		= registerICN("/icons/table/tag_2_off.png");
-	public final static String ICN_TABLE_TAG_2_1 		= registerICN("/icons/table/tag_2_on.png");
-	public final static String ICN_TABLE_TAG_3_0 		= registerICN("/icons/table/tag_3_off.png");
-	public final static String ICN_TABLE_TAG_3_1 		= registerICN("/icons/table/tag_3_on.png");
-	public final static String ICN_TABLE_TAG_4_0 		= registerICN("/icons/table/tag_4_off.png");
-	public final static String ICN_TABLE_TAG_4_1 		= registerICN("/icons/table/tag_4_on.png");
+	public final static String ICN_TABLE_TAG_0_0 		= register16x16ICN("/icons/tags/tag_0_off.png");
+	public final static String ICN_TABLE_TAG_0_1 		= register16x16ICN("/icons/tags/tag_0_on.png");
+	public final static String ICN_TABLE_TAG_1_0 		= register16x16ICN("/icons/tags/tag_1_off.png");
+	public final static String ICN_TABLE_TAG_1_1 		= register16x16ICN("/icons/tags/tag_1_on.png");
+	public final static String ICN_TABLE_TAG_2_0 		= register16x16ICN("/icons/tags/tag_2_off.png");
+	public final static String ICN_TABLE_TAG_2_1 		= register16x16ICN("/icons/tags/tag_2_on.png");
+	public final static String ICN_TABLE_TAG_3_0 		= register16x16ICN("/icons/tags/tag_3_off.png");
+	public final static String ICN_TABLE_TAG_3_1 		= register16x16ICN("/icons/tags/tag_3_on.png");
+	public final static String ICN_TABLE_TAG_4_0 		= register16x16ICN("/icons/tags/tag_4_off.png");
+	public final static String ICN_TABLE_TAG_4_1 		= register16x16ICN("/icons/tags/tag_4_on.png");
 	// #############################################  </TABLE>  ##############################################
 	
 	
@@ -180,6 +182,12 @@ public class Resources {
 		icn_ressources.add(s);
 		
 		return s;
+	}
+	
+	private static String register16x16ICN(String s) {
+		s = PathFormatter.getWithoutExtension(s) + "_16x16." + PathFormatter.getExtension(s);
+		
+		return registerICN(s);
 	}
 	
 	private static String registerIMG(String s) {

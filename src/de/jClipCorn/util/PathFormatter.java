@@ -110,6 +110,10 @@ public class PathFormatter {
 		}
 		return new String(path);
 	}
+	
+	public static String getWithoutExtension(String path) {
+		return path.substring(0, path.lastIndexOf('.'));
+	}
 
 	public static String getFilepath(String path) {
 		int liop = path.lastIndexOf(BACKSLASH);

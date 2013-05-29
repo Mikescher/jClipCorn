@@ -383,8 +383,6 @@ public class CCSeries extends CCDatabaseElement {
 	}
 	
 	public String getEpisodeGuide() {
-		
-		
 		StrBuilder guide = new StrBuilder();
 		
 		int titlewidth = GUIDE_W_BORDER + GUIDE_W_PADDING + getTitle().length() + GUIDE_W_PADDING + GUIDE_W_BORDER;
@@ -431,5 +429,37 @@ public class CCSeries extends CCDatabaseElement {
 		}
 
 		return guide.toString();
+	}
+	
+	public String getCommonPathStart() {
+		for (int c = 0;;c++) {
+			Character ckt = null;
+			for (int seasi = 0; seasi < getSeasonCount(); seasi++) {
+				CCSeason season = getSeason(seasi);
+				for (int epi = 0; epi < season.getEpisodeCount(); epi++) {
+					if (c >= season.getEpisode(epi).getPart().length()) {
+						String common = season.getEpisode(epi).getPart().substring(0, c);
+						if (common.lastIndexOf('\\') < 0) {
+							return common;
+						} else {
+							return common.substring(0, common.lastIndexOf('\\') + 1);
+						}
+					}
+					
+					if (ckt == null) {
+						ckt = season.getEpisode(epi).getPart().charAt(c);
+					} else {
+						if (! ckt.equals(season.getEpisode(epi).getPart().charAt(c))) {
+							String common = season.getEpisode(epi).getPart().substring(0, c);
+							if (common.lastIndexOf('\\') < 0) {
+								return common;
+							} else {
+								return common.substring(0, common.lastIndexOf('\\') + 1);
+							}
+						}
+					}
+				}
+			}
+		}
 	}
 }

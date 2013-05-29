@@ -157,39 +157,7 @@ public class MoveSeriesDialog extends JDialog {
 	private void init() {
 		lblTitel.setText(series.getTitle());
 		lblCover.setIcon(series.getCoverIcon());
-		edSearch.setText(getCommonPathStart());
-	}
-	
-	private String getCommonPathStart() {
-		for (int c = 0;;c++) {
-			Character ckt = null;
-			for (int seasi = 0; seasi < series.getSeasonCount(); seasi++) {
-				CCSeason season = series.getSeason(seasi);
-				for (int epi = 0; epi < season.getEpisodeCount(); epi++) {
-					if (c >= season.getEpisode(epi).getPart().length()) {
-						String common = season.getEpisode(epi).getPart().substring(0, c);
-						if (common.lastIndexOf('\\') < 0) {
-							return common;
-						} else {
-							return common.substring(0, common.lastIndexOf('\\') + 1);
-						}
-					}
-					
-					if (ckt == null) {
-						ckt = season.getEpisode(epi).getPart().charAt(c);
-					} else {
-						if (! ckt.equals(season.getEpisode(epi).getPart().charAt(c))) {
-							String common = season.getEpisode(epi).getPart().substring(0, c);
-							if (common.lastIndexOf('\\') < 0) {
-								return common;
-							} else {
-								return common.substring(0, common.lastIndexOf('\\') + 1);
-							}
-						}
-					}
-				}
-			}
-		}
+		edSearch.setText(series.getCommonPathStart());
 	}
 	
 	private void startReplace() {

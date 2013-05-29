@@ -229,7 +229,7 @@ public class DatabaseValidator {
 		// ###############################################
 
 		for (int i = 0; i < mov.getPartcount(); i++) {
-			if (!new File(mov.getAbsolutePart(i)).exists()) {
+			if (! new File(mov.getAbsolutePart(i)).exists()) {
 				e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_PATH_NOT_FOUND, mov));
 			}
 		}

@@ -75,7 +75,5 @@ public class Main {
 //TODO FETURE REQUESTS / BUGS (Benjamin):
 //TODO Serien batch renamen (Als Batch - von  serien - ordner auswählen - ordnerstruktur mit namen und so erzeugen, ACHTUNG nur neue ordner (schutz vor overriding), evtl vorher alle in temp ordner kopieren, möglichkeit bestehende ordnerstruktur zu vervollständigen)
 //TODO Shortcuts für SerienWindow
-//TODO Better Display in AUtofixer - FilterList for ErrorTypes - (ErrName1 (10) \r\n ErrName2 (12) \r\n ErrName5 (1) ...)
-//TODO Better Move Series DIalog -> Preview / Error Catching / Better INput etc etc
 //TODO Compare Series in CompareDialog
 //TODO ADd Features to PreviewSeries Things 

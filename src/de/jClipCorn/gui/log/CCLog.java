@@ -7,8 +7,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.RandomAccessFile;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
 import javax.swing.SwingUtilities;
 
@@ -18,8 +18,8 @@ import de.jClipCorn.util.CCDate;
 import de.jClipCorn.util.DialogHelper;
 
 public class CCLog {
-	private static List<CCLogElement> log = new ArrayList<>();
-	private static List<CCLogChangedListener> listener = new ArrayList<>();
+	private static List<CCLogElement> log = new Vector<>();
+	private static List<CCLogChangedListener> listener = new Vector<>();
 	
 	private static String path = null;
 	private static boolean changed = false;

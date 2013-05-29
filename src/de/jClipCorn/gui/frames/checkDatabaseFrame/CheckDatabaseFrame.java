@@ -19,13 +19,18 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
 import javax.swing.ListModel;
+import javax.swing.ListSelectionModel;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingUtilities;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseErrors.DatabaseAutofixer;
 import de.jClipCorn.database.databaseErrors.DatabaseError;
+import de.jClipCorn.database.databaseErrors.DatabaseErrorType;
 import de.jClipCorn.database.databaseErrors.DatabaseValidator;
 import de.jClipCorn.gui.CachedResourceLoader;
 import de.jClipCorn.gui.Resources;
@@ -44,12 +49,15 @@ public class CheckDatabaseFrame extends JFrame {
 	
 	private final JPanel contentPanel = new JPanel();
 	private JPanel pnlTop;
-	private JScrollPane scrollPane;
+	private JScrollPane scrlPnlRight;
 	private JList<DatabaseError> lsMain;
 	private JButton btnValidate;
 	private JLabel lblInfo;
 	private JProgressBar pBar;
 	private JButton btnAutofix;
+	private JScrollPane scrlPnlLeft;
+	private JList<DatabaseErrorType> lsCategories;
+	private JSplitPane pnlCenter;
 	
 	public CheckDatabaseFrame(CCMovieList ml, MainFrame owner) {
 		super();
@@ -69,7 +77,7 @@ public class CheckDatabaseFrame extends JFrame {
 		setBounds(100, 100, 750, 400);
 		
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
-		contentPanel.setLayout(new BorderLayout(0, 0));
+		contentPanel.setLayout(new BorderLayout(0, 2));
 		
 		pnlTop = new JPanel();
 		FlowLayout fl_pnlTop = (FlowLayout) pnlTop.getLayout();
@@ -85,12 +93,41 @@ public class CheckDatabaseFrame extends JFrame {
 		});
 		pnlTop.add(btnValidate);
 		
-		scrollPane = new JScrollPane();
-		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		contentPanel.add(scrollPane, BorderLayout.CENTER);
+		pBar = new JProgressBar();
+		contentPanel.add(pBar, BorderLayout.SOUTH);
+		
+		lblInfo = new JLabel();
+		pnlTop.add(lblInfo);
+		
+		btnAutofix = new JButton(LocaleBundle.getString("CheckDatabaseDialog.btnAutofix.text")); //$NON-NLS-1$
+		btnAutofix.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				autoFix();
+			}
+		});
+		btnAutofix.setEnabled(false);
+		pnlTop.add(btnAutofix);
+		
+		pnlCenter = new JSplitPane();
+		pnlCenter.setContinuousLayout(true);
+		contentPanel.add(pnlCenter, BorderLayout.CENTER);
+		
+		scrlPnlLeft = new JScrollPane();
+		pnlCenter.setLeftComponent(scrlPnlLeft);
+		
+		lsCategories = new JList<>();
+		lsCategories.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		lsCategories.setCellRenderer(new ErrorTypeListCellRenderer());
+		scrlPnlLeft.setViewportView(lsCategories);
+		
+		scrlPnlRight = new JScrollPane();
+		pnlCenter.setRightComponent(scrlPnlRight);
+		scrlPnlRight.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		
 		lsMain = new JList<>();
-		scrollPane.setViewportView(lsMain);
+		lsMain.setCellRenderer(new DatabaseErrorListCellRenderer());
+		scrlPnlRight.setViewportView(lsMain);
 		lsMain.addMouseListener(new MouseListener() {			
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -119,22 +156,15 @@ public class CheckDatabaseFrame extends JFrame {
 				// nothing
 			}
 		});
-		
-		pBar = new JProgressBar();
-		contentPanel.add(pBar, BorderLayout.SOUTH);
-		
-		lblInfo = new JLabel();
-		pnlTop.add(lblInfo);
-		
-		btnAutofix = new JButton(LocaleBundle.getString("CheckDatabaseDialog.btnAutofix.text")); //$NON-NLS-1$
-		btnAutofix.addActionListener(new ActionListener() {
+		lsCategories.addListSelectionListener(new ListSelectionListener() {
 			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				autoFix();
+			public void valueChanged(ListSelectionEvent arg0) {
+				ListModel<DatabaseError> lm = lsMain.getModel();
+				if (lm instanceof DatabaseErrorListModel) {
+					((DatabaseErrorListModel)lm).updateFilter(lsCategories.getSelectedValue());
+				}
 			}
 		});
-		btnAutofix.setEnabled(false);
-		pnlTop.add(btnAutofix);
 	}
 	
 	private void onDblClick() {
@@ -183,12 +213,25 @@ public class CheckDatabaseFrame extends JFrame {
 		});
 	}
 	
-	private void setListModel(final ListModel<DatabaseError> lm) {
+	private void setMainListModel(final ListModel<DatabaseError> lm) {
 		try {
 			SwingUtilities.invokeAndWait(new Runnable() {
 				@Override
 				public void run() {
 					lsMain.setModel(lm);
+				}
+			});
+		} catch (InvocationTargetException | InterruptedException e) {
+			CCLog.addError(e);
+		}
+	}
+	
+	private void setCategoriesListModel(final ListModel<DatabaseErrorType> lm) {
+		try {
+			SwingUtilities.invokeAndWait(new Runnable() {
+				@Override
+				public void run() {
+					lsCategories.setModel(lm);
 				}
 			});
 		} catch (InvocationTargetException | InterruptedException e) {
@@ -207,13 +250,30 @@ public class CheckDatabaseFrame extends JFrame {
 				
 				DatabaseValidator.startValidate(errors, movielist, new ProgressCallbackHelper(pBar));
 				
-				DefaultListModel<DatabaseError> dlm = new DefaultListModel<>();
+				DatabaseErrorListModel dlm = new DatabaseErrorListModel();
+				DefaultListModel<DatabaseErrorType> clm = new DefaultListModel<>();
+				
+				clm.addElement(null); //null = "All" (not sure if good code or lazy code)
 				
 				for (DatabaseError de : errors) {
 					dlm.addElement(de);
+					
+					boolean found = false;
+					
+					for (int i = 0; i < clm.getSize(); i++) {
+						if (! found && de.getType().equals(clm.get(i))) {
+							found = true;
+							clm.get(i).incCount();
+						}
+					}
+					
+					if (! found) {
+						clm.addElement(de.getType().copy(1));
+					}
 				}
 				
-				setListModel(dlm);
+				setMainListModel(dlm);
+				setCategoriesListModel(clm);
 				
 				errorList = errors;
 				

@@ -76,7 +76,7 @@ public class DatabaseValidator {
 		// ###############################################
 
 		if (series.getTitle().isEmpty()) {
-			e.add(DatabaseError.createSingle(DatabaseError.ERROR_TITLE_NOT_SET, series));
+			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_TITLE_NOT_SET, series));
 		}
 		
 		// ###############################################
@@ -85,7 +85,7 @@ public class DatabaseValidator {
 
 		for (int i = 0; i < series.getGenreCount(); i++) {
 			if (! series.getGenre(i).isValid()) {
-				e.add(DatabaseError.createSingleAdditional(DatabaseError.ERROR_WRONG_GENREID, series, i));
+				e.add(DatabaseError.createSingleAdditional(DatabaseErrorType.ERROR_WRONG_GENREID, series, i));
 			}
 		}
 		
@@ -94,7 +94,7 @@ public class DatabaseValidator {
 		// ###############################################
 
 		if (series.getCoverName().isEmpty()) {
-			e.add(DatabaseError.createSingle(DatabaseError.ERROR_NOCOVERSET, series));
+			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_NOCOVERSET, series));
 		}
 
 		// ###############################################
@@ -102,7 +102,7 @@ public class DatabaseValidator {
 		// ###############################################
 
 		if (! movielist.getCoverCache().coverExists(series.getCoverName())) {
-			e.add(DatabaseError.createSingle(DatabaseError.ERROR_COVER_NOT_FOUND, series));
+			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_COVER_NOT_FOUND, series));
 		}
 		
 		// ###############################################
@@ -110,7 +110,7 @@ public class DatabaseValidator {
 		// ###############################################
 		
 		if (series.getAddDate().isLessEqualsThan(MIN_DATE) || series.getAddDate().isGreaterThan(new CCDate())) {
-			e.add(DatabaseError.createSingle(DatabaseError.ERROR_WRONG_ADDDATE, series));
+			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_WRONG_ADDDATE, series));
 		}
 
 		// ###############################################
@@ -118,7 +118,7 @@ public class DatabaseValidator {
 		// ###############################################
 		
 		if (PathFormatter.isUntrimmed(series.getTitle())) {
-			e.add(DatabaseError.createSingle(DatabaseError.ERROR_NOT_TRIMMED, series));
+			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_NOT_TRIMMED, series));
 		}
 	}
 
@@ -128,7 +128,7 @@ public class DatabaseValidator {
 		// ###############################################
 
 		if (mov.hasHoleInGenres()) {
-			e.add(DatabaseError.createSingle(DatabaseError.ERROR_INCONTINUOUS_GENRELIST, mov));
+			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_INCONTINUOUS_GENRELIST, mov));
 		}
 
 		// ###############################################
@@ -137,7 +137,7 @@ public class DatabaseValidator {
 
 		for (int i = 0; i < mov.getGenreCount(); i++) {
 			if (!mov.getGenre(i).isValid()) {
-				e.add(DatabaseError.createSingleAdditional(DatabaseError.ERROR_WRONG_GENREID, mov, i));
+				e.add(DatabaseError.createSingleAdditional(DatabaseErrorType.ERROR_WRONG_GENREID, mov, i));
 			}
 		}
 
@@ -151,7 +151,7 @@ public class DatabaseValidator {
 		}
 
 		if (getRelativeDifference(size.getBytes(), mov.getFilesize().getBytes()) > getMaxSizeFileDrift()) {
-			e.add(DatabaseError.createSingle(DatabaseError.ERROR_WRONG_FILESIZE, mov));
+			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_WRONG_FILESIZE, mov));
 		}
 
 		// ###############################################
@@ -159,7 +159,7 @@ public class DatabaseValidator {
 		// ###############################################
 
 		if (mov.getGenreCount() <= 0) {
-			e.add(DatabaseError.createSingle(DatabaseError.ERROR_NOGENRE_SET, mov));
+			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_NOGENRE_SET, mov));
 		}
 
 		// ###############################################
@@ -167,7 +167,7 @@ public class DatabaseValidator {
 		// ###############################################
 
 		if (mov.getCoverName().isEmpty()) {
-			e.add(DatabaseError.createSingle(DatabaseError.ERROR_NOCOVERSET, mov));
+			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_NOCOVERSET, mov));
 		}
 
 		// ###############################################
@@ -175,7 +175,7 @@ public class DatabaseValidator {
 		// ###############################################
 
 		if (! movielist.getCoverCache().coverExists(mov.getCoverName())) {
-			e.add(DatabaseError.createSingle(DatabaseError.ERROR_COVER_NOT_FOUND, mov));
+			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_COVER_NOT_FOUND, mov));
 		}
 
 		// ###############################################
@@ -183,7 +183,7 @@ public class DatabaseValidator {
 		// ###############################################
 
 		if (mov.getTitle().isEmpty()) {
-			e.add(DatabaseError.createSingle(DatabaseError.ERROR_TITLE_NOT_SET, mov));
+			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_TITLE_NOT_SET, mov));
 		}
 
 		// ###############################################
@@ -191,7 +191,7 @@ public class DatabaseValidator {
 		// ###############################################
 
 		if (!mov.getZyklus().getTitle().isEmpty() && mov.getZyklus().getNumber() == -1) {
-			e.add(DatabaseError.createSingle(DatabaseError.ERROR_ZYKLUSNUMBER_IS_NEGONE, mov));
+			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_ZYKLUSNUMBER_IS_NEGONE, mov));
 		}
 
 		// ###############################################
@@ -199,7 +199,7 @@ public class DatabaseValidator {
 		// ###############################################
 
 		if (mov.getZyklus().getTitle().isEmpty() && mov.getZyklus().getNumber() != -1) {
-			e.add(DatabaseError.createSingle(DatabaseError.ERROR_ZYKLUSTITLE_IS_EMPTY, mov));
+			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_ZYKLUSTITLE_IS_EMPTY, mov));
 		}
 
 		// ###############################################
@@ -207,7 +207,7 @@ public class DatabaseValidator {
 		// ###############################################
 
 		if (mov.hasHoleInParts()) {
-			e.add(DatabaseError.createSingle(DatabaseError.ERROR_INCONTINUOUS_PARTS, mov));
+			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_INCONTINUOUS_PARTS, mov));
 		}
 
 		// ###############################################
@@ -221,7 +221,7 @@ public class DatabaseValidator {
 			}
 		}
 		if (!rform) {
-			e.add(DatabaseError.createSingle(DatabaseError.ERROR_FORMAT_NOT_FOUND_IN_PARTS, mov));
+			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_FORMAT_NOT_FOUND_IN_PARTS, mov));
 		}
 
 		// ###############################################
@@ -230,7 +230,7 @@ public class DatabaseValidator {
 
 		for (int i = 0; i < mov.getPartcount(); i++) {
 			if (!new File(mov.getAbsolutePart(i)).exists()) {
-				e.add(DatabaseError.createSingle(DatabaseError.ERROR_PATH_NOT_FOUND, mov));
+				e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_PATH_NOT_FOUND, mov));
 			}
 		}
 		
@@ -239,7 +239,7 @@ public class DatabaseValidator {
 		// ###############################################
 		
 		if (mov.getAddDate().isLessEqualsThan(MIN_DATE) || mov.getAddDate().isGreaterThan(new CCDate())) {
-			e.add(DatabaseError.createSingle(DatabaseError.ERROR_WRONG_ADDDATE, mov));
+			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_WRONG_ADDDATE, mov));
 		}
 
 		// ###############################################
@@ -248,7 +248,7 @@ public class DatabaseValidator {
 		
 		
 		if (PathFormatter.isUntrimmed(mov.getTitle()) || PathFormatter.isUntrimmed(mov.getZyklus().getTitle())) {
-			e.add(DatabaseError.createSingle(DatabaseError.ERROR_NOT_TRIMMED, mov));
+			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_NOT_TRIMMED, mov));
 		}
 		
 		// ###############################################
@@ -256,7 +256,7 @@ public class DatabaseValidator {
 		// ###############################################
 		
 		if (RomanNumberFormatter.endsWithRoman(mov.getZyklus().getTitle())) {
-			e.add(DatabaseError.createSingle(DatabaseError.ERROR_ZYKLUS_ENDS_WITH_ROMAN, mov));
+			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_ZYKLUS_ENDS_WITH_ROMAN, mov));
 		}
 		
 		// ###############################################
@@ -264,7 +264,7 @@ public class DatabaseValidator {
 		// ###############################################
 		
 		if (CCMovieQuality.calculateQuality(mov.getFilesize(), mov.getLength(), mov.getPartcount()) != mov.getQuality()) {
-			e.add(DatabaseError.createSingle(DatabaseError.ERROR_WRONG_QUALITY, mov));
+			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_WRONG_QUALITY, mov));
 		}
 		
 		// ###############################################
@@ -276,7 +276,7 @@ public class DatabaseValidator {
 			
 			if (StringUtils.equalsIgnoreCase(imov.getCompleteTitle(), mov.getCompleteTitle()) && imov.getLanguage() == mov.getLanguage()) {
 				if (mov.getLocalID() != imov.getLocalID()) {
-					e.add(DatabaseError.createDouble(DatabaseError.ERROR_DUPLICATE_TITLE, mov, imov));
+					e.add(DatabaseError.createDouble(DatabaseErrorType.ERROR_DUPLICATE_TITLE, mov, imov));
 				}
 				break;
 			}
@@ -293,7 +293,7 @@ public class DatabaseValidator {
 			}
 		}
 		if (wrongfn) {
-			e.add(DatabaseError.createSingle(DatabaseError.ERROR_WRONG_FILENAME, mov));
+			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_WRONG_FILENAME, mov));
 		}
 	}
 
@@ -303,7 +303,7 @@ public class DatabaseValidator {
 		// ###############################################
 
 		if (season.getTitle().isEmpty()) {
-			e.add(DatabaseError.createSingle(DatabaseError.ERROR_TITLE_NOT_SET, season));
+			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_TITLE_NOT_SET, season));
 		}
 		
 		// ###############################################
@@ -311,7 +311,7 @@ public class DatabaseValidator {
 		// ###############################################
 
 		if (! movielist.getCoverCache().coverExists(season.getCoverName())) {
-			e.add(DatabaseError.createSingle(DatabaseError.ERROR_COVER_NOT_FOUND, season));
+			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_COVER_NOT_FOUND, season));
 		}
 		
 		// ###############################################
@@ -319,7 +319,7 @@ public class DatabaseValidator {
 		// ###############################################
 		
 		if (season.getAddDate().isLessEqualsThan(MIN_DATE) || season.getAddDate().isGreaterThan(new CCDate())) {
-			e.add(DatabaseError.createSingle(DatabaseError.ERROR_WRONG_ADDDATE, season));
+			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_WRONG_ADDDATE, season));
 		}
 
 		// ###############################################
@@ -327,7 +327,7 @@ public class DatabaseValidator {
 		// ###############################################
 		
 		if (PathFormatter.isUntrimmed(season.getTitle())) {
-			e.add(DatabaseError.createSingle(DatabaseError.ERROR_NOT_TRIMMED, season));
+			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_NOT_TRIMMED, season));
 		}
 	}
 
@@ -337,15 +337,15 @@ public class DatabaseValidator {
 		// ###############################################
 
 		if (episode.getTitle().isEmpty()) {
-			e.add(DatabaseError.createSingle(DatabaseError.ERROR_TITLE_NOT_SET, episode));
+			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_TITLE_NOT_SET, episode));
 		}
 		
 		// ###############################################
 		// Wrong Format
 		// ###############################################
 
-		if (! CCMovieFormat.getMovieFormat(PathFormatter.getExtension(episode.getPart())).equals(episode.getFormat())) {
-			e.add(DatabaseError.createSingle(DatabaseError.ERROR_FORMAT_NOT_FOUND_IN_PARTS, episode));
+		if (! episode.getFormat().equals(CCMovieFormat.getMovieFormat(PathFormatter.getExtension(episode.getPart())))) {
+			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_FORMAT_NOT_FOUND_IN_PARTS, episode));
 		}
 
 		// ###############################################
@@ -353,7 +353,7 @@ public class DatabaseValidator {
 		// ###############################################
 
 		if (! new File(episode.getAbsolutePart()).exists()) {
-			e.add(DatabaseError.createSingle(DatabaseError.ERROR_PATH_NOT_FOUND, episode));
+			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_PATH_NOT_FOUND, episode));
 		}
 		
 		// ###############################################
@@ -363,7 +363,7 @@ public class DatabaseValidator {
 		CCMovieSize size = new CCMovieSize(FileSizeFormatter.getFileSize(episode.getAbsolutePart()));
 
 		if (getRelativeDifference(size.getBytes(), episode.getFilesize().getBytes()) > getMaxSizeFileDrift()) {
-			e.add(DatabaseError.createSingle(DatabaseError.ERROR_WRONG_FILESIZE, episode));
+			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_WRONG_FILESIZE, episode));
 		}
 		
 		// ###############################################
@@ -371,7 +371,7 @@ public class DatabaseValidator {
 		// ###############################################
 		
 		if (episode.getAddDate().isLessEqualsThan(MIN_DATE) || episode.getAddDate().isGreaterThan(new CCDate())) {
-			e.add(DatabaseError.createSingle(DatabaseError.ERROR_WRONG_ADDDATE, episode));
+			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_WRONG_ADDDATE, episode));
 		}
 		
 		// ###############################################
@@ -379,7 +379,7 @@ public class DatabaseValidator {
 		// ###############################################
 		
 		if (episode.getLastViewed().isGreaterThan(new CCDate())) {
-			e.add(DatabaseError.createSingle(DatabaseError.ERROR_WRONG_LASTVIEWEDDATE, episode));
+			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_WRONG_LASTVIEWEDDATE, episode));
 		}
 		
 		// ###############################################
@@ -387,7 +387,7 @@ public class DatabaseValidator {
 		// ###############################################
 		
 		//if (episode.getLastViewed().isGreaterThan(MIN_DATE) ^ episode.isViewed()) { // Dar nicht benutzt werden - da leider durch den Import der alten CC-Database viele solche Fälle vorkommen
-		//	e.add(DatabaseError.createSingle(DatabaseError.ERROR_15, episode));
+		//	e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_15, episode));
 		//}
 
 		// ###############################################
@@ -395,7 +395,7 @@ public class DatabaseValidator {
 		// ###############################################
 		
 		if (PathFormatter.isUntrimmed(episode.getTitle())) {
-			e.add(DatabaseError.createSingle(DatabaseError.ERROR_NOT_TRIMMED, episode));
+			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_NOT_TRIMMED, episode));
 		}
 		
 		// ###############################################
@@ -403,7 +403,7 @@ public class DatabaseValidator {
 		// ###############################################
 		
 		if (CCMovieQuality.calculateQuality(episode.getFilesize(), episode.getLength(), 1) != episode.getQuality()) {
-			e.add(DatabaseError.createSingle(DatabaseError.ERROR_WRONG_QUALITY, episode));
+			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_WRONG_QUALITY, episode));
 		}
 	}
 
@@ -432,7 +432,7 @@ public class DatabaseValidator {
 		
 		for (int i = 1; i < cvrList.size(); i++) {
 			if (cvrList.get(i).equalsCover(cvrList.get(i-1))) {
-				e.add(DatabaseError.createDouble(DatabaseError.ERROR_DUPLICATE_COVERLINK, cvrList.get(i-1).getElement(), cvrList.get(i).getElement()));
+				e.add(DatabaseError.createDouble(DatabaseErrorType.ERROR_DUPLICATE_COVERLINK, cvrList.get(i-1).getElement(), cvrList.get(i).getElement()));
 			}
 			
 			pcl.step();
@@ -460,7 +460,7 @@ public class DatabaseValidator {
 				found |= cvrList.get(j).getCover().equalsIgnoreCase(cvrname); // All hayl the Shortcut evaluation
 			}
 			if (! found) {
-				e.add(DatabaseError.createSingle(DatabaseError.ERROR_NONLINKED_COVERFILE, new File(movielist.getCoverCache().getCoverPath() + files[i])));
+				e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_NONLINKED_COVERFILE, new File(movielist.getCoverCache().getCoverPath() + files[i])));
 			}
 		}
 	}
@@ -501,7 +501,7 @@ public class DatabaseValidator {
 		
 		for (int i = 1; i < flList.size(); i++) {
 			if (flList.get(i).equalsPath(flList.get(i-1))) {
-				e.add(DatabaseError.createDouble(DatabaseError.ERROR_DUPLICATE_FILELINK, flList.get(i-1).getElement(), flList.get(i).getElement()));
+				e.add(DatabaseError.createDouble(DatabaseErrorType.ERROR_DUPLICATE_FILELINK, flList.get(i-1).getElement(), flList.get(i).getElement()));
 			}
 			
 			pcl.step();

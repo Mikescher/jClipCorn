@@ -20,55 +20,31 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.FileSizeFormatter;
 import de.jClipCorn.util.PathFormatter;
 
-public class DatabaseError {
-	public static int ERROR_INCONTINUOUS_GENRELIST = 1;
-	public static int ERROR_WRONG_GENREID = 2;
-	public static int ERROR_WRONG_FILESIZE = 3;
-	public static int ERROR_NOGENRE_SET = 4;
-	public static int ERROR_NOCOVERSET = 5;
-	public static int ERROR_COVER_NOT_FOUND = 6;
-	public static int ERROR_TITLE_NOT_SET = 7;
-	public static int ERROR_ZYKLUSNUMBER_IS_NEGONE = 8;
-	public static int ERROR_ZYKLUSTITLE_IS_EMPTY = 9;
-	public static int ERROR_INCONTINUOUS_PARTS = 10;
-	public static int ERROR_FORMAT_NOT_FOUND_IN_PARTS = 11;
-	public static int ERROR_PATH_NOT_FOUND = 12;
-	public static int ERROR_WRONG_ADDDATE = 13;
-	public static int ERROR_WRONG_LASTVIEWEDDATE = 14;
-	public static int ERROR_LASTVIEWED_AND_ISVIEWED_IS_PARADOX = 15;
-	public static int ERROR_NOT_TRIMMED = 16;
-	public static int ERROR_DUPLICATE_COVERLINK = 17;
-	public static int ERROR_ZYKLUS_ENDS_WITH_ROMAN = 18;
-	public static int ERROR_WRONG_QUALITY = 19;
-	public static int ERROR_DUPLICATE_TITLE = 20;
-	public static int ERROR_DUPLICATE_FILELINK = 21;
-	public static int ERROR_WRONG_FILENAME = 22;
-	public static int ERROR_NONLINKED_COVERFILE = 23;
-	
-	private final int errorcode;
+public class DatabaseError {	
+	private final DatabaseErrorType errortype;
 	private final Object el1;
 	private final Object el2;
 	
 	private final Object additional;
 	
-	public static DatabaseError createSingle(int error, Object element) {
+	public static DatabaseError createSingle(DatabaseErrorType error, Object element) {
 		return new DatabaseError(error, element, null, null);
 	}
 	
-	public static DatabaseError createSingleAdditional(int error, Object element, Object additional) {
+	public static DatabaseError createSingleAdditional(DatabaseErrorType error, Object element, Object additional) {
 		return new DatabaseError(error, element, null, additional);
 	}
 	
-	public static DatabaseError createDouble(int error, Object element1, Object element2) {
+	public static DatabaseError createDouble(DatabaseErrorType error, Object element1, Object element2) {
 		return new DatabaseError(error, element1, element2, null);
 	}
 	
-	public static DatabaseError createDoubleAdditional(int error, Object element1, Object element2, Object additional) {
+	public static DatabaseError createDoubleAdditional(DatabaseErrorType error, Object element1, Object element2, Object additional) {
 		return new DatabaseError(error, element1, element2, additional);
 	}
 
-	private DatabaseError(int error, Object element1, Object element2, Object additional) {
-		this.errorcode = error;
+	private DatabaseError(DatabaseErrorType error, Object element1, Object element2, Object additional) {
+		this.errortype = error;
 		this.el1 = element1;
 		this.el2 = element2;
 		this.additional = additional;
@@ -76,9 +52,9 @@ public class DatabaseError {
 	
 	public String getErrorString() {
 		if (additional == null) {
-			return LocaleBundle.getString(String.format("CheckDatabaseDialog.Error.ERR_%02d", errorcode)); //$NON-NLS-1$
+			return LocaleBundle.getString(String.format("CheckDatabaseDialog.Error.ERR_%02d", errortype.getType())); //$NON-NLS-1$
 		} else {
-			return LocaleBundle.getFormattedString(String.format("CheckDatabaseDialog.Error.ERR_%02d", errorcode), additional); //$NON-NLS-1$
+			return LocaleBundle.getFormattedString(String.format("CheckDatabaseDialog.Error.ERR_%02d", errortype.getType()), additional); //$NON-NLS-1$
 		}
 	}
 	
@@ -159,28 +135,16 @@ public class DatabaseError {
 		return el2 == null;
 	}
 	
+	public boolean isTypeOf(DatabaseErrorType det) {
+		return det.getType() == errortype.getType();
+	}
+	
+	public DatabaseErrorType getType() {
+		return errortype;
+	}
+	
 	public boolean isAutoFixable() {
-		if (! isSingleError()) {
-			return false;
-		}
-		
-		if (errorcode == ERROR_INCONTINUOUS_GENRELIST) {
-			return true;
-		} else if (errorcode == ERROR_WRONG_FILESIZE) {
-			return true;
-		} else if (errorcode == ERROR_INCONTINUOUS_PARTS) {
-			return true;
-		} else if (errorcode == ERROR_FORMAT_NOT_FOUND_IN_PARTS) {
-			return true;
-		} else if (errorcode == ERROR_NOT_TRIMMED) {
-			return true;
-		} else if (errorcode == ERROR_WRONG_QUALITY) {
-			return true;
-		} else if (errorcode == ERROR_WRONG_FILENAME) {
-			return true;
-		}
-		
-		return false;
+		return errortype.isAutoFixable();
 	}
 
 	public boolean elementsEquals(DatabaseError e) {
@@ -188,19 +152,19 @@ public class DatabaseError {
 	}
 
 	public boolean autoFix() {
-		if (errorcode == ERROR_INCONTINUOUS_GENRELIST) {
+		if (isTypeOf(DatabaseErrorType.ERROR_INCONTINUOUS_GENRELIST)) {
 			return fixError_Incontinous_Genrelist();
-		} else if (errorcode == ERROR_WRONG_FILESIZE) {
+		} else if (isTypeOf(DatabaseErrorType.ERROR_WRONG_FILESIZE)) {
 			return fixError_Wrong_Filesize();
-		} else if (errorcode == ERROR_INCONTINUOUS_PARTS) {
+		} else if (isTypeOf(DatabaseErrorType.ERROR_INCONTINUOUS_PARTS)) {
 			return fixError_Incontinous_Parts();
-		} else if (errorcode == ERROR_FORMAT_NOT_FOUND_IN_PARTS) {
+		} else if (isTypeOf(DatabaseErrorType.ERROR_FORMAT_NOT_FOUND_IN_PARTS)) {
 			return fixError_Format_Not_Found();
-		} else if (errorcode == ERROR_NOT_TRIMMED) {
+		} else if (isTypeOf(DatabaseErrorType.ERROR_NOT_TRIMMED)) {
 			return fixError_Not_Trimmed();
-		} else if (errorcode == ERROR_WRONG_QUALITY) {
+		} else if (isTypeOf(DatabaseErrorType.ERROR_WRONG_QUALITY)) {
 			return fixError_Wrong_Quality();
-		} else if (errorcode == ERROR_WRONG_FILENAME) {
+		} else if (isTypeOf(DatabaseErrorType.ERROR_WRONG_FILENAME)) {
 			return fixError_Wrong_Filename();
 		}
 		

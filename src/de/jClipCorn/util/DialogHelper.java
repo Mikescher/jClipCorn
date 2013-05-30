@@ -19,6 +19,10 @@ public class DialogHelper {
 		return showYesNoDlg(frame, LocaleBundle.getString(id + "_caption"), LocaleBundle.getString(id)); //$NON-NLS-1$
 	}
 	
+	public static void showLocalError(Component frame, String id) {
+		JOptionPane.showMessageDialog(frame, LocaleBundle.getString(id), LocaleBundle.getString(id + "_caption"), JOptionPane.ERROR_MESSAGE); //$NON-NLS-1$
+	}
+	
 	public static void showError(Component frame, String caption, String text) {
 		JOptionPane.showMessageDialog(frame, text, caption, JOptionPane.ERROR_MESSAGE);
 	}

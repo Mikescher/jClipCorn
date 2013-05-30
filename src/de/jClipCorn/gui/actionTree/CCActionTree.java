@@ -31,6 +31,7 @@ import de.jClipCorn.gui.frames.changeViewedFrame.ChangeViewedFrame;
 import de.jClipCorn.gui.frames.checkDatabaseFrame.CheckDatabaseFrame;
 import de.jClipCorn.gui.frames.compareDatabaseFrame.CompareDatabaseFrame;
 import de.jClipCorn.gui.frames.compareDatabaseFrame.DatabaseComparator;
+import de.jClipCorn.gui.frames.createSeriesFolderStructureFrame.CreateSeriesFolderStructureFrame;
 import de.jClipCorn.gui.frames.editMovieFrame.EditMovieFrame;
 import de.jClipCorn.gui.frames.editSeriesFrame.EditSeriesFrame;
 import de.jClipCorn.gui.frames.exportElementsFrame.ExportElementsFrame;
@@ -75,7 +76,7 @@ public class CCActionTree {
 		instance = this;
 	}
 
-	@SuppressWarnings({ "nls"})
+	@SuppressWarnings({"nls"})
 	private void createStructure() {
 		CCActionElement temp;
 
@@ -238,6 +239,14 @@ public class CCActionTree {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				onClickSeriesMove();
+			}
+		});
+		
+		temp = series.addChild(new CCActionElement("CreateFolderStructSeries", null, "ClipMenuBar.Series.CreateFolderStruct", Resources.ICN_MENUBAR_CREATEFOLDERSTRUCTURE));
+		temp.addListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				onClickSeriesCreateFolderStructure();
 			}
 		});
 
@@ -826,6 +835,15 @@ public class CCActionTree {
 		if (el != null && el.isSeries()) {
 			MoveSeriesDialog msf = new MoveSeriesDialog(owner, (CCSeries) el);
 			msf.setVisible(true);
+		}
+	}
+	
+	private void onClickSeriesCreateFolderStructure() {
+		CCDatabaseElement el = owner.getSelectedElement();
+
+		if (el != null && el.isSeries()) {
+			CreateSeriesFolderStructureFrame csfsf = new CreateSeriesFolderStructureFrame(owner, (CCSeries) el);
+			csfsf.setVisible(true);
 		}
 	}
 

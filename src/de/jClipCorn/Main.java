@@ -73,7 +73,6 @@ public class Main {
 //TODO (2.0) ONLINE SYNCHRONISATION / Online Profiles / View Ratings + Viewed from others ... ...
 
 //TODO FETURE REQUESTS / BUGS (Benjamin):
-//TODO Serien batch renamen (Als Batch - von  serien - ordner auswählen - ordnerstruktur mit namen und so erzeugen, ACHTUNG nur neue ordner (schutz vor overriding), evtl vorher alle in temp ordner kopieren, möglichkeit bestehende ordnerstruktur zu vervollständigen)
 //TODO Shortcuts für SerienWindow
 //TODO Compare Series in CompareDialog
 //TODO ADd Features to PreviewSeries Things 

@@ -2,10 +2,12 @@ package de.jClipCorn.database.databaseElement;
 
 import java.io.File;
 import java.sql.Date;
+import java.text.DecimalFormat;
 
 import org.jdom2.Element;
 
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFormat;
+import de.jClipCorn.database.databaseElement.columnTypes.CCMovieLanguage;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieQuality;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieSize;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTags;
@@ -381,5 +383,39 @@ public class CCEpisode {
 		f[0] = new File(getAbsolutePart());
 		
 		return LargeMD5Calculator.getMD5(f);
+	}
+	
+	@SuppressWarnings("nls")
+	public File getFileForCreatedFolderstructure(File parentfolder) {
+		if (! parentfolder.isDirectory()) {
+			return null; // meehp
+		}
+		
+		DecimalFormat decFormattter = new DecimalFormat("00");
+		
+		CCSeason season = this.getSeason();
+		CCSeries series = season.getSeries();
+		
+		String parent = parentfolder.getAbsolutePath();
+		if (! parent.endsWith("\\")) {
+			parent += "\\";
+		}
+		
+		String seriesfoldername = series.getTitle();
+		if (series.getLanguage() != CCMovieLanguage.GERMAN) {
+			seriesfoldername += String.format(" [%s]", series.getLanguage().getShortString());
+		}
+		seriesfoldername = PathFormatter.fixStringToFilename(seriesfoldername);
+		
+		String seasonfoldername = season.getTitle();
+		seasonfoldername = PathFormatter.fixStringToFilename(seasonfoldername);
+		
+		String filename = String.format("S%sE%s - %s", decFormattter.format(season.getSeasonNumber() + 1), decFormattter.format(this.getEpisode()), this.getTitle());
+		filename += "." + this.getFormat().asString();
+		filename = PathFormatter.fixStringToFilename(filename);
+		
+		String path = parent + seriesfoldername + "\\" + seasonfoldername + "\\" + filename;
+		
+		return new File(path);
 	}
 }

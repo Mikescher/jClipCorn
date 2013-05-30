@@ -36,6 +36,7 @@ public class ClipSeriesPopup extends ClipPopupMenu {
 		addAction("OpenFolder");
 		addAction("ShowInIMDB");
 		addAction("MoveSeries");
+		addAction("CreateFolderStructSeries");
 		
 		//#############
 		addSeparator();

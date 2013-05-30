@@ -69,6 +69,7 @@ public class Resources {
 	public final static String ICN_MENUBAR_TAG_3_1 					= registerICN("/icons/tags/tag_3_on.png");
 	public final static String ICN_MENUBAR_TAG_4_0 					= registerICN("/icons/tags/tag_4_off.png");
 	public final static String ICN_MENUBAR_TAG_4_1 					= registerICN("/icons/tags/tag_4_on.png");
+	public final static String ICN_MENUBAR_CREATEFOLDERSTRUCTURE	= registerICN("/icons/toolbar/folders_explorer.png");
 	// #############################################  </MENUBAR>  ############################################
 	
 

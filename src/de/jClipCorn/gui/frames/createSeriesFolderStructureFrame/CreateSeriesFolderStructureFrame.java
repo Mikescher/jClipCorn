@@ -1,8 +1,10 @@
 package de.jClipCorn.gui.frames.createSeriesFolderStructureFrame;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Font;
 
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -17,10 +19,15 @@ import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
 
+import de.jClipCorn.database.databaseElement.CCEpisode;
+import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.gui.guiComponents.CoverLabel;
 import de.jClipCorn.gui.guiComponents.ReadableTextField;
 import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.util.DialogHelper;
+import de.jClipCorn.util.PathFormatter;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.io.File;
@@ -37,15 +44,20 @@ public class CreateSeriesFolderStructureFrame extends JFrame {
 	private ReadableTextField edPath;
 	private JButton btnChoose;
 	private JScrollPane scrlPnlBottom;
-	private JList lsTest;
+	private JList<File> lsTest;
 	private JButton btnOk;
 	private JButton btnTest;
+	private JLabel lblCommonPath;
 
-	public CreateSeriesFolderStructureFrame(CCSeries ser) {
+	public CreateSeriesFolderStructureFrame(Component owner, CCSeries ser) {
 		super();
 		this.series = ser;
 		
 		initGUI();
+		
+		setLocationRelativeTo(owner);
+		
+		init();
 	}
 	
 	private void initGUI() {
@@ -75,6 +87,8 @@ public class CreateSeriesFolderStructureFrame extends JFrame {
 				FormFactory.RELATED_GAP_ROWSPEC,
 				FormFactory.DEFAULT_ROWSPEC,
 				FormFactory.RELATED_GAP_ROWSPEC,
+				FormFactory.DEFAULT_ROWSPEC,
+				FormFactory.RELATED_GAP_ROWSPEC,
 				RowSpec.decode("default:grow"), //$NON-NLS-1$
 				FormFactory.RELATED_GAP_ROWSPEC,
 				FormFactory.DEFAULT_ROWSPEC,
@@ -84,8 +98,11 @@ public class CreateSeriesFolderStructureFrame extends JFrame {
 		lblTitel.setFont(new Font("Tahoma", Font.PLAIN, 14)); //$NON-NLS-1$
 		pnlLeft.add(lblTitel, "2, 2, 5, 1"); //$NON-NLS-1$
 		
+		lblCommonPath = new JLabel();
+		pnlLeft.add(lblCommonPath, "2, 4, 3, 1"); //$NON-NLS-1$
+		
 		edPath = new ReadableTextField();
-		pnlLeft.add(edPath, "2, 4, 3, 1, fill, default"); //$NON-NLS-1$
+		pnlLeft.add(edPath, "2, 6, 3, 1, fill, default"); //$NON-NLS-1$
 		edPath.setColumns(10);
 		
 		btnChoose = new JButton(LocaleBundle.getString("AddMovieFrame.btnChoose.text")); //$NON-NLS-1$
@@ -95,28 +112,47 @@ public class CreateSeriesFolderStructureFrame extends JFrame {
 				onBtnChoose();
 			}
 		});
-		pnlLeft.add(btnChoose, "6, 4"); //$NON-NLS-1$
+		pnlLeft.add(btnChoose, "6, 6"); //$NON-NLS-1$
 		
 		btnOk = new JButton(LocaleBundle.getString("AddMovieFrame.btnOK.text")); //$NON-NLS-1$
+		btnOk.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				startMoving();
+			}
+		});
 		btnOk.setEnabled(false);
-		pnlLeft.add(btnOk, "2, 8, center, default"); //$NON-NLS-1$
+		pnlLeft.add(btnOk, "2, 10, center, default"); //$NON-NLS-1$
 		
 		btnTest = new JButton(LocaleBundle.getString("MoveSeriesFrame.btnTest.text")); //$NON-NLS-1$
+		btnTest.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				startTest();
+			}
+		});
 		btnTest.setEnabled(false);
-		pnlLeft.add(btnTest, "4, 8, center, default"); //$NON-NLS-1$
+		pnlLeft.add(btnTest, "4, 10, center, default"); //$NON-NLS-1$
 		
 		scrlPnlBottom = new JScrollPane();
 		scrlPnlBottom.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		getContentPane().add(scrlPnlBottom, BorderLayout.CENTER);
 		
-		lsTest = new JList();
+		lsTest = new JList<>();
+		lsTest.setCellRenderer(new CreateSeriesFolderStructureTestListCellRenderer());
 		scrlPnlBottom.setViewportView(lsTest);
 		
 		setSize(550, 600);
 	}
 	
+	private void init() {
+		lblCover.setIcon(series.getCoverIcon());
+		lblTitel.setText(series.getTitle());
+		lblCommonPath.setText(PathFormatter.getAbsolute(series.getCommonPathStart()));
+	}
+	
 	private void onBtnChoose() {
-		JFileChooser folderchooser = new JFileChooser(series.getCommonPathStart());
+		JFileChooser folderchooser = new JFileChooser(PathFormatter.getAbsolute(series.getCommonPathStart()));
 		folderchooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 		
 		if (folderchooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
@@ -124,5 +160,92 @@ public class CreateSeriesFolderStructureFrame extends JFrame {
 				edPath.setText(folderchooser.getSelectedFile().getAbsolutePath());
 			}
 		}
+		
+		btnOk.setEnabled(true);
+		btnTest.setEnabled(true);
+	}
+	
+	private void startTest() {
+		DefaultListModel<File> dlm = new DefaultListModel<>();
+		
+		File parentfolder = new File(edPath.getText());
+		
+		for (int sea = 0; sea < series.getSeasonCount(); sea++) {
+			CCSeason season = series.getSeason(sea);
+		
+			for (int epi = 0; epi < season.getEpisodeCount(); epi++) {
+				CCEpisode episode = season.getEpisode(epi);
+				
+				dlm.addElement(episode.getFileForCreatedFolderstructure(parentfolder));
+			}
+		}
+		
+		lsTest.setModel(dlm);
+	}
+	
+	private boolean startMoving() {
+		lsTest.setModel(new DefaultListModel<File>());
+		
+		if (! testMoving()) {
+			DialogHelper.showLocalInformation(this, "CreateSeriesFolderStructureFrame.dialogs.couldnotmove"); //$NON-NLS-1$
+			return false;
+		}
+		
+		if (DialogHelper.showLocaleYesNo(this, "CreateSeriesFolderStructureFrame.dialogs.sure")) { //$NON-NLS-1$
+			File parentfolder = new File(edPath.getText());
+			
+			for (int sea = 0; sea < series.getSeasonCount(); sea++) {
+				CCSeason season = series.getSeason(sea);
+			
+				for (int epi = 0; epi < season.getEpisodeCount(); epi++) {
+					CCEpisode episode = season.getEpisode(epi);
+					
+					File file = new File(episode.getAbsolutePart());
+					File newfile = episode.getFileForCreatedFolderstructure(parentfolder);
+					
+					File mkdirfolder = newfile.getParentFile();
+					
+					boolean succ = true;
+					if (! mkdirfolder.isDirectory()) {
+						succ = mkdirfolder.mkdirs();
+					}
+					if (succ) {
+						succ = file.renameTo(newfile);
+					}
+					
+					if (! succ) {
+						DialogHelper.showError(this, LocaleBundle.getString("CreateSeriesFolderStructureFrame.dialogs.error_caption"), LocaleBundle.getFormattedString("CreateSeriesFolderStructureFrame.dialogs.error", episode.getTitle())); //$NON-NLS-1$ //$NON-NLS-2$
+						
+						return false;
+					}
+					
+					episode.setPart(PathFormatter.getRelative(newfile.getAbsolutePath()));
+				}
+			}
+		}
+		
+		return true;
+	}
+	
+	private boolean testMoving() {
+		File parentfolder = new File(edPath.getText());
+		
+		if (! parentfolder.isDirectory()) {
+			return false;
+		}
+		
+		for (int sea = 0; sea < series.getSeasonCount(); sea++) {
+			CCSeason season = series.getSeason(sea);
+		
+			for (int epi = 0; epi < season.getEpisodeCount(); epi++) {
+				CCEpisode episode = season.getEpisode(epi);
+				
+				if (episode.getFileForCreatedFolderstructure(parentfolder).exists()) {
+					return false;
+				}
+			}
+		}
+		
+		return true;
 	}
 }

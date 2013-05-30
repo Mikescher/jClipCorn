@@ -299,4 +299,8 @@ public abstract class CCDatabaseElement {
 	public int getMovieListPosition() {
 		return movielist.getSortByDatabaseElement(this);
 	}
+
+	public void forceUpdate() {
+		updateDB();
+	}
 }

@@ -596,6 +596,13 @@ public class CCMovieList {
 		getInstance().fireOnRefresh();
 	}
 	
+	public void forceUpdateAll() {
+		for (Iterator<CCDatabaseElement> it = iterator(); it.hasNext();) {
+			CCDatabaseElement el = it.next();
+			el.forceUpdate();
+		}
+	}
+	
 	public static CCMovieList getInstance() {
 		return instance;
 	}

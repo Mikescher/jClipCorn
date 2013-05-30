@@ -159,7 +159,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 	private JLabel label_33;
 	private JButton btnToday;
 	private JButton btnTestParts;
-	private JButton btnCAlcQuality;
+	private JButton btnCalcQuality;
 
 	public EditMovieFrame(Component owner, CCMovie movie, UpdateCallbackListener ucl) {
 		super();
@@ -651,15 +651,15 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		btnTestParts.setBounds(277, 227, 131, 23);
 		getContentPane().add(btnTestParts);
 		
-		btnCAlcQuality = new JButton(LocaleBundle.getString("AddMovieFrame.btnCalcQuality.text")); //$NON-NLS-1$
-		btnCAlcQuality.addActionListener(new ActionListener() {
+		btnCalcQuality = new JButton(LocaleBundle.getString("AddMovieFrame.btnCalcQuality.text")); //$NON-NLS-1$
+		btnCalcQuality.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				onCalcQuality();
 			}
 		});
-		btnCAlcQuality.setBounds(296, 372, 78, 23);
-		getContentPane().add(btnCAlcQuality);
+		btnCalcQuality.setBounds(296, 372, 78, 23);
+		getContentPane().add(btnCalcQuality);
 	}
 
 	private void setDefaultValues() {

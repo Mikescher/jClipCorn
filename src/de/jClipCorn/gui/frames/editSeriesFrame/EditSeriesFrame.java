@@ -176,6 +176,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 	private JButton btnSeriesOk;
 	private JButton btnSeasonOK;
 	private JButton btnEpisodeOK;
+	private JButton btnEpisodeCalcQuality;
 
 	/**
 	 * @wbp.parser.constructor
@@ -619,7 +620,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		pnlEpisode.add(label_21);
 		
 		cbxEpisodeQuality = new JComboBox<>();
-		cbxEpisodeQuality.setBounds(74, 160, 212, 22);
+		cbxEpisodeQuality.setBounds(74, 160, 193, 22);
 		pnlEpisode.add(cbxEpisodeQuality);
 		
 		label_22 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblLength.text")); //$NON-NLS-1$
@@ -732,7 +733,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		pnlEpisode.add(lblTags);
 		
 		tagPnl = new TagPanel();
-		tagPnl.setBounds(74, 436, 212, 20);
+		tagPnl.setBounds(74, 436, 212, 22);
 		pnlEpisode.add(tagPnl);
 		
 		btnEpisodeOK = new JButton(LocaleBundle.getString("AddMovieFrame.btnOK.text")); //$NON-NLS-1$
@@ -744,6 +745,16 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		});
 		btnEpisodeOK.setBounds(148, 612, 89, 23);
 		pnlEpisode.add(btnEpisodeOK);
+		
+		btnEpisodeCalcQuality = new JButton(LocaleBundle.getString("EditSeriesFrame.btnCalcQuality.text")); //$NON-NLS-1$
+		btnEpisodeCalcQuality.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				cbxEpisodeQuality.setSelectedIndex(CCMovieQuality.calculateQuality((Long)spnEpisodeSize.getValue(), (Integer)spnEpisodeLength.getValue(), 1).asInt());
+			}
+		});
+		btnEpisodeCalcQuality.setBounds(277, 159, 70, 23);
+		pnlEpisode.add(btnEpisodeCalcQuality);
 	}
 
 	private void setDefaultValues() {

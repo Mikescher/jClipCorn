@@ -94,8 +94,6 @@ public class ExportHelper {
 		} catch (IOException e) {
 			CCLog.addError(e);
 		}
-		
-
 	}
 	
 	private static void copyAllCoverFromBackup(File backup, CCMovieList movielist) throws Exception {

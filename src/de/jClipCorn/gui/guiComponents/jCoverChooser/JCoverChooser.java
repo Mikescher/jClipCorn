@@ -24,7 +24,8 @@ public class JCoverChooser extends JComponent implements MouseListener {
 
 	private HashMap<Integer, TransformRectangle> rectangles = new HashMap<>();
 	
-	private List<ListSelectionListener> listener = new ArrayList<>();
+	private List<ListSelectionListener> listener_selection = new ArrayList<>();
+	private List<JCoverChooserPopupEvent> listener_popup = new ArrayList<>();
 
 	private int coverWidth = ImageUtilities.COVER_WIDTH;
 	private int coverHeight = ImageUtilities.COVER_HEIGHT;
@@ -58,14 +59,18 @@ public class JCoverChooser extends JComponent implements MouseListener {
 		
 			update();
 			
-			for (ListSelectionListener ls : listener) {
+			for (ListSelectionListener ls : listener_selection) {
 				ls.valueChanged(new ListSelectionEvent(this, currSelected, currSelected, false));
 			}
 		}
 	}
 	
-	public void addListener(ListSelectionListener l) {
-		listener.add(l);
+	public void addSelectionListener(ListSelectionListener l) {
+		listener_selection.add(l);
+	}
+	
+	public void addPopupListener(JCoverChooserPopupEvent l) {
+		listener_popup.add(l);
 	}
 	
 	public int getSelectedIndex() {
@@ -209,20 +214,39 @@ public class JCoverChooser extends JComponent implements MouseListener {
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		if (isEnabled()) {
-			int x = e.getX() - getComponentWidth()/2;
-			int y = e.getY() - getComponentHeight()/2;
+			if (e.getButton() == MouseEvent.BUTTON1) {
+				int imgid = getCoverForPoint(e.getX(), e.getY());
 
-			for (int i = -EXTRACOVERCOUNT; i <= EXTRACOVERCOUNT; i++) {
-				int imgid = currSelected + i;
-				if (coverIsSet(imgid)) {
-					TransformRectangle tr = rectangles.get(i);
-					if (tr.includesPoint(x, y)) {
-						setCurrSelected(imgid);
-						return;
+				if (imgid != Integer.MIN_VALUE) {
+					setCurrSelected(imgid);
+				}
+			} else if (e.getButton() == MouseEvent.BUTTON3) {
+				int imgid = getCoverForPoint(e.getX(), e.getY());
+
+				if (imgid != Integer.MIN_VALUE) {
+					for (JCoverChooserPopupEvent ev : listener_popup) {
+						ev.onPopup(imgid, e);
 					}
 				}
 			}
 		}
+	}
+	
+	private int getCoverForPoint(int px, int py) {
+		int x = px - getComponentWidth()/2;
+		int y = py - getComponentHeight()/2;
+
+		for (int i = -EXTRACOVERCOUNT; i <= EXTRACOVERCOUNT; i++) {
+			int imgid = currSelected + i;
+			if (coverIsSet(imgid)) {
+				TransformRectangle tr = rectangles.get(i);
+				if (tr.includesPoint(x, y)) {
+					return imgid;
+				}
+			}
+		}
+		
+		return Integer.MIN_VALUE;
 	}
 
 	@Override

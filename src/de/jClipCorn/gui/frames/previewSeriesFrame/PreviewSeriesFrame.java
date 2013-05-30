@@ -7,6 +7,9 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,6 +18,7 @@ import javax.swing.BoxLayout;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -36,27 +40,36 @@ import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieScore;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTyp;
+import de.jClipCorn.database.util.ExportHelper;
 import de.jClipCorn.gui.CachedResourceLoader;
 import de.jClipCorn.gui.Resources;
 import de.jClipCorn.gui.frames.addEpisodesFrame.AddEpisodesFrame;
 import de.jClipCorn.gui.frames.addSeasonFrame.AddSeasonFrame;
+import de.jClipCorn.gui.frames.createSeriesFolderStructureFrame.CreateSeriesFolderStructureFrame;
 import de.jClipCorn.gui.frames.displayGenresDialog.DisplayGenresDialog;
 import de.jClipCorn.gui.frames.displaySearchResultsDialog.DisplaySearchResultsDialog;
 import de.jClipCorn.gui.frames.editSeriesFrame.EditSeriesFrame;
+import de.jClipCorn.gui.frames.mainFrame.MainFrame;
+import de.jClipCorn.gui.frames.moveSeriesFrame.MoveSeriesDialog;
 import de.jClipCorn.gui.frames.previewSeriesFrame.serTable.SerTable;
 import de.jClipCorn.gui.guiComponents.CoverLabel;
 import de.jClipCorn.gui.guiComponents.jCoverChooser.JCoverChooser;
+import de.jClipCorn.gui.guiComponents.jCoverChooser.JCoverChooserPopupEvent;
 import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.util.DialogHelper;
 import de.jClipCorn.util.EpisodeSearchCallbackListener;
+import de.jClipCorn.util.FileChooserHelper;
 import de.jClipCorn.util.FileSizeFormatter;
 import de.jClipCorn.util.HTTPUtilities;
 import de.jClipCorn.util.ImageUtilities;
+import de.jClipCorn.util.PathFormatter;
+import de.jClipCorn.util.TextFileUtils;
 import de.jClipCorn.util.TimeIntervallFormatter;
 import de.jClipCorn.util.UpdateCallbackListener;
 import de.jClipCorn.util.parser.imageparser.ImDBImageParser;
 
-public class PreviewSeriesFrame extends JFrame implements ListSelectionListener, UpdateCallbackListener {
+public class PreviewSeriesFrame extends JFrame implements ListSelectionListener, JCoverChooserPopupEvent, UpdateCallbackListener {
 	private static final long serialVersionUID = 5484205983855802992L;
 
 	private CCSeries dispSeries;
@@ -114,6 +127,14 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 	private JMenuItem mntmNewMenuItem;
 	private Component vStrut_9;
 	private JMenuItem mntmResumePlaying;
+	private JMenu mntmRateSeries;
+	private JMenuItem mntmShowInFolder;
+	private JMenuItem mntmEditSeason;
+	private JMenuItem mntmShowSeasonInFolder;
+	private JMenuItem mntmExportSeries;
+	private JMenuItem mntmEpisodeguide;
+	private JMenuItem mntmMoveSeries;
+	private JMenuItem mntmCreateFolderStruct;
 
 	/**
 	 * @wbp.parser.constructor
@@ -124,7 +145,7 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 		setSize(new Dimension(1000, 700));
 		setMinimumSize(new Dimension(750, 680));
 
-		intialize();
+		updateData();
 
 		if (dispSeries.getSeasonCount() > 0) {
 			changeSeason(dispSeries.getSeason(0));
@@ -139,7 +160,7 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 		setSize(new Dimension(1000, 700));
 		setMinimumSize(new Dimension(750, 680));
 
-		intialize();
+		updateData();
 
 		if (dispSeries.getSeasonCount() > 0) {
 			changeSeason(dispSeries.getSeason(0));
@@ -156,7 +177,7 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 		setSize(new Dimension(1000, 700));
 		setMinimumSize(new Dimension(750, 680));
 
-		intialize();
+		updateData();
 
 		if (dispSeries.getSeasonCount() > 0) {
 			changeSeason(dispSeries.getSeason(0));
@@ -230,7 +251,8 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 		cvrChooser.setCircleRadius(300);
 		cvrChooser.setCoverWidth(ImageUtilities.COVER_WIDTH / 2);
 		cvrChooser.setCoverHeight(ImageUtilities.COVER_HEIGHT / 2);
-		cvrChooser.addListener(this);
+		cvrChooser.addSelectionListener(this);
+		cvrChooser.addPopupListener(this);
 
 		pnlMain = new JPanel();
 		pnlMain.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
@@ -283,6 +305,29 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 				(new EditSeriesFrame(PreviewSeriesFrame.this, dispSeries, PreviewSeriesFrame.this)).setVisible(true);
 			}
 		});
+		
+		mntmRateSeries = new JMenu(LocaleBundle.getString("PreviewSeriesFrame.Menu.Series.RateSeries")); //$NON-NLS-1$
+		mnSerie.add(mntmRateSeries);
+		for (final CCMovieScore score : CCMovieScore.values()) {
+			JMenuItem itm = new JMenuItem(score.asString(), score.getIcon());
+			mntmRateSeries.add(itm);
+			itm.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent arg0) {
+					dispSeries.setScore(score);
+					updateData();
+				}
+			});
+		}
+		
+		mntmShowInFolder = new JMenuItem(LocaleBundle.getString("PreviewSeriesFrame.Menu.Series.ShowInFolder")); //$NON-NLS-1$
+		mntmShowInFolder.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				PathFormatter.showInExplorer(PathFormatter.getAbsolute(dispSeries.getCommonPathStart()));
+			}
+		});
+		mnSerie.add(mntmShowInFolder);
 		mnSerie.add(mntmSerieBearbeiten);
 
 		mntmSerieLschen = new JMenuItem(LocaleBundle.getString("PreviewSeriesFrame.Menu.Series.DeleteSeries")); //$NON-NLS-1$
@@ -321,6 +366,25 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 				}
 			}
 		});
+		
+		mntmEditSeason = new JMenuItem(LocaleBundle.getString("PreviewSeriesFrame.Menu.Season.EditSeason")); //$NON-NLS-1$
+		mntmEditSeason.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				EditSeriesFrame esf = new EditSeriesFrame(PreviewSeriesFrame.this, tabSeason.getSeason(), PreviewSeriesFrame.this);
+				esf.setVisible(true);
+			}
+		});
+		mnStaffel.add(mntmEditSeason);
+		
+		mntmShowSeasonInFolder = new JMenuItem(LocaleBundle.getString("PreviewSeriesFrame.Menu.Season.ShowInFolder")); //$NON-NLS-1$
+		mntmShowSeasonInFolder.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				PathFormatter.showInExplorer(PathFormatter.getAbsolute(tabSeason.getSeason().getCommonPathStart()));
+			}
+		});
+		mnStaffel.add(mntmShowSeasonInFolder);
 		mnStaffel.add(mntmStaffelLschen);
 
 		mnExtras = new JMenu(LocaleBundle.getString("PreviewSeriesFrame.Menu.Extras")); //$NON-NLS-1$
@@ -372,6 +436,44 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 			}
 		});
 		mnExtras.add(mntmResumePlaying);
+		
+		mntmExportSeries = new JMenuItem(LocaleBundle.getString("PreviewSeriesFrame.Menu.Extras.ExportSeries")); //$NON-NLS-1$
+		mntmExportSeries.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				onExportSeries();
+			}
+		});
+		mnExtras.add(mntmExportSeries);
+		
+		mntmEpisodeguide = new JMenuItem(LocaleBundle.getString("PreviewSeriesFrame.Menu.Extras.ExportEpisodeGuide")); //$NON-NLS-1$
+		mntmEpisodeguide.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				onExportEpisodeGuide();
+			}
+		});
+		mnExtras.add(mntmEpisodeguide);
+		
+		mntmMoveSeries = new JMenuItem(LocaleBundle.getString("PreviewSeriesFrame.Menu.Extras.MoveSeries")); //$NON-NLS-1$
+		mntmMoveSeries.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				MoveSeriesDialog msf = new MoveSeriesDialog(PreviewSeriesFrame.this, dispSeries);
+				msf.setVisible(true);
+			}
+		});
+		mnExtras.add(mntmMoveSeries);
+		
+		mntmCreateFolderStruct = new JMenuItem(LocaleBundle.getString("PreviewSeriesFrame.Menu.Extras.CreateFolderStructure")); //$NON-NLS-1$
+		mntmCreateFolderStruct.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				CreateSeriesFolderStructureFrame csfsf = new CreateSeriesFolderStructureFrame(PreviewSeriesFrame.this, dispSeries);
+				csfsf.setVisible(true);
+			}
+		});
+		mnExtras.add(mntmCreateFolderStruct);
 		mnExtras.add(mntmAufImdbAnzeigen);
 
 		pnlLeft = new JPanel();
@@ -463,7 +565,7 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 		pnlAddInfo.add(btnAdditionalInfo);
 	}
 
-	private void intialize() {
+	private void updateData() {
 		if (dispSeries == null) {
 			return;
 		}
@@ -541,6 +643,11 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 	public void valueChanged(ListSelectionEvent e) {
 		changeSeason(dispSeries.getSeason(cvrChooser.getSelectedIndex()));
 	}
+	
+	@Override
+	public void onPopup(int coverID, MouseEvent e) {
+		(new SerCoverChooserPopupMenu(dispSeries.getSeason(coverID), this)).show(cvrChooser, e.getX(), e.getY());
+	}
 
 	public void changeSeason(CCSeason s) {
 		if (Main.DEBUG) {
@@ -558,7 +665,7 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 
 	@Override
 	public void onUpdate(Object o) {
-		intialize();
+		updateData();
 
 		if (dispSeries.getSeasonCount() > 0) {
 			changeSeason(dispSeries.getSeason(0));
@@ -624,7 +731,44 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 			});
 			dsrd.setVisible(true);
 		}
-		
-		
+	}
+
+	private void onExportSeries() {
+		final JFileChooser chooser = new JFileChooser();
+		chooser.setFileFilter(FileChooserHelper.createLocalFileFilter("ExportHelper.filechooser_jsccexport.description", ExportHelper.EXTENSION_SINGLEEXPORT)); //$NON-NLS-1$
+		chooser.setCurrentDirectory(new File(PathFormatter.getRealSelfDirectory()));
+
+		int returnval = chooser.showSaveDialog(PreviewSeriesFrame.this);
+
+		if (returnval == JFileChooser.APPROVE_OPTION) {
+			final boolean includeCover = 0 == DialogHelper.showLocaleOptions(PreviewSeriesFrame.this, "ExportHelper.dialogs.exportCover"); //$NON-NLS-1$
+
+			new Thread(new Runnable() {
+				@Override
+				public void run() {
+					MainFrame.getInstance().beginBlockingIntermediate();
+
+					ExportHelper.exportSeries(PathFormatter.forceExtension(chooser.getSelectedFile(), ExportHelper.EXTENSION_SINGLEEXPORT), dispSeries.getMovieList(), dispSeries, includeCover);
+					
+					MainFrame.getInstance().endBlockingIntermediate();
+				}
+			}, "THREAD_EXPORT_JSCCEXPORT_SERIES").start(); //$NON-NLS-1$
+		}
+	}
+	
+	private void onExportEpisodeGuide() {
+		final JFileChooser chooser = new JFileChooser();
+		chooser.setFileFilter(FileChooserHelper.createLocalFileFilter("ExportHelper.filechooser_txtguide.description", ExportHelper.EXTENSION_EPISODEGUIDE)); //$NON-NLS-1$
+		chooser.setCurrentDirectory(new File(PathFormatter.getRealSelfDirectory()));
+
+		int returnval = chooser.showSaveDialog(PreviewSeriesFrame.this);
+
+		if (returnval == JFileChooser.APPROVE_OPTION) {
+			try {
+				TextFileUtils.writeTextFile(PathFormatter.forceExtension(chooser.getSelectedFile(), ExportHelper.EXTENSION_EPISODEGUIDE), dispSeries.getEpisodeGuide());
+			} catch (IOException e) {
+				CCLog.addError(e);
+			}
+		}
 	}
 }

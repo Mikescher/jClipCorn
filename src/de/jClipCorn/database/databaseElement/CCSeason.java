@@ -20,6 +20,7 @@ import de.jClipCorn.util.ByteUtilies;
 import de.jClipCorn.util.CCDate;
 import de.jClipCorn.util.ImageUtilities;
 import de.jClipCorn.util.LargeMD5Calculator;
+import de.jClipCorn.util.PathFormatter;
 
 public class CCSeason {
 	private final CCSeries owner;
@@ -423,5 +424,16 @@ public class CCSeason {
 	@Override
 	public String toString() {
 		return getTitle();
+	}
+
+	public String getCommonPathStart() {
+		List<String> all = new ArrayList<>();
+		
+		for (int seasi = 0; seasi < getEpisodeCount(); seasi++) {
+			CCEpisode episode = getEpisode(seasi);
+			all.add(episode.getPart());
+		}
+		
+		return PathFormatter.getCommonFolderPath(all);
 	}
 }

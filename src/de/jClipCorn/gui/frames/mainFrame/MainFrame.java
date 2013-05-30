@@ -46,6 +46,8 @@ public class MainFrame extends JFrame implements CCDBUpdateListener {
 
 	private final static int FRAME_WIDTH = 875;
 	private final static int FRAME_HEIGHT = 625;
+	
+	private static MainFrame instance = null;
 
 	private Container content;
 	private ClipMenuBar mainMenu;
@@ -66,17 +68,18 @@ public class MainFrame extends JFrame implements CCDBUpdateListener {
 	private JButton btnSearch;
 
 	public MainFrame(CCMovieList movielist) {
+		super();
 		this.movielist = movielist;
 		
 		movielist.addChangeListener(this);
-		
 		CCActionTree actionTree = new CCActionTree(this);
 
 		initGUI();
 
 		createWindowListener();
-		
 		actionTree.implementKeyListener((JPanel) getContentPane());
+		
+		instance = this;
 	}
 
 	private void initGUI() {
@@ -152,7 +155,6 @@ public class MainFrame extends JFrame implements CCDBUpdateListener {
 		} catch (InvocationTargetException | InterruptedException e) {
 			CCLog.addError(e);
 		}
-		
 	}
 	
 	public void endBlockingIntermediate() {
@@ -358,5 +360,9 @@ public class MainFrame extends JFrame implements CCDBUpdateListener {
 	@Override
 	public void onRefresh() {
 		// -
+	}
+	
+	public static MainFrame getInstance() {
+		return instance;
 	}
 }

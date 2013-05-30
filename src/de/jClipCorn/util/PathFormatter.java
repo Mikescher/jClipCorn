@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
@@ -175,5 +176,34 @@ public class PathFormatter {
 	
 	public static File forceExtension(File f, String ext) {
 		return new File(forceExtension(f.getAbsolutePath(), ext));
+	}
+	
+	public static String getCommonFolderPath(List<String> pathlist) {
+		for (int c = 0;;c++) {
+			Character ckt = null;
+			for (int elem = 0; elem < pathlist.size(); elem++) {
+				if (c >= pathlist.get(elem).length()) {
+					String common = pathlist.get(elem).substring(0, c);
+					if (common.lastIndexOf('\\') < 0) {
+						return common;
+					} else {
+						return common.substring(0, common.lastIndexOf('\\') + 1);
+					}
+				}
+
+				if (ckt == null) {
+					ckt = pathlist.get(elem).charAt(c);
+				} else {
+					if (!ckt.equals(pathlist.get(elem).charAt(c))) {
+						String common = pathlist.get(elem).substring(0, c);
+						if (common.lastIndexOf('\\') < 0) {
+							return common;
+						} else {
+							return common.substring(0, common.lastIndexOf('\\') + 1);
+						}
+					}
+				}
+			}
+		}
 	}
 }

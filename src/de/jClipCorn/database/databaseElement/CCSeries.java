@@ -19,6 +19,7 @@ import de.jClipCorn.util.ByteUtilies;
 import de.jClipCorn.util.CCDate;
 import de.jClipCorn.util.ImageUtilities;
 import de.jClipCorn.util.LargeMD5Calculator;
+import de.jClipCorn.util.PathFormatter;
 import de.jClipCorn.util.TimeIntervallFormatter;
 import de.jClipCorn.util.YearRange;
 
@@ -424,7 +425,7 @@ public class CCSeries extends CCDatabaseElement {
 			for (int j = 0; j < season.getEpisodeCount(); j++) {
 				CCEpisode episode = season.getEpisode(j);
 				guide.appendPadding(GUIDE_W_BORDER, ' ');
-				guide.appendln(String.format("> [%02d] %s (%s)", episode.getEpisodeNumber(), episode.getTitle(), TimeIntervallFormatter.formatPointed(episode.getLength()))); //$NON-NLS-1$
+				guide.appendln(String.format("> [%02d] %s (%s)", episode.getEpisode(), episode.getTitle(), TimeIntervallFormatter.formatPointed(episode.getLength()))); //$NON-NLS-1$
 			}
 		}
 
@@ -432,34 +433,13 @@ public class CCSeries extends CCDatabaseElement {
 	}
 	
 	public String getCommonPathStart() {
-		for (int c = 0;;c++) {
-			Character ckt = null;
-			for (int seasi = 0; seasi < getSeasonCount(); seasi++) {
-				CCSeason season = getSeason(seasi);
-				for (int epi = 0; epi < season.getEpisodeCount(); epi++) {
-					if (c >= season.getEpisode(epi).getPart().length()) {
-						String common = season.getEpisode(epi).getPart().substring(0, c);
-						if (common.lastIndexOf('\\') < 0) {
-							return common;
-						} else {
-							return common.substring(0, common.lastIndexOf('\\') + 1);
-						}
-					}
-					
-					if (ckt == null) {
-						ckt = season.getEpisode(epi).getPart().charAt(c);
-					} else {
-						if (! ckt.equals(season.getEpisode(epi).getPart().charAt(c))) {
-							String common = season.getEpisode(epi).getPart().substring(0, c);
-							if (common.lastIndexOf('\\') < 0) {
-								return common;
-							} else {
-								return common.substring(0, common.lastIndexOf('\\') + 1);
-							}
-						}
-					}
-				}
-			}
+		List<String> all = new ArrayList<>();
+		
+		for (int seasi = 0; seasi < getSeasonCount(); seasi++) {
+			CCSeason season = getSeason(seasi);
+			all.add(season.getCommonPathStart());
 		}
+		
+		return PathFormatter.getCommonFolderPath(all);
 	}
 }

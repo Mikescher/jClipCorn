@@ -89,7 +89,7 @@ public class DisplaySearchResultsDialog extends JDialog implements MouseListener
 		pack();
 		
 		int w = rel.getWidth();
-		int h = Math.min(125, getHeight() + 5);
+		int h = Math.min(125, getHeight() + 10);
 		
 		setSize(w, h);
 		

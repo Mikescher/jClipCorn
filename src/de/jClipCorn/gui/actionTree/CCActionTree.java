@@ -82,9 +82,9 @@ public class CCActionTree {
 
 		root = new CCActionElement("ROOT", null, "", "");
 
-		// #######################################################################################################
+		// ################################################################################################################################################################
 		CCActionElement file = root.addChild(new CCActionElement("File", null, "ClipMenuBar.File", ""));
-		// #######################################################################################################
+		// ################################################################################################################################################################
 
 		temp = file.addChild(new CCActionElement("Open", null, "ClipMenuBar.File.Open", Resources.ICN_MENUBAR_OPENFILE));
 		temp.addListener(new ActionListener() {
@@ -102,9 +102,9 @@ public class CCActionTree {
 			}
 		});
 
-		// #######################################################################################################
+		// ################################################################################################################################################################
 		CCActionElement database = root.addChild(new CCActionElement("Database", null, "ClipMenuBar.Database", ""));
-		// #######################################################################################################
+		// ################################################################################################################################################################
 
 		temp = database.addChild(new CCActionElement("CheckDatabase", null, "ClipMenuBar.Database.CheckDB", Resources.ICN_MENUBAR_DBCHECK));
 		temp.addListener(new ActionListener() {
@@ -154,9 +154,9 @@ public class CCActionTree {
 			}
 		});
 
-		// #######################################################################################################
+		// ################################################################################################################################################################
 		CCActionElement movies = root.addChild(new CCActionElement("Movies", null, "ClipMenuBar.Movies", ""));
-		// #######################################################################################################
+		// ################################################################################################################################################################
 
 		temp = movies.addChild(new CCActionElement("PlayMovie", null, "ClipMenuBar.Movies.Play", Resources.ICN_MENUBAR_PLAY));
 		temp.addListener(new ActionListener() {
@@ -222,9 +222,9 @@ public class CCActionTree {
 			}
 		});
 
-		// #######################################################################################################
+		// ################################################################################################################################################################
 		CCActionElement series = root.addChild(new CCActionElement("Serien", null, "ClipMenuBar.Series", ""));
-		// #######################################################################################################
+		// ################################################################################################################################################################
 
 		temp = series.addChild(new CCActionElement("PrevSeries", KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "ClipMenuBar.Series.Preview", Resources.ICN_MENUBAR_PREVIEW_SER));
 		temp.addListener(new ActionListener() {
@@ -314,9 +314,9 @@ public class CCActionTree {
 			}
 		});
 
-		// #######################################################################################################
+		// ################################################################################################################################################################
 		CCActionElement extras = root.addChild(new CCActionElement("Extras", null, "ClipMenuBar.Extras", ""));
-		// #######################################################################################################
+		// ################################################################################################################################################################
 
 		temp = extras.addChild(new CCActionElement("XML", null, "ClipMenuBar.Extras.XML", Resources.ICN_MENUBAR_PARSEXML));
 		temp.addListener(new ActionListener() {
@@ -382,9 +382,9 @@ public class CCActionTree {
 			}
 		});
 		
-		// #######################################################################################################
+		// ################################################################################################################################################################
 		CCActionElement help = root.addChild(new CCActionElement("Help", null, "ClipMenuBar.Help", ""));
-		// #######################################################################################################
+		// ################################################################################################################################################################
 		
 		temp = help.addChild(new CCActionElement("ShowLog", null, "ClipMenuBar.Help.Log", Resources.ICN_MENUBAR_LOG));
 		temp.addListener(new ActionListener() {
@@ -410,71 +410,9 @@ public class CCActionTree {
 			}
 		});
 		
-		// #######################################################################################################
+		// ################################################################################################################################################################
 		CCActionElement other = root.addChild(new CCActionElement("Other", null, "", "", false));
-		// #######################################################################################################
-		
-		temp = other.addChild(new CCActionElement("SetMovieRating", null, "ClipMenuBar.Other.SetMovieRating", Resources.ICN_SIDEBAR_SCORE));
-		
-		temp = other.addChild(new CCActionElement("SetSeriesRating", null, "ClipMenuBar.Other.SetSeriesRating", Resources.ICN_SIDEBAR_SCORE));
-		
-		temp = other.addChild(new CCActionElement("SetTags", null, "ClipMenuBar.Other.SetTags", Resources.ICN_MENUBAR_TAGS));
-		
-		temp = other.addChild(new CCActionElement("SetRating0", null, "CCMovieScore.R0", CCMovieScore.RATING_0.getIconName()));
-		temp.addListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onClickOtherSetRating(CCMovieScore.RATING_0);
-			}
-		});
-		
-		temp = other.addChild(new CCActionElement("SetRating1", null, "CCMovieScore.R1", CCMovieScore.RATING_I.getIconName()));
-		temp.addListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onClickOtherSetRating(CCMovieScore.RATING_I);
-			}
-		});
-		
-		temp = other.addChild(new CCActionElement("SetRating2", null, "CCMovieScore.R2", CCMovieScore.RATING_II.getIconName()));
-		temp.addListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onClickOtherSetRating(CCMovieScore.RATING_II);
-			}
-		});
-		
-		temp = other.addChild(new CCActionElement("SetRating3", null, "CCMovieScore.R3", CCMovieScore.RATING_III.getIconName()));
-		temp.addListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onClickOtherSetRating(CCMovieScore.RATING_III);
-			}
-		});
-		
-		temp = other.addChild(new CCActionElement("SetRating4", null, "CCMovieScore.R4", CCMovieScore.RATING_IV.getIconName()));
-		temp.addListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onClickOtherSetRating(CCMovieScore.RATING_IV);
-			}
-		});
-		
-		temp = other.addChild(new CCActionElement("SetRating5", null, "CCMovieScore.R5", CCMovieScore.RATING_V.getIconName()));
-		temp.addListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onClickOtherSetRating(CCMovieScore.RATING_V);
-			}
-		});
-		
-		temp = other.addChild(new CCActionElement("SetRatingNO", null, "CCMovieScore.RNO", CCMovieScore.RATING_NO.getIconName()));
-		temp.addListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onClickOtherSetRating(CCMovieScore.RATING_NO);
-			}
-		});
+		// ################################################################################################################################################################
 		
 		temp = other.addChild(new CCActionElement("SetMovieViewed", null, "ClipMenuBar.Other.SetViewed", Resources.ICN_MENUBAR_VIEWED));
 		temp.addListener(new ActionListener() {
@@ -508,7 +446,72 @@ public class CCActionTree {
 			}
 		});
 		
-		temp = other.addChild(new CCActionElement("SwitchTag_00", null, "CCMovieTags.TAG_00", Resources.ICN_MENUBAR_TAG_0_1));
+		// ################################################################################################################################################################
+		CCActionElement setMovRating = other.addChild(new CCActionElement("SetMovieRating", null, "ClipMenuBar.Other.SetMovieRating", Resources.ICN_SIDEBAR_SCORE));
+		CCActionElement setSerRating = other.addChild(new CCActionElement("SetSeriesRating", null, "ClipMenuBar.Other.SetSeriesRating", Resources.ICN_SIDEBAR_SCORE));
+		// ################################################################################################################################################################
+		
+		temp = setMovRating.addChild(new CCActionElement("SetRating0", null, "CCMovieScore.R0", CCMovieScore.RATING_0.getIconName()));
+		temp.addListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				onClickOtherSetRating(CCMovieScore.RATING_0);
+			}
+		});
+		
+		temp = setMovRating.addChild(new CCActionElement("SetRating1", null, "CCMovieScore.R1", CCMovieScore.RATING_I.getIconName()));
+		temp.addListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				onClickOtherSetRating(CCMovieScore.RATING_I);
+			}
+		});
+		
+		temp = setMovRating.addChild(new CCActionElement("SetRating2", null, "CCMovieScore.R2", CCMovieScore.RATING_II.getIconName()));
+		temp.addListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				onClickOtherSetRating(CCMovieScore.RATING_II);
+			}
+		});
+		
+		temp = setMovRating.addChild(new CCActionElement("SetRating3", null, "CCMovieScore.R3", CCMovieScore.RATING_III.getIconName()));
+		temp.addListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				onClickOtherSetRating(CCMovieScore.RATING_III);
+			}
+		});
+		
+		temp = setMovRating.addChild(new CCActionElement("SetRating4", null, "CCMovieScore.R4", CCMovieScore.RATING_IV.getIconName()));
+		temp.addListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				onClickOtherSetRating(CCMovieScore.RATING_IV);
+			}
+		});
+		
+		temp = setMovRating.addChild(new CCActionElement("SetRating5", null, "CCMovieScore.R5", CCMovieScore.RATING_V.getIconName()));
+		temp.addListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				onClickOtherSetRating(CCMovieScore.RATING_V);
+			}
+		});
+		
+		temp = setSerRating.addChild(new CCActionElement("SetRatingNO", null, "CCMovieScore.RNO", CCMovieScore.RATING_NO.getIconName())); // Damit setSerRating ein Child hat und nicht als Executable gesehen wird ...
+		temp.addListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				onClickOtherSetRating(CCMovieScore.RATING_NO);
+			}
+		});
+		
+		// ################################################################################################################################################################
+		CCActionElement setTags = other.addChild(new CCActionElement("SetTags", null, "ClipMenuBar.Other.SetTags", Resources.ICN_MENUBAR_TAGS));
+		// ################################################################################################################################################################
+		
+		temp = setTags.addChild(new CCActionElement("SwitchTag_00", null, "CCMovieTags.TAG_00", Resources.ICN_MENUBAR_TAG_0_1));
 		temp.addListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -516,7 +519,7 @@ public class CCActionTree {
 			}
 		});
 		
-		temp = other.addChild(new CCActionElement("SwitchTag_01", null, "CCMovieTags.TAG_01", Resources.ICN_MENUBAR_TAG_1_1));
+		temp = setTags.addChild(new CCActionElement("SwitchTag_01", null, "CCMovieTags.TAG_01", Resources.ICN_MENUBAR_TAG_1_1));
 		temp.addListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -524,7 +527,7 @@ public class CCActionTree {
 			}
 		});
 		
-		temp = other.addChild(new CCActionElement("SwitchTag_02", null, "CCMovieTags.TAG_02", Resources.ICN_MENUBAR_TAG_2_1));
+		temp = setTags.addChild(new CCActionElement("SwitchTag_02", null, "CCMovieTags.TAG_02", Resources.ICN_MENUBAR_TAG_2_1));
 		temp.addListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -532,7 +535,7 @@ public class CCActionTree {
 			}
 		});
 		
-		temp = other.addChild(new CCActionElement("SwitchTag_03", null, "CCMovieTags.TAG_03", Resources.ICN_MENUBAR_TAG_3_1));
+		temp = setTags.addChild(new CCActionElement("SwitchTag_03", null, "CCMovieTags.TAG_03", Resources.ICN_MENUBAR_TAG_3_1));
 		temp.addListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -540,7 +543,7 @@ public class CCActionTree {
 			}
 		});
 		
-		temp = other.addChild(new CCActionElement("SwitchTag_04", null, "CCMovieTags.TAG_04", Resources.ICN_MENUBAR_TAG_4_1));
+		temp = setTags.addChild(new CCActionElement("SwitchTag_04", null, "CCMovieTags.TAG_04", Resources.ICN_MENUBAR_TAG_4_1));
 		temp.addListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -556,6 +559,7 @@ public class CCActionTree {
 		
 		if (Main.DEBUG) {
 			root.testTree();
+			//printTree();
 			System.out.println(String.format("[DBG] %d Elements in ActionTree intialized", root.getAllChildren().size())); //$NON-NLS-1$
 		}
 	}
@@ -582,6 +586,10 @@ public class CCActionTree {
 	
 	public String getCompleteToolbarConfig() {
 		return getRoot().getRootToolbarConfig();
+	}
+	
+	public void printTree() {
+		root.printTree(0);
 	}
 
 	// #######################################################################################################

@@ -22,6 +22,8 @@ import com.jgoodies.forms.layout.RowSpec;
 import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.database.databaseElement.CCSeries;
+import de.jClipCorn.gui.CachedResourceLoader;
+import de.jClipCorn.gui.Resources;
 import de.jClipCorn.gui.guiComponents.CoverLabel;
 import de.jClipCorn.gui.guiComponents.ReadableTextField;
 import de.jClipCorn.gui.localization.LocaleBundle;
@@ -62,6 +64,7 @@ public class CreateSeriesFolderStructureFrame extends JFrame {
 	
 	private void initGUI() {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		setIconImage(CachedResourceLoader.getImage(Resources.IMG_FRAME_ICON));
 		setTitle(LocaleBundle.getString("CreateSeriesFolderStructureFrame.this.title")); //$NON-NLS-1$
 		
 		pnlTop = new JPanel();

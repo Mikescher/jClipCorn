@@ -172,6 +172,7 @@ public class CCSeries extends CCDatabaseElement {
 		return CCMovieFormat.find(maxid);
 	}
 	
+	@Override
 	public CCMovieSize getFilesize() {
 		if (CCMovieList.isBlocked()) {
 			return new CCMovieSize();

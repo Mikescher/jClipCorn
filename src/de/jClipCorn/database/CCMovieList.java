@@ -428,6 +428,26 @@ public class CCMovieList {
 		
 		return c;
 	}
+	
+	public int getMovieCount() {
+		int c = 0;
+		
+		for (Iterator<CCMovie> it = iteratorMovies(); it.hasNext();it.next()) {
+			c++;
+		}
+		
+		return c;
+	}
+	
+	public int getSeriesCount() {
+		int c = 0;
+		
+		for (Iterator<CCSeries> it = iteratorSeries(); it.hasNext();it.next()) {
+			c++;
+		}
+		
+		return c;
+	}
 
 	public List<String> getZyklusList() {
 		List<String> result = new ArrayList<>();

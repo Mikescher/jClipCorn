@@ -41,4 +41,8 @@ public class CCMovieSize {
 	public String toString() {
 		return getFormatted();
 	}
+
+	public void div(long divider) {
+		bytes /= divider;
+	}
 }

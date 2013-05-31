@@ -45,6 +45,7 @@ import de.jClipCorn.gui.frames.randomMovieFrame.RandomMovieFrame;
 import de.jClipCorn.gui.frames.scanFolderFrame.ScanFolderFrame;
 import de.jClipCorn.gui.frames.searchFrame.SearchFrame;
 import de.jClipCorn.gui.frames.settingsFrame.SettingsFrame;
+import de.jClipCorn.gui.frames.statisticsFrame.StatisticsFrame;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.DialogHelper;
@@ -373,6 +374,14 @@ public class CCActionTree {
 				onClickExtrasRandomMovie();
 			}
 		});
+		
+		temp = extras.addChild(new CCActionElement("ShowStatistics", null, "ClipMenuBar.Extras.Statistics", null)); //TODO :3 I need an icon
+		temp.addListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				onClickExtrasShowStatistics();
+			}
+		});
 
 		temp = extras.addChild(new CCActionElement("ShowSettings", null, "ClipMenuBar.Extras.Settings", Resources.ICN_MENUBAR_SETTINGS));
 		temp.addListener(new ActionListener() {
@@ -670,6 +679,11 @@ public class CCActionTree {
 	private void onClickExtrasRandomMovie() {
 		RandomMovieFrame rmf = new RandomMovieFrame(owner, movielist);
 		rmf.setVisible(true);
+	}
+	
+	private void onClickExtrasShowStatistics() {
+		StatisticsFrame sf = new StatisticsFrame(owner, movielist);
+		sf.setVisible(true);
 	}
 	
 	private void onClickExtrasMassChangeViewed() {

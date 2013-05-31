@@ -72,7 +72,9 @@ public class Main {
 
 //TODO (2.0) ONLINE SYNCHRONISATION / Online Profiles / View Ratings + Viewed from others ... ...
 
-//TODO FETURE REQUESTS / BUGS (Benjamin):
 //TODO Shortcuts für SerienWindow
 //TODO Compare Series in CompareDialog
-//TODO ADd Features to PreviewSeries Things 
+
+//TODO Convert to UTF8: Preferences->General->ContentTypes->Default Encodings && UTFCast
+//TODO [DBG] Amount Translations in locale
+//TODO Filesystemcache - > not there wait 1 second + Information (max 15s)

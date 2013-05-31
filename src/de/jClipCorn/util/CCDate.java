@@ -13,6 +13,8 @@ public class CCDate {
 	public final static String STRINGREP_EXTENDED 	= LocaleBundle.getString("CCDate.STRINGREP_EXTENDED"); //$NON-NLS-1$
 	public final static String STRINGREP_SQL 		= "YYYY-MM-DD"; //$NON-NLS-1$
 	
+	public final static long MILLISECONDS_PER_DAY = 86400000;
+	
 	public static final int YEAR_MIN = 1900; 
 	
 	private static final String[] MONTHNAMES = {
@@ -292,6 +294,10 @@ public class CCDate {
 		succ &= setMonth(m);
 		succ &= setDay(d);
 		return succ;
+	}
+	
+	public boolean set(CCDate d) {
+		return set(d.getDay(), d.getMonth(), d.getYear());
 	}
 	
 	public void add(int d, int m, int y) {
@@ -592,5 +598,9 @@ public class CCDate {
 
 	public void reset() {
 		set(1, 1, YEAR_MIN);
+	}
+	
+	public long asMilliseconds() {
+		return new CCDate(1, 1, 1970).getDayDifferenceTo(this) * MILLISECONDS_PER_DAY;
 	}
 }

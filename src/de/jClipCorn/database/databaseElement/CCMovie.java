@@ -204,6 +204,7 @@ public class CCMovie extends CCDatabaseElement {
 		updateDB();
 	}
 	
+	@Override
 	public CCMovieSize getFilesize() {
 		return filesize;
 	}

@@ -14,7 +14,7 @@ import de.jClipCorn.util.LookAndFeelManager;
 
 public class Main {
 	public final static String TITLE = "jClipCorn"; //$NON-NLS-1$
-	public final static String VERSION = "1.8";	//$NON-NLS-1$
+	public final static String VERSION = "1.8.1";	//$NON-NLS-1$
 	public final static String DBVERSION = "1.6"; 	//$NON-NLS-1$
 	
 	private final static String PROPERTIES_PATH = "jClipcorn.properties"; //$NON-NLS-1$
@@ -79,3 +79,5 @@ public class Main {
 //TODO Compare Series in CompareDialog
 
 //TODO Convert to UTF8: Preferences->General->ContentTypes->Default Encodings && UTFCast
+//TODO Button Extras->Check for Updates
+//CreateFolder TSructure Succesfull-Mesage -> Close WIndow

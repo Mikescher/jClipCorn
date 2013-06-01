@@ -121,7 +121,9 @@ public class CreateSeriesFolderStructureFrame extends JFrame {
 		btnOk.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				startMoving();
+				if (startMoving()) {
+					dispose();
+				}
 			}
 		});
 		btnOk.setEnabled(false);

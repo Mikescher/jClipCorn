@@ -70,6 +70,6 @@ public class StatisticsTagChart extends StatisticsChart {
 
 	@Override
 	protected String createTitle() {
-		return LocaleBundle.getString("StatisticsFrame.charttitles.quality"); //$NON-NLS-1$
+		return LocaleBundle.getString("StatisticsFrame.charttitles.tags"); //$NON-NLS-1$
 	}
 }

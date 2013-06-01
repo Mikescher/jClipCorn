@@ -297,7 +297,7 @@ public class DatabaseError {
 		} else if (el1 instanceof CCSeason) {
 			return false;
 		} else if (el1 instanceof CCEpisode) {
-			((CCEpisode)el1).setQuality(CCMovieQuality.calculateQuality(((CCEpisode)el1).getFilesize(), ((CCMovie)el1).getLength(), 1));
+			((CCEpisode)el1).setQuality(CCMovieQuality.calculateQuality(((CCEpisode)el1).getFilesize(), ((CCEpisode)el1).getLength(), 1));
 			return true;
 		}
 		

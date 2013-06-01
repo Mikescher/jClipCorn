@@ -56,8 +56,8 @@ public class StatisticsOnlinescoreChart extends StatisticsChart {
 		
 		int[] values = StatisticsHelper.getMovieCountForAllOnlinescores(movielist);
 		
-		for (CCMovieOnlineScore format : CCMovieOnlineScore.values()) {
-			dataset.addValue(values[format.asInt()], "Series0", "" + format.asInt()/2.0); //$NON-NLS-1$ //$NON-NLS-2$
+		for (CCMovieOnlineScore oscore : CCMovieOnlineScore.values()) {
+			dataset.addValue(values[oscore.asInt()], "Series0", "" + oscore.asInt()/2.0); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		
         return dataset;

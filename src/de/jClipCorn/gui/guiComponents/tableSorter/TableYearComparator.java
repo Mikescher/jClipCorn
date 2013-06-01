@@ -2,9 +2,11 @@ package de.jClipCorn.gui.guiComponents.tableSorter;
 
 import java.util.Comparator;
 
-public class TableYearComparator implements Comparator<Integer>{
+import de.jClipCorn.util.YearRange;
+
+public class TableYearComparator implements Comparator<YearRange>{
 	@Override
-	public int compare(Integer o1, Integer o2) {
-		return Integer.compare(o1, o2);
+	public int compare(YearRange o1, YearRange o2) {
+		return YearRange.compare(o1, o2);
 	}
 }

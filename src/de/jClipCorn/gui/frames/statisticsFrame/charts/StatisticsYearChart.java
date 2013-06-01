@@ -5,6 +5,7 @@ import java.text.DecimalFormat;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.NumberAxis;
+import org.jfree.chart.labels.StandardXYToolTipGenerator;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.StandardXYBarPainter;
@@ -46,6 +47,7 @@ public class StatisticsYearChart extends StatisticsChart {
 		bar_renderer.setBarAlignmentFactor( 0 );
 		bar_renderer.setSeriesPaint(0, HISTOGRAMMCHART_COLOR);
 		bar_renderer.setShadowVisible(true);
+		bar_renderer.setBaseToolTipGenerator(new StandardXYToolTipGenerator("{1}: {2}", new DecimalFormat("0"), new DecimalFormat("0"))); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		bar_renderer.setBarPainter(new StandardXYBarPainter());
 		
 		plot.setBackgroundPaint(HISTOGRAMMACKGROUND_COLOR);

@@ -103,6 +103,7 @@ public class CCProperties {
 	public CCBoolProperty		PROP_STATBAR_STARTTIME;
 	public CCBoolProperty		PROP_MAINFRAME_CLICKABLEZYKLUS;
 	public CCBoolProperty		PROP_MAINFRAME_DONTCHANGEZYKLUSCOLOR;
+	public CCBoolProperty		PROP_STATISTICS_INTERACTIVECHARTS;
 	
 	private Properties properties;
 	private String path;
@@ -214,6 +215,7 @@ public class CCProperties {
 		PROP_STATBAR_STARTTIME					= new CCBoolProperty(CAT_STATUSBAR,	 	this,   "PROP_STATBAR_STARTTIME",					true);
 		PROP_MAINFRAME_CLICKABLEZYKLUS			= new CCBoolProperty(CAT_VIEW,		 	this,   "PROP_MAINFRAME_CLICKABLEZYKLUS",			false);
 		PROP_MAINFRAME_DONTCHANGEZYKLUSCOLOR	= new CCBoolProperty(CAT_VIEW,		 	this,   "PROP_MAINFRAME_DONTCHANGEZYKLUSCOLOR",		false);
+		PROP_STATISTICS_INTERACTIVECHARTS		= new CCBoolProperty(NONVISIBLE,	 	this,   "PROP_STATISTICS_INTERACTIVECHARTS",		false);
 	}
 	
 	public static CCProperties getInstance() {

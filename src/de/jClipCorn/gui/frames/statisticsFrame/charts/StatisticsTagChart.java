@@ -2,6 +2,8 @@ package de.jClipCorn.gui.frames.statisticsFrame.charts;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.axis.CategoryLabelPositions;
+import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.renderer.category.BarRenderer;
@@ -9,12 +11,12 @@ import org.jfree.chart.renderer.category.StandardBarPainter;
 import org.jfree.data.category.DefaultCategoryDataset;
 
 import de.jClipCorn.database.CCMovieList;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieQuality;
+import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTags;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.StatisticsHelper;
 
-public class StatisticsQualityChart extends StatisticsChart {
-	public StatisticsQualityChart(CCMovieList ml) {
+public class StatisticsTagChart extends StatisticsChart {
+	public StatisticsTagChart(CCMovieList ml) {
 		super(ml);
 	}
 
@@ -47,6 +49,9 @@ public class StatisticsQualityChart extends StatisticsChart {
 		chart.setBackgroundPaint(null);
 		plot.getDomainAxis().setTickLabelPaint(TEXT_FOREGROUND);
 		plot.getRangeAxis().setTickLabelPaint(TEXT_FOREGROUND);
+		plot.getRangeAxis().setStandardTickUnits(NumberAxis.createIntegerTickUnits());
+		
+		plot.getDomainAxis().setCategoryLabelPositions(CategoryLabelPositions.createUpRotationLabelPositions(Math.PI / 15.0));
 	    
 	    return chart;
 	}
@@ -54,10 +59,10 @@ public class StatisticsQualityChart extends StatisticsChart {
 	private DefaultCategoryDataset getDataSet(CCMovieList movielist) {
 		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 		
-		int[] values = StatisticsHelper.getMovieCountForAllQualities(movielist);
+		int[] values = StatisticsHelper.getMovieCountForAllTags(movielist);
 		
-		for (CCMovieQuality quality : CCMovieQuality.values()) {
-			dataset.addValue(values[quality.asInt()], "Series0", quality.asString()); //$NON-NLS-1$
+		for (int i = 0; i < CCMovieTags.ACTIVETAGS; i++) {
+			dataset.addValue(values[i], "Series0", CCMovieTags.getName(i)); //$NON-NLS-1$
 		}
 		
         return dataset;

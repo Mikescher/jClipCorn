@@ -595,6 +595,22 @@ public class CCDate {
 		
 		return result;
 	}
+	
+	public static CCDate min(CCDate a, CCDate b) {
+		if (a.isGreaterThan(b)) {
+			return b;
+		} else {
+			return a;
+		}
+	}
+	
+	public static CCDate max(CCDate a, CCDate b) {
+		if (a.isGreaterThan(b)) {
+			return a;
+		} else {
+			return b;
+		}
+	}
 
 	public void reset() {
 		set(1, 1, YEAR_MIN);

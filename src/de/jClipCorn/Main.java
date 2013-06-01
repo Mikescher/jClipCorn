@@ -66,8 +66,6 @@ public class Main {
 //TODO Parse Cover from more sources (coverparadies, darktown ...) ((Erst mal sehen ob die was taugen))
 //TODO Search for Trailer
 
-//TODO statistics page (JFreeChart)
-
 //TODO Read Only - Mode
 
 //TODO (2.0) ONLINE SYNCHRONISATION / Online Profiles / View Ratings + Viewed from others ... ...

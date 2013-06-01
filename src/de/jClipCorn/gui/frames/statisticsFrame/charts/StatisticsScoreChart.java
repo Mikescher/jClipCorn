@@ -2,6 +2,7 @@ package de.jClipCorn.gui.frames.statisticsFrame.charts;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.renderer.category.BarRenderer;
@@ -9,12 +10,12 @@ import org.jfree.chart.renderer.category.StandardBarPainter;
 import org.jfree.data.category.DefaultCategoryDataset;
 
 import de.jClipCorn.database.CCMovieList;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieQuality;
+import de.jClipCorn.database.databaseElement.columnTypes.CCMovieScore;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.StatisticsHelper;
 
-public class StatisticsQualityChart extends StatisticsChart {
-	public StatisticsQualityChart(CCMovieList ml) {
+public class StatisticsScoreChart extends StatisticsChart {
+	public StatisticsScoreChart(CCMovieList ml) {
 		super(ml);
 	}
 
@@ -47,6 +48,7 @@ public class StatisticsQualityChart extends StatisticsChart {
 		chart.setBackgroundPaint(null);
 		plot.getDomainAxis().setTickLabelPaint(TEXT_FOREGROUND);
 		plot.getRangeAxis().setTickLabelPaint(TEXT_FOREGROUND);
+		plot.getRangeAxis().setStandardTickUnits(NumberAxis.createIntegerTickUnits());
 	    
 	    return chart;
 	}
@@ -54,10 +56,10 @@ public class StatisticsQualityChart extends StatisticsChart {
 	private DefaultCategoryDataset getDataSet(CCMovieList movielist) {
 		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 		
-		int[] values = StatisticsHelper.getMovieCountForAllQualities(movielist);
+		int[] values = StatisticsHelper.getMovieCountForAllScores(movielist);
 		
-		for (CCMovieQuality quality : CCMovieQuality.values()) {
-			dataset.addValue(values[quality.asInt()], "Series0", quality.asString()); //$NON-NLS-1$
+		for (int i = 0; i < values.length; i++) {
+			dataset.addValue(values[i], "Series0", CCMovieScore.find(i).asString()); //$NON-NLS-1$
 		}
 		
         return dataset;
@@ -65,6 +67,6 @@ public class StatisticsQualityChart extends StatisticsChart {
 
 	@Override
 	protected String createTitle() {
-		return LocaleBundle.getString("StatisticsFrame.charttitles.quality"); //$NON-NLS-1$
+		return LocaleBundle.getString("StatisticsFrame.charttitles.score"); //$NON-NLS-1$
 	}
 }

@@ -30,13 +30,23 @@ import de.jClipCorn.gui.CachedResourceLoader;
 import de.jClipCorn.gui.Resources;
 import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsAddDateChart;
 import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsChart;
+import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsFSKChart;
 import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsFormatChart;
+import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsGenreChart;
+import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsHoursMovChart;
+import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsHoursSerChart;
+import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsHoursSerMovChart;
+import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsLanguageChart;
 import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsMovieLengthChart;
 import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsOnlinescoreChart;
 import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsQualityChart;
+import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsScoreChart;
+import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsSizeChart;
+import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsTagChart;
 import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsViewedChart;
 import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsYearChart;
 import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.StatisticsHelper;
 import de.jClipCorn.util.TimeIntervallFormatter;
 import de.jClipCorn.util.TimeKeeper;
@@ -70,6 +80,8 @@ public class StatisticsFrame extends JFrame {
 			initCharts();
 		}
 		TimeKeeper.stop();
+		
+		cbxChooseChart.setSelectedIndex(-1);
 
 		setLocationRelativeTo(owner);
 	}
@@ -144,7 +156,13 @@ public class StatisticsFrame extends JFrame {
 		pnlCenter.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		getContentPane().add(pnlCenter, BorderLayout.CENTER);
 		
-		chartPanel = new ChartPanel(new JFreeChart(new XYPlot()));
+		chartPanel = null;
+		if (CCProperties.getInstance().PROP_STATISTICS_INTERACTIVECHARTS.getValue()) {
+			chartPanel = new ChartPanel(new JFreeChart(new XYPlot()));
+		} else {
+			chartPanel = new FixedChartPanel(new JFreeChart(new XYPlot()));
+		}
+		chartPanel.setVisible(false);
 		pnlCenter.add(chartPanel, BorderLayout.CENTER);
 		
 		setSize(1000, 550);
@@ -223,15 +241,28 @@ public class StatisticsFrame extends JFrame {
 		cbxChooseChart.addItem(new StatisticsFormatChart(movielist));
 		cbxChooseChart.addItem(new StatisticsQualityChart(movielist));
 		cbxChooseChart.addItem(new StatisticsOnlinescoreChart(movielist));
+		cbxChooseChart.addItem(new StatisticsScoreChart(movielist));
 		cbxChooseChart.addItem(new StatisticsViewedChart(movielist));
 		cbxChooseChart.addItem(new StatisticsYearChart(movielist));
+		cbxChooseChart.addItem(new StatisticsGenreChart(movielist));
+		cbxChooseChart.addItem(new StatisticsFSKChart(movielist));
+		cbxChooseChart.addItem(new StatisticsLanguageChart(movielist));
+		cbxChooseChart.addItem(new StatisticsTagChart(movielist));
+		cbxChooseChart.addItem(new StatisticsHoursMovChart(movielist));
+		cbxChooseChart.addItem(new StatisticsHoursSerChart(movielist));
+		cbxChooseChart.addItem(new StatisticsHoursSerMovChart(movielist));
+		cbxChooseChart.addItem(new StatisticsSizeChart(movielist));
 	}
 	
 	private void assignChart(StatisticsChart statchart) {
 		if (statchart == null) {
+			chartPanel.setVisible(false);
+			
 			chartPanel.setChart(new JFreeChart(new XYPlot()));	
 			lblChartCaption.setText(""); //$NON-NLS-1$
 		} else {
+			chartPanel.setVisible(true);
+			
 			chartPanel.setChart(statchart.getChart());	
 			lblChartCaption.setText(statchart.getTitle());
 		}

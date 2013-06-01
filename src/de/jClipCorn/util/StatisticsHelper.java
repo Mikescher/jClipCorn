@@ -6,13 +6,19 @@ import java.util.List;
 
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
+import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.database.databaseElement.CCSeries;
+import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFSK;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFormat;
+import de.jClipCorn.database.databaseElement.columnTypes.CCMovieGenre;
+import de.jClipCorn.database.databaseElement.columnTypes.CCMovieLanguage;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieOnlineScore;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieQuality;
+import de.jClipCorn.database.databaseElement.columnTypes.CCMovieScore;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieSize;
+import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTags;
 
 public class StatisticsHelper {
 	public static int getViewedMovieCount(CCMovieList ml) {
@@ -299,6 +305,24 @@ public class StatisticsHelper {
 		return result;
 	}
 	
+	public static int[] getMovieCountForAllScores(CCMovieList ml) {
+		int[] result = new int[CCMovieScore.values().length - 1];
+		
+		for (int i = 0; i < (CCMovieScore.values().length - 1); i++) {
+			result[i] = 0;
+		}
+		
+		for (Iterator<CCMovie> it = ml.iteratorMovies(); it.hasNext();) {
+			CCMovie m = it.next();
+		
+			if (m.getScore() != CCMovieScore.RATING_NO) {
+				result[m.getScore().asInt()]++;
+			}
+		}
+		
+		return result;
+	}
+	
 	public static int getMovieViewedCount(CCMovieList ml) {
 		int v = 0;
 		for (Iterator<CCMovie> it = ml.iteratorMovies(); it.hasNext();) {
@@ -363,5 +387,223 @@ public class StatisticsHelper {
 		}
 		
 		return result;
+	}
+	
+	public static int[] getMovieCountForAllGenres(CCMovieList ml) {
+		int[] result = new int[CCMovieGenre.values().length];
+		
+		for (int i = 0; i < CCMovieGenre.values().length; i++) {
+			result[i] = 0;
+		}
+		
+		for (Iterator<CCMovie> it = ml.iteratorMovies(); it.hasNext();) {
+			CCMovie m = it.next();
+			
+			for (int gi = 0; gi < m.getGenreCount(); gi++) {
+				result[m.getGenre(gi).asInt()]++;
+			}
+		}
+		
+		return result;
+	}
+	
+	public static int[] getMovieCountForAllFSKs(CCMovieList ml) {
+		int[] result = new int[CCMovieFSK.values().length];
+		
+		for (int i = 0; i < CCMovieFSK.values().length; i++) {
+			result[i] = 0;
+		}
+		
+		for (Iterator<CCMovie> it = ml.iteratorMovies(); it.hasNext();) {
+			CCMovie m = it.next();
+			
+			result[m.getFSK().asInt()]++;
+		}
+		
+		return result;
+	}
+	
+	public static int[] getMovieCountForAllLanguages(CCMovieList ml) {
+		int[] result = new int[CCMovieLanguage.values().length];
+		
+		for (int i = 0; i < CCMovieLanguage.values().length; i++) {
+			result[i] = 0;
+		}
+		
+		for (Iterator<CCMovie> it = ml.iteratorMovies(); it.hasNext();) {
+			CCMovie m = it.next();
+			
+			result[m.getLanguage().asInt()]++;
+		}
+		
+		return result;
+	}
+	
+	public static int[] getMovieCountForAllTags(CCMovieList ml) {
+		int[] result = new int[CCMovieTags.ACTIVETAGS];
+		
+		for (int i = 0; i < CCMovieTags.ACTIVETAGS; i++) {
+			result[i] = 0;
+		}
+		
+		for (Iterator<CCMovie> it = ml.iteratorMovies(); it.hasNext();) {
+			CCMovie m = it.next();
+			
+			for (int i = 0; i < CCMovieTags.ACTIVETAGS; i++) {
+				 if (m.getTag(i)) {
+					 result[i]++;
+				 }
+			}
+		}
+		
+		return result;
+	}
+	
+	public static int[] getAddedMinuteCountForAllDates(CCMovieList ml, CCDate startDate, int count) {
+		int[] ls = new int[count];
+		
+		for (int i = 0; i < count; i++) {
+			ls[i] = 0;
+		}
+		
+		for (Iterator<CCMovie> it = ml.iteratorMovies(); it.hasNext();) {
+			CCMovie m = it.next();
+			
+			int pos = startDate.getDayDifferenceTo(m.getAddDate());
+			
+			ls[pos] += m.getLength();
+		}
+		
+		return ls;
+	}
+	
+	public static int[] getAddedSeriesCountForAllDates(CCMovieList ml, CCDate startDate, int count) {
+		int[] ls = new int[count];
+		
+		for (int i = 0; i < count; i++) {
+			ls[i] = 0;
+		}
+		
+		for (Iterator<CCSeries> it = ml.iteratorSeries(); it.hasNext();) {
+			CCSeries series = it.next();
+			
+			for (int sea = 0; sea < series.getSeasonCount(); sea++) {
+				CCSeason season = series.getSeason(sea);
+				
+				for (int epi = 0; epi < season.getEpisodeCount(); epi++) {
+					CCEpisode episode = season.getEpisode(epi);
+					
+					int pos = startDate.getDayDifferenceTo(episode.getAddDate());
+					
+					ls[pos] += episode.getLength();
+				}
+			}
+		}
+		
+		return ls;
+	}
+	
+	public static long[] getAddedByteCountForAllDates(CCMovieList ml, CCDate startDate, int count) {
+		long[] ls = new long[count];
+		
+		for (int i = 0; i < count; i++) {
+			ls[i] = 0;
+		}
+		
+		for (Iterator<CCMovie> it = ml.iteratorMovies(); it.hasNext();) {
+			CCMovie m = it.next();
+			
+			int pos = startDate.getDayDifferenceTo(m.getAddDate());
+			
+			ls[pos] += m.getFilesize().getBytes();
+		}
+		
+		return ls;
+	}
+	
+	public static int[] getMovieMinuteCountForAllDates(CCMovieList ml, CCDate startDate, int count) {
+		int[] ls = getAddedMinuteCountForAllDates(ml, startDate, count);
+		int[] ns = new int[count];
+		
+		int curr = 0;
+		
+		for (int i = 0; i < count; i++) {
+			curr += ls[i];
+			ns[i] = curr;
+		}
+		
+		return ns;
+	}
+	
+	public static int[] getSeriesMinuteCountForAllDates(CCMovieList ml, CCDate startDate, int count) {
+		int[] ls = getAddedSeriesCountForAllDates(ml, startDate, count);
+		int[] ns = new int[count];
+		
+		int curr = 0;
+		
+		for (int i = 0; i < count; i++) {
+			curr += ls[i];
+			ns[i] = curr;
+		}
+		
+		return ns;
+	}
+	
+	public static CCDate getFirstSeriesAddDate(CCMovieList ml) {
+		CCDate date = CCDate.getNewMaximumDate();
+
+		for (Iterator<CCSeries> it = ml.iteratorSeries(); it.hasNext();) {
+			CCSeries series = it.next();
+			
+			for (int sea = 0; sea < series.getSeasonCount(); sea++) {
+				CCSeason season = series.getSeason(sea);
+				
+				for (int epi = 0; epi < season.getEpisodeCount(); epi++) {
+					CCEpisode episode = season.getEpisode(epi);
+					
+					if (episode.getAddDate().isLessThan(date)) {
+						date.set(episode.getAddDate());
+					}
+				}
+			}
+		}
+		
+		return date;
+	}
+	
+	public static CCDate getLastSeriesAddDate(CCMovieList ml) {
+		CCDate date = CCDate.getNewMinimumDate();
+		
+		for (Iterator<CCSeries> it = ml.iteratorSeries(); it.hasNext();) {
+			CCSeries series = it.next();
+			
+			for (int sea = 0; sea < series.getSeasonCount(); sea++) {
+				CCSeason season = series.getSeason(sea);
+				
+				for (int epi = 0; epi < season.getEpisodeCount(); epi++) {
+					CCEpisode episode = season.getEpisode(epi);
+					
+					if (episode.getAddDate().isGreaterThan(date)) {
+						date.set(episode.getAddDate());
+					}
+				}
+			}
+		}
+		
+		return date;
+	}
+	
+	public static long[] getMovieByteCountForAllDates(CCMovieList ml, CCDate startDate, int count) {
+		long[] ls = getAddedByteCountForAllDates(ml, startDate, count);
+		long[] ns = new long[count];
+		
+		long curr = 0;
+		
+		for (int i = 0; i < count; i++) {
+			curr += ls[i];
+			ns[i] = curr;
+		}
+		
+		return ns;
 	}
 }

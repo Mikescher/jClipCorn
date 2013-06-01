@@ -49,4 +49,16 @@ public class YearRange {
 			return getYear1() + " - " + getYear2(); //$NON-NLS-1$
 		}
 	}
+	
+	public int getMiddle() {
+		if (isTimePoint()) {
+			return getYear1();
+		} else {
+			return (getYear1() + getYear2()) / 2;
+		}
+	}
+	
+	public static int compare(YearRange a, YearRange b) {
+		return Integer.compare(a.getMiddle(), b.getMiddle());
+	}
 }

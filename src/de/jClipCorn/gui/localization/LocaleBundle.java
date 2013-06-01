@@ -1,5 +1,6 @@
 package de.jClipCorn.gui.localization;
 
+import java.util.Enumeration;
 import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
@@ -41,5 +42,18 @@ public class LocaleBundle {
 
 	public static void updateLang() {
 		bundle = ResourceBundle.getBundle(DEFAULT_BASENAME, getLocale());
+	}
+	
+	public static int getTranslationCount() {
+		int c = 0;
+		for (Enumeration<String> enum_s = ResourceBundle.getBundle(DEFAULT_BASENAME, getLocale()).getKeys(); enum_s.hasMoreElements(); enum_s.nextElement()) {
+			c++;
+		}
+		
+		return c;
+	}
+	
+	public static Locale getCurrentLocale() {
+		return getLocale();
 	}
 }

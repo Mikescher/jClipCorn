@@ -375,7 +375,7 @@ public class CCActionTree {
 			}
 		});
 		
-		temp = extras.addChild(new CCActionElement("ShowStatistics", null, "ClipMenuBar.Extras.Statistics", null)); //TODO :3 I need an icon
+		temp = extras.addChild(new CCActionElement("ShowStatistics", null, "ClipMenuBar.Extras.Statistics", Resources.ICN_MENUBAR_STATISTICS));
 		temp.addListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {

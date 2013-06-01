@@ -5,6 +5,7 @@ import javax.swing.SwingUtilities;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.gui.Resources;
 import de.jClipCorn.gui.frames.mainFrame.MainFrame;
+import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.gui.log.ExceptionHandler;
 import de.jClipCorn.properties.CCProperties;
@@ -45,6 +46,8 @@ public class Main {
 	}
 	
 	private static void init() {
+		DEBUG |= CCProperties.getInstance().PROP_OTHER_DEBUGMODE.getValue();
+		
 		if (!CCProperties.getInstance().PROP_DATABASE_CREATELOGFILE.getValue()) {
 			System.setProperty("derby.stream.error.field", "de.jClipCorn.database.DerbyDatabase.DERBY_OUT"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
@@ -57,7 +60,9 @@ public class Main {
 			Resources.preload();
 		}
 		
-		DEBUG |= CCProperties.getInstance().PROP_OTHER_DEBUGMODE.getValue();
+		if (DEBUG) {
+			System.out.println("[DBG] " + LocaleBundle.getTranslationCount() + " Translations int Locale " + LocaleBundle.getCurrentLocale()); //$NON-NLS-1$ //$NON-NLS-2$
+		}
 	}
 }
 
@@ -74,5 +79,3 @@ public class Main {
 //TODO Compare Series in CompareDialog
 
 //TODO Convert to UTF8: Preferences->General->ContentTypes->Default Encodings && UTFCast
-//TODO [DBG] Amount Translations in locale
-//TODO Filesystemcache - > not there wait 1 second + Information (max 15s)

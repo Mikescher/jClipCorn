@@ -49,7 +49,6 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.StatisticsHelper;
 import de.jClipCorn.util.TimeIntervallFormatter;
-import de.jClipCorn.util.TimeKeeper;
 
 public class StatisticsFrame extends JFrame {
 	private static final long serialVersionUID = 2443934162053374481L;
@@ -74,12 +73,12 @@ public class StatisticsFrame extends JFrame {
 		
 		initGUI();
 
-		TimeKeeper.start();
+//		TimeKeeper.start();
 		{
 			initSidebarValues();
 			initCharts();
 		}
-		TimeKeeper.stop();
+//		TimeKeeper.stop();
 		
 		cbxChooseChart.setSelectedIndex(-1);
 

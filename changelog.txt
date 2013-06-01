@@ -1,3 +1,120 @@
+############ 2013-06-01: 1.8 Features
+
+Fixed various AV's when doing Action with an unfinished DriveMap
+Showing the Translationcount as Debugmessage
+Added Statistics-Icon
+
+############ 2013-06-01: 1.8 Features (StatisticsFrame completed)
+
+Finished StatisticsFrame:
+Added Userscore-Chart
+Added Genre-Chart
+Added FSK-Chart
+Added Language-Chart
+Added Tags-Chart
+Added Hours/Date-Chart (Movies, Series, both)
+Added Size/Date-Chart
+Added Hidden Option for Interactive Charts (Default-off)
+Fixed Sort-per-Year AV
+
+############ 2013-06-01: 1.8 Features (StatisticsFrame)
+
+Added StatisticsFrame
+Added Statistics Sidebar
+Added Add-Date Chart
+Added Format-Chart
+Added Length-Chart
+Added Score-Chart
+Added Quality-Chart
+Added Viewed-Chart
+Added Year-Chart
+
+############ 2013-05-30: 1.8 Features (PreviewSeriesFrame)
+
+JCoverChooser only reacts to left MouseButton
+Added RightClickMenu to Cover
+Added all the Options to SeriesMenu, SeasonMenu, ExtrasMenu and
+PopupMenu in PreviewSeriesFrame
+Added getInstance to MainFrame (IntermediateBlocking without direct
+access)
+
+############ 2013-05-30: 1.8 Bugfixes
+
+Added CalcQuality-Button to EditSeriesFrame
+Added forceDBUpdate Funktion to MovieList
+
+############ 2013-05-30: 1.8 Features (createSeriesFolderStructure)
+
+Finished cSFS-Functionality
+Added ActionElement for this
+
+############ 2013-05-29: 1.8 Features (createSeriesFolderStructure)
+
+started Series-cFS-Dialog
+createdGUI for Series-cFS-Frame
+
+############ 2013-05-29: 1.8 Features (MoveSeriesDialog)
+
+Resizable MoveSeriesDialog
+Visual Feedback if Operation is possible in MoveSeriesDialog
+Preview before executing in MoveSeriesDialog
+
+############ 2013-05-29: 1.8 Features (CheckDatabaseFrame)
+
+Added CategoryList to CheckDatabaseFrame
+Added ErrorType to DatabaseError
+Added visualization of Autofixable to List in CheckDatabaseFrame
+Added Translations to Error-Categories
+
+############ 2013-05-27: 1.8 Features (Tag System completed)
+
+New and better Tag-Icons (but not perfect ...)
+No duplicate Icons in Resources
+Better Tag Display in Table
+
+############ 2013-05-26: 1.8 Features
+
+Updated the DB-Version, for real this time
+
+############ 2013-05-26: 1.8 Features (Tag-System)
+
+Added, Removed and changed Ions
+Removed MagicNumbers in PreviewSeriesTable
+Removed the Field "Status" (moved to Tags)
+Added Tags to Movies and Episodes
+Added TagPanel to Display Tags of an Element
+Updated Database structure to 1.6
+Updated Locales (Removed a few Inconsistencies)
+Fatal Error on wrong Database structure
+
+############ 2013-05-25: 1.7.3 RELEASE
+
+############ 2013-05-25: 1.7.3 Fixes and Tasks
+
+New empty Seasons now have the name <untitled>
+New empty Episodes now have the name <untitled>
+SeasonList gets updated in EditSeriesFrame when updating a Seasontitle
+Changed Quality to be dependent on Length
+Added CalcQuality Button to Add/Edit -MovieFrame
+
+############ 2013-05-24: 1.7.3 ToDOs
+
+I should start coding - ToDos dont help
+
+############ 2013-05-22: 1.7.3 Updated ToDos
+
+And the ToDo List is growing and growing
+
+############ 2013-05-21: 1.7.3 ToDos Update
+
+Added Requests/Bugs from Benjamin
+
+############ 2013-05-21: 1.7.3 Updated ToDos
+
+############ 2013-05-18: 1.7.2 RELEASE
+
+Bugfix Release
+
 ############ 2013-05-18: 1.7.2 Code Cleanup
 
 Removed "Magic Numbers" for Column-Indizies

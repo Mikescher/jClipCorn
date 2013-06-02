@@ -234,22 +234,6 @@ public class CCActionTree {
 				onClickSeriesPreview();
 			}
 		});
-		
-		temp = series.addChild(new CCActionElement("MoveSeries", null, "ClipMenuBar.Series.MoveSeries", Resources.ICN_MENUBAR_MOVESERIES));
-		temp.addListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onClickSeriesMove();
-			}
-		});
-		
-		temp = series.addChild(new CCActionElement("CreateFolderStructSeries", null, "ClipMenuBar.Series.CreateFolderStruct", Resources.ICN_MENUBAR_CREATEFOLDERSTRUCTURE));
-		temp.addListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onClickSeriesCreateFolderStructure();
-			}
-		});
 
 		temp = series.addChild(new CCActionElement("AddSeries", KeyStroke.getKeyStroke(KeyEvent.VK_I, InputEvent.CTRL_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK), "ClipMenuBar.Series.Add", Resources.ICN_MENUBAR_ADD_SER));
 		temp.addListener(new ActionListener() {
@@ -304,6 +288,22 @@ public class CCActionTree {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				onClickSeriesCreateTXTEpisodeguide();
+			}
+		});
+		
+		temp = series.addChild(new CCActionElement("MoveSeries", null, "ClipMenuBar.Series.MoveSeries", Resources.ICN_MENUBAR_MOVESERIES));
+		temp.addListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				onClickSeriesMove();
+			}
+		});
+		
+		temp = series.addChild(new CCActionElement("CreateFolderStructSeries", null, "ClipMenuBar.Series.CreateFolderStruct", Resources.ICN_MENUBAR_CREATEFOLDERSTRUCTURE));
+		temp.addListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				onClickSeriesCreateFolderStructure();
 			}
 		});
 

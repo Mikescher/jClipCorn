@@ -899,7 +899,7 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler {
 		for (int i = 0; i < parent.getEpisodeCount(); i++) {
 			CCEpisode ep = parent.getEpisode(i);
 			try {
-				ep.setTitle(ep.getTitle().substring(0, ep.getTitle().length() - (int) spnSide_01.getValue()));
+				ep.setTitle(ep.getTitle().substring(0, ep.getTitle().length() - (int) spnSide_02.getValue()));
 			} catch (IndexOutOfBoundsException e) {
 				// doesnt mind...
 			}

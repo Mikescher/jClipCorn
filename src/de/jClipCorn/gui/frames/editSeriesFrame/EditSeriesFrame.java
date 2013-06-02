@@ -1268,7 +1268,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		testEpisodePart();
 	}
 	
-	private void onOKEpisode(boolean check) {
+	private void onOKEpisode(boolean check) { //TODO Update middle Listbox if ! prevTitle.equals(getTitle())
 		CCEpisode episode = getSelectedEpisode();
 		
 		if (episode == null) {
@@ -1289,6 +1289,8 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 			amied.setVisible(true);
 			return;
 		}
+		
+		String prevTitle = episode.getTitle();
 		
 		episode.beginUpdating();
 		
@@ -1311,6 +1313,11 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		episode.endUpdating();
 		
 		updateEpisodePanel();
+		
+		if (! prevTitle.equals(episode.getTitle())) {
+			updateSeasonPanel();
+			selectEpisode(episode);
+		}
 	}
 	
 	public boolean checkUserDataEpisode(List<UserDataProblem> ret) {

@@ -80,4 +80,5 @@ public class Main {
 
 //TODO Convert to UTF8: Preferences->General->ContentTypes->Default Encodings && UTFCast
 //TODO Button Extras->Check for Updates
-//CreateFolder TSructure Succesfull-Mesage -> Close WIndow
+
+//TODO CCDateEditor & SpinenrCCDateModel derpen rum ... zB wenn amn manuell ein Date einfügt wird intern nicht upgeated - ODER WENN MAN WAS FALSCHES REINSCHREIBT ETC ETC - ICH KRIEGS NICHT HIN DES TZU FIXEM

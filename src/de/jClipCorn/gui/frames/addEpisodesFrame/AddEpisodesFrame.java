@@ -43,10 +43,9 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCMovieQuality;
 import de.jClipCorn.gui.CachedResourceLoader;
 import de.jClipCorn.gui.Resources;
 import de.jClipCorn.gui.frames.inputErrorFrame.InputErrorDialog;
-import de.jClipCorn.gui.guiComponents.CCDateEditor;
 import de.jClipCorn.gui.guiComponents.HFixListCellRenderer;
 import de.jClipCorn.gui.guiComponents.ReadableTextField;
-import de.jClipCorn.gui.guiComponents.SpinnerCCDateModel;
+import de.jClipCorn.gui.guiComponents.jCCDateSpinner.JCCDateSpinner;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.CCDate;
@@ -85,7 +84,7 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler {
 	private JSpinner spnSize;
 	private JLabel label_7;
 	private JLabel lblFileSize;
-	private JSpinner spnAddDate;
+	private JCCDateSpinner spnAddDate;
 	private JPanel pnlInfo;
 	private JLabel lblEpisode;
 	private JSpinner spnEpisode;
@@ -124,7 +123,7 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler {
 	private JButton btnSide_09;
 	private JButton btnRecalcSize;
 	private JLabel lblSeason;
-	private JSpinner spnLastViewed;
+	private JCCDateSpinner spnLastViewed;
 	private JLabel lblLastviewed;
 	private JButton btnToday;
 	private ReadableTextField edPart;
@@ -244,9 +243,7 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler {
 		lblFileSize.setBounds(74, 267, 193, 16);
 		pnlInfo.add(lblFileSize);
 
-		spnAddDate = new JSpinner();
-		spnAddDate.setModel(new SpinnerCCDateModel(CCDate.getNewMinimumDate(), MIN_DATE, null));
-		spnAddDate.setEditor(new CCDateEditor(spnAddDate));
+		spnAddDate = new JCCDateSpinner(CCDate.getNewMinimumDate(), MIN_DATE, null);
 		spnAddDate.setBounds(74, 330, 193, 20);
 		pnlInfo.add(spnAddDate);
 
@@ -309,10 +306,8 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler {
 		btnRecalcSize.setBounds(74, 296, 193, 23);
 		pnlInfo.add(btnRecalcSize);
 
-		spnLastViewed = new JSpinner();
-		spnLastViewed.setModel(new SpinnerCCDateModel(CCDate.getNewMinimumDate(), MIN_DATE, null));
+		spnLastViewed = new JCCDateSpinner(CCDate.getNewMinimumDate(), MIN_DATE, null);
 		spnLastViewed.setBounds(74, 366, 193, 20);
-		spnLastViewed.setEditor(new CCDateEditor(spnLastViewed));
 		pnlInfo.add(spnLastViewed);
 
 		lblLastviewed = new JLabel(LocaleBundle.getString("AddEpisodeFrame.lblLastViewed.text")); //$NON-NLS-1$
@@ -715,8 +710,8 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler {
 		episode.setFormat(cbxFormat.getSelectedIndex());
 		episode.setLength((int) spnLength.getValue());
 		episode.setFilesize((long) spnSize.getValue());
-		episode.setAddDate((CCDate) spnAddDate.getValue());
-		episode.setLastViewed((CCDate) spnLastViewed.getValue());
+		episode.setAddDate(spnAddDate.getValue());
+		episode.setLastViewed(spnLastViewed.getValue());
 		episode.setPart(edPart.getText());
 		episode.setQuality(cbxQuality.getSelectedIndex());
 
@@ -735,8 +730,8 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler {
 
 		int len = (int) spnLength.getValue();
 		int epNum = (int) spnEpisode.getValue();
-		CCDate adddate = (CCDate) spnAddDate.getValue();
-		CCDate lvdate = (CCDate) spnLastViewed.getValue();
+		CCDate adddate = spnAddDate.getValue();
+		CCDate lvdate = spnLastViewed.getValue();
 
 		long fsize = (long) spnSize.getValue();
 		int quality = cbxQuality.getSelectedIndex();

@@ -344,16 +344,18 @@ public class MainFrame extends JFrame implements CCDBUpdateListener {
 					SwingUtilities.invokeLater(new Runnable() {
 						@Override
 						public void run() {
-							if (Main.DEBUG) {
-								System.out.println("[DBG] Update found"); //$NON-NLS-1$
-							} else {
-								ShowUpdateFrame suf = new ShowUpdateFrame(MainFrame.this, (UpdateConnector) e.getSource());
-								suf.setVisible(true);
+							if (e.getID() == 1) {
+								if (Main.DEBUG) {
+									System.out.println("[DBG] Update found"); //$NON-NLS-1$
+								} else {
+									ShowUpdateFrame suf = new ShowUpdateFrame(MainFrame.this, (UpdateConnector) e.getSource(), true);
+									suf.setVisible(true);
+								}
 							}
 						}
 					});
 				}
-			});
+			}, true);
 		}
 	}
 

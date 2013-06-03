@@ -1,4 +1,4 @@
-package de.jClipCorn.gui.guiComponents;
+package de.jClipCorn.gui.guiComponents.jCCDateSpinner;
 
 import javax.swing.AbstractSpinnerModel;
 

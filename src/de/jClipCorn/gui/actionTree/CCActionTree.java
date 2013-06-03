@@ -10,11 +10,11 @@ import java.io.IOException;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.KeyStroke;
+import javax.swing.SwingUtilities;
 
 import de.jClipCorn.Main;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
-import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieScore;
@@ -45,6 +45,7 @@ import de.jClipCorn.gui.frames.randomMovieFrame.RandomMovieFrame;
 import de.jClipCorn.gui.frames.scanFolderFrame.ScanFolderFrame;
 import de.jClipCorn.gui.frames.searchFrame.SearchFrame;
 import de.jClipCorn.gui.frames.settingsFrame.SettingsFrame;
+import de.jClipCorn.gui.frames.showUpdateFrame.ShowUpdateFrame;
 import de.jClipCorn.gui.frames.statisticsFrame.StatisticsFrame;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.properties.CCProperties;
@@ -53,6 +54,7 @@ import de.jClipCorn.util.FileChooserHelper;
 import de.jClipCorn.util.HTTPUtilities;
 import de.jClipCorn.util.PathFormatter;
 import de.jClipCorn.util.TextFileUtils;
+import de.jClipCorn.util.UpdateConnector;
 import de.jClipCorn.util.parser.ImDBParser;
 
 public class CCActionTree {
@@ -408,6 +410,14 @@ public class CCActionTree {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				onClickHelpShowRules();
+			}
+		});
+		
+		temp = help.addChild(new CCActionElement("CheckUpdates", null, "ClipMenuBar.Help.Updates", Resources.ICN_MENUBAR_UPDATES));
+		temp.addListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				onClickHelpCheckUpdates();
 			}
 		});
 		
@@ -984,6 +994,26 @@ public class CCActionTree {
 		FilenameRuleFrame frf = new FilenameRuleFrame(owner);
 		frf.setVisible(true);
 	}
+
+	private void onClickHelpCheckUpdates() {
+		new UpdateConnector(Main.TITLE, Main.VERSION, new ActionListener() {
+			@Override
+			public void actionPerformed(final ActionEvent e) {
+				SwingUtilities.invokeLater(new Runnable() {
+					@Override
+					public void run() {
+						if (e.getID() == 1) {
+							ShowUpdateFrame suf = new ShowUpdateFrame(owner, (UpdateConnector) e.getSource(), true);
+							suf.setVisible(true);
+						} else {
+							ShowUpdateFrame suf = new ShowUpdateFrame(owner, (UpdateConnector) e.getSource(), false);
+							suf.setVisible(true);
+						}
+					}
+				});
+			}
+		}, false);
+	}
 	
 	private void onClickHelpShowAbout() {
 		AboutFrame af = new AboutFrame(owner);
@@ -1000,10 +1030,7 @@ public class CCActionTree {
 		if (el.isMovie()) {
 			PathFormatter.showInExplorer(((CCMovie)el).getAbsolutePart(0));
 		} else {
-			CCEpisode e = ((CCSeries)el).getFirstEpisode();
-			if (e != null) {
-				PathFormatter.showInExplorer(e.getAbsolutePart());
-			}
+			PathFormatter.showInExplorer(PathFormatter.getAbsolute(((CCSeries)el).getCommonPathStart()));
 		}
 	}
 

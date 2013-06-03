@@ -18,12 +18,16 @@ public class UpdateConnector implements Runnable {
 	private boolean updateAvailable = false;
 	private String updateName;
 	
-	public UpdateConnector(String title, String version, ActionListener listener) {
+	public UpdateConnector(String title, String version, ActionListener listener, boolean threaded) {
 		this.listener = listener;
 		this.title = title;
 		this.version = version;
 		
-		new Thread(this, "THREAD_CHECK_FOR_UPDATES").start(); //$NON-NLS-1$
+		if (threaded) {
+			new Thread(this, "THREAD_CHECK_FOR_UPDATES").start(); //$NON-NLS-1$
+		} else {
+			run();
+		}
 	}
 
 	@Override
@@ -46,6 +50,8 @@ public class UpdateConnector implements Runnable {
 		
 		if (updateAvailable) {
 			listener.actionPerformed(new ActionEvent(this, 1, updateVersion));
+		} else {
+			listener.actionPerformed(new ActionEvent(this, 0, updateVersion));
 		}
 	}
 	

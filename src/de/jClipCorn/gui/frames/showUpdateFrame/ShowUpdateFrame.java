@@ -25,23 +25,28 @@ public class ShowUpdateFrame extends JDialog {
 	private JPanel panel;
 	private JButton btnDownload;
 	
-	public ShowUpdateFrame(MainFrame owner, UpdateConnector uc) {
+	public ShowUpdateFrame(MainFrame owner, UpdateConnector uc, boolean found) {
 		super();
 		
-		initGUI(uc);
+		initGUI(uc, found);
 		
 		setLocationRelativeTo(owner);
 	}
 	
-	private void initGUI(final UpdateConnector uc) {
+	private void initGUI(final UpdateConnector uc, boolean found) {
 		setTitle(LocaleBundle.getString("ShowUpdateFrame.this.title")); //$NON-NLS-1$
 		setModal(true);
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		getContentPane().setLayout(new BorderLayout(0, 0));
 		setSize(new Dimension(450, 140));
 		
-		lblText = new JLabel(LocaleBundle.getString("ShowUpdateFrame.label.text")); //$NON-NLS-1$
-		lblText.setForeground(Color.RED);
+		lblText = null;
+		if (found) {
+			lblText = new JLabel(LocaleBundle.getString("ShowUpdateFrame.label.text")); //$NON-NLS-1$
+			lblText.setForeground(Color.RED);
+		} else {
+			lblText = new JLabel(LocaleBundle.getString("ShowUpdateFrame.label.alttext")); //$NON-NLS-1$
+		}
 		lblText.setFont(new Font("Tahoma", Font.BOLD, 15)); //$NON-NLS-1$
 		lblText.setHorizontalAlignment(SwingConstants.CENTER);
 		getContentPane().add(lblText, BorderLayout.NORTH);
@@ -61,6 +66,7 @@ public class ShowUpdateFrame extends JDialog {
 				uc.openURL();
 			}
 		});
+		btnDownload.setEnabled(found);
 		panel.add(btnDownload);
 	}
 }

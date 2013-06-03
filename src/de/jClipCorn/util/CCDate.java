@@ -9,6 +9,7 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 
 public class CCDate {
 	public final static String STRINGREP_SIMPLE 	= "DD.MM.YYYY"; //$NON-NLS-1$
+	public final static String STRINGREP_SIMPLESHORT = "DD.MM.YY"; //$NON-NLS-1$
 	public final static String STRINGREP_LOCAL 		= "DD.N.YYYY"; //$NON-NLS-1$
 	public final static String STRINGREP_EXTENDED 	= LocaleBundle.getString("CCDate.STRINGREP_EXTENDED"); //$NON-NLS-1$
 	public final static String STRINGREP_SQL 		= "YYYY-MM-DD"; //$NON-NLS-1$
@@ -255,6 +256,24 @@ public class CCDate {
 				} else {
 					return false;
 				}
+			}
+		}
+		
+		if (ty > 0 && ty < 100) { // Jahr with only 2 Letters e.g. '94
+			int currYear = new CCDate().getYear();
+
+			int currBase = ((currYear / 100) * 100);
+
+			int distanceA = Math.abs(currYear - ((currBase - 100) + ty));
+			int distanceB = Math.abs(currYear - ((currBase) + ty));
+			int distanceC = Math.abs(currYear - ((currBase + 100) + ty));
+			
+			if (distanceC < distanceB && distanceC < distanceA) {
+				ty = (currBase + 100) + ty;
+			} else if (distanceB < distanceC && distanceB < distanceA) {
+				ty = currBase + ty;
+			} else {
+				ty = (currBase - 100) + ty;
 			}
 		}
 		

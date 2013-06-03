@@ -41,11 +41,10 @@ import de.jClipCorn.gui.CachedResourceLoader;
 import de.jClipCorn.gui.Resources;
 import de.jClipCorn.gui.frames.findCoverFrame.FindCoverDialog;
 import de.jClipCorn.gui.frames.inputErrorFrame.InputErrorDialog;
-import de.jClipCorn.gui.guiComponents.CCDateEditor;
 import de.jClipCorn.gui.guiComponents.CoverLabel;
 import de.jClipCorn.gui.guiComponents.ReadableTextField;
-import de.jClipCorn.gui.guiComponents.SpinnerCCDateModel;
 import de.jClipCorn.gui.guiComponents.TagPanel;
+import de.jClipCorn.gui.guiComponents.jCCDateSpinner.JCCDateSpinner;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.properties.CCProperties;
@@ -129,7 +128,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 	private JComboBox<String> cbxLanguage;
 	private JSpinner spnLength;
 	private JLabel label_19;
-	private JSpinner spnAddDate;
+	private JCCDateSpinner spnAddDate;
 	private JLabel label_20;
 	private JLabel label_21;
 	private JSpinner spnOnlineScore;
@@ -481,9 +480,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		label_19.setBounds(10, 440, 52, 16);
 		getContentPane().add(label_19);
 		
-		spnAddDate = new JSpinner();
-		spnAddDate.setModel(new SpinnerCCDateModel(CCDate.getNewMinimumDate(), MIN_DATE, null));
-		spnAddDate.setEditor(new CCDateEditor(spnAddDate));
+		spnAddDate = new JCCDateSpinner(CCDate.getNewMinimumDate(), MIN_DATE, null);
 		spnAddDate.setBounds(93, 471, 193, 20);
 		getContentPane().add(spnAddDate);
 		
@@ -1095,7 +1092,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		
 		movie.setLength((int) spnLength.getValue());
 		
-		movie.setAddDate((CCDate) spnAddDate.getValue());
+		movie.setAddDate(spnAddDate.getValue());
 		
 		movie.setOnlinescore((int) spnOnlineScore.getValue());
 		
@@ -1145,7 +1142,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		int zyklusID = (int) spnZyklus.getValue();
 		
 		int len = (int) spnLength.getValue();
-		CCDate adddate = (CCDate) spnAddDate.getValue();
+		CCDate adddate = spnAddDate.getValue();
 		int oscore = (int) spnOnlineScore.getValue();
 		
 		int fskidx = cbxFSK.getSelectedIndex();

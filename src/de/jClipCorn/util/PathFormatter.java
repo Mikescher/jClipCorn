@@ -179,29 +179,36 @@ public class PathFormatter {
 	}
 	
 	public static String getCommonFolderPath(List<String> pathlist) {
+		if (pathlist.isEmpty()) {
+			return "";
+		}
+		
 		for (int c = 0;;c++) {
 			Character ckt = null;
+			
+			boolean equal = true;
 			for (int elem = 0; elem < pathlist.size(); elem++) {
 				if (c >= pathlist.get(elem).length()) {
-					String common = pathlist.get(elem).substring(0, c);
-					if (common.lastIndexOf('\\') < 0) {
-						return common;
-					} else {
-						return common.substring(0, common.lastIndexOf('\\') + 1);
-					}
+					equal = false;
+					break;
 				}
 
 				if (ckt == null) {
 					ckt = pathlist.get(elem).charAt(c);
 				} else {
 					if (!ckt.equals(pathlist.get(elem).charAt(c))) {
-						String common = pathlist.get(elem).substring(0, c);
-						if (common.lastIndexOf('\\') < 0) {
-							return common;
-						} else {
-							return common.substring(0, common.lastIndexOf('\\') + 1);
-						}
+						equal = false;
+						break;
 					}
+				}
+			}
+			
+			if (! equal) {
+				String common = pathlist.get(0).substring(0, c);
+				if (common.lastIndexOf('\\') < 0) {
+					return common;
+				} else {
+					return common.substring(0, common.lastIndexOf('\\') + 1);
 				}
 			}
 		}

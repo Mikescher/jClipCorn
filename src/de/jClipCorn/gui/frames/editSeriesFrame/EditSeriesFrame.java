@@ -53,12 +53,11 @@ import de.jClipCorn.gui.frames.addEpisodesFrame.AddEpisodesFrame;
 import de.jClipCorn.gui.frames.addSeasonFrame.AddSeasonFrame;
 import de.jClipCorn.gui.frames.findCoverFrame.FindCoverDialog;
 import de.jClipCorn.gui.frames.inputErrorFrame.InputErrorDialog;
-import de.jClipCorn.gui.guiComponents.CCDateEditor;
 import de.jClipCorn.gui.guiComponents.CoverLabel;
 import de.jClipCorn.gui.guiComponents.HFixListCellRenderer;
 import de.jClipCorn.gui.guiComponents.ReadableTextField;
-import de.jClipCorn.gui.guiComponents.SpinnerCCDateModel;
 import de.jClipCorn.gui.guiComponents.TagPanel;
+import de.jClipCorn.gui.guiComponents.jCCDateSpinner.JCCDateSpinner;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.properties.CCProperties;
@@ -155,8 +154,8 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 	private JButton button_2;
 	private JButton btnEpisodeToday;
 	private JButton btnEpisodeClear;
-	private JSpinner spnEpisodeAdded;
-	private JSpinner spnEpisodeLastViewed;
+	private JCCDateSpinner spnEpisodeAdded;
+	private JCCDateSpinner spnEpisodeLastViewed;
 	private JLabel label_27;
 	private JLabel label_28;
 	private JLabel label_29;
@@ -689,15 +688,11 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		btnEpisodeClear.setBounds(276, 367, 71, 23);
 		pnlEpisode.add(btnEpisodeClear);
 		
-		spnEpisodeAdded = new JSpinner();
-		spnEpisodeAdded.setModel(new SpinnerCCDateModel(CCDate.getNewMinimumDate(), MIN_DATE, null));
-		spnEpisodeAdded.setEditor(new CCDateEditor(spnEpisodeAdded));
+		spnEpisodeAdded = new JCCDateSpinner(CCDate.getNewMinimumDate(), MIN_DATE, null);
 		spnEpisodeAdded.setBounds(74, 332, 193, 20);
 		pnlEpisode.add(spnEpisodeAdded);
 		
-		spnEpisodeLastViewed = new JSpinner();
-		spnEpisodeLastViewed.setModel(new SpinnerCCDateModel(CCDate.getNewMinimumDate(), MIN_DATE, null));
-		spnEpisodeLastViewed.setEditor(new CCDateEditor(spnEpisodeLastViewed));
+		spnEpisodeLastViewed = new JCCDateSpinner(CCDate.getNewMinimumDate(), MIN_DATE, null);
 		spnEpisodeLastViewed.setBounds(74, 368, 193, 20);
 		pnlEpisode.add(spnEpisodeLastViewed);
 		
@@ -1303,8 +1298,8 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		episode.setQuality(cbxEpisodeQuality.getSelectedIndex());
 		episode.setLength((int) spnEpisodeLength.getValue());
 		episode.setFilesize((long) spnEpisodeSize.getValue());
-		episode.setAddDate((CCDate) spnEpisodeAdded.getValue());
-		episode.setLastViewed((CCDate) spnEpisodeLastViewed.getValue());
+		episode.setAddDate(spnEpisodeAdded.getValue());
+		episode.setLastViewed(spnEpisodeLastViewed.getValue());
 		episode.setPart(edEpisodePart.getText());
 		episode.setTags(tagPnl.getValue());
 		
@@ -1328,8 +1323,8 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		
 		int len = (int) spnEpisodeLength.getValue();
 		int epNum = (int) spnEpisodeEpisode.getValue();
-		CCDate adddate = (CCDate) spnEpisodeAdded.getValue();
-		CCDate lvdate = (CCDate) spnEpisodeLastViewed.getValue();
+		CCDate adddate = spnEpisodeAdded.getValue();
+		CCDate lvdate = spnEpisodeLastViewed.getValue();
 
 		long fsize = (long) spnEpisodeSize.getValue();
 		int quality = cbxEpisodeQuality.getSelectedIndex();

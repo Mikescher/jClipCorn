@@ -4,8 +4,7 @@ import java.awt.Component;
 
 import javax.swing.JSpinner;
 
-import de.jClipCorn.gui.guiComponents.CCDateEditor;
-import de.jClipCorn.gui.guiComponents.SpinnerCCDateModel;
+import de.jClipCorn.gui.guiComponents.jCCDateSpinner.JCCDateSpinner;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.properties.CCProperties;
@@ -18,9 +17,7 @@ public class CCDateProperty extends CCProperty<CCDate> {
 
 	@Override
 	public Component getComponent() {
-		JSpinner spinner = new JSpinner(new SpinnerCCDateModel(getValue(), CCDate.getNewMinimumDate(), null));
-		spinner.setEditor(new CCDateEditor(spinner));
-		return spinner;
+		return new JCCDateSpinner(getValue(), CCDate.getNewMinimumDate(), null);
 	}
 
 	@Override
@@ -30,7 +27,7 @@ public class CCDateProperty extends CCProperty<CCDate> {
 
 	@Override
 	public CCDate getComponentValue(Component c) {
-		return (CCDate) ((JSpinner)c).getValue();
+		return ((JCCDateSpinner)c).getValue();
 	}
 
 	@Override

@@ -47,6 +47,7 @@ import de.jClipCorn.gui.frames.searchFrame.SearchFrame;
 import de.jClipCorn.gui.frames.settingsFrame.SettingsFrame;
 import de.jClipCorn.gui.frames.showUpdateFrame.ShowUpdateFrame;
 import de.jClipCorn.gui.frames.statisticsFrame.StatisticsFrame;
+import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.DialogHelper;
@@ -725,6 +726,11 @@ public class CCActionTree {
 	}
 
 	private void onClickMoviesAdd() {
+		if (CCProperties.getInstance().ARG_READONLY) {
+			CCLog.addInformation(LocaleBundle.getString("LogMessage.OperationFailedDueToReadOnly")); //$NON-NLS-1$
+			return;
+		}
+		
 		AddMovieFrame nFrame = new AddMovieFrame(owner, movielist);
 
 		nFrame.setVisible(true);
@@ -778,6 +784,11 @@ public class CCActionTree {
 	}
 
 	private void onClickMoviesRem() {
+		if (CCProperties.getInstance().ARG_READONLY) {
+			CCLog.addInformation(LocaleBundle.getString("LogMessage.OperationFailedDueToReadOnly")); //$NON-NLS-1$
+			return;
+		}
+		
 		if (owner.getSelectedElement() != null && owner.getSelectedElement().isMovie()) {
 			if (DialogHelper.showLocaleYesNo(owner, "Dialogs.DeleteMovie")) { //$NON-NLS-1$
 				movielist.remove(owner.getSelectedElement());
@@ -792,6 +803,11 @@ public class CCActionTree {
 	}
 
 	private void onClickDatabaseClear() {
+		if (CCProperties.getInstance().ARG_READONLY) {
+			CCLog.addInformation(LocaleBundle.getString("LogMessage.OperationFailedDueToReadOnly")); //$NON-NLS-1$
+			return;
+		}
+		
 		if (DialogHelper.showLocaleYesNo(owner, "Dialogs.ClearDatabase")) { //$NON-NLS-1$
 			new Thread(new Runnable() {
 				@Override
@@ -836,6 +852,11 @@ public class CCActionTree {
 	}
 	
 	private void onClickDatabaseImportMultipleElements() {
+		if (CCProperties.getInstance().ARG_READONLY) {
+			CCLog.addInformation(LocaleBundle.getString("LogMessage.OperationFailedDueToReadOnly")); //$NON-NLS-1$
+			return;
+		}
+		
 		final JFileChooser chooser = new JFileChooser();
 		chooser.setFileFilter(FileChooserHelper.createLocalFileFilter("ExportHelper.filechooser_jmccexport.description", ExportHelper.EXTENSION_MULTIPLEEXPORT)); //$NON-NLS-1$
 		chooser.setCurrentDirectory(new File(PathFormatter.getRealSelfDirectory()));
@@ -880,6 +901,11 @@ public class CCActionTree {
 	}
 
 	private void onClickSeriesAdd() {
+		if (CCProperties.getInstance().ARG_READONLY) {
+			CCLog.addInformation(LocaleBundle.getString("LogMessage.OperationFailedDueToReadOnly")); //$NON-NLS-1$
+			return;
+		}
+		
 		(new AddSeriesFrame(owner, movielist)).setVisible(true);
 	}
 	
@@ -939,6 +965,11 @@ public class CCActionTree {
 	}
 	
 	private void onClickSeriesImportSingle() {
+		if (CCProperties.getInstance().ARG_READONLY) {
+			CCLog.addInformation(LocaleBundle.getString("LogMessage.OperationFailedDueToReadOnly")); //$NON-NLS-1$
+			return;
+		}
+		
 		final JFileChooser chooser = new JFileChooser();
 		chooser.setFileFilter(FileChooserHelper.createLocalFileFilter("ExportHelper.filechooser_jsccexport.description", ExportHelper.EXTENSION_SINGLEEXPORT)); //$NON-NLS-1$
 		chooser.setCurrentDirectory(new File(PathFormatter.getRealSelfDirectory()));
@@ -950,7 +981,7 @@ public class CCActionTree {
 		}
 	}
 
-	private void onClickSeriesEdit() {
+	private void onClickSeriesEdit() {		
 		CCDatabaseElement el = owner.getSelectedElement();
 
 		if (el != null && el.isSeries()) {
@@ -978,6 +1009,11 @@ public class CCActionTree {
 	}
 
 	private void onClickSeriesRem() {
+		if (CCProperties.getInstance().ARG_READONLY) {
+			CCLog.addInformation(LocaleBundle.getString("LogMessage.OperationFailedDueToReadOnly")); //$NON-NLS-1$
+			return;
+		}
+		
 		if (owner.getSelectedElement() != null && owner.getSelectedElement().isSeries()) {
 			if (DialogHelper.showLocaleYesNo(owner, "Dialogs.DeleteSeries")) {//$NON-NLS-1$
 				movielist.remove(owner.getSelectedElement());

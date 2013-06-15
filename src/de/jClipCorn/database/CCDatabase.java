@@ -126,29 +126,7 @@ public class CCDatabase extends DerbyDatabase {
 
 			mov.beginUpdating();
 
-			mov.setTitle(rs.getString(TAB_MAIN_COLUMN_NAME));
-			mov.setViewed(rs.getBoolean(TAB_MAIN_COLUMN_VIEWED));
-			mov.setZyklusTitle(rs.getString(TAB_MAIN_COLUMN_ZYKLUS));
-			mov.setZyklusID(rs.getInt(TAB_MAIN_COLUMN_ZYKLUSNUMBER));
-			mov.setQuality(rs.getInt(TAB_MAIN_COLUMN_QUALITY));
-			mov.setLanguage(rs.getInt(TAB_MAIN_COLUMN_LANGUAGE));
-			mov.setGenres(rs.getLong(TAB_MAIN_COLUMN_GENRE));
-			mov.setLength(rs.getInt(TAB_MAIN_COLUMN_LENGTH));
-			mov.setAddDate(rs.getDate(TAB_MAIN_COLUMN_ADDDATE));
-			mov.setOnlinescore(rs.getInt(TAB_MAIN_COLUMN_ONLINESCORE));
-			mov.setFsk(rs.getInt(TAB_MAIN_COLUMN_FSK));
-			mov.setFormat(rs.getInt(TAB_MAIN_COLUMN_FORMAT));
-			mov.setYear(rs.getInt(TAB_MAIN_COLUMN_MOVIEYEAR));
-			mov.setFilesize(rs.getLong(TAB_MAIN_COLUMN_FILESIZE));
-			mov.setTags(rs.getShort(TAB_MAIN_COLUMN_TAGS));
-			mov.setPart(0, rs.getString(TAB_MAIN_COLUMN_PART_1));
-			mov.setPart(1, rs.getString(TAB_MAIN_COLUMN_PART_2));
-			mov.setPart(2, rs.getString(TAB_MAIN_COLUMN_PART_3));
-			mov.setPart(3, rs.getString(TAB_MAIN_COLUMN_PART_4));
-			mov.setPart(4, rs.getString(TAB_MAIN_COLUMN_PART_5));
-			mov.setPart(5, rs.getString(TAB_MAIN_COLUMN_PART_6));
-			mov.setScore(rs.getInt(TAB_MAIN_COLUMN_SCORE));
-			mov.setCover(rs.getString(TAB_MAIN_COLUMN_COVER));
+			updateMovieFromResultSet(rs, mov);
 
 			mov.abortUpdating();
 
@@ -160,13 +138,7 @@ public class CCDatabase extends DerbyDatabase {
 
 			ser.beginUpdating();
 
-			ser.setTitle(rs.getString(TAB_MAIN_COLUMN_NAME));
-			ser.setLanguage(rs.getInt(TAB_MAIN_COLUMN_LANGUAGE));
-			ser.setGenres(rs.getLong(TAB_MAIN_COLUMN_GENRE));
-			ser.setOnlinescore(rs.getInt(TAB_MAIN_COLUMN_ONLINESCORE));
-			ser.setFsk(rs.getInt(TAB_MAIN_COLUMN_FSK));
-			ser.setScore(rs.getInt(TAB_MAIN_COLUMN_SCORE));
-			ser.setCover(rs.getString(TAB_MAIN_COLUMN_COVER));
+			updateSeriesFromResultSet(rs, ser);
 
 			ser.abortUpdating();
 
@@ -181,9 +153,7 @@ public class CCDatabase extends DerbyDatabase {
 
 		seas.beginUpdating();
 
-		seas.setTitle(rs.getString(TAB_SEASONS_COLUMN_NAME));
-		seas.setYear(rs.getInt(TAB_SEASONS_COLUMN_YEAR));
-		seas.setCover(rs.getString(TAB_SEASONS_COLUMN_COVERNAME));
+		updateSeasonFromResultSet(rs, seas);
 
 		seas.abortUpdating();
 
@@ -197,6 +167,14 @@ public class CCDatabase extends DerbyDatabase {
 
 		ep.beginUpdating();
 
+		updateEpisodeFromResultSet(rs, ep);
+
+		ep.abortUpdating();
+
+		return ep;
+	}
+
+	private void updateEpisodeFromResultSet(ResultSet rs, CCEpisode ep) throws SQLException {
 		ep.setEpisodeNumber(rs.getInt(TAB_EPISODES_COLUMN_EPISODE));
 		ep.setTitle(rs.getString(TAB_EPISODES_COLUMN_NAME));
 		ep.setViewed(rs.getBoolean(TAB_EPISODES_COLUMN_VIEWED));
@@ -208,10 +186,48 @@ public class CCDatabase extends DerbyDatabase {
 		ep.setAddDate(rs.getDate(TAB_EPISODES_COLUMN_ADDDATE));
 		ep.setLastViewed(rs.getDate(TAB_EPISODES_COLUMN_LASTVIEWED));
 		ep.setTags(rs.getShort(TAB_EPISODES_COLUMN_TAGS));
+	}
+	
+	private void updateSeasonFromResultSet(ResultSet rs, CCSeason seas) throws SQLException {
+		seas.setTitle(rs.getString(TAB_SEASONS_COLUMN_NAME));
+		seas.setYear(rs.getInt(TAB_SEASONS_COLUMN_YEAR));
+		seas.setCover(rs.getString(TAB_SEASONS_COLUMN_COVERNAME));
+	}
+	
+	private void updateSeriesFromResultSet(ResultSet rs, CCSeries ser) throws SQLException {
+		ser.setTitle(rs.getString(TAB_MAIN_COLUMN_NAME));
+		ser.setLanguage(rs.getInt(TAB_MAIN_COLUMN_LANGUAGE));
+		ser.setGenres(rs.getLong(TAB_MAIN_COLUMN_GENRE));
+		ser.setOnlinescore(rs.getInt(TAB_MAIN_COLUMN_ONLINESCORE));
+		ser.setFsk(rs.getInt(TAB_MAIN_COLUMN_FSK));
+		ser.setScore(rs.getInt(TAB_MAIN_COLUMN_SCORE));
+		ser.setCover(rs.getString(TAB_MAIN_COLUMN_COVER));
+	}
 
-		ep.abortUpdating();
-
-		return ep;
+	private void updateMovieFromResultSet(ResultSet rs, CCMovie mov) throws SQLException {
+		mov.setTitle(rs.getString(TAB_MAIN_COLUMN_NAME));
+		mov.setViewed(rs.getBoolean(TAB_MAIN_COLUMN_VIEWED));
+		mov.setZyklusTitle(rs.getString(TAB_MAIN_COLUMN_ZYKLUS));
+		mov.setZyklusID(rs.getInt(TAB_MAIN_COLUMN_ZYKLUSNUMBER));
+		mov.setQuality(rs.getInt(TAB_MAIN_COLUMN_QUALITY));
+		mov.setLanguage(rs.getInt(TAB_MAIN_COLUMN_LANGUAGE));
+		mov.setGenres(rs.getLong(TAB_MAIN_COLUMN_GENRE));
+		mov.setLength(rs.getInt(TAB_MAIN_COLUMN_LENGTH));
+		mov.setAddDate(rs.getDate(TAB_MAIN_COLUMN_ADDDATE));
+		mov.setOnlinescore(rs.getInt(TAB_MAIN_COLUMN_ONLINESCORE));
+		mov.setFsk(rs.getInt(TAB_MAIN_COLUMN_FSK));
+		mov.setFormat(rs.getInt(TAB_MAIN_COLUMN_FORMAT));
+		mov.setYear(rs.getInt(TAB_MAIN_COLUMN_MOVIEYEAR));
+		mov.setFilesize(rs.getLong(TAB_MAIN_COLUMN_FILESIZE));
+		mov.setTags(rs.getShort(TAB_MAIN_COLUMN_TAGS));
+		mov.setPart(0, rs.getString(TAB_MAIN_COLUMN_PART_1));
+		mov.setPart(1, rs.getString(TAB_MAIN_COLUMN_PART_2));
+		mov.setPart(2, rs.getString(TAB_MAIN_COLUMN_PART_3));
+		mov.setPart(3, rs.getString(TAB_MAIN_COLUMN_PART_4));
+		mov.setPart(4, rs.getString(TAB_MAIN_COLUMN_PART_5));
+		mov.setPart(5, rs.getString(TAB_MAIN_COLUMN_PART_6));
+		mov.setScore(rs.getInt(TAB_MAIN_COLUMN_SCORE));
+		mov.setCover(rs.getString(TAB_MAIN_COLUMN_COVER));
 	}
 
 	private int getIntFromSet(ResultSet rs) throws SQLException {
@@ -425,7 +441,7 @@ public class CCDatabase extends DerbyDatabase {
 	}
 
 	@SuppressWarnings("nls")
-	public boolean updateMovie(CCMovie mov) {
+	public boolean updateMovieInDatabase(CCMovie mov) {
 		try {
 			PreparedStatement s = Statements.updateMainTabStatement;
 			s.clearParameters();
@@ -468,7 +484,7 @@ public class CCDatabase extends DerbyDatabase {
 	}
 
 	@SuppressWarnings("nls")
-	public boolean updateSeries(CCSeries ser) {
+	public boolean updateSeriesInDatabase(CCSeries ser) {
 		try {
 			PreparedStatement s = Statements.updateSeriesTabStatement;
 			s.clearParameters();
@@ -495,7 +511,7 @@ public class CCDatabase extends DerbyDatabase {
 	}
 	
 	@SuppressWarnings("nls")
-	public boolean updateSeason(CCSeason ser) {
+	public boolean updateSeasonInDatabase(CCSeason ser) {
 		try {
 			PreparedStatement s = Statements.updateSeasonTabStatement;
 			s.clearParameters();
@@ -516,7 +532,7 @@ public class CCDatabase extends DerbyDatabase {
 	}
 	
 	@SuppressWarnings("nls")
-	public boolean updateEpisode(CCEpisode ep) {
+	public boolean updateEpisodeInDatabase(CCEpisode ep) {
 		try {
 			PreparedStatement s = Statements.updateEpisodeTabStatement;
 			s.clearParameters();
@@ -541,6 +557,86 @@ public class CCDatabase extends DerbyDatabase {
 			return true;
 		} catch (SQLException e) {
 			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CouldNotUpdateEpisode", ep.getTitle(), ep.getLocalID()), e);
+			return false;
+		}
+	}
+	
+	@SuppressWarnings("nls")
+	public boolean updateMovieFromDatabase(CCMovie mov) {
+		try {
+			PreparedStatement s = Statements.selectSingleMainTabStatement;
+			s.clearParameters();
+			s.setInt(1, mov.getLocalID());
+			ResultSet rs = s.executeQuery();
+		
+			if (rs.next()) { 
+				updateMovieFromResultSet(rs, mov);
+			}
+			
+			rs.close();
+			return true;
+		} catch (SQLException e) {
+			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CouldNotUpdateMovie", mov.getTitle(), mov.getLocalID()), e);
+			return false;
+		}
+	}
+	
+	@SuppressWarnings("nls")
+	public boolean updateSeriesFromDatabase(CCSeries ser) {
+		try {
+			PreparedStatement s = Statements.selectSingleMainTabStatement;
+			s.clearParameters();
+			s.setInt(1, ser.getLocalID());
+			ResultSet rs = s.executeQuery();
+		
+			if (rs.next()) { 
+				updateSeriesFromResultSet(rs, ser);
+			}
+			
+			rs.close();
+			return true;
+		} catch (SQLException e) {
+			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CouldNotUpdateSeries", ser.getTitle(), ser.getLocalID()), e);
+			return false;
+		}
+	}
+	
+	@SuppressWarnings("nls")
+	public boolean updateSeasonFromDatabase(CCSeason sea) {
+		try {
+			PreparedStatement s = Statements.selectSingleSeasonTabStatement;
+			s.clearParameters();
+			s.setInt(1, sea.getSeasonID());
+			ResultSet rs = s.executeQuery();
+		
+			if (rs.next()) { 
+				updateSeasonFromResultSet(rs, sea);
+			}
+			
+			rs.close();
+			return true;
+		} catch (SQLException e) {
+			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CouldNotUpdateSeason", sea.getTitle(), sea.getSeasonID()), e);
+			return false;
+		}
+	}
+	
+	@SuppressWarnings("nls")
+	public boolean updateEpisodeFromDatabase(CCEpisode epi) {
+		try {
+			PreparedStatement s = Statements.selectSingleSeasonTabStatement;
+			s.clearParameters();
+			s.setInt(1, epi.getLocalID());
+			ResultSet rs = s.executeQuery();
+		
+			if (rs.next()) { 
+				updateEpisodeFromResultSet(rs, epi);
+			}
+			
+			rs.close();
+			return true;
+		} catch (SQLException e) {
+			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CouldNotUpdateEpisode", epi.getTitle(), epi.getLocalID()), e);
 			return false;
 		}
 	}

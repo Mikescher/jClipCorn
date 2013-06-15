@@ -71,14 +71,18 @@ public class BackupManager {
 		int maxDiff = CCProperties.getInstance().PROP_BACKUP_LIFETIME.getValue();
 		
 		CCDate now = new CCDate();
-		
+
 		for (File b : backups) {
 			CCDate date = getBackupDate(b);
 			if (date.getDayDifferenceTo(now) > maxDiff) {
-				if (b.delete()) {
-					CCLog.addInformation(LocaleBundle.getFormattedString("LogMessage.BackupDeleted", date)); //$NON-NLS-1$
+				if (CCProperties.getInstance().ARG_READONLY) {
+					CCLog.addInformation(LocaleBundle.getString("LogMessage.OperationFailedDueToReadOnly")); //$NON-NLS-1$
 				} else {
-					CCLog.addError(LocaleBundle.getFormattedString("LogMessage.BackupNotDeleted", date)); //$NON-NLS-1$
+					if (b.delete()) {
+						CCLog.addInformation(LocaleBundle.getFormattedString("LogMessage.BackupDeleted", date)); //$NON-NLS-1$
+					} else {
+						CCLog.addError(LocaleBundle.getFormattedString("LogMessage.BackupNotDeleted", date)); //$NON-NLS-1$
+					}
 				}
 			}
 		}
@@ -98,6 +102,11 @@ public class BackupManager {
 	}
 	
 	public void createBackup() {
+		if (CCProperties.getInstance().ARG_READONLY) {
+			CCLog.addInformation(LocaleBundle.getString("LogMessage.OperationFailedDueToReadOnly")); //$NON-NLS-1$
+			return;
+		}
+		
 		CCLog.addInformation(LocaleBundle.getString("LogMessage.BackupStarted")); //$NON-NLS-1$
 		
 		CCDate now = new CCDate();

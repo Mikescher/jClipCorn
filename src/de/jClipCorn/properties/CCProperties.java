@@ -38,6 +38,9 @@ public class CCProperties {
 	public final static int CAT_OTHERFRAMES 	= 7;
 	public final static int CAT_KEYSTROKES 		= 8;
 	
+	@SuppressWarnings("nls")
+	public final static String[] readOnlyArgs = {"readonly", "-readonly", "--readonly", "read-only", "-read-only", "--read-only", "ro", "-ro", "--ro"};
+	
 	private static CCProperties mainInstance = null;
 	
 	private List<CCProperty<Object>> propertylist = new Vector<>();
@@ -105,15 +108,18 @@ public class CCProperties {
 	public CCBoolProperty		PROP_MAINFRAME_DONTCHANGEZYKLUSCOLOR;
 	public CCBoolProperty		PROP_STATISTICS_INTERACTIVECHARTS;
 	
+	public boolean ARG_READONLY = false;
+	
 	private Properties properties;
 	private String path;
 	
-	public CCProperties(String path) {
+	public CCProperties(String path, String[] args) {
 		properties = new Properties();
 		this.path = path;
 		load(path);
 		
 		createProperties();
+		interpreteArgs(args);
 		
 		if (Main.DEBUG) {
 			System.out.println("[DBG] " + propertylist.size() + " Properties in List intialized"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -297,5 +303,18 @@ public class CCProperties {
 		}
 		
 		return cat;
+	}
+	
+	private void interpreteArgs(String args[]) {
+		for (int i = 0; i < args.length; i++) {
+			for (int j = 0; j < readOnlyArgs.length; j++) {
+				if (args[i].equalsIgnoreCase(readOnlyArgs[j])) {
+					ARG_READONLY = true;
+					if (Main.DEBUG) {
+						System.out.println("[DBG] ReadOnly Mode activated (" + args[i] + ")"); //$NON-NLS-1$ //$NON-NLS-2$
+					}
+				}
+			}
+		}
 	}
 }

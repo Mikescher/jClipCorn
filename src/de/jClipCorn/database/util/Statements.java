@@ -34,6 +34,10 @@ public class Statements {
 	public static PreparedStatement deleteMainTabStatement;
 	public static PreparedStatement deleteSeasonTabStatement;
 	public static PreparedStatement deleteEpisodeTabStatement;
+	
+	public static PreparedStatement selectSingleMainTabStatement;
+	public static PreparedStatement selectSingleSeasonTabStatement;
+	public static PreparedStatement selectSingleEpisodeTabStatement;
 
 	public static void intialize(CCDatabase d) {
 		try {
@@ -53,6 +57,10 @@ public class Statements {
 			intialize_selectEpisodeTab(d);
 			
 			intialize_deleteTab(d);
+			
+			intialize_selectSingleMainTab(d);
+			intialize_selectSingleSeasonTab(d);
+			intialize_selectSingleEpisodeTab(d);
 		} catch (SQLException e) {
 			CCLog.addFatalError(LocaleBundle.getString("LogMessage.CouldNotCreatePreparedStatement"), e); //$NON-NLS-1$
 		}
@@ -81,6 +89,10 @@ public class Statements {
 			deleteMainTabStatement.close();
 			deleteSeasonTabStatement.close();
 			deleteEpisodeTabStatement.close();
+			
+			selectSingleMainTabStatement.close();
+			selectSingleSeasonTabStatement.close();
+			selectSingleEpisodeTabStatement.close();
 		} catch (SQLException e) {
 			CCLog.addFatalError(e);
 		}
@@ -283,5 +295,32 @@ public class Statements {
 		deleteMainTabStatement = d.createPreparedStatement(String.format("DELETE FROM %s WHERE %s=?", CCDatabase.TAB_MAIN, CCDatabase.TAB_MAIN_COLUMN_LOCALID));
 		deleteSeasonTabStatement = d.createPreparedStatement(String.format("DELETE FROM %s WHERE %s=?", CCDatabase.TAB_SEASONS, CCDatabase.TAB_SEASONS_COLUMN_SEASONID));
 		deleteEpisodeTabStatement = d.createPreparedStatement(String.format("DELETE FROM %s WHERE %s=?", CCDatabase.TAB_EPISODES, CCDatabase.TAB_EPISODES_COLUMN_LOCALID));
+	}
+	
+	@SuppressWarnings("nls")
+	private static void intialize_selectSingleMainTab(CCDatabase d) throws SQLException {
+		SQLSelectHelper sh = new SQLSelectHelper(CCDatabase.TAB_MAIN);
+		
+		sh.addWhere(CCDatabase.TAB_MAIN_COLUMN_LOCALID, "?");
+		
+		selectSingleMainTabStatement = d.createPreparedStatement(sh.get());
+	}
+	
+	@SuppressWarnings("nls")
+	private static void intialize_selectSingleSeasonTab(CCDatabase d) throws SQLException {
+		SQLSelectHelper sh = new SQLSelectHelper(CCDatabase.TAB_SEASONS);
+		
+		sh.addWhere(CCDatabase.TAB_SEASONS_COLUMN_SEASONID, "?");
+		
+		selectSingleSeasonTabStatement = d.createPreparedStatement(sh.get());
+	}
+	
+	@SuppressWarnings("nls")
+	private static void intialize_selectSingleEpisodeTab(CCDatabase d) throws SQLException {
+		SQLSelectHelper sh = new SQLSelectHelper(CCDatabase.TAB_MAIN);
+		
+		sh.addWhere(CCDatabase.TAB_EPISODES_COLUMN_LOCALID, "?");
+		
+		selectSingleEpisodeTabStatement = d.createPreparedStatement(sh.get());
 	}
 }

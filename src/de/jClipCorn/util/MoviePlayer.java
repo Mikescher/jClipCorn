@@ -18,7 +18,9 @@ public class MoviePlayer {
 		"Programme\\VideoLAN\\VLC\\vlc.exe", 
 		"Program Files\\VideoLAN\\VLC\\vlc.exe", 
 		"Programme (x86)\\VideoLAN\\VLC\\vlc.exe", 
-		"Program Files (x86)\\VideoLAN\\VLC\\vlc.exe"
+		"Program Files (x86)\\VideoLAN\\VLC\\vlc.exe",
+		"VideoLAN\\VLC\\vlc.exe",
+		"VLC\\vlc.exe"
 	};
 	
 	private final static String DRIVE_1 = "C:\\"; //$NON-NLS-1$

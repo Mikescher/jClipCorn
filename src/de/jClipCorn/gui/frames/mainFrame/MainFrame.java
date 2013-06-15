@@ -83,7 +83,7 @@ public class MainFrame extends JFrame implements CCDBUpdateListener {
 	}
 
 	private void initGUI() {
-		setTitle(Main.TITLE + " v" + Main.VERSION + (Main.DEBUG ? " [DEBUG]" : "")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		setTitle(createTitle());
 		setIconImage(CachedResourceLoader.getImage(Resources.IMG_FRAME_ICON));
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -362,6 +362,25 @@ public class MainFrame extends JFrame implements CCDBUpdateListener {
 	@Override
 	public void onRefresh() {
 		// -
+	}
+	
+	@SuppressWarnings("nls")
+	public String createTitle() {
+		StringBuilder builder = new StringBuilder();
+		
+		builder.append(Main.TITLE);
+		builder.append(" v");
+		builder.append(Main.VERSION);
+		
+		if (Main.DEBUG) {
+			builder.append(" [DEBUG]");
+		}
+		
+		if (CCProperties.getInstance().ARG_READONLY) {
+			builder.append(" [READONLY]");
+		}
+		
+		return builder.toString();
 	}
 	
 	public static MainFrame getInstance() {

@@ -2,7 +2,6 @@ package de.jClipCorn.properties.property;
 
 import javax.swing.KeyStroke;
 
-import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.properties.CCProperties;
 
 public class CCCaptionedKeyStrokeProperty extends CCKeyStrokeProperty {
@@ -15,10 +14,6 @@ public class CCCaptionedKeyStrokeProperty extends CCKeyStrokeProperty {
 
 	@Override
 	public String getDescription() {
-		if (captionIdent.isEmpty()) {
-			return ""; //$NON-NLS-1$
-		}
-		
-		return LocaleBundle.getString(captionIdent);
+		return captionIdent;
 	}
 }

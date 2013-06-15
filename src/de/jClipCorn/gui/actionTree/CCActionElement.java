@@ -37,6 +37,8 @@ public class CCActionElement {
 	private final List<ActionListener> listener;
 	private final List<CCActionElement> children;
 	
+	private CCActionElement parent = null;
+	
 	public CCActionElement(String name, KeyStroke stroke, String caption, String iconRes) {
 		this.name = name;
 		this.captionIdent = caption;
@@ -67,6 +69,10 @@ public class CCActionElement {
 		}
 		
 		return LocaleBundle.getString(captionIdent);
+	}
+	
+	public boolean hasCaption() {
+		return ! captionIdent.isEmpty();
 	}
 	
 	public String getCaptionIdent() {
@@ -129,7 +135,20 @@ public class CCActionElement {
 	
 	public CCActionElement addChild(CCActionElement cae) {
 		children.add(cae);
+		cae.setParent(this);
 		return cae;
+	}
+	
+	public boolean hasParent() {
+		return parent != null;
+	}
+	
+	public CCActionElement getParent() {
+		return parent;
+	}
+	
+	public void setParent(CCActionElement p) {
+		this.parent = p;
 	}
 	
 	public CCActionElement find(String name) {
@@ -236,11 +255,27 @@ public class CCActionElement {
 	}
 	
 	private void createProperty(CCProperties props) {
-		if (defaultKeyStroke == null) {
-			keyStrokeProperty = new CCCaptionedKeyStrokeProperty(CCProperties.CAT_KEYSTROKES, props, "PROP_KEYSTROKE_" + name.toUpperCase(), captionIdent, KeyStrokeUtil.getEmptyKeyStroke()); //$NON-NLS-1$
-		} else {
-			keyStrokeProperty = new CCCaptionedKeyStrokeProperty(CCProperties.CAT_KEYSTROKES, props, "PROP_KEYSTROKE_" + name.toUpperCase(), captionIdent, defaultKeyStroke); //$NON-NLS-1$
+		if (!hasChildren()) {
+			KeyStroke stroke = (defaultKeyStroke == null) ? KeyStrokeUtil.getEmptyKeyStroke() : defaultKeyStroke;
+			
+			keyStrokeProperty = new CCCaptionedKeyStrokeProperty(CCProperties.CAT_KEYSTROKES, props, "PROP_KEYSTROKE_" + name.toUpperCase(), getFullCaption(), stroke); //$NON-NLS-1$
 		}
+	}
+	
+	public String getFullCaption() {
+		StringBuilder builder = new StringBuilder();
+		
+		CCActionElement curr = this;
+		
+		while(curr != null && curr.hasCaption()) {
+			builder.insert(0, curr.getCaption() + ": "); //$NON-NLS-1$
+			
+			curr = curr.getParent();
+		}
+		
+		builder.delete(builder.length() - 2, builder.length());
+		
+		return builder.toString();
 	}
 	
 	public void createAllProperties(CCProperties props) {

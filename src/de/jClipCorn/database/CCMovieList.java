@@ -294,25 +294,65 @@ public class CCMovieList {
 	}
 
 	public void update(CCMovie el) {
-		database.updateMovie(el);
+		if (CCProperties.getInstance().ARG_READONLY) {
+			CCLog.addInformation(LocaleBundle.getString("LogMessage.OperationFailedDueToReadOnly")); //$NON-NLS-1$
+			
+			el.beginUpdating();
+			database.updateMovieFromDatabase(el);
+			el.abortUpdating();
+			
+			return;
+		}
+		
+		database.updateMovieInDatabase(el);
 
 		fireOnChangeDatabaseElement(el);
 	}
 
 	public void update(CCEpisode ep) {
-		database.updateEpisode(ep);
+		if (CCProperties.getInstance().ARG_READONLY) {
+			CCLog.addInformation(LocaleBundle.getString("LogMessage.OperationFailedDueToReadOnly")); //$NON-NLS-1$
+						
+			ep.beginUpdating();
+			database.updateEpisodeFromDatabase(ep);
+			ep.abortUpdating();
+			
+			return;
+		}
+		
+		database.updateEpisodeInDatabase(ep);
 
 		fireOnAddDatabaseElement(ep.getSeries());
 	}
 
 	public void update(CCSeries se) {
-		database.updateSeries(se);
+		if (CCProperties.getInstance().ARG_READONLY) {
+			CCLog.addInformation(LocaleBundle.getString("LogMessage.OperationFailedDueToReadOnly")); //$NON-NLS-1$
+			
+			se.beginUpdating();
+			database.updateSeriesFromDatabase(se);
+			se.abortUpdating();
+			
+			return;
+		}
+		
+		database.updateSeriesInDatabase(se);
 
 		fireOnChangeDatabaseElement(se);
 	}
 
 	public void update(CCSeason sa) {
-		database.updateSeason(sa);
+		if (CCProperties.getInstance().ARG_READONLY) {
+			CCLog.addInformation(LocaleBundle.getString("LogMessage.OperationFailedDueToReadOnly")); //$NON-NLS-1$
+			
+			sa.beginUpdating();
+			database.updateSeasonFromDatabase(sa);
+			sa.abortUpdating();
+			
+			return;
+		}
+		
+		database.updateSeasonInDatabase(sa);
 
 		fireOnChangeDatabaseElement(sa.getSeries());
 	}

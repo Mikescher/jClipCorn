@@ -94,6 +94,11 @@ public class CCLog {
 	}
 
 	public static void save() {
+		if (CCProperties.getInstance().ARG_READONLY) {
+			CCLog.addInformation(LocaleBundle.getString("LogMessage.OperationFailedDueToReadOnly")); //$NON-NLS-1$
+			return;
+		}
+		
 		FileWriter file = null;
 		PrintWriter out = null;
 		try {

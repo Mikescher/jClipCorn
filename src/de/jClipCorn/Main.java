@@ -22,7 +22,7 @@ public class Main {
 	public static boolean DEBUG = "true".equals(System.getProperty("ineclipse"));  //$NON-NLS-1$//$NON-NLS-2$
 	
 	public static void main(String[] arg) {
-		new CCProperties(PROPERTIES_PATH); // MUSS ALS ERSTES CREATED WERDEN - FUCKING IMPORTANT
+		new CCProperties(PROPERTIES_PATH, arg); // MUSS ALS ERSTES CREATED WERDEN - FUCKING IMPORTANT
 		
 		CCLog.setPath(CCProperties.getInstance().PROP_LOG_PATH.getValue());
 		
@@ -79,6 +79,3 @@ public class Main {
 //TODO Compare Series in CompareDialog
 
 //TODO Convert to UTF8: Preferences->General->ContentTypes->Default Encodings && UTFCast
-//TODO Button Extras->Check for Updates
-
-//TODO CCDateEditor & SpinenrCCDateModel derpen rum ... zB wenn amn manuell ein Date einfügt wird intern nicht upgeated - ODER WENN MAN WAS FALSCHES REINSCHREIBT ETC ETC - ICH KRIEGS NICHT HIN DES TZU FIXEM

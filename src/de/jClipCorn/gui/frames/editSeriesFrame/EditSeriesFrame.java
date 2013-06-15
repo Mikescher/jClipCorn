@@ -1263,7 +1263,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		testEpisodePart();
 	}
 	
-	private void onOKEpisode(boolean check) { //TODO Update middle Listbox if ! prevTitle.equals(getTitle())
+	private void onOKEpisode(boolean check) {
 		CCEpisode episode = getSelectedEpisode();
 		
 		if (episode == null) {

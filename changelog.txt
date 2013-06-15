@@ -1,3 +1,41 @@
+############ 2013-06-15: 1.8.2 Bugfixes
+
+Fixed getRelativePath for non absolute Paths
+Improved Error Managment in CreateSeriesFolderStructure
+
+############ 2013-06-15: Removed already done ToDos
+
+############ 2013-06-15: 1.8.2 Bugfixes + Features
+
+Added Read Only Mode
+Added additional VLC Paths
+Fixed unused ACtionELements in SHortcut Settings
+Improved ActionELement Naming in Shortcut Settings
+
+############ 2013-06-03: 1.8.2 Bugfixes
+
+Fixed Series->openInFoder: Opening wrong path
+Fixed CCDate Spinner not regitering manually inserted CCDates
+Added Recognizing of short years ('95) to CCDate Parser
+Fixed getCommonFolderPath resulting in an endless loop for empty input
+values
+Added CheckForUpdates CCAction
+Added Case for No Update found in UpdateFrame
+
+############ 2013-06-02: 1.8.2 Bugfixes
+
+AddEpisodesFrame: Fixed Wrong Spinner for Sidebarbutton
+EditSeriesFrame: Update List after Changing Episodetitle
+
+############ 2013-06-01: 1.8.1 RELEASE
+
+Fixed AV when Autofixing wrong Quality of an Episode
+createSTructureFrame closes after successful operation
+
+############ 2013-06-01: 1.8 RELEASE
+
+Updated Version to 1.8
+
 ############ 2013-06-01: 1.8 Features
 
 Fixed various AV's when doing Action with an unfinished DriveMap

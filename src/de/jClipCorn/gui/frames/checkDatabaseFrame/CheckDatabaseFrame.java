@@ -273,6 +273,10 @@ public class CheckDatabaseFrame extends JFrame {
 				}
 				
 				setMainListModel(dlm);
+				
+				if (clm.size() <= 1) {
+					clm.clear();
+				}
 				setCategoriesListModel(clm);
 				
 				errorList = errors;

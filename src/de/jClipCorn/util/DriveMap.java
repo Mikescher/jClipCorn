@@ -50,6 +50,20 @@ public class DriveMap {
 		
 		return (name == null) ? ("") : (name);
 	}
+	
+	public static boolean hasDriveName(Character letter) {
+		if (! isCreated()) {
+			if (isCreating()) {
+				waitForCreateFinished();
+			} else {
+				createMap();
+			}
+		}
+		
+		String name = driveNameMap.get(letter);
+		
+		return name != null;
+	}
 
 	private static void createMap() {
 		is_creating = true;

@@ -91,8 +91,10 @@ public class PathFormatter {
 			return aPath.replace(getAbsoluteSelfDirectory(), WILDCARD_SELF);
 		} else if (aPath.charAt(0) == WORKINGDIR.charAt(0)) {
 			return WILDCARD_SELFDRIVE.concat(aPath.substring(3));
-		} else {
+		} else if (aPath.length() > 3 && Character.isLetter(aPath.charAt(0)) && aPath.charAt(1) == ':' && aPath.charAt(2) == '\\' && DriveMap.hasDriveName(aPath.charAt(0))){
 			return String.format(WILDCARD_DRIVENAME, DriveMap.getDriveName(aPath.charAt(0))).concat(aPath.substring(3));
+		} else {
+			return aPath;
 		}
 	}
 	

@@ -2,7 +2,6 @@ package de.jClipCorn.gui.frames.createSeriesFolderStructureFrame;
 
 import java.awt.Color;
 import java.awt.Component;
-import java.io.File;
 
 import javax.swing.JList;
 
@@ -16,9 +15,22 @@ public class CreateSeriesFolderStructureTestListCellRenderer extends SubstanceDe
 	@SuppressWarnings("rawtypes")
 	@Override
 	public Component getListCellRendererComponent(JList paramlist, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-		setText(PathFormatter.getRelative(((File)value).getAbsolutePath()));
+		setText(PathFormatter.getRelative(((String)value).substring(1)));
 		
-		setForeground(((File)value).exists() ? Color.RED : Color.GREEN);
+		switch (((String) value).charAt(0)) {
+		case '0':
+			setForeground(Color.GREEN);
+			break;
+		case '1':
+			setForeground(Color.YELLOW);
+			break;
+		case '2':
+			setForeground(Color.RED);
+			break;
+		default:
+			setForeground(Color.BLACK);
+			break;
+		}
 
 		return this;
 	}

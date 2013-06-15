@@ -3,6 +3,12 @@ package de.jClipCorn.gui.frames.createSeriesFolderStructureFrame;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -30,10 +36,6 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.DialogHelper;
 import de.jClipCorn.util.PathFormatter;
 
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.io.File;
-
 public class CreateSeriesFolderStructureFrame extends JFrame {
 	private static final long serialVersionUID = 8494757660196292481L;
 	
@@ -46,7 +48,7 @@ public class CreateSeriesFolderStructureFrame extends JFrame {
 	private ReadableTextField edPath;
 	private JButton btnChoose;
 	private JScrollPane scrlPnlBottom;
-	private JList<File> lsTest;
+	private JList<String> lsTest;
 	private JButton btnOk;
 	private JButton btnTest;
 	private JLabel lblCommonPath;
@@ -171,7 +173,7 @@ public class CreateSeriesFolderStructureFrame extends JFrame {
 	}
 	
 	private void startTest() {
-		DefaultListModel<File> dlm = new DefaultListModel<>();
+		DefaultListModel<String> dlm = new DefaultListModel<>();
 		
 		File parentfolder = new File(edPath.getText());
 		
@@ -181,7 +183,19 @@ public class CreateSeriesFolderStructureFrame extends JFrame {
 			for (int epi = 0; epi < season.getEpisodeCount(); epi++) {
 				CCEpisode episode = season.getEpisode(epi);
 				
-				dlm.addElement(episode.getFileForCreatedFolderstructure(parentfolder));
+				File p = episode.getFileForCreatedFolderstructure(parentfolder);
+				String pt = p.getAbsolutePath();
+				int id = 0; // GREEN
+				if (p.exists()) {
+					id = 1; // YELLOW;
+				}
+				for (int i = 0; i < dlm.size(); i++) {
+					if (dlm.get(i).substring(1).equals(pt)) {
+						id = 2; // RED
+					}
+				}
+				
+				dlm.addElement(id + pt);
 			}
 		}
 		
@@ -189,7 +203,7 @@ public class CreateSeriesFolderStructureFrame extends JFrame {
 	}
 	
 	private boolean startMoving() {
-		lsTest.setModel(new DefaultListModel<File>());
+		lsTest.setModel(new DefaultListModel<String>());
 		
 		if (! testMoving()) {
 			DialogHelper.showLocalInformation(this, "CreateSeriesFolderStructureFrame.dialogs.couldnotmove"); //$NON-NLS-1$
@@ -209,6 +223,16 @@ public class CreateSeriesFolderStructureFrame extends JFrame {
 					File newfile = episode.getFileForCreatedFolderstructure(parentfolder);
 					
 					File mkdirfolder = newfile.getParentFile();
+					
+					if (newfile.exists()) {
+						if (file.equals(newfile)) {
+							continue; // Skip already existing and correct Files
+						} else {
+							DialogHelper.showError(this, LocaleBundle.getString("CreateSeriesFolderStructureFrame.dialogs.error_caption"), LocaleBundle.getFormattedString("CreateSeriesFolderStructureFrame.dialogs.error", episode.getTitle())); //$NON-NLS-1$ //$NON-NLS-2$
+							
+							return false;
+						}
+					}
 					
 					boolean succ = true;
 					if (! mkdirfolder.isDirectory()) {
@@ -239,15 +263,22 @@ public class CreateSeriesFolderStructureFrame extends JFrame {
 			return false;
 		}
 		
+		List<File> files = new ArrayList<>();
+		
 		for (int sea = 0; sea < series.getSeasonCount(); sea++) {
 			CCSeason season = series.getSeason(sea);
 		
 			for (int epi = 0; epi < season.getEpisodeCount(); epi++) {
 				CCEpisode episode = season.getEpisode(epi);
 				
-				if (episode.getFileForCreatedFolderstructure(parentfolder).exists()) {
-					return false;
-				}
+				files.add(episode.getFileForCreatedFolderstructure(parentfolder));
+			}
+		}
+		
+		Collections.sort(files);
+		for (int i = 1; i < files.size(); i++) {
+			if (files.get(i-1).equals(files.get(i))) {
+				return false;
 			}
 		}
 		

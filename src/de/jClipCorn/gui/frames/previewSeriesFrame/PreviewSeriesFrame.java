@@ -139,7 +139,7 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 	/**
 	 * @wbp.parser.constructor
 	 */
-	public PreviewSeriesFrame(Component owner, CCSeries ser) {
+	public PreviewSeriesFrame(Component owner, CCSeries ser) { //TODO Big'O' Button for Continue watching
 		this.dispSeries = ser;
 		initGUI();
 		setSize(new Dimension(1000, 700));

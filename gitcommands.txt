@@ -35,3 +35,22 @@ git log --pretty=format:'############ %ad: %B' --date=short >changelog.txt
 >> Open in Notepad++
 >> go to Hex View -> Remove BOM (if there)
 >> Convert to ANSI
+
+##################################
+#  PUSH AND OVERRIDE CONFLICTS   #
+##################################
+
+git push -f
+
+#######################
+#  MERGE WITH KDIFF   #
+#######################
+
+.git/config:
+
+[merge]
+        tool = kdiff3
+[mergetool "kdiff3"]
+        path = c:/Program Files/KDiff3/kdiff3.exe
+		keepBackup = false
+		trustExitCode = false

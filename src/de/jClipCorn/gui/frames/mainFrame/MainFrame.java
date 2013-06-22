@@ -337,7 +337,7 @@ public class MainFrame extends JFrame implements CCDBUpdateListener {
 
 	@Override
 	public void onAfterLoad() {
-		if (CCProperties.getInstance().PROP_COMMON_CHECKFORUPDATES.getValue()) {
+		if (CCProperties.getInstance().PROP_COMMON_CHECKFORUPDATES.getValue() && ! Main.BETA) {
 			new UpdateConnector(Main.TITLE, Main.VERSION, new ActionListener() {
 				@Override
 				public void actionPerformed(final ActionEvent e) {
@@ -371,6 +371,10 @@ public class MainFrame extends JFrame implements CCDBUpdateListener {
 		builder.append(Main.TITLE);
 		builder.append(" v");
 		builder.append(Main.VERSION);
+		
+		if (Main.BETA) {
+			builder.append("-beta");
+		}
 		
 		if (Main.DEBUG) {
 			builder.append(" [DEBUG]");

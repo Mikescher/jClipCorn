@@ -14,12 +14,13 @@ import de.jClipCorn.util.LookAndFeelManager;
 
 public class Main {
 	public final static String TITLE = "jClipCorn"; //$NON-NLS-1$
-	public final static String VERSION = "1.8.2";	//$NON-NLS-1$
+	public final static String VERSION = "1.8.3";	//$NON-NLS-1$
 	public final static String DBVERSION = "1.6"; 	//$NON-NLS-1$
 	
 	private final static String PROPERTIES_PATH = "jClipcorn.properties"; //$NON-NLS-1$
 	
 	public static boolean DEBUG = "true".equals(System.getProperty("ineclipse"));  //$NON-NLS-1$//$NON-NLS-2$
+	public static boolean BETA = false;
 	
 	public static void main(String[] arg) {
 		new CCProperties(PROPERTIES_PATH, arg); // MUSS ALS ERSTES CREATED WERDEN - FUCKING IMPORTANT

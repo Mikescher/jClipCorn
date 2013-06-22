@@ -47,7 +47,7 @@ public class CCMovie extends CCDatabaseElement {
 		zyklus = new CCMovieZyklus();
 		filesize = new CCMovieSize();
 		tags = new CCMovieTags();
-		addDate = CCDate.getNewMinimumDate();
+		addDate = CCDate.getMinimumDate();
 	}
 	
 	@Override
@@ -57,7 +57,7 @@ public class CCMovie extends CCDatabaseElement {
 		zyklus.reset();
 		quality = CCMovieQuality.STREAM;
 		length = 0;
-		addDate.reset();
+		addDate = CCDate.getMinimumDate();
 		format = CCMovieFormat.MKV;
 		year = 1900;
 		filesize.setBytes(0);
@@ -173,7 +173,7 @@ public class CCMovie extends CCDatabaseElement {
 	}
 	
 	public void setAddDate(Date sqldate) {
-		this.addDate = new CCDate(sqldate);
+		this.addDate = CCDate.create(sqldate);
 		
 		updateDB();
 	}
@@ -333,13 +333,11 @@ public class CCMovie extends CCDatabaseElement {
 		super.parseFromXML(e, resetAddDate, resetViewed);
 		
 		if (e.getAttributeValue("adddate") != null) {
-			CCDate d = new CCDate();
-			d.parse(e.getAttributeValue("adddate"), "D.M.Y");
-			setAddDate(d);
+			setAddDate(CCDate.parse(e.getAttributeValue("adddate"), "D.M.Y"));
 		}
 		
 		if (resetAddDate) {
-			setAddDate(new CCDate());
+			setAddDate(CCDate.getCurrentDate());
 		}
 		
 		if (e.getAttributeValue("filesize") != null)

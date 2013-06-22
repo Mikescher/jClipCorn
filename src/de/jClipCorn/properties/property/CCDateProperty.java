@@ -17,7 +17,7 @@ public class CCDateProperty extends CCProperty<CCDate> {
 
 	@Override
 	public Component getComponent() {
-		return new JCCDateSpinner(getValue(), CCDate.getNewMinimumDate(), null);
+		return new JCCDateSpinner(getValue(), CCDate.getMinimumDate(), null);
 	}
 
 	@Override
@@ -40,15 +40,13 @@ public class CCDateProperty extends CCProperty<CCDate> {
 			return standard;
 		}
 		
-		CCDate d = CCDate.getNewMinimumDate();
-		
-		if (! d.parse(val, "D.M.Y")) { //$NON-NLS-1$
+		if (! CCDate.testparse(val, "D.M.Y")) { //$NON-NLS-1$
 			CCLog.addWarning(LocaleBundle.getFormattedString("LogMessage.PropFormatErrorCCDate", identifier, mclass.getName())); //$NON-NLS-1$
 			setDefault();
 			return standard;
 		}
 		
-		return d;
+		return CCDate.parse(val, "D.M.Y"); //$NON-NLS-1$
 	}
 
 	@Override

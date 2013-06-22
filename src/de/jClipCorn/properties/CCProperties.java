@@ -187,7 +187,7 @@ public class CCProperties {
 		PROP_COMMON_PRESCANFILESYSTEM			= new CCBoolProperty(CAT_COMMON, 		this, 	"PROP_COMMON_PRESCANFILESYSTEM", 			true);
 		PROP_SCANFOLDER_INCLUDESERIES			= new CCBoolProperty(CAT_OTHERFRAMES, 	this, 	"PROP_SCANFOLDER_INCLUDESERIES", 			false);
 		PROP_SCANFOLDER_EXCLUDEIFOS 			= new CCBoolProperty(CAT_OTHERFRAMES, 	this, 	"PROP_SCANFOLDER_EXCLUDEIFOS", 				false);
-		PROP_BACKUP_LASTBACKUP					= new CCDateProperty(NONVISIBLE, 		this, 	"PROP_BACKUP_LASTBACKUP", 					CCDate.getNewMinimumDate());
+		PROP_BACKUP_LASTBACKUP					= new CCDateProperty(NONVISIBLE, 		this, 	"PROP_BACKUP_LASTBACKUP", 					CCDate.getMinimumDate());
 		PROP_BACKUP_CREATEBACKUPS				= new CCBoolProperty(CAT_BACKUP, 		this, 	"PROP_BACKUP_CREATEBACKUPS", 				true);
 		PROP_BACKUP_FOLDERNAME					= new CCStringProperty(CAT_BACKUP,	 	this,	"PROP_BACKUP_FOLDERNAME",					"jClipCorn_backup");
 		PROP_BACKUP_BACKUPTIME					= new CCPintProperty(CAT_BACKUP, 		this, 	"PROP_BACKUP_BACKUPTIME", 					7);

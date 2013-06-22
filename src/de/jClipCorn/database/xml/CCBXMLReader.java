@@ -109,9 +109,7 @@ public class CCBXMLReader {
 		newMov.setGenre(translateGenre(e.getChild("genre").getChild("genre05").getAttribute("dec").getIntValue()), 5);
 		newMov.setGenre(translateGenre(e.getChild("genre").getChild("genre06").getAttribute("dec").getIntValue()), 6);
 		newMov.setLength(Integer.parseInt(e.getChildText("länge")));
-		CCDate d = new CCDate();
-		d.parse(e.getChildText("adddate"), "D.M.Y");
-		newMov.setAddDate(d);
+		newMov.setAddDate(CCDate.parse(e.getChildText("adddate"), "D.M.Y"));
 		newMov.setOnlinescore(Integer.parseInt(e.getChildText("imdbscore")));
 		newMov.setFsk(e.getChild("usk").getAttribute("dec").getIntValue());
 		newMov.setFormat(e.getChild("format").getAttribute("dec").getIntValue());
@@ -220,10 +218,8 @@ public class CCBXMLReader {
 		newEp.setFormat(owner.getChild("format").getAttribute("dec").getIntValue());
 		newEp.setFilesize(owner.getChild("größe").getAttribute("dec").getLongValue() * 1024);
 		newEp.setPart(owner.getChildText("pathpart1"));
-		CCDate d = new CCDate();
-		d.parse(owner.getChildText("adddate"), "D.M.Y");
-		newEp.setAddDate(d);
-		newEp.setLastViewed(CCDate.getNewMinimumDate());
+		newEp.setAddDate(CCDate.parse(owner.getChildText("adddate"), "D.M.Y"));
+		newEp.setLastViewed(CCDate.getMinimumDate());
 		
 		final CCEpisode finep = newEp;
 		try {

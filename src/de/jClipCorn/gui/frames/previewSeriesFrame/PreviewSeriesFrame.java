@@ -92,7 +92,6 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 	private JTextField edSearch;
 	private JPanel pnlSearch;
 	private JButton btnSearch;
-	private Component hStrut_1;
 	private JMenuBar menuBar;
 	private JPanel pnlOnlinescore;
 	private JLabel lblLength;
@@ -135,11 +134,13 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 	private JMenuItem mntmEpisodeguide;
 	private JMenuItem mntmMoveSeries;
 	private JMenuItem mntmCreateFolderStruct;
+	private JPanel pnlTopLeft;
+	private JButton btnPlayNext;
 
 	/**
 	 * @wbp.parser.constructor
 	 */
-	public PreviewSeriesFrame(Component owner, CCSeries ser) { //TODO Big'O' Button for Continue watching
+	public PreviewSeriesFrame(Component owner, CCSeries ser) {
 		this.dispSeries = ser;
 		initGUI();
 		setSize(new Dimension(1000, 700));
@@ -237,9 +238,19 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 		});
 		btnSearch.setIcon(CachedResourceLoader.getSmallImageIcon(Resources.ICN_FRAMES_SEARCH));
 		pnlSearch.add(btnSearch);
-
-		hStrut_1 = Box.createHorizontalStrut(200);
-		pnlTopInfo.add(hStrut_1, BorderLayout.WEST);
+		
+		pnlTopLeft = new JPanel();
+		pnlTopInfo.add(pnlTopLeft, BorderLayout.WEST);
+		pnlTopLeft.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+		
+		btnPlayNext = new JButton(LocaleBundle.getString("PreviewSeriesFrame.btnPlayNext.caption")); //$NON-NLS-1$
+		btnPlayNext.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				resumePlaying();
+			}
+		});
+		pnlTopLeft.add(btnPlayNext);
 
 		pnlCoverChooser = new JPanel();
 		pnlTop.add(pnlCoverChooser, BorderLayout.CENTER);

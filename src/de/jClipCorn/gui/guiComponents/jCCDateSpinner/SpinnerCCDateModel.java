@@ -19,24 +19,20 @@ public class SpinnerCCDateModel extends AbstractSpinnerModel {
 
 	@Override
 	public CCDate getNextValue() {
-		CCDate c = current.copy();
-		
 		if (max == null || current.isLessThan(max)) {
-			c.addDay(1);
+			current = current.getAddDay(1);
 		}
 		
-		return c;
+		return current;
 	}
 
 	@Override
 	public CCDate getPreviousValue() {
-		CCDate c = current.copy();
-		
-		if (min == null || c.isGreaterThan(min)) {
-			c.subDay(1);
+		if (min == null || current.isGreaterThan(min)) {
+			current = current.getSubDay(1);
 		}
 		
-		return c;
+		return current;
 	}
 
 	@Override

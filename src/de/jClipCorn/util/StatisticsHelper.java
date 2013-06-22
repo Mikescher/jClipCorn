@@ -166,12 +166,12 @@ public class StatisticsHelper {
 	}
 	
 	public static CCDate getFirstMovieAddDate(CCMovieList ml) {
-		CCDate date = CCDate.getNewMaximumDate();
+		CCDate date = CCDate.getMaximumDate();
 		
 		for (Iterator<CCMovie> it = ml.iteratorMovies(); it.hasNext();) {
 			CCMovie m = it.next();
 			if (m.getAddDate().isLessThan(date)) {
-				date.set(m.getAddDate());
+				date = m.getAddDate();
 			}
 		}
 		
@@ -179,12 +179,12 @@ public class StatisticsHelper {
 	}
 	
 	public static CCDate getLastMovieAddDate(CCMovieList ml) {
-		CCDate date = CCDate.getNewMinimumDate();
+		CCDate date = CCDate.getMinimumDate();
 		
 		for (Iterator<CCMovie> it = ml.iteratorMovies(); it.hasNext();) {
 			CCMovie m = it.next();
 			if (m.getAddDate().isGreaterThan(date)) {
-				date.set(m.getAddDate());
+				date = m.getAddDate();
 			}
 		}
 		
@@ -550,7 +550,7 @@ public class StatisticsHelper {
 	}
 	
 	public static CCDate getFirstSeriesAddDate(CCMovieList ml) {
-		CCDate date = CCDate.getNewMaximumDate();
+		CCDate date = CCDate.getMaximumDate();
 
 		for (Iterator<CCSeries> it = ml.iteratorSeries(); it.hasNext();) {
 			CCSeries series = it.next();
@@ -562,7 +562,7 @@ public class StatisticsHelper {
 					CCEpisode episode = season.getEpisode(epi);
 					
 					if (episode.getAddDate().isLessThan(date)) {
-						date.set(episode.getAddDate());
+						date = episode.getAddDate();
 					}
 				}
 			}
@@ -572,7 +572,7 @@ public class StatisticsHelper {
 	}
 	
 	public static CCDate getLastSeriesAddDate(CCMovieList ml) {
-		CCDate date = CCDate.getNewMinimumDate();
+		CCDate date = CCDate.getMinimumDate();
 		
 		for (Iterator<CCSeries> it = ml.iteratorSeries(); it.hasNext();) {
 			CCSeries series = it.next();
@@ -584,7 +584,7 @@ public class StatisticsHelper {
 					CCEpisode episode = season.getEpisode(epi);
 					
 					if (episode.getAddDate().isGreaterThan(date)) {
-						date.set(episode.getAddDate());
+						date = episode.getAddDate();
 					}
 				}
 			}

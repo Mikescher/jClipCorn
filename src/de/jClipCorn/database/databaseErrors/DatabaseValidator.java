@@ -26,7 +26,7 @@ import de.jClipCorn.util.ProgressCallbackListener;
 import de.jClipCorn.util.RomanNumberFormatter;
 
 public class DatabaseValidator {
-	private final static CCDate MIN_DATE = CCDate.getNewMinimumDate();
+	private final static CCDate MIN_DATE = CCDate.getMinimumDate();
 	
 	public static void startValidate(List<DatabaseError> e, CCMovieList ml, ProgressCallbackListener pcl) {
 		pcl.setMax(ml.getElementCount() * 5); // 1x Normal  +  2x  checkCover  +  2x CheckFiles
@@ -109,7 +109,7 @@ public class DatabaseValidator {
 		// Wrong AddDate
 		// ###############################################
 		
-		if (series.getAddDate().isLessEqualsThan(MIN_DATE) || series.getAddDate().isGreaterThan(new CCDate())) {
+		if (series.getAddDate().isLessEqualsThan(MIN_DATE) || series.getAddDate().isGreaterThan(CCDate.getCurrentDate())) {
 			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_WRONG_ADDDATE, series));
 		}
 
@@ -238,7 +238,7 @@ public class DatabaseValidator {
 		// Wrong AddDate
 		// ###############################################
 		
-		if (mov.getAddDate().isLessEqualsThan(MIN_DATE) || mov.getAddDate().isGreaterThan(new CCDate())) {
+		if (mov.getAddDate().isLessEqualsThan(MIN_DATE) || mov.getAddDate().isGreaterThan(CCDate.getCurrentDate())) {
 			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_WRONG_ADDDATE, mov));
 		}
 
@@ -318,7 +318,7 @@ public class DatabaseValidator {
 		// Wrong AddDate
 		// ###############################################
 		
-		if (season.getAddDate().isLessEqualsThan(MIN_DATE) || season.getAddDate().isGreaterThan(new CCDate())) {
+		if (season.getAddDate().isLessEqualsThan(MIN_DATE) || season.getAddDate().isGreaterThan(CCDate.getCurrentDate())) {
 			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_WRONG_ADDDATE, season));
 		}
 
@@ -370,7 +370,7 @@ public class DatabaseValidator {
 		// Wrong AddDate
 		// ###############################################
 		
-		if (episode.getAddDate().isLessEqualsThan(MIN_DATE) || episode.getAddDate().isGreaterThan(new CCDate())) {
+		if (episode.getAddDate().isLessEqualsThan(MIN_DATE) || episode.getAddDate().isGreaterThan(CCDate.getCurrentDate())) {
 			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_WRONG_ADDDATE, episode));
 		}
 		
@@ -378,7 +378,7 @@ public class DatabaseValidator {
 		// Wrong LastViewedDate
 		// ###############################################
 		
-		if (episode.getLastViewed().isGreaterThan(new CCDate())) {
+		if (episode.getLastViewed().isGreaterThan(CCDate.getCurrentDate())) {
 			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_WRONG_LASTVIEWEDDATE, episode));
 		}
 		

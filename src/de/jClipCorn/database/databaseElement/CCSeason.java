@@ -206,23 +206,23 @@ public class CCSeason {
 	}
 	
 	public CCDate calcMaximumAddDate() {
-		CCDate cd = CCDate.getNewMinimumDate();
+		CCDate cd = CCDate.getMinimumDate();
 		for (CCEpisode ep : episodes) {
 			if (ep.getAddDate().isGreaterThan(cd)) {
 				cd = ep.getAddDate();
 			}
 		}
-		return cd.copy();
+		return cd;
 	}
 	
 	public CCDate calcMinimumAddDate() {
-		CCDate cd = CCDate.getNewMaximumDate();
+		CCDate cd = CCDate.getMaximumDate();
 		for (CCEpisode ep : episodes) {
 			if (ep.getAddDate().isLessThan(cd)) {
 				cd = ep.getAddDate();
 			}
 		}
-		return cd.copy();
+		return cd;
 	}
 	
 	public CCDate calcAverageAddDate() {

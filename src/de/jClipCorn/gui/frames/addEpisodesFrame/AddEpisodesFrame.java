@@ -61,7 +61,7 @@ import de.jClipCorn.util.userdataProblem.UserDataProblemHandler;
 public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler {
 	private static final long serialVersionUID = 8825373383589912037L;
 
-	private static CCDate MIN_DATE = CCDate.getNewMinimumDate();
+	private static CCDate MIN_DATE = CCDate.getMinimumDate();
 
 	private final CCSeason parent;
 	private final JFileChooser videoFileChooser;
@@ -243,7 +243,7 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler {
 		lblFileSize.setBounds(74, 267, 193, 16);
 		pnlInfo.add(lblFileSize);
 
-		spnAddDate = new JCCDateSpinner(CCDate.getNewMinimumDate(), MIN_DATE, null);
+		spnAddDate = new JCCDateSpinner(CCDate.getMinimumDate(), MIN_DATE, null);
 		spnAddDate.setBounds(74, 330, 193, 20);
 		pnlInfo.add(spnAddDate);
 
@@ -290,7 +290,7 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler {
 		btnClear.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				spnLastViewed.setValue(CCDate.getNewMinimumDate());
+				spnLastViewed.setValue(CCDate.getMinimumDate());
 			}
 		});
 		btnClear.setBounds(276, 365, 71, 23);
@@ -306,7 +306,7 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler {
 		btnRecalcSize.setBounds(74, 296, 193, 23);
 		pnlInfo.add(btnRecalcSize);
 
-		spnLastViewed = new JCCDateSpinner(CCDate.getNewMinimumDate(), MIN_DATE, null);
+		spnLastViewed = new JCCDateSpinner(CCDate.getMinimumDate(), MIN_DATE, null);
 		spnLastViewed.setBounds(74, 366, 193, 20);
 		pnlInfo.add(spnLastViewed);
 
@@ -318,7 +318,7 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler {
 		btnToday.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				spnAddDate.setValue(new CCDate());
+				spnAddDate.setValue(CCDate.getCurrentDate());
 			}
 		});
 		btnToday.setBounds(276, 329, 71, 23);
@@ -779,8 +779,8 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler {
 			cbxFormat.setSelectedIndex(episode.getFormat().asInt());
 			spnLength.setValue(episode.getLength());
 			spnSize.setValue(episode.getFilesize().getBytes());
-			spnAddDate.setValue(episode.getAddDate().copy());
-			spnLastViewed.setValue(episode.getLastViewed().copy());
+			spnAddDate.setValue(episode.getAddDate());
+			spnLastViewed.setValue(episode.getLastViewed());
 			edPart.setText(episode.getPart());
 			cbxQuality.setSelectedIndex(episode.getQuality().asInt());
 
@@ -864,8 +864,8 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler {
 				ep.setPart(abspath);
 			}
 			ep.setQuality(CCMovieQuality.STREAM);
-			ep.setAddDate(new CCDate());
-			ep.setLastViewed(CCDate.getNewMinimumDate());
+			ep.setAddDate(CCDate.getCurrentDate());
+			ep.setLastViewed(CCDate.getMinimumDate());
 
 			ep.endUpdating();
 		}

@@ -42,8 +42,8 @@ public class CCEpisode {
 		
 		filesize = new CCMovieSize();
 		tags = new CCMovieTags();
-		addDate = CCDate.getNewMinimumDate();
-		lastViewed = CCDate.getNewMinimumDate();
+		addDate = CCDate.getMinimumDate();
+		lastViewed = CCDate.getMinimumDate();
 	}
 
 	public void beginUpdating() {
@@ -141,7 +141,7 @@ public class CCEpisode {
 	}
 	
 	public void setAddDate(Date sqldate) {
-		this.addDate = new CCDate(sqldate);
+		this.addDate = CCDate.create(sqldate);
 		
 		updateDB();
 	}
@@ -153,13 +153,13 @@ public class CCEpisode {
 	}
 	
 	public void resetLastViewed() {
-		this.lastViewed = CCDate.getNewMinimumDate();
+		this.lastViewed = CCDate.getMinimumDate();
 		
 		updateDB();
 	}
 	
 	public void setLastViewed(Date sqldate) {
-		this.lastViewed = new CCDate(sqldate);
+		this.lastViewed = CCDate.create(sqldate);
 		
 		updateDB();
 	}
@@ -210,8 +210,8 @@ public class CCEpisode {
 		filesize.setBytes(0);
 		tags.clear();
 		part = ""; //$NON-NLS-1$
-		addDate.reset();
-		lastViewed.reset();
+		addDate = CCDate.getMinimumDate();
+		lastViewed = CCDate.getMinimumDate();
 		
 		if (updateDB) {
 			updateDB();
@@ -275,7 +275,7 @@ public class CCEpisode {
 		
 		setViewed(true);
 		
-		setLastViewed(new CCDate());
+		setLastViewed(CCDate.getCurrentDate());
 	}
 	
 	/**
@@ -328,13 +328,11 @@ public class CCEpisode {
 			setViewed(false);
 		
 		if (e.getAttributeValue("adddate") != null) {
-			CCDate d = new CCDate();
-			d.parse(e.getAttributeValue("adddate"), "D.M.Y");
-			setAddDate(d);
+			setAddDate(CCDate.parse(e.getAttributeValue("adddate"), "D.M.Y"));
 		}
 		
 		if (resetAddDate) {
-			setAddDate(new CCDate());
+			setAddDate(CCDate.getCurrentDate());
 		}
 		
 		if (e.getAttributeValue("episodenumber") != null)
@@ -347,9 +345,7 @@ public class CCEpisode {
 			setFormat(Integer.parseInt(e.getAttributeValue("format")));
 		
 		if (e.getAttributeValue("lastviewed") != null) {
-			CCDate d = new CCDate();
-			d.parse(e.getAttributeValue("lastviewed"), "D.M.Y");
-			setLastViewed(d);
+			setLastViewed(CCDate.parse(e.getAttributeValue("lastviewed"), "D.M.Y"));
 		}
 		
 		if (e.getAttributeValue("length") != null)

@@ -550,7 +550,7 @@ public class CompareDatabaseFrame extends JFrame {
 
 		root.setAttribute("version", Main.VERSION);
 		root.setAttribute("dbversion", Main.DBVERSION);
-		root.setAttribute("date", new CCDate().getSimpleStringRepresentation());
+		root.setAttribute("date", CCDate.getCurrentDate().getSimpleStringRepresentation());
 		root.setAttribute("elementcount", movielist.getElementCount() + "");
 
 		for (Iterator<CCMovie> it = movielist.iteratorMovies(); it.hasNext();) {

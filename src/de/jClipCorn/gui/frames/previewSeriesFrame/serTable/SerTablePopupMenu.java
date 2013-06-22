@@ -61,7 +61,7 @@ public class SerTablePopupMenu extends JPopupMenu {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				episode.setViewed(true);
-				episode.setLastViewed(new CCDate());
+				episode.setLastViewed(CCDate.getCurrentDate());
 				owner.updateSeason();
 			}
 		});

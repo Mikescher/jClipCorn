@@ -48,9 +48,8 @@ public class BackupManager {
 	
 	private CCDate getBackupDate(File f) {
 		String sdate = RegExHelper.find(REGEXNAME, f.getName());
-		CCDate result = CCDate.getNewMinimumDate();
-		if (result.parse(sdate, "D.M.Y")) { //$NON-NLS-1$
-			return result;
+		if (CCDate.testparse(sdate, "D.M.Y")) { //$NON-NLS-1$
+			return CCDate.parse(sdate, "D.M.Y"); //$NON-NLS-1$
 		} else {
 			CCLog.addWarning(LocaleBundle.getFormattedString("LogMessage.CouldNotParseCCDate", sdate)); //$NON-NLS-1$
 			return null;
@@ -70,7 +69,7 @@ public class BackupManager {
 		
 		int maxDiff = CCProperties.getInstance().PROP_BACKUP_LIFETIME.getValue();
 		
-		CCDate now = new CCDate();
+		CCDate now = CCDate.getCurrentDate();
 
 		for (File b : backups) {
 			CCDate date = getBackupDate(b);
@@ -94,7 +93,7 @@ public class BackupManager {
 	private void tryCreateBackup() {
 		int minDiff = CCProperties.getInstance().PROP_BACKUP_BACKUPTIME.getValue();
 		CCDate lastBackup = CCProperties.getInstance().PROP_BACKUP_LASTBACKUP.getValue();
-		CCDate now = new CCDate();
+		CCDate now = CCDate.getCurrentDate();
 		
 		if (lastBackup.getDayDifferenceTo(now) > minDiff && movielist.getDatabaseDirectory().exists()) {
 			createBackup();
@@ -109,7 +108,7 @@ public class BackupManager {
 		
 		CCLog.addInformation(LocaleBundle.getString("LogMessage.BackupStarted")); //$NON-NLS-1$
 		
-		CCDate now = new CCDate();
+		CCDate now = CCDate.getCurrentDate();
 		
 		File file = new File(getBackupDirectory().getAbsolutePath() + '\\' + String.format(NAME, CCProperties.getInstance().PROP_DATABASE_NAME.getValue(), now.getSimpleStringRepresentation()) + '.' + ExportHelper.EXTENSION_BACKUP);
 		
@@ -128,6 +127,6 @@ public class BackupManager {
 		}
 		
 		CCLog.addInformation(LocaleBundle.getString("LogMessage.BackupCreated")); //$NON-NLS-1$
-		CCProperties.getInstance().PROP_BACKUP_LASTBACKUP.setValue(new CCDate());
+		CCProperties.getInstance().PROP_BACKUP_LASTBACKUP.setValue(CCDate.getCurrentDate());
 	}
 }

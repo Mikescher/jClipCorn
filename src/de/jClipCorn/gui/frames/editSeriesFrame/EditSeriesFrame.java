@@ -79,7 +79,7 @@ import de.jClipCorn.util.userdataProblem.UserDataProblemHandler;
 public class EditSeriesFrame extends JFrame implements ParseResultHandler, WindowListener {
 	private static final long serialVersionUID = -3694533463871522503L;
 	
-	private static CCDate MIN_DATE = CCDate.getNewMinimumDate();
+	private static CCDate MIN_DATE = CCDate.getMinimumDate();
 	
 	private final JFileChooser videoFileChooser;
 	private final JFileChooser coverFileChooser;
@@ -672,7 +672,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		btnEpisodeToday.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				spnEpisodeAdded.setValue(new CCDate());
+				spnEpisodeAdded.setValue(CCDate.getCurrentDate());
 			}
 		});
 		btnEpisodeToday.setBounds(276, 331, 71, 23);
@@ -682,17 +682,17 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		btnEpisodeClear.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				spnEpisodeLastViewed.setValue(CCDate.getNewMinimumDate());
+				spnEpisodeLastViewed.setValue(CCDate.getMinimumDate());
 			}
 		});
 		btnEpisodeClear.setBounds(276, 367, 71, 23);
 		pnlEpisode.add(btnEpisodeClear);
 		
-		spnEpisodeAdded = new JCCDateSpinner(CCDate.getNewMinimumDate(), MIN_DATE, null);
+		spnEpisodeAdded = new JCCDateSpinner(CCDate.getMinimumDate(), MIN_DATE, null);
 		spnEpisodeAdded.setBounds(74, 332, 193, 20);
 		pnlEpisode.add(spnEpisodeAdded);
 		
-		spnEpisodeLastViewed = new JCCDateSpinner(CCDate.getNewMinimumDate(), MIN_DATE, null);
+		spnEpisodeLastViewed = new JCCDateSpinner(CCDate.getMinimumDate(), MIN_DATE, null);
 		spnEpisodeLastViewed.setBounds(74, 368, 193, 20);
 		pnlEpisode.add(spnEpisodeLastViewed);
 		
@@ -872,8 +872,8 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		cbxEpisodeQuality.setSelectedIndex(episode.getQuality().asInt());
 		spnEpisodeLength.setValue(episode.getLength());
 		spnEpisodeSize.setValue(episode.getFilesize().getBytes());
-		spnEpisodeAdded.setValue(episode.getAddDate().copy());
-		spnEpisodeLastViewed.setValue(episode.getLastViewed().copy());
+		spnEpisodeAdded.setValue(episode.getAddDate());
+		spnEpisodeLastViewed.setValue(episode.getLastViewed());
 		edEpisodePart.setText(episode.getPart());
 		tagPnl.setValue(episode.getTags());
 		

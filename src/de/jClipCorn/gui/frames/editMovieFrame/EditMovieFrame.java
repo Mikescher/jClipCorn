@@ -65,7 +65,7 @@ import de.jClipCorn.util.userdataProblem.UserDataProblemHandler;
 public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDataProblemHandler{
 	private static final long serialVersionUID = 4392838185334567222L;
 	
-	private static CCDate MIN_DATE = CCDate.getNewMinimumDate();
+	private static CCDate MIN_DATE = CCDate.getMinimumDate();
 	
 	private final JFileChooser videoFileChooser;
 	private final JFileChooser coverFileChooser;
@@ -480,7 +480,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		label_19.setBounds(10, 440, 52, 16);
 		getContentPane().add(label_19);
 		
-		spnAddDate = new JCCDateSpinner(CCDate.getNewMinimumDate(), MIN_DATE, null);
+		spnAddDate = new JCCDateSpinner(CCDate.getMinimumDate(), MIN_DATE, null);
 		spnAddDate.setBounds(93, 471, 193, 20);
 		getContentPane().add(spnAddDate);
 		
@@ -632,7 +632,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		btnToday.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				spnAddDate.setValue(new CCDate());
+				spnAddDate.setValue(CCDate.getCurrentDate());
 			}
 		});
 		btnToday.setBounds(296, 470, 78, 23);
@@ -678,7 +678,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		cbxGenre6.setModel(new DefaultComboBoxModel<>(CCMovieGenre.getTrimmedList()));
 		cbxGenre7.setModel(new DefaultComboBoxModel<>(CCMovieGenre.getTrimmedList()));
 		
-		spnAddDate.setValue(new CCDate());
+		spnAddDate.setValue(CCDate.getCurrentDate());
 		spnZyklus.setValue(-1);
 		
 		updateByteDisp();
@@ -795,7 +795,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		cbxQuality.setSelectedIndex(movie.getQuality().asInt());
 		cbxLanguage.setSelectedIndex(movie.getLanguage().asInt());
 		spnLength.setValue(movie.getLength());
-		spnAddDate.setValue(movie.getAddDate().copy());
+		spnAddDate.setValue(movie.getAddDate());
 		spnOnlineScore.setValue(movie.getOnlinescore().asInt());
 		cbxFSK.setSelectedIndex(movie.getFSK().asInt());
 		cbxFormat.setSelectedIndex(movie.getFormat().asInt());

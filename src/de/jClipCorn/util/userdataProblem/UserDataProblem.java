@@ -124,7 +124,7 @@ public class UserDataProblem {
 		
 		//################################################################################################################
 
-		if (adddate.isLessEqualsThan(CCDate.getNewMinimumDate())) {
+		if (adddate.isLessEqualsThan(CCDate.getMinimumDate())) {
 			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_DATE_TOO_LESS));
 		}
 		
@@ -348,13 +348,13 @@ public class UserDataProblem {
 		
 		//################################################################################################################
 
-		if (adddate.isLessEqualsThan(CCDate.getNewMinimumDate())) {
+		if (adddate.isLessEqualsThan(CCDate.getMinimumDate())) {
 			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_DATE_TOO_LESS));
 		}
 		
 		//################################################################################################################
 
-		if (lvdate.isLessThan(CCDate.getNewMinimumDate())) {
+		if (lvdate.isLessThan(CCDate.getMinimumDate())) {
 			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_DATE_TOO_LESS));
 		}
 

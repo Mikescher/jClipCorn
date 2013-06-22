@@ -122,7 +122,7 @@ public class CCSeries extends CCDatabaseElement {
 	}
 	
 	public CCDate calcMaximumAddDate() {
-		CCDate cd = CCDate.getNewMinimumDate();
+		CCDate cd = CCDate.getMinimumDate();
 		for (CCSeason se: seasons) {
 			if (se.getAddDate().isGreaterThan(cd)) {
 				cd = se.calcMinimumAddDate();
@@ -132,7 +132,7 @@ public class CCSeries extends CCDatabaseElement {
 	}
 	
 	public CCDate calcMinimumAddDate() {
-		CCDate cd = CCDate.getNewMaximumDate();
+		CCDate cd = CCDate.getMaximumDate();
 		for (CCSeason se: seasons) {
 			if (se.getAddDate().isLessThan(cd)) {
 				cd = se.calcMaximumAddDate();
@@ -310,7 +310,7 @@ public class CCSeries extends CCDatabaseElement {
 		}
 		
 		if (isViewed()) {
-			CCDate d = CCDate.getNewMinimumDate();
+			CCDate d = CCDate.getMinimumDate();
 			
 			for (int i = 0; i < el.size(); i++) {
 				if (d.isGreaterThan(el.get(i).getLastViewed())) {

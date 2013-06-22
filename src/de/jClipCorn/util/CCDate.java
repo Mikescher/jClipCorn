@@ -7,7 +7,7 @@ import java.util.List;
 
 import de.jClipCorn.gui.localization.LocaleBundle;
 
-public class CCDate {
+public final class CCDate {
 	public final static String STRINGREP_SIMPLE 	= "DD.MM.YYYY"; //$NON-NLS-1$
 	public final static String STRINGREP_SIMPLESHORT = "DD.MM.YY"; //$NON-NLS-1$
 	public final static String STRINGREP_LOCAL 		= "DD.N.YYYY"; //$NON-NLS-1$
@@ -17,6 +17,10 @@ public class CCDate {
 	public final static long MILLISECONDS_PER_DAY = 86400000;
 	
 	public static final int YEAR_MIN = 1900; 
+	public static final int YEAR_MAX = 9999; 
+	
+	public static final CCDate DATE_MIN = new CCDate(1, 1, YEAR_MIN);
+	public static final CCDate DATE_MAX = new CCDate(31, 12, YEAR_MAX);
 	
 	private static final String[] MONTHNAMES = {
 		LocaleBundle.getString("CCDate.Month0"), //$NON-NLS-1$
@@ -48,47 +52,61 @@ public class CCDate {
 	private static final int[][] MONTHLIMITS = {{0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31}, {0, 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31}};
 	private static final int[] MONTHVALUES = {0, 3, 2, 5, 0, 3, 5, 1, 4, 6, 2, 4};
 	
-	private int day = 1;
-	private int month = 1;
-	private int year = YEAR_MIN;
+	private final int day;
+	private final int month;
+	private final int year;
 	
-	public CCDate() {
+	private CCDate(int d, int m, int y) {
+		day = d;
+		month = m;
+		year = y;
+	}
+	
+	public static CCDate getCurrentDate() {
 		Calendar c = Calendar.getInstance();
-		set(c.get(Calendar.DAY_OF_MONTH), c.get(Calendar.MONTH)+1, c.get(Calendar.YEAR));
+		return new CCDate(c.get(Calendar.DAY_OF_MONTH), c.get(Calendar.MONTH)+1, c.get(Calendar.YEAR));
 	}
 	
-	public CCDate(int d, int m, int y) {
-		set(d, m, y);
+	public static CCDate create(CCDate d) {
+		return new CCDate(d.getDay(), d.getMonth(), d.getYear());
 	}
 	
-	public CCDate(CCDate d) {
-		set(d.getDay(), d.getMonth(), d.getYear());
+	public static CCDate create(int d, int m, int y) {
+		return new CCDate(d, m, y);
 	}
 	
-	public static CCDate getNewMinimumDate() {
-		return new CCDate(1, 1, YEAR_MIN);
-	}
-	
-	public static CCDate getNewMaximumDate() { //Not really Maximum - just extreme high
-		return new CCDate(31, 12, 9999);
-	}
-
-	public CCDate(Date d) {
+	public static CCDate create(Date d) {
 		Calendar c = new GregorianCalendar();
 		c.setTime(d);
-		set(c.get(Calendar.DAY_OF_MONTH), c.get(Calendar.MONTH) + 1, c.get(Calendar.YEAR));
+		return new CCDate(c.get(Calendar.DAY_OF_MONTH), c.get(Calendar.MONTH) + 1, c.get(Calendar.YEAR));
+	}
+	
+	public static CCDate getMinimumDate() {
+		return DATE_MIN;
+	}
+	
+	public static CCDate getMaximumDate() { //Not really Maximum - just extreme high
+		return DATE_MAX;
 	}
 
 	public String getMonthName() {
 		return MONTHNAMES[month];
 	}
 	
+	public static int getDaysOfMonth(int m, int y) {
+		return MONTHLIMITS[ (isLeapYear(y)) ? (1) : (0) ][ m ];
+	}
+	
 	public int getDaysOfMonth() {
-		return MONTHLIMITS[ (isLeapYear()) ? (1) : (0) ][ month ];
+		return getDaysOfMonth(month, year);
+	}
+	
+	public static boolean isLeapYear(int y) {
+		return ((y % 4 == 0 && y % 100 != 0) || y % 400 == 0);
 	}
 	
 	public boolean isLeapYear() {
-		return ((year % 4 == 0 && year % 100 != 0) || year % 400 == 0);
+		return isLeapYear(year);
 	}
 	
 	private int getWeekdayInt() {
@@ -205,6 +223,10 @@ public class CCDate {
 		return getStringRepresentation(STRINGREP_SQL);
 	}
 	
+	public static boolean testparse(String rawData, String fmt) {
+		return parse(rawData, fmt) != null;
+	}
+	
 	/**
 	 * @param rawData parseable DATA
 	 * @param fmt Format of rawData 
@@ -214,12 +236,12 @@ public class CCDate {
 	 * Y	=> YEAR
 	 * @return
 	 */
-	public boolean parse(String rawData, String fmt) {
+	public static CCDate parse(String rawData, String fmt) {
 		char c;
 		int rp = 0;
-		int td = day;
-		int tm = month;
-		int ty = year;
+		int td = 1;
+		int tm = 1;
+		int ty = YEAR_MIN;
 		
 		rawData += '\0';
 		
@@ -236,7 +258,7 @@ public class CCDate {
 					drep += rawData.charAt(rp);
 					rp++;
 				} else {
-					return false;
+					return null;
 				}
 				
 				for (; Character.isDigit(rawData.charAt(rp)) ; rp++) {
@@ -254,13 +276,13 @@ public class CCDate {
 				if (rawData.charAt(rp) == c) {
 					rp++;
 				} else {
-					return false;
+					return null;
 				}
 			}
 		}
 		
 		if (ty > 0 && ty < 100) { // Jahr with only 2 Letters e.g. '94
-			int currYear = new CCDate().getYear();
+			int currYear = getCurrentDate().getYear();
 
 			int currBase = ((currYear / 100) * 100);
 
@@ -277,134 +299,127 @@ public class CCDate {
 			}
 		}
 		
-		return set(td, tm, ty);
+		return create(td, tm, ty);
 	}
 	
-	public boolean setDay(int d) {
-		if (d > 0 && d <= getDaysOfMonth()) {
-			day = d;
-			return true;
-		} else {
-			return false;
+	public CCDate getAdd(int d, int m, int y) {
+		if (d < 0 || m < 0 || y < 0) {
+			return null;
 		}
-	}
-	
-	public boolean setMonth(int m) {
-		if (m > 0 && m <= 12) {
-			month = m;
-			return true;
-		} else {
-			return false;
+		
+		int newday = getDay();
+		int newmonth = getMonth();
+		int newyear = getYear();
+		
+		newyear += y;
+		
+		newmonth += m;
+		
+		while (newmonth > 12) {
+			newmonth -= 12;
+			newyear++;
 		}
+		
+		newday += d;
+		
+		while (newday > getDaysOfMonth(newmonth, newyear)) {
+			newday -= getDaysOfMonth(newmonth, newyear);
+			newmonth++;
+			
+			while (newmonth > 12) {
+				newmonth -= 12;
+				newyear++;
+			}
+			
+		}	
+		
+		return create(newday, newmonth, newyear);
 	}
 	
-	public boolean setYear(int y) {
-		if (y >= YEAR_MIN) {
-			year = y;
-			return true;
-		} else {
-			return false;
+	public CCDate getSub(int d, int m, int y) {
+		if (d < 0 || m < 0 || y < 0) {
+			return null;
 		}
+		
+		int newday = getDay();
+		int newmonth = getMonth();
+		int newyear = getYear();
+		
+		newyear -= y;
+		
+		newmonth -= m;
+		
+		while (newmonth <= 0) {
+			newmonth += 12;
+			newyear--;
+		}
+		
+		newday -= d;
+		
+		while (newday <= 0) {
+			newday += getDaysOfMonth(newmonth, newyear);
+			newmonth--;
+			
+			while (newmonth <= 0) {
+				newmonth += 12;
+				newyear--;
+			}
+			
+		}
+		
+		return create(newday, newmonth, newyear);
 	}
 	
-	public boolean set(int d, int m, int y) {
-		boolean succ = true;
-		succ &= setYear(y);
-		succ &= setMonth(m);
-		succ &= setDay(d);
-		return succ;
-	}
-	
-	public boolean set(CCDate d) {
-		return set(d.getDay(), d.getMonth(), d.getYear());
-	}
-	
-	public void add(int d, int m, int y) {
-		addYear(y);
-		addMonth(m);
-		addDay(d);
-	}
-	
-	public void sub(int d, int m, int y) {
-		subYear(y);
-		subMonth(m);
-		subDay(d);
-	}
-	
-	public void addDay(int d) {
+	public CCDate getAddDay(int d) {
 		if (d < 0) {
-			subDay(-d);
-			return;
+			return getSubDay(-d);
 		}
 		
-		day += d;
-		
-		while (day > getDaysOfMonth()) {
-			day -= getDaysOfMonth();
-			addMonth(1);
-		}
+		return getAdd(d, 0, 0);
 	}
 	
-	public void subDay(int d) {
+	public CCDate getSubDay(int d) {
 		if (d < 0) {
-			addDay(-d);
-			return;
+			return getAddDay(-d);
 		}
 		
-		day -= d;
-		
-		while (day <= 0) {
-			subMonth(1);
-			day += getDaysOfMonth();
-		}
+		return getSub(d, 0, 0);
 	}
 	
-	public void addMonth(int m) {
+	public CCDate getAddMonth(int m) {
 		if (m < 0) {
-			subMonth(-m);
-			return;
+			return getSubMonth(-m);
 		}
 		
-		month += m;
-		while (month > 12) {
-			addYear(1);
-			month -= 12;
-		}
+		return getAdd(0, m, 0);
 	}
 	
-	public void subMonth(int m) {
+	public CCDate getSubMonth(int m) {
 		if (m < 0) {
-			addMonth(-m);
-			return;
+			return getAddMonth(-m);
 		}
 		
-		month -= m;
-		
-		while(month < 1) {
-			month += 12;
-			subYear(1);
-		}
+		return getSub(0, m, 0);
 	}
 	
-	public void addYear(int y) {
-		if (y < 0) {
-			subYear(-y);
-			return;
-		}
-		
-		year += y;
+	public CCDate getAddYear(int y) {
+		return getAdd(0, 0, y);
 	}
 	
-	public void subYear(int y) {
-		if (y < 0) {
-			addYear(-y);
-			return;
-		}
-		
-		year -= y;
-		if (year < YEAR_MIN) {
-			year = YEAR_MIN;
-		}
+	public CCDate getSubYear(int y) {
+		return getSub(0, 0, y);
+	}
+	
+	public CCDate getSetDay(int d) {
+		return create(d, getMonth(), getYear());
+	}
+	
+	public CCDate getSetMonth(int m) {
+		return create(getDay(), m, getYear());
+	}
+	
+	public CCDate getSetYear(int y) {
+		return create(getDay(), getMonth(), y);
 	}
 	
 	public int getDay() {
@@ -424,16 +439,16 @@ public class CCDate {
 			return 0;
 		}
 		
-		CCDate temp = new CCDate(this);
+		CCDate temp = create(this);
 		int c = 0;
 		
 		while (temp.isLessThan(other)) {
-			temp.addDay(1);
+			temp = temp.getAddDay(1);
 			c++;
 		}
 		
 		while (temp.isGreaterThan(other)) {
-			temp.subDay(1);
+			temp = temp.getSubDay(1);
 			c--;
 		}
 		
@@ -512,51 +527,51 @@ public class CCDate {
 	public static boolean test() {
 		boolean succ = true;
 		
-		CCDate tdate = new CCDate(1, 1, 1900);
+		CCDate tdate = getMinimumDate();
 		succ &= tdate.getDay() == 1 && tdate.getMonth() == 1 && tdate.getYear() == 1900;
 		
-		tdate.addDay(1);
+		tdate = tdate.getAddDay(1);
 		succ &= tdate.getDay() == 2 && tdate.getMonth() == 1 && tdate.getYear() == 1900;
 		
-		tdate.subDay(1);
+		tdate = tdate.getSubDay(1);
 		succ &= tdate.getDay() == 1 && tdate.getMonth() == 1 && tdate.getYear() == 1900;
 		
-		tdate.addMonth(1);
+		tdate = tdate.getAddMonth(1);
 		succ &= tdate.getDay() == 1 && tdate.getMonth() == 2 && tdate.getYear() == 1900;
 		
-		tdate.subMonth(1);
+		tdate = tdate.getSubMonth(1);
 		succ &= tdate.getDay() == 1 && tdate.getMonth() == 1 && tdate.getYear() == 1900;
 		
-		tdate.addYear(1);
+		tdate = tdate.getAddYear(1);
 		succ &= tdate.getDay() == 1 && tdate.getMonth() == 1 && tdate.getYear() == 1901;
 		
-		tdate.subYear(1);
+		tdate = tdate.getSubYear(1);
 		succ &= tdate.getDay() == 1 && tdate.getMonth() == 1 && tdate.getYear() == 1900;
 		
-		tdate.addDay(365);
+		tdate = tdate.getAddDay(365);
 		succ &= tdate.getDay() == 1 && tdate.getMonth() == 1 && tdate.getYear() == 1901;
 		
-		tdate.addDay(150);
+		tdate = tdate.getAddDay(150);
 		succ &= tdate.getDay() == 31 && tdate.getMonth() == 5 && tdate.getYear() == 1901;
 		succ &= tdate.getWeekdayInt() == 5;
 		
-		tdate.addDay(1096);
+		tdate = tdate.getAddDay(1096);
 		succ &= tdate.getDay() == 31 && tdate.getMonth() == 5 && tdate.getYear() == 1904;
 		succ &= tdate.isLeapYear();
 		
-		tdate.add(215, 12, 94);
+		tdate = tdate.getAdd(215, 12, 94);
 		succ &= tdate.getDay() == 1 && tdate.getMonth() == 1 && tdate.getYear() == 2000;
 		
-		tdate.setDay(2);
+		tdate = tdate.getSetDay(2);
 		succ &= tdate.getDay() == 2 && tdate.getMonth() == 1 && tdate.getYear() == 2000;
 		succ &= tdate.getWeekdayInt() == 7;
 		
-		tdate.addDay(1);
+		tdate = tdate.getAddDay(1);
 		succ &= tdate.getDay() == 3 && tdate.getMonth() == 1 && tdate.getYear() == 2000;
 		succ &= tdate.getWeekdayInt() == 1;
 		succ &= tdate.isLeapYear();
 		
-		tdate.addMonth(12);
+		tdate = tdate.getAddMonth(12);
 		succ &= tdate.getDay() == 3 && tdate.getMonth() == 1 && tdate.getYear() == 2001;
 		succ &= ! tdate.isLeapYear();
 		
@@ -582,13 +597,9 @@ public class CCDate {
 	public boolean isMinimum() {
 		return 1 == getDay() && 1 == getMonth() && YEAR_MIN == getYear();
 	}
-
-	public CCDate copy() {
-		return new CCDate(this);
-	}
 	
 	public static CCDate getMinDate(List<CCDate> datelist) {
-		CCDate min = getNewMaximumDate();
+		CCDate min = getMaximumDate();
 		
 		for (int i = 0; i < datelist.size(); i++) {
 			if (datelist.get(i).isLessThan(min)) {
@@ -609,8 +620,8 @@ public class CCDate {
 		
 		sum /= datelist.size();
 		
-		CCDate result = new CCDate(min);
-		result.addDay(sum);
+		CCDate result = create(min);
+		result = result.getAddDay(sum);
 		
 		return result;
 	}
@@ -630,12 +641,24 @@ public class CCDate {
 			return b;
 		}
 	}
-
-	public void reset() {
-		set(1, 1, YEAR_MIN);
-	}
 	
 	public long asMilliseconds() {
 		return new CCDate(1, 1, 1970).getDayDifferenceTo(this) * MILLISECONDS_PER_DAY;
+	}
+	
+	public boolean isValidDate() {
+		if (! (day > 0 && day <= getDaysOfMonth())) {
+			return false;
+		}
+		
+		if (! (month > 0 && month <= 12)) {
+			return false;
+		}
+		
+		if (! (year >= YEAR_MIN)) {
+			return false;
+		}
+		
+		return true;
 	}
 }

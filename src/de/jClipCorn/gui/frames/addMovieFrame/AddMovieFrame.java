@@ -545,7 +545,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		lblLength.setBounds(12, 373, 52, 16);
 		contentPane.add(lblLength);
 		
-		spnAddDate = new JCCDateSpinner(CCDate.getNewMinimumDate(), CCDate.getNewMinimumDate(), null);
+		spnAddDate = new JCCDateSpinner(CCDate.getMinimumDate(), CCDate.getMinimumDate(), null);
 		spnAddDate.setBounds(95, 466, 193, 20);
 		contentPane.add(spnAddDate);
 		
@@ -698,13 +698,11 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 	public void parseFromXML(Element e, boolean resetAddDate, boolean resetViewed) {
 		
 		if (e.getAttributeValue("adddate") != null) {
-			CCDate d = new CCDate();
-			d.parse(e.getAttributeValue("adddate"), "D.M.Y");
-			spnAddDate.setValue(d);
+			spnAddDate.setValue(CCDate.parse(e.getAttributeValue("adddate"), "D.M.Y"));
 		}
 		
 		if (resetAddDate) {
-			spnAddDate.setValue(new CCDate());
+			spnAddDate.setValue(CCDate.getCurrentDate());
 		}
 		
 		if (e.getAttributeValue("filesize") != null)
@@ -904,7 +902,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		cbxGenre6.setModel(new DefaultComboBoxModel<>(CCMovieGenre.getTrimmedList()));
 		cbxGenre7.setModel(new DefaultComboBoxModel<>(CCMovieGenre.getTrimmedList()));
 		
-		spnAddDate.setValue(new CCDate());
+		spnAddDate.setValue(CCDate.getCurrentDate());
 		spnZyklus.setValue(-1);
 		
 		updateByteDisp();

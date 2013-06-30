@@ -11,7 +11,12 @@ public class JCCDateSpinner extends JSpinner {
 
 	public JCCDateSpinner(CCDate current, CCDate min, CCDate max) {
 		super(new SpinnerCCDateModel(current, min, max));
-		super.setEditor(new CCDateEditor(this));
+		getModel().setOwner(this);
+		
+		CCDateEditor de = new CCDateEditor(this);
+		super.setEditor(de);
+		addChangeListener(de);
+		addPropertyChangeListener(de);
 	}
 
 	@Override

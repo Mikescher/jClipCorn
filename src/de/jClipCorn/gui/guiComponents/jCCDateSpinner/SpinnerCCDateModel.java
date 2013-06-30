@@ -7,6 +7,8 @@ import de.jClipCorn.util.CCDate;
 public class SpinnerCCDateModel extends AbstractSpinnerModel {
 	private static final long serialVersionUID = 1275113021121391715L;
 	
+	private JCCDateSpinner owner;
+	
 	private CCDate current;
 	private CCDate max;
 	private CCDate min;
@@ -19,8 +21,10 @@ public class SpinnerCCDateModel extends AbstractSpinnerModel {
 
 	@Override
 	public CCDate getNextValue() {
+		if (owner != null) ((CCDateEditor)owner.getEditor()).commitEdit();
+		
 		if (max == null || current.isLessThan(max)) {
-			current = current.getAddDay(1);
+			return current.getAddDay(1);
 		}
 		
 		return current;
@@ -28,8 +32,10 @@ public class SpinnerCCDateModel extends AbstractSpinnerModel {
 
 	@Override
 	public CCDate getPreviousValue() {
+		if (owner != null) ((CCDateEditor)owner.getEditor()).commitEdit();
+		
 		if (min == null || current.isGreaterThan(min)) {
-			current = current.getSubDay(1);
+			return current.getSubDay(1);
 		}
 		
 		return current;
@@ -42,11 +48,11 @@ public class SpinnerCCDateModel extends AbstractSpinnerModel {
 
 	@Override
 	public void setValue(Object o) {
-		if (isValidDate((CCDate) o)) {
+		if (isValidDate((CCDate) o) && ! current.equals(o)) {
 			current = (CCDate) o;
+			
+			fireStateChanged();
 		}
-		
-		fireStateChanged();
 	}
 
 	private boolean isValidDate(CCDate d) {
@@ -63,5 +69,9 @@ public class SpinnerCCDateModel extends AbstractSpinnerModel {
 				return d.equals(max) || d.equals(min) || (d.isGreaterThan(min) && d.isLessThan(max));
 			}
 		}
+	}
+
+	public void setOwner(JCCDateSpinner powner) {
+		this.owner = powner;
 	}
 }

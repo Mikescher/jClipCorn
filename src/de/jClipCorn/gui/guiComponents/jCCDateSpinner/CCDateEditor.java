@@ -1,34 +1,38 @@
 package de.jClipCorn.gui.guiComponents.jCCDateSpinner;
 
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.BorderLayout;
 import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
-import javax.swing.JSpinner;
+import javax.swing.JFormattedTextField;
+import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.SwingUtilities;
+import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
-import javax.swing.text.DefaultFormatter;
+import javax.swing.event.ChangeListener;
 
 import de.jClipCorn.util.CCDate;
 
-public class CCDateEditor extends JSpinner.DefaultEditor implements FocusListener, MouseListener {
+public class CCDateEditor extends JPanel implements ChangeListener, PropertyChangeListener {
 	private static final long serialVersionUID = -7568423030107551542L;
 
 	private JCCDateSpinner owner;
+	
+	private JTextField tf;
 
 	public CCDateEditor(JCCDateSpinner owner) {
-		super(owner);
-
 		this.owner = owner;
+		tf = new JFormattedTextField();
+		tf.setBorder(new EmptyBorder(0, 0, 0, 0));
+		
+		setLayout(new BorderLayout());
+		add(tf, BorderLayout.CENTER);
 
 		update();
-		
-		getTextField().setEditable(true);
-		getTextField().addFocusListener(this);
-		getTextField().addMouseListener(this);
+	}
+	
+	public JTextField getTextField() {
+		return tf;
 	}
 
 	public void update() {
@@ -47,7 +51,6 @@ public class CCDateEditor extends JSpinner.DefaultEditor implements FocusListene
 		commitEdit();
 	}
 
-	@Override
 	public void commitEdit() {
 		if (owner != null && owner.getModel() != null) {
 			String text = getTextField().getText();
@@ -60,49 +63,5 @@ public class CCDateEditor extends JSpinner.DefaultEditor implements FocusListene
 				update();
 			}
 		}
-	}
-
-	@Override
-	public void focusGained(FocusEvent e) {
-		DefaultFormatter fm = new DefaultFormatter();
-		fm.setOverwriteMode(false);
-		fm.install(getTextField());
-	}
-
-	@Override
-	public void focusLost(FocusEvent e) {
-		//not code
-	}
-
-	@Override
-	public void mouseClicked(MouseEvent e) {
-		//no code
-	}
-
-	@Override
-	public void mouseEntered(MouseEvent e) {
-		//no code
-	}
-
-	@Override
-	public void mouseExited(MouseEvent e) {
-		//no code
-	}
-
-	@Override
-	public void mousePressed(final MouseEvent e) {
-		SwingUtilities.invokeLater(new Runnable() { // invoke later is important for delay
-            @Override
-			public void run() {
-                JTextField tf = (JTextField)e.getSource();
-                int offset = tf.viewToModel(e.getPoint());
-                tf.setCaretPosition(offset);
-            }
-        });
-	}
-
-	@Override
-	public void mouseReleased(MouseEvent e) {
-		//no code
 	}
 }

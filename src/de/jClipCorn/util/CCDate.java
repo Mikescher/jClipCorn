@@ -330,7 +330,6 @@ public final class CCDate {
 				newmonth -= 12;
 				newyear++;
 			}
-			
 		}	
 		
 		return create(newday, newmonth, newyear);
@@ -357,14 +356,14 @@ public final class CCDate {
 		newday -= d;
 		
 		while (newday <= 0) {
-			newday += getDaysOfMonth(newmonth, newyear);
 			newmonth--;
+			newday += getDaysOfMonth(newmonth, newyear);
+			
 			
 			while (newmonth <= 0) {
 				newmonth += 12;
 				newyear--;
 			}
-			
 		}
 		
 		return create(newday, newmonth, newyear);

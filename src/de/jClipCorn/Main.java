@@ -78,11 +78,3 @@ public class Main {
 //TODO Compare Series in CompareDialog
 
 //TODO Convert to UTF8: Preferences->General->ContentTypes->Default Encodings && UTFCast
-
-
-// Bei allen Filesystem zugriffen Fehler abfangen (MD5 / Cover load / ...)
-// Wenn Drive nicht gefunden für x sekunden nicht nochmal scanne (oder vllt gar nicht mahr) (setting ?!)
-// Warum scannt der Compare dialog die serien
-// Beim vaöidaten vllt auch die integrität der cover validierbeb
-// Ordnerstruktur erzeugen -> Staffelnummer ist falsch wenn noch nicht sortiert (staffel zwischen aktuellen added)
-// Information bei Backup

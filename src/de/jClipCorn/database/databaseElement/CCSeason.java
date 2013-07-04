@@ -356,6 +356,13 @@ public class CCSeason {
 	public int getSeasonNumber() {
 		return getSeries().findSeason(this);
 	}
+	
+	/**
+	 * @return the Number of the Season (as it should be) (NOT THE ID)
+	 */
+	public int getSortedSeasonNumber() {
+		return getSeries().findSeasoninSorted(this);
+	}
 
 	public int findEpisode(CCEpisode ccEpisode) {
 		return episodes.indexOf(ccEpisode);

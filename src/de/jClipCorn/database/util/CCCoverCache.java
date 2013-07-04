@@ -65,7 +65,12 @@ public class CCCoverCache {
 		if (res == null) {
 			try {
 				res = ImageIO.read(new File(coverPath + name));
-				cache.put(name, res);
+				if (res != null) {
+					cache.put(name, res);
+				} else {
+					CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CoverFileBroken", name)); //$NON-NLS-1$
+					return CachedResourceLoader.getImage(Resources.IMG_COVER_NOTFOUND);
+				}
 			} catch (IOException e) {
 				if (! Main.DEBUG) {
 					CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CoverNotFound", name)); //$NON-NLS-1$

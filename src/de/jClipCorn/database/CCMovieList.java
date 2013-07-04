@@ -62,7 +62,7 @@ public class CCMovieList {
 			@Override
 			public void run() {
 				BackupManager bm = new BackupManager(CCMovieList.this);
-				bm.start();
+				bm.start(mf);
 				
 				long starttime = System.currentTimeMillis();
 

@@ -1,5 +1,6 @@
 package de.jClipCorn.database.util;
 
+import java.awt.Component;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileNotFoundException;
@@ -7,12 +8,15 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.zip.ZipOutputStream;
 
+import javax.swing.ProgressMonitor;
+
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.CCDate;
 import de.jClipCorn.util.PathFormatter;
+import de.jClipCorn.util.ProgressCallbackProgressMonitorHelper;
 import de.jClipCorn.util.RegExHelper;
 
 public class BackupManager {
@@ -26,9 +30,9 @@ public class BackupManager {
 		this.movielist = ml;
 	}
 
-	public void start() {
+	public void start(Component c) {
 		if (CCProperties.getInstance().PROP_BACKUP_CREATEBACKUPS.getValue()) {
-			tryCreateBackup();
+			tryCreateBackup(c);
 		}
 		
 		if (CCProperties.getInstance().PROP_BACKUP_AUTODELETEBACKUPS.getValue()) {
@@ -90,23 +94,26 @@ public class BackupManager {
 	/**
 	 * Create Backup when the time has come
 	 */
-	private void tryCreateBackup() {
+	private void tryCreateBackup(Component c) {
 		int minDiff = CCProperties.getInstance().PROP_BACKUP_BACKUPTIME.getValue();
 		CCDate lastBackup = CCProperties.getInstance().PROP_BACKUP_LASTBACKUP.getValue();
 		CCDate now = CCDate.getCurrentDate();
 		
 		if (lastBackup.getDayDifferenceTo(now) > minDiff && movielist.getDatabaseDirectory().exists()) {
-			createBackup();
+			createBackup(c);
 		}
 	}
 	
-	public void createBackup() {
+	public void createBackup(Component c) {
 		if (CCProperties.getInstance().ARG_READONLY) {
 			CCLog.addInformation(LocaleBundle.getString("LogMessage.OperationFailedDueToReadOnly")); //$NON-NLS-1$
 			return;
 		}
-		
 		CCLog.addInformation(LocaleBundle.getString("LogMessage.BackupStarted")); //$NON-NLS-1$
+		
+		ProgressMonitor monitor = new ProgressMonitor(c, LocaleBundle.getString("MainFrame.backupRunning"), "", 0, 1); //$NON-NLS-1$ //$NON-NLS-2$
+		monitor.setMillisToDecideToPopup(0);
+		monitor.setMillisToPopup(0);
 		
 		CCDate now = CCDate.getCurrentDate();
 		
@@ -117,7 +124,7 @@ public class BackupManager {
 			ZipOutputStream zos = new ZipOutputStream(os);
 			zos.setLevel(CCProperties.getInstance().PROP_BACKUP_COMPRESSION.getValue());
 			
-			ExportHelper.zipDir(movielist.getDatabaseDirectory().getParentFile(), movielist.getDatabaseDirectory(), zos, true);
+			ExportHelper.zipDir(movielist.getDatabaseDirectory().getParentFile(), movielist.getDatabaseDirectory(), zos, true, new ProgressCallbackProgressMonitorHelper(monitor));
 			
 			zos.close();
 		} catch (FileNotFoundException e) {

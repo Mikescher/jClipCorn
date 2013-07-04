@@ -406,7 +406,7 @@ public class CCEpisode {
 		String seasonfoldername = season.getTitle();
 		seasonfoldername = PathFormatter.fixStringToFilename(seasonfoldername);
 		
-		String filename = String.format("S%sE%s - %s", decFormattter.format(season.getSeasonNumber() + 1), decFormattter.format(this.getEpisode()), this.getTitle());
+		String filename = String.format("S%sE%s - %s", decFormattter.format(season.getSortedSeasonNumber() + 1), decFormattter.format(this.getEpisode()), this.getTitle());
 		filename += "." + this.getFormat().asString();
 		filename = PathFormatter.fixStringToFilename(filename);
 		

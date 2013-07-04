@@ -2,6 +2,7 @@ package de.jClipCorn.database.databaseElement;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Vector;
 
@@ -20,6 +21,7 @@ import de.jClipCorn.util.CCDate;
 import de.jClipCorn.util.ImageUtilities;
 import de.jClipCorn.util.LargeMD5Calculator;
 import de.jClipCorn.util.PathFormatter;
+import de.jClipCorn.util.SeasonComparator;
 import de.jClipCorn.util.TimeIntervallFormatter;
 import de.jClipCorn.util.YearRange;
 
@@ -333,6 +335,18 @@ public class CCSeries extends CCDatabaseElement {
 
 	public int findSeason(CCSeason ccSeason) {
 		return seasons.indexOf(ccSeason);
+	}
+	
+	public int findSeasoninSorted(CCSeason ccSeason) {
+		List<CCSeason> sortedseasons = new ArrayList<>();
+		
+		for (CCSeason cs : seasons) {
+			sortedseasons.add(cs);
+		}
+		
+		Collections.sort(sortedseasons, new SeasonComparator());
+		
+		return sortedseasons.indexOf(ccSeason);
 	}
 	
 	@SuppressWarnings("nls")

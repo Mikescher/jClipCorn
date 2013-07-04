@@ -19,7 +19,7 @@ import javax.swing.SwingUtilities;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTyp;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.ExtendedFocusTraversalOnArray;
-import de.jClipCorn.util.ProgressCallbackHelper;
+import de.jClipCorn.util.ProgressCallbackProgressBarHelper;
 import de.jClipCorn.util.UpdateCallbackListener;
 import de.jClipCorn.util.parser.ParseResultHandler;
 
@@ -173,7 +173,7 @@ public class FindCoverDialog extends JDialog {
 			}
 		};
 		
-		parser = new CoverImageParser(new ProgressCallbackHelper(progressBar), pnlCover, finishlistener, typ, edSearchTerm.getText());
+		parser = new CoverImageParser(new ProgressCallbackProgressBarHelper(progressBar), pnlCover, finishlistener, typ, edSearchTerm.getText());
 		parser.start();
 	}
 }

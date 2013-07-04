@@ -133,4 +133,10 @@ public class DriveMap {
 			}
 		}
 	}
+	
+	public static void tryWait() {
+		if (! isCreated() && isCreating()) {
+			waitForCreateFinished();
+		}
+	}
 }

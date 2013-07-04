@@ -215,4 +215,22 @@ public class PathFormatter {
 			}
 		}
 	}
+
+	public static int countAllFiles(File path) {
+		int c = 0;
+
+		File[] list = path.listFiles();
+
+		if (list != null) {
+			for (File f : list) {
+				if (f.isDirectory()) {
+					c += countAllFiles(f);
+				} else {
+					c++;
+				}
+			}
+		}
+		
+		return c;
+	}
 }

@@ -3,10 +3,10 @@ package de.jClipCorn.util;
 import javax.swing.JProgressBar;
 import javax.swing.SwingUtilities;
 
-public class ProgressCallbackHelper implements ProgressCallbackListener{
+public class ProgressCallbackProgressBarHelper implements ProgressCallbackListener{
 	private final JProgressBar progressBar;
 	
-	public ProgressCallbackHelper(JProgressBar p) {
+	public ProgressCallbackProgressBarHelper(JProgressBar p) {
 		this.progressBar = p;
 	}
 

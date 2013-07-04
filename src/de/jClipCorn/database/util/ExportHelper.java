@@ -34,6 +34,7 @@ import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.DialogHelper;
 import de.jClipCorn.util.PathFormatter;
+import de.jClipCorn.util.ProgressCallbackListener;
 import de.jClipCorn.util.TextFileUtils;
 
 public class ExportHelper {
@@ -48,15 +49,27 @@ public class ExportHelper {
 	public final static String EXTENSION_EPISODEGUIDE = "txt"; 											//$NON-NLS-1$
 	
 	public static void zipDir(File owner, File zipDir, ZipOutputStream zos, boolean recursively) {
+		doZipDir(owner, zipDir, zos, recursively, null);
+	}
+	
+	public static void zipDir(File owner, File zipDir, ZipOutputStream zos, boolean recursively, ProgressCallbackListener pcl) {
+		pcl.reset();
+		pcl.setMax(PathFormatter.countAllFiles(zipDir));
+		
+		doZipDir(owner, zipDir, zos, recursively, pcl);
+	}
+	
+	private static void doZipDir(File owner, File zipDir, ZipOutputStream zos, boolean recursively, ProgressCallbackListener pcl) {
 		try {
 			String[] dirList = zipDir.list();
 			byte[] readBuffer = new byte[2156];
 			int bytesIn = 0;
+			
 			for (int i = 0; i < dirList.length; i++) {
 				File file = new File(zipDir, dirList[i]);
 				if (file.isDirectory()) {
 					if (recursively) {
-						zipDir(owner, file, zos, recursively);
+						doZipDir(owner, file, zos, recursively, pcl);
 					}
 					continue;
 				}
@@ -69,6 +82,8 @@ public class ExportHelper {
 					zos.write(readBuffer, 0, bytesIn);
 				}
 				fis.close();
+				
+				if (pcl != null) pcl.step();
 			}
 		} catch (Exception e) {
 			CCLog.addError(e);

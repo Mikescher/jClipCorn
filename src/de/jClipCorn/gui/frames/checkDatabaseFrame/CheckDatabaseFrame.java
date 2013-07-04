@@ -38,7 +38,7 @@ import de.jClipCorn.gui.frames.mainFrame.MainFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.util.DialogHelper;
-import de.jClipCorn.util.ProgressCallbackHelper;
+import de.jClipCorn.util.ProgressCallbackProgressBarHelper;
 
 public class CheckDatabaseFrame extends JFrame {
 	private static final long serialVersionUID = 8481907373850170115L;
@@ -58,6 +58,7 @@ public class CheckDatabaseFrame extends JFrame {
 	private JScrollPane scrlPnlLeft;
 	private JList<DatabaseErrorType> lsCategories;
 	private JSplitPane pnlCenter;
+	private JButton btnFixselected;
 	
 	public CheckDatabaseFrame(CCMovieList ml, MainFrame owner) {
 		super();
@@ -156,6 +157,7 @@ public class CheckDatabaseFrame extends JFrame {
 				// nothing
 			}
 		});
+		
 		lsCategories.addListSelectionListener(new ListSelectionListener() {
 			@Override
 			public void valueChanged(ListSelectionEvent arg0) {
@@ -165,6 +167,16 @@ public class CheckDatabaseFrame extends JFrame {
 				}
 			}
 		});
+		
+		btnFixselected = new JButton(LocaleBundle.getString("CheckDatabaseDialog.btnFixSelected.text")); //$NON-NLS-1$
+		btnFixselected.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				fixSelected();
+			}
+		});
+		btnFixselected.setEnabled(false);
+		pnlTop.add(btnFixselected);
 	}
 	
 	private void onDblClick() {
@@ -180,7 +192,7 @@ public class CheckDatabaseFrame extends JFrame {
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
-				boolean succ = DatabaseAutofixer.fixErrors(errorList, new ProgressCallbackHelper(pBar));
+				boolean succ = DatabaseAutofixer.fixErrors(errorList, new ProgressCallbackProgressBarHelper(pBar));
 				endFixThread(succ);
 			}
 		}, "THREAD_AUTOFIX_DB").start(); //$NON-NLS-1$
@@ -191,6 +203,7 @@ public class CheckDatabaseFrame extends JFrame {
 			@Override
 			public void run() {
 				btnValidate.setEnabled(true);
+				btnFixselected.setEnabled(errorList.size() > 0);
 				btnAutofix.setEnabled(errorList.size() > 0);
 				lblInfo.setText(LocaleBundle.getFormattedString("CheckDatabaseDialog.lblInfo.text_2", errorList.size())); //$NON-NLS-1$
 			}
@@ -240,6 +253,7 @@ public class CheckDatabaseFrame extends JFrame {
 	}
 	
 	private void startValidate() {
+		btnFixselected.setEnabled(false);
 		btnValidate.setEnabled(false);
 		btnAutofix.setEnabled(false);
 		
@@ -248,41 +262,69 @@ public class CheckDatabaseFrame extends JFrame {
 			public void run() {
 				List<DatabaseError> errors = new ArrayList<>();
 				
-				DatabaseValidator.startValidate(errors, movielist, new ProgressCallbackHelper(pBar));
-				
-				DatabaseErrorListModel dlm = new DatabaseErrorListModel();
-				DefaultListModel<DatabaseErrorType> clm = new DefaultListModel<>();
-				
-				clm.addElement(null); //null = "All" (not sure if good code or lazy code)
-				
-				for (DatabaseError de : errors) {
-					dlm.addElement(de);
-					
-					boolean found = false;
-					
-					for (int i = 0; i < clm.getSize(); i++) {
-						if (! found && de.getType().equals(clm.get(i))) {
-							found = true;
-							clm.get(i).incCount();
-						}
-					}
-					
-					if (! found) {
-						clm.addElement(de.getType().copy(1));
-					}
-				}
-				
-				setMainListModel(dlm);
-				
-				if (clm.size() <= 1) {
-					clm.clear();
-				}
-				setCategoriesListModel(clm);
+				DatabaseValidator.startValidate(errors, movielist, new ProgressCallbackProgressBarHelper(pBar));
 				
 				errorList = errors;
+				
+				updateLists();
 				
 				endThread();
 			}
 		}, "THREAD_VALIDATE_DATABASE").start(); //$NON-NLS-1$
+	}
+
+	private void updateLists() { // Threadsafe
+		DatabaseErrorListModel dlm = new DatabaseErrorListModel();
+		DefaultListModel<DatabaseErrorType> clm = new DefaultListModel<>();
+		
+		clm.addElement(null); //null = "All" (not sure if good code or lazy code)
+		
+		for (DatabaseError de : errorList) {
+			dlm.addElement(de);
+			
+			boolean found = false;
+			
+			for (int i = 0; i < clm.getSize(); i++) {
+				if (! found && de.getType().equals(clm.get(i))) {
+					found = true;
+					clm.get(i).incCount();
+				}
+			}
+			
+			if (! found) {
+				clm.addElement(de.getType().copy(1));
+			}
+		}
+		
+		setMainListModel(dlm);
+		
+		if (clm.size() <= 1) {
+			clm.clear();
+		}
+		
+		setCategoriesListModel(clm);
+	}
+	
+	private void fixSelected() {
+		DatabaseError e = lsMain.getSelectedValue();
+		
+		if (e == null) {
+			DialogHelper.showInformation(this, getTitle(), LocaleBundle.getString("CheckDatabaseDialog.fixSelectedMessage.NoSelection")); //$NON-NLS-1$
+			return;
+		}
+		
+		if (! DatabaseAutofixer.canFix(errorList, e)) {
+			DialogHelper.showInformation(this, getTitle(), LocaleBundle.getString("CheckDatabaseDialog.fixSelectedMessage.Unfixable")); //$NON-NLS-1$
+			return;
+		}
+		
+		if (e.autoFix()) {
+			DialogHelper.showInformation(this, getTitle(), LocaleBundle.getString("CheckDatabaseDialog.fixSelectedMessage.Fixed")); //$NON-NLS-1$
+			
+			errorList.remove(e);
+			updateLists();
+		} else {
+			DialogHelper.showInformation(this, getTitle(), LocaleBundle.getString("CheckDatabaseDialog.fixSelectedMessage.Failed")); //$NON-NLS-1$
+		}
 	}
 }

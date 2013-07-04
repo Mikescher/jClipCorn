@@ -10,9 +10,7 @@ import de.jClipCorn.util.ProgressCallbackListener;
 
 public class DatabaseAutofixer {
 	public static boolean fixErrors(List<DatabaseError> list, ProgressCallbackListener pcl) {
-		if (! DriveMap.isCreated()) {
-			return false;
-		}
+		DriveMap.tryWait();
 		
 		pcl.setMax(list.size());
 		pcl.reset();
@@ -24,19 +22,7 @@ public class DatabaseAutofixer {
 			
 			DatabaseError error = list.get(i);
 			
-			if (! error.isAutoFixable()) { // Test if this File is Fixable
-				continue;
-			}
-			
-			List<DatabaseError> errlist = getAllWithSameElement(list, error); // Test if all Errors with this File are Fixable
-			boolean succ = true;
-			for (int j = 0; j < errlist.size(); j++) {
-				DatabaseError lerror = errlist.get(i);
-				succ &= lerror.isAutoFixable();
-			}
-			if (! succ) {
-				continue;
-			}
+			if (! canFix(list, error)) continue;
 			
 			boolean succval = error.autoFix();
 			
@@ -61,5 +47,25 @@ public class DatabaseAutofixer {
 		}
 		
 		return result;
+	}
+	
+	public static boolean canFix(List<DatabaseError> list, DatabaseError error) {
+		if (! error.isAutoFixable()) { // Test if this File is Fixable
+			return false;
+		}
+		
+		List<DatabaseError> errlist = getAllWithSameElement(list, error); // Test if all Errors with this File are Fixable
+		
+		boolean succ = true;
+		for (int j = 0; j < errlist.size(); j++) {
+			DatabaseError lerror = errlist.get(j);
+			succ &= lerror.isAutoFixable();
+		}
+		
+		if (! succ) {
+			return false;
+		}
+		
+		return true;
 	}
 }

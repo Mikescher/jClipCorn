@@ -52,7 +52,7 @@ import de.jClipCorn.util.CCDate;
 import de.jClipCorn.util.ExtendedFocusTraversalOnArray;
 import de.jClipCorn.util.FileChooserHelper;
 import de.jClipCorn.util.PathFormatter;
-import de.jClipCorn.util.ProgressCallbackHelper;
+import de.jClipCorn.util.ProgressCallbackProgressBarHelper;
 import de.jClipCorn.util.TextFileUtils;
 
 public class CompareDatabaseFrame extends JFrame {
@@ -581,7 +581,7 @@ public class CompareDatabaseFrame extends JFrame {
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
-				final List<CompareElement> fl = DatabaseComparator.compare(new File(edDB1.getText()), new File(edDB2.getText()), new ProgressCallbackHelper(progressBar));
+				final List<CompareElement> fl = DatabaseComparator.compare(new File(edDB1.getText()), new File(edDB2.getText()), new ProgressCallbackProgressBarHelper(progressBar));
 
 				SwingUtilities.invokeLater(new Runnable() {
 					@Override

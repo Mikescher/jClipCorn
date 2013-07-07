@@ -77,4 +77,4 @@ public class Main {
 //TODO Shortcuts für SerienWindow
 //TODO Compare Series in CompareDialog
 
-//TODO Convert to UTF8: Preferences->General->ContentTypes->Default Encodings && UTFCast
+//TODO What Features for 1.9 ??

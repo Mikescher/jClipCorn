@@ -102,3 +102,4 @@ public class Main {
 	//- Start collecting samples !!
 	//- (Also parse from wikipedia) (perhaps from various plaintext ressource)
 	//- Perhaps one Master parse code that has various sources (wikipedia, website, plaintext, explorer)
+//TODO Combined Filter (Choose from other Filters to create a new one (is an element in FilterTree (CUSTOM)) => Opens Create Custom Filter Menu)

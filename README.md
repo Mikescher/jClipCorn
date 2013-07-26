@@ -1,6 +1,6 @@
 ===============   jClipCorn   ===============
 
-![pterodactyl](mikescher.github.com/jClipCorn/README-FILES/pterodactyl.png)
+![pterodactyl](raw.github.com/Mikescher/jClipCorn/master/README-FILES/pterodactyl.png)
 
 Filme- und Serienverwaltung
 Mit lokaler (Derby) Datenbank

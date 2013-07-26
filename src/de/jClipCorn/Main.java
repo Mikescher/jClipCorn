@@ -83,6 +83,8 @@ public class Main {
 //TODO Backup Progressdialog has a non-functional abortbutton (should do nothing and not close window, perhaps open new window)
     //- Add proper Helper class, this will become handy in other playes too (BackupManager ...)
 //TODO Add Link to, so you caj identify it "WARNING (12:36:14): Could not parse FSK (???) at de.jClipCorn.util.parser.AgeRatingParser.getMinimumAge (AgeRatingParser.java:208)"
+//TODO Edit Series Frame -> Edit EPisodes -> Open File DIalog (Use Series Folder)
+//TODO Watch Episode without resetting/setting LastViewedDate
 //TODO Add Backup Information Page (Backup Manager)
 	//- List All Backups in Backup Folder
 	//- Delete Backups
@@ -95,3 +97,8 @@ public class Main {
 	//- Time until next Backup
 	//=> Change connect mechanics so that you can choose were to show the progress (blocking-mainframe, or progresswindow in B-Manager)
 	//=> Cahnge disconnect mechanic so you can unload an reload a Database in mid-progress (TESTING!!)
+//TODO Auto-Recognize Structure of AVI-File when importing Series (Get Filename)
+	//- Multiple versions to choose from
+	//- Start collecting samples !!
+	//- (Also parse from wikipedia) (perhaps from various plaintext ressource)
+	//- Perhaps one Master parse code that has various sources (wikipedia, website, plaintext, explorer)

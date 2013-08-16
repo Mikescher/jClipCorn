@@ -5,7 +5,7 @@ import java.awt.Point;
 import java.awt.image.BufferedImage;
 
 import de.jClipCorn.properties.CCProperties;
-import de.jClipCorn.util.ImageUtilities;
+import de.jClipCorn.util.helper.ImageUtilities;
 
 public class TransformRectangle3D extends TransformRectangle{
 	private final static double FLEEDEPTH = 2.0;

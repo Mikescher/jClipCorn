@@ -1,4 +1,4 @@
-package de.jClipCorn.util;
+package de.jClipCorn.util.listener;
 
 import javax.swing.ProgressMonitor;
 import javax.swing.SwingUtilities;

@@ -17,8 +17,8 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCMovieSize;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTyp;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
-import de.jClipCorn.util.ByteUtilies;
-import de.jClipCorn.util.ImageUtilities;
+import de.jClipCorn.util.helper.ByteUtilies;
+import de.jClipCorn.util.helper.ImageUtilities;
 
 public abstract class CCDatabaseElement {
 	private final int localID;				// INTEGER

@@ -1,10 +1,12 @@
-package de.jClipCorn.util;
+package de.jClipCorn.util.helper;
 
 import java.io.File;
 
 import javax.swing.filechooser.FileFilter;
 
 import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.util.Validator;
+import de.jClipCorn.util.formatter.PathFormatter;
 
 public class FileChooserHelper {
 	public static FileFilter createFileFilter(final String description, final String[] extensions) {

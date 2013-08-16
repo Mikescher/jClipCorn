@@ -23,7 +23,7 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.property.CCCaptionedKeyStrokeProperty;
 import de.jClipCorn.properties.property.CCKeyStrokeProperty;
-import de.jClipCorn.util.KeyStrokeUtil;
+import de.jClipCorn.util.helper.KeyStrokeUtil;
 
 public class CCActionElement {
 	private final String name;

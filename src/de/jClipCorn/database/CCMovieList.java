@@ -33,7 +33,7 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.CCDate;
-import de.jClipCorn.util.PathFormatter;
+import de.jClipCorn.util.formatter.PathFormatter;
 
 public class CCMovieList {
 	private static CCMovieList instance = null;

@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTyp;
 import de.jClipCorn.util.DoubleString;
-import de.jClipCorn.util.RegExHelper;
+import de.jClipCorn.util.helper.RegExHelper;
 import de.jClipCorn.util.parser.ImDBParser;
 import de.jClipCorn.util.parser.ImDBParser_Ger;
 @SuppressWarnings("nls")

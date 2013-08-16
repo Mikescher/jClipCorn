@@ -17,8 +17,8 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.gui.log.CCLogChangedListener;
 import de.jClipCorn.properties.CCProperties;
-import de.jClipCorn.util.FileSizeFormatter;
-import de.jClipCorn.util.TimeIntervallFormatter;
+import de.jClipCorn.util.formatter.FileSizeFormatter;
+import de.jClipCorn.util.formatter.TimeIntervallFormatter;
 
 public class ClipStatusBar extends AbstractClipStatusbar implements CCDBUpdateListener, CCLogChangedListener {
 	private static final long serialVersionUID = -5283785610114988490L;

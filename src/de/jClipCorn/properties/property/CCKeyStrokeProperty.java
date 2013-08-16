@@ -8,7 +8,7 @@ import de.jClipCorn.gui.guiComponents.KeyStrokeTextfield;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.properties.CCProperties;
-import de.jClipCorn.util.KeyStrokeUtil;
+import de.jClipCorn.util.helper.KeyStrokeUtil;
 
 public class CCKeyStrokeProperty  extends CCProperty<KeyStroke>{
 	public CCKeyStrokeProperty(int cat, CCProperties prop, String ident, KeyStroke std) {

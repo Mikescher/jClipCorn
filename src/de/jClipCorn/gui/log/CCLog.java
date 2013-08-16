@@ -15,7 +15,7 @@ import javax.swing.SwingUtilities;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.CCDate;
-import de.jClipCorn.util.DialogHelper;
+import de.jClipCorn.util.helper.DialogHelper;
 
 public class CCLog {
 	private static List<CCLogElement> log = new Vector<>();

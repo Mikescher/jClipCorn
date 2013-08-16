@@ -10,7 +10,7 @@ import org.jfree.util.Rotation;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieLanguage;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.util.StatisticsHelper;
+import de.jClipCorn.util.helper.StatisticsHelper;
 
 public class StatisticsLanguageChart extends StatisticsChart {
 	public StatisticsLanguageChart(CCMovieList ml) {

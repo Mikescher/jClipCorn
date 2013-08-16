@@ -15,8 +15,8 @@ import de.jClipCorn.gui.frames.editSeriesFrame.EditSeriesFrame;
 import de.jClipCorn.gui.frames.previewSeriesFrame.PreviewSeriesFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.CCDate;
-import de.jClipCorn.util.DialogHelper;
-import de.jClipCorn.util.PathFormatter;
+import de.jClipCorn.util.formatter.PathFormatter;
+import de.jClipCorn.util.helper.DialogHelper;
 
 public class SerTablePopupMenu extends JPopupMenu {
 	private static final long serialVersionUID = 1726753702894240378L;

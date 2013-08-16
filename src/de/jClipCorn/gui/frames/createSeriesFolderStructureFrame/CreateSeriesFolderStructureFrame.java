@@ -33,8 +33,8 @@ import de.jClipCorn.gui.Resources;
 import de.jClipCorn.gui.guiComponents.CoverLabel;
 import de.jClipCorn.gui.guiComponents.ReadableTextField;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.util.DialogHelper;
-import de.jClipCorn.util.PathFormatter;
+import de.jClipCorn.util.formatter.PathFormatter;
+import de.jClipCorn.util.helper.DialogHelper;
 
 public class CreateSeriesFolderStructureFrame extends JFrame {
 	private static final long serialVersionUID = 8494757660196292481L;

@@ -43,22 +43,24 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCMovieQuality;
 import de.jClipCorn.gui.CachedResourceLoader;
 import de.jClipCorn.gui.Resources;
 import de.jClipCorn.gui.frames.inputErrorFrame.InputErrorDialog;
+import de.jClipCorn.gui.frames.omniParserFrame.OmniParserFrame;
 import de.jClipCorn.gui.guiComponents.HFixListCellRenderer;
 import de.jClipCorn.gui.guiComponents.ReadableTextField;
 import de.jClipCorn.gui.guiComponents.jCCDateSpinner.JCCDateSpinner;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.CCDate;
-import de.jClipCorn.util.ExtendedFocusTraversalOnArray;
-import de.jClipCorn.util.FileChooserHelper;
-import de.jClipCorn.util.FileSizeFormatter;
-import de.jClipCorn.util.PathFormatter;
-import de.jClipCorn.util.UpdateCallbackListener;
 import de.jClipCorn.util.Validator;
+import de.jClipCorn.util.formatter.FileSizeFormatter;
+import de.jClipCorn.util.formatter.PathFormatter;
+import de.jClipCorn.util.helper.ExtendedFocusTraversalOnArray;
+import de.jClipCorn.util.helper.FileChooserHelper;
+import de.jClipCorn.util.listener.OmniParserCallbackListener;
+import de.jClipCorn.util.listener.UpdateCallbackListener;
 import de.jClipCorn.util.userdataProblem.UserDataProblem;
 import de.jClipCorn.util.userdataProblem.UserDataProblemHandler;
 
-public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler {
+public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler, OmniParserCallbackListener {
 	private static final long serialVersionUID = 8825373383589912037L;
 
 	private static CCDate MIN_DATE = CCDate.getMinimumDate();
@@ -134,6 +136,7 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler {
 	private JButton btnSide_14;
 	private JButton btnOpen;
 	private JButton btnSide_15;
+	private JButton btnOmniparser;
 
 	public AddEpisodesFrame(Component owner, CCSeason ss, UpdateCallbackListener ucl) {
 		super();
@@ -352,7 +355,7 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler {
 		pnlInfo.add(btnOpen);
 
 		scrollPane = new JScrollPane();
-		scrollPane.setBounds(12, 47, 329, 530);
+		scrollPane.setBounds(12, 47, 329, 503);
 		getContentPane().add(scrollPane);
 
 		lsEpisodes = new JList<>();
@@ -603,6 +606,17 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler {
 		});
 		btnSide_15.setBounds(12, 536, 334, 23);
 		pnlEdit.add(btnSide_15);
+		
+		btnOmniparser = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnOmniParser.text")); //$NON-NLS-1$
+		btnOmniparser.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				OmniParserFrame oframe = new OmniParserFrame(AddEpisodesFrame.this, AddEpisodesFrame.this, getTitleList(), getCommonFolderPathStart());
+				oframe.setVisible(true);
+			}
+		});
+		btnOmniparser.setBounds(112, 561, 129, 23);
+		getContentPane().add(btnOmniparser);
 	}
 
 	private void initFileChooser() {
@@ -763,6 +777,26 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler {
 		lsEpisodes.setSelectedIndex(-1);
 
 		updateDisplayPanel();
+	}
+	
+	private List<String> getTitleList() {
+		List<String> result = new ArrayList<>();
+		
+		for (int i = 0; i < parent.getEpisodeCount(); i++) {
+			result.add(i, parent.getEpisode(i).getTitle());
+		}
+		
+		return result;
+	}
+	
+	private String getCommonFolderPathStart() {
+		List<String> paths = new ArrayList<>();
+
+		for (int i = 0; i < parent.getEpisodeCount(); i++) {
+			paths.add(i, parent.getEpisode(i).getPart());
+		}
+		
+		return PathFormatter.getAbsolute(PathFormatter.getCommonFolderPath(paths));
 	}
 
 	private void updateDisplayPanel() {
@@ -1056,6 +1090,15 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler {
 			ep.setQuality(CCMovieQuality.calculateQuality(ep.getFilesize(), ep.getLength(), 1));
 		}
 
+		updateList();
+	}
+
+	@Override
+	public void updateTitles(ArrayList<String> newTitles) {
+		for (int i = 0; i < Math.min(parent.getEpisodeCount(), newTitles.size()); i++) {
+			parent.getEpisode(i).setTitle(newTitles.get(i));
+		}
+		
 		updateList();
 	}
 }

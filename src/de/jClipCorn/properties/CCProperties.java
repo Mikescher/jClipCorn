@@ -21,7 +21,7 @@ import de.jClipCorn.properties.property.CCRIntProperty;
 import de.jClipCorn.properties.property.CCStringProperty;
 import de.jClipCorn.properties.property.CCToolbarProperty;
 import de.jClipCorn.util.CCDate;
-import de.jClipCorn.util.LookAndFeelManager;
+import de.jClipCorn.util.helper.LookAndFeelManager;
 
 
 public class CCProperties {

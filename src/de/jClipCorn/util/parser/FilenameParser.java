@@ -10,8 +10,8 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCMovieLanguage;
 import de.jClipCorn.gui.frames.addMovieFrame.AddMovieFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
-import de.jClipCorn.util.PathFormatter;
-import de.jClipCorn.util.RomanNumberFormatter;
+import de.jClipCorn.util.formatter.PathFormatter;
+import de.jClipCorn.util.formatter.RomanNumberFormatter;
 
 @SuppressWarnings("nls")
 public class FilenameParser {

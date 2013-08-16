@@ -1,4 +1,4 @@
-package de.jClipCorn.util;
+package de.jClipCorn.util.formatter;
 
 import de.jClipCorn.gui.localization.LocaleBundle;
 

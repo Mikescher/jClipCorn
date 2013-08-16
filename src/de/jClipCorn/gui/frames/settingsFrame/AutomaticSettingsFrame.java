@@ -28,8 +28,8 @@ import de.jClipCorn.gui.frames.mainFrame.MainFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.property.CCProperty;
-import de.jClipCorn.util.DialogHelper;
-import de.jClipCorn.util.ExtendedFocusTraversalOnArray;
+import de.jClipCorn.util.helper.DialogHelper;
+import de.jClipCorn.util.helper.ExtendedFocusTraversalOnArray;
 
 public abstract class AutomaticSettingsFrame extends JFrame {
 	private static final long serialVersionUID = 4681197289662529891L;

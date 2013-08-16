@@ -11,7 +11,7 @@ import org.jfree.data.category.DefaultCategoryDataset;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieOnlineScore;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.util.StatisticsHelper;
+import de.jClipCorn.util.helper.StatisticsHelper;
 
 public class StatisticsOnlinescoreChart extends StatisticsChart {
 	public StatisticsOnlinescoreChart(CCMovieList ml) {

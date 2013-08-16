@@ -7,7 +7,7 @@ import javax.swing.JList;
 
 import org.pushingpixels.substance.api.renderers.SubstanceDefaultListCellRenderer;
 
-import de.jClipCorn.util.PathFormatter;
+import de.jClipCorn.util.formatter.PathFormatter;
 
 public class CreateSeriesFolderStructureTestListCellRenderer extends SubstanceDefaultListCellRenderer{
 	private static final long serialVersionUID = 4677604803615987519L;

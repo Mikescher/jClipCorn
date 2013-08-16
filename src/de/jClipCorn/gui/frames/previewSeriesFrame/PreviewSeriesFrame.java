@@ -57,16 +57,16 @@ import de.jClipCorn.gui.guiComponents.jCoverChooser.JCoverChooser;
 import de.jClipCorn.gui.guiComponents.jCoverChooser.JCoverChooserPopupEvent;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
-import de.jClipCorn.util.DialogHelper;
-import de.jClipCorn.util.EpisodeSearchCallbackListener;
-import de.jClipCorn.util.FileChooserHelper;
-import de.jClipCorn.util.FileSizeFormatter;
-import de.jClipCorn.util.HTTPUtilities;
-import de.jClipCorn.util.ImageUtilities;
-import de.jClipCorn.util.PathFormatter;
-import de.jClipCorn.util.TextFileUtils;
-import de.jClipCorn.util.TimeIntervallFormatter;
-import de.jClipCorn.util.UpdateCallbackListener;
+import de.jClipCorn.util.formatter.FileSizeFormatter;
+import de.jClipCorn.util.formatter.PathFormatter;
+import de.jClipCorn.util.formatter.TimeIntervallFormatter;
+import de.jClipCorn.util.helper.DialogHelper;
+import de.jClipCorn.util.helper.FileChooserHelper;
+import de.jClipCorn.util.helper.HTTPUtilities;
+import de.jClipCorn.util.helper.ImageUtilities;
+import de.jClipCorn.util.helper.TextFileUtils;
+import de.jClipCorn.util.listener.EpisodeSearchCallbackListener;
+import de.jClipCorn.util.listener.UpdateCallbackListener;
 import de.jClipCorn.util.parser.imageparser.ImDBImageParser;
 
 public class PreviewSeriesFrame extends JFrame implements ListSelectionListener, JCoverChooserPopupEvent, UpdateCallbackListener {

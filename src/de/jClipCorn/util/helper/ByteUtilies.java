@@ -1,4 +1,4 @@
-package de.jClipCorn.util;
+package de.jClipCorn.util.helper;
 
 public class ByteUtilies {
 	public static byte[] hexStringToByteArray(String s) {

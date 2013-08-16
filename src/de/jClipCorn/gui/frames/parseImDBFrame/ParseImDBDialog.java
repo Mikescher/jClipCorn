@@ -45,9 +45,9 @@ import de.jClipCorn.gui.guiComponents.ReadableTextField;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.util.DoubleString;
-import de.jClipCorn.util.ExtendedFocusTraversalOnArray;
-import de.jClipCorn.util.HTTPUtilities;
-import de.jClipCorn.util.ImageUtilities;
+import de.jClipCorn.util.helper.ExtendedFocusTraversalOnArray;
+import de.jClipCorn.util.helper.HTTPUtilities;
+import de.jClipCorn.util.helper.ImageUtilities;
 import de.jClipCorn.util.parser.ImDBParser;
 import de.jClipCorn.util.parser.ParseResultHandler;
 

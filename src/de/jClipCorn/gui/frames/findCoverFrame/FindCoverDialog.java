@@ -18,9 +18,9 @@ import javax.swing.SwingUtilities;
 
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTyp;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.util.ExtendedFocusTraversalOnArray;
-import de.jClipCorn.util.ProgressCallbackProgressBarHelper;
-import de.jClipCorn.util.UpdateCallbackListener;
+import de.jClipCorn.util.helper.ExtendedFocusTraversalOnArray;
+import de.jClipCorn.util.listener.ProgressCallbackProgressBarHelper;
+import de.jClipCorn.util.listener.UpdateCallbackListener;
 import de.jClipCorn.util.parser.ParseResultHandler;
 
 public class FindCoverDialog extends JDialog {

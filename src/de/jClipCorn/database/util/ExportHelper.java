@@ -32,10 +32,10 @@ import de.jClipCorn.gui.frames.mainFrame.MainFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.properties.CCProperties;
-import de.jClipCorn.util.DialogHelper;
-import de.jClipCorn.util.PathFormatter;
-import de.jClipCorn.util.ProgressCallbackListener;
-import de.jClipCorn.util.TextFileUtils;
+import de.jClipCorn.util.formatter.PathFormatter;
+import de.jClipCorn.util.helper.DialogHelper;
+import de.jClipCorn.util.helper.TextFileUtils;
+import de.jClipCorn.util.listener.ProgressCallbackListener;
 
 public class ExportHelper {
 	private final static String DB_XML_FILENAME = "database.xml"; //$NON-NLS-1$

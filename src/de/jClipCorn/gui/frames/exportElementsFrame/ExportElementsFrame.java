@@ -23,9 +23,10 @@ import de.jClipCorn.database.util.ExportHelper;
 import de.jClipCorn.gui.CachedResourceLoader;
 import de.jClipCorn.gui.Resources;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.util.DialogHelper;
-import de.jClipCorn.util.FileChooserHelper;
-import de.jClipCorn.util.PathFormatter;
+import de.jClipCorn.util.formatter.PathFormatter;
+import de.jClipCorn.util.helper.DialogHelper;
+import de.jClipCorn.util.helper.FileChooserHelper;
+
 import java.awt.Dimension;
 
 public class ExportElementsFrame extends JFrame {

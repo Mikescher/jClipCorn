@@ -1,6 +1,6 @@
 package de.jClipCorn.database.databaseElement.columnTypes;
 
-import de.jClipCorn.util.RomanNumberFormatter;
+import de.jClipCorn.util.formatter.RomanNumberFormatter;
 
 public class CCMovieZyklus {
 	private String title;

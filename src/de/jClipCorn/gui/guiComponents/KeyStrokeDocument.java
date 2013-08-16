@@ -5,7 +5,7 @@ import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultStyledDocument;
 
-import de.jClipCorn.util.KeyStrokeUtil;
+import de.jClipCorn.util.helper.KeyStrokeUtil;
 
 public class KeyStrokeDocument extends DefaultStyledDocument {
 	private static final long serialVersionUID = 2902824638430147997L;

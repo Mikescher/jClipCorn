@@ -50,12 +50,12 @@ import de.jClipCorn.gui.frames.statisticsFrame.StatisticsFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.properties.CCProperties;
-import de.jClipCorn.util.DialogHelper;
-import de.jClipCorn.util.FileChooserHelper;
-import de.jClipCorn.util.HTTPUtilities;
-import de.jClipCorn.util.PathFormatter;
-import de.jClipCorn.util.TextFileUtils;
 import de.jClipCorn.util.UpdateConnector;
+import de.jClipCorn.util.formatter.PathFormatter;
+import de.jClipCorn.util.helper.DialogHelper;
+import de.jClipCorn.util.helper.FileChooserHelper;
+import de.jClipCorn.util.helper.HTTPUtilities;
+import de.jClipCorn.util.helper.TextFileUtils;
 import de.jClipCorn.util.parser.ImDBParser;
 
 public class CCActionTree {

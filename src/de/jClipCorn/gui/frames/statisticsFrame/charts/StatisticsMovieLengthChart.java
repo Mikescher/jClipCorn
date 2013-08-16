@@ -9,7 +9,7 @@ import org.jfree.data.xy.XYDataset;
 
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.util.StatisticsHelper;
+import de.jClipCorn.util.helper.StatisticsHelper;
 
 public class StatisticsMovieLengthChart extends StatisticsChart {
 	public StatisticsMovieLengthChart(CCMovieList ml) {

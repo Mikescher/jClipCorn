@@ -1,6 +1,6 @@
 package de.jClipCorn.database.databaseElement.columnTypes;
 
-import de.jClipCorn.util.FileSizeFormatter;
+import de.jClipCorn.util.formatter.FileSizeFormatter;
 
 public class CCMovieSize {
 	private long bytes;

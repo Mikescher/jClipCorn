@@ -16,7 +16,7 @@ import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.util.CCDate;
 import de.jClipCorn.util.LargeMD5Calculator;
 import de.jClipCorn.util.MoviePlayer;
-import de.jClipCorn.util.PathFormatter;
+import de.jClipCorn.util.formatter.PathFormatter;
 
 public class CCEpisode {
 	private final CCSeason owner;

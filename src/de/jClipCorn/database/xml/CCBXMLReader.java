@@ -23,8 +23,8 @@ import de.jClipCorn.gui.frames.mainFrame.MainFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.util.CCDate;
-import de.jClipCorn.util.DialogHelper;
-import de.jClipCorn.util.RomanNumberFormatter;
+import de.jClipCorn.util.formatter.RomanNumberFormatter;
+import de.jClipCorn.util.helper.DialogHelper;
 
 @SuppressWarnings("nls")
 public class CCBXMLReader {

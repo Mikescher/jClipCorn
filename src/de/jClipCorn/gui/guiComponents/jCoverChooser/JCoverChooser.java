@@ -15,7 +15,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import de.jClipCorn.properties.CCProperties;
-import de.jClipCorn.util.ImageUtilities;
+import de.jClipCorn.util.helper.ImageUtilities;
 
 public class JCoverChooser extends JComponent implements MouseListener {
 	private static final long serialVersionUID = 4981485357566897454L;

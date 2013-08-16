@@ -1,4 +1,4 @@
-package de.jClipCorn.util;
+package de.jClipCorn.util.helper;
 
 import java.util.ArrayList;
 import java.util.List;

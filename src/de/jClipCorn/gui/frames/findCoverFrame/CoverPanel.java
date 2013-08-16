@@ -14,8 +14,8 @@ import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
 
 import de.jClipCorn.gui.guiComponents.WrapFlowLayout;
-import de.jClipCorn.util.ImageUtilities;
-import de.jClipCorn.util.UpdateCallbackListener;
+import de.jClipCorn.util.helper.ImageUtilities;
+import de.jClipCorn.util.listener.UpdateCallbackListener;
 
 public class CoverPanel extends JPanel implements UpdateCallbackListener {
 	private static final long serialVersionUID = -1988259985804809637L;

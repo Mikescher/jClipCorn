@@ -15,7 +15,7 @@ import org.jdom2.input.SAXBuilder;
 
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.gui.log.CCLog;
-import de.jClipCorn.util.ProgressCallbackListener;
+import de.jClipCorn.util.listener.ProgressCallbackListener;
 
 public class DatabaseComparator {
 	@SuppressWarnings("nls")

@@ -15,12 +15,12 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTyp;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieZyklus;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
-import de.jClipCorn.util.ByteUtilies;
 import de.jClipCorn.util.CCDate;
-import de.jClipCorn.util.ImageUtilities;
 import de.jClipCorn.util.LargeMD5Calculator;
 import de.jClipCorn.util.MoviePlayer;
-import de.jClipCorn.util.PathFormatter;
+import de.jClipCorn.util.formatter.PathFormatter;
+import de.jClipCorn.util.helper.ByteUtilies;
+import de.jClipCorn.util.helper.ImageUtilities;
 
 public class CCMovie extends CCDatabaseElement {
 	public final static int PARTCOUNT_MAX = 6; // 0 - 5

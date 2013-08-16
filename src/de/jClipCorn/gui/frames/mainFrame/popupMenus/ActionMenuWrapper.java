@@ -10,7 +10,7 @@ import de.jClipCorn.gui.actionTree.CCActionElement;
 import de.jClipCorn.gui.actionTree.CCActionTree;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
-import de.jClipCorn.util.KeyStrokeUtil;
+import de.jClipCorn.util.helper.KeyStrokeUtil;
 
 public class ActionMenuWrapper {
 	private final JMenu menu;

@@ -4,7 +4,7 @@ import java.util.HashMap;
 
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
-import de.jClipCorn.util.RegExHelper;
+import de.jClipCorn.util.helper.RegExHelper;
 
 @SuppressWarnings("nls")
 public class AgeRatingParser {

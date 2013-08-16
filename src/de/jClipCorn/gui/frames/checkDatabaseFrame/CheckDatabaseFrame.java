@@ -37,8 +37,8 @@ import de.jClipCorn.gui.Resources;
 import de.jClipCorn.gui.frames.mainFrame.MainFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
-import de.jClipCorn.util.DialogHelper;
-import de.jClipCorn.util.ProgressCallbackProgressBarHelper;
+import de.jClipCorn.util.helper.DialogHelper;
+import de.jClipCorn.util.listener.ProgressCallbackProgressBarHelper;
 
 public class CheckDatabaseFrame extends JFrame {
 	private static final long serialVersionUID = 8481907373850170115L;

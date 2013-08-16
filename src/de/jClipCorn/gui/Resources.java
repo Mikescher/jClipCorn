@@ -3,7 +3,7 @@ package de.jClipCorn.gui;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.jClipCorn.util.PathFormatter;
+import de.jClipCorn.util.formatter.PathFormatter;
 
 @SuppressWarnings("nls")
 public class Resources {

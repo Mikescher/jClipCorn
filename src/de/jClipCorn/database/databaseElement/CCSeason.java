@@ -16,11 +16,11 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCMovieQuality;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieSize;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTags;
 import de.jClipCorn.properties.CCProperties;
-import de.jClipCorn.util.ByteUtilies;
 import de.jClipCorn.util.CCDate;
-import de.jClipCorn.util.ImageUtilities;
 import de.jClipCorn.util.LargeMD5Calculator;
-import de.jClipCorn.util.PathFormatter;
+import de.jClipCorn.util.formatter.PathFormatter;
+import de.jClipCorn.util.helper.ByteUtilies;
+import de.jClipCorn.util.helper.ImageUtilities;
 
 public class CCSeason {
 	private final CCSeries owner;

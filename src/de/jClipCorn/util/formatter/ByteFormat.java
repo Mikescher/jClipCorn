@@ -1,4 +1,4 @@
-package de.jClipCorn.util;
+package de.jClipCorn.util.formatter;
 
 import java.text.FieldPosition;
 import java.text.NumberFormat;

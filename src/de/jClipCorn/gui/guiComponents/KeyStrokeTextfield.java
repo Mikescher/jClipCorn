@@ -6,7 +6,7 @@ import java.awt.event.KeyListener;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 
-import de.jClipCorn.util.KeyStrokeUtil;
+import de.jClipCorn.util.helper.KeyStrokeUtil;
 
 public class KeyStrokeTextfield extends JTextField implements KeyListener {
 	private static final long serialVersionUID = -8054153238795304087L;

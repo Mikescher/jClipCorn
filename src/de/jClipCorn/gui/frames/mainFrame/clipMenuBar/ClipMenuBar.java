@@ -10,7 +10,7 @@ import javax.swing.JMenuItem;
 
 import de.jClipCorn.gui.actionTree.CCActionElement;
 import de.jClipCorn.gui.actionTree.CCActionTree;
-import de.jClipCorn.util.KeyStrokeUtil;
+import de.jClipCorn.util.helper.KeyStrokeUtil;
 
 public class ClipMenuBar extends JMenuBar {
 	private static final long serialVersionUID = -2517053613105253375L;

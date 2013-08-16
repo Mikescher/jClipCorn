@@ -16,7 +16,7 @@ import org.jfree.data.xy.XYSeriesCollection;
 
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.util.StatisticsHelper;
+import de.jClipCorn.util.helper.StatisticsHelper;
 
 public class StatisticsYearChart extends StatisticsChart {
 

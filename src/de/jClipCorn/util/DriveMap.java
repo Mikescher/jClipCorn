@@ -9,6 +9,7 @@ import javax.swing.filechooser.FileSystemView;
 import de.jClipCorn.Main;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
+import de.jClipCorn.util.helper.RegExHelper;
 
 
 public class DriveMap {

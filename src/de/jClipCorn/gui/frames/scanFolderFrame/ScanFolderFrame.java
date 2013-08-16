@@ -34,8 +34,8 @@ import de.jClipCorn.gui.frames.addMovieFrame.AddMovieFrame;
 import de.jClipCorn.gui.frames.mainFrame.MainFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.properties.CCProperties;
-import de.jClipCorn.util.ExtendedFocusTraversalOnArray;
-import de.jClipCorn.util.PathFormatter;
+import de.jClipCorn.util.formatter.PathFormatter;
+import de.jClipCorn.util.helper.ExtendedFocusTraversalOnArray;
 
 public class ScanFolderFrame extends JFrame implements Runnable, MouseListener {
 	private static final long serialVersionUID = 7341007586104986521L;

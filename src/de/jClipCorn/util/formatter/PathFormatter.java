@@ -1,4 +1,4 @@
-package de.jClipCorn.util;
+package de.jClipCorn.util.formatter;
 
 import java.io.File;
 import java.io.IOException;
@@ -9,6 +9,8 @@ import java.util.List;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.properties.CCProperties;
+import de.jClipCorn.util.DriveMap;
+import de.jClipCorn.util.helper.RegExHelper;
 
 @SuppressWarnings("nls")
 public class PathFormatter {

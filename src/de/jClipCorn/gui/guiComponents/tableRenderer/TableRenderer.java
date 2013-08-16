@@ -6,7 +6,7 @@ import javax.swing.JTable;
 
 import org.pushingpixels.substance.api.renderers.SubstanceDefaultTableCellRenderer;
 
-import de.jClipCorn.util.LookAndFeelManager;
+import de.jClipCorn.util.helper.LookAndFeelManager;
 
 public class TableRenderer extends SubstanceDefaultTableCellRenderer {
 	private static final long serialVersionUID = -5742763325569140076L;

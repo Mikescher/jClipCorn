@@ -1,6 +1,6 @@
 package de.jClipCorn.gui.guiComponents.tableRenderer;
 
-import de.jClipCorn.util.TimeIntervallFormatter;
+import de.jClipCorn.util.formatter.TimeIntervallFormatter;
 
 public class TableLengthRenderer extends TableRenderer {
 	private static final long serialVersionUID = 1L;

@@ -1,4 +1,4 @@
-package de.jClipCorn.util;
+package de.jClipCorn.util.helper;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -19,6 +19,7 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCMovieQuality;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieScore;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieSize;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTags;
+import de.jClipCorn.util.CCDate;
 
 public class StatisticsHelper {
 	public static int getViewedMovieCount(CCMovieList ml) {

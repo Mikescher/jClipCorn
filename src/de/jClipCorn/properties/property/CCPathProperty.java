@@ -11,8 +11,8 @@ import org.apache.commons.lang.StringUtils;
 
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.properties.CCProperties;
-import de.jClipCorn.util.FileChooserHelper;
 import de.jClipCorn.util.Validator;
+import de.jClipCorn.util.helper.FileChooserHelper;
 
 public class CCPathProperty extends CCStringProperty {
 	private final String filterEnd;

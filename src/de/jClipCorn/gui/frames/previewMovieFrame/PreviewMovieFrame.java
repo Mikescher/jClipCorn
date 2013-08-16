@@ -26,11 +26,11 @@ import de.jClipCorn.gui.guiComponents.CoverLabel;
 import de.jClipCorn.gui.guiComponents.ReadableTextField;
 import de.jClipCorn.gui.guiComponents.TagPanel;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.util.DialogHelper;
-import de.jClipCorn.util.FileSizeFormatter;
-import de.jClipCorn.util.HTTPUtilities;
-import de.jClipCorn.util.TimeIntervallFormatter;
-import de.jClipCorn.util.UpdateCallbackListener;
+import de.jClipCorn.util.formatter.FileSizeFormatter;
+import de.jClipCorn.util.formatter.TimeIntervallFormatter;
+import de.jClipCorn.util.helper.DialogHelper;
+import de.jClipCorn.util.helper.HTTPUtilities;
+import de.jClipCorn.util.listener.UpdateCallbackListener;
 import de.jClipCorn.util.parser.ImDBParser;
 
 public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener {

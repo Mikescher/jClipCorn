@@ -4,9 +4,9 @@ import java.awt.image.BufferedImage;
 import java.util.List;
 
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTyp;
-import de.jClipCorn.util.HTTPUtilities;
-import de.jClipCorn.util.ProgressCallbackListener;
-import de.jClipCorn.util.UpdateCallbackListener;
+import de.jClipCorn.util.helper.HTTPUtilities;
+import de.jClipCorn.util.listener.ProgressCallbackListener;
+import de.jClipCorn.util.listener.UpdateCallbackListener;
 import de.jClipCorn.util.parser.imageparser.GoogleImageParser;
 import de.jClipCorn.util.parser.imageparser.ImDBImageParser;
 

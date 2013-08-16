@@ -18,9 +18,9 @@ import de.jClipCorn.gui.frames.addEpisodesFrame.AddEpisodesFrame;
 import de.jClipCorn.gui.frames.editSeriesFrame.EditSeriesFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
-import de.jClipCorn.util.DialogHelper;
-import de.jClipCorn.util.FileChooserHelper;
-import de.jClipCorn.util.PathFormatter;
+import de.jClipCorn.util.formatter.PathFormatter;
+import de.jClipCorn.util.helper.DialogHelper;
+import de.jClipCorn.util.helper.FileChooserHelper;
 
 public class SerCoverChooserPopupMenu extends JPopupMenu {
 	private static final long serialVersionUID = 1726753702894240378L;

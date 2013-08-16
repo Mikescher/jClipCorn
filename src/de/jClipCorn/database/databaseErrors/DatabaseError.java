@@ -17,8 +17,8 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCMovieSize;
 import de.jClipCorn.gui.frames.editMovieFrame.EditMovieFrame;
 import de.jClipCorn.gui.frames.editSeriesFrame.EditSeriesFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.util.FileSizeFormatter;
-import de.jClipCorn.util.PathFormatter;
+import de.jClipCorn.util.formatter.FileSizeFormatter;
+import de.jClipCorn.util.formatter.PathFormatter;
 
 public class DatabaseError {	
 	private final DatabaseErrorType errortype;

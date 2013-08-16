@@ -11,7 +11,7 @@ import org.jfree.data.category.DefaultCategoryDataset;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFormat;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.util.StatisticsHelper;
+import de.jClipCorn.util.helper.StatisticsHelper;
 
 public class StatisticsFormatChart extends StatisticsChart {
 	public StatisticsFormatChart(CCMovieList ml) {

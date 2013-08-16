@@ -9,7 +9,7 @@ import org.json.JSONObject;
 
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
-import de.jClipCorn.util.HTTPUtilities;
+import de.jClipCorn.util.helper.HTTPUtilities;
 
 @SuppressWarnings("nls")
 public class GoogleImageParser {

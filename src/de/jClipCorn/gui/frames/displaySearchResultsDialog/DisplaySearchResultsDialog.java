@@ -19,7 +19,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.ScrollPaneConstants;
 
 import de.jClipCorn.database.databaseElement.CCEpisode;
-import de.jClipCorn.util.EpisodeSearchCallbackListener;
+import de.jClipCorn.util.listener.EpisodeSearchCallbackListener;
 
 public class DisplaySearchResultsDialog extends JDialog implements MouseListener, WindowFocusListener, KeyListener {
 	private static final long serialVersionUID = 5984142965004380779L;

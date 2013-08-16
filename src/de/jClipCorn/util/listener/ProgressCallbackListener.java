@@ -1,4 +1,4 @@
-package de.jClipCorn.util;
+package de.jClipCorn.util.listener;
 
 public interface ProgressCallbackListener {
 	public void step();

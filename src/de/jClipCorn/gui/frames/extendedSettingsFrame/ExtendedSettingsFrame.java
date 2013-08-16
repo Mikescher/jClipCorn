@@ -36,8 +36,8 @@ import de.jClipCorn.gui.frames.extendedSettingsFrame.settingsTable.SettingsTable
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.property.CCProperty;
-import de.jClipCorn.util.DialogHelper;
-import de.jClipCorn.util.LookAndFeelManager;
+import de.jClipCorn.util.helper.DialogHelper;
+import de.jClipCorn.util.helper.LookAndFeelManager;
 
 public class ExtendedSettingsFrame extends JFrame implements ListSelectionListener {
 	private static final long serialVersionUID = 6757118153580402337L;

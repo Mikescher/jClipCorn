@@ -49,11 +49,11 @@ import de.jClipCorn.gui.guiComponents.ReadableTextField;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.util.CCDate;
-import de.jClipCorn.util.ExtendedFocusTraversalOnArray;
-import de.jClipCorn.util.FileChooserHelper;
-import de.jClipCorn.util.PathFormatter;
-import de.jClipCorn.util.ProgressCallbackProgressBarHelper;
-import de.jClipCorn.util.TextFileUtils;
+import de.jClipCorn.util.formatter.PathFormatter;
+import de.jClipCorn.util.helper.ExtendedFocusTraversalOnArray;
+import de.jClipCorn.util.helper.FileChooserHelper;
+import de.jClipCorn.util.helper.TextFileUtils;
+import de.jClipCorn.util.listener.ProgressCallbackProgressBarHelper;
 
 public class CompareDatabaseFrame extends JFrame {
 	private static final long serialVersionUID = 5114410004487986632L;

@@ -6,7 +6,7 @@ import java.util.List;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.util.DriveMap;
-import de.jClipCorn.util.ProgressCallbackListener;
+import de.jClipCorn.util.listener.ProgressCallbackListener;
 
 public class DatabaseAutofixer {
 	public static boolean fixErrors(List<DatabaseError> list, ProgressCallbackListener pcl) {

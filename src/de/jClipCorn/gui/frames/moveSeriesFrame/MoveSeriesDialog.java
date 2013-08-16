@@ -32,8 +32,8 @@ import de.jClipCorn.gui.CachedResourceLoader;
 import de.jClipCorn.gui.Resources;
 import de.jClipCorn.gui.guiComponents.CoverLabel;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.util.DialogHelper;
-import de.jClipCorn.util.PathFormatter;
+import de.jClipCorn.util.formatter.PathFormatter;
+import de.jClipCorn.util.helper.DialogHelper;
 
 public class MoveSeriesDialog extends JDialog {
 	private static final long serialVersionUID = 8795232362998343872L;

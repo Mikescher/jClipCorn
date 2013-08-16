@@ -15,9 +15,9 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.CCDate;
-import de.jClipCorn.util.PathFormatter;
-import de.jClipCorn.util.ProgressCallbackProgressMonitorHelper;
-import de.jClipCorn.util.RegExHelper;
+import de.jClipCorn.util.formatter.PathFormatter;
+import de.jClipCorn.util.helper.RegExHelper;
+import de.jClipCorn.util.listener.ProgressCallbackProgressMonitorHelper;
 
 public class BackupManager {
 	private final static String NAME = "%s [%s]"; //$NON-NLS-1$

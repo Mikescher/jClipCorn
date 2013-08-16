@@ -20,10 +20,10 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCMovieQuality;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieSize;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.CCDate;
-import de.jClipCorn.util.FileSizeFormatter;
-import de.jClipCorn.util.PathFormatter;
-import de.jClipCorn.util.ProgressCallbackListener;
-import de.jClipCorn.util.RomanNumberFormatter;
+import de.jClipCorn.util.formatter.FileSizeFormatter;
+import de.jClipCorn.util.formatter.PathFormatter;
+import de.jClipCorn.util.formatter.RomanNumberFormatter;
+import de.jClipCorn.util.listener.ProgressCallbackListener;
 
 public class DatabaseValidator {
 	private final static CCDate MIN_DATE = CCDate.getMinimumDate();

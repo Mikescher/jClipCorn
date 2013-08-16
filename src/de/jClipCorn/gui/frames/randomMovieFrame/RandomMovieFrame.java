@@ -20,7 +20,7 @@ import de.jClipCorn.gui.Resources;
 import de.jClipCorn.gui.guiComponents.jCoverChooser.JCoverChooser;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
-import de.jClipCorn.util.ImageUtilities;
+import de.jClipCorn.util.helper.ImageUtilities;
 
 public class RandomMovieFrame extends JFrame implements Runnable {
 	private static final long serialVersionUID = -8142348609793380058L;

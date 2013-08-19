@@ -1,5 +1,6 @@
 package de.jClipCorn.gui.frames.omniParserFrame;
 
+import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.Toolkit;
@@ -9,8 +10,6 @@ import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.AdjustmentEvent;
-import java.awt.event.AdjustmentListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.File;
@@ -24,12 +23,16 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.SwingConstants;
+import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.TitledBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
@@ -41,6 +44,7 @@ import com.jgoodies.forms.layout.RowSpec;
 
 import de.jClipCorn.gui.CachedResourceLoader;
 import de.jClipCorn.gui.Resources;
+import de.jClipCorn.gui.guiComponents.VerticalScrollPaneSynchronizer;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.listener.OmniParserCallbackListener;
@@ -71,13 +75,21 @@ public class OmniParserFrame extends JFrame {
 	private JButton btnLoadFromFiles;
 	private JButton btnLoadFromFolder;
 	private JButton btnLoadFromClipboard;
-	private JPanel panel;
+	private JPanel pnlOptions;
 	private JCheckBox chckbxRepUmlauts;
 	private JCheckBox chckbxRemInforStrings;
 	private JCheckBox chckbxRecogSpaceChars;
 	private JCheckBox chckbxSplitLines;
 	private JCheckBox chckbxRemRepStrings;
 	private JTable tableCompare;
+	private JPanel pnlPlainText;
+	private JLabel lblPlaintext;
+	private JPanel pnlFormattedText;
+	private JPanel pnlParsedText;
+	private JPanel pnlCheck;
+	private JLabel lblFormattedText;
+	private JLabel lblParsedText;
+	private JLabel lblCheck;
 
 	public OmniParserFrame(Component owner, OmniParserCallbackListener listener, List<String> oldtitles, String chooserdir) {
 		super();
@@ -87,7 +99,7 @@ public class OmniParserFrame extends JFrame {
 		this.filechooserdirectory = chooserdir;
 			
 		initGUI();
-		synchronizeScrollPanes(scrlPnlFormattedText, scrlPnlParsedText);
+		(new VerticalScrollPaneSynchronizer(scrlPnlFormattedText, scrlPnlParsedText)).start();
 		
 		setLocationRelativeTo(owner);
 		
@@ -110,7 +122,9 @@ public class OmniParserFrame extends JFrame {
 				FormFactory.RELATED_GAP_COLSPEC,
 				ColumnSpec.decode("min:grow(4)"), //$NON-NLS-1$
 				FormFactory.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("70dlu:grow"),}, //$NON-NLS-1$
+				ColumnSpec.decode("min:grow"), //$NON-NLS-1$
+				FormFactory.RELATED_GAP_COLSPEC,
+				ColumnSpec.decode("70dlu:grow(2)"),}, //$NON-NLS-1$
 			new RowSpec[] {
 				FormFactory.RELATED_GAP_ROWSPEC,
 				FormFactory.MIN_ROWSPEC,
@@ -125,7 +139,7 @@ public class OmniParserFrame extends JFrame {
 		FlowLayout fl_pnlTop = (FlowLayout) pnlTop.getLayout();
 		fl_pnlTop.setVgap(0);
 		fl_pnlTop.setAlignment(FlowLayout.LEFT);
-		contentPane.add(pnlTop, "2, 2, 5, 1, fill, fill"); //$NON-NLS-1$
+		contentPane.add(pnlTop, "2, 2, 7, 1, fill, fill"); //$NON-NLS-1$
 		
 		btnLoadFromFiles = new JButton(LocaleBundle.getString("OmniParserFrame.btnLoadFromFiles.text")); //$NON-NLS-1$
 		btnLoadFromFiles.addActionListener(new ActionListener() {
@@ -154,8 +168,12 @@ public class OmniParserFrame extends JFrame {
 		});
 		pnlTop.add(btnLoadFromClipboard);
 		
+		pnlPlainText = new JPanel();
+		contentPane.add(pnlPlainText, "2, 4, 1, 3, fill, fill"); //$NON-NLS-1$
+		pnlPlainText.setLayout(new BorderLayout(0, 0));
+		
 		scrlPnlPlainText = new JScrollPane();
-		contentPane.add(scrlPnlPlainText, "2, 4, 1, 3, fill, fill"); //$NON-NLS-1$
+		pnlPlainText.add(scrlPnlPlainText);
 		
 		memoPlaintext = new JTextArea();
 		memoPlaintext.setLineWrap(true);
@@ -177,10 +195,18 @@ public class OmniParserFrame extends JFrame {
 		});
 		scrlPnlPlainText.setViewportView(memoPlaintext);
 		
+		lblPlaintext = new JLabel(LocaleBundle.getString("OmniParserFrame.labelStep1.text")); //$NON-NLS-1$
+		lblPlaintext.setHorizontalAlignment(SwingConstants.CENTER);
+		pnlPlainText.add(lblPlaintext, BorderLayout.NORTH);
+		
+		pnlFormattedText = new JPanel();
+		contentPane.add(pnlFormattedText, "4, 4, 3, 1, fill, fill"); //$NON-NLS-1$
+		pnlFormattedText.setLayout(new BorderLayout(0, 0));
+		
 		scrlPnlFormattedText = new JScrollPane();
+		pnlFormattedText.add(scrlPnlFormattedText);
 		scrlPnlFormattedText.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
 		scrlPnlFormattedText.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		contentPane.add(scrlPnlFormattedText, "4, 4, fill, fill"); //$NON-NLS-1$
 		
 		memoFormattedText = new JTextArea();
 		memoFormattedText.getDocument().addDocumentListener(new DocumentListener() {
@@ -201,10 +227,14 @@ public class OmniParserFrame extends JFrame {
 		});
 		scrlPnlFormattedText.setViewportView(memoFormattedText);
 		
+		pnlParsedText = new JPanel();
+		contentPane.add(pnlParsedText, "8, 4, fill, fill"); //$NON-NLS-1$
+		pnlParsedText.setLayout(new BorderLayout(0, 0));
+		
 		scrlPnlParsedText = new JScrollPane();
+		pnlParsedText.add(scrlPnlParsedText);
 		scrlPnlParsedText.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		scrlPnlParsedText.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
-		contentPane.add(scrlPnlParsedText, "6, 4, fill, fill"); //$NON-NLS-1$
 		
 		memoParsedText = new JTextArea();
 		memoParsedText.getDocument().addDocumentListener(new DocumentListener() {
@@ -225,17 +255,26 @@ public class OmniParserFrame extends JFrame {
 		});
 		scrlPnlParsedText.setViewportView(memoParsedText);
 		
+		pnlCheck = new JPanel();
+		contentPane.add(pnlCheck, "4, 6, fill, fill"); //$NON-NLS-1$
+		pnlCheck.setLayout(new BorderLayout(0, 0));
+		
 		scrlPnlCheck = new JScrollPane();
-		contentPane.add(scrlPnlCheck, "4, 6, fill, fill"); //$NON-NLS-1$
+		pnlCheck.add(scrlPnlCheck);
 		
 		tableCompare = new JTable();
 		tableCompare.setFillsViewportHeight(true);
 		tableCompare.setEnabled(true);
 		scrlPnlCheck.setViewportView(tableCompare);
 		
-		panel = new JPanel();
-		contentPane.add(panel, "6, 6, fill, fill"); //$NON-NLS-1$
-		panel.setLayout(new FormLayout(new ColumnSpec[] {
+		lblCheck = new JLabel(LocaleBundle.getString("OmniParserFrame.labelStep4.text")); //$NON-NLS-1$
+		lblCheck.setHorizontalAlignment(SwingConstants.CENTER);
+		pnlCheck.add(lblCheck, BorderLayout.NORTH);
+		
+		pnlOptions = new JPanel();
+		pnlOptions.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), LocaleBundle.getString("OmniParserFrame.labelOptions.text"), TitledBorder.CENTER, TitledBorder.TOP, null, null)); //$NON-NLS-1$ //$NON-NLS-2$
+		contentPane.add(pnlOptions, "6, 6, 3, 1, fill, fill"); //$NON-NLS-1$
+		pnlOptions.setLayout(new FormLayout(new ColumnSpec[] {
 				FormFactory.RELATED_GAP_COLSPEC,
 				FormFactory.MIN_COLSPEC,},
 			new RowSpec[] {
@@ -258,7 +297,7 @@ public class OmniParserFrame extends JFrame {
 				onPlainTextChanged();
 			}
 		});
-		panel.add(chckbxSplitLines, "2, 2"); //$NON-NLS-1$
+		pnlOptions.add(chckbxSplitLines, "2, 2"); //$NON-NLS-1$
 		
 		chckbxRepUmlauts = new JCheckBox(LocaleBundle.getString("OmniParserFrame.chkbxReplUmlauts.text")); //$NON-NLS-1$
 		chckbxRepUmlauts.addItemListener(new ItemListener() {
@@ -267,7 +306,7 @@ public class OmniParserFrame extends JFrame {
 				onFormattedTextChanged();
 			}
 		});
-		panel.add(chckbxRepUmlauts, "2, 4"); //$NON-NLS-1$
+		pnlOptions.add(chckbxRepUmlauts, "2, 4"); //$NON-NLS-1$
 		
 		chckbxRemInforStrings = new JCheckBox(LocaleBundle.getString("OmniParserFrame.chkbxRemInfoStr.text")); //$NON-NLS-1$
 		chckbxRemInforStrings.addItemListener(new ItemListener() {
@@ -277,7 +316,7 @@ public class OmniParserFrame extends JFrame {
 			}
 		});
 		chckbxRemInforStrings.setSelected(true);
-		panel.add(chckbxRemInforStrings, "2, 6"); //$NON-NLS-1$
+		pnlOptions.add(chckbxRemInforStrings, "2, 6"); //$NON-NLS-1$
 		
 		chckbxRecogSpaceChars = new JCheckBox(LocaleBundle.getString("OmniParserFrame.chkbxRecogSpace.text")); //$NON-NLS-1$
 		chckbxRecogSpaceChars.addItemListener(new ItemListener() {
@@ -287,7 +326,7 @@ public class OmniParserFrame extends JFrame {
 			}
 		});
 		chckbxRecogSpaceChars.setSelected(true);
-		panel.add(chckbxRecogSpaceChars, "2, 8"); //$NON-NLS-1$
+		pnlOptions.add(chckbxRecogSpaceChars, "2, 8"); //$NON-NLS-1$
 		
 		chckbxRemRepStrings = new JCheckBox(LocaleBundle.getString("OmniParserFrame.chkbxRemRepPhrases.text")); //$NON-NLS-1$
 		chckbxRemRepStrings.setSelected(true);
@@ -297,10 +336,10 @@ public class OmniParserFrame extends JFrame {
 				onFormattedTextChanged();
 			}
 		});
-		panel.add(chckbxRemRepStrings, "2, 10"); //$NON-NLS-1$
+		pnlOptions.add(chckbxRemRepStrings, "2, 10"); //$NON-NLS-1$
 		
 		pnlBottom = new JPanel();
-		contentPane.add(pnlBottom, "2, 8, 5, 1, fill, fill"); //$NON-NLS-1$
+		contentPane.add(pnlBottom, "2, 8, 7, 1, fill, fill"); //$NON-NLS-1$
 		
 		btnOK = new JButton("OK"); //$NON-NLS-1$
 		btnOK.addActionListener(new ActionListener() {
@@ -320,6 +359,14 @@ public class OmniParserFrame extends JFrame {
 			}
 		});
 		pnlBottom.add(btnCancel);
+		
+		lblParsedText = new JLabel(LocaleBundle.getString("OmniParserFrame.labelStep3.text")); //$NON-NLS-1$
+		lblParsedText.setHorizontalAlignment(SwingConstants.CENTER);
+		pnlParsedText.add(lblParsedText, BorderLayout.NORTH);
+		
+		lblFormattedText = new JLabel(LocaleBundle.getString("OmniParserFrame.labelStep2.text")); //$NON-NLS-1$
+		lblFormattedText.setHorizontalAlignment(SwingConstants.CENTER);
+		pnlFormattedText.add(lblFormattedText, BorderLayout.NORTH);
 	}
 	
 	private void onLoadFromFolder() {
@@ -439,22 +486,6 @@ public class OmniParserFrame extends JFrame {
 		}
 		
 		tableCompare.setModel(model);
-	}
-	
-	private void synchronizeScrollPanes(final JScrollPane pane1, final JScrollPane pane2) {
-		pane1.getVerticalScrollBar().addAdjustmentListener(new AdjustmentListener() {
-			@Override
-			public void adjustmentValueChanged(AdjustmentEvent e) {
-				pane2.getVerticalScrollBar().setValue(pane1.getVerticalScrollBar().getValue());
-			}
-		});
-		
-		pane2.getVerticalScrollBar().addAdjustmentListener(new AdjustmentListener() {
-			@Override
-			public void adjustmentValueChanged(AdjustmentEvent e) {
-				pane1.getVerticalScrollBar().setValue(pane2.getVerticalScrollBar().getValue());
-			}
-		});
 	}
 	
 	private ArrayList<String> getTitleList() {

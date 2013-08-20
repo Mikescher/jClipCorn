@@ -19,6 +19,8 @@ import de.jClipCorn.gui.CachedResourceLoader;
 import de.jClipCorn.gui.Resources;
 import de.jClipCorn.gui.frames.mainFrame.clipTable.ClipTable;
 import de.jClipCorn.gui.frames.mainFrame.clipTable.RowFilterSource;
+import de.jClipCorn.gui.frames.mainFrame.filterTree.customFilterDialogs.CustomOperatorFilterDialog;
+import de.jClipCorn.gui.guiComponents.tableFilter.TableCustomFilter;
 import de.jClipCorn.gui.guiComponents.tableFilter.TableFSKFilter;
 import de.jClipCorn.gui.guiComponents.tableFilter.TableFormatFilter;
 import de.jClipCorn.gui.guiComponents.tableFilter.TableGenreFilter;
@@ -31,7 +33,9 @@ import de.jClipCorn.gui.guiComponents.tableFilter.TableTypFilter;
 import de.jClipCorn.gui.guiComponents.tableFilter.TableViewedFilter;
 import de.jClipCorn.gui.guiComponents.tableFilter.TableYearFilter;
 import de.jClipCorn.gui.guiComponents.tableFilter.TableZyklusFilter;
+import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.operators.CustomAndOperator;
 import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.util.listener.FinishListener;
 
 public class FilterTree extends AbstractFilterTree {
 	private static final long serialVersionUID = 592519777667038909L;
@@ -49,6 +53,8 @@ public class FilterTree extends AbstractFilterTree {
 	private DefaultMutableTreeNode node_language;
 	private DefaultMutableTreeNode node_typ;
 	private DefaultMutableTreeNode node_viewed;
+	@SuppressWarnings("unused")
+	private DefaultMutableTreeNode node_custom;
 
 	private final ClipTable table;
 	private final CCMovieList movielist;
@@ -106,6 +112,13 @@ public class FilterTree extends AbstractFilterTree {
 		
 		node_viewed = addNode(null, Resources.ICN_SIDEBAR_VIEWED, LocaleBundle.getString("FilterTree.Viewed"), reset); //$NON-NLS-1$
 		initViewed();
+		//TODO Icon
+		node_custom = addNode(null,  Resources.ICN_SIDEBAR_VIEWED, LocaleBundle.getString("FilterTree.Custom"), new ActionListener() { //$NON-NLS-1$
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				onCustomClicked();
+			}
+		});
 	}
 	
 	private void initAll() {
@@ -258,5 +271,16 @@ public class FilterTree extends AbstractFilterTree {
 				}
 			});
 		}
+	}
+	
+	private void onCustomClicked() {
+		final CustomAndOperator cfilter = new CustomAndOperator();
+		
+		new CustomOperatorFilterDialog(cfilter, new FinishListener() {
+			@Override
+			public void finish() {
+				table.setRowFilter(new TableCustomFilter(cfilter), RowFilterSource.SIDEBAR);
+			}
+		}, table.getMainFrame(), true).setVisible(true);
 	}
 }

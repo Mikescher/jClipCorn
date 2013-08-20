@@ -58,7 +58,35 @@ public class YearRange {
 		}
 	}
 	
+	public int getLowestYear() {
+		return getYear1();
+	}
+	
+	public int getHighestYear() {
+		if (isTimePoint()) {
+			return getYear1();
+		} else {
+			return getYear2();
+		}
+	}
+	
 	public static int compare(YearRange a, YearRange b) {
 		return Integer.compare(a.getMiddle(), b.getMiddle());
+	}
+	
+	public boolean isCompletelySmallerThan(YearRange r1) {
+		return getHighestYear() < r1.getLowestYear();
+	}
+	
+	public boolean isCompletelyGreaterThan(YearRange r1) {
+		return getLowestYear() > r1.getHighestYear();
+	}
+	
+	public boolean isCompletelyBetween(YearRange r1, YearRange r2) {
+		if (compare(r1, r2) > 1) { // r1 < r2
+			return isCompletelyGreaterThan(r2) && isCompletelySmallerThan(r1);
+		} else {// r1 >= r2
+			return isCompletelyGreaterThan(r1) && isCompletelySmallerThan(r2);
+		}
 	}
 }

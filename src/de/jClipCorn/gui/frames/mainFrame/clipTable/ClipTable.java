@@ -219,4 +219,8 @@ public class ClipTable extends JScrollPane implements CCDBUpdateListener, ListSe
 	public int getRowCount() {
 		return table.getRowCount();
 	}
+	
+	public MainFrame getMainFrame() {
+		return owner;
+	}
 }

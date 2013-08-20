@@ -97,13 +97,9 @@ public class Main {
 //   - Time until next Backup
 //   => Change connect mechanics so that you can choose were to show the progress (blocking-mainframe, or progresswindow in B-Manager)
 //   => Cahnge disconnect mechanic so you can unload an reload a Database in mid-progress (TESTING!!)
-//TODO Auto-Recognize Structure of AVI-File when importing Series (Get Filename)
-//   - Multiple versions to choose from
-//   - Start collecting samples !!
-//   - (Also parse from wikipedia) (perhaps from various plaintext ressource)
-//   - Perhaps one Master parse code that has various sources (wikipedia, website, plaintext, explorer)
 //TODO Combined Filter (Choose from other Filters to create a new one (is an element in FilterTree (CUSTOM)) => Opens Create Custom Filter Menu)
 //TODO Beim starten auf schreibrechte prüfen (DB ändern / Backup / Settingsfile ...) wenn nicht FATAL ERROR (auser bei ReadOnlyMode)
 //TODO ERROR Besser Highlighten (Iwas blinkendes großes auf der Main-View) -> TNA-Style Popup-Thingie Ya know
 //TODO Play Episode without updating viewed/LastViewed
-	
+//TODO Treeprint of Translation-Tree
+//TODO Load Aand save custom Filter (compressed string ???)

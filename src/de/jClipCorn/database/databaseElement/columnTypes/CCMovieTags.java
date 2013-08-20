@@ -163,6 +163,16 @@ public class CCMovieTags {
 		}
 	}
 	
+	public static String[] getList() {
+		String[] result = new String[ACTIVETAGS];
+		
+		for (int i = 0; i < ACTIVETAGS; i++) {
+			result[i] = getName(i);
+		}
+		
+		return result;
+	}
+	
 	public String getAsString() {
 		StringBuilder b = new StringBuilder();
 		

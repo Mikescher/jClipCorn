@@ -39,6 +39,38 @@ public class LocaleBundle {
 	public static String getFormattedString(String ident, Object... args) {
 		return String.format(getString(ident), args);
 	}
+	
+	public static String getDeformattedString(String ident, Object... args) {
+		String val = getString(ident);
+		
+		StringBuilder builder = new StringBuilder();
+		
+		int pos = 0;
+		boolean isSpecial = false;
+		while (pos < val.length()) {
+			boolean skip = false;
+			char c = val.charAt(pos);
+			
+			if (isSpecial) {
+				isSpecial = false;
+				if (Character.isLetter(c)) {
+					skip = true;
+					builder.deleteCharAt(builder.length() - 1);
+				}
+			} else {
+				if (c == '%') 
+					isSpecial = true;
+			}
+			
+			if (! skip) {
+				builder.append(c);
+			}
+			
+			pos++;
+			
+		}
+		return builder.toString();
+	}
 
 	public static void updateLang() {
 		bundle = ResourceBundle.getBundle(DEFAULT_BASENAME, getLocale());

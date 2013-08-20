@@ -26,4 +26,27 @@ public class CustomFormatFilter extends AbstractCustomFilter {
 	public void setFormat(CCMovieFormat format) {
 		this.format = format;
 	}
+	
+	@Override
+	public int getID() {
+		return 4;
+	}
+
+	@SuppressWarnings("nls")
+	@Override
+	public String exportToString() {
+		StringBuilder b = new StringBuilder();
+		b.append("[");
+		b.append(getID() + "");
+		b.append("|");
+		b.append(format.asInt()+"");
+		b.append("]");
+		
+		return b.toString();
+	}
+	
+	@Override
+	public boolean importFromString(String txt) {
+		
+	}
 }

@@ -26,4 +26,27 @@ public class CustomGenreFilter extends AbstractCustomFilter {
 	public void setGenre(CCMovieGenre genre) {
 		this.genre = genre;
 	}
+	
+	@Override
+	public int getID() {
+		return 6;
+	}
+	
+	@SuppressWarnings("nls")
+	@Override
+	public String exportToString() {
+		StringBuilder b = new StringBuilder();
+		b.append("[");
+		b.append(getID() + "");
+		b.append("|");
+		b.append(genre.asInt()+"");
+		b.append("]");
+		
+		return b.toString();
+	}
+	
+	@Override
+	public boolean importFromString(String txt) {
+		
+	}
 }

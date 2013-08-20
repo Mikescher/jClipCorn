@@ -20,4 +20,27 @@ public abstract class CustomOperator extends AbstractCustomFilter {
 	public boolean remove(AbstractCustomFilter f) {
 		return list.remove(f);
 	}
+
+	@SuppressWarnings("nls")
+	@Override
+	public String exportToString() {
+		StringBuilder b = new StringBuilder();
+		b.append("[");
+		b.append(getID() + "");
+		b.append("|");
+		for (int i = 0; i < list.size(); i++) {
+			if (i != 0) {
+				b.append(",");
+			}
+			b.append(list.get(i).exportToString());
+		}
+		b.append("]");
+		
+		return b.toString();
+	}
+
+	@Override
+	public boolean importFromString(String txt) {
+		
+	}
 }

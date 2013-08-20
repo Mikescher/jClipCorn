@@ -27,4 +27,27 @@ public class CustomTypFilter extends AbstractCustomFilter {
 	public void setTyp(CCMovieTyp typ) {
 		this.typ = typ;
 	}
+	
+	@Override
+	public int getID() {
+		return 13;
+	}
+	
+	@SuppressWarnings("nls")
+	@Override
+	public String exportToString() {
+		StringBuilder b = new StringBuilder();
+		b.append("[");
+		b.append(getID() + "");
+		b.append("|");
+		b.append(typ.asInt()+"");
+		b.append("]");
+		
+		return b.toString();
+	}
+	
+	@Override
+	public boolean importFromString(String txt) {
+		
+	}
 }

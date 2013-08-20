@@ -26,4 +26,27 @@ public class CustomLanguageFilter extends AbstractCustomFilter {
 	public void setLanguage(CCMovieLanguage language) {
 		this.language = language;
 	}
+	
+	@Override
+	public int getID() {
+		return 7;
+	}
+	
+	@SuppressWarnings("nls")
+	@Override
+	public String exportToString() {
+		StringBuilder b = new StringBuilder();
+		b.append("[");
+		b.append(getID() + "");
+		b.append("|");
+		b.append(language.asInt()+"");
+		b.append("]");
+		
+		return b.toString();
+	}
+	
+	@Override
+	public boolean importFromString(String txt) {
+		
+	}
 }

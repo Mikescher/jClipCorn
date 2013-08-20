@@ -26,4 +26,27 @@ public class CustomFSKFilter extends AbstractCustomFilter {
 	public void setFSK(CCMovieFSK fsk) {
 		this.fsk = fsk;
 	}
+	
+	@Override
+	public int getID() {
+		return 5;
+	}
+	
+	@SuppressWarnings("nls")
+	@Override
+	public String exportToString() {
+		StringBuilder b = new StringBuilder();
+		b.append("[");
+		b.append(getID() + "");
+		b.append("|");
+		b.append(fsk.asInt()+"");
+		b.append("]");
+		
+		return b.toString();
+	}
+	
+	@Override
+	public boolean importFromString(String txt) {
+		
+	}
 }

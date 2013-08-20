@@ -64,4 +64,31 @@ public class CustomZyklusFilter extends AbstractCustomFilter {
 	public String getName() {
 		return LocaleBundle.getFormattedString("FilterTree.Custom.CustomFilterNames.Zyklus", getSearchString()); //$NON-NLS-1$
 	}
+	
+	@Override
+	public int getID() {
+		return 16;
+	}
+	
+	@SuppressWarnings("nls")
+	@Override
+	public String exportToString() {
+		StringBuilder b = new StringBuilder();
+		b.append("[");
+		b.append(getID() + "");
+		b.append("|");
+		b.append(AbstractCustomFilter.escape(searchString));
+		b.append(",");
+		b.append(stringMatch.asInt()+"");
+		b.append(",");
+		b.append((caseSensitive)?("1"):("0"));
+		b.append("]");
+		
+		return b.toString();
+	}
+	
+	@Override
+	public boolean importFromString(String txt) {
+		
+	}
 }

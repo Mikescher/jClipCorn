@@ -26,4 +26,27 @@ public class CustomQualityFilter extends AbstractCustomFilter {
 	public void setQuality(CCMovieQuality quality) {
 		this.quality = quality;
 	}
+	
+	@Override
+	public int getID() {
+		return 9;
+	}
+	
+	@SuppressWarnings("nls")
+	@Override
+	public String exportToString() {
+		StringBuilder b = new StringBuilder();
+		b.append("[");
+		b.append(getID() + "");
+		b.append("|");
+		b.append(quality.asInt()+"");
+		b.append("]");
+		
+		return b.toString();
+	}
+	
+	@Override
+	public boolean importFromString(String txt) {
+		
+	}
 }

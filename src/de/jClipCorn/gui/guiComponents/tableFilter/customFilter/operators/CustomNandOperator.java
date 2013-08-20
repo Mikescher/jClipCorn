@@ -21,4 +21,9 @@ public class CustomNandOperator extends CustomOperator {
 	public String getName() {
 		return LocaleBundle.getFormattedString("FilterTree.Custom.CustomFilterNames.OP-NAND", list.size()); //$NON-NLS-1$
 	}
+	
+	@Override
+	public int getID() {
+		return 1;
+	}
 }

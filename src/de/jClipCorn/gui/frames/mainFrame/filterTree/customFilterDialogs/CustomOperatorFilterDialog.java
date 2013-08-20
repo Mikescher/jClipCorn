@@ -199,7 +199,7 @@ public class CustomOperatorFilterDialog extends CustomFilterDialog implements Fi
 		btnExport.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				//TODO EXPORT
+				System.out.println(getFilter().exportToString()); //TODO Better export
 			}
 		});
 		btnExport.setVisible(showExporter);

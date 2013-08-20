@@ -49,6 +49,11 @@ public class CustomYearFilter extends AbstractCustomFilter {
 			return ""; //$NON-NLS-1$
 		}
 	}
+	
+	@Override
+	public boolean importFromString(String txt) {
+		
+	}
 
 	public DecimalSearchType getSearchType() {
 		return searchType;
@@ -72,5 +77,27 @@ public class CustomYearFilter extends AbstractCustomFilter {
 
 	public void setLow(int low) {
 		this.low = low;
+	}
+	
+	@Override
+	public int getID() {
+		return 15;
+	}
+	
+	@SuppressWarnings("nls")
+	@Override
+	public String exportToString() {
+		StringBuilder b = new StringBuilder();
+		b.append("[");
+		b.append(getID() + "");
+		b.append("|");
+		b.append(low+"");
+		b.append(",");
+		b.append(high+"");
+		b.append(",");
+		b.append(searchType.asInt() + "");
+		b.append("]");
+		
+		return b.toString();
 	}
 }

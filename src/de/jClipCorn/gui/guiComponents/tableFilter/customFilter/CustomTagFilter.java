@@ -26,4 +26,27 @@ public class CustomTagFilter extends AbstractCustomFilter {
 	public void setTag(int tag) {
 		this.tag = tag;
 	}
+	
+	@Override
+	public int getID() {
+		return 11;
+	}
+	
+	@SuppressWarnings("nls")
+	@Override
+	public String exportToString() {
+		StringBuilder b = new StringBuilder();
+		b.append("[");
+		b.append(getID() + "");
+		b.append("|");
+		b.append(tag+"");
+		b.append("]");
+		
+		return b.toString();
+	}
+	
+	@Override
+	public boolean importFromString(String txt) {
+		
+	}
 }

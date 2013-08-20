@@ -21,4 +21,9 @@ public class CustomNorOperator extends CustomOperator {
 	public String getName() {
 		return LocaleBundle.getFormattedString("FilterTree.Custom.CustomFilterNames.OP-NOR", list.size()); //$NON-NLS-1$
 	}
+	
+	@Override
+	public int getID() {
+		return 2;
+	}
 }

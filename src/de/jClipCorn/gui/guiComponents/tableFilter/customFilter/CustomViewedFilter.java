@@ -25,4 +25,27 @@ public class CustomViewedFilter extends AbstractCustomFilter {
 	public void setViewed(boolean viewed) {
 		this.viewed = viewed;
 	}
+	
+	@Override
+	public int getID() {
+		return 14;
+	}
+	
+	@SuppressWarnings("nls")
+	@Override
+	public String exportToString() {
+		StringBuilder b = new StringBuilder();
+		b.append("[");
+		b.append(getID() + "");
+		b.append("|");
+		b.append((viewed)?("1"):("0"));
+		b.append("]");
+		
+		return b.toString();
+	}
+	
+	@Override
+	public boolean importFromString(String txt) {
+		
+	}
 }

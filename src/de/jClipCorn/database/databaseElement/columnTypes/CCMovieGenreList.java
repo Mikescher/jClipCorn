@@ -1,5 +1,6 @@
 package de.jClipCorn.database.databaseElement.columnTypes;
 
+
 public class CCMovieGenreList {
 	private final static long[] MASK = {0x00000000000000FFL, 
 										0x000000000000FF00L, 
@@ -239,5 +240,15 @@ public class CCMovieGenreList {
 	
 	public static int getMaxListSize() {
 		return SIZE;
+	}
+	
+	public boolean includes(CCMovieGenre g) {
+		for (int i = 0; i < getGenreCount(); i++) {
+			if (g.equals(getGenre(i))) {
+				return true;
+			}
+		}
+		
+		return false;
 	}
 }

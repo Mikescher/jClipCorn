@@ -125,20 +125,20 @@ public class CustomOnlinescoreFilterDialog extends CustomFilterDialog {
 	private void initValues() {
 		switch (getFilter().getSearchType()) {
 		case LESSER:
-			spnLesser.setValue(getFilter().getHigh());
+			spnLesser.setValue(getFilter().getHigh().asInt());
 			rdbtnLesser.setSelected(true);
 			break;
 		case GREATER:
-			spnGreater.setValue(getFilter().getLow());
+			spnGreater.setValue(getFilter().getLow().asInt());
 			rdbtnGreater.setSelected(true);
 			break;
 		case IN_RANGE:
-			spnBetween1.setValue(getFilter().getLow());
-			spnBetween2.setValue(getFilter().getHigh());
+			spnBetween1.setValue(getFilter().getLow().asInt());
+			spnBetween2.setValue(getFilter().getHigh().asInt());
 			rdbtnBetween.setSelected(true);
 			break;
 		case EXACT:
-			spnExactly.setValue(getFilter().getLow());
+			spnExactly.setValue(getFilter().getLow().asInt());
 			rdbtnExactly.setSelected(true);
 			break;
 		}

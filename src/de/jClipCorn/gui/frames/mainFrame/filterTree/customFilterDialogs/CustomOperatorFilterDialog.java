@@ -39,6 +39,7 @@ import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.operators.CustomN
 import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.operators.CustomOperator;
 import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.operators.CustomOrOperator;
 import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.listener.FinishListener;
 
 public class CustomOperatorFilterDialog extends CustomFilterDialog implements FinishListener{
@@ -199,7 +200,7 @@ public class CustomOperatorFilterDialog extends CustomFilterDialog implements Fi
 		btnExport.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				System.out.println(getFilter().exportToString()); //TODO Better export
+				DialogHelper.showPlainInputDialog(CustomOperatorFilterDialog.this, getFilter().exportToString());
 			}
 		});
 		btnExport.setVisible(showExporter);
@@ -209,7 +210,12 @@ public class CustomOperatorFilterDialog extends CustomFilterDialog implements Fi
 		btnImport.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				//TODO IMPORT
+				String imp = DialogHelper.showPlainInputDialog(CustomOperatorFilterDialog.this);
+				if (imp != null && !getFilter().importFromString(imp)) {
+					DialogHelper.showLocalError(CustomOperatorFilterDialog.this, "Dialogs.CustomFilterImportFailed"); //$NON-NLS-1$
+					getFilter().getList().clear();
+				} 
+				updateList();
 			}
 		});
 		btnImport.setVisible(showExporter);

@@ -1,5 +1,7 @@
 package de.jClipCorn.gui.guiComponents.tableFilter.customFilter;
 
+import java.util.regex.Pattern;
+
 import javax.swing.RowFilter.Entry;
 
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieScore;
@@ -38,21 +40,16 @@ public class CustomScoreFilter extends AbstractCustomFilter {
 	public String asString() {
 		switch (searchType) {
 		case LESSER:
-			return "< " + low.asInt(); //$NON-NLS-1$
+			return "X < " + low.asString(); //$NON-NLS-1$
 		case GREATER:
-			return low.asInt() + " <"; //$NON-NLS-1$
+			return low.asString() + " < X"; //$NON-NLS-1$
 		case IN_RANGE:
-			return low.asInt() + " < X < " + high.asInt(); //$NON-NLS-1$
+			return low.asString() + " < X < " + high.asString(); //$NON-NLS-1$
 		case EXACT:
-			return "== " + low.asInt(); //$NON-NLS-1$
+			return "X == " + low.asString(); //$NON-NLS-1$
 		default:
 			return ""; //$NON-NLS-1$
 		}
-	}
-	
-	@Override
-	public boolean importFromString(String txt) {
-		
 	}
 
 	public DecimalSearchType getSearchType() {
@@ -81,7 +78,7 @@ public class CustomScoreFilter extends AbstractCustomFilter {
 	
 	@Override
 	public int getID() {
-		return 10;
+		return AbstractCustomFilter.CUSTOMFILTERID_SCORE;
 	}
 	
 	@SuppressWarnings("nls")
@@ -99,5 +96,48 @@ public class CustomScoreFilter extends AbstractCustomFilter {
 		b.append("]");
 		
 		return b.toString();
+	}
+	
+	@SuppressWarnings("nls")
+	@Override
+	public boolean importFromString(String txt) {
+		String params = AbstractCustomFilter.getParameterFromExport(txt);
+		if (params == null) return false;
+		
+		String[] paramsplit = params.split(Pattern.quote(","));
+		if (paramsplit.length != 3) return false;
+		
+		int intval;
+		CCMovieScore f;
+		DecimalSearchType s;
+		
+		try {
+			intval = Integer.parseInt(paramsplit[0]);
+		} catch (NumberFormatException e) {
+			return false;
+		}
+		f = CCMovieScore.find(intval);
+		if (f == null) return false;
+		setLow(f);
+		
+		try {
+			intval = Integer.parseInt(paramsplit[1]);
+		} catch (NumberFormatException e) {
+			return false;
+		}
+		f = CCMovieScore.find(intval);
+		if (f == null) return false;
+		setHigh(f);
+		
+		try {
+			intval = Integer.parseInt(paramsplit[2]);
+		} catch (NumberFormatException e) {
+			return false;
+		}
+		s = DecimalSearchType.find(intval);
+		if (s == null) return false;
+		setSearchType(s);
+		
+		return true;
 	}
 }

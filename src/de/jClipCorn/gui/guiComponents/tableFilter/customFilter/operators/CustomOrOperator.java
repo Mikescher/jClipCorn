@@ -3,6 +3,7 @@ package de.jClipCorn.gui.guiComponents.tableFilter.customFilter.operators;
 import javax.swing.RowFilter.Entry;
 
 import de.jClipCorn.gui.frames.mainFrame.clipTable.ClipTableModel;
+import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.AbstractCustomFilter;
 import de.jClipCorn.gui.localization.LocaleBundle;
 
 public class CustomOrOperator extends CustomOperator {
@@ -24,6 +25,6 @@ public class CustomOrOperator extends CustomOperator {
 	
 	@Override
 	public int getID() {
-		return 3;
+		return AbstractCustomFilter.CUSTOMFILTERID_OR;
 	}
 }

@@ -12,6 +12,13 @@ public enum DecimalSearchType {
 		this.id = id;
 	}
 	
+	public static DecimalSearchType find(int val) {
+		if (val >= 0 && val < DecimalSearchType.values().length) {
+			return DecimalSearchType.values()[val]; // Geht nur wenn alle Zahlen nach der Reihe da sind
+		}
+		return null;
+	}
+	
 	public int asInt() {
 		return id;
 	}

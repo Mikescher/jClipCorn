@@ -1,5 +1,7 @@
 package de.jClipCorn.gui.guiComponents.tableFilter.customFilter;
 
+import java.util.regex.Pattern;
+
 import javax.swing.RowFilter.Entry;
 
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTags;
@@ -29,7 +31,7 @@ public class CustomTagFilter extends AbstractCustomFilter {
 	
 	@Override
 	public int getID() {
-		return 11;
+		return AbstractCustomFilter.CUSTOMFILTERID_TAG;
 	}
 	
 	@SuppressWarnings("nls")
@@ -45,8 +47,25 @@ public class CustomTagFilter extends AbstractCustomFilter {
 		return b.toString();
 	}
 	
+	@SuppressWarnings("nls")
 	@Override
 	public boolean importFromString(String txt) {
+		String params = AbstractCustomFilter.getParameterFromExport(txt);
+		if (params == null) return false;
 		
+		String[] paramsplit = params.split(Pattern.quote(","));
+		if (paramsplit.length != 1) return false;
+		
+		int intval;
+		try {
+			intval = Integer.parseInt(paramsplit[0]);
+		} catch (NumberFormatException e) {
+			return false;
+		}
+		
+		if (! CCMovieTags.isTagActive(intval)) return false;
+		setTag(intval);
+		
+		return true;
 	}
 }

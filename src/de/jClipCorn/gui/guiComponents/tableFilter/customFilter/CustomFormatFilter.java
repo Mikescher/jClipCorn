@@ -1,5 +1,7 @@
 package de.jClipCorn.gui.guiComponents.tableFilter.customFilter;
 
+import java.util.regex.Pattern;
+
 import javax.swing.RowFilter.Entry;
 
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFormat;
@@ -16,7 +18,7 @@ public class CustomFormatFilter extends AbstractCustomFilter {
 
 	@Override
 	public String getName() {
-		return LocaleBundle.getFormattedString("FilterTree.Custom.CustomFilterNames.Format", format); //$NON-NLS-1$
+		return LocaleBundle.getFormattedString("FilterTree.Custom.CustomFilterNames.Format", format.asString()); //$NON-NLS-1$
 	}
 
 	public CCMovieFormat getFormat() {
@@ -29,7 +31,7 @@ public class CustomFormatFilter extends AbstractCustomFilter {
 	
 	@Override
 	public int getID() {
-		return 4;
+		return AbstractCustomFilter.CUSTOMFILTERID_FORMAT;
 	}
 
 	@SuppressWarnings("nls")
@@ -45,8 +47,26 @@ public class CustomFormatFilter extends AbstractCustomFilter {
 		return b.toString();
 	}
 	
+	@SuppressWarnings("nls")
 	@Override
 	public boolean importFromString(String txt) {
+		String params = AbstractCustomFilter.getParameterFromExport(txt);
+		if (params == null) return false;
 		
+		String[] paramsplit = params.split(Pattern.quote(","));
+		if (paramsplit.length != 1) return false;
+		
+		int format;
+		try {
+			format = Integer.parseInt(paramsplit[0]);
+		} catch (NumberFormatException e) {
+			return false;
+		}
+		
+		CCMovieFormat f = CCMovieFormat.find(format);
+		if (f == null) return false;
+		setFormat(f);
+		
+		return true;
 	}
 }

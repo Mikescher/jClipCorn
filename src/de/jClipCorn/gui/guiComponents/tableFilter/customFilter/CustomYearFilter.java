@@ -1,9 +1,12 @@
 package de.jClipCorn.gui.guiComponents.tableFilter.customFilter;
 
+import java.util.regex.Pattern;
+
 import javax.swing.RowFilter.Entry;
 
 import de.jClipCorn.gui.frames.mainFrame.clipTable.ClipTableModel;
 import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.util.CCDate;
 import de.jClipCorn.util.DecimalSearchType;
 import de.jClipCorn.util.YearRange;
 
@@ -38,21 +41,16 @@ public class CustomYearFilter extends AbstractCustomFilter {
 	public String asString() {
 		switch (searchType) {
 		case LESSER:
-			return "< " + high; //$NON-NLS-1$
+			return "X < " + high; //$NON-NLS-1$
 		case GREATER:
-			return low + " <"; //$NON-NLS-1$
+			return low + " < X"; //$NON-NLS-1$
 		case IN_RANGE:
 			return low + " < X < " + high; //$NON-NLS-1$
 		case EXACT:
-			return "== " + low; //$NON-NLS-1$
+			return "X == " + low; //$NON-NLS-1$
 		default:
 			return ""; //$NON-NLS-1$
 		}
-	}
-	
-	@Override
-	public boolean importFromString(String txt) {
-		
 	}
 
 	public DecimalSearchType getSearchType() {
@@ -81,7 +79,7 @@ public class CustomYearFilter extends AbstractCustomFilter {
 	
 	@Override
 	public int getID() {
-		return 15;
+		return AbstractCustomFilter.CUSTOMFILTERID_YEAR;
 	}
 	
 	@SuppressWarnings("nls")
@@ -99,5 +97,45 @@ public class CustomYearFilter extends AbstractCustomFilter {
 		b.append("]");
 		
 		return b.toString();
+	}
+	
+	@SuppressWarnings("nls")
+	@Override
+	public boolean importFromString(String txt) {
+		String params = AbstractCustomFilter.getParameterFromExport(txt);
+		if (params == null) return false;
+		
+		String[] paramsplit = params.split(Pattern.quote(","));
+		if (paramsplit.length != 3) return false;
+		
+		int intval;
+		DecimalSearchType s;
+		
+		try {
+			intval = Integer.parseInt(paramsplit[0]);
+		} catch (NumberFormatException e) {
+			return false;
+		}
+		if (!(intval >= CCDate.YEAR_MIN && intval < CCDate.YEAR_MAX)) return false;
+		setLow(intval);
+		
+		try {
+			intval = Integer.parseInt(paramsplit[1]);
+		} catch (NumberFormatException e) {
+			return false;
+		}
+		if (!(intval >= CCDate.YEAR_MIN && intval < CCDate.YEAR_MAX)) return false;
+		setHigh(intval);
+		
+		try {
+			intval = Integer.parseInt(paramsplit[2]);
+		} catch (NumberFormatException e) {
+			return false;
+		}
+		s = DecimalSearchType.find(intval);
+		if (s == null) return false;
+		setSearchType(s);
+		
+		return true;
 	}
 }

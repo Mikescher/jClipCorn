@@ -16,13 +16,6 @@ public class TableGenreFilter extends RowFilter<ClipTableModel, Object> {
 
 	@Override
 	public boolean include(Entry<? extends ClipTableModel, ? extends Object> e) {
-		CCMovieGenreList gl = (CCMovieGenreList) e.getValue(ClipTableModel.COLUMN_GENRE);
-		for (int i = 0; i < gl.getGenreCount(); i++) {
-			if (defGenre.equals(gl.getGenre(i))) {
-				return true;
-			}
-		}
-		
-		return false;
+		return ((CCMovieGenreList) e.getValue(ClipTableModel.COLUMN_GENRE)).includes(defGenre);
 	}
 }

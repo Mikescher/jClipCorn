@@ -64,4 +64,12 @@ public class DialogHelper {
 	public static int showLocaleOptions(Component frame, String ident) {
 		return showLocaleOptions(frame, ident, 0);
 	}
+	
+	public static String showPlainInputDialog(Component frame, String value) {
+		return JOptionPane.showInputDialog(frame, "", value); //$NON-NLS-1$
+	}
+	
+	public static String showPlainInputDialog(Component frame) {
+		return showPlainInputDialog(frame, ""); //$NON-NLS-1$
+	}
 }

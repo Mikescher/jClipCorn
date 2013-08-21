@@ -1,5 +1,7 @@
 package de.jClipCorn.gui.guiComponents.tableFilter.customFilter;
 
+import java.util.regex.Pattern;
+
 import javax.swing.RowFilter.Entry;
 
 import de.jClipCorn.gui.frames.mainFrame.clipTable.ClipTableModel;
@@ -15,7 +17,7 @@ public class CustomViewedFilter extends AbstractCustomFilter {
 
 	@Override
 	public String getName() {
-		return LocaleBundle.getFormattedString("FilterTree.Custom.CustomFilterNames.Viewed", viewed); //$NON-NLS-1$
+		return LocaleBundle.getFormattedString("FilterTree.Custom.CustomFilterNames.Viewed", (viewed) ? (LocaleBundle.getString("FilterTree.Viewed.Viewed")) : (LocaleBundle.getString("FilterTree.Viewed.Unviewed"))); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
 
 	public boolean getViewed() {
@@ -28,7 +30,7 @@ public class CustomViewedFilter extends AbstractCustomFilter {
 	
 	@Override
 	public int getID() {
-		return 14;
+		return AbstractCustomFilter.CUSTOMFILTERID_VIEWED;
 	}
 	
 	@SuppressWarnings("nls")
@@ -44,8 +46,29 @@ public class CustomViewedFilter extends AbstractCustomFilter {
 		return b.toString();
 	}
 	
+	@SuppressWarnings("nls")
 	@Override
 	public boolean importFromString(String txt) {
+		String params = AbstractCustomFilter.getParameterFromExport(txt);
+		if (params == null) return false;
 		
+		String[] paramsplit = params.split(Pattern.quote(","));
+		if (paramsplit.length != 1) return false;
+		
+		int intval;
+		try {
+			intval = Integer.parseInt(paramsplit[0]);
+		} catch (NumberFormatException e) {
+			return false;
+		}
+		
+		boolean f;
+		if (intval == 0) f = false;
+		else if (intval == 1) f = true;
+		else return false;
+
+		setViewed(f);
+		
+		return true;
 	}
 }

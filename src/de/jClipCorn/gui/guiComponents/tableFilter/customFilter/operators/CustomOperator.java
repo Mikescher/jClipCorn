@@ -41,6 +41,22 @@ public abstract class CustomOperator extends AbstractCustomFilter {
 
 	@Override
 	public boolean importFromString(String txt) {
+		list.clear();
 		
+		if (txt == null) return false;
+		
+		int id = AbstractCustomFilter.getIDFromExport(txt);
+		if (id < 0) return false;
+		String params = AbstractCustomFilter.getParameterFromExport(txt);
+		if (params == null) return false;
+		String[] paramlist = AbstractCustomFilter.splitParameterFromExport(params);
+		
+		for (int i = 0; i < paramlist.length; i++) {
+			AbstractCustomFilter f = AbstractCustomFilter.createFilterFromExport(paramlist[i]);
+			if (f == null) return false;
+			add(f);
+		}
+		
+		return true;
 	}
 }

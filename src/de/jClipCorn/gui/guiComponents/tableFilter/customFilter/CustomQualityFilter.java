@@ -1,5 +1,7 @@
 package de.jClipCorn.gui.guiComponents.tableFilter.customFilter;
 
+import java.util.regex.Pattern;
+
 import javax.swing.RowFilter.Entry;
 
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieQuality;
@@ -16,7 +18,7 @@ public class CustomQualityFilter extends AbstractCustomFilter {
 
 	@Override
 	public String getName() {
-		return LocaleBundle.getFormattedString("FilterTree.Custom.CustomFilterNames.Quality", quality); //$NON-NLS-1$
+		return LocaleBundle.getFormattedString("FilterTree.Custom.CustomFilterNames.Quality", quality.asString()); //$NON-NLS-1$
 	}
 
 	public CCMovieQuality getQuality() {
@@ -29,7 +31,7 @@ public class CustomQualityFilter extends AbstractCustomFilter {
 	
 	@Override
 	public int getID() {
-		return 9;
+		return AbstractCustomFilter.CUSTOMFILTERID_QUALITY;
 	}
 	
 	@SuppressWarnings("nls")
@@ -45,8 +47,26 @@ public class CustomQualityFilter extends AbstractCustomFilter {
 		return b.toString();
 	}
 	
+	@SuppressWarnings("nls")
 	@Override
 	public boolean importFromString(String txt) {
+		String params = AbstractCustomFilter.getParameterFromExport(txt);
+		if (params == null) return false;
 		
+		String[] paramsplit = params.split(Pattern.quote(","));
+		if (paramsplit.length != 1) return false;
+		
+		int intval;
+		try {
+			intval = Integer.parseInt(paramsplit[0]);
+		} catch (NumberFormatException e) {
+			return false;
+		}
+		
+		CCMovieQuality f = CCMovieQuality.find(intval);
+		if (f == null) return false;
+		setQuality(f);
+		
+		return true;
 	}
 }

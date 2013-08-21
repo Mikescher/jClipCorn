@@ -11,6 +11,13 @@ public enum StringMatchType {
 		this.id = id;
 	}
 	
+	public static StringMatchType find(int val) {
+		if (val >= 0 && val < StringMatchType.values().length) {
+			return StringMatchType.values()[val]; // Geht nur wenn alle Zahlen nach der Reihe da sind
+		}
+		return null;
+	}
+	
 	public int asInt() {
 		return id;
 	}

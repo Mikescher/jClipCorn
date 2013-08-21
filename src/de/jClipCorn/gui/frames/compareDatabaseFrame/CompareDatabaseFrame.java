@@ -12,6 +12,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import javax.swing.DefaultListModel;
+import javax.swing.DefaultListSelectionModel;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -642,7 +643,7 @@ public class CompareDatabaseFrame extends JFrame {
 	
 	private void onSelection(JList<CompareElement> list, ListSelectionEvent e) {
 		if (! e.getValueIsAdjusting()) {
-			CompareElement scel = list.getModel().getElementAt(e.getFirstIndex());
+			CompareElement scel = list.getModel().getElementAt(((DefaultListSelectionModel) (e.getSource())).getLeadSelectionIndex());
 			
 			if (scel.isInDB1()) {
 				lblLocalIdDB1.setText(scel.getCSLIDDB1() + ""); //$NON-NLS-1$

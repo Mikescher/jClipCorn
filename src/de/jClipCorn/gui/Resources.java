@@ -22,6 +22,7 @@ public class Resources {
 	public final static String ICN_MENUBAR_CLOSE		 			= registerICN("/icons/toolbar/door_open.png");
 	public final static String ICN_MENUBAR_PARSEXML 				= registerICN("/icons/toolbar/blueprint.png");
 	public final static String ICN_MENUBAR_PLAY						= registerICN("/icons/toolbar/control_play.png");
+	public final static String ICN_MENUBAR_HIDDENPLAY				= registerICN("/icons/toolbar/control_hiddenplay.png");
 	public final static String ICN_MENUBAR_ADD_MOV					= registerICN("/icons/toolbar/add.png");
 	public final static String ICN_MENUBAR_ADD_SER					= registerICN("/icons/toolbar/addSer.png");
 	public final static String ICN_MENUBAR_ADD_SEA					= registerICN("/icons/toolbar/addSea.png");

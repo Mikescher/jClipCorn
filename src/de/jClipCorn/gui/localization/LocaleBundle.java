@@ -1,6 +1,9 @@
 package de.jClipCorn.gui.localization;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
@@ -87,5 +90,56 @@ public class LocaleBundle {
 	
 	public static Locale getCurrentLocale() {
 		return getLocale();
+	}
+	
+	@SuppressWarnings("nls")
+	private static void addSubListToBuilder(StringBuilder builder, String prefix, List<String> list, int depth) {
+		list.remove(prefix);
+		
+		boolean finished = false;
+		while(! finished) {
+			finished = true;
+			for (int i = 0; i < list.size(); i++) {
+				String s = list.get(i);
+				if (s.startsWith(prefix)) {
+					finished = false;
+					String newPrefix = s.substring(0, prefix.length());
+
+					if (s.indexOf('.', newPrefix.length()+1) > 0)
+						newPrefix = s.substring(0, s.indexOf('.', newPrefix.length()+1));
+					else
+						newPrefix = s;
+					
+					for (int c = 0; c < depth; c++) builder.append("   ");
+					builder.append(newPrefix.substring(newPrefix.lastIndexOf('.')+1, newPrefix.length()));
+					if (bundle.containsKey(s)) builder.append("   (\"" + getString(s).replaceAll("\r\n", "\\\\r\\\\n") + "\")");
+					builder.append("\r\n");
+					addSubListToBuilder(builder, newPrefix, list, depth + 1);
+					break;
+				}
+			}
+		}
+	}
+	
+	private static String getTranslationTree() {
+		Enumeration<String> enumer = bundle.getKeys();
+		List<String> list = new ArrayList<>();
+		StringBuilder builder = new StringBuilder();
+		
+		while (enumer.hasMoreElements()) {
+			String s = enumer.nextElement();
+			
+			list.add(s);
+		}
+		
+		Collections.sort(list);
+		
+		addSubListToBuilder(builder, "", list, 0); //$NON-NLS-1$
+		
+		return builder.toString();
+	}
+	
+	public static void printTranslationTree() {
+		System.out.println(getTranslationTree());
 	}
 }

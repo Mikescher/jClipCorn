@@ -270,12 +270,14 @@ public class CCEpisode {
 		return addDate;
 	}
 
-	public void play() {
+	public void play(boolean updateEpisodeState) {
 		MoviePlayer.play(this);
 		
-		setViewed(true);
+		if (updateEpisodeState) {
+			setViewed(true);
 		
-		setLastViewed(CCDate.getCurrentDate());
+			setLastViewed(CCDate.getCurrentDate());
+		}
 	}
 	
 	/**

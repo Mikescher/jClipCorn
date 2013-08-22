@@ -29,6 +29,53 @@ public class SerTablePopupMenu extends JPopupMenu {
 		this.episode = e;
 		this.owner = frame;
 
+		JMenuItem play = new JMenuItem(LocaleBundle.getString("PreviewSeriesFrame.PopupMenu.Play"), CachedResourceLoader.getSmallImageIcon(Resources.ICN_MENUBAR_PLAY)); //$NON-NLS-1$
+		play.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				owner.onEpisodeDblClick(episode);
+			}
+		});
+		add(play);
+		
+		JMenuItem playHidden = new JMenuItem(LocaleBundle.getString("PreviewSeriesFrame.PopupMenu.PlayHidden"), CachedResourceLoader.getSmallImageIcon(Resources.ICN_MENUBAR_HIDDENPLAY)); //$NON-NLS-1$
+		playHidden.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				episode.play(false);
+			}
+		});
+		add(playHidden);
+		
+		//#############
+		addSeparator();
+		//#############
+
+		JMenuItem setViewed = new JMenuItem(LocaleBundle.getString("PreviewSeriesFrame.PopupMenu.SetViewed"), CachedResourceLoader.getSmallImageIcon(Resources.ICN_SIDEBAR_VIEWED)); //$NON-NLS-1$
+		setViewed.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				episode.setViewed(true);
+				episode.setLastViewed(CCDate.getCurrentDate());
+				owner.updateSeason();
+			}
+		});
+		add(setViewed);
+
+		JMenuItem setUnviewed = new JMenuItem(LocaleBundle.getString("PreviewSeriesFrame.PopupMenu.SetUnviewed"), CachedResourceLoader.getSmallImageIcon(Resources.ICN_SIDEBAR_UNVIEWED)); //$NON-NLS-1$
+		setUnviewed.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				episode.setViewed(false);
+				owner.updateSeason();
+			}
+		});
+		add(setUnviewed);
+		
+		//#############
+		addSeparator();
+		//#############
+		
 		JMenu tags = new JMenu(LocaleBundle.getString("PreviewSeriesFrame.PopupMenu.ChangeTags")); //$NON-NLS-1$
 		tags.setIcon(CachedResourceLoader.getSmallImageIcon(Resources.ICN_MENUBAR_TAGS));
 		for (int i = 0; i < CCMovieTags.ACTIVETAGS; i++) {
@@ -55,27 +102,10 @@ public class SerTablePopupMenu extends JPopupMenu {
 			}
 		});
 		add(openFolder);
-
-		JMenuItem setViewed = new JMenuItem(LocaleBundle.getString("PreviewSeriesFrame.PopupMenu.SetViewed"), CachedResourceLoader.getSmallImageIcon(Resources.ICN_SIDEBAR_VIEWED)); //$NON-NLS-1$
-		setViewed.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				episode.setViewed(true);
-				episode.setLastViewed(CCDate.getCurrentDate());
-				owner.updateSeason();
-			}
-		});
-		add(setViewed);
-
-		JMenuItem setUnviewed = new JMenuItem(LocaleBundle.getString("PreviewSeriesFrame.PopupMenu.SetUnviewed"), CachedResourceLoader.getSmallImageIcon(Resources.ICN_SIDEBAR_UNVIEWED)); //$NON-NLS-1$
-		setUnviewed.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				episode.setViewed(false);
-				owner.updateSeason();
-			}
-		});
-		add(setUnviewed);
+		
+		//#############
+		addSeparator();
+		//#############
 
 		JMenuItem edit = new JMenuItem(LocaleBundle.getString("PreviewSeriesFrame.PopupMenu.Edit"), CachedResourceLoader.getSmallImageIcon(Resources.ICN_MENUBAR_EDIT_MOV)); //$NON-NLS-1$
 		edit.addActionListener(new ActionListener() {

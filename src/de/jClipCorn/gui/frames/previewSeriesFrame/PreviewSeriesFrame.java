@@ -685,7 +685,7 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 	
 	public void onEpisodeDblClick(CCEpisode ep) {
 		if (ep != null) {
-			ep.play();
+			ep.play(true);
 		}
 	}
 	
@@ -695,7 +695,7 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 		if (e != null) {
 			cvrChooser.setCurrSelected(e.getSeason().getSeasonNumber());
 			tabSeason.select(e);
-			e.play();
+			e.play(true);
 		}
 	}
 	
@@ -705,7 +705,7 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 		if (e != null) {
 			cvrChooser.setCurrSelected(e.getSeason().getSeasonNumber());
 			tabSeason.select(e);
-			e.play();
+			e.play(true);
 		}
 	}
 	
@@ -715,7 +715,7 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 		if (e != null) {
 			cvrChooser.setCurrSelected(e.getSeason().getSeasonNumber());
 			tabSeason.select(e);
-			e.play();
+			e.play(true);
 		}
 	}
 	

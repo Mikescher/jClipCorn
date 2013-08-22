@@ -41,7 +41,9 @@ public class Main {
 				final MainFrame myFrame = new MainFrame(mList);
 				myFrame.start();
 				
-				mList.connect(myFrame);				
+				mList.connect(myFrame);
+				
+				LocaleBundle.printTranslationTree();
 			}
 		});
 	}
@@ -73,17 +75,25 @@ public class Main {
 //TODO Search for Trailer
 
 //TODO (2.0) ONLINE SYNCHRONISATION / Online Profiles / View Ratings + Viewed from others ... ...
+	// - XML With MovieDATA is send to Server (no FileInfo / No COver )
+	// - YOu send a username and a 16-sign password (to differ the users)
+	// - Server keeps track of this xml and lastUpdated of the xml
+	// - You Send in an extra thread everytime something changed (global cahnge flag) ?
+	// - You have local versions of xml from others (the update in seperate thread when server-LastUpdate differs from local-LastUpdate)
+	// - You can look through lists of other users
+		// Look what they viewed (and you not) etc
+		// Look at their Ratings
+		// Look what movies they have but you not ...
+	// - you can right click a movie and click something like network view
+		// - YOu see if the othr one has the Movie / what he rates / if he has viewed ...
 
 //TODO Shortcuts für SerienWindow
 
 //TODO [[ 1.9 FEATURES: ?? ]]
 
 //TODO Compare Series in CompareDialog
-
 //TODO Backup Progressdialog has a non-functional abortbutton (should do nothing and not close window, perhaps open new window)
 //   - Add proper Helper class, this will become handy in other playes too (BackupManager ...)
-//TODO Edit Series Frame -> Edit EPisodes -> Open File DIalog (Use Series Folder)
-//TODO Watch Episode without resetting/setting LastViewedDate
 //TODO Add Backup Information Page (Backup Manager)
 //   - List All Backups in Backup Folder
 //   - Delete Backups
@@ -96,9 +106,7 @@ public class Main {
 //   - Time until next Backup
 //   => Change connect mechanics so that you can choose were to show the progress (blocking-mainframe, or progresswindow in B-Manager)
 //   => Cahnge disconnect mechanic so you can unload an reload a Database in mid-progress (TESTING!!)
-//TODO Combined Filter (Choose from other Filters to create a new one (is an element in FilterTree (CUSTOM)) => Opens Create Custom Filter Menu)
 //TODO Beim starten auf schreibrechte prüfen (DB ändern / Backup / Settingsfile ...) wenn nicht FATAL ERROR (auser bei ReadOnlyMode)
 //TODO ERROR Besser Highlighten (Iwas blinkendes großes auf der Main-View) -> TNA-Style Popup-Thingie Ya know
-//TODO Play Episode without updating viewed/LastViewed
 //TODO Treeprint of Translation-Tree
 //TODO Recent Custom Filters as SubTrees in FilterTree

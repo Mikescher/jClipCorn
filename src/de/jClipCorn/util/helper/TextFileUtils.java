@@ -3,14 +3,18 @@ package de.jClipCorn.util.helper;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.nio.charset.Charset;
 
 public class TextFileUtils {	
+	public final static Charset CHARSET_UTF8 = Charset.forName("UTF-8"); //$NON-NLS-1$
+	
 	public static String readTextFile(String filename) throws IOException {
 		return readTextFile(new File(filename));
 	}
@@ -20,8 +24,23 @@ public class TextFileUtils {
 		return readTextFile(new FileReader(file));
 	}
 	
-	public static String readTextFile(FileReader reader) throws IOException {
+	public static String readTextFile(InputStreamReader reader) throws IOException {
 		return readTextFile(new BufferedReader(reader));
+	}
+	
+	public static String readUTF8TextFile(String file) throws IOException {
+		return readUTF8TextFile(new File(file));
+	}
+
+	public static String readUTF8TextFile(File file) throws IOException {
+		FileInputStream stream;
+		String result = readUTF8TextFile(stream = new FileInputStream(file));
+		stream.close();
+		return result;
+	}
+	
+	public static String readUTF8TextFile(FileInputStream file) throws IOException {
+		return readTextFile(new InputStreamReader(file, CHARSET_UTF8));
 	}
 	
 	public static String readTextFile(BufferedReader reader) throws IOException {

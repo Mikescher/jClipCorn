@@ -290,7 +290,7 @@ public class ExportHelper {
 	
 	public static void openSingleElementFile(File f, MainFrame owner, CCMovieList movielist, CCMovieTyp forceTyp) {
 		try {
-			String xml = TextFileUtils.readTextFile(f);
+			String xml = TextFileUtils.readUTF8TextFile(f);
 			CCMovieTyp type = null;
 			if (forceTyp != null && (type = ExportHelper.getTypOfFirstElementOfExport(xml)) != forceTyp) {
 				CCLog.addError(LocaleBundle.getString("LogMessage.FormatErrorInExport")); //$NON-NLS-1$
@@ -336,7 +336,7 @@ public class ExportHelper {
 	
 	public static void openMultipleElementFile(File f, MainFrame owner, CCMovieList movielist) {
 		try {
-			String xml = TextFileUtils.readTextFile(f);
+			String xml = TextFileUtils.readUTF8TextFile(f);
 			
 			ImportElementsFrame ief = new ImportElementsFrame(owner, xml, movielist);
 			ief.setVisible(true);

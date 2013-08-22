@@ -441,6 +441,8 @@ public class CCSeason {
 			all.add(episode.getPart());
 		}
 		
+		while (all.contains("")) all.remove(""); //$NON-NLS-1$ //$NON-NLS-2$
+		
 		return PathFormatter.getCommonFolderPath(all);
 	}
 }

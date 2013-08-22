@@ -460,6 +460,8 @@ public class CCSeries extends CCDatabaseElement {
 			all.add(season.getCommonPathStart());
 		}
 		
+		while (all.contains("")) all.remove(""); //$NON-NLS-1$ //$NON-NLS-2$
+		
 		return PathFormatter.getCommonFolderPath(all);
 	}
 }

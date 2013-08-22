@@ -610,6 +610,8 @@ public final class CCDate {
 	}
 	
 	public static CCDate getAverageDate(List<CCDate> datelist) {
+		if (datelist.isEmpty()) return getMinimumDate();
+		
 		CCDate min = getMinDate(datelist);
 		int sum = 0;
 		

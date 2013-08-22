@@ -82,10 +82,6 @@ public class Main {
 
 //TODO Backup Progressdialog has a non-functional abortbutton (should do nothing and not close window, perhaps open new window)
 //   - Add proper Helper class, this will become handy in other playes too (BackupManager ...)
-//TODO Add Link to, so you caj identify it "WARNING (12:36:14): Could not parse FSK (???) at de.jClipCorn.util.parser.AgeRatingParser.getMinimumAge (AgeRatingParser.java:208)"
-//   - ADD FSK "gp"
-//   - ADD FSK "pa"
-//   - ADD FSK "approved"
 //TODO Edit Series Frame -> Edit EPisodes -> Open File DIalog (Use Series Folder)
 //TODO Watch Episode without resetting/setting LastViewedDate
 //TODO Add Backup Information Page (Backup Manager)
@@ -105,4 +101,4 @@ public class Main {
 //TODO ERROR Besser Highlighten (Iwas blinkendes großes auf der Main-View) -> TNA-Style Popup-Thingie Ya know
 //TODO Play Episode without updating viewed/LastViewed
 //TODO Treeprint of Translation-Tree
-//TODO Load Aand save custom Filter (compressed string ???)
+//TODO Recent Custom Filters as SubTrees in FilterTree

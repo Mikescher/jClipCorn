@@ -23,6 +23,7 @@ public class AgeRatingParser {
 		ratingsMap.put("not rated", -1);
 		ratingsMap.put("(banned)", -1); 
 		ratingsMap.put("banned", -1); 
+		ratingsMap.put("approved", -1); 
 		
 		ratingsMap.put("t", 0); 
 		ratingsMap.put("a", 0);
@@ -175,7 +176,7 @@ public class AgeRatingParser {
 		ratingsMap.put("adult", 21);
 	}
 	
-	public static int getMinimumAge(String rate) {
+	public static int getMinimumAge(String rate, String url) {
 		rate = rate.trim().toLowerCase();
 		
 		//################## STEP 1 ##################
@@ -205,7 +206,7 @@ public class AgeRatingParser {
 		
 		//################## STEP 4 ##################
 		
-		CCLog.addWarning(LocaleBundle.getFormattedString("LogMessage.CouldNotParseFSK", rate));
+		CCLog.addWarning(LocaleBundle.getFormattedString("LogMessage.CouldNotParseFSK", rate, url));
 		
 		return -1;
 	}

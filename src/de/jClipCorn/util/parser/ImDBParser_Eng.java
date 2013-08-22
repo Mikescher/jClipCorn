@@ -156,7 +156,7 @@ public class ImDBParser_Eng {
 			
 			split[1].replaceAll(REGEX_FSK_BRACKETS, "");
 
-			int ihf = AgeRatingParser.getMinimumAge(split[1]);
+			int ihf = AgeRatingParser.getMinimumAge(split[1], url);
 
 			if (ihf >= 0) {
 				genmap.put(split[0], ihf);

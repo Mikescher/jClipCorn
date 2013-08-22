@@ -82,7 +82,7 @@ public class ImDBParser {
 	public static Map<String, Integer> getFSKList(String html, String url) {
 		switch (LANGUAGE) {
 		case GERMAN:
-			return ImDBParser_Ger.getFSKList(html);
+			return ImDBParser_Ger.getFSKList(html, url);
 		case ENGLISH:
 			return ImDBParser_Eng.getFSKList(url);
 		default:
@@ -93,7 +93,7 @@ public class ImDBParser {
 	public static CCMovieFSK getFSK(String html, String url) {
 		switch (LANGUAGE) {
 		case GERMAN:
-			return ImDBParser_Ger.getFSK(html);
+			return ImDBParser_Ger.getFSK(html, url);
 		case ENGLISH:
 			return ImDBParser_Eng.getFSK(url);
 		default:

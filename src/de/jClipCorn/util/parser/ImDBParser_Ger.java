@@ -137,7 +137,7 @@ public class ImDBParser_Ger {
 		}
 	}
 	
-	public static Map<String, Integer> getFSKList(String html) {
+	public static Map<String, Integer> getFSKList(String html, String url) {
 		String allg = RegExHelper.find(REGEX_FSK, html);
 		String[] genarr = allg.split(REGEX_FSK_SPLIT);
 		
@@ -154,7 +154,7 @@ public class ImDBParser_Ger {
 			
 			split[1].replaceAll(REGEX_FSK_BRACKETS, "");
 
-			int ihf = AgeRatingParser.getMinimumAge(split[1]);
+			int ihf = AgeRatingParser.getMinimumAge(split[1], url);
 
 			if (ihf >= 0) {
 				genmap.put(split[0], ihf);
@@ -164,8 +164,8 @@ public class ImDBParser_Ger {
 		return genmap;
 	}
 	
-	public static CCMovieFSK getFSK(String html) {
-		Map<String, Integer> genmap = getFSKList(html);
+	public static CCMovieFSK getFSK(String html, String url) {
+		Map<String, Integer> genmap = getFSKList(html, url);
 		
 		if (genmap.get(FSK_STANDARD_1) != null) {
 			return CCMovieFSK.getNearest(genmap.get(FSK_STANDARD_1));

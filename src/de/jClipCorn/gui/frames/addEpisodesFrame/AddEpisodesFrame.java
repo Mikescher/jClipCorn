@@ -373,7 +373,7 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler, 
 		btnOK.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				onOKClicked();
+				onOKClicked(true);
 			}
 		});
 		btnOK.setBounds(507, 588, 89, 23);
@@ -643,7 +643,23 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler, 
 		massVideoFileChooser.setDialogTitle(LocaleBundle.getString("AddMovieFrame.videoFileChooser.title")); //$NON-NLS-1$
 	}
 
-	private void onOKClicked() {
+	private void onOKClicked(boolean check) {
+		if (check) {
+			List<UserDataProblem> problems = new ArrayList<>();
+
+			for (int i = 0; i < parent.getEpisodeCount(); i++) {
+				CCEpisode episode = parent.getEpisode(i);
+
+				UserDataProblem.testEpisodeData(problems, parent, episode, episode.getTitle(), episode.getLength(), episode.getEpisode(), episode.getAddDate(), episode.getLastViewed(), episode.getFilesize().getBytes(), episode.getFormat().asString(), episode.getFormat().asStringAlt(), episode.getPart(), episode.getQuality().asInt());
+			}
+
+			if (problems.size() > 0) {
+				InputErrorDialog amied = new InputErrorDialog(problems, this, this);
+				amied.setVisible(true);
+				return;
+			}
+		}
+		
 		if (listener != null) {
 			listener.onUpdate(null);
 		}

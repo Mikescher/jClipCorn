@@ -42,8 +42,6 @@ public class Main {
 				myFrame.start();
 				
 				mList.connect(myFrame);
-				
-				LocaleBundle.printTranslationTree();
 			}
 		});
 	}

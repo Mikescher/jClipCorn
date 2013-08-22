@@ -281,7 +281,7 @@ public class CCEpisode {
 	}
 	
 	/**
-	 * @return the Number of the Season (as it is in the Series-List) (NOT THE ID)
+	 * @return the Number of the Episode (as it is in the Season-List) (NOT THE ID)
 	 */
 	public int getEpisodeNumber() {
 		return getSeason().findEpisode(this);

@@ -23,11 +23,11 @@ import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieGenre;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieSize;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieZyklus;
-import de.jClipCorn.database.util.BackupManager;
 import de.jClipCorn.database.util.CCCoverCache;
 import de.jClipCorn.database.util.CCDBUpdateListener;
 import de.jClipCorn.database.util.MovieIterator;
 import de.jClipCorn.database.util.SeriesIterator;
+import de.jClipCorn.database.util.backupManager.BackupManager;
 import de.jClipCorn.gui.frames.mainFrame.MainFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
@@ -62,7 +62,7 @@ public class CCMovieList {
 			@Override
 			public void run() {
 				BackupManager bm = new BackupManager(CCMovieList.this);
-				bm.start(mf);
+				bm.doActions(mf);
 				
 				long starttime = System.currentTimeMillis();
 

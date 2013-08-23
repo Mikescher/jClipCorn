@@ -41,6 +41,7 @@ public class ExportHelper {
 	private final static String DB_XML_FILENAME = "database.xml"; //$NON-NLS-1$
 	
 	public final static String EXTENSION_BACKUP = "jccbkp"; // = jClipCornBackup   						//$NON-NLS-1$ 
+	public final static String EXTENSION_BACKUPPROPERTIES = "jccbkpinfo"; // = jClipCornBackup   		//$NON-NLS-1$ 
 	public final static String EXTENSION_FULLEXPORT = "jxmlbkp"; // = jXMLBackup   						//$NON-NLS-1$ 
 	public final static String EXTENSION_SINGLEEXPORT = "jsccexport"; // = jSingleClipCornExport 		//$NON-NLS-1$
 	public final static String EXTENSION_MULTIPLEEXPORT = "jmccexport"; // = jMultipleClipCornExport 	//$NON-NLS-1$

@@ -93,8 +93,6 @@ public class Main {
 //TODO [[ 1.9 FEATURES: ?? ]]
 
 //TODO Compare Series in CompareDialog
-//TODO Backup Progressdialog has a non-functional abortbutton (should do nothing and not close window, perhaps open new window)
-//   - Add proper Helper class, this will become handy in other playes too (BackupManager ...)
 //TODO Add Backup Information Page (Backup Manager)
 //   - List All Backups in Backup Folder
 //   - Delete Backups
@@ -107,6 +105,5 @@ public class Main {
 //   - Time until next Backup
 //   => Change connect mechanics so that you can choose were to show the progress (blocking-mainframe, or progresswindow in B-Manager)
 //   => Cahnge disconnect mechanic so you can unload an reload a Database in mid-progress (TESTING!!)
-//TODO Beim starten auf schreibrechte prüfen (DB ändern / Backup / Settingsfile ...) wenn nicht FATAL ERROR (auser bei ReadOnlyMode)
 //TODO ERROR Besser Highlighten (Iwas blinkendes großes auf der Main-View) -> TNA-Style Popup-Thingie Ya know
 //TODO Recent Custom Filters as SubTrees in FilterTree

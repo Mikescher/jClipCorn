@@ -10,6 +10,7 @@ import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.gui.log.ExceptionHandler;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.DriveMap;
+import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.LookAndFeelManager;
 
 public class Main {
@@ -28,6 +29,8 @@ public class Main {
 		CCLog.setPath(CCProperties.getInstance().PROP_LOG_PATH.getValue());
 		
 		Thread.setDefaultUncaughtExceptionHandler(ExceptionHandler.getInstance()); // For Main Thread
+		
+		PathFormatter.testWritePermissions();
 
 		LookAndFeelManager.setLookAndFeel(CCProperties.getInstance().PROP_UI_LOOKANDFEEL.getValue());
 

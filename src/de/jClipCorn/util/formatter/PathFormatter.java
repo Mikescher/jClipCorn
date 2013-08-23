@@ -23,6 +23,8 @@ public class PathFormatter {
 		' ', '!', '#', '&', '\'', '(', ')', '+', ',', '-', '.', ';', '=', '@', '[', ']', '^', '_', '`', '{', '}', 'ß'
 	));
 	
+	private final static String TESTFILE_NAME = "jClipCornPermissionTest.emptyfile";
+	
 	private final static String REGEX_SELF = "\\<\\?self\\>"; // \<\?self\>
 	private final static String REGEX_DRIVENAME = "\\<\\?vLabel=\"[^\\\"]+?\"\\>"; // <\?vLabel="[^\"]+?"\>
 	private final static String REGEX_DRIVELETTER = "\\<\\?vLetter=\"[A-Z]\"\\>"; // <\?vLetter="[A-Z]"\>
@@ -40,7 +42,6 @@ public class PathFormatter {
 		try {
 			return new File(".").getCanonicalPath();
 		} catch (IOException e) {
-			e.printStackTrace();
 			return new File("").getAbsolutePath();
 		}
 //		Funny old way: 
@@ -234,5 +235,34 @@ public class PathFormatter {
 		}
 		
 		return c;
+	}
+	
+	private static boolean canWriteInWorkingDir() {
+		File workingDir = new File(getRealSelfDirectory());
+		if (!workingDir.canRead() || !workingDir.canWrite()) return false;
+
+		File testFile = new File(getRealSelfDirectory() + TESTFILE_NAME);
+
+		if (testFile.exists()) testFile.delete();
+
+		if (testFile.exists()) return false;
+
+		try {
+			if (!testFile.createNewFile()) return false;
+		} catch (IOException e) {
+			return false; // Should hopefully not be called
+		}
+
+		if (!testFile.exists()) return false;
+
+		if (!testFile.delete()) return false;
+
+		return true;
+	}
+	
+	public static void testWritePermissions() {
+		if (! canWriteInWorkingDir() && ! CCProperties.getInstance().ARG_READONLY) {
+			CCLog.addFatalError(LocaleBundle.getString("LogMessage.NoWritePermissions"));
+		}
 	}
 }

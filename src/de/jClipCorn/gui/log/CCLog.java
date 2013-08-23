@@ -87,7 +87,7 @@ public class CCLog {
 		System.out.println(cle.getFormatted()); // This is desired - let it be
 		
 		if (type == CCLogType.LOG_ELEM_FATALERROR) {
-			DialogHelper.showDispatchError(LocaleBundle.getString("Main.AbortCaption"), LocaleBundle.getString("Main.AbortMessage")); //$NON-NLS-1$ //$NON-NLS-2$
+			DialogHelper.showDispatchError(LocaleBundle.getString("Main.AbortCaption"), LocaleBundle.getFormattedString("Main.AbortMessage", cle.getFormatted(CCLogElement.FORMAT_LEVEL_MID))); //$NON-NLS-1$ //$NON-NLS-2$
 			fatalabort();
 		}
 		setChangedFlag();

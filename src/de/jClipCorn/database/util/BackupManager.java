@@ -16,6 +16,7 @@ import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.CCDate;
 import de.jClipCorn.util.formatter.PathFormatter;
+import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.helper.RegExHelper;
 import de.jClipCorn.util.listener.ProgressCallbackProgressMonitorHelper;
 
@@ -111,9 +112,7 @@ public class BackupManager {
 		}
 		CCLog.addInformation(LocaleBundle.getString("LogMessage.BackupStarted")); //$NON-NLS-1$
 		
-		ProgressMonitor monitor = new ProgressMonitor(c, LocaleBundle.getString("MainFrame.backupRunning"), "", 0, 1); //$NON-NLS-1$ //$NON-NLS-2$
-		monitor.setMillisToDecideToPopup(0);
-		monitor.setMillisToPopup(0);
+		ProgressMonitor monitor = DialogHelper.getLocalPersistentProgressMonitor(c, "MainFrame.backupRunning"); //$NON-NLS-1$
 		
 		CCDate now = CCDate.getCurrentDate();
 		

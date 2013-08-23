@@ -3,8 +3,12 @@ package de.jClipCorn.util.helper;
 import java.awt.Component;
 import java.lang.reflect.InvocationTargetException;
 
+import javax.accessibility.AccessibleContext;
+import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.ProgressMonitor;
 import javax.swing.SwingUtilities;
 
 import de.jClipCorn.gui.localization.LocaleBundle;
@@ -71,5 +75,43 @@ public class DialogHelper {
 	
 	public static String showPlainInputDialog(Component frame) {
 		return showPlainInputDialog(frame, ""); //$NON-NLS-1$
+	}
+	
+	public static ProgressMonitor getLocalPersistentProgressMonitor(Component frame, String messageIdent) {
+		return getPersistentProgressMonitor(frame, LocaleBundle.getString(messageIdent));
+	}
+	
+	public static ProgressMonitor getPersistentProgressMonitor(Component frame, String message) {
+		final ProgressMonitor monitor = new ProgressMonitor(frame, message, "", 0, 1); //$NON-NLS-1$
+		monitor.setMillisToDecideToPopup(0);
+		monitor.setMillisToPopup(0);
+		
+		SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					monitor.setProgress(0);
+
+					AccessibleContext ac = monitor.getAccessibleContext();
+					if (ac == null) throw new Exception();
+					
+					JDialog dialog = (JDialog) ac.getAccessibleParent();
+					if (dialog == null) throw new Exception();
+					
+					java.util.List<JButton> components = SwingUtils.getDescendantsOfType(JButton.class, dialog, true);
+					if (components.isEmpty()) throw new Exception();
+					
+					JButton button = components.get(0);
+					if (button == null) throw new Exception();
+					
+					button.setVisible(false);
+				} catch (Exception e) {
+					CCLog.addError(LocaleBundle.getString("LogMessage.ErrorOmitingProgressMonitor"), e); //$NON-NLS-1$
+				}
+			}
+		});
+		
+		
+		return monitor;
 	}
 }

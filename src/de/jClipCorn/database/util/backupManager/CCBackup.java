@@ -5,12 +5,14 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.Properties;
 
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.CCDate;
+import de.jClipCorn.util.formatter.FileSizeFormatter;
 
 public class CCBackup {
 	private final static String HEADER = "Backup Info File"; //$NON-NLS-1$
@@ -34,8 +36,8 @@ public class CCBackup {
 		this.properties = new Properties();
 		
 		if (propertiesFile.exists()) {
-			FileInputStream stream;
-			this.properties.load(stream = new FileInputStream(properties));
+			FileInputStream stream = new FileInputStream(properties);
+			this.properties.load(stream);
 			stream.close();
 		}
 	}
@@ -87,7 +89,7 @@ public class CCBackup {
 	public boolean isPersistent() {
 		String result = properties.getProperty(PROP_PERSISTENT);
 
-		return result.equals("1"); //$NON-NLS-1$
+		return "1".equals(result); //$NON-NLS-1$
 	}
 
 	public void setPersistent(boolean pers) {
@@ -122,14 +124,27 @@ public class CCBackup {
 	
 	public boolean isExpired() {
 		if (isPersistent()) return false;
-		int distance = getDate().getDayDifferenceTo(CCDate.getCurrentDate());
-		return distance > CCProperties.getInstance().PROP_BACKUP_LIFETIME.getValue();
+		return getDate().getDayDifferenceTo(CCDate.getCurrentDate()) > CCProperties.getInstance().PROP_BACKUP_LIFETIME.getValue();
 	}
 
 	public boolean delete() {
-		boolean succ = true;
-		succ &= propertiesFile.delete();
-		succ &= archive.delete();
-		return succ;
+		try {
+			Files.delete(propertiesFile.toPath());
+			Files.delete(archive.toPath());
+		} catch (IOException e) {
+			CCLog.addError(e);
+			return false;
+		}
+		
+		return true;
+	}
+	
+	@Override
+	public String toString() {
+		return getName();
+	}
+
+	public long getSize() {
+		return FileSizeFormatter.getFileSize(archive);
 	}
 }

@@ -26,6 +26,7 @@ import de.jClipCorn.gui.frames.aboutFrame.AboutFrame;
 import de.jClipCorn.gui.frames.addMovieFrame.AddMovieFrame;
 import de.jClipCorn.gui.frames.addSeasonFrame.AddSeasonFrame;
 import de.jClipCorn.gui.frames.addSeriesFrame.AddSeriesFrame;
+import de.jClipCorn.gui.frames.backupManagerFrame.BackupsManagerFrame;
 import de.jClipCorn.gui.frames.changeScoreFrame.ChangeScoreFrame;
 import de.jClipCorn.gui.frames.changeViewedFrame.ChangeViewedFrame;
 import de.jClipCorn.gui.frames.checkDatabaseFrame.CheckDatabaseFrame;
@@ -378,6 +379,14 @@ public class CCActionTree {
 			}
 		});
 		
+		temp = extras.addChild(new CCActionElement("BackupManager", null, "ClipMenuBar.Extras.BackupManager", Resources.ICN_MENUBAR_RANDOMMOVIE)); //TODO ICON
+		temp.addListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				onClickExtrasBackupManager();
+			}
+		});
+		
 		temp = extras.addChild(new CCActionElement("ShowStatistics", null, "ClipMenuBar.Extras.Statistics", Resources.ICN_MENUBAR_STATISTICS));
 		temp.addListener(new ActionListener() {
 			@Override
@@ -690,6 +699,11 @@ public class CCActionTree {
 	private void onClickExtrasRandomMovie() {
 		RandomMovieFrame rmf = new RandomMovieFrame(owner, movielist);
 		rmf.setVisible(true);
+	}
+	
+	private void onClickExtrasBackupManager() {
+		BackupsManagerFrame bmf = new BackupsManagerFrame(owner);
+		bmf.setVisible(true);
 	}
 	
 	private void onClickExtrasShowStatistics() {

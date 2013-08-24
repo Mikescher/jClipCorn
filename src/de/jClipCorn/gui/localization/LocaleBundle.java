@@ -43,7 +43,7 @@ public class LocaleBundle {
 		return String.format(getString(ident), args);
 	}
 	
-	public static String getDeformattedString(String ident, Object... args) {
+	public static String getDeformattedString(String ident) {
 		String val = getString(ident);
 		
 		StringBuilder builder = new StringBuilder();

@@ -75,7 +75,9 @@ public class BackupManager {
 		if (prop.exists()) {
 			Properties result = new Properties();
 			try {
-				result.load(new FileInputStream(prop));
+				FileInputStream stream = new FileInputStream(prop);
+				result.load(stream);
+				stream.close();
 			} catch (IOException e) {
 				return null;
 			}
@@ -138,14 +140,18 @@ public class BackupManager {
 			CCBackup backup = backuplist.get(i);
 			
 			if (backup.isExpired()) {
-				String name = backup.getName();
-				if (backup.delete()) {
-					backuplist.remove(i);
-					CCLog.addInformation(LocaleBundle.getFormattedString("LogMessage.BackupDeleted", name)); //$NON-NLS-1$
-				} else {
-					CCLog.addError(LocaleBundle.getFormattedString("LogMessage.BackupNotDeleted", name)); //$NON-NLS-1$
-				}
+				deleteBackup(backup);
 			}
+		}
+	}
+	
+	public void deleteBackup(CCBackup bkp) {
+		String name = bkp.getName();
+		if (bkp.delete()) {
+			backuplist.remove(bkp);
+			CCLog.addInformation(LocaleBundle.getFormattedString("LogMessage.BackupDeleted", name)); //$NON-NLS-1$
+		} else {
+			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.BackupNotDeleted", name)); //$NON-NLS-1$
 		}
 	}
 
@@ -214,5 +220,9 @@ public class BackupManager {
 	
 	public static BackupManager getInstance() {
 		return instance; // Can be null
+	}
+
+	public List<CCBackup> getBackupList() {
+		return backuplist;
 	}
 }

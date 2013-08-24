@@ -238,7 +238,9 @@ public class CCProperties {
 	
 	public void save() {
 		try {
-			properties.store(new FileOutputStream(path), HEADER);
+			FileOutputStream stream = new FileOutputStream(path);
+			properties.store(stream, HEADER);
+			stream.close();
 		} catch (IOException e) {
 			CCLog.addError(e);
 		}

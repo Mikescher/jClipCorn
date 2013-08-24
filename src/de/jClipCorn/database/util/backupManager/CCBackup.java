@@ -52,7 +52,9 @@ public class CCBackup {
 	
 	private void saveToFile() {
 		try {
-			properties.store(new FileOutputStream(propertiesFile), HEADER);
+			FileOutputStream stream = new FileOutputStream(propertiesFile);
+			properties.store(stream, HEADER);
+			stream.close();
 		} catch (IOException e) {
 			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CouldNotUpdateBackupInfo", getName()), e); //$NON-NLS-1$
 		}

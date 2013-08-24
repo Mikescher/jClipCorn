@@ -31,14 +31,16 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.CCDate;
 import de.jClipCorn.util.formatter.FileSizeFormatter;
+import de.jClipCorn.util.formatter.PathFormatter;
+
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class BackupsManagerFrame extends JFrame {
 	private static final long serialVersionUID = 1277211351977537864L;
 	private JPanel panel;
 	private JList<CCBackup> lsBackups;
 	private JScrollPane scrollPane;
-	private JButton btnCreateBackup;
-	private JButton btnCreatePersistentBackup;
 	private JLabel lblNames;
 	private JLabel lblDates;
 	private JLabel lblSizes;
@@ -46,6 +48,8 @@ public class BackupsManagerFrame extends JFrame {
 	private JLabel lblVersions;
 	private JLabel lblDbversion;
 	private JLabel lblDeletionIns;
+	private JButton btnCreateBackup;
+	private JButton btnCreatePersistentBackup;
 	private JButton btnMakePersistent;
 	private JButton btnOpenInExplorer;
 	private JButton btnDelete;
@@ -60,6 +64,7 @@ public class BackupsManagerFrame extends JFrame {
 		
 		initGUI(); //TODO deactivatev things on READ-ONLY
 		updateList();
+		updateInfo(null);
 		
 		setLocationRelativeTo(parent);
 	}
@@ -121,9 +126,21 @@ public class BackupsManagerFrame extends JFrame {
 				FormFactory.DEFAULT_ROWSPEC,}));
 		
 		btnCreateBackup = new JButton(LocaleBundle.getString("BackupsManagerFrame.btnCreateBackup.text")); //$NON-NLS-1$
+		btnCreateBackup.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				//TODO code
+			}
+		});
 		panel.add(btnCreateBackup, "2, 2"); //$NON-NLS-1$
 		
 		btnCreatePersistentBackup = new JButton(LocaleBundle.getString("BackupsManagerFrame.btnCreatePersistentBackup.text")); //$NON-NLS-1$
+		btnCreatePersistentBackup.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				//TODO code
+			}
+		});
 		panel.add(btnCreatePersistentBackup, "4, 2, left, default"); //$NON-NLS-1$
 		
 		lblNames = new JLabel();
@@ -148,15 +165,45 @@ public class BackupsManagerFrame extends JFrame {
 		panel.add(lblDeletionIns, "2, 16, 3, 1"); //$NON-NLS-1$
 		
 		btnInsert = new JButton(LocaleBundle.getString("BackupsManagerFrame.btnRestoreBackup.text")); //$NON-NLS-1$
+		btnInsert.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				//TODO code
+			}
+		});
 		panel.add(btnInsert, "2, 20, 3, 1, left, default"); //$NON-NLS-1$
 		
 		btnMakePersistent = new JButton(LocaleBundle.getString("BackupsManagerFrame.btnSwitchPersistent.text")); //$NON-NLS-1$
+		btnMakePersistent.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (isElementSelected()) {
+					currentSelected.setPersistent(! currentSelected.isPersistent());
+					updateInfo(currentSelected);
+				}
+			}
+		});
 		panel.add(btnMakePersistent, "2, 22, 3, 1, left, default"); //$NON-NLS-1$
 		
 		btnOpenInExplorer = new JButton(LocaleBundle.getString("BackupsManagerFrame.btnOpenInExplorer.text")); //$NON-NLS-1$
+		btnOpenInExplorer.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				if (isElementSelected()) PathFormatter.showInExplorer(currentSelected.getArchive());
+			}
+		});
 		panel.add(btnOpenInExplorer, "2, 24, 3, 1, left, default"); //$NON-NLS-1$
 		
 		btnDelete = new JButton(LocaleBundle.getString("BackupsManagerFrame.btnDelete.text")); //$NON-NLS-1$
+		btnDelete.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (isElementSelected()) {
+					manager.deleteBackup(currentSelected);
+					updateList();
+				}
+			}
+		});
 		panel.add(btnDelete, "2, 26, 3, 1, left, default"); //$NON-NLS-1$
 		
 		scrollPane = new JScrollPane();
@@ -200,6 +247,8 @@ public class BackupsManagerFrame extends JFrame {
 			lblDbversion.setText(LocaleBundle.getDeformattedString("BackupsManagerFrame.lblDBVersion.textEmpty")); //$NON-NLS-1$
 			lblDeletionIns.setText(LocaleBundle.getDeformattedString("BackupsManagerFrame.lblDeletion.textEmpty")); //$NON-NLS-1$
 		}
+		
+		updateButtonStates();
 	}
 	
 	private String getDaysUntilDeletion(CCBackup bkp) {
@@ -229,5 +278,17 @@ public class BackupsManagerFrame extends JFrame {
 		for (CCBackup bkp : backups) model.addElement(bkp);
 		
 		lsBackups.setModel(model);
+		
+		updateInfo(null);
+	}
+	
+	private void updateButtonStates() {
+		boolean ra = ! CCProperties.getInstance().ARG_READONLY;
+		btnCreateBackup.setEnabled(isElementSelected() && ra);
+		btnCreatePersistentBackup.setEnabled(isElementSelected() && ra);
+		btnMakePersistent.setEnabled(isElementSelected() && ra);
+		btnOpenInExplorer.setEnabled(isElementSelected());
+		btnDelete.setEnabled(isElementSelected() && ra);
+		btnInsert.setEnabled(isElementSelected() && ra);
 	}
 }

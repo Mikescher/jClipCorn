@@ -126,12 +126,14 @@ public class BackupManager {
 	}
 	
 	public void doActions(Component c) {
-		if (CCProperties.getInstance().PROP_BACKUP_CREATEBACKUPS.getValue()) {
-			tryCreateBackup(c);
-		}
-		
-		if (CCProperties.getInstance().PROP_BACKUP_AUTODELETEBACKUPS.getValue()) {
-			tryDeleteOldBackups();
+		if (!CCProperties.getInstance().ARG_READONLY) {
+			if (CCProperties.getInstance().PROP_BACKUP_CREATEBACKUPS.getValue()) {
+				tryCreateBackup(c);
+			}
+
+			if (CCProperties.getInstance().PROP_BACKUP_AUTODELETEBACKUPS.getValue()) {
+				tryDeleteOldBackups();
+			}
 		}
 	}
 

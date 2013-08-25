@@ -1,3 +1,124 @@
+############ 2013-08-25: 1.9 RELEASE
+
+############ 2013-08-25: 1.9 Features
+Added Tag-Display to Cover on MainFrame
+Added Big (blinking) Error Warning when Error occurs
+
+############ 2013-08-25: 1.9 Features
+Added Icons for CustomFilter & BackupManager
+Database shuts now correctly down onClose
+Added Option for Quick (and dirty) closing
+Finished BackupManager (You can restore from old Backups)
+Added Info-Panel to Backupmanager (Shows Backup-Settings)
+Fixed JClipCorn not correctly shutting down on Fatal Error
+
+############ 2013-08-24: 1.9 Features
+Added a functionality to a few Buttons in BackupsManagerFrame
+Fixed unclosed Filehandle in CCProperties
+Fixed unclosed Filehandle in BackupManager
+
+############ 2013-08-24: 1.9 Features
+Semi-Finished BackupManager (the visuas work, no Button-Functionality)
+Fixed Auto-Delete Bug in new Backup-System
+
+############ 2013-08-23: 1.9 Features
+Implemented new Backup Functionality
+STarted BackupManagerFrame (unfinished)
+
+############ 2013-08-23: 1.9 Features
+Added More Info on FATAL-ERROR Message
+Addedd initial check for Write-Permissions (-> FATAL ERROR)
+
+############ 2013-08-23: 1.9 Bugfixes
+Fixed Bug with wrong Filechooser-direction in EditSeriesFrame
+Fixed Bug where you can close an ProgressMonitor
+
+############ 2013-08-22: 1.9 Bugfixes
+Fixed Load-AV when Season has 0 Episodes
+Fixed getCommonPathStart()-Bug when there is an empty  series/ empty season / uninitialized episode
+
+############ 2013-08-22: 1.9 Feature
+Added additional integrity Check when finally closing AddEpisodesFrame
+
+############ 2013-08-22: 1.9 Bugfix
+Fixed Omniparser-Bug where the Lines are not trimmed
+
+############ 2013-08-22: 1.9 Features
+Added "Play without changing Episode-State"-Feature
+Added Debug-Feature to print TranslationTree
+
+############ 2013-08-22: 1.9 Tasks
+Immproved Information-Output in CouldNotParseFSK Warning
+Added USA:"approved" to AgeRatingParser
+Updated ToDo List
+
+############ 2013-08-22: 1.9 Bugfixes
+Fixed Problem when re-importing Movies with NON-ASCII Chars (Encoding ...)
+
+############ 2013-08-21: 1.9 Bugfixes
+Fixed CompareDatabase Bug wehre the selection was not correct registered
+
+############ 2013-08-21: 1.9 Features
+Finished Custom Filter
+Added Import / Export to Filter
+Fixed Bug in Genre / Year Filter
+
+############ 2013-08-20: 1.9 Features
+Started Exporting / Importing of Custom Filter (unfinished)
+
+############ 2013-08-20: 1.9 Features
+Added Custom-Table Filter
+Added CustomFilter for every TableField
+Added AND / OR / NAND / NOR Operators for CustomFilter
+
+############ 2013-08-19: 1.9 Features
+Finished Omniparser
+Added VerticalScrollBarSynchronizer Helper Class
+
+############ 2013-08-16: 1.9 Features
+Added Big OmniParser Feature
+Reorganized Util-Classses (Changes in the imports in many classes [!] )
+Fixed Null-Pointer when displaying an empty series
+
+############ 2013-07-26: Added even more 1.9 ToDos
+
+############ 2013-07-26: Imma gonna do alot of commits today (4. Try)
+
+############ 2013-07-26: Third Try, wish me luck
+
+############ 2013-07-26: Second try 4 README
+
+############ 2013-07-26: "Improved" Readme
+
+############ 2013-07-26: Addde more 1.9 ToDos
+(I should start do REAL programming)
+
+############ 2013-07-18: Added ToDos (Perhaps 1.9)
+
+############ 2013-07-07: 1.8.3 RELEASE
+
+############ 2013-07-04: 1.8.3 Bugfixes and Features
+Added Error Handling for broken Coverfiles
+Added Error Handling in Large MD5 Calculator
+Added Possibility to fix single Databaseerror
+Added Information Monitor when backuping
+Fixed wrong Seasonnumber for unsorted Seasons in CreateFolderStructure
+
+############ 2013-06-30: 1.8.3 Bugfixes
+Hopefully finally fixed CCDateSpinner -.-
+
+############ 2013-06-22: 1.8.3 Features
+Added possibility for public (or private) beta builds
+
+############ 2013-06-22: 1.8.3 Bugfixes
+Fixed Overriding in CCDateSpinner
+Added Big "Continue Watching" Button to PreviewSeriesFRame
+CCDate is now an immutable Object (possible root for new bugs)
+
+############ 2013-06-21: Added ToDo
+
+############ 2013-06-21: Updated Changelog + ToDo + gitCommands
+
 ############ 2013-06-15: 1.8.2 RELEASE
 
 ############ 2013-06-15: 1.8.2 Bugfixes

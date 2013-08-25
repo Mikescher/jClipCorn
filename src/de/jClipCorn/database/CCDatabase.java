@@ -103,6 +103,23 @@ public class CCDatabase extends DerbyDatabase {
 			return false;
 		}
 	}
+	
+	public void disconnect(boolean cleanshutdown) {
+		try {
+			if (isConnected()) {
+				shutdownStatements();
+				closeDBConnection(getDBPath(), cleanshutdown);
+			}
+		} catch (SQLException e) {
+			CCLog.addError(LocaleBundle.getString("LogMessage.CouldNotDisconnectFromDB"), e); //$NON-NLS-1$
+		}
+	}
+	
+	public void reconnect() {
+		if (! connect(getDBPath())) {
+			CCLog.addFatalError(LocaleBundle.getString("LogMessage.CouldNotReconnectToDB"), lastError); //$NON-NLS-1$
+		}
+	}
 
 	private boolean create(String dbpath) {
 		boolean res = createNewDatabasefromResourceXML('/' + XML_NAME, dbpath);
@@ -758,7 +775,7 @@ public class CCDatabase extends DerbyDatabase {
 		}
 	}
 
-	public void shutdown() {
+	private void shutdownStatements() {
 		Statements.shutdown();
 	}
 }

@@ -74,6 +74,7 @@ public class Resources {
 	public final static String ICN_MENUBAR_SAVE						= registerICN("/icons/toolbar/save_as.png");
 	public final static String ICN_MENUBAR_STATISTICS				= registerICN("/icons/toolbar/statistics.png");
 	public final static String ICN_MENUBAR_UPDATES					= registerICN("/icons/toolbar/www_page.png");
+	public final static String ICN_MENUBAR_BACKUPMANAGER			= registerICN("/icons/toolbar/backup_manager.png");
 	// #############################################  </MENUBAR>  ############################################
 	
 
@@ -175,6 +176,7 @@ public class Resources {
 	public final static String ICN_SIDEBAR_TYP	 		= registerICN("/icons/sidebar/color_swatch.png");
 	public final static String ICN_SIDEBAR_VIEWED 		= registerICN("/icons/sidebar/viewed.png");
 	public final static String ICN_SIDEBAR_UNVIEWED		= registerICN("/icons/sidebar/unviewed.png");
+	public final static String ICN_SIDEBAR_CUSTOM		= registerICN("/icons/sidebar/tag.png");
 	// ##############################################  <SIDEBAR>  ############################################
 	
 	

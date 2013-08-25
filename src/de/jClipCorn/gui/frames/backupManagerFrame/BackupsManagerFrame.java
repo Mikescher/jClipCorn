@@ -13,6 +13,7 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.SwingUtilities;
 import javax.swing.border.EtchedBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -23,6 +24,7 @@ import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
 
 import de.jClipCorn.Main;
+import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.util.backupManager.BackupManager;
 import de.jClipCorn.database.util.backupManager.CCBackup;
 import de.jClipCorn.gui.CachedResourceLoader;
@@ -32,6 +34,8 @@ import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.CCDate;
 import de.jClipCorn.util.formatter.FileSizeFormatter;
 import de.jClipCorn.util.formatter.PathFormatter;
+import de.jClipCorn.util.helper.ApplicationHelper;
+import de.jClipCorn.util.helper.DialogHelper;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -55,14 +59,24 @@ public class BackupsManagerFrame extends JFrame {
 	private JButton btnDelete;
 	private JButton btnInsert;
 	
-	private CCBackup currentSelected = null;
 	private final BackupManager manager;
+	private final CCMovieList movielist;
+	
+	private CCBackup currentSelected = null;
+	private JButton btnChangeName;
+	private JPanel panel_1;
+	private JLabel lblInfoCreateBackups;
+	private JLabel lblInfoCreationTime;
+	private JLabel lblInfoAutoDelete;
+	private JLabel lblInfoAutoDeletAfter;
+	private JLabel lblInfoLastBackup;
 
 	public BackupsManagerFrame(Component parent) {
 		super();
 		this.manager = BackupManager.getInstance();
+		this.movielist = CCMovieList.getInstance();
 		
-		initGUI(); //TODO deactivatev things on READ-ONLY
+		initGUI();
 		updateList();
 		updateInfo(null);
 		
@@ -71,7 +85,7 @@ public class BackupsManagerFrame extends JFrame {
 	
 	private void initGUI() {
 		setTitle(LocaleBundle.getString("BackupsManagerFrame.this.title")); //$NON-NLS-1$
-		setMinimumSize(new Dimension(650, 350));
+		setMinimumSize(new Dimension(650, 400));
 		setSize(new Dimension(800, 500));
 		setIconImage(CachedResourceLoader.getImage(Resources.IMG_FRAME_ICON));
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -92,9 +106,10 @@ public class BackupsManagerFrame extends JFrame {
 		getContentPane().add(panel, "2, 2, fill, fill"); //$NON-NLS-1$
 		panel.setLayout(new FormLayout(new ColumnSpec[] {
 				FormFactory.RELATED_GAP_COLSPEC,
-				FormFactory.DEFAULT_COLSPEC,
+				ColumnSpec.decode("default:grow"), //$NON-NLS-1$
 				FormFactory.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("default:grow"),}, //$NON-NLS-1$
+				ColumnSpec.decode("default:grow"), //$NON-NLS-1$
+				FormFactory.RELATED_GAP_COLSPEC,},
 			new RowSpec[] {
 				FormFactory.RELATED_GAP_ROWSPEC,
 				FormFactory.DEFAULT_ROWSPEC,
@@ -121,39 +136,63 @@ public class BackupsManagerFrame extends JFrame {
 				FormFactory.RELATED_GAP_ROWSPEC,
 				FormFactory.DEFAULT_ROWSPEC,
 				FormFactory.RELATED_GAP_ROWSPEC,
-				FormFactory.DEFAULT_ROWSPEC,
-				FormFactory.RELATED_GAP_ROWSPEC,
-				FormFactory.DEFAULT_ROWSPEC,}));
+				RowSpec.decode("25dlu"), //$NON-NLS-1$
+				FormFactory.RELATED_GAP_ROWSPEC,}));
 		
 		btnCreateBackup = new JButton(LocaleBundle.getString("BackupsManagerFrame.btnCreateBackup.text")); //$NON-NLS-1$
 		btnCreateBackup.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				//TODO code
+				createBackup(false, null);
 			}
 		});
-		panel.add(btnCreateBackup, "2, 2"); //$NON-NLS-1$
+		panel.add(btnCreateBackup, "2, 2, left, default"); //$NON-NLS-1$
 		
 		btnCreatePersistentBackup = new JButton(LocaleBundle.getString("BackupsManagerFrame.btnCreatePersistentBackup.text")); //$NON-NLS-1$
 		btnCreatePersistentBackup.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				//TODO code
+				String name = DialogHelper.showLocalInputDialog(BackupsManagerFrame.this, "BackupsManagerFrame.dialogs.inputPersistentName", manager.getStandardBackupname()); //$NON-NLS-1$
+				createBackup(true, name);
 			}
 		});
 		panel.add(btnCreatePersistentBackup, "4, 2, left, default"); //$NON-NLS-1$
 		
 		lblNames = new JLabel();
-		panel.add(lblNames, "2, 4, 3, 1"); //$NON-NLS-1$
+		panel.add(lblNames, "2, 4"); //$NON-NLS-1$
+		
+		btnChangeName = new JButton("..."); //$NON-NLS-1$
+		btnChangeName.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (isElementSelected()) {
+					currentSelected.setName(DialogHelper.showPlainInputDialog(BackupsManagerFrame.this, currentSelected.getName()));
+					updateInfo(currentSelected);
+				}
+			}
+		});
+		panel.add(btnChangeName, "4, 4, left, default"); //$NON-NLS-1$
 		
 		lblDates = new JLabel();
-		panel.add(lblDates, "2, 6, 3, 1"); //$NON-NLS-1$
+		panel.add(lblDates, "2, 6"); //$NON-NLS-1$
 		
 		lblSizes = new JLabel();
-		panel.add(lblSizes, "2, 8, 3, 1"); //$NON-NLS-1$
+		panel.add(lblSizes, "2, 8"); //$NON-NLS-1$
 		
 		lblPersistents = new JLabel();
-		panel.add(lblPersistents, "2, 10, 3, 1"); //$NON-NLS-1$
+		panel.add(lblPersistents, "2, 10"); //$NON-NLS-1$
+		
+		btnMakePersistent = new JButton(LocaleBundle.getString("BackupsManagerFrame.btnSwitchPersistent.text")); //$NON-NLS-1$
+		btnMakePersistent.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (isElementSelected()) {
+					currentSelected.setPersistent(! currentSelected.isPersistent());
+					updateInfo(currentSelected);
+				}
+			}
+		});
+		panel.add(btnMakePersistent, "4, 10, left, default"); //$NON-NLS-1$
 		
 		lblVersions = new JLabel();
 		panel.add(lblVersions, "2, 12, 3, 1"); //$NON-NLS-1$
@@ -168,22 +207,12 @@ public class BackupsManagerFrame extends JFrame {
 		btnInsert.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				//TODO code
-			}
-		});
-		panel.add(btnInsert, "2, 20, 3, 1, left, default"); //$NON-NLS-1$
-		
-		btnMakePersistent = new JButton(LocaleBundle.getString("BackupsManagerFrame.btnSwitchPersistent.text")); //$NON-NLS-1$
-		btnMakePersistent.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if (isElementSelected()) {
-					currentSelected.setPersistent(! currentSelected.isPersistent());
-					updateInfo(currentSelected);
+				if (isElementSelected() &&DialogHelper.showLocaleYesNo(BackupsManagerFrame.this, "BackupsManagerFrame.dialogs.restoreWarning")) { //$NON-NLS-1$
+					restoreBackup(currentSelected);
 				}
 			}
 		});
-		panel.add(btnMakePersistent, "2, 22, 3, 1, left, default"); //$NON-NLS-1$
+		panel.add(btnInsert, "2, 20, left, default"); //$NON-NLS-1$
 		
 		btnOpenInExplorer = new JButton(LocaleBundle.getString("BackupsManagerFrame.btnOpenInExplorer.text")); //$NON-NLS-1$
 		btnOpenInExplorer.addActionListener(new ActionListener() {
@@ -192,7 +221,40 @@ public class BackupsManagerFrame extends JFrame {
 				if (isElementSelected()) PathFormatter.showInExplorer(currentSelected.getArchive());
 			}
 		});
-		panel.add(btnOpenInExplorer, "2, 24, 3, 1, left, default"); //$NON-NLS-1$
+		
+		panel_1 = new JPanel();
+		panel_1.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
+		panel.add(panel_1, "4, 20, 1, 7, fill, fill"); //$NON-NLS-1$
+		panel_1.setLayout(new FormLayout(new ColumnSpec[] {
+				FormFactory.RELATED_GAP_COLSPEC,
+				ColumnSpec.decode("default:grow"),}, //$NON-NLS-1$
+			new RowSpec[] {
+				FormFactory.RELATED_GAP_ROWSPEC,
+				FormFactory.DEFAULT_ROWSPEC,
+				FormFactory.RELATED_GAP_ROWSPEC,
+				FormFactory.DEFAULT_ROWSPEC,
+				FormFactory.RELATED_GAP_ROWSPEC,
+				FormFactory.DEFAULT_ROWSPEC,
+				FormFactory.RELATED_GAP_ROWSPEC,
+				FormFactory.DEFAULT_ROWSPEC,
+				FormFactory.RELATED_GAP_ROWSPEC,
+				FormFactory.DEFAULT_ROWSPEC,}));
+		
+		lblInfoCreateBackups = new JLabel();
+		panel_1.add(lblInfoCreateBackups, "2, 2"); //$NON-NLS-1$
+		
+		lblInfoCreationTime = new JLabel();
+		panel_1.add(lblInfoCreationTime, "2, 4"); //$NON-NLS-1$
+		
+		lblInfoAutoDelete = new JLabel();
+		panel_1.add(lblInfoAutoDelete, "2, 6"); //$NON-NLS-1$
+		
+		lblInfoAutoDeletAfter = new JLabel();
+		panel_1.add(lblInfoAutoDeletAfter, "2, 8"); //$NON-NLS-1$
+		
+		lblInfoLastBackup = new JLabel();
+		panel_1.add(lblInfoLastBackup, "2, 10"); //$NON-NLS-1$
+		panel.add(btnOpenInExplorer, "2, 22, left, default"); //$NON-NLS-1$
 		
 		btnDelete = new JButton(LocaleBundle.getString("BackupsManagerFrame.btnDelete.text")); //$NON-NLS-1$
 		btnDelete.addActionListener(new ActionListener() {
@@ -204,7 +266,7 @@ public class BackupsManagerFrame extends JFrame {
 				}
 			}
 		});
-		panel.add(btnDelete, "2, 26, 3, 1, left, default"); //$NON-NLS-1$
+		panel.add(btnDelete, "2, 24, left, default"); //$NON-NLS-1$
 		
 		scrollPane = new JScrollPane();
 		getContentPane().add(scrollPane, "4, 2, fill, fill"); //$NON-NLS-1$
@@ -248,6 +310,15 @@ public class BackupsManagerFrame extends JFrame {
 			lblDeletionIns.setText(LocaleBundle.getDeformattedString("BackupsManagerFrame.lblDeletion.textEmpty")); //$NON-NLS-1$
 		}
 		
+		String on = LocaleBundle.getString("BackupsManagerFrame.infoLabels.lblON"); //$NON-NLS-1$
+		String off = LocaleBundle.getString("BackupsManagerFrame.infoLabels.lblOFF"); //$NON-NLS-1$
+		
+		lblInfoCreateBackups.setText(LocaleBundle.getFormattedString("BackupsManagerFrame.infoLabels.CreateBackups", CCProperties.getInstance().PROP_BACKUP_CREATEBACKUPS.getValue() ? on : off)); //$NON-NLS-1$
+		lblInfoCreationTime.setText(LocaleBundle.getFormattedString("BackupsManagerFrame.infoLabels.CreationTime", CCProperties.getInstance().PROP_BACKUP_BACKUPTIME.getValue())); //$NON-NLS-1$
+		lblInfoAutoDelete.setText(LocaleBundle.getFormattedString("BackupsManagerFrame.infoLabels.AutoDelete", CCProperties.getInstance().PROP_BACKUP_AUTODELETEBACKUPS.getValue() ? on : off)); //$NON-NLS-1$
+		lblInfoAutoDeletAfter.setText(LocaleBundle.getFormattedString("BackupsManagerFrame.infoLabels.DeletionTime", CCProperties.getInstance().PROP_BACKUP_LIFETIME.getValue())); //$NON-NLS-1$
+		lblInfoLastBackup.setText(LocaleBundle.getFormattedString("BackupsManagerFrame.infoLabels.LastBackup", CCProperties.getInstance().PROP_BACKUP_LASTBACKUP.getValue().getSimpleStringRepresentation())); //$NON-NLS-1$
+		
 		updateButtonStates();
 	}
 	
@@ -284,11 +355,60 @@ public class BackupsManagerFrame extends JFrame {
 	
 	private void updateButtonStates() {
 		boolean ra = ! CCProperties.getInstance().ARG_READONLY;
-		btnCreateBackup.setEnabled(isElementSelected() && ra);
-		btnCreatePersistentBackup.setEnabled(isElementSelected() && ra);
+		btnCreateBackup.setEnabled(ra);
+		btnCreatePersistentBackup.setEnabled(ra);
+		btnChangeName.setEnabled(isElementSelected() && ra);
 		btnMakePersistent.setEnabled(isElementSelected() && ra);
 		btnOpenInExplorer.setEnabled(isElementSelected());
 		btnDelete.setEnabled(isElementSelected() && ra);
 		btnInsert.setEnabled(isElementSelected() && ra);
+	}
+	
+	private void createBackup(final boolean persistent, final String name) {
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				if (persistent) {
+					movielist.disconnectDatabase(false);
+					manager.createBackup(BackupsManagerFrame.this, name, true);
+					movielist.reconnectDatabase();
+				} else {
+					movielist.disconnectDatabase(false);
+					manager.createBackup(BackupsManagerFrame.this);
+					movielist.reconnectDatabase();
+				}
+				
+				SwingUtilities.invokeLater(new Runnable() {
+					@Override
+					public void run() {
+						updateList();
+					}
+				});
+			}
+		}, "THREAD_BACKUPSMANAGERFRAME_CREATEBACKUP").start(); //$NON-NLS-1$
+	}
+	
+	private void restoreBackup(final CCBackup bkp) {
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				movielist.disconnectDatabase(true);
+				
+				if (manager.restoreBackup(BackupsManagerFrame.this, bkp)) {
+					SwingUtilities.invokeLater(new Runnable() {
+						@Override
+						public void run() {
+							DialogHelper.showLocalInformation(BackupsManagerFrame.this, "BackupsManagerFrame.dialogs.ApplicationIsRestarting"); //$NON-NLS-1$
+
+							if (! ApplicationHelper.restartApplication()) {
+								DialogHelper.showLocalError(BackupsManagerFrame.this, "BackupsManagerFrame.dialogs.RestartFailed"); //$NON-NLS-1$
+								
+								ApplicationHelper.exitApplication();
+							}
+						}
+					});
+				}
+			}
+		}, "THREAD_BACKUPSMANAGeERFRAME_RESTOREBACKUP").start(); //$NON-NLS-1$
 	}
 }

@@ -69,6 +69,10 @@ public class DialogHelper {
 		return showLocaleOptions(frame, ident, 0);
 	}
 	
+	public static String showLocalInputDialog(Component frame, String ident, String value) {
+		return JOptionPane.showInputDialog(frame, LocaleBundle.getString(ident), value);
+	}
+	
 	public static String showPlainInputDialog(Component frame, String value) {
 		return JOptionPane.showInputDialog(frame, "", value); //$NON-NLS-1$
 	}

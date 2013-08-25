@@ -15,6 +15,7 @@ import javax.swing.SwingUtilities;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.CCDate;
+import de.jClipCorn.util.helper.ApplicationHelper;
 import de.jClipCorn.util.helper.DialogHelper;
 
 public class CCLog {
@@ -28,6 +29,10 @@ public class CCLog {
 		path = p;
 	}
 
+	public static void addInformation(Exception e) {
+		add(e.toString(), CCLogType.LOG_ELEM_INFORMATION, e.getStackTrace());
+	}
+	
 	public static void addInformation(String e) {
 		add(e, CCLogType.LOG_ELEM_INFORMATION);
 	}
@@ -195,8 +200,7 @@ public class CCLog {
 	}
 	
 	private static void fatalabort() {
-		save();
-		System.exit(-1);
+		ApplicationHelper.exitApplication(-1);
 	}
 	
 	public static void addChangeListener (CCLogChangedListener lst) {

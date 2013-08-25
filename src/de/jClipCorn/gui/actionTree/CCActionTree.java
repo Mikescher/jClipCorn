@@ -379,7 +379,7 @@ public class CCActionTree {
 			}
 		});
 		
-		temp = extras.addChild(new CCActionElement("BackupManager", null, "ClipMenuBar.Extras.BackupManager", Resources.ICN_MENUBAR_RANDOMMOVIE)); //TODO ICON
+		temp = extras.addChild(new CCActionElement("BackupManager", null, "ClipMenuBar.Extras.BackupManager", Resources.ICN_MENUBAR_BACKUPMANAGER));
 		temp.addListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {

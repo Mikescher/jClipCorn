@@ -539,7 +539,7 @@ public class CCMovieList {
 
 	public void shutdown() {
 		if (database != null) { // Close even after Intialize AV's
-			database.shutdown();
+			database.disconnect(CCProperties.getInstance().PROP_DATABASE_CLEANSHUTDOWN.getValue());
 		}
 	}
 	
@@ -661,6 +661,14 @@ public class CCMovieList {
 			CCDatabaseElement el = it.next();
 			el.forceUpdate();
 		}
+	}
+	
+	public void disconnectDatabase(boolean cleanShutdown) {
+		database.disconnect(cleanShutdown);
+	}
+
+	public void reconnectDatabase() {
+		database.reconnect();
 	}
 	
 	public static CCMovieList getInstance() {

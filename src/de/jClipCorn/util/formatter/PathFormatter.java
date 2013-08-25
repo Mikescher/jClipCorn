@@ -11,6 +11,7 @@ import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.DriveMap;
 import de.jClipCorn.util.helper.RegExHelper;
+import de.jClipCorn.util.listener.ProgressCallbackListener;
 
 @SuppressWarnings("nls")
 public class PathFormatter {
@@ -264,5 +265,33 @@ public class PathFormatter {
 		if (! canWriteInWorkingDir() && ! CCProperties.getInstance().ARG_READONLY) {
 			CCLog.addFatalError(LocaleBundle.getString("LogMessage.NoWritePermissions"));
 		}
+	}
+	
+	public static boolean deleteFolderContent(File folder, boolean deleteParentFolder, ProgressCallbackListener pcl) {
+		File[] files = folder.listFiles();
+		
+		if (pcl != null) pcl.setMax(files.length);
+		
+	    if(files != null) {
+	        for(File f: files) {
+	            if(f.isDirectory()) {
+	            	if (! deleteFolderContent(f, true, null)) {
+	            		return false;
+	            	}
+	            } else {
+	            	if (! f.delete()) {
+	            		return false;
+	            	}
+	            }
+	            
+	            if (pcl != null) pcl.step();
+	        }
+	    }
+	    
+	    if (deleteParentFolder && !folder.delete()) {
+        	return false;
+	    }
+	    
+	    return true;
 	}
 }

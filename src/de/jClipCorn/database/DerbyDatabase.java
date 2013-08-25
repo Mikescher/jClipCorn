@@ -153,6 +153,24 @@ public class DerbyDatabase {
 		connection.setAutoCommit(true);
 	}
 	
+	public void closeDBConnection(String dbPath, boolean cleanshutdown) throws SQLException {
+		connection.close();
+
+		try {
+			if (cleanshutdown) {
+				DriverManager.getConnection(PROTOCOL + ";shutdown=true");
+			}
+		} catch (SQLException e) {
+			CCLog.addInformation(e);
+			// This Exception is thrown when everything is ok, madness - i konw
+			// Madness ???
+			// This is DERBY
+		}
+		
+
+		connection = null;
+	}
+	
 	/**
 	 * Checks if a Database exists
 	 * 

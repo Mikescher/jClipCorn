@@ -179,8 +179,16 @@ public class BackupManager {
 		}
 	}
 	
+	public String getStandardBackupname() {
+		return String.format(BACKUPNAME, CCProperties.getInstance().PROP_DATABASE_NAME.getValue());
+	}
+	
 	public void createBackup(Component c) {
-		createBackup(c, String.format(BACKUPNAME, CCProperties.getInstance().PROP_DATABASE_NAME.getValue()), CCDate.getCurrentDate(), false, Main.VERSION, Main.DBVERSION);
+		createBackup(c, getStandardBackupname(), false);
+	}
+	
+	public void createBackup(Component c, String name, boolean persistent) {
+		createBackup(c, name, CCDate.getCurrentDate(), persistent, Main.VERSION, Main.DBVERSION);
 	}
 	
 	public void createBackup(Component c, String name, CCDate date, boolean persistent, String jccversion, String dbversion) {
@@ -218,6 +226,35 @@ public class BackupManager {
 		
 		CCLog.addInformation(LocaleBundle.getString("LogMessage.BackupCreated")); //$NON-NLS-1$
 		CCProperties.getInstance().PROP_BACKUP_LASTBACKUP.setValue(CCDate.getCurrentDate());
+	}
+	
+	public boolean restoreBackup(Component c, CCBackup bkp) {
+		if (CCProperties.getInstance().ARG_READONLY) {
+			CCLog.addInformation(LocaleBundle.getString("LogMessage.OperationFailedDueToReadOnly")); //$NON-NLS-1$
+			return false;
+		}
+		CCLog.addInformation(LocaleBundle.getString("LogMessage.RestoreStarted")); //$NON-NLS-1$
+		
+		File archive = bkp.getArchive();
+		File directory = movielist.getDatabaseDirectory();
+		File directoryP = directory.getParentFile();
+		
+		ProgressMonitor monitor = DialogHelper.getLocalPersistentProgressMonitor(c, "BackupsManagerFrame.dialogs.restoreRunning1"); //$NON-NLS-1$
+		
+		if (! PathFormatter.deleteFolderContent(directory, true, new ProgressCallbackProgressMonitorHelper(monitor))) {
+			CCLog.addFatalError(LocaleBundle.getString("LogMessage.RestoreFailed")); //$NON-NLS-1$
+			return false;
+		}
+		
+		monitor = DialogHelper.getLocalPersistentProgressMonitor(c, "BackupsManagerFrame.dialogs.restoreRunning2"); //$NON-NLS-1$
+		
+		if (! ExportHelper.unzipDir(archive, directoryP, new ProgressCallbackProgressMonitorHelper(monitor))) {
+			CCLog.addFatalError(LocaleBundle.getString("LogMessage.RestoreFailed")); //$NON-NLS-1$
+			return false;
+		}
+		
+		CCLog.addInformation(LocaleBundle.getString("LogMessage.RestoreFinished")); //$NON-NLS-1$
+		return true;
 	}
 	
 	public static BackupManager getInstance() {

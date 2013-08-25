@@ -40,14 +40,14 @@ import de.jClipCorn.util.listener.ProgressCallbackListener;
 public class ExportHelper {
 	private final static String DB_XML_FILENAME = "database.xml"; //$NON-NLS-1$
 	
-	public final static String EXTENSION_BACKUP = "jccbkp"; // = jClipCornBackup   						//$NON-NLS-1$ 
-	public final static String EXTENSION_BACKUPPROPERTIES = "jccbkpinfo"; // = jClipCornBackup   		//$NON-NLS-1$ 
-	public final static String EXTENSION_FULLEXPORT = "jxmlbkp"; // = jXMLBackup   						//$NON-NLS-1$ 
-	public final static String EXTENSION_SINGLEEXPORT = "jsccexport"; // = jSingleClipCornExport 		//$NON-NLS-1$
-	public final static String EXTENSION_MULTIPLEEXPORT = "jmccexport"; // = jMultipleClipCornExport 	//$NON-NLS-1$
-	public final static String EXTENSION_CCBACKUP = "xml"; // OLD Clipcorn Backup   					//$NON-NLS-1$
-	public final static String EXTENSION_COMPAREFILE = "jcccf"; 										//$NON-NLS-1$
-	public final static String EXTENSION_EPISODEGUIDE = "txt"; 											//$NON-NLS-1$
+	public final static String EXTENSION_BACKUP = "jccbkp"; 				// = jClipCornBackup   			//$NON-NLS-1$ 
+	public final static String EXTENSION_BACKUPPROPERTIES = "jccbkpinfo"; 	// = jClipCornBackupInfo 		//$NON-NLS-1$ 
+	public final static String EXTENSION_FULLEXPORT = "jxmlbkp"; 			// = jXMLBackup   				//$NON-NLS-1$ 
+	public final static String EXTENSION_SINGLEEXPORT = "jsccexport"; 		// = jSingleClipCornExport 		//$NON-NLS-1$
+	public final static String EXTENSION_MULTIPLEEXPORT = "jmccexport"; 	// = jMultipleClipCornExport 	//$NON-NLS-1$
+	public final static String EXTENSION_CCBACKUP = "xml"; 					// = OLD Clipcorn Backup   		//$NON-NLS-1$
+	public final static String EXTENSION_COMPAREFILE = "jcccf"; 			// = jClipCornCompareFile		//$NON-NLS-1$
+	public final static String EXTENSION_EPISODEGUIDE = "txt"; 				// = TextFile					//$NON-NLS-1$
 	
 	public static void zipDir(File owner, File zipDir, ZipOutputStream zos, boolean recursively) {
 		doZipDir(owner, zipDir, zos, recursively, null);
@@ -91,6 +91,66 @@ public class ExportHelper {
 		}
 	}
 	
+	public static boolean unzipDir(File archive, File targetFolder, ProgressCallbackListener pcl) {
+		byte[] buffer = new byte[2048];
+
+		String outdir = targetFolder.getAbsolutePath() + "/"; //$NON-NLS-1$
+
+		InputStream filestream = null;
+		ZipInputStream zipstream = null;
+		
+		try {
+			filestream = new FileInputStream(archive);
+			zipstream = new ZipInputStream(filestream);
+			
+			if (pcl != null) {
+				int entryCount = 0;
+				while (zipstream.getNextEntry() != null) entryCount++;
+				pcl.setMax(entryCount);
+				pcl.reset();
+				
+				zipstream.close();
+				filestream = new FileInputStream(archive);
+				zipstream = new ZipInputStream(filestream);
+			}
+			
+			ZipEntry entry;
+			while ((entry = zipstream.getNextEntry()) != null) {
+				File outfile = new File(outdir + entry.getName());
+				FileOutputStream output = null;
+				
+				try {
+					new File(outfile.getParent()).mkdirs();
+					output = new FileOutputStream(outfile);
+					int len = 0;
+					while ((len = zipstream.read(buffer)) > 0) {
+						output.write(buffer, 0, len);
+					}
+				} finally {
+					if (output != null)
+						output.close();
+				}
+				
+				if (pcl != null) pcl.step();
+			}
+		} catch (IOException e) {
+			CCLog.addError(e);
+			return false;
+		} finally {
+			try {
+				if (zipstream != null)
+					zipstream.close();
+				if (filestream != null)
+					filestream.close();
+			} catch (IOException e) {
+				CCLog.addError(e);
+				return false;
+			}
+		}
+		
+		return true;
+	}
+
 	public static void exportDatabase(File file, CCMovieList movielist) {
 		Document xml = movielist.getAsXML();
 		

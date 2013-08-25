@@ -112,13 +112,9 @@ public class FilterTree extends AbstractFilterTree {
 		
 		node_viewed = addNode(null, Resources.ICN_SIDEBAR_VIEWED, LocaleBundle.getString("FilterTree.Viewed"), reset); //$NON-NLS-1$
 		initViewed();
-		//TODO Icon
-		node_custom = addNode(null,  Resources.ICN_SIDEBAR_VIEWED, LocaleBundle.getString("FilterTree.Custom"), new ActionListener() { //$NON-NLS-1$
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onCustomClicked();
-			}
-		});
+
+		node_custom = addNode(null,  Resources.ICN_SIDEBAR_CUSTOM, LocaleBundle.getString("FilterTree.Custom"), getCustomActionListener()); //$NON-NLS-1$
+		//initCustom();
 	}
 	
 	private void initAll() {
@@ -271,6 +267,15 @@ public class FilterTree extends AbstractFilterTree {
 				}
 			});
 		}
+	}
+	
+	private ActionListener getCustomActionListener() {
+		return new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				onCustomClicked();
+			}
+		};
 	}
 	
 	private void onCustomClicked() {

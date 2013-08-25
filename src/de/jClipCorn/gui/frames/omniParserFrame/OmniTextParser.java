@@ -71,7 +71,8 @@ public class OmniTextParser {
 		cleanUpList(list);
 		
 		if (removeCommons) {
-			removeCounterStartings(list);
+			removeDynamicCounterStartings(list);
+			removeStaticCounterStartings(list);
 			removeCounterEndings(list);
 		}
 		
@@ -201,7 +202,60 @@ public class OmniTextParser {
 		}
 	}
 	
-	private static void removeCounterStartings(List<String> lines) {
+	private static void removeDynamicCounterStartings(List<String> lines) {
+		int prev = Integer.MIN_VALUE;
+		
+		boolean isCounter = true;
+		for (int p = 0; p < lines.size(); p++) {
+			String line = lines.get(p);
+			
+			String counter = "";  //$NON-NLS-1$
+			for (int i = 0; i < line.length(); i++) {
+				if (Character.isDigit(line.charAt(i))) {
+					counter += line.charAt(i);
+				} else {
+					break;
+				}
+			}
+			boolean succ = true;
+			try {
+				int value = Integer.parseInt(counter);
+				
+				if (value > prev) {
+					succ = true;
+					prev = value;
+				} else {
+					succ = false;
+				}
+			} catch (NumberFormatException e) {
+				succ = false;
+			}
+			
+			if (! succ) {
+				isCounter = false;
+				break;
+			}
+		}
+		
+		if (isCounter) {
+			for (int p = 0; p < lines.size(); p++) {
+				String line = lines.get(p);
+
+				int len = 0;
+				for (int i = 0; i < line.length(); i++) {
+					if (Character.isDigit(line.charAt(i))) {
+						len++;
+					} else {
+						break;
+					}
+				}
+				
+				lines.set(p, line.substring(len));
+			}
+		}
+	}
+	
+	private static void removeStaticCounterStartings(List<String> lines) {
 		int minlen = Math.min(getMinLen(lines), 4);
 		
 		int digitlen = minlen;

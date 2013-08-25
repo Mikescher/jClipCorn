@@ -126,7 +126,7 @@ public class CCBackup {
 	
 	public boolean isExpired() {
 		if (isPersistent()) return false;
-		return getDate().getDayDifferenceTo(CCDate.getCurrentDate()) > CCProperties.getInstance().PROP_BACKUP_LIFETIME.getValue();
+		return getDate().getDayDifferenceTo(CCDate.getCurrentDate()) >= CCProperties.getInstance().PROP_BACKUP_LIFETIME.getValue();
 	}
 
 	public boolean delete() {

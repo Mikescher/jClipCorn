@@ -16,6 +16,7 @@ import javax.swing.ScrollPaneConstants;
 
 import de.jClipCorn.gui.CachedResourceLoader;
 import de.jClipCorn.gui.Resources;
+import de.jClipCorn.gui.frames.mainFrame.MainFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.gui.log.CCLogChangedListener;
@@ -49,9 +50,13 @@ public class LogFrame extends JFrame implements CCLogChangedListener{
 	private JScrollPane spnUndefiniedList;
 
 	public LogFrame(Component owner) {
+		super();
+		
 		initGUI();
 		setLocationRelativeTo(owner);
 		setModels();
+		
+		MainFrame.getInstance().getCoverLabel().setErrorDisplay(false);
 		
 		CCLog.addChangeListener(this);
 	}

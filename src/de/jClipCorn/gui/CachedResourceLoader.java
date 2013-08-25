@@ -41,6 +41,17 @@ public class CachedResourceLoader {
 		}
 	}
 	
+	public static BufferedImage getSmallImage(String name) {
+		String shortFN = name.substring(0, name.lastIndexOf(46)) + "_16x16" + name.substring(name.lastIndexOf(46), name.length()); //$NON-NLS-1$
+		//ASCII 46 = '.'
+		
+		if (Main.class.getResource(shortFN) != null) {
+			return getImage(shortFN);
+		} else {
+			return getResizedImage(name, 16, 16);
+		}
+	}
+	
 	public static ImageIcon getImageIcon(String name) {
 		ImageIcon result = mapIcon.get(name);
 		if (result == null) {

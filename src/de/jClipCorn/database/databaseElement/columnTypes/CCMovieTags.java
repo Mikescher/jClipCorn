@@ -12,9 +12,9 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 public class CCMovieTags {
 	public final static int TAGCOUNT = 16;
 	public final static int ACTIVETAGS = 5;
-
+	
 	private final static String[] ICONS_ON = { Resources.ICN_TABLE_TAG_0_1, Resources.ICN_TABLE_TAG_1_1, Resources.ICN_TABLE_TAG_2_1, Resources.ICN_TABLE_TAG_3_1, Resources.ICN_TABLE_TAG_4_1 };
-
+	private final static String[] IMGS_ON = { Resources.ICN_MENUBAR_TAG_0_1, Resources.ICN_MENUBAR_TAG_1_1, Resources.ICN_MENUBAR_TAG_2_1, Resources.ICN_MENUBAR_TAG_3_1, Resources.ICN_MENUBAR_TAG_4_1 };
 	private final static String[] ICONS_OFF = { Resources.ICN_TABLE_TAG_0_0, Resources.ICN_TABLE_TAG_1_0, Resources.ICN_TABLE_TAG_2_0, Resources.ICN_TABLE_TAG_3_0, Resources.ICN_TABLE_TAG_4_0 };
 
 	private final static String[] NAMES = { LocaleBundle.getString("CCMovieTags.TAG_00"), //$NON-NLS-1$
@@ -238,5 +238,27 @@ public class CCMovieTags {
 
 	public static int compare(CCMovieTags o1, CCMovieTags o2) {
 		return Short.compare(o1.asShort(), o2.asShort());
+	}
+
+	public void drawOnImage(BufferedImage bi, boolean use32px) {
+		int posX = 8;
+		
+		for (int i = 0; i < ACTIVETAGS; i++) {
+			if (getTag(i)) {
+				if (use32px) {
+					bi.getGraphics().drawImage(CachedResourceLoader.getImage(IMGS_ON[i]), posX, 8, null);
+					posX += 32;
+					posX += 8;
+				} else {
+					bi.getGraphics().drawImage(CachedResourceLoader.getSmallImage(IMGS_ON[i]), posX, 8, null);
+					posX += 16;
+					posX += 4;
+				}
+			}
+		}
+	}
+
+	public boolean hasTags() {
+		return getTagCount() > 0;
 	}
 }

@@ -108,6 +108,7 @@ public class CCProperties {
 	public CCBoolProperty		PROP_MAINFRAME_DONTCHANGEZYKLUSCOLOR;
 	public CCBoolProperty		PROP_STATISTICS_INTERACTIVECHARTS;
 	public CCBoolProperty 		PROP_DATABASE_CLEANSHUTDOWN;
+	public CCBoolProperty 		PROP_MAINFRAME_SHOWTAGS;
 	
 	public boolean ARG_READONLY = false;
 	
@@ -224,6 +225,7 @@ public class CCProperties {
 		PROP_MAINFRAME_DONTCHANGEZYKLUSCOLOR	= new CCBoolProperty(CAT_VIEW,		 	this,   "PROP_MAINFRAME_DONTCHANGEZYKLUSCOLOR",		false);
 		PROP_STATISTICS_INTERACTIVECHARTS		= new CCBoolProperty(NONVISIBLE,	 	this,   "PROP_STATISTICS_INTERACTIVECHARTS",		false);
 		PROP_DATABASE_CLEANSHUTDOWN				= new CCBoolProperty(CAT_COMMON,	 	this,   "PROP_DATABASE_CLEANSHUTDOWN",				false);
+		PROP_MAINFRAME_SHOWTAGS					= new CCBoolProperty(CAT_VIEW,	 		this,   "PROP_MAINFRAME_SHOWTAGS",					true);
 	}
 	
 	public static CCProperties getInstance() {

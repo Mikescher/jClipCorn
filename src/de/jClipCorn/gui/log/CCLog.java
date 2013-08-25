@@ -7,11 +7,13 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.RandomAccessFile;
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Vector;
 
 import javax.swing.SwingUtilities;
 
+import de.jClipCorn.gui.frames.mainFrame.MainFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.CCDate;
@@ -95,6 +97,11 @@ public class CCLog {
 			DialogHelper.showDispatchError(LocaleBundle.getString("Main.AbortCaption"), LocaleBundle.getFormattedString("Main.AbortMessage", cle.getFormatted(CCLogElement.FORMAT_LEVEL_MID))); //$NON-NLS-1$ //$NON-NLS-2$
 			fatalabort();
 		}
+		
+		if (type == CCLogType.LOG_ELEM_ERROR) {
+			updateMainFrameLabel();
+		}
+		
 		setChangedFlag();
 	}
 
@@ -284,5 +291,22 @@ public class CCLog {
 		}
 		
 		return CCLogType.LOG_ELEM_INFORMATION;
+	}
+	
+	private static void updateMainFrameLabel() {
+		if (! SwingUtilities.isEventDispatchThread()) {
+			try {
+				SwingUtilities.invokeAndWait(new Runnable() {
+					@Override
+					public void run() {
+						MainFrame.getInstance().getCoverLabel().setErrorDisplay(true);
+					}
+				});
+			} catch (InvocationTargetException | InterruptedException e) {
+				CCLog.addError(e);
+			}
+		} else {
+			MainFrame.getInstance().getCoverLabel().setErrorDisplay(true);
+		}
 	}
 }

@@ -14,6 +14,8 @@ public class Resources {
 	public final static String IMG_COVER_STANDARD 		= registerIMG("/standard.png");
 	public final static String IMG_COVER_NOTFOUND 		= registerIMG("/covernotfound.png");
 	public final static String IMG_COVER_SERIES_MASK	= registerIMG("/mask_series.png");
+	public final static String IMG_COVER_ERROR_ON		= registerIMG("/cover_errror_on.png");
+	public final static String IMG_COVER_ERROR_OFF		= registerIMG("/cover_errror_off.png");
 	// #############################################  </COMMON>  #############################################
 	
 	

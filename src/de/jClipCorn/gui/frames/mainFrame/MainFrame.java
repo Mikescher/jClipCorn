@@ -35,7 +35,7 @@ import de.jClipCorn.gui.frames.mainFrame.popupMenus.ClipMoviePopup;
 import de.jClipCorn.gui.frames.mainFrame.popupMenus.ClipSeriesPopup;
 import de.jClipCorn.gui.frames.mainFrame.searchField.SearchField;
 import de.jClipCorn.gui.frames.showUpdateFrame.ShowUpdateFrame;
-import de.jClipCorn.gui.guiComponents.CoverLabel;
+import de.jClipCorn.gui.guiComponents.DatabaseElementPreviewLabel;
 import de.jClipCorn.gui.guiComponents.tableFilter.TableSearchFilter;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.properties.CCProperties;
@@ -54,7 +54,7 @@ public class MainFrame extends JFrame implements CCDBUpdateListener {
 	private ClipToolbar toolbar;
 	private JPanel leftPanel;
 	private FilterTree filterTree;
-	private CoverLabel coverImage;
+	private DatabaseElementPreviewLabel coverImage;
 	private JPanel middlePanel;
 	private ClipTable clipTable;
 	private ClipCharSortSelector charSelector;
@@ -129,7 +129,7 @@ public class MainFrame extends JFrame implements CCDBUpdateListener {
 		coverPanel.add(gapPanel, BorderLayout.NORTH);
 		gapPanel.setLayout(null);
 
-		coverImage = new CoverLabel(false);
+		coverImage = new DatabaseElementPreviewLabel();
 		coverPanel.add(coverImage);
 		
 		statusbar = new ClipStatusBar(this, movielist);
@@ -220,7 +220,7 @@ public class MainFrame extends JFrame implements CCDBUpdateListener {
 	}
 	
 	public void onClipTableSelectionChanged(CCDatabaseElement ccDatabaseElement) {
-		coverImage.setIcon(ccDatabaseElement.getCoverIcon());
+		coverImage.setDatabaseElement(ccDatabaseElement);
 	}
 	
 	public void onClipTableExecute(CCDatabaseElement ccDatabaseElement) {
@@ -389,5 +389,9 @@ public class MainFrame extends JFrame implements CCDBUpdateListener {
 	
 	public static MainFrame getInstance() {
 		return instance;
+	}
+
+	public DatabaseElementPreviewLabel getCoverLabel() {
+		return coverImage;
 	}
 }

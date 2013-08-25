@@ -95,3 +95,4 @@ public class Main {
 //TODO Compare Series in CompareDialog
 //TODO ERROR Besser Highlighten (Iwas blinkendes großes auf der Main-View) -> TNA-Style Popup-Thingie Ya know
 //TODO Recent Custom Filters as SubTrees in FilterTree
+//TODO SHow Tags in Cover on MainFrame (32x32 ?)

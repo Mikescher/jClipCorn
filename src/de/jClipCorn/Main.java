@@ -21,7 +21,7 @@ public class Main {
 	private final static String PROPERTIES_PATH = "jClipcorn.properties"; //$NON-NLS-1$
 	
 	public static boolean DEBUG = "true".equals(System.getProperty("ineclipse"));  //$NON-NLS-1$//$NON-NLS-2$
-	public static boolean BETA = true;
+	public static boolean BETA = false;
 	
 	public static void main(String[] arg) {
 		new CCProperties(PROPERTIES_PATH, arg); // MUSS ALS ERSTES CREATED WERDEN - FUCKING IMPORTANT
@@ -90,9 +90,5 @@ public class Main {
 
 //TODO Shortcuts für SerienWindow
 
-//TODO [[ 1.9 FEATURES: ?? ]]
-
 //TODO Compare Series in CompareDialog
-//TODO ERROR Besser Highlighten (Iwas blinkendes großes auf der Main-View) -> TNA-Style Popup-Thingie Ya know
 //TODO Recent Custom Filters as SubTrees in FilterTree
-//TODO SHow Tags in Cover on MainFrame (32x32 ?)

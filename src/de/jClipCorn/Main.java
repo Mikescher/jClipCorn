@@ -92,5 +92,4 @@ public class Main {
 //TODO Mark Actions as "only with Write-Access" => Show Warning when executed
 //TODO Compare Series in CompareDialog
 //TODO Recent Custom Filters as SubTrees in FilterTree
-//TODO Omniparser lässt Zeilen aus wenn eine ganz lang ist (alle Zeilen über 7 Buchstaben zulassen)
-//Bigger PlayNextEpisode Button
+//TODO PreviewSeries: SwitchStaffel -> Reset VertScrollbar to top

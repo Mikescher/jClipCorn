@@ -93,3 +93,6 @@ public class Main {
 //TODO Compare Series in CompareDialog
 //TODO Recent Custom Filters as SubTrees in FilterTree
 //TODO PreviewSeries: SwitchStaffel -> Reset VertScrollbar to top
+//TODO ImageCropper for AddMovie/AddSeries / Edit * etc etc (Crop those full covers nto real covers, remove white borders, ...)
+//TODO Toolbarbutton "Open Last Played Series"
+//TODO STatistics: Seriesepisodes Viewed per Day (Balken wie bei Movie / year) (Angefangen am ersten an dem eien folge geschaut wurde) (folgen ohne lastviewed ignorieren)

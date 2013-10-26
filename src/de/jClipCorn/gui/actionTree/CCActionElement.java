@@ -20,6 +20,7 @@ import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.gui.CachedResourceLoader;
 import de.jClipCorn.gui.frames.mainFrame.clipToolbar.ClipToolbar;
 import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.property.CCCaptionedKeyStrokeProperty;
 import de.jClipCorn.properties.property.CCKeyStrokeProperty;
@@ -31,6 +32,8 @@ public class CCActionElement {
 	private final String iconRes;
 	private final boolean visible;
 	private final KeyStroke defaultKeyStroke;
+	
+	private boolean isProhibitedInReadOnly = false;
 	
 	private CCKeyStrokeProperty keyStrokeProperty = null;
 	
@@ -112,6 +115,11 @@ public class CCActionElement {
 	}
 	
 	public void execute(String cmd) {
+		if (isProhibitedInReadOnly && CCProperties.getInstance().ARG_READONLY) {
+			CCLog.addInformation(LocaleBundle.getString("LogMessage.OperationFailedDueToReadOnly")); //$NON-NLS-1$
+			return;
+		}
+		
 		for (ActionListener al : listener) {
 			al.actionPerformed(new ActionEvent(this, 0, cmd));
 		}
@@ -326,5 +334,9 @@ public class CCActionElement {
 		} else {
 			return getName();
 		}
+	}
+
+	public void setReadOnlyRestriction() {
+		isProhibitedInReadOnly = true;
 	}
 }

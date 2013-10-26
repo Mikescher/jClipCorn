@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
@@ -117,11 +118,81 @@ public class ImageUtilities {
 	
 	public static void drawBorder(BufferedImage i, Color c, int thick) {
 		Graphics ig = i.getGraphics();
+		
 		ig.setColor(c);
+		
 		ig.fillRect(0, 0, thick, i.getHeight());
 		ig.fillRect(0, 0, i.getWidth(), thick);
 		ig.fillRect(i.getWidth() - thick, 0, thick, i.getHeight());
 		ig.fillRect(0, i.getHeight() - thick, i.getWidth(), thick);
+	}
+	
+	public static void drawActualBorder(BufferedImage i, Color c, int thick) {
+		Rectangle rect = getNonTransparentImageRect(i);
+		
+		Graphics ig = i.getGraphics();
+		
+		ig.setColor(c);
+		
+		ig.fillRect(rect.x, rect.y, thick, rect.height);
+		ig.fillRect(rect.x, rect.y, rect.width, thick);
+		ig.fillRect(rect.x + rect.width - thick, rect.y, thick, rect.height);
+		ig.fillRect(rect.x, rect.y + rect.height - thick, rect.width, thick);
+	}
+	
+	public static Rectangle getNonTransparentImageRect(BufferedImage i) {
+		int rx = 0;
+		int ry = 0;
+		int rwx = i.getWidth();
+		int rhy = i.getHeight();
+		
+		for (int x = 0; x < rwx; x++) {
+			if (isColumnFullyTransparent(i, x)) rx = x+1;
+			else break;
+		}
+		
+		for (int x = rwx-1; x >= 0; x--) {
+			if (isColumnFullyTransparent(i, x)) rwx = x;
+			else break;
+		}
+		
+		for (int y = 0; y < rhy; y++) {
+			if (isRowFullyTransparent(i, y)) ry = y+1;
+			else break;
+		}
+		
+		for (int y = rhy-1; y >= 0; y--) {
+			if (isRowFullyTransparent(i, y)) rhy = y;
+			else break;
+		}
+		
+		if (rx >= (i.getWidth() - 1) || rwx <= 0 || rx >= rwx) {
+			rx = 0;
+			rwx = i.getWidth();
+		}
+		
+		if (ry >= (i.getHeight()-1) || rhy <= 0 || ry >= rhy) {
+			ry = 0;
+			rhy = i.getHeight();
+		}
+		
+		return new Rectangle(rx, ry, rwx - rx, rhy - ry);
+	}
+	
+	public static boolean isRowFullyTransparent(BufferedImage i, int row) {
+		for (int x = 0; x < i.getWidth(); x++) {
+			if (((i.getRGB(x, row) >> 24) & 0xFF) != 0) return false;
+		}
+		
+		return true;
+	}
+	
+	public static boolean isColumnFullyTransparent(BufferedImage i, int col) {
+		for (int y = 0; y < i.getHeight(); y++) {
+			if (((i.getRGB(col, y) >> 24) & 0xFF) != 0) return false;
+		}
+		
+		return true;
 	}
 	
 	public static BufferedImage iconToImage(ImageIcon ic) {

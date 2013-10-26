@@ -128,8 +128,8 @@ public class ClipTable extends JScrollPane implements CCDBUpdateListener, ListSe
 
 	public int getSelectedRow() {
 		int selrow = table.getSelectedRow();
-		if (selrow >= 0) {
-			return table.convertRowIndexToModel(table.getSelectedRow());
+		if (selrow >= 0 && selrow < table.getRowCount()) {
+			return table.convertRowIndexToModel(selrow);
 		}
 		return -1;
 	}

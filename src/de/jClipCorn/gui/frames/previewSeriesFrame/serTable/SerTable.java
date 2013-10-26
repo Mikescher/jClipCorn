@@ -57,6 +57,8 @@ public class SerTable extends JScrollPane implements ListSelectionListener, Mous
 	public void changeSeason(CCSeason s) {
 		this.season = s;
 		
+		getVerticalScrollBar().setValue(0);
+		
 		model.changeSeason(s);
 		
 		model.fireTableDataChanged();

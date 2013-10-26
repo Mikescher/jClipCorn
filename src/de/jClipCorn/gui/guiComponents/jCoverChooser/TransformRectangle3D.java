@@ -40,9 +40,9 @@ public class TransformRectangle3D extends TransformRectangle{
 		
 		if (CCProperties.getInstance().PROP_PREVSERIES_COVERBORDER.getValue()) {
 			if (focused) {
-				ImageUtilities.drawBorder(i, FOCUSBORDERCOLOR, FOCUSBORDERWIDTH);
+				ImageUtilities.drawActualBorder(i, FOCUSBORDERCOLOR, FOCUSBORDERWIDTH);
 			} else {
-				ImageUtilities.drawBorder(i, BORDERCOLOR, BORDERWIDTH);
+				ImageUtilities.drawActualBorder(i, BORDERCOLOR, BORDERWIDTH);
 			}
 		}
 		

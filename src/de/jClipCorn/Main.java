@@ -89,10 +89,10 @@ public class Main {
 		// - YOu see if the othr one has the Movie / what he rates / if he has viewed ...
 
 //TODO Shortcuts für SerienWindow
-//TODO Mark Actions as "only with Write-Access" => Show Warning when executed
 //TODO Compare Series in CompareDialog
 //TODO Recent Custom Filters as SubTrees in FilterTree
-//TODO PreviewSeries: SwitchStaffel -> Reset VertScrollbar to top
 //TODO ImageCropper for AddMovie/AddSeries / Edit * etc etc (Crop those full covers nto real covers, remove white borders, ...)
 //TODO Toolbarbutton "Open Last Played Series"
-//TODO STatistics: Seriesepisodes Viewed per Day (Balken wie bei Movie / year) (Angefangen am ersten an dem eien folge geschaut wurde) (folgen ohne lastviewed ignorieren)
+//TODO Statistics: Seriesepisodes Viewed per Day (Balken wie bei Movie / year) (Angefangen am ersten an dem eien folge geschaut wurde) (folgen ohne lastviewed ignorieren) (???)
+//TODO Option to move Database to Server
+//TODO Serienviewer -> CoverSelector -> Selektionsramen anpassen wenn oben/unten/rechts/links transparenz im cover ist

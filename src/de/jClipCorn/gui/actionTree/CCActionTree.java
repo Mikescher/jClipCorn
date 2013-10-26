@@ -48,7 +48,6 @@ import de.jClipCorn.gui.frames.searchFrame.SearchFrame;
 import de.jClipCorn.gui.frames.settingsFrame.SettingsFrame;
 import de.jClipCorn.gui.frames.showUpdateFrame.ShowUpdateFrame;
 import de.jClipCorn.gui.frames.statisticsFrame.StatisticsFrame;
-import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.UpdateConnector;
@@ -120,6 +119,7 @@ public class CCActionTree {
 		});
 
 		temp = database.addChild(new CCActionElement("ClearDatabase", null, "ClipMenuBar.Database.ClearDB", Resources.ICN_MENUBAR_CLEARDB));
+		temp.setReadOnlyRestriction();
 		temp.addListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -136,6 +136,7 @@ public class CCActionTree {
 		});
 		
 		temp = database.addChild(new CCActionElement("ImportDatabase", null, "ClipMenuBar.Database.ImportDB", Resources.ICN_MENUBAR_IMPORTDB));
+		temp.setReadOnlyRestriction();
 		temp.addListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -144,6 +145,7 @@ public class CCActionTree {
 		});
 		
 		temp = database.addChild(new CCActionElement("ImportMultipleElements", null, "ClipMenuBar.Database.ImportMultiple", Resources.ICN_MENUBAR_IMPORMULTIPLEELEMENTS));
+		temp.setReadOnlyRestriction();
 		temp.addListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -180,6 +182,7 @@ public class CCActionTree {
 		});
 
 		temp = movies.addChild(new CCActionElement("AddMovie", KeyStroke.getKeyStroke(KeyEvent.VK_I, InputEvent.CTRL_DOWN_MASK), "ClipMenuBar.Movies.Add", Resources.ICN_MENUBAR_ADD_MOV));
+		temp.setReadOnlyRestriction();
 		temp.addListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -204,6 +207,7 @@ public class CCActionTree {
 		});
 		
 		temp = movies.addChild(new CCActionElement("ImportSingleMovie", null, "ClipMenuBar.Movies.ImportSingle", Resources.ICN_MENUBAR_IMPORTMOVIE));
+		temp.setReadOnlyRestriction();
 		temp.addListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -212,6 +216,7 @@ public class CCActionTree {
 		});
 
 		temp = movies.addChild(new CCActionElement("EditMovie", KeyStroke.getKeyStroke(KeyEvent.VK_E, InputEvent.CTRL_DOWN_MASK), "ClipMenuBar.Movies.Edit", Resources.ICN_MENUBAR_EDIT_MOV));
+		temp.setReadOnlyRestriction();
 		temp.addListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -220,6 +225,7 @@ public class CCActionTree {
 		});
 
 		temp = movies.addChild(new CCActionElement("RemMovie", KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0), "ClipMenuBar.Movies.Remove", Resources.ICN_MENUBAR_REMOVE));
+		temp.setReadOnlyRestriction();
 		temp.addListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -240,6 +246,7 @@ public class CCActionTree {
 		});
 
 		temp = series.addChild(new CCActionElement("AddSeries", KeyStroke.getKeyStroke(KeyEvent.VK_I, InputEvent.CTRL_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK), "ClipMenuBar.Series.Add", Resources.ICN_MENUBAR_ADD_SER));
+		temp.setReadOnlyRestriction();
 		temp.addListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -248,6 +255,7 @@ public class CCActionTree {
 		});
 		
 		temp = series.addChild(new CCActionElement("EditSeries", KeyStroke.getKeyStroke(KeyEvent.VK_E, InputEvent.CTRL_DOWN_MASK), "ClipMenuBar.Series.Edit", Resources.ICN_MENUBAR_EDIT_SER));
+		temp.setReadOnlyRestriction();
 		temp.addListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -256,6 +264,7 @@ public class CCActionTree {
 		});
 
 		temp = series.addChild(new CCActionElement("AddSeason", null, "ClipMenuBar.Series.AddSeason", Resources.ICN_MENUBAR_ADD_SEA));
+		temp.setReadOnlyRestriction();
 		temp.addListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -272,6 +281,7 @@ public class CCActionTree {
 		});
 		
 		temp = series.addChild(new CCActionElement("AddSeriesToExportList", KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_DOWN_MASK), "ClipMenuBar.Series.ExportMultiple", Resources.ICN_MENUBAR_EXPORTELEMENTS));
+		temp.setReadOnlyRestriction();
 		temp.addListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -280,6 +290,7 @@ public class CCActionTree {
 		});
 		
 		temp = series.addChild(new CCActionElement("ImportSingleSeries", null, "ClipMenuBar.Series.ImportSingle", Resources.ICN_MENUBAR_IMPORTSERIES));
+		temp.setReadOnlyRestriction();
 		temp.addListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -296,6 +307,7 @@ public class CCActionTree {
 		});
 		
 		temp = series.addChild(new CCActionElement("MoveSeries", null, "ClipMenuBar.Series.MoveSeries", Resources.ICN_MENUBAR_MOVESERIES));
+		temp.setReadOnlyRestriction();
 		temp.addListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -304,6 +316,7 @@ public class CCActionTree {
 		});
 		
 		temp = series.addChild(new CCActionElement("CreateFolderStructSeries", null, "ClipMenuBar.Series.CreateFolderStruct", Resources.ICN_MENUBAR_CREATEFOLDERSTRUCTURE));
+		temp.setReadOnlyRestriction();
 		temp.addListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -312,6 +325,7 @@ public class CCActionTree {
 		});
 
 		temp = series.addChild(new CCActionElement("RemSeries", KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0), "ClipMenuBar.Series.Remove", Resources.ICN_MENUBAR_REMOVE));
+		temp.setReadOnlyRestriction();
 		temp.addListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -324,6 +338,7 @@ public class CCActionTree {
 		// ################################################################################################################################################################
 
 		temp = extras.addChild(new CCActionElement("XML", null, "ClipMenuBar.Extras.XML", Resources.ICN_MENUBAR_PARSEXML));
+		temp.setReadOnlyRestriction();
 		temp.addListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -332,6 +347,7 @@ public class CCActionTree {
 		});
 		
 		temp = extras.addChild(new CCActionElement("ScanFolder", KeyStroke.getKeyStroke(KeyEvent.VK_O, InputEvent.CTRL_DOWN_MASK), "ClipMenuBar.Extras.ScanFolder", Resources.ICN_MENUBAR_SCANFOLDER));
+		temp.setReadOnlyRestriction();
 		temp.addListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -348,6 +364,7 @@ public class CCActionTree {
 		});
 		
 		temp = extras.addChild(new CCActionElement("MassChangeViewed", null, "ClipMenuBar.Extras.MassChangeViewed", Resources.ICN_MENUBAR_MCHANGE_VIEWED));
+		temp.setReadOnlyRestriction();
 		temp.addListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -356,6 +373,7 @@ public class CCActionTree {
 		});
 		
 		temp = extras.addChild(new CCActionElement("MassChangeScore", null, "ClipMenuBar.Extras.MassChangeScore", Resources.ICN_MENUBAR_MCHANGE_SCORE));
+		temp.setReadOnlyRestriction();
 		temp.addListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -364,6 +382,7 @@ public class CCActionTree {
 		});
 		
 		temp = extras.addChild(new CCActionElement("ResetViewed", null, "ClipMenuBar.Extras.ResetViewed", Resources.ICN_MENUBAR_RESETVIEWED));
+		temp.setReadOnlyRestriction();
 		temp.addListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -444,6 +463,7 @@ public class CCActionTree {
 		// ################################################################################################################################################################
 		
 		temp = other.addChild(new CCActionElement("SetMovieViewed", null, "ClipMenuBar.Other.SetViewed", Resources.ICN_MENUBAR_VIEWED));
+		temp.setReadOnlyRestriction();
 		temp.addListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -452,6 +472,7 @@ public class CCActionTree {
 		});
 		
 		temp = other.addChild(new CCActionElement("SetMovieUnviewed", null, "ClipMenuBar.Other.SetUnviewed", Resources.ICN_MENUBAR_UNVIEWED));
+		temp.setReadOnlyRestriction();
 		temp.addListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -481,6 +502,7 @@ public class CCActionTree {
 		// ################################################################################################################################################################
 		
 		temp = setMovRating.addChild(new CCActionElement("SetRating0", null, "CCMovieScore.R0", CCMovieScore.RATING_0.getIconName()));
+		temp.setReadOnlyRestriction();
 		temp.addListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -489,6 +511,7 @@ public class CCActionTree {
 		});
 		
 		temp = setMovRating.addChild(new CCActionElement("SetRating1", null, "CCMovieScore.R1", CCMovieScore.RATING_I.getIconName()));
+		temp.setReadOnlyRestriction();
 		temp.addListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -497,6 +520,7 @@ public class CCActionTree {
 		});
 		
 		temp = setMovRating.addChild(new CCActionElement("SetRating2", null, "CCMovieScore.R2", CCMovieScore.RATING_II.getIconName()));
+		temp.setReadOnlyRestriction();
 		temp.addListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -505,6 +529,7 @@ public class CCActionTree {
 		});
 		
 		temp = setMovRating.addChild(new CCActionElement("SetRating3", null, "CCMovieScore.R3", CCMovieScore.RATING_III.getIconName()));
+		temp.setReadOnlyRestriction();
 		temp.addListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -513,6 +538,7 @@ public class CCActionTree {
 		});
 		
 		temp = setMovRating.addChild(new CCActionElement("SetRating4", null, "CCMovieScore.R4", CCMovieScore.RATING_IV.getIconName()));
+		temp.setReadOnlyRestriction();
 		temp.addListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -521,6 +547,7 @@ public class CCActionTree {
 		});
 		
 		temp = setMovRating.addChild(new CCActionElement("SetRating5", null, "CCMovieScore.R5", CCMovieScore.RATING_V.getIconName()));
+		temp.setReadOnlyRestriction();
 		temp.addListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -529,6 +556,7 @@ public class CCActionTree {
 		});
 		
 		temp = setSerRating.addChild(new CCActionElement("SetRatingNO", null, "CCMovieScore.RNO", CCMovieScore.RATING_NO.getIconName())); // Damit setSerRating ein Child hat und nicht als Executable gesehen wird ...
+		temp.setReadOnlyRestriction();
 		temp.addListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -541,6 +569,7 @@ public class CCActionTree {
 		// ################################################################################################################################################################
 		
 		temp = setTags.addChild(new CCActionElement("SwitchTag_00", null, "CCMovieTags.TAG_00", Resources.ICN_MENUBAR_TAG_0_1));
+		temp.setReadOnlyRestriction();
 		temp.addListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -549,6 +578,7 @@ public class CCActionTree {
 		});
 		
 		temp = setTags.addChild(new CCActionElement("SwitchTag_01", null, "CCMovieTags.TAG_01", Resources.ICN_MENUBAR_TAG_1_1));
+		temp.setReadOnlyRestriction();
 		temp.addListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -557,6 +587,7 @@ public class CCActionTree {
 		});
 		
 		temp = setTags.addChild(new CCActionElement("SwitchTag_02", null, "CCMovieTags.TAG_02", Resources.ICN_MENUBAR_TAG_2_1));
+		temp.setReadOnlyRestriction();
 		temp.addListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -565,6 +596,7 @@ public class CCActionTree {
 		});
 		
 		temp = setTags.addChild(new CCActionElement("SwitchTag_03", null, "CCMovieTags.TAG_03", Resources.ICN_MENUBAR_TAG_3_1));
+		temp.setReadOnlyRestriction();
 		temp.addListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -573,6 +605,7 @@ public class CCActionTree {
 		});
 		
 		temp = setTags.addChild(new CCActionElement("SwitchTag_04", null, "CCMovieTags.TAG_04", Resources.ICN_MENUBAR_TAG_4_1));
+		temp.setReadOnlyRestriction();
 		temp.addListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -740,11 +773,6 @@ public class CCActionTree {
 	}
 
 	private void onClickMoviesAdd() {
-		if (CCProperties.getInstance().ARG_READONLY) {
-			CCLog.addInformation(LocaleBundle.getString("LogMessage.OperationFailedDueToReadOnly")); //$NON-NLS-1$
-			return;
-		}
-		
 		AddMovieFrame nFrame = new AddMovieFrame(owner, movielist);
 
 		nFrame.setVisible(true);
@@ -798,11 +826,6 @@ public class CCActionTree {
 	}
 
 	private void onClickMoviesRem() {
-		if (CCProperties.getInstance().ARG_READONLY) {
-			CCLog.addInformation(LocaleBundle.getString("LogMessage.OperationFailedDueToReadOnly")); //$NON-NLS-1$
-			return;
-		}
-		
 		if (owner.getSelectedElement() != null && owner.getSelectedElement().isMovie()) {
 			if (DialogHelper.showLocaleYesNo(owner, "Dialogs.DeleteMovie")) { //$NON-NLS-1$
 				movielist.remove(owner.getSelectedElement());
@@ -817,11 +840,6 @@ public class CCActionTree {
 	}
 
 	private void onClickDatabaseClear() {
-		if (CCProperties.getInstance().ARG_READONLY) {
-			CCLog.addInformation(LocaleBundle.getString("LogMessage.OperationFailedDueToReadOnly")); //$NON-NLS-1$
-			return;
-		}
-		
 		if (DialogHelper.showLocaleYesNo(owner, "Dialogs.ClearDatabase")) { //$NON-NLS-1$
 			new Thread(new Runnable() {
 				@Override
@@ -866,11 +884,6 @@ public class CCActionTree {
 	}
 	
 	private void onClickDatabaseImportMultipleElements() {
-		if (CCProperties.getInstance().ARG_READONLY) {
-			CCLog.addInformation(LocaleBundle.getString("LogMessage.OperationFailedDueToReadOnly")); //$NON-NLS-1$
-			return;
-		}
-		
 		final JFileChooser chooser = new JFileChooser();
 		chooser.setFileFilter(FileChooserHelper.createLocalFileFilter("ExportHelper.filechooser_jmccexport.description", ExportHelper.EXTENSION_MULTIPLEEXPORT)); //$NON-NLS-1$
 		chooser.setCurrentDirectory(new File(PathFormatter.getRealSelfDirectory()));
@@ -915,11 +928,6 @@ public class CCActionTree {
 	}
 
 	private void onClickSeriesAdd() {
-		if (CCProperties.getInstance().ARG_READONLY) {
-			CCLog.addInformation(LocaleBundle.getString("LogMessage.OperationFailedDueToReadOnly")); //$NON-NLS-1$
-			return;
-		}
-		
 		(new AddSeriesFrame(owner, movielist)).setVisible(true);
 	}
 	
@@ -979,11 +987,6 @@ public class CCActionTree {
 	}
 	
 	private void onClickSeriesImportSingle() {
-		if (CCProperties.getInstance().ARG_READONLY) {
-			CCLog.addInformation(LocaleBundle.getString("LogMessage.OperationFailedDueToReadOnly")); //$NON-NLS-1$
-			return;
-		}
-		
 		final JFileChooser chooser = new JFileChooser();
 		chooser.setFileFilter(FileChooserHelper.createLocalFileFilter("ExportHelper.filechooser_jsccexport.description", ExportHelper.EXTENSION_SINGLEEXPORT)); //$NON-NLS-1$
 		chooser.setCurrentDirectory(new File(PathFormatter.getRealSelfDirectory()));
@@ -1023,11 +1026,6 @@ public class CCActionTree {
 	}
 
 	private void onClickSeriesRem() {
-		if (CCProperties.getInstance().ARG_READONLY) {
-			CCLog.addInformation(LocaleBundle.getString("LogMessage.OperationFailedDueToReadOnly")); //$NON-NLS-1$
-			return;
-		}
-		
 		if (owner.getSelectedElement() != null && owner.getSelectedElement().isSeries()) {
 			if (DialogHelper.showLocaleYesNo(owner, "Dialogs.DeleteSeries")) {//$NON-NLS-1$
 				movielist.remove(owner.getSelectedElement());

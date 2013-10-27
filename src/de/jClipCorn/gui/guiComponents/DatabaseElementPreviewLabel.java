@@ -13,6 +13,7 @@ import de.jClipCorn.gui.CachedResourceLoader;
 import de.jClipCorn.gui.Resources;
 import de.jClipCorn.gui.actionTree.CCActionTree;
 import de.jClipCorn.properties.CCProperties;
+import de.jClipCorn.util.helper.ImageUtilities;
 
 public class DatabaseElementPreviewLabel extends CoverLabel {
 	private static final long serialVersionUID = -2960790547511297760L;
@@ -46,7 +47,7 @@ public class DatabaseElementPreviewLabel extends CoverLabel {
 		}
 		
 		if (CCProperties.getInstance().PROP_MAINFRAME_SHOWTAGS.getValue() && el.isMovie() && ((CCMovie)el).getTags().hasTags()) {
-			BufferedImage bi = el.getCover();
+			BufferedImage bi = ImageUtilities.deepCopyImage(el.getCover());
 			
 			CCMovie m = (CCMovie)el;
 			

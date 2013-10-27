@@ -79,8 +79,8 @@ public class CachedResourceLoader {
 			return bi;
 		}
 		
-		if (Main.DEBUG) {
-			System.out.println("[DBG] (Possible) Missing 16x16 Icon: " + name); //$NON-NLS-1$
+		if (Main.DEBUG && ((w == 16 && h == 16) || (w == 32 && h == 32))) {
+			System.out.println(String.format("[DBG] (Possible) Missing %dx%d Icon: %s", w, h, name)); //$NON-NLS-1$
 		}
 		
 		return resize(getImage(name), w, h);

@@ -7,6 +7,9 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
+import java.awt.image.ColorModel;
+import java.awt.image.DataBufferByte;
+import java.awt.image.WritableRaster;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -57,6 +60,9 @@ public class ImageUtilities {
 			nH = newHeight;
 			nW = (int) Math.round(ratio * newHeight);
 		}
+		
+		nW = Math.max(1, nW);
+		nH = Math.max(1, nH);
 		
 		int nX = (newWidth - nW) / 2;
 		int nY = (newHeight - nH) / 2;
@@ -179,6 +185,45 @@ public class ImageUtilities {
 		return new Rectangle(rx, ry, rwx - rx, rhy - ry);
 	}
 	
+	public static Rectangle getNonColorImageRect(BufferedImage i, int col) {
+		int rx = 0;
+		int ry = 0;
+		int rwx = i.getWidth();
+		int rhy = i.getHeight();
+		
+		for (int x = 0; x < rwx; x++) {
+			if (isColumnFullyColor(i, x, col)) rx = x+1;
+			else break;
+		}
+		
+		for (int x = rwx-1; x >= 0; x--) {
+			if (isColumnFullyColor(i, x, col)) rwx = x;
+			else break;
+		}
+		
+		for (int y = 0; y < rhy; y++) {
+			if (isRowFullyColor(i, y, col)) ry = y+1;
+			else break;
+		}
+		
+		for (int y = rhy-1; y >= 0; y--) {
+			if (isRowFullyColor(i, y, col)) rhy = y;
+			else break;
+		}
+		
+		if (rx >= (i.getWidth() - 1) || rwx <= 0 || rx >= rwx) {
+			rx = 0;
+			rwx = i.getWidth();
+		}
+		
+		if (ry >= (i.getHeight()-1) || rhy <= 0 || ry >= rhy) {
+			ry = 0;
+			rhy = i.getHeight();
+		}
+		
+		return new Rectangle(rx, ry, rwx - rx, rhy - ry);
+	}
+	
 	public static boolean isRowFullyTransparent(BufferedImage i, int row) {
 		for (int x = 0; x < i.getWidth(); x++) {
 			if (((i.getRGB(x, row) >> 24) & 0xFF) != 0) return false;
@@ -190,6 +235,22 @@ public class ImageUtilities {
 	public static boolean isColumnFullyTransparent(BufferedImage i, int col) {
 		for (int y = 0; y < i.getHeight(); y++) {
 			if (((i.getRGB(col, y) >> 24) & 0xFF) != 0) return false;
+		}
+		
+		return true;
+	}
+	
+	public static boolean isRowFullyColor(BufferedImage i, int row, int clr) {
+		for (int x = 0; x < i.getWidth(); x++) {
+			if ((i.getRGB(x, row) ^ clr) != 0) return false;
+		}
+		
+		return true;
+	}
+	
+	public static boolean isColumnFullyColor(BufferedImage i, int col, int clr) {
+		for (int y = 0; y < i.getHeight(); y++) {
+			if ((i.getRGB(col, y) ^ clr) != 0) return false;
 		}
 		
 		return true;
@@ -220,6 +281,21 @@ public class ImageUtilities {
 		} catch (IOException e) {
 			CCLog.addError(e);
 			return null;
+		}
+	}
+
+	public static BufferedImage deepCopyImage(BufferedImage bi) {
+		ColorModel cm = bi.getColorModel();
+		boolean isAlphaPremultiplied = cm.isAlphaPremultiplied();
+		WritableRaster raster = bi.copyData(null);
+		return new BufferedImage(cm, raster, isAlphaPremultiplied, null);
+	}
+
+	public static void alphaClearImage(BufferedImage img) {
+		byte[] a = ((DataBufferByte)img.getRaster().getDataBuffer()).getData();
+		
+		for (int i = 0; i < a.length; i++) {
+			a[i] = 0;
 		}
 	}
 }

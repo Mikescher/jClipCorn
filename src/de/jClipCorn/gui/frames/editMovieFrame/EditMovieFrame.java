@@ -39,6 +39,7 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCMovieSize;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTyp;
 import de.jClipCorn.gui.CachedResourceLoader;
 import de.jClipCorn.gui.Resources;
+import de.jClipCorn.gui.frames.coverCropFrame.CoverCropDialog;
 import de.jClipCorn.gui.frames.findCoverFrame.FindCoverDialog;
 import de.jClipCorn.gui.frames.inputErrorFrame.InputErrorDialog;
 import de.jClipCorn.gui.guiComponents.CoverLabel;
@@ -56,13 +57,14 @@ import de.jClipCorn.util.helper.ExtendedFocusTraversalOnArray;
 import de.jClipCorn.util.helper.FileChooserHelper;
 import de.jClipCorn.util.helper.HTTPUtilities;
 import de.jClipCorn.util.helper.ImageUtilities;
+import de.jClipCorn.util.listener.ImageCropperResultListener;
 import de.jClipCorn.util.listener.UpdateCallbackListener;
 import de.jClipCorn.util.parser.ImDBParser;
 import de.jClipCorn.util.parser.ParseResultHandler;
 import de.jClipCorn.util.userdataProblem.UserDataProblem;
 import de.jClipCorn.util.userdataProblem.UserDataProblemHandler;
 
-public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDataProblemHandler{
+public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDataProblemHandler, ImageCropperResultListener {
 	private static final long serialVersionUID = 4392838185334567222L;
 	
 	private static CCDate MIN_DATE = CCDate.getMinimumDate();
@@ -159,6 +161,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 	private JButton btnToday;
 	private JButton btnTestParts;
 	private JButton btnCalcQuality;
+	private JButton btnCrop;
 
 	public EditMovieFrame(Component owner, CCMovie movie, UpdateCallbackListener ucl) {
 		super();
@@ -444,7 +447,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 				showFindCoverDialog();
 			}
 		});
-		btnFindcover.setBounds(588, 422, 71, 25);
+		btnFindcover.setBounds(607, 422, 52, 25);
 		getContentPane().add(btnFindcover);
 		
 		label_16 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGesehen.text")); //$NON-NLS-1$
@@ -657,6 +660,16 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		});
 		btnCalcQuality.setBounds(296, 372, 78, 23);
 		getContentPane().add(btnCalcQuality);
+		
+		btnCrop = new JButton(LocaleBundle.getString("AddMovieFrame.btnCrop.text")); //$NON-NLS-1$
+		btnCrop.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				showCropDialog();
+			}
+		});
+		btnCrop.setBounds(536, 422, 61, 25);
+		getContentPane().add(btnCrop);
 	}
 
 	private void setDefaultValues() {
@@ -1165,5 +1178,21 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		UserDataProblem.testMovieData(ret, movie, i, movie.getMovieList(), p0, p1, p2, p3, p4, p5, title, zyklus, zyklusID, len, adddate, oscore, fskidx, year, fsize, csExtn, csExta, g0, g1, g2, g3, g4, g5, g6, g7, quality, lang);
 		
 		return ret.isEmpty();
+	}
+	
+	private void showCropDialog() {
+		if (currentCoverImage == null) return;
+		
+		(new CoverCropDialog(this, currentCoverImage, this)).setVisible(true);
+	}
+
+	@Override
+	public void editingFinished(BufferedImage i) {
+		setCover(i);
+	}
+
+	@Override
+	public void editingCanceled() {
+		// nothing
 	}
 }

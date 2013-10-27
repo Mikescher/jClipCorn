@@ -91,8 +91,6 @@ public class Main {
 //TODO Shortcuts für SerienWindow
 //TODO Compare Series in CompareDialog
 //TODO Recent Custom Filters as SubTrees in FilterTree
-//TODO ImageCropper for AddMovie/AddSeries / Edit * etc etc (Crop those full covers nto real covers, remove white borders, ...)
 //TODO Toolbarbutton "Open Last Played Series"
 //TODO Statistics: Seriesepisodes Viewed per Day (Balken wie bei Movie / year) (Angefangen am ersten an dem eien folge geschaut wurde) (folgen ohne lastviewed ignorieren) (???)
 //TODO Option to move Database to Server
-//TODO Serienviewer -> CoverSelector -> Selektionsramen anpassen wenn oben/unten/rechts/links transparenz im cover ist

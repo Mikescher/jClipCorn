@@ -34,6 +34,7 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCMovieQuality;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTyp;
 import de.jClipCorn.gui.CachedResourceLoader;
 import de.jClipCorn.gui.Resources;
+import de.jClipCorn.gui.frames.coverCropFrame.CoverCropDialog;
 import de.jClipCorn.gui.frames.editSeriesFrame.EditSeriesFrame;
 import de.jClipCorn.gui.frames.findCoverFrame.FindCoverDialog;
 import de.jClipCorn.gui.frames.inputErrorFrame.InputErrorDialog;
@@ -46,12 +47,13 @@ import de.jClipCorn.util.helper.ExtendedFocusTraversalOnArray;
 import de.jClipCorn.util.helper.FileChooserHelper;
 import de.jClipCorn.util.helper.HTTPUtilities;
 import de.jClipCorn.util.helper.ImageUtilities;
+import de.jClipCorn.util.listener.ImageCropperResultListener;
 import de.jClipCorn.util.parser.ImDBParser;
 import de.jClipCorn.util.parser.ParseResultHandler;
 import de.jClipCorn.util.userdataProblem.UserDataProblem;
 import de.jClipCorn.util.userdataProblem.UserDataProblemHandler;
 
-public class AddSeriesFrame extends JFrame implements ParseResultHandler, UserDataProblemHandler {
+public class AddSeriesFrame extends JFrame implements ParseResultHandler, UserDataProblemHandler, ImageCropperResultListener {
 	private static final long serialVersionUID = -4500039578109890172L;
 	
 	private final JFileChooser coverFileChooser;
@@ -92,6 +94,7 @@ public class AddSeriesFrame extends JFrame implements ParseResultHandler, UserDa
 	private JButton btnOK;
 	private JButton btnCancel;
 	private JButton btnIMDB;
+	private JButton btnCrop;
 
 	public AddSeriesFrame(Component owner, CCMovieList mlist) {
 		setSize(new Dimension(620, 545));
@@ -210,7 +213,7 @@ public class AddSeriesFrame extends JFrame implements ParseResultHandler, UserDa
 				showFindCoverDialog();
 			}
 		});
-		btnFind.setBounds(433, 67, 71, 25);
+		btnFind.setBounds(454, 67, 52, 25);
 		getContentPane().add(btnFind);
 
 		btnOpen = new JButton(LocaleBundle.getString("AddMovieFrame.btnOpenCover.text")); //$NON-NLS-1$
@@ -281,6 +284,16 @@ public class AddSeriesFrame extends JFrame implements ParseResultHandler, UserDa
 		});
 		btnIMDB.setBounds(298, 12, 57, 23);
 		getContentPane().add(btnIMDB);
+		
+		btnCrop = new JButton(LocaleBundle.getString("AddMovieFrame.btnCrop.text")); //$NON-NLS-1$
+		btnCrop.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				showCropDialog();
+			}
+		});
+		btnCrop.setBounds(381, 67, 63, 25);
+		getContentPane().add(btnCrop);
 	}
 
 	private void initFileChooser() {
@@ -521,5 +534,21 @@ public class AddSeriesFrame extends JFrame implements ParseResultHandler, UserDa
 	@Override
 	public void onAMIEDIgnoreClicked() {
 		onBtnOK(false);
+	}
+	
+	private void showCropDialog() {
+		if (currentCoverImage == null) return;
+		
+		(new CoverCropDialog(this, currentCoverImage, this)).setVisible(true);
+	}
+
+	@Override
+	public void editingFinished(BufferedImage i) {
+		setCover(i);
+	}
+
+	@Override
+	public void editingCanceled() {
+		// nothing
 	}
 }

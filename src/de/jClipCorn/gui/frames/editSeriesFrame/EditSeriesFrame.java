@@ -51,6 +51,7 @@ import de.jClipCorn.gui.CachedResourceLoader;
 import de.jClipCorn.gui.Resources;
 import de.jClipCorn.gui.frames.addEpisodesFrame.AddEpisodesFrame;
 import de.jClipCorn.gui.frames.addSeasonFrame.AddSeasonFrame;
+import de.jClipCorn.gui.frames.coverCropFrame.CoverCropDialog;
 import de.jClipCorn.gui.frames.findCoverFrame.FindCoverDialog;
 import de.jClipCorn.gui.frames.inputErrorFrame.InputErrorDialog;
 import de.jClipCorn.gui.guiComponents.CoverLabel;
@@ -70,6 +71,7 @@ import de.jClipCorn.util.helper.ExtendedFocusTraversalOnArray;
 import de.jClipCorn.util.helper.FileChooserHelper;
 import de.jClipCorn.util.helper.HTTPUtilities;
 import de.jClipCorn.util.helper.ImageUtilities;
+import de.jClipCorn.util.listener.ImageCropperResultListener;
 import de.jClipCorn.util.listener.UpdateCallbackListener;
 import de.jClipCorn.util.parser.ImDBParser;
 import de.jClipCorn.util.parser.ParseResultHandler;
@@ -176,6 +178,8 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 	private JButton btnSeasonOK;
 	private JButton btnEpisodeOK;
 	private JButton btnEpisodeCalcQuality;
+	private JButton btnSeriesCrop;
+	private JButton btnSeasonCrop;
 
 	/**
 	 * @wbp.parser.constructor
@@ -434,7 +438,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 				HTTPUtilities.openInBrowser(ImDBParser.getSearchURL(edSeriesTitle.getText(), CCMovieTyp.SERIES));
 			}
 		});
-		btnSeriesIMDB.setBounds(12, 14, 57, 23);
+		btnSeriesIMDB.setBounds(237, 381, 57, 20);
 		pnlSeries.add(btnSeriesIMDB);
 		
 		btnAddSeason = new JButton(LocaleBundle.getString("EditSeriesFrame.btnAddSeason.text")); //$NON-NLS-1$
@@ -476,6 +480,16 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		});
 		btnSeriesOk.setBounds(162, 612, 89, 23);
 		pnlSeries.add(btnSeriesOk);
+		
+		btnSeriesCrop = new JButton(LocaleBundle.getString("AddMovieFrame.btnCrop.text")); //$NON-NLS-1$
+		btnSeriesCrop.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				cropSeriesImage();
+			}
+		});
+		btnSeriesCrop.setBounds(12, 14, 71, 23);
+		pnlSeries.add(btnSeriesCrop);
 		
 		pnlSeason = new JPanel();
 		pnlSeason.setBorder(new LineBorder(new Color(0, 0, 0)));
@@ -573,6 +587,16 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		});
 		btnSeasonOK.setBounds(145, 612, 89, 23);
 		pnlSeason.add(btnSeasonOK);
+		
+		btnSeasonCrop = new JButton(LocaleBundle.getString("AddMovieFrame.btnCrop.text")); //$NON-NLS-1$
+		btnSeasonCrop.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				cropSeasonImage();
+			}
+		});
+		btnSeasonCrop.setBounds(12, 13, 71, 23);
+		pnlSeason.add(btnSeasonCrop);
 		
 		pnlEpisode = new JPanel();
 		pnlEpisode.setBorder(new LineBorder(new Color(0, 0, 0)));
@@ -1373,5 +1397,37 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 	@Override
 	public void windowOpened(WindowEvent arg0) {
 		// nothing to do
+	}
+	
+	private void cropSeriesImage() {
+		if (currentSeriesCoverImage == null) return;
+		
+		(new CoverCropDialog(this, currentSeriesCoverImage, new ImageCropperResultListener() {
+			@Override
+			public void editingFinished(BufferedImage i) {
+				setSeriesCover(i);
+			}
+			
+			@Override
+			public void editingCanceled() {
+				// nothing
+			}
+		}, true)).setVisible(true);
+	}
+	
+	private void cropSeasonImage() {
+		if (currentSeasonCoverImage == null) return;
+		
+		(new CoverCropDialog(this, currentSeasonCoverImage, new ImageCropperResultListener() {
+			@Override
+			public void editingFinished(BufferedImage i) {
+				setSeasonCover(i);
+			}
+			
+			@Override
+			public void editingCanceled() {
+				// nothing
+			}
+		})).setVisible(true);
 	}
 }

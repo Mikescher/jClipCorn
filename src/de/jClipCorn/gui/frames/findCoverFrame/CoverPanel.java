@@ -80,7 +80,7 @@ public class CoverPanel extends JPanel implements UpdateCallbackListener {
 		selctionID = id;
 		
 		BufferedImage newImg = ImageUtilities.resizeHalfCoverImage(images.get(selctionID));
-		ImageUtilities.drawBorder(newImg, Color.BLUE, 2);
+		ImageUtilities.drawActualBorder(newImg, Color.BLUE, 2);
 		labels.get(selctionID).setIcon(new ImageIcon(newImg));
 	}
 

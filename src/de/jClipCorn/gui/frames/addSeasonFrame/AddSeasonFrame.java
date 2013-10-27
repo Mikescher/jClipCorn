@@ -28,6 +28,7 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCMovieQuality;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTyp;
 import de.jClipCorn.gui.CachedResourceLoader;
 import de.jClipCorn.gui.Resources;
+import de.jClipCorn.gui.frames.coverCropFrame.CoverCropDialog;
 import de.jClipCorn.gui.frames.findCoverFrame.FindCoverDialog;
 import de.jClipCorn.gui.frames.inputErrorFrame.InputErrorDialog;
 import de.jClipCorn.gui.guiComponents.CoverLabel;
@@ -37,12 +38,13 @@ import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.ExtendedFocusTraversalOnArray;
 import de.jClipCorn.util.helper.FileChooserHelper;
 import de.jClipCorn.util.helper.ImageUtilities;
+import de.jClipCorn.util.listener.ImageCropperResultListener;
 import de.jClipCorn.util.listener.UpdateCallbackListener;
 import de.jClipCorn.util.parser.ParseResultHandler;
 import de.jClipCorn.util.userdataProblem.UserDataProblem;
 import de.jClipCorn.util.userdataProblem.UserDataProblemHandler;
 
-public class AddSeasonFrame extends JFrame implements UserDataProblemHandler, ParseResultHandler {
+public class AddSeasonFrame extends JFrame implements UserDataProblemHandler, ParseResultHandler, ImageCropperResultListener {
 	private static final long serialVersionUID = -5479523926638394942L;
 	
 	private final CCSeries parent;
@@ -61,6 +63,7 @@ public class AddSeasonFrame extends JFrame implements UserDataProblemHandler, Pa
 	private JLabel label_2;
 	private JSpinner spnYear;
 	private JButton btnFind;
+	private JButton btnCrop;
 
 	public AddSeasonFrame(Component owner, CCSeries ser, UpdateCallbackListener ucl){
 		super();
@@ -145,8 +148,18 @@ public class AddSeasonFrame extends JFrame implements UserDataProblemHandler, Pa
 				findCover();
 			}
 		});
-		btnFind.setBounds(365, 16, 60, 23);
+		btnFind.setBounds(373, 16, 52, 23);
 		getContentPane().add(btnFind);
+		
+		btnCrop = new JButton(LocaleBundle.getString("AddMovieFrame.btnCrop.text")); //$NON-NLS-1$
+		btnCrop.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				cropCover();
+			}
+		});
+		btnCrop.setBounds(298, 16, 65, 23);
+		getContentPane().add(btnCrop);
 	}
 	
 	private void initFileChooser() {
@@ -236,6 +249,12 @@ public class AddSeasonFrame extends JFrame implements UserDataProblemHandler, Pa
 	private void findCover() {
 		(new FindCoverDialog(this, this, CCMovieTyp.SERIES)).setVisible(true);
 	}
+	
+	private void cropCover() {
+		if (currentCoverImage == null) return;
+		
+		(new CoverCropDialog(this, currentCoverImage, this)).setVisible(true);
+	}
 
 	@Override
 	public String getFullTitle() {
@@ -309,6 +328,16 @@ public class AddSeasonFrame extends JFrame implements UserDataProblemHandler, Pa
 	
 	@Override
 	public void onFinishInserting() {
+		// nothing
+	}
+
+	@Override
+	public void editingFinished(BufferedImage i) {
+		setCover(i);
+	}
+
+	@Override
+	public void editingCanceled() {
 		// nothing
 	}
 }

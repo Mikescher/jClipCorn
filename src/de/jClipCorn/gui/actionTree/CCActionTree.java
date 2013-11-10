@@ -40,6 +40,7 @@ import de.jClipCorn.gui.frames.filenameRulesFrame.FilenameRuleFrame;
 import de.jClipCorn.gui.frames.logFrame.LogFrame;
 import de.jClipCorn.gui.frames.mainFrame.MainFrame;
 import de.jClipCorn.gui.frames.moveSeriesFrame.MoveSeriesDialog;
+import de.jClipCorn.gui.frames.parseWatchDataFrame.ParseWatchDataFrame;
 import de.jClipCorn.gui.frames.previewMovieFrame.PreviewMovieFrame;
 import de.jClipCorn.gui.frames.previewSeriesFrame.PreviewSeriesFrame;
 import de.jClipCorn.gui.frames.randomMovieFrame.RandomMovieFrame;
@@ -413,6 +414,14 @@ public class CCActionTree {
 				onClickExtrasShowStatistics();
 			}
 		});
+		
+		temp = extras.addChild(new CCActionElement("ParseWatchData", null, "ClipMenuBar.Extras.ParseWatchData", Resources.ICN_MENUBAR_WATCHDATA));
+		temp.addListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				onClickExtrasParseWatchData();
+			}
+		});
 
 		temp = extras.addChild(new CCActionElement("ShowSettings", null, "ClipMenuBar.Extras.Settings", Resources.ICN_MENUBAR_SETTINGS));
 		temp.addListener(new ActionListener() {
@@ -742,6 +751,11 @@ public class CCActionTree {
 	private void onClickExtrasShowStatistics() {
 		StatisticsFrame sf = new StatisticsFrame(owner, movielist);
 		sf.setVisible(true);
+	}
+	
+	private void onClickExtrasParseWatchData() {
+		ParseWatchDataFrame pwdf = new ParseWatchDataFrame(owner, movielist);
+		pwdf.setVisible(true);
 	}
 	
 	private void onClickExtrasMassChangeViewed() {

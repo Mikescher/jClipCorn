@@ -61,6 +61,12 @@ public class RegExHelper {
 		}
 	}
 
+	public static boolean isPatternMatch(Pattern p, String s) {
+		Matcher m = p.matcher(s);
+		
+		return m.matches();
+	}
+	
 	private static String stringReplace(String input, int start, int end, String replace) {
 		return "".concat(input.substring(0, start)).concat(replace).concat(input.substring(end));
 	}

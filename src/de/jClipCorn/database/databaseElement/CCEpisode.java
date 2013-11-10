@@ -287,6 +287,10 @@ public class CCEpisode {
 		return getSeason().findEpisode(this);
 	}
 	
+	public String getStringIdentifier() {
+		return String.format("S%02dE%02d", getSeason().getSortedSeasonNumber() + 1, getEpisode()); //$NON-NLS-1$
+	}
+	
 	public void delete() {
 		getSeason().deleteEpisode(this);
 	}

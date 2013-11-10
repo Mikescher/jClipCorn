@@ -234,14 +234,15 @@ public final class CCDate {
 	 * D	=> DAY
 	 * M	=> MONTH
 	 * Y	=> YEAR
-	 * @return
+	 * @return the parsed Date (must not be valid)
+	 * or NULL
 	 */
 	public static CCDate parse(String rawData, String fmt) {
 		char c;
 		int rp = 0;
 		int td = 1;
 		int tm = 1;
-		int ty = YEAR_MIN;
+		int ty = -1;
 		
 		rawData += '\0';
 		
@@ -296,6 +297,20 @@ public final class CCDate {
 				ty = currBase + ty;
 			} else {
 				ty = (currBase - 100) + ty;
+			}
+		} else if (ty == -1) { // No Year set
+			int cy = getCurrentDate().getYear();
+			
+			int distanceA = Math.abs(getCurrentDate().getDayDifferenceTo(create(td, tm, cy-1)));
+			int distanceB = Math.abs(getCurrentDate().getDayDifferenceTo(create(td, tm, cy)));
+			int distanceC = Math.abs(getCurrentDate().getDayDifferenceTo(create(td, tm, cy+1)));
+			
+			if (distanceC < distanceB && distanceC < distanceA) {
+				ty = cy+1;
+			} else if (distanceB < distanceC && distanceB < distanceA) {
+				ty = cy;
+			} else {
+				ty = cy+1;
 			}
 		}
 		

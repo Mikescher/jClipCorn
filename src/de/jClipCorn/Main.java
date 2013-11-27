@@ -95,3 +95,4 @@ public class Main {
 //TODO Statistics: Seriesepisodes Viewed per Day (Balken wie bei Movie / year) (Angefangen am ersten an dem eien folge geschaut wurde) (folgen ohne lastviewed ignorieren) (???)
 //TODO Option to move Database to Server
 //TODO When Zyklus sin bTable Clickable-> change cursor
+//TODO When set vieved -> clear WatchLater (with option)

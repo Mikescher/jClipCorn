@@ -92,7 +92,8 @@ public class Main {
 //TODO Compare Series in CompareDialog
 //TODO Recent Custom Filters as SubTrees in FilterTree
 //TODO Toolbarbutton "Open Last Played Series"
-//TODO Statistics: Seriesepisodes Viewed per Day (Balken wie bei Movie / year) (Angefangen am ersten an dem eien folge geschaut wurde) (folgen ohne lastviewed ignorieren) (???)
+//TODO Statistics: Seriesepisodes Viewed per Day (Balken wie bei Movie / year) (Angefangen am ersten an dem eien folge geschaut wurde) (folgen ohne lastviewed ignorieren, oder die als startwqert nehmen ??) (???)
 //TODO Option to move Database to Server
-//TODO When Zyklus sin bTable Clickable-> change cursor
 //TODO When set vieved -> clear WatchLater (with option)
+//TODO Import Movie -> Reset score
+//TODO ??optional?? show progressive viewed-Symbol for series

@@ -1,7 +1,12 @@
 package de.jClipCorn.gui.frames.mainFrame.clipTable;
 
+import java.awt.Component;
+import java.awt.Cursor;
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,14 +22,14 @@ import javax.swing.table.TableRowSorter;
 
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
-import de.jClipCorn.database.databaseElement.CCMovie;
+import de.jClipCorn.database.databaseElement.columnTypes.CCMovieZyklus;
 import de.jClipCorn.database.util.CCDBUpdateListener;
 import de.jClipCorn.gui.frames.mainFrame.MainFrame;
 import de.jClipCorn.gui.guiComponents.tableFilter.TableZyklusFilter;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.TableColumnAdjuster;
 
-public class ClipTable extends JScrollPane implements CCDBUpdateListener, ListSelectionListener, MouseListener {
+public class ClipTable extends JScrollPane implements CCDBUpdateListener, ListSelectionListener, MouseListener, MouseMotionListener {
 	private static final long serialVersionUID = -1226727910191440220L;
 
 	private SFixClipTable table;
@@ -62,6 +67,7 @@ public class ClipTable extends JScrollPane implements CCDBUpdateListener, ListSe
 
 		table.getSelectionModel().addListSelectionListener(this);
 		table.addMouseListener(this);
+		table.addMouseMotionListener(this);
 	}
 
 	public void autoResize() {
@@ -186,16 +192,25 @@ public class ClipTable extends JScrollPane implements CCDBUpdateListener, ListSe
 			}
 		}
 		
-		if (e.getButton() == MouseEvent.BUTTON1 && CCProperties.getInstance().PROP_MAINFRAME_CLICKABLEZYKLUS.getValue()) {
-			int row = table.rowAtPoint(e.getPoint());
-			int col = table.columnAtPoint(e.getPoint());
-			
-			if (row >= 0 && table.convertColumnIndexToModel(col) == ClipTableModel.COLUMN_ZYKLUS) {
-				CCDatabaseElement del = movielist.getDatabaseElementBySort(table.convertRowIndexToModel(row));
-				if ((del instanceof CCMovie) && ((CCMovie)del).hasZyklus()) {
-					setRowFilter(new TableZyklusFilter(((CCMovie)del).getZyklus()), null);
-				}
-			}
+		CCMovieZyklus zyklus = getZyklusUnderMouse(e.getPoint());
+		if (e.getButton() == MouseEvent.BUTTON1 && zyklus != null) {
+			setRowFilter(new TableZyklusFilter(zyklus), null);
+		}
+	}
+	
+	@Override
+	public void mouseDragged(MouseEvent e) {
+		// Do nothing ...
+	}
+
+	@Override
+	public void mouseMoved(MouseEvent e) {
+		CCMovieZyklus zyklus = getZyklusUnderMouse(e.getPoint());
+	
+		if (zyklus == null) {
+			setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+		} else {
+			setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		}
 	}
 
@@ -222,5 +237,38 @@ public class ClipTable extends JScrollPane implements CCDBUpdateListener, ListSe
 	
 	public MainFrame getMainFrame() {
 		return owner;
+	}
+	
+	private CCMovieZyklus getZyklusUnderMouse(Point p) {
+		if (! CCProperties.getInstance().PROP_MAINFRAME_CLICKABLEZYKLUS.getValue()) return null;
+		
+		int vcol = table.columnAtPoint(p);
+		int vrow = table.rowAtPoint(p);
+		
+		if (vcol == -1 || vrow == -1) {
+			return null;
+		}
+		
+		int mcol = table.convertColumnIndexToModel(vcol);
+		int mrow = table.convertRowIndexToModel(vrow);
+		
+		if (mcol != ClipTableModel.COLUMN_ZYKLUS) {
+			return null;
+		}
+		
+		CCMovieZyklus zyklus = (CCMovieZyklus) table.getValueAt(vrow, vcol);
+		
+		if (zyklus.isEmpty()) return null;
+
+		Component renderer = table.getCellRenderer(vrow, vcol).getTableCellRendererComponent(table, zyklus, false, false, mrow, mcol);
+		int width = renderer.getFontMetrics(renderer.getFont()).stringWidth(zyklus.getFormatted());
+		Rectangle clip = table.getCellRect(vrow, vcol, true);
+		clip.width = width;
+		
+		if (clip.contains(p)) {
+			return zyklus;
+		} else {
+			return null;
+		}
 	}
 }

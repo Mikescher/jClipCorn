@@ -25,7 +25,11 @@ public class CCMovieZyklus {
 	}
 
 	public boolean isSet() {
-		return ! (title.isEmpty() || zyklusNmbr < 0);
+		return ! isEmpty();
+	}
+	
+	public boolean isEmpty() {
+		return title.isEmpty() || zyklusNmbr < 0;
 	}
 
 	public String getTitle() {

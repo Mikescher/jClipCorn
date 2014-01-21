@@ -75,7 +75,7 @@ public class SerTableModel extends AbstractTableModel implements TableModelRowCo
 		case COLUMN_NAME: // Name
 			return ep.getTitle();
 		case COLUMN_VIEWED: // Viewed
-			return ep.isViewed();
+			return ep.getExtendedViewedState();
 		case COLUMN_LASTVIEWED: // Last Viewed
 			return ep.getLastViewed();
 		case COLUMN_QUALITY: // Quality

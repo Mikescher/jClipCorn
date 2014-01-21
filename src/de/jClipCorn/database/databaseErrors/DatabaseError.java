@@ -14,6 +14,7 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFormat;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieGenreList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieQuality;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieSize;
+import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTags;
 import de.jClipCorn.gui.frames.editMovieFrame.EditMovieFrame;
 import de.jClipCorn.gui.frames.editSeriesFrame.EditSeriesFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
@@ -166,6 +167,8 @@ public class DatabaseError {
 			return fixError_Wrong_Quality();
 		} else if (isTypeOf(DatabaseErrorType.ERROR_WRONG_FILENAME)) {
 			return fixError_Wrong_Filename();
+		} else if (isTypeOf(DatabaseErrorType.ERROR_IMPOSSIBLE_WATCH_LATER)) {
+			return fixError_Impossible_WatchLater();
 		}
 		
 		return false;
@@ -332,6 +335,28 @@ public class DatabaseError {
 			return false;
 		} else if (el1 instanceof CCEpisode) {
 			return false;
+		}
+		
+		return false;
+	}
+	
+	private boolean fixError_Impossible_WatchLater() {
+		if (el1 instanceof CCMovie) {
+			CCMovie mov = ((CCMovie)el1);
+			
+			mov.setTag(CCMovieTags.TAG_WATCH_LATER, false);
+
+			return true;
+		} else if (el1 instanceof CCSeries) {
+			return false;
+		} else if (el1 instanceof CCSeason) {
+			return false;
+		} else if (el1 instanceof CCEpisode) {
+			CCEpisode epi = ((CCEpisode)el1);
+			
+			epi.setTag(CCMovieTags.TAG_WATCH_LATER, false);
+
+			return true;
 		}
 		
 		return false;

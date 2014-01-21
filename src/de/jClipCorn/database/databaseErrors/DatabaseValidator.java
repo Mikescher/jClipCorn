@@ -18,6 +18,7 @@ import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFormat;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieQuality;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieSize;
+import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTags;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.CCDate;
 import de.jClipCorn.util.formatter.FileSizeFormatter;
@@ -295,6 +296,14 @@ public class DatabaseValidator {
 		if (wrongfn) {
 			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_WRONG_FILENAME, mov));
 		}
+		
+		// ###############################################
+		// Watch Late <> ViewedState
+		// ###############################################
+		
+		if (mov.isViewed() && mov.getTag(CCMovieTags.TAG_WATCH_LATER)) {
+			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_IMPOSSIBLE_WATCH_LATER, mov));
+		}
 	}
 
 	private static void validateSeason(List<DatabaseError> e, CCMovieList movielist, CCSeason season) {
@@ -404,6 +413,14 @@ public class DatabaseValidator {
 		
 		if (CCMovieQuality.calculateQuality(episode.getFilesize(), episode.getLength(), 1) != episode.getQuality()) {
 			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_WRONG_QUALITY, episode));
+		}
+		
+		// ###############################################
+		// Watch Late <> ViewedState
+		// ###############################################
+		
+		if (episode.isViewed() && episode.getTag(CCMovieTags.TAG_WATCH_LATER)) {
+			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_IMPOSSIBLE_WATCH_LATER, episode));
 		}
 	}
 

@@ -1,5 +1,6 @@
 package de.jClipCorn.gui.guiComponents.tableRenderer;
 
+import de.jClipCorn.database.util.ExtendedViewedState;
 import de.jClipCorn.gui.CachedResourceLoader;
 import de.jClipCorn.gui.Resources;
 
@@ -12,10 +13,16 @@ public class TableViewedRenderer extends TableRenderer {
 
 	@Override
     public void setValue(Object value) {
-		if((Boolean)value) {
+		switch ((ExtendedViewedState)value) {
+		case VIEWED:
 			setIcon(CachedResourceLoader.getImageIcon(Resources.ICN_TABLE_VIEWED_TRUE));
-		} else {
+			break;
+		case NOT_VIEWED:
 			setIcon(CachedResourceLoader.getImageIcon(Resources.ICN_TABLE_VIEWED_FALSE));
+			break;
+		case MARKED_FOR_LATER:
+			setIcon(CachedResourceLoader.getImageIcon(Resources.ICN_TABLE_VIEWED_LATER));
+			break;
 		}
     }
 }

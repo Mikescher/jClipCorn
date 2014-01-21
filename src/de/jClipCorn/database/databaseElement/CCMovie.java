@@ -13,8 +13,10 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCMovieSize;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTags;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTyp;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieZyklus;
+import de.jClipCorn.database.util.ExtendedViewedState;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
+import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.CCDate;
 import de.jClipCorn.util.LargeMD5Calculator;
 import de.jClipCorn.util.MoviePlayer;
@@ -103,6 +105,10 @@ public class CCMovie extends CCDatabaseElement {
 			this.viewed = viewed;
 			
 			updateDB();
+			
+			if (viewed && getTag(CCMovieTags.TAG_WATCH_LATER) && CCProperties.getInstance().PROP_MAINFRAME_AUTOMATICRESETWATCHLATER.getValue()) {
+				setTag(CCMovieTags.TAG_WATCH_LATER, false);
+			}
 		}
 	}
 
@@ -424,5 +430,14 @@ public class CCMovie extends CCDatabaseElement {
 
 	public boolean hasZyklus() {
 		return getZyklus().isSet();
+	}
+	
+	public ExtendedViewedState getExtendedViewedState() {
+		if (isViewed())
+			return ExtendedViewedState.VIEWED;
+		else if (tags.getTag(CCMovieTags.TAG_WATCH_LATER))
+			return ExtendedViewedState.MARKED_FOR_LATER;
+		else
+			return ExtendedViewedState.NOT_VIEWED;
 	}
 }

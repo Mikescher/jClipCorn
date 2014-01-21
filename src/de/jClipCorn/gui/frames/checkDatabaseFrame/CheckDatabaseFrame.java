@@ -227,28 +227,36 @@ public class CheckDatabaseFrame extends JFrame {
 	}
 	
 	private void setMainListModel(final ListModel<DatabaseError> lm) {
-		try {
-			SwingUtilities.invokeAndWait(new Runnable() {
-				@Override
-				public void run() {
-					lsMain.setModel(lm);
-				}
-			});
-		} catch (InvocationTargetException | InterruptedException e) {
-			CCLog.addError(e);
+		if (SwingUtilities.isEventDispatchThread()) {
+			lsMain.setModel(lm);
+		} else {
+			try {
+				SwingUtilities.invokeAndWait(new Runnable() {
+					@Override
+					public void run() {
+						lsMain.setModel(lm);
+					}
+				});
+			} catch (InvocationTargetException | InterruptedException e) {
+				CCLog.addError(e);
+			}
 		}
 	}
 	
 	private void setCategoriesListModel(final ListModel<DatabaseErrorType> lm) {
-		try {
-			SwingUtilities.invokeAndWait(new Runnable() {
-				@Override
-				public void run() {
-					lsCategories.setModel(lm);
-				}
-			});
-		} catch (InvocationTargetException | InterruptedException e) {
-			CCLog.addError(e);
+		if (SwingUtilities.isEventDispatchThread()) {
+			lsCategories.setModel(lm);
+		} else {
+			try {
+				SwingUtilities.invokeAndWait(new Runnable() {
+					@Override
+					public void run() {
+						lsCategories.setModel(lm);
+					}
+				});
+			} catch (InvocationTargetException | InterruptedException e) {
+				CCLog.addError(e);
+			}
 		}
 	}
 	

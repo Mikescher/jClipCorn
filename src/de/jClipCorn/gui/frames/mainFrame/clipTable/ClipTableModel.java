@@ -116,7 +116,7 @@ public class ClipTableModel extends AbstractTableModel implements TableModelRowC
 			case COLUMN_TITLE: // Name
 				return mov;
 			case COLUMN_VIEWED: // Viewed
-				return mov.isViewed();
+				return mov.getExtendedViewedState();
 			case COLUMN_ZYKLUS: // Zyklus
 				return mov.getZyklus();
 			case COLUMN_QUALITY: // Quality
@@ -154,7 +154,7 @@ public class ClipTableModel extends AbstractTableModel implements TableModelRowC
 			case COLUMN_TITLE: // Name
 				return ser;
 			case COLUMN_VIEWED: // Viewed
-				return ser.isViewed();
+				return ser.getExtendedViewedState();
 			case COLUMN_ZYKLUS: // Zyklus
 				return new CCMovieZyklus();
 			case COLUMN_QUALITY: // Quality

@@ -15,6 +15,7 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCMovieQuality;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieSize;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTags;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTyp;
+import de.jClipCorn.database.util.ExtendedViewedState;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.CCDate;
 import de.jClipCorn.util.LargeMD5Calculator;
@@ -463,5 +464,9 @@ public class CCSeries extends CCDatabaseElement {
 		while (all.contains("")) all.remove(""); //$NON-NLS-1$ //$NON-NLS-2$
 		
 		return PathFormatter.getCommonFolderPath(all);
+	}
+
+	public ExtendedViewedState getExtendedViewedState() {
+		return isViewed() ? ExtendedViewedState.VIEWED : ExtendedViewedState.NOT_VIEWED;
 	}
 }

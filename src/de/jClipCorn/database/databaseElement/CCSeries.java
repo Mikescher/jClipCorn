@@ -372,10 +372,10 @@ public class CCSeries extends CCDatabaseElement {
 	
 	@Override
 	@SuppressWarnings("nls")
-	public void parseFromXML(Element e, boolean resetAddDate, boolean resetViewed) {
+	public void parseFromXML(Element e, boolean resetAddDate, boolean resetViewed, boolean resetScore) {
 		beginUpdating();
 		
-		super.parseFromXML(e, resetAddDate, resetViewed);
+		super.parseFromXML(e, resetAddDate, resetViewed, resetScore);
 		
 		for (Element e2 : e.getChildren("season")) {
 			createNewEmptySeason().parseFromXML(e2, resetAddDate, resetViewed);

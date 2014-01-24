@@ -708,8 +708,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 	}
 	
 	@SuppressWarnings("nls")
-	public void parseFromXML(Element e, boolean resetAddDate, boolean resetViewed) {
-		
+	public void parseFromXML(Element e, boolean resetAddDate, boolean resetViewed, boolean resetScore) {
 		if (e.getAttributeValue("adddate") != null) {
 			spnAddDate.setValue(CCDate.parse(e.getAttributeValue("adddate"), "D.M.Y"));
 		}
@@ -774,6 +773,9 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		
 		if (e.getAttributeValue("score") != null)
 			cbxScore.setSelectedIndex(Integer.parseInt(e.getAttributeValue("score")));
+		
+		if (resetScore)
+			cbxScore.setSelectedIndex(cbxScore.getModel().getSize() - 1);
 		
 		setEnabledAll(true);
 		firstChooseClick = false;

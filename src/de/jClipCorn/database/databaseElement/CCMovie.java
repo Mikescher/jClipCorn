@@ -333,10 +333,10 @@ public class CCMovie extends CCDatabaseElement {
 	
 	@Override
 	@SuppressWarnings("nls")
-	public void parseFromXML(Element e, boolean resetAddDate, boolean resetViewed) {
+	public void parseFromXML(Element e, boolean resetAddDate, boolean resetViewed, boolean resetScore) {
 		beginUpdating();
 		
-		super.parseFromXML(e, resetAddDate, resetViewed);
+		super.parseFromXML(e, resetAddDate, resetViewed, resetScore);
 		
 		if (e.getAttributeValue("adddate") != null) {
 			setAddDate(CCDate.parse(e.getAttributeValue("adddate"), "D.M.Y"));

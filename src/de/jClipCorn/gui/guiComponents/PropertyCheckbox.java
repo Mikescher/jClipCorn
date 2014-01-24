@@ -13,7 +13,14 @@ public class PropertyCheckbox extends JCheckBox implements ActionListener {
 	private CCBoolProperty property;
 	
 	public PropertyCheckbox(CCBoolProperty property) {
-		super(property.getDescription());
+		super();
+		
+		if (property == null) { // WindowBuilder Bugfix
+			setText("[WindowBuilder] DUMMY TXT"); //$NON-NLS-1$
+			return;
+		}
+		
+		setText(property.getDescription());
 		this.property = property;
 		setSelected(property.getValue());
 		addActionListener(this);

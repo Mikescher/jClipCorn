@@ -249,10 +249,10 @@ public class ExportHelper {
 			for (Element e : root.getChildren()) {
 				if (e.getName().equals("movie")) { //$NON-NLS-1$
 					CCMovie mov = movielist.createNewEmptyMovie();
-					mov.parseFromXML(e, false, false);
+					mov.parseFromXML(e, false, false, false);
 				} else if (e.getName().equals("series")) { //$NON-NLS-1$
 					CCSeries ser = movielist.createNewEmptySeries();
-					ser.parseFromXML(e, false, false);
+					ser.parseFromXML(e, false, false, false);
 				}
 			}
 		} catch (Exception e) {
@@ -323,16 +323,16 @@ public class ExportHelper {
 		return null;
 	}
 	
-	public static void importSingleElement(CCMovieList movielist, String xmlcontent, boolean resetAddDate, boolean resetViewed) {
+	public static void importSingleElement(CCMovieList movielist, String xmlcontent, boolean resetAddDate, boolean resetViewed, boolean resetScore) {
 		Element value = getFirstElementOfExport(xmlcontent);
 		
 		if (value != null) {
 			if (value.getName().equalsIgnoreCase("movie")) {  //$NON-NLS-1$
 				CCMovie mov = movielist.createNewEmptyMovie();
-				mov.parseFromXML(value, resetAddDate, resetViewed);
+				mov.parseFromXML(value, resetAddDate, resetViewed, resetScore);
 			} else if (value.getName().equalsIgnoreCase("series")) { //$NON-NLS-1$
 				CCSeries ser = movielist.createNewEmptySeries();
-				ser.parseFromXML(value, resetAddDate, resetViewed);
+				ser.parseFromXML(value, resetAddDate, resetViewed, resetScore);
 			}
 		}
 	}
@@ -365,13 +365,14 @@ public class ExportHelper {
 			
 			boolean resetDate = DialogHelper.showLocaleYesNo(owner, "ExportHelper.dialogs.resetDate"); //$NON-NLS-1$
 			boolean resetViewed = DialogHelper.showLocaleYesNo(owner, "ExportHelper.dialogs.resetViewed"); //$NON-NLS-1$
+			boolean resetScore = DialogHelper.showLocaleYesNo(owner, "ExportHelper.dialogs.resetScore"); //$NON-NLS-1$
 			
 			if (methodval == 0) { // Direct
-				ExportHelper.importSingleElement(movielist, xml, resetDate, resetViewed);
+				ExportHelper.importSingleElement(movielist, xml, resetDate, resetViewed, resetScore);
 			} else if (methodval == 1) { // Edit & Add
 				Element value = ExportHelper.getFirstElementOfExport(xml);
 				AddMovieFrame amf = new AddMovieFrame(owner, movielist);
-				amf.parseFromXML(value, resetDate, resetViewed);
+				amf.parseFromXML(value, resetDate, resetViewed, resetScore);
 				amf.setVisible(true);
 			}
 		} catch (IOException e) {

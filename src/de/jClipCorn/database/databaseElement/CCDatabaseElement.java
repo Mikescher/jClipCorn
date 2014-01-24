@@ -249,7 +249,7 @@ public abstract class CCDatabaseElement {
 	}
 	
 	@SuppressWarnings("nls")
-	public void parseFromXML(Element e, boolean resetAddDate, boolean resetViewed) {
+	public void parseFromXML(Element e, boolean resetAddDate, boolean resetViewed, boolean resetScore) {
 		if (e.getAttributeValue("title") != null)
 			setTitle(e.getAttributeValue("title"));
 		
@@ -267,6 +267,9 @@ public abstract class CCDatabaseElement {
 		
 		if (e.getAttributeValue("score") != null)
 			setScore(Integer.parseInt(e.getAttributeValue("score")));
+		
+		if (resetScore)
+			setScore(CCMovieScore.RATING_NO);
 		
 		if (e.getAttributeValue("covername") != null)
 			setCover(e.getAttributeValue("covername"));

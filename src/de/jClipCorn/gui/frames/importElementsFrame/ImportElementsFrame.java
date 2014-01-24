@@ -66,6 +66,7 @@ public class ImportElementsFrame extends JFrame {
 	private JPanel pnlTopRightInner;
 	private PropertyCheckbox chcbxResetViewed;
 	private PropertyCheckbox chckbxOnlyCover;
+	private PropertyCheckbox chcbxResetScore;
 	private JLabel lblCover;
 	private JLabel lblViewed;
 	private JLabel lblChilds;
@@ -172,6 +173,8 @@ public class ImportElementsFrame extends JFrame {
 				FormFactory.DEFAULT_ROWSPEC,
 				FormFactory.RELATED_GAP_ROWSPEC,
 				FormFactory.DEFAULT_ROWSPEC,
+				FormFactory.RELATED_GAP_ROWSPEC,
+				FormFactory.DEFAULT_ROWSPEC,
 				FormFactory.RELATED_GAP_ROWSPEC,}));
 		
 		lblTXT2 = new JLabel(LocaleBundle.getString("ImportElementsFrame.lblName.caption")); //$NON-NLS-1$
@@ -223,6 +226,9 @@ public class ImportElementsFrame extends JFrame {
 		
 		chcbxResetViewed = new PropertyCheckbox(CCProperties.getInstance().PROP_IMPORT_RESETVIEWED);
 		pnlInfo.add(chcbxResetViewed, "2, 16, 6, 1"); //$NON-NLS-1$
+		
+		chcbxResetScore = new PropertyCheckbox(CCProperties.getInstance().PROP_IMPORT_RESETSCORE);
+		pnlInfo.add(chcbxResetScore, "2, 18, 6, 1"); //$NON-NLS-1$
 		
 		setSize(new Dimension(650, 350));
 		setMinimumSize(new Dimension(550, 250));
@@ -308,7 +314,7 @@ public class ImportElementsFrame extends JFrame {
 	private void onAddMovie(Element value, int index) {
 		CCMovie mov = movielist.createNewEmptyMovie();
 		
-		mov.parseFromXML(value, chckbxResetDate.isSelected(), chcbxResetViewed.isSelected());
+		mov.parseFromXML(value, chckbxResetDate.isSelected(), chcbxResetViewed.isSelected(), chcbxResetScore.isSelected());
 		
 		listModel.remove(index);
 	}
@@ -316,7 +322,7 @@ public class ImportElementsFrame extends JFrame {
 	private void onAddSeries(Element value, int index) {
 		CCSeries ser = movielist.createNewEmptySeries();
 		
-		ser.parseFromXML(value, chckbxResetDate.isSelected(), chcbxResetViewed.isSelected());
+		ser.parseFromXML(value, chckbxResetDate.isSelected(), chcbxResetViewed.isSelected(), chcbxResetScore.isSelected());
 		
 		listModel.remove(index);
 	}
@@ -334,7 +340,7 @@ public class ImportElementsFrame extends JFrame {
 		
 		AddMovieFrame amf = new AddMovieFrame(this, movielist);
 		
-		amf.parseFromXML(value, chckbxResetDate.isSelected(), chcbxResetViewed.isSelected());
+		amf.parseFromXML(value, chckbxResetDate.isSelected(), chcbxResetViewed.isSelected(), chcbxResetScore.isSelected());
 		
 		amf.setVisible(true);
 		

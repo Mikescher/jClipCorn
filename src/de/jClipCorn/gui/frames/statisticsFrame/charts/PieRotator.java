@@ -14,8 +14,7 @@ public class PieRotator extends Timer implements ActionListener {
 
     private int angle = 270;
 
-    public
-    PieRotator(final PiePlot3D plot) {
+    public PieRotator(final PiePlot3D plot) {
         super(200, null);
         this.plot = plot;
         addActionListener(this);

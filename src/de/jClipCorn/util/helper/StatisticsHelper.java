@@ -607,4 +607,97 @@ public class StatisticsHelper {
 		
 		return ns;
 	}
+	
+	public static CCDate getFirstEpisodeWatchedDate(CCMovieList ml) {
+		CCDate date = CCDate.getMaximumDate();
+		
+		for (Iterator<CCSeries> it = ml.iteratorSeries(); it.hasNext();) {
+			CCSeries s = it.next();
+			
+			for (int sc = 0; sc < s.getSeasonCount(); sc++) {
+				for (int ec = 0; ec < s.getSeason(sc).getEpisodeCount(); ec++) {
+					CCEpisode epis = s.getSeason(sc).getEpisode(ec);
+					
+					if (!epis.getLastViewed().isMinimum() && epis.getLastViewed().isLessThan(date)) {
+						date = epis.getLastViewed();
+					}
+				}
+			}
+		}
+		
+		return date;
+	}
+	
+	public static CCDate getLastEpisodeWatchedDate(CCMovieList ml) {
+		CCDate date = CCDate.getMinimumDate();
+		
+		for (Iterator<CCSeries> it = ml.iteratorSeries(); it.hasNext();) {
+			CCSeries s = it.next();
+			
+			for (int sc = 0; sc < s.getSeasonCount(); sc++) {
+				for (int ec = 0; ec < s.getSeason(sc).getEpisodeCount(); ec++) {
+					CCEpisode epis = s.getSeason(sc).getEpisode(ec);
+					
+					if (!epis.getLastViewed().isMinimum() && epis.getLastViewed().isGreaterThan(date)) {
+						date = epis.getLastViewed();
+					}
+				}
+			}
+			
+		}
+		
+		return date;
+	}
+	
+	public static List<Integer> getEpisodesViewedForAllDates(CCMovieList ml, CCDate startDate, int count) {
+		int initialcount = 0;
+		List<Integer> ls = new ArrayList<>();
+		
+		if (count == 0) return ls;
+		
+		for (int i = 0; i < count; i++) {
+			ls.add(0);
+		}
+		
+		for (Iterator<CCMovie> it = ml.iteratorMovies(); it.hasNext();) {
+			CCMovie m = it.next();
+			
+			int pos = startDate.getDayDifferenceTo(m.getAddDate());
+			
+			if (pos >= 0 && pos < count) {
+				int prev = ls.get(pos) + 1;
+				ls.set(pos, prev);
+			}
+		}
+		
+		for (Iterator<CCSeries> it = ml.iteratorSeries(); it.hasNext();) {
+			CCSeries s = it.next();
+			
+			for (int sc = 0; sc < s.getSeasonCount(); sc++) {
+				for (int ec = 0; ec < s.getSeason(sc).getEpisodeCount(); ec++) {
+					CCEpisode epis = s.getSeason(sc).getEpisode(ec);
+					
+					if (epis.isViewed()) {
+						if (epis.getLastViewed().isMinimum()) {
+							initialcount++;
+						} else {
+							int pos = startDate.getDayDifferenceTo(epis.getLastViewed());
+							
+							int prev = ls.get(pos) + 1;
+							ls.set(pos, prev);
+						}
+					}
+				}
+			}
+			
+		}
+		
+		ls.set(0, ls.get(0) + initialcount);
+		
+		for (int i = 1; i < ls.size(); i++) {
+			ls.set(i, ls.get(i-1) + ls.get(i));
+		}
+		
+		return ls;
+	}
 }

@@ -30,6 +30,7 @@ import de.jClipCorn.gui.CachedResourceLoader;
 import de.jClipCorn.gui.Resources;
 import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsAddDateChart;
 import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsChart;
+import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsEpisodesViewedChart;
 import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsFSKChart;
 import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsFormatChart;
 import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsGenreChart;
@@ -250,6 +251,7 @@ public class StatisticsFrame extends JFrame {
 		cbxChooseChart.addItem(new StatisticsHoursMovChart(movielist));
 		cbxChooseChart.addItem(new StatisticsHoursSerChart(movielist));
 		cbxChooseChart.addItem(new StatisticsHoursSerMovChart(movielist));
+		cbxChooseChart.addItem(new StatisticsEpisodesViewedChart(movielist));
 		cbxChooseChart.addItem(new StatisticsSizeChart(movielist));
 	}
 	

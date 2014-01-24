@@ -19,8 +19,8 @@ public final class CCDate {
 	public static final int YEAR_MIN = 1900; 
 	public static final int YEAR_MAX = 9999; 
 	
-	public static final CCDate DATE_MIN = new CCDate(1, 1, YEAR_MIN);
-	public static final CCDate DATE_MAX = new CCDate(31, 12, YEAR_MAX);
+	private static final CCDate DATE_MIN = new CCDate(1, 1, YEAR_MIN);
+	private static final CCDate DATE_MAX = new CCDate(31, 12, YEAR_MAX);
 	
 	private static final String[] MONTHNAMES = {
 		LocaleBundle.getString("CCDate.Month0"), //$NON-NLS-1$

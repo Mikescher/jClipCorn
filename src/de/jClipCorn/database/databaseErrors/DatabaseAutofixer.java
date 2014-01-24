@@ -49,6 +49,14 @@ public class DatabaseAutofixer {
 		return result;
 	}
 	
+	public static boolean canFix(List<DatabaseError> list, List<DatabaseError> error) {
+		for (DatabaseError err : error) {
+			if (! canFix(list, err)) return false;
+		}
+		
+		return true;
+	}
+	
 	public static boolean canFix(List<DatabaseError> list, DatabaseError error) {
 		if (! error.isAutoFixable()) { // Test if this File is Fixable
 			return false;

@@ -416,11 +416,19 @@ public class DatabaseValidator {
 		}
 		
 		// ###############################################
-		// Watch Late <> ViewedState
+		// Watch Later <> ViewedState
 		// ###############################################
 		
 		if (episode.isViewed() && episode.getTag(CCMovieTags.TAG_WATCH_LATER)) {
 			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_IMPOSSIBLE_WATCH_LATER, episode));
+		}
+		
+		// ###############################################
+		// LastViewed too small
+		// ###############################################
+		
+		if (!episode.getLastViewed().isMinimum() && episode.getLastViewed().isLessThan(CCDate.create(1, 6, 1900))) {
+			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_LASTWATCHED_TOO_OLD, episode));
 		}
 	}
 

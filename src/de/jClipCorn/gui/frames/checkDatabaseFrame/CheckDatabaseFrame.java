@@ -128,6 +128,7 @@ public class CheckDatabaseFrame extends JFrame {
 		
 		lsMain = new JList<>();
 		lsMain.setCellRenderer(new DatabaseErrorListCellRenderer());
+		lsMain.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 		scrlPnlRight.setViewportView(lsMain);
 		lsMain.addMouseListener(new MouseListener() {			
 			@Override
@@ -314,25 +315,33 @@ public class CheckDatabaseFrame extends JFrame {
 	}
 	
 	private void fixSelected() {
-		DatabaseError e = lsMain.getSelectedValue();
+		List<DatabaseError> errlist = lsMain.getSelectedValuesList();
 		
-		if (e == null) {
+		if (errlist == null || errlist.isEmpty()) {
 			DialogHelper.showInformation(this, getTitle(), LocaleBundle.getString("CheckDatabaseDialog.fixSelectedMessage.NoSelection")); //$NON-NLS-1$
 			return;
 		}
 		
-		if (! DatabaseAutofixer.canFix(errorList, e)) {
+		if (! DatabaseAutofixer.canFix(errorList, errlist)) {
 			DialogHelper.showInformation(this, getTitle(), LocaleBundle.getString("CheckDatabaseDialog.fixSelectedMessage.Unfixable")); //$NON-NLS-1$
 			return;
 		}
 		
-		if (e.autoFix()) {
+		boolean hasFixedAll = true;
+		for (DatabaseError err : errlist) {
+			if (err.autoFix()) {
+				errorList.remove(err);
+			} else {
+				hasFixedAll = false;
+			}
+		}
+		
+		if (hasFixedAll) {
 			DialogHelper.showInformation(this, getTitle(), LocaleBundle.getString("CheckDatabaseDialog.fixSelectedMessage.Fixed")); //$NON-NLS-1$
-			
-			errorList.remove(e);
-			updateLists();
 		} else {
 			DialogHelper.showInformation(this, getTitle(), LocaleBundle.getString("CheckDatabaseDialog.fixSelectedMessage.Failed")); //$NON-NLS-1$
 		}
+		
+		updateLists();
 	}
 }

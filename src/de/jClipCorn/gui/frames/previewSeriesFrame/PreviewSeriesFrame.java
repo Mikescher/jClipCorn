@@ -629,9 +629,9 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 		lblSize.setText(LocaleBundle.getFormattedString("PreviewSeriesFrame.lblSize.text", FileSizeFormatter.format(dispSeries.getFilesize()))); //$NON-NLS-1$
 
 		lblViewed.setText(LocaleBundle.getFormattedString("PreviewSeriesFrame.lblViewed.text", dispSeries.getViewedCount(), dispSeries.getEpisodeCount())); //$NON-NLS-1$
-		if (dispSeries.isViewed()) {
-			lblViewed.setIcon(CachedResourceLoader.getImageIcon(Resources.ICN_TABLE_VIEWED_TRUE));
-		}
+		//if (dispSeries.isViewed()) {
+			lblViewed.setIcon(ImageUtilities.sliceImage(CachedResourceLoader.getImageIcon(Resources.ICN_TABLE_VIEWED_TRUE), 0d, (dispSeries.getViewedCount() *1d) / dispSeries.getEpisodeCount()));
+		//}
 
 		if (dispSeries.getScore() == CCMovieScore.RATING_NO) {
 			lblScore.setText(LocaleBundle.getString("PreviewSeriesFrame.lblScore.text") + " - "); //$NON-NLS-1$ //$NON-NLS-2$

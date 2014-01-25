@@ -1,5 +1,6 @@
 package de.jClipCorn.util.helper;
 
+import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -297,5 +298,39 @@ public class ImageUtilities {
 		for (int i = 0; i < a.length; i++) {
 			a[i] = 0;
 		}
+	}
+
+	public static ImageIcon sliceImage(ImageIcon icn, double percStart, double percStop) {
+		BufferedImage bi = iconToImage(icn);
+		
+		sliceImage(bi, percStart, percStop);
+		
+		return new ImageIcon(bi);
+	}
+	
+	public static ImageIcon sliceImage(ImageIcon icn, int pixelStart, int pixelStop) {
+		BufferedImage bi = iconToImage(icn);
+		
+		sliceImage(bi, pixelStart, pixelStop);
+		
+		return new ImageIcon(bi);
+	}
+	
+	public static void sliceImage(BufferedImage img, double percStart, double percStop) {
+		sliceImage(img, (int)(img.getWidth() * percStart), (int)(img.getWidth() * percStop));
+	}
+	
+	public static void sliceImage(BufferedImage img, int pixelStart, int pixelStop) {
+		Graphics2D g = img.createGraphics();
+		
+		g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC));
+		
+		g.setColor(new Color(0, 0, 0, 0));
+		
+		if (pixelStart > 0)
+			g.fillRect(0, 0, pixelStart, img.getHeight());
+
+		if (pixelStop < img.getWidth())
+			g.fillRect(pixelStop, 0, img.getWidth() - pixelStop, img.getHeight());
 	}
 }

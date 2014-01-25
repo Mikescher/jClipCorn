@@ -92,4 +92,3 @@ public class Main {
 //TODO Compare Series in CompareDialog
 //TODO Toolbarbutton "Open Last Played Series"
 //TODO Option to move Database to Server
-//TODO ??optional?? show progressive viewed-Symbol for series

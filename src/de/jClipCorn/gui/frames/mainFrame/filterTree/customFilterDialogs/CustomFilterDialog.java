@@ -15,6 +15,8 @@ public class CustomFilterDialog extends JDialog implements WindowListener{
 	
 	private AbstractCustomFilter filter;
 	private FinishListener finListener;
+	
+	private boolean hasClosed = false;
 
 	public CustomFilterDialog(AbstractCustomFilter filter, FinishListener finListener) {
 		super();
@@ -50,8 +52,9 @@ public class CustomFilterDialog extends JDialog implements WindowListener{
 
 	@Override
 	public void windowClosed(WindowEvent arg0) {
-		if (finListener != null) {
+		if (finListener != null && ! hasClosed) {
 			finListener.finish();
+			hasClosed = true;
 		}
 	}
 

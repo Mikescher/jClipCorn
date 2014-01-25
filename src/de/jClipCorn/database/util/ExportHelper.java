@@ -48,6 +48,7 @@ public class ExportHelper {
 	public final static String EXTENSION_CCBACKUP = "xml"; 					// = OLD Clipcorn Backup   		//$NON-NLS-1$
 	public final static String EXTENSION_COMPAREFILE = "jcccf"; 			// = jClipCornCompareFile		//$NON-NLS-1$
 	public final static String EXTENSION_EPISODEGUIDE = "txt"; 				// = TextFile					//$NON-NLS-1$
+	public final static String EXTENSION_FILTERLIST = "flst"; 				// = FilterList					//$NON-NLS-1$
 	
 	public static void zipDir(File owner, File zipDir, ZipOutputStream zos, boolean recursively) {
 		doZipDir(owner, zipDir, zos, recursively, null);

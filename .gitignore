@@ -59,7 +59,7 @@ DerbManager*.jar
 *.bat
 
 *.log
-*jClipCorn.properties
+jClipCorn.*
 *.lnk
 *.avi
 *.exe

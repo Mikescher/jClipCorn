@@ -20,6 +20,7 @@ import de.jClipCorn.gui.Resources;
 import de.jClipCorn.gui.frames.mainFrame.clipTable.ClipTable;
 import de.jClipCorn.gui.frames.mainFrame.clipTable.RowFilterSource;
 import de.jClipCorn.gui.frames.mainFrame.filterTree.customFilterDialogs.CustomOperatorFilterDialog;
+import de.jClipCorn.gui.frames.organizeFilterFrame.OrganizeFilterDialog;
 import de.jClipCorn.gui.guiComponents.tableFilter.TableCustomFilter;
 import de.jClipCorn.gui.guiComponents.tableFilter.TableFSKFilter;
 import de.jClipCorn.gui.guiComponents.tableFilter.TableFormatFilter;
@@ -40,6 +41,8 @@ import de.jClipCorn.util.listener.FinishListener;
 public class FilterTree extends AbstractFilterTree {
 	private static final long serialVersionUID = 592519777667038909L;
 
+	private CustomFilterList customFilterList = new CustomFilterList();
+	
 	private DefaultMutableTreeNode node_all;
 	private DefaultMutableTreeNode node_zyklus;
 	private DefaultMutableTreeNode node_genre;
@@ -53,7 +56,6 @@ public class FilterTree extends AbstractFilterTree {
 	private DefaultMutableTreeNode node_language;
 	private DefaultMutableTreeNode node_typ;
 	private DefaultMutableTreeNode node_viewed;
-	@SuppressWarnings("unused")
 	private DefaultMutableTreeNode node_custom;
 
 	private final ClipTable table;
@@ -63,6 +65,8 @@ public class FilterTree extends AbstractFilterTree {
 		super(list);
 		this.table = table;
 		this.movielist = list;
+		
+		customFilterList.load();
 	}
 
 	@Override
@@ -113,8 +117,8 @@ public class FilterTree extends AbstractFilterTree {
 		node_viewed = addNode(null, Resources.ICN_SIDEBAR_VIEWED, LocaleBundle.getString("FilterTree.Viewed"), reset); //$NON-NLS-1$
 		initViewed();
 
-		node_custom = addNode(null,  Resources.ICN_SIDEBAR_CUSTOM, LocaleBundle.getString("FilterTree.Custom"), getCustomActionListener()); //$NON-NLS-1$
-		//initCustom();
+		node_custom = addNode(null,  Resources.ICN_SIDEBAR_CUSTOM, LocaleBundle.getString("FilterTree.Custom"), reset); //$NON-NLS-1$
+		initCustom();
 	}
 	
 	private void initAll() {
@@ -269,16 +273,44 @@ public class FilterTree extends AbstractFilterTree {
 		}
 	}
 	
-	private ActionListener getCustomActionListener() {
-		return new ActionListener() {
+	private void initCustom() {
+		for (int i = 0; i < customFilterList.size(); i++) {
+			final CustomFilterObject fo = customFilterList.get(i);
+			addNode(node_custom, Resources.ICN_SIDEBAR_CUSTOM, fo.getName(), new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent arg0) {
+					table.setRowFilter(new TableCustomFilter(fo.getFilter()), RowFilterSource.SIDEBAR);
+				}
+			});
+		}
+		
+		addNode(node_custom, Resources.ICN_SIDEBAR_CUSTOM, LocaleBundle.getString("FilterTree.Custom.OrganizeFilter"), new ActionListener() { //$NON-NLS-1$
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				onCustomClicked();
+				onOrganizeCustomFilterClicked();
 			}
-		};
+		});
+		
+		addNode(node_custom, Resources.ICN_SIDEBAR_CUSTOM, LocaleBundle.getString("FilterTree.Custom.NewFilter"), new ActionListener() { //$NON-NLS-1$
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				onNewCustomFilterClicked();
+			}
+		});
 	}
 	
-	private void onCustomClicked() {
+	private void onOrganizeCustomFilterClicked() {
+		new OrganizeFilterDialog(table.getMainFrame(), customFilterList, new FinishListener() {
+			@Override
+			public void finish() {
+				updateTree();
+				
+				customFilterList.save();
+			}
+		}).setVisible(true);
+	}
+	
+	private void onNewCustomFilterClicked() {
 		final CustomAndOperator cfilter = new CustomAndOperator();
 		
 		new CustomOperatorFilterDialog(cfilter, new FinishListener() {

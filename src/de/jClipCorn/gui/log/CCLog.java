@@ -14,6 +14,7 @@ import java.util.Vector;
 import javax.swing.SwingUtilities;
 
 import de.jClipCorn.gui.frames.mainFrame.MainFrame;
+import de.jClipCorn.gui.guiComponents.DatabaseElementPreviewLabel;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.CCDate;
@@ -299,14 +300,22 @@ public class CCLog {
 				SwingUtilities.invokeAndWait(new Runnable() {
 					@Override
 					public void run() {
-						MainFrame.getInstance().getCoverLabel().setErrorDisplay(true);
+						MainFrame mf =  MainFrame.getInstance();
+						if (mf != null) {
+							DatabaseElementPreviewLabel pl =  mf.getCoverLabel();
+							if (pl != null) pl.setErrorDisplay(true);
+						}
 					}
 				});
 			} catch (InvocationTargetException | InterruptedException e) {
 				CCLog.addError(e);
 			}
 		} else {
-			MainFrame.getInstance().getCoverLabel().setErrorDisplay(true);
+			MainFrame mf =  MainFrame.getInstance();
+			if (mf != null) {
+				DatabaseElementPreviewLabel pl =  mf.getCoverLabel();
+				if (pl != null) pl.setErrorDisplay(true);
+			}
 		}
 	}
 }

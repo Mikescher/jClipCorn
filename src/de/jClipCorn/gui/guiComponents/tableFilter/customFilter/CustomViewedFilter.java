@@ -4,6 +4,7 @@ import java.util.regex.Pattern;
 
 import javax.swing.RowFilter.Entry;
 
+import de.jClipCorn.database.util.ExtendedViewedState;
 import de.jClipCorn.gui.frames.mainFrame.clipTable.ClipTableModel;
 import de.jClipCorn.gui.localization.LocaleBundle;
 
@@ -12,7 +13,7 @@ public class CustomViewedFilter extends AbstractCustomFilter {
 	
 	@Override
 	public boolean include(Entry<? extends ClipTableModel, ? extends Object> e) {
-		return ! viewed ^ ((Boolean)e.getValue(ClipTableModel.COLUMN_VIEWED));
+		return ! viewed ^ ((ExtendedViewedState)e.getValue(ClipTableModel.COLUMN_VIEWED)).toBool();
 	}
 
 	@Override

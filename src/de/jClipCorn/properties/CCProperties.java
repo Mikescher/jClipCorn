@@ -8,6 +8,7 @@ import java.util.Properties;
 import java.util.Vector;
 
 import de.jClipCorn.Main;
+import de.jClipCorn.database.util.ExportHelper;
 import de.jClipCorn.gui.frames.mainFrame.clipToolbar.ClipToolbar;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.localization.util.LocalizedVector;
@@ -111,6 +112,7 @@ public class CCProperties {
 	public CCBoolProperty		PROP_STATISTICS_INTERACTIVECHARTS;
 	public CCBoolProperty 		PROP_DATABASE_CLEANSHUTDOWN;
 	public CCBoolProperty 		PROP_MAINFRAME_SHOWTAGS;
+	public CCStringProperty 	PROP_MAINFRAME_FILTERLISTPATH;
 	
 	public boolean ARG_READONLY = false;
 	
@@ -234,6 +236,7 @@ public class CCProperties {
 		PROP_STATISTICS_INTERACTIVECHARTS		= new CCBoolProperty(NONVISIBLE,	 	this,   "PROP_STATISTICS_INTERACTIVECHARTS",		false);
 		PROP_DATABASE_CLEANSHUTDOWN				= new CCBoolProperty(CAT_COMMON,	 	this,   "PROP_DATABASE_CLEANSHUTDOWN",				false);
 		PROP_MAINFRAME_SHOWTAGS					= new CCBoolProperty(CAT_VIEW,	 		this,   "PROP_MAINFRAME_SHOWTAGS",					true);
+		PROP_MAINFRAME_FILTERLISTPATH			= new CCStringProperty(CAT_COMMON,	 	this,	"PROP_MAINFRAME_FILTERLISTPATH",			"<?self>jClipCorn."+ExportHelper.EXTENSION_FILTERLIST);
 	}
 	
 	public static CCProperties getInstance() {

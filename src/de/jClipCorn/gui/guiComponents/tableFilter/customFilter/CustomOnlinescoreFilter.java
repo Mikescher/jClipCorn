@@ -40,7 +40,7 @@ public class CustomOnlinescoreFilter extends AbstractCustomFilter {
 	public String asString() {
 		switch (searchType) {
 		case LESSER:
-			return "X < " + low.asInt()/2.0; //$NON-NLS-1$
+			return "X < " + high.asInt()/2.0; //$NON-NLS-1$
 		case GREATER:
 			return low.asInt()/2.0 + " < X"; //$NON-NLS-1$
 		case IN_RANGE:

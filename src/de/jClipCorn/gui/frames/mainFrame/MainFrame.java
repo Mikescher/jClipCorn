@@ -131,6 +131,7 @@ public class MainFrame extends JFrame implements CCDBUpdateListener {
 
 		coverImage = new DatabaseElementPreviewLabel();
 		coverPanel.add(coverImage);
+		coverImage.setErrorDisplay(CCLog.hasErrors());
 		
 		statusbar = new ClipStatusBar(this, movielist);
 		getContentPane().add(statusbar, BorderLayout.SOUTH);

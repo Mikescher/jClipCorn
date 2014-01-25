@@ -79,7 +79,7 @@ public class Main {
 	// - XML With MovieDATA is send to Server (no FileInfo / No COver )
 	// - YOu send a username and a 16-sign password (to differ the users)
 	// - Server keeps track of this xml and lastUpdated of the xml
-	// - You Send in an extra thread everytime something changed (global cahnge flag) ?
+	// - You Send in an extra thread everytime something changed (global change flag) ?
 	// - You have local versions of xml from others (the update in seperate thread when server-LastUpdate differs from local-LastUpdate)
 	// - You can look through lists of other users
 		// Look what they viewed (and you not) etc
@@ -90,8 +90,6 @@ public class Main {
 
 //TODO Shortcuts für SerienWindow
 //TODO Compare Series in CompareDialog
-//TODO Recent Custom Filters as SubTrees in FilterTree
 //TODO Toolbarbutton "Open Last Played Series"
 //TODO Option to move Database to Server
-//TODO Import Movie -> Reset score
 //TODO ??optional?? show progressive viewed-Symbol for series

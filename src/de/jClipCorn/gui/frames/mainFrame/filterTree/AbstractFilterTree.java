@@ -87,12 +87,14 @@ public abstract class AbstractFilterTree extends JScrollPane implements TreeSele
 		}
 	}
 	
-	private void updateTree() {
+	protected void updateTree() {
 		root.removeAllChildren();
 		
 		addFields();
 		
-		tree.expandPath(new TreePath(root.getPath()));	
+		tree.expandPath(new TreePath(root.getPath()));
+		
+		model.reload();
 	}
 	
 	@Override

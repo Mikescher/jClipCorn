@@ -674,4 +674,25 @@ public class CCMovieList {
 	public static CCMovieList getInstance() {
 		return instance;
 	}
+
+	public CCEpisode getLastPlayedEpisode() {
+		CCEpisode max = null;
+		
+		for (Iterator<CCSeries> it = iteratorSeries(); it.hasNext();) {
+			CCSeries ser = it.next();
+			
+			for (int i = 0; i < ser.getSeasonCount(); i++) {
+				for (int j = 0; j < ser.getSeason(i).getEpisodeCount(); j++) {
+					CCEpisode ep = ser.getSeason(i).getEpisode(j);
+					
+					if (max == null || (ep.isViewed() && ep.getLastViewed().isGreaterThan(max.getLastViewed()))) {
+						max = ep;
+					}
+				}
+			}
+		}
+
+		
+		return max;
+	}
 }

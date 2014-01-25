@@ -15,6 +15,7 @@ import javax.swing.SwingUtilities;
 import de.jClipCorn.Main;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
+import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieScore;
@@ -270,6 +271,15 @@ public class CCActionTree {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				onClickSeasonAdd();
+			}
+		});
+		
+		temp = series.addChild(new CCActionElement("OpenLastPlayedSeries", null, "ClipMenuBar.Series.OpenLastPlayedSeries", Resources.ICN_MENUBAR_OPENLASTSERIES));
+		temp.setReadOnlyRestriction();
+		temp.addListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				onClickSeasonOpenLast();
 			}
 		});
 		
@@ -1027,6 +1037,14 @@ public class CCActionTree {
 		if (el != null && el.isSeries()) {
 			AddSeasonFrame asf = new AddSeasonFrame(owner, (CCSeries) el, null);
 			asf.setVisible(true);
+		}
+	}
+	
+	private void onClickSeasonOpenLast() {
+		CCEpisode ep = movielist.getLastPlayedEpisode();
+			
+		if (ep != null) {
+			new PreviewSeriesFrame(owner, ep).setVisible(true);	
 		}
 	}
 

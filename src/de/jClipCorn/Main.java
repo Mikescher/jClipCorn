@@ -90,5 +90,4 @@ public class Main {
 
 //TODO Shortcuts für SerienWindow
 //TODO Compare Series in CompareDialog
-//TODO Toolbarbutton "Open Last Played Series"
 //TODO Option to move Database to Server

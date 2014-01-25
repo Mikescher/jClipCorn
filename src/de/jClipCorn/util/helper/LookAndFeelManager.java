@@ -20,6 +20,8 @@ import de.jClipCorn.gui.log.CCLog;
 public class LookAndFeelManager {
 	private static boolean isSubstance = false;
 	
+	private static List<Entry<String, SkinInfo>> substanceLookAndFeelCache = null;
+	
 	private static void setLookAndFeel(String cls) {
 		try {
 			UIManager.setLookAndFeel(cls);
@@ -51,16 +53,13 @@ public class LookAndFeelManager {
 	}
 	
 	public static int getLookAndFeelCount() {
-		return 2 + SubstanceLookAndFeel.getAllSkins().size();
+		return 2 + getSubstanceLookAndFeelEntryList().size();
 	}
 	
 	private static String getSubstanceLookAndFeel(int n) {
-		for (Entry<String, SkinInfo> entry : SubstanceLookAndFeel.getAllSkins().entrySet()) {
-			if (n == 0) {
-				return entry.getValue().getClassName();
-			}
-			n--;
-		}
+		List<Entry<String, SkinInfo>> slfl = getSubstanceLookAndFeelEntryList();
+
+		if (n > 0  && n < slfl.size()) return slfl.get(n).getValue().getClassName();
 		return null;
 	}
 	
@@ -75,7 +74,7 @@ public class LookAndFeelManager {
 	private static List<String> getSubstanceLookAndFeelList() {
 		List<String> v = new Vector<>();
 		
-		for (Entry<String, SkinInfo> entry : SubstanceLookAndFeel.getAllSkins().entrySet()) {
+		for (Entry<String, SkinInfo> entry : getSubstanceLookAndFeelEntryList()) {
 			v.add(entry.getValue().getDisplayName());
 		}
 		
@@ -102,5 +101,17 @@ public class LookAndFeelManager {
 		for (String colorKey : colorKeys) {
 			System.out.println(colorKey);
 		}
+	}
+	
+	private static List<Entry<String, SkinInfo>> getSubstanceLookAndFeelEntryList() {
+		if (substanceLookAndFeelCache == null) {
+			substanceLookAndFeelCache = new ArrayList<>();
+			
+			for (Entry<String, SkinInfo> entry : SubstanceLookAndFeel.getAllSkins().entrySet()) {
+				substanceLookAndFeelCache.add(entry);
+			}
+		}
+		
+		return substanceLookAndFeelCache;
 	}
 }

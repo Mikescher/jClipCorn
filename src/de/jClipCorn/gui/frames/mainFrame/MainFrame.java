@@ -160,17 +160,19 @@ public class MainFrame extends JFrame implements CCDBUpdateListener {
 	
 	public void endBlockingIntermediate() {
 		CCMovieList.endBlocking();
+
+		Runnable runnner = new Runnable() {
+			@Override
+			public void run() {
+				getProgressBar().setIndeterminate(false);
+				setEnabled(true);
+			}
+		};
 		
-		try {
-			SwingUtilities.invokeAndWait(new Runnable() {
-				@Override
-				public void run() {
-					getProgressBar().setIndeterminate(false);
-					setEnabled(true);
-				}
-			});
-		} catch (InvocationTargetException | InterruptedException e) {
-			CCLog.addError(e);
+		if (SwingUtilities.isEventDispatchThread()) {
+			runnner.run();
+		} else {
+			SwingUtilities.invokeLater(runnner);
 		}
 	}
 

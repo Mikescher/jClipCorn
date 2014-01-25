@@ -61,10 +61,10 @@ public class CCMovieList {
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
+				long starttime = System.currentTimeMillis();
+				
 				BackupManager bm = new BackupManager(CCMovieList.this);
 				bm.doActions(mf);
-				
-				long starttime = System.currentTimeMillis();
 
 				mf.beginBlockingIntermediate();
 

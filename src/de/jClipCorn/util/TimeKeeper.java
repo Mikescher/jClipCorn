@@ -1,15 +1,22 @@
 package de.jClipCorn.util;
 
+import java.util.Stack;
+
 public class TimeKeeper {
-	static long time_ms = 0;
+	static Stack<Long> time_ms = new Stack<>();
 
 	public static void start() {
-		time_ms = System.currentTimeMillis();
+		time_ms.push(System.currentTimeMillis());
 	}
 	
 	@SuppressWarnings("nls")
 	public static void stop() {
-		long milllis = System.currentTimeMillis() - time_ms;
+		if (time_ms.isEmpty()) {
+			System.out.println("TimeKeeper ERROR: Stack is empty");
+			return;
+		}
+		
+		long milllis = System.currentTimeMillis() - time_ms.pop();
 		
 		StackTraceElement e = new Throwable().getStackTrace()[1];
 		
@@ -18,14 +25,15 @@ public class TimeKeeper {
 	
 	public static void freeze() {
 		System.out.print("FREEZE>> "); //$NON-NLS-1$
-		int i = 0;
-		while (i < 10) {
+		int i = 20;
+		while (i --> 0) { // the "goes to" operator :3
 			try {
-				Thread.sleep(250);
+				Thread.sleep(175);
 			} catch (InterruptedException e) {
 				// Empty Block
 			}
 			System.out.print("."); //$NON-NLS-1$
 		}
+		System.out.println();
 	}
 }

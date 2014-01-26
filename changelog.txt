@@ -1,3 +1,86 @@
+############ 2014-01-26: 1.9.1 RELEASE
+
+############ 2014-01-26: 1.9.1 Feature
+  Improved loadTime:
+    Added Cache for Substance-Look'n'Feels ( ~200ms )
+    Removed unnecessary InvokeAndWait on busy Dispatcher ( ~3000ms )
+
+############ 2014-01-25: 1.9.1 Feature
+  Added Action: "Open Last played Series"
+
+############ 2014-01-25: 1.9.1 Feature
+  Added progressive Viewed-Icon on PreviewSeriesFrame
+
+############ 2014-01-25: 1.9.1 Feature & Bugfixes
+  Added Way to save Filter
+  Fixed FilterTree Bug when it wouldn't update
+  Fixed FilterTree Bug when it wouldn't collapse
+  Added OrganizeFilterDialog
+  Fixed Bug where no Errors are shwon when they happen before Mainframe creation
+  Fixed DisplayString of OnlinescoreFilter
+  Fixed CustomViewedFilter AV (was not using new Tribool viewed-state)
+  Fixed Bug where DIalog-FInish-Listener was called more than one time
+    => cause of many strange behaviours
+  Updated .gitignore for *.flst files
+
+############ 2014-01-24: 1.9.1 Feature
+  Added Option to reset Score when Importing Movies/Series
+
+############ 2014-01-24: 1.9.1 Feature
+  Added new Statistics: "Viewed (Episodes)"
+
+############ 2014-01-24: 1.9.1 Feature
+  Added new DatabaseError: LastViewed is before 1.6.1900 (practically impossible)
+  Added "Fix Multiple DatabaseErrors At Once"-Feature (You can now multi select)
+
+############ 2014-01-21: 1.9.1 Feature & Bugfixes
+  Added Display for WatchLater in "Viewed"-Column
+  Added OPtion to automatically update "WatchLater"-Tag
+  Added DatabaseError "IMPOSSIBLE_WATCHLATER"
+  Fixed Dispatch-Thread Error in CheckDatabaseFrame
+
+############ 2014-01-20: 1.9.1 Feature
+  Added better ClickArea for Zyklus-Clicking
+  Added Hover-Cursor for Zyklus-Clicking
+
+############ 2013-11-27: ToDos because i have no time for actual coding ...
+
+############ 2013-11-10: 1.9.1 Beta Release (for internal use only)
+
+############ 2013-11-10: 1.9.1 Feature
+Added parseWatchDataFrame
+ -> Parses Watched Series/Movies from plainText
+
+############ 2013-10-27: 1.9.1 Big Feature (and Bugfixes)
+Added CoverCropDialog(crop & edit covers)
+Added ImageCropper to AddMovieFrame
+Added ImageCropper to AddSasonFrame
+Added ImageCropper to AddSeriesFrame
+Added ImageCropper to EditMovieFrame
+Added ImageCropper to EditSeriesFrame
+
+Fixed Bug when accessing a halfsize version of the standard cover
+Fixed Wrong Border Dimensions around partial tranparent cover in FindCoverDialog
+Fixed rendering Tags on actual DB-Cover when "RenderTagsOnCover" is set to true
+
+############ 2013-10-26: 1.9.1 Bugfixes
+Fixed AV when removing the last Element in Table (that is also selected)
+Fixed PreviewSeriesFrame VertScrollbar staying bottom when switching Season
+Improved internal handling of readonly-prohibited operations
+Fixed CoverChooser Border on partially transparent covers
+
+############ 2013-09-28: All hail my ToDo Commits
+
+############ 2013-09-15: And even more ToDos :D
+
+############ 2013-09-15: Added ToDos
+
+############ 2013-08-25: 1.9.1 Bugfixes
+Fixed too late Backup deletion (1 day late)
+Fixed Omniparer not recognizing Counter with variable lengths
+
+############ 2013-08-25: Updated Changelog
+
 ############ 2013-08-25: 1.9 RELEASE
 
 ############ 2013-08-25: 1.9 Features

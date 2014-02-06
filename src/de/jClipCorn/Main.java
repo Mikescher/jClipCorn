@@ -92,5 +92,6 @@ public class Main {
 //TODO Compare Series in CompareDialog
 //TODO Option to move Database to Server
 
-//TODO CustomOnlineSCoreFIlter: No_Rating nicht mitzählen (aktuell akzeptiert "GoodEnough < X" auch NO_RATING)
+//TODO CustomOnlineSCoreFilter: No_Rating nicht mitzählen (aktuell akzeptiert "GoodEnough < X" auch NO_RATING)
 //TODO Methode um jCC von Karlsruhe aus nicht immer synchen zu müssen (Need4Idea)
+//TODO Integrated VLC ? : https://code.google.com/p/vlcj/

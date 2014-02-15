@@ -95,3 +95,7 @@ public class Main {
 //TODO CustomOnlineSCoreFilter: No_Rating nicht mitzählen (aktuell akzeptiert "GoodEnough < X" auch NO_RATING)
 //TODO Methode um jCC von Karlsruhe aus nicht immer synchen zu müssen (Need4Idea)
 //TODO Integrated VLC ? : https://code.google.com/p/vlcj/
+
+//TODO Beim LastPlayed Series wirklich die LastPlayedSeries anzeigen (auch wenn m,ehere Episoden am gleichen letzten Tag angeschaut wurden)
+
+//TODO BUG !!! Parsen von ImDB Cover failt wieder mal ... (es werden keine erkannt)

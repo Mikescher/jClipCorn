@@ -685,7 +685,7 @@ public class CCMovieList {
 				for (int j = 0; j < ser.getSeason(i).getEpisodeCount(); j++) {
 					CCEpisode ep = ser.getSeason(i).getEpisode(j);
 					
-					if (max == null || (ep.isViewed() && ep.getLastViewed().isGreaterThan(max.getLastViewed()))) {
+					if (max == null || (ep.isViewed() && ep.getLastViewed().isGreaterEqualsThan(max.getLastViewed()))) {
 						max = ep;
 					}
 				}

@@ -20,9 +20,9 @@ public class CustomScoreFilter extends AbstractCustomFilter {
 		
 		switch (searchType) {
 		case LESSER:
-			return sco.asInt() < high.asInt();
+			return sco != CCMovieScore.RATING_NO && sco.asInt() < high.asInt();
 		case GREATER:
-			return low.asInt() < sco.asInt();
+			return sco != CCMovieScore.RATING_NO && low.asInt() < sco.asInt();
 		case IN_RANGE:
 			return low.asInt() < sco.asInt() && sco.asInt() < high.asInt();
 		case EXACT:

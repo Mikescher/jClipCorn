@@ -46,7 +46,7 @@ public class ImDBParser_Ger {
 	private final static String REGEX_GENRE = "(?<=<h5>Genre:</h5><div class=\"info-content\">)[^>]+(?=</div>)"; // (?<=<h5>Genre:</h5><div class="info-content">)[^>]+(?=</div>)
 	private final static String REGEX_GENRE_SPLIT = "[ ]+\\|[ ]+"; // [ ]+\|[ ]+
 	private final static String REGEX_COVER = "(?<=<a\\x20name=\"poster\"\\x20href=\")/rg/action-box-title/primary-photo/media/rm[0-9]+/tt[0-9]+(?=\"\\x20title=\")"; // (?<=<a\x20name="poster"\x20href=")/rg/action-box-title/primary-photo/media/rm[0-9]+/tt[0-9]+(?="\x20title=")
-	private final static String REGEX_COVER_DIREKT_1 = "<img id=\"primary-img\"[^>]+src=\"[^\"]+\"[^>]*\\>"; // <img id="primary-img"[^>]+src="[^"]"[^>]\>
+	private final static String REGEX_COVER_DIREKT_1 = "id=\"primary-img\"[^>]+src=\"[^\"]+\"[^>]*\\>"; // <img id="primary-img"[^>]+src="[^"]"[^>]\>
 	private final static String REGEX_COVER_DIREKT_2 = "(?<=src=\")[^\"]+(?=\")"; // (?<=src=")[^"]+(?=")
 	
 	public static String getSearchURL(String title, CCMovieTyp typ) {

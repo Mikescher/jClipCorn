@@ -45,7 +45,7 @@ public class ImDBParser_Eng {
 	private final static String REGEX_GENRE = "(?<=<h4 class=\\\"inline\\\">Genres:</h4>).*?(?=</div>)"; // (?<=<h4 class=\"inline\">Genres:</h4>).*?(?=</div>)
 	private final static String REGEX_GENRE_FIND = "(?<=> ).+?(?=</a>)"; // (?<=> ).+?(?=</a>)
 	private final static String REGEX_COVER = "(?<=<div class=\"image\"><a href=\")/media/rm[0-9]+?/tt[0-9]+?(?=\\?)"; // (?<=<div class="image"><a href=")/media/rm[0-9]+?/tt[0-9]+?(?=\?)
-	private final static String REGEX_COVER_DIREKT_1 = "<img id=\"primary-img\"[^>]+src=\"[^\"]+\"[^>]*\\>"; // <img id="primary-img"[^>]+src="[^"]"[^>]\>
+	private final static String REGEX_COVER_DIREKT_1 = "id=\"primary-img\"[^>]+src=\"[^\"]+\"[^>]*\\>"; // <img id="primary-img"[^>]+src="[^"]"[^>]\>
 	private final static String REGEX_COVER_DIREKT_2 = "(?<=src=\")[^\"]+(?=\")"; // (?<=src=")[^"]+(?=")
 	private final static String FSK_URL = "%sparentalguide";
 	

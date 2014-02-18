@@ -94,3 +94,8 @@ public class Main {
 
 //TODO Methode um jCC von Karlsruhe aus nicht immer synchen zu müssen (Need4Idea)
 //TODO Integrated VLC ? : https://code.google.com/p/vlcj/
+
+//TODO Use in DIalogs HQ-Cover Version (so cropping does not pixelate)
+//TODO Add AddFromClipboard Cover Function (perhaps also wehn clipboard == URL)
+//TODO Wrong FIlename DatabaseErro (and also wron Parentfolder) for Series (optionally option => default off)
+//TODO When viewing serries (or every update of series) --> update PreviewSeriesFrame (especially left sidebar)

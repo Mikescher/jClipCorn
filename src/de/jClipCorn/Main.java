@@ -100,20 +100,3 @@ public class Main {
 //TODO Wrong FIlename DatabaseErro (and also wron Parentfolder) for Series (optionally option => default off)
 //TODO When viewing serries (or every update of series) --> update PreviewSeriesFrame (especially left sidebar)
 //TODO WHen deleting series while filter:series it resizes all columns (wrong)
-//TODO AV: ExportHelper.dialogs.resetScore_caption not found
-/*
-ERROR (22:59:57): java.util.MissingResourceException: Can't find resource for bundle java.util.PropertyResourceBundle, key ExportHelper.dialogs.resetScore_caption
- at java.util.ResourceBundle.getObject
- at java.util.ResourceBundle.getObject
- at java.util.ResourceBundle.getString
- at de.jClipCorn.gui.localization.LocaleBundle.getString (LocaleBundle.java:34)
- at de.jClipCorn.util.helper.DialogHelper.showLocaleYesNo (DialogHelper.java:23)
- at de.jClipCorn.database.util.ExportHelper.openSingleElementFile (ExportHelper.java:369)
- at de.jClipCorn.gui.actionTree.CCActionTree.onClickFileOpen (CCActionTree.java:702)
- at de.jClipCorn.gui.actionTree.CCActionTree.access$0 (CCActionTree.java:680)
- at de.jClipCorn.gui.actionTree.CCActionTree$1.actionPerformed (CCActionTree.java:99)
- at de.jClipCorn.gui.actionTree.CCActionElement.execute (CCActionElement.java:124)
- at de.jClipCorn.gui.actionTree.CCActionElement.execute (CCActionElement.java:114)
- at de.jClipCorn.gui.frames.mainFrame.clipMenuBar.ClipMenuBar$2.actionPerformed (ClipMenuBar.java:61)
- at javax.swing.AbstractButton.fireActionPerformed
- */

@@ -89,7 +89,8 @@ public class ClipTable extends JScrollPane implements CCDBUpdateListener, ListSe
 	public void onChangeDatabaseElement(CCDatabaseElement el) {
 		int row = el.getMovieListPosition();
 		
-		model.fireTableRowsUpdated(row, row);
+		if (row > 0)
+			model.fireTableRowsUpdated(row, row);
 	}
 	
 	@Override

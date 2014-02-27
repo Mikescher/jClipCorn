@@ -78,6 +78,15 @@ public enum CCMovieFormat {
 		
 		return null;
 	}
+	
+	public static CCMovieFormat getMovieFormatOrDefault(String ext) {
+		CCMovieFormat mf = getMovieFormat(ext);
+		
+		if (mf == null) 
+			mf = AVI;
+		
+		return mf;
+	}
 
 	public static int compare(CCMovieFormat o1, CCMovieFormat o2) {
 		return Integer.compare(o1.asInt(), o2.asInt());

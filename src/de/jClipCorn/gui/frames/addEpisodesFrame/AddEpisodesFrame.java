@@ -906,7 +906,7 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler, 
 			ep.setEpisodeNumber(epid);
 			ep.setViewed(false);
 			ep.setLength(0);
-			ep.setFormat(CCMovieFormat.getMovieFormat(PathFormatter.getExtension(abspath)));
+			ep.setFormat(CCMovieFormat.getMovieFormatOrDefault(PathFormatter.getExtension(abspath)));
 			ep.setFilesize(ff[i].length());
 			if (CCProperties.getInstance().PROP_ADD_MOVIE_RELATIVE_AUTO.getValue()) {
 				ep.setPart(PathFormatter.getRelative(abspath));

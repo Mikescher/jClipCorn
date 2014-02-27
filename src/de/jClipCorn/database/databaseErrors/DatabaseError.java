@@ -261,8 +261,13 @@ public class DatabaseError {
 	
 	private boolean fixError_Format_Not_Found() {
 		if (el1 instanceof CCMovie) {
-			((CCMovie)el1).setFormat(CCMovieFormat.getMovieFormat(PathFormatter.getExtension(((CCMovie)el1).getAbsolutePart(0))));
-			return true;
+			CCMovieFormat fmt = CCMovieFormat.getMovieFormat(PathFormatter.getExtension(((CCMovie)el1).getAbsolutePart(0)));
+			if (fmt != null) {
+				((CCMovie)el1).setFormat(fmt);
+				return true;
+			} else {
+				return false;
+			}
 		} else if (el1 instanceof CCSeries) {
 			return false;
 		} else if (el1 instanceof CCSeason) {

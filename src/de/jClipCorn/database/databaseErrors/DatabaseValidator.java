@@ -217,7 +217,8 @@ public class DatabaseValidator {
 
 		boolean rform = false;
 		for (int i = 0; i < mov.getPartcount(); i++) {
-			if (CCMovieFormat.getMovieFormat(PathFormatter.getExtension(mov.getPart(i))).equals(mov.getFormat())) {
+			CCMovieFormat mfmt = CCMovieFormat.getMovieFormat(PathFormatter.getExtension(mov.getPart(i)));
+			if (mfmt != null && mfmt.equals(mov.getFormat())) {
 				rform = true;
 			}
 		}

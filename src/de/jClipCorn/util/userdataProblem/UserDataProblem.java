@@ -130,7 +130,7 @@ public class UserDataProblem {
 		
 		//################################################################################################################
 		
-		if (oscore <= 0 || oscore >= 10) {
+		if (oscore <= 0 || oscore > 10) {
 			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_INVALID_ONLINESCORE));
 		}
 		
@@ -268,7 +268,7 @@ public class UserDataProblem {
 		
 		//################################################################################################################
 		
-		if (oscore <= 0 || oscore >= 10) {
+		if (oscore <= 0 || oscore > 10) {
 			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_INVALID_ONLINESCORE));
 		}
 		

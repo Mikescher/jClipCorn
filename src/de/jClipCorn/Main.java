@@ -100,6 +100,7 @@ public class Main {
 // --> Special Button With [...|v] to either open or use other things (parse, Clipboard, url, cropper ...)
 //TODO Wrong FIlename DatabaseErro (and also wron Parentfolder) for Series (optionally option => default off)
 //TODO When viewing serries (or every update of series) --> update PreviewSeriesFrame (especially left sidebar)
+//TODO Clicking on Score to filter ? optionnally
 
 //TODO Bug: Filter with special char not loaded correctly (-> encoding ?)
 //TODO Bug: When Clicking on a Zyklus while a sidebar filter is active it will show [all] instead of [zyklus]

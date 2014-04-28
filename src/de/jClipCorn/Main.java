@@ -107,7 +107,6 @@ public class Main {
 //TODO Bug: Can't craete new Databse (prepStatement AV)
 //TODO Bug: Sidebar Filter Viewed --> AV
 
-//TODO Prevent Column Dragging -> weird effects when sorting
 //TODO Import Dialog -> Reset Tags
 
 //TODO No crop series flag on cover on add --> nly on display (doesnt matter for existing cover - perhaps fix 4 mine)

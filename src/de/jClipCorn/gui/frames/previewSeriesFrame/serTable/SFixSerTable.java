@@ -30,6 +30,8 @@ public class SFixSerTable extends SFixTable {
 	public SFixSerTable(TableModel dm) {
 		super(dm);
 		init();
+		
+		this.getTableHeader().setReorderingAllowed(false);
 	}
 	
 	private void init() {

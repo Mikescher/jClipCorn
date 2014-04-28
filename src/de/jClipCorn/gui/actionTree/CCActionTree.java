@@ -749,8 +749,10 @@ public class CCActionTree {
 	}
 	
 	private void onClickExtrasRandomMovie() {
-		RandomMovieFrame rmf = new RandomMovieFrame(owner, movielist);
-		rmf.setVisible(true);
+		if (movielist.getMovieCount() > 0) {
+			RandomMovieFrame rmf = new RandomMovieFrame(owner, movielist);
+			rmf.setVisible(true);
+		}
 	}
 	
 	private void onClickExtrasBackupManager() {

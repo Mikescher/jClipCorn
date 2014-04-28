@@ -125,7 +125,8 @@ public class StatisticsFrame extends JFrame {
 		btnPrevChart.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				cbxChooseChart.setSelectedIndex((cbxChooseChart.getSelectedIndex() + cbxChooseChart.getItemCount() - 1) % cbxChooseChart.getItemCount());
+				if (cbxChooseChart.getItemCount() > 0)
+					cbxChooseChart.setSelectedIndex((cbxChooseChart.getSelectedIndex() + cbxChooseChart.getItemCount() - 1) % cbxChooseChart.getItemCount());
 			}
 		});
 		pnlTop.add(btnPrevChart, "4, 2, left, top"); //$NON-NLS-1$
@@ -137,7 +138,8 @@ public class StatisticsFrame extends JFrame {
 		btnNxtChart.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				cbxChooseChart.setSelectedIndex((cbxChooseChart.getSelectedIndex() + 1) % cbxChooseChart.getItemCount());
+				if (cbxChooseChart.getItemCount() > 0)
+					cbxChooseChart.setSelectedIndex((cbxChooseChart.getSelectedIndex() + 1) % cbxChooseChart.getItemCount());
 			}
 		});
 		pnlTop.add(btnNxtChart, "8, 2, left, top"); //$NON-NLS-1$
@@ -222,8 +224,8 @@ public class StatisticsFrame extends JFrame {
 		lst.get(10).setText(StatisticsHelper.getSeriesSize(movielist).getFormatted());
 		lst.get(11).setText(StatisticsHelper.getTotalSize(movielist).getFormatted());
 		
-		lst.get(12).setText(TimeIntervallFormatter.formatPointed(StatisticsHelper.getMovieDuration(movielist) / movielist.getMovieCount()));
-		lst.get(13).setText(TimeIntervallFormatter.formatPointed(StatisticsHelper.getSeriesDuration(movielist) / movielist.getEpisodeCount()));
+		lst.get(12).setText(TimeIntervallFormatter.formatPointed(StatisticsHelper.failProofDiv(StatisticsHelper.getMovieDuration(movielist), movielist.getMovieCount())));
+		lst.get(13).setText(TimeIntervallFormatter.formatPointed(StatisticsHelper.failProofDiv(StatisticsHelper.getSeriesDuration(movielist), movielist.getEpisodeCount())));
 	
 		lst.get(14).setText(StatisticsHelper.getAvgMovieSize(movielist).getFormatted());
 		lst.get(15).setText(StatisticsHelper.getAvgSeriesSize(movielist).getFormatted());
@@ -236,23 +238,26 @@ public class StatisticsFrame extends JFrame {
 	}
 	
 	private void initCharts() {
-		cbxChooseChart.addItem(new StatisticsAddDateChart(movielist));
-		cbxChooseChart.addItem(new StatisticsMovieLengthChart(movielist));
-		cbxChooseChart.addItem(new StatisticsFormatChart(movielist));
-		cbxChooseChart.addItem(new StatisticsQualityChart(movielist));
-		cbxChooseChart.addItem(new StatisticsOnlinescoreChart(movielist));
-		cbxChooseChart.addItem(new StatisticsScoreChart(movielist));
-		cbxChooseChart.addItem(new StatisticsViewedChart(movielist));
-		cbxChooseChart.addItem(new StatisticsYearChart(movielist));
-		cbxChooseChart.addItem(new StatisticsGenreChart(movielist));
-		cbxChooseChart.addItem(new StatisticsFSKChart(movielist));
-		cbxChooseChart.addItem(new StatisticsLanguageChart(movielist));
-		cbxChooseChart.addItem(new StatisticsTagChart(movielist));
-		cbxChooseChart.addItem(new StatisticsHoursMovChart(movielist));
-		cbxChooseChart.addItem(new StatisticsHoursSerChart(movielist));
-		cbxChooseChart.addItem(new StatisticsHoursSerMovChart(movielist));
-		cbxChooseChart.addItem(new StatisticsEpisodesViewedChart(movielist));
-		cbxChooseChart.addItem(new StatisticsSizeChart(movielist));
+		boolean h_mov = movielist.hasMovies();
+		boolean h_ser = movielist.hasSeries();
+		
+		if (h_mov) cbxChooseChart.addItem(new StatisticsAddDateChart(movielist));
+		if (h_mov) cbxChooseChart.addItem(new StatisticsMovieLengthChart(movielist));
+		if (h_mov) cbxChooseChart.addItem(new StatisticsFormatChart(movielist));
+		if (h_mov) cbxChooseChart.addItem(new StatisticsQualityChart(movielist));
+		if (h_mov) cbxChooseChart.addItem(new StatisticsOnlinescoreChart(movielist));
+		if (h_mov) cbxChooseChart.addItem(new StatisticsScoreChart(movielist));
+		if (h_mov) cbxChooseChart.addItem(new StatisticsViewedChart(movielist));
+		if (h_mov) cbxChooseChart.addItem(new StatisticsYearChart(movielist));
+		if (h_mov) cbxChooseChart.addItem(new StatisticsGenreChart(movielist));
+		if (h_mov) cbxChooseChart.addItem(new StatisticsFSKChart(movielist));
+		if (h_mov) cbxChooseChart.addItem(new StatisticsLanguageChart(movielist));
+		if (h_mov) cbxChooseChart.addItem(new StatisticsTagChart(movielist));
+		if (h_mov) cbxChooseChart.addItem(new StatisticsHoursMovChart(movielist));
+		if (h_ser) cbxChooseChart.addItem(new StatisticsHoursSerChart(movielist));
+		if (h_ser) cbxChooseChart.addItem(new StatisticsHoursSerMovChart(movielist));
+		if (h_ser) cbxChooseChart.addItem(new StatisticsEpisodesViewedChart(movielist));
+		if (h_mov) cbxChooseChart.addItem(new StatisticsSizeChart(movielist));
 	}
 	
 	private void assignChart(StatisticsChart statchart) {

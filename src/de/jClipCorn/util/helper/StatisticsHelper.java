@@ -109,7 +109,12 @@ public class StatisticsHelper {
 			s.add(it.next().getFilesize());
 		}
 
-		s.div(ml.getMovieCount());
+		int mc = ml.getEpisodeCount();
+		
+		if (mc == 0)
+			return new CCMovieSize(0);
+		
+		s.div(mc);
 
 		return s;
 	}
@@ -121,7 +126,12 @@ public class StatisticsHelper {
 			s.add(it.next().getFilesize());
 		}
 
-		s.div(ml.getEpisodeCount());
+		int ec = ml.getEpisodeCount();
+		
+		if (ec == 0)
+			return new CCMovieSize(0);
+		
+		s.div(ec);
 
 		return s;
 	}
@@ -699,5 +709,9 @@ public class StatisticsHelper {
 		}
 		
 		return ls;
+	}
+	
+	public static int failProofDiv(int a, int b) {
+		return b == 0 ? 0 : a/b;
 	}
 }

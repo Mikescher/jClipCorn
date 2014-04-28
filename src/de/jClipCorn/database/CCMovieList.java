@@ -695,4 +695,16 @@ public class CCMovieList {
 		
 		return max;
 	}
+
+	public boolean hasMovies() {
+		return iteratorMovies().hasNext();
+	}
+
+	public boolean hasSeries() {
+		return iteratorSeries().hasNext();
+	}
+
+	public boolean hasElements() {
+		return list.size() > 0;
+	}
 }

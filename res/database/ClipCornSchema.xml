@@ -52,8 +52,8 @@
 		<column name="FORMAT"      	type="TINYINT" 	required="true"/>
 		<column name="FILESIZE" 	type="BIGINT" 	required="true"/>
 		<column name="PART1" 		type="VARCHAR" 	required="true" size="512"/>
-		<column name="STATUS" 		type="TINYINT" 	required="true"/>
 		<column name="LASTVIEWED"  	type="DATE" 	required="true"/>
 		<column name="ADDDATE"     	type="DATE" 	required="true"/>
+        <column name="TAGS"         type="SMALLINT" required="true"/>
   </table>
 </database>

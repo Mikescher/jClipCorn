@@ -229,6 +229,7 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler, 
 		pnlInfo.add(label_6);
 
 		spnSize = new JSpinner();
+		spnSize.setModel(new SpinnerNumberModel(new Long(0), null, null, new Long(1)));
 		spnSize.addChangeListener(new ChangeListener() {
 			@Override
 			public void stateChanged(ChangeEvent arg0) {
@@ -654,7 +655,12 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler, 
 			}
 
 			if (problems.size() > 0) {
-				InputErrorDialog amied = new InputErrorDialog(problems, this, this);
+				InputErrorDialog amied = new InputErrorDialog(problems, new UserDataProblemHandler() {
+					@Override
+					public void onAMIEDIgnoreClicked() {
+						onOKClicked(false);
+					}
+				}, this);
 				amied.setVisible(true);
 				return;
 			}

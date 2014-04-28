@@ -109,3 +109,5 @@ public class Main {
 
 //TODO Prevent Column Dragging -> weird effects when sorting
 //TODO Import Dialog -> Reset Tags
+
+//TODO No crop series flag on cover on add --> nly on display (doesnt matter for existing cover - perhaps fix 4 mine)

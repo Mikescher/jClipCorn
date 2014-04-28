@@ -2,6 +2,7 @@ package de.jClipCorn.gui.guiComponents.tableFilter;
 
 import javax.swing.RowFilter;
 
+import de.jClipCorn.database.util.ExtendedViewedState;
 import de.jClipCorn.gui.frames.mainFrame.clipTable.ClipTableModel;
 
 public class TableViewedFilter extends RowFilter<ClipTableModel, Object> {
@@ -14,6 +15,6 @@ public class TableViewedFilter extends RowFilter<ClipTableModel, Object> {
 
 	@Override
 	public boolean include(Entry<? extends ClipTableModel, ? extends Object> e) {
-		return ! defViewed ^ ((Boolean)e.getValue(ClipTableModel.COLUMN_VIEWED));
+		return ! defViewed ^((ExtendedViewedState)e.getValue(ClipTableModel.COLUMN_VIEWED)).toBool();
 	}
 }

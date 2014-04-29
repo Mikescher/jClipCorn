@@ -99,8 +99,5 @@ public class Main {
 //TODO Clicking on Score to filter ? optionnally
 
 //TODO Bug: Filter with special char not loaded correctly (-> encoding ?)
-//TODO Bug: Sidebar Filter Viewed --> AV
 
 //TODO Import Dialog -> Reset Tags
-
-//TODO No crop series flag on cover on add --> nly on display (doesnt matter for existing cover - perhaps fix 4 mine)

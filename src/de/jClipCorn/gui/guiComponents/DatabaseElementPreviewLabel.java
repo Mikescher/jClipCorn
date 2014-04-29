@@ -46,7 +46,13 @@ public class DatabaseElementPreviewLabel extends CoverLabel {
 			setErrorDisplay(false);
 		}
 		
-		if (CCProperties.getInstance().PROP_MAINFRAME_SHOWTAGS.getValue() && el.isMovie() && ((CCMovie)el).getTags().hasTags()) {
+		if (CCProperties.getInstance().PROP_MAINFRAME_AUTOMATICRESETWATCHLATER.getValue()  && el.isSeries()) {
+			BufferedImage bi = ImageUtilities.deepCopyImage(el.getCover());
+			
+			ImageUtilities.makeSeriesCover(bi);
+			
+			setIcon(new ImageIcon(bi));
+		} else if (CCProperties.getInstance().PROP_MAINFRAME_SHOWTAGS.getValue() && el.isMovie() && ((CCMovie)el).getTags().hasTags()) {
 			BufferedImage bi = ImageUtilities.deepCopyImage(el.getCover());
 			
 			CCMovie m = (CCMovie)el;

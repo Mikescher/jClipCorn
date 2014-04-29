@@ -7,13 +7,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.imageio.ImageIO;
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -23,7 +20,6 @@ import javax.swing.JLabel;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
-import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -39,15 +35,12 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCMovieSize;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTyp;
 import de.jClipCorn.gui.CachedResourceLoader;
 import de.jClipCorn.gui.Resources;
-import de.jClipCorn.gui.frames.coverCropFrame.CoverCropDialog;
-import de.jClipCorn.gui.frames.findCoverFrame.FindCoverDialog;
 import de.jClipCorn.gui.frames.inputErrorFrame.InputErrorDialog;
-import de.jClipCorn.gui.guiComponents.CoverLabel;
 import de.jClipCorn.gui.guiComponents.ReadableTextField;
 import de.jClipCorn.gui.guiComponents.TagPanel;
+import de.jClipCorn.gui.guiComponents.editCoverControl.EditCoverControl;
 import de.jClipCorn.gui.guiComponents.jCCDateSpinner.JCCDateSpinner;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.CCDate;
 import de.jClipCorn.util.Validator;
@@ -56,7 +49,6 @@ import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.ExtendedFocusTraversalOnArray;
 import de.jClipCorn.util.helper.FileChooserHelper;
 import de.jClipCorn.util.helper.HTTPUtilities;
-import de.jClipCorn.util.helper.ImageUtilities;
 import de.jClipCorn.util.listener.ImageCropperResultListener;
 import de.jClipCorn.util.listener.UpdateCallbackListener;
 import de.jClipCorn.util.parser.ImDBParser;
@@ -70,9 +62,6 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 	private static CCDate MIN_DATE = CCDate.getMinimumDate();
 	
 	private final JFileChooser videoFileChooser;
-	private final JFileChooser coverFileChooser;
-	
-	private BufferedImage currentCoverImage = null;
 	
 	private final CCMovie movie;
 	
@@ -119,9 +108,6 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 	private JComboBox<String> cbxGenre4;
 	private JComboBox<String> cbxGenre5;
 	private JComboBox<String> cbxGenre6;
-	private CoverLabel lblCover;
-	private JButton btnOpencover;
-	private JButton btnFindcover;
 	private JLabel label_16;
 	private JLabel label_17;
 	private JLabel label_18;
@@ -161,13 +147,12 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 	private JButton btnToday;
 	private JButton btnTestParts;
 	private JButton btnCalcQuality;
-	private JButton btnCrop;
+	private EditCoverControl edCvrControl;
 
 	public EditMovieFrame(Component owner, CCMovie movie, UpdateCallbackListener ucl) {
 		super();
 		this.movie = movie;
 		this.videoFileChooser = new JFileChooser(PathFormatter.getAbsoluteSelfDirectory());
-		this.coverFileChooser = new JFileChooser(PathFormatter.getAbsoluteSelfDirectory());
 		this.listener = ucl;
 		
 		setSize(new Dimension(740, 780));
@@ -178,7 +163,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		initFields();
 		
 		setLocationRelativeTo(owner);
-		setFocusTraversalPolicy(new ExtendedFocusTraversalOnArray(new Component[]{btnChoose0, btnChoose1, btnChoose2, btnChoose3, btnChoose4, btnChoose5, edTitle, edZyklus, spnZyklus, cbViewed, cbxQuality, cbxLanguage, spnLength, spnAddDate, spnOnlineScore, cbxFSK, cbxFormat, spnYear, spnSize, cbxGenre0, cbxGenre1, cbxGenre2, cbxGenre3, cbxGenre4, cbxGenre5, cbxGenre6, cbxGenre7, cbxScore, tagPnl, btnFindcover, btnOpencover, btnOK, btnCancel, btnToday, btnIMDB, btnClear1, btnClear2, btnClear3, btnClear4, btnClear5, btnTestParts}));
+		setFocusTraversalPolicy(new ExtendedFocusTraversalOnArray(new Component[]{btnChoose0, btnChoose1, btnChoose2, btnChoose3, btnChoose4, btnChoose5, edTitle, edZyklus, spnZyklus, cbViewed, cbxQuality, cbxLanguage, spnLength, spnAddDate, spnOnlineScore, cbxFSK, cbxFormat, spnYear, spnSize, cbxGenre0, cbxGenre1, cbxGenre2, cbxGenre3, cbxGenre4, cbxGenre5, cbxGenre6, cbxGenre7, cbxScore, tagPnl, btnOK, btnCancel, btnToday, btnIMDB, btnClear1, btnClear2, btnClear3, btnClear4, btnClear5, btnTestParts}));
 	}
 	
 	private void initGUI() {
@@ -425,31 +410,6 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		cbxGenre6.setBounds(506, 225, 212, 22);
 		getContentPane().add(cbxGenre6);
 		
-		lblCover = new CoverLabel(false);
-		lblCover.setHorizontalAlignment(SwingConstants.CENTER);
-		lblCover.setBounds(536, 457, 182, 254);
-		getContentPane().add(lblCover);
-		
-		btnOpencover = new JButton(LocaleBundle.getString("AddMovieFrame.btnChoose.text")); //$NON-NLS-1$
-		btnOpencover.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				openChooseCoverDialog();
-			}
-		});
-		btnOpencover.setBounds(671, 422, 47, 25);
-		getContentPane().add(btnOpencover);
-		
-		btnFindcover = new JButton(LocaleBundle.getString("AddMovieFrame.btnFindCover.text")); //$NON-NLS-1$
-		btnFindcover.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				showFindCoverDialog();
-			}
-		});
-		btnFindcover.setBounds(607, 422, 52, 25);
-		getContentPane().add(btnFindcover);
-		
 		label_16 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGesehen.text")); //$NON-NLS-1$
 		label_16.setBounds(10, 339, 52, 16);
 		getContentPane().add(label_16);
@@ -661,15 +621,9 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		btnCalcQuality.setBounds(296, 372, 78, 23);
 		getContentPane().add(btnCalcQuality);
 		
-		btnCrop = new JButton(LocaleBundle.getString("AddMovieFrame.btnCrop.text")); //$NON-NLS-1$
-		btnCrop.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				showCropDialog();
-			}
-		});
-		btnCrop.setBounds(536, 422, 61, 25);
-		getContentPane().add(btnCrop);
+		edCvrControl = new EditCoverControl(this);
+		edCvrControl.setBounds(536, 422, EditCoverControl.CTRL_WIDTH, EditCoverControl.CTRL_HEIGHT);
+		getContentPane().add(edCvrControl);
 	}
 
 	private void setDefaultValues() {
@@ -785,12 +739,6 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		}));
 		
 		videoFileChooser.setDialogTitle(LocaleBundle.getString("AddMovieFrame.videoFileChooser.title")); //$NON-NLS-1$
-		
-		//###################################################################################################################################
-		
-		coverFileChooser.setFileFilter(FileChooserHelper.createLocalFileFilter("AddMovieFrame.coverFileChooser.filterDescription", "png", "bmp", "gif", "jpg", "jpeg")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
-		
-		coverFileChooser.setDialogTitle(LocaleBundle.getString("AddMovieFrame.coverFileChooser.title")); //$NON-NLS-1$
 	}
 	
 	private void initFields() {
@@ -827,8 +775,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		cbxScore.setSelectedIndex(movie.getScore().asInt());
 		tagPnl.setValue(movie.getTags());
 		
-		currentCoverImage = movie.getCover();
-		lblCover.setIcon(new ImageIcon(currentCoverImage));
+		edCvrControl.setCover(movie.getCover());
 		
 		updateByteDisp();
 		testPaths();
@@ -836,31 +783,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 	
 	@Override
 	public void setCover(BufferedImage nci) {
-		if (nci != null) {
-			nci = ImageUtilities.resizeCoverImage(nci);
-			this.currentCoverImage = nci;
-			
-			lblCover.setIcon(new ImageIcon(currentCoverImage));
-		} else {
-			this.currentCoverImage = null;
-			
-			lblCover.setIcon(null);
-		}
-	}
-	
-	private void openChooseCoverDialog() {
-		int returnval = coverFileChooser.showOpenDialog(this);
-		
-		if (returnval != JFileChooser.APPROVE_OPTION) {
-			return;
-		}
-		
-		try {
-			BufferedImage read = ImageIO.read(coverFileChooser.getSelectedFile());
-			setCover(read);
-		} catch (IOException e) {
-			CCLog.addError(e);
-		}
+		edCvrControl.setCover(nci);
 	}
 
 	@Override
@@ -1068,10 +991,6 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		testPaths();
 	}
 	
-	private void showFindCoverDialog() {
-		(new FindCoverDialog(this, this, CCMovieTyp.MOVIE)).setVisible(true);
-	}
-	
 	private void onBtnOK(boolean check) {
 		List<UserDataProblem> problems = new ArrayList<>();
 		
@@ -1127,7 +1046,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		movie.setTags(tagPnl.getValue()); // TODOD TEST THIS FRAME
 		movie.setScore(cbxScore.getSelectedIndex());
 		
-		movie.setCover(currentCoverImage);
+		movie.setCover(edCvrControl.getResizedImage());
 		
 		//#####################################################################################
 		
@@ -1141,7 +1060,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 	}
 	
 	public boolean checkUserData(List<UserDataProblem> ret) {
-		BufferedImage i = currentCoverImage;
+		BufferedImage i = edCvrControl.getResizedImage();
 		
 		String p0 = edPart0.getText();
 		String p1 = edPart1.getText();
@@ -1178,12 +1097,6 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		UserDataProblem.testMovieData(ret, movie, i, movie.getMovieList(), p0, p1, p2, p3, p4, p5, title, zyklus, zyklusID, len, adddate, oscore, fskidx, year, fsize, csExtn, csExta, g0, g1, g2, g3, g4, g5, g6, g7, quality, lang);
 		
 		return ret.isEmpty();
-	}
-	
-	private void showCropDialog() {
-		if (currentCoverImage == null) return;
-		
-		(new CoverCropDialog(this, currentCoverImage, this)).setVisible(true);
 	}
 
 	@Override

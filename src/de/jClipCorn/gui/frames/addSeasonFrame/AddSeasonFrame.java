@@ -5,78 +5,57 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
-import javax.swing.SwingConstants;
 
 import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFormat;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieLanguage;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieQuality;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTyp;
 import de.jClipCorn.gui.CachedResourceLoader;
 import de.jClipCorn.gui.Resources;
-import de.jClipCorn.gui.frames.coverCropFrame.CoverCropDialog;
-import de.jClipCorn.gui.frames.findCoverFrame.FindCoverDialog;
 import de.jClipCorn.gui.frames.inputErrorFrame.InputErrorDialog;
-import de.jClipCorn.gui.guiComponents.CoverLabel;
+import de.jClipCorn.gui.guiComponents.editCoverControl.EditCoverControl;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.gui.log.CCLog;
-import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.ExtendedFocusTraversalOnArray;
-import de.jClipCorn.util.helper.FileChooserHelper;
-import de.jClipCorn.util.helper.ImageUtilities;
-import de.jClipCorn.util.listener.ImageCropperResultListener;
 import de.jClipCorn.util.listener.UpdateCallbackListener;
 import de.jClipCorn.util.parser.ParseResultHandler;
 import de.jClipCorn.util.userdataProblem.UserDataProblem;
 import de.jClipCorn.util.userdataProblem.UserDataProblemHandler;
 
-public class AddSeasonFrame extends JFrame implements UserDataProblemHandler, ParseResultHandler, ImageCropperResultListener {
+public class AddSeasonFrame extends JFrame implements UserDataProblemHandler, ParseResultHandler {
 	private static final long serialVersionUID = -5479523926638394942L;
 	
 	private final CCSeries parent;
-	private final JFileChooser coverFileChooser;
-	
-	private BufferedImage currentCoverImage = null;
 	
 	private final UpdateCallbackListener listener;
 	
 	private JLabel label;
 	private JTextField edTitle;
-	private JButton btnOpen;
-	private CoverLabel lblCover;
 	private JButton btnCancel;
 	private JButton btnOK;
 	private JLabel label_2;
 	private JSpinner spnYear;
-	private JButton btnFind;
-	private JButton btnCrop;
+	private EditCoverControl edCvrControl;
 
 	public AddSeasonFrame(Component owner, CCSeries ser, UpdateCallbackListener ucl){
 		super();
 		setSize(new Dimension(500, 400));
 		this.parent = ser;
-		this.coverFileChooser = new JFileChooser(PathFormatter.getAbsoluteSelfDirectory());
 		this.listener = ucl;
 		
 		initGUI();
-		initFileChooser();
 		
 		setLocationRelativeTo(owner);
-		setFocusTraversalPolicy(new ExtendedFocusTraversalOnArray(new Component[]{edTitle, spnYear, btnFind, btnOpen, btnOK, btnCancel}));
+		setFocusTraversalPolicy(new ExtendedFocusTraversalOnArray(new Component[]{edTitle, spnYear, btnOK, btnCancel}));
 	}
 	
 	private void initGUI() {
@@ -95,21 +74,6 @@ public class AddSeasonFrame extends JFrame implements UserDataProblemHandler, Pa
 		edTitle.setColumns(10);
 		edTitle.setBounds(76, 13, 212, 20);
 		getContentPane().add(edTitle);
-		
-		btnOpen = new JButton(LocaleBundle.getString("AddMovieFrame.btnOpenCover.text")); //$NON-NLS-1$
-		btnOpen.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				openChooseCoverDialog();
-			}
-		});
-		btnOpen.setBounds(435, 15, 47, 25);
-		getContentPane().add(btnOpen);
-		
-		lblCover = new CoverLabel(false);
-		lblCover.setHorizontalAlignment(SwingConstants.CENTER);
-		lblCover.setBounds(300, 53, 182, 254);
-		getContentPane().add(lblCover);
 		
 		btnCancel = new JButton(LocaleBundle.getString("AddMovieFrame.btnCancel.text")); //$NON-NLS-1$
 		btnCancel.addActionListener(new ActionListener() {
@@ -141,63 +105,18 @@ public class AddSeasonFrame extends JFrame implements UserDataProblemHandler, Pa
 		spnYear.setBounds(76, 44, 212, 20);
 		getContentPane().add(spnYear);
 		
-		btnFind = new JButton(LocaleBundle.getString("AddMovieFrame.btnFindCover.text")); //$NON-NLS-1$
-		btnFind.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				findCover();
-			}
-		});
-		btnFind.setBounds(373, 16, 52, 23);
-		getContentPane().add(btnFind);
-		
-		btnCrop = new JButton(LocaleBundle.getString("AddMovieFrame.btnCrop.text")); //$NON-NLS-1$
-		btnCrop.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				cropCover();
-			}
-		});
-		btnCrop.setBounds(298, 16, 65, 23);
-		getContentPane().add(btnCrop);
-	}
-	
-	private void initFileChooser() {
-		coverFileChooser.setFileFilter(FileChooserHelper.createLocalFileFilter("AddMovieFrame.coverFileChooser.filterDescription", "png", "bmp", "gif", "jpg", "jpeg")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
-		
-		coverFileChooser.setDialogTitle(LocaleBundle.getString("AddMovieFrame.coverFileChooser.title")); //$NON-NLS-1$
+		edCvrControl = new EditCoverControl(this);
+		edCvrControl.setBounds(298, 16, EditCoverControl.CTRL_WIDTH, EditCoverControl.CTRL_HEIGHT);
+		getContentPane().add(edCvrControl);
 	}
 	
 	@Override
 	public void setCover(BufferedImage nci) {
-		if (nci != null) {
-			nci = ImageUtilities.resizeCoverImage(nci);
-			this.currentCoverImage = nci;
-			
-			lblCover.setIcon(new ImageIcon(currentCoverImage));
-		} else {
-			this.currentCoverImage = null;
-			
-			lblCover.setIcon(null);
-		}
+		edCvrControl.setCover(nci);
 	}
 	
 	private void cancel() {
 		this.dispose();
-	}
-	
-	private void openChooseCoverDialog() {
-		int returnval = coverFileChooser.showOpenDialog(this);
-		
-		if (returnval != JFileChooser.APPROVE_OPTION) {
-			return;
-		}
-		try {
-			BufferedImage read = ImageIO.read(coverFileChooser.getSelectedFile());
-			setCover(read);
-		} catch (IOException e) {
-			CCLog.addError(e);
-		}
 	}
 
 	private void onBtnOK(boolean check) {
@@ -219,7 +138,7 @@ public class AddSeasonFrame extends JFrame implements UserDataProblemHandler, Pa
 
 		newS.setTitle(edTitle.getText());
 		newS.setYear((int) spnYear.getValue());
-		newS.setCover(currentCoverImage);
+		newS.setCover(edCvrControl.getResizedImage());
 		
 		//#####################################################################################
 		
@@ -236,7 +155,7 @@ public class AddSeasonFrame extends JFrame implements UserDataProblemHandler, Pa
 		String title = edTitle.getText();
 		int year = (int) spnYear.getValue();
 
-		UserDataProblem.testSeasonData(ret, currentCoverImage, title, year);
+		UserDataProblem.testSeasonData(ret, edCvrControl.getResizedImage(), title, year);
 		
 		return ret.isEmpty();
 	}
@@ -244,16 +163,6 @@ public class AddSeasonFrame extends JFrame implements UserDataProblemHandler, Pa
 	@Override
 	public void onAMIEDIgnoreClicked() {
 		onBtnOK(false);
-	}
-	
-	private void findCover() {
-		(new FindCoverDialog(this, this, CCMovieTyp.SERIES)).setVisible(true);
-	}
-	
-	private void cropCover() {
-		if (currentCoverImage == null) return;
-		
-		(new CoverCropDialog(this, currentCoverImage, this)).setVisible(true);
 	}
 
 	@Override
@@ -263,81 +172,71 @@ public class AddSeasonFrame extends JFrame implements UserDataProblemHandler, Pa
 
 	@Override
 	public void setMovieFormat(CCMovieFormat cmf) {
-		// NO SUCH ELEMENT
+		// NOP
 	}
 
 	@Override
 	public void setFilepath(int p, String t) {
-		// NO SUCH ELEMENT
+		// NOP
 	}
 
 	@Override
 	public void setMovieName(String name) {
-		// NO SUCH ELEMENT
+		// NOP
 	}
 
 	@Override
 	public void setZyklus(String mZyklusTitle) {
-		// NO SUCH ELEMENT
+		// NOP
 	}
 
 	@Override
 	public void setZyklusNumber(int iRoman) {
-		// NO SUCH ELEMENT
+		// NOP
 	}
 
 	@Override
 	public void setFilesize(long size) {
-		// NO SUCH ELEMENT
+		// NOP
 	}
 
 	@Override
 	public void setMovieLanguage(CCMovieLanguage lang) {
-		// NO SUCH ELEMENT
+		// NOP
 	}
 
 	@Override
 	public void setQuality(CCMovieQuality q) {
-		// NO SUCH ELEMENT
+		// NOP
 	}
 
 	@Override
 	public void setYear(int y) {
-		// NO SUCH ELEMENT
+		// NOP
 	}
 
 	@Override
 	public void setGenre(int gid, int movGenre) {
-		// NO SUCH ELEMENT
+		// NOP
 	}
 
 	@Override
 	public void setFSK(int fsk) {
-		// NO SUCH ELEMENT
+		// NOP
 	}
 
 	@Override
 	public void setLength(int l) {
-		// NO SUCH ELEMENT
+		// NOP
 	}
 
 	@Override
 	public void setScore(int s) {
-		// NO SUCH ELEMENT
+		// NOP
 	}
 	
 	@Override
 	public void onFinishInserting() {
-		// nothing
-	}
-
-	@Override
-	public void editingFinished(BufferedImage i) {
-		setCover(i);
-	}
-
-	@Override
-	public void editingCanceled() {
-		// nothing
+		// NOP
 	}
 }

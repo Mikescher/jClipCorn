@@ -6,14 +6,11 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.imageio.ImageIO;
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -48,15 +45,12 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCMovieSize;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTyp;
 import de.jClipCorn.gui.CachedResourceLoader;
 import de.jClipCorn.gui.Resources;
-import de.jClipCorn.gui.frames.coverCropFrame.CoverCropDialog;
-import de.jClipCorn.gui.frames.findCoverFrame.FindCoverDialog;
 import de.jClipCorn.gui.frames.inputErrorFrame.InputErrorDialog;
 import de.jClipCorn.gui.frames.parseImDBFrame.ParseImDBDialog;
-import de.jClipCorn.gui.guiComponents.CoverLabel;
 import de.jClipCorn.gui.guiComponents.ReadableTextField;
+import de.jClipCorn.gui.guiComponents.editCoverControl.EditCoverControl;
 import de.jClipCorn.gui.guiComponents.jCCDateSpinner.JCCDateSpinner;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.CCDate;
 import de.jClipCorn.util.Validator;
@@ -67,22 +61,18 @@ import de.jClipCorn.util.helper.ExtendedFocusTraversalOnArray;
 import de.jClipCorn.util.helper.FileChooserHelper;
 import de.jClipCorn.util.helper.HTTPUtilities;
 import de.jClipCorn.util.helper.ImageUtilities;
-import de.jClipCorn.util.listener.ImageCropperResultListener;
 import de.jClipCorn.util.parser.FilenameParser;
 import de.jClipCorn.util.parser.ImDBParser;
 import de.jClipCorn.util.parser.ParseResultHandler;
 import de.jClipCorn.util.userdataProblem.UserDataProblem;
 import de.jClipCorn.util.userdataProblem.UserDataProblemHandler;
 
-public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDataProblemHandler, ImageCropperResultListener {
+public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDataProblemHandler {
 	private static final long serialVersionUID = -5912378114066741528L;
 	
 	private boolean firstChooseClick = true;
 	
 	private final JFileChooser videoFileChooser;
-	private final JFileChooser coverFileChooser;
-	
-	private BufferedImage currentCoverImage = null;
 	
 	private CCMovieList movieList;
 	
@@ -117,9 +107,6 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 	private JComboBox<String> cbxGenre4;
 	private JComboBox<String> cbxGenre5;
 	private JComboBox<String> cbxGenre6;
-	private CoverLabel lblCover;
-	private JButton btnOpenCover;
-	private JButton btnFindCover;
 	private JCheckBox cbxViewed;
 	private JComboBox<String> cbxQuality;
 	private JComboBox<String> cbxLanguage;
@@ -169,7 +156,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 	private JLabel lblNewLabel;
 	private JLabel label_1;
 	private JButton btnCalcQuality;
-	private JButton btnCrop;
+	private EditCoverControl edCvrControl;
 
 	/**
 	 * @wbp.parser.constructor
@@ -178,7 +165,6 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		super();
 		this.movieList = mlist;
 		this.videoFileChooser = new JFileChooser(PathFormatter.getAbsoluteSelfDirectory());
-		this.coverFileChooser = new JFileChooser(PathFormatter.getAbsoluteSelfDirectory());
 		
 		init(owner);
 	}
@@ -187,7 +173,6 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		super();
 		this.movieList = mlist;
 		this.videoFileChooser = new JFileChooser(PathFormatter.getAbsoluteSelfDirectory());
-		this.coverFileChooser = new JFileChooser(PathFormatter.getAbsoluteSelfDirectory());
 		
 		init(owner);
 		
@@ -207,7 +192,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		setEnabledAll(false);
 
 		setLocationRelativeTo(owner);
-		setFocusTraversalPolicy(new ExtendedFocusTraversalOnArray(new Component[]{btnChoose0, btnChoose1, btnChoose2, btnChoose3, btnChoose4, btnChoose5, edTitle, edZyklus, spnZyklus, cbxViewed, spnLength, cbxLanguage, cbxQuality, btnCalcQuality, spnAddDate, spnOnlineScore, cbxFSK, cbxFormat, spnYear, spnSize, cbxScore, cbxGenre0, cbxGenre1, cbxGenre2, cbxGenre3, cbxGenre4, cbxGenre5, cbxGenre6, cbxGenre7, btnParseIMDB, btnFindCover, btnOpenCover, btnOK, btnCancel, btnOpenIMDb, btnClear1, btnClear2, btnClear3, btnClear4, btnClear5}));
+		setFocusTraversalPolicy(new ExtendedFocusTraversalOnArray(new Component[]{btnChoose0, btnChoose1, btnChoose2, btnChoose3, btnChoose4, btnChoose5, edTitle, edZyklus, spnZyklus, cbxViewed, spnLength, cbxLanguage, cbxQuality, btnCalcQuality, spnAddDate, spnOnlineScore, cbxFSK, cbxFormat, spnYear, spnSize, cbxScore, cbxGenre0, cbxGenre1, cbxGenre2, cbxGenre3, cbxGenre4, cbxGenre5, cbxGenre6, cbxGenre7, btnParseIMDB, btnOK, btnCancel, btnOpenIMDb, btnClear1, btnClear2, btnClear3, btnClear4, btnClear5}));
 
 		btnChoose0.setEnabled(true);
 	}
@@ -490,40 +475,9 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		cbxGenre6.setBounds(508, 300, 212, 22);
 		contentPane.add(cbxGenre6);
 		
-		lblCover = new CoverLabel(false);
-		lblCover.setHorizontalAlignment(SwingConstants.CENTER);
-		lblCover.setBounds(508, 459, ImageUtilities.COVER_WIDTH, ImageUtilities.COVER_HEIGHT);
-		contentPane.add(lblCover);
-		
-		btnOpenCover = new JButton(LocaleBundle.getString("AddMovieFrame.btnOpenCover.text")); //$NON-NLS-1$
-		btnOpenCover.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				openChooseCoverDialog();
-			}
-		});
-		btnOpenCover.setBounds(643, 421, 47, 25);
-		contentPane.add(btnOpenCover);
-		
-		btnFindCover = new JButton(LocaleBundle.getString("AddMovieFrame.btnFindCover.text")); //$NON-NLS-1$
-		btnFindCover.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				showFindCoverDialog();
-			}
-		});
-		btnFindCover.setBounds(581, 421, 52, 25);
-		contentPane.add(btnFindCover);
-		
-		btnCrop = new JButton(LocaleBundle.getString("AddMovieFrame.btnCrop.text")); //$NON-NLS-1$
-		btnCrop.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				showCropDialog();
-			}
-		});
-		btnCrop.setBounds(508, 421, 63, 25);
-		contentPane.add(btnCrop);
+		edCvrControl = new EditCoverControl(this);
+		edCvrControl.setBounds(508, 421, EditCoverControl.CTRL_WIDTH, EditCoverControl.CTRL_HEIGHT);
+		contentPane.add(edCvrControl);
 		
 		lblGesehen = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGesehen.text")); //$NON-NLS-1$
 		lblGesehen.setBounds(12, 341, 52, 16);
@@ -837,7 +791,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		
 		newM.setScore(cbxScore.getSelectedIndex());
 
-		newM.setCover(currentCoverImage);
+		newM.setCover(edCvrControl.getResizedImage());
 		
 		newM.endUpdating();
 		
@@ -848,32 +802,8 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		this.dispose();
 	}
 	
-	private void showFindCoverDialog() {
-		(new FindCoverDialog(this, this, CCMovieTyp.MOVIE)).setVisible(true);
-	}
-	
-	private void showCropDialog() {
-		if (currentCoverImage == null) return;
-		
-		(new CoverCropDialog(this, currentCoverImage, this)).setVisible(true);
-	}
-	
 	private void showIMDBParser() {
 		(new ParseImDBDialog(this, this, CCMovieTyp.MOVIE)).setVisible(true);
-	}
-	
-	private void openChooseCoverDialog() {
-		int returnval = coverFileChooser.showOpenDialog(this);
-		
-		if (returnval != JFileChooser.APPROVE_OPTION) {
-			return;
-		}
-		try {
-			BufferedImage read = ImageIO.read(coverFileChooser.getSelectedFile());
-			setCover(read);
-		} catch (IOException e) {
-			CCLog.addError(e);
-		}
 	}
 	
 	private void initFileChooser() {
@@ -885,12 +815,6 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		}));
 		
 		videoFileChooser.setDialogTitle(LocaleBundle.getString("AddMovieFrame.videoFileChooser.title")); //$NON-NLS-1$
-		
-		//###################################################################################################################################
-		
-		coverFileChooser.setFileFilter(FileChooserHelper.createLocalFileFilter("AddMovieFrame.coverFileChooser.filterDescription", "png", "bmp", "gif", "jpg", "jpeg")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
-		
-		coverFileChooser.setDialogTitle(LocaleBundle.getString("AddMovieFrame.coverFileChooser.title")); //$NON-NLS-1$
 	}
 
 	private void setDefaultValues() {
@@ -952,9 +876,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		cbxGenre4.setEnabled(e);
 		cbxGenre5.setEnabled(e);
 		cbxGenre6.setEnabled(e);
-		btnOpenCover.setEnabled(e);
-		btnFindCover.setEnabled(e);
-		btnCrop.setEnabled(e);
+		edCvrControl.setEnabled(e);
 		cbxViewed.setEnabled(e);
 		cbxQuality.setEnabled(e);
 		cbxLanguage.setEnabled(e);
@@ -1204,20 +1126,11 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 	
 	@Override
 	public void setCover(BufferedImage nci) {
-		if (nci != null) {
-			nci = ImageUtilities.resizeCoverImage(nci);
-			this.currentCoverImage = nci;
-			
-			lblCover.setIcon(new ImageIcon(currentCoverImage));
-		} else {
-			this.currentCoverImage = null;
-			
-			lblCover.setIcon(null);
-		}
+		edCvrControl.setCover(nci);
 	}
 	
 	public boolean checkUserData(List<UserDataProblem> ret) { 
-		BufferedImage i = currentCoverImage;
+		BufferedImage i = edCvrControl.getResizedImage();
 		
 		String p0 = ed_Part0.getText();
 		String p1 = ed_Part1.getText();
@@ -1270,15 +1183,5 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 	@Override
 	public void onAMIEDIgnoreClicked() {
 		onBtnOK(false);
-	}
-
-	@Override
-	public void editingFinished(BufferedImage i) {
-		setCover(i);
-	}
-
-	@Override
-	public void editingCanceled() {
-		// Do Nothing
 	}
 }

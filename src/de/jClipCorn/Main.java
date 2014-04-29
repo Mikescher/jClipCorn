@@ -92,12 +92,8 @@ public class Main {
 //TODO Compare Series in CompareDialog
 //TODO Option to move Database to Server
 
-//TODO Methode um jCC von Karlsruhe aus nicht immer synchen zu müssen (Need4Idea)
 //TODO Integrated VLC ? : https://code.google.com/p/vlcj/
 
-//TODO Use in DIalogs HQ-Cover Version (so cropping does not pixelate)
-//TODO Add AddFromClipboard Cover Function (perhaps also wehn clipboard == URL) (and via direct URL)
-// --> Special Button With [...|v] to either open or use other things (parse, Clipboard, url, cropper ...)
 //TODO Wrong FIlename DatabaseErro (and also wron Parentfolder) for Series (optionally option => default off)
 //TODO When viewing serries (or every update of series) --> update PreviewSeriesFrame (especially left sidebar)
 //TODO Clicking on Score to filter ? optionnally

@@ -50,6 +50,8 @@ public class PathFormatter {
 	}
 
 	public static String getAbsoluteSelfDirectory() {
+		if (CCProperties.getInstance() == null) return ""; // For WindowBuilder
+		
 		String sDir = CCProperties.getInstance().PROP_SELF_DIRECTORY.getValue();
 		
 		String ret = WORKINGDIR + BACKSLASH + sDir;

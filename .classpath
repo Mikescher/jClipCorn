@@ -53,6 +53,7 @@
 	</classpathentry>
 	<classpathentry kind="lib" path="lib/jcommon-1.0.17.jar"/>
 	<classpathentry kind="lib" path="lib/jfreechart-1.0.14.jar"/>
+	<classpathentry kind="lib" path="lib/JSplitButton_1.2.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/jgoodies-forms-1.4.2.jar"/>
 	<classpathentry kind="lib" path="lib/derby-10.10.1.1.jar"/>

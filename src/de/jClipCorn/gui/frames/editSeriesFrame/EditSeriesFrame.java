@@ -9,14 +9,11 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.imageio.ImageIO;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -29,7 +26,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
-import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.border.LineBorder;
 import javax.swing.event.ChangeEvent;
@@ -51,16 +47,13 @@ import de.jClipCorn.gui.CachedResourceLoader;
 import de.jClipCorn.gui.Resources;
 import de.jClipCorn.gui.frames.addEpisodesFrame.AddEpisodesFrame;
 import de.jClipCorn.gui.frames.addSeasonFrame.AddSeasonFrame;
-import de.jClipCorn.gui.frames.coverCropFrame.CoverCropDialog;
-import de.jClipCorn.gui.frames.findCoverFrame.FindCoverDialog;
 import de.jClipCorn.gui.frames.inputErrorFrame.InputErrorDialog;
-import de.jClipCorn.gui.guiComponents.CoverLabel;
 import de.jClipCorn.gui.guiComponents.HFixListCellRenderer;
 import de.jClipCorn.gui.guiComponents.ReadableTextField;
 import de.jClipCorn.gui.guiComponents.TagPanel;
+import de.jClipCorn.gui.guiComponents.editCoverControl.EditCoverControl;
 import de.jClipCorn.gui.guiComponents.jCCDateSpinner.JCCDateSpinner;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.CCDate;
 import de.jClipCorn.util.Validator;
@@ -70,8 +63,6 @@ import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.helper.ExtendedFocusTraversalOnArray;
 import de.jClipCorn.util.helper.FileChooserHelper;
 import de.jClipCorn.util.helper.HTTPUtilities;
-import de.jClipCorn.util.helper.ImageUtilities;
-import de.jClipCorn.util.listener.ImageCropperResultListener;
 import de.jClipCorn.util.listener.UpdateCallbackListener;
 import de.jClipCorn.util.parser.ImDBParser;
 import de.jClipCorn.util.parser.ParseResultHandler;
@@ -84,18 +75,12 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 	private static CCDate MIN_DATE = CCDate.getMinimumDate();
 	
 	private final JFileChooser videoFileChooser;
-	private final JFileChooser coverFileChooser;
-	
-	private BufferedImage currentSeriesCoverImage = null;
-	private BufferedImage currentSeasonCoverImage = null;
 	
 	private final CCSeries series;
 	
 	private final UpdateCallbackListener listener;
 	
 	private JList<String> lsSeasons;
-	private CoverLabel lblSeriesCover;
-	private JButton btnSeriesOpenCover;
 	private JLabel label_1;
 	private JTextField edSeriesTitle;
 	private JComboBox<String> cbxSeriesGenre_7;
@@ -122,13 +107,10 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 	private JLabel label_13;
 	private JComboBox<String> cbxSeriesFSK;
 	private JPanel pnlSeries;
-	private JButton btnSeriesFindCover;
 	private JScrollPane scrollPane;
 	private JComboBox<String> cbxSeriesScore;
 	private JLabel lblScore;
 	private JPanel pnlSeason;
-	private CoverLabel lblSeasonCover;
-	private JButton btnSeasonOpenCover;
 	private JLabel label_15;
 	private JTextField edSeasonTitle;
 	private JLabel label_16;
@@ -178,8 +160,8 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 	private JButton btnSeasonOK;
 	private JButton btnEpisodeOK;
 	private JButton btnEpisodeCalcQuality;
-	private JButton btnSeriesCrop;
-	private JButton btnSeasonCrop;
+	private EditCoverControl edSeriesCvrControl;
+	private EditCoverControl edSeasonCvrControl;
 
 	/**
 	 * @wbp.parser.constructor
@@ -189,7 +171,6 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		this.series = ser;
 		this.listener = ucl;
 		this.videoFileChooser = new JFileChooser(PathFormatter.getAbsolute(ser.getCommonPathStart()));
-		this.coverFileChooser = new JFileChooser(PathFormatter.getAbsolute(ser.getCommonPathStart()));
 		
 		initGUI();
 		setDefaultValues();
@@ -210,7 +191,6 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		this.series = sea.getSeries();
 		this.listener = ucl;
 		this.videoFileChooser = new JFileChooser(PathFormatter.getAbsoluteSelfDirectory());
-		this.coverFileChooser = new JFileChooser(PathFormatter.getAbsoluteSelfDirectory());
 		
 		initGUI();
 		setDefaultValues();
@@ -233,7 +213,6 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		this.series = ep.getSeries();
 		this.listener = ucl;
 		this.videoFileChooser = new JFileChooser(PathFormatter.getAbsoluteSelfDirectory());
-		this.coverFileChooser = new JFileChooser(PathFormatter.getAbsoluteSelfDirectory());
 		
 		initGUI();
 		setDefaultValues();
@@ -253,7 +232,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 	}
 	
 	private void updateFocusTraversalPolicy() {
-		setFocusTraversalPolicy(new ExtendedFocusTraversalOnArray(new Component[]{btnSeriesFindCover, btnSeriesOpenCover, edSeriesTitle, cbxSeriesLanguage, spnSeriesOnlineScore, cbxSeriesFSK, cbxSeriesScore, cbxSeriesGenre_0, cbxSeriesGenre_1, cbxSeriesGenre_2, cbxSeriesGenre_3, cbxSeriesGenre_4, cbxSeriesGenre_5, cbxSeriesGenre_6, cbxSeriesGenre_7, btnAddEmptySeason, btnAddSeason, btnRemoveSeason, btnSeriesOk, btnSeasonOpenCover, edSeasonTitle, spnSeasonYear, btnAddEpisode, btnAddMultipleEpisodes, btnRemoveEpisode, btnSeasonOK, edEpisodeTitle, spnEpisodeEpisode, cbEpisodeViewed, cbxEpisodeFormat, cbxEpisodeQuality, spnEpisodeLength, spnEpisodeSize, spnEpisodeAdded, spnEpisodeLastViewed, edEpisodePart, tagPnl, btnEpisodeOK, btnEpisodeToday, btnEpisodeClear, btnEpisodeOpenPart}));
+		setFocusTraversalPolicy(new ExtendedFocusTraversalOnArray(new Component[]{edSeriesTitle, cbxSeriesLanguage, spnSeriesOnlineScore, cbxSeriesFSK, cbxSeriesScore, cbxSeriesGenre_0, cbxSeriesGenre_1, cbxSeriesGenre_2, cbxSeriesGenre_3, cbxSeriesGenre_4, cbxSeriesGenre_5, cbxSeriesGenre_6, cbxSeriesGenre_7, btnAddEmptySeason, btnAddSeason, btnRemoveSeason, btnSeriesOk, edSeasonTitle, spnSeasonYear, btnAddEpisode, btnAddMultipleEpisodes, btnRemoveEpisode, btnSeasonOK, edEpisodeTitle, spnEpisodeEpisode, cbEpisodeViewed, cbxEpisodeFormat, cbxEpisodeQuality, spnEpisodeLength, spnEpisodeSize, spnEpisodeAdded, spnEpisodeLastViewed, edEpisodePart, tagPnl, btnEpisodeOK, btnEpisodeToday, btnEpisodeClear, btnEpisodeOpenPart}));
 	}
 	
 	private void selectEpisode(CCEpisode e) {
@@ -277,16 +256,6 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		pnlSeries.setBounds(12, 13, 419, 646);
 		getContentPane().add(pnlSeries);
 		pnlSeries.setLayout(null);
-		
-		btnSeriesOpenCover = new JButton(LocaleBundle.getString("AddMovieFrame.btnChoose.text")); //$NON-NLS-1$
-		btnSeriesOpenCover.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				openSeriesCover();
-			}
-		});
-		btnSeriesOpenCover.setBounds(162, 13, 32, 23);
-		pnlSeries.add(btnSeriesOpenCover);
 		
 		edSeriesTitle = new JTextField();
 		edSeriesTitle.setBounds(74, 314, 120, 20);
@@ -399,25 +368,10 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 			}
 		});
 		scrollPane.setViewportView(lsSeasons);
-		
-		lblSeriesCover = new CoverLabel(false);
-		lblSeriesCover.setBounds(12, 49, 182, 254);
-		pnlSeries.add(lblSeriesCover);
-		lblSeriesCover.setHorizontalAlignment(SwingConstants.CENTER);
-		
+
 		label_1 = new JLabel(LocaleBundle.getString("AddMovieFrame.label_1.text")); //$NON-NLS-1$
 		label_1.setBounds(12, 316, 52, 16);
 		pnlSeries.add(label_1);
-		
-		btnSeriesFindCover = new JButton(LocaleBundle.getString("AddMovieFrame.btnFindCover.text")); //$NON-NLS-1$
-		btnSeriesFindCover.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				showFindCoverDialog();
-			}
-		});
-		btnSeriesFindCover.setBounds(95, 14, 55, 23);
-		pnlSeries.add(btnSeriesFindCover);
 		
 		cbxSeriesScore = new JComboBox<>();
 		cbxSeriesScore.setBounds(74, 442, 120, 20);
@@ -481,36 +435,15 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		btnSeriesOk.setBounds(162, 612, 89, 23);
 		pnlSeries.add(btnSeriesOk);
 		
-		btnSeriesCrop = new JButton(LocaleBundle.getString("AddMovieFrame.btnCrop.text")); //$NON-NLS-1$
-		btnSeriesCrop.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				cropSeriesImage();
-			}
-		});
-		btnSeriesCrop.setBounds(12, 14, 71, 23);
-		pnlSeries.add(btnSeriesCrop);
+		edSeriesCvrControl = new EditCoverControl(this);
+		edSeriesCvrControl.setBounds(12, 14, EditCoverControl.CTRL_WIDTH, EditCoverControl.CTRL_HEIGHT);
+		pnlSeries.add(edSeriesCvrControl);
 		
 		pnlSeason = new JPanel();
 		pnlSeason.setBorder(new LineBorder(new Color(0, 0, 0)));
 		pnlSeason.setBounds(446, 13, 367, 646);
 		getContentPane().add(pnlSeason);
 		pnlSeason.setLayout(null);
-		
-		lblSeasonCover = new CoverLabel(false);
-		lblSeasonCover.setHorizontalAlignment(SwingConstants.CENTER);
-		lblSeasonCover.setBounds(12, 49, 182, 254);
-		pnlSeason.add(lblSeasonCover);
-		
-		btnSeasonOpenCover = new JButton(LocaleBundle.getString("AddMovieFrame.btnChoose.text")); //$NON-NLS-1$
-		btnSeasonOpenCover.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				openSeasonCover();
-			}
-		});
-		btnSeasonOpenCover.setBounds(162, 13, 32, 23);
-		pnlSeason.add(btnSeasonOpenCover);
 		
 		label_15 = new JLabel(LocaleBundle.getString("AddMovieFrame.label_1.text")); //$NON-NLS-1$
 		label_15.setBounds(12, 318, 52, 16);
@@ -588,15 +521,9 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		btnSeasonOK.setBounds(145, 612, 89, 23);
 		pnlSeason.add(btnSeasonOK);
 		
-		btnSeasonCrop = new JButton(LocaleBundle.getString("AddMovieFrame.btnCrop.text")); //$NON-NLS-1$
-		btnSeasonCrop.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				cropSeasonImage();
-			}
-		});
-		btnSeasonCrop.setBounds(12, 13, 71, 23);
-		pnlSeason.add(btnSeasonCrop);
+		edSeasonCvrControl = new EditCoverControl(this);
+		edSeasonCvrControl.setBounds(12, 13, EditCoverControl.CTRL_WIDTH, EditCoverControl.CTRL_HEIGHT);
+		pnlSeason.add(edSeasonCvrControl);
 		
 		pnlEpisode = new JPanel();
 		pnlEpisode.setBorder(new LineBorder(new Color(0, 0, 0)));
@@ -737,7 +664,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		edEpisodePart.setBounds(74, 406, 212, 20);
 		pnlEpisode.add(edEpisodePart);
 		
-		btnEpisodeOpenPart = new JButton(LocaleBundle.getString("AddMovieFrame.btnOpenCover.text")); //$NON-NLS-1$
+		btnEpisodeOpenPart = new JButton(LocaleBundle.getString("EditSeriesFrame.btnEpisodeOpenPart.text")); //$NON-NLS-1$
 		btnEpisodeOpenPart.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -827,8 +754,8 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 	}
 	
 	private void updateSeriesPanel() {
-		lblSeriesCover.setIcon(series.getCoverIcon());
-		currentSeriesCoverImage = series.getCover();
+		edSeriesCvrControl.setCover(series.getCover());
+		
 		lblSeriesSeriesID.setText(series.getSeriesID() + ""); //$NON-NLS-1$
 		edSeriesTitle.setText(series.getTitle());
 		cbxSeriesLanguage.setSelectedIndex(series.getLanguage().asInt());
@@ -863,8 +790,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		} else {
 			pnlSeason.setVisible(true);
 			
-			lblSeasonCover.setIcon(season.getCoverIcon());
-			currentSeasonCoverImage = season.getCover();
+			edSeasonCvrControl.setCover(season.getCover());
 			edSeasonTitle.setText(season.getTitle());
 			spnSeasonYear.setValue(season.getYear());
 			
@@ -914,73 +840,14 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		}));
 		
 		videoFileChooser.setDialogTitle(LocaleBundle.getString("AddMovieFrame.videoFileChooser.title")); //$NON-NLS-1$
-		
-		//###################################################################################################################################
-		
-		coverFileChooser.setFileFilter(FileChooserHelper.createLocalFileFilter("AddMovieFrame.coverFileChooser.filterDescription", "png", "bmp", "gif", "jpg", "jpeg")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
-		
-		coverFileChooser.setDialogTitle(LocaleBundle.getString("AddMovieFrame.coverFileChooser.title")); //$NON-NLS-1$
 	}
 	
 	private void updateEpisodesFilesizeDisplay() {
 		lblEpisodeFilesize.setText(FileSizeFormatter.format((long) spnEpisodeSize.getValue()));
 	}
-	
-	private void openSeriesCover() {
-		int returnval = coverFileChooser.showOpenDialog(this);
-		
-		if (returnval != JFileChooser.APPROVE_OPTION) {
-			return;
-		}
-		try {
-			BufferedImage read = ImageIO.read(coverFileChooser.getSelectedFile());
-			setSeriesCover(read);
-		} catch (IOException e) {
-			CCLog.addError(e);
-		}
-	}
-	
-	private void openSeasonCover() {
-		int returnval = coverFileChooser.showOpenDialog(this);
-		
-		if (returnval != JFileChooser.APPROVE_OPTION) {
-			return;
-		}
-		try {
-			BufferedImage read = ImageIO.read(coverFileChooser.getSelectedFile());
-			setSeasonCover(read);
-		} catch (IOException e) {
-			CCLog.addError(e);
-		}
-	}
-	
+
 	private void setSeriesCover(BufferedImage nci) {
-		if (nci != null) {
-			nci = ImageUtilities.resizeCoverImage(nci);
-			ImageUtilities.makeSeriesCover(nci);
-			this.currentSeriesCoverImage = nci;
-			
-			lblSeriesCover.setIcon(new ImageIcon(currentSeriesCoverImage));
-		} else {
-			this.currentSeriesCoverImage = null;
-			
-			lblSeriesCover.setIcon(null);
-		}
-	}
-	
-	private void setSeasonCover(BufferedImage nci) {
-		nci = ImageUtilities.resizeCoverImage(nci);
-		
-		this.currentSeasonCoverImage = nci;
-		if (nci != null) {
-			lblSeasonCover.setIcon(new ImageIcon(currentSeasonCoverImage));
-		} else {
-			lblSeasonCover.setIcon(null);
-		}
-	}
-	
-	private void showFindCoverDialog() {
-		(new FindCoverDialog(this, this, CCMovieTyp.MOVIE)).setVisible(true);
+		edSeriesCvrControl.setCover(nci);
 	}
 
 	@Override
@@ -990,67 +857,67 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 
 	@Override
 	public void setMovieFormat(CCMovieFormat cmf) {
-		// nope - we wont parse da Series
+		// NOP
 	}
 
 	@Override
 	public void setFilepath(int p, String t) {
-		// nope - we wont parse da Series
+		// NOP
 	}
 
 	@Override
 	public void setMovieName(String name) {
-		// nope - we wont parse da Series
+		// NOP
 	}
 
 	@Override
 	public void setZyklus(String mZyklusTitle) {
-		// nope - we wont parse da Series
+		// NOP
 	}
 
 	@Override
 	public void setZyklusNumber(int iRoman) {
-		// nope - we wont parse da Series
+		// NOP
 	}
 
 	@Override
 	public void setFilesize(long size) {
-		// nope - we wont parse da Series
+		// NOP
 	}
 
 	@Override
 	public void setMovieLanguage(CCMovieLanguage lang) {
-		// nope - we wont parse da Series
+		// NOP
 	}
 
 	@Override
 	public void setQuality(CCMovieQuality q) {
-		// nope - we wont parse da Series
+		// NOP
 	}
 
 	@Override
 	public void setYear(int y) {
-		// nope - we wont parse da Series
+		// NOP
 	}
 
 	@Override
 	public void setGenre(int gid, int movGenre) {
-		// nope - we wont parse da Series
+		// NOP
 	}
 
 	@Override
 	public void setFSK(int fsk) {
-		// nope - we wont parse da Series
+		// NOP
 	}
 
 	@Override
 	public void setLength(int l) {
-		// nope - we wont parse da Series
+		// NOP
 	}
 
 	@Override
 	public void setScore(int s) {
-		// nope - we wont parse da Series
+		// NOP
 	}
 
 	@Override
@@ -1112,7 +979,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		
 		//#####################################################################################
 		
-		series.setCover(currentSeriesCoverImage);
+		series.setCover(edSeriesCvrControl.getResizedImage());
 		series.setTitle(edSeriesTitle.getText());
 		series.setLanguage(cbxSeriesLanguage.getSelectedIndex());
 		series.setOnlinescore((int) spnSeriesOnlineScore.getValue());
@@ -1151,7 +1018,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		int gen6 = cbxSeriesGenre_6.getSelectedIndex();
 		int gen7 = cbxSeriesGenre_7.getSelectedIndex();
 		
-		UserDataProblem.testSeriesData(ret, currentSeriesCoverImage, title, oscore, gen0, gen1, gen2, gen3, gen4, gen5, gen6, gen7, fskidx);
+		UserDataProblem.testSeriesData(ret, edSeriesCvrControl.getResizedImage(), title, oscore, gen0, gen1, gen2, gen3, gen4, gen5, gen6, gen7, fskidx);
 		
 		return ret.isEmpty();
 	}
@@ -1226,7 +1093,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		
 		//#####################################################################################
 		
-		season.setCover(currentSeasonCoverImage);
+		season.setCover(edSeasonCvrControl.getResizedImage());
 		season.setTitle(edSeasonTitle.getText());
 		season.setYear((int) spnSeasonYear.getValue());
 		
@@ -1246,7 +1113,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		String title = edSeasonTitle.getText();
 		int year = (int) spnSeasonYear.getValue();
 
-		UserDataProblem.testSeasonData(ret, currentSeasonCoverImage, title, year);
+		UserDataProblem.testSeasonData(ret, edSeasonCvrControl.getResizedImage(), title, year);
 		
 		return ret.isEmpty();
 	}
@@ -1397,37 +1264,5 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 	@Override
 	public void windowOpened(WindowEvent arg0) {
 		// nothing to do
-	}
-	
-	private void cropSeriesImage() {
-		if (currentSeriesCoverImage == null) return;
-		
-		(new CoverCropDialog(this, currentSeriesCoverImage, new ImageCropperResultListener() {
-			@Override
-			public void editingFinished(BufferedImage i) {
-				setSeriesCover(i);
-			}
-			
-			@Override
-			public void editingCanceled() {
-				// nothing
-			}
-		}, true)).setVisible(true);
-	}
-	
-	private void cropSeasonImage() {
-		if (currentSeasonCoverImage == null) return;
-		
-		(new CoverCropDialog(this, currentSeasonCoverImage, new ImageCropperResultListener() {
-			@Override
-			public void editingFinished(BufferedImage i) {
-				setSeasonCover(i);
-			}
-			
-			@Override
-			public void editingCanceled() {
-				// nothing
-			}
-		})).setVisible(true);
 	}
 }

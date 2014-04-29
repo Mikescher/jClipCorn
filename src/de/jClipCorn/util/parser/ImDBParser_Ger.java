@@ -19,7 +19,6 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.util.DoubleString;
 import de.jClipCorn.util.helper.HTTPUtilities;
-import de.jClipCorn.util.helper.ImageUtilities;
 import de.jClipCorn.util.helper.RegExHelper;
 
 @SuppressWarnings("nls")
@@ -231,9 +230,7 @@ public class ImDBParser_Ger {
 		if (result == null) {
 			return null;
 		}
-		
-		result = ImageUtilities.resizeCoverImage(result);
-		
+
 		return result;
 	}
 }

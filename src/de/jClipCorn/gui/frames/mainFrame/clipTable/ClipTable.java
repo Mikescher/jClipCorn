@@ -195,7 +195,7 @@ public class ClipTable extends JScrollPane implements CCDBUpdateListener, ListSe
 		
 		CCMovieZyklus zyklus = getZyklusUnderMouse(e.getPoint());
 		if (e.getButton() == MouseEvent.BUTTON1 && zyklus != null) {
-			setRowFilter(new TableZyklusFilter(zyklus), null);
+			setRowFilter(new TableZyklusFilter(zyklus), RowFilterSource.CLICKED_ZYKLUS);
 		}
 	}
 	
@@ -217,10 +217,6 @@ public class ClipTable extends JScrollPane implements CCDBUpdateListener, ListSe
 
 	@SuppressWarnings("unchecked")
 	public void setRowFilter(RowFilter<ClipTableModel, Object> filter, RowFilterSource source) { // Source kann null sein
-		((TableRowSorter<ClipTableModel>) table.getRowSorter()).setRowFilter(filter);
-
-		owner.getStatusBar().updateLables_Movies();
-
 		if (source != RowFilterSource.CHARSELECTOR) {
 			owner.resetCharSelector();
 		}
@@ -230,6 +226,9 @@ public class ClipTable extends JScrollPane implements CCDBUpdateListener, ListSe
 		if (source != RowFilterSource.TEXTFIELD) {
 			owner.resetSearchField();
 		}
+		
+		((TableRowSorter<ClipTableModel>) table.getRowSorter()).setRowFilter(filter);
+		owner.getStatusBar().updateLables_Movies();
 	}
 
 	public int getRowCount() {

@@ -103,8 +103,6 @@ public class Main {
 //TODO Clicking on Score to filter ? optionnally
 
 //TODO Bug: Filter with special char not loaded correctly (-> encoding ?)
-//TODO Bug: When Clicking on a Zyklus while a sidebar filter is active it will show [all] instead of [zyklus]
-//TODO Bug: Can't craete new Databse (prepStatement AV)
 //TODO Bug: Sidebar Filter Viewed --> AV
 
 //TODO Import Dialog -> Reset Tags

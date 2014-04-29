@@ -64,7 +64,7 @@ public abstract class AutomaticSettingsFrame extends JFrame {
 		
 		setIconImage(CachedResourceLoader.getImage(Resources.IMG_FRAME_ICON));
 		
-		setSize(new Dimension(675, 440));
+		setSize(new Dimension(750, 440));
 		setMinimumSize(new Dimension(650, 400));
 		setTitle(LocaleBundle.getString("Settingsframe.this.title")); //$NON-NLS-1$
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

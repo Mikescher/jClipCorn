@@ -22,9 +22,11 @@ import javax.swing.table.TableRowSorter;
 
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
+import de.jClipCorn.database.databaseElement.columnTypes.CCMovieScore;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieZyklus;
 import de.jClipCorn.database.util.CCDBUpdateListener;
 import de.jClipCorn.gui.frames.mainFrame.MainFrame;
+import de.jClipCorn.gui.guiComponents.tableFilter.TableScoreFilter;
 import de.jClipCorn.gui.guiComponents.tableFilter.TableZyklusFilter;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.TableColumnAdjuster;
@@ -195,7 +197,12 @@ public class ClipTable extends JScrollPane implements CCDBUpdateListener, ListSe
 		
 		CCMovieZyklus zyklus = getZyklusUnderMouse(e.getPoint());
 		if (e.getButton() == MouseEvent.BUTTON1 && zyklus != null) {
-			setRowFilter(new TableZyklusFilter(zyklus), RowFilterSource.CLICKED_ZYKLUS);
+			setRowFilter(new TableZyklusFilter(zyklus), RowFilterSource.TABLE_CLICKED);
+		}
+		
+		CCMovieScore score = getScoreUnderMouse(e.getPoint());
+		if (e.getButton() == MouseEvent.BUTTON1 && score != null) {
+			setRowFilter(new TableScoreFilter(score), RowFilterSource.TABLE_CLICKED);
 		}
 	}
 	
@@ -207,8 +214,9 @@ public class ClipTable extends JScrollPane implements CCDBUpdateListener, ListSe
 	@Override
 	public void mouseMoved(MouseEvent e) {
 		CCMovieZyklus zyklus = getZyklusUnderMouse(e.getPoint());
+		CCMovieScore score = getScoreUnderMouse(e.getPoint());
 	
-		if (zyklus == null) {
+		if (zyklus == null && score == null) {
 			setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 		} else {
 			setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -267,6 +275,39 @@ public class ClipTable extends JScrollPane implements CCDBUpdateListener, ListSe
 		
 		if (clip.contains(p)) {
 			return zyklus;
+		} else {
+			return null;
+		}
+	}
+	
+	private CCMovieScore getScoreUnderMouse(Point p) {
+		if (! CCProperties.getInstance().PROP_MAINFRAME_CLICKABLESCORE.getValue()) return null;
+		
+		int vcol = table.columnAtPoint(p);
+		int vrow = table.rowAtPoint(p);
+		
+		if (vcol == -1 || vrow == -1) {
+			return null;
+		}
+		
+		int mcol = table.convertColumnIndexToModel(vcol);
+		int mrow = table.convertRowIndexToModel(vrow);
+		
+		if (mcol != ClipTableModel.COLUMN_SCORE) {
+			return null;
+		}
+		
+		CCMovieScore score = (CCMovieScore) table.getValueAt(vrow, vcol);
+		
+		if (score == CCMovieScore.RATING_NO) return null;
+
+		Component renderer = table.getCellRenderer(vrow, vcol).getTableCellRendererComponent(table, score, false, false, mrow, mcol);
+		int width = renderer.getFontMetrics(renderer.getFont()).stringWidth(score.asString());
+		Rectangle clip = table.getCellRect(vrow, vcol, true);
+		clip.width = width;
+		
+		if (clip.contains(p)) {
+			return score;
 		} else {
 			return null;
 		}

@@ -96,6 +96,7 @@ public class Main {
 
 //TODO Wrong FIlename DatabaseErro (and also wron Parentfolder) for Series (optionally option => default off)
 //TODO When viewing serries (or every update of series) --> update PreviewSeriesFrame (especially left sidebar)
-//TODO Clicking on Score to filter ? optionnally
 
 //TODO Import Dialog -> Reset Tags
+
+//TODO Check Series Folder Structure in CheckDB Dialog

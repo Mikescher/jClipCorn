@@ -48,7 +48,7 @@ public class CustomFilterList extends ArrayList<CustomFilterObject> {
 			String txt;
 			
 			try {
-				txt = TextFileUtils.readTextFile(f);
+				txt = TextFileUtils.readUTF8TextFile(f);
 			} catch (IOException e) {
 				CCLog.addError(e);
 				return;

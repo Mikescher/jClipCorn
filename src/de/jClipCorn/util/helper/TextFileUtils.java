@@ -5,7 +5,6 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -14,15 +13,6 @@ import java.nio.charset.Charset;
 
 public class TextFileUtils {	
 	public final static Charset CHARSET_UTF8 = Charset.forName("UTF-8"); //$NON-NLS-1$
-	
-	public static String readTextFile(String filename) throws IOException {
-		return readTextFile(new File(filename));
-	}
-	
-	@SuppressWarnings("resource")
-	public static String readTextFile(File file) throws IOException {
-		return readTextFile(new FileReader(file));
-	}
 	
 	public static String readTextFile(InputStreamReader reader) throws IOException {
 		return readTextFile(new BufferedReader(reader));

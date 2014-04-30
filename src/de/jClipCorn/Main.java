@@ -98,6 +98,4 @@ public class Main {
 //TODO When viewing serries (or every update of series) --> update PreviewSeriesFrame (especially left sidebar)
 //TODO Clicking on Score to filter ? optionnally
 
-//TODO Bug: Filter with special char not loaded correctly (-> encoding ?)
-
 //TODO Import Dialog -> Reset Tags

@@ -400,16 +400,23 @@ public class CCEpisode {
 		if (! parentfolder.isDirectory()) {
 			return null; // meehp
 		}
-		
-		DecimalFormat decFormattter = new DecimalFormat("00");
-		
-		CCSeason season = this.getSeason();
-		CCSeries series = season.getSeries();
-		
+
 		String parent = parentfolder.getAbsolutePath();
 		if (! parent.endsWith("\\")) {
 			parent += "\\";
 		}
+
+		String path = parent + getRelativeFileForCreatedFolderstructure();
+		
+		return new File(path);
+	}
+	
+	@SuppressWarnings("nls")
+	private String getRelativeFileForCreatedFolderstructure() {		
+		DecimalFormat decFormattter = new DecimalFormat("00");
+		
+		CCSeason season = this.getSeason();
+		CCSeries series = season.getSeries();
 		
 		String seriesfoldername = series.getTitle();
 		if (series.getLanguage() != CCMovieLanguage.GERMAN) {
@@ -424,9 +431,9 @@ public class CCEpisode {
 		filename += "." + this.getFormat().asString();
 		filename = PathFormatter.fixStringToFilename(filename);
 		
-		String path = parent + seriesfoldername + "\\" + seasonfoldername + "\\" + filename;
+		String path = seriesfoldername + "\\" + seasonfoldername + "\\" + filename;
 		
-		return new File(path);
+		return path;
 	}
 
 	public ExtendedViewedState getExtendedViewedState() {
@@ -436,5 +443,9 @@ public class CCEpisode {
 			return ExtendedViewedState.MARKED_FOR_LATER;
 		else
 			return ExtendedViewedState.NOT_VIEWED;
+	}
+
+	public boolean checkFolderStructure() {
+		return getPart().endsWith(getRelativeFileForCreatedFolderstructure());
 	}
 }

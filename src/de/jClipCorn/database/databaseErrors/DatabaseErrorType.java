@@ -5,7 +5,7 @@ import java.security.InvalidParameterException;
 import de.jClipCorn.gui.localization.LocaleBundle;
 
 public class DatabaseErrorType {
-	private static int ERRORTYPE_COUNT = 25;
+	private static int ERRORTYPE_COUNT = 26;
 	
 	public static DatabaseErrorType ERROR_INCONTINUOUS_GENRELIST = new DatabaseErrorType(1);
 	public static DatabaseErrorType ERROR_WRONG_GENREID = new DatabaseErrorType(2);
@@ -32,6 +32,7 @@ public class DatabaseErrorType {
 	public static DatabaseErrorType ERROR_NONLINKED_COVERFILE = new DatabaseErrorType(23);
 	public static DatabaseErrorType ERROR_IMPOSSIBLE_WATCH_LATER = new DatabaseErrorType(24);
 	public static DatabaseErrorType ERROR_LASTWATCHED_TOO_OLD = new DatabaseErrorType(25);
+	public static DatabaseErrorType ERROR_INVALID_SERIES_STRUCTURE = new DatabaseErrorType(26);
 	
 	private final int type;
 	private int count = 0;

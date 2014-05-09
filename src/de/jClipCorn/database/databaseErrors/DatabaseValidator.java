@@ -431,6 +431,14 @@ public class DatabaseValidator {
 		if (!episode.getLastViewed().isMinimum() && episode.getLastViewed().isLessThan(CCDate.create(1, 6, 1900))) {
 			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_LASTWATCHED_TOO_OLD, episode));
 		}
+		
+		// ###############################################
+		// Folderstructure not formatted
+		// ###############################################
+		
+		if (CCProperties.getInstance().PROP_VALIDATE_CHECK_SERIES_STRUCTURE.getValue() && ! episode.checkFolderStructure()) {
+			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_INVALID_SERIES_STRUCTURE, episode));
+		}
 	}
 
 	private static void findCoverErrors(List<DatabaseError> e, CCMovieList movielist, ProgressCallbackListener pcl) {

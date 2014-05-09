@@ -115,6 +115,7 @@ public class CCProperties {
 	public CCBoolProperty 		PROP_MAINFRAME_SHOWTAGS;
 	public CCStringProperty 	PROP_MAINFRAME_FILTERLISTPATH;
 	public CCBoolProperty		PROP_MAINFRAME_SHOWCOVERCORNER;
+	public CCBoolProperty		PROP_VALIDATE_CHECK_SERIES_STRUCTURE;
 	
 	public boolean ARG_READONLY = false;
 	
@@ -241,6 +242,7 @@ public class CCProperties {
 		PROP_MAINFRAME_SHOWTAGS					= new CCBoolProperty(CAT_VIEW,	 		this,   "PROP_MAINFRAME_SHOWTAGS",					true);
 		PROP_MAINFRAME_FILTERLISTPATH			= new CCStringProperty(CAT_COMMON,	 	this,	"PROP_MAINFRAME_FILTERLISTPATH",			"<?self>jClipCorn."+ExportHelper.EXTENSION_FILTERLIST);
 		PROP_MAINFRAME_SHOWCOVERCORNER			= new CCBoolProperty(CAT_VIEW,		 	this,   "PROP_MAINFRAME_SHOWCOVERCORNER",			true);
+		PROP_VALIDATE_CHECK_SERIES_STRUCTURE	= new CCBoolProperty(CAT_SERIES,		this,   "PROP_VALIDATE_CHECK_SERIES_STRUCTURE",		false);
 	}
 	
 	public static CCProperties getInstance() {

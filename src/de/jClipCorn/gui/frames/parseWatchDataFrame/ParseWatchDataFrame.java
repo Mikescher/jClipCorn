@@ -41,14 +41,28 @@ public class ParseWatchDataFrame extends JFrame {
 	
 	// ([A-Za-z].*)[ ]+\[S([0-9]+)\]
 	private final static String REGEX_SERIES_HEADER = "([A-Za-z].*)[ ]+\\[S([0-9]+)\\]"; //$NON-NLS-1$
-	// [\t ]+([0-9]+\.[0-9]+(\.[0-9]+)?)\:[\t ]*(E?\-?[0-9]+(\,[\t ]*E?\-?[0-9]+)*)
-	private final static String REGEX_SERIES_CONTENT = "[\\t ]+([0-9]+\\.[0-9]+(\\.[0-9]+)?)\\:[\\t ]*(E?\\-?[0-9]+(\\,[\\t ]*E?\\-?[0-9]+)*)"; //$NON-NLS-1$
 	//[^\[\]\n\r\t ][^\[\]\n\r]*
 	private final static String REGEX_MOVIE_HEADER = "[^\\[\\]\\n\\r\\t ][^\\[\\]\\n\\r]*"; //$NON-NLS-1$
+
+	// [\t ]+([0-9]+\.[0-9]+(\.[0-9]+)?)\:[\t ]*((E?\-?[0-9]+(\-E?[0-9]+)?(\,[\t ]*E?\-?[0-9]+(\-E?[0-9]+)?)*))
+	private final static String REGEX_SERIES_CONTENT = "[\\t ]+([0-9]+\\.[0-9]+(\\.[0-9]+)?)\\:[\\t ]*((E?\\-?[0-9]+(\\-E?[0-9]+)?(\\,[\\t ]*E?\\-?[0-9]+(\\-E?[0-9]+)?)*))"; //$NON-NLS-1$
+	
+	private final static String REGEX_CONTENT_SINGLE_1 = "E([0-9]+)"; //$NON-NLS-1$
+	private final static String REGEX_CONTENT_SINGLE_2 = "([0-9]+)"; //$NON-NLS-1$
+	private final static String REGEX_CONTENT_NEGATIVE_1 = "E\\-([0-9]+)"; //$NON-NLS-1$
+	private final static String REGEX_CONTENT_NEGATIVE_2 = "\\-([0-9]+)"; //$NON-NLS-1$
+	private final static String REGEX_CONTENT_RANGE_1 = "E([0-9]+)\\-E([0-9]+)"; //$NON-NLS-1$
+	private final static String REGEX_CONTENT_RANGE_2 = "E([0-9]+)\\-([0-9]+)"; //$NON-NLS-1$
 	
 	private final static Pattern PATTERN_SERIES_HEADER = Pattern.compile(REGEX_SERIES_HEADER);
 	private final static Pattern PATTERN_SERIES_CONTENT = Pattern.compile(REGEX_SERIES_CONTENT);
 	private final static Pattern PATTERN_MOVIE_HEADER = Pattern.compile(REGEX_MOVIE_HEADER);
+	private final static Pattern PATTERN_CONTENT_SINGLE_1 = Pattern.compile(REGEX_CONTENT_SINGLE_1);
+	private final static Pattern PATTERN_CONTENT_SINGLE_2 = Pattern.compile(REGEX_CONTENT_SINGLE_2);
+	private final static Pattern PATTERN_CONTENT_NEGATIVE_1 = Pattern.compile(REGEX_CONTENT_NEGATIVE_1);
+	private final static Pattern PATTERN_CONTENT_NEGATIVE_2 = Pattern.compile(REGEX_CONTENT_NEGATIVE_2);
+	private final static Pattern PATTERN_CONTENT_RANGE_1 = Pattern.compile(REGEX_CONTENT_RANGE_1);
+	private final static Pattern PATTERN_CONTENT_RANGE_2 = Pattern.compile(REGEX_CONTENT_RANGE_2);
 	
 	private final CCMovieList movielist;
 	
@@ -229,6 +243,10 @@ public class ParseWatchDataFrame extends JFrame {
 		for (int i = 0; i < lines.length; i++) {
 			String line = StringUtils.stripEnd(lines[i], null);
 			
+			if (line.indexOf("//") >= 0) {
+				line = line.substring(0, line.indexOf("//"));
+			}
+			
 			if (line.trim().isEmpty()) continue;
 					
 			Matcher matcher;
@@ -287,33 +305,56 @@ public class ParseWatchDataFrame extends JFrame {
 					String e = ep.trim();
 					if (e.isEmpty()) continue;
 					
-					boolean nState = true;
+					boolean range_neg;
 					
-					if ( e.startsWith("E")) {
-						e = e.substring(1);
-					}
+					int range_min;
+					int range_max;
 					
-					if (e.startsWith("-")) {
-						nState = false;
-						e = e.substring(1);
-					}
-					
-					int en;
 					try {
-						en = Integer.parseInt(e);
+						Matcher content_matcher;
+						if ((content_matcher = PATTERN_CONTENT_SINGLE_1.matcher(e)).matches()) {
+							range_neg = false;
+							range_min = Integer.parseInt(content_matcher.group(1));
+							range_max = range_min;
+						} else if ((content_matcher = PATTERN_CONTENT_SINGLE_2.matcher(e)).matches()) {
+							range_neg = false;
+							range_min = Integer.parseInt(content_matcher.group(1));
+							range_max = range_min;
+						} else if ((content_matcher = PATTERN_CONTENT_NEGATIVE_1.matcher(e)).matches()) {
+							range_neg = true;
+							range_min = Integer.parseInt(content_matcher.group(1));
+							range_max = range_min;
+						} else if ((content_matcher = PATTERN_CONTENT_NEGATIVE_2.matcher(e)).matches()) {
+							range_neg = true;
+							range_min = Integer.parseInt(content_matcher.group(1));
+							range_max = range_min;
+						} else if ((content_matcher = PATTERN_CONTENT_RANGE_1.matcher(e)).matches()) {
+							range_neg = false;
+							range_min = Integer.parseInt(content_matcher.group(1));
+							range_max = Integer.parseInt(content_matcher.group(2));
+						} else if ((content_matcher = PATTERN_CONTENT_RANGE_2.matcher(e)).matches()) {
+							range_neg = false;
+							range_min = Integer.parseInt(content_matcher.group(1));
+							range_max = Integer.parseInt(content_matcher.group(2));
+						} else {
+							errors.add(String.format("Line[%d] \"%s\" : The Episode \"%s\" could not be parsed (NaN)", i, line.trim(), e));
+							continue;
+						}
 					} catch (NumberFormatException ex2) {
-						errors.add(String.format("Line[%d] \"%s\" : The Episode \"%s\" could not be parsed (NaN)", i, line.trim(), e));
+						errors.add(String.format("Line[%d] \"%s\" : The Episode \"%s\" could not be parsed (RangeFormat)", i, line.trim(), e));
 						continue;
 					}
 					
-					CCEpisode epis = currSeason.getEpisodebyNumber(en);
-					
-					if (epis == null) {
-						errors.add(String.format("Line[%d] \"%s\" : The Episode \"%s\" could not be found in the current Season", i, line.trim(), e));
-						continue;
+					for (int en = range_min; en <= range_max; en++) {
+						CCEpisode epis = currSeason.getEpisodebyNumber(en);
+						
+						if (epis == null) {
+							errors.add(String.format("Line[%d] \"%s\" : The Episode \"%s\" could not be found in the current Season", i, line.trim(), en));
+							continue;
+						}
+						
+						set.add(new EpisodeWatchDataChangedSet(d, epis, range_neg));
 					}
-					
-					set.add(new EpisodeWatchDataChangedSet(d, epis, nState));
 				}
 			} else if ((matcher = PATTERN_MOVIE_HEADER.matcher(line)).matches()) {
 				String title = matcher.group().trim();

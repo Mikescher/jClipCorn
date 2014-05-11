@@ -65,7 +65,7 @@ public class Main {
 		}
 		
 		if (DEBUG) {
-			System.out.println("[DBG] " + LocaleBundle.getTranslationCount() + " Translations int Locale " + LocaleBundle.getCurrentLocale()); //$NON-NLS-1$ //$NON-NLS-2$
+			System.out.println("[DBG] " + LocaleBundle.getTranslationCount() + " Translations in Locale " + LocaleBundle.getCurrentLocale()); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 }

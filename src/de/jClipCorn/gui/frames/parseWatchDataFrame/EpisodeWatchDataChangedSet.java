@@ -32,6 +32,8 @@ public class EpisodeWatchDataChangedSet extends WatchDataChangeSet {
 	public String getChange() {
 		if (eps.isViewed() ^ newState)
 			return String.format("%d -> %d", eps.isViewed()?1:0, newState?1:0); //$NON-NLS-1$
+		else if (newState && ! eps.getLastViewed().isEquals(date))
+			return String.format("%s -> %s", eps.getLastViewed().getSimpleStringRepresentation(), date.getSimpleStringRepresentation()); //$NON-NLS-1$
 		else
 			return "#"; //$NON-NLS-1$
 	}
@@ -40,6 +42,8 @@ public class EpisodeWatchDataChangedSet extends WatchDataChangeSet {
 	public void execute() {
 		if (eps.isViewed() ^ newState) {
 			eps.setViewed(newState);
+		}
+		if (newState && ! eps.getLastViewed().isEquals(date)) {
 			eps.setLastViewed(date);
 		}
 	}

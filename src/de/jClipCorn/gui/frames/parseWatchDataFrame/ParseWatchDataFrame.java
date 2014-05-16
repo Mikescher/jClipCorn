@@ -305,7 +305,7 @@ public class ParseWatchDataFrame extends JFrame {
 					String e = ep.trim();
 					if (e.isEmpty()) continue;
 					
-					boolean range_neg;
+					boolean range_viewed;
 					
 					int range_min;
 					int range_max;
@@ -313,27 +313,27 @@ public class ParseWatchDataFrame extends JFrame {
 					try {
 						Matcher content_matcher;
 						if ((content_matcher = PATTERN_CONTENT_SINGLE_1.matcher(e)).matches()) {
-							range_neg = false;
+							range_viewed = true;
 							range_min = Integer.parseInt(content_matcher.group(1));
 							range_max = range_min;
 						} else if ((content_matcher = PATTERN_CONTENT_SINGLE_2.matcher(e)).matches()) {
-							range_neg = false;
+							range_viewed = true;
 							range_min = Integer.parseInt(content_matcher.group(1));
 							range_max = range_min;
 						} else if ((content_matcher = PATTERN_CONTENT_NEGATIVE_1.matcher(e)).matches()) {
-							range_neg = true;
+							range_viewed = false;
 							range_min = Integer.parseInt(content_matcher.group(1));
 							range_max = range_min;
 						} else if ((content_matcher = PATTERN_CONTENT_NEGATIVE_2.matcher(e)).matches()) {
-							range_neg = true;
+							range_viewed = false;
 							range_min = Integer.parseInt(content_matcher.group(1));
 							range_max = range_min;
 						} else if ((content_matcher = PATTERN_CONTENT_RANGE_1.matcher(e)).matches()) {
-							range_neg = false;
+							range_viewed = true;
 							range_min = Integer.parseInt(content_matcher.group(1));
 							range_max = Integer.parseInt(content_matcher.group(2));
 						} else if ((content_matcher = PATTERN_CONTENT_RANGE_2.matcher(e)).matches()) {
-							range_neg = false;
+							range_viewed = true;
 							range_min = Integer.parseInt(content_matcher.group(1));
 							range_max = Integer.parseInt(content_matcher.group(2));
 						} else {
@@ -353,7 +353,7 @@ public class ParseWatchDataFrame extends JFrame {
 							continue;
 						}
 						
-						set.add(new EpisodeWatchDataChangedSet(d, epis, range_neg));
+						set.add(new EpisodeWatchDataChangedSet(d, epis, range_viewed));
 					}
 				}
 			} else if ((matcher = PATTERN_MOVIE_HEADER.matcher(line)).matches()) {

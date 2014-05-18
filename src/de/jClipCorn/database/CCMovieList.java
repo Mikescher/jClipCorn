@@ -322,7 +322,7 @@ public class CCMovieList {
 		
 		database.updateEpisodeInDatabase(ep);
 
-		fireOnAddDatabaseElement(ep.getSeries());
+		fireOnChangeDatabaseElement(ep.getSeries()); // Why on onAdd
 	}
 
 	public void update(CCSeries se) {

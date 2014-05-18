@@ -94,8 +94,6 @@ public class Main {
 
 //TODO Integrated VLC ? : https://code.google.com/p/vlcj/
 
-//TODO When viewing serries (or every update of series) --> update PreviewSeriesFrame (especially left sidebar)
-
 //TODO Import Dialog -> Reset Tags
 
 //TODO Add Credits to used libs + Add License + Disclaimer

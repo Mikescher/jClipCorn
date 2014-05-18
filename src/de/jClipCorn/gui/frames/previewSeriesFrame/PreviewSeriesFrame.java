@@ -35,11 +35,13 @@ import javax.swing.event.ListSelectionListener;
 import org.apache.commons.lang.StringUtils;
 
 import de.jClipCorn.Main;
+import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieScore;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTyp;
+import de.jClipCorn.database.util.CCDBUpdateListener;
 import de.jClipCorn.database.util.ExportHelper;
 import de.jClipCorn.gui.CachedResourceLoader;
 import de.jClipCorn.gui.Resources;
@@ -153,6 +155,7 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 		}
 		
 		setLocationRelativeTo(owner);
+		initListener(ser);
 	}
 	
 	public PreviewSeriesFrame(Component owner, CCSeason sea) {
@@ -170,6 +173,7 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 		cvrChooser.setCurrSelected(sea.getSeasonNumber());
 		
 		setLocationRelativeTo(owner);
+		initListener(sea.getSeries());
 	}
 	
 	public PreviewSeriesFrame(Component owner, CCEpisode epi) {
@@ -189,6 +193,40 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 		tabSeason.select(epi);
 		
 		setLocationRelativeTo(owner);
+		initListener(epi.getSeries());
+	}
+
+	private void initListener(CCSeries ser) {
+		ser.getMovieList().addChangeListener(new CCDBUpdateListener() {
+			@Override
+			public void onRemMovie(CCDatabaseElement el) {
+				// Do nothing
+			}
+			
+			@Override
+			public void onRefresh() {
+				// Do nothing
+			}
+			
+			@Override
+			public void onAfterLoad() {
+				// Do nothing
+			}
+			
+			@Override
+			public void onChangeDatabaseElement(CCDatabaseElement el) {
+				if (el.equals(dispSeries)) {
+					updateData();
+				}
+			}
+			
+			@Override
+			public void onAddDatabaseElement(CCDatabaseElement mov) {
+				if (mov.equals(dispSeries)) {
+					updateData();
+				}
+			}
+		});
 	}
 
 	private void initGUI() {

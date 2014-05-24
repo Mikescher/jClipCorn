@@ -667,7 +667,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		}
 		
 		if (! edPart2.getText().isEmpty()) {
-			size.add(FileSizeFormatter.getFileSize(PathFormatter.getAbsolute(edPart3.getText())));
+			size.add(FileSizeFormatter.getFileSize(PathFormatter.getAbsolute(edPart2.getText())));
 		}
 		
 		if (! edPart3.getText().isEmpty()) {

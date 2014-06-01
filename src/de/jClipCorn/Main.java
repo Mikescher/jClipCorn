@@ -98,14 +98,11 @@ public class Main {
 
 //TODO Add Credits to used libs + Add License + Disclaimer
 
-//TODO : AV When selecting L&F : Autumn
 //TODO : You can close the Backup running DIalog with [X]
 //TODO : Fetch MovieData does not resize cover (--> Stargate)
 //TODO : Fetch MovieData : Extended Parse : Does not show Year
-//TODO : Add multiple Episodes -> One CLick set Epsiodelen + Calc Quality
-//TODO : CheckDatabaseFrame (Style:Windows) Cellrenderer behaves strange
+//TODO : Add multiple Episodes -> One Click set Epsiodelen + Calc Quality
 //TODO : Only allow CreateFolderStruct after successfull test
-//TODO : CreateFolderStruct : Style: Windows : Can't read yellow (and not good green) (+ selection fails (ONLY HERE ? NO ! EVERY CUSTOM RENDERER !!!))
 //TODO : Exception:
 /*
 UNDEFINIED (10:56:54): [Thread[THREAD_IMGPARSER_GOOGLE,6,main]] java.lang.OutOfMemoryError: Java heap space

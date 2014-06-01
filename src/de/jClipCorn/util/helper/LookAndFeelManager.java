@@ -59,7 +59,7 @@ public class LookAndFeelManager {
 	private static String getSubstanceLookAndFeel(int n) {
 		List<Entry<String, SkinInfo>> slfl = getSubstanceLookAndFeelEntryList();
 
-		if (n > 0  && n < slfl.size()) return slfl.get(n).getValue().getClassName();
+		if (n >= 0  && n < slfl.size()) return slfl.get(n).getValue().getClassName();
 		return null;
 	}
 	

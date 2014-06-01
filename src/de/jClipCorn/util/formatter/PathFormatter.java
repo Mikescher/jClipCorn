@@ -9,6 +9,7 @@ import java.util.List;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.properties.CCProperties;
+import de.jClipCorn.util.CCDate;
 import de.jClipCorn.util.DriveMap;
 import de.jClipCorn.util.helper.RegExHelper;
 import de.jClipCorn.util.listener.ProgressCallbackListener;
@@ -158,7 +159,7 @@ public class PathFormatter {
 		return ! s.equals(s.trim());
 	}
 	
-	public static String fixStringToFilename(String fn) {
+	public static String fixStringToFilesystemname(String fn) {
 		StringBuilder fnbuilder = new StringBuilder();
 		
 		for (int i = 0; i < fn.length(); i++) {
@@ -167,7 +168,18 @@ public class PathFormatter {
 			}
 		}
 		
-		return fnbuilder.toString();
+		String fnstring = fnbuilder.toString();
+		
+		while (fnstring.endsWith(" ") || fnstring.endsWith(".")) {
+			fnstring = fnstring.substring(0, fnstring.length() - 1);
+		}
+		
+		if (fnstring.isEmpty()) {
+			CCLog.addError(new Exception("INTERNAL ERROR: Could not create Filename for String '" + fn + "'"));
+			fnstring = "_ERROR_" + CCDate.getCurrentDate().toString() + "_";
+		}
+		
+		return fnstring;
 	}
 	
 	public static String rename(String fn, String newFilename) {

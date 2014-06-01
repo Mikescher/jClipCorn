@@ -423,7 +423,7 @@ public class CCMovie extends CCDatabaseElement {
 		
 		filename += "." + getFormat().asString();
 		
-		filename = PathFormatter.fixStringToFilename(filename);
+		filename = PathFormatter.fixStringToFilesystemname(filename);
 		
 		return filename;
 	}

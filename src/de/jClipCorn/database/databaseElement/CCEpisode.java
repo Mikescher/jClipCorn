@@ -422,14 +422,14 @@ public class CCEpisode {
 		if (series.getLanguage() != CCMovieLanguage.GERMAN) {
 			seriesfoldername += String.format(" [%s]", series.getLanguage().getShortString());
 		}
-		seriesfoldername = PathFormatter.fixStringToFilename(seriesfoldername);
+		seriesfoldername = PathFormatter.fixStringToFilesystemname(seriesfoldername);
 		
 		String seasonfoldername = season.getTitle();
-		seasonfoldername = PathFormatter.fixStringToFilename(seasonfoldername);
+		seasonfoldername = PathFormatter.fixStringToFilesystemname(seasonfoldername);
 		
 		String filename = String.format("S%sE%s - %s", decFormattter.format(season.getSortedSeasonNumber() + 1), decFormattter.format(this.getEpisode()), this.getTitle());
 		filename += "." + this.getFormat().asString();
-		filename = PathFormatter.fixStringToFilename(filename);
+		filename = PathFormatter.fixStringToFilesystemname(filename);
 		
 		String path = seriesfoldername + "\\" + seasonfoldername + "\\" + filename;
 		
@@ -446,6 +446,10 @@ public class CCEpisode {
 	}
 
 	public boolean checkFolderStructure() {
+		if (! getPart().endsWith(getRelativeFileForCreatedFolderstructure())) {
+			System.out.println(getPart() + " <> " + getRelativeFileForCreatedFolderstructure()); //$NON-NLS-1$
+		}
+		
 		return getPart().endsWith(getRelativeFileForCreatedFolderstructure());
 	}
 }

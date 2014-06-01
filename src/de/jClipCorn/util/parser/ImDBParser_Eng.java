@@ -8,8 +8,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+
+import org.apache.commons.lang.StringUtils;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFSK;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieGenre;
@@ -28,26 +32,25 @@ public class ImDBParser_Eng {
 	private final static String SEARCH_URL_A = "/find?s=tt&q=%s";
 	private final static String SEARCH_URL_M = "/find?s=tt&ttype=ft&q=%s";
 	private final static String SEARCH_URL_S = "/find?s=tt&ttype=tv&q=%s";
-	private final static String REGEX_SEARCH_HTMl_A = "<a href[ ]*=[ ]*\"/title/tt[0-9]+/[^>]+\"[ ]*>(?![ ]*<.+>).+?</a>"; // <a href[ ]*=[ ]*"/title/tt[0-9]+/[^>]+"[ ]*>(?![ ]*<.+>).+?</a>
-	private final static String REGEX_SEARCH_HREF_URL = "/title/tt[0-9]+/"; // /title/tt[0-9]+/
-	private final static String REGEX_SEARCH_HREF_NAME = "[^>]+(?=(</a>))"; // [^>]+(?=(</a>))
 	
-	private final static String REGEX_TITLE = "(?<=<title>)(.+?)(?= \\([12][0-9]{3}\\) - IMDb</title>)"; // (?<=<title>)(.+?)(?= \([12][0-9]{3}\) - IMDb</title>)
-	private final static String REGEX_YEAR = "(?<=\\()[12][0-9]{3}(?=\\) - IMDb</title>)"; // (?<=\()[12][0-9]{3}(?=\) - IMDb</title>)
-	private final static String REGEX_RATING = "(?<=<span itemprop=\\\"ratingValue\\\">)[0-9][,\\.][0-9](?=</span>)"; // (?<=<span itemprop=\"ratingValue\">)[0-9][,\.][0-9](?=</span>)
-	private final static String REGEX_LENGTH = "[0-9]+(?=( (M|m)in</time>))"; // [0-9]+(?=( (M|m)in</time>))
-	private final static String REGEX_FSK = "(?<=Certification:</h5><div class=\"info-content\">).*?(?=</div>)"; // (?<=Certification:</h5><div class="info-content">).*?(?=</div>)
-	private final static String REGEX_FSK_SPLIT = "(?<=\">).*?(?=</a>)"; // (?<=">).*?(?=</a>)
 	private final static String REGEX_FSK_BRACKETS = "\\([^\\)]*\\)"; // \([^\)]*\)
+	private final static String REGEX_COVER_URL = "/media/rm[0-9]+?/tt[0-9]+";
+	private final static String REGEX_SEARCH_URL = "/title/tt[0-9]+/"; // /title/tt[0-9]+/
+	
 	private final static String FSK_STANDARD_1 = "Germany";
 	private final static String FSK_STANDARD_2 = "West Germany";
-	private final static String REGEX_GENRE = "(?<=<h4 class=\\\"inline\\\">Genres:</h4>).*?(?=</div>)"; // (?<=<h4 class=\"inline\">Genres:</h4>).*?(?=</div>)
-	private final static String REGEX_GENRE_FIND = "(?<=> ).+?(?=</a>)"; // (?<=> ).+?(?=</a>)
-	private final static String REGEX_COVER = "(?<=<div class=\"image\"><a href=\")/media/rm[0-9]+?/tt[0-9]+?(?=\\?)"; // (?<=<div class="image"><a href=")/media/rm[0-9]+?/tt[0-9]+?(?=\?)
-	private final static String REGEX_COVER_DIREKT_1 = "id=\"primary-img\"[^>]+src=\"[^\"]+\"[^>]*\\>"; // <img id="primary-img"[^>]+src="[^"]"[^>]\>
-	private final static String REGEX_COVER_DIREKT_2 = "(?<=src=\")[^\"]+(?=\")"; // (?<=src=")[^"]+(?=")
 	private final static String FSK_URL = "%sparentalguide";
 	
+	private final static String JSOUP_SEARCH_HTML_A = "a[href~=/title/tt[0-9]+/.*]:matches(.+)";
+	private final static String JSOUP_TITLE = "h1.header span[itemprop=name][class=itemprop]";
+	private final static String JSOUP_YEAR = "h1.header span.nobr:matches(\\([12][0-9]{3}\\))"; // h1.header span.nobr:matches(\([12][0-9]{3}\))
+	private final static String JSOUP_RATING = "span[itemprop=ratingValue]:matches([0-9][,\\.]?[0-9]?)"; // span[itemprop=ratingValue]:matches([0-9][,\.]?[0-9]?)
+	private final static String JSOUP_LENGTH = "time[itemprop=duration]:matches([0-9]+ (M|m)in)";
+	private final static String JSOUP_FSK = "h5:matches(Certification.*) + div.info-content a[href]";
+	private final static String JSOUP_GENRE = "div[itemprop=genre] a";
+	private final static String JSOUP_COVER = "div[class=image] a[href~=/media/rm[0-9]+?/tt[0-9]+.*]";
+	private final static String JSOUP_COVER_DIRECT = "img#primary-img[src]";
+
 	public static String getSearchURL(String title, CCMovieTyp typ) {
 		if (typ == null) {
 			return String.format(BASE_URL + SEARCH_URL_A, HTTPUtilities.escapeURL(title));
@@ -64,27 +67,19 @@ public class ImDBParser_Eng {
 	}
 	
 	public static List<DoubleString> extractImDBLinks(String html) {
+		Document doc = Jsoup.parse(html);
+		
+		Elements searchresults = doc.select(JSOUP_SEARCH_HTML_A);
+		
 		List<DoubleString> result = new ArrayList<>();
 		
-		Pattern pat = Pattern.compile(REGEX_SEARCH_HTMl_A);
-		
-		Matcher matcher = pat.matcher(html);
-		
-		while (matcher.find()) {
-			result.add(new DoubleString(getLinkFromHREF(matcher.group()), getNameFromHREF(matcher.group())));
+		for (Element sresult : searchresults) {
+			result.add(new DoubleString(BASE_URL + RegExHelper.find(REGEX_SEARCH_URL, sresult.attr("href")), sresult.text()));
 		}
 		
 		removeDuplicate(result);
 		
 		return result;
-	}
-	
-	private static String getLinkFromHREF(String href) {
-		return BASE_URL + RegExHelper.find(REGEX_SEARCH_HREF_URL, href.trim()).trim();
-	}
-	
-	private static String getNameFromHREF(String href) {
-		return RegExHelper.find(REGEX_SEARCH_HREF_NAME, href.trim()).trim();
 	}
 	
 	private static <T> void removeDuplicate(List<T> arlList) {
@@ -103,11 +98,11 @@ public class ImDBParser_Eng {
 	}
 	
 	public static String getTitle(String html) {
-		return RegExHelper.find(REGEX_TITLE, html.trim()).trim();
+		return getContentBySelector(html, JSOUP_TITLE);
 	}
 	
 	public static int getYear(String html) {
-		String y = RegExHelper.find(REGEX_YEAR, html.trim()).trim();
+		String y = StringUtils.strip(getContentBySelector(html, JSOUP_YEAR).trim(), "()");
 		
 		try {
 			return Integer.parseInt(y);
@@ -117,7 +112,7 @@ public class ImDBParser_Eng {
 	}
 	
 	public static int getRating(String html) {
-		String y = RegExHelper.find(REGEX_RATING, html.trim()).trim();
+		String y = getContentBySelector(html, JSOUP_RATING);
 		
 		try {
 			return (int) Math.round(Double.parseDouble(y.replace(',', '.')));
@@ -127,7 +122,7 @@ public class ImDBParser_Eng {
 	}
 	
 	public static int getLength(String html) {
-		String y = RegExHelper.find(REGEX_LENGTH, html.trim()).trim();
+		String y = RegExHelper.find("[0-9]*", getContentBySelector(html, JSOUP_LENGTH));
 		
 		try {
 			return Integer.parseInt(y);
@@ -141,8 +136,7 @@ public class ImDBParser_Eng {
 		
 		String html = HTTPUtilities.getHTML(url, true);
 		
-		String allg = RegExHelper.find(REGEX_FSK, html);
-		List<String> genarr = RegExHelper.findAll(REGEX_FSK_SPLIT, allg);
+		List<String> genarr = getContentListBySelector(html, JSOUP_FSK);
 		
 		HashMap<String, Integer> genmap = new HashMap<>();
 		
@@ -181,10 +175,7 @@ public class ImDBParser_Eng {
 			}
 			
 			if (count <= 0) {
-				String regexhtmlfsk = RegExHelper.find(REGEX_FSK, url).trim();
-				if (! regexhtmlfsk.isEmpty()) {
-					CCLog.addWarning(LocaleBundle.getFormattedString("LogMessage.CouldNotFindFSK", RegExHelper.find(REGEX_FSK, url)));
-				}
+				CCLog.addWarning(LocaleBundle.getFormattedString("LogMessage.CouldNotFindFSK", url));
 				return null;
 			}
 			
@@ -195,13 +186,11 @@ public class ImDBParser_Eng {
 	}
 	
 	public static CCMovieGenreList getGenres(String html) {
-		String regfind = RegExHelper.find(REGEX_GENRE, html);
+		List<String> regfind = getContentListBySelector(html, JSOUP_GENRE);
 		
 		CCMovieGenreList result = new CCMovieGenreList();
 		
-		List<String> genres = RegExHelper.findAll(REGEX_GENRE_FIND, regfind);
-		
-		for (String ng : genres) {
+		for (String ng : regfind) {
 			CCMovieGenre genre = CCMovieGenre.parseFromIMDBName(ng.trim());
 			if (! genre.isEmpty()) {
 				result.addGenre(genre);
@@ -212,7 +201,7 @@ public class ImDBParser_Eng {
 	}
 	
 	public static BufferedImage getCover(String html) {
-		String cpageurl = BASE_URL + RegExHelper.find(REGEX_COVER, html);
+		String cpageurl = BASE_URL + RegExHelper.find(REGEX_COVER_URL, getAttrBySelector(html, JSOUP_COVER, "href"));
 		
 		String cpagehtml = HTTPUtilities.getHTML(cpageurl, true);
 		
@@ -224,8 +213,7 @@ public class ImDBParser_Eng {
 	}
 
 	public static BufferedImage getCoverDirekt(String html) {
-		String curl = RegExHelper.find(REGEX_COVER_DIREKT_1, html);
-		curl = RegExHelper.find(REGEX_COVER_DIREKT_2, curl);
+		String curl = getAttrBySelector(html, JSOUP_COVER_DIRECT, "src");
 		
 		if (curl.trim().isEmpty()) {
 			return null;
@@ -237,6 +225,28 @@ public class ImDBParser_Eng {
 			return null;
 		}
 
+		return result;
+	}
+	
+	public static String getContentBySelector(String html, String cssQuery) {
+		Element e = Jsoup.parse(html).select(cssQuery).first();
+		return (e == null) ? "" : e.text();
+	}
+	
+	public static String getAttrBySelector(String html, String cssQuery, String attr) {
+		Element e = Jsoup.parse(html).select(cssQuery).first();
+		return (e == null) ? "" : e.attr(attr);
+	}
+	
+	public static List<String> getContentListBySelector(String html, String cssQuery) {
+		Elements elst = Jsoup.parse(html).select(cssQuery);
+		
+		ArrayList<String> result = new ArrayList<>();
+		
+		for (Element e : elst) {
+			result.add(e.text());
+		}
+		
 		return result;
 	}
 }

@@ -21,11 +21,13 @@ public class CCLogElement {
 	private CCLogType type;
 	private List<StackTraceElement> sTrace;
 	private CCTime time;
+	private int count;
 
 	public CCLogElement() {
 		type = CCLogType.LOG_ELEM_UNDEFINED;
 		text = ""; //$NON-NLS-1$
 		time = new CCTime();
+		count = 1;
 		
 		sTrace = null;
 	}
@@ -79,19 +81,21 @@ public class CCLogElement {
 	}
 
 	private String getTypeStringRepresentation() {
+		String pref = count > 1 ? "[" + count + "x] " : ""; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		
 		switch (type) {
 		case LOG_ELEM_FATALERROR:
-			return LocaleBundle.getString("CCLog.FatalError").toUpperCase(); //$NON-NLS-1$
+			return pref + LocaleBundle.getString("CCLog.FatalError").toUpperCase(); //$NON-NLS-1$
 		case LOG_ELEM_ERROR:
-			return LocaleBundle.getString("CCLog.Error").toUpperCase(); //$NON-NLS-1$
+			return pref + LocaleBundle.getString("CCLog.Error").toUpperCase(); //$NON-NLS-1$
 		case LOG_ELEM_INFORMATION:
-			return LocaleBundle.getString("CCLog.Information").toUpperCase(); //$NON-NLS-1$
+			return pref + LocaleBundle.getString("CCLog.Information").toUpperCase(); //$NON-NLS-1$
 		case LOG_ELEM_UNDEFINED:
-			return LocaleBundle.getString("CCLog.Undefinied").toUpperCase(); //$NON-NLS-1$
+			return pref + LocaleBundle.getString("CCLog.Undefinied").toUpperCase(); //$NON-NLS-1$
 		case LOG_ELEM_WARNING:
-			return LocaleBundle.getString("CCLog.Warning").toUpperCase(); //$NON-NLS-1$
+			return pref + LocaleBundle.getString("CCLog.Warning").toUpperCase(); //$NON-NLS-1$
 		default:
-			return "[???]"; //$NON-NLS-1$
+			return pref + "[???]"; //$NON-NLS-1$
 		}
 	}
 
@@ -127,5 +131,62 @@ public class CCLogElement {
 	
 	public boolean isType(CCLogType t) {
 		return type == t;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((sTrace == null) ? 0 : sTrace.hashCode());
+		result = prime * result + ((text == null) ? 0 : text.hashCode());
+		result = prime * result + ((type == null) ? 0 : type.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		
+		if (obj == null) {
+			return false;
+		}
+		
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		
+		CCLogElement other = (CCLogElement) obj;
+		
+		if (sTrace == null) {
+			if (other.sTrace != null) {
+				return false;
+			}
+		} else if (!sTrace.equals(other.sTrace)) {
+			return false;
+		}
+		
+		if (text == null) {
+			if (other.text != null) {
+				return false;
+			}
+		} else if (!text.equals(other.text)) {
+			return false;
+		}
+		
+		if (type != other.type) {
+			return false;
+		}
+		
+		return true;
+	}
+
+	public void inc() {
+		count++;
+	}
+
+	public int getCount() {
+		return count;
 	}
 }

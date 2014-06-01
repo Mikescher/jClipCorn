@@ -90,20 +90,33 @@ public class CCLog {
 
 	private static void add(String txt, CCLogType type, StackTraceElement[] trace) {
 		CCLogElement cle = new CCLogElement(txt, type, trace);
-		log.add(cle);
-		
-		System.out.println(cle.getFormatted()); // This is desired - let it be
-		
-		if (type == CCLogType.LOG_ELEM_FATALERROR) {
-			DialogHelper.showDispatchError(LocaleBundle.getString("Main.AbortCaption"), LocaleBundle.getFormattedString("Main.AbortMessage", cle.getFormatted(CCLogElement.FORMAT_LEVEL_MID))); //$NON-NLS-1$ //$NON-NLS-2$
-			fatalabort();
-		}
-		
-		if (type == CCLogType.LOG_ELEM_ERROR) {
-			updateMainFrameLabel();
+
+		if (cle.equals(lastLogElem())) {
+			lastLogElem().inc();
+			System.out.println("LAST EXCEPTION x " + lastLogElem().getCount()); //$NON-NLS-1$
+			return;
+		} else {
+			log.add(cle);
+
+			System.out.println(cle.getFormatted()); // This is desired - let it be
+
+			if (type == CCLogType.LOG_ELEM_FATALERROR) {
+				DialogHelper.showDispatchError(LocaleBundle.getString("Main.AbortCaption"), LocaleBundle.getFormattedString("Main.AbortMessage", cle.getFormatted(CCLogElement.FORMAT_LEVEL_MID))); //$NON-NLS-1$ //$NON-NLS-2$
+				fatalabort();
+			}
+
+			if (type == CCLogType.LOG_ELEM_ERROR) {
+				updateMainFrameLabel();
+			}
+
 		}
 		
 		setChangedFlag();
+	}
+	
+	public static CCLogElement lastLogElem() {
+		if (log.size() <= 0) return null;
+		else return log.get(log.size() - 1);
 	}
 
 	public static void save() {

@@ -100,5 +100,3 @@ public class Main {
 //TODO : Add multiple Episodes -> One Click set Epsiodelen + Calc Quality
 
 //TODO : Exception: (delete Backup in manager) {{ CCBackup.setName (CCBackup.java:70) }}
-
-//TODO: Remove Lag etc when throwing the same exception really often (Driveletter not found)

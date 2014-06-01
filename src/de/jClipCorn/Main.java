@@ -98,7 +98,6 @@ public class Main {
 
 //TODO Add Credits to used libs + Add License + Disclaimer
 
-//TODO : Why find Agent SHIELD as not inserted ?
 //TODO : You can close the Backup running DIalog with [X]
 //TODO : Fetch MovieData does not resize cover (--> Stargate)
 //TODO : Fetch MovieData : Extended Parse : Does not show Year
@@ -106,7 +105,6 @@ public class Main {
 //TODO : CheckDatabaseFrame (Style:Windows) Cellrenderer behaves strange
 //TODO : Only allow CreateFolderStruct after successfull test
 //TODO : CreateFolderStruct : Style: Windows : Can't read yellow (and not good green) (+ selection fails (ONLY HERE ? NO ! EVERY CUSTOM RENDERER !!!))
-//TODO : False positive in WrongFolderStrucure (see curretn DB)
 //TODO : Exception:
 /*
 UNDEFINIED (10:56:54): [Thread[THREAD_IMGPARSER_GOOGLE,6,main]] java.lang.OutOfMemoryError: Java heap space

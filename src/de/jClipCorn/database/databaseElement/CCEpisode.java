@@ -446,10 +446,10 @@ public class CCEpisode {
 	}
 
 	public boolean checkFolderStructure() {
-		if (! getPart().endsWith(getRelativeFileForCreatedFolderstructure())) {
+		if (! getPart().toLowerCase().endsWith(getRelativeFileForCreatedFolderstructure().toLowerCase())) {
 			System.out.println(getPart() + " <> " + getRelativeFileForCreatedFolderstructure()); //$NON-NLS-1$
 		}
 		
-		return getPart().endsWith(getRelativeFileForCreatedFolderstructure());
+		return getPart().toLowerCase().endsWith(getRelativeFileForCreatedFolderstructure().toLowerCase());
 	}
 }

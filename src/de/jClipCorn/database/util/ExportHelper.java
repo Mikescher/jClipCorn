@@ -250,10 +250,10 @@ public class ExportHelper {
 			for (Element e : root.getChildren()) {
 				if (e.getName().equals("movie")) { //$NON-NLS-1$
 					CCMovie mov = movielist.createNewEmptyMovie();
-					mov.parseFromXML(e, false, false, false);
+					mov.parseFromXML(e, false, false, false, false);
 				} else if (e.getName().equals("series")) { //$NON-NLS-1$
 					CCSeries ser = movielist.createNewEmptySeries();
-					ser.parseFromXML(e, false, false, false);
+					ser.parseFromXML(e, false, false, false, false);
 				}
 			}
 		} catch (Exception e) {
@@ -324,16 +324,16 @@ public class ExportHelper {
 		return null;
 	}
 	
-	public static void importSingleElement(CCMovieList movielist, String xmlcontent, boolean resetAddDate, boolean resetViewed, boolean resetScore) {
+	public static void importSingleElement(CCMovieList movielist, String xmlcontent, boolean resetAddDate, boolean resetViewed, boolean resetScore, boolean resetTags) {
 		Element value = getFirstElementOfExport(xmlcontent);
 		
 		if (value != null) {
 			if (value.getName().equalsIgnoreCase("movie")) {  //$NON-NLS-1$
 				CCMovie mov = movielist.createNewEmptyMovie();
-				mov.parseFromXML(value, resetAddDate, resetViewed, resetScore);
+				mov.parseFromXML(value, resetAddDate, resetViewed, resetScore, resetTags);
 			} else if (value.getName().equalsIgnoreCase("series")) { //$NON-NLS-1$
 				CCSeries ser = movielist.createNewEmptySeries();
-				ser.parseFromXML(value, resetAddDate, resetViewed, resetScore);
+				ser.parseFromXML(value, resetAddDate, resetViewed, resetScore, resetTags);
 			}
 		}
 	}
@@ -367,9 +367,10 @@ public class ExportHelper {
 			boolean resetDate = DialogHelper.showLocaleYesNo(owner, "ExportHelper.dialogs.resetDate"); //$NON-NLS-1$
 			boolean resetViewed = DialogHelper.showLocaleYesNo(owner, "ExportHelper.dialogs.resetViewed"); //$NON-NLS-1$
 			boolean resetScore = DialogHelper.showLocaleYesNo(owner, "ExportHelper.dialogs.resetScore"); //$NON-NLS-1$
+			boolean resetTags = DialogHelper.showLocaleYesNo(owner, "ExportHelper.dialogs.resetTags"); //$NON-NLS-1$
 			
 			if (methodval == 0) { // Direct
-				ExportHelper.importSingleElement(movielist, xml, resetDate, resetViewed, resetScore);
+				ExportHelper.importSingleElement(movielist, xml, resetDate, resetViewed, resetScore, resetTags);
 			} else if (methodval == 1) { // Edit & Add
 				Element value = ExportHelper.getFirstElementOfExport(xml);
 				AddMovieFrame amf = new AddMovieFrame(owner, movielist);

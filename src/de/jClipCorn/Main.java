@@ -94,72 +94,11 @@ public class Main {
 
 //TODO Integrated VLC ? : https://code.google.com/p/vlcj/
 
-//TODO Import Dialog -> Reset Tags
-
 //TODO Add Credits to used libs + Add License + Disclaimer
 
-//TODO : You can close the Backup running DIalog with [X]
+//TODO : You can close the Backup running Dialog with [X]
 //TODO : Add multiple Episodes -> One Click set Epsiodelen + Calc Quality
-//TODO : Exception:
-/*
-UNDEFINIED (10:56:54): [Thread[THREAD_IMGPARSER_GOOGLE,6,main]] java.lang.OutOfMemoryError: Java heap space
-	at java.awt.image.DataBufferByte.<init>
-	at java.awt.image.ComponentSampleModel.createDataBuffer
-	at java.awt.image.Raster.createWritableRaster
-	at javax.imageio.ImageTypeSpecifier.createBufferedImage
-	at javax.imageio.ImageReader.getDestination
-	at com.sun.imageio.plugins.jpeg.JPEGImageReader.readInternal
-	at com.sun.imageio.plugins.jpeg.JPEGImageReader.read
-	at javax.imageio.ImageIO.read
-	at javax.imageio.ImageIO.read
-	at de.jClipCorn.util.helper.HTTPUtilities.getImage (HTTPUtilities.java:125)
-	at de.jClipCorn.gui.frames.findCoverFrame.CoverImageParser.parseGoogleImages (CoverImageParser.java:77)
-	at de.jClipCorn.gui.frames.findCoverFrame.CoverImageParser.access$0 (CoverImageParser.java:69)
-	at de.jClipCorn.gui.frames.findCoverFrame.CoverImageParser$1.run (CoverImageParser.java:46)
-	at java.lang.Thread.run
-*/
 
-//TODO : Exception: (delete Backup in manager)
-/*
-UNDEFINIED (13:15:29): [Thread[AWT-EventQueue-0,6,main]] java.lang.NullPointerException
-	at java.util.Hashtable.put
-	at java.util.Properties.setProperty
-	at de.jClipCorn.database.util.backupManager.CCBackup.setName (CCBackup.java:70)
-	at de.jClipCorn.gui.frames.backupManagerFrame.BackupsManagerFrame$3.actionPerformed (BackupsManagerFrame.java:169)
-	at javax.swing.AbstractButton.fireActionPerformed
-	at javax.swing.AbstractButton$Handler.actionPerformed
-	at javax.swing.DefaultButtonModel.fireActionPerformed
-	at javax.swing.DefaultButtonModel.setPressed
-	at javax.swing.plaf.basic.BasicButtonListener.mouseReleased
-	at java.awt.Component.processMouseEvent
-	at javax.swing.JComponent.processMouseEvent
-	at java.awt.Component.processEvent
-	at java.awt.Container.processEvent
-	at java.awt.Component.dispatchEventImpl
-	at java.awt.Container.dispatchEventImpl
-	at java.awt.Component.dispatchEvent
-	at java.awt.LightweightDispatcher.retargetMouseEvent
-	at java.awt.LightweightDispatcher.processMouseEvent
-	at java.awt.LightweightDispatcher.dispatchEvent
-	at java.awt.Container.dispatchEventImpl
-	at java.awt.Window.dispatchEventImpl
-	at java.awt.Component.dispatchEvent
-	at java.awt.EventQueue.dispatchEventImpl
-	at java.awt.EventQueue.access$200
-	at java.awt.EventQueue$3.run
-	at java.awt.EventQueue$3.run
-	at java.security.AccessController.doPrivileged
-	at java.security.ProtectionDomain$1.doIntersectionPrivilege
-	at java.security.ProtectionDomain$1.doIntersectionPrivilege
-	at java.awt.EventQueue$4.run
-	at java.awt.EventQueue$4.run
-	at java.security.AccessController.doPrivileged
-	at java.security.ProtectionDomain$1.doIntersectionPrivilege
-	at java.awt.EventQueue.dispatchEvent
-	at java.awt.EventDispatchThread.pumpOneEventForFilters
-	at java.awt.EventDispatchThread.pumpEventsForFilter
-	at java.awt.EventDispatchThread.pumpEventsForHierarchy
-	at java.awt.EventDispatchThread.pumpEvents
-	at java.awt.EventDispatchThread.pumpEvents
-	at java.awt.EventDispatchThread.run
-*/
+//TODO : Exception: (delete Backup in manager) {{ CCBackup.setName (CCBackup.java:70) }}
+
+//TODO: Remove Lag etc when throwing the same exception really often (Driveletter not found)

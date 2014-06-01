@@ -333,10 +333,10 @@ public class CCMovie extends CCDatabaseElement {
 	
 	@Override
 	@SuppressWarnings("nls")
-	public void parseFromXML(Element e, boolean resetAddDate, boolean resetViewed, boolean resetScore) {
+	public void parseFromXML(Element e, boolean resetAddDate, boolean resetViewed, boolean resetScore, boolean resetTags) {
 		beginUpdating();
 		
-		super.parseFromXML(e, resetAddDate, resetViewed, resetScore);
+		super.parseFromXML(e, resetAddDate, resetViewed, resetScore, resetTags);
 		
 		if (e.getAttributeValue("adddate") != null) {
 			setAddDate(CCDate.parse(e.getAttributeValue("adddate"), "D.M.Y"));
@@ -365,6 +365,9 @@ public class CCMovie extends CCDatabaseElement {
 		
 		if (e.getAttributeValue("tags") != null)
 			setTags(Short.parseShort(e.getAttributeValue("tags")));
+		
+		if (resetTags)
+			setTags(new CCMovieTags());
 		
 		if (e.getAttributeValue("viewed") != null)
 			setViewed(e.getAttributeValue("viewed").equals(true + ""));

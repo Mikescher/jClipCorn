@@ -10,6 +10,7 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.ProgressMonitor;
 import javax.swing.SwingUtilities;
+import javax.swing.WindowConstants;
 
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
@@ -102,6 +103,8 @@ public class DialogHelper {
 					JDialog dialog = (JDialog) ac.getAccessibleParent();
 					if (dialog == null) throw new Exception();
 					
+					dialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+					
 					java.util.List<JButton> components = SwingUtils.getDescendantsOfType(JButton.class, dialog, true);
 					if (components.isEmpty()) throw new Exception();
 					
@@ -114,7 +117,6 @@ public class DialogHelper {
 				}
 			}
 		});
-		
 		
 		return monitor;
 	}

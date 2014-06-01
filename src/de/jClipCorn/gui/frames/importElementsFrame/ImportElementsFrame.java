@@ -64,17 +64,18 @@ public class ImportElementsFrame extends JFrame {
 	private JButton btnAdd;
 	private JPanel pnlTopRight;
 	private JPanel pnlTopRightInner;
-	private PropertyCheckbox chcbxResetViewed;
 	private PropertyCheckbox chckbxOnlyCover;
-	private PropertyCheckbox chcbxResetScore;
 	private JLabel lblCover;
+	private PropertyCheckbox chcbxResetViewed;
+	private PropertyCheckbox chcbxResetScore;
+	private PropertyCheckbox chckbxResetDate;
+	private PropertyCheckbox chckbxResetTags;
 	private JLabel lblViewed;
 	private JLabel lblChilds;
 	private JButton btnEditAdd;
 	
 	private DefaultListModel<Element> listModel;
 	private CCMovieList movielist;
-	private PropertyCheckbox chckbxResetDate;
 
 	public ImportElementsFrame(Component owner, String xmlcontent, CCMovieList movielist) {
 		super();
@@ -175,6 +176,8 @@ public class ImportElementsFrame extends JFrame {
 				FormFactory.DEFAULT_ROWSPEC,
 				FormFactory.RELATED_GAP_ROWSPEC,
 				FormFactory.DEFAULT_ROWSPEC,
+				FormFactory.RELATED_GAP_ROWSPEC,
+				FormFactory.DEFAULT_ROWSPEC,
 				FormFactory.RELATED_GAP_ROWSPEC,}));
 		
 		lblTXT2 = new JLabel(LocaleBundle.getString("ImportElementsFrame.lblName.caption")); //$NON-NLS-1$
@@ -229,6 +232,9 @@ public class ImportElementsFrame extends JFrame {
 		
 		chcbxResetScore = new PropertyCheckbox(CCProperties.getInstance().PROP_IMPORT_RESETSCORE);
 		pnlInfo.add(chcbxResetScore, "2, 18, 6, 1"); //$NON-NLS-1$
+		
+		chckbxResetTags = new PropertyCheckbox(CCProperties.getInstance().PROP_IMPORT_RESETTAGS);
+		pnlInfo.add(chckbxResetTags, "2, 20, 6, 1"); //$NON-NLS-1$
 		
 		setSize(new Dimension(650, 350));
 		setMinimumSize(new Dimension(550, 250));
@@ -314,7 +320,7 @@ public class ImportElementsFrame extends JFrame {
 	private void onAddMovie(Element value, int index) {
 		CCMovie mov = movielist.createNewEmptyMovie();
 		
-		mov.parseFromXML(value, chckbxResetDate.isSelected(), chcbxResetViewed.isSelected(), chcbxResetScore.isSelected());
+		mov.parseFromXML(value, chckbxResetDate.isSelected(), chcbxResetViewed.isSelected(), chcbxResetScore.isSelected(), chckbxResetTags.isSelected());
 		
 		listModel.remove(index);
 	}
@@ -322,7 +328,7 @@ public class ImportElementsFrame extends JFrame {
 	private void onAddSeries(Element value, int index) {
 		CCSeries ser = movielist.createNewEmptySeries();
 		
-		ser.parseFromXML(value, chckbxResetDate.isSelected(), chcbxResetViewed.isSelected(), chcbxResetScore.isSelected());
+		ser.parseFromXML(value, chckbxResetDate.isSelected(), chcbxResetViewed.isSelected(), chcbxResetScore.isSelected(), chckbxResetTags.isSelected());
 		
 		listModel.remove(index);
 	}

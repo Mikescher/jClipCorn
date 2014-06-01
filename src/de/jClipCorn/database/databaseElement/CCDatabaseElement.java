@@ -249,7 +249,7 @@ public abstract class CCDatabaseElement {
 	}
 	
 	@SuppressWarnings("nls")
-	public void parseFromXML(Element e, boolean resetAddDate, boolean resetViewed, boolean resetScore) {
+	public void parseFromXML(Element e, boolean resetAddDate, boolean resetViewed, boolean resetScore, boolean resetTags) {
 		if (e.getAttributeValue("title") != null)
 			setTitle(e.getAttributeValue("title"));
 		

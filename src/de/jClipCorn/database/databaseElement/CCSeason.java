@@ -385,7 +385,7 @@ public class CCSeason {
 	}
 	
 	@SuppressWarnings("nls")
-	public void parseFromXML(Element e, boolean resetAddDate, boolean resetViewed) {
+	public void parseFromXML(Element e, boolean resetAddDate, boolean resetViewed, boolean resetTags) {
 		beginUpdating();
 		
 		if (e.getAttributeValue("title") != null)
@@ -398,7 +398,7 @@ public class CCSeason {
 			setCover(e.getAttributeValue("covername"));
 		
 		for (Element e2 : e.getChildren("episode")) {
-			createNewEmptyEpisode().parseFromXML(e2, resetAddDate, resetViewed);
+			createNewEmptyEpisode().parseFromXML(e2, resetAddDate, resetViewed, resetTags);
 		}
 		
 		if (e.getAttributeValue("coverdata") != null) {

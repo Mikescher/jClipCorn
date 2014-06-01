@@ -95,6 +95,7 @@ public class CCProperties {
 	public CCBoolProperty		PROP_IMPORT_ONLYWITHCOVER;
 	public CCBoolProperty		PROP_IMPORT_RESETADDDATE;
 	public CCBoolProperty		PROP_IMPORT_RESETSCORE;
+	public CCBoolProperty		PROP_IMPORT_RESETTAGS;
 	public CCRIntProperty 		PROP_PARSEIMDB_LANGUAGE;
 	public CCToolbarProperty	PROP_TOOLBAR_ELEMENTS;
 	public CCRIntProperty		PROP_SERIES_ADDDATECALCULATION; //0 = Lowest EpisdenAddDate || 1 = Highest EpisdenAddDate || 2 = Average EpisdenAddDate
@@ -222,6 +223,7 @@ public class CCProperties {
 		PROP_IMPORT_ONLYWITHCOVER				= new CCBoolProperty(NONVISIBLE,	 	this,   "PROP_IMPORT_ONLYWITHCOVER",				true);
 		PROP_IMPORT_RESETADDDATE				= new CCBoolProperty(NONVISIBLE,	 	this,   "PROP_IMPORT_RESETADDDATE",					true);
 		PROP_IMPORT_RESETSCORE					= new CCBoolProperty(NONVISIBLE,	 	this,   "PROP_IMPORT_RESETSCORE",					true);
+		PROP_IMPORT_RESETTAGS					= new CCBoolProperty(NONVISIBLE,	 	this,   "PROP_IMPORT_RESETTAGS",					true);
 		PROP_PARSEIMDB_LANGUAGE					= new CCRIntProperty(NONVISIBLE,	 	this,   "PROP_PARSEIMDB_LANGUAGE",					1, 					2);
 		PROP_TOOLBAR_ELEMENTS					= new CCToolbarProperty(CAT_VIEW, 		this, 	"PROP_TOOLBAR_ELEMENTS", 					ClipToolbar.STANDARD_CONFIG);
 		PROP_SERIES_ADDDATECALCULATION			= new CCRIntProperty(CAT_SERIES, 		this, 	"PROP_SERIES_ADDDATECALCULATION", 			1, 					va);

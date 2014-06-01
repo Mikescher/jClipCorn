@@ -126,6 +126,9 @@ public class HTTPUtilities {
 		} catch (IOException e) {
 			CCLog.addWarning(LocaleBundle.getFormattedString("LogMessage.CouldNotGetImage", urlToRead));
 			return null;
+		} catch (OutOfMemoryError e) {
+			CCLog.addWarning(LocaleBundle.getFormattedString("LogMessage.CouldNotGetImage", urlToRead));
+			return null;
 		}
 	}
 }

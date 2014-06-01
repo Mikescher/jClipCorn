@@ -329,7 +329,7 @@ public class CCEpisode {
 	}
 	
 	@SuppressWarnings("nls")
-	public void parseFromXML(Element e, boolean resetAddDate, boolean resetViewed) {
+	public void parseFromXML(Element e, boolean resetAddDate, boolean resetViewed, boolean resetTags) {
 		beginUpdating();
 		
 		if (e.getAttributeValue("title") != null)
@@ -374,6 +374,9 @@ public class CCEpisode {
 		if (e.getAttributeValue("short") != null)
 			setTags(Short.parseShort(e.getAttributeValue("short")));
 
+		if (resetTags)
+			setTags(new CCMovieTags());
+		
 		endUpdating();
 	}
 

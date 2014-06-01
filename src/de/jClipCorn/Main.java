@@ -98,8 +98,8 @@ public class Main {
 
 //TODO Add Credits to used libs + Add License + Disclaimer
 
+//TODO : Use JSoup to parse IMDB
 //TODO : You can close the Backup running DIalog with [X]
-//TODO : Fetch MovieData does not resize cover (--> Stargate)
 //TODO : Fetch MovieData : Extended Parse : Does not show Year
 //TODO : Add multiple Episodes -> One Click set Epsiodelen + Calc Quality
 //TODO : Only allow CreateFolderStruct after successfull test

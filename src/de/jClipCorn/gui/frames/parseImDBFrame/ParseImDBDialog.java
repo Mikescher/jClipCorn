@@ -594,7 +594,7 @@ public class ParseImDBDialog extends JDialog {
 					}
 					
 					if (bci != null) {
-						imgCover.setIcon(new ImageIcon(bci));
+						imgCover.setIcon(new ImageIcon(ImageUtilities.resizeCoverImage(bci)));
 					} else {
 						imgCover.setIcon(null);
 					}

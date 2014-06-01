@@ -120,6 +120,7 @@ public class CreateSeriesFolderStructureFrame extends JFrame {
 		pnlLeft.add(btnChoose, "6, 6"); //$NON-NLS-1$
 		
 		btnOk = new JButton(LocaleBundle.getString("AddMovieFrame.btnOK.text")); //$NON-NLS-1$
+		btnOk.setEnabled(false);
 		btnOk.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -168,7 +169,7 @@ public class CreateSeriesFolderStructureFrame extends JFrame {
 			}
 		}
 		
-		btnOk.setEnabled(true);
+		btnOk.setEnabled(false);
 		btnTest.setEnabled(true);
 	}
 	
@@ -176,6 +177,8 @@ public class CreateSeriesFolderStructureFrame extends JFrame {
 		DefaultListModel<String> dlm = new DefaultListModel<>();
 		
 		File parentfolder = new File(edPath.getText());
+		
+		boolean hasErrors = false;
 		
 		for (int sea = 0; sea < series.getSeasonCount(); sea++) {
 			CCSeason season = series.getSeason(sea);
@@ -192,6 +195,7 @@ public class CreateSeriesFolderStructureFrame extends JFrame {
 				for (int i = 0; i < dlm.size(); i++) {
 					if (dlm.get(i).substring(1).equals(pt)) {
 						id = 2; // RED
+						hasErrors = true;
 					}
 				}
 				
@@ -200,6 +204,8 @@ public class CreateSeriesFolderStructureFrame extends JFrame {
 		}
 		
 		lsTest.setModel(dlm);
+		
+		btnOk.setEnabled(! hasErrors);
 	}
 	
 	private boolean startMoving() {

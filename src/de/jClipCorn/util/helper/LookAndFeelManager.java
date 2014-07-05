@@ -85,6 +85,11 @@ public class LookAndFeelManager {
 		return isSubstance;
 	}
 	
+	public static boolean isWindows() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	
 	public static void printAllColorKeys() {
 		List<String> colorKeys = new ArrayList<>();
 		Set<Entry<Object, Object>> entries = UIManager.getLookAndFeelDefaults().entrySet();

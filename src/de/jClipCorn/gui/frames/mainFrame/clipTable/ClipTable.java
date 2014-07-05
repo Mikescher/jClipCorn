@@ -20,6 +20,8 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableRowSorter;
 
+import com.sun.java.swing.plaf.windows.WindowsScrollBarUI;
+
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieScore;
@@ -70,6 +72,9 @@ public class ClipTable extends JScrollPane implements CCDBUpdateListener, ListSe
 		table.getSelectionModel().addListSelectionListener(this);
 		table.addMouseListener(this);
 		table.addMouseMotionListener(this);
+		
+		if (this.getVerticalScrollBar().getUI() instanceof WindowsScrollBarUI)
+			this.getVerticalScrollBar().setUI(new ClipVerticalScrollbarUI(32));
 	}
 
 	public void autoResize() {

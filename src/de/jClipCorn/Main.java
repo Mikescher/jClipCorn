@@ -100,3 +100,6 @@ public class Main {
 //TODO : Add multiple Episodes -> One Click set Epsiodelen + Calc Quality
 
 //TODO : Exception: (delete Backup in manager) {{ CCBackup.setName (CCBackup.java:70) }}
+
+//TODO : Create TXT of all movies (+series)   ((Markdown ?))
+//TODO : New better Char-chooser control (or old control for win-theme)

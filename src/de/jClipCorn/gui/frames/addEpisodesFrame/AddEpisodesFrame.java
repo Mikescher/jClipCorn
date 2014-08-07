@@ -53,6 +53,7 @@ import de.jClipCorn.util.CCDate;
 import de.jClipCorn.util.Validator;
 import de.jClipCorn.util.formatter.FileSizeFormatter;
 import de.jClipCorn.util.formatter.PathFormatter;
+import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.helper.ExtendedFocusTraversalOnArray;
 import de.jClipCorn.util.helper.FileChooserHelper;
 import de.jClipCorn.util.listener.OmniParserCallbackListener;
@@ -137,6 +138,7 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler, 
 	private JButton btnOpen;
 	private JButton btnSide_15;
 	private JButton btnOmniparser;
+	private JButton btnAutoMeta;
 
 	public AddEpisodesFrame(Component owner, CCSeason ss, UpdateCallbackListener ucl) {
 		super();
@@ -616,8 +618,18 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler, 
 				oframe.setVisible(true);
 			}
 		});
-		btnOmniparser.setBounds(112, 561, 129, 23);
+		btnOmniparser.setBounds(12, 561, 129, 23);
 		getContentPane().add(btnOmniparser);
+		
+		btnAutoMeta = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnAutoMeta.text")); //$NON-NLS-1$
+		btnAutoMeta.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				autoMetaDataCalc();
+			}
+		});
+		btnAutoMeta.setBounds(152, 561, 189, 23);
+		getContentPane().add(btnAutoMeta);
 	}
 
 	private void initFileChooser() {
@@ -1121,6 +1133,54 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler, 
 			parent.getEpisode(i).setTitle(newTitles.get(i));
 		}
 		
+		updateList();
+	}
+
+	public void autoMetaDataCalc() {
+		lsEpisodes.setSelectedIndex(-1);
+
+		int len = -1;
+		boolean len_err = false;
+		for (int i = 0; i < parent.getEpisodeCount(); i++) {
+			CCEpisode ep = parent.getEpisode(i);
+
+			if (ep.getLength() > 0)
+				if (len > 0 && ep.getLength() != len) {
+					len_err = true;
+				} else {
+					len = ep.getLength();
+				}
+		}
+
+		while (len <= 0 || len_err) {
+			len_err = false;
+			
+			try {
+				len = Integer.parseInt(DialogHelper.showLocalInputDialog(this, "AddEpisodeFrame.inputMetaTextLenDialog.text", "0")); //$NON-NLS-1$ //$NON-NLS-2$
+			} catch (NumberFormatException nfe) {
+				len = -1;
+			}
+		}
+		
+		//####################################
+		
+		for (int i = 0; i < parent.getEpisodeCount(); i++) {
+			CCEpisode ep = parent.getEpisode(i);
+
+			File f = new File(ep.getAbsolutePart());
+			if (f.exists()) {
+				ep.setFilesize(f.length());
+			}
+
+			ep.setLength(len);
+			
+			ep.setFormat(CCMovieFormat.getMovieFormatOrDefault(PathFormatter.getExtension(ep.getAbsolutePart())));
+			
+			ep.setQuality(CCMovieQuality.calculateQuality(ep.getFilesize(), ep.getLength(), 1));
+		}
+		
+		//####################################
+
 		updateList();
 	}
 }

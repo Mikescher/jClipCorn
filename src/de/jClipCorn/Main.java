@@ -97,7 +97,6 @@ public class Main {
 //TODO Add Credits to used libs + Add License + Disclaimer
 
 //TODO : You can close the Backup running Dialog with [X]
-//TODO : Add multiple Episodes -> One Click set Epsiodelen + Calc Quality
 
 //TODO : Exception: (delete Backup in manager) {{ CCBackup.setName (CCBackup.java:70) }}
 

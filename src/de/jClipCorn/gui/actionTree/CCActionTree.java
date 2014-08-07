@@ -50,6 +50,7 @@ import de.jClipCorn.gui.frames.searchFrame.SearchFrame;
 import de.jClipCorn.gui.frames.settingsFrame.SettingsFrame;
 import de.jClipCorn.gui.frames.showUpdateFrame.ShowUpdateFrame;
 import de.jClipCorn.gui.frames.statisticsFrame.StatisticsFrame;
+import de.jClipCorn.gui.frames.textExportFrame.TextExportFrame;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.UpdateConnector;
@@ -160,6 +161,14 @@ public class CCActionTree {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				onClickDatabaseSearchDatabase();
+			}
+		});
+		
+		temp = database.addChild(new CCActionElement("TextExportDatabase", null, "ClipMenuBar.Database.TextExport", Resources.ICN_MENUBAR_EXPORTPLAINDB)); //TODO ICON
+		temp.addListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				onClickDatabaseTextExportDatabase();
 			}
 		});
 
@@ -924,6 +933,11 @@ public class CCActionTree {
 	private void onClickDatabaseSearchDatabase() {
 		SearchFrame sf = new SearchFrame(movielist, owner);
 		sf.setVisible(true);
+	}
+	
+	private void onClickDatabaseTextExportDatabase() {
+		TextExportFrame tef = new TextExportFrame(movielist, owner);
+		tef.setVisible(true);
 	}
 	
 	private void onClickSeriesPreview() {

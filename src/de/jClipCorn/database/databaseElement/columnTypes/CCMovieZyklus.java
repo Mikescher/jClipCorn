@@ -51,6 +51,18 @@ public class CCMovieZyklus {
 			return ""; //$NON-NLS-1$
 		}
 	}
+
+	public String getOrderableFormatted() {
+		if (isSet()) {
+			if (zyklusNmbr != 0) {
+				return title + " " + String.format("%05d", zyklusNmbr); //$NON-NLS-1$ //$NON-NLS-2$
+			} else {
+				return title;
+			}
+		} else {
+			return ""; //$NON-NLS-1$
+		}
+	}
 	
 	public String getHTMLFormatted() {
 		if (isSet()) {
@@ -103,5 +115,9 @@ public class CCMovieZyklus {
 	@Override 
 	public int hashCode() {
 		return title.hashCode() * (zyklusNmbr + 2);
+	}
+
+	public String getRoman() {
+		return RomanNumberFormatter.decToRom(zyklusNmbr);
 	}
 }

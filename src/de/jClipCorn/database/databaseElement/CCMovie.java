@@ -95,6 +95,14 @@ public class CCMovie extends CCDatabaseElement {
 			return getTitle();
 		}
 	}
+	
+	public String getOrderableTitle() {
+		if (zyklus.isSet()) {
+			return zyklus.getOrderableFormatted() + ' ' + '-' + ' ' + getTitle();
+		} else {
+			return getTitle();
+		}
+	}
 
 	public boolean isViewed() {
 		return viewed;
@@ -168,6 +176,7 @@ public class CCMovie extends CCDatabaseElement {
 		updateDB();
 	}
 
+	@Override
 	public CCDate getAddDate() {
 		return addDate;
 	}
@@ -202,6 +211,11 @@ public class CCMovie extends CCDatabaseElement {
 
 	public int getYear() {
 		return year;
+	}
+	
+	@Override
+	public int getFirstYear() {
+		return getYear();
 	}
 
 	public void setYear(int year) {

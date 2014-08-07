@@ -111,6 +111,7 @@ public class CCSeries extends CCDatabaseElement {
 		return l;
 	}
 	
+	@Override
 	public CCDate getAddDate() {
 		switch (CCProperties.getInstance().PROP_SERIES_ADDDATECALCULATION.getValue()) {
 		case 0:
@@ -204,6 +205,11 @@ public class CCSeries extends CCDatabaseElement {
 			maxy = Math.max(maxy, se.getYear());
 		}
 		return new YearRange(miny, maxy);
+	}
+	
+	@Override
+	public int getFirstYear() {
+		return getYearRange().getLowestYear();
 	}
 	
 	public CCMovieTags getTags() {

@@ -17,6 +17,7 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCMovieSize;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTyp;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
+import de.jClipCorn.util.CCDate;
 import de.jClipCorn.util.helper.ByteUtilies;
 import de.jClipCorn.util.helper.ImageUtilities;
 
@@ -309,4 +310,8 @@ public abstract class CCDatabaseElement {
 	}
 
 	public abstract CCMovieSize getFilesize();
+	
+	public abstract CCDate getAddDate();
+	
+	public abstract int getFirstYear();
 }

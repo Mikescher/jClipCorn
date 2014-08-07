@@ -51,6 +51,7 @@ public class Resources {
 	public final static String ICN_MENUBAR_COMPARE					= registerICN("/icons/toolbar/balance_unbalance.png");
 	public final static String ICN_MENUBAR_SEARCH					= registerICN("/icons/toolbar/bubblechart.png");
 	public final static String ICN_MENUBAR_IMDB						= registerICN("/icons/toolbar/imdb.png");
+	public final static String ICN_MENUBAR_EXPORTPLAINDB			= registerICN("/icons/toolbar/external.png");
 	public final static String ICN_MENUBAR_OPENFILE					= registerICN("/icons/toolbar/open_folder.png");
 	public final static String ICN_MENUBAR_IMPORTDB					= registerICN("/icons/toolbar/source_code_bullet_down.png");
 	public final static String ICN_MENUBAR_IMPORMULTIPLEELEMENTS	= registerICN("/icons/toolbar/file_manager_bullet_add.png");

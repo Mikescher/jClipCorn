@@ -24,7 +24,9 @@ import de.jClipCorn.database.util.CCDBUpdateListener;
 import de.jClipCorn.gui.CachedResourceLoader;
 import de.jClipCorn.gui.Resources;
 import de.jClipCorn.gui.actionTree.CCActionTree;
-import de.jClipCorn.gui.frames.mainFrame.clipCharSelector.ClipCharSortSelector;
+import de.jClipCorn.gui.frames.mainFrame.clipCharSelector.AbstractClipCharSortSelector;
+import de.jClipCorn.gui.frames.mainFrame.clipCharSelector.FullClipCharSortSelector;
+import de.jClipCorn.gui.frames.mainFrame.clipCharSelector.SmallClipCharSortSelector;
 import de.jClipCorn.gui.frames.mainFrame.clipMenuBar.ClipMenuBar;
 import de.jClipCorn.gui.frames.mainFrame.clipStatusbar.ClipStatusBar;
 import de.jClipCorn.gui.frames.mainFrame.clipTable.ClipTable;
@@ -40,6 +42,7 @@ import de.jClipCorn.gui.guiComponents.tableFilter.TableSearchFilter;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.UpdateConnector;
+import de.jClipCorn.util.helper.LookAndFeelManager;
 
 public class MainFrame extends JFrame implements CCDBUpdateListener {
 	private static final long serialVersionUID = 1002435986107998058L;
@@ -57,7 +60,7 @@ public class MainFrame extends JFrame implements CCDBUpdateListener {
 	private DatabaseElementPreviewLabel coverImage;
 	private JPanel middlePanel;
 	private ClipTable clipTable;
-	private ClipCharSortSelector charSelector;
+	private AbstractClipCharSortSelector charSelector;
 	private CCMovieList movielist;
 	private JPanel coverPanel;
 	private JPanel gapPanel;
@@ -114,7 +117,10 @@ public class MainFrame extends JFrame implements CCDBUpdateListener {
 
 		clipTable = new ClipTable(movielist, this);
 		filterTree = new FilterTree(movielist, clipTable);
-		charSelector = new ClipCharSortSelector(this);
+		if (LookAndFeelManager.isSubstance())
+			charSelector = new SmallClipCharSortSelector(this);
+		else
+			charSelector = new FullClipCharSortSelector(this);
 
 		middlePanel.add(clipTable, BorderLayout.CENTER);
 		middlePanel.add(charSelector, BorderLayout.SOUTH);

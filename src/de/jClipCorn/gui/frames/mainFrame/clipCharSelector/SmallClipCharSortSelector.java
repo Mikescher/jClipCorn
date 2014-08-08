@@ -7,22 +7,16 @@ import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.ParallelGroup;
 import javax.swing.GroupLayout.SequentialGroup;
 import javax.swing.JButton;
-import javax.swing.JToolBar;
 import javax.swing.LayoutStyle;
 
 import de.jClipCorn.gui.frames.mainFrame.MainFrame;
-import de.jClipCorn.gui.frames.mainFrame.clipTable.RowFilterSource;
-import de.jClipCorn.gui.guiComponents.tableFilter.TableCharFilter;
 import de.jClipCorn.util.helper.LookAndFeelManager;
 
 /**
- * @author ZEUS
- *
+ * For Substance Themes
  */
-public class ClipCharSortSelector extends JToolBar {
+public class SmallClipCharSortSelector extends AbstractClipCharSortSelector {
 	private static final long serialVersionUID = -8270219279263812975L;
-	
-	private final MainFrame owner;	
 	
 	@SuppressWarnings("nls")
 	private static String  captions[] = {"All",  "#",  "AB", "CD", "EF",  "GH", "IJ", "KL",  "MN", "OP", "QR",  "ST", "UV", "WX", "YZ"};
@@ -36,9 +30,8 @@ public class ClipCharSortSelector extends JToolBar {
 	
 	private JButton buttons[] = new JButton[BUTTONCOUNT];
 	
-	public ClipCharSortSelector(MainFrame mf) {
-		super();
-		this.owner = mf;
+	public SmallClipCharSortSelector(MainFrame mf) {
+		super(mf);
 		
 		createButtons();
 		createLayout();
@@ -90,10 +83,9 @@ public class ClipCharSortSelector extends JToolBar {
 	
 	private void onClick(int idx) {
 		if (idx == 0) {
-			owner.getClipTable().setRowFilter(null, RowFilterSource.CHARSELECTOR);
+			onClick(null);
 		} else {
-			owner.getClipTable().setRowFilter(new TableCharFilter(searches[idx]), RowFilterSource.CHARSELECTOR);
+			onClick(searches[idx]);
 		}
-		
 	}
 }

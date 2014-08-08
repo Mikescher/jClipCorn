@@ -96,5 +96,3 @@ public class Main {
 
 //TODO Add Credits to used libs + Add License + Disclaimer
 //TODO : You can close the Backup running Dialog with [X]
-//TODO : Exception: (delete Backup in manager) {{ CCBackup.setName (CCBackup.java:70) }}
-//TODO : New better Char-chooser control (or old control for win-theme)

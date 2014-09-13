@@ -164,7 +164,7 @@ public class CCActionTree {
 			}
 		});
 		
-		temp = database.addChild(new CCActionElement("TextExportDatabase", null, "ClipMenuBar.Database.TextExport", Resources.ICN_MENUBAR_EXPORTPLAINDB)); //TODO ICON
+		temp = database.addChild(new CCActionElement("TextExportDatabase", null, "ClipMenuBar.Database.TextExport", Resources.ICN_MENUBAR_EXPORTPLAINDB));
 		temp.addListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {

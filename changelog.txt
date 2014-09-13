@@ -1,3 +1,106 @@
+############ 2014-08-08: 1.9.2 Task: Reverted CharChooser to old behaviour of non-substance LnF's
+
+############ 2014-08-07: 1.9.2 Feature: Added (PLAIN | JSON | XML) export function
+
+############ 2014-08-07: 1.9.2 Feature: Added One-Click metadata calculation to "AddEpisodesFrame"
+
+############ 2014-07-29: Late night todo commit
+
+############ 2014-07-06: 1.9.2 Task: Added a minimum scrollbar height on the windows L'n'F
+
+############ 2014-06-01: 1.9.2 Task: Improved Performance when throwing a massive amount of exceptions (collecting them together)
+
+############ 2014-06-01: 1.9.2 Feature: Added ResetTags Option to ImportDialog(s)
+
+############ 2014-06-01: 1.9.2 Task: Changed IMDB-Parse Method to [jSoup-Library]
+  (source of a few bugs & better Maintenance)
+
+############ 2014-06-01: 1.9.2 Task: Only allow CreateFolderStructure after successful tests
+
+############ 2014-06-01: 1.9.2 Bugfix: Fixed AV when selecting Theme "Autumn"
+
+############ 2014-06-01: 1.9.2 Bugfix: Fixed List-UI with "Windows"-Theme
+
+############ 2014-06-01: 1.9.2 Bugfix: Fixed ValidateDatabase->CheckFolderStructure for Folder with different Lowercase/Uppercase
+
+############ 2014-06-01: 1.9.2 Bugfix: Fixed Filename-creation for Elements ending with a dot (caused various other bugs)
+
+############ 2014-05-24: 1.9.2 Bugfix: Wrong Movie-Filesize when having more than 2 Parts (+ TODO's)
+
+############ 2014-05-18: 1.9.2 Task: Live update PreviewSeriesFrame (while open)
+
+############ 2014-05-16: 1.9.2 Bugfix: ParseWatchDataFrame: Update Date even when no change in viewed
+
+############ 2014-05-16: 1.9.2 Beta Release (for internal use only)
+
+############ 2014-05-16: Fixed ParseWatchData not setting episodes to correct value
+
+############ 2014-05-11: Fixed typo
+
+############ 2014-05-10: 1.9.2 Feature: Added new Syntax to ParseWatchDataFrame (Episode ranges)
+
+############ 2014-05-09: 1.9.2 Feature: Added new Database Error: "INVALID_SERIESSTRUCTURE"
+
+############ 2014-04-30: 1.9.2 Feature: Added clickable Score to ClipTable
+
+############ 2014-04-30: 1.9.2 Bugfix: Fixed TextEncoding when loading Filter from File
+
+############ 2014-04-30: 1.9.2 Feature: Added 'pasteURL' && 'pasteImage' to EditCoverComponent
+
+############ 2014-04-29: 1.9.2 Feature: Only show SeriesOverlay when optin selected (do not modify files)
+
+############ 2014-04-29: 1.9.2 Feature: Added proper EditCoverControl
+  -> AddMovieFrame
+  -> AddSeasonFrame
+  -> AddSeriesFrame
+  -> EditMovieFrame
+  -> EditSeriesFrame
+
+############ 2014-04-29: 1.9.2 Bugfix: Fixed Zyklus-Click not working
+
+############ 2014-04-28: 1.9.2 Bugfix: Fixed various Exceptions when MovieList is empty
+
+############ 2014-04-28: 1.9.2 Bugfix: Fixed Creating new Database (Schema was too old)
+
+############ 2014-04-28: 1.9.2 Bugfix: Fixed Exception when sorting by ViewState
+
+############ 2014-04-28: 1.9.2 Task: Disabled Column Dragging in Table (caused weird things)
+
+############ 2014-04-28: 1.9.2 Bugfix: Fixed Exception in AddEpisodesFrame when ignoring Warnings
+
+############ 2014-04-14: Added a few (2) Bugs in Todo-List
+
+############ 2014-03-16: C-C-C-Combo-TODO-Commit
+
+############ 2014-03-11: Tododos
+
+############ 2014-03-09: Added Bug-Report-Todos
+
+############ 2014-02-27: 1.9.2 Bugfix: Fixed Column-Resizing when deleting whole Series
+
+############ 2014-02-27: 1.9.2 Bugfix: Fixed missing locale: "ExportHelper.dialogs.resetScore_caption"
+
+############ 2014-02-27: 1.9.2 Bugfix: Fixed Format==null when Extension is not recognized
+
+############ 2014-02-27: 1.9.2 Bugfix: Fixed Onlinescore can't be 10
+
+############ 2014-02-26: Feature ToDos and a TODO for a critical Bug
+
+############ 2014-02-18: More Todo's   ...   as always
+
+############ 2014-02-16: 1.9.2 Bugfixes
+- Fixed OpenLastPl+ÂayedSeries not really selecting last played Episode
+- Fixed ImDB-Parsing not recognizing images
+- Fixed CustomOnlineSCoreFilter interpreting No-Score as valid score
+
+############ 2014-02-15: Added critical ToDo
+
+############ 2014-02-06: ToDo (Singular ...)
+
+############ 2014-02-02: You know the deal ... more ToDo's
+
+############ 2014-01-26: Updated Changelog
+
 ############ 2014-01-26: 1.9.1 RELEASE
 
 ############ 2014-01-26: 1.9.1 Feature

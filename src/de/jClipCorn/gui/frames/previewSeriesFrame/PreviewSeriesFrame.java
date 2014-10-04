@@ -621,10 +621,14 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 
 		lblTitle.setText(dispSeries.getTitle());
 
+		int ccidx = cvrChooser.getSelectedIndex();
+		
 		cvrChooser.clear();
 		for (int i = 0; i < dispSeries.getSeasonCount(); i++) {
 			cvrChooser.addCover(dispSeries.getSeason(i).getHalfsizeCover());
 		}
+
+		cvrChooser.setCurrSelected(ccidx);
 
 		switch (dispSeries.getOnlinescore()) {
 		case STARS_0_0:
@@ -667,6 +671,7 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 		lblSize.setText(LocaleBundle.getFormattedString("PreviewSeriesFrame.lblSize.text", FileSizeFormatter.format(dispSeries.getFilesize()))); //$NON-NLS-1$
 
 		lblViewed.setText(LocaleBundle.getFormattedString("PreviewSeriesFrame.lblViewed.text", dispSeries.getViewedCount(), dispSeries.getEpisodeCount())); //$NON-NLS-1$
+		
 		//if (dispSeries.isViewed()) {
 			lblViewed.setIcon(ImageUtilities.sliceImage(CachedResourceLoader.getImageIcon(Resources.ICN_TABLE_VIEWED_TRUE), 0d, (dispSeries.getViewedCount() *1d) / dispSeries.getEpisodeCount()));
 		//}

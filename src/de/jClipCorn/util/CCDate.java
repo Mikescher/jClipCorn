@@ -663,7 +663,8 @@ public final class CCDate {
 	}
 	
 	public boolean isValidDate() {
-		if (! (day > 0 && day <= getDaysOfMonth())) {
+		
+		if (! (year >= YEAR_MIN)) {
 			return false;
 		}
 		
@@ -671,7 +672,7 @@ public final class CCDate {
 			return false;
 		}
 		
-		if (! (year >= YEAR_MIN)) {
+		if (! (day > 0 && day <= getDaysOfMonth())) {
 			return false;
 		}
 		

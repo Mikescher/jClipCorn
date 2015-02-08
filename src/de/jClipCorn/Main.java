@@ -15,7 +15,7 @@ import de.jClipCorn.util.helper.LookAndFeelManager;
 
 public class Main {
 	public final static String TITLE = "jClipCorn"; //$NON-NLS-1$
-	public final static String VERSION = "1.9.2";	//$NON-NLS-1$
+	public final static String VERSION = "1.9.3";	//$NON-NLS-1$
 	public final static String DBVERSION = "1.6"; 	//$NON-NLS-1$
 	
 	private final static String PROPERTIES_PATH = "jClipcorn.properties"; //$NON-NLS-1$

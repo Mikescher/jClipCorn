@@ -96,3 +96,6 @@ public class Main {
 
 //TODO Add Credits to used libs + Add License + Disclaimer
 //TODO : You can close the Backup running Dialog with [X]
+
+//TODO: Staffel hinzufügen -> falsche Staffel wird angezeigt
+//TODO: Leere Staffel öffnen -> AV

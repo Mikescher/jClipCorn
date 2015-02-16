@@ -1,3 +1,13 @@
+############ 2015-02-10: [TODO]'s
+
+############ 2015-02-08: 1.9.3 RELEASE
+
+############ 2014-10-17: 1.9.3 Bugfix: Fixed AV in CCDate.isValidate()
+
+############ 2014-10-04: 1.9.3 Bugfix: Fixed jCoverChooser reset when viewing Episode
+
+############ 2014-09-13: 1.9.2 RELEASE
+
 ############ 2014-08-08: 1.9.2 Task: Reverted CharChooser to old behaviour of non-substance LnF's
 
 ############ 2014-08-07: 1.9.2 Feature: Added (PLAIN | JSON | XML) export function

@@ -172,6 +172,8 @@ public class DatabaseError {
 			return fixError_Impossible_WatchLater();
 		} else if (isTypeOf(DatabaseErrorType.ERROR_LASTWATCHED_TOO_OLD)) {
 			return fixError_LastWatched_Too_Old();
+		} else if (isTypeOf(DatabaseErrorType.ERROR_IMPOSSIBLE_WATCH_NEVER)) {
+			return fixError_Impossible_WatchNever();
 		}
 		
 		return false;
@@ -363,6 +365,28 @@ public class DatabaseError {
 			CCEpisode epi = ((CCEpisode)el1);
 			
 			epi.setTag(CCMovieTags.TAG_WATCH_LATER, false);
+
+			return true;
+		}
+		
+		return false;
+	}
+	
+	private boolean fixError_Impossible_WatchNever() {
+		if (el1 instanceof CCMovie) {
+			CCMovie mov = ((CCMovie)el1);
+			
+			mov.setTag(CCMovieTags.TAG_WATCH_NEVER, false);
+
+			return true;
+		} else if (el1 instanceof CCSeries) {
+			return false;
+		} else if (el1 instanceof CCSeason) {
+			return false;
+		} else if (el1 instanceof CCEpisode) {
+			CCEpisode epi = ((CCEpisode)el1);
+			
+			epi.setTag(CCMovieTags.TAG_WATCH_NEVER, false);
 
 			return true;
 		}

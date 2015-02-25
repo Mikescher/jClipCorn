@@ -299,11 +299,19 @@ public class DatabaseValidator {
 		}
 		
 		// ###############################################
-		// Watch Late <> ViewedState
+		// Watch later <> ViewedState
 		// ###############################################
 		
 		if (mov.isViewed() && mov.getTag(CCMovieTags.TAG_WATCH_LATER)) {
 			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_IMPOSSIBLE_WATCH_LATER, mov));
+		}
+		
+		// ###############################################
+		// Watch never <> ViewedState
+		// ###############################################
+		
+		if (mov.isViewed() && mov.getTag(CCMovieTags.TAG_WATCH_NEVER)) {
+			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_IMPOSSIBLE_WATCH_NEVER, mov));
 		}
 	}
 
@@ -417,11 +425,19 @@ public class DatabaseValidator {
 		}
 		
 		// ###############################################
-		// Watch Later <> ViewedState
+		// Watch later <> ViewedState
 		// ###############################################
 		
 		if (episode.isViewed() && episode.getTag(CCMovieTags.TAG_WATCH_LATER)) {
 			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_IMPOSSIBLE_WATCH_LATER, episode));
+		}
+		
+		// ###############################################
+		// Watch never <> ViewedState
+		// ###############################################
+		
+		if (episode.isViewed() && episode.getTag(CCMovieTags.TAG_WATCH_NEVER)) {
+			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_IMPOSSIBLE_WATCH_NEVER, episode));
 		}
 		
 		// ###############################################

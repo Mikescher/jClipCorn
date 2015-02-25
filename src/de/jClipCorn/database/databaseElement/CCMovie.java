@@ -117,6 +117,10 @@ public class CCMovie extends CCDatabaseElement {
 			if (viewed && getTag(CCMovieTags.TAG_WATCH_LATER) && CCProperties.getInstance().PROP_MAINFRAME_AUTOMATICRESETWATCHLATER.getValue()) {
 				setTag(CCMovieTags.TAG_WATCH_LATER, false);
 			}
+			
+			if (viewed && getTag(CCMovieTags.TAG_WATCH_NEVER) && CCProperties.getInstance().PROP_MAINFRAME_AUTOMATICRESETWATCHNEVER.getValue()) {
+				setTag(CCMovieTags.TAG_WATCH_NEVER, false);
+			}
 		}
 	}
 

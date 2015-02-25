@@ -1,12 +1,8 @@
 package de.jClipCorn.database.databaseErrors;
 
-import java.security.InvalidParameterException;
-
 import de.jClipCorn.gui.localization.LocaleBundle;
 
 public class DatabaseErrorType {
-	private static int ERRORTYPE_COUNT = 26;
-	
 	public static DatabaseErrorType ERROR_INCONTINUOUS_GENRELIST = new DatabaseErrorType(1);
 	public static DatabaseErrorType ERROR_WRONG_GENREID = new DatabaseErrorType(2);
 	public static DatabaseErrorType ERROR_WRONG_FILESIZE = new DatabaseErrorType(3);
@@ -33,25 +29,18 @@ public class DatabaseErrorType {
 	public static DatabaseErrorType ERROR_IMPOSSIBLE_WATCH_LATER = new DatabaseErrorType(24);
 	public static DatabaseErrorType ERROR_LASTWATCHED_TOO_OLD = new DatabaseErrorType(25);
 	public static DatabaseErrorType ERROR_INVALID_SERIES_STRUCTURE = new DatabaseErrorType(26);
+	public static DatabaseErrorType ERROR_IMPOSSIBLE_WATCH_NEVER = new DatabaseErrorType(27);
 	
 	private final int type;
 	private int count = 0;
 	
 	public DatabaseErrorType(int ptype) {
 		this.type = ptype;
-		
-		if (type <= 0 || type > ERRORTYPE_COUNT) {
-			throw new InvalidParameterException("Errortype: " + ptype); //$NON-NLS-1$
-		}
 	}
 	
 	public DatabaseErrorType(DatabaseErrorType ptype) {
 		this.type = ptype.getType();
 		this.count = ptype.count;
-		
-		if (type <= 0 || type > ERRORTYPE_COUNT) {
-			throw new InvalidParameterException("Errortype: " + ptype); //$NON-NLS-1$
-		}
 	}
 
 	public int getType() {
@@ -96,6 +85,8 @@ public class DatabaseErrorType {
 		} else if (equals(ERROR_IMPOSSIBLE_WATCH_LATER)) {
 			return true;
 		} else if (equals(ERROR_LASTWATCHED_TOO_OLD)) {
+			return true;
+		} else if (equals(ERROR_IMPOSSIBLE_WATCH_NEVER)) {
 			return true;
 		}
 		

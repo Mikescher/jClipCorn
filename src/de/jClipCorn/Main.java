@@ -99,3 +99,5 @@ public class Main {
 
 //TODO: Staffel hinzufügen -> falsche Staffel wird angezeigt
 //TODO: Leere Staffel öffnen -> AV
+//TODO: Series: Play: Listboxjump
+//TODO: EPisode edit -> listbox dafuq

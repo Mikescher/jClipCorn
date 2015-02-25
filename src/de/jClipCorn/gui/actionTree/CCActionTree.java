@@ -19,6 +19,7 @@ import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieScore;
+import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTags;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTyp;
 import de.jClipCorn.database.util.ExportHelper;
 import de.jClipCorn.database.xml.CCBXMLReader;
@@ -596,50 +597,17 @@ public class CCActionTree {
 		CCActionElement setTags = other.addChild(new CCActionElement("SetTags", null, "ClipMenuBar.Other.SetTags", Resources.ICN_MENUBAR_TAGS));
 		// ################################################################################################################################################################
 		
-		temp = setTags.addChild(new CCActionElement("SwitchTag_00", null, "CCMovieTags.TAG_00", Resources.ICN_MENUBAR_TAG_0_1));
-		temp.setReadOnlyRestriction();
-		temp.addListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onSwitchTag(0);
-			}
-		});
-		
-		temp = setTags.addChild(new CCActionElement("SwitchTag_01", null, "CCMovieTags.TAG_01", Resources.ICN_MENUBAR_TAG_1_1));
-		temp.setReadOnlyRestriction();
-		temp.addListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onSwitchTag(1);
-			}
-		});
-		
-		temp = setTags.addChild(new CCActionElement("SwitchTag_02", null, "CCMovieTags.TAG_02", Resources.ICN_MENUBAR_TAG_2_1));
-		temp.setReadOnlyRestriction();
-		temp.addListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onSwitchTag(2);
-			}
-		});
-		
-		temp = setTags.addChild(new CCActionElement("SwitchTag_03", null, "CCMovieTags.TAG_03", Resources.ICN_MENUBAR_TAG_3_1));
-		temp.setReadOnlyRestriction();
-		temp.addListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onSwitchTag(3);
-			}
-		});
-		
-		temp = setTags.addChild(new CCActionElement("SwitchTag_04", null, "CCMovieTags.TAG_04", Resources.ICN_MENUBAR_TAG_4_1));
-		temp.setReadOnlyRestriction();
-		temp.addListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onSwitchTag(4);
-			}
-		});
+		for (int ii = 0; ii < CCMovieTags.ACTIVETAGS; ii++) {
+			final int i = ii;
+			temp = setTags.addChild(new CCActionElement(String.format("SwitchTag_%02d", i), null, String.format("CCMovieTags.TAG_%02d", i), Resources.ICN_TABLE_TAG_X_1[i]));
+			temp.setReadOnlyRestriction();
+			temp.addListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					onSwitchTag(i);
+				}
+			});
+		}
 		
 		// #######################################################################################################
 		

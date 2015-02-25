@@ -73,6 +73,8 @@ public class Resources {
 	public final static String ICN_MENUBAR_TAG_3_1 					= registerICN("/icons/tags/tag_3_on.png");
 	public final static String ICN_MENUBAR_TAG_4_0 					= registerICN("/icons/tags/tag_4_off.png");
 	public final static String ICN_MENUBAR_TAG_4_1 					= registerICN("/icons/tags/tag_4_on.png");
+	public final static String ICN_MENUBAR_TAG_5_0 					= registerICN("/icons/tags/tag_5_off.png");
+	public final static String ICN_MENUBAR_TAG_5_1 					= registerICN("/icons/tags/tag_5_on.png");
 	public final static String ICN_MENUBAR_CREATEFOLDERSTRUCTURE	= registerICN("/icons/toolbar/folders_explorer.png");
 	public final static String ICN_MENUBAR_SAVE						= registerICN("/icons/toolbar/save_as.png");
 	public final static String ICN_MENUBAR_STATISTICS				= registerICN("/icons/toolbar/statistics.png");
@@ -91,6 +93,7 @@ public class Resources {
 	public final static String ICN_TABLE_VIEWED_FALSE 	= registerICN("/icons/table/viewed_0.png");
 	public final static String ICN_TABLE_VIEWED_TRUE  	= registerICN("/icons/table/viewed_1.png");
 	public final static String ICN_TABLE_VIEWED_LATER 	= registerICN("/icons/table/viewed_2.png");
+	public final static String ICN_TABLE_VIEWED_NEVER 	= registerICN("/icons/table/viewed_3.png");
 	
 	public final static String ICN_TABLE_QUALITY_0 		= registerICN("/icons/table/quality_0.png");
 	public final static String ICN_TABLE_QUALITY_1 		= registerICN("/icons/table/quality_1.png");
@@ -148,6 +151,11 @@ public class Resources {
 	public final static String ICN_TABLE_TAG_3_1 		= register16x16ICN("/icons/tags/tag_3_on.png");
 	public final static String ICN_TABLE_TAG_4_0 		= register16x16ICN("/icons/tags/tag_4_off.png");
 	public final static String ICN_TABLE_TAG_4_1 		= register16x16ICN("/icons/tags/tag_4_on.png");
+	public final static String ICN_TABLE_TAG_5_0 		= register16x16ICN("/icons/tags/tag_5_off.png");
+	public final static String ICN_TABLE_TAG_5_1 		= register16x16ICN("/icons/tags/tag_5_on.png");
+
+	public final static String[] ICN_TABLE_TAG_X_0 		= new String[] {ICN_TABLE_TAG_0_0, ICN_TABLE_TAG_1_0, ICN_TABLE_TAG_2_0, ICN_TABLE_TAG_3_0, ICN_TABLE_TAG_4_0, ICN_TABLE_TAG_5_0};
+	public final static String[] ICN_TABLE_TAG_X_1 		= new String[] {ICN_TABLE_TAG_0_1, ICN_TABLE_TAG_1_1, ICN_TABLE_TAG_2_1, ICN_TABLE_TAG_3_1, ICN_TABLE_TAG_4_1, ICN_TABLE_TAG_5_1};
 	// #############################################  </TABLE>  ##############################################
 	
 	

@@ -454,6 +454,8 @@ public class CCMovie extends CCDatabaseElement {
 			return ExtendedViewedState.VIEWED;
 		else if (tags.getTag(CCMovieTags.TAG_WATCH_LATER))
 			return ExtendedViewedState.MARKED_FOR_LATER;
+		else if (tags.getTag(CCMovieTags.TAG_WATCH_NEVER))
+			return ExtendedViewedState.MARKED_FOR_NEVER;
 		else
 			return ExtendedViewedState.NOT_VIEWED;
 	}

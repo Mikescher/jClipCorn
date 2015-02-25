@@ -4,6 +4,7 @@ import javax.swing.RowFilter;
 
 import de.jClipCorn.database.util.ExtendedViewedState;
 import de.jClipCorn.gui.frames.mainFrame.clipTable.ClipTableModel;
+import de.jClipCorn.properties.CCProperties;
 
 public class TableViewedFilter extends RowFilter<ClipTableModel, Object> {
 	private boolean defViewed;
@@ -15,6 +16,18 @@ public class TableViewedFilter extends RowFilter<ClipTableModel, Object> {
 
 	@Override
 	public boolean include(Entry<? extends ClipTableModel, ? extends Object> e) {
-		return ! defViewed ^((ExtendedViewedState)e.getValue(ClipTableModel.COLUMN_VIEWED)).toBool();
+		ExtendedViewedState evs = ((ExtendedViewedState)e.getValue(ClipTableModel.COLUMN_VIEWED));
+		
+		if (defViewed)
+		{
+			return evs.toBool();
+		} 
+		else
+		{
+			if (evs != ExtendedViewedState.MARKED_FOR_NEVER || evs.toBool())
+				return ! evs.toBool();
+			else
+				return ! CCProperties.getInstance().PROP_MAINFRAME_DONT_FILTER_WATCHNEVER.getValue();
+		}
 	}
 }

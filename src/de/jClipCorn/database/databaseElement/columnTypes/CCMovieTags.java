@@ -11,23 +11,26 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 
 public class CCMovieTags {
 	public final static int TAGCOUNT = 16;
-	public final static int ACTIVETAGS = 5;
+	public final static int ACTIVETAGS = 6;
 	
 	public final static int TAG_BAD_QUALITY 	= 0;
 	public final static int TAG_MISSING_TIME 	= 1;
 	public final static int TAG_FILE_CORRUPTED 	= 2;
 	public final static int TAG_WATCH_LATER 	= 3;
 	public final static int TAG_WRONG_LANGUAGE 	= 4;
+	public final static int TAG_WATCH_NEVER 	= 5;
 
-	private final static String[] ICONS_ON = { Resources.ICN_TABLE_TAG_0_1, Resources.ICN_TABLE_TAG_1_1, Resources.ICN_TABLE_TAG_2_1, Resources.ICN_TABLE_TAG_3_1, Resources.ICN_TABLE_TAG_4_1 };
-	private final static String[] IMGS_ON = { Resources.ICN_MENUBAR_TAG_0_1, Resources.ICN_MENUBAR_TAG_1_1, Resources.ICN_MENUBAR_TAG_2_1, Resources.ICN_MENUBAR_TAG_3_1, Resources.ICN_MENUBAR_TAG_4_1 };
-	private final static String[] ICONS_OFF = { Resources.ICN_TABLE_TAG_0_0, Resources.ICN_TABLE_TAG_1_0, Resources.ICN_TABLE_TAG_2_0, Resources.ICN_TABLE_TAG_3_0, Resources.ICN_TABLE_TAG_4_0 };
+	private final static String[] ICONS_OFF = { Resources.ICN_TABLE_TAG_0_0,   Resources.ICN_TABLE_TAG_1_0,   Resources.ICN_TABLE_TAG_2_0,   Resources.ICN_TABLE_TAG_3_0,   Resources.ICN_TABLE_TAG_4_0,   Resources.ICN_TABLE_TAG_5_0 };
+	private final static String[] ICONS_ON  = { Resources.ICN_TABLE_TAG_0_1,   Resources.ICN_TABLE_TAG_1_1,   Resources.ICN_TABLE_TAG_2_1,   Resources.ICN_TABLE_TAG_3_1,   Resources.ICN_TABLE_TAG_4_1,   Resources.ICN_TABLE_TAG_5_1  };
+	private final static String[] IMGS_ON   = { Resources.ICN_MENUBAR_TAG_0_1, Resources.ICN_MENUBAR_TAG_1_1, Resources.ICN_MENUBAR_TAG_2_1, Resources.ICN_MENUBAR_TAG_3_1, Resources.ICN_MENUBAR_TAG_4_1, Resources.ICN_MENUBAR_TAG_5_1 };
 
-	private final static String[] NAMES = { LocaleBundle.getString("CCMovieTags.TAG_00"), //$NON-NLS-1$
-			LocaleBundle.getString("CCMovieTags.TAG_01"), //$NON-NLS-1$
-			LocaleBundle.getString("CCMovieTags.TAG_02"), //$NON-NLS-1$
-			LocaleBundle.getString("CCMovieTags.TAG_03"), //$NON-NLS-1$
-			LocaleBundle.getString("CCMovieTags.TAG_04") //$NON-NLS-1$
+	private final static String[] NAMES = { 
+		LocaleBundle.getString("CCMovieTags.TAG_00"), //$NON-NLS-1$
+		LocaleBundle.getString("CCMovieTags.TAG_01"), //$NON-NLS-1$
+		LocaleBundle.getString("CCMovieTags.TAG_02"), //$NON-NLS-1$
+		LocaleBundle.getString("CCMovieTags.TAG_03"), //$NON-NLS-1$
+		LocaleBundle.getString("CCMovieTags.TAG_04"), //$NON-NLS-1$
+		LocaleBundle.getString("CCMovieTags.TAG_05")  //$NON-NLS-1$
 	};
 
 	private boolean[] tags = new boolean[16];

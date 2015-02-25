@@ -704,6 +704,9 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 	}
 
 	public void changeSeason(CCSeason s) {
+		if (s == null)
+			return;
+		
 		if (Main.DEBUG) {
 			lblStaffel.setText(String.format("<%d> %s (%d) (%s)", s.getSeasonID(), s.getTitle(), s.getYear(), s.getCoverName())); //$NON-NLS-1$
 		} else {

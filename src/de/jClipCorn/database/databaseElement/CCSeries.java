@@ -223,6 +223,9 @@ public class CCSeries extends CCDatabaseElement {
 	}
 
 	public CCSeason getSeason(int ss) {
+		if (ss < 0 || ss >= seasons.size())
+			return null;
+		
 		return seasons.get(ss);
 	}
 

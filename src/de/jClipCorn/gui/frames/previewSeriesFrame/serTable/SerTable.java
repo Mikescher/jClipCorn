@@ -74,6 +74,14 @@ public class SerTable extends JScrollPane implements ListSelectionListener, Mous
 		return -1;
 	}
 	
+	public void setSelectedRow(int row) {
+		if (row < 0) return;
+		
+		row = table.convertRowIndexToView(row);
+		
+		table.getSelectionModel().setSelectionInterval(row, row);
+	}
+	
 	public CCEpisode getSelectedEpisode() {
 		int selrow = getSelectedRow();
 		if (selrow >= 0) {

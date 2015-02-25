@@ -710,7 +710,23 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 			lblStaffel.setText(String.format("%s (%d)", s.getTitle(), s.getYear())); //$NON-NLS-1$
 		}
 		
-		tabSeason.changeSeason(s);
+		if (tabSeason.getSeason() == s)
+		{
+			int row_s = tabSeason.getSelectedRow();
+			int pos_v = tabSeason.getVerticalScrollBar().getValue();
+			int pos_h = tabSeason.getHorizontalScrollBar().getValue();
+
+			tabSeason.changeSeason(s);
+			
+			tabSeason.getVerticalScrollBar().setValue(pos_v);
+			tabSeason.getHorizontalScrollBar().setValue(pos_h);
+			tabSeason.setSelectedRow(row_s);
+		}
+		else
+		{
+			tabSeason.changeSeason(s);			
+		}
+		
 	}
 	
 	public void updateSeason() {
@@ -721,9 +737,9 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 	public void onUpdate(Object o) {
 		updateData();
 
-		if (dispSeries.getSeasonCount() > 0) {
-			changeSeason(dispSeries.getSeason(0));
-		}
+//		if (dispSeries.getSeasonCount() > 0) {
+//			changeSeason(dispSeries.getSeason(0));
+//		}
 	}
 	
 	public void onEpisodeDblClick(CCEpisode ep) {

@@ -1,6 +1,7 @@
 package de.jClipCorn.gui.frames.statisticsFrame.charts;
 
 import java.awt.Color;
+import java.awt.event.ComponentEvent;
 
 import javax.swing.UIManager;
 
@@ -24,7 +25,7 @@ public abstract class StatisticsChart {
 	protected final static Color HISTOGRAMMCHART_COLOR = Color.BLUE;
 	protected final static Color HISTOGRAMMACKGROUND_COLOR = Color.LIGHT_GRAY;
 	
-	private final JFreeChart chart;
+	protected final JFreeChart chart;
 	private final String title;
 	
 	public StatisticsChart(CCMovieList ml) {
@@ -47,4 +48,8 @@ public abstract class StatisticsChart {
 	
 	protected abstract JFreeChart createChart(CCMovieList movielist);
 	protected abstract String createTitle();
+	
+	public void onResize(ComponentEvent e) {
+		// Overwrite me
+	}
 }

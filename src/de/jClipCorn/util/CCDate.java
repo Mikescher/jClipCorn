@@ -663,7 +663,6 @@ public final class CCDate {
 	}
 	
 	public boolean isValidDate() {
-		
 		if (! (year >= YEAR_MIN)) {
 			return false;
 		}

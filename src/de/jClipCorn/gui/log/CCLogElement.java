@@ -107,6 +107,8 @@ public class CCLogElement {
 			}
 		}
 		
+		if (stbuilder.length() == 0) return ""; //$NON-NLS-1$
+		
 		stbuilder.deleteCharAt(stbuilder.length() - 1);
 		
 		return stbuilder.toString();

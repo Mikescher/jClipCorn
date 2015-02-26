@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,6 +27,7 @@ import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
 
+import de.jClipCorn.Main;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.gui.CachedResourceLoader;
 import de.jClipCorn.gui.Resources;
@@ -42,12 +45,14 @@ import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsMovieLengthChart
 import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsOnlinescoreChart;
 import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsQualityChart;
 import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsScoreChart;
+import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsSeriesViewedChart;
 import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsSizeChart;
 import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsTagChart;
 import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsViewedChart;
 import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsYearChart;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.properties.CCProperties;
+import de.jClipCorn.util.TimeKeeper;
 import de.jClipCorn.util.formatter.TimeIntervallFormatter;
 import de.jClipCorn.util.helper.StatisticsHelper;
 
@@ -56,6 +61,7 @@ public class StatisticsFrame extends JFrame {
 
 	private final CCMovieList movielist;
 	private List<JLabel> sidebarValueLabels = new ArrayList<>();
+	private StatisticsChart currentChart = null;
 	
 	private JPanel pnlTop;
 	private JPanel pnlLeft;
@@ -74,12 +80,15 @@ public class StatisticsFrame extends JFrame {
 		
 		initGUI();
 
-//		TimeKeeper.start();
+		TimeKeeper.start();
 		{
 			initSidebarValues();
 			initCharts();
 		}
-//		TimeKeeper.stop();
+		long init_time = TimeKeeper.stop();
+		
+		if (Main.DEBUG)
+			System.out.println(String.format("[DBG] Statistics initialization time: %d ms", init_time)); //$NON-NLS-1$
 		
 		cbxChooseChart.setSelectedIndex(-1);
 
@@ -165,6 +174,21 @@ public class StatisticsFrame extends JFrame {
 			chartPanel = new FixedChartPanel(new JFreeChart(new XYPlot()));
 		}
 		chartPanel.setVisible(false);
+		chartPanel.addComponentListener(new ComponentListener() {
+			@Override
+			public void componentShown(ComponentEvent e) {/**/}
+			
+			@Override
+			public void componentResized(ComponentEvent e) {
+				if (currentChart != null) currentChart.onResize(e);
+			}
+			
+			@Override
+			public void componentMoved(ComponentEvent e) {/**/}
+			
+			@Override
+			public void componentHidden(ComponentEvent e) {/**/}
+		});
 		pnlCenter.add(chartPanel, BorderLayout.CENTER);
 		
 		setSize(1000, 550);
@@ -258,9 +282,12 @@ public class StatisticsFrame extends JFrame {
 		if (h_ser) cbxChooseChart.addItem(new StatisticsHoursSerMovChart(movielist));
 		if (h_ser) cbxChooseChart.addItem(new StatisticsEpisodesViewedChart(movielist));
 		if (h_mov) cbxChooseChart.addItem(new StatisticsSizeChart(movielist));
+		if (h_ser) cbxChooseChart.addItem(new StatisticsSeriesViewedChart(movielist));
 	}
 	
 	private void assignChart(StatisticsChart statchart) {
+		currentChart = statchart;
+		
 		if (statchart == null) {
 			chartPanel.setVisible(false);
 			

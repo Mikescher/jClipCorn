@@ -1,6 +1,8 @@
 package de.jClipCorn.util.helper;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
@@ -22,6 +24,8 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTags;
 import de.jClipCorn.util.CCDate;
 
 public class StatisticsHelper {
+	public static int[] CHART_COLORS = {0x4D4D4D, 0x5DA5DA, 0xFAA43A, 0x60BD68, 0xF17CB0, 0xB2912F, 0xB276B2, 0x000080, 0xF15854};
+	
 	public static int getViewedMovieCount(CCMovieList ml) {
 		int c = 0;
 
@@ -699,7 +703,6 @@ public class StatisticsHelper {
 					}
 				}
 			}
-			
 		}
 		
 		ls.set(0, ls.get(0) + initialcount);
@@ -713,5 +716,29 @@ public class StatisticsHelper {
 	
 	public static int failProofDiv(int a, int b) {
 		return b == 0 ? 0 : a/b;
+	}
+	
+	public static List<CCEpisode> getEpisodesWithExplicitLastViewedDate(CCSeries series) {
+		List<CCEpisode> result = new ArrayList<>();
+		
+		for (int sc = 0; sc < series.getSeasonCount(); sc++) {
+			CCSeason season = series.getSeason(sc);
+			
+			for (int ep = 0; ep < season.getEpisodeCount(); ep++) {
+				CCEpisode episode = season.getEpisode(ep);
+				
+				if (episode.isViewed() && !episode.getLastViewed().isMinimum())
+					result.add(episode);
+			}
+		}
+		
+		Collections.sort(result, new Comparator<CCEpisode>() {
+			@Override
+			public int compare(CCEpisode o1, CCEpisode o2) {
+				return CCDate.compare(o1.getLastViewed(), o2.getLastViewed());
+			}
+		});
+		
+		return result;
 	}
 }

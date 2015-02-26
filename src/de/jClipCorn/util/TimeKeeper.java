@@ -10,7 +10,7 @@ public class TimeKeeper {
 	}
 	
 	@SuppressWarnings("nls")
-	public static void stop() {
+	public static void stopAndPrint() {
 		if (time_ms.isEmpty()) {
 			System.out.println("TimeKeeper ERROR: Stack is empty");
 			return;
@@ -21,6 +21,16 @@ public class TimeKeeper {
 		StackTraceElement e = new Throwable().getStackTrace()[1];
 		
 		System.out.println(e.getFileName().substring(e.getFileName().lastIndexOf('.', e.getFileName().lastIndexOf('.') - 1) + 1) + " -> " + e.getMethodName() + "()  (Line " + e.getLineNumber() + "): " + milllis + "ms");
+	}
+	
+	@SuppressWarnings("nls")
+	public static long stop() {
+		if (time_ms.isEmpty()) {
+			System.out.println("TimeKeeper ERROR: Stack is empty");
+			return -1;
+		}
+		
+		return System.currentTimeMillis() - time_ms.pop();
 	}
 	
 	public static void freeze() {

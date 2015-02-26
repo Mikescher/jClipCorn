@@ -81,12 +81,12 @@ public class StatisticsSeriesTotalViewedChart extends StatisticsChart {
 	    	plot.setDataset(3*idx, dataset);
 	    	plot.setRenderer(3*idx, new XYAreaRenderer(XYAreaRenderer.AREA, null, null));
 	    	plot.getRenderer(3*idx).setSeriesPaint(0, ca);
-	    	plot.getRenderer(3*idx).setSeriesVisibleInLegend(0, true);
+	    	plot.getRenderer(3*idx).setSeriesVisibleInLegend(0, false);
 	    	
 	    	plot.setDataset(3*idx + 1, dataset);
 	    	plot.setRenderer(3*idx + 1, new StandardXYItemRenderer(StandardXYItemRenderer.LINES, null, null));
 	    	plot.getRenderer(3*idx + 1).setSeriesPaint(0, cf);
-	    	plot.getRenderer(3*idx + 1).setSeriesVisibleInLegend(0, false);
+	    	plot.getRenderer(3*idx + 1).setSeriesVisibleInLegend(0, true);
 
 	    	plot.setDataset( 3*idx + 2, startset);
 	    	plot.setRenderer(3*idx + 2, new StandardXYItemRenderer(StandardXYItemRenderer.LINES, null, null));
@@ -106,12 +106,11 @@ public class StatisticsSeriesTotalViewedChart extends StatisticsChart {
 		plot.setRangeGridlinePaint(GRIDLINECOLOR);
 	    
 	    JFreeChart chart = new JFreeChart(plot);
-	    //chart.removeLegend();
 	    
 	    chart.setBackgroundPaint(null);
 	    plot.getDomainAxis().setTickLabelPaint(TEXT_FOREGROUND);
 	    plot.getRangeAxis().setTickLabelPaint(TEXT_FOREGROUND);
-	    
+		
 	    return chart;
 	}
 	
@@ -220,7 +219,7 @@ public class StatisticsSeriesTotalViewedChart extends StatisticsChart {
 			}
 		}
 		
-		return max;
+		return max.getAddDay(1);
 	}
 
 	@Override

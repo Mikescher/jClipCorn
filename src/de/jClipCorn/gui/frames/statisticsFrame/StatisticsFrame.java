@@ -129,6 +129,7 @@ public class StatisticsFrame extends JFrame {
 				assignChart(cbxChooseChart.getItemAt(cbxChooseChart.getSelectedIndex()));
 			}
 		});
+		cbxChooseChart.setMaximumRowCount(24);
 		pnlTop.add(cbxChooseChart, "2, 2, fill, center"); //$NON-NLS-1$
 		
 		btnPrevChart = new JButton("<"); //$NON-NLS-1$

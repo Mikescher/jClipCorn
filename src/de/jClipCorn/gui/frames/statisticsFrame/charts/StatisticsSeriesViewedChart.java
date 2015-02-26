@@ -101,6 +101,7 @@ public class StatisticsSeriesViewedChart extends StatisticsChart {
 	    chart.setBackgroundPaint(null);
 	    plot.getDomainAxis().setTickLabelPaint(TEXT_FOREGROUND);
 	    plot.getRangeAxis().setTickLabelPaint(TEXT_FOREGROUND);
+		plot.getRangeAxis().setStandardTickUnits(NumberAxis.createIntegerTickUnits());
 	    
 	    return chart;
 	}

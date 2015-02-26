@@ -6,6 +6,7 @@ import java.awt.Insets;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
@@ -69,6 +70,7 @@ public class StatisticsSidebarFactory {
 	public JPanel getPanel() {
 		JPanel panel = new JPanel();
 		panel.setLayout(getGBLayout());
+		panel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 		
 		for (int i = 0; i < labels_left.size(); i++) {
 			panel.add(labels_left.get(i), constraints_left.get(i));

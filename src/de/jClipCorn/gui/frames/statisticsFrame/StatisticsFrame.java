@@ -45,6 +45,7 @@ import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsMovieLengthChart
 import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsOnlinescoreChart;
 import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsQualityChart;
 import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsScoreChart;
+import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsSeriesTotalViewedChart;
 import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsSeriesViewedChart;
 import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsSizeChart;
 import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsTagChart;
@@ -283,6 +284,7 @@ public class StatisticsFrame extends JFrame {
 		if (h_ser) cbxChooseChart.addItem(new StatisticsEpisodesViewedChart(movielist));
 		if (h_mov) cbxChooseChart.addItem(new StatisticsSizeChart(movielist));
 		if (h_ser) cbxChooseChart.addItem(new StatisticsSeriesViewedChart(movielist));
+		if (h_ser) cbxChooseChart.addItem(new StatisticsSeriesTotalViewedChart(movielist));
 	}
 	
 	private void assignChart(StatisticsChart statchart) {

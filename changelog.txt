@@ -1,3 +1,15 @@
+############ 2015-02-26: 1.9.4 Feature: Added new statistic "Series (viewed)"
+
+############ 2015-02-25: 1.9.4 Bugfix: Fixed Exception when Previewing an empty series
+
+############ 2015-02-25: 1.9.4 Task: Added DatabaseError "Impossible_Watch_Never" && moved Settings around
+
+############ 2015-02-25: 1.9.4 Bugfix: Fixed Selection and preview issues when editing/watching an episode in PreviewSeriesFrame
+
+############ 2015-02-25: 1.9.4 Feature: Added new tag "Watch never"
+
+############ 2015-02-16: Updated Changelog
+
 ############ 2015-02-10: [TODO]'s
 
 ############ 2015-02-08: 1.9.3 RELEASE
@@ -99,7 +111,7 @@
 ############ 2014-02-18: More Todo's   ...   as always
 
 ############ 2014-02-16: 1.9.2 Bugfixes
-- Fixed OpenLastPl+ÂayedSeries not really selecting last played Episode
+- Fixed OpenLastPlöayedSeries not really selecting last played Episode
 - Fixed ImDB-Parsing not recognizing images
 - Fixed CustomOnlineSCoreFilter interpreting No-Score as valid score
 

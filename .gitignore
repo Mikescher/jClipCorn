@@ -1,5 +1,5 @@
 #################
-## Eclipse
+## Eclipse + IDEA
 #################
 
 *.pydevproject
@@ -27,6 +27,8 @@ local.properties
 
 # PDT-specific
 .buildpath
+
+.idea/*
 
 ############
 ## Windows

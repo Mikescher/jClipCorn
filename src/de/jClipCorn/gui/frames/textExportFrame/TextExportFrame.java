@@ -58,7 +58,7 @@ public class TextExportFrame extends JFrame {
 	
 	private void initGUI() {
 		setTitle(LocaleBundle.getString("TextExportFrame.this.title")); //$NON-NLS-1$
-		setIconImage(CachedResourceLoader.getImage(Resources.IMG_FRAME_ICON));		
+		setIconImage(CachedResourceLoader.getImage(Resources.IMG_FRAME_ICON));
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		getContentPane().setLayout(null);

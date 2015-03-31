@@ -15,9 +15,9 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 
-import com.jgoodies.forms.factories.FormFactory;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.FormSpecs;
 import com.jgoodies.forms.layout.RowSpec;
 
 import de.jClipCorn.Main;
@@ -83,20 +83,20 @@ public abstract class AutomaticSettingsFrame extends JFrame {
 		getContentPane().add(pnlBottom, BorderLayout.SOUTH);
 		pnlBottom.setLayout(new FormLayout(new ColumnSpec[] {
 				ColumnSpec.decode("default:grow"), //$NON-NLS-1$
-				FormFactory.RELATED_GAP_COLSPEC,
+				FormSpecs.RELATED_GAP_COLSPEC,
 				ColumnSpec.decode("default:grow"), //$NON-NLS-1$
-				FormFactory.BUTTON_COLSPEC,
-				FormFactory.LABEL_COMPONENT_GAP_COLSPEC,
-				FormFactory.BUTTON_COLSPEC,
-				FormFactory.RELATED_GAP_COLSPEC,
+				FormSpecs.BUTTON_COLSPEC,
+				FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
+				FormSpecs.BUTTON_COLSPEC,
+				FormSpecs.RELATED_GAP_COLSPEC,
 				ColumnSpec.decode("default:grow"), //$NON-NLS-1$
-				FormFactory.RELATED_GAP_COLSPEC,
-				FormFactory.BUTTON_COLSPEC,
-				FormFactory.RELATED_GAP_COLSPEC,},
+				FormSpecs.RELATED_GAP_COLSPEC,
+				FormSpecs.BUTTON_COLSPEC,
+				FormSpecs.RELATED_GAP_COLSPEC,},
 			new RowSpec[] {
-				FormFactory.LINE_GAP_ROWSPEC,
+				FormSpecs.LINE_GAP_ROWSPEC,
 				RowSpec.decode("23px"), //$NON-NLS-1$
-				FormFactory.LINE_GAP_ROWSPEC,}));
+				FormSpecs.LINE_GAP_ROWSPEC,}));
 		
 		btnOk = new JButton(LocaleBundle.getString("Settingsframe.btnOK.title")); //$NON-NLS-1$
 		btnOk.addActionListener(new ActionListener() {
@@ -154,15 +154,15 @@ public abstract class AutomaticSettingsFrame extends JFrame {
 		scrlPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		
 		pnlTab.setLayout(new FormLayout(new ColumnSpec[] {
-				FormFactory.RELATED_GAP_COLSPEC,
-				FormFactory.DEFAULT_COLSPEC,
-				FormFactory.RELATED_GAP_COLSPEC,
+				FormSpecs.RELATED_GAP_COLSPEC,
+				FormSpecs.DEFAULT_COLSPEC,
+				FormSpecs.RELATED_GAP_COLSPEC,
 				ColumnSpec.decode("default:grow"), //$NON-NLS-1$
-				FormFactory.RELATED_GAP_COLSPEC,
+				FormSpecs.RELATED_GAP_COLSPEC,
 				ColumnSpec.decode("50dlu"), //$NON-NLS-1$
-				FormFactory.RELATED_GAP_COLSPEC,
-				FormFactory.DEFAULT_COLSPEC,
-				FormFactory.RELATED_GAP_COLSPEC},
+				FormSpecs.RELATED_GAP_COLSPEC,
+				FormSpecs.DEFAULT_COLSPEC,
+				FormSpecs.RELATED_GAP_COLSPEC},
 			getRowSpec(properties.getCategoryCount(pnlNumber))));
 
 		int c = 1;
@@ -218,7 +218,7 @@ public abstract class AutomaticSettingsFrame extends JFrame {
 		RowSpec[] spec = new RowSpec[c];
 		
 		for (int i = 0; i < c; i++) {
-			spec[i] = (i % 2 == 0) ? (FormFactory.RELATED_GAP_ROWSPEC) : (FormFactory.DEFAULT_ROWSPEC);
+			spec[i] = (i % 2 == 0) ? (FormSpecs.RELATED_GAP_ROWSPEC) : (FormSpecs.DEFAULT_ROWSPEC);
 		}
 		
 		return spec;

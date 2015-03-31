@@ -22,9 +22,9 @@ import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.XYPlot;
 
-import com.jgoodies.forms.factories.FormFactory;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.FormSpecs;
 import com.jgoodies.forms.layout.RowSpec;
 
 import de.jClipCorn.Main;
@@ -113,14 +113,14 @@ public class StatisticsFrame extends JFrame {
 				ColumnSpec.decode("200px"), //$NON-NLS-1$
 				ColumnSpec.decode("50dlu"), //$NON-NLS-1$
 				ColumnSpec.decode("41px"), //$NON-NLS-1$
-				FormFactory.LABEL_COMPONENT_GAP_COLSPEC,
+				FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
 				ColumnSpec.decode("300px"), //$NON-NLS-1$
-				FormFactory.LABEL_COMPONENT_GAP_COLSPEC,
+				FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
 				ColumnSpec.decode("41px"),}, //$NON-NLS-1$
 			new RowSpec[] {
-				FormFactory.RELATED_GAP_ROWSPEC,
+				FormSpecs.RELATED_GAP_ROWSPEC,
 				RowSpec.decode("23px"), //$NON-NLS-1$
-				FormFactory.RELATED_GAP_ROWSPEC,}));
+				FormSpecs.RELATED_GAP_ROWSPEC,}));
 		
 		cbxChooseChart = new JComboBox<>();
 		cbxChooseChart.addActionListener(new ActionListener() {

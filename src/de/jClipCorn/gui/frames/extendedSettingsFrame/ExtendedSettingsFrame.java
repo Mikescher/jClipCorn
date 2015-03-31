@@ -24,9 +24,9 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableRowSorter;
 
-import com.jgoodies.forms.factories.FormFactory;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.FormSpecs;
 import com.jgoodies.forms.layout.RowSpec;
 
 import de.jClipCorn.gui.CachedResourceLoader;
@@ -103,11 +103,11 @@ public class ExtendedSettingsFrame extends JFrame implements ListSelectionListen
 				new FormLayout(
 						new ColumnSpec[] { 
 								ColumnSpec.decode("default:grow(10)"),  //$NON-NLS-1$
-								FormFactory.RELATED_GAP_COLSPEC, 
+								FormSpecs.RELATED_GAP_COLSPEC, 
 								ColumnSpec.decode("default:grow"), //$NON-NLS-1$
-								FormFactory.RELATED_GAP_COLSPEC, 
+								FormSpecs.RELATED_GAP_COLSPEC, 
 								ColumnSpec.decode("default:grow"),  //$NON-NLS-1$
-								FormFactory.RELATED_GAP_COLSPEC,
+								FormSpecs.RELATED_GAP_COLSPEC,
 								ColumnSpec.decode("max(50dlu;default)"),  //$NON-NLS-1$
 				}, 
 				new RowSpec[] { 

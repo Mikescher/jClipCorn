@@ -85,4 +85,8 @@ public class StatisticsYearChart extends StatisticsChart {
 		return LocaleBundle.getString("StatisticsFrame.charttitles.year"); //$NON-NLS-1$
 	}
 
+	@Override
+	public boolean usesFilterableSeries() {
+		return false;
+	}
 }

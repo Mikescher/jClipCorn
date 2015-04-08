@@ -85,4 +85,8 @@ public class StatisticsHoursSerMovChart extends StatisticsChart {
 		return LocaleBundle.getString("StatisticsFrame.charttitles.hoursSerMov"); //$NON-NLS-1$
 	}
 
+	@Override
+	public boolean usesFilterableSeries() {
+		return false;
+	}
 }

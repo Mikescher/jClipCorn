@@ -72,4 +72,9 @@ public class StatisticsTagChart extends StatisticsChart {
 	protected String createTitle() {
 		return LocaleBundle.getString("StatisticsFrame.charttitles.tags"); //$NON-NLS-1$
 	}
+
+	@Override
+	public boolean usesFilterableSeries() {
+		return false;
+	}
 }

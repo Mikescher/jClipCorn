@@ -67,4 +67,9 @@ public class StatisticsOnlinescoreChart extends StatisticsChart {
 	protected String createTitle() {
 		return LocaleBundle.getString("StatisticsFrame.charttitles.onlinescore"); //$NON-NLS-1$
 	}
+
+	@Override
+	public boolean usesFilterableSeries() {
+		return false;
+	}
 }

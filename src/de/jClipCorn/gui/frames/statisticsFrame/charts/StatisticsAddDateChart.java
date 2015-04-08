@@ -92,4 +92,8 @@ public class StatisticsAddDateChart extends StatisticsChart {
 		return LocaleBundle.getString("StatisticsFrame.charttitles.adddate"); //$NON-NLS-1$
 	}
 
+	@Override
+	public boolean usesFilterableSeries() {
+		return false;
+	}
 }

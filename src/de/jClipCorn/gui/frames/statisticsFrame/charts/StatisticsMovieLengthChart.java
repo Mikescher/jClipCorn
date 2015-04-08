@@ -64,4 +64,8 @@ public class StatisticsMovieLengthChart extends StatisticsChart {
 		return LocaleBundle.getString("StatisticsFrame.charttitles.movielen"); //$NON-NLS-1$
 	}
 
+	@Override
+	public boolean usesFilterableSeries() {
+		return false;
+	}
 }

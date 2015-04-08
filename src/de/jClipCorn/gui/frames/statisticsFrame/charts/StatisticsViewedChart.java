@@ -57,4 +57,9 @@ public class StatisticsViewedChart extends StatisticsChart {
 	protected String createTitle() {
 		return LocaleBundle.getString("StatisticsFrame.charttitles.viewed"); //$NON-NLS-1$
 	}
+
+	@Override
+	public boolean usesFilterableSeries() {
+		return false;
+	}
 }

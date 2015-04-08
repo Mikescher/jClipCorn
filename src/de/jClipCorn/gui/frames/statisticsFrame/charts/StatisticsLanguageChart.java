@@ -64,4 +64,9 @@ public class StatisticsLanguageChart extends StatisticsChart {
 	protected String createTitle() {
 		return LocaleBundle.getString("StatisticsFrame.charttitles.language"); //$NON-NLS-1$
 	}
+
+	@Override
+	public boolean usesFilterableSeries() {
+		return false;
+	}
 }

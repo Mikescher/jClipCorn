@@ -2,12 +2,14 @@ package de.jClipCorn.gui.frames.statisticsFrame.charts;
 
 import java.awt.Color;
 import java.awt.event.ComponentEvent;
+import java.util.Map;
 
 import javax.swing.UIManager;
 
 import org.jfree.chart.JFreeChart;
 
 import de.jClipCorn.database.CCMovieList;
+import de.jClipCorn.database.databaseElement.CCSeries;
 
 public abstract class StatisticsChart {
 	protected final static boolean ROTATE_PIE = false;
@@ -25,7 +27,7 @@ public abstract class StatisticsChart {
 	protected final static Color HISTOGRAMMCHART_COLOR = Color.BLUE;
 	protected final static Color HISTOGRAMMACKGROUND_COLOR = Color.LIGHT_GRAY;
 	
-	protected final JFreeChart chart;
+	protected JFreeChart chart;
 	private final String title;
 	
 	public StatisticsChart(CCMovieList ml) {
@@ -46,10 +48,20 @@ public abstract class StatisticsChart {
 		return title;
 	}
 	
+	protected void updateChart(JFreeChart newchart) {
+		this.chart = newchart;
+	}
+	
 	protected abstract JFreeChart createChart(CCMovieList movielist);
 	protected abstract String createTitle();
 	
+	public abstract boolean usesFilterableSeries();
+	
 	public void onResize(ComponentEvent e) {
+		// Overwrite me
+	}
+
+	public void onHideSeries(Map<CCSeries, Boolean> map) {
 		// Overwrite me
 	}
 }

@@ -90,4 +90,8 @@ public class StatisticsEpisodesViewedChart extends StatisticsChart {
 		return LocaleBundle.getString("StatisticsFrame.charttitles.episodesViewed"); //$NON-NLS-1$
 	}
 
+	@Override
+	public boolean usesFilterableSeries() {
+		return false;
+	}
 }

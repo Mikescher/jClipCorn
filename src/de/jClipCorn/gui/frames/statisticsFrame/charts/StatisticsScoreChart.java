@@ -69,4 +69,9 @@ public class StatisticsScoreChart extends StatisticsChart {
 	protected String createTitle() {
 		return LocaleBundle.getString("StatisticsFrame.charttitles.score"); //$NON-NLS-1$
 	}
+
+	@Override
+	public boolean usesFilterableSeries() {
+		return false;
+	}
 }

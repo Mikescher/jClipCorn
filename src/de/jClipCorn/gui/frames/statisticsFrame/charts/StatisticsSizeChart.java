@@ -83,4 +83,8 @@ public class StatisticsSizeChart extends StatisticsChart {
 		return LocaleBundle.getString("StatisticsFrame.charttitles.sizeMov"); //$NON-NLS-1$
 	}
 
+	@Override
+	public boolean usesFilterableSeries() {
+		return false;
+	}
 }

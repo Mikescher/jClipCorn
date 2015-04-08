@@ -9,8 +9,11 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Vector;
 
 import org.jfree.chart.JFreeChart;
@@ -42,12 +45,18 @@ public class StatisticsSeriesTotalViewedChart extends StatisticsChart {
 	private NumberAxis valueAxis;
 	private XYPlot plot;
 	
+	private HashMap<CCSeries, Integer> indexMap;
+	private HashMap<Integer, XYDataset> datasetList;
+	
 	public StatisticsSeriesTotalViewedChart(CCMovieList ml) {
 		super(ml);
 	}
 
 	@Override
 	protected JFreeChart createChart(CCMovieList movielist) {
+		indexMap = new HashMap<>();
+		datasetList = new HashMap<>();
+		
 		DateAxis dateAxis = new DateAxis(""); //$NON-NLS-1$
 
 	    DateFormat chartFormatter = new SimpleDateFormat("dd.MM.yyyy"); //$NON-NLS-1$
@@ -62,7 +71,7 @@ public class StatisticsSeriesTotalViewedChart extends StatisticsChart {
 		    public StringBuffer format(long number, StringBuffer toAppendTo, FieldPosition pos) {  return new StringBuffer(String.valueOf((int)(number/60))); }
 		    @Override
 		    public Number parse(String source, ParsePosition parsePosition) { return null; }
-	});
+	    });
 	    
 	    plot = new XYPlot(new DefaultXYDataset(), dateAxis, valueAxis, new StandardXYItemRenderer(StandardXYItemRenderer.LINES, null, null));
 	    
@@ -72,22 +81,27 @@ public class StatisticsSeriesTotalViewedChart extends StatisticsChart {
 	    
 	    int idx = 0;
 	    for (TupleSeriesEpList series : serieslist) {
+	    	indexMap.put(series.series, idx);
+	    	
 	    	Color cf = new Color(StatisticsHelper.CHART_COLORS[idx % StatisticsHelper.CHART_COLORS.length]);
 	    	Color ca = new Color(cf.getRed(), cf.getGreen(), cf.getBlue(), 50);
 	    	
 	    	XYDataset dataset = getDataSet(series, startdate, enddate, false);
 	    	XYDataset startset = getDataSet(series, startdate, enddate, true);
 	    	
+	    	datasetList.put(3*idx, dataset);
 	    	plot.setDataset(3*idx, dataset);
 	    	plot.setRenderer(3*idx, new XYAreaRenderer(XYAreaRenderer.AREA, null, null));
 	    	plot.getRenderer(3*idx).setSeriesPaint(0, ca);
 	    	plot.getRenderer(3*idx).setSeriesVisibleInLegend(0, false);
-	    	
+
+	    	datasetList.put(3*idx + 1, dataset);
 	    	plot.setDataset(3*idx + 1, dataset);
 	    	plot.setRenderer(3*idx + 1, new StandardXYItemRenderer(StandardXYItemRenderer.LINES, null, null));
 	    	plot.getRenderer(3*idx + 1).setSeriesPaint(0, cf);
 	    	plot.getRenderer(3*idx + 1).setSeriesVisibleInLegend(0, true);
 
+	    	datasetList.put(3*idx + 2, startset);
 	    	plot.setDataset( 3*idx + 2, startset);
 	    	plot.setRenderer(3*idx + 2, new StandardXYItemRenderer(StandardXYItemRenderer.LINES, null, null));
 	    	plot.getRenderer(3*idx + 2).setSeriesPaint(0, cf);
@@ -227,4 +241,32 @@ public class StatisticsSeriesTotalViewedChart extends StatisticsChart {
 		return LocaleBundle.getString("StatisticsFrame.charttitles.seriesTotalViewed"); //$NON-NLS-1$
 	}
 
+	@Override
+	public boolean usesFilterableSeries() {
+		return true;
+	}
+
+	@Override
+	public void onHideSeries(Map<CCSeries, Boolean> map) {
+		for (Entry<CCSeries, Boolean> entry : map.entrySet()) {
+			if (indexMap.containsKey(entry.getKey())) {
+				int idx = indexMap.get(entry.getKey());
+
+				if (entry.getValue()) {
+					plot.setDataset(3*idx+0, datasetList.get(3*idx+0));
+					plot.setDataset(3*idx+1, datasetList.get(3*idx+1));
+					plot.setDataset(3*idx+2, datasetList.get(3*idx+2));
+				} else {
+					plot.setDataset(3*idx+0, null);
+					plot.setDataset(3*idx+1, null);
+					plot.setDataset(3*idx+2, null);
+				}
+			}
+		}
+		
+		JFreeChart chart = new JFreeChart(plot);
+		chart.setBackgroundPaint(null);
+		
+		updateChart(chart);
+	}
 }

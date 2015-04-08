@@ -71,6 +71,10 @@
 			<attribute name="javadoc_location" value="jar:platform:/resource/jClipCorn/javadoc/commons-beanutils-1.8.3-javadoc.jar!/"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="lib/jgoodies-common-1.2.1.jar"/>
+	<classpathentry kind="lib" path="lib/jgoodies-common-1.8.1.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/jClipCorn/lib/jgoodies-common-1.8.1.jar!/"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

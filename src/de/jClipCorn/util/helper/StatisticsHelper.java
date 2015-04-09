@@ -1,6 +1,7 @@
 package de.jClipCorn.util.helper;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -740,5 +741,57 @@ public class StatisticsHelper {
 		});
 		
 		return result;
+	}
+	
+	public static int[][] getAddedSeriesFormatLengthForAllDates(CCMovieList ml, CCDate startDate, int count) {
+		List<CCMovieFormat> formats = Arrays.asList(CCMovieFormat.values());
+		
+		int[][] ls = new int[count][formats.size()];
+		
+		for (int i = 0; i < count; i++) {
+			for (int j = 0; j < formats.size(); j++) {
+				ls[i][j] = 0;
+			}
+		}
+		
+		for (Iterator<CCSeries> it = ml.iteratorSeries(); it.hasNext();) {
+			CCSeries series = it.next();
+			
+			for (int sea = 0; sea < series.getSeasonCount(); sea++) {
+				CCSeason season = series.getSeason(sea);
+				
+				for (int epi = 0; epi < season.getEpisodeCount(); epi++) {
+					CCEpisode episode = season.getEpisode(epi);
+					
+					int pos = startDate.getDayDifferenceTo(episode.getAddDate());
+					
+					ls[pos][formats.indexOf(episode.getFormat())] += episode.getLength();
+				}
+			}
+		}
+		
+		return ls;
+	}
+	
+	public static int[][] getAddedMoviesFormatLengthForAllDates(CCMovieList ml, CCDate startDate, int count) {
+		List<CCMovieFormat> formats = Arrays.asList(CCMovieFormat.values());
+		
+		int[][] ls = new int[count][formats.size()];
+		
+		for (int i = 0; i < count; i++) {
+			for (int j = 0; j < formats.size(); j++) {
+				ls[i][j] = 0;
+			}
+		}
+		
+		for (Iterator<CCMovie> it = ml.iteratorMovies(); it.hasNext();) {
+			CCMovie m = it.next();
+			
+			int pos = startDate.getDayDifferenceTo(m.getAddDate());
+
+			ls[pos][formats.indexOf(m.getFormat())] += m.getLength();
+		}
+		
+		return ls;
 	}
 }

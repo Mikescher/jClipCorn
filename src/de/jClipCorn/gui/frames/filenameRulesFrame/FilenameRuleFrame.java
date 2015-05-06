@@ -13,6 +13,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
+import de.jClipCorn.gui.CachedResourceLoader;
+import de.jClipCorn.gui.Resources;
 import de.jClipCorn.gui.localization.LocaleBundle;
 
 public class FilenameRuleFrame extends JFrame {
@@ -23,14 +25,17 @@ public class FilenameRuleFrame extends JFrame {
 	private JButton btnOK;
 	
 	public FilenameRuleFrame(Component owner) {
-		setTitle(LocaleBundle.getString("FilenameRulesFrame.btnTitle.text")); //$NON-NLS-1$
-		setSize(new Dimension(750, 500));
+		super();
+		
 		initGUI();
 		setLocationRelativeTo(owner);
-		memoMain.setText(LocaleBundle.getString("FilenameRulesFrame.rules")); //$NON-NLS-1$
 	}
 	
 	private void initGUI() {
+		setTitle(LocaleBundle.getString("FilenameRulesFrame.btnTitle.text")); //$NON-NLS-1$
+		setSize(new Dimension(750, 500));
+		setIconImage(CachedResourceLoader.getImage(Resources.IMG_FRAME_ICON));
+		
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		
 		scrollPane = new JScrollPane();
@@ -52,5 +57,7 @@ public class FilenameRuleFrame extends JFrame {
 			}
 		});
 		pnlBottom.add(btnOK);
+
+		memoMain.setText(LocaleBundle.getString("FilenameRulesFrame.rules")); //$NON-NLS-1$
 	}
 }

@@ -71,6 +71,8 @@ public class ExportHelper {
 			int bytesIn = 0;
 			
 			for (int i = 0; i < dirList.length; i++) {
+				if (dirList[i].toLowerCase().endsWith("thumbs.db")) continue; //$NON-NLS-1$
+				
 				File file = new File(zipDir, dirList[i]);
 				if (file.isDirectory()) {
 					if (recursively) {

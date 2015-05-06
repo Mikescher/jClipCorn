@@ -1,3 +1,27 @@
+############ 2015-05-06: 1.9.5 RELEASE
+
+############ 2015-05-06: 1.9.5 Task: Added used libraries view
+
+############ 2015-05-06: 1.9.5 Task: Fixed 50 MB thumbs.db files in backup (~ 30% backup side reduction)
+
+############ 2015-04-09: 1.9.5 Feature: Added new statistics: "formate per time"
+
+############ 2015-04-08: 1.9.5 Feature: Added Series filtering to Statstistics frame
+
+############ 2015-04-08: 1.9.5 Bugfix: Upgraded jGoodies-common version from 1.2.1 to 1.8.1 (Exception with old version)
+
+############ 2015-04-01: removed artifacts
+
+############ 2015-03-31: Updated jGoodies Lib
+
+############ 2015-03-16: Beta Release (IN-HOUSE)
+
+############ 2015-02-26: 1.9.5 Bugfix: Fixed Colors in statisticsFrame
+
+############ 2015-02-26: 1.9.5 Feature: Added new statistic "Series (total viewed)"
+
+############ 2015-02-26: 1.9.4 RELEASE
+
 ############ 2015-02-26: 1.9.4 Feature: Added new statistic "Series (viewed)"
 
 ############ 2015-02-25: 1.9.4 Bugfix: Fixed Exception when Previewing an empty series

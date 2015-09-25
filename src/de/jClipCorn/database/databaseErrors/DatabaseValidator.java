@@ -16,6 +16,7 @@ import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFormat;
+import de.jClipCorn.database.databaseElement.columnTypes.CCMovieGenreList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieQuality;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieSize;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTags;
@@ -120,6 +121,22 @@ public class DatabaseValidator {
 		
 		if (PathFormatter.isUntrimmed(series.getTitle())) {
 			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_NOT_TRIMMED, series));
+		}
+		
+		// ###############################################
+		// Duplicate Genre
+		// ###############################################
+
+		int[] g_count = new int[256];
+		for (int i = 0; i < CCMovieGenreList.getMaxListSize(); i++) {
+			g_count[series.getGenre(i).asInt()]++;
+		}
+		
+		for (int i = 1; i < 256; i++) {
+			if (g_count[i] > 1) {
+				e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_DUPLICATE_GENRE, series));
+				break;
+			}
 		}
 	}
 
@@ -312,6 +329,22 @@ public class DatabaseValidator {
 		
 		if (mov.isViewed() && mov.getTag(CCMovieTags.TAG_WATCH_NEVER)) {
 			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_IMPOSSIBLE_WATCH_NEVER, mov));
+		}
+		
+		// ###############################################
+		// Duplicate Genre
+		// ###############################################
+
+		int[] g_count = new int[256];
+		for (int i = 0; i < CCMovieGenreList.getMaxListSize(); i++) {
+			g_count[mov.getGenre(i).asInt()]++;
+		}
+		
+		for (int i = 1; i < 256; i++) {
+			if (g_count[i] > 1) {
+				e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_DUPLICATE_GENRE, mov));
+				break;
+			}
 		}
 	}
 

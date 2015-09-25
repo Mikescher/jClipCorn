@@ -11,6 +11,7 @@ import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFormat;
+import de.jClipCorn.database.databaseElement.columnTypes.CCMovieGenre;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieGenreList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieQuality;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieSize;
@@ -174,6 +175,32 @@ public class DatabaseError {
 			return fixError_LastWatched_Too_Old();
 		} else if (isTypeOf(DatabaseErrorType.ERROR_IMPOSSIBLE_WATCH_NEVER)) {
 			return fixError_Impossible_WatchNever();
+		} else if (isTypeOf(DatabaseErrorType.ERROR_DUPLICATE_GENRE)) {
+			return fixError_Duplicate_Genre();
+		}
+		
+		return false;
+	}
+	
+	private boolean fixError_Duplicate_Genre() {
+		if (el1 instanceof CCDatabaseElement) {
+			CCDatabaseElement elem = (CCDatabaseElement) getElement1();
+			CCMovieGenreList ls = new CCMovieGenreList();
+			
+			boolean[] already_used = new boolean[256];
+			for (int i = 0; i < CCMovieGenreList.getMaxListSize(); i++) {
+				CCMovieGenre g = elem.getGenre(i);
+				
+				if (! (g.isEmpty() || already_used[g.asInt()])) {
+					ls.addGenre(g);
+					
+					already_used[g.asInt()] = true;
+				}
+			}
+			
+			elem.setGenres(ls);
+			
+			return true;
 		}
 		
 		return false;

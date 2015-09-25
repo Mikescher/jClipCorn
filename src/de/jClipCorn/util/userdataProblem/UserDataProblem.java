@@ -44,6 +44,7 @@ public class UserDataProblem {
 	public final static int PROBLEM_WRONG_QUALITY = 20;
 	public final static int PROBLEM_TITLE_ALREADYEXISTS = 21;
 	public final static int PROBLEM_FILE_ALREADYEXISTS = 22;
+	public final static int PROBLEM_DUPLICATE_GENRE = 23;
 	
 	private final int pid; // Problem ID
 	
@@ -52,7 +53,6 @@ public class UserDataProblem {
 	}
 	
 	public String getText() {
-		
 		return LocaleBundle.getString(String.format("UserDataErrors.ERROR_%02d", getPID())); //$NON-NLS-1$
 	}
 	
@@ -198,6 +198,25 @@ public class UserDataProblem {
 		}
 		
 		//################################################################################################################
+
+		int[] g_count = new int[256];
+		g_count[gen0]++;
+		g_count[gen1]++;
+		g_count[gen2]++;
+		g_count[gen3]++;
+		g_count[gen4]++;
+		g_count[gen5]++;
+		g_count[gen6]++;
+		g_count[gen7]++;
+		
+		for (int i = 1; i < 256; i++) {
+			if (g_count[i] > 1) {
+				ret.add(new UserDataProblem(UserDataProblem.PROBLEM_DUPLICATE_GENRE));
+				break;
+			}
+		}
+		
+		//################################################################################################################
 		
 		if (cvr == null) {
 			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_NO_COVER_SET));
@@ -289,6 +308,25 @@ public class UserDataProblem {
 		
 		if ((gen0 == 0 && gen1 != 0) || (gen1 == 0 && gen2 != 0) || (gen2 == 0 && gen3 != 0) || (gen3 == 0 && gen4 != 0) || (gen4 == 0 && gen5 != 0) || (gen5 == 0 && gen6 != 0) || (gen6 == 0 && gen7 != 0)) {
 			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_HOLE_IN_GENRE));
+		}
+		
+		//################################################################################################################
+
+		int[] g_count = new int[255];
+		g_count[gen0]++;
+		g_count[gen1]++;
+		g_count[gen2]++;
+		g_count[gen3]++;
+		g_count[gen4]++;
+		g_count[gen5]++;
+		g_count[gen6]++;
+		g_count[gen7]++;
+		
+		for (int i = 1; i < 256; i++) {
+			if (g_count[i] > 1) {
+				ret.add(new UserDataProblem(UserDataProblem.PROBLEM_DUPLICATE_GENRE));
+				break;
+			}
 		}
 		
 		//################################################################################################################

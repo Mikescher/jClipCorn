@@ -260,7 +260,9 @@ public class CCProperties {
 	
 	public void load(String path) {
 		try {
-			properties.load( new FileInputStream( path ) );
+			FileInputStream stream = new FileInputStream(path);
+			properties.load(stream);
+			stream.close();
 		} catch (IOException e) {
 			CCLog.addWarning(LocaleBundle.getFormattedString("LogMessage.PropFileNotFound", path)); //$NON-NLS-1$
 		}

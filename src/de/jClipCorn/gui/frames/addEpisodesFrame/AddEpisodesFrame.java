@@ -139,6 +139,8 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler, 
 	private JButton btnSide_15;
 	private JButton btnOmniparser;
 	private JButton btnAutoMeta;
+	private JSpinner spnSide_05;
+	private JButton btnIncEpisodeNumbers;
 
 	public AddEpisodesFrame(Component owner, CCSeason ss, UpdateCallbackListener ucl) {
 		super();
@@ -583,7 +585,7 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler, 
 				massRecalcSizes();
 			}
 		});
-		btnSide_09.setBounds(12, 304, 334, 23);
+		btnSide_09.setBounds(12, 337, 334, 23);
 		pnlEdit.add(btnSide_09);
 
 		cbxSideQuality = new JComboBox<>();
@@ -609,6 +611,21 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler, 
 		});
 		btnSide_15.setBounds(12, 536, 334, 23);
 		pnlEdit.add(btnSide_15);
+		
+		spnSide_05 = new JSpinner();
+		spnSide_05.setModel(new SpinnerNumberModel(new Integer(1), null, null, new Integer(1)));
+		spnSide_05.setBounds(12, 304, 100, 20);
+		pnlEdit.add(spnSide_05);
+		
+		btnIncEpisodeNumbers = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnIncEpisodeNumbers.text")); //$NON-NLS-1$
+		btnIncEpisodeNumbers.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				massIncNumber();
+			}
+		});
+		btnIncEpisodeNumbers.setBounds(124, 303, 222, 23);
+		pnlEdit.add(btnIncEpisodeNumbers);
 		
 		btnOmniparser = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnOmniParser.text")); //$NON-NLS-1$
 		btnOmniparser.addActionListener(new ActionListener() {
@@ -1036,6 +1053,20 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler, 
 			} catch (IndexOutOfBoundsException e) {
 				// doesnt mind...
 			}
+		}
+
+		updateList();
+	}
+
+	private void massIncNumber() {
+		int delta = (int) spnSide_05.getValue();
+
+		lsEpisodes.setSelectedIndex(-1);
+
+		for (int i = 0; i < parent.getEpisodeCount(); i++) {
+			CCEpisode ep = parent.getEpisode(i);
+
+			ep.setEpisodeNumber(ep.getEpisodeNumber() + delta);
 		}
 
 		updateList();

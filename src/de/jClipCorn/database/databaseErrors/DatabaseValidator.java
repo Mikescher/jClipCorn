@@ -369,7 +369,7 @@ public class DatabaseValidator {
 		// Wrong AddDate
 		// ###############################################
 		
-		if (season.getAddDate().isLessEqualsThan(MIN_DATE) || season.getAddDate().isGreaterThan(CCDate.getCurrentDate())) {
+		if (season.getEpisodeCount() > 0 && (season.getAddDate().isLessEqualsThan(MIN_DATE) || season.getAddDate().isGreaterThan(CCDate.getCurrentDate()))) {
 			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_WRONG_ADDDATE, season));
 		}
 

@@ -398,16 +398,12 @@ public class CCEpisode {
 		return LargeMD5Calculator.getMD5(f);
 	}
 	
-	@SuppressWarnings("nls")
 	public File getFileForCreatedFolderstructure(File parentfolder) {
 		if (! parentfolder.isDirectory()) {
 			return null; // meehp
 		}
 
-		String parent = parentfolder.getAbsolutePath();
-		if (! parent.endsWith("\\")) {
-			parent += "\\";
-		}
+		String parent = PathFormatter.appendSeparator(parentfolder.getAbsolutePath());
 
 		String path = parent + getRelativeFileForCreatedFolderstructure();
 		
@@ -434,7 +430,7 @@ public class CCEpisode {
 		filename += "." + this.getFormat().asString();
 		filename = PathFormatter.fixStringToFilesystemname(filename);
 		
-		String path = seriesfoldername + "\\" + seasonfoldername + "\\" + filename;
+		String path = PathFormatter.combine(seriesfoldername, seasonfoldername, filename);
 		
 		return path;
 	}

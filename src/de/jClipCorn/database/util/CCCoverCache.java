@@ -25,7 +25,7 @@ import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.ImageUtilities;
 
 public class CCCoverCache {
-	private final static String COVER_DIRECTORY = "\\cover\\"; //$NON-NLS-1$
+	private final static String COVER_DIRECTORY = PathFormatter.appendAndPrependSeparator("cover"); //$NON-NLS-1$
 
 	private Map<String, BufferedImage> cache; //TODO Precaching
 

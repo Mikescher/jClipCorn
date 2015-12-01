@@ -42,7 +42,7 @@ public class FilenameParser {
 			moviename = moviename.substring(0, filename.indexOf(" (Part 1)"));
 			
 			for (int p = 2; p <= CCMovie.PARTCOUNT_MAX; p++) {
-				String newFP = path + '\\' + moviename + " (Part " + p + ")" + '.' + ext;
+				String newFP = PathFormatter.combine(path, moviename + " (Part " + p + ")" + '.' + ext);
 				File f = new File(newFP);
 				if (f.exists()) {
 					files.add(f);

@@ -548,7 +548,7 @@ public class CCMovieList {
 	}
 	
 	public File getDatabaseDirectory() {
-		return new File(PathFormatter.getRealSelfDirectory() + CCProperties.getInstance().PROP_DATABASE_NAME.getValue() + '\\');
+		return new File(PathFormatter.combineAndAppend(PathFormatter.getRealSelfDirectory(), CCProperties.getInstance().PROP_DATABASE_NAME.getValue()));
 	}
 	
 	public List<File> getAbsolutePathList(boolean includeSeries) {

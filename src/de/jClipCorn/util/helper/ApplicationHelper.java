@@ -9,12 +9,13 @@ import java.util.List;
 import de.jClipCorn.Main;
 import de.jClipCorn.gui.frames.mainFrame.MainFrame;
 import de.jClipCorn.gui.log.CCLog;
+import de.jClipCorn.util.formatter.PathFormatter;
 
 public class ApplicationHelper {
 
 	@SuppressWarnings("nls")
 	public static boolean restartApplication() { //Will fail in Eclipse, cause there is no .jar File
-		String javaBin = System.getProperty("java.home") + File.separator + "bin" + File.separator + "java";
+		String javaBin = PathFormatter.combine(System.getProperty("java.home"), "bin", "java");
 		File currentJar;
 		
 		try {

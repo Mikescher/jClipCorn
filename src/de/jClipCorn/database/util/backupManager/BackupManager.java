@@ -45,7 +45,7 @@ public class BackupManager {
 	}
 	
 	private File getBackupDirectory() {
-		File file = new File(PathFormatter.getRealSelfDirectory() + CCProperties.getInstance().PROP_BACKUP_FOLDERNAME.getValue() + '\\');
+		File file = new File(PathFormatter.combineAndAppend(PathFormatter.getRealSelfDirectory(), CCProperties.getInstance().PROP_BACKUP_FOLDERNAME.getValue()));
 		
 		if (! file.exists()) {
 			file.mkdirs();
@@ -168,7 +168,7 @@ public class BackupManager {
 	}
 	
 	private File getNewBackupName() {
-		String prefix = getBackupDirectory().getAbsolutePath() + '\\';
+		String prefix = PathFormatter.appendSeparator(getBackupDirectory().getAbsolutePath());
 		int id = 0;
 		String now = CCDate.getCurrentDate().getSimpleStringRepresentation();
 		

@@ -22,6 +22,7 @@ import de.jClipCorn.properties.property.CCRIntProperty;
 import de.jClipCorn.properties.property.CCStringProperty;
 import de.jClipCorn.properties.property.CCToolbarProperty;
 import de.jClipCorn.util.CCDate;
+import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.LookAndFeelManager;
 
 
@@ -189,7 +190,7 @@ public class CCProperties {
 		PROP_LOADING_LIVEUPDATE					= new CCBoolProperty(CAT_VIEW, 			this, 	"PROP_LOADING_LIVEUPDATE", 					true);
 		PROP_STATUSBAR_CALC_SERIES_IN_LENGTH	= new CCBoolProperty(CAT_SERIES, 		this,	"PROP_STATUSBAR_CALC_SERIES_IN_LENGTH",	 	false);
 		PROP_STATUSBAR_CALC_SERIES_IN_SIZE		= new CCBoolProperty(CAT_SERIES, 		this,	"PROP_STATUSBAR_CALC_SERIES_IN_SIZE", 		false);
-		PROP_PLAY_VLC_PATH						= new CCPathProperty(CAT_PLAY, 			this,	"PROP_PLAY_VLC_PATH",						"", 				"\\vlc.exe");
+		PROP_PLAY_VLC_PATH						= new CCPathProperty(CAT_PLAY, 			this,	"PROP_PLAY_VLC_PATH",						"", 				PathFormatter.appendAndPrependSeparator("vlc.exe"));
 		PROP_PLAY_VLC_FULLSCREEN				= new CCBoolProperty(CAT_PLAY, 			this,   "PROP_PLAY_VLC_FULLSCREEN", 				false);
 		PROP_PLAY_VLC_AUTOPLAY					= new CCBoolProperty(CAT_PLAY, 			this,   "PROP_PLAY_VLC_AUTOPLAY", 					true);
 		PROP_PLAY_USESTANDARDONMISSINGVLC		= new CCBoolProperty(CAT_PLAY, 			this,   "PROP_PLAY_USESTANDARDONMISSINGVLC", 		true);

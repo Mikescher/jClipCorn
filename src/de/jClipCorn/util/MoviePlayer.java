@@ -11,20 +11,20 @@ import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.properties.CCProperties;
+import de.jClipCorn.util.formatter.PathFormatter;
 
 public class MoviePlayer {
 	@SuppressWarnings("nls")
 	private final static String[] PATHS = {
-		"Programme\\VideoLAN\\VLC\\vlc.exe", 
-		"Program Files\\VideoLAN\\VLC\\vlc.exe", 
-		"Programme (x86)\\VideoLAN\\VLC\\vlc.exe", 
-		"Program Files (x86)\\VideoLAN\\VLC\\vlc.exe",
-		"VideoLAN\\VLC\\vlc.exe",
-		"VLC\\vlc.exe"
+		PathFormatter.combine("Programme", "VideoLAN", "VLC", "vlc.exe"),
+		PathFormatter.combine("Program Files", "VideoLAN", "VLC", "vlc.exe"),
+		PathFormatter.combine("Programme (x86)", "VideoLAN", "VLC", "vlc.exe"),
+		PathFormatter.combine("VideoLAN", "VLC", "vlc.exe"),
+		PathFormatter.combine("VLC", "vlc.exe")
 	};
 	
-	private final static String DRIVE_1 = "C:\\"; //$NON-NLS-1$
-	private final static String DRIVE_2 = "H:\\"; //$NON-NLS-1$
+	private final static String DRIVE_1 = "C:" + PathFormatter.seperator; //$NON-NLS-1$
+	private final static String DRIVE_2 = "H:" + PathFormatter.seperator; //$NON-NLS-1$
 	
 	private static String lastVLCPath = null;
 	
@@ -62,6 +62,8 @@ public class MoviePlayer {
 					}
 				} catch (IOException e) {
 					CCLog.addError(e);
+				} catch (IllegalArgumentException e) {
+					CCLog.addError(e);
 				}
 			}
 		} else {
@@ -75,7 +77,7 @@ public class MoviePlayer {
 			}
 			
 			for (String s : abspaths) {
-				parameters.add("\"" + s.replace("/", "\\") + "\"");
+				parameters.add("\"" + s.replace("/", "\\") + "\""); //TODO Cross plattform
 			}
 			
 			try {

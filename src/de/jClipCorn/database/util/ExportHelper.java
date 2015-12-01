@@ -82,7 +82,7 @@ public class ExportHelper {
 				}
 				
 				FileInputStream fis = new FileInputStream(file);
-				ZipEntry anEntry = new ZipEntry(file.getAbsolutePath().replace(owner.getAbsolutePath() + '\\', "")); //$NON-NLS-1$
+				ZipEntry anEntry = new ZipEntry(file.getAbsolutePath().replace(PathFormatter.appendSeparator(owner.getAbsolutePath()), "")); //$NON-NLS-1$
 				zos.putNextEntry(anEntry);
 				
 				while ((bytesIn = fis.read(readBuffer)) != -1) {

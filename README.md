@@ -8,7 +8,7 @@ jClipCorn
 > Use this software only in a country which allows for private copies of your bought DVD's.  
 > Use this software only to manage copies of movies which you own.  
 
-![main-view](https://raw.github.com/Mikescher/jClipCorn/master/README-FILES/main-view.png)
+![main-view](README-FILES/main-view.png)
 
 ### Main Features
 
@@ -51,17 +51,20 @@ Terminator II - Tag der Abrechnung [Ger] (Part 1).avi
 Series have an unique folder per series (with the series name), after that a folder for each season and then files with the file name pattern `SxxExx - %name%`. For example: `S01E07 - You Win or You Die.avi`  
 You can create the folder structure for series by right clicking on a series and selecting *"Create folder structure"*
 
+Because series tend to become quite large you can also put them on their own external drive.
+A special [format syntax](https://github.com/Mikescher/jClipCorn/wiki/Relative-paths) guarantees that the paths to these series stay valid.
+
 ### First start
 
 First copy the executable (either jClipCorn.jar or jClipCorn.exe) into the folder where you have your movies, then execute it (it needs read and write permissions).
 
 On the first start it should create a folder "*ClipCornDB*" where the database is stored.
 
-![main-empty-metal](https://raw.github.com/Mikescher/jClipCorn/master/README-FILES/main-empty-metal.png)
+![main-empty-metal](https://raw.githubusercontent.com/wiki/Mikescher/jClipCorn/FILES/main-empty-metal.png)
 
 You can see this in the log view (icon in the bottom status bar, to the right of the progress bar).
 
-![log-recreate](https://raw.github.com/Mikescher/jClipCorn/master/README-FILES/log-recreate.png)
+![log-recreate](https://raw.githubusercontent.com/wiki/Mikescher/jClipCorn/FILES/log-recreate.png)
 
 At first you should look into the settings and eventually change a few things, important are:
 
@@ -75,16 +78,16 @@ After that you can start adding your movies and series.
 
 ### Adding a movie
 
-[see wiki](https://github.com/Mikescher/jClipCorn/wiki/Add-new-movie)
+####[(go to wiki)](https://github.com/Mikescher/jClipCorn/wiki/Add-new-movie)
 
 ### User Interface
 
-[see wiki](https://github.com/Mikescher/jClipCorn/wiki/User-Interface)
+####[(go to wiki)](https://github.com/Mikescher/jClipCorn/wiki/User-Interface)
 
 ### Adding a series
 
-[see wiki](https://github.com/Mikescher/jClipCorn/wiki/Add-new-series)
+####[(go to wiki)](https://github.com/Mikescher/jClipCorn/wiki/Add-new-series)
 
 ### Check Database for errors
 
-[see wiki](https://github.com/Mikescher/jClipCorn/wiki/Check-database)
+####[(go to wiki)](https://github.com/Mikescher/jClipCorn/wiki/Check-database)

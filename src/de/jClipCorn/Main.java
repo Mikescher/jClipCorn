@@ -101,4 +101,4 @@ public class Main {
 
 //TODO Cover mit höherer Auflösung
 //TODO All Views von Episoden (und Filmen speichern)  --> ermöglicht LastViewed + FirstViewed
-//       - New DB Version
+//       - New DB Version (dann auch gleich index für staffeln einführen)

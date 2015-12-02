@@ -312,7 +312,7 @@ public class UserDataProblem {
 		
 		//################################################################################################################
 
-		int[] g_count = new int[255];
+		int[] g_count = new int[256];
 		g_count[gen0]++;
 		g_count[gen1]++;
 		g_count[gen2]++;

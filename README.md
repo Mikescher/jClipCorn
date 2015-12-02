@@ -22,8 +22,10 @@ jClipCorn
  - Tag and rate your watched movies
  - Works under Windows, Linux *(and probably OS X)*
 
-###[> DOWNLOAD](http://www.github.com/Mikescher/jClipCorn/releases)
+#[> DOWNLOAD](http://www.github.com/Mikescher/jClipCorn/releases)
 ###[> HOMEPAGE](http://www.mikescher.de/programs/view/jClipCorn)
+###[> GITHUB WIKI](https://github.com/Mikescher/jClipCorn/wiki)
+###[> CHANGELOG](https://raw.githubusercontent.com/Mikescher/jClipCorn/master/changelog.txt)
 
 ### Organization
 

@@ -62,10 +62,9 @@ public class CustomFSKFilterDialog extends CustomFilterDialog {
 		});
 		pnlBottom.add(btnOk);
 	}
-
-	private void onOK() {
+	
+	@Override
+	protected void onAfterOK() {
 		getFilter().setFSK(CCMovieFSK.find(cbxMiddle.getSelectedIndex()));
-		
-		dispose();
 	}
 }

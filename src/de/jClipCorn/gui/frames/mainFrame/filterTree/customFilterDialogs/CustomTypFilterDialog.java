@@ -63,9 +63,8 @@ public class CustomTypFilterDialog extends CustomFilterDialog {
 		pnlBottom.add(btnOk);
 	}
 
-	private void onOK() {
+	@Override
+	protected void onAfterOK() {
 		getFilter().setTyp(CCMovieTyp.find(cbxMiddle.getSelectedIndex()));
-		
-		dispose();
 	}
 }

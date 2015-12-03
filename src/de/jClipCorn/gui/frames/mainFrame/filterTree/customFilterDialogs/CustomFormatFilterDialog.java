@@ -62,10 +62,9 @@ public class CustomFormatFilterDialog extends CustomFilterDialog {
 		});
 		pnlBottom.add(btnOk);
 	}
-
-	private void onOK() {
+	
+	@Override
+	protected void onAfterOK() {
 		getFilter().setFormat(CCMovieFormat.find(cbxMiddle.getSelectedIndex()));
-		
-		dispose();
 	}
 }

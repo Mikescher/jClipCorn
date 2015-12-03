@@ -63,9 +63,8 @@ public class CustomTagFilterDialog extends CustomFilterDialog {
 		pnlBottom.add(btnOk);
 	}
 
-	private void onOK() {
+	@Override
+	protected void onAfterOK() {
 		getFilter().setTag(cbxMiddle.getSelectedIndex());
-		
-		dispose();
 	}
 }

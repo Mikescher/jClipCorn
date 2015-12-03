@@ -148,7 +148,8 @@ public class CustomYearFilterDialog extends CustomFilterDialog {
 		}
 	}
 
-	private void onOK() {
+	@Override
+	protected void onAfterOK() {
 		if (rdbtnLesser.isSelected()) {
 			getFilter().setHigh((int) spnLesser.getValue());
 			
@@ -167,7 +168,5 @@ public class CustomYearFilterDialog extends CustomFilterDialog {
 			
 			getFilter().setSearchType(DecimalSearchType.EXACT);
 		}
-		
-		dispose();
 	}
 }

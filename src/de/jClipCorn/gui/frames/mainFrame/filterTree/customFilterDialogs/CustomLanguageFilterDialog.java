@@ -63,9 +63,8 @@ public class CustomLanguageFilterDialog extends CustomFilterDialog {
 		pnlBottom.add(btnOk);
 	}
 
-	private void onOK() {
+	@Override
+	protected void onAfterOK() {
 		getFilter().setLanguage(CCMovieLanguage.find(cbxMiddle.getSelectedIndex()));
-		
-		dispose();
 	}
 }

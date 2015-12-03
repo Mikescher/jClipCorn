@@ -145,7 +145,8 @@ public class CustomScoreFilterDialog extends CustomFilterDialog {
 		}
 	}
 
-	private void onOK() {
+	@Override
+	protected void onAfterOK() {
 		if (rdbtnLesser.isSelected()) {
 			getFilter().setHigh(CCMovieScore.find( cbxLesser.getSelectedIndex()));
 			
@@ -164,7 +165,5 @@ public class CustomScoreFilterDialog extends CustomFilterDialog {
 			
 			getFilter().setSearchType(DecimalSearchType.EXACT);
 		}
-		
-		dispose();
 	}
 }

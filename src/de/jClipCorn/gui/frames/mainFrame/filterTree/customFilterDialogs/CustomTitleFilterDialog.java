@@ -97,8 +97,9 @@ public class CustomTitleFilterDialog extends CustomFilterDialog {
 		});
 		pnlBottom.add(btnOk);
 	}
-
-	private void onOK() {
+	
+	@Override
+	protected void onAfterOK() {
 		if (rdbtnStartswith.isSelected()) getFilter().setStringMatch(StringMatchType.SM_STARTSWITH);
 		else if (rdbtnIncludes.isSelected()) getFilter().setStringMatch(StringMatchType.SM_INCLUDES);
 		else if (rdbtnEndsWith.isSelected()) getFilter().setStringMatch(StringMatchType.SM_ENDSWITH);
@@ -106,7 +107,5 @@ public class CustomTitleFilterDialog extends CustomFilterDialog {
 		getFilter().setCaseSensitive(chckbxCaseSensitive.isSelected());
 		
 		getFilter().setSearchString(edSearchString.getText());
-		
-		dispose();
 	}
 }

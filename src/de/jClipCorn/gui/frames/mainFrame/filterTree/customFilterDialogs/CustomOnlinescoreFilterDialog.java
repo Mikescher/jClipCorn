@@ -144,7 +144,8 @@ public class CustomOnlinescoreFilterDialog extends CustomFilterDialog {
 		}
 	}
 
-	private void onOK() {
+	@Override
+	protected void onAfterOK() {
 		if (rdbtnLesser.isSelected()) {
 			getFilter().setHigh(CCMovieOnlineScore.find((int) spnLesser.getValue()));
 			
@@ -163,7 +164,5 @@ public class CustomOnlinescoreFilterDialog extends CustomFilterDialog {
 			
 			getFilter().setSearchType(DecimalSearchType.EXACT);
 		}
-		
-		dispose();
 	}
 }

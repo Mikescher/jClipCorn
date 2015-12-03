@@ -10,7 +10,7 @@ import de.jClipCorn.gui.Resources;
 import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.AbstractCustomFilter;
 import de.jClipCorn.util.listener.FinishListener;
 
-public class CustomFilterDialog extends JDialog implements WindowListener{
+public abstract class CustomFilterDialog extends JDialog implements WindowListener{
 	private static final long serialVersionUID = -6822558028101935911L;
 	
 	private AbstractCustomFilter filter;
@@ -50,13 +50,19 @@ public class CustomFilterDialog extends JDialog implements WindowListener{
 		// Nothing
 	}
 
-	@Override
-	public void windowClosed(WindowEvent arg0) {
+	protected void onOK() {
+		onAfterOK();
+		
 		if (finListener != null && ! hasClosed) {
 			finListener.finish();
-			hasClosed = true;
 		}
+		
+		dispose();
+
+		hasClosed = true;
 	}
+	
+	protected abstract void onAfterOK();
 
 	@Override
 	public void windowClosing(WindowEvent arg0) {
@@ -80,6 +86,11 @@ public class CustomFilterDialog extends JDialog implements WindowListener{
 
 	@Override
 	public void windowOpened(WindowEvent arg0) {
+		// Nothing
+	}
+
+	@Override
+	public void windowClosed(WindowEvent e) {
 		// Nothing
 	}
 }

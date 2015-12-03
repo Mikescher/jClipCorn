@@ -63,9 +63,8 @@ public class CustomQualityFilterDialog extends CustomFilterDialog {
 		pnlBottom.add(btnOk);
 	}
 
-	private void onOK() {
+	@Override
+	protected void onAfterOK() {
 		getFilter().setQuality(CCMovieQuality.find(cbxMiddle.getSelectedIndex()));
-		
-		dispose();
 	}
 }

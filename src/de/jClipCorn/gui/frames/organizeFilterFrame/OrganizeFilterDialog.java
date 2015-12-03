@@ -249,7 +249,7 @@ public class OrganizeFilterDialog extends JDialog {
 			@Override
 			public void finish() {
 				String name = DialogHelper.showLocalInputDialog(OrganizeFilterDialog.this, "OrganizeFilterDialog.nameDialog.text", "");  //$NON-NLS-1$ //$NON-NLS-2$
-				if (!name.trim().isEmpty()) {
+				if (name != null && !name.trim().isEmpty()) {
 					filterlist.add(new CustomFilterObject(name, afilter));
 					updateList();
 				}

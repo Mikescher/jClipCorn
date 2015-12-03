@@ -221,9 +221,10 @@ public class CustomOperatorFilterDialog extends CustomFilterDialog implements Fi
 		btnImport.setVisible(showExporter);
 		pnlBottomRight.add(btnImport);
 	}
-
-	private void onOK() {
-		dispose();
+	
+	@Override
+	protected void onAfterOK() {
+		// Nothing
 	}
 
 	private void onAddOperator() {

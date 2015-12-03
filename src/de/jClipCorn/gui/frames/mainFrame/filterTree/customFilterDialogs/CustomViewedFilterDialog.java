@@ -62,9 +62,8 @@ public class CustomViewedFilterDialog extends CustomFilterDialog {
 		pnlBottom.add(btnOk);
 	}
 
-	private void onOK() {
+	@Override
+	protected void onAfterOK() {
 		getFilter().setViewed(chkbxMiddle.isSelected());
-		
-		dispose();
 	}
 }

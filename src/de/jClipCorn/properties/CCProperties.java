@@ -124,6 +124,8 @@ public class CCProperties {
 	
 	public boolean ARG_READONLY = false;
 	
+	public boolean firstLaunch = false;
+	
 	private Properties properties;
 	private String path;
 	
@@ -142,6 +144,8 @@ public class CCProperties {
 		if (Main.DEBUG) {
 			System.out.println("[DBG] " + propertylist.size() + " Properties in List intialized"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
+		
+		if (firstLaunch) save();
 		
 		mainInstance = this;
 
@@ -274,6 +278,7 @@ public class CCProperties {
 			properties.load(stream);
 			stream.close();
 		} catch (IOException e) {
+			firstLaunch = true;
 			CCLog.addWarning(LocaleBundle.getFormattedString("LogMessage.PropFileNotFound", path)); //$NON-NLS-1$
 		}
 	}

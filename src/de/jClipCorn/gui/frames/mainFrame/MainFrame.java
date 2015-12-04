@@ -13,6 +13,7 @@ import java.lang.reflect.InvocationTargetException;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.SwingUtilities;
@@ -39,6 +40,7 @@ import de.jClipCorn.gui.frames.mainFrame.searchField.SearchField;
 import de.jClipCorn.gui.frames.showUpdateFrame.ShowUpdateFrame;
 import de.jClipCorn.gui.guiComponents.DatabaseElementPreviewLabel;
 import de.jClipCorn.gui.guiComponents.tableFilter.TableSearchFilter;
+import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.UpdateConnector;
@@ -83,6 +85,13 @@ public class MainFrame extends JFrame implements CCDBUpdateListener {
 		actionTree.implementKeyListener((JPanel) getContentPane());
 		
 		instance = this;
+		
+		if (CCProperties.getInstance().firstLaunch) {
+			JOptionPane.showMessageDialog(this, 
+					LocaleBundle.getString("MainFrame.disclaimer.text"),  //$NON-NLS-1$
+					LocaleBundle.getString("MainFrame.disclaimer.caption"),  //$NON-NLS-1$
+					JOptionPane.INFORMATION_MESSAGE);
+		}
 	}
 
 	private void initGUI() {

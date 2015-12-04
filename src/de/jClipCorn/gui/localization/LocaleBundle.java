@@ -15,6 +15,11 @@ public class LocaleBundle {
 	private final static int DEFAULT = 1;
 	private final static String DEFAULT_BASENAME = "de.jClipCorn.gui.localization.locale"; //$NON-NLS-1$
 	private final static Locale[] LOCALES = {Locale.getDefault(), new Locale("dl", "DL"), Locale.GERMAN, Locale.US}; //$NON-NLS-1$ //$NON-NLS-2$
+
+	public final static int LOCALE_SYSTEMDEFAULT = 0;
+	public final static int LOCALE_DUAL = 0;
+	public final static int LOCALE_GERMAN = 0;
+	public final static int LOCALE_ENGLISCH = 0;
 	
 	private static ResourceBundle bundle = null; 
 	

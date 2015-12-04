@@ -101,9 +101,8 @@ public class Main {
 
 //TODO Put DB Version in DB (-> show warning) ... useful for auto upgrade
 //TODO Show Disclaimer on first start
-//TODO Use system language as default (already implemented ?)
 //TODO Cover Search acting up ??
-
+//TODO Statistic optional nach Jahren gliedern (globales control auserhalb der einzelnen stats - einzelnes jahr oder ges zeitraum)
 
 //TODO Cover mit höherer Auflösung
 //TODO All Views von Episoden (und Filmen speichern)  --> ermöglicht LastViewed + FirstViewed

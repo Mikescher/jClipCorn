@@ -4,6 +4,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
+import java.util.Locale;
 import java.util.Properties;
 import java.util.Vector;
 
@@ -180,14 +181,14 @@ public class CCProperties {
 		PROP_ADD_MOVIE_RELATIVE_AUTO 			= new CCBoolProperty(CAT_OTHERFRAMES, 	this,   "PROP_ADD_MOVIE_RELATIVE_AUTO", 			true);
 		PROP_DATABASE_NAME 						= new CCStringProperty(CAT_DATABASE, 	this,	"PROP_DATABASE_NAME",						"ClipCornDB");
 		PROP_LOG_PATH							= new CCStringProperty(CAT_DATABASE, 	this,	"PROP_LOG_PATH",							"jClipcorn.log");
-		PROP_UI_LANG							= new CCRIntProperty(CAT_COMMON, 		this, 	"PROP_UI_LANG", 							1, 					vl);
+		PROP_UI_LANG							= new CCRIntProperty(CAT_COMMON, 		this, 	"PROP_UI_LANG", 							getDefLanguage(),	vl);
 		PROP_ON_DBLCLICK_MOVE					= new CCRIntProperty(CAT_COMMON, 		this, 	"PROP_ON_DBLCLICK_MOVE", 					0, 					vd);
 		PROP_UI_LOOKANDFEEL						= new CCRIntProperty(CAT_VIEW, 			this,	"PROP_UI_LOOKANDFEEL", 						0, 					vlf);
 		PROP_MAINFRAME_TABLEBACKGROUND			= new CCRIntProperty(CAT_VIEW, 			this,	"PROP_MAINFRAME_TABLEBACKGROUND",			0, 					vb);
 		PROP_SELF_DIRECTORY						= new CCStringProperty(CAT_DATABASE, 	this,	"PROP_SELF_DIRECTORY",						"");
 		PROP_COVER_PREFIX						= new CCStringProperty(CAT_DATABASE, 	this,	"PROP_COVER_PREFIX",						"cover_");
 		PROP_COVER_TYPE							= new CCStringProperty(CAT_DATABASE, 	this,	"PROP_COVER_TYPE",							"png");
-		PROP_LOADING_LIVEUPDATE					= new CCBoolProperty(CAT_VIEW, 			this, 	"PROP_LOADING_LIVEUPDATE", 					true);
+		PROP_LOADING_LIVEUPDATE					= new CCBoolProperty(CAT_VIEW, 			this, 	"PROP_LOADING_LIVEUPDATE", 					false);
 		PROP_STATUSBAR_CALC_SERIES_IN_LENGTH	= new CCBoolProperty(CAT_SERIES, 		this,	"PROP_STATUSBAR_CALC_SERIES_IN_LENGTH",	 	false);
 		PROP_STATUSBAR_CALC_SERIES_IN_SIZE		= new CCBoolProperty(CAT_SERIES, 		this,	"PROP_STATUSBAR_CALC_SERIES_IN_SIZE", 		false);
 		PROP_PLAY_VLC_PATH						= new CCPathProperty(CAT_PLAY, 			this,	"PROP_PLAY_VLC_PATH",						"", 				PathFormatter.appendAndPrependSeparator("vlc.exe"));
@@ -205,7 +206,7 @@ public class CCProperties {
 		PROP_SCANFOLDER_INCLUDESERIES			= new CCBoolProperty(CAT_OTHERFRAMES, 	this, 	"PROP_SCANFOLDER_INCLUDESERIES", 			false);
 		PROP_SCANFOLDER_EXCLUDEIFOS 			= new CCBoolProperty(CAT_OTHERFRAMES, 	this, 	"PROP_SCANFOLDER_EXCLUDEIFOS", 				false);
 		PROP_BACKUP_LASTBACKUP					= new CCDateProperty(NONVISIBLE, 		this, 	"PROP_BACKUP_LASTBACKUP", 					CCDate.getMinimumDate());
-		PROP_BACKUP_CREATEBACKUPS				= new CCBoolProperty(CAT_BACKUP, 		this, 	"PROP_BACKUP_CREATEBACKUPS", 				true);
+		PROP_BACKUP_CREATEBACKUPS				= new CCBoolProperty(CAT_BACKUP, 		this, 	"PROP_BACKUP_CREATEBACKUPS", 				false);
 		PROP_BACKUP_FOLDERNAME					= new CCStringProperty(CAT_BACKUP,	 	this,	"PROP_BACKUP_FOLDERNAME",					"jClipCorn_backup");
 		PROP_BACKUP_BACKUPTIME					= new CCPintProperty(CAT_BACKUP, 		this, 	"PROP_BACKUP_BACKUPTIME", 					7);
 		PROP_BACKUP_COMPRESSION					= new CCRIntProperty(CAT_BACKUP, 		this, 	"PROP_BACKUP_COMPRESSION", 					0,					10);
@@ -252,6 +253,14 @@ public class CCProperties {
 		PROP_MAINFRAME_AUTOMATICRESETWATCHNEVER = new CCBoolProperty(CAT_DATABASE,		 this,   "PROP_MAINFRAME_AUTOMATICRESETWATCHNEVER",	true);
 	}
 	
+	private int getDefLanguage() {
+		if (Locale.getDefault().getCountry().equals(Locale.GERMANY.getCountry())) return LocaleBundle.LOCALE_DUAL;
+		if (Locale.getDefault().getCountry().equals(Locale.US.getCountry())) return LocaleBundle.LOCALE_ENGLISCH;
+		if (Locale.getDefault().getLanguage().equals(Locale.ENGLISH.getLanguage())) return LocaleBundle.LOCALE_ENGLISCH;
+		
+		return LocaleBundle.LOCALE_SYSTEMDEFAULT;
+	}
+
 	public static CCProperties getInstance() {
 		if (Main.DEBUG && mainInstance == null) { //ONLY FOR WindowBuilder
 			return new CCProperties();

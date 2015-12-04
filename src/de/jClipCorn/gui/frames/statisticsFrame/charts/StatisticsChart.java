@@ -56,12 +56,17 @@ public abstract class StatisticsChart {
 	protected abstract String createTitle();
 	
 	public abstract boolean usesFilterableSeries();
+	public abstract boolean usesFilterableYearRange();
 	
 	public void onResize(ComponentEvent e) {
 		// Overwrite me
 	}
 
 	public void onHideSeries(Map<CCSeries, Boolean> map) {
+		// Overwrite me
+	}
+
+	public void onFilterYearRange(int year) {
 		// Overwrite me
 	}
 }

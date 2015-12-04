@@ -58,9 +58,13 @@ import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsViewedChart;
 import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsYearChart;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.properties.CCProperties;
+import de.jClipCorn.util.CCDate;
 import de.jClipCorn.util.TimeKeeper;
 import de.jClipCorn.util.formatter.TimeIntervallFormatter;
 import de.jClipCorn.util.helper.StatisticsHelper;
+import javax.swing.border.EmptyBorder;
+import javax.swing.SwingConstants;
+import java.awt.Font;
 
 public class StatisticsFrame extends JFrame {
 	private static final long serialVersionUID = 2443934162053374481L;
@@ -68,6 +72,10 @@ public class StatisticsFrame extends JFrame {
 	private final CCMovieList movielist;
 	private List<JLabel> sidebarValueLabels = new ArrayList<>();
 	private StatisticsChart currentChart = null;
+
+	private int selectedYear = -1;
+	private int minYear;
+	private int maxYear;
 	
 	private JPanel pnlTop;
 	private JPanel pnlLeft;
@@ -81,6 +89,11 @@ public class StatisticsFrame extends JFrame {
 	private ChartPanel chartPanel;
 	private SeriesCheckBoxList seriesList;
 	private JScrollPane pnlCheckSeries;
+	private JPanel pnlLeftBottom;
+	private JPanel pnlYearRange;
+	private JButton btnNewButton;
+	private JButton btnNewButton_1;
+	private JLabel lblYear;
 	
 	public StatisticsFrame(Component owner, CCMovieList mlist) {
 		super();
@@ -90,6 +103,10 @@ public class StatisticsFrame extends JFrame {
 
 		TimeKeeper.start();
 		{
+			selectedYear = -1;
+			minYear = Math.min(StatisticsHelper.getFirstMovieAddDate(mlist).getYear(),StatisticsHelper.getFirstSeriesAddDate(mlist).getYear());
+			maxYear = CCDate.getCurrentDate().getYear();
+			
 			initSidebarValues();
 			initCharts();
 		}
@@ -136,8 +153,10 @@ public class StatisticsFrame extends JFrame {
 				StatisticsChart chart = cbxChooseChart.getItemAt(cbxChooseChart.getSelectedIndex());
 				
 				if (chart != null) pnlCheckSeries.setVisible(chart.usesFilterableSeries());
+				if (chart != null) pnlYearRange.setVisible(chart.usesFilterableYearRange());
 				assignChart(chart);
 				if (chart != null) chart.onHideSeries(seriesList.getMap());
+				if (chart != null) chart.onFilterYearRange(selectedYear);
 			}
 		});
 		cbxChooseChart.setMaximumRowCount(24);
@@ -177,10 +196,52 @@ public class StatisticsFrame extends JFrame {
 		pnlSidebar = getSidebarPanel();
 		sclPnlLeft.setViewportView(pnlSidebar);
 		
+		pnlLeftBottom = new JPanel();
+		pnlLeft.add(pnlLeftBottom, BorderLayout.SOUTH);
+		pnlLeftBottom.setLayout(new BorderLayout(0, 0));
+		
+		pnlYearRange = new JPanel();
+		pnlYearRange.setBorder(new EmptyBorder(5, 5, 5, 5));
+		pnlLeftBottom.add(pnlYearRange, BorderLayout.NORTH);
+		pnlYearRange.setLayout(new BorderLayout(0, 0));
+		
+		btnNewButton = new JButton("<"); //$NON-NLS-1$
+		btnNewButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (selectedYear == -1) selectedYear = maxYear;
+				else selectedYear--;
+				
+				if (selectedYear < minYear) selectedYear = -1;
+				
+				updateYearSelection(selectedYear);
+			}
+		});
+		pnlYearRange.add(btnNewButton, BorderLayout.WEST);
+		
+		lblYear = new JLabel(LocaleBundle.getString("StatisticsFrame.this.allTime")); //$NON-NLS-1$
+		lblYear.setFont(new Font("Courier New", Font.BOLD, 16)); //$NON-NLS-1$
+		lblYear.setHorizontalAlignment(SwingConstants.CENTER);
+		pnlYearRange.add(lblYear);
+		
+		btnNewButton_1 = new JButton(">"); //$NON-NLS-1$
+		btnNewButton_1.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (selectedYear == -1) selectedYear = minYear;
+				else selectedYear++;
+				
+				if (selectedYear > maxYear) selectedYear = -1;
+				
+				updateYearSelection(selectedYear);
+			}
+		});
+		pnlYearRange.add(btnNewButton_1, BorderLayout.EAST);
+		
 		pnlCheckSeries = new JScrollPane();
+		pnlLeftBottom.add(pnlCheckSeries);
 		pnlCheckSeries.setVisible(false);
 		pnlCheckSeries.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-		pnlLeft.add(pnlCheckSeries, BorderLayout.SOUTH); 
 		
 		seriesList = new SeriesCheckBoxList();
 		seriesList.setVisibleRowCount(16);
@@ -338,5 +399,12 @@ public class StatisticsFrame extends JFrame {
 			chartPanel.setChart(statchart.getChart());	
 			lblChartCaption.setText(statchart.getTitle());
 		}
+	}
+
+	private void updateYearSelection(int year) {
+		if (year == -1) lblYear.setText(LocaleBundle.getString("StatisticsFrame.this.allTime")); //$NON-NLS-1$
+		else  lblYear.setText(Integer.toString(year));
+
+		if (currentChart != null) currentChart.onFilterYearRange(selectedYear);
 	}
 }

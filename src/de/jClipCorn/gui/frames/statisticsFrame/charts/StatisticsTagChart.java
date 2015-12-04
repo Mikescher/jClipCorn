@@ -77,4 +77,9 @@ public class StatisticsTagChart extends StatisticsChart {
 	public boolean usesFilterableSeries() {
 		return false;
 	}
+	
+	@Override
+	public boolean usesFilterableYearRange() {
+		return false;
+	}
 }

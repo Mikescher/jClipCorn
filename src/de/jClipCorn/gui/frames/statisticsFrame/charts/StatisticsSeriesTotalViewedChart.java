@@ -19,6 +19,7 @@ import java.util.Vector;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.DateAxis;
 import org.jfree.chart.axis.NumberAxis;
+import org.jfree.chart.axis.ValueAxis;
 import org.jfree.chart.labels.ItemLabelAnchor;
 import org.jfree.chart.labels.ItemLabelPosition;
 import org.jfree.chart.labels.StandardXYItemLabelGenerator;
@@ -37,6 +38,11 @@ import de.jClipCorn.util.CCDate;
 import de.jClipCorn.util.helper.StatisticsHelper;
 
 public class StatisticsSeriesTotalViewedChart extends StatisticsChart {
+
+	private long domainTotalRangeMin;
+	private long domainTotalRangeMax;
+	private ValueAxis domainAxis;
+	
 	private class TupleSeriesEpList {
 		public CCSeries series;
 		public List<CCEpisode> episodes;
@@ -114,6 +120,9 @@ public class StatisticsSeriesTotalViewedChart extends StatisticsChart {
 	    	
 	    	idx++;
 		}
+
+        domainTotalRangeMin = startdate.asMilliseconds();
+        domainTotalRangeMax = enddate.asMilliseconds();
 	    
 		plot.setBackgroundPaint(XYBACKGROUND_COLOR);
 		plot.setDomainGridlinePaint(GRIDLINECOLOR);
@@ -124,6 +133,8 @@ public class StatisticsSeriesTotalViewedChart extends StatisticsChart {
 	    chart.setBackgroundPaint(null);
 	    plot.getDomainAxis().setTickLabelPaint(TEXT_FOREGROUND);
 	    plot.getRangeAxis().setTickLabelPaint(TEXT_FOREGROUND);
+	    
+	    domainAxis = plot.getDomainAxis();
 		
 	    return chart;
 	}
@@ -268,5 +279,19 @@ public class StatisticsSeriesTotalViewedChart extends StatisticsChart {
 		chart.setBackgroundPaint(null);
 		
 		updateChart(chart);
+	}
+
+	@Override
+	public boolean usesFilterableYearRange() {
+		return true;
+	}
+	
+	@Override
+	public void onFilterYearRange(int year) {
+		if (year == -1) {
+			domainAxis.setRange(domainTotalRangeMin, domainTotalRangeMax);
+		} else {
+			domainAxis.setRange(CCDate.create(1, 1, year).asMilliseconds(), CCDate.create(1, 1, year+1).asMilliseconds());
+		}
 	}
 }

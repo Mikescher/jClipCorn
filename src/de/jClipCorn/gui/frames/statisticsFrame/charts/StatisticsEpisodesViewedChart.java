@@ -8,6 +8,7 @@ import java.util.Vector;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.DateAxis;
 import org.jfree.chart.axis.NumberAxis;
+import org.jfree.chart.axis.ValueAxis;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.StandardXYItemRenderer;
 import org.jfree.data.xy.DefaultXYDataset;
@@ -19,6 +20,11 @@ import de.jClipCorn.util.CCDate;
 import de.jClipCorn.util.helper.StatisticsHelper;
 
 public class StatisticsEpisodesViewedChart extends StatisticsChart {
+
+	private long domainTotalRangeMin;
+	private long domainTotalRangeMax;
+	private ValueAxis domainAxis;
+	
 	public StatisticsEpisodesViewedChart(CCMovieList ml) {
 		super(ml);
 	}
@@ -48,6 +54,8 @@ public class StatisticsEpisodesViewedChart extends StatisticsChart {
 	    chart.setBackgroundPaint(null);
 	    plot.getDomainAxis().setTickLabelPaint(TEXT_FOREGROUND);
 	    plot.getRangeAxis().setTickLabelPaint(TEXT_FOREGROUND);
+	    
+	    domainAxis = plot.getDomainAxis();
 	    
 	    return chart;
 	}
@@ -81,6 +89,9 @@ public class StatisticsEpisodesViewedChart extends StatisticsChart {
 		}
 		
         dataset.addSeries("Series0", series); //$NON-NLS-1$
+
+        domainTotalRangeMin = (long)series[0][0];
+        domainTotalRangeMax = (long)series[0][posx.size() - 1];
         
         return dataset;
 	}
@@ -93,5 +104,19 @@ public class StatisticsEpisodesViewedChart extends StatisticsChart {
 	@Override
 	public boolean usesFilterableSeries() {
 		return false;
+	}
+
+	@Override
+	public boolean usesFilterableYearRange() {
+		return true;
+	}
+	
+	@Override
+	public void onFilterYearRange(int year) {
+		if (year == -1) {
+			domainAxis.setRange(domainTotalRangeMin, domainTotalRangeMax);
+		} else {
+			domainAxis.setRange(CCDate.create(1, 1, year).asMilliseconds(), CCDate.create(1, 1, year+1).asMilliseconds());
+		}
 	}
 }

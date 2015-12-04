@@ -100,10 +100,6 @@ public class Main {
 //TODO autom find IMDb Score discrepancies (search Movie on imdb -> if found compare score) ~ not in CheckDB (too long) but own dialog
 
 //TODO Put DB Version in DB (-> show warning) ... useful for auto upgrade
-//TODO Show Disclaimer on first start
-//TODO Cover Search acting up ??
-//TODO Statistic optional nach Jahren gliedern (globales control auserhalb der einzelnen stats - einzelnes jahr oder ges zeitraum)
-
 //TODO Cover mit höherer Auflösung
 //TODO All Views von Episoden (und Filmen speichern)  --> ermöglicht LastViewed + FirstViewed
 //       - New DB Version (dann auch gleich index für staffeln einführen)

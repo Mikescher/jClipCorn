@@ -12,7 +12,7 @@ import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.util.helper.HTTPUtilities;
 
 @SuppressWarnings("nls")
-public class GoogleImageParser {
+public class GoogleImageParser { //TODO Google API discontinued
 	private final static String KEY_DATA = "responseData";
 	private final static String KEY_RESULTS = "results";
 	private final static String KEY_URL = "unescapedUrl";

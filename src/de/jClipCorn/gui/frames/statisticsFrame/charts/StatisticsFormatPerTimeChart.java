@@ -10,6 +10,7 @@ import java.util.List;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.DateAxis;
 import org.jfree.chart.axis.NumberAxis;
+import org.jfree.chart.axis.ValueAxis;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.StandardXYItemRenderer;
 import org.jfree.chart.renderer.xy.XYAreaRenderer;
@@ -22,6 +23,10 @@ import de.jClipCorn.util.CCDate;
 import de.jClipCorn.util.helper.StatisticsHelper;
 
 public class StatisticsFormatPerTimeChart extends StatisticsChart {
+
+	private long domainTotalRangeMin;
+	private long domainTotalRangeMax;
+	private ValueAxis domainAxis;
 
 	public StatisticsFormatPerTimeChart(CCMovieList ml) {
 		super(ml);
@@ -73,6 +78,8 @@ public class StatisticsFormatPerTimeChart extends StatisticsChart {
 		plot.getRangeAxis().setAutoRange(false);
 		plot.getRangeAxis().setRange(0, 100);
 	    
+	    domainAxis = plot.getDomainAxis();
+	    
 	    return chart;
 	}
 	
@@ -110,6 +117,9 @@ public class StatisticsFormatPerTimeChart extends StatisticsChart {
 			
 			result.add(dataset);
 		}
+
+        domainTotalRangeMin = mindate.asMilliseconds();
+        domainTotalRangeMax = maxdate.asMilliseconds();
 		
 		return result;
 	}
@@ -122,5 +132,19 @@ public class StatisticsFormatPerTimeChart extends StatisticsChart {
 	@Override
 	public boolean usesFilterableSeries() {
 		return false;
+	}
+
+	@Override
+	public boolean usesFilterableYearRange() {
+		return true;
+	}
+	
+	@Override
+	public void onFilterYearRange(int year) {
+		if (year == -1) {
+			domainAxis.setRange(domainTotalRangeMin, domainTotalRangeMax);
+		} else {
+			domainAxis.setRange(CCDate.create(1, 1, year).asMilliseconds(), CCDate.create(1, 1, year+1).asMilliseconds());
+		}
 	}
 }

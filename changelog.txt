@@ -1,3 +1,50 @@
+############ 2015-12-05: 1.9.6 Other: Updated README imagees
+
+############ 2015-12-05: 1.9.6 Feature: Filter (some) statistics by year
+
+############ 2015-12-04: 1.9.6 Task: Show disclaimer on first startup
+
+############ 2015-12-04: 1.9.6 Task: Use systemlanguage if no properties found
+
+############ 2015-12-03: Create LICENSE
+############ 2015-12-03: 1.9.6 Bugfix: AV on AddCustomFilter -> Abort
+
+############ 2015-12-03: 1.9.6 Other: Added TODO's
+
+############ 2015-12-02: 1.9.6 Task: Changed "Zyklus" to "Film series" in en-US
+
+############ 2015-12-02: 1.9.6 Other: Moved Images to wiki git-repo
+
+############ 2015-12-02: 1.9.6 Other: Updated README - links to wiki
+
+############ 2015-12-02: 1.9.6 Other: Removed wiki submodule (2)
+
+############ 2015-12-02: 1.9.6 Other: Removed wiki submodule
+
+############ 2015-12-02: 1.9.6 Other: Added wiki as nested root (submodule)
+
+############ 2015-12-02: 1.9.6 Other: Added wiki as nested root
+
+############ 2015-12-02: 1.9.6 Other: Fixed links in README
+
+############ 2015-12-02: 1.9.6 Other: Removed cursor from README images
+
+############ 2015-12-02: 1.9.6 Other: Complete overhaul README.md (Road to public release)
+
+############ 2015-12-02: 1.9.6 Bugfix: AV in CheckUserProblem
+
+############ 2015-12-01: 1.9.6 Task: Support for cross-plattform paths (step 1)
+
+############ 2015-12-01: 1.9.6 Bugfix: Fixed false-positive in Database-Error "Wrong AddDate"
+
+############ 2015-12-01: 1.9.6 Task: Added massIncNumbers() to AddEpisodesFrame
+
+############ 2015-09-25: 1.9.6 Task: Added new DatabaseError [ERROR_DUPLICATE_GENRE]
+
+############ 2015-09-25: 1.9.6 Task: Added new UserProblem [PROBLEM_DUPLICATE_GENRE]
+
+############ 2015-09-25: 1.9.6 Bugfix: Fixed Memoryleak in CCProperties.load()
+
 ############ 2015-05-06: 1.9.5 RELEASE
 
 ############ 2015-05-06: 1.9.5 Task: Added used libraries view

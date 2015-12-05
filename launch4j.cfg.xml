@@ -1,8 +1,8 @@
 <launch4jConfig>
   <dontWrapJar>false</dontWrapJar>
   <headerType>gui</headerType>
-  <jar>E:\Eigene Dateien\Dropbox\Programming\Java\workspace\jClipCorn\build\jClipCorn 1.9.5.jar</jar>
-  <outfile>E:\Eigene Dateien\Dropbox\Programming\Java\workspace\jClipCorn\build\jClipCorn 1.9.5.exe</outfile>
+  <jar>F:\Eigene Dateien\Dropbox\Programming\Java\workspace\jClipCorn\build\jClipCorn 1.9.6.jar</jar>
+  <outfile>F:\Eigene Dateien\Dropbox\Programming\Java\workspace\jClipCorn\build\jClipCorn 1.9.6.exe</outfile>
   <errTitle></errTitle>
   <cmdLine></cmdLine>
   <chdir></chdir>
@@ -12,7 +12,7 @@
   <customProcName>false</customProcName>
   <stayAlive>false</stayAlive>
   <manifest></manifest>
-  <icon>E:\Eigene Dateien\Dropbox\Programming\Java\workspace\jClipCorn\data\Acidrums4-Betelgeuse-Apps-preferences-desktop-sound.ico</icon>
+  <icon>F:\Eigene Dateien\Dropbox\Programming\Java\workspace\jClipCorn\data\Acidrums4-Betelgeuse-Apps-preferences-desktop-sound.ico</icon>
   <jre>
     <path></path>
     <minVersion>1.7.0</minVersion>

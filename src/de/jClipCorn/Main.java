@@ -94,7 +94,6 @@ public class Main {
 
 //TODO Integrated VLC ? : https://code.google.com/p/vlcj/
 
-//TODO Add Credits to used libs + Add License + Disclaimer
 //TODO : You can close the Backup running Dialog with [X]
 
 //TODO autom find IMDb Score discrepancies (search Movie on imdb -> if found compare score) ~ not in CheckDB (too long) but own dialog

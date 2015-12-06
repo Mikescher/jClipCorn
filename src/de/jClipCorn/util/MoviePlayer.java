@@ -24,6 +24,12 @@ public class MoviePlayer {
 		PathFormatter.combine("VideoLAN", "VLC", "vlc.exe"),
 		PathFormatter.combine("VLC", "vlc.exe")
 	};
+
+	@SuppressWarnings("nls")
+	private final static String[] PATHS_NIX = {
+			"/bin/vlc",
+			"/usr/bin/vlc",
+	};
 	
 	private final static String DRIVE_1 = "C:" + PathFormatter.SEPERATOR; //$NON-NLS-1$
 	private final static String DRIVE_2 = "H:" + PathFormatter.SEPERATOR; //$NON-NLS-1$
@@ -132,7 +138,12 @@ public class MoviePlayer {
 				}
 			}
 		} else if (ApplicationHelper.isUnix()) {
-			//TODO start vlc under *nix
+			
+			for (String path : PATHS_NIX) {
+				if (new File(path).exists()) {
+					return lastVLCPath = path;
+				}
+			}
 		}
 		
 		

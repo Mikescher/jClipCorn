@@ -619,7 +619,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 				onCalcQuality();
 			}
 		});
-		btnCalcQuality.setBounds(296, 372, 78, 23);
+		btnCalcQuality.setBounds(296, 372, 112, 23);
 		getContentPane().add(btnCalcQuality);
 		
 		edCvrControl = new EditCoverControl(this);

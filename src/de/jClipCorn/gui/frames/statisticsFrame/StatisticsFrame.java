@@ -136,11 +136,11 @@ public class StatisticsFrame extends JFrame {
 				ColumnSpec.decode("15dlu"), //$NON-NLS-1$
 				ColumnSpec.decode("200px"), //$NON-NLS-1$
 				ColumnSpec.decode("50dlu"), //$NON-NLS-1$
-				ColumnSpec.decode("41px"), //$NON-NLS-1$
+				FormSpecs.PREF_COLSPEC,
 				FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
 				ColumnSpec.decode("300px"), //$NON-NLS-1$
 				FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
-				ColumnSpec.decode("41px"),}, //$NON-NLS-1$
+				FormSpecs.PREF_COLSPEC,},
 			new RowSpec[] {
 				FormSpecs.RELATED_GAP_ROWSPEC,
 				RowSpec.decode("23px"), //$NON-NLS-1$

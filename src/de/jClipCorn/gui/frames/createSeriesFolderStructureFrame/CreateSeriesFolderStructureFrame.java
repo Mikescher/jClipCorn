@@ -33,6 +33,7 @@ import de.jClipCorn.gui.Resources;
 import de.jClipCorn.gui.guiComponents.CoverLabel;
 import de.jClipCorn.gui.guiComponents.ReadableTextField;
 import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.DialogHelper;
 
@@ -156,11 +157,11 @@ public class CreateSeriesFolderStructureFrame extends JFrame {
 	private void init() {
 		lblCover.setIcon(series.getCoverIcon());
 		lblTitel.setText(series.getTitle());
-		lblCommonPath.setText(PathFormatter.getAbsolute(series.getCommonPathStart()));
+		lblCommonPath.setText(PathFormatter.fromCCPath(series.getCommonPathStart()));
 	}
 	
 	private void onBtnChoose() {
-		JFileChooser folderchooser = new JFileChooser(PathFormatter.getAbsolute(series.getCommonPathStart()));
+		JFileChooser folderchooser = new JFileChooser(PathFormatter.fromCCPath(series.getCommonPathStart()));
 		folderchooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 		
 		if (folderchooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
@@ -254,7 +255,7 @@ public class CreateSeriesFolderStructureFrame extends JFrame {
 						return false;
 					}
 					
-					episode.setPart(PathFormatter.getRelative(newfile.getAbsolutePath()));
+					episode.setPart(PathFormatter.getCCPath(newfile.getAbsolutePath(), CCProperties.getInstance().PROP_ADD_MOVIE_RELATIVE_AUTO.getValue()));
 				}
 			}
 		}

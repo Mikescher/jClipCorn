@@ -188,7 +188,7 @@ public class MoveSeriesDialog extends JDialog {
 				String oldp = ep.getPart();
 				String newp = ep.getPart().replace(edSearch.getText(), edReplace.getText());
 				
-				String ident = new File(PathFormatter.getAbsolute(newp)).exists() ? "1" : "0"; //$NON-NLS-1$ //$NON-NLS-2$
+				String ident = new File(PathFormatter.fromCCPath(newp)).exists() ? "1" : "0"; //$NON-NLS-1$ //$NON-NLS-2$
 				
 				Vector<String> tmp = new Vector<>();
 				tmp.add("9" + oldp); //$NON-NLS-1$

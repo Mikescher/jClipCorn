@@ -147,8 +147,8 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler, 
 		setSize(new Dimension(1100, 650));
 		this.parent = ss;
 		this.listener = ucl;
-		this.videoFileChooser = new JFileChooser(PathFormatter.getAbsolute(ss.getSeries().getCommonPathStart()));
-		this.massVideoFileChooser = new JFileChooser(PathFormatter.getAbsolute(ss.getSeries().getCommonPathStart()));
+		this.videoFileChooser = new JFileChooser(PathFormatter.fromCCPath(ss.getSeries().getCommonPathStart()));
+		this.massVideoFileChooser = new JFileChooser(PathFormatter.fromCCPath(ss.getSeries().getCommonPathStart()));
 
 		initGUI();
 
@@ -847,7 +847,7 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler, 
 			paths.add(i, parent.getEpisode(i).getPart());
 		}
 		
-		return PathFormatter.getAbsolute(PathFormatter.getCommonFolderPath(paths));
+		return PathFormatter.fromCCPath(PathFormatter.getCommonFolderPath(paths));
 	}
 
 	private void updateDisplayPanel() {
@@ -885,10 +885,7 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler, 
 	}
 
 	public void setFilepath(String t) {
-		String pt = t;
-		if (CCProperties.getInstance().PROP_ADD_MOVIE_RELATIVE_AUTO.getValue()) {
-			pt = PathFormatter.getRelative(t);
-		}
+		String pt = PathFormatter.getCCPath(t, CCProperties.getInstance().PROP_ADD_MOVIE_RELATIVE_AUTO.getValue());
 
 		edPart.setText(pt);
 		edPart.setCaretPosition(0);
@@ -898,7 +895,7 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler, 
 
 	private void recalcFilesize() {
 		String part = edPart.getText();
-		part = PathFormatter.getAbsolute(part);
+		part = PathFormatter.fromCCPath(part);
 		long fs = FileSizeFormatter.getFileSize(part);
 
 		if (fs > 0) {
@@ -910,7 +907,7 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler, 
 
 	private void testPart() {
 		String part = edPart.getText();
-		part = PathFormatter.getAbsolute(part);
+		part = PathFormatter.fromCCPath(part);
 
 		if (new File(part).exists()) {
 			edPart.setBackground(UIManager.getColor("TextField.background")); //$NON-NLS-1$
@@ -943,11 +940,9 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler, 
 			ep.setLength(0);
 			ep.setFormat(CCMovieFormat.getMovieFormatOrDefault(PathFormatter.getExtension(abspath)));
 			ep.setFilesize(ff[i].length());
-			if (CCProperties.getInstance().PROP_ADD_MOVIE_RELATIVE_AUTO.getValue()) {
-				ep.setPart(PathFormatter.getRelative(abspath));
-			} else {
-				ep.setPart(abspath);
-			}
+
+			ep.setPart(PathFormatter.getCCPath(abspath, CCProperties.getInstance().PROP_ADD_MOVIE_RELATIVE_AUTO.getValue()));
+
 			ep.setQuality(CCMovieQuality.STREAM);
 			ep.setAddDate(CCDate.getCurrentDate());
 			ep.setLastViewed(CCDate.getMinimumDate());

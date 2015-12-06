@@ -12,19 +12,21 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.formatter.PathFormatter;
+import de.jClipCorn.util.helper.ApplicationHelper;
 
 public class MoviePlayer {
 	@SuppressWarnings("nls")
-	private final static String[] PATHS = {
+	private final static String[] PATHS_WIN = {
 		PathFormatter.combine("Programme", "VideoLAN", "VLC", "vlc.exe"),
 		PathFormatter.combine("Program Files", "VideoLAN", "VLC", "vlc.exe"),
 		PathFormatter.combine("Programme (x86)", "VideoLAN", "VLC", "vlc.exe"),
+		PathFormatter.combine("Program Files (x86)", "VideoLAN", "VLC", "vlc.exe"),
 		PathFormatter.combine("VideoLAN", "VLC", "vlc.exe"),
 		PathFormatter.combine("VLC", "vlc.exe")
 	};
 	
-	private final static String DRIVE_1 = "C:" + PathFormatter.seperator; //$NON-NLS-1$
-	private final static String DRIVE_2 = "H:" + PathFormatter.seperator; //$NON-NLS-1$
+	private final static String DRIVE_1 = "C:" + PathFormatter.SEPERATOR; //$NON-NLS-1$
+	private final static String DRIVE_2 = "H:" + PathFormatter.SEPERATOR; //$NON-NLS-1$
 	
 	private static String lastVLCPath = null;
 	
@@ -103,30 +105,37 @@ public class MoviePlayer {
 			}
 		}
 		
-		for (String ss : PATHS) {
-			String path = DRIVE_1 + ss;
-			if (new File(path).exists()) {
-				return lastVLCPath = path;
+		if (ApplicationHelper.isWindows())
+		{
+			for (String ss : PATHS_WIN) {
+				String path = DRIVE_1 + ss;
+				if (new File(path).exists()) {
+					return lastVLCPath = path;
+				}
 			}
-		}
-		
-		for (String ss : PATHS) {
-			String path = DRIVE_2 + ss;
-			if (new File(path).exists()) {
-				return lastVLCPath = path;
+			
+			for (String ss : PATHS_WIN) {
+				String path = DRIVE_2 + ss;
+				if (new File(path).exists()) {
+					return lastVLCPath = path;
+				}
 			}
-		}
-		
-		for (File f : File.listRoots()) {
-			if (! (f.getAbsolutePath().equals(DRIVE_1) | f.getAbsolutePath().equals(DRIVE_2))) {
-				for (String ss : PATHS) {
-					String path = f.getAbsolutePath() + ss;
-					if (new File(path).exists()) {
-						return lastVLCPath = path;
+			
+			for (File f : File.listRoots()) {
+				if (! (f.getAbsolutePath().equals(DRIVE_1) | f.getAbsolutePath().equals(DRIVE_2))) {
+					for (String ss : PATHS_WIN) {
+						String path = f.getAbsolutePath() + ss;
+						if (new File(path).exists()) {
+							return lastVLCPath = path;
+						}
 					}
 				}
 			}
+		} else if (ApplicationHelper.isUnix()) {
+			//TODO start vlc under *nix
 		}
+		
+		
 		lastVLCPath = null;
 		return null;
 	}

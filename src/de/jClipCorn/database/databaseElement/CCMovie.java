@@ -278,7 +278,7 @@ public class CCMovie extends CCDatabaseElement {
 	}
 	
 	public String getAbsolutePart(int idx) {
-		return PathFormatter.getAbsolute(getPart(idx));
+		return PathFormatter.fromCCPath(getPart(idx));
 	}
 	
 	public void setPart(int idx, String path) {

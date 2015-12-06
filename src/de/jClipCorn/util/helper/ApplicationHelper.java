@@ -13,6 +13,8 @@ import de.jClipCorn.util.formatter.PathFormatter;
 
 public class ApplicationHelper {
 
+	private static String os_property = null;
+	
 	@SuppressWarnings("nls")
 	public static boolean restartApplication() { //Will fail in Eclipse, cause there is no .jar File
 		String javaBin = PathFormatter.combine(System.getProperty("java.home"), "bin", "java");
@@ -52,5 +54,26 @@ public class ApplicationHelper {
 	public static void exitApplication(int errorcode) {
 		MainFrame.getInstance().terminate();
 		System.exit(errorcode);
+	}
+
+	@SuppressWarnings("nls")
+	public static boolean isWindows() {
+		if (os_property == null) os_property = System.getProperty("os.name").toLowerCase();
+		
+		return os_property.indexOf("win") >= 0;
+	}
+	
+	@SuppressWarnings("nls")
+	public static boolean isUnix() {
+		if (os_property == null) os_property = System.getProperty("os.name").toLowerCase();
+		
+		return (os_property.indexOf("nix") >= 0 || os_property.indexOf("nux") >= 0 || os_property.indexOf("aix") > 0 );
+	}
+	
+	@SuppressWarnings("nls")
+	public static boolean isMac() {
+		if (os_property == null) os_property = System.getProperty("os.name").toLowerCase();
+
+		return os_property.indexOf("mac") >= 0;
 	}
 }

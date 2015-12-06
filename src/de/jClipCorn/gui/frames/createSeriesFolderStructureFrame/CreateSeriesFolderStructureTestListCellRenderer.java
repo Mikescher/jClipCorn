@@ -6,6 +6,7 @@ import java.awt.Component;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JList;
 
+import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.formatter.PathFormatter;
 
 public class CreateSeriesFolderStructureTestListCellRenderer extends DefaultListCellRenderer {
@@ -16,7 +17,7 @@ public class CreateSeriesFolderStructureTestListCellRenderer extends DefaultList
 	public Component getListCellRendererComponent(JList paramlist, Object value, int index, boolean isSelected, boolean cellHasFocus) {
 		DefaultListCellRenderer result = (DefaultListCellRenderer) super.getListCellRendererComponent(paramlist, value, index, isSelected, cellHasFocus);
 		
-		result.setText(PathFormatter.getRelative(((String)value).substring(1)));
+		result.setText(PathFormatter.getCCPath(((String)value).substring(1), CCProperties.getInstance().PROP_ADD_MOVIE_RELATIVE_AUTO.getValue()));
 		
 		switch (((String) value).charAt(0)) {
 		case '0':

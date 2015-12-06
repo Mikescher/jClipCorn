@@ -19,6 +19,7 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTags;
 import de.jClipCorn.gui.frames.editMovieFrame.EditMovieFrame;
 import de.jClipCorn.gui.frames.editSeriesFrame.EditSeriesFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.CCDate;
 import de.jClipCorn.util.formatter.FileSizeFormatter;
 import de.jClipCorn.util.formatter.PathFormatter;
@@ -358,7 +359,7 @@ public class DatabaseError {
 				File fnew = new File(npath);
 				
 				boolean succ = fold.renameTo(fnew);
-				mov.setPart(i, PathFormatter.getRelative(npath));
+				mov.setPart(i, PathFormatter.getCCPath(npath, CCProperties.getInstance().PROP_ADD_MOVIE_RELATIVE_AUTO.getValue()));
 				
 				if (! succ) {
 					return false;

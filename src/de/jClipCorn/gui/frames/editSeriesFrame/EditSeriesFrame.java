@@ -170,7 +170,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		super();
 		this.series = ser;
 		this.listener = ucl;
-		this.videoFileChooser = new JFileChooser(PathFormatter.getAbsolute(ser.getCommonPathStart()));
+		this.videoFileChooser = new JFileChooser(PathFormatter.fromCCPath(ser.getCommonPathStart()));
 		
 		initGUI();
 		setDefaultValues();
@@ -1119,7 +1119,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 	}
 	
 	private void testEpisodePart() {
-		String path = PathFormatter.getAbsolute(edEpisodePart.getText());
+		String path = PathFormatter.fromCCPath(edEpisodePart.getText());
 		
 		if (new File(path).exists()) {
 			edEpisodePart.setBackground(UIManager.getColor("TextField.background")); //$NON-NLS-1$
@@ -1129,7 +1129,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 	}
 	
 	private void recalcEpisodeFilesize() {
-		String path = PathFormatter.getAbsolute(edEpisodePart.getText());
+		String path = PathFormatter.fromCCPath(edEpisodePart.getText());
 		
 		spnEpisodeSize.setValue(FileSizeFormatter.getFileSize(path));
 	}
@@ -1144,7 +1144,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		String abspath = videoFileChooser.getSelectedFile().getAbsolutePath();
 		String path = abspath;
 		if (CCProperties.getInstance().PROP_ADD_MOVIE_RELATIVE_AUTO.getValue()) {
-			path = PathFormatter.getRelative(abspath);
+			path = PathFormatter.getCCPath(abspath, CCProperties.getInstance().PROP_ADD_MOVIE_RELATIVE_AUTO.getValue());
 		}
 		
 		edEpisodePart.setText(path);

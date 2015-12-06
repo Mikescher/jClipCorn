@@ -57,7 +57,7 @@ public class SerCoverChooserPopupMenu extends JPopupMenu {
 		openFolder.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				PathFormatter.showInExplorer(PathFormatter.getAbsolute(season.getCommonPathStart()));
+				PathFormatter.showInExplorer(PathFormatter.fromCCPath(season.getCommonPathStart()));
 				owner.updateSeason();
 			}
 		});

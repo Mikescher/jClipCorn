@@ -660,27 +660,27 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		CCMovieSize size = new CCMovieSize();
 		
 		if (! edPart0.getText().isEmpty()) {
-			size.add(FileSizeFormatter.getFileSize(PathFormatter.getAbsolute(edPart0.getText())));
+			size.add(FileSizeFormatter.getFileSize(PathFormatter.fromCCPath(edPart0.getText())));
 		}
 		
 		if (! edPart1.getText().isEmpty()) {
-			size.add(FileSizeFormatter.getFileSize(PathFormatter.getAbsolute(edPart1.getText())));
+			size.add(FileSizeFormatter.getFileSize(PathFormatter.fromCCPath(edPart1.getText())));
 		}
 		
 		if (! edPart2.getText().isEmpty()) {
-			size.add(FileSizeFormatter.getFileSize(PathFormatter.getAbsolute(edPart2.getText())));
+			size.add(FileSizeFormatter.getFileSize(PathFormatter.fromCCPath(edPart2.getText())));
 		}
 		
 		if (! edPart3.getText().isEmpty()) {
-			size.add(FileSizeFormatter.getFileSize(PathFormatter.getAbsolute(edPart3.getText())));
+			size.add(FileSizeFormatter.getFileSize(PathFormatter.fromCCPath(edPart3.getText())));
 		}
 		
 		if (! edPart4.getText().isEmpty()) {
-			size.add(FileSizeFormatter.getFileSize(PathFormatter.getAbsolute(edPart4.getText())));
+			size.add(FileSizeFormatter.getFileSize(PathFormatter.fromCCPath(edPart4.getText())));
 		}
 		
 		if (! edPart5.getText().isEmpty()) {
-			size.add(FileSizeFormatter.getFileSize(PathFormatter.getAbsolute(edPart5.getText())));
+			size.add(FileSizeFormatter.getFileSize(PathFormatter.fromCCPath(edPart5.getText())));
 		}
 		
 		if (size.getBytes() > 0) {
@@ -695,37 +695,37 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		Color c2 = Color.RED;
 		
 		if (! edPart0.getText().isEmpty()) {
-			edPart0.setBackground(new File(PathFormatter.getAbsolute(edPart0.getText())).exists()?c1:c2); 
+			edPart0.setBackground(new File(PathFormatter.fromCCPath(edPart0.getText())).exists()?c1:c2); 
 		} else {
 			edPart0.setBackground(c1);
 		}
 		
 		if (! edPart1.getText().isEmpty()) {
-			edPart1.setBackground(new File(PathFormatter.getAbsolute(edPart1.getText())).exists()?c1:c2); 
+			edPart1.setBackground(new File(PathFormatter.fromCCPath(edPart1.getText())).exists()?c1:c2); 
 		} else {
 			edPart1.setBackground(c1);
 		}
 		
 		if (! edPart2.getText().isEmpty()) {
-			edPart2.setBackground(new File(PathFormatter.getAbsolute(edPart2.getText())).exists()?c1:c2); 
+			edPart2.setBackground(new File(PathFormatter.fromCCPath(edPart2.getText())).exists()?c1:c2); 
 		} else {
 			edPart2.setBackground(c1);
 		}
 		
 		if (! edPart3.getText().isEmpty()) {
-			edPart3.setBackground(new File(PathFormatter.getAbsolute(edPart3.getText())).exists()?c1:c2); 
+			edPart3.setBackground(new File(PathFormatter.fromCCPath(edPart3.getText())).exists()?c1:c2); 
 		} else {
 			edPart3.setBackground(c1);
 		}
 		
 		if (! edPart4.getText().isEmpty()) {
-			edPart4.setBackground(new File(PathFormatter.getAbsolute(edPart4.getText())).exists()?c1:c2); 
+			edPart4.setBackground(new File(PathFormatter.fromCCPath(edPart4.getText())).exists()?c1:c2); 
 		} else {
 			edPart4.setBackground(c1);
 		}
 		
 		if (! edPart5.getText().isEmpty()) {
-			edPart5.setBackground(new File(PathFormatter.getAbsolute(edPart5.getText())).exists()?c1:c2); 
+			edPart5.setBackground(new File(PathFormatter.fromCCPath(edPart5.getText())).exists()?c1:c2); 
 		} else {
 			edPart5.setBackground(c1);
 		}
@@ -818,7 +818,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 	public void setFilepath(int p, String t) {
 		String pt = t;
 		if (CCProperties.getInstance().PROP_ADD_MOVIE_RELATIVE_AUTO.getValue()) {
-			pt = PathFormatter.getRelative(t);
+			pt = PathFormatter.getCCPath(t, CCProperties.getInstance().PROP_ADD_MOVIE_RELATIVE_AUTO.getValue());
 		}
 				
 		switch (p) {

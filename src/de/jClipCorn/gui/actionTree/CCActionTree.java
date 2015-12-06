@@ -1094,7 +1094,7 @@ public class CCActionTree {
 		if (el.isMovie()) {
 			PathFormatter.showInExplorer(((CCMovie)el).getAbsolutePart(0));
 		} else {
-			PathFormatter.showInExplorer(PathFormatter.getAbsolute(((CCSeries)el).getCommonPathStart()));
+			PathFormatter.showInExplorer(PathFormatter.fromCCPath(((CCSeries)el).getCommonPathStart()));
 		}
 	}
 

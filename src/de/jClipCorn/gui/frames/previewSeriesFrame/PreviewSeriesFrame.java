@@ -373,7 +373,7 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 		mntmShowInFolder.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				PathFormatter.showInExplorer(PathFormatter.getAbsolute(dispSeries.getCommonPathStart()));
+				PathFormatter.showInExplorer(PathFormatter.fromCCPath(dispSeries.getCommonPathStart()));
 			}
 		});
 		mnSerie.add(mntmShowInFolder);
@@ -430,7 +430,7 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 		mntmShowSeasonInFolder.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				PathFormatter.showInExplorer(PathFormatter.getAbsolute(tabSeason.getSeason().getCommonPathStart()));
+				PathFormatter.showInExplorer(PathFormatter.fromCCPath(tabSeason.getSeason().getCommonPathStart()));
 			}
 		});
 		mnStaffel.add(mntmShowSeasonInFolder);

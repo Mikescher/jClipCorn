@@ -16,8 +16,10 @@ import de.jClipCorn.util.listener.ProgressCallbackListener;
 
 @SuppressWarnings("nls")
 public class PathFormatter {
-	public static final String seperator = File.separator;
-	public static final char seperatorChar = File.separatorChar;
+	public static final String SEPERATOR = File.separator;
+	public static final char SEPERATOR_CHAR = File.separatorChar;
+	
+	public static final String SERIALIZATION_SEPERATOR = "/";
 	
 	private final static ArrayList<Character> VALIDFILENAMECHARS = new ArrayList<>(Arrays.asList(
 		'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'Ä', 'Ö', 'Ü',
@@ -65,15 +67,15 @@ public class PathFormatter {
 		return appendSeparator(WORKINGDIR);
 	}
 	
-	public static String getAbsolute(String rPath) {
+	public static String fromCCPath(String rPath) {
 		if (RegExHelper.startsWithRegEx(REGEX_SELF, rPath)) {
-			return RegExHelper.replace(REGEX_SELF, rPath, getAbsoluteSelfDirectory());
+			rPath =  RegExHelper.replace(REGEX_SELF, rPath, getAbsoluteSelfDirectory());
 		} else if (RegExHelper.startsWithRegEx(REGEX_DRIVENAME, rPath)) {
 			String card = RegExHelper.find(REGEX_DRIVENAME, rPath);
 			String name = card.substring(10, card.length() - 2);
 			char letter = DriveMap.getDriveLetter(name);
 			if (letter != '#') {
-				return RegExHelper.replace(REGEX_DRIVENAME, rPath, letter + ":" + seperator);
+				rPath = RegExHelper.replace(REGEX_DRIVENAME, rPath, letter + ":" + SEPERATOR);
 			} else {
 				CCLog.addWarning(LocaleBundle.getFormattedString("LogMessage.DriveNotFound", name));
 				return "";
@@ -81,22 +83,30 @@ public class PathFormatter {
 		} else if (RegExHelper.startsWithRegEx(REGEX_DRIVELETTER, rPath)) {
 			String card = RegExHelper.find(REGEX_DRIVELETTER, rPath);
 			char letter = card.charAt(11);
-			return RegExHelper.replace(REGEX_DRIVELETTER, rPath, letter + ":" + seperator);
+			rPath = RegExHelper.replace(REGEX_DRIVELETTER, rPath, letter + ":" + SEPERATOR);
 		} else if (RegExHelper.startsWithRegEx(REGEX_SELFDRIVE, rPath)) {
 			char letter = WORKINGDIR.charAt(0);
-			return RegExHelper.replace(REGEX_SELFDRIVE, rPath, letter + ":" + seperator);
-		} else {
-			return rPath;
+			rPath = RegExHelper.replace(REGEX_SELFDRIVE, rPath, letter + ":" + SEPERATOR);
 		}
+		
+		return rPath.replace(SERIALIZATION_SEPERATOR, SEPERATOR);
 	}
 	
-	public static String getRelative(String aPath) {
-		if (aPath.startsWith(getAbsoluteSelfDirectory())) {
-			return aPath.replace(getAbsoluteSelfDirectory(), WILDCARD_SELF);
-		} else if (aPath.charAt(0) == WORKINGDIR.charAt(0)) {
-			return WILDCARD_SELFDRIVE.concat(aPath.substring(3));
-		} else if (aPath.length() > 3 && Character.isLetter(aPath.charAt(0)) && aPath.charAt(1) == ':' && aPath.charAt(2) == seperatorChar && DriveMap.hasDriveName(aPath.charAt(0))){
-			return String.format(WILDCARD_DRIVENAME, DriveMap.getDriveName(aPath.charAt(0))).concat(aPath.substring(3));
+	public static String getCCPath(String aPath, boolean relative) {
+		aPath = aPath.replace(SEPERATOR, SERIALIZATION_SEPERATOR);
+		
+		if (relative) {
+			String self = getAbsoluteSelfDirectory().replace(SEPERATOR, SERIALIZATION_SEPERATOR);
+			
+			if (aPath.startsWith(self)) {
+				return aPath.replace(self, WILDCARD_SELF);
+			} else if (aPath.charAt(0) == WORKINGDIR.charAt(0)) {
+				return WILDCARD_SELFDRIVE.concat(aPath.substring(3));
+			} else if (aPath.length() > 3 && Character.isLetter(aPath.charAt(0)) && aPath.charAt(1) == ':' && aPath.charAt(2) == SEPERATOR_CHAR && DriveMap.hasDriveName(aPath.charAt(0))){
+				return String.format(WILDCARD_DRIVENAME, DriveMap.getDriveName(aPath.charAt(0))).concat(aPath.substring(3));
+			} else {
+				return aPath;
+			}
 		} else {
 			return aPath;
 		}
@@ -107,13 +117,13 @@ public class PathFormatter {
 	}
 	
 	public static String getFilenameWithExt(String path) {
-		return path.substring(path.lastIndexOf(seperator) + 1);
+		return path.substring(path.lastIndexOf(SEPERATOR) + 1);
 	}
 	
 	public static String getFilename(String path) {
 		int liop = path.lastIndexOf('.');
 		if (liop > 0) {
-			return path.substring(path.lastIndexOf(seperator) + 1, liop);
+			return path.substring(path.lastIndexOf(SEPERATOR) + 1, liop);
 		}
 		return new String(path);
 	}
@@ -123,7 +133,7 @@ public class PathFormatter {
 	}
 
 	public static String getFilepath(String path) {
-		int liop = path.lastIndexOf(seperator);
+		int liop = path.lastIndexOf(SEPERATOR);
 		if (liop > 0) {
 			return path.substring(0, liop);
 		}
@@ -222,10 +232,10 @@ public class PathFormatter {
 			
 			if (! equal) {
 				String common = pathlist.get(0).substring(0, c);
-				if (common.lastIndexOf(seperatorChar) < 0) {
+				if (common.lastIndexOf(SEPERATOR_CHAR) < 0) {
 					return common;
 				} else {
-					return common.substring(0, common.lastIndexOf(seperatorChar) + 1);
+					return common.substring(0, common.lastIndexOf(SEPERATOR_CHAR) + 1);
 				}
 			}
 		}
@@ -307,41 +317,41 @@ public class PathFormatter {
 	}
 	
 	public static String appendSeparator(String path) {
-		if (path.endsWith(seperator)) return path;
+		if (path.endsWith(SEPERATOR)) return path;
 		
-		return path + seperator;
+		return path + SEPERATOR;
 	}
 	
 	public static String prependSeparator(String path) {
-		if (path.startsWith(seperator)) return path;
+		if (path.startsWith(SEPERATOR)) return path;
 		
-		return seperator + path;
+		return SEPERATOR + path;
 	}
 	
 	public static String appendAndPrependSeparator(String path) {
-		if (path.endsWith(seperator)){
-			if (path.startsWith(seperator)){
+		if (path.endsWith(SEPERATOR)){
+			if (path.startsWith(SEPERATOR)){
 				return path;
 			} else {
-				return seperator + path;
+				return SEPERATOR + path;
 			}
 		} else {
-			if (path.startsWith(seperator)){
-				return path + seperator;
+			if (path.startsWith(SEPERATOR)){
+				return path + SEPERATOR;
 			} else {
-				return seperator + path + seperator;
+				return SEPERATOR + path + SEPERATOR;
 			}
 		}
 	}
 	
 	public static String removeFinalSeparator(String path) {
-		if (path.endsWith(seperator)) return path.substring(0, path.length() - seperator.length());
+		if (path.endsWith(SEPERATOR)) return path.substring(0, path.length() - SEPERATOR.length());
 		
 		return path;
 	}
 	
 	public static String removeFirstSeparator(String path) {
-		if (path.startsWith(seperator)) return path.substring(1);
+		if (path.startsWith(SEPERATOR)) return path.substring(1);
 		
 		return path;
 	}
@@ -356,7 +366,7 @@ public class PathFormatter {
 		for (int i = 0; i < tail.length; i++) {
 			String element = removeFirstAndLastSeparator(tail[i]);
 			if (! element.isEmpty()) {
-				buildr.append(seperator);
+				buildr.append(SEPERATOR);
 				buildr.append(element);
 			}
 		}
@@ -365,6 +375,6 @@ public class PathFormatter {
 	}
 	
 	public static String combineAndAppend(String base, String... tail) {
-		return combine(base, tail) + seperator;
+		return combine(base, tail) + SEPERATOR;
 	}
 }

@@ -13,7 +13,8 @@ import de.jClipCorn.util.helper.RegExHelper;
 
 
 public class DriveMap {
-	private final static String REGEX_DRIVENAME_ESCAPE = " \\([A-Z]:\\)"; //$NON-NLS-1$
+	private final static String REGEX_DRIVENAME_ESCAPE = " \\([A-Z]:\\)"; //$NON-NLS-1$            // \([A-Z]:\)
+	private final static String REGEX_INVALID_DRIVE_CHARS = "[^A-Za-z0-9_ \\-]"; //$NON-NLS-1$      // [^A-Za-z0-9_ \-]
 	
 	private final static int MAX_DELAY_COUNT = 24; // = 24s
 	
@@ -93,7 +94,11 @@ public class DriveMap {
 	
 	private static String getDriveName(File f) {
 		String drive =  FileSystemView.getFileSystemView().getSystemDisplayName(f);
-		return RegExHelper.replace(REGEX_DRIVENAME_ESCAPE, drive, ""); //$NON-NLS-1$
+		
+		drive = RegExHelper.replace(REGEX_DRIVENAME_ESCAPE, drive, "");     //$NON-NLS-1$
+		drive = RegExHelper.replace(REGEX_INVALID_DRIVE_CHARS, drive, "_"); //$NON-NLS-1$
+		
+		return drive;
 	}
 	
 	private static boolean isFileSystem(File f) {

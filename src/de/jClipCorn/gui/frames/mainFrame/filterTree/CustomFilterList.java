@@ -32,7 +32,7 @@ public class CustomFilterList extends ArrayList<CustomFilterObject> {
 			b.append(get(i).exportToString());
 		}
 		
-		File f = new File(PathFormatter.getAbsolute(CCProperties.getInstance().PROP_MAINFRAME_FILTERLISTPATH.getValue()));
+		File f = new File(PathFormatter.fromCCPath(CCProperties.getInstance().PROP_MAINFRAME_FILTERLISTPATH.getValue()));
 		
 		try {
 			TextFileUtils.writeTextFile(f, b.toString());
@@ -42,7 +42,7 @@ public class CustomFilterList extends ArrayList<CustomFilterObject> {
 	}
 
 	public void load() {
-		File f = new File(PathFormatter.getAbsolute(CCProperties.getInstance().PROP_MAINFRAME_FILTERLISTPATH.getValue()));
+		File f = new File(PathFormatter.fromCCPath(CCProperties.getInstance().PROP_MAINFRAME_FILTERLISTPATH.getValue()));
 		
 		if (f.exists()) {
 			String txt;

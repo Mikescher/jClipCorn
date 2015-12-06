@@ -263,7 +263,7 @@ public class CCEpisode {
 	}
 	
 	public String getAbsolutePart() {
-		return PathFormatter.getAbsolute(getPart());
+		return PathFormatter.fromCCPath(getPart());
 	}
 
 	public CCMovieTags getTags() {

@@ -18,10 +18,6 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 
-import com.sun.image.codec.jpeg.ImageFormatException;
-import com.sun.image.codec.jpeg.JPEGCodec;
-import com.sun.image.codec.jpeg.JPEGImageEncoder;
-
 import de.jClipCorn.gui.CachedResourceLoader;
 import de.jClipCorn.gui.Resources;
 import de.jClipCorn.gui.log.CCLog;
@@ -264,16 +260,21 @@ public class ImageUtilities {
 	}
 	
 	public static byte[] imageToByteArray(BufferedImage bi) {
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder( baos );
+		
 		try {
-			encoder.encode(bi);
-		} catch (ImageFormatException | IOException e) {
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			
+			ImageIO.write(bi, "jpg", baos ); //$NON-NLS-1$
+			byte[] data = baos.toByteArray();
+			
+			baos.close();
+			
+			return data;
+		} catch (IOException e) {
 			CCLog.addError(e);
 			return null;
 		}
 		
-		return baos.toByteArray();
 	}
 	
 	public static BufferedImage byteArrayToImage(byte[] imgarr) {

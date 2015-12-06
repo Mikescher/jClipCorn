@@ -26,7 +26,7 @@ public class CustomFilterList extends ArrayList<CustomFilterObject> {
 		
 		for (int i = 0; i < size(); i++) {
 			if (i != 0) {
-				b.append("\r\n"); //$NON-NLS-1$
+				b.append(TextFileUtils.LINE_END);
 			}
 			
 			b.append(get(i).exportToString());
@@ -54,7 +54,7 @@ public class CustomFilterList extends ArrayList<CustomFilterObject> {
 				return;
 			}
 			
-			String[] lines = txt.split("\r\n"); //$NON-NLS-1$
+			String[] lines = TextFileUtils.splitLines(txt);
 			
 			for (int i = 0; i < lines.length; i++) {
 				lines[i] = lines[i].trim();

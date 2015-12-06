@@ -14,6 +14,8 @@ import java.nio.charset.Charset;
 public class TextFileUtils {	
 	public final static Charset CHARSET_UTF8 = Charset.forName("UTF-8"); //$NON-NLS-1$
 	
+	public final static String LINE_END = System.getProperty("line.separator"); //$NON-NLS-1$
+	
 	public static String readTextFile(InputStreamReader reader) throws IOException {
 		return readTextFile(new BufferedReader(reader));
 	}
@@ -42,7 +44,7 @@ public class TextFileUtils {
 
 			while ((s = reader.readLine()) != null) {
 				if (!first) {
-					content.append(System.getProperty("line.separator")); //$NON-NLS-1$
+					content.append(LINE_END);
 				}
 				content.append(s);
 				first = false;
@@ -68,7 +70,7 @@ public class TextFileUtils {
 
 			while ((s = reader.readLine()) != null) {
 				if (!first) {
-					content.append(System.getProperty("line.separator")); //$NON-NLS-1$
+					content.append(LINE_END);
 				}
 				content.append(s);
 				first = false;
@@ -101,5 +103,9 @@ public class TextFileUtils {
 		} finally {
 			if (bw != null) bw.close();
 		}
+	}
+
+	public static String[] splitLines(String text) {
+		return text.split("\\r?\\n"); //$NON-NLS-1$
 	}
 }

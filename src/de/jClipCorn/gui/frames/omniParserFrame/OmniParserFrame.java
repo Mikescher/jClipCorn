@@ -47,6 +47,7 @@ import de.jClipCorn.gui.Resources;
 import de.jClipCorn.gui.guiComponents.VerticalScrollPaneSynchronizer;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.formatter.PathFormatter;
+import de.jClipCorn.util.helper.TextFileUtils;
 import de.jClipCorn.util.listener.OmniParserCallbackListener;
 
 public class OmniParserFrame extends JFrame {
@@ -391,7 +392,7 @@ public class OmniParserFrame extends JFrame {
 			StringBuilder result = new StringBuilder();
 			
 			for (int i = 0; i < list.length; i++) {
-				if (i > 0) result.append("\n"); //$NON-NLS-1$
+				if (i > 0) result.append(TextFileUtils.LINE_END);
 				result.append(list[i]);
 			}
 			
@@ -430,7 +431,7 @@ public class OmniParserFrame extends JFrame {
 			StringBuilder result = new StringBuilder();
 			
 			for (int i = 0; i < list.length; i++) {
-				if (i > 0) result.append("\n"); //$NON-NLS-1$
+				if (i > 0) result.append(TextFileUtils.LINE_END);
 				result.append(PathFormatter.getWithoutExtension(list[i]));
 			}
 			
@@ -471,11 +472,8 @@ public class OmniParserFrame extends JFrame {
 	
 	private void updateCompareTable() {
 		String input = memoParsedText.getText();
-		
-		input.replace("\r\n", "\n"); //$NON-NLS-1$ //$NON-NLS-2$
-		input.replace("\n\r", "\n"); //$NON-NLS-1$ //$NON-NLS-2$
 
-		List<String> list = new ArrayList<>(Arrays.asList(input.split("\n"))); //$NON-NLS-1$
+		List<String> list = new ArrayList<>(Arrays.asList(TextFileUtils.splitLines(input)));
 		
 		DefaultTableModel model = new DefaultTableModel(old_titles.size(), 2);
 		model.setColumnIdentifiers(COLUMN_HEADERS);
@@ -491,9 +489,6 @@ public class OmniParserFrame extends JFrame {
 	private ArrayList<String> getTitleList() {
 		String input = memoParsedText.getText();
 		
-		input.replace("\r\n", "\n"); //$NON-NLS-1$ //$NON-NLS-2$
-		input.replace("\n\r", "\n"); //$NON-NLS-1$ //$NON-NLS-2$
-		
-		return new ArrayList<>(Arrays.asList(input.split("\n"))); //$NON-NLS-1$
+		return new ArrayList<>(Arrays.asList(TextFileUtils.splitLines(input)));
 	}
 }

@@ -5,6 +5,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import de.jClipCorn.util.helper.TextFileUtils;
+
 public class OmniTextParser {
 
 	@SuppressWarnings("nls")
@@ -46,7 +48,7 @@ public class OmniTextParser {
 
 		for (int i = 0; i < list.size(); i++) {
 			if (i > 0)
-				result.append("\n"); //$NON-NLS-1$
+				result.append(TextFileUtils.LINE_END);
 			result.append(list.get(i));
 		}
 
@@ -54,10 +56,7 @@ public class OmniTextParser {
 	}
 
 	private static List<String> parseList(String input, boolean replaceUmlauts, boolean removeInfoStrings, boolean replaceSpaceAlts, boolean removeCommons) {
-		input.replace("\r\n", "\n"); //$NON-NLS-1$ //$NON-NLS-2$
-		input.replace("\n\r", "\n"); //$NON-NLS-1$ //$NON-NLS-2$
-
-		List<String> list = new ArrayList<>(Arrays.asList(input.split("\n"))); //$NON-NLS-1$
+		List<String> list = new ArrayList<>(Arrays.asList(TextFileUtils.splitLines(input)));
 		
 		trimList(list);
 		cleanUpList(list);

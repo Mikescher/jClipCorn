@@ -82,7 +82,7 @@ public class AboutFrame extends JFrame implements ComponentListener {
 			return;
 		}
 		
-		for (String line : libs.split("\r\n")) { //$NON-NLS-1$
+		for (String line : TextFileUtils.splitLines(libs)) {
 			if (line.isEmpty()) continue;
 			
 			dlm.addElement(line);

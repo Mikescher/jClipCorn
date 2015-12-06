@@ -602,7 +602,7 @@ public class DatabaseValidator {
 		Collections.sort(flList);
 		
 		for (int i = 1; i < flList.size(); i++) {
-			if (flList.get(i).equalsPath(flList.get(i-1))) {
+			if (!flList.get(i).getPath().isEmpty() && flList.get(i).equalsPath(flList.get(i-1))) {
 				e.add(DatabaseError.createDouble(DatabaseErrorType.ERROR_DUPLICATE_FILELINK, flList.get(i-1).getElement(), flList.get(i).getElement()));
 			}
 			

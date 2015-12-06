@@ -68,5 +68,8 @@ jClipCorn.*
 *.exe
 *.7z
 *.zip
+
+jClipCornPermissionTest.emptyfile
+
 jClipCorn Wiki
 jClipCorn Wiki/*

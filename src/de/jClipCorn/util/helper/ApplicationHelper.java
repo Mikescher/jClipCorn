@@ -52,7 +52,8 @@ public class ApplicationHelper {
 	}
 
 	public static void exitApplication(int errorcode) {
-		MainFrame.getInstance().terminate();
+		MainFrame inst = MainFrame.getInstance();
+		if (inst != null) inst.terminate();
 		System.exit(errorcode);
 	}
 

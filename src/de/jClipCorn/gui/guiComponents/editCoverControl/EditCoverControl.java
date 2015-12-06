@@ -138,7 +138,7 @@ public class EditCoverControl extends AbstractEditCoverControl {
 				showCropDialog();
 			}
 		});
-		btnCrop.setBounds(0, 0, 60, 23);
+		btnCrop.setBounds(0, 0, 70, 23);
 		add(btnCrop);
 
 		setSize(CTRL_WIDTH, CTRL_HEIGHT);

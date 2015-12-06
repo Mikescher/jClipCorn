@@ -16,7 +16,7 @@ import de.jClipCorn.util.helper.LookAndFeelManager;
 public class Main {
 	public final static String TITLE = "jClipCorn"; //$NON-NLS-1$
 	public final static String VERSION = "1.10";	//$NON-NLS-1$
-	public final static String DBVERSION = "1.7"; 	//$NON-NLS-1$
+	public final static String DBVERSION = "1.6"; 	//$NON-NLS-1$
 	
 	private final static String PROPERTIES_PATH = "jClipcorn.properties"; //$NON-NLS-1$
 	
@@ -99,7 +99,9 @@ public class Main {
 
 //TODO autom find IMDb Score discrepancies (search Movie on imdb -> if found compare score) ~ not in CheckDB (too long) but own dialog
 
+//TODO save paths file-sep independent (move, episode + settings)
 //TODO Put DB Version in DB (-> show warning) ... useful for auto upgrade
 //TODO Cover mit höherer Auflösung
 //TODO All Views von Episoden (und Filmen speichern)  --> ermöglicht LastViewed + FirstViewed
 //       - New DB Version (dann auch gleich index für staffeln einführen)
+

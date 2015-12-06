@@ -351,7 +351,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		getContentPane().add(cbxGenre0);
 		
 		label_7 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGenre.text")); //$NON-NLS-1$
-		label_7.setBounds(418, 14, 52, 16);
+		label_7.setBounds(418, 14, 60, 16);
 		getContentPane().add(label_7);
 		
 		cbxGenre1 = new JComboBox<>();
@@ -359,7 +359,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		getContentPane().add(cbxGenre1);
 		
 		label_8 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGenre_1.text")); //$NON-NLS-1$
-		label_8.setBounds(418, 50, 52, 16);
+		label_8.setBounds(418, 50, 60, 16);
 		getContentPane().add(label_8);
 		
 		cbxGenre2 = new JComboBox<>();
@@ -367,7 +367,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		getContentPane().add(cbxGenre2);
 		
 		label_9 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGenre_2.text")); //$NON-NLS-1$
-		label_9.setBounds(418, 86, 52, 16);
+		label_9.setBounds(418, 86, 60, 16);
 		getContentPane().add(label_9);
 		
 		cbxGenre3 = new JComboBox<>();
@@ -375,7 +375,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		getContentPane().add(cbxGenre3);
 		
 		label_10 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGenre_3.text")); //$NON-NLS-1$
-		label_10.setBounds(418, 121, 52, 16);
+		label_10.setBounds(418, 121, 60, 16);
 		getContentPane().add(label_10);
 		
 		cbxGenre7 = new JComboBox<>();
@@ -383,19 +383,19 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		getContentPane().add(cbxGenre7);
 		
 		label_11 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGenre_7.text")); //$NON-NLS-1$
-		label_11.setBounds(418, 263, 52, 16);
+		label_11.setBounds(418, 263, 60, 16);
 		getContentPane().add(label_11);
 		
 		label_12 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGenre_6.text")); //$NON-NLS-1$
-		label_12.setBounds(418, 228, 52, 16);
+		label_12.setBounds(418, 228, 60, 16);
 		getContentPane().add(label_12);
 		
 		label_13 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGenre_5.text")); //$NON-NLS-1$
-		label_13.setBounds(418, 192, 52, 16);
+		label_13.setBounds(418, 192, 60, 16);
 		getContentPane().add(label_13);
 		
 		label_14 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGenre_4.text")); //$NON-NLS-1$
-		label_14.setBounds(418, 156, 52, 16);
+		label_14.setBounds(418, 156, 60, 16);
 		getContentPane().add(label_14);
 		
 		cbxGenre4 = new JComboBox<>();
@@ -510,7 +510,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		getContentPane().add(label_27);
 		
 		label_28 = new JLabel("Byte = "); //$NON-NLS-1$
-		label_28.setBounds(294, 647, 37, 16);
+		label_28.setBounds(294, 647, 60, 16);
 		getContentPane().add(label_28);
 		
 		btnOK = new JButton(LocaleBundle.getString("AddMovieFrame.btnOK.text")); //$NON-NLS-1$
@@ -558,7 +558,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		getContentPane().add(btnIMDB);
 		
 		lblFileSizeDisp = new JLabel();
-		lblFileSizeDisp.setBounds(341, 647, 129, 16);
+		lblFileSizeDisp.setBounds(355, 647, 129, 16);
 		getContentPane().add(lblFileSizeDisp);
 		
 		lblMID = new JLabel();
@@ -566,6 +566,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		getContentPane().add(lblMID);
 		
 		btnRecalculateSize = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnRecalcSizes.text")); //$NON-NLS-1$
+		btnRecalculateSize.setToolTipText(LocaleBundle.getString("AddEpisodeFrame.btnRecalcSizes.text")); //$NON-NLS-1$
 		btnRecalculateSize.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {

@@ -178,6 +178,48 @@ public class DatabaseError {
 			return fixError_Impossible_WatchNever();
 		} else if (isTypeOf(DatabaseErrorType.ERROR_DUPLICATE_GENRE)) {
 			return fixError_Duplicate_Genre();
+		} else if (isTypeOf(DatabaseErrorType.ERROR_INVALID_CHARS_IN_PATH)) {
+			return fixError_Invalid_Chars();
+		}
+		
+		return false;
+	}
+	
+	private boolean fixError_Invalid_Chars() {
+		if (el1 instanceof CCMovie) {
+			CCMovie mov = (CCMovie) el1;
+			
+			for (int i = 0; i < CCMovie.PARTCOUNT_MAX; i++) {
+				if (! mov.getPart(i).isEmpty()) {
+					String old = mov.getPart(i);
+					String abs = mov.getAbsolutePart(i);
+					String rel = PathFormatter.getCCPath(abs.replace("\\", PathFormatter.SERIALIZATION_SEPERATOR), CCProperties.getInstance().PROP_ADD_MOVIE_RELATIVE_AUTO.getValue()); //$NON-NLS-1$
+				
+					if (old.length() == rel.length() && rel.length() > 3) {
+						mov.setPart(i, rel);
+					} else {
+						return false;
+					}
+				}
+			}
+			
+			return true;
+		} else if (el1 instanceof CCEpisode) {
+			CCEpisode episode = (CCEpisode) el1;
+			
+			if (! episode.getPart().isEmpty()) {
+				String old = episode.getPart();
+				String abs = episode.getAbsolutePart();
+				String rel = PathFormatter.getCCPath(abs.replace("\\", PathFormatter.SERIALIZATION_SEPERATOR), CCProperties.getInstance().PROP_ADD_MOVIE_RELATIVE_AUTO.getValue()); //$NON-NLS-1$
+			
+				if (old.length() == rel.length() && rel.length() > 3) {
+					episode.setPart(rel);
+				} else {
+					return false;
+				}
+			}
+			
+			return true;
 		}
 		
 		return false;

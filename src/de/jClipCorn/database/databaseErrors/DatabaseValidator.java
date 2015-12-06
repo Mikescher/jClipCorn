@@ -346,6 +346,17 @@ public class DatabaseValidator {
 				break;
 			}
 		}
+		
+		// ###############################################
+		// Invalid path characters
+		// ###############################################
+		
+		for (int i = 0; i < CCMovie.PARTCOUNT_MAX; i++) {
+			if (PathFormatter.containsIllegalPathSymbols(mov.getPart(i))){
+				e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_INVALID_CHARS_IN_PATH, mov));
+				break;
+			}
+		}
 	}
 
 	private static void validateSeason(List<DatabaseError> e, CCMovieList movielist, CCSeason season) {
@@ -487,6 +498,14 @@ public class DatabaseValidator {
 		
 		if (CCProperties.getInstance().PROP_VALIDATE_CHECK_SERIES_STRUCTURE.getValue() && ! episode.checkFolderStructure()) {
 			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_INVALID_SERIES_STRUCTURE, episode));
+		}
+		
+		// ###############################################
+		// Invalid path characters
+		// ###############################################
+
+		if (PathFormatter.containsIllegalPathSymbols(episode.getPart())){
+			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_INVALID_CHARS_IN_PATH, episode));
 		}
 	}
 

@@ -21,12 +21,14 @@ public class PathFormatter {
 	
 	public static final String SERIALIZATION_SEPERATOR = "/";
 	
-	private final static ArrayList<Character> VALIDFILENAMECHARS = new ArrayList<>(Arrays.asList(
+	private final static ArrayList<Character> VALID_FILENAME_CHARS = new ArrayList<>(Arrays.asList(
 		'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'Ä', 'Ö', 'Ü',
 		'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'ä', 'ö', 'ü',
 		'0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
 		' ', '!', '#', '&', '\'', '(', ')', '+', ',', '-', '.', ';', '=', '@', '[', ']', '^', '_', '`', '{', '}', 'ß'
 	));
+	
+	private final static ArrayList<Character> INVALID_PATH_CHARS = new ArrayList<>(Arrays.asList('\\', '"', '<', '>', '?', ':', '*', '|'));
 	
 	private final static String TESTFILE_NAME = "jClipCornPermissionTest.emptyfile";
 	
@@ -170,7 +172,7 @@ public class PathFormatter {
 		StringBuilder fnbuilder = new StringBuilder();
 		
 		for (int i = 0; i < fn.length(); i++) {
-			if (VALIDFILENAMECHARS.contains(fn.charAt(i))) {
+			if (VALID_FILENAME_CHARS.contains(fn.charAt(i))) {
 				fnbuilder.append(fn.charAt(i));
 			}
 		}
@@ -376,5 +378,25 @@ public class PathFormatter {
 	
 	public static String combineAndAppend(String base, String... tail) {
 		return combine(base, tail) + SEPERATOR;
+	}
+
+	public static boolean containsIllegalPathSymbols(String rPath) {
+		if (rPath.isEmpty()) return false;
+		
+		if (RegExHelper.startsWithRegEx(REGEX_SELF, rPath)) {
+			rPath =  RegExHelper.replace(REGEX_SELF, rPath, "");
+		} else if (RegExHelper.startsWithRegEx(REGEX_DRIVENAME, rPath)) {
+			rPath = RegExHelper.replace(REGEX_DRIVENAME, rPath, "");
+		} else if (RegExHelper.startsWithRegEx(REGEX_DRIVELETTER, rPath)) {
+			rPath = RegExHelper.replace(REGEX_DRIVELETTER, rPath, "");
+		} else if (RegExHelper.startsWithRegEx(REGEX_SELFDRIVE, rPath)) {
+			rPath = RegExHelper.replace(REGEX_SELFDRIVE, rPath, "");
+		}
+		
+		for (Character chr : INVALID_PATH_CHARS) {
+			if (rPath.indexOf(chr) >= 0) return true;
+		}
+		
+		return false;
 	}
 }

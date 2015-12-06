@@ -45,6 +45,7 @@ public class UserDataProblem {
 	public final static int PROBLEM_TITLE_ALREADYEXISTS = 21;
 	public final static int PROBLEM_FILE_ALREADYEXISTS = 22;
 	public final static int PROBLEM_DUPLICATE_GENRE = 23;
+	public final static int PROBLEM_INVALID_PATH_CHARACTERS = 24;
 	
 	private final int pid; // Problem ID
 	
@@ -278,6 +279,18 @@ public class UserDataProblem {
 				}
 			}
 		}
+		
+		//################################################################################################################
+		
+		if (PathFormatter.containsIllegalPathSymbols(p0) || 
+				PathFormatter.containsIllegalPathSymbols(p1) || 
+				PathFormatter.containsIllegalPathSymbols(p2) || 
+				PathFormatter.containsIllegalPathSymbols(p3) || 
+				PathFormatter.containsIllegalPathSymbols(p4) || 
+				PathFormatter.containsIllegalPathSymbols(p5)) {
+			
+			ret.add(new UserDataProblem(PROBLEM_INVALID_PATH_CHARACTERS));
+		}
 	}
 	
 	public static void testSeriesData(List<UserDataProblem> ret, BufferedImage cvr, String title, int oscore, int gen0, int gen1, int gen2, int gen3, int gen4, int gen5, int gen6, int gen7, int fskidx) {
@@ -450,6 +463,13 @@ public class UserDataProblem {
 		
 		if (PathFormatter.isUntrimmed(title)) {
 			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_ZYKLUSORTITLE_HAS_LEADINGORTRAILING_SPACES));
+		}
+
+		//################################################################################################################
+		
+		if (PathFormatter.containsIllegalPathSymbols(part)) {
+			
+			ret.add(new UserDataProblem(PROBLEM_INVALID_PATH_CHARACTERS));
 		}
 	}
 	

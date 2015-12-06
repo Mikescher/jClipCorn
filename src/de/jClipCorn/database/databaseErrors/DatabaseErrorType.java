@@ -31,6 +31,7 @@ public class DatabaseErrorType {
 	public static DatabaseErrorType ERROR_INVALID_SERIES_STRUCTURE = new DatabaseErrorType(26);
 	public static DatabaseErrorType ERROR_IMPOSSIBLE_WATCH_NEVER = new DatabaseErrorType(27);
 	public static DatabaseErrorType ERROR_DUPLICATE_GENRE = new DatabaseErrorType(28);
+	public static DatabaseErrorType ERROR_INVALID_CHARS_IN_PATH = new DatabaseErrorType(29);
 	
 	private final int type;
 	private int count = 0;
@@ -90,6 +91,8 @@ public class DatabaseErrorType {
 		} else if (equals(ERROR_IMPOSSIBLE_WATCH_NEVER)) {
 			return true;
 		} else if (equals(ERROR_DUPLICATE_GENRE)) {
+			return true;
+		} else if (equals(ERROR_INVALID_CHARS_IN_PATH)) {
 			return true;
 		}
 		

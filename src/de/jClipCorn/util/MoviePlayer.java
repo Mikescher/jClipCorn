@@ -84,8 +84,12 @@ public class MoviePlayer {
 				parameters.add("--no-playlist-autostart");
 			}
 			
-			for (String s : abspaths) {
-				parameters.add("\"" + s.replace("/", "\\") + "\""); //TODO Cross plattform
+			for (String abspath : abspaths) {
+				if (ApplicationHelper.isWindows()) {
+					parameters.add("\"" + abspath + "\"");
+				} else {
+					parameters.add(abspath);
+				}
 			}
 			
 			try {

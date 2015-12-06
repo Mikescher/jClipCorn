@@ -53,6 +53,7 @@ public class Resources {
 	public final static String ICN_MENUBAR_IMDB						= registerICN("/icons/toolbar/imdb.png");
 	public final static String ICN_MENUBAR_EXPORTPLAINDB			= registerICN("/icons/toolbar/external.png");
 	public final static String ICN_MENUBAR_OPENFILE					= registerICN("/icons/toolbar/open_folder.png");
+	public final static String ICN_MENUBAR_RESTARTAPP				= registerICN("/icons/toolbar/recycle_bag.png");
 	public final static String ICN_MENUBAR_IMPORTDB					= registerICN("/icons/toolbar/source_code_bullet_down.png");
 	public final static String ICN_MENUBAR_IMPORMULTIPLEELEMENTS	= registerICN("/icons/toolbar/file_manager_bullet_add.png");
 	public final static String ICN_MENUBAR_IMPORTMOVIE				= registerICN("/icons/toolbar/script_bullet_add_mov.png");

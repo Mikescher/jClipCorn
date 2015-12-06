@@ -56,6 +56,7 @@ import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.UpdateConnector;
 import de.jClipCorn.util.formatter.PathFormatter;
+import de.jClipCorn.util.helper.ApplicationHelper;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.helper.FileChooserHelper;
 import de.jClipCorn.util.helper.HTTPUtilities;
@@ -99,6 +100,14 @@ public class CCActionTree {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				onClickFileOpen();
+			}
+		});
+		
+		temp = file.addChild(new CCActionElement("Restart", null, "ClipMenuBar.File.Restart", Resources.ICN_MENUBAR_RESTARTAPP));
+		temp.addListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				onClickFileRestart();
 			}
 		});
 		
@@ -686,10 +695,13 @@ public class CCActionTree {
 			}
 		}
 	}
+
+	private void onClickFileRestart() {
+		ApplicationHelper.restartApplication();
+	}
 	
 	private void onClickFileExit() {
-		owner.terminate();
-		owner.dispose();
+		ApplicationHelper.exitApplication();
 	}
 
 	private void onClickExtrasXML() {

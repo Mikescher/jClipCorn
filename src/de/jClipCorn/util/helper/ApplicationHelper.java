@@ -53,7 +53,10 @@ public class ApplicationHelper {
 
 	public static void exitApplication(int errorcode) {
 		MainFrame inst = MainFrame.getInstance();
-		if (inst != null) inst.terminate();
+		if (inst != null) {
+			inst.terminate();
+			inst.dispose();
+		}
 		System.exit(errorcode);
 	}
 

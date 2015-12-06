@@ -738,6 +738,10 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 	private void onBtnOK(boolean check) {
 		List<UserDataProblem> problems = new ArrayList<>();
 		
+		// some problems are too fatal
+		if (! edCvrControl.isCoverSet()) check = false;
+		if (edTitle.getText().isEmpty()) check = false;
+		
 		boolean probvalue = (! check) || checkUserData(problems);
 		
 		if (! probvalue) {

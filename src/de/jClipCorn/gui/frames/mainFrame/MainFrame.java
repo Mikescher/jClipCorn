@@ -153,7 +153,10 @@ public class MainFrame extends JFrame implements CCDBUpdateListener {
 
 		pack();
 		
-		setSize(875, 640);
+		if (LookAndFeelManager.isMetal())
+			setSize(875, 650);
+		else
+			setSize(875, 640);
 	}
 	
 	public void beginBlockingIntermediate() {
@@ -334,8 +337,8 @@ public class MainFrame extends JFrame implements CCDBUpdateListener {
 		filterTree.reset();
 	}
 	
-	public void resetSearchField() {
-		edSearch.reset();
+	public void resetSearchField(boolean force) {
+		edSearch.reset(force);
 	}
 
 	@Override

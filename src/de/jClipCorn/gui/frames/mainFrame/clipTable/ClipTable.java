@@ -237,7 +237,7 @@ public class ClipTable extends JScrollPane implements CCDBUpdateListener, ListSe
 			owner.resetSidebar();
 		}
 		if (source != RowFilterSource.TEXTFIELD) {
-			owner.resetSearchField();
+			owner.resetSearchField(true);
 		}
 		
 		((TableRowSorter<ClipTableModel>) table.getRowSorter()).setRowFilter(filter);

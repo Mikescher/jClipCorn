@@ -149,5 +149,6 @@ public abstract class AbstractFilterTree extends JScrollPane implements TreeSele
 	public void reset() {
 		collapseAll();
 		tree.getSelectionModel().clearSelection();
+		getVerticalScrollBar().setValue(0);
 	}
 }

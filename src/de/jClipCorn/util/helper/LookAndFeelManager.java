@@ -20,8 +20,9 @@ import de.jClipCorn.gui.log.CCLog;
 public class LookAndFeelManager {
 	public final static int ID_LNF_WINDOWS = 0;
 	public final static int ID_LNF_METAL   = 1;
-	
+
 	private static boolean isSubstance = false;
+	private static boolean isMetal = false;
 	
 	private static List<Entry<String, SkinInfo>> substanceLookAndFeelCache = null;
 	
@@ -38,10 +39,12 @@ public class LookAndFeelManager {
 		case 0:
 			setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 			isSubstance = false;
+			isMetal = false;
 			break;
 		case 1:
 			setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
 			isSubstance = false;
+			isMetal = true;
 			break;
 		default:
 			String subLNF = getSubstanceLookAndFeel(propertynumber - 2);
@@ -51,6 +54,7 @@ public class LookAndFeelManager {
 				SubstanceLookAndFeel.setSkin(subLNF);
 			}
 			isSubstance = true;
+			isMetal = false;
 			break;
 		}
 	}
@@ -86,6 +90,10 @@ public class LookAndFeelManager {
 
 	public static boolean isSubstance() {
 		return isSubstance;
+	}
+
+	public static boolean isMetal() {
+		return isMetal;
 	}
 	
 	public static void printAllColorKeys() {

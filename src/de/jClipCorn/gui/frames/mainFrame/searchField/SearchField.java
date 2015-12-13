@@ -23,7 +23,7 @@ public class SearchField extends JTextField implements FocusListener, DocumentLi
 	public SearchField(MainFrame owner) {
 		super();
 		this.owner = owner;
-		reset();
+		reset(false);
 
 		addFocusListener(this);
 		getDocument().addDocumentListener(this);
@@ -41,7 +41,7 @@ public class SearchField extends JTextField implements FocusListener, DocumentLi
 	@Override
 	public void focusLost(FocusEvent arg0) {
 		if (getText().isEmpty()) {
-			reset();
+			reset(false);
 		}
 	}
 	
@@ -59,8 +59,8 @@ public class SearchField extends JTextField implements FocusListener, DocumentLi
 		return new Color((r1 + r2) / 2, (g1 + g2) / 2, (b1 + b2) / 2);
 	}
 
-	public void reset() {
-		if (!hasFocus()) {
+	public void reset(boolean force) {
+		if (!hasFocus() || force) {
 			setText(EMPTY_VAL);
 			
 			setForeground(getInactiveColor());

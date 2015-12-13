@@ -38,6 +38,7 @@ public class FullClipCharSortSelector extends AbstractClipCharSortSelector {
 		for(int i = 0; i < BUTTONCOUNT; i++) {
 			buttons[i] = new JButton(captions[i]);
 			buttons[i].setMargin(new Insets(0, 0, 0, 0));
+			buttons[i].setBorderPainted(false);
 		}
 	}
 	

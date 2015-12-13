@@ -1,3 +1,35 @@
+############ 2015-12-13: 1.9.7 Feature: Automatic UI LnF selection on first start
+
+############ 2015-12-13: 1.9.7 Feature: Automatic parse google image results for cover (manual jsoup-ing)
+
+############ 2015-12-13: 1.9.7 Task: IMDB Parsing works again (new IMDB website layout)
+
+############ 2015-12-13: 1.9.7 Feature: Better Dialog InitialPath in addEpisodeFrame on empty series
+
+############ 2015-12-06: 1.9.7 Task: Don't show duplicate file error if file not found (absPath = empty)
+
+############ 2015-12-06: 1.9.7 Bugfix: Fixed VLC Parameter under Linux
+
+############ 2015-12-06: 1.9.7 Feature: Added Restart ActionTree entry
+
+############ 2015-12-06: 1.9.7 Bugfix: Fixed Write permission prblems on linux
+
+############ 2015-12-06: 1.9.7 Feature: Added defaul VLC Path for Unix
+
+############ 2015-12-06: 1.9.7 Feature: Check for invalid file names (and added auto-fixer for DatabaseError)
+
+############ 2015-12-06: 1.9.7 Feature: Save paths filesystem independent (always forward-slash)
+
+############ 2015-12-06: 1.9.7 Bugfix: Fixed AV on add cover-less movie (you can still shoot yourself in the foot by clicking ignore - but a missing cover was quite fatal)
+
+############ 2015-12-06: 1.9.7 Task: Updated a vene more frames to look better with [[Metal]]-design
+
+############ 2015-12-06: 1.9.7 Task: Updated a few frames to look better with [[Metal]]-design
+
+############ 2015-12-06: 1.9.7 Bugfix: Fixed line endings (r/w) on unixoid systems
+
+############ 2015-12-05: 1.9.6 RELEASE
+
 ############ 2015-12-05: 1.9.6 Other: Updated README imagees
 
 ############ 2015-12-05: 1.9.6 Feature: Filter (some) statistics by year

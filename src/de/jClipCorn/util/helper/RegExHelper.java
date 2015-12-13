@@ -20,9 +20,13 @@ public class RegExHelper {
 	}
 
 	public static String find(String regEx, String input) {
+		return find(regEx, input, 0);
+	}
+
+	public static String find(String regEx, String input, int group) {
 		Matcher matcher = Pattern.compile(regEx).matcher(input);
 		if (matcher.find()) {
-			return matcher.group();
+			return matcher.group(group);
 		}
 		return "";
 	}

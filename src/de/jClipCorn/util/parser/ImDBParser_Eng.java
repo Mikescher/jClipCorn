@@ -36,6 +36,7 @@ public class ImDBParser_Eng {
 	private final static String REGEX_FSK_BRACKETS = "\\([^\\)]*\\)"; // \([^\)]*\)
 	private final static String REGEX_COVER_URL = "/media/rm[0-9]+?/tt[0-9]+";
 	private final static String REGEX_SEARCH_URL = "/title/tt[0-9]+/"; // /title/tt[0-9]+/
+	private final static String REGEX_ALT_YEAR = ".*\\(([0-9]{4})\\)";  // .*\(([0-9]{4})\)
 	
 	private final static String FSK_STANDARD_1 = "Germany";
 	private final static String FSK_STANDARD_2 = "West Germany";
@@ -51,6 +52,10 @@ public class ImDBParser_Eng {
 	private final static String JSOUP_COVER = "div[class=image] a[href~=/media/rm[0-9]+?/tt[0-9]+.*]";
 	private final static String JSOUP_COVER_DIRECT = "img#primary-img[src]";
 
+	private final static String JSOUP_ALT_TITLE = "h1[itemprop=name]";
+	private final static String JSOUP_ALT_YEAR = "meta[property=og:title][content~=.*\\([0-9]{4}\\)]"; // meta[property=og:title][content~=.*\([0-9]{4}\)]
+	private final static String JSOUP_ALT_COVER = "div[class=poster] a[href~=/media/rm[0-9]+?/tt[0-9]+.*]";
+	
 	public static String getSearchURL(String title, CCMovieTyp typ) {
 		if (typ == null) {
 			return String.format(BASE_URL + SEARCH_URL_A, HTTPUtilities.escapeURL(title));
@@ -98,7 +103,11 @@ public class ImDBParser_Eng {
 	}
 	
 	public static String getTitle(String html) {
-		return getContentBySelector(html, JSOUP_TITLE);
+		String cnt = getContentBySelector(html, JSOUP_TITLE);
+		
+		if (cnt.isEmpty()) cnt = getContentBySelector(html, JSOUP_ALT_TITLE);
+		
+		return cnt;
 	}
 	
 	public static int getYear(String html) {
@@ -107,6 +116,13 @@ public class ImDBParser_Eng {
 		try {
 			return Integer.parseInt(y);
 		} catch (NumberFormatException e) {
+			y = getAttrBySelector(html, JSOUP_ALT_YEAR, "content").trim();
+			
+			y = RegExHelper.find(REGEX_ALT_YEAR, y, 1);
+			if (! y.isEmpty()) {
+				return Integer.parseInt(y);
+			}
+			
 			return 0;
 		}
 	}
@@ -201,7 +217,13 @@ public class ImDBParser_Eng {
 	}
 	
 	public static BufferedImage getCover(String html) {
-		String cpageurl = BASE_URL + RegExHelper.find(REGEX_COVER_URL, getAttrBySelector(html, JSOUP_COVER, "href"));
+		String find = RegExHelper.find(REGEX_COVER_URL, getAttrBySelector(html, JSOUP_COVER, "href"));
+		
+		if (find.isEmpty()) {
+			find = RegExHelper.find(REGEX_COVER_URL, getAttrBySelector(html, JSOUP_ALT_COVER, "href"));
+		}
+			
+		String cpageurl = BASE_URL + find;
 		
 		String cpagehtml = HTTPUtilities.getHTML(cpageurl, true);
 		

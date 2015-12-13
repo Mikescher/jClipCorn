@@ -171,7 +171,7 @@ public class ParseImDBDialog extends JDialog {
 				}
 			}
 		});
-		edSearchName.setBounds(10, 11, 552, 20);
+		edSearchName.setBounds(10, 11, 525, 20);
 		panel.add(edSearchName);
 		edSearchName.setColumns(10);
 		
@@ -182,7 +182,7 @@ public class ParseImDBDialog extends JDialog {
 				startGetImDBList(false);
 			}
 		});
-		btnParse.setBounds(572, 10, 89, 23);
+		btnParse.setBounds(547, 10, 89, 23);
 		panel.add(btnParse);
 		
 		pnlMain = new JPanel();
@@ -383,7 +383,7 @@ public class ParseImDBDialog extends JDialog {
 				}
 			}
 		});
-		btnIMDB.setBounds(6, 190, 83, 23);
+		btnIMDB.setBounds(6, 190, 94, 23);
 		pnlMain.add(btnIMDB);
 		
 		btnOk = new JButton(LocaleBundle.getString("parseImDBFrame.btnOK.text")); //$NON-NLS-1$
@@ -404,7 +404,7 @@ public class ParseImDBDialog extends JDialog {
 				showAllRatingsDialog();
 			}
 		});
-		btnFSKAll.setBounds(6, 219, 83, 23);
+		btnFSKAll.setBounds(6, 219, 94, 23);
 		pnlMain.add(btnFSKAll);
 		
 		pbarSearch = new JProgressBar();
@@ -418,7 +418,7 @@ public class ParseImDBDialog extends JDialog {
 				startGetImDBList(true);
 			}
 		});
-		btnExtendedParse.setBounds(671, 10, 122, 23);
+		btnExtendedParse.setBounds(648, 10, 145, 23);
 		panel.add(btnExtendedParse);
 	}
 	

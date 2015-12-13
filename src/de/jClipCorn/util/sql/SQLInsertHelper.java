@@ -28,10 +28,10 @@ public class SQLInsertHelper extends SQLHelper {
 				cnames.append(", ");
 				cvals.append(", ");
 			}
-			cnames.append(fields.get(i).get1());
-			cvals.append(fields.get(i).get2());
+			cnames.append(sqlEscape(fields.get(i).get1()));
+			cvals.append(sqlEscape(fields.get(i).get2()));
 		}
 
-		return String.format(rformat, tabname, cnames.toString(), cvals.toString());
+		return String.format(rformat, sqlEscape(tabname), cnames.toString(), cvals.toString());
 	}
 }

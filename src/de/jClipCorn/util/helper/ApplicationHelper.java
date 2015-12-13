@@ -80,4 +80,8 @@ public class ApplicationHelper {
 
 		return os_property.indexOf("mac") >= 0;
 	}
+
+	public static String getCurrentUsername() {
+		return System.getProperty("user.name"); //$NON-NLS-1$
+	}
 }

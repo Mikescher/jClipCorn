@@ -3,9 +3,9 @@ package de.jClipCorn.util;
 import java.util.Calendar;
 
 public class CCTime {
-	private final static String STRINGREP_SHORT = "HH:MM"; //$NON-NLS-1$
-	private final static String STRINGREP_SIMPLE = "HH:MM:SS"; //$NON-NLS-1$
-	private final static String STRINGREP_AMPM = "PP:MM:SS A"; //$NON-NLS-1$
+	public final static String STRINGREP_SHORT = "HH:MM"; //$NON-NLS-1$
+	public final static String STRINGREP_SIMPLE = "HH:MM:SS"; //$NON-NLS-1$
+	public final static String STRINGREP_AMPM = "PP:MM:SS A"; //$NON-NLS-1$
 	
 	private int hour;
 	private int min;
@@ -238,7 +238,22 @@ public class CCTime {
 	 * S	=> SECOND
 	 * @return
 	 */
-	public boolean parse(String rawData, String fmt) {
+	public static CCTime parse(String rawData, String fmt) {
+		CCTime c = new CCTime();
+		c.parseData(rawData, fmt);
+		return c;
+	}
+	
+	/**
+	 * @param rawData parseable DATA
+	 * @param fmt Format of rawData 
+	 * eg "H:M:S"
+	 * H	=> HOUR
+	 * M	=> MINUTE
+	 * S	=> SECOND
+	 * @return
+	 */
+	public boolean parseData(String rawData, String fmt) {
 		char c;
 		int rp = 0;
 		
@@ -281,6 +296,10 @@ public class CCTime {
 		}
 		
 		return set(th, tm, ts);
+	}
+
+	public static CCTime getCurrentTime() {
+		return new CCTime();
 	}
 	
 	public String getSimpleStringRepresentation() {

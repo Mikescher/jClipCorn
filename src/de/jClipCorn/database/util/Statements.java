@@ -39,6 +39,9 @@ public class Statements {
 	public static PreparedStatement selectSingleSeasonTabStatement;
 	public static PreparedStatement selectSingleEpisodeTabStatement;
 
+	public static PreparedStatement addInfoKey;
+	public static PreparedStatement selectInfoKey;
+
 	public static void intialize(CCDatabase d) {
 		try {
 			intialize_addMainTab(d);
@@ -61,6 +64,9 @@ public class Statements {
 			intialize_selectSingleMainTab(d);
 			intialize_selectSingleSeasonTab(d);
 			intialize_selectSingleEpisodeTab(d);
+
+			intialize_addInfoKey(d);
+			intialize_selectInfoKey(d);
 		} catch (SQLException e) {
 			CCLog.addFatalError(LocaleBundle.getString("LogMessage.CouldNotCreatePreparedStatement"), e); //$NON-NLS-1$
 		}
@@ -93,10 +99,12 @@ public class Statements {
 			selectSingleMainTabStatement.close();
 			selectSingleSeasonTabStatement.close();
 			selectSingleEpisodeTabStatement.close();
-		} catch (SQLException e) {
+
+			addInfoKey.close();
+			selectInfoKey.close();
+		} catch (Exception e) {
 			CCLog.addFatalError(e);
-		}
-				
+		}	
 	}
 	
 	@SuppressWarnings("nls")
@@ -323,4 +331,25 @@ public class Statements {
 		
 		selectSingleEpisodeTabStatement = d.createPreparedStatement(sh.get());
 	}
+
+	@SuppressWarnings("nls")
+	private static void intialize_selectInfoKey(CCDatabase d) throws SQLException {
+		SQLSelectHelper sh = new SQLSelectHelper(CCDatabase.TAB_INFO);
+		
+		sh.addWhere(CCDatabase.TAB_INFO_COLUMN_KEY, "?");
+		sh.setTarget(CCDatabase.TAB_INFO_COLUMN_VALUE);
+		
+		selectInfoKey = d.createPreparedStatement(sh.get());
+	}
+
+	@SuppressWarnings("nls")
+	private static void intialize_addInfoKey(CCDatabase d) throws SQLException {
+		SQLInsertHelper ih = new SQLInsertHelper(CCDatabase.TAB_INFO);
+		
+		ih.addField(CCDatabase.TAB_INFO_COLUMN_KEY, "?");
+		ih.addField(CCDatabase.TAB_INFO_COLUMN_VALUE, "?");
+		
+		addInfoKey = d.createPreparedStatement(ih.get());
+	}
+	
 }

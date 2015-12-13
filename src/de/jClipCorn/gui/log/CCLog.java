@@ -28,6 +28,8 @@ public class CCLog {
 	private static String path = null;
 	private static boolean changed = false;
 
+	private static boolean fatalExit = false;
+	
 	public static void setPath(String p) {
 		path = p;
 	}
@@ -221,6 +223,10 @@ public class CCLog {
 	}
 	
 	private static void fatalabort() {
+		if (fatalExit) System.exit(-9999); // infinite recursion in exitApplication;
+		
+		fatalExit = true;
+		
 		ApplicationHelper.exitApplication(-1);
 	}
 	

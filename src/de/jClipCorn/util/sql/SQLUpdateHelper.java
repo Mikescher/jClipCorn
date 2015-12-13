@@ -29,11 +29,11 @@ public class SQLUpdateHelper extends SQLHelper {
 			if (i > 0) {
 				cnames.append(", ");
 			}
-			cnames.append(fields.get(i).get1());
+			cnames.append(sqlEscape(fields.get(i).get1()));
 			cnames.append("=");
-			cnames.append(fields.get(i).get2());
+			cnames.append(sqlEscape(fields.get(i).get2()));
 		}
 		
-		return String.format(rformat, tabname, cnames.toString(), whereClauses.get1(), whereClauses.get2());
+		return String.format(rformat, tabname, cnames.toString(), sqlEscape(whereClauses.get1()), sqlEscape(whereClauses.get2()));
 	}
 }

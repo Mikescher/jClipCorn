@@ -24,7 +24,7 @@ public class SQLSelectHelper extends SQLHelper {
 	@Override
 	public String get() {
 		StringBuilder sqlbuilder = new StringBuilder();
-		sqlbuilder.append(String.format("SELECT %s FROM %s", target, tabname));
+		sqlbuilder.append(String.format("SELECT %s FROM %s", sqlEscape(target), sqlEscape(tabname)));
 		if (!wheres.isEmpty()) {
 			sqlbuilder.append(" WHERE");
 			for (int i = 0; i < wheres.size(); i++) {
@@ -32,9 +32,9 @@ public class SQLSelectHelper extends SQLHelper {
 					sqlbuilder.append(" AND");
 				}
 				sqlbuilder.append(" ");
-				sqlbuilder.append(wheres.get(i).get1());
+				sqlbuilder.append(sqlEscape(wheres.get(i).get1()));
 				sqlbuilder.append("=");
-				sqlbuilder.append(wheres.get(i).get2());
+				sqlbuilder.append(sqlEscape(wheres.get(i).get2()));
 			}
 		}
 

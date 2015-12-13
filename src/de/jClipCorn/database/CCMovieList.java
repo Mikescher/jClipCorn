@@ -73,6 +73,7 @@ public class CCMovieList {
 				if (!database.tryconnect(CCProperties.getInstance().PROP_DATABASE_NAME.getValue())) {
 					CCLog.addFatalError(LocaleBundle.getString("LogMessage.ErrorCreateDB"), database.getLastError()); //$NON-NLS-1$
 				}
+				testDatabaseVersion();
 
 				database.fillMovieList(CCMovieList.this);
 
@@ -720,5 +721,16 @@ public class CCMovieList {
 
 	public boolean hasElements() {
 		return list.size() > 0;
+	}
+
+	public void testDatabaseVersion() {
+		String real = database.getInformation_DBVersion();
+		String expected = Main.DBVERSION;
+		
+		if (! real.equals(Main.DBVERSION)) {
+			CCLog.addFatalError(LocaleBundle.getFormattedString("LogMessage.WrongDatabaseVersion", real, expected)); //$NON-NLS-1$
+		} else {
+			CCLog.addInformation(LocaleBundle.getFormattedString("LogMessage.CorrectDatabaseVersion", expected)); //$NON-NLS-1$
+		}
 	}
 }

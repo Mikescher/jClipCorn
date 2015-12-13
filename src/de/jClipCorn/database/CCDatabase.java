@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.jClipCorn.Main;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.CCMovie;
@@ -17,60 +18,71 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.CCDate;
+import de.jClipCorn.util.CCTime;
+import de.jClipCorn.util.helper.ApplicationHelper;
 
 public class CCDatabase extends DerbyDatabase {
-	public final static String TAB_MAIN = "MOVIES"; //$NON-NLS-1$
-	public final static String TAB_SEASONS = "SEASONS"; //$NON-NLS-1$
+	public final static String TAB_MAIN     = "MOVIES";   //$NON-NLS-1$
+	public final static String TAB_SEASONS  = "SEASONS";  //$NON-NLS-1$
 	public final static String TAB_EPISODES = "EPISODES"; //$NON-NLS-1$
+	public final static String TAB_INFO     = "INFO";     //$NON-NLS-1$
 
 	private final static String XML_NAME = "database/ClipCornSchema.xml"; //$NON-NLS-1$
 
-	public final static String TAB_MAIN_COLUMN_LOCALID = "LOCALID"; //$NON-NLS-1$
-	public final static String TAB_MAIN_COLUMN_NAME = "NAME"; //$NON-NLS-1$
-	public final static String TAB_MAIN_COLUMN_VIEWED = "VIEWED"; //$NON-NLS-1$
-	public final static String TAB_MAIN_COLUMN_ZYKLUS = "ZYKLUS"; //$NON-NLS-1$
-	public final static String TAB_MAIN_COLUMN_ZYKLUSNUMBER = "ZYKLUSNUMBER"; //$NON-NLS-1$
-	public final static String TAB_MAIN_COLUMN_QUALITY = "QUALITY"; //$NON-NLS-1$
-	public final static String TAB_MAIN_COLUMN_LANGUAGE = "LANGUAGE"; //$NON-NLS-1$
-	public final static String TAB_MAIN_COLUMN_GENRE = "GENRE"; //$NON-NLS-1$
-	public final static String TAB_MAIN_COLUMN_LENGTH = "LENGTH"; //$NON-NLS-1$
-	public final static String TAB_MAIN_COLUMN_ADDDATE = "ADDDATE"; //$NON-NLS-1$
-	public final static String TAB_MAIN_COLUMN_ONLINESCORE = "ONLINESCORE"; //$NON-NLS-1$
-	public final static String TAB_MAIN_COLUMN_FSK = "FSK"; //$NON-NLS-1$
-	public final static String TAB_MAIN_COLUMN_FORMAT = "FORMAT"; //$NON-NLS-1$
-	public final static String TAB_MAIN_COLUMN_MOVIEYEAR = "MOVIEYEAR"; //$NON-NLS-1$
-	public final static String TAB_MAIN_COLUMN_FILESIZE = "FILESIZE"; //$NON-NLS-1$
-	public final static String TAB_MAIN_COLUMN_TAGS = "TAGS"; //$NON-NLS-1$
-	public final static String TAB_MAIN_COLUMN_PART_1 = "PART1"; //$NON-NLS-1$
-	public final static String TAB_MAIN_COLUMN_PART_2 = "PART2"; //$NON-NLS-1$
-	public final static String TAB_MAIN_COLUMN_PART_3 = "PART3"; //$NON-NLS-1$
-	public final static String TAB_MAIN_COLUMN_PART_4 = "PART4"; //$NON-NLS-1$
-	public final static String TAB_MAIN_COLUMN_PART_5 = "PART5"; //$NON-NLS-1$
-	public final static String TAB_MAIN_COLUMN_PART_6 = "PART6"; //$NON-NLS-1$
-	public final static String TAB_MAIN_COLUMN_SCORE = "SCORE"; //$NON-NLS-1$
-	public final static String TAB_MAIN_COLUMN_COVER = "COVERNAME"; //$NON-NLS-1$
-	public final static String TAB_MAIN_COLUMN_TYPE = "TYPE"; //$NON-NLS-1$
-	public final static String TAB_MAIN_COLUMN_SERIES_ID = "SERIESID"; //$NON-NLS-1$
+	public final static String INFOKEY_DBVERSION     = "VERSION_DB";   			//$NON-NLS-1$
+	public final static String INFOKEY_DATE          = "CREATION_DATE";         //$NON-NLS-1$
+	public final static String INFOKEY_TIME          = "CREATION_TIME";         //$NON-NLS-1$
+	public final static String INFOKEY_USERNAME      = "CREATION_USERNAME";     //$NON-NLS-1$
 
-	public final static String TAB_SEASONS_COLUMN_SEASONID = "SEASONID"; //$NON-NLS-1$
-	public final static String TAB_SEASONS_COLUMN_SERIESID = "SERIESID"; //$NON-NLS-1$
-	public final static String TAB_SEASONS_COLUMN_NAME = "NAME"; //$NON-NLS-1$
-	public final static String TAB_SEASONS_COLUMN_YEAR = "SEASONYEAR"; //$NON-NLS-1$
-	public final static String TAB_SEASONS_COLUMN_COVERNAME = "COVERNAME"; //$NON-NLS-1$
+	public final static String TAB_INFO_COLUMN_KEY            = "IKEY";         //$NON-NLS-1$
+	public final static String TAB_INFO_COLUMN_VALUE          = "IVALUE";       //$NON-NLS-1$
+	
+	public final static String TAB_MAIN_COLUMN_LOCALID        = "LOCALID";      //$NON-NLS-1$
+	public final static String TAB_MAIN_COLUMN_NAME           = "NAME";         //$NON-NLS-1$
+	public final static String TAB_MAIN_COLUMN_VIEWED         = "VIEWED";       //$NON-NLS-1$
+	public final static String TAB_MAIN_COLUMN_ZYKLUS         = "ZYKLUS";       //$NON-NLS-1$
+	public final static String TAB_MAIN_COLUMN_ZYKLUSNUMBER   = "ZYKLUSNUMBER"; //$NON-NLS-1$
+	public final static String TAB_MAIN_COLUMN_QUALITY        = "QUALITY";      //$NON-NLS-1$
+	public final static String TAB_MAIN_COLUMN_LANGUAGE       = "LANGUAGE";     //$NON-NLS-1$
+	public final static String TAB_MAIN_COLUMN_GENRE          = "GENRE";        //$NON-NLS-1$
+	public final static String TAB_MAIN_COLUMN_LENGTH         = "LENGTH";       //$NON-NLS-1$
+	public final static String TAB_MAIN_COLUMN_ADDDATE        = "ADDDATE";      //$NON-NLS-1$
+	public final static String TAB_MAIN_COLUMN_ONLINESCORE    = "ONLINESCORE";  //$NON-NLS-1$
+	public final static String TAB_MAIN_COLUMN_FSK            = "FSK";          //$NON-NLS-1$
+	public final static String TAB_MAIN_COLUMN_FORMAT         = "FORMAT";       //$NON-NLS-1$
+	public final static String TAB_MAIN_COLUMN_MOVIEYEAR      = "MOVIEYEAR";    //$NON-NLS-1$
+	public final static String TAB_MAIN_COLUMN_FILESIZE       = "FILESIZE";     //$NON-NLS-1$
+	public final static String TAB_MAIN_COLUMN_TAGS           = "TAGS";         //$NON-NLS-1$
+	public final static String TAB_MAIN_COLUMN_PART_1         = "PART1";        //$NON-NLS-1$
+	public final static String TAB_MAIN_COLUMN_PART_2         = "PART2";        //$NON-NLS-1$
+	public final static String TAB_MAIN_COLUMN_PART_3         = "PART3";        //$NON-NLS-1$
+	public final static String TAB_MAIN_COLUMN_PART_4         = "PART4";        //$NON-NLS-1$
+	public final static String TAB_MAIN_COLUMN_PART_5         = "PART5";        //$NON-NLS-1$
+	public final static String TAB_MAIN_COLUMN_PART_6         = "PART6";        //$NON-NLS-1$
+	public final static String TAB_MAIN_COLUMN_SCORE          = "SCORE";        //$NON-NLS-1$
+	public final static String TAB_MAIN_COLUMN_COVER          = "COVERNAME";    //$NON-NLS-1$
+	public final static String TAB_MAIN_COLUMN_TYPE           = "TYPE";         //$NON-NLS-1$
+	public final static String TAB_MAIN_COLUMN_SERIES_ID      = "SERIESID";     //$NON-NLS-1$
 
-	public final static String TAB_EPISODES_COLUMN_LOCALID = "LOCALID"; //$NON-NLS-1$
-	public final static String TAB_EPISODES_COLUMN_SEASONID = "SEASONID"; //$NON-NLS-1$
-	public final static String TAB_EPISODES_COLUMN_EPISODE = "EPISODE"; //$NON-NLS-1$
-	public final static String TAB_EPISODES_COLUMN_NAME = "NAME"; //$NON-NLS-1$
-	public final static String TAB_EPISODES_COLUMN_VIEWED = "VIEWED"; //$NON-NLS-1$
-	public final static String TAB_EPISODES_COLUMN_QUALITY = "QUALITY"; //$NON-NLS-1$
-	public final static String TAB_EPISODES_COLUMN_LENGTH = "LENGTH"; //$NON-NLS-1$
-	public final static String TAB_EPISODES_COLUMN_FORMAT = "FORMAT"; //$NON-NLS-1$
-	public final static String TAB_EPISODES_COLUMN_FILESIZE = "FILESIZE"; //$NON-NLS-1$
-	public final static String TAB_EPISODES_COLUMN_PART_1 = "PART1"; //$NON-NLS-1$
-	public final static String TAB_EPISODES_COLUMN_TAGS = "TAGS"; //$NON-NLS-1$
-	public final static String TAB_EPISODES_COLUMN_LASTVIEWED = "LASTVIEWED"; //$NON-NLS-1$
-	public final static String TAB_EPISODES_COLUMN_ADDDATE = "ADDDATE"; //$NON-NLS-1$
+	public final static String TAB_SEASONS_COLUMN_SEASONID    = "SEASONID";     //$NON-NLS-1$
+	public final static String TAB_SEASONS_COLUMN_SERIESID    = "SERIESID";     //$NON-NLS-1$
+	public final static String TAB_SEASONS_COLUMN_NAME        = "NAME";         //$NON-NLS-1$
+	public final static String TAB_SEASONS_COLUMN_YEAR        = "SEASONYEAR";   //$NON-NLS-1$
+	public final static String TAB_SEASONS_COLUMN_COVERNAME   = "COVERNAME";    //$NON-NLS-1$
+
+	public final static String TAB_EPISODES_COLUMN_LOCALID    = "LOCALID";      //$NON-NLS-1$
+	public final static String TAB_EPISODES_COLUMN_SEASONID   = "SEASONID";     //$NON-NLS-1$
+	public final static String TAB_EPISODES_COLUMN_EPISODE    = "EPISODE";      //$NON-NLS-1$
+	public final static String TAB_EPISODES_COLUMN_NAME       = "NAME";         //$NON-NLS-1$
+	public final static String TAB_EPISODES_COLUMN_VIEWED     = "VIEWED";       //$NON-NLS-1$
+	public final static String TAB_EPISODES_COLUMN_QUALITY    = "QUALITY";      //$NON-NLS-1$
+	public final static String TAB_EPISODES_COLUMN_LENGTH     = "LENGTH";       //$NON-NLS-1$
+	public final static String TAB_EPISODES_COLUMN_FORMAT     = "FORMAT";       //$NON-NLS-1$
+	public final static String TAB_EPISODES_COLUMN_FILESIZE   = "FILESIZE";     //$NON-NLS-1$
+	public final static String TAB_EPISODES_COLUMN_PART_1     = "PART1";        //$NON-NLS-1$
+	public final static String TAB_EPISODES_COLUMN_TAGS       = "TAGS";         //$NON-NLS-1$
+	public final static String TAB_EPISODES_COLUMN_LASTVIEWED = "LASTVIEWED";   //$NON-NLS-1$
+	public final static String TAB_EPISODES_COLUMN_ADDDATE    = "ADDDATE";      //$NON-NLS-1$
 
 	private String databasePath;
 
@@ -126,6 +138,11 @@ public class CCDatabase extends DerbyDatabase {
 		if (res) {
 			databasePath = dbpath;
 			Statements.intialize(this);
+
+			writeNewInformationToDB(INFOKEY_DBVERSION, Main.DBVERSION);
+			writeNewInformationToDB(INFOKEY_DATE, CCDate.getCurrentDate().getSQLStringRepresentation());
+			writeNewInformationToDB(INFOKEY_TIME, CCTime.getCurrentTime().getSimpleStringRepresentation());
+			writeNewInformationToDB(INFOKEY_USERNAME, ApplicationHelper.getCurrentUsername());
 		}
 		return res;
 	}
@@ -768,6 +785,60 @@ public class CCDatabase extends DerbyDatabase {
 			s.clearParameters();
 			
 			s.setInt(1, localID);
+			
+			s.executeUpdate();
+		} catch (SQLException e) {
+			CCLog.addError(e);
+		}
+	}
+	
+	public String getInformation_DBVersion() {
+		return getInformationFromDB(INFOKEY_DBVERSION);
+	}
+	
+	public CCDate getInformation_CreationDate() {
+		return CCDate.parse(getInformationFromDB(INFOKEY_DATE), CCDate.STRINGREP_SQL);
+	}
+	
+	public CCTime getInformation_CreationTime() {
+		return CCTime.parse(getInformationFromDB(INFOKEY_TIME), CCTime.STRINGREP_SIMPLE);
+	}
+	
+	public String getInformation_CreationUsername() {
+		return getInformationFromDB(INFOKEY_USERNAME);
+	}
+	
+	private String getInformationFromDB(String key) {
+		try {
+			String value;
+			
+			PreparedStatement s = Statements.selectInfoKey;
+			s.clearParameters();
+			s.setString(1, key);
+			
+			ResultSet rs = s.executeQuery();
+			if (rs.next()) 
+				value = rs.getString(1);
+			else 
+				value = ""; //$NON-NLS-1$
+
+			rs.close();
+			
+			return value;
+			
+		} catch (SQLException e) {
+			CCLog.addError(e);
+			return null;
+		}
+	}
+	
+	private void writeNewInformationToDB(String key, String value) {
+		try {
+			PreparedStatement s = Statements.addInfoKey;
+			s.clearParameters();
+
+			s.setString(1, key);
+			s.setString(2, value);
 			
 			s.executeUpdate();
 		} catch (SQLException e) {

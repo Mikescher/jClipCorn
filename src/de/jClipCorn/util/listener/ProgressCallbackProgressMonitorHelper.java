@@ -3,7 +3,7 @@ package de.jClipCorn.util.listener;
 import javax.swing.ProgressMonitor;
 import javax.swing.SwingUtilities;
 
-public class ProgressCallbackProgressMonitorHelper implements ProgressCallbackListener{
+public class ProgressCallbackProgressMonitorHelper implements ProgressCallbackListener {
 	private final ProgressMonitor monitor;
 	private int progress;
 	private int max;

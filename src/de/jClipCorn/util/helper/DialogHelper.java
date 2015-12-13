@@ -1,6 +1,7 @@
 package de.jClipCorn.util.helper;
 
 import java.awt.Component;
+import java.awt.event.WindowListener;
 import java.lang.reflect.InvocationTargetException;
 
 import javax.accessibility.AccessibleContext;
@@ -104,6 +105,9 @@ public class DialogHelper {
 					if (dialog == null) throw new Exception();
 					
 					dialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+					for (WindowListener listener : dialog.getWindowListeners()) {
+						dialog.removeWindowListener(listener);
+					}
 					
 					java.util.List<JButton> components = SwingUtils.getDescendantsOfType(JButton.class, dialog, true);
 					if (components.isEmpty()) throw new Exception();

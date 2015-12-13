@@ -224,6 +224,9 @@ public class BackupManager {
 			CCLog.addError(e);
 		}
 		
+		monitor.setProgress(monitor.getMaximum());
+		monitor.close();
+		
 		CCLog.addInformation(LocaleBundle.getString("LogMessage.BackupCreated")); //$NON-NLS-1$
 		CCProperties.getInstance().PROP_BACKUP_LASTBACKUP.setValue(CCDate.getCurrentDate());
 	}

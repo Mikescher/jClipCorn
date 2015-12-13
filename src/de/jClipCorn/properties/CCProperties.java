@@ -241,7 +241,7 @@ public class CCProperties {
 		PROP_STATBAR_LOG						= new CCBoolProperty(CAT_STATUSBAR,	 	this,   "PROP_STATBAR_LOG",							true);
 		PROP_STATBAR_VIEWEDCOUNT				= new CCBoolProperty(CAT_STATUSBAR,	 	this,   "PROP_STATBAR_VIEWEDCOUNT",					true);
 		PROP_STATBAR_SERIESCOUNT				= new CCBoolProperty(CAT_STATUSBAR,	 	this,   "PROP_STATBAR_SERIESCOUNT",					true);
-		PROP_STATBAR_LENGTH						= new CCBoolProperty(CAT_STATUSBAR,	 	this,   "PROP_STATBAR_LENGTH",						true);
+		PROP_STATBAR_LENGTH						= new CCBoolProperty(CAT_STATUSBAR,	 	this,   "PROP_STATBAR_LENGTH",						getDefStatbarLength());
 		PROP_STATBAR_SIZE						= new CCBoolProperty(CAT_STATUSBAR,	 	this,   "PROP_STATBAR_SIZE",						true);
 		PROP_STATBAR_STARTTIME					= new CCBoolProperty(CAT_STATUSBAR,	 	this,   "PROP_STATBAR_STARTTIME",					true);
 		PROP_MAINFRAME_CLICKABLEZYKLUS			= new CCBoolProperty(CAT_VIEW,		 	this,   "PROP_MAINFRAME_CLICKABLEZYKLUS",			false);
@@ -254,8 +254,8 @@ public class CCProperties {
 		PROP_MAINFRAME_SHOWCOVERCORNER			= new CCBoolProperty(CAT_VIEW,		 	this,   "PROP_MAINFRAME_SHOWCOVERCORNER",			true);
 		PROP_VALIDATE_CHECK_SERIES_STRUCTURE	= new CCBoolProperty(CAT_SERIES,		this,   "PROP_VALIDATE_CHECK_SERIES_STRUCTURE",		false);
 		PROP_MAINFRAME_DONT_FILTER_WATCHNEVER	= new CCBoolProperty(CAT_VIEW,			this, 	"PROP_MAINFRAME_DONT_FILTER_WATCHNEVER", 	true);
-		PROP_MAINFRAME_AUTOMATICRESETWATCHLATER = new CCBoolProperty(CAT_DATABASE,		 this,   "PROP_MAINFRAME_AUTOMATICRESETWATCHLATER",	true);
-		PROP_MAINFRAME_AUTOMATICRESETWATCHNEVER = new CCBoolProperty(CAT_DATABASE,		 this,   "PROP_MAINFRAME_AUTOMATICRESETWATCHNEVER",	true);
+		PROP_MAINFRAME_AUTOMATICRESETWATCHLATER = new CCBoolProperty(CAT_DATABASE,		this,   "PROP_MAINFRAME_AUTOMATICRESETWATCHLATER",	true);
+		PROP_MAINFRAME_AUTOMATICRESETWATCHNEVER = new CCBoolProperty(CAT_DATABASE,		this,   "PROP_MAINFRAME_AUTOMATICRESETWATCHNEVER",	true);
 	}
 	
 	private int getDefLanguage() {
@@ -272,6 +272,10 @@ public class CCProperties {
 		if (ApplicationHelper.isUnix())    return LookAndFeelManager.ID_LNF_METAL;
 		
 		return LookAndFeelManager.ID_LNF_METAL;
+	}
+	
+	private boolean getDefStatbarLength() {
+		return getDefStyle() != LookAndFeelManager.ID_LNF_WINDOWS;
 	}
 
 	public static CCProperties getInstance() {

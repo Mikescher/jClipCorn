@@ -157,11 +157,11 @@ public class CreateSeriesFolderStructureFrame extends JFrame {
 	private void init() {
 		lblCover.setIcon(series.getCoverIcon());
 		lblTitel.setText(series.getTitle());
-		lblCommonPath.setText(PathFormatter.fromCCPath(series.getCommonPathStart()));
+		lblCommonPath.setText(PathFormatter.fromCCPath(series.getCommonPathStart(false)));
 	}
 	
 	private void onBtnChoose() {
-		JFileChooser folderchooser = new JFileChooser(PathFormatter.fromCCPath(series.getCommonPathStart()));
+		JFileChooser folderchooser = new JFileChooser(PathFormatter.fromCCPath(series.getCommonPathStart(false)));
 		folderchooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 		
 		if (folderchooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {

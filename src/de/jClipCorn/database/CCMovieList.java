@@ -601,6 +601,20 @@ public class CCMovieList {
 		
 		return null;
 	}
+
+	public String getCommonSeriesPath() {
+		List<String> all = new ArrayList<>();
+		
+		for (Iterator<CCSeries> it = iteratorSeries(); it.hasNext();) {
+			all.add(it.next().getCommonPathStart(false));
+		}
+		
+		while (all.contains("")) all.remove(""); //$NON-NLS-1$ //$NON-NLS-2$
+		
+		String common = PathFormatter.getCommonFolderPath(all);
+		
+		return common;
+	}
 	
 	public Iterator<CCDatabaseElement> iterator() {
 		return list.iterator();

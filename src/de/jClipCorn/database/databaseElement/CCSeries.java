@@ -462,7 +462,7 @@ public class CCSeries extends CCDatabaseElement {
 		return guide.toString();
 	}
 	
-	public String getCommonPathStart() {
+	public String getCommonPathStart(boolean extendedSearch) {
 		List<String> all = new ArrayList<>();
 		
 		for (int seasi = 0; seasi < getSeasonCount(); seasi++) {
@@ -472,7 +472,13 @@ public class CCSeries extends CCDatabaseElement {
 		
 		while (all.contains("")) all.remove(""); //$NON-NLS-1$ //$NON-NLS-2$
 		
-		return PathFormatter.getCommonFolderPath(all);
+		String common = PathFormatter.getCommonFolderPath(all);
+		
+		if (extendedSearch && common.isEmpty()) {
+			common = movielist.getCommonSeriesPath();
+		}
+		
+		return common;
 	}
 
 	public ExtendedViewedState getExtendedViewedState() {

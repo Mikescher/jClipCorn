@@ -147,8 +147,11 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler, 
 		setSize(new Dimension(1100, 650));
 		this.parent = ss;
 		this.listener = ucl;
-		this.videoFileChooser = new JFileChooser(PathFormatter.fromCCPath(ss.getSeries().getCommonPathStart()));
-		this.massVideoFileChooser = new JFileChooser(PathFormatter.fromCCPath(ss.getSeries().getCommonPathStart()));
+		
+		String cPathStart = ss.getSeries().getCommonPathStart(true);
+		
+		this.videoFileChooser = new JFileChooser(PathFormatter.fromCCPath(cPathStart));
+		this.massVideoFileChooser = new JFileChooser(PathFormatter.fromCCPath(cPathStart));
 
 		initGUI();
 

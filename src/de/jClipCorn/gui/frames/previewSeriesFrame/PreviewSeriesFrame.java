@@ -373,7 +373,7 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 		mntmShowInFolder.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				PathFormatter.showInExplorer(PathFormatter.fromCCPath(dispSeries.getCommonPathStart()));
+				PathFormatter.showInExplorer(PathFormatter.fromCCPath(dispSeries.getCommonPathStart(false)));
 			}
 		});
 		mnSerie.add(mntmShowInFolder);

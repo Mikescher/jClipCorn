@@ -170,7 +170,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		super();
 		this.series = ser;
 		this.listener = ucl;
-		this.videoFileChooser = new JFileChooser(PathFormatter.fromCCPath(ser.getCommonPathStart()));
+		this.videoFileChooser = new JFileChooser(PathFormatter.fromCCPath(ser.getCommonPathStart(true)));
 		
 		initGUI();
 		setDefaultValues();

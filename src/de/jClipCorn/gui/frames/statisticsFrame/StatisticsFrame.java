@@ -152,9 +152,11 @@ public class StatisticsFrame extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				StatisticsChart chart = cbxChooseChart.getItemAt(cbxChooseChart.getSelectedIndex());
 				
-				if (chart != null) pnlCheckSeries.setVisible(chart.usesFilterableSeries());
-				if (chart != null) pnlYearRange.setVisible(chart.usesFilterableYearRange());
+				pnlCheckSeries.setVisible((chart != null) && chart.usesFilterableSeries());
+				pnlYearRange.setVisible((chart != null) && chart.usesFilterableYearRange());
+				
 				assignChart(chart);
+				
 				if (chart != null) chart.onHideSeries(seriesList.getMap());
 				if (chart != null) chart.onFilterYearRange(selectedYear);
 			}
@@ -204,6 +206,7 @@ public class StatisticsFrame extends JFrame {
 		pnlYearRange.setBorder(new EmptyBorder(5, 5, 5, 5));
 		pnlLeftBottom.add(pnlYearRange, BorderLayout.NORTH);
 		pnlYearRange.setLayout(new BorderLayout(0, 0));
+		pnlYearRange.setVisible(false);
 		
 		btnNewButton = new JButton("<"); //$NON-NLS-1$
 		btnNewButton.addActionListener(new ActionListener() {

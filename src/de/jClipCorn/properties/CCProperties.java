@@ -24,6 +24,7 @@ import de.jClipCorn.properties.property.CCStringProperty;
 import de.jClipCorn.properties.property.CCToolbarProperty;
 import de.jClipCorn.util.CCDate;
 import de.jClipCorn.util.formatter.PathFormatter;
+import de.jClipCorn.util.helper.ApplicationHelper;
 import de.jClipCorn.util.helper.LookAndFeelManager;
 
 
@@ -187,7 +188,7 @@ public class CCProperties {
 		PROP_LOG_PATH							= new CCStringProperty(CAT_DATABASE, 	this,	"PROP_LOG_PATH",							"jClipcorn.log");
 		PROP_UI_LANG							= new CCRIntProperty(CAT_COMMON, 		this, 	"PROP_UI_LANG", 							getDefLanguage(),	vl);
 		PROP_ON_DBLCLICK_MOVE					= new CCRIntProperty(CAT_COMMON, 		this, 	"PROP_ON_DBLCLICK_MOVE", 					0, 					vd);
-		PROP_UI_LOOKANDFEEL						= new CCRIntProperty(CAT_VIEW, 			this,	"PROP_UI_LOOKANDFEEL", 						0, 					vlf);
+		PROP_UI_LOOKANDFEEL						= new CCRIntProperty(CAT_VIEW, 			this,	"PROP_UI_LOOKANDFEEL", 						getDefStyle(),		vlf);
 		PROP_MAINFRAME_TABLEBACKGROUND			= new CCRIntProperty(CAT_VIEW, 			this,	"PROP_MAINFRAME_TABLEBACKGROUND",			0, 					vb);
 		PROP_SELF_DIRECTORY						= new CCStringProperty(CAT_DATABASE, 	this,	"PROP_SELF_DIRECTORY",						"");
 		PROP_COVER_PREFIX						= new CCStringProperty(CAT_DATABASE, 	this,	"PROP_COVER_PREFIX",						"cover_");
@@ -263,6 +264,14 @@ public class CCProperties {
 		if (Locale.getDefault().getLanguage().equals(Locale.ENGLISH.getLanguage())) return LocaleBundle.LOCALE_ENGLISCH;
 		
 		return LocaleBundle.LOCALE_SYSTEMDEFAULT;
+	}
+	
+	private int getDefStyle() {
+		if (ApplicationHelper.isWindows()) return LookAndFeelManager.ID_LNF_WINDOWS;
+		if (ApplicationHelper.isMac())     return LookAndFeelManager.ID_LNF_METAL;
+		if (ApplicationHelper.isUnix())    return LookAndFeelManager.ID_LNF_METAL;
+		
+		return LookAndFeelManager.ID_LNF_METAL;
 	}
 
 	public static CCProperties getInstance() {

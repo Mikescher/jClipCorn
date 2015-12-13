@@ -18,6 +18,9 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 
 public class LookAndFeelManager {
+	public final static int ID_LNF_WINDOWS = 0;
+	public final static int ID_LNF_METAL   = 1;
+	
 	private static boolean isSubstance = false;
 	
 	private static List<Entry<String, SkinInfo>> substanceLookAndFeelCache = null;

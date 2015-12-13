@@ -475,7 +475,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		cbxGenre6.setBounds(508, 300, 212, 22);
 		contentPane.add(cbxGenre6);
 		
-		edCvrControl = new EditCoverControl(this);
+		edCvrControl = new EditCoverControl(this, this);
 		edCvrControl.setBounds(508, 421, EditCoverControl.CTRL_WIDTH, EditCoverControl.CTRL_HEIGHT);
 		contentPane.add(edCvrControl);
 		

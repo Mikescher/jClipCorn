@@ -2,6 +2,7 @@ package de.jClipCorn.gui.frames.findCoverFrame;
 
 import java.awt.image.BufferedImage;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTyp;
 import de.jClipCorn.util.helper.HTTPUtilities;
@@ -14,6 +15,7 @@ public class CoverImageParser {
 	private boolean thread_1_finished = false;
 	private boolean thread_2_finished = false;
 	private boolean thread_3_finished = false;
+	private boolean thread_4_finished = false;
 	
 	private boolean thread_forcestop = false;
 	
@@ -38,26 +40,39 @@ public class CoverImageParser {
 		
 		thread_forcestop = false;
 		
-		proglistener.setMax(8 + 24 + 24);
+		final CopyOnWriteArrayList<String> exclusions = new CopyOnWriteArrayList<>();
+		
+		// 16  = GoogleImage_1
+		// 16  = GoogleImage_2
+		// 24  = IMDB_1 
+		// 24  = IMDB_2
+		proglistener.setMax(16 + 16 + 24 + 24);
 		
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
-				parseGoogleImages();
+				parseGoogleImages1(exclusions);
 			}
-		}, "THREAD_IMGPARSER_GOOGLE").start(); //$NON-NLS-1$
+		}, "THREAD_IMGPARSER_GOOGLE_1").start(); //$NON-NLS-1$
 		
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
-				parseCoverSearch();
+				parseGoogleImages2(exclusions);
+			}
+		}, "THREAD_IMGPARSER_GOOGLE_2").start(); //$NON-NLS-1$
+		
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				parseCoverSearch(exclusions);
 			}
 		}, "THREAD_IMGPARSER_IMDB_1").start(); //$NON-NLS-1$
 		
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
-				parseImDBImages();
+				parseImDBImages(exclusions);
 			}
 		}, "THREAD_IMGPARSE_IMDB_2").start(); //$NON-NLS-1$
 	}
@@ -66,10 +81,10 @@ public class CoverImageParser {
 		thread_forcestop = true;
 	}
 
-	private void parseGoogleImages() { // Parse the Google Image Search
-		String url = GoogleImageParser.getSearchURL(searchText);
-		String json = HTTPUtilities.getHTML(url, false);
-		List<String> links = GoogleImageParser.extractImageLinks(json);
+	private void parseGoogleImages1(CopyOnWriteArrayList<String> exclusions) { // Parse the Google Image Search
+		String url = GoogleImageParser.getSearchURL(searchText, GoogleImageParser.SEARCH_APPENDIX_1);
+		String html = HTTPUtilities.getJavascriptHTML(url, GoogleImageParser.HTMLUNIT_JS_TIMEOUT);
+		List<String> links = GoogleImageParser.extractImageLinks(html, 16, exclusions, proglistener);
 
 		for (String s : links) {
 			proglistener.step();
@@ -91,7 +106,32 @@ public class CoverImageParser {
 		onEndThread(1);
 	}
 
-	private void parseImDBImages() { // Parses the Images from the first Result of ImDB CoverSearch
+	private void parseGoogleImages2(CopyOnWriteArrayList<String> exclusions) { // Parse the Google Image Search
+		String url = GoogleImageParser.getSearchURL(searchText, GoogleImageParser.SEARCH_APPENDIX_2);
+		String html = HTTPUtilities.getJavascriptHTML(url, GoogleImageParser.HTMLUNIT_JS_TIMEOUT);
+		List<String> links = GoogleImageParser.extractImageLinks(html, 16, exclusions, proglistener);
+
+		for (String s : links) {
+			proglistener.step();
+
+			BufferedImage biu = HTTPUtilities.getImage(s);
+			if (biu != null) {
+				updatelistener.onUpdate(biu);
+			}
+			
+			if (thread_forcestop) {
+				onEndThread(1);
+				return;
+			}
+		}
+		proglistener.step();
+
+		// #################################################################################
+
+		onEndThread(2);
+	}
+
+	private void parseImDBImages(CopyOnWriteArrayList<String> exclusions) { // Parses the Images from the first Result of ImDB CoverSearch
 		String searchurl = ImDBImageParser.getSearchURL(searchText, typ);
 		String searchhtml = HTTPUtilities.getHTML(searchurl, true);
 		String direkturl = ImDBImageParser.getFirstSearchResult(searchhtml);
@@ -120,6 +160,9 @@ public class CoverImageParser {
 			if (posterlinks.size() > 0) {
 				int currCID = 0;
 				for (String url : posterlinks) {
+					if (exclusions.contains(url)) continue;
+					exclusions.add(url);
+					
 					if (currCID++ >= 23)
 						continue;
 
@@ -145,6 +188,9 @@ public class CoverImageParser {
 
 				int currCID = 0;
 				for (String url : alllinks) {
+					if (exclusions.contains(url)) continue;
+					exclusions.add(url);
+					
 					if (currCID++ >= 23)
 						continue;
 
@@ -169,10 +215,10 @@ public class CoverImageParser {
 
 		// #################################################################################
 
-		onEndThread(2);
+		onEndThread(3);
 	}
 
-	private void parseCoverSearch() { // Parses the Images from the second Result of ImDB CoverSearch
+	private void parseCoverSearch(CopyOnWriteArrayList<String> exclusions) { // Parses the Images from the second Result of ImDB CoverSearch
 		String searchurl = ImDBImageParser.getSearchURL(searchText, typ);
 		String searchhtml = HTTPUtilities.getHTML(searchurl, true);
 		String direkturl = ImDBImageParser.getSecondSearchResult(searchhtml);
@@ -201,6 +247,9 @@ public class CoverImageParser {
 			if (posterlinks.size() > 0) {
 				int currCID = 0;
 				for (String url : posterlinks) {
+					if (exclusions.contains(url)) continue;
+					exclusions.add(url);
+					
 					if (currCID++ >= 23)
 						continue;
 
@@ -226,6 +275,9 @@ public class CoverImageParser {
 
 				int currCID = 0;
 				for (String url : alllinks) {
+					if (exclusions.contains(url)) continue;
+					exclusions.add(url);
+					
 					if (currCID++ >= 23)
 						continue;
 
@@ -250,7 +302,7 @@ public class CoverImageParser {
 
 		// #################################################################################
 
-		onEndThread(3);
+		onEndThread(4);
 	}
 
 	private void onEndThread(int thread) {
@@ -264,6 +316,9 @@ public class CoverImageParser {
 		case 3:
 			thread_3_finished = true;
 			break;
+		case 4:
+			thread_4_finished = true;
+			break;
 		}
 		
 		if (isFinished()) {
@@ -273,6 +328,6 @@ public class CoverImageParser {
 	}
 	
 	public boolean isFinished() {
-		return thread_1_finished && thread_2_finished && thread_3_finished;
+		return thread_1_finished && thread_2_finished && thread_3_finished && thread_4_finished;
 	}
 }

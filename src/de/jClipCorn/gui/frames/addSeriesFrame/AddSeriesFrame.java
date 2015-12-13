@@ -239,7 +239,7 @@ public class AddSeriesFrame extends JFrame implements ParseResultHandler, UserDa
 		btnIMDB.setBounds(298, 12, 57, 23);
 		getContentPane().add(btnIMDB);
 		
-		edCvrControl = new EditCoverControl(this);
+		edCvrControl = new EditCoverControl(this, this);
 		edCvrControl.setBounds(381, 67, EditCoverControl.CTRL_WIDTH, EditCoverControl.CTRL_HEIGHT);
 		getContentPane().add(edCvrControl);
 	}

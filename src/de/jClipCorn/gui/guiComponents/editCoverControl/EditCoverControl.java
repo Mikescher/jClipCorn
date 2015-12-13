@@ -1,5 +1,6 @@
 package de.jClipCorn.gui.guiComponents.editCoverControl;
 
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
@@ -39,6 +40,8 @@ public class EditCoverControl extends AbstractEditCoverControl {
 	private final ParseResultHandler owner;
 	private final JFileChooser coverFileChooser;
 
+	private final Window ownerWindow; //JDialog or JWindow
+	
 	private CoverLabel lblCover;
 	private JSplitButton btnFind;
 	private JButton btnCrop;
@@ -49,14 +52,15 @@ public class EditCoverControl extends AbstractEditCoverControl {
 	private JMenuItem mntmPasteImg;
 
 	public EditCoverControl() { // For WindowBuilder
-		this(null);
+		this(null, null);
 	}
 
-	public EditCoverControl(ParseResultHandler handler) {
+	public EditCoverControl(Window owner, ParseResultHandler handler) {
 		super();
-
+		
 		this.coverFileChooser = new JFileChooser(PathFormatter.getAbsoluteSelfDirectory());
 		this.owner = handler;
+		this.ownerWindow = owner;
 
 		coverFileChooser.setFileFilter(FileChooserHelper.createLocalFileFilter("EditCoverControl.coverFileChooser.description", "png", "bmp", "gif", "jpg", "jpeg")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
 
@@ -160,7 +164,7 @@ public class EditCoverControl extends AbstractEditCoverControl {
 	}
 
 	private void showFindCoverDialog() {
-		(new FindCoverDialog(this, this, CCMovieTyp.MOVIE)).setVisible(true);
+		(new FindCoverDialog(ownerWindow, this, CCMovieTyp.MOVIE)).setVisible(true);
 	}
 
 	private void showCropDialog() {

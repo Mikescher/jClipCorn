@@ -9,3 +9,4 @@ JFreeChart
 JSplitButton
 JSoup
 JGoodies (commons, forms)
+HTMLUnit 

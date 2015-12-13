@@ -17,6 +17,8 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingUtilities;
 
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTyp;
+import de.jClipCorn.gui.CachedResourceLoader;
+import de.jClipCorn.gui.Resources;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.helper.ExtendedFocusTraversalOnArray;
 import de.jClipCorn.util.listener.ProgressCallbackProgressBarHelper;
@@ -61,6 +63,7 @@ public class FindCoverDialog extends JDialog {
 		setModal(true);
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		setTitle(LocaleBundle.getString("FindCoverDialog.this.title")); //$NON-NLS-1$
+		setIconImage(CachedResourceLoader.getImage(Resources.IMG_FRAME_ICON));
 		
 		pnlTop = new JPanel();
 		getContentPane().add(pnlTop, BorderLayout.NORTH);
@@ -134,7 +137,7 @@ public class FindCoverDialog extends JDialog {
 		pnlCover = new CoverPanel(scrollPane);
 		scrollPane.setViewportView(pnlCover);
 		
-		setSize(650, 550);
+		setSize(800, 680);
 	}
 	
 	private void onOK() {

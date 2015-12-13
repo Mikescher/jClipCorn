@@ -435,7 +435,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		btnSeriesOk.setBounds(162, 612, 89, 23);
 		pnlSeries.add(btnSeriesOk);
 		
-		edSeriesCvrControl = new EditCoverControl(this);
+		edSeriesCvrControl = new EditCoverControl(this, this);
 		edSeriesCvrControl.setBounds(12, 14, EditCoverControl.CTRL_WIDTH, EditCoverControl.CTRL_HEIGHT);
 		pnlSeries.add(edSeriesCvrControl);
 		
@@ -521,7 +521,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		btnSeasonOK.setBounds(145, 612, 89, 23);
 		pnlSeason.add(btnSeasonOK);
 		
-		edSeasonCvrControl = new EditCoverControl(this);
+		edSeasonCvrControl = new EditCoverControl(this, this);
 		edSeasonCvrControl.setBounds(12, 13, EditCoverControl.CTRL_WIDTH, EditCoverControl.CTRL_HEIGHT);
 		pnlSeason.add(edSeasonCvrControl);
 		

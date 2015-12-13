@@ -1,58 +1,74 @@
 package de.jClipCorn.util.parser.imageparser;
 
+import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.CopyOnWriteArrayList;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.util.helper.HTTPUtilities;
+import de.jClipCorn.util.listener.ProgressCallbackListener;
 
 @SuppressWarnings("nls")
-public class GoogleImageParser { //TODO Google API discontinued
-	private final static String KEY_DATA = "responseData";
-	private final static String KEY_RESULTS = "results";
-	private final static String KEY_URL = "unescapedUrl";
+public class GoogleImageParser {
+	public final static String SEARCH_APPENDIX_1 = "cover";
+	public final static String SEARCH_APPENDIX_2 = "poster";
+
+	public final static int HTMLUNIT_JS_TIMEOUT = 5 * 1000; // 5s
 	
-	private final static String SEARCH_APPENDIX = " cover";
+	private final static String BASE_URL = "https://www.google.com";
+	private final static String SEARCH_URL = "/search?q=%s&tbm=isch&tbm=isch&safe=off&num=16";
+
+	private final static String JSOUP_SEARCHPAGE_IMAGE = "a[href*=imgurl]:has(img[src])"; // a[href*=imgurl]:has(img[src])
 	
-	private final static String BASE_URL = "https://ajax.googleapis.com";
-	private final static String SEARCH_URL = "/ajax/services/search/images?v=1.0&rsz=8&q=%s&userip=127.0.0.1";
-	
-	public static String getSearchURL(String title) {
-		return String.format(BASE_URL + SEARCH_URL, HTTPUtilities.escapeURL(title + SEARCH_APPENDIX));
+	public static String getSearchURL(String title, String appendix) {
+		return String.format(BASE_URL + SEARCH_URL, HTTPUtilities.escapeURL(title + " " + appendix));
 	}
 	
-	public static List<String> extractImageLinks(String json) {
+	public static List<String> extractImageLinks(String html, int max, CopyOnWriteArrayList<String> exclusions, ProgressCallbackListener progress) {
 		List<String> result = new ArrayList<>();
 		
-		JSONObject jobj;
-		try {
-			jobj = new JSONObject(json);
-		} catch (JSONException e) {
-			CCLog.addWarning(LocaleBundle.getFormattedString("LogMessage.CouldNotParseJSON", json), e); //$NON-NLS-1$
-			return result;
-		}
+		Elements images = Jsoup.parse(html).select(JSOUP_SEARCHPAGE_IMAGE);
 		
-		JSONArray jsonresults;
-		try {
-			jsonresults = jobj.getJSONObject(KEY_DATA).getJSONArray(KEY_RESULTS);
-		} catch (JSONException e) {
-			CCLog.addWarning(LocaleBundle.getFormattedString("LogMessage.CouldNotParseJSON", json), e); //$NON-NLS-1$
-			return result;
-		}
-		
-		for (int i = 0; i < jsonresults.length(); i++) {
-			try {
-				String nurl = jsonresults.getJSONObject(i).getString(KEY_URL);
-				result.add(nurl);
-			} catch (JSONException e) {
-				CCLog.addWarning(LocaleBundle.getFormattedString("LogMessage.CouldNotParseJSON", json), e); //$NON-NLS-1$
-				return result;
+		int count = 0;
+		for (Iterator<Element> it = images.iterator(); it.hasNext();) {
+			if (count == max) return result;
+			
+			String url = it.next().attr("href");
+			
+			if (exclusions.contains(url)) continue;
+			exclusions.add(url);
+			
+			if (! url.isEmpty()) {
+				try {
+					Map<String, String> parameter = HTTPUtilities.splitQuery(url);
+					
+					if (parameter.containsKey("imgurl") && !parameter.get("imgurl").isEmpty() && HTTPUtilities.isURL(parameter.get("imgurl"))) {
+						count++;
+						
+						result.add(parameter.get("imgurl"));
+					} else {
+						CCLog.addError(LocaleBundle.getFormattedString("LogMessage.MalformedURL", url));
+					}
+				} catch (UnsupportedEncodingException | MalformedURLException e) {
+					CCLog.addError(LocaleBundle.getFormattedString("LogMessage.MalformedURL", url), e);
+				}
 			}
+			
+			progress.step();
+		}
+		
+		while (count != max) {
+			progress.step();
+			count++;
 		}
 		
 		return result;

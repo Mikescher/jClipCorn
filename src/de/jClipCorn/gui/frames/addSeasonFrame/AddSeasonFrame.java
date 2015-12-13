@@ -105,7 +105,7 @@ public class AddSeasonFrame extends JFrame implements UserDataProblemHandler, Pa
 		spnYear.setBounds(76, 44, 212, 20);
 		getContentPane().add(spnYear);
 		
-		edCvrControl = new EditCoverControl(this);
+		edCvrControl = new EditCoverControl(this, this);
 		edCvrControl.setBounds(298, 16, EditCoverControl.CTRL_WIDTH, EditCoverControl.CTRL_HEIGHT);
 		getContentPane().add(edCvrControl);
 	}

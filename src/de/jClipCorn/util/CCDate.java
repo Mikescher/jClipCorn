@@ -662,6 +662,8 @@ public final class CCDate {
 		return new CCDate(1, 1, 1970).getDayDifferenceTo(this) * MILLISECONDS_PER_DAY;
 	}
 	
+	/// This checks _not_ for unset dates (1.1.1900)
+	/// This checks only for really invalid dates (eg 40.13.1800)
 	public boolean isValidDate() {
 		if (! (year >= YEAR_MIN)) {
 			return false;

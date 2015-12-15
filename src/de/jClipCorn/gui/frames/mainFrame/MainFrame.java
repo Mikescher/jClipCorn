@@ -118,6 +118,7 @@ public class MainFrame extends JFrame implements CCDBUpdateListener {
 		btnSearch.setPreferredSize(new Dimension(20, 20));
 		btnSearch.setContentAreaFilled(false);
 		btnSearch.setBorderPainted(false);
+		btnSearch.setFocusPainted(false);
 		btnSearch.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {

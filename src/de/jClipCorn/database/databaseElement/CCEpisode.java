@@ -242,6 +242,10 @@ public class CCEpisode {
 		return viewed;
 	}
 
+	public boolean isViewedAndHasLastViewed() {
+		return viewed && !lastViewed.isMinimum();
+	}
+
 	public CCMovieQuality getQuality() {
 		return quality;
 	}
@@ -282,9 +286,19 @@ public class CCEpisode {
 		MoviePlayer.play(this);
 		
 		if (updateEpisodeState) {
-			setViewed(true);
-		
-			setLastViewed(CCDate.getCurrentDate());
+			if (CCProperties.getInstance().PROP_SERIES_KEEP_LASTVIEWED_PERSISTENT.getValue()) {
+				if (isViewedAndHasLastViewed()) {
+					// Don't update series - keep viewed persistent
+				} else {
+					setViewed(true);
+					
+					setLastViewed(CCDate.getCurrentDate());
+				}
+			} else {
+				setViewed(true);
+				
+				setLastViewed(CCDate.getCurrentDate());
+			}
 		}
 	}
 	

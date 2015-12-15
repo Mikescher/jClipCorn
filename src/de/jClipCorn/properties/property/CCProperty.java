@@ -38,10 +38,6 @@ public abstract class CCProperty<T extends Object> {
 		return standard;
 	}
 	
-	public T getStandard() {
-		return standard;
-	}
-	
 	public String getIdentifier() {
 		return identifier;
 	}

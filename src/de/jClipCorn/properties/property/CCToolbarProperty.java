@@ -79,7 +79,7 @@ public class CCToolbarProperty extends CCStringProperty {
 		if (isValid(val)) {
 			return val;
 		} else  {
-			setValue(getStandard());
+			setValue(getDefault());
 			CCLog.addWarning(LocaleBundle.getFormattedString("LogMessage.PropFormatErrorToolbar", identifier, mclass.getName())); //$NON-NLS-1$
 			return standard;
 		}

@@ -8,10 +8,11 @@ import de.jClipCorn.gui.guiComponents.jCCDateSpinner.JCCDateSpinner;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.properties.CCProperties;
+import de.jClipCorn.properties.CCPropertyCategory;
 import de.jClipCorn.util.CCDate;
 
 public class CCDateProperty extends CCProperty<CCDate> {
-	public CCDateProperty(int cat, CCProperties prop, String ident, CCDate std) {
+	public CCDateProperty(CCPropertyCategory cat, CCProperties prop, String ident, CCDate std) {
 		super(cat, CCDate.class, prop, ident, std);
 	}
 

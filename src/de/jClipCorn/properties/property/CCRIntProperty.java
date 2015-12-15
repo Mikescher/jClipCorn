@@ -11,6 +11,7 @@ import javax.swing.SpinnerNumberModel;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.properties.CCProperties;
+import de.jClipCorn.properties.CCPropertyCategory;
 
 public class CCRIntProperty extends CCIntProperty {
 	private int min;
@@ -18,21 +19,21 @@ public class CCRIntProperty extends CCIntProperty {
 	
 	private Vector<String> values;
 	
-	public CCRIntProperty(int cat, CCProperties prop, String ident, Integer standard, int min, int max, Vector<String> values) {
+	public CCRIntProperty(CCPropertyCategory cat, CCProperties prop, String ident, Integer standard, int min, int max, Vector<String> values) {
 		super(cat ,prop, ident, standard);
 		this.min = min;
 		this.max = max;
 		this.values = values;
 	}
 	
-	public CCRIntProperty(int cat, CCProperties prop, String ident, Integer standard, Vector<String> values) {
+	public CCRIntProperty(CCPropertyCategory cat, CCProperties prop, String ident, Integer standard, Vector<String> values) {
 		super(cat, prop, ident, standard);
 		this.min = 0;
 		this.max = values.size();
 		this.values = values;
 	}
 	
-	public CCRIntProperty(int cat, CCProperties prop, String ident, Integer standard, Integer max) {
+	public CCRIntProperty(CCPropertyCategory cat, CCProperties prop, String ident, Integer standard, Integer max) {
 		super(cat, prop, ident, standard);
 		this.min = 0;
 		this.max = max;

@@ -4,16 +4,17 @@ import java.awt.Component;
 
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.properties.CCProperties;
+import de.jClipCorn.properties.CCPropertyCategory;
 
 public abstract class CCProperty<T extends Object> {
 	protected final CCProperties properties;
 	protected final String identifier;
 	protected final T standard;
-	protected final int category;
+	protected final CCPropertyCategory category;
 	protected final Class<T> mclass;
 
 	@SuppressWarnings("unchecked")
-	public CCProperty(int cat, Class<T> pclass, CCProperties prop, String ident, T std) {
+	public CCProperty(CCPropertyCategory cat, Class<T> pclass, CCProperties prop, String ident, T std) {
 		prop.addPropertyToList((CCProperty<Object>)this);
 		
 		this.category = cat;
@@ -46,7 +47,7 @@ public abstract class CCProperty<T extends Object> {
 		return getValue().getClass().getSimpleName();
 	}
 	
-	public int getCategory() {
+	public CCPropertyCategory getCategory() {
 		return category;
 	}
 	

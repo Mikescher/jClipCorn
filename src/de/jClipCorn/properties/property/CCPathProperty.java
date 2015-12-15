@@ -11,13 +11,14 @@ import org.apache.commons.lang.StringUtils;
 
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.properties.CCProperties;
+import de.jClipCorn.properties.CCPropertyCategory;
 import de.jClipCorn.util.Validator;
 import de.jClipCorn.util.helper.FileChooserHelper;
 
 public class CCPathProperty extends CCStringProperty {
 	private final String filterEnd;
 	
-	public CCPathProperty(int cat, CCProperties prop, String ident, String standard, String filter) {
+	public CCPathProperty(CCPropertyCategory cat, CCProperties prop, String ident, String standard, String filter) {
 		super(cat, prop, ident, standard);
 		filterEnd = filter;
 	}

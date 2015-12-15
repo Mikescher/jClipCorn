@@ -8,9 +8,10 @@ import javax.swing.SpinnerNumberModel;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.properties.CCProperties;
+import de.jClipCorn.properties.CCPropertyCategory;
 
 public class CCIntProperty extends CCProperty<Integer> {
-	CCIntProperty(int cat, CCProperties prop, String ident, Integer standard) {
+	CCIntProperty(CCPropertyCategory cat, CCProperties prop, String ident, Integer standard) {
 		super(cat, Integer.class, prop, ident, standard);
 	}
 

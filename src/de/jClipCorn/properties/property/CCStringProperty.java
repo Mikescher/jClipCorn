@@ -7,9 +7,10 @@ import javax.swing.JTextField;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.properties.CCProperties;
+import de.jClipCorn.properties.CCPropertyCategory;
 
 public class CCStringProperty extends CCProperty<String> {
-	public CCStringProperty(int cat, CCProperties prop, String ident, String standard) {
+	public CCStringProperty(CCPropertyCategory cat, CCProperties prop, String ident, String standard) {
 		super(cat, String.class, prop, ident, standard);
 	}
 

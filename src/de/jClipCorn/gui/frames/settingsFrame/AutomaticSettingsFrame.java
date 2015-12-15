@@ -27,9 +27,11 @@ import de.jClipCorn.gui.frames.extendedSettingsFrame.ExtendedSettingsFrame;
 import de.jClipCorn.gui.frames.mainFrame.MainFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.properties.CCProperties;
+import de.jClipCorn.properties.CCPropertyCategory;
 import de.jClipCorn.properties.property.CCProperty;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.helper.ExtendedFocusTraversalOnArray;
+import de.jClipCorn.util.helper.LookAndFeelManager;
 
 public abstract class AutomaticSettingsFrame extends JFrame {
 	private static final long serialVersionUID = 4681197289662529891L;
@@ -64,7 +66,11 @@ public abstract class AutomaticSettingsFrame extends JFrame {
 		
 		setIconImage(CachedResourceLoader.getImage(Resources.IMG_FRAME_ICON));
 		
-		setSize(new Dimension(750, 440));
+		if (LookAndFeelManager.isMetal())
+			setSize(new Dimension(800, 525));
+		else
+			setSize(new Dimension(700, 475));
+		
 		setMinimumSize(new Dimension(650, 400));
 		setTitle(LocaleBundle.getString("Settingsframe.this.title")); //$NON-NLS-1$
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -73,10 +79,10 @@ public abstract class AutomaticSettingsFrame extends JFrame {
 		tpnlSettings.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
 		getContentPane().add(tpnlSettings, BorderLayout.CENTER);
 		
-		int pnlCount = properties.getHighestCategory() + 1;
+		int pnlCount = properties.getCategoryCount();
 		
 		for (int i = 0; i < pnlCount; i++) {
-			tabOrder.addAll(initPanel(i));
+			tabOrder.addAll(initPanel(CCProperties.CATEGORIES[i]));
 		}
 
 		pnlBottom = new JPanel();
@@ -138,14 +144,14 @@ public abstract class AutomaticSettingsFrame extends JFrame {
 		setFocusTraversalPolicy(new ExtendedFocusTraversalOnArray(tabOrder));
 	}
 
-	private List<Component> initPanel(int pnlNumber) {
+	private List<Component> initPanel(CCPropertyCategory category) {
 		List<Component> tabOrder = new ArrayList<>();
 		
 		JPanel pnlRoot = new JPanel();
 		JScrollPane scrlPane = new JScrollPane();
 		
 		JPanel pnlTab = new JPanel();
-		tpnlSettings.addTab(LocaleBundle.getString("Settingsframe.tabbedCpt.Caption_" + pnlNumber), null, pnlRoot, null); //$NON-NLS-1$
+		tpnlSettings.addTab(category.getCaption(), null, pnlRoot, null);
 		
 		pnlRoot.setLayout(new BorderLayout());
 		pnlRoot.add(scrlPane, BorderLayout.CENTER);
@@ -163,11 +169,11 @@ public abstract class AutomaticSettingsFrame extends JFrame {
 				FormSpecs.RELATED_GAP_COLSPEC,
 				FormSpecs.DEFAULT_COLSPEC,
 				FormSpecs.RELATED_GAP_COLSPEC},
-			getRowSpec(properties.getCategoryCount(pnlNumber))));
+			getRowSpec(properties.getCountForCategory(category))));
 
 		int c = 1;
 		for (final CCProperty<Object> p : properties.getPropertyList()) {
-			if (p.getCategory() == pnlNumber) {
+			if (p.getCategory().equals(category)) {
 				JLabel info = new JLabel(p.getDescription());
 				pnlTab.add(info, "2, " + c*2 + ", right, default"); //$NON-NLS-1$ //$NON-NLS-2$
 

@@ -8,9 +8,10 @@ import javax.swing.SpinnerNumberModel;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.properties.CCProperties;
+import de.jClipCorn.properties.CCPropertyCategory;
 
 public class CCDoubleProperty extends CCProperty<Double> {
-	CCDoubleProperty(int cat, CCProperties prop, String ident, Double standard) {
+	CCDoubleProperty(CCPropertyCategory cat, CCProperties prop, String ident, Double standard) {
 		super(cat, Double.class, prop, ident, standard);
 	}
 

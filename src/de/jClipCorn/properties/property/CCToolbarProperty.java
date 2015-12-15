@@ -16,10 +16,11 @@ import de.jClipCorn.gui.guiComponents.ToolbarConfigPanel;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.properties.CCProperties;
+import de.jClipCorn.properties.CCPropertyCategory;
 
 public class CCToolbarProperty extends CCStringProperty {
 
-	public CCToolbarProperty(int cat, CCProperties prop, String ident, String standard) {
+	public CCToolbarProperty(CCPropertyCategory cat, CCProperties prop, String ident, String standard) {
 		super(cat, prop, ident, standard);
 	}
 	

@@ -9,6 +9,7 @@ import javax.swing.JComboBox;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.properties.CCProperties;
+import de.jClipCorn.properties.CCPropertyCategory;
 import de.jClipCorn.properties.exceptions.BooleanFormatException;
 
 public class CCBoolProperty extends CCProperty<Boolean> {
@@ -16,7 +17,7 @@ public class CCBoolProperty extends CCProperty<Boolean> {
 	public final static String TYPE_BOOL_FALSE = "false"; //$NON-NLS-1$
 	private final static String[] BOOL_LIST = { TYPE_BOOL_FALSE, TYPE_BOOL_TRUE };
 	
-	public CCBoolProperty(int cat, CCProperties prop, String ident, boolean standard) {
+	public CCBoolProperty(CCPropertyCategory cat, CCProperties prop, String ident, boolean standard) {
 		super(cat, Boolean.class, prop, ident, standard);
 	}
 

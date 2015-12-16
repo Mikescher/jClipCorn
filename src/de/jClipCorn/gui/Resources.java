@@ -95,6 +95,7 @@ public class Resources {
 	public final static String ICN_TABLE_VIEWED_TRUE  	= registerICN("/icons/table/viewed_1.png");
 	public final static String ICN_TABLE_VIEWED_LATER 	= registerICN("/icons/table/viewed_2.png");
 	public final static String ICN_TABLE_VIEWED_NEVER 	= registerICN("/icons/table/viewed_3.png");
+	public final static String ICN_TABLE_VIEWED_PARTIAL	= registerICN("/icons/table/viewed_4.png");
 	
 	public final static String ICN_TABLE_QUALITY_0 		= registerICN("/icons/table/quality_0.png");
 	public final static String ICN_TABLE_QUALITY_1 		= registerICN("/icons/table/quality_1.png");

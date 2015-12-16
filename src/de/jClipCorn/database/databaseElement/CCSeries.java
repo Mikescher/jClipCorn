@@ -71,6 +71,10 @@ public class CCSeries extends CCDatabaseElement {
 		return v;
 	}
 	
+	public boolean isPartialViewed() { // Some parts viewed - some not
+		return !(isViewed() || isUnviewed());
+	}
+	
 	public CCMovieQuality getQuality() {
 		int qs = 0;
 		int qc = 0;
@@ -482,6 +486,11 @@ public class CCSeries extends CCDatabaseElement {
 	}
 
 	public ExtendedViewedState getExtendedViewedState() {
-		return isViewed() ? ExtendedViewedState.VIEWED : ExtendedViewedState.NOT_VIEWED;
+		if (isViewed())
+			return ExtendedViewedState.VIEWED;
+		else if (CCProperties.getInstance().PROP_SHOW_PARTIAL_VIEWED_STATE.getValue() && isPartialViewed())
+			return ExtendedViewedState.PARTIAL_VIEWED;
+		else
+			return ExtendedViewedState.NOT_VIEWED;
 	}
 }

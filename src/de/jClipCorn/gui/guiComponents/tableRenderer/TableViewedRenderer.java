@@ -26,6 +26,9 @@ public class TableViewedRenderer extends TableRenderer {
 		case MARKED_FOR_NEVER:
 			setIcon(CachedResourceLoader.getImageIcon(Resources.ICN_TABLE_VIEWED_NEVER));
 			break;
+		case PARTIAL_VIEWED:
+			setIcon(CachedResourceLoader.getImageIcon(Resources.ICN_TABLE_VIEWED_PARTIAL));
+			break;
 		}
     }
 }

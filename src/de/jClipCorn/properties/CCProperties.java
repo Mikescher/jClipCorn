@@ -136,6 +136,7 @@ public class CCProperties {
 	public CCBoolProperty		PROP_VALIDATE_CHECK_SERIES_STRUCTURE;
 	public CCBoolProperty		PROP_MAINFRAME_DONT_FILTER_WATCHNEVER;
 	public CCBoolProperty		PROP_SERIES_KEEP_LASTVIEWED_PERSISTENT;
+	public CCBoolProperty		PROP_SHOW_PARTIAL_VIEWED_STATE;
 	
 	public boolean ARG_READONLY = false;
 	
@@ -240,6 +241,7 @@ public class CCProperties {
 		PROP_SERIES_ADDDATECALCULATION			= new CCRIntProperty(CAT_SERIES, 		this, 	"PROP_SERIES_ADDDATECALCULATION", 			1, 					va);
 		PROP_VALIDATE_CHECK_SERIES_STRUCTURE	= new CCBoolProperty(CAT_SERIES,		this,   "PROP_VALIDATE_CHECK_SERIES_STRUCTURE",		false);
 		PROP_SERIES_KEEP_LASTVIEWED_PERSISTENT  = new CCBoolProperty(CAT_SERIES,		this,   "PROP_SERIES_KEEP_LASTVIEWED_PERSISTENT",	false);
+		PROP_SHOW_PARTIAL_VIEWED_STATE			= new CCBoolProperty(CAT_SERIES,		this,   "PROP_SHOW_PARTIAL_VIEWED_STATE",			false);
 		
 		PROP_PLAY_VLC_PATH						= new CCPathProperty(CAT_PLAY, 			this,	"PROP_PLAY_VLC_PATH",						"", 				PathFormatter.appendAndPrependSeparator("vlc.exe"));
 		PROP_PLAY_VLC_FULLSCREEN				= new CCBoolProperty(CAT_PLAY, 			this,   "PROP_PLAY_VLC_FULLSCREEN", 				false);

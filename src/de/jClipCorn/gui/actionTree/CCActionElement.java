@@ -298,7 +298,7 @@ public class CCActionElement {
 		}
 		
 		if (Main.DEBUG) {
-			System.out.println(String.format("[DBG] %d Properties in ActionTree intialized", childs.size())); //$NON-NLS-1$
+			System.out.println(String.format("[DBG] %d Keystrokeproperties in ActionTree intialized", childs.size())); //$NON-NLS-1$
 		}
 	}
 	

@@ -156,4 +156,16 @@ public class SerTable extends JScrollPane implements ListSelectionListener, Mous
 			}
 		}
 	}
+
+	@Override
+	public void requestFocus() {
+		table.requestFocus();
+		if (table.getRowCount() > 0 && table.getColumnCount() > 0 && table.getSelectedRow() == -1) table.changeSelection(0, 0, false, false);
+		else if (table.getRowCount() > 0 && table.getColumnCount() > 0 && table.getSelectedRow() >= 0) table.changeSelection(table.getSelectedRow(), 0, false, false);
+	}
+
+	@Override
+	public boolean isFocusOwner() {
+		return table.isFocusOwner();
+	}
 }

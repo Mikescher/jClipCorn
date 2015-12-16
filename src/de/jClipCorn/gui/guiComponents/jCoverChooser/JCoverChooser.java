@@ -289,4 +289,8 @@ public class JCoverChooser extends JComponent implements MouseListener {
 	public void set3DMode(boolean mode3d) {
 		this.mode3d = mode3d;
 	}
+	
+	public int getElementCount() {
+		return images.size();
+	}
 }

@@ -5,8 +5,11 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.KeyEventDispatcher;
+import java.awt.KeyboardFocusManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
@@ -612,6 +615,23 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 			}
 		});
 		pnlAddInfo.add(btnAdditionalInfo);
+		
+		KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new KeyEventDispatcher() {
+			@Override
+			public boolean dispatchKeyEvent(KeyEvent e) {
+				if (e.getID() == KeyEvent.KEY_PRESSED){
+					if (e.getKeyCode() == KeyEvent.VK_LEFT && cvrChooser.getSelectedIndex() > 0) {
+						cvrChooser.setCurrSelected(cvrChooser.getSelectedIndex() - 1);
+					} else if (e.getKeyCode() == KeyEvent.VK_RIGHT && cvrChooser.getSelectedIndex()+1 < cvrChooser.getElementCount()) {
+						cvrChooser.setCurrSelected(cvrChooser.getSelectedIndex() + 1);
+					} else if (e.getKeyCode() == KeyEvent.VK_DOWN || e.getKeyCode() == KeyEvent.VK_UP) {
+						if (! tabSeason.isFocusOwner()) tabSeason.requestFocus();
+					}
+				}
+				
+				return false;
+			}
+		});
 	}
 
 	private void updateData() {

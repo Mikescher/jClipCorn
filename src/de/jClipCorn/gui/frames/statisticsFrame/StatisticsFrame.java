@@ -251,7 +251,7 @@ public class StatisticsFrame extends JFrame {
 		pnlCheckSeries.setViewportView(seriesList);
 		DefaultListModel<SeriesCheckBoxList.SeriesCheckBoxListElement> seriesListModel = new DefaultListModel<>();
 		seriesListModel.addElement(new SeriesCheckBoxList.SeriesCheckBoxListElement());
-		for (Iterator<CCSeries> it = movielist.iteratorSeries(); it.hasNext();) {
+		for (Iterator<CCSeries> it = movielist.iteratorSeriesSorted(); it.hasNext();) {
 			seriesListModel.addElement(new SeriesCheckBoxList.SeriesCheckBoxListElement(it.next()));
 		}
 		seriesList.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);

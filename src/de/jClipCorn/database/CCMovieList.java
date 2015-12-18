@@ -33,6 +33,8 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.CCDate;
+import de.jClipCorn.util.comparator.CCMovieComparator;
+import de.jClipCorn.util.comparator.CCSeriesComparator;
 import de.jClipCorn.util.formatter.PathFormatter;
 
 public class CCMovieList {
@@ -625,8 +627,28 @@ public class CCMovieList {
 		return new MovieIterator(list);
 	}
 	
+	public Iterator<CCMovie> iteratorMoviesSorted() {
+		List<CCMovie> list = new ArrayList<>();
+		Iterator<CCMovie> it = iteratorMovies();
+		while (it.hasNext()) list.add(it.next());
+
+		Collections.sort(list, new CCMovieComparator());
+
+		return list.iterator();
+	}
+	
 	public Iterator<CCSeries> iteratorSeries() {
 		return new SeriesIterator(list);
+	}
+	
+	public Iterator<CCSeries> iteratorSeriesSorted() {
+	      List<CCSeries> list = new ArrayList<>();
+	      Iterator<CCSeries> it = iteratorSeries();
+	      while (it.hasNext()) list.add(it.next());
+
+	      Collections.sort(list, new CCSeriesComparator());
+	      
+	      return list.iterator();
 	}
 	
 	@SuppressWarnings("nls")

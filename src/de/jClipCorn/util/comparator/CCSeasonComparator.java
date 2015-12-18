@@ -1,10 +1,10 @@
-package de.jClipCorn.util;
+package de.jClipCorn.util.comparator;
 
 import java.util.Comparator;
 
 import de.jClipCorn.database.databaseElement.CCSeason;
 
-public class SeasonComparator implements Comparator<CCSeason>{
+public class CCSeasonComparator implements Comparator<CCSeason> {
 	
 	@Override
 	public int compare(CCSeason o1, CCSeason o2) {

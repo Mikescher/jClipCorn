@@ -19,8 +19,8 @@ import de.jClipCorn.database.util.ExtendedViewedState;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.CCDate;
 import de.jClipCorn.util.LargeMD5Calculator;
-import de.jClipCorn.util.SeasonComparator;
 import de.jClipCorn.util.YearRange;
+import de.jClipCorn.util.comparator.CCSeasonComparator;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.formatter.TimeIntervallFormatter;
 import de.jClipCorn.util.helper.ByteUtilies;
@@ -363,7 +363,7 @@ public class CCSeries extends CCDatabaseElement {
 			sortedseasons.add(cs);
 		}
 		
-		Collections.sort(sortedseasons, new SeasonComparator());
+		Collections.sort(sortedseasons, new CCSeasonComparator());
 		
 		return sortedseasons.indexOf(ccSeason);
 	}

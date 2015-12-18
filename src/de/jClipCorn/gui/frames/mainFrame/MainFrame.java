@@ -158,11 +158,8 @@ public class MainFrame extends JFrame implements CCDBUpdateListener {
 		getContentPane().add(statusbar, BorderLayout.SOUTH);
 
 		pack();
-		
-		if (LookAndFeelManager.isMetal())
-			setSize(875, 650);
-		else
-			setSize(875, 640);
+
+		setSize(CCProperties.getInstance().PROP_MAINFRAME_WIDTH.getValue(), CCProperties.getInstance().PROP_MAINFRAME_HEIGHT.getValue());
 	}
 	
 	public void beginBlockingIntermediate() {

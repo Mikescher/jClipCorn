@@ -3,8 +3,8 @@ package de.jClipCorn.properties.property;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.CCPropertyCategory;
 
-public class CCPintProperty extends CCRIntProperty {
-	public CCPintProperty(CCPropertyCategory cat, CCProperties prop, String ident, Integer standard) {
+public class CCPIntProperty extends CCRIntProperty {
+	public CCPIntProperty(CCPropertyCategory cat, CCProperties prop, String ident, Integer standard) {
 		super(cat, prop, ident, standard, 0, Integer.MAX_VALUE, null);
 	}
 	

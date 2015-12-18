@@ -17,7 +17,7 @@ import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.properties.property.CCBoolProperty;
 import de.jClipCorn.properties.property.CCDateProperty;
 import de.jClipCorn.properties.property.CCPathProperty;
-import de.jClipCorn.properties.property.CCPintProperty;
+import de.jClipCorn.properties.property.CCPIntProperty;
 import de.jClipCorn.properties.property.CCProperty;
 import de.jClipCorn.properties.property.CCRIntProperty;
 import de.jClipCorn.properties.property.CCStringProperty;
@@ -80,11 +80,11 @@ public class CCProperties {
 	public CCRIntProperty 		PROP_ON_DBLCLICK_MOVE; //0=Play | 1=Preview
 	public CCBoolProperty 		PROP_USE_INTELLISORT;
 	public CCBoolProperty 		PROP_INCLUDE_SERIES_IN_VIEWEDCOUNT;
-	public CCPintProperty 		PROP_MAINFRAME_SCROLLSPEED;
+	public CCPIntProperty 		PROP_MAINFRAME_SCROLLSPEED;
 	public CCRIntProperty 		PROP_MAINFRAME_TABLEBACKGROUND; //0=WHITE | 1=GRAY-WHITE | 2=Score
 	public CCBoolProperty 		PROP_LOADING_PRELOADRESOURCES;
 	public CCBoolProperty 		PROP_DATABASE_CREATELOGFILE;
-	public CCPintProperty 		PROP_DATABASE_COVERCACHESIZE;
+	public CCPIntProperty 		PROP_DATABASE_COVERCACHESIZE;
 	public CCBoolProperty 		PROP_COMMON_CHECKFORUPDATES;
 	public CCBoolProperty 		PROP_COMMON_PRESCANFILESYSTEM;
 	public CCBoolProperty 		PROP_SCANFOLDER_INCLUDESERIES;
@@ -92,12 +92,12 @@ public class CCProperties {
 	public CCDateProperty 		PROP_BACKUP_LASTBACKUP;
 	public CCBoolProperty 		PROP_BACKUP_CREATEBACKUPS;
 	public CCStringProperty 	PROP_BACKUP_FOLDERNAME;
-	public CCPintProperty 		PROP_BACKUP_BACKUPTIME;
+	public CCPIntProperty 		PROP_BACKUP_BACKUPTIME;
 	public CCRIntProperty 		PROP_BACKUP_COMPRESSION;
 	public CCBoolProperty 		PROP_BACKUP_AUTODELETEBACKUPS;
-	public CCPintProperty 		PROP_BACKUP_LIFETIME;
+	public CCPIntProperty 		PROP_BACKUP_LIFETIME;
 	public CCBoolProperty 		PROP_LOG_APPEND;
-	public CCPintProperty 		PROP_LOG_MAX_LINECOUNT;
+	public CCPIntProperty 		PROP_LOG_MAX_LINECOUNT;
 	public CCRIntProperty 		PROP_VIEW_DB_START_SORT;
 	public CCRIntProperty		PROP_VALIDATE_FILESIEDRIFT;
 	public CCBoolProperty		PROP_OTHER_DEBUGMODE;
@@ -137,6 +137,8 @@ public class CCProperties {
 	public CCBoolProperty		PROP_MAINFRAME_DONT_FILTER_WATCHNEVER;
 	public CCBoolProperty		PROP_SERIES_KEEP_LASTVIEWED_PERSISTENT;
 	public CCBoolProperty		PROP_SHOW_PARTIAL_VIEWED_STATE;
+	public CCPIntProperty 		PROP_MAINFRAME_WIDTH;
+	public CCPIntProperty 		PROP_MAINFRAME_HEIGHT;
 	
 	public boolean ARG_READONLY = false;
 	
@@ -210,7 +212,7 @@ public class CCProperties {
 		PROP_UI_LOOKANDFEEL						= new CCRIntProperty(CAT_VIEW, 			this,	"PROP_UI_LOOKANDFEEL", 						getDefStyle(),		vlf);
 		PROP_MAINFRAME_TABLEBACKGROUND			= new CCRIntProperty(CAT_VIEW, 			this,	"PROP_MAINFRAME_TABLEBACKGROUND",			0, 					vb);
 		PROP_LOADING_LIVEUPDATE					= new CCBoolProperty(CAT_VIEW, 			this, 	"PROP_LOADING_LIVEUPDATE", 					false);
-		PROP_MAINFRAME_SCROLLSPEED				= new CCPintProperty(CAT_VIEW, 			this, 	"PROP_MAINFRAME_SCROLLSPEED", 				3);
+		PROP_MAINFRAME_SCROLLSPEED				= new CCPIntProperty(CAT_VIEW, 			this, 	"PROP_MAINFRAME_SCROLLSPEED", 				3);
 		PROP_VIEW_DB_START_SORT					= new CCRIntProperty(CAT_VIEW, 			this, 	"PROP_VIEW_DB_START_SORT", 					0,					vs);
 		PROP_TOOLBAR_ELEMENTS					= new CCToolbarProperty(CAT_VIEW, 		this, 	"PROP_TOOLBAR_ELEMENTS", 					ClipToolbar.STANDARD_CONFIG);
 		PROP_MAINFRAME_CLICKABLEZYKLUS			= new CCBoolProperty(CAT_VIEW,		 	this,   "PROP_MAINFRAME_CLICKABLEZYKLUS",			false);
@@ -226,8 +228,8 @@ public class CCProperties {
 		PROP_COVER_PREFIX						= new CCStringProperty(CAT_DATABASE, 	this,	"PROP_COVER_PREFIX",						"cover_");
 		PROP_COVER_TYPE							= new CCStringProperty(CAT_DATABASE, 	this,	"PROP_COVER_TYPE",							"png");
 		PROP_DATABASE_CREATELOGFILE				= new CCBoolProperty(CAT_DATABASE,		this, 	"PROP_DATABASE_CREATELOGFILE", 				true);
-		PROP_DATABASE_COVERCACHESIZE			= new CCPintProperty(CAT_DATABASE, 		this, 	"PROP_DATABASE_COVERCACHESIZE", 			128);
-		PROP_LOG_MAX_LINECOUNT 					= new CCPintProperty(CAT_DATABASE, 		this, 	"PROP_LOG_MAX_LINECOUNT", 					1048576); // 2^20
+		PROP_DATABASE_COVERCACHESIZE			= new CCPIntProperty(CAT_DATABASE, 		this, 	"PROP_DATABASE_COVERCACHESIZE", 			128);
+		PROP_LOG_MAX_LINECOUNT 					= new CCPIntProperty(CAT_DATABASE, 		this, 	"PROP_LOG_MAX_LINECOUNT", 					1048576); // 2^20
 
 		PROP_ON_DBLCLICK_MOVE					= new CCRIntProperty(CAT_MOVIES, 		this, 	"PROP_ON_DBLCLICK_MOVE", 					0, 					vd);
 		PROP_MAINFRAME_AUTOMATICRESETWATCHLATER = new CCBoolProperty(CAT_MOVIES,		this,   "PROP_MAINFRAME_AUTOMATICRESETWATCHLATER",	true);
@@ -250,10 +252,10 @@ public class CCProperties {
 		
 		PROP_BACKUP_CREATEBACKUPS				= new CCBoolProperty(CAT_BACKUP, 		this, 	"PROP_BACKUP_CREATEBACKUPS", 				false);
 		PROP_BACKUP_FOLDERNAME					= new CCStringProperty(CAT_BACKUP,	 	this,	"PROP_BACKUP_FOLDERNAME",					"jClipCorn_backup");
-		PROP_BACKUP_BACKUPTIME					= new CCPintProperty(CAT_BACKUP, 		this, 	"PROP_BACKUP_BACKUPTIME", 					7);
+		PROP_BACKUP_BACKUPTIME					= new CCPIntProperty(CAT_BACKUP, 		this, 	"PROP_BACKUP_BACKUPTIME", 					7);
 		PROP_BACKUP_COMPRESSION					= new CCRIntProperty(CAT_BACKUP, 		this, 	"PROP_BACKUP_COMPRESSION", 					0,					10);
 		PROP_BACKUP_AUTODELETEBACKUPS			= new CCBoolProperty(CAT_BACKUP, 		this,   "PROP_BACKUP_AUTODELETEBACKUPS", 			true);
-		PROP_BACKUP_LIFETIME					= new CCPintProperty(CAT_BACKUP, 		this, 	"PROP_BACKUP_LIFETIME", 					56);
+		PROP_BACKUP_LIFETIME					= new CCPIntProperty(CAT_BACKUP, 		this, 	"PROP_BACKUP_LIFETIME", 					56);
 		
 		PROP_STATBAR_ELCOUNT					= new CCBoolProperty(CAT_STATUSBAR,	 	this,   "PROP_STATBAR_ELCOUNT",						true);
 		PROP_STATBAR_PROGRESSBAR				= new CCBoolProperty(CAT_STATUSBAR,	 	this,   "PROP_STATBAR_PROGRESSBAR",					true);
@@ -282,6 +284,8 @@ public class CCProperties {
 		PROP_IMPORT_RESETTAGS					= new CCBoolProperty(NONVISIBLE,	 	this,   "PROP_IMPORT_RESETTAGS",					true);
 		PROP_PARSEIMDB_LANGUAGE					= new CCRIntProperty(NONVISIBLE,	 	this,   "PROP_PARSEIMDB_LANGUAGE",					1, 					2);
 		PROP_STATISTICS_INTERACTIVECHARTS		= new CCBoolProperty(NONVISIBLE,	 	this,   "PROP_STATISTICS_INTERACTIVECHARTS",		false);
+		PROP_MAINFRAME_WIDTH					= new CCPIntProperty(NONVISIBLE,	 	this,   "PROP_MAINFRAME_WIDTH",						875);
+		PROP_MAINFRAME_HEIGHT					= new CCPIntProperty(NONVISIBLE,	 	this,   "PROP_MAINFRAME_HEIGHT",					getDefMFHeight());
 	}
 	
 	private int getDefLanguage() {
@@ -302,6 +306,13 @@ public class CCProperties {
 	
 	private boolean getDefStatbarLength() {
 		return getDefStyle() != LookAndFeelManager.ID_LNF_WINDOWS;
+	}
+	
+	private int getDefMFHeight() {
+		if (LookAndFeelManager.isMetal())
+			return 650;
+		else
+			return 640;
 	}
 
 	public static CCProperties getInstance() {

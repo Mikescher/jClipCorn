@@ -1,4 +1,4 @@
-﻿package de.jClipCorn.gui.frames.statisticsFrame;
+package de.jClipCorn.gui.frames.statisticsFrame;
 
 import java.awt.BorderLayout;
 import java.awt.Component;

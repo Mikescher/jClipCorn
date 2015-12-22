@@ -3,7 +3,7 @@
 #################
 
 *.pydevproject
-# .project
+.project
 .metadata
 bin/
 tmp/
@@ -12,8 +12,8 @@ tmp/
 *.swp
 *~.nib
 local.properties
-# .classpath
-# .settings/
+.classpath
+.settings/
 .loadpath
 
 # External tool builders
@@ -40,6 +40,16 @@ Thumbs.db
 # Folder config file
 Desktop.ini
 
+############
+## Gradle
+############
+
+.gradle
+build/
+gradle-app.setting
+!gradle-wrapper.jar
+.gradletasknamecache
+
 #################
 ## jClipCorn
 #################
@@ -48,7 +58,7 @@ ClipCornDB/
 ClipCornDB*/
 data/
 jClipCorn_backup/
-build/
+mybuilds/
 # javadoc/
 jClipCorn_backup/
 bin*/

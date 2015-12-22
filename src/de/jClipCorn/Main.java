@@ -95,7 +95,4 @@ public class Main {
 
 //TODO autom find IMDb Score discrepancies (search Movie on imdb -> if found compare score) ~ not in CheckDB (too long) but own dialog
 
-//TODO Cover mit höherer Auflösung
-//TODO All Views von Episoden (und Filmen speichern)  --> ermöglicht LastViewed + FirstViewed
-//       - New DB Version (dann auch gleich index für staffeln einführen)
-
+//TODO Cover with higher resolution // <--

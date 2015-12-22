@@ -1,3 +1,37 @@
+############ 2015-12-22: 1.9.8 Bugfix: Fixed exception in statistics with movies in only one year
+
+############ 2015-12-22: 1.9.8 Task: Fixed mmissing libs in build.gradle (now with manual dependency managmet)
+
+############ 2015-12-22: 1.9.8 Task: Moved to gradle as build system
+
+############ 2015-12-18: 1.9.8 Feature: Moved MainFrame Width and Height to Settings
+
+############ 2015-12-18: 1.9.8 Feature: Show Series sorted in StatisticsFrame
+
+############ 2015-12-16: 1.9.8 Feature: Ability to navigate PreviewSeriesFrame with arrow-keys
+
+############ 2015-12-16: 1.9.8 Feature: Show (optionally) icons for partially viewed series
+
+############ 2015-12-15: 1.9.8 Task: Properties re-organized (UI and code)
+
+############ 2015-12-15: 1.9.8 Feature: Added new Property PROP_SERIES_KEEP_LASTVIEWED_PERSISTANT
+
+############ 2015-12-15: 1.9.8 Task: CCProperty.getDefault() and CCProperty.getStandard() are redundant methods -.-
+
+############ 2015-12-13: 1.9.8 Bugfix: Progressmonitor (create backup) can no longer be closed by [X]
+
+############ 2015-12-13: 1.9.8 Task: Better default value for statusbar under Metal L'n'F
+
+############ 2015-12-13: 1.9.8 Bugfix: Fixed YearRange visibility in StatisticsFrame
+
+############ 2015-12-13: 1.9.8 Feature: Fixed a few problems with the Metal LnF
+
+############ 2015-12-13: 1.9.8 Feature: Better theme for char selector buttons (Metal)
+
+############ 2015-12-13: 1.9.8 Feature: Added version number to database [DB-Version 1.8]
+
+############ 2015-12-13: 1.9.7 RELEASE
+
 ############ 2015-12-13: 1.9.7 Feature: Automatic UI LnF selection on first start
 
 ############ 2015-12-13: 1.9.7 Feature: Automatic parse google image results for cover (manual jsoup-ing)
@@ -214,7 +248,7 @@
 ############ 2014-02-18: More Todo's   ...   as always
 
 ############ 2014-02-16: 1.9.2 Bugfixes
-- Fixed OpenLastPlöayedSeries not really selecting last played Episode
+- Fixed OpenLastPlÃ¶ayedSeries not really selecting last played Episode
 - Fixed ImDB-Parsing not recognizing images
 - Fixed CustomOnlineSCoreFilter interpreting No-Score as valid score
 

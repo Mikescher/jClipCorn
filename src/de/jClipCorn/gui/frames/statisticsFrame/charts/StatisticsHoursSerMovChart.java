@@ -87,6 +87,8 @@ public class StatisticsHoursSerMovChart extends StatisticsChart {
         domainTotalRangeMin = (long)series[0][0];
         domainTotalRangeMax = (long)series[0][daycount - 1];
         
+        if (domainTotalRangeMin == domainTotalRangeMax) domainTotalRangeMax++;
+        
         return dataset;
 	}
 

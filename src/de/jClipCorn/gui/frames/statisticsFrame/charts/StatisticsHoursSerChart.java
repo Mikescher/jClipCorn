@@ -86,6 +86,8 @@ public class StatisticsHoursSerChart extends StatisticsChart {
         domainTotalRangeMin = (long)series[0][0];
         domainTotalRangeMax = (long)series[0][allpos.length - 1];
         
+        if (domainTotalRangeMin == domainTotalRangeMax) domainTotalRangeMax++;
+        
         return dataset;
 	}
 

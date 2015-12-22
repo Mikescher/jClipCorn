@@ -93,6 +93,8 @@ public class StatisticsEpisodesViewedChart extends StatisticsChart {
         domainTotalRangeMin = (long)series[0][0];
         domainTotalRangeMax = (long)series[0][posx.size() - 1];
         
+        if (domainTotalRangeMin == domainTotalRangeMax) domainTotalRangeMax++;
+        
         return dataset;
 	}
 

@@ -114,6 +114,8 @@ public class StatisticsSeriesViewedChart extends StatisticsChart {
         domainTotalRangeMin = startdate.asMilliseconds();
         domainTotalRangeMax = enddate.asMilliseconds();
 	    
+        if (domainTotalRangeMin == domainTotalRangeMax) domainTotalRangeMax++;
+        
 		plot.setBackgroundPaint(XYBACKGROUND_COLOR);
 		plot.setDomainGridlinePaint(GRIDLINECOLOR);
 		plot.setRangeGridlinePaint(GRIDLINECOLOR);

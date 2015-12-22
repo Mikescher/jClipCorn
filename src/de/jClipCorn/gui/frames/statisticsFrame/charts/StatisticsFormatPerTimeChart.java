@@ -121,6 +121,8 @@ public class StatisticsFormatPerTimeChart extends StatisticsChart {
         domainTotalRangeMin = mindate.asMilliseconds();
         domainTotalRangeMax = maxdate.asMilliseconds();
 		
+        if (domainTotalRangeMin == domainTotalRangeMax) domainTotalRangeMax++;
+        
 		return result;
 	}
 

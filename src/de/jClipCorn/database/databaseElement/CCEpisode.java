@@ -461,10 +461,10 @@ public class CCEpisode {
 	}
 
 	public boolean checkFolderStructure() {
-		if (! getPart().toLowerCase().endsWith(getRelativeFileForCreatedFolderstructure().toLowerCase())) {
-			System.out.println(getPart() + " <> " + getRelativeFileForCreatedFolderstructure()); //$NON-NLS-1$
+		if (! getAbsolutePart().toLowerCase().endsWith(getRelativeFileForCreatedFolderstructure().toLowerCase())) {
+			System.out.println(getAbsolutePart() + " <> " + getRelativeFileForCreatedFolderstructure()); //$NON-NLS-1$
 		}
 		
-		return getPart().toLowerCase().endsWith(getRelativeFileForCreatedFolderstructure().toLowerCase());
+		return getAbsolutePart().toLowerCase().endsWith(getRelativeFileForCreatedFolderstructure().toLowerCase());
 	}
 }

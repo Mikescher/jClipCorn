@@ -352,7 +352,7 @@ public class DatabaseValidator {
 		// ###############################################
 		
 		for (int i = 0; i < CCMovie.PARTCOUNT_MAX; i++) {
-			if (PathFormatter.containsIllegalPathSymbols(mov.getPart(i))){
+			if (PathFormatter.containsIllegalPathSymbolsInSerializedFormat(mov.getPart(i))){
 				e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_INVALID_CHARS_IN_PATH, mov));
 				break;
 			}
@@ -504,7 +504,7 @@ public class DatabaseValidator {
 		// Invalid path characters
 		// ###############################################
 
-		if (PathFormatter.containsIllegalPathSymbols(episode.getPart())){
+		if (PathFormatter.containsIllegalPathSymbolsInSerializedFormat(episode.getPart())){
 			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_INVALID_CHARS_IN_PATH, episode));
 		}
 	}

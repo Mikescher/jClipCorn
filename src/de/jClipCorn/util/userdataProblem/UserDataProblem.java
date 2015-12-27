@@ -282,12 +282,12 @@ public class UserDataProblem {
 		
 		//################################################################################################################
 		
-		if (PathFormatter.containsIllegalPathSymbols(p0) || 
-				PathFormatter.containsIllegalPathSymbols(p1) || 
-				PathFormatter.containsIllegalPathSymbols(p2) || 
-				PathFormatter.containsIllegalPathSymbols(p3) || 
-				PathFormatter.containsIllegalPathSymbols(p4) || 
-				PathFormatter.containsIllegalPathSymbols(p5)) {
+		if (PathFormatter.containsIllegalPathSymbolsInSerializedFormat(p0) || 
+				PathFormatter.containsIllegalPathSymbolsInSerializedFormat(p1) || 
+				PathFormatter.containsIllegalPathSymbolsInSerializedFormat(p2) || 
+				PathFormatter.containsIllegalPathSymbolsInSerializedFormat(p3) || 
+				PathFormatter.containsIllegalPathSymbolsInSerializedFormat(p4) || 
+				PathFormatter.containsIllegalPathSymbolsInSerializedFormat(p5)) {
 			
 			ret.add(new UserDataProblem(PROBLEM_INVALID_PATH_CHARACTERS));
 		}
@@ -467,8 +467,7 @@ public class UserDataProblem {
 
 		//################################################################################################################
 		
-		if (PathFormatter.containsIllegalPathSymbols(part)) {
-			
+		if (PathFormatter.containsIllegalPathSymbolsInSerializedFormat(part)) {
 			ret.add(new UserDataProblem(PROBLEM_INVALID_PATH_CHARACTERS));
 		}
 	}

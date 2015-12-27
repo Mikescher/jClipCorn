@@ -11,6 +11,7 @@ import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.CCDate;
 import de.jClipCorn.util.DriveMap;
+import de.jClipCorn.util.helper.ApplicationHelper;
 import de.jClipCorn.util.helper.RegExHelper;
 import de.jClipCorn.util.listener.ProgressCallbackListener;
 
@@ -18,8 +19,9 @@ import de.jClipCorn.util.listener.ProgressCallbackListener;
 public class PathFormatter {
 	public static final String SEPERATOR = File.separator;
 	public static final char SEPERATOR_CHAR = File.separatorChar;
-	
+
 	public static final String SERIALIZATION_SEPERATOR = "/";
+	public static final char SERIALIZATION_SEPERATOR_CHAR = '/';
 	
 	private final static ArrayList<Character> VALID_FILENAME_CHARS = new ArrayList<>(Arrays.asList(
 		'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'Ä', 'Ö', 'Ü',
@@ -28,7 +30,8 @@ public class PathFormatter {
 		' ', '!', '#', '&', '\'', '(', ')', '+', ',', '-', '.', ';', '=', '@', '[', ']', '^', '_', '`', '{', '}', 'ß'
 	));
 	
-	private final static ArrayList<Character> INVALID_PATH_CHARS = new ArrayList<>(Arrays.asList('\\', '"', '<', '>', '?', ':', '*', '|'));
+	private final static ArrayList<Character> INVALID_PATH_CHARS_SERIALIZED = new ArrayList<>(Arrays.asList('\\', '"', '<', '>', '?', '*', '|'));
+	private final static ArrayList<Character> INVALID_PATH_CHARS_SYSTEM     = new ArrayList<>(Arrays.asList('"', '<', '>', '?', '*', '|'));
 	
 	private final static String TESTFILE_NAME = "jClipCornPermissionTest.emptyfile";
 	
@@ -104,7 +107,7 @@ public class PathFormatter {
 				return aPath.replace(self, WILDCARD_SELF);
 			} else if (aPath.charAt(0) == WORKINGDIR.charAt(0)) {
 				return WILDCARD_SELFDRIVE.concat(aPath.substring(3));
-			} else if (aPath.length() > 3 && Character.isLetter(aPath.charAt(0)) && aPath.charAt(1) == ':' && aPath.charAt(2) == SEPERATOR_CHAR && DriveMap.hasDriveName(aPath.charAt(0))){
+			} else if (aPath.length() > 3 && Character.isLetter(aPath.charAt(0)) && aPath.charAt(1) == ':' && (aPath.charAt(2) == SEPERATOR_CHAR || aPath.charAt(2) == SERIALIZATION_SEPERATOR_CHAR) && DriveMap.hasDriveName(aPath.charAt(0))){
 				return String.format(WILDCARD_DRIVENAME, DriveMap.getDriveName(aPath.charAt(0))).concat(aPath.substring(3));
 			} else {
 				return aPath;
@@ -234,10 +237,10 @@ public class PathFormatter {
 			
 			if (! equal) {
 				String common = pathlist.get(0).substring(0, c);
-				if (common.lastIndexOf(SEPERATOR_CHAR) < 0) {
+				if (common.lastIndexOf(SERIALIZATION_SEPERATOR) < 0) {
 					return common;
 				} else {
-					return common.substring(0, common.lastIndexOf(SEPERATOR_CHAR) + 1);
+					return common.substring(0, common.lastIndexOf(SERIALIZATION_SEPERATOR) + 1);
 				}
 			}
 		}
@@ -380,7 +383,7 @@ public class PathFormatter {
 		return combine(base, tail) + SEPERATOR;
 	}
 
-	public static boolean containsIllegalPathSymbols(String rPath) {
+	public static boolean containsIllegalPathSymbolsInSerializedFormat(String rPath) {
 		if (rPath.isEmpty()) return false;
 		
 		if (RegExHelper.startsWithRegEx(REGEX_SELF, rPath)) {
@@ -393,9 +396,37 @@ public class PathFormatter {
 			rPath = RegExHelper.replace(REGEX_SELFDRIVE, rPath, "");
 		}
 		
-		for (Character chr : INVALID_PATH_CHARS) {
+		for (Character chr : INVALID_PATH_CHARS_SERIALIZED) {
 			if (rPath.indexOf(chr) >= 0) return true;
 		}
+
+		if (rPath.indexOf(':') >= 2) return true;
+		
+		return false;
+	}
+
+	public static boolean containsIllegalPathSymbolsInSystemFormat(String rPath) {
+		if (rPath.isEmpty()) return false;
+		
+		if (RegExHelper.startsWithRegEx(REGEX_SELF, rPath)) {
+			rPath =  RegExHelper.replace(REGEX_SELF, rPath, "");
+		} else if (RegExHelper.startsWithRegEx(REGEX_DRIVENAME, rPath)) {
+			rPath = RegExHelper.replace(REGEX_DRIVENAME, rPath, "");
+		} else if (RegExHelper.startsWithRegEx(REGEX_DRIVELETTER, rPath)) {
+			rPath = RegExHelper.replace(REGEX_DRIVELETTER, rPath, "");
+		} else if (RegExHelper.startsWithRegEx(REGEX_SELFDRIVE, rPath)) {
+			rPath = RegExHelper.replace(REGEX_SELFDRIVE, rPath, "");
+		}
+		
+		for (Character chr : INVALID_PATH_CHARS_SYSTEM) {
+			if (rPath.indexOf(chr) >= 0) return true;
+		}
+
+		if (rPath.indexOf(':') >= 2) return true;
+		
+		if (ApplicationHelper.isWindows() && rPath.indexOf('/') >= 0) return true;
+		if (ApplicationHelper.isUnix() && rPath.indexOf('\\') >= 0) return true;
+		if (ApplicationHelper.isMac() && rPath.indexOf('\\') >= 0) return true;
 		
 		return false;
 	}

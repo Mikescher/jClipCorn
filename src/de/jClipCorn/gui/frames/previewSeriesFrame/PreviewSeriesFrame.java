@@ -619,7 +619,7 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 		KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new KeyEventDispatcher() {
 			@Override
 			public boolean dispatchKeyEvent(KeyEvent e) {
-				if (e.getID() == KeyEvent.KEY_PRESSED){
+				if (e.getID() == KeyEvent.KEY_PRESSED && containsKeyboardFocus()) {
 					if (e.getKeyCode() == KeyEvent.VK_LEFT && cvrChooser.getSelectedIndex() > 0) {
 						cvrChooser.setCurrSelected(cvrChooser.getSelectedIndex() - 1);
 					} else if (e.getKeyCode() == KeyEvent.VK_RIGHT && cvrChooser.getSelectedIndex()+1 < cvrChooser.getElementCount()) {
@@ -634,6 +634,18 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 		});
 	}
 
+	private boolean containsKeyboardFocus() {
+		Component focus = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
+		
+		while (focus != null) {
+			if (focus == this) return true;
+
+			focus = focus.getParent();
+		}
+		
+		return false;
+	}
+	
 	private void updateData() {
 		if (dispSeries == null) {
 			return;

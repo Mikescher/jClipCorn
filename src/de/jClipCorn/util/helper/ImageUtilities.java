@@ -260,11 +260,10 @@ public class ImageUtilities {
 	}
 	
 	public static byte[] imageToByteArray(BufferedImage bi) {
-		
 		try {
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			
-			ImageIO.write(bi, "jpg", baos ); //$NON-NLS-1$
+			ImageIO.write(bi, "png", baos ); //$NON-NLS-1$
 			byte[] data = baos.toByteArray();
 			
 			baos.close();
@@ -274,7 +273,6 @@ public class ImageUtilities {
 			CCLog.addError(e);
 			return null;
 		}
-		
 	}
 	
 	public static BufferedImage byteArrayToImage(byte[] imgarr) {

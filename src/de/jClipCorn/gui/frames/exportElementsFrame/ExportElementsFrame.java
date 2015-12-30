@@ -90,22 +90,22 @@ public class ExportElementsFrame extends JFrame {
 			list.add(lsModel.get(i));
 		}
 		
-			final JFileChooser chooser = new JFileChooser();
-			chooser.setFileFilter(FileChooserHelper.createLocalFileFilter("ExportHelper.filechooser_jmccexport.description", ExportHelper.EXTENSION_MULTIPLEEXPORT)); //$NON-NLS-1$
-			chooser.setCurrentDirectory(new File(PathFormatter.getRealSelfDirectory()));
+		final JFileChooser chooser = new JFileChooser();
+		chooser.setFileFilter(FileChooserHelper.createLocalFileFilter("ExportHelper.filechooser_jmccexport.description", ExportHelper.EXTENSION_MULTIPLEEXPORT)); //$NON-NLS-1$
+		chooser.setCurrentDirectory(new File(PathFormatter.getRealSelfDirectory()));
 
-			int returnval = chooser.showSaveDialog(this);
+		int returnval = chooser.showSaveDialog(this);
 
-			if (returnval == JFileChooser.APPROVE_OPTION) {
-				final boolean includeCover = 0 == DialogHelper.showLocaleOptions(this, "ExportHelper.dialogs.exportCover"); //$NON-NLS-1$
+		if (returnval == JFileChooser.APPROVE_OPTION) {
+			final boolean includeCover = 0 == DialogHelper.showLocaleOptions(this, "ExportHelper.dialogs.exportCover"); //$NON-NLS-1$
 
-				new Thread(new Runnable() {
-					@Override
-					public void run() {
-						ExportHelper.exportDBElements(PathFormatter.forceExtension(chooser.getSelectedFile(), ExportHelper.EXTENSION_MULTIPLEEXPORT), movielist, list, includeCover);
-					}
-				}, "THREAD_EXPORT_JMCCEXPORT").start(); //$NON-NLS-1$
-			}
+			new Thread(new Runnable() {
+				@Override
+				public void run() {
+					ExportHelper.exportDBElements(PathFormatter.forceExtension(chooser.getSelectedFile(), ExportHelper.EXTENSION_MULTIPLEEXPORT), movielist, list, includeCover);
+				}
+			}, "THREAD_EXPORT_JMCCEXPORT").start(); //$NON-NLS-1$
+		}
 	}
 	
 	public void addElement(CCDatabaseElement el) {

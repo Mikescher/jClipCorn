@@ -33,10 +33,11 @@ public class ImDBParser_Eng {
 	private final static String SEARCH_URL_M = "/find?s=tt&ttype=ft&q=%s";
 	private final static String SEARCH_URL_S = "/find?s=tt&ttype=tv&q=%s";
 	
-	private final static String REGEX_FSK_BRACKETS = "\\([^\\)]*\\)"; // \([^\)]*\)
-	private final static String REGEX_COVER_URL = "/media/rm[0-9]+?/tt[0-9]+";
-	private final static String REGEX_SEARCH_URL = "/title/tt[0-9]+/"; // /title/tt[0-9]+/
-	private final static String REGEX_ALT_YEAR = ".*\\(([0-9]{4})\\)";  // .*\(([0-9]{4})\)
+	private final static String REGEX_FSK_BRACKETS = "\\([^\\)]*\\)";           // \([^\)]*\)
+	private final static String REGEX_COVER_URL = "/media/rm[0-9]+?/tt[0-9]+";  // /media/rm[0-9]+?/tt[0-9]+
+	private final static String REGEX_SEARCH_URL = "/title/tt[0-9]+/";          // /title/tt[0-9]+/
+	private final static String REGEX_ALT_YEAR = ".*\\(([0-9]{4})\\)";          // .*\(([0-9]{4})\)
+	private final static String REGEX_YEAR_SIMPLE = "\\([12][0-9]{3}\\)";       // \([12][0-9]{3}\)
 	
 	private final static String FSK_STANDARD_1 = "Germany";
 	private final static String FSK_STANDARD_2 = "West Germany";
@@ -105,7 +106,11 @@ public class ImDBParser_Eng {
 	public static String getTitle(String html) {
 		String cnt = getContentBySelector(html, JSOUP_TITLE);
 		
-		if (cnt.isEmpty()) cnt = getContentBySelector(html, JSOUP_ALT_TITLE);
+		if (cnt.isEmpty()) {
+			cnt = getContentBySelector(html, JSOUP_ALT_TITLE);
+			cnt = RegExHelper.replace(REGEX_YEAR_SIMPLE, cnt, "");
+			cnt = cnt.trim();
+		}
 		
 		return cnt;
 	}

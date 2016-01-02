@@ -103,7 +103,7 @@ public class Main {
 //TODO Cover with higher resolution // <--
 
 //TODO filter for series with missing movies (custom filter ?)
-//TODO year in imdb-parser-title (eg: 'Der 7bte Zwerg')
 //TODO save original/alternative title (eng title)
 //TODO Better preset for addEmptyEpisode
 //TODO Mass Move Series Dialog
+//TODO More Info in extended settings dialog

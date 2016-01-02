@@ -47,6 +47,7 @@ public class Resources {
 	public final static String ICN_MENUBAR_RESETVIEWED				= registerICN("/icons/toolbar/scroller_bar.png");
 	public final static String ICN_MENUBAR_MOVESERIES				= registerICN("/icons/toolbar/move_to_folder.png");
 	public final static String ICN_MENUBAR_MOVEALLSERIES			= registerICN("/icons/toolbar/move_to_folder2.png");
+	public final static String ICN_MENUBAR_MOVEALLMOVIES			= registerICN("/icons/toolbar/move_to_folder3.png");
 	public final static String ICN_MENUBAR_FINDINCOMPLETEZYKLUS		= registerICN("/icons/toolbar/blackboard_steps.png");
 	public final static String ICN_MENUBAR_FILENAMERULES			= registerICN("/icons/toolbar/books.png");
 	public final static String ICN_MENUBAR_CREATE_JXMLBKP			= registerICN("/icons/toolbar/source_code.png");

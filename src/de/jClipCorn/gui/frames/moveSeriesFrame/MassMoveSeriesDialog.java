@@ -179,9 +179,9 @@ public class MassMoveSeriesDialog extends JDialog {
 		}
 		
 		DefaultTableModel dtm = new DefaultReadOnlyTableModel();
-		dtm.addColumn(LocaleBundle.getString("MoveSeriesDialog.Table.HeaderSeries")); //$NON-NLS-1$
-		dtm.addColumn(LocaleBundle.getString("MoveSeriesDialog.Table.HeaderOld")); //$NON-NLS-1$
-		dtm.addColumn(LocaleBundle.getString("MoveSeriesDialog.Table.HeaderNew")); //$NON-NLS-1$
+		dtm.addColumn(LocaleBundle.getString("MoveSeriesFrame.Table.HeaderSeries")); //$NON-NLS-1$
+		dtm.addColumn(LocaleBundle.getString("MoveSeriesFrame.Table.HeaderOld")); //$NON-NLS-1$
+		dtm.addColumn(LocaleBundle.getString("MoveSeriesFrame.Table.HeaderNew")); //$NON-NLS-1$
 		
 		for (Vector<String> row : data) {
 			dtm.addRow(row);

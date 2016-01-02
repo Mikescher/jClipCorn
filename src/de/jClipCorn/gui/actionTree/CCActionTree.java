@@ -41,6 +41,7 @@ import de.jClipCorn.gui.frames.exportElementsFrame.ExportElementsFrame;
 import de.jClipCorn.gui.frames.filenameRulesFrame.FilenameRuleFrame;
 import de.jClipCorn.gui.frames.logFrame.LogFrame;
 import de.jClipCorn.gui.frames.mainFrame.MainFrame;
+import de.jClipCorn.gui.frames.moveSeriesFrame.MassMoveMoviesDialog;
 import de.jClipCorn.gui.frames.moveSeriesFrame.MassMoveSeriesDialog;
 import de.jClipCorn.gui.frames.moveSeriesFrame.MoveSeriesDialog;
 import de.jClipCorn.gui.frames.parseWatchDataFrame.ParseWatchDataFrame;
@@ -421,6 +422,14 @@ public class CCActionTree {
 			}
 		});
 		
+		temp = extras.addChild(new CCActionElement("MassMoveMovies", null, "ClipMenuBar.Extras.MassMoveMovies", Resources.ICN_MENUBAR_MOVEALLMOVIES));
+		temp.addListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				onCLickExtrasMassMoveMovies();
+			}
+		});
+		
 		temp = extras.addChild(new CCActionElement("ResetViewed", null, "ClipMenuBar.Extras.ResetViewed", Resources.ICN_MENUBAR_RESETVIEWED));
 		temp.setReadOnlyRestriction();
 		temp.addListener(new ActionListener() {
@@ -795,6 +804,11 @@ public class CCActionTree {
 	private void onCLickExtrasMassMoveSeries() {
 		MassMoveSeriesDialog mmsd = new MassMoveSeriesDialog(owner, movielist);
 		mmsd.setVisible(true);
+	}
+	
+	private void onCLickExtrasMassMoveMovies() {
+		MassMoveMoviesDialog mmmd = new MassMoveMoviesDialog(owner, movielist);
+		mmmd.setVisible(true);
 	}
 	
 	private void onClickMoviesPlay() {

@@ -619,6 +619,24 @@ public class CCMovieList {
 		
 		return common;
 	}
+
+	public String getCommonMoviesPath() {
+		List<String> all = new ArrayList<>();
+		
+		for (Iterator<CCMovie> it = iteratorMovies(); it.hasNext();) {
+			CCMovie curr = it.next();
+			
+			for (int i = 0; i < curr.getPartcount(); i++) {
+				all.add(curr.getPart(i));
+			}
+		}
+		
+		while (all.contains("")) all.remove(""); //$NON-NLS-1$ //$NON-NLS-2$
+		
+		String common = PathFormatter.getCommonFolderPath(all);
+		
+		return common;
+	}
 	
 	public Iterator<CCDatabaseElement> iterator() {
 		return list.iterator();
@@ -640,6 +658,16 @@ public class CCMovieList {
 		}
 
 		return map;
+	}
+	
+	public List<CCMovie> listMoviesSorted() {
+		List<CCMovie> list = new ArrayList<>();
+		Iterator<CCMovie> it = iteratorMovies();
+		while (it.hasNext()) list.add(it.next());
+
+		Collections.sort(list, new CCMovieComparator());
+
+		return list;
 	}
 	
 	public Iterator<CCMovie> iteratorMovies() {

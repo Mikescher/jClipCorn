@@ -73,7 +73,13 @@ public class Main {
 //TODO Use OpenMovieDatabase (they have a ~real~ API)
 // http://www.omdbapi.com
 // -> it is IMDB Data
-// (save IMDB ID)
+// !! save IMDB ID
+//		-> autom find series with new episodes
+//		-> autom update imdb score
+//		-> better open in imdb action
+//		-> find trailer
+//		-> find plot summary / synopsis
+//		-> autom find age-restriction for different nations
 
 //TODO Parse that (eventually ?): http://www.themoviedb.org/search/movie?query=lazarus%20projekt
 //TODO Auto parse Summary

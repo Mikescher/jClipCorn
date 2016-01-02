@@ -67,9 +67,9 @@ public abstract class AutomaticSettingsFrame extends JFrame {
 		setIconImage(CachedResourceLoader.getImage(Resources.IMG_FRAME_ICON));
 		
 		if (LookAndFeelManager.isMetal())
-			setSize(new Dimension(800, 525));
+			setSize(new Dimension(825, 525));
 		else
-			setSize(new Dimension(700, 475));
+			setSize(new Dimension(775, 475));
 		
 		setMinimumSize(new Dimension(650, 400));
 		setTitle(LocaleBundle.getString("Settingsframe.this.title")); //$NON-NLS-1$
@@ -120,7 +120,7 @@ public abstract class AutomaticSettingsFrame extends JFrame {
 		pnlBottom.add(btnOk, "4, 2, fill, top"); //$NON-NLS-1$
 		tabOrder.add(btnOk);
 		
-		btnCancel = new JButton(LocaleBundle.getString("UIGeneric.btnCancel.title")); //$NON-NLS-1$
+		btnCancel = new JButton(LocaleBundle.getString("UIGeneric.btnCancel.text")); //$NON-NLS-1$
 		btnCancel.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {

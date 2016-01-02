@@ -659,6 +659,26 @@ public class CCMovieList {
 	public Iterator<CCSeries> iteratorSeries() {
 		return new SeriesIterator(list);
 	}
+	
+	public List<CCEpisode> listAllEpisodes() {
+		List<CCEpisode> eps = new ArrayList<>();
+		
+		for (Iterator<CCSeries> it = iteratorSeries(); it.hasNext();) {
+			CCSeries series = it.next();
+			
+			for (int seasonIdx = 0; seasonIdx < series.getSeasonCount(); seasonIdx++) {
+				CCSeason season = series.getSeason(seasonIdx);
+				
+				for (int episodeIdx = 0; episodeIdx < season.getEpisodeCount(); episodeIdx++) {
+					CCEpisode episode = season.getEpisode(episodeIdx);
+					
+					eps.add(episode);
+				}
+			}
+		}
+		
+		return eps;
+	}
 
 	public Iterator<CCSeries> iteratorSeriesSorted() {
 		List<CCSeries> list = new ArrayList<>();

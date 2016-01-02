@@ -41,6 +41,7 @@ import de.jClipCorn.gui.frames.exportElementsFrame.ExportElementsFrame;
 import de.jClipCorn.gui.frames.filenameRulesFrame.FilenameRuleFrame;
 import de.jClipCorn.gui.frames.logFrame.LogFrame;
 import de.jClipCorn.gui.frames.mainFrame.MainFrame;
+import de.jClipCorn.gui.frames.moveSeriesFrame.MassMoveSeriesDialog;
 import de.jClipCorn.gui.frames.moveSeriesFrame.MoveSeriesDialog;
 import de.jClipCorn.gui.frames.parseWatchDataFrame.ParseWatchDataFrame;
 import de.jClipCorn.gui.frames.previewMovieFrame.PreviewMovieFrame;
@@ -409,6 +410,14 @@ public class CCActionTree {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				onClickExtrasMassChangeScore();
+			}
+		});
+		
+		temp = extras.addChild(new CCActionElement("MassMoveSeries", null, "ClipMenuBar.Extras.MassMoveSeries", Resources.ICN_MENUBAR_MOVEALLSERIES));
+		temp.addListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				onCLickExtrasMassMoveSeries();
 			}
 		});
 		
@@ -781,6 +790,11 @@ public class CCActionTree {
 	private void onClickExtrasMassChangeScore() {
 		ChangeScoreFrame csf = new ChangeScoreFrame(owner, movielist);
 		csf.setVisible(true);
+	}
+	
+	private void onCLickExtrasMassMoveSeries() {
+		MassMoveSeriesDialog mmsd = new MassMoveSeriesDialog(owner, movielist);
+		mmsd.setVisible(true);
 	}
 	
 	private void onClickMoviesPlay() {

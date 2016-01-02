@@ -25,6 +25,9 @@ public class MoveSeriesTestTableCellRenderer extends SubstanceDefaultTableCellRe
 		} else if (cr == '1') {
 			c.setBackground(Color.GREEN);
 			c.setForeground(Color.BLACK);
+		} else if (cr == '2') {
+			c.setBackground(Color.WHITE);
+			c.setForeground(Color.BLACK);
 		}
 
 		return c;

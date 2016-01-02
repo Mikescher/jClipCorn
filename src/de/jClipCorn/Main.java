@@ -102,7 +102,7 @@ public class Main {
 
 //TODO Cover with higher resolution // <--
 
-//TODO filter for series with missing movies (custom filter ?)
 //TODO save original/alternative title (eng title)
-//TODO Mass Move Series Dialog
 //TODO More Info in extended settings dialog
+//TODO AddMovieFrame.btnOK.text -> generics
+//TODO getcommonpathstart case insensitive under windows

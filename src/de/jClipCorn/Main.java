@@ -70,6 +70,11 @@ public class Main {
 	}
 }
 
+//TODO Use OpenMovieDatabase (they have a ~real~ API)
+// http://www.omdbapi.com
+// -> it is IMDB Data
+// (save IMDB ID)
+
 //TODO Parse that (eventually ?): http://www.themoviedb.org/search/movie?query=lazarus%20projekt
 //TODO Auto parse Summary
 //TODO Search for Trailer
@@ -96,3 +101,10 @@ public class Main {
 //TODO autom find IMDb Score discrepancies (search Movie on imdb -> if found compare score) ~ not in CheckDB (too long) but own dialog
 
 //TODO Cover with higher resolution // <--
+
+//TODO linux / is self-dir (gets replaced always)
+//TODO filter for series with missing movies (custom filter ?)
+//TODO year in imdb-parser-title (eg: 'Der 7bte Zwerg')
+//TODO save original/alternative title (eng title)
+//TODO Better preset for addEmptyEpisode
+//TODO Mass Move Series Dialog

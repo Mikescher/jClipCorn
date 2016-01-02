@@ -31,6 +31,7 @@ import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.gui.CachedResourceLoader;
 import de.jClipCorn.gui.Resources;
 import de.jClipCorn.gui.guiComponents.CoverLabel;
+import de.jClipCorn.gui.guiComponents.DefaultReadOnlyTableModel;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.DialogHelper;
@@ -187,18 +188,19 @@ public class MoveSeriesDialog extends JDialog {
 				
 				String oldp = ep.getPart();
 				String newp = ep.getPart().replace(edSearch.getText(), edReplace.getText());
-				
-				String ident = new File(PathFormatter.fromCCPath(newp)).exists() ? "1" : "0"; //$NON-NLS-1$ //$NON-NLS-2$
+
+				String identOld = new File(PathFormatter.fromCCPath(oldp)).exists() ? "1" : "0"; //$NON-NLS-1$ //$NON-NLS-2$
+				String identNew = new File(PathFormatter.fromCCPath(newp)).exists() ? "1" : "0"; //$NON-NLS-1$ //$NON-NLS-2$
 				
 				Vector<String> tmp = new Vector<>();
-				tmp.add("9" + oldp); //$NON-NLS-1$
-				tmp.add(ident + newp);
+				tmp.add(identOld + oldp);
+				tmp.add(identNew + newp);
 				
 				data.add(tmp);
 			}
 		}
 		
-		DefaultTableModel dtm = new DefaultTableModel();
+		DefaultTableModel dtm = new DefaultReadOnlyTableModel();
 		dtm.addColumn("Old"); //$NON-NLS-1$
 		dtm.addColumn("New"); //$NON-NLS-1$
 		

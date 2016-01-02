@@ -232,7 +232,15 @@ public class PathFormatter {
 				if (ckt == null) {
 					ckt = pathlist.get(elem).charAt(c);
 				} else {
-					if (!ckt.equals(pathlist.get(elem).charAt(c))) {
+					Character a = ckt;
+					Character b = pathlist.get(elem).charAt(c);
+					
+					if (ApplicationHelper.isWindows()) {
+						a = Character.toLowerCase(a);
+						b = Character.toLowerCase(b);
+					}
+							
+					if (!a.equals(b)) {
 						equal = false;
 						break;
 					}

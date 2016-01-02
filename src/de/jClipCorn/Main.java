@@ -104,5 +104,3 @@ public class Main {
 
 //TODO save original/alternative title (eng title)
 //TODO More Info in extended settings dialog
-//TODO UIGeneric.btnOK.text -> generics
-//TODO getcommonpathstart case insensitive under windows

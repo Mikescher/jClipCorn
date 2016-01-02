@@ -46,6 +46,7 @@ public class Resources {
 	public final static String ICN_MENUBAR_MCHANGE_SCORE			= registerICN("/icons/toolbar/knotscore.png");
 	public final static String ICN_MENUBAR_RESETVIEWED				= registerICN("/icons/toolbar/scroller_bar.png");
 	public final static String ICN_MENUBAR_MOVESERIES				= registerICN("/icons/toolbar/move_to_folder.png");
+	public final static String ICN_MENUBAR_FINDINCOMPLETEZYKLUS		= registerICN("/icons/toolbar/blackboard_steps.png");
 	public final static String ICN_MENUBAR_FILENAMERULES			= registerICN("/icons/toolbar/books.png");
 	public final static String ICN_MENUBAR_CREATE_JXMLBKP			= registerICN("/icons/toolbar/source_code.png");
 	public final static String ICN_MENUBAR_COMPARE					= registerICN("/icons/toolbar/balance_unbalance.png");

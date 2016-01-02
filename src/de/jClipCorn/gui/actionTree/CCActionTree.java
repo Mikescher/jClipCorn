@@ -49,6 +49,7 @@ import de.jClipCorn.gui.frames.randomMovieFrame.RandomMovieFrame;
 import de.jClipCorn.gui.frames.scanFolderFrame.ScanFolderFrame;
 import de.jClipCorn.gui.frames.searchFrame.SearchFrame;
 import de.jClipCorn.gui.frames.settingsFrame.SettingsFrame;
+import de.jClipCorn.gui.frames.showIncompleteFilmSeriesFrame.ShowIncompleteFilmSeriesFrame;
 import de.jClipCorn.gui.frames.showUpdateFrame.ShowUpdateFrame;
 import de.jClipCorn.gui.frames.statisticsFrame.StatisticsFrame;
 import de.jClipCorn.gui.frames.textExportFrame.TextExportFrame;
@@ -451,6 +452,14 @@ public class CCActionTree {
 				onClickExtrasParseWatchData();
 			}
 		});
+		
+		temp = extras.addChild(new CCActionElement("ShowIncompleteFilmSeries", null, "ClipMenuBar.Extras.ShowIncompleteFilmSeries", Resources.ICN_MENUBAR_FINDINCOMPLETEZYKLUS));
+		temp.addListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				onCLickExtrasShowIncompleteFilmSeries();
+			}
+		});
 
 		temp = extras.addChild(new CCActionElement("ShowSettings", null, "ClipMenuBar.Extras.Settings", Resources.ICN_MENUBAR_SETTINGS));
 		temp.addListener(new ActionListener() {
@@ -757,6 +766,11 @@ public class CCActionTree {
 	private void onClickExtrasParseWatchData() {
 		ParseWatchDataFrame pwdf = new ParseWatchDataFrame(owner, movielist);
 		pwdf.setVisible(true);
+	}
+	
+	private void onCLickExtrasShowIncompleteFilmSeries() {
+		ShowIncompleteFilmSeriesFrame sifsf = new ShowIncompleteFilmSeriesFrame(owner, movielist);
+		sifsf.setVisible(true);
 	}
 	
 	private void onClickExtrasMassChangeViewed() {

@@ -5,6 +5,7 @@ import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
@@ -623,6 +624,24 @@ public class CCMovieList {
 		return list.iterator();
 	}
 	
+	public HashMap<String, List<CCMovie>> listAllZyklus() {
+		HashMap<String, List<CCMovie>> map = new HashMap<>();
+		
+		for (Iterator<CCMovie> it = iteratorMovies(); it.hasNext();) {
+			CCMovie curr = it.next();
+			
+			if (! curr.hasZyklus()) continue;
+			
+			String zyklus = curr.getZyklus().getTitle();
+			if (! map.containsKey(curr.getZyklus().getTitle())) {
+				map.put(zyklus, new ArrayList<>());
+			}
+			map.get(zyklus).add(curr);
+		}
+
+		return map;
+	}
+	
 	public Iterator<CCMovie> iteratorMovies() {
 		return new MovieIterator(list);
 	}
@@ -640,17 +659,17 @@ public class CCMovieList {
 	public Iterator<CCSeries> iteratorSeries() {
 		return new SeriesIterator(list);
 	}
-	
-	public Iterator<CCSeries> iteratorSeriesSorted() {
-	      List<CCSeries> list = new ArrayList<>();
-	      Iterator<CCSeries> it = iteratorSeries();
-	      while (it.hasNext()) list.add(it.next());
 
-	      Collections.sort(list, new CCSeriesComparator());
-	      
-	      return list.iterator();
+	public Iterator<CCSeries> iteratorSeriesSorted() {
+		List<CCSeries> list = new ArrayList<>();
+		Iterator<CCSeries> it = iteratorSeries();
+		while (it.hasNext()) list.add(it.next());
+
+		Collections.sort(list, new CCSeriesComparator());
+
+		return list.iterator();
 	}
-	
+
 	@SuppressWarnings("nls")
 	public Document getEmptyXML() {
 		Document xml = new Document(new Element("database"));

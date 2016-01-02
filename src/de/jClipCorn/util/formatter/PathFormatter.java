@@ -90,8 +90,12 @@ public class PathFormatter {
 			char letter = card.charAt(11);
 			rPath = RegExHelper.replace(REGEX_DRIVELETTER, rPath, letter + ":" + SEPERATOR);
 		} else if (RegExHelper.startsWithRegEx(REGEX_SELFDRIVE, rPath)) {
-			char letter = WORKINGDIR.charAt(0);
-			rPath = RegExHelper.replace(REGEX_SELFDRIVE, rPath, letter + ":" + SEPERATOR);
+			if (ApplicationHelper.isWindows()) {
+				char letter = WORKINGDIR.charAt(0);
+				rPath = RegExHelper.replace(REGEX_SELFDRIVE, rPath, letter + ":" + SEPERATOR);
+			} else if (ApplicationHelper.isUnix() || ApplicationHelper.isMac()) {
+				rPath = RegExHelper.replace(REGEX_SELFDRIVE, rPath, "/");
+			}
 		}
 		
 		return rPath.replace(SERIALIZATION_SEPERATOR, SEPERATOR);
@@ -105,9 +109,9 @@ public class PathFormatter {
 			
 			if (aPath.startsWith(self)) {
 				return aPath.replace(self, WILDCARD_SELF);
-			} else if (aPath.charAt(0) == WORKINGDIR.charAt(0)) {
+			} else if (ApplicationHelper.isWindows() && aPath.charAt(0) == WORKINGDIR.charAt(0)) {
 				return WILDCARD_SELFDRIVE.concat(aPath.substring(3));
-			} else if (aPath.length() > 3 && Character.isLetter(aPath.charAt(0)) && aPath.charAt(1) == ':' && (aPath.charAt(2) == SEPERATOR_CHAR || aPath.charAt(2) == SERIALIZATION_SEPERATOR_CHAR) && DriveMap.hasDriveName(aPath.charAt(0))){
+			} else if (ApplicationHelper.isWindows() && aPath.length() > 3 && Character.isLetter(aPath.charAt(0)) && aPath.charAt(1) == ':' && (aPath.charAt(2) == SEPERATOR_CHAR || aPath.charAt(2) == SERIALIZATION_SEPERATOR_CHAR) && DriveMap.hasDriveName(aPath.charAt(0))){
 				return String.format(WILDCARD_DRIVENAME, DriveMap.getDriveName(aPath.charAt(0))).concat(aPath.substring(3));
 			} else {
 				return aPath;

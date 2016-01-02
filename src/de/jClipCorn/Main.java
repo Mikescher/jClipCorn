@@ -102,7 +102,6 @@ public class Main {
 
 //TODO Cover with higher resolution // <--
 
-//TODO linux / is self-dir (gets replaced always)
 //TODO filter for series with missing movies (custom filter ?)
 //TODO year in imdb-parser-title (eg: 'Der 7bte Zwerg')
 //TODO save original/alternative title (eng title)

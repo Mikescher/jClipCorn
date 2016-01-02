@@ -33,6 +33,7 @@ import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.gui.CachedResourceLoader;
 import de.jClipCorn.gui.Resources;
+import de.jClipCorn.gui.guiComponents.DefaultReadOnlyTableModel;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.CCDate;
 
@@ -430,7 +431,7 @@ public class ParseWatchDataFrame extends JFrame {
 		titles.add(LocaleBundle.getString("ParseWatchDataFrame.tableResults.header_2")); //$NON-NLS-1$
 		titles.add(LocaleBundle.getString("ParseWatchDataFrame.tableResults.header_3")); //$NON-NLS-1$
 		
-		DefaultTableModel tm = new DefaultTableModel(titles, 0);
+		DefaultTableModel tm = new DefaultReadOnlyTableModel(titles, 0);
 		
 		for (WatchDataChangeSet wcds : change) {
 			tm.addRow(new String[]{wcds.getDate(), wcds.getName(), wcds.getSubInfo(), wcds.getChange()});

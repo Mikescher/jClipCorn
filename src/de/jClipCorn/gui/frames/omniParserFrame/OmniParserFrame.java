@@ -44,6 +44,7 @@ import com.jgoodies.forms.layout.RowSpec;
 
 import de.jClipCorn.gui.CachedResourceLoader;
 import de.jClipCorn.gui.Resources;
+import de.jClipCorn.gui.guiComponents.DefaultReadOnlyTableModel;
 import de.jClipCorn.gui.guiComponents.VerticalScrollPaneSynchronizer;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.formatter.PathFormatter;
@@ -475,7 +476,7 @@ public class OmniParserFrame extends JFrame {
 
 		List<String> list = new ArrayList<>(Arrays.asList(TextFileUtils.splitLines(input)));
 		
-		DefaultTableModel model = new DefaultTableModel(old_titles.size(), 2);
+		DefaultTableModel model = new DefaultReadOnlyTableModel(old_titles.size(), 2);
 		model.setColumnIdentifiers(COLUMN_HEADERS);
 		
 		for (int i = 0; i < old_titles.size(); i++) {

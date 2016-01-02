@@ -8,7 +8,7 @@ import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.util.helper.HTTPUtilities;
 
 public class UpdateConnector implements Runnable {
-	private final static String HIGHSCORE_URL = "http://www.mikescher.de/update.php?Name=jClipCorn"; //$NON-NLS-1$
+	private final static String HIGHSCORE_URL = "http://www.mikescher.com/update.php?Name=jClipCorn"; //$NON-NLS-1$
 	
 	private final ActionListener listener;
 	private final String title;

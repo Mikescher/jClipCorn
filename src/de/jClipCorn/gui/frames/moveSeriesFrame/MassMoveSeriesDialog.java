@@ -111,7 +111,7 @@ public class MassMoveSeriesDialog extends JDialog {
 		pnlLeft.add(edReplace, "2, 8, 3, 1, fill, center"); //$NON-NLS-1$
 		edReplace.setColumns(10);
 		
-		btnNewButton = new JButton(LocaleBundle.getString("AddMovieFrame.btnOK.text")); //$NON-NLS-1$
+		btnNewButton = new JButton(LocaleBundle.getString("UIGeneric.btnOK.text")); //$NON-NLS-1$
 		pnlLeft.add(btnNewButton, "2, 10, center, top"); //$NON-NLS-1$
 		
 		btnTest = new JButton(LocaleBundle.getString("MassMoveSeriesFrame.btnTest.text")); //$NON-NLS-1$

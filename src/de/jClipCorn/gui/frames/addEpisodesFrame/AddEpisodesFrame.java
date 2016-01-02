@@ -267,7 +267,7 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler, 
 		spnEpisode.setBounds(74, 49, 193, 20);
 		pnlInfo.add(spnEpisode);
 
-		btnEpCancel = new JButton(LocaleBundle.getString("AddMovieFrame.btnCancel.text")); //$NON-NLS-1$
+		btnEpCancel = new JButton(LocaleBundle.getString("UIGeneric.btnCancel.text")); //$NON-NLS-1$
 		btnEpCancel.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -277,7 +277,7 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler, 
 		btnEpCancel.setBounds(12, 526, 97, 23);
 		pnlInfo.add(btnEpCancel);
 
-		btnEpOk = new JButton(LocaleBundle.getString("AddMovieFrame.btnOK.text")); //$NON-NLS-1$
+		btnEpOk = new JButton(LocaleBundle.getString("UIGeneric.btnOK.text")); //$NON-NLS-1$
 		btnEpOk.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -378,7 +378,7 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler, 
 		lsEpisodes.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		scrollPane.setViewportView(lsEpisodes);
 
-		btnOK = new JButton(LocaleBundle.getString("AddMovieFrame.btnOK.text")); //$NON-NLS-1$
+		btnOK = new JButton(LocaleBundle.getString("UIGeneric.btnOK.text")); //$NON-NLS-1$
 		btnOK.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {

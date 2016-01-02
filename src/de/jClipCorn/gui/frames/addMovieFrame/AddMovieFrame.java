@@ -582,7 +582,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		lblNewLabel.setBounds(296, 642, 50, 16);
 		contentPane.add(lblNewLabel);
 		
-		btnOK = new JButton(LocaleBundle.getString("AddMovieFrame.btnOK.text")); //$NON-NLS-1$
+		btnOK = new JButton(LocaleBundle.getString("UIGeneric.btnOK.text")); //$NON-NLS-1$
 		btnOK.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -592,14 +592,14 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		btnOK.setBounds(265, 724, 95, 25);
 		contentPane.add(btnOK);
 		
-		btnCancel = new JButton(LocaleBundle.getString("AddMovieFrame.btnCancel.text")); //$NON-NLS-1$
+		btnCancel = new JButton(LocaleBundle.getString("UIGeneric.btnCancel.text")); //$NON-NLS-1$
 		btnCancel.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				cancel();
 			}
 		});
-		btnCancel.setBounds(379, 724, 95, 25);
+		btnCancel.setBounds(379, 724, 125, 25);
 		contentPane.add(btnCancel);
 		
 		edTitle = new JTextField();

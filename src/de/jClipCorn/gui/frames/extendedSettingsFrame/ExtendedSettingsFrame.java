@@ -158,7 +158,7 @@ public class ExtendedSettingsFrame extends JFrame implements ListSelectionListen
 		pnlBottomBottom = new JPanel();
 		pnlBottom.add(pnlBottomBottom, BorderLayout.SOUTH);
 
-		btnOK = new JButton(LocaleBundle.getString("extendedSettingsFrame.btnOK.title")); //$NON-NLS-1$
+		btnOK = new JButton(LocaleBundle.getString("UIGeneric.btnOK.text")); //$NON-NLS-1$
 		btnOK.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {

@@ -255,7 +255,7 @@ public class CoverCropDialog extends JDialog {
 		pnlBottom = new JPanel();
 		contentPane.add(pnlBottom, BorderLayout.SOUTH);
 		
-		btnOk = new JButton(LocaleBundle.getString("CoverCropFrame.btnOK.text")); //$NON-NLS-1$
+		btnOk = new JButton(LocaleBundle.getString("UIGeneric.btnOK.text")); //$NON-NLS-1$
 		btnOk.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -265,7 +265,7 @@ public class CoverCropDialog extends JDialog {
 		});
 		pnlBottom.add(btnOk);
 		
-		btnCancel = new JButton(LocaleBundle.getString("CoverCropFrame.btnCancel.text")); //$NON-NLS-1$
+		btnCancel = new JButton(LocaleBundle.getString("UIGeneric.btnCancel.text")); //$NON-NLS-1$
 		btnCancel.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {

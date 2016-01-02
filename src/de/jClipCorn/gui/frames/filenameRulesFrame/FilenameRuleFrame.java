@@ -49,7 +49,7 @@ public class FilenameRuleFrame extends JFrame {
 		pnlBottom = new JPanel();
 		getContentPane().add(pnlBottom, BorderLayout.SOUTH);
 		
-		btnOK = new JButton(LocaleBundle.getString("AddMovieFrame.btnOK.text")); //$NON-NLS-1$
+		btnOK = new JButton(LocaleBundle.getString("UIGeneric.btnOK.text")); //$NON-NLS-1$
 		btnOK.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {

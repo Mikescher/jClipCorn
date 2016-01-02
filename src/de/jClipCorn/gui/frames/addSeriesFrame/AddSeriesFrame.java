@@ -209,7 +209,7 @@ public class AddSeriesFrame extends JFrame implements ParseResultHandler, UserDa
 		label_13.setBounds(298, 86, 52, 16);
 		getContentPane().add(label_13);
 
-		btnOK = new JButton(LocaleBundle.getString("AddMovieFrame.btnOK.text")); //$NON-NLS-1$
+		btnOK = new JButton(LocaleBundle.getString("UIGeneric.btnOK.text")); //$NON-NLS-1$
 		btnOK.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -219,7 +219,7 @@ public class AddSeriesFrame extends JFrame implements ParseResultHandler, UserDa
 		btnOK.setBounds(197, 484, 95, 25);
 		getContentPane().add(btnOK);
 
-		btnCancel = new JButton(LocaleBundle.getString("AddMovieFrame.btnCancel.text")); //$NON-NLS-1$
+		btnCancel = new JButton(LocaleBundle.getString("UIGeneric.btnCancel.text")); //$NON-NLS-1$
 		btnCancel.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {

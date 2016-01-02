@@ -210,7 +210,7 @@ public class ParseWatchDataFrame extends JFrame {
 		btnExecute.setEnabled(false);
 		pnlButtons.add(btnExecute);
 		
-		btnCancel = new JButton(LocaleBundle.getString("ParseWatchDataFrame.btnCancel.text")); //$NON-NLS-1$
+		btnCancel = new JButton(LocaleBundle.getString("UIGeneric.btnCancel.text")); //$NON-NLS-1$
 		btnCancel.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {

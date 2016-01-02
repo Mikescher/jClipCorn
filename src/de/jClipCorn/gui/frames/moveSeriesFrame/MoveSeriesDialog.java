@@ -124,7 +124,7 @@ public class MoveSeriesDialog extends JDialog {
 		pnlLeft.add(edReplace, "2, 12, 3, 1, fill, center"); //$NON-NLS-1$
 		edReplace.setColumns(10);
 		
-		btnNewButton = new JButton(LocaleBundle.getString("AddMovieFrame.btnOK.text")); //$NON-NLS-1$
+		btnNewButton = new JButton(LocaleBundle.getString("UIGeneric.btnOK.text")); //$NON-NLS-1$
 		pnlLeft.add(btnNewButton, "2, 14, center, top"); //$NON-NLS-1$
 		
 		btnTest = new JButton(LocaleBundle.getString("MoveSeriesFrame.btnTest.text")); //$NON-NLS-1$

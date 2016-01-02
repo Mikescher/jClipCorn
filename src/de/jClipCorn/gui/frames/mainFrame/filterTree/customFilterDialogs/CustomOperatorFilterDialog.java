@@ -184,7 +184,7 @@ public class CustomOperatorFilterDialog extends CustomFilterDialog implements Fi
 		pnlBottomLeft = new JPanel();
 		pnlBottom.add(pnlBottomLeft, BorderLayout.CENTER);
 		
-		btnOk = new JButton(LocaleBundle.getString("AddMovieFrame.btnOK.text")); //$NON-NLS-1$
+		btnOk = new JButton(LocaleBundle.getString("UIGeneric.btnOK.text")); //$NON-NLS-1$
 		pnlBottomLeft.add(btnOk);
 		btnOk.addActionListener(new ActionListener() {
 			@Override

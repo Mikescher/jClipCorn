@@ -173,7 +173,7 @@ public class OrganizeFilterDialog extends JDialog {
 		panel_1 = new JPanel();
 		getContentPane().add(panel_1, "1, 2, 2, 1"); //$NON-NLS-1$
 		
-		btnOK = new JButton(LocaleBundle.getString("OrganizeFilterDialog.btnOK.text")); //$NON-NLS-1$
+		btnOK = new JButton(LocaleBundle.getString("UIGeneric.btnOK.text")); //$NON-NLS-1$
 		btnOK.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {

@@ -120,7 +120,7 @@ public class CreateSeriesFolderStructureFrame extends JFrame {
 		});
 		pnlLeft.add(btnChoose, "6, 6"); //$NON-NLS-1$
 		
-		btnOk = new JButton(LocaleBundle.getString("AddMovieFrame.btnOK.text")); //$NON-NLS-1$
+		btnOk = new JButton(LocaleBundle.getString("UIGeneric.btnOK.text")); //$NON-NLS-1$
 		btnOk.setEnabled(false);
 		btnOk.addActionListener(new ActionListener() {
 			@Override

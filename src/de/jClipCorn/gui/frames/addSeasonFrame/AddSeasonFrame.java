@@ -75,7 +75,7 @@ public class AddSeasonFrame extends JFrame implements UserDataProblemHandler, Pa
 		edTitle.setBounds(76, 13, 212, 20);
 		getContentPane().add(edTitle);
 		
-		btnCancel = new JButton(LocaleBundle.getString("AddMovieFrame.btnCancel.text")); //$NON-NLS-1$
+		btnCancel = new JButton(LocaleBundle.getString("UIGeneric.btnCancel.text")); //$NON-NLS-1$
 		btnCancel.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -85,7 +85,7 @@ public class AddSeasonFrame extends JFrame implements UserDataProblemHandler, Pa
 		btnCancel.setBounds(244, 334, 95, 25);
 		getContentPane().add(btnCancel);
 		
-		btnOK = new JButton(LocaleBundle.getString("AddMovieFrame.btnOK.text")); //$NON-NLS-1$
+		btnOK = new JButton(LocaleBundle.getString("UIGeneric.btnOK.text")); //$NON-NLS-1$
 		btnOK.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {

@@ -112,7 +112,7 @@ public class CustomOnlinescoreFilterDialog extends CustomFilterDialog {
 		pnlBottom = new JPanel();
 		getContentPane().add(pnlBottom, BorderLayout.SOUTH);
 		
-		btnOk = new JButton(LocaleBundle.getString("AddMovieFrame.btnOK.text")); //$NON-NLS-1$
+		btnOk = new JButton(LocaleBundle.getString("UIGeneric.btnOK.text")); //$NON-NLS-1$
 		btnOk.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {

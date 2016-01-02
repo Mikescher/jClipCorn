@@ -386,7 +386,7 @@ public class ParseImDBDialog extends JDialog {
 		btnIMDB.setBounds(6, 190, 94, 23);
 		pnlMain.add(btnIMDB);
 		
-		btnOk = new JButton(LocaleBundle.getString("parseImDBFrame.btnOK.text")); //$NON-NLS-1$
+		btnOk = new JButton(LocaleBundle.getString("UIGeneric.btnOK.text")); //$NON-NLS-1$
 		btnOk.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {

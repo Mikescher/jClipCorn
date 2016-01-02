@@ -425,7 +425,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		btnAddEmptySeason.setBounds(206, 473, 167, 23);
 		pnlSeries.add(btnAddEmptySeason);
 		
-		btnSeriesOk = new JButton(LocaleBundle.getString("AddMovieFrame.btnOK.text")); //$NON-NLS-1$
+		btnSeriesOk = new JButton(LocaleBundle.getString("UIGeneric.btnOK.text")); //$NON-NLS-1$
 		btnSeriesOk.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -511,7 +511,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		btnAddMultipleEpisodes.setBounds(204, 412, 153, 23);
 		pnlSeason.add(btnAddMultipleEpisodes);
 		
-		btnSeasonOK = new JButton(LocaleBundle.getString("AddMovieFrame.btnOK.text")); //$NON-NLS-1$
+		btnSeasonOK = new JButton(LocaleBundle.getString("UIGeneric.btnOK.text")); //$NON-NLS-1$
 		btnSeasonOK.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -682,7 +682,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		tagPnl.setBounds(74, 436, 273, 22);
 		pnlEpisode.add(tagPnl);
 		
-		btnEpisodeOK = new JButton(LocaleBundle.getString("AddMovieFrame.btnOK.text")); //$NON-NLS-1$
+		btnEpisodeOK = new JButton(LocaleBundle.getString("UIGeneric.btnOK.text")); //$NON-NLS-1$
 		btnEpisodeOK.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {

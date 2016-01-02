@@ -104,7 +104,7 @@ public abstract class AutomaticSettingsFrame extends JFrame {
 				RowSpec.decode("23px"), //$NON-NLS-1$
 				FormSpecs.LINE_GAP_ROWSPEC,}));
 		
-		btnOk = new JButton(LocaleBundle.getString("Settingsframe.btnOK.title")); //$NON-NLS-1$
+		btnOk = new JButton(LocaleBundle.getString("UIGeneric.btnOK.text")); //$NON-NLS-1$
 		btnOk.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -120,7 +120,7 @@ public abstract class AutomaticSettingsFrame extends JFrame {
 		pnlBottom.add(btnOk, "4, 2, fill, top"); //$NON-NLS-1$
 		tabOrder.add(btnOk);
 		
-		btnCancel = new JButton(LocaleBundle.getString("Settingsframe.btnCancel.title")); //$NON-NLS-1$
+		btnCancel = new JButton(LocaleBundle.getString("UIGeneric.btnCancel.title")); //$NON-NLS-1$
 		btnCancel.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {

@@ -4,6 +4,7 @@ import javax.swing.ImageIcon;
 
 import de.jClipCorn.gui.CachedResourceLoader;
 import de.jClipCorn.gui.Resources;
+import de.jClipCorn.util.formatter.PathFormatter;
 
 public enum CCMovieFormat {
 	MKV(0),
@@ -79,6 +80,19 @@ public enum CCMovieFormat {
 		return null;
 	}
 	
+	public static CCMovieFormat getMovieFormatFromPath(String path) {
+		return getMovieFormat(PathFormatter.getExtension(path));
+	}
+	
+	public static CCMovieFormat getMovieFormatFromPathOrDefault(String path) {
+		CCMovieFormat mf = getMovieFormat(PathFormatter.getExtension(path));
+		
+		if (mf == null) 
+			mf = AVI;
+		
+		return mf;
+	}
+	
 	public static CCMovieFormat getMovieFormatOrDefault(String ext) {
 		CCMovieFormat mf = getMovieFormat(ext);
 		
@@ -115,5 +129,23 @@ public enum CCMovieFormat {
 		default:
 			return null;
 		}
+	}
+
+	public static CCMovieFormat getMovieFormatFromPaths(String path0, String... paths) {
+		CCMovieFormat fmt = null;
+		
+		if (path0 != null && !path0.isEmpty()) {
+			fmt = getMovieFormatFromPath(path0);
+		}
+		
+		for (String path : paths) {
+			if (path != null && !path.isEmpty()) {
+				CCMovieFormat result = getMovieFormatFromPath(path);
+				
+				if (result != null && result != fmt) return null;
+			}
+		}
+		
+		return fmt;
 	}
 }

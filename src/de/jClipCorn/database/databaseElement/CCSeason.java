@@ -313,6 +313,34 @@ public class CCSeason {
 			}
 		}
 	}
+	
+	public Integer getCommonEpisodeLength() {
+		if (getEpisodeCount() == 0) return null;
+		
+		int len = -1;
+		for (int i = 0; i < getEpisodeCount(); i++) {
+			CCEpisode ep = getEpisode(i);
+
+			if (ep.getLength() > 0)
+				if (len > 0 && ep.getLength() != len) {
+					return null;
+				} else {
+					len = ep.getLength();
+				}
+		}
+		
+		return len;
+	}
+	
+	public int getNextEpisodeNumber() {
+		int ep = -1;
+		
+		for (CCEpisode ccEpisode : episodes) {
+			ep = Math.max(ep, ccEpisode.getEpisode());
+		}
+		
+		return ep + 1;
+	}
 
 	public void delete() {
 		getSeries().deleteSeason(this);

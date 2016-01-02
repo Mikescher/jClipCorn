@@ -104,6 +104,5 @@ public class Main {
 
 //TODO filter for series with missing movies (custom filter ?)
 //TODO save original/alternative title (eng title)
-//TODO Better preset for addEmptyEpisode
 //TODO Mass Move Series Dialog
 //TODO More Info in extended settings dialog

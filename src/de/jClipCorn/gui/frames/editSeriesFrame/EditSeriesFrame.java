@@ -696,7 +696,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		btnEpisodeCalcQuality.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				cbxEpisodeQuality.setSelectedIndex(CCMovieQuality.calculateQuality((Long)spnEpisodeSize.getValue(), (Integer)spnEpisodeLength.getValue(), 1).asInt());
+				recalcEpisodeQuality();
 			}
 		});
 		btnEpisodeCalcQuality.setBounds(251, 159, 94, 23);
@@ -1030,7 +1030,13 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 			return;
 		}
 		
-		season.createNewEmptyEpisode().setTitle("<untitled>"); //$NON-NLS-1$
+		CCEpisode newEp = season.createNewEmptyEpisode();
+		
+		newEp.setTitle("<untitled>"); //$NON-NLS-1$
+		newEp.setAddDate(CCDate.getCurrentDate());
+		newEp.setEpisodeNumber(season.getNextEpisodeNumber());
+		Integer commonLen = season.getCommonEpisodeLength();
+		if (commonLen != null) newEp.setLength(commonLen);
 		
 		updateSeasonPanel();
 	}
@@ -1133,6 +1139,18 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		
 		spnEpisodeSize.setValue(FileSizeFormatter.getFileSize(path));
 	}
+
+	private void recalcEpisodeFormat() {
+		String path = PathFormatter.fromCCPath(edEpisodePart.getText());
+		
+		CCMovieFormat fmt = CCMovieFormat.getMovieFormatFromPath(path);
+		
+		cbxEpisodeFormat.setSelectedIndex(fmt.asInt());
+	}
+
+	private void recalcEpisodeQuality() {
+		cbxEpisodeQuality.setSelectedIndex(CCMovieQuality.calculateQuality((Long)spnEpisodeSize.getValue(), (Integer)spnEpisodeLength.getValue(), 1).asInt());
+	}
 	
 	private void openEpisodePart() {
 		int returnval = videoFileChooser.showOpenDialog(this);
@@ -1150,6 +1168,8 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		edEpisodePart.setText(path);
 		
 		recalcEpisodeFilesize();
+		recalcEpisodeFormat();
+		recalcEpisodeQuality();
 		
 		testEpisodePart();
 	}

@@ -1169,24 +1169,15 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler, 
 	public void autoMetaDataCalc() {
 		lsEpisodes.setSelectedIndex(-1);
 
-		int len = -1;
-		boolean len_err = false;
-		for (int i = 0; i < parent.getEpisodeCount(); i++) {
-			CCEpisode ep = parent.getEpisode(i);
+		Integer len = parent.getCommonEpisodeLength();
 
-			if (ep.getLength() > 0)
-				if (len > 0 && ep.getLength() != len) {
-					len_err = true;
-				} else {
-					len = ep.getLength();
-				}
-		}
-
-		while (len <= 0 || len_err) {
-			len_err = false;
-			
+		while (len == null || len <= 0) {
 			try {
-				len = Integer.parseInt(DialogHelper.showLocalInputDialog(this, "AddEpisodeFrame.inputMetaTextLenDialog.text", "0")); //$NON-NLS-1$ //$NON-NLS-2$
+				String dialogresult = DialogHelper.showLocalInputDialog(this, "AddEpisodeFrame.inputMetaTextLenDialog.text", "0"); //$NON-NLS-1$ //$NON-NLS-2$
+				
+				if (dialogresult == null) return; // abort
+				
+				len = Integer.parseInt(dialogresult);
 			} catch (NumberFormatException nfe) {
 				len = -1;
 			}

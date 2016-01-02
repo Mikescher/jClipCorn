@@ -616,7 +616,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		btnCalcQuality.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				onCalcQuality();
+				recalcQuality();
 			}
 		});
 		btnCalcQuality.setBounds(296, 372, 112, 23);
@@ -817,7 +817,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 	@Override
 	public void setFilepath(int p, String t) {
 		String pt = t;
-		if (CCProperties.getInstance().PROP_ADD_MOVIE_RELATIVE_AUTO.getValue()) {
+		if (!t.isEmpty() && CCProperties.getInstance().PROP_ADD_MOVIE_RELATIVE_AUTO.getValue()) {
 			pt = PathFormatter.getCCPath(t, CCProperties.getInstance().PROP_ADD_MOVIE_RELATIVE_AUTO.getValue());
 		}
 				
@@ -847,8 +847,15 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 			edPart5.setCaretPosition(0);
 			break;
 		}
+
+		testPaths();
 		
 		updateFilesize();
+		
+		CCMovieFormat fmt = CCMovieFormat.getMovieFormatFromPaths(edPart0.getText(), edPart1.getText(), edPart2.getText(), edPart3.getText(), edPart4.getText(), edPart5.getText());
+		if (fmt != null) cbxFormat.setSelectedIndex(fmt.asInt());
+		
+		recalcQuality();
 	}
 
 	@Override
@@ -938,7 +945,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		// nothing
 	}
 	
-	private void onCalcQuality() {
+	private void recalcQuality() {
 		setQuality(CCMovieQuality.calculateQuality((long)spnSize.getValue(), (int) spnLength.getValue(), getPartCount()));
 	}
 	
@@ -961,35 +968,10 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		}
 		
 		setFilepath(cNmbr, videoFileChooser.getSelectedFile().getAbsolutePath());
-		
-		updateFilesize();
 	}
 	
 	private void onBtnClearClicked(int cNmbr) {
-		switch (cNmbr) {
-		case 0:
-			edPart0.setText(""); //$NON-NLS-1$
-			break;
-		case 1:
-			edPart1.setText(""); //$NON-NLS-1$
-			break;
-		case 2:
-			edPart2.setText(""); //$NON-NLS-1$
-			break;
-		case 3:
-			edPart3.setText(""); //$NON-NLS-1$
-			break;
-		case 4:
-			edPart4.setText(""); //$NON-NLS-1$
-			break;
-		case 5:
-			edPart5.setText(""); //$NON-NLS-1$
-			break;
-		}
-		
-		updateFilesize();
-		
-		testPaths();
+		setFilepath(cNmbr, ""); //$NON-NLS-1$
 	}
 	
 	private void onBtnOK(boolean check) {

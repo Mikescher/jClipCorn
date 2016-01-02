@@ -1,4 +1,4 @@
-	package de.jClipCorn.gui.frames.moveSeriesFrame;
+package de.jClipCorn.gui.frames.moveSeriesFrame;
 
 import java.awt.Color;
 import java.awt.Component;

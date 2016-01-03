@@ -273,15 +273,15 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 		});
 		pnlSearch.setLayout(new FormLayout(new ColumnSpec[] {
 				FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
-				ColumnSpec.decode("268px"),
+				ColumnSpec.decode("268px"), //$NON-NLS-1$
 				FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
-				ColumnSpec.decode("50px"),
+				ColumnSpec.decode("50px"), //$NON-NLS-1$
 				FormSpecs.RELATED_GAP_COLSPEC,},
 			new RowSpec[] {
 				FormSpecs.LINE_GAP_ROWSPEC,
-				RowSpec.decode("26px"),
+				RowSpec.decode("26px"), //$NON-NLS-1$
 				FormSpecs.LINE_GAP_ROWSPEC,}));
-		pnlSearch.add(edSearch, "2, 2, left, fill");
+		pnlSearch.add(edSearch, "2, 2, left, fill"); //$NON-NLS-1$
 		edSearch.setColumns(24);
 
 		btnSearch = new JButton();
@@ -292,7 +292,7 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 			}
 		});
 		btnSearch.setIcon(CachedResourceLoader.getSmallImageIcon(Resources.ICN_FRAMES_SEARCH));
-		pnlSearch.add(btnSearch, "4, 2, left, top");
+		pnlSearch.add(btnSearch, "4, 2, left, top"); //$NON-NLS-1$
 		
 		pnlTopLeft = new JPanel();
 		pnlTopInfo.add(pnlTopLeft, BorderLayout.WEST);

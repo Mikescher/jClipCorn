@@ -1,3 +1,48 @@
+############ 2016-01-03: 1.9.9 Feature: Improved Usability of ExtendedSettingsFrame
+
+############ 2016-01-03: 1.9.9 Task: Made "partial viewed" icon with less contrast
+
+############ 2016-01-03: 1.9.9 Task: Moved Maintenance Tasks in own category
+
+############ 2016-01-03: 1.9.9 Feature: MassMoveMovies dialog (like massMoveSeries, but for movies)
+
+############ 2016-01-02: 1.9.9 Bugfix: Fixed getCommonFolderPath() for case-insensitive filesystems (windows)
+
+############ 2016-01-02: 1.9.9 Task: Unified translations for 'OK' and 'Cancel'
+
+############ 2016-01-02: 1.9.9 Feature: MassMoveSeries dialog (like moveSeries, but in batch)
+
+############ 2016-01-02: 1.9.9 Feature: Find dialog for film series with missing movies
+
+############ 2016-01-02: 1.9.9 Task: Changed Update API URL to mikescher.com
+
+############ 2016-01-02: 1.9.9 Feature: Better EmptyEpisode Preset and more intelligent editEpisode/editMovie dialog
+
+############ 2016-01-02: 1.9.9 Bugfix: Fixed imdb parsing for new layout (year in title)
+
+############ 2016-01-02: 1.9.9 Bugfix: Fixed <?self[dir]> wildcard under linux (only valid in windows os)
+
+############ 2016-01-02: 1.9.9 Bugfix: Fixed a few editable tables that should be readonly
+
+############ 2016-01-02: 1.9.9 Bugfix: Fixed table rendering in moveSeriesDialog
+
+############ 2015-12-30: 1.9.9 Bugfix: Fixed jpg encoding error (linux) when importing series/movie covers
+
+############ 2015-12-30: Merge pull request #2 from Bigben37/master
+
+fixed some mistakes in language files
+############ 2015-12-30: fixed some mistakes in language files
+
+############ 2015-12-27: 1.9.9 Bugfix: Fixed false-positive error "ERROR_INVALID_SERIES_STRUCTURE"
+
+############ 2015-12-27: 1.9.9 Bugfix: Fixed errors in getCCPath, caused by the new path serialization format
+
+############ 2015-12-27: 1.9.9 Bugfix: Fixed focus issues in PreviewSeriesFrame
+
+############ 2015-12-22: 1.9.8.1 Bugfix: Fixed Dateformat in DatabaseConverter(1.6 -> 1.7)
+
+############ 2015-12-22: 1.9.8 RELEASE
+
 ############ 2015-12-22: 1.9.8 Bugfix: Fixed exception in statistics with movies in only one year
 
 ############ 2015-12-22: 1.9.8 Task: Fixed mmissing libs in build.gradle (now with manual dependency managmet)

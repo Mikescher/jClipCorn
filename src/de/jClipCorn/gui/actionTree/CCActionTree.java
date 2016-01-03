@@ -369,15 +369,6 @@ public class CCActionTree {
 		// ################################################################################################################################################################
 		CCActionElement extras = root.addChild(new CCActionElement("Extras", null, "ClipMenuBar.Extras", ""));
 		// ################################################################################################################################################################
-
-		temp = extras.addChild(new CCActionElement("XML", null, "ClipMenuBar.Extras.XML", Resources.ICN_MENUBAR_PARSEXML));
-		temp.setReadOnlyRestriction();
-		temp.addListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onClickExtrasXML();
-			}
-		});
 		
 		temp = extras.addChild(new CCActionElement("ScanFolder", KeyStroke.getKeyStroke(KeyEvent.VK_O, InputEvent.CTRL_DOWN_MASK), "ClipMenuBar.Extras.ScanFolder", Resources.ICN_MENUBAR_SCANFOLDER));
 		temp.setReadOnlyRestriction();
@@ -393,49 +384,6 @@ public class CCActionTree {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				onClickExtrasCompareDBs();
-			}
-		});
-		
-		temp = extras.addChild(new CCActionElement("MassChangeViewed", null, "ClipMenuBar.Extras.MassChangeViewed", Resources.ICN_MENUBAR_MCHANGE_VIEWED));
-		temp.setReadOnlyRestriction();
-		temp.addListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onClickExtrasMassChangeViewed();
-			}
-		});
-		
-		temp = extras.addChild(new CCActionElement("MassChangeScore", null, "ClipMenuBar.Extras.MassChangeScore", Resources.ICN_MENUBAR_MCHANGE_SCORE));
-		temp.setReadOnlyRestriction();
-		temp.addListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onClickExtrasMassChangeScore();
-			}
-		});
-		
-		temp = extras.addChild(new CCActionElement("MassMoveSeries", null, "ClipMenuBar.Extras.MassMoveSeries", Resources.ICN_MENUBAR_MOVEALLSERIES));
-		temp.addListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onCLickExtrasMassMoveSeries();
-			}
-		});
-		
-		temp = extras.addChild(new CCActionElement("MassMoveMovies", null, "ClipMenuBar.Extras.MassMoveMovies", Resources.ICN_MENUBAR_MOVEALLMOVIES));
-		temp.addListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onCLickExtrasMassMoveMovies();
-			}
-		});
-		
-		temp = extras.addChild(new CCActionElement("ResetViewed", null, "ClipMenuBar.Extras.ResetViewed", Resources.ICN_MENUBAR_RESETVIEWED));
-		temp.setReadOnlyRestriction();
-		temp.addListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onClickExtrasResetViewed();
 			}
 		});
 		
@@ -464,6 +412,7 @@ public class CCActionTree {
 		});
 		
 		temp = extras.addChild(new CCActionElement("ParseWatchData", null, "ClipMenuBar.Extras.ParseWatchData", Resources.ICN_MENUBAR_WATCHDATA));
+		temp.setReadOnlyRestriction();
 		temp.addListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -484,6 +433,64 @@ public class CCActionTree {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				onClickExtrasSettings();
+			}
+		});
+
+		// ################################################################################################################################################################
+		CCActionElement maintenance = root.addChild(new CCActionElement("Maintenance", null, "ClipMenuBar.Maintenance", ""));
+		// ################################################################################################################################################################
+
+		temp = maintenance.addChild(new CCActionElement("XML", null, "ClipMenuBar.Maintenance.XML", Resources.ICN_MENUBAR_PARSEXML));
+		temp.setReadOnlyRestriction();
+		temp.addListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				onClickMaintenanceXML();
+			}
+		});
+		
+		temp = maintenance.addChild(new CCActionElement("MassChangeViewed", null, "ClipMenuBar.Maintenance.MassChangeViewed", Resources.ICN_MENUBAR_MCHANGE_VIEWED));
+		temp.setReadOnlyRestriction();
+		temp.addListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				onClickMaintenanceMassChangeViewed();
+			}
+		});
+		
+		temp = maintenance.addChild(new CCActionElement("MassChangeScore", null, "ClipMenuBar.Maintenance.MassChangeScore", Resources.ICN_MENUBAR_MCHANGE_SCORE));
+		temp.setReadOnlyRestriction();
+		temp.addListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				onClickMaintenanceMassChangeScore();
+			}
+		});
+		
+		temp = maintenance.addChild(new CCActionElement("MassMoveSeries", null, "ClipMenuBar.Maintenance.MassMoveSeries", Resources.ICN_MENUBAR_MOVEALLSERIES));
+		temp.setReadOnlyRestriction();
+		temp.addListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				onCLickMaintenanceMassMoveSeries();
+			}
+		});
+		
+		temp = maintenance.addChild(new CCActionElement("MassMoveMovies", null, "ClipMenuBar.Maintenance.MassMoveMovies", Resources.ICN_MENUBAR_MOVEALLMOVIES));
+		temp.setReadOnlyRestriction();
+		temp.addListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				onCLickMaintenanceMassMoveMovies();
+			}
+		});
+		
+		temp = maintenance.addChild(new CCActionElement("ResetViewed", null, "ClipMenuBar.Maintenance.ResetViewed", Resources.ICN_MENUBAR_RESETVIEWED));
+		temp.setReadOnlyRestriction();
+		temp.addListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				onClickMaintenanceResetViewed();
 			}
 		});
 		
@@ -731,7 +738,7 @@ public class CCActionTree {
 		ApplicationHelper.exitApplication();
 	}
 
-	private void onClickExtrasXML() {
+	private void onClickMaintenanceXML() {
 		final JFileChooser chooser = new JFileChooser();
 		chooser.setFileFilter(FileChooserHelper.createLocalFileFilter("ExportHelper.filechooser_ccbxml.description", ExportHelper.EXTENSION_CCBACKUP));  //$NON-NLS-1$
 		chooser.setCurrentDirectory(new File(PathFormatter.getRealSelfDirectory()));
@@ -758,7 +765,7 @@ public class CCActionTree {
 		cdf.setVisible(true);
 	}
 	
-	private void onClickExtrasResetViewed() {
+	private void onClickMaintenanceResetViewed() {
 		if (DialogHelper.showLocaleYesNo(owner, "Dialogs.ResetViewed")) { //$NON-NLS-1$
 			owner.getMovielist().resetAllMovieViewed(false);
 		}
@@ -791,22 +798,22 @@ public class CCActionTree {
 		sifsf.setVisible(true);
 	}
 	
-	private void onClickExtrasMassChangeViewed() {
+	private void onClickMaintenanceMassChangeViewed() {
 		ChangeViewedFrame cvf = new ChangeViewedFrame(owner, movielist);
 		cvf.setVisible(true);
 	}
 	
-	private void onClickExtrasMassChangeScore() {
+	private void onClickMaintenanceMassChangeScore() {
 		ChangeScoreFrame csf = new ChangeScoreFrame(owner, movielist);
 		csf.setVisible(true);
 	}
 	
-	private void onCLickExtrasMassMoveSeries() {
+	private void onCLickMaintenanceMassMoveSeries() {
 		MassMoveSeriesDialog mmsd = new MassMoveSeriesDialog(owner, movielist);
 		mmsd.setVisible(true);
 	}
 	
-	private void onCLickExtrasMassMoveMovies() {
+	private void onCLickMaintenanceMassMoveMovies() {
 		MassMoveMoviesDialog mmmd = new MassMoveMoviesDialog(owner, movielist);
 		mmmd.setVisible(true);
 	}

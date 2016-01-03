@@ -5,9 +5,10 @@ import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.Vector;
 
 import javax.swing.SwingUtilities;
@@ -642,8 +643,8 @@ public class CCMovieList {
 		return list.iterator();
 	}
 	
-	public HashMap<String, List<CCMovie>> listAllZyklus() {
-		HashMap<String, List<CCMovie>> map = new HashMap<>();
+	public Map<String, List<CCMovie>> listAllZyklus() {
+		Map<String, List<CCMovie>> map = new TreeMap<>(); // TreeMap is ordered by default
 		
 		for (Iterator<CCMovie> it = iteratorMovies(); it.hasNext();) {
 			CCMovie curr = it.next();

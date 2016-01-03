@@ -2,6 +2,14 @@ package de.jClipCorn.gui.frames.showIncompleteFilmSeriesFrame;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -9,6 +17,8 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.border.EmptyBorder;
 
 import de.jClipCorn.database.CCMovieList;
@@ -18,16 +28,6 @@ import de.jClipCorn.gui.CachedResourceLoader;
 import de.jClipCorn.gui.Resources;
 import de.jClipCorn.gui.frames.previewMovieFrame.PreviewMovieFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import java.awt.event.ActionListener;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map.Entry;
-import java.awt.event.ActionEvent;
-import java.awt.Dimension;
-import javax.swing.JScrollPane;
-import javax.swing.ScrollPaneConstants;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
 public class ShowIncompleteFilmSeriesFrame extends JDialog {
 	private static final long serialVersionUID = 4396672523833844038L;
@@ -92,7 +92,7 @@ public class ShowIncompleteFilmSeriesFrame extends JDialog {
 	private void scan() {
 		DefaultListModel<MissingZyklusElement> mdl = new DefaultListModel<>();
 		
-		HashMap<String, List<CCMovie>> zyklusList = movielist.listAllZyklus();
+		Map<String, List<CCMovie>> zyklusList = movielist.listAllZyklus();
 
 		zyklusLoop: 
 			for (Entry<String, List<CCMovie>> zyklus : zyklusList.entrySet()) {

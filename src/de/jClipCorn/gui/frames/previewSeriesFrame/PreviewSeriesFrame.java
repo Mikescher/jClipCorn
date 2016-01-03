@@ -73,6 +73,10 @@ import de.jClipCorn.util.helper.TextFileUtils;
 import de.jClipCorn.util.listener.EpisodeSearchCallbackListener;
 import de.jClipCorn.util.listener.UpdateCallbackListener;
 import de.jClipCorn.util.parser.imageparser.ImDBImageParser;
+import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.ColumnSpec;
+import com.jgoodies.forms.layout.FormSpecs;
+import com.jgoodies.forms.layout.RowSpec;
 
 public class PreviewSeriesFrame extends JFrame implements ListSelectionListener, JCoverChooserPopupEvent, UpdateCallbackListener {
 	private static final long serialVersionUID = 5484205983855802992L;
@@ -267,7 +271,17 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 				startSearch();
 			}
 		});
-		pnlSearch.add(edSearch);
+		pnlSearch.setLayout(new FormLayout(new ColumnSpec[] {
+				FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
+				ColumnSpec.decode("268px"),
+				FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
+				ColumnSpec.decode("50px"),
+				FormSpecs.RELATED_GAP_COLSPEC,},
+			new RowSpec[] {
+				FormSpecs.LINE_GAP_ROWSPEC,
+				RowSpec.decode("26px"),
+				FormSpecs.LINE_GAP_ROWSPEC,}));
+		pnlSearch.add(edSearch, "2, 2, left, fill");
 		edSearch.setColumns(24);
 
 		btnSearch = new JButton();
@@ -278,7 +292,7 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 			}
 		});
 		btnSearch.setIcon(CachedResourceLoader.getSmallImageIcon(Resources.ICN_FRAMES_SEARCH));
-		pnlSearch.add(btnSearch);
+		pnlSearch.add(btnSearch, "4, 2, left, top");
 		
 		pnlTopLeft = new JPanel();
 		pnlTopInfo.add(pnlTopLeft, BorderLayout.WEST);

@@ -5,7 +5,7 @@ import de.jClipCorn.properties.CCPropertyCategory;
 
 public class CCPIntProperty extends CCRIntProperty {
 	public CCPIntProperty(CCPropertyCategory cat, CCProperties prop, String ident, Integer standard) {
-		super(cat, prop, ident, standard, 0, Integer.MAX_VALUE, null);
+		super(cat, prop, ident, standard, 0, Integer.MAX_VALUE);
 	}
 	
 	@Override

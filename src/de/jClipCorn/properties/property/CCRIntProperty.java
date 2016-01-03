@@ -1,10 +1,7 @@
 package de.jClipCorn.properties.property;
 
 import java.awt.Component;
-import java.util.Vector;
 
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JComboBox;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 
@@ -14,30 +11,19 @@ import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.CCPropertyCategory;
 
 public class CCRIntProperty extends CCIntProperty {
-	private int min;
-	private int max;
+	private final int min;
+	private final int max;
 	
-	private Vector<String> values;
-	
-	public CCRIntProperty(CCPropertyCategory cat, CCProperties prop, String ident, Integer standard, int min, int max, Vector<String> values) {
-		super(cat ,prop, ident, standard);
+	public CCRIntProperty(CCPropertyCategory cat, CCProperties prop, String ident, Integer standard, Integer min, Integer max) {
+		super(cat, prop, ident, standard);
 		this.min = min;
 		this.max = max;
-		this.values = values;
-	}
-	
-	public CCRIntProperty(CCPropertyCategory cat, CCProperties prop, String ident, Integer standard, Vector<String> values) {
-		super(cat, prop, ident, standard);
-		this.min = 0;
-		this.max = values.size();
-		this.values = values;
 	}
 	
 	public CCRIntProperty(CCPropertyCategory cat, CCProperties prop, String ident, Integer standard, Integer max) {
 		super(cat, prop, ident, standard);
 		this.min = 0;
 		this.max = max;
-		this.values = null;
 	}
 	
 	@Override
@@ -83,29 +69,17 @@ public class CCRIntProperty extends CCIntProperty {
 
 	@Override
 	public Component getComponent() {
-		if (values == null) {
-			return new JSpinner(new SpinnerNumberModel(min, min, max, 1));
-		} else {
-			return new JComboBox<>(new DefaultComboBoxModel<>(values));
-		}
+		return new JSpinner(new SpinnerNumberModel(min, min, max - 1, 1));
 	}
 	
 	@Override
 	public void setComponentValueToValue(Component c, Integer val) {
-		if (values == null) {
-			((JSpinner)c).setValue(val);
-		} else {
-			((JComboBox<?>)c).setSelectedIndex(val);
-		}
+		((JSpinner)c).setValue(val);
 	}
 
 	@Override
 	public Integer getComponentValue(Component c) {
-		if (values == null) {
-			return (Integer) ((JSpinner)c).getValue();
-		} else {
-			return ((JComboBox<?>)c).getSelectedIndex();
-		}
+		return (Integer) ((JSpinner)c).getValue();
 	}
 
 	public int getMin() {

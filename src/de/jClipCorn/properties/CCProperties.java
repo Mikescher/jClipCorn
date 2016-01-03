@@ -16,12 +16,13 @@ import de.jClipCorn.gui.localization.util.LocalizedVector;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.properties.property.CCBoolProperty;
 import de.jClipCorn.properties.property.CCDateProperty;
-import de.jClipCorn.properties.property.CCPathProperty;
 import de.jClipCorn.properties.property.CCPIntProperty;
+import de.jClipCorn.properties.property.CCPathProperty;
 import de.jClipCorn.properties.property.CCProperty;
 import de.jClipCorn.properties.property.CCRIntProperty;
 import de.jClipCorn.properties.property.CCStringProperty;
 import de.jClipCorn.properties.property.CCToolbarProperty;
+import de.jClipCorn.properties.property.CCVIntProperty;
 import de.jClipCorn.util.CCDate;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.ApplicationHelper;
@@ -200,7 +201,7 @@ public class CCProperties {
 		va.add("CCProperties.AddDateCalculation.Opt1"); //$NON-NLS-1$
 		va.add("CCProperties.AddDateCalculation.Opt2"); //$NON-NLS-1$
 		
-		PROP_UI_LANG							= new CCRIntProperty(CAT_COMMON, 		this, 	"PROP_UI_LANG", 							getDefLanguage(),	vl);
+		PROP_UI_LANG							= new CCVIntProperty(CAT_COMMON, 		this, 	"PROP_UI_LANG", 							getDefLanguage(),	vl);
 		PROP_LOADING_PRELOADRESOURCES			= new CCBoolProperty(CAT_COMMON, 		this,   "PROP_LOADING_PRELOADICONS", 				false);
 		PROP_USE_INTELLISORT					= new CCBoolProperty(CAT_COMMON,		this, 	"PROP_USE_INTELLISORT", 					false);
 		PROP_COMMON_CHECKFORUPDATES				= new CCBoolProperty(CAT_COMMON, 		this, 	"PROP_COMMON_CHECKFORUPDATES", 				true);
@@ -209,11 +210,11 @@ public class CCProperties {
 		PROP_DATABASE_CLEANSHUTDOWN				= new CCBoolProperty(CAT_COMMON,	 	this,   "PROP_DATABASE_CLEANSHUTDOWN",				false);
 		PROP_MAINFRAME_FILTERLISTPATH			= new CCStringProperty(CAT_COMMON,	 	this,	"PROP_MAINFRAME_FILTERLISTPATH",			"<?self>jClipCorn."+ExportHelper.EXTENSION_FILTERLIST);
 		
-		PROP_UI_LOOKANDFEEL						= new CCRIntProperty(CAT_VIEW, 			this,	"PROP_UI_LOOKANDFEEL", 						getDefStyle(),		vlf);
-		PROP_MAINFRAME_TABLEBACKGROUND			= new CCRIntProperty(CAT_VIEW, 			this,	"PROP_MAINFRAME_TABLEBACKGROUND",			0, 					vb);
+		PROP_UI_LOOKANDFEEL						= new CCVIntProperty(CAT_VIEW, 			this,	"PROP_UI_LOOKANDFEEL", 						getDefStyle(),		vlf);
+		PROP_MAINFRAME_TABLEBACKGROUND			= new CCVIntProperty(CAT_VIEW, 			this,	"PROP_MAINFRAME_TABLEBACKGROUND",			0, 					vb);
 		PROP_LOADING_LIVEUPDATE					= new CCBoolProperty(CAT_VIEW, 			this, 	"PROP_LOADING_LIVEUPDATE", 					false);
 		PROP_MAINFRAME_SCROLLSPEED				= new CCPIntProperty(CAT_VIEW, 			this, 	"PROP_MAINFRAME_SCROLLSPEED", 				3);
-		PROP_VIEW_DB_START_SORT					= new CCRIntProperty(CAT_VIEW, 			this, 	"PROP_VIEW_DB_START_SORT", 					0,					vs);
+		PROP_VIEW_DB_START_SORT					= new CCVIntProperty(CAT_VIEW, 			this, 	"PROP_VIEW_DB_START_SORT", 					0,					vs);
 		PROP_TOOLBAR_ELEMENTS					= new CCToolbarProperty(CAT_VIEW, 		this, 	"PROP_TOOLBAR_ELEMENTS", 					ClipToolbar.STANDARD_CONFIG);
 		PROP_MAINFRAME_CLICKABLEZYKLUS			= new CCBoolProperty(CAT_VIEW,		 	this,   "PROP_MAINFRAME_CLICKABLEZYKLUS",			false);
 		PROP_MAINFRAME_CLICKABLESCORE			= new CCBoolProperty(CAT_VIEW,		 	this,   "PROP_MAINFRAME_CLICKABLESCORE",			false);
@@ -231,7 +232,7 @@ public class CCProperties {
 		PROP_DATABASE_COVERCACHESIZE			= new CCPIntProperty(CAT_DATABASE, 		this, 	"PROP_DATABASE_COVERCACHESIZE", 			128);
 		PROP_LOG_MAX_LINECOUNT 					= new CCPIntProperty(CAT_DATABASE, 		this, 	"PROP_LOG_MAX_LINECOUNT", 					1048576); // 2^20
 
-		PROP_ON_DBLCLICK_MOVE					= new CCRIntProperty(CAT_MOVIES, 		this, 	"PROP_ON_DBLCLICK_MOVE", 					0, 					vd);
+		PROP_ON_DBLCLICK_MOVE					= new CCVIntProperty(CAT_MOVIES, 		this, 	"PROP_ON_DBLCLICK_MOVE", 					0, 					vd);
 		PROP_MAINFRAME_AUTOMATICRESETWATCHLATER = new CCBoolProperty(CAT_MOVIES,		this,   "PROP_MAINFRAME_AUTOMATICRESETWATCHLATER",	true);
 		PROP_MAINFRAME_AUTOMATICRESETWATCHNEVER = new CCBoolProperty(CAT_MOVIES,		this,   "PROP_MAINFRAME_AUTOMATICRESETWATCHNEVER",	true);
 
@@ -240,7 +241,7 @@ public class CCProperties {
 		PROP_INCLUDE_SERIES_IN_VIEWEDCOUNT		= new CCBoolProperty(CAT_SERIES, 		this,	"PROP_INCLUDE_SERIES_IN_VIEWEDCOUNT", 		false);
 		PROP_PREVSERIES_3DCOVER					= new CCBoolProperty(CAT_SERIES, 		this,   "PROP_PREVSERIES_3DCOVER",					true);
 		PROP_PREVSERIES_COVERBORDER				= new CCBoolProperty(CAT_SERIES, 		this,   "PROP_PREVSERIES_COVERBORDER",				true);
-		PROP_SERIES_ADDDATECALCULATION			= new CCRIntProperty(CAT_SERIES, 		this, 	"PROP_SERIES_ADDDATECALCULATION", 			1, 					va);
+		PROP_SERIES_ADDDATECALCULATION			= new CCVIntProperty(CAT_SERIES, 		this, 	"PROP_SERIES_ADDDATECALCULATION", 			1, 					va);
 		PROP_VALIDATE_CHECK_SERIES_STRUCTURE	= new CCBoolProperty(CAT_SERIES,		this,   "PROP_VALIDATE_CHECK_SERIES_STRUCTURE",		false);
 		PROP_SERIES_KEEP_LASTVIEWED_PERSISTENT  = new CCBoolProperty(CAT_SERIES,		this,   "PROP_SERIES_KEEP_LASTVIEWED_PERSISTENT",	false);
 		PROP_SHOW_PARTIAL_VIEWED_STATE			= new CCBoolProperty(CAT_SERIES,		this,   "PROP_SHOW_PARTIAL_VIEWED_STATE",			false);

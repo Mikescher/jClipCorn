@@ -31,6 +31,21 @@ public class LocaleBundle {
 		return LOCALES[DEFAULT];
 	}
 	
+	public static String getStringOrDefault(String ident, String def) {
+		try {
+			if (bundle == null) {
+				return ResourceBundle.getBundle(DEFAULT_BASENAME, getDefaultLocale()).getString(ident);
+			} else {
+				if (! bundle.containsKey(ident)) return def;
+				
+				return bundle.getString(ident);
+			}
+		} catch (MissingResourceException e) {
+			CCLog.addError(e);
+			return ""; //$NON-NLS-1$
+		}
+	}
+	
 	public static String getString(String ident) {
 		try {
 			if (bundle == null) {

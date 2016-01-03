@@ -109,4 +109,3 @@ public class Main {
 //TODO Cover with higher resolution // <--
 
 //TODO save original/alternative title (eng title)
-//TODO More Info in extended settings dialog

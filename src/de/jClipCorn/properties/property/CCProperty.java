@@ -45,6 +45,7 @@ public abstract class CCProperty<T extends Object> {
 	
 	public String getTypeName() {
 		return getValue().getClass().getSimpleName();
+	
 	}
 	
 	public CCPropertyCategory getCategory() {
@@ -53,6 +54,10 @@ public abstract class CCProperty<T extends Object> {
 	
 	public String getDescription() {
 		return LocaleBundle.getString("Settingsframe.tabbedPnl." + getIdentifier()); //$NON-NLS-1$
+	}
+	
+	public String getDescriptionOrEmpty() {
+		return LocaleBundle.getStringOrDefault("Settingsframe.tabbedPnl." + getIdentifier(), ""); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 	
 	public Component getAlternativeComponent() {

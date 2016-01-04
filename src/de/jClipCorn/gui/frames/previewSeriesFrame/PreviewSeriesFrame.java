@@ -281,7 +281,7 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 				FormSpecs.LINE_GAP_ROWSPEC,
 				RowSpec.decode("26px"), //$NON-NLS-1$
 				FormSpecs.LINE_GAP_ROWSPEC,}));
-		pnlSearch.add(edSearch, "2, 2, left, fill"); //$NON-NLS-1$
+		pnlSearch.add(edSearch, "2, 2, fill, fill"); //$NON-NLS-1$
 		edSearch.setColumns(24);
 
 		btnSearch = new JButton();

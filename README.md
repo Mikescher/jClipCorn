@@ -23,7 +23,7 @@ jClipCorn
  - Works under Windows, Linux *(and probably OS X)*
 
 #[> DOWNLOAD](http://www.github.com/Mikescher/jClipCorn/releases)
-###[> HOMEPAGE](http://www.mikescher.de/programs/view/jClipCorn)
+###[> HOMEPAGE](http://www.mikescher.com/programs/view/jClipCorn)
 ###[> GITHUB WIKI](https://github.com/Mikescher/jClipCorn/wiki)
 ###[> CHANGELOG](https://raw.githubusercontent.com/Mikescher/jClipCorn/master/changelog.txt)
 

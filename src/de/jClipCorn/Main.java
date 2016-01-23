@@ -109,3 +109,16 @@ public class Main {
 //TODO Cover with higher resolution // <--
 
 //TODO save original/alternative title (eng title)
+
+//TODO Create unique ID and save it (combined with computername ?) --> send while check4update to have identity
+//TODO Prevent addAll opening too many windows (show warning message with note that you can dbl-click)
+//TODO Missing Legend for statistics: "Format/Zeit" --> Use stacked line diagramm (-> continoous stacked bar diagram)
+//TODO Improve file naming
+//       - 'x: y'  becomes 'x - y'
+//       - Movies with Zyklus can then have two '-' in them (first sperates title and series, second replaces ':')
+//TODO Configure List of Season orderer (new prop type ?)
+//    If every season of a series matches the regex then use the number as folder-structure index
+//    Staffel[ ]?(?<index>[0-9]+).*
+//    Season[ ]?(?<index>[0-9]+).*
+//    Volume[ ]?(?<index>[0-9]+).*
+//    (?<index>[0-9]+) - .*

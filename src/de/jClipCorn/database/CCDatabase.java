@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import de.jClipCorn.Main;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
@@ -29,10 +30,11 @@ public class CCDatabase extends DerbyDatabase {
 
 	private final static String XML_NAME = "database/ClipCornSchema.xml"; //$NON-NLS-1$
 
-	public final static String INFOKEY_DBVERSION     = "VERSION_DB";   			//$NON-NLS-1$
-	public final static String INFOKEY_DATE          = "CREATION_DATE";         //$NON-NLS-1$
-	public final static String INFOKEY_TIME          = "CREATION_TIME";         //$NON-NLS-1$
-	public final static String INFOKEY_USERNAME      = "CREATION_USERNAME";     //$NON-NLS-1$
+	public final static String INFOKEY_DBVERSION	= "VERSION_DB";   							//$NON-NLS-1$
+	public final static String INFOKEY_DATE			= "CREATION_DATE";         					//$NON-NLS-1$
+	public final static String INFOKEY_TIME			= "CREATION_TIME";         					//$NON-NLS-1$
+	public final static String INFOKEY_USERNAME		= "CREATION_USERNAME";     					//$NON-NLS-1$
+	public final static String INFOKEY_DUUID      	= "DATABASE_UNIVERSALLY_UNIQUE_IDENTIFIER";	//$NON-NLS-1$
 
 	public final static String TAB_INFO_COLUMN_KEY            = "IKEY";         //$NON-NLS-1$
 	public final static String TAB_INFO_COLUMN_VALUE          = "IVALUE";       //$NON-NLS-1$
@@ -808,6 +810,20 @@ public class CCDatabase extends DerbyDatabase {
 		return getInformationFromDB(INFOKEY_USERNAME);
 	}
 	
+	public String getInformation_DUUID() {
+		if (!hasInformationInDB(INFOKEY_DUUID)) {
+			CCLog.addInformation(LocaleBundle.getString("LogMessage.RegenerateDUUID")); //$NON-NLS-1$
+			
+			writeNewInformationToDB(INFOKEY_DUUID, UUID.randomUUID().toString());
+		}
+		
+		return getInformationFromDB(INFOKEY_DUUID);
+	}
+
+	public void resetInformation_DUUID() {
+		updateInformationInDB(INFOKEY_DUUID, UUID.randomUUID().toString());
+	}
+	
 	private String getInformationFromDB(String key) {
 		try {
 			String value;
@@ -832,6 +848,27 @@ public class CCDatabase extends DerbyDatabase {
 		}
 	}
 	
+	private boolean hasInformationInDB(String key) {
+		try {
+			boolean value;
+			
+			PreparedStatement s = Statements.selectInfoKey;
+			s.clearParameters();
+			s.setString(1, key);
+			
+			ResultSet rs = s.executeQuery();
+			value = rs.next();
+
+			rs.close();
+			
+			return value;
+			
+		} catch (SQLException e) {
+			CCLog.addError(e);
+			return false;
+		}
+	}
+	
 	private void writeNewInformationToDB(String key, String value) {
 		try {
 			PreparedStatement s = Statements.addInfoKey;
@@ -839,6 +876,20 @@ public class CCDatabase extends DerbyDatabase {
 
 			s.setString(1, key);
 			s.setString(2, value);
+			
+			s.executeUpdate();
+		} catch (SQLException e) {
+			CCLog.addError(e);
+		}
+	}
+	
+	private void updateInformationInDB(String key, String value) {
+		try {
+			PreparedStatement s = Statements.updateInfoKey;
+			s.clearParameters();
+
+			s.setString(1, value);
+			s.setString(2, key);
 			
 			s.executeUpdate();
 		} catch (SQLException e) {

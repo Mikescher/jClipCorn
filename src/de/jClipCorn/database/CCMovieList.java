@@ -820,7 +820,11 @@ public class CCMovieList {
 		if (! real.equals(Main.DBVERSION)) {
 			CCLog.addFatalError(LocaleBundle.getFormattedString("LogMessage.WrongDatabaseVersion", real, expected)); //$NON-NLS-1$
 		} else {
-			CCLog.addInformation(LocaleBundle.getFormattedString("LogMessage.CorrectDatabaseVersion", expected)); //$NON-NLS-1$
+			CCLog.addInformation(LocaleBundle.getFormattedString("LogMessage.CorrectDatabaseVersion", expected, database.getInformation_DUUID())); //$NON-NLS-1$
 		}
+	}
+
+	public void resetLocalDUUID() {
+		database.resetInformation_DUUID();
 	}
 }

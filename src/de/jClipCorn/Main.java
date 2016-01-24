@@ -110,8 +110,4 @@ public class Main {
 
 //TODO save original/alternative title (eng title)
 
-//TODO Create unique ID and save it (combined with computername ?) --> send while check4update to have identity
 //TODO Missing Legend for statistics: "Format/Zeit" --> Use stacked line diagramm (-> continoous stacked bar diagram)
-//TODO Improve file naming
-//       - 'x: y'  becomes 'x - y'
-//       - Movies with Zyklus can then have two '-' in them (first sperates title and series, second replaces ':')

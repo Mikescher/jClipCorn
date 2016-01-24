@@ -41,6 +41,7 @@ public class Statements {
 
 	public static PreparedStatement addInfoKey;
 	public static PreparedStatement selectInfoKey;
+	public static PreparedStatement updateInfoKey;
 
 	public static void intialize(CCDatabase d) {
 		try {
@@ -67,6 +68,8 @@ public class Statements {
 
 			intialize_addInfoKey(d);
 			intialize_selectInfoKey(d);
+			intialize_updateInfoKey(d);
+			
 		} catch (SQLException e) {
 			CCLog.addFatalError(LocaleBundle.getString("LogMessage.CouldNotCreatePreparedStatement"), e); //$NON-NLS-1$
 		}
@@ -102,6 +105,8 @@ public class Statements {
 
 			addInfoKey.close();
 			selectInfoKey.close();
+			updateInfoKey.close();
+			
 		} catch (Exception e) {
 			CCLog.addFatalError(e);
 		}	
@@ -350,6 +355,15 @@ public class Statements {
 		ih.addField(CCDatabase.TAB_INFO_COLUMN_VALUE, "?");
 		
 		addInfoKey = d.createPreparedStatement(ih.get());
+	}
+
+	@SuppressWarnings("nls")
+	private static void intialize_updateInfoKey(CCDatabase d) throws SQLException {
+		SQLUpdateHelper ih = new SQLUpdateHelper(CCDatabase.TAB_INFO, new DoubleString(CCDatabase.TAB_INFO_COLUMN_KEY, "?"));
+		
+		ih.addField(CCDatabase.TAB_INFO_COLUMN_VALUE, "?");
+		
+		updateInfoKey = d.createPreparedStatement(ih.get());
 	}
 	
 }

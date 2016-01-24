@@ -494,6 +494,15 @@ public class CCActionTree {
 			}
 		});
 		
+		temp = maintenance.addChild(new CCActionElement("RegenerateDUUID", null, "ClipMenuBar.Maintenance.RegenerateDUUID", Resources.ICN_MENUBAR_REGENERATEDUUID));
+		temp.setReadOnlyRestriction();
+		temp.addListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				onClickMaintenanceRegenerateDUUID();
+			}
+		});
+		
 		// ################################################################################################################################################################
 		CCActionElement help = root.addChild(new CCActionElement("Help", null, "ClipMenuBar.Help", ""));
 		// ################################################################################################################################################################
@@ -768,6 +777,12 @@ public class CCActionTree {
 	private void onClickMaintenanceResetViewed() {
 		if (DialogHelper.showLocaleYesNo(owner, "Dialogs.ResetViewed")) { //$NON-NLS-1$
 			owner.getMovielist().resetAllMovieViewed(false);
+		}
+	}
+	
+	private void onClickMaintenanceRegenerateDUUID() {
+		if (DialogHelper.showLocaleYesNo(owner, "Dialogs.ResetDUUID")) { //$NON-NLS-1$
+			owner.getMovielist().resetLocalDUUID();
 		}
 	}
 	

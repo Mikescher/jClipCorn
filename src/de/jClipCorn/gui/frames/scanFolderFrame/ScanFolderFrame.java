@@ -35,6 +35,7 @@ import de.jClipCorn.gui.frames.mainFrame.MainFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.formatter.PathFormatter;
+import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.helper.ExtendedFocusTraversalOnArray;
 
 public class ScanFolderFrame extends JFrame implements Runnable, MouseListener {
@@ -263,6 +264,11 @@ public class ScanFolderFrame extends JFrame implements Runnable, MouseListener {
 	}
 	
 	private void addAll() {
+		if (lsModel.size() > 16) {
+			DialogHelper.showLocalInformation(this, "Dialogs.TooManyAddFrames"); //$NON-NLS-1$
+			return;
+		}
+		
 		for (int i = 0; i < lsModel.size(); i++) {
 			String path = lsModel.get(i);
 			AddMovieFrame amf = new AddMovieFrame(this, owner.getMovielist(), path);

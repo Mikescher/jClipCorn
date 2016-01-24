@@ -15,13 +15,13 @@ import de.jClipCorn.util.helper.LookAndFeelManager;
 
 public class Main {
 	public final static String TITLE = "jClipCorn"; //$NON-NLS-1$
-	public final static String VERSION = "1.9.9";	//$NON-NLS-1$
+	public final static String VERSION = "1.9.10";	//$NON-NLS-1$
 	public final static String DBVERSION = "1.7"; 	//$NON-NLS-1$
 	
 	private final static String PROPERTIES_PATH = "jClipcorn.properties"; //$NON-NLS-1$
 	
 	public static boolean DEBUG = "true".equals(System.getProperty("ineclipse"));  //$NON-NLS-1$//$NON-NLS-2$
-	public static boolean BETA = false;
+	public static boolean BETA = true;
 	
 	public static void main(String[] arg) {
 		new CCProperties(PROPERTIES_PATH, arg); // FIRST ACTION - CACHE THIS SHIT - FUCKING IMPORTANT
@@ -111,7 +111,6 @@ public class Main {
 //TODO save original/alternative title (eng title)
 
 //TODO Create unique ID and save it (combined with computername ?) --> send while check4update to have identity
-//TODO Prevent addAll opening too many windows (show warning message with note that you can dbl-click)
 //TODO Missing Legend for statistics: "Format/Zeit" --> Use stacked line diagramm (-> continoous stacked bar diagram)
 //TODO Improve file naming
 //       - 'x: y'  becomes 'x - y'

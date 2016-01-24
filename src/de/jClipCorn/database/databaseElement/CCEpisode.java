@@ -7,7 +7,6 @@ import java.text.DecimalFormat;
 import org.jdom2.Element;
 
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFormat;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieLanguage;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieQuality;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieSize;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTags;
@@ -431,16 +430,11 @@ public class CCEpisode {
 		CCSeason season = this.getSeason();
 		CCSeries series = season.getSeries();
 		
-		String seriesfoldername = series.getTitle();
-		if (series.getLanguage() != CCMovieLanguage.GERMAN) {
-			seriesfoldername += String.format(" [%s]", series.getLanguage().getShortString());
-		}
-		seriesfoldername = PathFormatter.fixStringToFilesystemname(seriesfoldername);
+		String seriesfoldername = series.getFolderNameForCreatedFolderStructure();
+		String seasonfoldername = season.getFolderNameForCreatedFolderStructure();
+		int seasonIndex = season.getIndexForCreatedFolderStructure();
 		
-		String seasonfoldername = season.getTitle();
-		seasonfoldername = PathFormatter.fixStringToFilesystemname(seasonfoldername);
-		
-		String filename = String.format("S%sE%s - %s", decFormattter.format(season.getSortedSeasonNumber() + 1), decFormattter.format(this.getEpisode()), this.getTitle());
+		String filename = String.format("S%sE%s - %s", decFormattter.format(seasonIndex), decFormattter.format(this.getEpisode()), this.getTitle());
 		filename += "." + this.getFormat().asString();
 		filename = PathFormatter.fixStringToFilesystemname(filename);
 		

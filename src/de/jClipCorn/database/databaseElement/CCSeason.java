@@ -5,6 +5,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.swing.ImageIcon;
 
@@ -472,5 +474,21 @@ public class CCSeason {
 		while (all.contains("")) all.remove(""); //$NON-NLS-1$ //$NON-NLS-2$
 		
 		return PathFormatter.getCommonFolderPath(all);
+	}
+	
+	public String getFolderNameForCreatedFolderStructure() {
+		return PathFormatter.fixStringToFilesystemname(getTitle());
+	}
+
+	public int getIndexForCreatedFolderStructure() {
+		Pattern regex = owner.getValidSeasonIndexRegex();
+		
+		if (regex != null) {
+			Matcher m = regex.matcher(getTitle());
+			m.matches();
+			return Integer.parseInt(m.group("index")); //$NON-NLS-1$
+		}
+		
+		return getSortedSeasonNumber() + 1;
 	}
 }

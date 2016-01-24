@@ -3,14 +3,18 @@ package de.jClipCorn.database.databaseElement;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Vector;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.commons.lang.text.StrBuilder;
 import org.jdom2.Element;
 
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFormat;
+import de.jClipCorn.database.databaseElement.columnTypes.CCMovieLanguage;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieQuality;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieSize;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTags;
@@ -492,5 +496,64 @@ public class CCSeries extends CCDatabaseElement {
 			return ExtendedViewedState.PARTIAL_VIEWED;
 		else
 			return ExtendedViewedState.NOT_VIEWED;
+	}
+
+	public String getFolderNameForCreatedFolderStructure() {
+		String seriesfoldername = getTitle();
+		if (getLanguage() != CCMovieLanguage.GERMAN) {
+			seriesfoldername += String.format(" [%s]", getLanguage().getShortString()); //$NON-NLS-1$
+		}
+		seriesfoldername = PathFormatter.fixStringToFilesystemname(seriesfoldername);
+		return seriesfoldername;
+	}
+
+	@SuppressWarnings("nls")
+	public Pattern getValidSeasonIndexRegex() {
+		Pattern regexInt = Pattern.compile("^[0-9]+$");
+		
+		for (String rex : CCProperties.getInstance().PROP_SEASON_INDEX_REGEXPRESSIONS.getNonEmptyValues()) {
+			Pattern p = Pattern.compile("^" + rex + "$");
+			
+			boolean fitsAllSeasons = true;
+			HashSet<Integer> indiMap = new HashSet<>();
+			for (CCSeason season : seasons) {
+				Matcher m = p.matcher(season.getTitle());
+
+				if (! m.matches()) {
+					fitsAllSeasons = false;
+					break;
+				}
+				
+				try	{
+					String group = m.group("index");
+					
+					if (group == null) {
+						fitsAllSeasons = false;
+						break;
+					}
+					
+					if (! regexInt.matcher(group).matches()) {
+						fitsAllSeasons = false;
+						break;
+					}
+					
+					if (indiMap.contains(Integer.parseInt(group))) {
+						fitsAllSeasons = false;
+						break;
+					}
+					
+				} catch (IllegalArgumentException e) {
+					fitsAllSeasons = false;
+					break;
+				}
+				
+				indiMap.add(Integer.parseInt(m.group("index")));
+			}
+			if (fitsAllSeasons) {
+				return p;
+			}
+		}
+		
+		return null;
 	}
 }

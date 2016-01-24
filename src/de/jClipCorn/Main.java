@@ -115,9 +115,3 @@ public class Main {
 //TODO Improve file naming
 //       - 'x: y'  becomes 'x - y'
 //       - Movies with Zyklus can then have two '-' in them (first sperates title and series, second replaces ':')
-//TODO Configure List of Season orderer (new prop type ?)
-//    If every season of a series matches the regex then use the number as folder-structure index
-//    Staffel[ ]?(?<index>[0-9]+).*
-//    Season[ ]?(?<index>[0-9]+).*
-//    Volume[ ]?(?<index>[0-9]+).*
-//    (?<index>[0-9]+) - .*

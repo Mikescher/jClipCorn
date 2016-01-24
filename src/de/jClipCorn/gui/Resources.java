@@ -128,6 +128,7 @@ public class Resources {
 	public final static String ICN_TABLE_LANGUAGE_1 	= registerICN("/icons/table/language_1.png");
 	public final static String ICN_TABLE_LANGUAGE_2 	= registerICN("/icons/table/language_2.png");
 	public final static String ICN_TABLE_LANGUAGE_3 	= registerICN("/icons/table/language_3.png");
+	public final static String ICN_TABLE_LANGUAGE_4 	= registerICN("/icons/table/language_4.png");
 	
 	public final static String ICN_TABLE_SCORE_0 		= registerICN("/icons/table/poo.png");
 	public final static String ICN_TABLE_SCORE_1 		= registerICN("/icons/table/emotion_sick.png");

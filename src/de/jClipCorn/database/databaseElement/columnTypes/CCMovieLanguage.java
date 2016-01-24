@@ -10,20 +10,23 @@ public enum CCMovieLanguage {
 	GERMAN(0),
 	ENGLISH(1),
 	MUTED(2),
-	FRENCH(3);
+	FRENCH(3),
+	JAPANESE(4);
 
 	private final static String NAMES[] = {
-		LocaleBundle.getString("CCMovieLanguage.German"),  //$NON-NLS-1$
-		LocaleBundle.getString("CCMovieLanguage.English"), //$NON-NLS-1$
-		LocaleBundle.getString("CCMovieLanguage.Muted"),   //$NON-NLS-1$
-		LocaleBundle.getString("CCMovieLanguage.French")   //$NON-NLS-1$
+		LocaleBundle.getString("CCMovieLanguage.German"),   //$NON-NLS-1$
+		LocaleBundle.getString("CCMovieLanguage.English"),  //$NON-NLS-1$
+		LocaleBundle.getString("CCMovieLanguage.Muted"),    //$NON-NLS-1$
+		LocaleBundle.getString("CCMovieLanguage.French"),   //$NON-NLS-1$
+		LocaleBundle.getString("CCMovieLanguage.Japanese")  //$NON-NLS-1$
 	};
 	
 	private final static String SHORTNAMES[] = {
-		"GER",  //$NON-NLS-1$
-		"ENG", //$NON-NLS-1$
+		"GER",   //$NON-NLS-1$
+		"ENG",   //$NON-NLS-1$
 		"MUT",   //$NON-NLS-1$
-		"FR"   //$NON-NLS-1$
+		"FR",    //$NON-NLS-1$
+		"JAP"    //$NON-NLS-1$
 	};
 	
 	private int id;
@@ -65,6 +68,8 @@ public enum CCMovieLanguage {
 			return CachedResourceLoader.getImageIcon(Resources.ICN_TABLE_LANGUAGE_2);
 		case FRENCH:
 			return CachedResourceLoader.getImageIcon(Resources.ICN_TABLE_LANGUAGE_3);
+		case JAPANESE:
+			return CachedResourceLoader.getImageIcon(Resources.ICN_TABLE_LANGUAGE_4);
 		default:
 			return null;
 		}

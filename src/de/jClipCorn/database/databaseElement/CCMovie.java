@@ -431,7 +431,7 @@ public class CCMovie extends CCDatabaseElement {
 			
 			filename += getTitle().replace(": ", " - ");
 		} else {
-			filename += getTitle().replace(": ", " ");
+			filename += getTitle().replace(": ", " - ");
 		}
 				
 		if (getLanguage() != CCMovieLanguage.GERMAN) {

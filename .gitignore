@@ -72,6 +72,8 @@ DerbManager*.jar
 
 *.log
 jClipCorn.*
+jClipcorn.*
+jclipcorn.*
 *.lnk
 *.avi
 *.mkv

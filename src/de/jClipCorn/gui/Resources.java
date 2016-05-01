@@ -83,6 +83,7 @@ public class Resources {
 	public final static String ICN_MENUBAR_CREATEFOLDERSTRUCTURE	= registerICN("/icons/toolbar/folders_explorer.png");
 	public final static String ICN_MENUBAR_SAVE						= registerICN("/icons/toolbar/save_as.png");
 	public final static String ICN_MENUBAR_STATISTICS				= registerICN("/icons/toolbar/statistics.png");
+	public final static String ICN_MENUBAR_SHUFFLE					= registerICN("/icons/toolbar/cards.png");
 	public final static String ICN_MENUBAR_UPDATES					= registerICN("/icons/toolbar/www_page.png");
 	public final static String ICN_MENUBAR_BACKUPMANAGER			= registerICN("/icons/toolbar/backup_manager.png");
 	public final static String ICN_MENUBAR_WATCHDATA				= registerICN("/icons/toolbar/inbox_table.png");

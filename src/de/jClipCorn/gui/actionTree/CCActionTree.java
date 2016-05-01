@@ -411,6 +411,14 @@ public class CCActionTree {
 			}
 		});
 		
+		temp = extras.addChild(new CCActionElement("ShuffleTable", null, "ClipMenuBar.Extras.ShuffleTable", Resources.ICN_MENUBAR_SHUFFLE));
+		temp.addListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				onClickExtrasShuffleTable();
+			}
+		});
+		
 		temp = extras.addChild(new CCActionElement("ParseWatchData", null, "ClipMenuBar.Extras.ParseWatchData", Resources.ICN_MENUBAR_WATCHDATA));
 		temp.setReadOnlyRestriction();
 		temp.addListener(new ActionListener() {
@@ -801,6 +809,10 @@ public class CCActionTree {
 	private void onClickExtrasShowStatistics() {
 		StatisticsFrame sf = new StatisticsFrame(owner, movielist);
 		sf.setVisible(true);
+	}
+	
+	private void onClickExtrasShuffleTable() {
+		owner.getClipTable().shuffle();
 	}
 	
 	private void onClickExtrasParseWatchData() {

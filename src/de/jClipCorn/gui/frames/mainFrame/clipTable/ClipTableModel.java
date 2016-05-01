@@ -1,8 +1,12 @@
 package de.jClipCorn.gui.frames.mainFrame.clipTable;
 
 import java.awt.Color;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
-import javax.swing.JTable;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import javax.swing.table.AbstractTableModel;
 
 import de.jClipCorn.database.CCMovieList;
@@ -10,12 +14,13 @@ import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieZyklus;
+import de.jClipCorn.gui.guiComponents.SFixTable;
 import de.jClipCorn.gui.guiComponents.tableRenderer.TableModelRowColorInterface;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.YearRange;
 
-public class ClipTableModel extends AbstractTableModel implements TableModelRowColorInterface {
+public class ClipTableModel extends AbstractTableModel implements TableModelRowColorInterface, TableModelListener {
 	private static final long serialVersionUID = -3060547018013428568L;
 	
 	public final static int COLUMN_SCORE = 0;
@@ -34,6 +39,9 @@ public class ClipTableModel extends AbstractTableModel implements TableModelRowC
 	public final static int COLUMN_FORMAT = 13;
 	public final static int COLUMN_YEAR = 14;
 	public final static int COLUMN_SIZE = 15;
+	
+	private List<Integer> mapping = null;
+	private boolean lockShuffleMapping = false;
 	
 	private static final String[] COLUMN_NAMES = {
 			"", 			 									//$NON-NLS-1$
@@ -71,14 +79,16 @@ public class ClipTableModel extends AbstractTableModel implements TableModelRowC
 	};
 
 	private final CCMovieList movielist;
-	private JTable owner;
+	private SFixTable owner;
 
 	public ClipTableModel(CCMovieList ml) {
 		super();
 		this.movielist = ml;
+		
+		this.addTableModelListener(this);
 	}
 	
-	public void setTable(JTable t) {
+	public void setTable(SFixTable t) {
 		this.owner = t;
 	}
 
@@ -106,8 +116,8 @@ public class ClipTableModel extends AbstractTableModel implements TableModelRowC
 			return ""; //$NON-NLS-1$
 		}
 
-		CCDatabaseElement el = movielist.getDatabaseElementBySort(row);
-		
+		CCDatabaseElement el = getDatabaseElementByRow(row);
+
 		if (el.isMovie()) {
 			CCMovie mov = (CCMovie) el;
 			switch (col) {
@@ -194,6 +204,7 @@ public class ClipTableModel extends AbstractTableModel implements TableModelRowC
 
 	@Override
 	public void setValueAt(Object value, int row, int col) {
+		clearMapping();
 		fireTableCellUpdated(row, col);
 	}
 
@@ -205,9 +216,45 @@ public class ClipTableModel extends AbstractTableModel implements TableModelRowC
 		case 1:
 			return (row%2==0) ? (Color.WHITE) : (COLOR_BACKGROUNDGRAY);
 		case 2:
-			return COLOR_ONLINESCORE[movielist.getDatabaseElementBySort(owner.convertRowIndexToModel(row)).getOnlinescore().asInt()];
+			return COLOR_ONLINESCORE[getDatabaseElementByRow(owner.convertRowIndexToModel(row)).getOnlinescore().asInt()];
 		default:
 			return Color.MAGENTA;
+		}
+	}
+	
+	public void shuffle() {
+		owner.resetSort();
+		
+		mapping = new ArrayList<>();
+		for (int i = 0; i < getRowCount(); i++) {
+			mapping.add(i);
+		}
+		
+		Collections.shuffle(mapping);
+		
+		lockShuffleMapping = true;
+		fireTableDataChanged();
+		lockShuffleMapping = false;
+	}	
+
+	@Override
+	public void tableChanged(TableModelEvent e) {
+		clearMapping();
+	}
+
+	public void clearMapping() {
+		if (! lockShuffleMapping && mapping != null) {
+			mapping = null;
+			fireTableDataChanged();
+		}
+	}
+
+	public CCDatabaseElement getDatabaseElementByRow(int row) {
+		if (mapping != null && row < mapping.size()) {
+			return movielist.getDatabaseElementBySort(mapping.get(row));
+		} else {
+			clearMapping();
+			return movielist.getDatabaseElementBySort(row);
 		}
 	}
 }

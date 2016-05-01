@@ -38,7 +38,6 @@ public class ClipTable extends JScrollPane implements CCDBUpdateListener, ListSe
 
 	private SFixClipTable table;
 	private ClipTableModel model;
-	private CCMovieList movielist;
 	private MainFrame owner;
 
 	private TableColumnAdjuster adjuster;
@@ -46,7 +45,6 @@ public class ClipTable extends JScrollPane implements CCDBUpdateListener, ListSe
 	public ClipTable(CCMovieList ml, MainFrame owner) {
 		super();
 		this.owner = owner;
-		this.movielist = ml;
 
 		model = new ClipTableModel(ml);
 
@@ -151,7 +149,7 @@ public class ClipTable extends JScrollPane implements CCDBUpdateListener, ListSe
 	public CCDatabaseElement getSelectedDatabaseElement() {
 		int selrow = getSelectedRow();
 		if (selrow >= 0) {
-			return movielist.getDatabaseElementBySort(selrow);
+			return model.getDatabaseElementByRow(selrow);
 		}
 		return null;
 	}
@@ -230,6 +228,8 @@ public class ClipTable extends JScrollPane implements CCDBUpdateListener, ListSe
 
 	@SuppressWarnings("unchecked")
 	public void setRowFilter(RowFilter<ClipTableModel, Object> filter, RowFilterSource source) { // Source kann null sein
+		model.clearMapping();
+		
 		if (source != RowFilterSource.CHARSELECTOR) {
 			owner.resetCharSelector();
 		}
@@ -316,5 +316,9 @@ public class ClipTable extends JScrollPane implements CCDBUpdateListener, ListSe
 		} else {
 			return null;
 		}
+	}
+
+	public void shuffle() {
+		model.shuffle();
 	}
 }

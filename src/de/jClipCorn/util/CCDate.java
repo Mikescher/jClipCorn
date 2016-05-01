@@ -7,7 +7,7 @@ import java.util.List;
 
 import de.jClipCorn.gui.localization.LocaleBundle;
 
-public final class CCDate {
+public final class CCDate implements Comparable<CCDate> {
 	public final static String STRINGREP_SIMPLE 	= "DD.MM.YYYY"; //$NON-NLS-1$
 	public final static String STRINGREP_SIMPLESHORT = "DD.MM.YY"; //$NON-NLS-1$
 	public final static String STRINGREP_LOCAL 		= "DD.N.YYYY"; //$NON-NLS-1$
@@ -117,6 +117,10 @@ public final class CCDate {
 	
 	public String getWeekday() {
 		return WEEKDAYS[getWeekdayInt()];
+	}
+	
+	public CCWeekday getWeekdayEnum() {
+		return CCWeekday.find(getWeekdayInt());
 	}
 	
 	/**
@@ -678,5 +682,10 @@ public final class CCDate {
 		}
 		
 		return true;
+	}
+
+	@Override
+	public int compareTo(CCDate o) {
+		return compare(this, o);
 	}
 }

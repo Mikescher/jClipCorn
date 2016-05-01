@@ -89,7 +89,7 @@ public class StatisticsSeriesViewedChart extends StatisticsChart {
 	    	plot.setDataset(3*idx, dataset);
 	    	plot.setRenderer(3*idx, new XYAreaRenderer(XYAreaRenderer.AREA, null, null));
 	    	plot.getRenderer(3*idx).setSeriesPaint(0, ca);
-	    	plot.getRenderer(3*idx).setSeriesVisibleInLegend(0, true);
+	    	plot.getRenderer(3*idx).setSeriesVisibleInLegend(0, false);
 
 	    	datasetList.put(3*idx + 1, dataset);
 	    	plot.setDataset(3*idx + 1, dataset);

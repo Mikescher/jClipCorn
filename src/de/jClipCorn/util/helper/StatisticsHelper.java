@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map.Entry;
 
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
@@ -23,6 +25,7 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCMovieScore;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieSize;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTags;
 import de.jClipCorn.util.CCDate;
+import de.jClipCorn.util.CCDatespan;
 
 public class StatisticsHelper {
 	public static int[] CHART_COLORS = {0x4D4D4D, 0x5DA5DA, 0xFAA43A, 0x60BD68, 0xF17CB0, 0xB2912F, 0xB276B2, 0x000080, 0xF15854};
@@ -793,5 +796,94 @@ public class StatisticsHelper {
 		}
 		
 		return ls;
+	}
+
+	public static List<CCDatespan> getDatespanFromSeries(CCSeries series, int gravity) {
+		List<CCDatespan> span = new ArrayList<>();
+		List<CCDate> dates = new ArrayList<>();
+		
+		for (int sc = 0; sc < series.getSeasonCount(); sc++) {
+			CCSeason season = series.getSeason(sc);
+			
+			for (int ep = 0; ep < season.getEpisodeCount(); ep++) {
+				CCEpisode episode = season.getEpisode(ep);
+				
+				if (episode.isViewed() && !episode.getLastViewed().isMinimum())
+					dates.add(episode.getLastViewed());
+			}
+		}
+		
+		if (dates.size() == 0) return span;
+		
+		Collections.sort(dates);
+		
+		CCDate start = dates.get(0);
+		dates.remove(0);
+		
+		CCDate end = start;
+		
+		while (dates.size() > 0) {
+			CCDate curr = dates.get(0);
+			dates.remove(0);
+			
+			if (end.getDayDifferenceTo(curr) > gravity) {
+				span.add(new CCDatespan(start, end));
+				start = curr;
+				end = start;
+			} else {
+				end = curr;
+			}
+		}
+		span.add(new CCDatespan(start, end));
+		
+		return span;
+	}
+	
+	public static HashMap<String, List<CCDatespan>> getAllSeriesTimespans(CCMovieList ml, int gravity) {
+		HashMap<String, List<CCDatespan>> r = new HashMap<>();
+
+		for (Iterator<CCSeries> it = ml.iteratorSeries(); it.hasNext();) {
+			CCSeries series = it.next();
+			
+			List<CCDatespan> span = getDatespanFromSeries(series, gravity);
+			
+			if (span.size() > 0) r.put(series.getTitle(), span);
+		}
+
+		return r;
+	}
+
+	public static <T> List<String> convertMapToKeyList(HashMap<String, T> m) {
+		List<String> r = new ArrayList<>();
+
+		for (String key : m.keySet()) {
+			r.add(key);
+		}
+		
+		return r;
+	}
+
+	public static CCDate getSeriesTimespansStart(HashMap<String, List<CCDatespan>> seriesMap) {
+		CCDate start = CCDate.getCurrentDate();
+		
+		for (Entry<String, List<CCDatespan>> set : seriesMap.entrySet()) {
+			for (CCDatespan span : set.getValue()) {
+				start = CCDate.min(start, span.start);
+			}
+		}
+		
+		return start;
+	}
+
+	public static CCDate getSeriesTimespansEnd(HashMap<String, List<CCDatespan>> seriesMap) {
+		CCDate end = CCDate.getCurrentDate();
+		
+		for (Entry<String, List<CCDatespan>> set : seriesMap.entrySet()) {
+			for (CCDatespan span : set.getValue()) {
+				end = CCDate.max(end, span.end);
+			}
+		}
+		
+		return end;
 	}
 }

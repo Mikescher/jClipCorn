@@ -143,6 +143,7 @@ public class CCProperties {
 	public CCPIntProperty 				PROP_MAINFRAME_WIDTH;
 	public CCPIntProperty 				PROP_MAINFRAME_HEIGHT;
 	public CCSeasonRegexListProperty	PROP_SEASON_INDEX_REGEXPRESSIONS;
+	public CCPIntProperty 				PROP_STATISTICS_TIMELINEGRAVITY;
 	
 	public boolean ARG_READONLY = false;
 	
@@ -276,7 +277,8 @@ public class CCProperties {
 		PROP_SCANFOLDER_EXCLUDEIFOS 			= new CCBoolProperty(CAT_OTHERFRAMES, 		this, 	"PROP_SCANFOLDER_EXCLUDEIFOS", 				false);
 		PROP_VALIDATE_FILESIEDRIFT				= new CCRIntProperty(CAT_OTHERFRAMES, 		this, 	"PROP_VALIDATE_FILESIEDRIFT", 				5,					100);
 		PROP_VALIDATE_DUP_IGNORE_IFO			= new CCBoolProperty(CAT_OTHERFRAMES, 		this,   "PROP_VALIDATE_DUP_IGNORE_IFO",				true);
-                                                                                        	
+		PROP_STATISTICS_TIMELINEGRAVITY         = new CCPIntProperty(CAT_OTHERFRAMES,	 	this,   "PROP_STATISTICS_TIMELINEGRAVITY",			7);
+		
 		PROP_BACKUP_LASTBACKUP					= new CCDateProperty(NONVISIBLE, 			this, 	"PROP_BACKUP_LASTBACKUP", 					CCDate.getMinimumDate());
 		PROP_OTHER_DEBUGMODE					= new CCBoolProperty(NONVISIBLE, 			this,   "PROP_OTHER_DEBUGMODE", 					false);
 		PROP_MASSCHANGESCORE_SKIPRATED			= new CCBoolProperty(NONVISIBLE,	 		this,   "PROP_MASSCHANGESCORE_SKIPRATED",			false);

@@ -240,8 +240,26 @@ public class ClipTable extends JScrollPane implements CCDBUpdateListener, ListSe
 			owner.resetSearchField(true);
 		}
 		
-		((TableRowSorter<ClipTableModel>) table.getRowSorter()).setRowFilter(filter);
+		TableRowSorter<ClipTableModel> sorter = ((TableRowSorter<ClipTableModel>) table.getRowSorter());
+		
+		sorter.setRowFilter(filter);
+		
+		if (! hasSortOrder()) {
+			initialSort();
+		}
+		
 		owner.getStatusBar().updateLables_Movies();
+	}
+	
+	private boolean hasSortOrder() {
+		@SuppressWarnings("unchecked")
+		TableRowSorter<ClipTableModel> sorter = ((TableRowSorter<ClipTableModel>) table.getRowSorter());
+		
+		for (SortKey skey : sorter.getSortKeys()) {
+			if (skey.getSortOrder() != SortOrder.UNSORTED) return true;
+		}
+		
+		return false;
 	}
 
 	public int getRowCount() {

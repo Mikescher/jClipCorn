@@ -3,6 +3,10 @@ package de.jClipCorn.gui.frames.statisticsFrame.timeline;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -15,7 +19,7 @@ import de.jClipCorn.util.CCDate;
 import de.jClipCorn.util.CCDatespan;
 import de.jClipCorn.util.CCWeekday;
 
-public class TimelineDisplayComponent extends JComponent {
+public class TimelineDisplayComponent extends JComponent implements MouseListener {
 	private static final long serialVersionUID = -9133712754093362059L;
 
 	private final static int CELL_WIDTH = 4;
@@ -30,6 +34,13 @@ public class TimelineDisplayComponent extends JComponent {
 	private final CCDate start;
 	private final CCDate end;
 	private final int dayCount;
+
+	private CCSeries selected = null;
+	
+	public ActionListener onSelectedChanged = new ActionListener() {
+		@Override
+		public void actionPerformed(ActionEvent e) { /**/ }
+	};
 	
 	public TimelineDisplayComponent(List<CCSeries> orderlist, HashMap<CCSeries, List<CCDatespan>> elGravity, HashMap<CCSeries, List<CCDatespan>> elZero, CCDate s, CCDate e, Map<CCSeries, Boolean> map) {
 		super();
@@ -44,6 +55,8 @@ public class TimelineDisplayComponent extends JComponent {
 		dayCount = start.getDayDifferenceTo(end) + 1;
 
 		dim = calculateSize();
+		
+		addMouseListener(this);
 	}
 	
     @Override
@@ -78,6 +91,19 @@ public class TimelineDisplayComponent extends JComponent {
 		graphics.setColor(Color.WHITE);
 		graphics.fillRect(0, 0, this.getWidth(), this.getHeight());
 
+		i = 0;
+		for (CCSeries key : list) {
+			if (!filter.getOrDefault(key, true)) continue;
+
+			if (key == selected) {
+				graphics.setColor(new Color(135, 206, 250));
+				graphics.fillRect(0, i*CELL_HEIGHT, dim.width, CELL_HEIGHT);
+				graphics.setColor(Color.BLACK);
+			}
+			
+			i++;
+		}
+		
 		CCDate d = CCDate.create(start);
 		while(d.isLessEqualsThan(end)) {
 			int dd = (start.getDayDifferenceTo(d));
@@ -134,4 +160,40 @@ public class TimelineDisplayComponent extends JComponent {
 			i++;
 		}
 	}
+
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		int idx = e.getY() / CELL_HEIGHT;
+
+		int i = 0;
+		for (CCSeries key : list) {
+			if (!filter.getOrDefault(key, true)) continue;
+			
+			if (idx == i) {
+				selected = key;
+				onSelectedChanged.actionPerformed(new ActionEvent(key, i, null));
+				repaint();
+				return;
+			}
+				
+			i++;
+		}
+	}
+	
+	public void setSelectedDirect(CCSeries key) {
+		selected = key;
+		repaint();
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) { /**/ }
+
+	@Override
+	public void mouseReleased(MouseEvent e) { /**/ }
+
+	@Override
+	public void mouseEntered(MouseEvent e) { /**/ }
+
+	@Override
+	public void mouseExited(MouseEvent e) { /**/ }
 }

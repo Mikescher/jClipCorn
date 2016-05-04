@@ -1,6 +1,8 @@
 package de.jClipCorn.gui.frames.statisticsFrame.charts;
 
 import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
 import java.util.Comparator;
@@ -60,6 +62,25 @@ public class StatisticsSeriesTimeline extends StatisticsPanel {
 		if (map == null) map = new HashMap<>();
 		
 		if (seriesMap == null) collectData();
+
+		TimelineCaptionComponent leftBody = new TimelineCaptionComponent(seriesList, map);
+		TimelineEmptyCaptionComponent leftHeader = new TimelineEmptyCaptionComponent(leftBody);
+		TimelineDisplayComponent rightBody = new TimelineDisplayComponent(seriesList, seriesMap, seriesMapZero, seriesMapStart, seriesMapEnd, map);
+		TimelineDateCaptionComponent rightHeader = new TimelineDateCaptionComponent(seriesMapStart, seriesMapEnd);
+		
+		leftBody.onSelectedChanged = new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				rightBody.setSelectedDirect((CCSeries)e.getSource());
+			}
+		};
+
+		rightBody.onSelectedChanged = new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				leftBody.setSelectedDirect((CCSeries)e.getSource());
+			}
+		};
 		
 		JScrollPane left;
 		JScrollPane right;
@@ -67,30 +88,24 @@ public class StatisticsSeriesTimeline extends StatisticsPanel {
 		JPanel root = new JPanel(new BorderLayout());
 		{
 			JPanel leftRoot = new JPanel(new BorderLayout());
-			{
-				TimelineCaptionComponent body = new TimelineCaptionComponent(seriesList, map);
-				TimelineEmptyCaptionComponent header = new TimelineEmptyCaptionComponent(body);
-				
+			{				
 				left = new JScrollPane(JScrollPane.VERTICAL_SCROLLBAR_NEVER,  JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
 				{
 					left.setBorder(new EmptyBorder(0, 0, 0, 0));
-					left.setViewportView(body);
+					left.setViewportView(leftBody);
 				}
 				leftRoot.add(left, BorderLayout.CENTER);
 
-				leftRoot.add(header, BorderLayout.NORTH);
+				leftRoot.add(leftHeader, BorderLayout.NORTH);
 			}
 			root.add(leftRoot, BorderLayout.WEST);
 
 			JPanel rightRoot = new JPanel(new BorderLayout());
 			{
-				TimelineDisplayComponent body = new TimelineDisplayComponent(seriesList, seriesMap, seriesMapZero, seriesMapStart, seriesMapEnd, map);
-				TimelineDateCaptionComponent header = new TimelineDateCaptionComponent(seriesMapStart, seriesMapEnd);
-				
 				JScrollPane rightTop = new JScrollPane(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,  JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 				{	
 					rightTop.setBorder(new EmptyBorder(0, 0, 0, 0));
-					rightTop.setViewportView(header);
+					rightTop.setViewportView(rightHeader);
 				}
 				rightRoot.add(rightTop, BorderLayout.NORTH);
 				
@@ -109,7 +124,7 @@ public class StatisticsSeriesTimeline extends StatisticsPanel {
 							rightTop.getHorizontalScrollBar().setValue(right.getHorizontalScrollBar().getValue());
 						}
 					});
-					right.setViewportView(body);
+					right.setViewportView(rightBody);
 				}
 				rightRoot.add(right, BorderLayout.CENTER);
 			}

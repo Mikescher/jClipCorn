@@ -5,6 +5,10 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.List;
 import java.util.Map;
 
@@ -12,7 +16,7 @@ import javax.swing.JComponent;
 
 import de.jClipCorn.database.databaseElement.CCSeries;
 
-public class TimelineCaptionComponent extends JComponent {
+public class TimelineCaptionComponent extends JComponent implements MouseListener {
 	private static final long serialVersionUID = -9133712754093362059L;
 
 	private final static int CELL_HEIGHT = 16;
@@ -21,6 +25,13 @@ public class TimelineCaptionComponent extends JComponent {
 	
 	private final List<CCSeries> elements;
 	private final Dimension dim;
+
+	private CCSeries selected = null;
+	
+	public ActionListener onSelectedChanged = new ActionListener() {
+		@Override
+		public void actionPerformed(ActionEvent e) { /**/ }
+	};
 	
 	public TimelineCaptionComponent(List<CCSeries> e, Map<CCSeries, Boolean> map) {
 		super();
@@ -28,6 +39,8 @@ public class TimelineCaptionComponent extends JComponent {
 		filter = map;
 		elements = e;
 		dim = calculateSize();
+		
+		addMouseListener(this);
 	}
 	
     @Override
@@ -72,6 +85,19 @@ public class TimelineCaptionComponent extends JComponent {
 		graphics.setColor(Color.WHITE);
 		graphics.fillRect(0, 0, this.getWidth(), this.getHeight());
 
+		i = 0;
+		for (CCSeries key : elements) {
+			if (!filter.getOrDefault(key, true)) continue;
+
+			if (key == selected) {
+				graphics.setColor(new Color(135, 206, 250));
+				graphics.fillRect(0, i*CELL_HEIGHT, dim.width, CELL_HEIGHT);
+				graphics.setColor(Color.BLACK);
+			}
+			
+			i++;
+		}
+		
 		graphics.setColor(Color.BLACK);
 		i = 0;
 		for (int x = 0; x < elements.size(); x++) {
@@ -94,4 +120,40 @@ public class TimelineCaptionComponent extends JComponent {
 			i++;
 		}
 	}
+
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		int idx = e.getY() / CELL_HEIGHT;
+
+		int i = 0;
+		for (CCSeries key : elements) {
+			if (!filter.getOrDefault(key, true)) continue;
+			
+			if (idx == i) {
+				selected = key;
+				onSelectedChanged.actionPerformed(new ActionEvent(key, i, null));
+				repaint();
+				return;
+			}
+				
+			i++;
+		}
+	}
+	
+	public void setSelectedDirect(CCSeries key) {
+		selected = key;
+		repaint();
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) { /**/ }
+
+	@Override
+	public void mouseReleased(MouseEvent e) { /**/ }
+
+	@Override
+	public void mouseEntered(MouseEvent e) { /**/ }
+
+	@Override
+	public void mouseExited(MouseEvent e) { /**/ }
 }

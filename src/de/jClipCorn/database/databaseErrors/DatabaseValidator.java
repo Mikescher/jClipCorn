@@ -448,7 +448,7 @@ public class DatabaseValidator {
 		// Wrong Viewed State
 		// ###############################################
 		
-		//if (episode.getLastViewed().isGreaterThan(MIN_DATE) ^ episode.isViewed()) { // Dar nicht benutzt werden - da leider durch den Import der alten CC-Database viele solche Fälle vorkommen
+		//if (episode.getLastViewed().isGreaterThan(MIN_DATE) ^ episode.isViewed()) { // Dar nicht benutzt werden - da leider durch den Import der alten CC-Database viele solche FÃ¤lle vorkommen
 		//	e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_15, episode));
 		//}
 

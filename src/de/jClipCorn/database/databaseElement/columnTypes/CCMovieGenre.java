@@ -125,7 +125,7 @@ public enum CCMovieGenre {
 			genID = 9;
 		} else if (ng.equals("comedy")) {
 			genID = 10;
-		} else if (ng.equals("komödie")) {
+		} else if (ng.equals("komÃ¶die")) {
 			genID = 10;
 		} else if (ng.equals("slapstick-comedy")) {
 			genID = 11;

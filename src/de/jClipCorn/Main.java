@@ -98,7 +98,7 @@ public class Main {
 	// - you can right click a movie and click something like network view
 		// - You see if the othr one has the Movie / what he rates / if he has viewed ...
 
-//TODO Shortcuts für SerienWindow
+//TODO Shortcuts fÃ¼r SerienWindow
 //TODO Compare Series in CompareDialog
 //TODO Option to move Database to Server
 

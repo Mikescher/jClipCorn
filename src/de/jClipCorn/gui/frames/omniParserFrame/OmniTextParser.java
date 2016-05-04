@@ -366,13 +366,13 @@ public class OmniTextParser {
 	// Jep, Umlauts is correct English
 	private static void replaceUmlauts(List<String> lines) {
 		for (int i = 0; i < lines.size(); i++) {
-			lines.set(i, lines.get(i).replace("oe", "ö")); //$NON-NLS-1$ //$NON-NLS-2$
-			lines.set(i, lines.get(i).replace("ae", "ä")); //$NON-NLS-1$ //$NON-NLS-2$
-			lines.set(i, lines.get(i).replace("ue", "ü")); //$NON-NLS-1$ //$NON-NLS-2$
+			lines.set(i, lines.get(i).replace("oe", "Ã¶")); //$NON-NLS-1$ //$NON-NLS-2$
+			lines.set(i, lines.get(i).replace("ae", "Ã¤")); //$NON-NLS-1$ //$NON-NLS-2$
+			lines.set(i, lines.get(i).replace("ue", "Ã¼")); //$NON-NLS-1$ //$NON-NLS-2$
 			
-			lines.set(i, lines.get(i).replace("Oe", "Ö")); //$NON-NLS-1$ //$NON-NLS-2$
-			lines.set(i, lines.get(i).replace("Ae", "Ä")); //$NON-NLS-1$ //$NON-NLS-2$
-			lines.set(i, lines.get(i).replace("Ue", "Ü")); //$NON-NLS-1$ //$NON-NLS-2$
+			lines.set(i, lines.get(i).replace("Oe", "Ã–")); //$NON-NLS-1$ //$NON-NLS-2$
+			lines.set(i, lines.get(i).replace("Ae", "Ã„")); //$NON-NLS-1$ //$NON-NLS-2$
+			lines.set(i, lines.get(i).replace("Ue", "Ãœ")); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 

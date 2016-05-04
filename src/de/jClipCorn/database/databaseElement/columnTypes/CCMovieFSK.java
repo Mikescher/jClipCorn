@@ -7,7 +7,7 @@ import de.jClipCorn.gui.Resources;
 import de.jClipCorn.gui.localization.LocaleBundle;
 
 public enum CCMovieFSK {
-	RATING_0(0), // keine Alterschbeschr‰kung
+	RATING_0(0), // keine Alterschbeschr√§kung
 	RATING_I(1), // ab 6 Jahren
 	RATING_II(2), // ab 12 Jahren
 	RATING_III(3), // ab 16 Jahren

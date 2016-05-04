@@ -26,7 +26,7 @@ import de.jClipCorn.gui.log.CCLog;
 /**
  * A little Wrapper for embedded JavaDB (derby) Databases
  * 
- * @author Mike Schwörer
+ * @author Mike SchwÃ¶rer
  *
  */
 @SuppressWarnings("nls")

@@ -53,7 +53,7 @@ public class AgeRatingParser {
 		ratingsMap.put("livre", 0);
 		ratingsMap.put("unrestricted", 0);
 		ratingsMap.put("general audience", 0);
-		ratingsMap.put("ohne altersbeschränkung", 0);
+		ratingsMap.put("ohne altersbeschrÃ¤nkung", 0);
 		
 		ratingsMap.put("m/4", 4);
 		ratingsMap.put("bo-a", 4);

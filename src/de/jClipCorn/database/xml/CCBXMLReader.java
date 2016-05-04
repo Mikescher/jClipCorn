@@ -99,7 +99,7 @@ public class CCBXMLReader {
 		newMov.setZyklusTitle(getZyklusName(e.getChildText("zyklus")));
 		newMov.setZyklusID(getZyklusNumber(e.getChildText("zyklus")));
 		newMov.setViewed(! e.getChildText("gesehen").equals("0"));
-		newMov.setQuality(e.getChild("qualit‰t").getAttribute("dec").getIntValue() + 1);
+		newMov.setQuality(e.getChild("qualit√§t").getAttribute("dec").getIntValue() + 1);
 		newMov.setLanguage(e.getChild("sprache").getAttribute("dec").getIntValue());
 		newMov.setGenre(translateGenre(e.getChild("genre").getChild("genre00").getAttribute("dec").getIntValue()), 0);
 		newMov.setGenre(translateGenre(e.getChild("genre").getChild("genre01").getAttribute("dec").getIntValue()), 1);
@@ -108,13 +108,13 @@ public class CCBXMLReader {
 		newMov.setGenre(translateGenre(e.getChild("genre").getChild("genre04").getAttribute("dec").getIntValue()), 4);
 		newMov.setGenre(translateGenre(e.getChild("genre").getChild("genre05").getAttribute("dec").getIntValue()), 5);
 		newMov.setGenre(translateGenre(e.getChild("genre").getChild("genre06").getAttribute("dec").getIntValue()), 6);
-		newMov.setLength(Integer.parseInt(e.getChildText("l‰nge")));
+		newMov.setLength(Integer.parseInt(e.getChildText("l√§nge")));
 		newMov.setAddDate(CCDate.parse(e.getChildText("adddate"), "D.M.Y"));
 		newMov.setOnlinescore(Integer.parseInt(e.getChildText("imdbscore")));
 		newMov.setFsk(e.getChild("usk").getAttribute("dec").getIntValue());
 		newMov.setFormat(e.getChild("format").getAttribute("dec").getIntValue());
 		newMov.setYear(Integer.parseInt(e.getChildText("jahr")));
-		newMov.setFilesize(e.getChild("grˆﬂe").getAttribute("dec").getLongValue() * 1024);
+		newMov.setFilesize(e.getChild("gr√∂√üe").getAttribute("dec").getLongValue() * 1024);
 		newMov.setPart(0, e.getChildText("pathpart1"));
 		newMov.setPart(1, e.getChildText("pathpart2"));
 		String cvrval = e.getChildText("cover");
@@ -213,10 +213,10 @@ public class CCBXMLReader {
 		newEp.setEpisodeNumber(owner.getAttribute("number").getIntValue());
 		newEp.setTitle(owner.getChildText("filmtitel"));
 		newEp.setViewed(! owner.getChildText("gesehen").equals("0"));
-		newEp.setQuality(owner.getChild("qualit‰t").getAttribute("dec").getIntValue() + 1);
-		newEp.setLength(Integer.parseInt(owner.getChildText("l‰nge")));
+		newEp.setQuality(owner.getChild("qualit√§t").getAttribute("dec").getIntValue() + 1);
+		newEp.setLength(Integer.parseInt(owner.getChildText("l√§nge")));
 		newEp.setFormat(owner.getChild("format").getAttribute("dec").getIntValue());
-		newEp.setFilesize(owner.getChild("grˆﬂe").getAttribute("dec").getLongValue() * 1024);
+		newEp.setFilesize(owner.getChild("gr√∂√üe").getAttribute("dec").getLongValue() * 1024);
 		newEp.setPart(owner.getChildText("pathpart1"));
 		newEp.setAddDate(CCDate.parse(owner.getChildText("adddate"), "D.M.Y"));
 		newEp.setLastViewed(CCDate.getMinimumDate());

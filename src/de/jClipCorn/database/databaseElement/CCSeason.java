@@ -432,7 +432,7 @@ public class CCSeason {
 		}
 		
 		if (e.getAttributeValue("coverdata") != null) {
-			setCover(""); //Damit er nicht probiert was zu löschen
+			setCover(""); //Damit er nicht probiert was zu lÃ¶schen
 			setCover(ImageUtilities.byteArrayToImage(ByteUtilies.hexStringToByteArray(e.getAttributeValue("coverdata"))));
 		}
 		

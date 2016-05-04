@@ -1,4 +1,4 @@
-jClipCorn
+jClipCorn [![Build Status](https://api.travis-ci.org/Mikescher/jClipCorn.svg)](https://travis-ci.org/Mikescher/jClipCorn)
 ------------------
 *a portable movie and series manager for Windows and Linux*
 

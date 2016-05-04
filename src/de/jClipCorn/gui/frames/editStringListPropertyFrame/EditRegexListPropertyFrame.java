@@ -85,15 +85,13 @@ public class EditRegexListPropertyFrame extends JDialog {
 				String[] data = edMain.getText().split("\r?\n"); //$NON-NLS-1$
 				
 				for (String datum : data) {
-					if (! (target.testRegex(datum) || datum.trim().isEmpty())) return;
+					if (! (datum.trim().isEmpty() || target.testRegex(datum))) return;
 				}
-				
-				target.setComponentValueToValue(component, data);
 				
 				setVisible(false);
 				dispose();
 				
-				okListener.actionPerformed(new ActionEvent(this, 0, target.getValueAsString()));
+				okListener.actionPerformed(new ActionEvent(this, 0, String.join("\n", data))); //$NON-NLS-1$
 			}
 		});
 		pnlBottom.add(btnOk);

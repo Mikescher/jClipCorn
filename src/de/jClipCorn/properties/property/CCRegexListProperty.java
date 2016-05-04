@@ -40,7 +40,7 @@ public class CCRegexListProperty extends CCStringListProperty {
 				new EditRegexListPropertyFrame(firstComponent.getParent(), new ActionListener() {
 					@Override
 					public void actionPerformed(ActionEvent e) {
-						setComponentValueToValue(firstComponent, getValue());
+						setComponentValueToValue(firstComponent, e.getActionCommand().split("\n")); //$NON-NLS-1$
 					}
 				}, firstComponent, CCRegexListProperty.this).setVisible(true);
 			}

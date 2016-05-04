@@ -41,4 +41,8 @@ public abstract class StatisticsPanel {
 	public void onFilterYearRange(int year) {
 		// Overwrite me
 	}
+	
+	public boolean resetFrameOnFilter() {
+		return false;
+	}
 }

@@ -839,34 +839,36 @@ public class StatisticsHelper {
 		return span;
 	}
 	
-	public static HashMap<String, List<CCDatespan>> getAllSeriesTimespans(CCMovieList ml, int gravity) {
-		HashMap<String, List<CCDatespan>> r = new HashMap<>();
+	public static HashMap<CCSeries, List<CCDatespan>> getAllSeriesTimespans(CCMovieList ml, int gravity) {
+		HashMap<CCSeries, List<CCDatespan>> r = new HashMap<>();
 
 		for (Iterator<CCSeries> it = ml.iteratorSeries(); it.hasNext();) {
 			CCSeries series = it.next();
 			
 			List<CCDatespan> span = getDatespanFromSeries(series, gravity);
 			
-			if (span.size() > 0) r.put(series.getTitle(), span);
+			if (span.size() > 0) r.put(series, span);
 		}
 
 		return r;
 	}
 
-	public static <T> List<String> convertMapToKeyList(HashMap<String, T> m) {
-		List<String> r = new ArrayList<>();
+	public static <T, U> List<U> convertMapToOrderedKeyList(HashMap<U, T> m, Comparator<U> c) {
+		List<U> r = new ArrayList<>();
 
-		for (String key : m.keySet()) {
+		for (U key : m.keySet()) {
 			r.add(key);
 		}
 		
+		Collections.sort(r, c);
+		
 		return r;
 	}
 
-	public static CCDate getSeriesTimespansStart(HashMap<String, List<CCDatespan>> seriesMap) {
+	public static CCDate getSeriesTimespansStart(HashMap<CCSeries, List<CCDatespan>> seriesMap) {
 		CCDate start = CCDate.getCurrentDate();
 		
-		for (Entry<String, List<CCDatespan>> set : seriesMap.entrySet()) {
+		for (Entry<CCSeries, List<CCDatespan>> set : seriesMap.entrySet()) {
 			for (CCDatespan span : set.getValue()) {
 				start = CCDate.min(start, span.start);
 			}
@@ -875,10 +877,10 @@ public class StatisticsHelper {
 		return start;
 	}
 
-	public static CCDate getSeriesTimespansEnd(HashMap<String, List<CCDatespan>> seriesMap) {
+	public static CCDate getSeriesTimespansEnd(HashMap<CCSeries, List<CCDatespan>> seriesMap) {
 		CCDate end = CCDate.getCurrentDate();
 		
-		for (Entry<String, List<CCDatespan>> set : seriesMap.entrySet()) {
+		for (Entry<CCSeries, List<CCDatespan>> set : seriesMap.entrySet()) {
 			for (CCDatespan span : set.getValue()) {
 				end = CCDate.max(end, span.end);
 			}

@@ -254,7 +254,12 @@ public class StatisticsFrame extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				StatisticsPanel chart = cbxChooseChart.getItemAt(cbxChooseChart.getSelectedIndex());
 				
-				if (chart != null) chart.onHideSeries(seriesList.getMap());
+				if (chart != null) {
+					chart.onHideSeries(seriesList.getMap());
+					if (chart.resetFrameOnFilter()) {
+						assignChart(chart);
+					}
+				}
 			}
 		});
 		
@@ -362,6 +367,7 @@ public class StatisticsFrame extends JFrame {
 		currentChart = statchart;
 		
 		pnlCenter.removeAll();
+		pnlCenter.setVisible(false);
 		if (currentChart != null) {
 			JComponent comp = currentChart.getComponent();
 			
@@ -370,7 +376,8 @@ public class StatisticsFrame extends JFrame {
 		} else {
 			lblChartCaption.setText(""); //$NON-NLS-1$
 		}
-		
+
+		pnlCenter.setVisible(true);
 		pnlCenter.repaint();
 	}
 

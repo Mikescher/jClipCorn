@@ -1,4 +1,4 @@
-package de.jClipCorn.gui.frames.statisticsFrame.charts;
+package de.jClipCorn.gui.frames.statisticsFrame.timeline;
 
 import java.awt.Color;
 import java.awt.Dimension;

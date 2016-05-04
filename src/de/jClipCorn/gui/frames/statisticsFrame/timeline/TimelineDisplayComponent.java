@@ -1,14 +1,16 @@
-package de.jClipCorn.gui.frames.statisticsFrame.charts;
+package de.jClipCorn.gui.frames.statisticsFrame.timeline;
 
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map.Entry;
+import java.util.Map;
 
 import javax.swing.JComponent;
 
+import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.util.CCDate;
 import de.jClipCorn.util.CCDatespan;
 import de.jClipCorn.util.CCWeekday;
@@ -18,17 +20,22 @@ public class TimelineDisplayComponent extends JComponent {
 
 	private final static int CELL_WIDTH = 4;
 	private final static int CELL_HEIGHT = 16;
-	
-	private final HashMap<String, List<CCDatespan>> elements;
-	private final HashMap<String, List<CCDatespan>> elementsNoGravity;
+
+	private final Map<CCSeries, Boolean> filter;
+
+	private final List<CCSeries> list;
+	private final HashMap<CCSeries, List<CCDatespan>> elements;
+	private final HashMap<CCSeries, List<CCDatespan>> elementsNoGravity;
 	private final Dimension dim;
 	private final CCDate start;
 	private final CCDate end;
 	private final int dayCount;
 	
-	public TimelineDisplayComponent(HashMap<String, List<CCDatespan>> elGravity, HashMap<String, List<CCDatespan>> elZero, CCDate s, CCDate e) {
+	public TimelineDisplayComponent(List<CCSeries> orderlist, HashMap<CCSeries, List<CCDatespan>> elGravity, HashMap<CCSeries, List<CCDatespan>> elZero, CCDate s, CCDate e, Map<CCSeries, Boolean> map) {
 		super();
 		
+		filter = map;
+		list = orderlist;
 		elements = elGravity;
 		elementsNoGravity = elZero;
 				
@@ -48,13 +55,26 @@ public class TimelineDisplayComponent extends JComponent {
     public Dimension getPreferredSize() {
         return dim;
     }
+	
+    @Override
+    public Dimension getMaximumSize() {
+        return dim;
+    }
     
     public Dimension calculateSize() {
-        return new Dimension(dayCount * CELL_WIDTH, elements.size() * CELL_HEIGHT);
+    	int count = 0;
+
+		for (CCSeries key : list) {
+			if (filter.getOrDefault(key, true)) count++;
+		}
+    	
+        return new Dimension(dayCount * CELL_WIDTH, count * CELL_HEIGHT);
     }
 	
 	@Override
 	public void paintComponent(Graphics graphics) {
+		int i;
+		
 		graphics.setColor(Color.WHITE);
 		graphics.fillRect(0, 0, this.getWidth(), this.getHeight());
 
@@ -74,15 +94,22 @@ public class TimelineDisplayComponent extends JComponent {
 		}
 
 		graphics.setColor(Color.BLACK);
-		for (int i = 0; i <= elements.size(); i++) {
+		i = 0;
+		for (CCSeries key : list) {
+			if (!filter.getOrDefault(key, true)) continue;
+
 			graphics.drawLine(0, i*CELL_HEIGHT, dim.width, i*CELL_HEIGHT);
-		}
-		
-		int i = 0;
-		graphics.setColor(Color.BLACK);
-		for (Entry<String, List<CCDatespan>> spanlist : elements.entrySet()) {
 			
-			for (CCDatespan span : elementsNoGravity.get(spanlist.getKey())) {
+			i++;
+		}
+		graphics.drawLine(0, i*CELL_HEIGHT, dim.width, i*CELL_HEIGHT);
+		
+		i = 0;
+		graphics.setColor(Color.BLACK);
+		for (CCSeries key : list) {
+			if (!filter.getOrDefault(key, true)) continue;
+			
+			for (CCDatespan span : elementsNoGravity.get(key)) {
 				int x = start.getDayDifferenceTo(span.start) * CELL_WIDTH;
 				int y = i*CELL_HEIGHT + 2;
 				int w = (span.start.getDayDifferenceTo(span.end) + 1) * CELL_WIDTH;
@@ -92,7 +119,7 @@ public class TimelineDisplayComponent extends JComponent {
 				graphics.fillRect(x, y, w, h);
 			}
 			
-			for (CCDatespan span : spanlist.getValue()) {
+			for (CCDatespan span : elements.getOrDefault(key, new ArrayList<>())) {
 				int x = start.getDayDifferenceTo(span.start) * CELL_WIDTH;
 				int y = i*CELL_HEIGHT + 2;
 				int w = (span.start.getDayDifferenceTo(span.end) + 1) * CELL_WIDTH;

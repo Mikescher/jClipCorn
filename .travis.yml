@@ -1,0 +1,19 @@
+language: java
+
+sudo: false
+
+before_install:
+ - chmod +x gradlew
+ - chmod +x .utility/push-javadoc-to-gh-pages.sh
+
+install: ./gradlew fatJar
+
+script: 
+ - ./gradlew check
+
+notifications:
+  email:
+    recipients:
+      - mailport@mikescher.de
+    on_success: always
+    on_failure: always

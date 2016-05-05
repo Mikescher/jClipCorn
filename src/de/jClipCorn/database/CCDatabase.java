@@ -22,7 +22,7 @@ import de.jClipCorn.util.CCDate;
 import de.jClipCorn.util.CCTime;
 import de.jClipCorn.util.helper.ApplicationHelper;
 
-public class CCDatabase extends DerbyDatabase {
+public class CCDatabase {
 	public final static String TAB_MAIN     = "MOVIES";   //$NON-NLS-1$
 	public final static String TAB_SEASONS  = "SEASONS";  //$NON-NLS-1$
 	public final static String TAB_EPISODES = "EPISODES"; //$NON-NLS-1$
@@ -87,9 +87,13 @@ public class CCDatabase extends DerbyDatabase {
 	public final static String TAB_EPISODES_COLUMN_ADDDATE    = "ADDDATE";      //$NON-NLS-1$
 
 	private String databasePath;
-
+	private GenericDatabase db;
+	
+	
 	public CCDatabase() {
 		super();
+		
+		db = new DerbyDatabase();
 	}
 
 	public boolean tryconnect(String path) {
@@ -108,21 +112,21 @@ public class CCDatabase extends DerbyDatabase {
 
 	private boolean connect(String dbpath) {
 		try {
-			establishDBConnection(dbpath);
+			db.establishDBConnection(dbpath);
 			databasePath = dbpath;
 			Statements.intialize(this);
 			return true;
 		} catch (SQLException e) {
-			lastError = e;
+			db.lastError = e;
 			return false;
 		}
 	}
 	
 	public void disconnect(boolean cleanshutdown) {
 		try {
-			if (isConnected()) {
+			if (db.isConnected()) {
 				shutdownStatements();
-				closeDBConnection(getDBPath(), cleanshutdown);
+				db.closeDBConnection(getDBPath(), cleanshutdown);
 			}
 		} catch (SQLException e) {
 			CCLog.addError(LocaleBundle.getString("LogMessage.CouldNotDisconnectFromDB"), e); //$NON-NLS-1$
@@ -131,12 +135,12 @@ public class CCDatabase extends DerbyDatabase {
 	
 	public void reconnect() {
 		if (! connect(getDBPath())) {
-			CCLog.addFatalError(LocaleBundle.getString("LogMessage.CouldNotReconnectToDB"), lastError); //$NON-NLS-1$
+			CCLog.addFatalError(LocaleBundle.getString("LogMessage.CouldNotReconnectToDB"), db.lastError); //$NON-NLS-1$
 		}
 	}
 
 	private boolean create(String dbpath) {
-		boolean res = createNewDatabasefromResourceXML('/' + XML_NAME, dbpath);
+		boolean res = db.createNewDatabasefromResourceXML('/' + XML_NAME, dbpath);
 		if (res) {
 			databasePath = dbpath;
 			Statements.intialize(this);
@@ -153,7 +157,7 @@ public class CCDatabase extends DerbyDatabase {
 	 * @return the ammount of Movies and Series in the Database
 	 */
 	public int getDBElementCount() {
-		return getRowCount(TAB_MAIN);
+		return db.getRowCount(TAB_MAIN);
 	}
 
 	private CCDatabaseElement createDatabaseElementFromDatabase(ResultSet rs, CCMovieList ml) throws SQLException {
@@ -348,7 +352,7 @@ public class CCDatabase extends DerbyDatabase {
 
 			return true;
 		} catch (SQLException e) {
-			lastError = e;
+			db.lastError = e;
 			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.NoNewRow", id), e); //$NON-NLS-1$
 			return false;
 		}
@@ -370,7 +374,7 @@ public class CCDatabase extends DerbyDatabase {
 
 			return true;
 		} catch (SQLException e) {
-			lastError = e;
+			db.lastError = e;
 			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.NoNewSeasonRow", seasid, serid), e); //$NON-NLS-1$
 			return false;
 		}
@@ -401,7 +405,7 @@ public class CCDatabase extends DerbyDatabase {
 
 			return true;
 		} catch (SQLException e) {
-			lastError = e;
+			db.lastError = e;
 			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.NoNewEpisodeRow", eid, sid), e); //$NON-NLS-1$
 			return false;
 		}
@@ -899,5 +903,13 @@ public class CCDatabase extends DerbyDatabase {
 
 	private void shutdownStatements() {
 		Statements.shutdown();
+	}
+
+	public Exception getLastError() {
+		return db.getLastError();
+	}
+
+	public PreparedStatement createPreparedStatement(String sql) throws SQLException {
+		return db.createPreparedStatement(sql);
 	}
 }

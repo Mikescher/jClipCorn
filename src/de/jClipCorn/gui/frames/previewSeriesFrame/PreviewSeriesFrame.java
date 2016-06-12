@@ -157,8 +157,11 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 
 		updateData();
 
-		if (dispSeries.getSeasonCount() > 0) {
-			changeSeason(dispSeries.getSeason(0));
+		CCSeason sea = dispSeries.getInitialDisplaySeason();
+		if (sea != null) {
+			changeSeason(sea);
+
+			cvrChooser.setCurrSelected(sea.getSeasonNumber());
 		}
 		
 		setLocationRelativeTo(owner);
@@ -173,10 +176,7 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 
 		updateData();
 
-		if (dispSeries.getSeasonCount() > 0) {
-			changeSeason(dispSeries.getSeason(0));
-		}
-		
+		changeSeason(sea);
 		cvrChooser.setCurrSelected(sea.getSeasonNumber());
 		
 		setLocationRelativeTo(owner);
@@ -191,10 +191,7 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 
 		updateData();
 
-		if (dispSeries.getSeasonCount() > 0) {
-			changeSeason(dispSeries.getSeason(0));
-		}
-		
+		changeSeason(epi.getSeason());
 		cvrChooser.setCurrSelected(epi.getSeason().getSeasonNumber());
 		
 		tabSeason.select(epi);

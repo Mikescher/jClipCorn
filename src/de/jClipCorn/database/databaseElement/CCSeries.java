@@ -560,4 +560,21 @@ public class CCSeries extends CCDatabaseElement {
 		
 		return null;
 	}
+
+	public CCSeason getInitialDisplaySeason() {
+		if (getSeasonCount() == 0) return null;
+		
+		CCSeason zero = getSeason(0);
+		
+		if (zero.getIndexForCreatedFolderStructure() == 0) {
+			CCSeason first = getSeason(1);
+			if (first == null) {
+				return zero;
+			} else {
+				return first;
+			}
+		} else {
+			return zero;
+		}
+	}
 }

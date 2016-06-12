@@ -56,6 +56,7 @@ public class ImDBParser_Eng {
 	private final static String JSOUP_ALT_TITLE = "h1[itemprop=name]";
 	private final static String JSOUP_ALT_YEAR = "meta[property=og:title][content~=.*\\([0-9]{4}\\)]"; // meta[property=og:title][content~=.*\([0-9]{4}\)]
 	private final static String JSOUP_ALT_COVER = "div[class=poster] a[href~=/media/rm[0-9]+?/tt[0-9]+.*]";
+	private final static String JSOUP_ALT_COVER_2 = "div[class=poster] a img[src*=/images/]";
 	
 	public static String getSearchURL(String title, CCMovieTyp typ) {
 		if (typ == null) {
@@ -226,6 +227,19 @@ public class ImDBParser_Eng {
 		
 		if (find.isEmpty()) {
 			find = RegExHelper.find(REGEX_COVER_URL, getAttrBySelector(html, JSOUP_ALT_COVER, "href"));
+		}
+		
+		if (find.isEmpty()) {
+			String url = getAttrBySelector(html, JSOUP_ALT_COVER_2, "src");
+			if (url != null) {
+				int urlStart = url.lastIndexOf("@@");
+				int urlEnd = url.lastIndexOf(".");
+				if (!url.isEmpty() && urlStart > 0 && urlEnd > 0) {
+					find = url.replace(url.substring(urlStart+2, urlEnd), "");
+					
+					return HTTPUtilities.getImage(find);
+				}
+			}
 		}
 			
 		String cpageurl = BASE_URL + find;

@@ -1,6 +1,7 @@
 package de.jClipCorn.database.databaseElement.columnTypes;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
@@ -236,5 +237,23 @@ public enum CCMovieGenre {
 
 	public boolean isValid() {
 		return id >= 0 && id < CCMovieGenre.values().length && id < NAMES.length;
+	}
+	
+	public static Comparator<CCMovieGenre> getTextComparator() {
+		return new Comparator<CCMovieGenre>() {
+			@Override
+			public int compare(CCMovieGenre o1, CCMovieGenre o2) {
+				return o1.asString().compareTo(o2.asString());
+			}
+		};
+	}
+	
+	public static Comparator<CCMovieGenre> getIDComparator() {
+		return new Comparator<CCMovieGenre>() {
+			@Override
+			public int compare(CCMovieGenre o1, CCMovieGenre o2) {
+				return Integer.compare(o1.asInt(), o2.asInt());
+			}
+		};
 	}
 }

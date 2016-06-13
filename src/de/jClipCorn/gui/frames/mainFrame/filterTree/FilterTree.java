@@ -2,6 +2,8 @@ package de.jClipCorn.gui.frames.mainFrame.filterTree;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Collections;
+import java.util.List;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 
@@ -252,7 +254,11 @@ public class FilterTree extends AbstractFilterTree {
 			return;
 		}
 		
-		for (final CCMovieGenre genre : movielist.getGenreList()) {
+		List<CCMovieGenre> genres = movielist.getGenreList();
+		
+		Collections.sort(genres, CCMovieGenre.getTextComparator());
+		
+		for (final CCMovieGenre genre : genres) {
 			addNodeI(node_genre, null, genre.asString(), new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {

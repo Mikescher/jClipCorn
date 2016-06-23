@@ -239,6 +239,13 @@ public class ImDBParser_Eng {
 					
 					return HTTPUtilities.getImage(find);
 				}
+
+				urlStart = url.lastIndexOf("@");
+				if (!url.isEmpty() && urlStart > 0 && urlEnd > 0) {
+					find = url.replace(url.substring(urlStart+2, urlEnd), "");
+					
+					return HTTPUtilities.getImage(find);
+				}
 			}
 		}
 			

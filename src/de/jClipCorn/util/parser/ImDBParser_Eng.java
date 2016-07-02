@@ -48,6 +48,7 @@ public class ImDBParser_Eng {
 	private final static String JSOUP_YEAR = "h1.header span.nobr:matches(\\([12][0-9]{3}\\))"; // h1.header span.nobr:matches(\([12][0-9]{3}\))
 	private final static String JSOUP_RATING = "span[itemprop=ratingValue]:matches([0-9][,\\.]?[0-9]?)"; // span[itemprop=ratingValue]:matches([0-9][,\.]?[0-9]?)
 	private final static String JSOUP_LENGTH = "time[itemprop=duration]:matches([0-9]+ (M|m)in)";
+	private final static String JSOUP_LENGTH_2 = "time[itemprop=duration]:matches(([0-9]+)[Hh] ([0-9]+)[Mm]in)";
 	private final static String JSOUP_FSK = "h5:matches(Certification.*) + div.info-content a[href]";
 	private final static String JSOUP_GENRE = "div[itemprop=genre] a";
 	private final static String JSOUP_COVER = "div[class=image] a[href~=/media/rm[0-9]+?/tt[0-9]+.*]";
@@ -145,6 +146,19 @@ public class ImDBParser_Eng {
 	
 	public static int getLength(String html) {
 		String y = RegExHelper.find("[0-9]*", getContentBySelector(html, JSOUP_LENGTH));
+		
+		if (y == null || "".equals(y)){
+			y = getContentBySelector(html, JSOUP_LENGTH_2);
+
+			String sh = RegExHelper.find("([0-9]+)[Hh] ([0-9]+)[Mm]in", y, 1);
+			String sm = RegExHelper.find("([0-9]+)[Hh] ([0-9]+)[Mm]in", y, 2);
+			
+			try {
+				return Integer.parseInt(sh)*60 + Integer.parseInt(sm);
+			} catch (NumberFormatException e) {
+				return 0;
+			}
+		}
 		
 		try {
 			return Integer.parseInt(y);

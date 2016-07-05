@@ -1,3 +1,65 @@
+﻿############ 2016-07-05: 1.9.10 RELEASE
+
+############ 2016-07-05: 1.9.10 Feature: Added "Calculate Size" button to AddSeriesFrame
+
+############ 2016-07-02: 1.9.10 Bugfix: Fixed ImdbParser no longer getting length (IMDb yay)
+
+############ 2016-06-23: 1.9.10 Bugfix: Fixed ImdbParser no longer getting poster image (2x) (IMDb keeps changing their url schema -.-)
+
+############ 2016-06-13: 1.9.10 Task: Sort Genres in sidebar by name
+
+############ 2016-06-12: 1.9.10 Bugfix: Fixed ImdbParser no longer getting poster image (IMDb keeps changing their url schema -.-)
+
+############ 2016-06-12: 1.9.10 Task: Show first season in series preview even if there is a season zero
+
+############ 2016-05-05: 1.9.10 Task: Started support for multiple DB types
+
+############ 2016-05-05: 1.9.10 Bugfix: Fixed RegexList control in SettingsFrame
+
+############ 2016-05-05: 1.9.10 Other: Converted all files to UTF-8
+
+############ 2016-05-05: 1.9.10 Other: Fixed travis.yml script (2)
+
+############ 2016-05-05: 1.9.10 Other: Fixed travis.yml script
+
+############ 2016-05-05: 1.9.10 Other: Added build status to README
+
+############ 2016-05-05: 1.9.10 Task: Added travis config script
+
+############ 2016-05-05: 1.9.10 Task: Restore sort order after shuffle
+
+############ 2016-05-05: 1.9.10 Feature: Added mouse selection to statistic "series timeline"
+
+############ 2016-05-05: 1.9.10 Feature: Added series filter to statistic "series timeline"
+
+############ 2016-05-01: 1.9.10 Feature: Added new statistics: "series timeline"
+
+############ 2016-05-01: 1.9.10 Feature: Added shuffle button to table
+
+############ 2016-04-07: fixed some more case problems under *nix (tested under ManjaroLinux)
+
+############ 2016-04-07: fixed some case problems under *nix (tested under ManjaroLinux)
+
+############ 2016-04-03: 1.9.10 Bugfix: Fixed series addDate calculation
+
+############ 2016-01-24: 1.9.10 Feature: Added unique Identifier (DUUID) to database (for later)
+
+############ 2016-01-24: 1.9.10 Task: Better filename for movies with seperated titles (':')
+
+############ 2016-01-24: 1.9.10 Feature: Added Language "Japanese"
+
+############ 2016-01-24: 1.9.10 Feature: Added RegexList-settings to autom. extract season-indizies from season-titles (for folder structure)
+
+############ 2016-01-24: 1.9.10 Bugfix: Fixed too many newly opened windows in ScanFolderFrame (for too many found elements)
+
+############ 2016-01-24: Updated TODO
+
+############ 2016-01-07: 1.9.10 Other: Updated mikescher.de reference in README
+
+############ 2016-01-04: 1.9.10 Bugfix: Fixed wrong aligned searchfield in PreviewSeriesframe
+
+############ 2016-01-03: 1.9.9 RELEASE
+
 ############ 2016-01-03: 1.9.9 Feature: Improved Usability of ExtendedSettingsFrame
 
 ############ 2016-01-03: 1.9.9 Task: Made "partial viewed" icon with less contrast

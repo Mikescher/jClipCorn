@@ -141,6 +141,7 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler, 
 	private JButton btnAutoMeta;
 	private JSpinner spnSide_05;
 	private JButton btnIncEpisodeNumbers;
+	private JButton btnCalcQuality;
 
 	public AddEpisodesFrame(Component owner, CCSeason ss, UpdateCallbackListener ucl) {
 		super();
@@ -362,6 +363,18 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler, 
 		});
 		btnOpen.setBounds(276, 403, 71, 23);
 		pnlInfo.add(btnOpen);
+		
+		btnCalcQuality = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnCalcQuality.text")); //$NON-NLS-1$
+		btnCalcQuality.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				CCMovieQuality q = CCMovieQuality.calculateQuality((long)spnSize.getValue(), (int) spnLength.getValue(), 1);
+				
+				cbxQuality.setSelectedIndex(q.asInt());
+			}
+		});
+		btnCalcQuality.setBounds(276, 160, 71, 22);
+		pnlInfo.add(btnCalcQuality);
 
 		scrollPane = new JScrollPane();
 		scrollPane.setBounds(12, 47, 329, 503);

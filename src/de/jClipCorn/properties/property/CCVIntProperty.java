@@ -37,7 +37,7 @@ public class CCVIntProperty extends CCRIntProperty {
 		return ((JComboBox<?>)c).getSelectedIndex();
 	}
 
-	public int getValueCOount() {
+	public int getValueCount() {
 		return values.size();
 	}
 }

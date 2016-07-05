@@ -18,12 +18,16 @@ public class CCRIntProperty extends CCIntProperty {
 		super(cat, prop, ident, standard);
 		this.min = min;
 		this.max = max;
+		
+		if (max-min <= 0) throw new RuntimeException("Assertion failed max > min"); //$NON-NLS-1$
 	}
 	
 	public CCRIntProperty(CCPropertyCategory cat, CCProperties prop, String ident, Integer standard, Integer max) {
 		super(cat, prop, ident, standard);
 		this.min = 0;
 		this.max = max;
+		
+		if (max-min <= 0) throw new RuntimeException("Assertion failed max > min"); //$NON-NLS-1$
 	}
 	
 	@Override

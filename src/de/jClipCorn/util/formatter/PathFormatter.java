@@ -442,4 +442,8 @@ public class PathFormatter {
 		
 		return false;
 	}
+
+	public static void createFolders(String filePath) {
+		new File(filePath).getParentFile().mkdirs();
+	}
 }

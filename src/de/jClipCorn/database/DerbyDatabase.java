@@ -1,4 +1,8 @@
 package de.jClipCorn.database;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -6,6 +10,8 @@ import java.util.Properties;
 
 import org.apache.ddlutils.Platform;
 import org.apache.ddlutils.PlatformFactory;
+import org.apache.ddlutils.io.DatabaseIO;
+import org.apache.ddlutils.model.Database;
 
 import de.jClipCorn.gui.log.CCLog;
 
@@ -25,6 +31,8 @@ public class DerbyDatabase extends GenericDatabase {
 
 	private String database_username = "default";
 	private String database_password = "";
+	
+	private Database structure; // XML-Template ...
 
 	//@Override
 	public String getDatabasePath(String dbPath) {
@@ -105,6 +113,42 @@ public class DerbyDatabase extends GenericDatabase {
 		connection = DriverManager.getConnection(getDatabasePath(dbPath), getUserPasswordProperties());
 		
 		connection.setAutoCommit(true);
+	}
+	
+	/**
+	 * Creates a Structure defined in the global variable structure in the Database
+	 * 
+	 * @param dbName Name of the Database
+	 * @throws Exception Throws Exception if Tables couldnt be created
+	 */
+	protected void createTables(String dbName) throws Exception {
+		Platform platform = PlatformFactory.createNewPlatformInstance(dbName);
+		platform.createTables(connection, structure, false, true);
+	}
+	
+	/**
+	 * parses the structure from an XML-File
+	 * @param xmlPath Path to the descriptive XML-File
+	 */
+	protected void parseXML(String xmlPath) {
+		structure = new DatabaseIO().read(xmlPath);
+	}
+	
+	/**
+	 * parses the structure from an XML-Resource
+	 * @param xmlPath Path to the descriptive XML-Resource
+	 */
+	protected boolean parseXMLfromResource(String xmlResPath) {
+		InputStream is = this.getClass().getResourceAsStream(xmlResPath);
+		InputStreamReader isr = new InputStreamReader(is);
+		BufferedReader bf = new BufferedReader(isr);
+		structure = new DatabaseIO().read( bf );
+		try {
+			bf.close();
+		} catch (IOException e) {
+			return false;
+		}
+		return true;
 	}
 	
 	/**

@@ -77,39 +77,46 @@ public class Statements {
 	
 	public static void shutdown() {
 		try {
-			addEmptyMainTabStatement.close();
-			addEmptySeasonTabStatement.close();
-			addEmptyEpisodeTabStatement.close();
+			TryClose(addEmptyMainTabStatement);
+			TryClose(addEmptySeasonTabStatement);
+			TryClose(addEmptyEpisodeTabStatement);
 					
-			newLocalIDStatement.close();
-			newSeriesIDStatement.close();
-			newSeasonIDStatement.close();
-			newEpisodeIDStatement.close();
+			TryClose(newLocalIDStatement);
+			TryClose(newSeriesIDStatement);
+			TryClose(newSeasonIDStatement);
+			TryClose(newEpisodeIDStatement);
 					
-			updateMainTabStatement.close();
-			updateSeriesTabStatement.close();
-			updateSeasonTabStatement.close();
-			updateEpisodeTabStatement.close();
+			TryClose(updateMainTabStatement);
+			TryClose(updateSeriesTabStatement);
+			TryClose(updateSeasonTabStatement);
+			TryClose(updateEpisodeTabStatement);
 					
-			selectMainTabStatement.close();
-			selectSeasonTabStatement.close();
-			selectEpisodeTabStatement.close();
+			TryClose(selectMainTabStatement);
+			TryClose(selectSeasonTabStatement);
+			TryClose(selectEpisodeTabStatement);
 					
-			deleteMainTabStatement.close();
-			deleteSeasonTabStatement.close();
-			deleteEpisodeTabStatement.close();
+			TryClose(deleteMainTabStatement);
+			TryClose(deleteSeasonTabStatement);
+			TryClose(deleteEpisodeTabStatement);
 			
-			selectSingleMainTabStatement.close();
-			selectSingleSeasonTabStatement.close();
-			selectSingleEpisodeTabStatement.close();
+			TryClose(selectSingleMainTabStatement);
+			TryClose(selectSingleSeasonTabStatement);
+			TryClose(selectSingleEpisodeTabStatement);
 
-			addInfoKey.close();
-			selectInfoKey.close();
-			updateInfoKey.close();
+			TryClose(addInfoKey);
+			TryClose(selectInfoKey);
+			TryClose(updateInfoKey);
 			
 		} catch (Exception e) {
 			CCLog.addFatalError(e);
 		}	
+	}
+	
+	private static void TryClose(PreparedStatement stmt) throws SQLException {
+		if (stmt == null) return;
+		if (stmt.isClosed()) return;
+		
+		stmt.close();
 	}
 	
 	@SuppressWarnings("nls")

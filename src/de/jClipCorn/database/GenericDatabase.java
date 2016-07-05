@@ -1,9 +1,5 @@
 package de.jClipCorn.database;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
@@ -12,11 +8,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.apache.ddlutils.Platform;
-import org.apache.ddlutils.PlatformFactory;
-import org.apache.ddlutils.io.DatabaseIO;
-import org.apache.ddlutils.model.Database;
 
 import de.jClipCorn.gui.log.CCLog;
 
@@ -60,7 +51,6 @@ public abstract class GenericDatabase {
 	
 	protected Exception lastError = null;
 	
-	private Database structure; // XML-Template ...
 	protected Connection connection = null; // Database
 
 	/**
@@ -271,6 +261,13 @@ public abstract class GenericDatabase {
 		}
 	}
 	
+
+	public void executeSQLThrow(String sql) throws SQLException {
+		Statement s = connection.createStatement();
+		s.execute(sql);
+		s.close();
+	}
+	
 	/**
 	 * Executes an SQL-Statement and returns a single Value frm the Resultset
 	 * 
@@ -458,42 +455,6 @@ public abstract class GenericDatabase {
 			return false;
 		}
 
-		return true;
-	}
-	
-	/**
-	 * Creates a Structure defined in the global variable structure in the Database
-	 * 
-	 * @param dbName Name of the Database
-	 * @throws Exception Throws Exception if Tables couldnt be created
-	 */
-	protected void createTables(String dbName) throws Exception {
-		Platform platform = PlatformFactory.createNewPlatformInstance(dbName);
-		platform.createTables(connection, structure, false, true);
-	}
-	
-	/**
-	 * parses the structure from an XML-File
-	 * @param xmlPath Path to the descriptive XML-File
-	 */
-	protected void parseXML(String xmlPath) {
-		structure = new DatabaseIO().read(xmlPath);
-	}
-	
-	/**
-	 * parses the structure from an XML-Resource
-	 * @param xmlPath Path to the descriptive XML-Resource
-	 */
-	protected boolean parseXMLfromResource(String xmlResPath) {
-		InputStream is = this.getClass().getResourceAsStream(xmlResPath);
-		InputStreamReader isr = new InputStreamReader(is);
-		BufferedReader bf = new BufferedReader(isr);
-		structure = new DatabaseIO().read( bf );
-		try {
-			bf.close();
-		} catch (IOException e) {
-			return false;
-		}
 		return true;
 	}
 

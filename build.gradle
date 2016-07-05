@@ -61,6 +61,8 @@ dependencies {
 	compile 'commons-logging:commons-logging:1.2'
 	compile name: 'commons-beanutils-1.8.3-custombuild'
 
+	compile 'org.xerial:sqlite-jdbc:3.8.11.2'
+
 	compile 'org.apache.derby:derby:10.10.1.1'
 	compile 'org.apache.ddlutils:ddlutils:1.0'
 

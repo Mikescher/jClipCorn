@@ -93,12 +93,17 @@ public class CCDatabase {
 	public CCDatabase() {
 		super();
 		
-		db = new DerbyDatabase();
+		switch (CCProperties.getInstance().PROP_DATABASE_DRIVER.getValue()) {
+		case 0:
+			db = new DerbyDatabase();
+		case 1:
+			db = new SQLiteDatabase();
+		}
 	}
 
 	public boolean tryconnect(String path) {
 		if (!connect(path)) {
-			if (!create(path)) {
+			if (!create(path)) { //TODO Needs Dialog to choose database type
 				return false;
 			} else {
 				CCLog.addWarning(LocaleBundle.getString("LogMessage.FailedDBConnect")); //$NON-NLS-1$

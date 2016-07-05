@@ -68,23 +68,23 @@ public class CCProperties {
 	public CCBoolProperty 				PROP_ADD_MOVIE_RELATIVE_AUTO;
 	public CCStringProperty 			PROP_DATABASE_NAME;
 	public CCStringProperty 			PROP_LOG_PATH;
-	public CCRIntProperty 				PROP_UI_LANG;
+	public CCVIntProperty 				PROP_UI_LANG;
 	public CCStringProperty 			PROP_SELF_DIRECTORY;
 	public CCStringProperty 			PROP_COVER_PREFIX;
 	public CCStringProperty 			PROP_COVER_TYPE;
 	public CCBoolProperty 				PROP_LOADING_LIVEUPDATE;
 	public CCBoolProperty 				PROP_STATUSBAR_CALC_SERIES_IN_LENGTH;
 	public CCBoolProperty 				PROP_STATUSBAR_CALC_SERIES_IN_SIZE;
-	public CCRIntProperty 				PROP_UI_LOOKANDFEEL;
+	public CCVIntProperty 				PROP_UI_LOOKANDFEEL;
 	public CCStringProperty 			PROP_PLAY_VLC_PATH;
 	public CCBoolProperty 				PROP_PLAY_VLC_FULLSCREEN;
 	public CCBoolProperty 				PROP_PLAY_VLC_AUTOPLAY;
 	public CCBoolProperty 				PROP_PLAY_USESTANDARDONMISSINGVLC; // Use Standard Player on missing VLC
-	public CCRIntProperty 				PROP_ON_DBLCLICK_MOVE; //0=Play | 1=Preview
+	public CCVIntProperty 				PROP_ON_DBLCLICK_MOVE; //0=Play | 1=Preview
 	public CCBoolProperty 				PROP_USE_INTELLISORT;
 	public CCBoolProperty 				PROP_INCLUDE_SERIES_IN_VIEWEDCOUNT;
 	public CCPIntProperty 				PROP_MAINFRAME_SCROLLSPEED;
-	public CCRIntProperty 				PROP_MAINFRAME_TABLEBACKGROUND; //0=WHITE | 1=GRAY-WHITE | 2=Score
+	public CCVIntProperty 				PROP_MAINFRAME_TABLEBACKGROUND; //0=WHITE | 1=GRAY-WHITE | 2=Score
 	public CCBoolProperty 				PROP_LOADING_PRELOADRESOURCES;
 	public CCBoolProperty 				PROP_DATABASE_CREATELOGFILE;
 	public CCPIntProperty 				PROP_DATABASE_COVERCACHESIZE;
@@ -101,7 +101,7 @@ public class CCProperties {
 	public CCPIntProperty 				PROP_BACKUP_LIFETIME;
 	public CCBoolProperty 				PROP_LOG_APPEND;
 	public CCPIntProperty 				PROP_LOG_MAX_LINECOUNT;
-	public CCRIntProperty 				PROP_VIEW_DB_START_SORT;
+	public CCVIntProperty 				PROP_VIEW_DB_START_SORT;
 	public CCRIntProperty				PROP_VALIDATE_FILESIEDRIFT;
 	public CCBoolProperty				PROP_OTHER_DEBUGMODE;
 	public CCBoolProperty				PROP_VALIDATE_DUP_IGNORE_IFO;
@@ -117,7 +117,7 @@ public class CCProperties {
 	public CCBoolProperty				PROP_IMPORT_RESETTAGS;
 	public CCRIntProperty 				PROP_PARSEIMDB_LANGUAGE;
 	public CCToolbarProperty			PROP_TOOLBAR_ELEMENTS;
-	public CCRIntProperty				PROP_SERIES_ADDDATECALCULATION; //0 = Lowest EpisdenAddDate || 1 = Highest EpisdenAddDate || 2 = Average EpisdenAddDate
+	public CCVIntProperty				PROP_SERIES_ADDDATECALCULATION; //0 = Lowest EpisdenAddDate || 1 = Highest EpisdenAddDate || 2 = Average EpisdenAddDate
 	public CCBoolProperty				PROP_STATBAR_ELCOUNT;
 	public CCBoolProperty				PROP_STATBAR_PROGRESSBAR;
 	public CCBoolProperty				PROP_STATBAR_LOG;
@@ -144,6 +144,7 @@ public class CCProperties {
 	public CCPIntProperty 				PROP_MAINFRAME_HEIGHT;
 	public CCSeasonRegexListProperty	PROP_SEASON_INDEX_REGEXPRESSIONS;
 	public CCPIntProperty 				PROP_STATISTICS_TIMELINEGRAVITY;
+	public CCVIntProperty 				PROP_DATABASE_DRIVER;
 	
 	public boolean ARG_READONLY = false;
 	
@@ -204,6 +205,10 @@ public class CCProperties {
 		va.add("CCProperties.AddDateCalculation.Opt0"); //$NON-NLS-1$
 		va.add("CCProperties.AddDateCalculation.Opt1"); //$NON-NLS-1$
 		va.add("CCProperties.AddDateCalculation.Opt2"); //$NON-NLS-1$
+		
+		LocalizedVector vdb = new LocalizedVector();
+		vdb.add("CCProperties.DatabaseDriver.Opt0"); //$NON-NLS-1$
+		vdb.add("CCProperties.DatabaseDriver.Opt1"); //$NON-NLS-1$
 		
 		PROP_UI_LANG							= new CCVIntProperty(CAT_COMMON, 			this, 	"PROP_UI_LANG", 							getDefLanguage(),	vl);
 		PROP_LOADING_PRELOADRESOURCES			= new CCBoolProperty(CAT_COMMON, 			this,   "PROP_LOADING_PRELOADICONS", 				false);
@@ -293,6 +298,7 @@ public class CCProperties {
 		PROP_STATISTICS_INTERACTIVECHARTS		= new CCBoolProperty(NONVISIBLE,	 		this,   "PROP_STATISTICS_INTERACTIVECHARTS",		false);
 		PROP_MAINFRAME_WIDTH					= new CCPIntProperty(NONVISIBLE,	 		this,   "PROP_MAINFRAME_WIDTH",						875);
 		PROP_MAINFRAME_HEIGHT					= new CCPIntProperty(NONVISIBLE,	 		this,   "PROP_MAINFRAME_HEIGHT",					getDefMFHeight());
+		PROP_DATABASE_DRIVER					= new CCVIntProperty(NONVISIBLE, 			this, 	"PROP_DATABASE_DRIVER", 					0,					vdb);
 	}
 	
 	private ArrayList<String> getDefSeasonRegex() {

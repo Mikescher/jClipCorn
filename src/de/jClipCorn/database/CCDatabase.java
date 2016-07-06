@@ -96,14 +96,20 @@ public class CCDatabase {
 		switch (CCProperties.getInstance().PROP_DATABASE_DRIVER.getValue()) {
 		case 0:
 			db = new DerbyDatabase();
+			break;
 		case 1:
 			db = new SQLiteDatabase();
+			break;
 		}
 	}
 
 	public boolean tryconnect(String path) {
 		if (!connect(path)) {
+			System.out.println("Cannot connect because of reason:\n" + db.getLastError()); //$NON-NLS-1$
+			
 			if (!create(path)) { //TODO Needs Dialog to choose database type
+				System.out.println("Cannot create because of reason:\n" + db.getLastError()); //$NON-NLS-1$
+				
 				return false;
 			} else {
 				CCLog.addWarning(LocaleBundle.getString("LogMessage.FailedDBConnect")); //$NON-NLS-1$

@@ -1,6 +1,7 @@
 package de.jClipCorn.database;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.StringReader;
 import java.nio.file.FileAlreadyExistsException;
@@ -45,7 +46,8 @@ public class SQLiteDatabase extends GenericDatabase {
 			
 			PathFormatter.createFolders(PathFormatter.combine(dbPath, DB_FILENAME));
 			
-			establishDBConnection(dbPath);
+			connection = DriverManager.getConnection(PROTOCOL + PathFormatter.combine(dbPath, DB_FILENAME));
+			connection.setAutoCommit(true);
 			
 			createTablesFromXML(TextFileUtils.readTextResource(xmlResPath, getClass()));
 		} catch (Exception e) {
@@ -68,7 +70,9 @@ public class SQLiteDatabase extends GenericDatabase {
 	}
 	
 	@Override
-	public void establishDBConnection(String dbPath) throws SQLException {
+	public void establishDBConnection(String dbPath) throws Exception {
+		if (!databaseExists(dbPath)) throw new FileNotFoundException(PathFormatter.combine(dbPath, DB_FILENAME));
+		
 		connection = DriverManager.getConnection(PROTOCOL + PathFormatter.combine(dbPath, DB_FILENAME));
 		
 		connection.setAutoCommit(true);
@@ -121,5 +125,10 @@ public class SQLiteDatabase extends GenericDatabase {
 		} else {
 			return type + "(" + size + ")";
 		}
+	}
+
+	@Override
+	public boolean supportsDateType() {
+		return false;
 	}
 }

@@ -80,7 +80,10 @@ public abstract class GenericDatabase {
 	 */
 	public abstract boolean createNewDatabasefromResourceXML(String xmlResPath, String dbPath);
 	
-	//public abstract String getProtocol();
+	/**
+	 * @return true if the database has a native DATE type
+	 */
+	public abstract boolean supportsDateType();
 	
 	/**
 	 * Connects to an existing Database
@@ -88,7 +91,7 @@ public abstract class GenericDatabase {
 	 * @param dbPath Path to the Database-Folder
 	 * @throws Exception Throw an Exception if the Connection couldn't be established
 	 */
-	public abstract void establishDBConnection(String dbPath) throws SQLException;
+	public abstract void establishDBConnection(String dbPath) throws Exception;
 	
 	public abstract void closeDBConnection(String dbPath, boolean cleanshutdown) throws SQLException;
 	

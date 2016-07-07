@@ -103,31 +103,39 @@ public class CCDatabase {
 		}
 	}
 
-	public boolean tryconnect(String path) {
-		if (!connect(path)) {
-			System.out.println("Cannot connect because of reason:\n" + db.getLastError()); //$NON-NLS-1$
-			
-			if (!create(path)) { //TODO Needs Dialog to choose database type
-				System.out.println("Cannot create because of reason:\n" + db.getLastError()); //$NON-NLS-1$
+	public DatabaseConnectResult tryconnect(String path) {
+		if (db.databaseExists(path)) {
+			if (connect(path)) {
+				CCLog.addInformation(LocaleBundle.getFormattedString("LogMessage.DBConnect", path)); //$NON-NLS-1$
 				
-				return false;
+				return DatabaseConnectResult.SUCESS_CONNECTED;
 			} else {
-				CCLog.addWarning(LocaleBundle.getString("LogMessage.FailedDBConnect")); //$NON-NLS-1$
-				return true;
+				System.out.println("Cannot connect because of reason:\n" + db.getLastError()); //$NON-NLS-1$
+				
+				return DatabaseConnectResult.ERROR_CANTCONNECT;
 			}
 		} else {
-			CCLog.addInformation(LocaleBundle.getFormattedString("LogMessage.DBConnect", path)); //$NON-NLS-1$
-			return true;
+			if (create(path)) {
+				CCLog.addInformation(LocaleBundle.getFormattedString("LogMessage.DBCreated", path)); //$NON-NLS-1$
+				
+				return DatabaseConnectResult.SUCCESS_CREATED;
+			} else {
+				System.out.println("Cannot create because of reason:\n" + db.getLastError()); //$NON-NLS-1$
+				
+				return DatabaseConnectResult.ERROR_CANTCREATE;
+			}
 		}
 	}
 
 	private boolean connect(String dbpath) {
 		try {
+			if (! db.databaseExists(dbpath)) return false;
+			
 			db.establishDBConnection(dbpath);
 			databasePath = dbpath;
 			Statements.intialize(this);
 			return true;
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			db.lastError = e;
 			return false;
 		}
@@ -234,7 +242,7 @@ public class CCDatabase {
 		ep.setFormat(rs.getInt(TAB_EPISODES_COLUMN_FORMAT));
 		ep.setFilesize(rs.getLong(TAB_EPISODES_COLUMN_FILESIZE));
 		ep.setPart(rs.getString(TAB_EPISODES_COLUMN_PART_1));
-		ep.setAddDate(rs.getDate(TAB_EPISODES_COLUMN_ADDDATE));
+		ep.setAddDate(getDateFromResultSet(rs, TAB_EPISODES_COLUMN_ADDDATE));
 		ep.setLastViewed(rs.getDate(TAB_EPISODES_COLUMN_LASTVIEWED));
 		ep.setTags(rs.getShort(TAB_EPISODES_COLUMN_TAGS));
 	}
@@ -264,7 +272,7 @@ public class CCDatabase {
 		mov.setLanguage(rs.getInt(TAB_MAIN_COLUMN_LANGUAGE));
 		mov.setGenres(rs.getLong(TAB_MAIN_COLUMN_GENRE));
 		mov.setLength(rs.getInt(TAB_MAIN_COLUMN_LENGTH));
-		mov.setAddDate(rs.getDate(TAB_MAIN_COLUMN_ADDDATE));
+		mov.setAddDate(getDateFromResultSet(rs, TAB_MAIN_COLUMN_ADDDATE));
 		mov.setOnlinescore(rs.getInt(TAB_MAIN_COLUMN_ONLINESCORE));
 		mov.setFsk(rs.getInt(TAB_MAIN_COLUMN_FSK));
 		mov.setFormat(rs.getInt(TAB_MAIN_COLUMN_FORMAT));
@@ -279,6 +287,14 @@ public class CCDatabase {
 		mov.setPart(5, rs.getString(TAB_MAIN_COLUMN_PART_6));
 		mov.setScore(rs.getInt(TAB_MAIN_COLUMN_SCORE));
 		mov.setCover(rs.getString(TAB_MAIN_COLUMN_COVER));
+	}
+	
+	private CCDate getDateFromResultSet(ResultSet rs, String columnName) throws SQLException {
+		if (db.supportsDateType()) {
+			return CCDate.create(rs.getDate(TAB_MAIN_COLUMN_ADDDATE));
+		} else {
+			return CCDate.createFromSQL(rs.getString(TAB_MAIN_COLUMN_ADDDATE));
+		}
 	}
 
 	private int getIntFromSet(ResultSet rs) throws SQLException {

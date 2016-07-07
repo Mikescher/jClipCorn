@@ -81,6 +81,21 @@ public final class CCDate implements Comparable<CCDate> {
 		return new CCDate(c.get(Calendar.DAY_OF_MONTH), c.get(Calendar.MONTH) + 1, c.get(Calendar.YEAR));
 	}
 	
+	public static CCDate createFromSQL(String sqlRep) {
+		int y = (sqlRep.charAt(0)-'0') * 1000 + // Y
+				(sqlRep.charAt(1)-'0') * 100 +  // Y
+				(sqlRep.charAt(2)-'0') * 10 +   // Y
+				(sqlRep.charAt(3)-'0') * 1;     // Y
+		                                        // -
+		int m = (sqlRep.charAt(5)-'0') * 10 +   // M
+				(sqlRep.charAt(6)-'0') * 1;     // M
+                                                // -
+		int d = (sqlRep.charAt(8)-'0') * 10 +   // D
+				(sqlRep.charAt(9)-'0') * 1;     // D
+		
+		return new CCDate(d, m, y);
+	}
+	
 	public static CCDate getMinimumDate() {
 		return DATE_MIN;
 	}

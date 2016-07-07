@@ -164,4 +164,9 @@ public class DerbyDatabase extends GenericDatabase {
 		props.put("password", database_password);
 		return props;
 	}
+
+	@Override
+	public boolean supportsDateType() {
+		return false;
+	}
 }

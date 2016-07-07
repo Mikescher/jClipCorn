@@ -74,9 +74,14 @@ public class CCMovieList {
 
 				database = new CCDatabase();
 
-				if (!database.tryconnect(CCProperties.getInstance().PROP_DATABASE_NAME.getValue())) {
+				DatabaseConnectResult dbcr = database.tryconnect(CCProperties.getInstance().PROP_DATABASE_NAME.getValue());
+				
+				if (dbcr == DatabaseConnectResult.ERROR_CANTCONNECT) {
+					CCLog.addFatalError(LocaleBundle.getString("LogMessage.ErrorConnectDB"), database.getLastError()); //$NON-NLS-1$
+				} else if (dbcr == DatabaseConnectResult.ERROR_CANTCREATE) {
 					CCLog.addFatalError(LocaleBundle.getString("LogMessage.ErrorCreateDB"), database.getLastError()); //$NON-NLS-1$
 				}
+				
 				testDatabaseVersion();
 
 				database.fillMovieList(CCMovieList.this);

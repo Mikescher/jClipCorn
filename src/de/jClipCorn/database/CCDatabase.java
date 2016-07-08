@@ -35,6 +35,7 @@ public class CCDatabase {
 	public final static String INFOKEY_TIME			= "CREATION_TIME";         					//$NON-NLS-1$
 	public final static String INFOKEY_USERNAME		= "CREATION_USERNAME";     					//$NON-NLS-1$
 	public final static String INFOKEY_DUUID      	= "DATABASE_UNIVERSALLY_UNIQUE_IDENTIFIER";	//$NON-NLS-1$
+	public final static String INFOKEY_RAND      	= "RAND";									//$NON-NLS-1$
 
 	public final static String TAB_INFO_COLUMN_KEY            = "IKEY";         //$NON-NLS-1$
 	public final static String TAB_INFO_COLUMN_VALUE          = "IVALUE";       //$NON-NLS-1$
@@ -88,8 +89,7 @@ public class CCDatabase {
 
 	private String databasePath;
 	private GenericDatabase db;
-	
-	
+		
 	public CCDatabase() {
 		super();
 		
@@ -101,6 +101,10 @@ public class CCDatabase {
 			db = new SQLiteDatabase();
 			break;
 		}
+	}
+	
+	public boolean exists(String path) {
+		return db.databaseExists(path);
 	}
 
 	public DatabaseConnectResult tryconnect(String path) {
@@ -135,6 +139,13 @@ public class CCDatabase {
 			databasePath = dbpath;
 			Statements.intialize(this);
 			return true;
+		} catch (SQLException e) {
+			db.lastError = e;
+			
+			Exception next = e.getNextException();
+			if (next != null) db.lastError = next;
+			
+			return false;
 		} catch (Exception e) {
 			db.lastError = e;
 			return false;
@@ -938,5 +949,9 @@ public class CCDatabase {
 
 	public PreparedStatement createPreparedStatement(String sql) throws SQLException {
 		return db.createPreparedStatement(sql);
+	}
+
+	public String GetDBTypeName() {
+		return db.GetDBTypeName();
 	}
 }

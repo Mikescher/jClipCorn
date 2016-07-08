@@ -1,5 +1,6 @@
 package de.jClipCorn.database;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -13,6 +14,7 @@ import org.apache.ddlutils.PlatformFactory;
 import org.apache.ddlutils.io.DatabaseIO;
 import org.apache.ddlutils.model.Database;
 
+import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 
 @SuppressWarnings("nls")
@@ -79,12 +81,8 @@ public class DerbyDatabase extends GenericDatabase {
 	
 	@Override
 	public boolean databaseExists(String dbPath) {
-		try {
-			DriverManager.getConnection(getDatabasePath(dbPath), getUserPasswordProperties());
-			return true;
-		} catch (SQLException e) {
-			return false;
-		}
+		File f = new File(dbPath);
+		return f.exists() && f.isDirectory();
 	}
 	
 	@Override
@@ -102,7 +100,6 @@ public class DerbyDatabase extends GenericDatabase {
 			// This is DERBY
 		}
 		
-
 		connection = null;
 	}
 	
@@ -168,5 +165,10 @@ public class DerbyDatabase extends GenericDatabase {
 	@Override
 	public boolean supportsDateType() {
 		return false;
+	}
+
+	@Override
+	public String GetDBTypeName() {
+		return LocaleBundle.getString("CCProperties.DatabaseDriver.Opt1");
 	}
 }

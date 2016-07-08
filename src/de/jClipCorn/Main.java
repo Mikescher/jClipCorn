@@ -41,6 +41,8 @@ public class Main {
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
+				mList.showInitialWizard();
+								
 				final MainFrame myFrame = new MainFrame(mList);
 				myFrame.start();
 				

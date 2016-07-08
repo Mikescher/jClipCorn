@@ -26,6 +26,10 @@ public class PropertyElement {
 		property.setComponentValueToValue(component, property.getValue());
 	}
 
+	public Object getComponentValue() {
+		return property.getComponentValue(component);
+	}
+
 	public void setPropertyValue() {
 		property.setValue(property.getComponentValue(component));
 	}

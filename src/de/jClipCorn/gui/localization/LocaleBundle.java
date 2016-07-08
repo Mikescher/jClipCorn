@@ -26,6 +26,10 @@ public class LocaleBundle {
 	private static Locale getLocale() {
 		return LOCALES[CCProperties.getInstance().PROP_UI_LANG.getValue()];
 	}
+
+	private static Locale getLocale(int langID) {
+		return LOCALES[langID];
+	}
 	
 	private static Locale getDefaultLocale() {
 		return LOCALES[DEFAULT];
@@ -97,6 +101,10 @@ public class LocaleBundle {
 
 	public static void updateLang() {
 		bundle = ResourceBundle.getBundle(DEFAULT_BASENAME, getLocale());
+	}
+
+	public static void updateLangManual(int overrideLang) {
+		bundle = ResourceBundle.getBundle(DEFAULT_BASENAME, getLocale(overrideLang));
 	}
 	
 	public static int getTranslationCount() {

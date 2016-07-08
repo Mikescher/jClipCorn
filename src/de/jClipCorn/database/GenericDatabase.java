@@ -509,5 +509,7 @@ public abstract class GenericDatabase {
 			CCLog.addError(getLastError());
 		}
 	}
+
+	public abstract String GetDBTypeName();
 }
 

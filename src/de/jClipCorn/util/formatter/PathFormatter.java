@@ -446,4 +446,23 @@ public class PathFormatter {
 	public static void createFolders(String filePath) {
 		new File(filePath).getParentFile().mkdirs();
 	}
+
+	public static boolean validateDatabaseName(String name) {
+		if (name == null) return false;
+
+		if (name.length() == 0) return false;
+		
+		for (int i = 0; i < name.length(); i++) {
+			char chr = name.charAt(i);
+
+			boolean isDigit = (chr >= '0' && chr <= '9');
+			boolean isUpper = (chr >= 'A' && chr <= 'Z');
+			boolean isLower = (chr >= 'a' && chr <= 'z');
+			boolean isSpecial = (chr == '_' || chr == '-');
+			
+			if (!(isDigit || isUpper || isLower || isSpecial)) return false;
+		}
+		
+		return true;
+	}
 }

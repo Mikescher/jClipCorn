@@ -108,6 +108,10 @@ public abstract class AutomaticSettingsFrame extends JFrame {
 		btnOk.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
+				if (! validateValues()) {
+					return;
+				}
+				
 				if (! Main.DEBUG) {
 					DialogHelper.showInformation(AutomaticSettingsFrame.this, LocaleBundle.getString("Settingsframe.informationDlg.caption"), LocaleBundle.getString("Settingsframe.informationDlg.text")); //$NON-NLS-1$ //$NON-NLS-2$
 				}
@@ -219,6 +223,14 @@ public abstract class AutomaticSettingsFrame extends JFrame {
 		}		
 	}
 	
+	protected Object getCurrentInputValue(CCProperty<?> prop) {
+		for (PropertyElement pe : elements) {
+			if (pe.getProperty().getIdentifier().equals(prop.getIdentifier())) return pe.getComponentValue();
+		}
+		
+		return null;
+	}
+	
 	private RowSpec[] getRowSpec(int rowCount) {
 		int c = rowCount * 2 + 1;
 		RowSpec[] spec = new RowSpec[c];
@@ -229,4 +241,6 @@ public abstract class AutomaticSettingsFrame extends JFrame {
 		
 		return spec;
 	}
+	
+	protected abstract boolean validateValues();
 }

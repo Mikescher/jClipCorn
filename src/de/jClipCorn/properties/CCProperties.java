@@ -183,11 +183,7 @@ public class CCProperties {
 		vd.add("CCProperties.DblClickMove.Opt1"); //$NON-NLS-1$
 		vd.add("CCProperties.DblClickMove.Opt2"); //$NON-NLS-1$
 		
-		LocalizedVector vl = new LocalizedVector();
-		vl.add("CCProperties.Language.Opt0"); //$NON-NLS-1$
-		vl.add("CCProperties.Language.Opt1"); //$NON-NLS-1$
-		vl.add("CCProperties.Language.Opt2"); //$NON-NLS-1$
-		vl.add("CCProperties.Language.Opt3"); //$NON-NLS-1$
+		LocalizedVector vl = getUILanguageOptions();
 
 		Vector<String> vlf = new Vector<>(LookAndFeelManager.getLookAndFeelList());
 		
@@ -206,9 +202,7 @@ public class CCProperties {
 		va.add("CCProperties.AddDateCalculation.Opt1"); //$NON-NLS-1$
 		va.add("CCProperties.AddDateCalculation.Opt2"); //$NON-NLS-1$
 		
-		LocalizedVector vdb = new LocalizedVector();
-		vdb.add("CCProperties.DatabaseDriver.Opt0"); //$NON-NLS-1$
-		vdb.add("CCProperties.DatabaseDriver.Opt1"); //$NON-NLS-1$
+		LocalizedVector vdb = getDatabaseDriverOptions();
 		
 		PROP_UI_LANG							= new CCVIntProperty(CAT_COMMON, 			this, 	"PROP_UI_LANG", 							getDefLanguage(),	vl);
 		PROP_LOADING_PRELOADRESOURCES			= new CCBoolProperty(CAT_COMMON, 			this,   "PROP_LOADING_PRELOADICONS", 				false);
@@ -298,7 +292,23 @@ public class CCProperties {
 		PROP_STATISTICS_INTERACTIVECHARTS		= new CCBoolProperty(NONVISIBLE,	 		this,   "PROP_STATISTICS_INTERACTIVECHARTS",		false);
 		PROP_MAINFRAME_WIDTH					= new CCPIntProperty(NONVISIBLE,	 		this,   "PROP_MAINFRAME_WIDTH",						875);
 		PROP_MAINFRAME_HEIGHT					= new CCPIntProperty(NONVISIBLE,	 		this,   "PROP_MAINFRAME_HEIGHT",					getDefMFHeight());
-		PROP_DATABASE_DRIVER					= new CCVIntProperty(NONVISIBLE, 			this, 	"PROP_DATABASE_DRIVER", 					0,					vdb);
+		PROP_DATABASE_DRIVER					= new CCVIntProperty(NONVISIBLE, 			this, 	"PROP_DATABASE_DRIVER", 					1,					vdb);
+	}
+	
+	public LocalizedVector getUILanguageOptions() {
+		LocalizedVector vl = new LocalizedVector();
+		vl.add("CCProperties.Language.Opt0"); //$NON-NLS-1$
+		vl.add("CCProperties.Language.Opt1"); //$NON-NLS-1$
+		vl.add("CCProperties.Language.Opt2"); //$NON-NLS-1$
+		vl.add("CCProperties.Language.Opt3"); //$NON-NLS-1$
+		return vl;
+	}
+	
+	public LocalizedVector getDatabaseDriverOptions() {
+		LocalizedVector vdb = new LocalizedVector();
+		vdb.add("CCProperties.DatabaseDriver.Opt0"); //$NON-NLS-1$
+		vdb.add("CCProperties.DatabaseDriver.Opt1"); //$NON-NLS-1$
+		return vdb;
 	}
 	
 	private ArrayList<String> getDefSeasonRegex() {

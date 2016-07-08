@@ -30,6 +30,7 @@ import de.jClipCorn.database.util.CCDBUpdateListener;
 import de.jClipCorn.database.util.MovieIterator;
 import de.jClipCorn.database.util.SeriesIterator;
 import de.jClipCorn.database.util.backupManager.BackupManager;
+import de.jClipCorn.gui.frames.initialConfigFrame.InitialConfigFrame;
 import de.jClipCorn.gui.frames.mainFrame.MainFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
@@ -38,6 +39,7 @@ import de.jClipCorn.util.CCDate;
 import de.jClipCorn.util.comparator.CCMovieComparator;
 import de.jClipCorn.util.comparator.CCSeriesComparator;
 import de.jClipCorn.util.formatter.PathFormatter;
+import de.jClipCorn.util.helper.ApplicationHelper;
 
 public class CCMovieList {
 	private static CCMovieList instance = null;
@@ -57,10 +59,24 @@ public class CCMovieList {
 		this.database = null;
 		this.list = new Vector<>();
 		this.listener = new Vector<>();
+
+		database = new CCDatabase();
 		
 		instance = this;
 	}
 
+	public void showInitialWizard() {
+		if (!database.exists(CCProperties.getInstance().PROP_DATABASE_NAME.getValue())) {
+			boolean cont = InitialConfigFrame.ShowWizard();
+			
+			if (! cont) {
+				ApplicationHelper.exitApplication(0);
+			}
+
+			database = new CCDatabase(); // in case db type has changed
+		}
+	}
+	
 	public void connect(final MainFrame mf) {
 		new Thread(new Runnable() {
 			@Override
@@ -71,8 +87,6 @@ public class CCMovieList {
 				bm.doActions(mf);
 
 				mf.beginBlockingIntermediate();
-
-				database = new CCDatabase();
 
 				DatabaseConnectResult dbcr = database.tryconnect(CCProperties.getInstance().PROP_DATABASE_NAME.getValue());
 				
@@ -821,11 +835,13 @@ public class CCMovieList {
 	public void testDatabaseVersion() {
 		String real = database.getInformation_DBVersion();
 		String expected = Main.DBVERSION;
+		String name = CCProperties.getInstance().PROP_DATABASE_NAME.getValue();
+		String type = database.GetDBTypeName();
 		
 		if (! real.equals(Main.DBVERSION)) {
 			CCLog.addFatalError(LocaleBundle.getFormattedString("LogMessage.WrongDatabaseVersion", real, expected)); //$NON-NLS-1$
 		} else {
-			CCLog.addInformation(LocaleBundle.getFormattedString("LogMessage.CorrectDatabaseVersion", expected, database.getInformation_DUUID())); //$NON-NLS-1$
+			CCLog.addInformation(LocaleBundle.getFormattedString("LogMessage.CorrectDatabaseVersion", name, type, expected, database.getInformation_DUUID())); //$NON-NLS-1$
 		}
 	}
 

@@ -13,21 +13,27 @@ import org.jdom2.Element;
 import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
 
+import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.TextFileUtils;
 
 @SuppressWarnings("nls")
 public class SQLiteDatabase extends GenericDatabase {
-	
+
+	private final static String DRIVER = "org.sqlite.JDBC";
 	private final static String PROTOCOL = "jdbc:sqlite:";
-	private final static String DB_FILENAME = "database.db";
+
+	public String getDatabaseFilePath(String dbPath) {
+		return PathFormatter.combine(dbPath, dbPath + ".db");
+	}
 	
 	@Override
 	public boolean createNewDatabase(String xmlPath, String dbPath) {
 		try {
-			if (databaseExists(dbPath)) throw new FileAlreadyExistsException(PathFormatter.combine(dbPath, DB_FILENAME));
+			if (databaseExists(dbPath)) throw new FileAlreadyExistsException(getDatabaseFilePath(dbPath));
 			
-			PathFormatter.createFolders(PathFormatter.combine(dbPath, DB_FILENAME));
+			PathFormatter.createFolders(getDatabaseFilePath(dbPath));
 			
 			establishDBConnection(dbPath);
 			
@@ -42,11 +48,11 @@ public class SQLiteDatabase extends GenericDatabase {
 	@Override
 	public boolean createNewDatabasefromResourceXML(String xmlResPath, String dbPath) {
 		try {
-			if (databaseExists(dbPath)) throw new FileAlreadyExistsException(PathFormatter.combine(dbPath, DB_FILENAME));
+			if (databaseExists(dbPath)) throw new FileAlreadyExistsException(getDatabaseFilePath(dbPath));
 			
-			PathFormatter.createFolders(PathFormatter.combine(dbPath, DB_FILENAME));
+			PathFormatter.createFolders(getDatabaseFilePath(dbPath));
 			
-			connection = DriverManager.getConnection(PROTOCOL + PathFormatter.combine(dbPath, DB_FILENAME));
+			connection = DriverManager.getConnection(PROTOCOL + getDatabaseFilePath(dbPath));
 			connection.setAutoCommit(true);
 			
 			createTablesFromXML(TextFileUtils.readTextResource(xmlResPath, getClass()));
@@ -59,7 +65,7 @@ public class SQLiteDatabase extends GenericDatabase {
 	
 	@Override
 	public boolean databaseExists(String dbPath) {
-		return new File(PathFormatter.combine(dbPath, DB_FILENAME)).exists();
+		return new File(getDatabaseFilePath(dbPath)).exists();
 	}
 	
 	@Override
@@ -70,14 +76,24 @@ public class SQLiteDatabase extends GenericDatabase {
 	}
 	
 	@Override
-	public void establishDBConnection(String dbPath) throws Exception {
-		if (!databaseExists(dbPath)) throw new FileNotFoundException(PathFormatter.combine(dbPath, DB_FILENAME));
+	public void establishDBConnection(String dbPath) throws Exception { //TODO create lockfile because sqlite allows parallel connection
+		try {
+			Class.forName(DRIVER).newInstance();
+		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
+			CCLog.addUndefinied(Thread.currentThread(), e);
+		}
 		
-		connection = DriverManager.getConnection(PROTOCOL + PathFormatter.combine(dbPath, DB_FILENAME));
+		if (!databaseExists(dbPath)) throw new FileNotFoundException(getDatabaseFilePath(dbPath));
+		
+		connection = DriverManager.getConnection(PROTOCOL + getDatabaseFilePath(dbPath));
 		
 		connection.setAutoCommit(true);
 		
+		// Test if newly created
 		executeSQLThrow("SELECT * FROM " + CCDatabase.TAB_INFO + " LIMIT 1");
+		
+		// Test if writeable
+		executeSQLThrow("REPLACE INTO " + CCDatabase.TAB_INFO + " (" + CCDatabase.TAB_INFO_COLUMN_KEY + ", " + CCDatabase.TAB_INFO_COLUMN_VALUE + ") VALUES ('" + CCDatabase.INFOKEY_RAND + "', '" + Math.random() + "')");
 	}
 
 	private void createTablesFromXML(String xmlSource) throws JDOMException, IOException, SQLException {
@@ -130,5 +146,10 @@ public class SQLiteDatabase extends GenericDatabase {
 	@Override
 	public boolean supportsDateType() {
 		return false;
+	}
+
+	@Override
+	public String GetDBTypeName() {
+		return LocaleBundle.getString("CCProperties.DatabaseDriver.Opt0");
 	}
 }

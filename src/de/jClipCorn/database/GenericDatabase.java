@@ -263,7 +263,6 @@ public abstract class GenericDatabase {
 			return false;
 		}
 	}
-	
 
 	public void executeSQLThrow(String sql) throws SQLException {
 		Statement s = connection.createStatement();

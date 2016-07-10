@@ -15,7 +15,9 @@ import org.jdom2.input.SAXBuilder;
 
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
+import de.jClipCorn.util.exceptions.FileLockedException;
 import de.jClipCorn.util.formatter.PathFormatter;
+import de.jClipCorn.util.helper.FileLockManager;
 import de.jClipCorn.util.helper.TextFileUtils;
 
 @SuppressWarnings("nls")
@@ -30,14 +32,22 @@ public class SQLiteDatabase extends GenericDatabase {
 	
 	@Override
 	public boolean createNewDatabase(String xmlPath, String dbPath) {
+		String dbFilePath = getDatabaseFilePath(dbPath);
+		
 		try {
-			if (databaseExists(dbPath)) throw new FileAlreadyExistsException(getDatabaseFilePath(dbPath));
+			if (databaseExists(dbPath)) throw new FileAlreadyExistsException(dbFilePath);
+			if (FileLockManager.isLocked(dbFilePath)) throw new FileLockedException(dbFilePath);
 			
-			PathFormatter.createFolders(getDatabaseFilePath(dbPath));
+			PathFormatter.createFolders(dbFilePath);
+			
+			if (! FileLockManager.tryLockFile(dbFilePath, true)) {
+				throw new Exception("Cannot lock databasefile");
+			}
 			
 			establishDBConnection(dbPath);
 			
 			createTablesFromXML(TextFileUtils.readUTF8TextFile(xmlPath));
+			
 		} catch (Exception e) {
 			lastError = e;
 			return false;
@@ -47,12 +57,19 @@ public class SQLiteDatabase extends GenericDatabase {
 
 	@Override
 	public boolean createNewDatabasefromResourceXML(String xmlResPath, String dbPath) {
+		String dbFilePath = getDatabaseFilePath(dbPath);
+		
 		try {
-			if (databaseExists(dbPath)) throw new FileAlreadyExistsException(getDatabaseFilePath(dbPath));
+			if (databaseExists(dbPath)) throw new FileAlreadyExistsException(dbFilePath);
+			if (FileLockManager.isLocked(dbFilePath)) throw new FileLockedException(dbFilePath);
 			
 			PathFormatter.createFolders(getDatabaseFilePath(dbPath));
 			
-			connection = DriverManager.getConnection(PROTOCOL + getDatabaseFilePath(dbPath));
+			if (! FileLockManager.tryLockFile(dbFilePath, true)) {
+				throw new Exception("Cannot lock databasefile");
+			}
+			
+			connection = DriverManager.getConnection(PROTOCOL + dbFilePath);
 			connection.setAutoCommit(true);
 			
 			createTablesFromXML(TextFileUtils.readTextResource(xmlResPath, getClass()));
@@ -70,22 +87,40 @@ public class SQLiteDatabase extends GenericDatabase {
 	
 	@Override
 	public void closeDBConnection(String dbPath, boolean cleanshutdown) throws SQLException {
+		boolean unlockresult;
+		try {
+			unlockresult = FileLockManager.unlockFile(getDatabaseFilePath(dbPath));
+			
+			if (! unlockresult) {
+				CCLog.addWarning("Cannot unlock database file");
+			}
+		} catch (IOException e) {
+			CCLog.addWarning("Cannot unlock database file", e);
+		}
+		
         if(connection != null) {
             connection.close();
         }
 	}
 	
 	@Override
-	public void establishDBConnection(String dbPath) throws Exception { //TODO create lockfile because sqlite allows parallel connection
+	public void establishDBConnection(String dbPath) throws Exception {
+		String dbFilePath = getDatabaseFilePath(dbPath);
+		
 		try {
 			Class.forName(DRIVER).newInstance();
 		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
 			CCLog.addUndefinied(Thread.currentThread(), e);
 		}
 		
-		if (!databaseExists(dbPath)) throw new FileNotFoundException(getDatabaseFilePath(dbPath));
+		if (!databaseExists(dbPath)) throw new FileNotFoundException(dbFilePath);
+		if (FileLockManager.isLocked(dbFilePath)) throw new FileLockedException(dbFilePath);
 		
-		connection = DriverManager.getConnection(PROTOCOL + getDatabaseFilePath(dbPath));
+		if (!FileLockManager.tryLockFile(dbFilePath, true)) {
+			throw new Exception("Cannot lock databasefile");
+		}
+		
+		connection = DriverManager.getConnection(PROTOCOL + dbFilePath);
 		
 		connection.setAutoCommit(true);
 		

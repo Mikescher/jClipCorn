@@ -6,6 +6,7 @@ import java.util.GregorianCalendar;
 import java.util.List;
 
 import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.util.exceptions.DateFormatException;
 
 public final class CCDate implements Comparable<CCDate> {
 	public final static String STRINGREP_SIMPLE 	= "DD.MM.YYYY"; //$NON-NLS-1$
@@ -81,7 +82,9 @@ public final class CCDate implements Comparable<CCDate> {
 		return new CCDate(c.get(Calendar.DAY_OF_MONTH), c.get(Calendar.MONTH) + 1, c.get(Calendar.YEAR));
 	}
 	
-	public static CCDate createFromSQL(String sqlRep) {
+	public static CCDate createFromSQL(String sqlRep) throws DateFormatException {
+		if (sqlRep.length() != 10) throw new DateFormatException(sqlRep);
+		
 		int y = (sqlRep.charAt(0)-'0') * 1000 + // Y
 				(sqlRep.charAt(1)-'0') * 100 +  // Y
 				(sqlRep.charAt(2)-'0') * 10 +   // Y

@@ -1,66 +1,77 @@
 <?xml version="1.0"?>
 <!DOCTYPE database SYSTEM "http://db.apache.org/torque/dtd/database.dtd">
 <database name="CLIPCORN">
-  
-  <table name="INFO">
-        <column name="IKEY"			type="VARCHAR"  required="true" size="256" primaryKey="true"/>
 
-        <column name="IVALUE"		type="VARCHAR"  required="true" size="2048" />
-  </table>
+	<table name="INFO">
+		<column name="IKEY"         type="VARCHAR"  required="true" size="256" primaryKey="true"/>
+		<column name="IVALUE"       type="VARCHAR"  required="true" size="2048" />
+	</table>
 
-  <table name="MOVIES">
-        <column name="LOCALID" 		type="INTEGER"  required="true" primaryKey="true"/> 						<!-- ALSO USED FOR SERIES-->
+	<table name="MOVIES">
+		<column name="LOCALID"        type="INTEGER"  required="true" primaryKey="true"/>    <!-- ALSO USED FOR SERIES-->
 
-        <column name="NAME" 		type="VARCHAR"  required="true" size="128" />								<!-- ALSO USED FOR SERIES-->
-        <column name="VIEWED" 		type="BIT" 		required="true"            />
-        <column name="ZYKLUS" 		type="VARCHAR" 	required="true" size="128" />
-        <column name="ZYKLUSNUMBER" type="TINYINT" 	required="true"            />
-        <column name="QUALITY" 		type="TINYINT" 	required="true"            />
-        <column name="LANGUAGE" 	type="TINYINT" 	required="true"            />								<!-- ALSO USED FOR SERIES-->
-        <column name="GENRE" 		type="BIGINT" 	required="true"            />								<!-- ALSO USED FOR SERIES-->
-        <column name="LENGTH" 		type="INTEGER" 	required="true"            />
-        <column name="ADDDATE"     	type="DATE" 	required="true"            />
-        <column name="ONLINESCORE" 	type="TINYINT" 	required="true"            />								<!-- ALSO USED FOR SERIES-->
-        <column name="FSK"         	type="TINYINT" 	required="true"            />								<!-- ALSO USED FOR SERIES-->
-        <column name="FORMAT"      	type="TINYINT" 	required="true"            />
-        <column name="MOVIEYEAR" 	type="SMALLINT" required="true"            />
-        <column name="FILESIZE" 	type="BIGINT" 	required="true"            />
-        <column name="TAGS" 		type="SMALLINT" required="true"            />
-        <column name="PART1" 		type="VARCHAR" 	required="true" size="512" />
-        <column name="PART2" 		type="VARCHAR" 	required="true" size="512" />
-        <column name="PART3" 		type="VARCHAR" 	required="true" size="512" />
-        <column name="PART4" 		type="VARCHAR" 	required="true" size="512" />
-        <column name="PART5" 		type="VARCHAR" 	required="true" size="512" />
-        <column name="PART6" 		type="VARCHAR" 	required="true" size="512" />
-        <column name="SCORE" 		type="TINYINT" 	required="true"            />								<!-- ALSO USED FOR SERIES-->
-        <column name="COVERNAME" 	type="VARCHAR"  required="true" size="256" />								<!-- ALSO USED FOR SERIES-->
-        <column name="TYPE" 		type="TINYINT" 	required="true"            />
-        <column name="SERIESID" 	type="INTEGER" 	required="true"            />
-  </table>
-  
-  <table name="SEASONS">
-        <column name="SEASONID"		type="INTEGER"  required="true" primaryKey="true"/>
+		<column name="NAME"           type="VARCHAR"  required="true" size="128"       />    <!-- ALSO USED FOR SERIES-->
+		<column name="VIEWED"         type="BIT"      required="true"                  />
+		<column name="VIEWED_HISTORY" type="VARCHAR"  required="true" size="4096"      />
+		<column name="ZYKLUS"         type="VARCHAR"  required="true" size="128"       />
+		<column name="ZYKLUSNUMBER"   type="TINYINT"  required="true"                  />
+		<column name="QUALITY"        type="TINYINT"  required="true"                  />
+		<column name="LANGUAGE"       type="TINYINT"  required="true"                  />    <!-- ALSO USED FOR SERIES-->
+		<column name="GENRE"          type="BIGINT"   required="true"                  />    <!-- ALSO USED FOR SERIES-->
+		<column name="LENGTH"         type="INTEGER"  required="true"                  />
+		<column name="ADDDATE"        type="DATE"     required="true"                  />
+		<column name="ONLINESCORE"    type="TINYINT"  required="true"                  />    <!-- ALSO USED FOR SERIES-->
+		<column name="FSK"            type="TINYINT"  required="true"                  />    <!-- ALSO USED FOR SERIES-->
+		<column name="FORMAT"         type="TINYINT"  required="true"                  />
+		<column name="MOVIEYEAR"      type="SMALLINT" required="true"                  />
+		<column name="ONLINEREF"      type="VARCHAR"  required="true" size="128"       />    <!-- ALSO USED FOR SERIES-->
+		<column name="GROUPS"         type="VARCHAR"  required="true" size="4096"      />    <!-- ALSO USED FOR SERIES-->
+		<column name="FILESIZE"       type="BIGINT"   required="true"                  />
+		<column name="TAGS"           type="SMALLINT" required="true"                  />
+		<column name="PART1"          type="VARCHAR"  required="true" size="512"       />
+		<column name="PART2"          type="VARCHAR"  required="true" size="512"       />
+		<column name="PART3"          type="VARCHAR"  required="true" size="512"       />
+		<column name="PART4"          type="VARCHAR"  required="true" size="512"       />
+		<column name="PART5"          type="VARCHAR"  required="true" size="512"       />
+		<column name="PART6"          type="VARCHAR"  required="true" size="512"       />
+		<column name="SCORE"          type="TINYINT"  required="true"                  />    <!-- ALSO USED FOR SERIES-->
+		<column name="COVERNAME"      type="VARCHAR"  required="true" size="256"       />    <!-- ALSO USED FOR SERIES-->
+		<column name="TYPE"           type="TINYINT"  required="true"                  />
+		<column name="SERIESID"       type="INTEGER"  required="true"                  />
+	</table>
 
-        <column name="SERIESID"		type="INTEGER"  required="true"            />
-        <column name="NAME"			type="VARCHAR"  required="true" size="128" />
-        <column name="SEASONYEAR" 	type="SMALLINT" required="true"            />
-        <column name="COVERNAME" 	type="VARCHAR"  required="true" size="256" />
-  </table>
-  
-  <table name="EPISODES">
-        <column name="LOCALID" 		type="INTEGER"  required="true" primaryKey="true"/>
+	<table name="SEASONS">
+		<column name="SEASONID"     type="INTEGER"  required="true" primaryKey="true"/>
 
-        <column name="SEASONID"		type="INTEGER"  required="true"            />
-        <column name="EPISODE" 		type="SMALLINT" required="true"            />
-        <column name="NAME" 		type="VARCHAR"  required="true" size="128" />
-        <column name="VIEWED" 		type="BIT" 		required="true"            />
-        <column name="QUALITY" 		type="TINYINT" 	required="true"            />
-        <column name="LENGTH" 		type="INTEGER" 	required="true"            />
-        <column name="FORMAT"      	type="TINYINT" 	required="true"            />
-        <column name="FILESIZE" 	type="BIGINT" 	required="true"            />
-        <column name="PART1" 		type="VARCHAR" 	required="true" size="512" />
-        <column name="LASTVIEWED"  	type="DATE" 	required="true"            />
-        <column name="ADDDATE"     	type="DATE" 	required="true"            />
-        <column name="TAGS"         type="SMALLINT" required="true"            />
-  </table>
+		<column name="SERIESID"     type="INTEGER"  required="true"                  />
+		<column name="NAME"         type="VARCHAR"  required="true" size="128"       />
+		<column name="SEASONYEAR"   type="SMALLINT" required="true"                  />
+		<column name="COVERNAME"    type="VARCHAR"  required="true" size="256"       />
+
+		<foreign-key foreignTable="SEASONS">
+			<reference local="SERIESID" foreign="SERIESID"/>
+		</foreign-key> 
+	</table>
+
+	<table name="EPISODES">
+		<column name="LOCALID"      type="INTEGER"  required="true" primaryKey="true"/>
+
+		<column name="SEASONID"       type="INTEGER"  required="true"                />
+		<column name="EPISODE"        type="SMALLINT" required="true"                />
+		<column name="NAME"           type="VARCHAR"  required="true" size="128"     />
+		<column name="VIEWED"         type="BIT"      required="true"                />
+		<column name="VIEWED_HISTORY" type="VARCHAR"  required="true" size="4096"    />
+		<column name="QUALITY"        type="TINYINT"  required="true"                />
+		<column name="LENGTH"         type="INTEGER"  required="true"                />
+		<column name="FORMAT"         type="TINYINT"  required="true"                />
+		<column name="FILESIZE"       type="BIGINT"   required="true"                />
+		<column name="PART1"          type="VARCHAR"  required="true" size="512"     />
+		<column name="ADDDATE"        type="DATE"     required="true"                />
+		<column name="TAGS"           type="SMALLINT" required="true"                />
+
+		<foreign-key foreignTable="SEASONS">
+			<reference local="SEASONID" foreign="SEASONID"/>
+		</foreign-key> 
+	</table>
+
 </database>

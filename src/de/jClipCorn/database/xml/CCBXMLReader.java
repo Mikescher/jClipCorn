@@ -27,6 +27,9 @@ import de.jClipCorn.util.formatter.RomanNumberFormatter;
 import de.jClipCorn.util.helper.DialogHelper;
 
 @SuppressWarnings("nls")
+/*
+ * Old (pascal) ClipCorn database export format
+ */
 public class CCBXMLReader {
 	private String filename;
 	private CCMovieList movielist;
@@ -219,7 +222,6 @@ public class CCBXMLReader {
 		newEp.setFilesize(owner.getChild("größe").getAttribute("dec").getLongValue() * 1024);
 		newEp.setPart(owner.getChildText("pathpart1"));
 		newEp.setAddDate(CCDate.parse(owner.getChildText("adddate"), "D.M.Y"));
-		newEp.setLastViewed(CCDate.getMinimumDate());
 		
 		final CCEpisode finep = newEp;
 		try {

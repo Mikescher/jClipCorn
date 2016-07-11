@@ -20,7 +20,6 @@ import de.jClipCorn.gui.frames.editMovieFrame.EditMovieFrame;
 import de.jClipCorn.gui.frames.editSeriesFrame.EditSeriesFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.properties.CCProperties;
-import de.jClipCorn.util.CCDate;
 import de.jClipCorn.util.formatter.FileSizeFormatter;
 import de.jClipCorn.util.formatter.PathFormatter;
 
@@ -172,8 +171,6 @@ public class DatabaseError {
 			return fixError_Wrong_Filename();
 		} else if (isTypeOf(DatabaseErrorType.ERROR_IMPOSSIBLE_WATCH_LATER)) {
 			return fixError_Impossible_WatchLater();
-		} else if (isTypeOf(DatabaseErrorType.ERROR_LASTWATCHED_TOO_OLD)) {
-			return fixError_LastWatched_Too_Old();
 		} else if (isTypeOf(DatabaseErrorType.ERROR_IMPOSSIBLE_WATCH_NEVER)) {
 			return fixError_Impossible_WatchNever();
 		} else if (isTypeOf(DatabaseErrorType.ERROR_DUPLICATE_GENRE)) {
@@ -457,24 +454,6 @@ public class DatabaseError {
 			CCEpisode epi = ((CCEpisode)el1);
 			
 			epi.setTag(CCMovieTags.TAG_WATCH_NEVER, false);
-
-			return true;
-		}
-		
-		return false;
-	}
-	
-	private boolean fixError_LastWatched_Too_Old() {
-		if (el1 instanceof CCMovie) {
-			return false;
-		} else if (el1 instanceof CCSeries) {
-			return false;
-		} else if (el1 instanceof CCSeason) {
-			return false;
-		} else if (el1 instanceof CCEpisode) {
-			CCEpisode epi = ((CCEpisode)el1);
-			
-			epi.setLastViewed(CCDate.getMinimumDate());
 
 			return true;
 		}

@@ -25,6 +25,7 @@ import de.jClipCorn.util.CCDate;
 import de.jClipCorn.util.LargeMD5Calculator;
 import de.jClipCorn.util.YearRange;
 import de.jClipCorn.util.comparator.CCSeasonComparator;
+import de.jClipCorn.util.exceptions.CCFormatException;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.formatter.TimeIntervallFormatter;
 import de.jClipCorn.util.helper.ByteUtilies;
@@ -342,10 +343,10 @@ public class CCSeries extends CCDatabaseElement {
 			CCDate d = CCDate.getMinimumDate();
 			
 			for (int i = 0; i < el.size(); i++) {
-				if (d.isGreaterThan(el.get(i).getLastViewed())) {
+				if (d.isGreaterThan(el.get(i).getViewedHistoryLast())) {
 					return el.get(i);
 				}
-				d = el.get(i).getLastViewed();
+				d = el.get(i).getViewedHistoryLast();
 			}
 			
 			return el.get(0);
@@ -393,7 +394,7 @@ public class CCSeries extends CCDatabaseElement {
 	
 	@Override
 	@SuppressWarnings("nls")
-	public void parseFromXML(Element e, boolean resetAddDate, boolean resetViewed, boolean resetScore, boolean resetTags) {
+	public void parseFromXML(Element e, boolean resetAddDate, boolean resetViewed, boolean resetScore, boolean resetTags) throws CCFormatException {
 		beginUpdating();
 		
 		super.parseFromXML(e, resetAddDate, resetViewed, resetScore, resetTags);

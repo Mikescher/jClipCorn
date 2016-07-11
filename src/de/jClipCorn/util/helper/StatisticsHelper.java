@@ -636,8 +636,8 @@ public class StatisticsHelper {
 				for (int ec = 0; ec < s.getSeason(sc).getEpisodeCount(); ec++) {
 					CCEpisode epis = s.getSeason(sc).getEpisode(ec);
 					
-					if (!epis.getLastViewed().isMinimum() && epis.getLastViewed().isLessThan(date)) {
-						date = epis.getLastViewed();
+					if (!epis.getViewedHistoryLast().isMinimum() && epis.getViewedHistoryLast().isLessThan(date)) {
+						date = epis.getViewedHistoryLast();
 					}
 				}
 			}
@@ -656,8 +656,8 @@ public class StatisticsHelper {
 				for (int ec = 0; ec < s.getSeason(sc).getEpisodeCount(); ec++) {
 					CCEpisode epis = s.getSeason(sc).getEpisode(ec);
 					
-					if (!epis.getLastViewed().isMinimum() && epis.getLastViewed().isGreaterThan(date)) {
-						date = epis.getLastViewed();
+					if (!epis.getViewedHistoryLast().isMinimum() && epis.getViewedHistoryLast().isGreaterThan(date)) {
+						date = epis.getViewedHistoryLast();
 					}
 				}
 			}
@@ -696,10 +696,10 @@ public class StatisticsHelper {
 					CCEpisode epis = s.getSeason(sc).getEpisode(ec);
 					
 					if (epis.isViewed()) {
-						if (epis.getLastViewed().isMinimum()) {
+						if (epis.getViewedHistoryLast().isMinimum()) {
 							initialcount++;
 						} else {
-							int pos = startDate.getDayDifferenceTo(epis.getLastViewed());
+							int pos = startDate.getDayDifferenceTo(epis.getViewedHistoryLast());
 							
 							int prev = ls.get(pos) + 1;
 							ls.set(pos, prev);
@@ -731,7 +731,7 @@ public class StatisticsHelper {
 			for (int ep = 0; ep < season.getEpisodeCount(); ep++) {
 				CCEpisode episode = season.getEpisode(ep);
 				
-				if (episode.isViewed() && !episode.getLastViewed().isMinimum())
+				if (episode.isViewed() && !episode.getViewedHistoryLast().isMinimum())
 					result.add(episode);
 			}
 		}
@@ -739,7 +739,7 @@ public class StatisticsHelper {
 		Collections.sort(result, new Comparator<CCEpisode>() {
 			@Override
 			public int compare(CCEpisode o1, CCEpisode o2) {
-				return CCDate.compare(o1.getLastViewed(), o2.getLastViewed());
+				return CCDate.compare(o1.getViewedHistoryLast(), o2.getViewedHistoryLast());
 			}
 		});
 		
@@ -808,8 +808,8 @@ public class StatisticsHelper {
 			for (int ep = 0; ep < season.getEpisodeCount(); ep++) {
 				CCEpisode episode = season.getEpisode(ep);
 				
-				if (episode.isViewed() && !episode.getLastViewed().isMinimum())
-					dates.add(episode.getLastViewed());
+				if (episode.isViewed() && !episode.getViewedHistoryLast().isMinimum())
+					dates.add(episode.getViewedHistoryLast());
 			}
 		}
 		

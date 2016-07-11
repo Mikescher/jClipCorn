@@ -138,13 +138,13 @@ public class CCProperties {
 	public CCBoolProperty				PROP_MAINFRAME_SHOWCOVERCORNER;
 	public CCBoolProperty				PROP_VALIDATE_CHECK_SERIES_STRUCTURE;
 	public CCBoolProperty				PROP_MAINFRAME_DONT_FILTER_WATCHNEVER;
-	public CCBoolProperty				PROP_SERIES_KEEP_LASTVIEWED_PERSISTENT;
 	public CCBoolProperty				PROP_SHOW_PARTIAL_VIEWED_STATE;
 	public CCPIntProperty 				PROP_MAINFRAME_WIDTH;
 	public CCPIntProperty 				PROP_MAINFRAME_HEIGHT;
 	public CCSeasonRegexListProperty	PROP_SEASON_INDEX_REGEXPRESSIONS;
 	public CCPIntProperty 				PROP_STATISTICS_TIMELINEGRAVITY;
 	public CCVIntProperty 				PROP_DATABASE_DRIVER;
+	public CCBoolProperty				PROP_SERIES_DISPLAYED_DATE; //TODO LastViewed | FirstViewed | AverageViewed
 	
 	public boolean ARG_READONLY = false;
 	
@@ -246,7 +246,6 @@ public class CCProperties {
 		PROP_PREVSERIES_COVERBORDER				= new CCBoolProperty(CAT_SERIES, 			this,   "PROP_PREVSERIES_COVERBORDER",				true);
 		PROP_SERIES_ADDDATECALCULATION			= new CCVIntProperty(CAT_SERIES, 			this, 	"PROP_SERIES_ADDDATECALCULATION", 			1, 					va);
 		PROP_VALIDATE_CHECK_SERIES_STRUCTURE	= new CCBoolProperty(CAT_SERIES,			this,   "PROP_VALIDATE_CHECK_SERIES_STRUCTURE",		false);
-		PROP_SERIES_KEEP_LASTVIEWED_PERSISTENT  = new CCBoolProperty(CAT_SERIES,			this,   "PROP_SERIES_KEEP_LASTVIEWED_PERSISTENT",	false);
 		PROP_SHOW_PARTIAL_VIEWED_STATE			= new CCBoolProperty(CAT_SERIES,			this,   "PROP_SHOW_PARTIAL_VIEWED_STATE",			false);
 		PROP_SEASON_INDEX_REGEXPRESSIONS		= new CCSeasonRegexListProperty(CAT_SERIES, this, 	"PROP_SEASON_INDEX_REGEXPRESSIONS", 		getDefSeasonRegex());
 		

@@ -7,6 +7,8 @@ import javax.swing.ImageIcon;
 import org.jdom2.Element;
 
 import de.jClipCorn.database.CCMovieList;
+import de.jClipCorn.database.databaseElement.columnTypes.CCDateTimeList;
+import de.jClipCorn.database.databaseElement.columnTypes.CCGroupList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFSK;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieGenre;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieGenreList;
@@ -15,23 +17,29 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCMovieOnlineScore;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieScore;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieSize;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTyp;
+import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReference;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.util.CCDate;
+import de.jClipCorn.util.exceptions.CCFormatException;
+import de.jClipCorn.util.exceptions.OnlineRefFormatException;
 import de.jClipCorn.util.helper.ByteUtilies;
 import de.jClipCorn.util.helper.ImageUtilities;
 
 public abstract class CCDatabaseElement {
-	private final int localID;				// INTEGER
-	private final CCMovieTyp typ;			// TINYINT
-	private String title; 					// LEN = 128
-	private CCMovieLanguage language;		// TINYINT
-	private CCMovieGenreList genres;		// BIGINT - unsigned
-	private CCMovieOnlineScore onlinescore;	// TINYINT
-	private CCMovieFSK fsk;					// TINYINT
-	private CCMovieScore score;				// TINYINT
-	private String covername;				// LEN = 256
-	private final int seriesID;				// INTEGER
+	private final int localID;					// INTEGER
+	private final CCMovieTyp typ;				// TINYINT
+	private String title; 						// LEN = 128
+	private CCMovieLanguage language;			// TINYINT
+	private CCMovieGenreList genres;			// BIGINT - unsigned
+	private CCMovieOnlineScore onlinescore;		// TINYINT
+	private CCMovieFSK fsk;						// TINYINT
+	private CCMovieScore score;					// TINYINT
+	private String covername;					// LEN = 256
+	private final int seriesID;					// INTEGER
+	private CCOnlineReference onlineReference;	// VARCHAR
+	private CCGroupList linkedGroups;			// VARCHAR
+	private CCDateTimeList viewedHistory;       // VARCHAR
 	
 	protected final CCMovieList movielist;
 	protected boolean isUpdating = false;
@@ -42,6 +50,8 @@ public abstract class CCDatabaseElement {
 		this.seriesID = seriesID;
 		this.movielist = ml;
 		
+		onlineReference = new CCOnlineReference();
+		linkedGroups = CCGroupList.createEmpty();
 		genres = new CCMovieGenreList();
 	}
 	
@@ -187,6 +197,54 @@ public abstract class CCDatabaseElement {
 		return genres.getGenreCount();
 	}
 
+	public void setOnlineReference(String data) throws OnlineRefFormatException {
+		onlineReference = CCOnlineReference.parse(data);
+		
+		updateDB();
+	}
+
+	public CCOnlineReference getOnlineReference() {
+		return onlineReference;
+	}
+
+	public void setOnlineReference(CCOnlineReference value) {
+		onlineReference = value;
+		
+		updateDB();
+	}
+
+	public void setGroups(String data) {
+		linkedGroups = CCGroupList.parse(data);
+		
+		updateDB();
+	}
+
+	public void setGroups(CCGroupList value) {
+		linkedGroups = value;
+		
+		updateDB();
+	}
+
+	public CCGroupList getGroups() {
+		return linkedGroups;
+	}
+
+	public void setViewedHistory(String data) throws CCFormatException {
+		viewedHistory = CCDateTimeList.parse(data);
+		
+		updateDB();
+	}
+
+	public void setViewedHistory(CCDateTimeList value) {
+		viewedHistory = value;
+		
+		updateDB();
+	}
+
+	public CCDateTimeList getViewedHistory() {
+		return viewedHistory;
+	}
+
 	public void setGenre(CCMovieGenre genre, int idx) {
 		boolean succ = genres.setGenre(idx, genre);
 		
@@ -249,8 +307,11 @@ public abstract class CCDatabaseElement {
 		e.setAttribute("seriesid", seriesID + "");
 	}
 	
+	/**
+	 * @throws CCFormatException  
+	 */
 	@SuppressWarnings("nls")
-	public void parseFromXML(Element e, boolean resetAddDate, boolean resetViewed, boolean resetScore, boolean resetTags) {
+	public void parseFromXML(Element e, boolean resetAddDate, boolean resetViewed, boolean resetScore, boolean resetTags) throws CCFormatException {
 		if (e.getAttributeValue("title") != null)
 			setTitle(e.getAttributeValue("title"));
 		

@@ -16,7 +16,7 @@ import de.jClipCorn.util.helper.LookAndFeelManager;
 public class Main {
 	public final static String TITLE = "jClipCorn"; //$NON-NLS-1$
 	public final static String VERSION = "1.9.10";	//$NON-NLS-1$
-	public final static String DBVERSION = "1.7"; 	//$NON-NLS-1$
+	public final static String DBVERSION = "1.8"; 	//$NON-NLS-1$
 	
 	private final static String PROPERTIES_PATH = "jClipcorn.properties"; //$NON-NLS-1$
 	
@@ -113,3 +113,24 @@ public class Main {
 //TODO save original/alternative title (eng title)
 
 //TODO Missing Legend for statistics: "Format/Zeit" --> Use stacked line diagramm (-> continoous stacked bar diagram)
+
+//TODO Get Viewed Values from backups
+
+//TODO
+//  jClipCorn  - better cover resolution,                                                                                                    
+//  - show cover in HD (right click in coverpanel + series cover control + cbl click coverpanel)                                             
+//  - mass reverse image search for better cover versions (more HD)                                                                          
+//  - generate filename strip down chars (á -> a, ê -> e, etc)                                                                               
+//  - Format/Quality etc also for Serien (everything for a;b;a+b with toggle control?  ->  only were applicable)                             
+//  - combined timeline row                                                                                                                  
+//  - db_err: find series with non-continoous episode numbers                                                                                
+//  - remember online id (+ dialog to find them) as string with ident for website                                                            
+//      - imdb:????                                                                                                                          
+//      - amazon:???                                                                                                                         
+//      - moviepilot:???                                                                                                                     
+//      - themoviedb:???                                                                                                                     
+//  - Custom Movie Groups (SpencerHill, Statham, Disney, Marvel, DC, Tarrantino)                                                             
+//          -> then remove the big SpencerHill cycle, make to group and go back to real cycles (Zwei Supertypen in Miami, Jack Clementi, ...)
+//  - Calc Button for Series Quali                                                                                                           
+//  - Auto retrieve length button                                                                                                            
+//  - dont allow no cover add (leads to exception)                                                                                           

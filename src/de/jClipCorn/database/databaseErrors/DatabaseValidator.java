@@ -440,7 +440,7 @@ public class DatabaseValidator {
 		// Wrong LastViewedDate
 		// ###############################################
 		
-		if (episode.getLastViewed().isGreaterThan(CCDate.getCurrentDate())) {
+		if (episode.getViewedHistoryLast().isGreaterThan(CCDate.getCurrentDate())) {
 			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_WRONG_LASTVIEWEDDATE, episode));
 		}
 		
@@ -488,7 +488,7 @@ public class DatabaseValidator {
 		// LastViewed too small
 		// ###############################################
 		
-		if (!episode.getLastViewed().isMinimum() && episode.getLastViewed().isLessThan(CCDate.create(1, 6, 1900))) {
+		if (!episode.getViewedHistoryLast().isMinimum() && episode.getViewedHistoryLast().isLessThan(CCDate.create(1, 6, 1900))) {
 			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_LASTWATCHED_TOO_OLD, episode));
 		}
 		

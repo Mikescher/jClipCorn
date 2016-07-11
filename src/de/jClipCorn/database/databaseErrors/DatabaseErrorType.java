@@ -86,8 +86,6 @@ public class DatabaseErrorType {
 			return true;
 		} else if (equals(ERROR_IMPOSSIBLE_WATCH_LATER)) {
 			return true;
-		} else if (equals(ERROR_LASTWATCHED_TOO_OLD)) {
-			return true;
 		} else if (equals(ERROR_IMPOSSIBLE_WATCH_NEVER)) {
 			return true;
 		} else if (equals(ERROR_DUPLICATE_GENRE)) {

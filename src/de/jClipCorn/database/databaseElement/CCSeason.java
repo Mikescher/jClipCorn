@@ -20,6 +20,7 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTags;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.CCDate;
 import de.jClipCorn.util.LargeMD5Calculator;
+import de.jClipCorn.util.exceptions.CCFormatException;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.ByteUtilies;
 import de.jClipCorn.util.helper.ImageUtilities;
@@ -415,7 +416,7 @@ public class CCSeason {
 	}
 	
 	@SuppressWarnings("nls")
-	public void parseFromXML(Element e, boolean resetAddDate, boolean resetViewed, boolean resetTags) {
+	public void parseFromXML(Element e, boolean resetAddDate, boolean resetViewed, boolean resetTags) throws CCFormatException {
 		beginUpdating();
 		
 		if (e.getAttributeValue("title") != null)

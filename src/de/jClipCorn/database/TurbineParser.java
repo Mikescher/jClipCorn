@@ -112,10 +112,6 @@ public class TurbineParser {
 		}
 	}
 	
-	private String getXMLAttrStr(Element e, String attr, String def) {
-		return e.getAttributeValue(attr, def);
-	}
-	
 	private String getXMLAttrStr(Element e, String attr) throws XMLFormatException {
 		String s = e.getAttributeValue(attr, (String)null);
 		

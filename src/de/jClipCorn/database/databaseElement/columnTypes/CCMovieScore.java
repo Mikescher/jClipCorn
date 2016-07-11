@@ -93,5 +93,4 @@ public enum CCMovieScore {
 			return null;
 		}
 	}
-	
 }

@@ -2,10 +2,15 @@ package de.jClipCorn.util;
 
 import java.util.Calendar;
 
-public class CCTime {
-	public final static String STRINGREP_SHORT = "HH:MM"; //$NON-NLS-1$
+import de.jClipCorn.util.exceptions.TimeFormatException;
+
+public class CCTime implements Comparable<CCTime> {
+	public static final CCTime MIDNIGHT = new CCTime(0, 0, 0);
+
+	public final static String STRINGREP_SHORT  = "HH:MM"; //$NON-NLS-1$
 	public final static String STRINGREP_SIMPLE = "HH:MM:SS"; //$NON-NLS-1$
-	public final static String STRINGREP_AMPM = "PP:MM:SS A"; //$NON-NLS-1$
+	public final static String STRINGREP_SQL    = "HH:MM:SS"; //$NON-NLS-1$
+	public final static String STRINGREP_AMPM   = "PP:MM:SS A"; //$NON-NLS-1$
 	
 	private int hour;
 	private int min;
@@ -297,9 +302,28 @@ public class CCTime {
 		
 		return set(th, tm, ts);
 	}
+	
+	public static CCTime createFromSQL(String sqlRep) throws TimeFormatException {
+		if (sqlRep.length() != 8) throw new TimeFormatException(sqlRep);
+		
+		int h = (sqlRep.charAt(0)-'0') * 10 +   // h
+				(sqlRep.charAt(1)-'0') * 1;     // h
+		                                        // :
+		int m = (sqlRep.charAt(3)-'0') * 10 +   // M
+				(sqlRep.charAt(4)-'0') * 1;     // M
+                                                // :
+		int s = (sqlRep.charAt(6)-'0') * 10 +   // s
+				(sqlRep.charAt(7)-'0') * 1;     // s
+		
+		return new CCTime(h, m, s);
+	}
 
 	public static CCTime getCurrentTime() {
 		return new CCTime();
+	}
+	
+	public String getSQLStringRepresentation() {
+		return getStringRepresentation(STRINGREP_SQL);
 	}
 	
 	public String getSimpleStringRepresentation() {
@@ -324,5 +348,56 @@ public class CCTime {
 
 	public boolean isAM() {
 		return hour <= 12;
+	}
+
+	@Override
+	public int compareTo(CCTime o) {
+		return compare(this, o);
+	}
+
+	public static int compare(CCTime o1, CCTime o2) {
+		return o1.compare(o2);
+	}
+	
+	public int compare(CCTime other) {
+		if (equals(other)) {
+			return 0;
+		} else if (isGreaterThan(other)) {
+			return 1;
+		} else {
+			return -1;
+		}
+	}
+	
+	@Override
+	public boolean equals(Object other) {
+		return (other instanceof CCTime) && ((CCTime)other).getSeconds() == getSeconds() && ((CCTime)other).getMinutes() == getMinutes() && ((CCTime)other).getHours() == getHours();
+	}
+	
+	@Override
+	public int hashCode() {
+		return (((hour << 6) + min) << 6) + sec;
+	}
+	
+	public boolean isGreaterThan(CCTime other) {
+		if (getHours() < other.getHours()) {
+			return false;
+		} else if (getHours() > other.getHours()) {
+			return true;
+		} else {
+			if (getMinutes() < other.getMinutes()) {
+				return false;
+			} else if (getMinutes() > other.getMinutes()) {
+				return true;
+			} else {
+				if (getSeconds() < other.getSeconds()) {
+					return false;
+				} else if (getSeconds() > other.getSeconds()) {
+					return true;
+				} else {
+					return false; // THEY ARE F*** EQUAL
+				}
+			}
+		}
 	}
 }

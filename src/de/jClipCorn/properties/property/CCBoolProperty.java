@@ -10,7 +10,7 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.CCPropertyCategory;
-import de.jClipCorn.properties.exceptions.BooleanFormatException;
+import de.jClipCorn.util.exceptions.BooleanFormatException;
 
 public class CCBoolProperty extends CCProperty<Boolean> {
 	public final static String TYPE_BOOL_TRUE = "true"; //$NON-NLS-1$
@@ -83,7 +83,7 @@ public class CCBoolProperty extends CCProperty<Boolean> {
 		} else if (TYPE_BOOL_FALSE.equals(b)) {
 			return false;
 		} else {
-			throw new BooleanFormatException();
+			throw new BooleanFormatException(b);
 		}
 	}
 

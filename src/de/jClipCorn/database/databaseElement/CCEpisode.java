@@ -6,6 +6,7 @@ import java.text.DecimalFormat;
 
 import org.jdom2.Element;
 
+import de.jClipCorn.database.databaseElement.columnTypes.CCDateTimeList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFormat;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieQuality;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieSize;
@@ -15,8 +16,10 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.CCDate;
+import de.jClipCorn.util.CCDateTime;
 import de.jClipCorn.util.LargeMD5Calculator;
 import de.jClipCorn.util.MoviePlayer;
+import de.jClipCorn.util.exceptions.CCFormatException;
 import de.jClipCorn.util.formatter.PathFormatter;
 
 public class CCEpisode {
@@ -33,7 +36,7 @@ public class CCEpisode {
 	private CCMovieSize filesize;
 	private String part;
 	private CCDate addDate;
-	private CCDate lastViewed; // NOT SET = 1.1.1900
+	private CCDateTimeList viewedHistory;
 	
 	private boolean isUpdating = false;
 	
@@ -44,7 +47,7 @@ public class CCEpisode {
 		filesize = new CCMovieSize();
 		tags = new CCMovieTags();
 		addDate = CCDate.getMinimumDate();
-		lastViewed = CCDate.getMinimumDate();
+		viewedHistory = CCDateTimeList.createEmpty();
 	}
 
 	public void beginUpdating() {
@@ -84,7 +87,7 @@ public class CCEpisode {
 			this.viewed = viewed;
 
 			if (! viewed) {
-				resetLastViewed();
+				fullResetLastViewed();
 			}
 
 			if (viewed && getTag(CCMovieTags.TAG_WATCH_LATER) && CCProperties.getInstance().PROP_MAINFRAME_AUTOMATICRESETWATCHLATER.getValue()) {
@@ -93,6 +96,18 @@ public class CCEpisode {
 
 			updateDB();
 		}
+	}
+	
+	public void addToViewedHistory(CCDateTime datetime) {
+		this.viewedHistory = this.viewedHistory.add(datetime);
+		
+		updateDB();
+	}
+	
+	public void fullResetLastViewed() {
+		this.viewedHistory = CCDateTimeList.createEmpty();
+		
+		updateDB();
 	}
 	
 	public void setQuality(int quality) {
@@ -153,20 +168,14 @@ public class CCEpisode {
 		updateDB();
 	}
 
-	public void setLastViewed(CCDate date) {
-		this.lastViewed = date;
+	public void setViewedHistory(CCDateTimeList datelist) {
+		this.viewedHistory = datelist;
 		
 		updateDB();
 	}
-	
-	public void resetLastViewed() {
-		this.lastViewed = CCDate.getMinimumDate();
-		
-		updateDB();
-	}
-	
-	public void setLastViewed(Date sqldate) {
-		this.lastViewed = CCDate.create(sqldate);
+
+	public void setViewedHistory(String datelist) throws CCFormatException {
+		this.viewedHistory = CCDateTimeList.parse(datelist);
 		
 		updateDB();
 	}
@@ -218,7 +227,7 @@ public class CCEpisode {
 		tags.clear();
 		part = ""; //$NON-NLS-1$
 		addDate = CCDate.getMinimumDate();
-		lastViewed = CCDate.getMinimumDate();
+		viewedHistory = CCDateTimeList.createEmpty();
 		
 		if (updateDB) {
 			updateDB();
@@ -239,10 +248,6 @@ public class CCEpisode {
 
 	public boolean isViewed() {
 		return viewed;
-	}
-
-	public boolean isViewedAndHasLastViewed() {
-		return viewed && !lastViewed.isMinimum();
 	}
 
 	public CCMovieQuality getQuality() {
@@ -273,8 +278,16 @@ public class CCEpisode {
 		return tags;
 	}
 
-	public CCDate getLastViewed() {
-		return lastViewed;
+	public CCDateTimeList getViewedHistory() {
+		return viewedHistory;
+	}
+
+	public CCDate getViewedHistoryLast() {
+		return viewedHistory.getLast();
+	}
+
+	public CCDate getViewedHistoryFirst() {
+		return viewedHistory.getFirst();
 	}
 
 	public CCDate getAddDate() {
@@ -285,19 +298,9 @@ public class CCEpisode {
 		MoviePlayer.play(this);
 		
 		if (updateEpisodeState) {
-			if (CCProperties.getInstance().PROP_SERIES_KEEP_LASTVIEWED_PERSISTENT.getValue()) {
-				if (isViewedAndHasLastViewed()) {
-					// Don't update series - keep viewed persistent
-				} else {
-					setViewed(true);
-					
-					setLastViewed(CCDate.getCurrentDate());
-				}
-			} else {
-				setViewed(true);
-				
-				setLastViewed(CCDate.getCurrentDate());
-			}
+			setViewed(true);
+			
+			addToViewedHistory(CCDateTime.getCurrentDateTime());
 		}
 	}
 	
@@ -330,7 +333,7 @@ public class CCEpisode {
 		e.setAttribute("episodenumber", episodeNumber + "");
 		e.setAttribute("filesize", filesize.getBytes() + "");
 		e.setAttribute("format", format.asInt() + "");
-		e.setAttribute("lastviewed", lastViewed.getSimpleStringRepresentation());
+		e.setAttribute("history", viewedHistory.toSerializationString());
 		e.setAttribute("length", length + "");
 		e.setAttribute("part", part);
 		e.setAttribute("quality", quality.asInt() + "");
@@ -342,7 +345,7 @@ public class CCEpisode {
 	}
 	
 	@SuppressWarnings("nls")
-	public void parseFromXML(Element e, boolean resetAddDate, boolean resetViewed, boolean resetTags) {
+	public void parseFromXML(Element e, boolean resetAddDate, boolean resetViewed, boolean resetTags) throws CCFormatException {
 		beginUpdating();
 		
 		if (e.getAttributeValue("title") != null)
@@ -371,8 +374,10 @@ public class CCEpisode {
 		if (e.getAttributeValue("format") != null)
 			setFormat(Integer.parseInt(e.getAttributeValue("format")));
 		
-		if (e.getAttributeValue("lastviewed") != null) {
-			setLastViewed(CCDate.parse(e.getAttributeValue("lastviewed"), "D.M.Y"));
+		if (e.getAttributeValue("history") != null) {
+			setViewedHistory(CCDateTimeList.parse(e.getAttributeValue("history")));
+		} else if (e.getAttributeValue("lastviewed") != null) {
+			setViewedHistory(CCDateTimeList.create(CCDate.parse(e.getAttributeValue("lastviewed"), "D.M.Y"))); // backwards compatibility
 		}
 		
 		if (e.getAttributeValue("length") != null)

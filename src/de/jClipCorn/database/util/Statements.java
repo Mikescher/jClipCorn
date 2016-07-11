@@ -126,6 +126,7 @@ public class Statements {
 		ih.addField(CCDatabase.TAB_MAIN_COLUMN_LOCALID, "?");
 		ih.addField(CCDatabase.TAB_MAIN_COLUMN_NAME, "?");
 		ih.addField(CCDatabase.TAB_MAIN_COLUMN_VIEWED, "?");
+		ih.addField(CCDatabase.TAB_MAIN_COLUMN_VIEWEDHISTORY, "?");
 		ih.addField(CCDatabase.TAB_MAIN_COLUMN_ZYKLUS, "?");
 		ih.addField(CCDatabase.TAB_MAIN_COLUMN_ZYKLUSNUMBER, "?");
 		ih.addField(CCDatabase.TAB_MAIN_COLUMN_QUALITY, "?");
@@ -137,6 +138,8 @@ public class Statements {
 		ih.addField(CCDatabase.TAB_MAIN_COLUMN_FSK, "?");
 		ih.addField(CCDatabase.TAB_MAIN_COLUMN_FORMAT, "?");
 		ih.addField(CCDatabase.TAB_MAIN_COLUMN_MOVIEYEAR, "?");
+		ih.addField(CCDatabase.TAB_MAIN_COLUMN_ONLINEREF, "?");
+		ih.addField(CCDatabase.TAB_MAIN_COLUMN_GROUPS, "?");
 		ih.addField(CCDatabase.TAB_MAIN_COLUMN_FILESIZE, "?");
 		ih.addField(CCDatabase.TAB_MAIN_COLUMN_TAGS, "?");
 		ih.addField(CCDatabase.TAB_MAIN_COLUMN_PART_1, "?");
@@ -175,13 +178,13 @@ public class Statements {
 		ih.addField(CCDatabase.TAB_EPISODES_COLUMN_EPISODE, "?");
 		ih.addField(CCDatabase.TAB_EPISODES_COLUMN_NAME, "?");
 		ih.addField(CCDatabase.TAB_EPISODES_COLUMN_VIEWED, "?");
+		ih.addField(CCDatabase.TAB_EPISODES_COLUMN_VIEWEDHISTORY, "?");
 		ih.addField(CCDatabase.TAB_EPISODES_COLUMN_QUALITY, "?");
 		ih.addField(CCDatabase.TAB_EPISODES_COLUMN_LENGTH, "?");
 		ih.addField(CCDatabase.TAB_EPISODES_COLUMN_FORMAT, "?");
 		ih.addField(CCDatabase.TAB_EPISODES_COLUMN_FILESIZE, "?");
 		ih.addField(CCDatabase.TAB_EPISODES_COLUMN_PART_1, "?");
 		ih.addField(CCDatabase.TAB_EPISODES_COLUMN_TAGS, "?");
-		ih.addField(CCDatabase.TAB_EPISODES_COLUMN_LASTVIEWED, "?");
 		ih.addField(CCDatabase.TAB_EPISODES_COLUMN_ADDDATE, "?");
 		
 		addEmptyEpisodeTabStatement = d.createPreparedStatement(ih.get());
@@ -201,6 +204,7 @@ public class Statements {
 		
 		uh.addField(CCDatabase.TAB_MAIN_COLUMN_NAME, "?");
 		uh.addField(CCDatabase.TAB_MAIN_COLUMN_VIEWED, "?");
+		uh.addField(CCDatabase.TAB_MAIN_COLUMN_VIEWEDHISTORY, "?");
 		uh.addField(CCDatabase.TAB_MAIN_COLUMN_ZYKLUS, "?");
 		uh.addField(CCDatabase.TAB_MAIN_COLUMN_ZYKLUSNUMBER, "?");
 		uh.addField(CCDatabase.TAB_MAIN_COLUMN_QUALITY, "?");
@@ -212,6 +216,8 @@ public class Statements {
 		uh.addField(CCDatabase.TAB_MAIN_COLUMN_FSK, "?");
 		uh.addField(CCDatabase.TAB_MAIN_COLUMN_FORMAT, "?");
 		uh.addField(CCDatabase.TAB_MAIN_COLUMN_MOVIEYEAR, "?");
+		uh.addField(CCDatabase.TAB_MAIN_COLUMN_ONLINEREF, "?");
+		uh.addField(CCDatabase.TAB_MAIN_COLUMN_GROUPS, "?");
 		uh.addField(CCDatabase.TAB_MAIN_COLUMN_FILESIZE, "?");
 		uh.addField(CCDatabase.TAB_MAIN_COLUMN_TAGS, "?");
 		uh.addField(CCDatabase.TAB_MAIN_COLUMN_PART_1, "?");
@@ -261,18 +267,18 @@ public class Statements {
 	private static void intialize_updatesEpisodeTab(CCDatabase d) throws SQLException {
 		SQLUpdateHelper uh = new SQLUpdateHelper(CCDatabase.TAB_EPISODES, new DoubleString(CCDatabase.TAB_EPISODES_COLUMN_LOCALID, "?"));
 		
-		uh.addField(CCDatabase.TAB_EPISODES_COLUMN_SEASONID, "?");
-		uh.addField(CCDatabase.TAB_EPISODES_COLUMN_EPISODE, "?");
-		uh.addField(CCDatabase.TAB_EPISODES_COLUMN_NAME, "?");
-		uh.addField(CCDatabase.TAB_EPISODES_COLUMN_VIEWED, "?");
-		uh.addField(CCDatabase.TAB_EPISODES_COLUMN_QUALITY, "?");
-		uh.addField(CCDatabase.TAB_EPISODES_COLUMN_LENGTH, "?");
-		uh.addField(CCDatabase.TAB_EPISODES_COLUMN_FORMAT, "?");
-		uh.addField(CCDatabase.TAB_EPISODES_COLUMN_FILESIZE, "?");
-		uh.addField(CCDatabase.TAB_EPISODES_COLUMN_PART_1, "?");
-		uh.addField(CCDatabase.TAB_EPISODES_COLUMN_TAGS, "?");
-		uh.addField(CCDatabase.TAB_EPISODES_COLUMN_LASTVIEWED, "?");
-		uh.addField(CCDatabase.TAB_EPISODES_COLUMN_ADDDATE, "?");
+		uh.addField(CCDatabase.TAB_EPISODES_COLUMN_SEASONID, "?");         // TAB_EPISODES_COLUMN_SEASONID
+		uh.addField(CCDatabase.TAB_EPISODES_COLUMN_EPISODE, "?");          // TAB_EPISODES_COLUMN_EPISODE
+		uh.addField(CCDatabase.TAB_EPISODES_COLUMN_NAME, "?");             // TAB_EPISODES_COLUMN_NAME
+		uh.addField(CCDatabase.TAB_EPISODES_COLUMN_VIEWED, "?");           // TAB_EPISODES_COLUMN_VIEWED
+		uh.addField(CCDatabase.TAB_EPISODES_COLUMN_VIEWEDHISTORY, "?");    // TAB_EPISODES_COLUMN_VIEWEDHISTORY
+		uh.addField(CCDatabase.TAB_EPISODES_COLUMN_QUALITY, "?");          // TAB_EPISODES_COLUMN_QUALITY
+		uh.addField(CCDatabase.TAB_EPISODES_COLUMN_LENGTH, "?");           // TAB_EPISODES_COLUMN_LENGTH
+		uh.addField(CCDatabase.TAB_EPISODES_COLUMN_FORMAT, "?");           // TAB_EPISODES_COLUMN_FORMAT
+		uh.addField(CCDatabase.TAB_EPISODES_COLUMN_FILESIZE, "?");         // TAB_EPISODES_COLUMN_FILESIZE
+		uh.addField(CCDatabase.TAB_EPISODES_COLUMN_PART_1, "?");           // TAB_EPISODES_COLUMN_PART_1
+		uh.addField(CCDatabase.TAB_EPISODES_COLUMN_TAGS, "?");             // TAB_EPISODES_COLUMN_TAGS
+		uh.addField(CCDatabase.TAB_EPISODES_COLUMN_ADDDATE, "?");          // TAB_EPISODES_COLUMN_ADDDATE
 		
 		updateEpisodeTabStatement = d.createPreparedStatement(uh.get());
 	}

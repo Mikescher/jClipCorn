@@ -32,6 +32,7 @@ import de.jClipCorn.gui.frames.mainFrame.MainFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.properties.CCProperties;
+import de.jClipCorn.util.exceptions.CCFormatException;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.helper.TextFileUtils;
@@ -329,7 +330,7 @@ public class ExportHelper {
 		return null;
 	}
 	
-	public static void importSingleElement(CCMovieList movielist, String xmlcontent, boolean resetAddDate, boolean resetViewed, boolean resetScore, boolean resetTags) {
+	public static void importSingleElement(CCMovieList movielist, String xmlcontent, boolean resetAddDate, boolean resetViewed, boolean resetScore, boolean resetTags) throws CCFormatException {
 		Element value = getFirstElementOfExport(xmlcontent);
 		
 		if (value != null) {
@@ -382,7 +383,7 @@ public class ExportHelper {
 				amf.parseFromXML(value, resetDate, resetViewed, resetScore);
 				amf.setVisible(true);
 			}
-		} catch (IOException e) {
+		} catch (IOException | CCFormatException e) {
 			CCLog.addError(LocaleBundle.getString("LogMessage.FormatErrorInExport"), e); //$NON-NLS-1$
 		}
 	}

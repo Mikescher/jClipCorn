@@ -8,6 +8,10 @@ public class DoubleString {
 		this.s1 = s1;
 		this.s2 = s2;
 	}
+	
+	public static DoubleString createPrepared(String s1) {
+		return new DoubleString(s1, "?"); //$NON-NLS-1$
+	}
 
 	public String get1() {
 		return s1;

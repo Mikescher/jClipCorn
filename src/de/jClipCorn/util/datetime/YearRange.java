@@ -1,4 +1,4 @@
-package de.jClipCorn.util;
+package de.jClipCorn.util.datetime;
 
 public class YearRange {
 	private int year1;

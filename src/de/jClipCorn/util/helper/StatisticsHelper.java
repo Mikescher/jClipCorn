@@ -24,8 +24,8 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCMovieQuality;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieScore;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieSize;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTags;
-import de.jClipCorn.util.CCDate;
-import de.jClipCorn.util.CCDatespan;
+import de.jClipCorn.util.datetime.CCDate;
+import de.jClipCorn.util.datetime.CCDatespan;
 
 public class StatisticsHelper {
 	public static int[] CHART_COLORS = {0x4D4D4D, 0x5DA5DA, 0xFAA43A, 0x60BD68, 0xF17CB0, 0xB2912F, 0xB276B2, 0x000080, 0xF15854};

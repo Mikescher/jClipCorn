@@ -16,7 +16,7 @@ import org.jfree.data.xy.XYDataset;
 
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.util.CCDate;
+import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.helper.StatisticsHelper;
 
 public class StatisticsAddDateChart extends StatisticsChart {

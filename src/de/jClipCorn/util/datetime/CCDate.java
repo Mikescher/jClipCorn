@@ -1,17 +1,25 @@
-package de.jClipCorn.util;
+package de.jClipCorn.util.datetime;
 
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashSet;
+import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
 
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.exceptions.DateFormatException;
+import de.jClipCorn.util.parser.StringSpecParser;
+import de.jClipCorn.util.parser.StringSpecSupplier;
 
-public final class CCDate implements Comparable<CCDate> {
-	public final static String STRINGREP_SIMPLE 	= "DD.MM.YYYY"; //$NON-NLS-1$
-	public final static String STRINGREP_SIMPLESHORT = "DD.MM.YY"; //$NON-NLS-1$
-	public final static String STRINGREP_LOCAL 		= "DD.N.YYYY"; //$NON-NLS-1$
+public final class CCDate implements Comparable<CCDate>, StringSpecSupplier {
+	public static CCDate STATIC_SUPPLIER = new CCDate(6, 8, 1991);
+	
+	public final static String STRINGREP_SIMPLE 	= "dd.MM.YYYY"; //$NON-NLS-1$
+	public final static String STRINGREP_SIMPLESHORT = "dd.MM.YY"; //$NON-NLS-1$
+	public final static String STRINGREP_LOCAL 		= "dd.MMMM.YYYY"; //$NON-NLS-1$
 	public final static String STRINGREP_EXTENDED 	= LocaleBundle.getString("CCDate.STRINGREP_EXTENDED"); //$NON-NLS-1$
 	public final static String STRINGREP_SQL 		= "YYYY-MM-DD"; //$NON-NLS-1$
 	
@@ -22,6 +30,9 @@ public final class CCDate implements Comparable<CCDate> {
 	
 	private static final CCDate DATE_MIN = new CCDate(1, 1, YEAR_MIN);
 	private static final CCDate DATE_MAX = new CCDate(31, 12, YEAR_MAX);
+	public  static final String MIN_SQL = DATE_MIN.getSQLStringRepresentation();
+	
+	private final static HashSet<Character> stringSpecifier = new HashSet<>(Arrays.asList('y', 'M', 'd'));
 	
 	private static final String[] MONTHNAMES = {
 		LocaleBundle.getString("CCDate.Month0"), //$NON-NLS-1$
@@ -127,7 +138,7 @@ public final class CCDate implements Comparable<CCDate> {
 		return isLeapYear(year);
 	}
 	
-	private int getWeekdayInt() {
+	public int getWeekdayInt() {
 	    int wkd = (((year - ((month<3)?1:0)) + (year - ((month<3)?1:0))/4 - (year - ((month<3)?1:0))/100 + (year - ((month<3)?1:0))/400 + MONTHVALUES[month - 1] + day) % 7);
 	    
 	    return (wkd < 1) ? (wkd+7) : (wkd);
@@ -141,168 +152,45 @@ public final class CCDate implements Comparable<CCDate> {
 		return CCWeekday.find(getWeekdayInt());
 	}
 	
-	/**
-	 * @param fmt Format STyle
-	 * YYYY	=> YEAR
-	 * MMM 	=> MONTH (005)
-	 * MM  	=> MONTH (05)
-	 * M   	=> MONTH (5)
-	 * D	=> DAY
-	 * N	=> MONTHNAME
-	 * W	=> WEEKDAY
-	 * @return
-	 */
 	public String getStringRepresentation(String fmt) {
-		StringBuilder repbuilder = new StringBuilder();
-		char actualCounter = '-';
-		int counter = 0;
-		char c;
+		return StringSpecParser.build(fmt, this);
+	}
+	
+	@SuppressWarnings("nls")
+	@Override
+	public String resolveStringSpecifier(char c, int count) {
+		if (c == 'y') 
+			return String.format("%0" + count + "d", year);
 		
-		for (int p = 0;p<fmt.length();p++) {
-			c = fmt.charAt(p);
-			if (c == 'Y' || c == 'M' || c == 'D' || c == 'N' || c == 'W') {
-				if (counter == 0 || actualCounter == c) {
-					counter++;
-					actualCounter = c;
-				} else {
-					String tmpformat = ""; //$NON-NLS-1$
-					
-					if (actualCounter == 'Y') {
-						tmpformat = String.format("%0" + counter + "d", year); //$NON-NLS-1$ //$NON-NLS-2$
-					} else if (actualCounter == 'M') {
-						tmpformat = String.format("%0" + counter + "d", month); //$NON-NLS-1$ //$NON-NLS-2$
-					} else if (actualCounter == 'D') {
-						tmpformat = String.format("%0" + counter + "d", day); //$NON-NLS-1$ //$NON-NLS-2$
-					} else if (actualCounter == 'N') {
-						tmpformat = getMonthName();
-					} else if (actualCounter == 'W') {
-						tmpformat = getWeekday();
-					}
-					
-					repbuilder.append(tmpformat);
-					
-					counter = 1;
-					actualCounter = c;
-				}
-			} else {
-				if (counter > 0) {
-					String tmpformat = ""; //$NON-NLS-1$
-					
-					if (actualCounter == 'Y') {
-						tmpformat = String.format("%0" + counter + "d", year); //$NON-NLS-1$ //$NON-NLS-2$
-					} else if (actualCounter == 'M') {
-						tmpformat = String.format("%0" + counter + "d", month); //$NON-NLS-1$ //$NON-NLS-2$
-					} else if (actualCounter == 'D') {
-						tmpformat = String.format("%0" + counter + "d", day); //$NON-NLS-1$ //$NON-NLS-2$
-					} else if (actualCounter == 'N') {
-						tmpformat = getMonthName();
-					} else if (actualCounter == 'W') {
-						tmpformat = getWeekday();
-					}
-					
-					repbuilder.append(tmpformat);
-				}
-				repbuilder.append(c);
-				counter = 0;
-				actualCounter = '-';
-			}
+		if (c == 'M') {
+			if (count == 4) return getMonthName();
+
+			return String.format("%0" + count + "d", month);
 		}
 		
-		if (counter > 0) {
-			String tmpformat = ""; //$NON-NLS-1$
-			
-			if (actualCounter == 'Y') {
-				tmpformat = String.format("%0" + counter + "d", year); //$NON-NLS-1$ //$NON-NLS-2$
-			} else if (actualCounter == 'M') {
-				tmpformat = String.format("%0" + counter + "d", month); //$NON-NLS-1$ //$NON-NLS-2$
-			} else if (actualCounter == 'D') {
-				tmpformat = String.format("%0" + counter + "d", day); //$NON-NLS-1$ //$NON-NLS-2$
-			} else if (actualCounter == 'N') {
-				tmpformat = getMonthName();
-			} else if (actualCounter == 'W') {
-				tmpformat = getWeekday();
-			}
-			
-			repbuilder.append(tmpformat);
+		if (c == 'd') {
+			if (count == 4) return getWeekday();
+
+			return String.format("%0" + count + "d", day);
 		}
 		
-		return repbuilder.toString();
+		return null;
 	}
-	
-	public String getSimpleStringRepresentation() {
-		return getStringRepresentation(STRINGREP_SIMPLE);
+
+	@Override
+	public Map<Character, Integer> getSpecDefaults() {
+		Map<Character, Integer> d = new Hashtable<>();
+		d.put('y', -1);
+		d.put('M', 1);
+		d.put('d', 1);
+		return d;
 	}
-	
-	public String getLocalStringRepresentation() {
-		return getStringRepresentation(STRINGREP_LOCAL);
-	}
-	
-	public String getExtendedStringRepresentation() {
-		return getStringRepresentation(STRINGREP_EXTENDED);
-	}
-	
-	public String getSQLStringRepresentation() {
-		return getStringRepresentation(STRINGREP_SQL);
-	}
-	
-	public static boolean testparse(String rawData, String fmt) {
-		return parse(rawData, fmt) != null;
-	}
-	
-	/**
-	 * @param rawData parseable DATA
-	 * @param fmt Format of rawData 
-	 * eg "D/M/Y"
-	 * D	=> DAY
-	 * M	=> MONTH
-	 * Y	=> YEAR
-	 * @return the parsed Date (must not be valid)
-	 * or NULL
-	 */
-	public static CCDate parse(String rawData, String fmt) {
-		char c;
-		int rp = 0;
-		int td = 1;
-		int tm = 1;
-		int ty = -1;
-		
-		rawData += '\0';
-		
-		for (int p = 0;p<fmt.length();p++) {
-			c = fmt.charAt(p);
-			while((p+1)<fmt.length() && fmt.charAt(p+1) == fmt.charAt(p) && (c == 'D' || c == 'M' || c == 'Y')) {
-				p++;
-			}
-			
-			if (c == 'D' || c == 'M' || c == 'Y') {
-				String drep = ""; //$NON-NLS-1$
-				
-				if (Character.isDigit(rawData.charAt(rp))) {
-					drep += rawData.charAt(rp);
-					rp++;
-				} else {
-					return null;
-				}
-				
-				for (; Character.isDigit(rawData.charAt(rp)) ; rp++) {
-					drep += rawData.charAt(rp);
-				}
-				
-				if (c == 'D') {
-					td = Integer.parseInt(drep);
-				} else if (c == 'M') {
-					tm = Integer.parseInt(drep);	
-				} else if (c == 'Y') {
-					ty = Integer.parseInt(drep);	
-				}
-			}  else {
-				if (rawData.charAt(rp) == c) {
-					rp++;
-				} else {
-					return null;
-				}
-			}
-		}
+
+	@Override
+	public Object createFromParsedData(Map<Character, Integer> values) {
+		int td = values.get('d');
+		int tm = values.get('M');
+		int ty = values.get('y');
 		
 		if (ty > 0 && ty < 100) { // Jahr with only 2 Letters e.g. '94
 			int currYear = getCurrentDate().getYear();
@@ -336,7 +224,36 @@ public final class CCDate implements Comparable<CCDate> {
 			}
 		}
 		
-		return create(td, tm, ty);
+		return CCDate.create(td, tm, ty);
+	}
+
+	@Override
+	public HashSet<Character> getAllStringSpecifier() {
+		return stringSpecifier; // { 'y', 'M', 'd' }
+	}
+	
+	public String getSimpleStringRepresentation() {
+		return getStringRepresentation(STRINGREP_SIMPLE);
+	}
+	
+	public String getLocalStringRepresentation() {
+		return getStringRepresentation(STRINGREP_LOCAL);
+	}
+	
+	public String getExtendedStringRepresentation() {
+		return getStringRepresentation(STRINGREP_EXTENDED);
+	}
+	
+	public String getSQLStringRepresentation() {
+		return getStringRepresentation(STRINGREP_SQL);
+	}
+	
+	public static boolean testparse(String rawData, String fmt) {
+		return parse(rawData, fmt) != null;
+	}
+	
+	public static CCDate parse(String rawData, String fmt) {
+		return (CCDate)StringSpecParser.parse(rawData, fmt, CCDate.STATIC_SUPPLIER);
 	}
 	
 	public CCDate getAdd(int d, int m, int y) {
@@ -558,60 +475,6 @@ public final class CCDate implements Comparable<CCDate> {
 				}
 			}
 		}
-	}
-	
-	public static boolean test() {
-		boolean succ = true;
-		
-		CCDate tdate = getMinimumDate();
-		succ &= tdate.getDay() == 1 && tdate.getMonth() == 1 && tdate.getYear() == 1900;
-		
-		tdate = tdate.getAddDay(1);
-		succ &= tdate.getDay() == 2 && tdate.getMonth() == 1 && tdate.getYear() == 1900;
-		
-		tdate = tdate.getSubDay(1);
-		succ &= tdate.getDay() == 1 && tdate.getMonth() == 1 && tdate.getYear() == 1900;
-		
-		tdate = tdate.getAddMonth(1);
-		succ &= tdate.getDay() == 1 && tdate.getMonth() == 2 && tdate.getYear() == 1900;
-		
-		tdate = tdate.getSubMonth(1);
-		succ &= tdate.getDay() == 1 && tdate.getMonth() == 1 && tdate.getYear() == 1900;
-		
-		tdate = tdate.getAddYear(1);
-		succ &= tdate.getDay() == 1 && tdate.getMonth() == 1 && tdate.getYear() == 1901;
-		
-		tdate = tdate.getSubYear(1);
-		succ &= tdate.getDay() == 1 && tdate.getMonth() == 1 && tdate.getYear() == 1900;
-		
-		tdate = tdate.getAddDay(365);
-		succ &= tdate.getDay() == 1 && tdate.getMonth() == 1 && tdate.getYear() == 1901;
-		
-		tdate = tdate.getAddDay(150);
-		succ &= tdate.getDay() == 31 && tdate.getMonth() == 5 && tdate.getYear() == 1901;
-		succ &= tdate.getWeekdayInt() == 5;
-		
-		tdate = tdate.getAddDay(1096);
-		succ &= tdate.getDay() == 31 && tdate.getMonth() == 5 && tdate.getYear() == 1904;
-		succ &= tdate.isLeapYear();
-		
-		tdate = tdate.getAdd(215, 12, 94);
-		succ &= tdate.getDay() == 1 && tdate.getMonth() == 1 && tdate.getYear() == 2000;
-		
-		tdate = tdate.getSetDay(2);
-		succ &= tdate.getDay() == 2 && tdate.getMonth() == 1 && tdate.getYear() == 2000;
-		succ &= tdate.getWeekdayInt() == 7;
-		
-		tdate = tdate.getAddDay(1);
-		succ &= tdate.getDay() == 3 && tdate.getMonth() == 1 && tdate.getYear() == 2000;
-		succ &= tdate.getWeekdayInt() == 1;
-		succ &= tdate.isLeapYear();
-		
-		tdate = tdate.getAddMonth(12);
-		succ &= tdate.getDay() == 3 && tdate.getMonth() == 1 && tdate.getYear() == 2001;
-		succ &= ! tdate.isLeapYear();
-		
-		return succ;
 	}
 	
 	public boolean isEquals(CCDate other) {

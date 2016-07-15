@@ -15,10 +15,10 @@ import de.jClipCorn.database.util.ExtendedViewedState;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.properties.CCProperties;
-import de.jClipCorn.util.CCDate;
-import de.jClipCorn.util.CCDateTime;
 import de.jClipCorn.util.LargeMD5Calculator;
 import de.jClipCorn.util.MoviePlayer;
+import de.jClipCorn.util.datetime.CCDate;
+import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.exceptions.CCFormatException;
 import de.jClipCorn.util.formatter.PathFormatter;
 

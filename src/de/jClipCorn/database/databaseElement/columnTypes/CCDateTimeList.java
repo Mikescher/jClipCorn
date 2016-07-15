@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import de.jClipCorn.util.CCDate;
-import de.jClipCorn.util.CCDateTime;
+import de.jClipCorn.util.datetime.CCDate;
+import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.exceptions.CCFormatException;
 
 @SuppressWarnings("nls")

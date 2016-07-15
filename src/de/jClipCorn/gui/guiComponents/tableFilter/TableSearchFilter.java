@@ -11,8 +11,8 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCMovieLanguage;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieQuality;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieZyklus;
 import de.jClipCorn.gui.frames.mainFrame.clipTable.ClipTableModel;
-import de.jClipCorn.util.CCDate;
-import de.jClipCorn.util.YearRange;
+import de.jClipCorn.util.datetime.CCDate;
+import de.jClipCorn.util.datetime.YearRange;
 
 public class TableSearchFilter extends RowFilter<ClipTableModel, Object> {
 	private final String searchTerm;

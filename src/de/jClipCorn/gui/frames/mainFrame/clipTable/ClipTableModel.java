@@ -18,7 +18,7 @@ import de.jClipCorn.gui.guiComponents.SFixTable;
 import de.jClipCorn.gui.guiComponents.tableRenderer.TableModelRowColorInterface;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.properties.CCProperties;
-import de.jClipCorn.util.YearRange;
+import de.jClipCorn.util.datetime.YearRange;
 
 public class ClipTableModel extends AbstractTableModel implements TableModelRowColorInterface, TableModelListener {
 	private static final long serialVersionUID = -3060547018013428568L;

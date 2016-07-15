@@ -1,6 +1,6 @@
 package de.jClipCorn.gui.guiComponents.tableRenderer;
 
-import de.jClipCorn.util.CCDate;
+import de.jClipCorn.util.datetime.CCDate;
 
 public class TableDateRenderer extends TableRenderer {
 	private static final long serialVersionUID = 1L;

@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.util.CCTime;
+import de.jClipCorn.util.datetime.CCTime;
 
 public class CCLogElement {
 	public final static int FORMAT_LEVEL_PREVIEW = -1;

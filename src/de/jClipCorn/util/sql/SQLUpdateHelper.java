@@ -18,6 +18,10 @@ public class SQLUpdateHelper extends SQLHelper {
 	public void addField(String field, String val) {
 		fields.add(new DoubleString(field, val));
 	}
+
+	public void addPreparedField(String field) {
+		addField(field, "?"); //$NON-NLS-1$
+	}
 	
 	@Override
 	@SuppressWarnings("nls")

@@ -51,12 +51,13 @@ import de.jClipCorn.gui.frames.inputErrorFrame.InputErrorDialog;
 import de.jClipCorn.gui.guiComponents.HFixListCellRenderer;
 import de.jClipCorn.gui.guiComponents.ReadableTextField;
 import de.jClipCorn.gui.guiComponents.TagPanel;
+import de.jClipCorn.gui.guiComponents.dateTimeListEditor.DateTimeListEditor;
 import de.jClipCorn.gui.guiComponents.editCoverControl.EditCoverControl;
 import de.jClipCorn.gui.guiComponents.jCCDateSpinner.JCCDateSpinner;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.properties.CCProperties;
-import de.jClipCorn.util.CCDate;
 import de.jClipCorn.util.Validator;
+import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.formatter.FileSizeFormatter;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.DialogHelper;
@@ -137,10 +138,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 	private JLabel label_26;
 	private JButton button_2;
 	private JButton btnEpisodeToday;
-	private JButton btnEpisodeClear;
 	private JCCDateSpinner spnEpisodeAdded;
-	private JCCDateSpinner spnEpisodeLastViewed;
-	private JLabel label_27;
 	private JLabel label_28;
 	private JLabel label_29;
 	private ReadableTextField edEpisodePart;
@@ -162,6 +160,8 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 	private JButton btnEpisodeCalcQuality;
 	private EditCoverControl edSeriesCvrControl;
 	private EditCoverControl edSeasonCvrControl;
+	private JLabel lblHistori;
+	private DateTimeListEditor cmpViewedHistory;
 
 	/**
 	 * @wbp.parser.constructor
@@ -232,7 +232,6 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 	}
 	
 	private void updateFocusTraversalPolicy() {
-		setFocusTraversalPolicy(new ExtendedFocusTraversalOnArray(new Component[]{edSeriesTitle, cbxSeriesLanguage, spnSeriesOnlineScore, cbxSeriesFSK, cbxSeriesScore, cbxSeriesGenre_0, cbxSeriesGenre_1, cbxSeriesGenre_2, cbxSeriesGenre_3, cbxSeriesGenre_4, cbxSeriesGenre_5, cbxSeriesGenre_6, cbxSeriesGenre_7, btnAddEmptySeason, btnAddSeason, btnRemoveSeason, btnSeriesOk, edSeasonTitle, spnSeasonYear, btnAddEpisode, btnAddMultipleEpisodes, btnRemoveEpisode, btnSeasonOK, edEpisodeTitle, spnEpisodeEpisode, cbEpisodeViewed, cbxEpisodeFormat, cbxEpisodeQuality, spnEpisodeLength, spnEpisodeSize, spnEpisodeAdded, spnEpisodeLastViewed, edEpisodePart, tagPnl, btnEpisodeOK, btnEpisodeToday, btnEpisodeClear, btnEpisodeOpenPart}));
 	}
 	
 	private void selectEpisode(CCEpisode e) {
@@ -629,39 +628,21 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		btnEpisodeToday.setBounds(251, 331, 96, 23);
 		pnlEpisode.add(btnEpisodeToday);
 		
-		btnEpisodeClear = new JButton(LocaleBundle.getString("AddMovieFrame.btnClear.text")); //$NON-NLS-1$
-		btnEpisodeClear.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				spnEpisodeLastViewed.setValue(CCDate.getMinimumDate());
-			}
-		});
-		btnEpisodeClear.setBounds(251, 367, 96, 23);
-		pnlEpisode.add(btnEpisodeClear);
-		
 		spnEpisodeAdded = new JCCDateSpinner(CCDate.getMinimumDate(), MIN_DATE, null);
 		spnEpisodeAdded.setBounds(74, 332, 165, 20);
 		pnlEpisode.add(spnEpisodeAdded);
-		
-		spnEpisodeLastViewed = new JCCDateSpinner(CCDate.getMinimumDate(), MIN_DATE, null);
-		spnEpisodeLastViewed.setBounds(74, 368, 165, 20);
-		pnlEpisode.add(spnEpisodeLastViewed);
-		
-		label_27 = new JLabel(LocaleBundle.getString("AddEpisodeFrame.lblLastViewed.text")); //$NON-NLS-1$
-		label_27.setBounds(12, 369, 71, 16);
-		pnlEpisode.add(label_27);
 		
 		label_28 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblEinfgDatum.text")); //$NON-NLS-1$
 		label_28.setBounds(12, 334, 71, 16);
 		pnlEpisode.add(label_28);
 		
 		label_29 = new JLabel(LocaleBundle.getString("AddEpisodeFrame.lblPart.text")); //$NON-NLS-1$
-		label_29.setBounds(12, 409, 46, 14);
+		label_29.setBounds(12, 372, 46, 14);
 		pnlEpisode.add(label_29);
 		
 		edEpisodePart = new ReadableTextField();
 		edEpisodePart.setColumns(10);
-		edEpisodePart.setBounds(74, 406, 212, 20);
+		edEpisodePart.setBounds(74, 369, 212, 20);
 		pnlEpisode.add(edEpisodePart);
 		
 		btnEpisodeOpenPart = new JButton(LocaleBundle.getString("EditSeriesFrame.btnEpisodeOpenPart.text")); //$NON-NLS-1$
@@ -671,15 +652,15 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 				openEpisodePart();
 			}
 		});
-		btnEpisodeOpenPart.setBounds(295, 405, 52, 23);
+		btnEpisodeOpenPart.setBounds(295, 368, 52, 23);
 		pnlEpisode.add(btnEpisodeOpenPart);
 		
 		lblTags = new JLabel(LocaleBundle.getString("EditSeriesFrame.lblTags.text")); //$NON-NLS-1$
-		lblTags.setBounds(12, 440, 52, 14);
+		lblTags.setBounds(12, 410, 52, 14);
 		pnlEpisode.add(lblTags);
 		
 		tagPnl = new TagPanel();
-		tagPnl.setBounds(74, 436, 273, 22);
+		tagPnl.setBounds(74, 406, 273, 22);
 		pnlEpisode.add(tagPnl);
 		
 		btnEpisodeOK = new JButton(LocaleBundle.getString("UIGeneric.btnOK.text")); //$NON-NLS-1$
@@ -701,6 +682,15 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		});
 		btnEpisodeCalcQuality.setBounds(251, 159, 94, 23);
 		pnlEpisode.add(btnEpisodeCalcQuality);
+		
+		lblHistori = new JLabel("Historie");
+		lblHistori.setBounds(12, 448, 52, 14);
+		pnlEpisode.add(lblHistori);
+		
+		cmpViewedHistory = new DateTimeListEditor();
+		cmpViewedHistory.setBackground(Color.WHITE);
+		cmpViewedHistory.setBounds(74, 448, 271, 152);
+		pnlEpisode.add(cmpViewedHistory);
 	}
 
 	private void setDefaultValues() {
@@ -823,7 +813,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		spnEpisodeLength.setValue(episode.getLength());
 		spnEpisodeSize.setValue(episode.getFilesize().getBytes());
 		spnEpisodeAdded.setValue(episode.getAddDate());
-		spnEpisodeLastViewed.setValue(episode.getLastViewed());
+		//spnEpisodeLastViewed.setValue(episode.getLastViewed());
 		edEpisodePart.setText(episode.getPart());
 		tagPnl.setValue(episode.getTags());
 		

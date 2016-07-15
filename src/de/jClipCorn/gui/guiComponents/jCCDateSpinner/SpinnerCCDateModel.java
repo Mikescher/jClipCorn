@@ -2,7 +2,7 @@ package de.jClipCorn.gui.guiComponents.jCCDateSpinner;
 
 import javax.swing.AbstractSpinnerModel;
 
-import de.jClipCorn.util.CCDate;
+import de.jClipCorn.util.datetime.CCDate;
 
 public class SpinnerCCDateModel extends AbstractSpinnerModel {
 	private static final long serialVersionUID = 1275113021121391715L;

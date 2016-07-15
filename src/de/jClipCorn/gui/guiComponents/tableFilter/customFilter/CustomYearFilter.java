@@ -6,9 +6,9 @@ import javax.swing.RowFilter.Entry;
 
 import de.jClipCorn.gui.frames.mainFrame.clipTable.ClipTableModel;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.util.CCDate;
 import de.jClipCorn.util.DecimalSearchType;
-import de.jClipCorn.util.YearRange;
+import de.jClipCorn.util.datetime.CCDate;
+import de.jClipCorn.util.datetime.YearRange;
 
 public class CustomYearFilter extends AbstractCustomFilter {
 	private int low = 1900;

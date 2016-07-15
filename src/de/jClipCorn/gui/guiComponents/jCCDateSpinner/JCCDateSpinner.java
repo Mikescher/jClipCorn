@@ -4,7 +4,7 @@ import javax.swing.JComponent;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerModel;
 
-import de.jClipCorn.util.CCDate;
+import de.jClipCorn.util.datetime.CCDate;
 
 public class JCCDateSpinner extends JSpinner {
 	private static final long serialVersionUID = -7562943010812302334L;
@@ -17,6 +17,10 @@ public class JCCDateSpinner extends JSpinner {
 		super.setEditor(de);
 		addChangeListener(de);
 		addPropertyChangeListener(de);
+	}
+
+	public JCCDateSpinner() {
+		this(CCDate.getCurrentDate(), CCDate.getMinimumDate(), CCDate.getMaximumDate());
 	}
 
 	@Override

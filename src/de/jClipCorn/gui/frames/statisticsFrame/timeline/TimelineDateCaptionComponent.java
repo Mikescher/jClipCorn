@@ -6,7 +6,7 @@ import java.awt.Graphics;
 
 import javax.swing.JComponent;
 
-import de.jClipCorn.util.CCDate;
+import de.jClipCorn.util.datetime.CCDate;
 
 public class TimelineDateCaptionComponent extends JComponent {
 	private static final long serialVersionUID = -9133712754093362059L;

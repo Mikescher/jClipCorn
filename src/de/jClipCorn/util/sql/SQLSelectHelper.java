@@ -20,6 +20,10 @@ public class SQLSelectHelper extends SQLHelper {
 		wheres.add(new DoubleString(field, val));
 	}
 
+	public void addPreparedWhere(String field) {
+		addWhere(field, "?"); //$NON-NLS-1$
+	}
+
 	@SuppressWarnings("nls")
 	@Override
 	public String get() {

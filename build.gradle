@@ -32,6 +32,8 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 mainClassName = project.appmain
 
+compileJava.options.encoding = 'UTF-8'
+
 jar {
     manifest {
         attributes 'Implementation-Title':   project.appname,  
@@ -48,6 +50,10 @@ configurations {
 
 	runtime.exclude group: 'commons-beanutils'
 	compile.exclude group: 'commons-beanutils'
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
 }
 
 dependencies {
@@ -101,6 +107,8 @@ dependencies {
 	compile 'org.eclipse.jetty.websocket:websocket-common:9.2.13.v20150730'
 	compile 'xml-apis:xml-apis:1.4.01'
 	compile 'org.w3c.css:sac:1.3'
+
+	compile 'junit:junit:4.12'
 }
 
 task fatJar(type: Jar) {

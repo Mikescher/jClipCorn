@@ -25,7 +25,7 @@ import de.jClipCorn.properties.property.CCSeasonRegexListProperty;
 import de.jClipCorn.properties.property.CCStringProperty;
 import de.jClipCorn.properties.property.CCToolbarProperty;
 import de.jClipCorn.properties.property.CCVIntProperty;
-import de.jClipCorn.util.CCDate;
+import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.ApplicationHelper;
 import de.jClipCorn.util.helper.LookAndFeelManager;
@@ -144,7 +144,7 @@ public class CCProperties {
 	public CCSeasonRegexListProperty	PROP_SEASON_INDEX_REGEXPRESSIONS;
 	public CCPIntProperty 				PROP_STATISTICS_TIMELINEGRAVITY;
 	public CCVIntProperty 				PROP_DATABASE_DRIVER;
-	public CCBoolProperty				PROP_SERIES_DISPLAYED_DATE; //TODO LastViewed | FirstViewed | AverageViewed
+	public CCVIntProperty				PROP_SERIES_DISPLAYED_DATE; //TODO LastViewed | FirstViewed | AverageViewed
 	
 	public boolean ARG_READONLY = false;
 	

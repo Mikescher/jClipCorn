@@ -1,6 +1,6 @@
 package de.jClipCorn.gui.guiComponents.tableRenderer;
 
-import de.jClipCorn.util.YearRange;
+import de.jClipCorn.util.datetime.YearRange;
 
 public class TableYearRenderer extends TableRenderer {
 	private static final long serialVersionUID = 1L;

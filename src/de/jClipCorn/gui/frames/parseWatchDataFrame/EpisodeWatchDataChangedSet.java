@@ -1,7 +1,7 @@
 package de.jClipCorn.gui.frames.parseWatchDataFrame;
 
 import de.jClipCorn.database.databaseElement.CCEpisode;
-import de.jClipCorn.util.CCDate;
+import de.jClipCorn.util.datetime.CCDate;
 
 public class EpisodeWatchDataChangedSet extends WatchDataChangeSet {
 	private CCEpisode eps;

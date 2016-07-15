@@ -22,7 +22,7 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCMovieGenre;
 import de.jClipCorn.gui.frames.mainFrame.MainFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
-import de.jClipCorn.util.CCDate;
+import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.formatter.RomanNumberFormatter;
 import de.jClipCorn.util.helper.DialogHelper;
 

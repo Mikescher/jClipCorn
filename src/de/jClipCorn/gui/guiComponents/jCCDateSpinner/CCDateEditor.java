@@ -11,7 +11,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import de.jClipCorn.util.CCDate;
+import de.jClipCorn.util.datetime.CCDate;
 
 public class CCDateEditor extends JPanel implements ChangeListener, PropertyChangeListener {
 	private static final long serialVersionUID = -7568423030107551542L;

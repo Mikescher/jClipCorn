@@ -15,9 +15,9 @@ import java.util.Map;
 import javax.swing.JComponent;
 
 import de.jClipCorn.database.databaseElement.CCSeries;
-import de.jClipCorn.util.CCDate;
-import de.jClipCorn.util.CCDatespan;
-import de.jClipCorn.util.CCWeekday;
+import de.jClipCorn.util.datetime.CCDate;
+import de.jClipCorn.util.datetime.CCDatespan;
+import de.jClipCorn.util.datetime.CCWeekday;
 
 public class TimelineDisplayComponent extends JComponent implements MouseListener {
 	private static final long serialVersionUID = -9133712754093362059L;

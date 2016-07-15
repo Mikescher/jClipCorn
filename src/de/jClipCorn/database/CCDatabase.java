@@ -18,14 +18,14 @@ import de.jClipCorn.database.util.Statements;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.properties.CCProperties;
-import de.jClipCorn.util.CCDate;
-import de.jClipCorn.util.CCTime;
+import de.jClipCorn.util.datetime.CCDate;
+import de.jClipCorn.util.datetime.CCTime;
 import de.jClipCorn.util.exceptions.CCFormatException;
 import de.jClipCorn.util.exceptions.OnlineRefFormatException;
 import de.jClipCorn.util.helper.ApplicationHelper;
 
 public class CCDatabase {
-	public final static String TAB_MAIN            = "MOVIES";    //$NON-NLS-1$
+	public final static String TAB_MAIN            = "ELEMENTS";  //$NON-NLS-1$
 	public final static String TAB_SEASONS         = "SEASONS";   //$NON-NLS-1$
 	public final static String TAB_EPISODES        = "EPISODES";  //$NON-NLS-1$
 	public final static String TAB_INFO            = "INFO";      //$NON-NLS-1$
@@ -369,35 +369,35 @@ public class CCDatabase {
 			PreparedStatement s = Statements.addEmptyMainTabStatement;
 			s.clearParameters();
 
-			s.setInt(1, id);                              // TAB_MAIN_COLUMN_LOCALID
-			s.setString(2, "");                           // TAB_MAIN_COLUMN_NAME
-			s.setInt(3, 0);                               // TAB_MAIN_COLUMN_VIEWED
-			s.setString(4, "");                           // TAB_MAIN_COLUMN_VIEWEDHISTORY
-			s.setString(4, "");                           // TAB_MAIN_COLUMN_ZYKLUS
-			s.setInt(5, 0);                               // TAB_MAIN_COLUMN_ZYKLUSNUMBER
-			s.setInt(6, 0);                               // TAB_MAIN_COLUMN_QUALITY
-			s.setInt(7, 0);                               // TAB_MAIN_COLUMN_LANGUAGE
-			s.setInt(8, 0);                               // TAB_MAIN_COLUMN_GENRE
-			s.setInt(9, 0);                               // TAB_MAIN_COLUMN_LENGTH
-			s.setString(10, CCDate.YEAR_MIN + "-01-01");  // TAB_MAIN_COLUMN_ADDDATE
-			s.setInt(11, 0);                              // TAB_MAIN_COLUMN_ONLINESCORE
-			s.setInt(12, 0);                              // TAB_MAIN_COLUMN_FSK
-			s.setInt(13, 0);                              // TAB_MAIN_COLUMN_FORMAT
-			s.setInt(14, 0);                              // TAB_MAIN_COLUMN_MOVIEYEAR
-			s.setString(15, "");                          // TAB_MAIN_COLUMN_ONLINEREF
-			s.setString(16, "");                          // TAB_MAIN_COLUMN_GROUPS
-			s.setInt(17, 0);                              // TAB_MAIN_COLUMN_FILESIZE
-			s.setInt(18, 0);                              // TAB_MAIN_COLUMN_TAGS
-			s.setString(29, "");                          // TAB_MAIN_COLUMN_PART_1
-			s.setString(20, "");                          // TAB_MAIN_COLUMN_PART_2
-			s.setString(21, "");                          // TAB_MAIN_COLUMN_PART_3
-			s.setString(22, "");                          // TAB_MAIN_COLUMN_PART_4
-			s.setString(23, "");                          // TAB_MAIN_COLUMN_PART_5
-			s.setString(24, "");                          // TAB_MAIN_COLUMN_PART_6
-			s.setInt(25, 0);                              // TAB_MAIN_COLUMN_SCORE
-			s.setString(26, "");                          // TAB_MAIN_COLUMN_COVER
-			s.setInt(27, CCMovieTyp.MOVIE.asInt());       // TAB_MAIN_COLUMN_TYPE
-			s.setInt(28, -1);                             // TAB_MAIN_COLUMN_SERIES_ID
+			s.setInt(1, id);                              // 01   TAB_MAIN_COLUMN_LOCALID               
+			s.setString(2, "");                           // 02   TAB_MAIN_COLUMN_NAME                  
+			s.setInt(3, 0);                               // 03   TAB_MAIN_COLUMN_VIEWED                
+			s.setString(4, "");                           // 04   TAB_MAIN_COLUMN_VIEWEDHISTORY         
+			s.setString(5, "");                           // 05   TAB_MAIN_COLUMN_ZYKLUS                
+			s.setInt(6, 0);                               // 06   TAB_MAIN_COLUMN_ZYKLUSNUMBER          
+			s.setInt(7, 0);                               // 07   TAB_MAIN_COLUMN_QUALITY               
+			s.setInt(8, 0);                               // 08   TAB_MAIN_COLUMN_LANGUAGE              
+			s.setInt(9, 0);                               // 09   TAB_MAIN_COLUMN_GENRE                 
+			s.setInt(10, 0);                              // 10   TAB_MAIN_COLUMN_LENGTH                
+			s.setString(11, CCDate.MIN_SQL);              // 11   TAB_MAIN_COLUMN_ADDDATE               
+			s.setInt(12, 0);                              // 12   TAB_MAIN_COLUMN_ONLINESCORE           
+			s.setInt(13, 0);                              // 13   TAB_MAIN_COLUMN_FSK                   
+			s.setInt(14, 0);                              // 14   TAB_MAIN_COLUMN_FORMAT                
+			s.setInt(15, 0);                              // 15   TAB_MAIN_COLUMN_MOVIEYEAR             
+			s.setString(16, "");                          // 16   TAB_MAIN_COLUMN_ONLINEREF             
+			s.setString(17, "");                          // 17   TAB_MAIN_COLUMN_GROUPS                
+			s.setInt(18, 0);                              // 18   TAB_MAIN_COLUMN_FILESIZE              
+			s.setInt(19, 0);                              // 19   TAB_MAIN_COLUMN_TAGS                  
+			s.setString(20, "");                          // 20   TAB_MAIN_COLUMN_PART_1                
+			s.setString(21, "");                          // 21   TAB_MAIN_COLUMN_PART_2                
+			s.setString(22, "");                          // 22   TAB_MAIN_COLUMN_PART_3                
+			s.setString(23, "");                          // 23   TAB_MAIN_COLUMN_PART_4                
+			s.setString(24, "");                          // 24   TAB_MAIN_COLUMN_PART_5                
+			s.setString(25, "");                          // 25   TAB_MAIN_COLUMN_PART_6                
+			s.setInt(26, 0);                              // 26   TAB_MAIN_COLUMN_SCORE                 
+			s.setString(27, "");                          // 27   TAB_MAIN_COLUMN_COVER                 
+			s.setInt(28, CCMovieTyp.MOVIE.asInt());       // 28   TAB_MAIN_COLUMN_TYPE                  
+			s.setInt(29, -1);                             // 29   TAB_MAIN_COLUMN_SERIES_ID             
 
 			s.executeUpdate();
 
@@ -437,18 +437,19 @@ public class CCDatabase {
 			PreparedStatement s = Statements.addEmptyEpisodeTabStatement;
 			s.clearParameters();
 
-			s.setInt(1, eid);                            // TAB_EPISODES_COLUMN_SEASONID
-			s.setInt(2, sid);                            // TAB_EPISODES_COLUMN_EPISODE
-			s.setInt(3, 0);                              // TAB_EPISODES_COLUMN_NAME
-			s.setBoolean(4, false);                      // TAB_EPISODES_COLUMN_VIEWED
-			s.setString(5, "");                          // TAB_EPISODES_COLUMN_VIEWEDHISTORY
-			s.setInt(6, 0);                              // TAB_EPISODES_COLUMN_QUALITY
-			s.setInt(7, 0);                              // TAB_EPISODES_COLUMN_LENGTH
-			s.setInt(8, 0);                              // TAB_EPISODES_COLUMN_FORMAT
-			s.setInt(9, 0);                              // TAB_EPISODES_COLUMN_FILESIZE
-			s.setString(10, "");                         // TAB_EPISODES_COLUMN_PART_1
-			s.setInt(11, 0);                             // TAB_EPISODES_COLUMN_TAGS
-			s.setString(12, CCDate.YEAR_MIN + "-01-01"); // TAB_EPISODES_COLUMN_ADDDATE
+			s.setInt(1, eid);                            // 01   TAB_EPISODES_COLUMN_LOCALID        
+			s.setInt(2, sid);                            // 02   TAB_EPISODES_COLUMN_SEASONID       
+			s.setInt(3, 0);                              // 03   TAB_EPISODES_COLUMN_EPISODE        
+			s.setBoolean(4, false);                      // 04   TAB_EPISODES_COLUMN_NAME           
+			s.setString(5, "");                          // 05   TAB_EPISODES_COLUMN_VIEWED         
+			s.setString(6, "");                          // 06   TAB_EPISODES_COLUMN_VIEWEDHISTORY  
+			s.setInt(7, 0);                              // 07   TAB_EPISODES_COLUMN_QUALITY        
+			s.setInt(8, 0);                              // 08   TAB_EPISODES_COLUMN_LENGTH         
+			s.setInt(9, 0);                              // 09   TAB_EPISODES_COLUMN_FORMAT         
+			s.setInt(10, 0);                             // 10   TAB_EPISODES_COLUMN_FILESIZE       
+			s.setString(11, "");                         // 11   TAB_EPISODES_COLUMN_PART_1         
+			s.setInt(12, 0);                             // 12   TAB_EPISODES_COLUMN_TAGS           
+			s.setString(13, CCDate.MIN_SQL);             // 13   TAB_EPISODES_COLUMN_ADDDATE        
 
 			s.executeUpdate();
 

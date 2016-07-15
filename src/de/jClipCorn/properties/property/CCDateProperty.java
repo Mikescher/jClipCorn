@@ -9,7 +9,7 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.CCPropertyCategory;
-import de.jClipCorn.util.CCDate;
+import de.jClipCorn.util.datetime.CCDate;
 
 public class CCDateProperty extends CCProperty<CCDate> {
 	public CCDateProperty(CCPropertyCategory cat, CCProperties prop, String ident, CCDate std) {

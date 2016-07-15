@@ -1,4 +1,4 @@
-package de.jClipCorn.util;
+package de.jClipCorn.util.datetime;
 
 import de.jClipCorn.gui.localization.LocaleBundle;
 

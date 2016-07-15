@@ -2,7 +2,7 @@ package de.jClipCorn.gui.guiComponents.tableSorter;
 
 import java.util.Comparator;
 
-import de.jClipCorn.util.CCDate;
+import de.jClipCorn.util.datetime.CCDate;
 
 public class TableDateComparator implements Comparator<CCDate>{
 	@Override

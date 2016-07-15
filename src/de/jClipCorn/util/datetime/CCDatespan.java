@@ -1,4 +1,4 @@
-package de.jClipCorn.util;
+package de.jClipCorn.util.datetime;
 
 public class CCDatespan {
 	public final CCDate start;

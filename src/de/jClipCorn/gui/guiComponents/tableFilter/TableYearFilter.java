@@ -3,7 +3,7 @@ package de.jClipCorn.gui.guiComponents.tableFilter;
 import javax.swing.RowFilter;
 
 import de.jClipCorn.gui.frames.mainFrame.clipTable.ClipTableModel;
-import de.jClipCorn.util.YearRange;
+import de.jClipCorn.util.datetime.YearRange;
 
 public class TableYearFilter extends RowFilter<ClipTableModel, Object> {
 	private Integer defYear;

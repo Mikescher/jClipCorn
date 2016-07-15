@@ -16,6 +16,10 @@ public class SQLInsertHelper extends SQLHelper {
 		fields.add(new DoubleString(field, val));
 	}
 
+	public void addPreparedField(String field) {
+		addField(field, "?"); //$NON-NLS-1$
+	}
+
 	@Override
 	@SuppressWarnings("nls")
 	public String get() {

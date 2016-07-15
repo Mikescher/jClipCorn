@@ -24,8 +24,8 @@ import de.jClipCorn.gui.frames.statisticsFrame.timeline.TimelineDisplayComponent
 import de.jClipCorn.gui.frames.statisticsFrame.timeline.TimelineEmptyCaptionComponent;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.properties.CCProperties;
-import de.jClipCorn.util.CCDate;
-import de.jClipCorn.util.CCDatespan;
+import de.jClipCorn.util.datetime.CCDate;
+import de.jClipCorn.util.datetime.CCDatespan;
 import de.jClipCorn.util.helper.StatisticsHelper;
 
 public class StatisticsSeriesTimeline extends StatisticsPanel {

@@ -2,7 +2,7 @@ package de.jClipCorn.gui.guiComponents.tableSorter;
 
 import java.util.Comparator;
 
-import de.jClipCorn.util.YearRange;
+import de.jClipCorn.util.datetime.YearRange;
 
 public class TableYearComparator implements Comparator<YearRange>{
 	@Override

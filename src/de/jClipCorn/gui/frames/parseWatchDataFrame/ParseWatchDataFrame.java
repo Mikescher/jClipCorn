@@ -35,7 +35,7 @@ import de.jClipCorn.gui.CachedResourceLoader;
 import de.jClipCorn.gui.Resources;
 import de.jClipCorn.gui.guiComponents.DefaultReadOnlyTableModel;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.util.CCDate;
+import de.jClipCorn.util.datetime.CCDate;
 
 public class ParseWatchDataFrame extends JFrame {
 	private static final long serialVersionUID = 7237565086883500709L;

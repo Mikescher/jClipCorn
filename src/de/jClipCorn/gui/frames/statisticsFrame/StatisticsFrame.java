@@ -55,8 +55,8 @@ import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsTagChart;
 import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsViewedChart;
 import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsYearChart;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.util.CCDate;
 import de.jClipCorn.util.TimeKeeper;
+import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.formatter.TimeIntervallFormatter;
 import de.jClipCorn.util.helper.StatisticsHelper;
 

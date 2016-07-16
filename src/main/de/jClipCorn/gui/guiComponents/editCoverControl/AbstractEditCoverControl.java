@@ -7,6 +7,7 @@ import javax.swing.JPanel;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFormat;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieLanguage;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieQuality;
+import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReference;
 import de.jClipCorn.util.listener.ImageCropperResultListener;
 import de.jClipCorn.util.parser.ParseResultHandler;
 
@@ -104,6 +105,11 @@ public class AbstractEditCoverControl extends JPanel implements ParseResultHandl
 
 	@Override
 	public void setCover(BufferedImage nci) {
+		// NOP
+	}
+	
+	@Override
+	public void setOnlineReference(CCOnlineReference ref) {
 		// NOP
 	}
 

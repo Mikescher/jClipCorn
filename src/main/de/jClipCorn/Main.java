@@ -136,3 +136,9 @@ public class Main {
 //  - dont allow no cover add (leads to exception)
 //- add db err (mov+epi) not viewed but has history
 //- add db err (ser) has history
+//- auto find imdb for non ref movies/series (TMDB FIRST !)
+//- dialog show unreffed movies
+//- add groups to (both?) search
+//- serialize groups/refs/viewed-history
+//- AddMovieFrame.parseFromXML --> wtf? (auch für ser)
+//- statistics online reference provider

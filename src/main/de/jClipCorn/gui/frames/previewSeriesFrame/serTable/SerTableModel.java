@@ -8,6 +8,7 @@ import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.gui.guiComponents.tableRenderer.TableModelRowColorInterface;
 import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.properties.CCProperties;
 
 public class SerTableModel extends AbstractTableModel implements TableModelRowColorInterface{
 	private static final long serialVersionUID = -2056843389761330885L;
@@ -23,11 +24,11 @@ public class SerTableModel extends AbstractTableModel implements TableModelRowCo
 	public final static int COLUMN_FORMAT = 8;
 	public final static int COLUMN_SIZE = 9;
 	
-	private static final String[] COLUMN_NAMES = { 
+	private String[] COLUMN_NAMES = { 
 			LocaleBundle.getString("PreviewSeriesFrame.serTable.Episode"), //$NON-NLS-1$
 			LocaleBundle.getString("PreviewSeriesFrame.serTable.Name"), //$NON-NLS-1$
 			"", //$NON-NLS-1$
-			LocaleBundle.getString("PreviewSeriesFrame.serTable.Lastviewed"), //$NON-NLS-1$
+			"_ERROR_", //$NON-NLS-1$
 			LocaleBundle.getString("PreviewSeriesFrame.serTable.Quality"), //$NON-NLS-1$
 			LocaleBundle.getString("PreviewSeriesFrame.serTable.Length"), //$NON-NLS-1$
 			LocaleBundle.getString("PreviewSeriesFrame.serTable.Tags"), //$NON-NLS-1$
@@ -41,6 +42,18 @@ public class SerTableModel extends AbstractTableModel implements TableModelRowCo
 	public SerTableModel(CCSeason sea) {
 		super();
 		this.season = sea;
+		
+		switch (CCProperties.getInstance().PROP_SERIES_ADDDATECALCULATION.getValue()) {
+		case 0:
+			COLUMN_NAMES[3] = LocaleBundle.getString("CCProperties.SeriesDisplayDate.Opt0"); //$NON-NLS-1$
+			break;
+		case 1:
+			COLUMN_NAMES[3] = LocaleBundle.getString("CCProperties.SeriesDisplayDate.Opt1"); //$NON-NLS-1$
+			break;
+		case 2:
+			COLUMN_NAMES[3] = LocaleBundle.getString("CCProperties.SeriesDisplayDate.Opt2"); //$NON-NLS-1$
+			break;
+		}
 	}
 
 	@Override

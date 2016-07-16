@@ -35,6 +35,8 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFSK;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieGenre;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieGenreList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTyp;
+import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineRefType;
+import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReference;
 import de.jClipCorn.gui.CachedResourceLoader;
 import de.jClipCorn.gui.Resources;
 import de.jClipCorn.gui.frames.allRatingsFrame.AllRatingsDialog;
@@ -374,7 +376,7 @@ public class ParseImDBDialog extends JDialog {
 		cbCover.setBounds(6, 157, 21, 23);
 		pnlMain.add(cbCover);
 		
-		btnIMDB = new JButton(CachedResourceLoader.getImageIcon(Resources.ICN_FRAMES_IMDB));
+		btnIMDB = new JButton(CachedResourceLoader.getImageIcon(Resources.ICN_FRAMES_IMDBBUTTON));
 		btnIMDB.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -538,8 +540,15 @@ public class ParseImDBDialog extends JDialog {
 					lsDBList.setSelectedIndex(-1);
 
 					for (DoubleString sm : res) {
-						lsDBListPaths.add(sm.get1());
-						mdlLsDBList.addElement(sm.get2());
+						String id = ImDBParser.extractOnlineID(sm.get1());
+						
+						if (id != null) {
+							lsDBListPaths.add(sm.get1());
+							mdlLsDBList.addElement(sm.get2());
+						} else {
+							CCLog.addWarning(LocaleBundle.getFormattedString("LogMessage.CantExtractIMDBLink", sm.get1())); //$NON-NLS-1$
+						}
+						
 					}
 
 					pbarSearch.setIndeterminate(false);
@@ -638,6 +647,12 @@ public class ParseImDBDialog extends JDialog {
 	}
 	
 	private void insertDataIntoFrame() {
+		String imdbID = ImDBParser.extractOnlineID(selectedURL);
+		
+		if (imdbID != null) {
+			owner.setOnlineReference(new CCOnlineReference(CCOnlineRefType.IMDB, imdbID));
+		}
+		
 		if (cbTitle.isSelected()) {
 			owner.setMovieName(edTitle.getText());
 		}

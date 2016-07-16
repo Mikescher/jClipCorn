@@ -24,6 +24,8 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCDateTimeList;
 import de.jClipCorn.gui.guiComponents.jCCDateTimeSpinner.JCCDateTimeSpinner;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.datetime.CCDateTime;
+import javax.swing.JScrollPane;
+import javax.swing.ScrollPaneConstants;
 
 public class DateTimeListEditor extends JPanel {
 	private static final long serialVersionUID = -1991426029921952573L;
@@ -41,6 +43,7 @@ public class DateTimeListEditor extends JPanel {
 	private JLabel lblCount;
 	private JPanel panel_4;
 	private JPanel panel_5;
+	private JScrollPane scrollPane;
 
 	public DateTimeListEditor() {
 		initGUI();
@@ -120,7 +123,8 @@ public class DateTimeListEditor extends JPanel {
 		edAddDateTime = new JCCDateTimeSpinner();
 		panel_5.add(edAddDateTime);
 		
-		btnAdd = new JButton(LocaleBundle.getString("DateTimeListEditor.Add")); //$NON-NLS-1$
+		btnAdd = new JButton("+"); //$NON-NLS-1$
+		btnAdd.setMargin(new java.awt.Insets(1, 2, 1, 2));
 		panel_5.add(btnAdd);
 		btnAdd.addActionListener(new ActionListener() {
 			@Override
@@ -130,8 +134,14 @@ public class DateTimeListEditor extends JPanel {
 				resortList();
 			}
 		});
+		listModel = new DefaultListModel<>();
+		
+		scrollPane = new JScrollPane();
+		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		add(scrollPane, BorderLayout.CENTER);
 		
 		list = new JList<>();
+		scrollPane.setViewportView(list);
 		list.addListSelectionListener(new ListSelectionListener() {
 			@Override
 			public void valueChanged(ListSelectionEvent e) {
@@ -141,8 +151,6 @@ public class DateTimeListEditor extends JPanel {
 			}
 		});
 		list.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
-		add(list, BorderLayout.CENTER);
-		listModel = new DefaultListModel<>();
 		list.setModel(listModel);
 		list.setCellRenderer(new DTLEListRenderer());
 	}

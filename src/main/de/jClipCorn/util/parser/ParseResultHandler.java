@@ -5,6 +5,7 @@ import java.awt.image.BufferedImage;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFormat;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieLanguage;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieQuality;
+import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReference;
 
 public interface ParseResultHandler {
 	public String getFullTitle();
@@ -23,6 +24,7 @@ public interface ParseResultHandler {
 	public void setLength(int l);
 	public void setScore(int s);
 	public void setCover(BufferedImage nci);
+	public void setOnlineReference(CCOnlineReference ref);
 	
 	public void onFinishInserting();
 }

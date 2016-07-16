@@ -14,11 +14,12 @@ import javax.swing.JList;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JScrollPane;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
 
 import de.jClipCorn.Main;
 import de.jClipCorn.database.databaseElement.CCMovie;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTyp;
 import de.jClipCorn.gui.CachedResourceLoader;
 import de.jClipCorn.gui.Resources;
 import de.jClipCorn.gui.frames.editMovieFrame.EditMovieFrame;
@@ -32,9 +33,6 @@ import de.jClipCorn.util.formatter.TimeIntervallFormatter;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.helper.HTTPUtilities;
 import de.jClipCorn.util.listener.UpdateCallbackListener;
-import de.jClipCorn.util.parser.ImDBParser;
-import javax.swing.JScrollPane;
-import javax.swing.ScrollPaneConstants;
 
 public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener {
 	private static final long serialVersionUID = 7483476533745432416L;
@@ -59,7 +57,7 @@ public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener 
 	private JLabel lblFormat;
 	private JLabel lblYear;
 	private JLabel lblSize;
-	private JButton btnImDB;
+	private JButton btnOnlineRef;
 	private JLabel lblGenre;
 	private JLabel lblScore_1;
 	private JLabel lbl_Quality;
@@ -191,15 +189,15 @@ public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener 
 		lblSize.setBounds(10, 493, 63, 14);
 		getContentPane().add(lblSize);
 		
-		btnImDB = new JButton(CachedResourceLoader.getImageIcon(Resources.ICN_FRAMES_IMDB));
-		btnImDB.addActionListener(new ActionListener() {
+		btnOnlineRef = new JButton();
+		btnOnlineRef.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				openImDB();
+				openInBrowser();
 			}
 		});
-		btnImDB.setBounds(627, 50, 57, 23);
-		getContentPane().add(btnImDB);
+		btnOnlineRef.setBounds(627, 50, 57, 23);
+		getContentPane().add(btnOnlineRef);
 		
 		lblGenre = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGenre.text")); //$NON-NLS-1$
 		lblGenre.setBounds(202, 318, 46, 14);
@@ -290,7 +288,7 @@ public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener 
 		mntmShowInImdb.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				openImDB();
+				openInBrowser();
 			}
 		});
 		mnExtras.add(mntmShowInImdb);
@@ -402,10 +400,13 @@ public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener 
 		for (CCDateTime dt : movie.getViewedHistory()) {
 			dlsmViewed.addElement(dt.getSimpleStringRepresentation());
 		}
+		
+		btnOnlineRef.setIcon(movie.getOnlineReference().getIconButton());
+		btnOnlineRef.setEnabled(movie.getOnlineReference().isSet());
 	}
 
-	private void openImDB() {
-		HTTPUtilities.openInBrowser(ImDBParser.getSearchURL(movie.getCompleteTitle(), CCMovieTyp.MOVIE));
+	private void openInBrowser() {
+		HTTPUtilities.openInBrowser(movie.getOnlineReference().getURL());
 	}
 
 	@Override

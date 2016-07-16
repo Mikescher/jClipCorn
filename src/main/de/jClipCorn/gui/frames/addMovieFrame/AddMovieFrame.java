@@ -12,7 +12,6 @@ import java.util.List;
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -43,6 +42,7 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCMovieQuality;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieScore;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieSize;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTyp;
+import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReference;
 import de.jClipCorn.gui.CachedResourceLoader;
 import de.jClipCorn.gui.Resources;
 import de.jClipCorn.gui.frames.inputErrorFrame.InputErrorDialog;
@@ -50,6 +50,7 @@ import de.jClipCorn.gui.frames.parseImDBFrame.ParseImDBDialog;
 import de.jClipCorn.gui.guiComponents.ReadableTextField;
 import de.jClipCorn.gui.guiComponents.editCoverControl.EditCoverControl;
 import de.jClipCorn.gui.guiComponents.jCCDateSpinner.JCCDateSpinner;
+import de.jClipCorn.gui.guiComponents.referenceChooser.JReferenceChooser;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.Validator;
@@ -57,12 +58,9 @@ import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.formatter.FileSizeFormatter;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.ByteUtilies;
-import de.jClipCorn.util.helper.ExtendedFocusTraversalOnArray;
 import de.jClipCorn.util.helper.FileChooserHelper;
-import de.jClipCorn.util.helper.HTTPUtilities;
 import de.jClipCorn.util.helper.ImageUtilities;
 import de.jClipCorn.util.parser.FilenameParser;
-import de.jClipCorn.util.parser.ImDBParser;
 import de.jClipCorn.util.parser.ParseResultHandler;
 import de.jClipCorn.util.userdataProblem.UserDataProblem;
 import de.jClipCorn.util.userdataProblem.UserDataProblemHandler;
@@ -107,7 +105,6 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 	private JComboBox<String> cbxGenre4;
 	private JComboBox<String> cbxGenre5;
 	private JComboBox<String> cbxGenre6;
-	private JCheckBox cbxViewed;
 	private JComboBox<String> cbxQuality;
 	private JComboBox<String> cbxLanguage;
 	private JSpinner spnLength;
@@ -122,7 +119,6 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 	private JTextField edTitle;
 	private JSpinner spnZyklus;
 	private JButton btnParseIMDB;
-	private JButton btnOpenIMDb;
 	private JLabel lblFileSizeDisp;
 	private JComboBox<String> cbxScore;
 	private JLabel lblScore;
@@ -141,7 +137,6 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 	private JLabel lblGenre_6;
 	private JLabel lblGenre_5;
 	private JLabel lblGenre_4;
-	private JLabel lblGesehen;
 	private JLabel lblQuality;
 	private JLabel lblLanguage;
 	private JLabel lblLength;
@@ -157,6 +152,8 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 	private JLabel label_1;
 	private JButton btnCalcQuality;
 	private EditCoverControl edCvrControl;
+	private JReferenceChooser edReference;
+	private JLabel lblOnlineid;
 
 	/**
 	 * @wbp.parser.constructor
@@ -192,7 +189,6 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		setEnabledAll(false);
 
 		setLocationRelativeTo(owner);
-		setFocusTraversalPolicy(new ExtendedFocusTraversalOnArray(new Component[]{btnChoose0, btnChoose1, btnChoose2, btnChoose3, btnChoose4, btnChoose5, edTitle, edZyklus, spnZyklus, cbxViewed, spnLength, cbxLanguage, cbxQuality, btnCalcQuality, spnAddDate, spnOnlineScore, cbxFSK, cbxFormat, spnYear, spnSize, cbxScore, cbxGenre0, cbxGenre1, cbxGenre2, cbxGenre3, cbxGenre4, cbxGenre5, cbxGenre6, cbxGenre7, btnParseIMDB, btnOK, btnCancel, btnOpenIMDb, btnClear1, btnClear2, btnClear3, btnClear4, btnClear5}));
 
 		btnChoose0.setEnabled(true);
 	}
@@ -224,7 +220,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		
 		ed_Part1 = new ReadableTextField();
 		ed_Part1.setColumns(10);
-		ed_Part1.setBounds(76, 50, 191, 22);
+		ed_Part1.setBounds(76, 42, 191, 22);
 		contentPane.add(ed_Part1);
 		
 		btnChoose1 = new JButton(LocaleBundle.getString("AddMovieFrame.btnChoose.text")); //$NON-NLS-1$
@@ -234,7 +230,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 				onBtnChooseClicked(1);
 			}
 		});
-		btnChoose1.setBounds(279, 49, 41, 25);
+		btnChoose1.setBounds(279, 41, 41, 25);
 		contentPane.add(btnChoose1);
 		
 		btnClear1 = new JButton(LocaleBundle.getString("AddMovieFrame.btnClear.text")); //$NON-NLS-1$
@@ -244,7 +240,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 				onBtnClearClicked(1);
 			}
 		});
-		btnClear1.setBounds(332, 49, 78, 25);
+		btnClear1.setBounds(332, 41, 78, 25);
 		contentPane.add(btnClear1);
 		
 		lblPart = new JLabel(LocaleBundle.getString("AddMovieFrame.lblPart.text")); //$NON-NLS-1$
@@ -253,7 +249,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		
 		ed_Part2 = new ReadableTextField();
 		ed_Part2.setColumns(10);
-		ed_Part2.setBounds(76, 86, 191, 22);
+		ed_Part2.setBounds(76, 70, 191, 22);
 		contentPane.add(ed_Part2);
 		
 		btnChoose2 = new JButton(LocaleBundle.getString("AddMovieFrame.btnChoose.text")); //$NON-NLS-1$
@@ -263,7 +259,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 				onBtnChooseClicked(2);
 			}
 		});
-		btnChoose2.setBounds(279, 87, 41, 25);
+		btnChoose2.setBounds(279, 69, 41, 25);
 		contentPane.add(btnChoose2);
 		
 		btnClear2 = new JButton(LocaleBundle.getString("AddMovieFrame.btnClear.text")); //$NON-NLS-1$
@@ -273,12 +269,12 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 				onBtnClearClicked(2);
 			}
 		});
-		btnClear2.setBounds(332, 85, 78, 25);
+		btnClear2.setBounds(332, 69, 78, 25);
 		contentPane.add(btnClear2);
 		
 		ed_Part3 = new ReadableTextField();
 		ed_Part3.setColumns(10);
-		ed_Part3.setBounds(76, 122, 191, 22);
+		ed_Part3.setBounds(76, 98, 191, 22);
 		contentPane.add(ed_Part3);
 		
 		btnChoose3 = new JButton(LocaleBundle.getString("AddMovieFrame.btnChoose.text")); //$NON-NLS-1$
@@ -288,7 +284,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 				onBtnChooseClicked(3);
 			}
 		});
-		btnChoose3.setBounds(279, 121, 41, 25);
+		btnChoose3.setBounds(279, 97, 41, 25);
 		contentPane.add(btnChoose3);
 		
 		btnClear3 = new JButton(LocaleBundle.getString("AddMovieFrame.btnClear.text")); //$NON-NLS-1$
@@ -298,12 +294,12 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 				onBtnClearClicked(3);
 			}
 		});
-		btnClear3.setBounds(332, 121, 78, 25);
+		btnClear3.setBounds(332, 97, 78, 25);
 		contentPane.add(btnClear3);
 		
 		ed_Part4 = new ReadableTextField();
 		ed_Part4.setColumns(10);
-		ed_Part4.setBounds(76, 158, 191, 22);
+		ed_Part4.setBounds(76, 126, 191, 22);
 		contentPane.add(ed_Part4);
 		
 		btnChoose4 = new JButton(LocaleBundle.getString("AddMovieFrame.btnChoose.text")); //$NON-NLS-1$
@@ -313,7 +309,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 				onBtnChooseClicked(4);
 			}
 		});
-		btnChoose4.setBounds(279, 157, 41, 25);
+		btnChoose4.setBounds(279, 125, 41, 25);
 		contentPane.add(btnChoose4);
 		
 		btnClear4 = new JButton(LocaleBundle.getString("AddMovieFrame.btnClear.text")); //$NON-NLS-1$
@@ -323,12 +319,12 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 				onBtnClearClicked(4);
 			}
 		});
-		btnClear4.setBounds(332, 157, 78, 25);
+		btnClear4.setBounds(332, 125, 78, 25);
 		contentPane.add(btnClear4);
 		
 		ed_Part5 = new ReadableTextField();
 		ed_Part5.setColumns(10);
-		ed_Part5.setBounds(76, 194, 191, 22);
+		ed_Part5.setBounds(76, 154, 191, 22);
 		contentPane.add(ed_Part5);
 		
 		btnChoose5 = new JButton(LocaleBundle.getString("AddMovieFrame.btnChoose.text")); //$NON-NLS-1$
@@ -338,7 +334,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 				onBtnChooseClicked(5);
 			}
 		});
-		btnChoose5.setBounds(279, 193, 41, 25);
+		btnChoose5.setBounds(279, 153, 41, 25);
 		contentPane.add(btnChoose5);
 		
 		btnClear5 = new JButton(LocaleBundle.getString("AddMovieFrame.btnClear.text")); //$NON-NLS-1$
@@ -348,36 +344,36 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 				onBtnClearClicked(5);
 			}
 		});
-		btnClear5.setBounds(332, 193, 78, 25);
+		btnClear5.setBounds(332, 153, 78, 25);
 		contentPane.add(btnClear5);
 		
 		lblPart_1 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblPart_1.text")); //$NON-NLS-1$
-		lblPart_1.setBounds(12, 53, 52, 16);
+		lblPart_1.setBounds(12, 45, 52, 16);
 		contentPane.add(lblPart_1);
 		
 		lblPart_2 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblPart_2.text")); //$NON-NLS-1$
-		lblPart_2.setBounds(12, 89, 52, 16);
+		lblPart_2.setBounds(12, 73, 52, 16);
 		contentPane.add(lblPart_2);
 		
 		lblPart_3 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblPart_3.text")); //$NON-NLS-1$
-		lblPart_3.setBounds(12, 125, 52, 16);
+		lblPart_3.setBounds(12, 101, 52, 16);
 		contentPane.add(lblPart_3);
 		
 		lblPart_4 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblPart_4.text")); //$NON-NLS-1$
-		lblPart_4.setBounds(12, 161, 52, 16);
+		lblPart_4.setBounds(12, 129, 52, 16);
 		contentPane.add(lblPart_4);
 		
 		lblPart_5 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblPart_5.text")); //$NON-NLS-1$
-		lblPart_5.setBounds(12, 197, 52, 16);
+		lblPart_5.setBounds(12, 157, 52, 16);
 		contentPane.add(lblPart_5);
 		
 		edZyklus = new JTextField();
-		edZyklus.setBounds(76, 303, 148, 20);
+		edZyklus.setBounds(95, 304, 148, 20);
 		contentPane.add(edZyklus);
 		edZyklus.setColumns(10);
 		
 		lblZyklus = new JLabel(LocaleBundle.getString("AddMovieFrame.lblZyklus.text")); //$NON-NLS-1$
-		lblZyklus.setBounds(12, 305, 52, 16);
+		lblZyklus.setBounds(12, 305, 71, 16);
 		contentPane.add(lblZyklus);
 		
 		pnlRelPaths = new JPanel();
@@ -479,88 +475,80 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		edCvrControl.setBounds(508, 421, EditCoverControl.CTRL_WIDTH, EditCoverControl.CTRL_HEIGHT);
 		contentPane.add(edCvrControl);
 		
-		lblGesehen = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGesehen.text")); //$NON-NLS-1$
-		lblGesehen.setBounds(12, 341, 52, 16);
-		contentPane.add(lblGesehen);
-		
 		lblQuality = new JLabel(LocaleBundle.getString("AddMovieFrame.lblQuality.text")); //$NON-NLS-1$
-		lblQuality.setBounds(12, 436, 52, 16);
+		lblQuality.setBounds(12, 436, 71, 16);
 		contentPane.add(lblQuality);
 		
 		lblLanguage = new JLabel(LocaleBundle.getString("AddMovieFrame.lblSprache.text")); //$NON-NLS-1$
-		lblLanguage.setBounds(12, 405, 52, 16);
+		lblLanguage.setBounds(12, 405, 71, 16);
 		contentPane.add(lblLanguage);
 		
-		cbxViewed = new JCheckBox(""); //$NON-NLS-1$
-		cbxViewed.setBounds(76, 337, 212, 25);
-		contentPane.add(cbxViewed);
-		
 		cbxQuality = new JComboBox<>();
-		cbxQuality.setBounds(76, 433, 212, 22);
+		cbxQuality.setBounds(95, 434, 212, 22);
 		contentPane.add(cbxQuality);
 		
 		cbxLanguage = new JComboBox<>();
-		cbxLanguage.setBounds(76, 402, 212, 22);
+		cbxLanguage.setBounds(95, 403, 212, 22);
 		contentPane.add(cbxLanguage);
 		
 		spnLength = new JSpinner();
 		spnLength.setModel(new SpinnerNumberModel(0, 0, null, 1));
-		spnLength.setBounds(76, 371, 212, 20);
+		spnLength.setBounds(95, 372, 212, 20);
 		contentPane.add(spnLength);
 		
 		lblLength = new JLabel(LocaleBundle.getString("AddMovieFrame.lblLength.text")); //$NON-NLS-1$
-		lblLength.setBounds(12, 373, 52, 16);
+		lblLength.setBounds(12, 373, 71, 16);
 		contentPane.add(lblLength);
 		
 		spnAddDate = new JCCDateSpinner(CCDate.getMinimumDate(), CCDate.getMinimumDate(), null);
-		spnAddDate.setBounds(95, 466, 193, 20);
+		spnAddDate.setBounds(114, 467, 193, 20);
 		contentPane.add(spnAddDate);
 		
 		lblMin = new JLabel("min."); //$NON-NLS-1$
-		lblMin.setBounds(305, 373, 52, 16);
+		lblMin.setBounds(324, 374, 52, 16);
 		contentPane.add(lblMin);
 		
 		lblEinfgDatum = new JLabel(LocaleBundle.getString("AddMovieFrame.lblEinfgDatum.text")); //$NON-NLS-1$
-		lblEinfgDatum.setBounds(12, 467, 71, 16);
+		lblEinfgDatum.setBounds(12, 467, 84, 16);
 		contentPane.add(lblEinfgDatum);
 		
 		spnOnlineScore = new JSpinner();
 		spnOnlineScore.setModel(new SpinnerNumberModel(0, 0, 10, 1));
-		spnOnlineScore.setBounds(95, 499, 193, 20);
+		spnOnlineScore.setBounds(114, 500, 193, 20);
 		contentPane.add(spnOnlineScore);
 		
 		lblOnlinescore = new JLabel(LocaleBundle.getString("AddMovieFrame.lblOnlinescore.text")); //$NON-NLS-1$
-		lblOnlinescore.setBounds(12, 500, 71, 16);
+		lblOnlinescore.setBounds(12, 500, 84, 16);
 		contentPane.add(lblOnlinescore);
 		
 		label = new JLabel("/ 10"); //$NON-NLS-1$
-		label.setBounds(305, 504, 52, 16);
+		label.setBounds(324, 505, 52, 16);
 		contentPane.add(label);
 		
 		cbxFSK = new JComboBox<>();
-		cbxFSK.setBounds(76, 534, 212, 22);
+		cbxFSK.setBounds(95, 535, 212, 22);
 		contentPane.add(cbxFSK);
 		
 		lblFsk = new JLabel(LocaleBundle.getString("AddMovieFrame.lblFsk.text")); //$NON-NLS-1$
-		lblFsk.setBounds(12, 537, 52, 16);
+		lblFsk.setBounds(12, 537, 71, 16);
 		contentPane.add(lblFsk);
 		
 		cbxFormat = new JComboBox<>();
-		cbxFormat.setBounds(76, 569, 212, 22);
+		cbxFormat.setBounds(95, 570, 212, 22);
 		contentPane.add(cbxFormat);
 		
 		lblFormat = new JLabel(LocaleBundle.getString("AddMovieFrame.lblFormat.text")); //$NON-NLS-1$
-		lblFormat.setBounds(12, 572, 52, 16);
+		lblFormat.setBounds(12, 572, 71, 16);
 		contentPane.add(lblFormat);
 		
 		spnYear = new JSpinner();
 		spnYear.setModel(new SpinnerNumberModel(1900, 1900, null, 1));
 		spnYear.setEditor(new JSpinner.NumberEditor(spnYear, "0")); //$NON-NLS-1$
-		spnYear.setBounds(76, 604, 212, 20);
+		spnYear.setBounds(95, 605, 212, 20);
 		contentPane.add(spnYear);
 		
 		lblYear = new JLabel(LocaleBundle.getString("AddMovieFrame.lblYear.text")); //$NON-NLS-1$
-		lblYear.setBounds(12, 608, 52, 16);
+		lblYear.setBounds(12, 608, 71, 16);
 		contentPane.add(lblYear);
 		
 		spnSize = new JSpinner();
@@ -571,15 +559,15 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 			}
 		});
 		spnSize.setModel(new SpinnerNumberModel(0L, 0L, null, 1L));
-		spnSize.setBounds(76, 640, 212, 20);
+		spnSize.setBounds(95, 641, 212, 20);
 		contentPane.add(spnSize);
 		
 		lblGre = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGre.text")); //$NON-NLS-1$
-		lblGre.setBounds(12, 644, 52, 16);
+		lblGre.setBounds(12, 644, 71, 16);
 		contentPane.add(lblGre);
 		
 		lblNewLabel = new JLabel("Byte = "); //$NON-NLS-1$
-		lblNewLabel.setBounds(296, 642, 50, 16);
+		lblNewLabel.setBounds(315, 643, 50, 16);
 		contentPane.add(lblNewLabel);
 		
 		btnOK = new JButton(LocaleBundle.getString("UIGeneric.btnOK.text")); //$NON-NLS-1$
@@ -604,16 +592,16 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		
 		edTitle = new JTextField();
 		edTitle.setColumns(10);
-		edTitle.setBounds(76, 266, 212, 20);
+		edTitle.setBounds(95, 231, 212, 20);
 		contentPane.add(edTitle);
 		
 		label_1 = new JLabel(LocaleBundle.getString("AddMovieFrame.label_1.text")); //$NON-NLS-1$
-		label_1.setBounds(12, 267, 52, 16);
+		label_1.setBounds(12, 231, 71, 16);
 		contentPane.add(label_1);
 		
 		spnZyklus = new JSpinner();
 		spnZyklus.setModel(new SpinnerNumberModel(-1, -1, 255, 1));
-		spnZyklus.setBounds(236, 304, 52, 20);
+		spnZyklus.setBounds(255, 305, 52, 20);
 		contentPane.add(spnZyklus);
 		
 		btnParseIMDB = new JButton(LocaleBundle.getString("AddMovieFrame.btnParseIMDB.text")); //$NON-NLS-1$
@@ -627,26 +615,16 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		btnParseIMDB.setBounds(508, 368, 212, 42);
 		contentPane.add(btnParseIMDB);
 		
-		btnOpenIMDb = new JButton(CachedResourceLoader.getImageIcon(Resources.ICN_FRAMES_IMDB));
-		btnOpenIMDb.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				HTTPUtilities.openInBrowser(ImDBParser.getSearchURL(getFullTitle(), CCMovieTyp.MOVIE));
-			}
-		});
-		btnOpenIMDb.setBounds(300, 265, 57, 23);
-		contentPane.add(btnOpenIMDb);
-		
 		lblFileSizeDisp = new JLabel();
-		lblFileSizeDisp.setBounds(355, 642, 129, 16);
+		lblFileSizeDisp.setBounds(374, 643, 129, 16);
 		contentPane.add(lblFileSizeDisp);
 		
 		cbxScore = new JComboBox<>();
-		cbxScore.setBounds(76, 671, 212, 20);
+		cbxScore.setBounds(95, 677, 212, 20);
 		contentPane.add(cbxScore);
 		
 		lblScore = new JLabel(LocaleBundle.getString("EditSeriesFrame.lblScore.text")); //$NON-NLS-1$
-		lblScore.setBounds(12, 674, 52, 16);
+		lblScore.setBounds(12, 680, 71, 16);
 		contentPane.add(lblScore);
 		
 		btnCalcQuality = new JButton(LocaleBundle.getString("AddMovieFrame.btnCalcQuality.text")); //$NON-NLS-1$
@@ -657,8 +635,16 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 			}
 		});
 		btnCalcQuality.setEnabled(false);
-		btnCalcQuality.setBounds(305, 433, 95, 23);
+		btnCalcQuality.setBounds(319, 434, 91, 23);
 		contentPane.add(btnCalcQuality);
+		
+		edReference = new JReferenceChooser();
+		edReference.setBounds(95, 267, 212, 20);
+		contentPane.add(edReference);
+		
+		lblOnlineid = new JLabel(LocaleBundle.getString("AddMovieFrame.lblOnlineID.text")); //$NON-NLS-1$
+		lblOnlineid.setBounds(12, 267, 71, 16);
+		contentPane.add(lblOnlineid);
 	}
 	
 	@SuppressWarnings("nls")
@@ -688,11 +674,13 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		if (e.getAttributeValue("quality") != null)
 			setQuality(CCMovieQuality.find(Integer.parseInt(e.getAttributeValue("quality"))));
 		
+		/* TODO
 		if (e.getAttributeValue("viewed") != null)
 			cbxViewed.setSelected(e.getAttributeValue("viewed").equals(true + ""));
 		
 		if (resetViewed)
 			cbxViewed.setSelected(false);
+		*/
 		
 		if (e.getAttributeValue("year") != null)
 			setYear(Integer.parseInt(e.getAttributeValue("year")));
@@ -767,8 +755,6 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		newM.setZyklusTitle(edZyklus.getText());
 		newM.setZyklusID((int) spnZyklus.getValue());
 		
-		newM.setViewed(cbxViewed.isSelected());
-		
 		newM.setQuality(cbxQuality.getSelectedIndex());
 		newM.setLanguage(cbxLanguage.getSelectedIndex());
 		
@@ -796,6 +782,8 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		newM.setScore(cbxScore.getSelectedIndex());
 
 		newM.setCover(edCvrControl.getResizedImage());
+		
+		newM.setOnlineReference(edReference.getValue());
 		
 		newM.endUpdating();
 		
@@ -854,13 +842,14 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		spnAddDate.setValue(CCDate.getCurrentDate());
 		spnZyklus.setValue(-1);
 		
+		edReference.setValue(new CCOnlineReference());
+		
 		updateByteDisp();
 	}
 	
 	private void setEnabledAll(boolean e) {
 		edZyklus.setEnabled(e);
 		btnParseIMDB.setEnabled(e);
-		btnOpenIMDb.setEnabled(e);
 		btnClear5.setEnabled(e);
 		btnClear4.setEnabled(e);
 		btnClear3.setEnabled(e);
@@ -881,7 +870,6 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		cbxGenre5.setEnabled(e);
 		cbxGenre6.setEnabled(e);
 		edCvrControl.setEnabled(e);
-		cbxViewed.setEnabled(e);
 		cbxQuality.setEnabled(e);
 		cbxLanguage.setEnabled(e);
 		spnLength.setEnabled(e);
@@ -897,6 +885,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		spnZyklus.setEnabled(e);
 		cbxScore.setEnabled(e);
 		btnCalcQuality.setEnabled(e);
+		edReference.setEnabled(e);
 	}
 	
 	private void onBtnChooseClicked(int cNmbr) {
@@ -1131,6 +1120,11 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		edCvrControl.setCover(nci);
 	}
 	
+	@Override
+	public void setOnlineReference(CCOnlineReference ref) {
+		edReference.setValue(ref);
+	}
+	
 	public boolean checkUserData(List<UserDataProblem> ret) { 
 		BufferedImage i = edCvrControl.getResizedImage();
 		
@@ -1166,7 +1160,9 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		int g6 = cbxGenre6.getSelectedIndex();
 		int g7 = cbxGenre7.getSelectedIndex();
 		
-		UserDataProblem.testMovieData(ret, null, i, movieList, p0, p1, p2, p3, p4, p5, title, zyklus, zyklusID, len, adddate, oscore, fskidx, year, fsize, csExtn, csExta, g0, g1, g2, g3, g4, g5, g6, g7, quality, lang);
+		CCOnlineReference ref = edReference.getValue();
+		
+		UserDataProblem.testMovieData(ret, null, i, movieList, p0, p1, p2, p3, p4, p5, title, zyklus, zyklusID, len, adddate, oscore, fskidx, year, fsize, csExtn, csExta, g0, g1, g2, g3, g4, g5, g6, g7, quality, lang, ref);
 	
 		return ret.isEmpty();
 	}

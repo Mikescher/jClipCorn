@@ -34,7 +34,7 @@ public class ClipSeriesPopup extends ClipPopupMenu {
 		
 		addActionMenu("SetSeriesRating").add("SetRatingNO").add("SetRating0").add("SetRating1").add("SetRating2").add("SetRating3").add("SetRating4").add("SetRating5");
 		addAction("OpenFolder");
-		addAction("ShowInIMDB");
+		addAction("ShowInBrowser");
 		addAction("MoveSeries");
 		addAction("CreateFolderStructSeries");
 		

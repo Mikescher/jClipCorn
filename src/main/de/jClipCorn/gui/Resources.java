@@ -54,7 +54,7 @@ public class Resources {
 	public final static String ICN_MENUBAR_CREATE_JXMLBKP			= registerICN("/icons/toolbar/source_code.png");
 	public final static String ICN_MENUBAR_COMPARE					= registerICN("/icons/toolbar/balance_unbalance.png");
 	public final static String ICN_MENUBAR_SEARCH					= registerICN("/icons/toolbar/bubblechart.png");
-	public final static String ICN_MENUBAR_IMDB						= registerICN("/icons/toolbar/imdb.png");
+	public final static String ICN_MENUBAR_ONLINEREFERENCE			= registerICN("/icons/toolbar/www_page.png");
 	public final static String ICN_MENUBAR_EXPORTPLAINDB			= registerICN("/icons/toolbar/external.png");
 	public final static String ICN_MENUBAR_OPENFILE					= registerICN("/icons/toolbar/open_folder.png");
 	public final static String ICN_MENUBAR_RESTARTAPP				= registerICN("/icons/toolbar/recycle_bag.png");
@@ -84,7 +84,7 @@ public class Resources {
 	public final static String ICN_MENUBAR_SAVE						= registerICN("/icons/toolbar/save_as.png");
 	public final static String ICN_MENUBAR_STATISTICS				= registerICN("/icons/toolbar/statistics.png");
 	public final static String ICN_MENUBAR_SHUFFLE					= registerICN("/icons/toolbar/cards.png");
-	public final static String ICN_MENUBAR_UPDATES					= registerICN("/icons/toolbar/www_page.png");
+	public final static String ICN_MENUBAR_UPDATES					= registerICN("/icons/toolbar/upload_for_cloud.png");
 	public final static String ICN_MENUBAR_BACKUPMANAGER			= registerICN("/icons/toolbar/backup_manager.png");
 	public final static String ICN_MENUBAR_WATCHDATA				= registerICN("/icons/toolbar/inbox_table.png");
 	public final static String ICN_MENUBAR_OPENLASTSERIES			= registerICN("/icons/toolbar/paper_airplane.png");
@@ -169,11 +169,12 @@ public class Resources {
 	
 	
 	// ############################################  </FRAMES>  ##############################################
-	public final static String ICN_FRAMES_IMDB 			= registerICN("/icons/addMovieFrame/imdb.png");	
+	public final static String ICN_FRAMES_IMDBBUTTON	= registerICN("/icons/onlineReferences/ref1_large.png");
 	public final static String ICN_FRAMES_SEARCH 		= registerICN("/icons/previewSeriesFrame/magnifier.png");
 	public final static String IMG_FRAMES_ABOUT 		= registerICN("/UberDialog.png");	
 	// #############################################  <FRAMES>  ##############################################
 
+	
 	
 	// ##############################################  </LOG>  ###############################################
 	public final static String ICN_LOG_UNDEFINIED		= registerICN("/icons/log/question.png");
@@ -200,6 +201,26 @@ public class Resources {
 	public final static String ICN_SIDEBAR_UNVIEWED		= registerICN("/icons/sidebar/unviewed.png");
 	public final static String ICN_SIDEBAR_CUSTOM		= registerICN("/icons/sidebar/tag.png");
 	// ##############################################  <SIDEBAR>  ############################################
+	
+
+	
+	// ##############################################  </LOG>  ###############################################
+	public final static String ICN_REF_0_SMALL			= registerICN("/icons/onlineReferences/ref0_16x16.png");
+	public final static String ICN_REF_0_BIG			= registerICN("/icons/onlineReferences/ref0.png");
+	public final static String ICN_REF_0_BUTTON			= registerICN("/icons/onlineReferences/ref0_large.png");
+	public final static String ICN_REF_1_SMALL			= registerICN("/icons/onlineReferences/ref1_16x16.png");
+	public final static String ICN_REF_1_BIG			= registerICN("/icons/onlineReferences/ref1.png");
+	public final static String ICN_REF_1_BUTTON			= registerICN("/icons/onlineReferences/ref1_large.png");
+	public final static String ICN_REF_2_SMALL			= registerICN("/icons/onlineReferences/ref2_16x16.png");
+	public final static String ICN_REF_2_BIG			= registerICN("/icons/onlineReferences/ref2.png");
+	public final static String ICN_REF_2_BUTTON			= registerICN("/icons/onlineReferences/ref2_large.png");
+	public final static String ICN_REF_3_SMALL			= registerICN("/icons/onlineReferences/ref3_16x16.png");
+	public final static String ICN_REF_3_BIG			= registerICN("/icons/onlineReferences/ref3.png");
+	public final static String ICN_REF_3_BUTTON			= registerICN("/icons/onlineReferences/ref3_large.png");
+	public final static String ICN_REF_4_SMALL			= registerICN("/icons/onlineReferences/ref4_16x16.png");
+	public final static String ICN_REF_4_BIG			= registerICN("/icons/onlineReferences/ref4.png");
+	public final static String ICN_REF_4_BUTTON			= registerICN("/icons/onlineReferences/ref4_large.png");
+	// ###############################################  <LOG>  ###############################################
 	
 	
 	// #######################################################################################################

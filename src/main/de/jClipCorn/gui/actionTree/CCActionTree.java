@@ -21,6 +21,7 @@ import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieScore;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTags;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTyp;
+import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReference;
 import de.jClipCorn.database.util.ExportHelper;
 import de.jClipCorn.database.xml.CCBXMLReader;
 import de.jClipCorn.gui.Resources;
@@ -64,7 +65,6 @@ import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.helper.FileChooserHelper;
 import de.jClipCorn.util.helper.HTTPUtilities;
 import de.jClipCorn.util.helper.TextFileUtils;
-import de.jClipCorn.util.parser.ImDBParser;
 
 public class CCActionTree {
 	public final static String EVENT_ON_MOVIE_EXECUTED_0 = "PlayMovie"; //$NON-NLS-1$
@@ -577,11 +577,11 @@ public class CCActionTree {
 			}
 		});
 		
-		temp = other.addChild(new CCActionElement("ShowInIMDB", null, "ClipMenuBar.Other.ShowInIMDB", Resources.ICN_MENUBAR_IMDB));
+		temp = other.addChild(new CCActionElement("ShowInBrowser", null, "ClipMenuBar.Other.ShowInBrowser", Resources.ICN_MENUBAR_ONLINEREFERENCE));
 		temp.addListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				onClickOtherShowInIMDB();
+				onClickOtherShowInBrowser();
 			}
 		});
 		
@@ -1207,12 +1207,20 @@ public class CCActionTree {
 		}
 	}
 	
-	private void onClickOtherShowInIMDB() {
+	private void onClickOtherShowInBrowser() {
 		CCDatabaseElement el = owner.getSelectedElement();
-		if (el != null && el.isMovie()) {
-			HTTPUtilities.openInBrowser(ImDBParser.getSearchURL(((CCMovie)el).getCompleteTitle(), CCMovieTyp.MOVIE));
-		} else if (el != null && el.isSeries()) {
-			HTTPUtilities.openInBrowser(ImDBParser.getSearchURL(((CCSeries)el).getTitle(), CCMovieTyp.SERIES));
+		if (el == null) return;
+		
+		CCOnlineReference ref = el.getOnlineReference();
+		
+		if (ref.isUnset()) {
+			if (el.isMovie()) {
+				HTTPUtilities.searchInBrowser(((CCMovie)el).getCompleteTitle());
+			} else if (el.isSeries()) {
+				HTTPUtilities.searchInBrowser(((CCSeries)el).getTitle());
+			}
+		} else {
+			HTTPUtilities.openInBrowser(ref.getURL());
 		}
 	}
 	

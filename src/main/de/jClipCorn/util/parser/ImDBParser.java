@@ -3,6 +3,8 @@ package de.jClipCorn.util.parser;
 import java.awt.image.BufferedImage;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFSK;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieGenreList;
@@ -12,6 +14,8 @@ import de.jClipCorn.util.DoubleString;
 
 public class ImDBParser {
 	public final static ImDBLanguage LANGUAGE = ImDBLanguage.find(CCProperties.getInstance().PROP_PARSEIMDB_LANGUAGE.getValue());
+	
+	private final static Pattern REGEX_IMDB_ID = Pattern.compile("^.*imdb\\.com/[a-z]+/(tt[0-9]+)(/.*)?$", Pattern.CASE_INSENSITIVE); //$NON-NLS-1$
 	
 	public static String getSearchURL(String title, CCMovieTyp typ) {
 		switch (LANGUAGE) {
@@ -132,5 +136,15 @@ public class ImDBParser {
 		default:
 			return null;
 		}
+	}
+
+	public static String extractOnlineID(String url) {
+		Matcher m = REGEX_IMDB_ID.matcher(url);
+		
+		if (m.matches()) {
+			return m.group(1);
+		}
+		
+		return null;
 	}
 }

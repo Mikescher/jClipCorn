@@ -17,6 +17,7 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCDateTimeList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFSK;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieQuality;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieZyklus;
+import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReference;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.datetime.CCDateTime;
@@ -48,6 +49,7 @@ public class UserDataProblem {
 	public final static int PROBLEM_FILE_ALREADYEXISTS = 22;
 	public final static int PROBLEM_DUPLICATE_GENRE = 23;
 	public final static int PROBLEM_INVALID_PATH_CHARACTERS = 24;
+	public final static int PROBLEM_INVALID_REFERENCE = 25;
 	
 	private final int pid; // Problem ID
 	
@@ -67,9 +69,12 @@ public class UserDataProblem {
 	//####################################################################################################################################################
 	//####################################################################################################################################################
 	
-	public static void testMovieData(List<UserDataProblem> ret, CCMovie mov, BufferedImage cvr, CCMovieList l, String p0, String p1, String p2, String p3, String p4, String p5, 
-									String title, String zyklus, int zyklusID, int len, CCDate adddate, int oscore, int fskidx, int year, long fsize, String csExtn, 
-									String csExta, int gen0, int gen1, int gen2, int gen3, int gen4, int gen5, int gen6, int gen7, int quality, int language) {
+	public static void testMovieData(List<UserDataProblem> ret, CCMovie mov, BufferedImage cvr, CCMovieList l, 
+									 String p0, String p1, String p2, String p3, String p4, String p5, 
+									 String title, String zyklus, int zyklusID, int len, CCDate adddate, 
+									 int oscore, int fskidx, int year, long fsize, String csExtn, String csExta, 
+									 int gen0, int gen1, int gen2, int gen3, int gen4, int gen5, int gen6, int gen7, 
+									 int quality, int language, CCOnlineReference ref) {
 		
 		int partcount = 0;
 		
@@ -293,9 +298,15 @@ public class UserDataProblem {
 			
 			ret.add(new UserDataProblem(PROBLEM_INVALID_PATH_CHARACTERS));
 		}
+		
+		//################################################################################################################
+		
+		if (!ref.isValid()) {
+			ret.add(new UserDataProblem(PROBLEM_INVALID_REFERENCE));
+		}
 	}
 	
-	public static void testSeriesData(List<UserDataProblem> ret, BufferedImage cvr, String title, int oscore, int gen0, int gen1, int gen2, int gen3, int gen4, int gen5, int gen6, int gen7, int fskidx) {
+	public static void testSeriesData(List<UserDataProblem> ret, BufferedImage cvr, String title, int oscore, int gen0, int gen1, int gen2, int gen3, int gen4, int gen5, int gen6, int gen7, int fskidx, CCOnlineReference ref) {
 		if (title.isEmpty()) {
 			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_EMPTY_TITLE));
 		}
@@ -354,6 +365,12 @@ public class UserDataProblem {
 		
 		if (PathFormatter.isUntrimmed(title)) {
 			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_ZYKLUSORTITLE_HAS_LEADINGORTRAILING_SPACES));
+		}
+		
+		//################################################################################################################
+
+		if (!ref.isValid()) {
+			ret.add(new UserDataProblem(PROBLEM_INVALID_REFERENCE));
 		}
 	}
 	

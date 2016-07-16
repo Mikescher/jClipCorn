@@ -20,6 +20,7 @@ import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFormat;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieLanguage;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieQuality;
+import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReference;
 import de.jClipCorn.gui.CachedResourceLoader;
 import de.jClipCorn.gui.Resources;
 import de.jClipCorn.gui.frames.inputErrorFrame.InputErrorDialog;
@@ -232,6 +233,11 @@ public class AddSeasonFrame extends JFrame implements UserDataProblemHandler, Pa
 
 	@Override
 	public void setScore(int s) {
+		// NOP
+	}
+	
+	@Override
+	public void setOnlineReference(CCOnlineReference ref) {
 		// NOP
 	}
 	

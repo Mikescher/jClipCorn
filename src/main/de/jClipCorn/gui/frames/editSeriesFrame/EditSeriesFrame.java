@@ -43,7 +43,7 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCMovieGenre;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieLanguage;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieQuality;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieScore;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTyp;
+import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReference;
 import de.jClipCorn.gui.CachedResourceLoader;
 import de.jClipCorn.gui.Resources;
 import de.jClipCorn.gui.frames.addEpisodesFrame.AddEpisodesFrame;
@@ -63,12 +63,11 @@ import de.jClipCorn.util.formatter.FileSizeFormatter;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.helper.FileChooserHelper;
-import de.jClipCorn.util.helper.HTTPUtilities;
 import de.jClipCorn.util.listener.UpdateCallbackListener;
-import de.jClipCorn.util.parser.ImDBParser;
 import de.jClipCorn.util.parser.ParseResultHandler;
 import de.jClipCorn.util.userdataProblem.UserDataProblem;
 import de.jClipCorn.util.userdataProblem.UserDataProblemHandler;
+import de.jClipCorn.gui.guiComponents.referenceChooser.JReferenceChooser;
 
 public class EditSeriesFrame extends JFrame implements ParseResultHandler, WindowListener {
 	private static final long serialVersionUID = -3694533463871522503L;
@@ -147,7 +146,6 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 	private TagPanel tagPnl;
 	private JLabel lblSeriesSeriesID;
 	private JLabel lblSeasonID;
-	private JButton btnSeriesIMDB;
 	private JButton btnAddSeason;
 	private JButton btnAddEpisode;
 	private JButton btnRemoveEpisode;
@@ -162,6 +160,8 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 	private EditCoverControl edSeasonCvrControl;
 	private JLabel lblHistory;
 	private DateTimeListEditor cmpEpisodeViewedHistory;
+	private JReferenceChooser edSeriesReference;
+	private JLabel label;
 
 	/**
 	 * @wbp.parser.constructor
@@ -263,67 +263,67 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		edSeriesTitle.setColumns(10);
 		
 		cbxSeriesGenre_7 = new JComboBox<>();
-		cbxSeriesGenre_7.setBounds(294, 262, 110, 22);
+		cbxSeriesGenre_7.setBounds(263, 202, 141, 22);
 		pnlSeries.add(cbxSeriesGenre_7);
 		
 		label_2 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGenre_7.text")); //$NON-NLS-1$
-		label_2.setBounds(206, 265, 52, 16);
+		label_2.setBounds(206, 204, 52, 16);
 		pnlSeries.add(label_2);
 		
 		label_3 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGenre_6.text")); //$NON-NLS-1$
-		label_3.setBounds(206, 230, 52, 16);
+		label_3.setBounds(206, 177, 52, 16);
 		pnlSeries.add(label_3);
 		
 		label_4 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGenre_5.text")); //$NON-NLS-1$
-		label_4.setBounds(206, 194, 52, 16);
+		label_4.setBounds(206, 150, 52, 16);
 		pnlSeries.add(label_4);
 		
 		label_5 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGenre_4.text")); //$NON-NLS-1$
-		label_5.setBounds(206, 158, 52, 16);
+		label_5.setBounds(206, 123, 52, 16);
 		pnlSeries.add(label_5);
 		
 		label_6 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGenre_3.text")); //$NON-NLS-1$
-		label_6.setBounds(206, 123, 52, 16);
+		label_6.setBounds(206, 96, 52, 16);
 		pnlSeries.add(label_6);
 		
 		label_7 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGenre_2.text")); //$NON-NLS-1$
-		label_7.setBounds(206, 88, 52, 16);
+		label_7.setBounds(206, 69, 52, 16);
 		pnlSeries.add(label_7);
 		
 		label_8 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGenre_1.text")); //$NON-NLS-1$
-		label_8.setBounds(206, 52, 52, 16);
+		label_8.setBounds(206, 42, 52, 16);
 		pnlSeries.add(label_8);
 		
 		label_9 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGenre.text"));   //$NON-NLS-1$
-		label_9.setBounds(206, 16, 52, 16);
+		label_9.setBounds(206, 15, 76, 16);
 		pnlSeries.add(label_9);
 		
 		cbxSeriesGenre_0 = new JComboBox<>();
-		cbxSeriesGenre_0.setBounds(294, 13, 110, 22);
+		cbxSeriesGenre_0.setBounds(263, 13, 141, 22);
 		pnlSeries.add(cbxSeriesGenre_0);
 		
 		cbxSeriesGenre_1 = new JComboBox<>();
-		cbxSeriesGenre_1.setBounds(294, 49, 110, 22);
+		cbxSeriesGenre_1.setBounds(263, 40, 141, 22);
 		pnlSeries.add(cbxSeriesGenre_1);
 		
 		cbxSeriesGenre_2 = new JComboBox<>();
-		cbxSeriesGenre_2.setBounds(294, 85, 110, 22);
+		cbxSeriesGenre_2.setBounds(263, 67, 141, 22);
 		pnlSeries.add(cbxSeriesGenre_2);
 		
 		cbxSeriesGenre_3 = new JComboBox<>();
-		cbxSeriesGenre_3.setBounds(294, 120, 110, 22);
+		cbxSeriesGenre_3.setBounds(263, 94, 141, 22);
 		pnlSeries.add(cbxSeriesGenre_3);
 		
 		cbxSeriesGenre_4 = new JComboBox<>();
-		cbxSeriesGenre_4.setBounds(294, 155, 110, 22);
+		cbxSeriesGenre_4.setBounds(263, 121, 141, 22);
 		pnlSeries.add(cbxSeriesGenre_4);
 		
 		cbxSeriesGenre_5 = new JComboBox<>();
-		cbxSeriesGenre_5.setBounds(294, 191, 110, 22);
+		cbxSeriesGenre_5.setBounds(263, 148, 141, 22);
 		pnlSeries.add(cbxSeriesGenre_5);
 		
 		cbxSeriesGenre_6 = new JComboBox<>();
-		cbxSeriesGenre_6.setBounds(294, 227, 110, 22);
+		cbxSeriesGenre_6.setBounds(263, 175, 141, 22);
 		pnlSeries.add(cbxSeriesGenre_6);
 		
 		cbxSeriesLanguage = new JComboBox<>();
@@ -385,16 +385,6 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		lblSeriesSeriesID.setBounds(206, 317, 76, 14);
 		pnlSeries.add(lblSeriesSeriesID);
 		
-		btnSeriesIMDB = new JButton(CachedResourceLoader.getImageIcon(Resources.ICN_FRAMES_IMDB));
-		btnSeriesIMDB.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				HTTPUtilities.openInBrowser(ImDBParser.getSearchURL(edSeriesTitle.getText(), CCMovieTyp.SERIES));
-			}
-		});
-		btnSeriesIMDB.setBounds(237, 381, 57, 20);
-		pnlSeries.add(btnSeriesIMDB);
-		
 		btnAddSeason = new JButton(LocaleBundle.getString("EditSeriesFrame.btnAddSeason.text")); //$NON-NLS-1$
 		btnAddSeason.addActionListener(new ActionListener() {
 			@Override
@@ -438,6 +428,14 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		edSeriesCvrControl = new EditCoverControl(this, this);
 		edSeriesCvrControl.setBounds(12, 14, EditCoverControl.CTRL_WIDTH, EditCoverControl.CTRL_HEIGHT);
 		pnlSeries.add(edSeriesCvrControl);
+		
+		edSeriesReference = new JReferenceChooser();
+		edSeriesReference.setBounds(263, 256, 141, 20);
+		pnlSeries.add(edSeriesReference);
+		
+		label = new JLabel(LocaleBundle.getString("AddMovieFrame.lblOnlineID.text")); //$NON-NLS-1$
+		label.setBounds(206, 258, 52, 16);
+		pnlSeries.add(label);
 		
 		pnlSeason = new JPanel();
 		pnlSeason.setBorder(new LineBorder(new Color(0, 0, 0)));
@@ -763,6 +761,8 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		cbxSeriesGenre_6.setSelectedIndex(series.getGenre(6).asInt());
 		cbxSeriesGenre_7.setSelectedIndex(series.getGenre(7).asInt());
 		
+		edSeriesReference.setValue(series.getOnlineReference());
+		
 		lsSeasons.setSelectedIndex(-1);
 		DefaultListModel<String> ml;
 		lsSeasons.setModel(ml = new DefaultListModel<>());
@@ -917,6 +917,11 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 	}
 	
 	@Override
+	public void setOnlineReference(CCOnlineReference ref) {
+		edSeriesReference.setValue(ref);
+	}
+	
+	@Override
 	public void onFinishInserting() {
 		// nothing
 	}
@@ -986,6 +991,8 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		series.setGenre(CCMovieGenre.find(cbxSeriesGenre_6.getSelectedIndex()), 6);
 		series.setGenre(CCMovieGenre.find(cbxSeriesGenre_7.getSelectedIndex()), 7);
 		
+		series.setOnlineReference(edSeriesReference.getValue());
+		
 		//#####################################################################################
 		
 		series.endUpdating();
@@ -1009,7 +1016,9 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		int gen6 = cbxSeriesGenre_6.getSelectedIndex();
 		int gen7 = cbxSeriesGenre_7.getSelectedIndex();
 		
-		UserDataProblem.testSeriesData(ret, edSeriesCvrControl.getResizedImage(), title, oscore, gen0, gen1, gen2, gen3, gen4, gen5, gen6, gen7, fskidx);
+		CCOnlineReference ref = edSeriesReference.getValue();
+		
+		UserDataProblem.testSeriesData(ret, edSeriesCvrControl.getResizedImage(), title, oscore, gen0, gen1, gen2, gen3, gen4, gen5, gen6, gen7, fskidx, ref);
 		
 		return ret.isEmpty();
 	}

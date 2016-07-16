@@ -187,4 +187,8 @@ public class HTTPUtilities {
 		
 		return true;
 	}
+
+	public static void searchInBrowser(String text) {
+		openInBrowser("https://www.google.de/search?q=" + escapeURL(text));
+	}
 }

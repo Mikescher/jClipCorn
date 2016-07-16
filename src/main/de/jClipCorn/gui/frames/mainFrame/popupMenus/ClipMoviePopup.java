@@ -37,7 +37,7 @@ public class ClipMoviePopup extends ClipPopupMenu {
 		//#############
 		
 		addAction("OpenFolder");
-		addAction("ShowInIMDB");
+		addAction("ShowInBrowser");
 		
 		//#############
 		addSeparator();

@@ -36,6 +36,7 @@ import javax.swing.event.ListSelectionListener;
 import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.database.databaseElement.CCSeries;
+import de.jClipCorn.database.databaseElement.columnTypes.CCDateTimeList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFSK;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFormat;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieGenre;
@@ -161,7 +162,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 	private EditCoverControl edSeriesCvrControl;
 	private EditCoverControl edSeasonCvrControl;
 	private JLabel lblHistori;
-	private DateTimeListEditor cmpViewedHistory;
+	private DateTimeListEditor cmpEpisodeViewedHistory;
 
 	/**
 	 * @wbp.parser.constructor
@@ -687,10 +688,10 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		lblHistori.setBounds(12, 448, 52, 14);
 		pnlEpisode.add(lblHistori);
 		
-		cmpViewedHistory = new DateTimeListEditor();
-		cmpViewedHistory.setBackground(Color.WHITE);
-		cmpViewedHistory.setBounds(74, 448, 271, 152);
-		pnlEpisode.add(cmpViewedHistory);
+		cmpEpisodeViewedHistory = new DateTimeListEditor();
+		cmpEpisodeViewedHistory.setBackground(Color.WHITE);
+		cmpEpisodeViewedHistory.setBounds(74, 448, 271, 152);
+		pnlEpisode.add(cmpEpisodeViewedHistory);
 	}
 
 	private void setDefaultValues() {
@@ -813,7 +814,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		spnEpisodeLength.setValue(episode.getLength());
 		spnEpisodeSize.setValue(episode.getFilesize().getBytes());
 		spnEpisodeAdded.setValue(episode.getAddDate());
-		//spnEpisodeLastViewed.setValue(episode.getLastViewed());
+		cmpEpisodeViewedHistory.setValue(episode.getViewedHistory());
 		edEpisodePart.setText(episode.getPart());
 		tagPnl.setValue(episode.getTags());
 		
@@ -1200,7 +1201,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		episode.setLength((int) spnEpisodeLength.getValue());
 		episode.setFilesize((long) spnEpisodeSize.getValue());
 		episode.setAddDate(spnEpisodeAdded.getValue());
-		episode.setLastViewed(spnEpisodeLastViewed.getValue());
+		episode.setViewedHistory(cmpEpisodeViewedHistory.getValue());
 		episode.setPart(edEpisodePart.getText());
 		episode.setTags(tagPnl.getValue());
 		
@@ -1225,7 +1226,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		int len = (int) spnEpisodeLength.getValue();
 		int epNum = (int) spnEpisodeEpisode.getValue();
 		CCDate adddate = spnEpisodeAdded.getValue();
-		CCDate lvdate = spnEpisodeLastViewed.getValue();
+		CCDateTimeList lvdate = cmpEpisodeViewedHistory.getValue();
 
 		long fsize = (long) spnEpisodeSize.getValue();
 		int quality = cbxEpisodeQuality.getSelectedIndex();

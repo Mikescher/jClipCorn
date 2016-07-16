@@ -18,13 +18,13 @@ public class CCTime implements Comparable<CCTime>, StringSpecSupplier {
 	public final static String STRINGREP_SQL    = "HH:mm:ss"; //$NON-NLS-1$
 	public final static String STRINGREP_AMPM   = "hh:mm:ss t"; //$NON-NLS-1$
 
-	private static final CCTime MIDNIGHT = new CCTime(0, 0, 0);
+	private static final CCTime MIDNIGHT = new CCTime(0, 0, 0); // { 'H', 'm', 's', 'h', 't' }
 	
 	private final int hour;
 	private final int min;
 	private final int sec;
 	
-	private final static HashSet<Character> stringSpecifier = new HashSet<>(Arrays.asList('H', 'm', 's', 'h', 't'));
+	private static HashSet<Character> stringSpecifier = null;
 	
 	public CCTime() {
 		Calendar cal = Calendar.getInstance();
@@ -345,6 +345,8 @@ public class CCTime implements Comparable<CCTime>, StringSpecSupplier {
 
 	@Override
 	public HashSet<Character> getAllStringSpecifier() {
+		if (stringSpecifier == null) stringSpecifier = new HashSet<>(Arrays.asList('H', 'm', 's', 'h', 't'));
+		
 		return stringSpecifier;
 	}
 
@@ -368,5 +370,9 @@ public class CCTime implements Comparable<CCTime>, StringSpecSupplier {
 
 	public static CCTime getMidnight() {
 		return MIDNIGHT;
+	}
+
+	public boolean isMidnight() {
+		return hour == 0 && min == 0 && sec == 0;
 	}
 }

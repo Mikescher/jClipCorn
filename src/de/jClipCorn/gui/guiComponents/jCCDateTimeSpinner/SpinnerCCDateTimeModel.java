@@ -17,16 +17,51 @@ public class SpinnerCCDateTimeModel extends AbstractSpinnerModel {
 
 	@Override
 	public CCDateTime getNextValue() {
+		char spec = owner.getSelectedSpecifier();
+		
 		if (owner != null) ((CCDateTimeEditor)owner.getEditor()).commitEdit();
-
-		return current.getAddDay(1);
+		
+		switch (spec) {
+		case 'y':
+			return current.getAddYear(1);
+		case 'M':
+			return current.getAddMonth(1);
+		case 'd':
+			return current.getAddDay(1);
+		case 'H':
+			return current.getAddHour(1);
+		case 'm':
+			return current.getAddMinute(1);
+		case 's':
+			return current.getAddSecond(1);
+		default:
+			return current.getAddDay(1);
+		}
+		
 	}
 
 	@Override
 	public CCDateTime getPreviousValue() {
+		char spec = owner.getSelectedSpecifier();
+		
 		if (owner != null) ((CCDateTimeEditor)owner.getEditor()).commitEdit();
-
-		return current.getSubDay(1);
+		
+		switch (spec) {
+		case 'y':
+			return current.getSubYear(1);
+		case 'M':
+			return current.getSubMonth(1);
+		case 'd':
+			return current.getSubDay(1);
+		case 'H':
+			return current.getSubHour(1);
+		case 'm':
+			return current.getSubMinute(1);
+		case 's':
+			return current.getSubSecond(1);
+		default:
+			return current.getSubDay(1);
+		}
 	}
 
 	@Override
@@ -37,9 +72,15 @@ public class SpinnerCCDateTimeModel extends AbstractSpinnerModel {
 	@Override
 	public void setValue(Object o) {
 		if (! current.equals(o)) {
+
+			int caret = 0;
+			if (owner != null) caret = ((CCDateTimeEditor)owner.getEditor()).getTextField().getCaretPosition();
+			
 			current = (CCDateTime) o;
 			
 			fireStateChanged();
+
+			if (owner != null)  ((CCDateTimeEditor)owner.getEditor()).getTextField().setCaretPosition(caret);
 		}
 	}
 

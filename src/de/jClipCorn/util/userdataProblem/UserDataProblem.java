@@ -13,11 +13,13 @@ import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.database.databaseElement.CCSeries;
+import de.jClipCorn.database.databaseElement.columnTypes.CCDateTimeList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFSK;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieQuality;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieZyklus;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.datetime.CCDate;
+import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.formatter.RomanNumberFormatter;
 
@@ -379,7 +381,7 @@ public class UserDataProblem {
 		}
 	}
 	
-	public static void testEpisodeData(List<UserDataProblem> ret, CCSeason season, CCEpisode episode, String title, int len, int epNum, CCDate adddate, CCDate lvdate, long fsize, String csExtn, String csExta, String part, int quality) {
+	public static void testEpisodeData(List<UserDataProblem> ret, CCSeason season, CCEpisode episode, String title, int len, int epNum, CCDate adddate, CCDateTimeList lvdates, long fsize, String csExtn, String csExta, String part, int quality) {
 		if (title.isEmpty()) {
 			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_EMPTY_TITLE));
 		}
@@ -405,8 +407,10 @@ public class UserDataProblem {
 		
 		//################################################################################################################
 
-		if (lvdate.isLessThan(CCDate.getMinimumDate())) {
-			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_DATE_TOO_LESS));
+		for (CCDateTime lvdate : lvdates) {
+			if (lvdate.isLessThan(CCDate.getMinimumDate())) {
+				ret.add(new UserDataProblem(UserDataProblem.PROBLEM_DATE_TOO_LESS));
+			}
 		}
 
 		//################################################################################################################

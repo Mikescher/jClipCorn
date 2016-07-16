@@ -487,7 +487,13 @@ public abstract class GenericDatabase {
 	 * @throws SQLException
 	 */
 	public PreparedStatement createPreparedStatement(String sql) throws SQLException {
-		return connection.prepareStatement(sql);
+		try {
+			return connection.prepareStatement(sql);
+		} catch (SQLException e) {
+			System.out.println("Cannot prepare statement: '"+sql + "' cause of " + e.getMessage());
+			
+			throw e;
+		}
 	}
 	
 	/**

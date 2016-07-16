@@ -2,6 +2,7 @@ package de.jClipCorn.database.databaseElement.columnTypes;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 import de.jClipCorn.util.datetime.CCDate;
@@ -9,7 +10,7 @@ import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.exceptions.CCFormatException;
 
 @SuppressWarnings("nls")
-public class CCDateTimeList {
+public class CCDateTimeList implements Iterable<CCDateTime> {
 	private final List<CCDateTime> list;
 	
 	private CCDateTimeList(List<CCDateTime> lst) {
@@ -57,6 +58,10 @@ public class CCDateTimeList {
 		return new CCDateTimeList();
 	}
 
+	public static CCDateTimeList create(List<CCDateTime> dtlist) {
+		return new CCDateTimeList(new ArrayList<>(dtlist));
+	}
+
 	public CCDateTimeList add(CCDateTime value) {
 		List<CCDateTime> new_list = new ArrayList<>(list);
 		
@@ -89,5 +94,10 @@ public class CCDateTimeList {
 
 	public CCDate getFirst() {
 		return isEmpty() ? CCDate.getMinimumDate() : list.get(0).date;
+	}
+
+	@Override
+	public Iterator<CCDateTime> iterator() {
+		return list.iterator();
 	}
 }

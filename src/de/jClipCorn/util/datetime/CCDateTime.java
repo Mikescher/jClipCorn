@@ -12,16 +12,22 @@ import de.jClipCorn.util.parser.StringSpecSupplier;
 
 @SuppressWarnings("nls")
 public class CCDateTime implements Comparable<CCDateTime>, StringSpecSupplier {
-	public final static String STRINGREP_SIMPLE 	= "DD.MM.YYYY HH:mm:ss"; //$NON-NLS-1$
-	public final static String STRINGREP_SIMPLESHORT = "DD.MM.YY HH:mm"; //$NON-NLS-1$
-	public final static String STRINGREP_LOCAL 		= "DD.N.YYYY HH:mm:ss"; //$NON-NLS-1$
+	public static CCDateTime STATIC_SUPPLIER = CCDateTime.create(1, 1, 2000, 0, 0, 0);
+	
+	public final static String STRINGREP_SIMPLE 	= "dd.MM.yyyy HH:mm:ss"; //$NON-NLS-1$
+	public final static String STRINGREP_SIMPLESHORT = "dd.MM.yy HH:mm"; //$NON-NLS-1$
+	public final static String STRINGREP_SIMPLEDATE = "dd.MM.yyyy"; //$NON-NLS-1$
+	public final static String STRINGREP_LOCAL 		= "dd.N.yyyy HH:mm:ss"; //$NON-NLS-1$
 	
 	public final CCDate date;
 	public final CCTime time;
 
-	private final static HashSet<Character> stringSpecifierDate = CCDate.STATIC_SUPPLIER.getAllStringSpecifier();
-	private final static HashSet<Character> stringSpecifierTime = CCTime.STATIC_SUPPLIER.getAllStringSpecifier();
-	private final static HashSet<Character> stringSpecifier = getStringSpecifier();
+	private static final CCTime TIME_MIN = new CCTime(0, 0, 0);
+	private static final CCTime TIME_MAX = new CCTime(23, 59, 59);
+
+	private static HashSet<Character> stringSpecifierDate = null;
+	private static HashSet<Character> stringSpecifierTime = null;
+	private static HashSet<Character> stringSpecifier = null; // { 'y', 'M', 'd' } && { 'H', 'm', 's', 'h', 't' }
 	
 	private CCDateTime(CCDate d, CCTime t) {
 		date = d;
@@ -83,19 +89,23 @@ public class CCDateTime implements Comparable<CCDateTime>, StringSpecSupplier {
 	}
 	
 	public String getSimpleShortStringRepresentation() {
-		return getStringRepresentation(STRINGREP_SIMPLE);
+		return getStringRepresentation(STRINGREP_SIMPLESHORT);
 	}
 	
 	public static boolean testparse(String rawData, String fmt) {
 		return parse(rawData, fmt) != null;
 	}
 	
-	public static CCDate parse(String rawData, String fmt) {
-		return (CCDate)StringSpecParser.parse(rawData, fmt, CCDate.STATIC_SUPPLIER);
+	public static CCDateTime parse(String rawData, String fmt) {
+		return (CCDateTime)StringSpecParser.parse(rawData, fmt, CCDateTime.STATIC_SUPPLIER);
 	}
 	
 	public String getLocalStringRepresentation() {
 		return getStringRepresentation(STRINGREP_LOCAL);
+	}
+
+	public String getSimpleDateStringRepresentation() {
+		return getStringRepresentation(STRINGREP_SIMPLEDATE);
 	}
 
 	public CCDateTime getAddDay(int v) {
@@ -148,6 +158,12 @@ public class CCDateTime implements Comparable<CCDateTime>, StringSpecSupplier {
 
 	@Override
 	public String resolveStringSpecifier(char c, int count) {
+		if (stringSpecifierDate == null)
+			stringSpecifierDate = CCDate.STATIC_SUPPLIER.getAllStringSpecifier();
+
+		if (stringSpecifierTime == null)
+			stringSpecifierTime = CCTime.STATIC_SUPPLIER.getAllStringSpecifier();
+			
 		if (stringSpecifierDate.contains(c))
 			return date.resolveStringSpecifier(c, count);
 
@@ -159,19 +175,23 @@ public class CCDateTime implements Comparable<CCDateTime>, StringSpecSupplier {
 
 	@Override
 	public HashSet<Character> getAllStringSpecifier() {
-		return stringSpecifier;
-	}
+		if (stringSpecifierDate == null)
+			stringSpecifierDate = CCDate.STATIC_SUPPLIER.getAllStringSpecifier();
 
-	private static HashSet<Character> getStringSpecifier() {
-		HashSet<Character> r = new HashSet<>();
+		if (stringSpecifierTime == null)
+			stringSpecifierTime = CCTime.STATIC_SUPPLIER.getAllStringSpecifier();
 		
-		for (Character chr : stringSpecifierDate)
-			r.add(chr);
+		if (stringSpecifier == null) {
+			stringSpecifier = new HashSet<>();
+			
+			for (Character chr : stringSpecifierDate)
+				stringSpecifier.add(chr);
+			
+			for (Character chr : stringSpecifierTime)
+				stringSpecifier.add(chr);
+		}
 		
-		for (Character chr : stringSpecifierTime)
-			r.add(chr);
-				
-		return r;
+		return stringSpecifier;
 	}
 
 	@Override
@@ -195,5 +215,45 @@ public class CCDateTime implements Comparable<CCDateTime>, StringSpecSupplier {
 			d.put(entry.getKey(), entry.getValue());
 
 		return d;
+	}
+
+	public boolean isLessThan(CCDate date) {
+		return isLessThan(create(date, TIME_MIN));
+	}
+
+	public boolean isGreaterThan(CCDate date) {
+		return isGreaterThan(create(date, TIME_MAX));
+	}
+
+	public boolean isLessEqualsThan(CCDate date) {
+		return isLessEqualsThan(create(date, TIME_MIN));
+	}
+
+	public boolean isGreaterEqualsThan(CCDate date) {
+		return isGreaterEqualsThan(create(date, TIME_MAX));
+	}
+	
+	public boolean isGreaterThan(CCDateTime other) {
+		return compareTo(other) > 0;
+	}
+	
+	public boolean isLessThan(CCDateTime other) {
+		return compareTo(other) < 0;
+	}
+	
+	public boolean isEquals(CCDateTime other) {
+		return compareTo(other) == 0;
+	}
+	
+	public boolean isGreaterEqualsThan(CCDateTime other) {
+		return compareTo(other) >= 0;
+	}
+	
+	public boolean isLessEqualsThan(CCDateTime other) {
+		return compareTo(other) <= 0;
+	}
+
+	public boolean isMidnight() {
+		return time.isMidnight();
 	}
 }

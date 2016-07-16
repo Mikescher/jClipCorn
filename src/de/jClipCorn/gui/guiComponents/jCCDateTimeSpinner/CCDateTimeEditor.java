@@ -38,7 +38,7 @@ public class CCDateTimeEditor extends JPanel implements ChangeListener, Property
 	public void uptime() {
 		CCDateTime datetime = owner.getModel().getValue();
 
-		getTextField().setText(datetime.getSQLStringRepresentation());
+		getTextField().setText(datetime.getSimpleStringRepresentation());
 	}
 
 	@Override
@@ -53,6 +53,8 @@ public class CCDateTimeEditor extends JPanel implements ChangeListener, Property
 
 	public void commitEdit() {
 		if (owner != null && owner.getModel() != null) {
+			int caret = getTextField().getCaretPosition();
+			
 			String text = getTextField().getText();
 			
 			if (CCDateTime.testparse(text, CCDateTime.STRINGREP_SIMPLE)) {
@@ -62,6 +64,8 @@ public class CCDateTimeEditor extends JPanel implements ChangeListener, Property
 			} else {
 				uptime();
 			}
+
+			getTextField().setCaretPosition(caret);
 		}
 	}
 }

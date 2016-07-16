@@ -1,5 +1,7 @@
 package de.jClipCorn.gui.guiComponents.jCCDateTimeSpinner;
 
+import java.util.HashSet;
+
 import javax.swing.JComponent;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerModel;
@@ -50,5 +52,33 @@ public class JCCDateTimeSpinner extends JSpinner {
 	@Override
 	public JComponent getEditor() {
 		return super.getEditor();
+	}
+	
+	public char getSelectedSpecifier() {
+		if (getEditor() != null && getEditor() instanceof CCDateTimeEditor) {
+			CCDateTimeEditor ed = (CCDateTimeEditor) getEditor();
+			
+			int caret = ed.getTextField().getCaretPosition();
+			
+			HashSet<Character> specs = CCDateTime.STATIC_SUPPLIER.getAllStringSpecifier();
+			String rep = CCDateTime.STRINGREP_SIMPLE;
+			
+			int rd = 999999;
+			char rc = ' ';
+			
+			for (int i = 0; i < rep.length(); i++) {
+				if (specs.contains(rep.charAt(i))) {
+					int nd = Math.abs(i - caret);
+					if (nd < rd) {
+						rd = nd;
+						rc = rep.charAt(i);
+					}
+				}
+			}
+			
+			return rc;
+		}
+		
+		return ' ';
 	}
 }

@@ -17,11 +17,11 @@ import de.jClipCorn.util.parser.StringSpecSupplier;
 public final class CCDate implements Comparable<CCDate>, StringSpecSupplier {
 	public static CCDate STATIC_SUPPLIER = new CCDate(6, 8, 1991);
 	
-	public final static String STRINGREP_SIMPLE 	= "dd.MM.YYYY"; //$NON-NLS-1$
-	public final static String STRINGREP_SIMPLESHORT = "dd.MM.YY"; //$NON-NLS-1$
-	public final static String STRINGREP_LOCAL 		= "dd.MMMM.YYYY"; //$NON-NLS-1$
+	public final static String STRINGREP_SIMPLE 	= "dd.MM.yyyy"; //$NON-NLS-1$
+	public final static String STRINGREP_SIMPLESHORT = "dd.MM.yy"; //$NON-NLS-1$
+	public final static String STRINGREP_LOCAL 		= "dd.MMMM.yyyy"; //$NON-NLS-1$
 	public final static String STRINGREP_EXTENDED 	= LocaleBundle.getString("CCDate.STRINGREP_EXTENDED"); //$NON-NLS-1$
-	public final static String STRINGREP_SQL 		= "YYYY-MM-DD"; //$NON-NLS-1$
+	public final static String STRINGREP_SQL 		= "yyyy-MM-dd"; //$NON-NLS-1$
 	
 	public final static long MILLISECONDS_PER_DAY = 86400000;
 	
@@ -32,7 +32,7 @@ public final class CCDate implements Comparable<CCDate>, StringSpecSupplier {
 	private static final CCDate DATE_MAX = new CCDate(31, 12, YEAR_MAX);
 	public  static final String MIN_SQL = DATE_MIN.getSQLStringRepresentation();
 	
-	private final static HashSet<Character> stringSpecifier = new HashSet<>(Arrays.asList('y', 'M', 'd'));
+	private static HashSet<Character> stringSpecifier = null; // { 'y', 'M', 'd' }
 	
 	private static final String[] MONTHNAMES = {
 		LocaleBundle.getString("CCDate.Month0"), //$NON-NLS-1$
@@ -229,7 +229,9 @@ public final class CCDate implements Comparable<CCDate>, StringSpecSupplier {
 
 	@Override
 	public HashSet<Character> getAllStringSpecifier() {
-		return stringSpecifier; // { 'y', 'M', 'd' }
+		if (stringSpecifier == null) stringSpecifier = new HashSet<>(Arrays.asList('y', 'M', 'd'));
+		
+		return stringSpecifier;
 	}
 	
 	public String getSimpleStringRepresentation() {

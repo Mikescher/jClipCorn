@@ -1,13 +1,13 @@
 package de.jClipCorn.gui.frames.parseWatchDataFrame;
 
 import de.jClipCorn.database.databaseElement.CCEpisode;
-import de.jClipCorn.util.datetime.CCDate;
+import de.jClipCorn.util.datetime.CCDateTime;
 
 public class EpisodeWatchDataChangedSet extends WatchDataChangeSet {
 	private CCEpisode eps;
-	private CCDate date;
+	private CCDateTime date;
 	
-	public EpisodeWatchDataChangedSet(CCDate d, CCEpisode e, boolean newViewed) {
+	public EpisodeWatchDataChangedSet(CCDateTime d, CCEpisode e, boolean newViewed) {
 		super(newViewed);
 		this.eps = e;
 		this.date = d;
@@ -32,8 +32,8 @@ public class EpisodeWatchDataChangedSet extends WatchDataChangeSet {
 	public String getChange() {
 		if (eps.isViewed() ^ newState)
 			return String.format("%d -> %d", eps.isViewed()?1:0, newState?1:0); //$NON-NLS-1$
-		else if (newState && ! eps.getLastViewed().isEquals(date))
-			return String.format("%s -> %s", eps.getLastViewed().getSimpleStringRepresentation(), date.getSimpleStringRepresentation()); //$NON-NLS-1$
+		else if (newState && ! eps.getViewedHistory().contains(date))
+			return String.format("history += %s", date.getSimpleStringRepresentation()); //$NON-NLS-1$
 		else
 			return "#"; //$NON-NLS-1$
 	}
@@ -42,9 +42,7 @@ public class EpisodeWatchDataChangedSet extends WatchDataChangeSet {
 	public void execute() {
 		if (eps.isViewed() ^ newState) {
 			eps.setViewed(newState);
-		}
-		if (newState && ! eps.getLastViewed().isEquals(date)) {
-			eps.setLastViewed(date);
+			eps.addToViewedHistory(date);
 		}
 	}
 }

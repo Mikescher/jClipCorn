@@ -150,7 +150,6 @@ public class MoviePlayer {
 			}
 		}
 		
-		
 		lastVLCPath = null;
 		return null;
 	}

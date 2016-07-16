@@ -26,12 +26,15 @@ import de.jClipCorn.gui.guiComponents.CoverLabel;
 import de.jClipCorn.gui.guiComponents.ReadableTextField;
 import de.jClipCorn.gui.guiComponents.TagPanel;
 import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.formatter.FileSizeFormatter;
 import de.jClipCorn.util.formatter.TimeIntervallFormatter;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.helper.HTTPUtilities;
 import de.jClipCorn.util.listener.UpdateCallbackListener;
 import de.jClipCorn.util.parser.ImDBParser;
+import javax.swing.JScrollPane;
+import javax.swing.ScrollPaneConstants;
 
 public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener {
 	private static final long serialVersionUID = 7483476533745432416L;
@@ -79,6 +82,10 @@ public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener 
 	private JMenuItem mntmPlayMovie;
 	private TagPanel pnlTags;
 	private JLabel lblTags;
+	private JList<String> lsHistory;
+	private JLabel lblViewedHistory;
+	private JScrollPane scrollPane;
+	private JScrollPane scrollPane_1;
 	
 	public PreviewMovieFrame(Component owner, CCMovie m) {
 		super();
@@ -110,9 +117,13 @@ public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener 
 		lblViewed.setBounds(10, 11, 30, 16);
 		getContentPane().add(lblViewed);
 		
+		scrollPane = new JScrollPane();
+		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		scrollPane.setBounds(202, 343, 220, 87);
+		getContentPane().add(scrollPane);
+		
 		lsGenres = new JList<>();
-		lsGenres.setBounds(202, 343, 482, 87);
-		getContentPane().add(lsGenres);
+		scrollPane.setViewportView(lsGenres);
 		
 		edPart0 = new ReadableTextField();
 		edPart0.setBounds(201, 53, 416, 20);
@@ -249,6 +260,7 @@ public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener 
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				playMovie();
+				updateFields();
 			}
 		});
 		mnMovie.add(mntmPlayMovie);
@@ -301,6 +313,18 @@ public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener 
 		lblTags = new JLabel(LocaleBundle.getString("EditSeriesFrame.lblTags.text")); //$NON-NLS-1$
 		lblTags.setBounds(202, 468, 46, 14);
 		getContentPane().add(lblTags);
+		
+		scrollPane_1 = new JScrollPane();
+		scrollPane_1.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		scrollPane_1.setBounds(462, 343, 220, 87);
+		getContentPane().add(scrollPane_1);
+		
+		lsHistory = new JList<>();
+		scrollPane_1.setViewportView(lsHistory);
+		
+		lblViewedHistory = new JLabel(LocaleBundle.getString("EditSeriesFrame.lblHistory.text")); //$NON-NLS-1$
+		lblViewedHistory.setBounds(462, 317, 46, 14);
+		getContentPane().add(lblViewedHistory);
 	}
 	
 	private void playMovie() {
@@ -360,10 +384,10 @@ public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener 
 		
 		lbl_OnlineScore.setIcon(movie.getOnlinescore().getIcon());
 		
-		DefaultListModel<String> dlsm;
-		lsGenres.setModel(dlsm = new DefaultListModel<>());
+		DefaultListModel<String> dlsmGenre;
+		lsGenres.setModel(dlsmGenre = new DefaultListModel<>());
 		for (int i = 0; i < movie.getGenreCount(); i++) {
-			dlsm.addElement(movie.getGenre(i).asString());
+			dlsmGenre.addElement(movie.getGenre(i).asString());
 		}
 		
 		edPart0.setText(movie.getPart(0));
@@ -372,6 +396,12 @@ public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener 
 		edPart3.setText(movie.getPart(3));
 		edPart4.setText(movie.getPart(4));
 		edPart5.setText(movie.getPart(5));
+		
+		DefaultListModel<String> dlsmViewed;
+		lsHistory.setModel(dlsmViewed = new DefaultListModel<>());
+		for (CCDateTime dt : movie.getViewedHistory()) {
+			dlsmViewed.addElement(dt.getSimpleStringRepresentation());
+		}
 	}
 
 	private void openImDB() {

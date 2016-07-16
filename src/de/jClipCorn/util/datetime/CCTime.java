@@ -95,8 +95,8 @@ public class CCTime implements Comparable<CCTime>, StringSpecSupplier {
 		return parse(rawData, fmt) != null;
 	}
 
-	public static CCDate parse(String rawData, String fmt) {
-		return (CCDate)StringSpecParser.parse(rawData, fmt, CCTime.STATIC_SUPPLIER);
+	public static CCTime parse(String rawData, String fmt) {
+		return (CCTime)StringSpecParser.parse(rawData, fmt, CCTime.STATIC_SUPPLIER);
 	}
 	
 	public static CCTime createFromSQL(String sqlRep) throws TimeFormatException {
@@ -374,5 +374,13 @@ public class CCTime implements Comparable<CCTime>, StringSpecSupplier {
 
 	public boolean isMidnight() {
 		return hour == 0 && min == 0 && sec == 0;
+	}
+
+	public boolean isValidTime() {
+		if (hour < 0 || hour >= 24) return false;
+		if (min  < 0 || min  >= 60) return false;
+		if (sec  < 0 || sec  >= 60) return false;
+		
+		return true;
 	}
 }

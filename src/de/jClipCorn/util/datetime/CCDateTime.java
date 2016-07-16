@@ -256,4 +256,8 @@ public class CCDateTime implements Comparable<CCDateTime>, StringSpecSupplier {
 	public boolean isMidnight() {
 		return time.isMidnight();
 	}
+
+	public boolean isValidDateTime() {
+		return date.isValidDate() && time.isValidTime();
+	}
 }

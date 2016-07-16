@@ -12,6 +12,7 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCMovieQuality;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieSize;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTags;
 import de.jClipCorn.database.util.ExtendedViewedState;
+import de.jClipCorn.database.util.ExtendedViewedStateType;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.properties.CCProperties;
@@ -87,7 +88,7 @@ public class CCEpisode {
 			this.viewed = viewed;
 
 			if (! viewed) {
-				fullResetLastViewed();
+				fullResetViewedHistory();
 			}
 
 			if (viewed && getTag(CCMovieTags.TAG_WATCH_LATER) && CCProperties.getInstance().PROP_MAINFRAME_AUTOMATICRESETWATCHLATER.getValue()) {
@@ -104,7 +105,7 @@ public class CCEpisode {
 		updateDB();
 	}
 	
-	public void fullResetLastViewed() {
+	public void fullResetViewedHistory() {
 		this.viewedHistory = CCDateTimeList.createEmpty();
 		
 		updateDB();
@@ -283,11 +284,24 @@ public class CCEpisode {
 	}
 
 	public CCDate getViewedHistoryLast() {
-		return viewedHistory.getLast();
+		return viewedHistory.getLastDateOrInvalid();
 	}
 
 	public CCDate getViewedHistoryFirst() {
-		return viewedHistory.getFirst();
+		return viewedHistory.getFirstDateOrInvalid();
+	}
+
+	public CCDate getViewedHistoryAverage() {
+		return viewedHistory.getAverageDateOrInvalid();
+	}
+	
+	public CCDate getDisplayDate() {
+		int prop = CCProperties.getInstance().PROP_SERIES_DISPLAYED_DATE.getValue();
+		
+		if (prop == 0) return getViewedHistoryLast();
+		if (prop == 1) return getViewedHistoryFirst();
+
+		return getViewedHistoryAverage();
 	}
 
 	public CCDate getAddDate() {
@@ -450,13 +464,13 @@ public class CCEpisode {
 
 	public ExtendedViewedState getExtendedViewedState() {
 		if (isViewed())
-			return ExtendedViewedState.VIEWED;
+			return new ExtendedViewedState(ExtendedViewedStateType.VIEWED, getViewedHistory());
 		else if (tags.getTag(CCMovieTags.TAG_WATCH_LATER))
-			return ExtendedViewedState.MARKED_FOR_LATER;
+			return new ExtendedViewedState(ExtendedViewedStateType.MARKED_FOR_LATER, getViewedHistory());
 		else if (tags.getTag(CCMovieTags.TAG_WATCH_NEVER))
-			return ExtendedViewedState.MARKED_FOR_NEVER;
+			return new ExtendedViewedState(ExtendedViewedStateType.MARKED_FOR_NEVER, getViewedHistory());
 		else
-			return ExtendedViewedState.NOT_VIEWED;
+			return new ExtendedViewedState(ExtendedViewedStateType.NOT_VIEWED, getViewedHistory());
 	}
 
 	public boolean checkFolderStructure() {

@@ -21,7 +21,7 @@ public class Main {
 	private final static String PROPERTIES_PATH = "jClipcorn.properties"; //$NON-NLS-1$
 	
 	public static boolean DEBUG = "true".equals(System.getProperty("ineclipse"));  //$NON-NLS-1$//$NON-NLS-2$
-	public static boolean BETA = false;
+	public static boolean BETA = true;
 	
 	public static void main(String[] arg) {
 		new CCProperties(PROPERTIES_PATH, arg); // FIRST ACTION - CACHE THIS SHIT - FUCKING IMPORTANT
@@ -133,4 +133,6 @@ public class Main {
 //          -> then remove the big SpencerHill cycle, make to group and go back to real cycles (Zwei Supertypen in Miami, Jack Clementi, ...)
 //  - Calc Button for Series Quali                                                                                                           
 //  - Auto retrieve length button                                                                                                            
-//  - dont allow no cover add (leads to exception)                                                                                           
+//  - dont allow no cover add (leads to exception)
+//- add db err (mov+epi) not viewed but has history
+//- add db err (ser) has history

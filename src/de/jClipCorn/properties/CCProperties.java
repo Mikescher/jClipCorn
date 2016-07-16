@@ -202,6 +202,11 @@ public class CCProperties {
 		va.add("CCProperties.AddDateCalculation.Opt1"); //$NON-NLS-1$
 		va.add("CCProperties.AddDateCalculation.Opt2"); //$NON-NLS-1$
 		
+		LocalizedVector vdd = new LocalizedVector();
+		vdd.add("CCProperties.SeriesDisplayDate.Opt0"); //$NON-NLS-1$
+		vdd.add("CCProperties.SeriesDisplayDate.Opt1"); //$NON-NLS-1$
+		vdd.add("CCProperties.SeriesDisplayDate.Opt2"); //$NON-NLS-1$
+		
 		LocalizedVector vdb = getDatabaseDriverOptions();
 		
 		PROP_UI_LANG							= new CCVIntProperty(CAT_COMMON, 			this, 	"PROP_UI_LANG", 							getDefLanguage(),	vl);
@@ -247,6 +252,7 @@ public class CCProperties {
 		PROP_SERIES_ADDDATECALCULATION			= new CCVIntProperty(CAT_SERIES, 			this, 	"PROP_SERIES_ADDDATECALCULATION", 			1, 					va);
 		PROP_VALIDATE_CHECK_SERIES_STRUCTURE	= new CCBoolProperty(CAT_SERIES,			this,   "PROP_VALIDATE_CHECK_SERIES_STRUCTURE",		false);
 		PROP_SHOW_PARTIAL_VIEWED_STATE			= new CCBoolProperty(CAT_SERIES,			this,   "PROP_SHOW_PARTIAL_VIEWED_STATE",			false);
+		PROP_SERIES_DISPLAYED_DATE              = new CCVIntProperty(CAT_SERIES, 			this, 	"PROP_SERIES_DISPLAYED_DATE", 				0, 					vdd);
 		PROP_SEASON_INDEX_REGEXPRESSIONS		= new CCSeasonRegexListProperty(CAT_SERIES, this, 	"PROP_SEASON_INDEX_REGEXPRESSIONS", 		getDefSeasonRegex());
 		
 		PROP_PLAY_VLC_PATH						= new CCPathProperty(CAT_PLAY, 				this,	"PROP_PLAY_VLC_PATH",						"", 				PathFormatter.appendAndPrependSeparator("vlc.exe"));

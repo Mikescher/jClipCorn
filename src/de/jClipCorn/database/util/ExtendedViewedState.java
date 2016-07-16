@@ -1,24 +1,25 @@
 package de.jClipCorn.database.util;
 
-import de.jClipCorn.gui.log.CCLog;
+import de.jClipCorn.database.databaseElement.columnTypes.CCDateTimeList;
 
-public enum ExtendedViewedState {
-	VIEWED, 
-	NOT_VIEWED, 
-	MARKED_FOR_LATER, 
-	MARKED_FOR_NEVER,
-	PARTIAL_VIEWED;
+public class ExtendedViewedState {
+	public final ExtendedViewedStateType Type;
+	public final CCDateTimeList History;
+
+	public ExtendedViewedState(ExtendedViewedStateType t, CCDateTimeList h) {
+		Type = t;
+		History = h;
+	}
+	
+	public CCDateTimeList getHistory() {
+		return History;
+	}
+	
+	public ExtendedViewedStateType getType() {
+		return Type;
+	}
 
 	public boolean toBool() {
-		switch (this) {
-			case VIEWED: return true;
-			case NOT_VIEWED: return false;
-			case MARKED_FOR_LATER: return false;
-			case MARKED_FOR_NEVER: return false;
-			case PARTIAL_VIEWED: return false;
-		}
-		
-		CCLog.addError(new Exception());
-		return false;
+		return Type.toBool();
 	}
 }

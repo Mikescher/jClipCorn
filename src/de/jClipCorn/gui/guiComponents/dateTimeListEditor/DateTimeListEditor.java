@@ -15,15 +15,15 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
-import javax.swing.border.BevelBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 import de.jClipCorn.database.databaseElement.columnTypes.CCDateTimeList;
 import de.jClipCorn.gui.guiComponents.jCCDateTimeSpinner.JCCDateTimeSpinner;
+import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.datetime.CCDateTime;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.event.ListSelectionEvent;
 
 public class DateTimeListEditor extends JPanel {
 	private static final long serialVersionUID = -1991426029921952573L;
@@ -71,7 +71,7 @@ public class DateTimeListEditor extends JPanel {
 		panel_1.setOpaque(false);
 		panel.add(panel_1, BorderLayout.WEST);
 		
-		btnNewButton = new JButton("+ Now");
+		btnNewButton = new JButton(LocaleBundle.getString("DateTimeListEditor.Now")); //$NON-NLS-1$
 		btnNewButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -86,7 +86,7 @@ public class DateTimeListEditor extends JPanel {
 		panel_3.setOpaque(false);
 		panel.add(panel_3, BorderLayout.EAST);
 		
-		btnRemove = new JButton("Remove");
+		btnRemove = new JButton(LocaleBundle.getString("DateTimeListEditor.Remove")); //$NON-NLS-1$
 		btnRemove.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -120,7 +120,7 @@ public class DateTimeListEditor extends JPanel {
 		edAddDateTime = new JCCDateTimeSpinner();
 		panel_5.add(edAddDateTime);
 		
-		btnAdd = new JButton("Add");
+		btnAdd = new JButton(LocaleBundle.getString("DateTimeListEditor.Add")); //$NON-NLS-1$
 		panel_5.add(btnAdd);
 		btnAdd.addActionListener(new ActionListener() {
 			@Override
@@ -140,7 +140,7 @@ public class DateTimeListEditor extends JPanel {
 				}
 			}
 		});
-		list.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
+		list.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		add(list, BorderLayout.CENTER);
 		listModel = new DefaultListModel<>();
 		list.setModel(listModel);

@@ -44,6 +44,8 @@ import de.jClipCorn.gui.guiComponents.PropertyCheckbox;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.properties.CCProperties;
+import de.jClipCorn.util.exceptions.CCFormatException;
+import de.jClipCorn.util.helper.DialogHelper;
 
 public class ImportElementsFrame extends JFrame {
 	private static final long serialVersionUID = -7243383487017811810L;
@@ -114,7 +116,12 @@ public class ImportElementsFrame extends JFrame {
 		btnAddAll.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				onAddAll();
+				try {
+					onAddAll();
+				} catch (CCFormatException e) {
+					DialogHelper.showError(ImportElementsFrame.this, LocaleBundle.getString("Dialogs.GenericCaption.Error"), LocaleBundle.getString("LogMessage.FormatErrorInExport")); //$NON-NLS-1$ //$NON-NLS-2$
+					CCLog.addWarning(LocaleBundle.getString("LogMessage.FormatErrorInExport"), e); //$NON-NLS-1$
+				}
 			}
 		});
 		pnlTopRight.add(btnAddAll);
@@ -218,7 +225,12 @@ public class ImportElementsFrame extends JFrame {
 		btnAdd.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				onAdd();
+				try {
+					onAdd();
+				} catch (CCFormatException e) {
+					DialogHelper.showError(ImportElementsFrame.this, LocaleBundle.getString("Dialogs.GenericCaption.Error"), LocaleBundle.getString("LogMessage.FormatErrorInExportf")); //$NON-NLS-1$ //$NON-NLS-2$
+					CCLog.addWarning(LocaleBundle.getString("LogMessage.FormatErrorInExport"), e); //$NON-NLS-1$
+				}
 			}
 		});
 		btnAdd.setEnabled(false);
@@ -265,45 +277,45 @@ public class ImportElementsFrame extends JFrame {
 	private void updateInfoPanel() {
 		if (lbContent.getSelectedValue() != null) {
 			Element value = lbContent.getSelectedValue();
-			if (value.getName().equalsIgnoreCase("movie")) { 
-				if (value.getAttributeValue("zyklus").isEmpty()) { 
-					lblName.setText(value.getAttributeValue("title"));
+			if (value.getName().equalsIgnoreCase("movie")) {  //$NON-NLS-1$
+				if (value.getAttributeValue("zyklus").isEmpty()) {  //$NON-NLS-1$
+					lblName.setText(value.getAttributeValue("title")); //$NON-NLS-1$
 				} else {
-					lblName.setText(value.getAttributeValue("zyklus") + " " + value.getAttributeValue("zyklusnumber") + " - " + value.getAttributeValue("title"));
+					lblName.setText(value.getAttributeValue("zyklus") + " " + value.getAttributeValue("zyklusnumber") + " - " + value.getAttributeValue("title")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 				}
 				
-				lblChilds.setText("0");
+				lblChilds.setText("0"); //$NON-NLS-1$
 				
-				lblViewed.setText(LocaleBundle.getString((value.getAttributeValue("viewed").equals("true")) ? ("ImportElementsFrame.common.bool_true") : ("ImportElementsFrame.common.bool_false")));
+				lblViewed.setText(LocaleBundle.getString((value.getAttributeValue("viewed").equals("true")) ? ("ImportElementsFrame.common.bool_true") : ("ImportElementsFrame.common.bool_false"))); //$NON-NLS-1$ //$NON-NLS-2$
 			} else {
-				lblName.setText(value.getAttributeValue("title"));
+				lblName.setText(value.getAttributeValue("title")); //$NON-NLS-1$
 				
 				int count = 0;
 				List<Element> childs = value.getChildren();
 				for (Element e : childs) {
 					count += e.getChildren().size();
 				}
-				lblChilds.setText("" + count);
+				lblChilds.setText("" + count); //$NON-NLS-1$
 
-				lblViewed.setText("");
+				lblViewed.setText(""); //$NON-NLS-1$
 			}
 			
-			lblCover.setText(LocaleBundle.getString((value.getAttributeValue("coverdata") != null) ? ("ImportElementsFrame.common.bool_true") : ("ImportElementsFrame.common.bool_false")));
+			lblCover.setText(LocaleBundle.getString((value.getAttributeValue("coverdata") != null) ? ("ImportElementsFrame.common.bool_true") : ("ImportElementsFrame.common.bool_false"))); //$NON-NLS-1$
 		
-			btnEditAdd.setEnabled(value.getName().equalsIgnoreCase("movie"));
+			btnEditAdd.setEnabled(value.getName().equalsIgnoreCase("movie")); //$NON-NLS-1$
 			btnAdd.setEnabled(true);
 		} else {
-			lblChilds.setText("");
-			lblCover.setText("");
-			lblName.setText("");
-			lblViewed.setText("");
+			lblChilds.setText(""); //$NON-NLS-1$
+			lblCover.setText(""); //$NON-NLS-1$
+			lblName.setText(""); //$NON-NLS-1$
+			lblViewed.setText(""); //$NON-NLS-1$
 			
 			btnEditAdd.setEnabled(false);
 			btnAdd.setEnabled(false);
 		}
 	}
 	
-	private void onAdd() {
+	private void onAdd() throws CCFormatException {
 		if (lbContent.getSelectedValue() == null) {
 			return;
 		}
@@ -317,7 +329,7 @@ public class ImportElementsFrame extends JFrame {
 		}
 	}
 		
-	private void onAddMovie(Element value, int index) {
+	private void onAddMovie(Element value, int index) throws CCFormatException {
 		CCMovie mov = movielist.createNewEmptyMovie();
 		
 		mov.parseFromXML(value, chckbxResetDate.isSelected(), chcbxResetViewed.isSelected(), chcbxResetScore.isSelected(), chckbxResetTags.isSelected());
@@ -325,7 +337,7 @@ public class ImportElementsFrame extends JFrame {
 		listModel.remove(index);
 	}
 	
-	private void onAddSeries(Element value, int index) {
+	private void onAddSeries(Element value, int index) throws CCFormatException {
 		CCSeries ser = movielist.createNewEmptySeries();
 		
 		ser.parseFromXML(value, chckbxResetDate.isSelected(), chcbxResetViewed.isSelected(), chcbxResetScore.isSelected(), chckbxResetTags.isSelected());
@@ -353,12 +365,11 @@ public class ImportElementsFrame extends JFrame {
 		listModel.remove(lbContent.getSelectedIndex());
 	}
 	
-	@SuppressWarnings("nls")
-	private void onAddAll() {
+	private void onAddAll() throws CCFormatException {
 		for (int i = listModel.size()-1; i >= 0; i--) {
 			Element value = listModel.get(i);
 			
-			if ((! chckbxOnlyCover.isSelected()) || (value.getAttributeValue("coverdata") != null)) {
+			if ((! chckbxOnlyCover.isSelected()) || (value.getAttributeValue("coverdata") != null)) { //$NON-NLS-1$
 				if (value.getName().equalsIgnoreCase("movie")) {  //$NON-NLS-1$
 					onAddMovie(value, i);
 				} else if (value.getName().equalsIgnoreCase("series")) { //$NON-NLS-1$

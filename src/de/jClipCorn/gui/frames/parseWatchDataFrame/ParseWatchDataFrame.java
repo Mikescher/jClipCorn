@@ -35,7 +35,7 @@ import de.jClipCorn.gui.CachedResourceLoader;
 import de.jClipCorn.gui.Resources;
 import de.jClipCorn.gui.guiComponents.DefaultReadOnlyTableModel;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.util.datetime.CCDate;
+import de.jClipCorn.util.datetime.CCDateTime;
 
 public class ParseWatchDataFrame extends JFrame {
 	private static final long serialVersionUID = 7237565086883500709L;
@@ -289,13 +289,13 @@ public class ParseWatchDataFrame extends JFrame {
 					continue;
 				}
 				
-				CCDate d = CCDate.parse(date, "D.M.Y");
+				CCDateTime d = CCDateTime.parse(date, "D.M.Y");
 				
-				if (d == null) {
-					d = CCDate.parse(date, "D.M");
-				}
+				if (d == null) d = CCDateTime.parse(date, "D.M");
+				if (d == null) d = CCDateTime.parse(date, "D.M.Y H:m");
+				if (d == null) d = CCDateTime.parse(date, "D.M.Y H:m:s");
 				
-				if (d == null || ! d.isValidDate()) {
+				if (d == null || ! d.isValidDateTime()) {
 					errors.add(String.format("Line[%d] \"%s\" : Date \"%s\" is no valid Date", i, line.trim(), date));
 					continue;
 				}

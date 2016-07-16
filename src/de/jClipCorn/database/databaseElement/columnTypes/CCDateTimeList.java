@@ -43,6 +43,10 @@ public class CCDateTimeList implements Iterable<CCDateTime> {
 	public boolean isEmpty() {
 		return list.isEmpty();
 	}
+
+	public boolean any() {
+		return !list.isEmpty();
+	}
 	
 	public int count() {
 		return list.size();
@@ -65,7 +69,8 @@ public class CCDateTimeList implements Iterable<CCDateTime> {
 	public CCDateTimeList add(CCDateTime value) {
 		List<CCDateTime> new_list = new ArrayList<>(list);
 		
-		new_list.add(value);
+		if (! contains(value))
+			new_list.add(value);
 		
 		return new CCDateTimeList(new_list);
 	}
@@ -88,16 +93,62 @@ public class CCDateTimeList implements Iterable<CCDateTime> {
 		return new CCDateTimeList(CCDateTime.create(date));
 	}
 
-	public CCDate getLast() {
+	public CCDate getLastDateOrInvalid() {
 		return isEmpty() ? CCDate.getMinimumDate() : list.get(count() - 1).date;
 	}
 
-	public CCDate getFirst() {
+	public CCDate getFirstDateOrInvalid() {
 		return isEmpty() ? CCDate.getMinimumDate() : list.get(0).date;
+	}
+
+	public CCDate getAverageDateOrInvalid() {
+		if (isEmpty()) return CCDate.getMinimumDate();
+		
+		return CCDate.getAverageDate(getDateList());
+	}
+	
+	public boolean contains(CCDateTime time) {
+		for (CCDateTime dt : list) {
+			if (dt.isEquals(time)) return true;
+		}
+		return false;
 	}
 
 	@Override
 	public Iterator<CCDateTime> iterator() {
 		return list.iterator();
+	}
+
+	/*
+	 * List of dates
+	 * (dates can be not unique (cause of different times) 
+	 */
+	public List<CCDate> getDateList() {
+		List<CCDate> l = new ArrayList<>();
+		for (CCDateTime dt : list) {
+			l.add(dt.date);
+		}
+		return l;
+	}
+
+	public String getHTMLListFormatted() {
+		return getHTMLListFormatted(0);
+	}
+
+	public String getHTMLListFormatted(int hiddenHack) {
+		if (isEmpty()) return "";
+		
+		StringBuilder b = new StringBuilder();
+		
+		b.append("<html>");
+		for (CCDateTime datetime : list) {
+			b.append(datetime.getSimpleShortStringRepresentation() + "<br/>");
+		}
+		for (int i = 0; i < hiddenHack; i++) {
+			b.append("<!--HACK-->");
+		}
+		b.append("</html>");
+		
+		return b.toString();
 	}
 }

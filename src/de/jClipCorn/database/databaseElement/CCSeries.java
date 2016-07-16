@@ -13,6 +13,7 @@ import org.apache.commons.lang.text.StrBuilder;
 import org.jdom2.Element;
 
 import de.jClipCorn.database.CCMovieList;
+import de.jClipCorn.database.databaseElement.columnTypes.CCDateTimeList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFormat;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieLanguage;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieQuality;
@@ -20,6 +21,7 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCMovieSize;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTags;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTyp;
 import de.jClipCorn.database.util.ExtendedViewedState;
+import de.jClipCorn.database.util.ExtendedViewedStateType;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.LargeMD5Calculator;
 import de.jClipCorn.util.comparator.CCSeasonComparator;
@@ -496,11 +498,11 @@ public class CCSeries extends CCDatabaseElement {
 
 	public ExtendedViewedState getExtendedViewedState() {
 		if (isViewed())
-			return ExtendedViewedState.VIEWED;
+			return new ExtendedViewedState(ExtendedViewedStateType.VIEWED, CCDateTimeList.createEmpty());
 		else if (CCProperties.getInstance().PROP_SHOW_PARTIAL_VIEWED_STATE.getValue() && isPartialViewed())
-			return ExtendedViewedState.PARTIAL_VIEWED;
+			return new ExtendedViewedState(ExtendedViewedStateType.PARTIAL_VIEWED, CCDateTimeList.createEmpty());
 		else
-			return ExtendedViewedState.NOT_VIEWED;
+			return new ExtendedViewedState(ExtendedViewedStateType.NOT_VIEWED, CCDateTimeList.createEmpty());
 	}
 
 	public String getFolderNameForCreatedFolderStructure() {
@@ -577,5 +579,10 @@ public class CCSeries extends CCDatabaseElement {
 		} else {
 			return zero;
 		}
+	}
+
+	@Override
+	public CCDateTimeList getViewedHistory() {
+		return CCDateTimeList.createEmpty();
 	}
 }

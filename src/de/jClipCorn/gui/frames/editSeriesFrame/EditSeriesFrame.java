@@ -62,7 +62,6 @@ import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.formatter.FileSizeFormatter;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.DialogHelper;
-import de.jClipCorn.util.helper.ExtendedFocusTraversalOnArray;
 import de.jClipCorn.util.helper.FileChooserHelper;
 import de.jClipCorn.util.helper.HTTPUtilities;
 import de.jClipCorn.util.listener.UpdateCallbackListener;
@@ -161,7 +160,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 	private JButton btnEpisodeCalcQuality;
 	private EditCoverControl edSeriesCvrControl;
 	private EditCoverControl edSeasonCvrControl;
-	private JLabel lblHistori;
+	private JLabel lblHistory;
 	private DateTimeListEditor cmpEpisodeViewedHistory;
 
 	/**
@@ -233,6 +232,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 	}
 	
 	private void updateFocusTraversalPolicy() {
+		// all ok
 	}
 	
 	private void selectEpisode(CCEpisode e) {
@@ -684,9 +684,9 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		btnEpisodeCalcQuality.setBounds(251, 159, 94, 23);
 		pnlEpisode.add(btnEpisodeCalcQuality);
 		
-		lblHistori = new JLabel("Historie");
-		lblHistori.setBounds(12, 448, 52, 14);
-		pnlEpisode.add(lblHistori);
+		lblHistory = new JLabel(LocaleBundle.getString("EditSeriesFrame.lblHistory.text")); //$NON-NLS-1$
+		lblHistory.setBounds(12, 448, 52, 14);
+		pnlEpisode.add(lblHistory);
 		
 		cmpEpisodeViewedHistory = new DateTimeListEditor();
 		cmpEpisodeViewedHistory.setBackground(Color.WHITE);

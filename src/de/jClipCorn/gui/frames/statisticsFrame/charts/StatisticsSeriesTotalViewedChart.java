@@ -157,11 +157,11 @@ public class StatisticsSeriesTotalViewedChart extends StatisticsChart {
 			posy.add(0);
 		}
 		
-		int firstIdx = mindate.getDayDifferenceTo(series.episodes.get(0).getLastViewed());
+		int firstIdx = mindate.getDayDifferenceTo(series.episodes.get(0).getViewedHistoryFirst());
 		int lastIdx = 0;
 		int minutesum = 0;
 		for (CCEpisode episode : series.episodes) {
-			int idx = mindate.getDayDifferenceTo(episode.getLastViewed());
+			int idx = mindate.getDayDifferenceTo(episode.getViewedHistoryFirst());
 			lastIdx = idx;
 			minutesum += episode.getLength();
 			
@@ -178,7 +178,7 @@ public class StatisticsSeriesTotalViewedChart extends StatisticsChart {
 		if (single) {
 			CCEpisode episode = series.episodes.get(series.episodes.size() - 1);
 			
-			int idx = mindate.getDayDifferenceTo(episode.getLastViewed());
+			int idx = mindate.getDayDifferenceTo(episode.getViewedHistoryFirst());
 			int value = posy.get(idx) + 1;
 			
 			posx.clear();
@@ -218,7 +218,7 @@ public class StatisticsSeriesTotalViewedChart extends StatisticsChart {
 		Collections.sort(result, new Comparator<TupleSeriesEpList>() {
 			@Override
 			public int compare(TupleSeriesEpList o1, TupleSeriesEpList o2) {
-				return CCDate.compare(o1.episodes.get(0).getLastViewed(), o2.episodes.get(0).getLastViewed());
+				return CCDate.compare(o1.episodes.get(0).getViewedHistoryFirst(), o2.episodes.get(0).getViewedHistoryFirst());
 			}
 		});
 		
@@ -230,7 +230,7 @@ public class StatisticsSeriesTotalViewedChart extends StatisticsChart {
 		
 		for (TupleSeriesEpList series : serieslist) {
 			for (CCEpisode episode : series.episodes) {
-				min = CCDate.min(min, episode.getLastViewed());
+				min = CCDate.min(min, episode.getViewedHistoryFirst());
 			}
 		}
 		
@@ -242,7 +242,7 @@ public class StatisticsSeriesTotalViewedChart extends StatisticsChart {
 		
 		for (TupleSeriesEpList series : serieslist) {
 			for (CCEpisode episode : series.episodes) {
-				max = CCDate.max(max, episode.getLastViewed());
+				max = CCDate.max(max, episode.getViewedHistoryFirst());
 			}
 		}
 		

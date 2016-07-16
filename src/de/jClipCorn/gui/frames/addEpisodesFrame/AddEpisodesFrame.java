@@ -15,7 +15,6 @@ import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -38,6 +37,7 @@ import javax.swing.event.ListSelectionListener;
 
 import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.CCSeason;
+import de.jClipCorn.database.databaseElement.columnTypes.CCDateTimeList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFormat;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieQuality;
 import de.jClipCorn.gui.CachedResourceLoader;
@@ -54,7 +54,6 @@ import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.formatter.FileSizeFormatter;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.DialogHelper;
-import de.jClipCorn.util.helper.ExtendedFocusTraversalOnArray;
 import de.jClipCorn.util.helper.FileChooserHelper;
 import de.jClipCorn.util.listener.OmniParserCallbackListener;
 import de.jClipCorn.util.listener.UpdateCallbackListener;
@@ -75,8 +74,6 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler, 
 	private JList<String> lsEpisodes;
 	private JLabel label;
 	private JTextField edTitle;
-	private JLabel label_1;
-	private JCheckBox cbViewed;
 	private JLabel label_2;
 	private JSpinner spnLength;
 	private JLabel label_3;
@@ -122,12 +119,9 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler, 
 	private JSpinner spnSideLength;
 	private JButton btnSide_13;
 	private JComboBox<String> cbxSideFormat;
-	private JButton btnClear;
 	private JButton btnSide_09;
 	private JButton btnRecalcSize;
 	private JLabel lblSeason;
-	private JCCDateSpinner spnLastViewed;
-	private JLabel lblLastviewed;
 	private JButton btnToday;
 	private ReadableTextField edPart;
 	private JLabel lblNewLabel;
@@ -157,7 +151,6 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler, 
 		initGUI();
 
 		setLocationRelativeTo(owner);
-		setFocusTraversalPolicy(new ExtendedFocusTraversalOnArray(new Component[]{btnAddEpisodes, edTitle, spnEpisode, cbViewed, cbxFormat, cbxQuality, spnLength, spnSize, spnAddDate, spnLastViewed, btnOpen, edPart, btnNext, btnEpCancel, btnEpOk, btnRecalcSize, btnToday, btnClear, spnSide_01, btnSide_01, spnSide_02, btnSide_02, edSide_01, edSide_02, btnSide_03, btnSide_04, edSide_03, btnSide_05, edSide_04, btnSide_06, spnSide_03, spnSide_04, btnSide_07, edSide_05, btnSide_08, btnSide_09, btnSide_10, btnSide_11, spnSideLength, btnSide_12, cbxSideFormat, btnSide_13, cbxSideQuality, btnSide_14, btnSide_15, btnOK}));
 
 		updateList();
 		initFileChooser();
@@ -200,40 +193,32 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler, 
 		pnlInfo.add(edTitle);
 		edTitle.setColumns(10);
 
-		label_1 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGesehen.text")); //$NON-NLS-1$
-		label_1.setBounds(12, 89, 52, 16);
-		pnlInfo.add(label_1);
-
-		cbViewed = new JCheckBox();
-		cbViewed.setBounds(74, 84, 212, 25);
-		pnlInfo.add(cbViewed);
-
 		label_2 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblLength.text")); //$NON-NLS-1$
-		label_2.setBounds(12, 197, 52, 16);
+		label_2.setBounds(12, 158, 52, 16);
 		pnlInfo.add(label_2);
 
 		spnLength = new JSpinner();
-		spnLength.setBounds(74, 197, 193, 20);
+		spnLength.setBounds(74, 158, 193, 20);
 		pnlInfo.add(spnLength);
 
 		label_3 = new JLabel("min."); //$NON-NLS-1$
-		label_3.setBounds(276, 199, 71, 16);
+		label_3.setBounds(276, 160, 71, 16);
 		pnlInfo.add(label_3);
 
 		label_4 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblEinfgDatum.text")); //$NON-NLS-1$
-		label_4.setBounds(12, 332, 71, 16);
+		label_4.setBounds(12, 293, 71, 16);
 		pnlInfo.add(label_4);
 
 		label_5 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblFormat.text")); //$NON-NLS-1$
-		label_5.setBounds(12, 127, 52, 16);
+		label_5.setBounds(12, 88, 52, 16);
 		pnlInfo.add(label_5);
 
 		cbxFormat = new JComboBox<>();
-		cbxFormat.setBounds(74, 123, 193, 22);
+		cbxFormat.setBounds(74, 84, 193, 22);
 		pnlInfo.add(cbxFormat);
 
 		label_6 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGre.text")); //$NON-NLS-1$
-		label_6.setBounds(12, 235, 52, 16);
+		label_6.setBounds(12, 196, 52, 16);
 		pnlInfo.add(label_6);
 
 		spnSize = new JSpinner();
@@ -244,11 +229,11 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler, 
 				updateFilesizeDisplay();
 			}
 		});
-		spnSize.setBounds(74, 234, 193, 20);
+		spnSize.setBounds(74, 195, 193, 20);
 		pnlInfo.add(spnSize);
 
 		label_7 = new JLabel("Byte = "); //$NON-NLS-1$
-		label_7.setBounds(276, 235, 71, 16);
+		label_7.setBounds(276, 196, 71, 16);
 		pnlInfo.add(label_7);
 
 		lblFileSize = new JLabel();
@@ -256,7 +241,7 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler, 
 		pnlInfo.add(lblFileSize);
 
 		spnAddDate = new JCCDateSpinner(CCDate.getMinimumDate(), MIN_DATE, null);
-		spnAddDate.setBounds(74, 330, 193, 20);
+		spnAddDate.setBounds(74, 291, 193, 20);
 		pnlInfo.add(spnAddDate);
 
 		lblEpisode = new JLabel(LocaleBundle.getString("AddEpisodeFrame.lblEpisode.text")); //$NON-NLS-1$
@@ -299,16 +284,6 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler, 
 		btnNext.setBounds(276, 526, 71, 23);
 		pnlInfo.add(btnNext);
 
-		btnClear = new JButton(LocaleBundle.getString("AddMovieFrame.btnClear.text")); //$NON-NLS-1$
-		btnClear.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				spnLastViewed.setValue(CCDate.getMinimumDate());
-			}
-		});
-		btnClear.setBounds(276, 365, 71, 23);
-		pnlInfo.add(btnClear);
-
 		btnRecalcSize = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnRecalcSizes.text")); //$NON-NLS-1$
 		btnRecalcSize.addActionListener(new ActionListener() {
 			@Override
@@ -316,16 +291,8 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler, 
 				recalcFilesize();
 			}
 		});
-		btnRecalcSize.setBounds(74, 296, 193, 23);
+		btnRecalcSize.setBounds(74, 257, 193, 23);
 		pnlInfo.add(btnRecalcSize);
-
-		spnLastViewed = new JCCDateSpinner(CCDate.getMinimumDate(), MIN_DATE, null);
-		spnLastViewed.setBounds(74, 366, 193, 20);
-		pnlInfo.add(spnLastViewed);
-
-		lblLastviewed = new JLabel(LocaleBundle.getString("AddEpisodeFrame.lblLastViewed.text")); //$NON-NLS-1$
-		lblLastviewed.setBounds(12, 367, 71, 16);
-		pnlInfo.add(lblLastviewed);
 
 		btnToday = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnToday.text")); //$NON-NLS-1$
 		btnToday.addActionListener(new ActionListener() {
@@ -334,24 +301,24 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler, 
 				spnAddDate.setValue(CCDate.getCurrentDate());
 			}
 		});
-		btnToday.setBounds(276, 329, 71, 23);
+		btnToday.setBounds(276, 290, 71, 23);
 		pnlInfo.add(btnToday);
 
 		edPart = new ReadableTextField();
-		edPart.setBounds(74, 404, 193, 20);
+		edPart.setBounds(74, 322, 193, 20);
 		pnlInfo.add(edPart);
 		edPart.setColumns(10);
 
 		lblNewLabel = new JLabel(LocaleBundle.getString("AddEpisodeFrame.lblPart.text")); //$NON-NLS-1$
-		lblNewLabel.setBounds(12, 407, 46, 14);
+		lblNewLabel.setBounds(12, 325, 46, 14);
 		pnlInfo.add(lblNewLabel);
 
 		cbxQuality = new JComboBox<>();
-		cbxQuality.setBounds(74, 160, 193, 22);
+		cbxQuality.setBounds(74, 121, 193, 22);
 		pnlInfo.add(cbxQuality);
 
 		lblQuality = new JLabel(LocaleBundle.getString("AddMovieFrame.lblQuality.text")); //$NON-NLS-1$
-		lblQuality.setBounds(12, 164, 46, 14);
+		lblQuality.setBounds(12, 118, 46, 14);
 		pnlInfo.add(lblQuality);
 
 		btnOpen = new JButton(LocaleBundle.getString("AddMovieFrame.btnChoose.text")); //$NON-NLS-1$
@@ -361,7 +328,7 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler, 
 				openPart();
 			}
 		});
-		btnOpen.setBounds(276, 403, 71, 23);
+		btnOpen.setBounds(276, 321, 71, 23);
 		pnlInfo.add(btnOpen);
 		
 		btnCalcQuality = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnCalcQuality.text")); //$NON-NLS-1$
@@ -373,7 +340,7 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler, 
 				cbxQuality.setSelectedIndex(q.asInt());
 			}
 		});
-		btnCalcQuality.setBounds(276, 160, 71, 22);
+		btnCalcQuality.setBounds(276, 121, 71, 22);
 		pnlInfo.add(btnCalcQuality);
 
 		scrollPane = new JScrollPane();
@@ -697,7 +664,7 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler, 
 			for (int i = 0; i < parent.getEpisodeCount(); i++) {
 				CCEpisode episode = parent.getEpisode(i);
 
-				UserDataProblem.testEpisodeData(problems, parent, episode, episode.getTitle(), episode.getLength(), episode.getEpisode(), episode.getAddDate(), episode.getLastViewed(), episode.getFilesize().getBytes(), episode.getFormat().asString(), episode.getFormat().asStringAlt(), episode.getPart(), episode.getQuality().asInt());
+				UserDataProblem.testEpisodeData(problems, parent, episode, episode.getTitle(), episode.getLength(), episode.getEpisode(), episode.getAddDate(), episode.getViewedHistory(), episode.getFilesize().getBytes(), episode.getFormat().asString(), episode.getFormat().asStringAlt(), episode.getPart(), episode.getQuality().asInt());
 			}
 
 			if (problems.size() > 0) {
@@ -788,12 +755,10 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler, 
 
 		episode.setTitle(edTitle.getText());
 		episode.setEpisodeNumber((int) spnEpisode.getValue());
-		episode.setViewed(cbViewed.isSelected());
 		episode.setFormat(cbxFormat.getSelectedIndex());
 		episode.setLength((int) spnLength.getValue());
 		episode.setFilesize((long) spnSize.getValue());
 		episode.setAddDate(spnAddDate.getValue());
-		episode.setLastViewed(spnLastViewed.getValue());
 		episode.setPart(edPart.getText());
 		episode.setQuality(cbxQuality.getSelectedIndex());
 
@@ -813,7 +778,7 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler, 
 		int len = (int) spnLength.getValue();
 		int epNum = (int) spnEpisode.getValue();
 		CCDate adddate = spnAddDate.getValue();
-		CCDate lvdate = spnLastViewed.getValue();
+		CCDateTimeList lvdate = CCDateTimeList.createEmpty();
 
 		long fsize = (long) spnSize.getValue();
 		int quality = cbxQuality.getSelectedIndex();
@@ -877,12 +842,10 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler, 
 
 			edTitle.setText(episode.getTitle());
 			spnEpisode.setValue(episode.getEpisode());
-			cbViewed.setSelected(episode.isViewed());
 			cbxFormat.setSelectedIndex(episode.getFormat().asInt());
 			spnLength.setValue(episode.getLength());
 			spnSize.setValue(episode.getFilesize().getBytes());
 			spnAddDate.setValue(episode.getAddDate());
-			spnLastViewed.setValue(episode.getLastViewed());
 			edPart.setText(episode.getPart());
 			cbxQuality.setSelectedIndex(episode.getQuality().asInt());
 
@@ -962,7 +925,6 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler, 
 
 			ep.setQuality(CCMovieQuality.STREAM);
 			ep.setAddDate(CCDate.getCurrentDate());
-			ep.setLastViewed(CCDate.getMinimumDate());
 
 			ep.endUpdating();
 		}

@@ -14,12 +14,14 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTags;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTyp;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieZyklus;
 import de.jClipCorn.database.util.ExtendedViewedState;
+import de.jClipCorn.database.util.ExtendedViewedStateType;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.LargeMD5Calculator;
 import de.jClipCorn.util.MoviePlayer;
 import de.jClipCorn.util.datetime.CCDate;
+import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.exceptions.CCFormatException;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.ByteUtilies;
@@ -310,6 +312,7 @@ public class CCMovie extends CCDatabaseElement {
 		MoviePlayer.play(this);
 		
 		setViewed(true);
+		addToViewedHistory(CCDateTime.getCurrentDateTime());
 	}
 
 	public CCMovieList getMovieList() {
@@ -456,12 +459,12 @@ public class CCMovie extends CCDatabaseElement {
 	
 	public ExtendedViewedState getExtendedViewedState() {
 		if (isViewed())
-			return ExtendedViewedState.VIEWED;
+			return new ExtendedViewedState(ExtendedViewedStateType.VIEWED, getViewedHistory());
 		else if (tags.getTag(CCMovieTags.TAG_WATCH_LATER))
-			return ExtendedViewedState.MARKED_FOR_LATER;
+			return new ExtendedViewedState(ExtendedViewedStateType.MARKED_FOR_LATER, getViewedHistory());
 		else if (tags.getTag(CCMovieTags.TAG_WATCH_NEVER))
-			return ExtendedViewedState.MARKED_FOR_NEVER;
+			return new ExtendedViewedState(ExtendedViewedStateType.MARKED_FOR_NEVER, getViewedHistory());
 		else
-			return ExtendedViewedState.NOT_VIEWED;
+			return new ExtendedViewedState(ExtendedViewedStateType.NOT_VIEWED, getViewedHistory());
 	}
 }

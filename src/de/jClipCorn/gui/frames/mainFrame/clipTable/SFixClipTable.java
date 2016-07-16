@@ -61,7 +61,7 @@ public class SFixClipTable extends SFixTable {
 	private TablePartRenderer renderer_parts;
 	private TableLengthRenderer renderer_length;
 	private TableTagsRenderer renderer_tags;
-	private TableDateRenderer renderer_date;
+	private TableDateRenderer renderer_adddate;
 	private TableOnlinescoreRenderer renderer_onlinescore;
 	private TableFSKRenderer renderer_fsk;
 	private TableFormatRenderer renderer_format;
@@ -113,7 +113,7 @@ public class SFixClipTable extends SFixTable {
 		renderer_parts = new TablePartRenderer();
 		renderer_length = new TableLengthRenderer();
 		renderer_tags = new TableTagsRenderer();
-		renderer_date = new TableDateRenderer();
+		renderer_adddate = new TableDateRenderer();
 		renderer_onlinescore = new TableOnlinescoreRenderer();
 		renderer_fsk = new TableFSKRenderer();
 		renderer_format = new TableFormatRenderer();
@@ -190,7 +190,7 @@ public class SFixClipTable extends SFixTable {
 		case ClipTableModel.COLUMN_LENGTH:		// Length
 			return renderer_length;
 		case ClipTableModel.COLUMN_DATE:		// Date
-			return renderer_date;
+			return renderer_adddate;
 		case ClipTableModel.COLUMN_ONLINESCORE:	// OnlineScore
 			return renderer_onlinescore;
 		case ClipTableModel.COLUMN_TAGS:	// OnlineScore

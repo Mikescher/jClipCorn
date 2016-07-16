@@ -21,6 +21,7 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReference;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.util.datetime.CCDate;
+import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.exceptions.CCFormatException;
 import de.jClipCorn.util.exceptions.OnlineRefFormatException;
 import de.jClipCorn.util.helper.ByteUtilies;
@@ -53,6 +54,7 @@ public abstract class CCDatabaseElement {
 		onlineReference = new CCOnlineReference();
 		linkedGroups = CCGroupList.createEmpty();
 		genres = new CCMovieGenreList();
+		viewedHistory = CCDateTimeList.createEmpty();
 	}
 	
 	public void setDefaultValues(boolean updateDB) {
@@ -63,6 +65,9 @@ public abstract class CCDatabaseElement {
 		fsk = CCMovieFSK.RATING_0;
 		score = CCMovieScore.RATING_NO;
 		covername = ""; //$NON-NLS-1$
+		viewedHistory = CCDateTimeList.createEmpty();
+		onlineReference = new CCOnlineReference();
+		linkedGroups = CCGroupList.createEmpty();
 		
 		if (updateDB) {
 			updateDB();
@@ -243,6 +248,18 @@ public abstract class CCDatabaseElement {
 
 	public CCDateTimeList getViewedHistory() {
 		return viewedHistory;
+	}
+	
+	public void addToViewedHistory(CCDateTime datetime) {
+		this.viewedHistory = this.viewedHistory.add(datetime);
+		
+		updateDB();
+	}
+	
+	public void fullResetViewedHistory() {
+		this.viewedHistory = CCDateTimeList.createEmpty();
+		
+		updateDB();
 	}
 
 	public void setGenre(CCMovieGenre genre, int idx) {

@@ -13,7 +13,7 @@ public class TableViewedRenderer extends TableRenderer {
 
 	@Override
     public void setValue(Object value) {
-		switch ((ExtendedViewedState)value) {
+		switch (((ExtendedViewedState)value).getType()) {
 		case VIEWED:
 			setIcon(CachedResourceLoader.getImageIcon(Resources.ICN_TABLE_VIEWED_TRUE));
 			break;

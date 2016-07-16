@@ -159,8 +159,13 @@ public final class CCDate implements Comparable<CCDate>, StringSpecSupplier {
 	@SuppressWarnings("nls")
 	@Override
 	public String resolveStringSpecifier(char c, int count) {
-		if (c == 'y') 
+		if (c == 'y')
+		{
+			if (count == 1) return Integer.toString(year);
+			if (count == 2) return String.format("%02d", (year % 100));
+
 			return String.format("%0" + count + "d", year);
+		}
 		
 		if (c == 'M') {
 			if (count == 4) return getMonthName();

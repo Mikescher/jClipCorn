@@ -63,10 +63,10 @@ public class TestCCDate {
 
 	@Test
 	public void testFormat() {
-		assertEquals("26.01.2001", CCDate.create(26,6,2001).getStringRepresentation("dd.MM.yyyy"));
-		assertEquals("26.01.01", CCDate.create(26,6,2001).getStringRepresentation("dd.MM.yy"));
-		assertEquals("26.1.01", CCDate.create(26,6,2001).getStringRepresentation("d.M.yy"));
-		assertEquals("2001-01-26", CCDate.create(26,6,2001).getStringRepresentation("yyyy-MM-dd"));
+		assertEquals("26.06.2001", CCDate.create(26,6,2001).getStringRepresentation("dd.MM.yyyy"));
+		assertEquals("26.06.01", CCDate.create(26,6,2001).getStringRepresentation("dd.MM.yy"));
+		assertEquals("26.6.01", CCDate.create(26,6,2001).getStringRepresentation("d.M.yy"));
+		assertEquals("2001-06-26", CCDate.create(26,6,2001).getStringRepresentation("yyyy-MM-dd"));
 	}
 	
 	@Test

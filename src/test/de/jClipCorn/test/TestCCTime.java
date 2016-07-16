@@ -18,11 +18,11 @@ public class TestCCTime {
 		assertEquals(base, base.getAddMinute(24*60));
 		assertEquals(base, base.getAddSecond(24*60*60));
 		
-		assertEquals(13, base.getAddHour(1).getHours());
+		assertEquals(14, base.getAddHour(1).getHours());
 		assertEquals(30, base.getAddHour(1).getMinutes());
 		assertEquals(15, base.getAddHour(1).getSeconds());
 
-		assertEquals(11, base.getSubHour(1).getHours());
+		assertEquals(12, base.getSubHour(1).getHours());
 		assertEquals(30, base.getSubHour(1).getMinutes());
 		assertEquals(15, base.getSubHour(1).getSeconds());
 
@@ -36,11 +36,11 @@ public class TestCCTime {
 
 		assertEquals(13, base.getAddSecond(55).getHours());
 		assertEquals(31, base.getAddSecond(55).getMinutes());
-		assertEquals(25, base.getAddSecond(55).getSeconds());
+		assertEquals(10, base.getAddSecond(55).getSeconds());
 
 		assertEquals(13, base.getSubSecond(55).getHours());
 		assertEquals(29, base.getSubSecond(55).getMinutes());
-		assertEquals(35, base.getSubSecond(55).getSeconds());
+		assertEquals(20, base.getSubSecond(55).getSeconds());
 
 		assertEquals(14, base.getAddSecond(60*60).getHours());
 		assertEquals(30, base.getAddSecond(60*60).getMinutes());

@@ -252,6 +252,11 @@ public class CCDateTime implements Comparable<CCDateTime>, StringSpecSupplier {
 	public boolean isLessEqualsThan(CCDateTime other) {
 		return compareTo(other) <= 0;
 	}
+	
+	@Override
+	public boolean equals(Object other) {
+		return other != null && (other instanceof CCDateTime) && isEquals((CCDateTime)other);
+	}
 
 	public boolean isMidnight() {
 		return time.isMidnight();
@@ -259,5 +264,10 @@ public class CCDateTime implements Comparable<CCDateTime>, StringSpecSupplier {
 
 	public boolean isValidDateTime() {
 		return date.isValidDate() && time.isValidTime();
+	}
+
+	@Override
+	public int hashCode() {
+		return date.hashCode() ^ 13 * time.hashCode();
 	}
 }

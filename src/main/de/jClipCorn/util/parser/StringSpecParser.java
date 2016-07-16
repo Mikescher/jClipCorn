@@ -94,6 +94,8 @@ public class StringSpecParser {
 			}
 		}
 		
+		if (rp != rawData.length()-1) return null;
+		
 		return supplier.createFromParsedData(values);
 	}
 }

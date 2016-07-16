@@ -142,3 +142,4 @@ public class Main {
 //- serialize groups/refs/viewed-history
 //- AddMovieFrame.parseFromXML --> wtf? (auch für ser)
 //- statistics online reference provider
+//- add db error invalid online ref

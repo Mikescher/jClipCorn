@@ -380,8 +380,18 @@ public class AddSeriesFrame extends JFrame implements ParseResultHandler, UserDa
 	
 	private void onBtnOK(boolean check) {
 		List<UserDataProblem> problems = new ArrayList<>();
+
+		// some problems are too fatal
+		if (! edCvrControl.isCoverSet()) {
+			problems.add(new UserDataProblem(UserDataProblem.PROBLEM_NO_COVER));
+			check = false;
+		}
+		if (edTitle.getText().isEmpty()) {
+			problems.add(new UserDataProblem(UserDataProblem.PROBLEM_EMPTY_TITLE));
+			check = false;
+		}
 		
-		boolean probvalue = (! check) || checkUserData(problems);
+		boolean probvalue = check && checkUserData(problems);
 		
 		if (! probvalue) {
 			InputErrorDialog amied = new InputErrorDialog(problems, this, this);

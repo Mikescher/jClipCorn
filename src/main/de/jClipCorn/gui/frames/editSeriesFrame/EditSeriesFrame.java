@@ -957,8 +957,18 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 	
 	private void onOKSeries(boolean check) {
 		List<UserDataProblem> problems = new ArrayList<>();
+
+		// some problems are too fatal
+		if (! edSeriesCvrControl.isCoverSet()) {
+			problems.add(new UserDataProblem(UserDataProblem.PROBLEM_NO_COVER));
+			check = false;
+		}
+		if (edSeriesTitle.getText().isEmpty()) {
+			problems.add(new UserDataProblem(UserDataProblem.PROBLEM_EMPTY_TITLE));
+			check = false;
+		}
 		
-		boolean probvalue = (! check) || checkUserDataSeries(problems);
+		boolean probvalue = check && checkUserDataSeries(problems);
 		
 		if (! probvalue) {
 			InputErrorDialog amied = new InputErrorDialog(problems, new UserDataProblemHandler() {
@@ -1079,8 +1089,18 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		}
 		
 		List<UserDataProblem> problems = new ArrayList<>();
+
+		// some problems are too fatal
+		if (! edSeasonCvrControl.isCoverSet()) {
+			problems.add(new UserDataProblem(UserDataProblem.PROBLEM_NO_COVER));
+			check = false;
+		}
+		if (edSeasonTitle.getText().isEmpty()) {
+			problems.add(new UserDataProblem(UserDataProblem.PROBLEM_EMPTY_TITLE));
+			check = false;
+		}
 		
-		boolean probvalue = (! check) || checkUserDataSeason(problems);
+		boolean probvalue = check && checkUserDataSeason(problems);
 		
 		if (! probvalue) {
 			InputErrorDialog amied = new InputErrorDialog(problems, new UserDataProblemHandler() {
@@ -1182,8 +1202,14 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		}
 		
 		List<UserDataProblem> problems = new ArrayList<>();
+
+		// some problems are too fatal
+		if (edEpisodeTitle.getText().isEmpty()) {
+			problems.add(new UserDataProblem(UserDataProblem.PROBLEM_EMPTY_TITLE));
+			check = false;
+		}
 		
-		boolean probvalue = (! check) || checkUserDataEpisode(problems);
+		boolean probvalue = check && checkUserDataEpisode(problems);
 		
 		if (! probvalue) {
 			InputErrorDialog amied = new InputErrorDialog(problems, new UserDataProblemHandler() {

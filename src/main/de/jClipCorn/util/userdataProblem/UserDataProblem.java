@@ -50,6 +50,7 @@ public class UserDataProblem {
 	public final static int PROBLEM_DUPLICATE_GENRE = 23;
 	public final static int PROBLEM_INVALID_PATH_CHARACTERS = 24;
 	public final static int PROBLEM_INVALID_REFERENCE = 25;
+	public final static int PROBLEM_NO_COVER = 26;
 	
 	private final int pid; // Problem ID
 	

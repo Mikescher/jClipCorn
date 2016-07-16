@@ -151,6 +151,11 @@ public abstract class CCDatabaseElement {
 	}
 	
 	public void setCover(BufferedImage name) {
+		if (name == null) {
+			return;
+		}
+			
+		
 		if (! covername.isEmpty() && name.equals(getCover())) {
 			return;
 		}

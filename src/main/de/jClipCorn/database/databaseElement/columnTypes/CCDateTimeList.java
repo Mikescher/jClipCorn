@@ -159,4 +159,13 @@ public class CCDateTimeList implements Iterable<CCDateTime> {
 			
 		return new CCDateTimeList(lst);
 	}
+
+	public boolean isValid() {
+		for (CCDateTime cdt : list) {
+			if (cdt.date.isMinimum()) return false;
+			if (cdt.isGreaterThan(CCDateTime.getCurrentDateTime())) return false;
+		}
+		
+		return true;
+	}
 }

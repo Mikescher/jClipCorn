@@ -146,6 +146,14 @@ public class DatabaseValidator {
 		if (! series.getOnlineReference().isValid()) {
 			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_INVALID_ONLINEREF, series));
 		}
+		
+		// ###############################################
+		// History exists
+		// ###############################################
+
+		if (! series.getViewedHistory().isEmpty()) {
+			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_SERIES_HAS_HISTORY, series));
+		}
 	}
 
 	private static void validateMovie(List<DatabaseError> e, CCMovieList movielist, CCMovie mov) {
@@ -373,6 +381,22 @@ public class DatabaseValidator {
 		if (! mov.getOnlineReference().isValid()) {
 			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_INVALID_ONLINEREF, mov));
 		}
+		
+		// ###############################################
+		// History but not viewed
+		// ###############################################
+
+		if (mov.isViewed() && !mov.getViewedHistory().isEmpty()) {
+			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_HISTORY_BUT_UNVIEWED, mov));
+		}
+		
+		// ###############################################
+		// History is invalid
+		// ###############################################
+
+		if (! mov.getViewedHistory().isValid()) {
+			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_INVALID_HISTORY, mov));
+		}
 	}
 
 	private static void validateSeason(List<DatabaseError> e, CCMovieList movielist, CCSeason season) {
@@ -522,6 +546,22 @@ public class DatabaseValidator {
 
 		if (PathFormatter.containsIllegalPathSymbolsInSerializedFormat(episode.getPart())){
 			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_INVALID_CHARS_IN_PATH, episode));
+		}
+		
+		// ###############################################
+		// History but not viewed
+		// ###############################################
+
+		if (episode.isViewed() && !episode.getViewedHistory().isEmpty()) {
+			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_HISTORY_BUT_UNVIEWED, episode));
+		}
+		
+		// ###############################################
+		// History is invalid
+		// ###############################################
+
+		if (! episode.getViewedHistory().isValid()) {
+			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_INVALID_HISTORY, episode));
 		}
 	}
 

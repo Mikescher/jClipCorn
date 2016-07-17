@@ -151,4 +151,12 @@ public class CCDateTimeList implements Iterable<CCDateTime> {
 		
 		return b.toString();
 	}
+
+	public CCDateTimeList removeLast() {
+		List<CCDateTime> lst = new ArrayList<>(list);
+		
+		if (! lst.isEmpty()) lst.remove(lst.size()-1);
+			
+		return new CCDateTimeList(lst);
+	}
 }

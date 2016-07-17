@@ -37,13 +37,17 @@ import javax.swing.event.ListSelectionListener;
 
 import org.apache.commons.lang.StringUtils;
 
+import com.jgoodies.forms.layout.ColumnSpec;
+import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.FormSpecs;
+import com.jgoodies.forms.layout.RowSpec;
+
 import de.jClipCorn.Main;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieScore;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTyp;
 import de.jClipCorn.database.util.CCDBUpdateListener;
 import de.jClipCorn.database.util.ExportHelper;
 import de.jClipCorn.gui.CachedResourceLoader;
@@ -72,11 +76,6 @@ import de.jClipCorn.util.helper.ImageUtilities;
 import de.jClipCorn.util.helper.TextFileUtils;
 import de.jClipCorn.util.listener.EpisodeSearchCallbackListener;
 import de.jClipCorn.util.listener.UpdateCallbackListener;
-import de.jClipCorn.util.parser.imageparser.ImDBImageParser;
-import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.ColumnSpec;
-import com.jgoodies.forms.layout.FormSpecs;
-import com.jgoodies.forms.layout.RowSpec;
 
 public class PreviewSeriesFrame extends JFrame implements ListSelectionListener, JCoverChooserPopupEvent, UpdateCallbackListener {
 	private static final long serialVersionUID = 5484205983855802992L;
@@ -483,11 +482,12 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 		});
 		mnZuflligeEpisodeAbspielen.add(mntmNewMenuItem);
 
-		mntmAufImdbAnzeigen = new JMenuItem(LocaleBundle.getString("PreviewSeriesFrame.Menu.Extras.ViewImDB")); //$NON-NLS-1$
+		mntmAufImdbAnzeigen = new JMenuItem(LocaleBundle.getString("PreviewSeriesFrame.Menu.Extras.ViewOnline")); //$NON-NLS-1$
 		mntmAufImdbAnzeigen.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				HTTPUtilities.openInBrowser(ImDBImageParser.getSearchURL(dispSeries.getTitle(), CCMovieTyp.SERIES));
+				if (dispSeries.getOnlineReference().isSet() && dispSeries.getOnlineReference().isValid())
+					HTTPUtilities.openInBrowser(dispSeries.getOnlineReference().getURL());
 			}
 		});
 		

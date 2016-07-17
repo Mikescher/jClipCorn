@@ -114,34 +114,37 @@ public class Main {
 
 //TODO Missing Legend for statistics: "Format/Zeit" --> Use stacked line diagramm (-> continoous stacked bar diagram)
 
-//TODO Get Viewed Values from backups
-
 //TODO
-//  jClipCorn  - better cover resolution,                                                                                                    
-//  - show cover in HD (right click in coverpanel + series cover control + cbl click coverpanel)                                             
-//  - mass reverse image search for better cover versions (more HD)                                                                          
-//  - generate filename strip down chars (á -> a, ê -> e, etc)                                                                               
-//  - Format/Quality etc also for Serien (everything for a;b;a+b with toggle control?  ->  only were applicable)                             
-//  - combined timeline row                                                                                                                  
-//  - db_err: find series with non-continoous episode numbers                                                                                
-//  - remember online id (+ dialog to find them) as string with ident for website                                                            
-//      - imdb:????                                                                                                                          
-//      - amazon:???                                                                                                                         
-//      - moviepilot:???                                                                                                                     
-//      - themoviedb:???                                                                                                                     
-//  - Custom Movie Groups (SpencerHill, Statham, Disney, Marvel, DC, Tarrantino)                                                             
-//          -> then remove the big SpencerHill cycle, make to group and go back to real cycles (Zwei Supertypen in Miami, Jack Clementi, ...)
-//  - Calc Button for Series Quali                                                                                                           
-//  - Auto retrieve length button                                                                                                            
-//  - dont allow no cover add (leads to exception)
-//- add db err (mov+epi) not viewed but has history
-//- add db err (ser) has history
-//- auto find imdb for non ref movies/series (TMDB FIRST !)
-//- dialog show unreffed movies
-//- add groups to (both?) search
-//- serialize groups/refs/viewed-history
-//- AddMovieFrame.parseFromXML --> wtf? (auch für ser)
-//- statistics online reference provider
-//- add db error invalid online ref
-//- make it configurable which metadata-provider and which image-provider to use (new property type FlagList->CheckBoxList)
-//- extended option to hide Wartungs menu from deafult user
+//   - jClipCorn  - better cover resolution,  
+//   - Get Viewed Values from backups
+//   - show cover in HD (right click in coverpanel + series cover control + cbl click coverpanel)                                             
+//   - mass reverse image search for better cover versions (more HD)                                                                          
+//   - generate filename strip down chars (á -> a, ê -> e, etc)                                                                               
+//   - Format/Quality etc also for Serien (everything for a;b;a+b with toggle control?  ->  only were applicable)                             
+//   - combined timeline row                                                                                                                  
+//   - db_err: find series with non-continoous episode numbers                                                                                
+// X - remember online id (+ dialog to find them) as string with ident for website                                                            
+// X     - imdb:????                                                                                                                          
+// X     - amazon:???                                                                                                                         
+// X     - moviepilot:???                                                                                                                     
+// X     - themoviedb:???                                                                                                                     
+//   - Custom Movie Groups (SpencerHill, Statham, Disney, Marvel, DC, Tarrantino)                                                             
+//           -> then remove the big SpencerHill cycle, make to group and go back to real cycles (Zwei Supertypen in Miami, Jack Clementi, ...)
+// X - Calc Button for Series Quali                                                                                                           
+//   - Auto retrieve length button                                                                                                            
+// X - dont allow no cover add (leads to exception)
+//   - add db err (mov+epi) not viewed but has history
+//   - add db err (ser) has history
+// X - auto find imdb for non ref movies/series (TMDB FIRST !)
+//   - dialog show unreffed movies
+//   - add groups to (both?) search
+//   - serialize groups/refs/viewed-history
+//   - AddMovieFrame.parseFromXML --> wtf? (auch für ser)
+// X - statistics online reference provider
+// X - add db error invalid online ref
+//   - make it configurable which metadata-provider and which image-provider to use (new property type FlagList->CheckBoxList)
+//   - extended option to hide Wartungs menu from deafult user
+//   - search and extended search for groups
+//   - strange xml parse in addmovframe
+//   - viewed | groups | ref to filter
+// X - undo last viewed

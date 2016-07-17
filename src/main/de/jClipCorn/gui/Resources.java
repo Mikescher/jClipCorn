@@ -40,6 +40,7 @@ public class Resources {
 	public final static String ICN_MENUBAR_FOLDER					= registerICN("/icons/toolbar/folder.png");
 	public final static String ICN_MENUBAR_VIEWED					= registerICN("/icons/toolbar/viewed.png");
 	public final static String ICN_MENUBAR_UNVIEWED					= registerICN("/icons/toolbar/unviewed.png");
+	public final static String ICN_MENUBAR_UNDOVIEWED				= registerICN("/icons/toolbar/undoviewed.png");
 	public final static String ICN_MENUBAR_SCANFOLDER				= registerICN("/icons/toolbar/scanner.png");
 	public final static String ICN_MENUBAR_ABOUT					= registerICN("/icons/toolbar/info_rhombus.png");
 	public final static String ICN_MENUBAR_MCHANGE_VIEWED			= registerICN("/icons/toolbar/knot.png");

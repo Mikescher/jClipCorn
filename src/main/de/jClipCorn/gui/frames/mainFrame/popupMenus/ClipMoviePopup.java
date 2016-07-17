@@ -24,6 +24,7 @@ public class ClipMoviePopup extends ClipPopupMenu {
 		for (int i = 0; i < CCMovieTags.ACTIVETAGS; i++) wrapper_Tags.add(String.format("SwitchTag_%02d", i));
 		addAction("SetMovieViewed");
 		addAction("SetMovieUnviewed");
+		addAction("UndoMovieViewed");
 		
 		//#############
 		addSeparator();

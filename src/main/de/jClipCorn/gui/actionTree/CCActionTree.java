@@ -18,6 +18,7 @@ import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.CCSeries;
+import de.jClipCorn.database.databaseElement.columnTypes.CCDateTimeList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieScore;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTags;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTyp;
@@ -576,6 +577,15 @@ public class CCActionTree {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				onClickOtherSetUnviewed();
+			}
+		});
+		
+		temp = other.addChild(new CCActionElement("UndoMovieViewed", null, "ClipMenuBar.Other.UndoMovieViewed", Resources.ICN_MENUBAR_UNDOVIEWED));
+		temp.setReadOnlyRestriction();
+		temp.addListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				onClickOtherOtherUndoMovieViewed();
 			}
 		});
 		
@@ -1212,6 +1222,20 @@ public class CCActionTree {
 		CCDatabaseElement el = owner.getSelectedElement();
 		if (el != null && el.isMovie()) {
 			((CCMovie)el).setViewed(true);
+		}
+	}
+	
+	private void onClickOtherOtherUndoMovieViewed() {
+		CCDatabaseElement el = owner.getSelectedElement();
+		if (el != null && el.isMovie() && ((CCMovie)el).isViewed()) {
+			CCMovie mov = ((CCMovie)el);
+			
+			CCDateTimeList history = mov.getViewedHistory();
+			history = history.removeLast();
+			mov.setViewedHistory(history);
+			
+			if (history.isEmpty())
+				mov.setViewed(false);
 		}
 	}
 	

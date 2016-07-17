@@ -51,7 +51,7 @@ public abstract class CCDatabaseElement {
 		this.seriesID = seriesID;
 		this.movielist = ml;
 		
-		onlineReference = new CCOnlineReference();
+		onlineReference = CCOnlineReference.createNone();
 		linkedGroups = CCGroupList.createEmpty();
 		genres = new CCMovieGenreList();
 		viewedHistory = CCDateTimeList.createEmpty();
@@ -66,7 +66,7 @@ public abstract class CCDatabaseElement {
 		score = CCMovieScore.RATING_NO;
 		covername = ""; //$NON-NLS-1$
 		viewedHistory = CCDateTimeList.createEmpty();
-		onlineReference = new CCOnlineReference();
+		onlineReference = CCOnlineReference.createNone();
 		linkedGroups = CCGroupList.createEmpty();
 		
 		if (updateDB) {

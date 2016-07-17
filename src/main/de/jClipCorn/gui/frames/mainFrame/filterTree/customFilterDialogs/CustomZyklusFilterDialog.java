@@ -16,7 +16,7 @@ import javax.swing.JTextField;
 
 import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomZyklusFilter;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.util.StringMatchType;
+import de.jClipCorn.util.datatypes.StringMatchType;
 import de.jClipCorn.util.listener.FinishListener;
 
 public class CustomZyklusFilterDialog extends CustomFilterDialog {

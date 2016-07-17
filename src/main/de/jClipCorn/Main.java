@@ -143,3 +143,5 @@ public class Main {
 //- AddMovieFrame.parseFromXML --> wtf? (auch für ser)
 //- statistics online reference provider
 //- add db error invalid online ref
+//- make it configurable which metadata-provider and which image-provider to use (new property type FlagList->CheckBoxList)
+//- extended option to hide Wartungs menu from deafult user

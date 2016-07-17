@@ -76,8 +76,7 @@ public class CCBackup {
 		String result = properties.getProperty(PROP_DATE);
 		if (result == null) return CCDate.getMinimumDate();
 		
-		CCDate dateresult = CCDate.parse(result, "D.M.Y"); //$NON-NLS-1$
-		if (dateresult == null) return CCDate.getMinimumDate();
+		CCDate dateresult = CCDate.parseOrDefault(result, CCDate.STRINGREP_DESERIALIZE, CCDate.getMinimumDate());
 		
 		return dateresult;
 	}

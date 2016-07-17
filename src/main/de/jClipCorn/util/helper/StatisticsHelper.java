@@ -24,6 +24,7 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCMovieQuality;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieScore;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieSize;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTags;
+import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineRefType;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.datetime.CCDatespan;
 
@@ -287,6 +288,22 @@ public class StatisticsHelper {
 			CCMovie m = it.next();
 		
 			result[m.getFormat().asInt()]++;
+		}
+		
+		return result;
+	}
+	
+	public static int[] getElementCountForAllProvider(CCMovieList ml) {
+		int[] result = new int[CCOnlineRefType.values().length];
+		
+		for (int i = 0; i < CCOnlineRefType.values().length; i++) {
+			result[i] = 0;
+		}
+		
+		for (Iterator<CCDatabaseElement> it = ml.iterator(); it.hasNext();) {
+			CCDatabaseElement m = it.next();
+		
+			result[m.getOnlineReference().type.asInt()]++;
 		}
 		
 		return result;

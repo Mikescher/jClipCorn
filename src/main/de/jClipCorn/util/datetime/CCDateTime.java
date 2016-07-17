@@ -93,11 +93,15 @@ public class CCDateTime implements Comparable<CCDateTime>, StringSpecSupplier {
 	}
 	
 	public static boolean testparse(String rawData, String fmt) {
-		return parse(rawData, fmt) != null;
+		return StringSpecParser.testparse(rawData, fmt, CCDateTime.STATIC_SUPPLIER);
 	}
 	
-	public static CCDateTime parse(String rawData, String fmt) {
+	public static CCDateTime parse(String rawData, String fmt) throws CCFormatException {
 		return (CCDateTime)StringSpecParser.parse(rawData, fmt, CCDateTime.STATIC_SUPPLIER);
+	}
+	
+	public static CCDateTime parseOrDefault(String rawData, String fmt, CCDateTime defaultValue){
+		return (CCDateTime)StringSpecParser.parseOrDefault(rawData, fmt, CCDateTime.STATIC_SUPPLIER, defaultValue);
 	}
 	
 	public String getLocalStringRepresentation() {

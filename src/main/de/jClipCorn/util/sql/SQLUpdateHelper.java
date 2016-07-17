@@ -3,7 +3,7 @@ package de.jClipCorn.util.sql;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.jClipCorn.util.DoubleString;
+import de.jClipCorn.util.datatypes.DoubleString;
 
 public class SQLUpdateHelper extends SQLHelper {
 	private DoubleString whereClauses;

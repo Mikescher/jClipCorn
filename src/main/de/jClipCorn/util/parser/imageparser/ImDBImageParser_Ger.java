@@ -7,10 +7,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTyp;
-import de.jClipCorn.util.DoubleString;
+import de.jClipCorn.util.datatypes.DoubleString;
 import de.jClipCorn.util.helper.RegExHelper;
-import de.jClipCorn.util.parser.ImDBParser;
-import de.jClipCorn.util.parser.ImDBParser_Ger;
+import de.jClipCorn.util.parser.onlineparser.ImDBParser;
+import de.jClipCorn.util.parser.onlineparser.ImDBParser_Ger;
 @SuppressWarnings("nls")
 public class ImDBImageParser_Ger {
 	private final static String COVER_URL_ALL_APPENDIX = "mediaindex";

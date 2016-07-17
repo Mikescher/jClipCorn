@@ -45,6 +45,7 @@ import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsHoursSerMovChart
 import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsLanguageChart;
 import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsMovieLengthChart;
 import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsOnlinescoreChart;
+import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsProviderChart;
 import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsQualityChart;
 import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsScoreChart;
 import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsSeriesTimeline;
@@ -339,6 +340,7 @@ public class StatisticsFrame extends JFrame {
 	private void initCharts() {
 		boolean h_mov = movielist.hasMovies();
 		boolean h_ser = movielist.hasSeries();
+		boolean h_any = h_mov || h_ser;
 		
 		if (h_mov) cbxChooseChart.addItem(new StatisticsAddDateChart(movielist));
 		if (h_mov) cbxChooseChart.addItem(new StatisticsMovieLengthChart(movielist));
@@ -361,6 +363,7 @@ public class StatisticsFrame extends JFrame {
 		if (h_ser) cbxChooseChart.addItem(new StatisticsSeriesTotalViewedChart(movielist));
 		if (h_mov) cbxChooseChart.addItem(new StatisticsFormatPerTimeChart(movielist));
 		if (h_ser) cbxChooseChart.addItem(new StatisticsSeriesTimeline(movielist));
+		if (h_any) cbxChooseChart.addItem(new StatisticsProviderChart(movielist));
 	}
 	
 	private void assignChart(StatisticsPanel statchart) {

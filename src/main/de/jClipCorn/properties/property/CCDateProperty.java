@@ -10,6 +10,7 @@ import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.CCPropertyCategory;
 import de.jClipCorn.util.datetime.CCDate;
+import de.jClipCorn.util.exceptions.CCFormatException;
 
 public class CCDateProperty extends CCProperty<CCDate> {
 	public CCDateProperty(CCPropertyCategory cat, CCProperties prop, String ident, CCDate std) {
@@ -41,13 +42,13 @@ public class CCDateProperty extends CCProperty<CCDate> {
 			return standard;
 		}
 		
-		if (! CCDate.testparse(val, "D.M.Y")) { //$NON-NLS-1$
+		try {
+			return CCDate.parse(val, CCDate.STRINGREP_DESERIALIZE);
+		} catch (CCFormatException e) {
 			CCLog.addWarning(LocaleBundle.getFormattedString("LogMessage.PropFormatErrorCCDate", identifier, mclass.getName())); //$NON-NLS-1$
 			setDefault();
 			return standard;
 		}
-		
-		return CCDate.parse(val, "D.M.Y"); //$NON-NLS-1$
 	}
 
 	@Override

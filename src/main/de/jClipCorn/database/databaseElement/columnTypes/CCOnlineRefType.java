@@ -40,9 +40,9 @@ public enum CCOnlineRefType {
 		return id;
 	}
 	
-	public static CCMovieScore find(int val) {
-		if (val >= 0 && val < CCMovieScore.values().length) {
-			return CCMovieScore.values()[val]; // Geht nur wenn alle Zahlen nach der Reihe da sind
+	public static CCOnlineRefType find(int val) {
+		if (val >= 0 && val < CCOnlineRefType.values().length) {
+			return CCOnlineRefType.values()[val]; // Geht nur wenn alle Zahlen nach der Reihe da sind
 		}
 		return null;
 	}

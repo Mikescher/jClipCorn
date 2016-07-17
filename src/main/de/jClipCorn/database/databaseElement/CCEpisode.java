@@ -372,7 +372,7 @@ public class CCEpisode {
 			setViewed(false);
 		
 		if (e.getAttributeValue("adddate") != null) {
-			setAddDate(CCDate.parse(e.getAttributeValue("adddate"), "D.M.Y"));
+			setAddDate(CCDate.parse(e.getAttributeValue("adddate"), CCDate.STRINGREP_DESERIALIZE));
 		}
 		
 		if (resetAddDate) {
@@ -391,7 +391,7 @@ public class CCEpisode {
 		if (e.getAttributeValue("history") != null) {
 			setViewedHistory(CCDateTimeList.parse(e.getAttributeValue("history")));
 		} else if (e.getAttributeValue("lastviewed") != null) {
-			setViewedHistory(CCDateTimeList.create(CCDate.parse(e.getAttributeValue("lastviewed"), "D.M.Y"))); // backwards compatibility
+			setViewedHistory(CCDateTimeList.create(CCDate.parse(e.getAttributeValue("lastviewed"), CCDate.STRINGREP_DESERIALIZE))); // backwards compatibility
 		}
 		
 		if (e.getAttributeValue("length") != null)

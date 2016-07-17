@@ -1,4 +1,4 @@
-package de.jClipCorn.util.parser;
+package de.jClipCorn.util.parser.onlineparser;
 
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -21,7 +21,7 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCMovieGenreList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTyp;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
-import de.jClipCorn.util.DoubleString;
+import de.jClipCorn.util.datatypes.DoubleString;
 import de.jClipCorn.util.helper.HTTPUtilities;
 import de.jClipCorn.util.helper.RegExHelper;
 

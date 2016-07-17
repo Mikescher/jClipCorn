@@ -29,6 +29,7 @@ import de.jClipCorn.gui.frames.aboutFrame.AboutFrame;
 import de.jClipCorn.gui.frames.addMovieFrame.AddMovieFrame;
 import de.jClipCorn.gui.frames.addSeasonFrame.AddSeasonFrame;
 import de.jClipCorn.gui.frames.addSeriesFrame.AddSeriesFrame;
+import de.jClipCorn.gui.frames.autofindRefrenceFrame.AutoFindReferenceFrame;
 import de.jClipCorn.gui.frames.backupManagerFrame.BackupsManagerFrame;
 import de.jClipCorn.gui.frames.changeScoreFrame.ChangeScoreFrame;
 import de.jClipCorn.gui.frames.changeViewedFrame.ChangeViewedFrame;
@@ -511,6 +512,15 @@ public class CCActionTree {
 			}
 		});
 		
+		temp = maintenance.addChild(new CCActionElement("AutoFindReferences", null, "ClipMenuBar.Maintenance.AutoFindReferences", Resources.ICN_MENUBAR_AUTOFINDREF));
+		temp.setReadOnlyRestriction();
+		temp.addListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				onClickMaintenanceAutoFindReferences();
+			}
+		});
+		
 		// ################################################################################################################################################################
 		CCActionElement help = root.addChild(new CCActionElement("Help", null, "ClipMenuBar.Help", ""));
 		// ################################################################################################################################################################
@@ -792,6 +802,11 @@ public class CCActionTree {
 		if (DialogHelper.showLocaleYesNo(owner, "Dialogs.ResetDUUID")) { //$NON-NLS-1$
 			owner.getMovielist().resetLocalDUUID();
 		}
+	}
+	
+	private void onClickMaintenanceAutoFindReferences() {
+		AutoFindReferenceFrame afrf = new AutoFindReferenceFrame(owner, movielist);
+		afrf.setVisible(true);
 	}
 	
 	private void onClickExtrasRandomMovie() {

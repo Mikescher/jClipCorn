@@ -289,11 +289,11 @@ public class ParseWatchDataFrame extends JFrame {
 					continue;
 				}
 				
-				CCDateTime d = CCDateTime.parse(date, "D.M.Y");
+				CCDateTime d = CCDateTime.parseOrDefault(date, "d.M.y", null);
 				
-				if (d == null) d = CCDateTime.parse(date, "D.M");
-				if (d == null) d = CCDateTime.parse(date, "D.M.Y H:m");
-				if (d == null) d = CCDateTime.parse(date, "D.M.Y H:m:s");
+				if (d == null) d = CCDateTime.parseOrDefault(date, "d.M", null);
+				if (d == null) d = CCDateTime.parseOrDefault(date, "d.M.y H:m", null);
+				if (d == null) d = CCDateTime.parseOrDefault(date, "d.M.y H:m:s", null);
 				
 				if (d == null || ! d.isValidDateTime()) {
 					errors.add(String.format("Line[%d] \"%s\" : Date \"%s\" is no valid Date", i, line.trim(), date));

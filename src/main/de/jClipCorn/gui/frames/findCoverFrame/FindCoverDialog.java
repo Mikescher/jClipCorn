@@ -23,7 +23,7 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.helper.ExtendedFocusTraversalOnArray;
 import de.jClipCorn.util.listener.ProgressCallbackProgressBarHelper;
 import de.jClipCorn.util.listener.UpdateCallbackListener;
-import de.jClipCorn.util.parser.ParseResultHandler;
+import de.jClipCorn.util.parser.onlineparser.ParseResultHandler;
 
 public class FindCoverDialog extends JDialog {
 	private static final long serialVersionUID = -5790203846014201695L;
@@ -176,7 +176,7 @@ public class FindCoverDialog extends JDialog {
 			}
 		};
 		
-		parser = new CoverImageParser(new ProgressCallbackProgressBarHelper(progressBar), pnlCover, finishlistener, typ, edSearchTerm.getText());
+		parser = new CoverImageParser(new ProgressCallbackProgressBarHelper(progressBar), pnlCover, finishlistener, typ, edSearchTerm.getText(), handler.getSearchReference());
 		parser.start();
 	}
 }

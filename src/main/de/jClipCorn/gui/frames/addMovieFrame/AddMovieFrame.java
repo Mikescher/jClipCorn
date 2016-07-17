@@ -55,13 +55,14 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.Validator;
 import de.jClipCorn.util.datetime.CCDate;
+import de.jClipCorn.util.exceptions.CCFormatException;
 import de.jClipCorn.util.formatter.FileSizeFormatter;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.ByteUtilies;
 import de.jClipCorn.util.helper.FileChooserHelper;
 import de.jClipCorn.util.helper.ImageUtilities;
 import de.jClipCorn.util.parser.FilenameParser;
-import de.jClipCorn.util.parser.ParseResultHandler;
+import de.jClipCorn.util.parser.onlineparser.ParseResultHandler;
 import de.jClipCorn.util.userdataProblem.UserDataProblem;
 import de.jClipCorn.util.userdataProblem.UserDataProblemHandler;
 
@@ -648,9 +649,9 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 	}
 	
 	@SuppressWarnings("nls")
-	public void parseFromXML(Element e, boolean resetAddDate, boolean resetViewed, boolean resetScore) {
+	public void parseFromXML(Element e, boolean resetAddDate, boolean resetViewed, boolean resetScore) throws CCFormatException {
 		if (e.getAttributeValue("adddate") != null) {
-			spnAddDate.setValue(CCDate.parse(e.getAttributeValue("adddate"), "D.M.Y"));
+			spnAddDate.setValue(CCDate.parse(e.getAttributeValue("adddate"), CCDate.STRINGREP_DESERIALIZE));
 		}
 		
 		if (resetAddDate) {
@@ -725,18 +726,18 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 	
 	private void onBtnOK(boolean check) {
 		List<UserDataProblem> problems = new ArrayList<>();
+
+		boolean probvalue = !check || checkUserData(problems);
 		
 		// some problems are too fatal
-		if (! edCvrControl.isCoverSet()) {
+		if (probvalue && ! edCvrControl.isCoverSet()) {
 			problems.add(new UserDataProblem(UserDataProblem.PROBLEM_NO_COVER));
-			check = false;
+			probvalue = false;
 		}
-		if (edTitle.getText().isEmpty()) {
+		if (probvalue && edTitle.getText().isEmpty()) {
 			problems.add(new UserDataProblem(UserDataProblem.PROBLEM_EMPTY_TITLE));
-			check = false;
+			probvalue = false;
 		}
-		
-		boolean probvalue = check && checkUserData(problems);
 		
 		if (! probvalue) {
 			InputErrorDialog amied = new InputErrorDialog(problems, this, this);
@@ -848,7 +849,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		spnAddDate.setValue(CCDate.getCurrentDate());
 		spnZyklus.setValue(-1);
 		
-		edReference.setValue(new CCOnlineReference());
+		edReference.setValue(CCOnlineReference.createNone());
 		
 		updateByteDisp();
 	}
@@ -1089,6 +1090,11 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		} else {
 			return edZyklus.getText() + " - " + getMovieTitle(); //$NON-NLS-1$
 		}
+	}
+
+	@Override
+	public CCOnlineReference getSearchReference() {
+		return edReference.getValue();
 	}
 	
 	private void updateFilesize() {

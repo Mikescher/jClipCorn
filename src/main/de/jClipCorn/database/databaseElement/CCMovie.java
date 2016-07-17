@@ -361,7 +361,7 @@ public class CCMovie extends CCDatabaseElement {
 		super.parseFromXML(e, resetAddDate, resetViewed, resetScore, resetTags);
 		
 		if (e.getAttributeValue("adddate") != null) {
-			setAddDate(CCDate.parse(e.getAttributeValue("adddate"), "D.M.Y"));
+			setAddDate(CCDate.parse(e.getAttributeValue("adddate"), CCDate.STRINGREP_DESERIALIZE));
 		}
 		
 		if (resetAddDate) {

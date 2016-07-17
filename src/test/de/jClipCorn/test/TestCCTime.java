@@ -6,6 +6,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 import de.jClipCorn.util.datetime.CCTime;
+import de.jClipCorn.util.exceptions.CCFormatException;
 
 @SuppressWarnings("nls")
 public class TestCCTime {
@@ -61,7 +62,7 @@ public class TestCCTime {
 	}
 	
 	@Test
-	public void testParse() {
+	public void testParse() throws CCFormatException {
 		assertTrue(CCTime.testparse("20:01:55", "HH:mm:ss"));
 		assertEquals(CCTime.create(20,1,55), CCTime.parse("20:01:55", "HH:mm:ss"));
 

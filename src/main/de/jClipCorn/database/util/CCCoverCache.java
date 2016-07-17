@@ -20,7 +20,7 @@ import de.jClipCorn.gui.Resources;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.properties.CCProperties;
-import de.jClipCorn.util.CachedHashMap;
+import de.jClipCorn.util.datatypes.CachedHashMap;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.ImageUtilities;
 

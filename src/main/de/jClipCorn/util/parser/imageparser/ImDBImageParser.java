@@ -4,8 +4,8 @@ import java.awt.image.BufferedImage;
 import java.util.List;
 
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTyp;
-import de.jClipCorn.util.DoubleString;
-import de.jClipCorn.util.parser.ImDBParser;
+import de.jClipCorn.util.datatypes.DoubleString;
+import de.jClipCorn.util.parser.onlineparser.ImDBParser;
 @SuppressWarnings("nls")
 public class ImDBImageParser {
 	public static String getSearchURL(String title, CCMovieTyp typ) {

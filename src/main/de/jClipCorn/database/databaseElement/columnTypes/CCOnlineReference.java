@@ -20,8 +20,24 @@ public class CCOnlineReference {
 		this.id = id;
 	}
 
-	public CCOnlineReference() {
-		this(CCOnlineRefType.NONE, ""); //$NON-NLS-1$
+	public static CCOnlineReference createNone() {
+		return new CCOnlineReference(CCOnlineRefType.NONE, ""); //$NON-NLS-1$
+	}
+
+	public static CCOnlineReference createIMDB(String id) {
+		return new CCOnlineReference(CCOnlineRefType.IMDB, id);
+	}
+
+	public static CCOnlineReference createAMZN(String id) {
+		return new CCOnlineReference(CCOnlineRefType.AMAZON, id);
+	}
+
+	public static CCOnlineReference createMVPT(String id) {
+		return new CCOnlineReference(CCOnlineRefType.MOVIEPILOT, id);
+	}
+
+	public static CCOnlineReference createTMDB(String id) {
+		return new CCOnlineReference(CCOnlineRefType.THEMOVIEDB, id);
 	}
 
 	public String toSerializationString() {
@@ -30,7 +46,7 @@ public class CCOnlineReference {
 	}
 
 	public static CCOnlineReference parse(String data) throws OnlineRefFormatException {
-		if (data.isEmpty()) return new CCOnlineReference();
+		if (data.isEmpty()) return CCOnlineReference.createNone();
 		
 		int idx = data.indexOf(':');
 
@@ -95,5 +111,20 @@ public class CCOnlineReference {
 		default:
 			return false;
 		}
+	}
+
+	@Override
+	public int hashCode() {
+		return id.hashCode() ^ 13 * type.asInt();
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof CCOnlineReference))
+			return false;
+		if (obj == this)
+			return true;
+
+		return ((CCOnlineReference)obj).id.equals(id) && ((CCOnlineReference)obj).type == type;
 	}
 }

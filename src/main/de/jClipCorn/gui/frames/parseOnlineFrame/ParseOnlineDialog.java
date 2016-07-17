@@ -8,6 +8,8 @@ import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -47,33 +49,32 @@ import de.jClipCorn.gui.guiComponents.ReadableTextField;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.properties.CCProperties;
-import de.jClipCorn.util.DoubleString;
+import de.jClipCorn.util.datatypes.DoubleString;
 import de.jClipCorn.util.helper.ExtendedFocusTraversalOnArray;
 import de.jClipCorn.util.helper.HTTPUtilities;
 import de.jClipCorn.util.helper.ImageUtilities;
-import de.jClipCorn.util.parser.ImDBParser;
-import de.jClipCorn.util.parser.ParseResultHandler;
-import de.jClipCorn.util.parser.TMDBParser;
-import de.jClipCorn.util.parser.TMDBParser.TMDBFullResult;
-import de.jClipCorn.util.parser.TMDBParser.TMDBSimpleResult;
+import de.jClipCorn.util.parser.onlineparser.ImDBParser;
+import de.jClipCorn.util.parser.onlineparser.ParseResultHandler;
+import de.jClipCorn.util.parser.onlineparser.TMDBParser;
+import de.jClipCorn.util.parser.onlineparser.TMDBParser.TMDBFullResult;
+import de.jClipCorn.util.parser.onlineparser.TMDBParser.TMDBSimpleResult;
 
 public class ParseOnlineDialog extends JDialog {
 	private static final long serialVersionUID = 3777677368743220383L;
 	
-	private DefaultListModel<String> mdlLsDBList;
-	private List<CCOnlineReference> lsDBListPaths = new ArrayList<>();
+	private DefaultListModel<ParseOnlineDialogElement> mdlLsDBList;
 	private BufferedImage imgCoverBI = null;
 	private Map<String, Integer> cbFSKlsAll = null;
 	
 	private final ParseResultHandler owner;
 	private final CCMovieTyp typ;
 	
-	private CCOnlineReference selectedReference = new CCOnlineReference();
+	private CCOnlineReference selectedReference = CCOnlineReference.createNone();
 
 	private boolean enumerateIMDB = CCProperties.getInstance().PROP_QUERY_IMDB.getValue();
 	private boolean enumerateTMDB = CCProperties.getInstance().PROP_QUERY_TMDB.getValue();
 	
-	private JList<String> lsDBList;
+	private JList<ParseOnlineDialogElement> lsDBList;
 	private JPanel panel;
 	private JTextField edSearchName;
 	private JButton btnParse;
@@ -163,6 +164,7 @@ public class ParseOnlineDialog extends JDialog {
 				}
 			}
 		});
+		lsDBList.setCellRenderer(new ParseOnlineDialogRenderer());
 		scrollPane.setViewportView(lsDBList);
 		
 		panel = new JPanel();
@@ -388,7 +390,7 @@ public class ParseOnlineDialog extends JDialog {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				if (lsDBList.getSelectedIndex() >= 0) {
-					HTTPUtilities.openInBrowser(lsDBListPaths.get(lsDBList.getSelectedIndex()).getURL());
+					HTTPUtilities.openInBrowser(lsDBList.getSelectedValue().Reference.getURL());
 				}
 			}
 		});
@@ -518,7 +520,6 @@ public class ParseOnlineDialog extends JDialog {
 		pbarSearch.setIndeterminate(true);
 
 		mdlLsDBList.clear();
-		lsDBListPaths.clear();
 		lsDBList.setSelectedIndex(-1);
 
 		ThreadGroup group = new ThreadGroup("THREADGROUP_SEARCH_ONLINE"); //$NON-NLS-1$
@@ -581,10 +582,12 @@ public class ParseOnlineDialog extends JDialog {
 			SwingUtilities.invokeAndWait(new Runnable() {
 				@Override
 				public void run() {
+					int ordering = 0;
 					for (TMDBSimpleResult result : results) {
-						lsDBListPaths.add(new CCOnlineReference(CCOnlineRefType.THEMOVIEDB, result.ID));
-						mdlLsDBList.addElement("[TMDB] " + result.Title); //$NON-NLS-1$
+						mdlLsDBList.addElement(new ParseOnlineDialogElement(result.Title, ordering++, CCOnlineReference.createTMDB(result.ID)));
 					}
+					
+					resortListModel(mdlLsDBList);
 				}
 			});
 		} catch (InvocationTargetException | InterruptedException e) {
@@ -602,15 +605,17 @@ public class ParseOnlineDialog extends JDialog {
 			SwingUtilities.invokeAndWait(new Runnable() {
 				@Override
 				public void run() {
+					int ordering = 5;
 					for (DoubleString sm : res) {
 						String id = ImDBParser.extractOnlineID(sm.get1());
 						
 						if (id != null) {
-							lsDBListPaths.add(new CCOnlineReference(CCOnlineRefType.IMDB, id));
-							mdlLsDBList.addElement("[IMDb] " + sm.get2()); //$NON-NLS-1$
+							mdlLsDBList.addElement(new ParseOnlineDialogElement(sm.get2(), ordering++, CCOnlineReference.createIMDB(id)));
 						} else {
 							CCLog.addWarning(LocaleBundle.getFormattedString("LogMessage.CantExtractIMDBLink", sm.get1())); //$NON-NLS-1$
 						}
+
+						resortListModel(mdlLsDBList);
 					}
 				}
 			});
@@ -618,6 +623,20 @@ public class ParseOnlineDialog extends JDialog {
 			CCLog.addError(e);
 			return;
 		}
+	}
+	
+	private <T extends Comparable<T>> void resortListModel(DefaultListModel<T> model) {
+	    List<T> list = new ArrayList<>();
+	    for (int i = 0; i < model.size(); i++) {
+	        list.add(model.get(i));
+	    }
+	    
+	    Collections.sort(list);
+	    
+	    model.removeAllElements();
+	    for (T s : list) {
+	    	model.addElement(s);
+	    }
 	}
 	
 	private void runParseIMDB() {
@@ -710,15 +729,22 @@ public class ParseOnlineDialog extends JDialog {
 			return;
 		}
 		
-		TMDBFullResult metadata = TMDBParser.getMovieMetadata(ref.id);
-		String imdbURL = new CCOnlineReference(CCOnlineRefType.IMDB, metadata.ImdbID).getURL();
+		TMDBFullResult metadata = TMDBParser.getMetadata(ref.id);
+		
+		CCMovieFSK _mfsk = null;
+		cbFSKlsAll = new HashMap<>();
+		
+		if (metadata.ImdbRef.isSet()) {
+			String imdbURL = metadata.ImdbRef.getURL();
 
-		String imdbHTML = HTTPUtilities.getHTML(imdbURL, true, true);
-		final CCMovieFSK mfsk = ImDBParser.getFSK(imdbHTML, imdbURL);
-		cbFSKlsAll = ImDBParser.getFSKList(imdbHTML, imdbURL);
+			String imdbHTML = HTTPUtilities.getHTML(imdbURL, true, true);
+			_mfsk = ImDBParser.getFSK(imdbHTML, imdbURL);
+			cbFSKlsAll = ImDBParser.getFSKList(imdbHTML, imdbURL);
+		}
 
 		BufferedImage bci = HTTPUtilities.getImage(metadata.CoverPath);
-		
+
+		final CCMovieFSK mfsk = _mfsk;
 		try {
 			SwingUtilities.invokeAndWait(new Runnable() {
 				@Override
@@ -730,6 +756,8 @@ public class ParseOnlineDialog extends JDialog {
 
 					if (mfsk != null) {
 						cbxFSK.setSelectedIndex(mfsk.asInt());
+					} else {
+						cbxFSK.setSelectedIndex(-1);
 					}
 					
 					if (bci != null) {
@@ -768,7 +796,7 @@ public class ParseOnlineDialog extends JDialog {
 			return;
 		}
 		
-		selectedReference = lsDBListPaths.get(lsDBList.getSelectedIndex());
+		selectedReference = lsDBList.getSelectedValue().Reference;
 		
 		new Thread(new Runnable() {
 			@Override

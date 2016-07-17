@@ -358,7 +358,12 @@ public class ImportElementsFrame extends JFrame {
 		
 		AddMovieFrame amf = new AddMovieFrame(this, movielist);
 		
-		amf.parseFromXML(value, chckbxResetDate.isSelected(), chcbxResetViewed.isSelected(), chcbxResetScore.isSelected());
+		try {
+			amf.parseFromXML(value, chckbxResetDate.isSelected(), chcbxResetViewed.isSelected(), chcbxResetScore.isSelected());
+		} catch (CCFormatException e) {
+			CCLog.addError(e);
+			return;
+		}
 		
 		amf.setVisible(true);
 		

@@ -5,7 +5,7 @@ import javax.swing.RowFilter.Entry;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.gui.frames.mainFrame.clipTable.ClipTableModel;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.util.StringMatchType;
+import de.jClipCorn.util.datatypes.StringMatchType;
 
 public class CustomTitleFilter extends AbstractCustomFilter {
 	private String searchString = ""; //$NON-NLS-1$

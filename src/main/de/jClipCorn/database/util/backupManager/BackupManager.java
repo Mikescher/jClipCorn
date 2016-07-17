@@ -21,6 +21,7 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.datetime.CCDate;
+import de.jClipCorn.util.exceptions.CCFormatException;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.helper.RegExHelper;
@@ -89,10 +90,11 @@ public class BackupManager {
 	
 	private CCDate getBackupDateFromOldFileFormat(File f) {
 		String sdate = RegExHelper.find(REGEXNAME, f.getName());
-		if (CCDate.testparse(sdate, "D.M.Y")) { //$NON-NLS-1$
-			return CCDate.parse(sdate, "D.M.Y"); //$NON-NLS-1$
-		} else {
-			CCLog.addWarning(LocaleBundle.getFormattedString("LogMessage.CouldNotParseCCDate", sdate)); //$NON-NLS-1$
+
+		try {
+			return CCDate.parse(sdate, CCDate.STRINGREP_DESERIALIZE);
+		} catch (CCFormatException e) {
+			CCLog.addWarning(LocaleBundle.getFormattedString("LogMessage.CouldNotParseCCDate", sdate), e); //$NON-NLS-1$
 			return CCDate.getMinimumDate();
 		}
 	}

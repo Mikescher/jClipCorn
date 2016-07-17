@@ -64,7 +64,7 @@ import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.helper.FileChooserHelper;
 import de.jClipCorn.util.listener.UpdateCallbackListener;
-import de.jClipCorn.util.parser.ParseResultHandler;
+import de.jClipCorn.util.parser.onlineparser.ParseResultHandler;
 import de.jClipCorn.util.userdataProblem.UserDataProblem;
 import de.jClipCorn.util.userdataProblem.UserDataProblemHandler;
 import de.jClipCorn.gui.guiComponents.referenceChooser.JReferenceChooser;
@@ -847,6 +847,11 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 	}
 
 	@Override
+	public CCOnlineReference getSearchReference() {
+		return edSeriesReference.getValue();
+	}
+
+	@Override
 	public void setMovieFormat(CCMovieFormat cmf) {
 		// NOP
 	}
@@ -958,17 +963,17 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 	private void onOKSeries(boolean check) {
 		List<UserDataProblem> problems = new ArrayList<>();
 
-		// some problems are too fatal
-		if (! edSeriesCvrControl.isCoverSet()) {
-			problems.add(new UserDataProblem(UserDataProblem.PROBLEM_NO_COVER));
-			check = false;
-		}
-		if (edSeriesTitle.getText().isEmpty()) {
-			problems.add(new UserDataProblem(UserDataProblem.PROBLEM_EMPTY_TITLE));
-			check = false;
-		}
+		boolean probvalue = !check || checkUserDataSeries(problems);
 		
-		boolean probvalue = check && checkUserDataSeries(problems);
+		// some problems are too fatal
+		if (probvalue && ! edSeriesCvrControl.isCoverSet()) {
+			problems.add(new UserDataProblem(UserDataProblem.PROBLEM_NO_COVER));
+			probvalue = false;
+		}
+		if (probvalue && edSeriesTitle.getText().isEmpty()) {
+			problems.add(new UserDataProblem(UserDataProblem.PROBLEM_EMPTY_TITLE));
+			probvalue = false;
+		}
 		
 		if (! probvalue) {
 			InputErrorDialog amied = new InputErrorDialog(problems, new UserDataProblemHandler() {
@@ -1090,17 +1095,17 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		
 		List<UserDataProblem> problems = new ArrayList<>();
 
-		// some problems are too fatal
-		if (! edSeasonCvrControl.isCoverSet()) {
-			problems.add(new UserDataProblem(UserDataProblem.PROBLEM_NO_COVER));
-			check = false;
-		}
-		if (edSeasonTitle.getText().isEmpty()) {
-			problems.add(new UserDataProblem(UserDataProblem.PROBLEM_EMPTY_TITLE));
-			check = false;
-		}
+		boolean probvalue = !check || checkUserDataSeason(problems);
 		
-		boolean probvalue = check && checkUserDataSeason(problems);
+		// some problems are too fatal
+		if (probvalue && ! edSeasonCvrControl.isCoverSet()) {
+			problems.add(new UserDataProblem(UserDataProblem.PROBLEM_NO_COVER));
+			probvalue = false;
+		}
+		if (probvalue && edSeasonTitle.getText().isEmpty()) {
+			problems.add(new UserDataProblem(UserDataProblem.PROBLEM_EMPTY_TITLE));
+			probvalue = false;
+		}
 		
 		if (! probvalue) {
 			InputErrorDialog amied = new InputErrorDialog(problems, new UserDataProblemHandler() {
@@ -1203,13 +1208,13 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		
 		List<UserDataProblem> problems = new ArrayList<>();
 
-		// some problems are too fatal
-		if (edEpisodeTitle.getText().isEmpty()) {
-			problems.add(new UserDataProblem(UserDataProblem.PROBLEM_EMPTY_TITLE));
-			check = false;
-		}
+		boolean probvalue = !check || checkUserDataEpisode(problems);
 		
-		boolean probvalue = check && checkUserDataEpisode(problems);
+		// some problems are too fatal
+		if (probvalue && edEpisodeTitle.getText().isEmpty()) {
+			problems.add(new UserDataProblem(UserDataProblem.PROBLEM_EMPTY_TITLE));
+			probvalue = false;
+		}
 		
 		if (! probvalue) {
 			InputErrorDialog amied = new InputErrorDialog(problems, new UserDataProblemHandler() {

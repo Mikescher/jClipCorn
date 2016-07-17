@@ -1,4 +1,4 @@
-package de.jClipCorn.util.parser;
+package de.jClipCorn.util.parser.onlineparser;
 
 public enum ImDBLanguage {
 	GERMAN(0), 

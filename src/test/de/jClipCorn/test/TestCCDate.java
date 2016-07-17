@@ -6,6 +6,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertEquals;
 import de.jClipCorn.util.datetime.CCDate;
+import de.jClipCorn.util.exceptions.CCFormatException;
 
 @SuppressWarnings("nls")
 public class TestCCDate {
@@ -70,7 +71,7 @@ public class TestCCDate {
 	}
 	
 	@Test
-	public void testParse() {
+	public void testParse() throws CCFormatException {
 		assertTrue(CCDate.testparse("26-06-2001", "dd-MM-yyyy"));
 		assertEquals(CCDate.create(26,6,2001), CCDate.parse("26-06-2001", "dd-MM-yyyy"));
 		

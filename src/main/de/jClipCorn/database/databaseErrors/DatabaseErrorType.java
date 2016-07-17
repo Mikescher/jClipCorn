@@ -32,6 +32,7 @@ public class DatabaseErrorType {
 	public static DatabaseErrorType ERROR_IMPOSSIBLE_WATCH_NEVER = new DatabaseErrorType(27);
 	public static DatabaseErrorType ERROR_DUPLICATE_GENRE = new DatabaseErrorType(28);
 	public static DatabaseErrorType ERROR_INVALID_CHARS_IN_PATH = new DatabaseErrorType(29);
+	public static DatabaseErrorType ERROR_INVALID_ONLINEREF = new DatabaseErrorType(30);
 	
 	private final int type;
 	private int count = 0;

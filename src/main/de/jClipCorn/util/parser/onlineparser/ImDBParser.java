@@ -1,4 +1,4 @@
-package de.jClipCorn.util.parser;
+package de.jClipCorn.util.parser.onlineparser;
 
 import java.awt.image.BufferedImage;
 import java.util.List;
@@ -10,7 +10,7 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFSK;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieGenreList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTyp;
 import de.jClipCorn.properties.CCProperties;
-import de.jClipCorn.util.DoubleString;
+import de.jClipCorn.util.datatypes.DoubleString;
 
 public class ImDBParser {
 	public final static ImDBLanguage LANGUAGE = ImDBLanguage.find(CCProperties.getInstance().PROP_PARSEIMDB_LANGUAGE.getValue());

@@ -856,11 +856,21 @@ public class CCDatabase {
 	}
 	
 	public CCDate getInformation_CreationDate() {
-		return CCDate.parse(getInformationFromDB(INFOKEY_DATE), CCDate.STRINGREP_SQL);
+		try {
+			return CCDate.parse(getInformationFromDB(INFOKEY_DATE), CCDate.STRINGREP_SQL);
+		} catch (CCFormatException e) {
+			CCLog.addError(e);
+			return CCDate.getMinimumDate();
+		}
 	}
 	
 	public CCTime getInformation_CreationTime() {
-		return CCTime.parse(getInformationFromDB(INFOKEY_TIME), CCTime.STRINGREP_SIMPLE);
+		try {
+			return CCTime.parse(getInformationFromDB(INFOKEY_TIME), CCTime.STRINGREP_SIMPLE);
+		} catch (CCFormatException e) {
+			CCLog.addError(e);
+			return CCTime.getMidnight();
+		}
 	}
 	
 	public String getInformation_CreationUsername() {

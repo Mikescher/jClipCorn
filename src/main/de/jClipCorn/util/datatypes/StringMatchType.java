@@ -1,4 +1,4 @@
-package de.jClipCorn.util;
+package de.jClipCorn.util.datatypes;
 
 public enum StringMatchType {
 	SM_STARTSWITH(0),

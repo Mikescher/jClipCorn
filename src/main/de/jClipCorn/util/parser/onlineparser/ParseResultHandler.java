@@ -1,4 +1,4 @@
-package de.jClipCorn.util.parser;
+package de.jClipCorn.util.parser.onlineparser;
 
 import java.awt.image.BufferedImage;
 
@@ -9,6 +9,7 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReference;
 
 public interface ParseResultHandler {
 	public String getFullTitle();
+	public CCOnlineReference getSearchReference();
 	
 	public void setMovieFormat(CCMovieFormat cmf);
 	public void setFilepath(int p, String t);

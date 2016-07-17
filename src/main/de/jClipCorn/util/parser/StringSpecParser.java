@@ -3,6 +3,9 @@ package de.jClipCorn.util.parser;
 import java.util.HashSet;
 import java.util.Map;
 
+import de.jClipCorn.util.exceptions.CCFormatException;
+import de.jClipCorn.util.exceptions.StringSpecFormatException;
+
 public class StringSpecParser {
 
 	public static String build(String fmt, StringSpecSupplier supplier) {
@@ -54,7 +57,24 @@ public class StringSpecParser {
 		return repbuilder.toString();
 	}
 	
-	public static Object parse(String rawData, String fmt, StringSpecSupplier supplier) {
+	public static Object parse(String rawData, String fmt, StringSpecSupplier supplier) throws CCFormatException {
+		Object o = parseInternal(rawData, fmt, supplier);
+		if (o == null) throw new StringSpecFormatException(rawData, fmt);
+		return o;
+	}
+	
+	public static Object parseOrDefault(String rawData, String fmt, StringSpecSupplier supplier, Object defaultValue) {
+		Object o = parseInternal(rawData, fmt, supplier);
+		if (o == null) return defaultValue;
+		return o;
+	}
+	
+	public static boolean testparse(String rawData, String fmt, StringSpecSupplier supplier) {
+		Object o = parseInternal(rawData, fmt, supplier);
+		return o != null;
+	}
+	
+	public static Object parseInternal(String rawData, String fmt, StringSpecSupplier supplier) {
 		HashSet<Character> specifier = supplier.getAllStringSpecifier();
 		
 		Map<Character, Integer> values = supplier.getSpecDefaults();

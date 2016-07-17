@@ -52,7 +52,7 @@ import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.FileChooserHelper;
 import de.jClipCorn.util.listener.ImageCropperResultListener;
 import de.jClipCorn.util.listener.UpdateCallbackListener;
-import de.jClipCorn.util.parser.ParseResultHandler;
+import de.jClipCorn.util.parser.onlineparser.ParseResultHandler;
 import de.jClipCorn.util.userdataProblem.UserDataProblem;
 import de.jClipCorn.util.userdataProblem.UserDataProblemHandler;
 
@@ -658,7 +658,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		spnZyklus.setValue(-1);
 		
 		edViewedHistory.setValue(CCDateTimeList.createEmpty());
-		edReference.setValue(new CCOnlineReference());
+		edReference.setValue(CCOnlineReference.createNone());
 		
 		updateByteDisp();
 	}
@@ -829,6 +829,11 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 	}
 
 	@Override
+	public CCOnlineReference getSearchReference() {
+		return edReference.getValue();
+	}
+
+	@Override
 	public void setMovieFormat(CCMovieFormat cmf) {
 		cbxFormat.setSelectedIndex(cmf.asInt());
 	}
@@ -996,17 +1001,17 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 	private void onBtnOK(boolean check) {
 		List<UserDataProblem> problems = new ArrayList<>();
 
-		// some problems are too fatal
-		if (! edCvrControl.isCoverSet()) {
-			problems.add(new UserDataProblem(UserDataProblem.PROBLEM_NO_COVER));
-			check = false;
-		}
-		if (edTitle.getText().isEmpty()) {
-			problems.add(new UserDataProblem(UserDataProblem.PROBLEM_EMPTY_TITLE));
-			check = false;
-		}
+		boolean probvalue = !check || checkUserData(problems);
 		
-		boolean probvalue = check && checkUserData(problems);
+		// some problems are too fatal
+		if (probvalue && ! edCvrControl.isCoverSet()) {
+			problems.add(new UserDataProblem(UserDataProblem.PROBLEM_NO_COVER));
+			probvalue = false;
+		}
+		if (probvalue && edTitle.getText().isEmpty()) {
+			problems.add(new UserDataProblem(UserDataProblem.PROBLEM_EMPTY_TITLE));
+			probvalue = false;
+		}
 		
 		if (! probvalue) {
 			InputErrorDialog amied = new InputErrorDialog(problems, this, this);

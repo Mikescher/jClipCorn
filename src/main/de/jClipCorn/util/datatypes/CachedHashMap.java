@@ -1,4 +1,4 @@
-package de.jClipCorn.util;
+package de.jClipCorn.util.datatypes;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

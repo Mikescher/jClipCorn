@@ -11,7 +11,9 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.util.datetime.CCDateTime;
+import de.jClipCorn.util.exceptions.CCFormatException;
 
 public class CCDateTimeEditor extends JPanel implements ChangeListener, PropertyChangeListener {
 	private static final long serialVersionUID = -7568423030107551542L;
@@ -56,13 +58,17 @@ public class CCDateTimeEditor extends JPanel implements ChangeListener, Property
 			int caret = getTextField().getCaretPosition();
 			
 			String text = getTextField().getText();
-			
-			if (CCDateTime.testparse(text, CCDateTime.STRINGREP_SIMPLE)) {
-				owner.getModel().setValue(CCDateTime.parse(text, CCDateTime.STRINGREP_SIMPLE));
-			} else if (CCDateTime.testparse(text, CCDateTime.STRINGREP_SIMPLESHORT)) {
-				owner.getModel().setValue(CCDateTime.parse(text, CCDateTime.STRINGREP_SIMPLESHORT));
-			} else {
-				uptime();
+
+			try {
+				if (CCDateTime.testparse(text, CCDateTime.STRINGREP_SIMPLE)) {
+					owner.getModel().setValue(CCDateTime.parse(text, CCDateTime.STRINGREP_SIMPLE));
+				} else if (CCDateTime.testparse(text, CCDateTime.STRINGREP_SIMPLESHORT)) {
+					owner.getModel().setValue(CCDateTime.parse(text, CCDateTime.STRINGREP_SIMPLESHORT));
+				} else {
+					uptime();
+				}
+			} catch (CCFormatException e) {
+				CCLog.addError(e);
 			}
 
 			getTextField().setCaretPosition(caret);

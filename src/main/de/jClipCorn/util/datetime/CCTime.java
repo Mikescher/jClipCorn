@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Map;
 
+import de.jClipCorn.util.exceptions.CCFormatException;
 import de.jClipCorn.util.exceptions.TimeFormatException;
 import de.jClipCorn.util.parser.StringSpecParser;
 import de.jClipCorn.util.parser.StringSpecSupplier;
@@ -92,11 +93,15 @@ public class CCTime implements Comparable<CCTime>, StringSpecSupplier {
 	}
 	
 	public static boolean testparse(String rawData, String fmt) {
-		return parse(rawData, fmt) != null;
+		return StringSpecParser.testparse(rawData, fmt, CCTime.STATIC_SUPPLIER);
 	}
 
-	public static CCTime parse(String rawData, String fmt) {
+	public static CCTime parse(String rawData, String fmt) throws CCFormatException {
 		return (CCTime)StringSpecParser.parse(rawData, fmt, CCTime.STATIC_SUPPLIER);
+	}
+	
+	public static CCTime parseOrDefault(String rawData, String fmt, CCTime defaultValue){
+		return (CCTime)StringSpecParser.parseOrDefault(rawData, fmt, CCTime.STATIC_SUPPLIER, defaultValue);
 	}
 	
 	public static CCTime createFromSQL(String sqlRep) throws TimeFormatException {

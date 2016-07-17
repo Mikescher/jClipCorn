@@ -36,7 +36,7 @@ import de.jClipCorn.gui.frames.parseOnlineFrame.ParseOnlineDialog;
 import de.jClipCorn.gui.guiComponents.editCoverControl.EditCoverControl;
 import de.jClipCorn.gui.guiComponents.referenceChooser.JReferenceChooser;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.util.parser.ParseResultHandler;
+import de.jClipCorn.util.parser.onlineparser.ParseResultHandler;
 import de.jClipCorn.util.userdataProblem.UserDataProblem;
 import de.jClipCorn.util.userdataProblem.UserDataProblemHandler;
 
@@ -275,6 +275,11 @@ public class AddSeriesFrame extends JFrame implements ParseResultHandler, UserDa
 	}
 
 	@Override
+	public CCOnlineReference getSearchReference() {
+		return edReference.getValue();
+	}
+
+	@Override
 	public void setMovieFormat(CCMovieFormat cmf) {
 		// No such field
 	}
@@ -381,17 +386,17 @@ public class AddSeriesFrame extends JFrame implements ParseResultHandler, UserDa
 	private void onBtnOK(boolean check) {
 		List<UserDataProblem> problems = new ArrayList<>();
 
-		// some problems are too fatal
-		if (! edCvrControl.isCoverSet()) {
-			problems.add(new UserDataProblem(UserDataProblem.PROBLEM_NO_COVER));
-			check = false;
-		}
-		if (edTitle.getText().isEmpty()) {
-			problems.add(new UserDataProblem(UserDataProblem.PROBLEM_EMPTY_TITLE));
-			check = false;
-		}
+		boolean probvalue = !check || checkUserData(problems);
 		
-		boolean probvalue = check && checkUserData(problems);
+		// some problems are too fatal
+		if (probvalue && ! edCvrControl.isCoverSet()) {
+			problems.add(new UserDataProblem(UserDataProblem.PROBLEM_NO_COVER));
+			probvalue = false;
+		}
+		if (probvalue && edTitle.getText().isEmpty()) {
+			problems.add(new UserDataProblem(UserDataProblem.PROBLEM_EMPTY_TITLE));
+			probvalue = false;
+		}
 		
 		if (! probvalue) {
 			InputErrorDialog amied = new InputErrorDialog(problems, this, this);

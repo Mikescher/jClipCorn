@@ -1,4 +1,4 @@
-package de.jClipCorn.util;
+package de.jClipCorn.util.datatypes;
 
 public class DoubleString {
 	private String s1;

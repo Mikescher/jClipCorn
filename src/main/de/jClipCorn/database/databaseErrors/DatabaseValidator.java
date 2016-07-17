@@ -138,6 +138,14 @@ public class DatabaseValidator {
 				break;
 			}
 		}
+		
+		// ###############################################
+		// Invalid CCOnlineRef
+		// ###############################################
+
+		if (! series.getOnlineReference().isValid()) {
+			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_INVALID_ONLINEREF, series));
+		}
 	}
 
 	private static void validateMovie(List<DatabaseError> e, CCMovieList movielist, CCMovie mov) {
@@ -356,6 +364,14 @@ public class DatabaseValidator {
 				e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_INVALID_CHARS_IN_PATH, mov));
 				break;
 			}
+		}
+		
+		// ###############################################
+		// Invalid CCOnlineRef
+		// ###############################################
+
+		if (! mov.getOnlineReference().isValid()) {
+			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_INVALID_ONLINEREF, mov));
 		}
 	}
 

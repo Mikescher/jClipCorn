@@ -10,13 +10,15 @@ import java.util.List;
 import java.util.Map;
 
 import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.util.exceptions.CCFormatException;
 import de.jClipCorn.util.exceptions.DateFormatException;
 import de.jClipCorn.util.parser.StringSpecParser;
 import de.jClipCorn.util.parser.StringSpecSupplier;
 
 public final class CCDate implements Comparable<CCDate>, StringSpecSupplier {
 	public static CCDate STATIC_SUPPLIER = new CCDate(6, 8, 1991);
-	
+
+	public final static String STRINGREP_DESERIALIZE = "d.M.y"; //$NON-NLS-1$
 	public final static String STRINGREP_SIMPLE 	= "dd.MM.yyyy"; //$NON-NLS-1$
 	public final static String STRINGREP_SIMPLESHORT = "dd.MM.yy"; //$NON-NLS-1$
 	public final static String STRINGREP_LOCAL 		= "dd.MMMM.yyyy"; //$NON-NLS-1$
@@ -256,11 +258,15 @@ public final class CCDate implements Comparable<CCDate>, StringSpecSupplier {
 	}
 	
 	public static boolean testparse(String rawData, String fmt) {
-		return parse(rawData, fmt) != null;
+		return StringSpecParser.testparse(rawData, fmt, CCDate.STATIC_SUPPLIER);
 	}
 	
-	public static CCDate parse(String rawData, String fmt) {
+	public static CCDate parse(String rawData, String fmt) throws CCFormatException {
 		return (CCDate)StringSpecParser.parse(rawData, fmt, CCDate.STATIC_SUPPLIER);
+	}
+	
+	public static CCDate parseOrDefault(String rawData, String fmt, CCDate defaultValue) {
+		return (CCDate)StringSpecParser.parseOrDefault(rawData, fmt, CCDate.STATIC_SUPPLIER, defaultValue);
 	}
 	
 	public CCDate getAdd(int d, int m, int y) {

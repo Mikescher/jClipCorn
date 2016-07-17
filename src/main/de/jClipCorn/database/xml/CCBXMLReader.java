@@ -23,6 +23,7 @@ import de.jClipCorn.gui.frames.mainFrame.MainFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.util.datetime.CCDate;
+import de.jClipCorn.util.exceptions.CCFormatException;
 import de.jClipCorn.util.formatter.RomanNumberFormatter;
 import de.jClipCorn.util.helper.DialogHelper;
 
@@ -56,7 +57,7 @@ public class CCBXMLReader {
 			if (! createDatabaseElements()) {
 				return false;
 			}
-		} catch (DataConversionException e) {
+		} catch (DataConversionException | CCFormatException e) {
 			return false;
 		}
 		
@@ -77,7 +78,7 @@ public class CCBXMLReader {
 		return true;
 	}
 	
-	private boolean createDatabaseElements() throws DataConversionException {
+	private boolean createDatabaseElements() throws DataConversionException, CCFormatException {
 		Element root = document.getRootElement().getChild("database");
 		if (root == null) return false;
 		
@@ -94,7 +95,7 @@ public class CCBXMLReader {
 		return true;
 	}
 	
-	private void createMovie(Element e) throws DataConversionException {
+	private void createMovie(Element e) throws DataConversionException, CCFormatException {
 		CCMovie newMov = movielist.createNewEmptyMovie();
 		newMov.beginUpdating();
 		
@@ -112,7 +113,7 @@ public class CCBXMLReader {
 		newMov.setGenre(translateGenre(e.getChild("genre").getChild("genre05").getAttribute("dec").getIntValue()), 5);
 		newMov.setGenre(translateGenre(e.getChild("genre").getChild("genre06").getAttribute("dec").getIntValue()), 6);
 		newMov.setLength(Integer.parseInt(e.getChildText("länge")));
-		newMov.setAddDate(CCDate.parse(e.getChildText("adddate"), "D.M.Y"));
+		newMov.setAddDate(CCDate.parse(e.getChildText("adddate"), CCDate.STRINGREP_DESERIALIZE));
 		newMov.setOnlinescore(Integer.parseInt(e.getChildText("imdbscore")));
 		newMov.setFsk(e.getChild("usk").getAttribute("dec").getIntValue());
 		newMov.setFormat(e.getChild("format").getAttribute("dec").getIntValue());
@@ -136,7 +137,7 @@ public class CCBXMLReader {
 		}
 	}
 	
-	private void createSeries(Element e) throws DataConversionException {
+	private void createSeries(Element e) throws DataConversionException, CCFormatException {
 		CCSeries newSer = movielist.createNewEmptySeries();
 		newSer.beginUpdating();
 		
@@ -153,8 +154,6 @@ public class CCBXMLReader {
 		newSer.setFsk(e.getChild("info").getChild("usk").getAttribute("dec").getIntValue());
 		String cvrval = e.getChild("info").getChildText("cover");
 		newSer.setCover(cvrval.substring(0, cvrval.length() - 3) + "png");
-		
-		
 		
 		for (Iterator<Element> itseries = e.getChildren().iterator(); itseries.hasNext();) {
 			Element eseries = itseries.next();
@@ -176,7 +175,7 @@ public class CCBXMLReader {
 		}
 	}
 	
-	private void createSeason(CCSeries series, Element owner) throws DataConversionException {
+	private void createSeason(CCSeries series, Element owner) throws DataConversionException, CCFormatException {
 		CCSeason newSeas = series.createNewEmptySeason();
 		
 		newSeas.beginUpdating();
@@ -185,8 +184,6 @@ public class CCBXMLReader {
 		newSeas.setYear(Integer.parseInt(owner.getChild("info").getChildText("jahr")));
 		String cvrval = owner.getChild("info").getChildText("cover");
 		newSeas.setCover(cvrval.substring(0, cvrval.length() - 3) + "png");
-		
-		
 		
 		for (Iterator<Element> itseason = owner.getChildren().iterator(); itseason.hasNext();) {
 			Element eseason = itseason.next();
@@ -208,7 +205,7 @@ public class CCBXMLReader {
 		}
 	}
 	
-	private void createEpisode(CCSeason season, Element owner) throws DataConversionException {
+	private void createEpisode(CCSeason season, Element owner) throws DataConversionException, CCFormatException {
 		CCEpisode newEp = season.createNewEmptyEpisode();
 		
 		newEp.beginUpdating();
@@ -221,14 +218,19 @@ public class CCBXMLReader {
 		newEp.setFormat(owner.getChild("format").getAttribute("dec").getIntValue());
 		newEp.setFilesize(owner.getChild("größe").getAttribute("dec").getLongValue() * 1024);
 		newEp.setPart(owner.getChildText("pathpart1"));
-		newEp.setAddDate(CCDate.parse(owner.getChildText("adddate"), "D.M.Y"));
+		newEp.setAddDate(CCDate.parse(owner.getChildText("adddate"), CCDate.STRINGREP_DESERIALIZE));
 		
 		final CCEpisode finep = newEp;
 		try {
 			SwingUtilities.invokeAndWait(new Runnable() {
 				@Override
 				public void run() {
-					finep.endUpdating();
+					try {
+						finep.endUpdating();
+					} catch (Exception e) {
+						CCLog.addError(e);
+						throw e;
+					}
 				}
 			});
 		} catch (InvocationTargetException | InterruptedException e) {

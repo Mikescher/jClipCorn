@@ -169,7 +169,6 @@ public class Resources {
 	
 	
 	// ############################################  </FRAMES>  ##############################################
-	public final static String ICN_FRAMES_IMDBBUTTON	= registerICN("/icons/onlineReferences/ref1_large.png");
 	public final static String ICN_FRAMES_SEARCH 		= registerICN("/icons/previewSeriesFrame/magnifier.png");
 	public final static String IMG_FRAMES_ABOUT 		= registerICN("/UberDialog.png");	
 	// #############################################  <FRAMES>  ##############################################

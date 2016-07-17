@@ -133,10 +133,10 @@ public class CoverImageParser {
 
 	private void parseImDBImages(CopyOnWriteArrayList<String> exclusions) { // Parses the Images from the first Result of ImDB CoverSearch
 		String searchurl = ImDBImageParser.getSearchURL(searchText, typ);
-		String searchhtml = HTTPUtilities.getHTML(searchurl, true);
+		String searchhtml = HTTPUtilities.getHTML(searchurl, true, false);
 		String direkturl = ImDBImageParser.getFirstSearchResult(searchhtml);
 		if (!direkturl.isEmpty()) {
-			String direkthtml = HTTPUtilities.getHTML(direkturl, true);
+			String direkthtml = HTTPUtilities.getHTML(direkturl, true, false);
 
 			proglistener.step();
 
@@ -153,7 +153,7 @@ public class CoverImageParser {
 			}
 
 			String posterurl = ImDBImageParser.getCoverUrlPoster(direkturl);
-			String posterhtml = HTTPUtilities.getHTML(posterurl, true);
+			String posterhtml = HTTPUtilities.getHTML(posterurl, true, false);
 
 			List<String> posterlinks = ImDBImageParser.extractImageLinks(posterhtml);
 
@@ -166,7 +166,7 @@ public class CoverImageParser {
 					if (currCID++ >= 23)
 						continue;
 
-					String urlhtml = HTTPUtilities.getHTML(url, true);
+					String urlhtml = HTTPUtilities.getHTML(url, true, false);
 
 					BufferedImage imgurl = ImDBImageParser.getDirectImage(urlhtml);
 					if (imgurl != null) {
@@ -182,7 +182,7 @@ public class CoverImageParser {
 				}
 			} else {
 				String allurl = ImDBImageParser.getCoverUrlAll(direkturl);
-				String allhtml = HTTPUtilities.getHTML(allurl, true);
+				String allhtml = HTTPUtilities.getHTML(allurl, true, false);
 
 				List<String> alllinks = ImDBImageParser.extractImageLinks(allhtml);
 
@@ -194,7 +194,7 @@ public class CoverImageParser {
 					if (currCID++ >= 23)
 						continue;
 
-					String urlhtml = HTTPUtilities.getHTML(url, true);
+					String urlhtml = HTTPUtilities.getHTML(url, true, false);
 
 					BufferedImage imgurl = ImDBImageParser.getDirectImage(urlhtml);
 					if (imgurl != null) {
@@ -220,10 +220,10 @@ public class CoverImageParser {
 
 	private void parseCoverSearch(CopyOnWriteArrayList<String> exclusions) { // Parses the Images from the second Result of ImDB CoverSearch
 		String searchurl = ImDBImageParser.getSearchURL(searchText, typ);
-		String searchhtml = HTTPUtilities.getHTML(searchurl, true);
+		String searchhtml = HTTPUtilities.getHTML(searchurl, true, false);
 		String direkturl = ImDBImageParser.getSecondSearchResult(searchhtml);
 		if (!direkturl.isEmpty()) {
-			String direkthtml = HTTPUtilities.getHTML(direkturl, true);
+			String direkthtml = HTTPUtilities.getHTML(direkturl, true, false);
 
 			proglistener.step();
 
@@ -240,7 +240,7 @@ public class CoverImageParser {
 			proglistener.step();
 
 			String posterurl = ImDBImageParser.getCoverUrlPoster(direkturl);
-			String posterhtml = HTTPUtilities.getHTML(posterurl, true);
+			String posterhtml = HTTPUtilities.getHTML(posterurl, true, false);
 
 			List<String> posterlinks = ImDBImageParser.extractImageLinks(posterhtml);
 
@@ -253,7 +253,7 @@ public class CoverImageParser {
 					if (currCID++ >= 23)
 						continue;
 
-					String urlhtml = HTTPUtilities.getHTML(url, true);
+					String urlhtml = HTTPUtilities.getHTML(url, true, false);
 
 					BufferedImage imgurl = ImDBImageParser.getDirectImage(urlhtml);
 					if (imgurl != null) {
@@ -269,7 +269,7 @@ public class CoverImageParser {
 				}
 			} else {
 				String allurl = ImDBImageParser.getCoverUrlAll(direkturl);
-				String allhtml = HTTPUtilities.getHTML(allurl, true);
+				String allhtml = HTTPUtilities.getHTML(allurl, true, false);
 
 				List<String> alllinks = ImDBImageParser.extractImageLinks(allhtml);
 
@@ -281,7 +281,7 @@ public class CoverImageParser {
 					if (currCID++ >= 23)
 						continue;
 
-					String urlhtml = HTTPUtilities.getHTML(url, true);
+					String urlhtml = HTTPUtilities.getHTML(url, true, false);
 
 					BufferedImage imgurl = ImDBImageParser.getDirectImage(urlhtml);
 					if (imgurl != null) {

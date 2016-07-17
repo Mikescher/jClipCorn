@@ -144,7 +144,9 @@ public class CCProperties {
 	public CCSeasonRegexListProperty	PROP_SEASON_INDEX_REGEXPRESSIONS;
 	public CCPIntProperty 				PROP_STATISTICS_TIMELINEGRAVITY;
 	public CCVIntProperty 				PROP_DATABASE_DRIVER;
-	public CCVIntProperty				PROP_SERIES_DISPLAYED_DATE; //TODO LastViewed | FirstViewed | AverageViewed
+	public CCVIntProperty				PROP_SERIES_DISPLAYED_DATE;
+	public CCBoolProperty				PROP_QUERY_IMDB;
+	public CCBoolProperty				PROP_QUERY_TMDB;
 	
 	public boolean ARG_READONLY = false;
 	
@@ -282,6 +284,8 @@ public class CCProperties {
 		PROP_VALIDATE_FILESIEDRIFT				= new CCRIntProperty(CAT_OTHERFRAMES, 		this, 	"PROP_VALIDATE_FILESIEDRIFT", 				5,					100);
 		PROP_VALIDATE_DUP_IGNORE_IFO			= new CCBoolProperty(CAT_OTHERFRAMES, 		this,   "PROP_VALIDATE_DUP_IGNORE_IFO",				true);
 		PROP_STATISTICS_TIMELINEGRAVITY         = new CCPIntProperty(CAT_OTHERFRAMES,	 	this,   "PROP_STATISTICS_TIMELINEGRAVITY",			7);
+		PROP_QUERY_IMDB							= new CCBoolProperty(CAT_OTHERFRAMES,	 	this,   "PROP_QUERY_IMDB",							true);
+		PROP_QUERY_TMDB							= new CCBoolProperty(CAT_OTHERFRAMES,	 	this,   "PROP_QUERY_TMDB",							true);
 		
 		PROP_BACKUP_LASTBACKUP					= new CCDateProperty(NONVISIBLE, 			this, 	"PROP_BACKUP_LASTBACKUP", 					CCDate.getMinimumDate());
 		PROP_OTHER_DEBUGMODE					= new CCBoolProperty(NONVISIBLE, 			this,   "PROP_OTHER_DEBUGMODE", 					false);

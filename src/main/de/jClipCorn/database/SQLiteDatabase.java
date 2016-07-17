@@ -107,7 +107,7 @@ public class SQLiteDatabase extends GenericDatabase {
 		try {
 			Class.forName(DRIVER).newInstance();
 		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
-			CCLog.addUndefinied(Thread.currentThread(), e);
+			CCLog.addError(e);
 		}
 		
 		if (!databaseExists(dbPath)) throw new FileNotFoundException(dbFilePath);

@@ -30,7 +30,7 @@ import de.jClipCorn.gui.log.CCLog;
 public class HTTPUtilities {
 	private final static int MAX_CONNECTION_TRY = 6;
 
-	public static String getHTML(String urlToRead, boolean stripLineBreaks) {
+	public static String getHTML(String urlToRead, boolean stripLineBreaks, boolean followRedirects) {
 		if (urlToRead.isEmpty()) {
 			return "";
 		}
@@ -40,7 +40,7 @@ public class HTTPUtilities {
 
 			for (int i = 0; i < MAX_CONNECTION_TRY; i++) {
 				try {
-					return getUncaughtHTML(url, stripLineBreaks);
+					return getUncaughtHTML(url, stripLineBreaks, followRedirects);
 				} catch (IOException e) {
 					if ((i + 1) == MAX_CONNECTION_TRY) {
 						CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CouldNotGetHTML", urlToRead), e);
@@ -55,7 +55,7 @@ public class HTTPUtilities {
 		return "";
 	}
 
-	private static String getUncaughtHTML(URL url, boolean stripLineBreaks) throws IOException {
+	private static String getUncaughtHTML(URL url, boolean stripLineBreaks, boolean followRedirects) throws IOException {
 		HttpURLConnection conn = null;
 		BufferedReader rd = null;
 		String line;
@@ -69,6 +69,12 @@ public class HTTPUtilities {
 			String encoding = conn.getContentEncoding();
 			if (encoding == null) {
 				encoding = "UTF-8";
+			}
+
+			switch (conn.getResponseCode()) {
+			case HttpURLConnection.HTTP_MOVED_PERM:
+			case HttpURLConnection.HTTP_MOVED_TEMP:
+				return getUncaughtHTML(new URL(url, conn.getHeaderField("location")), stripLineBreaks, followRedirects);
 			}
 
 			rd = new BufferedReader(new InputStreamReader(conn.getInputStream(), encoding));

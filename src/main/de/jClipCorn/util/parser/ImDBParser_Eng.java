@@ -170,7 +170,7 @@ public class ImDBParser_Eng {
 	public static Map<String, Integer> getFSKList(String url) {
 		url = String.format(FSK_URL, url);
 		
-		String html = HTTPUtilities.getHTML(url, true);
+		String html = HTTPUtilities.getHTML(url, true, false);
 		
 		List<String> genarr = getContentListBySelector(html, JSOUP_FSK);
 		
@@ -265,7 +265,7 @@ public class ImDBParser_Eng {
 			
 		String cpageurl = BASE_URL + find;
 		
-		String cpagehtml = HTTPUtilities.getHTML(cpageurl, true);
+		String cpagehtml = HTTPUtilities.getHTML(cpageurl, true, false);
 		
 		if (cpagehtml.isEmpty()) {
 			return null;

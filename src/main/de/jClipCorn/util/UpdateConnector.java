@@ -33,7 +33,7 @@ public class UpdateConnector implements Runnable {
 
 	@Override
 	public void run() {
-		String resultCode = HTTPUtilities.getHTML(HIGHSCORE_URL, false);
+		String resultCode = HTTPUtilities.getHTML(HIGHSCORE_URL, false, true);
 
 		if (resultCode == null || resultCode.isEmpty()) {
 			updateName = title;

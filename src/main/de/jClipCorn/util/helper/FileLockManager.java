@@ -133,7 +133,7 @@ public class FileLockManager {
 
 				return result;
 			} catch (Exception e) {
-				CCLog.addUndefinied(Thread.currentThread(), e);
+				CCLog.addError(e);
 				return result;
 			}
 		}
@@ -152,7 +152,7 @@ public class FileLockManager {
 
 				return result;
 			} catch (Exception e) {
-				CCLog.addUndefinied(Thread.currentThread(), e);
+				CCLog.addError(e);
 				return result;
 			}
 		}

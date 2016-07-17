@@ -10,7 +10,7 @@ public class CCOnlineReference {
 	private static final Pattern REGEX_IMDB = Pattern.compile("^tt[0-9]+$"); //$NON-NLS-1$
 	private static final Pattern REGEX_AMZN = Pattern.compile("^[A-Z0-9]+$"); //$NON-NLS-1$
 	private static final Pattern REGEX_MVPT = Pattern.compile("^(movie|serie)/.+$"); //$NON-NLS-1$
-	private static final Pattern REGEX_TMDB = Pattern.compile("^(movie|serie)/[0-9]+$"); //$NON-NLS-1$
+	private static final Pattern REGEX_TMDB = Pattern.compile("^(movie|tv)/[0-9]+$"); //$NON-NLS-1$
 	
 	public final CCOnlineRefType type;
 	public final String id;
@@ -56,7 +56,7 @@ public class CCOnlineReference {
 		case NONE:
 			return null;
 		case IMDB:
-			return "https://www.imdb.com/title/" + id;
+			return "http://www.imdb.com/title/" + id;
 		case AMAZON:
 			return "https://www.amazon.de/dp/" + id;
 		case MOVIEPILOT:

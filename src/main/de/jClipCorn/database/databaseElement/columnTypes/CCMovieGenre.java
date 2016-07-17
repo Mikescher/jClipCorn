@@ -55,7 +55,8 @@ public enum CCMovieGenre {
 		LocaleBundle.getString("CCMovieGenre.Genre032"), LocaleBundle.getString("CCMovieGenre.Genre033"), LocaleBundle.getString("CCMovieGenre.Genre034"), LocaleBundle.getString("CCMovieGenre.Genre035"),
 		LocaleBundle.getString("CCMovieGenre.Genre036"), LocaleBundle.getString("CCMovieGenre.Genre037"), LocaleBundle.getString("CCMovieGenre.Genre038"), LocaleBundle.getString("CCMovieGenre.Genre039"), 
 		LocaleBundle.getString("CCMovieGenre.Genre040"), LocaleBundle.getString("CCMovieGenre.Genre041"), LocaleBundle.getString("CCMovieGenre.Genre042"), LocaleBundle.getString("CCMovieGenre.Genre043"),
-		LocaleBundle.getString("CCMovieGenre.Genre044"), LocaleBundle.getString("CCMovieGenre.Genre045"), LocaleBundle.getString("CCMovieGenre.Genre046"), LocaleBundle.getString("CCMovieGenre.Genre047")
+		LocaleBundle.getString("CCMovieGenre.Genre044"), LocaleBundle.getString("CCMovieGenre.Genre045"), LocaleBundle.getString("CCMovieGenre.Genre046"), LocaleBundle.getString("CCMovieGenre.Genre047"), 
+		LocaleBundle.getString("CCMovieGenre.Genre048"), LocaleBundle.getString("CCMovieGenre.Genre049")
 	};
 	
 	private int id;
@@ -124,6 +125,10 @@ public enum CCMovieGenre {
 			genID = 8;
 		} else if (ng.equals("sci-fi")) {
 			genID = 9;
+		} else if (ng.equals("science-fiction")) {
+			genID = 9;
+		} else if (ng.equals("science fiction")) {
+			genID = 9;
 		} else if (ng.equals("comedy")) {
 			genID = 10;
 		} else if (ng.equals("komödie")) {
@@ -139,6 +144,8 @@ public enum CCMovieGenre {
 		} else if (ng.equals("crime")) {
 			genID = 14;
 		} else if (ng.equals("kriegsfilm")) {
+			genID = 15;
+		} else if (ng.equals("war")) {
 			genID = 15;
 		} else if (ng.equals("war")) {
 			genID = 15;
@@ -192,6 +199,8 @@ public enum CCMovieGenre {
 			genID = 35;
 		} else if (ng.equals("adventure")) {
 			genID = 35;
+		} else if (ng.equals("action & adventure")) {
+			genID = 35;
 		} else if (ng.equals("romanze")) {
 			genID = 36;
 		} else if (ng.equals("romance")) {
@@ -224,11 +233,88 @@ public enum CCMovieGenre {
 			genID = 46;
 		} else if (ng.equals("film-noir")) {
 			genID = 47;
+		} else if (ng.equals("kids")) {
+			genID = 48;
+		} else if (ng.equals("kinder")) {
+			genID = 48;
+		} else if (ng.equals("kinderfilm")) {
+			genID = 48;
+		} else if (ng.equals("soap")) {
+			genID = 49;
+		} else if (ng.equals("soap opera")) {
+			genID = 49;
+		} else if (ng.equals("seifenoper")) {
+			genID = 49;
 		} else {
 			CCLog.addWarning(LocaleBundle.getFormattedString("LogMessage.CouldNotParseGenre", ng));
 		}
 
 		return CCMovieGenre.find(genID);
+	}
+
+	public static CCMovieGenre parseFromTMDbID(int id) {
+		switch (id) {
+		case 28:
+			return CCMovieGenre.GENRE_019; // Action
+		case 12:
+			return CCMovieGenre.GENRE_035; // Adventure
+		case 16:
+			return CCMovieGenre.GENRE_026; // Animation
+		case 35:
+			return CCMovieGenre.GENRE_010; // Comedy
+		case 80:
+			return CCMovieGenre.GENRE_014; // Crime
+		case 99:
+			return CCMovieGenre.GENRE_034; // Documentary
+		case 18:
+			return CCMovieGenre.GENRE_040; // Drama
+		case 10751:
+			return CCMovieGenre.GENRE_039; // Family
+		case 14:
+			return CCMovieGenre.GENRE_038; // Fantasy
+		case 10769:
+			return CCMovieGenre.GENRE_000; // Foreign
+		case 36:
+			return CCMovieGenre.GENRE_046; // History
+		case 27:
+			return CCMovieGenre.GENRE_029; // Horror
+		case 10402:
+			return CCMovieGenre.GENRE_045; // Music
+		case 9648:
+			return CCMovieGenre.GENRE_037; // Mystery
+		case 10749:
+			return CCMovieGenre.GENRE_036; // Romance
+		case 878:
+			return CCMovieGenre.GENRE_009; // Science Fiction
+		case 10770:
+			return CCMovieGenre.GENRE_000; // TV Movie
+		case 53:
+			return CCMovieGenre.GENRE_006; // Thriller
+		case 10752:
+			return CCMovieGenre.GENRE_015; // War
+		case 37:
+			return CCMovieGenre.GENRE_037; // Western
+		case 10759:
+			return CCMovieGenre.GENRE_035; // Action & Adventure
+		case 10762:
+			return CCMovieGenre.GENRE_048; // Kids
+		case 10763:
+			return CCMovieGenre.GENRE_000; // News
+		case 10764:
+			return CCMovieGenre.GENRE_000; // Reality
+		case 10765:
+			return CCMovieGenre.GENRE_000; // Sci-Fi & Fantasy
+		case 10766:
+			return CCMovieGenre.GENRE_049; // Soap
+		case 10767:
+			return CCMovieGenre.GENRE_000; // Talk
+		case 10768:
+			return CCMovieGenre.GENRE_000; // War & Politics
+		default:
+			CCLog.addWarning(LocaleBundle.getFormattedString("LogMessage.CouldNotParseGenreID", id)); //$NON-NLS-1$
+			return CCMovieGenre.GENRE_000;
+		}
+
 	}
 
 	public boolean isEmpty() {

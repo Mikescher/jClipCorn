@@ -32,7 +32,7 @@ import de.jClipCorn.gui.CachedResourceLoader;
 import de.jClipCorn.gui.Resources;
 import de.jClipCorn.gui.frames.editSeriesFrame.EditSeriesFrame;
 import de.jClipCorn.gui.frames.inputErrorFrame.InputErrorDialog;
-import de.jClipCorn.gui.frames.parseImDBFrame.ParseImDBDialog;
+import de.jClipCorn.gui.frames.parseOnlineFrame.ParseOnlineDialog;
 import de.jClipCorn.gui.guiComponents.editCoverControl.EditCoverControl;
 import de.jClipCorn.gui.guiComponents.referenceChooser.JReferenceChooser;
 import de.jClipCorn.gui.localization.LocaleBundle;
@@ -266,7 +266,7 @@ public class AddSeriesFrame extends JFrame implements ParseResultHandler, UserDa
 	}
 	
 	private void showIMDBParser() {
-		(new ParseImDBDialog(this, this, CCMovieTyp.SERIES)).setVisible(true);
+		(new ParseOnlineDialog(this, this, CCMovieTyp.SERIES)).setVisible(true);
 	}
 
 	@Override

@@ -1,4 +1,4 @@
-package de.jClipCorn.gui.frames.parseImDBFrame;
+package de.jClipCorn.gui.frames.parseOnlineFrame;
 
 import java.awt.Component;
 import java.awt.event.ActionEvent;
@@ -46,25 +46,32 @@ import de.jClipCorn.gui.guiComponents.ReadableSpinner;
 import de.jClipCorn.gui.guiComponents.ReadableTextField;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
+import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.DoubleString;
 import de.jClipCorn.util.helper.ExtendedFocusTraversalOnArray;
 import de.jClipCorn.util.helper.HTTPUtilities;
 import de.jClipCorn.util.helper.ImageUtilities;
 import de.jClipCorn.util.parser.ImDBParser;
 import de.jClipCorn.util.parser.ParseResultHandler;
+import de.jClipCorn.util.parser.TMDBParser;
+import de.jClipCorn.util.parser.TMDBParser.TMDBFullResult;
+import de.jClipCorn.util.parser.TMDBParser.TMDBSimpleResult;
 
-public class ParseImDBDialog extends JDialog {
+public class ParseOnlineDialog extends JDialog {
 	private static final long serialVersionUID = 3777677368743220383L;
 	
 	private DefaultListModel<String> mdlLsDBList;
-	private List<String> lsDBListPaths = new ArrayList<>();
+	private List<CCOnlineReference> lsDBListPaths = new ArrayList<>();
 	private BufferedImage imgCoverBI = null;
 	private Map<String, Integer> cbFSKlsAll = null;
 	
 	private final ParseResultHandler owner;
 	private final CCMovieTyp typ;
 	
-	private String selectedURL = ""; //$NON-NLS-1$
+	private CCOnlineReference selectedReference = new CCOnlineReference();
+
+	private boolean enumerateIMDB = CCProperties.getInstance().PROP_QUERY_IMDB.getValue();
+	private boolean enumerateTMDB = CCProperties.getInstance().PROP_QUERY_TMDB.getValue();
 	
 	private JList<String> lsDBList;
 	private JPanel panel;
@@ -120,7 +127,7 @@ public class ParseImDBDialog extends JDialog {
 	private JButton btnFSKAll;
 	private JButton btnExtendedParse;
 
-	public ParseImDBDialog(Component owner, ParseResultHandler handler, CCMovieTyp typ) {
+	public ParseOnlineDialog(Component owner, ParseResultHandler handler, CCMovieTyp typ) {
 		setResizable(false);
 		this.owner = handler;
 		this.typ = typ;
@@ -169,7 +176,7 @@ public class ParseImDBDialog extends JDialog {
 			@Override
 			public void keyPressed(KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-					startGetImDBList(false);
+					runSearchAsync(false);
 				}
 			}
 		});
@@ -181,7 +188,7 @@ public class ParseImDBDialog extends JDialog {
 		btnParse.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				startGetImDBList(false);
+				runSearchAsync(false);
 			}
 		});
 		btnParse.setBounds(547, 10, 89, 23);
@@ -376,12 +383,12 @@ public class ParseImDBDialog extends JDialog {
 		cbCover.setBounds(6, 157, 21, 23);
 		pnlMain.add(cbCover);
 		
-		btnIMDB = new JButton(CachedResourceLoader.getImageIcon(Resources.ICN_FRAMES_IMDBBUTTON));
+		btnIMDB = new JButton(CachedResourceLoader.getImageIcon(Resources.ICN_REF_0_BUTTON));
 		btnIMDB.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				if (lsDBList.getSelectedIndex() >= 0) {
-					HTTPUtilities.openInBrowser(lsDBListPaths.get(lsDBList.getSelectedIndex()));
+					HTTPUtilities.openInBrowser(lsDBListPaths.get(lsDBList.getSelectedIndex()).getURL());
 				}
 			}
 		});
@@ -417,7 +424,7 @@ public class ParseImDBDialog extends JDialog {
 		btnExtendedParse.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				startGetImDBList(true);
+				runSearchAsync(true);
 			}
 		});
 		btnExtendedParse.setBounds(648, 10, 145, 23);
@@ -428,15 +435,6 @@ public class ParseImDBDialog extends JDialog {
 		if (lsDBList.getSelectedIndex() >= 0 && cbFSKlsAll != null) {
 			(new AllRatingsDialog(cbFSKlsAll, this)).setVisible(true);
 		}
-	}
-	
-	private void startGetImDBList(final boolean parseAll) {
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				runSearch(parseAll);
-			}
-		}, "THREAD_SEARCH_IN_IMDB_PA").start(); //$NON-NLS-1$
 	}
 	
 	private void initComboboxes() {
@@ -475,6 +473,8 @@ public class ParseImDBDialog extends JDialog {
 		cbxGenre5.setSelectedIndex(-1);
 		cbxGenre6.setSelectedIndex(-1);
 		cbxGenre7.setSelectedIndex(-1);
+		
+		btnIMDB.setIcon(CachedResourceLoader.getImageIcon(Resources.ICN_REF_0_BUTTON));
 	}
 	
 	private void resetCheckboxes() {
@@ -512,47 +512,79 @@ public class ParseImDBDialog extends JDialog {
 		cbGenre6.setSelected(cbxGenre6.getSelectedIndex() > 0);
 		cbGenre7.setSelected(cbxGenre7.getSelectedIndex() > 0);
 	}
-	
-	private void runSearch(boolean parseAll) {
-		try {
-			SwingUtilities.invokeAndWait(new Runnable() {
-				@Override
-				public void run() {
-					btnParse.setEnabled(false);
-					pbarSearch.setIndeterminate(true);
+
+	private void runSearchAsync(boolean parseAll) {
+		btnParse.setEnabled(false);
+		pbarSearch.setIndeterminate(true);
+
+		mdlLsDBList.clear();
+		lsDBListPaths.clear();
+		lsDBList.setSelectedIndex(-1);
+
+		ThreadGroup group = new ThreadGroup("THREADGROUP_SEARCH_ONLINE"); //$NON-NLS-1$
+
+		Thread t1 = new Thread(group, new Runnable() {
+			@Override
+			public void run() {
+				if (enumerateIMDB) runSearchIMDB(parseAll);
+			}
+		}, "THREAD_SEARCH_ONLINE_IMDB_PA"); //$NON-NLS-1$
+		
+		Thread t2 = new Thread(group, new Runnable() {
+			@Override
+			public void run() {
+				if (enumerateTMDB) runSearchTMDB(parseAll);
+			}
+		}, "THREAD_SEARCH_ONLINE_TMDB_PA"); //$NON-NLS-1$
+
+		t1.start();
+		t2.start();
+		
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					while (group.activeCount() > 0) {
+						Thread.sleep(8);
+					}
+				} catch (InterruptedException e) {
+					CCLog.addError(e);
 				}
-			});
-		} catch (InvocationTargetException | InterruptedException e) {
-			CCLog.addError(e);
-			return;
+				
+				try {
+					SwingUtilities.invokeAndWait(new Runnable() {
+						@Override
+						public void run() {
+							pbarSearch.setIndeterminate(false);
+							btnParse.setEnabled(true);
+						}
+					});
+				} catch (InvocationTargetException | InterruptedException e) {
+					CCLog.addError(e);
+				}
+			}
+		}, "THREAD_SEARCH_ONLINE_JOIN").start(); //$NON-NLS-1$
+	}
+	
+	private void runSearchTMDB(boolean parseAll) {
+		List<TMDBSimpleResult> results;
+		
+		if (parseAll) {
+			results = TMDBParser.searchMulti(edSearchName.getText());
+		} else if (typ == CCMovieTyp.MOVIE) {
+			results = TMDBParser.searchMovies(edSearchName.getText());
+		} else {
+			results = TMDBParser.searchSeries(edSearchName.getText());
 		}
 
-		String url = ImDBParser.getSearchURL(edSearchName.getText(), (parseAll)?(null):(typ));
-		String html = HTTPUtilities.getHTML(url, true);
-		final List<DoubleString> res = ImDBParser.extractImDBLinks(html);
-		
 		try {
 			SwingUtilities.invokeAndWait(new Runnable() {
 				@Override
 				public void run() {
-					mdlLsDBList.clear();
-					lsDBListPaths.clear();
-					lsDBList.setSelectedIndex(-1);
-
-					for (DoubleString sm : res) {
-						String id = ImDBParser.extractOnlineID(sm.get1());
-						
-						if (id != null) {
-							lsDBListPaths.add(sm.get1());
-							mdlLsDBList.addElement(sm.get2());
-						} else {
-							CCLog.addWarning(LocaleBundle.getFormattedString("LogMessage.CantExtractIMDBLink", sm.get1())); //$NON-NLS-1$
-						}
-						
+					for (TMDBSimpleResult result : results) {
+						lsDBListPaths.add(new CCOnlineReference(CCOnlineRefType.THEMOVIEDB, result.ID));
+						mdlLsDBList.addElement("[TMDB] " + result.Title); //$NON-NLS-1$
 					}
-
-					pbarSearch.setIndeterminate(false);
-					btnParse.setEnabled(true);
 				}
 			});
 		} catch (InvocationTargetException | InterruptedException e) {
@@ -561,8 +593,36 @@ public class ParseImDBDialog extends JDialog {
 		}
 	}
 	
-	private void runParse() {
-		final String url = selectedURL;
+	private void runSearchIMDB(boolean parseAll) {
+		String url = ImDBParser.getSearchURL(edSearchName.getText(), (parseAll)?(null):(typ));
+		String html = HTTPUtilities.getHTML(url, true, true);
+		final List<DoubleString> res = ImDBParser.extractImDBLinks(html);
+		
+		try {
+			SwingUtilities.invokeAndWait(new Runnable() {
+				@Override
+				public void run() {
+					for (DoubleString sm : res) {
+						String id = ImDBParser.extractOnlineID(sm.get1());
+						
+						if (id != null) {
+							lsDBListPaths.add(new CCOnlineReference(CCOnlineRefType.IMDB, id));
+							mdlLsDBList.addElement("[IMDb] " + sm.get2()); //$NON-NLS-1$
+						} else {
+							CCLog.addWarning(LocaleBundle.getFormattedString("LogMessage.CantExtractIMDBLink", sm.get1())); //$NON-NLS-1$
+						}
+					}
+				}
+			});
+		} catch (InvocationTargetException | InterruptedException e) {
+			CCLog.addError(e);
+			return;
+		}
+	}
+	
+	private void runParseIMDB() {
+		final CCOnlineReference ref = selectedReference;
+		final String url = ref.getURL();
 		
 		try {
 			SwingUtilities.invokeAndWait(new Runnable() {
@@ -578,7 +638,7 @@ public class ParseImDBDialog extends JDialog {
 			return;
 		}
 		
-		String html = HTTPUtilities.getHTML(url, true);
+		String html = HTTPUtilities.getHTML(url, true, true);
 
 		final String title = ImDBParser.getTitle(html);
 		final int year = ImDBParser.getYear(html);
@@ -618,6 +678,78 @@ public class ParseImDBDialog extends JDialog {
 					cbxGenre6.setSelectedIndex(mgl.getGenre(6).asInt());
 					cbxGenre7.setSelectedIndex(mgl.getGenre(7).asInt());
 					
+					btnIMDB.setIcon(selectedReference.getIconButton());
+					
+					btnOk.setEnabled(true);
+					
+					updateCheckBoxes();
+					
+					pbarSearch.setIndeterminate(false);
+				}
+			});
+		} catch (InvocationTargetException | InterruptedException e) {
+			CCLog.addError(e);
+			return;
+		}		
+	}
+	
+	private void runParseTMDB() {
+		final CCOnlineReference ref = selectedReference;
+		
+		try {
+			SwingUtilities.invokeAndWait(new Runnable() {
+				@Override
+				public void run() {
+					resetAll();
+					pbarSearch.setIndeterminate(true);
+					
+				}
+			});
+		} catch (InvocationTargetException | InterruptedException e) {
+			CCLog.addError(e);
+			return;
+		}
+		
+		TMDBFullResult metadata = TMDBParser.getMovieMetadata(ref.id);
+		String imdbURL = new CCOnlineReference(CCOnlineRefType.IMDB, metadata.ImdbID).getURL();
+
+		String imdbHTML = HTTPUtilities.getHTML(imdbURL, true, true);
+		final CCMovieFSK mfsk = ImDBParser.getFSK(imdbHTML, imdbURL);
+		cbFSKlsAll = ImDBParser.getFSKList(imdbHTML, imdbURL);
+
+		BufferedImage bci = HTTPUtilities.getImage(metadata.CoverPath);
+		
+		try {
+			SwingUtilities.invokeAndWait(new Runnable() {
+				@Override
+				public void run() {
+					edTitle.setText(metadata.Title);
+					spnYear.setValue(metadata.Year);
+					spnScore.setValue(metadata.Score);
+					spnLength.setValue(metadata.Length);
+
+					if (mfsk != null) {
+						cbxFSK.setSelectedIndex(mfsk.asInt());
+					}
+					
+					if (bci != null) {
+						imgCover.setIcon(new ImageIcon(ImageUtilities.resizeCoverImage(bci)));
+					} else {
+						imgCover.setIcon(null);
+					}
+					imgCoverBI = bci;
+					
+					cbxGenre0.setSelectedIndex(metadata.Genres.getGenre(0).asInt());
+					cbxGenre1.setSelectedIndex(metadata.Genres.getGenre(1).asInt());
+					cbxGenre2.setSelectedIndex(metadata.Genres.getGenre(2).asInt());
+					cbxGenre3.setSelectedIndex(metadata.Genres.getGenre(3).asInt());
+					cbxGenre4.setSelectedIndex(metadata.Genres.getGenre(4).asInt());
+					cbxGenre5.setSelectedIndex(metadata.Genres.getGenre(5).asInt());
+					cbxGenre6.setSelectedIndex(metadata.Genres.getGenre(6).asInt());
+					cbxGenre7.setSelectedIndex(metadata.Genres.getGenre(7).asInt());
+					
+					btnIMDB.setIcon(selectedReference.getIconButton());
+					
 					btnOk.setEnabled(true);
 					
 					updateCheckBoxes();
@@ -636,22 +768,21 @@ public class ParseImDBDialog extends JDialog {
 			return;
 		}
 		
-		selectedURL = lsDBListPaths.get(lsDBList.getSelectedIndex());
+		selectedReference = lsDBListPaths.get(lsDBList.getSelectedIndex());
 		
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
-				runParse();
+				if (selectedReference.type == CCOnlineRefType.IMDB)
+					runParseIMDB();
+				else if (selectedReference.type == CCOnlineRefType.THEMOVIEDB)
+					runParseTMDB();
 			}
-		}, "THREAD_PARSE_IMDB_MOVIE").start(); //$NON-NLS-1$
+		}, "THREAD_PARSE_MOVIE").start(); //$NON-NLS-1$
 	}
 	
 	private void insertDataIntoFrame() {
-		String imdbID = ImDBParser.extractOnlineID(selectedURL);
-		
-		if (imdbID != null) {
-			owner.setOnlineReference(new CCOnlineReference(CCOnlineRefType.IMDB, imdbID));
-		}
+		owner.setOnlineReference(selectedReference);
 		
 		if (cbTitle.isSelected()) {
 			owner.setMovieName(edTitle.getText());

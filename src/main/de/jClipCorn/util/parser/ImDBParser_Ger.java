@@ -212,7 +212,7 @@ public class ImDBParser_Ger {
 	public static BufferedImage getCover(String html) {
 		String cpageurl = BASE_URL + RegExHelper.find(REGEX_COVER, html);
 		
-		String cpagehtml = HTTPUtilities.getHTML(cpageurl, true);
+		String cpagehtml = HTTPUtilities.getHTML(cpageurl, true, false);
 		
 		if (cpagehtml.isEmpty()) {
 			return null;

@@ -108,7 +108,7 @@ public class DerbyDatabase extends GenericDatabase {
 		try {
 			Class.forName(DRIVER).newInstance();
 		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
-			CCLog.addUndefinied(Thread.currentThread(), e);
+			CCLog.addError(e);
 		}
 				
 		connection = DriverManager.getConnection(getDatabasePath(dbPath), getUserPasswordProperties());

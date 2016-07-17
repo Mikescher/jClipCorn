@@ -46,7 +46,7 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReference;
 import de.jClipCorn.gui.CachedResourceLoader;
 import de.jClipCorn.gui.Resources;
 import de.jClipCorn.gui.frames.inputErrorFrame.InputErrorDialog;
-import de.jClipCorn.gui.frames.parseImDBFrame.ParseImDBDialog;
+import de.jClipCorn.gui.frames.parseOnlineFrame.ParseOnlineDialog;
 import de.jClipCorn.gui.guiComponents.ReadableTextField;
 import de.jClipCorn.gui.guiComponents.editCoverControl.EditCoverControl;
 import de.jClipCorn.gui.guiComponents.jCCDateSpinner.JCCDateSpinner;
@@ -801,7 +801,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 	}
 	
 	private void showIMDBParser() {
-		(new ParseImDBDialog(this, this, CCMovieTyp.MOVIE)).setVisible(true);
+		(new ParseOnlineDialog(this, this, CCMovieTyp.MOVIE)).setVisible(true);
 	}
 	
 	private void initFileChooser() {

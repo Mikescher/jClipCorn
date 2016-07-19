@@ -8,6 +8,7 @@ import java.util.List;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 import de.jClipCorn.database.CCMovieList;
+import de.jClipCorn.database.databaseElement.columnTypes.CCGroup;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFSK;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFormat;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieGenre;
@@ -27,6 +28,7 @@ import de.jClipCorn.gui.guiComponents.tableFilter.TableCustomFilter;
 import de.jClipCorn.gui.guiComponents.tableFilter.TableFSKFilter;
 import de.jClipCorn.gui.guiComponents.tableFilter.TableFormatFilter;
 import de.jClipCorn.gui.guiComponents.tableFilter.TableGenreFilter;
+import de.jClipCorn.gui.guiComponents.tableFilter.TableGroupFilter;
 import de.jClipCorn.gui.guiComponents.tableFilter.TableLanguageFilter;
 import de.jClipCorn.gui.guiComponents.tableFilter.TableOnlinescoreFilter;
 import de.jClipCorn.gui.guiComponents.tableFilter.TableQualityFilter;
@@ -47,6 +49,7 @@ public class FilterTree extends AbstractFilterTree {
 	
 	private DefaultMutableTreeNode node_all;
 	private DefaultMutableTreeNode node_zyklus;
+	private DefaultMutableTreeNode node_groups;
 	private DefaultMutableTreeNode node_genre;
 	private DefaultMutableTreeNode node_onlinescore;
 	private DefaultMutableTreeNode node_score;
@@ -86,6 +89,9 @@ public class FilterTree extends AbstractFilterTree {
 		node_zyklus = addNode(null, Resources.ICN_SIDEBAR_ZYKLUS, LocaleBundle.getString("FilterTree.Zyklus"), reset); //$NON-NLS-1$
 		initZyklus();
 		
+		node_groups = addNode(null, Resources.ICN_SIDEBAR_GROUPS, LocaleBundle.getString("FilterTree.Groups"), reset); //$NON-NLS-1$
+		initGroups(); //TODO HIDE IF NO ELEMENTS
+		
 		node_genre = addNode(null, Resources.ICN_SIDEBAR_GENRE, LocaleBundle.getString("FilterTree.Genre"), reset); //$NON-NLS-1$
 		initGenre();
 		
@@ -93,7 +99,7 @@ public class FilterTree extends AbstractFilterTree {
 		initOnlineScore();
 		
 		node_score = addNode(null, Resources.ICN_SIDEBAR_SCORE, LocaleBundle.getString("FilterTree.Score"), reset); //$NON-NLS-1$
-		initScore();
+		initScore(); //TODO HIDE IF NO ELEMENTS
 		
 		node_fsk = addNode(null, Resources.ICN_TABLE_FSK_2, LocaleBundle.getString("FilterTree.FSK"), reset); //$NON-NLS-1$
 		initFSK();
@@ -244,6 +250,17 @@ public class FilterTree extends AbstractFilterTree {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					table.setRowFilter(new TableZyklusFilter(zyklus), RowFilterSource.SIDEBAR);
+				}
+			});
+		}
+	}
+	
+	private void initGroups() {
+		for (final CCGroup group : movielist.getGroupList()) {
+			addNodeI(node_groups, null, group.Name, new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					table.setRowFilter(new TableGroupFilter(group), RowFilterSource.SIDEBAR);
 				}
 			});
 		}

@@ -56,12 +56,12 @@ import de.jClipCorn.gui.frames.addEpisodesFrame.AddEpisodesFrame;
 import de.jClipCorn.gui.frames.addSeasonFrame.AddSeasonFrame;
 import de.jClipCorn.gui.frames.createSeriesFolderStructureFrame.CreateSeriesFolderStructureFrame;
 import de.jClipCorn.gui.frames.displayGenresDialog.DisplayGenresDialog;
-import de.jClipCorn.gui.frames.displaySearchResultsDialog.DisplaySearchResultsDialog;
 import de.jClipCorn.gui.frames.editSeriesFrame.EditSeriesFrame;
 import de.jClipCorn.gui.frames.mainFrame.MainFrame;
 import de.jClipCorn.gui.frames.moveSeriesFrame.MoveSeriesDialog;
 import de.jClipCorn.gui.frames.previewSeriesFrame.serTable.SerTable;
 import de.jClipCorn.gui.guiComponents.CoverLabel;
+import de.jClipCorn.gui.guiComponents.displaySearchResultsDialog.DisplaySearchResultsDialog;
 import de.jClipCorn.gui.guiComponents.jCoverChooser.JCoverChooser;
 import de.jClipCorn.gui.guiComponents.jCoverChooser.JCoverChooserPopupEvent;
 import de.jClipCorn.gui.localization.LocaleBundle;
@@ -830,7 +830,7 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 		
 		for (int i = 0; i < el.size(); i++) {
 			if (StringUtils.containsIgnoreCase(el.get(i).getTitle(), edSearch.getText())) {
-					found.add(el.get(i));
+				found.add(el.get(i));
 			}
 		}
 		

@@ -23,6 +23,7 @@ public class LookAndFeelManager {
 
 	private static boolean isSubstance = false;
 	private static boolean isMetal = false;
+	private static boolean isWindows = false;
 	
 	private static List<Entry<String, SkinInfo>> substanceLookAndFeelCache = null;
 	
@@ -40,11 +41,13 @@ public class LookAndFeelManager {
 			setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 			isSubstance = false;
 			isMetal = false;
+			isWindows = true;
 			break;
 		case 1:
 			setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
 			isSubstance = false;
 			isMetal = true;
+			isWindows = false;
 			break;
 		default:
 			String subLNF = getSubstanceLookAndFeel(propertynumber - 2);
@@ -55,6 +58,7 @@ public class LookAndFeelManager {
 			}
 			isSubstance = true;
 			isMetal = false;
+			isWindows = false;
 			break;
 		}
 	}
@@ -94,6 +98,10 @@ public class LookAndFeelManager {
 
 	public static boolean isMetal() {
 		return isMetal;
+	}
+
+	public static boolean isWindows() {
+		return isWindows;
 	}
 	
 	public static void printAllColorKeys() {

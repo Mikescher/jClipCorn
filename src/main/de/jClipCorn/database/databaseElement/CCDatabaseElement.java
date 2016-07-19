@@ -224,15 +224,19 @@ public abstract class CCDatabaseElement {
 	}
 
 	public void setGroups(String data) {
-		linkedGroups = CCGroupList.parse(data);
-		
-		updateDB();
+		setGroups(CCGroupList.parse(movielist, data));
 	}
 
 	public void setGroups(CCGroupList value) {
+		if (linkedGroups.equals(value)) return;
+		
+		movielist.unlinkElementFromGroups(this, linkedGroups);
+		
 		linkedGroups = value;
 		
 		updateDB();
+		
+		movielist.linkElementToGroups(this, value);
 	}
 
 	public CCGroupList getGroups() {

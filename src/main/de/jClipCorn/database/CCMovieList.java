@@ -5,9 +5,11 @@ import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.TreeMap;
 import java.util.Vector;
 
@@ -22,6 +24,8 @@ import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.database.databaseElement.CCSeries;
+import de.jClipCorn.database.databaseElement.columnTypes.CCGroup;
+import de.jClipCorn.database.databaseElement.columnTypes.CCGroupList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieGenre;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieSize;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieZyklus;
@@ -45,11 +49,12 @@ public class CCMovieList {
 	private static CCMovieList instance = null;
 	
 	private List<CCDatabaseElement> list;
-
+	
+	private Map<CCGroup, List<CCDatabaseElement>> globalGroupList = new HashMap<>();
 	private CCCoverCache coverCache;
-	private CCDatabase database;
-
 	private List<CCDBUpdateListener> listener;
+	
+	private CCDatabase database;
 
 	private long loadTime = -1;
 	
@@ -846,5 +851,45 @@ public class CCMovieList {
 
 	public void resetLocalDUUID() {
 		database.resetInformation_DUUID();
+	}
+	
+	public boolean groupExists(String name) {
+		for (Entry<CCGroup, List<CCDatabaseElement>> entry : globalGroupList.entrySet()) {
+			if (entry.getKey().Name.equals(name)) return true;
+		}
+		return false;
+	}
+	
+	public List<CCGroup> getGroupList() {
+		return new ArrayList<>(globalGroupList.keySet());
+	}
+	
+	public CCGroup getOrCreateGroup(String name) {
+		for (Entry<CCGroup, List<CCDatabaseElement>> entry : globalGroupList.entrySet()) {
+			if (entry.getKey().Name.equals(name)) return entry.getKey();
+		}
+		
+		return CCGroup.create(name);
+	}
+	
+	public void unlinkElementFromGroups(CCDatabaseElement source, CCGroupList grouplist) {
+		for (CCGroup g : grouplist) {
+			List<CCDatabaseElement> lst = globalGroupList.get(g);
+			lst.remove(source);
+			if (lst.isEmpty()) {
+				globalGroupList.remove(g);
+			}
+		}
+	}
+	
+	public void linkElementToGroups(CCDatabaseElement source, CCGroupList grouplist) {
+		for (CCGroup g : grouplist) {
+			List<CCDatabaseElement> lst = globalGroupList.get(g);
+			if (lst == null) {
+				lst = new ArrayList<>();
+				globalGroupList.put(g, lst);
+			}
+			lst.add(source);
+		}
 	}
 }

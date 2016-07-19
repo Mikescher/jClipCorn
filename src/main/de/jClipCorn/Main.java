@@ -133,8 +133,8 @@ public class Main {
 // X - Calc Button for Series Quali                                                                                                           
 //   - Auto retrieve length button                                                                                                            
 // X - dont allow no cover add (leads to exception)
-//   - add db err (mov+epi) not viewed but has history
-//   - add db err (ser) has history
+// X - add db err (mov+epi) not viewed but has history
+// X - add db err (ser) has history
 // X - auto find imdb for non ref movies/series (TMDB FIRST !)
 //   - dialog show unreffed movies
 //   - add groups to (both?) search
@@ -148,3 +148,8 @@ public class Main {
 //   - strange xml parse in addmovframe
 //   - viewed | groups | ref to filter
 // X - undo last viewed
+//   - manage groups dialog (add to group, remove from group, delete group)
+//   - measure startup time
+//   - error: two groups with different case-ing
+//   - error: movie has one group two times (FATAL! should not be possible)
+//   - Sidebar needs to listen to group changed events and update

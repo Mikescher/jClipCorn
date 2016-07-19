@@ -90,6 +90,7 @@ public class Resources {
 	public final static String ICN_MENUBAR_BACKUPMANAGER			= registerICN("/icons/toolbar/backup_manager.png");
 	public final static String ICN_MENUBAR_WATCHDATA				= registerICN("/icons/toolbar/inbox_table.png");
 	public final static String ICN_MENUBAR_OPENLASTSERIES			= registerICN("/icons/toolbar/paper_airplane.png");
+	public final static String ICN_MENUBAR_GROUPS					= registerICN("/icons/toolbar/function_recently_used.png");
 	// #############################################  </MENUBAR>  ############################################
 	
 
@@ -189,6 +190,7 @@ public class Resources {
 	// #############################################  </SIDEBAR>  ############################################
 	public final static String ICN_SIDEBAR_ALL	 		= registerICN("/icons/sidebar/jar_empty.png");
 	public final static String ICN_SIDEBAR_ZYKLUS 		= registerICN("/icons/sidebar/asterisk_orange.png");
+	public final static String ICN_SIDEBAR_GROUPS 		= registerICN("/icons/sidebar/function_recently_used.png");
 	public final static String ICN_SIDEBAR_GENRE 		= registerICN("/icons/sidebar/book_spelling.png");
 	public final static String ICN_SIDEBAR_ONLINESCORE	= registerICN("/icons/sidebar/star.png");
 	public final static String ICN_SIDEBAR_SCORE 		= registerICN("/icons/sidebar/to_do_list.png");

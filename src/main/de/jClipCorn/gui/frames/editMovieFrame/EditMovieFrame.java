@@ -26,6 +26,7 @@ import javax.swing.event.ChangeListener;
 
 import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.columnTypes.CCDateTimeList;
+import de.jClipCorn.database.databaseElement.columnTypes.CCGroupList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFSK;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFormat;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieGenre;
@@ -41,6 +42,7 @@ import de.jClipCorn.gui.guiComponents.ReadableTextField;
 import de.jClipCorn.gui.guiComponents.TagPanel;
 import de.jClipCorn.gui.guiComponents.dateTimeListEditor.DateTimeListEditor;
 import de.jClipCorn.gui.guiComponents.editCoverControl.EditCoverControl;
+import de.jClipCorn.gui.guiComponents.groupListEditor.GroupListEditor;
 import de.jClipCorn.gui.guiComponents.jCCDateSpinner.JCCDateSpinner;
 import de.jClipCorn.gui.guiComponents.referenceChooser.JReferenceChooser;
 import de.jClipCorn.gui.localization.LocaleBundle;
@@ -151,6 +153,8 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 	private JReferenceChooser edReference;
 	private DateTimeListEditor edViewedHistory;
 	private JLabel label_30;
+	private JLabel lblGruppen;
+	private GroupListEditor edGroups;
 
 	public EditMovieFrame(Component owner, CCMovie movie, UpdateCallbackListener ucl) {
 		super();
@@ -627,12 +631,20 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		getContentPane().add(edReference);
 		
 		edViewedHistory = new DateTimeListEditor();
-		edViewedHistory.setBounds(506, 234, 212, 133);
+		edViewedHistory.setBounds(506, 264, 212, 133);
 		getContentPane().add(edViewedHistory);
 		
 		label_30 = new JLabel(LocaleBundle.getString("EditSeriesFrame.lblHistory.text")); //$NON-NLS-1$
-		label_30.setBounds(418, 231, 52, 16);
+		label_30.setBounds(418, 261, 52, 16);
 		getContentPane().add(label_30);
+		
+		lblGruppen = new JLabel(LocaleBundle.getString("EditSeriesFrame.lblGroups.text")); //$NON-NLS-1$
+		lblGruppen.setBounds(418, 231, 52, 16);
+		getContentPane().add(lblGruppen);
+		
+		edGroups = new GroupListEditor(movie.getMovieList());
+		edGroups.setBounds(506, 230, 212, 22);
+		getContentPane().add(edGroups);
 	}
 
 	private void setDefaultValues() {
@@ -659,6 +671,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		
 		edViewedHistory.setValue(CCDateTimeList.createEmpty());
 		edReference.setValue(CCOnlineReference.createNone());
+		edGroups.setValue(CCGroupList.createEmpty());
 		
 		updateByteDisp();
 	}
@@ -791,6 +804,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 
 		edViewedHistory.setValue(movie.getViewedHistory());
 		edReference.setValue(movie.getOnlineReference());
+		edGroups.setValue(movie.getGroups());
 		
 		updateByteDisp();
 		testPaths();
@@ -1067,6 +1081,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 
 		movie.setViewedHistory(edViewedHistory.getValue());
 		movie.setOnlineReference(edReference.getValue());
+		movie.setGroups(edGroups.getValue());
 		
 		//#####################################################################################
 		

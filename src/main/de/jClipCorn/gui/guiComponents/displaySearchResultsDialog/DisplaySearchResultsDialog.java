@@ -1,4 +1,4 @@
-package de.jClipCorn.gui.frames.displaySearchResultsDialog;
+package de.jClipCorn.gui.guiComponents.displaySearchResultsDialog;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -36,10 +36,9 @@ public class DisplaySearchResultsDialog extends JDialog implements MouseListener
 		
 		if (instance != null) {
 			instance.dispose();
-			instance = this;
 		}
-		
-		
+		instance = this;
+				
 		setAlwaysOnTop(true);
 		initGUI();
 		

@@ -108,7 +108,7 @@ public class ImageUtilities {
 		cvr.getGraphics().drawImage(CachedResourceLoader.getImage(Resources.IMG_COVER_SERIES_MASK), tl.x, tl.y, null);
 	}
 	
-	private static Point getTopLeftNonTransparentPixel(BufferedImage i) {
+	public static Point getTopLeftNonTransparentPixel(BufferedImage i) {
 		for (int x = 0; x < i.getWidth(); x++) {
 			for (int y = 0; y < i.getHeight(); y++) {
 				if ((i.getRGB(x, y) >> 24) != 0) {
@@ -117,6 +117,17 @@ public class ImageUtilities {
 			}
 		}
 		return new Point(i.getWidth() - 1, i.getHeight() - 1);
+	}
+	
+	public static Point getTopRightNonTransparentPixel(BufferedImage i) {
+		for (int x = i.getWidth()-1; x >= 0; x--) {
+			for (int y = 0; y < i.getHeight(); y++) {
+				if ((i.getRGB(x, y) >> 24) != 0) {
+					return new Point(x, y);
+				}
+			}
+		}
+		return new Point(0, i.getHeight() - 1);
 	}
 	
 	public static void drawBorder(BufferedImage i, Color c, int thick) {

@@ -582,17 +582,19 @@ public class CCDatabase {
 			PreparedStatement s = Statements.updateSeriesTabStatement;
 			s.clearParameters();
 
-			s.setString(1, ser.getTitle());
-			s.setInt(2, ser.getLanguage().asInt());
-			s.setLong(3, ser.getGenres().getAllGenres());
-			s.setInt(4, ser.getOnlinescore().asInt());
-			s.setInt(5, ser.getFSK().asInt());
-			s.setInt(6, ser.getScore().asInt());
-			s.setString(7, ser.getCoverName());
-			s.setInt(8, ser.getType().asInt());
-			s.setInt(9, ser.getSeriesID());
+			s.setString(1, ser.getTitle());                                     // 01     TAB_MAIN_COLUMN_NAME        
+			s.setInt(2, ser.getLanguage().asInt());                             // 02     TAB_MAIN_COLUMN_LANGUAGE    
+			s.setLong(3, ser.getGenres().getAllGenres());                       // 03     TAB_MAIN_COLUMN_GENRE       
+			s.setInt(4, ser.getOnlinescore().asInt());                          // 04     TAB_MAIN_COLUMN_ONLINESCORE 
+			s.setInt(5, ser.getFSK().asInt());                                  // 05     TAB_MAIN_COLUMN_FSK         
+			s.setString(6, ser.getOnlineReference().toSerializationString());   // 06     TAB_MAIN_COLUMN_ONLINEREF   
+			s.setString(7, ser.getGroups().toSerializationString());            // 07     TAB_MAIN_COLUMN_GROUPS      
+			s.setInt(8, ser.getScore().asInt());                                // 08     TAB_MAIN_COLUMN_SCORE       
+			s.setString(9, ser.getCoverName());                                 // 09     TAB_MAIN_COLUMN_COVER       
+			s.setInt(10, ser.getType().asInt());                                // 10     TAB_MAIN_COLUMN_TYPE        
+			s.setInt(11, ser.getSeriesID());                                    // 11     TAB_MAIN_COLUMN_SERIES_ID   
 
-			s.setInt(10, ser.getLocalID());
+			s.setInt(12, ser.getLocalID());
 
 			s.executeUpdate();
 

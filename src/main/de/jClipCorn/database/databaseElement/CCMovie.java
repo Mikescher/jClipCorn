@@ -320,10 +320,6 @@ public class CCMovie extends CCDatabaseElement {
 			addToViewedHistory(CCDateTime.getCurrentDateTime());
 		}
 	}
-
-	public CCMovieList getMovieList() {
-		return movielist;
-	}
 	
 	@SuppressWarnings("nls")
 	@Override

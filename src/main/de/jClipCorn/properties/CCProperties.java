@@ -147,6 +147,7 @@ public class CCProperties {
 	public CCVIntProperty				PROP_SERIES_DISPLAYED_DATE;
 	public CCBoolProperty				PROP_QUERY_IMDB;
 	public CCBoolProperty				PROP_QUERY_TMDB;
+	public CCBoolProperty 				PROP_MAINFRAME_SHOWGROUPS;
 	
 	public boolean ARG_READONLY = false;
 	
@@ -230,6 +231,7 @@ public class CCProperties {
 		PROP_MAINFRAME_CLICKABLESCORE			= new CCBoolProperty(CAT_VIEW,		 		this,   "PROP_MAINFRAME_CLICKABLESCORE",			false);
 		PROP_MAINFRAME_DONTCHANGEZYKLUSCOLOR	= new CCBoolProperty(CAT_VIEW,		 		this,   "PROP_MAINFRAME_DONTCHANGEZYKLUSCOLOR",		false);
 		PROP_MAINFRAME_SHOWTAGS					= new CCBoolProperty(CAT_VIEW,	 			this,   "PROP_MAINFRAME_SHOWTAGS",					true);
+		PROP_MAINFRAME_SHOWGROUPS				= new CCBoolProperty(CAT_VIEW,	 			this,   "PROP_MAINFRAME_SHOWGROUPS",				true);
 		PROP_MAINFRAME_SHOWCOVERCORNER			= new CCBoolProperty(CAT_VIEW,		 		this,   "PROP_MAINFRAME_SHOWCOVERCORNER",			true);
 		PROP_MAINFRAME_DONT_FILTER_WATCHNEVER	= new CCBoolProperty(CAT_VIEW,				this, 	"PROP_MAINFRAME_DONT_FILTER_WATCHNEVER", 	true);
 		

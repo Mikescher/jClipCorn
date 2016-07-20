@@ -871,6 +871,15 @@ public class CCMovieList {
 		
 		return CCGroup.create(name);
 	}
+
+	public int getGroupIndex(CCGroup value) {
+		int idx = 0;
+		for (CCGroup key : globalGroupList.keySet()) {
+			if (key.equals(value)) return idx;
+			idx++;
+		}
+		return -1;
+	}
 	
 	public void unlinkElementFromGroups(CCDatabaseElement source, CCGroupList grouplist) {
 		for (CCGroup g : grouplist) {

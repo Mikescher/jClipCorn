@@ -1,5 +1,10 @@
 package de.jClipCorn.database.databaseElement.columnTypes;
 
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -7,6 +12,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import de.jClipCorn.database.CCMovieList;
+import de.jClipCorn.util.helper.ImageUtilities;
 
 public class CCGroupList implements Iterable<CCGroup> {
 	private static final String SEPERATOR = ";"; //$NON-NLS-1$
@@ -130,5 +136,58 @@ public class CCGroupList implements Iterable<CCGroup> {
 			hc = 17*hc ^ hc ^ g.hashCode();
 		}
 		return hc;
+	}
+
+	public void drawOnImage(CCMovieList ml, BufferedImage bi) {
+		final int PADDING_X = 4;
+		final int PADDING_Y = 2;
+		final int RADIUS = 5;
+		final int MARGIN = 3;
+		
+		Graphics2D g = bi.createGraphics();
+		
+		Font old = g.getFont();
+		g.setFont(new Font(old.getFontName(), Font.BOLD, old.getSize()));
+		
+		FontMetrics fm = g.getFontMetrics();
+		
+		int right = ImageUtilities.getTopRightNonTransparentPixel(bi).x;
+		
+		int height = fm.getHeight();
+		int offset = fm.getDescent();
+		
+		for (int i = 0; i < count(); i++) {
+			String group = get(i).Name;
+			
+			int width = fm.stringWidth(group);
+			
+			g.setColor(get(i).getTagColor(ml));
+			
+			g.fillRoundRect(
+					right - MARGIN - PADDING_X - width - PADDING_X, 
+					i * (height + 2 * PADDING_Y + 2 * MARGIN) + MARGIN, 
+					2 * PADDING_X + width, 
+					2 * PADDING_Y + height, 
+					RADIUS, 
+					RADIUS);
+
+			g.setColor(Color.BLACK);
+			
+			g.drawRoundRect(
+					right - MARGIN - PADDING_X - width - PADDING_X, 
+					i * (height + 2 * PADDING_Y + 2 * MARGIN) + MARGIN, 
+					2 * PADDING_X + width, 
+					2 * PADDING_Y + height, 
+					RADIUS, 
+					RADIUS);
+			
+			g.drawString(
+					group, 
+					right - MARGIN - PADDING_X - width, 
+					i * (height + 2 * PADDING_Y + 2 * MARGIN) + MARGIN + PADDING_Y + height - offset);
+		}
+			
+		
+		g.dispose();
 	}
 }

@@ -243,6 +243,10 @@ public abstract class CCDatabaseElement {
 		return linkedGroups;
 	}
 
+	public boolean hasGroups() {
+		return ! linkedGroups.isEmpty();
+	}
+
 	public void setViewedHistory(String data) throws CCFormatException {
 		viewedHistory = CCDateTimeList.parse(data);
 		
@@ -392,6 +396,10 @@ public abstract class CCDatabaseElement {
 		return movielist.getSortByDatabaseElement(this);
 	}
 
+	public CCMovieList getMovieList() {
+		return movielist;
+	}
+
 	public void forceUpdate() {
 		updateDB();
 	}
@@ -401,4 +409,5 @@ public abstract class CCDatabaseElement {
 	public abstract CCDate getAddDate();
 	
 	public abstract int getFirstYear();
+
 }

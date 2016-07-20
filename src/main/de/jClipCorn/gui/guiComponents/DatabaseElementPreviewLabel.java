@@ -46,18 +46,24 @@ public class DatabaseElementPreviewLabel extends CoverLabel {
 			setErrorDisplay(false);
 		}
 		
-		if (CCProperties.getInstance().PROP_MAINFRAME_AUTOMATICRESETWATCHLATER.getValue()  && el.isSeries()) {
+		boolean drawSCorner = CCProperties.getInstance().PROP_MAINFRAME_SHOWCOVERCORNER.getValue()  && el.isSeries();
+		boolean drawTag = CCProperties.getInstance().PROP_MAINFRAME_SHOWTAGS.getValue() && el.isMovie() && ((CCMovie)el).getTags().hasTags();
+		boolean drawGroups = CCProperties.getInstance().PROP_MAINFRAME_SHOWGROUPS.getValue() && el.hasGroups();
+		
+		if (drawSCorner || drawTag || drawGroups) {
 			BufferedImage bi = ImageUtilities.deepCopyImage(el.getCover());
 			
-			ImageUtilities.makeSeriesCover(bi);
+			if (drawSCorner) {
+				ImageUtilities.makeSeriesCover(bi);
+			}
 			
-			setIcon(new ImageIcon(bi));
-		} else if (CCProperties.getInstance().PROP_MAINFRAME_SHOWTAGS.getValue() && el.isMovie() && ((CCMovie)el).getTags().hasTags()) {
-			BufferedImage bi = ImageUtilities.deepCopyImage(el.getCover());
+			if (drawTag) {
+				((CCMovie)el).getTags().drawOnImage(bi, false);
+			}
 			
-			CCMovie m = (CCMovie)el;
-			
-			m.getTags().drawOnImage(bi, false);
+			if (drawGroups) {
+				el.getGroups().drawOnImage(el.getMovieList(), bi);
+			}
 			
 			setIcon(new ImageIcon(bi));
 		} else {

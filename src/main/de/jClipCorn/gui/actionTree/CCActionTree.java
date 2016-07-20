@@ -90,7 +90,7 @@ public class CCActionTree {
 		instance = this;
 	}
 
-	@SuppressWarnings({"nls"})
+	@SuppressWarnings("nls")
 	private void createStructure() {
 		CCActionElement temp;
 
@@ -196,6 +196,14 @@ public class CCActionTree {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				onClickMoviesPlay();
+			}
+		});
+
+		temp = movies.addChild(new CCActionElement("PlayMovieAnonymous", null, "ClipMenuBar.Movies.PlayAnonymous", Resources.ICN_MENUBAR_HIDDENPLAY));
+		temp.addListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				onClickMoviesPlayAnonymous();
 			}
 		});
 
@@ -874,7 +882,15 @@ public class CCActionTree {
 		CCDatabaseElement element = owner.getSelectedElement();
 
 		if (element != null && element.isMovie()) {
-			((CCMovie) element).play();
+			((CCMovie) element).play(true);
+		}
+	}
+	
+	private void onClickMoviesPlayAnonymous() {
+		CCDatabaseElement element = owner.getSelectedElement();
+
+		if (element != null && element.isMovie()) {
+			((CCMovie) element).play(false);
 		}
 	}
 

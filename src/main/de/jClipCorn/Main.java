@@ -153,5 +153,5 @@ public class Main {
 // X - error: two groups with different case-ing
 // X - error: movie has one group two times (FATAL! should not be possible)
 // X - Sidebar needs to listen to group changed events and update
-//   - undo viewed for episodes
-//   - play unchanged for movies
+// X - undo viewed for episodes
+// X - play unchanged for movies

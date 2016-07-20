@@ -307,12 +307,18 @@ public class CCMovie extends CCDatabaseElement {
 	public void delete() {
 		movielist.remove(this);
 	}
-	
+
 	public void play() {
+		play(true);
+	}
+	
+	public void play(boolean updateViewedAndHistory) {
 		MoviePlayer.play(this);
 		
-		setViewed(true);
-		addToViewedHistory(CCDateTime.getCurrentDateTime());
+		if (updateViewedAndHistory) {
+			setViewed(true);
+			addToViewedHistory(CCDateTime.getCurrentDateTime());
+		}
 	}
 
 	public CCMovieList getMovieList() {

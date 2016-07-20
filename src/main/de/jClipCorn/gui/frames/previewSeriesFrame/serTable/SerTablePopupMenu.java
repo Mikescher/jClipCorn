@@ -8,6 +8,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 
 import de.jClipCorn.database.databaseElement.CCEpisode;
+import de.jClipCorn.database.databaseElement.columnTypes.CCDateTimeList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTags;
 import de.jClipCorn.gui.CachedResourceLoader;
 import de.jClipCorn.gui.Resources;
@@ -61,6 +62,22 @@ public class SerTablePopupMenu extends JPopupMenu {
 			}
 		});
 		add(setViewed);
+
+		JMenuItem undoViewed = new JMenuItem(LocaleBundle.getString("PreviewSeriesFrame.PopupMenu.UndoViewed"), CachedResourceLoader.getSmallImageIcon(Resources.ICN_MENUBAR_UNDOVIEWED)); //$NON-NLS-1$
+		undoViewed.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				if (episode != null && episode.isViewed()) {
+					CCDateTimeList history = episode.getViewedHistory();
+					history = history.removeLast();
+					episode.setViewedHistory(history);
+					
+					if (history.isEmpty())
+						episode.setViewed(false);
+				}
+			}
+		});
+		add(undoViewed);
 
 		JMenuItem setUnviewed = new JMenuItem(LocaleBundle.getString("PreviewSeriesFrame.PopupMenu.SetUnviewed"), CachedResourceLoader.getSmallImageIcon(Resources.ICN_SIDEBAR_UNVIEWED)); //$NON-NLS-1$
 		setUnviewed.addActionListener(new ActionListener() {

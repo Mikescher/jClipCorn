@@ -13,6 +13,7 @@ public class ClipMoviePopup extends ClipPopupMenu {
 	@Override
 	protected void init() {
 		addAction("PlayMovie");
+		addAction("PlayMovieAnonymous");
 		addAction("PrevMovie");
 		
 		//#############

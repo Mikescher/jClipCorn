@@ -65,6 +65,7 @@ import de.jClipCorn.util.parser.FilenameParser;
 import de.jClipCorn.util.parser.onlineparser.ParseResultHandler;
 import de.jClipCorn.util.userdataProblem.UserDataProblem;
 import de.jClipCorn.util.userdataProblem.UserDataProblemHandler;
+import de.jClipCorn.gui.guiComponents.groupListEditor.GroupListEditor;
 
 public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDataProblemHandler {
 	private static final long serialVersionUID = -5912378114066741528L;
@@ -155,6 +156,8 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 	private EditCoverControl edCvrControl;
 	private JReferenceChooser edReference;
 	private JLabel lblOnlineid;
+	private JLabel lblGroups;
+	private GroupListEditor edGroups;
 
 	/**
 	 * @wbp.parser.constructor
@@ -646,6 +649,15 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		lblOnlineid = new JLabel(LocaleBundle.getString("AddMovieFrame.lblOnlineID.text")); //$NON-NLS-1$
 		lblOnlineid.setBounds(12, 267, 71, 16);
 		contentPane.add(lblOnlineid);
+		
+		lblGroups = new JLabel(LocaleBundle.getString("EditSeriesFrame.lblGroups.text")); //$NON-NLS-1$
+		lblGroups.setBounds(12, 338, 71, 16);
+		contentPane.add(lblGroups);
+		
+		edGroups = new GroupListEditor((CCMovieList) null);
+		edGroups.setEnabled(false);
+		edGroups.setBounds(95, 337, 212, 20);
+		contentPane.add(edGroups);
 	}
 	
 	@SuppressWarnings("nls")
@@ -787,10 +799,11 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		newM.setGenre(CCMovieGenre.find(cbxGenre7.getSelectedIndex()), 7);
 		
 		newM.setScore(cbxScore.getSelectedIndex());
+		newM.setOnlineReference(edReference.getValue());
+		newM.setGroups(edGroups.getValue());
 
 		newM.setCover(edCvrControl.getResizedImage());
 		
-		newM.setOnlineReference(edReference.getValue());
 		
 		newM.endUpdating();
 		

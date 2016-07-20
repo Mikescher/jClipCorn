@@ -39,6 +39,7 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.parser.onlineparser.ParseResultHandler;
 import de.jClipCorn.util.userdataProblem.UserDataProblem;
 import de.jClipCorn.util.userdataProblem.UserDataProblemHandler;
+import de.jClipCorn.gui.guiComponents.groupListEditor.GroupListEditor;
 
 public class AddSeriesFrame extends JFrame implements ParseResultHandler, UserDataProblemHandler {
 	private static final long serialVersionUID = -4500039578109890172L;
@@ -76,9 +77,11 @@ public class AddSeriesFrame extends JFrame implements ParseResultHandler, UserDa
 	private EditCoverControl edCvrControl;
 	private JLabel label_9;
 	private JReferenceChooser edReference;
+	private GroupListEditor edGroups;
+	private JLabel lblGroups;
 
 	public AddSeriesFrame(Component owner, CCMovieList mlist) {
-		setSize(new Dimension(620, 545));
+		setSize(new Dimension(675, 530));
 		movieList = mlist;
 		
 		setResizable(false);
@@ -96,67 +99,67 @@ public class AddSeriesFrame extends JFrame implements ParseResultHandler, UserDa
 		getContentPane().setLayout(null);
 
 		label = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGenre.text")); //$NON-NLS-1$
-		label.setBounds(10, 194, 59, 16);
+		label.setBounds(10, 133, 59, 16);
 		getContentPane().add(label);
 
 		cbxGenre0 = new JComboBox<>();
-		cbxGenre0.setBounds(87, 188, 212, 22);
+		cbxGenre0.setBounds(87, 130, 212, 22);
 		getContentPane().add(cbxGenre0);
 
 		cbxGenre1 = new JComboBox<>();
-		cbxGenre1.setBounds(87, 224, 212, 22);
+		cbxGenre1.setBounds(87, 160, 212, 22);
 		getContentPane().add(cbxGenre1);
 
 		cbxGenre2 = new JComboBox<>();
-		cbxGenre2.setBounds(87, 260, 212, 22);
+		cbxGenre2.setBounds(87, 190, 212, 22);
 		getContentPane().add(cbxGenre2);
 
 		label_1 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGenre_2.text")); //$NON-NLS-1$
-		label_1.setBounds(10, 266, 59, 16);
+		label_1.setBounds(10, 193, 59, 16);
 		getContentPane().add(label_1);
 
 		label_2 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGenre_1.text")); //$NON-NLS-1$
-		label_2.setBounds(10, 230, 59, 16);
+		label_2.setBounds(10, 163, 59, 16);
 		getContentPane().add(label_2);
 
 		label_3 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGenre_3.text")); //$NON-NLS-1$
-		label_3.setBounds(10, 301, 59, 16);
+		label_3.setBounds(10, 223, 59, 16);
 		getContentPane().add(label_3);
 
 		cbxGenre3 = new JComboBox<>();
-		cbxGenre3.setBounds(87, 295, 212, 22);
+		cbxGenre3.setBounds(87, 220, 212, 22);
 		getContentPane().add(cbxGenre3);
 
 		cbxGenre4 = new JComboBox<>();
-		cbxGenre4.setBounds(87, 330, 212, 22);
+		cbxGenre4.setBounds(87, 250, 212, 22);
 		getContentPane().add(cbxGenre4);
 
 		label_4 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGenre_4.text")); //$NON-NLS-1$
-		label_4.setBounds(10, 336, 59, 16);
+		label_4.setBounds(10, 253, 59, 16);
 		getContentPane().add(label_4);
 
 		label_5 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGenre_5.text")); //$NON-NLS-1$
-		label_5.setBounds(10, 372, 59, 16);
+		label_5.setBounds(10, 283, 59, 16);
 		getContentPane().add(label_5);
 
 		cbxGenre5 = new JComboBox<>();
-		cbxGenre5.setBounds(87, 366, 212, 22);
+		cbxGenre5.setBounds(87, 280, 212, 22);
 		getContentPane().add(cbxGenre5);
 
 		cbxGenre6 = new JComboBox<>();
-		cbxGenre6.setBounds(87, 402, 212, 22);
+		cbxGenre6.setBounds(87, 310, 212, 22);
 		getContentPane().add(cbxGenre6);
 
 		label_6 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGenre_6.text")); //$NON-NLS-1$
-		label_6.setBounds(10, 408, 59, 16);
+		label_6.setBounds(10, 313, 59, 16);
 		getContentPane().add(label_6);
 
 		label_7 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGenre_7.text")); //$NON-NLS-1$
-		label_7.setBounds(10, 443, 59, 16);
+		label_7.setBounds(10, 343, 59, 16);
 		getContentPane().add(label_7);
 
 		cbxGenre7 = new JComboBox<>();
-		cbxGenre7.setBounds(87, 437, 212, 22);
+		cbxGenre7.setBounds(87, 340, 212, 22);
 		getContentPane().add(cbxGenre7);
 
 		btnParse = new JButton(LocaleBundle.getString("AddSeriesFrame.btnParse.text")); //$NON-NLS-1$
@@ -167,45 +170,45 @@ public class AddSeriesFrame extends JFrame implements ParseResultHandler, UserDa
 			}
 		});
 		btnParse.setFont(new Font("Tahoma", Font.BOLD, 15)); //$NON-NLS-1$
-		btnParse.setBounds(381, 14, 212, 42);
+		btnParse.setBounds(445, 110, 212, 42);
 		getContentPane().add(btnParse);
 
 		label_8 = new JLabel(LocaleBundle.getString("AddMovieFrame.label_1.text")); //$NON-NLS-1$
-		label_8.setBounds(10, 14, 52, 16);
+		label_8.setBounds(10, 12, 52, 16);
 		getContentPane().add(label_8);
 
 		edTitle = new JTextField();
 		edTitle.setColumns(10);
-		edTitle.setBounds(87, 12, 212, 20);
+		edTitle.setBounds(87, 10, 212, 20);
 		getContentPane().add(edTitle);
 
 		label_10 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblSprache.text")); //$NON-NLS-1$
-		label_10.setBounds(10, 50, 59, 16);
+		label_10.setBounds(368, 13, 59, 16);
 		getContentPane().add(label_10);
 
 		cbxLanguage = new JComboBox<>();
-		cbxLanguage.setBounds(87, 47, 212, 22);
+		cbxLanguage.setBounds(445, 10, 212, 22);
 		getContentPane().add(cbxLanguage);
 
 		label_11 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblFsk.text")); //$NON-NLS-1$
-		label_11.setBounds(10, 157, 71, 16);
+		label_11.setBounds(10, 73, 71, 16);
 		getContentPane().add(label_11);
 
 		cbxFSK = new JComboBox<>();
-		cbxFSK.setBounds(87, 154, 212, 22);
+		cbxFSK.setBounds(87, 70, 212, 22);
 		getContentPane().add(cbxFSK);
 
 		label_12 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblOnlinescore.text")); //$NON-NLS-1$
-		label_12.setBounds(10, 122, 87, 16);
+		label_12.setBounds(10, 42, 87, 16);
 		getContentPane().add(label_12);
 
 		spnOnlinescore = new JSpinner();
 		spnOnlinescore.setModel(new SpinnerNumberModel(0, 0, 10, 1));
-		spnOnlinescore.setBounds(106, 121, 193, 20);
+		spnOnlinescore.setBounds(106, 40, 193, 20);
 		getContentPane().add(spnOnlinescore);
 
 		label_13 = new JLabel("/ 10"); //$NON-NLS-1$
-		label_13.setBounds(311, 122, 52, 16);
+		label_13.setBounds(311, 40, 52, 16);
 		getContentPane().add(label_13);
 
 		btnOK = new JButton(LocaleBundle.getString("UIGeneric.btnOK.text")); //$NON-NLS-1$
@@ -215,7 +218,7 @@ public class AddSeriesFrame extends JFrame implements ParseResultHandler, UserDa
 				onBtnOK(true);
 			}
 		});
-		btnOK.setBounds(197, 484, 95, 25);
+		btnOK.setBounds(176, 470, 116, 25);
 		getContentPane().add(btnOK);
 
 		btnCancel = new JButton(LocaleBundle.getString("UIGeneric.btnCancel.text")); //$NON-NLS-1$
@@ -225,20 +228,28 @@ public class AddSeriesFrame extends JFrame implements ParseResultHandler, UserDa
 				cancel();
 			}
 		});
-		btnCancel.setBounds(311, 484, 95, 25);
+		btnCancel.setBounds(311, 470, 116, 25);
 		getContentPane().add(btnCancel);
 		
 		edCvrControl = new EditCoverControl(this, this);
-		edCvrControl.setBounds(381, 67, EditCoverControl.CTRL_WIDTH, EditCoverControl.CTRL_HEIGHT);
+		edCvrControl.setBounds(475, 170, EditCoverControl.CTRL_WIDTH, EditCoverControl.CTRL_HEIGHT);
 		getContentPane().add(edCvrControl);
 		
 		label_9 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblOnlineID.text")); //$NON-NLS-1$
-		label_9.setBounds(10, 86, 87, 16);
+		label_9.setBounds(368, 42, 87, 16);
 		getContentPane().add(label_9);
 		
 		edReference = new JReferenceChooser();
-		edReference.setBounds(87, 86, 212, 20);
+		edReference.setBounds(445, 40, 212, 20);
 		getContentPane().add(edReference);
+		
+		edGroups = new GroupListEditor(movieList);
+		edGroups.setBounds(445, 70, 212, 22);
+		getContentPane().add(edGroups);
+		
+		lblGroups = new JLabel(LocaleBundle.getString("EditSeriesFrame.lblGroups.text")); //$NON-NLS-1$
+		lblGroups.setBounds(368, 73, 87, 16);
+		getContentPane().add(lblGroups);
 	}
 	
 	private void setDefaultValues() {
@@ -257,7 +268,6 @@ public class AddSeriesFrame extends JFrame implements ParseResultHandler, UserDa
 		cbxGenre5.setModel(new DefaultComboBoxModel<>(CCMovieGenre.getTrimmedList()));
 		cbxGenre6.setModel(new DefaultComboBoxModel<>(CCMovieGenre.getTrimmedList()));
 		cbxGenre7.setModel(new DefaultComboBoxModel<>(CCMovieGenre.getTrimmedList()));
-
 	}
 
 	@Override
@@ -428,6 +438,8 @@ public class AddSeriesFrame extends JFrame implements ParseResultHandler, UserDa
 		newS.setGenre(CCMovieGenre.find(cbxGenre5.getSelectedIndex()), 5);
 		newS.setGenre(CCMovieGenre.find(cbxGenre6.getSelectedIndex()), 6);
 		newS.setGenre(CCMovieGenre.find(cbxGenre7.getSelectedIndex()), 7);
+		
+		newS.setGroups(edGroups.getValue());
 		
 		newS.setCover(edCvrControl.getResizedImage());
 		

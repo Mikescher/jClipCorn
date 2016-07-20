@@ -148,8 +148,10 @@ public class Main {
 //   - strange xml parse in addmovframe
 //   - viewed | groups | ref to filter
 // X - undo last viewed
-//   - manage groups dialog (add to group, remove from group, delete group)
+// / - manage groups dialog (add to group, remove from group, delete group)
 //   - measure startup time
-//   - error: two groups with different case-ing
-//   - error: movie has one group two times (FATAL! should not be possible)
-//   - Sidebar needs to listen to group changed events and update
+// X - error: two groups with different case-ing
+// X - error: movie has one group two times (FATAL! should not be possible)
+// X - Sidebar needs to listen to group changed events and update
+//   - undo viewed for episodes
+//   - play unchanged for movies

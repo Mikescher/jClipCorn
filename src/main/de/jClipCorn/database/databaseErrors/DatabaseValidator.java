@@ -4,8 +4,10 @@ import java.io.File;
 import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -15,6 +17,7 @@ import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.database.databaseElement.CCSeries;
+import de.jClipCorn.database.databaseElement.columnTypes.CCGroup;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFormat;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieGenreList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieQuality;
@@ -58,6 +61,7 @@ public class DatabaseValidator {
 		
 		findCoverErrors(e, ml, pcl);
 		findDuplicateFiles(e, ml, pcl);
+		findDuplicateGroups(e, ml, pcl);
 		
 		pcl.reset();
 	}
@@ -153,6 +157,23 @@ public class DatabaseValidator {
 
 		if (! series.getViewedHistory().isEmpty()) {
 			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_SERIES_HAS_HISTORY, series));
+		}
+		
+		// ###############################################
+		// Duplicate/Empty Groups
+		// ###############################################
+
+		Set<String> groupSet = new HashSet<>();
+		for (CCGroup group : series.getGroups()) {
+			if (! groupSet.add(group.Name.toLowerCase().trim())) {
+				e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_INVALID_GROUPLIST, series));
+				break;
+			}
+
+			if (group.Name.toLowerCase().trim().isEmpty()) {
+				e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_INVALID_GROUPLIST, series));
+				break;
+			}
 		}
 	}
 
@@ -397,6 +418,23 @@ public class DatabaseValidator {
 		if (! mov.getViewedHistory().isValid()) {
 			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_INVALID_HISTORY, mov));
 		}
+		
+		// ###############################################
+		// Duplicate/Empty Groups
+		// ###############################################
+
+		Set<String> groupSet = new HashSet<>();
+		for (CCGroup group : mov.getGroups()) {
+			if (! groupSet.add(group.Name.toLowerCase().trim())) {
+				e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_INVALID_GROUPLIST, mov));
+				break;
+			}
+
+			if (group.Name.toLowerCase().trim().isEmpty()) {
+				e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_INVALID_GROUPLIST, mov));
+				break;
+			}
+		}
 	}
 
 	private static void validateSeason(List<DatabaseError> e, CCMovieList movielist, CCSeason season) {
@@ -623,7 +661,7 @@ public class DatabaseValidator {
 		}
 	}
 
-	private static void findDuplicateFiles(List<DatabaseError> e, CCMovieList movielist, ProgressCallbackListener pcl) {
+	private static void findDuplicateGroups(List<DatabaseError> e, CCMovieList movielist, ProgressCallbackListener pcl) {
 		boolean ignIFO = CCProperties.getInstance().PROP_VALIDATE_DUP_IGNORE_IFO.getValue();
 		
 		List<DatabaseFileElement> flList = new ArrayList<>();
@@ -663,6 +701,21 @@ public class DatabaseValidator {
 			}
 			
 			pcl.step();
+		}
+	}
+
+	private static void findDuplicateFiles(List<DatabaseError> e, CCMovieList movielist, ProgressCallbackListener pcl) {
+		Set<String> groupSet = new HashSet<>();
+		for (CCGroup group : movielist.getGroupList()) {
+			if (! groupSet.add(group.Name.toLowerCase().trim())) {
+				e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_INVALID_GROUP, group));
+				break;
+			}
+
+			if (group.Name.toLowerCase().trim().isEmpty()) {
+				e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_INVALID_GROUP, group));
+				break;
+			}
 		}
 	}
 }

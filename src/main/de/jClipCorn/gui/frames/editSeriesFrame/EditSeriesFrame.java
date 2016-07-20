@@ -54,7 +54,9 @@ import de.jClipCorn.gui.guiComponents.ReadableTextField;
 import de.jClipCorn.gui.guiComponents.TagPanel;
 import de.jClipCorn.gui.guiComponents.dateTimeListEditor.DateTimeListEditor;
 import de.jClipCorn.gui.guiComponents.editCoverControl.EditCoverControl;
+import de.jClipCorn.gui.guiComponents.groupListEditor.GroupListEditor;
 import de.jClipCorn.gui.guiComponents.jCCDateSpinner.JCCDateSpinner;
+import de.jClipCorn.gui.guiComponents.referenceChooser.JReferenceChooser;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.Validator;
@@ -67,7 +69,6 @@ import de.jClipCorn.util.listener.UpdateCallbackListener;
 import de.jClipCorn.util.parser.onlineparser.ParseResultHandler;
 import de.jClipCorn.util.userdataProblem.UserDataProblem;
 import de.jClipCorn.util.userdataProblem.UserDataProblemHandler;
-import de.jClipCorn.gui.guiComponents.referenceChooser.JReferenceChooser;
 
 public class EditSeriesFrame extends JFrame implements ParseResultHandler, WindowListener {
 	private static final long serialVersionUID = -3694533463871522503L;
@@ -162,6 +163,8 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 	private DateTimeListEditor cmpEpisodeViewedHistory;
 	private JReferenceChooser edSeriesReference;
 	private JLabel label;
+	private JLabel lblGroups;
+	private GroupListEditor edSeriesGroups;
 
 	/**
 	 * @wbp.parser.constructor
@@ -436,6 +439,14 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		label = new JLabel(LocaleBundle.getString("AddMovieFrame.lblOnlineID.text")); //$NON-NLS-1$
 		label.setBounds(206, 258, 52, 16);
 		pnlSeries.add(label);
+		
+		lblGroups = new JLabel(LocaleBundle.getString("EditSeriesFrame.lblGroups.text")); //$NON-NLS-1$
+		lblGroups.setBounds(206, 290, 52, 16);
+		pnlSeries.add(lblGroups);
+		
+		edSeriesGroups = new GroupListEditor(series.getMovieList());
+		edSeriesGroups.setBounds(263, 288, 141, 20);
+		pnlSeries.add(edSeriesGroups);
 		
 		pnlSeason = new JPanel();
 		pnlSeason.setBorder(new LineBorder(new Color(0, 0, 0)));
@@ -761,6 +772,8 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		cbxSeriesGenre_6.setSelectedIndex(series.getGenre(6).asInt());
 		cbxSeriesGenre_7.setSelectedIndex(series.getGenre(7).asInt());
 		
+		edSeriesGroups.setValue(series.getGroups());
+		
 		edSeriesReference.setValue(series.getOnlineReference());
 		
 		lsSeasons.setSelectedIndex(-1);
@@ -1007,6 +1020,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		series.setGenre(CCMovieGenre.find(cbxSeriesGenre_7.getSelectedIndex()), 7);
 		
 		series.setOnlineReference(edSeriesReference.getValue());
+		series.setGroups(edSeriesGroups.getValue());
 		
 		//#####################################################################################
 		

@@ -152,14 +152,6 @@ public class DatabaseValidator {
 		}
 		
 		// ###############################################
-		// History exists
-		// ###############################################
-
-		if (! series.getViewedHistory().isEmpty()) {
-			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_SERIES_HAS_HISTORY, series));
-		}
-		
-		// ###############################################
 		// Duplicate/Empty Groups
 		// ###############################################
 

@@ -387,12 +387,12 @@ public class CCEpisode {
 		
 		if (e.getAttributeValue("format") != null)
 			setFormat(Integer.parseInt(e.getAttributeValue("format")));
+
+		if (e.getAttributeValue("lastviewed") != null)  // backwards compatibility
+			setViewedHistory(CCDateTimeList.create(CCDate.parse(e.getAttributeValue("lastviewed"), CCDate.STRINGREP_DESERIALIZE)));
 		
-		if (e.getAttributeValue("history") != null) {
+		if (e.getAttributeValue("history") != null)
 			setViewedHistory(CCDateTimeList.parse(e.getAttributeValue("history")));
-		} else if (e.getAttributeValue("lastviewed") != null) {
-			setViewedHistory(CCDateTimeList.create(CCDate.parse(e.getAttributeValue("lastviewed"), CCDate.STRINGREP_DESERIALIZE))); // backwards compatibility
-		}
 		
 		if (e.getAttributeValue("length") != null)
 			setLength(Integer.parseInt(e.getAttributeValue("length")));

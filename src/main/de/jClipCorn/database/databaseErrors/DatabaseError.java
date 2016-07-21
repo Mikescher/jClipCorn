@@ -10,7 +10,6 @@ import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.database.databaseElement.CCSeries;
-import de.jClipCorn.database.databaseElement.columnTypes.CCDateTimeList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGroup;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFormat;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieGenre;
@@ -181,8 +180,6 @@ public class DatabaseError {
 			return fixError_Duplicate_Genre();
 		} else if (isTypeOf(DatabaseErrorType.ERROR_INVALID_CHARS_IN_PATH)) {
 			return fixError_Invalid_Chars();
-		} else if (isTypeOf(DatabaseErrorType.ERROR_SERIES_HAS_HISTORY)) {
-			return fixError_Series_Has_History();
 		}
 		
 		return false;
@@ -245,16 +242,6 @@ public class DatabaseError {
 			}
 			
 			elem.setGenres(ls);
-			
-			return true;
-		}
-		
-		return false;
-	}
-	
-	private boolean fixError_Series_Has_History() {
-		if (el1 instanceof CCSeries) {
-			((CCSeries)el1).setViewedHistory(CCDateTimeList.createEmpty());
 			
 			return true;
 		}

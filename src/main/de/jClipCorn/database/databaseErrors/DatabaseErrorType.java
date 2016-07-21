@@ -33,7 +33,7 @@ public class DatabaseErrorType {
 	public static DatabaseErrorType ERROR_DUPLICATE_GENRE = new DatabaseErrorType(28);
 	public static DatabaseErrorType ERROR_INVALID_CHARS_IN_PATH = new DatabaseErrorType(29);
 	public static DatabaseErrorType ERROR_INVALID_ONLINEREF = new DatabaseErrorType(30);
-	public static DatabaseErrorType ERROR_SERIES_HAS_HISTORY = new DatabaseErrorType(31);
+	//public static DatabaseErrorType ERROR_SERIES_HAS_HISTORY = new DatabaseErrorType(31);
 	public static DatabaseErrorType ERROR_HISTORY_BUT_UNVIEWED = new DatabaseErrorType(32);
 	public static DatabaseErrorType ERROR_INVALID_HISTORY = new DatabaseErrorType(33);
 	public static DatabaseErrorType ERROR_INVALID_GROUPLIST = new DatabaseErrorType(34);
@@ -97,8 +97,6 @@ public class DatabaseErrorType {
 		} else if (equals(ERROR_DUPLICATE_GENRE)) {
 			return true;
 		} else if (equals(ERROR_INVALID_CHARS_IN_PATH)) {
-			return true;
-		} else if (equals(ERROR_SERIES_HAS_HISTORY)) {
 			return true;
 		}
 		

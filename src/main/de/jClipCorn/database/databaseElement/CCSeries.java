@@ -57,10 +57,6 @@ public class CCSeries extends CCDatabaseElement {
 	public CCSeason createNewEmptySeason() {
 		return movielist.createNewEmptySeason(this);
 	}
-
-	public CCMovieList getMovieList() {
-		return movielist;
-	}
 	
 	public boolean isViewed() { // All parts viewed
 		boolean v = true;
@@ -579,10 +575,5 @@ public class CCSeries extends CCDatabaseElement {
 		} else {
 			return zero;
 		}
-	}
-
-	@Override
-	public CCDateTimeList getViewedHistory() {
-		return CCDateTimeList.createEmpty();
 	}
 }

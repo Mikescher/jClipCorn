@@ -7,7 +7,6 @@ import javax.swing.ImageIcon;
 import org.jdom2.Element;
 
 import de.jClipCorn.database.CCMovieList;
-import de.jClipCorn.database.databaseElement.columnTypes.CCDateTimeList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGroupList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFSK;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieGenre;
@@ -21,7 +20,6 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReference;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.util.datetime.CCDate;
-import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.exceptions.CCFormatException;
 import de.jClipCorn.util.exceptions.OnlineRefFormatException;
 import de.jClipCorn.util.helper.ByteUtilies;
@@ -40,7 +38,6 @@ public abstract class CCDatabaseElement {
 	private final int seriesID;					// INTEGER
 	private CCOnlineReference onlineReference;	// VARCHAR
 	private CCGroupList linkedGroups;			// VARCHAR
-	private CCDateTimeList viewedHistory;       // VARCHAR
 	
 	protected final CCMovieList movielist;
 	protected boolean isUpdating = false;
@@ -54,7 +51,6 @@ public abstract class CCDatabaseElement {
 		onlineReference = CCOnlineReference.createNone();
 		linkedGroups = CCGroupList.createEmpty();
 		genres = new CCMovieGenreList();
-		viewedHistory = CCDateTimeList.createEmpty();
 	}
 	
 	public void setDefaultValues(boolean updateDB) {
@@ -65,7 +61,6 @@ public abstract class CCDatabaseElement {
 		fsk = CCMovieFSK.RATING_0;
 		score = CCMovieScore.RATING_NO;
 		covername = ""; //$NON-NLS-1$
-		viewedHistory = CCDateTimeList.createEmpty();
 		onlineReference = CCOnlineReference.createNone();
 		linkedGroups = CCGroupList.createEmpty();
 		
@@ -247,34 +242,6 @@ public abstract class CCDatabaseElement {
 		return ! linkedGroups.isEmpty();
 	}
 
-	public void setViewedHistory(String data) throws CCFormatException {
-		viewedHistory = CCDateTimeList.parse(data);
-		
-		updateDB();
-	}
-
-	public void setViewedHistory(CCDateTimeList value) {
-		viewedHistory = value;
-		
-		updateDB();
-	}
-
-	public CCDateTimeList getViewedHistory() {
-		return viewedHistory;
-	}
-	
-	public void addToViewedHistory(CCDateTime datetime) {
-		this.viewedHistory = this.viewedHistory.add(datetime);
-		
-		updateDB();
-	}
-	
-	public void fullResetViewedHistory() {
-		this.viewedHistory = CCDateTimeList.createEmpty();
-		
-		updateDB();
-	}
-
 	public void setGenre(CCMovieGenre genre, int idx) {
 		boolean succ = genres.setGenre(idx, genre);
 		
@@ -335,6 +302,8 @@ public abstract class CCDatabaseElement {
 		e.setAttribute("score", score.asInt() + "");
 		e.setAttribute("covername", covername);
 		e.setAttribute("seriesid", seriesID + "");
+		e.setAttribute("groups", linkedGroups.toSerializationString());
+		e.setAttribute("onlinreref", onlineReference.toSerializationString());
 	}
 	
 	/**
@@ -370,6 +339,12 @@ public abstract class CCDatabaseElement {
 			setCover(""); //Damit er nicht probiert was zu löschen
 			setCover(ImageUtilities.byteArrayToImage(ByteUtilies.hexStringToByteArray(e.getAttributeValue("coverdata"))));
 		}
+		
+		if (e.getAttributeValue("groups") != null)
+			setGroups(e.getAttributeValue("groups"));
+		
+		if (e.getAttributeValue("onlinreref") != null)
+			setOnlineReference(e.getAttributeValue("onlinreref"));
 	}
 
 	@SuppressWarnings("nls")

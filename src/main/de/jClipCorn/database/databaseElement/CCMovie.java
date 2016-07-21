@@ -6,6 +6,7 @@ import java.sql.Date;
 import org.jdom2.Element;
 
 import de.jClipCorn.database.CCMovieList;
+import de.jClipCorn.database.databaseElement.columnTypes.CCDateTimeList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFormat;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieLanguage;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieQuality;
@@ -44,6 +45,7 @@ public class CCMovie extends CCDatabaseElement {
 	private CCMovieSize filesize;			// BIGINT - signed (unfortunately)
 	private CCMovieTags tags;				// SMALLINT
 	private String[] parts;					// [0..5] -> LEN = 512
+	private CCDateTimeList viewedHistory;   // VARCHAR
 	
 	public CCMovie(CCMovieList ml, int id) {
 		super(ml, CCMovieTyp.MOVIE, id, -1);
@@ -53,6 +55,7 @@ public class CCMovie extends CCDatabaseElement {
 		filesize = new CCMovieSize();
 		tags = new CCMovieTags();
 		addDate = CCDate.getMinimumDate();
+		viewedHistory = CCDateTimeList.createEmpty();
 	}
 	
 	@Override
@@ -73,6 +76,7 @@ public class CCMovie extends CCDatabaseElement {
 		parts[3] = ""; //$NON-NLS-1$
 		parts[4] = ""; //$NON-NLS-1$
 		parts[5] = ""; //$NON-NLS-1$
+		viewedHistory = CCDateTimeList.createEmpty();
 		
 		
 		if (updateDB) {
@@ -294,6 +298,34 @@ public class CCMovie extends CCDatabaseElement {
 		setPart(idx, ""); //$NON-NLS-1$
 	}
 
+	public void setViewedHistory(String data) throws CCFormatException {
+		viewedHistory = CCDateTimeList.parse(data);
+		
+		updateDB();
+	}
+
+	public void setViewedHistory(CCDateTimeList value) {
+		viewedHistory = value;
+		
+		updateDB();
+	}
+
+	public CCDateTimeList getViewedHistory() {
+		return viewedHistory;
+	}
+	
+	public void addToViewedHistory(CCDateTime datetime) {
+		this.viewedHistory = this.viewedHistory.add(datetime);
+		
+		updateDB();
+	}
+	
+	public void fullResetViewedHistory() {
+		this.viewedHistory = CCDateTimeList.createEmpty();
+		
+		updateDB();
+	}
+
 	public boolean hasHoleInParts() {
 		boolean ret = false;
 		
@@ -338,6 +370,7 @@ public class CCMovie extends CCDatabaseElement {
 		e.setAttribute("quality", quality.asInt() + "");
 		e.setAttribute("tags", tags.asShort() + "");
 		e.setAttribute("viewed", viewed + "");
+		e.setAttribute("history", viewedHistory.toSerializationString());
 		e.setAttribute("year", year + "");
 		e.setAttribute("zyklus", zyklus.getTitle());
 		e.setAttribute("zyklusnumber", zyklus.getNumber() + "");
@@ -407,6 +440,9 @@ public class CCMovie extends CCDatabaseElement {
 		
 		if (e.getAttributeValue("zyklusnumber") != null)
 			setZyklusID(Integer.parseInt(e.getAttributeValue("zyklusnumber")));
+		
+		if (e.getAttributeValue("history") != null)
+			setViewedHistory(e.getAttributeValue("history"));
 		
 		endUpdating();
 	}

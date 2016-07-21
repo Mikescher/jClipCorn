@@ -128,8 +128,8 @@ public class Main {
 // X     - amazon:???                                                                                                                         
 // X     - moviepilot:???                                                                                                                     
 // X     - themoviedb:???                                                                                                                     
-//   - Custom Movie Groups (SpencerHill, Statham, Disney, Marvel, DC, Tarrantino)                                                             
-//           -> then remove the big SpencerHill cycle, make to group and go back to real cycles (Zwei Supertypen in Miami, Jack Clementi, ...)
+// X - Custom Movie Groups (SpencerHill, Statham, Disney, Marvel, DC, Tarrantino)                                                             
+// X         -> then remove the big SpencerHill cycle, make to group and go back to real cycles (Zwei Supertypen in Miami, Jack Clementi, ...)
 // X - Calc Button for Series Quali                                                                                                           
 //   - Auto retrieve length button                                                                                                            
 // X - dont allow no cover add (leads to exception)
@@ -155,3 +155,4 @@ public class Main {
 // X - Sidebar needs to listen to group changed events and update
 // X - undo viewed for episodes
 // X - play unchanged for movies
+//   - Groups in filename "[G1] Zyklus IX - title (Part 1).avi"

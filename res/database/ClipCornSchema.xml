@@ -7,7 +7,7 @@
 		<column name="IVALUE"       type="VARCHAR"  required="true" size="2048" />
 	</table>
 
-	<table name="MOVIES">
+	<table name="ELEMENTS">
 		<column name="LOCALID"        type="INTEGER"  required="true" primaryKey="true"/>    <!-- ALSO USED FOR SERIES-->
 
 		<column name="NAME"           type="VARCHAR"  required="true" size="128"       />    <!-- ALSO USED FOR SERIES-->

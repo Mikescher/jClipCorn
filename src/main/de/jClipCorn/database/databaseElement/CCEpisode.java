@@ -388,8 +388,11 @@ public class CCEpisode {
 		if (e.getAttributeValue("format") != null)
 			setFormat(Integer.parseInt(e.getAttributeValue("format")));
 
-		if (e.getAttributeValue("lastviewed") != null)  // backwards compatibility
-			setViewedHistory(CCDateTimeList.create(CCDate.parse(e.getAttributeValue("lastviewed"), CCDate.STRINGREP_DESERIALIZE)));
+		if (e.getAttributeValue("lastviewed") != null) { // backwards compatibility
+			CCDate d = CCDate.parse(e.getAttributeValue("lastviewed"), CCDate.STRINGREP_DESERIALIZE);
+			if (!d.isMinimum())
+				setViewedHistory(CCDateTimeList.create(d));
+		}		
 		
 		if (e.getAttributeValue("history") != null)
 			setViewedHistory(CCDateTimeList.parse(e.getAttributeValue("history")));

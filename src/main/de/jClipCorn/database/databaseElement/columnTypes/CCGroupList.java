@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -162,7 +163,10 @@ public class CCGroupList implements Iterable<CCGroup> {
 		
 		FontMetrics fm = g.getFontMetrics();
 		
-		int right = ImageUtilities.getTopRightNonTransparentPixel(bi).x;
+		Point tr = ImageUtilities.getTopRightNonTransparentPixel(bi);
+		
+		int right = tr.x;
+		int top = tr.y;
 		
 		int height = fm.getHeight();
 		int offset = fm.getDescent();
@@ -176,7 +180,7 @@ public class CCGroupList implements Iterable<CCGroup> {
 			
 			g.fillRoundRect(
 					right - MARGIN - PADDING_X - width - PADDING_X, 
-					i * (height + 2 * PADDING_Y + 2 * MARGIN) + MARGIN, 
+					top + i * (height + 2 * PADDING_Y + 2 * MARGIN) + MARGIN, 
 					2 * PADDING_X + width, 
 					2 * PADDING_Y + height, 
 					RADIUS, 
@@ -186,7 +190,7 @@ public class CCGroupList implements Iterable<CCGroup> {
 			
 			g.drawRoundRect(
 					right - MARGIN - PADDING_X - width - PADDING_X, 
-					i * (height + 2 * PADDING_Y + 2 * MARGIN) + MARGIN, 
+					top + i * (height + 2 * PADDING_Y + 2 * MARGIN) + MARGIN, 
 					2 * PADDING_X + width, 
 					2 * PADDING_Y + height, 
 					RADIUS, 
@@ -195,7 +199,7 @@ public class CCGroupList implements Iterable<CCGroup> {
 			g.drawString(
 					group, 
 					right - MARGIN - PADDING_X - width, 
-					i * (height + 2 * PADDING_Y + 2 * MARGIN) + MARGIN + PADDING_Y + height - offset);
+					top + i * (height + 2 * PADDING_Y + 2 * MARGIN) + MARGIN + PADDING_Y + height - offset);
 		}
 			
 		

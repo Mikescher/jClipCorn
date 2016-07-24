@@ -148,7 +148,7 @@ public class Main {
 // X - strange xml parse in addmovframe
 // X - viewed | groups | ref to filter
 // X - undo last viewed
-// / - manage groups dialog (add to group, remove from group, delete group)
+// / - manage groups dialog (add to group, remove from group, delete group, rename group (!), reindex groups)
 //   - measure startup time
 // X - error: two groups with different case-ing
 // X - error: movie has one group two times (FATAL! should not be possible)

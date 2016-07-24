@@ -94,6 +94,13 @@ public class CCGroupList implements Iterable<CCGroup> {
 		return false;
 	}
 
+	public boolean containsIgnoreCase(String name) {
+		for (CCGroup ccGroup : list) {
+			if (ccGroup.Name.equalsIgnoreCase(name)) return true;
+		}
+		return false;
+	}
+
 	public String toSerializationString() {
 		if (isEmpty()) return ""; //$NON-NLS-1$
 		

@@ -175,6 +175,11 @@ public class SearchFrame extends JFrame {
 				continue;
 			}
 			
+			if (mov.getGroups().containsIgnoreCase(searchString)) {
+				addToList(mov);
+				continue;
+			}
+			
 			boolean movFound = false;
 			for (int i = 0; i < mov.getPartcount(); i++) {
 				if (StringUtils.containsIgnoreCase(mov.getAbsolutePart(i), searchString)) {
@@ -225,6 +230,11 @@ public class SearchFrame extends JFrame {
 			}
 			
 			if (StringUtils.equalsIgnoreCase(ser.getOnlineReference().type.getIdentifier(), searchString)) {
+				addToList(ser);
+				continue;
+			}
+
+			if (ser.getGroups().containsIgnoreCase(searchString)) {
 				addToList(ser);
 				continue;
 			}

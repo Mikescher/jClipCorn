@@ -24,7 +24,9 @@ public class TableSearchFilter extends RowFilter<ClipTableModel, Object> {
 
 	@Override
 	public boolean include(Entry<? extends ClipTableModel, ? extends Object> e) {
-		String title = ((CCDatabaseElement)e.getValue(ClipTableModel.COLUMN_TITLE)).getTitle();
+		CCDatabaseElement elem = ((CCDatabaseElement)e.getValue(ClipTableModel.COLUMN_TITLE));
+		
+		String title = elem.getTitle();
 		
 		if (StringUtils.containsIgnoreCase(title, searchTerm)) {
 			return true;
@@ -59,6 +61,10 @@ public class TableSearchFilter extends RowFilter<ClipTableModel, Object> {
 		}
 		
 		if (((YearRange)e.getValue(ClipTableModel.COLUMN_YEAR)).asString().equalsIgnoreCase(searchTerm)) {
+			return true;
+		}
+		
+		if (elem.getGroups().containsIgnoreCase(searchTerm)) {
 			return true;
 		}
 		

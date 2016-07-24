@@ -61,7 +61,7 @@ public class DatabaseValidator {
 		
 		findCoverErrors(e, ml, pcl);
 		findDuplicateFiles(e, ml, pcl);
-		findDuplicateGroups(e, ml, pcl);
+		findErrorInGroups(e, ml, pcl);
 		
 		pcl.reset();
 	}
@@ -700,7 +700,7 @@ public class DatabaseValidator {
 		}
 	}
 
-	private static void findDuplicateGroups(List<DatabaseError> e, CCMovieList movielist, ProgressCallbackListener pcl) {
+	private static void findErrorInGroups(List<DatabaseError> e, CCMovieList movielist, ProgressCallbackListener pcl) {
 		Set<String> groupSet = new HashSet<>();
 		for (CCGroup group : movielist.getGroupList()) {
 			if (! groupSet.add(group.Name.toLowerCase().trim())) {
@@ -709,6 +709,11 @@ public class DatabaseValidator {
 			}
 
 			if (group.Name.toLowerCase().trim().isEmpty()) {
+				e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_INVALID_GROUP, group));
+				break;
+			}
+
+			if (! group.Name.trim().equals(group.Name)) {
 				e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_INVALID_GROUP, group));
 				break;
 			}

@@ -201,6 +201,8 @@ public class GroupListPopup extends JDialog implements WindowFocusListener {
 	}
 
 	private void onAdd() {
+		if (! CCGroup.REGEX_GROUP_NAME.matcher(edNewGroup.getText()).matches()) return;
+		
 		CCGroup g = CCGroup.create(edNewGroup.getText());
 		if (uiMap.containsKey(g)) {
 			uiMap.get(g).setSelected(true);

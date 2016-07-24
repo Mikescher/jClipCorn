@@ -21,7 +21,6 @@ import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.datetime.CCTime;
 import de.jClipCorn.util.exceptions.CCFormatException;
-import de.jClipCorn.util.exceptions.OnlineRefFormatException;
 import de.jClipCorn.util.helper.ApplicationHelper;
 
 public class CCDatabase {
@@ -269,7 +268,7 @@ public class CCDatabase {
 		seas.setCover(rs.getString(TAB_SEASONS_COLUMN_COVERNAME));
 	}
 	
-	private void updateSeriesFromResultSet(ResultSet rs, CCSeries ser) throws SQLException, OnlineRefFormatException {
+	private void updateSeriesFromResultSet(ResultSet rs, CCSeries ser) throws SQLException, CCFormatException {
 		ser.setTitle(rs.getString(TAB_MAIN_COLUMN_NAME));
 		ser.setLanguage(rs.getInt(TAB_MAIN_COLUMN_LANGUAGE));
 		ser.setGenres(rs.getLong(TAB_MAIN_COLUMN_GENRE));
@@ -690,7 +689,7 @@ public class CCDatabase {
 			
 			rs.close();
 			return true;
-		} catch (SQLException | OnlineRefFormatException e) {
+		} catch (SQLException | CCFormatException e) {
 			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CouldNotUpdateSeries", ser.getTitle(), ser.getLocalID()), e);
 			return false;
 		}

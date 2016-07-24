@@ -10,6 +10,7 @@ import java.util.Properties;
 import java.util.Vector;
 
 import de.jClipCorn.Main;
+import de.jClipCorn.database.databaseElement.columnTypes.CCMovieLanguage;
 import de.jClipCorn.database.util.ExportHelper;
 import de.jClipCorn.gui.frames.mainFrame.clipToolbar.ClipToolbar;
 import de.jClipCorn.gui.localization.LocaleBundle;
@@ -148,6 +149,7 @@ public class CCProperties {
 	public CCBoolProperty				PROP_QUERY_IMDB;
 	public CCBoolProperty				PROP_QUERY_TMDB;
 	public CCBoolProperty 				PROP_MAINFRAME_SHOWGROUPS;
+	public CCVIntProperty 				PROP_DATABASE_DEFAULTPARSERLANG;
 	
 	public boolean ARG_READONLY = false;
 	
@@ -212,6 +214,8 @@ public class CCProperties {
 		
 		LocalizedVector vdb = getDatabaseDriverOptions();
 		
+		LocalizedVector vdpl = CCMovieLanguage.valueNames();
+		
 		PROP_UI_LANG							= new CCVIntProperty(CAT_COMMON, 			this, 	"PROP_UI_LANG", 							getDefLanguage(),	vl);
 		PROP_LOADING_PRELOADRESOURCES			= new CCBoolProperty(CAT_COMMON, 			this,   "PROP_LOADING_PRELOADICONS", 				false);
 		PROP_USE_INTELLISORT					= new CCBoolProperty(CAT_COMMON,			this, 	"PROP_USE_INTELLISORT", 					false);
@@ -243,7 +247,8 @@ public class CCProperties {
 		PROP_DATABASE_CREATELOGFILE				= new CCBoolProperty(CAT_DATABASE,			this, 	"PROP_DATABASE_CREATELOGFILE", 				true);
 		PROP_DATABASE_COVERCACHESIZE			= new CCPIntProperty(CAT_DATABASE, 			this, 	"PROP_DATABASE_COVERCACHESIZE", 			128);
 		PROP_LOG_MAX_LINECOUNT 					= new CCPIntProperty(CAT_DATABASE, 			this, 	"PROP_LOG_MAX_LINECOUNT", 					1048576); // 2^20
-
+		PROP_DATABASE_DEFAULTPARSERLANG			= new CCVIntProperty(CAT_DATABASE, 			this, 	"PROP_DATABASE_DEFAULTPARSERLANG", 			CCMovieLanguage.GERMAN.asInt(), 	vdpl);
+		
 		PROP_ON_DBLCLICK_MOVE					= new CCVIntProperty(CAT_MOVIES, 			this, 	"PROP_ON_DBLCLICK_MOVE", 					0, 					vd);
 		PROP_MAINFRAME_AUTOMATICRESETWATCHLATER = new CCBoolProperty(CAT_MOVIES,			this,   "PROP_MAINFRAME_AUTOMATICRESETWATCHLATER",	true);
 		PROP_MAINFRAME_AUTOMATICRESETWATCHNEVER = new CCBoolProperty(CAT_MOVIES,			this,   "PROP_MAINFRAME_AUTOMATICRESETWATCHNEVER",	true);

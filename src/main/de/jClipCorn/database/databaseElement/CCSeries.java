@@ -14,6 +14,7 @@ import org.jdom2.Element;
 
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCDateTimeList;
+import de.jClipCorn.database.databaseElement.columnTypes.CCGroup;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFormat;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieLanguage;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieQuality;
@@ -389,7 +390,6 @@ public class CCSeries extends CCDatabaseElement {
 		}
 	}
 	
-	
 	@Override
 	@SuppressWarnings("nls")
 	public void parseFromXML(Element e, boolean resetAddDate, boolean resetViewed, boolean resetScore, boolean resetTags) throws CCFormatException {
@@ -501,12 +501,20 @@ public class CCSeries extends CCDatabaseElement {
 			return new ExtendedViewedState(ExtendedViewedStateType.NOT_VIEWED, CCDateTimeList.createEmpty());
 	}
 
+	@SuppressWarnings("nls")
 	public String getFolderNameForCreatedFolderStructure() {
 		String seriesfoldername = getTitle();
-		if (getLanguage() != CCMovieLanguage.GERMAN) {
-			seriesfoldername += String.format(" [%s]", getLanguage().getShortString()); //$NON-NLS-1$
+		
+		for (CCGroup group : getGroups()) {
+			seriesfoldername += " [["+group.Name+"]]";
 		}
+		
+		if (getLanguage() != CCMovieLanguage.GERMAN) {
+			seriesfoldername += String.format(" [%s]", getLanguage().getShortString());
+		}
+		
 		seriesfoldername = PathFormatter.fixStringToFilesystemname(seriesfoldername);
+		
 		return seriesfoldername;
 	}
 

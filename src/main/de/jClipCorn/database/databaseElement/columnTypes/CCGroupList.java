@@ -12,6 +12,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import de.jClipCorn.database.CCMovieList;
+import de.jClipCorn.util.exceptions.GroupFormatException;
 import de.jClipCorn.util.helper.ImageUtilities;
 
 public class CCGroupList implements Iterable<CCGroup> {
@@ -51,11 +52,14 @@ public class CCGroupList implements Iterable<CCGroup> {
 		return list.size();
 	}
 
-	public static CCGroupList parse(CCMovieList ml, String data) {
+	public static CCGroupList parse(CCMovieList ml, String data) throws GroupFormatException {
 		if (data.isEmpty()) return new CCGroupList();
 		
 		List<CCGroup> gl = new ArrayList<>();
 		for (String str : data.split(SEPERATOR)) {
+			if (! CCGroup.REGEX_GROUP_NAME.matcher(str).matches())
+				throw new GroupFormatException(str);
+			
 			gl.add(ml.getOrCreateGroup(str));
 		}
 		

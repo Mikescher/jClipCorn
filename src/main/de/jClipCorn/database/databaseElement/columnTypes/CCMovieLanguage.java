@@ -5,6 +5,7 @@ import javax.swing.ImageIcon;
 import de.jClipCorn.gui.CachedResourceLoader;
 import de.jClipCorn.gui.Resources;
 import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.gui.localization.util.LocalizedVector;
 
 public enum CCMovieLanguage {
 	GERMAN(0),
@@ -20,6 +21,14 @@ public enum CCMovieLanguage {
 		LocaleBundle.getString("CCMovieLanguage.French"),   //$NON-NLS-1$
 		LocaleBundle.getString("CCMovieLanguage.Japanese")  //$NON-NLS-1$
 	};
+
+	private final static String NAME_IDS[] = {
+		"CCMovieLanguage.German",   //$NON-NLS-1$
+		"CCMovieLanguage.English",  //$NON-NLS-1$
+		"CCMovieLanguage.Muted",    //$NON-NLS-1$
+		"CCMovieLanguage.French",   //$NON-NLS-1$
+		"CCMovieLanguage.Japanese"  //$NON-NLS-1$
+	};
 	
 	private final static String SHORTNAMES[] = {
 		"GER",   //$NON-NLS-1$
@@ -33,6 +42,14 @@ public enum CCMovieLanguage {
 	
 	private CCMovieLanguage(int val) {
 		id = val;
+	}
+
+	public static LocalizedVector valueNames() {
+		LocalizedVector lv = new LocalizedVector();
+		for (String id : NAME_IDS) {
+			lv.add(id);
+		}
+		return lv;
 	}
 	
 	public int asInt() {

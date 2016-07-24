@@ -7,6 +7,7 @@ import org.jdom2.Element;
 
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCDateTimeList;
+import de.jClipCorn.database.databaseElement.columnTypes.CCGroup;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFormat;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieLanguage;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieQuality;
@@ -474,6 +475,10 @@ public class CCMovie extends CCDatabaseElement {
 			filename += getTitle().replace(": ", " - ");
 		} else {
 			filename += getTitle().replace(": ", " - ");
+		}
+		
+		for (CCGroup group : getGroups()) {
+			filename += " [["+group.Name+"]]";
 		}
 				
 		if (getLanguage() != CCMovieLanguage.GERMAN) {

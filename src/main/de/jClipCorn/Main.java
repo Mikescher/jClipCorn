@@ -155,4 +155,5 @@ public class Main {
 // X - Sidebar needs to listen to group changed events and update
 // X - undo viewed for episodes
 // X - play unchanged for movies
-//   - Groups in filename "[G1] Zyklus IX - title (Part 1).avi"
+// X - Groups in filename "[G1] Zyklus IX - title (Part 1).avi"
+//   - Filenameparser test

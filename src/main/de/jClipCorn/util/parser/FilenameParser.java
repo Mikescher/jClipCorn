@@ -1,29 +1,32 @@
 package de.jClipCorn.util.parser;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.regex.Matcher;
 
+import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCMovie;
+import de.jClipCorn.database.databaseElement.columnTypes.CCGroup;
+import de.jClipCorn.database.databaseElement.columnTypes.CCGroupList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFormat;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieLanguage;
-import de.jClipCorn.gui.frames.addMovieFrame.AddMovieFrame;
+import de.jClipCorn.database.databaseElement.columnTypes.CCMovieZyklus;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
+import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.formatter.RomanNumberFormatter;
 
 @SuppressWarnings("nls")
 public class FilenameParser {
-	private AddMovieFrame frame;
-	
-	public FilenameParser(AddMovieFrame amf) {
-		this.frame  = amf;
-	}
-	
-	public void parse(String filepath) {
-		List<File> files = new ArrayList<>();
-		files.add(new File(filepath));
+	public static FilenameParserResult parse(CCMovieList movielist, String filepath) {
+		Map<Integer, String> addFiles = new HashMap<>();
+		CCGroupList groups = CCGroupList.createEmpty();
+		CCMovieLanguage lang = CCMovieLanguage.find(CCProperties.getInstance().PROP_DATABASE_DEFAULTPARSERLANG.getValue());
+		CCMovieZyklus zyklus = null;
+		CCMovieFormat format = null;
+		String title = "";
 		
 		String path = PathFormatter.getFilepath(filepath);
 		String filename = PathFormatter.getFilename(filepath); // Filename
@@ -31,7 +34,7 @@ public class FilenameParser {
 		
 		if (path.equals(filepath) || filename.equals(filepath) || ext.equals(filepath)) {
 			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.ErrorParsingFN", filepath));
-			return;
+			return null;
 		}
 		
 		// ###################  PART  ###################
@@ -45,40 +48,53 @@ public class FilenameParser {
 				String newFP = PathFormatter.combine(path, moviename + " (Part " + p + ")" + '.' + ext);
 				File f = new File(newFP);
 				if (f.exists()) {
-					files.add(f);
-					frame.setFilepath(p - 1, newFP);
+					addFiles.put(p, newFP);
 				} else {
 					break;
 				}
 			}
 		}
 		
+		// ###################  GROUPS  ###################
+		
+		Matcher mGroups = CCGroup.REGEX_GROUP_SYNTAX.matcher(moviename);
+		CCGroupList grouplist = CCGroupList.createEmpty();
+		while (mGroups.find()) {
+			String group = mGroups.group();
+			String groupname = group.substring(2, group.length() - 4);
+			
+			if (! CCGroup.REGEX_GROUP_NAME.matcher(groupname).matches()) continue;
+			
+			int idx = moviename.indexOf(group);
+			if (idx <= 0) continue;
+			if (moviename.charAt(idx-1) != ' ') continue;
+			
+			moviename = moviename.substring(0, idx-1) + moviename.substring(idx+group.length(), moviename.length()-1);
+			
+			grouplist.add(movielist, groupname);
+		}
+		
 		// ###################  LANGUAGE  ###################
 		
 		String flang = moviename.substring(moviename.lastIndexOf(' ') + 1);
-		String lang = "";
+		String slang = "";
 		if ((! flang.equals(moviename)) && (flang.charAt(0) =='[') && flang.endsWith("]")) {
-			lang = flang.substring(1, flang.length() - 1);
+			slang = flang.substring(1, flang.length() - 1);
 			boolean succ = false;
-			if (lang.equalsIgnoreCase(CCMovieLanguage.ENGLISH.getShortString())) {
-				frame.setMovieLanguage(CCMovieLanguage.ENGLISH);
+			if (slang.equalsIgnoreCase(CCMovieLanguage.ENGLISH.getShortString())) {
+				lang = CCMovieLanguage.ENGLISH;
 				succ = true;
-			} else if (lang.equalsIgnoreCase(CCMovieLanguage.FRENCH.getShortString())) {
-				frame.setMovieLanguage(CCMovieLanguage.FRENCH);
+			} else if (slang.equalsIgnoreCase(CCMovieLanguage.FRENCH.getShortString())) {
+				lang = CCMovieLanguage.FRENCH;
 				succ = true;
-			} else if (lang.equalsIgnoreCase(CCMovieLanguage.MUTED.getShortString())) {
-				frame.setMovieLanguage(CCMovieLanguage.MUTED);
-				succ = true;
-			} else { // auch wen "GER"
-				frame.setMovieLanguage(CCMovieLanguage.GERMAN);
+			} else if (slang.equalsIgnoreCase(CCMovieLanguage.MUTED.getShortString())) {
+				lang = CCMovieLanguage.MUTED;
 				succ = true;
 			}
 			
 			if (succ) {
 				moviename = moviename.substring(0, moviename.length() - (flang.length() + 1));
 			}
-		} else {
-			frame.setMovieLanguage(CCMovieLanguage.GERMAN);
 		}
 		
 		// ###################  ZYKLUS  ###################
@@ -100,8 +116,7 @@ public class FilenameParser {
 			}
 		}
 		
-		frame.setZyklus(mZyklus);
-		frame.setZyklusNumber(iRoman);
+		zyklus = new CCMovieZyklus(mZyklus, iRoman);
 		
 		// ###################  NAME  ###################
 		
@@ -110,20 +125,22 @@ public class FilenameParser {
 			iRoman = RomanNumberFormatter.romToDec(mRoman);
 			mZyklus = moviename.substring(0, moviename.lastIndexOf(' '));
 			
-			frame.setMovieName(mZyklus);
-			frame.setZyklus(mZyklus);
-			frame.setZyklusNumber(iRoman);
+			title = mZyklus;
+			
+			zyklus = new CCMovieZyklus(mZyklus, iRoman);
 		} else {
 			moviename = moviename.replaceFirst(" - ", ": ");
-			
-			frame.setMovieName(moviename);
+
+			title = moviename;
 		}
 		
 		// ###################  FORMAT  ###################
 		
 		CCMovieFormat cmf = CCMovieFormat.getMovieFormat(ext);
 		if (cmf != null) {
-			frame.setMovieFormat(cmf);
+			format = cmf;
 		}
+		
+		return new FilenameParserResult(zyklus, title, lang, format, groups, addFiles);
 	}
 }

@@ -166,6 +166,11 @@ public class DatabaseValidator {
 				e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_INVALID_GROUPLIST, series));
 				break;
 			}
+
+			if (! CCGroup.REGEX_GROUP_NAME.matcher(group.Name).matches()) {
+				e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_INVALID_GROUPLIST, series));
+				break;
+			}
 		}
 	}
 
@@ -293,8 +298,7 @@ public class DatabaseValidator {
 		// ###############################################
 		// Zyklus/Title ends/starts with a space
 		// ###############################################
-		
-		
+				
 		if (PathFormatter.isUntrimmed(mov.getTitle()) || PathFormatter.isUntrimmed(mov.getZyklus().getTitle())) {
 			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_NOT_TRIMMED, mov));
 		}
@@ -399,7 +403,7 @@ public class DatabaseValidator {
 		// History but not viewed
 		// ###############################################
 
-		if (mov.isViewed() && !mov.getViewedHistory().isEmpty()) {
+		if (!mov.isViewed() && !mov.getViewedHistory().isEmpty()) {
 			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_HISTORY_BUT_UNVIEWED, mov));
 		}
 		
@@ -582,7 +586,7 @@ public class DatabaseValidator {
 		// History but not viewed
 		// ###############################################
 
-		if (episode.isViewed() && !episode.getViewedHistory().isEmpty()) {
+		if (!episode.isViewed() && !episode.getViewedHistory().isEmpty()) {
 			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_HISTORY_BUT_UNVIEWED, episode));
 		}
 		
@@ -653,7 +657,7 @@ public class DatabaseValidator {
 		}
 	}
 
-	private static void findDuplicateGroups(List<DatabaseError> e, CCMovieList movielist, ProgressCallbackListener pcl) {
+	private static void findDuplicateFiles(List<DatabaseError> e, CCMovieList movielist, ProgressCallbackListener pcl) {
 		boolean ignIFO = CCProperties.getInstance().PROP_VALIDATE_DUP_IGNORE_IFO.getValue();
 		
 		List<DatabaseFileElement> flList = new ArrayList<>();
@@ -696,7 +700,7 @@ public class DatabaseValidator {
 		}
 	}
 
-	private static void findDuplicateFiles(List<DatabaseError> e, CCMovieList movielist, ProgressCallbackListener pcl) {
+	private static void findDuplicateGroups(List<DatabaseError> e, CCMovieList movielist, ProgressCallbackListener pcl) {
 		Set<String> groupSet = new HashSet<>();
 		for (CCGroup group : movielist.getGroupList()) {
 			if (! groupSet.add(group.Name.toLowerCase().trim())) {

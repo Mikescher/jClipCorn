@@ -6,6 +6,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -16,6 +17,8 @@ import javax.swing.JTextArea;
 import de.jClipCorn.gui.CachedResourceLoader;
 import de.jClipCorn.gui.Resources;
 import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.gui.log.CCLog;
+import de.jClipCorn.util.helper.TextFileUtils;
 
 public class FilenameRuleFrame extends JFrame {
 	private static final long serialVersionUID = 692779597355844596L;
@@ -58,6 +61,17 @@ public class FilenameRuleFrame extends JFrame {
 		});
 		pnlBottom.add(btnOK);
 
-		memoMain.setText(LocaleBundle.getString("FilenameRulesFrame.rules")); //$NON-NLS-1$
+		memoMain.setText(getDescription());
+	}
+	
+	private String getDescription() {
+		try {
+			String txt = LocaleBundle.getString("FilenameRulesFrame.rules"); //$NON-NLS-1$
+			txt = txt.replace("{grammar}", TextFileUtils.readTextResource("/grammar.txt", this.getClass())); //$NON-NLS-1$ //$NON-NLS-2$
+			return txt;
+		} catch (IOException e) {
+			CCLog.addError(e);
+			return "??"; //$NON-NLS-1$
+		}
 	}
 }

@@ -8,6 +8,7 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map.Entry;
 
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultComboBoxModel;
@@ -33,6 +34,7 @@ import org.jdom2.Element;
 
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCMovie;
+import de.jClipCorn.database.databaseElement.columnTypes.CCGroupList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFSK;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFormat;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieGenre;
@@ -62,6 +64,7 @@ import de.jClipCorn.util.helper.ByteUtilies;
 import de.jClipCorn.util.helper.FileChooserHelper;
 import de.jClipCorn.util.helper.ImageUtilities;
 import de.jClipCorn.util.parser.FilenameParser;
+import de.jClipCorn.util.parser.FilenameParserResult;
 import de.jClipCorn.util.parser.onlineparser.ParseResultHandler;
 import de.jClipCorn.util.userdataProblem.UserDataProblem;
 import de.jClipCorn.util.userdataProblem.UserDataProblemHandler;
@@ -179,7 +182,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		
 		setFilepath(0, firstPath);
 		setEnabledAll(true);
-		new FilenameParser(this).parse(firstPath);	
+		parseFromFile(firstPath);
 		firstChooseClick = false;	
 		updateFilesize();
 	}
@@ -919,12 +922,29 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		
 		if (firstChooseClick) {
 			setEnabledAll(true);
-			new FilenameParser(this).parse(videoFileChooser.getSelectedFile().getAbsolutePath());
+			parseFromFile(videoFileChooser.getSelectedFile().getAbsolutePath());
 			
 			firstChooseClick = false;
 		}
 		
 		updateFilesize();
+	}
+	
+	private void parseFromFile(String fp) {
+		FilenameParserResult r = FilenameParser.parse(movieList, fp);
+		
+		if (r == null) return;
+		
+		if (r.Title != null) setMovieName(r.Title);
+		if (r.Zyklus != null) setZyklus(r.Zyklus.getTitle());
+		if (r.Zyklus != null) setZyklusNumber(r.Zyklus.getNumber());
+		
+		if (r.Language != null) setMovieLanguage(r.Language);
+		if (r.Format != null) setMovieFormat(r.Format);
+		
+		if (r.AdditionalFiles != null) 
+			for (Entry<Integer, String> addFile : r.AdditionalFiles.entrySet())
+				setFilepath(addFile.getKey()-1, addFile.getValue());
 	}
 	
 	private void onBtnClearClicked(int cNmbr) {
@@ -959,6 +979,10 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 	@Override
 	public void setMovieFormat(CCMovieFormat cmf) {
 		cbxFormat.setSelectedIndex(cmf.asInt());
+	}
+
+	public void setGroupList(CCGroupList gl) {
+		edGroups.setValue(gl);
 	}
 
 	@Override

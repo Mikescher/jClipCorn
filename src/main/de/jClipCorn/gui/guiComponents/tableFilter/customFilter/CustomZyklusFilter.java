@@ -1,11 +1,17 @@
 package de.jClipCorn.gui.guiComponents.tableFilter.customFilter;
 
+import java.awt.Component;
+
 import javax.swing.RowFilter.Entry;
 
+import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieZyklus;
 import de.jClipCorn.gui.frames.mainFrame.clipTable.ClipTableModel;
+import de.jClipCorn.gui.frames.mainFrame.filterTree.customFilterDialogs.CustomFilterDialog;
+import de.jClipCorn.gui.frames.mainFrame.filterTree.customFilterDialogs.CustomZyklusFilterDialog;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.datatypes.StringMatchType;
+import de.jClipCorn.util.listener.FinishListener;
 
 public class CustomZyklusFilter extends AbstractCustomFilter {
 	private String searchString = ""; //$NON-NLS-1$
@@ -63,6 +69,11 @@ public class CustomZyklusFilter extends AbstractCustomFilter {
 	@Override
 	public String getName() {
 		return LocaleBundle.getFormattedString("FilterTree.Custom.CustomFilterNames.Zyklus", asString()); //$NON-NLS-1$
+	}
+
+	@Override
+	public String getPrecreateName() {
+		return LocaleBundle.getDeformattedString("FilterTree.Custom.CustomFilterNames.Zyklus").replace("()", "").trim(); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
 	
 	public String asString() {
@@ -138,5 +149,15 @@ public class CustomZyklusFilter extends AbstractCustomFilter {
 		setCaseSensitive(f);
 		
 		return true;
+	}
+
+	@Override
+	public CustomFilterDialog CreateDialog(FinishListener fl, Component parent, CCMovieList ml) {
+		return new CustomZyklusFilterDialog(this, fl, parent);
+	}
+
+	@Override
+	public AbstractCustomFilter createNew() {
+		return new CustomZyklusFilter();
 	}
 }

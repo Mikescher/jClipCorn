@@ -6,42 +6,42 @@ import java.util.regex.Pattern;
 import javax.swing.RowFilter.Entry;
 
 import de.jClipCorn.database.CCMovieList;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieQuality;
+import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.gui.frames.mainFrame.clipTable.ClipTableModel;
 import de.jClipCorn.gui.frames.mainFrame.filterTree.customFilterDialogs.CustomFilterDialog;
-import de.jClipCorn.gui.frames.mainFrame.filterTree.customFilterDialogs.CustomQualityFilterDialog;
+import de.jClipCorn.gui.frames.mainFrame.filterTree.customFilterDialogs.CustomGroupFilterDialog;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.listener.FinishListener;
 
-public class CustomQualityFilter extends AbstractCustomFilter {
-	private CCMovieQuality quality = CCMovieQuality.STREAM;
+public class CustomGroupFilter extends AbstractCustomFilter {
+	private String group = ""; //$NON-NLS-1$
 	
 	@Override
 	public boolean include(Entry<? extends ClipTableModel, ? extends Object> e) {
-		return quality.equals(e.getValue(ClipTableModel.COLUMN_QUALITY));
+		return ((CCDatabaseElement)e.getValue(ClipTableModel.COLUMN_TITLE)).getGroups().contains(group);
 	}
 
 	@Override
 	public String getName() {
-		return LocaleBundle.getFormattedString("FilterTree.Custom.CustomFilterNames.Quality", quality.asString()); //$NON-NLS-1$
+		return LocaleBundle.getFormattedString("FilterTree.Custom.CustomFilterNames.Groups", group); //$NON-NLS-1$
 	}
 
 	@Override
 	public String getPrecreateName() {
-		return LocaleBundle.getDeformattedString("FilterTree.Custom.CustomFilterNames.Quality").replace("()", "").trim(); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		return LocaleBundle.getDeformattedString("FilterTree.Custom.CustomFilterNames.Groups").replace("()", "").trim(); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
 
-	public CCMovieQuality getQuality() {
-		return quality;
+	public String getGroup() {
+		return group;
 	}
 
-	public void setQuality(CCMovieQuality quality) {
-		this.quality = quality;
+	public void setGroup(String group) {
+		this.group = group;
 	}
 	
 	@Override
 	public int getID() {
-		return AbstractCustomFilter.CUSTOMFILTERID_QUALITY;
+		return AbstractCustomFilter.CUSTOMFILTERID_GROUP;
 	}
 	
 	@SuppressWarnings("nls")
@@ -51,7 +51,7 @@ public class CustomQualityFilter extends AbstractCustomFilter {
 		b.append("[");
 		b.append(getID() + "");
 		b.append("|");
-		b.append(quality.asInt()+"");
+		b.append(AbstractCustomFilter.escape(group));
 		b.append("]");
 		
 		return b.toString();
@@ -65,28 +65,19 @@ public class CustomQualityFilter extends AbstractCustomFilter {
 		
 		String[] paramsplit = params.split(Pattern.quote(","));
 		if (paramsplit.length != 1) return false;
-		
-		int intval;
-		try {
-			intval = Integer.parseInt(paramsplit[0]);
-		} catch (NumberFormatException e) {
-			return false;
-		}
-		
-		CCMovieQuality f = CCMovieQuality.find(intval);
-		if (f == null) return false;
-		setQuality(f);
+
+		setGroup(AbstractCustomFilter.descape(paramsplit[0]));
 		
 		return true;
 	}
 
 	@Override
 	public CustomFilterDialog CreateDialog(FinishListener fl, Component parent, CCMovieList ml) {
-		return new CustomQualityFilterDialog(this, fl, parent);
+		return new CustomGroupFilterDialog(this, fl, parent, ml);
 	}
 
 	@Override
 	public AbstractCustomFilter createNew() {
-		return new CustomQualityFilter();
+		return new CustomGroupFilter();
 	}
 }

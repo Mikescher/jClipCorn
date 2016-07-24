@@ -323,7 +323,7 @@ public class FilterTree extends AbstractFilterTree {
 	}
 	
 	private void onOrganizeCustomFilterClicked() {
-		new OrganizeFilterDialog(table.getMainFrame(), customFilterList, new FinishListener() {
+		new OrganizeFilterDialog(movielist, table.getMainFrame(), customFilterList, new FinishListener() {
 			@Override
 			public void finish() {
 				updateTree();
@@ -336,7 +336,7 @@ public class FilterTree extends AbstractFilterTree {
 	private void onNewCustomFilterClicked() {
 		final CustomAndOperator cfilter = new CustomAndOperator();
 		
-		new CustomOperatorFilterDialog(cfilter, new FinishListener() {
+		new CustomOperatorFilterDialog(movielist, cfilter, new FinishListener() {
 			@Override
 			public void finish() {
 				table.setRowFilter(new TableCustomFilter(cfilter), RowFilterSource.SIDEBAR);

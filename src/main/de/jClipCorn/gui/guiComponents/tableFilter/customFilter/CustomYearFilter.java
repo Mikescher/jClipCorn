@@ -1,14 +1,19 @@
 package de.jClipCorn.gui.guiComponents.tableFilter.customFilter;
 
+import java.awt.Component;
 import java.util.regex.Pattern;
 
 import javax.swing.RowFilter.Entry;
 
+import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.gui.frames.mainFrame.clipTable.ClipTableModel;
+import de.jClipCorn.gui.frames.mainFrame.filterTree.customFilterDialogs.CustomFilterDialog;
+import de.jClipCorn.gui.frames.mainFrame.filterTree.customFilterDialogs.CustomYearFilterDialog;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.DecimalSearchType;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.datetime.YearRange;
+import de.jClipCorn.util.listener.FinishListener;
 
 public class CustomYearFilter extends AbstractCustomFilter {
 	private int low = 1900;
@@ -36,6 +41,11 @@ public class CustomYearFilter extends AbstractCustomFilter {
 	@Override
 	public String getName() {
 		return LocaleBundle.getFormattedString("FilterTree.Custom.CustomFilterNames.Year", asString()); //$NON-NLS-1$
+	}
+
+	@Override
+	public String getPrecreateName() {
+		return LocaleBundle.getDeformattedString("FilterTree.Custom.CustomFilterNames.Year").replace("()", "").trim(); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
 	
 	public String asString() {
@@ -137,5 +147,15 @@ public class CustomYearFilter extends AbstractCustomFilter {
 		setSearchType(s);
 		
 		return true;
+	}
+
+	@Override
+	public CustomFilterDialog CreateDialog(FinishListener fl, Component parent, CCMovieList ml) {
+		return new CustomYearFilterDialog(this, fl, parent);
+	}
+
+	@Override
+	public AbstractCustomFilter createNew() {
+		return new CustomZyklusFilter();
 	}
 }

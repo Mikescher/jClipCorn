@@ -1,12 +1,17 @@
 package de.jClipCorn.gui.guiComponents.tableFilter.customFilter;
 
+import java.awt.Component;
 import java.util.regex.Pattern;
 
 import javax.swing.RowFilter.Entry;
 
+import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTags;
 import de.jClipCorn.gui.frames.mainFrame.clipTable.ClipTableModel;
+import de.jClipCorn.gui.frames.mainFrame.filterTree.customFilterDialogs.CustomFilterDialog;
+import de.jClipCorn.gui.frames.mainFrame.filterTree.customFilterDialogs.CustomTagFilterDialog;
 import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.util.listener.FinishListener;
 
 public class CustomTagFilter extends AbstractCustomFilter {
 	private int tag = 0;
@@ -19,6 +24,11 @@ public class CustomTagFilter extends AbstractCustomFilter {
 	@Override
 	public String getName() {
 		return LocaleBundle.getFormattedString("FilterTree.Custom.CustomFilterNames.Tag", CCMovieTags.getName(tag)); //$NON-NLS-1$
+	}
+
+	@Override
+	public String getPrecreateName() {
+		return LocaleBundle.getDeformattedString("FilterTree.Custom.CustomFilterNames.Tag").replace("()", "").trim(); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
 
 	public int getTag() {
@@ -67,5 +77,15 @@ public class CustomTagFilter extends AbstractCustomFilter {
 		setTag(intval);
 		
 		return true;
+	}
+
+	@Override
+	public CustomFilterDialog CreateDialog(FinishListener fl, Component parent, CCMovieList ml) {
+		return new CustomTagFilterDialog(this, fl, parent);
+	}
+
+	@Override
+	public AbstractCustomFilter createNew() {
+		return new CustomScoreFilter();
 	}
 }

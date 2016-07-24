@@ -114,6 +114,20 @@ public class CCDateTimeList implements Iterable<CCDateTime> {
 		return false;
 	}
 
+	public boolean containsDate(CCDate date) {
+		for (CCDateTime dt : list) {
+			if (dt.date.isEquals(date)) return true;
+		}
+		return false;
+	}
+
+	public boolean containsDateBetween(CCDate first, CCDate second) {
+		for (CCDateTime dt : list) {
+			if (dt.date.isGreaterEqualsThan(first) && dt.date.isLessEqualsThan(second)) return true;
+		}
+		return false;
+	}
+
 	@Override
 	public Iterator<CCDateTime> iterator() {
 		return list.iterator();

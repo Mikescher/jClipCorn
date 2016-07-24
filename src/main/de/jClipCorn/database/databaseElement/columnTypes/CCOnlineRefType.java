@@ -52,7 +52,7 @@ public enum CCOnlineRefType {
 	}
 	
 	public static String[] getList() {
-		return IDENTIFIER;
+		return NAMES;
 	}
 	
 	public String getIdentifier() {

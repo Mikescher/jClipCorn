@@ -1,13 +1,18 @@
 package de.jClipCorn.gui.guiComponents.tableFilter.customFilter;
 
+import java.awt.Component;
 import java.util.regex.Pattern;
 
 import javax.swing.RowFilter.Entry;
 
+import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieOnlineScore;
 import de.jClipCorn.gui.frames.mainFrame.clipTable.ClipTableModel;
+import de.jClipCorn.gui.frames.mainFrame.filterTree.customFilterDialogs.CustomFilterDialog;
+import de.jClipCorn.gui.frames.mainFrame.filterTree.customFilterDialogs.CustomOnlinescoreFilterDialog;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.DecimalSearchType;
+import de.jClipCorn.util.listener.FinishListener;
 
 public class CustomOnlinescoreFilter extends AbstractCustomFilter {
 	private CCMovieOnlineScore low = CCMovieOnlineScore.STARS_0_0;
@@ -35,6 +40,11 @@ public class CustomOnlinescoreFilter extends AbstractCustomFilter {
 	@Override
 	public String getName() {
 		return LocaleBundle.getFormattedString("FilterTree.Custom.CustomFilterNames.Onlinescore", asString()); //$NON-NLS-1$
+	}
+
+	@Override
+	public String getPrecreateName() {
+		return LocaleBundle.getDeformattedString("FilterTree.Custom.CustomFilterNames.Onlinescore").replace("()", "").trim(); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
 	
 	public String asString() {
@@ -139,5 +149,15 @@ public class CustomOnlinescoreFilter extends AbstractCustomFilter {
 		setSearchType(s);
 		
 		return true;
+	}
+
+	@Override
+	public CustomFilterDialog CreateDialog(FinishListener fl, Component parent, CCMovieList ml) {
+		return new CustomOnlinescoreFilterDialog(this, fl, parent);
+	}
+
+	@Override
+	public AbstractCustomFilter createNew() {
+		return new CustomOnlinescoreFilter();
 	}
 }

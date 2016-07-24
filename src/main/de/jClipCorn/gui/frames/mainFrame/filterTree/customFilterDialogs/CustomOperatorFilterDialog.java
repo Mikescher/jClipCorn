@@ -7,9 +7,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -19,25 +21,9 @@ import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.FormSpecs;
 import com.jgoodies.forms.layout.RowSpec;
 
+import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.AbstractCustomFilter;
-import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomFSKFilter;
-import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomFormatFilter;
-import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomGenreFilter;
-import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomLanguageFilter;
-import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomOnlinescoreFilter;
-import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomQualityFilter;
-import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomScoreFilter;
-import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomTagFilter;
-import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomTitleFilter;
-import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomTypFilter;
-import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomViewedFilter;
-import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomYearFilter;
-import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomZyklusFilter;
-import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.operators.CustomAndOperator;
-import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.operators.CustomNandOperator;
-import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.operators.CustomNorOperator;
 import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.operators.CustomOperator;
-import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.operators.CustomOrOperator;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.listener.FinishListener;
@@ -50,8 +36,8 @@ public class CustomOperatorFilterDialog extends CustomFilterDialog implements Fi
 	private JButton btnOk;
 	private JList<String> displayList;
 	private JScrollPane scrollPane;
-	private JComboBox<String> cbxFilter;
-	private JComboBox<String> cbxOperator;
+	private JComboBox<AbstractCustomFilter> cbxFilter;
+	private JComboBox<AbstractCustomFilter> cbxOperator;
 	private JButton btnAddFilter;
 	private JButton btnAddOperator;
 	private JButton btnDelete;
@@ -61,8 +47,11 @@ public class CustomOperatorFilterDialog extends CustomFilterDialog implements Fi
 	private JButton btnExport;
 	private JButton btnImport;
 
-	public CustomOperatorFilterDialog(CustomOperator op, FinishListener fl, Component parent, boolean showExporter) {
+	private final CCMovieList movielist;
+	
+	public CustomOperatorFilterDialog(CCMovieList ml, CustomOperator op, FinishListener fl, Component parent, boolean showExporter) {
 		super(op, fl);
+		movielist = ml;
 		initGUI(showExporter);
 		
 		updateList();
@@ -78,7 +67,7 @@ public class CustomOperatorFilterDialog extends CustomFilterDialog implements Fi
 	private void initGUI(boolean showExporter) {
 		setResizable(true);
 		setMinimumSize(new Dimension(450, 300));
-		setSize(new Dimension(450, 300));
+		setSize(new Dimension(450, 350));
 		
 		pnlMiddle = new JPanel();
 		getContentPane().add(pnlMiddle, BorderLayout.CENTER);
@@ -115,21 +104,17 @@ public class CustomOperatorFilterDialog extends CustomFilterDialog implements Fi
 		scrollPane.setViewportView(displayList);
 		
 		cbxFilter = new JComboBox<>();
-		cbxFilter.setModel(new DefaultComboBoxModel<>(new String[] { 
-				LocaleBundle.getDeformattedString("FilterTree.Custom.CustomFilterNames.Title"), //$NON-NLS-1$
-				LocaleBundle.getDeformattedString("FilterTree.Custom.CustomFilterNames.Format"), //$NON-NLS-1$
-				LocaleBundle.getDeformattedString("FilterTree.Custom.CustomFilterNames.FSK"), //$NON-NLS-1$
-				LocaleBundle.getDeformattedString("FilterTree.Custom.CustomFilterNames.Genre"), //$NON-NLS-1$
-				LocaleBundle.getDeformattedString("FilterTree.Custom.CustomFilterNames.Language"), //$NON-NLS-1$
-				LocaleBundle.getDeformattedString("FilterTree.Custom.CustomFilterNames.Onlinescore"), //$NON-NLS-1$
-				LocaleBundle.getDeformattedString("FilterTree.Custom.CustomFilterNames.Quality"), //$NON-NLS-1$
-				LocaleBundle.getDeformattedString("FilterTree.Custom.CustomFilterNames.Score"), //$NON-NLS-1$
-				LocaleBundle.getDeformattedString("FilterTree.Custom.CustomFilterNames.Tag"), //$NON-NLS-1$
-				LocaleBundle.getDeformattedString("FilterTree.Custom.CustomFilterNames.Typ"), //$NON-NLS-1$
-				LocaleBundle.getDeformattedString("FilterTree.Custom.CustomFilterNames.Viewed"), //$NON-NLS-1$ 
-				LocaleBundle.getDeformattedString("FilterTree.Custom.CustomFilterNames.Year"), //$NON-NLS-1$,
-				LocaleBundle.getDeformattedString("FilterTree.Custom.CustomFilterNames.Zyklus"), //$NON-NLS-1$
-		}));
+		cbxFilter.setModel(new DefaultComboBoxModel<>(AbstractCustomFilter.getAllSimpleFilter()));
+		cbxFilter.setRenderer(new DefaultListCellRenderer() {
+			private static final long serialVersionUID = 1710057818185541683L;
+
+		    @Override
+			public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+		    	JLabel comp = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+		    	comp.setText(((AbstractCustomFilter)value).getPrecreateName());
+		        return comp;
+		    }
+		});
 		pnlMiddle.add(cbxFilter, "4, 2, fill, default"); //$NON-NLS-1$
 		
 		btnAddFilter = new JButton(LocaleBundle.getString("FilterTree.Custom.CustomOperatorFilterDialog.btnAddFilter.text")); //$NON-NLS-1$
@@ -142,12 +127,17 @@ public class CustomOperatorFilterDialog extends CustomFilterDialog implements Fi
 		pnlMiddle.add(btnAddFilter, "4, 4"); //$NON-NLS-1$
 		
 		cbxOperator = new JComboBox<>();
-		cbxOperator.setModel(new DefaultComboBoxModel<>(new String[] {
-				LocaleBundle.getDeformattedString("FilterTree.Custom.CustomFilterNames.OP-AND"), //$NON-NLS-1$
-				LocaleBundle.getDeformattedString("FilterTree.Custom.CustomFilterNames.OP-OR"), //$NON-NLS-1$
-				LocaleBundle.getDeformattedString("FilterTree.Custom.CustomFilterNames.OP-NAND"), //$NON-NLS-1$
-				LocaleBundle.getDeformattedString("FilterTree.Custom.CustomFilterNames.OP-NOR") //$NON-NLS-1$
-		}));
+		cbxOperator.setModel(new DefaultComboBoxModel<>(AbstractCustomFilter.getAllOperatorFilter()));
+		cbxOperator.setRenderer(new DefaultListCellRenderer() {
+			private static final long serialVersionUID = 1710057818185541683L;
+
+		    @Override
+			public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+		    	JLabel comp = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+		    	comp.setText(((AbstractCustomFilter)value).getPrecreateName());
+		        return comp;
+		    }
+		});
 		pnlMiddle.add(cbxOperator, "4, 8, fill, default"); //$NON-NLS-1$
 		
 		btnAddOperator = new JButton(LocaleBundle.getString("FilterTree.Custom.CustomOperatorFilterDialog.btnAddOp.text")); //$NON-NLS-1$
@@ -228,24 +218,9 @@ public class CustomOperatorFilterDialog extends CustomFilterDialog implements Fi
 	}
 
 	private void onAddOperator() {
-		CustomOperator childop = null;
-		
-		switch (cbxOperator.getSelectedIndex()) {
-		case 0:
-			childop = new CustomAndOperator();
-			break;
-		case 1:
-			childop = new CustomOrOperator();
-			break;
-		case 2:
-			childop = new CustomNandOperator();
-			break;
-		case 3:
-			childop = new CustomNorOperator();
-			break;
+		if (cbxOperator.getSelectedIndex() >= 0) {
+			onStartEdit(getFilter().add(((AbstractCustomFilter)cbxOperator.getSelectedItem()).createNew()));
 		}
-		
-		onStartEdit(getFilter().add(childop));
 	}
 	
 	private void onDelete() {
@@ -271,78 +246,14 @@ public class CustomOperatorFilterDialog extends CustomFilterDialog implements Fi
 	private void onStartEdit(AbstractCustomFilter f) {
 		updateList();
 		
-		if (f instanceof CustomTitleFilter) {
-			new CustomTitleFilterDialog((CustomTitleFilter) f, this, this).setVisible(true);
-		} else if (f instanceof CustomOperator) {
-			new CustomOperatorFilterDialog((CustomOperator) f, this, this, false).setVisible(true);
-		}if (f instanceof CustomFormatFilter) {
-			new CustomFormatFilterDialog((CustomFormatFilter) f, this, this).setVisible(true);
-		} else if (f instanceof CustomFSKFilter) {
-			new CustomFSKFilterDialog((CustomFSKFilter) f, this, this).setVisible(true);
-		} else if (f instanceof CustomGenreFilter) {
-			new CustomGenreFilterDialog((CustomGenreFilter) f, this, this).setVisible(true);
-		} else if (f instanceof CustomLanguageFilter) {
-			new CustomLanguageFilterDialog((CustomLanguageFilter) f, this, this).setVisible(true);
-		} else if (f instanceof CustomOnlinescoreFilter) {
-			new CustomOnlinescoreFilterDialog((CustomOnlinescoreFilter) f, this, this).setVisible(true);
-		} else if (f instanceof CustomQualityFilter) {
-			new CustomQualityFilterDialog((CustomQualityFilter) f, this, this).setVisible(true);
-		} else if (f instanceof CustomScoreFilter) {
-			new CustomScoreFilterDialog((CustomScoreFilter) f, this, this).setVisible(true);
-		} else if (f instanceof CustomTagFilter) {
-			new CustomTagFilterDialog((CustomTagFilter) f, this, this).setVisible(true);
-		} else if (f instanceof CustomTypFilter) {
-			new CustomTypFilterDialog((CustomTypFilter) f, this, this).setVisible(true);
-		} else if (f instanceof CustomViewedFilter) {
-			new CustomViewedFilterDialog((CustomViewedFilter) f, this, this).setVisible(true);
-		} else if (f instanceof CustomYearFilter) {
-			new CustomYearFilterDialog((CustomYearFilter) f, this, this).setVisible(true);
-		} else if (f instanceof CustomZyklusFilter) {
-			new CustomZyklusFilterDialog((CustomZyklusFilter) f, this, this).setVisible(true);
+		if (f != null) {
+			f.CreateDialog(this, this, movielist).setVisible(true);
 		}
 	}
 	
 	private void onAddFilter() {
-		switch (cbxFilter.getSelectedIndex()) {
-		case 0: //Title
-			onStartEdit(getFilter().add(new CustomTitleFilter()));
-			break;
-		case 1: //Format
-			onStartEdit(getFilter().add(new CustomFormatFilter()));
-			break;
-		case 2: //FSK
-			onStartEdit(getFilter().add(new CustomFSKFilter()));
-			break;
-		case 3: //Genre
-			onStartEdit(getFilter().add(new CustomGenreFilter()));
-			break;
-		case 4: //Language
-			onStartEdit(getFilter().add(new CustomLanguageFilter()));
-			break;
-		case 5: //Onlinescore
-			onStartEdit(getFilter().add(new CustomOnlinescoreFilter()));
-			break;
-		case 6: //Quality
-			onStartEdit(getFilter().add(new CustomQualityFilter()));
-			break;
-		case 7: //Score
-			onStartEdit(getFilter().add(new CustomScoreFilter()));
-			break;
-		case 8: //Tag
-			onStartEdit(getFilter().add(new CustomTagFilter()));
-			break;
-		case 9: //Typ
-			onStartEdit(getFilter().add(new CustomTypFilter()));
-			break;
-		case 10: //Viewed
-			onStartEdit(getFilter().add(new CustomViewedFilter()));
-			break;
-		case 11: //Year
-			onStartEdit(getFilter().add(new CustomYearFilter()));
-			break;
-		case 12: //Zyklus
-			onStartEdit(getFilter().add(new CustomZyklusFilter()));
-			break;
+		if (cbxFilter.getSelectedIndex() >= 0) {
+			onStartEdit(getFilter().add(((AbstractCustomFilter)cbxFilter.getSelectedItem()).createNew()));
 		}
 	}
 	

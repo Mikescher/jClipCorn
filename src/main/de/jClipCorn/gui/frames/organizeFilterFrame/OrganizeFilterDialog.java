@@ -21,6 +21,7 @@ import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.FormSpecs;
 import com.jgoodies.forms.layout.RowSpec;
 
+import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.gui.CachedResourceLoader;
 import de.jClipCorn.gui.Resources;
 import de.jClipCorn.gui.frames.mainFrame.filterTree.CustomFilterList;
@@ -49,11 +50,14 @@ public class OrganizeFilterDialog extends JDialog {
 	private JButton btnRename;
 	private JButton btnUp;
 	private JButton btnDown;
+	
+	private final CCMovieList movielist;
 
-	public OrganizeFilterDialog(Component owner, CustomFilterList flist, FinishListener okAction) {
+	public OrganizeFilterDialog(CCMovieList ml, Component owner, CustomFilterList flist, FinishListener okAction) {
 		super();
 		this.filterlist = flist;
 		this.action = okAction;
+		this.movielist = ml;
 		
 		setSize(350, 300);
 		
@@ -210,7 +214,7 @@ public class OrganizeFilterDialog extends JDialog {
 		
 		final CustomFilterObject cfo = filterlist.get(sel);
 		
-		new CustomOperatorFilterDialog(cfo.getFilter(), new FinishListener() {
+		new CustomOperatorFilterDialog(movielist, cfo.getFilter(), new FinishListener() {
 			@Override
 			public void finish() {
 				updateList();
@@ -245,7 +249,7 @@ public class OrganizeFilterDialog extends JDialog {
 	private void onActionAdd() {
 		final CustomOperator afilter;
 		
-		new CustomOperatorFilterDialog(afilter = new CustomAndOperator(), new FinishListener() {
+		new CustomOperatorFilterDialog(movielist, afilter = new CustomAndOperator(), new FinishListener() {
 			@Override
 			public void finish() {
 				String name = DialogHelper.showLocalInputDialog(OrganizeFilterDialog.this, "OrganizeFilterDialog.nameDialog.text", "");  //$NON-NLS-1$ //$NON-NLS-2$

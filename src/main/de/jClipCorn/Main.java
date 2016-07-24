@@ -146,7 +146,7 @@ public class Main {
 //   - extended option to hide Wartungs menu from deafult user
 //   - search and extended search for groups
 //   - strange xml parse in addmovframe
-//   - viewed | groups | ref to filter
+// X - viewed | groups | ref to filter
 // X - undo last viewed
 // / - manage groups dialog (add to group, remove from group, delete group)
 //   - measure startup time

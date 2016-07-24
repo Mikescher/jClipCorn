@@ -1,16 +1,20 @@
 package de.jClipCorn.gui.guiComponents.tableFilter.customFilter;
 
+import java.awt.Component;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
 import javax.swing.RowFilter.Entry;
 
+import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.gui.frames.mainFrame.clipTable.ClipTableModel;
+import de.jClipCorn.gui.frames.mainFrame.filterTree.customFilterDialogs.CustomFilterDialog;
 import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.operators.CustomAndOperator;
 import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.operators.CustomNandOperator;
 import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.operators.CustomNorOperator;
 import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.operators.CustomOrOperator;
+import de.jClipCorn.util.listener.FinishListener;
 
 public abstract class AbstractCustomFilter {
 	public final static int CUSTOMFILTERID_AND = 0;
@@ -30,14 +34,21 @@ public abstract class AbstractCustomFilter {
 	public final static int CUSTOMFILTERID_VIEWED = 14;
 	public final static int CUSTOMFILTERID_YEAR = 15;
 	public final static int CUSTOMFILTERID_ZYKLUS = 16;
+	public final static int CUSTOMFILTERID_GROUP = 17;
+	public final static int CUSTOMFILTERID_REFERENCE = 18;
+	public final static int CUSTOMFILTERID_HISTORY = 19;
 	
 	public abstract boolean include(Entry<? extends ClipTableModel, ? extends Object> e);
 	
 	public abstract String getName();
-	
+	public abstract String getPrecreateName();
 	public abstract int getID();
+	
 	public abstract String exportToString();
 	public abstract boolean importFromString(String txt);
+
+	public abstract AbstractCustomFilter createNew();
+	public abstract CustomFilterDialog CreateDialog(FinishListener fl, Component parent, CCMovieList ml);
 	
 	public static String escape(String txt) {
 		StringBuilder builder = new StringBuilder();
@@ -174,9 +185,45 @@ public abstract class AbstractCustomFilter {
 			return new CustomYearFilter();
 		case CUSTOMFILTERID_ZYKLUS:
 			return new CustomZyklusFilter();
+		case CUSTOMFILTERID_GROUP:
+			return new CustomGroupFilter();
+		case CUSTOMFILTERID_REFERENCE:
+			return new CustomReferenceFilter();
+		case CUSTOMFILTERID_HISTORY:
+			return new CustomHistoryFilter();
 		default:
 			return null;
 		}
+	}
+	
+	public static AbstractCustomFilter[] getAllSimpleFilter() {
+		return new AbstractCustomFilter[] { 
+			new CustomTitleFilter(),
+			new CustomFormatFilter(),
+			new CustomFSKFilter(),
+			new CustomGenreFilter(),
+			new CustomLanguageFilter(),
+			new CustomOnlinescoreFilter(),
+			new CustomQualityFilter(),
+			new CustomScoreFilter(),
+			new CustomReferenceFilter(),
+			new CustomTagFilter(),
+			new CustomGroupFilter(),
+			new CustomTypFilter(),
+			new CustomViewedFilter(),
+			new CustomHistoryFilter(),
+			new CustomYearFilter(),
+			new CustomZyklusFilter(),
+		};
+	}
+	
+	public static AbstractCustomFilter[] getAllOperatorFilter() {
+		return new AbstractCustomFilter[] {
+			new CustomAndOperator(),
+			new CustomOrOperator(),
+			new CustomNandOperator(),
+			new CustomNorOperator(),
+		};
 	}
 	
 	public static AbstractCustomFilter createFilterFromExport(String txt) {

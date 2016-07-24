@@ -4,7 +4,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
@@ -29,6 +31,8 @@ public class PathFormatter {
 		'0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
 		' ', '!', '#', '&', '\'', '(', ')', '+', ',', '-', '.', ';', '=', '@', '[', ']', '^', '_', '`', '{', '}', 'ß'
 	));
+	
+	private final static Map<Character, Character> FILENAME_CHAR_MAPPING = createMappingMap();
 	
 	private final static ArrayList<Character> INVALID_PATH_CHARS_SERIALIZED = new ArrayList<>(Arrays.asList('\\', '"', '<', '>', '?', '*', '|'));
 	private final static ArrayList<Character> INVALID_PATH_CHARS_SYSTEM     = new ArrayList<>(Arrays.asList('"', '<', '>', '?', '*', '|'));
@@ -56,6 +60,34 @@ public class PathFormatter {
 		}
 //		Funny old way: 
 //		return new File(new PathFormatter().getClass().getProtectionDomain().getCodeSource().getLocation().getPath()).getParent().replace("%20", " ");  //$NON-NLS-1$ //$NON-NLS-2$
+	}
+
+	private static Map<Character, Character> createMappingMap() {
+		Map<Character, Character> map = new HashMap<>();
+		
+		map.put('Á', 'A');
+		map.put('á', 'a');
+		
+		map.put('Ç', 'C');
+		map.put('Č', 'C');
+		map.put('ç', 'c');
+		map.put('č', 'c');
+		
+		map.put('È', 'E');
+		map.put('è', 'e');
+		
+		map.put('Ø', 'O');
+		map.put('Ó', 'O');
+		map.put('ø', 'o');
+		map.put('ó', 'o');
+		
+		map.put('Š', 'S');
+		map.put('š', 's');
+		
+		map.put('Ž', 'Z');
+		map.put('ž', 'z');
+
+		return map;
 	}
 
 	public static String getAbsoluteSelfDirectory() {
@@ -181,6 +213,8 @@ public class PathFormatter {
 		for (int i = 0; i < fn.length(); i++) {
 			if (VALID_FILENAME_CHARS.contains(fn.charAt(i))) {
 				fnbuilder.append(fn.charAt(i));
+			} else if (FILENAME_CHAR_MAPPING.containsKey(fn.charAt(i))) {
+				fnbuilder.append(FILENAME_CHAR_MAPPING.get(fn.charAt(i)));
 			}
 		}
 		

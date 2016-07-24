@@ -137,14 +137,14 @@ public class Main {
 // X - add db err (ser) has history
 // X - auto find imdb for non ref movies/series (TMDB FIRST !)
 //   - dialog show unreffed movies
-//   - add groups to (both?) search
-//   - serialize groups/refs/viewed-history
+// X - add groups to (both?) search
+// X - serialize groups/refs/viewed-history
 //   - AddMovieFrame.parseFromXML --> wtf? (auch für ser)
 // X - statistics online reference provider
 // X - add db error invalid online ref
 //   - make it configurable which metadata-provider and which image-provider to use (new property type FlagList->CheckBoxList)
 //   - extended option to hide Wartungs menu from deafult user
-//   - search and extended search for groups
+// X - search and extended search for groups
 //   - strange xml parse in addmovframe
 // X - viewed | groups | ref to filter
 // X - undo last viewed

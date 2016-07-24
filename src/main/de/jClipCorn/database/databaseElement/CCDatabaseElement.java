@@ -311,7 +311,7 @@ public abstract class CCDatabaseElement {
 	 * @throws CCFormatException  
 	 */
 	@SuppressWarnings("nls")
-	public void parseFromXML(Element e, boolean resetAddDate, boolean resetViewed, boolean resetScore, boolean resetTags) throws CCFormatException {
+	public void parseFromXML(Element e, boolean resetAddDate, boolean resetViewed, boolean resetScore, boolean resetTags, boolean ignoreCoverData) throws CCFormatException {
 		if (e.getAttributeValue("title") != null)
 			setTitle(e.getAttributeValue("title"));
 		
@@ -336,7 +336,7 @@ public abstract class CCDatabaseElement {
 		if (e.getAttributeValue("covername") != null)
 			setCover(e.getAttributeValue("covername"));
 		
-		if (e.getAttributeValue("coverdata") != null) {
+		if (!ignoreCoverData && e.getAttributeValue("coverdata") != null) {
 			setCover(""); //Damit er nicht probiert was zu löschen
 			setCover(ImageUtilities.byteArrayToImage(ByteUtilies.hexStringToByteArray(e.getAttributeValue("coverdata"))));
 		}

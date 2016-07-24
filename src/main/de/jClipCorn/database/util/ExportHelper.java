@@ -256,10 +256,10 @@ public class ExportHelper {
 			for (Element e : root.getChildren()) {
 				if (e.getName().equals("movie")) { //$NON-NLS-1$
 					CCMovie mov = movielist.createNewEmptyMovie();
-					mov.parseFromXML(e, false, false, false, false);
+					mov.parseFromXML(e, false, false, false, false, false);
 				} else if (e.getName().equals("series")) { //$NON-NLS-1$
 					CCSeries ser = movielist.createNewEmptySeries();
-					ser.parseFromXML(e, false, false, false, false);
+					ser.parseFromXML(e, false, false, false, false, false);
 				}
 			}
 		} catch (Exception e) {
@@ -336,10 +336,10 @@ public class ExportHelper {
 		if (value != null) {
 			if (value.getName().equalsIgnoreCase("movie")) {  //$NON-NLS-1$
 				CCMovie mov = movielist.createNewEmptyMovie();
-				mov.parseFromXML(value, resetAddDate, resetViewed, resetScore, resetTags);
+				mov.parseFromXML(value, resetAddDate, resetViewed, resetScore, resetTags, false);
 			} else if (value.getName().equalsIgnoreCase("series")) { //$NON-NLS-1$
 				CCSeries ser = movielist.createNewEmptySeries();
-				ser.parseFromXML(value, resetAddDate, resetViewed, resetScore, resetTags);
+				ser.parseFromXML(value, resetAddDate, resetViewed, resetScore, resetTags, false);
 			}
 		}
 	}

@@ -332,7 +332,7 @@ public class ImportElementsFrame extends JFrame {
 	private void onAddMovie(Element value, int index) throws CCFormatException {
 		CCMovie mov = movielist.createNewEmptyMovie();
 		
-		mov.parseFromXML(value, chckbxResetDate.isSelected(), chcbxResetViewed.isSelected(), chcbxResetScore.isSelected(), chckbxResetTags.isSelected());
+		mov.parseFromXML(value, chckbxResetDate.isSelected(), chcbxResetViewed.isSelected(), chcbxResetScore.isSelected(), chckbxResetTags.isSelected(), false);
 		
 		listModel.remove(index);
 	}
@@ -340,7 +340,7 @@ public class ImportElementsFrame extends JFrame {
 	private void onAddSeries(Element value, int index) throws CCFormatException {
 		CCSeries ser = movielist.createNewEmptySeries();
 		
-		ser.parseFromXML(value, chckbxResetDate.isSelected(), chcbxResetViewed.isSelected(), chcbxResetScore.isSelected(), chckbxResetTags.isSelected());
+		ser.parseFromXML(value, chckbxResetDate.isSelected(), chcbxResetViewed.isSelected(), chcbxResetScore.isSelected(), chckbxResetTags.isSelected(), false);
 		
 		listModel.remove(index);
 	}

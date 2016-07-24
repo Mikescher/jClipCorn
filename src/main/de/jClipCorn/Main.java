@@ -15,7 +15,7 @@ import de.jClipCorn.util.helper.LookAndFeelManager;
 
 public class Main {
 	public final static String TITLE = "jClipCorn"; //$NON-NLS-1$
-	public final static String VERSION = "1.9.10";	//$NON-NLS-1$
+	public final static String VERSION = "1.10.0";	//$NON-NLS-1$
 	public final static String DBVERSION = "1.8"; 	//$NON-NLS-1$
 	
 	private final static String PROPERTIES_PATH = "jClipcorn.properties"; //$NON-NLS-1$
@@ -34,7 +34,7 @@ public class Main {
 
 		LookAndFeelManager.setLookAndFeel(CCProperties.getInstance().PROP_UI_LOOKANDFEEL.getValue());
 
-		final CCMovieList mList = new CCMovieList();
+		final CCMovieList mList = CCMovieList.create();
 		
 		init();
 		
@@ -119,7 +119,7 @@ public class Main {
 //   - Get Viewed Values from backups
 //   - show cover in HD (right click in coverpanel + series cover control + cbl click coverpanel)                                             
 //   - mass reverse image search for better cover versions (more HD)                                                                          
-//   - generate filename strip down chars (á -> a, ê -> e, etc)                                                                               
+// X - generate filename strip down chars (á -> a, ê -> e, etc)                                                                               
 //   - Format/Quality etc also for Serien (everything for a;b;a+b with toggle control?  ->  only were applicable)                             
 //   - combined timeline row                                                                                                                  
 //   - db_err: find series with non-continoous episode numbers                                                                                
@@ -145,7 +145,7 @@ public class Main {
 //   - make it configurable which metadata-provider and which image-provider to use (new property type FlagList->CheckBoxList)
 //   - extended option to hide Wartungs menu from deafult user
 // X - search and extended search for groups
-//   - strange xml parse in addmovframe
+// X - strange xml parse in addmovframe
 // X - viewed | groups | ref to filter
 // X - undo last viewed
 // / - manage groups dialog (add to group, remove from group, delete group)

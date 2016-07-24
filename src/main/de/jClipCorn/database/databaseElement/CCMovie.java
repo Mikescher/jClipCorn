@@ -391,10 +391,10 @@ public class CCMovie extends CCDatabaseElement {
 	
 	@Override
 	@SuppressWarnings("nls")
-	public void parseFromXML(Element e, boolean resetAddDate, boolean resetViewed, boolean resetScore, boolean resetTags) throws CCFormatException {
+	public void parseFromXML(Element e, boolean resetAddDate, boolean resetViewed, boolean resetScore, boolean resetTags, boolean ignoreCoverData) throws CCFormatException {
 		beginUpdating();
 		
-		super.parseFromXML(e, resetAddDate, resetViewed, resetScore, resetTags);
+		super.parseFromXML(e, resetAddDate, resetViewed, resetScore, resetTags, ignoreCoverData);
 		
 		if (e.getAttributeValue("adddate") != null) {
 			setAddDate(CCDate.parse(e.getAttributeValue("adddate"), CCDate.STRINGREP_DESERIALIZE));

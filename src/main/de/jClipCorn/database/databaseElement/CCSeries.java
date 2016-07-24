@@ -392,10 +392,10 @@ public class CCSeries extends CCDatabaseElement {
 	
 	@Override
 	@SuppressWarnings("nls")
-	public void parseFromXML(Element e, boolean resetAddDate, boolean resetViewed, boolean resetScore, boolean resetTags) throws CCFormatException {
+	public void parseFromXML(Element e, boolean resetAddDate, boolean resetViewed, boolean resetScore, boolean resetTags, boolean ignoreCoverData) throws CCFormatException {
 		beginUpdating();
 		
-		super.parseFromXML(e, resetAddDate, resetViewed, resetScore, resetTags);
+		super.parseFromXML(e, resetAddDate, resetViewed, resetScore, resetTags, ignoreCoverData);
 		
 		for (Element e2 : e.getChildren("season")) {
 			createNewEmptySeason().parseFromXML(e2, resetAddDate, resetViewed, resetTags);

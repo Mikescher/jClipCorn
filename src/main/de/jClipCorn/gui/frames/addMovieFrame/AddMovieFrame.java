@@ -34,6 +34,7 @@ import org.jdom2.Element;
 
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCMovie;
+import de.jClipCorn.database.databaseElement.columnTypes.CCDateTimeList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGroupList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFSK;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFormat;
@@ -51,6 +52,7 @@ import de.jClipCorn.gui.frames.inputErrorFrame.InputErrorDialog;
 import de.jClipCorn.gui.frames.parseOnlineFrame.ParseOnlineDialog;
 import de.jClipCorn.gui.guiComponents.ReadableTextField;
 import de.jClipCorn.gui.guiComponents.editCoverControl.EditCoverControl;
+import de.jClipCorn.gui.guiComponents.groupListEditor.GroupListEditor;
 import de.jClipCorn.gui.guiComponents.jCCDateSpinner.JCCDateSpinner;
 import de.jClipCorn.gui.guiComponents.referenceChooser.JReferenceChooser;
 import de.jClipCorn.gui.localization.LocaleBundle;
@@ -60,15 +62,12 @@ import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.exceptions.CCFormatException;
 import de.jClipCorn.util.formatter.FileSizeFormatter;
 import de.jClipCorn.util.formatter.PathFormatter;
-import de.jClipCorn.util.helper.ByteUtilies;
 import de.jClipCorn.util.helper.FileChooserHelper;
-import de.jClipCorn.util.helper.ImageUtilities;
 import de.jClipCorn.util.parser.FilenameParser;
 import de.jClipCorn.util.parser.FilenameParserResult;
 import de.jClipCorn.util.parser.onlineparser.ParseResultHandler;
 import de.jClipCorn.util.userdataProblem.UserDataProblem;
 import de.jClipCorn.util.userdataProblem.UserDataProblemHandler;
-import de.jClipCorn.gui.guiComponents.groupListEditor.GroupListEditor;
 
 public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDataProblemHandler {
 	private static final long serialVersionUID = -5912378114066741528L;
@@ -78,6 +77,9 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 	private final JFileChooser videoFileChooser;
 	
 	private CCMovieList movieList;
+	
+	private Boolean forceViewed = null;
+	private CCDateTimeList forceViewedHistory = null;
 	
 	private JPanel contentPane;
 	private ReadableTextField ed_Part0;
@@ -657,83 +659,48 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		lblGroups.setBounds(12, 338, 71, 16);
 		contentPane.add(lblGroups);
 		
-		edGroups = new GroupListEditor((CCMovieList) null);
+		edGroups = new GroupListEditor(movieList);
 		edGroups.setEnabled(false);
 		edGroups.setBounds(95, 337, 212, 20);
 		contentPane.add(edGroups);
 	}
 	
-	@SuppressWarnings("nls")
 	public void parseFromXML(Element e, boolean resetAddDate, boolean resetViewed, boolean resetScore) throws CCFormatException {
-		if (e.getAttributeValue("adddate") != null) {
-			spnAddDate.setValue(CCDate.parse(e.getAttributeValue("adddate"), CCDate.STRINGREP_DESERIALIZE));
-		}
+		CCMovie tmpMov = new CCMovie(CCMovieList.createStub(), -1);
+		tmpMov.parseFromXML(e, resetAddDate, resetViewed, resetScore, false, true);
 		
-		if (resetAddDate) {
-			spnAddDate.setValue(CCDate.getCurrentDate());
-		}
+		if (!tmpMov.getAddDate().isMinimum() && !resetAddDate)
+			spnAddDate.setValue(tmpMov.getAddDate());
 		
-		if (e.getAttributeValue("filesize") != null)
-			setFilesize(Long.parseLong(e.getAttributeValue("filesize")));
-		
-		if (e.getAttributeValue("format") != null)
-			cbxFormat.setSelectedIndex(Integer.parseInt(e.getAttributeValue("format")));
-		
-		if (e.getAttributeValue("length") != null)
-			setLength(Integer.parseInt(e.getAttributeValue("length")));
-		
+		setFilesize(tmpMov.getFilesize().getBytes());
+		setMovieFormat(tmpMov.getFormat());
+		setQuality(tmpMov.getQuality());
+		setLength(tmpMov.getLength());
+
 		for (int i = 0; i < CCMovie.PARTCOUNT_MAX; i++) {
-			if (e.getAttributeValue("part_"+i) != null)
-				setDirectFilepath(i, e.getAttributeValue("part_"+i));
+			if (!tmpMov.getPart(i).isEmpty())
+				setDirectFilepath(i, tmpMov.getPart(i));
 		}
 		
-		if (e.getAttributeValue("quality") != null)
-			setQuality(CCMovieQuality.find(Integer.parseInt(e.getAttributeValue("quality"))));
+		forceViewed = tmpMov.isViewed();
+		forceViewedHistory = tmpMov.getViewedHistory();
 		
-		/* TODO
-		if (e.getAttributeValue("viewed") != null)
-			cbxViewed.setSelected(e.getAttributeValue("viewed").equals(true + ""));
+		setYear(tmpMov.getYear());
+		setZyklus(tmpMov.getZyklus().getTitle());
+		setZyklusNumber(tmpMov.getZyklus().getNumber());
+		setTitle(tmpMov.getTitle());
+		setOnlineReference(tmpMov.getOnlineReference());
+		setGroups(tmpMov.getGroups());
+		setScore(tmpMov.getOnlinescore().asInt());
+		setMovieLanguage(tmpMov.getLanguage());
+		setFSK(tmpMov.getFSK().asInt());
+
+		if (! resetScore)
+			cbxScore.setSelectedIndex(tmpMov.getScore().asInt());
 		
-		if (resetViewed)
-			cbxViewed.setSelected(false);
-		*/
-		
-		if (e.getAttributeValue("year") != null)
-			setYear(Integer.parseInt(e.getAttributeValue("year")));
-		
-		if (e.getAttributeValue("zyklus") != null)
-			setZyklus(e.getAttributeValue("zyklus"));
-		
-		if (e.getAttributeValue("zyklusnumber") != null)
-			setZyklusNumber(Integer.parseInt(e.getAttributeValue("zyklusnumber")));
-		
-		if (e.getAttributeValue("coverdata") != null)
-			setCover(ImageUtilities.byteArrayToImage(ByteUtilies.hexStringToByteArray(e.getAttributeValue("coverdata"))));
-		
-		if (e.getAttributeValue("title") != null)
-			edTitle.setText(e.getAttributeValue("title"));
-		
-		if (e.getAttributeValue("language") != null)
-			cbxLanguage.setSelectedIndex(Integer.parseInt(e.getAttributeValue("language")));
-		
-		if (e.getAttributeValue("genres") != null) {
-			CCMovieGenreList mgl = new CCMovieGenreList(Long.parseLong(e.getAttributeValue("genres")));
-			for (int i = 0; i < CCMovieGenreList.getMaxListSize(); i++) {
-				setGenre(i, mgl.getGenre(i).asInt());
-			}
+		for (int i = 0; i < CCMovieGenreList.getMaxListSize(); i++) {
+			setGenre(i, tmpMov.getGenre(i).asInt());
 		}
-		
-		if (e.getAttributeValue("onlinescore") != null)
-			setScore(Integer.parseInt(e.getAttributeValue("onlinescore"))); // Yap, stimmt. seScore setzt den Onlinescore
-		
-		if (e.getAttributeValue("fsk") != null)
-			setFSK(Integer.parseInt(e.getAttributeValue("fsk")));
-		
-		if (e.getAttributeValue("score") != null)
-			cbxScore.setSelectedIndex(Integer.parseInt(e.getAttributeValue("score")));
-		
-		if (resetScore)
-			cbxScore.setSelectedIndex(cbxScore.getModel().getSize() - 1);
 		
 		setEnabledAll(true);
 		firstChooseClick = false;
@@ -765,6 +732,10 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		newM.beginUpdating();
 		
 		//#####################################################################################
+		
+		if (forceViewed != null) newM.setViewed(forceViewed);
+		
+		if (forceViewedHistory != null) newM.setViewedHistory(forceViewedHistory);
 		
 		newM.setPart(0, ed_Part0.getText());
 		newM.setPart(1, ed_Part1.getText());
@@ -806,7 +777,6 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		newM.setGroups(edGroups.getValue());
 
 		newM.setCover(edCvrControl.getResizedImage());
-		
 		
 		newM.endUpdating();
 		
@@ -1172,6 +1142,10 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 	@Override
 	public void setOnlineReference(CCOnlineReference ref) {
 		edReference.setValue(ref);
+	}
+	
+	public void setGroups(CCGroupList gl) {
+		edGroups.setValue(gl);
 	}
 	
 	public boolean checkUserData(List<UserDataProblem> ret) { 

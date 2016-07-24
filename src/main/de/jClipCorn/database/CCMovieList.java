@@ -60,14 +60,32 @@ public class CCMovieList {
 	
 	private boolean blocked = false;
 
-	public CCMovieList() {
-		this.database = null;
-		this.list = new Vector<>();
-		this.listener = new Vector<>();
+	private CCMovieList(boolean stub) {
+		if (stub) {
+			this.database = null;
+			this.list = new Vector<>();
+			this.listener = new Vector<>();
 
-		database = new CCDatabase();
-		
-		instance = this;
+			database = CCDatabase.createStub();
+			
+			instance = this;
+		} else {
+			this.database = null;
+			this.list = new Vector<>();
+			this.listener = new Vector<>();
+
+			database = CCDatabase.create();
+			
+			instance = this;
+		}
+	}
+	
+	public static CCMovieList create() {
+		return new CCMovieList(false);
+	}
+	
+	public static CCMovieList createStub() {
+		return new CCMovieList(true);
 	}
 
 	public void showInitialWizard() {
@@ -78,7 +96,7 @@ public class CCMovieList {
 				ApplicationHelper.exitApplication(0);
 			}
 
-			database = new CCDatabase(); // in case db type has changed
+			database = CCDatabase.create(); // in case db type has changed
 		}
 	}
 	

@@ -25,16 +25,16 @@ public class SerTableModel extends AbstractTableModel implements TableModelRowCo
 	public final static int COLUMN_SIZE = 9;
 	
 	private String[] COLUMN_NAMES = { 
-			LocaleBundle.getString("PreviewSeriesFrame.serTable.Episode"), //$NON-NLS-1$
-			LocaleBundle.getString("PreviewSeriesFrame.serTable.Name"), //$NON-NLS-1$
-			"", //$NON-NLS-1$
-			"_ERROR_", //$NON-NLS-1$
-			LocaleBundle.getString("PreviewSeriesFrame.serTable.Quality"), //$NON-NLS-1$
-			LocaleBundle.getString("PreviewSeriesFrame.serTable.Length"), //$NON-NLS-1$
-			LocaleBundle.getString("PreviewSeriesFrame.serTable.Tags"), //$NON-NLS-1$
-			LocaleBundle.getString("PreviewSeriesFrame.serTable.Added"), //$NON-NLS-1$
-			LocaleBundle.getString("PreviewSeriesFrame.serTable.Format"), //$NON-NLS-1$
-			LocaleBundle.getString("PreviewSeriesFrame.serTable.Size"), //$NON-NLS-1$
+		LocaleBundle.getString("PreviewSeriesFrame.serTable.Episode"), //$NON-NLS-1$
+		LocaleBundle.getString("PreviewSeriesFrame.serTable.Name"), //$NON-NLS-1$
+		"", //$NON-NLS-1$
+		"_ERROR_", //$NON-NLS-1$
+		LocaleBundle.getString("PreviewSeriesFrame.serTable.Quality"), //$NON-NLS-1$
+		LocaleBundle.getString("PreviewSeriesFrame.serTable.Length"), //$NON-NLS-1$
+		LocaleBundle.getString("PreviewSeriesFrame.serTable.Tags"), //$NON-NLS-1$
+		LocaleBundle.getString("PreviewSeriesFrame.serTable.Added"), //$NON-NLS-1$
+		LocaleBundle.getString("PreviewSeriesFrame.serTable.Format"), //$NON-NLS-1$
+		LocaleBundle.getString("PreviewSeriesFrame.serTable.Size"), //$NON-NLS-1$
 	};
 
 	private CCSeason season;
@@ -43,15 +43,15 @@ public class SerTableModel extends AbstractTableModel implements TableModelRowCo
 		super();
 		this.season = sea;
 		
-		switch (CCProperties.getInstance().PROP_SERIES_ADDDATECALCULATION.getValue()) {
+		switch (CCProperties.getInstance().PROP_SERIES_DISPLAYED_DATE.getValue()) {
 		case 0:
-			COLUMN_NAMES[3] = LocaleBundle.getString("CCProperties.SeriesDisplayDate.Opt0"); //$NON-NLS-1$
+			COLUMN_NAMES[3] = LocaleBundle.getString("PreviewSeriesFrame.serTable.ViewedHistory_1"); //$NON-NLS-1$
 			break;
 		case 1:
-			COLUMN_NAMES[3] = LocaleBundle.getString("CCProperties.SeriesDisplayDate.Opt1"); //$NON-NLS-1$
+			COLUMN_NAMES[3] = LocaleBundle.getString("PreviewSeriesFrame.serTable.ViewedHistory_2"); //$NON-NLS-1$
 			break;
 		case 2:
-			COLUMN_NAMES[3] = LocaleBundle.getString("CCProperties.SeriesDisplayDate.Opt2"); //$NON-NLS-1$
+			COLUMN_NAMES[3] = LocaleBundle.getString("PreviewSeriesFrame.serTable.ViewedHistory_3"); //$NON-NLS-1$
 			break;
 		}
 	}

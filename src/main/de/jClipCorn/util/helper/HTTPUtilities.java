@@ -25,11 +25,71 @@ import com.gargoylesoftware.htmlunit.html.HtmlPage;
 
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
+import de.jClipCorn.util.exceptions.HTTPErrorCodeException;
 
 @SuppressWarnings("nls")
 public class HTTPUtilities {
+	private final static int HTTP_TOO_MANY_REQUESTS = 429;
+	
 	private final static int MAX_CONNECTION_TRY = 6;
+	private final static int MAX_RATELIMIT_TIME = 10*1000;
 
+	public static String getRateLimitedHTML(String urlToRead, boolean stripLineBreaks, boolean followRedirects) {
+		if (urlToRead.isEmpty()) {
+			return "";
+		}
+		
+		int reconnects = 0;
+		int delaySum = 0;
+		int nextDelay = 750;
+
+		try {
+			URL url = new URL(urlToRead);
+
+			while (true) {
+				try {
+					return getUncaughtHTML(url, stripLineBreaks, followRedirects);
+				} catch (HTTPErrorCodeException e) {
+					if (e.Errorcode == HTTP_TOO_MANY_REQUESTS)
+					{
+						reconnects++;
+
+						delaySum += nextDelay;
+						
+						if (delaySum > MAX_RATELIMIT_TIME) {
+							CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CouldNotGetHTML", urlToRead), e);
+							return "";
+						}
+						
+						try { 
+							Thread.sleep(nextDelay); 
+						} catch (InterruptedException x) { 
+							//NOP 
+						}
+						
+						nextDelay *= 2;
+					} else {
+						reconnects++;
+						if (reconnects >= MAX_CONNECTION_TRY) {
+							CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CouldNotGetHTML", urlToRead), e);
+							return "";
+						}
+					}
+				} catch (IOException e) {
+					reconnects++;
+					if (reconnects >= MAX_CONNECTION_TRY) {
+						CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CouldNotGetHTML", urlToRead), e);
+						return "";
+					}
+				}
+			}
+
+		} catch (MalformedURLException e) {
+			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CouldNotGetHTML", urlToRead), e);
+			return "";
+		}
+	}
+	
 	public static String getHTML(String urlToRead, boolean stripLineBreaks, boolean followRedirects) {
 		if (urlToRead.isEmpty()) {
 			return "";
@@ -41,7 +101,7 @@ public class HTTPUtilities {
 			for (int i = 0; i < MAX_CONNECTION_TRY; i++) {
 				try {
 					return getUncaughtHTML(url, stripLineBreaks, followRedirects);
-				} catch (IOException e) {
+				} catch (IOException | HTTPErrorCodeException e) {
 					if ((i + 1) == MAX_CONNECTION_TRY) {
 						CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CouldNotGetHTML", urlToRead), e);
 					}
@@ -55,7 +115,7 @@ public class HTTPUtilities {
 		return "";
 	}
 
-	private static String getUncaughtHTML(URL url, boolean stripLineBreaks, boolean followRedirects) throws IOException {
+	private static String getUncaughtHTML(URL url, boolean stripLineBreaks, boolean followRedirects) throws IOException, HTTPErrorCodeException {
 		HttpURLConnection conn = null;
 		BufferedReader rd = null;
 		String line;
@@ -75,6 +135,10 @@ public class HTTPUtilities {
 			case HttpURLConnection.HTTP_MOVED_PERM:
 			case HttpURLConnection.HTTP_MOVED_TEMP:
 				return getUncaughtHTML(new URL(url, conn.getHeaderField("location")), stripLineBreaks, followRedirects);
+			case HTTP_TOO_MANY_REQUESTS:
+			case HttpURLConnection.HTTP_NOT_FOUND:
+			case HttpURLConnection.HTTP_FORBIDDEN:
+				throw new HTTPErrorCodeException(conn.getResponseCode());
 			}
 
 			rd = new BufferedReader(new InputStreamReader(conn.getInputStream(), encoding));

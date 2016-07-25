@@ -58,7 +58,7 @@ public class TMDBParser {
 		if (year > 0)
 			url += "&year="+year;
 		
-		String json = HTTPUtilities.getHTML(url, false, false);
+		String json = HTTPUtilities.getRateLimitedHTML(url, false, false);
 		try {
 			JSONObject root = new JSONObject(new JSONTokener(json));
 			
@@ -91,7 +91,7 @@ public class TMDBParser {
 		if (year > 0)
 			url += "&year="+year;
 		
-		String json = HTTPUtilities.getHTML(url, false, false);
+		String json = HTTPUtilities.getRateLimitedHTML(url, false, false);
 		try {
 			JSONObject root = new JSONObject(new JSONTokener(json));
 			
@@ -124,7 +124,7 @@ public class TMDBParser {
 		if (year > 0)
 			url += "&year="+year;
 		
-		String json = HTTPUtilities.getHTML(url, false, false);
+		String json = HTTPUtilities.getRateLimitedHTML(url, false, false);
 		try {
 			JSONObject root = new JSONObject(new JSONTokener(json));
 			
@@ -156,7 +156,7 @@ public class TMDBParser {
 	public static TMDBFullResult getMetadata(String id) {
 		String url = URL_BASE + id + "?api_key=" + API_KEY;
 		
-		String json = HTTPUtilities.getHTML(url, false, false);
+		String json = HTTPUtilities.getRateLimitedHTML(url, false, false);
 		try {
 			TMDBFullResult result = new TMDBFullResult();
 			
@@ -225,7 +225,7 @@ public class TMDBParser {
 	public static List<String> findCovers(CCOnlineReference ref) {
 		String url = URL_BASE + ref.id + URL_SEARCHCOVER + "?api_key=" + API_KEY;
 		
-		String json = HTTPUtilities.getHTML(url, false, false);
+		String json = HTTPUtilities.getRateLimitedHTML(url, false, false);
 		try {
 			JSONObject root = new JSONObject(new JSONTokener(json));
 

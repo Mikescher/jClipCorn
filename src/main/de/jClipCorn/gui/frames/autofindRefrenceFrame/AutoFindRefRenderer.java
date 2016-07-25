@@ -18,7 +18,7 @@ public class AutoFindRefRenderer extends DefaultListCellRenderer {
 		
 		lbl.setText(element.local.getTitle());
 		
-		if (element.onlineRef.isSet())
+		if (element.tmdbRef.isSet())
 			lbl.setBackground(Color.GREEN);
 		else
 			lbl.setBackground(Color.RED);

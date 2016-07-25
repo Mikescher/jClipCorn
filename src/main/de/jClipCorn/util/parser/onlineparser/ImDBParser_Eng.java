@@ -19,6 +19,7 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFSK;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieGenre;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieGenreList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTyp;
+import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReference;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.util.datatypes.DoubleString;
@@ -72,6 +73,10 @@ public class ImDBParser_Eng {
 		default:
 			return null;
 		}
+	}
+	
+	public static String getURL(CCOnlineReference ref) {
+		return BASE_URL + "/title/" + ref.id;
 	}
 	
 	public static List<DoubleString> extractImDBLinks(String html) {

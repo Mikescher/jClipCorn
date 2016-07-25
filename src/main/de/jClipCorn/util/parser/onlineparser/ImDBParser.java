@@ -9,13 +9,69 @@ import java.util.regex.Pattern;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFSK;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieGenreList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTyp;
+import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReference;
+import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.datatypes.DoubleString;
+import de.jClipCorn.util.helper.HTTPUtilities;
 
 public class ImDBParser {
 	public final static ImDBLanguage LANGUAGE = ImDBLanguage.find(CCProperties.getInstance().PROP_PARSEIMDB_LANGUAGE.getValue());
 	
 	private final static Pattern REGEX_IMDB_ID = Pattern.compile("^.*imdb\\.com/[a-z]+/(tt[0-9]+)(/.*)?$", Pattern.CASE_INSENSITIVE); //$NON-NLS-1$
+	
+	public static class IMDBLimitedResult {
+		public CCOnlineReference Reference;
+		public String Title;
+		public int Year;
+		public BufferedImage Cover;
+	}
+	
+	public static IMDBLimitedResult getMetadata(CCOnlineReference ref) {
+		try {
+			String url = getURL(ref);
+
+			String html = HTTPUtilities.getHTML(url, true, true);
+			
+			if (html.trim().isEmpty()) return null;
+			
+			IMDBLimitedResult r = new IMDBLimitedResult();
+			r.Reference = ref;
+			r.Title = ImDBParser.getTitle(html);
+			r.Year  = ImDBParser.getYear(html);
+			r.Cover = ImDBParser.getCover(html);
+			
+			return r;
+		} catch (Exception e) {
+			CCLog.addError(e);
+			return null;
+		}
+	}
+
+	public static CCOnlineReference getFirstResultReference(String title, boolean isSeries) {
+		String url = ImDBParser.getSearchURL(title, isSeries ? CCMovieTyp.SERIES : CCMovieTyp.MOVIE);
+		String html = HTTPUtilities.getHTML(url, true, true);
+		final List<DoubleString> res = ImDBParser.extractImDBLinks(html);
+		
+		if (res.isEmpty()) return CCOnlineReference.createNone();
+		
+		String oid = extractOnlineID(res.get(0).get1());
+		
+		if (oid == null) return CCOnlineReference.createNone();
+		
+		return CCOnlineReference.createIMDB(oid);
+	}
+	
+	public static String getURL(CCOnlineReference ref) {
+		switch (LANGUAGE) {
+		case GERMAN:
+			return ImDBParser_Ger.getURL(ref);
+		case ENGLISH:
+			return ImDBParser_Eng.getURL(ref);
+		default:
+			return null;
+		}
+	}
 	
 	public static String getSearchURL(String title, CCMovieTyp typ) {
 		switch (LANGUAGE) {

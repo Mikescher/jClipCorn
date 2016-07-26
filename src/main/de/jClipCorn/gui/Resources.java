@@ -211,18 +211,30 @@ public class Resources {
 	public final static String ICN_REF_0_SMALL			= registerICN("/icons/onlineReferences/ref0_16x16.png");
 	public final static String ICN_REF_0_BIG			= registerICN("/icons/onlineReferences/ref0.png");
 	public final static String ICN_REF_0_BUTTON			= registerICN("/icons/onlineReferences/ref0_large.png");
+	
 	public final static String ICN_REF_1_SMALL			= registerICN("/icons/onlineReferences/ref1_16x16.png");
 	public final static String ICN_REF_1_BIG			= registerICN("/icons/onlineReferences/ref1.png");
 	public final static String ICN_REF_1_BUTTON			= registerICN("/icons/onlineReferences/ref1_large.png");
+	
 	public final static String ICN_REF_2_SMALL			= registerICN("/icons/onlineReferences/ref2_16x16.png");
 	public final static String ICN_REF_2_BIG			= registerICN("/icons/onlineReferences/ref2.png");
 	public final static String ICN_REF_2_BUTTON			= registerICN("/icons/onlineReferences/ref2_large.png");
+	
 	public final static String ICN_REF_3_SMALL			= registerICN("/icons/onlineReferences/ref3_16x16.png");
 	public final static String ICN_REF_3_BIG			= registerICN("/icons/onlineReferences/ref3.png");
 	public final static String ICN_REF_3_BUTTON			= registerICN("/icons/onlineReferences/ref3_large.png");
+	
 	public final static String ICN_REF_4_SMALL			= registerICN("/icons/onlineReferences/ref4_16x16.png");
 	public final static String ICN_REF_4_BIG			= registerICN("/icons/onlineReferences/ref4.png");
 	public final static String ICN_REF_4_BUTTON			= registerICN("/icons/onlineReferences/ref4_large.png");
+	
+	public final static String ICN_REF_5_SMALL			= registerICN("/icons/onlineReferences/ref5_16x16.png");
+	public final static String ICN_REF_5_BIG			= registerICN("/icons/onlineReferences/ref5.png");
+	public final static String ICN_REF_5_BUTTON			= registerICN("/icons/onlineReferences/ref5_large.png");
+	
+	public final static String ICN_REF_6_SMALL			= registerICN("/icons/onlineReferences/ref6_16x16.png");
+	public final static String ICN_REF_6_BIG			= registerICN("/icons/onlineReferences/ref6.png");
+	public final static String ICN_REF_6_BUTTON			= registerICN("/icons/onlineReferences/ref6_large.png");
 	// ###############################################  <LOG>  ###############################################
 	
 	

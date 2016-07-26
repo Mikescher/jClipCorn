@@ -157,3 +157,6 @@ public class Main {
 // X - play unchanged for movies
 // X - Groups in filename "[G1] Zyklus IX - title (Part 1).avi"
 //   - Filenameparser test
+//   - timeline statistic: use all history viewed dates
+//   - dialog to find onlinescore discrepancies (and optionally update them)
+//   - can use multiple online-references (auto add imdb, add proxer and MAM for many)

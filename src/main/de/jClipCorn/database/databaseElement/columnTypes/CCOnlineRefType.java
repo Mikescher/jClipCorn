@@ -12,7 +12,9 @@ public enum CCOnlineRefType {
 	IMDB(1),
 	AMAZON(2),
 	MOVIEPILOT(3),
-	THEMOVIEDB(4);
+	THEMOVIEDB(4),
+	PROXERME(5),
+	MYANIMELIST(6);
 	
 	private final static String IDENTIFIER[] = {
 		"",   			//$NON-NLS-1$
@@ -20,6 +22,8 @@ public enum CCOnlineRefType {
 		"amzn",   		//$NON-NLS-1$
 		"mvpt",  		//$NON-NLS-1$
 		"tmdb",   		//$NON-NLS-1$
+		"prox",   		//$NON-NLS-1$
+		"myal",   		//$NON-NLS-1$
 	};
 	
 	private final static String NAMES[] = {
@@ -28,6 +32,8 @@ public enum CCOnlineRefType {
 		LocaleBundle.getString("CCOnlineRefType.AMAZON"), //$NON-NLS-1$
 		LocaleBundle.getString("CCOnlineRefType.MOVIEPILOT"), //$NON-NLS-1$
 		LocaleBundle.getString("CCOnlineRefType.THEMOVIEDB"), //$NON-NLS-1$
+		LocaleBundle.getString("CCOnlineRefType.PROXERME"), //$NON-NLS-1$
+		LocaleBundle.getString("CCOnlineRefType.MYANIMELIST"), //$NON-NLS-1$
 	};
 	
 	private int id;
@@ -83,6 +89,10 @@ public enum CCOnlineRefType {
 			return CachedResourceLoader.getImageIcon(Resources.ICN_REF_3_BIG);
 		case THEMOVIEDB:
 			return CachedResourceLoader.getImageIcon(Resources.ICN_REF_4_BIG);
+		case PROXERME:
+			return CachedResourceLoader.getImageIcon(Resources.ICN_REF_5_BIG);
+		case MYANIMELIST:
+			return CachedResourceLoader.getImageIcon(Resources.ICN_REF_6_BIG);
 		default:
 			return null;
 		}
@@ -100,6 +110,10 @@ public enum CCOnlineRefType {
 			return CachedResourceLoader.getImageIcon(Resources.ICN_REF_3_SMALL);
 		case THEMOVIEDB:
 			return CachedResourceLoader.getImageIcon(Resources.ICN_REF_4_SMALL);
+		case PROXERME:
+			return CachedResourceLoader.getImageIcon(Resources.ICN_REF_5_SMALL);
+		case MYANIMELIST:
+			return CachedResourceLoader.getImageIcon(Resources.ICN_REF_6_SMALL);
 		default:
 			return null;
 		}
@@ -117,6 +131,10 @@ public enum CCOnlineRefType {
 			return CachedResourceLoader.getImageIcon(Resources.ICN_REF_3_BUTTON);
 		case THEMOVIEDB:
 			return CachedResourceLoader.getImageIcon(Resources.ICN_REF_4_BUTTON);
+		case PROXERME:
+			return CachedResourceLoader.getImageIcon(Resources.ICN_REF_5_BUTTON);
+		case MYANIMELIST:
+			return CachedResourceLoader.getImageIcon(Resources.ICN_REF_6_BUTTON);
 		default:
 			return null;
 		}

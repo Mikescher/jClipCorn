@@ -11,6 +11,8 @@ public class CCOnlineReference {
 	private static final Pattern REGEX_AMZN = Pattern.compile("^[A-Z0-9]+$"); //$NON-NLS-1$
 	private static final Pattern REGEX_MVPT = Pattern.compile("^(movie|serie)/.+$"); //$NON-NLS-1$
 	private static final Pattern REGEX_TMDB = Pattern.compile("^(movie|tv)/[0-9]+$"); //$NON-NLS-1$
+	private static final Pattern REGEX_PROX = Pattern.compile("^[0-9]+$"); //$NON-NLS-1$
+	private static final Pattern REGEX_MYAL = Pattern.compile("^[0-9]+$"); //$NON-NLS-1$
 	
 	public final CCOnlineRefType type;
 	public final String id;
@@ -28,16 +30,24 @@ public class CCOnlineReference {
 		return new CCOnlineReference(CCOnlineRefType.IMDB, id);
 	}
 
-	public static CCOnlineReference createAMZN(String id) {
+	public static CCOnlineReference createAmazon(String id) {
 		return new CCOnlineReference(CCOnlineRefType.AMAZON, id);
 	}
 
-	public static CCOnlineReference createMVPT(String id) {
+	public static CCOnlineReference createMoviepilot(String id) {
 		return new CCOnlineReference(CCOnlineRefType.MOVIEPILOT, id);
 	}
 
 	public static CCOnlineReference createTMDB(String id) {
 		return new CCOnlineReference(CCOnlineRefType.THEMOVIEDB, id);
+	}
+
+	public static CCOnlineReference createProxer(String id) {
+		return new CCOnlineReference(CCOnlineRefType.PROXERME, id);
+	}
+
+	public static CCOnlineReference createMyAnimeList(String id) {
+		return new CCOnlineReference(CCOnlineRefType.MYANIMELIST, id);
 	}
 
 	public String toSerializationString() {
@@ -79,6 +89,10 @@ public class CCOnlineReference {
 			return "https://www.moviepilot.de/" + id;
 		case THEMOVIEDB:
 			return "https://www.themoviedb.org/" + id;
+		case PROXERME:
+			return "http://proxer.me/info/" + id;
+		case MYANIMELIST:
+			return "http://myanimelist.net/anime/" + id + "/";
 		default:
 			return null;
 		}
@@ -108,6 +122,10 @@ public class CCOnlineReference {
 			return REGEX_MVPT.matcher(id).matches();
 		case THEMOVIEDB:
 			return REGEX_TMDB.matcher(id).matches();
+		case PROXERME:
+			return REGEX_PROX.matcher(id).matches();
+		case MYANIMELIST:
+			return REGEX_MYAL.matcher(id).matches();
 		default:
 			return false;
 		}

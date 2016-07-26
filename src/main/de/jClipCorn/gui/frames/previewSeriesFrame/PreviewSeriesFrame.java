@@ -144,6 +144,7 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 	private JMenuItem mntmCreateFolderStruct;
 	private JPanel pnlTopLeft;
 	private JButton btnPlayNext;
+	private JButton btnOnline;
 
 	/**
 	 * @wbp.parser.constructor
@@ -617,7 +618,7 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 		pnlAddInfo.setAlignmentX(Component.LEFT_ALIGNMENT);
 		pnlInfo.add(pnlAddInfo);
 
-		btnAdditionalInfo = new JButton(LocaleBundle.getString("PreviewSeriesFrame.btnAdditional.text")); //$NON-NLS-1$
+		btnAdditionalInfo = new JButton("Genres"); //$NON-NLS-1$
 		btnAdditionalInfo.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -626,6 +627,15 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 			}
 		});
 		pnlAddInfo.add(btnAdditionalInfo);
+		
+		btnOnline = new JButton(" "); //$NON-NLS-1$
+		btnOnline.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				HTTPUtilities.openInBrowser(dispSeries.getOnlineReference().getURL());
+			}
+		});
+		pnlAddInfo.add(btnOnline);
 		
 		KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new KeyEventDispatcher() {
 			@Override
@@ -734,6 +744,9 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 		lblfsk.setIcon(dispSeries.getFSK().getIcon());
 
 		lblCover.setIcon(dispSeries.getCoverIcon());
+		
+		btnOnline.setIcon(dispSeries.getOnlineReference().getIconButton());
+		btnOnline.setEnabled(dispSeries.getOnlineReference().isSet());
 	}
 	
 	@Override

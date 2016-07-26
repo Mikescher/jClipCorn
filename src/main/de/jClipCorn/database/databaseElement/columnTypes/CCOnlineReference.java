@@ -1,19 +1,10 @@
 package de.jClipCorn.database.databaseElement.columnTypes;
 
-import java.util.regex.Pattern;
-
 import javax.swing.Icon;
 
 import de.jClipCorn.util.exceptions.OnlineRefFormatException;
 
 public class CCOnlineReference {
-	private static final Pattern REGEX_IMDB = Pattern.compile("^tt[0-9]+$"); //$NON-NLS-1$
-	private static final Pattern REGEX_AMZN = Pattern.compile("^[A-Z0-9]+$"); //$NON-NLS-1$
-	private static final Pattern REGEX_MVPT = Pattern.compile("^(movies|serie)/.+$"); //$NON-NLS-1$
-	private static final Pattern REGEX_TMDB = Pattern.compile("^(movie|tv)/[0-9]+$"); //$NON-NLS-1$
-	private static final Pattern REGEX_PROX = Pattern.compile("^[0-9]+$"); //$NON-NLS-1$
-	private static final Pattern REGEX_MYAL = Pattern.compile("^[0-9]+$"); //$NON-NLS-1$
-	
 	public final CCOnlineRefType type;
 	public final String id;
 	
@@ -111,24 +102,7 @@ public class CCOnlineReference {
 	}
 
 	public boolean isValid() {
-		switch (type) {
-		case NONE:
-			return id.isEmpty();
-		case IMDB:
-			return REGEX_IMDB.matcher(id).matches();
-		case AMAZON:
-			return REGEX_AMZN.matcher(id).matches();
-		case MOVIEPILOT:
-			return REGEX_MVPT.matcher(id).matches();
-		case THEMOVIEDB:
-			return REGEX_TMDB.matcher(id).matches();
-		case PROXERME:
-			return REGEX_PROX.matcher(id).matches();
-		case MYANIMELIST:
-			return REGEX_MYAL.matcher(id).matches();
-		default:
-			return false;
-		}
+		return type.isValid(id);
 	}
 
 	@Override

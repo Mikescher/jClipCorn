@@ -160,3 +160,4 @@ public class Main {
 // X - timeline statistic: use all history viewed dates
 //   - dialog to find onlinescore discrepancies (and optionally update them)
 //   - can use multiple online-references (auto add imdb, add proxer and MAM for many)
+//   - Export and import reference mapping file (to get mappings to other dbs) ?

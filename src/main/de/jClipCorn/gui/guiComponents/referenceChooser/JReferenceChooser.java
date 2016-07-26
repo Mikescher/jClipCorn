@@ -5,6 +5,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JPanel;
@@ -48,6 +50,17 @@ public class JReferenceChooser extends JPanel {
 		edID = new JTextField();
 		add(edID, BorderLayout.CENTER);
 		edID.setColumns(10);
+		edID.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(KeyEvent e) {
+                if ((e.getKeyCode() == KeyEvent.VK_V) && ((e.getModifiers() & KeyEvent.CTRL_MASK) != 0)) {
+                    CCOnlineRefType guess = CCOnlineRefType.guessType(edID.getText());
+                    if (guess != null && guess != cbxType.getSelectedItem()) {
+                    	cbxType.setSelectedItem(guess);
+                    }
+                }
+            }
+        });
 
 		cbxType.addActionListener(new ActionListener() {
 			@Override

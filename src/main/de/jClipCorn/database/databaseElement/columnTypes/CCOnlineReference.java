@@ -9,7 +9,7 @@ import de.jClipCorn.util.exceptions.OnlineRefFormatException;
 public class CCOnlineReference {
 	private static final Pattern REGEX_IMDB = Pattern.compile("^tt[0-9]+$"); //$NON-NLS-1$
 	private static final Pattern REGEX_AMZN = Pattern.compile("^[A-Z0-9]+$"); //$NON-NLS-1$
-	private static final Pattern REGEX_MVPT = Pattern.compile("^(movie|serie)/.+$"); //$NON-NLS-1$
+	private static final Pattern REGEX_MVPT = Pattern.compile("^(movies|serie)/.+$"); //$NON-NLS-1$
 	private static final Pattern REGEX_TMDB = Pattern.compile("^(movie|tv)/[0-9]+$"); //$NON-NLS-1$
 	private static final Pattern REGEX_PROX = Pattern.compile("^[0-9]+$"); //$NON-NLS-1$
 	private static final Pattern REGEX_MYAL = Pattern.compile("^[0-9]+$"); //$NON-NLS-1$

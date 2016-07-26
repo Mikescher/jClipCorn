@@ -116,12 +116,12 @@ public class Main {
 
 //TODO
 //   - jClipCorn  - better cover resolution,  
-//   - Get Viewed Values from backups
+// X - Get Viewed Values from backups
 //   - show cover in HD (right click in coverpanel + series cover control + cbl click coverpanel)                                             
 //   - mass reverse image search for better cover versions (more HD)                                                                          
 // X - generate filename strip down chars (á -> a, ê -> e, etc)                                                                               
 //   - Format/Quality etc also for Serien (everything for a;b;a+b with toggle control?  ->  only were applicable)                             
-//   - combined timeline row                                                                                                                  
+//   - combined timeline row (like github commit overview)                                                                                                               
 //   - db_err: find series with non-continoous episode numbers                                                                                
 // X - remember online id (+ dialog to find them) as string with ident for website                                                            
 // X     - imdb:????                                                                                                                          
@@ -139,7 +139,7 @@ public class Main {
 //   - dialog show unreffed movies
 // X - add groups to (both?) search
 // X - serialize groups/refs/viewed-history
-//   - AddMovieFrame.parseFromXML --> wtf? (auch für ser)
+// X - AddMovieFrame.parseFromXML --> wtf? (auch für ser)
 // X - statistics online reference provider
 // X - add db error invalid online ref
 //   - make it configurable which metadata-provider and which image-provider to use (new property type FlagList->CheckBoxList)
@@ -157,6 +157,6 @@ public class Main {
 // X - play unchanged for movies
 // X - Groups in filename "[G1] Zyklus IX - title (Part 1).avi"
 //   - Filenameparser test
-//   - timeline statistic: use all history viewed dates
+// X - timeline statistic: use all history viewed dates
 //   - dialog to find onlinescore discrepancies (and optionally update them)
 //   - can use multiple online-references (auto add imdb, add proxer and MAM for many)

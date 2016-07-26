@@ -26,6 +26,7 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCMovieSize;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTags;
 import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineRefType;
 import de.jClipCorn.util.datetime.CCDate;
+import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.datetime.CCDatespan;
 
 public class StatisticsHelper {
@@ -825,8 +826,9 @@ public class StatisticsHelper {
 			for (int ep = 0; ep < season.getEpisodeCount(); ep++) {
 				CCEpisode episode = season.getEpisode(ep);
 				
-				if (episode.isViewed() && !episode.getViewedHistoryLast().isMinimum())
-					dates.add(episode.getViewedHistoryLast());
+				for (CCDateTime timestamp : episode.getViewedHistory()) {
+					dates.add(timestamp.date);
+				}
 			}
 		}
 		

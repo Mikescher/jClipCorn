@@ -188,7 +188,7 @@ public class AutoFindReferenceFrame extends JFrame {
 		pnlRight.add(lblLocal);
 		
 		lblOnline = new JLabel();
-		lblOnline.setText("AutoFindReferencesFrame.lblTMDB"); //$NON-NLS-1$
+		lblOnline.setText(LocaleBundle.getString("AutoFindReferencesFrame.lblTMDB")); //$NON-NLS-1$
 		lblOnline.setBounds(194, 12, 153, 16);
 		pnlRight.add(lblOnline);
 		
@@ -371,6 +371,8 @@ public class AutoFindReferenceFrame extends JFrame {
 
 			@Override
 			public boolean dispatchKeyEvent(KeyEvent e) {
+				if (! AutoFindReferenceFrame.this.isActive()) return false;
+				
 				KeyStroke keyStroke = KeyStroke.getKeyStrokeForEvent(e);
 				
 				if (!keyStroke.isOnKeyRelease() && keyStroke.getKeyCode() == KeyEvent.VK_P && keyStroke.getModifiers() == 0) {

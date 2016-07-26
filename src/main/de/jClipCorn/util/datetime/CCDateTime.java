@@ -274,4 +274,12 @@ public class CCDateTime implements Comparable<CCDateTime>, StringSpecSupplier {
 	public int hashCode() {
 		return date.hashCode() ^ 13 * time.hashCode();
 	}
+
+	public static CCDateTime getMinimumDateTime() {
+		return new CCDateTime(CCDate.getMinimumDate(), CCTime.getMidnight());
+	}
+
+	public boolean isMinimum() {
+		return date.isMinimum() && time.isMidnight();
+	}
 }

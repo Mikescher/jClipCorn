@@ -283,6 +283,10 @@ public class CCEpisode {
 		return viewedHistory;
 	}
 
+	public CCDateTime getViewedHistoryLastDateTime() {
+		return viewedHistory.getLastOrInvalid();
+	}
+
 	public CCDate getViewedHistoryLast() {
 		return viewedHistory.getLastDateOrInvalid();
 	}

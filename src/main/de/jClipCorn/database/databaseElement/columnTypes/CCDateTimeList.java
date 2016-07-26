@@ -93,6 +93,14 @@ public class CCDateTimeList implements Iterable<CCDateTime> {
 		return new CCDateTimeList(CCDateTime.create(date));
 	}
 
+	public CCDateTime getFirstOrInvalid() {
+		return isEmpty() ? CCDateTime.getMinimumDateTime() : list.get(0);
+	}
+
+	public CCDateTime getLastOrInvalid() {
+		return isEmpty() ? CCDateTime.getMinimumDateTime() : list.get(count() - 1);
+	}
+	
 	public CCDate getLastDateOrInvalid() {
 		return isEmpty() ? CCDate.getMinimumDate() : list.get(count() - 1).date;
 	}

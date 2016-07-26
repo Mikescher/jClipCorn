@@ -1,5 +1,6 @@
 package de.jClipCorn.gui.frames.autofindRefrenceFrame;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.KeyEventDispatcher;
@@ -34,10 +35,13 @@ import javax.swing.event.ListSelectionListener;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.databaseElement.CCMovie;
+import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineRefType;
 import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReference;
 import de.jClipCorn.gui.CachedResourceLoader;
 import de.jClipCorn.gui.Resources;
+import de.jClipCorn.gui.frames.editMovieFrame.EditMovieFrame;
+import de.jClipCorn.gui.frames.editSeriesFrame.EditSeriesFrame;
 import de.jClipCorn.gui.guiComponents.CoverLabel;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
@@ -60,17 +64,17 @@ public class AutoFindReferenceFrame extends JFrame {
 	private JList<AutoFindRefElement> listResults;
 	private JPanel pnlRight;
 	private JButton btnIgnore;
-	private JButton btnApply;
+	private JButton btnApplyTmdb;
 	private JLabel lblLocal;
 	private JLabel lblOnline;
 	private JTextField edTitleLocal;
-	private JTextField edTitleOnline;
+	private JTextField edTitleTmdb;
 	private CoverLabel cvrLocal;
-	private CoverLabel cvrOnline;
+	private CoverLabel cvrTmdb;
 	private JTextField edYearLocal;
 	private JTextField edRefLocal;
-	private JTextField edYearOnline;
-	private JTextField edRefOnline;
+	private JTextField edYearTmdb;
+	private JTextField edRefTmdb;
 	private JPanel pnlLeft;
 	private JButton btnSearch;
 	private JProgressBar pbProgress;
@@ -81,6 +85,7 @@ public class AutoFindReferenceFrame extends JFrame {
 	private JButton btnApplyImdb;
 	private CoverLabel cvrImDB;
 	private JTextField edYearImDB;
+	private JButton btnEdit;
 
 	/**
 	 * Create the frame.
@@ -167,15 +172,15 @@ public class AutoFindReferenceFrame extends JFrame {
 		btnIgnore.setBounds(12, 355, 153, 26);
 		pnlRight.add(btnIgnore);
 		
-		btnApply = new JButton(LocaleBundle.getString("AutoFindReferencesFrame.btnApply")); //$NON-NLS-1$
-		btnApply.addActionListener(new ActionListener() {
+		btnApplyTmdb = new JButton(LocaleBundle.getString("AutoFindReferencesFrame.btnApply")); //$NON-NLS-1$
+		btnApplyTmdb.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				actionApply();
 			}
 		});
-		btnApply.setBounds(194, 355, 153, 26);
-		pnlRight.add(btnApply);
+		btnApplyTmdb.setBounds(194, 355, 153, 26);
+		pnlRight.add(btnApplyTmdb);
 		
 		lblLocal = new JLabel();
 		lblLocal.setText(LocaleBundle.getString("AutoFindReferencesFrame.lblLocal")); //$NON-NLS-1$
@@ -183,7 +188,7 @@ public class AutoFindReferenceFrame extends JFrame {
 		pnlRight.add(lblLocal);
 		
 		lblOnline = new JLabel();
-		lblOnline.setText(LocaleBundle.getString("AutoFindReferencesFrame.lblOnline")); //$NON-NLS-1$
+		lblOnline.setText("AutoFindReferencesFrame.lblTMDB"); //$NON-NLS-1$
 		lblOnline.setBounds(194, 12, 153, 16);
 		pnlRight.add(lblOnline);
 		
@@ -193,19 +198,19 @@ public class AutoFindReferenceFrame extends JFrame {
 		pnlRight.add(edTitleLocal);
 		edTitleLocal.setColumns(10);
 		
-		edTitleOnline = new JTextField();
-		edTitleOnline.setEditable(false);
-		edTitleOnline.setColumns(10);
-		edTitleOnline.setBounds(194, 54, 153, 20);
-		pnlRight.add(edTitleOnline);
+		edTitleTmdb = new JTextField();
+		edTitleTmdb.setEditable(false);
+		edTitleTmdb.setColumns(10);
+		edTitleTmdb.setBounds(194, 54, 153, 20);
+		pnlRight.add(edTitleTmdb);
 		
 		cvrLocal = new CoverLabel(true);
 		cvrLocal.setBounds(12, 150, 91, 127);
 		pnlRight.add(cvrLocal);
 		
-		cvrOnline = new CoverLabel(true);
-		cvrOnline.setBounds(194, 150, 91, 127);
-		pnlRight.add(cvrOnline);
+		cvrTmdb = new CoverLabel(true);
+		cvrTmdb.setBounds(194, 150, 91, 127);
+		pnlRight.add(cvrTmdb);
 		
 		edYearLocal = new JTextField();
 		edYearLocal.setEditable(false);
@@ -219,17 +224,17 @@ public class AutoFindReferenceFrame extends JFrame {
 		edRefLocal.setBounds(12, 118, 153, 20);
 		pnlRight.add(edRefLocal);
 		
-		edYearOnline = new JTextField();
-		edYearOnline.setEditable(false);
-		edYearOnline.setColumns(10);
-		edYearOnline.setBounds(194, 86, 153, 20);
-		pnlRight.add(edYearOnline);
+		edYearTmdb = new JTextField();
+		edYearTmdb.setEditable(false);
+		edYearTmdb.setColumns(10);
+		edYearTmdb.setBounds(194, 86, 153, 20);
+		pnlRight.add(edYearTmdb);
 		
-		edRefOnline = new JTextField();
-		edRefOnline.setEditable(false);
-		edRefOnline.setColumns(10);
-		edRefOnline.setBounds(194, 118, 153, 20);
-		pnlRight.add(edRefOnline);
+		edRefTmdb = new JTextField();
+		edRefTmdb.setEditable(false);
+		edRefTmdb.setColumns(10);
+		edRefTmdb.setBounds(194, 118, 153, 20);
+		pnlRight.add(edRefTmdb);
 		
 		edTitleIMDB = new JTextField();
 		edTitleIMDB.setEditable(false);
@@ -267,6 +272,32 @@ public class AutoFindReferenceFrame extends JFrame {
 		edYearImDB.setColumns(10);
 		edYearImDB.setBounds(379, 86, 153, 20);
 		pnlRight.add(edYearImDB);
+		
+		btnEdit = new JButton(LocaleBundle.getString("AutoFindReferencesFrame.btnEdit")); //$NON-NLS-1$
+		btnEdit.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				onEdit();
+			}
+		});
+		btnEdit.setBounds(12, 289, 91, 26);
+		pnlRight.add(btnEdit);
+	}
+
+	protected void onEdit() {
+		if (isThreadRunning) return;
+		
+		if (listResults.getSelectedIndex() < 0) {
+			return;
+		}
+		
+		AutoFindRefElement value = listResults.getSelectedValue();
+		
+		if (value.local.isMovie()) {
+			new EditMovieFrame(this, (CCMovie) value.local, null).setVisible(true);
+		} else {
+			new EditSeriesFrame(this, (CCSeries) value.local, null).setVisible(true);
+		}
 	}
 
 	private void onClose() {
@@ -275,23 +306,27 @@ public class AutoFindReferenceFrame extends JFrame {
 
 	private void refreshRightPanel() {
 		edTitleLocal.setText(""); //$NON-NLS-1$
-		edTitleOnline.setText(""); //$NON-NLS-1$
+		edTitleTmdb.setText(""); //$NON-NLS-1$
 		edTitleIMDB.setText(""); //$NON-NLS-1$
 		
 		edYearLocal.setText(""); //$NON-NLS-1$
-		edYearOnline.setText(""); //$NON-NLS-1$
+		edYearTmdb.setText(""); //$NON-NLS-1$
 		edYearImDB.setText(""); //$NON-NLS-1$
 		
 		edRefLocal.setText(""); //$NON-NLS-1$
-		edRefOnline.setText(""); //$NON-NLS-1$
+		edRefTmdb.setText(""); //$NON-NLS-1$
 		edRefIMDB.setText(""); //$NON-NLS-1$
 		
 		cvrLocal.setIcon(null);
-		cvrOnline.setIcon(null);
 		cvrImDB.setIcon(null);
+		cvrTmdb.setIcon(null);
 		
-		btnApply.setEnabled(false);
 		btnIgnore.setEnabled(false);
+		btnApplyTmdb.setEnabled(false);
+		btnApplyImdb.setEnabled(false);
+
+		btnApplyTmdb.setBackground(null);
+		btnApplyImdb.setBackground(null);
 		
 		if (listResults.getSelectedIndex() < 0) {
 			return;
@@ -301,29 +336,33 @@ public class AutoFindReferenceFrame extends JFrame {
 
 		edTitleLocal.setText(value.local.getTitle());
 		
-		if (value.tmdbMeta != null) edTitleOnline.setText(value.tmdbMeta.Title);
+		if (value.tmdbMeta != null) edTitleTmdb.setText(value.tmdbMeta.Title);
 
 		if (value.local.isMovie()){
 			edYearLocal.setText(Integer.toString(((CCMovie)value.local).getYear()));
-			if (value.tmdbMeta != null) edYearOnline.setText(Integer.toString(value.tmdbMeta.Year));
+			if (value.tmdbMeta != null) edYearTmdb.setText(Integer.toString(value.tmdbMeta.Year));
 		} else {
 			edYearLocal.setText(""); //$NON-NLS-1$
-			edYearOnline.setText(""); //$NON-NLS-1$
+			edYearTmdb.setText(""); //$NON-NLS-1$
 		}
 		
 		if (value.imdbMeta != null && value.imdbMeta.Year > 0) edYearImDB.setText(Integer.toString(value.imdbMeta.Year));
-		if (value.imdbMeta != null) cvrImDB.setIcon(new ImageIcon(ImageUtilities.resizeHalfCoverImage(value.imdbMeta.Cover)));
-		if (value.imdbMeta != null) edTitleIMDB.setText(value.imdbMeta.Title);
-		if (value.imdbMeta != null) edRefIMDB.setText(value.imdbMeta.Reference.toSerializationString());
+		if (value.imdbMeta != null && value.imdbMeta.Cover != null) cvrImDB.setIcon(new ImageIcon(ImageUtilities.resizeHalfCoverImage(value.imdbMeta.Cover)));
+		if (value.imdbMeta != null && value.imdbMeta.Title != null) edTitleIMDB.setText(value.imdbMeta.Title);
+		if (value.imdbMeta != null && value.imdbMeta.Reference != null) edRefIMDB.setText(value.imdbMeta.Reference.toSerializationString());
 				
 		edRefLocal.setText(value.local.getOnlineReference().toSerializationString());
-		edRefOnline.setText(value.tmdbRef.toSerializationString());
+		edRefTmdb.setText(value.tmdbRef.toSerializationString());
 
 		cvrLocal.setIcon(new ImageIcon(value.local.getHalfsizeCover()));
-		if (value.tmdbCover != null) cvrOnline.setIcon(new ImageIcon(ImageUtilities.resizeHalfCoverImage(value.tmdbCover)));
+		if (value.tmdbCover != null) cvrTmdb.setIcon(new ImageIcon(ImageUtilities.resizeHalfCoverImage(value.tmdbCover)));
 		
-		btnApply.setEnabled(value.tmdbRef.isSet());
+		btnApplyTmdb.setEnabled(value.tmdbRef.isSet());
+		btnApplyImdb.setEnabled(value.imdbMeta != null && value.imdbMeta.Reference != null && value.imdbMeta.Reference.isSet());
 		btnIgnore.setEnabled(true);
+		
+		if (! edYearLocal.getText().equals(edYearImDB.getText()) && btnApplyImdb.isEnabled()) btnApplyImdb.setBackground(Color.RED);
+		if (! edYearLocal.getText().equals(edYearTmdb.getText()) && btnApplyTmdb.isEnabled()) btnApplyTmdb.setBackground(Color.RED);
 	}
 
 	private void initMap() {
@@ -355,7 +394,7 @@ public class AutoFindReferenceFrame extends JFrame {
 
 		pnlLeft.setEnabled(false);
 		pnlRight.setEnabled(false);
-		btnApply.setEnabled(false);
+		btnApplyTmdb.setEnabled(false);
 		btnIgnore.setEnabled(false);
 		btnSearch.setEnabled(false);
 		btnApplyImdb.setEnabled(false);
@@ -368,6 +407,9 @@ public class AutoFindReferenceFrame extends JFrame {
 			
 			if (el.getOnlineReference().isUnset())
 				elements.add(el);
+			
+			if (elements.size() >= 250) // 250 max, prevent OutOfMemory and other fun stuff
+				break;
 		}
 		
 		pbProgress.setMaximum(elements.size());
@@ -400,7 +442,7 @@ public class AutoFindReferenceFrame extends JFrame {
 
 								pnlLeft.setEnabled(true);
 								pnlRight.setEnabled(true);
-								btnApply.setEnabled(true);
+								btnApplyTmdb.setEnabled(true);
 								btnApplyImdb.setEnabled(true);
 								btnIgnore.setEnabled(true);
 								btnSearch.setEnabled(true);
@@ -414,7 +456,7 @@ public class AutoFindReferenceFrame extends JFrame {
 					}
 				}
 			}
-		}, "THREAD_IMGPARSER_IMDB_1").start(); //$NON-NLS-1$
+		}, "THREAD_AUTOFINDREF").start(); //$NON-NLS-1$
 	}
 	
 	private List<AutoFindRefElement> run(List<CCDatabaseElement> source) {

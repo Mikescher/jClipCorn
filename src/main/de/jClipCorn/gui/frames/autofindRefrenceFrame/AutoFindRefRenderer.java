@@ -17,8 +17,11 @@ public class AutoFindRefRenderer extends DefaultListCellRenderer {
 		AutoFindRefElement element = (AutoFindRefElement) value;
 		
 		lbl.setText(element.local.getTitle());
+
+		boolean istmdb = element.tmdbRef != null && element.tmdbRef.isSet();
+		boolean isimdb = element.imdbMeta != null && element.imdbMeta.Reference != null && element.imdbMeta.Reference.isSet();
 		
-		if (element.tmdbRef.isSet())
+		if (istmdb || isimdb)
 			lbl.setBackground(Color.GREEN);
 		else
 			lbl.setBackground(Color.RED);

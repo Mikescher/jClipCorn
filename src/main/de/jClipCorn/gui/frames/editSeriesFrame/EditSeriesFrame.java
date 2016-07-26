@@ -60,6 +60,7 @@ import de.jClipCorn.gui.guiComponents.referenceChooser.JReferenceChooser;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.Validator;
+import de.jClipCorn.util.adapter.UpdateCallbackAdapter;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.formatter.FileSizeFormatter;
 import de.jClipCorn.util.formatter.PathFormatter;
@@ -172,8 +173,12 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 	public EditSeriesFrame(Component owner, CCSeries ser, UpdateCallbackListener ucl) {
 		super();
 		this.series = ser;
-		this.listener = ucl;
 		this.videoFileChooser = new JFileChooser(PathFormatter.fromCCPath(ser.getCommonPathStart(true)));
+
+		if (ucl == null)
+			this.listener = new UpdateCallbackAdapter();
+		else
+			this.listener = ucl;
 		
 		initGUI();
 		setDefaultValues();

@@ -48,6 +48,7 @@ import de.jClipCorn.gui.guiComponents.referenceChooser.JReferenceChooser;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.Validator;
+import de.jClipCorn.util.adapter.UpdateCallbackAdapter;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.formatter.FileSizeFormatter;
 import de.jClipCorn.util.formatter.PathFormatter;
@@ -160,7 +161,11 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		super();
 		this.movie = movie;
 		this.videoFileChooser = new JFileChooser(PathFormatter.getAbsoluteSelfDirectory());
-		this.listener = ucl;
+		
+		if (ucl == null)
+			this.listener = new UpdateCallbackAdapter();
+		else
+			this.listener = ucl;
 		
 		setSize(new Dimension(740, 780));
 		

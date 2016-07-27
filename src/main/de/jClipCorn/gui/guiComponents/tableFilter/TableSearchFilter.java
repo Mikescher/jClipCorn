@@ -68,6 +68,10 @@ public class TableSearchFilter extends RowFilter<ClipTableModel, Object> {
 			return true;
 		}
 		
+		if (elem.getOnlineReference().isSet() && (elem.getOnlineReference().toSerializationString().equals(searchTerm) || elem.getOnlineReference().id.equals(searchTerm))) {
+			return true;
+		}
+		
 		return false;
 	}
 }

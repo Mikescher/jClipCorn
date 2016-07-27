@@ -164,3 +164,4 @@ public class Main {
 //   - tmdb open ?language=de-DE when exists (lang option)
 //   - tmdb get de-De title (lang option)
 //   - error duplicate online-id
+//   - Searchfield error: All->CustomFilter->Click-in-Field

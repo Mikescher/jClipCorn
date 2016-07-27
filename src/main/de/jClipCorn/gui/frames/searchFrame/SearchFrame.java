@@ -180,6 +180,11 @@ public class SearchFrame extends JFrame {
 				continue;
 			}
 			
+			if (mov.getOnlineReference().isSet() && (mov.getOnlineReference().toSerializationString().equals(searchString) || mov.getOnlineReference().id.equals(searchString))) {
+				addToList(mov);
+				continue;
+			}
+			
 			boolean movFound = false;
 			for (int i = 0; i < mov.getPartcount(); i++) {
 				if (StringUtils.containsIgnoreCase(mov.getAbsolutePart(i), searchString)) {
@@ -235,6 +240,11 @@ public class SearchFrame extends JFrame {
 			}
 
 			if (ser.getGroups().containsIgnoreCase(searchString)) {
+				addToList(ser);
+				continue;
+			}
+			
+			if (ser.getOnlineReference().isSet() && (ser.getOnlineReference().toSerializationString().equals(searchString) || ser.getOnlineReference().id.equals(searchString))) {
 				addToList(ser);
 				continue;
 			}

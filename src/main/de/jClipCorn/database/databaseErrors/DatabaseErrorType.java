@@ -38,6 +38,7 @@ public class DatabaseErrorType {
 	public static DatabaseErrorType ERROR_INVALID_HISTORY = new DatabaseErrorType(33);
 	public static DatabaseErrorType ERROR_INVALID_GROUPLIST = new DatabaseErrorType(34);
 	public static DatabaseErrorType ERROR_INVALID_GROUP = new DatabaseErrorType(35);
+	public static DatabaseErrorType ERROR_DUPLICATE_REF = new DatabaseErrorType(36);
 	
 	private final int type;
 	private int count = 0;

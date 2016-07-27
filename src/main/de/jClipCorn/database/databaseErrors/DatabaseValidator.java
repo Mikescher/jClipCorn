@@ -62,6 +62,7 @@ public class DatabaseValidator {
 		findCoverErrors(e, ml, pcl);
 		findDuplicateFiles(e, ml, pcl);
 		findErrorInGroups(e, ml, pcl);
+		findDuplicateOnlineRef(e, ml, pcl);
 		
 		pcl.reset();
 	}
@@ -716,6 +717,20 @@ public class DatabaseValidator {
 			if (! group.Name.trim().equals(group.Name)) {
 				e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_INVALID_GROUP, group));
 				break;
+			}
+		}
+	}
+	
+	private static void findDuplicateOnlineRef(List<DatabaseError> e, CCMovieList movielist, ProgressCallbackListener pcl) {
+		Set<String> refSet = new HashSet<>();
+
+		for (Iterator<CCDatabaseElement> it = movielist.iterator(); it.hasNext();) {
+			CCDatabaseElement el = it.next();
+			
+			if (el.getOnlineReference().isSet()) {
+				if (! refSet.add(el.getOnlineReference().toSerializationString())) {
+					e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_DUPLICATE_REF, el));
+				}
 			}
 		}
 	}

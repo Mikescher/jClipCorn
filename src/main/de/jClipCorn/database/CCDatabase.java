@@ -107,6 +107,9 @@ public class CCDatabase {
 		case STUB:
 			db = new StubDatabase();
 			break;
+		case INMEMORY:
+			db = new MemoryDatabase();
+			break;
 		}
 	}
 	

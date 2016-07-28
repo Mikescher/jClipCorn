@@ -36,7 +36,7 @@ public class StubDatabase extends GenericDatabase {
 
 	@Override
 	public String GetDBTypeName() {
-		return "__STUB__"; //$NON-NLS-1$
+		return CCDatabaseDriver.STUB.asString();
 	}
 
 }

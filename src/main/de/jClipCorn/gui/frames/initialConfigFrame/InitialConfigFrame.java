@@ -81,7 +81,7 @@ public class InitialConfigFrame extends JDialog {
 		DefaultComboBoxModel<String> modelDatabaseDriver = new DefaultComboBoxModel<>();
 		modelDatabaseDriver.addElement(CCDatabaseDriver.DERBY.asString());
 		modelDatabaseDriver.addElement(CCDatabaseDriver.SQLITE.asString());
-		cbxDatabaseDriver = new JComboBox<>();
+		cbxDatabaseDriver = new JComboBox<>(modelDatabaseDriver);
 		switch (CCProperties.getInstance().PROP_DATABASE_DRIVER.getValue()) {
 		case DERBY:
 			cbxDatabaseDriver.setSelectedIndex(0);

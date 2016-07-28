@@ -14,7 +14,6 @@ import org.apache.ddlutils.PlatformFactory;
 import org.apache.ddlutils.io.DatabaseIO;
 import org.apache.ddlutils.model.Database;
 
-import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 
 @SuppressWarnings("nls")
@@ -169,6 +168,6 @@ public class DerbyDatabase extends GenericDatabase {
 
 	@Override
 	public String GetDBTypeName() {
-		return LocaleBundle.getString("CCProperties.DatabaseDriver.Opt1");
+		return CCDatabaseDriver.DERBY.asString();
 	}
 }

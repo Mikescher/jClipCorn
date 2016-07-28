@@ -7,7 +7,6 @@ import java.nio.file.FileAlreadyExistsException;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.util.exceptions.FileLockedException;
 import de.jClipCorn.util.formatter.PathFormatter;
@@ -135,6 +134,6 @@ public class SQLiteDatabase extends GenericDatabase {
 
 	@Override
 	public String GetDBTypeName() {
-		return LocaleBundle.getString("CCProperties.DatabaseDriver.Opt0");
+		return CCDatabaseDriver.SQLITE.asString();
 	}
 }

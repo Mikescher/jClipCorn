@@ -68,7 +68,7 @@ public class DatabaseValidator {
 	}
 	
 	private static double getMaxSizeFileDrift() {
-		return CCProperties.getInstance().PROP_VALIDATE_FILESIEDRIFT.getValue() / 100d;
+		return CCProperties.getInstance().PROP_VALIDATE_FILESIZEDRIFT.getValue() / 100d;
 	}
 	
 	private static double getRelativeDifference(long size1, long size2) {

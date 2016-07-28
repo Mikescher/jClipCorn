@@ -7,12 +7,14 @@ import de.jClipCorn.util.enumextension.EnumWrapper;
 public enum CCDatabaseDriver implements ContinoousEnum<CCDatabaseDriver> {
 	DERBY(0),
 	SQLITE(1), 
-	STUB(2);
+	STUB(2), 
+	INMEMORY(3);
 	
 	private final static String NAMES[] = {
 		LocaleBundle.getString("CCDatabaseDriver.DERBY"),   //$NON-NLS-1$
 		LocaleBundle.getString("CCDatabaseDriver.SQLITE"),  //$NON-NLS-1$
 		LocaleBundle.getString("CCDatabaseDriver.STUB"),    //$NON-NLS-1$
+		LocaleBundle.getString("CCDatabaseDriver.INMEMORY"),//$NON-NLS-1$
 	};
 	
 	private int id;

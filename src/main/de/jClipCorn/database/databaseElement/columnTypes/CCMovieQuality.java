@@ -5,8 +5,10 @@ import javax.swing.ImageIcon;
 import de.jClipCorn.gui.CachedResourceLoader;
 import de.jClipCorn.gui.Resources;
 import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.util.enumextension.ContinoousEnum;
+import de.jClipCorn.util.enumextension.EnumWrapper;
 
-public enum CCMovieQuality {
+public enum CCMovieQuality implements ContinoousEnum<CCMovieQuality> {
 	STREAM(0), 
 	ONE_CD(1), 
 	MULTIPLE_CD(2), 
@@ -27,26 +29,28 @@ public enum CCMovieQuality {
 	
 	private int id;
 	
+	private static EnumWrapper<CCMovieQuality> wrapper = new EnumWrapper<>(STREAM);
+
 	private CCMovieQuality(int val) {
 		id = val;
 	}
 	
+	public static EnumWrapper<CCMovieQuality> getWrapper() {
+		return wrapper;
+	}
+	
+	@Override
 	public int asInt() {
 		return id;
 	}
 	
+	@Override
 	public String asString() {
 		return NAMES[asInt()];
 	}
 	
-	public static CCMovieQuality find(int val) {
-		if (val >= 0 && val < CCMovieQuality.values().length) {
-			return CCMovieQuality.values()[val]; // Geht nur wenn alle Zahlen nach der Reihe da sind
-		}
-		return null;
-	}
-	
-	public static String[] getList() {
+	@Override
+	public String[] getList() {
 		return NAMES;
 	}
 
@@ -95,5 +99,10 @@ public enum CCMovieQuality {
 		} else {
 			return CCMovieQuality.BLURAY;
 		}
+	}
+
+	@Override
+	public CCMovieQuality[] evalues() {
+		return CCMovieQuality.values();
 	}
 }

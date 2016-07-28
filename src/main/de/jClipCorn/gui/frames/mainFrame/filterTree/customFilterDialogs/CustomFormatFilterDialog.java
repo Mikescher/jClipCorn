@@ -28,7 +28,7 @@ public class CustomFormatFilterDialog extends CustomFilterDialog {
 		super(ft, fl);
 		initGUI();
 		
-		cbxMiddle.setModel(new DefaultComboBoxModel<>(CCMovieFormat.getList()));
+		cbxMiddle.setModel(new DefaultComboBoxModel<>(CCMovieFormat.getWrapper().getList()));
 		cbxMiddle.setSelectedIndex(ft.getFormat().asInt());
 		
 		setLocationRelativeTo(parent);
@@ -65,6 +65,6 @@ public class CustomFormatFilterDialog extends CustomFilterDialog {
 	
 	@Override
 	protected void onAfterOK() {
-		getFilter().setFormat(CCMovieFormat.find(cbxMiddle.getSelectedIndex()));
+		getFilter().setFormat(CCMovieFormat.getWrapper().find(cbxMiddle.getSelectedIndex()));
 	}
 }

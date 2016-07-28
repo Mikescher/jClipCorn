@@ -59,7 +59,7 @@ public class StatisticsScoreChart extends StatisticsChart {
 		int[] values = StatisticsHelper.getMovieCountForAllScores(movielist);
 		
 		for (int i = 0; i < values.length; i++) {
-			dataset.addValue(values[i], "Series0", CCMovieScore.find(i).asString()); //$NON-NLS-1$
+			dataset.addValue(values[i], "Series0", CCMovieScore.getWrapper().find(i).asString()); //$NON-NLS-1$
 		}
 		
         return dataset;

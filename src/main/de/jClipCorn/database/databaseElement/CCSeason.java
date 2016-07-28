@@ -168,7 +168,7 @@ public class CCSeason {
 			qual = Math.max(0, qual);
 			qual = Math.min(qual, CCMovieQuality.values().length - 1);
 			
-			return CCMovieQuality.find(qual);
+			return CCMovieQuality.getWrapper().find(qual);
 		} else {
 			return CCMovieQuality.STREAM;
 		}
@@ -256,7 +256,7 @@ public class CCSeason {
 			}
 		}
 		
-		return CCMovieFormat.find(maxid);
+		return CCMovieFormat.getWrapper().find(maxid);
 	}
 	
 	public CCMovieSize getFilesize() {

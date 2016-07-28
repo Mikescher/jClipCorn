@@ -28,7 +28,7 @@ public class CustomGenreFilterDialog extends CustomFilterDialog {
 		super(ft, fl);
 		initGUI();
 		
-		cbxMiddle.setModel(new DefaultComboBoxModel<>(CCMovieGenre.getList()));
+		cbxMiddle.setModel(new DefaultComboBoxModel<>(CCMovieGenre.getWrapper().getList()));
 		cbxMiddle.setSelectedIndex(ft.getGenre().asInt());
 		
 		setLocationRelativeTo(parent);
@@ -65,6 +65,6 @@ public class CustomGenreFilterDialog extends CustomFilterDialog {
 	
 	@Override
 	protected void onAfterOK() {
-		getFilter().setGenre(CCMovieGenre.find(cbxMiddle.getSelectedIndex()));
+		getFilter().setGenre(CCMovieGenre.getWrapper().find(cbxMiddle.getSelectedIndex()));
 	}
 }

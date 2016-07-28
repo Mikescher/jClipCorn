@@ -126,7 +126,7 @@ public class CustomOnlinescoreFilter extends AbstractCustomFilter {
 		} catch (NumberFormatException e) {
 			return false;
 		}
-		f = CCMovieOnlineScore.find(intval);
+		f = CCMovieOnlineScore.getWrapper().find(intval);
 		if (f == null) return false;
 		setLow(f);
 		
@@ -135,7 +135,7 @@ public class CustomOnlinescoreFilter extends AbstractCustomFilter {
 		} catch (NumberFormatException e) {
 			return false;
 		}
-		f = CCMovieOnlineScore.find(intval);
+		f = CCMovieOnlineScore.getWrapper().find(intval);
 		if (f == null) return false;
 		setHigh(f);
 		
@@ -144,7 +144,7 @@ public class CustomOnlinescoreFilter extends AbstractCustomFilter {
 		} catch (NumberFormatException e) {
 			return false;
 		}
-		s = DecimalSearchType.find(intval);
+		s = DecimalSearchType.getWrapper().find(intval);
 		if (s == null) return false;
 		setSearchType(s);
 		

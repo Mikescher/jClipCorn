@@ -253,10 +253,10 @@ public class AddSeriesFrame extends JFrame implements ParseResultHandler, UserDa
 	}
 	
 	private void setDefaultValues() {
-		cbxLanguage.setModel(new DefaultComboBoxModel<>(CCMovieLanguage.getList()));
+		cbxLanguage.setModel(new DefaultComboBoxModel<>(CCMovieLanguage.getWrapper().getList()));
 		
 		DefaultComboBoxModel<String> cbFSKdcbm;
-		cbxFSK.setModel(cbFSKdcbm = new DefaultComboBoxModel<>(CCMovieFSK.getList()));
+		cbxFSK.setModel(cbFSKdcbm = new DefaultComboBoxModel<>(CCMovieFSK.getWrapper().getList()));
 		cbFSKdcbm.addElement(" "); //$NON-NLS-1$
 		cbxFSK.setSelectedIndex(cbFSKdcbm.getSize() - 1);
 		
@@ -430,14 +430,14 @@ public class AddSeriesFrame extends JFrame implements ParseResultHandler, UserDa
 		
 		newS.setOnlineReference(edReference.getValue());
 		
-		newS.setGenre(CCMovieGenre.find(cbxGenre0.getSelectedIndex()), 0);
-		newS.setGenre(CCMovieGenre.find(cbxGenre1.getSelectedIndex()), 1);
-		newS.setGenre(CCMovieGenre.find(cbxGenre2.getSelectedIndex()), 2);
-		newS.setGenre(CCMovieGenre.find(cbxGenre3.getSelectedIndex()), 3);
-		newS.setGenre(CCMovieGenre.find(cbxGenre4.getSelectedIndex()), 4);
-		newS.setGenre(CCMovieGenre.find(cbxGenre5.getSelectedIndex()), 5);
-		newS.setGenre(CCMovieGenre.find(cbxGenre6.getSelectedIndex()), 6);
-		newS.setGenre(CCMovieGenre.find(cbxGenre7.getSelectedIndex()), 7);
+		newS.setGenre(CCMovieGenre.getWrapper().find(cbxGenre0.getSelectedIndex()), 0);
+		newS.setGenre(CCMovieGenre.getWrapper().find(cbxGenre1.getSelectedIndex()), 1);
+		newS.setGenre(CCMovieGenre.getWrapper().find(cbxGenre2.getSelectedIndex()), 2);
+		newS.setGenre(CCMovieGenre.getWrapper().find(cbxGenre3.getSelectedIndex()), 3);
+		newS.setGenre(CCMovieGenre.getWrapper().find(cbxGenre4.getSelectedIndex()), 4);
+		newS.setGenre(CCMovieGenre.getWrapper().find(cbxGenre5.getSelectedIndex()), 5);
+		newS.setGenre(CCMovieGenre.getWrapper().find(cbxGenre6.getSelectedIndex()), 6);
+		newS.setGenre(CCMovieGenre.getWrapper().find(cbxGenre7.getSelectedIndex()), 7);
 		
 		newS.setGroups(edGroups.getValue());
 		

@@ -28,7 +28,7 @@ public class CustomLanguageFilterDialog extends CustomFilterDialog {
 		super(ft, fl);
 		initGUI();
 		
-		cbxMiddle.setModel(new DefaultComboBoxModel<>(CCMovieLanguage.getList()));
+		cbxMiddle.setModel(new DefaultComboBoxModel<>(CCMovieLanguage.getWrapper().getList()));
 		cbxMiddle.setSelectedIndex(ft.getLanguage().asInt());
 		
 		setLocationRelativeTo(parent);
@@ -65,6 +65,6 @@ public class CustomLanguageFilterDialog extends CustomFilterDialog {
 
 	@Override
 	protected void onAfterOK() {
-		getFilter().setLanguage(CCMovieLanguage.find(cbxMiddle.getSelectedIndex()));
+		getFilter().setLanguage(CCMovieLanguage.getWrapper().find(cbxMiddle.getSelectedIndex()));
 	}
 }

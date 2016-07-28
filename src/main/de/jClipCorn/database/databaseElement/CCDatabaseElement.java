@@ -105,7 +105,7 @@ public abstract class CCDatabaseElement {
 	}
 
 	public void setOnlinescore(int onlinescore) {
-		this.onlinescore = CCMovieOnlineScore.find(onlinescore);
+		this.onlinescore = CCMovieOnlineScore.getWrapper().find(onlinescore);
 		
 		updateDB();
 	}
@@ -115,7 +115,7 @@ public abstract class CCDatabaseElement {
 	}
 
 	public void setFsk(int fsk) {
-		this.fsk = CCMovieFSK.find(fsk);
+		this.fsk = CCMovieFSK.getWrapper().find(fsk);
 		
 		updateDB();
 	}
@@ -129,7 +129,7 @@ public abstract class CCDatabaseElement {
 	}
 
 	public void setScore(int score) {
-		this.score = CCMovieScore.find(score);
+		this.score = CCMovieScore.getWrapper().find(score);
 		
 		updateDB();
 	}
@@ -186,7 +186,7 @@ public abstract class CCDatabaseElement {
 	}
 
 	public void setLanguage(int language) {
-		this.language = CCMovieLanguage.find(language);
+		this.language = CCMovieLanguage.getWrapper().find(language);
 		
 		if (this.language == null) {
 			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.ErroneousDatabaseValues", language)); //$NON-NLS-1$

@@ -239,8 +239,8 @@ public class CCBXMLReader {
 	}
 	
 	private CCMovieGenre translateGenre(int genre) {
-		if (genre == -1) return CCMovieGenre.find(CCMovieGenre.NO_GENRE);
-		return CCMovieGenre.find(genre);
+		if (genre == -1) return CCMovieGenre.getWrapper().find(CCMovieGenre.NO_GENRE);
+		return CCMovieGenre.getWrapper().find(genre);
 	}
 	
 	private String getZyklusName(String fullz) {

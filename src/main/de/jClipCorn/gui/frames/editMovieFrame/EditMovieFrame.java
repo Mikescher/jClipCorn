@@ -653,14 +653,14 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 	}
 
 	private void setDefaultValues() {
-		cbxQuality.setModel(new DefaultComboBoxModel<>(CCMovieQuality.getList()));
+		cbxQuality.setModel(new DefaultComboBoxModel<>(CCMovieQuality.getWrapper().getList()));
 		
-		cbxLanguage.setModel(new DefaultComboBoxModel<>(CCMovieLanguage.getList()));
+		cbxLanguage.setModel(new DefaultComboBoxModel<>(CCMovieLanguage.getWrapper().getList()));
 		
-		cbxFSK.setModel(new DefaultComboBoxModel<>(CCMovieFSK.getList()));
+		cbxFSK.setModel(new DefaultComboBoxModel<>(CCMovieFSK.getWrapper().getList()));
 		
-		cbxFormat.setModel(new DefaultComboBoxModel<>(CCMovieFormat.getList()));
-		cbxScore.setModel(new DefaultComboBoxModel<>(CCMovieScore.getList()));
+		cbxFormat.setModel(new DefaultComboBoxModel<>(CCMovieFormat.getWrapper().getList()));
+		cbxScore.setModel(new DefaultComboBoxModel<>(CCMovieScore.getWrapper().getList()));
 		
 		cbxGenre0.setModel(new DefaultComboBoxModel<>(CCMovieGenre.getTrimmedList()));
 		cbxGenre1.setModel(new DefaultComboBoxModel<>(CCMovieGenre.getTrimmedList()));
@@ -1070,14 +1070,14 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		movie.setYear((int) spnYear.getValue());
 		movie.setFilesize((long) spnSize.getValue());
 		
-		movie.setGenre(CCMovieGenre.find(cbxGenre0.getSelectedIndex()), 0);
-		movie.setGenre(CCMovieGenre.find(cbxGenre1.getSelectedIndex()), 1);
-		movie.setGenre(CCMovieGenre.find(cbxGenre2.getSelectedIndex()), 2);
-		movie.setGenre(CCMovieGenre.find(cbxGenre3.getSelectedIndex()), 3);
-		movie.setGenre(CCMovieGenre.find(cbxGenre4.getSelectedIndex()), 4);
-		movie.setGenre(CCMovieGenre.find(cbxGenre5.getSelectedIndex()), 5);
-		movie.setGenre(CCMovieGenre.find(cbxGenre6.getSelectedIndex()), 6);
-		movie.setGenre(CCMovieGenre.find(cbxGenre7.getSelectedIndex()), 7);
+		movie.setGenre(CCMovieGenre.getWrapper().find(cbxGenre0.getSelectedIndex()), 0);
+		movie.setGenre(CCMovieGenre.getWrapper().find(cbxGenre1.getSelectedIndex()), 1);
+		movie.setGenre(CCMovieGenre.getWrapper().find(cbxGenre2.getSelectedIndex()), 2);
+		movie.setGenre(CCMovieGenre.getWrapper().find(cbxGenre3.getSelectedIndex()), 3);
+		movie.setGenre(CCMovieGenre.getWrapper().find(cbxGenre4.getSelectedIndex()), 4);
+		movie.setGenre(CCMovieGenre.getWrapper().find(cbxGenre5.getSelectedIndex()), 5);
+		movie.setGenre(CCMovieGenre.getWrapper().find(cbxGenre6.getSelectedIndex()), 6);
+		movie.setGenre(CCMovieGenre.getWrapper().find(cbxGenre7.getSelectedIndex()), 7);
 		
 		movie.setTags(tagPnl.getValue());
 		movie.setScore(cbxScore.getSelectedIndex());
@@ -1122,8 +1122,8 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		long fsize = (long) spnSize.getValue();
 		int quality = cbxQuality.getSelectedIndex();
 		int lang = cbxLanguage.getSelectedIndex();
-		String csExtn  = CCMovieFormat.find(cbxFormat.getSelectedIndex()).asString();
-		String csExta = CCMovieFormat.find(cbxFormat.getSelectedIndex()).asStringAlt();
+		String csExtn  = CCMovieFormat.getWrapper().find(cbxFormat.getSelectedIndex()).asString();
+		String csExta = CCMovieFormat.getWrapper().find(cbxFormat.getSelectedIndex()).asStringAlt();
 		
 		int g0 = cbxGenre0.getSelectedIndex();
 		int g1 = cbxGenre1.getSelectedIndex();

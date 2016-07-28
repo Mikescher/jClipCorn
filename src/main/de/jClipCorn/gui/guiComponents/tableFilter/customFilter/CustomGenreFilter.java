@@ -74,7 +74,7 @@ public class CustomGenreFilter extends AbstractCustomFilter {
 			return false;
 		}
 		
-		CCMovieGenre f = CCMovieGenre.find(intval);
+		CCMovieGenre f = CCMovieGenre.getWrapper().find(intval);
 		if (f == null) return false;
 		setGenre(f);
 		

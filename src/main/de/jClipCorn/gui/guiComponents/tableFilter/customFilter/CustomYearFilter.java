@@ -142,7 +142,7 @@ public class CustomYearFilter extends AbstractCustomFilter {
 		} catch (NumberFormatException e) {
 			return false;
 		}
-		s = DecimalSearchType.find(intval);
+		s = DecimalSearchType.getWrapper().find(intval);
 		if (s == null) return false;
 		setSearchType(s);
 		

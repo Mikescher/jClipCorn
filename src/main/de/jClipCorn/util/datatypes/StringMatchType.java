@@ -1,24 +1,49 @@
 package de.jClipCorn.util.datatypes;
 
-public enum StringMatchType {
+import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.util.enumextension.ContinoousEnum;
+import de.jClipCorn.util.enumextension.EnumWrapper;
+
+public enum StringMatchType implements ContinoousEnum<StringMatchType> {
 	SM_STARTSWITH(0),
 	SM_INCLUDES(1),
 	SM_ENDSWITH(2);
+
+	private final static String NAMES[] = {
+		LocaleBundle.getString("StringMatchType.STARTSWITH"), //$NON-NLS-1$
+		LocaleBundle.getString("StringMatchType.INCLUDES"),   //$NON-NLS-1$
+		LocaleBundle.getString("StringMatchType.ENDSWITH")    //$NON-NLS-1$
+	};
 	
 	private final int id;
 	
-	StringMatchType(int id) {
-		this.id = id;
+	private static EnumWrapper<StringMatchType> wrapper = new EnumWrapper<>(SM_STARTSWITH);
+
+	private StringMatchType(int val) {
+		id = val;
 	}
 	
-	public static StringMatchType find(int val) {
-		if (val >= 0 && val < StringMatchType.values().length) {
-			return StringMatchType.values()[val]; // Geht nur wenn alle Zahlen nach der Reihe da sind
-		}
-		return null;
+	public static EnumWrapper<StringMatchType> getWrapper() {
+		return wrapper;
 	}
 	
+	@Override
 	public int asInt() {
 		return id;
+	}
+
+	@Override
+	public String asString() {
+		return NAMES[asInt()];
+	}
+
+	@Override
+	public String[] getList() {
+		return NAMES;
+	}
+
+	@Override
+	public StringMatchType[] evalues() {
+		return StringMatchType.values();
 	}
 }

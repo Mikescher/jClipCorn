@@ -5,8 +5,10 @@ import javax.swing.ImageIcon;
 import de.jClipCorn.gui.CachedResourceLoader;
 import de.jClipCorn.gui.Resources;
 import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.util.enumextension.ContinoousEnum;
+import de.jClipCorn.util.enumextension.EnumWrapper;
 
-public enum CCMovieScore {
+public enum CCMovieScore implements ContinoousEnum<CCMovieScore> {
 	RATING_0(0),	// Fucking bullshit crap
 	RATING_I(1),	// bad movie
 	RATING_II(2),	// not recommended
@@ -26,30 +28,32 @@ public enum CCMovieScore {
 	};
 	
 	private int id;
-	
+
+	private static EnumWrapper<CCMovieScore> wrapper = new EnumWrapper<>(RATING_0);
+
 	private CCMovieScore(int val) {
 		id = val;
 	}
 	
-	public int asInt() {
-		return id;
+	public static EnumWrapper<CCMovieScore> getWrapper() {
+		return wrapper;
 	}
 	
-	public static CCMovieScore find(int val) {
-		if (val >= 0 && val < CCMovieScore.values().length) {
-			return CCMovieScore.values()[val]; // Geht nur wenn alle Zahlen nach der Reihe da sind
-		}
-		return null;
+	@Override
+	public int asInt() {
+		return id;
 	}
 
 	public static int compare(CCMovieScore s1, CCMovieScore s2) {
 		return Integer.compare(s1.asInt(), s2.asInt());
 	}
 	
-	public static String[] getList() {
+	@Override
+	public String[] getList() {
 		return NAMES;
 	}
 	
+	@Override
 	public String asString() {
 		return NAMES[asInt()];
 	}
@@ -92,5 +96,10 @@ public enum CCMovieScore {
 		default:
 			return null;
 		}
+	}
+
+	@Override
+	public CCMovieScore[] evalues() {
+		return CCMovieScore.values();
 	}
 }

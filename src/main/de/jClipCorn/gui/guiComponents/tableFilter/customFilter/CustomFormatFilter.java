@@ -78,7 +78,7 @@ public class CustomFormatFilter extends AbstractCustomFilter {
 			return false;
 		}
 		
-		CCMovieFormat f = CCMovieFormat.find(format);
+		CCMovieFormat f = CCMovieFormat.getWrapper().find(format);
 		if (f == null) return false;
 		setFormat(f);
 		

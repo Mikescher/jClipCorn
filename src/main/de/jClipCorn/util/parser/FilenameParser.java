@@ -23,7 +23,7 @@ public class FilenameParser {
 	public static FilenameParserResult parse(CCMovieList movielist, String filepath) {
 		Map<Integer, String> addFiles = new HashMap<>();
 		CCGroupList groups = CCGroupList.createEmpty();
-		CCMovieLanguage lang = CCMovieLanguage.find(CCProperties.getInstance().PROP_DATABASE_DEFAULTPARSERLANG.getValue());
+		CCMovieLanguage lang = CCProperties.getInstance().PROP_DATABASE_DEFAULTPARSERLANG.getValue();
 		CCMovieZyklus zyklus = null;
 		CCMovieFormat format = null;
 		String title = "";

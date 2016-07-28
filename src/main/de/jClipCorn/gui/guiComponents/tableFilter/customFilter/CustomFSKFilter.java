@@ -78,7 +78,7 @@ public class CustomFSKFilter extends AbstractCustomFilter {
 			return false;
 		}
 		
-		CCMovieFSK f = CCMovieFSK.find(intval);
+		CCMovieFSK f = CCMovieFSK.getWrapper().find(intval);
 		if (f == null) return false;
 		setFSK(f);
 		

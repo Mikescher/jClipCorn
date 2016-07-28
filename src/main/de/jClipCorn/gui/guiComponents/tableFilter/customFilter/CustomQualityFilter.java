@@ -73,7 +73,7 @@ public class CustomQualityFilter extends AbstractCustomFilter {
 			return false;
 		}
 		
-		CCMovieQuality f = CCMovieQuality.find(intval);
+		CCMovieQuality f = CCMovieQuality.getWrapper().find(intval);
 		if (f == null) return false;
 		setQuality(f);
 		

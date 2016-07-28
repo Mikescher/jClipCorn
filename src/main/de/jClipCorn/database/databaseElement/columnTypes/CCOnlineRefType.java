@@ -7,9 +7,11 @@ import javax.swing.Icon;
 import de.jClipCorn.gui.CachedResourceLoader;
 import de.jClipCorn.gui.Resources;
 import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.util.enumextension.ContinoousEnum;
+import de.jClipCorn.util.enumextension.EnumWrapper;
 import de.jClipCorn.util.exceptions.OnlineRefFormatException;
 
-public enum CCOnlineRefType {
+public enum CCOnlineRefType implements ContinoousEnum<CCOnlineRefType> {
 	NONE(0),
 	IMDB(1),
 	AMAZON(2),
@@ -46,27 +48,28 @@ public enum CCOnlineRefType {
 	};
 	
 	private int id;
-	
+
+	private static EnumWrapper<CCOnlineRefType> wrapper = new EnumWrapper<>(NONE);
+
 	private CCOnlineRefType(int val) {
 		id = val;
 	}
 	
-	public int asInt() {
-		return id;
+	public static EnumWrapper<CCOnlineRefType> getWrapper() {
+		return wrapper;
 	}
 	
-	public static CCOnlineRefType find(int val) {
-		if (val >= 0 && val < CCOnlineRefType.values().length) {
-			return CCOnlineRefType.values()[val]; // Geht nur wenn alle Zahlen nach der Reihe da sind
-		}
-		return null;
+	@Override
+	public int asInt() {
+		return id;
 	}
 
 	public static int compare(CCMovieScore s1, CCMovieScore s2) {
 		return Integer.compare(s1.asInt(), s2.asInt());
 	}
 	
-	public static String[] getList() {
+	@Override
+	public String[] getList() {
 		return NAMES;
 	}
 	
@@ -74,6 +77,7 @@ public enum CCOnlineRefType {
 		return IDENTIFIER[asInt()];
 	}
 	
+	@Override
 	public String asString() {
 		return NAMES[asInt()];
 	}
@@ -180,5 +184,10 @@ public enum CCOnlineRefType {
 			}
 		}
 		return result;
+	}
+
+	@Override
+	public CCOnlineRefType[] evalues() {
+		return CCOnlineRefType.values();
 	}
 }

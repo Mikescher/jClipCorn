@@ -28,7 +28,7 @@ public class CustomReferenceFilterDialog extends CustomFilterDialog {
 		super(ft, fl);
 		initGUI();
 		
-		cbxMiddle.setModel(new DefaultComboBoxModel<>(CCOnlineRefType.getList()));
+		cbxMiddle.setModel(new DefaultComboBoxModel<>(CCOnlineRefType.getWrapper().getList()));
 		cbxMiddle.setSelectedIndex(ft.getReference().asInt());
 		
 		setLocationRelativeTo(parent);
@@ -65,6 +65,6 @@ public class CustomReferenceFilterDialog extends CustomFilterDialog {
 
 	@Override
 	protected void onAfterOK() {
-		getFilter().setReference(CCOnlineRefType.find(cbxMiddle.getSelectedIndex()));
+		getFilter().setReference(CCOnlineRefType.getWrapper().find(cbxMiddle.getSelectedIndex()));
 	}
 }

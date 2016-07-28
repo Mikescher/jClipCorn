@@ -4,9 +4,11 @@ import javax.swing.ImageIcon;
 
 import de.jClipCorn.gui.CachedResourceLoader;
 import de.jClipCorn.gui.Resources;
+import de.jClipCorn.util.enumextension.EnumWrapper;
+import de.jClipCorn.util.enumextension.ContinoousEnum;
 import de.jClipCorn.util.formatter.PathFormatter;
 
-public enum CCMovieFormat {
+public enum CCMovieFormat implements ContinoousEnum<CCMovieFormat> {
 	MKV(0),
 	AVI(1),
 	MPEG(2),
@@ -22,21 +24,22 @@ public enum CCMovieFormat {
 	private final static String ALTNAMES[] = {"mkv", "avi", "mpg", "img", "ifo", "wmv", "mp4", "divx", "flv"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$
 	private int id;
 	
+	private static EnumWrapper<CCMovieFormat> wrapper = new EnumWrapper<>(MKV);
+	
 	private CCMovieFormat(int val) {
 		id = val;
 	}
 	
+	public static EnumWrapper<CCMovieFormat> getWrapper() {
+		return wrapper;
+	}
+	
+	@Override
 	public int asInt() {
 		return id;
 	}
-	
-	public static CCMovieFormat find(int val) {
-		if (val >= 0 && val < CCMovieFormat.values().length) {
-			return CCMovieFormat.values()[val]; // Geht nur wenn alle Zahlen nach der Reihe da sind
-		}
-		return null;
-	}
 
+	@Override
 	public String asString() {
 		return NAMES[asInt()];
 	}
@@ -45,8 +48,14 @@ public enum CCMovieFormat {
 		return ALTNAMES[asInt()];
 	}
 	
-	public static String[] getList() {
+	@Override
+	public String[] getList() {
 		return NAMES;
+	}
+
+	@Override
+	public CCMovieFormat[] evalues() {
+		return CCMovieFormat.values();
 	}
 	
 	public static boolean isValidMovieFormat(String ext) {
@@ -67,13 +76,13 @@ public enum CCMovieFormat {
 	public static CCMovieFormat getMovieFormat(String ext) {
 		for (int i = 0; i < NAMES.length; i++) {
 			if (NAMES[i].equalsIgnoreCase(ext)) {
-				return CCMovieFormat.find(i);
+				return wrapper.find(i);
 			}
 		}
 		
 		for (int i = 0; i < ALTNAMES.length; i++) {
 			if (ALTNAMES[i].equalsIgnoreCase(ext)) {
-				return CCMovieFormat.find(i);
+				return wrapper.find(i);
 			}
 		}
 		

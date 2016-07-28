@@ -59,7 +59,7 @@ public class StatisticsProviderChart extends StatisticsChart {
 		int[] values = StatisticsHelper.getElementCountForAllProvider(movielist);
 		
 		for (int i = 0; i < values.length; i++) {
-			dataset.addValue(values[i], "Provider0", CCOnlineRefType.find(i).asString()); //$NON-NLS-1$
+			dataset.addValue(values[i], "Provider0", CCOnlineRefType.getWrapper().find(i).asString()); //$NON-NLS-1$
 		}
 		
         return dataset;

@@ -118,11 +118,11 @@ public class CustomScoreFilterDialog extends CustomFilterDialog {
 	}
 	
 	private void initValues() {
-		cbxLesser.setModel(new DefaultComboBoxModel<>(CCMovieScore.getList()));
-		cbxGreater.setModel(new DefaultComboBoxModel<>(CCMovieScore.getList()));
-		cbxBetween1.setModel(new DefaultComboBoxModel<>(CCMovieScore.getList()));
-		cbxBetween2.setModel(new DefaultComboBoxModel<>(CCMovieScore.getList()));
-		cbxExactly.setModel(new DefaultComboBoxModel<>(CCMovieScore.getList()));
+		cbxLesser.setModel(new DefaultComboBoxModel<>(CCMovieScore.getWrapper().getList()));
+		cbxGreater.setModel(new DefaultComboBoxModel<>(CCMovieScore.getWrapper().getList()));
+		cbxBetween1.setModel(new DefaultComboBoxModel<>(CCMovieScore.getWrapper().getList()));
+		cbxBetween2.setModel(new DefaultComboBoxModel<>(CCMovieScore.getWrapper().getList()));
+		cbxExactly.setModel(new DefaultComboBoxModel<>(CCMovieScore.getWrapper().getList()));
 		
 		switch (getFilter().getSearchType()) {
 		case LESSER:
@@ -148,20 +148,20 @@ public class CustomScoreFilterDialog extends CustomFilterDialog {
 	@Override
 	protected void onAfterOK() {
 		if (rdbtnLesser.isSelected()) {
-			getFilter().setHigh(CCMovieScore.find( cbxLesser.getSelectedIndex()));
+			getFilter().setHigh(CCMovieScore.getWrapper().find( cbxLesser.getSelectedIndex()));
 			
 			getFilter().setSearchType(DecimalSearchType.LESSER);
 		} else if (rdbtnGreater.isSelected()) {
-			getFilter().setLow(CCMovieScore.find(cbxGreater.getSelectedIndex()));
+			getFilter().setLow(CCMovieScore.getWrapper().find(cbxGreater.getSelectedIndex()));
 			
 			getFilter().setSearchType(DecimalSearchType.GREATER);
 		} else if (rdbtnBetween.isSelected()) {
-			getFilter().setLow(CCMovieScore.find(cbxBetween1.getSelectedIndex()));
-			getFilter().setHigh(CCMovieScore.find(cbxBetween2.getSelectedIndex()));
+			getFilter().setLow(CCMovieScore.getWrapper().find(cbxBetween1.getSelectedIndex()));
+			getFilter().setHigh(CCMovieScore.getWrapper().find(cbxBetween2.getSelectedIndex()));
 			
 			getFilter().setSearchType(DecimalSearchType.IN_RANGE);
 		} else if (rdbtnExactly.isSelected()) {
-			getFilter().setLow(CCMovieScore.find(cbxExactly.getSelectedIndex()));
+			getFilter().setLow(CCMovieScore.getWrapper().find(cbxExactly.getSelectedIndex()));
 			
 			getFilter().setSearchType(DecimalSearchType.EXACT);
 		}

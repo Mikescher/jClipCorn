@@ -28,7 +28,7 @@ public class CustomFSKFilterDialog extends CustomFilterDialog {
 		super(ft, fl);
 		initGUI();
 		
-		cbxMiddle.setModel(new DefaultComboBoxModel<>(CCMovieFSK.getList()));
+		cbxMiddle.setModel(new DefaultComboBoxModel<>(CCMovieFSK.getWrapper().getList()));
 		cbxMiddle.setSelectedIndex(ft.getFSK().asInt());
 		
 		setLocationRelativeTo(parent);
@@ -65,6 +65,6 @@ public class CustomFSKFilterDialog extends CustomFilterDialog {
 	
 	@Override
 	protected void onAfterOK() {
-		getFilter().setFSK(CCMovieFSK.find(cbxMiddle.getSelectedIndex()));
+		getFilter().setFSK(CCMovieFSK.getWrapper().find(cbxMiddle.getSelectedIndex()));
 	}
 }

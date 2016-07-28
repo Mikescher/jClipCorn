@@ -701,11 +701,11 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler, 
 	}
 
 	private void setDefaultValues() {
-		cbxQuality.setModel(new DefaultComboBoxModel<>(CCMovieQuality.getList()));
-		cbxSideQuality.setModel(new DefaultComboBoxModel<>(CCMovieQuality.getList()));
+		cbxQuality.setModel(new DefaultComboBoxModel<>(CCMovieQuality.getWrapper().getList()));
+		cbxSideQuality.setModel(new DefaultComboBoxModel<>(CCMovieQuality.getWrapper().getList()));
 
-		cbxFormat.setModel(new DefaultComboBoxModel<>(CCMovieFormat.getList()));
-		cbxSideFormat.setModel(new DefaultComboBoxModel<>(CCMovieFormat.getList()));
+		cbxFormat.setModel(new DefaultComboBoxModel<>(CCMovieFormat.getWrapper().getList()));
+		cbxSideFormat.setModel(new DefaultComboBoxModel<>(CCMovieFormat.getWrapper().getList()));
 	}
 
 	private void onBtnNext() {
@@ -782,8 +782,8 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler, 
 
 		long fsize = (long) spnSize.getValue();
 		int quality = cbxQuality.getSelectedIndex();
-		String csExtn = CCMovieFormat.find(cbxFormat.getSelectedIndex()).asString();
-		String csExta = CCMovieFormat.find(cbxFormat.getSelectedIndex()).asStringAlt();
+		String csExtn = CCMovieFormat.getWrapper().find(cbxFormat.getSelectedIndex()).asString();
+		String csExta = CCMovieFormat.getWrapper().find(cbxFormat.getSelectedIndex()).asStringAlt();
 
 		String part = edPart.getText();
 

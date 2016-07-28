@@ -151,7 +151,7 @@ public final class CCDate implements Comparable<CCDate>, StringSpecSupplier {
 	}
 	
 	public CCWeekday getWeekdayEnum() {
-		return CCWeekday.find(getWeekdayInt());
+		return CCWeekday.getWrapper().find(getWeekdayInt());
 	}
 	
 	public String getStringRepresentation(String fmt) {

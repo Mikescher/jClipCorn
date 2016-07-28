@@ -16,7 +16,7 @@ import de.jClipCorn.util.datatypes.DoubleString;
 import de.jClipCorn.util.helper.HTTPUtilities;
 
 public class ImDBParser {
-	public final static ImDBLanguage LANGUAGE = ImDBLanguage.find(CCProperties.getInstance().PROP_PARSEIMDB_LANGUAGE.getValue());
+	public final static ImDBLanguage LANGUAGE = ImDBLanguage.getWrapper().find(CCProperties.getInstance().PROP_PARSEIMDB_LANGUAGE.getValue());
 	
 	private final static Pattern REGEX_IMDB_ID = Pattern.compile("^.*imdb\\.com/[a-z]+/(tt[0-9]+)(/.*)?$", Pattern.CASE_INSENSITIVE); //$NON-NLS-1$
 	

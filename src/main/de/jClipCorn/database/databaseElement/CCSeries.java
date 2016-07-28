@@ -93,7 +93,7 @@ public class CCSeries extends CCDatabaseElement {
 			qual = Math.max(0, qual);
 			qual = Math.min(qual, CCMovieQuality.values().length - 1);
 			
-			return CCMovieQuality.find(qual);
+			return CCMovieQuality.getWrapper().find(qual);
 		} else {
 			return CCMovieQuality.STREAM;
 		}
@@ -190,7 +190,7 @@ public class CCSeries extends CCDatabaseElement {
 			}
 		}
 		
-		return CCMovieFormat.find(maxid);
+		return CCMovieFormat.getWrapper().find(maxid);
 	}
 	
 	@Override

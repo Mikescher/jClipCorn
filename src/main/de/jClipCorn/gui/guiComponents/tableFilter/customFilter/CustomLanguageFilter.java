@@ -73,7 +73,7 @@ public class CustomLanguageFilter extends AbstractCustomFilter {
 			return false;
 		}
 		
-		CCMovieLanguage f = CCMovieLanguage.find(intval);
+		CCMovieLanguage f = CCMovieLanguage.getWrapper().find(intval);
 		if (f == null) return false;
 		setLanguage(f);
 		

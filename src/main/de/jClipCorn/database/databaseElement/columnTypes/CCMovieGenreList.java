@@ -105,7 +105,7 @@ public class CCMovieGenreList {
 
 	public CCMovieGenre getGenre(int idx) {
 		if (idx >= 0 && idx < SIZE) {
-			return CCMovieGenre.find(getGenreInt(idx));
+			return CCMovieGenre.getWrapper().find(getGenreInt(idx));
 		} else {
 			return null;
 		}

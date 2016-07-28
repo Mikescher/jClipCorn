@@ -5,8 +5,10 @@ import java.util.Comparator;
 
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
+import de.jClipCorn.util.enumextension.EnumWrapper;
+import de.jClipCorn.util.enumextension.ContinoousEnum;
 
-public enum CCMovieGenre {
+public enum CCMovieGenre implements ContinoousEnum<CCMovieGenre> {
 	GENRE_000(0x00), GENRE_001(0x01), GENRE_002(0x02), GENRE_003(0x03), GENRE_004(0x04), GENRE_005(0x05), GENRE_006(0x06), GENRE_007(0x07),
 	GENRE_008(0x08), GENRE_009(0x09), GENRE_010(0x0A), GENRE_011(0x0B), GENRE_012(0x0C), GENRE_013(0x0D), GENRE_014(0x0E), GENRE_015(0x0F),
 	GENRE_016(0x10), GENRE_017(0x11), GENRE_018(0x12), GENRE_019(0x13), GENRE_020(0x14), GENRE_021(0x15), GENRE_022(0x16), GENRE_023(0x17),
@@ -61,21 +63,22 @@ public enum CCMovieGenre {
 	
 	private int id;
 	
+	private static EnumWrapper<CCMovieGenre> wrapper = new EnumWrapper<>(GENRE_000);
+
 	private CCMovieGenre(int val) {
 		id = val;
 	}
 	
+	public static EnumWrapper<CCMovieGenre> getWrapper() {
+		return wrapper;
+	}
+	
+	@Override
 	public int asInt() {
 		return id;
 	}
-	
-	public static CCMovieGenre find(int val) {
-		if (val >= 0 && val < CCMovieGenre.values().length) { 
-			return CCMovieGenre.values()[val]; // Geht nur wenn alle Zahlen nach der Reihe da sind
-		}
-		return null;
-	}
 
+	@Override
 	public String asString() {
 		if (id < NAMES.length) {
 			return NAMES[id];
@@ -85,13 +88,14 @@ public enum CCMovieGenre {
 		}
 	}
 
-	public static String[] getList() {
+	@Override
+	public String[] getList() {
 		return NAMES;
 	}
 
 	public static String[] getTrimmedList() {
 		ArrayList<String> res = new ArrayList<>();
-		for (String s : getList()) {
+		for (String s : getWrapper().getList()) {
 			if (s.equals(LocaleBundle.getString("CCMovieGenre.Genre000"))) { //$NON-NLS-1$
 				res.add(" "); //$NON-NLS-1$
 			} else if (!s.isEmpty()) {
@@ -249,7 +253,7 @@ public enum CCMovieGenre {
 			CCLog.addWarning(LocaleBundle.getFormattedString("LogMessage.CouldNotParseGenre", ng));
 		}
 
-		return CCMovieGenre.find(genID);
+		return getWrapper().find(genID);
 	}
 
 	public static CCMovieGenre parseFromTMDbID(int id) {
@@ -341,5 +345,10 @@ public enum CCMovieGenre {
 				return Integer.compare(o1.asInt(), o2.asInt());
 			}
 		};
+	}
+
+	@Override
+	public CCMovieGenre[] evalues() {
+		return CCMovieGenre.values();
 	}
 }

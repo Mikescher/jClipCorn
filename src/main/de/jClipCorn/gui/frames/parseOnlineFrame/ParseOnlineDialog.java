@@ -440,7 +440,7 @@ public class ParseOnlineDialog extends JDialog {
 	}
 	
 	private void initComboboxes() {
-		cbxFSK.setModel(new DefaultComboBoxModel<>(CCMovieFSK.getList()));
+		cbxFSK.setModel(new DefaultComboBoxModel<>(CCMovieFSK.getWrapper().getList()));
 		
 		cbxGenre0.setModel(new DefaultComboBoxModel<>(CCMovieGenre.getTrimmedList()));
 		cbxGenre1.setModel(new DefaultComboBoxModel<>(CCMovieGenre.getTrimmedList()));

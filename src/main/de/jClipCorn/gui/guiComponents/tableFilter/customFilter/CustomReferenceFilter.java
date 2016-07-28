@@ -74,7 +74,7 @@ public class CustomReferenceFilter extends AbstractCustomFilter {
 			return false;
 		}
 		
-		CCOnlineRefType f = CCOnlineRefType.find(intval);
+		CCOnlineRefType f = CCOnlineRefType.getWrapper().find(intval);
 		if (f == null) return false;
 		setReference(f);
 		

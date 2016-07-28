@@ -763,14 +763,14 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		newM.setYear((int) spnYear.getValue());
 		newM.setFilesize((long) spnSize.getValue());
 		
-		newM.setGenre(CCMovieGenre.find(cbxGenre0.getSelectedIndex()), 0);
-		newM.setGenre(CCMovieGenre.find(cbxGenre1.getSelectedIndex()), 1);
-		newM.setGenre(CCMovieGenre.find(cbxGenre2.getSelectedIndex()), 2);
-		newM.setGenre(CCMovieGenre.find(cbxGenre3.getSelectedIndex()), 3);
-		newM.setGenre(CCMovieGenre.find(cbxGenre4.getSelectedIndex()), 4);
-		newM.setGenre(CCMovieGenre.find(cbxGenre5.getSelectedIndex()), 5);
-		newM.setGenre(CCMovieGenre.find(cbxGenre6.getSelectedIndex()), 6);
-		newM.setGenre(CCMovieGenre.find(cbxGenre7.getSelectedIndex()), 7);
+		newM.setGenre(CCMovieGenre.getWrapper().find(cbxGenre0.getSelectedIndex()), 0);
+		newM.setGenre(CCMovieGenre.getWrapper().find(cbxGenre1.getSelectedIndex()), 1);
+		newM.setGenre(CCMovieGenre.getWrapper().find(cbxGenre2.getSelectedIndex()), 2);
+		newM.setGenre(CCMovieGenre.getWrapper().find(cbxGenre3.getSelectedIndex()), 3);
+		newM.setGenre(CCMovieGenre.getWrapper().find(cbxGenre4.getSelectedIndex()), 4);
+		newM.setGenre(CCMovieGenre.getWrapper().find(cbxGenre5.getSelectedIndex()), 5);
+		newM.setGenre(CCMovieGenre.getWrapper().find(cbxGenre6.getSelectedIndex()), 6);
+		newM.setGenre(CCMovieGenre.getWrapper().find(cbxGenre7.getSelectedIndex()), 7);
 		
 		newM.setScore(cbxScore.getSelectedIndex());
 		newM.setOnlineReference(edReference.getValue());
@@ -809,19 +809,19 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 			rdbtnDisableAutomRelative.setSelected(true);
 		}
 		
-		cbxQuality.setModel(new DefaultComboBoxModel<>(CCMovieQuality.getList()));
+		cbxQuality.setModel(new DefaultComboBoxModel<>(CCMovieQuality.getWrapper().getList()));
 		
-		cbxLanguage.setModel(new DefaultComboBoxModel<>(CCMovieLanguage.getList()));
+		cbxLanguage.setModel(new DefaultComboBoxModel<>(CCMovieLanguage.getWrapper().getList()));
 		
-		cbxScore.setModel(new DefaultComboBoxModel<>(CCMovieScore.getList()));
+		cbxScore.setModel(new DefaultComboBoxModel<>(CCMovieScore.getWrapper().getList()));
 		cbxScore.setSelectedIndex(cbxScore.getModel().getSize() - 1);
 		
 		DefaultComboBoxModel<String> cbFSKdcbm;
-		cbxFSK.setModel(cbFSKdcbm = new DefaultComboBoxModel<>(CCMovieFSK.getList()));
+		cbxFSK.setModel(cbFSKdcbm = new DefaultComboBoxModel<>(CCMovieFSK.getWrapper().getList()));
 		cbFSKdcbm.addElement(" "); //$NON-NLS-1$
 		cbxFSK.setSelectedIndex(cbFSKdcbm.getSize() - 1);
 		
-		cbxFormat.setModel(new DefaultComboBoxModel<>(CCMovieFormat.getList()));
+		cbxFormat.setModel(new DefaultComboBoxModel<>(CCMovieFormat.getWrapper().getList()));
 		
 		cbxGenre0.setModel(new DefaultComboBoxModel<>(CCMovieGenre.getTrimmedList()));
 		cbxGenre1.setModel(new DefaultComboBoxModel<>(CCMovieGenre.getTrimmedList()));
@@ -1171,8 +1171,8 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		long fsize = (long) spnSize.getValue();
 		int quality = cbxQuality.getSelectedIndex();
 		int lang = cbxLanguage.getSelectedIndex();
-		String csExtn  = CCMovieFormat.find(cbxFormat.getSelectedIndex()).asString();
-		String csExta = CCMovieFormat.find(cbxFormat.getSelectedIndex()).asStringAlt();
+		String csExtn  = CCMovieFormat.getWrapper().find(cbxFormat.getSelectedIndex()).asString();
+		String csExta = CCMovieFormat.getWrapper().find(cbxFormat.getSelectedIndex()).asStringAlt();
 		
 		int g0 = cbxGenre0.getSelectedIndex();
 		int g1 = cbxGenre1.getSelectedIndex();

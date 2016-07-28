@@ -94,18 +94,18 @@ public class CCDatabase {
 	private String databasePath;
 	private GenericDatabase db;
 		
-	private CCDatabase(int driver) {
+	private CCDatabase(CCDatabaseDriver driver) {
 		super();
 		
 		switch (driver) {
-		case -1:
-			db = new StubDatabase();
-			break;
-		case 0:
+		case DERBY:
 			db = new DerbyDatabase();
 			break;
-		case 1:
+		case SQLITE:
 			db = new SQLiteDatabase();
+			break;
+		case STUB:
+			db = new StubDatabase();
 			break;
 		}
 	}
@@ -115,7 +115,7 @@ public class CCDatabase {
 	}
 	
 	public static CCDatabase createStub() {
-		return new CCDatabase(-1);
+		return new CCDatabase(CCDatabaseDriver.STUB);
 	}
 	
 	public boolean exists(String path) {

@@ -131,7 +131,7 @@ public class CustomTitleFilter extends AbstractCustomFilter {
 		} catch (NumberFormatException e) {
 			return false;
 		}
-		s = StringMatchType.find(intval);
+		s = StringMatchType.getWrapper().find(intval);
 		if (s == null) return false;
 		setStringMatch(s);
 		

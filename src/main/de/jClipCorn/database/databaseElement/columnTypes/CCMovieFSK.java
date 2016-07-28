@@ -5,8 +5,10 @@ import javax.swing.ImageIcon;
 import de.jClipCorn.gui.CachedResourceLoader;
 import de.jClipCorn.gui.Resources;
 import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.util.enumextension.EnumWrapper;
+import de.jClipCorn.util.enumextension.ContinoousEnum;
 
-public enum CCMovieFSK {
+public enum CCMovieFSK implements ContinoousEnum<CCMovieFSK> {
 	RATING_0(0), // keine Alterschbeschräkung
 	RATING_I(1), // ab 6 Jahren
 	RATING_II(2), // ab 12 Jahren
@@ -20,27 +22,29 @@ public enum CCMovieFSK {
 			LocaleBundle.getString("CCMovieFSK.FSK4") }; //$NON-NLS-1$
 	private final static int AGES[] = { 0, 6, 12, 16, 18 };
 	private int id;
+	
+	private static EnumWrapper<CCMovieFSK> wrapper = new EnumWrapper<>(RATING_0);
 
 	private CCMovieFSK(int val) {
 		id = val;
 	}
+	
+	public static EnumWrapper<CCMovieFSK> getWrapper() {
+		return wrapper;
+	}
 
+	@Override
 	public int asInt() {
 		return id;
 	}
 
-	public static CCMovieFSK find(int val) {
-		if (val >= 0 && val < CCMovieFSK.values().length) {
-			return CCMovieFSK.values()[val]; // Geht nur wenn alle Zahlen nach der Reihe da sind
-		}
-		return null;
-	}
-
+	@Override
 	public String asString() {
 		return NAMES[asInt()];
 	}
 
-	public static String[] getList() {
+	@Override
+	public String[] getList() {
 		return NAMES;
 	}
 
@@ -55,7 +59,7 @@ public enum CCMovieFSK {
 			}
 		}
 
-		return find(val);
+		return getWrapper().find(val);
 	}
 
 	public static int compare(CCMovieFSK o1, CCMovieFSK o2) {
@@ -77,5 +81,10 @@ public enum CCMovieFSK {
 		default:
 			return null;
 		}
+	}
+
+	@Override
+	public CCMovieFSK[] evalues() {
+		return CCMovieFSK.values();
 	}
 }

@@ -15,6 +15,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
+import de.jClipCorn.database.CCDatabaseDriver;
 import de.jClipCorn.gui.CachedResourceLoader;
 import de.jClipCorn.gui.Resources;
 import de.jClipCorn.gui.localization.LocaleBundle;
@@ -77,8 +78,19 @@ public class InitialConfigFrame extends JDialog {
 		lblDatenbanktyp.setBounds(12, 151, 243, 16);
 		getContentPane().add(lblDatenbanktyp);
 		
-		cbxDatabaseDriver = new JComboBox<>(new DefaultComboBoxModel<>(CCProperties.getInstance().getDatabaseDriverOptions()));
-		cbxDatabaseDriver.setSelectedIndex(CCProperties.getInstance().PROP_DATABASE_DRIVER.getValue());
+		DefaultComboBoxModel<String> modelDatabaseDriver = new DefaultComboBoxModel<>();
+		modelDatabaseDriver.addElement(CCDatabaseDriver.DERBY.asString());
+		modelDatabaseDriver.addElement(CCDatabaseDriver.SQLITE.asString());
+		cbxDatabaseDriver = new JComboBox<>();
+		switch (CCProperties.getInstance().PROP_DATABASE_DRIVER.getValue()) {
+		case DERBY:
+			cbxDatabaseDriver.setSelectedIndex(0);
+			break;
+		default:
+		case SQLITE:
+			cbxDatabaseDriver.setSelectedIndex(1);
+			break;
+		}
 		cbxDatabaseDriver.setBounds(273, 147, 175, 25);
 		getContentPane().add(cbxDatabaseDriver);
 		
@@ -214,7 +226,14 @@ public class InitialConfigFrame extends JDialog {
 			return;
 		}
 		
-		CCProperties.getInstance().PROP_DATABASE_DRIVER.setValue(cbxDatabaseDriver.getSelectedIndex());
+		switch (cbxDatabaseDriver.getSelectedIndex()) {
+		case 0:
+			CCProperties.getInstance().PROP_DATABASE_DRIVER.setValue(CCDatabaseDriver.DERBY);
+			break;
+		case 1:
+			CCProperties.getInstance().PROP_DATABASE_DRIVER.setValue(CCDatabaseDriver.SQLITE);
+			break;
+		}
 		
 		CCProperties.getInstance().PROP_COMMON_CHECKFORUPDATES.setValue(cbCheckForUpdates.isSelected());
 		

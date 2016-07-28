@@ -1,8 +1,10 @@
 package de.jClipCorn.util.datetime;
 
 import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.util.enumextension.ContinoousEnum;
+import de.jClipCorn.util.enumextension.EnumWrapper;
 
-public enum CCWeekday {
+public enum CCWeekday implements ContinoousEnum<CCWeekday> {
 	UNKNOWN(0),
 	MONDAY(1),
 	TUESDAY(2),
@@ -22,28 +24,36 @@ public enum CCWeekday {
 			LocaleBundle.getString("CCDate.Day6"), //$NON-NLS-1$
 			LocaleBundle.getString("CCDate.Day7") //$NON-NLS-1$
 	};
+	
 	private int id;
+	
+	private static EnumWrapper<CCWeekday> wrapper = new EnumWrapper<>(UNKNOWN);
 
 	private CCWeekday(int val) {
 		id = val;
 	}
+	
+	public static EnumWrapper<CCWeekday> getWrapper() {
+		return wrapper;
+	}
 
+	@Override
 	public int asInt() {
 		return id;
 	}
 
-	public static CCWeekday find(int val) {
-		if (val >= 0 && val < CCWeekday.values().length) {
-			return CCWeekday.values()[val]; // Geht nur wenn alle Zahlen nach der Reihe da sind
-		}
-		return null;
-	}
-
+	@Override
 	public String asString() {
 		return NAMES[asInt()];
 	}
 
-	public static String[] getList() {
+	@Override
+	public String[] getList() {
 		return NAMES;
+	}
+
+	@Override
+	public CCWeekday[] evalues() {
+		return CCWeekday.values();
 	}
 }

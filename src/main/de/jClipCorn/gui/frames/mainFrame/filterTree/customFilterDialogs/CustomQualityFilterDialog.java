@@ -28,7 +28,7 @@ public class CustomQualityFilterDialog extends CustomFilterDialog {
 		super(ft, fl);
 		initGUI();
 		
-		cbxMiddle.setModel(new DefaultComboBoxModel<>(CCMovieQuality.getList()));
+		cbxMiddle.setModel(new DefaultComboBoxModel<>(CCMovieQuality.getWrapper().getList()));
 		cbxMiddle.setSelectedIndex(ft.getQuality().asInt());
 		
 		setLocationRelativeTo(parent);
@@ -65,6 +65,6 @@ public class CustomQualityFilterDialog extends CustomFilterDialog {
 
 	@Override
 	protected void onAfterOK() {
-		getFilter().setQuality(CCMovieQuality.find(cbxMiddle.getSelectedIndex()));
+		getFilter().setQuality(CCMovieQuality.getWrapper().find(cbxMiddle.getSelectedIndex()));
 	}
 }

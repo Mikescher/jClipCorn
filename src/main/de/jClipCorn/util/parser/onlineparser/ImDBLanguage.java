@@ -1,23 +1,47 @@
 package de.jClipCorn.util.parser.onlineparser;
 
-public enum ImDBLanguage {
+import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.util.enumextension.ContinoousEnum;
+import de.jClipCorn.util.enumextension.EnumWrapper;
+
+public enum ImDBLanguage implements ContinoousEnum<ImDBLanguage> {
 	GERMAN(0), 
 	ENGLISH(1);
 
+	private final static String NAMES[] = {
+		LocaleBundle.getString("ImDBLanguage.GERMAN"),    //$NON-NLS-1$
+		LocaleBundle.getString("ImDBLanguage.ENGLISH")    //$NON-NLS-1$
+	};
+
 	private int id;
+	
+	private static EnumWrapper<ImDBLanguage> wrapper = new EnumWrapper<>(GERMAN);
 
 	private ImDBLanguage(int val) {
 		id = val;
 	}
-
-	public static ImDBLanguage find(int val) {
-		if (val >= 0 && val < ImDBLanguage.values().length) {
-			return ImDBLanguage.values()[val]; // Geht nur wenn alle Zahlen nach der Reihe da sind
-		}
-		return null;
+	
+	public static EnumWrapper<ImDBLanguage> getWrapper() {
+		return wrapper;
 	}
 	
+	@Override
 	public int asInt() {
 		return id;
+	}
+
+	@Override
+	public String asString() {
+		return NAMES[asInt()];
+	}
+
+	@Override
+	public String[] getList() {
+		return NAMES;
+	}
+
+	@Override
+	public ImDBLanguage[] evalues() {
+		return ImDBLanguage.values();
 	}
 }

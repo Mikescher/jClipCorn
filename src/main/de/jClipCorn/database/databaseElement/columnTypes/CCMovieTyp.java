@@ -5,8 +5,10 @@ import javax.swing.ImageIcon;
 import de.jClipCorn.gui.CachedResourceLoader;
 import de.jClipCorn.gui.Resources;
 import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.util.enumextension.ContinoousEnum;
+import de.jClipCorn.util.enumextension.EnumWrapper;
 
-public enum CCMovieTyp {
+public enum CCMovieTyp implements ContinoousEnum<CCMovieTyp> {
 	MOVIE(0),
 	SERIES(1);
 	
@@ -16,27 +18,29 @@ public enum CCMovieTyp {
 	};
 	
 	private int id;
-	
+
+	private static EnumWrapper<CCMovieTyp> wrapper = new EnumWrapper<>(MOVIE);
+
 	private CCMovieTyp(int val) {
 		id = val;
 	}
 	
+	public static EnumWrapper<CCMovieTyp> getWrapper() {
+		return wrapper;
+	}
+	
+	@Override
 	public int asInt() {
 		return id;
 	}
 	
+	@Override
 	public String asString() {
 		return NAMES[asInt()];
 	}
 	
-	public static CCMovieTyp find(int val) {
-		if (val >= 0 && val < CCMovieFormat.values().length) {
-			return CCMovieTyp.values()[val]; // Geht nur wenn alle Zahlen nach der Reihe da sind
-		}
-		return null;
-	}
-	
-	public static String[] getList() {
+	@Override
+	public String[] getList() {
 		return NAMES;
 	}
 	
@@ -50,5 +54,10 @@ public enum CCMovieTyp {
 			return null;
 		}
 		
+	}
+
+	@Override
+	public CCMovieTyp[] evalues() {
+		return CCMovieTyp.values();
 	}
 }

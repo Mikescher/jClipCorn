@@ -6,8 +6,10 @@ import de.jClipCorn.gui.CachedResourceLoader;
 import de.jClipCorn.gui.Resources;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.localization.util.LocalizedVector;
+import de.jClipCorn.util.enumextension.ContinoousEnum;
+import de.jClipCorn.util.enumextension.EnumWrapper;
 
-public enum CCMovieLanguage {
+public enum CCMovieLanguage implements ContinoousEnum<CCMovieLanguage> {
 	GERMAN(0),
 	ENGLISH(1),
 	MUTED(2),
@@ -39,9 +41,14 @@ public enum CCMovieLanguage {
 	};
 	
 	private int id;
-	
+	private static EnumWrapper<CCMovieLanguage> wrapper = new EnumWrapper<>(GERMAN);
+
 	private CCMovieLanguage(int val) {
 		id = val;
+	}
+	
+	public static EnumWrapper<CCMovieLanguage> getWrapper() {
+		return wrapper;
 	}
 
 	public static LocalizedVector valueNames() {
@@ -52,22 +59,18 @@ public enum CCMovieLanguage {
 		return lv;
 	}
 	
+	@Override
 	public int asInt() {
 		return id;
 	}
 	
+	@Override
 	public String asString() {
 		return NAMES[asInt()];
 	}
 	
-	public static CCMovieLanguage find(int val) {
-		if (val >= 0 && val < CCMovieLanguage.values().length) {
-			return CCMovieLanguage.values()[val]; // Geht nur wenn alle Zahlen nach der Reihe da sind
-		}
-		return null;
-	}
-	
-	public static String[] getList() {
+	@Override
+	public String[] getList() {
 		return NAMES;
 	}
 
@@ -94,5 +97,10 @@ public enum CCMovieLanguage {
 
 	public String getShortString() {
 		return SHORTNAMES[asInt()];
+	}
+
+	@Override
+	public CCMovieLanguage[] evalues() {
+		return CCMovieLanguage.values();
 	}
 }

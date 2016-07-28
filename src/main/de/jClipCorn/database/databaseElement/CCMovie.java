@@ -153,7 +153,7 @@ public class CCMovie extends CCDatabaseElement {
 	}
 
 	public void setQuality(int quality) {
-		this.quality = CCMovieQuality.find(quality);
+		this.quality = CCMovieQuality.getWrapper().find(quality);
 		
 		if (this.quality == null) {
 			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.ErroneousDatabaseValues", quality)); //$NON-NLS-1$
@@ -210,7 +210,7 @@ public class CCMovie extends CCDatabaseElement {
 	}
 
 	public void setFormat(int format) {
-		this.format = CCMovieFormat.find(format);
+		this.format = CCMovieFormat.getWrapper().find(format);
 		
 		updateDB();
 	}

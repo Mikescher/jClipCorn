@@ -74,7 +74,7 @@ public class CustomTypFilter extends AbstractCustomFilter {
 			return false;
 		}
 		
-		CCMovieTyp f = CCMovieTyp.find(intval);
+		CCMovieTyp f = CCMovieTyp.getWrapper().find(intval);
 		if (f == null) return false;
 		setTyp(f);
 		

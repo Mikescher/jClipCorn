@@ -1,25 +1,51 @@
 package de.jClipCorn.util;
 
-public enum DecimalSearchType {
+import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.util.enumextension.ContinoousEnum;
+import de.jClipCorn.util.enumextension.EnumWrapper;
+
+public enum DecimalSearchType implements ContinoousEnum<DecimalSearchType> {
 	LESSER(0),
 	GREATER(1),
 	IN_RANGE(2),
 	EXACT(3);
+
+	private final static String NAMES[] = {
+		LocaleBundle.getString("DecimalSearchType.LESSER"),    //$NON-NLS-1$
+		LocaleBundle.getString("DecimalSearchType.GREATER"),   //$NON-NLS-1$
+		LocaleBundle.getString("DecimalSearchType.IN_RANGE"),  //$NON-NLS-1$
+		LocaleBundle.getString("DecimalSearchType.EXACT")      //$NON-NLS-1$
+	};
 	
 	private final int id;
 	
-	DecimalSearchType(int id) {
-		this.id = id;
+	private static EnumWrapper<DecimalSearchType> wrapper = new EnumWrapper<>(LESSER);
+
+	private DecimalSearchType(int val) {
+		id = val;
 	}
 	
-	public static DecimalSearchType find(int val) {
-		if (val >= 0 && val < DecimalSearchType.values().length) {
-			return DecimalSearchType.values()[val]; // Geht nur wenn alle Zahlen nach der Reihe da sind
-		}
-		return null;
+	public static EnumWrapper<DecimalSearchType> getWrapper() {
+		return wrapper;
 	}
 	
+	@Override
 	public int asInt() {
 		return id;
+	}
+
+	@Override
+	public String asString() {
+		return NAMES[asInt()];
+	}
+
+	@Override
+	public String[] getList() {
+		return NAMES;
+	}
+
+	@Override
+	public DecimalSearchType[] evalues() {
+		return DecimalSearchType.values();
 	}
 }

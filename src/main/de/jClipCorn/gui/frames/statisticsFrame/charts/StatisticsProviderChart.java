@@ -2,12 +2,9 @@ package de.jClipCorn.gui.frames.statisticsFrame.charts;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
-import org.jfree.chart.axis.NumberAxis;
-import org.jfree.chart.plot.CategoryPlot;
-import org.jfree.chart.plot.PlotOrientation;
-import org.jfree.chart.renderer.category.BarRenderer;
-import org.jfree.chart.renderer.category.StandardBarPainter;
-import org.jfree.data.category.DefaultCategoryDataset;
+import org.jfree.chart.plot.PiePlot3D;
+import org.jfree.data.general.DefaultPieDataset;
+import org.jfree.util.Rotation;
 
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineRefType;
@@ -21,45 +18,43 @@ public class StatisticsProviderChart extends StatisticsChart {
 
 	@Override
 	protected JFreeChart createChart(CCMovieList movielist) {
-		JFreeChart chart = ChartFactory.createBarChart(
-	            "",      //$NON-NLS-1$
-	            "",      //$NON-NLS-1$
+		JFreeChart chart = ChartFactory.createPieChart3D(
 	            "",      //$NON-NLS-1$
 	            getDataSet(movielist),               
-	            PlotOrientation.VERTICAL, 
 	            false,                  
-	            false,
+	            true, // tooltips
 	            false
 	    );
-		
+
 		chart.removeLegend();
-		
-		CategoryPlot plot = chart.getCategoryPlot();
-		
-		BarRenderer renderer = new BarRenderer();
-		renderer.setSeriesPaint(0, BARCHART_COLOR);
-		renderer.setBarPainter(new StandardBarPainter());
-		plot.setRenderer(renderer);
-		
+
+		PiePlot3D plot = (PiePlot3D) chart.getPlot();
+		plot.setStartAngle(290);
+		plot.setDirection(Rotation.CLOCKWISE);
+		plot.setForegroundAlpha(0.5f);
+
 		plot.setBackgroundPaint(XYBACKGROUND_COLOR);
-		plot.setDomainGridlinePaint(GRIDLINECOLOR);
-		plot.setRangeGridlinePaint(GRIDLINECOLOR);
-		
+
 		chart.setBackgroundPaint(null);
-		plot.getDomainAxis().setTickLabelPaint(TEXT_FOREGROUND);
-		plot.getRangeAxis().setTickLabelPaint(TEXT_FOREGROUND);
-		plot.getRangeAxis().setStandardTickUnits(NumberAxis.createIntegerTickUnits());
-	    
+
+		if (ROTATE_PIE) {
+			PieRotator rotator = new PieRotator(plot);
+			rotator.start();
+		}
+
 	    return chart;
 	}
 	
-	private DefaultCategoryDataset getDataSet(CCMovieList movielist) {
-		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+	@SuppressWarnings("nls")
+	private DefaultPieDataset getDataSet(CCMovieList movielist) {
+		DefaultPieDataset dataset = new DefaultPieDataset();
 		
 		int[] values = StatisticsHelper.getElementCountForAllProvider(movielist);
 		
 		for (int i = 0; i < values.length; i++) {
-			dataset.addValue(values[i], "Provider0", CCOnlineRefType.getWrapper().find(i).asString()); //$NON-NLS-1$
+			if (values[i] > 0) {
+				dataset.setValue(CCOnlineRefType.getWrapper().find(i).asString() + " [" + values[i] + "]", values[i]);
+			}
 		}
 		
         return dataset;

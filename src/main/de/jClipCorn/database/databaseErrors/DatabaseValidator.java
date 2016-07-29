@@ -728,7 +728,7 @@ public class DatabaseValidator {
 			CCDatabaseElement el = it.next();
 			
 			if (el.getOnlineReference().isSet()) {
-				if (! refSet.add(el.getOnlineReference().toSerializationString())) {
+				if (! refSet.add(el.getLanguage().asInt() + '_' + el.getOnlineReference().toSerializationString())) {
 					e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_DUPLICATE_REF, el));
 				}
 			}

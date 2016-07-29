@@ -38,7 +38,6 @@ public class DateTimeListEditor extends JPanel {
 	private JButton btnRemove;
 	private JList<CCDateTime> list;
 	private JPanel panel_1;
-	
 	private DefaultListModel<CCDateTime> listModel;
 	private JLabel lblCount;
 	private JPanel panel_4;
@@ -156,29 +155,36 @@ public class DateTimeListEditor extends JPanel {
 	}
 	
 	private void resortList() {
-	    List<CCDateTime> list = new ArrayList<>();
+	    HashSet<CCDateTime> hash = new HashSet<>();
 	    for (int i = 0; i < listModel.size(); i++) {
-	        list.add(listModel.get(i));
+	    	hash.add(listModel.get(i));
 	    }
 	    
+	    List<CCDateTime> list = new ArrayList<>(hash);
 	    Collections.sort(list);
 	    
 	    listModel.removeAllElements();
-	    for (CCDateTime s : new HashSet<>(list)) {
+	    for (CCDateTime s : list) {
 	    	listModel.addElement(s);
 	    }
 	    
 	    lblCount.setText(Integer.toString(listModel.size()));
 	}
 	
-	public void setValue(CCDateTimeList list) {
+	public void setValue(CCDateTimeList dtlist) {
 		listModel.clear();
 		
-		for (CCDateTime dt : list) {
+		for (CCDateTime dt : dtlist) {
 			listModel.addElement(dt);
 		}
 		
 		resortList();
+		
+		if (listModel.isEmpty()) {
+			list.setSelectedIndex(-1);
+		} else {
+			list.setSelectedIndex(0);
+		}
 	}
 	
 	public CCDateTimeList getValue() {

@@ -42,6 +42,8 @@ public class ClipTable extends JScrollPane implements CCDBUpdateListener, ListSe
 
 	private TableColumnAdjuster adjuster;
 
+	private boolean suppressRowFilterResetEvents = false;
+
 	public ClipTable(CCMovieList ml, MainFrame owner) {
 		super();
 		this.owner = owner;
@@ -225,19 +227,27 @@ public class ClipTable extends JScrollPane implements CCDBUpdateListener, ListSe
 			setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		}
 	}
-
+	
 	@SuppressWarnings("unchecked")
 	public void setRowFilter(RowFilter<ClipTableModel, Object> filter, RowFilterSource source) { // Source kann null sein
 		model.clearMapping();
 		
-		if (source != RowFilterSource.CHARSELECTOR) {
-			owner.resetCharSelector();
-		}
-		if (source != RowFilterSource.SIDEBAR) {
-			owner.resetSidebar();
-		}
-		if (source != RowFilterSource.TEXTFIELD) {
-			owner.resetSearchField(true);
+		if (!suppressRowFilterResetEvents) {
+			
+			suppressRowFilterResetEvents = true;
+			
+			if (source != RowFilterSource.CHARSELECTOR) {
+				owner.resetCharSelector();
+			}
+			if (source != RowFilterSource.SIDEBAR) {
+				owner.resetSidebar();
+			}
+			if (source != RowFilterSource.TEXTFIELD) {
+				owner.resetSearchField(true);
+			}
+			
+			suppressRowFilterResetEvents = false;
+			
 		}
 		
 		TableRowSorter<ClipTableModel> sorter = ((TableRowSorter<ClipTableModel>) table.getRowSorter());

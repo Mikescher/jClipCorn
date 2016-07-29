@@ -146,7 +146,6 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 	private JButton btnEpisodeOpenPart;
 	private JLabel lblTags;
 	private TagPanel tagPnl;
-	private JLabel lblSeriesSeriesID;
 	private JLabel lblSeasonID;
 	private JButton btnAddSeason;
 	private JButton btnAddEpisode;
@@ -388,10 +387,6 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		lblScore = new JLabel(LocaleBundle.getString("EditSeriesFrame.lblScore.text")); //$NON-NLS-1$
 		lblScore.setBounds(12, 446, 46, 14);
 		pnlSeries.add(lblScore);
-		
-		lblSeriesSeriesID = new JLabel();
-		lblSeriesSeriesID.setBounds(206, 317, 76, 14);
-		pnlSeries.add(lblSeriesSeriesID);
 		
 		btnAddSeason = new JButton(LocaleBundle.getString("EditSeriesFrame.btnAddSeason.text")); //$NON-NLS-1$
 		btnAddSeason.addActionListener(new ActionListener() {
@@ -761,7 +756,6 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 	private void updateSeriesPanel() {
 		edSeriesCvrControl.setCover(series.getCover());
 		
-		lblSeriesSeriesID.setText(series.getSeriesID() + ""); //$NON-NLS-1$
 		edSeriesTitle.setText(series.getTitle());
 		cbxSeriesLanguage.setSelectedIndex(series.getLanguage().asInt());
 		spnSeriesOnlineScore.setValue(series.getOnlinescore().asInt());

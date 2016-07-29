@@ -5,8 +5,8 @@ import java.util.Comparator;
 
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
-import de.jClipCorn.util.enumextension.EnumWrapper;
 import de.jClipCorn.util.enumextension.ContinoousEnum;
+import de.jClipCorn.util.enumextension.EnumWrapper;
 
 public enum CCMovieGenre implements ContinoousEnum<CCMovieGenre> {
 	GENRE_000(0x00), GENRE_001(0x01), GENRE_002(0x02), GENRE_003(0x03), GENRE_004(0x04), GENRE_005(0x05), GENRE_006(0x06), GENRE_007(0x07),

@@ -1,8 +1,10 @@
 package de.jClipCorn.gui.frames.logFrame;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GridLayout;
 
 import javax.swing.JFrame;
@@ -21,8 +23,6 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.gui.log.CCLogChangedListener;
 import de.jClipCorn.gui.log.CCLogType;
-import java.awt.Color;
-import java.awt.Font;
 
 public class LogFrame extends JFrame implements CCLogChangedListener{ 
 	private static final long serialVersionUID = -8838227410250810646L;

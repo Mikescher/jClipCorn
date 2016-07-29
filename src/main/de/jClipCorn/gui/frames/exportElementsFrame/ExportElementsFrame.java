@@ -2,6 +2,7 @@ package de.jClipCorn.gui.frames.exportElementsFrame;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -26,8 +27,6 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.helper.FileChooserHelper;
-
-import java.awt.Dimension;
 
 public class ExportElementsFrame extends JFrame {
 	private static final long serialVersionUID = 1568672663044965879L;

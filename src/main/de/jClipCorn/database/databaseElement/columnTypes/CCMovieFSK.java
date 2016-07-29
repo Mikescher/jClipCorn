@@ -5,8 +5,8 @@ import javax.swing.ImageIcon;
 import de.jClipCorn.gui.CachedResourceLoader;
 import de.jClipCorn.gui.Resources;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.util.enumextension.EnumWrapper;
 import de.jClipCorn.util.enumextension.ContinoousEnum;
+import de.jClipCorn.util.enumextension.EnumWrapper;
 
 public enum CCMovieFSK implements ContinoousEnum<CCMovieFSK> {
 	RATING_0(0), // keine Alterschbeschräkung

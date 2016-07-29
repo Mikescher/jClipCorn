@@ -4,8 +4,8 @@ import javax.swing.ImageIcon;
 
 import de.jClipCorn.gui.CachedResourceLoader;
 import de.jClipCorn.gui.Resources;
-import de.jClipCorn.util.enumextension.EnumWrapper;
 import de.jClipCorn.util.enumextension.ContinoousEnum;
+import de.jClipCorn.util.enumextension.EnumWrapper;
 import de.jClipCorn.util.formatter.PathFormatter;
 
 public enum CCMovieFormat implements ContinoousEnum<CCMovieFormat> {

@@ -2,6 +2,7 @@ package de.jClipCorn.gui.frames.mainFrame.filterTree.customFilterDialogs;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -17,7 +18,6 @@ import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomTitleFilter
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.datatypes.StringMatchType;
 import de.jClipCorn.util.listener.FinishListener;
-import java.awt.Dimension;
 
 public class CustomTitleFilterDialog extends CustomFilterDialog {
 	private static final long serialVersionUID = -6822558028101935911L;

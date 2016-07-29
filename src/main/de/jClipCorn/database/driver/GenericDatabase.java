@@ -1,4 +1,4 @@
-package de.jClipCorn.database;
+package de.jClipCorn.database.driver;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
@@ -131,6 +131,10 @@ public abstract class GenericDatabase {
 		} else {
 			return null;
 		}
+	}
+
+	public void setLastError(Exception e) {
+		lastError = e;
 	}
 	
 	/**

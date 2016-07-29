@@ -1,10 +1,12 @@
-package de.jClipCorn.database;
+package de.jClipCorn.database.driver;
 
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
 import de.jClipCorn.gui.log.CCLog;
+import de.jClipCorn.gui.settings.CCDatabaseDriver;
 import de.jClipCorn.util.helper.TextFileUtils;
+import de.jClipCorn.util.parser.TurbineParser;
 
 @SuppressWarnings("nls")
 public class MemoryDatabase extends GenericDatabase {

@@ -1,4 +1,4 @@
-package de.jClipCorn.util.parser.imageparser;
+package de.jClipCorn.util.parser.imagesearch.imageparser;
 
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -12,7 +12,7 @@ import de.jClipCorn.util.helper.RegExHelper;
 import de.jClipCorn.util.parser.onlineparser.ImDBParser;
 import de.jClipCorn.util.parser.onlineparser.ImDBParser_Ger;
 @SuppressWarnings("nls")
-public class ImDBImageParser_Eng {
+public class ImDBImageParser_Ger {
 	private final static String COVER_URL_ALL_APPENDIX = "mediaindex";
 	private final static String COVER_URL_POSTER_APPENDIX = "mediaindex?refine=poster";
 	

@@ -1,4 +1,4 @@
-package de.jClipCorn.database;
+package de.jClipCorn.database.driver;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.UUID;
 
 import de.jClipCorn.Main;
+import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.CCMovie;
@@ -17,6 +18,7 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTyp;
 import de.jClipCorn.database.util.Statements;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
+import de.jClipCorn.gui.settings.CCDatabaseDriver;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.datetime.CCTime;
@@ -158,14 +160,14 @@ public class CCDatabase {
 			Statements.intialize(this);
 			return true;
 		} catch (SQLException e) {
-			db.lastError = e;
+			db.setLastError(e);
 			
 			Exception next = e.getNextException();
-			if (next != null) db.lastError = next;
+			if (next != null) db.setLastError(e);
 			
 			return false;
 		} catch (Exception e) {
-			db.lastError = e;
+			db.setLastError(e);
 			return false;
 		}
 	}
@@ -183,7 +185,7 @@ public class CCDatabase {
 	
 	public void reconnect() {
 		if (! connect(getDBPath())) {
-			CCLog.addFatalError(LocaleBundle.getString("LogMessage.CouldNotReconnectToDB"), db.lastError); //$NON-NLS-1$
+			CCLog.addFatalError(LocaleBundle.getString("LogMessage.CouldNotReconnectToDB"), db.getLastError()); //$NON-NLS-1$
 		}
 	}
 
@@ -416,7 +418,7 @@ public class CCDatabase {
 
 			return true;
 		} catch (SQLException e) {
-			db.lastError = e;
+			db.setLastError(e);
 			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.NoNewRow", id), e); //$NON-NLS-1$
 			return false;
 		}
@@ -438,7 +440,7 @@ public class CCDatabase {
 
 			return true;
 		} catch (SQLException e) {
-			db.lastError = e;
+			db.setLastError(e);
 			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.NoNewSeasonRow", seasid, serid), e); //$NON-NLS-1$
 			return false;
 		}
@@ -468,7 +470,7 @@ public class CCDatabase {
 
 			return true;
 		} catch (SQLException e) {
-			db.lastError = e;
+			db.setLastError(e);
 			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.NoNewEpisodeRow", eid, sid), e); //$NON-NLS-1$
 			return false;
 		}

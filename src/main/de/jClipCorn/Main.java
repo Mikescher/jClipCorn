@@ -161,7 +161,7 @@ public class Main {
 //   - dialog to find onlinescore discrepancies (and optionally update them)
 //   - can use multiple online-references (auto add imdb, add proxer and MAM for many)
 //   - Export and import reference mapping file (to get mappings to other dbs) ?
-//   - tmdb open ?language=de-DE when exists (lang option)
+// X - tmdb open ?language=de-DE when exists (lang option)
 //   - tmdb get de-De title (lang option)
-//   - error duplicate online-id
-//   - Searchfield error: All->CustomFilter->Click-in-Field
+// X - error duplicate online-id
+// X - Searchfield error: All->CustomFilter->Click-in-Field

@@ -29,6 +29,8 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCGroupList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieGenre;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieSize;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieZyklus;
+import de.jClipCorn.database.driver.CCDatabase;
+import de.jClipCorn.database.driver.DatabaseConnectResult;
 import de.jClipCorn.database.util.CCCoverCache;
 import de.jClipCorn.database.util.CCDBUpdateListener;
 import de.jClipCorn.database.util.MovieIterator;

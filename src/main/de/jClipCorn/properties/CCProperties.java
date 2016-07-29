@@ -10,16 +10,19 @@ import java.util.Properties;
 import java.util.Vector;
 
 import de.jClipCorn.Main;
-import de.jClipCorn.database.CCDatabaseDriver;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieLanguage;
 import de.jClipCorn.database.util.ExportHelper;
 import de.jClipCorn.gui.frames.mainFrame.clipToolbar.ClipToolbar;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.localization.util.LocalizedVector;
 import de.jClipCorn.gui.log.CCLog;
+import de.jClipCorn.gui.settings.BrowserLanguage;
+import de.jClipCorn.gui.settings.CCDatabaseDriver;
+import de.jClipCorn.gui.settings.ImageSearchImplementation;
 import de.jClipCorn.properties.property.CCBoolProperty;
 import de.jClipCorn.properties.property.CCDateProperty;
 import de.jClipCorn.properties.property.CCEnumProperty;
+import de.jClipCorn.properties.property.CCEnumSetProperty;
 import de.jClipCorn.properties.property.CCPIntProperty;
 import de.jClipCorn.properties.property.CCPathProperty;
 import de.jClipCorn.properties.property.CCProperty;
@@ -28,6 +31,7 @@ import de.jClipCorn.properties.property.CCSeasonRegexListProperty;
 import de.jClipCorn.properties.property.CCStringProperty;
 import de.jClipCorn.properties.property.CCToolbarProperty;
 import de.jClipCorn.properties.property.CCVIntProperty;
+import de.jClipCorn.properties.property.CCEnumSetProperty.EnumSetValue;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.ApplicationHelper;
@@ -37,28 +41,30 @@ public class CCProperties {
 	private final static String HEADER = "jClipCorn Configuration File"; //$NON-NLS-1$
 	
 	public final static CCPropertyCategory NONVISIBLE			= new CCPropertyCategory();
-	public final static CCPropertyCategory CAT_COMMON 			= new CCPropertyCategory(0, "COMMON");       //$NON-NLS-1$
-	public final static CCPropertyCategory CAT_VIEW 			= new CCPropertyCategory(1, "VIEW");         //$NON-NLS-1$
-	public final static CCPropertyCategory CAT_DATABASE 		= new CCPropertyCategory(2, "DATABASE");     //$NON-NLS-1$
-	public final static CCPropertyCategory CAT_MOVIES	 		= new CCPropertyCategory(3, "MOVIES");       //$NON-NLS-1$
-	public final static CCPropertyCategory CAT_SERIES 			= new CCPropertyCategory(4, "SERIES");       //$NON-NLS-1$
-	public final static CCPropertyCategory CAT_PLAY 			= new CCPropertyCategory(5, "PLAY");         //$NON-NLS-1$
-	public final static CCPropertyCategory CAT_BACKUP 			= new CCPropertyCategory(6, "BACKUP");       //$NON-NLS-1$
-	public final static CCPropertyCategory CAT_STATUSBAR		= new CCPropertyCategory(7, "STATUSBAR");    //$NON-NLS-1$
-	public final static CCPropertyCategory CAT_OTHERFRAMES 		= new CCPropertyCategory(8, "OTHERFRAMES");  //$NON-NLS-1$
-	public final static CCPropertyCategory CAT_KEYSTROKES 		= new CCPropertyCategory(9, "KEYSTROKES");   //$NON-NLS-1$
+	public final static CCPropertyCategory CAT_COMMON 			= new CCPropertyCategory(0,  "COMMON");       //$NON-NLS-1$
+	public final static CCPropertyCategory CAT_VIEW 			= new CCPropertyCategory(1,  "VIEW");         //$NON-NLS-1$
+	public final static CCPropertyCategory CAT_DATABASE 		= new CCPropertyCategory(2,  "DATABASE");     //$NON-NLS-1$
+	public final static CCPropertyCategory CAT_PARSER	 		= new CCPropertyCategory(3,  "PARSER");       //$NON-NLS-1$
+	public final static CCPropertyCategory CAT_MOVIES	 		= new CCPropertyCategory(4,  "MOVIES");       //$NON-NLS-1$
+	public final static CCPropertyCategory CAT_SERIES 			= new CCPropertyCategory(5,  "SERIES");       //$NON-NLS-1$
+	public final static CCPropertyCategory CAT_PLAY 			= new CCPropertyCategory(6,  "PLAY");         //$NON-NLS-1$
+	public final static CCPropertyCategory CAT_BACKUP 			= new CCPropertyCategory(7,  "BACKUP");       //$NON-NLS-1$
+	public final static CCPropertyCategory CAT_STATUSBAR		= new CCPropertyCategory(8,  "STATUSBAR");    //$NON-NLS-1$
+	public final static CCPropertyCategory CAT_OTHERFRAMES 		= new CCPropertyCategory(9,  "OTHERFRAMES");  //$NON-NLS-1$
+	public final static CCPropertyCategory CAT_KEYSTROKES 		= new CCPropertyCategory(10, "KEYSTROKES");   //$NON-NLS-1$
 	
 	public final static CCPropertyCategory[] CATEGORIES = {
-			CAT_COMMON,
-			CAT_VIEW,
-			CAT_DATABASE,
-			CAT_MOVIES,
-			CAT_SERIES,
-			CAT_PLAY,
-			CAT_BACKUP,
-			CAT_STATUSBAR,
-			CAT_OTHERFRAMES,
-			CAT_KEYSTROKES 	
+		CAT_COMMON,
+		CAT_VIEW,
+		CAT_DATABASE,
+		CAT_PARSER,
+		CAT_MOVIES,
+		CAT_SERIES,
+		CAT_PLAY,
+		CAT_BACKUP,
+		CAT_STATUSBAR,
+		CAT_OTHERFRAMES,
+		CAT_KEYSTROKES 	
 	};
 	
 	@SuppressWarnings("nls")
@@ -68,90 +74,92 @@ public class CCProperties {
 	
 	private List<CCProperty<Object>> propertylist = new Vector<>();
 	
-	public CCBoolProperty 					PROP_ADD_MOVIE_RELATIVE_AUTO;
-	public CCStringProperty 				PROP_DATABASE_NAME;
-	public CCStringProperty 				PROP_LOG_PATH;
-	public CCVIntProperty 					PROP_UI_LANG;
-	public CCStringProperty 				PROP_SELF_DIRECTORY;
-	public CCStringProperty 				PROP_COVER_PREFIX;
-	public CCStringProperty 				PROP_COVER_TYPE;
-	public CCBoolProperty 					PROP_LOADING_LIVEUPDATE;
-	public CCBoolProperty 					PROP_STATUSBAR_CALC_SERIES_IN_LENGTH;
-	public CCBoolProperty 					PROP_STATUSBAR_CALC_SERIES_IN_SIZE;
-	public CCVIntProperty 					PROP_UI_LOOKANDFEEL;
-	public CCStringProperty 				PROP_PLAY_VLC_PATH;
-	public CCBoolProperty 					PROP_PLAY_VLC_FULLSCREEN;
-	public CCBoolProperty 					PROP_PLAY_VLC_AUTOPLAY;
-	public CCBoolProperty 					PROP_PLAY_USESTANDARDONMISSINGVLC; // Use Standard Player on missing VLC
-	public CCVIntProperty 					PROP_ON_DBLCLICK_MOVE; //0=Play | 1=Preview
-	public CCBoolProperty 					PROP_USE_INTELLISORT;
-	public CCBoolProperty 					PROP_INCLUDE_SERIES_IN_VIEWEDCOUNT;
-	public CCPIntProperty 					PROP_MAINFRAME_SCROLLSPEED;
-	public CCVIntProperty 					PROP_MAINFRAME_TABLEBACKGROUND; //0=WHITE | 1=GRAY-WHITE | 2=Score
-	public CCBoolProperty 					PROP_LOADING_PRELOADRESOURCES;
-	public CCBoolProperty 					PROP_DATABASE_CREATELOGFILE;
-	public CCPIntProperty 					PROP_DATABASE_COVERCACHESIZE;
-	public CCBoolProperty 					PROP_COMMON_CHECKFORUPDATES;
-	public CCBoolProperty 					PROP_COMMON_PRESCANFILESYSTEM;
-	public CCBoolProperty 					PROP_SCANFOLDER_INCLUDESERIES;
-	public CCBoolProperty 					PROP_SCANFOLDER_EXCLUDEIFOS;
-	public CCDateProperty 					PROP_BACKUP_LASTBACKUP;
-	public CCBoolProperty 					PROP_BACKUP_CREATEBACKUPS;
-	public CCStringProperty 				PROP_BACKUP_FOLDERNAME;
-	public CCPIntProperty 					PROP_BACKUP_BACKUPTIME;
-	public CCRIntProperty 					PROP_BACKUP_COMPRESSION;
-	public CCBoolProperty 					PROP_BACKUP_AUTODELETEBACKUPS;
-	public CCPIntProperty 					PROP_BACKUP_LIFETIME;
-	public CCBoolProperty 					PROP_LOG_APPEND;
-	public CCPIntProperty 					PROP_LOG_MAX_LINECOUNT;
-	public CCVIntProperty 					PROP_VIEW_DB_START_SORT;
-	public CCRIntProperty					PROP_VALIDATE_FILESIZEDRIFT;
-	public CCBoolProperty					PROP_OTHER_DEBUGMODE;
-	public CCBoolProperty					PROP_VALIDATE_DUP_IGNORE_IFO;
-	public CCBoolProperty					PROP_PREVSERIES_3DCOVER;
-	public CCBoolProperty					PROP_PREVSERIES_COVERBORDER;
-	public CCBoolProperty					PROP_MASSCHANGESCORE_SKIPRATED;
-	public CCBoolProperty					PROP_MASSCHANGESCORE_ONLYVIEWED;
-	public CCBoolProperty					PROP_MASSCHANGEVIEWED_ONLYUNVIEWED;
-	public CCBoolProperty					PROP_IMPORT_RESETVIEWED;
-	public CCBoolProperty					PROP_IMPORT_ONLYWITHCOVER;
-	public CCBoolProperty					PROP_IMPORT_RESETADDDATE;
-	public CCBoolProperty					PROP_IMPORT_RESETSCORE;
-	public CCBoolProperty					PROP_IMPORT_RESETTAGS;
-	public CCRIntProperty 					PROP_PARSEIMDB_LANGUAGE;
-	public CCToolbarProperty				PROP_TOOLBAR_ELEMENTS;
-	public CCVIntProperty					PROP_SERIES_ADDDATECALCULATION; //0 = Lowest EpisdenAddDate || 1 = Highest EpisdenAddDate || 2 = Average EpisdenAddDate
-	public CCBoolProperty					PROP_STATBAR_ELCOUNT;
-	public CCBoolProperty					PROP_STATBAR_PROGRESSBAR;
-	public CCBoolProperty					PROP_STATBAR_LOG;
-	public CCBoolProperty					PROP_STATBAR_VIEWEDCOUNT;
-	public CCBoolProperty					PROP_STATBAR_SERIESCOUNT;
-	public CCBoolProperty					PROP_STATBAR_LENGTH;
-	public CCBoolProperty					PROP_STATBAR_SIZE;
-	public CCBoolProperty					PROP_STATBAR_STARTTIME;
-	public CCBoolProperty					PROP_MAINFRAME_CLICKABLEZYKLUS;
-	public CCBoolProperty					PROP_MAINFRAME_CLICKABLESCORE;
-	public CCBoolProperty					PROP_MAINFRAME_DONTCHANGEZYKLUSCOLOR;
-	public CCBoolProperty					PROP_MAINFRAME_AUTOMATICRESETWATCHLATER;
-	public CCBoolProperty					PROP_MAINFRAME_AUTOMATICRESETWATCHNEVER;
-	public CCBoolProperty					PROP_STATISTICS_INTERACTIVECHARTS;
-	public CCBoolProperty 					PROP_DATABASE_CLEANSHUTDOWN;
-	public CCBoolProperty 					PROP_MAINFRAME_SHOWTAGS;
-	public CCStringProperty 				PROP_MAINFRAME_FILTERLISTPATH;
-	public CCBoolProperty					PROP_MAINFRAME_SHOWCOVERCORNER;
-	public CCBoolProperty					PROP_VALIDATE_CHECK_SERIES_STRUCTURE;
-	public CCBoolProperty					PROP_MAINFRAME_DONT_FILTER_WATCHNEVER;
-	public CCBoolProperty					PROP_SHOW_PARTIAL_VIEWED_STATE;
-	public CCPIntProperty 					PROP_MAINFRAME_WIDTH;
-	public CCPIntProperty 					PROP_MAINFRAME_HEIGHT;
-	public CCSeasonRegexListProperty		PROP_SEASON_INDEX_REGEXPRESSIONS;
-	public CCPIntProperty 					PROP_STATISTICS_TIMELINEGRAVITY;
-	public CCEnumProperty<CCDatabaseDriver>	PROP_DATABASE_DRIVER;
-	public CCVIntProperty					PROP_SERIES_DISPLAYED_DATE;
-	public CCBoolProperty					PROP_QUERY_IMDB;
-	public CCBoolProperty					PROP_QUERY_TMDB;
-	public CCBoolProperty 					PROP_MAINFRAME_SHOWGROUPS;
-	public CCEnumProperty<CCMovieLanguage> 	PROP_DATABASE_DEFAULTPARSERLANG;
+	public CCBoolProperty 									PROP_ADD_MOVIE_RELATIVE_AUTO;
+	public CCStringProperty 								PROP_DATABASE_NAME;
+	public CCStringProperty 								PROP_LOG_PATH;
+	public CCVIntProperty 									PROP_UI_LANG;
+	public CCStringProperty 								PROP_SELF_DIRECTORY;
+	public CCStringProperty 								PROP_COVER_PREFIX;
+	public CCStringProperty 								PROP_COVER_TYPE;
+	public CCBoolProperty 									PROP_LOADING_LIVEUPDATE;
+	public CCBoolProperty 									PROP_STATUSBAR_CALC_SERIES_IN_LENGTH;
+	public CCBoolProperty 									PROP_STATUSBAR_CALC_SERIES_IN_SIZE;
+	public CCVIntProperty 									PROP_UI_LOOKANDFEEL;
+	public CCStringProperty 								PROP_PLAY_VLC_PATH;
+	public CCBoolProperty 									PROP_PLAY_VLC_FULLSCREEN;
+	public CCBoolProperty 									PROP_PLAY_VLC_AUTOPLAY;
+	public CCBoolProperty 									PROP_PLAY_USESTANDARDONMISSINGVLC; // Use Standard Player on missing VLC
+	public CCVIntProperty 									PROP_ON_DBLCLICK_MOVE; //0=Play | 1=Preview
+	public CCBoolProperty 									PROP_USE_INTELLISORT;
+	public CCBoolProperty 									PROP_INCLUDE_SERIES_IN_VIEWEDCOUNT;
+	public CCPIntProperty 									PROP_MAINFRAME_SCROLLSPEED;
+	public CCVIntProperty 									PROP_MAINFRAME_TABLEBACKGROUND; //0=WHITE | 1=GRAY-WHITE | 2=Score
+	public CCBoolProperty 									PROP_LOADING_PRELOADRESOURCES;
+	public CCBoolProperty 									PROP_DATABASE_CREATELOGFILE;
+	public CCPIntProperty 									PROP_DATABASE_COVERCACHESIZE;
+	public CCBoolProperty 									PROP_COMMON_CHECKFORUPDATES;
+	public CCBoolProperty 									PROP_COMMON_PRESCANFILESYSTEM;
+	public CCBoolProperty 									PROP_SCANFOLDER_INCLUDESERIES;
+	public CCBoolProperty 									PROP_SCANFOLDER_EXCLUDEIFOS;
+	public CCDateProperty 									PROP_BACKUP_LASTBACKUP;
+	public CCBoolProperty 									PROP_BACKUP_CREATEBACKUPS;
+	public CCStringProperty 								PROP_BACKUP_FOLDERNAME;
+	public CCPIntProperty 									PROP_BACKUP_BACKUPTIME;
+	public CCRIntProperty 									PROP_BACKUP_COMPRESSION;
+	public CCBoolProperty 									PROP_BACKUP_AUTODELETEBACKUPS;
+	public CCPIntProperty 									PROP_BACKUP_LIFETIME;
+	public CCBoolProperty 									PROP_LOG_APPEND;
+	public CCPIntProperty 									PROP_LOG_MAX_LINECOUNT;
+	public CCVIntProperty 									PROP_VIEW_DB_START_SORT;
+	public CCRIntProperty									PROP_VALIDATE_FILESIZEDRIFT;
+	public CCBoolProperty									PROP_OTHER_DEBUGMODE;
+	public CCBoolProperty									PROP_VALIDATE_DUP_IGNORE_IFO;
+	public CCBoolProperty									PROP_PREVSERIES_3DCOVER;
+	public CCBoolProperty									PROP_PREVSERIES_COVERBORDER;
+	public CCBoolProperty									PROP_MASSCHANGESCORE_SKIPRATED;
+	public CCBoolProperty									PROP_MASSCHANGESCORE_ONLYVIEWED;
+	public CCBoolProperty									PROP_MASSCHANGEVIEWED_ONLYUNVIEWED;
+	public CCBoolProperty									PROP_IMPORT_RESETVIEWED;
+	public CCBoolProperty									PROP_IMPORT_ONLYWITHCOVER;
+	public CCBoolProperty									PROP_IMPORT_RESETADDDATE;
+	public CCBoolProperty									PROP_IMPORT_RESETSCORE;
+	public CCBoolProperty									PROP_IMPORT_RESETTAGS;
+	public CCRIntProperty 									PROP_PARSEIMDB_LANGUAGE;
+	public CCToolbarProperty								PROP_TOOLBAR_ELEMENTS;
+	public CCVIntProperty									PROP_SERIES_ADDDATECALCULATION; //0 = Lowest EpisdenAddDate || 1 = Highest EpisdenAddDate || 2 = Average EpisdenAddDate
+	public CCBoolProperty									PROP_STATBAR_ELCOUNT;
+	public CCBoolProperty									PROP_STATBAR_PROGRESSBAR;
+	public CCBoolProperty									PROP_STATBAR_LOG;
+	public CCBoolProperty									PROP_STATBAR_VIEWEDCOUNT;
+	public CCBoolProperty									PROP_STATBAR_SERIESCOUNT;
+	public CCBoolProperty									PROP_STATBAR_LENGTH;
+	public CCBoolProperty									PROP_STATBAR_SIZE;
+	public CCBoolProperty									PROP_STATBAR_STARTTIME;
+	public CCBoolProperty									PROP_MAINFRAME_CLICKABLEZYKLUS;
+	public CCBoolProperty									PROP_MAINFRAME_CLICKABLESCORE;
+	public CCBoolProperty									PROP_MAINFRAME_DONTCHANGEZYKLUSCOLOR;
+	public CCBoolProperty									PROP_MAINFRAME_AUTOMATICRESETWATCHLATER;
+	public CCBoolProperty									PROP_MAINFRAME_AUTOMATICRESETWATCHNEVER;
+	public CCBoolProperty									PROP_STATISTICS_INTERACTIVECHARTS;
+	public CCBoolProperty 									PROP_DATABASE_CLEANSHUTDOWN;
+	public CCBoolProperty 									PROP_MAINFRAME_SHOWTAGS;
+	public CCStringProperty 								PROP_MAINFRAME_FILTERLISTPATH;
+	public CCBoolProperty									PROP_MAINFRAME_SHOWCOVERCORNER;
+	public CCBoolProperty									PROP_VALIDATE_CHECK_SERIES_STRUCTURE;
+	public CCBoolProperty									PROP_MAINFRAME_DONT_FILTER_WATCHNEVER;
+	public CCBoolProperty									PROP_SHOW_PARTIAL_VIEWED_STATE;
+	public CCPIntProperty 									PROP_MAINFRAME_WIDTH;
+	public CCPIntProperty 									PROP_MAINFRAME_HEIGHT;
+	public CCSeasonRegexListProperty						PROP_SEASON_INDEX_REGEXPRESSIONS;
+	public CCPIntProperty 									PROP_STATISTICS_TIMELINEGRAVITY;
+	public CCEnumProperty<CCDatabaseDriver>					PROP_DATABASE_DRIVER;
+	public CCVIntProperty									PROP_SERIES_DISPLAYED_DATE;
+	public CCBoolProperty									PROP_QUERY_IMDB;
+	public CCBoolProperty									PROP_QUERY_TMDB;
+	public CCBoolProperty 									PROP_MAINFRAME_SHOWGROUPS;
+	public CCEnumProperty<CCMovieLanguage> 					PROP_DATABASE_DEFAULTPARSERLANG;
+	public CCEnumProperty<BrowserLanguage> 					PROP_TMDB_LANGUAGE;
+	public CCEnumSetProperty<ImageSearchImplementation>		PROP_IMAGESEARCH_IMPL;
 	
 	public boolean ARG_READONLY = false;
 	
@@ -245,8 +253,13 @@ public class CCProperties {
 		PROP_DATABASE_CREATELOGFILE				= new CCBoolProperty(CAT_DATABASE,			this, 	"PROP_DATABASE_CREATELOGFILE", 				true);
 		PROP_DATABASE_COVERCACHESIZE			= new CCPIntProperty(CAT_DATABASE, 			this, 	"PROP_DATABASE_COVERCACHESIZE", 			128);
 		PROP_LOG_MAX_LINECOUNT 					= new CCPIntProperty(CAT_DATABASE, 			this, 	"PROP_LOG_MAX_LINECOUNT", 					1048576); // 2^20
-		PROP_DATABASE_DEFAULTPARSERLANG			= new CCEnumProperty<>(CAT_DATABASE, 		this, 	"PROP_DATABASE_DEFAULTPARSERLANG", 			CCMovieLanguage.GERMAN, 	CCMovieLanguage.getWrapper());
-		
+
+		PROP_DATABASE_DEFAULTPARSERLANG			= new CCEnumProperty<>(CAT_PARSER, 			this, 	"PROP_DATABASE_DEFAULTPARSERLANG", 			CCMovieLanguage.GERMAN, 	CCMovieLanguage.getWrapper());
+		PROP_TMDB_LANGUAGE						= new CCEnumProperty<>(CAT_PARSER, 			this, 	"PROP_TMDB_LANGUAGE", 						getDefBLanguage(),			BrowserLanguage.getWrapper());
+		PROP_IMAGESEARCH_IMPL					= new CCEnumSetProperty<>(CAT_PARSER, 		this, 	"PROP_IMAGESEARCH_IMPL", 					EnumSetValue.ALL,			ImageSearchImplementation.getWrapper());
+		PROP_QUERY_IMDB							= new CCBoolProperty(CAT_PARSER,	 		this,   "PROP_QUERY_IMDB",							true);
+		PROP_QUERY_TMDB							= new CCBoolProperty(CAT_PARSER,	 		this,   "PROP_QUERY_TMDB",							true);
+
 		PROP_ON_DBLCLICK_MOVE					= new CCVIntProperty(CAT_MOVIES, 			this, 	"PROP_ON_DBLCLICK_MOVE", 					0, 					vd);
 		PROP_MAINFRAME_AUTOMATICRESETWATCHLATER = new CCBoolProperty(CAT_MOVIES,			this,   "PROP_MAINFRAME_AUTOMATICRESETWATCHLATER",	true);
 		PROP_MAINFRAME_AUTOMATICRESETWATCHNEVER = new CCBoolProperty(CAT_MOVIES,			this,   "PROP_MAINFRAME_AUTOMATICRESETWATCHNEVER",	true);
@@ -289,8 +302,6 @@ public class CCProperties {
 		PROP_VALIDATE_FILESIZEDRIFT				= new CCRIntProperty(CAT_OTHERFRAMES, 		this, 	"PROP_VALIDATE_FILESIZEDRIFT", 				5,					100);
 		PROP_VALIDATE_DUP_IGNORE_IFO			= new CCBoolProperty(CAT_OTHERFRAMES, 		this,   "PROP_VALIDATE_DUP_IGNORE_IFO",				true);
 		PROP_STATISTICS_TIMELINEGRAVITY         = new CCPIntProperty(CAT_OTHERFRAMES,	 	this,   "PROP_STATISTICS_TIMELINEGRAVITY",			7);
-		PROP_QUERY_IMDB							= new CCBoolProperty(CAT_OTHERFRAMES,	 	this,   "PROP_QUERY_IMDB",							true);
-		PROP_QUERY_TMDB							= new CCBoolProperty(CAT_OTHERFRAMES,	 	this,   "PROP_QUERY_TMDB",							true);
 		
 		PROP_BACKUP_LASTBACKUP					= new CCDateProperty(NONVISIBLE, 			this, 	"PROP_BACKUP_LASTBACKUP", 					CCDate.getMinimumDate());
 		PROP_OTHER_DEBUGMODE					= new CCBoolProperty(NONVISIBLE, 			this,   "PROP_OTHER_DEBUGMODE", 					false);
@@ -334,6 +345,14 @@ public class CCProperties {
 		if (Locale.getDefault().getLanguage().equals(Locale.ENGLISH.getLanguage())) return LocaleBundle.LOCALE_ENGLISCH;
 		
 		return LocaleBundle.LOCALE_SYSTEMDEFAULT;
+	}
+
+	private BrowserLanguage getDefBLanguage() {
+		if (Locale.getDefault().getCountry().equals(Locale.GERMANY.getCountry())) return BrowserLanguage.GERMAN;
+		if (Locale.getDefault().getCountry().equals(Locale.US.getCountry())) return BrowserLanguage.ENGLISH;
+		if (Locale.getDefault().getLanguage().equals(Locale.ENGLISH.getLanguage())) return BrowserLanguage.ENGLISH;
+		
+		return BrowserLanguage.ENGLISH;
 	}
 	
 	private int getDefStyle() {

@@ -1,4 +1,4 @@
-package de.jClipCorn.util.parser.imageparser;
+package de.jClipCorn.util.parser.imagesearch.imageparser;
 
 import java.awt.image.BufferedImage;
 import java.util.List;

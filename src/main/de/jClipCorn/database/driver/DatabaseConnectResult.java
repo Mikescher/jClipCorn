@@ -1,4 +1,4 @@
-package de.jClipCorn.database;
+package de.jClipCorn.database.driver;
 
 public enum DatabaseConnectResult {
 	SUCESS_CONNECTED,

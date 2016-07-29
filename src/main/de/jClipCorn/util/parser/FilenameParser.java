@@ -61,7 +61,7 @@ public class FilenameParser {
 		CCGroupList grouplist = CCGroupList.createEmpty();
 		while (mGroups.find()) {
 			String group = mGroups.group();
-			String groupname = group.substring(2, group.length() - 4);
+			String groupname = group.substring(2, group.length() - 2);
 			
 			if (! CCGroup.REGEX_GROUP_NAME.matcher(groupname).matches()) continue;
 			
@@ -69,10 +69,14 @@ public class FilenameParser {
 			if (idx <= 0) continue;
 			if (moviename.charAt(idx-1) != ' ') continue;
 			
-			moviename = moviename.substring(0, idx-1) + moviename.substring(idx+group.length(), moviename.length()-1);
+			if (idx+group.length() == moviename.length())
+				moviename = moviename.substring(0, idx-1);
+			else
+				moviename = moviename.substring(0, idx-1) + moviename.substring(idx+group.length(), moviename.length()-1);
 			
-			grouplist.add(movielist, groupname);
+			grouplist = grouplist.add(movielist, groupname);
 		}
+		if (!grouplist.isEmpty()) groups = grouplist;
 		
 		// ###################  LANGUAGE  ###################
 		

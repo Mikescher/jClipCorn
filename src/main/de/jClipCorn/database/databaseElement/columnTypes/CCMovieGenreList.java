@@ -251,4 +251,8 @@ public class CCMovieGenreList {
 		
 		return false;
 	}
+
+	public boolean isEmpty() {
+		return getGenreCount() == 0;
+	}
 }

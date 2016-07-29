@@ -2,6 +2,8 @@ package de.jClipCorn.database.databaseElement.columnTypes;
 
 import javax.swing.Icon;
 
+import de.jClipCorn.gui.settings.BrowserLanguage;
+import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.exceptions.OnlineRefFormatException;
 
 public class CCOnlineReference {
@@ -69,17 +71,22 @@ public class CCOnlineReference {
 
 	@SuppressWarnings("nls")
 	public String getURL() {
+		BrowserLanguage lang = CCProperties.getInstance().PROP_TMDB_LANGUAGE.getValue();
+		
 		switch (type) {
 		case NONE:
 			return null;
 		case IMDB:
 			return "http://www.imdb.com/title/" + id;
 		case AMAZON:
-			return "https://www.amazon.de/dp/" + id;
+			return "https://www.amazon.com/dp/" + id;
 		case MOVIEPILOT:
 			return "https://www.moviepilot.de/" + id;
 		case THEMOVIEDB:
-			return "https://www.themoviedb.org/" + id;
+			if (lang == BrowserLanguage.ENGLISH)
+				return "https://www.themoviedb.org/" + id;
+			else
+				return "https://www.themoviedb.org/" + id + "?language=" + lang.asLanguageID();
 		case PROXERME:
 			return "http://proxer.me/info/" + id;
 		case MYANIMELIST:

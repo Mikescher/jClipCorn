@@ -15,6 +15,8 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCMovieGenreList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReference;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
+import de.jClipCorn.gui.settings.BrowserLanguage;
+import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.helper.HTTPUtilities;
 
@@ -152,9 +154,38 @@ public class TMDBParser {
 		}
 	}
 	
-	@SuppressWarnings("nls")
 	public static TMDBFullResult getMetadata(String id) {
+		if (CCProperties.getInstance().PROP_TMDB_LANGUAGE.getValue() == BrowserLanguage.ENGLISH) {
+			
+			// simple call
+			
+			return getMetadataInternal(id, BrowserLanguage.ENGLISH);
+		} else {
+			
+			// specific call but fallback to en-Us for missing fields
+			
+			TMDBFullResult base = getMetadataInternal(id, BrowserLanguage.ENGLISH);
+			TMDBFullResult ext = getMetadataInternal(id, CCProperties.getInstance().PROP_TMDB_LANGUAGE.getValue());
+			
+			if (ext.Title == null || ext.Title.isEmpty()) ext.Title = base.Title;
+			if (ext.Year == 0) ext.Year = base.Year;
+			if (ext.Length == 0) ext.Length = base.Length;
+			if (ext.Title == null || ext.Title.isEmpty()) ext.CoverPath = base.CoverPath;
+			if (ext.Score == 0) ext.Score = base.Score;
+			if (ext.Genres == null || ext.Genres.isEmpty()) ext.Genres = base.Genres;
+			if (ext.ImdbRef == null || ext.ImdbRef.isUnset()) ext.ImdbRef = base.ImdbRef;
+			
+			return ext;
+		}
+	}
+
+	@SuppressWarnings("nls")
+	public static TMDBFullResult getMetadataInternal(String id, BrowserLanguage lang) {
 		String url = URL_BASE + id + "?api_key=" + API_KEY;
+		
+		if (CCProperties.getInstance().PROP_TMDB_LANGUAGE.getValue() != BrowserLanguage.ENGLISH) {
+			url += "&language=" + CCProperties.getInstance().PROP_TMDB_LANGUAGE.getValue().asLanguageID();
+		}
 		
 		String json = HTTPUtilities.getRateLimitedHTML(url, false, false);
 		try {

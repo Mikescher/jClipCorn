@@ -1,4 +1,4 @@
-package de.jClipCorn.util.parser.imageparser;
+package de.jClipCorn.util.parser.imagesearch.imageparser;
 
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;

@@ -1,4 +1,4 @@
-package de.jClipCorn.database;
+package de.jClipCorn.database.driver;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -8,10 +8,12 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 import de.jClipCorn.gui.log.CCLog;
+import de.jClipCorn.gui.settings.CCDatabaseDriver;
 import de.jClipCorn.util.exceptions.FileLockedException;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.FileLockManager;
 import de.jClipCorn.util.helper.TextFileUtils;
+import de.jClipCorn.util.parser.TurbineParser;
 
 @SuppressWarnings("nls")
 public class SQLiteDatabase extends GenericDatabase {

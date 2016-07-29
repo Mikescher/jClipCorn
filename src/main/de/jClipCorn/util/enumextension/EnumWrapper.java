@@ -1,5 +1,8 @@
 package de.jClipCorn.util.enumextension;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class EnumWrapper<T extends ContinoousEnum<T>> {
 
 	private final T defValue;
@@ -17,5 +20,22 @@ public class EnumWrapper<T extends ContinoousEnum<T>> {
 
 	public String[] getList() {
 		return defValue.getList();
+	}
+
+	public String asString(T value) {
+		if (value == null) return ""; //$NON-NLS-1$
+		return value.asString();
+	}
+
+	public T firstValue() {
+		return defValue.evalues()[0];
+	}
+
+	public List<T> allValues() {
+		List<T> lst = new ArrayList<>();
+		
+		for (T val : defValue.evalues()) lst.add(val);
+		
+		return lst;
 	}
 }

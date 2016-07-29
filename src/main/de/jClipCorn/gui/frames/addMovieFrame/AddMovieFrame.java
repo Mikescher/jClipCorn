@@ -911,6 +911,8 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		
 		if (r.Language != null) setMovieLanguage(r.Language);
 		if (r.Format != null) setMovieFormat(r.Format);
+
+		if (r.Groups != null) setGroupList(r.Groups);
 		
 		if (r.AdditionalFiles != null) 
 			for (Entry<Integer, String> addFile : r.AdditionalFiles.entrySet())

@@ -23,6 +23,7 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.helper.ExtendedFocusTraversalOnArray;
 import de.jClipCorn.util.listener.ProgressCallbackProgressBarHelper;
 import de.jClipCorn.util.listener.UpdateCallbackListener;
+import de.jClipCorn.util.parser.imagesearch.CoverImageParser;
 import de.jClipCorn.util.parser.onlineparser.ParseResultHandler;
 
 public class FindCoverDialog extends JDialog {

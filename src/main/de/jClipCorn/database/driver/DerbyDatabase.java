@@ -1,4 +1,4 @@
-package de.jClipCorn.database;
+package de.jClipCorn.database.driver;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -15,6 +15,7 @@ import org.apache.ddlutils.io.DatabaseIO;
 import org.apache.ddlutils.model.Database;
 
 import de.jClipCorn.gui.log.CCLog;
+import de.jClipCorn.gui.settings.CCDatabaseDriver;
 
 @SuppressWarnings("nls")
 public class DerbyDatabase extends GenericDatabase {

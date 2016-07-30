@@ -455,7 +455,7 @@ public class CCActionTree {
 		});
 
 		// ################################################################################################################################################################
-		CCActionElement maintenance = root.addChild(new CCActionElement("Maintenance", null, "ClipMenuBar.Maintenance", ""));
+		CCActionElement maintenance = root.addChild(new CCActionElement("Maintenance", null, "ClipMenuBar.Maintenance", "", CCProperties.getInstance().PROP_SHOW_EXTENDED_FEATURES.getValue()));
 		// ################################################################################################################################################################
 
 		temp = maintenance.addChild(new CCActionElement("XML", null, "ClipMenuBar.Maintenance.XML", Resources.ICN_MENUBAR_PARSEXML));

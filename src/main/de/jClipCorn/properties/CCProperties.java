@@ -165,6 +165,7 @@ public class CCProperties {
 	public CCEnumProperty<CCMovieLanguage> 					PROP_DATABASE_DEFAULTPARSERLANG;
 	public CCEnumProperty<BrowserLanguage> 					PROP_TMDB_LANGUAGE;
 	public CCEnumSetProperty<ImageSearchImplementation>		PROP_IMAGESEARCH_IMPL;
+	public CCBoolProperty 									PROP_SHOW_EXTENDED_FEATURES;
 	
 	public boolean ARG_READONLY = false;
 	
@@ -296,6 +297,7 @@ public class CCProperties {
 		PROP_MAINFRAME_WIDTH					= new CCPIntProperty(NONVISIBLE,	 		this,   "PROP_MAINFRAME_WIDTH",						875);
 		PROP_MAINFRAME_HEIGHT					= new CCPIntProperty(NONVISIBLE,	 		this,   "PROP_MAINFRAME_HEIGHT",					getDefMFHeight());
 		PROP_DATABASE_DRIVER					= new CCEnumProperty<>(NONVISIBLE, 			this, 	"PROP_DATABASE_DRIVER", 					CCDatabaseDriver.SQLITE,			CCDatabaseDriver.getWrapper());
+		PROP_SHOW_EXTENDED_FEATURES				= new CCBoolProperty(NONVISIBLE,	 		this,   "PROP_SHOW_EXTENDED_FEATURES",				true);
 	}
 
 	private String getDefFLPath() {

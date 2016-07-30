@@ -142,13 +142,13 @@ public class Main {
 // X - AddMovieFrame.parseFromXML --> wtf? (auch für ser)
 // X - statistics online reference provider
 // X - add db error invalid online ref
-//   - make it configurable which metadata-provider and which image-provider to use (new property type FlagList->CheckBoxList)
-//   - extended option to hide Wartungs menu from deafult user
+// X - make it configurable which metadata-provider and which image-provider to use (new property type FlagList->CheckBoxList)
+// X - extended option to hide Wartungs menu from deafult user
 // X - search and extended search for groups
 // X - strange xml parse in addmovframe
 // X - viewed | groups | ref to filter
 // X - undo last viewed
-// / - manage groups dialog (add to group, remove from group, delete group, rename group (!), reindex groups)
+//   - manage groups dialog (add to group, remove from group, delete group, rename group (!), reindex groups)
 //   - measure startup time
 // X - error: two groups with different case-ing
 // X - error: movie has one group two times (FATAL! should not be possible)
@@ -162,6 +162,6 @@ public class Main {
 //   - can use multiple online-references (auto add imdb, add proxer and MAM for many)
 //   - Export and import reference mapping file (to get mappings to other dbs) ?
 // X - tmdb open ?language=de-DE when exists (lang option)
-//   - tmdb get de-De title (lang option)
+// X - tmdb get de-De title (lang option)
 // X - error duplicate online-id
 // X - Searchfield error: All->CustomFilter->Click-in-Field

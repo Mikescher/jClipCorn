@@ -144,6 +144,7 @@ public abstract class AutomaticSettingsFrame extends JFrame {
 		});
 		pnlBottom.add(btnExtended, "10, 2"); //$NON-NLS-1$
 		tabOrder.add(btnExtended);
+		btnExtended.setVisible(CCProperties.getInstance().PROP_SHOW_EXTENDED_FEATURES.getValue());
 		
 		setFocusTraversalPolicy(new ExtendedFocusTraversalOnArray(tabOrder));
 	}

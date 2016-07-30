@@ -112,6 +112,11 @@ public class CCMovie extends CCDatabaseElement {
 		}
 	}
 
+	@Override
+	public String getFullDisplayTitle() {
+		return getCompleteTitle();
+	}
+
 	public boolean isViewed() {
 		return viewed;
 	}

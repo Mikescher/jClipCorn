@@ -93,7 +93,7 @@ public class CCProperties {
 	public CCStringProperty 								PROP_PLAY_VLC_PATH;
 	public CCBoolProperty 									PROP_PLAY_VLC_FULLSCREEN;
 	public CCBoolProperty 									PROP_PLAY_VLC_AUTOPLAY;
-	public CCBoolProperty 									PROP_PLAY_USESTANDARDONMISSINGVLC; // Use Standard Player on missing VLC
+	public CCBoolProperty 									PROP_PLAY_USESTANDARDONMISSINGVLC;
 	public CCEnumProperty<DoubleClickAction>				PROP_ON_DBLCLICK_MOVE;
 	public CCBoolProperty 									PROP_USE_INTELLISORT;
 	public CCBoolProperty 									PROP_INCLUDE_SERIES_IN_VIEWEDCOUNT;
@@ -131,7 +131,7 @@ public class CCProperties {
 	public CCBoolProperty									PROP_IMPORT_RESETTAGS;
 	public CCRIntProperty 									PROP_PARSEIMDB_LANGUAGE;
 	public CCToolbarProperty								PROP_TOOLBAR_ELEMENTS;
-	public CCEnumProperty<AddDateAlgorithm>			PROP_SERIES_ADDDATECALCULATION;
+	public CCEnumProperty<AddDateAlgorithm>					PROP_SERIES_ADDDATECALCULATION;
 	public CCBoolProperty									PROP_STATBAR_ELCOUNT;
 	public CCBoolProperty									PROP_STATBAR_PROGRESSBAR;
 	public CCBoolProperty									PROP_STATBAR_LOG;
@@ -199,8 +199,6 @@ public class CCProperties {
 	
 	@SuppressWarnings("nls")
 	private void createProperties() {
-		Vector<String> vlf = new Vector<>(LookAndFeelManager.getLookAndFeelList());
-		
 		PROP_UI_LANG							= new CCEnumProperty<>(CAT_COMMON, 			this, 	"PROP_UI_LANG", 							getDefLanguage(),					UILanguage.getWrapper());
 		PROP_LOADING_PRELOADRESOURCES			= new CCBoolProperty(CAT_COMMON, 			this,   "PROP_LOADING_PRELOADICONS", 				false);
 		PROP_USE_INTELLISORT					= new CCBoolProperty(CAT_COMMON,			this, 	"PROP_USE_INTELLISORT", 					false);
@@ -210,7 +208,7 @@ public class CCProperties {
 		PROP_DATABASE_CLEANSHUTDOWN				= new CCBoolProperty(CAT_COMMON,	 		this,   "PROP_DATABASE_CLEANSHUTDOWN",				false);
 		PROP_MAINFRAME_FILTERLISTPATH			= new CCStringProperty(CAT_COMMON,	 		this,	"PROP_MAINFRAME_FILTERLISTPATH",			getDefFLPath());
 		                                                                                	
-		PROP_UI_LOOKANDFEEL						= new CCVIntProperty(CAT_VIEW, 				this,	"PROP_UI_LOOKANDFEEL", 						getDefStyle(),						vlf);
+		PROP_UI_LOOKANDFEEL						= new CCVIntProperty(CAT_VIEW, 				this,	"PROP_UI_LOOKANDFEEL", 						getDefStyle(),						LookAndFeelManager.getLookAndFeelVector());
 		PROP_MAINFRAME_TABLEBACKGROUND			= new CCEnumProperty<>(CAT_VIEW, 			this,	"PROP_MAINFRAME_TABLEBACKGROUND",			UITableBackground.WHITE, 			UITableBackground.getWrapper());
 		PROP_LOADING_LIVEUPDATE					= new CCBoolProperty(CAT_VIEW, 				this, 	"PROP_LOADING_LIVEUPDATE", 					false);
 		PROP_MAINFRAME_SCROLLSPEED				= new CCPIntProperty(CAT_VIEW, 				this, 	"PROP_MAINFRAME_SCROLLSPEED", 				3);

@@ -91,6 +91,7 @@ public class Resources {
 	public final static String ICN_MENUBAR_WATCHDATA				= registerICN("/icons/toolbar/inbox_table.png");
 	public final static String ICN_MENUBAR_OPENLASTSERIES			= registerICN("/icons/toolbar/paper_airplane.png");
 	public final static String ICN_MENUBAR_GROUPS					= registerICN("/icons/toolbar/function_recently_used.png");
+	public final static String ICN_MENUBAR_MANAGEGROUPS				= registerICN("/icons/toolbar/function_recently_used_edited.png");
 	// #############################################  </MENUBAR>  ############################################
 	
 

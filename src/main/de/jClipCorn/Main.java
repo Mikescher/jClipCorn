@@ -75,10 +75,8 @@ public class Main {
 //TODO Use OpenMovieDatabase (they have a ~real~ API)
 // http://www.omdbapi.com
 // -> it is IMDB Data
-// !! save IMDB ID
 //		-> autom find series with new episodes
 //		-> autom update imdb score
-//		-> better open in imdb action
 //		-> find trailer
 //		-> find plot summary / synopsis
 //		-> autom find age-restriction for different nations
@@ -110,58 +108,21 @@ public class Main {
 
 //TODO Cover with higher resolution // <--
 
-//TODO save original/alternative title (eng title)
+//TODO save original/alternative title (eng title) --> get from TMDB / IMDB
 
 //TODO Missing Legend for statistics: "Format/Zeit" --> Use stacked line diagramm (-> continoous stacked bar diagram)
 
 //TODO
 //   - jClipCorn  - better cover resolution,  
-// X - Get Viewed Values from backups
 //   - show cover in HD (right click in coverpanel + series cover control + cbl click coverpanel)                                             
-//   - mass reverse image search for better cover versions (more HD)                                                                          
-// X - generate filename strip down chars (á -> a, ê -> e, etc)                                                                               
+//   - mass reverse image search for better cover versions (more HD)                                                                     
 //   - Format/Quality etc also for Serien (everything for a;b;a+b with toggle control?  ->  only were applicable)                             
 //   - combined timeline row (like github commit overview)                                                                                                               
-//   - db_err: find series with non-continoous episode numbers                                                                                
-// X - remember online id (+ dialog to find them) as string with ident for website                                                            
-// X     - imdb:????                                                                                                                          
-// X     - amazon:???                                                                                                                         
-// X     - moviepilot:???                                                                                                                     
-// X     - themoviedb:???                                                                                                                     
-// X - Custom Movie Groups (SpencerHill, Statham, Disney, Marvel, DC, Tarrantino)                                                             
-// X         -> then remove the big SpencerHill cycle, make to group and go back to real cycles (Zwei Supertypen in Miami, Jack Clementi, ...)
-// X - Calc Button for Series Quali                                                                                                           
-//   - Auto retrieve length button                                                                                                            
-// X - dont allow no cover add (leads to exception)
-// X - add db err (mov+epi) not viewed but has history
-// X - add db err (ser) has history
-// X - auto find imdb for non ref movies/series (TMDB FIRST !)
+//   - db_err: find series with non-continoous episode numbers
+//   - find missing seasons online
+//   - Auto retrieve length button
 //   - dialog show unreffed movies
-// X - add groups to (both?) search
-// X - serialize groups/refs/viewed-history
-// X - AddMovieFrame.parseFromXML --> wtf? (auch für ser)
-// X - statistics online reference provider
-// X - add db error invalid online ref
-// X - make it configurable which metadata-provider and which image-provider to use (new property type FlagList->CheckBoxList)
-// X - extended option to hide Wartungs menu from deafult user
-// X - search and extended search for groups
-// X - strange xml parse in addmovframe
-// X - viewed | groups | ref to filter
-// X - undo last viewed
-//   - manage groups dialog (add to group, remove from group, delete group, rename group (!), reindex groups)
-//   - measure startup time
-// X - error: two groups with different case-ing
-// X - error: movie has one group two times (FATAL! should not be possible)
-// X - Sidebar needs to listen to group changed events and update
-// X - undo viewed for episodes
-// X - play unchanged for movies
-// X - Groups in filename "[G1] Zyklus IX - title (Part 1).avi"
 //   - Filenameparser test
-// X - timeline statistic: use all history viewed dates
 //   - dialog to find onlinescore discrepancies (and optionally update them)
 //   - can use multiple online-references (auto add imdb, add proxer and MAM for many)
 //   - Export and import reference mapping file (to get mappings to other dbs) ?
-// X - tmdb open ?language=de-DE when exists (lang option)
-// X - tmdb get de-De title (lang option)
-// X - error duplicate online-id
-// X - Searchfield error: All->CustomFilter->Click-in-Field

@@ -921,4 +921,87 @@ public class CCMovieList {
 			lst.add(source);
 		}
 	}
+
+	public void recalculateGroupCache(boolean validateExisting) {
+		
+		// Create new Map
+		
+		Map<CCGroup, List<CCDatabaseElement>> gm = new HashMap<>();
+		for (Iterator<CCDatabaseElement> it = iterator(); it.hasNext();) {
+			CCDatabaseElement el = it.next();
+			
+			for (CCGroup group : el.getGroups()) {
+				List<CCDatabaseElement> list = gm.get(group);
+				if (list == null) {
+					list = new ArrayList<>();
+					gm.put(group, list);
+				}
+				list.add(el);
+			}
+		}
+		
+		// compare with existing
+		
+		if (validateExisting) {
+			compareGroupMaps(globalGroupList, gm);
+		}
+		
+		// set new one
+		
+		globalGroupList = gm;
+	}
+	
+	@SuppressWarnings("nls")
+	private void compareGroupMaps(Map<CCGroup, List<CCDatabaseElement>> current, Map<CCGroup, List<CCDatabaseElement>> created) {
+		for (CCGroup g : current.keySet()) {
+			if (!created.containsKey(g)) {
+				CCLog.addError(LocaleBundle.getString("LogMessage.GroupCacheInvalid") + "\r\nCache has one key too many: " + g.Name);
+			} else {
+				List<CCDatabaseElement> lsCreatedMising = new ArrayList<>(current.get(g));
+				lsCreatedMising.removeAll(created.get(g));
+				
+				for (CCDatabaseElement miss : lsCreatedMising) {
+					CCLog.addError(LocaleBundle.getString("LogMessage.GroupCacheInvalid") + "\r\nSuperfluous mapping in current: " + miss.getFullDisplayTitle());
+				}
+				
+				List<CCDatabaseElement> lsCurrentMising = new ArrayList<>(created.get(g));
+				lsCurrentMising.removeAll(current.get(g));
+				
+				for (CCDatabaseElement miss : lsCurrentMising) {
+					CCLog.addError(LocaleBundle.getString("LogMessage.GroupCacheInvalid") + "\r\nMissing mapping in current: " + miss.getFullDisplayTitle());
+				}
+			}
+		}
+		
+		for (CCGroup g : created.keySet()) {
+			if (!created.containsKey(g)) {
+				CCLog.addError(LocaleBundle.getString("LogMessage.GroupCacheInvalid") + "\r\nCache is missing one key: " + g.Name);
+			} else {
+				List<CCDatabaseElement> lsCreatedMising = new ArrayList<>(current.get(g));
+				lsCreatedMising.removeAll(created.get(g));
+				
+				for (CCDatabaseElement miss : lsCreatedMising) {
+					CCLog.addError(LocaleBundle.getString("LogMessage.GroupCacheInvalid") + "\r\nSuperfluous mapping in current: " + miss.getFullDisplayTitle());
+				}
+				
+				List<CCDatabaseElement> lsCurrentMising = new ArrayList<>(created.get(g));
+				lsCurrentMising.removeAll(current.get(g));
+				
+				for (CCDatabaseElement miss : lsCurrentMising) {
+					CCLog.addError(LocaleBundle.getString("LogMessage.GroupCacheInvalid") + "\r\nMissing mapping in current: " + miss.getFullDisplayTitle());
+				}
+			}
+		}
+	}
+	
+	public List<CCDatabaseElement> getInternalListCopy() {
+		return new ArrayList<>(list);
+	}
+
+	public List<CCDatabaseElement> getDatabaseElementsbyGroup(CCGroup group) {
+		List<CCDatabaseElement> result = globalGroupList.get(group);
+		if (result == null) result = new ArrayList<>();
+		
+		return result;
+	}
 }

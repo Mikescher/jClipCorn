@@ -1,6 +1,5 @@
 package de.jClipCorn.gui.guiComponents.jCheckBoxList;
 
-import java.awt.Component;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -11,21 +10,17 @@ import java.util.Set;
 import javax.swing.DefaultListModel;
 import javax.swing.JCheckBox;
 import javax.swing.JList;
-import javax.swing.ListCellRenderer;
 import javax.swing.ListSelectionModel;
-import javax.swing.UIManager;
-import javax.swing.border.Border;
-import javax.swing.border.EmptyBorder;
 
 import de.jClipCorn.gui.guiComponents.StringDisplayConverter;
+import de.jClipCorn.gui.guiComponents.jCheckBoxList.CBListModel.CBFilter;
 import de.jClipCorn.util.Tuple;
 
 public class JCheckBoxList<T> extends JList<JCheckBox> {
 	private static final long serialVersionUID = -449508648731560934L;
-
-	protected static Border noFocusBorder = new EmptyBorder(1, 1, 1, 1);
 	
-	private DefaultListModel<JCheckBox> model = new DefaultListModel<>();
+	private DefaultListModel<JCheckBox> innermodel = new DefaultListModel<>();
+	private CBListModel outermodel = new CBListModel(innermodel);
 	
 	private final StringDisplayConverter<T> converter;
 	private final List<Tuple<T, JCheckBox>> map = new ArrayList<>();
@@ -52,7 +47,7 @@ public class JCheckBoxList<T> extends JList<JCheckBox> {
 
 	private void init() {
 		setCellRenderer(new CBCellRenderer());
-		setModel(model);
+		setModel(outermodel);
 		
 		addMouseListener(new MouseAdapter() {
 			@Override
@@ -69,6 +64,19 @@ public class JCheckBoxList<T> extends JList<JCheckBox> {
 
 		setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 	}
+
+	public void clear() {
+		map.clear();
+		innermodel.clear();
+		repaint();
+	}	
+
+	public void addAll(List<T> ls) {
+		for (T elem : ls) {
+			add(elem);
+		}
+		repaint();
+	}
 	
 	public void add(T value) {
 		add(value, false);
@@ -78,7 +86,7 @@ public class JCheckBoxList<T> extends JList<JCheckBox> {
 		JCheckBox cb = new JCheckBox(converter.toDisplayString(value));
 		cb.setSelected(checked);
 		map.add(new Tuple<>(value, cb));
-		model.addElement(cb);
+		innermodel.addElement(cb);
 	}
 	
 	public boolean getChecked(T value) {
@@ -109,10 +117,21 @@ public class JCheckBoxList<T> extends JList<JCheckBox> {
 		return false;
 	}
 	
+	public boolean setCheckedFast(T value, boolean checked) {
+		for (Tuple<T, JCheckBox> tuple : map) {
+			if (tuple.Item1 == value) {
+				tuple.Item2.setSelected(checked);
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
 	public List<T> getAllElements() {
 		List<T> result = new ArrayList<>();
 		
-		for (Enumeration<JCheckBox> e = model.elements(); e.hasMoreElements();) {
+		for (Enumeration<JCheckBox> e = innermodel.elements(); e.hasMoreElements();) {
 			JCheckBox cb = e.nextElement();
 			T value = findValue(cb);
 			
@@ -125,7 +144,7 @@ public class JCheckBoxList<T> extends JList<JCheckBox> {
 	public List<T> getCheckedElements() {
 		List<T> result = new ArrayList<>();
 		
-		for (Enumeration<JCheckBox> e = model.elements(); e.hasMoreElements();) {
+		for (Enumeration<JCheckBox> e = innermodel.elements(); e.hasMoreElements();) {
 			JCheckBox cb = e.nextElement();
 			T value = findValue(cb);
 			
@@ -138,7 +157,7 @@ public class JCheckBoxList<T> extends JList<JCheckBox> {
 	public List<T> getUncheckedElements() {
 		List<T> result = new ArrayList<>();
 		
-		for (Enumeration<JCheckBox> e = model.elements(); e.hasMoreElements();) {
+		for (Enumeration<JCheckBox> e = innermodel.elements(); e.hasMoreElements();) {
 			JCheckBox cb = e.nextElement();
 			T value = findValue(cb);
 			
@@ -156,18 +175,7 @@ public class JCheckBoxList<T> extends JList<JCheckBox> {
 		repaint();
 	}
 
-	protected class CBCellRenderer implements ListCellRenderer<JCheckBox> {
-		@Override
-		public Component getListCellRendererComponent(JList<? extends JCheckBox> list, JCheckBox value, int index, boolean isSelected, boolean cellHasFocus) {
-			JCheckBox checkbox = value;
-			checkbox.setBackground(isSelected ? getSelectionBackground() : getBackground());
-			checkbox.setForeground(isSelected ? getSelectionForeground() : getForeground());
-			checkbox.setEnabled(isEnabled());
-			checkbox.setFont(getFont());
-			checkbox.setFocusPainted(false);
-			checkbox.setBorderPainted(true);
-			checkbox.setBorder(isSelected ? UIManager.getBorder("List.focusCellHighlightBorder") : noFocusBorder); //$NON-NLS-1$
-			return checkbox;
-		}
+	public void setFilter(CBFilter f) {
+		outermodel.setFilter(f);
 	}
 }

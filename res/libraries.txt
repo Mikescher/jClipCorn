@@ -9,4 +9,7 @@ JFreeChart
 JSplitButton
 JSoup
 JGoodies (commons, forms)
-HTMLUnit 
+HTMLUnit
+SQLite-JDBC
+jUnit
+Hamcrest-core

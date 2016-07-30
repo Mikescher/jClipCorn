@@ -82,6 +82,10 @@ public class LookAndFeelManager {
 		return v;
 	}
 	
+	public static Vector<String> getLookAndFeelVector() {
+		return new Vector<>(getLookAndFeelList());
+	}
+	
 	private static List<String> getSubstanceLookAndFeelList() {
 		List<String> v = new Vector<>();
 		

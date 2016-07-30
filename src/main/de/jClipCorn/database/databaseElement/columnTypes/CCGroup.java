@@ -9,7 +9,7 @@ public class CCGroup implements Comparable<CCGroup> {
 	private final static int COLOR_TAG_ALPHA = 224;
 
 	public final static Pattern REGEX_GROUP_SYNTAX = Pattern.compile("\\[\\[[A-Za-z0-0\\-_ ]+\\]\\]"); //$NON-NLS-1$
-	public final static Pattern REGEX_GROUP_NAME = Pattern.compile("^[A-Za-z0-0\\-_ ]+$"); //$NON-NLS-1$
+	private final static Pattern REGEX_GROUP_NAME = Pattern.compile("^[A-Za-z0-0\\-_ ]+$"); //$NON-NLS-1$
 	
 	public final static Color[] TAG_COLORS = new Color[]
 	{
@@ -34,6 +34,14 @@ public class CCGroup implements Comparable<CCGroup> {
 	public static CCGroup create(String name) {
 		CCGroup g = new CCGroup(name);
 		return g;
+	}
+	
+	public static boolean isValidGroupName(String name) {
+		if (name == null) return false;
+		
+		if (name.trim().isEmpty()) return false;
+		
+		return REGEX_GROUP_NAME.matcher(name).matches();
 	}
 
 	@Override

@@ -63,7 +63,7 @@ public class FilenameParser {
 			String group = mGroups.group();
 			String groupname = group.substring(2, group.length() - 2);
 			
-			if (! CCGroup.REGEX_GROUP_NAME.matcher(groupname).matches()) continue;
+			if (! CCGroup.isValidGroupName(groupname)) continue;
 			
 			int idx = moviename.indexOf(group);
 			if (idx <= 0) continue;
@@ -74,7 +74,7 @@ public class FilenameParser {
 			else
 				moviename = moviename.substring(0, idx-1) + moviename.substring(idx+group.length(), moviename.length()-1);
 			
-			grouplist = grouplist.add(movielist, groupname);
+			grouplist = grouplist.getAdd(movielist, groupname);
 		}
 		if (!grouplist.isEmpty()) groups = grouplist;
 		

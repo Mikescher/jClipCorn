@@ -584,4 +584,9 @@ public class CCSeries extends CCDatabaseElement {
 			return zero;
 		}
 	}
+
+	@Override
+	public String getFullDisplayTitle() {
+		return getTitle();
+	}
 }

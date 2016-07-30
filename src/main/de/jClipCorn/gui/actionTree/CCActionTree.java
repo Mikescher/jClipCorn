@@ -42,6 +42,7 @@ import de.jClipCorn.gui.frames.editMovieFrame.EditMovieFrame;
 import de.jClipCorn.gui.frames.editSeriesFrame.EditSeriesFrame;
 import de.jClipCorn.gui.frames.exportElementsFrame.ExportElementsFrame;
 import de.jClipCorn.gui.frames.filenameRulesFrame.FilenameRuleFrame;
+import de.jClipCorn.gui.frames.groupManageFrame.GroupManageFrame;
 import de.jClipCorn.gui.frames.logFrame.LogFrame;
 import de.jClipCorn.gui.frames.mainFrame.MainFrame;
 import de.jClipCorn.gui.frames.moveSeriesFrame.MassMoveMoviesDialog;
@@ -184,6 +185,14 @@ public class CCActionTree {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				onClickDatabaseTextExportDatabase();
+			}
+		});
+		
+		temp = database.addChild(new CCActionElement("ManageGroups", null, "ClipMenuBar.Database.ManageGroups", Resources.ICN_MENUBAR_MANAGEGROUPS));
+		temp.addListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				onClickDatabaseManageGroups();
 			}
 		});
 
@@ -1035,6 +1044,11 @@ public class CCActionTree {
 	private void onClickDatabaseTextExportDatabase() {
 		TextExportFrame tef = new TextExportFrame(movielist, owner);
 		tef.setVisible(true);
+	}
+	
+	private void onClickDatabaseManageGroups() {
+		GroupManageFrame gm = new GroupManageFrame(movielist, owner);
+		gm.setVisible(true);
 	}
 	
 	private void onClickSeriesPreview() {

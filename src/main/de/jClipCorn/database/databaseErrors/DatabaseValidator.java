@@ -168,7 +168,7 @@ public class DatabaseValidator {
 				break;
 			}
 
-			if (! CCGroup.REGEX_GROUP_NAME.matcher(group.Name).matches()) {
+			if (! CCGroup.isValidGroupName(group.Name)) {
 				e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_INVALID_GROUPLIST, series));
 				break;
 			}

@@ -58,7 +58,7 @@ public class CCGroupList implements Iterable<CCGroup> {
 		
 		List<CCGroup> gl = new ArrayList<>();
 		for (String str : data.split(SEPERATOR)) {
-			if (! CCGroup.REGEX_GROUP_NAME.matcher(str).matches())
+			if (! CCGroup.isValidGroupName(str))
 				throw new GroupFormatException(str);
 			
 			gl.add(ml.getOrCreateGroup(str));
@@ -71,13 +71,29 @@ public class CCGroupList implements Iterable<CCGroup> {
 		return new CCGroupList();
 	}
 
-	public CCGroupList add(CCMovieList ml, String value) {
+	public CCGroupList getAdd(CCMovieList ml, String value) {
 		value = value.replace(SEPERATOR, ""); //$NON-NLS-1$
 				
 		List<CCGroup> new_list = new ArrayList<>(list);
 		
 		if (! contains(value)) new_list.add(ml.getOrCreateGroup(value));
 		
+		return new CCGroupList(new_list);
+	}
+
+	public CCGroupList getAdd(CCGroup g) {
+		List<CCGroup> new_list = new ArrayList<>(list);
+		
+		if (! contains(g)) new_list.add(g);
+		
+		return new CCGroupList(new_list);
+	}
+
+	public CCGroupList getRemove(CCGroup rem) {
+		List<CCGroup> new_list = new ArrayList<>(list);
+		
+		new_list.remove(rem);
+
 		return new CCGroupList(new_list);
 	}
 

@@ -300,12 +300,16 @@ public class CCEpisode {
 	}
 	
 	public CCDate getDisplayDate() {
-		int prop = CCProperties.getInstance().PROP_SERIES_DISPLAYED_DATE.getValue();
-		
-		if (prop == 0) return getViewedHistoryLast();
-		if (prop == 1) return getViewedHistoryFirst();
-
-		return getViewedHistoryAverage();
+		switch (CCProperties.getInstance().PROP_SERIES_DISPLAYED_DATE.getValue()) {
+		case LAST_VIEWED:
+			return getViewedHistoryLast();
+		case FIRST_VIEWED:
+			return getViewedHistoryFirst();
+		case AVERAGE:
+			return getViewedHistoryAverage();
+		default:
+			return null;
+		}
 	}
 
 	public CCDate getAddDate() {

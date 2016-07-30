@@ -19,6 +19,7 @@ import de.jClipCorn.gui.CachedResourceLoader;
 import de.jClipCorn.gui.Resources;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.settings.CCDatabaseDriver;
+import de.jClipCorn.gui.settings.UILanguage;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.DialogHelper;
@@ -119,8 +120,8 @@ public class InitialConfigFrame extends JDialog {
 		getContentPane().add(lblSprache);
 		
 		cbxLanguage = new JComboBox<>();
-		cbxLanguage.setModel(new DefaultComboBoxModel<>(CCProperties.getInstance().getUILanguageOptions()));
-		cbxLanguage.setSelectedIndex(CCProperties.getInstance().PROP_UI_LANG.getValue());
+		cbxLanguage.setModel(new DefaultComboBoxModel<>(UILanguage.getWrapper().getList()));
+		cbxLanguage.setSelectedIndex(CCProperties.getInstance().PROP_UI_LANG.getValue().asInt());
 		cbxLanguage.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -241,8 +242,8 @@ public class InitialConfigFrame extends JDialog {
 		
 		CCProperties.getInstance().PROP_BACKUP_CREATEBACKUPS.setValue(cbBackups.isSelected());
 		
-		if (CCProperties.getInstance().PROP_UI_LANG.getValue() != cbxLanguage.getSelectedIndex()) {
-			CCProperties.getInstance().PROP_UI_LANG.setValue(cbxLanguage.getSelectedIndex());
+		if (CCProperties.getInstance().PROP_UI_LANG.getValue().asInt() != cbxLanguage.getSelectedIndex()) {
+			CCProperties.getInstance().PROP_UI_LANG.setValue(UILanguage.getWrapper().find(cbxLanguage.getSelectedIndex()));
 			LocaleBundle.updateLang();
 		}
 

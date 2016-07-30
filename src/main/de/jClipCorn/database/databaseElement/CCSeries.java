@@ -122,11 +122,11 @@ public class CCSeries extends CCDatabaseElement {
 	@Override
 	public CCDate getAddDate() {
 		switch (CCProperties.getInstance().PROP_SERIES_ADDDATECALCULATION.getValue()) {
-		case 0:
+		case OLDEST_DATE:
 			return calcMinimumAddDate();
-		case 1:
+		case NEWEST_DATE:
 			return calcMaximumAddDate();
-		case 2:
+		case AVERAGE_DATE:
 			return calcAverageAddDate();
 		default:
 			return null;

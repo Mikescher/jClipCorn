@@ -5,8 +5,6 @@ import de.jClipCorn.properties.CCProperties;
 
 public class TableDateListRenderer extends TableRenderer {
 	private static final long serialVersionUID = 1L;
-	
-	private int displayDateSetting = CCProperties.getInstance().PROP_SERIES_DISPLAYED_DATE.getValue();
 
 	public TableDateListRenderer() {
 		super();
@@ -18,12 +16,20 @@ public class TableDateListRenderer extends TableRenderer {
 		if (d.isEmpty()) {
 			setText(" - "); //$NON-NLS-1$
 		} else {
-			if (displayDateSetting == 0) 
-				setText(d.getLastDateOrInvalid().getSimpleStringRepresentation());
-			else if (displayDateSetting == 1) 
-				setText(d.getFirstDateOrInvalid().getSimpleStringRepresentation());
-			else if (displayDateSetting == 2) 
+			switch (CCProperties.getInstance().PROP_SERIES_DISPLAYED_DATE.getValue()) {
+			case AVERAGE:
 				setText(d.getAverageDateOrInvalid().getSimpleStringRepresentation());
+				break;
+			case FIRST_VIEWED:
+				setText(d.getFirstDateOrInvalid().getSimpleStringRepresentation());
+				break;
+			case LAST_VIEWED:
+				setText(d.getLastDateOrInvalid().getSimpleStringRepresentation());
+				break;
+			default:
+				setText("??_ERR_??"); //$NON-NLS-1$
+				break;
+			}
 		}
     }
 }

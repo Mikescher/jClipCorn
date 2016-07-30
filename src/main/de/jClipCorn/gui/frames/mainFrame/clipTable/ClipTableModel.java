@@ -211,11 +211,11 @@ public class ClipTableModel extends AbstractTableModel implements TableModelRowC
 	@Override
 	public Color getRowColor(int row) {
 		switch (CCProperties.getInstance().PROP_MAINFRAME_TABLEBACKGROUND.getValue()) {
-		case 0:
+		case WHITE:
 			return Color.WHITE;
-		case 1:
+		case STRIPED:
 			return (row%2==0) ? (Color.WHITE) : (COLOR_BACKGROUNDGRAY);
-		case 2:
+		case SCORE:
 			return COLOR_ONLINESCORE[getDatabaseElementByRow(owner.convertRowIndexToModel(row)).getOnlinescore().asInt()];
 		default:
 			return Color.MAGENTA;

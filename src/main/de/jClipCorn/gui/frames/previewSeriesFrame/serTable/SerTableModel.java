@@ -44,13 +44,13 @@ public class SerTableModel extends AbstractTableModel implements TableModelRowCo
 		this.season = sea;
 		
 		switch (CCProperties.getInstance().PROP_SERIES_DISPLAYED_DATE.getValue()) {
-		case 0:
+		case LAST_VIEWED:
 			COLUMN_NAMES[3] = LocaleBundle.getString("PreviewSeriesFrame.serTable.ViewedHistory_1"); //$NON-NLS-1$
 			break;
-		case 1:
+		case FIRST_VIEWED:
 			COLUMN_NAMES[3] = LocaleBundle.getString("PreviewSeriesFrame.serTable.ViewedHistory_2"); //$NON-NLS-1$
 			break;
-		case 2:
+		case AVERAGE:
 			COLUMN_NAMES[3] = LocaleBundle.getString("PreviewSeriesFrame.serTable.ViewedHistory_3"); //$NON-NLS-1$
 			break;
 		}

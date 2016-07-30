@@ -14,15 +14,21 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCMovieLanguage;
 import de.jClipCorn.database.util.ExportHelper;
 import de.jClipCorn.gui.frames.mainFrame.clipToolbar.ClipToolbar;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.gui.localization.util.LocalizedVector;
 import de.jClipCorn.gui.log.CCLog;
+import de.jClipCorn.gui.settings.AddDateAlgorithm;
 import de.jClipCorn.gui.settings.BrowserLanguage;
 import de.jClipCorn.gui.settings.CCDatabaseDriver;
+import de.jClipCorn.gui.settings.DisplayDateAlgorithm;
+import de.jClipCorn.gui.settings.DoubleClickAction;
 import de.jClipCorn.gui.settings.ImageSearchImplementation;
+import de.jClipCorn.gui.settings.InitalSortingColumn;
+import de.jClipCorn.gui.settings.UILanguage;
+import de.jClipCorn.gui.settings.UITableBackground;
 import de.jClipCorn.properties.property.CCBoolProperty;
 import de.jClipCorn.properties.property.CCDateProperty;
 import de.jClipCorn.properties.property.CCEnumProperty;
 import de.jClipCorn.properties.property.CCEnumSetProperty;
+import de.jClipCorn.properties.property.CCEnumSetProperty.EnumSetValue;
 import de.jClipCorn.properties.property.CCPIntProperty;
 import de.jClipCorn.properties.property.CCPathProperty;
 import de.jClipCorn.properties.property.CCProperty;
@@ -31,7 +37,6 @@ import de.jClipCorn.properties.property.CCSeasonRegexListProperty;
 import de.jClipCorn.properties.property.CCStringProperty;
 import de.jClipCorn.properties.property.CCToolbarProperty;
 import de.jClipCorn.properties.property.CCVIntProperty;
-import de.jClipCorn.properties.property.CCEnumSetProperty.EnumSetValue;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.ApplicationHelper;
@@ -77,7 +82,7 @@ public class CCProperties {
 	public CCBoolProperty 									PROP_ADD_MOVIE_RELATIVE_AUTO;
 	public CCStringProperty 								PROP_DATABASE_NAME;
 	public CCStringProperty 								PROP_LOG_PATH;
-	public CCVIntProperty 									PROP_UI_LANG;
+	public CCEnumProperty<UILanguage>						PROP_UI_LANG;
 	public CCStringProperty 								PROP_SELF_DIRECTORY;
 	public CCStringProperty 								PROP_COVER_PREFIX;
 	public CCStringProperty 								PROP_COVER_TYPE;
@@ -89,11 +94,11 @@ public class CCProperties {
 	public CCBoolProperty 									PROP_PLAY_VLC_FULLSCREEN;
 	public CCBoolProperty 									PROP_PLAY_VLC_AUTOPLAY;
 	public CCBoolProperty 									PROP_PLAY_USESTANDARDONMISSINGVLC; // Use Standard Player on missing VLC
-	public CCVIntProperty 									PROP_ON_DBLCLICK_MOVE; //0=Play | 1=Preview
+	public CCEnumProperty<DoubleClickAction>				PROP_ON_DBLCLICK_MOVE;
 	public CCBoolProperty 									PROP_USE_INTELLISORT;
 	public CCBoolProperty 									PROP_INCLUDE_SERIES_IN_VIEWEDCOUNT;
 	public CCPIntProperty 									PROP_MAINFRAME_SCROLLSPEED;
-	public CCVIntProperty 									PROP_MAINFRAME_TABLEBACKGROUND; //0=WHITE | 1=GRAY-WHITE | 2=Score
+	public CCEnumProperty<UITableBackground>				PROP_MAINFRAME_TABLEBACKGROUND;
 	public CCBoolProperty 									PROP_LOADING_PRELOADRESOURCES;
 	public CCBoolProperty 									PROP_DATABASE_CREATELOGFILE;
 	public CCPIntProperty 									PROP_DATABASE_COVERCACHESIZE;
@@ -110,7 +115,7 @@ public class CCProperties {
 	public CCPIntProperty 									PROP_BACKUP_LIFETIME;
 	public CCBoolProperty 									PROP_LOG_APPEND;
 	public CCPIntProperty 									PROP_LOG_MAX_LINECOUNT;
-	public CCVIntProperty 									PROP_VIEW_DB_START_SORT;
+	public CCEnumProperty<InitalSortingColumn> 				PROP_VIEW_DB_START_SORT;
 	public CCRIntProperty									PROP_VALIDATE_FILESIZEDRIFT;
 	public CCBoolProperty									PROP_OTHER_DEBUGMODE;
 	public CCBoolProperty									PROP_VALIDATE_DUP_IGNORE_IFO;
@@ -126,7 +131,7 @@ public class CCProperties {
 	public CCBoolProperty									PROP_IMPORT_RESETTAGS;
 	public CCRIntProperty 									PROP_PARSEIMDB_LANGUAGE;
 	public CCToolbarProperty								PROP_TOOLBAR_ELEMENTS;
-	public CCVIntProperty									PROP_SERIES_ADDDATECALCULATION; //0 = Lowest EpisdenAddDate || 1 = Highest EpisdenAddDate || 2 = Average EpisdenAddDate
+	public CCEnumProperty<AddDateAlgorithm>			PROP_SERIES_ADDDATECALCULATION;
 	public CCBoolProperty									PROP_STATBAR_ELCOUNT;
 	public CCBoolProperty									PROP_STATBAR_PROGRESSBAR;
 	public CCBoolProperty									PROP_STATBAR_LOG;
@@ -153,7 +158,7 @@ public class CCProperties {
 	public CCSeasonRegexListProperty						PROP_SEASON_INDEX_REGEXPRESSIONS;
 	public CCPIntProperty 									PROP_STATISTICS_TIMELINEGRAVITY;
 	public CCEnumProperty<CCDatabaseDriver>					PROP_DATABASE_DRIVER;
-	public CCVIntProperty									PROP_SERIES_DISPLAYED_DATE;
+	public CCEnumProperty<DisplayDateAlgorithm>				PROP_SERIES_DISPLAYED_DATE;
 	public CCBoolProperty									PROP_QUERY_IMDB;
 	public CCBoolProperty									PROP_QUERY_TMDB;
 	public CCBoolProperty 									PROP_MAINFRAME_SHOWGROUPS;
@@ -193,49 +198,22 @@ public class CCProperties {
 	
 	@SuppressWarnings("nls")
 	private void createProperties() {
-		LocalizedVector vd = new LocalizedVector();
-		vd.add("CCProperties.DblClickMove.Opt0"); //$NON-NLS-1$
-		vd.add("CCProperties.DblClickMove.Opt1"); //$NON-NLS-1$
-		vd.add("CCProperties.DblClickMove.Opt2"); //$NON-NLS-1$
-		
-		LocalizedVector vl = getUILanguageOptions();
-
 		Vector<String> vlf = new Vector<>(LookAndFeelManager.getLookAndFeelList());
 		
-		LocalizedVector vb = new LocalizedVector();
-		vb.add("CCProperties.TabBackground.Opt0"); //$NON-NLS-1$
-		vb.add("CCProperties.TabBackground.Opt1"); //$NON-NLS-1$
-		vb.add("CCProperties.TabBackground.Opt2"); //$NON-NLS-1$
-		
-		LocalizedVector vs = new LocalizedVector();
-		vs.add("ClipTableModel.LocalID"); //$NON-NLS-1$
-		vs.add("ClipTableModel.Title"); //$NON-NLS-1$
-		vs.add("ClipTableModel.Added"); //$NON-NLS-1$
-		
-		LocalizedVector va = new LocalizedVector();
-		va.add("CCProperties.AddDateCalculation.Opt0"); //$NON-NLS-1$
-		va.add("CCProperties.AddDateCalculation.Opt1"); //$NON-NLS-1$
-		va.add("CCProperties.AddDateCalculation.Opt2"); //$NON-NLS-1$
-		
-		LocalizedVector vdd = new LocalizedVector();
-		vdd.add("CCProperties.SeriesDisplayDate.Opt0"); //$NON-NLS-1$
-		vdd.add("CCProperties.SeriesDisplayDate.Opt1"); //$NON-NLS-1$
-		vdd.add("CCProperties.SeriesDisplayDate.Opt2"); //$NON-NLS-1$
-		
-		PROP_UI_LANG							= new CCVIntProperty(CAT_COMMON, 			this, 	"PROP_UI_LANG", 							getDefLanguage(),	vl);
+		PROP_UI_LANG							= new CCEnumProperty<>(CAT_COMMON, 			this, 	"PROP_UI_LANG", 							getDefLanguage(),					UILanguage.getWrapper());
 		PROP_LOADING_PRELOADRESOURCES			= new CCBoolProperty(CAT_COMMON, 			this,   "PROP_LOADING_PRELOADICONS", 				false);
 		PROP_USE_INTELLISORT					= new CCBoolProperty(CAT_COMMON,			this, 	"PROP_USE_INTELLISORT", 					false);
 		PROP_COMMON_CHECKFORUPDATES				= new CCBoolProperty(CAT_COMMON, 			this, 	"PROP_COMMON_CHECKFORUPDATES", 				true);
 		PROP_COMMON_PRESCANFILESYSTEM			= new CCBoolProperty(CAT_COMMON, 			this, 	"PROP_COMMON_PRESCANFILESYSTEM", 			true);
 		PROP_LOG_APPEND							= new CCBoolProperty(CAT_COMMON, 			this,   "PROP_LOG_APPEND", 							true);
 		PROP_DATABASE_CLEANSHUTDOWN				= new CCBoolProperty(CAT_COMMON,	 		this,   "PROP_DATABASE_CLEANSHUTDOWN",				false);
-		PROP_MAINFRAME_FILTERLISTPATH			= new CCStringProperty(CAT_COMMON,	 		this,	"PROP_MAINFRAME_FILTERLISTPATH",			"<?self>jClipCorn."+ExportHelper.EXTENSION_FILTERLIST);
+		PROP_MAINFRAME_FILTERLISTPATH			= new CCStringProperty(CAT_COMMON,	 		this,	"PROP_MAINFRAME_FILTERLISTPATH",			getDefFLPath());
 		                                                                                	
-		PROP_UI_LOOKANDFEEL						= new CCVIntProperty(CAT_VIEW, 				this,	"PROP_UI_LOOKANDFEEL", 						getDefStyle(),		vlf);
-		PROP_MAINFRAME_TABLEBACKGROUND			= new CCVIntProperty(CAT_VIEW, 				this,	"PROP_MAINFRAME_TABLEBACKGROUND",			0, 					vb);
+		PROP_UI_LOOKANDFEEL						= new CCVIntProperty(CAT_VIEW, 				this,	"PROP_UI_LOOKANDFEEL", 						getDefStyle(),						vlf);
+		PROP_MAINFRAME_TABLEBACKGROUND			= new CCEnumProperty<>(CAT_VIEW, 			this,	"PROP_MAINFRAME_TABLEBACKGROUND",			UITableBackground.WHITE, 			UITableBackground.getWrapper());
 		PROP_LOADING_LIVEUPDATE					= new CCBoolProperty(CAT_VIEW, 				this, 	"PROP_LOADING_LIVEUPDATE", 					false);
 		PROP_MAINFRAME_SCROLLSPEED				= new CCPIntProperty(CAT_VIEW, 				this, 	"PROP_MAINFRAME_SCROLLSPEED", 				3);
-		PROP_VIEW_DB_START_SORT					= new CCVIntProperty(CAT_VIEW, 				this, 	"PROP_VIEW_DB_START_SORT", 					0,					vs);
+		PROP_VIEW_DB_START_SORT					= new CCEnumProperty<>(CAT_VIEW, 			this, 	"PROP_VIEW_DB_START_SORT", 					InitalSortingColumn.LOCALID,		InitalSortingColumn.getWrapper());
 		PROP_TOOLBAR_ELEMENTS					= new CCToolbarProperty(CAT_VIEW, 			this, 	"PROP_TOOLBAR_ELEMENTS", 					ClipToolbar.STANDARD_CONFIG);
 		PROP_MAINFRAME_CLICKABLEZYKLUS			= new CCBoolProperty(CAT_VIEW,		 		this,   "PROP_MAINFRAME_CLICKABLEZYKLUS",			false);
 		PROP_MAINFRAME_CLICKABLESCORE			= new CCBoolProperty(CAT_VIEW,		 		this,   "PROP_MAINFRAME_CLICKABLESCORE",			false);
@@ -254,13 +232,13 @@ public class CCProperties {
 		PROP_DATABASE_COVERCACHESIZE			= new CCPIntProperty(CAT_DATABASE, 			this, 	"PROP_DATABASE_COVERCACHESIZE", 			128);
 		PROP_LOG_MAX_LINECOUNT 					= new CCPIntProperty(CAT_DATABASE, 			this, 	"PROP_LOG_MAX_LINECOUNT", 					1048576); // 2^20
 
-		PROP_DATABASE_DEFAULTPARSERLANG			= new CCEnumProperty<>(CAT_PARSER, 			this, 	"PROP_DATABASE_DEFAULTPARSERLANG", 			CCMovieLanguage.GERMAN, 	CCMovieLanguage.getWrapper());
-		PROP_TMDB_LANGUAGE						= new CCEnumProperty<>(CAT_PARSER, 			this, 	"PROP_TMDB_LANGUAGE", 						getDefBLanguage(),			BrowserLanguage.getWrapper());
-		PROP_IMAGESEARCH_IMPL					= new CCEnumSetProperty<>(CAT_PARSER, 		this, 	"PROP_IMAGESEARCH_IMPL", 					EnumSetValue.ALL,			ImageSearchImplementation.getWrapper());
+		PROP_DATABASE_DEFAULTPARSERLANG			= new CCEnumProperty<>(CAT_PARSER, 			this, 	"PROP_DATABASE_DEFAULTPARSERLANG", 			CCMovieLanguage.GERMAN, 			CCMovieLanguage.getWrapper());
+		PROP_TMDB_LANGUAGE						= new CCEnumProperty<>(CAT_PARSER, 			this, 	"PROP_TMDB_LANGUAGE", 						getDefBLanguage(),					BrowserLanguage.getWrapper());
+		PROP_IMAGESEARCH_IMPL					= new CCEnumSetProperty<>(CAT_PARSER, 		this, 	"PROP_IMAGESEARCH_IMPL", 					EnumSetValue.ALL,					ImageSearchImplementation.getWrapper());
 		PROP_QUERY_IMDB							= new CCBoolProperty(CAT_PARSER,	 		this,   "PROP_QUERY_IMDB",							true);
 		PROP_QUERY_TMDB							= new CCBoolProperty(CAT_PARSER,	 		this,   "PROP_QUERY_TMDB",							true);
 
-		PROP_ON_DBLCLICK_MOVE					= new CCVIntProperty(CAT_MOVIES, 			this, 	"PROP_ON_DBLCLICK_MOVE", 					0, 					vd);
+		PROP_ON_DBLCLICK_MOVE					= new CCEnumProperty<>(CAT_MOVIES, 			this, 	"PROP_ON_DBLCLICK_MOVE", 					DoubleClickAction.PLAY, 			DoubleClickAction.getWrapper());
 		PROP_MAINFRAME_AUTOMATICRESETWATCHLATER = new CCBoolProperty(CAT_MOVIES,			this,   "PROP_MAINFRAME_AUTOMATICRESETWATCHLATER",	true);
 		PROP_MAINFRAME_AUTOMATICRESETWATCHNEVER = new CCBoolProperty(CAT_MOVIES,			this,   "PROP_MAINFRAME_AUTOMATICRESETWATCHNEVER",	true);
                                                                                         	
@@ -269,13 +247,13 @@ public class CCProperties {
 		PROP_INCLUDE_SERIES_IN_VIEWEDCOUNT		= new CCBoolProperty(CAT_SERIES, 			this,	"PROP_INCLUDE_SERIES_IN_VIEWEDCOUNT", 		false);
 		PROP_PREVSERIES_3DCOVER					= new CCBoolProperty(CAT_SERIES, 			this,   "PROP_PREVSERIES_3DCOVER",					true);
 		PROP_PREVSERIES_COVERBORDER				= new CCBoolProperty(CAT_SERIES, 			this,   "PROP_PREVSERIES_COVERBORDER",				true);
-		PROP_SERIES_ADDDATECALCULATION			= new CCVIntProperty(CAT_SERIES, 			this, 	"PROP_SERIES_ADDDATECALCULATION", 			1, 					va);
+		PROP_SERIES_ADDDATECALCULATION			= new CCEnumProperty<>(CAT_SERIES, 			this, 	"PROP_SERIES_ADDDATECALCULATION", 			AddDateAlgorithm.NEWEST_DATE, 		AddDateAlgorithm.getWrapper());
+		PROP_SERIES_DISPLAYED_DATE              = new CCEnumProperty<>(CAT_SERIES, 			this, 	"PROP_SERIES_DISPLAYED_DATE", 				DisplayDateAlgorithm.LAST_VIEWED, 	DisplayDateAlgorithm.getWrapper());
 		PROP_VALIDATE_CHECK_SERIES_STRUCTURE	= new CCBoolProperty(CAT_SERIES,			this,   "PROP_VALIDATE_CHECK_SERIES_STRUCTURE",		false);
 		PROP_SHOW_PARTIAL_VIEWED_STATE			= new CCBoolProperty(CAT_SERIES,			this,   "PROP_SHOW_PARTIAL_VIEWED_STATE",			false);
-		PROP_SERIES_DISPLAYED_DATE              = new CCVIntProperty(CAT_SERIES, 			this, 	"PROP_SERIES_DISPLAYED_DATE", 				0, 					vdd);
 		PROP_SEASON_INDEX_REGEXPRESSIONS		= new CCSeasonRegexListProperty(CAT_SERIES, this, 	"PROP_SEASON_INDEX_REGEXPRESSIONS", 		getDefSeasonRegex());
 		
-		PROP_PLAY_VLC_PATH						= new CCPathProperty(CAT_PLAY, 				this,	"PROP_PLAY_VLC_PATH",						"", 				PathFormatter.appendAndPrependSeparator("vlc.exe"));
+		PROP_PLAY_VLC_PATH						= new CCPathProperty(CAT_PLAY, 				this,	"PROP_PLAY_VLC_PATH",						"", 								PathFormatter.appendAndPrependSeparator("vlc.exe"));
 		PROP_PLAY_VLC_FULLSCREEN				= new CCBoolProperty(CAT_PLAY, 				this,   "PROP_PLAY_VLC_FULLSCREEN", 				false);
 		PROP_PLAY_VLC_AUTOPLAY					= new CCBoolProperty(CAT_PLAY, 				this,   "PROP_PLAY_VLC_AUTOPLAY", 					true);
 		PROP_PLAY_USESTANDARDONMISSINGVLC		= new CCBoolProperty(CAT_PLAY, 				this,   "PROP_PLAY_USESTANDARDONMISSINGVLC", 		true);
@@ -283,7 +261,7 @@ public class CCProperties {
 		PROP_BACKUP_CREATEBACKUPS				= new CCBoolProperty(CAT_BACKUP, 			this, 	"PROP_BACKUP_CREATEBACKUPS", 				false);
 		PROP_BACKUP_FOLDERNAME					= new CCStringProperty(CAT_BACKUP,	 		this,	"PROP_BACKUP_FOLDERNAME",					"jClipCorn_backup");
 		PROP_BACKUP_BACKUPTIME					= new CCPIntProperty(CAT_BACKUP, 			this, 	"PROP_BACKUP_BACKUPTIME", 					7);
-		PROP_BACKUP_COMPRESSION					= new CCRIntProperty(CAT_BACKUP, 			this, 	"PROP_BACKUP_COMPRESSION", 					0,					10);
+		PROP_BACKUP_COMPRESSION					= new CCRIntProperty(CAT_BACKUP, 			this, 	"PROP_BACKUP_COMPRESSION", 					0,									10);
 		PROP_BACKUP_AUTODELETEBACKUPS			= new CCBoolProperty(CAT_BACKUP, 			this,   "PROP_BACKUP_AUTODELETEBACKUPS", 			true);
 		PROP_BACKUP_LIFETIME					= new CCPIntProperty(CAT_BACKUP, 			this, 	"PROP_BACKUP_LIFETIME", 					56);
 		
@@ -299,7 +277,7 @@ public class CCProperties {
 		PROP_ADD_MOVIE_RELATIVE_AUTO 			= new CCBoolProperty(CAT_OTHERFRAMES, 		this,   "PROP_ADD_MOVIE_RELATIVE_AUTO", 			true);
 		PROP_SCANFOLDER_INCLUDESERIES			= new CCBoolProperty(CAT_OTHERFRAMES, 		this, 	"PROP_SCANFOLDER_INCLUDESERIES", 			false);
 		PROP_SCANFOLDER_EXCLUDEIFOS 			= new CCBoolProperty(CAT_OTHERFRAMES, 		this, 	"PROP_SCANFOLDER_EXCLUDEIFOS", 				false);
-		PROP_VALIDATE_FILESIZEDRIFT				= new CCRIntProperty(CAT_OTHERFRAMES, 		this, 	"PROP_VALIDATE_FILESIZEDRIFT", 				5,					100);
+		PROP_VALIDATE_FILESIZEDRIFT				= new CCRIntProperty(CAT_OTHERFRAMES, 		this, 	"PROP_VALIDATE_FILESIZEDRIFT", 				5,									100);
 		PROP_VALIDATE_DUP_IGNORE_IFO			= new CCBoolProperty(CAT_OTHERFRAMES, 		this,   "PROP_VALIDATE_DUP_IGNORE_IFO",				true);
 		PROP_STATISTICS_TIMELINEGRAVITY         = new CCPIntProperty(CAT_OTHERFRAMES,	 	this,   "PROP_STATISTICS_TIMELINEGRAVITY",			7);
 		
@@ -313,20 +291,15 @@ public class CCProperties {
 		PROP_IMPORT_RESETADDDATE				= new CCBoolProperty(NONVISIBLE,	 		this,   "PROP_IMPORT_RESETADDDATE",					true);
 		PROP_IMPORT_RESETSCORE					= new CCBoolProperty(NONVISIBLE,	 		this,   "PROP_IMPORT_RESETSCORE",					true);
 		PROP_IMPORT_RESETTAGS					= new CCBoolProperty(NONVISIBLE,	 		this,   "PROP_IMPORT_RESETTAGS",					true);
-		PROP_PARSEIMDB_LANGUAGE					= new CCRIntProperty(NONVISIBLE,	 		this,   "PROP_PARSEIMDB_LANGUAGE",					1, 					2);
+		PROP_PARSEIMDB_LANGUAGE					= new CCRIntProperty(NONVISIBLE,	 		this,   "PROP_PARSEIMDB_LANGUAGE",					1, 									2);
 		PROP_STATISTICS_INTERACTIVECHARTS		= new CCBoolProperty(NONVISIBLE,	 		this,   "PROP_STATISTICS_INTERACTIVECHARTS",		false);
 		PROP_MAINFRAME_WIDTH					= new CCPIntProperty(NONVISIBLE,	 		this,   "PROP_MAINFRAME_WIDTH",						875);
 		PROP_MAINFRAME_HEIGHT					= new CCPIntProperty(NONVISIBLE,	 		this,   "PROP_MAINFRAME_HEIGHT",					getDefMFHeight());
-		PROP_DATABASE_DRIVER					= new CCEnumProperty<>(NONVISIBLE, 			this, 	"PROP_DATABASE_DRIVER", 					CCDatabaseDriver.SQLITE,	CCDatabaseDriver.getWrapper());
+		PROP_DATABASE_DRIVER					= new CCEnumProperty<>(NONVISIBLE, 			this, 	"PROP_DATABASE_DRIVER", 					CCDatabaseDriver.SQLITE,			CCDatabaseDriver.getWrapper());
 	}
-	
-	public LocalizedVector getUILanguageOptions() {
-		LocalizedVector vl = new LocalizedVector();
-		vl.add("CCProperties.Language.Opt0"); //$NON-NLS-1$
-		vl.add("CCProperties.Language.Opt1"); //$NON-NLS-1$
-		vl.add("CCProperties.Language.Opt2"); //$NON-NLS-1$
-		vl.add("CCProperties.Language.Opt3"); //$NON-NLS-1$
-		return vl;
+
+	private String getDefFLPath() {
+		return "<?self>jClipCorn."+ExportHelper.EXTENSION_FILTERLIST; //$NON-NLS-1$
 	}
 	
 	private ArrayList<String> getDefSeasonRegex() {
@@ -336,15 +309,16 @@ public class CCProperties {
 		result.add("Volume[ ]?(?<index>[0-9]+).*"); //$NON-NLS-1$
 		result.add(""); //$NON-NLS-1$
 		result.add("(?<index>[0-9]+) - .*"); //$NON-NLS-1$
+		result.add("S(?<index>[0-9]+) - .*"); //$NON-NLS-1$
 		return result;
 	}
 
-	private int getDefLanguage() {
-		if (Locale.getDefault().getCountry().equals(Locale.GERMANY.getCountry())) return LocaleBundle.LOCALE_DUAL;
-		if (Locale.getDefault().getCountry().equals(Locale.US.getCountry())) return LocaleBundle.LOCALE_ENGLISCH;
-		if (Locale.getDefault().getLanguage().equals(Locale.ENGLISH.getLanguage())) return LocaleBundle.LOCALE_ENGLISCH;
+	private UILanguage getDefLanguage() {
+		if (Locale.getDefault().getCountry().equals(Locale.GERMANY.getCountry())) return UILanguage.DUAL;
+		if (Locale.getDefault().getCountry().equals(Locale.US.getCountry())) return UILanguage.ENGLISCH;
+		if (Locale.getDefault().getLanguage().equals(Locale.ENGLISH.getLanguage())) return UILanguage.ENGLISCH;
 		
-		return LocaleBundle.LOCALE_SYSTEMDEFAULT;
+		return UILanguage.DEFAULT;
 	}
 
 	private BrowserLanguage getDefBLanguage() {

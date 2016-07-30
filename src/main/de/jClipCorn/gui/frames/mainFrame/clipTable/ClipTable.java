@@ -118,13 +118,13 @@ public class ClipTable extends JScrollPane implements CCDBUpdateListener, ListSe
 		List<SortKey> list = new ArrayList<>();	
 		
 		switch (CCProperties.getInstance().PROP_VIEW_DB_START_SORT.getValue()) {
-		case 0:
+		case LOCALID:
 			//DO nothing
 			return;
-		case 1:
+		case TITLE:
 			list.add( new RowSorter.SortKey(ClipTableModel.COLUMN_TITLE, SortOrder.ASCENDING) );
 			break;
-		case 2:
+		case ADDDATE:
 			list.add( new RowSorter.SortKey(ClipTableModel.COLUMN_DATE, SortOrder.DESCENDING) );
 			break;
 		}

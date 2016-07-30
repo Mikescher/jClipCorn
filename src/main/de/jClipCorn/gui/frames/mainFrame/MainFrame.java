@@ -254,13 +254,13 @@ public class MainFrame extends JFrame implements CCDBUpdateListener {
 		
 		if (ccDatabaseElement.isMovie()) {
 			switch (CCProperties.getInstance().PROP_ON_DBLCLICK_MOVE.getValue()) {
-			case 0:
+			case PLAY:
 				CCActionTree.getInstance().find(CCActionTree.EVENT_ON_MOVIE_EXECUTED_0).execute();
 				break;
-			case 1:
+			case PREVIEW:
 				CCActionTree.getInstance().find(CCActionTree.EVENT_ON_MOVIE_EXECUTED_1).execute();
 				break;
-			case 2:
+			case EDIT:
 				CCActionTree.getInstance().find(CCActionTree.EVENT_ON_MOVIE_EXECUTED_2).execute();
 				break;
 			}

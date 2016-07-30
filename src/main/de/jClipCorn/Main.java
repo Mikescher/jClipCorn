@@ -128,3 +128,7 @@ public class Main {
 //   - Export and import reference mapping file (to get mappings to other dbs) ?
 
 // TODO Unit tests (with memory database)
+
+// TODO get actors from online and save to db
+//      add filter for actors. 
+//      don't show all actors, make it configurable which actors are "enabled" (?)

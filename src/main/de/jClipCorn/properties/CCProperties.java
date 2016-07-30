@@ -343,9 +343,9 @@ public class CCProperties {
 	
 	private int getDefMFHeight() {
 		if (LookAndFeelManager.isMetal())
-			return 650;
+			return 670;
 		else
-			return 640;
+			return 660;
 	}
 
 	public static CCProperties getInstance() {

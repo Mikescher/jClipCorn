@@ -27,9 +27,8 @@ public class CCEnumSetProperty<T extends ContinoousEnum<T>> extends CCProperty<S
 		this.source = source;
 	}
 
-	@SuppressWarnings("unchecked")
 	public CCEnumSetProperty(CCPropertyCategory cat, CCProperties prop, String ident, EnumSetValue stdType, EnumWrapper<T> source) {
-		super(cat, (Class<Set<T>>)new HashSet<T>().getClass(), prop, ident, standardConverter(stdType, source));
+		super(cat, getTypeClass(), prop, ident, standardConverter(stdType, source));
 		
 		this.source = source;
 	}
@@ -49,6 +48,15 @@ public class CCEnumSetProperty<T extends ContinoousEnum<T>> extends CCProperty<S
 		default:
 			return null;
 		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	private static <T> Class<Set<T>> getTypeClass() {
+		Set<T> s = new HashSet<>(); // java generics are fucking stupid
+		                            // as soon as I inline this constructor the gardle build fails
+		                            // and I can't even explain why
+		
+		return (Class<Set<T>>)(s.getClass());
 	}
 
 	@Override

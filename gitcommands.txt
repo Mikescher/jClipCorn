@@ -32,9 +32,7 @@ git log --format='full'
 ################
 
 git log --pretty=format:'############ %ad: %B' --date=short >changelog.txt
->> Open in Notepad++
->> go to Hex View -> Remove BOM (if there)
->> Convert to ANSI
+>> remove all changes to old entries (they were manually changed and now undo'ed)
 
 ##################################
 #  PUSH AND OVERRIDE CONFLICTS   #

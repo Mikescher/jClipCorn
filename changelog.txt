@@ -1,4 +1,139 @@
-﻿############ 2016-07-05: 1.9.10 RELEASE
+############ 2016-07-30: 1.10.0 Feature: Added Group-Manage frame (delete, rename, merge, update)
+
+############ 2016-07-30: 1.10.0 Feature: Added Idiot-mode ;D
+ - with hidden extended settings button
+ - and hidden Maintenance menu
+ - can only be deactivated by manually editing config file
+
+############ 2016-07-30: 1.10.0 Task: Use EnumWrapper for all multi-value properties (better than magic numbers)
+
+############ 2016-07-30: 1.10.0 Features: More Parser options:
+  - Optionally open TMDB-URL with language suffix
+  - Get localized TMDB title and other metadata
+  - Choose which image search implementations are active
+
+############ 2016-07-29: 1.10.0 Bugfixes: Using apache.commons.lang3.StringUtils.stripAccents to normalize FilePaths (instead of hand-crafted shit)
+
+############ 2016-07-29: 1.10.0 Bugfixes: Fixed ERROR_DUPLICATE_REF triggering for the same movie in two different languages
+
+############ 2016-07-29: 1.10.0 Bugfixes: Fixed Searchfield sometimes not resetting when gaining focus
+
+############ 2016-07-29: 1.10.0 Task: Organize usings
+
+############ 2016-07-28: 1.10.0 Task: Added in-memory database (for unit tests)
+
+############ 2016-07-28: 1.10.0 Task: Refactored enums into common interface and added CCEnumProperty<>
+
+############ 2016-07-27: 1.10.0 Feature: Search through OnlineRef
+
+############ 2016-07-27: 1.10.0 Feature: Added DatabaseError: ERROR_DUPLICATE_REF
+
+############ 2016-07-26: 1.10.0 Task: Automatically set RefType on JReferenceChooser paste event
+
+############ 2016-07-26: 1.10.0 Task: OpenLastPlayedSeries now laso respects the time component of the ViewedHistory
+
+############ 2016-07-26: 1.10.0 Task: Timeline statistic supports all dates from viewed history
+
+############ 2016-07-26: 1.10.0 Bugfixes: Fixed a few small AutoRefFinder bugs
+
+############ 2016-07-26: 1.10.0 Feature: Added OpenInBrowser button to PreviewSeriesFrame
+
+############ 2016-07-26: 1.10.0 Feature: Added two new online reference sources: Proxer.me and MyAnimeList
+
+############ 2016-07-25: 1.10.0 Feature: AutoFindReferenceFrame also searches through IMDB
+
+############ 2016-07-25: 1.10.0 Bugfix: Fixed 429 (TOO_MANY_REQUESTS) Http error when searching for _alot_ of TMDB references
+
+############ 2016-07-24: 1.10.0 Bugfix: Fixed series table not showing correct viewed history
+
+############ 2016-07-24: 1.10.0 Bugfix: Various small fixes
+
+############ 2016-07-24: 1.10.0 Bugfix: Fixed load&edit with jxml-backup not working with new properties
+
+############ 2016-07-24: 1.10.0 Task: Normalize characters in filename generation (eg é -> e)
+
+############ 2016-07-24: 1.10.0 Feature: Added groups to searchable database fields
+
+############ 2016-07-24: 1.10.0 Feature: Added new filters to custom filter dialog:
+  - CustomGroupFilter
+  - CustomReferenceFilter (only reference type)
+  - CustomHistoryFilter (Viewed-history)
+
+############ 2016-07-24: 1.10.0 Feature: Added Groups to filename grammar (double square brackets)
+
+############ 2016-07-21: 1.10.0 Task: CCGroup, CCOnlineReference and ViewedHistory Serialization + Deserialization (XML)
+
+############ 2016-07-20: 1.10.0 Feature: Show groups rendered on top of the cover
+
+############ 2016-07-20: 1.10.0 Feature: "Undo Episode Viewed" and "Play movie without changing history"
+
+############ 2016-07-20: 1.10.0 Feature: Finished CCGroup Implementation
+  - Added DatabaseErrors for invalid groups/grouplists
+  - Added GroupEditor to AddSeriesFrame, EditSeriesFrame, AddMovieFrame, EditMovieFrame
+
+############ 2016-07-19: 1.10.0 Feature: Basic CCGroup Implementation
+  - write and read Groups from database
+  - global group cache
+  - GroupListEditor component
+  - Sidebar Group listing and filter
+
+############ 2016-07-17: 1.10.0 Task: Added Database Errors:
+  - ERROR_SERIES_HAS_HISTORY
+  - ERROR_HISTORY_BUT_UNVIEWED
+  - ERROR_INVALID_HISTORY
+
+############ 2016-07-17: 1.10.0 Feature: Added UndoViewed to MainFrame popup
+
+############ 2016-07-17: 1.10.0 Feature: Finished OnlineReference intagration
+ - Search TMDB for metadata
+ - Added options to search TMDB and IMDB
+ - Search TMDB for images
+ - Added Maintenance-dialog to mass find OnlineRef ID's
+ - Automatically include RefID in AddMovie/AddEpisode frame
+ - ShowInBrowser now uses URL from CCOnlineReference
+ - Added DatabaseError ERROR_INVALID_ONLINEREF
+
+############ 2016-07-17: 1.10.0 Feature: Added TheMovieDB.org online-search provider
+
+############ 2016-07-17: 1.10.0 Bugfix: Fixed Exception when trying to add a movie/series/season without cover
+
+############ 2016-07-16: 1.10.0 Task: Added basic implementation of OnlineReference
+
+############ 2016-07-16: 1.10.0 Bugfix: Fixed jUnit tests
+
+############ 2016-07-16: 1.10.0 Task: Finished ViewedHistory for Movies and Episodes
+
+############ 2016-07-16: 1.10.0 Task: Finished DateTimeListEditor for EditSeriesFrame
+
+############ 2016-07-16: 1.10.0 Task: Working on 1.8 features
+  - added Unit Tests
+  - added CCTimeSpinner
+  - added CCDateTimeSpinner
+  - added DateTimeListEditor
+
+############ 2016-07-11: 1.10.0 Task: Changed database schema to 1.8
+  - added Groups to Movies & Series
+  - added ViewedHistory to Movies
+  - added ViewedHistory to Episodes
+  - removed Last/First-Viewed from Episodes
+  - added OnlineReference URI to Movies & Series
+  - added foreign keys to Episodes and Season Table
+
+############ 2016-07-10: 1.10.10 Task: Parse Schema XML with Custom Turbine parser
+
+############ 2016-07-10: 1.10.10 Task: Added .~lock file to prevent parallel db access
+
+############ 2016-07-09: 1.10.0 Feature: Added first-start wizard to choose language, database, theme etc
+
+############ 2016-07-07: 1.10.0 Bugfix: Fixed SQLite Date type not loading back from db
+
+############ 2016-07-06: 1.10.0 Bugfix: Fixed Error when using non-SQLite DB
+
+############ 2016-07-05: 1.10.0 Feature: Rudimentary support for SQLite databases
+
+############ 2016-07-06: 1.9.10 Emergency-Bugfix: Fixed Error when using non-SQLite DB
+
+############ 2016-07-05: 1.9.10 RELEASE
 
 ############ 2016-07-05: 1.9.10 Feature: Added "Calculate Size" button to AddSeriesFrame
 

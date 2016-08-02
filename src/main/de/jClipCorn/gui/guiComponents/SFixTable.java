@@ -86,6 +86,7 @@ public class SFixTable extends JTable {
 		    public void mouseClicked(MouseEvent e) {
 		        int column = getTableHeader().columnAtPoint(e.getPoint());
 		        RowSorter<?> sorter = getRowSorter();
+		        if (sorter == null) return;
 		        List<SortKey> sortKeys = new ArrayList<>();
 		        switch (currentOrder) {
 		            case UNSORTED:

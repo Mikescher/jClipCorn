@@ -138,3 +138,5 @@ public class Main {
 // TODO add "invalid time" -> leads to datetime with no time set (-1:-1:-1 or 99:99:99)
 //      better datetime UI formatting and comparing
 //      -> convert MIDNIGHT (only this time) to INV_TIME
+
+// TODO re-add tootltip in MainTable for [addate, length, tags, ...]

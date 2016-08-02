@@ -132,3 +132,9 @@ public class Main {
 // TODO get actors from online and save to db
 //      add filter for actors. 
 //      don't show all actors, make it configurable which actors are "enabled" (?)
+
+// TODO Find incomplete zyklus dows not work for all (Zwei Supertypen in Miami)
+
+// TODO add "invalid time" -> leads to datetime with no time set (-1:-1:-1 or 99:99:99)
+//      better datetime UI formatting and comparing
+//      -> convert MIDNIGHT (only this time) to INV_TIME

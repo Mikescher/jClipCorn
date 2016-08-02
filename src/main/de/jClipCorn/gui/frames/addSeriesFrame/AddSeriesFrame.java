@@ -376,7 +376,7 @@ public class AddSeriesFrame extends JFrame implements ParseResultHandler, UserDa
 	
 	@Override
 	public void setOnlineReference(CCOnlineReference ref) {
-		// No such field
+		edReference.setValue(ref);
 	}
 	
 	@Override

@@ -81,7 +81,6 @@ public class Main {
 //		-> find plot summary / synopsis
 //		-> autom find age-restriction for different nations
 
-//TODO Parse that (eventually ?): http://www.themoviedb.org/search/movie?query=lazarus%20projekt
 //TODO Auto parse Summary
 //TODO Search for Trailer
 
@@ -128,6 +127,12 @@ public class Main {
 //   - Export and import reference mapping file (to get mappings to other dbs) ?
 
 // TODO Unit tests (with memory database)
+// - add movie
+// - update movie
+// - delete movie
+// - parse watchdata (test data in ParseeWatchData.java)
+// - Filenameparser
+// - XML Export import (various flavours)
 
 // TODO get actors from online and save to db
 //      add filter for actors. 

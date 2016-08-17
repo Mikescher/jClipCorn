@@ -1,4 +1,4 @@
-package de.jClipCorn.gui.frames.parseWatchDataFrame;
+package de.jClipCorn.util.parser.watchdata;
 
 public abstract class WatchDataChangeSet {
 

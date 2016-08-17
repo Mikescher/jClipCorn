@@ -29,7 +29,7 @@ public enum CCMovieScore implements ContinoousEnum<CCMovieScore> {
 	
 	private int id;
 
-	private static EnumWrapper<CCMovieScore> wrapper = new EnumWrapper<>(RATING_0);
+	private static EnumWrapper<CCMovieScore> wrapper = new EnumWrapper<>(RATING_NO);
 
 	private CCMovieScore(int val) {
 		id = val;

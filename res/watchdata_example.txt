@@ -1,0 +1,33 @@
+SerienName [S01]
+    01.1.12: E01
+    02.12: E01, E02, E03
+    03.12.12: E04-09, E11            // Use a range of Episodes
+    11.12.12: E10, E11-E15
+    [11.12.16 19:04]: E16            // Use square brackets to specify a time
+    [11.12.16 19:04:33]: E17         // A time can also include a 'seconds' part
+SerienName [S02]
+    03.03: E-07                      // Set to _not_ viewed
+
+MovieName
+
+MovieName {{---}}                     // use double squirly brackets to specify a custom score for a movie
+MovieName {{--}}
+MovieName {{-}}
+MovieName {{0}}
+MovieName {{+}}
+MovieName {{++}}
+MovieName {{+++}}
+
+MovieName [11.12.12]                 // use square brackets to specify the viewed date/time of a movie
+MovieName [11.12.12 19:04]
+
+MovieName {{++}} [11.12.12 19:04]    // you can combine custom scores and viewed times
+
+[11.12.12 19:04]: MovieName          // you can also write the date in front of the movie name
+[11.12.12 19:04]: MovieName {{++}}
+
+SerienName                           // Use first and only Season
+    01.1.12: 01, 2, 4                // Directly use EpisodeNumbers
+    
+SerienName [S03]
+    E01: [22.7.16 19:04]             // for single episodes you can optionally switch to order of elements

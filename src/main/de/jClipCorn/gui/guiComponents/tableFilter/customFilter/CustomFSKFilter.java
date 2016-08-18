@@ -56,11 +56,6 @@ public class CustomFSKFilter extends AbstractCustomFilter {
 		
 		return b.toString();
 	}
-
-	@Override
-	public AbstractCustomFilter createNew() {
-		return new CustomFSKFilter();
-	}
 	
 	@SuppressWarnings("nls")
 	@Override
@@ -88,5 +83,10 @@ public class CustomFSKFilter extends AbstractCustomFilter {
 	@Override
 	public CustomFilterDialog CreateDialog(FinishListener fl, Component parent, CCMovieList ml) {
 		return new CustomFSKFilterDialog(this, fl, parent);
+	}
+
+	@Override
+	public AbstractCustomFilter createNew() {
+		return new CustomFSKFilter();
 	}
 }

@@ -156,6 +156,6 @@ public class CustomYearFilter extends AbstractCustomFilter {
 
 	@Override
 	public AbstractCustomFilter createNew() {
-		return new CustomZyklusFilter();
+		return new CustomYearFilter();
 	}
 }

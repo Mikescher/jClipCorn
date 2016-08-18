@@ -86,6 +86,6 @@ public class CustomTagFilter extends AbstractCustomFilter {
 
 	@Override
 	public AbstractCustomFilter createNew() {
-		return new CustomScoreFilter();
+		return new CustomTagFilter();
 	}
 }

@@ -88,6 +88,8 @@ public class CCEpisode {
 			this.viewed = viewed;
 
 			if (! viewed) {
+				String.format("Clear ViewedHistory of %s ( %s )", getTitle(), viewedHistory.toSerializationString()); //$NON-NLS-1$
+				
 				fullResetViewedHistory();
 			}
 

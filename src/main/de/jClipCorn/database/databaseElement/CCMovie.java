@@ -127,6 +127,12 @@ public class CCMovie extends CCDatabaseElement {
 			
 			updateDB();
 			
+			if (!viewed) {
+				String.format("Clear ViewedHistory of %s ( %s )", getFullDisplayTitle(), viewedHistory.toSerializationString()); //$NON-NLS-1$
+				
+				fullResetViewedHistory();
+			}
+			
 			if (viewed && getTag(CCMovieTags.TAG_WATCH_LATER) && CCProperties.getInstance().PROP_MAINFRAME_AUTOMATICRESETWATCHLATER.getValue()) {
 				setTag(CCMovieTags.TAG_WATCH_LATER, false);
 			}

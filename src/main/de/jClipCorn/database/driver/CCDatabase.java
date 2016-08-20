@@ -1,5 +1,6 @@
 package de.jClipCorn.database.driver;
 
+import java.awt.Color;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -14,6 +15,7 @@ import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.database.databaseElement.CCSeries;
+import de.jClipCorn.database.databaseElement.columnTypes.CCGroup;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTyp;
 import de.jClipCorn.database.util.Statements;
 import de.jClipCorn.gui.localization.LocaleBundle;
@@ -30,6 +32,7 @@ public class CCDatabase {
 	public final static String TAB_SEASONS         = "SEASONS";   //$NON-NLS-1$
 	public final static String TAB_EPISODES        = "EPISODES";  //$NON-NLS-1$
 	public final static String TAB_INFO            = "INFO";      //$NON-NLS-1$
+	public final static String TAB_GROUPS          = "GROUPS";    //$NON-NLS-1$
 
 	private final static String XML_NAME = "database/ClipCornSchema.xml"; //$NON-NLS-1$
 
@@ -93,9 +96,16 @@ public class CCDatabase {
 	public final static String TAB_EPISODES_COLUMN_TAGS            = "TAGS";            //$NON-NLS-1$
 	public final static String TAB_EPISODES_COLUMN_ADDDATE         = "ADDDATE";         //$NON-NLS-1$
 
+	public final static String TAB_GROUPS_COLUMN_NAME              = "NAME";            //$NON-NLS-1$
+	public final static String TAB_GROUPS_COLUMN_ORDER             = "ORDERING";        //$NON-NLS-1$
+	public final static String TAB_GROUPS_COLUMN_COLOR             = "COLOR";           //$NON-NLS-1$
+	public final static String TAB_GROUPS_COLUMN_SERIALIZE         = "SERIALIZE";       //$NON-NLS-1$
+	
 	private String databasePath;
 	private GenericDatabase db;
 		
+	public final DatabaseUpgradeAssistant upgrader;
+	
 	private CCDatabase(CCDatabaseDriver driver) {
 		super();
 		
@@ -113,6 +123,8 @@ public class CCDatabase {
 			db = new MemoryDatabase();
 			break;
 		}
+		
+		upgrader = new DatabaseUpgradeAssistant(db);
 	}
 	
 	public static CCDatabase create() {
@@ -157,6 +169,9 @@ public class CCDatabase {
 			
 			db.establishDBConnection(dbpath);
 			databasePath = dbpath;
+			
+			upgrader.tryUpgrade();
+			
 			Statements.intialize(this);
 			return true;
 		} catch (SQLException e) {
@@ -753,25 +768,39 @@ public class CCDatabase {
 
 	public void fillMovieList(CCMovieList ml) {
 		try {
-			PreparedStatement s = Statements.selectMainTabStatement;
-			s.clearParameters();
-			
-			ResultSet rs = s.executeQuery();
-			
-			if (CCProperties.getInstance().PROP_LOADING_LIVEUPDATE.getValue()) {
+			{
+				PreparedStatement s = Statements.selectGroupsStatement;
+				s.clearParameters();
+				
+				ResultSet rs = s.executeQuery();
+				
 				while (rs.next()) {
-					ml.directlyInsert(createDatabaseElementFromDatabase(rs, ml));
+					ml.directlyAddGroup(CCGroup.create(rs.getString(TAB_GROUPS_COLUMN_NAME), rs.getInt(TAB_GROUPS_COLUMN_ORDER), rs.getInt(TAB_GROUPS_COLUMN_COLOR), rs.getBoolean(TAB_GROUPS_COLUMN_SERIALIZE)));
 				}
-			} else {
-				List<CCDatabaseElement> temp = new ArrayList<>();
-				while (rs.next()) {
-					temp.add(createDatabaseElementFromDatabase(rs, ml));
-				}
-				ml.directlyInsert(temp);
+				
+				rs.close();
 			}
 			
-			rs.close();
-			
+			{
+				PreparedStatement s = Statements.selectMainTabStatement;
+				s.clearParameters();
+				
+				ResultSet rs = s.executeQuery();
+				
+				if (CCProperties.getInstance().PROP_LOADING_LIVEUPDATE.getValue()) {
+					while (rs.next()) {
+						ml.directlyInsert(createDatabaseElementFromDatabase(rs, ml));
+					}
+				} else {
+					List<CCDatabaseElement> temp = new ArrayList<>();
+					while (rs.next()) {
+						temp.add(createDatabaseElementFromDatabase(rs, ml));
+					}
+					ml.directlyInsert(temp);
+				}
+				
+				rs.close();
+			}
 		} catch (SQLException | CCFormatException e) {
 			CCLog.addError(e);
 		}
@@ -912,7 +941,7 @@ public class CCDatabase {
 		try {
 			String value;
 			
-			PreparedStatement s = Statements.selectInfoKey;
+			PreparedStatement s = Statements.selectInfoKeyStatement;
 			s.clearParameters();
 			s.setString(1, key);
 			
@@ -936,7 +965,7 @@ public class CCDatabase {
 		try {
 			boolean value;
 			
-			PreparedStatement s = Statements.selectInfoKey;
+			PreparedStatement s = Statements.selectInfoKeyStatement;
 			s.clearParameters();
 			s.setString(1, key);
 			
@@ -955,7 +984,7 @@ public class CCDatabase {
 	
 	private void writeNewInformationToDB(String key, String value) {
 		try {
-			PreparedStatement s = Statements.addInfoKey;
+			PreparedStatement s = Statements.addInfoKeyStatement;
 			s.clearParameters();
 
 			s.setString(1, key);
@@ -969,13 +998,50 @@ public class CCDatabase {
 	
 	private void updateInformationInDB(String key, String value) {
 		try {
-			PreparedStatement s = Statements.updateInfoKey;
+			PreparedStatement s = Statements.updateInfoKeyStatement;
 			s.clearParameters();
 
 			s.setString(1, value);
 			s.setString(2, key);
 			
 			s.executeUpdate();
+		} catch (SQLException e) {
+			CCLog.addError(e);
+		}
+	}
+	
+	public void removeGroup(String name) {
+		try {
+			PreparedStatement s = Statements.removeGroupStatement;
+			s.clearParameters();
+
+			s.setString(1, name);
+			
+			s.executeUpdate();
+		} catch (SQLException e) {
+			CCLog.addError(e);
+		}
+	}
+
+	public void addGroup(String name, int order, Color color, boolean doSerialize) {
+		try {
+			PreparedStatement s = Statements.insertGroupStatement;
+			s.clearParameters();
+
+			s.setString(1, name);
+			s.setInt(2, order);
+			s.setInt(3, color.getRGB());
+			s.setBoolean(4, doSerialize);
+			
+			s.executeUpdate();
+		} catch (SQLException e) {
+			CCLog.addError(e);
+		}
+	}
+
+	public void clearGroups() {
+		try {
+			db.executeSQLThrow("DELETE FROM " + TAB_GROUPS); //$NON-NLS-1$
 		} catch (SQLException e) {
 			CCLog.addError(e);
 		}

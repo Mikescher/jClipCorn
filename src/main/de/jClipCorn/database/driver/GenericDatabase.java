@@ -300,6 +300,28 @@ public abstract class GenericDatabase {
 	}
 	
 	/**
+	 * Executes an SQL-Statement and returns a single Value frm the Resultset
+	 * 
+	 * @param sql The SQL-Statement
+	 * @param column the specific Column for the return Value
+	 * @return The return Value
+	 * @throws SQLException 
+	 */
+	public Object querySingleSQLThrow(String sql, int column) throws SQLException {
+		Statement s = connection.createStatement();
+		ResultSet rs = s.executeQuery(sql);
+		
+		Object ret = null;
+		if (rs.next()) {
+			ret = rs.getObject(column + 1);
+		}
+		rs.close();
+		s.close();
+		
+		return ret;
+	}
+	
+	/**
 	 * Executes an SQL-Statement and returns a single Integer-Value frm the Resultset
 	 * 
 	 * @param sql The SQL-Statement
@@ -319,6 +341,17 @@ public abstract class GenericDatabase {
 	 */
 	public String querySingleStringSQL(String sql, int column) {
 		return (String) querySingleSQL(sql, column);
+	}
+	
+	/**
+	 * Executes an SQL-Statement and returns a single String-Value frm the Resultset
+	 * 
+	 * @param sql The SQL-Statement
+	 * @param column the specific Column for the return Value
+	 * @return The return Value
+	 */
+	public String querySingleStringSQLThrow(String sql, int column) throws SQLException {
+		return (String) querySingleSQLThrow(sql, column);
 	}
 	
 	/**

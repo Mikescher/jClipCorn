@@ -30,14 +30,14 @@ public class CCDateTimeEditor extends JPanel implements ChangeListener, Property
 		setLayout(new BorderLayout());
 		add(tf, BorderLayout.CENTER);
 
-		uptime();
+		update();
 	}
 	
 	public JTextField getTextField() {
 		return tf;
 	}
 
-	public void uptime() {
+	public void update() {
 		CCDateTime datetime = owner.getModel().getValue();
 
 		getTextField().setText(datetime.getSimpleStringRepresentation());
@@ -45,7 +45,7 @@ public class CCDateTimeEditor extends JPanel implements ChangeListener, Property
 
 	@Override
 	public void stateChanged(ChangeEvent e) {
-		uptime();
+		update();
 	}
 
 	@Override
@@ -69,7 +69,7 @@ public class CCDateTimeEditor extends JPanel implements ChangeListener, Property
 				} else if (CCDateTime.testparse(text, CCDateTime.STRINGREP_SIMPLEDATE)) {
 					owner.getModel().setValue(CCDateTime.parse(text, CCDateTime.STRINGREP_SIMPLEDATE));
 				} else {
-					uptime();
+					update();
 				}
 			} catch (CCFormatException e) {
 				CCLog.addError(e);

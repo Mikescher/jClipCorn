@@ -192,7 +192,7 @@ public class CCGroupList implements Iterable<CCGroup> {
 			
 			int width = fm.stringWidth(group);
 			
-			g.setColor(get(i).getTagColor(ml));
+			g.setColor(get(i).Color);
 			
 			g.fillRoundRect(
 					right - MARGIN - PADDING_X - width - PADDING_X, 

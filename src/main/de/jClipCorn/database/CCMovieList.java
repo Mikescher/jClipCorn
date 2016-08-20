@@ -320,6 +320,8 @@ public class CCMovieList {
 			});
 			return;
 		}
+		
+		database.upgrader.onAfterConnect(this, database);
 
 		for (CCDBUpdateListener l : listener) {
 			l.onAfterLoad();
@@ -907,6 +909,7 @@ public class CCMovieList {
 			lst.remove(source);
 			if (lst.isEmpty()) {
 				globalGroupList.remove(g);
+				database.removeGroup(g.Name);
 			}
 		}
 	}
@@ -917,6 +920,7 @@ public class CCMovieList {
 			if (lst == null) {
 				lst = new ArrayList<>();
 				globalGroupList.put(g, lst);
+				database.addGroup(g.Name, g.Order, g.Color, g.DoSerialize);
 			}
 			lst.add(source);
 		}
@@ -949,6 +953,11 @@ public class CCMovieList {
 		// set new one
 		
 		globalGroupList = gm;
+		
+		database.clearGroups();
+		for (CCGroup g : globalGroupList.keySet()) {
+			database.addGroup(g.Name, g.Order, g.Color, g.DoSerialize);
+		}
 	}
 	
 	@SuppressWarnings("nls")
@@ -1003,5 +1012,9 @@ public class CCMovieList {
 		if (result == null) result = new ArrayList<>();
 		
 		return result;
+	}
+
+	public void directlyAddGroup(CCGroup g) {
+		globalGroupList.put(g, new ArrayList<>());
 	}
 }

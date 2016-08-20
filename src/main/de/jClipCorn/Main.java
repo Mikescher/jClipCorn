@@ -16,7 +16,7 @@ import de.jClipCorn.util.helper.LookAndFeelManager;
 public class Main {
 	public final static String TITLE = "jClipCorn"; //$NON-NLS-1$
 	public final static String VERSION = "1.10.1";	//$NON-NLS-1$
-	public final static String DBVERSION = "1.8"; 	//$NON-NLS-1$
+	public final static String DBVERSION = "1.9"; 	//$NON-NLS-1$
 	
 	private final static String PROPERTIES_PATH = "jClipcorn.properties"; //$NON-NLS-1$
 	
@@ -145,3 +145,7 @@ public class Main {
 //      -> convert MIDNIGHT (only this time) to INV_TIME
 
 // TODO re-add tootltip in MainTable for [addate, length, tags, ...]
+
+// TODO Dialog to edit Group metadata (Color, Order, DoSerialize) // currently only possible via DB edit
+// TODO Backup database (only DB file ?) before auto upgrade
+// TODO Show Message after DB auto upgrade

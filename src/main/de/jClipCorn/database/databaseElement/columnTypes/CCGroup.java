@@ -3,13 +3,13 @@ package de.jClipCorn.database.databaseElement.columnTypes;
 import java.awt.Color;
 import java.util.regex.Pattern;
 
-import de.jClipCorn.database.CCMovieList;
-
 public class CCGroup implements Comparable<CCGroup> {
 	private final static int COLOR_TAG_ALPHA = 224;
 
 	public final static Pattern REGEX_GROUP_SYNTAX = Pattern.compile("\\[\\[[A-Za-z0-0\\-_ ]+\\]\\]"); //$NON-NLS-1$
 	private final static Pattern REGEX_GROUP_NAME = Pattern.compile("^[A-Za-z0-0\\-_ ]+$"); //$NON-NLS-1$
+	
+	private static int staticGroupCounter = 10000;
 	
 	public final static Color[] TAG_COLORS = new Color[]
 	{
@@ -26,13 +26,28 @@ public class CCGroup implements Comparable<CCGroup> {
 	};
 	
 	public final String Name;
+	public final int Order;
+	public final Color Color;
+	public final boolean DoSerialize;
 	
-	private CCGroup(String n) {
+	private CCGroup(String n, int o, Color c, boolean s) {
 		Name = n;
+		Order = o;
+		Color = c;
+		DoSerialize = s;
 	}
 	
 	public static CCGroup create(String name) {
-		CCGroup g = new CCGroup(name);
+		CCGroup g = new CCGroup(name, staticGroupCounter, TAG_COLORS[staticGroupCounter % TAG_COLORS.length], true);
+		staticGroupCounter++;
+		
+		return g;
+	}
+	
+	public static CCGroup create(String name, int order, int color, boolean ser) {
+		CCGroup g = new CCGroup(name, order, new Color(color), ser);
+		staticGroupCounter++;
+		
 		return g;
 	}
 	
@@ -46,7 +61,7 @@ public class CCGroup implements Comparable<CCGroup> {
 
 	@Override
 	public int compareTo(CCGroup o) {
-		return Name.compareTo(o.Name);
+		return Integer.compare(this.Order, o.Order);
 	}
 	
 	@Override
@@ -62,13 +77,5 @@ public class CCGroup implements Comparable<CCGroup> {
 	@Override
 	public int hashCode() {
 		return Name.hashCode();
-	}
-
-	public Color getTagColor(CCMovieList ml) {
-		int idx = ml.getGroupIndex(this);
-		
-		if (idx >= 0) return TAG_COLORS[idx % TAG_COLORS.length];
-		
-		else return TAG_COLORS[Math.abs(hashCode()) % TAG_COLORS.length];
 	}
 }

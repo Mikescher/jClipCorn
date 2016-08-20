@@ -1,7 +1,11 @@
 package de.jClipCorn.util.sql;
 
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.Set;
+
+import de.jClipCorn.database.driver.CCDatabase;
 
 @SuppressWarnings("nls")
 public abstract class SQLHelper {
@@ -591,4 +595,8 @@ public abstract class SQLHelper {
 	}
 	
 	public abstract String get();
+
+	public PreparedStatement prepare(CCDatabase d) throws SQLException {
+		return d.createPreparedStatement(get());
+	}
 }

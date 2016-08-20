@@ -506,7 +506,7 @@ public class CCSeries extends CCDatabaseElement {
 		String seriesfoldername = getTitle();
 		
 		for (CCGroup group : getGroups()) {
-			seriesfoldername += " [["+group.Name+"]]";
+			if (group.DoSerialize) seriesfoldername += " [["+group.Name+"]]";
 		}
 		
 		if (getLanguage() != CCMovieLanguage.GERMAN) {

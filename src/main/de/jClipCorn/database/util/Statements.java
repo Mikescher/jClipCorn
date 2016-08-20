@@ -7,6 +7,7 @@ import de.jClipCorn.database.driver.CCDatabase;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.util.datatypes.DoubleString;
+import de.jClipCorn.util.sql.SQLDeleteHelper;
 import de.jClipCorn.util.sql.SQLInsertHelper;
 import de.jClipCorn.util.sql.SQLOrder;
 import de.jClipCorn.util.sql.SQLSelectHelper;
@@ -40,9 +41,14 @@ public class Statements {
 	public static PreparedStatement selectSingleSeasonTabStatement;
 	public static PreparedStatement selectSingleEpisodeTabStatement;
 
-	public static PreparedStatement addInfoKey;
-	public static PreparedStatement selectInfoKey;
-	public static PreparedStatement updateInfoKey;
+	public static PreparedStatement addInfoKeyStatement;
+	public static PreparedStatement selectInfoKeyStatement;
+	public static PreparedStatement updateInfoKeyStatement;
+
+	public static PreparedStatement selectGroupsStatement;
+	public static PreparedStatement insertGroupStatement;
+	public static PreparedStatement removeGroupStatement;
+	public static PreparedStatement updateGroupStatement;
 
 	public static void intialize(CCDatabase d) {
 		try {
@@ -70,6 +76,11 @@ public class Statements {
 			intialize_addInfoKey(d);
 			intialize_selectInfoKey(d);
 			intialize_updateInfoKey(d);
+
+			intialize_selectGroups(d);
+			intialize_insertGroup(d);
+			intialize_updateGroup(d);
+			intialize_removeGroup(d);
 			
 		} catch (SQLException e) {
 			CCLog.addFatalError(LocaleBundle.getString("LogMessage.CouldNotCreatePreparedStatement"), e);
@@ -104,9 +115,14 @@ public class Statements {
 			TryClose(selectSingleSeasonTabStatement);
 			TryClose(selectSingleEpisodeTabStatement);
 
-			TryClose(addInfoKey);
-			TryClose(selectInfoKey);
-			TryClose(updateInfoKey);
+			TryClose(addInfoKeyStatement);
+			TryClose(selectInfoKeyStatement);
+			TryClose(updateInfoKeyStatement);
+
+			TryClose(selectGroupsStatement);
+			TryClose(insertGroupStatement);
+			TryClose(removeGroupStatement);
+			TryClose(updateGroupStatement);
 			
 		} catch (Exception e) {
 			CCLog.addFatalError(e);
@@ -153,7 +169,7 @@ public class Statements {
 		ih.addPreparedField(CCDatabase.TAB_MAIN_COLUMN_TYPE);               // 28   TAB_MAIN_COLUMN_TYPE
 		ih.addPreparedField(CCDatabase.TAB_MAIN_COLUMN_SERIES_ID);          // 29   TAB_MAIN_COLUMN_SERIES_ID
 		
-		addEmptyMainTabStatement = d.createPreparedStatement(ih.get());
+		addEmptyMainTabStatement = ih.prepare(d);
 	}
 	
 	private static void intialize_addSeasonTab(CCDatabase d) throws SQLException {
@@ -165,7 +181,7 @@ public class Statements {
 		ih.addPreparedField(CCDatabase.TAB_SEASONS_COLUMN_YEAR);
 		ih.addPreparedField(CCDatabase.TAB_SEASONS_COLUMN_COVERNAME);
 		
-		addEmptySeasonTabStatement = d.createPreparedStatement(ih.get());
+		addEmptySeasonTabStatement = ih.prepare(d);
 	}
 	
 	private static void intialize_addEpisodeTab(CCDatabase d) throws SQLException {
@@ -185,7 +201,7 @@ public class Statements {
 		ih.addPreparedField(CCDatabase.TAB_EPISODES_COLUMN_TAGS);              // 12   TAB_EPISODES_COLUMN_TAGS
 		ih.addPreparedField(CCDatabase.TAB_EPISODES_COLUMN_ADDDATE);           // 13   TAB_EPISODES_COLUMN_ADDDATE
 		
-		addEmptyEpisodeTabStatement = d.createPreparedStatement(ih.get());
+		addEmptyEpisodeTabStatement = ih.prepare(d);
 	}
 	
 	private static void intialize_newID(CCDatabase d) throws SQLException {
@@ -227,7 +243,7 @@ public class Statements {
 		uh.addPreparedField(CCDatabase.TAB_MAIN_COLUMN_TYPE);                // 27   TAB_MAIN_COLUMN_TYPE          
 		uh.addPreparedField(CCDatabase.TAB_MAIN_COLUMN_SERIES_ID);           // 28   TAB_MAIN_COLUMN_SERIES_ID     
 		
-		updateMainTabStatement = d.createPreparedStatement(uh.get());
+		updateMainTabStatement = uh.prepare(d);
 	}
 	
 	private static void intialize_updatesSeriesTab(CCDatabase d) throws SQLException {
@@ -245,7 +261,7 @@ public class Statements {
 		uh.addPreparedField(CCDatabase.TAB_MAIN_COLUMN_TYPE);           // 10     TAB_MAIN_COLUMN_TYPE
 		uh.addPreparedField(CCDatabase.TAB_MAIN_COLUMN_SERIES_ID);      // 11     TAB_MAIN_COLUMN_SERIES_ID
 		
-		updateSeriesTabStatement = d.createPreparedStatement(uh.get());
+		updateSeriesTabStatement = uh.prepare(d);
 	}
 	
 	private static void intialize_updatesSeasonTab(CCDatabase d) throws SQLException {
@@ -256,7 +272,7 @@ public class Statements {
 		uh.addPreparedField(CCDatabase.TAB_SEASONS_COLUMN_YEAR);
 		uh.addPreparedField(CCDatabase.TAB_SEASONS_COLUMN_COVERNAME);
 		
-		updateSeasonTabStatement = d.createPreparedStatement(uh.get());
+		updateSeasonTabStatement = uh.prepare(d);
 	}
 	
 	private static void intialize_updatesEpisodeTab(CCDatabase d) throws SQLException {
@@ -275,7 +291,7 @@ public class Statements {
 		uh.addPreparedField(CCDatabase.TAB_EPISODES_COLUMN_TAGS);             // TAB_EPISODES_COLUMN_TAGS
 		uh.addPreparedField(CCDatabase.TAB_EPISODES_COLUMN_ADDDATE);          // TAB_EPISODES_COLUMN_ADDDATE
 		
-		updateEpisodeTabStatement = d.createPreparedStatement(uh.get());
+		updateEpisodeTabStatement = uh.prepare(d);
 	}
 	
 	private static void intialize_selectMainTab(CCDatabase d) throws SQLException {
@@ -284,7 +300,7 @@ public class Statements {
 		sh.setOrderBy(CCDatabase.TAB_MAIN_COLUMN_LOCALID);
 		sh.setOrder(SQLOrder.ASC);		
 		
-		selectMainTabStatement = d.createPreparedStatement(sh.get());
+		selectMainTabStatement = sh.prepare(d);
 	}
 	
 	private static void intialize_selectSeasonTab(CCDatabase d) throws SQLException {
@@ -295,7 +311,7 @@ public class Statements {
 		sh.setOrderBy(CCDatabase.TAB_SEASONS_COLUMN_NAME);
 		sh.setOrder(SQLOrder.ASC);
 		
-		selectSeasonTabStatement = d.createPreparedStatement(sh.get());
+		selectSeasonTabStatement = sh.prepare(d);
 	}
 	
 	private static void intialize_selectEpisodeTab(CCDatabase d) throws SQLException {
@@ -306,13 +322,13 @@ public class Statements {
 		sh.setOrderBy(CCDatabase.TAB_EPISODES_COLUMN_EPISODE);
 		sh.setOrder(SQLOrder.ASC);
 		
-		selectEpisodeTabStatement = d.createPreparedStatement(sh.get());
+		selectEpisodeTabStatement = sh.prepare(d);
 	}
 	
 	private static void intialize_deleteTab(CCDatabase d) throws SQLException {
-		deleteMainTabStatement = d.createPreparedStatement(String.format("DELETE FROM %s WHERE %s=?", CCDatabase.TAB_MAIN, CCDatabase.TAB_MAIN_COLUMN_LOCALID));
-		deleteSeasonTabStatement = d.createPreparedStatement(String.format("DELETE FROM %s WHERE %s=?", CCDatabase.TAB_SEASONS, CCDatabase.TAB_SEASONS_COLUMN_SEASONID));
-		deleteEpisodeTabStatement = d.createPreparedStatement(String.format("DELETE FROM %s WHERE %s=?", CCDatabase.TAB_EPISODES, CCDatabase.TAB_EPISODES_COLUMN_LOCALID));
+		deleteMainTabStatement = new SQLDeleteHelper(CCDatabase.TAB_MAIN, DoubleString.createPrepared(CCDatabase.TAB_MAIN_COLUMN_LOCALID)).prepare(d);
+		deleteSeasonTabStatement = new SQLDeleteHelper(CCDatabase.TAB_SEASONS, DoubleString.createPrepared(CCDatabase.TAB_SEASONS_COLUMN_SEASONID)).prepare(d);
+		deleteEpisodeTabStatement = new SQLDeleteHelper(CCDatabase.TAB_EPISODES, DoubleString.createPrepared(CCDatabase.TAB_EPISODES_COLUMN_LOCALID)).prepare(d);
 	}
 	
 	private static void intialize_selectSingleMainTab(CCDatabase d) throws SQLException {
@@ -320,7 +336,7 @@ public class Statements {
 		
 		sh.addPreparedWhere(CCDatabase.TAB_MAIN_COLUMN_LOCALID);
 		
-		selectSingleMainTabStatement = d.createPreparedStatement(sh.get());
+		selectSingleMainTabStatement = sh.prepare(d);
 	}
 	
 	private static void intialize_selectSingleSeasonTab(CCDatabase d) throws SQLException {
@@ -328,7 +344,7 @@ public class Statements {
 		
 		sh.addPreparedWhere(CCDatabase.TAB_SEASONS_COLUMN_SEASONID);
 		
-		selectSingleSeasonTabStatement = d.createPreparedStatement(sh.get());
+		selectSingleSeasonTabStatement = sh.prepare(d);
 	}
 	
 	private static void intialize_selectSingleEpisodeTab(CCDatabase d) throws SQLException {
@@ -336,7 +352,7 @@ public class Statements {
 		
 		sh.addPreparedWhere(CCDatabase.TAB_EPISODES_COLUMN_LOCALID);
 		
-		selectSingleEpisodeTabStatement = d.createPreparedStatement(sh.get());
+		selectSingleEpisodeTabStatement = sh.prepare(d);
 	}
 
 	private static void intialize_selectInfoKey(CCDatabase d) throws SQLException {
@@ -345,7 +361,7 @@ public class Statements {
 		sh.addPreparedWhere(CCDatabase.TAB_INFO_COLUMN_KEY);
 		sh.setTarget(CCDatabase.TAB_INFO_COLUMN_VALUE);
 		
-		selectInfoKey = d.createPreparedStatement(sh.get());
+		selectInfoKeyStatement = sh.prepare(d);
 	}
 
 	private static void intialize_addInfoKey(CCDatabase d) throws SQLException {
@@ -354,7 +370,7 @@ public class Statements {
 		ih.addPreparedField(CCDatabase.TAB_INFO_COLUMN_KEY);
 		ih.addPreparedField(CCDatabase.TAB_INFO_COLUMN_VALUE);
 		
-		addInfoKey = d.createPreparedStatement(ih.get());
+		addInfoKeyStatement = ih.prepare(d);
 	}
 
 	private static void intialize_updateInfoKey(CCDatabase d) throws SQLException {
@@ -362,7 +378,37 @@ public class Statements {
 		
 		ih.addPreparedField(CCDatabase.TAB_INFO_COLUMN_VALUE);
 		
-		updateInfoKey = d.createPreparedStatement(ih.get());
+		updateInfoKeyStatement = ih.prepare(d);
 	}
-	
+
+	private static void intialize_selectGroups(CCDatabase d) throws SQLException {
+		SQLSelectHelper sh = new SQLSelectHelper(CCDatabase.TAB_GROUPS);
+		
+		selectGroupsStatement = sh.prepare(d);
+	}
+
+	private static void intialize_insertGroup(CCDatabase d) throws SQLException {
+		SQLInsertHelper ih = new SQLInsertHelper(CCDatabase.TAB_GROUPS);
+		
+		ih.addPreparedField(CCDatabase.TAB_GROUPS_COLUMN_NAME);
+		ih.addPreparedField(CCDatabase.TAB_GROUPS_COLUMN_ORDER);
+		ih.addPreparedField(CCDatabase.TAB_GROUPS_COLUMN_COLOR);
+		ih.addPreparedField(CCDatabase.TAB_GROUPS_COLUMN_SERIALIZE);
+		
+		insertGroupStatement = ih.prepare(d);
+	}
+
+	private static void intialize_updateGroup(CCDatabase d) throws SQLException {
+		SQLUpdateHelper uh = new SQLUpdateHelper(CCDatabase.TAB_GROUPS, DoubleString.createPrepared(CCDatabase.TAB_GROUPS_COLUMN_NAME));
+
+		uh.addPreparedField(CCDatabase.TAB_GROUPS_COLUMN_COLOR);
+		uh.addPreparedField(CCDatabase.TAB_GROUPS_COLUMN_ORDER);
+		uh.addPreparedField(CCDatabase.TAB_GROUPS_COLUMN_SERIALIZE);
+		
+		updateGroupStatement = uh.prepare(d);
+	}
+
+	private static void intialize_removeGroup(CCDatabase d) throws SQLException {
+		removeGroupStatement = new SQLDeleteHelper(CCDatabase.TAB_GROUPS, DoubleString.createPrepared(CCDatabase.TAB_GROUPS_COLUMN_NAME)).prepare(d);
+	}
 }

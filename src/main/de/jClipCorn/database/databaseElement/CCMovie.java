@@ -489,7 +489,7 @@ public class CCMovie extends CCDatabaseElement {
 		}
 		
 		for (CCGroup group : getGroups()) {
-			filename += " [["+group.Name+"]]";
+			if (group.DoSerialize) filename += " [["+group.Name+"]]";
 		}
 				
 		if (getLanguage() != CCMovieLanguage.GERMAN) {

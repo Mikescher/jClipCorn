@@ -55,21 +55,27 @@ public class CCDateTimeEditor extends JPanel implements ChangeListener, Property
 
 	public void commitEdit() {
 		if (owner != null && owner.getModel() != null) {
-			int caret = getTextField().getCaretPosition();
+			JTextField tf = getTextField();
 			
-			String text = getTextField().getText();
+			int caret = tf.getCaretPosition();
+			
+			String text = tf.getText();
 
 			try {
 				if (CCDateTime.testparse(text, CCDateTime.STRINGREP_SIMPLE)) {
 					owner.getModel().setValue(CCDateTime.parse(text, CCDateTime.STRINGREP_SIMPLE));
 				} else if (CCDateTime.testparse(text, CCDateTime.STRINGREP_SIMPLESHORT)) {
 					owner.getModel().setValue(CCDateTime.parse(text, CCDateTime.STRINGREP_SIMPLESHORT));
+				} else if (CCDateTime.testparse(text, CCDateTime.STRINGREP_SIMPLEDATE)) {
+					owner.getModel().setValue(CCDateTime.parse(text, CCDateTime.STRINGREP_SIMPLEDATE));
 				} else {
 					uptime();
 				}
 			} catch (CCFormatException e) {
 				CCLog.addError(e);
 			}
+			
+			if (caret > tf.getText().length()) caret = tf.getText().length();
 
 			getTextField().setCaretPosition(caret);
 		}

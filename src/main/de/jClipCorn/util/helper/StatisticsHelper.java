@@ -25,6 +25,7 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCMovieScore;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieSize;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTags;
 import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineRefType;
+import de.jClipCorn.util.SortableTuple;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.datetime.CCDatespan;
@@ -818,7 +819,7 @@ public class StatisticsHelper {
 
 	public static List<CCDatespan> getDatespanFromSeries(CCSeries series, int gravity) {
 		List<CCDatespan> span = new ArrayList<>();
-		List<CCDate> dates = new ArrayList<>();
+		List<SortableTuple<CCDate, Integer>> dates = new ArrayList<>();
 		
 		for (int sc = 0; sc < series.getSeasonCount(); sc++) {
 			CCSeason season = series.getSeason(sc);
@@ -827,7 +828,7 @@ public class StatisticsHelper {
 				CCEpisode episode = season.getEpisode(ep);
 				
 				for (CCDateTime timestamp : episode.getViewedHistory()) {
-					dates.add(timestamp.date);
+					dates.add(new SortableTuple<>(timestamp.date, season.getSeasonID() * 10000 + episode.getEpisode()));
 				}
 			}
 		}
@@ -836,24 +837,24 @@ public class StatisticsHelper {
 		
 		Collections.sort(dates);
 		
-		CCDate start = dates.get(0);
+		SortableTuple<CCDate, Integer> start = dates.get(0);
 		dates.remove(0);
 		
-		CCDate end = start;
+		SortableTuple<CCDate, Integer> end = start;
 		
 		while (dates.size() > 0) {
-			CCDate curr = dates.get(0);
+			SortableTuple<CCDate, Integer> curr = dates.get(0);
 			dates.remove(0);
 			
-			if (end.getDayDifferenceTo(curr) > gravity) {
-				span.add(new CCDatespan(start, end));
+			if (end.Item1.getDayDifferenceTo(curr.Item1) > gravity || curr.Item2 < end.Item2) {
+				span.add(new CCDatespan(start.Item1, end.Item1));
 				start = curr;
 				end = start;
 			} else {
 				end = curr;
 			}
 		}
-		span.add(new CCDatespan(start, end));
+		span.add(new CCDatespan(start.Item1, end.Item1));
 		
 		return span;
 	}

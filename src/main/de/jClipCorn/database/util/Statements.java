@@ -401,8 +401,8 @@ public class Statements {
 	private static void intialize_updateGroup(CCDatabase d) throws SQLException {
 		SQLUpdateHelper uh = new SQLUpdateHelper(CCDatabase.TAB_GROUPS, DoubleString.createPrepared(CCDatabase.TAB_GROUPS_COLUMN_NAME));
 
-		uh.addPreparedField(CCDatabase.TAB_GROUPS_COLUMN_COLOR);
 		uh.addPreparedField(CCDatabase.TAB_GROUPS_COLUMN_ORDER);
+		uh.addPreparedField(CCDatabase.TAB_GROUPS_COLUMN_COLOR);
 		uh.addPreparedField(CCDatabase.TAB_GROUPS_COLUMN_SERIALIZE);
 		
 		updateGroupStatement = uh.prepare(d);

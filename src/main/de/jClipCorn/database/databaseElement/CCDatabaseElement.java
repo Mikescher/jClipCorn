@@ -228,11 +228,15 @@ public abstract class CCDatabaseElement {
 		
 		movielist.unlinkElementFromGroups(this, linkedGroups);
 		
-		linkedGroups = value;
+		setGroupsInternal(value);
 		
 		updateDB();
 		
 		movielist.linkElementToGroups(this, value);
+	}
+
+	public void setGroupsInternal(CCGroupList value) {
+		linkedGroups = value;
 	}
 
 	public CCGroupList getGroups() {

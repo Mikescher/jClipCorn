@@ -1039,6 +1039,23 @@ public class CCDatabase {
 		}
 	}
 
+	public void updateGroup(String name, int order, Color color, boolean doSerialize) {
+		try {
+			PreparedStatement s = Statements.updateGroupStatement;
+			s.clearParameters();
+
+			s.setInt(1, order);
+			s.setInt(2, color.getRGB());
+			s.setBoolean(3, doSerialize);
+			
+			s.setString(4, name);
+			
+			s.executeUpdate();
+		} catch (SQLException e) {
+			CCLog.addError(e);
+		}
+	}
+
 	public void clearGroups() {
 		try {
 			db.executeSQLThrow("DELETE FROM " + TAB_GROUPS); //$NON-NLS-1$

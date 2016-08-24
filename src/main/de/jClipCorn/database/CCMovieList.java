@@ -886,6 +886,14 @@ public class CCMovieList {
 		return new ArrayList<>(globalGroupList.keySet());
 	}
 	
+	public List<CCGroup> getSortedGroupList() {
+		ArrayList<CCGroup> gl =  new ArrayList<>(globalGroupList.keySet());
+		
+		Collections.sort(gl);
+		
+		return gl;
+	}
+	
 	public CCGroup getOrCreateGroup(String name) {
 		for (Entry<CCGroup, List<CCDatabaseElement>> entry : globalGroupList.entrySet()) {
 			if (entry.getKey().Name.equals(name)) return entry.getKey();
@@ -1016,5 +1024,16 @@ public class CCMovieList {
 
 	public void directlyAddGroup(CCGroup g) {
 		globalGroupList.put(g, new ArrayList<>());
+	}
+
+	public void updateGroup(CCGroup gOld, CCGroup gNew) {
+		for (CCDatabaseElement el : new ArrayList<>(getDatabaseElementsbyGroup(gOld))) {
+			el.setGroupsInternal(el.getGroups().getRemove(gOld).getAdd(gNew));
+		}
+		
+		List<CCDatabaseElement> garb = globalGroupList.remove(gOld);
+		if (garb != null) globalGroupList.put(gNew, garb);
+		
+		database.updateGroup(gNew.Name, gNew.Order, gNew.Color, gNew.DoSerialize);
 	}
 }

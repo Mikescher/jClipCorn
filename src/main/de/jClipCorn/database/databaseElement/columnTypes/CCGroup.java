@@ -13,16 +13,16 @@ public class CCGroup implements Comparable<CCGroup> {
 	
 	public final static Color[] TAG_COLORS = new Color[]
 	{
-		new Color( 26, 188, 156, COLOR_TAG_ALPHA),
-		new Color( 41, 128, 185, COLOR_TAG_ALPHA),
-		new Color(142,  68, 173, COLOR_TAG_ALPHA),
-		new Color(241, 196,  15, COLOR_TAG_ALPHA),
-		new Color(127, 140, 141, COLOR_TAG_ALPHA),
-		new Color(243, 156,  18, COLOR_TAG_ALPHA),
-		new Color(211,  84,   0, COLOR_TAG_ALPHA),
-		new Color(192,  57,  43, COLOR_TAG_ALPHA),
-		new Color(189, 195, 199, COLOR_TAG_ALPHA),
-		new Color( 46, 204, 113, COLOR_TAG_ALPHA),
+		new Color( 26, 188, 156),
+		new Color( 41, 128, 185),
+		new Color(142,  68, 173),
+		new Color(241, 196,  15),
+		new Color(127, 140, 141),
+		new Color(243, 156,  18),
+		new Color(211,  84,   0),
+		new Color(192,  57,  43),
+		new Color(189, 195, 199),
+		new Color( 46, 204, 113),
 	};
 	
 	public final String Name;
@@ -33,7 +33,7 @@ public class CCGroup implements Comparable<CCGroup> {
 	private CCGroup(String n, int o, Color c, boolean s) {
 		Name = n;
 		Order = o;
-		Color = c;
+		Color = new Color(c.getRed(), c.getGreen(), c.getBlue(), COLOR_TAG_ALPHA);
 		DoSerialize = s;
 	}
 	
@@ -46,6 +46,13 @@ public class CCGroup implements Comparable<CCGroup> {
 	
 	public static CCGroup create(String name, int order, int color, boolean ser) {
 		CCGroup g = new CCGroup(name, order, new Color(color), ser);
+		staticGroupCounter++;
+		
+		return g;
+	}
+	
+	public static CCGroup create(String name, int order, Color color, boolean ser) {
+		CCGroup g = new CCGroup(name, order, color, ser);
 		staticGroupCounter++;
 		
 		return g;

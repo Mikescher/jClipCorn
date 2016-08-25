@@ -142,7 +142,5 @@ public class Main {
 //      better datetime UI formatting and comparing
 //      -> convert MIDNIGHT (only this time) to INV_TIME
 
-// TODO re-add tootltip in MainTable for [addate, length, tags, ...]
-
 // TODO Backup database (only DB file ?) before auto upgrade
 // TODO Show Message after DB auto upgrade

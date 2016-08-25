@@ -1,15 +1,11 @@
 package de.jClipCorn.gui.frames.previewSeriesFrame.serTable;
 
-import java.awt.Component;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-
-import javax.swing.JComponent;
-import javax.swing.ToolTipManager;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableModel;
 
 import de.jClipCorn.database.databaseElement.columnTypes.CCDateTimeList;
+import de.jClipCorn.database.databaseElement.columnTypes.CCMovieSize;
+import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTags;
 import de.jClipCorn.gui.guiComponents.SFixTable;
 import de.jClipCorn.gui.guiComponents.tableRenderer.TableDateListRenderer;
 import de.jClipCorn.gui.guiComponents.tableRenderer.TableDateRenderer;
@@ -21,6 +17,9 @@ import de.jClipCorn.gui.guiComponents.tableRenderer.TableQualityRenderer;
 import de.jClipCorn.gui.guiComponents.tableRenderer.TableStringTitleRenderer;
 import de.jClipCorn.gui.guiComponents.tableRenderer.TableTagsRenderer;
 import de.jClipCorn.gui.guiComponents.tableRenderer.TableViewedRenderer;
+import de.jClipCorn.gui.log.CCLog;
+import de.jClipCorn.util.formatter.FileSizeFormatter;
+import de.jClipCorn.util.formatter.TimeIntervallFormatter;
 
 public class SFixSerTable extends SFixTable {
 	private static final long serialVersionUID = 6982359339154624097L;
@@ -41,20 +40,6 @@ public class SFixSerTable extends SFixTable {
 		init();
 		
 		this.getTableHeader().setReorderingAllowed(false);
-		
-		addMouseListener(new MouseAdapter() {
-		    final int defaultTimeout = ToolTipManager.sharedInstance().getInitialDelay();
-		    
-			@Override
-			public void mouseExited(MouseEvent e) {
-		        ToolTipManager.sharedInstance().setInitialDelay(defaultTimeout);
-			}
-			
-			@Override
-			public void mouseEntered(MouseEvent e) {
-		        ToolTipManager.sharedInstance().setInitialDelay(0);
-			}
-		});
 	}
 	
 	private void init() {
@@ -82,25 +67,25 @@ public class SFixSerTable extends SFixTable {
 		column = convertColumnIndexToModel(column); // So you can move the positions of the Columns ...
 		
 		switch (column) {
-		case SerTableModel.COLUMN_EPISODE:		// Episode
+		case SerTableModel.COLUMN_EPISODE:
 			return renderer_episode;
-		case SerTableModel.COLUMN_NAME:			// Name
+		case SerTableModel.COLUMN_NAME:
 			return renderer_title;
-		case SerTableModel.COLUMN_VIEWED:		// Viewed
+		case SerTableModel.COLUMN_VIEWED:
 			return renderer_viewed;
-		case SerTableModel.COLUMN_LASTVIEWED:	// Last Viewed
+		case SerTableModel.COLUMN_LASTVIEWED:
 			return renderer_datelist;
-		case SerTableModel.COLUMN_QUALITY:		// Quality
+		case SerTableModel.COLUMN_QUALITY:
 			return renderer_quality;
-		case SerTableModel.COLUMN_LENGTH:		// Length
+		case SerTableModel.COLUMN_LENGTH:
 			return renderer_length;
-		case SerTableModel.COLUMN_TAGS:			// Tags
+		case SerTableModel.COLUMN_TAGS:
 			return renderer_tags;
-		case SerTableModel.COLUMN_ADDDATE:		// Add Date
+		case SerTableModel.COLUMN_ADDDATE:
 			return renderer_date;
-		case SerTableModel.COLUMN_FORMAT:		// Format
+		case SerTableModel.COLUMN_FORMAT:
 			return renderer_format;
-		case SerTableModel.COLUMN_SIZE:			// Size
+		case SerTableModel.COLUMN_SIZE:
 			return renderer_filesize;
 		default:
 			System.out.println("Mysterious switch jump in [SFixSerTable.java]"); //$NON-NLS-1$
@@ -108,42 +93,32 @@ public class SFixSerTable extends SFixTable {
 		}
 	}
 
-    @Override
-	public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
-        Component c = super.prepareRenderer(renderer, row, column);
-        
-        if (c instanceof JComponent) {
-            Object value = getValueAt(row, column);
-    		int realColumn = convertColumnIndexToModel(column); // So you can move the positions of the Columns ...
-            JComponent jc = (JComponent) c;
-                        
-    		switch (realColumn) {
-    		case SerTableModel.COLUMN_EPISODE:		// Episode
-    			break;
-    		case SerTableModel.COLUMN_NAME:			// Name
-    			break;
-    		case SerTableModel.COLUMN_VIEWED:		// Viewed
-    			break;
-    		case SerTableModel.COLUMN_LASTVIEWED:	// Last Viewed
-    			if (((CCDateTimeList)value).any()) jc.setToolTipText(((CCDateTimeList)value).getHTMLListFormatted(row));
-    			break;
-    		case SerTableModel.COLUMN_QUALITY:		// Quality
-    			break;
-    		case SerTableModel.COLUMN_LENGTH:		// Length
-    			break;
-    		case SerTableModel.COLUMN_TAGS:			// Tags
-    			break;
-    		case SerTableModel.COLUMN_ADDDATE:		// Add Date
-    			break;
-    		case SerTableModel.COLUMN_FORMAT:		// Format
-    			break;
-    		case SerTableModel.COLUMN_SIZE:			// Size
-    			break;
-    		default:
-    			System.out.println("Mysterious switch jump in [SFixSerTable.java]"); //$NON-NLS-1$
-    		}
-        }
-        
-        return c;
-    }
+	@Override
+	protected String getTooltip(int column, int row, Object value) {
+		switch (column) {
+		case SerTableModel.COLUMN_EPISODE:
+			return null;
+		case SerTableModel.COLUMN_NAME:
+			return null;
+		case SerTableModel.COLUMN_VIEWED:
+			return null;
+		case SerTableModel.COLUMN_LASTVIEWED:
+			return (((CCDateTimeList)value).any()) ? ((CCDateTimeList)value).getHTMLListFormatted(row) : null;
+		case SerTableModel.COLUMN_QUALITY:
+			return null;
+		case SerTableModel.COLUMN_LENGTH:
+			return TimeIntervallFormatter.format(((int)value));
+		case SerTableModel.COLUMN_TAGS:
+			return ((CCMovieTags) value).getAsString();
+		case SerTableModel.COLUMN_ADDDATE:
+			return null;
+		case SerTableModel.COLUMN_FORMAT:
+			return null;
+		case SerTableModel.COLUMN_SIZE:
+			return FileSizeFormatter.formatBytes((CCMovieSize)value);
+		default:
+			CCLog.addUndefinied("Mysterious switch jump in [SFixSerTable.java]"); //$NON-NLS-1$
+			return null;
+		}
+	}
 }

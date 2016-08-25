@@ -12,7 +12,6 @@ public class TableScoreRenderer extends TableRenderer {
 	@Override
     public void setValue(Object value) {
 		setIcon(((CCMovieScore)value).getIcon());
-		setToolTipText(((CCMovieScore)value).asString());
     }
 
 }

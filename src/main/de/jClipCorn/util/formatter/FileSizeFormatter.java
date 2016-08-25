@@ -2,6 +2,9 @@ package de.jClipCorn.util.formatter;
 
 import java.io.File;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.text.NumberFormat;
+import java.util.Locale;
 
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieSize;
 
@@ -34,5 +37,16 @@ public class FileSizeFormatter {
 	
 	public static long getFileSize(File f) {
 		return f.length();
+	}
+
+	@SuppressWarnings("nls")
+	public static String formatBytes(CCMovieSize value) {
+		DecimalFormat formatter = (DecimalFormat) NumberFormat.getInstance(Locale.US);
+		DecimalFormatSymbols symbols = formatter.getDecimalFormatSymbols();
+
+		symbols.setGroupingSeparator(' ');
+		formatter.setDecimalFormatSymbols(symbols);
+
+		return formatter.format(value.getBytes()) + " bytes";
 	}
 }

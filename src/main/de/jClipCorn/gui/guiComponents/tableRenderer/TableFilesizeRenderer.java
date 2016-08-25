@@ -12,6 +12,5 @@ public class TableFilesizeRenderer extends TableRenderer {
 	@Override
     public void setValue(Object value) {
 		setText(((CCMovieSize)value).getFormatted());
-		setToolTipText(((CCMovieSize)value).getBytes() + " bytes"); //$NON-NLS-1$
     }
 }

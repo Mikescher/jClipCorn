@@ -11,9 +11,6 @@ public class TableTagsRenderer extends TableRenderer {
 
 	@Override
     public void setValue(Object value) {
-		CCMovieTags tags = (CCMovieTags) value;
-		
-		setIcon(tags.getIcon());
-		setToolTipText(tags.getAsString());
+		setIcon(((CCMovieTags) value).getIcon());
     }
 }

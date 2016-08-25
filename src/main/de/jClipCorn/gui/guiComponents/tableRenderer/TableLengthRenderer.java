@@ -12,6 +12,5 @@ public class TableLengthRenderer extends TableRenderer {
 	@Override
     public void setValue(Object value) {
 		setText(TimeIntervallFormatter.formatShort(((int)value)));
-		setToolTipText(TimeIntervallFormatter.format(((int)value)));
     }
 }

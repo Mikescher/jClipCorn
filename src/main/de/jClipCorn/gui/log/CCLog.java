@@ -90,6 +90,10 @@ public class CCLog {
 		add('[' + thread.toString() + ']' + ' ' + throwable.toString(), CCLogType.LOG_ELEM_UNDEFINED, throwable.getStackTrace());
 	}
 
+	public static void addUndefinied(String msg) {
+		add('[' + Thread.currentThread().toString() + ']' + ' ' + msg, CCLogType.LOG_ELEM_UNDEFINED, new Exception().getStackTrace());
+	}
+
 	private static void add(String txt, CCLogType type, StackTraceElement[] trace) {
 		CCLogElement cle = new CCLogElement(txt, type, trace);
 

@@ -94,21 +94,27 @@ public class ShowIncompleteFilmSeriesFrame extends JDialog {
 		
 		Map<String, List<CCMovie>> zyklusList = movielist.listAllZyklus();
 
-		zyklusLoop: 
-			for (Entry<String, List<CCMovie>> zyklus : zyklusList.entrySet()) {
-				int maxZyklusNumber = 0;
-				for (CCMovie m : zyklus.getValue()) maxZyklusNumber = Math.max(maxZyklusNumber, m.getZyklus().getNumber());
+		for (Entry<String, List<CCMovie>> zyklus : zyklusList.entrySet()) {
+			int maxZyklusNumber = 0;
+			for (CCMovie m : zyklus.getValue()) maxZyklusNumber = Math.max(maxZyklusNumber, m.getZyklus().getNumber());
 
-				for (int zid = 1; zid < maxZyklusNumber; zid++) {
-					CCMovie firstMov = zyklus.getValue().get(0);
-					for (CCMovie m : zyklus.getValue()) {
-						if (m.getZyklus().getNumber() < firstMov.getZyklus().getNumber()) firstMov = m;
-						if (m.getZyklus().getNumber() == zid) continue zyklusLoop;
-					}
-					
-					mdl.addElement(new MissingZyklusElement(new CCMovieZyklus(firstMov.getZyklus().getTitle(), zid), firstMov));
-				}
+			CCMovie firstMov = zyklus.getValue().get(0);
+			for (CCMovie m : zyklus.getValue()) {
+				if (m.getZyklus().getNumber() < firstMov.getZyklus().getNumber()) firstMov = m;
 			}
+			
+			for (int zid = 1; zid < maxZyklusNumber; zid++) {
+				boolean found = false;
+				for (CCMovie m : zyklus.getValue()) {
+					if (m.getZyklus().getNumber() == zid) {
+						found = true;
+						break;
+					}
+				}
+				
+				if (!found) mdl.addElement(new MissingZyklusElement(new CCMovieZyklus(firstMov.getZyklus().getTitle(), zid), firstMov));
+			}
+		}
 		
 		listMain.setModel(mdl);
 	}

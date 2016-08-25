@@ -287,7 +287,6 @@ public class GroupManageFrame extends JFrame {
 	private void onMoveUp() {
 		CCGroup group = getSelectedGroup();
 		if (group == null) return;
-		if (!DialogHelper.showLocaleYesNo(this, "Dialogs.ChangeGroup")) return; //$NON-NLS-1$
 		
 		List<CCGroup> list = movielist.getSortedGroupList();
 		
@@ -304,12 +303,13 @@ public class GroupManageFrame extends JFrame {
 		}
 		
 		reinitData();
+		
+		tabGroups.getSelectionModel().setSelectionInterval(idx-1, idx-1);
 	}
 	
 	private void onMoveDown() {
 		CCGroup group = getSelectedGroup();
 		if (group == null) return;
-		if (!DialogHelper.showLocaleYesNo(this, "Dialogs.ChangeGroup")) return; //$NON-NLS-1$
 		
 		List<CCGroup> list = movielist.getSortedGroupList();
 		
@@ -326,6 +326,8 @@ public class GroupManageFrame extends JFrame {
 		}
 		
 		reinitData();
+		
+		tabGroups.getSelectionModel().setSelectionInterval(idx+1, idx+1);
 	}
 	
 	private void onSetColor() {

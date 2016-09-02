@@ -291,7 +291,7 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler, 
 				recalcFilesize();
 			}
 		});
-		btnRecalcSize.setBounds(74, 257, 193, 23);
+		btnRecalcSize.setBounds(74, 227, 193, 23);
 		pnlInfo.add(btnRecalcSize);
 
 		btnToday = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnToday.text")); //$NON-NLS-1$

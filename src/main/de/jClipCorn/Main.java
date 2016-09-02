@@ -141,6 +141,7 @@ public class Main {
 // TODO add "invalid time" -> leads to datetime with no time set (-1:-1:-1 or 99:99:99)
 //      better datetime UI formatting and comparing
 //      -> convert MIDNIGHT (only this time) to INV_TIME
+//      -> convert with new db version mechanism (?)
 
 // TODO Backup database (only DB file ?) before auto upgrade
 // TODO Show Message after DB auto upgrade

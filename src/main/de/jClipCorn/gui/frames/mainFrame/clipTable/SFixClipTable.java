@@ -231,7 +231,7 @@ public class SFixClipTable extends SFixTable {
 	protected String getTooltip(int column, int row, Object value) {
 		switch (column) {
 		case ClipTableModel.COLUMN_SCORE:
-			return ((CCMovieScore)value).asString();
+			return ((CCMovieScore)value == CCMovieScore.RATING_NO) ? null : ((CCMovieScore)value).asString();
 		case ClipTableModel.COLUMN_TITLE:
 			return null;
 		case ClipTableModel.COLUMN_VIEWED:

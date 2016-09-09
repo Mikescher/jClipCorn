@@ -43,6 +43,8 @@ public class CCDatabase {
 	public final static String INFOKEY_DUUID      	= "DATABASE_UNIVERSALLY_UNIQUE_IDENTIFIER";	//$NON-NLS-1$
 	public final static String INFOKEY_RAND      	= "RAND";									//$NON-NLS-1$
 
+	public final static String[] INFOKEYS = new String[]{INFOKEY_DBVERSION, INFOKEY_DATE, INFOKEY_TIME, INFOKEY_USERNAME, INFOKEY_DUUID};
+	
 	public final static String TAB_INFO_COLUMN_KEY                 = "IKEY";            //$NON-NLS-1$
 	public final static String TAB_INFO_COLUMN_VALUE               = "IVALUE";          //$NON-NLS-1$
 	
@@ -937,7 +939,7 @@ public class CCDatabase {
 		updateInformationInDB(INFOKEY_DUUID, UUID.randomUUID().toString());
 	}
 	
-	private String getInformationFromDB(String key) {
+	public String getInformationFromDB(String key) {
 		try {
 			String value;
 			

@@ -85,4 +85,8 @@ public class CCGroup implements Comparable<CCGroup> {
 	public int hashCode() {
 		return Name.hashCode();
 	}
+
+	public String getHexColor() {
+		return String.format("#%02X%02X%02X", Color.getRed(), Color.getGreen(), Color.getBlue()); //$NON-NLS-1$
+	}
 }

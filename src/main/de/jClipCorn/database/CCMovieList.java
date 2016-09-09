@@ -779,7 +779,7 @@ public class CCMovieList {
 	}
 	
 	@SuppressWarnings("nls")
-	public Document getAsXML() {
+	public Document getElementsAsXML() {
 		Document xml = getEmptyXML();
 		
 		Element root = xml.getRootElement();
@@ -788,6 +788,45 @@ public class CCMovieList {
 		
 		for (CCDatabaseElement el : list) {
 			el.generateXML(root, false, false, false);
+		}
+		
+		return xml;
+	}
+	
+	@SuppressWarnings("nls")
+	public Document getGroupsAsXML() {
+		Document xml = getEmptyXML();
+		
+		Element root = xml.getRootElement();
+		Element relg = new Element("groups");
+		root.addContent(relg);
+		
+		relg.setAttribute("count", Integer.toString(globalGroupList.size()));
+		
+		for (Entry<CCGroup, List<CCDatabaseElement>> el : globalGroupList.entrySet()) {
+			Element g = new Element("group");
+			g.setAttribute("name", el.getKey().Name);
+			g.setAttribute("ordering", Integer.toString(el.getKey().Order));
+			g.setAttribute("color", el.getKey().getHexColor());
+			g.setAttribute("serialize", el.getKey().DoSerialize ? "true" : "false");
+			relg.addContent(g);
+		}
+		
+		return xml;
+	}
+	
+	@SuppressWarnings("nls")
+	public Document getDBInfoAsXML() {
+		Document xml = getEmptyXML();
+		
+		Element root = xml.getRootElement();
+		Element rdbi = new Element("info");
+		root.addContent(rdbi);
+		
+		for (String key : CCDatabase.INFOKEYS) {
+			Element e = new Element(key);
+			e.setText(database.getInformationFromDB(key));
+			rdbi.addContent(e);
 		}
 		
 		return xml;
@@ -900,6 +939,14 @@ public class CCMovieList {
 		}
 		
 		return CCGroup.create(name);
+	}
+	
+	public CCGroup getGroupOrNull(String name) {
+		for (Entry<CCGroup, List<CCDatabaseElement>> entry : globalGroupList.entrySet()) {
+			if (entry.getKey().Name.equals(name)) return entry.getKey();
+		}
+		
+		return null;
 	}
 
 	public int getGroupIndex(CCGroup value) {

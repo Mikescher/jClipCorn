@@ -1,5 +1,6 @@
 package de.jClipCorn.database.util;
 
+import java.awt.Color;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -25,6 +26,7 @@ import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.CCSeries;
+import de.jClipCorn.database.databaseElement.columnTypes.CCGroup;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTyp;
 import de.jClipCorn.gui.frames.addMovieFrame.AddMovieFrame;
 import de.jClipCorn.gui.frames.importElementsFrame.ImportElementsFrame;
@@ -39,7 +41,9 @@ import de.jClipCorn.util.helper.TextFileUtils;
 import de.jClipCorn.util.listener.ProgressCallbackListener;
 
 public class ExportHelper {
-	private final static String DB_XML_FILENAME = "database.xml"; //$NON-NLS-1$
+	private final static String DB_XML_FILENAME_MAIN   = "database.xml"; //$NON-NLS-1$
+	private final static String DB_XML_FILENAME_GROUPS = "groups.xml";   //$NON-NLS-1$
+	private final static String DB_XML_FILENAME_INFO   = "info.xml";     //$NON-NLS-1$
 	
 	public final static String EXTENSION_BACKUP = "jccbkp"; 				// = jClipCornBackup   			//$NON-NLS-1$ 
 	public final static String EXTENSION_BACKUPPROPERTIES = "jccbkpinfo"; 	// = jClipCornBackupInfo 		//$NON-NLS-1$ 
@@ -159,17 +163,13 @@ public class ExportHelper {
 	}
 
 	public static void exportDatabase(File file, CCMovieList movielist) {
-		Document xml = movielist.getAsXML();
-		
 		try {
 			FileOutputStream ostream = new FileOutputStream(file);
 			ZipOutputStream zos = new ZipOutputStream(ostream);
 			
-			ZipEntry xmlentry = new ZipEntry(DB_XML_FILENAME);
-			zos.putNextEntry(xmlentry);
-			XMLOutputter xout = new XMLOutputter();
-			xout.setFormat(Format.getPrettyFormat());
-			xout.output(xml, zos);
+			outputXML(zos, movielist.getElementsAsXML(), DB_XML_FILENAME_MAIN);
+			outputXML(zos, movielist.getGroupsAsXML(), DB_XML_FILENAME_GROUPS);
+			outputXML(zos, movielist.getDBInfoAsXML(), DB_XML_FILENAME_INFO);
 			
 			zipDir(movielist.getCoverCache().getCoverDirectory().getParentFile(), movielist.getCoverCache().getCoverDirectory(), zos, false);
 			
@@ -177,6 +177,14 @@ public class ExportHelper {
 		} catch (IOException e) {
 			CCLog.addError(e);
 		}
+	}
+	
+	private static void outputXML(ZipOutputStream zos, Document xml, String filename) throws IOException {
+		ZipEntry xmlentry = new ZipEntry(filename);
+		zos.putNextEntry(xmlentry);
+		XMLOutputter xout = new XMLOutputter();
+		xout.setFormat(Format.getPrettyFormat());
+		xout.output(xml, zos);
 	}
 	
 	private static void copyAllCoverFromBackup(File backup, CCMovieList movielist) throws Exception {
@@ -211,7 +219,7 @@ public class ExportHelper {
 		}
 	}
 	
-	private static String getXMLContentFromBackup(File backup) throws Exception{
+	private static String getXMLContentFromBackup(File backup, String filename) throws Exception{
 		String content = null;
 
 		InputStream theFile = new FileInputStream(backup);
@@ -220,7 +228,7 @@ public class ExportHelper {
 		try {
 			ZipEntry entry;
 			while ((entry = stream.getNextEntry()) != null) {
-				if (! entry.getName().equals(DB_XML_FILENAME)) {
+				if (! entry.getName().equals(filename)) {
 					continue;
 				}
 				
@@ -243,25 +251,58 @@ public class ExportHelper {
 			movielist.clear();
 
 			copyAllCoverFromBackup(backup, movielist);
-			String content = getXMLContentFromBackup(backup);
-
-			if (content == null) {
-				throw new Exception("File not found: " + DB_XML_FILENAME); //$NON-NLS-1$
-			}
-
-			Document doc = new SAXBuilder().build(new StringReader(content));
-
-			Element root = doc.getRootElement();
-
-			for (Element e : root.getChildren()) {
-				if (e.getName().equals("movie")) { //$NON-NLS-1$
-					CCMovie mov = movielist.createNewEmptyMovie();
-					mov.parseFromXML(e, false, false, false, false, false);
-				} else if (e.getName().equals("series")) { //$NON-NLS-1$
-					CCSeries ser = movielist.createNewEmptySeries();
-					ser.parseFromXML(e, false, false, false, false, false);
+			
+			{
+				String contentMain = getXMLContentFromBackup(backup, DB_XML_FILENAME_MAIN);
+	
+				if (contentMain == null) {
+					throw new Exception("File not found: " + DB_XML_FILENAME_MAIN); //$NON-NLS-1$
+				}
+	
+				Document doc = new SAXBuilder().build(new StringReader(contentMain));
+	
+				Element root = doc.getRootElement();
+	
+				for (Element e : root.getChildren()) {
+					if (e.getName().equals("movie")) { //$NON-NLS-1$
+						CCMovie mov = movielist.createNewEmptyMovie();
+						mov.parseFromXML(e, false, false, false, false, false);
+					} else if (e.getName().equals("series")) { //$NON-NLS-1$
+						CCSeries ser = movielist.createNewEmptySeries();
+						ser.parseFromXML(e, false, false, false, false, false);
+					}
 				}
 			}
+						
+			{
+				String contentGroups = getXMLContentFromBackup(backup, DB_XML_FILENAME_GROUPS);
+	
+				if (contentGroups != null) {
+					Document doc = new SAXBuilder().build(new StringReader(contentGroups));
+					
+					Element root = doc.getRootElement();
+					Element groups = root.getChild("groups"); //$NON-NLS-1$
+		
+					for (Element e : groups.getChildren()) {
+						
+						String name = e.getAttributeValue("name"); //$NON-NLS-1$
+						int order = Integer.parseInt(e.getAttributeValue("ordering")); //$NON-NLS-1$
+						String colorStr = e.getAttributeValue("color"); //$NON-NLS-1$
+						boolean doser = !e.getAttributeValue("serialize").equalsIgnoreCase("false"); //$NON-NLS-1$ //$NON-NLS-2$
+						
+						Color color = new Color(
+					            Integer.valueOf( colorStr.substring( 1, 3 ), 16 ),
+					            Integer.valueOf( colorStr.substring( 3, 5 ), 16 ),
+					            Integer.valueOf( colorStr.substring( 5, 7 ), 16 ) );
+						
+						CCGroup group = movielist.getGroupOrNull(name);
+						if (group != null) {
+							movielist.updateGroup(group, CCGroup.create(group.Name, order, color, doser));
+						}
+					}
+				}
+			}
+			
 		} catch (Exception e) {
 			CCLog.addError(e);
 		}

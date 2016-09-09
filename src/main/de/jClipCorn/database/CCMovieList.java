@@ -477,6 +477,7 @@ public class CCMovieList {
 	private void removeMovie(CCMovie m) {
 		list.remove(m);
 		database.removeFromMain(m.getLocalID());
+		unlinkElementFromGroups(m, m.getGroups());
 		
 		if (! m.getCoverName().isEmpty()) {
 			coverCache.deleteCover(m);
@@ -489,6 +490,7 @@ public class CCMovieList {
 			s.deleteSeason(s.getSeason(i));
 		}
 		database.removeFromMain(s.getLocalID());
+		unlinkElementFromGroups(s, s.getGroups());
 		
 		if (! s.getCoverName().isEmpty()) {
 			coverCache.deleteCover(s);

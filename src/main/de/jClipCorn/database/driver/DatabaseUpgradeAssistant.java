@@ -4,9 +4,16 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JFrame;
+
+import de.jClipCorn.Main;
 import de.jClipCorn.database.CCMovieList;
+import de.jClipCorn.database.util.backupManager.BackupManager;
+import de.jClipCorn.gui.frames.mainFrame.MainFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
+import de.jClipCorn.properties.CCProperties;
+import de.jClipCorn.util.helper.DialogHelper;
 
 public class DatabaseUpgradeAssistant {
 	private final GenericDatabase db;
@@ -45,12 +52,33 @@ public class DatabaseUpgradeAssistant {
 		try {
 			String version = getDBVersion();
 			
-			if (version.equals("1.8")) {
-				upgrade_18_19();
+			if (version.equals(Main.DBVERSION)) return;
+
+			DialogHelper.showLocalInformation(MainFrame.getInstance() != null ? MainFrame.getInstance() : new JFrame(), "Dialogs.DatabaseMigration");
+			
+			CCLog.addInformation(LocaleBundle.getString("LogMessage.DatabaseUpgradeStarted"));
+
+			if (CCProperties.getInstance().ARG_READONLY) {
+				CCLog.addInformation(LocaleBundle.getString("LogMessage.MigrationFailedDueToReadOnly")); //$NON-NLS-1$
+				return;
 			}
 			
-			setDBVersion("1.9");
-		} catch (SQLException e) {
+			BackupManager.getInstance().createMigrationBackup(version);
+			
+			if (version.equals("1.8")) {
+				upgrade_18_19();
+				setDBVersion("1.9");
+			}
+						
+			if (! getDBVersion().equals(Main.DBVERSION)) {
+				throw new Exception("version mismatch after migration");
+			}
+			
+			CCLog.addInformation(LocaleBundle.getString("LogMessage.DatabaseUpgradeSucess"));
+			
+			DialogHelper.showLocalInformation(MainFrame.getInstance() != null ? MainFrame.getInstance() : new JFrame(), "Dialogs.DatabaseMigrationSucess");
+			
+		} catch (Exception e) {
 			CCLog.addFatalError(LocaleBundle.getString("LogMessage.DatabaseUpgradeFailed"), e);
 		}
 	}

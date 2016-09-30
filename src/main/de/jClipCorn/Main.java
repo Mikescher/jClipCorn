@@ -142,6 +142,3 @@ public class Main {
 //      better datetime UI formatting and comparing
 //      -> convert MIDNIGHT (only this time) to INV_TIME
 //      -> convert with new db version mechanism (?)
-
-// TODO Backup database (only DB file ?) before auto upgrade
-// TODO Show Message after DB auto upgrade

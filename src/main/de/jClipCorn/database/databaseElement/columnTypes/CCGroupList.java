@@ -187,12 +187,15 @@ public class CCGroupList implements Iterable<CCGroup> {
 		int height = fm.getHeight();
 		int offset = fm.getDescent();
 		
-		for (int i = 0; i < count(); i++) {
-			String group = get(i).Name;
+		List<CCGroup> groupsSorted = new ArrayList<>(list);
+		groupsSorted.sort((a, b) -> Integer.compare(b.Name.length(), a.Name.length()));
+		
+		for (int i = 0; i < groupsSorted.size(); i++) {
+			String group = groupsSorted.get(i).Name;
 			
 			int width = fm.stringWidth(group);
 			
-			g.setColor(get(i).Color);
+			g.setColor(groupsSorted.get(i).Color);
 			
 			g.fillRoundRect(
 					right - MARGIN - PADDING_X - width - PADDING_X, 
@@ -217,7 +220,6 @@ public class CCGroupList implements Iterable<CCGroup> {
 					right - MARGIN - PADDING_X - width, 
 					top + i * (height + 2 * PADDING_Y + 2 * MARGIN) + MARGIN + PADDING_Y + height - offset);
 		}
-			
 		
 		g.dispose();
 	}

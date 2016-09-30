@@ -76,12 +76,18 @@ public class MoviePlayer {
 			}
 		} else {
 			parameters.add(vlc);
+			parameters.add("--no-random");
+			parameters.add("--no-loop");
+			parameters.add("--no-repeat");
 			parameters.add("--playlist-enqueue");
 			if (CCProperties.getInstance().PROP_PLAY_VLC_FULLSCREEN.getValue()) {
 				parameters.add("--fullscreen");
 			}
 			if (! CCProperties.getInstance().PROP_PLAY_VLC_AUTOPLAY.getValue()) {
 				parameters.add("--no-playlist-autostart");
+			}
+			if (CCProperties.getInstance().PROP_PLAY_VLCSINGLEINSTANCEMODE.getValue()) {
+				parameters.add("--one-instance");
 			}
 			
 			for (String abspath : abspaths) {

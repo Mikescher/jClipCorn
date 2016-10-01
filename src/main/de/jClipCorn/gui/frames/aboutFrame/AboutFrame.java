@@ -18,7 +18,7 @@ import de.jClipCorn.gui.CachedResourceLoader;
 import de.jClipCorn.gui.Resources;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
-import de.jClipCorn.util.helper.TextFileUtils;
+import de.jClipCorn.util.helper.SimpleFileUtils;
 
 public class AboutFrame extends JFrame implements ComponentListener {
 	private static final long serialVersionUID = -807033167837187549L;
@@ -76,13 +76,13 @@ public class AboutFrame extends JFrame implements ComponentListener {
 		
 		String libs;
 		try {
-			libs = TextFileUtils.readTextResource("/libraries.txt", this.getClass()); //$NON-NLS-1$
+			libs = SimpleFileUtils.readTextResource("/libraries.txt", this.getClass()); //$NON-NLS-1$
 		} catch (IOException e) {
 			CCLog.addError(e);
 			return;
 		}
 		
-		for (String line : TextFileUtils.splitLines(libs)) {
+		for (String line : SimpleFileUtils.splitLines(libs)) {
 			if (line.isEmpty()) continue;
 			
 			dlm.addElement(line);

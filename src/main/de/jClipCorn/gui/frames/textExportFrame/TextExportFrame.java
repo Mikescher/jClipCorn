@@ -24,7 +24,7 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.FileChooserHelper;
-import de.jClipCorn.util.helper.TextFileUtils;
+import de.jClipCorn.util.helper.SimpleFileUtils;
 
 public class TextExportFrame extends JFrame {
 	private static final long serialVersionUID = -807033167837187549L;
@@ -179,7 +179,7 @@ public class TextExportFrame extends JFrame {
 			start();
 			
 			try {
-				TextFileUtils.writeTextFile(chooser.getSelectedFile(), memoResult.getText());
+				SimpleFileUtils.writeTextFile(chooser.getSelectedFile(), memoResult.getText());
 			} catch (IOException e) {
 				CCLog.addError(e);
 				dispose();

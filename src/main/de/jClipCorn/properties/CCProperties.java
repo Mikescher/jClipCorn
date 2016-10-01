@@ -175,11 +175,16 @@ public class CCProperties {
 	private Properties properties;
 	private String path;
 	
-	private CCProperties() { //Dummy Constructor
+	private CCProperties() {
+		properties = new Properties();
+		this.path = null;
 		
+		createProperties();
+		
+		mainInstance = this;
 	}
 	
-	public CCProperties(String path, String[] args) {
+	private CCProperties(String path, String[] args) {
 		properties = new Properties();
 		this.path = path;
 		load(path);
@@ -196,6 +201,14 @@ public class CCProperties {
 		mainInstance = this;
 
 		LocaleBundle.updateLang();
+	}
+	
+	public static void create(String path, String[] args) {
+		new CCProperties(path, args);
+	}
+	
+	public static void createInMemory() {
+		new CCProperties();
 	}
 	
 	@SuppressWarnings("nls")
@@ -369,6 +382,8 @@ public class CCProperties {
 	}
 	
 	public void save() {
+		if (path == null) return;
+		
 		try {
 			FileOutputStream stream = new FileOutputStream(path);
 			properties.store(stream, HEADER);

@@ -72,7 +72,7 @@ public class FilenameParser {
 			if (idx+group.length() == moviename.length())
 				moviename = moviename.substring(0, idx-1);
 			else
-				moviename = moviename.substring(0, idx-1) + moviename.substring(idx+group.length(), moviename.length()-1);
+				moviename = moviename.substring(0, idx-1) + moviename.substring(idx+group.length(), moviename.length());
 			
 			grouplist = grouplist.getAdd(movielist, groupname);
 		}
@@ -85,15 +85,12 @@ public class FilenameParser {
 		if ((! flang.equals(moviename)) && (flang.charAt(0) =='[') && flang.endsWith("]")) {
 			slang = flang.substring(1, flang.length() - 1);
 			boolean succ = false;
-			if (slang.equalsIgnoreCase(CCMovieLanguage.ENGLISH.getShortString())) {
-				lang = CCMovieLanguage.ENGLISH;
-				succ = true;
-			} else if (slang.equalsIgnoreCase(CCMovieLanguage.FRENCH.getShortString())) {
-				lang = CCMovieLanguage.FRENCH;
-				succ = true;
-			} else if (slang.equalsIgnoreCase(CCMovieLanguage.MUTED.getShortString())) {
-				lang = CCMovieLanguage.MUTED;
-				succ = true;
+			
+			for (CCMovieLanguage itlang : CCMovieLanguage.values()) {
+				if (slang.equalsIgnoreCase(itlang.getShortString())) {
+					lang = itlang;
+					succ = true;
+				}
 			}
 			
 			if (succ) {

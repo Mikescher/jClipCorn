@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import de.jClipCorn.util.helper.TextFileUtils;
+import de.jClipCorn.util.helper.SimpleFileUtils;
 
 public class OmniTextParser {
 
@@ -48,7 +48,7 @@ public class OmniTextParser {
 
 		for (int i = 0; i < list.size(); i++) {
 			if (i > 0)
-				result.append(TextFileUtils.LINE_END);
+				result.append(SimpleFileUtils.LINE_END);
 			result.append(list.get(i));
 		}
 
@@ -56,7 +56,7 @@ public class OmniTextParser {
 	}
 
 	private static List<String> parseList(String input, boolean replaceUmlauts, boolean removeInfoStrings, boolean replaceSpaceAlts, boolean removeCommons) {
-		List<String> list = new ArrayList<>(Arrays.asList(TextFileUtils.splitLines(input)));
+		List<String> list = new ArrayList<>(Arrays.asList(SimpleFileUtils.splitLines(input)));
 		
 		trimList(list);
 		cleanUpList(list);

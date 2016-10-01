@@ -11,7 +11,7 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.formatter.PathFormatter;
-import de.jClipCorn.util.helper.TextFileUtils;
+import de.jClipCorn.util.helper.SimpleFileUtils;
 
 public class CustomFilterList extends ArrayList<CustomFilterObject> {
 	private static final long serialVersionUID = -1658394481177986689L;
@@ -26,7 +26,7 @@ public class CustomFilterList extends ArrayList<CustomFilterObject> {
 		
 		for (int i = 0; i < size(); i++) {
 			if (i != 0) {
-				b.append(TextFileUtils.LINE_END);
+				b.append(SimpleFileUtils.LINE_END);
 			}
 			
 			b.append(get(i).exportToString());
@@ -35,7 +35,7 @@ public class CustomFilterList extends ArrayList<CustomFilterObject> {
 		File f = new File(PathFormatter.fromCCPath(CCProperties.getInstance().PROP_MAINFRAME_FILTERLISTPATH.getValue()));
 		
 		try {
-			TextFileUtils.writeTextFile(f, b.toString());
+			SimpleFileUtils.writeTextFile(f, b.toString());
 		} catch (IOException e) {
 			CCLog.addError(e);
 		}
@@ -48,13 +48,13 @@ public class CustomFilterList extends ArrayList<CustomFilterObject> {
 			String txt;
 			
 			try {
-				txt = TextFileUtils.readUTF8TextFile(f);
+				txt = SimpleFileUtils.readUTF8TextFile(f);
 			} catch (IOException e) {
 				CCLog.addError(e);
 				return;
 			}
 			
-			String[] lines = TextFileUtils.splitLines(txt);
+			String[] lines = SimpleFileUtils.splitLines(txt);
 			
 			for (int i = 0; i < lines.length; i++) {
 				lines[i] = lines[i].trim();

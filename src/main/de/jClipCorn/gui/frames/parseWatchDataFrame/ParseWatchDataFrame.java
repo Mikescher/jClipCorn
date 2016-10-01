@@ -29,7 +29,7 @@ import de.jClipCorn.gui.Resources;
 import de.jClipCorn.gui.guiComponents.DefaultReadOnlyTableModel;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
-import de.jClipCorn.util.helper.TextFileUtils;
+import de.jClipCorn.util.helper.SimpleFileUtils;
 import de.jClipCorn.util.parser.watchdata.WatchDataChangeSet;
 import de.jClipCorn.util.parser.watchdata.WatchDataParser;
 
@@ -196,7 +196,7 @@ public class ParseWatchDataFrame extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				try {
-					memoData.setText(TextFileUtils.readTextResource("/watchdata_example.txt", this.getClass())); //$NON-NLS-1$
+					memoData.setText(SimpleFileUtils.readTextResource("/watchdata_example.txt", this.getClass())); //$NON-NLS-1$
 					memoLog.setText(""); //$NON-NLS-1$
 				} catch (IOException e) {
 					CCLog.addError(e);

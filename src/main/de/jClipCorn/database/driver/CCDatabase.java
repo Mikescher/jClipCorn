@@ -137,6 +137,10 @@ public class CCDatabase {
 		return new CCDatabase(CCDatabaseDriver.STUB);
 	}
 	
+	public static CCDatabase createInMemory() {
+		return new CCDatabase(CCDatabaseDriver.INMEMORY);
+	}
+	
 	public boolean exists(String path) {
 		return db.databaseExists(path);
 	}
@@ -1080,5 +1084,9 @@ public class CCDatabase {
 
 	public String GetDBTypeName() {
 		return db.GetDBTypeName();
+	}
+
+	public boolean IsInMemory() {
+		return db.IsInMemory();
 	}
 }

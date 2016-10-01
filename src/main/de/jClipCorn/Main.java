@@ -24,7 +24,7 @@ public class Main {
 	public static boolean BETA = true;
 	
 	public static void main(String[] arg) {
-		new CCProperties(PROPERTIES_PATH, arg); // FIRST ACTION - CACHE THIS SHIT - FUCKING IMPORTANT
+		CCProperties.create(PROPERTIES_PATH, arg); // FIRST ACTION - CACHE THIS SHIT - FUCKING IMPORTANT
 		
 		CCLog.setPath(CCProperties.getInstance().PROP_LOG_PATH.getValue());
 		
@@ -126,19 +126,8 @@ public class Main {
 //   - can use multiple online-references (auto add imdb, add proxer and MAM for many)
 //   - Export and import reference mapping file (to get mappings to other dbs) ?
 
-// TODO Unit tests (with memory database)
-// - add movie
-// - update movie
-// - delete movie
-// - parse watchdata (test data in ParseeWatchData.java)
-// - Filenameparser
-// - XML Export import (various flavours)
-
 // TODO get actors from online and save to db
 //      add filter for actors. 
 //      don't show all actors, make it configurable which actors are "enabled" (?)
 
-// TODO add "invalid time" -> leads to datetime with no time set (-1:-1:-1 or 99:99:99)
-//      better datetime UI formatting and comparing
-//      -> convert MIDNIGHT (only this time) to INV_TIME
-//      -> convert with new db version mechanism (?)
+//TODO ignore dots in search

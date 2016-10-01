@@ -73,7 +73,7 @@ import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.helper.FileChooserHelper;
 import de.jClipCorn.util.helper.HTTPUtilities;
 import de.jClipCorn.util.helper.ImageUtilities;
-import de.jClipCorn.util.helper.TextFileUtils;
+import de.jClipCorn.util.helper.SimpleFileUtils;
 import de.jClipCorn.util.listener.EpisodeSearchCallbackListener;
 import de.jClipCorn.util.listener.UpdateCallbackListener;
 
@@ -894,7 +894,7 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 
 		if (returnval == JFileChooser.APPROVE_OPTION) {
 			try {
-				TextFileUtils.writeTextFile(PathFormatter.forceExtension(chooser.getSelectedFile(), ExportHelper.EXTENSION_EPISODEGUIDE), dispSeries.getEpisodeGuide());
+				SimpleFileUtils.writeTextFile(PathFormatter.forceExtension(chooser.getSelectedFile(), ExportHelper.EXTENSION_EPISODEGUIDE), dispSeries.getEpisodeGuide());
 			} catch (IOException e) {
 				CCLog.addError(e);
 			}

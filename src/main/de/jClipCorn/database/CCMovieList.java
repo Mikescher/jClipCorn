@@ -62,32 +62,26 @@ public class CCMovieList {
 	
 	private boolean blocked = false;
 
-	private CCMovieList(boolean stub) {
-		if (stub) {
-			this.database = null;
-			this.list = new Vector<>();
-			this.listener = new Vector<>();
+	private CCMovieList(CCDatabase db) {
+		this.database = null;
+		this.list = new Vector<>();
+		this.listener = new Vector<>();
 
-			database = CCDatabase.createStub();
-			
-			instance = this;
-		} else {
-			this.database = null;
-			this.list = new Vector<>();
-			this.listener = new Vector<>();
-
-			database = CCDatabase.create();
-			
-			instance = this;
-		}
+		database = db;
+		
+		instance = this;
 	}
 	
 	public static CCMovieList create() {
-		return new CCMovieList(false);
+		return new CCMovieList(CCDatabase.create());
+	}
+	
+	public static CCMovieList createInMemory() {
+		return new CCMovieList(CCDatabase.createInMemory());
 	}
 	
 	public static CCMovieList createStub() {
-		return new CCMovieList(true);
+		return new CCMovieList(CCDatabase.createStub());
 	}
 
 	public void showInitialWizard() {
@@ -134,6 +128,12 @@ public class CCMovieList {
 				mf.endBlockingIntermediate();
 			}
 		}, "THREAD_LOAD_DATABASE").start(); //$NON-NLS-1$
+	}
+	
+	public void connectForTests() {
+		database.tryconnect(""); //$NON-NLS-1$
+		database.fillMovieList(CCMovieList.this);
+		coverCache = new CCCoverCache(CCMovieList.this);
 	}
 
 	public CCDatabaseElement getDatabaseElementBySort(int row) { // WARNIG SORT <> MOVIEID || SORT IN DATABASE (SORTED BY MOVIEID)
@@ -1084,5 +1084,29 @@ public class CCMovieList {
 		if (garb != null) globalGroupList.put(gNew, garb);
 		
 		database.updateGroup(gNew.Name, gNew.Order, gNew.Color, gNew.DoSerialize);
+	}
+	
+	public boolean isInMemory() {
+		return database.IsInMemory();
+	}
+
+	public CCSeries getSeries(String title) {
+		for (Iterator<CCSeries> it = iteratorSeries(); it.hasNext();) {
+			CCSeries ser = it.next();
+			
+			if (ser.getTitle().equals(title)) return ser;
+		}
+		
+		return null;
+	}
+
+	public CCMovie getMovie(String title) {
+		for (Iterator<CCMovie> it = iteratorMovies(); it.hasNext();) {
+			CCMovie mov = it.next();
+			
+			if (mov.getTitle().equals(title)) return mov;
+		}
+		
+		return null;
 	}
 }

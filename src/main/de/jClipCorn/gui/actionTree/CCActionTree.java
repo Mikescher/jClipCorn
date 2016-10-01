@@ -67,7 +67,7 @@ import de.jClipCorn.util.helper.ApplicationHelper;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.helper.FileChooserHelper;
 import de.jClipCorn.util.helper.HTTPUtilities;
-import de.jClipCorn.util.helper.TextFileUtils;
+import de.jClipCorn.util.helper.SimpleFileUtils;
 
 public class CCActionTree {
 	public final static String EVENT_ON_MOVIE_EXECUTED_0 = "PlayMovie"; //$NON-NLS-1$
@@ -1129,7 +1129,7 @@ public class CCActionTree {
 
 			if (returnval == JFileChooser.APPROVE_OPTION) {
 				try {
-					TextFileUtils.writeTextFile(PathFormatter.forceExtension(chooser.getSelectedFile(), ExportHelper.EXTENSION_EPISODEGUIDE), ((CCSeries)element).getEpisodeGuide());
+					SimpleFileUtils.writeTextFile(PathFormatter.forceExtension(chooser.getSelectedFile(), ExportHelper.EXTENSION_EPISODEGUIDE), ((CCSeries)element).getEpisodeGuide());
 				} catch (IOException e) {
 					CCLog.addError(e);
 				}

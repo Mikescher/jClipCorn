@@ -53,7 +53,7 @@ import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.ExtendedFocusTraversalOnArray;
 import de.jClipCorn.util.helper.FileChooserHelper;
-import de.jClipCorn.util.helper.TextFileUtils;
+import de.jClipCorn.util.helper.SimpleFileUtils;
 import de.jClipCorn.util.listener.ProgressCallbackProgressBarHelper;
 
 public class CompareDatabaseFrame extends JFrame {
@@ -572,7 +572,7 @@ public class CompareDatabaseFrame extends JFrame {
 		String xmlstring = xout.outputString(xml);
 
 		try {
-			TextFileUtils.writeTextFile(path, xmlstring);
+			SimpleFileUtils.writeTextFile(path, xmlstring);
 		} catch (IOException e) {
 			CCLog.addError(e);
 		}

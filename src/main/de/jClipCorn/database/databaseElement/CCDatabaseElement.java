@@ -110,12 +110,24 @@ public abstract class CCDatabaseElement {
 		updateDB();
 	}
 
+	public void setOnlinescore(CCMovieOnlineScore onlinescore) {
+		this.onlinescore = onlinescore;
+		
+		updateDB();
+	}
+
 	public CCMovieFSK getFSK() {
 		return fsk;
 	}
 
 	public void setFsk(int fsk) {
 		this.fsk = CCMovieFSK.getWrapper().find(fsk);
+		
+		updateDB();
+	}
+
+	public void setFsk(CCMovieFSK fsk) {
+		this.fsk = fsk;
 		
 		updateDB();
 	}
@@ -187,6 +199,16 @@ public abstract class CCDatabaseElement {
 
 	public void setLanguage(int language) {
 		this.language = CCMovieLanguage.getWrapper().find(language);
+		
+		if (this.language == null) {
+			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.ErroneousDatabaseValues", language)); //$NON-NLS-1$
+		}
+		
+		updateDB();
+	}
+
+	public void setLanguage(CCMovieLanguage language) {
+		this.language = language;
 		
 		if (this.language == null) {
 			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.ErroneousDatabaseValues", language)); //$NON-NLS-1$

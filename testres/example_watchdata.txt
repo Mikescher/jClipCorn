@@ -1,0 +1,20 @@
+Steins;Gate [S01]
+    01.1.12: E01
+    02.12: E02, E03
+    03.12.12: E04-06, E008            // comment
+    [11.12.16 19:04]: E9
+    [11.12.16 19:04:33]: E10
+
+Soul Eater [S01]
+    03.03: E06
+    03.03: E-07
+Soul Eater [S02]
+    04.03: E17
+
+Hypercube
+
+Super 8 [11.12.12 19:04]
+[11.12.12 19:04]: Death Proof: Todsicher {{++}}
+
+Der Bomber {{+++}}
+

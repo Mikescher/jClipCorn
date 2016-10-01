@@ -5,7 +5,7 @@ import java.sql.SQLException;
 
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.gui.settings.CCDatabaseDriver;
-import de.jClipCorn.util.helper.TextFileUtils;
+import de.jClipCorn.util.helper.SimpleFileUtils;
 import de.jClipCorn.util.parser.TurbineParser;
 
 @SuppressWarnings("nls")
@@ -26,7 +26,7 @@ public class MemoryDatabase extends GenericDatabase {
 			connection = DriverManager.getConnection(PROTOCOL);
 			connection.setAutoCommit(true);
 
-			TurbineParser turb = new TurbineParser(TextFileUtils.readUTF8TextFile(xmlPath), this);
+			TurbineParser turb = new TurbineParser(SimpleFileUtils.readUTF8TextFile(xmlPath), this);
 			turb.parse();
 			turb.create();
 		} catch (Exception e) {
@@ -48,7 +48,7 @@ public class MemoryDatabase extends GenericDatabase {
 			connection = DriverManager.getConnection(PROTOCOL);
 			connection.setAutoCommit(true);
 
-			TurbineParser turb = new TurbineParser(TextFileUtils.readTextResource(xmlResPath, getClass()), this);
+			TurbineParser turb = new TurbineParser(SimpleFileUtils.readTextResource(xmlResPath, getClass()), this);
 			turb.parse();
 			turb.create();
 		} catch (Exception e) {
@@ -84,4 +84,7 @@ public class MemoryDatabase extends GenericDatabase {
 	public String GetDBTypeName() {
 		return CCDatabaseDriver.INMEMORY.asString();
 	}
+
+	@Override
+	public boolean IsInMemory() {return true;}
 }

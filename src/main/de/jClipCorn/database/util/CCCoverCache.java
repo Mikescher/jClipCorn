@@ -2,7 +2,9 @@ package de.jClipCorn.database.util;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Vector;
@@ -33,11 +35,15 @@ public class CCCoverCache {
 	
 	private Vector<Integer> usedCoverIDs;
 
+	private final boolean isInMemory;
+	
 	public CCCoverCache(CCMovieList ml) {
 		cache = new CachedHashMap<>(CCProperties.getInstance().PROP_DATABASE_COVERCACHESIZE.getValue());
 		
 		coverPath = PathFormatter.getRealSelfDirectory() + ml.getDatabasePath() + COVER_DIRECTORY;
 
+		isInMemory = ml.isInMemory();
+		
 		tryCreatePath();
 
 		calculateBiggestCID();
@@ -106,10 +112,14 @@ public class CCCoverCache {
 	}
 	
 	public boolean coverExists(String name) {
+		if (isInMemory) return cache.containsKey(name);
+		
 		return new File(coverPath + name).exists();
 	}
 
 	public void preloadCover(String name) {
+		if (isInMemory) return;
+		
 		BufferedImage res = cache.get(name);
 
 		if (res == null) {
@@ -123,6 +133,8 @@ public class CCCoverCache {
 	}
 
 	private void tryCreatePath() {
+		if (isInMemory) return;
+		
 		File dbpF = new File(coverPath);
 
 		if (!dbpF.exists() && !dbpF.mkdirs()) { // Only mkdir if not exists
@@ -131,6 +143,8 @@ public class CCCoverCache {
 	}
 
 	private void calculateBiggestCID() {
+		if (isInMemory) return;
+		
 		usedCoverIDs = new Vector<>();
 		
 		String[] files = getCoverDirectory().list();
@@ -148,6 +162,8 @@ public class CCCoverCache {
 	}
 	
 	public int getNewCoverID() {
+		if (isInMemory) return cache.size() + 1;
+		
 		int i = 0;
 		while(usedCoverIDs.size() > i && usedCoverIDs.get(i).equals(i)) {
 			i++;
@@ -171,6 +187,11 @@ public class CCCoverCache {
 		String fname = CCProperties.getInstance().PROP_COVER_PREFIX.getValue() + id + '.' + CCProperties.getInstance().PROP_COVER_TYPE.getValue();
 		String path = coverPath + fname;
 
+		if (isInMemory) {
+			cache.put(fname, cov);
+			return fname;
+		}
+		
 		try {
 			File f = new File(path);
 			if (! f.exists()) {
@@ -192,13 +213,15 @@ public class CCCoverCache {
 	}
 	
 	public void deleteCover(String covername) {
+		cache.remove(covername);
+		
+		if (isInMemory) return;
+		
 		File f = new File(coverPath + covername);
 
 		if (!f.delete()) {
 			CCLog.addWarning(LocaleBundle.getFormattedString("LogMessage.DeleteCover", covername)); //$NON-NLS-1$
 		}
-		
-		cache.remove(covername);
 		
 		if (Main.DEBUG) {
 			System.out.println("removing Cover from Folder: " + covername); //$NON-NLS-1$
@@ -211,5 +234,29 @@ public class CCCoverCache {
 
 	public File getCoverDirectory() {
 		return new File(getCoverPath());
+	}
+
+	public void addCover(String name, InputStream stream) throws Exception {
+		if (isInMemory) {
+			BufferedImage bi = ImageIO.read(stream);
+			cache.put(name, bi);
+		} else {
+			byte[] buffer = new byte[2048];
+			
+			String outpath = getCoverPath() + name;
+			FileOutputStream output = null;
+			try {
+				output = new FileOutputStream(outpath);
+				int len = 0;
+				while ((len = stream.read(buffer)) > 0) {
+					output.write(buffer, 0, len);
+				}
+			} finally {
+				if (output != null) {
+					output.close();
+				}
+			}
+		}
+		
 	}
 }

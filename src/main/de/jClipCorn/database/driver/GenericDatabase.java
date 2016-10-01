@@ -553,5 +553,7 @@ public abstract class GenericDatabase {
 	}
 
 	public abstract String GetDBTypeName();
+
+	public abstract boolean IsInMemory();
 }
 

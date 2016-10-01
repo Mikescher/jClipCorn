@@ -18,7 +18,7 @@ import de.jClipCorn.gui.CachedResourceLoader;
 import de.jClipCorn.gui.Resources;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
-import de.jClipCorn.util.helper.TextFileUtils;
+import de.jClipCorn.util.helper.SimpleFileUtils;
 
 public class FilenameRuleFrame extends JFrame {
 	private static final long serialVersionUID = 692779597355844596L;
@@ -67,7 +67,7 @@ public class FilenameRuleFrame extends JFrame {
 	private String getDescription() {
 		try {
 			String txt = LocaleBundle.getString("FilenameRulesFrame.rules"); //$NON-NLS-1$
-			txt = txt.replace("{grammar}", TextFileUtils.readTextResource("/grammar.txt", this.getClass())); //$NON-NLS-1$ //$NON-NLS-2$
+			txt = txt.replace("{grammar}", SimpleFileUtils.readTextResource("/grammar.txt", this.getClass())); //$NON-NLS-1$ //$NON-NLS-2$
 			return txt;
 		} catch (IOException e) {
 			CCLog.addError(e);

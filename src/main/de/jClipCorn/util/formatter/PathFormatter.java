@@ -24,6 +24,9 @@ public class PathFormatter {
 
 	public static final String SERIALIZATION_SEPERATOR = "/";
 	public static final char SERIALIZATION_SEPERATOR_CHAR = '/';
+
+	public static final String ALTERNATIVE_SEPERATOR = "\\";
+	public static final char ALTERNATIVE_SEPERATOR_CHAR = '\\';
 	
 	private final static ArrayList<Character> VALID_FILENAME_CHARS = new ArrayList<>(Arrays.asList(
 		'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'Ä', 'Ö', 'Ü',
@@ -128,7 +131,10 @@ public class PathFormatter {
 	}
 	
 	public static String getFilenameWithExt(String path) {
-		return path.substring(path.lastIndexOf(SEPERATOR) + 1);
+		path = path.substring(path.lastIndexOf(SERIALIZATION_SEPERATOR) + 1);
+		path = path.substring(path.lastIndexOf(ALTERNATIVE_SEPERATOR) + 1);
+		
+		return path;
 	}
 	
 	public static String getFilename(String path) {

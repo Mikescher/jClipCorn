@@ -171,4 +171,7 @@ public class DerbyDatabase extends GenericDatabase {
 	public String GetDBTypeName() {
 		return CCDatabaseDriver.DERBY.asString();
 	}
+
+	@Override
+	public boolean IsInMemory() {return false;}
 }

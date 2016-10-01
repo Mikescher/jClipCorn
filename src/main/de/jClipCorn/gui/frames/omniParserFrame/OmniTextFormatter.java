@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import de.jClipCorn.util.helper.TextFileUtils;
+import de.jClipCorn.util.helper.SimpleFileUtils;
 
 public class OmniTextFormatter {
 	public static String format(String input, boolean splitLongLines) {
@@ -14,7 +14,7 @@ public class OmniTextFormatter {
 
 		for (int i = 0; i < list.size(); i++) {
 			if (i > 0)
-				result.append(TextFileUtils.LINE_END);
+				result.append(SimpleFileUtils.LINE_END);
 			result.append(list.get(i));
 		}
 
@@ -22,7 +22,7 @@ public class OmniTextFormatter {
 	}
 
 	private static List<String> formatList(String input, boolean splitLongLines) {
-		List<String> list = new ArrayList<>(Arrays.asList(TextFileUtils.splitLines(input)));
+		List<String> list = new ArrayList<>(Arrays.asList(SimpleFileUtils.splitLines(input)));
 
 		trimList(list);
 		

@@ -37,7 +37,7 @@ import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.exceptions.CCFormatException;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.DialogHelper;
-import de.jClipCorn.util.helper.TextFileUtils;
+import de.jClipCorn.util.helper.SimpleFileUtils;
 import de.jClipCorn.util.listener.ProgressCallbackListener;
 
 public class ExportHelper {
@@ -188,8 +188,6 @@ public class ExportHelper {
 	}
 	
 	private static void copyAllCoverFromBackup(File backup, CCMovieList movielist) throws Exception {
-		byte[] buffer = new byte[2048];
-
 		InputStream theFile = new FileInputStream(backup);
 		ZipInputStream stream = new ZipInputStream(theFile);
 
@@ -200,19 +198,7 @@ public class ExportHelper {
 					continue;
 				}
 				
-				String outpath = movielist.getCoverCache().getCoverPath() + PathFormatter.getFilenameWithExt(entry.getName());
-				FileOutputStream output = null;
-				try {
-					output = new FileOutputStream(outpath);
-					int len = 0;
-					while ((len = stream.read(buffer)) > 0) {
-						output.write(buffer, 0, len);
-					}
-				} finally {
-					if (output != null) {
-						output.close();
-					}
-				}
+				movielist.getCoverCache().addCover(PathFormatter.getFilenameWithExt(entry.getName()), stream);
 			}
 		} finally {
 			stream.close();
@@ -233,7 +219,7 @@ public class ExportHelper {
 				}
 				
 				BufferedReader reader = new BufferedReader(new InputStreamReader(stream, "UTF-8")); //$NON-NLS-1$
-				content = TextFileUtils.readTextFile(reader);
+				content = SimpleFileUtils.readTextFile(reader);
 				reader.close();
 				
 				return content;
@@ -399,7 +385,7 @@ public class ExportHelper {
 	
 	public static void openSingleElementFile(File f, MainFrame owner, CCMovieList movielist, CCMovieTyp forceTyp) {
 		try {
-			String xml = TextFileUtils.readUTF8TextFile(f);
+			String xml = SimpleFileUtils.readUTF8TextFile(f);
 			CCMovieTyp type = null;
 			if (forceTyp != null && (type = ExportHelper.getTypOfFirstElementOfExport(xml)) != forceTyp) {
 				CCLog.addError(LocaleBundle.getString("LogMessage.FormatErrorInExport")); //$NON-NLS-1$
@@ -447,7 +433,7 @@ public class ExportHelper {
 	
 	public static void openMultipleElementFile(File f, MainFrame owner, CCMovieList movielist) {
 		try {
-			String xml = TextFileUtils.readUTF8TextFile(f);
+			String xml = SimpleFileUtils.readUTF8TextFile(f);
 			
 			ImportElementsFrame ief = new ImportElementsFrame(owner, xml, movielist);
 			ief.setVisible(true);

@@ -48,7 +48,7 @@ import de.jClipCorn.gui.guiComponents.DefaultReadOnlyTableModel;
 import de.jClipCorn.gui.guiComponents.VerticalScrollPaneSynchronizer;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.formatter.PathFormatter;
-import de.jClipCorn.util.helper.TextFileUtils;
+import de.jClipCorn.util.helper.SimpleFileUtils;
 import de.jClipCorn.util.listener.OmniParserCallbackListener;
 
 public class OmniParserFrame extends JFrame {
@@ -393,7 +393,7 @@ public class OmniParserFrame extends JFrame {
 			StringBuilder result = new StringBuilder();
 			
 			for (int i = 0; i < list.length; i++) {
-				if (i > 0) result.append(TextFileUtils.LINE_END);
+				if (i > 0) result.append(SimpleFileUtils.LINE_END);
 				result.append(list[i]);
 			}
 			
@@ -432,7 +432,7 @@ public class OmniParserFrame extends JFrame {
 			StringBuilder result = new StringBuilder();
 			
 			for (int i = 0; i < list.length; i++) {
-				if (i > 0) result.append(TextFileUtils.LINE_END);
+				if (i > 0) result.append(SimpleFileUtils.LINE_END);
 				result.append(PathFormatter.getWithoutExtension(list[i]));
 			}
 			
@@ -474,7 +474,7 @@ public class OmniParserFrame extends JFrame {
 	private void updateCompareTable() {
 		String input = memoParsedText.getText();
 
-		List<String> list = new ArrayList<>(Arrays.asList(TextFileUtils.splitLines(input)));
+		List<String> list = new ArrayList<>(Arrays.asList(SimpleFileUtils.splitLines(input)));
 		
 		DefaultTableModel model = new DefaultReadOnlyTableModel(old_titles.size(), 2);
 		model.setColumnIdentifiers(COLUMN_HEADERS);
@@ -490,6 +490,6 @@ public class OmniParserFrame extends JFrame {
 	private ArrayList<String> getTitleList() {
 		String input = memoParsedText.getText();
 		
-		return new ArrayList<>(Arrays.asList(TextFileUtils.splitLines(input)));
+		return new ArrayList<>(Arrays.asList(SimpleFileUtils.splitLines(input)));
 	}
 }

@@ -14,7 +14,7 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCMovieSize;
 import de.jClipCorn.database.util.ExportHelper;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.util.formatter.FileSizeFormatter;
-import de.jClipCorn.util.helper.TextFileUtils;
+import de.jClipCorn.util.helper.SimpleFileUtils;
 
 public class DatabasePlainTextExporter extends DatabaseTextExporter {
 
@@ -86,7 +86,7 @@ public class DatabasePlainTextExporter extends DatabaseTextExporter {
 				if (addYear) builder.append(" (" + ser.getYearRange().asString() + ")");
 				if (addSize) builder.append(" (" + ser.getFilesize().getFormatted() + ")");
 
-				builder.append(TextFileUtils.LINE_END);
+				builder.append(SimpleFileUtils.LINE_END);
 				
 				for (int j = 0; j < ser.getSeasonCount(); j++) {
 					CCSeason season = ser.getSeason(j);
@@ -140,7 +140,7 @@ public class DatabasePlainTextExporter extends DatabaseTextExporter {
 		if (addViewed) builder.append((vcount == last.size()) ? "[X] " : ((vcount == 0) ? "[ ] " : "[/] "));
 		builder.append(last.get(0).getZyklus().getTitle());
 		if (addSize) builder.append(" (" + FileSizeFormatter.format(bytesum) + ")");
-		builder.append(TextFileUtils.LINE_END);		
+		builder.append(SimpleFileUtils.LINE_END);		
 		
 		for (CCMovie mov : last) {
 			builder.append("\t");
@@ -157,7 +157,7 @@ public class DatabasePlainTextExporter extends DatabaseTextExporter {
 			if (addYear) builder.append(" (" + mov.getYear() + ")");
 			if (addSize) builder.append(" (" + mov.getFilesize().getFormatted() + ")");
 
-			builder.append(TextFileUtils.LINE_END);
+			builder.append(SimpleFileUtils.LINE_END);
 		}
 		
 		last = null;

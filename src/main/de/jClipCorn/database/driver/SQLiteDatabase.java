@@ -12,7 +12,7 @@ import de.jClipCorn.gui.settings.CCDatabaseDriver;
 import de.jClipCorn.util.exceptions.FileLockedException;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.FileLockManager;
-import de.jClipCorn.util.helper.TextFileUtils;
+import de.jClipCorn.util.helper.SimpleFileUtils;
 import de.jClipCorn.util.parser.TurbineParser;
 
 @SuppressWarnings("nls")
@@ -41,7 +41,7 @@ public class SQLiteDatabase extends GenericDatabase {
 			
 			establishDBConnection(dbPath);
 
-			TurbineParser turb = new TurbineParser(TextFileUtils.readUTF8TextFile(xmlPath), this);
+			TurbineParser turb = new TurbineParser(SimpleFileUtils.readUTF8TextFile(xmlPath), this);
 			turb.parse();
 			turb.create();
 		} catch (Exception e) {
@@ -68,7 +68,7 @@ public class SQLiteDatabase extends GenericDatabase {
 			connection = DriverManager.getConnection(PROTOCOL + dbFilePath);
 			connection.setAutoCommit(true);
 
-			TurbineParser turb = new TurbineParser(TextFileUtils.readTextResource(xmlResPath, getClass()), this);
+			TurbineParser turb = new TurbineParser(SimpleFileUtils.readTextResource(xmlResPath, getClass()), this);
 			turb.parse();
 			turb.create();
 		} catch (Exception e) {
@@ -138,4 +138,7 @@ public class SQLiteDatabase extends GenericDatabase {
 	public String GetDBTypeName() {
 		return CCDatabaseDriver.SQLITE.asString();
 	}
+
+	@Override
+	public boolean IsInMemory() {return false;}
 }

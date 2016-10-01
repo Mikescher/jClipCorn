@@ -23,7 +23,7 @@ public class FileLockManager {
 		File lockFile = new File(lockpath);
 		
 		if (lockFile.exists()) {
-			String pid = TextFileUtils.readUTF8TextFile(lockFile);
+			String pid = SimpleFileUtils.readUTF8TextFile(lockFile);
 			
 			if (pid.equalsIgnoreCase(getPID())) return true;
 			
@@ -33,11 +33,11 @@ public class FileLockManager {
 				CCLog.addWarning(LocaleBundle.getString("LogMessage.IncorrectShutdown")); //$NON-NLS-1$
 			}
 			
-			TextFileUtils.writeTextFile(lockFile, getPID());
+			SimpleFileUtils.writeTextFile(lockFile, getPID());
 			return true;
 		}
 
-		TextFileUtils.writeTextFile(lockFile, getPID());
+		SimpleFileUtils.writeTextFile(lockFile, getPID());
 		return true;
 	}
 
@@ -47,7 +47,7 @@ public class FileLockManager {
 		File lockFile = new File(lockpath);		
 
 		if (lockFile.exists()) {
-			String pid = TextFileUtils.readUTF8TextFile(lockFile);
+			String pid = SimpleFileUtils.readUTF8TextFile(lockFile);
 			
 			if (pid.equalsIgnoreCase(getPID()) || !isRunning(pid)) {
 				lockFile.delete();
@@ -69,7 +69,7 @@ public class FileLockManager {
 			return false;
 		}
 		
-		String pid = TextFileUtils.readUTF8TextFile(lockFile);
+		String pid = SimpleFileUtils.readUTF8TextFile(lockFile);
 		
 		return isRunning(pid);
 	}

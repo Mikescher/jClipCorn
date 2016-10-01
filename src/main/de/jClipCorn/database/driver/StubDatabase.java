@@ -41,4 +41,6 @@ public class StubDatabase extends GenericDatabase {
 		return CCDatabaseDriver.STUB.asString();
 	}
 
+	@Override
+	public boolean IsInMemory() {return true;}
 }

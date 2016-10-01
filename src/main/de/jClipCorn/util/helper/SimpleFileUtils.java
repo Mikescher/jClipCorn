@@ -10,8 +10,11 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.text.MessageFormat;
+import java.util.UUID;
 
-public class TextFileUtils {	
+public class SimpleFileUtils {	
 	public final static Charset CHARSET_UTF8 = Charset.forName("UTF-8"); //$NON-NLS-1$
 	
 	public final static String LINE_END = System.getProperty("line.separator"); //$NON-NLS-1$
@@ -82,6 +85,19 @@ public class TextFileUtils {
 		}
 		return content.toString();
 	}
+
+	public static void writeTextResource(File out, String resourcename, Class<?> c) throws IOException {
+		InputStream is = null;
+		
+		try {
+			is = c.getResourceAsStream(resourcename);
+			if (is == null) throw new IOException();
+			
+			Files.copy(is, out.toPath());
+		} finally {
+			if (is != null) is.close();
+		}
+	}
 	
 	public static void writeTextFile(String filename, String text) throws IOException {
 		writeTextFile(new File(filename), text);
@@ -107,5 +123,12 @@ public class TextFileUtils {
 
 	public static String[] splitLines(String text) {
 		return text.split("\\r?\\n"); //$NON-NLS-1$
+	}
+
+	@SuppressWarnings("nls")
+	public static String getTempFile(String ext) {
+		String fileName = MessageFormat.format("{0}.{1}", UUID.randomUUID(), ext);
+		
+		return new File(fileName).getAbsolutePath();
 	}
 }

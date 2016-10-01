@@ -25,10 +25,16 @@ public class CCLog {
 	private static List<CCLogElement> log = new Vector<>();
 	private static List<CCLogChangedListener> listener = new Vector<>();
 	
+	private static boolean isUnitTest = false;
+	
 	private static String path = null;
 	private static boolean changed = false;
 
 	private static boolean fatalExit = false;
+	
+	public static void setUnitTestMode() {
+		isUnitTest = true;
+	}
 	
 	public static void setPath(String p) {
 		path = p;
@@ -126,6 +132,8 @@ public class CCLog {
 	}
 
 	public static void save() {
+		if (isUnitTest) return;
+		
 		if (CCProperties.getInstance().ARG_READONLY) {
 			CCLog.addInformation(LocaleBundle.getString("LogMessage.OperationFailedDueToReadOnly")); //$NON-NLS-1$
 			return;

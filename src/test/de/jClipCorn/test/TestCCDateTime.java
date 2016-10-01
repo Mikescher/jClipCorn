@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
+import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.exceptions.CCFormatException;
 
@@ -12,6 +13,8 @@ public class TestCCDateTime {
 
 	@Test
 	public void testFormat() {
+		CCLog.setUnitTestMode();
+		
 		CCDateTime base = CCDateTime.create(26, 1, 2001, 19, 45, 1);
 		
 		assertEquals("19:45:01", base.getStringRepresentation("HH:mm:ss"));
@@ -32,6 +35,8 @@ public class TestCCDateTime {
 	
 	@Test
 	public void testParse() throws CCFormatException {
+		CCLog.setUnitTestMode();
+		
 		assertEquals(CCDateTime.create(19,8,2020, 7,50,35), CCDateTime.parse("19,8,2020 07:50:35", "dd,MM,yyyy HH:mm:ss"));
 		assertEquals(CCDateTime.create(19,8,2020, 0,0,0), CCDateTime.parse("19,8,2020", "dd,MM,yyyy"));
 	}

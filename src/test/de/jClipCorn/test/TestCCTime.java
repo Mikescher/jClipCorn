@@ -5,6 +5,7 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
+import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.util.datetime.CCTime;
 import de.jClipCorn.util.exceptions.CCFormatException;
 
@@ -13,6 +14,8 @@ public class TestCCTime {
 
 	@Test
 	public void testAddSubTime() {
+		CCLog.setUnitTestMode();
+		
 		CCTime base = CCTime.create(13, 30, 15);
 
 		assertEquals(base, base.getAddHour(24));
@@ -50,6 +53,8 @@ public class TestCCTime {
 
 	@Test
 	public void testFormat() {
+		CCLog.setUnitTestMode();
+		
 		CCTime base = CCTime.create(19, 45, 1);
 		
 		assertEquals("19:45:01", base.getStringRepresentation("HH:mm:ss"));
@@ -63,6 +68,8 @@ public class TestCCTime {
 	
 	@Test
 	public void testParse() throws CCFormatException {
+		CCLog.setUnitTestMode();
+		
 		assertTrue(CCTime.testparse("20:01:55", "HH:mm:ss"));
 		assertEquals(CCTime.create(20,1,55), CCTime.parse("20:01:55", "HH:mm:ss"));
 

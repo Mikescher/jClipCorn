@@ -10,6 +10,7 @@ import org.junit.Test;
 
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieScore;
+import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.helper.SimpleFileUtils;
 import de.jClipCorn.util.parser.watchdata.WatchDataChangeSet;
@@ -20,6 +21,8 @@ public class TestWatchDataParser {
 
 	@Test
 	public void testWatchDataParse() throws Exception {
+		CCLog.setUnitTestMode();
+		
 		CCMovieList ml = ClipCornTestHelper.createExampleDB();
 		
 		List<String> err = new ArrayList<>();

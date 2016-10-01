@@ -19,6 +19,7 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCMovieScore;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTyp;
 import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineRefType;
 import de.jClipCorn.database.util.ExportHelper;
+import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.helper.SimpleFileUtils;
 
@@ -27,6 +28,8 @@ public class TestDatabase {
 
 	@Test
 	public void testAddMovie() throws Exception {
+		CCLog.setUnitTestMode();
+		
 		CCMovieList ml = ClipCornTestHelper.createEmptyDB();
 		
 		assertEquals(0, ml.getElementCount());
@@ -79,6 +82,8 @@ public class TestDatabase {
 
 	@Test
 	public void testParseJSCCImport() throws Exception {
+		CCLog.setUnitTestMode();
+		
 		CCMovieList ml = ClipCornTestHelper.createEmptyDB();
 		
 		String data = SimpleFileUtils.readTextResource("/example_single_01.jsccexport", getClass());
@@ -106,6 +111,8 @@ public class TestDatabase {
 
 	@Test
 	public void testJSCCRoundtrip() throws Exception {
+		CCLog.setUnitTestMode();
+		
 		CCMovieList ml = ClipCornTestHelper.createEmptyDB();
 		
 		String data = SimpleFileUtils.readTextResource("/example_single_01.jsccexport", getClass());
@@ -137,6 +144,8 @@ public class TestDatabase {
 
 	@Test
 	public void testImport() throws Exception {
+		CCLog.setUnitTestMode();
+		
 		CCMovieList ml = ClipCornTestHelper.createExampleDB();
 		
 		assertTrue(ml.hasElements());

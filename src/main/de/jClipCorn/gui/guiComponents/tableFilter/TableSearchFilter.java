@@ -23,17 +23,18 @@ public class TableSearchFilter extends RowFilter<ClipTableModel, Object> {
 	}
 
 	@Override
+	@SuppressWarnings("nls")
 	public boolean include(Entry<? extends ClipTableModel, ? extends Object> e) {
 		CCDatabaseElement elem = ((CCDatabaseElement)e.getValue(ClipTableModel.COLUMN_TITLE));
 		
 		String title = elem.getTitle();
 		
-		if (StringUtils.containsIgnoreCase(title, searchTerm)) {
+		if (StringUtils.containsIgnoreCase(title.replace(".", ""), searchTerm.replace(".", ""))) {
 			return true;
 		}
 		
 		String zyklus = ((CCMovieZyklus)e.getValue(ClipTableModel.COLUMN_ZYKLUS)).getTitle();
-		if (StringUtils.containsIgnoreCase(zyklus, searchTerm)) {
+		if (StringUtils.containsIgnoreCase(zyklus.replace(".", ""), searchTerm.replace(".", ""))) {
 			return true;
 		}
 		

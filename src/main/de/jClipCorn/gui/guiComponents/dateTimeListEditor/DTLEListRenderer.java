@@ -17,10 +17,7 @@ public class DTLEListRenderer implements ListCellRenderer<CCDateTime> {
 	public Component getListCellRendererComponent(JList<? extends CCDateTime> list, CCDateTime value, int index, boolean isSelected, boolean cellHasFocus) {
 		JLabel renderer = (JLabel) defaultRenderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
 		
-		if (value.isMidnight())
-			renderer.setText(value.getSimpleDateStringRepresentation());
-		else
-			renderer.setText(value.getSimpleShortStringRepresentation());
+		renderer.setText(value.getSimpleStringRepresentation());
 		
 		return renderer;
 	}

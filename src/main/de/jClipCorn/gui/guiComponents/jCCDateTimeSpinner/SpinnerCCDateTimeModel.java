@@ -1,8 +1,11 @@
 package de.jClipCorn.gui.guiComponents.jCCDateTimeSpinner;
 
 import javax.swing.AbstractSpinnerModel;
+import javax.swing.JTextField;
+import javax.swing.text.Document;
 
 import de.jClipCorn.util.datetime.CCDateTime;
+import de.jClipCorn.util.datetime.CCTime;
 
 public class SpinnerCCDateTimeModel extends AbstractSpinnerModel {
 	private static final long serialVersionUID = 1275113021121391715L;
@@ -23,19 +26,19 @@ public class SpinnerCCDateTimeModel extends AbstractSpinnerModel {
 		
 		switch (spec) {
 		case 'y':
-			return current.getAddYear(1);
+			return current.getSpecifyTimeIfNeeded(CCTime.getMidnight()).getAddYear(1);
 		case 'M':
-			return current.getAddMonth(1);
+			return current.getSpecifyTimeIfNeeded(CCTime.getMidnight()).getAddMonth(1);
 		case 'd':
-			return current.getAddDay(1);
+			return current.getSpecifyTimeIfNeeded(CCTime.getMidnight()).getAddDay(1);
 		case 'H':
-			return current.getAddHour(1);
+			return current.getSpecifyTimeIfNeeded(CCTime.getMidnight()).getAddHour(1);
 		case 'm':
-			return current.getAddMinute(1);
+			return current.getSpecifyTimeIfNeeded(CCTime.getMidnight()).getAddMinute(1);
 		case 's':
-			return current.getAddSecond(1);
+			return current.getSpecifyTimeIfNeeded(CCTime.getMidnight()).getAddSecond(1);
 		default:
-			return current.getAddDay(1);
+			return current.getSpecifyTimeIfNeeded(CCTime.getMidnight()).getAddDay(1);
 		}
 		
 	}
@@ -80,7 +83,16 @@ public class SpinnerCCDateTimeModel extends AbstractSpinnerModel {
 			
 			fireStateChanged();
 
-			if (owner != null)  ((CCDateTimeEditor)owner.getEditor()).getTextField().setCaretPosition(caret);
+			if (owner != null)  {
+				JTextField tf = ((CCDateTimeEditor)owner.getEditor()).getTextField();
+				
+				Document doc = tf.getDocument();
+		        if (doc != null && caret > doc.getLength()) {
+		            caret = doc.getLength();
+		        }
+		        
+				tf.setCaretPosition(caret);
+			}
 		}
 	}
 

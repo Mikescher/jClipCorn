@@ -19,7 +19,8 @@ public class CCTime implements Comparable<CCTime>, StringSpecSupplier {
 	public final static String STRINGREP_SQL    = "HH:mm:ss"; //$NON-NLS-1$
 	public final static String STRINGREP_AMPM   = "hh:mm:ss t"; //$NON-NLS-1$
 
-	private static final CCTime MIDNIGHT = new CCTime(0, 0, 0); // { 'H', 'm', 's', 'h', 't' }
+	private static final CCTime MIDNIGHT    = new CCTime(0, 0, 0); // { 'H', 'm', 's', 'h', 't' }
+	private static final CCTime UNSPECIFIED = new CCTime(99, 99, 99);
 	
 	private final int hour;
 	private final int min;
@@ -361,15 +362,21 @@ public class CCTime implements Comparable<CCTime>, StringSpecSupplier {
 		int tm = values.get('m');
 		int ts = values.get('s');
 		
+		if (th == UNSPECIFIED.hour && tm == UNSPECIFIED.min && ts == UNSPECIFIED.sec) return UNSPECIFIED;
+
+		if (th == UNSPECIFIED.hour) th = 0;
+		if (tm == UNSPECIFIED.hour) tm = 0;
+		if (ts == UNSPECIFIED.hour) ts = 0;
+				
 		return create(th, tm, ts);
 	}
 
 	@Override
 	public Map<Character, Integer> getSpecDefaults() {
 		Map<Character, Integer> d = new Hashtable<>();
-		d.put('H', 0);
-		d.put('m', 0);
-		d.put('s', 0);
+		d.put('H', UNSPECIFIED.hour);
+		d.put('m', UNSPECIFIED.min);
+		d.put('s', UNSPECIFIED.sec);
 		return d;
 	}
 
@@ -377,11 +384,21 @@ public class CCTime implements Comparable<CCTime>, StringSpecSupplier {
 		return MIDNIGHT;
 	}
 
+	public static CCTime getUnspecified() {
+		return UNSPECIFIED;
+	}
+
 	public boolean isMidnight() {
 		return hour == 0 && min == 0 && sec == 0;
 	}
 
+	public boolean isUnspecifiedTime() {
+		return hour == 99 && min == 99 && sec == 99;
+	}
+
 	public boolean isValidTime() {
+		if (isUnspecifiedTime()) return true;
+		
 		if (hour < 0 || hour >= 24) return false;
 		if (min  < 0 || min  >= 60) return false;
 		if (sec  < 0 || sec  >= 60) return false;

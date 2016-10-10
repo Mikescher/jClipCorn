@@ -212,10 +212,10 @@ public class SearchFrame extends JFrame {
 						continue;
 					}
 					
-					if (StringUtils.containsIgnoreCase(epi.getAbsolutePart(), searchString)) {
-						addToList(epi);
-						continue;
-					}
+					//if (StringUtils.containsIgnoreCase(epi.getAbsolutePart(), searchString)) {
+					//	addToList(epi);
+					//	continue;
+					//}
 				}
 				
 				if (StringUtils.containsIgnoreCase(sea.getTitle(), searchString)) {

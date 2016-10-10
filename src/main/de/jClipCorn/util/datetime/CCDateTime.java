@@ -12,12 +12,13 @@ import de.jClipCorn.util.parser.StringSpecSupplier;
 
 @SuppressWarnings("nls")
 public class CCDateTime implements Comparable<CCDateTime>, StringSpecSupplier {
-	public static CCDateTime STATIC_SUPPLIER = CCDateTime.create(1, 1, 2000, 0, 0, 0);
+	public static CCDateTime STATIC_SUPPLIER = CCDateTime.create(CCDate.create(1, 1, 2000), CCTime.getUnspecified());
 	
-	public final static String STRINGREP_SIMPLE 	= "dd.MM.yyyy HH:mm:ss"; //$NON-NLS-1$
-	public final static String STRINGREP_SIMPLESHORT = "dd.MM.yy HH:mm"; //$NON-NLS-1$
-	public final static String STRINGREP_SIMPLEDATE = "dd.MM.yyyy"; //$NON-NLS-1$
-	public final static String STRINGREP_LOCAL 		= "dd.N.yyyy HH:mm:ss"; //$NON-NLS-1$
+	public final static String STRINGREP_SIMPLE 	     = "dd.MM.yyyy HH:mm:ss"; //$NON-NLS-1$
+	public final static String STRINGREP_SIMPLESHORT     = "dd.MM.yy HH:mm";      //$NON-NLS-1$
+	public final static String STRINGREP_SIMPLEDATE      = "dd.MM.yyyy";          //$NON-NLS-1$
+	public final static String STRINGREP_SIMPLESHORTDATE = "dd.MM.yy";            //$NON-NLS-1$
+	public final static String STRINGREP_LOCAL 		     = "dd.N.yyyy HH:mm:ss";  //$NON-NLS-1$
 	
 	public final CCDate date;
 	public final CCTime time;
@@ -35,17 +36,21 @@ public class CCDateTime implements Comparable<CCDateTime>, StringSpecSupplier {
 	}
 
 	public static CCDateTime createFromSQL(String str) throws CCFormatException {
-		if (str.length() != 19) throw new DateTimeFormatException(str);
-		
-		String[] parts = str.split(" ");
+		if (str.length() == 19) {
+			String[] parts = str.split(" ");
 
-		if (parts.length != 2) throw new DateTimeFormatException(str);
+			if (parts.length != 2) throw new DateTimeFormatException(str);
+			
+			return new CCDateTime(CCDate.createFromSQL(parts[0]), CCTime.createFromSQL(parts[1]));
+		} else if (str.length() == 10) {
+			return new CCDateTime(CCDate.createFromSQL(str), CCTime.getUnspecified());
+		}
 		
-		return new CCDateTime(CCDate.createFromSQL(parts[0]), CCTime.createFromSQL(parts[1]));
+		throw new DateTimeFormatException(str);
 	}
 
 	public static CCDateTime create(CCDate d) {
-		return new CCDateTime(d, CCTime.getMidnight());
+		return new CCDateTime(d, CCTime.getUnspecified());
 	}
 
 	public static CCDateTime create(CCDate d, CCTime t) {
@@ -57,7 +62,10 @@ public class CCDateTime implements Comparable<CCDateTime>, StringSpecSupplier {
 	}
 	
 	public String getSQLStringRepresentation() {
-		return date.getSQLStringRepresentation() + " " + time.getSQLStringRepresentation();
+		if (time.isUnspecifiedTime()) 
+			return date.getSQLStringRepresentation();
+		else
+			return date.getSQLStringRepresentation() + " " + time.getSQLStringRepresentation();
 	}
 
 	@Override
@@ -65,11 +73,17 @@ public class CCDateTime implements Comparable<CCDateTime>, StringSpecSupplier {
 		int c = date.compareTo(o.date);
 		if (c != 0) return c;
 		
+		if (time.isUnspecifiedTime() || o.time.isUnspecifiedTime()) return 0;
+		
 		return time.compareTo(o.time);
 	}
 
 	public static CCDateTime create(int dd, int dm, int dy, int th, int tm, int ts) {
 		return new CCDateTime(CCDate.create(dd, dm, dy), CCTime.create(th, tm, ts));
+	}
+
+	public static CCDateTime createDateOnly(int dd, int dm, int dy) {
+		return new CCDateTime(CCDate.create(dd, dm, dy), CCTime.getUnspecified());
 	}
 
 	public CCDate getDate() {
@@ -85,11 +99,17 @@ public class CCDateTime implements Comparable<CCDateTime>, StringSpecSupplier {
 	}
 	
 	public String getSimpleStringRepresentation() {
-		return getStringRepresentation(STRINGREP_SIMPLE);
+		if (time.isUnspecifiedTime()) 
+			return getStringRepresentation(STRINGREP_SIMPLEDATE);
+		else
+			return getStringRepresentation(STRINGREP_SIMPLE);
 	}
 	
 	public String getSimpleShortStringRepresentation() {
-		return getStringRepresentation(STRINGREP_SIMPLESHORT);
+		if (time.isUnspecifiedTime()) 
+			return getStringRepresentation(STRINGREP_SIMPLESHORTDATE);
+		else
+			return getStringRepresentation(STRINGREP_SIMPLESHORT);
 	}
 	
 	public static boolean testparse(String rawData, String fmt) {
@@ -105,7 +125,10 @@ public class CCDateTime implements Comparable<CCDateTime>, StringSpecSupplier {
 	}
 	
 	public String getLocalStringRepresentation() {
-		return getStringRepresentation(STRINGREP_LOCAL);
+		if (time.isUnspecifiedTime()) 
+			return getStringRepresentation(STRINGREP_SIMPLEDATE);
+		else
+			return getStringRepresentation(STRINGREP_LOCAL);
 	}
 
 	public String getSimpleDateStringRepresentation() {
@@ -281,5 +304,10 @@ public class CCDateTime implements Comparable<CCDateTime>, StringSpecSupplier {
 
 	public boolean isMinimum() {
 		return date.isMinimum() && time.isMidnight();
+	}
+
+	public CCDateTime getSpecifyTimeIfNeeded(CCTime fallbacktime) {
+		if (time.isUnspecifiedTime()) return new CCDateTime(date, fallbacktime);
+		return this;
 	}
 }

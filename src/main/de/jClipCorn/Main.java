@@ -129,3 +129,5 @@ public class Main {
 // TODO get actors from online and save to db
 //      add filter for actors. 
 //      don't show all actors, make it configurable which actors are "enabled" (?)
+
+//TODO Settings for display dates (DE | US | ISO)

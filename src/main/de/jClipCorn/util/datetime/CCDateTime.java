@@ -15,9 +15,9 @@ public class CCDateTime implements Comparable<CCDateTime>, StringSpecSupplier {
 	public static CCDateTime STATIC_SUPPLIER = CCDateTime.create(CCDate.create(1, 1, 2000), CCTime.getUnspecified());
 	
 	public final static String STRINGREP_SIMPLE 	     = "dd.MM.yyyy HH:mm:ss"; //$NON-NLS-1$
-	public final static String STRINGREP_SIMPLESHORT     = "dd.MM.yy HH:mm";      //$NON-NLS-1$
+	public final static String STRINGREP_SIMPLESHORT     = "dd.MM.yyyy HH:mm";    //$NON-NLS-1$
 	public final static String STRINGREP_SIMPLEDATE      = "dd.MM.yyyy";          //$NON-NLS-1$
-	public final static String STRINGREP_SIMPLESHORTDATE = "dd.MM.yy";            //$NON-NLS-1$
+	public final static String STRINGREP_SIMPLESHORTDATE = "dd.MM.yyyy";          //$NON-NLS-1$
 	public final static String STRINGREP_LOCAL 		     = "dd.N.yyyy HH:mm:ss";  //$NON-NLS-1$
 	
 	public final CCDate date;

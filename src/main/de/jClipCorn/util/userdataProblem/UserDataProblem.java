@@ -426,7 +426,7 @@ public class UserDataProblem {
 		//################################################################################################################
 
 		for (CCDateTime lvdate : lvdates) {
-			if (lvdate.isLessThan(CCDate.getMinimumDate())) {
+			if (!lvdate.isUnspecifiedDateTime() && lvdate.isLessThan(CCDate.getMinimumDate())) {
 				ret.add(new UserDataProblem(UserDataProblem.PROBLEM_DATE_TOO_LESS));
 			}
 		}

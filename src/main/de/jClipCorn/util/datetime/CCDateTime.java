@@ -5,6 +5,7 @@ import java.util.Hashtable;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.exceptions.CCFormatException;
 import de.jClipCorn.util.exceptions.DateTimeFormatException;
 import de.jClipCorn.util.parser.StringSpecParser;
@@ -13,6 +14,8 @@ import de.jClipCorn.util.parser.StringSpecSupplier;
 @SuppressWarnings("nls")
 public class CCDateTime implements Comparable<CCDateTime>, StringSpecSupplier {
 	public static CCDateTime STATIC_SUPPLIER = CCDateTime.create(CCDate.create(1, 1, 2000), CCTime.getUnspecified());
+	
+	public final static String UNSPECIFIED_REPRESENTATION = "UNSPECIFIED";
 	
 	public final static String STRINGREP_SIMPLE 	     = "dd.MM.yyyy HH:mm:ss"; //$NON-NLS-1$
 	public final static String STRINGREP_SIMPLESHORT     = "dd.MM.yyyy HH:mm";    //$NON-NLS-1$
@@ -44,6 +47,8 @@ public class CCDateTime implements Comparable<CCDateTime>, StringSpecSupplier {
 			return new CCDateTime(CCDate.createFromSQL(parts[0]), CCTime.createFromSQL(parts[1]));
 		} else if (str.length() == 10) {
 			return new CCDateTime(CCDate.createFromSQL(str), CCTime.getUnspecified());
+		} else if (str.length() == UNSPECIFIED_REPRESENTATION.length() && str.equals(UNSPECIFIED_REPRESENTATION)) {
+			return new CCDateTime(CCDate.getUnspecified(), CCTime.getUnspecified());
 		}
 		
 		throw new DateTimeFormatException(str);
@@ -62,7 +67,9 @@ public class CCDateTime implements Comparable<CCDateTime>, StringSpecSupplier {
 	}
 	
 	public String getSQLStringRepresentation() {
-		if (time.isUnspecifiedTime()) 
+		if (isUnspecifiedDateTime()) 
+			return UNSPECIFIED_REPRESENTATION;
+		else if (time.isUnspecifiedTime()) 
 			return date.getSQLStringRepresentation();
 		else
 			return date.getSQLStringRepresentation() + " " + time.getSQLStringRepresentation();
@@ -70,6 +77,8 @@ public class CCDateTime implements Comparable<CCDateTime>, StringSpecSupplier {
 
 	@Override
 	public int compareTo(CCDateTime o) {
+		if (isUnspecifiedDateTime()) return -1;
+		
 		int c = date.compareTo(o.date);
 		if (c != 0) return c;
 		
@@ -99,14 +108,18 @@ public class CCDateTime implements Comparable<CCDateTime>, StringSpecSupplier {
 	}
 	
 	public String getSimpleStringRepresentation() {
-		if (time.isUnspecifiedTime()) 
+		if (isUnspecifiedDateTime())
+			return LocaleBundle.getString("CCDate.STRINGREP_UNSPEC");
+		else if (time.isUnspecifiedTime()) 
 			return getStringRepresentation(STRINGREP_SIMPLEDATE);
 		else
 			return getStringRepresentation(STRINGREP_SIMPLE);
 	}
 	
 	public String getSimpleShortStringRepresentation() {
-		if (time.isUnspecifiedTime()) 
+		if (isUnspecifiedDateTime())
+			return LocaleBundle.getString("CCDate.STRINGREP_UNSPEC");
+		else if (time.isUnspecifiedTime()) 
 			return getStringRepresentation(STRINGREP_SIMPLESHORTDATE);
 		else
 			return getStringRepresentation(STRINGREP_SIMPLESHORT);
@@ -125,7 +138,9 @@ public class CCDateTime implements Comparable<CCDateTime>, StringSpecSupplier {
 	}
 	
 	public String getLocalStringRepresentation() {
-		if (time.isUnspecifiedTime()) 
+		if (isUnspecifiedDateTime())
+			return LocaleBundle.getString("CCDate.STRINGREP_UNSPEC");
+		else if (time.isUnspecifiedTime()) 
 			return getStringRepresentation(STRINGREP_SIMPLEDATE);
 		else
 			return getStringRepresentation(STRINGREP_LOCAL);
@@ -269,6 +284,7 @@ public class CCDateTime implements Comparable<CCDateTime>, StringSpecSupplier {
 	}
 	
 	public boolean isEquals(CCDateTime other) {
+		if (this.isUnspecifiedDateTime() || other.isUnspecifiedDateTime()) return false;
 		return compareTo(other) == 0;
 	}
 	
@@ -302,12 +318,25 @@ public class CCDateTime implements Comparable<CCDateTime>, StringSpecSupplier {
 		return new CCDateTime(CCDate.getMinimumDate(), CCTime.getMidnight());
 	}
 
+	public static CCDateTime getUnspecified() {
+		return new CCDateTime(CCDate.getUnspecified(), CCTime.getUnspecified());
+	}
+
 	public boolean isMinimum() {
 		return date.isMinimum() && time.isMidnight();
+	}
+
+	public boolean isUnspecifiedDateTime() {
+		return date.isUnspecifiedDate();
 	}
 
 	public CCDateTime getSpecifyTimeIfNeeded(CCTime fallbacktime) {
 		if (time.isUnspecifiedTime()) return new CCDateTime(date, fallbacktime);
 		return this;
+	}
+	
+	@Override
+	public String toString() {
+		return "<CCDateTime>:" + getSQLStringRepresentation();
 	}
 }

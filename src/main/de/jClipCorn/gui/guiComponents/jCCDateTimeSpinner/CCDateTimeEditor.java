@@ -11,6 +11,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.exceptions.CCFormatException;
@@ -62,7 +63,9 @@ public class CCDateTimeEditor extends JPanel implements ChangeListener, Property
 			String text = tf.getText();
 
 			try {
-				if (CCDateTime.testparse(text, CCDateTime.STRINGREP_SIMPLE)) {
+				if (text.equalsIgnoreCase(CCDateTime.UNSPECIFIED_REPRESENTATION) || text.equalsIgnoreCase(LocaleBundle.getString("CCDate.STRINGREP_UNSPEC"))) { //$NON-NLS-1$
+					owner.getModel().setValue(CCDateTime.getUnspecified());
+				} else if (CCDateTime.testparse(text, CCDateTime.STRINGREP_SIMPLE)) {
 					owner.getModel().setValue(CCDateTime.parse(text, CCDateTime.STRINGREP_SIMPLE));
 				} else if (CCDateTime.testparse(text, CCDateTime.STRINGREP_SIMPLESHORT)) {
 					owner.getModel().setValue(CCDateTime.parse(text, CCDateTime.STRINGREP_SIMPLESHORT));

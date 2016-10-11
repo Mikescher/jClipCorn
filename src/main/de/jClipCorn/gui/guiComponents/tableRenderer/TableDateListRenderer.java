@@ -13,7 +13,7 @@ public class TableDateListRenderer extends TableRenderer {
 	@Override
     public void setValue(Object value) {
 		CCDateTimeList d = ((CCDateTimeList)value);
-		if (d.isEmpty()) {
+		if (d.isEmptyOrOnlyUnspecified()) {
 			setText(" - "); //$NON-NLS-1$
 		} else {
 			switch (CCProperties.getInstance().PROP_SERIES_DISPLAYED_DATE.getValue()) {

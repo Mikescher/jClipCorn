@@ -43,6 +43,12 @@ public class CCDateTimeList implements Iterable<CCDateTime> {
 	public boolean isEmpty() {
 		return list.isEmpty();
 	}
+	
+	public boolean isEmptyOrOnlyUnspecified() {
+		for (CCDateTime dt : list) if (! dt.isUnspecifiedDateTime()) return false;
+		
+		return true;
+	}
 
 	public boolean any() {
 		return !list.isEmpty();
@@ -94,25 +100,43 @@ public class CCDateTimeList implements Iterable<CCDateTime> {
 	}
 
 	public CCDateTime getFirstOrInvalid() {
-		return isEmpty() ? CCDateTime.getMinimumDateTime() : list.get(0);
+		List<CCDateTime> specList = getSpecifiedList();
+		
+		if (specList.isEmpty()) return CCDateTime.getMinimumDateTime();
+		
+		return specList.get(0);
 	}
 
 	public CCDateTime getLastOrInvalid() {
-		return isEmpty() ? CCDateTime.getMinimumDateTime() : list.get(count() - 1);
+		List<CCDateTime> specList = getSpecifiedList();
+		
+		if (specList.isEmpty()) return CCDateTime.getMinimumDateTime();
+		
+		return specList.get(specList.size() - 1);
 	}
 	
 	public CCDate getLastDateOrInvalid() {
-		return isEmpty() ? CCDate.getMinimumDate() : list.get(count() - 1).date;
+		List<CCDate> specList = getSpecifiedDateList();
+		
+		if (specList.isEmpty()) return CCDate.getMinimumDate();
+		
+		return specList.get(specList.size() - 1);
 	}
 
 	public CCDate getFirstDateOrInvalid() {
-		return isEmpty() ? CCDate.getMinimumDate() : list.get(0).date;
+		List<CCDate> specList = getSpecifiedDateList();
+		
+		if (specList.isEmpty()) return CCDate.getMinimumDate();
+		
+		return specList.get(0);
 	}
 
 	public CCDate getAverageDateOrInvalid() {
-		if (isEmpty()) return CCDate.getMinimumDate();
+		List<CCDate> specList = getSpecifiedDateList();
 		
-		return CCDate.getAverageDate(getDateList());
+		if (specList.isEmpty()) return CCDate.getMinimumDate();
+		
+		return CCDate.getAverageDate(specList);
 	}
 	
 	public boolean contains(CCDateTime time) {
@@ -152,13 +176,33 @@ public class CCDateTimeList implements Iterable<CCDateTime> {
 		}
 		return l;
 	}
+	
+	/*
+	 * List of dates
+	 * (dates can be not unique (cause of different times) 
+	 */
+	public List<CCDate> getSpecifiedDateList() {
+		List<CCDate> l = new ArrayList<>();
+		for (CCDateTime dt : list) {
+			if (! dt.isUnspecifiedDateTime()) l.add(dt.date);
+		}
+		return l;
+	}
+	
+	public List<CCDateTime> getSpecifiedList() {
+		List<CCDateTime> l = new ArrayList<>();
+		for (CCDateTime dt : list) {
+			if (! dt.isUnspecifiedDateTime()) l.add(dt);
+		}
+		return l;
+	}
 
 	public String getHTMLListFormatted() {
 		return getHTMLListFormatted(0);
 	}
 
 	public String getHTMLListFormatted(int hiddenHack) {
-		if (isEmpty()) return "";
+		if (isEmptyOrOnlyUnspecified()) return "";
 		
 		StringBuilder b = new StringBuilder();
 		

@@ -590,6 +590,14 @@ public class DatabaseValidator {
 		if (!episode.isViewed() && !episode.getViewedHistory().isEmpty()) {
 			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_HISTORY_BUT_UNVIEWED, episode));
 		}
+
+		// ###############################################
+		// Viewed but no history
+		// ###############################################
+
+		if (episode.isViewed() && episode.getViewedHistory().isEmpty()) {
+			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_VIEWED_BUT_NO_HISTORY, episode));
+		}
 		
 		// ###############################################
 		// History is invalid

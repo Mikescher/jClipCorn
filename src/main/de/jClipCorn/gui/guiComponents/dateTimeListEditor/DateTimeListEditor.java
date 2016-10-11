@@ -145,7 +145,10 @@ public class DateTimeListEditor extends JPanel {
 			@Override
 			public void valueChanged(ListSelectionEvent e) {
 				if (list.getSelectedIndex() >= 0) {
-					edAddDateTime.setValue(list.getSelectedValue());
+					if (list.getSelectedValue().isUnspecifiedDateTime())
+						edAddDateTime.setValue(CCDateTime.getCurrentDateTime());
+					else
+						edAddDateTime.setValue(list.getSelectedValue());
 				}
 			}
 		});

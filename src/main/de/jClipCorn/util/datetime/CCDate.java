@@ -33,6 +33,7 @@ public final class CCDate implements Comparable<CCDate>, StringSpecSupplier {
 	private static final CCDate DATE_MIN = new CCDate(1, 1, YEAR_MIN);
 	private static final CCDate DATE_MAX = new CCDate(31, 12, YEAR_MAX);
 	public  static final String MIN_SQL = DATE_MIN.getSQLStringRepresentation();
+	private static final CCDate UNSPECIFIED = new CCDate(99, 99, 99);
 	
 	private static HashSet<Character> stringSpecifier = null; // { 'y', 'M', 'd' }
 	
@@ -118,6 +119,10 @@ public final class CCDate implements Comparable<CCDate>, StringSpecSupplier {
 	
 	public static CCDate getMaximumDate() { //Not really Maximum - just extreme high
 		return DATE_MAX;
+	}
+
+	public static CCDate getUnspecified() {
+		return UNSPECIFIED;
 	}
 
 	public String getMonthName() {
@@ -423,7 +428,7 @@ public final class CCDate implements Comparable<CCDate>, StringSpecSupplier {
 	
 	@Override
 	public String toString() {
-		return getSimpleStringRepresentation();
+		return "<CCDate>:" + getSQLStringRepresentation(); //$NON-NLS-1$
 	}
 	
 	public int compare(CCDate other) {
@@ -509,6 +514,10 @@ public final class CCDate implements Comparable<CCDate>, StringSpecSupplier {
 	public boolean isMinimum() {
 		return 1 == getDay() && 1 == getMonth() && YEAR_MIN == getYear();
 	}
+
+	public boolean isUnspecifiedDate() {
+		return 99 == getDay() && 99 == getMonth() && 99 == getYear();
+	}
 	
 	public static CCDate getMinDate(List<CCDate> datelist) {
 		CCDate min = getMaximumDate();
@@ -563,6 +572,8 @@ public final class CCDate implements Comparable<CCDate>, StringSpecSupplier {
 	/// This checks _not_ for unset dates (1.1.1900)
 	/// This checks only for really invalid dates (eg 40.13.1800)
 	public boolean isValidDate() {
+		if (isUnspecifiedDate()) return true;
+		
 		if (! (year >= YEAR_MIN)) {
 			return false;
 		}

@@ -1,6 +1,7 @@
 package de.jClipCorn.test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
@@ -41,6 +42,10 @@ public class TestCCDateTime {
 		assertEquals(CCDateTime.create(19,8,2020, 7,50,35), CCDateTime.parse("19,8,2020 07:50:35", "dd,MM,yyyy HH:mm:ss"));
 		assertEquals(CCDateTime.create(19,8,2020, 99,99,99), CCDateTime.parse("19,8,2020", "dd,MM,yyyy"));
 		assertTrue(CCDateTime.parse("19,8,2020", "dd,MM,yyyy").time.isUnspecifiedTime());
+
+		assertTrue(CCDateTime.createFromSQL("UNSPECIFIED").isUnspecifiedDateTime());
+		assertTrue(CCDateTime.createFromSQL("2016-09-07").time.isUnspecifiedTime());
+		assertEquals(CCDateTime.create(7,9,2016, 12,13,14), CCDateTime.createFromSQL("2016-09-07 12:13:14"));
 	}
 	
 	@Test
@@ -72,4 +77,16 @@ public class TestCCDateTime {
 		assertEquals(+1, CCDateTime.create(30,8,2020, 7,50,35).compareTo(CCDateTime.createDateOnly(19,8,2020)));
 	}
 
+	
+	@Test
+	public void testUnspecified() {
+		assertEquals(+1, CCDateTime.create(19,8,2020, 7,50,35).compareTo(CCDateTime.getUnspecified()));
+		assertEquals(-1, CCDateTime.getUnspecified().compareTo(CCDateTime.createDateOnly(19,8,2020)));
+		
+		assertFalse(00 == CCDateTime.getUnspecified().compareTo(CCDateTime.getUnspecified()));
+		
+		assertFalse(CCDateTime.getUnspecified().isEquals(CCDateTime.getUnspecified()));
+		assertFalse(CCDateTime.create(19,8,2020, 7,50,35).isEquals(CCDateTime.getUnspecified()));
+		assertFalse(CCDateTime.getUnspecified().isEquals(CCDateTime.createDateOnly(19,8,2020)));
+	}
 }

@@ -405,4 +405,9 @@ public class CCTime implements Comparable<CCTime>, StringSpecSupplier {
 		
 		return true;
 	}
+	
+	@Override
+	public String toString() {
+		return "<CCTime>:" + getSQLStringRepresentation(); //$NON-NLS-1$
+	}
 }

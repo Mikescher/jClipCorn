@@ -39,14 +39,15 @@ public class DatabaseErrorType {
 	public static DatabaseErrorType ERROR_INVALID_GROUPLIST = new DatabaseErrorType(34);
 	public static DatabaseErrorType ERROR_INVALID_GROUP = new DatabaseErrorType(35);
 	public static DatabaseErrorType ERROR_DUPLICATE_REF = new DatabaseErrorType(36);
-	
+	public static DatabaseErrorType ERROR_VIEWED_BUT_NO_HISTORY = new DatabaseErrorType(37);
+
 	private final int type;
 	private int count = 0;
-	
+
 	public DatabaseErrorType(int ptype) {
 		this.type = ptype;
 	}
-	
+
 	public DatabaseErrorType(DatabaseErrorType ptype) {
 		this.type = ptype.getType();
 		this.count = ptype.count;
@@ -55,24 +56,24 @@ public class DatabaseErrorType {
 	public int getType() {
 		return type;
 	}
-	
+
 	@Override
 	public boolean equals(Object e) {
-		return e instanceof DatabaseErrorType && ((DatabaseErrorType)e).getType() == this.getType();
+		return e instanceof DatabaseErrorType && ((DatabaseErrorType) e).getType() == this.getType();
 	}
 
 	@Override
 	public int hashCode() {
 		return type;
 	}
-	
+
 	@SuppressWarnings("nls")
 	@Override
 	public String toString() {
 		if (count == 0) {
-			return LocaleBundle.getString(String.format("CheckDatabaseDialog.Errornames.ERR_%02d", type)); 
+			return LocaleBundle.getString(String.format("CheckDatabaseDialog.Errornames.ERR_%02d", type));
 		} else {
-			return LocaleBundle.getString(String.format("CheckDatabaseDialog.Errornames.ERR_%02d", type)) + " (" + count + ")"; 
+			return LocaleBundle.getString(String.format("CheckDatabaseDialog.Errornames.ERR_%02d", type)) + " (" + count + ")";
 		}
 	}
 
@@ -100,28 +101,28 @@ public class DatabaseErrorType {
 		} else if (equals(ERROR_INVALID_CHARS_IN_PATH)) {
 			return true;
 		}
-		
+
 		return false;
 	}
-	
+
 	public void incCount() {
 		count++;
 	}
-	
+
 	public void setCount(int c) {
 		count = c;
 	}
-	
+
 	public int getCount() {
 		return count;
 	}
-	
+
 	public DatabaseErrorType copy(int pcount) {
 		DatabaseErrorType det = new DatabaseErrorType(this);
 		det.setCount(pcount);
 		return det;
 	}
-	
+
 	public DatabaseErrorType copy() {
 		return new DatabaseErrorType(this);
 	}

@@ -15,13 +15,13 @@ import de.jClipCorn.util.helper.LookAndFeelManager;
 
 public class Main {
 	public final static String TITLE = "jClipCorn"; //$NON-NLS-1$
-	public final static String VERSION = "1.10.1";	//$NON-NLS-1$
+	public final static String VERSION = "1.10.2";	//$NON-NLS-1$
 	public final static String DBVERSION = "1.9"; 	//$NON-NLS-1$
 	
 	private final static String PROPERTIES_PATH = "jClipcorn.properties"; //$NON-NLS-1$
 	
 	public static boolean DEBUG = "true".equals(System.getProperty("ineclipse"));  //$NON-NLS-1$//$NON-NLS-2$
-	public static boolean BETA = false;
+	public static boolean BETA = true;
 	
 	public static void main(String[] arg) {
 		CCProperties.create(PROPERTIES_PATH, arg); // FIRST ACTION - CACHE THIS SHIT - FUCKING IMPORTANT
@@ -131,3 +131,5 @@ public class Main {
 //      don't show all actors, make it configurable which actors are "enabled" (?)
 
 //TODO Settings for display dates (DE | US | ISO)
+
+//TODO BUG: DateTimeListEditor too small if first date has no time component

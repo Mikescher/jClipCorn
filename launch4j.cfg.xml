@@ -1,8 +1,8 @@
 <launch4jConfig>
   <dontWrapJar>false</dontWrapJar>
   <headerType>gui</headerType>
-  <jar>F:\Eigene Dateien\Dropbox\Programming\Java\workspace\jClipCorn\mybuilds\jClipCorn 1.10.0.jar</jar>
-  <outfile>F:\Eigene Dateien\Dropbox\Programming\Java\workspace\jClipCorn\mybuilds\jClipCorn 1.10.0.exe</outfile>
+  <jar>F:\Eigene Dateien\Dropbox\Programming\Java\workspace\jClipCorn\mybuilds\jClipCorn 1.10.1.jar</jar>
+  <outfile>F:\Eigene Dateien\Dropbox\Programming\Java\workspace\jClipCorn\mybuilds\jClipCorn 1.10.1.exe</outfile>
   <errTitle></errTitle>
   <cmdLine></cmdLine>
   <chdir></chdir>

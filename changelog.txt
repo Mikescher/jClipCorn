@@ -1,3 +1,68 @@
+############ 2016-10-11: 1.10.1 Task: added unspecified datetime for datetime values before the introduction of the history
+
+############ 2016-10-10: 1.10.1 Bugfix: Show full year component in history tooltip
+
+############ 2016-10-10: 1.10.1 Task: added unspecified time for datetime values without time component
+
+############ 2016-10-01: 1.10.1 Task: fixed unit tests
+
+############ 2016-10-01: 1.10.1 Task: Ignore dots in search
+
+############ 2016-10-01: 1.10.1 Task: Added Unit Tests
+  - Database Add/remove/update
+  - Load full db backup
+  - load single movie export
+  - parse WatchData
+  - parse Filenames
+
+############ 2016-10-01: 1.10.1 Task: Automatically create backup on database migration
+
+############ 2016-09-30: 1.10.1 Task: Order Tags in cover display by length
+
+############ 2016-09-30: 1.10.1 Feature: Added VLC option "start with --one-instance"
+
+############ 2016-09-09: 1.10.1 Bugfix: Fixed deleting movie not updating group-cache
+
+############ 2016-09-09: 1.10.1 Task: Added groups.xml and info.xml to jxmlbkp-backups
+
+############ 2016-09-04: 1.10.1 Task: Don't show table tooltip for CCMovieScore.RATING_NO
+
+############ 2016-09-02: 1.10.1 Bugfix: Fixed wrong aligned label in AddEpisodesFrame
+
+############ 2016-08-25: 1.10.1 Bugfix: Fixed Tooltips in ClipTable
+
+############ 2016-08-25: 1.10.1 Bugfix: Fixed ShowIncompleteFilmSeries not finding all missing movies
+
+############ 2016-08-24: 1.10.1 Feature: Manage group metadata via ManageGroupsFrame
+
+############ 2016-08-24: 1.10.1 Feature: Timelinestatistic: No gravity for series re-viewing
+
+############ 2016-08-21: 1.10.1 Feature: Added Group Metadata
+  - Added new table [GROUPS] and updated DB version o 1.9
+  - Added database auto upgrading
+  - Added group metadata: Color
+  - Added group metadata: Order
+  - Added group metadata: DoSerialize (of not set file/foldernames will be unaffected by group)
+  - Added SQLDeleteHelper for better PreparedStatement creation
+
+############ 2016-08-20: 1.10.1 Bugfix: Fixed exception when setting caret position in CCDateTimeEditor
+
+############ 2016-08-19: 1.10.1 Bugfix: Fixed setting movie to unviewed not resetting ViewedHistory
+
+############ 2016-08-18: 1.10.1 Bugfix: Fixed showing wrong dialog for CustomTagFilter and CustomYearFilter
+
+############ 2016-08-17: 1.10.1 Feature: Added datetime and moviescore support to ParseWatchDataFrame
+
+############ 2016-08-02: 1.10.1 Bugfix: Fixed NullpointerException in SFixTable
+
+############ 2016-08-02: 1.10.1 Bugfix: Fixed AddSeriesFrame not using OnlineRef from Parser
+
+############ 2016-07-30: 1.10.1 Task: Fixed default mainframe height to show all filter in sidebar
+
+############ 2016-07-30: 1.10.1 Task: Fixed gradle build error (java generics WTF)
+
+############ 2016-07-30: 1.10.0 RELEASE
+
 ############ 2016-07-30: 1.10.0 Feature: Added Group-Manage frame (delete, rename, merge, update)
 
 ############ 2016-07-30: 1.10.0 Feature: Added Idiot-mode ;D

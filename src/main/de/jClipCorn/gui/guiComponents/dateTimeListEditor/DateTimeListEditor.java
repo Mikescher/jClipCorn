@@ -26,6 +26,7 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCDateTimeList;
 import de.jClipCorn.gui.guiComponents.jCCDateTimeSpinner.JCCDateTimeSpinner;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.datetime.CCDateTime;
+import java.awt.Dimension;
 
 public class DateTimeListEditor extends JPanel {
 	private static final long serialVersionUID = -1991426029921952573L;
@@ -120,6 +121,9 @@ public class DateTimeListEditor extends JPanel {
 		panel_2.add(panel_5);
 		
 		edAddDateTime = new JCCDateTimeSpinner();
+		edAddDateTime.setMinimumSize(new Dimension(150, 20));
+		edAddDateTime.setSize(new Dimension(150, 20));
+		edAddDateTime.setPreferredSize(new Dimension(150, 20));
 		panel_5.add(edAddDateTime);
 		
 		btnAdd = new JButton("+"); //$NON-NLS-1$

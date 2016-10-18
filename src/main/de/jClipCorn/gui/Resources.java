@@ -175,6 +175,7 @@ public class Resources {
 	// ############################################  </FRAMES>  ##############################################
 	public final static String ICN_FRAMES_SEARCH 		= registerICN("/icons/previewSeriesFrame/magnifier.png");
 	public final static String IMG_FRAMES_ABOUT 		= registerICN("/UberDialog.png");	
+	public final static String ICN_FRAMES_DELETE 		= registerICN("/icons/common/delete.png");
 	// #############################################  <FRAMES>  ##############################################
 
 	

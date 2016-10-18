@@ -283,9 +283,25 @@ public class CCDateTime implements Comparable<CCDateTime>, StringSpecSupplier {
 		return compareTo(other) < 0;
 	}
 	
-	public boolean isEquals(CCDateTime other) {
+	/**
+	 * This method treats undefined datetimes as unequal to other undefined datetimes (SQL style)
+	 * also a datetime with an undefinned time component is equal to all other datetimes with the same date component
+	 */
+	public boolean isEqual(CCDateTime other) {
+		if (other == null) return false;
+		
 		if (this.isUnspecifiedDateTime() || other.isUnspecifiedDateTime()) return false;
+		
 		return compareTo(other) == 0;
+	}
+
+	/**
+	 * In contrast to isEquals, this method tests if two objects contain really the same data (same date and same time)
+	 */
+	public boolean isExactEqual(CCDateTime other) {
+		if (other == null) return false;
+		
+		return this.time.isEqual(other.time) && this.date.isEqual(other.date);
 	}
 	
 	public boolean isGreaterEqualsThan(CCDateTime other) {
@@ -298,7 +314,7 @@ public class CCDateTime implements Comparable<CCDateTime>, StringSpecSupplier {
 	
 	@Override
 	public boolean equals(Object other) {
-		return other != null && (other instanceof CCDateTime) && isEquals((CCDateTime)other);
+		return other != null && (other instanceof CCDateTime) && isEqual((CCDateTime)other);
 	}
 
 	public boolean isMidnight() {

@@ -406,7 +406,7 @@ public final class CCDate implements Comparable<CCDate>, StringSpecSupplier {
 	}
 	
 	public int getDayDifferenceTo(CCDate other) {
-		if (isEquals(other)) {
+		if (isEqual(other)) {
 			return 0;
 		}
 		
@@ -443,7 +443,17 @@ public final class CCDate implements Comparable<CCDate>, StringSpecSupplier {
 	
 	@Override
 	public boolean equals(Object other) {
-		return (other instanceof CCDate) && ((CCDate)other).getDay() == getDay() && ((CCDate)other).getMonth() == getMonth() && ((CCDate)other).getYear() == getYear();
+		return (other instanceof CCDate) && isEqual((CCDate)other);
+	}
+
+	public boolean isEqual(CCDate other) {
+		if (other == null) return false;
+		
+		if (this.isUnspecifiedDate() && other.isUnspecifiedDate()) return true;
+		
+		return getDay() == other.getDay() &&
+				getMonth() == other.getMonth() &&
+				getYear() == other.getYear();
 	}
 	
 	@Override
@@ -495,16 +505,12 @@ public final class CCDate implements Comparable<CCDate>, StringSpecSupplier {
 		}
 	}
 	
-	public boolean isEquals(CCDate other) {
-		return equals(other);
-	}
-	
 	public boolean isGreaterEqualsThan(CCDate other) {
-		return isGreaterThan(other) || isEquals(other);
+		return isGreaterThan(other) || isEqual(other);
 	}
 	
 	public boolean isLessEqualsThan(CCDate other) {
-		return isLessThan(other) || isEquals(other);
+		return isLessThan(other) || isEqual(other);
 	}
 
 	public static int compare(CCDate o1, CCDate o2) {

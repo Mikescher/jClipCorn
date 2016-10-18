@@ -177,7 +177,17 @@ public class CCTime implements Comparable<CCTime>, StringSpecSupplier {
 	
 	@Override
 	public boolean equals(Object other) {
-		return (other instanceof CCTime) && ((CCTime)other).getSeconds() == getSeconds() && ((CCTime)other).getMinutes() == getMinutes() && ((CCTime)other).getHours() == getHours();
+		return (other instanceof CCTime) && isEqual((CCTime)other);
+	}
+
+	public boolean isEqual(CCTime other) {
+		if (other == null) return false;
+		
+		if (this.isUnspecifiedTime() && other.isUnspecifiedTime()) return true;
+		
+		return getSeconds() == other.getSeconds() &&
+				getMinutes() == other.getMinutes() &&
+				getHours() == other.getHours();
 	}
 	
 	@Override

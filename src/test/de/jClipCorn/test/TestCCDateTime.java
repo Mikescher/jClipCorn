@@ -7,6 +7,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 import de.jClipCorn.gui.log.CCLog;
+import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.exceptions.CCFormatException;
 
@@ -85,8 +86,21 @@ public class TestCCDateTime {
 		
 		assertFalse(00 == CCDateTime.getUnspecified().compareTo(CCDateTime.getUnspecified()));
 		
-		assertFalse(CCDateTime.getUnspecified().isEquals(CCDateTime.getUnspecified()));
-		assertFalse(CCDateTime.create(19,8,2020, 7,50,35).isEquals(CCDateTime.getUnspecified()));
-		assertFalse(CCDateTime.getUnspecified().isEquals(CCDateTime.createDateOnly(19,8,2020)));
+		assertFalse(CCDateTime.getUnspecified().isEqual(CCDateTime.getUnspecified()));
+		assertFalse(CCDateTime.create(19,8,2020, 7,50,35).isEqual(CCDateTime.getUnspecified()));
+		assertFalse(CCDateTime.getUnspecified().isEqual(CCDateTime.createDateOnly(19,8,2020)));
+	}
+
+	@Test
+	public void testEquals() {
+		assertFalse(CCDateTime.create(19,8,2020, 7,50,35).isEqual(CCDateTime.getUnspecified()));
+		assertFalse(CCDateTime.create(19,8,2020, 7,50,35).isExactEqual(CCDateTime.getUnspecified()));
+		assertTrue(CCDateTime.getUnspecified().isExactEqual(CCDateTime.getUnspecified()));
+		assertTrue(CCDateTime.create(19,8,2020, 7,50,35).isExactEqual(CCDateTime.create(19,8,2020, 7,50,35)));
+
+		assertTrue(CCDateTime.create(19,8,2020, 7,50,35).isEqual(CCDateTime.create(CCDate.create(19,8,2020))));
+		assertFalse(CCDateTime.create(19,8,2020, 7,50,35).isExactEqual(CCDateTime.create(CCDate.create(19,8,2020))));
+		assertTrue(CCDateTime.create(CCDate.create(19,8,2020)).isExactEqual(CCDateTime.create(CCDate.create(19,8,2020))));
+		assertTrue(CCDateTime.create(19,8,2020, 7,50,35).isExactEqual(CCDateTime.create(19,8,2020, 7,50,35)));
 	}
 }

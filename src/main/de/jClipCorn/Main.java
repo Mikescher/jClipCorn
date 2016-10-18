@@ -131,5 +131,3 @@ public class Main {
 //      don't show all actors, make it configurable which actors are "enabled" (?)
 
 //TODO Settings for display dates (DE | US | ISO)
-
-//TODO BUG: DateTimeListEditor too small if first date has no time component

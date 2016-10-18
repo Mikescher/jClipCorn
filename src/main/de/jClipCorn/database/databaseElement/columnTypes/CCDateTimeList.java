@@ -141,14 +141,14 @@ public class CCDateTimeList implements Iterable<CCDateTime> {
 	
 	public boolean contains(CCDateTime time) {
 		for (CCDateTime dt : list) {
-			if (dt.isEquals(time)) return true;
+			if (dt.isEqual(time)) return true;
 		}
 		return false;
 	}
 
 	public boolean containsDate(CCDate date) {
 		for (CCDateTime dt : list) {
-			if (dt.date.isEquals(date)) return true;
+			if (dt.date.isEqual(date)) return true;
 		}
 		return false;
 	}

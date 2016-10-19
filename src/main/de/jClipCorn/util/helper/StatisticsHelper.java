@@ -828,7 +828,7 @@ public class StatisticsHelper {
 				CCEpisode episode = season.getEpisode(ep);
 				
 				for (CCDateTime timestamp : episode.getViewedHistory()) {
-					dates.add(new SortableTuple<>(timestamp.date, season.getSeasonNumber() * 10000 + episode.getEpisode()));
+					dates.add(new SortableTuple<>(timestamp.date, season.getSeasonNumber() * 10000 + episode.getEpisodeNumber()));
 				}
 			}
 		}

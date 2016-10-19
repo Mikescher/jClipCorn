@@ -664,7 +664,7 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler, 
 			for (int i = 0; i < parent.getEpisodeCount(); i++) {
 				CCEpisode episode = parent.getEpisode(i);
 
-				UserDataProblem.testEpisodeData(problems, parent, episode, episode.getTitle(), episode.getLength(), episode.getEpisode(), episode.getAddDate(), episode.getViewedHistory(), episode.getFilesize().getBytes(), episode.getFormat().asString(), episode.getFormat().asStringAlt(), episode.getPart(), episode.getQuality().asInt());
+				UserDataProblem.testEpisodeData(problems, parent, episode, episode.getTitle(), episode.getLength(), episode.getEpisodeNumber(), episode.getAddDate(), episode.getViewedHistory(), episode.getFilesize().getBytes(), episode.getFormat().asString(), episode.getFormat().asStringAlt(), episode.getPart(), episode.getQuality().asInt());
 			}
 
 			if (problems.size() > 0) {
@@ -841,7 +841,7 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler, 
 			pnlEpisodeInfo.setVisible(true);
 
 			edTitle.setText(episode.getTitle());
-			spnEpisode.setValue(episode.getEpisode());
+			spnEpisode.setValue(episode.getEpisodeNumber());
 			cbxFormat.setSelectedIndex(episode.getFormat().asInt());
 			spnLength.setValue(episode.getLength());
 			spnSize.setValue(episode.getFilesize().getBytes());

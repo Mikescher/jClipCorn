@@ -122,7 +122,7 @@ public class SerTable extends JScrollPane implements ListSelectionListener, Mous
 			table.getSelectionModel().clearSelection();
 		} else {
 			changeSeason(e.getSeason());
-			table.getSelectionModel().setSelectionInterval(e.getEpisodeNumber(), e.getEpisodeNumber());
+			table.getSelectionModel().setSelectionInterval(e.getEpisodeIndexInSeason(), e.getEpisodeIndexInSeason());
 			table.scrollRectToVisible(table.getCellRect(table.getSelectedRow(), table.getSelectedColumn(), false));
 		}
 	}

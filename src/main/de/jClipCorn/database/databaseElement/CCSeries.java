@@ -466,7 +466,7 @@ public class CCSeries extends CCDatabaseElement {
 			for (int j = 0; j < season.getEpisodeCount(); j++) {
 				CCEpisode episode = season.getEpisode(j);
 				guide.appendPadding(GUIDE_W_BORDER, ' ');
-				guide.appendln(String.format("> [%02d] %s (%s)", episode.getEpisode(), episode.getTitle(), TimeIntervallFormatter.formatPointed(episode.getLength()))); //$NON-NLS-1$
+				guide.appendln(String.format("> [%02d] %s (%s)", episode.getEpisodeNumber(), episode.getTitle(), TimeIntervallFormatter.formatPointed(episode.getLength()))); //$NON-NLS-1$
 			}
 		}
 

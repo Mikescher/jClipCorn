@@ -466,6 +466,14 @@ public class DatabaseValidator {
 		if (PathFormatter.isUntrimmed(season.getTitle())) {
 			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_NOT_TRIMMED, season));
 		}
+
+		// ###############################################
+		// Non-continoous episode numbers
+		// ###############################################
+		
+		if (! season.isContinoousEpisodeNumbers()) {
+			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_NON_CONTINOOUS_EPISODES, season));
+		}
 	}
 
 	private static void validateEpisode(List<DatabaseError> e, CCEpisode episode) {

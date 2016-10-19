@@ -84,7 +84,7 @@ public class SerTableModel extends AbstractTableModel implements TableModelRowCo
 
 		switch (col) {
 		case COLUMN_EPISODE: // Episode
-			return ep.getEpisode();
+			return ep.getEpisodeNumber();
 		case COLUMN_NAME: // Name
 			return ep.getTitle();
 		case COLUMN_VIEWED: // Viewed

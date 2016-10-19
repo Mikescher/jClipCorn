@@ -669,7 +669,7 @@ public class CCDatabase {
 			s.clearParameters();
 
 			s.setInt(1, ep.getSeason().getSeasonID());                       // TAB_EPISODES_COLUMN_SEASONID
-			s.setInt(2, ep.getEpisode());                                    // TAB_EPISODES_COLUMN_EPISODE
+			s.setInt(2, ep.getEpisodeNumber());                                    // TAB_EPISODES_COLUMN_EPISODE
 			s.setString(3, ep.getTitle());                                   // TAB_EPISODES_COLUMN_NAME
 			s.setBoolean(4, ep.isViewed());                                  // TAB_EPISODES_COLUMN_VIEWED
 			s.setString(5, ep.getViewedHistory().toSerializationString());   // TAB_EPISODES_COLUMN_VIEWEDHISTORY

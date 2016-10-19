@@ -188,6 +188,7 @@ public class DateTimeListEditor extends JPanel {
 		add(scrollPane, BorderLayout.CENTER);
 		
 		pnlContent = new JPanel();
+		pnlContent.setBackground(Color.WHITE);
 		scrollPane.setViewportView(pnlContent);
 		pnlContent.setLayout(new BoxLayout(pnlContent, BoxLayout.Y_AXIS));
 	}

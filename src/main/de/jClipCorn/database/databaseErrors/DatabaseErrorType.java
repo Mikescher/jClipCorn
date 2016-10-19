@@ -40,6 +40,7 @@ public class DatabaseErrorType {
 	public static DatabaseErrorType ERROR_INVALID_GROUP = new DatabaseErrorType(35);
 	public static DatabaseErrorType ERROR_DUPLICATE_REF = new DatabaseErrorType(36);
 	public static DatabaseErrorType ERROR_VIEWED_BUT_NO_HISTORY = new DatabaseErrorType(37);
+	public static DatabaseErrorType ERROR_NON_CONTINOOUS_EPISODES = new DatabaseErrorType(38);
 
 	private final int type;
 	private int count = 0;

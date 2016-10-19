@@ -245,7 +245,7 @@ public class CCEpisode {
 		return localID;
 	}
 
-	public int getEpisode() {
+	public int getEpisodeNumber() {
 		return episodeNumber;
 	}
 
@@ -331,12 +331,12 @@ public class CCEpisode {
 	/**
 	 * @return the Number of the Episode (as it is in the Season-List) (NOT THE ID)
 	 */
-	public int getEpisodeNumber() {
+	public int getEpisodeIndexInSeason() {
 		return getSeason().findEpisode(this);
 	}
 	
 	public String getStringIdentifier() {
-		return String.format("S%02dE%02d", getSeason().getSortedSeasonNumber() + 1, getEpisode()); //$NON-NLS-1$
+		return String.format("S%02dE%02d", getSeason().getSortedSeasonNumber() + 1, getEpisodeNumber()); //$NON-NLS-1$
 	}
 	
 	public void delete() {
@@ -466,7 +466,7 @@ public class CCEpisode {
 		String seasonfoldername = season.getFolderNameForCreatedFolderStructure();
 		int seasonIndex = season.getIndexForCreatedFolderStructure();
 		
-		String filename = String.format("S%sE%s - %s", decFormattter.format(seasonIndex), decFormattter.format(this.getEpisode()), this.getTitle());
+		String filename = String.format("S%sE%s - %s", decFormattter.format(seasonIndex), decFormattter.format(this.getEpisodeNumber()), this.getTitle());
 		filename += "." + this.getFormat().asString();
 		filename = PathFormatter.fixStringToFilesystemname(filename);
 		

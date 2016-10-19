@@ -117,7 +117,6 @@ public class Main {
 //   - mass reverse image search for better cover versions (more HD)                                                                     
 //   - Format/Quality etc also for Serien (everything for a;b;a+b with toggle control?  ->  only were applicable)                             
 //   - combined timeline row (like github commit overview)                                                                                                               
-//   - db_err: find series with non-continoous episode numbers
 //   - find missing seasons online
 //   - Auto retrieve length button
 //   - dialog to find onlinescore discrepancies (and optionally update them)

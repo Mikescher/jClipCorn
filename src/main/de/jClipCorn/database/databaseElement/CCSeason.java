@@ -278,7 +278,7 @@ public class CCSeason {
 	
 	public CCEpisode getEpisodebyNumber(int en) {
 		for (int i = 0; i < episodes.size(); i++) {
-			if (episodes.get(i).getEpisode() == en) {
+			if (episodes.get(i).getEpisodeNumber() == en) {
 				return episodes.get(i);
 			}
 		}
@@ -339,7 +339,7 @@ public class CCSeason {
 		int ep = -1;
 		
 		for (CCEpisode ccEpisode : episodes) {
-			ep = Math.max(ep, ccEpisode.getEpisode());
+			ep = Math.max(ep, ccEpisode.getEpisodeNumber());
 		}
 		
 		return ep + 1;
@@ -491,5 +491,46 @@ public class CCSeason {
 		}
 		
 		return getSortedSeasonNumber() + 1;
+	}
+	
+	public int getFirstEpisodeNumber() {
+		if (getEpisodeCount() == 0) return -1;
+		
+		int n = episodes.get(0).getEpisodeNumber();
+		
+		for (int i = 0; i < episodes.size(); i++) {
+			n = Math.min(n, episodes.get(i).getEpisodeNumber());
+		}
+		
+		return n;
+	}
+	
+	public int getLastEpisodeNumber() {
+		if (getEpisodeCount() == 0) return -1;
+		
+		int n = episodes.get(0).getEpisodeNumber();
+		
+		for (int i = 0; i < episodes.size(); i++) {
+			n = Math.max(n, episodes.get(i).getEpisodeNumber());
+		}
+		
+		return n;
+	}
+
+	public boolean isContinoousEpisodeNumbers() {
+		if (getEpisodeCount() == 0) return true;
+
+		int first = getFirstEpisodeNumber();
+		int last = getLastEpisodeNumber();
+		
+		if (getEpisodeCount() != (1 + last - first)) 
+			return false;
+		
+		for (int i = first; i < last; i++) {
+			if (getEpisodebyNumber(i) == null) 
+				return false;
+		}
+		
+		return true;
 	}
 }

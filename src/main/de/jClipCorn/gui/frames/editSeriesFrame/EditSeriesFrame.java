@@ -243,7 +243,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 	}
 	
 	private void selectEpisode(CCEpisode e) {
-		lsEpisodes.setSelectedIndex(e.getEpisodeNumber()); // Calls the Listener
+		lsEpisodes.setSelectedIndex(e.getEpisodeIndexInSeason()); // Calls the Listener
 	}
 
 	private void selectSeason(CCSeason s) {
@@ -819,7 +819,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		}
 		
 		edEpisodeTitle.setText(episode.getTitle());
-		spnEpisodeEpisode.setValue(episode.getEpisode());
+		spnEpisodeEpisode.setValue(episode.getEpisodeNumber());
 		cbEpisodeViewed.setSelected(episode.isViewed());
 		cbxEpisodeFormat.setSelectedIndex(episode.getFormat().asInt());
 		cbxEpisodeQuality.setSelectedIndex(episode.getQuality().asInt());

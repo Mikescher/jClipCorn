@@ -26,6 +26,10 @@ public class ActionMenuWrapper {
 			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.ErrorActionNotFound", actionIdent)); //$NON-NLS-1$
 		}
 		
+		return add(el);
+	}
+	
+	public ActionMenuWrapper add(CCActionElement el) {
 		JMenuItem item = menu.add(el.getCaption());
 		
 		item.setIcon(el.getSmallIcon());

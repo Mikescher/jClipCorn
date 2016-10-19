@@ -2,8 +2,8 @@ package de.jClipCorn.database.databaseElement.columnTypes;
 
 import javax.swing.Icon;
 
-import de.jClipCorn.gui.settings.BrowserLanguage;
 import de.jClipCorn.properties.CCProperties;
+import de.jClipCorn.properties.enumerations.BrowserLanguage;
 import de.jClipCorn.util.exceptions.OnlineRefFormatException;
 
 public class CCOnlineReference {

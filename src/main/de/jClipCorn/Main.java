@@ -120,8 +120,6 @@ public class Main {
 //   - db_err: find series with non-continoous episode numbers
 //   - find missing seasons online
 //   - Auto retrieve length button
-//   - dialog show unreffed movies
-//   - Filenameparser test
 //   - dialog to find onlinescore discrepancies (and optionally update them)
 //   - can use multiple online-references (auto add imdb, add proxer and MAM for many)
 //   - Export and import reference mapping file (to get mappings to other dbs) ?
@@ -131,3 +129,5 @@ public class Main {
 //      don't show all actors, make it configurable which actors are "enabled" (?)
 
 //TODO Settings for display dates (DE | US | ISO)
+
+//TODO Use http://www.iconarchive.com/show/series-season-folder-icons-by-aaron-sinuhe.html 

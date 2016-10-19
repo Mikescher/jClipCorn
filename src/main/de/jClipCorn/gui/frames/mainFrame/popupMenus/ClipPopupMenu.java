@@ -49,7 +49,7 @@ public abstract class ClipPopupMenu extends JPopupMenu {
 		return item;
 	}
 	
-	protected ActionMenuWrapper addActionMenu(String actionIdent) {
+	protected ActionMenuWrapper addActionMenuTree(String actionIdent) {
 		final CCActionElement el = CCActionTree.getInstance().find(actionIdent);
 		
 		if (el == null) {
@@ -72,6 +72,12 @@ public abstract class ClipPopupMenu extends JPopupMenu {
 			}
 		});
 		
-		return new ActionMenuWrapper(item);
+		ActionMenuWrapper amw = new ActionMenuWrapper(item);
+		
+		for (CCActionElement child : el.getAllChildren()) {
+			amw.add(child);
+		}
+		
+		return amw;
 	}
 }

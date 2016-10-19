@@ -20,8 +20,8 @@ public class ClipMoviePopup extends ClipPopupMenu {
 		addSeparator();
 		//#############
 		
-		addActionMenu("SetMovieRating").add("SetRatingNO").add("SetRating0").add("SetRating1").add("SetRating2").add("SetRating3").add("SetRating4").add("SetRating5");
-		ActionMenuWrapper wrapper_Tags = addActionMenu("SetTags");
+		addActionMenuTree("SetMovieRating");
+		ActionMenuWrapper wrapper_Tags = addActionMenuTree("SetTags");
 		for (int i = 0; i < CCMovieTags.ACTIVETAGS; i++) wrapper_Tags.add(String.format("SwitchTag_%02d", i));
 		addAction("SetMovieViewed");
 		addAction("SetMovieUnviewed");

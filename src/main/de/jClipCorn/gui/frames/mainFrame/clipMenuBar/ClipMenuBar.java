@@ -10,6 +10,7 @@ import javax.swing.JMenuItem;
 
 import de.jClipCorn.gui.actionTree.CCActionElement;
 import de.jClipCorn.gui.actionTree.CCActionTree;
+import de.jClipCorn.gui.actionTree.UIActionTree;
 import de.jClipCorn.util.helper.KeyStrokeUtil;
 
 public class ClipMenuBar extends JMenuBar {
@@ -22,7 +23,7 @@ public class ClipMenuBar extends JMenuBar {
 	}
 
 	private void createMenuBar() {
-		CCActionTree aTree = CCActionTree.getInstance();
+		UIActionTree aTree = CCActionTree.getInstance();
 
 		for (Iterator<CCActionElement> it = aTree.getRoot().getChildren(); it.hasNext();) {
 			final CCActionElement el = it.next();

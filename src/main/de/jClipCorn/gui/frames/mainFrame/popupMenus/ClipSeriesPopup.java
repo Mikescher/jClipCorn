@@ -32,7 +32,7 @@ public class ClipSeriesPopup extends ClipPopupMenu {
 		addSeparator();
 		//#############
 		
-		addActionMenu("SetSeriesRating").add("SetRatingNO").add("SetRating0").add("SetRating1").add("SetRating2").add("SetRating3").add("SetRating4").add("SetRating5");
+		addActionMenuTree("SetSeriesRating");
 		addAction("OpenFolder");
 		addAction("ShowInBrowser");
 		addAction("MoveSeries");

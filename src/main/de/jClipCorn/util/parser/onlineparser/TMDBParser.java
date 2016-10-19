@@ -15,8 +15,8 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCMovieGenreList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReference;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
-import de.jClipCorn.gui.settings.BrowserLanguage;
 import de.jClipCorn.properties.CCProperties;
+import de.jClipCorn.properties.enumerations.BrowserLanguage;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.helper.HTTPUtilities;
 

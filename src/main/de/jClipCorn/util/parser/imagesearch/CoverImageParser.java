@@ -6,8 +6,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTyp;
 import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReference;
-import de.jClipCorn.gui.settings.ImageSearchImplementation;
 import de.jClipCorn.properties.CCProperties;
+import de.jClipCorn.properties.enumerations.ImageSearchImplementation;
 import de.jClipCorn.util.listener.FinishListener;
 import de.jClipCorn.util.listener.ProgressCallbackListener;
 import de.jClipCorn.util.listener.UpdateCallbackListener;

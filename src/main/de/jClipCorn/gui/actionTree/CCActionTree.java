@@ -7,7 +7,6 @@ import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
 
-import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
@@ -69,682 +68,164 @@ import de.jClipCorn.util.helper.FileChooserHelper;
 import de.jClipCorn.util.helper.HTTPUtilities;
 import de.jClipCorn.util.helper.SimpleFileUtils;
 
-public class CCActionTree {
+public class CCActionTree extends UIActionTree{
 	public final static String EVENT_ON_MOVIE_EXECUTED_0 = "PlayMovie"; //$NON-NLS-1$
 	public final static String EVENT_ON_MOVIE_EXECUTED_1 = "PrevMovie"; //$NON-NLS-1$
 	public final static String EVENT_ON_MOVIE_EXECUTED_2 = "EditMovie"; //$NON-NLS-1$
 	public final static String EVENT_ON_SERIES_EXECUTED  = "PrevSeries"; //$NON-NLS-1$
 
-	private static CCActionTree instance = null;
-
+	private final static KeyStroke KS_CTRL_F = KeyStroke.getKeyStroke(KeyEvent.VK_F, InputEvent.CTRL_DOWN_MASK);
+	private final static KeyStroke KS_ENTER = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0);
+	private final static KeyStroke KS_CTRL_I = KeyStroke.getKeyStroke(KeyEvent.VK_I, InputEvent.CTRL_DOWN_MASK);
+	private final static KeyStroke KS_CTRL_S = KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_DOWN_MASK);
+	private final static KeyStroke KS_DEL = KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0);
+	private final static KeyStroke KS_CTRL_E = KeyStroke.getKeyStroke(KeyEvent.VK_E, InputEvent.CTRL_DOWN_MASK);
+	private final static KeyStroke KS_CTRL_SHIFT_I = KeyStroke.getKeyStroke(KeyEvent.VK_I, InputEvent.CTRL_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK);
+	private final static KeyStroke KS_CTRL_O = KeyStroke.getKeyStroke(KeyEvent.VK_O, InputEvent.CTRL_DOWN_MASK);
+	private final static KeyStroke KS_F1 = KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0);
+	
 	private MainFrame owner;
 	private CCMovieList movielist;
 
-	private CCActionElement root;
-
 	public CCActionTree(MainFrame mf) {
+		super();
+		
 		this.owner = mf;
 		this.movielist = mf.getMovielist();
-
-		createStructure();
-
-		instance = this;
 	}
-
+	
 	@SuppressWarnings("nls")
-	private void createStructure() {
-		CCActionElement temp;
-
-		root = new CCActionElement("ROOT", null, "", "");
-
-		// ################################################################################################################################################################
-		CCActionElement file = root.addChild(new CCActionElement("File", null, "ClipMenuBar.File", ""));
-		// ################################################################################################################################################################
-
-		temp = file.addChild(new CCActionElement("Open", null, "ClipMenuBar.File.Open", Resources.ICN_MENUBAR_OPENFILE));
-		temp.addListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onClickFileOpen();
-			}
-		});
+	@Override
+	protected void createStructure() {
 		
-		temp = file.addChild(new CCActionElement("Restart", null, "ClipMenuBar.File.Restart", Resources.ICN_MENUBAR_RESTARTAPP));
-		temp.addListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onClickFileRestart();
-			}
-		});
-		
-		temp = file.addChild(new CCActionElement("Exit", null, "ClipMenuBar.File.Exit", Resources.ICN_MENUBAR_CLOSE));
-		temp.addListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onClickFileExit();
-			}
-		});
-
-		// ################################################################################################################################################################
-		CCActionElement database = root.addChild(new CCActionElement("Database", null, "ClipMenuBar.Database", ""));
-		// ################################################################################################################################################################
-
-		temp = database.addChild(new CCActionElement("CheckDatabase", null, "ClipMenuBar.Database.CheckDB", Resources.ICN_MENUBAR_DBCHECK));
-		temp.addListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onClickDatabaseCheck();
-			}
-		});
-
-		temp = database.addChild(new CCActionElement("ClearDatabase", null, "ClipMenuBar.Database.ClearDB", Resources.ICN_MENUBAR_CLEARDB));
-		temp.setReadOnlyRestriction();
-		temp.addListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onClickDatabaseClear();
-			}
-		});
-		
-		temp = database.addChild(new CCActionElement("ExportDatabase", null, "ClipMenuBar.Database.ExportDB", Resources.ICN_MENUBAR_CREATE_JXMLBKP));
-		temp.addListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onClickDatabaseExportAsJxmBKP();
-			}
-		});
-		
-		temp = database.addChild(new CCActionElement("ImportDatabase", null, "ClipMenuBar.Database.ImportDB", Resources.ICN_MENUBAR_IMPORTDB));
-		temp.setReadOnlyRestriction();
-		temp.addListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onClickDatabaseImportAsJxmBKP();
-			}
-		});
-		
-		temp = database.addChild(new CCActionElement("ImportMultipleElements", null, "ClipMenuBar.Database.ImportMultiple", Resources.ICN_MENUBAR_IMPORMULTIPLEELEMENTS));
-		temp.setReadOnlyRestriction();
-		temp.addListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onClickDatabaseImportMultipleElements();
-			}
-		});
-		
-		temp = database.addChild(new CCActionElement("SearchDatabase", KeyStroke.getKeyStroke(KeyEvent.VK_F, InputEvent.CTRL_DOWN_MASK), "ClipMenuBar.Database.SearchDB", Resources.ICN_MENUBAR_SEARCH));
-		temp.addListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onClickDatabaseSearchDatabase();
-			}
-		});
-		
-		temp = database.addChild(new CCActionElement("TextExportDatabase", null, "ClipMenuBar.Database.TextExport", Resources.ICN_MENUBAR_EXPORTPLAINDB));
-		temp.addListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onClickDatabaseTextExportDatabase();
-			}
-		});
-		
-		temp = database.addChild(new CCActionElement("ManageGroups", null, "ClipMenuBar.Database.ManageGroups", Resources.ICN_MENUBAR_MANAGEGROUPS));
-		temp.addListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onClickDatabaseManageGroups();
-			}
-		});
-
-		// ################################################################################################################################################################
-		CCActionElement movies = root.addChild(new CCActionElement("Movies", null, "ClipMenuBar.Movies", ""));
-		// ################################################################################################################################################################
-
-		temp = movies.addChild(new CCActionElement("PlayMovie", null, "ClipMenuBar.Movies.Play", Resources.ICN_MENUBAR_PLAY));
-		temp.addListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onClickMoviesPlay();
-			}
-		});
-
-		temp = movies.addChild(new CCActionElement("PlayMovieAnonymous", null, "ClipMenuBar.Movies.PlayAnonymous", Resources.ICN_MENUBAR_HIDDENPLAY));
-		temp.addListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onClickMoviesPlayAnonymous();
-			}
-		});
-
-		temp = movies.addChild(new CCActionElement("PrevMovie", KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "ClipMenuBar.Movies.Preview", Resources.ICN_MENUBAR_PREVIEW_MOV));
-		temp.addListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onClickMoviesPrev();
-			}
-		});
-
-		temp = movies.addChild(new CCActionElement("AddMovie", KeyStroke.getKeyStroke(KeyEvent.VK_I, InputEvent.CTRL_DOWN_MASK), "ClipMenuBar.Movies.Add", Resources.ICN_MENUBAR_ADD_MOV));
-		temp.setReadOnlyRestriction();
-		temp.addListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onClickMoviesAdd();
-			}
-		});
-		
-		temp = movies.addChild(new CCActionElement("ExportSingleMovie", null, "ClipMenuBar.Movies.ExportSingle", Resources.ICN_MENUBAR_EXPORTMOVIE));
-		temp.addListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onClickMoviesExportSingle();
-			}
-		});
-		
-		temp = movies.addChild(new CCActionElement("AddMovieToExportList", KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_DOWN_MASK), "ClipMenuBar.Movies.ExportMultiple", Resources.ICN_MENUBAR_EXPORTELEMENTS));
-		temp.addListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onClickMoviesAddToExportList();
-			}
-		});
-		
-		temp = movies.addChild(new CCActionElement("ImportSingleMovie", null, "ClipMenuBar.Movies.ImportSingle", Resources.ICN_MENUBAR_IMPORTMOVIE));
-		temp.setReadOnlyRestriction();
-		temp.addListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onClickMoviesImportSingle();
-			}
-		});
-
-		temp = movies.addChild(new CCActionElement("EditMovie", KeyStroke.getKeyStroke(KeyEvent.VK_E, InputEvent.CTRL_DOWN_MASK), "ClipMenuBar.Movies.Edit", Resources.ICN_MENUBAR_EDIT_MOV));
-		temp.setReadOnlyRestriction();
-		temp.addListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onClickMoviesEdit();
-			}
-		});
-
-		temp = movies.addChild(new CCActionElement("RemMovie", KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0), "ClipMenuBar.Movies.Remove", Resources.ICN_MENUBAR_REMOVE));
-		temp.setReadOnlyRestriction();
-		temp.addListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onClickMoviesRem();
-			}
-		});
-
-		// ################################################################################################################################################################
-		CCActionElement series = root.addChild(new CCActionElement("Serien", null, "ClipMenuBar.Series", ""));
-		// ################################################################################################################################################################
-
-		temp = series.addChild(new CCActionElement("PrevSeries", KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "ClipMenuBar.Series.Preview", Resources.ICN_MENUBAR_PREVIEW_SER));
-		temp.addListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onClickSeriesPreview();
-			}
-		});
-
-		temp = series.addChild(new CCActionElement("AddSeries", KeyStroke.getKeyStroke(KeyEvent.VK_I, InputEvent.CTRL_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK), "ClipMenuBar.Series.Add", Resources.ICN_MENUBAR_ADD_SER));
-		temp.setReadOnlyRestriction();
-		temp.addListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onClickSeriesAdd();
-			}
-		});
-		
-		temp = series.addChild(new CCActionElement("EditSeries", KeyStroke.getKeyStroke(KeyEvent.VK_E, InputEvent.CTRL_DOWN_MASK), "ClipMenuBar.Series.Edit", Resources.ICN_MENUBAR_EDIT_SER));
-		temp.setReadOnlyRestriction();
-		temp.addListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onClickSeriesEdit();
-			}
-		});
-
-		temp = series.addChild(new CCActionElement("AddSeason", null, "ClipMenuBar.Series.AddSeason", Resources.ICN_MENUBAR_ADD_SEA));
-		temp.setReadOnlyRestriction();
-		temp.addListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onClickSeasonAdd();
-			}
-		});
-		
-		temp = series.addChild(new CCActionElement("OpenLastPlayedSeries", null, "ClipMenuBar.Series.OpenLastPlayedSeries", Resources.ICN_MENUBAR_OPENLASTSERIES));
-		temp.setReadOnlyRestriction();
-		temp.addListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onClickSeasonOpenLast();
-			}
-		});
-		
-		temp = series.addChild(new CCActionElement("ExportSingleSeries", null, "ClipMenuBar.Series.ExportSingle", Resources.ICN_MENUBAR_EXPORTSERIES));
-		temp.addListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onClickSeriesExportSingle();
-			}
-		});
-		
-		temp = series.addChild(new CCActionElement("AddSeriesToExportList", KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_DOWN_MASK), "ClipMenuBar.Series.ExportMultiple", Resources.ICN_MENUBAR_EXPORTELEMENTS));
-		temp.setReadOnlyRestriction();
-		temp.addListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onClickSeriesAddToExportList();
-			}
-		});
-		
-		temp = series.addChild(new CCActionElement("ImportSingleSeries", null, "ClipMenuBar.Series.ImportSingle", Resources.ICN_MENUBAR_IMPORTSERIES));
-		temp.setReadOnlyRestriction();
-		temp.addListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onClickSeriesImportSingle();
-			}
-		});
-		
-		temp = series.addChild(new CCActionElement("SaveTXTEpisodeguide", null, "ClipMenuBar.Series.SaveTXTEpisodeguide", Resources.ICN_MENUBAR_EPISODEGUIDE));
-		temp.addListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onClickSeriesCreateTXTEpisodeguide();
-			}
-		});
-		
-		temp = series.addChild(new CCActionElement("MoveSeries", null, "ClipMenuBar.Series.MoveSeries", Resources.ICN_MENUBAR_MOVESERIES));
-		temp.setReadOnlyRestriction();
-		temp.addListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onClickSeriesMove();
-			}
-		});
-		
-		temp = series.addChild(new CCActionElement("CreateFolderStructSeries", null, "ClipMenuBar.Series.CreateFolderStruct", Resources.ICN_MENUBAR_CREATEFOLDERSTRUCTURE));
-		temp.setReadOnlyRestriction();
-		temp.addListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onClickSeriesCreateFolderStructure();
-			}
-		});
-
-		temp = series.addChild(new CCActionElement("RemSeries", KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0), "ClipMenuBar.Series.Remove", Resources.ICN_MENUBAR_REMOVE));
-		temp.setReadOnlyRestriction();
-		temp.addListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onClickSeriesRem();
-			}
-		});
-
-		// ################################################################################################################################################################
-		CCActionElement extras = root.addChild(new CCActionElement("Extras", null, "ClipMenuBar.Extras", ""));
-		// ################################################################################################################################################################
-		
-		temp = extras.addChild(new CCActionElement("ScanFolder", KeyStroke.getKeyStroke(KeyEvent.VK_O, InputEvent.CTRL_DOWN_MASK), "ClipMenuBar.Extras.ScanFolder", Resources.ICN_MENUBAR_SCANFOLDER));
-		temp.setReadOnlyRestriction();
-		temp.addListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onClickExtrasScanFolder();
-			}
-		});
-		
-		temp = extras.addChild(new CCActionElement("CompareDBs", null, "ClipMenuBar.Extras.CompareDBs", Resources.ICN_MENUBAR_COMPARE));
-		temp.addListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onClickExtrasCompareDBs();
-			}
-		});
-		
-		temp = extras.addChild(new CCActionElement("RandomMovie", null, "ClipMenuBar.Extras.RandomMovie", Resources.ICN_MENUBAR_RANDOMMOVIE));
-		temp.addListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onClickExtrasRandomMovie();
-			}
-		});
-		
-		temp = extras.addChild(new CCActionElement("BackupManager", null, "ClipMenuBar.Extras.BackupManager", Resources.ICN_MENUBAR_BACKUPMANAGER));
-		temp.addListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onClickExtrasBackupManager();
-			}
-		});
-		
-		temp = extras.addChild(new CCActionElement("ShowStatistics", null, "ClipMenuBar.Extras.Statistics", Resources.ICN_MENUBAR_STATISTICS));
-		temp.addListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onClickExtrasShowStatistics();
-			}
-		});
-		
-		temp = extras.addChild(new CCActionElement("ShuffleTable", null, "ClipMenuBar.Extras.ShuffleTable", Resources.ICN_MENUBAR_SHUFFLE));
-		temp.addListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onClickExtrasShuffleTable();
-			}
-		});
-		
-		temp = extras.addChild(new CCActionElement("ParseWatchData", null, "ClipMenuBar.Extras.ParseWatchData", Resources.ICN_MENUBAR_WATCHDATA));
-		temp.setReadOnlyRestriction();
-		temp.addListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onClickExtrasParseWatchData();
-			}
-		});
-		
-		temp = extras.addChild(new CCActionElement("ShowIncompleteFilmSeries", null, "ClipMenuBar.Extras.ShowIncompleteFilmSeries", Resources.ICN_MENUBAR_FINDINCOMPLETEZYKLUS));
-		temp.addListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onCLickExtrasShowIncompleteFilmSeries();
-			}
-		});
-
-		temp = extras.addChild(new CCActionElement("ShowSettings", null, "ClipMenuBar.Extras.Settings", Resources.ICN_MENUBAR_SETTINGS));
-		temp.addListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onClickExtrasSettings();
-			}
-		});
-
-		// ################################################################################################################################################################
-		CCActionElement maintenance = root.addChild(new CCActionElement("Maintenance", null, "ClipMenuBar.Maintenance", "", CCProperties.getInstance().PROP_SHOW_EXTENDED_FEATURES.getValue()));
-		// ################################################################################################################################################################
-
-		temp = maintenance.addChild(new CCActionElement("XML", null, "ClipMenuBar.Maintenance.XML", Resources.ICN_MENUBAR_PARSEXML));
-		temp.setReadOnlyRestriction();
-		temp.addListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onClickMaintenanceXML();
-			}
-		});
-		
-		temp = maintenance.addChild(new CCActionElement("MassChangeViewed", null, "ClipMenuBar.Maintenance.MassChangeViewed", Resources.ICN_MENUBAR_MCHANGE_VIEWED));
-		temp.setReadOnlyRestriction();
-		temp.addListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onClickMaintenanceMassChangeViewed();
-			}
-		});
-		
-		temp = maintenance.addChild(new CCActionElement("MassChangeScore", null, "ClipMenuBar.Maintenance.MassChangeScore", Resources.ICN_MENUBAR_MCHANGE_SCORE));
-		temp.setReadOnlyRestriction();
-		temp.addListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onClickMaintenanceMassChangeScore();
-			}
-		});
-		
-		temp = maintenance.addChild(new CCActionElement("MassMoveSeries", null, "ClipMenuBar.Maintenance.MassMoveSeries", Resources.ICN_MENUBAR_MOVEALLSERIES));
-		temp.setReadOnlyRestriction();
-		temp.addListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onCLickMaintenanceMassMoveSeries();
-			}
-		});
-		
-		temp = maintenance.addChild(new CCActionElement("MassMoveMovies", null, "ClipMenuBar.Maintenance.MassMoveMovies", Resources.ICN_MENUBAR_MOVEALLMOVIES));
-		temp.setReadOnlyRestriction();
-		temp.addListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onCLickMaintenanceMassMoveMovies();
-			}
-		});
-		
-		temp = maintenance.addChild(new CCActionElement("ResetViewed", null, "ClipMenuBar.Maintenance.ResetViewed", Resources.ICN_MENUBAR_RESETVIEWED));
-		temp.setReadOnlyRestriction();
-		temp.addListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onClickMaintenanceResetViewed();
-			}
-		});
-		
-		temp = maintenance.addChild(new CCActionElement("RegenerateDUUID", null, "ClipMenuBar.Maintenance.RegenerateDUUID", Resources.ICN_MENUBAR_REGENERATEDUUID));
-		temp.setReadOnlyRestriction();
-		temp.addListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onClickMaintenanceRegenerateDUUID();
-			}
-		});
-		
-		temp = maintenance.addChild(new CCActionElement("AutoFindReferences", null, "ClipMenuBar.Maintenance.AutoFindReferences", Resources.ICN_MENUBAR_AUTOFINDREF));
-		temp.setReadOnlyRestriction();
-		temp.addListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onClickMaintenanceAutoFindReferences();
-			}
-		});
-		
-		// ################################################################################################################################################################
-		CCActionElement help = root.addChild(new CCActionElement("Help", null, "ClipMenuBar.Help", ""));
-		// ################################################################################################################################################################
-		
-		temp = help.addChild(new CCActionElement("ShowLog", null, "ClipMenuBar.Help.Log", Resources.ICN_MENUBAR_LOG));
-		temp.addListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onClickHelpShowLog();
-			}
-		});
-		
-		temp = help.addChild(new CCActionElement("ShowRules", null, "ClipMenuBar.Help.Filenamerules", Resources.ICN_MENUBAR_FILENAMERULES));
-		temp.addListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onClickHelpShowRules();
-			}
-		});
-		
-		temp = help.addChild(new CCActionElement("CheckUpdates", null, "ClipMenuBar.Help.Updates", Resources.ICN_MENUBAR_UPDATES));
-		temp.addListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onClickHelpCheckUpdates();
-			}
-		});
-		
-		temp = help.addChild(new CCActionElement("ShowAbout", KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0), "ClipMenuBar.Help.About", Resources.ICN_MENUBAR_ABOUT));
-		temp.addListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onClickHelpShowAbout();
-			}
-		});
-		
-		// ################################################################################################################################################################
-		CCActionElement other = root.addChild(new CCActionElement("Other", null, "", "", false));
-		// ################################################################################################################################################################
-		
-		temp = other.addChild(new CCActionElement("SetMovieViewed", null, "ClipMenuBar.Other.SetViewed", Resources.ICN_MENUBAR_VIEWED));
-		temp.setReadOnlyRestriction();
-		temp.addListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onClickOtherSetViewed();
-			}
-		});
-		
-		temp = other.addChild(new CCActionElement("SetMovieUnviewed", null, "ClipMenuBar.Other.SetUnviewed", Resources.ICN_MENUBAR_UNVIEWED));
-		temp.setReadOnlyRestriction();
-		temp.addListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onClickOtherSetUnviewed();
-			}
-		});
-		
-		temp = other.addChild(new CCActionElement("UndoMovieViewed", null, "ClipMenuBar.Other.UndoMovieViewed", Resources.ICN_MENUBAR_UNDOVIEWED));
-		temp.setReadOnlyRestriction();
-		temp.addListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onClickOtherOtherUndoMovieViewed();
-			}
-		});
-		
-		temp = other.addChild(new CCActionElement("OpenFolder", null, "ClipMenuBar.Other.OpenFolder", Resources.ICN_MENUBAR_FOLDER));
-		temp.addListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onClickOtherOpenFolder();
-			}
-		});
-		
-		temp = other.addChild(new CCActionElement("ShowInBrowser", null, "ClipMenuBar.Other.ShowInBrowser", Resources.ICN_MENUBAR_ONLINEREFERENCE));
-		temp.addListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onClickOtherShowInBrowser();
-			}
-		});
-		
-		// ################################################################################################################################################################
-		CCActionElement setMovRating = other.addChild(new CCActionElement("SetMovieRating", null, "ClipMenuBar.Other.SetMovieRating", Resources.ICN_SIDEBAR_SCORE));
-		CCActionElement setSerRating = other.addChild(new CCActionElement("SetSeriesRating", null, "ClipMenuBar.Other.SetSeriesRating", Resources.ICN_SIDEBAR_SCORE));
-		// ################################################################################################################################################################
-		
-		temp = setMovRating.addChild(new CCActionElement("SetRating0", null, "CCMovieScore.R0", CCMovieScore.RATING_0.getIconName()));
-		temp.setReadOnlyRestriction();
-		temp.addListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onClickOtherSetRating(CCMovieScore.RATING_0);
-			}
-		});
-		
-		temp = setMovRating.addChild(new CCActionElement("SetRating1", null, "CCMovieScore.R1", CCMovieScore.RATING_I.getIconName()));
-		temp.setReadOnlyRestriction();
-		temp.addListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onClickOtherSetRating(CCMovieScore.RATING_I);
-			}
-		});
-		
-		temp = setMovRating.addChild(new CCActionElement("SetRating2", null, "CCMovieScore.R2", CCMovieScore.RATING_II.getIconName()));
-		temp.setReadOnlyRestriction();
-		temp.addListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onClickOtherSetRating(CCMovieScore.RATING_II);
-			}
-		});
-		
-		temp = setMovRating.addChild(new CCActionElement("SetRating3", null, "CCMovieScore.R3", CCMovieScore.RATING_III.getIconName()));
-		temp.setReadOnlyRestriction();
-		temp.addListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onClickOtherSetRating(CCMovieScore.RATING_III);
-			}
-		});
-		
-		temp = setMovRating.addChild(new CCActionElement("SetRating4", null, "CCMovieScore.R4", CCMovieScore.RATING_IV.getIconName()));
-		temp.setReadOnlyRestriction();
-		temp.addListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onClickOtherSetRating(CCMovieScore.RATING_IV);
-			}
-		});
-		
-		temp = setMovRating.addChild(new CCActionElement("SetRating5", null, "CCMovieScore.R5", CCMovieScore.RATING_V.getIconName()));
-		temp.setReadOnlyRestriction();
-		temp.addListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onClickOtherSetRating(CCMovieScore.RATING_V);
-			}
-		});
-		
-		temp = setSerRating.addChild(new CCActionElement("SetRatingNO", null, "CCMovieScore.RNO", CCMovieScore.RATING_NO.getIconName())); // Damit setSerRating ein Child hat und nicht als Executable gesehen wird ...
-		temp.setReadOnlyRestriction();
-		temp.addListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onClickOtherSetRating(CCMovieScore.RATING_NO);
-			}
-		});
-		
-		// ################################################################################################################################################################
-		CCActionElement setTags = other.addChild(new CCActionElement("SetTags", null, "ClipMenuBar.Other.SetTags", Resources.ICN_MENUBAR_TAGS));
-		// ################################################################################################################################################################
-		
-		for (int ii = 0; ii < CCMovieTags.ACTIVETAGS; ii++) {
-			final int i = ii;
-			temp = setTags.addChild(new CCActionElement(String.format("SwitchTag_%02d", i), null, String.format("CCMovieTags.TAG_%02d", i), Resources.ICN_TABLE_TAG_X_1[i]));
-			temp.setReadOnlyRestriction();
-			temp.addListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					onSwitchTag(i);
+		createRoot();
+		{
+			CCActionElement file = addMaster("File", null, "ClipMenuBar.File", "");
+			{
+				add(file, "Open",    null, "ClipMenuBar.File.Open",    Resources.ICN_MENUBAR_OPENFILE,   this::onClickFileOpen);
+				add(file, "Restart", null, "ClipMenuBar.File.Restart", Resources.ICN_MENUBAR_RESTARTAPP, this::onClickFileRestart);
+				add(file, "Exit",    null, "ClipMenuBar.File.Exit",    Resources.ICN_MENUBAR_CLOSE,      this::onClickFileExit);
+			}
+			
+			CCActionElement database = addMaster("Database", null, "ClipMenuBar.Database", "");
+			{
+				add(database, "CheckDatabase",          null,      "ClipMenuBar.Database.CheckDB",        Resources.ICN_MENUBAR_DBCHECK,               false, this::onClickDatabaseCheck);
+				add(database, "ClearDatabase",          null,      "ClipMenuBar.Database.ClearDB",        Resources.ICN_MENUBAR_CLEARDB,               true,  this::onClickDatabaseClear);
+				add(database, "ExportDatabase",         null,      "ClipMenuBar.Database.ExportDB",       Resources.ICN_MENUBAR_CREATE_JXMLBKP,        false, this::onClickDatabaseExportAsJxmBKP);
+				add(database, "ImportDatabase",         null,      "ClipMenuBar.Database.ImportDB",       Resources.ICN_MENUBAR_IMPORTDB,              true,  this::onClickDatabaseImportAsJxmBKP);
+				add(database, "ImportMultipleElements", null,      "ClipMenuBar.Database.ImportMultiple", Resources.ICN_MENUBAR_IMPORMULTIPLEELEMENTS, true,  this::onClickDatabaseImportMultipleElements);
+				add(database, "SearchDatabase",         KS_CTRL_F, "ClipMenuBar.Database.SearchDB",       Resources.ICN_MENUBAR_SEARCH,                false, this::onClickDatabaseSearchDatabase);
+				add(database, "TextExportDatabase",     null,      "ClipMenuBar.Database.TextExport",     Resources.ICN_MENUBAR_EXPORTPLAINDB,         false, this::onClickDatabaseTextExportDatabase);
+				add(database, "ManageGroups",           null,      "ClipMenuBar.Database.ManageGroups",   Resources.ICN_MENUBAR_MANAGEGROUPS,          false, this::onClickDatabaseManageGroups);
+			}
+			
+			CCActionElement movies = addMaster("Movies", null, "ClipMenuBar.Movies", "");
+			{
+				add(movies, "PlayMovie",            null,      "ClipMenuBar.Movies.Play",           Resources.ICN_MENUBAR_PLAY,           false, this::onClickMoviesPlay);
+				add(movies, "PlayMovieAnonymous",   null,      "ClipMenuBar.Movies.PlayAnonymous",  Resources.ICN_MENUBAR_HIDDENPLAY,     false, this::onClickMoviesPlayAnonymous);
+				add(movies, "PrevMovie",            KS_ENTER,  "ClipMenuBar.Movies.Preview",        Resources.ICN_MENUBAR_PREVIEW_MOV,    false, this::onClickMoviesPrev);
+				add(movies, "AddMovie",             KS_CTRL_I, "ClipMenuBar.Movies.Add",            Resources.ICN_MENUBAR_ADD_MOV,        true,  this::onClickMoviesAdd);
+				add(movies, "ExportSingleMovie",    null,      "ClipMenuBar.Movies.ExportSingle",   Resources.ICN_MENUBAR_EXPORTMOVIE,    false, this::onClickMoviesExportSingle);
+				add(movies, "AddMovieToExportList", KS_CTRL_S, "ClipMenuBar.Movies.ExportMultiple", Resources.ICN_MENUBAR_EXPORTELEMENTS, false, this::onClickMoviesAddToExportList);
+				add(movies, "ImportSingleMovie",    null,      "ClipMenuBar.Movies.ImportSingle",   Resources.ICN_MENUBAR_IMPORTMOVIE,    true,  this::onClickMoviesImportSingle);
+				add(movies, "EditMovie",            KS_CTRL_E, "ClipMenuBar.Movies.Edit",           Resources.ICN_MENUBAR_EDIT_MOV,       true,  this::onClickMoviesEdit);
+				add(movies, "RemMovie",             KS_DEL,    "ClipMenuBar.Movies.Remove",         Resources.ICN_MENUBAR_REMOVE,         true,  this::onClickMoviesRem);
+			}
+			
+			CCActionElement series = addMaster("Serien", null, "ClipMenuBar.Series", "");
+			{
+				add(series, "PrevSeries",               KS_ENTER,        "ClipMenuBar.Series.Preview",              Resources.ICN_MENUBAR_PREVIEW_SER,           true,  this::onClickSeriesPreview);
+				add(series, "AddSeries",                KS_CTRL_SHIFT_I, "ClipMenuBar.Series.Add",                  Resources.ICN_MENUBAR_ADD_SER,               true,  this::onClickSeriesAdd);
+				add(series, "EditSeries",               KS_CTRL_E,       "ClipMenuBar.Series.Edit",                 Resources.ICN_MENUBAR_EDIT_SER,              true,  this::onClickSeriesEdit);
+				add(series, "AddSeason",                null,            "ClipMenuBar.Series.AddSeason",            Resources.ICN_MENUBAR_ADD_SEA,               true,  this::onClickSeasonAdd);
+				add(series, "OpenLastPlayedSeries",     null,            "ClipMenuBar.Series.OpenLastPlayedSeries", Resources.ICN_MENUBAR_OPENLASTSERIES,        true,  this::onClickSeasonOpenLast);
+				add(series, "ExportSingleSeries",       null,            "ClipMenuBar.Series.ExportSingle",         Resources.ICN_MENUBAR_EXPORTSERIES,          true,  this::onClickSeriesExportSingle);
+				add(series, "AddSeriesToExportList",    KS_CTRL_S,       "ClipMenuBar.Series.ExportMultiple",       Resources.ICN_MENUBAR_EXPORTELEMENTS,        true,  this::onClickSeriesAddToExportList);
+				add(series, "ImportSingleSeries",       null,            "ClipMenuBar.Series.ImportSingle",         Resources.ICN_MENUBAR_IMPORTSERIES,          true,  this::onClickSeriesImportSingle);
+				add(series, "SaveTXTEpisodeguide",      null,            "ClipMenuBar.Series.SaveTXTEpisodeguide",  Resources.ICN_MENUBAR_EPISODEGUIDE,          false, this::onClickSeriesCreateTXTEpisodeguide);
+				add(series, "MoveSeries",               null,            "ClipMenuBar.Series.MoveSeries",           Resources.ICN_MENUBAR_MOVESERIES,            true,  this::onClickSeriesMove);
+				add(series, "CreateFolderStructSeries", null,            "ClipMenuBar.Series.CreateFolderStruct",   Resources.ICN_MENUBAR_CREATEFOLDERSTRUCTURE, true,  this::onClickSeriesCreateFolderStructure);
+				add(series, "RemSeries",                KS_DEL,          "ClipMenuBar.Series.Remove",               Resources.ICN_MENUBAR_REMOVE,                true,  this::onClickSeriesRem);
+			}
+			
+			CCActionElement extras = addMaster("Extras", null, "ClipMenuBar.Extras", "");
+			{
+				add(extras, "ScanFolder",               KS_CTRL_O, "ClipMenuBar.Extras.ScanFolder",               Resources.ICN_MENUBAR_SCANFOLDER,           true,  this::onClickExtrasScanFolder);
+				add(extras, "CompareDBs",               null,      "ClipMenuBar.Extras.CompareDBs",               Resources.ICN_MENUBAR_COMPARE,              false, this::onClickExtrasCompareDBs);
+				add(extras, "RandomMovie",              null,      "ClipMenuBar.Extras.RandomMovie",              Resources.ICN_MENUBAR_RANDOMMOVIE,          false, this::onClickExtrasRandomMovie);
+				add(extras, "BackupManager",            null,      "ClipMenuBar.Extras.BackupManager",            Resources.ICN_MENUBAR_BACKUPMANAGER,        false, this::onClickExtrasBackupManager);
+				add(extras, "ShowStatistics",           null,      "ClipMenuBar.Extras.Statistics",               Resources.ICN_MENUBAR_STATISTICS,           false, this::onClickExtrasShowStatistics);
+				add(extras, "ShuffleTable",             null,      "ClipMenuBar.Extras.ShuffleTable",             Resources.ICN_MENUBAR_SHUFFLE,              false, this::onClickExtrasShuffleTable);
+				add(extras, "ParseWatchData",           null,      "ClipMenuBar.Extras.ParseWatchData",           Resources.ICN_MENUBAR_WATCHDATA,            true,  this::onClickExtrasParseWatchData);
+				add(extras, "ShowIncompleteFilmSeries", null,      "ClipMenuBar.Extras.ShowIncompleteFilmSeries", Resources.ICN_MENUBAR_FINDINCOMPLETEZYKLUS, false, this::onClickExtrasShowIncompleteFilmSeries);
+				add(extras, "ShowSettings",             null,      "ClipMenuBar.Extras.Settings",                 Resources.ICN_MENUBAR_SETTINGS,             false, this::onClickExtrasSettings);
+			}
+			
+			CCActionElement maintenance = addMaster("Maintenance", null, "ClipMenuBar.Maintenance", "", CCProperties.getInstance().PROP_SHOW_EXTENDED_FEATURES);
+			{
+				add(maintenance, "XML",                null, "ClipMenuBar.Maintenance.XML",                Resources.ICN_MENUBAR_PARSEXML,        true, this::onClickMaintenanceXML);
+				add(maintenance, "MassChangeViewed",   null, "ClipMenuBar.Maintenance.MassChangeViewed",   Resources.ICN_MENUBAR_MCHANGE_VIEWED,  true, this::onClickMaintenanceMassChangeViewed);
+				add(maintenance, "MassChangeScore",    null, "ClipMenuBar.Maintenance.MassChangeScore",    Resources.ICN_MENUBAR_MCHANGE_SCORE,   true, this::onClickMaintenanceMassChangeScore);
+				add(maintenance, "MassMoveSeries",     null, "ClipMenuBar.Maintenance.MassMoveSeries",     Resources.ICN_MENUBAR_MOVEALLSERIES,   true, this::onClickMaintenanceMassMoveSeries);
+				add(maintenance, "MassMoveMovies",     null, "ClipMenuBar.Maintenance.MassMoveMovies",     Resources.ICN_MENUBAR_MOVEALLMOVIES,   true, this::onClickMaintenanceMassMoveMovies);
+				add(maintenance, "ResetViewed",        null, "ClipMenuBar.Maintenance.ResetViewed",        Resources.ICN_MENUBAR_RESETVIEWED,     true, this::onClickMaintenanceResetViewed);
+				add(maintenance, "RegenerateDUUID",    null, "ClipMenuBar.Maintenance.RegenerateDUUID",    Resources.ICN_MENUBAR_REGENERATEDUUID, true, this::onClickMaintenanceRegenerateDUUID);
+				add(maintenance, "AutoFindReferences", null, "ClipMenuBar.Maintenance.AutoFindReferences", Resources.ICN_MENUBAR_AUTOFINDREF,     true, this::onClickMaintenanceAutoFindReferences);
+			}
+			
+			CCActionElement help = addMaster("Help", null, "ClipMenuBar.Help", "");
+			{		
+				add(help, "ShowLog",      null,  "ClipMenuBar.Help.Log",           Resources.ICN_MENUBAR_LOG,           this::onClickHelpShowLog);
+				add(help, "ShowRules",    null,  "ClipMenuBar.Help.Filenamerules", Resources.ICN_MENUBAR_FILENAMERULES, this::onClickHelpShowRules);
+				add(help, "CheckUpdates", null,  "ClipMenuBar.Help.Updates",       Resources.ICN_MENUBAR_UPDATES,       this::onClickHelpCheckUpdates);
+				add(help, "ShowAbout",    KS_F1, "ClipMenuBar.Help.About",         Resources.ICN_MENUBAR_ABOUT,         this::onClickHelpShowAbout);
+			}
+			
+			CCActionElement other = addMaster("Other", null, "", "", false);
+			{
+				add(other, "SetMovieViewed",   null, "ClipMenuBar.Other.SetViewed",       Resources.ICN_MENUBAR_VIEWED,          this::onClickOtherSetViewed);
+				add(other, "SetMovieUnviewed", null, "ClipMenuBar.Other.SetUnviewed",     Resources.ICN_MENUBAR_UNVIEWED,        this::onClickOtherSetUnviewed);
+				add(other, "UndoMovieViewed",  null, "ClipMenuBar.Other.UndoMovieViewed", Resources.ICN_MENUBAR_UNDOVIEWED,      this::onClickOtherOtherUndoMovieViewed);
+				add(other, "OpenFolder",       null, "ClipMenuBar.Other.OpenFolder",      Resources.ICN_MENUBAR_FOLDER,          this::onClickOtherOpenFolder);
+				add(other, "ShowInBrowser",    null, "ClipMenuBar.Other.ShowInBrowser",   Resources.ICN_MENUBAR_ONLINEREFERENCE, this::onClickOtherShowInBrowser);
+				
+				CCActionElement movRating = add(other, "SetMovieRating", null, "ClipMenuBar.Other.SetMovieRating", Resources.ICN_SIDEBAR_SCORE);
+				{
+					add(movRating, "SetMovRatingNO", null, "CCMovieScore.RNO", CCMovieScore.RATING_NO.getIconName(),  true, () -> onClickOtherSetRating(CCMovieScore.RATING_NO));
+					add(movRating, "SetMovRating0",  null, "CCMovieScore.R0",  CCMovieScore.RATING_0.getIconName(),   true, () -> onClickOtherSetRating(CCMovieScore.RATING_0));
+					add(movRating, "SetMovRating1",  null, "CCMovieScore.R1",  CCMovieScore.RATING_I.getIconName(),   true, () -> onClickOtherSetRating(CCMovieScore.RATING_I));
+					add(movRating, "SetMovRating2",  null, "CCMovieScore.R2",  CCMovieScore.RATING_II.getIconName(),  true, () -> onClickOtherSetRating(CCMovieScore.RATING_II));
+					add(movRating, "SetMovRating3",  null, "CCMovieScore.R3",  CCMovieScore.RATING_III.getIconName(), true, () -> onClickOtherSetRating(CCMovieScore.RATING_III));
+					add(movRating, "SetMovRating4",  null, "CCMovieScore.R4",  CCMovieScore.RATING_IV.getIconName(),  true, () -> onClickOtherSetRating(CCMovieScore.RATING_IV));
+					add(movRating, "SetMovRating5",  null, "CCMovieScore.R5",  CCMovieScore.RATING_V.getIconName(),   true, () -> onClickOtherSetRating(CCMovieScore.RATING_V));
 				}
-			});
+
+				CCActionElement serRating = add(other, "SetSeriesRating", null, "ClipMenuBar.Other.SetSeriesRating", Resources.ICN_SIDEBAR_SCORE);
+				{
+					add(serRating, "SetSerRatingNO", null, "CCMovieScore.RNO", CCMovieScore.RATING_NO.getIconName(),  true, () -> onClickOtherSetRating(CCMovieScore.RATING_NO));
+					add(serRating, "SetSerRating0",  null, "CCMovieScore.R0",  CCMovieScore.RATING_0.getIconName(),   true, () -> onClickOtherSetRating(CCMovieScore.RATING_0));
+					add(serRating, "SetSerRating1",  null, "CCMovieScore.R1",  CCMovieScore.RATING_I.getIconName(),   true, () -> onClickOtherSetRating(CCMovieScore.RATING_I));
+					add(serRating, "SetSerRating2",  null, "CCMovieScore.R2",  CCMovieScore.RATING_II.getIconName(),  true, () -> onClickOtherSetRating(CCMovieScore.RATING_II));
+					add(serRating, "SetSerRating3",  null, "CCMovieScore.R3",  CCMovieScore.RATING_III.getIconName(), true, () -> onClickOtherSetRating(CCMovieScore.RATING_III));
+					add(serRating, "SetSerRating4",  null, "CCMovieScore.R4",  CCMovieScore.RATING_IV.getIconName(),  true, () -> onClickOtherSetRating(CCMovieScore.RATING_IV));
+					add(serRating, "SetSerRating5",  null, "CCMovieScore.R5",  CCMovieScore.RATING_V.getIconName(),   true, () -> onClickOtherSetRating(CCMovieScore.RATING_V));
+				}
+
+				CCActionElement elemTags = add(other, "SetTags", null, "ClipMenuBar.Other.SetTags", Resources.ICN_MENUBAR_TAGS);
+				{
+					for (int i = 0; i < CCMovieTags.ACTIVETAGS; i++) {
+						final int idx = i;
+						add(elemTags, String.format("SwitchTag_%02d", idx), null, String.format("CCMovieTags.TAG_%02d", idx), Resources.ICN_TABLE_TAG_X_1[idx], true, () -> onClickSwitchTag(idx));
+					}
+				}
+			}
 		}
-		
-		// #######################################################################################################
-		
-		createProperties();
-		
-		// #######################################################################################################
-		
+
 		if (Main.DEBUG) {
 			root.testTree();
 			//printTree();
 			System.out.println(String.format("[DBG] %d Elements in ActionTree intialized", root.getAllChildren().size())); //$NON-NLS-1$
 		}
-	}
-
-	public CCActionElement getRoot() {
-		return root;
-	}
-
-	public static CCActionTree getInstance() {
-		return instance;
-	}
-
-	public CCActionElement find(String name) {
-		return root.find(name);
-	}
-	
-	public void implementKeyListener(JComponent comp) {
-		getRoot().implementAllKeyListener(comp);
-	}
-	
-	private void createProperties() {
-		getRoot().createAllProperties(CCProperties.getInstance());
-	}
-	
-	public String getCompleteToolbarConfig() {
-		return getRoot().getRootToolbarConfig();
-	}
-	
-	public void printTree() {
-		root.printTree(0);
 	}
 
 	// #######################################################################################################
@@ -862,7 +343,7 @@ public class CCActionTree {
 		pwdf.setVisible(true);
 	}
 	
-	private void onCLickExtrasShowIncompleteFilmSeries() {
+	private void onClickExtrasShowIncompleteFilmSeries() {
 		ShowIncompleteFilmSeriesFrame sifsf = new ShowIncompleteFilmSeriesFrame(owner, movielist);
 		sifsf.setVisible(true);
 	}
@@ -877,12 +358,12 @@ public class CCActionTree {
 		csf.setVisible(true);
 	}
 	
-	private void onCLickMaintenanceMassMoveSeries() {
+	private void onClickMaintenanceMassMoveSeries() {
 		MassMoveSeriesDialog mmsd = new MassMoveSeriesDialog(owner, movielist);
 		mmsd.setVisible(true);
 	}
 	
-	private void onCLickMaintenanceMassMoveMovies() {
+	private void onClickMaintenanceMassMoveMovies() {
 		MassMoveMoviesDialog mmmd = new MassMoveMoviesDialog(owner, movielist);
 		mmmd.setVisible(true);
 	}
@@ -1293,7 +774,7 @@ public class CCActionTree {
 		}
 	}
 	
-	private void onSwitchTag(int c) {
+	private void onClickSwitchTag(int c) {
 		CCDatabaseElement el = owner.getSelectedElement();
 		if (el != null && el.isMovie()) {
 			((CCMovie)el).switchTag(c);

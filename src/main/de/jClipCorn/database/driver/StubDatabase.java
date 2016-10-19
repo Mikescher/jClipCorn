@@ -2,7 +2,7 @@ package de.jClipCorn.database.driver;
 
 import java.sql.SQLException;
 
-import de.jClipCorn.gui.settings.CCDatabaseDriver;
+import de.jClipCorn.properties.enumerations.CCDatabaseDriver;
 
 public class StubDatabase extends GenericDatabase {
 

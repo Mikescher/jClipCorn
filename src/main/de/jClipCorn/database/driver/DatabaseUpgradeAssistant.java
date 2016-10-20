@@ -13,6 +13,8 @@ import de.jClipCorn.gui.frames.mainFrame.MainFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.properties.CCProperties;
+import de.jClipCorn.util.datetime.CCDate;
+import de.jClipCorn.util.datetime.CCTime;
 import de.jClipCorn.util.helper.DialogHelper;
 
 public class DatabaseUpgradeAssistant {
@@ -65,9 +67,28 @@ public class DatabaseUpgradeAssistant {
 			
 			BackupManager.getInstance().createMigrationBackup(version);
 			
+			if (version.equals("1.5")) {
+				upgrade_15_16();
+				setDBVersion("1.6");
+				version = "1.6";
+			}
+			
+			if (version.equals("1.6")) {
+				upgrade_16_17();
+				setDBVersion("1.7");
+				version = "1.7";
+			}
+			
+			if (version.equals("1.7")) {
+				upgrade_17_18();
+				setDBVersion("1.8");
+				version = "1.8";
+			}
+			
 			if (version.equals("1.8")) {
 				upgrade_18_19();
 				setDBVersion("1.9");
+				version = "1.9";
 			}
 						
 			if (! getDBVersion().equals(Main.DBVERSION)) {
@@ -83,6 +104,54 @@ public class DatabaseUpgradeAssistant {
 		}
 	}
 
+	@SuppressWarnings("nls")
+	private void upgrade_15_16() throws SQLException {
+		CCLog.addInformation("[UPGRADE 1.5 -> 1.6] Rename column 'STATUS' to 'TAGS'");
+
+		db.executeSQLThrow("ALTER TABLE MOVIES ADD COLUMN TAGS SMALLINT");
+		db.executeSQLThrow("UPDATE MOVIES SET TAGS = STATUS");
+		db.executeSQLThrow("ALTER TABLE MOVIES DROP COLUMN STATUS");
+
+		db.executeSQLThrow("ALTER TABLE EPISODES ADD COLUMN TAGS SMALLINT");
+		db.executeSQLThrow("UPDATE EPISODES SET TAGS = STATUS");
+		db.executeSQLThrow("ALTER TABLE EPISODES DROP COLUMN STATUS");
+	}
+
+	@SuppressWarnings("nls")
+	private void upgrade_16_17() throws SQLException {
+		CCLog.addInformation("[UPGRADE 1.6 -> 1.7] Add Info Table");
+
+		String date = CCDate.getCurrentDate().getStringRepresentation("yyyy-MM-dd");
+		String time = CCTime.getCurrentTime().getStringRepresentation("HH:mm:ss");
+		
+		db.executeSQLThrow("CREATE TABLE INFO (\"IKEY\" VARCHAR(256) NOT NULL, IVALUE VARCHAR(256) NOT NULL, PRIMARY KEY (\"IKEY\"))");
+
+		db.executeSQLThrow("INSERT INTO INFO (\"IKEY\", IVALUE) VALUES ('VERSION_DB', '1.7')");
+		db.executeSQLThrow("INSERT INTO INFO (\"IKEY\", IVALUE) VALUES ('CREATION_DATE', '"+date+"')");
+		db.executeSQLThrow("INSERT INTO INFO (\"IKEY\", IVALUE) VALUES ('CREATION_TIME', '"+time+"')");
+		db.executeSQLThrow("INSERT INTO INFO (\"IKEY\", IVALUE) VALUES ('CREATION_USERNAME', '" + System.getProperty("user.name") + "')");
+	}
+
+	@SuppressWarnings("nls")
+	private void upgrade_17_18() throws SQLException {
+		CCLog.addInformation("[UPGRADE 1.7 -> 1.8] Added Groups to movies and series");
+		CCLog.addInformation("[UPGRADE 1.7 -> 1.8] Added viewed-history to movies and series (and removed LastViewed)");
+		CCLog.addInformation("[UPGRADE 1.7 -> 1.8] Added OnlineReference to Movies and series");
+
+		db.executeSQLThrow("ALTER TABLE MOVIES ADD COLUMN VIEWED_HISTORY VARCHAR(4096)");
+		db.executeSQLThrow("UPDATE MOVIES SET VIEWED_HISTORY = \"\"");
+		
+		db.executeSQLThrow("ALTER TABLE MOVIES ADD COLUMN ONLINEREF VARCHAR(128)");
+		db.executeSQLThrow("UPDATE MOVIES SET ONLINEREF = \"\"");
+		
+		db.executeSQLThrow("ALTER TABLE MOVIES ADD COLUMN GROUPS VARCHAR(4096)");
+		db.executeSQLThrow("UPDATE MOVIES SET GROUPS = \"\"");
+
+		db.executeSQLThrow("ALTER TABLE EPISODES ADD COLUMN VIEWED_HISTORY VARCHAR(4096)");
+		db.executeSQLThrow("UPDATE EPISODES SET VIEWED_HISTORY = LASTVIEWED");
+		db.executeSQLThrow("ALTER TABLE EPISODES DROP COLUMN LASTVIEWED");
+	}
+	
 	@SuppressWarnings("nls")
 	private void upgrade_18_19() throws SQLException {
 		CCLog.addInformation("[UPGRADE 1.8 -> 1.9] Create Table Groups");

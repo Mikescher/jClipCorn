@@ -1,155 +1,105 @@
-############ 2016-10-11: 1.10.1 Task: added unspecified datetime for datetime values before the introduction of the history
+########################################################################
+############ Wed Oct 12 21:20:42 2016 +0200  1.10.1 RELEASE ############
+########################################################################
 
-############ 2016-10-10: 1.10.1 Bugfix: Show full year component in history tooltip
 
-############ 2016-10-10: 1.10.1 Task: added unspecified time for datetime values without time component
-
-############ 2016-10-01: 1.10.1 Task: fixed unit tests
-
-############ 2016-10-01: 1.10.1 Task: Ignore dots in search
-
-############ 2016-10-01: 1.10.1 Task: Added Unit Tests
+1.10.1 Task: added unspecified datetime for datetime values before the introduction of the history
+1.10.1 Bugfix: Show full year component in history tooltip
+1.10.1 Task: added unspecified time for datetime values without time component
+1.10.1 Task: fixed unit tests
+1.10.1 Task: Ignore dots in search
+1.10.1 Task: Added Unit Tests
   - Database Add/remove/update
   - Load full db backup
   - load single movie export
   - parse WatchData
   - parse Filenames
-
-############ 2016-10-01: 1.10.1 Task: Automatically create backup on database migration
-
-############ 2016-09-30: 1.10.1 Task: Order Tags in cover display by length
-
-############ 2016-09-30: 1.10.1 Feature: Added VLC option "start with --one-instance"
-
-############ 2016-09-09: 1.10.1 Bugfix: Fixed deleting movie not updating group-cache
-
-############ 2016-09-09: 1.10.1 Task: Added groups.xml and info.xml to jxmlbkp-backups
-
-############ 2016-09-04: 1.10.1 Task: Don't show table tooltip for CCMovieScore.RATING_NO
-
-############ 2016-09-02: 1.10.1 Bugfix: Fixed wrong aligned label in AddEpisodesFrame
-
-############ 2016-08-25: 1.10.1 Bugfix: Fixed Tooltips in ClipTable
-
-############ 2016-08-25: 1.10.1 Bugfix: Fixed ShowIncompleteFilmSeries not finding all missing movies
-
-############ 2016-08-24: 1.10.1 Feature: Manage group metadata via ManageGroupsFrame
-
-############ 2016-08-24: 1.10.1 Feature: Timelinestatistic: No gravity for series re-viewing
-
-############ 2016-08-21: 1.10.1 Feature: Added Group Metadata
+1.10.1 Task: Automatically create backup on database migration
+1.10.1 Task: Order Tags in cover display by length
+1.10.1 Feature: Added VLC option "start with --one-instance"
+1.10.1 Bugfix: Fixed deleting movie not updating group-cache
+1.10.1 Task: Added groups.xml and info.xml to jxmlbkp-backups
+1.10.1 Task: Don't show table tooltip for CCMovieScore.RATING_NO
+1.10.1 Bugfix: Fixed wrong aligned label in AddEpisodesFrame
+1.10.1 Bugfix: Fixed Tooltips in ClipTable
+1.10.1 Bugfix: Fixed ShowIncompleteFilmSeries not finding all missing movies
+1.10.1 Feature: Manage group metadata via ManageGroupsFrame
+1.10.1 Feature: Timelinestatistic: No gravity for series re-viewing
+1.10.1 Feature: Added Group Metadata
   - Added new table [GROUPS] and updated DB version o 1.9
   - Added database auto upgrading
   - Added group metadata: Color
   - Added group metadata: Order
   - Added group metadata: DoSerialize (of not set file/foldernames will be unaffected by group)
   - Added SQLDeleteHelper for better PreparedStatement creation
+1.10.1 Bugfix: Fixed exception when setting caret position in CCDateTimeEditor
+1.10.1 Bugfix: Fixed setting movie to unviewed not resetting ViewedHistory
+1.10.1 Bugfix: Fixed showing wrong dialog for CustomTagFilter and CustomYearFilter
+1.10.1 Feature: Added datetime and moviescore support to ParseWatchDataFrame
+1.10.1 Bugfix: Fixed NullpointerException in SFixTable
+1.10.1 Bugfix: Fixed AddSeriesFrame not using OnlineRef from Parser
+1.10.1 Task: Fixed default mainframe height to show all filter in sidebar
+1.10.1 Task: Fixed gradle build error (java generics WTF)
 
-############ 2016-08-20: 1.10.1 Bugfix: Fixed exception when setting caret position in CCDateTimeEditor
 
-############ 2016-08-19: 1.10.1 Bugfix: Fixed setting movie to unviewed not resetting ViewedHistory
+########################################################################
+############ Sat Jul 30 15:47:04 2016 +0200  1.10.0 RELEASE ############
+########################################################################
 
-############ 2016-08-18: 1.10.1 Bugfix: Fixed showing wrong dialog for CustomTagFilter and CustomYearFilter
 
-############ 2016-08-17: 1.10.1 Feature: Added datetime and moviescore support to ParseWatchDataFrame
-
-############ 2016-08-02: 1.10.1 Bugfix: Fixed NullpointerException in SFixTable
-
-############ 2016-08-02: 1.10.1 Bugfix: Fixed AddSeriesFrame not using OnlineRef from Parser
-
-############ 2016-07-30: 1.10.1 Task: Fixed default mainframe height to show all filter in sidebar
-
-############ 2016-07-30: 1.10.1 Task: Fixed gradle build error (java generics WTF)
-
-############ 2016-07-30: 1.10.0 RELEASE
-
-############ 2016-07-30: 1.10.0 Feature: Added Group-Manage frame (delete, rename, merge, update)
-
-############ 2016-07-30: 1.10.0 Feature: Added Idiot-mode ;D
+1.10.0 Feature: Added Group-Manage frame (delete, rename, merge, update)
+1.10.0 Feature: Added Idiot-mode ;D
  - with hidden extended settings button
  - and hidden Maintenance menu
  - can only be deactivated by manually editing config file
-
-############ 2016-07-30: 1.10.0 Task: Use EnumWrapper for all multi-value properties (better than magic numbers)
-
-############ 2016-07-30: 1.10.0 Features: More Parser options:
+1.10.0 Task: Use EnumWrapper for all multi-value properties (better than magic numbers)
+1.10.0 Features: More Parser options:
   - Optionally open TMDB-URL with language suffix
   - Get localized TMDB title and other metadata
   - Choose which image search implementations are active
-
-############ 2016-07-29: 1.10.0 Bugfixes: Using apache.commons.lang3.StringUtils.stripAccents to normalize FilePaths (instead of hand-crafted shit)
-
-############ 2016-07-29: 1.10.0 Bugfixes: Fixed ERROR_DUPLICATE_REF triggering for the same movie in two different languages
-
-############ 2016-07-29: 1.10.0 Bugfixes: Fixed Searchfield sometimes not resetting when gaining focus
-
-############ 2016-07-29: 1.10.0 Task: Organize usings
-
-############ 2016-07-28: 1.10.0 Task: Added in-memory database (for unit tests)
-
-############ 2016-07-28: 1.10.0 Task: Refactored enums into common interface and added CCEnumProperty<>
-
-############ 2016-07-27: 1.10.0 Feature: Search through OnlineRef
-
-############ 2016-07-27: 1.10.0 Feature: Added DatabaseError: ERROR_DUPLICATE_REF
-
-############ 2016-07-26: 1.10.0 Task: Automatically set RefType on JReferenceChooser paste event
-
-############ 2016-07-26: 1.10.0 Task: OpenLastPlayedSeries now laso respects the time component of the ViewedHistory
-
-############ 2016-07-26: 1.10.0 Task: Timeline statistic supports all dates from viewed history
-
-############ 2016-07-26: 1.10.0 Bugfixes: Fixed a few small AutoRefFinder bugs
-
-############ 2016-07-26: 1.10.0 Feature: Added OpenInBrowser button to PreviewSeriesFrame
-
-############ 2016-07-26: 1.10.0 Feature: Added two new online reference sources: Proxer.me and MyAnimeList
-
-############ 2016-07-25: 1.10.0 Feature: AutoFindReferenceFrame also searches through IMDB
-
-############ 2016-07-25: 1.10.0 Bugfix: Fixed 429 (TOO_MANY_REQUESTS) Http error when searching for _alot_ of TMDB references
-
-############ 2016-07-24: 1.10.0 Bugfix: Fixed series table not showing correct viewed history
-
-############ 2016-07-24: 1.10.0 Bugfix: Various small fixes
-
-############ 2016-07-24: 1.10.0 Bugfix: Fixed load&edit with jxml-backup not working with new properties
-
-############ 2016-07-24: 1.10.0 Task: Normalize characters in filename generation (eg é -> e)
-
-############ 2016-07-24: 1.10.0 Feature: Added groups to searchable database fields
-
-############ 2016-07-24: 1.10.0 Feature: Added new filters to custom filter dialog:
+1.10.0 Bugfixes: Using apache.commons.lang3.StringUtils.stripAccents to normalize FilePaths (instead of hand-crafted shit)
+1.10.0 Bugfixes: Fixed ERROR_DUPLICATE_REF triggering for the same movie in two different languages
+1.10.0 Bugfixes: Fixed Searchfield sometimes not resetting when gaining focus
+1.10.0 Task: Organize usings
+1.10.0 Task: Added in-memory database (for unit tests)
+1.10.0 Task: Refactored enums into common interface and added CCEnumProperty<>
+1.10.0 Feature: Search through OnlineRef
+1.10.0 Feature: Added DatabaseError: ERROR_DUPLICATE_REF
+1.10.0 Task: Automatically set RefType on JReferenceChooser paste event
+1.10.0 Task: OpenLastPlayedSeries now laso respects the time component of the ViewedHistory
+1.10.0 Task: Timeline statistic supports all dates from viewed history
+1.10.0 Bugfixes: Fixed a few small AutoRefFinder bugs
+1.10.0 Feature: Added OpenInBrowser button to PreviewSeriesFrame
+1.10.0 Feature: Added two new online reference sources: Proxer.me and MyAnimeList
+1.10.0 Feature: AutoFindReferenceFrame also searches through IMDB
+1.10.0 Bugfix: Fixed 429 (TOO_MANY_REQUESTS) Http error when searching for _alot_ of TMDB references
+1.10.0 Bugfix: Fixed series table not showing correct viewed history
+1.10.0 Bugfix: Various small fixes
+1.10.0 Bugfix: Fixed load&edit with jxml-backup not working with new properties
+1.10.0 Task: Normalize characters in filename generation (eg é -> e)
+1.10.0 Feature: Added groups to searchable database fields
+1.10.0 Feature: Added new filters to custom filter dialog:
   - CustomGroupFilter
   - CustomReferenceFilter (only reference type)
   - CustomHistoryFilter (Viewed-history)
-
-############ 2016-07-24: 1.10.0 Feature: Added Groups to filename grammar (double square brackets)
-
-############ 2016-07-21: 1.10.0 Task: CCGroup, CCOnlineReference and ViewedHistory Serialization + Deserialization (XML)
-
-############ 2016-07-20: 1.10.0 Feature: Show groups rendered on top of the cover
-
-############ 2016-07-20: 1.10.0 Feature: "Undo Episode Viewed" and "Play movie without changing history"
-
-############ 2016-07-20: 1.10.0 Feature: Finished CCGroup Implementation
+1.10.0 Feature: Added Groups to filename grammar (double square brackets)
+1.10.0 Task: CCGroup, CCOnlineReference and ViewedHistory Serialization + Deserialization (XML)
+1.10.0 Feature: Show groups rendered on top of the cover
+1.10.0 Feature: "Undo Episode Viewed" and "Play movie without changing history"
+1.10.0 Feature: Finished CCGroup Implementation
   - Added DatabaseErrors for invalid groups/grouplists
   - Added GroupEditor to AddSeriesFrame, EditSeriesFrame, AddMovieFrame, EditMovieFrame
-
-############ 2016-07-19: 1.10.0 Feature: Basic CCGroup Implementation
+1.10.0 Feature: Basic CCGroup Implementation
   - write and read Groups from database
   - global group cache
   - GroupListEditor component
   - Sidebar Group listing and filter
-
-############ 2016-07-17: 1.10.0 Task: Added Database Errors:
+1.10.0 Task: Added Database Errors:
   - ERROR_SERIES_HAS_HISTORY
   - ERROR_HISTORY_BUT_UNVIEWED
   - ERROR_INVALID_HISTORY
-
-############ 2016-07-17: 1.10.0 Feature: Added UndoViewed to MainFrame popup
-
-############ 2016-07-17: 1.10.0 Feature: Finished OnlineReference intagration
+1.10.0 Feature: Added UndoViewed to MainFrame popup
+1.10.0 Feature: Finished OnlineReference intagration
  - Search TMDB for metadata
  - Added options to search TMDB and IMDB
  - Search TMDB for images
@@ -157,430 +107,265 @@
  - Automatically include RefID in AddMovie/AddEpisode frame
  - ShowInBrowser now uses URL from CCOnlineReference
  - Added DatabaseError ERROR_INVALID_ONLINEREF
-
-############ 2016-07-17: 1.10.0 Feature: Added TheMovieDB.org online-search provider
-
-############ 2016-07-17: 1.10.0 Bugfix: Fixed Exception when trying to add a movie/series/season without cover
-
-############ 2016-07-16: 1.10.0 Task: Added basic implementation of OnlineReference
-
-############ 2016-07-16: 1.10.0 Bugfix: Fixed jUnit tests
-
-############ 2016-07-16: 1.10.0 Task: Finished ViewedHistory for Movies and Episodes
-
-############ 2016-07-16: 1.10.0 Task: Finished DateTimeListEditor for EditSeriesFrame
-
-############ 2016-07-16: 1.10.0 Task: Working on 1.8 features
+1.10.0 Feature: Added TheMovieDB.org online-search provider
+1.10.0 Bugfix: Fixed Exception when trying to add a movie/series/season without cover
+1.10.0 Task: Added basic implementation of OnlineReference
+1.10.0 Bugfix: Fixed jUnit tests
+1.10.0 Task: Finished ViewedHistory for Movies and Episodes
+1.10.0 Task: Finished DateTimeListEditor for EditSeriesFrame
+1.10.0 Task: Working on 1.8 features
   - added Unit Tests
   - added CCTimeSpinner
   - added CCDateTimeSpinner
   - added DateTimeListEditor
-
-############ 2016-07-11: 1.10.0 Task: Changed database schema to 1.8
+1.10.0 Task: Changed database schema to 1.8
   - added Groups to Movies & Series
   - added ViewedHistory to Movies
   - added ViewedHistory to Episodes
   - removed Last/First-Viewed from Episodes
   - added OnlineReference URI to Movies & Series
   - added foreign keys to Episodes and Season Table
-
-############ 2016-07-10: 1.10.10 Task: Parse Schema XML with Custom Turbine parser
-
-############ 2016-07-10: 1.10.10 Task: Added .~lock file to prevent parallel db access
-
-############ 2016-07-09: 1.10.0 Feature: Added first-start wizard to choose language, database, theme etc
-
-############ 2016-07-07: 1.10.0 Bugfix: Fixed SQLite Date type not loading back from db
-
-############ 2016-07-06: 1.10.0 Bugfix: Fixed Error when using non-SQLite DB
-
-############ 2016-07-05: 1.10.0 Feature: Rudimentary support for SQLite databases
-
-############ 2016-07-06: 1.9.10 Emergency-Bugfix: Fixed Error when using non-SQLite DB
-
-############ 2016-07-05: 1.9.10 RELEASE
-
-############ 2016-07-05: 1.9.10 Feature: Added "Calculate Size" button to AddSeriesFrame
-
-############ 2016-07-02: 1.9.10 Bugfix: Fixed ImdbParser no longer getting length (IMDb yay)
-
-############ 2016-06-23: 1.9.10 Bugfix: Fixed ImdbParser no longer getting poster image (2x) (IMDb keeps changing their url schema -.-)
-
-############ 2016-06-13: 1.9.10 Task: Sort Genres in sidebar by name
-
-############ 2016-06-12: 1.9.10 Bugfix: Fixed ImdbParser no longer getting poster image (IMDb keeps changing their url schema -.-)
-
-############ 2016-06-12: 1.9.10 Task: Show first season in series preview even if there is a season zero
-
-############ 2016-05-05: 1.9.10 Task: Started support for multiple DB types
-
-############ 2016-05-05: 1.9.10 Bugfix: Fixed RegexList control in SettingsFrame
-
-############ 2016-05-05: 1.9.10 Other: Converted all files to UTF-8
-
-############ 2016-05-05: 1.9.10 Other: Fixed travis.yml script (2)
-
-############ 2016-05-05: 1.9.10 Other: Fixed travis.yml script
-
-############ 2016-05-05: 1.9.10 Other: Added build status to README
-
-############ 2016-05-05: 1.9.10 Task: Added travis config script
-
-############ 2016-05-05: 1.9.10 Task: Restore sort order after shuffle
-
-############ 2016-05-05: 1.9.10 Feature: Added mouse selection to statistic "series timeline"
-
-############ 2016-05-05: 1.9.10 Feature: Added series filter to statistic "series timeline"
-
-############ 2016-05-01: 1.9.10 Feature: Added new statistics: "series timeline"
-
-############ 2016-05-01: 1.9.10 Feature: Added shuffle button to table
-
-############ 2016-04-07: fixed some more case problems under *nix (tested under ManjaroLinux)
-
-############ 2016-04-07: fixed some case problems under *nix (tested under ManjaroLinux)
-
-############ 2016-04-03: 1.9.10 Bugfix: Fixed series addDate calculation
-
-############ 2016-01-24: 1.9.10 Feature: Added unique Identifier (DUUID) to database (for later)
-
-############ 2016-01-24: 1.9.10 Task: Better filename for movies with seperated titles (':')
-
-############ 2016-01-24: 1.9.10 Feature: Added Language "Japanese"
-
-############ 2016-01-24: 1.9.10 Feature: Added RegexList-settings to autom. extract season-indizies from season-titles (for folder structure)
-
-############ 2016-01-24: 1.9.10 Bugfix: Fixed too many newly opened windows in ScanFolderFrame (for too many found elements)
-
-############ 2016-01-24: Updated TODO
-
-############ 2016-01-07: 1.9.10 Other: Updated mikescher.de reference in README
-
-############ 2016-01-04: 1.9.10 Bugfix: Fixed wrong aligned searchfield in PreviewSeriesframe
-
-############ 2016-01-03: 1.9.9 RELEASE
-
-############ 2016-01-03: 1.9.9 Feature: Improved Usability of ExtendedSettingsFrame
-
-############ 2016-01-03: 1.9.9 Task: Made "partial viewed" icon with less contrast
-
-############ 2016-01-03: 1.9.9 Task: Moved Maintenance Tasks in own category
-
-############ 2016-01-03: 1.9.9 Feature: MassMoveMovies dialog (like massMoveSeries, but for movies)
-
-############ 2016-01-02: 1.9.9 Bugfix: Fixed getCommonFolderPath() for case-insensitive filesystems (windows)
-
-############ 2016-01-02: 1.9.9 Task: Unified translations for 'OK' and 'Cancel'
-
-############ 2016-01-02: 1.9.9 Feature: MassMoveSeries dialog (like moveSeries, but in batch)
-
-############ 2016-01-02: 1.9.9 Feature: Find dialog for film series with missing movies
-
-############ 2016-01-02: 1.9.9 Task: Changed Update API URL to mikescher.com
-
-############ 2016-01-02: 1.9.9 Feature: Better EmptyEpisode Preset and more intelligent editEpisode/editMovie dialog
-
-############ 2016-01-02: 1.9.9 Bugfix: Fixed imdb parsing for new layout (year in title)
-
-############ 2016-01-02: 1.9.9 Bugfix: Fixed <?self[dir]> wildcard under linux (only valid in windows os)
-
-############ 2016-01-02: 1.9.9 Bugfix: Fixed a few editable tables that should be readonly
-
-############ 2016-01-02: 1.9.9 Bugfix: Fixed table rendering in moveSeriesDialog
-
-############ 2015-12-30: 1.9.9 Bugfix: Fixed jpg encoding error (linux) when importing series/movie covers
-
-############ 2015-12-30: Merge pull request #2 from Bigben37/master
-
-fixed some mistakes in language files
-############ 2015-12-30: fixed some mistakes in language files
-
-############ 2015-12-27: 1.9.9 Bugfix: Fixed false-positive error "ERROR_INVALID_SERIES_STRUCTURE"
-
-############ 2015-12-27: 1.9.9 Bugfix: Fixed errors in getCCPath, caused by the new path serialization format
-
-############ 2015-12-27: 1.9.9 Bugfix: Fixed focus issues in PreviewSeriesFrame
-
-############ 2015-12-22: 1.9.8.1 Bugfix: Fixed Dateformat in DatabaseConverter(1.6 -> 1.7)
-
-############ 2015-12-22: 1.9.8 RELEASE
-
-############ 2015-12-22: 1.9.8 Bugfix: Fixed exception in statistics with movies in only one year
-
-############ 2015-12-22: 1.9.8 Task: Fixed mmissing libs in build.gradle (now with manual dependency managmet)
-
-############ 2015-12-22: 1.9.8 Task: Moved to gradle as build system
-
-############ 2015-12-18: 1.9.8 Feature: Moved MainFrame Width and Height to Settings
-
-############ 2015-12-18: 1.9.8 Feature: Show Series sorted in StatisticsFrame
-
-############ 2015-12-16: 1.9.8 Feature: Ability to navigate PreviewSeriesFrame with arrow-keys
-
-############ 2015-12-16: 1.9.8 Feature: Show (optionally) icons for partially viewed series
-
-############ 2015-12-15: 1.9.8 Task: Properties re-organized (UI and code)
-
-############ 2015-12-15: 1.9.8 Feature: Added new Property PROP_SERIES_KEEP_LASTVIEWED_PERSISTANT
-
-############ 2015-12-15: 1.9.8 Task: CCProperty.getDefault() and CCProperty.getStandard() are redundant methods -.-
-
-############ 2015-12-13: 1.9.8 Bugfix: Progressmonitor (create backup) can no longer be closed by [X]
-
-############ 2015-12-13: 1.9.8 Task: Better default value for statusbar under Metal L'n'F
-
-############ 2015-12-13: 1.9.8 Bugfix: Fixed YearRange visibility in StatisticsFrame
-
-############ 2015-12-13: 1.9.8 Feature: Fixed a few problems with the Metal LnF
-
-############ 2015-12-13: 1.9.8 Feature: Better theme for char selector buttons (Metal)
-
-############ 2015-12-13: 1.9.8 Feature: Added version number to database [DB-Version 1.8]
-
-############ 2015-12-13: 1.9.7 RELEASE
-
-############ 2015-12-13: 1.9.7 Feature: Automatic UI LnF selection on first start
-
-############ 2015-12-13: 1.9.7 Feature: Automatic parse google image results for cover (manual jsoup-ing)
-
-############ 2015-12-13: 1.9.7 Task: IMDB Parsing works again (new IMDB website layout)
-
-############ 2015-12-13: 1.9.7 Feature: Better Dialog InitialPath in addEpisodeFrame on empty series
-
-############ 2015-12-06: 1.9.7 Task: Don't show duplicate file error if file not found (absPath = empty)
-
-############ 2015-12-06: 1.9.7 Bugfix: Fixed VLC Parameter under Linux
-
-############ 2015-12-06: 1.9.7 Feature: Added Restart ActionTree entry
-
-############ 2015-12-06: 1.9.7 Bugfix: Fixed Write permission prblems on linux
-
-############ 2015-12-06: 1.9.7 Feature: Added defaul VLC Path for Unix
-
-############ 2015-12-06: 1.9.7 Feature: Check for invalid file names (and added auto-fixer for DatabaseError)
-
-############ 2015-12-06: 1.9.7 Feature: Save paths filesystem independent (always forward-slash)
-
-############ 2015-12-06: 1.9.7 Bugfix: Fixed AV on add cover-less movie (you can still shoot yourself in the foot by clicking ignore - but a missing cover was quite fatal)
-
-############ 2015-12-06: 1.9.7 Task: Updated a vene more frames to look better with [[Metal]]-design
-
-############ 2015-12-06: 1.9.7 Task: Updated a few frames to look better with [[Metal]]-design
-
-############ 2015-12-06: 1.9.7 Bugfix: Fixed line endings (r/w) on unixoid systems
-
-############ 2015-12-05: 1.9.6 RELEASE
-
-############ 2015-12-05: 1.9.6 Other: Updated README imagees
-
-############ 2015-12-05: 1.9.6 Feature: Filter (some) statistics by year
-
-############ 2015-12-04: 1.9.6 Task: Show disclaimer on first startup
-
-############ 2015-12-04: 1.9.6 Task: Use systemlanguage if no properties found
-
-############ 2015-12-03: Create LICENSE
-############ 2015-12-03: 1.9.6 Bugfix: AV on AddCustomFilter -> Abort
-
-############ 2015-12-03: 1.9.6 Other: Added TODO's
-
-############ 2015-12-02: 1.9.6 Task: Changed "Zyklus" to "Film series" in en-US
-
-############ 2015-12-02: 1.9.6 Other: Moved Images to wiki git-repo
-
-############ 2015-12-02: 1.9.6 Other: Updated README - links to wiki
-
-############ 2015-12-02: 1.9.6 Other: Removed wiki submodule (2)
-
-############ 2015-12-02: 1.9.6 Other: Removed wiki submodule
-
-############ 2015-12-02: 1.9.6 Other: Added wiki as nested root (submodule)
-
-############ 2015-12-02: 1.9.6 Other: Added wiki as nested root
-
-############ 2015-12-02: 1.9.6 Other: Fixed links in README
-
-############ 2015-12-02: 1.9.6 Other: Removed cursor from README images
-
-############ 2015-12-02: 1.9.6 Other: Complete overhaul README.md (Road to public release)
-
-############ 2015-12-02: 1.9.6 Bugfix: AV in CheckUserProblem
-
-############ 2015-12-01: 1.9.6 Task: Support for cross-plattform paths (step 1)
-
-############ 2015-12-01: 1.9.6 Bugfix: Fixed false-positive in Database-Error "Wrong AddDate"
-
-############ 2015-12-01: 1.9.6 Task: Added massIncNumbers() to AddEpisodesFrame
-
-############ 2015-09-25: 1.9.6 Task: Added new DatabaseError [ERROR_DUPLICATE_GENRE]
-
-############ 2015-09-25: 1.9.6 Task: Added new UserProblem [PROBLEM_DUPLICATE_GENRE]
-
-############ 2015-09-25: 1.9.6 Bugfix: Fixed Memoryleak in CCProperties.load()
-
-############ 2015-05-06: 1.9.5 RELEASE
-
-############ 2015-05-06: 1.9.5 Task: Added used libraries view
-
-############ 2015-05-06: 1.9.5 Task: Fixed 50 MB thumbs.db files in backup (~ 30% backup side reduction)
-
-############ 2015-04-09: 1.9.5 Feature: Added new statistics: "formate per time"
-
-############ 2015-04-08: 1.9.5 Feature: Added Series filtering to Statstistics frame
-
-############ 2015-04-08: 1.9.5 Bugfix: Upgraded jGoodies-common version from 1.2.1 to 1.8.1 (Exception with old version)
-
-############ 2015-04-01: removed artifacts
-
-############ 2015-03-31: Updated jGoodies Lib
-
-############ 2015-03-16: Beta Release (IN-HOUSE)
-
-############ 2015-02-26: 1.9.5 Bugfix: Fixed Colors in statisticsFrame
-
-############ 2015-02-26: 1.9.5 Feature: Added new statistic "Series (total viewed)"
-
-############ 2015-02-26: 1.9.4 RELEASE
-
-############ 2015-02-26: 1.9.4 Feature: Added new statistic "Series (viewed)"
-
-############ 2015-02-25: 1.9.4 Bugfix: Fixed Exception when Previewing an empty series
-
-############ 2015-02-25: 1.9.4 Task: Added DatabaseError "Impossible_Watch_Never" && moved Settings around
-
-############ 2015-02-25: 1.9.4 Bugfix: Fixed Selection and preview issues when editing/watching an episode in PreviewSeriesFrame
-
-############ 2015-02-25: 1.9.4 Feature: Added new tag "Watch never"
-
-############ 2015-02-16: Updated Changelog
-
-############ 2015-02-10: [TODO]'s
-
-############ 2015-02-08: 1.9.3 RELEASE
-
-############ 2014-10-17: 1.9.3 Bugfix: Fixed AV in CCDate.isValidate()
-
-############ 2014-10-04: 1.9.3 Bugfix: Fixed jCoverChooser reset when viewing Episode
-
-############ 2014-09-13: 1.9.2 RELEASE
-
-############ 2014-08-08: 1.9.2 Task: Reverted CharChooser to old behaviour of non-substance LnF's
-
-############ 2014-08-07: 1.9.2 Feature: Added (PLAIN | JSON | XML) export function
-
-############ 2014-08-07: 1.9.2 Feature: Added One-Click metadata calculation to "AddEpisodesFrame"
-
-############ 2014-07-29: Late night todo commit
-
-############ 2014-07-06: 1.9.2 Task: Added a minimum scrollbar height on the windows L'n'F
-
-############ 2014-06-01: 1.9.2 Task: Improved Performance when throwing a massive amount of exceptions (collecting them together)
-
-############ 2014-06-01: 1.9.2 Feature: Added ResetTags Option to ImportDialog(s)
-
-############ 2014-06-01: 1.9.2 Task: Changed IMDB-Parse Method to [jSoup-Library]
+1.10.0 Task: Parse Schema XML with Custom Turbine parser
+1.10.0 Task: Added .~lock file to prevent parallel db access
+1.10.0 Feature: Added first-start wizard to choose language, database, theme etc
+1.10.0 Bugfix: Fixed SQLite Date type not loading back from db
+1.10.0 Bugfix: Fixed Error when using non-SQLite DB
+1.9.10 Bugfix: Fixed Error when using non-SQLite DB
+
+
+#######################################################################
+############ Tue Jul 5 22:31:21 2016 +0200  1.9.10 RELEASE ############
+#######################################################################
+
+
+1.9.10 Feature: Added "Calculate Size" button to AddSeriesFrame
+1.10.0 Feature: Rudimentary support for SQLite databases
+1.9.10 Bugfix: Fixed ImdbParser no longer getting length (IMDb yay)
+1.9.10 Bugfix: Fixed ImdbParser no longer getting poster image (2x) (IMDb keeps changing their url schema -.-)
+1.9.10 Task: Sort Genres in sidebar by name
+1.9.10 Bugfix: Fixed ImdbParser no longer getting poster image (IMDb keeps changing their url schema -.-)
+1.9.10 Task: Show first season in series preview even if there is a season zero
+1.9.10 Task: Started support for multiple DB types
+1.9.10 Bugfix: Fixed RegexList control in SettingsFrame
+1.9.10 Other: Converted all files to UTF-8
+1.9.10 Other: Fixed travis.yml script (2)
+1.9.10 Other: Fixed travis.yml script
+1.9.10 Other: Added build status to README
+1.9.10 Task: Added travis config script
+1.9.10 Task: Restore sort order after shuffle
+1.9.10 Feature: Added mouse selection to statistic "series timeline"
+1.9.10 Feature: Added series filter to statistic "series timeline"
+1.9.10 Feature: Added new statistics: "series timeline"
+1.9.10 Feature: Added shuffle button to table
+1.9.10 Bugfix: Fixed series addDate calculation
+1.9.10 Feature: Added unique Identifier (DUUID) to database (for later)
+1.9.10 Task: Better filename for movies with seperated titles (':')
+1.9.10 Feature: Added Language "Japanese"
+1.9.10 Feature: Added RegexList-settings to autom. extract season-indizies from season-titles (for folder structure)
+1.9.10 Bugfix: Fixed too many newly opened windows in ScanFolderFrame (for too many found elements)
+1.9.10 Other: Updated mikescher.de reference in README
+1.9.10 Bugfix: Fixed wrong aligned searchfield in PreviewSeriesframe
+
+
+######################################################################
+############ Sun Jan 3 02:26:20 2016 +0100  1.9.9 RELEASE ############
+######################################################################
+
+
+1.9.9 Feature: Improved Usability of ExtendedSettingsFrame
+1.9.9 Task: Made "partial viewed" icon with less contrast
+1.9.9 Task: Moved Maintenance Tasks in own category
+1.9.9 Feature: MassMoveMovies dialog (like massMoveSeries, but for movies)
+1.9.9 Bugfix: Fixed getCommonFolderPath() for case-insensitive filesystems (windows)
+1.9.9 Task: Unified translations for 'OK' and 'Cancel'
+1.9.9 Feature: MassMoveSeries dialog (like moveSeries, but in batch)
+1.9.9 Feature: Find dialog for film series with missing movies
+1.9.9 Task: Changed Update API URL to mikescher.com
+1.9.9 Feature: Better EmptyEpisode Preset and more intelligent editEpisode/editMovie dialog
+1.9.9 Bugfix: Fixed imdb parsing for new layout (year in title)
+1.9.9 Bugfix: Fixed <?self[dir]> wildcard under linux (only valid in windows os)
+1.9.9 Bugfix: Fixed a few editable tables that should be readonly
+1.9.9 Bugfix: Fixed table rendering in moveSeriesDialog
+1.9.9 Bugfix: Fixed jpg encoding error (linux) when importing series/movie covers
+1.9.9 Bugfix: Fixed false-positive error "ERROR_INVALID_SERIES_STRUCTURE"
+1.9.9 Bugfix: Fixed errors in getCCPath, caused by the new path serialization format
+1.9.9 Bugfix: Fixed focus issues in PreviewSeriesFrame
+1.9.8.1 Bugfix: Fixed Dateformat in DatabaseConverter(1.6 -> 1.7)
+
+
+#######################################################################
+############ Tue Dec 22 16:12:05 2015 +0100  1.9.8 RELEASE ############
+#######################################################################
+
+
+1.9.8 Bugfix: Fixed exception in statistics with movies in only one year
+1.9.8 Task: Fixed mmissing libs in build.gradle (now with manual dependency managmet)
+1.9.8 Task: Moved to gradle as build system
+1.9.8 Feature: Moved MainFrame Width and Height to Settings
+1.9.8 Feature: Show Series sorted in StatisticsFrame
+1.9.8 Feature: Ability to navigate PreviewSeriesFrame with arrow-keys
+1.9.8 Feature: Show (optionally) icons for partially viewed series
+1.9.8 Task: Properties re-organized (UI and code)
+1.9.8 Feature: Added new Property PROP_SERIES_KEEP_LASTVIEWED_PERSISTANT
+1.9.8 Task: CCProperty.getDefault() and CCProperty.getStandard() are redundant methods -.-
+1.9.8 Bugfix: Progressmonitor (create backup) can no longer be closed by [X]
+1.9.8 Task: Better default value for statusbar under Metal L'n'F
+1.9.8 Bugfix: Fixed YearRange visibility in StatisticsFrame
+1.9.8 Feature: Fixed a few problems with the Metal LnF
+1.9.8 Feature: Better theme for char selector buttons (Metal)
+1.9.8 Feature: Added version number to database [DB-Version 1.8]
+
+
+#######################################################################
+############ Sun Dec 13 17:17:37 2015 +0100  1.9.7 RELEASE ############
+#######################################################################
+
+
+1.9.7 Feature: Automatic UI LnF selection on first start
+1.9.7 Feature: Automatic parse google image results for cover (manual jsoup-ing)
+1.9.7 Task: IMDB Parsing works again (new IMDB website layout)
+1.9.7 Feature: Better Dialog InitialPath in addEpisodeFrame on empty series
+1.9.7 Task: Don't show duplicate file error if file not found (absPath = empty)
+1.9.7 Bugfix: Fixed VLC Parameter under Linux
+1.9.7 Feature: Added Restart ActionTree entry
+1.9.7 Bugfix: Fixed Write permission prblems on linux
+1.9.7 Feature: Added defaul VLC Path for Unix
+1.9.7 Feature: Check for invalid file names (and added auto-fixer for DatabaseError)
+1.9.7 Feature: Save paths filesystem independent (always forward-slash)
+1.9.7 Bugfix: Fixed AV on add cover-less movie (you can still shoot yourself in the foot by clicking ignore - but a missing cover was quite fatal)
+1.9.7 Task: Updated a vene more frames to look better with [[Metal]]-design
+1.9.7 Task: Updated a few frames to look better with [[Metal]]-design
+1.9.7 Bugfix: Fixed line endings (r/w) on unixoid systems
+
+
+######################################################################
+############ Sat Dec 5 14:46:40 2015 +0100  1.9.6 RELEASE ############
+######################################################################
+
+
+1.9.6 Other: Updated README imagees
+1.9.6 Feature: Filter (some) statistics by year
+1.9.6 Task: Show disclaimer on first startup
+1.9.6 Task: Use systemlanguage if no properties found
+1.9.6 Bugfix: AV on AddCustomFilter -> Abort
+1.9.6 Other: Added TODO's
+1.9.6 Task: Changed "Zyklus" to "Film series" in en-US
+1.9.6 Other: Moved Images to wiki git-repo
+1.9.6 Other: Updated README - links to wiki
+1.9.6 Other: Removed wiki submodule (2)
+1.9.6 Other: Removed wiki submodule
+1.9.6 Other: Added wiki as nested root (submodule)
+1.9.6 Other: Added wiki as nested root
+1.9.6 Other: Fixed links in README
+1.9.6 Other: Removed cursor from README images
+1.9.6 Other: Complete overhaul README.md (Road to public release)
+1.9.6 Bugfix: AV in CheckUserProblem
+1.9.6 Task: Support for cross-plattform paths (step 1)
+1.9.6 Bugfix: Fixed false-positive in Database-Error "Wrong AddDate"
+1.9.6 Task: Added massIncNumbers() to AddEpisodesFrame
+1.9.6 Task: Added new DatabaseError [ERROR_DUPLICATE_GENRE]
+1.9.6 Task: Added new UserProblem [PROBLEM_DUPLICATE_GENRE]
+1.9.6 Bugfix: Fixed Memoryleak in CCProperties.load()
+
+
+######################################################################
+############ Wed May 6 16:18:29 2015 +0200  1.9.5 RELEASE ############
+######################################################################
+
+
+1.9.5 Task: Added used libraries view
+1.9.5 Task: Fixed 50 MB thumbs.db files in backup (~ 30% backup side reduction)
+1.9.5 Feature: Added new statistics: "formate per time"
+1.9.5 Feature: Added Series filtering to Statstistics frame
+1.9.5 Bugfix: Upgraded jGoodies-common version from 1.2.1 to 1.8.1 (Exception with old version)
+1.9.5 Bugfix: Fixed Colors in statisticsFrame
+1.9.5 Feature: Added new statistic "Series (total viewed)"
+
+
+#######################################################################
+############ Thu Feb 26 02:16:03 2015 +0100  1.9.4 RELEASE ############
+#######################################################################
+
+
+1.9.4 Feature: Added new statistic "Series (viewed)"
+1.9.4 Bugfix: Fixed Exception when Previewing an empty series
+1.9.4 Task: Added DatabaseError "Impossible_Watch_Never" && moved Settings around
+1.9.4 Bugfix: Fixed Selection and preview issues when editing/watching an episode in PreviewSeriesFrame
+1.9.4 Feature: Added new tag "Watch never"
+
+
+######################################################################
+############ Sun Feb 8 21:46:31 2015 +0100  1.9.3 RELEASE ############
+######################################################################
+
+
+1.9.3 Bugfix: Fixed AV in CCDate.isValidate()
+1.9.3 Bugfix: Fixed jCoverChooser reset when viewing Episode
+
+
+#######################################################################
+############ Sat Sep 13 21:06:40 2014 +0200  1.9.2 RELEASE ############
+#######################################################################
+
+
+1.9.2 Task: Reverted CharChooser to old behaviour of non-substance LnF's
+1.9.2 Feature: Added (PLAIN | JSON | XML) export function
+1.9.2 Feature: Added One-Click metadata calculation to "AddEpisodesFrame"
+1.9.2 Task: Added a minimum scrollbar height on the windows L'n'F
+1.9.2 Task: Improved Performance when throwing a massive amount of exceptions (collecting them together)
+1.9.2 Feature: Added ResetTags Option to ImportDialog(s)
+1.9.2 Task: Changed IMDB-Parse Method to [jSoup-Library]
   (source of a few bugs & better Maintenance)
-
-############ 2014-06-01: 1.9.2 Task: Only allow CreateFolderStructure after successful tests
-
-############ 2014-06-01: 1.9.2 Bugfix: Fixed AV when selecting Theme "Autumn"
-
-############ 2014-06-01: 1.9.2 Bugfix: Fixed List-UI with "Windows"-Theme
-
-############ 2014-06-01: 1.9.2 Bugfix: Fixed ValidateDatabase->CheckFolderStructure for Folder with different Lowercase/Uppercase
-
-############ 2014-06-01: 1.9.2 Bugfix: Fixed Filename-creation for Elements ending with a dot (caused various other bugs)
-
-############ 2014-05-24: 1.9.2 Bugfix: Wrong Movie-Filesize when having more than 2 Parts (+ TODO's)
-
-############ 2014-05-18: 1.9.2 Task: Live update PreviewSeriesFrame (while open)
-
-############ 2014-05-16: 1.9.2 Bugfix: ParseWatchDataFrame: Update Date even when no change in viewed
-
-############ 2014-05-16: 1.9.2 Beta Release (for internal use only)
-
-############ 2014-05-16: Fixed ParseWatchData not setting episodes to correct value
-
-############ 2014-05-11: Fixed typo
-
-############ 2014-05-10: 1.9.2 Feature: Added new Syntax to ParseWatchDataFrame (Episode ranges)
-
-############ 2014-05-09: 1.9.2 Feature: Added new Database Error: "INVALID_SERIESSTRUCTURE"
-
-############ 2014-04-30: 1.9.2 Feature: Added clickable Score to ClipTable
-
-############ 2014-04-30: 1.9.2 Bugfix: Fixed TextEncoding when loading Filter from File
-
-############ 2014-04-30: 1.9.2 Feature: Added 'pasteURL' && 'pasteImage' to EditCoverComponent
-
-############ 2014-04-29: 1.9.2 Feature: Only show SeriesOverlay when optin selected (do not modify files)
-
-############ 2014-04-29: 1.9.2 Feature: Added proper EditCoverControl
+1.9.2 Task: Only allow CreateFolderStructure after successful tests
+1.9.2 Bugfix: Fixed AV when selecting Theme "Autumn"
+1.9.2 Bugfix: Fixed List-UI with "Windows"-Theme
+1.9.2 Bugfix: Fixed ValidateDatabase->CheckFolderStructure for Folder with different Lowercase/Uppercase
+1.9.2 Bugfix: Fixed Filename-creation for Elements ending with a dot (caused various other bugs)
+1.9.2 Bugfix: Wrong Movie-Filesize when having more than 2 Parts (+ TODO's)
+1.9.2 Task: Live update PreviewSeriesFrame (while open)
+1.9.2 Bugfix: ParseWatchDataFrame: Update Date even when no change in viewed
+1.9.2 Feature: Added new Syntax to ParseWatchDataFrame (Episode ranges)
+1.9.2 Feature: Added new Database Error: "INVALID_SERIESSTRUCTURE"
+1.9.2 Feature: Added clickable Score to ClipTable
+1.9.2 Bugfix: Fixed TextEncoding when loading Filter from File
+1.9.2 Feature: Added 'pasteURL' && 'pasteImage' to EditCoverComponent
+1.9.2 Feature: Only show SeriesOverlay when optin selected (do not modify files)
+1.9.2 Feature: Added proper EditCoverControl
   -> AddMovieFrame
   -> AddSeasonFrame
   -> AddSeriesFrame
   -> EditMovieFrame
   -> EditSeriesFrame
+1.9.2 Bugfix: Fixed Zyklus-Click not working
+1.9.2 Bugfix: Fixed various Exceptions when MovieList is empty
+1.9.2 Bugfix: Fixed Creating new Database (Schema was too old)
+1.9.2 Bugfix: Fixed Exception when sorting by ViewState
+1.9.2 Task: Disabled Column Dragging in Table (caused weird things)
+1.9.2 Bugfix: Fixed Exception in AddEpisodesFrame when ignoring Warnings
+1.9.2 Bugfix: Fixed Column-Resizing when deleting whole Series
+1.9.2 Bugfix: Fixed missing locale: "ExportHelper.dialogs.resetScore_caption"
+1.9.2 Bugfix: Fixed Format==null when Extension is not recognized
+1.9.2 Bugfix: Fixed Onlinescore can't be 10
+1.9.2 Bugfixes
+  - Fixed OpenLastPlöayedSeries not really selecting last played Episode
+  - Fixed ImDB-Parsing not recognizing images
+  - Fixed CustomOnlineSCoreFilter interpreting No-Score as valid score
 
-############ 2014-04-29: 1.9.2 Bugfix: Fixed Zyklus-Click not working
 
-############ 2014-04-28: 1.9.2 Bugfix: Fixed various Exceptions when MovieList is empty
+#######################################################################
+############ Sun Jan 26 00:57:13 2014 +0100  1.9.1 RELEASE ############
+#######################################################################
 
-############ 2014-04-28: 1.9.2 Bugfix: Fixed Creating new Database (Schema was too old)
 
-############ 2014-04-28: 1.9.2 Bugfix: Fixed Exception when sorting by ViewState
-
-############ 2014-04-28: 1.9.2 Task: Disabled Column Dragging in Table (caused weird things)
-
-############ 2014-04-28: 1.9.2 Bugfix: Fixed Exception in AddEpisodesFrame when ignoring Warnings
-
-############ 2014-04-14: Added a few (2) Bugs in Todo-List
-
-############ 2014-03-16: C-C-C-Combo-TODO-Commit
-
-############ 2014-03-11: Tododos
-
-############ 2014-03-09: Added Bug-Report-Todos
-
-############ 2014-02-27: 1.9.2 Bugfix: Fixed Column-Resizing when deleting whole Series
-
-############ 2014-02-27: 1.9.2 Bugfix: Fixed missing locale: "ExportHelper.dialogs.resetScore_caption"
-
-############ 2014-02-27: 1.9.2 Bugfix: Fixed Format==null when Extension is not recognized
-
-############ 2014-02-27: 1.9.2 Bugfix: Fixed Onlinescore can't be 10
-
-############ 2014-02-26: Feature ToDos and a TODO for a critical Bug
-
-############ 2014-02-18: More Todo's   ...   as always
-
-############ 2014-02-16: 1.9.2 Bugfixes
-- Fixed OpenLastPlöayedSeries not really selecting last played Episode
-- Fixed ImDB-Parsing not recognizing images
-- Fixed CustomOnlineSCoreFilter interpreting No-Score as valid score
-
-############ 2014-02-15: Added critical ToDo
-
-############ 2014-02-06: ToDo (Singular ...)
-
-############ 2014-02-02: You know the deal ... more ToDo's
-
-############ 2014-01-26: Updated Changelog
-
-############ 2014-01-26: 1.9.1 RELEASE
-
-############ 2014-01-26: 1.9.1 Feature
+1.9.1 Feature
   Improved loadTime:
     Added Cache for Substance-Look'n'Feels ( ~200ms )
     Removed unnecessary InvokeAndWait on busy Dispatcher ( ~3000ms )
-
-############ 2014-01-25: 1.9.1 Feature
+1.9.1 Feature
   Added Action: "Open Last played Series"
-
-############ 2014-01-25: 1.9.1 Feature
+1.9.1 Feature
   Added progressive Viewed-Icon on PreviewSeriesFrame
-
-############ 2014-01-25: 1.9.1 Feature & Bugfixes
+1.9.1 Feature & Bugfixes
   Added Way to save Filter
   Fixed FilterTree Bug when it wouldn't update
   Fixed FilterTree Bug when it wouldn't collapse
@@ -591,949 +376,706 @@ fixed some mistakes in language files
   Fixed Bug where DIalog-FInish-Listener was called more than one time
     => cause of many strange behaviours
   Updated .gitignore for *.flst files
-
-############ 2014-01-24: 1.9.1 Feature
+1.9.1 Feature
   Added Option to reset Score when Importing Movies/Series
-
-############ 2014-01-24: 1.9.1 Feature
+1.9.1 Feature
   Added new Statistics: "Viewed (Episodes)"
-
-############ 2014-01-24: 1.9.1 Feature
+1.9.1 Feature
   Added new DatabaseError: LastViewed is before 1.6.1900 (practically impossible)
   Added "Fix Multiple DatabaseErrors At Once"-Feature (You can now multi select)
-
-############ 2014-01-21: 1.9.1 Feature & Bugfixes
+1.9.1 Feature & Bugfixes
   Added Display for WatchLater in "Viewed"-Column
   Added OPtion to automatically update "WatchLater"-Tag
   Added DatabaseError "IMPOSSIBLE_WATCHLATER"
   Fixed Dispatch-Thread Error in CheckDatabaseFrame
-
-############ 2014-01-20: 1.9.1 Feature
+1.9.1 Feature
   Added better ClickArea for Zyklus-Clicking
   Added Hover-Cursor for Zyklus-Clicking
-
-############ 2013-11-27: ToDos because i have no time for actual coding ...
-
-############ 2013-11-10: 1.9.1 Beta Release (for internal use only)
-
-############ 2013-11-10: 1.9.1 Feature
-Added parseWatchDataFrame
+1.9.1 Feature
+  Added parseWatchDataFrame
  -> Parses Watched Series/Movies from plainText
-
-############ 2013-10-27: 1.9.1 Big Feature (and Bugfixes)
-Added CoverCropDialog(crop & edit covers)
-Added ImageCropper to AddMovieFrame
-Added ImageCropper to AddSasonFrame
-Added ImageCropper to AddSeriesFrame
-Added ImageCropper to EditMovieFrame
-Added ImageCropper to EditSeriesFrame
-
-Fixed Bug when accessing a halfsize version of the standard cover
-Fixed Wrong Border Dimensions around partial tranparent cover in FindCoverDialog
-Fixed rendering Tags on actual DB-Cover when "RenderTagsOnCover" is set to true
-
-############ 2013-10-26: 1.9.1 Bugfixes
-Fixed AV when removing the last Element in Table (that is also selected)
-Fixed PreviewSeriesFrame VertScrollbar staying bottom when switching Season
-Improved internal handling of readonly-prohibited operations
-Fixed CoverChooser Border on partially transparent covers
-
-############ 2013-09-28: All hail my ToDo Commits
-
-############ 2013-09-15: And even more ToDos :D
-
-############ 2013-09-15: Added ToDos
-
-############ 2013-08-25: 1.9.1 Bugfixes
-Fixed too late Backup deletion (1 day late)
-Fixed Omniparer not recognizing Counter with variable lengths
-
-############ 2013-08-25: Updated Changelog
-
-############ 2013-08-25: 1.9 RELEASE
-
-############ 2013-08-25: 1.9 Features
-Added Tag-Display to Cover on MainFrame
-Added Big (blinking) Error Warning when Error occurs
-
-############ 2013-08-25: 1.9 Features
-Added Icons for CustomFilter & BackupManager
-Database shuts now correctly down onClose
-Added Option for Quick (and dirty) closing
-Finished BackupManager (You can restore from old Backups)
-Added Info-Panel to Backupmanager (Shows Backup-Settings)
-Fixed JClipCorn not correctly shutting down on Fatal Error
-
-############ 2013-08-24: 1.9 Features
-Added a functionality to a few Buttons in BackupsManagerFrame
-Fixed unclosed Filehandle in CCProperties
-Fixed unclosed Filehandle in BackupManager
-
-############ 2013-08-24: 1.9 Features
-Semi-Finished BackupManager (the visuas work, no Button-Functionality)
-Fixed Auto-Delete Bug in new Backup-System
-
-############ 2013-08-23: 1.9 Features
-Implemented new Backup Functionality
-STarted BackupManagerFrame (unfinished)
-
-############ 2013-08-23: 1.9 Features
-Added More Info on FATAL-ERROR Message
-Addedd initial check for Write-Permissions (-> FATAL ERROR)
-
-############ 2013-08-23: 1.9 Bugfixes
-Fixed Bug with wrong Filechooser-direction in EditSeriesFrame
-Fixed Bug where you can close an ProgressMonitor
-
-############ 2013-08-22: 1.9 Bugfixes
-Fixed Load-AV when Season has 0 Episodes
-Fixed getCommonPathStart()-Bug when there is an empty  series/ empty season / uninitialized episode
-
-############ 2013-08-22: 1.9 Feature
-Added additional integrity Check when finally closing AddEpisodesFrame
-
-############ 2013-08-22: 1.9 Bugfix
-Fixed Omniparser-Bug where the Lines are not trimmed
-
-############ 2013-08-22: 1.9 Features
-Added "Play without changing Episode-State"-Feature
-Added Debug-Feature to print TranslationTree
-
-############ 2013-08-22: 1.9 Tasks
-Immproved Information-Output in CouldNotParseFSK Warning
-Added USA:"approved" to AgeRatingParser
-Updated ToDo List
-
-############ 2013-08-22: 1.9 Bugfixes
-Fixed Problem when re-importing Movies with NON-ASCII Chars (Encoding ...)
-
-############ 2013-08-21: 1.9 Bugfixes
-Fixed CompareDatabase Bug wehre the selection was not correct registered
-
-############ 2013-08-21: 1.9 Features
-Finished Custom Filter
-Added Import / Export to Filter
-Fixed Bug in Genre / Year Filter
-
-############ 2013-08-20: 1.9 Features
-Started Exporting / Importing of Custom Filter (unfinished)
-
-############ 2013-08-20: 1.9 Features
-Added Custom-Table Filter
-Added CustomFilter for every TableField
-Added AND / OR / NAND / NOR Operators for CustomFilter
-
-############ 2013-08-19: 1.9 Features
-Finished Omniparser
-Added VerticalScrollBarSynchronizer Helper Class
-
-############ 2013-08-16: 1.9 Features
-Added Big OmniParser Feature
-Reorganized Util-Classses (Changes in the imports in many classes [!] )
-Fixed Null-Pointer when displaying an empty series
-
-############ 2013-07-26: Added even more 1.9 ToDos
-
-############ 2013-07-26: Imma gonna do alot of commits today (4. Try)
-
-############ 2013-07-26: Third Try, wish me luck
-
-############ 2013-07-26: Second try 4 README
-
-############ 2013-07-26: "Improved" Readme
-
-############ 2013-07-26: Addde more 1.9 ToDos
-(I should start do REAL programming)
-
-############ 2013-07-18: Added ToDos (Perhaps 1.9)
-
-############ 2013-07-07: 1.8.3 RELEASE
-
-############ 2013-07-04: 1.8.3 Bugfixes and Features
-Added Error Handling for broken Coverfiles
-Added Error Handling in Large MD5 Calculator
-Added Possibility to fix single Databaseerror
-Added Information Monitor when backuping
-Fixed wrong Seasonnumber for unsorted Seasons in CreateFolderStructure
-
-############ 2013-06-30: 1.8.3 Bugfixes
-Hopefully finally fixed CCDateSpinner -.-
-
-############ 2013-06-22: 1.8.3 Features
-Added possibility for public (or private) beta builds
-
-############ 2013-06-22: 1.8.3 Bugfixes
-Fixed Overriding in CCDateSpinner
-Added Big "Continue Watching" Button to PreviewSeriesFRame
-CCDate is now an immutable Object (possible root for new bugs)
-
-############ 2013-06-21: Added ToDo
-
-############ 2013-06-21: Updated Changelog + ToDo + gitCommands
-
-############ 2013-06-15: 1.8.2 RELEASE
-
-############ 2013-06-15: 1.8.2 Bugfixes
-
-Fixed getRelativePath for non absolute Paths
-Improved Error Managment in CreateSeriesFolderStructure
-
-############ 2013-06-15: Removed already done ToDos
-
-############ 2013-06-15: 1.8.2 Bugfixes + Features
-
-Added Read Only Mode
-Added additional VLC Paths
-Fixed unused ACtionELements in SHortcut Settings
-Improved ActionELement Naming in Shortcut Settings
-
-############ 2013-06-03: 1.8.2 Bugfixes
-
-Fixed Series->openInFoder: Opening wrong path
-Fixed CCDate Spinner not regitering manually inserted CCDates
-Added Recognizing of short years ('95) to CCDate Parser
-Fixed getCommonFolderPath resulting in an endless loop for empty input
-values
-Added CheckForUpdates CCAction
-Added Case for No Update found in UpdateFrame
-
-############ 2013-06-02: 1.8.2 Bugfixes
-
-AddEpisodesFrame: Fixed Wrong Spinner for Sidebarbutton
-EditSeriesFrame: Update List after Changing Episodetitle
-
-############ 2013-06-01: 1.8.1 RELEASE
-
-Fixed AV when Autofixing wrong Quality of an Episode
-createSTructureFrame closes after successful operation
-
-############ 2013-06-01: 1.8 RELEASE
-
-Updated Version to 1.8
-
-############ 2013-06-01: 1.8 Features
-
-Fixed various AV's when doing Action with an unfinished DriveMap
-Showing the Translationcount as Debugmessage
-Added Statistics-Icon
-
-############ 2013-06-01: 1.8 Features (StatisticsFrame completed)
-
-Finished StatisticsFrame:
-Added Userscore-Chart
-Added Genre-Chart
-Added FSK-Chart
-Added Language-Chart
-Added Tags-Chart
-Added Hours/Date-Chart (Movies, Series, both)
-Added Size/Date-Chart
-Added Hidden Option for Interactive Charts (Default-off)
-Fixed Sort-per-Year AV
-
-############ 2013-06-01: 1.8 Features (StatisticsFrame)
-
-Added StatisticsFrame
-Added Statistics Sidebar
-Added Add-Date Chart
-Added Format-Chart
-Added Length-Chart
-Added Score-Chart
-Added Quality-Chart
-Added Viewed-Chart
-Added Year-Chart
-
-############ 2013-05-30: 1.8 Features (PreviewSeriesFrame)
-
-JCoverChooser only reacts to left MouseButton
-Added RightClickMenu to Cover
-Added all the Options to SeriesMenu, SeasonMenu, ExtrasMenu and
-PopupMenu in PreviewSeriesFrame
-Added getInstance to MainFrame (IntermediateBlocking without direct
-access)
-
-############ 2013-05-30: 1.8 Bugfixes
-
-Added CalcQuality-Button to EditSeriesFrame
-Added forceDBUpdate Funktion to MovieList
-
-############ 2013-05-30: 1.8 Features (createSeriesFolderStructure)
-
-Finished cSFS-Functionality
-Added ActionElement for this
-
-############ 2013-05-29: 1.8 Features (createSeriesFolderStructure)
-
-started Series-cFS-Dialog
-createdGUI for Series-cFS-Frame
-
-############ 2013-05-29: 1.8 Features (MoveSeriesDialog)
-
-Resizable MoveSeriesDialog
-Visual Feedback if Operation is possible in MoveSeriesDialog
-Preview before executing in MoveSeriesDialog
-
-############ 2013-05-29: 1.8 Features (CheckDatabaseFrame)
-
-Added CategoryList to CheckDatabaseFrame
-Added ErrorType to DatabaseError
-Added visualization of Autofixable to List in CheckDatabaseFrame
-Added Translations to Error-Categories
-
-############ 2013-05-27: 1.8 Features (Tag System completed)
-
-New and better Tag-Icons (but not perfect ...)
-No duplicate Icons in Resources
-Better Tag Display in Table
-
-############ 2013-05-26: 1.8 Features
-
-Updated the DB-Version, for real this time
-
-############ 2013-05-26: 1.8 Features (Tag-System)
-
-Added, Removed and changed Ions
-Removed MagicNumbers in PreviewSeriesTable
-Removed the Field "Status" (moved to Tags)
-Added Tags to Movies and Episodes
-Added TagPanel to Display Tags of an Element
-Updated Database structure to 1.6
-Updated Locales (Removed a few Inconsistencies)
-Fatal Error on wrong Database structure
-
-############ 2013-05-25: 1.7.3 RELEASE
-
-############ 2013-05-25: 1.7.3 Fixes and Tasks
-
-New empty Seasons now have the name <untitled>
-New empty Episodes now have the name <untitled>
-SeasonList gets updated in EditSeriesFrame when updating a Seasontitle
-Changed Quality to be dependent on Length
-Added CalcQuality Button to Add/Edit -MovieFrame
-
-############ 2013-05-24: 1.7.3 ToDOs
-
-I should start coding - ToDos dont help
-
-############ 2013-05-22: 1.7.3 Updated ToDos
-
-And the ToDo List is growing and growing
-
-############ 2013-05-21: 1.7.3 ToDos Update
-
-Added Requests/Bugs from Benjamin
-
-############ 2013-05-21: 1.7.3 Updated ToDos
-
-############ 2013-05-18: 1.7.2 RELEASE
-
-Bugfix Release
-
-############ 2013-05-18: 1.7.2 Code Cleanup
-
-Removed "Magic Numbers" for Column-Indizies
-
-############ 2013-05-18: 1.7.2 Bugfix
-
-Fixed Wrong renaming for English/France or Muted Movies
-
-############ 2013-05-09: 1.7.1 RELEASE
-
-Bugfix Release
-
-############ 2013-05-09: 1.7.1 Bugfixes
-
-Fixed Null-Cover Bug
-Fixed Element-Changed-Listener resetting TableSelection
-Fixed jCoverChooser drawing an null-Image (i hope so ...)
-
-############ 2013-05-01: 1.7.1 Bugfixes
-
-Fixed Translations
-Fixed Button Enablation in CheckDatabaseFrame
-
-############ 2013-04-29: 1.7 Changelog
-
-Updated Changelog for 1.7
-
-############ 2013-04-29: 1.7 RELEASE
-
-Updated Version to "1.7"
-
-############ 2013-04-29: 1.7 Fixes
-
-Fixed Translation
-Fixed a few Bugs
-Oragnized ToDos
-
-############ 2013-04-29: 1.7 Features
-
-Added Option for Clickable Zyklus
-
-############ 2013-04-29: 1.7 Features
-
-Improved the Search in PreviewSeriesFrame
-Added Settings for displaying Columns in Statusbar
-Added the RabdomMovieFrame ("Filmtrommel")
-
-############ 2013-04-27: 1.7 Features+Bugfix
-
-Fixed Zero-Height Lines in JList (on empty elements)
-Fixed Layout (Wrong Widths) of Lists in editToolbarFrame
-Added Non-Linked-Cover DatabaseError
-
-############ 2013-04-27: 1.7 Features
-
-Added Option for Add-Date Calculation-Method in Settings
-Added Missing
-Icons
-Added 16x16 Icons (now there should no Icons get down-sized in
-runtime)
-
-############ 2013-04-26: 1.7 Bugfixes
-
-Fixed too small seperator in editToolbarFrame
-Fixed Nullpointer when adding/previewing/deleting season
-Fixed MassSetLength in addMultipleEpisodesFrame
-Fixed NonSelection TitleEdit in addMultipleEpisodesFrame
-Fixed non setting LastViewed when man. changing Viewed of an Episode
-Added UserDataProblem "Untrimmed" to CCSeries
-Added UserDataProblem "Untrimmed" to CCSeason
-Added UserDataProblem "Untrimmed" to CCEpisode
-Fixed Color of CaptionedPanel in addMultipleEpisodesFrame
-Fixed Backgroundcolor of PathEdit in addMultipleEpisodesFrame
-
-############ 2013-04-26: 1.7 Libraryfix
-
-Fixed BeanUtils Library (again)
-- Removed duplicate files in jar
-
-############ 2013-04-26: 1.7 Bugfix
-
-Removed Test-Ressource-File (*_16x16.png)
-Fixed Fatal AV when Searching for Directory
-Fixed the possibility to open Windows while in an blocking call (through
-Screenshots)
-
-############ 2013-04-26: 1.7 Features
-
-Fixed Missing BeanUtils-Exception Bug (now using custom compiled
-beanutils.jar)
-Added support for prerenderered 16x16 Icons
-Fixed Border around Seperator in EditToolbarFrame
-Updated ToDos
-
-############ 2013-04-26: 1.7 Features
-
-Added PropertyCheckbox
-Added Option to change the Toolbar
-added ToolbarConfigPanel to show ToolbarConfig
-Added EditToolbarFrame to change the Toolbar visual
-
-############ 2013-04-26: 1.7 Bugfix
-
-Fixed missing jGoodies-Commons Library
-
-############ 2013-04-26: Export Fix (BeanUtils)
-
-Fixed the Duplicate-Entry Bug when exporting
-
-############ 2013-04-26: 1.7 Possible Bugfixes
-
-Fixed new Warnnings due to new Eclipse Settings
-- Fixed a few ressourceleaks
-
-############ 2013-04-26: Git cleanup
-
-Added Eclipse Files to Repository
-Configured Project specific settings
-Added javadoc to repository
-Updated Derby and jGoodies Library
-
-############ 2013-04-25: Added gitcommands
-
-Added gitcommands - a list of Commands for git
-
-############ 2013-04-25: Changelog Fix 2
-
-Changed Changelog Encoding from UTF-8 (BOM) to ANSI
-
-############ 2013-04-25: Changelog Fix
-
-Fixed Wrong Encoding in Changelog (removed BOM,, Encoding from UCS-2 to
-UTF-8)
-
-############ 2013-04-25: 1.7 Features
-
-Add Cache-Function to Movieplayer (it remembers the VLC-Path)
-Removed the Cancel-Button from ParseImDBDialog
-(Noone noticed it had no functionality ^^)
-
-############ 2013-04-25: 1.7 Features
-
-Added Episodeguide-Export to Series
-
-############ 2013-04-25: 1.7 Glitchfix
-
-Rewrite of the SFixTable, should now work ("nearly") always
-
-############ 2013-04-25: 1.7 Features
-
-Improved ExtendedSettingsframe (now uses the Component Methods from the
-Properties)
-
-############ 2013-04-25: 1.7 Features
-
-Added Shortcuts for ExportList
-Added Option to export Movies in CompareDatabaseDialog
-Added (hidden) option for ImDB-Parser-Language
-Added automatic sorter to extendedSettingsFrame
-Added general openFile-Dialog
-Cleaned up the open File Methods (moved all openFile-Things to extra
-methods)
-
-############ 2013-04-25: 1.7 Features
-
-Finished Single-Import
-Finished Single-Export
-Finished Multiple-Import
-Finished Multiple-Export
-
-############ 2013-04-24: 1.7 Features
-
-Added Option to export Cover in XML
-Added LocalID to searched Fields in SearchFrame
-Adedd Export-Single-Movie Function
-Added (incomplete) Import-Movie-from-jccsexport-File Function
-Added ImportElementsFrame to Import One or Multiple Elements from a File
-Small Bugfixes
-Updated Locale-Files
-Updated ToDOs
-
-############ 2013-04-24: 1.7 Big Code Cleanup
-
-Massive CodeCleanup with >>Google CodePro AnalytiX<<
-Fixed a lot of bad code, possible errors and ugly programming style
-
-############ 2013-04-23: 1.7 Code Cleanup
-
-Fixed "unclean" Code (CodePro AnalytiX):
-- Added Names to Threads
-- Added hashcode() Methods
-- Replaced "startsWith" with "charAt(0)"
-- Removed obsolete semikolons
-- Made LocalizedVector Methods synchronized
-- Various other improvements
-
-############ 2013-04-23: 1.7 Code Cleanup
-
-Removed unused Localizations
-
-############ 2013-04-23: 1.7 Features
-
-Forced Extension in SaveDialogs
-Removed strange empty lines in Coverlabel (dafuq ?)
-Fixed Bug when deleting Series (not deleting all cover / deleting some 2
-times)
-Fixed ConcurrentModification in getGenreList (yay, finally)
-Added OnRefresh Event (after the Blocking of the App)
-
-############ 2013-04-23: 1.7 Features
-
-Removed the unnecessary Frame ExportJXMLBKPDialog (Functionality is now
-frameless)
-
-############ 2013-04-23: 1.7 Features
-
-Added Option to load previously exported (jxmlbkp) Databases
-Moved the zip / export / import Functionality to ExportHelper.java
-Added parseXML Functions to CCMovie, CCSeries, CCSeason and CCEpisode
-It now needs a doubleclick to open the Log
-Fixed Bug in Settingsframe with empty Descriptions (captionIdent == "")
-
-############ 2013-04-22: 1.7 Updated ToDOs
-
-A lot of TODO Updates ...
-
-############ 2013-04-14: 1.7 Features
-
-Added DatabaseError for Wrong Filename
-Added Autofix for Wrong Filename
-
-############ 2013-04-14: 1.7 Features
-
-Added TestCase to CCDate
-Fixed WeekdayCalculation in CCDate
-
-############ 2013-04-13: 1.6 Changelog
-
-Updated Changelog
-
-############ 2013-04-13: 1.6 RELEASE
-
-Changed the Versionnumber
-
-############ 2013-04-13: 1.6 Features
-
-Finished Shortcut System:
-- Automatic Shortcuts for all Elements in the ActionTree
-- Change Shortcuts in SettingsFrame
-- ShortcutEdit (KeyStrokeEdit) for changing Shortcuts in the GUI
-- Fixed Visual Bugs when displaying Shortcuts
-Better Width and Height-Managment in Settingsframe:
-- Automatic calc the Height (use Scrollbar if too much)
-- Automatic calc the Amount of Tabs
-Updated ToDos
-
-############ 2013-04-13: 1.6 Features
-
-Cleaned up the CCProperties code:
-- getValue is now abstract
-- setValue is now abstract
-- No more ugly hard casts in CCProperties - easier to add new Property
-Formats
-Added CCKeyStrokeProperty
-
-############ 2013-04-13: 1.6 Features
-
-Added Keyboard Shortcuts
-
-############ 2013-04-13: 1.6 Bugfix and Features
-
-Fixed Focus Bugs in MassChangeScoreFrame
-Fixed Focus Bugs in MassChangeViewedFrame
-Added Numpad Keys to MassChangeScoreFrame
-Added Numpad Keys to MassChangeViewedFrame
-Added "Only Viewed" Option to MassChangeScoreFrame
-Added "Only Not-Viewed" Option to MassChangeViewedFrame
-Fixed AV in ScanFolderFrame
-
-############ 2013-04-13: 1.6 Features
-
-Added TabOrder for AddMovieFrame
-Added TabOrder for AddEpisodesFrame
-Added TabOrder for AddSeriesFrame
-Added TabOrder for CompareDatabaseFrame
-Added TabOrder for EditMovieFrame
-Added TabOrder for EditSeriesFrame
-Added TabOrder for ExportJxmlBKBFrame
-Added TabOrder for FindCoverDialog
-Added TabOrder for ParseImDBDialog
-Added TabOrder for ScanFolderFrame
-Added TabOrder for AutomaticSettingsFrame
-
-############ 2013-04-12: 1.6 Features
-
-Added TabOrder for AddMovieFrame
-Added TabOrder for AddEpisodesFrame
-
-############ 2013-04-10: 1.6 Updated ToDos 2
-
-############ 2013-04-09: 1.6 Updated ToDos
-
-############ 2013-04-09: 1.6 Bugfix
-
-Fixed trim bug
-
-############ 2013-04-08: 1.6 Features
-
-Added "Show in Browser" to Movies/Series Popup
-Updated .gitignore
-Updated Changelog (now finally not binary)
-
-############ 2013-04-08: 1.6 Features
-
-Better Sort of Genres in Table
-Throw UserDataProblem/DatabaseError when Tabs at start/end of strings
-Auto set Quality of Mass-added-Episodes
-Added contextmenu->"save as" to Coverlabels
-Fixed AV when adding a season
-Added findCover to AddSeason
-Added ErrorCount to InputErrorDialog
-
-############ 2013-04-05: 1.5 Bugfix
-
-Fixed Bug when editing a Movie
-
-############ 2013-04-05: 1.5 Changelog
-
-Added Changelog
-
-############ 2013-04-05: GIT Attributes Update
-
-############ 2013-04-05: 1.5 UPDATE
-
-Completely redone the findCoverFrame (everything is better now)
-
-############ 2013-04-05: 1.5 RELEASE
-
-Fixed CharSelctor (Less Buttons, but now all are visible)
-Fixed IMDB-Background-Color not working with sorted Table
-Added Lbl with Amount of Errors in CheckDatabaseFrame
-Fixed Autofix-Filesize for Episodes
-Added Display cover and ID to DebugMode (PreviewMovie and PreviewSeries)
-Better delete Icon
-Better Validate Icon
-Added new Search Frame that also searches Paths, Seasons and Episodes
-Renamed CheckDatabaseDialog to CheckDatabaseFrame
-Added 2D Mode to CoverChooser
-Added Option for 2D Mode
-Added Borders to CoverChooser
-Added Option for Border in CoverChooser
-Changed Settings-Cateory from DIALOGS to OTHERFRAMES
-Added Option to skip already rated Movies in MassChangeFrame
-Added Border around Selected Cover in findCoverFrame
-
-############ 2013-04-05: 1.5 Added Changelog
-
-Changelog
-
-############ 2013-04-04: 1.5 FEATURES AND BUGFIXES
-
-- Added UserDataError: Zyklus/Title is not trimmed
-- Changed Errors from Bad-JSON to Warnings
-- Removed Iterator Test Code
-- Fixed Deadlock in parseIMDBFrame
-- Improved Thread-Managment in parseIMDBFrame
-- Removed Rawtype Warnings from a bunch of Frames (added
-Generic-Parameters)
-- Fixed Color Reset Bug in EditMovie(with empty Path-Edits)
-- Added Language as Field to CompareDatabase
-- Fixed NullpointerException in DatabaseComparator
-- Added Path Info to CompareDatabase Dialog
-- Fixed Wrong UserDataError when changing path of a Movie with an Zyklus
-- Added UserDataError: Zyklus ends with Roman
-- Added UserDataError: Wrong Quality
-- Added DatabaseError: Zyklus ends with Roman
-- Added DatabaseError: Wrong Quality
-- Moved getMovieQualityForFilesize to CCMovieQuality.java
-- Improved IntelliSort with larger roman Numbers (should now always work
-correctly)
-- Removed Unhelpful LocalID's from CheckDatabaseFrame
-- Added Open Edit Window Action to CheckDatabaseErrorDialog
-- Update Button with Count whenn Adding Movie in ScanFolderFrame
-- Fixed Deadlock in findCoverDialog
-- Fixed OK-Button in parseIMDB-Frame always being enabled
-- Added "Edit Movie on DblClick" Setting
-- Removed ChangeScore-Button from PreviewMovieFrame
-- Improved Filename Parser: <Men in Black III> is parsed as "Men in
-Black III - Men in Black"
-- Improved Filename Parser: <Men in Black - The Subtitle> is parsed as
-"Men in Black: The Subtitle"
-- Improved FilenameRenderer: Use complete Filesize (Of all Parts) to
-calculate Quality
-- Changed Label in Statusbar from "Movies" to "Elements"
-- Added a Autofix-Button to Autofix Database Errors
-- Added Autofix for Error: Incontinous Genrelist
-- Added Autofix for Error: Wrong Filesize
-- Added Autofix for Error: Incontinous Partlist
-- Added Autofix for Error: Wrong Format
-- Added Autofix for Error: Non Trimmed Title/Zyklus
-- Added Autofix for Error: Wrong Quality
-- Improved Multithread-Handling of ProgressCallbackListener (more
-Methods)
-- Added ProgressCallbackHelper (Easy Progress Display in Multithreading)
-- Added DatabaseError: Duplicate Movietitle
-- Added UserDataError: Duplicate Movietitle
-- Made UserDataErrors in LanguageFiles better readable by forcing a
-two-digit-number
-- Removed old and unused Code from DatabaseCoverElement
-- Fixed English Caption in German Language (SettingsFrame)
-- Added DatabaseError: Duplicate File
-- Added UserDataError: Duplicate File
-
-############ 2013-04-04: 1.5 MASSIVE TODOS UPDATE
-
-Added a fuckload of ToDos
-(And fixed to easy bugs)
-
-############ 2013-04-02: Merge pull request #1 from Bigben37/master
-
-1.4 LANG Language Files fixed!
-############ 2013-04-02: Small fixes to language files
-
-############ 2013-04-02: 1.4 Update
-
-Changed Launch4j config to 1.4
-
-############ 2013-04-02: 1.4 RELEASE
-
-Added Compare Frame
-Changed Delete Icon
-Fixed Language Problems in Filenameparser
-Updated .gitignore to include libraries
-
-############ 2013-04-02: 1.4 WIP-Feature
-
-Started Implementing Comparing DB's
-
-############ 2013-04-01: 1.4 Bugfix
-
-Added Better (non-Glitching) CoverCache-ID Mechanism
-
-############ 2013-03-31: 1.4 Imports
-
-############ 2013-03-31: 1.4 Feature
-
-Added TimeKeeper for Simple Methode Performance Testing
-Added MD5 Calculation for Movie-File
-Updated ToDos
-
-############ 2013-03-31: 1.4 Documentation
-
-Added better comments to the FindCoverThreads
-
-############ 2013-03-31: 1.4 Features
-
-Made disabled Spinner, Textfields and Comboboxes better readable
-
-############ 2013-03-31: 1.4 Features
-
-- Moved Util (Database) Classes to util package
-- Added iterator(), iteratorMovies() and iteratorSeries()
-- Replaced Loops with iterators
-
-############ 2013-03-30: ToDo Updates
-
-############ 2013-03-30: 1.4 Features
-
-Implementes Serialization (XML) for
-CCDatabaseElement
-CCMovie
-CCSeries
-CCSeason
-CCEpisode
-Added Export as *.jxmlbkp Option (XML in Zip with Cover)
-Fixed a Situation where you edit Swing Objects in an non-Event-Thread
-
-############ 2013-03-30: 1.4 Features
-
-Added Hidden DebugMode Option (only in extended Settings Dialog)
-Added Option to change the FilesizeDrift
-
-############ 2013-03-30: 1.3 Bugfix
-
-Fixed the non-displaying the duplicate Cover Error Message
-Added proper Debug Mode
-
-############ 2013-03-29: 1.3 Bugfix
-
-Fixed a Bug where you cant see which Elements have Bugs
-
-############ 2013-03-29: 1.3 RELEASE
-
--  Added Score to AddMovieFrame
-
-############ 2013-03-29: 1.3 REALEASE
-
-- Added Score to AddMovieFrame
-
-############ 2013-03-23: 1.3 Features
-
-- Moved alle CheckUserDataMethods to the CheckUserData Class
-- Added ToDos
-- Do not Autoselect title in ParseImDB-Frame
-- Use Progressbar when opening Page in ParseImDB-Frame
-- Added (bannned) to AgeRatingParser
-- Do not throw Warnings when parsing a Movie with minimal Infos
-- Added UserDataWarning: Zyklus (or Title) has Leading or trailing
-Spaces
-- Added UserDataWarning: Zyklus already exists
-- Fixed confusing Messages (and wrong algorithms) with the ZyklusNumbers
-(-1 | 0 | Number)
-- Added new Checks to CheckDatabaseDialogs : Leading / Trailing Spaces
-- Added new Checks to CheckDatabaseDialogs : Wrong AddDate
-- Added new Checks to CheckDatabaseDialogs : Wrong LastViewed
-- Added new Checks to CheckDatabaseDialogs : Inconsistent AddDate and
-isViewed
-- Added new Checks to CheckDatabaseDialogs : Duplicate CoverFiles
-- Changed JTextArea in CheckDatabaseFrame to JList
-- Fixed Progressbar in CheckDatabaseFrame
-- Exported CheckDatabase Code in to several extra Classes
-- Changed DatabaseError Strings to Default :== German
-
-############ 2013-03-20: 1.3 Features
-
-Fixed Title in Preview Movie hides Viewed-Eye
-Added Are-you-sure Dialog to delete Episode
-Updated ToDo's
-
-############ 2013-03-19: 1.3 Features
-
-Added Filenamerules
-Added EBNF for Filenames
-Added CCDateSpinner Bug
-Updates ToDo List
-Updated UserData to German Texts
-
-############ 2013-03-18: GIT FIX
-
-Fixed Missing locae-Files (.gitignore failed hard)
-
-############ 2013-03-18: 1.3 Features
-
-Added Initial Sort Property
-Improved CCRInt Property (Constructors)
-
-############ 2013-03-18: 1.2 Bugfix IV
-
-Bug vo BF III auch in CCSeason gefixt
-Moar ToDo's
-
-############ 2013-03-17: 1.2 Bugfix III
-
-- Fixed Bug on Adding new Movie (deleting nonexistent cover)
-- Fixed Auto-Calc Filesize when adding Movie
-- Added ":" Syntax to Filenameparser
-
-############ 2013-03-16: 1.2 Bugfix II
-
--Fixed Text Glitch in editMovieFrame
--Fixed Filesize fixing itself when open editFrame
--Fixed non-auto-relative Path in editSeriesFrame
--Fixed wrong calculation of FileExists and Filesize in
-PreviewSeriesFrame
--Fixed TableTypFilter not working
--Made MoveSeriesFrame modal
-
-############ 2013-03-16: 1.2 Bugfix
-
-Fixed 2 massive Bugs in Covercache (Deleting and Adding)
-
-############ 2013-03-16: 1.2 Update
-
-Modality sucks
-
-############ 2013-03-16: 1.2 Release
-
-Fixed a load of Bugs
-Added Context Menu to PreviewSeriesFrame
-Added Search To PreviewSeriesFrame
-
-############ 2013-03-16: 1.1 Bugfixes
-
-Fixed AV when using StatusFilter
-Fixed Checkbox in ScanFrame not correct disabled
-
-############ 2013-03-16: Removed *.exe Files from Repository (4th Try)
-
-############ 2013-03-16: Removed *.exe Files from Repository (3rd Try)
-
-############ 2013-03-16: Removed *.exe Files from Repository (2nd Try)
-
-############ 2013-03-16: Removed *.exe Files from Repository
-
-############ 2013-03-15: 1.1 Realease
-
--Added Change Score Frame
--Added Change Viewed Frame
--Added Move Series Frame
--Improved Quality Filter / Renderer
--Added Status-Filter to Sidebar
--Fixed Scan Folder Dialog
--Fixed multiple Layout Issues
--Fixed CheckDB Dialog Issues
--Added Series to CheckDB Dialog
-
-############ 2013-03-14: Added moar TODO's
-
-############ 2013-03-14: INITIAL COMMIT
+1.9.1 Big Feature (and Bugfixes)
+  Added CoverCropDialog(crop & edit covers)
+  Added ImageCropper to AddMovieFrame
+  Added ImageCropper to AddSasonFrame
+  Added ImageCropper to AddSeriesFrame
+  Added ImageCropper to EditMovieFrame
+  Added ImageCropper to EditSeriesFrame
+  Fixed Bug when accessing a halfsize version of the standard cover
+  Fixed Wrong Border Dimensions around partial tranparent cover in FindCoverDialog
+  Fixed rendering Tags on actual DB-Cover when "RenderTagsOnCover" is set to true
+1.9.1 Bugfixes
+  Fixed AV when removing the last Element in Table (that is also selected)
+  Fixed PreviewSeriesFrame VertScrollbar staying bottom when switching Season
+  Improved internal handling of readonly-prohibited operations
+  Fixed CoverChooser Border on partially transparent covers
+1.9.1 Bugfixes
+  Fixed too late Backup deletion (1 day late)
+  Fixed Omniparer not recognizing Counter with variable lengths
+
+
+#####################################################################
+############ Sun Aug 25 17:18:18 2013 +0200  1.9 RELEASE ############
+#####################################################################
+
+
+1.9 Features
+  Added Tag-Display to Cover on MainFrame
+  Added Big (blinking) Error Warning when Error occurs
+1.9 Features
+  Added Icons for CustomFilter & BackupManager
+  Database shuts now correctly down onClose
+  Added Option for Quick (and dirty) closing
+  Finished BackupManager (You can restore from old Backups)
+  Added Info-Panel to Backupmanager (Shows Backup-Settings)
+  Fixed JClipCorn not correctly shutting down on Fatal Error
+1.9 Features
+  Added a functionality to a few Buttons in BackupsManagerFrame
+  Fixed unclosed Filehandle in CCProperties
+  Fixed unclosed Filehandle in BackupManager
+1.9 Features
+  Semi-Finished BackupManager (the visuas work, no Button-Functionality)
+  Fixed Auto-Delete Bug in new Backup-System
+1.9 Features
+  Implemented new Backup Functionality
+  STarted BackupManagerFrame (unfinished)
+1.9 Features
+  Added More Info on FATAL-ERROR Message
+  Addedd initial check for Write-Permissions (-> FATAL ERROR)
+1.9 Bugfixes
+  Fixed Bug with wrong Filechooser-direction in EditSeriesFrame
+  Fixed Bug where you can close an ProgressMonitor
+1.9 Bugfixes
+  Fixed Load-AV when Season has 0 Episodes
+  Fixed getCommonPathStart()-Bug when there is an empty  series/ empty season / uninitialized episode
+1.9 Feature
+  Added additional integrity Check when finally closing AddEpisodesFrame
+1.9 Bugfix
+  Fixed Omniparser-Bug where the Lines are not trimmed
+1.9 Features
+  Added "Play without changing Episode-State"-Feature
+  Added Debug-Feature to print TranslationTree
+1.9 Tasks
+  Immproved Information-Output in CouldNotParseFSK Warning
+  Added USA:"approved" to AgeRatingParser
+  Updated ToDo List
+1.9 Bugfixes
+  Fixed Problem when re-importing Movies with NON-ASCII Chars (Encoding ...)
+1.9 Bugfixes
+  Fixed CompareDatabase Bug wehre the selection was not correct registered
+1.9 Features
+  Finished Custom Filter
+  Added Import / Export to Filter
+  Fixed Bug in Genre / Year Filter
+1.9 Features
+  Started Exporting / Importing of Custom Filter (unfinished)
+1.9 Features
+  Added Custom-Table Filter
+  Added CustomFilter for every TableField
+  Added AND / OR / NAND / NOR Operators for CustomFilter
+1.9 Features
+  Finished Omniparser
+  Added VerticalScrollBarSynchronizer Helper Class
+1.9 Features
+  Added Big OmniParser Feature
+  Reorganized Util-Classses (Changes in the imports in many classes [!] )
+  Fixed Null-Pointer when displaying an empty series
+
+
+######################################################################
+############ Sun Jul 7 14:10:03 2013 +0200  1.8.3 RELEASE ############
+######################################################################
+
+
+1.8.3 Bugfixes and Features
+  Added Error Handling for broken Coverfiles
+  Added Error Handling in Large MD5 Calculator
+  Added Possibility to fix single Databaseerror
+  Added Information Monitor when backuping
+  Fixed wrong Seasonnumber for unsorted Seasons in CreateFolderStructure
+1.8.3 Bugfixes
+  Hopefully finally fixed CCDateSpinner -.-
+1.8.3 Features
+  Added possibility for public (or private) beta builds
+1.8.3 Bugfixes
+  Fixed Overriding in CCDateSpinner
+  Added Big "Continue Watching" Button to PreviewSeriesFRame
+  CCDate is now an immutable Object (possible root for new bugs)
+
+
+#######################################################################
+############ Sat Jun 15 22:58:33 2013 +0200  1.8.2 RELEASE ############
+#######################################################################
+
+
+1.8.2 Bugfixes
+  Fixed getRelativePath for non absolute Paths
+  Improved Error Managment in CreateSeriesFolderStructure
+1.8.2 Bugfixes + Features
+  Added Read Only Mode
+  Added additional VLC Paths
+  Fixed unused ACtionELements in SHortcut Settings
+  Improved ActionELement Naming in Shortcut Settings
+1.8.2 Bugfixes
+  Fixed Series->openInFoder: Opening wrong path
+  Fixed CCDate Spinner not regitering manually inserted CCDates
+  Added Recognizing of short years ('95) to CCDate Parser
+  Fixed getCommonFolderPath resulting in an endless loop for empty input
+  values
+  Added CheckForUpdates CCAction
+  Added Case for No Update found in UpdateFrame
+1.8.2 Bugfixes
+  AddEpisodesFrame: Fixed Wrong Spinner for Sidebarbutton
+  EditSeriesFrame: Update List after Changing Episodetitle
+
+
+######################################################################
+############ Sat Jun 1 21:25:08 2013 +0200  1.8.1 RELEASE ############
+######################################################################
+
+
+1.8.1 RELEASE
+  Fixed AV when Autofixing wrong Quality of an Episode
+  createSTructureFrame closes after successful operation
+
+
+####################################################################
+############ Sat Jun 1 17:54:27 2013 +0200  1.8 RELEASE ############
+####################################################################
+
+
+1.8 RELEASE
+  Updated Version to 1.8
+1.8 Features
+  Fixed various AV's when doing Action with an unfinished DriveMap
+  Showing the Translationcount as Debugmessage
+  Added Statistics-Icon
+1.8 Features (StatisticsFrame completed)
+  Finished StatisticsFrame:
+  Added Userscore-Chart
+  Added Genre-Chart
+  Added FSK-Chart
+  Added Language-Chart
+  Added Tags-Chart
+  Added Hours/Date-Chart (Movies, Series, both)
+  Added Size/Date-Chart
+  Added Hidden Option for Interactive Charts (Default-off)
+  Fixed Sort-per-Year AV
+1.8 Features (StatisticsFrame)
+  Added StatisticsFrame
+  Added Statistics Sidebar
+  Added Add-Date Chart
+  Added Format-Chart
+  Added Length-Chart
+  Added Score-Chart
+  Added Quality-Chart
+  Added Viewed-Chart
+  Added Year-Chart
+1.8 Features (PreviewSeriesFrame)
+  JCoverChooser only reacts to left MouseButton
+  Added RightClickMenu to Cover
+  Added all the Options to SeriesMenu, SeasonMenu, ExtrasMenu and
+  PopupMenu in PreviewSeriesFrame
+  Added getInstance to MainFrame (IntermediateBlocking without direct
+  access)
+1.8 Bugfixes
+  Added CalcQuality-Button to EditSeriesFrame
+  Added forceDBUpdate Funktion to MovieList
+1.8 Features (createSeriesFolderStructure)
+  Finished cSFS-Functionality
+  Added ActionElement for this
+1.8 Features (createSeriesFolderStructure)
+  started Series-cFS-Dialog
+  createdGUI for Series-cFS-Frame
+1.8 Features (MoveSeriesDialog)
+  Resizable MoveSeriesDialog
+  Visual Feedback if Operation is possible in MoveSeriesDialog
+  Preview before executing in MoveSeriesDialog
+1.8 Features (CheckDatabaseFrame)
+  Added CategoryList to CheckDatabaseFrame
+  Added ErrorType to DatabaseError
+  Added visualization of Autofixable to List in CheckDatabaseFrame
+  Added Translations to Error-Categories
+1.8 Features (Tag System completed)
+  New and better Tag-Icons (but not perfect ...)
+  No duplicate Icons in Resources
+  Better Tag Display in Table
+1.8 Features
+  Updated the DB-Version, for real this time
+1.8 Features (Tag-System)
+  Added, Removed and changed Ions
+  Removed MagicNumbers in PreviewSeriesTable
+  Removed the Field "Status" (moved to Tags)
+  Added Tags to Movies and Episodes
+  Added TagPanel to Display Tags of an Element
+  Updated Database structure to 1.6
+  Updated Locales (Removed a few Inconsistencies)
+  Fatal Error on wrong Database structure
+
+
+#######################################################################
+############ Sat May 25 15:23:41 2013 +0200  1.7.3 RELEASE ############
+#######################################################################
+
+
+1.7.3 Fixes and Tasks
+  New empty Seasons now have the name <untitled>
+  New empty Episodes now have the name <untitled>
+  SeasonList gets updated in EditSeriesFrame when updating a Seasontitle
+  Changed Quality to be dependent on Length
+  Added CalcQuality Button to Add/Edit -MovieFrame
+
+
+#######################################################################
+############ Sat May 18 14:58:24 2013 +0200  1.7.2 RELEASE ############
+#######################################################################
+
+
+1.7.2 RELEASE
+  Bugfix Release
+1.7.2 Other
+  Removed "Magic Numbers" for Column-Indizies
+1.7.2 Bugfix
+  Fixed Wrong renaming for English/France or Muted Movies
+
+
+######################################################################
+############ Thu May 9 19:17:04 2013 +0200  1.7.1 RELEASE ############
+######################################################################
+
+
+1.7.1 RELEASE
+  Bugfix Release
+1.7.1 Bugfixes
+  Fixed Null-Cover Bug
+  Fixed Element-Changed-Listener resetting TableSelection
+  Fixed jCoverChooser drawing an null-Image (i hope so ...)
+1.7.1 Bugfixes
+  Fixed Translations
+  Fixed Button Enablation in CheckDatabaseFrame
+1.7 Other
+  Updated Other for 1.7
+
+
+#####################################################################
+############ Mon Apr 29 18:54:17 2013 +0200  1.7 RELEASE ############
+#####################################################################
+
+
+1.7 RELEASE
+  Updated Version to "1.7"
+1.7 Fixes
+  Fixed Translation
+  Fixed a few Bugs
+  Oragnized ToDos
+1.7 Features
+  Added Option for Clickable Zyklus
+1.7 Features
+  Improved the Search in PreviewSeriesFrame
+  Added Settings for displaying Columns in Statusbar
+  Added the RabdomMovieFrame ("Filmtrommel")
+1.7 Features+Bugfix
+  Fixed Zero-Height Lines in JList (on empty elements)
+  Fixed Layout (Wrong Widths) of Lists in editToolbarFrame
+  Added Non-Linked-Cover DatabaseError
+1.7 Features
+  Added Option for Add-Date Calculation-Method in Settings
+  Added Missing
+  Icons
+  Added 16x16 Icons (now there should no Icons get down-sized in
+  runtime)
+1.7 Bugfixes
+  Fixed too small seperator in editToolbarFrame
+  Fixed Nullpointer when adding/previewing/deleting season
+  Fixed MassSetLength in addMultipleEpisodesFrame
+  Fixed NonSelection TitleEdit in addMultipleEpisodesFrame
+  Fixed non setting LastViewed when man. changing Viewed of an Episode
+  Added UserDataProblem "Untrimmed" to CCSeries
+  Added UserDataProblem "Untrimmed" to CCSeason
+  Added UserDataProblem "Untrimmed" to CCEpisode
+  Fixed Color of CaptionedPanel in addMultipleEpisodesFrame
+  Fixed Backgroundcolor of PathEdit in addMultipleEpisodesFrame
+1.7 Bugfix
+  Fixed BeanUtils Library (again)
+  - Removed duplicate files in jar
+1.7 Bugfix
+  Removed Test-Ressource-File (*_16x16.png)
+  Fixed Fatal AV when Searching for Directory
+  Fixed the possibility to open Windows while in an blocking call (through
+  Screenshots)
+1.7 Features
+  Fixed Missing BeanUtils-Exception Bug (now using custom compiled
+  beanutils.jar)
+  Added support for prerenderered 16x16 Icons
+  Fixed Border around Seperator in EditToolbarFrame
+  Updated ToDos
+1.7 Features
+  Added PropertyCheckbox
+  Added Option to change the Toolbar
+  added ToolbarConfigPanel to show ToolbarConfig
+  Added EditToolbarFrame to change the Toolbar visual
+1.7 Bugfix
+  Fixed missing jGoodies-Commons Library
+1.7 Possible Bugfixes
+  Fixed new Warnnings due to new Eclipse Settings
+  - Fixed a few ressourceleaks
+1.7 Features
+  Add Cache-Function to Movieplayer (it remembers the VLC-Path)
+  Removed the Cancel-Button from ParseImDBDialog
+  (Noone noticed it had no functionality ^^)
+1.7 Features
+  Added Episodeguide-Export to Series
+1.7 Bugfix
+  Rewrite of the SFixTable, should now work ("nearly") always
+1.7 Features
+  Improved ExtendedSettingsframe (now uses the Component Methods from the
+  Properties)
+1.7 Features
+  Added Shortcuts for ExportList
+  Added Option to export Movies in CompareDatabaseDialog
+  Added (hidden) option for ImDB-Parser-Language
+  Added automatic sorter to extendedSettingsFrame
+  Added general openFile-Dialog
+  Cleaned up the open File Methods (moved all openFile-Things to extra
+  methods)
+1.7 Features
+  Finished Single-Import
+  Finished Single-Export
+  Finished Multiple-Import
+  Finished Multiple-Export
+1.7 Features
+  Added Option to export Cover in XML
+  Added LocalID to searched Fields in SearchFrame
+  Adedd Export-Single-Movie Function
+  Added (incomplete) Import-Movie-from-jccsexport-File Function
+  Added ImportElementsFrame to Import One or Multiple Elements from a File
+  Small Bugfixes
+  Updated Locale-Files
+  Updated ToDOs
+1.7 Big Other
+  Massive CodeCleanup with >>Google CodePro AnalytiX<<
+  Fixed a lot of bad code, possible errors and ugly programming style
+1.7 Other
+  Fixed "unclean" Code (CodePro AnalytiX):
+  - Added Names to Threads
+  - Added hashcode() Methods
+  - Replaced "startsWith" with "charAt(0)"
+  - Removed obsolete semikolons
+  - Made LocalizedVector Methods synchronized
+  - Various other improvements
+1.7 Other
+  Removed unused Localizations
+1.7 Features
+  Forced Extension in SaveDialogs
+  Removed strange empty lines in Coverlabel (dafuq ?)
+  Fixed Bug when deleting Series (not deleting all cover / deleting some 2
+  times)
+  Fixed ConcurrentModification in getGenreList (yay, finally)
+  Added OnRefresh Event (after the Blocking of the App)
+1.7 Features
+  Removed the unnecessary Frame ExportJXMLBKPDialog (Functionality is now
+  frameless)
+1.7 Features
+  Added Option to load previously exported (jxmlbkp) Databases
+  Moved the zip / export / import Functionality to ExportHelper.java
+  Added parseXML Functions to CCMovie, CCSeries, CCSeason and CCEpisode
+  It now needs a doubleclick to open the Log
+  Fixed Bug in Settingsframe with empty Descriptions (captionIdent == "")
+1.7 Features
+  Added DatabaseError for Wrong Filename
+  Added Autofix for Wrong Filename
+1.7 Features
+  Added TestCase to CCDate
+  Fixed WeekdayCalculation in CCDate
+1.6 Other
+  Updated Other
+
+
+#####################################################################
+############ Sat Apr 13 22:42:28 2013 +0200  1.6 RELEASE ############
+#####################################################################
+
+
+1.6 RELEASE
+  Changed the Versionnumber
+1.6 Features
+  Finished Shortcut System:
+  - Automatic Shortcuts for all Elements in the ActionTree
+  - Change Shortcuts in SettingsFrame
+  - ShortcutEdit (KeyStrokeEdit) for changing Shortcuts in the GUI
+  - Fixed Visual Bugs when displaying Shortcuts
+  Better Width and Height-Managment in Settingsframe:
+  - Automatic calc the Height (use Scrollbar if too much)
+  - Automatic calc the Amount of Tabs
+  Updated ToDos
+1.6 Features
+  Cleaned up the CCProperties code:
+  - getValue is now abstract
+  - setValue is now abstract
+  - No more ugly hard casts in CCProperties - easier to add new Property
+  Formats
+  Added CCKeyStrokeProperty
+1.6 Features
+  Added Keyboard Shortcuts
+1.6 Bugfix and Features
+  Fixed Focus Bugs in MassChangeScoreFrame
+  Fixed Focus Bugs in MassChangeViewedFrame
+  Added Numpad Keys to MassChangeScoreFrame
+  Added Numpad Keys to MassChangeViewedFrame
+  Added "Only Viewed" Option to MassChangeScoreFrame
+  Added "Only Not-Viewed" Option to MassChangeViewedFrame
+  Fixed AV in ScanFolderFrame
+1.6 Features
+  Added TabOrder for AddMovieFrame
+  Added TabOrder for AddEpisodesFrame
+  Added TabOrder for AddSeriesFrame
+  Added TabOrder for CompareDatabaseFrame
+  Added TabOrder for EditMovieFrame
+  Added TabOrder for EditSeriesFrame
+  Added TabOrder for ExportJxmlBKBFrame
+  Added TabOrder for FindCoverDialog
+  Added TabOrder for ParseImDBDialog
+  Added TabOrder for ScanFolderFrame
+  Added TabOrder for AutomaticSettingsFrame
+1.6 Features
+  Added TabOrder for AddMovieFrame
+  Added TabOrder for AddEpisodesFrame
+1.6 Bugfix
+  Fixed trim bug
+1.6 Features
+  Added "Show in Browser" to Movies/Series Popup
+  Updated .gitignore
+  Updated Other (now finally not binary)
+1.6 Features
+  Better Sort of Genres in Table
+  Throw UserDataProblem/DatabaseError when Tabs at start/end of strings
+  Auto set Quality of Mass-added-Episodes
+  Added contextmenu->"save as" to Coverlabels
+  Fixed AV when adding a season
+  Added findCover to AddSeason
+  Added ErrorCount to InputErrorDialog
+1.5 Bugfix
+  Fixed Bug when editing a Movie
+1.5 Other
+  Added Other
+1.5 UPDATE
+  Completely redone the findCoverFrame (everything is better now)
+
+
+####################################################################
+############ Fri Apr 5 17:11:11 2013 +0200  1.5 RELEASE ############
+####################################################################
+
+
+1.5 RELEASE
+  Fixed CharSelctor (Less Buttons, but now all are visible)
+  Fixed IMDB-Background-Color not working with sorted Table
+  Added Lbl with Amount of Errors in CheckDatabaseFrame
+  Fixed Autofix-Filesize for Episodes
+  Added Display cover and ID to DebugMode (PreviewMovie and PreviewSeries)
+  Better delete Icon
+  Better Validate Icon
+  Added new Search Frame that also searches Paths, Seasons and Episodes
+  Renamed CheckDatabaseDialog to CheckDatabaseFrame
+  Added 2D Mode to CoverChooser
+  Added Option for 2D Mode
+  Added Borders to CoverChooser
+  Added Option for Border in CoverChooser
+  Changed Settings-Cateory from DIALOGS to OTHERFRAMES
+  Added Option to skip already rated Movies in MassChangeFrame
+  Added Border around Selected Cover in findCoverFrame
+1.5 FEATURES AND BUGFIXES
+  - Added UserDataError: Zyklus/Title is not trimmed
+  - Changed Errors from Bad-JSON to Warnings
+  - Removed Iterator Test Code
+  - Fixed Deadlock in parseIMDBFrame
+  - Improved Thread-Managment in parseIMDBFrame
+  - Removed Rawtype Warnings from a bunch of Frames (added
+  Generic-Parameters)
+  - Fixed Color Reset Bug in EditMovie(with empty Path-Edits)
+  - Added Language as Field to CompareDatabase
+  - Fixed NullpointerException in DatabaseComparator
+  - Added Path Info to CompareDatabase Dialog
+  - Fixed Wrong UserDataError when changing path of a Movie with an Zyklus
+  - Added UserDataError: Zyklus ends with Roman
+  - Added UserDataError: Wrong Quality
+  - Added DatabaseError: Zyklus ends with Roman
+  - Added DatabaseError: Wrong Quality
+  - Moved getMovieQualityForFilesize to CCMovieQuality.java
+  - Improved IntelliSort with larger roman Numbers (should now always work
+  correctly)
+  - Removed Unhelpful LocalID's from CheckDatabaseFrame
+  - Added Open Edit Window Action to CheckDatabaseErrorDialog
+  - Update Button with Count whenn Adding Movie in ScanFolderFrame
+  - Fixed Deadlock in findCoverDialog
+  - Fixed OK-Button in parseIMDB-Frame always being enabled
+  - Added "Edit Movie on DblClick" Setting
+  - Removed ChangeScore-Button from PreviewMovieFrame
+  - Improved Filename Parser: <Men in Black III> is parsed as "Men in
+  Black III - Men in Black"
+  - Improved Filename Parser: <Men in Black - The Subtitle> is parsed as
+  "Men in Black: The Subtitle"
+  - Improved FilenameRenderer: Use complete Filesize (Of all Parts) to
+  calculate Quality
+  - Changed Label in Statusbar from "Movies" to "Elements"
+  - Added a Autofix-Button to Autofix Database Errors
+  - Added Autofix for Error: Incontinous Genrelist
+  - Added Autofix for Error: Wrong Filesize
+  - Added Autofix for Error: Incontinous Partlist
+  - Added Autofix for Error: Wrong Format
+  - Added Autofix for Error: Non Trimmed Title/Zyklus
+  - Added Autofix for Error: Wrong Quality
+  - Improved Multithread-Handling of ProgressCallbackListener (more
+  Methods)
+  - Added ProgressCallbackHelper (Easy Progress Display in Multithreading)
+  - Added DatabaseError: Duplicate Movietitle
+  - Added UserDataError: Duplicate Movietitle
+  - Made UserDataErrors in LanguageFiles better readable by forcing a
+  two-digit-number
+  - Removed old and unused Code from DatabaseCoverElement
+  - Fixed English Caption in German Language (SettingsFrame)
+  - Added DatabaseError: Duplicate File
+  - Added UserDataError: Duplicate File
+1.4 Update
+  Changed Launch4j config to 1.4
+
+
+####################################################################
+############ Tue Apr 2 14:57:44 2013 +0200  1.4 RELEASE ############
+####################################################################
+
+
+1.4 RELEASE
+  Added Compare Frame
+  Changed Delete Icon
+  Fixed Language Problems in Filenameparser
+  Updated .gitignore to include libraries
+1.4 WIP-Feature
+  Started Implementing Comparing DB's
+1.4 Bugfix
+  Added Better (non-Glitching) CoverCache-ID Mechanism
+1.4 Feature
+  Added TimeKeeper for Simple Methode Performance Testing
+  Added MD5 Calculation for Movie-File
+  Updated ToDos
+1.4 Other
+  Added better comments to the FindCoverThreads
+1.4 Features
+  Made disabled Spinner, Textfields and Comboboxes better readable
+1.4 Features
+  - Moved Util (Database) Classes to util package
+  - Added iterator(), iteratorMovies() and iteratorSeries()
+  - Replaced Loops with iterators
+1.4 Features
+  Implementes Serialization (XML) for
+  CCDatabaseElement
+  CCMovie
+  CCSeries
+  CCSeason
+  CCEpisode
+  Added Export as *.jxmlbkp Option (XML in Zip with Cover)
+  Fixed a Situation where you edit Swing Objects in an non-Event-Thread
+1.4 Features
+  Added Hidden DebugMode Option (only in extended Settings Dialog)
+  Added Option to change the FilesizeDrift
+1.3 Bugfix
+  Fixed the non-displaying the duplicate Cover Error Message
+  Added proper Debug Mode
+1.3 Bugfix
+  Fixed a Bug where you cant see which Elements have Bugs
+
+
+#####################################################################
+############ Fri Mar 29 20:55:32 2013 +0100  1.3 RELEASE ############
+#####################################################################
+
+
+1.3 RELEASE
+  -  Added Score to AddMovieFrame
+1.3 REALEASE
+  - Added Score to AddMovieFrame
+1.3 Features
+  - Moved alle CheckUserDataMethods to the CheckUserData Class
+  - Added ToDos
+  - Do not Autoselect title in ParseImDB-Frame
+  - Use Progressbar when opening Page in ParseImDB-Frame
+  - Added (bannned) to AgeRatingParser
+  - Do not throw Warnings when parsing a Movie with minimal Infos
+  - Added UserDataWarning: Zyklus (or Title) has Leading or trailing
+  Spaces
+  - Added UserDataWarning: Zyklus already exists
+  - Fixed confusing Messages (and wrong algorithms) with the ZyklusNumbers
+  (-1 | 0 | Number)
+  - Added new Checks to CheckDatabaseDialogs : Leading / Trailing Spaces
+  - Added new Checks to CheckDatabaseDialogs : Wrong AddDate
+  - Added new Checks to CheckDatabaseDialogs : Wrong LastViewed
+  - Added new Checks to CheckDatabaseDialogs : Inconsistent AddDate and
+  isViewed
+  - Added new Checks to CheckDatabaseDialogs : Duplicate CoverFiles
+  - Changed JTextArea in CheckDatabaseFrame to JList
+  - Fixed Progressbar in CheckDatabaseFrame
+  - Exported CheckDatabase Code in to several extra Classes
+  - Changed DatabaseError Strings to Default :== German
+1.3 Features
+  Fixed Title in Preview Movie hides Viewed-Eye
+  Added Are-you-sure Dialog to delete Episode
+  Updated ToDo's
+1.3 Features
+  Added Filenamerules
+  Added EBNF for Filenames
+  Added CCDateSpinner Bug
+  Updates ToDo List
+  Updated UserData to German Texts
+1.3 Features
+  Added Initial Sort Property
+  Improved CCRInt Property (Constructors)
+1.2 Bugfix IV
+  Bug vo BF III auch in CCSeason gefixt
+  Moar ToDo's
+1.2 Bugfix III
+  - Fixed Bug on Adding new Movie (deleting nonexistent cover)
+  - Fixed Auto-Calc Filesize when adding Movie
+  - Added ":" Syntax to Filenameparser
+1.2 Bugfix II
+  -Fixed Text Glitch in editMovieFrame
+  -Fixed Filesize fixing itself when open editFrame
+  -Fixed non-auto-relative Path in editSeriesFrame
+  -Fixed wrong calculation of FileExists and Filesize in
+  PreviewSeriesFrame
+  -Fixed TableTypFilter not working
+  -Made MoveSeriesFrame modal
+1.2 Bugfix
+  Fixed 2 massive Bugs in Covercache (Deleting and Adding)
+1.2 Update
+  Modality sucks
+
+
+#####################################################################
+############ Sat Mar 16 17:29:38 2013 +0100  1.2 Release ############
+#####################################################################
+
+
+1.2 Release
+  Fixed a load of Bugs
+  Added Context Menu to PreviewSeriesFrame
+  Added Search To PreviewSeriesFrame
+1.1 Bugfixes
+  Fixed AV when using StatusFilter
+  Fixed Checkbox in ScanFrame not correct disabled
+
+
+######################################################################
+############ Fri Mar 15 23:56:34 2013 +0100  1.1 Realease ############
+######################################################################
+
+
+1.1 Realease
+  -Added Change Score Frame
+  -Added Change Viewed Frame
+  -Added Move Series Frame
+  -Improved Quality Filter / Renderer
+  -Added Status-Filter to Sidebar
+  -Fixed Scan Folder Dialog
+  -Fixed multiple Layout Issues
+  -Fixed CheckDB Dialog Issues
+  -Added Series to CheckDB Dialog

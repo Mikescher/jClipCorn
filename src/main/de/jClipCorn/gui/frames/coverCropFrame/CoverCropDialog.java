@@ -49,11 +49,11 @@ import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.FormSpecs;
 import com.jgoodies.forms.layout.RowSpec;
 
-import de.jClipCorn.gui.CachedResourceLoader;
-import de.jClipCorn.gui.Resources;
 import de.jClipCorn.gui.guiComponents.CoverLabel;
 import de.jClipCorn.gui.guiComponents.SimpleDoubleBufferStrategy;
 import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.gui.resources.CachedResourceLoader;
+import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.helper.ImageUtilities;
 import de.jClipCorn.util.listener.ImageCropperResultListener;
 

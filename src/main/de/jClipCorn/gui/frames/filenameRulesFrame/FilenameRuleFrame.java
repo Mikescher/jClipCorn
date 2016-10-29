@@ -14,10 +14,10 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
-import de.jClipCorn.gui.CachedResourceLoader;
-import de.jClipCorn.gui.Resources;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
+import de.jClipCorn.gui.resources.CachedResourceLoader;
+import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.helper.SimpleFileUtils;
 
 public class FilenameRuleFrame extends JFrame {

@@ -50,8 +50,6 @@ import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieScore;
 import de.jClipCorn.database.util.CCDBUpdateListener;
 import de.jClipCorn.database.util.ExportHelper;
-import de.jClipCorn.gui.CachedResourceLoader;
-import de.jClipCorn.gui.Resources;
 import de.jClipCorn.gui.frames.addEpisodesFrame.AddEpisodesFrame;
 import de.jClipCorn.gui.frames.addSeasonFrame.AddSeasonFrame;
 import de.jClipCorn.gui.frames.createSeriesFolderStructureFrame.CreateSeriesFolderStructureFrame;
@@ -66,6 +64,8 @@ import de.jClipCorn.gui.guiComponents.jCoverChooser.JCoverChooser;
 import de.jClipCorn.gui.guiComponents.jCoverChooser.JCoverChooserPopupEvent;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
+import de.jClipCorn.gui.resources.CachedResourceLoader;
+import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.formatter.FileSizeFormatter;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.formatter.TimeIntervallFormatter;
@@ -288,7 +288,7 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 				startSearch();
 			}
 		});
-		btnSearch.setIcon(CachedResourceLoader.getSmallImageIcon(Resources.ICN_FRAMES_SEARCH));
+		btnSearch.setIcon(CachedResourceLoader.getIcon(Resources.ICN_FRAMES_SEARCH.icon16x16));
 		pnlSearch.add(btnSearch, "4, 2, left, top"); //$NON-NLS-1$
 		
 		pnlTopLeft = new JPanel();
@@ -685,37 +685,37 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 
 		switch (dispSeries.getOnlinescore()) {
 		case STARS_0_0:
-			lblOnlineScore.setIcon(CachedResourceLoader.getImageIcon(Resources.ICN_TABLE_ONLINESCORE_0));
+			lblOnlineScore.setIcon(CachedResourceLoader.getIcon(Resources.ICN_TABLE_ONLINESCORE_0));
 			break;
 		case STARS_0_5:
-			lblOnlineScore.setIcon(CachedResourceLoader.getImageIcon(Resources.ICN_TABLE_ONLINESCORE_1));
+			lblOnlineScore.setIcon(CachedResourceLoader.getIcon(Resources.ICN_TABLE_ONLINESCORE_1));
 			break;
 		case STARS_1_0:
-			lblOnlineScore.setIcon(CachedResourceLoader.getImageIcon(Resources.ICN_TABLE_ONLINESCORE_2));
+			lblOnlineScore.setIcon(CachedResourceLoader.getIcon(Resources.ICN_TABLE_ONLINESCORE_2));
 			break;
 		case STARS_1_5:
-			lblOnlineScore.setIcon(CachedResourceLoader.getImageIcon(Resources.ICN_TABLE_ONLINESCORE_3));
+			lblOnlineScore.setIcon(CachedResourceLoader.getIcon(Resources.ICN_TABLE_ONLINESCORE_3));
 			break;
 		case STARS_2_0:
-			lblOnlineScore.setIcon(CachedResourceLoader.getImageIcon(Resources.ICN_TABLE_ONLINESCORE_4));
+			lblOnlineScore.setIcon(CachedResourceLoader.getIcon(Resources.ICN_TABLE_ONLINESCORE_4));
 			break;
 		case STARS_2_5:
-			lblOnlineScore.setIcon(CachedResourceLoader.getImageIcon(Resources.ICN_TABLE_ONLINESCORE_5));
+			lblOnlineScore.setIcon(CachedResourceLoader.getIcon(Resources.ICN_TABLE_ONLINESCORE_5));
 			break;
 		case STARS_3_0:
-			lblOnlineScore.setIcon(CachedResourceLoader.getImageIcon(Resources.ICN_TABLE_ONLINESCORE_6));
+			lblOnlineScore.setIcon(CachedResourceLoader.getIcon(Resources.ICN_TABLE_ONLINESCORE_6));
 			break;
 		case STARS_3_5:
-			lblOnlineScore.setIcon(CachedResourceLoader.getImageIcon(Resources.ICN_TABLE_ONLINESCORE_7));
+			lblOnlineScore.setIcon(CachedResourceLoader.getIcon(Resources.ICN_TABLE_ONLINESCORE_7));
 			break;
 		case STARS_4_0:
-			lblOnlineScore.setIcon(CachedResourceLoader.getImageIcon(Resources.ICN_TABLE_ONLINESCORE_8));
+			lblOnlineScore.setIcon(CachedResourceLoader.getIcon(Resources.ICN_TABLE_ONLINESCORE_8));
 			break;
 		case STARS_4_5:
-			lblOnlineScore.setIcon(CachedResourceLoader.getImageIcon(Resources.ICN_TABLE_ONLINESCORE_9));
+			lblOnlineScore.setIcon(CachedResourceLoader.getIcon(Resources.ICN_TABLE_ONLINESCORE_9));
 			break;
 		case STARS_5_0:
-			lblOnlineScore.setIcon(CachedResourceLoader.getImageIcon(Resources.ICN_TABLE_ONLINESCORE_10));
+			lblOnlineScore.setIcon(CachedResourceLoader.getIcon(Resources.ICN_TABLE_ONLINESCORE_10));
 			break;
 		}
 
@@ -726,7 +726,7 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 		lblViewed.setText(LocaleBundle.getFormattedString("PreviewSeriesFrame.lblViewed.text", dispSeries.getViewedCount(), dispSeries.getEpisodeCount())); //$NON-NLS-1$
 		
 		//if (dispSeries.isViewed()) {
-			lblViewed.setIcon(ImageUtilities.sliceImage(CachedResourceLoader.getImageIcon(Resources.ICN_TABLE_VIEWED_TRUE), 0d, (dispSeries.getViewedCount() *1d) / dispSeries.getEpisodeCount()));
+			lblViewed.setIcon(ImageUtilities.sliceImage(CachedResourceLoader.getIcon(Resources.ICN_TABLE_VIEWED_TRUE), 0d, (dispSeries.getViewedCount() *1d) / dispSeries.getEpisodeCount()));
 		//}
 
 		if (dispSeries.getScore() == CCMovieScore.RATING_NO) {

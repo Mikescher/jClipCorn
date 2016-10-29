@@ -32,11 +32,11 @@ import de.jClipCorn.database.databaseErrors.DatabaseAutofixer;
 import de.jClipCorn.database.databaseErrors.DatabaseError;
 import de.jClipCorn.database.databaseErrors.DatabaseErrorType;
 import de.jClipCorn.database.databaseErrors.DatabaseValidator;
-import de.jClipCorn.gui.CachedResourceLoader;
-import de.jClipCorn.gui.Resources;
 import de.jClipCorn.gui.frames.mainFrame.MainFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
+import de.jClipCorn.gui.resources.CachedResourceLoader;
+import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.listener.ProgressCallbackProgressBarHelper;
 

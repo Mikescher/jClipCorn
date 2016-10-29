@@ -22,8 +22,6 @@ import de.jClipCorn.Main;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.util.CCDBUpdateListener;
-import de.jClipCorn.gui.CachedResourceLoader;
-import de.jClipCorn.gui.Resources;
 import de.jClipCorn.gui.actionTree.CCActionTree;
 import de.jClipCorn.gui.frames.mainFrame.clipCharSelector.AbstractClipCharSortSelector;
 import de.jClipCorn.gui.frames.mainFrame.clipCharSelector.FullClipCharSortSelector;
@@ -42,6 +40,8 @@ import de.jClipCorn.gui.guiComponents.DatabaseElementPreviewLabel;
 import de.jClipCorn.gui.guiComponents.tableFilter.TableSearchFilter;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
+import de.jClipCorn.gui.resources.CachedResourceLoader;
+import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.UpdateConnector;
 import de.jClipCorn.util.helper.LookAndFeelManager;
@@ -125,7 +125,7 @@ public class MainFrame extends JFrame implements CCDBUpdateListener {
 				startSearch();
 			}
 		});
-		btnSearch.setIcon(CachedResourceLoader.getSmallImageIcon(Resources.ICN_FRAMES_SEARCH));
+		btnSearch.setIcon(CachedResourceLoader.getIcon(Resources.ICN_FRAMES_SEARCH.icon16x16));
 		toprightPanel.add(btnSearch);
 		content.add(leftPanel, BorderLayout.WEST);
 		content.add(middlePanel, BorderLayout.CENTER);

@@ -18,12 +18,11 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCMovieQuality;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieScore;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTags;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTyp;
-import de.jClipCorn.gui.CachedResourceLoader;
-import de.jClipCorn.gui.Resources;
 import de.jClipCorn.gui.frames.mainFrame.clipTable.ClipTable;
 import de.jClipCorn.gui.frames.mainFrame.clipTable.RowFilterSource;
 import de.jClipCorn.gui.frames.mainFrame.filterTree.customFilterDialogs.CustomOperatorFilterDialog;
 import de.jClipCorn.gui.frames.organizeFilterFrame.OrganizeFilterDialog;
+import de.jClipCorn.gui.guiComponents.jSimpleTree.SimpleTreeObject;
 import de.jClipCorn.gui.guiComponents.tableFilter.TableCustomFilter;
 import de.jClipCorn.gui.guiComponents.tableFilter.TableFSKFilter;
 import de.jClipCorn.gui.guiComponents.tableFilter.TableFormatFilter;
@@ -40,6 +39,8 @@ import de.jClipCorn.gui.guiComponents.tableFilter.TableYearFilter;
 import de.jClipCorn.gui.guiComponents.tableFilter.TableZyklusFilter;
 import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.operators.CustomAndOperator;
 import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.gui.resources.CachedResourceLoader;
+import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.listener.FinishListener;
 
 public class FilterTree extends AbstractFilterTree {
@@ -130,7 +131,7 @@ public class FilterTree extends AbstractFilterTree {
 	}
 	
 	private void initAll() {
-		node_all.setUserObject(new FilterTreeNode(CachedResourceLoader.getImageIcon(Resources.ICN_SIDEBAR_ALL), LocaleBundle.getString("FilterTree.All"), new ActionListener() { //$NON-NLS-1$
+		node_all.setUserObject(new SimpleTreeObject(CachedResourceLoader.getIcon(Resources.ICN_SIDEBAR_ALL), LocaleBundle.getString("FilterTree.All"), new ActionListener() { //$NON-NLS-1$
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				table.setRowFilter(null, RowFilterSource.SIDEBAR);

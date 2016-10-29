@@ -34,11 +34,11 @@ import com.jgoodies.forms.layout.FormSpecs;
 import com.jgoodies.forms.layout.RowSpec;
 
 import de.jClipCorn.database.databaseElement.columnTypes.CCDateTimeList;
-import de.jClipCorn.gui.CachedResourceLoader;
-import de.jClipCorn.gui.Resources;
 import de.jClipCorn.gui.guiComponents.jCCDateSpinner.JCCDateSpinner;
 import de.jClipCorn.gui.guiComponents.jCCTimeSpinner.JCCTimeSpinner;
 import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.gui.resources.CachedResourceLoader;
+import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.datetime.CCTime;
@@ -330,7 +330,7 @@ public class DateTimeListEditor extends JPanel {
 			JPanel pnl = new JPanel(new BorderLayout());
 
 			JLabel lbl = new JLabel(element.getSimpleStringRepresentation());
-			JLabel btn = new JLabel(CachedResourceLoader.getSmallImageIcon(Resources.ICN_FRAMES_DELETE));
+			JLabel btn = new JLabel(CachedResourceLoader.getIcon(Resources.ICN_FRAMES_DELETE.icon16x16));
 			
 			btn.setHorizontalAlignment(SwingConstants.CENTER);
 			btn.setVerticalAlignment(SwingConstants.CENTER);

@@ -17,9 +17,9 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingUtilities;
 
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTyp;
-import de.jClipCorn.gui.CachedResourceLoader;
-import de.jClipCorn.gui.Resources;
 import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.gui.resources.CachedResourceLoader;
+import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.helper.ExtendedFocusTraversalOnArray;
 import de.jClipCorn.util.listener.ProgressCallbackProgressBarHelper;
 import de.jClipCorn.util.listener.UpdateCallbackListener;

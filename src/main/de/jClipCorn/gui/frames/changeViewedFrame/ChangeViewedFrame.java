@@ -19,11 +19,11 @@ import javax.swing.SwingConstants;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.databaseElement.CCMovie;
-import de.jClipCorn.gui.CachedResourceLoader;
-import de.jClipCorn.gui.Resources;
 import de.jClipCorn.gui.guiComponents.CoverLabel;
 import de.jClipCorn.gui.guiComponents.PropertyCheckbox;
 import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.gui.resources.CachedResourceLoader;
+import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.properties.CCProperties;
 
 public class ChangeViewedFrame extends JFrame {
@@ -64,7 +64,7 @@ public class ChangeViewedFrame extends JFrame {
 		getContentPane().setLayout(null);
 		
 		lblCover = new CoverLabel(false);
-		lblCover.setIcon(CachedResourceLoader.getImageIcon(Resources.IMG_COVER_STANDARD));
+		lblCover.setIcon(CachedResourceLoader.getIcon(Resources.IMG_COVER_STANDARD));
 		lblCover.setBounds(100, 47, 182, 254);
 		getContentPane().add(lblCover);
 		
@@ -147,7 +147,7 @@ public class ChangeViewedFrame extends JFrame {
 				}
 				
 				lblCover.setIcon(mov.getCoverIcon());
-				lblCurrent.setIcon(CachedResourceLoader.getImageIcon((mov.isViewed() ? (Resources.ICN_TABLE_VIEWED_TRUE) : (Resources.ICN_TABLE_VIEWED_FALSE))));
+				lblCurrent.setIcon(CachedResourceLoader.getIcon((mov.isViewed() ? (Resources.ICN_TABLE_VIEWED_TRUE) : (Resources.ICN_TABLE_VIEWED_FALSE))));
 				lblTitle.setText(mov.getCompleteTitle());
 			} else {
 				nextMovie();

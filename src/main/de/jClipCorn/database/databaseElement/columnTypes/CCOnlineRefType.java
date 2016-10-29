@@ -4,9 +4,9 @@ import java.util.regex.Pattern;
 
 import javax.swing.Icon;
 
-import de.jClipCorn.gui.CachedResourceLoader;
-import de.jClipCorn.gui.Resources;
 import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.gui.resources.CachedResourceLoader;
+import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.enumextension.ContinoousEnum;
 import de.jClipCorn.util.enumextension.EnumWrapper;
 import de.jClipCorn.util.exceptions.OnlineRefFormatException;
@@ -93,19 +93,19 @@ public enum CCOnlineRefType implements ContinoousEnum<CCOnlineRefType> {
 	public Icon getIcon() {
 		switch (this) {
 		case NONE:
-			return CachedResourceLoader.getImageIcon(Resources.ICN_REF_0_BIG);
+			return CachedResourceLoader.getIcon(Resources.ICN_REF_0.icon32x32);
 		case IMDB:
-			return CachedResourceLoader.getImageIcon(Resources.ICN_REF_1_BIG);
+			return CachedResourceLoader.getIcon(Resources.ICN_REF_1.icon32x32);
 		case AMAZON:
-			return CachedResourceLoader.getImageIcon(Resources.ICN_REF_2_BIG);
+			return CachedResourceLoader.getIcon(Resources.ICN_REF_2.icon32x32);
 		case MOVIEPILOT:
-			return CachedResourceLoader.getImageIcon(Resources.ICN_REF_3_BIG);
+			return CachedResourceLoader.getIcon(Resources.ICN_REF_3.icon32x32);
 		case THEMOVIEDB:
-			return CachedResourceLoader.getImageIcon(Resources.ICN_REF_4_BIG);
+			return CachedResourceLoader.getIcon(Resources.ICN_REF_4.icon32x32);
 		case PROXERME:
-			return CachedResourceLoader.getImageIcon(Resources.ICN_REF_5_BIG);
+			return CachedResourceLoader.getIcon(Resources.ICN_REF_5.icon32x32);
 		case MYANIMELIST:
-			return CachedResourceLoader.getImageIcon(Resources.ICN_REF_6_BIG);
+			return CachedResourceLoader.getIcon(Resources.ICN_REF_6.icon32x32);
 		default:
 			return null;
 		}
@@ -114,19 +114,19 @@ public enum CCOnlineRefType implements ContinoousEnum<CCOnlineRefType> {
 	public Icon getIcon16x16() {
 		switch (this) {
 		case NONE:
-			return CachedResourceLoader.getImageIcon(Resources.ICN_REF_0_SMALL);
+			return CachedResourceLoader.getIcon(Resources.ICN_REF_0.icon16x16);
 		case IMDB:
-			return CachedResourceLoader.getImageIcon(Resources.ICN_REF_1_SMALL);
+			return CachedResourceLoader.getIcon(Resources.ICN_REF_1.icon16x16);
 		case AMAZON:
-			return CachedResourceLoader.getImageIcon(Resources.ICN_REF_2_SMALL);
+			return CachedResourceLoader.getIcon(Resources.ICN_REF_2.icon16x16);
 		case MOVIEPILOT:
-			return CachedResourceLoader.getImageIcon(Resources.ICN_REF_3_SMALL);
+			return CachedResourceLoader.getIcon(Resources.ICN_REF_3.icon16x16);
 		case THEMOVIEDB:
-			return CachedResourceLoader.getImageIcon(Resources.ICN_REF_4_SMALL);
+			return CachedResourceLoader.getIcon(Resources.ICN_REF_4.icon16x16);
 		case PROXERME:
-			return CachedResourceLoader.getImageIcon(Resources.ICN_REF_5_SMALL);
+			return CachedResourceLoader.getIcon(Resources.ICN_REF_5.icon16x16);
 		case MYANIMELIST:
-			return CachedResourceLoader.getImageIcon(Resources.ICN_REF_6_SMALL);
+			return CachedResourceLoader.getIcon(Resources.ICN_REF_6.icon16x16);
 		default:
 			return null;
 		}
@@ -135,19 +135,19 @@ public enum CCOnlineRefType implements ContinoousEnum<CCOnlineRefType> {
 	public Icon getIconButton() {
 		switch (this) {
 		case NONE:
-			return CachedResourceLoader.getImageIcon(Resources.ICN_REF_0_BUTTON);
+			return CachedResourceLoader.getIcon(Resources.ICN_REF_0_BUTTON);
 		case IMDB:
-			return CachedResourceLoader.getImageIcon(Resources.ICN_REF_1_BUTTON);
+			return CachedResourceLoader.getIcon(Resources.ICN_REF_1_BUTTON);
 		case AMAZON:
-			return CachedResourceLoader.getImageIcon(Resources.ICN_REF_2_BUTTON);
+			return CachedResourceLoader.getIcon(Resources.ICN_REF_2_BUTTON);
 		case MOVIEPILOT:
-			return CachedResourceLoader.getImageIcon(Resources.ICN_REF_3_BUTTON);
+			return CachedResourceLoader.getIcon(Resources.ICN_REF_3_BUTTON);
 		case THEMOVIEDB:
-			return CachedResourceLoader.getImageIcon(Resources.ICN_REF_4_BUTTON);
+			return CachedResourceLoader.getIcon(Resources.ICN_REF_4_BUTTON);
 		case PROXERME:
-			return CachedResourceLoader.getImageIcon(Resources.ICN_REF_5_BUTTON);
+			return CachedResourceLoader.getIcon(Resources.ICN_REF_5_BUTTON);
 		case MYANIMELIST:
-			return CachedResourceLoader.getImageIcon(Resources.ICN_REF_6_BUTTON);
+			return CachedResourceLoader.getIcon(Resources.ICN_REF_6_BUTTON);
 		default:
 			return null;
 		}

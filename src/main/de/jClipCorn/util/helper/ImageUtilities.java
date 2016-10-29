@@ -18,9 +18,9 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 
-import de.jClipCorn.gui.CachedResourceLoader;
-import de.jClipCorn.gui.Resources;
 import de.jClipCorn.gui.log.CCLog;
+import de.jClipCorn.gui.resources.CachedResourceLoader;
+import de.jClipCorn.gui.resources.Resources;
 
 public class ImageUtilities {
 	public final static int COVER_WIDTH  = 182;
@@ -96,6 +96,24 @@ public class ImageUtilities {
         }
         return img;
     }
+	
+	public static BufferedImage resize(BufferedImage bi, int width, int height) {
+		if (bi.getWidth() == width && bi.getHeight() == height) {
+			return bi;
+		}
+		
+		BufferedImage resizedImage = new BufferedImage(width, height, bi.getType());
+		Graphics2D graphics = resizedImage.createGraphics();
+		graphics.drawImage(bi, 0, 0, width, height, null);
+		graphics.dispose();
+		
+		graphics.setComposite(AlphaComposite.Src);
+		graphics.setRenderingHint(RenderingHints.KEY_INTERPOLATION,RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+		graphics.setRenderingHint(RenderingHints.KEY_RENDERING,RenderingHints.VALUE_RENDER_QUALITY);
+		graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
+
+		return resizedImage;
+	}
     
 	private static boolean isCorrectlySized(BufferedImage bb, int prefWidth, int prefHeight) {
 		return (bb != null) && (bb.getWidth() == prefWidth) && (bb.getHeight() == prefHeight);

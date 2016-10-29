@@ -5,9 +5,9 @@ import java.awt.event.WindowListener;
 
 import javax.swing.JDialog;
 
-import de.jClipCorn.gui.CachedResourceLoader;
-import de.jClipCorn.gui.Resources;
 import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.AbstractCustomFilter;
+import de.jClipCorn.gui.resources.CachedResourceLoader;
+import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.listener.FinishListener;
 
 public abstract class CustomFilterDialog extends JDialog implements WindowListener{

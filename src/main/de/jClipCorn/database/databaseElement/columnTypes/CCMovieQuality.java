@@ -2,9 +2,9 @@ package de.jClipCorn.database.databaseElement.columnTypes;
 
 import javax.swing.ImageIcon;
 
-import de.jClipCorn.gui.CachedResourceLoader;
-import de.jClipCorn.gui.Resources;
 import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.gui.resources.CachedResourceLoader;
+import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.enumextension.ContinoousEnum;
 import de.jClipCorn.util.enumextension.EnumWrapper;
 
@@ -61,15 +61,15 @@ public enum CCMovieQuality implements ContinoousEnum<CCMovieQuality> {
 	public ImageIcon getIcon() {
 		switch (this) {
 		case STREAM:
-			return CachedResourceLoader.getImageIcon(Resources.ICN_TABLE_QUALITY_0);
+			return CachedResourceLoader.getIcon(Resources.ICN_TABLE_QUALITY_0);
 		case ONE_CD:
-			return CachedResourceLoader.getImageIcon(Resources.ICN_TABLE_QUALITY_1);
+			return CachedResourceLoader.getIcon(Resources.ICN_TABLE_QUALITY_1);
 		case MULTIPLE_CD:
-			return CachedResourceLoader.getImageIcon(Resources.ICN_TABLE_QUALITY_2);
+			return CachedResourceLoader.getIcon(Resources.ICN_TABLE_QUALITY_2);
 		case DVD:
-			return CachedResourceLoader.getImageIcon(Resources.ICN_TABLE_QUALITY_3);
+			return CachedResourceLoader.getIcon(Resources.ICN_TABLE_QUALITY_3);
 		case BLURAY:
-			return CachedResourceLoader.getImageIcon(Resources.ICN_TABLE_QUALITY_4);
+			return CachedResourceLoader.getIcon(Resources.ICN_TABLE_QUALITY_4);
 		default:
 			return null;
 		}

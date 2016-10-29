@@ -14,10 +14,10 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 
 import de.jClipCorn.Main;
-import de.jClipCorn.gui.CachedResourceLoader;
-import de.jClipCorn.gui.Resources;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
+import de.jClipCorn.gui.resources.CachedResourceLoader;
+import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.helper.SimpleFileUtils;
 
 public class AboutFrame extends JFrame implements ComponentListener {
@@ -39,7 +39,7 @@ public class AboutFrame extends JFrame implements ComponentListener {
 		setIconImage(CachedResourceLoader.getImage(Resources.IMG_FRAME_ICON));
 		addComponentListener(this);
 		
-		lblImg = new JLabel(CachedResourceLoader.getImageIcon(Resources.IMG_FRAMES_ABOUT));
+		lblImg = new JLabel(CachedResourceLoader.getIcon(Resources.IMG_FRAMES_ABOUT));
 		lblImg.addMouseListener(new MouseListener() {
 			
 			@Override

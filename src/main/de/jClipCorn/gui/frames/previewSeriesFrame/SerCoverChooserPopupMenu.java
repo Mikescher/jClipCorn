@@ -12,12 +12,12 @@ import javax.swing.JPopupMenu;
 import javax.swing.filechooser.FileFilter;
 
 import de.jClipCorn.database.databaseElement.CCSeason;
-import de.jClipCorn.gui.CachedResourceLoader;
-import de.jClipCorn.gui.Resources;
 import de.jClipCorn.gui.frames.addEpisodesFrame.AddEpisodesFrame;
 import de.jClipCorn.gui.frames.editSeriesFrame.EditSeriesFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
+import de.jClipCorn.gui.resources.CachedResourceLoader;
+import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.helper.FileChooserHelper;
@@ -33,7 +33,7 @@ public class SerCoverChooserPopupMenu extends JPopupMenu {
 		this.season = s;
 		this.owner = frame;
 
-		JMenuItem addEpisodes = new JMenuItem(LocaleBundle.getString("PreviewSeriesFrame.PopupMenuCover.AddEpisodes"), CachedResourceLoader.getSmallImageIcon(Resources.ICN_MENUBAR_ADD_SEA)); //$NON-NLS-1$
+		JMenuItem addEpisodes = new JMenuItem(LocaleBundle.getString("PreviewSeriesFrame.PopupMenuCover.AddEpisodes"), CachedResourceLoader.getIcon(Resources.ICN_MENUBAR_ADD_SEA.icon16x16)); //$NON-NLS-1$
 		addEpisodes.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -43,7 +43,7 @@ public class SerCoverChooserPopupMenu extends JPopupMenu {
 		});
 		add(addEpisodes);
 		
-		JMenuItem editSeason = new JMenuItem(LocaleBundle.getString("PreviewSeriesFrame.PopupMenuCover.Edit"), CachedResourceLoader.getSmallImageIcon(Resources.ICN_MENUBAR_EDIT_SER)); //$NON-NLS-1$
+		JMenuItem editSeason = new JMenuItem(LocaleBundle.getString("PreviewSeriesFrame.PopupMenuCover.Edit"), CachedResourceLoader.getIcon(Resources.ICN_MENUBAR_EDIT_SER.icon16x16)); //$NON-NLS-1$
 		editSeason.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -53,7 +53,7 @@ public class SerCoverChooserPopupMenu extends JPopupMenu {
 		});
 		add(editSeason);
 		
-		JMenuItem openFolder = new JMenuItem(LocaleBundle.getString("PreviewSeriesFrame.PopupMenuCover.OpenFolder"), CachedResourceLoader.getSmallImageIcon(Resources.ICN_MENUBAR_FOLDER)); //$NON-NLS-1$
+		JMenuItem openFolder = new JMenuItem(LocaleBundle.getString("PreviewSeriesFrame.PopupMenuCover.OpenFolder"), CachedResourceLoader.getIcon(Resources.ICN_MENUBAR_FOLDER.icon16x16)); //$NON-NLS-1$
 		openFolder.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -63,7 +63,7 @@ public class SerCoverChooserPopupMenu extends JPopupMenu {
 		});
 		add(openFolder);
 		
-		JMenuItem delSeason = new JMenuItem(LocaleBundle.getString("PreviewSeriesFrame.PopupMenuCover.Delete"), CachedResourceLoader.getSmallImageIcon(Resources.ICN_MENUBAR_REMOVE)); //$NON-NLS-1$
+		JMenuItem delSeason = new JMenuItem(LocaleBundle.getString("PreviewSeriesFrame.PopupMenuCover.Delete"), CachedResourceLoader.getIcon(Resources.ICN_MENUBAR_REMOVE.icon16x16)); //$NON-NLS-1$
 		delSeason.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -77,7 +77,7 @@ public class SerCoverChooserPopupMenu extends JPopupMenu {
 		
 		addSeparator();
 		
-		JMenuItem saveCover = new JMenuItem(LocaleBundle.getString("PreviewSeriesFrame.PopupMenuCover.SaveCover"), CachedResourceLoader.getSmallImageIcon(Resources.ICN_MENUBAR_SAVE)); //$NON-NLS-1$
+		JMenuItem saveCover = new JMenuItem(LocaleBundle.getString("PreviewSeriesFrame.PopupMenuCover.SaveCover"), CachedResourceLoader.getIcon(Resources.ICN_MENUBAR_SAVE.icon16x16)); //$NON-NLS-1$
 		saveCover.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {

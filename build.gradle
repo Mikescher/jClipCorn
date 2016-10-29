@@ -58,7 +58,7 @@ jar {
 	version = project.appversion
 }
 
-task fatJar(type: Jar) { //  ->  file ends up in ./build/libs/*.jar
+task fatJar(type: Jar) { //  ->  file ends up in ./build/libs/smth.jar
 	manifest {
 		attributes 'Implementation-Title':   project.appname,  
 				   'Implementation-Version': project.version,

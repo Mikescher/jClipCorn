@@ -39,8 +39,6 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCMovieGenreList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTyp;
 import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineRefType;
 import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReference;
-import de.jClipCorn.gui.CachedResourceLoader;
-import de.jClipCorn.gui.Resources;
 import de.jClipCorn.gui.frames.allRatingsFrame.AllRatingsDialog;
 import de.jClipCorn.gui.guiComponents.CoverLabel;
 import de.jClipCorn.gui.guiComponents.ReadableCombobox;
@@ -48,6 +46,8 @@ import de.jClipCorn.gui.guiComponents.ReadableSpinner;
 import de.jClipCorn.gui.guiComponents.ReadableTextField;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
+import de.jClipCorn.gui.resources.CachedResourceLoader;
+import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.datatypes.DoubleString;
 import de.jClipCorn.util.helper.ExtendedFocusTraversalOnArray;
@@ -385,7 +385,7 @@ public class ParseOnlineDialog extends JDialog {
 		cbCover.setBounds(6, 157, 21, 23);
 		pnlMain.add(cbCover);
 		
-		btnIMDB = new JButton(CachedResourceLoader.getImageIcon(Resources.ICN_REF_0_BUTTON));
+		btnIMDB = new JButton(CachedResourceLoader.getIcon(Resources.ICN_REF_0_BUTTON));
 		btnIMDB.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -476,7 +476,7 @@ public class ParseOnlineDialog extends JDialog {
 		cbxGenre6.setSelectedIndex(-1);
 		cbxGenre7.setSelectedIndex(-1);
 		
-		btnIMDB.setIcon(CachedResourceLoader.getImageIcon(Resources.ICN_REF_0_BUTTON));
+		btnIMDB.setIcon(CachedResourceLoader.getIcon(Resources.ICN_REF_0_BUTTON));
 	}
 	
 	private void resetCheckboxes() {

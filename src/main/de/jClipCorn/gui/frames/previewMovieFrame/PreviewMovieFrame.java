@@ -20,13 +20,13 @@ import javax.swing.SwingConstants;
 
 import de.jClipCorn.Main;
 import de.jClipCorn.database.databaseElement.CCMovie;
-import de.jClipCorn.gui.CachedResourceLoader;
-import de.jClipCorn.gui.Resources;
 import de.jClipCorn.gui.frames.editMovieFrame.EditMovieFrame;
 import de.jClipCorn.gui.guiComponents.CoverLabel;
 import de.jClipCorn.gui.guiComponents.ReadableTextField;
 import de.jClipCorn.gui.guiComponents.TagPanel;
 import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.gui.resources.CachedResourceLoader;
+import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.formatter.FileSizeFormatter;
 import de.jClipCorn.util.formatter.TimeIntervallFormatter;
@@ -293,7 +293,7 @@ public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener 
 		});
 		mnExtras.add(mntmShowInImdb);
 		
-		btnPlay = new JButton(CachedResourceLoader.getImageIcon(Resources.ICN_MENUBAR_PLAY));
+		btnPlay = new JButton(CachedResourceLoader.getIcon(Resources.ICN_MENUBAR_PLAY.icon32x32));
 		btnPlay.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -353,7 +353,7 @@ public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener 
 		lblCover.setIcon(movie.getCoverIcon());
 		label.setText(movie.getCompleteTitle());
 		
-		lblViewed.setIcon(movie.isViewed()?CachedResourceLoader.getImageIcon(Resources.ICN_TABLE_VIEWED_TRUE):null);
+		lblViewed.setIcon(movie.isViewed()?CachedResourceLoader.getIcon(Resources.ICN_TABLE_VIEWED_TRUE):null);
 		
 		lbl_Quality.setIcon(movie.getQuality().getIcon());
 		lbl_Quality.setText(movie.getQuality().asString());

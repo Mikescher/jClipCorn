@@ -37,12 +37,12 @@ import com.jgoodies.forms.layout.RowSpec;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGroup;
-import de.jClipCorn.gui.CachedResourceLoader;
-import de.jClipCorn.gui.Resources;
 import de.jClipCorn.gui.guiComponents.StringDisplayConverter;
 import de.jClipCorn.gui.guiComponents.jCheckBoxList.CBListModel.CBFilter;
 import de.jClipCorn.gui.guiComponents.jCheckBoxList.JCheckBoxList;
 import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.gui.resources.CachedResourceLoader;
+import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.helper.DialogHelper;
 
 public class GroupManageFrame extends JFrame {

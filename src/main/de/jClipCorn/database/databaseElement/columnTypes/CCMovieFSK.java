@@ -2,9 +2,9 @@ package de.jClipCorn.database.databaseElement.columnTypes;
 
 import javax.swing.ImageIcon;
 
-import de.jClipCorn.gui.CachedResourceLoader;
-import de.jClipCorn.gui.Resources;
 import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.gui.resources.CachedResourceLoader;
+import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.enumextension.ContinoousEnum;
 import de.jClipCorn.util.enumextension.EnumWrapper;
 
@@ -69,15 +69,15 @@ public enum CCMovieFSK implements ContinoousEnum<CCMovieFSK> {
 	public ImageIcon getIcon() {
 		switch (this) {
 		case RATING_0:
-			return CachedResourceLoader.getImageIcon(Resources.ICN_TABLE_FSK_0);
+			return CachedResourceLoader.getIcon(Resources.ICN_TABLE_FSK_0);
 		case RATING_I:
-			return CachedResourceLoader.getImageIcon(Resources.ICN_TABLE_FSK_1);
+			return CachedResourceLoader.getIcon(Resources.ICN_TABLE_FSK_1);
 		case RATING_II:
-			return CachedResourceLoader.getImageIcon(Resources.ICN_TABLE_FSK_2);
+			return CachedResourceLoader.getIcon(Resources.ICN_TABLE_FSK_2);
 		case RATING_III:
-			return CachedResourceLoader.getImageIcon(Resources.ICN_TABLE_FSK_3);
+			return CachedResourceLoader.getIcon(Resources.ICN_TABLE_FSK_3);
 		case RATING_IV:
-			return CachedResourceLoader.getImageIcon(Resources.ICN_TABLE_FSK_4);
+			return CachedResourceLoader.getIcon(Resources.ICN_TABLE_FSK_4);
 		default:
 			return null;
 		}

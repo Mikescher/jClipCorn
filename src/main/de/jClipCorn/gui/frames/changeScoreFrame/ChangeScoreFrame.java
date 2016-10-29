@@ -21,10 +21,10 @@ import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieScore;
-import de.jClipCorn.gui.CachedResourceLoader;
-import de.jClipCorn.gui.Resources;
 import de.jClipCorn.gui.guiComponents.PropertyCheckbox;
 import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.gui.resources.CachedResourceLoader;
+import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.properties.CCProperties;
 
 public class ChangeScoreFrame extends JFrame {
@@ -75,7 +75,7 @@ public class ChangeScoreFrame extends JFrame {
 		getContentPane().setLayout(null);
 		
 		lblCover = new JLabel();
-		lblCover.setIcon(CachedResourceLoader.getImageIcon(Resources.IMG_COVER_STANDARD));
+		lblCover.setIcon(CachedResourceLoader.getIcon(Resources.IMG_COVER_STANDARD));
 		lblCover.setBounds(10, 36, 182, 254);
 		getContentPane().add(lblCover);
 		

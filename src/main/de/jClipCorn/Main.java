@@ -3,11 +3,11 @@ package de.jClipCorn;
 import javax.swing.SwingUtilities;
 
 import de.jClipCorn.database.CCMovieList;
-import de.jClipCorn.gui.Resources;
 import de.jClipCorn.gui.frames.mainFrame.MainFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.gui.log.ExceptionHandler;
+import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.DriveMap;
 import de.jClipCorn.util.formatter.PathFormatter;
@@ -130,3 +130,6 @@ public class Main {
 //TODO Settings for display dates (DE | US | ISO)
 
 //TODO Use http://www.iconarchive.com/show/series-season-folder-icons-by-aaron-sinuhe.html 
+
+//TODO Timeline what when watched (order by last) (Mov & Episodes)
+//TODO Better icon for Open_lastplayedseries

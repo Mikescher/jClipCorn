@@ -1,13 +1,15 @@
 package de.jClipCorn.database.databaseElement.columnTypes;
 
 import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.image.BufferedImage;
 
 import javax.swing.ImageIcon;
 
-import de.jClipCorn.gui.CachedResourceLoader;
-import de.jClipCorn.gui.Resources;
 import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.gui.resources.CachedResourceLoader;
+import de.jClipCorn.gui.resources.MultiIconRef;
+import de.jClipCorn.gui.resources.Resources;
 
 public class CCMovieTags {
 	public final static int TAGCOUNT = 16;
@@ -20,9 +22,9 @@ public class CCMovieTags {
 	public final static int TAG_WRONG_LANGUAGE 	= 4;
 	public final static int TAG_WATCH_NEVER 	= 5;
 
-	private final static String[] ICONS_OFF = { Resources.ICN_TABLE_TAG_0_0,   Resources.ICN_TABLE_TAG_1_0,   Resources.ICN_TABLE_TAG_2_0,   Resources.ICN_TABLE_TAG_3_0,   Resources.ICN_TABLE_TAG_4_0,   Resources.ICN_TABLE_TAG_5_0 };
-	private final static String[] ICONS_ON  = { Resources.ICN_TABLE_TAG_0_1,   Resources.ICN_TABLE_TAG_1_1,   Resources.ICN_TABLE_TAG_2_1,   Resources.ICN_TABLE_TAG_3_1,   Resources.ICN_TABLE_TAG_4_1,   Resources.ICN_TABLE_TAG_5_1  };
-	private final static String[] IMGS_ON   = { Resources.ICN_MENUBAR_TAG_0_1, Resources.ICN_MENUBAR_TAG_1_1, Resources.ICN_MENUBAR_TAG_2_1, Resources.ICN_MENUBAR_TAG_3_1, Resources.ICN_MENUBAR_TAG_4_1, Resources.ICN_MENUBAR_TAG_5_1 };
+	private final static MultiIconRef[] ICONS_OFF = { Resources.ICN_TABLE_TAG_0_0,   Resources.ICN_TABLE_TAG_1_0,   Resources.ICN_TABLE_TAG_2_0,   Resources.ICN_TABLE_TAG_3_0,   Resources.ICN_TABLE_TAG_4_0,   Resources.ICN_TABLE_TAG_5_0 };
+	private final static MultiIconRef[] ICONS_ON  = { Resources.ICN_TABLE_TAG_0_1,   Resources.ICN_TABLE_TAG_1_1,   Resources.ICN_TABLE_TAG_2_1,   Resources.ICN_TABLE_TAG_3_1,   Resources.ICN_TABLE_TAG_4_1,   Resources.ICN_TABLE_TAG_5_1  };
+	private final static MultiIconRef[] IMGS_ON   = { Resources.ICN_MENUBAR_TAG_0_1, Resources.ICN_MENUBAR_TAG_1_1, Resources.ICN_MENUBAR_TAG_2_1, Resources.ICN_MENUBAR_TAG_3_1, Resources.ICN_MENUBAR_TAG_4_1, Resources.ICN_MENUBAR_TAG_5_1 };
 
 	private final static String[] NAMES = { 
 		LocaleBundle.getString("CCMovieTags.TAG_00"), //$NON-NLS-1$
@@ -108,12 +110,12 @@ public class CCMovieTags {
 		return c >= 0 && c < ACTIVETAGS;
 	}
 
-	public BufferedImage getTagImage(int c) {
+	public Image getTagImage(int c) {
 		if (isTagActive(c)) {
 			if (tags[c]) {
-				return CachedResourceLoader.getImage(ICONS_ON[c]);
+				return CachedResourceLoader.getImage(ICONS_ON[c].icon32x32);
 			} else {
-				return CachedResourceLoader.getImage(ICONS_OFF[c]);
+				return CachedResourceLoader.getImage(ICONS_OFF[c].icon32x32);
 			}
 		} else {
 			return null;
@@ -122,7 +124,7 @@ public class CCMovieTags {
 	
 	public static ImageIcon getOnIcon(int c) {
 		if (isTagActive(c)) {
-			return CachedResourceLoader.getImageIcon(ICONS_ON[c]);
+			return CachedResourceLoader.getIcon(ICONS_ON[c].icon32x32);
 		} else {
 			return null;
 		}
@@ -130,7 +132,7 @@ public class CCMovieTags {
 	
 	public static ImageIcon getOffIcon(int c) {
 		if (isTagActive(c)) {
-			return CachedResourceLoader.getImageIcon(ICONS_OFF[c]);
+			return CachedResourceLoader.getIcon(ICONS_OFF[c].icon32x32);
 		} else {
 			return null;
 		}
@@ -139,9 +141,9 @@ public class CCMovieTags {
 	public ImageIcon getTagIcon(int c) {
 		if (isTagActive(c)) {
 			if (tags[c]) {
-				return CachedResourceLoader.getImageIcon(ICONS_ON[c]);
+				return CachedResourceLoader.getIcon(ICONS_ON[c].icon32x32);
 			} else {
-				return CachedResourceLoader.getImageIcon(ICONS_OFF[c]);
+				return CachedResourceLoader.getIcon(ICONS_OFF[c].icon32x32);
 			}
 		} else {
 			return null;
@@ -255,11 +257,11 @@ public class CCMovieTags {
 		for (int i = 0; i < ACTIVETAGS; i++) {
 			if (getTag(i)) {
 				if (use32px) {
-					bi.getGraphics().drawImage(CachedResourceLoader.getImage(IMGS_ON[i]), posX, 8, null);
+					bi.getGraphics().drawImage(CachedResourceLoader.getImage(IMGS_ON[i].icon32x32), posX, 8, null);
 					posX += 32;
 					posX += 8;
 				} else {
-					bi.getGraphics().drawImage(CachedResourceLoader.getSmallImage(IMGS_ON[i]), posX, 8, null);
+					bi.getGraphics().drawImage(CachedResourceLoader.getImage(IMGS_ON[i].icon16x16), posX, 8, null);
 					posX += 16;
 					posX += 4;
 				}

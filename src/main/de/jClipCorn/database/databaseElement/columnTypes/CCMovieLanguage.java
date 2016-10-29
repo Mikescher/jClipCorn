@@ -2,10 +2,10 @@ package de.jClipCorn.database.databaseElement.columnTypes;
 
 import javax.swing.ImageIcon;
 
-import de.jClipCorn.gui.CachedResourceLoader;
-import de.jClipCorn.gui.Resources;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.localization.util.LocalizedVector;
+import de.jClipCorn.gui.resources.CachedResourceLoader;
+import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.enumextension.ContinoousEnum;
 import de.jClipCorn.util.enumextension.EnumWrapper;
 
@@ -81,15 +81,15 @@ public enum CCMovieLanguage implements ContinoousEnum<CCMovieLanguage> {
 	public ImageIcon getIcon() {
 		switch (this) {
 		case GERMAN:
-			return CachedResourceLoader.getImageIcon(Resources.ICN_TABLE_LANGUAGE_0);
+			return CachedResourceLoader.getIcon(Resources.ICN_TABLE_LANGUAGE_0);
 		case ENGLISH:
-			return CachedResourceLoader.getImageIcon(Resources.ICN_TABLE_LANGUAGE_1);
+			return CachedResourceLoader.getIcon(Resources.ICN_TABLE_LANGUAGE_1);
 		case MUTED:
-			return CachedResourceLoader.getImageIcon(Resources.ICN_TABLE_LANGUAGE_2);
+			return CachedResourceLoader.getIcon(Resources.ICN_TABLE_LANGUAGE_2);
 		case FRENCH:
-			return CachedResourceLoader.getImageIcon(Resources.ICN_TABLE_LANGUAGE_3);
+			return CachedResourceLoader.getIcon(Resources.ICN_TABLE_LANGUAGE_3);
 		case JAPANESE:
-			return CachedResourceLoader.getImageIcon(Resources.ICN_TABLE_LANGUAGE_4);
+			return CachedResourceLoader.getIcon(Resources.ICN_TABLE_LANGUAGE_4);
 		default:
 			return null;
 		}

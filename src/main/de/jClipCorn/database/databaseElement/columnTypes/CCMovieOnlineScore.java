@@ -2,9 +2,9 @@ package de.jClipCorn.database.databaseElement.columnTypes;
 
 import javax.swing.ImageIcon;
 
-import de.jClipCorn.gui.CachedResourceLoader;
-import de.jClipCorn.gui.Resources;
 import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.gui.resources.CachedResourceLoader;
+import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.enumextension.ContinoousEnum;
 import de.jClipCorn.util.enumextension.EnumWrapper;
 
@@ -59,27 +59,27 @@ public enum CCMovieOnlineScore implements ContinoousEnum<CCMovieOnlineScore> {
 	public ImageIcon getIcon() {
 		switch (this) {
 		case STARS_0_0:
-			return CachedResourceLoader.getImageIcon(Resources.ICN_TABLE_ONLINESCORE_0);
+			return CachedResourceLoader.getIcon(Resources.ICN_TABLE_ONLINESCORE_0);
 		case STARS_0_5:
-			return CachedResourceLoader.getImageIcon(Resources.ICN_TABLE_ONLINESCORE_1);
+			return CachedResourceLoader.getIcon(Resources.ICN_TABLE_ONLINESCORE_1);
 		case STARS_1_0:
-			return CachedResourceLoader.getImageIcon(Resources.ICN_TABLE_ONLINESCORE_2);
+			return CachedResourceLoader.getIcon(Resources.ICN_TABLE_ONLINESCORE_2);
 		case STARS_1_5:
-			return CachedResourceLoader.getImageIcon(Resources.ICN_TABLE_ONLINESCORE_3);
+			return CachedResourceLoader.getIcon(Resources.ICN_TABLE_ONLINESCORE_3);
 		case STARS_2_0:
-			return CachedResourceLoader.getImageIcon(Resources.ICN_TABLE_ONLINESCORE_4);
+			return CachedResourceLoader.getIcon(Resources.ICN_TABLE_ONLINESCORE_4);
 		case STARS_2_5:
-			return CachedResourceLoader.getImageIcon(Resources.ICN_TABLE_ONLINESCORE_5);
+			return CachedResourceLoader.getIcon(Resources.ICN_TABLE_ONLINESCORE_5);
 		case STARS_3_0:
-			return CachedResourceLoader.getImageIcon(Resources.ICN_TABLE_ONLINESCORE_6);
+			return CachedResourceLoader.getIcon(Resources.ICN_TABLE_ONLINESCORE_6);
 		case STARS_3_5:
-			return CachedResourceLoader.getImageIcon(Resources.ICN_TABLE_ONLINESCORE_7);
+			return CachedResourceLoader.getIcon(Resources.ICN_TABLE_ONLINESCORE_7);
 		case STARS_4_0:
-			return CachedResourceLoader.getImageIcon(Resources.ICN_TABLE_ONLINESCORE_8);
+			return CachedResourceLoader.getIcon(Resources.ICN_TABLE_ONLINESCORE_8);
 		case STARS_4_5:
-			return CachedResourceLoader.getImageIcon(Resources.ICN_TABLE_ONLINESCORE_9);
+			return CachedResourceLoader.getIcon(Resources.ICN_TABLE_ONLINESCORE_9);
 		case STARS_5_0:
-			return CachedResourceLoader.getImageIcon(Resources.ICN_TABLE_ONLINESCORE_10);
+			return CachedResourceLoader.getIcon(Resources.ICN_TABLE_ONLINESCORE_10);
 		default:
 			return null;
 		}

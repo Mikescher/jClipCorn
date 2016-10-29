@@ -1,8 +1,8 @@
 package de.jClipCorn.gui.guiComponents.tableRenderer;
 
 import de.jClipCorn.database.util.ExtendedViewedState;
-import de.jClipCorn.gui.CachedResourceLoader;
-import de.jClipCorn.gui.Resources;
+import de.jClipCorn.gui.resources.CachedResourceLoader;
+import de.jClipCorn.gui.resources.Resources;
 
 public class TableViewedRenderer extends TableRenderer {
 	private static final long serialVersionUID = 5357005350195701739L;
@@ -15,19 +15,19 @@ public class TableViewedRenderer extends TableRenderer {
     public void setValue(Object value) {
 		switch (((ExtendedViewedState)value).getType()) {
 		case VIEWED:
-			setIcon(CachedResourceLoader.getImageIcon(Resources.ICN_TABLE_VIEWED_TRUE));
+			setIcon(CachedResourceLoader.getIcon(Resources.ICN_TABLE_VIEWED_TRUE));
 			break;
 		case NOT_VIEWED:
-			setIcon(CachedResourceLoader.getImageIcon(Resources.ICN_TABLE_VIEWED_FALSE));
+			setIcon(CachedResourceLoader.getIcon(Resources.ICN_TABLE_VIEWED_FALSE));
 			break;
 		case MARKED_FOR_LATER:
-			setIcon(CachedResourceLoader.getImageIcon(Resources.ICN_TABLE_VIEWED_LATER));
+			setIcon(CachedResourceLoader.getIcon(Resources.ICN_TABLE_VIEWED_LATER));
 			break;
 		case MARKED_FOR_NEVER:
-			setIcon(CachedResourceLoader.getImageIcon(Resources.ICN_TABLE_VIEWED_NEVER));
+			setIcon(CachedResourceLoader.getIcon(Resources.ICN_TABLE_VIEWED_NEVER));
 			break;
 		case PARTIAL_VIEWED:
-			setIcon(CachedResourceLoader.getImageIcon(Resources.ICN_TABLE_VIEWED_PARTIAL));
+			setIcon(CachedResourceLoader.getIcon(Resources.ICN_TABLE_VIEWED_PARTIAL));
 			break;
 		}
     }

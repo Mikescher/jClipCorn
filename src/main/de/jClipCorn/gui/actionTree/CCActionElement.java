@@ -17,10 +17,11 @@ import org.apache.commons.lang.StringUtils;
 
 import de.jClipCorn.Main;
 import de.jClipCorn.database.CCMovieList;
-import de.jClipCorn.gui.CachedResourceLoader;
 import de.jClipCorn.gui.frames.mainFrame.clipToolbar.ClipToolbar;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
+import de.jClipCorn.gui.resources.CachedResourceLoader;
+import de.jClipCorn.gui.resources.MultiIconRef;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.property.CCCaptionedKeyStrokeProperty;
 import de.jClipCorn.properties.property.CCKeyStrokeProperty;
@@ -29,7 +30,7 @@ import de.jClipCorn.util.helper.KeyStrokeUtil;
 public class CCActionElement {
 	private final String name;
 	private final String captionIdent;
-	private final String iconRes;
+	private final MultiIconRef iconRes;
 	private final boolean visible;
 	private final KeyStroke defaultKeyStroke;
 	
@@ -42,7 +43,7 @@ public class CCActionElement {
 	
 	private CCActionElement parent = null;
 	
-	public CCActionElement(String name, KeyStroke stroke, String caption, String iconRes) {
+	public CCActionElement(String name, KeyStroke stroke, String caption, MultiIconRef iconRes) {
 		this.name = name;
 		this.captionIdent = caption;
 		this.iconRes = iconRes;
@@ -52,7 +53,7 @@ public class CCActionElement {
 		this.defaultKeyStroke = stroke;
 	}
 	
-	public CCActionElement(String name, KeyStroke stroke, String caption, String iconRes, boolean vis) {
+	public CCActionElement(String name, KeyStroke stroke, String caption, MultiIconRef iconRes, boolean vis) {
 		this.name = name;
 		this.captionIdent = caption;
 		this.iconRes = iconRes;
@@ -83,19 +84,19 @@ public class CCActionElement {
 	}
 	
 	public ImageIcon getSmallIcon() {
-		if (iconRes == null || iconRes.isEmpty()) {
+		if (iconRes == null) {
 			return null;
 		}
 		
-		return CachedResourceLoader.getSmallImageIcon(iconRes);
+		return CachedResourceLoader.getIcon(iconRes.icon16x16);
 	}
 	
 	public ImageIcon getIcon() {
-		if (iconRes == null || iconRes.isEmpty()) {
+		if (iconRes == null) {
 			return null;
 		}
-		
-		return CachedResourceLoader.getImageIcon(iconRes);
+
+		return CachedResourceLoader.getIcon(iconRes.icon32x32);
 	}
 	
 	public void addListener(ActionListener al) {

@@ -16,10 +16,10 @@ import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.filechooser.FileFilter;
 
-import de.jClipCorn.gui.CachedResourceLoader;
-import de.jClipCorn.gui.Resources;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
+import de.jClipCorn.gui.resources.CachedResourceLoader;
+import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.FileChooserHelper;
 import de.jClipCorn.util.helper.ImageUtilities;
@@ -36,9 +36,9 @@ public class CoverLabel extends JLabel implements MouseListener {
 
 	public Icon getStandardIcon() {
 		if (isHalfSize) {
-			return CachedResourceLoader.getResizedImageIcon(Resources.IMG_COVER_STANDARD, ImageUtilities.COVER_WIDTH / 2, ImageUtilities.COVER_HEIGHT / 2);
+			return CachedResourceLoader.getIcon(Resources.IMG_COVER_STANDARD_SMALL);
 		} else {
-			return CachedResourceLoader.getImageIcon(Resources.IMG_COVER_STANDARD);
+			return CachedResourceLoader.getIcon(Resources.IMG_COVER_STANDARD);
 		}
 	}
 

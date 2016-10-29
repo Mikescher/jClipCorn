@@ -29,11 +29,11 @@ import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.FormSpecs;
 import com.jgoodies.forms.layout.RowSpec;
 
-import de.jClipCorn.gui.CachedResourceLoader;
-import de.jClipCorn.gui.Resources;
 import de.jClipCorn.gui.frames.extendedSettingsFrame.settingsTable.SettingsTableEditor;
 import de.jClipCorn.gui.frames.extendedSettingsFrame.settingsTable.SettingsTableModel;
 import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.gui.resources.CachedResourceLoader;
+import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.property.CCProperty;
 import de.jClipCorn.util.helper.DialogHelper;

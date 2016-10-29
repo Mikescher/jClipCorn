@@ -9,9 +9,9 @@ import javax.swing.ImageIcon;
 
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.databaseElement.CCMovie;
-import de.jClipCorn.gui.CachedResourceLoader;
-import de.jClipCorn.gui.Resources;
 import de.jClipCorn.gui.actionTree.CCActionTree;
+import de.jClipCorn.gui.resources.CachedResourceLoader;
+import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.helper.ImageUtilities;
 
@@ -85,9 +85,9 @@ public class DatabaseElementPreviewLabel extends CoverLabel {
 
 		if (isError()) {
 			if (timerSwitch) {
-				setIcon(CachedResourceLoader.getImageIcon(Resources.IMG_COVER_ERROR_ON));
+				setIcon(CachedResourceLoader.getIcon(Resources.IMG_COVER_ERROR_ON));
 			} else {
-				setIcon(CachedResourceLoader.getImageIcon(Resources.IMG_COVER_ERROR_OFF));
+				setIcon(CachedResourceLoader.getIcon(Resources.IMG_COVER_ERROR_OFF));
 			}
 		}
 	}

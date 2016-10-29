@@ -17,10 +17,10 @@ import javax.swing.ImageIcon;
 import de.jClipCorn.Main;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
-import de.jClipCorn.gui.CachedResourceLoader;
-import de.jClipCorn.gui.Resources;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
+import de.jClipCorn.gui.resources.CachedResourceLoader;
+import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.datatypes.CachedHashMap;
 import de.jClipCorn.util.formatter.PathFormatter;
@@ -100,7 +100,7 @@ public class CCCoverCache {
 		if (res == null) {
 			try {
 				res = ImageIO.read(new File(coverPath + name));
-				res = CachedResourceLoader.resize(res, ImageUtilities.COVER_WIDTH / 2, ImageUtilities.COVER_HEIGHT / 2);
+				res = ImageUtilities.resize(res, ImageUtilities.COVER_WIDTH / 2, ImageUtilities.COVER_HEIGHT / 2);
 				cache.put(name + "_halfsize", res); //$NON-NLS-1$
 			} catch (IOException e) {
 				CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CoverNotFound", coverPath + name)); //$NON-NLS-1$

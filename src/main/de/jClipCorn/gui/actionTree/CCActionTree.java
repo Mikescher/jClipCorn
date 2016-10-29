@@ -24,7 +24,6 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTyp;
 import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReference;
 import de.jClipCorn.database.util.ExportHelper;
 import de.jClipCorn.database.xml.CCBXMLReader;
-import de.jClipCorn.gui.Resources;
 import de.jClipCorn.gui.frames.aboutFrame.AboutFrame;
 import de.jClipCorn.gui.frames.addMovieFrame.AddMovieFrame;
 import de.jClipCorn.gui.frames.addSeasonFrame.AddSeasonFrame;
@@ -59,6 +58,7 @@ import de.jClipCorn.gui.frames.showUpdateFrame.ShowUpdateFrame;
 import de.jClipCorn.gui.frames.statisticsFrame.StatisticsFrame;
 import de.jClipCorn.gui.frames.textExportFrame.TextExportFrame;
 import de.jClipCorn.gui.log.CCLog;
+import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.UpdateConnector;
 import de.jClipCorn.util.formatter.PathFormatter;
@@ -100,14 +100,14 @@ public class CCActionTree extends UIActionTree{
 		
 		createRoot();
 		{
-			CCActionElement file = addMaster("File", null, "ClipMenuBar.File", "");
+			CCActionElement file = addMaster("File", null, "ClipMenuBar.File", null);
 			{
 				add(file, "Open",    null, "ClipMenuBar.File.Open",    Resources.ICN_MENUBAR_OPENFILE,   this::onClickFileOpen);
 				add(file, "Restart", null, "ClipMenuBar.File.Restart", Resources.ICN_MENUBAR_RESTARTAPP, this::onClickFileRestart);
 				add(file, "Exit",    null, "ClipMenuBar.File.Exit",    Resources.ICN_MENUBAR_CLOSE,      this::onClickFileExit);
 			}
 			
-			CCActionElement database = addMaster("Database", null, "ClipMenuBar.Database", "");
+			CCActionElement database = addMaster("Database", null, "ClipMenuBar.Database", null);
 			{
 				add(database, "CheckDatabase",          null,      "ClipMenuBar.Database.CheckDB",        Resources.ICN_MENUBAR_DBCHECK,               false, this::onClickDatabaseCheck);
 				add(database, "ClearDatabase",          null,      "ClipMenuBar.Database.ClearDB",        Resources.ICN_MENUBAR_CLEARDB,               true,  this::onClickDatabaseClear);
@@ -119,7 +119,7 @@ public class CCActionTree extends UIActionTree{
 				add(database, "ManageGroups",           null,      "ClipMenuBar.Database.ManageGroups",   Resources.ICN_MENUBAR_MANAGEGROUPS,          false, this::onClickDatabaseManageGroups);
 			}
 			
-			CCActionElement movies = addMaster("Movies", null, "ClipMenuBar.Movies", "");
+			CCActionElement movies = addMaster("Movies", null, "ClipMenuBar.Movies", null);
 			{
 				add(movies, "PlayMovie",            null,      "ClipMenuBar.Movies.Play",           Resources.ICN_MENUBAR_PLAY,           false, this::onClickMoviesPlay);
 				add(movies, "PlayMovieAnonymous",   null,      "ClipMenuBar.Movies.PlayAnonymous",  Resources.ICN_MENUBAR_HIDDENPLAY,     false, this::onClickMoviesPlayAnonymous);
@@ -132,7 +132,7 @@ public class CCActionTree extends UIActionTree{
 				add(movies, "RemMovie",             KS_DEL,    "ClipMenuBar.Movies.Remove",         Resources.ICN_MENUBAR_REMOVE,         true,  this::onClickMoviesRem);
 			}
 			
-			CCActionElement series = addMaster("Serien", null, "ClipMenuBar.Series", "");
+			CCActionElement series = addMaster("Serien", null, "ClipMenuBar.Series", null);
 			{
 				add(series, "PrevSeries",               KS_ENTER,        "ClipMenuBar.Series.Preview",              Resources.ICN_MENUBAR_PREVIEW_SER,           true,  this::onClickSeriesPreview);
 				add(series, "AddSeries",                KS_CTRL_SHIFT_I, "ClipMenuBar.Series.Add",                  Resources.ICN_MENUBAR_ADD_SER,               true,  this::onClickSeriesAdd);
@@ -148,7 +148,7 @@ public class CCActionTree extends UIActionTree{
 				add(series, "RemSeries",                KS_DEL,          "ClipMenuBar.Series.Remove",               Resources.ICN_MENUBAR_REMOVE,                true,  this::onClickSeriesRem);
 			}
 			
-			CCActionElement extras = addMaster("Extras", null, "ClipMenuBar.Extras", "");
+			CCActionElement extras = addMaster("Extras", null, "ClipMenuBar.Extras", null);
 			{
 				add(extras, "ScanFolder",               KS_CTRL_O, "ClipMenuBar.Extras.ScanFolder",               Resources.ICN_MENUBAR_SCANFOLDER,           true,  this::onClickExtrasScanFolder);
 				add(extras, "CompareDBs",               null,      "ClipMenuBar.Extras.CompareDBs",               Resources.ICN_MENUBAR_COMPARE,              false, this::onClickExtrasCompareDBs);
@@ -161,7 +161,7 @@ public class CCActionTree extends UIActionTree{
 				add(extras, "ShowSettings",             null,      "ClipMenuBar.Extras.Settings",                 Resources.ICN_MENUBAR_SETTINGS,             false, this::onClickExtrasSettings);
 			}
 			
-			CCActionElement maintenance = addMaster("Maintenance", null, "ClipMenuBar.Maintenance", "", CCProperties.getInstance().PROP_SHOW_EXTENDED_FEATURES);
+			CCActionElement maintenance = addMaster("Maintenance", null, "ClipMenuBar.Maintenance", null, CCProperties.getInstance().PROP_SHOW_EXTENDED_FEATURES);
 			{
 				add(maintenance, "XML",                null, "ClipMenuBar.Maintenance.XML",                Resources.ICN_MENUBAR_PARSEXML,        true, this::onClickMaintenanceXML);
 				add(maintenance, "MassChangeViewed",   null, "ClipMenuBar.Maintenance.MassChangeViewed",   Resources.ICN_MENUBAR_MCHANGE_VIEWED,  true, this::onClickMaintenanceMassChangeViewed);
@@ -173,7 +173,7 @@ public class CCActionTree extends UIActionTree{
 				add(maintenance, "AutoFindReferences", null, "ClipMenuBar.Maintenance.AutoFindReferences", Resources.ICN_MENUBAR_AUTOFINDREF,     true, this::onClickMaintenanceAutoFindReferences);
 			}
 			
-			CCActionElement help = addMaster("Help", null, "ClipMenuBar.Help", "");
+			CCActionElement help = addMaster("Help", null, "ClipMenuBar.Help", null);
 			{		
 				add(help, "ShowLog",      null,  "ClipMenuBar.Help.Log",           Resources.ICN_MENUBAR_LOG,           this::onClickHelpShowLog);
 				add(help, "ShowRules",    null,  "ClipMenuBar.Help.Filenamerules", Resources.ICN_MENUBAR_FILENAMERULES, this::onClickHelpShowRules);
@@ -181,7 +181,7 @@ public class CCActionTree extends UIActionTree{
 				add(help, "ShowAbout",    KS_F1, "ClipMenuBar.Help.About",         Resources.ICN_MENUBAR_ABOUT,         this::onClickHelpShowAbout);
 			}
 			
-			CCActionElement other = addMaster("Other", null, "", "", false);
+			CCActionElement other = addMaster("Other", null, "", null, false);
 			{
 				add(other, "SetMovieViewed",   null, "ClipMenuBar.Other.SetViewed",       Resources.ICN_MENUBAR_VIEWED,          this::onClickOtherSetViewed);
 				add(other, "SetMovieUnviewed", null, "ClipMenuBar.Other.SetUnviewed",     Resources.ICN_MENUBAR_UNVIEWED,        this::onClickOtherSetUnviewed);
@@ -191,24 +191,24 @@ public class CCActionTree extends UIActionTree{
 				
 				CCActionElement movRating = add(other, "SetMovieRating", null, "ClipMenuBar.Other.SetMovieRating", Resources.ICN_SIDEBAR_SCORE);
 				{
-					add(movRating, "SetMovRatingNO", null, "CCMovieScore.RNO", CCMovieScore.RATING_NO.getIconName(),  true, () -> onClickOtherSetRating(CCMovieScore.RATING_NO));
-					add(movRating, "SetMovRating0",  null, "CCMovieScore.R0",  CCMovieScore.RATING_0.getIconName(),   true, () -> onClickOtherSetRating(CCMovieScore.RATING_0));
-					add(movRating, "SetMovRating1",  null, "CCMovieScore.R1",  CCMovieScore.RATING_I.getIconName(),   true, () -> onClickOtherSetRating(CCMovieScore.RATING_I));
-					add(movRating, "SetMovRating2",  null, "CCMovieScore.R2",  CCMovieScore.RATING_II.getIconName(),  true, () -> onClickOtherSetRating(CCMovieScore.RATING_II));
-					add(movRating, "SetMovRating3",  null, "CCMovieScore.R3",  CCMovieScore.RATING_III.getIconName(), true, () -> onClickOtherSetRating(CCMovieScore.RATING_III));
-					add(movRating, "SetMovRating4",  null, "CCMovieScore.R4",  CCMovieScore.RATING_IV.getIconName(),  true, () -> onClickOtherSetRating(CCMovieScore.RATING_IV));
-					add(movRating, "SetMovRating5",  null, "CCMovieScore.R5",  CCMovieScore.RATING_V.getIconName(),   true, () -> onClickOtherSetRating(CCMovieScore.RATING_V));
+					add(movRating, "SetMovRatingNO", null, "CCMovieScore.RNO", CCMovieScore.RATING_NO.getIconRef(),  true, () -> onClickOtherSetRating(CCMovieScore.RATING_NO));
+					add(movRating, "SetMovRating0",  null, "CCMovieScore.R0",  CCMovieScore.RATING_0.getIconRef(),   true, () -> onClickOtherSetRating(CCMovieScore.RATING_0));
+					add(movRating, "SetMovRating1",  null, "CCMovieScore.R1",  CCMovieScore.RATING_I.getIconRef(),   true, () -> onClickOtherSetRating(CCMovieScore.RATING_I));
+					add(movRating, "SetMovRating2",  null, "CCMovieScore.R2",  CCMovieScore.RATING_II.getIconRef(),  true, () -> onClickOtherSetRating(CCMovieScore.RATING_II));
+					add(movRating, "SetMovRating3",  null, "CCMovieScore.R3",  CCMovieScore.RATING_III.getIconRef(), true, () -> onClickOtherSetRating(CCMovieScore.RATING_III));
+					add(movRating, "SetMovRating4",  null, "CCMovieScore.R4",  CCMovieScore.RATING_IV.getIconRef(),  true, () -> onClickOtherSetRating(CCMovieScore.RATING_IV));
+					add(movRating, "SetMovRating5",  null, "CCMovieScore.R5",  CCMovieScore.RATING_V.getIconRef(),   true, () -> onClickOtherSetRating(CCMovieScore.RATING_V));
 				}
 
 				CCActionElement serRating = add(other, "SetSeriesRating", null, "ClipMenuBar.Other.SetSeriesRating", Resources.ICN_SIDEBAR_SCORE);
 				{
-					add(serRating, "SetSerRatingNO", null, "CCMovieScore.RNO", CCMovieScore.RATING_NO.getIconName(),  true, () -> onClickOtherSetRating(CCMovieScore.RATING_NO));
-					add(serRating, "SetSerRating0",  null, "CCMovieScore.R0",  CCMovieScore.RATING_0.getIconName(),   true, () -> onClickOtherSetRating(CCMovieScore.RATING_0));
-					add(serRating, "SetSerRating1",  null, "CCMovieScore.R1",  CCMovieScore.RATING_I.getIconName(),   true, () -> onClickOtherSetRating(CCMovieScore.RATING_I));
-					add(serRating, "SetSerRating2",  null, "CCMovieScore.R2",  CCMovieScore.RATING_II.getIconName(),  true, () -> onClickOtherSetRating(CCMovieScore.RATING_II));
-					add(serRating, "SetSerRating3",  null, "CCMovieScore.R3",  CCMovieScore.RATING_III.getIconName(), true, () -> onClickOtherSetRating(CCMovieScore.RATING_III));
-					add(serRating, "SetSerRating4",  null, "CCMovieScore.R4",  CCMovieScore.RATING_IV.getIconName(),  true, () -> onClickOtherSetRating(CCMovieScore.RATING_IV));
-					add(serRating, "SetSerRating5",  null, "CCMovieScore.R5",  CCMovieScore.RATING_V.getIconName(),   true, () -> onClickOtherSetRating(CCMovieScore.RATING_V));
+					add(serRating, "SetSerRatingNO", null, "CCMovieScore.RNO", CCMovieScore.RATING_NO.getIconRef(),  true, () -> onClickOtherSetRating(CCMovieScore.RATING_NO));
+					add(serRating, "SetSerRating0",  null, "CCMovieScore.R0",  CCMovieScore.RATING_0.getIconRef(),   true, () -> onClickOtherSetRating(CCMovieScore.RATING_0));
+					add(serRating, "SetSerRating1",  null, "CCMovieScore.R1",  CCMovieScore.RATING_I.getIconRef(),   true, () -> onClickOtherSetRating(CCMovieScore.RATING_I));
+					add(serRating, "SetSerRating2",  null, "CCMovieScore.R2",  CCMovieScore.RATING_II.getIconRef(),  true, () -> onClickOtherSetRating(CCMovieScore.RATING_II));
+					add(serRating, "SetSerRating3",  null, "CCMovieScore.R3",  CCMovieScore.RATING_III.getIconRef(), true, () -> onClickOtherSetRating(CCMovieScore.RATING_III));
+					add(serRating, "SetSerRating4",  null, "CCMovieScore.R4",  CCMovieScore.RATING_IV.getIconRef(),  true, () -> onClickOtherSetRating(CCMovieScore.RATING_IV));
+					add(serRating, "SetSerRating5",  null, "CCMovieScore.R5",  CCMovieScore.RATING_V.getIconRef(),   true, () -> onClickOtherSetRating(CCMovieScore.RATING_V));
 				}
 
 				CCActionElement elemTags = add(other, "SetTags", null, "ClipMenuBar.Other.SetTags", Resources.ICN_MENUBAR_TAGS);

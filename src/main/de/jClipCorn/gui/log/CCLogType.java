@@ -2,8 +2,8 @@ package de.jClipCorn.gui.log;
 
 import javax.swing.ImageIcon;
 
-import de.jClipCorn.gui.CachedResourceLoader;
-import de.jClipCorn.gui.Resources;
+import de.jClipCorn.gui.resources.CachedResourceLoader;
+import de.jClipCorn.gui.resources.Resources;
 
 public enum CCLogType {
 	LOG_ELEM_UNDEFINED, 
@@ -12,35 +12,18 @@ public enum CCLogType {
 	LOG_ELEM_ERROR,
 	LOG_ELEM_FATALERROR;
 
-	public ImageIcon getIcon() {
-		switch (this) {
-		case LOG_ELEM_UNDEFINED:
-			return CachedResourceLoader.getImageIcon(Resources.ICN_LOG_UNDEFINIED);
-		case LOG_ELEM_INFORMATION:
-			return CachedResourceLoader.getImageIcon(Resources.ICN_LOG_OK);
-		case LOG_ELEM_WARNING:
-			return CachedResourceLoader.getImageIcon(Resources.ICN_LOG_WARNING);
-		case LOG_ELEM_ERROR:
-			return CachedResourceLoader.getImageIcon(Resources.ICN_LOG_ERROR);
-		case LOG_ELEM_FATALERROR:
-			return CachedResourceLoader.getImageIcon(Resources.ICN_LOG_ERROR);
-		default:
-			return null;
-		}
-	}
-	
 	public ImageIcon getSmallIcon() {
 		switch (this) {
 		case LOG_ELEM_UNDEFINED:
-			return CachedResourceLoader.getSmallImageIcon(Resources.ICN_LOG_UNDEFINIED);
+			return CachedResourceLoader.getIcon(Resources.ICN_LOG_UNDEFINIED.icon16x16);
 		case LOG_ELEM_INFORMATION:
-			return CachedResourceLoader.getSmallImageIcon(Resources.ICN_LOG_OK);
+			return CachedResourceLoader.getIcon(Resources.ICN_LOG_OK.icon16x16);
 		case LOG_ELEM_WARNING:
-			return CachedResourceLoader.getSmallImageIcon(Resources.ICN_LOG_WARNING);
+			return CachedResourceLoader.getIcon(Resources.ICN_LOG_WARNING.icon16x16);
 		case LOG_ELEM_ERROR:
-			return CachedResourceLoader.getSmallImageIcon(Resources.ICN_LOG_ERROR);
+			return CachedResourceLoader.getIcon(Resources.ICN_LOG_ERROR.icon16x16);
 		case LOG_ELEM_FATALERROR:
-			return CachedResourceLoader.getSmallImageIcon(Resources.ICN_LOG_ERROR);
+			return CachedResourceLoader.getIcon(Resources.ICN_LOG_ERROR.icon16x16);
 		default:
 			return null;
 		}

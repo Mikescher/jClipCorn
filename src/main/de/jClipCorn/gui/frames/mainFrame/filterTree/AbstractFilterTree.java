@@ -17,7 +17,11 @@ import javax.swing.tree.TreeSelectionModel;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.util.CCDBUpdateListener;
-import de.jClipCorn.gui.CachedResourceLoader;
+import de.jClipCorn.gui.guiComponents.jSimpleTree.SimpleTreeObject;
+import de.jClipCorn.gui.guiComponents.jSimpleTree.SimpleTreeRenderer;
+import de.jClipCorn.gui.resources.CachedResourceLoader;
+import de.jClipCorn.gui.resources.IconRef;
+import de.jClipCorn.gui.resources.MultiIconRef;
 
 public abstract class AbstractFilterTree extends JScrollPane implements TreeSelectionListener, CCDBUpdateListener, TreeExpansionListener {
 	private static final long serialVersionUID = -1226727910191440220L;
@@ -56,20 +60,24 @@ public abstract class AbstractFilterTree extends JScrollPane implements TreeSele
 		
 		tree.setRootVisible(false);
 		
-		tree.setCellRenderer(new FilterRenderer());
+		tree.setCellRenderer(new SimpleTreeRenderer());
 	}
 	
 	protected abstract void addFields();
 	
-	protected DefaultMutableTreeNode addNode(DefaultMutableTreeNode aroot, String icon, String txt, ActionListener listener) {
-		return addNodeI(aroot, CachedResourceLoader.getImageIcon(icon), txt, listener);
+	protected DefaultMutableTreeNode addNode(DefaultMutableTreeNode aroot, IconRef icon, String txt, ActionListener listener) {
+		return addNodeI(aroot, CachedResourceLoader.getIcon(icon), txt, listener);
+	}
+
+	protected DefaultMutableTreeNode addNode(DefaultMutableTreeNode aroot, MultiIconRef icon, String txt, ActionListener listener) {
+		return addNodeI(aroot, CachedResourceLoader.getIcon(icon.icon16x16), txt, listener);
 	}
 	
 	protected DefaultMutableTreeNode addNodeI(DefaultMutableTreeNode aroot, Icon icon, String txt, ActionListener listener) {
 		if (aroot == null) {
 			aroot = root;
 		}
-		DefaultMutableTreeNode node = new DefaultMutableTreeNode(new FilterTreeNode(icon, txt, listener));
+		DefaultMutableTreeNode node = new DefaultMutableTreeNode(new SimpleTreeObject(icon, txt, listener));
 		aroot.add(node);
 		return node;
 	}
@@ -82,7 +90,7 @@ public abstract class AbstractFilterTree extends JScrollPane implements TreeSele
 			
 			Object user = node.getUserObject();
 			if (user != null) {
-				((FilterTreeNode) user).execute();
+				((SimpleTreeObject) user).execute();
 			}
 		}
 	}

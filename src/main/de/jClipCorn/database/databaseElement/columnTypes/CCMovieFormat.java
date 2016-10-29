@@ -2,8 +2,8 @@ package de.jClipCorn.database.databaseElement.columnTypes;
 
 import javax.swing.ImageIcon;
 
-import de.jClipCorn.gui.CachedResourceLoader;
-import de.jClipCorn.gui.Resources;
+import de.jClipCorn.gui.resources.CachedResourceLoader;
+import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.enumextension.ContinoousEnum;
 import de.jClipCorn.util.enumextension.EnumWrapper;
 import de.jClipCorn.util.formatter.PathFormatter;
@@ -118,23 +118,23 @@ public enum CCMovieFormat implements ContinoousEnum<CCMovieFormat> {
 	public ImageIcon getIcon() {
 		switch (this) {
 		case MKV:
-			return CachedResourceLoader.getImageIcon(Resources.ICN_TABLE_FORMAT_0);
+			return CachedResourceLoader.getIcon(Resources.ICN_TABLE_FORMAT_0);
 		case AVI:
-			return CachedResourceLoader.getImageIcon(Resources.ICN_TABLE_FORMAT_1);
+			return CachedResourceLoader.getIcon(Resources.ICN_TABLE_FORMAT_1);
 		case MPEG:
-			return CachedResourceLoader.getImageIcon(Resources.ICN_TABLE_FORMAT_2);
+			return CachedResourceLoader.getIcon(Resources.ICN_TABLE_FORMAT_2);
 		case IMG:
-			return CachedResourceLoader.getImageIcon(Resources.ICN_TABLE_FORMAT_3);
+			return CachedResourceLoader.getIcon(Resources.ICN_TABLE_FORMAT_3);
 		case IFO:
-			return CachedResourceLoader.getImageIcon(Resources.ICN_TABLE_FORMAT_4);
+			return CachedResourceLoader.getIcon(Resources.ICN_TABLE_FORMAT_4);
 		case WMV:
-			return CachedResourceLoader.getImageIcon(Resources.ICN_TABLE_FORMAT_5);
+			return CachedResourceLoader.getIcon(Resources.ICN_TABLE_FORMAT_5);
 		case MP4:
-			return CachedResourceLoader.getImageIcon(Resources.ICN_TABLE_FORMAT_6);
+			return CachedResourceLoader.getIcon(Resources.ICN_TABLE_FORMAT_6);
 		case DIVX:
-			return CachedResourceLoader.getImageIcon(Resources.ICN_TABLE_FORMAT_7);
+			return CachedResourceLoader.getIcon(Resources.ICN_TABLE_FORMAT_7);
 		case FLV:
-			return CachedResourceLoader.getImageIcon(Resources.ICN_TABLE_FORMAT_8);
+			return CachedResourceLoader.getIcon(Resources.ICN_TABLE_FORMAT_8);
 		default:
 			return null;
 		}

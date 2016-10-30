@@ -56,7 +56,7 @@ public class MassMoveSeriesDialog extends JDialog {
 		super();
 		setSize(new Dimension(800, 600));
 		this.movielist = mlist;
-		this.episodes = mlist.listAllEpisodes();
+		this.episodes = mlist.iteratorEpisodes().enumerate();
 		
 		initGUI();
 		

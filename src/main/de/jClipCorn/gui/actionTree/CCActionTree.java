@@ -57,6 +57,7 @@ import de.jClipCorn.gui.frames.showIncompleteFilmSeriesFrame.ShowIncompleteFilmS
 import de.jClipCorn.gui.frames.showUpdateFrame.ShowUpdateFrame;
 import de.jClipCorn.gui.frames.statisticsFrame.StatisticsFrame;
 import de.jClipCorn.gui.frames.textExportFrame.TextExportFrame;
+import de.jClipCorn.gui.frames.watchHistoryFrame.WatchHistoryFrame;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.properties.CCProperties;
@@ -152,6 +153,7 @@ public class CCActionTree extends UIActionTree{
 			{
 				add(extras, "ScanFolder",               KS_CTRL_O, "ClipMenuBar.Extras.ScanFolder",               Resources.ICN_MENUBAR_SCANFOLDER,           true,  this::onClickExtrasScanFolder);
 				add(extras, "CompareDBs",               null,      "ClipMenuBar.Extras.CompareDBs",               Resources.ICN_MENUBAR_COMPARE,              false, this::onClickExtrasCompareDBs);
+				add(extras, "ShowWatchHistory",         null,      "ClipMenuBar.Extras.WatchHistory",             Resources.ICN_MENUBAR_WATCHHISTORY,         false, this::onClickExtrasShowWatchHistory);
 				add(extras, "RandomMovie",              null,      "ClipMenuBar.Extras.RandomMovie",              Resources.ICN_MENUBAR_RANDOMMOVIE,          false, this::onClickExtrasRandomMovie);
 				add(extras, "BackupManager",            null,      "ClipMenuBar.Extras.BackupManager",            Resources.ICN_MENUBAR_BACKUPMANAGER,        false, this::onClickExtrasBackupManager);
 				add(extras, "ShowStatistics",           null,      "ClipMenuBar.Extras.Statistics",               Resources.ICN_MENUBAR_STATISTICS,           false, this::onClickExtrasShowStatistics);
@@ -298,6 +300,11 @@ public class CCActionTree extends UIActionTree{
 	private void onClickExtrasCompareDBs() {
 		CompareDatabaseFrame cdf = new CompareDatabaseFrame(owner, movielist);
 		cdf.setVisible(true);
+	}
+	
+	private void onClickExtrasShowWatchHistory() {
+		WatchHistoryFrame whf = new WatchHistoryFrame(owner, movielist);
+		whf.setVisible(true);
 	}
 	
 	private void onClickMaintenanceResetViewed() {

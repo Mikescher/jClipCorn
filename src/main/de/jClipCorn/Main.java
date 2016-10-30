@@ -131,5 +131,4 @@ public class Main {
 
 //TODO Use http://www.iconarchive.com/show/series-season-folder-icons-by-aaron-sinuhe.html 
 
-//TODO Timeline what when watched (order by last) (Mov & Episodes)
 //TODO Better icon for Open_lastplayedseries

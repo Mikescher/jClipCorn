@@ -56,7 +56,7 @@ public class MassMoveMoviesDialog extends JDialog {
 		super();
 		setSize(new Dimension(800, 600));
 		this.movielist = mlist;
-		this.movies = mlist.listMoviesSorted();
+		this.movies = mlist.iteratorMoviesSorted().enumerate();
 		
 		initGUI();
 		

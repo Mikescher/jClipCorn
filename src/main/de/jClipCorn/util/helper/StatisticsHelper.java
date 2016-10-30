@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
 
@@ -36,8 +35,8 @@ public class StatisticsHelper {
 	public static int getViewedMovieCount(CCMovieList ml) {
 		int c = 0;
 
-		for (Iterator<CCMovie> it = ml.iteratorMovies(); it.hasNext();) {
-			c += it.next().isViewed() ? 1 : 0;
+		for (CCMovie mov : ml.iteratorMovies()) {
+			c += mov.isViewed() ? 1 : 0;
 		}
 
 		return c;
@@ -46,8 +45,7 @@ public class StatisticsHelper {
 	public static int getViewedEpisodeCount(CCMovieList ml) {
 		int c = 0;
 
-		for (Iterator<CCSeries> it = ml.iteratorSeries(); it.hasNext();) {
-			CCSeries series = it.next();
+		for (CCSeries series : ml.iteratorSeries()) {
 			for (int s = 0; s < series.getSeasonCount(); s++) {
 				CCSeason season = series.getSeason(s);
 				for (int e = 0; e < season.getEpisodeCount(); e++) {
@@ -62,8 +60,8 @@ public class StatisticsHelper {
 	public static int getMovieDuration(CCMovieList ml) {
 		int c = 0;
 
-		for (Iterator<CCMovie> it = ml.iteratorMovies(); it.hasNext();) {
-			c += it.next().getLength();
+		for (CCMovie mov : ml.iteratorMovies()) {
+			c += mov.getLength();
 		}
 
 		return c;
@@ -72,8 +70,8 @@ public class StatisticsHelper {
 	public static int getSeriesDuration(CCMovieList ml) {
 		int c = 0;
 
-		for (Iterator<CCSeries> it = ml.iteratorSeries(); it.hasNext();) {
-			c += it.next().getLength();
+		for (CCSeries series : ml.iteratorSeries()) {
+			c += series.getLength();
 		}
 
 		return c;
@@ -86,8 +84,8 @@ public class StatisticsHelper {
 	public static CCMovieSize getMovieSize(CCMovieList ml) {
 		CCMovieSize s = new CCMovieSize();
 
-		for (Iterator<CCMovie> it = ml.iteratorMovies(); it.hasNext();) {
-			s.add(it.next().getFilesize());
+		for (CCMovie mov : ml.iteratorMovies()) {
+			s.add(mov.getFilesize());
 		}
 
 		return s;
@@ -96,8 +94,8 @@ public class StatisticsHelper {
 	public static CCMovieSize getSeriesSize(CCMovieList ml) {
 		CCMovieSize s = new CCMovieSize();
 
-		for (Iterator<CCSeries> it = ml.iteratorSeries(); it.hasNext();) {
-			s.add(it.next().getFilesize());
+		for (CCSeries series : ml.iteratorSeries()) {
+			s.add(series.getFilesize());
 		}
 
 		return s;
@@ -106,8 +104,8 @@ public class StatisticsHelper {
 	public static CCMovieSize getTotalSize(CCMovieList ml) {
 		CCMovieSize s = new CCMovieSize();
 
-		for (Iterator<CCDatabaseElement> it = ml.iterator(); it.hasNext();) {
-			s.add(it.next().getFilesize());
+		for (CCDatabaseElement el : ml.iterator()) {
+			s.add(el.getFilesize());
 		}
 
 		return s;
@@ -116,8 +114,8 @@ public class StatisticsHelper {
 	public static CCMovieSize getAvgMovieSize(CCMovieList ml) {
 		CCMovieSize s = new CCMovieSize();
 
-		for (Iterator<CCMovie> it = ml.iteratorMovies(); it.hasNext();) {
-			s.add(it.next().getFilesize());
+		for (CCMovie mov : ml.iteratorMovies()) {
+			s.add(mov.getFilesize());
 		}
 
 		int mc = ml.getEpisodeCount();
@@ -133,8 +131,8 @@ public class StatisticsHelper {
 	public static CCMovieSize getAvgSeriesSize(CCMovieList ml) {
 		CCMovieSize s = new CCMovieSize();
 
-		for (Iterator<CCSeries> it = ml.iteratorSeries(); it.hasNext();) {
-			s.add(it.next().getFilesize());
+		for (CCSeries series : ml.iteratorSeries()) {
+			s.add(series.getFilesize());
 		}
 
 		int ec = ml.getEpisodeCount();
@@ -150,8 +148,8 @@ public class StatisticsHelper {
 	public static double getAvgImDbRating(CCMovieList ml) {
 		int c = 0;
 
-		for (Iterator<CCDatabaseElement> it = ml.iterator(); it.hasNext();) {
-			c += it.next().getOnlinescore().asInt();
+		for (CCDatabaseElement el : ml.iterator()) {
+			c += el.getOnlinescore().asInt();
 		}
 
 		return ((int) ((c / (ml.getElementCount() * 1d)) * 5)) / 10d;
@@ -160,8 +158,7 @@ public class StatisticsHelper {
 	public static int getViewedMovieDuration(CCMovieList ml) {
 		int c = 0;
 
-		for (Iterator<CCMovie> it = ml.iteratorMovies(); it.hasNext();) {
-			CCMovie m = it.next();
+		for (CCMovie m : ml.iteratorMovies()) {
 			if (m.isViewed()) {
 				c += m.getLength();
 			}
@@ -173,8 +170,7 @@ public class StatisticsHelper {
 	public static int getViewedSeriesDuration(CCMovieList ml) {
 		int c = 0;
 
-		for (Iterator<CCSeries> it = ml.iteratorSeries(); it.hasNext();) {
-			CCSeries s = it.next();
+		for (CCSeries s : ml.iteratorSeries()) {
 			if (s.isViewed()) {
 				c += s.getLength();
 			}
@@ -190,8 +186,7 @@ public class StatisticsHelper {
 	public static CCDate getFirstMovieAddDate(CCMovieList ml) {
 		CCDate date = CCDate.getMaximumDate();
 		
-		for (Iterator<CCMovie> it = ml.iteratorMovies(); it.hasNext();) {
-			CCMovie m = it.next();
+		for (CCMovie m : ml.iteratorMovies()) {
 			if (m.getAddDate().isLessThan(date)) {
 				date = m.getAddDate();
 			}
@@ -203,8 +198,7 @@ public class StatisticsHelper {
 	public static CCDate getLastMovieAddDate(CCMovieList ml) {
 		CCDate date = CCDate.getMinimumDate();
 		
-		for (Iterator<CCMovie> it = ml.iteratorMovies(); it.hasNext();) {
-			CCMovie m = it.next();
+		for (CCMovie m : ml.iteratorMovies()) {
 			if (m.getAddDate().isGreaterThan(date)) {
 				date = m.getAddDate();
 			}
@@ -220,9 +214,7 @@ public class StatisticsHelper {
 			ls.add(0);
 		}
 		
-		for (Iterator<CCMovie> it = ml.iteratorMovies(); it.hasNext();) {
-			CCMovie m = it.next();
-			
+		for (CCMovie m : ml.iteratorMovies()) {
 			int pos = startDate.getDayDifferenceTo(m.getAddDate());
 			
 			if (pos >= 0 && pos < count) {
@@ -237,9 +229,7 @@ public class StatisticsHelper {
 	public static int getMinimumMovieLength(CCMovieList ml) {
 		int len = Integer.MAX_VALUE;
 		
-		for (Iterator<CCMovie> it = ml.iteratorMovies(); it.hasNext();) {
-			CCMovie m = it.next();
-		
+		for (CCMovie m : ml.iteratorMovies()) {
 			if (m.getLength() < len) {
 				len = m.getLength();
 			}
@@ -251,9 +241,7 @@ public class StatisticsHelper {
 	public static int getMaximumMovieLength(CCMovieList ml) {
 		int len = 0;
 		
-		for (Iterator<CCMovie> it = ml.iteratorMovies(); it.hasNext();) {
-			CCMovie m = it.next();
-		
+		for (CCMovie m : ml.iteratorMovies()) {
 			if (m.getLength() > len) {
 				len = m.getLength();
 			}
@@ -270,9 +258,7 @@ public class StatisticsHelper {
 			result[1][i] = 0;
 		}
 		
-		for (Iterator<CCMovie> it = ml.iteratorMovies(); it.hasNext();) {
-			CCMovie m = it.next();
-		
+		for (CCMovie m : ml.iteratorMovies()) {
 			result[1][m.getLength() - minLength + 1]++;
 		}
 		
@@ -286,9 +272,7 @@ public class StatisticsHelper {
 			result[i] = 0;
 		}
 		
-		for (Iterator<CCMovie> it = ml.iteratorMovies(); it.hasNext();) {
-			CCMovie m = it.next();
-		
+		for (CCMovie m : ml.iteratorMovies()) {
 			result[m.getFormat().asInt()]++;
 		}
 		
@@ -302,9 +286,7 @@ public class StatisticsHelper {
 			result[i] = 0;
 		}
 		
-		for (Iterator<CCDatabaseElement> it = ml.iterator(); it.hasNext();) {
-			CCDatabaseElement m = it.next();
-		
+		for (CCDatabaseElement m : ml.iterator()) {
 			result[m.getOnlineReference().type.asInt()]++;
 		}
 		
@@ -318,9 +300,7 @@ public class StatisticsHelper {
 			result[i] = 0;
 		}
 		
-		for (Iterator<CCMovie> it = ml.iteratorMovies(); it.hasNext();) {
-			CCMovie m = it.next();
-		
+		for (CCMovie m : ml.iteratorMovies()) {
 			result[m.getQuality().asInt()]++;
 		}
 		
@@ -334,9 +314,7 @@ public class StatisticsHelper {
 			result[i] = 0;
 		}
 		
-		for (Iterator<CCMovie> it = ml.iteratorMovies(); it.hasNext();) {
-			CCMovie m = it.next();
-		
+		for (CCMovie m : ml.iteratorMovies()) {
 			result[m.getOnlinescore().asInt()]++;
 		}
 		
@@ -350,9 +328,7 @@ public class StatisticsHelper {
 			result[i] = 0;
 		}
 		
-		for (Iterator<CCMovie> it = ml.iteratorMovies(); it.hasNext();) {
-			CCMovie m = it.next();
-		
+		for (CCMovie m : ml.iteratorMovies()) {
 			if (m.getScore() != CCMovieScore.RATING_NO) {
 				result[m.getScore().asInt()]++;
 			}
@@ -363,8 +339,7 @@ public class StatisticsHelper {
 	
 	public static int getMovieViewedCount(CCMovieList ml) {
 		int v = 0;
-		for (Iterator<CCMovie> it = ml.iteratorMovies(); it.hasNext();) {
-			CCMovie m = it.next();
+		for (CCMovie m : ml.iteratorMovies()) {
 			if (m.isViewed()) {
 				v++;
 			}
@@ -374,8 +349,7 @@ public class StatisticsHelper {
 	
 	public static int getMovieUnviewedCount(CCMovieList ml) {
 		int v = 0;
-		for (Iterator<CCMovie> it = ml.iteratorMovies(); it.hasNext();) {
-			CCMovie m = it.next();
+		for (CCMovie m : ml.iteratorMovies()) {
 			if (! m.isViewed()) {
 				v++;
 			}
@@ -386,9 +360,7 @@ public class StatisticsHelper {
 	public static int getMinimumMovieYear(CCMovieList ml) {
 		int y = Integer.MAX_VALUE;
 		
-		for (Iterator<CCMovie> it = ml.iteratorMovies(); it.hasNext();) {
-			CCMovie m = it.next();
-		
+		for (CCMovie m : ml.iteratorMovies()) {
 			if (m.getYear() < y) {
 				y = m.getYear();
 			}
@@ -400,9 +372,7 @@ public class StatisticsHelper {
 	public static int getMaximumMovieYear(CCMovieList ml) {
 		int y = 0;
 		
-		for (Iterator<CCMovie> it = ml.iteratorMovies(); it.hasNext();) {
-			CCMovie m = it.next();
-		
+		for (CCMovie m : ml.iteratorMovies()) {
 			if (m.getYear() > y) {
 				y = m.getYear();
 			}
@@ -418,9 +388,7 @@ public class StatisticsHelper {
 			result[i] = 0;
 		}
 		
-		for (Iterator<CCMovie> it = ml.iteratorMovies(); it.hasNext();) {
-			CCMovie m = it.next();
-		
+		for (CCMovie m : ml.iteratorMovies()) {
 			result[m.getYear() - minYear]++;
 		}
 		
@@ -434,9 +402,7 @@ public class StatisticsHelper {
 			result[i] = 0;
 		}
 		
-		for (Iterator<CCMovie> it = ml.iteratorMovies(); it.hasNext();) {
-			CCMovie m = it.next();
-			
+		for (CCMovie m : ml.iteratorMovies()) {
 			for (int gi = 0; gi < m.getGenreCount(); gi++) {
 				result[m.getGenre(gi).asInt()]++;
 			}
@@ -452,9 +418,7 @@ public class StatisticsHelper {
 			result[i] = 0;
 		}
 		
-		for (Iterator<CCMovie> it = ml.iteratorMovies(); it.hasNext();) {
-			CCMovie m = it.next();
-			
+		for (CCMovie m : ml.iteratorMovies()) {
 			result[m.getFSK().asInt()]++;
 		}
 		
@@ -468,9 +432,7 @@ public class StatisticsHelper {
 			result[i] = 0;
 		}
 		
-		for (Iterator<CCMovie> it = ml.iteratorMovies(); it.hasNext();) {
-			CCMovie m = it.next();
-			
+		for (CCMovie m : ml.iteratorMovies()) {
 			result[m.getLanguage().asInt()]++;
 		}
 		
@@ -484,9 +446,7 @@ public class StatisticsHelper {
 			result[i] = 0;
 		}
 		
-		for (Iterator<CCMovie> it = ml.iteratorMovies(); it.hasNext();) {
-			CCMovie m = it.next();
-			
+		for (CCMovie m : ml.iteratorMovies()) {
 			for (int i = 0; i < CCMovieTags.ACTIVETAGS; i++) {
 				 if (m.getTag(i)) {
 					 result[i]++;
@@ -504,9 +464,7 @@ public class StatisticsHelper {
 			ls[i] = 0;
 		}
 		
-		for (Iterator<CCMovie> it = ml.iteratorMovies(); it.hasNext();) {
-			CCMovie m = it.next();
-			
+		for (CCMovie m : ml.iteratorMovies()) {
 			int pos = startDate.getDayDifferenceTo(m.getAddDate());
 			
 			ls[pos] += m.getLength();
@@ -522,9 +480,7 @@ public class StatisticsHelper {
 			ls[i] = 0;
 		}
 		
-		for (Iterator<CCSeries> it = ml.iteratorSeries(); it.hasNext();) {
-			CCSeries series = it.next();
-			
+		for (CCSeries series : ml.iteratorSeries()) {
 			for (int sea = 0; sea < series.getSeasonCount(); sea++) {
 				CCSeason season = series.getSeason(sea);
 				
@@ -548,9 +504,7 @@ public class StatisticsHelper {
 			ls[i] = 0;
 		}
 		
-		for (Iterator<CCMovie> it = ml.iteratorMovies(); it.hasNext();) {
-			CCMovie m = it.next();
-			
+		for (CCMovie m : ml.iteratorMovies()) {
 			int pos = startDate.getDayDifferenceTo(m.getAddDate());
 			
 			ls[pos] += m.getFilesize().getBytes();
@@ -590,9 +544,7 @@ public class StatisticsHelper {
 	public static CCDate getFirstSeriesAddDate(CCMovieList ml) {
 		CCDate date = CCDate.getMaximumDate();
 
-		for (Iterator<CCSeries> it = ml.iteratorSeries(); it.hasNext();) {
-			CCSeries series = it.next();
-			
+		for (CCSeries series : ml.iteratorSeries()) {
 			for (int sea = 0; sea < series.getSeasonCount(); sea++) {
 				CCSeason season = series.getSeason(sea);
 				
@@ -612,9 +564,7 @@ public class StatisticsHelper {
 	public static CCDate getLastSeriesAddDate(CCMovieList ml) {
 		CCDate date = CCDate.getMinimumDate();
 		
-		for (Iterator<CCSeries> it = ml.iteratorSeries(); it.hasNext();) {
-			CCSeries series = it.next();
-			
+		for (CCSeries series : ml.iteratorSeries()) {
 			for (int sea = 0; sea < series.getSeasonCount(); sea++) {
 				CCSeason season = series.getSeason(sea);
 				
@@ -648,9 +598,7 @@ public class StatisticsHelper {
 	public static CCDate getFirstEpisodeWatchedDate(CCMovieList ml) {
 		CCDate date = CCDate.getMaximumDate();
 		
-		for (Iterator<CCSeries> it = ml.iteratorSeries(); it.hasNext();) {
-			CCSeries s = it.next();
-			
+		for (CCSeries s : ml.iteratorSeries()) {
 			for (int sc = 0; sc < s.getSeasonCount(); sc++) {
 				for (int ec = 0; ec < s.getSeason(sc).getEpisodeCount(); ec++) {
 					CCEpisode epis = s.getSeason(sc).getEpisode(ec);
@@ -668,9 +616,7 @@ public class StatisticsHelper {
 	public static CCDate getLastEpisodeWatchedDate(CCMovieList ml) {
 		CCDate date = CCDate.getMinimumDate();
 		
-		for (Iterator<CCSeries> it = ml.iteratorSeries(); it.hasNext();) {
-			CCSeries s = it.next();
-			
+		for (CCSeries s : ml.iteratorSeries()) {
 			for (int sc = 0; sc < s.getSeasonCount(); sc++) {
 				for (int ec = 0; ec < s.getSeason(sc).getEpisodeCount(); ec++) {
 					CCEpisode epis = s.getSeason(sc).getEpisode(ec);
@@ -696,9 +642,7 @@ public class StatisticsHelper {
 			ls.add(0);
 		}
 		
-		for (Iterator<CCMovie> it = ml.iteratorMovies(); it.hasNext();) {
-			CCMovie m = it.next();
-			
+		for (CCMovie m : ml.iteratorMovies()) {
 			int pos = startDate.getDayDifferenceTo(m.getAddDate());
 			
 			if (pos >= 0 && pos < count) {
@@ -707,9 +651,7 @@ public class StatisticsHelper {
 			}
 		}
 		
-		for (Iterator<CCSeries> it = ml.iteratorSeries(); it.hasNext();) {
-			CCSeries s = it.next();
-			
+		for (CCSeries s : ml.iteratorSeries()) {
 			for (int sc = 0; sc < s.getSeasonCount(); sc++) {
 				for (int ec = 0; ec < s.getSeason(sc).getEpisodeCount(); ec++) {
 					CCEpisode epis = s.getSeason(sc).getEpisode(ec);
@@ -776,9 +718,7 @@ public class StatisticsHelper {
 			}
 		}
 		
-		for (Iterator<CCSeries> it = ml.iteratorSeries(); it.hasNext();) {
-			CCSeries series = it.next();
-			
+		for (CCSeries series : ml.iteratorSeries()) {
 			for (int sea = 0; sea < series.getSeasonCount(); sea++) {
 				CCSeason season = series.getSeason(sea);
 				
@@ -806,9 +746,7 @@ public class StatisticsHelper {
 			}
 		}
 		
-		for (Iterator<CCMovie> it = ml.iteratorMovies(); it.hasNext();) {
-			CCMovie m = it.next();
-			
+		for (CCMovie m : ml.iteratorMovies()) {
 			int pos = startDate.getDayDifferenceTo(m.getAddDate());
 
 			ls[pos][formats.indexOf(m.getFormat())] += m.getLength();
@@ -866,9 +804,7 @@ public class StatisticsHelper {
 	public static HashMap<CCSeries, List<CCDatespan>> getAllSeriesTimespans(CCMovieList ml, int gravity) {
 		HashMap<CCSeries, List<CCDatespan>> r = new HashMap<>();
 
-		for (Iterator<CCSeries> it = ml.iteratorSeries(); it.hasNext();) {
-			CCSeries series = it.next();
-			
+		for (CCSeries series : ml.iteratorSeries()) {
 			List<CCDatespan> span = getDatespanFromSeries(series, gravity);
 			
 			if (span.size() > 0) r.put(series, span);

@@ -34,15 +34,15 @@ public class TestWatchDataParser {
 		
 		for (WatchDataChangeSet wdcs : r) wdcs.execute();
 		
-		assertEquals(true, ml.getSeries("Steins;Gate").getSeason(0).getEpisodebyNumber(1).isViewed());
-		assertTrue(ml.getSeries("Steins;Gate").getSeason(0).getEpisodebyNumber(1).getViewedHistory().contains(CCDateTime.parse("1.1.12", "d.M.y")));
+		assertEquals(true, ml.getSeries("Steins;Gate").getSeason(0).getEpisodeByNumber(1).isViewed());
+		assertTrue(ml.getSeries("Steins;Gate").getSeason(0).getEpisodeByNumber(1).getViewedHistory().contains(CCDateTime.parse("1.1.12", "d.M.y")));
 
-		assertEquals(true, ml.getSeries("Steins;Gate").getSeason(0).getEpisodebyNumber(2).isViewed());
-		assertTrue(ml.getSeries("Steins;Gate").getSeason(0).getEpisodebyNumber(2).getViewedHistory().contains(CCDateTime.parse("2.12", "d.M")));
+		assertEquals(true, ml.getSeries("Steins;Gate").getSeason(0).getEpisodeByNumber(2).isViewed());
+		assertTrue(ml.getSeries("Steins;Gate").getSeason(0).getEpisodeByNumber(2).getViewedHistory().contains(CCDateTime.parse("2.12", "d.M")));
 
-		assertEquals(true, ml.getSeries("Soul Eater").getSeason(0).getEpisodebyNumber(6).isViewed());
-		assertEquals(false, ml.getSeries("Soul Eater").getSeason(0).getEpisodebyNumber(7).isViewed());
-		assertEquals(true, ml.getSeries("Soul Eater").getSeason(1).getEpisodebyNumber(17).isViewed());
+		assertEquals(true, ml.getSeries("Soul Eater").getSeason(0).getEpisodeByNumber(6).isViewed());
+		assertEquals(false, ml.getSeries("Soul Eater").getSeason(0).getEpisodeByNumber(7).isViewed());
+		assertEquals(true, ml.getSeries("Soul Eater").getSeason(1).getEpisodeByNumber(17).isViewed());
 
 		assertEquals(true, ml.getMovie("Hypercube").isViewed());
 

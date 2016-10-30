@@ -6,7 +6,6 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.swing.DefaultListModel;
@@ -245,8 +244,8 @@ public class StatisticsFrame extends JFrame {
 		pnlCheckSeries.setViewportView(seriesList);
 		DefaultListModel<SeriesCheckBoxList.SeriesCheckBoxListElement> seriesListModel = new DefaultListModel<>();
 		seriesListModel.addElement(new SeriesCheckBoxList.SeriesCheckBoxListElement());
-		for (Iterator<CCSeries> it = movielist.iteratorSeriesSorted(); it.hasNext();) {
-			seriesListModel.addElement(new SeriesCheckBoxList.SeriesCheckBoxListElement(it.next()));
+		for (CCSeries ser : movielist.iteratorSeriesSorted()) {
+			seriesListModel.addElement(new SeriesCheckBoxList.SeriesCheckBoxListElement(ser));
 		}
 		seriesList.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
 		seriesList.setModel(seriesListModel);

@@ -4,7 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.util.Iterator;
 
 import javax.swing.Box;
 import javax.swing.DefaultListModel;
@@ -147,9 +146,7 @@ public class SearchFrame extends JFrame {
 		
 		lsmdl.clear();
 		
-		for (Iterator<CCMovie> it = movielist.iteratorMovies(); it.hasNext();) {
-			CCMovie mov = it.next();
-			
+		for (CCMovie mov : movielist.iteratorMovies()) {
 			if ((mov.getLocalID() + "").equals(searchString)) { //$NON-NLS-1$
 				addToList(mov);
 				continue;
@@ -198,9 +195,7 @@ public class SearchFrame extends JFrame {
 			}
 		}
 		
-		for (Iterator<CCSeries> it = movielist.iteratorSeries(); it.hasNext();) {
-			CCSeries ser = it.next();
-			
+		for (CCSeries ser : movielist.iteratorSeries()) {
 			for (int i = 0; i < ser.getSeasonCount(); i++) {
 				CCSeason sea = ser.getSeason(i);
 				

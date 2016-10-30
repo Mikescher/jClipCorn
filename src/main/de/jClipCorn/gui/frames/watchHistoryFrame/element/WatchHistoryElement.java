@@ -1,0 +1,41 @@
+package de.jClipCorn.gui.frames.watchHistoryFrame.element;
+
+import java.awt.image.BufferedImage;
+
+import javax.swing.ImageIcon;
+
+import de.jClipCorn.database.databaseElement.columnTypes.CCDateTimeList;
+import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFormat;
+import de.jClipCorn.database.databaseElement.columnTypes.CCMovieLanguage;
+import de.jClipCorn.database.databaseElement.columnTypes.CCMovieQuality;
+import de.jClipCorn.database.databaseElement.columnTypes.CCMovieSize;
+import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTags;
+import de.jClipCorn.gui.frames.watchHistoryFrame.WatchHistoryFrame;
+import de.jClipCorn.util.datetime.CCDateTime;
+
+public abstract class WatchHistoryElement implements Comparable<WatchHistoryElement> {
+	
+	public abstract CCDateTime getTimestamp();
+	public abstract String getName();
+	public abstract BufferedImage getCover();
+	public abstract CCMovieQuality getQuality();
+	public abstract CCMovieLanguage getLanguage();
+	public abstract int getLength();
+	public abstract CCMovieTags getTags();
+	public abstract CCMovieFormat getFormat();
+	public abstract CCMovieSize getSize();
+
+	public abstract ImageIcon getNameIcon();
+	public abstract String getFullName();
+	public abstract CCDateTimeList getHistory();
+
+	public abstract boolean isMovie();
+	public abstract boolean isEpisode();
+
+	public abstract void open(WatchHistoryFrame owner);
+	
+	@Override
+	public int compareTo(WatchHistoryElement o) {
+		return getTimestamp().compareTo(o.getTimestamp());
+	}
+}

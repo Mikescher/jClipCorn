@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -191,9 +190,7 @@ public class StatisticsSeriesViewedChart extends StatisticsChart {
 	private List<TupleSeriesEpList> getIncludedSeries(CCMovieList movielist) {
 		List<TupleSeriesEpList> result = new ArrayList<>();
 		
-		for (Iterator<CCSeries> it = movielist.iteratorSeries(); it.hasNext();) {
-			CCSeries series = it.next();
-			
+		for (CCSeries series : movielist.iteratorSeries()) {
 			List<CCEpisode> expeplist = StatisticsHelper.getEpisodesWithExplicitLastViewedDate(series);
 			
 			if (! expeplist.isEmpty()) {

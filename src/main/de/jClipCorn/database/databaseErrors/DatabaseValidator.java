@@ -5,7 +5,6 @@ import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -324,9 +323,7 @@ public class DatabaseValidator {
 		// Duplicate Name
 		// ###############################################
 		
-		for (Iterator<CCMovie> it = movielist.iteratorMovies(); it.hasNext();) {
-			CCMovie imov = it.next();
-			
+		for (CCMovie imov : movielist.iteratorMovies()) {
 			if (StringUtils.equalsIgnoreCase(imov.getCompleteTitle(), mov.getCompleteTitle()) && imov.getLanguage() == mov.getLanguage()) {
 				if (mov.getLocalID() != imov.getLocalID()) {
 					e.add(DatabaseError.createDouble(DatabaseErrorType.ERROR_DUPLICATE_TITLE, mov, imov));
@@ -623,9 +620,7 @@ public class DatabaseValidator {
 		
 		List<DatabaseCoverElement> cvrList = new ArrayList<>();
 		
-		for (Iterator<CCDatabaseElement> it = movielist.iterator(); it.hasNext();) {
-			CCDatabaseElement el = it.next();
-			
+		for (CCDatabaseElement el : movielist.iterator()) {
 			cvrList.add(new DatabaseCoverElement(el.getCoverName(), el));
 			
 			if (el.isSeries()) {
@@ -679,8 +674,7 @@ public class DatabaseValidator {
 		
 		List<DatabaseFileElement> flList = new ArrayList<>();
 		
-		for (Iterator<CCDatabaseElement> it = movielist.iterator(); it.hasNext();) {
-			CCDatabaseElement el = it.next();
+		for (CCDatabaseElement el : movielist.iterator()) {
 			if (el.isMovie()) {
 				for (int i = 0; i < ((CCMovie)el).getPartcount(); i++) {
 					if (ignIFO && CCMovieFormat.getMovieFormat(PathFormatter.getExtension(((CCMovie)el).getAbsolutePart(i))) == CCMovieFormat.IFO) {
@@ -740,9 +734,7 @@ public class DatabaseValidator {
 	private static void findDuplicateOnlineRef(List<DatabaseError> e, CCMovieList movielist, ProgressCallbackListener pcl) {
 		Set<String> refSet = new HashSet<>();
 
-		for (Iterator<CCDatabaseElement> it = movielist.iterator(); it.hasNext();) {
-			CCDatabaseElement el = it.next();
-			
+		for (CCDatabaseElement el : movielist.iterator()) {
 			if (el.getOnlineReference().isSet()) {
 				if (! refSet.add(el.getLanguage().asInt() + '_' + el.getOnlineReference().toSerializationString())) {
 					e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_DUPLICATE_REF, el));

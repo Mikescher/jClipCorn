@@ -13,7 +13,6 @@ import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.swing.DefaultListModel;
@@ -404,9 +403,7 @@ public class AutoFindReferenceFrame extends JFrame {
 		pbProgress.setValue(0);
 		
 		List<CCDatabaseElement> elements = new ArrayList<>();
-		for (Iterator<CCDatabaseElement> it = database.iterator(); it.hasNext();) {
-			CCDatabaseElement el = it.next();
-			
+		for (CCDatabaseElement el : database.iterator()) {
 			if (el.getOnlineReference().isUnset())
 				elements.add(el);
 			

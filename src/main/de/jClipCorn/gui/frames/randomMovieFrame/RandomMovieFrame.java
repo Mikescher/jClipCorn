@@ -5,7 +5,6 @@ import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -83,8 +82,8 @@ public class RandomMovieFrame extends JFrame implements Runnable {
 	private void generateList(CCMovieList movielist) {
 		choosableList = new ArrayList<>();
 
-		for (Iterator<CCMovie> it = movielist.iteratorMovies(); it.hasNext();) {
-			choosableList.add(it.next());
+		for (CCMovie mov : movielist.iteratorMovies()) {
+			choosableList.add(mov);
 		}
 	}
 

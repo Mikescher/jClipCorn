@@ -276,7 +276,7 @@ public class CCSeason {
 		return episodes.get(ee);
 	}
 	
-	public CCEpisode getEpisodebyNumber(int en) {
+	public CCEpisode getEpisodeByNumber(int en) {
 		for (int i = 0; i < episodes.size(); i++) {
 			if (episodes.get(i).getEpisodeNumber() == en) {
 				return episodes.get(i);
@@ -311,7 +311,7 @@ public class CCSeason {
 	
 	public int getNewUnusedEpisodeNumber() {
 		for (int i = 1;; i++) {
-			if (getEpisodebyNumber(i) == null) {
+			if (getEpisodeByNumber(i) == null) {
 				return i;
 			}
 		}
@@ -527,7 +527,7 @@ public class CCSeason {
 			return false;
 		
 		for (int i = first; i < last; i++) {
-			if (getEpisodebyNumber(i) == null) 
+			if (getEpisodeByNumber(i) == null) 
 				return false;
 		}
 		

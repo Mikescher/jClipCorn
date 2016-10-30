@@ -2,7 +2,6 @@ package de.jClipCorn.util.userdataProblem;
 
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -251,9 +250,7 @@ public class UserDataProblem {
 		
 		//################################################################################################################
 		
-		for (Iterator<CCMovie> it = l.iteratorMovies(); it.hasNext();) {
-			CCMovie imov = it.next();
-			
+		for (CCMovie imov : l.iteratorMovies()) {
 			if (StringUtils.equalsIgnoreCase(imov.getTitle(), title) && StringUtils.equalsIgnoreCase(imov.getZyklus().getTitle(), zyklus)  && imov.getLanguage().asInt() == language) {
 				if (mov == null || mov.getLocalID() != imov.getLocalID()) {
 					ret.add(new UserDataProblem(PROBLEM_TITLE_ALREADYEXISTS));
@@ -264,9 +261,7 @@ public class UserDataProblem {
 		
 		//################################################################################################################
 		
-		for (Iterator<CCDatabaseElement> it = l.iterator(); it.hasNext();) {
-			CCDatabaseElement idel = it.next();
-			
+		for (CCDatabaseElement idel : l.iterator()) {
 			if (idel.isMovie()) {
 				if (isPathIncluded((CCMovie)idel, p0, p1, p2, p3, p4, p5)) {
 					if (mov == null || mov.getLocalID() != idel.getLocalID()) {
@@ -406,7 +401,7 @@ public class UserDataProblem {
 		
 		//################################################################################################################
 		
-		CCEpisode eqEp = season.getEpisodebyNumber(epNum);
+		CCEpisode eqEp = season.getEpisodeByNumber(epNum);
 		if (eqEp != null && eqEp != episode) {
 			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_EPISODENUMBER_ALREADY_EXISTS));
 		}
@@ -457,9 +452,7 @@ public class UserDataProblem {
 		
 		//################################################################################################################
 		
-		for (Iterator<CCDatabaseElement> it = season.getMovieList().iterator(); it.hasNext();) {
-			CCDatabaseElement idel = it.next();
-			
+		for (CCDatabaseElement idel : season.getMovieList().iterator()) {
 			if (idel.isMovie()) {
 				if (isPathIncluded((CCMovie)idel, part)) {
 					ret.add(new UserDataProblem(PROBLEM_FILE_ALREADYEXISTS));

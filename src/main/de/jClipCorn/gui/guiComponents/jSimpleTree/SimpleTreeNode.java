@@ -1,5 +1,6 @@
 package de.jClipCorn.gui.guiComponents.jSimpleTree;
 
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.Icon;
@@ -14,6 +15,15 @@ public class SimpleTreeNode extends DefaultMutableTreeNode {
 	
 	public SimpleTreeNode(Icon icon, String text, ActionListener listener) {
 		super(new SimpleTreeObject(icon, text, listener));
+	}
+	
+	public SimpleTreeNode(Icon icon, String text, Runnable listener) {
+		super(new SimpleTreeObject(icon, text, new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				listener.run();
+			}
+		}));
 	}
 
 	public SimpleTreeNode(Icon icon, String text) {

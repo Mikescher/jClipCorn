@@ -8,7 +8,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.swing.DefaultListModel;
@@ -554,10 +553,8 @@ public class CompareDatabaseFrame extends JFrame {
 		root.setAttribute("date", CCDate.getCurrentDate().getSimpleStringRepresentation());
 		root.setAttribute("elementcount", movielist.getElementCount() + "");
 
-		for (Iterator<CCMovie> it = movielist.iteratorMovies(); it.hasNext();) {
-			CCDatabaseElement del = it.next();
-
-			del.generateXML(root, true, true, false);
+		for (CCMovie mov : movielist.iteratorMovies()) {
+			mov.generateXML(root, true, true, false);
 
 			SwingUtilities.invokeLater(new Runnable() {
 				@Override

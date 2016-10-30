@@ -3,7 +3,6 @@ package de.jClipCorn.gui.frames.textExportFrame;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Iterator;
 import java.util.List;
 
 import de.jClipCorn.database.CCMovieList;
@@ -47,9 +46,7 @@ public abstract class DatabaseTextExporter {
 	public List<CCDatabaseElement> getOrderedList() {
 		List<CCDatabaseElement> result = new ArrayList<>();
 		
-		for (Iterator<CCDatabaseElement> it = movielist.iterator(); it.hasNext();) {
-			CCDatabaseElement elem = it.next();
-			
+		for (CCDatabaseElement elem : movielist.iterator()) {
 			if (! includeSeries && elem.isSeries())
 				continue;
 			

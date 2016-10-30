@@ -1,7 +1,6 @@
 package de.jClipCorn.util.parser.watchdata;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -136,9 +135,7 @@ public class WatchDataParser {
 	private static CCSeason parseSeriesHeaderLine(CCMovieList movielist, int currLine, String line, String title, String seasonNumber, List<String> errors) {
 		CCSeries s = null;
 		
-		for (Iterator<CCSeries> it = movielist.iteratorSeries(); it.hasNext();) {
-			CCSeries curr = it.next();
-			
+		for (CCSeries curr : movielist.iteratorSeries()) {
 			if (curr.getTitle().equalsIgnoreCase(title)) {
 				s = curr;
 				break;
@@ -229,7 +226,7 @@ public class WatchDataParser {
 			}
 			
 			for (int en = range_min; en <= range_max; en++) {
-				CCEpisode epis = currSeason.getEpisodebyNumber(en);
+				CCEpisode epis = currSeason.getEpisodeByNumber(en);
 				
 				if (epis == null) {
 					errors.add(String.format("Line[%d] \"%s\" : The Episode \"%s\" could not be found in the current Season", currLine, line.trim(), en));
@@ -248,18 +245,14 @@ public class WatchDataParser {
 		CCSeries s = null;
 		CCMovie m = null;
 		
-		for (Iterator<CCSeries> it = movielist.iteratorSeries(); it.hasNext();) {
-			CCSeries curr = it.next();
-			
+		for (CCSeries curr : movielist.iteratorSeries()) {
 			if (curr.getTitle().equalsIgnoreCase(title)) {
 				s = curr;
 				break;
 			}
 		}
 		
-		for (Iterator<CCMovie> it = movielist.iteratorMovies(); it.hasNext();) {
-			CCMovie curr = it.next();
-			
+		for (CCMovie curr : movielist.iteratorMovies()) {
 			if (curr.getTitle().equalsIgnoreCase(title) || curr.getCompleteTitle().equalsIgnoreCase(title)) {
 				
 				if (m != null) {
@@ -299,9 +292,7 @@ public class WatchDataParser {
 	private static ExtendedMovieWatchDataChangedSet parseMovieExtHeader(CCMovieList movielist, int currLine, String line, String title, String score, String date, List<String> errors) {
 		CCMovie m = null;
 		
-		for (Iterator<CCMovie> it = movielist.iteratorMovies(); it.hasNext();) {
-			CCMovie curr = it.next();
-			
+		for (CCMovie curr : movielist.iteratorMovies()) {
 			if (curr.getTitle().equalsIgnoreCase(title) || curr.getCompleteTitle().equalsIgnoreCase(title)) {
 				
 				if (m != null) {

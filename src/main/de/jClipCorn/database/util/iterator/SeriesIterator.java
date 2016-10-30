@@ -1,17 +1,16 @@
-package de.jClipCorn.database.util;
+package de.jClipCorn.database.util.iterator;
 
-import java.util.Iterator;
 import java.util.List;
 
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
-import de.jClipCorn.database.databaseElement.CCMovie;
+import de.jClipCorn.database.databaseElement.CCSeries;
 
-public class MovieIterator implements Iterator<CCMovie> {
+public class SeriesIterator extends CCIterator<CCSeries> {
 	private boolean active = true;
 	private int pos = -1;
 	private final List<CCDatabaseElement> it;
 	
-	public MovieIterator(List<CCDatabaseElement> ownerIterator) {
+	public SeriesIterator(List<CCDatabaseElement> ownerIterator) {
 		it = ownerIterator;
 		skip();
 	}
@@ -22,18 +21,18 @@ public class MovieIterator implements Iterator<CCMovie> {
 	}
 
 	@Override
-	public CCMovie next() {
-		CCMovie mov = (CCMovie)it.get(pos);
+	public CCSeries next() {
+		CCSeries ser = (CCSeries)it.get(pos);
 		
 		skip();
 		
-		return mov;
+		return ser;
 	}
 	
 	private void skip() {
 		do {
 			pos++;
-		} while ((active = pos < it.size()) && !(it.get(pos) instanceof CCMovie));
+		} while ((active = pos < it.size()) && !(it.get(pos) instanceof CCSeries));
 	}
 
 	@Override

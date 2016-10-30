@@ -33,14 +33,18 @@ import de.jClipCorn.database.driver.CCDatabase;
 import de.jClipCorn.database.driver.DatabaseConnectResult;
 import de.jClipCorn.database.util.CCCoverCache;
 import de.jClipCorn.database.util.CCDBUpdateListener;
-import de.jClipCorn.database.util.MovieIterator;
-import de.jClipCorn.database.util.SeriesIterator;
 import de.jClipCorn.database.util.backupManager.BackupManager;
+import de.jClipCorn.database.util.iterator.CCIterator;
+import de.jClipCorn.database.util.iterator.DatabaseIterator;
+import de.jClipCorn.database.util.iterator.EpisodesIterator;
+import de.jClipCorn.database.util.iterator.MovieIterator;
+import de.jClipCorn.database.util.iterator.SeriesIterator;
 import de.jClipCorn.gui.frames.initialConfigFrame.InitialConfigFrame;
 import de.jClipCorn.gui.frames.mainFrame.MainFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.properties.CCProperties;
+import de.jClipCorn.util.comparator.CCDatabaseElementComparator;
 import de.jClipCorn.util.comparator.CCMovieComparator;
 import de.jClipCorn.util.comparator.CCSeriesComparator;
 import de.jClipCorn.util.datetime.CCDate;
@@ -513,9 +517,7 @@ public class CCMovieList {
 	public int getEpisodeCount() {
 		int c = 0;
 		
-		for (Iterator<CCSeries> it = iteratorSeries(); it.hasNext();) {
-			CCSeries ser = it.next();
-			
+		for (CCSeries ser : iteratorSeries()) {
 			c += ser.getEpisodeCount();
 		}
 		
@@ -523,36 +525,23 @@ public class CCMovieList {
 	}
 	
 	public int getMovieCount() {
-		int c = 0;
-		
-		for (Iterator<CCMovie> it = iteratorMovies(); it.hasNext();it.next()) {
-			c++;
-		}
-		
-		return c;
+		return iteratorMovies().count();
 	}
 	
 	public int getSeriesCount() {
-		int c = 0;
-		
-		for (Iterator<CCSeries> it = iteratorSeries(); it.hasNext();it.next()) {
-			c++;
-		}
-		
-		return c;
+		return iteratorSeries().count();
 	}
 
 	public List<String> getZyklusList() {
 		List<String> result = new ArrayList<>();
 
-		for (Iterator<CCMovie> it = iteratorMovies(); it.hasNext();) {
-			CCMovie mov = it.next();
+		for (CCMovie mov : iteratorMovies()) {
 			String zyklus = mov.getZyklus().getTitle();
 			if (!result.contains(zyklus) && !zyklus.isEmpty()) {
 				result.add(zyklus);
 			}
 		}
-
+		
 		Collections.sort(result);
 
 		return result;
@@ -561,8 +550,7 @@ public class CCMovieList {
 	public List<Integer> getYearList() {
 		List<Integer> result = new ArrayList<>();
 
-		for (Iterator<CCMovie> it = iteratorMovies(); it.hasNext();) {
-			CCMovie mov = it.next();
+		for (CCMovie mov : iteratorMovies()) {
 			Integer year = mov.getYear();
 			if (!result.contains(year)) {
 				result.add(year);
@@ -639,14 +627,13 @@ public class CCMovieList {
 	}
 
 	public void resetAllMovieViewed(boolean to) {
-		for (Iterator<CCMovie> it = iteratorMovies(); it.hasNext();) {
-			it.next().setViewed(to);
+		for (CCMovie mov : iteratorMovies()) {
+			mov.setViewed(to);
 		}
 	}
 	
 	public CCMovie findfirst(CCMovieZyklus zyklus) {
-		for (Iterator<CCMovie> it = iteratorMovies(); it.hasNext();) {
-			CCMovie mov = it.next();
+		for (CCMovie mov : iteratorMovies()) {
 			if (mov.getZyklus().equals(zyklus)) {
 				return mov;
 			}
@@ -658,8 +645,8 @@ public class CCMovieList {
 	public String getCommonSeriesPath() {
 		List<String> all = new ArrayList<>();
 		
-		for (Iterator<CCSeries> it = iteratorSeries(); it.hasNext();) {
-			all.add(it.next().getCommonPathStart(false));
+		for (CCSeries ser : iteratorSeries()) {
+			all.add(ser.getCommonPathStart(false));
 		}
 		
 		while (all.contains("")) all.remove(""); //$NON-NLS-1$ //$NON-NLS-2$
@@ -672,9 +659,7 @@ public class CCMovieList {
 	public String getCommonMoviesPath() {
 		List<String> all = new ArrayList<>();
 		
-		for (Iterator<CCMovie> it = iteratorMovies(); it.hasNext();) {
-			CCMovie curr = it.next();
-			
+		for (CCMovie curr : iteratorMovies()) {
 			for (int i = 0; i < curr.getPartcount(); i++) {
 				all.add(curr.getPart(i));
 			}
@@ -687,16 +672,10 @@ public class CCMovieList {
 		return common;
 	}
 	
-	public Iterator<CCDatabaseElement> iterator() {
-		return list.iterator();
-	}
-	
 	public Map<String, List<CCMovie>> listAllZyklus() {
 		Map<String, List<CCMovie>> map = new TreeMap<>(); // TreeMap is ordered by default
 		
-		for (Iterator<CCMovie> it = iteratorMovies(); it.hasNext();) {
-			CCMovie curr = it.next();
-			
+		for (CCMovie curr : iteratorMovies()) {
 			if (! curr.hasZyklus()) continue;
 			
 			String zyklus = curr.getZyklus().getTitle();
@@ -709,62 +688,32 @@ public class CCMovieList {
 		return map;
 	}
 	
-	public List<CCMovie> listMoviesSorted() {
-		List<CCMovie> list = new ArrayList<>();
-		Iterator<CCMovie> it = iteratorMovies();
-		while (it.hasNext()) list.add(it.next());
-
-		Collections.sort(list, new CCMovieComparator());
-
-		return list;
+	public CCIterator<CCDatabaseElement> iterator() {
+		return new DatabaseIterator(list);
 	}
 	
-	public Iterator<CCMovie> iteratorMovies() {
+	public CCIterator<CCDatabaseElement> iteratorSorted() {
+		return new DatabaseIterator(list).asSorted(new CCDatabaseElementComparator());
+	}
+	
+	public CCIterator<CCMovie> iteratorMovies() {
 		return new MovieIterator(list);
 	}
 	
-	public Iterator<CCMovie> iteratorMoviesSorted() {
-		List<CCMovie> list = new ArrayList<>();
-		Iterator<CCMovie> it = iteratorMovies();
-		while (it.hasNext()) list.add(it.next());
-
-		Collections.sort(list, new CCMovieComparator());
-
-		return list.iterator();
+	public CCIterator<CCMovie> iteratorMoviesSorted() {
+		return iteratorMovies().asSorted(new CCMovieComparator());
 	}
 	
-	public Iterator<CCSeries> iteratorSeries() {
+	public CCIterator<CCSeries> iteratorSeries() {
 		return new SeriesIterator(list);
 	}
-	
-	public List<CCEpisode> listAllEpisodes() {
-		List<CCEpisode> eps = new ArrayList<>();
-		
-		for (Iterator<CCSeries> it = iteratorSeries(); it.hasNext();) {
-			CCSeries series = it.next();
-			
-			for (int seasonIdx = 0; seasonIdx < series.getSeasonCount(); seasonIdx++) {
-				CCSeason season = series.getSeason(seasonIdx);
-				
-				for (int episodeIdx = 0; episodeIdx < season.getEpisodeCount(); episodeIdx++) {
-					CCEpisode episode = season.getEpisode(episodeIdx);
-					
-					eps.add(episode);
-				}
-			}
-		}
-		
-		return eps;
+
+	public CCIterator<CCSeries> iteratorSeriesSorted() {
+		return iteratorSeries().asSorted(new CCSeriesComparator());
 	}
-
-	public Iterator<CCSeries> iteratorSeriesSorted() {
-		List<CCSeries> list = new ArrayList<>();
-		Iterator<CCSeries> it = iteratorSeries();
-		while (it.hasNext()) list.add(it.next());
-
-		Collections.sort(list, new CCSeriesComparator());
-
-		return list.iterator();
+	
+	public CCIterator<CCEpisode> iteratorEpisodes() {
+		return new EpisodesIterator(list);
 	}
 
 	@SuppressWarnings("nls")
@@ -870,9 +819,7 @@ public class CCMovieList {
 	public CCEpisode getLastPlayedEpisode() {
 		CCEpisode max = null;
 		
-		for (Iterator<CCSeries> it = iteratorSeries(); it.hasNext();) {
-			CCSeries ser = it.next();
-			
+		for (CCSeries ser : iteratorSeries()) {
 			for (int i = 0; i < ser.getSeasonCount(); i++) {
 				for (int j = 0; j < ser.getSeason(i).getEpisodeCount(); j++) {
 					CCEpisode ep = ser.getSeason(i).getEpisode(j);
@@ -888,11 +835,11 @@ public class CCMovieList {
 	}
 
 	public boolean hasMovies() {
-		return iteratorMovies().hasNext();
+		return iteratorMovies().any();
 	}
 
 	public boolean hasSeries() {
-		return iteratorSeries().hasNext();
+		return iteratorSeries().any();
 	}
 
 	public boolean hasElements() {
@@ -1091,9 +1038,7 @@ public class CCMovieList {
 	}
 
 	public CCSeries getSeries(String title) {
-		for (Iterator<CCSeries> it = iteratorSeries(); it.hasNext();) {
-			CCSeries ser = it.next();
-			
+		for (CCSeries ser : iteratorSeries()) {
 			if (ser.getTitle().equals(title)) return ser;
 		}
 		
@@ -1101,9 +1046,7 @@ public class CCMovieList {
 	}
 
 	public CCMovie getMovie(String title) {
-		for (Iterator<CCMovie> it = iteratorMovies(); it.hasNext();) {
-			CCMovie mov = it.next();
-			
+		for (CCMovie mov : iteratorMovies()) {
 			if (mov.getTitle().equals(title)) return mov;
 		}
 		

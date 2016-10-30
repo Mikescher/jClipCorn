@@ -101,6 +101,8 @@ public class DatabaseErrorType {
 			return true;
 		} else if (equals(ERROR_INVALID_CHARS_IN_PATH)) {
 			return true;
+		} else if (equals(ERROR_VIEWED_BUT_NO_HISTORY)) {
+			return true;
 		}
 
 		return false;

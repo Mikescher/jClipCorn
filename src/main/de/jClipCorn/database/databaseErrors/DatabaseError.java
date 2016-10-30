@@ -21,6 +21,7 @@ import de.jClipCorn.gui.frames.editMovieFrame.EditMovieFrame;
 import de.jClipCorn.gui.frames.editSeriesFrame.EditSeriesFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.properties.CCProperties;
+import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.formatter.FileSizeFormatter;
 import de.jClipCorn.util.formatter.PathFormatter;
 
@@ -180,6 +181,8 @@ public class DatabaseError {
 			return fixError_Duplicate_Genre();
 		} else if (isTypeOf(DatabaseErrorType.ERROR_INVALID_CHARS_IN_PATH)) {
 			return fixError_Invalid_Chars();
+		} else if (isTypeOf(DatabaseErrorType.ERROR_VIEWED_BUT_NO_HISTORY)) {
+			return fixError_MissingHistory();
 		}
 		
 		return false;
@@ -457,6 +460,34 @@ public class DatabaseError {
 			CCEpisode epi = ((CCEpisode)el1);
 			
 			epi.setTag(CCMovieTags.TAG_WATCH_NEVER, false);
+
+			return true;
+		}
+		
+		return false;
+	}
+
+	private boolean fixError_MissingHistory() {
+		if (el1 instanceof CCMovie) {
+			CCMovie mov = ((CCMovie)el1);
+			
+			if (! mov.isViewed()) return false;
+			if (mov.getViewedHistory().any()) return false;
+			
+			mov.addToViewedHistory(CCDateTime.getUnspecified());
+
+			return true;
+		} else if (el1 instanceof CCSeries) {
+			return false;
+		} else if (el1 instanceof CCSeason) {
+			return false;
+		} else if (el1 instanceof CCEpisode) {
+			CCEpisode epi = ((CCEpisode)el1);
+			
+			if (! epi.isViewed()) return false;
+			if (epi.getViewedHistory().any()) return false;
+			
+			epi.addToViewedHistory(CCDateTime.getUnspecified());
 
 			return true;
 		}

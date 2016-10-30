@@ -429,6 +429,14 @@ public class DatabaseValidator {
 				break;
 			}
 		}
+
+		// ###############################################
+		// Viewed but no history
+		// ###############################################
+
+		if (mov.isViewed() && mov.getViewedHistory().isEmpty()) {
+			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_VIEWED_BUT_NO_HISTORY, mov));
+		}
 	}
 
 	private static void validateSeason(List<DatabaseError> e, CCMovieList movielist, CCSeason season) {

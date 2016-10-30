@@ -3,7 +3,6 @@ package de.jClipCorn.gui.guiComponents;
 import java.awt.Component;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
@@ -70,11 +69,15 @@ public abstract class SFixTable extends JTable {
 	}
 
 	private void fixTableSort() {
+		// this causes column resizing to no longer work :/
+		// http://stackoverflow.com/questions/5477965/how-to-restore-the-original-row-order-with-jtables-row-sorter
+		/*
 		for (MouseListener mouseListener : getTableHeader().getMouseListeners()) {
 			if (mouseListener instanceof javax.swing.plaf.basic.BasicTableHeaderUI.MouseInputHandler) {
 				getTableHeader().removeMouseListener(mouseListener);
 			}
 		}
+		*/
 
 		getTableHeader().addMouseListener(new MouseAdapter() {
 			private SortOrder currentOrder = SortOrder.UNSORTED;

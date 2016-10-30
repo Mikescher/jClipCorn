@@ -57,6 +57,7 @@ public class ClipTable extends JScrollPane implements CCDBUpdateListener, ListSe
 		this.setViewportView(table);
 
 		adjuster = new TableColumnAdjuster(table);
+		adjuster.setMaxAdjustWidth(550);
 		adjuster.setOnlyAdjustLarger(false);
 
 		if (ml != null) { // Sonst meckert der WindowsBuilder

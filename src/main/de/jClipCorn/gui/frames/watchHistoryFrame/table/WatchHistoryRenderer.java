@@ -34,7 +34,7 @@ public class WatchHistoryRenderer extends TableRenderer {
 			break;
 			
 		case WatchHistoryTableModel.COLUMN_QUALITY:
-			setText(""); //$NON-NLS-1$
+			setText(el.getQuality().asString());
 			setIcon(el.getQuality().getIcon());
 			setToolTipText(null);
 			break;

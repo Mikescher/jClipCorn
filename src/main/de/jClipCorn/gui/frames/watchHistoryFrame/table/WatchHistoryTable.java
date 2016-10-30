@@ -37,6 +37,7 @@ public class WatchHistoryTable extends JScrollPane implements ListSelectionListe
 		this.setViewportView(table);
 
 		adjuster = new TableColumnAdjuster(table);
+		adjuster.setMaxAdjustWidth(400);
 		adjuster.setOnlyAdjustLarger(false);
 	}
 

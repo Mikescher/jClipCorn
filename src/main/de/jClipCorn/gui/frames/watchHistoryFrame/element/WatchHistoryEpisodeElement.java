@@ -1,6 +1,7 @@
 package de.jClipCorn.gui.frames.watchHistoryFrame.element;
 
 import java.awt.image.BufferedImage;
+import java.text.DecimalFormat;
 
 import javax.swing.ImageIcon;
 
@@ -88,10 +89,12 @@ public class WatchHistoryEpisodeElement extends WatchHistoryElement {
 
 	@Override
 	@SuppressWarnings("nls")
-	public String getFullName() {
-		String p1 = Episode.getSeries().getTitle();
-		String p2 = "S" + Episode.getSeason().getIndexForCreatedFolderStructure() + " " + Episode.getSeason().getTitle();
-		String p3 = "E" + Episode.getEpisodeIndexInSeason() + " " + Episode.getTitle();
+	public String getFullName() {	
+		DecimalFormat fmt = new DecimalFormat("00");
+		
+		String p1 = Episode.getSeries().getTitle() + " S" + fmt.format(Episode.getSeason().getIndexForCreatedFolderStructure());
+		String p2 = Episode.getSeason().getTitle() + " E" + fmt.format(Episode.getEpisodeIndexInSeason()); 
+		String p3 = Episode.getTitle();
 		
 		return p1 + " - " + p2 + " - " + p3;
 	}

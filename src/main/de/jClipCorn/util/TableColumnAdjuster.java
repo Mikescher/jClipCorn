@@ -25,6 +25,7 @@ public class TableColumnAdjuster implements PropertyChangeListener, TableModelLi
 	
 	private JTable table;
 	private int spacing;
+	private int maxAutoWidth = Integer.MAX_VALUE;
 	private boolean isColumnHeaderIncluded;
 	private boolean isColumnDataIncluded;
 	private boolean isOnlyAdjustLarger;
@@ -53,6 +54,10 @@ public class TableColumnAdjuster implements PropertyChangeListener, TableModelLi
 		setResizeAdjuster(false);
 		installActions();
 		installResizeAdjuster();
+	}
+	
+	public void setMaxAdjustWidth(int max) {
+		maxAutoWidth = max;
 	}
 	
 	private void configureTable() {
@@ -140,10 +145,15 @@ public class TableColumnAdjuster implements PropertyChangeListener, TableModelLi
 		if (!tableColumn.getResizable())
 			return;
 
+		int oldWidth = tableColumn.getWidth();
 		int columnHeaderWidth = getColumnHeaderWidth(column);
 		int columnDataWidth = getColumnDataWidth(column);
 		int preferredWidth = Math.max(columnHeaderWidth, columnDataWidth);
 
+		if (preferredWidth > oldWidth) {
+			preferredWidth = Math.min(maxAutoWidth, Math.max(preferredWidth, oldWidth));
+		}
+		
 		updateTableColumn(column, preferredWidth);
 	}
 

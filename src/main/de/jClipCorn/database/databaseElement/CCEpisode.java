@@ -456,7 +456,7 @@ public class CCEpisode {
 	}
 	
 	@SuppressWarnings("nls")
-	private String getRelativeFileForCreatedFolderstructure() {		
+	public String getRelativeFileForCreatedFolderstructure() {		
 		DecimalFormat decFormattter = new DecimalFormat("00");
 		
 		CCSeason season = this.getSeason();

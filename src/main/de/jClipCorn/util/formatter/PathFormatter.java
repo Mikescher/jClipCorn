@@ -21,8 +21,8 @@ import de.jClipCorn.util.listener.ProgressCallbackListener;
 
 @SuppressWarnings("nls")
 public class PathFormatter {
-	public static final String SEPERATOR = File.separator;
-	public static final char SEPERATOR_CHAR = File.separatorChar;
+	public static String SEPERATOR = File.separator;
+	public static char SEPERATOR_CHAR = File.separatorChar;
 
 	public static final String SERIALIZATION_SEPERATOR = "/";
 	public static final char SERIALIZATION_SEPERATOR_CHAR = '/';
@@ -63,6 +63,16 @@ public class PathFormatter {
 	private final static String WILDCARD_SELFDRIVE = "<?self[dir]>";
 	
 	private final static String WORKINGDIR = getWorkingDir();
+	
+	public static void SetPathModeUnix() {
+		SEPERATOR = "/";
+		SEPERATOR_CHAR = '/';
+	}
+
+	public static void SetPathModeWindows() {
+		SEPERATOR = "\\";
+		SEPERATOR_CHAR = '\\';
+	}
 	
 	private static String getWorkingDir() {// Dafuq - wasn code (wird ja nur 1mal executed)
 		try {

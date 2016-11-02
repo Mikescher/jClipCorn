@@ -150,10 +150,10 @@ public class TestDatabase {
 		
 		assertTrue(ml.hasElements());
 		
-		assertEquals(18, ml.getElementCount());
-		assertEquals(76, ml.getEpisodeCount());
+		assertEquals(20, ml.getElementCount());
+		assertEquals(86, ml.getEpisodeCount());
 		assertEquals(2, ml.getGroupList().size());
-		assertEquals(16, ml.getMovieCount());
-		assertEquals(2, ml.getSeriesCount());
+		assertEquals(17, ml.getMovieCount());
+		assertEquals(3, ml.getSeriesCount());
 	}
 }

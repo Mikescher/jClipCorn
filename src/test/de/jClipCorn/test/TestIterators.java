@@ -18,10 +18,10 @@ public class TestIterators {
 		
 		CCMovieList ml = ClipCornTestHelper.createExampleDB();
 		
-		assertEquals(18, ml.iterator().count());
-		assertEquals(18, ml.iteratorSorted().count());
-		assertEquals(18, ml.iterator().enumerate().size());
-		assertEquals(18, ml.iteratorSorted().enumerate().size());
+		assertEquals(20, ml.iterator().count());
+		assertEquals(20, ml.iteratorSorted().count());
+		assertEquals(20, ml.iterator().enumerate().size());
+		assertEquals(20, ml.iteratorSorted().enumerate().size());
 	}
 
 	@Test
@@ -30,10 +30,10 @@ public class TestIterators {
 		
 		CCMovieList ml = ClipCornTestHelper.createExampleDB();
 		
-		assertEquals(16, ml.iteratorMovies().count());
-		assertEquals(16, ml.iteratorMoviesSorted().count());
-		assertEquals(16, ml.iteratorMovies().enumerate().size());
-		assertEquals(16, ml.iteratorMoviesSorted().enumerate().size());
+		assertEquals(17, ml.iteratorMovies().count());
+		assertEquals(17, ml.iteratorMoviesSorted().count());
+		assertEquals(17, ml.iteratorMovies().enumerate().size());
+		assertEquals(17, ml.iteratorMoviesSorted().enumerate().size());
 	}
 
 	@Test
@@ -42,10 +42,10 @@ public class TestIterators {
 		
 		CCMovieList ml = ClipCornTestHelper.createExampleDB();
 		
-		assertEquals(2, ml.iteratorSeries().count());
-		assertEquals(2, ml.iteratorSeriesSorted().count());
-		assertEquals(2, ml.iteratorSeries().enumerate().size());
-		assertEquals(2, ml.iteratorSeriesSorted().enumerate().size());
+		assertEquals(3, ml.iteratorSeries().count());
+		assertEquals(3, ml.iteratorSeriesSorted().count());
+		assertEquals(3, ml.iteratorSeries().enumerate().size());
+		assertEquals(3, ml.iteratorSeriesSorted().enumerate().size());
 	}
 
 	@Test
@@ -54,8 +54,8 @@ public class TestIterators {
 		
 		CCMovieList ml = ClipCornTestHelper.createExampleDB();
 		
-		assertEquals(76, ml.iteratorEpisodes().count());
-		assertEquals(76, ml.iteratorEpisodes().enumerate().size());
+		assertEquals(86, ml.iteratorEpisodes().count());
+		assertEquals(86, ml.iteratorEpisodes().enumerate().size());
 	}
 
 	@Test

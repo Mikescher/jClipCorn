@@ -529,16 +529,6 @@ public class CCMovieList {
 	public void setLoadTime(long loadTime) {
 		this.loadTime = loadTime;
 	}
-
-	public int getEpisodeCount() {
-		int c = 0;
-		
-		for (CCSeries ser : iteratorSeries()) {
-			c += ser.getEpisodeCount();
-		}
-		
-		return c;
-	}
 	
 	public int getMovieCount() {
 		return iteratorMovies().count();
@@ -546,6 +536,10 @@ public class CCMovieList {
 	
 	public int getSeriesCount() {
 		return iteratorSeries().count();
+	}
+
+	public int getEpisodeCount() {
+		return iteratorEpisodes().count();
 	}
 
 	public List<String> getZyklusList() {

@@ -15,6 +15,16 @@ public class ApplicationHelper {
 
 	private static String os_property = null;
 	
+	public static void SetOverrideModeUnix() {
+		os_property = "generic_unix"; //$NON-NLS-1$
+		PathFormatter.SetPathModeUnix();
+	}
+
+	public static void SetOverrideModeWindows() {
+		os_property = "generic_windows"; //$NON-NLS-1$
+		PathFormatter.SetPathModeWindows();
+	}
+	
 	@SuppressWarnings("nls")
 	public static boolean restartApplication() { //Will fail in Eclipse, cause there is no .jar File
 		String javaBin = PathFormatter.combine(System.getProperty("java.home"), "bin", "java");

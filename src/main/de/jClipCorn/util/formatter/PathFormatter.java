@@ -4,7 +4,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -34,6 +36,15 @@ public class PathFormatter {
 		'0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
 		' ', '!', '#', '&', '\'', '(', ')', '+', ',', '-', '.', ';', '=', '@', '[', ']', '^', '_', '`', '{', '}', 'ß'
 	));
+	
+    private static final Map<Character, Character> FILENAME_REPLACEMENT_CHARS;
+    static
+    {
+    	FILENAME_REPLACEMENT_CHARS = new HashMap<>();
+    	FILENAME_REPLACEMENT_CHARS.put('×', 'x'); // MULTIPLICATION SIGN  -->  	LATIN SMALL LETTER X
+    	FILENAME_REPLACEMENT_CHARS.put('—', '-'); // EM DASH              -->  	HYPHEN-MINUS
+    	FILENAME_REPLACEMENT_CHARS.put('–', '-'); // EN DASH              -->  	HYPHEN-MINUS
+    }
 	
 	private final static ArrayList<Character> INVALID_PATH_CHARS_SERIALIZED = new ArrayList<>(Arrays.asList('\\', '"', '<', '>', '?', '*', '|'));
 	private final static ArrayList<Character> INVALID_PATH_CHARS_SYSTEM     = new ArrayList<>(Arrays.asList('"', '<', '>', '?', '*', '|'));
@@ -193,6 +204,8 @@ public class PathFormatter {
 				String ncs = StringUtils.stripAccents(Character.toString(fn.charAt(i)));
 				if (ncs.length() == 1 && VALID_FILENAME_CHARS.contains(ncs.charAt(0))) {
 					fnbuilder.append(ncs.charAt(0));
+				} else if (FILENAME_REPLACEMENT_CHARS.containsKey(fn.charAt(i))) {
+					fnbuilder.append(FILENAME_REPLACEMENT_CHARS.get(fn.charAt(i)));
 				}
 			}
 		}

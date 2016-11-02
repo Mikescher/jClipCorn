@@ -1,5 +1,6 @@
 package de.jClipCorn.database.databaseElement.columnTypes;
 
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.swing.Icon;
@@ -7,6 +8,7 @@ import javax.swing.Icon;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.CachedResourceLoader;
 import de.jClipCorn.gui.resources.Resources;
+import de.jClipCorn.util.Tuple;
 import de.jClipCorn.util.enumextension.ContinoousEnum;
 import de.jClipCorn.util.enumextension.EnumWrapper;
 import de.jClipCorn.util.exceptions.OnlineRefFormatException;
@@ -26,6 +28,11 @@ public enum CCOnlineRefType implements ContinoousEnum<CCOnlineRefType> {
 	private static final Pattern REGEX_TMDB = Pattern.compile("^(movie|tv)/[0-9]+$"); //$NON-NLS-1$
 	private static final Pattern REGEX_PROX = Pattern.compile("^[0-9]+$"); //$NON-NLS-1$
 	private static final Pattern REGEX_MYAL = Pattern.compile("^[0-9]+$"); //$NON-NLS-1$
+
+	private static final Pattern REGEX_PASTE_IMDB = Pattern.compile("^(http://|https://)?(www\\.)?imdb\\.(com|de)/title/(?<id>tt[0-9]+)(/.*)?$"); //$NON-NLS-1$
+	private static final Pattern REGEX_PASTE_TMDB = Pattern.compile("^(http://|https://)?(www\\.)?themoviedb\\.org/(?<id>(movie|tv)/[0-9]+)(\\-.*)?(/.*)?$"); //$NON-NLS-1$
+	private static final Pattern REGEX_PASTE_MYAL = Pattern.compile("^(http://|https://)?(www\\.)?myanimelist\\.net/anime/(?<id>[0-9]+)(/.*)?$"); //$NON-NLS-1$
+	private static final Pattern REGEX_PASTE_PROX = Pattern.compile("^(http://|https://)?(www\\.)?proxer\\.me/info/(?<id>[0-9]+)(/.*)?$"); //$NON-NLS-1$
 	
 	private final static String IDENTIFIER[] = {
 		"",   			//$NON-NLS-1$
@@ -184,6 +191,33 @@ public enum CCOnlineRefType implements ContinoousEnum<CCOnlineRefType> {
 			}
 		}
 		return result;
+	}
+
+	@SuppressWarnings("nls")
+	public static Tuple<CCOnlineRefType, String> extractType(String input) {
+		Matcher matcher;
+		
+		matcher = REGEX_PASTE_IMDB.matcher(input);
+		if (matcher.find()) {
+			return Tuple.Create(CCOnlineRefType.IMDB, matcher.group("id"));
+		}
+		
+		matcher = REGEX_PASTE_TMDB.matcher(input);
+		if (matcher.find()) {
+			return Tuple.Create(CCOnlineRefType.THEMOVIEDB, matcher.group("id"));
+		}
+		
+		matcher = REGEX_PASTE_MYAL.matcher(input);
+		if (matcher.find()) {
+			return Tuple.Create(CCOnlineRefType.MYANIMELIST, matcher.group("id"));
+		}
+		
+		matcher = REGEX_PASTE_PROX.matcher(input);
+		if (matcher.find()) {
+			return Tuple.Create(CCOnlineRefType.PROXERME, matcher.group("id"));
+		}
+		
+		return null;
 	}
 
 	@Override

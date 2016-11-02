@@ -18,6 +18,7 @@ import javax.swing.event.DocumentEvent;
 import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineRefType;
 import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReference;
 import de.jClipCorn.gui.guiComponents.WideComboBox;
+import de.jClipCorn.util.Tuple;
 import de.jClipCorn.util.adapter.DocumentAdapter;
 
 public class JReferenceChooser extends JPanel {
@@ -57,6 +58,14 @@ public class JReferenceChooser extends JPanel {
                     CCOnlineRefType guess = CCOnlineRefType.guessType(edID.getText());
                     if (guess != null && guess != cbxType.getSelectedItem()) {
                     	cbxType.setSelectedItem(guess);
+                    	return;
+                    }
+                    
+                    Tuple<CCOnlineRefType, String> extraction = CCOnlineRefType.extractType(edID.getText());
+                    if (extraction != null) {
+                    	if (extraction.Item1 != cbxType.getSelectedItem()) cbxType.setSelectedItem(extraction.Item1);
+                    	if (! edID.getText().equals(extraction.Item2)) edID.setText(extraction.Item2);
+                    	return;
                     }
                 }
             }

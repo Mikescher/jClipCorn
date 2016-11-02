@@ -85,7 +85,7 @@ public class SerTable extends JScrollPane implements ListSelectionListener, Mous
 	public CCEpisode getSelectedEpisode() {
 		int selrow = getSelectedRow();
 		if (selrow >= 0) {
-			return season.getEpisode(selrow);
+			return season.getEpisodeByArrayIndex(selrow);
 		}
 		return null;
 	}

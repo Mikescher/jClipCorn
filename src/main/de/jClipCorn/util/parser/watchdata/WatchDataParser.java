@@ -154,7 +154,7 @@ public class WatchDataParser {
 			return null;
 		}
 		
-		return s.getSeason(sn);
+		return s.getSeasonByArrayIndex(sn);
 	}
 	
 	@SuppressWarnings("nls")
@@ -282,7 +282,7 @@ public class WatchDataParser {
 				return null;
 			}
 
-			return new Tuple<>(null, s.getSeason(0));
+			return new Tuple<>(null, s.getSeasonByArrayIndex(0));
 		}
 
 		return null;

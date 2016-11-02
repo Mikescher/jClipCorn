@@ -228,13 +228,13 @@ public class CCSeries extends CCDatabaseElement {
 		CCMovieTags i = new CCMovieTags();
 		
 		for (int j = 0; j < getSeasonCount(); j++) {
-			i.doUnion(getSeason(j).getTags());
+			i.doUnion(getSeasonByArrayIndex(j).getTags());
 		}
 		
 		return i;
 	}
 
-	public CCSeason getSeason(int ss) {
+	public CCSeason getSeasonByArrayIndex(int ss) {
 		if (ss < 0 || ss >= seasons.size())
 			return null;
 		
@@ -245,7 +245,7 @@ public class CCSeries extends CCDatabaseElement {
 		seasons.remove(season);
 		
 		for (int i = season.getEpisodeCount()-1; i >= 0; i--) {
-			season.deleteEpisode(season.getEpisode(i));
+			season.deleteEpisode(season.getEpisodeByArrayIndex(i));
 		}
 		
 		getMovieList().removeSeasonDatabase(season);
@@ -281,7 +281,7 @@ public class CCSeries extends CCDatabaseElement {
 		List<File> result = new ArrayList<>();
 		
 		for (int i = 0; i < seasons.size(); i++) {
-			result.addAll(getSeason(i).getAbsolutePathList());
+			result.addAll(getSeasonByArrayIndex(i).getAbsolutePathList());
 		}
 		
 		return result;
@@ -289,7 +289,7 @@ public class CCSeries extends CCDatabaseElement {
 	
 	public boolean isFileInList(String path) {
 		for (int i = 0; i < seasons.size(); i++) {
-			CCSeason s = getSeason(i);
+			CCSeason s = getSeasonByArrayIndex(i);
 			if(s.isFileInList(path)) {
 				return true;
 			}
@@ -302,7 +302,7 @@ public class CCSeries extends CCDatabaseElement {
 		List<CCEpisode> result = new ArrayList<>();
 		
 		for (int i = 0; i < getSeasonCount(); i++) {
-			result.addAll(getSeason(i).getEpisodeList());
+			result.addAll(getSeasonByArrayIndex(i).getEpisodeList());
 		}
 		
 		return result;
@@ -449,7 +449,7 @@ public class CCSeries extends CCDatabaseElement {
 		guide.appendPadding(titlewidth, '#');
 		
 		for (int i = 0; i < getSeasonCount(); i++) {
-			CCSeason season = getSeason(i);
+			CCSeason season = getSeasonByArrayIndex(i);
 			String seasontitle = season.getTitle() + ' ' + '(' + season.getYear() + ')';
 			
 			guide.appendNewLine();
@@ -464,7 +464,7 @@ public class CCSeries extends CCDatabaseElement {
 			guide.appendNewLine();
 			guide.appendNewLine();
 			for (int j = 0; j < season.getEpisodeCount(); j++) {
-				CCEpisode episode = season.getEpisode(j);
+				CCEpisode episode = season.getEpisodeByArrayIndex(j);
 				guide.appendPadding(GUIDE_W_BORDER, ' ');
 				guide.appendln(String.format("> [%02d] %s (%s)", episode.getEpisodeNumber(), episode.getTitle(), TimeIntervallFormatter.formatPointed(episode.getLength()))); //$NON-NLS-1$
 			}
@@ -477,7 +477,7 @@ public class CCSeries extends CCDatabaseElement {
 		List<String> all = new ArrayList<>();
 		
 		for (int seasi = 0; seasi < getSeasonCount(); seasi++) {
-			CCSeason season = getSeason(seasi);
+			CCSeason season = getSeasonByArrayIndex(seasi);
 			all.add(season.getCommonPathStart());
 		}
 		
@@ -571,10 +571,10 @@ public class CCSeries extends CCDatabaseElement {
 	public CCSeason getInitialDisplaySeason() {
 		if (getSeasonCount() == 0) return null;
 		
-		CCSeason zero = getSeason(0);
+		CCSeason zero = getSeasonByArrayIndex(0);
 		
 		if (zero.getIndexForCreatedFolderStructure() == 0) {
-			CCSeason first = getSeason(1);
+			CCSeason first = getSeasonByArrayIndex(1);
 			if (first == null) {
 				return zero;
 			} else {

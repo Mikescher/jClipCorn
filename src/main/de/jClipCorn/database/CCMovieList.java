@@ -189,6 +189,22 @@ public class CCMovieList {
 		return null;
 	}
 
+	public CCMovie findDatabaseMovie(int id) {
+		CCDatabaseElement e = findDatabaseElement(id);
+		
+		if (e != null && e instanceof CCMovie) return (CCMovie)e;
+		
+		return null;
+	}
+
+	public CCSeries findDatabaseSeries(int id) {
+		CCDatabaseElement e = findDatabaseElement(id);
+		
+		if (e != null && e instanceof CCSeries) return (CCSeries)e;
+		
+		return null;
+	}
+
 	public CCMovie createNewEmptyMovie() { // Does this make getMovieBySort fail (id changes etc ??)
 		CCMovie mov = database.createNewEmptyMovie(this);
 		list.add(mov);
@@ -491,7 +507,7 @@ public class CCMovieList {
 	private void removeSeries(CCSeries s) {
 		list.remove(s);
 		for (int i = s.getSeasonCount() - 1; i >= 0; i--) {
-			s.deleteSeason(s.getSeason(i));
+			s.deleteSeason(s.getSeasonByArrayIndex(i));
 		}
 		database.removeFromMain(s.getLocalID());
 		unlinkElementFromGroups(s, s.getGroups());
@@ -821,8 +837,8 @@ public class CCMovieList {
 		
 		for (CCSeries ser : iteratorSeries()) {
 			for (int i = 0; i < ser.getSeasonCount(); i++) {
-				for (int j = 0; j < ser.getSeason(i).getEpisodeCount(); j++) {
-					CCEpisode ep = ser.getSeason(i).getEpisode(j);
+				for (int j = 0; j < ser.getSeasonByArrayIndex(i).getEpisodeCount(); j++) {
+					CCEpisode ep = ser.getSeasonByArrayIndex(i).getEpisodeByArrayIndex(j);
 					
 					if (max == null || (ep.isViewed() && ep.getViewedHistoryLastDateTime().isGreaterEqualsThan(max.getViewedHistoryLastDateTime()))) {
 						max = ep;

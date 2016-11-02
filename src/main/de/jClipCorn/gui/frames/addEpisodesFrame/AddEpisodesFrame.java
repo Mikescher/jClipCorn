@@ -662,7 +662,7 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler, 
 			List<UserDataProblem> problems = new ArrayList<>();
 
 			for (int i = 0; i < parent.getEpisodeCount(); i++) {
-				CCEpisode episode = parent.getEpisode(i);
+				CCEpisode episode = parent.getEpisodeByArrayIndex(i);
 
 				UserDataProblem.testEpisodeData(problems, parent, episode, episode.getTitle(), episode.getLength(), episode.getEpisodeNumber(), episode.getAddDate(), episode.getViewedHistory(), episode.getFilesize().getBytes(), episode.getFormat().asString(), episode.getFormat().asStringAlt(), episode.getPart(), episode.getQuality().asInt());
 			}
@@ -731,7 +731,7 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler, 
 		if (index < 0) {
 			return null;
 		} else {
-			return parent.getEpisode(index);
+			return parent.getEpisodeByArrayIndex(index);
 		}
 	}
 
@@ -804,7 +804,7 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler, 
 		model.clear();
 
 		for (int i = 0; i < parent.getEpisodeCount(); i++) {
-			model.add(i, parent.getEpisode(i).getTitle());
+			model.add(i, parent.getEpisodeByArrayIndex(i).getTitle());
 		}
 
 		lsEpisodes.setSelectedIndex(-1);
@@ -816,7 +816,7 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler, 
 		List<String> result = new ArrayList<>();
 		
 		for (int i = 0; i < parent.getEpisodeCount(); i++) {
-			result.add(i, parent.getEpisode(i).getTitle());
+			result.add(i, parent.getEpisodeByArrayIndex(i).getTitle());
 		}
 		
 		return result;
@@ -826,7 +826,7 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler, 
 		List<String> paths = new ArrayList<>();
 
 		for (int i = 0; i < parent.getEpisodeCount(); i++) {
-			paths.add(i, parent.getEpisode(i).getPart());
+			paths.add(i, parent.getEpisodeByArrayIndex(i).getPart());
 		}
 		
 		return PathFormatter.fromCCPath(PathFormatter.getCommonFolderPath(paths));
@@ -936,7 +936,7 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler, 
 		lsEpisodes.setSelectedIndex(-1);
 
 		for (int i = 0; i < parent.getEpisodeCount(); i++) {
-			CCEpisode ep = parent.getEpisode(i);
+			CCEpisode ep = parent.getEpisodeByArrayIndex(i);
 			try {
 				ep.setTitle(ep.getTitle().substring((int) spnSide_01.getValue()));
 			} catch (IndexOutOfBoundsException e) {
@@ -951,7 +951,7 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler, 
 		lsEpisodes.setSelectedIndex(-1);
 
 		for (int i = 0; i < parent.getEpisodeCount(); i++) {
-			CCEpisode ep = parent.getEpisode(i);
+			CCEpisode ep = parent.getEpisodeByArrayIndex(i);
 			try {
 				ep.setTitle(ep.getTitle().substring(0, ep.getTitle().length() - (int) spnSide_02.getValue()));
 			} catch (IndexOutOfBoundsException e) {
@@ -966,7 +966,7 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler, 
 		lsEpisodes.setSelectedIndex(-1);
 
 		for (int i = 0; i < parent.getEpisodeCount(); i++) {
-			CCEpisode ep = parent.getEpisode(i);
+			CCEpisode ep = parent.getEpisodeByArrayIndex(i);
 
 			ep.setTitle(ep.getTitle().replace(edSide_01.getText(), edSide_02.getText()));
 		}
@@ -978,7 +978,7 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler, 
 		lsEpisodes.setSelectedIndex(-1);
 
 		for (int i = 0; i < parent.getEpisodeCount(); i++) {
-			CCEpisode ep = parent.getEpisode(i);
+			CCEpisode ep = parent.getEpisodeByArrayIndex(i);
 
 			ep.setTitle(ep.getTitle().trim());
 		}
@@ -990,7 +990,7 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler, 
 		lsEpisodes.setSelectedIndex(-1);
 
 		for (int i = 0; i < parent.getEpisodeCount(); i++) {
-			CCEpisode ep = parent.getEpisode(i);
+			CCEpisode ep = parent.getEpisodeByArrayIndex(i);
 
 			ep.setTitle(edSide_03.getText().concat(ep.getTitle()));
 		}
@@ -1002,7 +1002,7 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler, 
 		lsEpisodes.setSelectedIndex(-1);
 
 		for (int i = 0; i < parent.getEpisodeCount(); i++) {
-			CCEpisode ep = parent.getEpisode(i);
+			CCEpisode ep = parent.getEpisodeByArrayIndex(i);
 
 			ep.setTitle(ep.getTitle().concat(edSide_04.getText()));
 		}
@@ -1017,7 +1017,7 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler, 
 		lsEpisodes.setSelectedIndex(-1);
 
 		for (int i = 0; i < parent.getEpisodeCount(); i++) {
-			CCEpisode ep = parent.getEpisode(i);
+			CCEpisode ep = parent.getEpisodeByArrayIndex(i);
 
 			try {
 				String title = ep.getTitle();
@@ -1038,7 +1038,7 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler, 
 		lsEpisodes.setSelectedIndex(-1);
 
 		for (int i = 0; i < parent.getEpisodeCount(); i++) {
-			CCEpisode ep = parent.getEpisode(i);
+			CCEpisode ep = parent.getEpisodeByArrayIndex(i);
 
 			ep.setEpisodeNumber(ep.getEpisodeNumber() + delta);
 		}
@@ -1050,7 +1050,7 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler, 
 		lsEpisodes.setSelectedIndex(-1);
 
 		for (int i = 0; i < parent.getEpisodeCount(); i++) {
-			CCEpisode ep = parent.getEpisode(i);
+			CCEpisode ep = parent.getEpisodeByArrayIndex(i);
 
 			ep.setTitle(ep.getTitle().replace(edSide_05.getText(), "")); //$NON-NLS-1$
 		}
@@ -1062,7 +1062,7 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler, 
 		lsEpisodes.setSelectedIndex(-1);
 
 		for (int i = 0; i < parent.getEpisodeCount(); i++) {
-			CCEpisode ep = parent.getEpisode(i);
+			CCEpisode ep = parent.getEpisodeByArrayIndex(i);
 
 			File f = new File(ep.getAbsolutePart());
 			if (f.exists()) {
@@ -1077,7 +1077,7 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler, 
 		lsEpisodes.setSelectedIndex(-1);
 
 		for (int i = 0; i < parent.getEpisodeCount(); i++) {
-			CCEpisode ep = parent.getEpisode(i);
+			CCEpisode ep = parent.getEpisodeByArrayIndex(i);
 
 			ep.setViewed(viewed);
 		}
@@ -1089,7 +1089,7 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler, 
 		lsEpisodes.setSelectedIndex(-1);
 
 		for (int i = 0; i < parent.getEpisodeCount(); i++) {
-			CCEpisode ep = parent.getEpisode(i);
+			CCEpisode ep = parent.getEpisodeByArrayIndex(i);
 
 			ep.setLength((int) spnSideLength.getValue());
 		}
@@ -1101,7 +1101,7 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler, 
 		lsEpisodes.setSelectedIndex(-1);
 
 		for (int i = 0; i < parent.getEpisodeCount(); i++) {
-			CCEpisode ep = parent.getEpisode(i);
+			CCEpisode ep = parent.getEpisodeByArrayIndex(i);
 
 			ep.setFormat(cbxSideFormat.getSelectedIndex());
 		}
@@ -1113,7 +1113,7 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler, 
 		lsEpisodes.setSelectedIndex(-1);
 
 		for (int i = 0; i < parent.getEpisodeCount(); i++) {
-			CCEpisode ep = parent.getEpisode(i);
+			CCEpisode ep = parent.getEpisodeByArrayIndex(i);
 
 			ep.setQuality(cbxSideQuality.getSelectedIndex());
 		}
@@ -1125,7 +1125,7 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler, 
 		lsEpisodes.setSelectedIndex(-1);
 
 		for (int i = 0; i < parent.getEpisodeCount(); i++) {
-			CCEpisode ep = parent.getEpisode(i);
+			CCEpisode ep = parent.getEpisodeByArrayIndex(i);
 			ep.setQuality(CCMovieQuality.calculateQuality(ep.getFilesize(), ep.getLength(), 1));
 		}
 
@@ -1135,7 +1135,7 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler, 
 	@Override
 	public void updateTitles(ArrayList<String> newTitles) {
 		for (int i = 0; i < Math.min(parent.getEpisodeCount(), newTitles.size()); i++) {
-			parent.getEpisode(i).setTitle(newTitles.get(i));
+			parent.getEpisodeByArrayIndex(i).setTitle(newTitles.get(i));
 		}
 		
 		updateList();
@@ -1161,7 +1161,7 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler, 
 		//####################################
 		
 		for (int i = 0; i < parent.getEpisodeCount(); i++) {
-			CCEpisode ep = parent.getEpisode(i);
+			CCEpisode ep = parent.getEpisodeByArrayIndex(i);
 
 			File f = new File(ep.getAbsolutePart());
 			if (f.exists()) {

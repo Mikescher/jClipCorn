@@ -45,11 +45,11 @@ public class DatabaseValidator {
 				validateSeries(e, ml, series);
 
 				for (int seasi = 0; seasi < series.getSeasonCount(); seasi++) {
-					CCSeason season = series.getSeason(seasi);
+					CCSeason season = series.getSeasonByArrayIndex(seasi);
 					validateSeason(e, ml, season);
 					
 					for (int epi = 0; epi < season.getEpisodeCount(); epi++) {
-						CCEpisode episode = season.getEpisode(epi);
+						CCEpisode episode = season.getEpisodeByArrayIndex(epi);
 						validateEpisode(e, episode);
 					}
 				}
@@ -633,7 +633,7 @@ public class DatabaseValidator {
 			
 			if (el.isSeries()) {
 				for (int j = 0; j < ((CCSeries)el).getSeasonCount(); j++) {
-					cvrList.add(new DatabaseCoverElement(((CCSeries)el).getSeason(j).getCoverName(), ((CCSeries)el).getSeason(j)));
+					cvrList.add(new DatabaseCoverElement(((CCSeries)el).getSeasonByArrayIndex(j).getCoverName(), ((CCSeries)el).getSeasonByArrayIndex(j)));
 				}
 			}
 			
@@ -694,13 +694,13 @@ public class DatabaseValidator {
 			} else if (el.isSeries()) {
 				CCSeries s = ((CCSeries)el);
 				for (int i = 0; i < s.getSeasonCount(); i++) {
-					CCSeason se = s.getSeason(i);
+					CCSeason se = s.getSeasonByArrayIndex(i);
 					for (int j = 0; j < se.getEpisodeCount(); j++) {
-						if (ignIFO && CCMovieFormat.getMovieFormat(PathFormatter.getExtension(se.getEpisode(j).getAbsolutePart())) == CCMovieFormat.IFO) {
+						if (ignIFO && CCMovieFormat.getMovieFormat(PathFormatter.getExtension(se.getEpisodeByArrayIndex(j).getAbsolutePart())) == CCMovieFormat.IFO) {
 							continue;
 						}
 						
-						flList.add(new DatabaseFileElement(se.getEpisode(j).getAbsolutePart(), se.getEpisode(j)));
+						flList.add(new DatabaseFileElement(se.getEpisodeByArrayIndex(j).getAbsolutePart(), se.getEpisodeByArrayIndex(j)));
 					}
 				}
 			}

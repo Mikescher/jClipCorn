@@ -80,7 +80,7 @@ public class SerTableModel extends AbstractTableModel implements TableModelRowCo
 			return ""; //$NON-NLS-1$
 		}
 
-		CCEpisode ep = season.getEpisode(row);
+		CCEpisode ep = season.getEpisodeByArrayIndex(row);
 
 		switch (col) {
 		case COLUMN_EPISODE: // Episode

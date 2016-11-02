@@ -272,9 +272,9 @@ public class UserDataProblem {
 			} else if (idel.isSeries()) {
 				CCSeries ss = (CCSeries) idel;
 				for (int i = 0; i < ss.getSeasonCount(); i++) {
-					CCSeason seas = ss.getSeason(i);
+					CCSeason seas = ss.getSeasonByArrayIndex(i);
 					for (int j = 0; j < seas.getEpisodeCount(); j++) {
-						if (isPathIncluded(seas.getEpisode(j), p0, p1, p2, p3, p4, p5)) {
+						if (isPathIncluded(seas.getEpisodeByArrayIndex(j), p0, p1, p2, p3, p4, p5)) {
 							ret.add(new UserDataProblem(PROBLEM_FILE_ALREADYEXISTS));
 							break;
 						}
@@ -461,10 +461,10 @@ public class UserDataProblem {
 			} else if (idel.isSeries()) {
 				CCSeries ss = (CCSeries) idel;
 				for (int i = 0; i < ss.getSeasonCount(); i++) {
-					CCSeason seas = ss.getSeason(i);
+					CCSeason seas = ss.getSeasonByArrayIndex(i);
 					for (int j = 0; j < seas.getEpisodeCount(); j++) {
-						if (isPathIncluded(seas.getEpisode(j), part)) {
-							if (episode == null || episode != seas.getEpisode(j)) {
+						if (isPathIncluded(seas.getEpisodeByArrayIndex(j), part)) {
+							if (episode == null || episode != seas.getEpisodeByArrayIndex(j)) {
 								ret.add(new UserDataProblem(PROBLEM_FILE_ALREADYEXISTS));
 							}
 							break;

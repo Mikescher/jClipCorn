@@ -678,7 +678,7 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 		
 		cvrChooser.clear();
 		for (int i = 0; i < dispSeries.getSeasonCount(); i++) {
-			cvrChooser.addCover(dispSeries.getSeason(i).getHalfsizeCover());
+			cvrChooser.addCover(dispSeries.getSeasonByArrayIndex(i).getHalfsizeCover());
 		}
 
 		cvrChooser.setCurrSelected(ccidx);
@@ -751,12 +751,12 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 	
 	@Override
 	public void valueChanged(ListSelectionEvent e) {
-		changeSeason(dispSeries.getSeason(cvrChooser.getSelectedIndex()));
+		changeSeason(dispSeries.getSeasonByArrayIndex(cvrChooser.getSelectedIndex()));
 	}
 	
 	@Override
 	public void onPopup(int coverID, MouseEvent e) {
-		(new SerCoverChooserPopupMenu(dispSeries.getSeason(coverID), this)).show(cvrChooser, e.getX(), e.getY());
+		(new SerCoverChooserPopupMenu(dispSeries.getSeasonByArrayIndex(coverID), this)).show(cvrChooser, e.getX(), e.getY());
 	}
 
 	public void changeSeason(CCSeason s) {

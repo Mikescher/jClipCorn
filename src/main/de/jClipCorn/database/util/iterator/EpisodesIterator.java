@@ -30,8 +30,8 @@ public class EpisodesIterator extends CCIterator<CCEpisode> {
 	@Override
 	public CCEpisode next() {
 		CCSeries ser = (CCSeries)it.get(posCurr_list);
-		CCSeason sea = ser.getSeason(posCurr_season);
-		CCEpisode ep = sea.getEpisode(posCurr_episode);
+		CCSeason sea = ser.getSeasonByArrayIndex(posCurr_season);
+		CCEpisode ep = sea.getEpisodeByArrayIndex(posCurr_episode);
 		
 		skipToNextEpisode();
 		
@@ -40,7 +40,7 @@ public class EpisodesIterator extends CCIterator<CCEpisode> {
 
 	private void skipToNextEpisode() {
 		CCSeries ser = (CCSeries)it.get(posCurr_list);
-		CCSeason sea = ser.getSeason(posCurr_season);
+		CCSeason sea = ser.getSeasonByArrayIndex(posCurr_season);
 		
 		posCurr_episode++;
 		
@@ -56,7 +56,7 @@ public class EpisodesIterator extends CCIterator<CCEpisode> {
 		
 		do {
 			posCurr_season++;
-		} while (posCurr_season < ser.getSeasonCount() && ser.getSeason(posCurr_season).getEpisodeCount() == 0);
+		} while (posCurr_season < ser.getSeasonCount() && ser.getSeasonByArrayIndex(posCurr_season).getEpisodeCount() == 0);
 		
 		if (ser.getSeasonCount() <= posCurr_season) {
 			skipToNextSeries();
@@ -80,6 +80,6 @@ public class EpisodesIterator extends CCIterator<CCEpisode> {
 		
 		CCSeries ser = (CCSeries) it.get(posCurr_list);
 		
-		while (ser.getSeason(posCurr_season).getEpisodeCount() == 0) posCurr_season++;
+		while (ser.getSeasonByArrayIndex(posCurr_season).getEpisodeCount() == 0) posCurr_season++;
 	}
 }

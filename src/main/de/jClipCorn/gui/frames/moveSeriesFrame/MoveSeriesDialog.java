@@ -167,9 +167,9 @@ public class MoveSeriesDialog extends JDialog {
 		}
 		
 		for (int seasi = 0; seasi < series.getSeasonCount(); seasi++) {
-			CCSeason season = series.getSeason(seasi);
+			CCSeason season = series.getSeasonByArrayIndex(seasi);
 			for (int epi = 0; epi < season.getEpisodeCount(); epi++) {
-				CCEpisode ep = season.getEpisode(epi);
+				CCEpisode ep = season.getEpisodeByArrayIndex(epi);
 				
 				ep.setPart(ep.getPart().replace(edSearch.getText(), edReplace.getText()));
 			}
@@ -182,9 +182,9 @@ public class MoveSeriesDialog extends JDialog {
 		Vector<Vector<String>> data = new Vector<>();
 		
 		for (int seasi = 0; seasi < series.getSeasonCount(); seasi++) {
-			CCSeason season = series.getSeason(seasi);
+			CCSeason season = series.getSeasonByArrayIndex(seasi);
 			for (int epi = 0; epi < season.getEpisodeCount(); epi++) {
-				CCEpisode ep = season.getEpisode(epi);
+				CCEpisode ep = season.getEpisodeByArrayIndex(epi);
 				
 				String oldp = ep.getPart();
 				String newp = ep.getPart().replace(edSearch.getText(), edReplace.getText());

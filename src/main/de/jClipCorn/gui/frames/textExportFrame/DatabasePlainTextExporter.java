@@ -89,7 +89,7 @@ public class DatabasePlainTextExporter extends DatabaseTextExporter {
 				builder.append(SimpleFileUtils.LINE_END);
 				
 				for (int j = 0; j < ser.getSeasonCount(); j++) {
-					CCSeason season = ser.getSeason(j);
+					CCSeason season = ser.getSeasonByArrayIndex(j);
 					
 					builder.append("\t");
 					builder.append(season.getTitle());
@@ -98,7 +98,7 @@ public class DatabasePlainTextExporter extends DatabaseTextExporter {
 					builder.append(System.lineSeparator());
 					
 					for (int k = 0; k < season.getEpisodeCount(); k++) {
-						CCEpisode episode = season.getEpisode(k);
+						CCEpisode episode = season.getEpisodeByArrayIndex(k);
 						
 						builder.append("\t\t");
 

@@ -78,7 +78,7 @@ public class DatabaseJSONExporter extends DatabaseTextExporter {
 				for (int j = 0; j < ser.getSeasonCount(); j++) {
 					boolean last_season = (j == ser.getSeasonCount()-1);
 					
-					CCSeason season = ser.getSeason(j);
+					CCSeason season = ser.getSeasonByArrayIndex(j);
 					
 					builder.append("\t\t\t");
 					builder.append("{");
@@ -101,7 +101,7 @@ public class DatabaseJSONExporter extends DatabaseTextExporter {
 					for (int k = 0; k < season.getEpisodeCount(); k++) {
 						boolean last_episode = (k == season.getEpisodeCount()-1);
 						
-						CCEpisode episode = season.getEpisode(k);
+						CCEpisode episode = season.getEpisodeByArrayIndex(k);
 						
 						builder.append("\t\t\t\t\t");
 						builder.append("{");

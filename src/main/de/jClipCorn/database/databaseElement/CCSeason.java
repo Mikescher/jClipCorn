@@ -178,7 +178,7 @@ public class CCSeason {
 		CCMovieTags i = new CCMovieTags();
 		
 		for (int j = 0; j < getEpisodeCount(); j++) {
-			i.doUnion(getEpisode(j).getTags());
+			i.doUnion(getEpisodeByArrayIndex(j).getTags());
 		}
 		return i;
 	}
@@ -272,7 +272,7 @@ public class CCSeason {
 	/**
 	 * ATTENTION: gets the n-te Episode | NOT THE Episode with the number n
 	 */
-	public CCEpisode getEpisode(int ee) {
+	public CCEpisode getEpisodeByArrayIndex(int ee) {
 		return episodes.get(ee);
 	}
 	
@@ -322,7 +322,7 @@ public class CCSeason {
 		
 		int len = -1;
 		for (int i = 0; i < getEpisodeCount(); i++) {
-			CCEpisode ep = getEpisode(i);
+			CCEpisode ep = getEpisodeByArrayIndex(i);
 
 			if (ep.getLength() > 0)
 				if (len > 0 && ep.getLength() != len) {
@@ -361,7 +361,7 @@ public class CCSeason {
 		List<File> result = new ArrayList<>();
 		
 		for (int i = 0; i < episodes.size(); i++) {
-			result.add(new File(getEpisode(i).getAbsolutePart()));
+			result.add(new File(getEpisodeByArrayIndex(i).getAbsolutePart()));
 		}
 		
 		return result;
@@ -369,7 +369,7 @@ public class CCSeason {
 	
 	public boolean isFileInList(String path) {
 		for (int i = 0; i < episodes.size(); i++) {
-			if (getEpisode(i).getAbsolutePart().equals(path)) {
+			if (getEpisodeByArrayIndex(i).getAbsolutePart().equals(path)) {
 				return true;
 			}
 		}
@@ -468,7 +468,7 @@ public class CCSeason {
 		List<String> all = new ArrayList<>();
 		
 		for (int seasi = 0; seasi < getEpisodeCount(); seasi++) {
-			CCEpisode episode = getEpisode(seasi);
+			CCEpisode episode = getEpisodeByArrayIndex(seasi);
 			all.add(episode.getPart());
 		}
 		

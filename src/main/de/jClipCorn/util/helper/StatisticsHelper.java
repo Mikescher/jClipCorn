@@ -47,9 +47,9 @@ public class StatisticsHelper {
 
 		for (CCSeries series : ml.iteratorSeries()) {
 			for (int s = 0; s < series.getSeasonCount(); s++) {
-				CCSeason season = series.getSeason(s);
+				CCSeason season = series.getSeasonByArrayIndex(s);
 				for (int e = 0; e < season.getEpisodeCount(); e++) {
-					c += season.getEpisode(e).isViewed() ? 1 : 0;
+					c += season.getEpisodeByArrayIndex(e).isViewed() ? 1 : 0;
 				}
 			}
 		}
@@ -482,10 +482,10 @@ public class StatisticsHelper {
 		
 		for (CCSeries series : ml.iteratorSeries()) {
 			for (int sea = 0; sea < series.getSeasonCount(); sea++) {
-				CCSeason season = series.getSeason(sea);
+				CCSeason season = series.getSeasonByArrayIndex(sea);
 				
 				for (int epi = 0; epi < season.getEpisodeCount(); epi++) {
-					CCEpisode episode = season.getEpisode(epi);
+					CCEpisode episode = season.getEpisodeByArrayIndex(epi);
 					
 					int pos = startDate.getDayDifferenceTo(episode.getAddDate());
 					
@@ -546,10 +546,10 @@ public class StatisticsHelper {
 
 		for (CCSeries series : ml.iteratorSeries()) {
 			for (int sea = 0; sea < series.getSeasonCount(); sea++) {
-				CCSeason season = series.getSeason(sea);
+				CCSeason season = series.getSeasonByArrayIndex(sea);
 				
 				for (int epi = 0; epi < season.getEpisodeCount(); epi++) {
-					CCEpisode episode = season.getEpisode(epi);
+					CCEpisode episode = season.getEpisodeByArrayIndex(epi);
 					
 					if (episode.getAddDate().isLessThan(date)) {
 						date = episode.getAddDate();
@@ -566,10 +566,10 @@ public class StatisticsHelper {
 		
 		for (CCSeries series : ml.iteratorSeries()) {
 			for (int sea = 0; sea < series.getSeasonCount(); sea++) {
-				CCSeason season = series.getSeason(sea);
+				CCSeason season = series.getSeasonByArrayIndex(sea);
 				
 				for (int epi = 0; epi < season.getEpisodeCount(); epi++) {
-					CCEpisode episode = season.getEpisode(epi);
+					CCEpisode episode = season.getEpisodeByArrayIndex(epi);
 					
 					if (episode.getAddDate().isGreaterThan(date)) {
 						date = episode.getAddDate();
@@ -600,8 +600,8 @@ public class StatisticsHelper {
 		
 		for (CCSeries s : ml.iteratorSeries()) {
 			for (int sc = 0; sc < s.getSeasonCount(); sc++) {
-				for (int ec = 0; ec < s.getSeason(sc).getEpisodeCount(); ec++) {
-					CCEpisode epis = s.getSeason(sc).getEpisode(ec);
+				for (int ec = 0; ec < s.getSeasonByArrayIndex(sc).getEpisodeCount(); ec++) {
+					CCEpisode epis = s.getSeasonByArrayIndex(sc).getEpisodeByArrayIndex(ec);
 					
 					if (!epis.getViewedHistoryLast().isMinimum() && epis.getViewedHistoryLast().isLessThan(date)) {
 						date = epis.getViewedHistoryLast();
@@ -618,8 +618,8 @@ public class StatisticsHelper {
 		
 		for (CCSeries s : ml.iteratorSeries()) {
 			for (int sc = 0; sc < s.getSeasonCount(); sc++) {
-				for (int ec = 0; ec < s.getSeason(sc).getEpisodeCount(); ec++) {
-					CCEpisode epis = s.getSeason(sc).getEpisode(ec);
+				for (int ec = 0; ec < s.getSeasonByArrayIndex(sc).getEpisodeCount(); ec++) {
+					CCEpisode epis = s.getSeasonByArrayIndex(sc).getEpisodeByArrayIndex(ec);
 					
 					if (!epis.getViewedHistoryLast().isMinimum() && epis.getViewedHistoryLast().isGreaterThan(date)) {
 						date = epis.getViewedHistoryLast();
@@ -653,8 +653,8 @@ public class StatisticsHelper {
 		
 		for (CCSeries s : ml.iteratorSeries()) {
 			for (int sc = 0; sc < s.getSeasonCount(); sc++) {
-				for (int ec = 0; ec < s.getSeason(sc).getEpisodeCount(); ec++) {
-					CCEpisode epis = s.getSeason(sc).getEpisode(ec);
+				for (int ec = 0; ec < s.getSeasonByArrayIndex(sc).getEpisodeCount(); ec++) {
+					CCEpisode epis = s.getSeasonByArrayIndex(sc).getEpisodeByArrayIndex(ec);
 					
 					if (epis.isViewed()) {
 						if (epis.getViewedHistoryLast().isMinimum()) {
@@ -687,10 +687,10 @@ public class StatisticsHelper {
 		List<CCEpisode> result = new ArrayList<>();
 		
 		for (int sc = 0; sc < series.getSeasonCount(); sc++) {
-			CCSeason season = series.getSeason(sc);
+			CCSeason season = series.getSeasonByArrayIndex(sc);
 			
 			for (int ep = 0; ep < season.getEpisodeCount(); ep++) {
-				CCEpisode episode = season.getEpisode(ep);
+				CCEpisode episode = season.getEpisodeByArrayIndex(ep);
 				
 				if (episode.isViewed() && !episode.getViewedHistoryLast().isMinimum())
 					result.add(episode);
@@ -720,10 +720,10 @@ public class StatisticsHelper {
 		
 		for (CCSeries series : ml.iteratorSeries()) {
 			for (int sea = 0; sea < series.getSeasonCount(); sea++) {
-				CCSeason season = series.getSeason(sea);
+				CCSeason season = series.getSeasonByArrayIndex(sea);
 				
 				for (int epi = 0; epi < season.getEpisodeCount(); epi++) {
-					CCEpisode episode = season.getEpisode(epi);
+					CCEpisode episode = season.getEpisodeByArrayIndex(epi);
 					
 					int pos = startDate.getDayDifferenceTo(episode.getAddDate());
 					
@@ -760,10 +760,10 @@ public class StatisticsHelper {
 		List<SortableTuple<CCDate, Integer>> dates = new ArrayList<>();
 		
 		for (int sc = 0; sc < series.getSeasonCount(); sc++) {
-			CCSeason season = series.getSeason(sc);
+			CCSeason season = series.getSeasonByArrayIndex(sc);
 			
 			for (int ep = 0; ep < season.getEpisodeCount(); ep++) {
-				CCEpisode episode = season.getEpisode(ep);
+				CCEpisode episode = season.getEpisodeByArrayIndex(ep);
 				
 				for (CCDateTime timestamp : episode.getViewedHistory()) {
 					dates.add(new SortableTuple<>(timestamp.date, season.getSeasonNumber() * 10000 + episode.getEpisodeNumber()));

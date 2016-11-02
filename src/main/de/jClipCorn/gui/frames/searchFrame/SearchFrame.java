@@ -197,10 +197,10 @@ public class SearchFrame extends JFrame {
 		
 		for (CCSeries ser : movielist.iteratorSeries()) {
 			for (int i = 0; i < ser.getSeasonCount(); i++) {
-				CCSeason sea = ser.getSeason(i);
+				CCSeason sea = ser.getSeasonByArrayIndex(i);
 				
 				for (int j = 0; j < sea.getEpisodeCount(); j++) {
-					CCEpisode epi = sea.getEpisode(j);
+					CCEpisode epi = sea.getEpisodeByArrayIndex(j);
 					
 					if (StringUtils.containsIgnoreCase(epi.getTitle(), searchString)) {
 						addToList(epi);

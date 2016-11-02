@@ -182,10 +182,10 @@ public class CreateSeriesFolderStructureFrame extends JFrame {
 		boolean hasErrors = false;
 		
 		for (int sea = 0; sea < series.getSeasonCount(); sea++) {
-			CCSeason season = series.getSeason(sea);
+			CCSeason season = series.getSeasonByArrayIndex(sea);
 		
 			for (int epi = 0; epi < season.getEpisodeCount(); epi++) {
-				CCEpisode episode = season.getEpisode(epi);
+				CCEpisode episode = season.getEpisodeByArrayIndex(epi);
 				
 				File p = episode.getFileForCreatedFolderstructure(parentfolder);
 				String pt = p.getAbsolutePath();
@@ -221,10 +221,10 @@ public class CreateSeriesFolderStructureFrame extends JFrame {
 			File parentfolder = new File(edPath.getText());
 			
 			for (int sea = 0; sea < series.getSeasonCount(); sea++) {
-				CCSeason season = series.getSeason(sea);
+				CCSeason season = series.getSeasonByArrayIndex(sea);
 			
 				for (int epi = 0; epi < season.getEpisodeCount(); epi++) {
-					CCEpisode episode = season.getEpisode(epi);
+					CCEpisode episode = season.getEpisodeByArrayIndex(epi);
 					
 					File file = new File(episode.getAbsolutePart());
 					File newfile = episode.getFileForCreatedFolderstructure(parentfolder);
@@ -273,10 +273,10 @@ public class CreateSeriesFolderStructureFrame extends JFrame {
 		List<File> files = new ArrayList<>();
 		
 		for (int sea = 0; sea < series.getSeasonCount(); sea++) {
-			CCSeason season = series.getSeason(sea);
+			CCSeason season = series.getSeasonByArrayIndex(sea);
 		
 			for (int epi = 0; epi < season.getEpisodeCount(); epi++) {
-				CCEpisode episode = season.getEpisode(epi);
+				CCEpisode episode = season.getEpisodeByArrayIndex(epi);
 				
 				files.add(episode.getFileForCreatedFolderstructure(parentfolder));
 			}

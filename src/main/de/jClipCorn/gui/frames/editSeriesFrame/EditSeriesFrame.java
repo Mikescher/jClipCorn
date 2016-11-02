@@ -733,7 +733,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		if (sel < 0) {
 			return null;
 		} else {
-			return series.getSeason(sel);
+			return series.getSeasonByArrayIndex(sel);
 		}
 	}
 	
@@ -749,8 +749,24 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		if (sel < 0) {
 			return null;
 		} else {
-			return season.getEpisode(sel);
+			return season.getEpisodeByArrayIndex(sel);
 		}
+	}
+	
+	private List<CCEpisode> getSelectedEpisodes() {
+		CCSeason season = getSelectedSeason();
+		
+		if (season == null) {
+			return null;
+		}
+		
+		List<CCEpisode> result = new ArrayList<>();
+		
+		for (int idx : lsEpisodes.getSelectedIndices()) {
+			result.add(season.getEpisodeByArrayIndex(idx));
+		}
+		
+		return result;
 	}
 	
 	private void updateSeriesPanel() {
@@ -779,7 +795,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		DefaultListModel<String> ml;
 		lsSeasons.setModel(ml = new DefaultListModel<>());
 		for (int i = 0; i < series.getSeasonCount(); i++) {
-			ml.addElement(series.getSeason(i).getTitle());
+			ml.addElement(series.getSeasonByArrayIndex(i).getTitle());
 		}
 		
 		updateSeasonPanel();
@@ -801,7 +817,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 			DefaultListModel<String> ml;
 			lsEpisodes.setModel(ml = new DefaultListModel<>());
 			for (int i = 0; i < season.getEpisodeCount(); i++) {
-				ml.addElement(season.getEpisode(i).getTitle());
+				ml.addElement(season.getEpisodeByArrayIndex(i).getTitle());
 			}
 		}
 		
@@ -1086,14 +1102,25 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 	
 	private void removeEpisode() {
 		CCSeason season = getSelectedSeason();
-		CCEpisode episode = getSelectedEpisode();
 		
-		if (episode == null || season == null) {
-			return;
-		}
-		
-		if (DialogHelper.showYesNoDlg(this, LocaleBundle.getString("EditSeriesFrame.dlgDeleteEpisode.caption"), LocaleBundle.getString("EditSeriesFrame.dlgDeleteEpisode.text"))) {  //$NON-NLS-1$//$NON-NLS-2$
-			season.deleteEpisode(episode);
+		if (getSelectedEpisodes().size() <= 1) {
+			CCEpisode episode = getSelectedEpisode();
+			
+			if (episode == null || season == null) {
+				return;
+			}
+			
+			if (DialogHelper.showYesNoDlg(this, LocaleBundle.getString("EditSeriesFrame.dlgDeleteEpisode.caption"), LocaleBundle.getString("EditSeriesFrame.dlgDeleteEpisode.text"))) {  //$NON-NLS-1$//$NON-NLS-2$
+				season.deleteEpisode(episode);
+			}
+		} else {
+			List<CCEpisode> listEpisodes = getSelectedEpisodes();
+			
+			if (DialogHelper.showYesNoDlg(this, LocaleBundle.getString("EditSeriesFrame.dlgDeleteMultipleEpisode.caption"), LocaleBundle.getFormattedString("EditSeriesFrame.dlgDeleteMultipleEpisode.text", listEpisodes.size()))) {  //$NON-NLS-1$//$NON-NLS-2$
+				for (CCEpisode ep : listEpisodes) {
+					season.deleteEpisode(ep);
+				}
+			}
 		}
 		
 		updateSeasonPanel();

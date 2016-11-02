@@ -63,7 +63,7 @@ public class DatabaseXMLExporter extends DatabaseTextExporter {
 				if (addLanguage) jdom_elem_ser.setAttribute(new Attribute("language", ser.getLanguage().asString()));
 				
 				for (int j = 0; j < ser.getSeasonCount(); j++) {
-					CCSeason season = ser.getSeason(j);
+					CCSeason season = ser.getSeasonByArrayIndex(j);
 
 					Element jdom_elem_sea = new Element("season");
 					jdom_elem_ser.addContent(jdom_elem_sea);
@@ -72,7 +72,7 @@ public class DatabaseXMLExporter extends DatabaseTextExporter {
 					if (addYear) jdom_elem_sea.setAttribute(new Attribute("year", season.getYear() + ""));
 					
 					for (int k = 0; k < season.getEpisodeCount(); k++) {
-						CCEpisode episode = season.getEpisode(k);
+						CCEpisode episode = season.getEpisodeByArrayIndex(k);
 						
 						Element jdom_elem_epi = new Element("episode");
 						jdom_elem_sea.addContent(jdom_elem_epi);

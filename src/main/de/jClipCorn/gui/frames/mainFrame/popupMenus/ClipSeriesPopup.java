@@ -11,7 +11,6 @@ public class ClipSeriesPopup extends ClipPopupMenu {
 	@SuppressWarnings("nls")
 	@Override
 	protected void init() {
-		
 		addAction("PrevSeries");
 		
 		//#############

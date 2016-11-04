@@ -2,9 +2,11 @@ package de.jClipCorn.gui.guiComponents.tableSorter;
 
 import java.util.Comparator;
 
-public class TableViewedComparator implements Comparator<Boolean> {
+import de.jClipCorn.database.util.ExtendedViewedState;
+
+public class TableViewedComparator implements Comparator<ExtendedViewedState> {
 	@Override
-	public int compare(Boolean o1, Boolean o2) {
-		return ((o1 ^ o2) ? ((o1) ? (1) : (-1)) : (0)); // Code-Level: Genius
+	public int compare(ExtendedViewedState o1, ExtendedViewedState o2) {
+		return o1.Type.compareTo(o2.Type);
 	}
 }

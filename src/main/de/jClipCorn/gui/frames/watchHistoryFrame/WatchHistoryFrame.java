@@ -62,9 +62,11 @@ public class WatchHistoryFrame extends JFrame {
 	private JPanel pnlInfo;
 	private JLabel lblName;
 	private JLabel lblHistory;
-	private ReadableTextField edName;
+	private ReadableTextField edName1;
 	private JScrollPane scrollPaneHistory;
 	private JList<CCDateTime> listHistory;
+	private ReadableTextField edName2;
+	private ReadableTextField edName3;
 
 	public WatchHistoryFrame(Component owner, CCMovieList mlist) {
 		super();
@@ -134,6 +136,10 @@ public class WatchHistoryFrame extends JFrame {
 				FormSpecs.RELATED_GAP_COLSPEC,
 				FormSpecs.DEFAULT_COLSPEC,
 				FormSpecs.RELATED_GAP_COLSPEC,
+				ColumnSpec.decode("default:grow"), //$NON-NLS-1$
+				FormSpecs.RELATED_GAP_COLSPEC,
+				ColumnSpec.decode("default:grow"), //$NON-NLS-1$
+				FormSpecs.RELATED_GAP_COLSPEC,
 				ColumnSpec.decode("default:grow"),}, //$NON-NLS-1$
 			new RowSpec[] {
 				FormSpecs.DEFAULT_ROWSPEC,
@@ -143,15 +149,23 @@ public class WatchHistoryFrame extends JFrame {
 		lblName = new JLabel(LocaleBundle.getString("WatchHistoryFrame.lblName")); //$NON-NLS-1$
 		pnlInfo.add(lblName, "2, 1, right, top"); //$NON-NLS-1$
 		
-		edName = new ReadableTextField();
-		pnlInfo.add(edName, "4, 1, fill, default"); //$NON-NLS-1$
-		edName.setColumns(10);
+		edName1 = new ReadableTextField();
+		pnlInfo.add(edName1, "4, 1, fill, default"); //$NON-NLS-1$
+		edName1.setColumns(10);
+		
+		edName2 = new ReadableTextField();
+		edName2.setColumns(10);
+		pnlInfo.add(edName2, "6, 1, fill, default"); //$NON-NLS-1$
+		
+		edName3 = new ReadableTextField();
+		edName3.setColumns(10);
+		pnlInfo.add(edName3, "8, 1, fill, default"); //$NON-NLS-1$
 		
 		lblHistory = new JLabel(LocaleBundle.getString("WatchHistoryFrame.lblHistory")); //$NON-NLS-1$
 		pnlInfo.add(lblHistory, "2, 3, right, top"); //$NON-NLS-1$
 		
 		scrollPaneHistory = new JScrollPane();
-		pnlInfo.add(scrollPaneHistory, "4, 3, fill, fill"); //$NON-NLS-1$
+		pnlInfo.add(scrollPaneHistory, "4, 3, 5, 1, fill, fill"); //$NON-NLS-1$
 		
 		listHistory = new JList<>();
 		listHistory.setVisibleRowCount(4);
@@ -271,7 +285,9 @@ public class WatchHistoryFrame extends JFrame {
 
 	public void onSelect(WatchHistoryElement elem) {
 		lblCover.setIcon(new ImageIcon(elem.getCover()));
-		edName.setText(elem.getFullName());
+		edName1.setText(elem.getFullNamePart1());
+		edName2.setText(elem.getFullNamePart2());
+		edName3.setText(elem.getFullNamePart3());
 		
 		DefaultListModel<CCDateTime> dt = new DefaultListModel<>();
 		for (CCDateTime stamp : elem.getHistory()) dt.addElement(stamp);

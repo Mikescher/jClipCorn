@@ -26,7 +26,9 @@ public abstract class WatchHistoryElement implements Comparable<WatchHistoryElem
 	public abstract CCMovieSize getSize();
 
 	public abstract ImageIcon getNameIcon();
-	public abstract String getFullName();
+	public abstract String getFullNamePart1();
+	public abstract String getFullNamePart2();
+	public abstract String getFullNamePart3();
 	public abstract CCDateTimeList getHistory();
 
 	public abstract boolean isMovie();

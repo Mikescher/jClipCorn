@@ -187,6 +187,10 @@ public class CCSeason {
 		return episodes.size();
 	}
 	
+	public boolean isEmpty() {
+		return episodes.isEmpty();
+	}
+	
 	public int getLength() {
 		int l = 0;
 		for (CCEpisode ep : episodes) {

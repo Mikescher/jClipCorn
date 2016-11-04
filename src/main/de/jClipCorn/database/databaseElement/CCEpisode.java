@@ -249,6 +249,18 @@ public class CCEpisode {
 		return episodeNumber;
 	}
 
+	public int getGlobalEpisodeNumber() {
+		int idx = 0;
+		
+		for (CCSeason season : getSeries().getSeasonsSorted()) {
+			if (season == getSeason()) break;
+			
+			if (!season.isEmpty()) idx += season.getLastEpisodeNumber();
+		}
+
+		return idx + episodeNumber;
+	}
+
 	public boolean isViewed() {
 		return viewed;
 	}

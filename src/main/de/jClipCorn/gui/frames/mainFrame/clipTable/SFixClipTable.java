@@ -13,6 +13,7 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCMovieOnlineScore;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieScore;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieSize;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTags;
+import de.jClipCorn.database.databaseElement.columnTypes.CCMovieZyklus;
 import de.jClipCorn.database.util.ExtendedViewedState;
 import de.jClipCorn.gui.guiComponents.SFixTable;
 import de.jClipCorn.gui.guiComponents.tableRenderer.TableDateRenderer;
@@ -237,7 +238,10 @@ public class SFixClipTable extends SFixTable {
 		case ClipTableModel.COLUMN_VIEWED:
 			return (((ExtendedViewedState)value).getHistory().any()) ? ((ExtendedViewedState)value).getHistory().getHTMLListFormatted(row) : null;
 		case ClipTableModel.COLUMN_ZYKLUS:
-			return null;
+			if (((CCMovieZyklus)value).isSet() && ((CCMovieZyklus)value).hasNumber())
+				return ((CCMovieZyklus)value).getDecimalFormatted();
+			else
+				return null;
 		case ClipTableModel.COLUMN_QUALITY:
 			return null;
 		case ClipTableModel.COLUMN_LANGUAGE:

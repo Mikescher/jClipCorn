@@ -1,7 +1,7 @@
 package de.jClipCorn.gui.frames.watchHistoryFrame.element;
 
 import java.awt.image.BufferedImage;
-import java.text.DecimalFormat;
+import java.text.MessageFormat;
 
 import javax.swing.ImageIcon;
 
@@ -33,8 +33,9 @@ public class WatchHistoryEpisodeElement extends WatchHistoryElement {
 	}
 
 	@Override
+	@SuppressWarnings("nls")
 	public String getName() {
-		return Episode.getTitle();
+		return MessageFormat.format("{0} E{1,number,###} - {2}", Episode.getSeries().getTitle(), Episode.getGlobalEpisodeNumber(), Episode.getTitle());
 	}
 
 	@Override
@@ -88,15 +89,19 @@ public class WatchHistoryEpisodeElement extends WatchHistoryElement {
 	}
 
 	@Override
+	public String getFullNamePart1() {	
+		return Episode.getSeries().getTitle();
+	}
+
+	@Override
+	public String getFullNamePart2() {	
+		return Episode.getSeason().getTitle();
+	}
+
+	@Override
 	@SuppressWarnings("nls")
-	public String getFullName() {	
-		DecimalFormat fmt = new DecimalFormat("00");
-		
-		String p1 = Episode.getSeries().getTitle() + " S" + fmt.format(Episode.getSeason().getIndexForCreatedFolderStructure());
-		String p2 = Episode.getSeason().getTitle() + " E" + fmt.format(Episode.getEpisodeIndexInSeason()); 
-		String p3 = Episode.getTitle();
-		
-		return p1 + " - " + p2 + " - " + p3;
+	public String getFullNamePart3() {	
+		return MessageFormat.format("E{0,number,##} - {1}", Episode.getEpisodeIndexInSeason(), Episode.getTitle());
 	}
 
 	@Override

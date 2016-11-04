@@ -364,7 +364,7 @@ public class CCSeries extends CCDatabaseElement {
 		return seasons.indexOf(ccSeason);
 	}
 	
-	public int findSeasoninSorted(CCSeason ccSeason) {
+	public List<CCSeason> getSeasonsSorted() {
 		List<CCSeason> sortedseasons = new ArrayList<>();
 		
 		for (CCSeason cs : seasons) {
@@ -373,7 +373,11 @@ public class CCSeries extends CCDatabaseElement {
 		
 		Collections.sort(sortedseasons, new CCSeasonComparator());
 		
-		return sortedseasons.indexOf(ccSeason);
+		return sortedseasons;
+	}
+	
+	public int findSeasoninSorted(CCSeason ccSeason) {
+		return getSeasonsSorted().indexOf(ccSeason);
 	}
 	
 	@SuppressWarnings("nls")

@@ -32,6 +32,10 @@ public class CCMovieZyklus {
 		return title.isEmpty() || zyklusNmbr < 0;
 	}
 
+	public boolean hasNumber() {
+		return zyklusNmbr > 0;
+	}
+
 	public String getTitle() {
 		return title;
 	}
@@ -42,7 +46,7 @@ public class CCMovieZyklus {
 
 	public String getFormatted() {
 		if (isSet()) {
-			if (zyklusNmbr != 0) {
+			if (hasNumber()) {
 				return title + " " + RomanNumberFormatter.decToRom(zyklusNmbr); //$NON-NLS-1$
 			} else {
 				return title;
@@ -54,7 +58,7 @@ public class CCMovieZyklus {
 
 	public String getOrderableFormatted() {
 		if (isSet()) {
-			if (zyklusNmbr != 0) {
+			if (hasNumber()) {
 				return title + " " + String.format("%05d", zyklusNmbr); //$NON-NLS-1$ //$NON-NLS-2$
 			} else {
 				return title;
@@ -66,7 +70,7 @@ public class CCMovieZyklus {
 	
 	public String getHTMLFormatted() {
 		if (isSet()) {
-			if (zyklusNmbr != 0) {
+			if (hasNumber()) {
 				return "<html><a href=\"\">" + title + "</a> " + RomanNumberFormatter.decToRom(zyklusNmbr) + "</html>"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			} else {
 				return "<html><a href=\"\">" + title + "</a></html>"; //$NON-NLS-1$ //$NON-NLS-2$
@@ -78,10 +82,22 @@ public class CCMovieZyklus {
 	
 	public String getSimpleHTMLFormatted() {
 		if (isSet()) {
-			if (zyklusNmbr != 0) {
+			if (hasNumber()) {
 				return "<html><u>" + title + "</u> " + RomanNumberFormatter.decToRom(zyklusNmbr) + "</html>"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			} else {
 				return "<html><u>" + title + "</u></html>"; //$NON-NLS-1$ //$NON-NLS-2$
+			}
+		} else {
+			return ""; //$NON-NLS-1$
+		}
+	}
+
+	public String getDecimalFormatted() {
+		if (isSet()) {
+			if (hasNumber()) {
+				return title + " " + zyklusNmbr; //$NON-NLS-1$
+			} else {
+				return title;
 			}
 		} else {
 			return ""; //$NON-NLS-1$

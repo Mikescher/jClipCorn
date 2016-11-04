@@ -87,8 +87,18 @@ public class WatchHistoryMovieElement extends WatchHistoryElement{
 	}
 
 	@Override
-	public String getFullName() {
-		return Movie.getCompleteTitle();
+	public String getFullNamePart1() {
+		return Movie.getZyklus().getFormatted();
+	}
+
+	@Override
+	public String getFullNamePart2() {
+		return Movie.getTitle();
+	}
+
+	@Override
+	public String getFullNamePart3() {
+		return ""; //$NON-NLS-1$
 	}
 
 	@Override

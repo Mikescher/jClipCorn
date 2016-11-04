@@ -113,9 +113,9 @@ public class CCMovieTags {
 	public Image getTagImage(int c) {
 		if (isTagActive(c)) {
 			if (tags[c]) {
-				return CachedResourceLoader.getImage(ICONS_ON[c].icon32x32);
+				return CachedResourceLoader.getImage(ICONS_ON[c].icon16x16);
 			} else {
-				return CachedResourceLoader.getImage(ICONS_OFF[c].icon32x32);
+				return CachedResourceLoader.getImage(ICONS_OFF[c].icon16x16);
 			}
 		} else {
 			return null;

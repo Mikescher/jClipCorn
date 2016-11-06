@@ -3,8 +3,10 @@ package de.jClipCorn.database.databaseElement;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -494,6 +496,31 @@ public class CCSeries extends CCDatabaseElement {
 		}
 		
 		return common;
+	}
+	
+	public String guessSeriesRootPath() {
+		Map<String, Integer> result = new HashMap<>();
+		
+		String pathMax = ""; //$NON-NLS-1$
+		int countMax = 0;
+		
+		for (int seasi = 0; seasi < getSeasonCount(); seasi++) {
+			CCSeason season = getSeasonByArrayIndex(seasi);
+			for (int epsi = 0; epsi < season.getEpisodeCount(); epsi++) {
+				CCEpisode episode = season.getEpisodeByArrayIndex(epsi);
+				
+				String path = PathFormatter.getParentPath(episode.getAbsolutePart(), 3); // season-folder -> series-folder -> root-folder 
+				
+				result.put(path, result.getOrDefault(path, 0) + 1);
+				
+				if (result.getOrDefault(path, 0) > countMax) {
+					countMax = result.getOrDefault(path, 0);
+					pathMax = path;
+				}
+			}
+		}
+
+		return pathMax;
 	}
 
 	public ExtendedViewedState getExtendedViewedState() {

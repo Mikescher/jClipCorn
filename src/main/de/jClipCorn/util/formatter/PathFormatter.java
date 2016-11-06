@@ -501,4 +501,15 @@ public class PathFormatter {
 		
 		return true;
 	}
+
+	public static String getParentPath(String path, int count) {
+		if (path.endsWith(SEPERATOR)) path = path.substring(0, path.length() - 1);
+		
+		for (int i = 0; i < count; i++) {
+			int idx = path.lastIndexOf(SEPERATOR_CHAR);
+			if (idx > 0) path = path.substring(0, idx);
+		}
+		
+		return path;
+	}
 }

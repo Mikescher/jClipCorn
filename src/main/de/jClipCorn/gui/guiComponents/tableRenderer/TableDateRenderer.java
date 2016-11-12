@@ -15,7 +15,7 @@ public class TableDateRenderer extends TableRenderer {
 		if (d.isMinimum()) {
 			setText(" - "); //$NON-NLS-1$
 		} else {
-			setText(((CCDate)value).getSimpleStringRepresentation());
+			setText(((CCDate)value).toStringUINormal());
 		}
     }
 }

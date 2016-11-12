@@ -609,6 +609,7 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 
 		lblfsk = new JLabel();
 		lblfsk.setHorizontalTextPosition(SwingConstants.LEADING);
+		lblfsk.setFont(new Font("Tahoma", Font.PLAIN, 12)); //$NON-NLS-1$
 		pnlInfo.add(lblfsk);
 
 		verticalStrut = Box.createVerticalStrut(4);

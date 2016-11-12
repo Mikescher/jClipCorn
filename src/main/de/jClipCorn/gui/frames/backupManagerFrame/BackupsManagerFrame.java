@@ -293,7 +293,7 @@ public class BackupsManagerFrame extends JFrame {
 		
 		if (isElementSelected()) {
 			lblNames.setText(LocaleBundle.getFormattedString("BackupsManagerFrame.lblName.text", currentSelected.getName())); //$NON-NLS-1$
-			lblDates.setText(LocaleBundle.getFormattedString("BackupsManagerFrame.lblDate.text", currentSelected.getDate().getLocalStringRepresentation())); //$NON-NLS-1$
+			lblDates.setText(LocaleBundle.getFormattedString("BackupsManagerFrame.lblDate.text", currentSelected.getDate().toStringUIVerbose())); //$NON-NLS-1$
 			lblSizes.setText(LocaleBundle.getFormattedString("BackupsManagerFrame.lblSize.text", FileSizeFormatter.format(currentSelected.getSize()))); //$NON-NLS-1$
 			lblPersistents.setText(LocaleBundle.getFormattedString("BackupsManagerFrame.lblPersistent.text", currentSelected.isPersistent() ? "[X]" : "[ ]")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			lblVersions.setText(LocaleBundle.getFormattedString("BackupsManagerFrame.lblVersion.text", currentSelected.getCCVersion())); //$NON-NLS-1$
@@ -316,7 +316,7 @@ public class BackupsManagerFrame extends JFrame {
 		lblInfoCreationTime.setText(LocaleBundle.getFormattedString("BackupsManagerFrame.infoLabels.CreationTime", CCProperties.getInstance().PROP_BACKUP_BACKUPTIME.getValue())); //$NON-NLS-1$
 		lblInfoAutoDelete.setText(LocaleBundle.getFormattedString("BackupsManagerFrame.infoLabels.AutoDelete", CCProperties.getInstance().PROP_BACKUP_AUTODELETEBACKUPS.getValue() ? on : off)); //$NON-NLS-1$
 		lblInfoAutoDeletAfter.setText(LocaleBundle.getFormattedString("BackupsManagerFrame.infoLabels.DeletionTime", CCProperties.getInstance().PROP_BACKUP_LIFETIME.getValue())); //$NON-NLS-1$
-		lblInfoLastBackup.setText(LocaleBundle.getFormattedString("BackupsManagerFrame.infoLabels.LastBackup", CCProperties.getInstance().PROP_BACKUP_LASTBACKUP.getValue().getSimpleStringRepresentation())); //$NON-NLS-1$
+		lblInfoLastBackup.setText(LocaleBundle.getFormattedString("BackupsManagerFrame.infoLabels.LastBackup", CCProperties.getInstance().PROP_BACKUP_LASTBACKUP.getValue().toStringUIVerbose())); //$NON-NLS-1$
 		
 		updateButtonStates();
 	}

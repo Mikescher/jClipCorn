@@ -50,7 +50,15 @@ public class TableSearchFilter extends RowFilter<ClipTableModel, Object> {
 			return true;
 		}
 		
-		if (((CCDate)e.getValue(ClipTableModel.COLUMN_DATE)).getSimpleStringRepresentation().equalsIgnoreCase(searchTerm)) {
+		if (((CCDate)e.getValue(ClipTableModel.COLUMN_DATE)).toStringSerialize().equalsIgnoreCase(searchTerm)) {
+			return true;
+		}
+		
+		if (((CCDate)e.getValue(ClipTableModel.COLUMN_DATE)).toStringSQL().equalsIgnoreCase(searchTerm)) {
+			return true;
+		}
+		
+		if (((CCDate)e.getValue(ClipTableModel.COLUMN_DATE)).toStringUINormal().equalsIgnoreCase(searchTerm)) {
 			return true;
 		}
 		

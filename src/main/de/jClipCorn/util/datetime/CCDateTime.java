@@ -17,12 +17,6 @@ public class CCDateTime implements Comparable<CCDateTime>, StringSpecSupplier {
 	
 	public final static String UNSPECIFIED_REPRESENTATION = "UNSPECIFIED";
 	
-	public final static String STRINGREP_SIMPLE 	     = "dd.MM.yyyy HH:mm:ss"; //$NON-NLS-1$
-	public final static String STRINGREP_SIMPLESHORT     = "dd.MM.yyyy HH:mm";    //$NON-NLS-1$
-	public final static String STRINGREP_SIMPLEDATE      = "dd.MM.yyyy";          //$NON-NLS-1$
-	public final static String STRINGREP_SIMPLESHORTDATE = "dd.MM.yyyy";          //$NON-NLS-1$
-	public final static String STRINGREP_LOCAL 		     = "dd.N.yyyy HH:mm:ss";  //$NON-NLS-1$
-	
 	public final CCDate date;
 	public final CCTime time;
 
@@ -70,9 +64,9 @@ public class CCDateTime implements Comparable<CCDateTime>, StringSpecSupplier {
 		if (isUnspecifiedDateTime()) 
 			return UNSPECIFIED_REPRESENTATION;
 		else if (time.isUnspecifiedTime()) 
-			return date.getSQLStringRepresentation();
+			return date.toStringSQL();
 		else
-			return date.getSQLStringRepresentation() + " " + time.getSQLStringRepresentation();
+			return date.toStringSQL() + " " + time.toStringSQL();
 	}
 
 	@Override
@@ -107,22 +101,45 @@ public class CCDateTime implements Comparable<CCDateTime>, StringSpecSupplier {
 		return StringSpecParser.build(fmt, this);
 	}
 	
-	public String getSimpleStringRepresentation() {
+	public String toStringUINormal() {
 		if (isUnspecifiedDateTime())
 			return LocaleBundle.getString("CCDate.STRINGREP_UNSPEC");
 		else if (time.isUnspecifiedTime()) 
-			return getStringRepresentation(STRINGREP_SIMPLEDATE);
+			return InternationalDateTimeFormatHelper.fmtUIDateOnly(this);
 		else
-			return getStringRepresentation(STRINGREP_SIMPLE);
+			return InternationalDateTimeFormatHelper.fmtUINormal(this);
 	}
 	
-	public String getSimpleShortStringRepresentation() {
+	public String toStringUIShort() {
 		if (isUnspecifiedDateTime())
 			return LocaleBundle.getString("CCDate.STRINGREP_UNSPEC");
 		else if (time.isUnspecifiedTime()) 
-			return getStringRepresentation(STRINGREP_SIMPLESHORTDATE);
+			return InternationalDateTimeFormatHelper.fmtUIDateOnly(this);
 		else
-			return getStringRepresentation(STRINGREP_SIMPLESHORT);
+			return InternationalDateTimeFormatHelper.fmtUIShort(this);
+	}
+	
+	public String toStringUIDateOnly() {
+		if (isUnspecifiedDateTime())
+			return LocaleBundle.getString("CCDate.STRINGREP_UNSPEC");
+		else
+			return InternationalDateTimeFormatHelper.fmtUIDateOnly(this);
+	}
+	
+	public String toStringInput() {
+		return InternationalDateTimeFormatHelper.fmtInput(this);
+	}
+	
+	public static CCDateTime parseInputOrNull(String rawData) {
+		if (rawData.equalsIgnoreCase(CCDateTime.UNSPECIFIED_REPRESENTATION) || rawData.equalsIgnoreCase(LocaleBundle.getString("CCDate.STRINGREP_UNSPEC")))
+			return CCDateTime.getUnspecified();
+		
+		for (String fmt : InternationalDateTimeFormatHelper.DESERIALIZE_DATETIME_INPUT) {
+			CCDateTime d = CCDateTime.parseOrDefault(rawData, fmt, null);
+			if (d != null) return d;
+		}
+		
+		return null;
 	}
 	
 	public static boolean testparse(String rawData, String fmt) {
@@ -135,19 +152,6 @@ public class CCDateTime implements Comparable<CCDateTime>, StringSpecSupplier {
 	
 	public static CCDateTime parseOrDefault(String rawData, String fmt, CCDateTime defaultValue){
 		return (CCDateTime)StringSpecParser.parseOrDefault(rawData, fmt, CCDateTime.STATIC_SUPPLIER, defaultValue);
-	}
-	
-	public String getLocalStringRepresentation() {
-		if (isUnspecifiedDateTime())
-			return LocaleBundle.getString("CCDate.STRINGREP_UNSPEC");
-		else if (time.isUnspecifiedTime()) 
-			return getStringRepresentation(STRINGREP_SIMPLEDATE);
-		else
-			return getStringRepresentation(STRINGREP_LOCAL);
-	}
-
-	public String getSimpleDateStringRepresentation() {
-		return getStringRepresentation(STRINGREP_SIMPLEDATE);
 	}
 
 	public CCDateTime getAddDay(int v) {

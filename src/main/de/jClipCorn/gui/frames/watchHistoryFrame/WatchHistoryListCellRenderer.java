@@ -15,7 +15,7 @@ public class WatchHistoryListCellRenderer extends DefaultListCellRenderer {
 	public Component getListCellRendererComponent(JList paramlist, Object value, int index, boolean isSelected, boolean cellHasFocus) {
 		DefaultListCellRenderer result = (DefaultListCellRenderer) super.getListCellRendererComponent(paramlist, value, index, isSelected, cellHasFocus);
 		
-		result.setText(((CCDateTime)value).getSimpleStringRepresentation());
+		result.setText(((CCDateTime)value).toStringUINormal());
 
 		return result;
 	}

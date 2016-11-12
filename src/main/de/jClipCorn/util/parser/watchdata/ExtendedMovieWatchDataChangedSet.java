@@ -19,7 +19,7 @@ public class ExtendedMovieWatchDataChangedSet extends WatchDataChangeSet {
 	@Override
 	public String getDate() {
 		if (date != null) 
-			return date.getSimpleStringRepresentation();
+			return date.toStringUINormal();
 		else 
 			return "-"; //$NON-NLS-1$
 	}
@@ -45,7 +45,7 @@ public class ExtendedMovieWatchDataChangedSet extends WatchDataChangeSet {
 		if (date != null && ! mov.getViewedHistory().contains(date)) {
 			if (b.length()>0)b.append(" & ");
 			
-			b.append(String.format("history += %s", date.getSimpleStringRepresentation()));
+			b.append(String.format("history += %s", date.toStringUINormal()));
 		}
 
 		if (score != null && mov.getScore() != score) {

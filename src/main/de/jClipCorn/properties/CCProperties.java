@@ -38,6 +38,7 @@ import de.jClipCorn.properties.property.CCStringProperty;
 import de.jClipCorn.properties.property.CCToolbarProperty;
 import de.jClipCorn.properties.property.CCVIntProperty;
 import de.jClipCorn.util.datetime.CCDate;
+import de.jClipCorn.util.datetime.CCDateTimeFormat;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.ApplicationHelper;
 import de.jClipCorn.util.helper.LookAndFeelManager;
@@ -168,6 +169,7 @@ public class CCProperties {
 	public CCEnumSetProperty<ImageSearchImplementation>		PROP_IMAGESEARCH_IMPL;
 	public CCBoolProperty 									PROP_SHOW_EXTENDED_FEATURES;
 	public CCBoolProperty									PROP_MAINFRAME_SORT_GENRES;
+	public CCEnumProperty<CCDateTimeFormat>					PROP_UI_DATETIME_FORMAT;
 	
 	public boolean ARG_READONLY = false;
 	
@@ -215,6 +217,7 @@ public class CCProperties {
 	@SuppressWarnings("nls")
 	private void createProperties() {
 		PROP_UI_LANG							= new CCEnumProperty<>(CAT_COMMON, 			this, 	"PROP_UI_LANG", 							getDefLanguage(),					UILanguage.getWrapper());
+		PROP_UI_DATETIME_FORMAT					= new CCEnumProperty<>(CAT_COMMON, 			this,   "PROP_UI_DATETIME_FORMAT", 					getDefDTFormat(), 					CCDateTimeFormat.getWrapper());
 		PROP_LOADING_PRELOADRESOURCES			= new CCBoolProperty(CAT_COMMON, 			this,   "PROP_LOADING_PRELOADICONS", 				false);
 		PROP_USE_INTELLISORT					= new CCBoolProperty(CAT_COMMON,			this, 	"PROP_USE_INTELLISORT", 					false);
 		PROP_COMMON_CHECKFORUPDATES				= new CCBoolProperty(CAT_COMMON, 			this, 	"PROP_COMMON_CHECKFORUPDATES", 				true);
@@ -336,6 +339,13 @@ public class CCProperties {
 		if (Locale.getDefault().getLanguage().equals(Locale.ENGLISH.getLanguage())) return UILanguage.ENGLISCH;
 		
 		return UILanguage.DEFAULT;
+	}
+	
+	private CCDateTimeFormat getDefDTFormat() {
+		if (Locale.getDefault().getCountry().equals(Locale.GERMANY.getCountry())) return CCDateTimeFormat.GERMAN;
+		if (Locale.getDefault().getCountry().equals(Locale.US.getCountry())) return CCDateTimeFormat.AMERICA;
+
+		return CCDateTimeFormat.ISO_8601;
 	}
 
 	private BrowserLanguage getDefBLanguage() {

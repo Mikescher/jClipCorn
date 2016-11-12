@@ -113,7 +113,7 @@ public class CCBXMLReader {
 		newMov.setGenre(translateGenre(e.getChild("genre").getChild("genre05").getAttribute("dec").getIntValue()), 5);
 		newMov.setGenre(translateGenre(e.getChild("genre").getChild("genre06").getAttribute("dec").getIntValue()), 6);
 		newMov.setLength(Integer.parseInt(e.getChildText("länge")));
-		newMov.setAddDate(CCDate.parse(e.getChildText("adddate"), CCDate.STRINGREP_DESERIALIZE));
+		newMov.setAddDate(CCDate.deserialize(e.getChildText("adddate")));
 		newMov.setOnlinescore(Integer.parseInt(e.getChildText("imdbscore")));
 		newMov.setFsk(e.getChild("usk").getAttribute("dec").getIntValue());
 		newMov.setFormat(e.getChild("format").getAttribute("dec").getIntValue());
@@ -218,7 +218,7 @@ public class CCBXMLReader {
 		newEp.setFormat(owner.getChild("format").getAttribute("dec").getIntValue());
 		newEp.setFilesize(owner.getChild("größe").getAttribute("dec").getLongValue() * 1024);
 		newEp.setPart(owner.getChildText("pathpart1"));
-		newEp.setAddDate(CCDate.parse(owner.getChildText("adddate"), CCDate.STRINGREP_DESERIALIZE));
+		newEp.setAddDate(CCDate.deserialize(owner.getChildText("adddate")));
 		
 		final CCEpisode finep = newEp;
 		try {

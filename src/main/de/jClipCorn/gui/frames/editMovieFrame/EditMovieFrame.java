@@ -541,7 +541,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 				dispose();
 			}
 		});
-		btnCancel.setBounds(377, 722, 95, 25);
+		btnCancel.setBounds(377, 722, 105, 25);
 		getContentPane().add(btnCancel);
 		
 		edTitle = new JTextField();

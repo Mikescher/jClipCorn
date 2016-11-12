@@ -90,7 +90,7 @@ public class SFixWatchHistoryTable extends SFixTable {
 			case WatchHistoryTableModel.COLUMN_NAME:
 				return null;
 			case WatchHistoryTableModel.COLUMN_DATE:
-				return el.getTimestamp().getSimpleStringRepresentation();
+				return el.getTimestamp().toStringUINormal();
 			case WatchHistoryTableModel.COLUMN_QUALITY:
 				return null;
 			case WatchHistoryTableModel.COLUMN_LENGTH:

@@ -11,9 +11,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.util.datetime.CCTime;
-import de.jClipCorn.util.exceptions.CCFormatException;
 
 public class CCTimeEditor extends JPanel implements ChangeListener, PropertyChangeListener {
 	private static final long serialVersionUID = -7568423030107551542L;
@@ -40,7 +38,7 @@ public class CCTimeEditor extends JPanel implements ChangeListener, PropertyChan
 	public void uptime() {
 		CCTime time = owner.getModel().getValue();
 
-		getTextField().setText(time.getSimpleStringRepresentation());
+		getTextField().setText(time.toStringInput());
 	}
 
 	@Override
@@ -57,16 +55,11 @@ public class CCTimeEditor extends JPanel implements ChangeListener, PropertyChan
 		if (owner != null && owner.getModel() != null) {
 			String text = getTextField().getText();
 
-			try {
-				if (CCTime.testparse(text, CCTime.STRINGREP_SIMPLE)) {
-					owner.getModel().setValue(CCTime.parse(text, CCTime.STRINGREP_SIMPLE));
-				} else if (CCTime.testparse(text, CCTime.STRINGREP_SHORT)) {
-					owner.getModel().setValue(CCTime.parse(text, CCTime.STRINGREP_SHORT));
-				} else {
-					uptime();
-				}
-			} catch (CCFormatException e) {
-				CCLog.addError(e);
+			CCTime pTime = CCTime.parseInputOrNull(text);
+			if (pTime != null) {
+				owner.getModel().setValue(pTime);
+			} else {
+				uptime();
 			}
 		}
 	}

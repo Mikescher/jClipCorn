@@ -28,9 +28,9 @@ public class WatchHistoryRenderer extends TableRenderer {
 			break;
 			
 		case WatchHistoryTableModel.COLUMN_DATE:
-			setText(el.getTimestamp().getSimpleShortStringRepresentation());
+			setText(el.getTimestamp().toStringUIShort());
 			setIcon(null);
-			setToolTipText(el.getTimestamp().getSimpleStringRepresentation());
+			setToolTipText(el.getTimestamp().toStringUINormal());
 			break;
 			
 		case WatchHistoryTableModel.COLUMN_QUALITY:

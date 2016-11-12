@@ -208,7 +208,7 @@ public class CCDateTimeList implements Iterable<CCDateTime> {
 		
 		b.append("<html>");
 		for (CCDateTime datetime : list) {
-			b.append(datetime.getSimpleShortStringRepresentation() + "<br/>");
+			b.append(datetime.toStringUIShort() + "<br/>");
 		}
 		for (int i = 0; i < hiddenHack; i++) {
 			b.append("<!--HACK-->");

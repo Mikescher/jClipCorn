@@ -217,8 +217,8 @@ public class CCDatabase {
 			Statements.intialize(this);
 
 			writeNewInformationToDB(INFOKEY_DBVERSION, Main.DBVERSION);
-			writeNewInformationToDB(INFOKEY_DATE, CCDate.getCurrentDate().getSQLStringRepresentation());
-			writeNewInformationToDB(INFOKEY_TIME, CCTime.getCurrentTime().getSimpleStringRepresentation());
+			writeNewInformationToDB(INFOKEY_DATE, CCDate.getCurrentDate().toStringSQL());
+			writeNewInformationToDB(INFOKEY_TIME, CCTime.getCurrentTime().toStringSQL());
 			writeNewInformationToDB(INFOKEY_USERNAME, ApplicationHelper.getCurrentUsername());
 		}
 		return res;
@@ -574,14 +574,14 @@ public class CCDatabase {
 
 			s.setString(1, mov.getTitle());                                    // TAB_MAIN_COLUMN_LOCALID
 			s.setBoolean(2, mov.isViewed());                                   // TAB_MAIN_COLUMN_NAME
-			s.setString(3, mov.getViewedHistory().toSerializationString());   // TAB_MAIN_COLUMN_VIEWED
+			s.setString(3, mov.getViewedHistory().toSerializationString());    // TAB_MAIN_COLUMN_VIEWED
 			s.setString(4, mov.getZyklus().getTitle());                        // TAB_MAIN_COLUMN_VIEWEDHISTORY
 			s.setInt(5, mov.getZyklus().getNumber());                          // TAB_MAIN_COLUMN_ZYKLUS
 			s.setInt(6, mov.getQuality().asInt());                             // TAB_MAIN_COLUMN_ZYKLUSNUMBER
 			s.setInt(7, mov.getLanguage().asInt());                            // TAB_MAIN_COLUMN_QUALITY
 			s.setLong(8, mov.getGenres().getAllGenres());                      // TAB_MAIN_COLUMN_LANGUAGE
 			s.setInt(9, mov.getLength());                                      // TAB_MAIN_COLUMN_GENRE
-			s.setString(10, mov.getAddDate().getSQLStringRepresentation());    // TAB_MAIN_COLUMN_LENGTH
+			s.setString(10, mov.getAddDate().toStringSQL());    			   // TAB_MAIN_COLUMN_LENGTH
 			s.setInt(11, mov.getOnlinescore().asInt());                        // TAB_MAIN_COLUMN_ADDDATE
 			s.setInt(12, mov.getFSK().asInt());                                // TAB_MAIN_COLUMN_ONLINESCORE
 			s.setInt(13, mov.getFormat().asInt());                             // TAB_MAIN_COLUMN_FSK
@@ -669,7 +669,7 @@ public class CCDatabase {
 			s.clearParameters();
 
 			s.setInt(1, ep.getSeason().getSeasonID());                       // TAB_EPISODES_COLUMN_SEASONID
-			s.setInt(2, ep.getEpisodeNumber());                                    // TAB_EPISODES_COLUMN_EPISODE
+			s.setInt(2, ep.getEpisodeNumber());                              // TAB_EPISODES_COLUMN_EPISODE
 			s.setString(3, ep.getTitle());                                   // TAB_EPISODES_COLUMN_NAME
 			s.setBoolean(4, ep.isViewed());                                  // TAB_EPISODES_COLUMN_VIEWED
 			s.setString(5, ep.getViewedHistory().toSerializationString());   // TAB_EPISODES_COLUMN_VIEWEDHISTORY
@@ -679,7 +679,7 @@ public class CCDatabase {
 			s.setLong(9, ep.getFilesize().getBytes());                       // TAB_EPISODES_COLUMN_FILESIZE
 			s.setString(10, ep.getPart());                                   // TAB_EPISODES_COLUMN_PART_1
 			s.setShort(11, ep.getTags().asShort());                          // TAB_EPISODES_COLUMN_TAGS
-			s.setString(12, ep.getAddDate().getSQLStringRepresentation());   // TAB_EPISODES_COLUMN_ADDDATE
+			s.setString(12, ep.getAddDate().toStringSQL());					 // TAB_EPISODES_COLUMN_ADDDATE
 
 			s.setInt(13, ep.getLocalID());
 
@@ -909,7 +909,7 @@ public class CCDatabase {
 	
 	public CCDate getInformation_CreationDate() {
 		try {
-			return CCDate.parse(getInformationFromDB(INFOKEY_DATE), CCDate.STRINGREP_SQL);
+			return CCDate.createFromSQL(getInformationFromDB(INFOKEY_DATE));
 		} catch (CCFormatException e) {
 			CCLog.addError(e);
 			return CCDate.getMinimumDate();
@@ -918,7 +918,7 @@ public class CCDatabase {
 	
 	public CCTime getInformation_CreationTime() {
 		try {
-			return CCTime.parse(getInformationFromDB(INFOKEY_TIME), CCTime.STRINGREP_SIMPLE);
+			return CCTime.createFromSQL(getInformationFromDB(INFOKEY_TIME));
 		} catch (CCFormatException e) {
 			CCLog.addError(e);
 			return CCTime.getMidnight();

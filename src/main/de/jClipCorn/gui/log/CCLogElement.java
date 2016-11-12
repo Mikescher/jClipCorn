@@ -66,7 +66,7 @@ public class CCLogElement {
 		default:
 			return getTypeStringRepresentation() + ": " + text + "\n" + getFormattedStackTrace() + '\n'; //$NON-NLS-1$ //$NON-NLS-2$
 		case FORMAT_LEVEL_LIST_FULL:
-			return getTypeStringRepresentation() + " (" + time.getSimpleStringRepresentation() + "): " + text + "\n" + getFormattedStackTrace() + '\n'; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			return getTypeStringRepresentation() + " (" + time.toStringUINormal() + "): " + text + "\n" + getFormattedStackTrace() + '\n'; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		}
 	}
 	

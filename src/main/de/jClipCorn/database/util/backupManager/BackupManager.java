@@ -93,7 +93,7 @@ public class BackupManager {
 		String sdate = RegExHelper.find(REGEXNAME, f.getName());
 
 		try {
-			return CCDate.parse(sdate, CCDate.STRINGREP_DESERIALIZE);
+			return CCDate.deserialize(sdate);
 		} catch (CCFormatException e) {
 			CCLog.addWarning(LocaleBundle.getFormattedString("LogMessage.CouldNotParseCCDate", sdate), e); //$NON-NLS-1$
 			return CCDate.getMinimumDate();
@@ -173,7 +173,7 @@ public class BackupManager {
 	private File getNewBackupName() {
 		String prefix = PathFormatter.appendSeparator(getBackupDirectory().getAbsolutePath());
 		int id = 0;
-		String now = CCDate.getCurrentDate().getSimpleStringRepresentation();
+		String now = CCDate.getCurrentDate().toStringSQL();
 
 		for (;;) {
 			File f = new File(prefix + String.format(BACKUPFILENAME, now, id));

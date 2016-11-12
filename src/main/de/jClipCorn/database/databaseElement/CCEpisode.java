@@ -365,7 +365,7 @@ public class CCEpisode {
 		e.setAttribute("localid", localID + "");
 		e.setAttribute("title", title);
 		e.setAttribute("viewed", viewed + "");
-		e.setAttribute("adddate", addDate.getSimpleStringRepresentation());
+		e.setAttribute("adddate", addDate.toStringSerialize());
 		e.setAttribute("episodenumber", episodeNumber + "");
 		e.setAttribute("filesize", filesize.getBytes() + "");
 		e.setAttribute("format", format.asInt() + "");
@@ -394,7 +394,7 @@ public class CCEpisode {
 			setViewed(false);
 		
 		if (e.getAttributeValue("adddate") != null) {
-			setAddDate(CCDate.parse(e.getAttributeValue("adddate"), CCDate.STRINGREP_DESERIALIZE));
+			setAddDate(CCDate.deserialize(e.getAttributeValue("adddate")));
 		}
 		
 		if (resetAddDate) {
@@ -411,7 +411,7 @@ public class CCEpisode {
 			setFormat(Integer.parseInt(e.getAttributeValue("format")));
 
 		if (e.getAttributeValue("lastviewed") != null) { // backwards compatibility
-			CCDate d = CCDate.parse(e.getAttributeValue("lastviewed"), CCDate.STRINGREP_DESERIALIZE);
+			CCDate d = CCDate.deserialize(e.getAttributeValue("lastviewed"));
 			if (!d.isMinimum())
 				setViewedHistory(CCDateTimeList.create(d));
 		}		

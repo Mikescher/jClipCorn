@@ -14,13 +14,10 @@ import de.jClipCorn.util.parser.StringSpecSupplier;
 public class CCTime implements Comparable<CCTime>, StringSpecSupplier {
 	public static CCTime STATIC_SUPPLIER = new CCTime(12, 0, 0);
 	
-	public final static String STRINGREP_SHORT  = "HH:mm"; //$NON-NLS-1$
-	public final static String STRINGREP_SIMPLE = "HH:mm:ss"; //$NON-NLS-1$
-	public final static String STRINGREP_SQL    = "HH:mm:ss"; //$NON-NLS-1$
-	public final static String STRINGREP_AMPM   = "hh:mm:ss t"; //$NON-NLS-1$
-
 	private static final CCTime MIDNIGHT    = new CCTime(0, 0, 0); // { 'H', 'm', 's', 'h', 't' }
 	private static final CCTime UNSPECIFIED = new CCTime(99, 99, 99);
+
+	public final static String SERIALIZE_FORMAT = InternationalDateTimeFormatHelper.SERIALIZE_TIME;
 	
 	private final int hour;
 	private final int min;
@@ -93,6 +90,15 @@ public class CCTime implements Comparable<CCTime>, StringSpecSupplier {
 		return StringSpecParser.build(fmt, this);
 	}
 	
+	public static CCTime parseInputOrNull(String rawData) {
+		for (String fmt : InternationalDateTimeFormatHelper.DESERIALIZE_TIME_INPUT) {
+			CCTime d = CCTime.parseOrDefault(rawData, fmt, null);
+			if (d != null) return d;
+		}
+		
+		return null;
+	}
+	
 	public static boolean testparse(String rawData, String fmt) {
 		return StringSpecParser.testparse(rawData, fmt, CCTime.STATIC_SUPPLIER);
 	}
@@ -116,6 +122,9 @@ public class CCTime implements Comparable<CCTime>, StringSpecSupplier {
                                                 // :
 		int s = (sqlRep.charAt(6)-'0') * 10 +   // s
 				(sqlRep.charAt(7)-'0') * 1;     // s
+
+		if (sqlRep.charAt(2) != ':') throw new TimeFormatException(sqlRep);
+		if (sqlRep.charAt(5) != ':') throw new TimeFormatException(sqlRep);
 		
 		return new CCTime(h, m, s);
 	}
@@ -128,20 +137,26 @@ public class CCTime implements Comparable<CCTime>, StringSpecSupplier {
 		return new CCTime();
 	}
 	
-	public String getSQLStringRepresentation() {
-		return getStringRepresentation(STRINGREP_SQL);
+	public String toStringSQL() { 
+		return getStringRepresentation(InternationalDateTimeFormatHelper.TIME_SQL);
 	}
 	
-	public String getSimpleStringRepresentation() {
-		return getStringRepresentation(STRINGREP_SIMPLE);
+	public String toStringSerialize() { 
+		return getStringRepresentation(SERIALIZE_FORMAT);
+	}
+
+	// with seconds
+	public String toStringUINormal() { 
+		return InternationalDateTimeFormatHelper.fmtUINormal(this);
+	}
+
+	// without sesonds
+	public String toStringUIShort() { 
+		return InternationalDateTimeFormatHelper.fmtUIShort(this);
 	}
 	
-	public String getShortStringRepresentation() {
-		return getStringRepresentation(STRINGREP_SHORT);
-	}
-	
-	public String getAMPMStringRepresentation() {
-		return getStringRepresentation(STRINGREP_AMPM);
+	public String toStringInput() { 
+		return InternationalDateTimeFormatHelper.fmtInput(this);
 	}
 	
 	public String getAMPMString() {
@@ -418,6 +433,6 @@ public class CCTime implements Comparable<CCTime>, StringSpecSupplier {
 	
 	@Override
 	public String toString() {
-		return "<CCTime>:" + getSQLStringRepresentation(); //$NON-NLS-1$
+		return "<CCTime>:" + toStringSQL(); //$NON-NLS-1$
 	}
 }

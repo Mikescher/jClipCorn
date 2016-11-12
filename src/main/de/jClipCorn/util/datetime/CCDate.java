@@ -17,13 +17,6 @@ import de.jClipCorn.util.parser.StringSpecSupplier;
 
 public final class CCDate implements Comparable<CCDate>, StringSpecSupplier {
 	public static CCDate STATIC_SUPPLIER = new CCDate(6, 8, 1991);
-
-	public final static String STRINGREP_DESERIALIZE = "d.M.y"; //$NON-NLS-1$
-	public final static String STRINGREP_SIMPLE 	= "dd.MM.yyyy"; //$NON-NLS-1$
-	public final static String STRINGREP_SIMPLESHORT = "dd.MM.yy"; //$NON-NLS-1$
-	public final static String STRINGREP_LOCAL 		= "dd.MMMM.yyyy"; //$NON-NLS-1$
-	public final static String STRINGREP_EXTENDED 	= LocaleBundle.getString("CCDate.STRINGREP_EXTENDED"); //$NON-NLS-1$
-	public final static String STRINGREP_SQL 		= "yyyy-MM-dd"; //$NON-NLS-1$
 	
 	public final static long MILLISECONDS_PER_DAY = 86400000;
 	
@@ -32,7 +25,7 @@ public final class CCDate implements Comparable<CCDate>, StringSpecSupplier {
 	
 	private static final CCDate DATE_MIN = new CCDate(1, 1, YEAR_MIN);
 	private static final CCDate DATE_MAX = new CCDate(31, 12, YEAR_MAX);
-	public  static final String MIN_SQL = DATE_MIN.getSQLStringRepresentation();
+	public  static final String MIN_SQL = DATE_MIN.toStringSQL();
 	private static final CCDate UNSPECIFIED = new CCDate(99, 99, 99);
 	
 	private static HashSet<Character> stringSpecifier = null; // { 'y', 'M', 'd' }
@@ -109,6 +102,9 @@ public final class CCDate implements Comparable<CCDate>, StringSpecSupplier {
                                                 // -
 		int d = (sqlRep.charAt(8)-'0') * 10 +   // D
 				(sqlRep.charAt(9)-'0') * 1;     // D
+
+		if (sqlRep.charAt(4) != '-') throw new DateFormatException(sqlRep);
+		if (sqlRep.charAt(7) != '-') throw new DateFormatException(sqlRep);
 		
 		return new CCDate(d, m, y);
 	}
@@ -246,20 +242,45 @@ public final class CCDate implements Comparable<CCDate>, StringSpecSupplier {
 		return stringSpecifier;
 	}
 	
-	public String getSimpleStringRepresentation() {
-		return getStringRepresentation(STRINGREP_SIMPLE);
+	public String toStringSQL() { 
+		return getStringRepresentation(InternationalDateTimeFormatHelper.DATE_SQL);
+	}
+
+	public String toStringSerialize() { 
+		return getStringRepresentation(InternationalDateTimeFormatHelper.SERIALIZE_DATE);
 	}
 	
-	public String getLocalStringRepresentation() {
-		return getStringRepresentation(STRINGREP_LOCAL);
+	public String toStringInput() { 
+		return InternationalDateTimeFormatHelper.fmtInput(this);
 	}
 	
-	public String getExtendedStringRepresentation() {
-		return getStringRepresentation(STRINGREP_EXTENDED);
+	public String toStringUIShort() { 
+		return InternationalDateTimeFormatHelper.fmtUIShort(this);
 	}
 	
-	public String getSQLStringRepresentation() {
-		return getStringRepresentation(STRINGREP_SQL);
+	public String toStringUINormal() { 
+		return InternationalDateTimeFormatHelper.fmtUINormal(this);
+	}
+	
+	public String toStringUIVerbose() { 
+		return InternationalDateTimeFormatHelper.fmtUIVerbose(this);
+	}
+	
+	public static CCDate deserialize(String rawData) throws CCFormatException {
+		return parse(rawData, InternationalDateTimeFormatHelper.SERIALIZE_DATE);
+	}
+	
+	public static CCDate deserializeOrDefault(String rawData, CCDate defaultValue) {
+		return parseOrDefault(rawData, InternationalDateTimeFormatHelper.SERIALIZE_DATE, defaultValue);
+	}
+	
+	public static CCDate parseInputOrNull(String rawData) {
+		for (String fmt : InternationalDateTimeFormatHelper.DESERIALIZE_DATE_INPUT) {
+			CCDate d = CCDate.parseOrDefault(rawData, fmt, null);
+			if (d != null) return d;
+		}
+		
+		return null;
 	}
 	
 	public static boolean testparse(String rawData, String fmt) {
@@ -428,7 +449,7 @@ public final class CCDate implements Comparable<CCDate>, StringSpecSupplier {
 	
 	@Override
 	public String toString() {
-		return "<CCDate>:" + getSQLStringRepresentation(); //$NON-NLS-1$
+		return "<CCDate>:" + toStringSQL(); //$NON-NLS-1$
 	}
 	
 	public int compare(CCDate other) {

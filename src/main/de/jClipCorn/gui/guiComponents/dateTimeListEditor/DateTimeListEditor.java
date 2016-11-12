@@ -329,7 +329,7 @@ public class DateTimeListEditor extends JPanel {
 		for (CCDateTime element : data) {
 			JPanel pnl = new JPanel(new BorderLayout());
 
-			JLabel lbl = new JLabel(element.getSimpleStringRepresentation());
+			JLabel lbl = new JLabel(element.toStringUINormal());
 			JLabel btn = new JLabel(CachedResourceLoader.getIcon(Resources.ICN_FRAMES_DELETE.icon16x16));
 			
 			btn.setHorizontalAlignment(SwingConstants.CENTER);

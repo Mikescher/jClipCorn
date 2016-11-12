@@ -10,9 +10,9 @@ public enum CCWeekday implements ContinoousEnum<CCWeekday> {
 	TUESDAY(2),
 	WEDNESDAY(3),
 	THURSDAY(4),
-	FRIDAY(3),
-	SATURDAY(3),
-	SUNDAY(3);
+	FRIDAY(5),
+	SATURDAY(6),
+	SUNDAY(7);
 
 	private final static String NAMES[] = { 
 			LocaleBundle.getString("CCDate.Month0"), //$NON-NLS-1$

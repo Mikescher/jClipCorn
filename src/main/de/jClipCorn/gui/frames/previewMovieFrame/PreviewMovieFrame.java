@@ -363,7 +363,7 @@ public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener 
 		
 		lbl_Length.setText(TimeIntervallFormatter.formatPointed(movie.getLength()));
 		
-		lbl_Added.setText(movie.getAddDate().getSimpleStringRepresentation());
+		lbl_Added.setText(movie.getAddDate().toStringUINormal());
 		
 		lbl_FSK.setIcon(movie.getFSK().getIcon());
 		lbl_FSK.setText(movie.getFSK().asString());
@@ -398,7 +398,7 @@ public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener 
 		DefaultListModel<String> dlsmViewed;
 		lsHistory.setModel(dlsmViewed = new DefaultListModel<>());
 		for (CCDateTime dt : movie.getViewedHistory()) {
-			dlsmViewed.addElement(dt.getSimpleStringRepresentation());
+			dlsmViewed.addElement(dt.toStringUINormal());
 		}
 		
 		btnOnlineRef.setIcon(movie.getOnlineReference().getIconButton());

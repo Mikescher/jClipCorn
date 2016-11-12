@@ -48,13 +48,13 @@ public class CustomHistoryFilter extends AbstractCustomFilter {
 	public String getName() {
 		switch (Type) {
 		case CONTAINS:
-			return LocaleBundle.getFormattedString("FilterTree.Custom.CustomFilterNames.History", First.getLocalStringRepresentation()); //$NON-NLS-1$
+			return LocaleBundle.getFormattedString("FilterTree.Custom.CustomFilterNames.History", First.toStringUIVerbose()); //$NON-NLS-1$
 		case CONTAINS_BETWEEN:
-			return LocaleBundle.getFormattedString("FilterTree.Custom.CustomFilterNames.History", First.getLocalStringRepresentation() + " - " + Second.getLocalStringRepresentation()); //$NON-NLS-1$ //$NON-NLS-2$
+			return LocaleBundle.getFormattedString("FilterTree.Custom.CustomFilterNames.History", First.toStringUIVerbose() + " - " + Second.toStringUIVerbose()); //$NON-NLS-1$ //$NON-NLS-2$
 		case CONTAINS_NOT:
-			return LocaleBundle.getFormattedString("FilterTree.Custom.CustomFilterNames.History", "not " + First.getLocalStringRepresentation()); //$NON-NLS-1$ //$NON-NLS-2$
+			return LocaleBundle.getFormattedString("FilterTree.Custom.CustomFilterNames.History", "not " + First.toStringUIVerbose()); //$NON-NLS-1$ //$NON-NLS-2$
 		case CONTAINS_NOT_BETWEEEN:
-			return LocaleBundle.getFormattedString("FilterTree.Custom.CustomFilterNames.History", "not " + First.getLocalStringRepresentation() + " - " + Second.getLocalStringRepresentation()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			return LocaleBundle.getFormattedString("FilterTree.Custom.CustomFilterNames.History", "not " + First.toStringUIVerbose() + " - " + Second.toStringUIVerbose()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		default:
 			return LocaleBundle.getFormattedString("FilterTree.Custom.CustomFilterNames.History", "?"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
@@ -92,9 +92,9 @@ public class CustomHistoryFilter extends AbstractCustomFilter {
 			break;
 		}
 		b.append("|");
-		b.append(First.getSQLStringRepresentation());
+		b.append(First.toStringSQL());
 		b.append("|");
-		b.append(Second.getSQLStringRepresentation());
+		b.append(Second.toStringSQL());
 		b.append("]");
 		
 		return b.toString();

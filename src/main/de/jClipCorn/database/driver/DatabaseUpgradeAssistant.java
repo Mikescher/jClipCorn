@@ -121,8 +121,8 @@ public class DatabaseUpgradeAssistant {
 	private void upgrade_16_17() throws SQLException {
 		CCLog.addInformation("[UPGRADE 1.6 -> 1.7] Add Info Table");
 
-		String date = CCDate.getCurrentDate().getStringRepresentation("yyyy-MM-dd");
-		String time = CCTime.getCurrentTime().getStringRepresentation("HH:mm:ss");
+		String date = CCDate.getCurrentDate().toStringSQL();
+		String time = CCTime.getCurrentTime().toStringSQL();
 		
 		db.executeSQLThrow("CREATE TABLE INFO (\"IKEY\" VARCHAR(256) NOT NULL, IVALUE VARCHAR(256) NOT NULL, PRIMARY KEY (\"IKEY\"))");
 

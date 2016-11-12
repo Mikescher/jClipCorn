@@ -11,10 +11,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.util.datetime.CCDateTime;
-import de.jClipCorn.util.exceptions.CCFormatException;
 
 public class CCDateTimeEditor extends JPanel implements ChangeListener, PropertyChangeListener {
 	private static final long serialVersionUID = -7568423030107551542L;
@@ -41,7 +38,7 @@ public class CCDateTimeEditor extends JPanel implements ChangeListener, Property
 	public void update() {
 		CCDateTime datetime = owner.getModel().getValue();
 
-		getTextField().setText(datetime.getSimpleStringRepresentation());
+		getTextField().setText(datetime.toStringInput());
 	}
 
 	@Override
@@ -57,25 +54,14 @@ public class CCDateTimeEditor extends JPanel implements ChangeListener, Property
 	public void commitEdit() {
 		if (owner != null && owner.getModel() != null) {
 			JTextField tf = getTextField();
-			
 			int caret = tf.getCaretPosition();
-			
 			String text = tf.getText();
 
-			try {
-				if (text.equalsIgnoreCase(CCDateTime.UNSPECIFIED_REPRESENTATION) || text.equalsIgnoreCase(LocaleBundle.getString("CCDate.STRINGREP_UNSPEC"))) { //$NON-NLS-1$
-					owner.getModel().setValue(CCDateTime.getUnspecified());
-				} else if (CCDateTime.testparse(text, CCDateTime.STRINGREP_SIMPLE)) {
-					owner.getModel().setValue(CCDateTime.parse(text, CCDateTime.STRINGREP_SIMPLE));
-				} else if (CCDateTime.testparse(text, CCDateTime.STRINGREP_SIMPLESHORT)) {
-					owner.getModel().setValue(CCDateTime.parse(text, CCDateTime.STRINGREP_SIMPLESHORT));
-				} else if (CCDateTime.testparse(text, CCDateTime.STRINGREP_SIMPLEDATE)) {
-					owner.getModel().setValue(CCDateTime.parse(text, CCDateTime.STRINGREP_SIMPLEDATE));
-				} else {
-					update();
-				}
-			} catch (CCFormatException e) {
-				CCLog.addError(e);
+			CCDateTime pDateTime = CCDateTime.parseInputOrNull(text);
+			if (pDateTime != null) {
+				owner.getModel().setValue(pDateTime);
+			} else {
+				update();
 			}
 			
 			if (caret > tf.getText().length()) caret = tf.getText().length();

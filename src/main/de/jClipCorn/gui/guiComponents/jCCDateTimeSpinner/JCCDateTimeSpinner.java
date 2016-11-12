@@ -7,6 +7,7 @@ import javax.swing.JSpinner;
 import javax.swing.SpinnerModel;
 
 import de.jClipCorn.util.datetime.CCDateTime;
+import de.jClipCorn.util.datetime.InternationalDateTimeFormatHelper;
 
 public class JCCDateTimeSpinner extends JSpinner {
 	private static final long serialVersionUID = -7562943010812302334L;
@@ -61,7 +62,7 @@ public class JCCDateTimeSpinner extends JSpinner {
 			int caret = ed.getTextField().getCaretPosition();
 			
 			HashSet<Character> specs = CCDateTime.STATIC_SUPPLIER.getAllStringSpecifier();
-			String rep = CCDateTime.STRINGREP_SIMPLE;
+			String rep = InternationalDateTimeFormatHelper.FORMAT_DATETIME_NORMAL.get(InternationalDateTimeFormatHelper.currentFormat);
 			
 			int rd = 999999;
 			char rc = ' ';

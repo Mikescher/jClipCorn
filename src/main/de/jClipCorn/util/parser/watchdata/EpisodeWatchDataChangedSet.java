@@ -15,7 +15,7 @@ public class EpisodeWatchDataChangedSet extends WatchDataChangeSet {
 
 	@Override
 	public String getDate() {
-		return date.getSimpleStringRepresentation();
+		return date.toStringUINormal();
 	}
 
 	@Override
@@ -33,7 +33,7 @@ public class EpisodeWatchDataChangedSet extends WatchDataChangeSet {
 		if (eps.isViewed() ^ newState)
 			return String.format("%d -> %d", eps.isViewed()?1:0, newState?1:0); //$NON-NLS-1$
 		else if (newState && ! eps.getViewedHistory().contains(date))
-			return String.format("history += %s", date.getSimpleStringRepresentation()); //$NON-NLS-1$
+			return String.format("history += %s", date.toStringUINormal()); //$NON-NLS-1$
 		else
 			return "#"; //$NON-NLS-1$
 	}

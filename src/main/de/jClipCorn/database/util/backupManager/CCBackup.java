@@ -76,13 +76,13 @@ public class CCBackup {
 		String result = properties.getProperty(PROP_DATE);
 		if (result == null) return CCDate.getMinimumDate();
 		
-		CCDate dateresult = CCDate.parseOrDefault(result, CCDate.STRINGREP_DESERIALIZE, CCDate.getMinimumDate());
+		CCDate dateresult = CCDate.deserializeOrDefault(result, CCDate.getMinimumDate());
 		
 		return dateresult;
 	}
 
 	public void setDate(CCDate date) {
-		properties.setProperty(PROP_DATE, date.getSimpleStringRepresentation());
+		properties.setProperty(PROP_DATE, date.toStringSerialize());
 		
 		saveToFile();
 	}

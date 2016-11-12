@@ -147,7 +147,7 @@ public class CCLog {
 			
 			if (CCProperties.getInstance().PROP_LOG_APPEND.getValue()) {
 				out.print('\n');
-				out.print("--------------------------------  " + CCDate.getCurrentDate().getSimpleStringRepresentation() + "  --------------------------------" + '\n'); //$NON-NLS-1$ //$NON-NLS-2$
+				out.print("--------------------------------  " + CCDate.getCurrentDate().toStringSerialize() + "  --------------------------------" + '\n'); //$NON-NLS-1$ //$NON-NLS-2$
 				out.print('\n');
 			}
 

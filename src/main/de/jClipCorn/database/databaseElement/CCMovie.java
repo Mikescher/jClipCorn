@@ -370,7 +370,7 @@ public class CCMovie extends CCDatabaseElement {
 	protected void setXMLAttributes(Element e, boolean fileHash, boolean coverHash, boolean coverData) {
 		super.setXMLAttributes(e, fileHash, coverHash, coverData);
 		
-		e.setAttribute("adddate", addDate.getSimpleStringRepresentation() + "");
+		e.setAttribute("adddate", addDate.toStringSerialize());
 		e.setAttribute("filesize", filesize.getBytes() + "");
 		e.setAttribute("format", format.asInt() + "");
 		e.setAttribute("length", length  + "");
@@ -408,7 +408,7 @@ public class CCMovie extends CCDatabaseElement {
 		super.parseFromXML(e, resetAddDate, resetViewed, resetScore, resetTags, ignoreCoverData);
 		
 		if (e.getAttributeValue("adddate") != null) {
-			setAddDate(CCDate.parse(e.getAttributeValue("adddate"), CCDate.STRINGREP_DESERIALIZE));
+			setAddDate(CCDate.deserialize(e.getAttributeValue("adddate")));
 		}
 		
 		if (resetAddDate) {

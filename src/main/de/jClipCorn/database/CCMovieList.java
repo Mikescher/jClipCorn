@@ -734,7 +734,7 @@ public class CCMovieList {
 		
 		root.setAttribute("version", Main.VERSION);
 		root.setAttribute("dbversion", Main.DBVERSION);
-		root.setAttribute("date", CCDate.getCurrentDate().getSimpleStringRepresentation());
+		root.setAttribute("date", CCDate.getCurrentDate().toStringSerialize());
 		
 		return xml;
 	}

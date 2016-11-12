@@ -18,13 +18,13 @@ public class TableDateListRenderer extends TableRenderer {
 		} else {
 			switch (CCProperties.getInstance().PROP_SERIES_DISPLAYED_DATE.getValue()) {
 			case AVERAGE:
-				setText(d.getAverageDateOrInvalid().getSimpleStringRepresentation());
+				setText(d.getAverageDateOrInvalid().toStringUINormal());
 				break;
 			case FIRST_VIEWED:
-				setText(d.getFirstDateOrInvalid().getSimpleStringRepresentation());
+				setText(d.getFirstDateOrInvalid().toStringUINormal());
 				break;
 			case LAST_VIEWED:
-				setText(d.getLastDateOrInvalid().getSimpleStringRepresentation());
+				setText(d.getLastDateOrInvalid().toStringUINormal());
 				break;
 			default:
 				setText("??_ERR_??"); //$NON-NLS-1$

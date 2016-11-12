@@ -43,7 +43,7 @@ public class CCDateProperty extends CCProperty<CCDate> {
 		}
 		
 		try {
-			return CCDate.parse(val, CCDate.STRINGREP_DESERIALIZE);
+			return CCDate.deserialize(val);
 		} catch (CCFormatException e) {
 			CCLog.addWarning(LocaleBundle.getFormattedString("LogMessage.PropFormatErrorCCDate", identifier, mclass.getName())); //$NON-NLS-1$
 			setDefault();
@@ -53,7 +53,7 @@ public class CCDateProperty extends CCProperty<CCDate> {
 
 	@Override
 	public CCDate setValue(CCDate val) {
-		properties.setProperty(identifier, val.getSimpleStringRepresentation());
+		properties.setProperty(identifier, val.toStringSerialize());
 		
 		return getValue();
 	}

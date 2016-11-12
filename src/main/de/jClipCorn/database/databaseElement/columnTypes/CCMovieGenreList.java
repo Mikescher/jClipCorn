@@ -1,5 +1,8 @@
 package de.jClipCorn.database.databaseElement.columnTypes;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class CCMovieGenreList {
 	private final static long[] MASK = {0x00000000000000FFL, 
@@ -111,6 +114,17 @@ public class CCMovieGenreList {
 		}
 	}
 	
+	public List<CCMovieGenre> getGenres() {
+		List<CCMovieGenre> result = new ArrayList<>();
+
+		int sz = getGenreCount();
+		for(int i = 0; i < sz; i++) {
+			result.add(getGenre(i));
+		}
+		
+		return result;
+	}
+	
 	public boolean setGenre(int idx, CCMovieGenre val) {
 		return setGenre(idx, val.asInt());
 	}
@@ -162,31 +176,20 @@ public class CCMovieGenreList {
 	}
 	
 	public String asString() {
-		StringBuilder sb = new StringBuilder();
-		
-		int sz = getGenreCount();
-		for(int i = 0; i < sz; i++) {
-			sb.append(getGenre(i).asString());
-			if ((i+1) < sz) {
-				sb.append('|');
-			}
-		}
-		
-		return sb.toString();
+		return getGenres().stream().map(g -> g.asString()).collect(Collectors.joining("|")); //$NON-NLS-1$
+	}
+	
+	/*
+	 * This is not the same as x.asSorted().asString()
+	 * 
+	 * asSorted sorts based on the ID, this sorts based on translation
+	 */
+	public String asSortedString() {
+		return getGenres().stream().sorted(CCMovieGenre.getTextComparator()).map(g -> g.asString()).collect(Collectors.joining("|")); //$NON-NLS-1$
 	}
 	
 	public String asSimpleString() {
-		StringBuilder sb = new StringBuilder();
-		
-		int sz = getGenreCount();
-		for(int i = 0; i < sz; i++) {
-			sb.append(getGenre(i)+""); //$NON-NLS-1$
-			if ((i+1) < sz) {
-				sb.append('|');
-			}
-		}
-		
-		return sb.toString();
+		return getGenres().stream().map(g -> g + "").collect(Collectors.joining("|")); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 	
 	public CCMovieGenreList getSorted() {

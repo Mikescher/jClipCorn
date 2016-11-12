@@ -167,6 +167,7 @@ public class CCProperties {
 	public CCEnumProperty<BrowserLanguage> 					PROP_TMDB_LANGUAGE;
 	public CCEnumSetProperty<ImageSearchImplementation>		PROP_IMAGESEARCH_IMPL;
 	public CCBoolProperty 									PROP_SHOW_EXTENDED_FEATURES;
+	public CCBoolProperty									PROP_MAINFRAME_SORT_GENRES;
 	
 	public boolean ARG_READONLY = false;
 	
@@ -235,6 +236,7 @@ public class CCProperties {
 		PROP_MAINFRAME_SHOWGROUPS				= new CCBoolProperty(CAT_VIEW,	 			this,   "PROP_MAINFRAME_SHOWGROUPS",				true);
 		PROP_MAINFRAME_SHOWCOVERCORNER			= new CCBoolProperty(CAT_VIEW,		 		this,   "PROP_MAINFRAME_SHOWCOVERCORNER",			true);
 		PROP_MAINFRAME_DONT_FILTER_WATCHNEVER	= new CCBoolProperty(CAT_VIEW,				this, 	"PROP_MAINFRAME_DONT_FILTER_WATCHNEVER", 	true);
+		PROP_MAINFRAME_SORT_GENRES				= new CCBoolProperty(CAT_VIEW,				this, 	"PROP_MAINFRAME_SORT_GENRES", 				true);
 		
 		PROP_DATABASE_NAME 						= new CCStringProperty(CAT_DATABASE, 		this,	"PROP_DATABASE_NAME",						"ClipCornDB");
 		PROP_LOG_PATH							= new CCStringProperty(CAT_DATABASE, 		this,	"PROP_LOG_PATH",							"jClipcorn.log");

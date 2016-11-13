@@ -41,22 +41,24 @@ import de.jClipCorn.util.helper.SimpleFileUtils;
 import de.jClipCorn.util.listener.ProgressCallbackListener;
 
 public class ExportHelper {
-	private final static String DB_XML_FILENAME_MAIN   = "database.xml"; //$NON-NLS-1$
-	private final static String DB_XML_FILENAME_GROUPS = "groups.xml";   //$NON-NLS-1$
-	private final static String DB_XML_FILENAME_INFO   = "info.xml";     //$NON-NLS-1$
+	private final static String DB_XML_FILENAME_MAIN   = "database.xml"; 														//$NON-NLS-1$
+	private final static String DB_XML_FILENAME_GROUPS = "groups.xml";   														//$NON-NLS-1$
+	private final static String DB_XML_FILENAME_INFO   = "info.xml";     														//$NON-NLS-1$
 	
-	public final static String EXTENSION_BACKUP = "jccbkp"; 				// = jClipCornBackup   			//$NON-NLS-1$ 
-	public final static String EXTENSION_BACKUPPROPERTIES = "jccbkpinfo"; 	// = jClipCornBackupInfo 		//$NON-NLS-1$ 
-	public final static String EXTENSION_FULLEXPORT = "jxmlbkp"; 			// = jXMLBackup   				//$NON-NLS-1$ 
-	public final static String EXTENSION_SINGLEEXPORT = "jsccexport"; 		// = jSingleClipCornExport 		//$NON-NLS-1$
-	public final static String EXTENSION_MULTIPLEEXPORT = "jmccexport"; 	// = jMultipleClipCornExport 	//$NON-NLS-1$
-	public final static String EXTENSION_CCBACKUP = "xml"; 					// = OLD Clipcorn Backup   		//$NON-NLS-1$
-	public final static String EXTENSION_COMPAREFILE = "jcccf"; 			// = jClipCornCompareFile		//$NON-NLS-1$
-	public final static String EXTENSION_EPISODEGUIDE = "txt"; 				// = TextFile					//$NON-NLS-1$
-	public final static String EXTENSION_TEXTEXPORT_PLAIN = "txt"; 			// = TextFile					//$NON-NLS-1$
-	public final static String EXTENSION_TEXTEXPORT_XML = "xml"; 			// = XML-TextFile				//$NON-NLS-1$
-	public final static String EXTENSION_TEXTEXPORT_JSON = "json"; 			// = JSON-TextFile				//$NON-NLS-1$
-	public final static String EXTENSION_FILTERLIST = "flst"; 				// = FilterList					//$NON-NLS-1$
+	public final static String EXTENSION_BACKUP = "jccbkp"; 				// = jClipCornBackup   								//$NON-NLS-1$ 
+	public final static String EXTENSION_BACKUPPROPERTIES = "jccbkpinfo"; 	// = jClipCornBackupInfo		[DEPRECATED] 		//$NON-NLS-1$ 
+	public final static String EXTENSION_FULLEXPORT = "jxmlbkp"; 			// = jXMLBackup   									//$NON-NLS-1$ 
+	public final static String EXTENSION_SINGLEEXPORT = "jsccexport"; 		// = jSingleClipCornExport 							//$NON-NLS-1$
+	public final static String EXTENSION_MULTIPLEEXPORT = "jmccexport"; 	// = jMultipleClipCornExport 						//$NON-NLS-1$
+	public final static String EXTENSION_CCBACKUP = "xml"; 					// = OLD Clipcorn Backup   		[DEPRECATED]		//$NON-NLS-1$
+	public final static String EXTENSION_COMPAREFILE = "jcccf"; 			// = jClipCornCompareFile							//$NON-NLS-1$
+	public final static String EXTENSION_EPISODEGUIDE = "txt"; 				// = TextFile										//$NON-NLS-1$
+	public final static String EXTENSION_TEXTEXPORT_PLAIN = "txt"; 			// = TextFile										//$NON-NLS-1$
+	public final static String EXTENSION_TEXTEXPORT_XML = "xml"; 			// = XML-TextFile									//$NON-NLS-1$
+	public final static String EXTENSION_TEXTEXPORT_JSON = "json"; 			// = JSON-TextFile									//$NON-NLS-1$
+	public final static String EXTENSION_FILTERLIST = "flst"; 				// = FilterList										//$NON-NLS-1$
+
+	public final static String FILENAME_BACKUPINFO = "info.ini"; 			// = jClipCornBackupInfo 							//$NON-NLS-1$ 
 	
 	public static void zipDir(File owner, File zipDir, ZipOutputStream zos, boolean recursively) {
 		doZipDir(owner, zipDir, zos, recursively, null);
@@ -102,7 +104,7 @@ public class ExportHelper {
 		}
 	}
 	
-	public static boolean unzipDir(File archive, File targetFolder, ProgressCallbackListener pcl) {
+	public static boolean unzipBackupDir(File archive, File targetFolder, ProgressCallbackListener pcl) {
 		byte[] buffer = new byte[2048];
 
 		String outdir = targetFolder.getAbsolutePath() + "/"; //$NON-NLS-1$
@@ -127,6 +129,8 @@ public class ExportHelper {
 			
 			ZipEntry entry;
 			while ((entry = zipstream.getNextEntry()) != null) {
+				if (entry.getName().equalsIgnoreCase(ExportHelper.FILENAME_BACKUPINFO)) continue;
+				
 				File outfile = new File(outdir + entry.getName());
 				FileOutputStream output = null;
 				

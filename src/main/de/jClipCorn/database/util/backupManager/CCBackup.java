@@ -3,16 +3,30 @@ package de.jClipCorn.database.util.backupManager;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.Reader;
+import java.io.Writer;
+import java.net.URI;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
 import java.nio.file.Files;
+import java.nio.file.StandardOpenOption;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
+import de.jClipCorn.Main;
+import de.jClipCorn.database.util.ExportHelper;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.properties.CCProperties;
+import de.jClipCorn.util.Tuple;
 import de.jClipCorn.util.datetime.CCDate;
+import de.jClipCorn.util.exceptions.CCFormatException;
 import de.jClipCorn.util.formatter.FileSizeFormatter;
+import de.jClipCorn.util.formatter.PathFormatter;
+import de.jClipCorn.util.helper.RegExHelper;
 
 public class CCBackup {
 	private final static String HEADER = "Backup Info File"; //$NON-NLS-1$
@@ -22,39 +36,47 @@ public class CCBackup {
 	private final static String PROP_PERSISTENT = "persistent"; //$NON-NLS-1$
 	private final static String PROP_CCVERSION = "jcc-version"; //$NON-NLS-1$
 	private final static String PROP_DBVERSION = "db-version"; //$NON-NLS-1$
+
+	private final static String REGEXNAME = "(?<= \\[)[0-9]{1,2}\\.[0-9]{1,2}\\.[0-9]{4}(?=\\])"; // (?<= \[)[0-9]{1,2}\.[0-9]{1,2}\.[0-9]{4}(?=\]) //$NON-NLS-1$
 	
 	private File archive;
-	private File propertiesFile;
 	private Properties properties;
 	
-	public CCBackup(File archive, File properties) throws FileNotFoundException, IOException {
+	public CCBackup(File archive) throws FileNotFoundException, IOException {
 		this.archive = archive;
 		if (! archive.exists()) throw new FileNotFoundException();
 		
-		this.propertiesFile = properties;
+		Tuple<Properties, Boolean> result = loadProperties(archive);
 		
-		this.properties = new Properties();
+		this.properties = result.Item1;
 		
-		if (propertiesFile.exists()) {
-			FileInputStream stream = new FileInputStream(properties);
-			this.properties.load(stream);
-			stream.close();
-		}
+		if (! result.Item2) saveToFile();
 	}
 
 	public File getArchive() {
 		return archive;
 	}
-
-	public File getPropertiesFile() {
-		return propertiesFile;
-	}
 	
+	@SuppressWarnings("nls")
 	private void saveToFile() {
 		try {
-			FileOutputStream stream = new FileOutputStream(propertiesFile);
-			properties.store(stream, HEADER);
-			stream.close();
+			Map<String, String> env = new HashMap<>(); 
+			env.put("create", "false");
+			URI uri = URI.create("jar:" + archive.toURI());
+			try (FileSystem fs = FileSystems.newFileSystem(uri, env))
+			{
+			    try (Writer writer = Files.newBufferedWriter(fs.getPath(ExportHelper.FILENAME_BACKUPINFO), StandardCharsets.UTF_8, StandardOpenOption.CREATE)) {
+					properties.store(writer, HEADER);
+			    }
+			}
+			
+			// delete old prop file if exits
+			try {
+				File externalInfoFile = getPropertyFileFor(archive);
+				if (externalInfoFile.exists()) externalInfoFile.delete();
+			} catch(Exception e) {
+				CCLog.addError(e);
+			}
 		} catch (IOException e) {
 			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CouldNotUpdateBackupInfo", getName()), e); //$NON-NLS-1$
 		}
@@ -130,7 +152,6 @@ public class CCBackup {
 
 	public boolean delete() {
 		try {
-			Files.delete(propertiesFile.toPath());
 			Files.delete(archive.toPath());
 		} catch (IOException e) {
 			CCLog.addError(e);
@@ -147,5 +168,68 @@ public class CCBackup {
 
 	public long getSize() {
 		return FileSizeFormatter.getFileSize(archive);
+	}
+
+	private CCDate getBackupDateFromOldFileFormat(File f) {
+		String sdate = RegExHelper.find(REGEXNAME, f.getName());
+
+		try {
+			return CCDate.deserialize(sdate);
+		} catch (CCFormatException e) {
+			CCLog.addWarning(LocaleBundle.getFormattedString("LogMessage.CouldNotParseCCDate", sdate), e); //$NON-NLS-1$
+			return CCDate.getMinimumDate();
+		}
+	}
+
+	private File getPropertyFileFor(File archive) {
+		return new File(PathFormatter.getWithoutExtension(archive.getAbsolutePath()) + "." + ExportHelper.EXTENSION_BACKUPPROPERTIES); //$NON-NLS-1$
+	}
+
+	@SuppressWarnings("nls")
+	private Tuple<Properties, Boolean> loadProperties(File f) {
+
+		// load from info.ini in zip file
+		try {
+			Map<String, String> env = new HashMap<>(); 
+			env.put("create", "false");
+			URI uri = URI.create("jar:" + archive.toURI());
+			try (FileSystem fs = FileSystems.newFileSystem(uri, env))
+			{
+			    if (Files.exists(fs.getPath(ExportHelper.FILENAME_BACKUPINFO))) {
+					try (Reader reader =  Files.newBufferedReader(fs.getPath(ExportHelper.FILENAME_BACKUPINFO), StandardCharsets.UTF_8)) {
+						Properties result1 = new Properties();
+						result1.load(reader);
+						return Tuple.Create(result1, true);
+					}
+			    }
+			}
+		} catch (IOException e) {
+			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CouldNotUpdateBackupInfo", getName()), e); //$NON-NLS-1$
+		}
+		
+		
+		// [Backwards compatibility] load from external info file - archives before 1.10.2
+		File externalInfoFile = getPropertyFileFor(f);
+		if (externalInfoFile.exists()) {
+			Properties result2 = new Properties();
+			try {
+				FileInputStream stream = new FileInputStream(externalInfoFile);
+				result2.load(stream);
+				stream.close();
+				return Tuple.Create(result2, false);
+			} catch (IOException e) {
+				CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CouldNotUpdateBackupInfo", getName()), e); //$NON-NLS-1$
+			}
+		}
+		
+		
+		// [Backwards compatibility] auto determine values - really old archives
+		Properties result3 = new Properties();
+		result3.setProperty(PROP_NAME, PathFormatter.getFilename(f.getAbsolutePath()));
+		result3.setProperty(PROP_DATE, getBackupDateFromOldFileFormat(f).toStringSerialize());
+		result3.setProperty(PROP_PERSISTENT, "0");
+		result3.setProperty(PROP_CCVERSION, Main.VERSION);
+		result3.setProperty(PROP_DBVERSION, Main.DBVERSION);
+		return Tuple.Create(result3, false);
 	}
 }

@@ -3,12 +3,10 @@ package de.jClipCorn.database.util.backupManager;
 import java.awt.Component;
 import java.io.File;
 import java.io.FileFilter;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 import java.util.zip.ZipOutputStream;
 
 import javax.swing.ProgressMonitor;
@@ -20,10 +18,8 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.datetime.CCDate;
-import de.jClipCorn.util.exceptions.CCFormatException;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.DialogHelper;
-import de.jClipCorn.util.helper.RegExHelper;
 import de.jClipCorn.util.listener.ProgressCallbackListener;
 import de.jClipCorn.util.listener.ProgressCallbackProgressMonitorHelper;
 import de.jClipCorn.util.listener.ProgressCallbackSink;
@@ -31,7 +27,6 @@ import de.jClipCorn.util.listener.ProgressCallbackSink;
 public class BackupManager {
 	private final static String BACKUPFILENAME = "jCC-Backup %s_%d." + ExportHelper.EXTENSION_BACKUP; //$NON-NLS-1$
 	private final static String BACKUPNAME = "Backup of %s"; //$NON-NLS-1$
-	private final static String REGEXNAME = "(?<= \\[)[0-9]{1,2}\\.[0-9]{1,2}\\.[0-9]{4}(?=\\])"; // (?<= \[)[0-9]{1,2}\.[0-9]{1,2}\.[0-9]{4}(?=\]) //$NON-NLS-1$
 
 	private static BackupManager instance = null;
 
@@ -67,64 +62,23 @@ public class BackupManager {
 		return result;
 	}
 
-	private File getPropertyFileFor(File archive) {
-		return new File(PathFormatter.getWithoutExtension(archive.getAbsolutePath()) + "." + ExportHelper.EXTENSION_BACKUPPROPERTIES); //$NON-NLS-1$
-	}
-
-	private Properties getPropertyFileClassFor(File archive) {
-		File prop = getPropertyFileFor(archive);
-
-		if (prop.exists()) {
-			Properties result = new Properties();
-			try {
-				FileInputStream stream = new FileInputStream(prop);
-				result.load(stream);
-				stream.close();
-			} catch (IOException e) {
-				return null;
-			}
-			return result;
-		} else {
-			return null;
-		}
-	}
-
-	private CCDate getBackupDateFromOldFileFormat(File f) {
-		String sdate = RegExHelper.find(REGEXNAME, f.getName());
-
-		try {
-			return CCDate.deserialize(sdate);
-		} catch (CCFormatException e) {
-			CCLog.addWarning(LocaleBundle.getFormattedString("LogMessage.CouldNotParseCCDate", sdate), e); //$NON-NLS-1$
-			return CCDate.getMinimumDate();
-		}
-	}
-
 	private void initBackupsList() {
 		File[] archives = getArchiveFiles();
 
+		long startTime = System.currentTimeMillis();
+		
 		for (File f : archives) {
-			Properties prop = getPropertyFileClassFor(f);
-			File propfile = getPropertyFileFor(f);
-
-			boolean doRecreatePropFile = prop == null;
-
 			try {
-				CCBackup backup = new CCBackup(f, propfile);
-
-				if (doRecreatePropFile) { // Only for Backwards compatibility
-					String filename = PathFormatter.getFilename(f.getAbsolutePath());
-					backup.setName(filename);
-					backup.setDate(getBackupDateFromOldFileFormat(f));
-					backup.setPersistent(false);
-					backup.setCCVersion(Main.VERSION);
-					backup.setDBVersion(Main.DBVERSION);
-				}
+				CCBackup backup = new CCBackup(f);
 
 				backuplist.add(backup);
 			} catch (IOException e) {
 				CCLog.addError(LocaleBundle.getFormattedString("LogMessage.ErrorInitBackupList", f.getName()), e); //$NON-NLS-1$
 			}
+		}
+
+		if (Main.DEBUG) {
+			System.out.println("[DBG] Backups loaded in " + ((System.currentTimeMillis() - startTime) / 10) / 100.0 + "s"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 
@@ -238,7 +192,7 @@ public class BackupManager {
 
 		zos.close();
 
-		CCBackup backup = new CCBackup(file, getPropertyFileFor(file));
+		CCBackup backup = new CCBackup(file);
 		backup.setName(name);
 		backup.setDate(date);
 		backup.setPersistent(persistent);
@@ -267,7 +221,7 @@ public class BackupManager {
 
 		monitor = DialogHelper.getLocalPersistentProgressMonitor(c, "BackupsManagerFrame.dialogs.restoreRunning2"); //$NON-NLS-1$
 
-		if (!ExportHelper.unzipDir(archive, directoryP, new ProgressCallbackProgressMonitorHelper(monitor))) {
+		if (!ExportHelper.unzipBackupDir(archive, directoryP, new ProgressCallbackProgressMonitorHelper(monitor))) {
 			CCLog.addFatalError(LocaleBundle.getString("LogMessage.RestoreFailed")); //$NON-NLS-1$
 			return false;
 		}

@@ -135,5 +135,3 @@ public class Main {
 //TODO Move Series into seperate table
 //TODO Settings to (additionally) show global episode numbers in series
 //TODO Option to mark season as extra (ordered last, special filename, not in carousal but on right side of it ...)
-
-//TODO jccbackup xml info into zip

@@ -136,11 +136,10 @@ public class Main {
 //      add filter for actors. 
 //      don't show all actors, make it configurable which actors are "enabled" (?)
 
-//TODO Settings for display dates (DE | US | ISO)
-
 //TODO Use http://www.iconarchive.com/show/series-season-folder-icons-by-aaron-sinuhe.html 
 
 //TODO Better icon for Open_lastplayedseries
 //TODO Move Series into seperate table
 //TODO Settings to (additionally) show global episode numbers in series
 //TODO Option to mark season as extra (ordered last, special filename, not in carousal but on right side of it ...)
+//TODO Statistics option to switch between SERIES|MOVIES|BOTH for all statistics (where it makes sense)

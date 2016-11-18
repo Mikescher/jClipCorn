@@ -41,6 +41,16 @@ public class StatisticsHelper {
 
 		return c;
 	}
+	
+	public static int getUnviewedMovieCount(CCMovieList ml) {
+		int c = 0;
+
+		for (CCMovie mov : ml.iteratorMovies()) {
+			c += mov.isViewed() ? 0 : 1;
+		}
+
+		return c;
+	}
 
 	public static int getViewedEpisodeCount(CCMovieList ml) {
 		int c = 0;
@@ -335,26 +345,6 @@ public class StatisticsHelper {
 		}
 		
 		return result;
-	}
-	
-	public static int getMovieViewedCount(CCMovieList ml) {
-		int v = 0;
-		for (CCMovie m : ml.iteratorMovies()) {
-			if (m.isViewed()) {
-				v++;
-			}
-		}
-		return v;
-	}
-	
-	public static int getMovieUnviewedCount(CCMovieList ml) {
-		int v = 0;
-		for (CCMovie m : ml.iteratorMovies()) {
-			if (! m.isViewed()) {
-				v++;
-			}
-		}
-		return v;
 	}
 	
 	public static int getMinimumMovieYear(CCMovieList ml) {
@@ -766,7 +756,7 @@ public class StatisticsHelper {
 				CCEpisode episode = season.getEpisodeByArrayIndex(ep);
 				
 				for (CCDateTime timestamp : episode.getViewedHistory()) {
-					dates.add(new SortableTuple<>(timestamp.date, season.getSeasonNumber() * 10000 + episode.getEpisodeNumber()));
+					if (!timestamp.isUnspecifiedDateTime()) dates.add(new SortableTuple<>(timestamp.date, season.getSeasonNumber() * 10000 + episode.getEpisodeNumber()));
 				}
 			}
 		}
@@ -826,7 +816,7 @@ public class StatisticsHelper {
 	}
 
 	public static CCDate getSeriesTimespansStart(HashMap<CCSeries, List<CCDatespan>> seriesMap) {
-		CCDate start = CCDate.getCurrentDate();
+		CCDate start = CCDate.getMaximumDate();
 		
 		for (Entry<CCSeries, List<CCDatespan>> set : seriesMap.entrySet()) {
 			for (CCDatespan span : set.getValue()) {
@@ -838,7 +828,7 @@ public class StatisticsHelper {
 	}
 
 	public static CCDate getSeriesTimespansEnd(HashMap<CCSeries, List<CCDatespan>> seriesMap) {
-		CCDate end = CCDate.getCurrentDate();
+		CCDate end = CCDate.getMinimumDate();
 		
 		for (Entry<CCSeries, List<CCDatespan>> set : seriesMap.entrySet()) {
 			for (CCDatespan span : set.getValue()) {

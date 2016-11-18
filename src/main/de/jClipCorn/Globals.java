@@ -5,7 +5,6 @@ import java.util.Map;
 
 import de.jClipCorn.gui.frames.mainFrame.MainFrame;
 import de.jClipCorn.gui.frames.mainFrame.clipStatusbar.ClipStatusBar;
-import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.util.MapStopWatch;
 
 @SuppressWarnings("nls")
@@ -21,7 +20,7 @@ public final class Globals {
 	public static int TIMING_DATABASE_CONNECT      = 0x06;
 	public static int TIMING_MOVIELIST_FILL        = 0x07;
 	
-	private static Map<Integer, String> TIMING_IDS = new HashMap<>();
+	public static Map<Integer, String> TIMING_IDS = new HashMap<>();
 	
 	public static MapStopWatch TIMINGS = new MapStopWatch();
 
@@ -36,7 +35,7 @@ public final class Globals {
 		TIMING_IDS.put(TIMING_MOVIELIST_FILL,        "MOVIELIST_FILL");
 		
 		TIMINGS.setOnTimerStop((id, time) -> {
-			CCLog.addDebug("Timer " + TIMING_IDS.get(id) + " finished := " + time + "ms");
+			//CCLog.addDebug("Timer " + TIMING_IDS.get(id) + " finished := " + time + "ms");
 			
 			MainFrame inst = MainFrame.getInstance();
 			if (inst != null) {

@@ -47,8 +47,8 @@ public class StatisticsViewedChart extends StatisticsChart {
 	
 	private PieDataset getDataSet(CCMovieList movielist) {
 		DefaultPieDataset dataset = new DefaultPieDataset();
-		dataset.setValue(LocaleBundle.getString("StatisticsFrame.chartAxis.PieViewed"), StatisticsHelper.getMovieViewedCount(movielist)); //$NON-NLS-1$
-		dataset.setValue(LocaleBundle.getString("StatisticsFrame.chartAxis.PieUnviewed"), StatisticsHelper.getMovieUnviewedCount(movielist)); //$NON-NLS-1$
+		dataset.setValue(LocaleBundle.getString("StatisticsFrame.chartAxis.PieViewed"), StatisticsHelper.getViewedMovieCount(movielist)); //$NON-NLS-1$
+		dataset.setValue(LocaleBundle.getString("StatisticsFrame.chartAxis.PieUnviewed"), StatisticsHelper.getUnviewedMovieCount(movielist)); //$NON-NLS-1$
 		
         return dataset;
 	}

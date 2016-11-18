@@ -55,7 +55,7 @@ public class StatisticsSeriesTimeline extends StatisticsPanel {
 		seriesMapZero = StatisticsHelper.getAllSeriesTimespans(movielist, 0);
 		seriesList = StatisticsHelper.convertMapToOrderedKeyList(seriesMap, comp);
 		seriesMapStart = StatisticsHelper.getSeriesTimespansStart(seriesMap);
-		seriesMapEnd = StatisticsHelper.getSeriesTimespansEnd(seriesMap);
+		seriesMapEnd = CCDate.max(StatisticsHelper.getSeriesTimespansEnd(seriesMap), CCDate.getCurrentDate());
 	}
 	
 	private JComponent create(Map<CCSeries, Boolean> map) {

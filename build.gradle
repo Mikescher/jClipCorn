@@ -98,6 +98,9 @@ task changelog << {
 
 	def lastRelease = ""
 
+	def rex_Normal  = /(?i)^[0-9]+\.[0-9]+(\.[0-9]+)?(\.[0-9]+)?\s+((Big|Possible) )?(WIP\-)?(Fixes( and Tasks)?|Libraryfix|Glitchfix|Code Cleanup|Documentation|Changelog|Tasks?|Features?|(Emergency\-)?Bugfixe?s?|Updates?|Rea?leases?|Others?|Features\+Bugfix)[ \r\n\t\s:]/
+	def rex_Release = /(?i)^[0-9]+\.[0-9]+(\.[0-9]+)?\s+Rea?leases?/
+
 	log.each 
 	{ 
 		def (partHash, partDate, partMessage) = "${it}".split('_____INNERDEL_____')
@@ -106,13 +109,12 @@ task changelog << {
 		partDate = partDate.trim()
 		partMessage = partMessage.trim()
 
-		def isNormal = partMessage.find(/(?i)^[0-9]+\.[0-9]+(\.[0-9]+)?(\.[0-9]+)?\s+((Big|Possible) )?(WIP\-)?(Fixes( and Tasks)?|Libraryfix|Glitchfix|Code Cleanup|Documentation|Changelog|Tasks?|Features?|(Emergency\-)?Bugfixe?s?|Updates?|Rea?leases?|Others?|Features\+Bugfix)[ \r\n\t\s:]/)
-		def isRelease = partMessage.find(/(?i)^[0-9]+\.[0-9]+(\.[0-9]+)?\s+Rea?leases?/) && (partMessage.split('\n').getAt(0).trim().split(' ').getAt(0).trim() != lastRelease.trim())
+		def isNormal = partMessage.find(rex_Normal)
+		def isRelease = partMessage.find(rex_Release) && (partMessage.split('\n').getAt(0).trim().split(' ').getAt(0).trim() != lastRelease.trim())
 
 		partMessage = partMessage.replaceAll('\r\n', '\n')                     // normalize linebreaks
 		partMessage = partMessage.replaceAll(/\n\n+/, '\n')                    // remove empty lines
 		partMessage = partMessage.replaceAll(/^1\.10\.10/, '1.10.0')           // fix misspelling
-		partMessage = partMessage.replaceAll(/\n(?=[^ ])/, '\n  ')             // indent info lines
 
 		partMessage = partMessage.replace('Emergency-Bugfix', 'Bugfix')        // word replacement
 		partMessage = partMessage.replace('Libraryfix', 'Bugfix')              // word replacement
@@ -134,14 +136,30 @@ task changelog << {
 
 			if (partMessage.split('\n').size() > 1) 
 			{
-				file << "${partMessage}\n"
+				partMessage.split('\n').eachWithIndex
+				{ line , i ->
+					line = line.trim()
+					def isNewGroup = line.find(rex_Normal)
+					if (i == 0 || isNewGroup)
+						file << "${line}\n"
+					else
+						file << "  ${line}\n"
+				}
 			}
 
 			lastRelease = partMessageHeader.split(' ').getAt(0).trim()
 		} 
 		else if (isNormal) 
 		{
-			file << "${partMessage}\n"
+			partMessage.split('\n').eachWithIndex 
+			{ line , i ->
+				line = line.trim()
+				def isNewGroup = line.find(rex_Normal)
+				if (i == 0 || isNewGroup)
+					file << "${line}\n"
+				else
+					file << "  ${line}\n"
+			}
 		} 
 		else 
 		{

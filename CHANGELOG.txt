@@ -49,9 +49,9 @@
 
 1.10.0 Feature: Added Group-Manage frame (delete, rename, merge, update)
 1.10.0 Feature: Added Idiot-mode ;D
- - with hidden extended settings button
- - and hidden Maintenance menu
- - can only be deactivated by manually editing config file
+  - with hidden extended settings button
+  - and hidden Maintenance menu
+  - can only be deactivated by manually editing config file
 1.10.0 Task: Use EnumWrapper for all multi-value properties (better than magic numbers)
 1.10.0 Features: More Parser options:
   - Optionally open TMDB-URL with language suffix
@@ -100,13 +100,13 @@
   - ERROR_INVALID_HISTORY
 1.10.0 Feature: Added UndoViewed to MainFrame popup
 1.10.0 Feature: Finished OnlineReference intagration
- - Search TMDB for metadata
- - Added options to search TMDB and IMDB
- - Search TMDB for images
- - Added Maintenance-dialog to mass find OnlineRef ID's
- - Automatically include RefID in AddMovie/AddEpisode frame
- - ShowInBrowser now uses URL from CCOnlineReference
- - Added DatabaseError ERROR_INVALID_ONLINEREF
+  - Search TMDB for metadata
+  - Added options to search TMDB and IMDB
+  - Search TMDB for images
+  - Added Maintenance-dialog to mass find OnlineRef ID's
+  - Automatically include RefID in AddMovie/AddEpisode frame
+  - ShowInBrowser now uses URL from CCOnlineReference
+  - Added DatabaseError ERROR_INVALID_ONLINEREF
 1.10.0 Feature: Added TheMovieDB.org online-search provider
 1.10.0 Bugfix: Fixed Exception when trying to add a movie/series/season without cover
 1.10.0 Task: Added basic implementation of OnlineReference
@@ -359,8 +359,8 @@
 
 1.9.1 Feature
   Improved loadTime:
-    Added Cache for Substance-Look'n'Feels ( ~200ms )
-    Removed unnecessary InvokeAndWait on busy Dispatcher ( ~3000ms )
+  Added Cache for Substance-Look'n'Feels ( ~200ms )
+  Removed unnecessary InvokeAndWait on busy Dispatcher ( ~3000ms )
 1.9.1 Feature
   Added Action: "Open Last played Series"
 1.9.1 Feature
@@ -374,7 +374,7 @@
   Fixed DisplayString of OnlinescoreFilter
   Fixed CustomViewedFilter AV (was not using new Tribool viewed-state)
   Fixed Bug where DIalog-FInish-Listener was called more than one time
-    => cause of many strange behaviours
+  => cause of many strange behaviours
   Updated .gitignore for *.flst files
 1.9.1 Feature
   Added Option to reset Score when Importing Movies/Series
@@ -393,7 +393,7 @@
   Added Hover-Cursor for Zyklus-Clicking
 1.9.1 Feature
   Added parseWatchDataFrame
- -> Parses Watched Series/Movies from plainText
+  -> Parses Watched Series/Movies from plainText
 1.9.1 Big Feature (and Bugfixes)
   Added CoverCropDialog(crop & edit covers)
   Added ImageCropper to AddMovieFrame

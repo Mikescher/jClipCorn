@@ -99,6 +99,10 @@ public class CCLog {
 	public static void addUndefinied(String msg) {
 		add('[' + Thread.currentThread().toString() + ']' + ' ' + msg, CCLogType.LOG_ELEM_UNDEFINED, new Exception().getStackTrace());
 	}
+	
+	public static void addDebug(String msg) {
+		System.out.println("[DBG] " + msg); //$NON-NLS-1$
+	}
 
 	private static void add(String txt, CCLogType type, StackTraceElement[] trace) {
 		CCLogElement cle = new CCLogElement(txt, type, trace);
@@ -110,7 +114,7 @@ public class CCLog {
 		} else {
 			log.add(cle);
 
-			System.out.println(cle.getFormatted()); // This is desired - let it be
+			System.out.println(cle.getFormatted().trim()); // This is desired - let it be
 
 			if (type == CCLogType.LOG_ELEM_FATALERROR) {
 				DialogHelper.showDispatchError(LocaleBundle.getString("Main.AbortCaption"), LocaleBundle.getFormattedString("Main.AbortMessage", cle.getFormatted(CCLogElement.FORMAT_LEVEL_MID))); //$NON-NLS-1$ //$NON-NLS-2$

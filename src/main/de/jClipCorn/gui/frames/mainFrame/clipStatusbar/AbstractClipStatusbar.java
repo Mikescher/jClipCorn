@@ -15,6 +15,8 @@ import javax.swing.JSeparator;
 import javax.swing.SwingConstants;
 import javax.swing.border.EtchedBorder;
 
+import de.jClipCorn.gui.guiComponents.JTooltipLabel;
+
 public class AbstractClipStatusbar extends JPanel {
 	private static final long serialVersionUID = -7508283304287773899L;
 	
@@ -103,7 +105,7 @@ public class AbstractClipStatusbar extends JPanel {
 			return new JLabel(txt);
 		}
 		
-		JLabel lbl = new JLabel(txt);
+		JLabel lbl = new JTooltipLabel(txt, -1, Integer.MAX_VALUE, -1);
 		
 		GridBagConstraints gbc = new GridBagConstraints();
 		gbc.anchor = GridBagConstraints.WEST;

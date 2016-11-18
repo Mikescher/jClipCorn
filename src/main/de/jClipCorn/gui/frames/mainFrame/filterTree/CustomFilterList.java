@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import de.jClipCorn.Main;
 import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.operators.CustomAndOperator;
 import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.operators.CustomOperator;
 import de.jClipCorn.gui.localization.LocaleBundle;
@@ -77,6 +76,6 @@ public class CustomFilterList extends ArrayList<CustomFilterObject> {
 			}
 		}
 		
-		if (Main.DEBUG) System.out.println("[DBG] " + size() + " Filters loaded from File"); //$NON-NLS-1$ //$NON-NLS-2$
+		CCLog.addDebug(size() + " Filters loaded from File"); //$NON-NLS-1$
 	}
 }

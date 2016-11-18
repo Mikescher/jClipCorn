@@ -44,7 +44,7 @@ public class CCRIntProperty extends CCIntProperty {
 			CCLog.addWarning(LocaleBundle.getFormattedString("LogMessage.PropRangeExceeded", min, max, identifier, i)); //$NON-NLS-1$
 			return max - 1;
 		} else {
-			System.out.println("Should never be reached [CCRIntProperty]"); //$NON-NLS-1$
+			CCLog.addUndefinied("Should never be reached [CCRIntProperty]"); //$NON-NLS-1$
 			return 0;
 		}
 	}
@@ -60,7 +60,7 @@ public class CCRIntProperty extends CCIntProperty {
 			super.setValue(max - 1);
 			CCLog.addWarning(LocaleBundle.getFormattedString("LogMessage.PropRangeExceeded", min, max, identifier, val)); //$NON-NLS-1$
 		} else {
-			System.out.println("Should never be reached [CCRIntProperty]"); //$NON-NLS-1$
+			CCLog.addUndefinied("Should never be reached [CCRIntProperty]"); //$NON-NLS-1$
 		}
 		
 		return getValue();

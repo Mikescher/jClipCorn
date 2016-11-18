@@ -5,7 +5,7 @@ import java.util.List;
 import de.jClipCorn.properties.CCProperties;
 
 
-public class ClipToolbar extends AbstractClipToolbar{
+public class ClipToolbar extends AbstractClipToolbar {
 	private static final long serialVersionUID = -3817962841171328183L;
 	
 	public final static String IDENT_SEPERATOR = "#"; //$NON-NLS-1$

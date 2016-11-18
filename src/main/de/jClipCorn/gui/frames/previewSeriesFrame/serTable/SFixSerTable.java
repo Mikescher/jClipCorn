@@ -88,7 +88,7 @@ public class SFixSerTable extends SFixTable {
 		case SerTableModel.COLUMN_SIZE:
 			return renderer_filesize;
 		default:
-			System.out.println("Mysterious switch jump in [SFixSerTable.java]"); //$NON-NLS-1$
+			CCLog.addUndefinied("Mysterious switch jump in [SFixSerTable.java]"); //$NON-NLS-1$
 			return super.getCellRenderer(row, column); //renderer_default;
 		}
 	}

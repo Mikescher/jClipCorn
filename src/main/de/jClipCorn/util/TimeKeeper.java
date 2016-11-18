@@ -2,6 +2,8 @@ package de.jClipCorn.util;
 
 import java.util.Stack;
 
+import de.jClipCorn.gui.log.CCLog;
+
 public class TimeKeeper {
 	static Stack<Long> time_ms = new Stack<>();
 
@@ -12,7 +14,7 @@ public class TimeKeeper {
 	@SuppressWarnings("nls")
 	public static void stopAndPrint() {
 		if (time_ms.isEmpty()) {
-			System.out.println("TimeKeeper ERROR: Stack is empty");
+			CCLog.addDebug("TimeKeeper ERROR: Stack is empty");
 			return;
 		}
 		
@@ -20,13 +22,13 @@ public class TimeKeeper {
 		
 		StackTraceElement e = new Throwable().getStackTrace()[1];
 		
-		System.out.println(e.getFileName().substring(e.getFileName().lastIndexOf('.', e.getFileName().lastIndexOf('.') - 1) + 1) + " -> " + e.getMethodName() + "()  (Line " + e.getLineNumber() + "): " + milllis + "ms");
+		CCLog.addDebug(e.getFileName().substring(e.getFileName().lastIndexOf('.', e.getFileName().lastIndexOf('.') - 1) + 1) + " -> " + e.getMethodName() + "()  (Line " + e.getLineNumber() + "): " + milllis + "ms");
 	}
 	
 	@SuppressWarnings("nls")
 	public static long stop() {
 		if (time_ms.isEmpty()) {
-			System.out.println("TimeKeeper ERROR: Stack is empty");
+			CCLog.addDebug("TimeKeeper ERROR: Stack is empty");
 			return -1;
 		}
 		
@@ -34,7 +36,7 @@ public class TimeKeeper {
 	}
 	
 	public static void freeze() {
-		System.out.print("FREEZE>> "); //$NON-NLS-1$
+		CCLog.addDebug("FREEZE>> "); //$NON-NLS-1$
 		int i = 20;
 		while (i --> 0) { // the "goes to" operator :3
 			try {

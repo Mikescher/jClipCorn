@@ -194,10 +194,8 @@ public class CCProperties {
 		
 		createProperties();
 		interpreteArgs(args);
-		
-		if (Main.DEBUG) {
-			System.out.println("[DBG] " + propertylist.size() + " Properties in List intialized"); //$NON-NLS-1$ //$NON-NLS-2$
-		}
+
+		CCLog.addDebug(propertylist.size() + " Properties in List intialized"); //$NON-NLS-1$
 		
 		if (firstLaunch) save();
 		
@@ -469,9 +467,8 @@ public class CCProperties {
 			for (int j = 0; j < readOnlyArgs.length; j++) {
 				if (args[i].equalsIgnoreCase(readOnlyArgs[j])) {
 					ARG_READONLY = true;
-					if (Main.DEBUG) {
-						System.out.println("[DBG] ReadOnly Mode activated (" + args[i] + ")"); //$NON-NLS-1$ //$NON-NLS-2$
-					}
+
+					CCLog.addDebug("ReadOnly Mode activated (" + args[i] + ")"); //$NON-NLS-1$ //$NON-NLS-2$
 				}
 			}
 		}

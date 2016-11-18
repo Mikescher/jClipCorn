@@ -122,7 +122,7 @@ public class LookAndFeelManager {
 
 		// print the color keys
 		for (String colorKey : colorKeys) {
-			System.out.println(colorKey);
+			CCLog.addDebug(colorKey);
 		}
 	}
 	

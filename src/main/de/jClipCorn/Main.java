@@ -23,14 +23,23 @@ public class Main {
 	public static boolean DEBUG = "true".equals(System.getProperty("ineclipse"));  //$NON-NLS-1$//$NON-NLS-2$
 	public static boolean BETA = true;
 	
+	
 	public static void main(String[] arg) {
-		CCProperties.create(PROPERTIES_PATH, arg); // FIRST ACTION - CACHE THIS SHIT - FUCKING IMPORTANT
+		Globals.TIMINGS.start(Globals.TIMING_LOAD_PROPERTIES);
+		{
+			CCProperties.create(PROPERTIES_PATH, arg); // FIRST ACTION - CACHE THIS SHIT - FUCKING IMPORTANT
+		}
+		Globals.TIMINGS.stop(Globals.TIMING_LOAD_PROPERTIES);
 		
 		CCLog.setPath(CCProperties.getInstance().PROP_LOG_PATH.getValue());
 		
 		Thread.setDefaultUncaughtExceptionHandler(ExceptionHandler.getInstance()); // For Main Thread
-		
-		PathFormatter.testWritePermissions();
+
+		Globals.TIMINGS.start(Globals.TIMING_LOAD_TESTREADONLY);
+		{
+			PathFormatter.testWritePermissions();
+		}
+		Globals.TIMINGS.stop(Globals.TIMING_LOAD_TESTREADONLY);
 
 		LookAndFeelManager.setLookAndFeel(CCProperties.getInstance().PROP_UI_LOOKANDFEEL.getValue());
 
@@ -63,12 +72,12 @@ public class Main {
 		}
 
 		if (CCProperties.getInstance().PROP_LOADING_PRELOADRESOURCES.getValue()) {
+			Globals.TIMINGS.start(Globals.TIMING_LOAD_PRELOADRESOURCES);
 			Resources.preload();
+			Globals.TIMINGS.stop(Globals.TIMING_LOAD_PRELOADRESOURCES);
 		}
 		
-		if (DEBUG) {
-			System.out.println("[DBG] " + LocaleBundle.getTranslationCount() + " Translations in Locale " + LocaleBundle.getCurrentLocale()); //$NON-NLS-1$ //$NON-NLS-2$
-		}
+		CCLog.addDebug(LocaleBundle.getTranslationCount() + " Translations in Locale " + LocaleBundle.getCurrentLocale()); //$NON-NLS-1$
 	}
 }
 

@@ -81,7 +81,7 @@ public class CCCoverCache {
 				if (! Main.DEBUG) {
 					CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CoverNotFound", name)); //$NON-NLS-1$
 				} else {
-					System.out.println(String.format("[DBG] Cover not found (%s)", name)); //$NON-NLS-1$
+					CCLog.addDebug(String.format("Cover not found (%s)", name)); //$NON-NLS-1$
 				}
 				return CachedResourceLoader.getImage(Resources.IMG_COVER_NOTFOUND);
 			}
@@ -180,9 +180,7 @@ public class CCCoverCache {
 	private String addNewCoverToFolder(BufferedImage cov) {
 		int id = getNewCoverID();
 		
-		if (Main.DEBUG) {
-			System.out.println("addingCoverToFolder: " + id); //$NON-NLS-1$
-		}
+		CCLog.addDebug("addingCoverToFolder: " + id); //$NON-NLS-1$
 
 		String fname = CCProperties.getInstance().PROP_COVER_PREFIX.getValue() + id + '.' + CCProperties.getInstance().PROP_COVER_TYPE.getValue();
 		String path = coverPath + fname;
@@ -223,9 +221,7 @@ public class CCCoverCache {
 			CCLog.addWarning(LocaleBundle.getFormattedString("LogMessage.DeleteCover", covername)); //$NON-NLS-1$
 		}
 		
-		if (Main.DEBUG) {
-			System.out.println("removing Cover from Folder: " + covername); //$NON-NLS-1$
-		}
+		CCLog.addDebug("removing Cover from Folder: " + covername); //$NON-NLS-1$
 	}
 	
 	public String getCoverPath() {

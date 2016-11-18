@@ -6,7 +6,7 @@ import java.util.Map;
 
 import javax.swing.filechooser.FileSystemView;
 
-import de.jClipCorn.Main;
+import de.jClipCorn.Globals;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.util.helper.RegExHelper;
@@ -68,10 +68,11 @@ public class DriveMap {
 	}
 
 	private static void createMap() {
+		Globals.TIMINGS.start(Globals.TIMING_SCAN_DRIVES);
+		
 		is_creating = true;
 		created = false;
 		
-		long sss = System.currentTimeMillis();
 		driveNameMap = new HashMap<>();
 		driveLetterMap = new HashMap<>();
 		
@@ -86,10 +87,8 @@ public class DriveMap {
 		
 		created = true;
 		is_creating = false;
-		
-		if (Main.DEBUG) {
-			System.out.println("[DBG] FileSystem scanned in " + ((System.currentTimeMillis() - sss) / 100) / 10.0 + "s"); //$NON-NLS-1$ //$NON-NLS-2$
-		}
+
+		Globals.TIMINGS.stop(Globals.TIMING_SCAN_DRIVES);
 	}
 	
 	private static String getDriveName(File f) {

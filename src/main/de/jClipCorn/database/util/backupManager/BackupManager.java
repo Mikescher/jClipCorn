@@ -11,6 +11,7 @@ import java.util.zip.ZipOutputStream;
 
 import javax.swing.ProgressMonitor;
 
+import de.jClipCorn.Globals;
 import de.jClipCorn.Main;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.util.ExportHelper;
@@ -63,9 +64,9 @@ public class BackupManager {
 	}
 
 	private void initBackupsList() {
+		Globals.TIMINGS.start(Globals.TIMING_INIT_BACKUPMANAGER);
+		
 		File[] archives = getArchiveFiles();
-
-		long startTime = System.currentTimeMillis();
 		
 		for (File f : archives) {
 			try {
@@ -77,9 +78,7 @@ public class BackupManager {
 			}
 		}
 
-		if (Main.DEBUG) {
-			System.out.println("[DBG] Backups loaded in " + ((System.currentTimeMillis() - startTime) / 10) / 100.0 + "s"); //$NON-NLS-1$ //$NON-NLS-2$
-		}
+		Globals.TIMINGS.stop(Globals.TIMING_INIT_BACKUPMANAGER);
 	}
 
 	public void doActions(Component c) {

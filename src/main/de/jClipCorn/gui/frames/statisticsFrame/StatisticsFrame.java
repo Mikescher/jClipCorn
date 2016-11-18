@@ -53,6 +53,7 @@ import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsTagChart;
 import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsViewedChart;
 import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsYearChart;
 import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.gui.resources.CachedResourceLoader;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.TimeKeeper;
@@ -106,7 +107,7 @@ public class StatisticsFrame extends JFrame {
 		long init_time = TimeKeeper.stop();
 		
 		if (Main.DEBUG)
-			System.out.println(String.format("[DBG] Statistics initialization time: %d ms", init_time)); //$NON-NLS-1$
+			CCLog.addDebug(String.format("Statistics initialization time: %d ms", init_time)); //$NON-NLS-1$
 		
 		cbxChooseChart.setSelectedIndex(-1);
 

@@ -15,7 +15,6 @@ import javax.swing.KeyStroke;
 
 import org.apache.commons.lang.StringUtils;
 
-import de.jClipCorn.Main;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.gui.frames.mainFrame.clipToolbar.ClipToolbar;
 import de.jClipCorn.gui.localization.LocaleBundle;
@@ -191,7 +190,7 @@ public class CCActionElement {
 		for (int i = 0; i < childs.size(); i++) {
 			for (int j = 0; j < childs.size(); j++) {
 				if (i != j && StringUtils.equalsIgnoreCase(childs.get(i).getName(), childs.get(j).getName())) {
-					System.out.println(String.format("[DBG] Duplicate Item (%s) in ActionTree found", childs.get(j).getCaptionIdent())); //$NON-NLS-1$
+					CCLog.addDebug(String.format("Duplicate Item (%s) in ActionTree found", childs.get(j).getCaptionIdent())); //$NON-NLS-1$
 				}
 			}
 		}
@@ -204,7 +203,7 @@ public class CCActionElement {
 		}
 		build.append("|>"); //$NON-NLS-1$
 		build.append(name);
-		System.out.println(build.toString());
+		CCLog.addDebug(build.toString());
 		for (CCActionElement el : children) {
 			el.printTree(deep+1);
 		}
@@ -298,9 +297,7 @@ public class CCActionElement {
 			childs.get(i).createProperty(props);
 		}
 		
-		if (Main.DEBUG) {
-			System.out.println(String.format("[DBG] %d Keystrokeproperties in ActionTree intialized", childs.size())); //$NON-NLS-1$
-		}
+		CCLog.addDebug(String.format("%d Keystrokeproperties in ActionTree intialized", childs.size())); //$NON-NLS-1$
 	}
 	
 	public String getRootToolbarConfig() {

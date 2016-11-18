@@ -527,7 +527,7 @@ public abstract class GenericDatabase {
 		try {
 			return connection.prepareStatement(sql);
 		} catch (SQLException e) {
-			System.out.println("Cannot prepare statement: '"+sql + "' cause of " + e.getMessage());
+			CCLog.addDebug("Cannot prepare statement: '"+sql + "' cause of " + e.getMessage());
 			
 			throw e;
 		}

@@ -152,7 +152,7 @@ public class CCDatabase {
 				
 				return DatabaseConnectResult.SUCESS_CONNECTED;
 			} else {
-				System.out.println("Cannot connect because of reason:\n" + db.getLastError()); //$NON-NLS-1$
+				CCLog.addDebug("Cannot connect because of reason:\n" + db.getLastError()); //$NON-NLS-1$
 				
 				return DatabaseConnectResult.ERROR_CANTCONNECT;
 			}
@@ -162,7 +162,7 @@ public class CCDatabase {
 				
 				return DatabaseConnectResult.SUCCESS_CREATED;
 			} else {
-				System.out.println("Cannot create because of reason:\n" + db.getLastError()); //$NON-NLS-1$
+				CCLog.addDebug("Cannot create because of reason:\n" + db.getLastError()); //$NON-NLS-1$
 				
 				return DatabaseConnectResult.ERROR_CANTCREATE;
 			}

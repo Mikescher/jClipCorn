@@ -163,6 +163,6 @@ public class LocaleBundle {
 	}
 	
 	public static void printTranslationTree() {
-		System.out.println(getTranslationTree());
+		CCLog.addDebug(getTranslationTree());
 	}
 }

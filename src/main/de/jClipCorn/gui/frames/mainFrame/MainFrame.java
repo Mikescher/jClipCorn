@@ -370,7 +370,7 @@ public class MainFrame extends JFrame implements CCDBUpdateListener {
 						public void run() {
 							if (e.getID() == 1) {
 								if (Main.DEBUG) {
-									System.out.println("[DBG] Update found"); //$NON-NLS-1$
+									CCLog.addDebug("Update found"); //$NON-NLS-1$
 								} else {
 									ShowUpdateFrame suf = new ShowUpdateFrame(MainFrame.this, (UpdateConnector) e.getSource(), true);
 									suf.setVisible(true);

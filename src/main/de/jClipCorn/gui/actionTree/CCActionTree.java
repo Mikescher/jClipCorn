@@ -226,7 +226,7 @@ public class CCActionTree extends UIActionTree{
 		if (Main.DEBUG) {
 			root.testTree();
 			//printTree();
-			System.out.println(String.format("[DBG] %d Elements in ActionTree intialized", root.getAllChildren().size())); //$NON-NLS-1$
+			CCLog.addDebug(String.format("%d Elements in ActionTree intialized", root.getAllChildren().size())); //$NON-NLS-1$
 		}
 	}
 

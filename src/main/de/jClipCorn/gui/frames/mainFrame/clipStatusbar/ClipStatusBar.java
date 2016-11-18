@@ -8,6 +8,7 @@ import javax.swing.JLabel;
 import javax.swing.JProgressBar;
 import javax.swing.SwingUtilities;
 
+import de.jClipCorn.Globals;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.util.CCDBUpdateListener;
@@ -134,11 +135,11 @@ public class ClipStatusBar extends AbstractClipStatusbar implements CCDBUpdateLi
 		}
 		
 		updateLables_Movies();
-		lblViewed.setText(LocaleBundle.getFormattedString("ClipStatusBar.Viewed", movielist.getViewedCount())); //$NON-NLS-1$
-		lblSeries.setText(LocaleBundle.getFormattedString("ClipStatusBar.Series", movielist.getEpisodeCount())); //$NON-NLS-1$
-		lblLength.setText(LocaleBundle.getFormattedString("ClipStatusBar.Length", TimeIntervallFormatter.formatPointed(movielist.getTotalLength(CCProperties.getInstance().PROP_STATUSBAR_CALC_SERIES_IN_LENGTH.getValue())))); //$NON-NLS-1$
-		lblSize.setText(  LocaleBundle.getFormattedString("ClipStatusBar.Size", FileSizeFormatter.format(movielist.getTotalSize(CCProperties.getInstance().PROP_STATUSBAR_CALC_SERIES_IN_SIZE.getValue())))); //$NON-NLS-1$
-		lblStarttime.setText(LocaleBundle.getFormattedString("ClipStatusBar.Starttime", movielist.getLoadTime() / 1000, movielist.getTotalDatabaseCount())); //$NON-NLS-1$
+		updateLables_Viewed();
+		updateLables_Series();
+		updateLables_Length();
+		updateLables_Size();
+		updateLables_Starttime();
 		updateLabels_Log();
 	}
 	
@@ -150,6 +151,39 @@ public class ClipStatusBar extends AbstractClipStatusbar implements CCDBUpdateLi
 	
 	public void updateLables_Movies() {
 		lblMovies.setText(LocaleBundle.getFormattedString("ClipStatusBar.Movies", owner.getClipTable().getRowCount(), movielist.getElementCount())); //$NON-NLS-1$
+	}
+	
+	private void updateLables_Viewed() {
+		lblViewed.setText(LocaleBundle.getFormattedString("ClipStatusBar.Viewed", movielist.getViewedCount())); //$NON-NLS-1$
+	}
+	
+	private void updateLables_Series() {		
+		lblSeries.setText(LocaleBundle.getFormattedString("ClipStatusBar.Series", movielist.getEpisodeCount())); //$NON-NLS-1$
+	}
+	
+	private void updateLables_Length() {
+		lblLength.setText(LocaleBundle.getFormattedString("ClipStatusBar.Length", TimeIntervallFormatter.formatPointed(movielist.getTotalLength(CCProperties.getInstance().PROP_STATUSBAR_CALC_SERIES_IN_LENGTH.getValue())))); //$NON-NLS-1$
+	}
+	
+	private void updateLables_Size() {
+		lblSize.setText(  LocaleBundle.getFormattedString("ClipStatusBar.Size", FileSizeFormatter.format(movielist.getTotalSize(CCProperties.getInstance().PROP_STATUSBAR_CALC_SERIES_IN_SIZE.getValue())))); //$NON-NLS-1$
+	}
+	
+	public void updateLables_Starttime() {
+		StringBuilder tooltip = new StringBuilder();
+		
+		tooltip.append("<html>"); //$NON-NLS-1$
+		if (Globals.TIMINGS.contains(Globals.TIMING_LOAD_PROPERTIES))       tooltip.append(String.format("TIMING_LOAD_PROPERTIES       = %dms<br/>", Globals.TIMINGS.getMilliseconds(Globals.TIMING_LOAD_PROPERTIES))); //$NON-NLS-1$
+		if (Globals.TIMINGS.contains(Globals.TIMING_LOAD_TESTREADONLY))     tooltip.append(String.format("TIMING_LOAD_TESTREADONLY     = %dms<br/>", Globals.TIMINGS.getMilliseconds(Globals.TIMING_LOAD_TESTREADONLY))); //$NON-NLS-1$
+		if (Globals.TIMINGS.contains(Globals.TIMING_INIT_BACKUPMANAGER))    tooltip.append(String.format("TIMING_INIT_BACKUPMANAGER    = %dms<br/>", Globals.TIMINGS.getMilliseconds(Globals.TIMING_INIT_BACKUPMANAGER))); //$NON-NLS-1$
+		if (Globals.TIMINGS.contains(Globals.TIMING_LOAD_PRELOADRESOURCES)) tooltip.append(String.format("TIMING_LOAD_PRELOADRESOURCES = %dms<br/>", Globals.TIMINGS.getMilliseconds(Globals.TIMING_LOAD_PRELOADRESOURCES))); //$NON-NLS-1$
+		if (Globals.TIMINGS.contains(Globals.TIMING_LOAD_TOTAL))            tooltip.append(String.format("TIMING_LOAD_TOTAL            = %dms<br/>", Globals.TIMINGS.getMilliseconds(Globals.TIMING_LOAD_TOTAL))); //$NON-NLS-1$
+		if (Globals.TIMINGS.contains(Globals.TIMING_MOVIELIST_FILL))        tooltip.append(String.format("TIMING_MOVIELIST_FILL        = %dms<br/>", Globals.TIMINGS.getMilliseconds(Globals.TIMING_MOVIELIST_FILL))); //$NON-NLS-1$
+		if (Globals.TIMINGS.contains(Globals.TIMING_SCAN_DRIVES))           tooltip.append(String.format("TIMING_SCAN_DRIVES           = %dms<br/>", Globals.TIMINGS.getMilliseconds(Globals.TIMING_SCAN_DRIVES))); //$NON-NLS-1$
+		tooltip.append("</html>"); //$NON-NLS-1$
+		
+		lblStarttime.setText(LocaleBundle.getFormattedString("ClipStatusBar.Starttime", (int)Globals.TIMINGS.getSecondsOrZero(Globals.TIMING_LOAD_TOTAL, 0), movielist.getTotalDatabaseCount())); //$NON-NLS-1$
+		lblStarttime.setToolTipText(tooltip.toString());
 	}
 
 	@Override

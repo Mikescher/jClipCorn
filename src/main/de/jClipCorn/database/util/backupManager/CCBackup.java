@@ -53,12 +53,24 @@ public class CCBackup {
 		if (! result.Item2) saveToFile();
 	}
 
+	public CCBackup(File archive, String name, CCDate date, boolean persistent, String jccversion, String dbversion) {
+		this.archive = archive;
+
+		properties = new Properties();
+
+		properties.setProperty(PROP_NAME, name);
+		properties.setProperty(PROP_DATE, date.toStringSerialize());
+		properties.setProperty(PROP_PERSISTENT, persistent ? "1" : "0"); //$NON-NLS-1$ //$NON-NLS-2$
+		properties.setProperty(PROP_CCVERSION, jccversion);
+		properties.setProperty(PROP_DBVERSION, dbversion);
+	}
+
 	public File getArchive() {
 		return archive;
 	}
 	
 	@SuppressWarnings("nls")
-	private void saveToFile() {
+	public void saveToFile() {
 		try {
 			Map<String, String> env = new HashMap<>(); 
 			env.put("create", "false");
@@ -115,8 +127,8 @@ public class CCBackup {
 		return "1".equals(result); //$NON-NLS-1$
 	}
 
-	public void setPersistent(boolean pers) {
-		properties.setProperty(PROP_PERSISTENT, pers ? "1" : "0"); //$NON-NLS-1$ //$NON-NLS-2$
+	public void setPersistent(boolean persistent) {
+		properties.setProperty(PROP_PERSISTENT, persistent ? "1" : "0"); //$NON-NLS-1$ //$NON-NLS-2$
 		
 		saveToFile();
 	}
@@ -127,8 +139,8 @@ public class CCBackup {
 		return result;
 	}
 
-	public void setCCVersion(String vers) {
-		properties.setProperty(PROP_CCVERSION, vers);
+	public void setCCVersion(String jccversion) {
+		properties.setProperty(PROP_CCVERSION, jccversion);
 		
 		saveToFile();
 	}
@@ -139,8 +151,8 @@ public class CCBackup {
 		return result;
 	}
 
-	public void setDBVersion(String vers) {
-		properties.setProperty(PROP_DBVERSION, vers);
+	public void setDBVersion(String dbversion) {
+		properties.setProperty(PROP_DBVERSION, dbversion);
 		
 		saveToFile();
 	}

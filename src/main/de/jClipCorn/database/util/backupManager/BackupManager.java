@@ -192,12 +192,8 @@ public class BackupManager {
 
 		zos.close();
 
-		CCBackup backup = new CCBackup(file);
-		backup.setName(name);
-		backup.setDate(date);
-		backup.setPersistent(persistent);
-		backup.setCCVersion(jccversion);
-		backup.setDBVersion(dbversion);
+		CCBackup backup = new CCBackup(file, name, date, persistent, jccversion, dbversion);
+		backup.saveToFile();
 		backuplist.add(backup);
 	}
 

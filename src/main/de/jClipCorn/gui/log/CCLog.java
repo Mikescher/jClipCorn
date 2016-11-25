@@ -99,6 +99,21 @@ public class CCLog {
 	public static void addUndefinied(String msg) {
 		add('[' + Thread.currentThread().toString() + ']' + ' ' + msg, CCLogType.LOG_ELEM_UNDEFINED, new Exception().getStackTrace());
 	}
+
+	public static void addDefaultSwitchError(String owner) {
+		addUndefinied("Invalid jump to default switch statement for " + owner); //$NON-NLS-1$
+	}
+
+	public static void addDefaultSwitchError(Class<?> c) {
+		addDefaultSwitchError(c.getSimpleName());
+	}
+
+	public static void addDefaultSwitchError(Object o) {
+		if (o == null) 
+			addDefaultSwitchError("NULL"); //$NON-NLS-1$
+		else
+			addDefaultSwitchError(o.getClass());
+	}
 	
 	public static void addDebug(String msg) {
 		System.out.println("[DBG] " + msg); //$NON-NLS-1$

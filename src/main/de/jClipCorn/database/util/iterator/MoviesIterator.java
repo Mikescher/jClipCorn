@@ -4,13 +4,14 @@ import java.util.List;
 
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.databaseElement.CCMovie;
+import de.jClipCorn.util.cciterator.CCIterator;
 
-public class MovieIterator extends CCIterator<CCMovie> {
+public class MoviesIterator extends CCIterator<CCMovie> {
 	private boolean active = true;
 	private int pos = -1;
 	private final List<CCDatabaseElement> it;
 	
-	public MovieIterator(List<CCDatabaseElement> ownerIterator) {
+	public MoviesIterator(List<CCDatabaseElement> ownerIterator) {
 		it = ownerIterator;
 		skip();
 	}
@@ -40,5 +41,10 @@ public class MovieIterator extends CCIterator<CCMovie> {
 		it.remove(pos);
 		pos--;
 		skip();
+	}
+
+	@Override
+	protected CCIterator<CCMovie> cloneFresh() {
+		return new MoviesIterator(it);
 	}
 }

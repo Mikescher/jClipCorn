@@ -23,7 +23,7 @@ import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.exceptions.CCFormatException;
 import de.jClipCorn.util.formatter.PathFormatter;
 
-public class CCEpisode {
+public class CCEpisode implements ICCPlayableElement{
 	private final CCSeason owner;
 	private final int localID;
 	
@@ -207,6 +207,7 @@ public class CCEpisode {
 		updateDB();
 	}
 	
+	@Override
 	public boolean getTag(int c) {
 		return tags.getTag(c);
 	}
@@ -237,6 +238,7 @@ public class CCEpisode {
 		}
 	}
 
+	@Override
 	public String getTitle() {
 		return title;
 	}
@@ -261,22 +263,27 @@ public class CCEpisode {
 		return idx + episodeNumber;
 	}
 
+	@Override
 	public boolean isViewed() {
 		return viewed;
 	}
 
+	@Override
 	public CCMovieQuality getQuality() {
 		return quality;
 	}
 
+	@Override
 	public int getLength() {
 		return length;
 	}
 
+	@Override
 	public CCMovieFormat getFormat() {
 		return format;
 	}
 
+	@Override
 	public CCMovieSize getFilesize() {
 		return filesize;
 	}
@@ -289,10 +296,12 @@ public class CCEpisode {
 		return PathFormatter.fromCCPath(getPart());
 	}
 
+	@Override
 	public CCMovieTags getTags() {
 		return tags;
 	}
 
+	@Override
 	public CCDateTimeList getViewedHistory() {
 		return viewedHistory;
 	}
@@ -326,14 +335,16 @@ public class CCEpisode {
 		}
 	}
 
+	@Override
 	public CCDate getAddDate() {
 		return addDate;
 	}
 
-	public void play(boolean updateEpisodeState) {
+	@Override
+	public void play(boolean updateViewedAndHistory) {
 		MoviePlayer.play(this);
 		
-		if (updateEpisodeState) {
+		if (updateViewedAndHistory) {
 			setViewed(true);
 			
 			addToViewedHistory(CCDateTime.getCurrentDateTime());

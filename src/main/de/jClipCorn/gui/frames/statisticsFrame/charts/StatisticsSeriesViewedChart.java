@@ -30,6 +30,7 @@ import org.jfree.ui.TextAnchor;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.CCSeries;
+import de.jClipCorn.gui.frames.statisticsFrame.StatisticsTypeFilter;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.helper.StatisticsHelper;
@@ -51,12 +52,16 @@ public class StatisticsSeriesViewedChart extends StatisticsChart {
 	private HashMap<CCSeries, Integer> indexMap;
 	private HashMap<Integer, XYDataset> datasetList;
 	
-	public StatisticsSeriesViewedChart(CCMovieList ml) {
-		super(ml);
+	private JFreeChart chart;
+	
+	public StatisticsSeriesViewedChart(CCMovieList ml, StatisticsTypeFilter _source) {
+		super(ml, _source);
 	}
 
 	@Override
-	protected JFreeChart createChart(CCMovieList movielist) {
+	protected JFreeChart createChart(CCMovieList movielist, StatisticsTypeFilter source) {
+		if (chart != null) return chart;
+		
 		indexMap = new HashMap<>();
 		datasetList = new HashMap<>();
 		
@@ -119,7 +124,7 @@ public class StatisticsSeriesViewedChart extends StatisticsChart {
 		plot.setDomainGridlinePaint(GRIDLINECOLOR);
 		plot.setRangeGridlinePaint(GRIDLINECOLOR);
 	    
-	    JFreeChart chart = new JFreeChart(plot);
+	    chart = new JFreeChart(plot);
 	    //chart.removeLegend();
 	    
 	    chart.setBackgroundPaint(null);
@@ -134,7 +139,7 @@ public class StatisticsSeriesViewedChart extends StatisticsChart {
 	
 	@Override
 	public void onResize(ComponentEvent e) {
-		if (valueAxis == null) return;
+		if (valueAxis == null || chart == null) return;
 		
 		valueAxis.setRange(0, e.getComponent().getHeight() / 25f);
 		chart.fireChartChanged();
@@ -246,7 +251,7 @@ public class StatisticsSeriesViewedChart extends StatisticsChart {
 	}
 
 	@Override
-	public void onHideSeries(Map<CCSeries, Boolean> map) {
+	protected void onChangeFilter(Map<CCSeries, Boolean> map) {
 		for (Entry<CCSeries, Boolean> entry : map.entrySet()) {
 			if (indexMap.containsKey(entry.getKey())) {
 				int idx = indexMap.get(entry.getKey());
@@ -263,10 +268,10 @@ public class StatisticsSeriesViewedChart extends StatisticsChart {
 			}
 		}
 		
-		JFreeChart chart = new JFreeChart(plot);
+		chart = new JFreeChart(plot);
 		chart.setBackgroundPaint(null);
 		
-		updateChart(chart);
+		invalidateComponent();
 	}
 
 	@Override
@@ -275,11 +280,21 @@ public class StatisticsSeriesViewedChart extends StatisticsChart {
 	}
 	
 	@Override
-	public void onFilterYearRange(int year) {
+	protected void onFilterYearRange(int year) {
 		if (year == -1) {
 			domainAxis.setRange(domainTotalRangeMin, domainTotalRangeMax);
 		} else {
 			domainAxis.setRange(CCDate.create(1, 1, year).asMilliseconds(), CCDate.create(1, 1, year+1).asMilliseconds());
 		}
+	}
+
+	@Override
+	protected StatisticsTypeFilter supportedTypes() {
+		return StatisticsTypeFilter.SERIES;
+	}
+
+	@Override
+	public String createToggleTwoCaption() {
+		return LocaleBundle.getString("StatisticsFrame.this.toggleEpisodes"); //$NON-NLS-1$
 	}
 }

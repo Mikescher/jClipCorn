@@ -20,9 +20,9 @@ public final class Globals {
 	public static int TIMING_DATABASE_CONNECT      = 0x06;
 	public static int TIMING_MOVIELIST_FILL        = 0x07;
 	
-	public static Map<Integer, String> TIMING_IDS = new HashMap<>();
+	public final static Map<Integer, String> TIMING_IDS = new HashMap<>();
 	
-	public static MapStopWatch TIMINGS = new MapStopWatch();
+	public final static MapStopWatch TIMINGS = new MapStopWatch();
 
 	static {
 		TIMING_IDS.put(TIMING_LOAD_TOTAL,            "LOAD_TOTAL");

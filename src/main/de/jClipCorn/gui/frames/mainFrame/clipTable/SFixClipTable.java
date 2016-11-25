@@ -213,7 +213,7 @@ public class SFixClipTable extends SFixTable {
 		case ClipTableModel.COLUMN_SIZE:
 			return renderer_filesize;
 		default:
-			CCLog.addError(new Exception("Mysterious switch jump in [SFixTable.java]")); //$NON-NLS-1$
+			CCLog.addDefaultSwitchError(this);
 			return super.getCellRenderer(row, column);//renderer_default;
 		}
 	}
@@ -267,7 +267,7 @@ public class SFixClipTable extends SFixTable {
 		case ClipTableModel.COLUMN_SIZE:
 			return FileSizeFormatter.formatBytes((CCMovieSize)value);
 		default:
-			CCLog.addUndefinied("Mysterious switch jump in [SFixTable.java]"); //$NON-NLS-1$
+			CCLog.addDefaultSwitchError(this);
 			return null;
 		}
 	}

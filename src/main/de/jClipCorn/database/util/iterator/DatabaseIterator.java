@@ -3,6 +3,7 @@ package de.jClipCorn.database.util.iterator;
 import java.util.List;
 
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
+import de.jClipCorn.util.cciterator.CCIterator;
 
 public class DatabaseIterator extends CCIterator<CCDatabaseElement> {
 	private int posNext = 0;
@@ -22,5 +23,10 @@ public class DatabaseIterator extends CCIterator<CCDatabaseElement> {
 		posNext++;
 		
 		return it.get(posNext - 1);
+	}
+
+	@Override
+	protected CCIterator<CCDatabaseElement> cloneFresh() {
+		return new DatabaseIterator(it);
 	}
 }

@@ -15,22 +15,25 @@ import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
 import de.jClipCorn.database.CCMovieList;
+import de.jClipCorn.database.databaseElement.ICCDatedElement;
+import de.jClipCorn.gui.frames.statisticsFrame.StatisticsTypeFilter;
 import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.util.cciterator.CCIterator;
 import de.jClipCorn.util.helper.StatisticsHelper;
 
 public class StatisticsYearChart extends StatisticsChart {
 
-	public StatisticsYearChart(CCMovieList ml) {
-		super(ml);
+	public StatisticsYearChart(CCMovieList ml, StatisticsTypeFilter _source) {
+		super(ml, _source);
 	}
 
 	@Override
-	protected JFreeChart createChart(CCMovieList movielist) {
+	protected JFreeChart createChart(CCMovieList movielist, StatisticsTypeFilter source) {
 		JFreeChart chart = ChartFactory.createHistogram(
 				"",  //$NON-NLS-1$
 				"",  //$NON-NLS-1$
 				"",  //$NON-NLS-1$
-				getDataSet(movielist), 
+				getDataSet(movielist, source), 
 				PlotOrientation.VERTICAL, 
 				false, 
 				false, 
@@ -64,12 +67,14 @@ public class StatisticsYearChart extends StatisticsChart {
 	    return chart;
 	}
 	
-	private IntervalXYDataset getDataSet(CCMovieList movielist) {
-		int minYear = StatisticsHelper.getMinimumMovieYear(movielist);
-		int maxYear = StatisticsHelper.getMaximumMovieYear(movielist);
+	private IntervalXYDataset getDataSet(CCMovieList movielist, StatisticsTypeFilter source) {
+		CCIterator<ICCDatedElement> it = source.iteratorMoviesOrSeason(movielist);
+		
+		int minYear = StatisticsHelper.getMinimumYear(it);
+		int maxYear = StatisticsHelper.getMaximumYear(it);
 		int count = (maxYear - minYear) + 1;
 		
-		int[] yearcounts = StatisticsHelper.getMovieCountForAllYears(movielist, minYear, count);
+		int[] yearcounts = StatisticsHelper.getCountForAllYears(minYear, count, it);
 		
 		XYSeries xyseries = new XYSeries("Series0"); //$NON-NLS-1$
 		
@@ -93,5 +98,15 @@ public class StatisticsYearChart extends StatisticsChart {
 	@Override
 	public boolean usesFilterableYearRange() {
 		return false;
+	}
+
+	@Override
+	protected StatisticsTypeFilter supportedTypes() {
+		return StatisticsTypeFilter.BOTH;
+	}
+
+	@Override
+	public String createToggleTwoCaption() {
+		return LocaleBundle.getString("StatisticsFrame.this.toggleSeasons"); //$NON-NLS-1$
 	}
 }

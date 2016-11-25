@@ -22,11 +22,15 @@ public final class CCDate implements Comparable<CCDate>, StringSpecSupplier {
 	
 	public static final int YEAR_MIN = 1900; 
 	public static final int YEAR_MAX = 9999; 
+
+	public static final int YEAR_UNSPECIFIED = 99;
+	public static final int MONTH_UNSPECIFIED = 99;
+	public static final int DAY_UNSPECIFIED = 99;
 	
 	private static final CCDate DATE_MIN = new CCDate(1, 1, YEAR_MIN);
 	private static final CCDate DATE_MAX = new CCDate(31, 12, YEAR_MAX);
 	public  static final String MIN_SQL = DATE_MIN.toStringSQL();
-	private static final CCDate UNSPECIFIED = new CCDate(99, 99, 99);
+	private static final CCDate UNSPECIFIED = new CCDate(DAY_UNSPECIFIED, MONTH_UNSPECIFIED, YEAR_UNSPECIFIED);
 	
 	private static HashSet<Character> stringSpecifier = null; // { 'y', 'M', 'd' }
 	
@@ -452,16 +456,6 @@ public final class CCDate implements Comparable<CCDate>, StringSpecSupplier {
 		return "<CCDate>:" + toStringSQL(); //$NON-NLS-1$
 	}
 	
-	public int compare(CCDate other) {
-		if (equals(other)) {
-			return 0;
-		} else if (isGreaterThan(other)) {
-			return 1;
-		} else {
-			return -1;
-		}
-	}
-	
 	@Override
 	public boolean equals(Object other) {
 		return (other instanceof CCDate) && isEqual((CCDate)other);
@@ -535,7 +529,13 @@ public final class CCDate implements Comparable<CCDate>, StringSpecSupplier {
 	}
 
 	public static int compare(CCDate o1, CCDate o2) {
-		return o1.compare(o2);
+		if (o1.equals(o2)) {
+			return 0;
+		} else if (o1.isGreaterThan(o2)) {
+			return 1;
+		} else {
+			return -1;
+		}
 	}
 
 	public boolean isMinimum() {

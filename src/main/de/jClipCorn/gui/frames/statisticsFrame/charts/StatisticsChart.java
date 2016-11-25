@@ -14,6 +14,7 @@ import org.jfree.chart.plot.XYPlot;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.gui.frames.statisticsFrame.FixedChartPanel;
 import de.jClipCorn.gui.frames.statisticsFrame.StatisticsPanel;
+import de.jClipCorn.gui.frames.statisticsFrame.StatisticsTypeFilter;
 import de.jClipCorn.properties.CCProperties;
 
 public abstract class StatisticsChart extends StatisticsPanel {
@@ -32,54 +33,58 @@ public abstract class StatisticsChart extends StatisticsPanel {
 	protected final static Color HISTOGRAMMCHART_COLOR = Color.BLUE;
 	protected final static Color HISTOGRAMMACKGROUND_COLOR = Color.LIGHT_GRAY;
 	
-	protected JFreeChart chart;
-	private JComponent chartPanel = null;
+	private final CCMovieList movielist;
 	
-	public StatisticsChart(CCMovieList ml) {
-		super();
-		
-		this.chart = createChart(ml);
+	public StatisticsChart(CCMovieList ml, StatisticsTypeFilter _source) {
+		super(_source);
+		movielist = ml;
 	}
 
-	public JFreeChart getChart() {
-		return chart;
-	}
-	
-	protected void updateChart(JFreeChart newchart) {
-		this.chart = newchart;
+	private JFreeChart getChart() {
+		if (! supportedTypes().contains(source)) return null;
+
+		if (source == StatisticsTypeFilter.MOVIES && ! movielist.containsMovies()) return null;
+		if (source == StatisticsTypeFilter.SERIES && ! movielist.containsMovies()) return null;
+		if (source == StatisticsTypeFilter.BOTH && movielist.getElementCount() == 0) return null;
+		
+		return createChart(movielist, source);
 	}
 	
 	@Override
-	public JComponent getComponent() {
-		if (chartPanel == null) {
-			if (CCProperties.getInstance().PROP_STATISTICS_INTERACTIVECHARTS.getValue()) {
-				chartPanel = new ChartPanel(new JFreeChart(new XYPlot()));
-			} else {
-				chartPanel = new FixedChartPanel(new JFreeChart(new XYPlot()));
+	protected JComponent createComponent() {
+		JFreeChart chart = getChart();
+		if (chart == null) return null;
+		
+		JComponent chartPanel;
+		
+		if (CCProperties.getInstance().PROP_STATISTICS_INTERACTIVECHARTS.getValue()) {
+			chartPanel = new ChartPanel(new JFreeChart(new XYPlot()));
+		} else {
+			chartPanel = new FixedChartPanel(new JFreeChart(new XYPlot()));
+		}
+		
+		chartPanel.setVisible(true);
+		
+		chartPanel.addComponentListener(new ComponentListener() {
+			@Override
+			public void componentShown(ComponentEvent e) {/**/}
+			
+			@Override
+			public void componentResized(ComponentEvent e) {
+				StatisticsChart.this.onResize(e);
 			}
 			
-			chartPanel.setVisible(true);
+			@Override
+			public void componentMoved(ComponentEvent e) {/**/}
 			
-			chartPanel.addComponentListener(new ComponentListener() {
-				@Override
-				public void componentShown(ComponentEvent e) {/**/}
-				
-				@Override
-				public void componentResized(ComponentEvent e) {
-					StatisticsChart.this.onResize(e);
-				}
-				
-				@Override
-				public void componentMoved(ComponentEvent e) {/**/}
-				
-				@Override
-				public void componentHidden(ComponentEvent e) {/**/}
-			});
-			
-			((ChartPanel)chartPanel).setChart(getChart());	
-		}
+			@Override
+			public void componentHidden(ComponentEvent e) {/**/}
+		});
+		
+		((ChartPanel)chartPanel).setChart(chart);	
+		
 		return chartPanel;
 	}
 	
-	protected abstract JFreeChart createChart(CCMovieList movielist);
+	protected abstract JFreeChart createChart(CCMovieList movielist, StatisticsTypeFilter source);
 }

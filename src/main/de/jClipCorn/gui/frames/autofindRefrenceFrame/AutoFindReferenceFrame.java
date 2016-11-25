@@ -403,7 +403,7 @@ public class AutoFindReferenceFrame extends JFrame {
 		pbProgress.setValue(0);
 		
 		List<CCDatabaseElement> elements = new ArrayList<>();
-		for (CCDatabaseElement el : database.iterator()) {
+		for (CCDatabaseElement el : database.iteratorElements()) {
 			if (el.getOnlineReference().isUnset())
 				elements.add(el);
 			

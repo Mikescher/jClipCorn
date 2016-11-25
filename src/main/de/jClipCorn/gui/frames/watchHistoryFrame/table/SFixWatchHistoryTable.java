@@ -67,7 +67,7 @@ public class SFixWatchHistoryTable extends SFixTable {
 		case WatchHistoryTableModel.COLUMN_SIZE:
 			return renderer_size;
 		default:
-			CCLog.addError(new Exception("Mysterious switch jump in [SFixTable.java]")); //$NON-NLS-1$
+			CCLog.addDefaultSwitchError(this);
 			return super.getCellRenderer(row, column);//renderer_default;
 		}
 	}

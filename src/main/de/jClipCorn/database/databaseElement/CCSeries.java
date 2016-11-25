@@ -25,8 +25,10 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTags;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTyp;
 import de.jClipCorn.database.util.ExtendedViewedState;
 import de.jClipCorn.database.util.ExtendedViewedStateType;
+import de.jClipCorn.database.util.iterator.DirectEpisodesIterator;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.LargeMD5Calculator;
+import de.jClipCorn.util.cciterator.CCIterator;
 import de.jClipCorn.util.comparator.CCSeasonComparator;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.datetime.YearRange;
@@ -173,26 +175,7 @@ public class CCSeries extends CCDatabaseElement {
 	}
 	
 	public CCMovieFormat getFormat() {
-		int l = CCMovieFormat.values().length;
-		int[] ls = new int[l];
-		for (int i = 0; i < l; i++) {
-			ls[i] = 0;
-		}
-		
-		for (CCSeason se: seasons) {
-			ls[se.getFormat().asInt()]++;
-		}
-		
-		int max = 0;
-		int maxid = 0;
-		for (int i = 0; i < l; i++) {
-			if (ls[i] > max) {
-				max = ls[i];
-				maxid = i;
-			}
-		}
-		
-		return CCMovieFormat.getWrapper().find(maxid);
+		return iteratorEpisodes().findMostCommon(e -> e.getFormat(), CCMovieFormat.getWrapper().firstValue());
 	}
 	
 	@Override
@@ -619,5 +602,9 @@ public class CCSeries extends CCDatabaseElement {
 	@Override
 	public String getFullDisplayTitle() {
 		return getTitle();
+	}
+	
+	public CCIterator<CCEpisode> iteratorEpisodes() {
+		return new DirectEpisodesIterator(this);
 	}
 }

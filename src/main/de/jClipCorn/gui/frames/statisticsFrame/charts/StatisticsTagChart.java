@@ -11,22 +11,25 @@ import org.jfree.chart.renderer.category.StandardBarPainter;
 import org.jfree.data.category.DefaultCategoryDataset;
 
 import de.jClipCorn.database.CCMovieList;
+import de.jClipCorn.database.databaseElement.ICCPlayableElement;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTags;
+import de.jClipCorn.gui.frames.statisticsFrame.StatisticsTypeFilter;
 import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.util.cciterator.CCIterator;
 import de.jClipCorn.util.helper.StatisticsHelper;
 
 public class StatisticsTagChart extends StatisticsChart {
-	public StatisticsTagChart(CCMovieList ml) {
-		super(ml);
+	public StatisticsTagChart(CCMovieList ml, StatisticsTypeFilter _source) {
+		super(ml, _source);
 	}
 
 	@Override
-	protected JFreeChart createChart(CCMovieList movielist) {
+	protected JFreeChart createChart(CCMovieList movielist, StatisticsTypeFilter source) {
 		JFreeChart chart = ChartFactory.createBarChart(
 	            "",      //$NON-NLS-1$
 	            "",      //$NON-NLS-1$
 	            "",      //$NON-NLS-1$
-	            getDataSet(movielist),               
+	            getDataSet(movielist, source),               
 	            PlotOrientation.VERTICAL, 
 	            false,                  
 	            false,
@@ -56,10 +59,12 @@ public class StatisticsTagChart extends StatisticsChart {
 	    return chart;
 	}
 	
-	private DefaultCategoryDataset getDataSet(CCMovieList movielist) {
+	private DefaultCategoryDataset getDataSet(CCMovieList movielist, StatisticsTypeFilter source) {
+		CCIterator<ICCPlayableElement> it = source.iteratorMoviesOrEpisodes(movielist);
+		
 		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 		
-		int[] values = StatisticsHelper.getMovieCountForAllTags(movielist);
+		int[] values = StatisticsHelper.getCountForAllTags(it);
 		
 		for (int i = 0; i < CCMovieTags.ACTIVETAGS; i++) {
 			dataset.addValue(values[i], "Series0", CCMovieTags.getName(i)); //$NON-NLS-1$
@@ -81,5 +86,15 @@ public class StatisticsTagChart extends StatisticsChart {
 	@Override
 	public boolean usesFilterableYearRange() {
 		return false;
+	}
+
+	@Override
+	protected StatisticsTypeFilter supportedTypes() {
+		return StatisticsTypeFilter.BOTH;
+	}
+
+	@Override
+	public String createToggleTwoCaption() {
+		return LocaleBundle.getString("StatisticsFrame.this.toggleEpisodes"); //$NON-NLS-1$
 	}
 }

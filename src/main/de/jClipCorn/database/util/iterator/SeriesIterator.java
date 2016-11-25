@@ -4,6 +4,7 @@ import java.util.List;
 
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.databaseElement.CCSeries;
+import de.jClipCorn.util.cciterator.CCIterator;
 
 public class SeriesIterator extends CCIterator<CCSeries> {
 	private boolean active = true;
@@ -40,5 +41,10 @@ public class SeriesIterator extends CCIterator<CCSeries> {
 		it.remove(pos);
 		pos--;
 		skip();
+	}
+
+	@Override
+	protected CCIterator<CCSeries> cloneFresh() {
+		return new SeriesIterator(it);
 	}
 }

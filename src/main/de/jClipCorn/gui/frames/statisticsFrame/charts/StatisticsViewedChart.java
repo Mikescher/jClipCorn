@@ -8,19 +8,22 @@ import org.jfree.data.general.PieDataset;
 import org.jfree.util.Rotation;
 
 import de.jClipCorn.database.CCMovieList;
+import de.jClipCorn.database.databaseElement.ICCPlayableElement;
+import de.jClipCorn.gui.frames.statisticsFrame.StatisticsTypeFilter;
 import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.util.cciterator.CCIterator;
 import de.jClipCorn.util.helper.StatisticsHelper;
 
 public class StatisticsViewedChart extends StatisticsChart {
-	public StatisticsViewedChart(CCMovieList ml) {
-		super(ml);
+	public StatisticsViewedChart(CCMovieList ml, StatisticsTypeFilter _source) {
+		super(ml, _source);
 	}
 
 	@Override
-	protected JFreeChart createChart(CCMovieList movielist) {
+	protected JFreeChart createChart(CCMovieList movielist, StatisticsTypeFilter source) {
 		JFreeChart chart = ChartFactory.createPieChart3D(
 	            "",      //$NON-NLS-1$
-	            getDataSet(movielist),               
+	            getDataSet(movielist, source),               
 	            false,                  
 	            false,
 	            false
@@ -45,10 +48,12 @@ public class StatisticsViewedChart extends StatisticsChart {
 	    return chart;
 	}
 	
-	private PieDataset getDataSet(CCMovieList movielist) {
+	private PieDataset getDataSet(CCMovieList movielist, StatisticsTypeFilter source) {
+		CCIterator<ICCPlayableElement> it = source.iteratorMoviesOrEpisodes(movielist);
+		
 		DefaultPieDataset dataset = new DefaultPieDataset();
-		dataset.setValue(LocaleBundle.getString("StatisticsFrame.chartAxis.PieViewed"), StatisticsHelper.getViewedMovieCount(movielist)); //$NON-NLS-1$
-		dataset.setValue(LocaleBundle.getString("StatisticsFrame.chartAxis.PieUnviewed"), StatisticsHelper.getUnviewedMovieCount(movielist)); //$NON-NLS-1$
+		dataset.setValue(LocaleBundle.getString("StatisticsFrame.chartAxis.PieViewed"), StatisticsHelper.getViewedCount(it)); //$NON-NLS-1$
+		dataset.setValue(LocaleBundle.getString("StatisticsFrame.chartAxis.PieUnviewed"), StatisticsHelper.getUnviewedCount(it)); //$NON-NLS-1$
 		
         return dataset;
 	}
@@ -66,5 +71,15 @@ public class StatisticsViewedChart extends StatisticsChart {
 	@Override
 	public boolean usesFilterableYearRange() {
 		return false;
+	}
+
+	@Override
+	protected StatisticsTypeFilter supportedTypes() {
+		return StatisticsTypeFilter.BOTH;
+	}
+
+	@Override
+	public String createToggleTwoCaption() {
+		return LocaleBundle.getString("StatisticsFrame.this.toggleEpisodes"); //$NON-NLS-1$
 	}
 }

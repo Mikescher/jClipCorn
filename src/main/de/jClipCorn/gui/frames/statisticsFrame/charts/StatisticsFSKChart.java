@@ -9,22 +9,25 @@ import org.jfree.chart.renderer.category.StandardBarPainter;
 import org.jfree.data.category.DefaultCategoryDataset;
 
 import de.jClipCorn.database.CCMovieList;
+import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFSK;
+import de.jClipCorn.gui.frames.statisticsFrame.StatisticsTypeFilter;
 import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.util.cciterator.CCIterator;
 import de.jClipCorn.util.helper.StatisticsHelper;
 
 public class StatisticsFSKChart extends StatisticsChart {
-	public StatisticsFSKChart(CCMovieList ml) {
-		super(ml);
+	public StatisticsFSKChart(CCMovieList ml, StatisticsTypeFilter _source) {
+		super(ml, _source);
 	}
 
 	@Override
-	protected JFreeChart createChart(CCMovieList movielist) {
+	protected JFreeChart createChart(CCMovieList movielist, StatisticsTypeFilter source) {
 		JFreeChart chart = ChartFactory.createBarChart(
 	            "",      //$NON-NLS-1$
 	            "",      //$NON-NLS-1$
 	            "",      //$NON-NLS-1$
-	            getDataSet(movielist),               
+	            getDataSet(movielist, source),               
 	            PlotOrientation.VERTICAL, 
 	            false,                  
 	            false,
@@ -53,10 +56,12 @@ public class StatisticsFSKChart extends StatisticsChart {
 	    return chart;
 	}
 	
-	private DefaultCategoryDataset getDataSet(CCMovieList movielist) {
+	private DefaultCategoryDataset getDataSet(CCMovieList movielist, StatisticsTypeFilter source) {
+		CCIterator<CCDatabaseElement> it = source.iteratorMoviesOrSeries(movielist);
+		
 		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 		
-		int[] values = StatisticsHelper.getMovieCountForAllFSKs(movielist);
+		int[] values = StatisticsHelper.getCountForAllFSKs(it);
 		
 		for (CCMovieFSK fsk : CCMovieFSK.values()) {
 			dataset.addValue(values[fsk.asInt()], "Series0", fsk.asString()); //$NON-NLS-1$
@@ -78,5 +83,15 @@ public class StatisticsFSKChart extends StatisticsChart {
 	@Override
 	public boolean usesFilterableYearRange() {
 		return false;
+	}
+
+	@Override
+	protected StatisticsTypeFilter supportedTypes() {
+		return StatisticsTypeFilter.BOTH;
+	}
+
+	@Override
+	public String createToggleTwoCaption() {
+		return LocaleBundle.getString("StatisticsFrame.this.toggleSeries"); //$NON-NLS-1$
 	}
 }

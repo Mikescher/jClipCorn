@@ -18,6 +18,7 @@ import javax.swing.border.EmptyBorder;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.gui.frames.statisticsFrame.StatisticsPanel;
+import de.jClipCorn.gui.frames.statisticsFrame.StatisticsTypeFilter;
 import de.jClipCorn.gui.frames.statisticsFrame.timeline.TimelineCaptionComponent;
 import de.jClipCorn.gui.frames.statisticsFrame.timeline.TimelineDateCaptionComponent;
 import de.jClipCorn.gui.frames.statisticsFrame.timeline.TimelineDisplayComponent;
@@ -31,7 +32,7 @@ import de.jClipCorn.util.helper.StatisticsHelper;
 public class StatisticsSeriesTimeline extends StatisticsPanel {
 	private CCMovieList movielist;
 	
-	private JComponent statComp = null;
+	private Map<CCSeries, Boolean> mapCache = null;
 	
 	private HashMap<CCSeries, List<CCDatespan>> seriesMap;
 	private HashMap<CCSeries, List<CCDatespan>> seriesMapZero;
@@ -39,7 +40,8 @@ public class StatisticsSeriesTimeline extends StatisticsPanel {
 	private CCDate seriesMapStart;
 	private CCDate seriesMapEnd;
 	
-	public StatisticsSeriesTimeline(CCMovieList ml) {
+	public StatisticsSeriesTimeline(CCMovieList ml, StatisticsTypeFilter _source) {
+		super(_source);
 		movielist = ml;
 	}
 	
@@ -57,8 +59,10 @@ public class StatisticsSeriesTimeline extends StatisticsPanel {
 		seriesMapStart = StatisticsHelper.getSeriesTimespansStart(seriesMap);
 		seriesMapEnd = CCDate.max(StatisticsHelper.getSeriesTimespansEnd(seriesMap), CCDate.getCurrentDate());
 	}
-	
-	private JComponent create(Map<CCSeries, Boolean> map) {
+
+	@Override
+	public JComponent createComponent() {
+		Map<CCSeries, Boolean> map = mapCache;
 		if (map == null) map = new HashMap<>();
 		
 		if (seriesMap == null) collectData();
@@ -135,15 +139,9 @@ public class StatisticsSeriesTimeline extends StatisticsPanel {
 	}
 
 	@Override
-	public void onHideSeries(Map<CCSeries, Boolean> map) {
-		statComp = create(map);
-	}
-	
-	@Override
-	public JComponent getComponent() {
-		if (statComp != null) return statComp;
-		
-		return (statComp = create(null));
+	protected void onChangeFilter(Map<CCSeries, Boolean> map) {
+		mapCache = map;
+		invalidateComponent();
 	}
 
 	@Override
@@ -155,14 +153,24 @@ public class StatisticsSeriesTimeline extends StatisticsPanel {
 	public boolean usesFilterableYearRange() {
 		return false;
 	}
-	
+
+	@Override
+	protected String createTitle() {
+		return LocaleBundle.getString("StatisticsFrame.charttitles.seriesTimeline"); //$NON-NLS-1$
+	}
+
 	@Override
 	public boolean resetFrameOnFilter() {
 		return true;
 	}
 
 	@Override
-	protected String createTitle() {
-		return LocaleBundle.getString("StatisticsFrame.charttitles.seriesTimeline"); //$NON-NLS-1$
+	protected StatisticsTypeFilter supportedTypes() {
+		return StatisticsTypeFilter.SERIES;
+	}
+
+	@Override
+	public String createToggleTwoCaption() {
+		return LocaleBundle.getString("StatisticsFrame.this.toggleEpisodes"); //$NON-NLS-1$
 	}
 }

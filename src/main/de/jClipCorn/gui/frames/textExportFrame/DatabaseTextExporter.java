@@ -46,7 +46,7 @@ public abstract class DatabaseTextExporter {
 	public List<CCDatabaseElement> getOrderedList() {
 		List<CCDatabaseElement> result = new ArrayList<>();
 		
-		for (CCDatabaseElement elem : movielist.iterator()) {
+		for (CCDatabaseElement elem : movielist.iteratorElements()) {
 			if (! includeSeries && elem.isSeries())
 				continue;
 			
@@ -93,7 +93,7 @@ public abstract class DatabaseTextExporter {
 			cp = new Comparator<CCDatabaseElement>() {
 				@Override
 				public int compare(CCDatabaseElement o1, CCDatabaseElement o2) {
-					return o1.getAddDate().compare(o2.getAddDate());
+					return o1.getAddDate().compareTo(o2.getAddDate());
 				}
 			};
 			break;

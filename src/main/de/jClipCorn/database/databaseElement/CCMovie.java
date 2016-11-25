@@ -29,7 +29,7 @@ import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.ByteUtilies;
 import de.jClipCorn.util.helper.ImageUtilities;
 
-public class CCMovie extends CCDatabaseElement {
+public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, ICCDatedElement {
 	public final static int PARTCOUNT_MAX = 6; // 0 - 5
 	public final static int NAME_LENGTH_MAX = 128;
 	public final static int ZYKLUS_LENGTH_MAX = 128;
@@ -117,6 +117,7 @@ public class CCMovie extends CCDatabaseElement {
 		return getCompleteTitle();
 	}
 
+	@Override
 	public boolean isViewed() {
 		return viewed;
 	}
@@ -159,6 +160,7 @@ public class CCMovie extends CCDatabaseElement {
 		updateDB();
 	}
 
+	@Override
 	public CCMovieQuality getQuality() {
 		return quality;
 	}
@@ -189,6 +191,7 @@ public class CCMovie extends CCDatabaseElement {
 		return pc;
 	}
 
+	@Override
 	public int getLength() {
 		return length;
 	}
@@ -216,6 +219,7 @@ public class CCMovie extends CCDatabaseElement {
 		updateDB();
 	}
 
+	@Override
 	public CCMovieFormat getFormat() {
 		return format;
 	}
@@ -232,6 +236,7 @@ public class CCMovie extends CCDatabaseElement {
 		updateDB();
 	}
 
+	@Override
 	public int getYear() {
 		return year;
 	}
@@ -262,6 +267,7 @@ public class CCMovie extends CCDatabaseElement {
 		setFilesize(filesize.getBytes());
 	}
 	
+	@Override
 	public CCMovieTags getTags() {
 		return tags;
 	}
@@ -288,6 +294,7 @@ public class CCMovie extends CCDatabaseElement {
 		updateDB();
 	}
 	
+	@Override
 	public boolean getTag(int c) {
 		return tags.getTag(c);
 	}
@@ -322,6 +329,7 @@ public class CCMovie extends CCDatabaseElement {
 		updateDB();
 	}
 
+	@Override
 	public CCDateTimeList getViewedHistory() {
 		return viewedHistory;
 	}
@@ -356,6 +364,7 @@ public class CCMovie extends CCDatabaseElement {
 		play(true);
 	}
 	
+	@Override
 	public void play(boolean updateViewedAndHistory) {
 		MoviePlayer.play(this);
 		

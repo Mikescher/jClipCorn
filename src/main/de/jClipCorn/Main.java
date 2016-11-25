@@ -142,4 +142,8 @@ public class Main {
 //TODO Move Series into seperate table
 //TODO Settings to (additionally) show global episode numbers in series
 //TODO Option to mark season as extra (ordered last, special filename, not in carousal but on right side of it ...)
-//TODO Statistics option to switch between SERIES|MOVIES|BOTH for all statistics (where it makes sense)
+
+//TODO full database transaction log 
+//        -> everytime we change a mov/ep/sea/ser we copy its old state with a timestamp to the log_table
+//        -> then in the ui we can restore old states and even view the database at a specific timestamp
+//        -> option to clean up state (only keep 1 per day for older than month && only keep one per week for older than year)

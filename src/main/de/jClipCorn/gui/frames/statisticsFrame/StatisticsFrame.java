@@ -2,11 +2,13 @@ package de.jClipCorn.gui.frames.statisticsFrame;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -16,6 +18,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JToggleButton;
 import javax.swing.ListSelectionModel;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
@@ -30,28 +33,6 @@ import com.jgoodies.forms.layout.RowSpec;
 import de.jClipCorn.Main;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCSeries;
-import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsAddDateChart;
-import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsEpisodesViewedChart;
-import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsFSKChart;
-import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsFormatChart;
-import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsFormatPerTimeChart;
-import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsGenreChart;
-import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsHoursMovChart;
-import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsHoursSerChart;
-import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsHoursSerMovChart;
-import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsLanguageChart;
-import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsMovieLengthChart;
-import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsOnlinescoreChart;
-import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsProviderChart;
-import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsQualityChart;
-import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsScoreChart;
-import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsSeriesTimeline;
-import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsSeriesTotalViewedChart;
-import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsSeriesViewedChart;
-import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsSizeChart;
-import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsTagChart;
-import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsViewedChart;
-import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsYearChart;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.gui.resources.CachedResourceLoader;
@@ -66,18 +47,19 @@ public class StatisticsFrame extends JFrame {
 
 	private final CCMovieList movielist;
 	private List<JLabel> sidebarValueLabels = new ArrayList<>();
-	private StatisticsPanel currentChart = null;
+	private StatisticsGroup currentChart = null;
 
 	private int selectedYear = -1;
 	private int minYear;
 	private int maxYear;
+	private StatisticsTypeFilter selectedType = StatisticsTypeFilter.BOTH;
 	
 	private JPanel pnlTop;
 	private JPanel pnlLeft;
 	private JPanel pnlCenter;
 	private JPanel pnlSidebar;
 	private JScrollPane sclPnlLeft;
-	private JComboBox<StatisticsPanel> cbxChooseChart;
+	private JComboBox<StatisticsGroup> cbxChooseChart;
 	private JButton btnPrevChart;
 	private JLabel lblChartCaption;
 	private JButton btnNxtChart;
@@ -88,6 +70,9 @@ public class StatisticsFrame extends JFrame {
 	private JButton btnNewButton;
 	private JButton btnNewButton_1;
 	private JLabel lblYear;
+	private JToggleButton btnMovies;
+	private JToggleButton btnSeries;
+	private JToggleButton btnBoth;
 	
 	public StatisticsFrame(Component owner, CCMovieList mlist) {
 		super();
@@ -98,7 +83,8 @@ public class StatisticsFrame extends JFrame {
 		TimeKeeper.start();
 		{
 			selectedYear = -1;
-			minYear = Math.min(StatisticsHelper.getFirstMovieAddDate(mlist).getYear(),StatisticsHelper.getFirstSeriesAddDate(mlist).getYear());
+			minYear = StatisticsHelper.getFirstAddDate(mlist.iteratorPlayables()).getYear();
+			if (minYear == CCDate.YEAR_UNSPECIFIED) minYear = CCDate.getCurrentDate().getYear();
 			maxYear = CCDate.getCurrentDate().getYear();
 			
 			initSidebarValues();
@@ -128,13 +114,18 @@ public class StatisticsFrame extends JFrame {
 		getContentPane().add(pnlTop, BorderLayout.NORTH);
 		pnlTop.setLayout(new FormLayout(new ColumnSpec[] {
 				ColumnSpec.decode("15dlu"), //$NON-NLS-1$
-				ColumnSpec.decode("200px"), //$NON-NLS-1$
-				ColumnSpec.decode("50dlu"), //$NON-NLS-1$
+				ColumnSpec.decode("250px"), //$NON-NLS-1$
+				ColumnSpec.decode("5dlu:grow"), //$NON-NLS-1$
 				FormSpecs.PREF_COLSPEC,
 				FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
 				ColumnSpec.decode("300px"), //$NON-NLS-1$
 				FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
-				FormSpecs.PREF_COLSPEC,},
+				FormSpecs.PREF_COLSPEC,
+				ColumnSpec.decode("default:grow"), //$NON-NLS-1$
+				FormSpecs.DEFAULT_COLSPEC,
+				FormSpecs.DEFAULT_COLSPEC,
+				FormSpecs.DEFAULT_COLSPEC,
+				FormSpecs.RELATED_GAP_COLSPEC,},
 			new RowSpec[] {
 				FormSpecs.RELATED_GAP_ROWSPEC,
 				RowSpec.decode("23px"), //$NON-NLS-1$
@@ -144,15 +135,12 @@ public class StatisticsFrame extends JFrame {
 		cbxChooseChart.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				StatisticsPanel chart = cbxChooseChart.getItemAt(cbxChooseChart.getSelectedIndex());
+				StatisticsGroup chart = cbxChooseChart.getItemAt(cbxChooseChart.getSelectedIndex());
 				
 				pnlCheckSeries.setVisible((chart != null) && chart.usesFilterableSeries());
 				pnlYearRange.setVisible((chart != null) && chart.usesFilterableYearRange());
 				
-				assignChart(chart);
-				
-				if (chart != null) chart.onHideSeries(seriesList.getMap());
-				if (chart != null) chart.onFilterYearRange(selectedYear);
+				updateStatGroup(chart);
 			}
 		});
 		cbxChooseChart.setMaximumRowCount(24);
@@ -253,13 +241,11 @@ public class StatisticsFrame extends JFrame {
 		seriesList.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				StatisticsPanel chart = cbxChooseChart.getItemAt(cbxChooseChart.getSelectedIndex());
+				StatisticsGroup chart = cbxChooseChart.getItemAt(cbxChooseChart.getSelectedIndex());
 				
 				if (chart != null) {
-					chart.onHideSeries(seriesList.getMap());
-					if (chart.resetFrameOnFilter()) {
-						assignChart(chart);
-					}
+					chart.onChangeFilter(seriesList.getMap());
+					if (chart.resetFrameOnFilter()) updateStatGroup(currentChart);
 				}
 			}
 		});
@@ -267,8 +253,56 @@ public class StatisticsFrame extends JFrame {
 		pnlCenter = new JPanel(new BorderLayout());
 		pnlCenter.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		getContentPane().add(pnlCenter, BorderLayout.CENTER);
+		
+		btnMovies = new JToggleButton(LocaleBundle.getString("StatisticsFrame.this.toggleMovies")); //$NON-NLS-1$
+		btnMovies.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				setTypeFilter(StatisticsTypeFilter.MOVIES);
+			}
+		});
+		pnlTop.add(btnMovies, "10, 2"); //$NON-NLS-1$
+		
+		btnSeries = new JToggleButton(LocaleBundle.getString("StatisticsFrame.this.toggleSeries")); //$NON-NLS-1$
+		btnSeries.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				setTypeFilter(StatisticsTypeFilter.SERIES);
+			}
+		});
+		pnlTop.add(btnSeries, "11, 2"); //$NON-NLS-1$
+		
+		btnBoth = new JToggleButton(LocaleBundle.getString("StatisticsFrame.this.toggleBoth")); //$NON-NLS-1$
+		btnBoth.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				setTypeFilter(StatisticsTypeFilter.BOTH);
+			}
+		});
+		btnBoth.setSelected(true);
+		pnlTop.add(btnBoth, "12, 2"); //$NON-NLS-1$
 				
+		setPreferredSize(new Dimension(1000, 550));
+		setMinimumSize(new Dimension(925, 485));
 		setSize(1000, 550);
+	}
+
+	private void setTypeFilter(StatisticsTypeFilter tf) {
+		setTypeFilter(tf, true);
+	}
+	
+	private void setTypeFilter(StatisticsTypeFilter tf, boolean triggerUpdate) {
+		boolean changed = (selectedType != tf);
+		
+		selectedType = tf;
+
+		btnMovies.setSelected(tf == StatisticsTypeFilter.MOVIES);
+		btnSeries.setSelected(tf == StatisticsTypeFilter.SERIES);
+		btnBoth.setSelected(tf == StatisticsTypeFilter.BOTH);
+		
+		if (triggerUpdate && changed) {
+			updateStatGroup(currentChart);
+		}
 	}
 	
 	private JPanel getSidebarPanel() {
@@ -310,10 +344,10 @@ public class StatisticsFrame extends JFrame {
 		List<JLabel> lst = sidebarValueLabels; // Locale Alias
 		
 		lst.get(0).setText("" + movielist.getMovieCount()); //$NON-NLS-1$
-		lst.get(1).setText("" + StatisticsHelper.getViewedMovieCount(movielist)); //$NON-NLS-1$
+		lst.get(1).setText("" + StatisticsHelper.getViewedCount(movielist.iteratorMovies().asCasted())); //$NON-NLS-1$
 		lst.get(2).setText("" + movielist.getSeriesCount()); //$NON-NLS-1$
 		lst.get(3).setText("" + movielist.getEpisodeCount()); //$NON-NLS-1$
-		lst.get(4).setText("" + StatisticsHelper.getViewedEpisodeCount(movielist)); //$NON-NLS-1$
+		lst.get(4).setText("" + StatisticsHelper.getViewedCount(movielist.iteratorEpisodes().asCasted())); //$NON-NLS-1$
 		lst.get(5).setText("" + movielist.getElementCount()); //$NON-NLS-1$
 		
 		lst.get(6).setText(TimeIntervallFormatter.formatPointed(StatisticsHelper.getMovieDuration(movielist)));
@@ -342,42 +376,38 @@ public class StatisticsFrame extends JFrame {
 		boolean h_ser = movielist.hasSeries();
 		boolean h_any = h_mov || h_ser;
 		
-		if (h_mov) cbxChooseChart.addItem(new StatisticsAddDateChart(movielist));
-		if (h_mov) cbxChooseChart.addItem(new StatisticsMovieLengthChart(movielist));
-		if (h_mov) cbxChooseChart.addItem(new StatisticsFormatChart(movielist));
-		if (h_mov) cbxChooseChart.addItem(new StatisticsQualityChart(movielist));
-		if (h_mov) cbxChooseChart.addItem(new StatisticsOnlinescoreChart(movielist));
-		if (h_mov) cbxChooseChart.addItem(new StatisticsScoreChart(movielist));
-		if (h_mov) cbxChooseChart.addItem(new StatisticsViewedChart(movielist));
-		if (h_mov) cbxChooseChart.addItem(new StatisticsYearChart(movielist));
-		if (h_mov) cbxChooseChart.addItem(new StatisticsGenreChart(movielist));
-		if (h_mov) cbxChooseChart.addItem(new StatisticsFSKChart(movielist));
-		if (h_mov) cbxChooseChart.addItem(new StatisticsLanguageChart(movielist));
-		if (h_mov) cbxChooseChart.addItem(new StatisticsTagChart(movielist));
-		if (h_mov) cbxChooseChart.addItem(new StatisticsHoursMovChart(movielist));
-		if (h_ser) cbxChooseChart.addItem(new StatisticsHoursSerChart(movielist));
-		if (h_ser) cbxChooseChart.addItem(new StatisticsHoursSerMovChart(movielist));
-		if (h_ser) cbxChooseChart.addItem(new StatisticsEpisodesViewedChart(movielist));
-		if (h_mov) cbxChooseChart.addItem(new StatisticsSizeChart(movielist));
-		if (h_ser) cbxChooseChart.addItem(new StatisticsSeriesViewedChart(movielist));
-		if (h_ser) cbxChooseChart.addItem(new StatisticsSeriesTotalViewedChart(movielist));
-		if (h_mov) cbxChooseChart.addItem(new StatisticsFormatPerTimeChart(movielist));
-		if (h_ser) cbxChooseChart.addItem(new StatisticsSeriesTimeline(movielist));
-		if (h_any) cbxChooseChart.addItem(new StatisticsProviderChart(movielist));
+		for (Function<CCMovieList, StatisticsGroup> supplier : ClipCornStatistics.STATISTICS) {
+			if (h_any) cbxChooseChart.addItem(supplier.apply(movielist));
+		}
 	}
 	
-	private void assignChart(StatisticsPanel statchart) {
+	private void updateStatGroup(StatisticsGroup statchart) {
 		currentChart = statchart;
 		
 		pnlCenter.removeAll();
 		pnlCenter.setVisible(false);
 		if (currentChart != null) {
-			JComponent comp = currentChart.getComponent();
+			if (currentChart.supportedTypes() == StatisticsTypeFilter.MOVIES) setTypeFilter(StatisticsTypeFilter.MOVIES, false);
+			if (currentChart.supportedTypes() == StatisticsTypeFilter.SERIES) setTypeFilter(StatisticsTypeFilter.SERIES, false);
+
+			btnMovies.setEnabled(currentChart.supportedTypes().containsMovies());
+			btnSeries.setEnabled(currentChart.supportedTypes().containsSeries());
+			btnBoth.setEnabled(currentChart.supportedTypes().containsBoth());
+			
+			JComponent comp = currentChart.getComponent(selectedType);
 			
 			pnlCenter.add(comp, BorderLayout.CENTER);
 			lblChartCaption.setText(statchart.getTitle());
+			btnSeries.setText(statchart.getCaptionToggle2());
+
+			currentChart.onChangeFilter(seriesList.getMap());
+			currentChart.onFilterYearRange(selectedYear);
 		} else {
 			lblChartCaption.setText(""); //$NON-NLS-1$
+
+			btnMovies.setEnabled(false);
+			btnSeries.setEnabled(false);
+			btnBoth.setEnabled(false);
 		}
 
 		pnlCenter.setVisible(true);

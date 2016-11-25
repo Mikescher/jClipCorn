@@ -9,22 +9,25 @@ import org.jfree.chart.renderer.category.StandardBarPainter;
 import org.jfree.data.category.DefaultCategoryDataset;
 
 import de.jClipCorn.database.CCMovieList;
+import de.jClipCorn.database.databaseElement.ICCPlayableElement;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieQuality;
+import de.jClipCorn.gui.frames.statisticsFrame.StatisticsTypeFilter;
 import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.util.cciterator.CCIterator;
 import de.jClipCorn.util.helper.StatisticsHelper;
 
 public class StatisticsQualityChart extends StatisticsChart {
-	public StatisticsQualityChart(CCMovieList ml) {
-		super(ml);
+	public StatisticsQualityChart(CCMovieList ml, StatisticsTypeFilter _source) {
+		super(ml, _source);
 	}
 
 	@Override
-	protected JFreeChart createChart(CCMovieList movielist) {
+	protected JFreeChart createChart(CCMovieList movielist, StatisticsTypeFilter source) {
 		JFreeChart chart = ChartFactory.createBarChart(
 	            "",      //$NON-NLS-1$
 	            "",      //$NON-NLS-1$
 	            "",      //$NON-NLS-1$
-	            getDataSet(movielist),               
+	            getDataSet(movielist, source),               
 	            PlotOrientation.VERTICAL, 
 	            false,                  
 	            false,
@@ -50,11 +53,13 @@ public class StatisticsQualityChart extends StatisticsChart {
 	    
 	    return chart;
 	}
-	
-	private DefaultCategoryDataset getDataSet(CCMovieList movielist) {
+
+	private DefaultCategoryDataset getDataSet(CCMovieList movielist, StatisticsTypeFilter source) {
+		CCIterator<ICCPlayableElement> it = source.iteratorMoviesOrEpisodes(movielist);
+		
 		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 		
-		int[] values = StatisticsHelper.getMovieCountForAllQualities(movielist);
+		int[] values = StatisticsHelper.getCountForAllQualities(it);
 		
 		for (CCMovieQuality quality : CCMovieQuality.values()) {
 			dataset.addValue(values[quality.asInt()], "Series0", quality.asString()); //$NON-NLS-1$
@@ -76,5 +81,15 @@ public class StatisticsQualityChart extends StatisticsChart {
 	@Override
 	public boolean usesFilterableYearRange() {
 		return false;
+	}
+
+	@Override
+	protected StatisticsTypeFilter supportedTypes() {
+		return StatisticsTypeFilter.BOTH;
+	}
+
+	@Override
+	public String createToggleTwoCaption() {
+		return LocaleBundle.getString("StatisticsFrame.this.toggleEpisodes"); //$NON-NLS-1$
 	}
 }

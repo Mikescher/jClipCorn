@@ -261,7 +261,7 @@ public class UserDataProblem {
 		
 		//################################################################################################################
 		
-		for (CCDatabaseElement idel : l.iterator()) {
+		for (CCDatabaseElement idel : l.iteratorElements()) {
 			if (idel.isMovie()) {
 				if (isPathIncluded((CCMovie)idel, p0, p1, p2, p3, p4, p5)) {
 					if (mov == null || mov.getLocalID() != idel.getLocalID()) {
@@ -452,7 +452,7 @@ public class UserDataProblem {
 		
 		//################################################################################################################
 		
-		for (CCDatabaseElement idel : season.getMovieList().iterator()) {
+		for (CCDatabaseElement idel : season.getMovieList().iteratorElements()) {
 			if (idel.isMovie()) {
 				if (isPathIncluded((CCMovie)idel, part)) {
 					ret.add(new UserDataProblem(PROBLEM_FILE_ALREADYEXISTS));

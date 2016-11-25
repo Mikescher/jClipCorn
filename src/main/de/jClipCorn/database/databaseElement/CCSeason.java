@@ -25,7 +25,7 @@ import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.ByteUtilies;
 import de.jClipCorn.util.helper.ImageUtilities;
 
-public class CCSeason {
+public class CCSeason implements ICCDatedElement {
 	private final CCSeries owner;
 	private final int seasonID;
 	
@@ -114,10 +114,12 @@ public class CCSeason {
 		return owner;
 	}
 
+	@Override
 	public String getTitle() {
 		return title;
 	}
 
+	@Override
 	public int getYear() {
 		return year;
 	}

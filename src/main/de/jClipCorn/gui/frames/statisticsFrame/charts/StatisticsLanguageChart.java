@@ -8,20 +8,23 @@ import org.jfree.data.general.PieDataset;
 import org.jfree.util.Rotation;
 
 import de.jClipCorn.database.CCMovieList;
+import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieLanguage;
+import de.jClipCorn.gui.frames.statisticsFrame.StatisticsTypeFilter;
 import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.util.cciterator.CCIterator;
 import de.jClipCorn.util.helper.StatisticsHelper;
 
 public class StatisticsLanguageChart extends StatisticsChart {
-	public StatisticsLanguageChart(CCMovieList ml) {
-		super(ml);
+	public StatisticsLanguageChart(CCMovieList ml, StatisticsTypeFilter _source) {
+		super(ml, _source);
 	}
 
 	@Override
-	protected JFreeChart createChart(CCMovieList movielist) {
+	protected JFreeChart createChart(CCMovieList movielist, StatisticsTypeFilter source) {
 		JFreeChart chart = ChartFactory.createPieChart3D(
 	            "",      //$NON-NLS-1$
-	            getDataSet(movielist),               
+	            getDataSet(movielist, source),               
 	            false,                  
 	            true, // tooltips
 	            false
@@ -46,10 +49,12 @@ public class StatisticsLanguageChart extends StatisticsChart {
 	    return chart;
 	}
 	
-	private PieDataset getDataSet(CCMovieList movielist) {
+	private PieDataset getDataSet(CCMovieList movielist, StatisticsTypeFilter source) {
+		CCIterator<CCDatabaseElement> it = source.iteratorMoviesOrSeries(movielist);
+		
 		DefaultPieDataset dataset = new DefaultPieDataset();
 		
-		int[] values = StatisticsHelper.getMovieCountForAllLanguages(movielist);
+		int[] values = StatisticsHelper.getCountForAllLanguages(it);
 		
 		for (int i = 0; i < values.length; i++) {
 			if (values[i] > 0) {
@@ -73,5 +78,15 @@ public class StatisticsLanguageChart extends StatisticsChart {
 	@Override
 	public boolean usesFilterableYearRange() {
 		return false;
+	}
+
+	@Override
+	protected StatisticsTypeFilter supportedTypes() {
+		return StatisticsTypeFilter.BOTH;
+	}
+
+	@Override
+	public String createToggleTwoCaption() {
+		return LocaleBundle.getString("StatisticsFrame.this.toggleSeries"); //$NON-NLS-1$
 	}
 }

@@ -17,23 +17,26 @@ import org.jfree.chart.renderer.xy.XYAreaRenderer;
 import org.jfree.data.xy.DefaultXYDataset;
 
 import de.jClipCorn.database.CCMovieList;
+import de.jClipCorn.database.databaseElement.ICCPlayableElement;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFormat;
+import de.jClipCorn.gui.frames.statisticsFrame.StatisticsTypeFilter;
 import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.util.cciterator.CCIterator;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.helper.StatisticsHelper;
 
-public class StatisticsFormatPerTimeChart extends StatisticsChart {
+public class StatisticsFormatOverTimeChart extends StatisticsChart {
 
 	private long domainTotalRangeMin;
 	private long domainTotalRangeMax;
 	private ValueAxis domainAxis;
 
-	public StatisticsFormatPerTimeChart(CCMovieList ml) {
-		super(ml);
+	public StatisticsFormatOverTimeChart(CCMovieList ml, StatisticsTypeFilter _source) {
+		super(ml, _source);
 	}
 
 	@Override
-	protected JFreeChart createChart(CCMovieList movielist) {
+	protected JFreeChart createChart(CCMovieList movielist, StatisticsTypeFilter source) {
 		DateAxis dateAxis = new DateAxis(""); //$NON-NLS-1$
 
 	    DateFormat chartFormatter = new SimpleDateFormat("dd.MM.yyyy"); //$NON-NLS-1$
@@ -43,7 +46,7 @@ public class StatisticsFormatPerTimeChart extends StatisticsChart {
 	    
 	    XYPlot plot = new XYPlot(new DefaultXYDataset(), dateAxis, valueAxis, new StandardXYItemRenderer(StandardXYItemRenderer.LINES, null, null));
 	    
-	    List<DefaultXYDataset> datasets = getDataSet(movielist);
+	    List<DefaultXYDataset> datasets = getDataSet(movielist, source);
 	    for (int idx = 0; idx < datasets.size(); idx++) {
 	    	Color cf = new Color(StatisticsHelper.CHART_COLORS[idx % StatisticsHelper.CHART_COLORS.length]);
 	    	Color ca = new Color(cf.getRed(), cf.getGreen(), cf.getBlue(), 50);
@@ -83,15 +86,16 @@ public class StatisticsFormatPerTimeChart extends StatisticsChart {
 	    return chart;
 	}
 	
-	private List<DefaultXYDataset> getDataSet(CCMovieList movielist) {
-		CCDate mindate = CCDate.min(StatisticsHelper.getFirstSeriesAddDate(movielist), StatisticsHelper.getFirstMovieAddDate(movielist));
+	private List<DefaultXYDataset> getDataSet(CCMovieList movielist, StatisticsTypeFilter source) {
+		CCIterator<ICCPlayableElement> it = source.iteratorMoviesOrEpisodes(movielist);
+		
+		CCDate mindate = StatisticsHelper.getFirstAddDate(it);
 		long minMilliecs = mindate.asMilliseconds();
-		CCDate maxdate = CCDate.max(StatisticsHelper.getLastSeriesAddDate(movielist), StatisticsHelper.getLastMovieAddDate(movielist));
+		CCDate maxdate = StatisticsHelper.getLastAddDate(it);
 		int daycount = mindate.getDayDifferenceTo(maxdate) + 1;
 
 		List<CCMovieFormat> formats = Arrays.asList(CCMovieFormat.values());
-		int[][] allLen_ser = StatisticsHelper.getAddedSeriesFormatLengthForAllDates(movielist, mindate, daycount);
-		int[][] allLen_mov = StatisticsHelper.getAddedMoviesFormatLengthForAllDates(movielist, mindate, daycount);
+		int[][] allLen = StatisticsHelper.getAddedFormatLengthForAllDates(mindate, daycount, it);
 		
 		List<DefaultXYDataset> result = new ArrayList<>();
 		for (int ifmt = 0; ifmt < formats.size(); ifmt++) {
@@ -101,12 +105,10 @@ public class StatisticsFormatPerTimeChart extends StatisticsChart {
 			int fmtSum = 0;
 			for (int i = 0; i < daycount; i++) {
 				for (int ifmt2 = 0; ifmt2 < formats.size(); ifmt2++) {
-					lenSum += allLen_ser[i][ifmt2];
-					lenSum += allLen_mov[i][ifmt2];
+					lenSum += allLen[i][ifmt2];
 				}
 
-				fmtSum += allLen_ser[i][ifmt];
-				fmtSum += allLen_mov[i][ifmt];
+				fmtSum += allLen[i][ifmt];
 				
 				series[0][i] = minMilliecs + i * CCDate.MILLISECONDS_PER_DAY;
 				series[1][i] = (100d * fmtSum) / lenSum;
@@ -128,7 +130,7 @@ public class StatisticsFormatPerTimeChart extends StatisticsChart {
 
 	@Override
 	protected String createTitle() {
-		return LocaleBundle.getString("StatisticsFrame.charttitles.formatPerTime"); //$NON-NLS-1$
+		return LocaleBundle.getString("StatisticsFrame.charttitles.formatOverTime"); //$NON-NLS-1$
 	}
 
 	@Override
@@ -142,11 +144,21 @@ public class StatisticsFormatPerTimeChart extends StatisticsChart {
 	}
 	
 	@Override
-	public void onFilterYearRange(int year) {
+	protected void onFilterYearRange(int year) {
 		if (year == -1) {
 			domainAxis.setRange(domainTotalRangeMin, domainTotalRangeMax);
 		} else {
 			domainAxis.setRange(CCDate.create(1, 1, year).asMilliseconds(), CCDate.create(1, 1, year+1).asMilliseconds());
 		}
+	}
+
+	@Override
+	protected StatisticsTypeFilter supportedTypes() {
+		return StatisticsTypeFilter.BOTH;
+	}
+
+	@Override
+	public String createToggleTwoCaption() {
+		return LocaleBundle.getString("StatisticsFrame.this.toggleEpisodes"); //$NON-NLS-1$
 	}
 }

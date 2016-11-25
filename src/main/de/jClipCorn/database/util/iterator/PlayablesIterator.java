@@ -4,11 +4,13 @@ import java.util.List;
 
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.databaseElement.CCEpisode;
+import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.database.databaseElement.CCSeries;
+import de.jClipCorn.database.databaseElement.ICCPlayableElement;
 import de.jClipCorn.util.cciterator.CCIterator;
 
-public class EpisodesIterator extends CCIterator<CCEpisode> {
+public class PlayablesIterator extends CCIterator<ICCPlayableElement> {
 	private boolean active = true;
 	
 	private int posCurr_list = -1;
@@ -17,10 +19,10 @@ public class EpisodesIterator extends CCIterator<CCEpisode> {
 	
 	private final List<CCDatabaseElement> it;
 	
-	public EpisodesIterator(List<CCDatabaseElement> ownerIterator) {
+	public PlayablesIterator(List<CCDatabaseElement> ownerIterator) {
 		it = ownerIterator;
 		
-		skipToNextSeries();
+		skipToNextElement();
 	}
 
 	@Override
@@ -29,14 +31,23 @@ public class EpisodesIterator extends CCIterator<CCEpisode> {
 	}
 
 	@Override
-	public CCEpisode next() {
-		CCSeries ser = (CCSeries)it.get(posCurr_list);
-		CCSeason sea = ser.getSeasonByArrayIndex(posCurr_season);
-		CCEpisode ep = sea.getEpisodeByArrayIndex(posCurr_episode);
+	public ICCPlayableElement next() {
+	
+		CCDatabaseElement curr = it.get(posCurr_list);
 		
-		skipToNextEpisode();
+		if (curr instanceof CCMovie) {
+			skipToNextElement();
+			return (CCMovie)curr;
+		} else {
+			CCSeries ser = (CCSeries)it.get(posCurr_list);
+			CCSeason sea = ser.getSeasonByArrayIndex(posCurr_season);
+			CCEpisode ep = sea.getEpisodeByArrayIndex(posCurr_episode);
+			
+			skipToNextEpisode();
+			
+			return ep;
+		}
 		
-		return ep;
 	}
 
 	private void skipToNextEpisode() {
@@ -60,11 +71,11 @@ public class EpisodesIterator extends CCIterator<CCEpisode> {
 		} while (posCurr_season < ser.getSeasonCount() && ser.getSeasonByArrayIndex(posCurr_season).getEpisodeCount() == 0);
 		
 		if (ser.getSeasonCount() <= posCurr_season) {
-			skipToNextSeries();
+			skipToNextElement();
 		}
 	}
 	
-	private void skipToNextSeries() {
+	private void skipToNextElement() {
 		posCurr_season = 0;
 		posCurr_episode = 0;
 		
@@ -72,7 +83,9 @@ public class EpisodesIterator extends CCIterator<CCEpisode> {
 			posCurr_list++;
 			
 			if (posCurr_list >= it.size()) {active = false; return;}
-			if (!(it.get(posCurr_list) instanceof CCSeries)) continue;
+			
+			if (it.get(posCurr_list) instanceof CCMovie) return;
+			
 			if (((CCSeries)it.get(posCurr_list)).getSeasonCount() == 0) continue;
 			if (((CCSeries)it.get(posCurr_list)).getEpisodeCount() == 0) continue;
 			
@@ -85,7 +98,7 @@ public class EpisodesIterator extends CCIterator<CCEpisode> {
 	}
 
 	@Override
-	protected CCIterator<CCEpisode> cloneFresh() {
-		return new EpisodesIterator(it);
+	protected CCIterator<ICCPlayableElement> cloneFresh() {
+		return new PlayablesIterator(it);
 	}
 }

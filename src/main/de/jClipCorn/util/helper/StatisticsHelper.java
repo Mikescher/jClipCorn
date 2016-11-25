@@ -14,6 +14,8 @@ import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.database.databaseElement.CCSeries;
+import de.jClipCorn.database.databaseElement.ICCDatedElement;
+import de.jClipCorn.database.databaseElement.ICCPlayableElement;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFSK;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFormat;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieGenre;
@@ -25,6 +27,7 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCMovieSize;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTags;
 import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineRefType;
 import de.jClipCorn.util.SortableTuple;
+import de.jClipCorn.util.cciterator.CCIterator;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.datetime.CCDatespan;
@@ -32,39 +35,12 @@ import de.jClipCorn.util.datetime.CCDatespan;
 public class StatisticsHelper {
 	public static int[] CHART_COLORS = {0x4D4D4D, 0x5DA5DA, 0xFAA43A, 0x60BD68, 0xF17CB0, 0xB2912F, 0xB276B2, 0x000080, 0xF15854};
 	
-	public static int getViewedMovieCount(CCMovieList ml) {
-		int c = 0;
-
-		for (CCMovie mov : ml.iteratorMovies()) {
-			c += mov.isViewed() ? 1 : 0;
-		}
-
-		return c;
+	public static int getViewedCount(CCIterator<ICCPlayableElement> it) {
+		return it.filter(e -> e.isViewed()).count();
 	}
 	
-	public static int getUnviewedMovieCount(CCMovieList ml) {
-		int c = 0;
-
-		for (CCMovie mov : ml.iteratorMovies()) {
-			c += mov.isViewed() ? 0 : 1;
-		}
-
-		return c;
-	}
-
-	public static int getViewedEpisodeCount(CCMovieList ml) {
-		int c = 0;
-
-		for (CCSeries series : ml.iteratorSeries()) {
-			for (int s = 0; s < series.getSeasonCount(); s++) {
-				CCSeason season = series.getSeasonByArrayIndex(s);
-				for (int e = 0; e < season.getEpisodeCount(); e++) {
-					c += season.getEpisodeByArrayIndex(e).isViewed() ? 1 : 0;
-				}
-			}
-		}
-
-		return c;
+	public static int getUnviewedCount(CCIterator<ICCPlayableElement> it) {
+		return it.filter(e -> !e.isViewed()).count();
 	}
 
 	public static int getMovieDuration(CCMovieList ml) {
@@ -114,7 +90,7 @@ public class StatisticsHelper {
 	public static CCMovieSize getTotalSize(CCMovieList ml) {
 		CCMovieSize s = new CCMovieSize();
 
-		for (CCDatabaseElement el : ml.iterator()) {
+		for (CCDatabaseElement el : ml.iteratorElements()) {
 			s.add(el.getFilesize());
 		}
 
@@ -158,7 +134,7 @@ public class StatisticsHelper {
 	public static double getAvgImDbRating(CCMovieList ml) {
 		int c = 0;
 
-		for (CCDatabaseElement el : ml.iterator()) {
+		for (CCDatabaseElement el : ml.iteratorElements()) {
 			c += el.getOnlinescore().asInt();
 		}
 
@@ -193,38 +169,22 @@ public class StatisticsHelper {
 		return getViewedMovieDuration(ml) + getViewedSeriesDuration(ml);
 	}
 	
-	public static CCDate getFirstMovieAddDate(CCMovieList ml) {
-		CCDate date = CCDate.getMaximumDate();
-		
-		for (CCMovie m : ml.iteratorMovies()) {
-			if (m.getAddDate().isLessThan(date)) {
-				date = m.getAddDate();
-			}
-		}
-		
-		return date;
+	public static CCDate getFirstAddDate(CCIterator<ICCPlayableElement> it) {
+		return it.minOrDefault(m -> m.getAddDate(), CCDate::compare, CCDate.getUnspecified());
 	}
 	
-	public static CCDate getLastMovieAddDate(CCMovieList ml) {
-		CCDate date = CCDate.getMinimumDate();
-		
-		for (CCMovie m : ml.iteratorMovies()) {
-			if (m.getAddDate().isGreaterThan(date)) {
-				date = m.getAddDate();
-			}
-		}
-		
-		return date;
+	public static CCDate getLastAddDate(CCIterator<ICCPlayableElement> it) {
+		return it.maxOrDefault(m -> m.getAddDate(), CCDate::compare, CCDate.getUnspecified());
 	}
 	
-	public static List<Integer> getMovieCountForAllDates(CCMovieList ml, CCDate startDate, int count) {
+	public static List<Integer> getCountForAllDates(CCDate startDate, int count, CCIterator<ICCPlayableElement> source) {
 		List<Integer> ls = new ArrayList<>();
 		
 		for (int i = 0; i < count; i++) {
 			ls.add(0);
 		}
 		
-		for (CCMovie m : ml.iteratorMovies()) {
+		for (ICCPlayableElement m : source) {
 			int pos = startDate.getDayDifferenceTo(m.getAddDate());
 			
 			if (pos >= 0 && pos < count) {
@@ -236,31 +196,15 @@ public class StatisticsHelper {
 		return ls;
 	}
 	
-	public static int getMinimumMovieLength(CCMovieList ml) {
-		int len = Integer.MAX_VALUE;
-		
-		for (CCMovie m : ml.iteratorMovies()) {
-			if (m.getLength() < len) {
-				len = m.getLength();
-			}
-		}
-		
-		return len;
+	public static int getMinimumLength(CCIterator<ICCPlayableElement> it) {
+		return it.minOrDefault(m -> m.getLength(), Integer::compare, -1);
 	}
 	
-	public static int getMaximumMovieLength(CCMovieList ml) {
-		int len = 0;
-		
-		for (CCMovie m : ml.iteratorMovies()) {
-			if (m.getLength() > len) {
-				len = m.getLength();
-			}
-		}
-		
-		return len;
+	public static int getMaximumLength(CCIterator<ICCPlayableElement> it) {
+		return it.maxOrDefault(m -> m.getLength(), Integer::compare, -1);
 	}
 	
-	public static double[][] getMovieCountForAllLengths(CCMovieList ml, int minLength, int count) {
+	public static double[][] getCountForAllLengths(int minLength, int count, CCIterator<ICCPlayableElement> it) {
 		double[][] result = new double[2][count+2];
 		
 		for (int i = 0; i < (count+2); i++) {
@@ -268,77 +212,77 @@ public class StatisticsHelper {
 			result[1][i] = 0;
 		}
 		
-		for (CCMovie m : ml.iteratorMovies()) {
-			result[1][m.getLength() - minLength + 1]++;
+		for (ICCPlayableElement m : it) {
+			result[1][m.getLength() - minLength + 1] += 1;
 		}
 		
 		return result;
 	}
 	
-	public static int[] getMovieCountForAllFormats(CCMovieList ml) {
+	public static int[] getCountForAllFormats(CCIterator<ICCPlayableElement> it) {
 		int[] result = new int[CCMovieFormat.values().length];
 		
 		for (int i = 0; i < CCMovieFormat.values().length; i++) {
 			result[i] = 0;
 		}
 		
-		for (CCMovie m : ml.iteratorMovies()) {
+		for (ICCPlayableElement m : it) {
 			result[m.getFormat().asInt()]++;
 		}
 		
 		return result;
 	}
 	
-	public static int[] getElementCountForAllProvider(CCMovieList ml) {
+	public static int[] getElementCountForAllProvider(CCIterator<CCDatabaseElement> it) {
 		int[] result = new int[CCOnlineRefType.values().length];
 		
 		for (int i = 0; i < CCOnlineRefType.values().length; i++) {
 			result[i] = 0;
 		}
 		
-		for (CCDatabaseElement m : ml.iterator()) {
+		for (CCDatabaseElement m : it) {
 			result[m.getOnlineReference().type.asInt()]++;
 		}
 		
 		return result;
 	}
 	
-	public static int[] getMovieCountForAllQualities(CCMovieList ml) {
+	public static int[] getCountForAllQualities(CCIterator<ICCPlayableElement> it) {
 		int[] result = new int[CCMovieQuality.values().length];
 		
 		for (int i = 0; i < CCMovieQuality.values().length; i++) {
 			result[i] = 0;
 		}
 		
-		for (CCMovie m : ml.iteratorMovies()) {
+		for (ICCPlayableElement m : it) {
 			result[m.getQuality().asInt()]++;
 		}
 		
 		return result;
 	}
 	
-	public static int[] getMovieCountForAllOnlinescores(CCMovieList ml) {
+	public static int[] getCountForAllOnlinescores(CCIterator<CCDatabaseElement> it) {
 		int[] result = new int[CCMovieOnlineScore.values().length];
 		
 		for (int i = 0; i < CCMovieOnlineScore.values().length; i++) {
 			result[i] = 0;
 		}
 		
-		for (CCMovie m : ml.iteratorMovies()) {
+		for (CCDatabaseElement m : it) {
 			result[m.getOnlinescore().asInt()]++;
 		}
 		
 		return result;
 	}
 	
-	public static int[] getMovieCountForAllScores(CCMovieList ml) {
+	public static int[] getCountForAllScores(CCIterator<CCDatabaseElement> it) {
 		int[] result = new int[CCMovieScore.values().length - 1];
 		
 		for (int i = 0; i < (CCMovieScore.values().length - 1); i++) {
 			result[i] = 0;
 		}
 		
-		for (CCMovie m : ml.iteratorMovies()) {
+		for (CCDatabaseElement m : it) {
 			if (m.getScore() != CCMovieScore.RATING_NO) {
 				result[m.getScore().asInt()]++;
 			}
@@ -347,52 +291,36 @@ public class StatisticsHelper {
 		return result;
 	}
 	
-	public static int getMinimumMovieYear(CCMovieList ml) {
-		int y = Integer.MAX_VALUE;
-		
-		for (CCMovie m : ml.iteratorMovies()) {
-			if (m.getYear() < y) {
-				y = m.getYear();
-			}
-		}
-		
-		return y;
+	public static int getMinimumYear(CCIterator<ICCDatedElement> it) {
+		return it.minOrDefault(e -> e.getYear(), Integer::compare, 0);
 	}
 	
-	public static int getMaximumMovieYear(CCMovieList ml) {
-		int y = 0;
-		
-		for (CCMovie m : ml.iteratorMovies()) {
-			if (m.getYear() > y) {
-				y = m.getYear();
-			}
-		}
-		
-		return y;
+	public static int getMaximumYear(CCIterator<ICCDatedElement> it) {
+		return it.maxOrDefault(e -> e.getYear(), Integer::compare, 0);
 	}
 	
-	public static int[] getMovieCountForAllYears(CCMovieList ml, int minYear, int count) {
+	public static int[] getCountForAllYears(int minYear, int count, CCIterator<ICCDatedElement> it) {
 		int[] result = new int[count];
 		
 		for (int i = 0; i < count; i++) {
 			result[i] = 0;
 		}
 		
-		for (CCMovie m : ml.iteratorMovies()) {
+		for (ICCDatedElement m : it) {
 			result[m.getYear() - minYear]++;
 		}
 		
 		return result;
 	}
 	
-	public static int[] getMovieCountForAllGenres(CCMovieList ml) {
+	public static int[] getCountForAllGenres(CCIterator<CCDatabaseElement> it) {
 		int[] result = new int[CCMovieGenre.values().length];
 		
 		for (int i = 0; i < CCMovieGenre.values().length; i++) {
 			result[i] = 0;
 		}
 		
-		for (CCMovie m : ml.iteratorMovies()) {
+		for (CCDatabaseElement m : it) {
 			for (int gi = 0; gi < m.getGenreCount(); gi++) {
 				result[m.getGenre(gi).asInt()]++;
 			}
@@ -401,60 +329,53 @@ public class StatisticsHelper {
 		return result;
 	}
 	
-	public static int[] getMovieCountForAllFSKs(CCMovieList ml) {
+	public static int[] getCountForAllFSKs(CCIterator<CCDatabaseElement> it) {
 		int[] result = new int[CCMovieFSK.values().length];
 		
 		for (int i = 0; i < CCMovieFSK.values().length; i++) {
 			result[i] = 0;
 		}
-		
-		for (CCMovie m : ml.iteratorMovies()) {
+
+		for (CCDatabaseElement m : it) {
 			result[m.getFSK().asInt()]++;
 		}
 		
 		return result;
 	}
 	
-	public static int[] getMovieCountForAllLanguages(CCMovieList ml) {
+	public static int[] getCountForAllLanguages(CCIterator<CCDatabaseElement> it) {
 		int[] result = new int[CCMovieLanguage.values().length];
 		
 		for (int i = 0; i < CCMovieLanguage.values().length; i++) {
 			result[i] = 0;
 		}
-		
-		for (CCMovie m : ml.iteratorMovies()) {
+
+		for (CCDatabaseElement m : it) {
 			result[m.getLanguage().asInt()]++;
 		}
 		
 		return result;
 	}
 	
-	public static int[] getMovieCountForAllTags(CCMovieList ml) {
+	public static int[] getCountForAllTags(CCIterator<ICCPlayableElement> it) {
 		int[] result = new int[CCMovieTags.ACTIVETAGS];
 		
 		for (int i = 0; i < CCMovieTags.ACTIVETAGS; i++) {
-			result[i] = 0;
-		}
-		
-		for (CCMovie m : ml.iteratorMovies()) {
-			for (int i = 0; i < CCMovieTags.ACTIVETAGS; i++) {
-				 if (m.getTag(i)) {
-					 result[i]++;
-				 }
-			}
+			final int tag = i;
+			result[tag] = it.filter(p -> p.getTag(tag)).count();
 		}
 		
 		return result;
 	}
 	
-	public static int[] getAddedMinuteCountForAllDates(CCMovieList ml, CCDate startDate, int count) {
+	public static int[] getMinuteCountForAllDates(CCDate startDate, int count, CCIterator<ICCPlayableElement> it) {
 		int[] ls = new int[count];
 		
 		for (int i = 0; i < count; i++) {
 			ls[i] = 0;
 		}
 		
-		for (CCMovie m : ml.iteratorMovies()) {
+		for (ICCPlayableElement m : it) {
 			int pos = startDate.getDayDifferenceTo(m.getAddDate());
 			
 			ls[pos] += m.getLength();
@@ -463,38 +384,14 @@ public class StatisticsHelper {
 		return ls;
 	}
 	
-	public static int[] getAddedSeriesCountForAllDates(CCMovieList ml, CCDate startDate, int count) {
-		int[] ls = new int[count];
-		
-		for (int i = 0; i < count; i++) {
-			ls[i] = 0;
-		}
-		
-		for (CCSeries series : ml.iteratorSeries()) {
-			for (int sea = 0; sea < series.getSeasonCount(); sea++) {
-				CCSeason season = series.getSeasonByArrayIndex(sea);
-				
-				for (int epi = 0; epi < season.getEpisodeCount(); epi++) {
-					CCEpisode episode = season.getEpisodeByArrayIndex(epi);
-					
-					int pos = startDate.getDayDifferenceTo(episode.getAddDate());
-					
-					ls[pos] += episode.getLength();
-				}
-			}
-		}
-		
-		return ls;
-	}
-	
-	public static long[] getAddedByteCountForAllDates(CCMovieList ml, CCDate startDate, int count) {
+	public static long[] getByteCountForAllDates(CCDate startDate, int count, CCIterator<ICCPlayableElement> it) {
 		long[] ls = new long[count];
 		
 		for (int i = 0; i < count; i++) {
 			ls[i] = 0;
 		}
-		
-		for (CCMovie m : ml.iteratorMovies()) {
+
+		for (ICCPlayableElement m : it) {
 			int pos = startDate.getDayDifferenceTo(m.getAddDate());
 			
 			ls[pos] += m.getFilesize().getBytes();
@@ -503,8 +400,8 @@ public class StatisticsHelper {
 		return ls;
 	}
 	
-	public static int[] getMovieMinuteCountForAllDates(CCMovieList ml, CCDate startDate, int count) {
-		int[] ls = getAddedMinuteCountForAllDates(ml, startDate, count);
+	public static int[] getCumulativeMinuteCountForAllDates(CCDate startDate, int count, CCIterator<ICCPlayableElement> it) {
+		int[] ls = getMinuteCountForAllDates(startDate, count, it);
 		int[] ns = new int[count];
 		
 		int curr = 0;
@@ -517,62 +414,8 @@ public class StatisticsHelper {
 		return ns;
 	}
 	
-	public static int[] getSeriesMinuteCountForAllDates(CCMovieList ml, CCDate startDate, int count) {
-		int[] ls = getAddedSeriesCountForAllDates(ml, startDate, count);
-		int[] ns = new int[count];
-		
-		int curr = 0;
-		
-		for (int i = 0; i < count; i++) {
-			curr += ls[i];
-			ns[i] = curr;
-		}
-		
-		return ns;
-	}
-	
-	public static CCDate getFirstSeriesAddDate(CCMovieList ml) {
-		CCDate date = CCDate.getMaximumDate();
-
-		for (CCSeries series : ml.iteratorSeries()) {
-			for (int sea = 0; sea < series.getSeasonCount(); sea++) {
-				CCSeason season = series.getSeasonByArrayIndex(sea);
-				
-				for (int epi = 0; epi < season.getEpisodeCount(); epi++) {
-					CCEpisode episode = season.getEpisodeByArrayIndex(epi);
-					
-					if (episode.getAddDate().isLessThan(date)) {
-						date = episode.getAddDate();
-					}
-				}
-			}
-		}
-		
-		return date;
-	}
-	
-	public static CCDate getLastSeriesAddDate(CCMovieList ml) {
-		CCDate date = CCDate.getMinimumDate();
-		
-		for (CCSeries series : ml.iteratorSeries()) {
-			for (int sea = 0; sea < series.getSeasonCount(); sea++) {
-				CCSeason season = series.getSeasonByArrayIndex(sea);
-				
-				for (int epi = 0; epi < season.getEpisodeCount(); epi++) {
-					CCEpisode episode = season.getEpisodeByArrayIndex(epi);
-					
-					if (episode.getAddDate().isGreaterThan(date)) {
-						date = episode.getAddDate();
-					}
-				}
-			}
-		}
-		
-		return date;
-	}
-	
-	public static long[] getMovieByteCountForAllDates(CCMovieList ml, CCDate startDate, int count) {
-		long[] ls = getAddedByteCountForAllDates(ml, startDate, count);
+	public static long[] getCumulativeByteCountForAllDates(CCDate startDate, int count, CCIterator<ICCPlayableElement> it) {
+		long[] ls = getByteCountForAllDates(startDate, count, it);
 		long[] ns = new long[count];
 		
 		long curr = 0;
@@ -585,44 +428,15 @@ public class StatisticsHelper {
 		return ns;
 	}
 	
-	public static CCDate getFirstEpisodeWatchedDate(CCMovieList ml) {
-		CCDate date = CCDate.getMaximumDate();
-		
-		for (CCSeries s : ml.iteratorSeries()) {
-			for (int sc = 0; sc < s.getSeasonCount(); sc++) {
-				for (int ec = 0; ec < s.getSeasonByArrayIndex(sc).getEpisodeCount(); ec++) {
-					CCEpisode epis = s.getSeasonByArrayIndex(sc).getEpisodeByArrayIndex(ec);
-					
-					if (!epis.getViewedHistoryLast().isMinimum() && epis.getViewedHistoryLast().isLessThan(date)) {
-						date = epis.getViewedHistoryLast();
-					}
-				}
-			}
-		}
-		
-		return date;
+	public static CCDate getFirstWatchedDate(CCIterator<ICCPlayableElement> it) {
+		return it.map(m -> m.getViewedHistory().getLastDateOrInvalid()).filter(p -> !p.isMinimum()).minOrDefault(CCDate::compare, CCDate.getUnspecified());
 	}
 	
-	public static CCDate getLastEpisodeWatchedDate(CCMovieList ml) {
-		CCDate date = CCDate.getMinimumDate();
-		
-		for (CCSeries s : ml.iteratorSeries()) {
-			for (int sc = 0; sc < s.getSeasonCount(); sc++) {
-				for (int ec = 0; ec < s.getSeasonByArrayIndex(sc).getEpisodeCount(); ec++) {
-					CCEpisode epis = s.getSeasonByArrayIndex(sc).getEpisodeByArrayIndex(ec);
-					
-					if (!epis.getViewedHistoryLast().isMinimum() && epis.getViewedHistoryLast().isGreaterThan(date)) {
-						date = epis.getViewedHistoryLast();
-					}
-				}
-			}
-			
-		}
-		
-		return date;
+	public static CCDate getLastWatchedDate(CCIterator<ICCPlayableElement> it) {
+		return it.map(m -> m.getViewedHistory().getLastDateOrInvalid()).filter(p -> !p.isMinimum()).maxOrDefault(CCDate::compare, CCDate.getUnspecified());
 	}
 	
-	public static List<Integer> getEpisodesViewedForAllDates(CCMovieList ml, CCDate startDate, int count) {
+	public static List<Integer> getViewedForAllDates(CCDate startDate, int count, CCIterator<ICCPlayableElement> it) {
 		int initialcount = 0;
 		List<Integer> ls = new ArrayList<>();
 		
@@ -632,31 +446,14 @@ public class StatisticsHelper {
 			ls.add(0);
 		}
 		
-		for (CCMovie m : ml.iteratorMovies()) {
-			int pos = startDate.getDayDifferenceTo(m.getAddDate());
-			
-			if (pos >= 0 && pos < count) {
+		for (ICCPlayableElement elem : it.filter(el -> el.isViewed())) {
+			if (elem.getViewedHistory().getLastDateOrInvalid().isMinimum()) {
+				initialcount++;
+			} else {
+				int pos = startDate.getDayDifferenceTo(elem.getViewedHistory().getLastDateOrInvalid());
+				
 				int prev = ls.get(pos) + 1;
 				ls.set(pos, prev);
-			}
-		}
-		
-		for (CCSeries s : ml.iteratorSeries()) {
-			for (int sc = 0; sc < s.getSeasonCount(); sc++) {
-				for (int ec = 0; ec < s.getSeasonByArrayIndex(sc).getEpisodeCount(); ec++) {
-					CCEpisode epis = s.getSeasonByArrayIndex(sc).getEpisodeByArrayIndex(ec);
-					
-					if (epis.isViewed()) {
-						if (epis.getViewedHistoryLast().isMinimum()) {
-							initialcount++;
-						} else {
-							int pos = startDate.getDayDifferenceTo(epis.getViewedHistoryLast());
-							
-							int prev = ls.get(pos) + 1;
-							ls.set(pos, prev);
-						}
-					}
-				}
 			}
 		}
 		
@@ -697,7 +494,7 @@ public class StatisticsHelper {
 		return result;
 	}
 	
-	public static int[][] getAddedSeriesFormatLengthForAllDates(CCMovieList ml, CCDate startDate, int count) {
+	public static int[][] getAddedFormatLengthForAllDates(CCDate startDate, int count, CCIterator<ICCPlayableElement> it) {
 		List<CCMovieFormat> formats = Arrays.asList(CCMovieFormat.values());
 		
 		int[][] ls = new int[count][formats.size()];
@@ -708,35 +505,7 @@ public class StatisticsHelper {
 			}
 		}
 		
-		for (CCSeries series : ml.iteratorSeries()) {
-			for (int sea = 0; sea < series.getSeasonCount(); sea++) {
-				CCSeason season = series.getSeasonByArrayIndex(sea);
-				
-				for (int epi = 0; epi < season.getEpisodeCount(); epi++) {
-					CCEpisode episode = season.getEpisodeByArrayIndex(epi);
-					
-					int pos = startDate.getDayDifferenceTo(episode.getAddDate());
-					
-					ls[pos][formats.indexOf(episode.getFormat())] += episode.getLength();
-				}
-			}
-		}
-		
-		return ls;
-	}
-	
-	public static int[][] getAddedMoviesFormatLengthForAllDates(CCMovieList ml, CCDate startDate, int count) {
-		List<CCMovieFormat> formats = Arrays.asList(CCMovieFormat.values());
-		
-		int[][] ls = new int[count][formats.size()];
-		
-		for (int i = 0; i < count; i++) {
-			for (int j = 0; j < formats.size(); j++) {
-				ls[i][j] = 0;
-			}
-		}
-		
-		for (CCMovie m : ml.iteratorMovies()) {
+		for (ICCPlayableElement m : it) {
 			int pos = startDate.getDayDifferenceTo(m.getAddDate());
 
 			ls[pos][formats.indexOf(m.getFormat())] += m.getLength();

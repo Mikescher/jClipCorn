@@ -15,7 +15,10 @@ import org.jfree.data.xy.DefaultXYDataset;
 import org.jfree.data.xy.XYDataset;
 
 import de.jClipCorn.database.CCMovieList;
+import de.jClipCorn.database.databaseElement.ICCPlayableElement;
+import de.jClipCorn.gui.frames.statisticsFrame.StatisticsTypeFilter;
 import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.util.cciterator.CCIterator;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.helper.StatisticsHelper;
 
@@ -25,12 +28,12 @@ public class StatisticsAddDateChart extends StatisticsChart {
 	private long domainTotalRangeMax;
 	private ValueAxis domainAxis;
 	
-	public StatisticsAddDateChart(CCMovieList ml) {
-		super(ml);
+	public StatisticsAddDateChart(CCMovieList ml, StatisticsTypeFilter _source) {
+		super(ml, _source);
 	}
 
 	@Override
-	protected JFreeChart createChart(CCMovieList movielist) {
+	protected JFreeChart createChart(CCMovieList movielist, StatisticsTypeFilter source) {
 		DateAxis dateAxis = new DateAxis(""); //$NON-NLS-1$
 
 	    DateFormat chartFormatter = new SimpleDateFormat("dd.MM.yyyy"); //$NON-NLS-1$
@@ -42,7 +45,7 @@ public class StatisticsAddDateChart extends StatisticsChart {
 
 	    StandardXYItemRenderer renderer = new StandardXYItemRenderer(StandardXYItemRenderer.LINES, null, null);
 	    
-	    XYPlot plot = new XYPlot(getDataSet(movielist), dateAxis, valueAxis, renderer);
+	    XYPlot plot = new XYPlot(getDataSet(movielist, source), dateAxis, valueAxis, renderer);
 	    
 		plot.getRenderer().setSeriesPaint(0, XYCHART_COLOR);
 		
@@ -62,24 +65,25 @@ public class StatisticsAddDateChart extends StatisticsChart {
 	    return chart;
 	}
 	
-	private XYDataset getDataSet(CCMovieList movielist) {
-		CCDate mindate = StatisticsHelper.getFirstMovieAddDate(movielist);
+	private XYDataset getDataSet(CCMovieList movielist, StatisticsTypeFilter source) {
+		CCIterator<ICCPlayableElement> it = source.iteratorMoviesOrEpisodes(movielist);
+		
+		CCDate mindate = StatisticsHelper.getFirstAddDate(it);
+		CCDate maxdate = StatisticsHelper.getLastAddDate(it);
+		
 		long minMilliecs = mindate.asMilliseconds();
-		CCDate maxdate = StatisticsHelper.getLastMovieAddDate(movielist);
 		int daycount = mindate.getDayDifferenceTo(maxdate) + 1;
 		
 		DefaultXYDataset dataset = new DefaultXYDataset();
 		
-		List<Integer> allpos = StatisticsHelper.getMovieCountForAllDates(movielist, mindate, daycount);
+		List<Integer> allpos = StatisticsHelper.getCountForAllDates(mindate, daycount, it);
 		
 		List<Integer> posx = new Vector<>();
 		List<Integer> posy = new Vector<>();
 		
 		for (int i = 0; i < daycount; i++) {
-//			if (allpos.get(i) > 0) {
-				posx.add(i);
-				posy.add(allpos.get(i));
-//			}
+			posx.add(i);
+			posy.add(allpos.get(i));
 		}
 		
 		double[][] series = new double[2][posx.size()];
@@ -115,11 +119,21 @@ public class StatisticsAddDateChart extends StatisticsChart {
 	}
 	
 	@Override
-	public void onFilterYearRange(int year) {
+	protected void onFilterYearRange(int year) {
 		if (year == -1) {
 			domainAxis.setRange(domainTotalRangeMin, domainTotalRangeMax);
 		} else {
 			domainAxis.setRange(CCDate.create(1, 1, year).asMilliseconds(), CCDate.create(1, 1, year+1).asMilliseconds());
 		}
+	}
+
+	@Override
+	protected StatisticsTypeFilter supportedTypes() {
+		return StatisticsTypeFilter.BOTH;
+	}
+
+	@Override
+	public String createToggleTwoCaption() {
+		return LocaleBundle.getString("StatisticsFrame.this.toggleEpisodes"); //$NON-NLS-1$
 	}
 }

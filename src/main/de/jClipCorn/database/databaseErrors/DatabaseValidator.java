@@ -628,7 +628,7 @@ public class DatabaseValidator {
 		
 		List<DatabaseCoverElement> cvrList = new ArrayList<>();
 		
-		for (CCDatabaseElement el : movielist.iterator()) {
+		for (CCDatabaseElement el : movielist.iteratorElements()) {
 			cvrList.add(new DatabaseCoverElement(el.getCoverName(), el));
 			
 			if (el.isSeries()) {
@@ -682,7 +682,7 @@ public class DatabaseValidator {
 		
 		List<DatabaseFileElement> flList = new ArrayList<>();
 		
-		for (CCDatabaseElement el : movielist.iterator()) {
+		for (CCDatabaseElement el : movielist.iteratorElements()) {
 			if (el.isMovie()) {
 				for (int i = 0; i < ((CCMovie)el).getPartcount(); i++) {
 					if (ignIFO && CCMovieFormat.getMovieFormat(PathFormatter.getExtension(((CCMovie)el).getAbsolutePart(i))) == CCMovieFormat.IFO) {
@@ -742,7 +742,7 @@ public class DatabaseValidator {
 	private static void findDuplicateOnlineRef(List<DatabaseError> e, CCMovieList movielist, ProgressCallbackListener pcl) {
 		Set<String> refSet = new HashSet<>();
 
-		for (CCDatabaseElement el : movielist.iterator()) {
+		for (CCDatabaseElement el : movielist.iteratorElements()) {
 			if (el.getOnlineReference().isSet()) {
 				if (! refSet.add(el.getLanguage().asInt() + '_' + el.getOnlineReference().toSerializationString())) {
 					e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_DUPLICATE_REF, el));

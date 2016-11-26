@@ -26,6 +26,6 @@ public class UniqueStream<TType> extends CCSimpleStream<TType> {
 
 	@Override
 	protected CCStream<TType> cloneFresh() {
-		return new UniqueStream<>(source);
+		return new UniqueStream<>(source.cloneFresh());
 	}
 }

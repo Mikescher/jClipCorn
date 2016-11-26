@@ -157,6 +157,17 @@ public class TestIterators extends ClipCornBaseTest {
 	public void testIteratorChains() throws Exception {
 		CCMovieList ml = createExampleDB();
 
+		int x1 = ml
+				.iteratorElements()
+				.map(p -> p.getLocalID())
+				.sort(Integer::compare)
+				.reverse()
+				.filter(p -> p >= 0)
+				.unique()
+				.<Integer>cast().sum((a,b) -> a+b, 0);
+		
+		assertEquals(190, x1);
+		
 		assertEquals(0, ml.iteratorMovies().map(p -> p.getLocalID()).sort(Integer::compare).firstOrNull().intValue());
 		assertEquals(18, ml.iteratorMovies().map(p -> p.getLocalID()).sort(Integer::compare).lastOrNull().intValue());
 		assertEquals(19, ml.iteratorElements().map(p -> p.getLocalID()).sort(Integer::compare).lastOrNull().intValue());

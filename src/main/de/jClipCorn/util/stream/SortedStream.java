@@ -19,7 +19,7 @@ public class SortedStream<TType> extends CCSimpleStream<TType> {
 	@Override
 	public TType nextOrNothing(boolean first) {
 		if (first) {
-			it = source.enumerate();
+			it = source.enumerateThisInternal();
 			Collections.sort(it, sourceComp);
 		}
 		
@@ -31,6 +31,6 @@ public class SortedStream<TType> extends CCSimpleStream<TType> {
 
 	@Override
 	protected CCStream<TType> cloneFresh() {
-		return new SortedStream<>(source, sourceComp);
+		return new SortedStream<>(source.cloneFresh(), sourceComp);
 	}
 }

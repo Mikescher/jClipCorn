@@ -16,7 +16,7 @@ public class ReverseStream<T> extends CCSimpleStream<T> {
 	@Override
 	public T nextOrNothing(boolean first) {
 		if (first) {
-			ls = source.enumerate();
+			ls = source.enumerateThisInternal();
 			posCurr = ls.size();
 		}
 		
@@ -28,6 +28,6 @@ public class ReverseStream<T> extends CCSimpleStream<T> {
 
 	@Override
 	protected CCStream<T> cloneFresh() {
-		return new ReverseStream<>(source);
+		return new ReverseStream<>(source.cloneFresh());
 	}
 }

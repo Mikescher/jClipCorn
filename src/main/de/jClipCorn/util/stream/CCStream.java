@@ -40,6 +40,13 @@ public abstract class CCStream<TType> implements Iterator<TType>, Iterable<TType
 		return result;
 	}
 
+	// enumerate this iterator, the stream is dead after this operation (!)
+	public List<TType> enumerateThisInternal() {
+		List<TType> result = new ArrayList<>();
+		while (hasNext()) result.add(next());
+		return result;
+	}
+
 	public int count() {
 		int c = 0;
 		

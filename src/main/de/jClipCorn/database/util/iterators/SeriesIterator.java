@@ -4,43 +4,24 @@ import java.util.List;
 
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.databaseElement.CCSeries;
+import de.jClipCorn.util.stream.CCSimpleStream;
 import de.jClipCorn.util.stream.CCStream;
 
-public class SeriesIterator extends CCStream<CCSeries> {
-	private boolean active = true;
+public class SeriesIterator extends CCSimpleStream<CCSeries> {
 	private int pos = -1;
 	private final List<CCDatabaseElement> it;
 	
 	public SeriesIterator(List<CCDatabaseElement> ownerIterator) {
 		it = ownerIterator;
-		skip();
 	}
 
 	@Override
-	public boolean hasNext() {
-		return active;
-	}
-
-	@Override
-	public CCSeries next() {
-		CCSeries ser = (CCSeries)it.get(pos);
-		
-		skip();
-		
-		return ser;
-	}
-	
-	private void skip() {
-		do {
+	public CCSeries nextOrNothing(boolean first) {
+		while (pos + 1 < it.size()) {
 			pos++;
-		} while ((active = pos < it.size()) && !(it.get(pos) instanceof CCSeries));
-	}
-
-	@Override
-	public void remove() {
-		it.remove(pos);
-		pos--;
-		skip();
+			if (it.get(pos) instanceof CCSeries) return (CCSeries) it.get(pos);
+		}
+		return finishStream();
 	}
 
 	@Override

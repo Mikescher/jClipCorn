@@ -94,6 +94,8 @@ public class TestIterators extends ClipCornBaseTest {
 	@Test
 	public void testDirectEpisodesIterator() throws Exception {
 		CCMovieList ml = createExampleDB();
+
+		assertEquals("1;2;3;4;5;6;7;8;9;10", ml.findDatabaseSeries(19).iteratorEpisodes().stringjoin(p -> p.getEpisodeNumber()+"", ";"));
 		
 		assertEquals(25, ml.findDatabaseSeries(10).iteratorEpisodes().count());
 		assertEquals(51, ml.findDatabaseSeries(11).iteratorEpisodes().count());

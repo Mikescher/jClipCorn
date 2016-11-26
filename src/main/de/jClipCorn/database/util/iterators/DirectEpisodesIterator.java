@@ -1,58 +1,33 @@
 package de.jClipCorn.database.util.iterators;
 
 import de.jClipCorn.database.databaseElement.CCEpisode;
-import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.database.databaseElement.CCSeries;
+import de.jClipCorn.util.stream.CCSimpleStream;
 import de.jClipCorn.util.stream.CCStream;
 
-public class DirectEpisodesIterator extends CCStream<CCEpisode> {
+public class DirectEpisodesIterator extends CCSimpleStream<CCEpisode> {
 	private CCSeries series;
 	
-	private boolean active = true;
-
-	private int posCurr_season = -1;
+	private int posCurr_season = 0;
 	private int posCurr_episode = -1;
 	
 	public DirectEpisodesIterator(CCSeries _series) {
 		series = _series;
-		
-		skipToNextSeason();
 	}
 
 	@Override
-	public boolean hasNext() {
-		return active;
-	}
-
-	@Override
-	public CCEpisode next() {
-		CCSeason sea = series.getSeasonByArrayIndex(posCurr_season);
-		CCEpisode ep = sea.getEpisodeByArrayIndex(posCurr_episode);
-		
-		skipToNextEpisode();
-		
-		return ep;
-	}
-
-	private void skipToNextEpisode() {
-		CCSeason sea = series.getSeasonByArrayIndex(posCurr_season);
-		
-		posCurr_episode++;
-		
-		if (sea.getEpisodeCount() <= posCurr_episode) {
-			skipToNextSeason();
-		}
-	}
-
-	private void skipToNextSeason() {
-		posCurr_episode = 0;
-		
-		do {
+	public CCEpisode nextOrNothing(boolean first) {
+		for (;;) {
+			posCurr_episode++;
+			
+			if (posCurr_season >= series.getSeasonCount()) 
+				return finishStream();
+			
+			if (posCurr_episode < series.getSeasonByArrayIndex(posCurr_season).getEpisodeCount()) 
+				return series.getSeasonByArrayIndex(posCurr_season).getEpisodeByArrayIndex(posCurr_episode);
+			
 			posCurr_season++;
-		} while (posCurr_season < series.getSeasonCount() && series.getSeasonByArrayIndex(posCurr_season).getEpisodeCount() == 0);
-		
-		if (series.getSeasonCount() <= posCurr_season) {
-			active = false;
+			posCurr_episode = -1;
 		}
 	}
 

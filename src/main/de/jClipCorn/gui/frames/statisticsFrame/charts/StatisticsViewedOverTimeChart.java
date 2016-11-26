@@ -66,8 +66,8 @@ public class StatisticsViewedOverTimeChart extends StatisticsChart {
 	private XYDataset getDataSet(CCMovieList movielist, StatisticsTypeFilter source) {
 		CCIterator<ICCPlayableElement> it = source.iteratorMoviesOrEpisodes(movielist);
 		
-		CCDate mindate = StatisticsHelper.getFirstWatchedDate(it);
-		CCDate maxdate = StatisticsHelper.getLastWatchedDate(it);
+		CCDate mindate = StatisticsHelper.getFirstWatchedDate(movielist.iteratorPlayables());
+		CCDate maxdate = StatisticsHelper.getLastWatchedDate(movielist.iteratorPlayables());
 		
 		mindate = mindate.getSubDay(1);
 		

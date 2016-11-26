@@ -118,8 +118,6 @@ public class Main {
 
 //TODO save original/alternative title (eng title) --> get from TMDB / IMDB
 
-//TODO Missing Legend for statistics: "Format/Zeit" --> Use stacked line diagramm (-> continoous stacked bar diagram)
-
 //TODO
 //   - jClipCorn  - better cover resolution,  
 //   - show cover in HD (right click in coverpanel + series cover control + cbl click coverpanel)                                             

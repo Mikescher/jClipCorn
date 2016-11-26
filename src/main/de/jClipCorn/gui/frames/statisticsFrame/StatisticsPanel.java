@@ -77,6 +77,8 @@ public abstract class StatisticsPanel {
 		if (a == null && b == null) return true;
 		if (a == null && FilterAllTrue(b)) return true;
 		if (b == null && FilterAllTrue(a)) return true;
+
+		if (a == null || b == null) return false;
 		
 		if (a.size() != b.size()) return false;
 		

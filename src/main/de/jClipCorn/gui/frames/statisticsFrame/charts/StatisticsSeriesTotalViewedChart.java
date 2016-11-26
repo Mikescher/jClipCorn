@@ -161,19 +161,16 @@ public class StatisticsSeriesTotalViewedChart extends StatisticsChart {
 		
 		int firstIdx = mindate.getDayDifferenceTo(series.episodes.get(0).getViewedHistoryFirst());
 		int lastIdx = 0;
-		int minutesum = 0;
 		for (CCEpisode episode : series.episodes) {
 			int idx = mindate.getDayDifferenceTo(episode.getViewedHistoryFirst());
-			lastIdx = idx;
-			minutesum += episode.getLength();
+			lastIdx = Math.max(idx, lastIdx);
 			
-			posy.set(idx, minutesum);
+			posy.set(idx, posy.get(idx) + episode.getLength());
 		}
 		
 		int valueYSum = 0;
 		for (int idx = firstIdx; idx <= lastIdx; idx++) {
-			valueYSum = Math.max(valueYSum, posy.get(idx));
-			
+			valueYSum += posy.get(idx);
 			posy.set(idx, valueYSum);
 		}
 
@@ -276,11 +273,6 @@ public class StatisticsSeriesTotalViewedChart extends StatisticsChart {
 				}
 			}
 		}
-		
-		chart = new JFreeChart(plot);
-		chart.setBackgroundPaint(null);
-
-		invalidateComponent();
 	}
 
 	@Override

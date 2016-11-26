@@ -68,8 +68,8 @@ public class StatisticsAddDateChart extends StatisticsChart {
 	private XYDataset getDataSet(CCMovieList movielist, StatisticsTypeFilter source) {
 		CCIterator<ICCPlayableElement> it = source.iteratorMoviesOrEpisodes(movielist);
 		
-		CCDate mindate = StatisticsHelper.getFirstAddDate(it);
-		CCDate maxdate = StatisticsHelper.getLastAddDate(it);
+		CCDate mindate = StatisticsHelper.getFirstAddDate(movielist.iteratorPlayables());
+		CCDate maxdate = StatisticsHelper.getLastAddDate(movielist.iteratorPlayables());
 		
 		long minMilliecs = mindate.asMilliseconds();
 		int daycount = mindate.getDayDifferenceTo(maxdate) + 1;

@@ -267,11 +267,6 @@ public class StatisticsSeriesViewedChart extends StatisticsChart {
 				}
 			}
 		}
-		
-		chart = new JFreeChart(plot);
-		chart.setBackgroundPaint(null);
-		
-		invalidateComponent();
 	}
 
 	@Override

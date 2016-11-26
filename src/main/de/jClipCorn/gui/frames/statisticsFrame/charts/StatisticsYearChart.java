@@ -70,8 +70,8 @@ public class StatisticsYearChart extends StatisticsChart {
 	private IntervalXYDataset getDataSet(CCMovieList movielist, StatisticsTypeFilter source) {
 		CCIterator<ICCDatedElement> it = source.iteratorMoviesOrSeason(movielist);
 		
-		int minYear = StatisticsHelper.getMinimumYear(it);
-		int maxYear = StatisticsHelper.getMaximumYear(it);
+		int minYear = StatisticsHelper.getMinimumYear(movielist.iteratorDatedElements());
+		int maxYear = StatisticsHelper.getMaximumYear(movielist.iteratorDatedElements());
 		int count = (maxYear - minYear) + 1;
 		
 		int[] yearcounts = StatisticsHelper.getCountForAllYears(minYear, count, it);

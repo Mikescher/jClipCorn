@@ -69,9 +69,9 @@ public class StatisticsSizeOverTimeChart extends StatisticsChart {
 	private XYDataset getDataSet(CCMovieList movielist, StatisticsTypeFilter source) {
 		CCIterator<ICCPlayableElement> it = source.iteratorMoviesOrEpisodes(movielist);
 		
-		CCDate mindate = StatisticsHelper.getFirstAddDate(it);
+		CCDate mindate = StatisticsHelper.getFirstAddDate(movielist.iteratorPlayables());
 		long minMilliecs = mindate.asMilliseconds();
-		CCDate maxdate = StatisticsHelper.getLastAddDate(it);
+		CCDate maxdate = StatisticsHelper.getLastAddDate(movielist.iteratorPlayables());
 		int daycount = mindate.getDayDifferenceTo(maxdate) + 1;
 		
 		DefaultXYDataset dataset = new DefaultXYDataset();

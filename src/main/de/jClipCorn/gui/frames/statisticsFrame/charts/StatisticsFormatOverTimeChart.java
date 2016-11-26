@@ -54,12 +54,12 @@ public class StatisticsFormatOverTimeChart extends StatisticsChart {
 	    	plot.setDataset( 2*idx+0, datasets.get(idx));
 	    	plot.setRenderer(2*idx+0, new XYAreaRenderer(XYAreaRenderer.AREA, null, null));
 	    	plot.getRenderer(2*idx+0).setSeriesPaint(0, ca);
-	    	plot.getRenderer(2*idx+0).setSeriesVisibleInLegend(0, false);
+	    	//plot.getRenderer(2*idx+0).setSeriesVisibleInLegend(0, false);
 
 	    	plot.setDataset( 2*idx+1, datasets.get(idx));
 	    	plot.setRenderer(2*idx+1, new StandardXYItemRenderer(StandardXYItemRenderer.LINES, null, null));
 	    	plot.getRenderer(2*idx+1).setSeriesPaint(0, cf);
-	    	plot.getRenderer(2*idx+1).setSeriesVisibleInLegend(0, true);
+	    	//plot.getRenderer(2*idx+1).setSeriesVisibleInLegend(0, true);
 		}
 	    
 		plot.setBackgroundPaint(XYBACKGROUND_COLOR);
@@ -80,7 +80,7 @@ public class StatisticsFormatOverTimeChart extends StatisticsChart {
 		
 		plot.getRangeAxis().setAutoRange(false);
 		plot.getRangeAxis().setRange(0, 100);
-	    
+
 	    domainAxis = plot.getDomainAxis();
 	    
 	    return chart;
@@ -89,9 +89,9 @@ public class StatisticsFormatOverTimeChart extends StatisticsChart {
 	private List<DefaultXYDataset> getDataSet(CCMovieList movielist, StatisticsTypeFilter source) {
 		CCIterator<ICCPlayableElement> it = source.iteratorMoviesOrEpisodes(movielist);
 		
-		CCDate mindate = StatisticsHelper.getFirstAddDate(it);
+		CCDate mindate = StatisticsHelper.getFirstAddDate(movielist.iteratorPlayables());
 		long minMilliecs = mindate.asMilliseconds();
-		CCDate maxdate = StatisticsHelper.getLastAddDate(it);
+		CCDate maxdate = StatisticsHelper.getLastAddDate(movielist.iteratorPlayables());
 		int daycount = mindate.getDayDifferenceTo(maxdate) + 1;
 
 		List<CCMovieFormat> formats = Arrays.asList(CCMovieFormat.values());

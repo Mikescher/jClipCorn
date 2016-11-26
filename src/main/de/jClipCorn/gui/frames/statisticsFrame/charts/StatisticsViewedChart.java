@@ -51,9 +51,12 @@ public class StatisticsViewedChart extends StatisticsChart {
 	private PieDataset getDataSet(CCMovieList movielist, StatisticsTypeFilter source) {
 		CCIterator<ICCPlayableElement> it = source.iteratorMoviesOrEpisodes(movielist);
 		
+		int vc = StatisticsHelper.getViewedCount(it);
+		int nvc = StatisticsHelper.getUnviewedCount(it);
+		
 		DefaultPieDataset dataset = new DefaultPieDataset();
-		dataset.setValue(LocaleBundle.getString("StatisticsFrame.chartAxis.PieViewed"), StatisticsHelper.getViewedCount(it)); //$NON-NLS-1$
-		dataset.setValue(LocaleBundle.getString("StatisticsFrame.chartAxis.PieUnviewed"), StatisticsHelper.getUnviewedCount(it)); //$NON-NLS-1$
+		dataset.setValue(LocaleBundle.getString("StatisticsFrame.chartAxis.PieViewed") + " [" + vc + "]", vc); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		dataset.setValue(LocaleBundle.getString("StatisticsFrame.chartAxis.PieUnviewed") + " [" + nvc + "]", nvc); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		
         return dataset;
 	}

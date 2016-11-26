@@ -435,6 +435,8 @@ public final class CCDate implements Comparable<CCDate>, StringSpecSupplier {
 			return 0;
 		}
 		
+		if (this.isUnspecifiedDate() || !this.isValidDate() || other.isUnspecifiedDate() || !other.isValidDate()) return 0;
+		
 		CCDate temp = create(this);
 		int c = 0;
 		

@@ -372,12 +372,8 @@ public class StatisticsFrame extends JFrame {
 	}
 	
 	private void initCharts() {
-		boolean h_mov = movielist.hasMovies();
-		boolean h_ser = movielist.hasSeries();
-		boolean h_any = h_mov || h_ser;
-		
 		for (Function<CCMovieList, StatisticsGroup> supplier : ClipCornStatistics.STATISTICS) {
-			if (h_any) cbxChooseChart.addItem(supplier.apply(movielist));
+			cbxChooseChart.addItem(supplier.apply(movielist));
 		}
 	}
 	

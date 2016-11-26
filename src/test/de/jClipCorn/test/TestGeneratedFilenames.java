@@ -5,18 +5,14 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 import de.jClipCorn.database.CCMovieList;
-import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.util.formatter.PathFormatter;
-import de.jClipCorn.util.helper.ApplicationHelper;
 
 @SuppressWarnings("nls")
-public class TestGeneratedFilenames {
+public class TestGeneratedFilenames extends ClipCornBaseTest {
 
 	@Test
 	public void testMovieFilename() throws Exception {
-		CCLog.setUnitTestMode();
-		
-		CCMovieList ml = ClipCornTestHelper.createExampleDB();
+		CCMovieList ml = createExampleDB();
 		
 		assertEquals("Super 8.avi", ml.findDatabaseMovie(4).generateFilename(0));
 		assertEquals("Forrest Gump [ENG].mpeg", ml.findDatabaseMovie(18).generateFilename(0));
@@ -28,10 +24,7 @@ public class TestGeneratedFilenames {
 
 	@Test
 	public void testSeriesFilename() throws Exception {
-		CCLog.setUnitTestMode();
-		ApplicationHelper.SetOverrideModeUnix();
-		
-		CCMovieList ml = ClipCornTestHelper.createExampleDB();
+		CCMovieList ml = createExampleDB();
 		
 		assertEquals("Steins;Gate/01 - ONA/S01E01 - Prologue of the Beginning and End.mkv", ml.findDatabaseSeries(10).getSeasonByArrayIndex(0).getEpisodeByArrayIndex(0).getRelativeFileForCreatedFolderstructure());
 		assertEquals("Steins;Gate/01 - ONA/S01E06 - Divergence of Butterfly Effect.mkv", ml.findDatabaseSeries(10).getSeasonByArrayIndex(0).getEpisodeByArrayIndex(5).getRelativeFileForCreatedFolderstructure());

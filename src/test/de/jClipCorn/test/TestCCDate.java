@@ -6,17 +6,14 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.exceptions.CCFormatException;
 
 @SuppressWarnings("nls")
-public class TestCCDate {
+public class TestCCDate extends ClipCornBaseTest {
 
 	@Test
 	public void testAddSubDate() {
-		CCLog.setUnitTestMode();
-		
 		CCDate tdate = CCDate.getMinimumDate();
 		assertTrue(tdate.getDay() == 1 && tdate.getMonth() == 1 && tdate.getYear() == 1900);
 		
@@ -68,8 +65,6 @@ public class TestCCDate {
 
 	@Test
 	public void testFormat() {
-		CCLog.setUnitTestMode();
-		
 		assertEquals("26.06.2001", CCDate.create(26,6,2001).getStringRepresentation("dd.MM.yyyy"));
 		assertEquals("26.06.01", CCDate.create(26,6,2001).getStringRepresentation("dd.MM.yy"));
 		assertEquals("26.6.01", CCDate.create(26,6,2001).getStringRepresentation("d.M.yy"));
@@ -78,8 +73,6 @@ public class TestCCDate {
 	
 	@Test
 	public void testParse() throws CCFormatException {
-		CCLog.setUnitTestMode();
-		
 		assertTrue(CCDate.testparse("26-06-2001", "dd-MM-yyyy"));
 		assertEquals(CCDate.create(26,6,2001), CCDate.parse("26-06-2001", "dd-MM-yyyy"));
 		

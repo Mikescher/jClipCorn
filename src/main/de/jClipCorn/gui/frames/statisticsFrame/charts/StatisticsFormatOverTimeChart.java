@@ -95,7 +95,7 @@ public class StatisticsFormatOverTimeChart extends StatisticsChart {
 		int daycount = mindate.getDayDifferenceTo(maxdate) + 1;
 
 		List<CCMovieFormat> formats = Arrays.asList(CCMovieFormat.values());
-		int[][] allLen = StatisticsHelper.getAddedFormatLengthForAllDates(mindate, daycount, it);
+		int[][] allLen = StatisticsHelper.getCumulativeFormatLengthForAllDates(mindate, daycount, it);
 		
 		List<DefaultXYDataset> result = new ArrayList<>();
 		for (int ifmt = 0; ifmt < formats.size(); ifmt++) {

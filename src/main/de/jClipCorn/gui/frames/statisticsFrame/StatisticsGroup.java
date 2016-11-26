@@ -55,7 +55,7 @@ public class StatisticsGroup {
 		return template.usesFilterableYearRange();
 	}
 
-	protected StatisticsTypeFilter supportedTypes() {
+	public StatisticsTypeFilter supportedTypes() {
 		return template.supportedTypes();
 	}
 

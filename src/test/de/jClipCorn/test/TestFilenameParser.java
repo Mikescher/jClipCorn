@@ -7,19 +7,16 @@ import org.junit.Test;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFormat;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieLanguage;
-import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.parser.FilenameParser;
 import de.jClipCorn.util.parser.FilenameParserResult;
 
 @SuppressWarnings("nls")
-public class TestFilenameParser {
+public class TestFilenameParser extends ClipCornBaseTest {
 
 	@Test
 	public void testFilenameParser() throws Exception {
-		CCLog.setUnitTestMode();
-		CCMovieList ml = ClipCornTestHelper.createEmptyDB();
-		
+		CCMovieList ml = createEmptyDB();
 		
 		{
 			FilenameParserResult r = FilenameParser.parse(ml, PathFormatter.combine("F:", "Filme", "Captain America I - The First Avenger [[MCU]] [GER].avi"));

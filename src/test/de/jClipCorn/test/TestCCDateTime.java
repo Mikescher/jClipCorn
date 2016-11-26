@@ -6,18 +6,15 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.exceptions.CCFormatException;
 
 @SuppressWarnings("nls")
-public class TestCCDateTime {
+public class TestCCDateTime extends ClipCornBaseTest {
 
 	@Test
 	public void testFormat() {
-		CCLog.setUnitTestMode();
-		
 		CCDateTime base = CCDateTime.create(26, 1, 2001, 19, 45, 1);
 		
 		assertEquals("19:45:01", base.getStringRepresentation("HH:mm:ss"));
@@ -38,8 +35,6 @@ public class TestCCDateTime {
 	
 	@Test
 	public void testParse() throws CCFormatException {
-		CCLog.setUnitTestMode();
-		
 		assertEquals(CCDateTime.create(19,8,2020, 7,50,35), CCDateTime.parse("19,8,2020 07:50:35", "dd,MM,yyyy HH:mm:ss"));
 		assertEquals(CCDateTime.create(19,8,2020, 99,99,99), CCDateTime.parse("19,8,2020", "dd,MM,yyyy"));
 		assertTrue(CCDateTime.parse("19,8,2020", "dd,MM,yyyy").time.isUnspecifiedTime());
@@ -51,8 +46,6 @@ public class TestCCDateTime {
 	
 	@Test
 	public void testOrder() {
-		CCLog.setUnitTestMode();
-
 		assertEquals(00, CCDateTime.create(19,8,2020, 7,50,35).compareTo(CCDateTime.create(19,8,2020, 7,50,35)));
 		
 		assertEquals(-1, CCDateTime.create(19,8,2020, 7,50,34).compareTo(CCDateTime.create(19,8,2020, 7,50,35)));

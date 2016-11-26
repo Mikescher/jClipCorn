@@ -42,10 +42,6 @@ public abstract class StatisticsChart extends StatisticsPanel {
 
 	private JFreeChart getChart() {
 		if (! supportedTypes().contains(source)) return null;
-
-		if (source == StatisticsTypeFilter.MOVIES && ! movielist.containsMovies()) return null;
-		if (source == StatisticsTypeFilter.SERIES && ! movielist.containsMovies()) return null;
-		if (source == StatisticsTypeFilter.BOTH && movielist.getElementCount() == 0) return null;
 		
 		return createChart(movielist, source);
 	}
@@ -82,6 +78,17 @@ public abstract class StatisticsChart extends StatisticsPanel {
 		});
 		
 		((ChartPanel)chartPanel).setChart(chart);	
+		
+		
+		if (source == StatisticsTypeFilter.MOVIES && ! movielist.containsMovies()) 
+			chartPanel.setVisible(false);
+		else if (source == StatisticsTypeFilter.SERIES && ! movielist.containsMovies()) 
+			chartPanel.setVisible(false);
+		else if (source == StatisticsTypeFilter.BOTH && movielist.getElementCount() == 0)
+			chartPanel.setVisible(false);
+		else
+			chartPanel.setVisible(true);
+		
 		
 		return chartPanel;
 	}

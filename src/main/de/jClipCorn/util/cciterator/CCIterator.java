@@ -162,4 +162,17 @@ public abstract class CCIterator<TType> implements Iterator<TType>, Iterable<TTy
 	public <TAttrType> CCIterator<TAttrType> map(Function<TType, TAttrType> selector) {
 		return new MapIterator<>(this, selector);
 	}
+
+	public TType firstOrNull() {
+		CCIterator<TType> it = cloneFresh();
+		if (it.hasNext()) return it.next();
+		return null;
+	}
+
+	public TType lastOrNull() {
+		CCIterator<TType> it = cloneFresh();
+		TType last = null;
+		while (it.hasNext()) last = it.next();
+		return last;
+	}
 }

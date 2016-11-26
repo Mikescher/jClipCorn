@@ -135,6 +135,10 @@ public class StatisticsSeriesTimeline extends StatisticsPanel {
 			root.add(rightRoot, BorderLayout.CENTER);
 		}
 		
+
+		root.setVisible(movielist.containsMovies());
+		
+		
 		return root;
 	}
 

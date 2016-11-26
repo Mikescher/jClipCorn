@@ -440,7 +440,7 @@ public class StatisticsHelper {
 		int initialcount = 0;
 		List<Integer> ls = new ArrayList<>();
 		
-		if (count == 0) return ls;
+		if (count <= 0) return ls;
 		
 		for (int i = 0; i < count; i++) {
 			ls.add(0);
@@ -494,7 +494,7 @@ public class StatisticsHelper {
 		return result;
 	}
 	
-	public static int[][] getAddedFormatLengthForAllDates(CCDate startDate, int count, CCIterator<ICCPlayableElement> it) {
+	public static int[][] getCumulativeFormatLengthForAllDates(CCDate startDate, int count, CCIterator<ICCPlayableElement> it) {
 		List<CCMovieFormat> formats = Arrays.asList(CCMovieFormat.values());
 		
 		int[][] ls = new int[count][formats.size()];

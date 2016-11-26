@@ -10,20 +10,17 @@ import org.junit.Test;
 
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieScore;
-import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.helper.SimpleFileUtils;
 import de.jClipCorn.util.parser.watchdata.WatchDataChangeSet;
 import de.jClipCorn.util.parser.watchdata.WatchDataParser;
 
 @SuppressWarnings("nls")
-public class TestWatchDataParser {
+public class TestWatchDataParser extends ClipCornBaseTest {
 
 	@Test
 	public void testWatchDataParse() throws Exception {
-		CCLog.setUnitTestMode();
-		
-		CCMovieList ml = ClipCornTestHelper.createExampleDB();
+		CCMovieList ml = createExampleDB();
 		
 		List<String> err = new ArrayList<>();
 		List<WatchDataChangeSet> r = WatchDataParser.parse(ml, SimpleFileUtils.readTextResource("/example_watchdata.txt", getClass()), err);

@@ -181,16 +181,16 @@ public class CCSeries extends CCDatabaseElement {
 	@Override
 	public CCMovieSize getFilesize() {
 		if (CCMovieList.isBlocked()) {
-			return new CCMovieSize();
+			return CCMovieSize.ZERO;
 		}
 		
-		CCMovieSize sz = new CCMovieSize();
+		long sz = 0;
 		
 		for (CCSeason se: seasons) {
-			sz.add(se.getFilesize());
+			sz += se.getFilesize().getBytes();
 		}
 		
-		return sz;
+		return new CCMovieSize(sz);
 	}
 	
 	public YearRange getYearRange() {

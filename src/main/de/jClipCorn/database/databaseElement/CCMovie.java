@@ -53,7 +53,7 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 		parts = new String[PARTCOUNT_MAX];
 		
 		zyklus = new CCMovieZyklus();
-		filesize = new CCMovieSize();
+		filesize = CCMovieSize.ZERO;
 		tags = new CCMovieTags();
 		addDate = CCDate.getMinimumDate();
 		viewedHistory = CCDateTimeList.createEmpty();
@@ -69,7 +69,7 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 		addDate = CCDate.getMinimumDate();
 		format = CCMovieFormat.MKV;
 		year = 1900;
-		filesize.setBytes(0);
+		filesize = CCMovieSize.ZERO;
 		tags.clear();
 		parts[0] = ""; //$NON-NLS-1$
 		parts[1] = ""; //$NON-NLS-1$
@@ -258,7 +258,7 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 	}
 
 	public void setFilesize(long filesize) {
-		this.filesize.setBytes(filesize);
+		this.filesize = new CCMovieSize(filesize);
 		
 		updateDB();
 	}

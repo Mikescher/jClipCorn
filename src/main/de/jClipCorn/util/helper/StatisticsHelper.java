@@ -6,12 +6,12 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.databaseElement.CCEpisode;
-import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.database.databaseElement.ICCDatedElement;
@@ -33,7 +33,7 @@ import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.datetime.CCDatespan;
 
 public class StatisticsHelper {
-	public static int[] CHART_COLORS = {0x4D4D4D, 0x5DA5DA, 0xFAA43A, 0x60BD68, 0xF17CB0, 0xB2912F, 0xB276B2, 0x000080, 0xF15854};
+	public final static int[] CHART_COLORS = {0x4D4D4D, 0x5DA5DA, 0xFAA43A, 0x60BD68, 0xF17CB0, 0xB2912F, 0xB276B2, 0x000080, 0xF15854};
 	
 	public static int getViewedCount(CCIterator<ICCPlayableElement> it) {
 		return it.filter(e -> e.isViewed()).count();
@@ -44,91 +44,45 @@ public class StatisticsHelper {
 	}
 
 	public static int getMovieDuration(CCMovieList ml) {
-		int c = 0;
-
-		for (CCMovie mov : ml.iteratorMovies()) {
-			c += mov.getLength();
-		}
-
-		return c;
+		return ml.iteratorMovies().sum(m -> m.getLength(), (a, b) -> a + b, 0);
 	}
 
 	public static int getSeriesDuration(CCMovieList ml) {
-		int c = 0;
-
-		for (CCSeries series : ml.iteratorSeries()) {
-			c += series.getLength();
-		}
-
-		return c;
+		return ml.iteratorEpisodes().sum(m -> m.getLength(), (a, b) -> a + b, 0);
 	}
 
 	public static int getTotalDuration(CCMovieList ml) {
-		return getMovieDuration(ml) + getSeriesDuration(ml);
+		return ml.iteratorPlayables().sum(m -> m.getLength(), (a, b) -> a + b, 0);
 	}
 
 	public static CCMovieSize getMovieSize(CCMovieList ml) {
-		CCMovieSize s = new CCMovieSize();
-
-		for (CCMovie mov : ml.iteratorMovies()) {
-			s.add(mov.getFilesize());
-		}
-
-		return s;
+		return ml.iteratorMovies().sum(m -> m.getFilesize(), CCMovieSize::add, CCMovieSize.ZERO);
 	}
 
 	public static CCMovieSize getSeriesSize(CCMovieList ml) {
-		CCMovieSize s = new CCMovieSize();
-
-		for (CCSeries series : ml.iteratorSeries()) {
-			s.add(series.getFilesize());
-		}
-
-		return s;
+		return ml.iteratorSeries().sum(m -> m.getFilesize(), CCMovieSize::add, CCMovieSize.ZERO);
 	}
 
 	public static CCMovieSize getTotalSize(CCMovieList ml) {
-		CCMovieSize s = new CCMovieSize();
-
-		for (CCDatabaseElement el : ml.iteratorElements()) {
-			s.add(el.getFilesize());
-		}
-
-		return s;
+		return ml.iteratorElements().sum(m -> m.getFilesize(), CCMovieSize::add, CCMovieSize.ZERO);
 	}
 
 	public static CCMovieSize getAvgMovieSize(CCMovieList ml) {
-		CCMovieSize s = new CCMovieSize();
-
-		for (CCMovie mov : ml.iteratorMovies()) {
-			s.add(mov.getFilesize());
-		}
-
 		int mc = ml.getEpisodeCount();
 		
 		if (mc == 0)
 			return new CCMovieSize(0);
 		
-		s.div(mc);
-
-		return s;
+		return CCMovieSize.div(getMovieSize(ml), mc);
 	}
 
 	public static CCMovieSize getAvgSeriesSize(CCMovieList ml) {
-		CCMovieSize s = new CCMovieSize();
-
-		for (CCSeries series : ml.iteratorSeries()) {
-			s.add(series.getFilesize());
-		}
-
 		int ec = ml.getEpisodeCount();
 		
 		if (ec == 0)
 			return new CCMovieSize(0);
 		
-		s.div(ec);
-
-		return s;
+		return CCMovieSize.div(getSeriesSize(ml), ec);
 	}
 
 	public static double getAvgImDbRating(CCMovieList ml) {
@@ -142,31 +96,15 @@ public class StatisticsHelper {
 	}
 
 	public static int getViewedMovieDuration(CCMovieList ml) {
-		int c = 0;
-
-		for (CCMovie m : ml.iteratorMovies()) {
-			if (m.isViewed()) {
-				c += m.getLength();
-			}
-		}
-
-		return c;
+		return ml.iteratorMovies().filter(m -> m.isViewed()).sum(m -> m.getLength(), (a, b) -> a + b, 0);
 	}
 
 	public static int getViewedSeriesDuration(CCMovieList ml) {
-		int c = 0;
-
-		for (CCSeries s : ml.iteratorSeries()) {
-			if (s.isViewed()) {
-				c += s.getLength();
-			}
-		}
-
-		return c;
+		return ml.iteratorEpisodes().filter(m -> m.isViewed()).sum(m -> m.getLength(), (a, b) -> a + b, 0);
 	}
 
 	public static int getViewedTotalDuration(CCMovieList ml) {
-		return getViewedMovieDuration(ml) + getViewedSeriesDuration(ml);
+		return ml.iteratorPlayables().filter(m -> m.isViewed()).sum(m -> m.getLength(), (a, b) -> a + b, 0);
 	}
 	
 	public static CCDate getFirstAddDate(CCIterator<ICCPlayableElement> it) {
@@ -368,7 +306,7 @@ public class StatisticsHelper {
 		return result;
 	}
 	
-	public static int[] getMinuteCountForAllDates(CCDate startDate, int count, CCIterator<ICCPlayableElement> it) {
+	private static int[] getMinuteCountForAllDates(CCDate startDate, int count, CCIterator<ICCPlayableElement> it) {
 		int[] ls = new int[count];
 		
 		for (int i = 0; i < count; i++) {
@@ -384,7 +322,7 @@ public class StatisticsHelper {
 		return ls;
 	}
 	
-	public static long[] getByteCountForAllDates(CCDate startDate, int count, CCIterator<ICCPlayableElement> it) {
+	private static long[] getByteCountForAllDates(CCDate startDate, int count, CCIterator<ICCPlayableElement> it) {
 		long[] ls = new long[count];
 		
 		for (int i = 0; i < count; i++) {
@@ -494,7 +432,7 @@ public class StatisticsHelper {
 		return result;
 	}
 	
-	public static int[][] getCumulativeFormatLengthForAllDates(CCDate startDate, int count, CCIterator<ICCPlayableElement> it) {
+	public static int[][] getCumulativeFormatCountForAllDates(CCDate startDate, int count, CCIterator<ICCPlayableElement> it) {
 		List<CCMovieFormat> formats = Arrays.asList(CCMovieFormat.values());
 		
 		int[][] ls = new int[count][formats.size()];
@@ -508,7 +446,27 @@ public class StatisticsHelper {
 		for (ICCPlayableElement m : it) {
 			int pos = startDate.getDayDifferenceTo(m.getAddDate());
 
-			ls[pos][formats.indexOf(m.getFormat())] += m.getLength();
+			ls[pos][formats.indexOf(m.getFormat())] += 1;
+		}
+		
+		return ls;
+	}
+	
+	public static int[][] getCumulativeQualityCountForAllDates(CCDate startDate, int count, CCIterator<ICCPlayableElement> it) {
+		List<CCMovieQuality> qualities = Arrays.asList(CCMovieQuality.values());
+		
+		int[][] ls = new int[count][qualities.size()];
+		
+		for (int i = 0; i < count; i++) {
+			for (int j = 0; j < qualities.size(); j++) {
+				ls[i][j] = 0;
+			}
+		}
+		
+		for (ICCPlayableElement m : it) {
+			int pos = startDate.getDayDifferenceTo(m.getAddDate());
+
+			ls[pos][qualities.indexOf(m.getQuality())] += 1;
 		}
 		
 		return ls;
@@ -606,5 +564,29 @@ public class StatisticsHelper {
 		}
 		
 		return end;
+	}
+	
+	public static int[] getMultipleWatchCount(CCIterator<ICCPlayableElement> it) {
+		Map<Integer, Integer> map = new HashMap<>();
+		map.put(0, 0);
+		int max_vc = 0;
+		
+		for (ICCPlayableElement m : it) {
+			int vc = m.getViewedHistory().count();
+			
+			Integer sum = map.get(vc);
+			if (sum == null) sum = 0;
+			map.put(vc, sum + 1);
+			
+			max_vc = Math.max(max_vc, vc);
+		}
+		
+		int[] result = new int[max_vc + 1];
+		for (int vc = 0; vc <= max_vc; vc++) {
+			Integer sum = map.get(vc);
+			if (sum == null) sum = 0;
+			result[vc] = sum;
+		}
+		return result;
 	}
 }

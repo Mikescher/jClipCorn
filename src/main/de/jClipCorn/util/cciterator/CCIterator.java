@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.function.BinaryOperator;
 import java.util.function.Function;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
@@ -174,5 +175,17 @@ public abstract class CCIterator<TType> implements Iterator<TType>, Iterable<TTy
 		TType last = null;
 		while (it.hasNext()) last = it.next();
 		return last;
+	}
+	
+	public TType sum(BinaryOperator<TType> op, TType startValue) {
+		TType v = startValue;
+		for (TType t : this) v = op.apply(v, t);
+		return v;
+	}
+	
+	public <TAttrType> TAttrType sum(Function<TType, TAttrType> selector, BinaryOperator<TAttrType> op, TAttrType startValue) {
+		TAttrType v = startValue;
+		for (TType t : this) v = op.apply(v, selector.apply(t));
+		return v;
 	}
 }

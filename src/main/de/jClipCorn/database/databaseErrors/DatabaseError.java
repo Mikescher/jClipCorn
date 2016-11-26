@@ -273,9 +273,9 @@ public class DatabaseError {
 	
 	private boolean fixError_Wrong_Filesize() {
 		if (el1 instanceof CCMovie) {
-			CCMovieSize size = new CCMovieSize();
+			CCMovieSize size = CCMovieSize.ZERO;
 			for (int i = 0; i < ((CCMovie) el1).getPartcount(); i++) {
-				size.add(FileSizeFormatter.getFileSize(((CCMovie) el1).getAbsolutePart(i)));
+				size = CCMovieSize.addBytes(size, FileSizeFormatter.getFileSize(((CCMovie) el1).getAbsolutePart(i)));
 			}
 			
 			if (size.getBytes() == 0) {

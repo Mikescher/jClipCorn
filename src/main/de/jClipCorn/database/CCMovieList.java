@@ -465,15 +465,11 @@ public class CCMovieList {
 	}
 
 	public CCMovieSize getTotalSize(boolean includeSeries) {
-		CCMovieSize v = new CCMovieSize(0);
+		long bytes = 0;
 		for (CCDatabaseElement m : list) {
-			if (m.isMovie()) {
-				v.add(((CCMovie) m).getFilesize());
-			} else if (includeSeries) {
-				v.add(((CCSeries) m).getFilesize());
-			}
+			bytes += m.getFilesize().getBytes();
 		}
-		return v;
+		return new CCMovieSize(bytes);
 	}
 
 	public boolean contains(CCDatabaseElement m) {

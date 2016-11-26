@@ -21,20 +21,20 @@ import org.jfree.util.ShapeUtilities;
 
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.ICCPlayableElement;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFormat;
+import de.jClipCorn.database.databaseElement.columnTypes.CCMovieQuality;
 import de.jClipCorn.gui.frames.statisticsFrame.StatisticsTypeFilter;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.cciterator.CCIterator;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.helper.StatisticsHelper;
 
-public class StatisticsFormatOverTimeChart extends StatisticsChart {
+public class StatisticsQualityOverTimeChart extends StatisticsChart {
 
 	private long domainTotalRangeMin;
 	private long domainTotalRangeMax;
 	private ValueAxis domainAxis;
 
-	public StatisticsFormatOverTimeChart(CCMovieList ml, StatisticsTypeFilter _source) {
+	public StatisticsQualityOverTimeChart(CCMovieList ml, StatisticsTypeFilter _source) {
 		super(ml, _source);
 	}
 
@@ -102,11 +102,11 @@ public class StatisticsFormatOverTimeChart extends StatisticsChart {
 		CCDate maxdate = StatisticsHelper.getLastAddDate(movielist.iteratorPlayables());
 		int daycount = mindate.getDayDifferenceTo(maxdate) + 1;
 
-		List<CCMovieFormat> formats = Arrays.asList(CCMovieFormat.values());
-		int[][] allLen = StatisticsHelper.getCumulativeFormatCountForAllDates(mindate, daycount, it);
+		List<CCMovieQuality> qualities = Arrays.asList(CCMovieQuality.values());
+		int[][] allLen = StatisticsHelper.getCumulativeQualityCountForAllDates(mindate, daycount, it);
 		
 		List<DefaultXYDataset> result = new ArrayList<>();
-		for (int ifmt = 0; ifmt < formats.size(); ifmt++) {
+		for (int ifmt = 0; ifmt < qualities.size(); ifmt++) {
 			double[][] series = new double[2][daycount];
 	
 			int fmtSum = 0;
@@ -118,7 +118,7 @@ public class StatisticsFormatOverTimeChart extends StatisticsChart {
 			}
 
 			DefaultXYDataset dataset = new DefaultXYDataset();
-	        dataset.addSeries("" + formats.get(ifmt), series); //$NON-NLS-1$
+	        dataset.addSeries("" + qualities.get(ifmt).asString(), series); //$NON-NLS-1$
 			
 			result.add(dataset);
 		}
@@ -133,7 +133,7 @@ public class StatisticsFormatOverTimeChart extends StatisticsChart {
 
 	@Override
 	protected String createTitle() {
-		return LocaleBundle.getString("StatisticsFrame.charttitles.formatOverTime"); //$NON-NLS-1$
+		return LocaleBundle.getString("StatisticsFrame.charttitles.qualityOverTime"); //$NON-NLS-1$
 	}
 
 	@Override

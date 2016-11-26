@@ -197,9 +197,9 @@ public class DatabaseValidator {
 		// Moviesize <> Real size
 		// ###############################################
 
-		CCMovieSize size = new CCMovieSize();
+		CCMovieSize size = CCMovieSize.ZERO;
 		for (int i = 0; i < mov.getPartcount(); i++) {
-			size.add(FileSizeFormatter.getFileSize(mov.getAbsolutePart(i)));
+			size = CCMovieSize.addBytes(size, FileSizeFormatter.getFileSize(mov.getAbsolutePart(i)));
 		}
 
 		if (getRelativeDifference(size.getBytes(), mov.getFilesize().getBytes()) > getMaxSizeFileDrift()) {

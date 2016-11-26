@@ -413,5 +413,4 @@ public abstract class CCDatabaseElement {
 	public abstract int getFirstYear();
 
 	public abstract String getFullDisplayTitle();
-
 }

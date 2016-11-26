@@ -129,10 +129,10 @@ public class DatabasePlainTextExporter extends DatabaseTextExporter {
 		int len = 0;
 		int vcount = 0;
 		
-		CCMovieSize bytesum = new CCMovieSize();
+		CCMovieSize bytesum = CCMovieSize.ZERO;
 		
 		for (CCMovie melem : last) {
-			bytesum.add(melem.getFilesize());
+			bytesum = CCMovieSize.add(bytesum, melem.getFilesize());
 			len = Math.max(len, melem.getZyklus().getRoman().length());
 			if (melem.isViewed()) vcount++;			
 		}

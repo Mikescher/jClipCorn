@@ -266,13 +266,13 @@ public class CCSeason implements ICCDatedElement {
 	}
 	
 	public CCMovieSize getFilesize() {
-		CCMovieSize sz = new CCMovieSize();
+		long sz = 0;
 		
 		for (CCEpisode ep : episodes) {
-			sz.add(ep.getFilesize());
+			sz += ep.getFilesize().getBytes();
 		}
 		
-		return sz;
+		return new CCMovieSize(sz);
 	}
 
 	/**

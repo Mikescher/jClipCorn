@@ -99,7 +99,7 @@ public class TestStatistics extends ClipCornBaseTest {
 			
 			StatisticsHelper.getCumulativeByteCountForAllDates(mf, mdc, ml.iteratorMovies().asCasted());
 			StatisticsHelper.getCumulativeMinuteCountForAllDates(mf, mdc, ml.iteratorMovies().asCasted());
-			StatisticsHelper.getCumulativeFormatLengthForAllDates(mf, mdc, ml.iteratorMovies().asCasted());
+			StatisticsHelper.getCumulativeFormatCountForAllDates(mf, mdc, ml.iteratorMovies().asCasted());
 		}
 
 		{
@@ -108,7 +108,7 @@ public class TestStatistics extends ClipCornBaseTest {
 	
 			StatisticsHelper.getCumulativeMinuteCountForAllDates(sf, sdc, ml.iteratorEpisodes().asCasted());
 			StatisticsHelper.getCumulativeMinuteCountForAllDates(sf, sdc, ml.iteratorEpisodes().asCasted());
-			StatisticsHelper.getCumulativeFormatLengthForAllDates(sf, sdc, ml.iteratorEpisodes().asCasted());
+			StatisticsHelper.getCumulativeFormatCountForAllDates(sf, sdc, ml.iteratorEpisodes().asCasted());
 		}
 		
 		{
@@ -117,7 +117,7 @@ public class TestStatistics extends ClipCornBaseTest {
 			
 			StatisticsHelper.getCumulativeMinuteCountForAllDates(pf, pdc, ml.iteratorPlayables().asCasted());
 			StatisticsHelper.getCumulativeMinuteCountForAllDates(pf, pdc, ml.iteratorPlayables().asCasted());
-			StatisticsHelper.getCumulativeFormatLengthForAllDates(pf, pdc, ml.iteratorPlayables().asCasted());
+			StatisticsHelper.getCumulativeFormatCountForAllDates(pf, pdc, ml.iteratorPlayables().asCasted());
 		}
 	}
 

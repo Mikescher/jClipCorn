@@ -3,7 +3,8 @@ package de.jClipCorn.database.databaseElement.columnTypes;
 import de.jClipCorn.util.formatter.FileSizeFormatter;
 
 public class CCMovieSize {
-	private long bytes;
+	public static final CCMovieSize ZERO = new CCMovieSize(0);
+	private final long bytes;
 
 	public CCMovieSize(long bytes) {
 		this.bytes = bytes;
@@ -21,18 +22,6 @@ public class CCMovieSize {
 		return FileSizeFormatter.format(bytes);
 	}
 
-	public void add(CCMovieSize afz) {
-		add(afz.getBytes());
-	}
-	
-	public void add(long afz) {
-		bytes += afz;
-	}
-
-	public void setBytes(long sz) {
-		bytes = sz;
-	}
-
 	public static int compare(CCMovieSize o1, CCMovieSize o2) {
 		return Long.compare(o1.getBytes(), o2.getBytes());
 	}
@@ -41,8 +30,16 @@ public class CCMovieSize {
 	public String toString() {
 		return getFormatted();
 	}
-
-	public void div(long divider) {
-		bytes /= divider;
+	
+	public static CCMovieSize add(CCMovieSize a, CCMovieSize b) {
+		return new CCMovieSize(a.bytes + b.bytes);
+	}
+	
+	public static CCMovieSize addBytes(CCMovieSize a, long b) {
+		return new CCMovieSize(a.bytes + b);
+	}
+	
+	public static CCMovieSize div(CCMovieSize a, long divider) {
+		return new CCMovieSize(a.bytes / divider);
 	}
 }

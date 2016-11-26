@@ -1107,30 +1107,30 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 	}
 	
 	private void updateFilesize() {
-		CCMovieSize size = new CCMovieSize();
+		CCMovieSize size = CCMovieSize.ZERO;
 		
 		if (! ed_Part0.getText().isEmpty()) {
-			size.add(FileSizeFormatter.getFileSize(PathFormatter.fromCCPath(ed_Part0.getText())));
+			size = CCMovieSize.addBytes(size, FileSizeFormatter.getFileSize(PathFormatter.fromCCPath(ed_Part0.getText())));
 		}
 		
 		if (! ed_Part1.getText().isEmpty()) {
-			size.add(FileSizeFormatter.getFileSize(PathFormatter.fromCCPath(ed_Part1.getText())));
+			size = CCMovieSize.addBytes(size, FileSizeFormatter.getFileSize(PathFormatter.fromCCPath(ed_Part1.getText())));
 		}
 		
 		if (! ed_Part2.getText().isEmpty()) {
-			size.add(FileSizeFormatter.getFileSize(PathFormatter.fromCCPath(ed_Part3.getText())));
+			size = CCMovieSize.addBytes(size, FileSizeFormatter.getFileSize(PathFormatter.fromCCPath(ed_Part3.getText())));
 		}
 		
 		if (! ed_Part3.getText().isEmpty()) {
-			size.add(FileSizeFormatter.getFileSize(PathFormatter.fromCCPath(ed_Part3.getText())));
+			size = CCMovieSize.addBytes(size, FileSizeFormatter.getFileSize(PathFormatter.fromCCPath(ed_Part3.getText())));
 		}
 		
 		if (! ed_Part4.getText().isEmpty()) {
-			size.add(FileSizeFormatter.getFileSize(PathFormatter.fromCCPath(ed_Part4.getText())));
+			size = CCMovieSize.addBytes(size, FileSizeFormatter.getFileSize(PathFormatter.fromCCPath(ed_Part4.getText())));
 		}
 		
 		if (! ed_Part5.getText().isEmpty()) {
-			size.add(FileSizeFormatter.getFileSize(PathFormatter.fromCCPath(ed_Part5.getText())));
+			size = CCMovieSize.addBytes(size, FileSizeFormatter.getFileSize(PathFormatter.fromCCPath(ed_Part5.getText())));
 		}
 		
 		setFilesize(size.getBytes());

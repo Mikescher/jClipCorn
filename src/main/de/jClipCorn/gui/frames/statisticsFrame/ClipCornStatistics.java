@@ -16,6 +16,7 @@ import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsLengthOverTimeCh
 import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsOnlinescoreChart;
 import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsProviderChart;
 import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsQualityChart;
+import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsQualityOverTimeChart;
 import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsScoreChart;
 import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsSeriesTimeline;
 import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsSeriesTotalViewedChart;
@@ -24,6 +25,7 @@ import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsSizeOverTimeChar
 import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsTagChart;
 import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsViewedChart;
 import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsViewedOverTimeChart;
+import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsWatchCountChart;
 import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsYearChart;
 
 public final class ClipCornStatistics {
@@ -49,12 +51,17 @@ public final class ClipCornStatistics {
 		STATISTICS.add(ml -> new StatisticsGroup(s -> new StatisticsTagChart(ml, s)));
 		STATISTICS.add(ml -> new StatisticsGroup(s -> new StatisticsProviderChart(ml, s)));
 
+		// ======== SPECIAL PROPERTIES =========
+
+		STATISTICS.add(ml -> new StatisticsGroup(s -> new StatisticsWatchCountChart(ml, s)));
+
 		// ======== PROPERTIES PLOTTED OVER TIME =========
 
 		STATISTICS.add(ml -> new StatisticsGroup(s -> new StatisticsLengthOverTimeChart(ml, s)));
 		STATISTICS.add(ml -> new StatisticsGroup(s -> new StatisticsViewedOverTimeChart(ml, s)));
 		STATISTICS.add(ml -> new StatisticsGroup(s -> new StatisticsSizeOverTimeChart(ml, s)));
 		STATISTICS.add(ml -> new StatisticsGroup(s -> new StatisticsFormatOverTimeChart(ml, s)));
+		STATISTICS.add(ml -> new StatisticsGroup(s -> new StatisticsQualityOverTimeChart(ml, s)));
 
 		// ======== SERIES-ONLY CHARTS =========
 

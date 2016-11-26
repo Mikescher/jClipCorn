@@ -45,7 +45,7 @@ public class CCEpisode implements ICCPlayableElement{
 		this.owner = owner;
 		this.localID = localID;
 		
-		filesize = new CCMovieSize();
+		filesize = CCMovieSize.ZERO;
 		tags = new CCMovieTags();
 		addDate = CCDate.getMinimumDate();
 		viewedHistory = CCDateTimeList.createEmpty();
@@ -148,7 +148,7 @@ public class CCEpisode implements ICCPlayableElement{
 	}
 	
 	public void setFilesize(long filesize) {
-		this.filesize.setBytes(filesize);
+		this.filesize = new CCMovieSize(filesize);
 		
 		updateDB();
 	}
@@ -227,7 +227,7 @@ public class CCEpisode implements ICCPlayableElement{
 		quality = CCMovieQuality.STREAM;
 		length = 0;
 		format = CCMovieFormat.MKV;
-		filesize.setBytes(0);
+		filesize = CCMovieSize.ZERO;
 		tags.clear();
 		part = ""; //$NON-NLS-1$
 		addDate = CCDate.getMinimumDate();

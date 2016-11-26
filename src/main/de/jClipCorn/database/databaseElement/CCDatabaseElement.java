@@ -7,18 +7,19 @@ import javax.swing.ImageIcon;
 import org.jdom2.Element;
 
 import de.jClipCorn.database.CCMovieList;
+import de.jClipCorn.database.databaseElement.columnTypes.CCDBElementTyp;
+import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguage;
+import de.jClipCorn.database.databaseElement.columnTypes.CCFSK;
+import de.jClipCorn.database.databaseElement.columnTypes.CCFileSize;
+import de.jClipCorn.database.databaseElement.columnTypes.CCGenre;
+import de.jClipCorn.database.databaseElement.columnTypes.CCGenreList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGroupList;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFSK;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieGenre;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieGenreList;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieLanguage;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieOnlineScore;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieScore;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieSize;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTyp;
 import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReference;
+import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineScore;
+import de.jClipCorn.database.databaseElement.columnTypes.CCUserScore;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
+import de.jClipCorn.util.LargeMD5Calculator;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.exceptions.CCFormatException;
 import de.jClipCorn.util.exceptions.GroupFormatException;
@@ -28,13 +29,13 @@ import de.jClipCorn.util.helper.ImageUtilities;
 
 public abstract class CCDatabaseElement {
 	private final int localID;					// INTEGER
-	private final CCMovieTyp typ;				// TINYINT
+	private final CCDBElementTyp typ;				// TINYINT
 	private String title; 						// LEN = 128
-	private CCMovieLanguage language;			// TINYINT
-	private CCMovieGenreList genres;			// BIGINT - unsigned
-	private CCMovieOnlineScore onlinescore;		// TINYINT
-	private CCMovieFSK fsk;						// TINYINT
-	private CCMovieScore score;					// TINYINT
+	private CCDBLanguage language;			// TINYINT
+	private CCGenreList genres;			// BIGINT - unsigned
+	private CCOnlineScore onlinescore;		// TINYINT
+	private CCFSK fsk;						// TINYINT
+	private CCUserScore score;					// TINYINT
 	private String covername;					// LEN = 256
 	private final int seriesID;					// INTEGER
 	private CCOnlineReference onlineReference;	// VARCHAR
@@ -43,7 +44,7 @@ public abstract class CCDatabaseElement {
 	protected final CCMovieList movielist;
 	protected boolean isUpdating = false;
 
-	public CCDatabaseElement(CCMovieList ml, CCMovieTyp typ, int id, int seriesID) {
+	public CCDatabaseElement(CCMovieList ml, CCDBElementTyp typ, int id, int seriesID) {
 		this.typ = typ;
 		this.localID = id;
 		this.seriesID = seriesID;
@@ -51,16 +52,16 @@ public abstract class CCDatabaseElement {
 		
 		onlineReference = CCOnlineReference.createNone();
 		linkedGroups = CCGroupList.createEmpty();
-		genres = new CCMovieGenreList();
+		genres = new CCGenreList();
 	}
 	
 	public void setDefaultValues(boolean updateDB) {
 		title = ""; //$NON-NLS-1$
-		language = CCMovieLanguage.GERMAN;
+		language = CCDBLanguage.GERMAN;
 		genres.clear();
-		onlinescore = CCMovieOnlineScore.STARS_0_0;
-		fsk = CCMovieFSK.RATING_0;
-		score = CCMovieScore.RATING_NO;
+		onlinescore = CCOnlineScore.STARS_0_0;
+		fsk = CCFSK.RATING_0;
+		score = CCUserScore.RATING_NO;
 		covername = ""; //$NON-NLS-1$
 		onlineReference = CCOnlineReference.createNone();
 		linkedGroups = CCGroupList.createEmpty();
@@ -100,53 +101,53 @@ public abstract class CCDatabaseElement {
 		updateDB();
 	}
 	
-	public CCMovieOnlineScore getOnlinescore() {
+	public CCOnlineScore getOnlinescore() {
 		return onlinescore;
 	}
 
 	public void setOnlinescore(int onlinescore) {
-		this.onlinescore = CCMovieOnlineScore.getWrapper().find(onlinescore);
+		this.onlinescore = CCOnlineScore.getWrapper().find(onlinescore);
 		
 		updateDB();
 	}
 
-	public void setOnlinescore(CCMovieOnlineScore onlinescore) {
+	public void setOnlinescore(CCOnlineScore onlinescore) {
 		this.onlinescore = onlinescore;
 		
 		updateDB();
 	}
 
-	public CCMovieFSK getFSK() {
+	public CCFSK getFSK() {
 		return fsk;
 	}
 
 	public void setFsk(int fsk) {
-		this.fsk = CCMovieFSK.getWrapper().find(fsk);
+		this.fsk = CCFSK.getWrapper().find(fsk);
 		
 		updateDB();
 	}
 
-	public void setFsk(CCMovieFSK fsk) {
+	public void setFsk(CCFSK fsk) {
 		this.fsk = fsk;
 		
 		updateDB();
 	}
 	
-	public CCMovieTyp getType() {
+	public CCDBElementTyp getType() {
 		return typ;
 	}
 	
-	public CCMovieScore getScore() {
+	public CCUserScore getScore() {
 		return score;
 	}
 
 	public void setScore(int score) {
-		this.score = CCMovieScore.getWrapper().find(score);
+		this.score = CCUserScore.getWrapper().find(score);
 		
 		updateDB();
 	}
 	
-	public void setScore(CCMovieScore score) {
+	public void setScore(CCUserScore score) {
 		this.score = score;
 		
 		updateDB();
@@ -185,6 +186,10 @@ public abstract class CCDatabaseElement {
 		return movielist.getCoverCache().getCover(covername);
 	}
 	
+	public String getCoverMD5() {
+		return LargeMD5Calculator.calcMD5(getCover());
+	}
+	
 	public BufferedImage getHalfsizeCover() {
 		return movielist.getCoverCache().getHalfsizeCover(covername);
 	}
@@ -193,12 +198,12 @@ public abstract class CCDatabaseElement {
 		return movielist.getCoverCache().getCoverIcon(covername);
 	}
 	
-	public CCMovieLanguage getLanguage() {
+	public CCDBLanguage getLanguage() {
 		return language;
 	}
 
 	public void setLanguage(int language) {
-		this.language = CCMovieLanguage.getWrapper().find(language);
+		this.language = CCDBLanguage.getWrapper().find(language);
 		
 		if (this.language == null) {
 			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.ErroneousDatabaseValues", language)); //$NON-NLS-1$
@@ -207,7 +212,7 @@ public abstract class CCDatabaseElement {
 		updateDB();
 	}
 
-	public void setLanguage(CCMovieLanguage language) {
+	public void setLanguage(CCDBLanguage language) {
 		this.language = language;
 		
 		if (this.language == null) {
@@ -217,7 +222,7 @@ public abstract class CCDatabaseElement {
 		updateDB();
 	}
 
-	public CCMovieGenre getGenre(int idx) {
+	public CCGenre getGenre(int idx) {
 		return genres.getGenre(idx);
 	}
 	
@@ -269,7 +274,7 @@ public abstract class CCDatabaseElement {
 		return ! linkedGroups.isEmpty();
 	}
 
-	public void setGenre(CCMovieGenre genre, int idx) {
+	public void setGenre(CCGenre genre, int idx) {
 		boolean succ = genres.setGenre(idx, genre);
 		
 		if (! succ) {
@@ -280,18 +285,18 @@ public abstract class CCDatabaseElement {
 	}
 	
 	public void setGenres(long grs) {
-		genres =  new CCMovieGenreList(grs);
+		genres =  new CCGenreList(grs);
 		
 		updateDB();
 	}
 	
-	public void setGenres(CCMovieGenreList grs) {
-		genres =  new CCMovieGenreList(grs);
+	public void setGenres(CCGenreList grs) {
+		genres =  new CCGenreList(grs);
 		
 		updateDB();
 	}
 	
-	public CCMovieGenreList getGenres() {
+	public CCGenreList getGenres() {
 		return genres;
 	}
 	
@@ -310,11 +315,11 @@ public abstract class CCDatabaseElement {
 	}
 
 	public boolean isMovie() {
-		return getType().equals(CCMovieTyp.MOVIE);
+		return getType().equals(CCDBElementTyp.MOVIE);
 	}
 	
 	public boolean isSeries() {
-		return getType().equals(CCMovieTyp.SERIES);
+		return getType().equals(CCDBElementTyp.SERIES);
 	}
 	
 	@SuppressWarnings({ "nls"})
@@ -327,10 +332,21 @@ public abstract class CCDatabaseElement {
 		e.setAttribute("onlinescore", onlinescore.asInt() + "");
 		e.setAttribute("fsk", fsk.asInt() + "");
 		e.setAttribute("score", score.asInt() + "");
-		e.setAttribute("covername", covername);
 		e.setAttribute("seriesid", seriesID + "");
 		e.setAttribute("groups", linkedGroups.toSerializationString());
 		e.setAttribute("onlinreref", onlineReference.toSerializationString());
+
+		if (! coverData) {
+			e.setAttribute("covername", covername);
+		}
+		
+		if (coverHash) {
+			e.setAttribute("coverhash", getCoverMD5());
+		}
+		
+		if (coverData) {
+			e.setAttribute("coverdata", ByteUtilies.byteArrayToHexString(ImageUtilities.imageToByteArray(getCover())));
+		}
 	}
 	
 	/**
@@ -357,7 +373,7 @@ public abstract class CCDatabaseElement {
 			setScore(Integer.parseInt(e.getAttributeValue("score")));
 		
 		if (resetScore)
-			setScore(CCMovieScore.RATING_NO);
+			setScore(CCUserScore.RATING_NO);
 		
 		if (e.getAttributeValue("covername") != null)
 			setCover(e.getAttributeValue("covername"));
@@ -406,7 +422,7 @@ public abstract class CCDatabaseElement {
 		updateDB();
 	}
 
-	public abstract CCMovieSize getFilesize();
+	public abstract CCFileSize getFilesize();
 	
 	public abstract CCDate getAddDate();
 	

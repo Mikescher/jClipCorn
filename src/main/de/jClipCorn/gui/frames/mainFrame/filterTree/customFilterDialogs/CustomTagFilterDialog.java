@@ -11,7 +11,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
 
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTags;
+import de.jClipCorn.database.databaseElement.columnTypes.CCTagList;
 import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomTagFilter;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.listener.FinishListener;
@@ -28,7 +28,7 @@ public class CustomTagFilterDialog extends CustomFilterDialog {
 		super(ft, fl);
 		initGUI();
 		
-		cbxMiddle.setModel(new DefaultComboBoxModel<>(CCMovieTags.getList()));
+		cbxMiddle.setModel(new DefaultComboBoxModel<>(CCTagList.getList()));
 		cbxMiddle.setSelectedIndex(ft.getTag());
 		
 		setLocationRelativeTo(parent);

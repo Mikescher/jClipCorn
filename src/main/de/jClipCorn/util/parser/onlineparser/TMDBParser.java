@@ -10,8 +10,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieGenre;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieGenreList;
+import de.jClipCorn.database.databaseElement.columnTypes.CCGenre;
+import de.jClipCorn.database.databaseElement.columnTypes.CCGenreList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReference;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
@@ -45,7 +45,7 @@ public class TMDBParser {
 		public int Score;
 		public String CoverPath;
 		public CCOnlineReference ImdbRef;
-		public CCMovieGenreList Genres;
+		public CCGenreList Genres;
 		public int Length;
 	}
 
@@ -199,11 +199,11 @@ public class TMDBParser {
 			result.CoverPath = hasString(root, "poster_path") ? (URL_IMAGE_BASE + root.getString("poster_path")) : "";
 			result.Score = (int) Math.round(root.optDouble("vote_average", 0));
 			
-			result.Genres = new CCMovieGenreList();
+			result.Genres = new CCGenreList();
 			if (root.has("genres")) {
 				JSONArray jsonGenres = root.getJSONArray("genres");
 				for (int i = 0; i < jsonGenres.length(); i++) {
-					CCMovieGenre g = CCMovieGenre.parseFromTMDbID(jsonGenres.getJSONObject(i).getInt("id"));
+					CCGenre g = CCGenre.parseFromTMDbID(jsonGenres.getJSONObject(i).getInt("id"));
 					if (g.isValid())
 						result.Genres.addGenre(g);
 				}

@@ -1,7 +1,8 @@
 package de.jClipCorn.database.databaseErrors;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FilenameFilter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -16,13 +17,17 @@ import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.database.databaseElement.CCSeries;
+import de.jClipCorn.database.databaseElement.columnTypes.CCFileFormat;
+import de.jClipCorn.database.databaseElement.columnTypes.CCFileSize;
+import de.jClipCorn.database.databaseElement.columnTypes.CCGenreList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGroup;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFormat;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieGenreList;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieQuality;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieSize;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTags;
+import de.jClipCorn.database.databaseElement.columnTypes.CCQuality;
+import de.jClipCorn.database.databaseElement.columnTypes.CCTagList;
+import de.jClipCorn.database.util.covercache.CCCoverCache;
+import de.jClipCorn.database.util.covercache.CCFolderCoverCache;
+import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.properties.CCProperties;
+import de.jClipCorn.util.Tuple;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.formatter.FileSizeFormatter;
 import de.jClipCorn.util.formatter.PathFormatter;
@@ -132,7 +137,7 @@ public class DatabaseValidator {
 		// ###############################################
 
 		int[] g_count = new int[256];
-		for (int i = 0; i < CCMovieGenreList.getMaxListSize(); i++) {
+		for (int i = 0; i < CCGenreList.getMaxListSize(); i++) {
 			g_count[series.getGenre(i).asInt()]++;
 		}
 		
@@ -197,9 +202,9 @@ public class DatabaseValidator {
 		// Moviesize <> Real size
 		// ###############################################
 
-		CCMovieSize size = CCMovieSize.ZERO;
+		CCFileSize size = CCFileSize.ZERO;
 		for (int i = 0; i < mov.getPartcount(); i++) {
-			size = CCMovieSize.addBytes(size, FileSizeFormatter.getFileSize(mov.getAbsolutePart(i)));
+			size = CCFileSize.addBytes(size, FileSizeFormatter.getFileSize(mov.getAbsolutePart(i)));
 		}
 
 		if (getRelativeDifference(size.getBytes(), mov.getFilesize().getBytes()) > getMaxSizeFileDrift()) {
@@ -268,7 +273,7 @@ public class DatabaseValidator {
 
 		boolean rform = false;
 		for (int i = 0; i < mov.getPartcount(); i++) {
-			CCMovieFormat mfmt = CCMovieFormat.getMovieFormat(PathFormatter.getExtension(mov.getPart(i)));
+			CCFileFormat mfmt = CCFileFormat.getMovieFormat(PathFormatter.getExtension(mov.getPart(i)));
 			if (mfmt != null && mfmt.equals(mov.getFormat())) {
 				rform = true;
 			}
@@ -315,7 +320,7 @@ public class DatabaseValidator {
 		// Wrong Quality
 		// ###############################################
 		
-		if (CCMovieQuality.calculateQuality(mov.getFilesize(), mov.getLength(), mov.getPartcount()) != mov.getQuality()) {
+		if (CCQuality.calculateQuality(mov.getFilesize(), mov.getLength(), mov.getPartcount()) != mov.getQuality()) {
 			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_WRONG_QUALITY, mov));
 		}
 		
@@ -350,7 +355,7 @@ public class DatabaseValidator {
 		// Watch later <> ViewedState
 		// ###############################################
 		
-		if (mov.isViewed() && mov.getTag(CCMovieTags.TAG_WATCH_LATER)) {
+		if (mov.isViewed() && mov.getTag(CCTagList.TAG_WATCH_LATER)) {
 			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_IMPOSSIBLE_WATCH_LATER, mov));
 		}
 		
@@ -358,7 +363,7 @@ public class DatabaseValidator {
 		// Watch never <> ViewedState
 		// ###############################################
 		
-		if (mov.isViewed() && mov.getTag(CCMovieTags.TAG_WATCH_NEVER)) {
+		if (mov.isViewed() && mov.getTag(CCTagList.TAG_WATCH_NEVER)) {
 			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_IMPOSSIBLE_WATCH_NEVER, mov));
 		}
 		
@@ -367,7 +372,7 @@ public class DatabaseValidator {
 		// ###############################################
 
 		int[] g_count = new int[256];
-		for (int i = 0; i < CCMovieGenreList.getMaxListSize(); i++) {
+		for (int i = 0; i < CCGenreList.getMaxListSize(); i++) {
 			g_count[mov.getGenre(i).asInt()]++;
 		}
 		
@@ -494,7 +499,7 @@ public class DatabaseValidator {
 		// Wrong Format
 		// ###############################################
 
-		if (! episode.getFormat().equals(CCMovieFormat.getMovieFormat(PathFormatter.getExtension(episode.getPart())))) {
+		if (! episode.getFormat().equals(CCFileFormat.getMovieFormat(PathFormatter.getExtension(episode.getPart())))) {
 			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_FORMAT_NOT_FOUND_IN_PARTS, episode));
 		}
 
@@ -510,7 +515,7 @@ public class DatabaseValidator {
 		// Moviesize <> Real size
 		// ###############################################
 
-		CCMovieSize size = new CCMovieSize(FileSizeFormatter.getFileSize(episode.getAbsolutePart()));
+		CCFileSize size = new CCFileSize(FileSizeFormatter.getFileSize(episode.getAbsolutePart()));
 
 		if (getRelativeDifference(size.getBytes(), episode.getFilesize().getBytes()) > getMaxSizeFileDrift()) {
 			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_WRONG_FILESIZE, episode));
@@ -552,7 +557,7 @@ public class DatabaseValidator {
 		// Wrong Quality
 		// ###############################################
 		
-		if (CCMovieQuality.calculateQuality(episode.getFilesize(), episode.getLength(), 1) != episode.getQuality()) {
+		if (CCQuality.calculateQuality(episode.getFilesize(), episode.getLength(), 1) != episode.getQuality()) {
 			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_WRONG_QUALITY, episode));
 		}
 		
@@ -560,7 +565,7 @@ public class DatabaseValidator {
 		// Watch later <> ViewedState
 		// ###############################################
 		
-		if (episode.isViewed() && episode.getTag(CCMovieTags.TAG_WATCH_LATER)) {
+		if (episode.isViewed() && episode.getTag(CCTagList.TAG_WATCH_LATER)) {
 			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_IMPOSSIBLE_WATCH_LATER, episode));
 		}
 		
@@ -568,7 +573,7 @@ public class DatabaseValidator {
 		// Watch never <> ViewedState
 		// ###############################################
 		
-		if (episode.isViewed() && episode.getTag(CCMovieTags.TAG_WATCH_NEVER)) {
+		if (episode.isViewed() && episode.getTag(CCTagList.TAG_WATCH_NEVER)) {
 			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_IMPOSSIBLE_WATCH_NEVER, episode));
 		}
 		
@@ -654,27 +659,29 @@ public class DatabaseValidator {
 		// Too much Cover in Folder
 		// ###############################################
 		
-		final String prefix = CCProperties.getInstance().PROP_COVER_PREFIX.getValue();
-		final String suffix = "." + CCProperties.getInstance().PROP_COVER_TYPE.getValue();  //$NON-NLS-1$
-		
-		String[] files = movielist.getCoverCache().getCoverDirectory().list(new FilenameFilter() {
+		try {
+			CCCoverCache cc = movielist.getCoverCache();
 			
-			@Override
-			public boolean accept(File path, String name) {
-				return name.startsWith(prefix) && name.endsWith(suffix);
+			List<Tuple<String, BufferedImage>> files = cc.listCoversNonCached();
+
+			for (int i = 0; i < files.size(); i++) {
+				String cvrname = files.get(i).Item1;
+				boolean found = false;
+				for (int j = 0; j < cvrList.size(); j++) {
+					found |= cvrList.get(j).getCover().equalsIgnoreCase(cvrname); // All hayl the Shortcut evaluation
+				}
+				if (! found) {
+					if (cc instanceof CCFolderCoverCache) {
+						e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_NONLINKED_COVERFILE, new File(PathFormatter.combine(((CCFolderCoverCache)cc).getCoverPath(), cvrname))));
+					} else {
+						e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_NONLINKED_COVERFILE, cvrname));
+					}
+				}
 			}
-		});
-		
-		for (int i = 0; i < files.length; i++) {
-			String cvrname = PathFormatter.getFilenameWithExt(files[i]);
-			boolean found = false;
-			for (int j = 0; j < cvrList.size(); j++) {
-				found |= cvrList.get(j).getCover().equalsIgnoreCase(cvrname); // All hayl the Shortcut evaluation
-			}
-			if (! found) {
-				e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_NONLINKED_COVERFILE, new File(movielist.getCoverCache().getCoverPath() + files[i])));
-			}
+		} catch (IOException e1) {
+			CCLog.addError(e1);
 		}
+		
 	}
 
 	private static void findDuplicateFiles(List<DatabaseError> e, CCMovieList movielist, ProgressCallbackListener pcl) {
@@ -685,7 +692,7 @@ public class DatabaseValidator {
 		for (CCDatabaseElement el : movielist.iteratorElements()) {
 			if (el.isMovie()) {
 				for (int i = 0; i < ((CCMovie)el).getPartcount(); i++) {
-					if (ignIFO && CCMovieFormat.getMovieFormat(PathFormatter.getExtension(((CCMovie)el).getAbsolutePart(i))) == CCMovieFormat.IFO) {
+					if (ignIFO && CCFileFormat.getMovieFormat(PathFormatter.getExtension(((CCMovie)el).getAbsolutePart(i))) == CCFileFormat.IFO) {
 						continue;
 					}
 					
@@ -696,7 +703,7 @@ public class DatabaseValidator {
 				for (int i = 0; i < s.getSeasonCount(); i++) {
 					CCSeason se = s.getSeasonByArrayIndex(i);
 					for (int j = 0; j < se.getEpisodeCount(); j++) {
-						if (ignIFO && CCMovieFormat.getMovieFormat(PathFormatter.getExtension(se.getEpisodeByArrayIndex(j).getAbsolutePart())) == CCMovieFormat.IFO) {
+						if (ignIFO && CCFileFormat.getMovieFormat(PathFormatter.getExtension(se.getEpisodeByArrayIndex(j).getAbsolutePart())) == CCFileFormat.IFO) {
 							continue;
 						}
 						

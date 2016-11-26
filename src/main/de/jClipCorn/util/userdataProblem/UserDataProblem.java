@@ -13,8 +13,8 @@ import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.database.databaseElement.columnTypes.CCDateTimeList;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFSK;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieQuality;
+import de.jClipCorn.database.databaseElement.columnTypes.CCFSK;
+import de.jClipCorn.database.databaseElement.columnTypes.CCQuality;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieZyklus;
 import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReference;
 import de.jClipCorn.gui.localization.LocaleBundle;
@@ -144,7 +144,7 @@ public class UserDataProblem {
 		
 		//################################################################################################################
 		
-		if (fskidx == (CCMovieFSK.values().length)) {
+		if (fskidx == (CCFSK.values().length)) {
 			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_FSK_NOT_SET));
 		}
 		
@@ -244,7 +244,7 @@ public class UserDataProblem {
 		
 		//################################################################################################################
 		
-		if (CCMovieQuality.calculateQuality(fsize, len, partcount).asInt() != quality) {
+		if (CCQuality.calculateQuality(fsize, len, partcount).asInt() != quality) {
 			ret.add(new UserDataProblem(PROBLEM_WRONG_QUALITY));
 		}
 		
@@ -315,7 +315,7 @@ public class UserDataProblem {
 		
 		//################################################################################################################
 		
-		if (fskidx == (CCMovieFSK.values().length)) {
+		if (fskidx == (CCFSK.values().length)) {
 			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_FSK_NOT_SET));
 		}
 		
@@ -420,8 +420,8 @@ public class UserDataProblem {
 		
 		//################################################################################################################
 
-		for (CCDateTime lvdate : lvdates) {
-			if (!lvdate.isUnspecifiedDateTime() && lvdate.isLessThan(CCDate.getMinimumDate())) {
+		for (CCDateTime lvdate : lvdates.iterator().filter(d -> !d.isUnspecifiedDateTime())) {
+			if (lvdate.isLessThan(CCDate.getMinimumDate())) {
 				ret.add(new UserDataProblem(UserDataProblem.PROBLEM_DATE_TOO_LESS));
 			}
 		}
@@ -446,7 +446,7 @@ public class UserDataProblem {
 		
 		//################################################################################################################
 		
-		if (CCMovieQuality.calculateQuality(fsize, len, 1).asInt() != quality) {
+		if (CCQuality.calculateQuality(fsize, len, 1).asInt() != quality) {
 			ret.add(new UserDataProblem(PROBLEM_WRONG_QUALITY));
 		}
 		

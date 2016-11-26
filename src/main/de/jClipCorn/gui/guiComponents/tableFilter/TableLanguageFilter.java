@@ -2,13 +2,13 @@ package de.jClipCorn.gui.guiComponents.tableFilter;
 
 import javax.swing.RowFilter;
 
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieLanguage;
+import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguage;
 import de.jClipCorn.gui.frames.mainFrame.clipTable.ClipTableModel;
 
 public class TableLanguageFilter extends RowFilter<ClipTableModel, Object> {
-	private CCMovieLanguage defLanguage;
+	private CCDBLanguage defLanguage;
 	
-	public TableLanguageFilter(CCMovieLanguage language) {
+	public TableLanguageFilter(CCDBLanguage language) {
 		super();
 		this.defLanguage = language;
 	}

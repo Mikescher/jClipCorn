@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTyp;
+import de.jClipCorn.database.databaseElement.columnTypes.CCDBElementTyp;
 import de.jClipCorn.util.datatypes.DoubleString;
 import de.jClipCorn.util.helper.RegExHelper;
 import de.jClipCorn.util.parser.onlineparser.ImDBParser;
@@ -19,7 +19,7 @@ public class ImDBImageParser_Ger {
 	private final static String REGEX_THUMBLIST = "<div class=\"thumb_list\".+?</div>"; // <div class="thumb_list".+?</div>
 	private final static String REGEX_IMAGELINK = "(?<= href=\"/rg/mediaindex/unknown-thumbnail)/media/rm[0-9]+/tt[0-9]+(?=\")"; // (?<= href="/rg/mediaindex/unknown-thumbnail)/media/rm[0-9]+/tt[0-9]+(?=")
 	
-	public static String getSearchURL(String title, CCMovieTyp typ) {
+	public static String getSearchURL(String title, CCDBElementTyp typ) {
 		return ImDBParser.getSearchURL(title, typ);
 	}
 	

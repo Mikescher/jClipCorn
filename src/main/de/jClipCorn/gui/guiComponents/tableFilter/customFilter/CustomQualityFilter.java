@@ -6,7 +6,7 @@ import java.util.regex.Pattern;
 import javax.swing.RowFilter.Entry;
 
 import de.jClipCorn.database.CCMovieList;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieQuality;
+import de.jClipCorn.database.databaseElement.columnTypes.CCQuality;
 import de.jClipCorn.gui.frames.mainFrame.clipTable.ClipTableModel;
 import de.jClipCorn.gui.frames.mainFrame.filterTree.customFilterDialogs.CustomFilterDialog;
 import de.jClipCorn.gui.frames.mainFrame.filterTree.customFilterDialogs.CustomQualityFilterDialog;
@@ -14,7 +14,7 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.listener.FinishListener;
 
 public class CustomQualityFilter extends AbstractCustomFilter {
-	private CCMovieQuality quality = CCMovieQuality.STREAM;
+	private CCQuality quality = CCQuality.STREAM;
 	
 	@Override
 	public boolean include(Entry<? extends ClipTableModel, ? extends Object> e) {
@@ -31,11 +31,11 @@ public class CustomQualityFilter extends AbstractCustomFilter {
 		return LocaleBundle.getDeformattedString("FilterTree.Custom.CustomFilterNames.Quality").replace("()", "").trim(); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
 
-	public CCMovieQuality getQuality() {
+	public CCQuality getQuality() {
 		return quality;
 	}
 
-	public void setQuality(CCMovieQuality quality) {
+	public void setQuality(CCQuality quality) {
 		this.quality = quality;
 	}
 	
@@ -73,7 +73,7 @@ public class CustomQualityFilter extends AbstractCustomFilter {
 			return false;
 		}
 		
-		CCMovieQuality f = CCMovieQuality.getWrapper().find(intval);
+		CCQuality f = CCQuality.getWrapper().find(intval);
 		if (f == null) return false;
 		setQuality(f);
 		

@@ -9,10 +9,10 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieOnlineScore;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieScore;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieSize;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTags;
+import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineScore;
+import de.jClipCorn.database.databaseElement.columnTypes.CCUserScore;
+import de.jClipCorn.database.databaseElement.columnTypes.CCFileSize;
+import de.jClipCorn.database.databaseElement.columnTypes.CCTagList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieZyklus;
 import de.jClipCorn.database.util.ExtendedViewedState;
 import de.jClipCorn.gui.guiComponents.SFixTable;
@@ -213,7 +213,7 @@ public class SFixClipTable extends SFixTable {
 		case ClipTableModel.COLUMN_SIZE:
 			return renderer_filesize;
 		default:
-			CCLog.addDefaultSwitchError(this);
+			CCLog.addDefaultSwitchError(this, column);
 			return super.getCellRenderer(row, column);//renderer_default;
 		}
 	}
@@ -231,44 +231,44 @@ public class SFixClipTable extends SFixTable {
 	@Override
 	protected String getTooltip(int column, int row, Object value) {
 		switch (column) {
-		case ClipTableModel.COLUMN_SCORE:
-			return ((CCMovieScore)value == CCMovieScore.RATING_NO) ? null : ((CCMovieScore)value).asString();
-		case ClipTableModel.COLUMN_TITLE:
-			return null;
-		case ClipTableModel.COLUMN_VIEWED:
-			return (((ExtendedViewedState)value).getHistory().any()) ? ((ExtendedViewedState)value).getHistory().getHTMLListFormatted(row) : null;
-		case ClipTableModel.COLUMN_ZYKLUS:
-			if (((CCMovieZyklus)value).isSet() && ((CCMovieZyklus)value).hasNumber())
-				return ((CCMovieZyklus)value).getDecimalFormatted();
-			else
+			case ClipTableModel.COLUMN_SCORE:
+				return ((CCUserScore)value == CCUserScore.RATING_NO) ? null : ((CCUserScore)value).asString();
+			case ClipTableModel.COLUMN_TITLE:
 				return null;
-		case ClipTableModel.COLUMN_QUALITY:
-			return null;
-		case ClipTableModel.COLUMN_LANGUAGE:
-			return null;
-		case ClipTableModel.COLUMN_GENRE:
-			return null;
-		case ClipTableModel.COLUMN_PARTCOUNT:
-			return null;
-		case ClipTableModel.COLUMN_LENGTH:
-			return TimeIntervallFormatter.format(((int)value));
-		case ClipTableModel.COLUMN_DATE:
-			return null;
-		case ClipTableModel.COLUMN_ONLINESCORE:
-			return LocaleBundle.getString("CCMovieScore.Score") + ": " + ((CCMovieOnlineScore)value).asInt();  //$NON-NLS-1$//$NON-NLS-2$
-		case ClipTableModel.COLUMN_TAGS:
-			return ((CCMovieTags) value).getAsString();
-		case ClipTableModel.COLUMN_FSK:
-			return null;
-		case ClipTableModel.COLUMN_FORMAT:
-			return null;
-		case ClipTableModel.COLUMN_YEAR:
-			return null;
-		case ClipTableModel.COLUMN_SIZE:
-			return FileSizeFormatter.formatBytes((CCMovieSize)value);
-		default:
-			CCLog.addDefaultSwitchError(this);
-			return null;
+			case ClipTableModel.COLUMN_VIEWED:
+				return (((ExtendedViewedState)value).getHistory().any()) ? ((ExtendedViewedState)value).getHistory().getHTMLListFormatted(row) : null;
+			case ClipTableModel.COLUMN_ZYKLUS:
+				if (((CCMovieZyklus)value).isSet() && ((CCMovieZyklus)value).hasNumber())
+					return ((CCMovieZyklus)value).getDecimalFormatted();
+				else
+					return null;
+			case ClipTableModel.COLUMN_QUALITY:
+				return null;
+			case ClipTableModel.COLUMN_LANGUAGE:
+				return null;
+			case ClipTableModel.COLUMN_GENRE:
+				return null;
+			case ClipTableModel.COLUMN_PARTCOUNT:
+				return null;
+			case ClipTableModel.COLUMN_LENGTH:
+				return TimeIntervallFormatter.format(((int)value));
+			case ClipTableModel.COLUMN_DATE:
+				return null;
+			case ClipTableModel.COLUMN_ONLINESCORE:
+				return LocaleBundle.getString("CCMovieScore.Score") + ": " + ((CCOnlineScore)value).asInt();  //$NON-NLS-1$//$NON-NLS-2$
+			case ClipTableModel.COLUMN_TAGS:
+				return ((CCTagList) value).getAsString();
+			case ClipTableModel.COLUMN_FSK:
+				return null;
+			case ClipTableModel.COLUMN_FORMAT:
+				return null;
+			case ClipTableModel.COLUMN_YEAR:
+				return null;
+			case ClipTableModel.COLUMN_SIZE:
+				return FileSizeFormatter.formatBytes((CCFileSize)value);
+			default:
+				CCLog.addDefaultSwitchError(this, column);
+				return null;
 		}
 	}
 }

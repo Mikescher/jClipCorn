@@ -10,11 +10,11 @@ import org.jfree.data.category.DefaultCategoryDataset;
 
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieOnlineScore;
+import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineScore;
 import de.jClipCorn.gui.frames.statisticsFrame.StatisticsTypeFilter;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.util.cciterator.CCIterator;
 import de.jClipCorn.util.helper.StatisticsHelper;
+import de.jClipCorn.util.stream.CCStream;
 
 public class StatisticsOnlinescoreChart extends StatisticsChart {
 	public StatisticsOnlinescoreChart(CCMovieList ml, StatisticsTypeFilter _source) {
@@ -55,13 +55,13 @@ public class StatisticsOnlinescoreChart extends StatisticsChart {
 	}
 	
 	private DefaultCategoryDataset getDataSet(CCMovieList movielist, StatisticsTypeFilter source) {
-		CCIterator<CCDatabaseElement> it = source.iteratorMoviesOrSeries(movielist);
+		CCStream<CCDatabaseElement> it = source.iteratorMoviesOrSeries(movielist);
 		
 		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 		
 		int[] values = StatisticsHelper.getCountForAllOnlinescores(it);
 		
-		for (CCMovieOnlineScore oscore : CCMovieOnlineScore.values()) {
+		for (CCOnlineScore oscore : CCOnlineScore.values()) {
 			dataset.addValue(values[oscore.asInt()], "Series0", "" + oscore.asInt()/2.0); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		

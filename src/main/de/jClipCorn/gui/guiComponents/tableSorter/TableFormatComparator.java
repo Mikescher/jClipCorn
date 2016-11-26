@@ -2,11 +2,11 @@ package de.jClipCorn.gui.guiComponents.tableSorter;
 
 import java.util.Comparator;
 
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFormat;
+import de.jClipCorn.database.databaseElement.columnTypes.CCFileFormat;
 
-public class TableFormatComparator implements Comparator<CCMovieFormat>{
+public class TableFormatComparator implements Comparator<CCFileFormat>{
 	@Override
-	public int compare(CCMovieFormat o1, CCMovieFormat o2) {
-		return CCMovieFormat.compare(o1, o2);
+	public int compare(CCFileFormat o1, CCFileFormat o2) {
+		return CCFileFormat.compare(o1, o2);
 	}
 }

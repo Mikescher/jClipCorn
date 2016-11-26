@@ -1,6 +1,6 @@
 package de.jClipCorn.gui.frames.compareDatabaseFrame;
 
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieLanguage;
+import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguage;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieZyklus;
 
 public class CompareElement {
@@ -109,8 +109,8 @@ public class CompareElement {
 	
 	@Override
 	public String toString() {
-		if (language != CCMovieLanguage.GERMAN.asInt()) {
-			return getCompleteTitle() + "[" + CCMovieLanguage.getWrapper().find(language).asString() + "]"; //$NON-NLS-1$ //$NON-NLS-2$
+		if (language != CCDBLanguage.GERMAN.asInt()) {
+			return getCompleteTitle() + "[" + CCDBLanguage.getWrapper().find(language).asString() + "]"; //$NON-NLS-1$ //$NON-NLS-2$
 		} else {
 			return getCompleteTitle();
 		}

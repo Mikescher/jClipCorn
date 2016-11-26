@@ -11,7 +11,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
 
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFormat;
+import de.jClipCorn.database.databaseElement.columnTypes.CCFileFormat;
 import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomFormatFilter;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.listener.FinishListener;
@@ -28,7 +28,7 @@ public class CustomFormatFilterDialog extends CustomFilterDialog {
 		super(ft, fl);
 		initGUI();
 		
-		cbxMiddle.setModel(new DefaultComboBoxModel<>(CCMovieFormat.getWrapper().getList()));
+		cbxMiddle.setModel(new DefaultComboBoxModel<>(CCFileFormat.getWrapper().getList()));
 		cbxMiddle.setSelectedIndex(ft.getFormat().asInt());
 		
 		setLocationRelativeTo(parent);
@@ -65,6 +65,6 @@ public class CustomFormatFilterDialog extends CustomFilterDialog {
 	
 	@Override
 	protected void onAfterOK() {
-		getFilter().setFormat(CCMovieFormat.getWrapper().find(cbxMiddle.getSelectedIndex()));
+		getFilter().setFormat(CCFileFormat.getWrapper().find(cbxMiddle.getSelectedIndex()));
 	}
 }

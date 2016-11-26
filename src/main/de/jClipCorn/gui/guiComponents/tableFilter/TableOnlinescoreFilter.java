@@ -2,13 +2,13 @@ package de.jClipCorn.gui.guiComponents.tableFilter;
 
 import javax.swing.RowFilter;
 
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieOnlineScore;
+import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineScore;
 import de.jClipCorn.gui.frames.mainFrame.clipTable.ClipTableModel;
 
 public class TableOnlinescoreFilter extends RowFilter<ClipTableModel, Object> {
-	private CCMovieOnlineScore defScore;
+	private CCOnlineScore defScore;
 	
-	public TableOnlinescoreFilter(CCMovieOnlineScore score) {
+	public TableOnlinescoreFilter(CCOnlineScore score) {
 		super();
 		this.defScore = score;
 	}

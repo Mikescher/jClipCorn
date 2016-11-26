@@ -12,8 +12,8 @@ import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.ICCPlayableElement;
 import de.jClipCorn.gui.frames.statisticsFrame.StatisticsTypeFilter;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.util.cciterator.CCIterator;
 import de.jClipCorn.util.helper.StatisticsHelper;
+import de.jClipCorn.util.stream.CCStream;
 
 public class StatisticsWatchCountChart extends StatisticsChart {
 
@@ -57,7 +57,7 @@ public class StatisticsWatchCountChart extends StatisticsChart {
 	}
 	
 	private DefaultCategoryDataset getDataSet(CCMovieList movielist, StatisticsTypeFilter source) {
-		CCIterator<ICCPlayableElement> it = source.iteratorMoviesOrEpisodes(movielist);
+		CCStream<ICCPlayableElement> it = source.iteratorMoviesOrEpisodes(movielist);
 
 		int[] watchcounts = StatisticsHelper.getMultipleWatchCount(it);
 

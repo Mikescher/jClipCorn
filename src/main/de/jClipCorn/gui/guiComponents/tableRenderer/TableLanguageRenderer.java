@@ -1,6 +1,6 @@
 package de.jClipCorn.gui.guiComponents.tableRenderer;
 
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieLanguage;
+import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguage;
 
 public class TableLanguageRenderer extends TableRenderer {
 	private static final long serialVersionUID = 5357005350195701739L;
@@ -11,8 +11,8 @@ public class TableLanguageRenderer extends TableRenderer {
 
 	@Override
     public void setValue(Object value) {
-		setText(((CCMovieLanguage)value).asString());
+		setText(((CCDBLanguage)value).asString());
 		
-		setIcon(((CCMovieLanguage)value).getIcon());
+		setIcon(((CCDBLanguage)value).getIcon());
     }
 }

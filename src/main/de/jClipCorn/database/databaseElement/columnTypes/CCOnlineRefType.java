@@ -71,7 +71,7 @@ public enum CCOnlineRefType implements ContinoousEnum<CCOnlineRefType> {
 		return id;
 	}
 
-	public static int compare(CCMovieScore s1, CCMovieScore s2) {
+	public static int compare(CCUserScore s1, CCUserScore s2) {
 		return Integer.compare(s1.asInt(), s2.asInt());
 	}
 	

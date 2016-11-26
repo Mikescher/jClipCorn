@@ -9,14 +9,15 @@ import org.junit.Test;
 
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCMovie;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFSK;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFormat;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieGenre;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieLanguage;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieOnlineScore;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieQuality;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieScore;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTyp;
+import de.jClipCorn.database.databaseElement.CCSeries;
+import de.jClipCorn.database.databaseElement.columnTypes.CCFSK;
+import de.jClipCorn.database.databaseElement.columnTypes.CCFileFormat;
+import de.jClipCorn.database.databaseElement.columnTypes.CCGenre;
+import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguage;
+import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineScore;
+import de.jClipCorn.database.databaseElement.columnTypes.CCQuality;
+import de.jClipCorn.database.databaseElement.columnTypes.CCUserScore;
+import de.jClipCorn.database.databaseElement.columnTypes.CCDBElementTyp;
 import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineRefType;
 import de.jClipCorn.database.util.ExportHelper;
 import de.jClipCorn.util.datetime.CCDate;
@@ -36,22 +37,22 @@ public class TestDatabase extends ClipCornBaseTest {
 		movWrite.beginUpdating();
 		movWrite.setTitle("Title");
 		movWrite.setAddDate(CCDate.getCurrentDate());
-		movWrite.setFormat(CCMovieFormat.MKV);
+		movWrite.setFormat(CCFileFormat.MKV);
 		movWrite.setZyklusID(4);
 		movWrite.setZyklusTitle("Zyklus");
 		movWrite.setFilesize(1024);
-		movWrite.setFsk(CCMovieFSK.RATING_III);
-		movWrite.setGenre(CCMovieGenre.GENRE_002, 0);
-		movWrite.setGenre(CCMovieGenre.GENRE_004, 1);
-		movWrite.setGenre(CCMovieGenre.GENRE_006, 2);
-		movWrite.setLanguage(CCMovieLanguage.ENGLISH);
+		movWrite.setFsk(CCFSK.RATING_III);
+		movWrite.setGenre(CCGenre.GENRE_002, 0);
+		movWrite.setGenre(CCGenre.GENRE_004, 1);
+		movWrite.setGenre(CCGenre.GENRE_006, 2);
+		movWrite.setLanguage(CCDBLanguage.ENGLISH);
 		movWrite.setLength(120);
-		movWrite.setOnlinescore(CCMovieOnlineScore.STARS_3_0);
+		movWrite.setOnlinescore(CCOnlineScore.STARS_3_0);
 		movWrite.setViewed(true);
 		movWrite.setYear(2012);
-		movWrite.setScore(CCMovieScore.RATING_III);
+		movWrite.setScore(CCUserScore.RATING_III);
 		movWrite.setOnlineReference("tmdb:movie/207703");
-		movWrite.setQuality(CCMovieQuality.BLURAY);
+		movWrite.setQuality(CCQuality.BLURAY);
 		movWrite.setPart(0, "C:\test.mov");
 		movWrite.endUpdating();
 		
@@ -61,19 +62,19 @@ public class TestDatabase extends ClipCornBaseTest {
 		CCMovie movRead = ml.iteratorMovies().next();
 
 		assertEquals("Title", movWrite.getTitle());
-		assertEquals(CCMovieTyp.MOVIE, movWrite.getType());
+		assertEquals(CCDBElementTyp.MOVIE, movWrite.getType());
 		assertEquals(movRead.getAddDate(), movWrite.getAddDate());
-		assertEquals(CCMovieFormat.MKV, movWrite.getFormat());
+		assertEquals(CCFileFormat.MKV, movWrite.getFormat());
 		assertEquals("Zyklus IV", movWrite.getZyklus().getFormatted());
 		assertEquals("Zyklus IV - Title", movWrite.getCompleteTitle());
 		assertEquals(1024, movWrite.getFilesize().getBytes());
-		assertEquals(CCMovieLanguage.ENGLISH, movWrite.getLanguage());
+		assertEquals(CCDBLanguage.ENGLISH, movWrite.getLanguage());
 		assertEquals(120, movWrite.getLength());
 		assertEquals(2012, movWrite.getYear());
-		assertEquals(CCMovieScore.RATING_III, movWrite.getScore());
-		assertEquals(CCMovieFSK.RATING_III, movWrite.getFSK());
+		assertEquals(CCUserScore.RATING_III, movWrite.getScore());
+		assertEquals(CCFSK.RATING_III, movWrite.getFSK());
 		assertEquals(CCOnlineRefType.THEMOVIEDB, movWrite.getOnlineReference().type);
-		assertEquals(CCMovieOnlineScore.STARS_3_0, movWrite.getOnlinescore());
+		assertEquals(CCOnlineScore.STARS_3_0, movWrite.getOnlinescore());
 		assertEquals("C:\test.mov", movWrite.getPart(0));
 	}
 
@@ -89,46 +90,94 @@ public class TestDatabase extends ClipCornBaseTest {
 		CCMovie mov = ml.iteratorMovies().next();
 		
 		assertEquals("Älter. Härter. Besser.", mov.getTitle());
-		assertEquals(CCMovieTyp.MOVIE, mov.getType());
-		assertEquals(CCMovieFormat.AVI, mov.getFormat());
+		assertEquals(CCDBElementTyp.MOVIE, mov.getType());
+		assertEquals(CCFileFormat.AVI, mov.getFormat());
 		assertEquals("R.E.D. I - Älter. Härter. Besser.", mov.getCompleteTitle());
 		assertEquals(714502144, mov.getFilesize().getBytes());
-		assertEquals(CCMovieLanguage.GERMAN, mov.getLanguage());
+		assertEquals(CCDBLanguage.GERMAN, mov.getLanguage());
 		assertEquals(111, mov.getLength());
 		assertEquals(2010, mov.getYear());
-		assertEquals(CCMovieScore.RATING_NO, mov.getScore());
-		assertEquals(CCMovieFSK.RATING_III, mov.getFSK());
+		assertEquals(CCUserScore.RATING_NO, mov.getScore());
+		assertEquals(CCFSK.RATING_III, mov.getFSK());
 		assertEquals(CCOnlineRefType.THEMOVIEDB, mov.getOnlineReference().type);
 		assertEquals("movie/39514", mov.getOnlineReference().id);
-		assertEquals(CCMovieOnlineScore.STARS_3_5, mov.getOnlinescore());
+		assertEquals(CCOnlineScore.STARS_3_5, mov.getOnlinescore());
 		assertEquals("<?self>R.E.D. I - Älter. Härter. Besser..avi", mov.getPart(0));
 	}
 
 	@Test
-	public void testJSCCRoundtrip() throws Exception {
+	public void testJSCCRoundtrip_Movie() throws Exception {
 		CCMovieList ml = createEmptyDB();
 		
 		String data = SimpleFileUtils.readTextResource("/example_single_01.jsccexport", getClass());
 		
 		ExportHelper.importSingleElement(ml, data, true, true, true, true);
-
+		CCMovie mov = ml.iteratorMovies().firstOrNull();
 		assertEquals(1, ml.getElementCount());
-		CCMovie mov = ml.iteratorMovies().next();
+
+		File filep = new File(SimpleFileUtils.getTempFile("xml"));
+		ExportHelper.exportMovie(filep, ml, mov, true);
 		
 		ml.remove(mov);
 		assertEquals(0, ml.getElementCount());
-		
-		File filep = new File(SimpleFileUtils.getTempFile("xml"));
-		
-		ExportHelper.exportMovie(filep, ml, mov, true);
+
 		String dataExpected = SimpleFileUtils.readUTF8TextFile(filep);
 		ExportHelper.importSingleElement(ml, dataExpected, true, true, true, true);
-		ml.remove(ml.iteratorMovies().next());
-		
+		mov = ml.iteratorMovies().firstOrNull();
+		assertEquals(1, ml.getElementCount());
+
 		ExportHelper.exportMovie(filep, ml, mov, true);
+		
+		ml.remove(ml.iteratorMovies().firstOrNull());
+		assertEquals(0, ml.getElementCount());
+		
 		String dataActual = SimpleFileUtils.readUTF8TextFile(filep);
 		ExportHelper.importSingleElement(ml, dataExpected, true, true, true, true);
-		ml.remove(ml.iteratorMovies().next());
+		mov = ml.iteratorMovies().firstOrNull();
+		assertEquals(1, ml.getElementCount());
+		
+		ml.remove(ml.iteratorMovies().firstOrNull());
+		assertEquals(0, ml.getElementCount());
+
+		assertEquals(dataExpected, dataActual);
+		
+		filep.delete();
+	}
+
+
+	@Test
+	public void testJSCCRoundtrip_Series() throws Exception {
+		CCMovieList ml = createEmptyDB();
+		
+		String data = SimpleFileUtils.readTextResource("/example_single_02.jsccexport", getClass());
+		
+		ExportHelper.importSingleElement(ml, data, true, true, true, true);
+		CCSeries ser = ml.iteratorSeries().firstOrNull();
+		assertEquals(1, ml.getElementCount());
+
+		File filep = new File(SimpleFileUtils.getTempFile("xml"));
+		ExportHelper.exportSeries(filep, ml, ser, true);
+		
+		ml.remove(ser);
+		assertEquals(0, ml.getElementCount());
+
+		String dataExpected = SimpleFileUtils.readUTF8TextFile(filep);
+		ExportHelper.importSingleElement(ml, dataExpected, true, true, true, true);
+		ser = ml.iteratorSeries().firstOrNull();
+		assertEquals(1, ml.getElementCount());
+
+		ExportHelper.exportSeries(filep, ml, ser, true);
+		
+		ml.remove(ml.iteratorSeries().firstOrNull());
+		assertEquals(0, ml.getElementCount());
+		
+		String dataActual = SimpleFileUtils.readUTF8TextFile(filep);
+		ExportHelper.importSingleElement(ml, dataExpected, true, true, true, true);
+		ser = ml.iteratorSeries().firstOrNull();
+		assertEquals(1, ml.getElementCount());
+		
+		ml.remove(ml.iteratorSeries().firstOrNull());
+		assertEquals(0, ml.getElementCount());
 
 		assertEquals(dataExpected, dataActual);
 		

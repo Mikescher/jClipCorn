@@ -27,13 +27,13 @@ import javax.swing.event.ChangeListener;
 import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.columnTypes.CCDateTimeList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGroupList;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFSK;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFormat;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieGenre;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieLanguage;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieQuality;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieScore;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieSize;
+import de.jClipCorn.database.databaseElement.columnTypes.CCFSK;
+import de.jClipCorn.database.databaseElement.columnTypes.CCFileFormat;
+import de.jClipCorn.database.databaseElement.columnTypes.CCGenre;
+import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguage;
+import de.jClipCorn.database.databaseElement.columnTypes.CCQuality;
+import de.jClipCorn.database.databaseElement.columnTypes.CCUserScore;
+import de.jClipCorn.database.databaseElement.columnTypes.CCFileSize;
 import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReference;
 import de.jClipCorn.gui.frames.inputErrorFrame.InputErrorDialog;
 import de.jClipCorn.gui.guiComponents.ReadableTextField;
@@ -653,23 +653,23 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 	}
 
 	private void setDefaultValues() {
-		cbxQuality.setModel(new DefaultComboBoxModel<>(CCMovieQuality.getWrapper().getList()));
+		cbxQuality.setModel(new DefaultComboBoxModel<>(CCQuality.getWrapper().getList()));
 		
-		cbxLanguage.setModel(new DefaultComboBoxModel<>(CCMovieLanguage.getWrapper().getList()));
+		cbxLanguage.setModel(new DefaultComboBoxModel<>(CCDBLanguage.getWrapper().getList()));
 		
-		cbxFSK.setModel(new DefaultComboBoxModel<>(CCMovieFSK.getWrapper().getList()));
+		cbxFSK.setModel(new DefaultComboBoxModel<>(CCFSK.getWrapper().getList()));
 		
-		cbxFormat.setModel(new DefaultComboBoxModel<>(CCMovieFormat.getWrapper().getList()));
-		cbxScore.setModel(new DefaultComboBoxModel<>(CCMovieScore.getWrapper().getList()));
+		cbxFormat.setModel(new DefaultComboBoxModel<>(CCFileFormat.getWrapper().getList()));
+		cbxScore.setModel(new DefaultComboBoxModel<>(CCUserScore.getWrapper().getList()));
 		
-		cbxGenre0.setModel(new DefaultComboBoxModel<>(CCMovieGenre.getTrimmedList()));
-		cbxGenre1.setModel(new DefaultComboBoxModel<>(CCMovieGenre.getTrimmedList()));
-		cbxGenre2.setModel(new DefaultComboBoxModel<>(CCMovieGenre.getTrimmedList()));
-		cbxGenre3.setModel(new DefaultComboBoxModel<>(CCMovieGenre.getTrimmedList()));
-		cbxGenre4.setModel(new DefaultComboBoxModel<>(CCMovieGenre.getTrimmedList()));
-		cbxGenre5.setModel(new DefaultComboBoxModel<>(CCMovieGenre.getTrimmedList()));
-		cbxGenre6.setModel(new DefaultComboBoxModel<>(CCMovieGenre.getTrimmedList()));
-		cbxGenre7.setModel(new DefaultComboBoxModel<>(CCMovieGenre.getTrimmedList()));
+		cbxGenre0.setModel(new DefaultComboBoxModel<>(CCGenre.getTrimmedList()));
+		cbxGenre1.setModel(new DefaultComboBoxModel<>(CCGenre.getTrimmedList()));
+		cbxGenre2.setModel(new DefaultComboBoxModel<>(CCGenre.getTrimmedList()));
+		cbxGenre3.setModel(new DefaultComboBoxModel<>(CCGenre.getTrimmedList()));
+		cbxGenre4.setModel(new DefaultComboBoxModel<>(CCGenre.getTrimmedList()));
+		cbxGenre5.setModel(new DefaultComboBoxModel<>(CCGenre.getTrimmedList()));
+		cbxGenre6.setModel(new DefaultComboBoxModel<>(CCGenre.getTrimmedList()));
+		cbxGenre7.setModel(new DefaultComboBoxModel<>(CCGenre.getTrimmedList()));
 		
 		spnAddDate.setValue(CCDate.getCurrentDate());
 		spnZyklus.setValue(-1);
@@ -686,30 +686,30 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 	}
 	
 	private void updateFilesize() {
-		CCMovieSize size = CCMovieSize.ZERO;
+		CCFileSize size = CCFileSize.ZERO;
 		
 		if (! edPart0.getText().isEmpty()) {
-			size = CCMovieSize.addBytes(size, FileSizeFormatter.getFileSize(PathFormatter.fromCCPath(edPart0.getText())));
+			size = CCFileSize.addBytes(size, FileSizeFormatter.getFileSize(PathFormatter.fromCCPath(edPart0.getText())));
 		}
 		
 		if (! edPart1.getText().isEmpty()) {
-			size = CCMovieSize.addBytes(size, FileSizeFormatter.getFileSize(PathFormatter.fromCCPath(edPart1.getText())));
+			size = CCFileSize.addBytes(size, FileSizeFormatter.getFileSize(PathFormatter.fromCCPath(edPart1.getText())));
 		}
 		
 		if (! edPart2.getText().isEmpty()) {
-			size = CCMovieSize.addBytes(size, FileSizeFormatter.getFileSize(PathFormatter.fromCCPath(edPart2.getText())));
+			size = CCFileSize.addBytes(size, FileSizeFormatter.getFileSize(PathFormatter.fromCCPath(edPart2.getText())));
 		}
 		
 		if (! edPart3.getText().isEmpty()) {
-			size = CCMovieSize.addBytes(size, FileSizeFormatter.getFileSize(PathFormatter.fromCCPath(edPart3.getText())));
+			size = CCFileSize.addBytes(size, FileSizeFormatter.getFileSize(PathFormatter.fromCCPath(edPart3.getText())));
 		}
 		
 		if (! edPart4.getText().isEmpty()) {
-			size = CCMovieSize.addBytes(size, FileSizeFormatter.getFileSize(PathFormatter.fromCCPath(edPart4.getText())));
+			size = CCFileSize.addBytes(size, FileSizeFormatter.getFileSize(PathFormatter.fromCCPath(edPart4.getText())));
 		}
 		
 		if (! edPart5.getText().isEmpty()) {
-			size = CCMovieSize.addBytes(size, FileSizeFormatter.getFileSize(PathFormatter.fromCCPath(edPart5.getText())));
+			size = CCFileSize.addBytes(size, FileSizeFormatter.getFileSize(PathFormatter.fromCCPath(edPart5.getText())));
 		}
 		
 		if (size.getBytes() > 0) {
@@ -764,7 +764,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		videoFileChooser.setFileFilter(FileChooserHelper.createLocalFileFilter("AddMovieFrame.videoFileChooser.filterDescription", new Validator<String>() { //$NON-NLS-1$
 			@Override
 			public boolean validate(String val) {
-				return CCMovieFormat.isValidMovieFormat(val);
+				return CCFileFormat.isValidMovieFormat(val);
 			}
 		}));
 		
@@ -853,7 +853,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 	}
 
 	@Override
-	public void setMovieFormat(CCMovieFormat cmf) {
+	public void setMovieFormat(CCFileFormat cmf) {
 		cbxFormat.setSelectedIndex(cmf.asInt());
 	}
 
@@ -895,7 +895,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		
 		updateFilesize();
 		
-		CCMovieFormat fmt = CCMovieFormat.getMovieFormatFromPaths(edPart0.getText(), edPart1.getText(), edPart2.getText(), edPart3.getText(), edPart4.getText(), edPart5.getText());
+		CCFileFormat fmt = CCFileFormat.getMovieFormatFromPaths(edPart0.getText(), edPart1.getText(), edPart2.getText(), edPart3.getText(), edPart4.getText(), edPart5.getText());
 		if (fmt != null) cbxFormat.setSelectedIndex(fmt.asInt());
 		
 		recalcQuality();
@@ -922,14 +922,14 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 	}
 
 	@Override
-	public void setMovieLanguage(CCMovieLanguage lang) {
+	public void setMovieLanguage(CCDBLanguage lang) {
 		cbxLanguage.setSelectedIndex(lang.asInt());
 		
 		testPaths();
 	}
 
 	@Override
-	public void setQuality(CCMovieQuality q) {
+	public void setQuality(CCQuality q) {
 		cbxQuality.setSelectedIndex(q.asInt());
 	}
 	
@@ -989,7 +989,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 	}
 	
 	private void recalcQuality() {
-		setQuality(CCMovieQuality.calculateQuality((long)spnSize.getValue(), (int) spnLength.getValue(), getPartCount()));
+		setQuality(CCQuality.calculateQuality((long)spnSize.getValue(), (int) spnLength.getValue(), getPartCount()));
 	}
 	
 	private int getPartCount() {
@@ -1070,14 +1070,14 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		movie.setYear((int) spnYear.getValue());
 		movie.setFilesize((long) spnSize.getValue());
 		
-		movie.setGenre(CCMovieGenre.getWrapper().find(cbxGenre0.getSelectedIndex()), 0);
-		movie.setGenre(CCMovieGenre.getWrapper().find(cbxGenre1.getSelectedIndex()), 1);
-		movie.setGenre(CCMovieGenre.getWrapper().find(cbxGenre2.getSelectedIndex()), 2);
-		movie.setGenre(CCMovieGenre.getWrapper().find(cbxGenre3.getSelectedIndex()), 3);
-		movie.setGenre(CCMovieGenre.getWrapper().find(cbxGenre4.getSelectedIndex()), 4);
-		movie.setGenre(CCMovieGenre.getWrapper().find(cbxGenre5.getSelectedIndex()), 5);
-		movie.setGenre(CCMovieGenre.getWrapper().find(cbxGenre6.getSelectedIndex()), 6);
-		movie.setGenre(CCMovieGenre.getWrapper().find(cbxGenre7.getSelectedIndex()), 7);
+		movie.setGenre(CCGenre.getWrapper().find(cbxGenre0.getSelectedIndex()), 0);
+		movie.setGenre(CCGenre.getWrapper().find(cbxGenre1.getSelectedIndex()), 1);
+		movie.setGenre(CCGenre.getWrapper().find(cbxGenre2.getSelectedIndex()), 2);
+		movie.setGenre(CCGenre.getWrapper().find(cbxGenre3.getSelectedIndex()), 3);
+		movie.setGenre(CCGenre.getWrapper().find(cbxGenre4.getSelectedIndex()), 4);
+		movie.setGenre(CCGenre.getWrapper().find(cbxGenre5.getSelectedIndex()), 5);
+		movie.setGenre(CCGenre.getWrapper().find(cbxGenre6.getSelectedIndex()), 6);
+		movie.setGenre(CCGenre.getWrapper().find(cbxGenre7.getSelectedIndex()), 7);
 		
 		movie.setTags(tagPnl.getValue());
 		movie.setScore(cbxScore.getSelectedIndex());
@@ -1122,8 +1122,8 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		long fsize = (long) spnSize.getValue();
 		int quality = cbxQuality.getSelectedIndex();
 		int lang = cbxLanguage.getSelectedIndex();
-		String csExtn  = CCMovieFormat.getWrapper().find(cbxFormat.getSelectedIndex()).asString();
-		String csExta = CCMovieFormat.getWrapper().find(cbxFormat.getSelectedIndex()).asStringAlt();
+		String csExtn  = CCFileFormat.getWrapper().find(cbxFormat.getSelectedIndex()).asString();
+		String csExta = CCFileFormat.getWrapper().find(cbxFormat.getSelectedIndex()).asStringAlt();
 		
 		int g0 = cbxGenre0.getSelectedIndex();
 		int g1 = cbxGenre1.getSelectedIndex();

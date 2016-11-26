@@ -5,11 +5,11 @@ import java.awt.image.BufferedImage;
 import javax.swing.ImageIcon;
 
 import de.jClipCorn.database.databaseElement.columnTypes.CCDateTimeList;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFormat;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieLanguage;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieQuality;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieSize;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTags;
+import de.jClipCorn.database.databaseElement.columnTypes.CCFileFormat;
+import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguage;
+import de.jClipCorn.database.databaseElement.columnTypes.CCQuality;
+import de.jClipCorn.database.databaseElement.columnTypes.CCFileSize;
+import de.jClipCorn.database.databaseElement.columnTypes.CCTagList;
 import de.jClipCorn.gui.frames.watchHistoryFrame.WatchHistoryFrame;
 import de.jClipCorn.util.datetime.CCDateTime;
 
@@ -18,12 +18,12 @@ public abstract class WatchHistoryElement implements Comparable<WatchHistoryElem
 	public abstract CCDateTime getTimestamp();
 	public abstract String getName();
 	public abstract BufferedImage getCover();
-	public abstract CCMovieQuality getQuality();
-	public abstract CCMovieLanguage getLanguage();
+	public abstract CCQuality getQuality();
+	public abstract CCDBLanguage getLanguage();
 	public abstract int getLength();
-	public abstract CCMovieTags getTags();
-	public abstract CCMovieFormat getFormat();
-	public abstract CCMovieSize getSize();
+	public abstract CCTagList getTags();
+	public abstract CCFileFormat getFormat();
+	public abstract CCFileSize getSize();
 
 	public abstract ImageIcon getNameIcon();
 	public abstract String getFullNamePart1();

@@ -1,6 +1,6 @@
 package de.jClipCorn.gui.guiComponents.tableRenderer;
 
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieOnlineScore;
+import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineScore;
 
 public class TableOnlinescoreRenderer extends TableRenderer {
 	private static final long serialVersionUID = 1L;
@@ -11,6 +11,6 @@ public class TableOnlinescoreRenderer extends TableRenderer {
 
 	@Override
     public void setValue(Object value) {
-		setIcon(((CCMovieOnlineScore)value).getIcon());
+		setIcon(((CCOnlineScore)value).getIcon());
     }
 }

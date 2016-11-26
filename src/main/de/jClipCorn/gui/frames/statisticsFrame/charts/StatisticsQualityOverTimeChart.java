@@ -21,12 +21,12 @@ import org.jfree.util.ShapeUtilities;
 
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.ICCPlayableElement;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieQuality;
+import de.jClipCorn.database.databaseElement.columnTypes.CCQuality;
 import de.jClipCorn.gui.frames.statisticsFrame.StatisticsTypeFilter;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.util.cciterator.CCIterator;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.helper.StatisticsHelper;
+import de.jClipCorn.util.stream.CCStream;
 
 public class StatisticsQualityOverTimeChart extends StatisticsChart {
 
@@ -95,14 +95,14 @@ public class StatisticsQualityOverTimeChart extends StatisticsChart {
 	}
 	
 	private List<DefaultXYDataset> getDataSet(CCMovieList movielist, StatisticsTypeFilter source) {
-		CCIterator<ICCPlayableElement> it = source.iteratorMoviesOrEpisodes(movielist);
+		CCStream<ICCPlayableElement> it = source.iteratorMoviesOrEpisodes(movielist);
 		
 		CCDate mindate = StatisticsHelper.getFirstAddDate(movielist.iteratorPlayables());
 		long minMilliecs = mindate.asMilliseconds();
 		CCDate maxdate = StatisticsHelper.getLastAddDate(movielist.iteratorPlayables());
 		int daycount = mindate.getDayDifferenceTo(maxdate) + 1;
 
-		List<CCMovieQuality> qualities = Arrays.asList(CCMovieQuality.values());
+		List<CCQuality> qualities = Arrays.asList(CCQuality.values());
 		int[][] allLen = StatisticsHelper.getCumulativeQualityCountForAllDates(mindate, daycount, it);
 		
 		List<DefaultXYDataset> result = new ArrayList<>();

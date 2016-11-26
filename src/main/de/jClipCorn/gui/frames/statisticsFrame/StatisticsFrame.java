@@ -344,10 +344,10 @@ public class StatisticsFrame extends JFrame {
 		List<JLabel> lst = sidebarValueLabels; // Locale Alias
 		
 		lst.get(0).setText("" + movielist.getMovieCount()); //$NON-NLS-1$
-		lst.get(1).setText("" + StatisticsHelper.getViewedCount(movielist.iteratorMovies().asCasted())); //$NON-NLS-1$
+		lst.get(1).setText("" + StatisticsHelper.getViewedCount(movielist.iteratorMovies().cast())); //$NON-NLS-1$
 		lst.get(2).setText("" + movielist.getSeriesCount()); //$NON-NLS-1$
 		lst.get(3).setText("" + movielist.getEpisodeCount()); //$NON-NLS-1$
-		lst.get(4).setText("" + StatisticsHelper.getViewedCount(movielist.iteratorEpisodes().asCasted())); //$NON-NLS-1$
+		lst.get(4).setText("" + StatisticsHelper.getViewedCount(movielist.iteratorEpisodes().cast())); //$NON-NLS-1$
 		lst.get(5).setText("" + movielist.getElementCount()); //$NON-NLS-1$
 		
 		lst.get(6).setText(TimeIntervallFormatter.formatPointed(StatisticsHelper.getMovieDuration(movielist)));

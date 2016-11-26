@@ -2,13 +2,13 @@ package de.jClipCorn.gui.guiComponents.tableFilter;
 
 import javax.swing.RowFilter;
 
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFSK;
+import de.jClipCorn.database.databaseElement.columnTypes.CCFSK;
 import de.jClipCorn.gui.frames.mainFrame.clipTable.ClipTableModel;
 
 public class TableFSKFilter extends RowFilter<ClipTableModel, Object> {
-	private CCMovieFSK defFSK;
+	private CCFSK defFSK;
 	
-	public TableFSKFilter(CCMovieFSK fsk) {
+	public TableFSKFilter(CCFSK fsk) {
 		super();
 		this.defFSK = fsk;
 	}

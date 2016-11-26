@@ -7,10 +7,10 @@ import java.text.DecimalFormat;
 import org.jdom2.Element;
 
 import de.jClipCorn.database.databaseElement.columnTypes.CCDateTimeList;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFormat;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieQuality;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieSize;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTags;
+import de.jClipCorn.database.databaseElement.columnTypes.CCFileFormat;
+import de.jClipCorn.database.databaseElement.columnTypes.CCQuality;
+import de.jClipCorn.database.databaseElement.columnTypes.CCFileSize;
+import de.jClipCorn.database.databaseElement.columnTypes.CCTagList;
 import de.jClipCorn.database.util.ExtendedViewedState;
 import de.jClipCorn.database.util.ExtendedViewedStateType;
 import de.jClipCorn.gui.localization.LocaleBundle;
@@ -30,11 +30,11 @@ public class CCEpisode implements ICCPlayableElement{
 	private int episodeNumber;
 	private String title;
 	private boolean viewed;
-	private CCMovieQuality quality;
+	private CCQuality quality;
 	private int length;
-	private CCMovieTags tags;
-	private CCMovieFormat format;
-	private CCMovieSize filesize;
+	private CCTagList tags;
+	private CCFileFormat format;
+	private CCFileSize filesize;
 	private String part;
 	private CCDate addDate;
 	private CCDateTimeList viewedHistory;
@@ -45,8 +45,8 @@ public class CCEpisode implements ICCPlayableElement{
 		this.owner = owner;
 		this.localID = localID;
 		
-		filesize = CCMovieSize.ZERO;
-		tags = new CCMovieTags();
+		filesize = CCFileSize.ZERO;
+		tags = new CCTagList();
 		addDate = CCDate.getMinimumDate();
 		viewedHistory = CCDateTimeList.createEmpty();
 	}
@@ -93,8 +93,8 @@ public class CCEpisode implements ICCPlayableElement{
 				fullResetViewedHistory();
 			}
 
-			if (viewed && getTag(CCMovieTags.TAG_WATCH_LATER) && CCProperties.getInstance().PROP_MAINFRAME_AUTOMATICRESETWATCHLATER.getValue()) {
-				setTag(CCMovieTags.TAG_WATCH_LATER, false);
+			if (viewed && getTag(CCTagList.TAG_WATCH_LATER) && CCProperties.getInstance().PROP_MAINFRAME_AUTOMATICRESETWATCHLATER.getValue()) {
+				setTag(CCTagList.TAG_WATCH_LATER, false);
 			}
 
 			updateDB();
@@ -114,7 +114,7 @@ public class CCEpisode implements ICCPlayableElement{
 	}
 	
 	public void setQuality(int quality) {
-		this.quality = CCMovieQuality.getWrapper().find(quality);
+		this.quality = CCQuality.getWrapper().find(quality);
 		
 		if (this.quality == null) {
 			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.ErroneousDatabaseValues", quality)); //$NON-NLS-1$
@@ -123,7 +123,7 @@ public class CCEpisode implements ICCPlayableElement{
 		updateDB();
 	}
 	
-	public void setQuality(CCMovieQuality quality) {
+	public void setQuality(CCQuality quality) {
 		this.quality = quality;
 		
 		updateDB();
@@ -136,19 +136,19 @@ public class CCEpisode implements ICCPlayableElement{
 	}
 	
 	public void setFormat(int format) {
-		this.format = CCMovieFormat.getWrapper().find(format);
+		this.format = CCFileFormat.getWrapper().find(format);
 		
 		updateDB();
 	}
 	
-	public void setFormat(CCMovieFormat format) {
+	public void setFormat(CCFileFormat format) {
 		this.format = format;
 		
 		updateDB();
 	}
 	
 	public void setFilesize(long filesize) {
-		this.filesize = new CCMovieSize(filesize);
+		this.filesize = new CCFileSize(filesize);
 		
 		updateDB();
 	}
@@ -183,7 +183,7 @@ public class CCEpisode implements ICCPlayableElement{
 		updateDB();
 	}
 	
-	public void setTags(CCMovieTags stat) {
+	public void setTags(CCTagList stat) {
 		tags = stat;
 		
 		updateDB();
@@ -224,10 +224,10 @@ public class CCEpisode implements ICCPlayableElement{
 		episodeNumber = 0;
 		title = ""; //$NON-NLS-1$
 		viewed = false;
-		quality = CCMovieQuality.STREAM;
+		quality = CCQuality.STREAM;
 		length = 0;
-		format = CCMovieFormat.MKV;
-		filesize = CCMovieSize.ZERO;
+		format = CCFileFormat.MKV;
+		filesize = CCFileSize.ZERO;
 		tags.clear();
 		part = ""; //$NON-NLS-1$
 		addDate = CCDate.getMinimumDate();
@@ -269,7 +269,7 @@ public class CCEpisode implements ICCPlayableElement{
 	}
 
 	@Override
-	public CCMovieQuality getQuality() {
+	public CCQuality getQuality() {
 		return quality;
 	}
 
@@ -279,12 +279,12 @@ public class CCEpisode implements ICCPlayableElement{
 	}
 
 	@Override
-	public CCMovieFormat getFormat() {
+	public CCFileFormat getFormat() {
 		return format;
 	}
 
 	@Override
-	public CCMovieSize getFilesize() {
+	public CCFileSize getFilesize() {
 		return filesize;
 	}
 
@@ -297,7 +297,7 @@ public class CCEpisode implements ICCPlayableElement{
 	}
 
 	@Override
-	public CCMovieTags getTags() {
+	public CCTagList getTags() {
 		return tags;
 	}
 
@@ -443,7 +443,7 @@ public class CCEpisode implements ICCPlayableElement{
 			setTags(Short.parseShort(e.getAttributeValue("short")));
 
 		if (resetTags)
-			setTags(new CCMovieTags());
+			setTags(new CCTagList());
 		
 		endUpdating();
 	}
@@ -501,9 +501,9 @@ public class CCEpisode implements ICCPlayableElement{
 	public ExtendedViewedState getExtendedViewedState() {
 		if (isViewed())
 			return new ExtendedViewedState(ExtendedViewedStateType.VIEWED, getViewedHistory());
-		else if (tags.getTag(CCMovieTags.TAG_WATCH_LATER))
+		else if (tags.getTag(CCTagList.TAG_WATCH_LATER))
 			return new ExtendedViewedState(ExtendedViewedStateType.MARKED_FOR_LATER, getViewedHistory());
-		else if (tags.getTag(CCMovieTags.TAG_WATCH_NEVER))
+		else if (tags.getTag(CCTagList.TAG_WATCH_NEVER))
 			return new ExtendedViewedState(ExtendedViewedStateType.MARKED_FOR_NEVER, getViewedHistory());
 		else
 			return new ExtendedViewedState(ExtendedViewedStateType.NOT_VIEWED, getViewedHistory());

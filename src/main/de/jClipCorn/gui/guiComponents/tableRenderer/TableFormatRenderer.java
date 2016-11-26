@@ -1,6 +1,6 @@
 package de.jClipCorn.gui.guiComponents.tableRenderer;
 
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFormat;
+import de.jClipCorn.database.databaseElement.columnTypes.CCFileFormat;
 
 public class TableFormatRenderer extends TableRenderer {
 	private static final long serialVersionUID = -7556536853620039148L;
@@ -11,7 +11,7 @@ public class TableFormatRenderer extends TableRenderer {
 
 	@Override
     public void setValue(Object value) {
-		setText(((CCMovieFormat)value).asString());
-		setIcon(((CCMovieFormat)value).getIcon());
+		setText(((CCFileFormat)value).asString());
+		setIcon(((CCFileFormat)value).getIcon());
     }
 }

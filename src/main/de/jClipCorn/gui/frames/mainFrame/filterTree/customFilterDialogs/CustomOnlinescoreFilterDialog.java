@@ -14,7 +14,7 @@ import javax.swing.JRadioButton;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieOnlineScore;
+import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineScore;
 import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomOnlinescoreFilter;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.DecimalSearchType;
@@ -147,20 +147,20 @@ public class CustomOnlinescoreFilterDialog extends CustomFilterDialog {
 	@Override
 	protected void onAfterOK() {
 		if (rdbtnLesser.isSelected()) {
-			getFilter().setHigh(CCMovieOnlineScore.getWrapper().find((int) spnLesser.getValue()));
+			getFilter().setHigh(CCOnlineScore.getWrapper().find((int) spnLesser.getValue()));
 			
 			getFilter().setSearchType(DecimalSearchType.LESSER);
 		} else if (rdbtnGreater.isSelected()) {
-			getFilter().setLow(CCMovieOnlineScore.getWrapper().find((int) spnGreater.getValue()));
+			getFilter().setLow(CCOnlineScore.getWrapper().find((int) spnGreater.getValue()));
 			
 			getFilter().setSearchType(DecimalSearchType.GREATER);
 		} else if (rdbtnBetween.isSelected()) {
-			getFilter().setLow(CCMovieOnlineScore.getWrapper().find((int) spnBetween1.getValue()));
-			getFilter().setHigh(CCMovieOnlineScore.getWrapper().find((int) spnBetween2.getValue()));
+			getFilter().setLow(CCOnlineScore.getWrapper().find((int) spnBetween1.getValue()));
+			getFilter().setHigh(CCOnlineScore.getWrapper().find((int) spnBetween2.getValue()));
 			
 			getFilter().setSearchType(DecimalSearchType.IN_RANGE);
 		} else if (rdbtnExactly.isSelected()) {
-			getFilter().setLow(CCMovieOnlineScore.getWrapper().find((int) spnExactly.getValue()));
+			getFilter().setLow(CCOnlineScore.getWrapper().find((int) spnExactly.getValue()));
 			
 			getFilter().setSearchType(DecimalSearchType.EXACT);
 		}

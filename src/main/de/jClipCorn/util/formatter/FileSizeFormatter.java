@@ -6,7 +6,7 @@ import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.util.Locale;
 
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieSize;
+import de.jClipCorn.database.databaseElement.columnTypes.CCFileSize;
 
 public class FileSizeFormatter {
 	private static final String[] UNITS = new String[] { 
@@ -27,7 +27,7 @@ public class FileSizeFormatter {
 		return new DecimalFormat("#,##0.#").format(bytes / Math.pow(1024, digitGroups)) + " " + UNITS[digitGroups]; //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
-	public static String format(CCMovieSize size) {
+	public static String format(CCFileSize size) {
 		return format(size.getBytes());
 	}
 	
@@ -40,7 +40,7 @@ public class FileSizeFormatter {
 	}
 
 	@SuppressWarnings("nls")
-	public static String formatBytes(CCMovieSize value) {
+	public static String formatBytes(CCFileSize value) {
 		DecimalFormat formatter = (DecimalFormat) NumberFormat.getInstance(Locale.US);
 		DecimalFormatSymbols symbols = formatter.getDecimalFormatSymbols();
 

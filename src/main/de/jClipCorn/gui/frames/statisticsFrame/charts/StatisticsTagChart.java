@@ -12,11 +12,11 @@ import org.jfree.data.category.DefaultCategoryDataset;
 
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.ICCPlayableElement;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTags;
+import de.jClipCorn.database.databaseElement.columnTypes.CCTagList;
 import de.jClipCorn.gui.frames.statisticsFrame.StatisticsTypeFilter;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.util.cciterator.CCIterator;
 import de.jClipCorn.util.helper.StatisticsHelper;
+import de.jClipCorn.util.stream.CCStream;
 
 public class StatisticsTagChart extends StatisticsChart {
 	public StatisticsTagChart(CCMovieList ml, StatisticsTypeFilter _source) {
@@ -60,14 +60,14 @@ public class StatisticsTagChart extends StatisticsChart {
 	}
 	
 	private DefaultCategoryDataset getDataSet(CCMovieList movielist, StatisticsTypeFilter source) {
-		CCIterator<ICCPlayableElement> it = source.iteratorMoviesOrEpisodes(movielist);
+		CCStream<ICCPlayableElement> it = source.iteratorMoviesOrEpisodes(movielist);
 		
 		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 		
 		int[] values = StatisticsHelper.getCountForAllTags(it);
 		
-		for (int i = 0; i < CCMovieTags.ACTIVETAGS; i++) {
-			dataset.addValue(values[i], "Series0", CCMovieTags.getName(i)); //$NON-NLS-1$
+		for (int i = 0; i < CCTagList.ACTIVETAGS; i++) {
+			dataset.addValue(values[i], "Series0", CCTagList.getName(i)); //$NON-NLS-1$
 		}
 		
         return dataset;

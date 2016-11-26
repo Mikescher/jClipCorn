@@ -10,16 +10,16 @@ import javax.swing.JDialog;
 import javax.swing.JList;
 import javax.swing.ListSelectionModel;
 
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieGenreList;
+import de.jClipCorn.database.databaseElement.columnTypes.CCGenreList;
 
 public class DisplayGenresDialog extends JDialog {
 	private static final long serialVersionUID = 7628037231286957759L;
 	
-	private final CCMovieGenreList genreList;
+	private final CCGenreList genreList;
 	private final int cwidth;
 	private JList<Object> lsGenres;
 
-	public DisplayGenresDialog(CCMovieGenreList list, int width, Component rel) {
+	public DisplayGenresDialog(CCGenreList list, int width, Component rel) {
 		super();
 		setUndecorated(true);
 		this.genreList = list;

@@ -6,9 +6,9 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFSK;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieGenreList;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTyp;
+import de.jClipCorn.database.databaseElement.columnTypes.CCFSK;
+import de.jClipCorn.database.databaseElement.columnTypes.CCGenreList;
+import de.jClipCorn.database.databaseElement.columnTypes.CCDBElementTyp;
 import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReference;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.properties.CCProperties;
@@ -49,7 +49,7 @@ public class ImDBParser {
 	}
 
 	public static CCOnlineReference getFirstResultReference(String title, boolean isSeries) {
-		String url = ImDBParser.getSearchURL(title, isSeries ? CCMovieTyp.SERIES : CCMovieTyp.MOVIE);
+		String url = ImDBParser.getSearchURL(title, isSeries ? CCDBElementTyp.SERIES : CCDBElementTyp.MOVIE);
 		String html = HTTPUtilities.getHTML(url, true, true);
 		final List<DoubleString> res = ImDBParser.extractImDBLinks(html);
 		
@@ -73,7 +73,7 @@ public class ImDBParser {
 		}
 	}
 	
-	public static String getSearchURL(String title, CCMovieTyp typ) {
+	public static String getSearchURL(String title, CCDBElementTyp typ) {
 		switch (LANGUAGE) {
 		case GERMAN:
 			return ImDBParser_Ger.getSearchURL(title, typ);
@@ -150,7 +150,7 @@ public class ImDBParser {
 		}
 	}
 	
-	public static CCMovieFSK getFSK(String html, String url) {
+	public static CCFSK getFSK(String html, String url) {
 		switch (LANGUAGE) {
 		case GERMAN:
 			return ImDBParser_Ger.getFSK(html, url);
@@ -161,7 +161,7 @@ public class ImDBParser {
 		}
 	}
 	
-	public static CCMovieGenreList getGenres(String html) {
+	public static CCGenreList getGenres(String html) {
 		switch (LANGUAGE) {
 		case GERMAN:
 			return ImDBParser_Ger.getGenres(html);

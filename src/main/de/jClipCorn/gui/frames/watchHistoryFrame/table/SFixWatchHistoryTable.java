@@ -50,25 +50,25 @@ public class SFixWatchHistoryTable extends SFixTable {
 		column = convertColumnIndexToModel(column); // So you can move the positions of the Columns ...
 		
 		switch (column) {
-		case WatchHistoryTableModel.COLUMN_NAME:
-			return renderer_name;
-		case WatchHistoryTableModel.COLUMN_DATE:
-			return renderer_date;
-		case WatchHistoryTableModel.COLUMN_QUALITY:
-			return renderer_quality;
-		case WatchHistoryTableModel.COLUMN_LANGUAGE:
-			return renderer_language;
-		case WatchHistoryTableModel.COLUMN_LENGTH:
-			return renderer_length;
-		case WatchHistoryTableModel.COLUMN_TAGS:
-			return renderer_tags;
-		case WatchHistoryTableModel.COLUMN_FORMAT:
-			return renderer_format;
-		case WatchHistoryTableModel.COLUMN_SIZE:
-			return renderer_size;
-		default:
-			CCLog.addDefaultSwitchError(this);
-			return super.getCellRenderer(row, column);//renderer_default;
+			case WatchHistoryTableModel.COLUMN_NAME:
+				return renderer_name;
+			case WatchHistoryTableModel.COLUMN_DATE:
+				return renderer_date;
+			case WatchHistoryTableModel.COLUMN_QUALITY:
+				return renderer_quality;
+			case WatchHistoryTableModel.COLUMN_LANGUAGE:
+				return renderer_language;
+			case WatchHistoryTableModel.COLUMN_LENGTH:
+				return renderer_length;
+			case WatchHistoryTableModel.COLUMN_TAGS:
+				return renderer_tags;
+			case WatchHistoryTableModel.COLUMN_FORMAT:
+				return renderer_format;
+			case WatchHistoryTableModel.COLUMN_SIZE:
+				return renderer_size;
+			default:
+				CCLog.addDefaultSwitchError(this, column);
+				return super.getCellRenderer(row, column);//renderer_default;
 		}
 	}
 	

@@ -9,7 +9,7 @@ import javax.swing.JPopupMenu;
 
 import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.columnTypes.CCDateTimeList;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTags;
+import de.jClipCorn.database.databaseElement.columnTypes.CCTagList;
 import de.jClipCorn.gui.frames.editSeriesFrame.EditSeriesFrame;
 import de.jClipCorn.gui.frames.previewSeriesFrame.PreviewSeriesFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
@@ -95,8 +95,8 @@ public class SerTablePopupMenu extends JPopupMenu {
 		
 		JMenu tags = new JMenu(LocaleBundle.getString("PreviewSeriesFrame.PopupMenu.ChangeTags")); //$NON-NLS-1$
 		tags.setIcon(CachedResourceLoader.getIcon(Resources.ICN_MENUBAR_TAGS.icon16x16));
-		for (int i = 0; i < CCMovieTags.ACTIVETAGS; i++) {
-			JMenuItem mi = new JMenuItem(CCMovieTags.getName(i), CCMovieTags.getOnIcon(i));
+		for (int i = 0; i < CCTagList.ACTIVETAGS; i++) {
+			JMenuItem mi = new JMenuItem(CCTagList.getName(i), CCTagList.getOnIcon(i));
 			final int curr = i;
 			mi.addActionListener(new ActionListener() {
 				@Override

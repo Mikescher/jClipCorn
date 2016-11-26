@@ -6,7 +6,7 @@ import java.util.regex.Pattern;
 import javax.swing.RowFilter.Entry;
 
 import de.jClipCorn.database.CCMovieList;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieOnlineScore;
+import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineScore;
 import de.jClipCorn.gui.frames.mainFrame.clipTable.ClipTableModel;
 import de.jClipCorn.gui.frames.mainFrame.filterTree.customFilterDialogs.CustomFilterDialog;
 import de.jClipCorn.gui.frames.mainFrame.filterTree.customFilterDialogs.CustomOnlinescoreFilterDialog;
@@ -15,13 +15,13 @@ import de.jClipCorn.util.DecimalSearchType;
 import de.jClipCorn.util.listener.FinishListener;
 
 public class CustomOnlinescoreFilter extends AbstractCustomFilter {
-	private CCMovieOnlineScore low = CCMovieOnlineScore.STARS_0_0;
-	private CCMovieOnlineScore high = CCMovieOnlineScore.STARS_0_0;
+	private CCOnlineScore low = CCOnlineScore.STARS_0_0;
+	private CCOnlineScore high = CCOnlineScore.STARS_0_0;
 	private DecimalSearchType searchType = DecimalSearchType.EXACT;
 	
 	@Override
 	public boolean include(Entry<? extends ClipTableModel, ? extends Object> e) {
-		CCMovieOnlineScore osco = (CCMovieOnlineScore) e.getValue(ClipTableModel.COLUMN_ONLINESCORE);
+		CCOnlineScore osco = (CCOnlineScore) e.getValue(ClipTableModel.COLUMN_ONLINESCORE);
 		
 		switch (searchType) {
 		case LESSER:
@@ -70,19 +70,19 @@ public class CustomOnlinescoreFilter extends AbstractCustomFilter {
 		this.searchType = searchType;
 	}
 
-	public CCMovieOnlineScore getHigh() {
+	public CCOnlineScore getHigh() {
 		return high;
 	}
 
-	public void setHigh(CCMovieOnlineScore high) {
+	public void setHigh(CCOnlineScore high) {
 		this.high = high;
 	}
 
-	public CCMovieOnlineScore getLow() {
+	public CCOnlineScore getLow() {
 		return low;
 	}
 
-	public void setLow(CCMovieOnlineScore low) {
+	public void setLow(CCOnlineScore low) {
 		this.low = low;
 	}
 	
@@ -118,7 +118,7 @@ public class CustomOnlinescoreFilter extends AbstractCustomFilter {
 		if (paramsplit.length != 3) return false;
 		
 		int intval;
-		CCMovieOnlineScore f;
+		CCOnlineScore f;
 		DecimalSearchType s;
 		
 		try {
@@ -126,7 +126,7 @@ public class CustomOnlinescoreFilter extends AbstractCustomFilter {
 		} catch (NumberFormatException e) {
 			return false;
 		}
-		f = CCMovieOnlineScore.getWrapper().find(intval);
+		f = CCOnlineScore.getWrapper().find(intval);
 		if (f == null) return false;
 		setLow(f);
 		
@@ -135,7 +135,7 @@ public class CustomOnlinescoreFilter extends AbstractCustomFilter {
 		} catch (NumberFormatException e) {
 			return false;
 		}
-		f = CCMovieOnlineScore.getWrapper().find(intval);
+		f = CCOnlineScore.getWrapper().find(intval);
 		if (f == null) return false;
 		setHigh(f);
 		

@@ -6,7 +6,7 @@ import java.util.regex.Pattern;
 import javax.swing.RowFilter.Entry;
 
 import de.jClipCorn.database.CCMovieList;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieScore;
+import de.jClipCorn.database.databaseElement.columnTypes.CCUserScore;
 import de.jClipCorn.gui.frames.mainFrame.clipTable.ClipTableModel;
 import de.jClipCorn.gui.frames.mainFrame.filterTree.customFilterDialogs.CustomFilterDialog;
 import de.jClipCorn.gui.frames.mainFrame.filterTree.customFilterDialogs.CustomScoreFilterDialog;
@@ -15,19 +15,19 @@ import de.jClipCorn.util.DecimalSearchType;
 import de.jClipCorn.util.listener.FinishListener;
 
 public class CustomScoreFilter extends AbstractCustomFilter {
-	private CCMovieScore low = CCMovieScore.RATING_0;
-	private CCMovieScore high = CCMovieScore.RATING_0;
+	private CCUserScore low = CCUserScore.RATING_0;
+	private CCUserScore high = CCUserScore.RATING_0;
 	private DecimalSearchType searchType = DecimalSearchType.EXACT;
 	
 	@Override
 	public boolean include(Entry<? extends ClipTableModel, ? extends Object> e) {
-		CCMovieScore sco = (CCMovieScore) e.getValue(ClipTableModel.COLUMN_SCORE);
+		CCUserScore sco = (CCUserScore) e.getValue(ClipTableModel.COLUMN_SCORE);
 		
 		switch (searchType) {
 		case LESSER:
-			return sco != CCMovieScore.RATING_NO && sco.asInt() < high.asInt();
+			return sco != CCUserScore.RATING_NO && sco.asInt() < high.asInt();
 		case GREATER:
-			return sco != CCMovieScore.RATING_NO && low.asInt() < sco.asInt();
+			return sco != CCUserScore.RATING_NO && low.asInt() < sco.asInt();
 		case IN_RANGE:
 			return low.asInt() < sco.asInt() && sco.asInt() < high.asInt();
 		case EXACT:
@@ -70,19 +70,19 @@ public class CustomScoreFilter extends AbstractCustomFilter {
 		this.searchType = searchType;
 	}
 
-	public CCMovieScore getHigh() {
+	public CCUserScore getHigh() {
 		return high;
 	}
 
-	public void setHigh(CCMovieScore high) {
+	public void setHigh(CCUserScore high) {
 		this.high = high;
 	}
 
-	public CCMovieScore getLow() {
+	public CCUserScore getLow() {
 		return low;
 	}
 
-	public void setLow(CCMovieScore low) {
+	public void setLow(CCUserScore low) {
 		this.low = low;
 	}
 	
@@ -118,7 +118,7 @@ public class CustomScoreFilter extends AbstractCustomFilter {
 		if (paramsplit.length != 3) return false;
 		
 		int intval;
-		CCMovieScore f;
+		CCUserScore f;
 		DecimalSearchType s;
 		
 		try {
@@ -126,7 +126,7 @@ public class CustomScoreFilter extends AbstractCustomFilter {
 		} catch (NumberFormatException e) {
 			return false;
 		}
-		f = CCMovieScore.getWrapper().find(intval);
+		f = CCUserScore.getWrapper().find(intval);
 		if (f == null) return false;
 		setLow(f);
 		
@@ -135,7 +135,7 @@ public class CustomScoreFilter extends AbstractCustomFilter {
 		} catch (NumberFormatException e) {
 			return false;
 		}
-		f = CCMovieScore.getWrapper().find(intval);
+		f = CCUserScore.getWrapper().find(intval);
 		if (f == null) return false;
 		setHigh(f);
 		

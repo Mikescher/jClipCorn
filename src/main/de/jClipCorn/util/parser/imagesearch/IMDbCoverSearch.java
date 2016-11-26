@@ -4,7 +4,7 @@ import java.awt.image.BufferedImage;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTyp;
+import de.jClipCorn.database.databaseElement.columnTypes.CCDBElementTyp;
 import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReference;
 import de.jClipCorn.util.helper.HTTPUtilities;
 import de.jClipCorn.util.listener.FinishListener;
@@ -19,7 +19,7 @@ public class IMDbCoverSearch extends AbstractImageSearch {
 	}
 
 	@Override
-	public void start(CopyOnWriteArrayList<String> exclusions, String searchText, CCMovieTyp typ, CCOnlineReference reference) {
+	public void start(CopyOnWriteArrayList<String> exclusions, String searchText, CCDBElementTyp typ, CCOnlineReference reference) {
 		String searchurl = ImDBImageParser.getSearchURL(searchText, typ);
 		String searchhtml = HTTPUtilities.getHTML(searchurl, true, false);
 		String direkturl = ImDBImageParser.getFirstSearchResult(searchhtml);

@@ -3,6 +3,7 @@ package de.jClipCorn.test;
 import java.io.File;
 import java.io.IOException;
 
+import org.junit.After;
 import org.junit.Before;
 
 import de.jClipCorn.database.CCMovieList;
@@ -12,13 +13,21 @@ import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.helper.ApplicationHelper;
 import de.jClipCorn.util.helper.SimpleFileUtils;
 
+import static org.junit.Assert.assertFalse;
+
 @SuppressWarnings("nls")
 public class ClipCornBaseTest {
 	
 	@Before
 	public void Init() {
-		CCLog.setUnitTestMode();
+		CCLog.initUnitTestMode();
 		ApplicationHelper.SetOverrideModeUnix();
+	}
+
+	@After
+	public void Finalize() {
+		assertFalse(CCLog.hasErrors());
+		assertFalse(CCLog.hasUndefinieds());
 	}
 	
 	protected CCMovieList createEmptyDB() {

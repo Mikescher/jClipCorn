@@ -9,15 +9,15 @@ import javax.swing.tree.DefaultMutableTreeNode;
 
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGroup;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFSK;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFormat;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieGenre;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieLanguage;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieOnlineScore;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieQuality;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieScore;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTags;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTyp;
+import de.jClipCorn.database.databaseElement.columnTypes.CCFSK;
+import de.jClipCorn.database.databaseElement.columnTypes.CCFileFormat;
+import de.jClipCorn.database.databaseElement.columnTypes.CCGenre;
+import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguage;
+import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineScore;
+import de.jClipCorn.database.databaseElement.columnTypes.CCQuality;
+import de.jClipCorn.database.databaseElement.columnTypes.CCUserScore;
+import de.jClipCorn.database.databaseElement.columnTypes.CCTagList;
+import de.jClipCorn.database.databaseElement.columnTypes.CCDBElementTyp;
 import de.jClipCorn.gui.frames.mainFrame.clipTable.ClipTable;
 import de.jClipCorn.gui.frames.mainFrame.clipTable.RowFilterSource;
 import de.jClipCorn.gui.frames.mainFrame.filterTree.customFilterDialogs.CustomOperatorFilterDialog;
@@ -157,7 +157,7 @@ public class FilterTree extends AbstractFilterTree {
 	}
 	
 	private void initFSK() {
-		for (final CCMovieFSK fsk : CCMovieFSK.values()) {
+		for (final CCFSK fsk : CCFSK.values()) {
 			addNodeI(node_fsk, fsk.getIcon(), fsk.asString(), new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
@@ -168,7 +168,7 @@ public class FilterTree extends AbstractFilterTree {
 	}
 	
 	private void initScore() {
-		for (final CCMovieScore score : CCMovieScore.values()) {
+		for (final CCUserScore score : CCUserScore.values()) {
 			addNodeI(node_score, score.getIcon(), score.asString(), new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
@@ -179,7 +179,7 @@ public class FilterTree extends AbstractFilterTree {
 	}
 	
 	private void initOnlineScore() {
-		for (final CCMovieOnlineScore oscore : CCMovieOnlineScore.values()) {
+		for (final CCOnlineScore oscore : CCOnlineScore.values()) {
 			addNodeI(node_onlinescore, oscore.getIcon(), oscore.asInt()/2.0+"", new ActionListener() { //$NON-NLS-1$
 				@Override
 				public void actionPerformed(ActionEvent e) {
@@ -190,7 +190,7 @@ public class FilterTree extends AbstractFilterTree {
 	}
 	
 	private void initFormat() {
-		for (final CCMovieFormat format : CCMovieFormat.values()) {
+		for (final CCFileFormat format : CCFileFormat.values()) {
 			addNodeI(node_format, format.getIcon(), format.asString(), new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
@@ -201,7 +201,7 @@ public class FilterTree extends AbstractFilterTree {
 	}
 	
 	private void initQuality() {
-		for (final CCMovieQuality quality : CCMovieQuality.values()) {
+		for (final CCQuality quality : CCQuality.values()) {
 			addNodeI(node_quality, quality.getIcon(), quality.asString(), new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
@@ -212,9 +212,9 @@ public class FilterTree extends AbstractFilterTree {
 	}
 	
 	private void initTags() {
-		for (int i = 0; i < CCMovieTags.ACTIVETAGS; i++) {
+		for (int i = 0; i < CCTagList.ACTIVETAGS; i++) {
 			final int curr = i;
-			addNodeI(node_tags, CCMovieTags.getOnIcon(i), CCMovieTags.getName(i), new ActionListener() {
+			addNodeI(node_tags, CCTagList.getOnIcon(i), CCTagList.getName(i), new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					table.setRowFilter(new TableTagFilter(curr), RowFilterSource.SIDEBAR);
@@ -224,7 +224,7 @@ public class FilterTree extends AbstractFilterTree {
 	}
 	
 	private void initLanguage() {
-		for (final CCMovieLanguage language : CCMovieLanguage.values()) {
+		for (final CCDBLanguage language : CCDBLanguage.values()) {
 			addNodeI(node_language, language.getIcon(), language.asString(), new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
@@ -235,7 +235,7 @@ public class FilterTree extends AbstractFilterTree {
 	}
 	
 	private void initTyp() {
-		for (final CCMovieTyp typ : CCMovieTyp.values()) {
+		for (final CCDBElementTyp typ : CCDBElementTyp.values()) {
 			addNodeI(node_typ, typ.getIcon(), typ.asString(), new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
@@ -272,11 +272,11 @@ public class FilterTree extends AbstractFilterTree {
 			return;
 		}
 		
-		List<CCMovieGenre> genres = movielist.getGenreList();
+		List<CCGenre> genres = movielist.getGenreList();
 		
-		Collections.sort(genres, CCMovieGenre.getTextComparator());
+		Collections.sort(genres, CCGenre.getTextComparator());
 		
-		for (final CCMovieGenre genre : genres) {
+		for (final CCGenre genre : genres) {
 			addNodeI(node_genre, null, genre.asString(), new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {

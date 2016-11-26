@@ -21,12 +21,12 @@ import javax.swing.SpinnerNumberModel;
 
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCSeries;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFSK;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFormat;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieGenre;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieLanguage;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieQuality;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTyp;
+import de.jClipCorn.database.databaseElement.columnTypes.CCFSK;
+import de.jClipCorn.database.databaseElement.columnTypes.CCFileFormat;
+import de.jClipCorn.database.databaseElement.columnTypes.CCGenre;
+import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguage;
+import de.jClipCorn.database.databaseElement.columnTypes.CCQuality;
+import de.jClipCorn.database.databaseElement.columnTypes.CCDBElementTyp;
 import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReference;
 import de.jClipCorn.gui.frames.editSeriesFrame.EditSeriesFrame;
 import de.jClipCorn.gui.frames.inputErrorFrame.InputErrorDialog;
@@ -253,21 +253,21 @@ public class AddSeriesFrame extends JFrame implements ParseResultHandler, UserDa
 	}
 	
 	private void setDefaultValues() {
-		cbxLanguage.setModel(new DefaultComboBoxModel<>(CCMovieLanguage.getWrapper().getList()));
+		cbxLanguage.setModel(new DefaultComboBoxModel<>(CCDBLanguage.getWrapper().getList()));
 		
 		DefaultComboBoxModel<String> cbFSKdcbm;
-		cbxFSK.setModel(cbFSKdcbm = new DefaultComboBoxModel<>(CCMovieFSK.getWrapper().getList()));
+		cbxFSK.setModel(cbFSKdcbm = new DefaultComboBoxModel<>(CCFSK.getWrapper().getList()));
 		cbFSKdcbm.addElement(" "); //$NON-NLS-1$
 		cbxFSK.setSelectedIndex(cbFSKdcbm.getSize() - 1);
 		
-		cbxGenre0.setModel(new DefaultComboBoxModel<>(CCMovieGenre.getTrimmedList()));
-		cbxGenre1.setModel(new DefaultComboBoxModel<>(CCMovieGenre.getTrimmedList()));
-		cbxGenre2.setModel(new DefaultComboBoxModel<>(CCMovieGenre.getTrimmedList()));
-		cbxGenre3.setModel(new DefaultComboBoxModel<>(CCMovieGenre.getTrimmedList()));
-		cbxGenre4.setModel(new DefaultComboBoxModel<>(CCMovieGenre.getTrimmedList()));
-		cbxGenre5.setModel(new DefaultComboBoxModel<>(CCMovieGenre.getTrimmedList()));
-		cbxGenre6.setModel(new DefaultComboBoxModel<>(CCMovieGenre.getTrimmedList()));
-		cbxGenre7.setModel(new DefaultComboBoxModel<>(CCMovieGenre.getTrimmedList()));
+		cbxGenre0.setModel(new DefaultComboBoxModel<>(CCGenre.getTrimmedList()));
+		cbxGenre1.setModel(new DefaultComboBoxModel<>(CCGenre.getTrimmedList()));
+		cbxGenre2.setModel(new DefaultComboBoxModel<>(CCGenre.getTrimmedList()));
+		cbxGenre3.setModel(new DefaultComboBoxModel<>(CCGenre.getTrimmedList()));
+		cbxGenre4.setModel(new DefaultComboBoxModel<>(CCGenre.getTrimmedList()));
+		cbxGenre5.setModel(new DefaultComboBoxModel<>(CCGenre.getTrimmedList()));
+		cbxGenre6.setModel(new DefaultComboBoxModel<>(CCGenre.getTrimmedList()));
+		cbxGenre7.setModel(new DefaultComboBoxModel<>(CCGenre.getTrimmedList()));
 	}
 
 	@Override
@@ -276,7 +276,7 @@ public class AddSeriesFrame extends JFrame implements ParseResultHandler, UserDa
 	}
 	
 	private void showIMDBParser() {
-		(new ParseOnlineDialog(this, this, CCMovieTyp.SERIES)).setVisible(true);
+		(new ParseOnlineDialog(this, this, CCDBElementTyp.SERIES)).setVisible(true);
 	}
 
 	@Override
@@ -290,7 +290,7 @@ public class AddSeriesFrame extends JFrame implements ParseResultHandler, UserDa
 	}
 
 	@Override
-	public void setMovieFormat(CCMovieFormat cmf) {
+	public void setMovieFormat(CCFileFormat cmf) {
 		// No such field
 	}
 
@@ -320,12 +320,12 @@ public class AddSeriesFrame extends JFrame implements ParseResultHandler, UserDa
 	}
 
 	@Override
-	public void setMovieLanguage(CCMovieLanguage lang) {
+	public void setMovieLanguage(CCDBLanguage lang) {
 		cbxLanguage.setSelectedIndex(lang.asInt());
 	}
 
 	@Override
-	public void setQuality(CCMovieQuality q) {
+	public void setQuality(CCQuality q) {
 		// No such field
 	}
 
@@ -430,14 +430,14 @@ public class AddSeriesFrame extends JFrame implements ParseResultHandler, UserDa
 		
 		newS.setOnlineReference(edReference.getValue());
 		
-		newS.setGenre(CCMovieGenre.getWrapper().find(cbxGenre0.getSelectedIndex()), 0);
-		newS.setGenre(CCMovieGenre.getWrapper().find(cbxGenre1.getSelectedIndex()), 1);
-		newS.setGenre(CCMovieGenre.getWrapper().find(cbxGenre2.getSelectedIndex()), 2);
-		newS.setGenre(CCMovieGenre.getWrapper().find(cbxGenre3.getSelectedIndex()), 3);
-		newS.setGenre(CCMovieGenre.getWrapper().find(cbxGenre4.getSelectedIndex()), 4);
-		newS.setGenre(CCMovieGenre.getWrapper().find(cbxGenre5.getSelectedIndex()), 5);
-		newS.setGenre(CCMovieGenre.getWrapper().find(cbxGenre6.getSelectedIndex()), 6);
-		newS.setGenre(CCMovieGenre.getWrapper().find(cbxGenre7.getSelectedIndex()), 7);
+		newS.setGenre(CCGenre.getWrapper().find(cbxGenre0.getSelectedIndex()), 0);
+		newS.setGenre(CCGenre.getWrapper().find(cbxGenre1.getSelectedIndex()), 1);
+		newS.setGenre(CCGenre.getWrapper().find(cbxGenre2.getSelectedIndex()), 2);
+		newS.setGenre(CCGenre.getWrapper().find(cbxGenre3.getSelectedIndex()), 3);
+		newS.setGenre(CCGenre.getWrapper().find(cbxGenre4.getSelectedIndex()), 4);
+		newS.setGenre(CCGenre.getWrapper().find(cbxGenre5.getSelectedIndex()), 5);
+		newS.setGenre(CCGenre.getWrapper().find(cbxGenre6.getSelectedIndex()), 6);
+		newS.setGenre(CCGenre.getWrapper().find(cbxGenre7.getSelectedIndex()), 7);
 		
 		newS.setGroups(edGroups.getValue());
 		

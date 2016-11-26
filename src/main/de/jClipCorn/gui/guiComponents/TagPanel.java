@@ -9,12 +9,12 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
 
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTags;
+import de.jClipCorn.database.databaseElement.columnTypes.CCTagList;
 
 public class TagPanel extends JPanel {
 	private static final long serialVersionUID = -6093081428307402687L;
 
-	private CCMovieTags value = new CCMovieTags();
+	private CCTagList value = new CCTagList();
 	private boolean readOnly = false;
 
 	public TagPanel() {
@@ -32,9 +32,9 @@ public class TagPanel extends JPanel {
 	private void update() {
 		removeAll();
 
-		for (int i = 0; i < CCMovieTags.ACTIVETAGS; i++) {
+		for (int i = 0; i < CCTagList.ACTIVETAGS; i++) {
 			JLabel l = new JLabel(value.getTagIcon(i));
-			l.setToolTipText(CCMovieTags.getName(i));
+			l.setToolTipText(CCTagList.getName(i));
 
 			final int pos = i;
 			l.addMouseListener(new MouseListener() {
@@ -82,11 +82,11 @@ public class TagPanel extends JPanel {
 		}
 	}
 
-	public CCMovieTags getValue() {
+	public CCTagList getValue() {
 		return value;
 	}
 
-	public void setValue(CCMovieTags v) {
+	public void setValue(CCTagList v) {
 		value = v.copy();
 		update();
 	}

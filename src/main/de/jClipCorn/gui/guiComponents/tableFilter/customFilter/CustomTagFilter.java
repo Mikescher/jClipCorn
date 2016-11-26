@@ -6,7 +6,7 @@ import java.util.regex.Pattern;
 import javax.swing.RowFilter.Entry;
 
 import de.jClipCorn.database.CCMovieList;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTags;
+import de.jClipCorn.database.databaseElement.columnTypes.CCTagList;
 import de.jClipCorn.gui.frames.mainFrame.clipTable.ClipTableModel;
 import de.jClipCorn.gui.frames.mainFrame.filterTree.customFilterDialogs.CustomFilterDialog;
 import de.jClipCorn.gui.frames.mainFrame.filterTree.customFilterDialogs.CustomTagFilterDialog;
@@ -18,12 +18,12 @@ public class CustomTagFilter extends AbstractCustomFilter {
 	
 	@Override
 	public boolean include(Entry<? extends ClipTableModel, ? extends Object> e) {
-		return ((CCMovieTags)e.getValue(ClipTableModel.COLUMN_TAGS)).getTag(tag);
+		return ((CCTagList)e.getValue(ClipTableModel.COLUMN_TAGS)).getTag(tag);
 	}
 
 	@Override
 	public String getName() {
-		return LocaleBundle.getFormattedString("FilterTree.Custom.CustomFilterNames.Tag", CCMovieTags.getName(tag)); //$NON-NLS-1$
+		return LocaleBundle.getFormattedString("FilterTree.Custom.CustomFilterNames.Tag", CCTagList.getName(tag)); //$NON-NLS-1$
 	}
 
 	@Override
@@ -73,7 +73,7 @@ public class CustomTagFilter extends AbstractCustomFilter {
 			return false;
 		}
 		
-		if (! CCMovieTags.isTagActive(intval)) return false;
+		if (! CCTagList.isTagActive(intval)) return false;
 		setTag(intval);
 		
 		return true;

@@ -37,12 +37,12 @@ import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.database.databaseElement.columnTypes.CCDateTimeList;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFSK;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFormat;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieGenre;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieLanguage;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieQuality;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieScore;
+import de.jClipCorn.database.databaseElement.columnTypes.CCFSK;
+import de.jClipCorn.database.databaseElement.columnTypes.CCFileFormat;
+import de.jClipCorn.database.databaseElement.columnTypes.CCGenre;
+import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguage;
+import de.jClipCorn.database.databaseElement.columnTypes.CCQuality;
+import de.jClipCorn.database.databaseElement.columnTypes.CCUserScore;
 import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReference;
 import de.jClipCorn.gui.frames.addEpisodesFrame.AddEpisodesFrame;
 import de.jClipCorn.gui.frames.addSeasonFrame.AddSeasonFrame;
@@ -706,25 +706,25 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 	private void setDefaultValues() {
 		//#########################   SERIES   ###########################################################
 		
-		cbxSeriesGenre_0.setModel(new DefaultComboBoxModel<>(CCMovieGenre.getTrimmedList()));
-		cbxSeriesGenre_1.setModel(new DefaultComboBoxModel<>(CCMovieGenre.getTrimmedList()));
-		cbxSeriesGenre_2.setModel(new DefaultComboBoxModel<>(CCMovieGenre.getTrimmedList()));
-		cbxSeriesGenre_3.setModel(new DefaultComboBoxModel<>(CCMovieGenre.getTrimmedList()));
-		cbxSeriesGenre_4.setModel(new DefaultComboBoxModel<>(CCMovieGenre.getTrimmedList()));
-		cbxSeriesGenre_5.setModel(new DefaultComboBoxModel<>(CCMovieGenre.getTrimmedList()));
-		cbxSeriesGenre_6.setModel(new DefaultComboBoxModel<>(CCMovieGenre.getTrimmedList()));
-		cbxSeriesGenre_7.setModel(new DefaultComboBoxModel<>(CCMovieGenre.getTrimmedList()));
+		cbxSeriesGenre_0.setModel(new DefaultComboBoxModel<>(CCGenre.getTrimmedList()));
+		cbxSeriesGenre_1.setModel(new DefaultComboBoxModel<>(CCGenre.getTrimmedList()));
+		cbxSeriesGenre_2.setModel(new DefaultComboBoxModel<>(CCGenre.getTrimmedList()));
+		cbxSeriesGenre_3.setModel(new DefaultComboBoxModel<>(CCGenre.getTrimmedList()));
+		cbxSeriesGenre_4.setModel(new DefaultComboBoxModel<>(CCGenre.getTrimmedList()));
+		cbxSeriesGenre_5.setModel(new DefaultComboBoxModel<>(CCGenre.getTrimmedList()));
+		cbxSeriesGenre_6.setModel(new DefaultComboBoxModel<>(CCGenre.getTrimmedList()));
+		cbxSeriesGenre_7.setModel(new DefaultComboBoxModel<>(CCGenre.getTrimmedList()));
 	
-		cbxSeriesFSK.setModel(new DefaultComboBoxModel<>(CCMovieFSK.getWrapper().getList()));
-		cbxSeriesLanguage.setModel(new DefaultComboBoxModel<>(CCMovieLanguage.getWrapper().getList()));
-		cbxSeriesScore.setModel(new DefaultComboBoxModel<>(CCMovieScore.getWrapper().getList()));
+		cbxSeriesFSK.setModel(new DefaultComboBoxModel<>(CCFSK.getWrapper().getList()));
+		cbxSeriesLanguage.setModel(new DefaultComboBoxModel<>(CCDBLanguage.getWrapper().getList()));
+		cbxSeriesScore.setModel(new DefaultComboBoxModel<>(CCUserScore.getWrapper().getList()));
 		
 		//#########################   SEASON   ############################################################
 		
 		//#########################   EPISODE   ###########################################################
 		
-		cbxEpisodeFormat.setModel(new DefaultComboBoxModel<>(CCMovieFormat.getWrapper().getList()));
-		cbxEpisodeQuality.setModel(new DefaultComboBoxModel<>(CCMovieQuality.getWrapper().getList()));
+		cbxEpisodeFormat.setModel(new DefaultComboBoxModel<>(CCFileFormat.getWrapper().getList()));
+		cbxEpisodeQuality.setModel(new DefaultComboBoxModel<>(CCQuality.getWrapper().getList()));
 	}
 	
 	private CCSeason getSelectedSeason() {
@@ -854,7 +854,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		videoFileChooser.setFileFilter(FileChooserHelper.createLocalFileFilter("AddMovieFrame.videoFileChooser.filterDescription", new Validator<String>() { //$NON-NLS-1$
 			@Override
 			public boolean validate(String val) {
-				return CCMovieFormat.isValidMovieFormat(val);
+				return CCFileFormat.isValidMovieFormat(val);
 			}
 		}));
 		
@@ -880,7 +880,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 	}
 
 	@Override
-	public void setMovieFormat(CCMovieFormat cmf) {
+	public void setMovieFormat(CCFileFormat cmf) {
 		// NOP
 	}
 
@@ -910,12 +910,12 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 	}
 
 	@Override
-	public void setMovieLanguage(CCMovieLanguage lang) {
+	public void setMovieLanguage(CCDBLanguage lang) {
 		// NOP
 	}
 
 	@Override
-	public void setQuality(CCMovieQuality q) {
+	public void setQuality(CCQuality q) {
 		// NOP
 	}
 
@@ -1025,14 +1025,14 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		series.setFsk(cbxSeriesFSK.getSelectedIndex());
 		series.setScore(cbxSeriesScore.getSelectedIndex());
 		
-		series.setGenre(CCMovieGenre.getWrapper().find(cbxSeriesGenre_0.getSelectedIndex()), 0);
-		series.setGenre(CCMovieGenre.getWrapper().find(cbxSeriesGenre_1.getSelectedIndex()), 1);
-		series.setGenre(CCMovieGenre.getWrapper().find(cbxSeriesGenre_2.getSelectedIndex()), 2);
-		series.setGenre(CCMovieGenre.getWrapper().find(cbxSeriesGenre_3.getSelectedIndex()), 3);
-		series.setGenre(CCMovieGenre.getWrapper().find(cbxSeriesGenre_4.getSelectedIndex()), 4);
-		series.setGenre(CCMovieGenre.getWrapper().find(cbxSeriesGenre_5.getSelectedIndex()), 5);
-		series.setGenre(CCMovieGenre.getWrapper().find(cbxSeriesGenre_6.getSelectedIndex()), 6);
-		series.setGenre(CCMovieGenre.getWrapper().find(cbxSeriesGenre_7.getSelectedIndex()), 7);
+		series.setGenre(CCGenre.getWrapper().find(cbxSeriesGenre_0.getSelectedIndex()), 0);
+		series.setGenre(CCGenre.getWrapper().find(cbxSeriesGenre_1.getSelectedIndex()), 1);
+		series.setGenre(CCGenre.getWrapper().find(cbxSeriesGenre_2.getSelectedIndex()), 2);
+		series.setGenre(CCGenre.getWrapper().find(cbxSeriesGenre_3.getSelectedIndex()), 3);
+		series.setGenre(CCGenre.getWrapper().find(cbxSeriesGenre_4.getSelectedIndex()), 4);
+		series.setGenre(CCGenre.getWrapper().find(cbxSeriesGenre_5.getSelectedIndex()), 5);
+		series.setGenre(CCGenre.getWrapper().find(cbxSeriesGenre_6.getSelectedIndex()), 6);
+		series.setGenre(CCGenre.getWrapper().find(cbxSeriesGenre_7.getSelectedIndex()), 7);
 		
 		series.setOnlineReference(edSeriesReference.getValue());
 		series.setGroups(edSeriesGroups.getValue());
@@ -1208,13 +1208,13 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 	private void recalcEpisodeFormat() {
 		String path = PathFormatter.fromCCPath(edEpisodePart.getText());
 		
-		CCMovieFormat fmt = CCMovieFormat.getMovieFormatFromPath(path);
+		CCFileFormat fmt = CCFileFormat.getMovieFormatFromPath(path);
 		
 		cbxEpisodeFormat.setSelectedIndex(fmt.asInt());
 	}
 
 	private void recalcEpisodeQuality() {
-		cbxEpisodeQuality.setSelectedIndex(CCMovieQuality.calculateQuality((Long)spnEpisodeSize.getValue(), (Integer)spnEpisodeLength.getValue(), 1).asInt());
+		cbxEpisodeQuality.setSelectedIndex(CCQuality.calculateQuality((Long)spnEpisodeSize.getValue(), (Integer)spnEpisodeLength.getValue(), 1).asInt());
 	}
 	
 	private void openEpisodePart() {
@@ -1310,8 +1310,8 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 
 		long fsize = (long) spnEpisodeSize.getValue();
 		int quality = cbxEpisodeQuality.getSelectedIndex();
-		String csExtn  = CCMovieFormat.getWrapper().find(cbxEpisodeFormat.getSelectedIndex()).asString();
-		String csExta = CCMovieFormat.getWrapper().find(cbxEpisodeFormat.getSelectedIndex()).asStringAlt();
+		String csExtn  = CCFileFormat.getWrapper().find(cbxEpisodeFormat.getSelectedIndex()).asString();
+		String csExta = CCFileFormat.getWrapper().find(cbxEpisodeFormat.getSelectedIndex()).asStringAlt();
 		
 		String part = edEpisodePart.getText();
 		

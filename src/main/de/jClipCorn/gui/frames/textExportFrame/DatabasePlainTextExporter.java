@@ -10,7 +10,7 @@ import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.database.databaseElement.CCSeries;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieSize;
+import de.jClipCorn.database.databaseElement.columnTypes.CCFileSize;
 import de.jClipCorn.database.util.ExportHelper;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.util.formatter.FileSizeFormatter;
@@ -129,10 +129,10 @@ public class DatabasePlainTextExporter extends DatabaseTextExporter {
 		int len = 0;
 		int vcount = 0;
 		
-		CCMovieSize bytesum = CCMovieSize.ZERO;
+		CCFileSize bytesum = CCFileSize.ZERO;
 		
 		for (CCMovie melem : last) {
-			bytesum = CCMovieSize.add(bytesum, melem.getFilesize());
+			bytesum = CCFileSize.add(bytesum, melem.getFilesize());
 			len = Math.max(len, melem.getZyklus().getRoman().length());
 			if (melem.isViewed()) vcount++;			
 		}

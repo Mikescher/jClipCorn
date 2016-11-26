@@ -6,7 +6,7 @@ import java.util.regex.Pattern;
 import javax.swing.RowFilter.Entry;
 
 import de.jClipCorn.database.CCMovieList;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFSK;
+import de.jClipCorn.database.databaseElement.columnTypes.CCFSK;
 import de.jClipCorn.gui.frames.mainFrame.clipTable.ClipTableModel;
 import de.jClipCorn.gui.frames.mainFrame.filterTree.customFilterDialogs.CustomFSKFilterDialog;
 import de.jClipCorn.gui.frames.mainFrame.filterTree.customFilterDialogs.CustomFilterDialog;
@@ -14,7 +14,7 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.listener.FinishListener;
 
 public class CustomFSKFilter extends AbstractCustomFilter {
-	private CCMovieFSK fsk = CCMovieFSK.RATING_0;
+	private CCFSK fsk = CCFSK.RATING_0;
 	
 	@Override
 	public boolean include(Entry<? extends ClipTableModel, ? extends Object> e) {
@@ -31,11 +31,11 @@ public class CustomFSKFilter extends AbstractCustomFilter {
 		return LocaleBundle.getDeformattedString("FilterTree.Custom.CustomFilterNames.FSK").replace("()", "").trim(); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
 
-	public CCMovieFSK getFSK() {
+	public CCFSK getFSK() {
 		return fsk;
 	}
 
-	public void setFSK(CCMovieFSK fsk) {
+	public void setFSK(CCFSK fsk) {
 		this.fsk = fsk;
 	}
 	
@@ -73,7 +73,7 @@ public class CustomFSKFilter extends AbstractCustomFilter {
 			return false;
 		}
 		
-		CCMovieFSK f = CCMovieFSK.getWrapper().find(intval);
+		CCFSK f = CCFSK.getWrapper().find(intval);
 		if (f == null) return false;
 		setFSK(f);
 		

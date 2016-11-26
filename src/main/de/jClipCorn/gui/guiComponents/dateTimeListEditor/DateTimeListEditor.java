@@ -77,8 +77,7 @@ public class DateTimeListEditor extends JPanel {
 	public DateTimeListEditor(CCDateTimeList lst) {
 		initGUI();
 
-		data = new ArrayList<>();
-		for (CCDateTime dt : lst) data.add(dt);
+		data = lst.iterator().enumerate();
 		
 		updateContentList(null);
 	}
@@ -210,8 +209,7 @@ public class DateTimeListEditor extends JPanel {
 	
 	public void setValue(CCDateTimeList dtlist) {
 		data.clear();
-		
-		for (CCDateTime dt : dtlist) data.add(dt);
+		data.addAll(dtlist.iterator().enumerate());
 		
 		updateContentList(null);
 	}

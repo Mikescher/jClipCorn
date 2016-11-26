@@ -10,11 +10,11 @@ import org.jfree.data.category.DefaultCategoryDataset;
 
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFSK;
+import de.jClipCorn.database.databaseElement.columnTypes.CCFSK;
 import de.jClipCorn.gui.frames.statisticsFrame.StatisticsTypeFilter;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.util.cciterator.CCIterator;
 import de.jClipCorn.util.helper.StatisticsHelper;
+import de.jClipCorn.util.stream.CCStream;
 
 public class StatisticsFSKChart extends StatisticsChart {
 	public StatisticsFSKChart(CCMovieList ml, StatisticsTypeFilter _source) {
@@ -57,13 +57,13 @@ public class StatisticsFSKChart extends StatisticsChart {
 	}
 	
 	private DefaultCategoryDataset getDataSet(CCMovieList movielist, StatisticsTypeFilter source) {
-		CCIterator<CCDatabaseElement> it = source.iteratorMoviesOrSeries(movielist);
+		CCStream<CCDatabaseElement> it = source.iteratorMoviesOrSeries(movielist);
 		
 		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 		
 		int[] values = StatisticsHelper.getCountForAllFSKs(it);
 		
-		for (CCMovieFSK fsk : CCMovieFSK.values()) {
+		for (CCFSK fsk : CCFSK.values()) {
 			dataset.addValue(values[fsk.asInt()], "Series0", fsk.asString()); //$NON-NLS-1$
 		}
 		

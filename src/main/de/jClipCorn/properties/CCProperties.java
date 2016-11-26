@@ -10,7 +10,7 @@ import java.util.Properties;
 import java.util.Vector;
 
 import de.jClipCorn.Main;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieLanguage;
+import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguage;
 import de.jClipCorn.database.util.ExportHelper;
 import de.jClipCorn.gui.frames.mainFrame.clipToolbar.ClipToolbar;
 import de.jClipCorn.gui.localization.LocaleBundle;
@@ -164,7 +164,7 @@ public class CCProperties {
 	public CCBoolProperty									PROP_QUERY_IMDB;
 	public CCBoolProperty									PROP_QUERY_TMDB;
 	public CCBoolProperty 									PROP_MAINFRAME_SHOWGROUPS;
-	public CCEnumProperty<CCMovieLanguage> 					PROP_DATABASE_DEFAULTPARSERLANG;
+	public CCEnumProperty<CCDBLanguage> 					PROP_DATABASE_DEFAULTPARSERLANG;
 	public CCEnumProperty<BrowserLanguage> 					PROP_TMDB_LANGUAGE;
 	public CCEnumSetProperty<ImageSearchImplementation>		PROP_IMAGESEARCH_IMPL;
 	public CCBoolProperty 									PROP_SHOW_EXTENDED_FEATURES;
@@ -248,7 +248,7 @@ public class CCProperties {
 		PROP_DATABASE_COVERCACHESIZE			= new CCPIntProperty(CAT_DATABASE, 			this, 	"PROP_DATABASE_COVERCACHESIZE", 			128);
 		PROP_LOG_MAX_LINECOUNT 					= new CCPIntProperty(CAT_DATABASE, 			this, 	"PROP_LOG_MAX_LINECOUNT", 					1048576); // 2^20
 
-		PROP_DATABASE_DEFAULTPARSERLANG			= new CCEnumProperty<>(CAT_PARSER, 			this, 	"PROP_DATABASE_DEFAULTPARSERLANG", 			CCMovieLanguage.GERMAN, 			CCMovieLanguage.getWrapper());
+		PROP_DATABASE_DEFAULTPARSERLANG			= new CCEnumProperty<>(CAT_PARSER, 			this, 	"PROP_DATABASE_DEFAULTPARSERLANG", 			CCDBLanguage.GERMAN, 			CCDBLanguage.getWrapper());
 		PROP_TMDB_LANGUAGE						= new CCEnumProperty<>(CAT_PARSER, 			this, 	"PROP_TMDB_LANGUAGE", 						getDefBLanguage(),					BrowserLanguage.getWrapper());
 		PROP_IMAGESEARCH_IMPL					= new CCEnumSetProperty<>(CAT_PARSER, 		this, 	"PROP_IMAGESEARCH_IMPL", 					EnumSetValue.ALL,					ImageSearchImplementation.getWrapper());
 		PROP_QUERY_IMDB							= new CCBoolProperty(CAT_PARSER,	 		this,   "PROP_QUERY_IMDB",							true);

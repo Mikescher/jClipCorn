@@ -11,8 +11,8 @@ import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineRefType;
 import de.jClipCorn.gui.frames.statisticsFrame.StatisticsTypeFilter;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.util.cciterator.CCIterator;
 import de.jClipCorn.util.helper.StatisticsHelper;
+import de.jClipCorn.util.stream.CCStream;
 
 public class StatisticsProviderChart extends StatisticsChart {
 	public StatisticsProviderChart(CCMovieList ml, StatisticsTypeFilter _source) {
@@ -50,7 +50,7 @@ public class StatisticsProviderChart extends StatisticsChart {
 	
 	@SuppressWarnings("nls")
 	private DefaultPieDataset getDataSet(CCMovieList movielist, StatisticsTypeFilter source) {
-		CCIterator<CCDatabaseElement> it = source.iteratorMoviesOrSeries(movielist);
+		CCStream<CCDatabaseElement> it = source.iteratorMoviesOrSeries(movielist);
 		
 		DefaultPieDataset dataset = new DefaultPieDataset();
 		

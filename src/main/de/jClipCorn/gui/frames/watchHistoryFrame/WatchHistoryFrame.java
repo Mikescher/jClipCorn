@@ -41,10 +41,10 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.CachedResourceLoader;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.adapter.TreeExpansionAdapter;
-import de.jClipCorn.util.cciterator.ReverseIterator;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.helper.LookAndFeelManager;
+import de.jClipCorn.util.stream.CCStreams;
 
 public class WatchHistoryFrame extends JFrame {
 	private static final long serialVersionUID = 7210078286644540662L;
@@ -226,14 +226,14 @@ public class WatchHistoryFrame extends JFrame {
 		data.clear();
 		
 		for (CCMovie mov : movielist.iteratorMovies()) {
-			for (CCDateTime timestamp : mov.getViewedHistory()) {
-				if (! timestamp.isUnspecifiedDateTime()) data.add(new WatchHistoryMovieElement(timestamp, mov));
+			for (CCDateTime timestamp : mov.getViewedHistory().iterator().filter(d -> !d.isUnspecifiedDateTime())) {
+				data.add(new WatchHistoryMovieElement(timestamp, mov));
 			}
 		}
 		
 		for (CCEpisode episode : movielist.iteratorEpisodes()) {
-			for (CCDateTime timestamp : episode.getViewedHistory()) {
-				if (! timestamp.isUnspecifiedDateTime()) data.add(new WatchHistoryEpisodeElement(timestamp, episode));
+			for (CCDateTime timestamp : episode.getViewedHistory().iterator().filter(d -> !d.isUnspecifiedDateTime())) {
+				data.add(new WatchHistoryEpisodeElement(timestamp, episode));
 			}
 		}
 		
@@ -249,7 +249,7 @@ public class WatchHistoryFrame extends JFrame {
 
 		CCDate nowD = CCDateTime.getCurrentDateTime().getDate();
 		
-		for (WatchHistoryElement elem : new ReverseIterator<>(data)) {
+		for (WatchHistoryElement elem : CCStreams.iterate(data).reverse()) {
 			if (elem.isMovie() && filter == WatchHistoryFilterType.SERIES) continue;
 			if (elem.isEpisode() && filter == WatchHistoryFilterType.MOVIES) continue;
 
@@ -290,7 +290,7 @@ public class WatchHistoryFrame extends JFrame {
 		edName3.setText(elem.getFullNamePart3());
 		
 		DefaultListModel<CCDateTime> dt = new DefaultListModel<>();
-		for (CCDateTime stamp : elem.getHistory()) dt.addElement(stamp);
+		for (CCDateTime stamp : elem.getHistory().iterator()) dt.addElement(stamp);
 		
 		listHistory.setModel(dt);
 	}

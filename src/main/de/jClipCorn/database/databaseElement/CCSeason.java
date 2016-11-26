@@ -13,10 +13,10 @@ import javax.swing.ImageIcon;
 import org.jdom2.Element;
 
 import de.jClipCorn.database.CCMovieList;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFormat;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieQuality;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieSize;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTags;
+import de.jClipCorn.database.databaseElement.columnTypes.CCFileFormat;
+import de.jClipCorn.database.databaseElement.columnTypes.CCQuality;
+import de.jClipCorn.database.databaseElement.columnTypes.CCFileSize;
+import de.jClipCorn.database.databaseElement.columnTypes.CCTagList;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.LargeMD5Calculator;
 import de.jClipCorn.util.datetime.CCDate;
@@ -156,7 +156,7 @@ public class CCSeason implements ICCDatedElement {
 		return v;
 	}
 	
-	public CCMovieQuality getQuality() {
+	public CCQuality getQuality() {
 		int qs = 0;
 		int qc = 0;
 		for (CCEpisode ep : episodes) {
@@ -168,16 +168,16 @@ public class CCSeason implements ICCDatedElement {
 			int qual = (int) Math.round((qs*1d) / qc);
 			
 			qual = Math.max(0, qual);
-			qual = Math.min(qual, CCMovieQuality.values().length - 1);
+			qual = Math.min(qual, CCQuality.values().length - 1);
 			
-			return CCMovieQuality.getWrapper().find(qual);
+			return CCQuality.getWrapper().find(qual);
 		} else {
-			return CCMovieQuality.STREAM;
+			return CCQuality.STREAM;
 		}
 	}
 	
-	public CCMovieTags getTags() {
-		CCMovieTags i = new CCMovieTags();
+	public CCTagList getTags() {
+		CCTagList i = new CCTagList();
 		
 		for (int j = 0; j < getEpisodeCount(); j++) {
 			i.doUnion(getEpisodeByArrayIndex(j).getTags());
@@ -242,8 +242,8 @@ public class CCSeason implements ICCDatedElement {
 		return CCDate.getAverageDate(dlist);
 	}
 	
-	public CCMovieFormat getFormat() {
-		int l = CCMovieFormat.values().length;
+	public CCFileFormat getFormat() {
+		int l = CCFileFormat.values().length;
 		int[] ls = new int[l];
 		for (int i = 0; i < l; i++) {
 			ls[i] = 0;
@@ -262,17 +262,17 @@ public class CCSeason implements ICCDatedElement {
 			}
 		}
 		
-		return CCMovieFormat.getWrapper().find(maxid);
+		return CCFileFormat.getWrapper().find(maxid);
 	}
 	
-	public CCMovieSize getFilesize() {
+	public CCFileSize getFilesize() {
 		long sz = 0;
 		
 		for (CCEpisode ep : episodes) {
 			sz += ep.getFilesize().getBytes();
 		}
 		
-		return new CCMovieSize(sz);
+		return new CCFileSize(sz);
 	}
 
 	/**
@@ -410,7 +410,10 @@ public class CCSeason implements ICCDatedElement {
 		e.setAttribute("seasonid", seasonID + "");
 		e.setAttribute("title", title);
 		e.setAttribute("year", year + "");
-		e.setAttribute("covername", covername);
+		
+		if (! coverData) {
+			e.setAttribute("covername", covername);
+		}
 		
 		if (coverHash) {
 			e.setAttribute("coverhash", getCoverMD5());

@@ -1,6 +1,7 @@
 package de.jClipCorn.database.util;
 
 import java.awt.Color;
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -15,6 +16,8 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
+import javax.imageio.ImageIO;
+
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.JDOMException;
@@ -26,14 +29,18 @@ import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.CCSeries;
+import de.jClipCorn.database.databaseElement.columnTypes.CCDBElementTyp;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGroup;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTyp;
+import de.jClipCorn.database.util.covercache.CCCoverCache;
+import de.jClipCorn.database.util.covercache.CCFolderCoverCache;
 import de.jClipCorn.gui.frames.addMovieFrame.AddMovieFrame;
 import de.jClipCorn.gui.frames.importElementsFrame.ImportElementsFrame;
 import de.jClipCorn.gui.frames.mainFrame.MainFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.properties.CCProperties;
+import de.jClipCorn.util.TimeKeeper;
+import de.jClipCorn.util.Tuple;
 import de.jClipCorn.util.exceptions.CCFormatException;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.DialogHelper;
@@ -168,6 +175,8 @@ public class ExportHelper {
 
 	public static void exportDatabase(File file, CCMovieList movielist) {
 		try {
+			TimeKeeper.start();
+			
 			FileOutputStream ostream = new FileOutputStream(file);
 			ZipOutputStream zos = new ZipOutputStream(ostream);
 			
@@ -175,9 +184,22 @@ public class ExportHelper {
 			outputXML(zos, movielist.getGroupsAsXML(), DB_XML_FILENAME_GROUPS);
 			outputXML(zos, movielist.getDBInfoAsXML(), DB_XML_FILENAME_INFO);
 			
-			zipDir(movielist.getCoverCache().getCoverDirectory().getParentFile(), movielist.getCoverCache().getCoverDirectory(), zos, false);
+			CCCoverCache cc = movielist.getCoverCache();
+			
+			if (cc instanceof CCFolderCoverCache) {
+				// fast track for already serialized images (~ 6 times faster)
+				zipDir(((CCFolderCoverCache)cc).getCoverDirectory().getParentFile(), ((CCFolderCoverCache)cc).getCoverDirectory(), zos, false);
+			} else {
+				for (Tuple<String, BufferedImage> cover : cc.listCoversNonCached()) {
+					ZipEntry coverEntry = new ZipEntry(PathFormatter.combine("cover", cover.Item1)); //$NON-NLS-1$
+					zos.putNextEntry(coverEntry);
+					ImageIO.write(cover.Item2, "PNG", zos); //$NON-NLS-1$
+				}
+			}
 			
 			zos.close();
+			
+			TimeKeeper.stopAndPrint();
 		} catch (IOException e) {
 			CCLog.addError(e);
 		}
@@ -375,29 +397,29 @@ public class ExportHelper {
 		}
 	}
 	
-	public static CCMovieTyp getTypOfFirstElementOfExport(String xmlcontent) {
+	public static CCDBElementTyp getTypOfFirstElementOfExport(String xmlcontent) {
 		Element value = getFirstElementOfExport(xmlcontent);
 		
 		if (value.getName().equalsIgnoreCase("movie")) {  //$NON-NLS-1$
-			return CCMovieTyp.MOVIE;
+			return CCDBElementTyp.MOVIE;
 		} else if (value.getName().equalsIgnoreCase("series")) { //$NON-NLS-1$
-			return CCMovieTyp.SERIES;
+			return CCDBElementTyp.SERIES;
 		}
 		
 		return null;
 	}
 	
-	public static void openSingleElementFile(File f, MainFrame owner, CCMovieList movielist, CCMovieTyp forceTyp) {
+	public static void openSingleElementFile(File f, MainFrame owner, CCMovieList movielist, CCDBElementTyp forceTyp) {
 		try {
 			String xml = SimpleFileUtils.readUTF8TextFile(f);
-			CCMovieTyp type = null;
+			CCDBElementTyp type = null;
 			if (forceTyp != null && (type = ExportHelper.getTypOfFirstElementOfExport(xml)) != forceTyp) {
 				CCLog.addError(LocaleBundle.getString("LogMessage.FormatErrorInExport")); //$NON-NLS-1$
 				return;
 			}
 			
 			int methodval = 0;
-			if (type == CCMovieTyp.MOVIE) {
+			if (type == CCDBElementTyp.MOVIE) {
 				methodval = DialogHelper.showLocaleOptions(owner, "ExportHelper.dialogs.importDirect", 1); //$NON-NLS-1$
 			}
 			

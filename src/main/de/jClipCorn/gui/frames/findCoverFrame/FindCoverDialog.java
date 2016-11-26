@@ -16,7 +16,7 @@ import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingUtilities;
 
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTyp;
+import de.jClipCorn.database.databaseElement.columnTypes.CCDBElementTyp;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.CachedResourceLoader;
 import de.jClipCorn.gui.resources.Resources;
@@ -46,10 +46,10 @@ public class FindCoverDialog extends JDialog {
 	private CoverImageParser parser;
 	
 	private final ParseResultHandler handler;
-	private final CCMovieTyp typ;
+	private final CCDBElementTyp typ;
 	private JButton btnStop;
 	
-	public FindCoverDialog(Component owner, ParseResultHandler handler, CCMovieTyp typ) {
+	public FindCoverDialog(Component owner, ParseResultHandler handler, CCDBElementTyp typ) {
 		super();
 		this.handler = handler;
 		this.typ = typ;

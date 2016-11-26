@@ -3,12 +3,12 @@ package de.jClipCorn.util.parser.imagesearch.imageparser;
 import java.awt.image.BufferedImage;
 import java.util.List;
 
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTyp;
+import de.jClipCorn.database.databaseElement.columnTypes.CCDBElementTyp;
 import de.jClipCorn.util.datatypes.DoubleString;
 import de.jClipCorn.util.parser.onlineparser.ImDBParser;
 @SuppressWarnings("nls")
 public class ImDBImageParser {
-	public static String getSearchURL(String title, CCMovieTyp typ) {
+	public static String getSearchURL(String title, CCDBElementTyp typ) {
 		switch (ImDBParser.LANGUAGE) {
 		case GERMAN:
 			return ImDBImageParser_Ger.getSearchURL(title, typ);

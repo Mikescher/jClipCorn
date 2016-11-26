@@ -12,11 +12,11 @@ import org.jfree.data.category.DefaultCategoryDataset;
 
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieGenre;
+import de.jClipCorn.database.databaseElement.columnTypes.CCGenre;
 import de.jClipCorn.gui.frames.statisticsFrame.StatisticsTypeFilter;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.util.cciterator.CCIterator;
 import de.jClipCorn.util.helper.StatisticsHelper;
+import de.jClipCorn.util.stream.CCStream;
 
 public class StatisticsGenreChart extends StatisticsChart {
 	public StatisticsGenreChart(CCMovieList ml, StatisticsTypeFilter _source) {
@@ -61,7 +61,7 @@ public class StatisticsGenreChart extends StatisticsChart {
 	}
 	
 	private DefaultCategoryDataset getDataSet(CCMovieList movielist, StatisticsTypeFilter source) {
-		CCIterator<CCDatabaseElement> it = source.iteratorMoviesOrSeries(movielist);
+		CCStream<CCDatabaseElement> it = source.iteratorMoviesOrSeries(movielist);
 		
 		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 		
@@ -70,7 +70,7 @@ public class StatisticsGenreChart extends StatisticsChart {
 		
 		for (int i = 0; i < values.length; i++) {
 			if (tvalues[i] > 0) {
-				dataset.addValue(values[i], "Series0", CCMovieGenre.getWrapper().find(i).asString()); //$NON-NLS-1$
+				dataset.addValue(values[i], "Series0", CCGenre.getWrapper().find(i).asString()); //$NON-NLS-1$
 			}
 		}
 		

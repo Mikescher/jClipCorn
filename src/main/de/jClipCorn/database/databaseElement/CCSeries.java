@@ -15,28 +15,25 @@ import org.apache.commons.lang.text.StrBuilder;
 import org.jdom2.Element;
 
 import de.jClipCorn.database.CCMovieList;
+import de.jClipCorn.database.databaseElement.columnTypes.CCDBElementTyp;
+import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguage;
 import de.jClipCorn.database.databaseElement.columnTypes.CCDateTimeList;
+import de.jClipCorn.database.databaseElement.columnTypes.CCFileFormat;
+import de.jClipCorn.database.databaseElement.columnTypes.CCFileSize;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGroup;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFormat;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieLanguage;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieQuality;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieSize;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTags;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTyp;
+import de.jClipCorn.database.databaseElement.columnTypes.CCQuality;
+import de.jClipCorn.database.databaseElement.columnTypes.CCTagList;
 import de.jClipCorn.database.util.ExtendedViewedState;
 import de.jClipCorn.database.util.ExtendedViewedStateType;
-import de.jClipCorn.database.util.iterator.DirectEpisodesIterator;
+import de.jClipCorn.database.util.iterators.DirectEpisodesIterator;
 import de.jClipCorn.properties.CCProperties;
-import de.jClipCorn.util.LargeMD5Calculator;
-import de.jClipCorn.util.cciterator.CCIterator;
 import de.jClipCorn.util.comparator.CCSeasonComparator;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.datetime.YearRange;
 import de.jClipCorn.util.exceptions.CCFormatException;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.formatter.TimeIntervallFormatter;
-import de.jClipCorn.util.helper.ByteUtilies;
-import de.jClipCorn.util.helper.ImageUtilities;
+import de.jClipCorn.util.stream.CCStream;
 
 public class CCSeries extends CCDatabaseElement {
 	private final static int GUIDE_W_BORDER = 2;
@@ -45,7 +42,7 @@ public class CCSeries extends CCDatabaseElement {
 	private List<CCSeason> seasons = new Vector<>();
 	
 	public CCSeries(CCMovieList ml, int id, int seriesID) {
-		super(ml, CCMovieTyp.SERIES, id, seriesID);
+		super(ml, CCDBElementTyp.SERIES, id, seriesID);
 	}
 	
 	@Override
@@ -83,7 +80,7 @@ public class CCSeries extends CCDatabaseElement {
 		return !(isViewed() || isUnviewed());
 	}
 	
-	public CCMovieQuality getQuality() {
+	public CCQuality getQuality() {
 		int qs = 0;
 		int qc = 0;
 		for (CCSeason se: seasons) {
@@ -95,11 +92,11 @@ public class CCSeries extends CCDatabaseElement {
 			int qual = (int) Math.round((qs*1d) / qc);
 			
 			qual = Math.max(0, qual);
-			qual = Math.min(qual, CCMovieQuality.values().length - 1);
+			qual = Math.min(qual, CCQuality.values().length - 1);
 			
-			return CCMovieQuality.getWrapper().find(qual);
+			return CCQuality.getWrapper().find(qual);
 		} else {
-			return CCMovieQuality.STREAM;
+			return CCQuality.STREAM;
 		}
 	}
 	
@@ -174,14 +171,14 @@ public class CCSeries extends CCDatabaseElement {
 		return CCDate.getAverageDate(dlist);
 	}
 	
-	public CCMovieFormat getFormat() {
-		return iteratorEpisodes().findMostCommon(e -> e.getFormat(), CCMovieFormat.getWrapper().firstValue());
+	public CCFileFormat getFormat() {
+		return iteratorEpisodes().findMostCommon(e -> e.getFormat(), CCFileFormat.getWrapper().firstValue());
 	}
 	
 	@Override
-	public CCMovieSize getFilesize() {
+	public CCFileSize getFilesize() {
 		if (CCMovieList.isBlocked()) {
-			return CCMovieSize.ZERO;
+			return CCFileSize.ZERO;
 		}
 		
 		long sz = 0;
@@ -190,7 +187,7 @@ public class CCSeries extends CCDatabaseElement {
 			sz += se.getFilesize().getBytes();
 		}
 		
-		return new CCMovieSize(sz);
+		return new CCFileSize(sz);
 	}
 	
 	public YearRange getYearRange() {
@@ -209,8 +206,8 @@ public class CCSeries extends CCDatabaseElement {
 		return getYearRange().getLowestYear();
 	}
 	
-	public CCMovieTags getTags() {
-		CCMovieTags i = new CCMovieTags();
+	public CCTagList getTags() {
+		CCTagList i = new CCTagList();
 		
 		for (int j = 0; j < getSeasonCount(); j++) {
 			i.doUnion(getSeasonByArrayIndex(j).getTags());
@@ -365,18 +362,11 @@ public class CCSeries extends CCDatabaseElement {
 		return getSeasonsSorted().indexOf(ccSeason);
 	}
 	
-	@SuppressWarnings("nls")
 	@Override
 	protected void setXMLAttributes(Element e, boolean fileHash, boolean coverHash, boolean coverData) {
 		super.setXMLAttributes(e, fileHash, coverHash, coverData);
 		
-		if (coverHash) {
-			e.setAttribute("coverhash", getCoverMD5());
-		}
-		
-		if (coverData) {
-			e.setAttribute("coverdata", ByteUtilies.byteArrayToHexString(ImageUtilities.imageToByteArray(getCover())));
-		}
+		// series has no more attributes than CCDatabaseElement - for now
 	}
 	
 	@Override
@@ -391,10 +381,6 @@ public class CCSeries extends CCDatabaseElement {
 		}
 		
 		endUpdating();
-	}
-	
-	public String getCoverMD5() {
-		return LargeMD5Calculator.calcMD5(getCover());
 	}
 	
 	@Override
@@ -523,7 +509,7 @@ public class CCSeries extends CCDatabaseElement {
 			if (group.DoSerialize) seriesfoldername += " [["+group.Name+"]]";
 		}
 		
-		if (getLanguage() != CCMovieLanguage.GERMAN) {
+		if (getLanguage() != CCDBLanguage.GERMAN) {
 			seriesfoldername += String.format(" [%s]", getLanguage().getShortString());
 		}
 		
@@ -604,7 +590,7 @@ public class CCSeries extends CCDatabaseElement {
 		return getTitle();
 	}
 	
-	public CCIterator<CCEpisode> iteratorEpisodes() {
+	public CCStream<CCEpisode> iteratorEpisodes() {
 		return new DirectEpisodesIterator(this);
 	}
 }

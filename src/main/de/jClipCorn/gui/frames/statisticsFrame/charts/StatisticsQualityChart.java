@@ -10,11 +10,11 @@ import org.jfree.data.category.DefaultCategoryDataset;
 
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.ICCPlayableElement;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieQuality;
+import de.jClipCorn.database.databaseElement.columnTypes.CCQuality;
 import de.jClipCorn.gui.frames.statisticsFrame.StatisticsTypeFilter;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.util.cciterator.CCIterator;
 import de.jClipCorn.util.helper.StatisticsHelper;
+import de.jClipCorn.util.stream.CCStream;
 
 public class StatisticsQualityChart extends StatisticsChart {
 	public StatisticsQualityChart(CCMovieList ml, StatisticsTypeFilter _source) {
@@ -55,13 +55,13 @@ public class StatisticsQualityChart extends StatisticsChart {
 	}
 
 	private DefaultCategoryDataset getDataSet(CCMovieList movielist, StatisticsTypeFilter source) {
-		CCIterator<ICCPlayableElement> it = source.iteratorMoviesOrEpisodes(movielist);
+		CCStream<ICCPlayableElement> it = source.iteratorMoviesOrEpisodes(movielist);
 		
 		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 		
 		int[] values = StatisticsHelper.getCountForAllQualities(it);
 		
-		for (CCMovieQuality quality : CCMovieQuality.values()) {
+		for (CCQuality quality : CCQuality.values()) {
 			dataset.addValue(values[quality.asInt()], "Series0", quality.asString()); //$NON-NLS-1$
 		}
 		

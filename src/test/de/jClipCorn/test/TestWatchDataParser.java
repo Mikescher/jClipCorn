@@ -9,7 +9,7 @@ import java.util.List;
 import org.junit.Test;
 
 import de.jClipCorn.database.CCMovieList;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieScore;
+import de.jClipCorn.database.databaseElement.columnTypes.CCUserScore;
 import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.helper.SimpleFileUtils;
 import de.jClipCorn.util.parser.watchdata.WatchDataChangeSet;
@@ -48,9 +48,9 @@ public class TestWatchDataParser extends ClipCornBaseTest {
 
 		assertEquals(true, ml.getMovie("Death Proof: Todsicher").isViewed());
 		assertTrue(ml.getMovie("Death Proof: Todsicher").getViewedHistory().contains(CCDateTime.create(11, 12, 2012, 19, 4, 0)));
-		assertEquals(CCMovieScore.RATING_IV, ml.getMovie("Death Proof: Todsicher").getScore());
+		assertEquals(CCUserScore.RATING_IV, ml.getMovie("Death Proof: Todsicher").getScore());
 
 		assertEquals(true, ml.getMovie("Der Bomber").isViewed());
-		assertEquals(CCMovieScore.RATING_V, ml.getMovie("Der Bomber").getScore());
+		assertEquals(CCUserScore.RATING_V, ml.getMovie("Der Bomber").getScore());
 	}
 }

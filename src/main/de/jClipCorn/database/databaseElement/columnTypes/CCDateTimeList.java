@@ -2,42 +2,42 @@ package de.jClipCorn.database.databaseElement.columnTypes;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.exceptions.CCFormatException;
+import de.jClipCorn.util.stream.CCStream;
+import de.jClipCorn.util.stream.IterableStream;
 
 @SuppressWarnings("nls")
-public class CCDateTimeList implements Iterable<CCDateTime> {
+public class CCDateTimeList {
 	private final List<CCDateTime> list;
 	
 	private CCDateTimeList(List<CCDateTime> lst) {
-		list = lst;
-		
-		Collections.sort(list);
+		Collections.sort(lst);
+
+		list = Collections.unmodifiableList(lst);
 	}
 
 	private CCDateTimeList() {
-		list = new ArrayList<>();
+		list = Collections.unmodifiableList(new ArrayList<>());
 	}
 
 	private CCDateTimeList(String[] rawData) throws CCFormatException {
-		list = new ArrayList<>();
-		
-		for (String str : rawData) {
-			list.add(CCDateTime.createFromSQL(str));
-		}
+		List<CCDateTime> lst = new ArrayList<>();
+		for (String str : rawData) lst.add(CCDateTime.createFromSQL(str));
+		Collections.sort(lst);
 
-		Collections.sort(list);
+		list = Collections.unmodifiableList(lst);
 	}
 	
 	public CCDateTimeList(CCDateTime datetime) {
-		list = new ArrayList<>();
-		list.add(datetime);
+		List<CCDateTime> lst = new ArrayList<>();
+		lst.add(datetime);
+		Collections.sort(lst);
 
-		Collections.sort(list);
+		list = Collections.unmodifiableList(lst);
 	}
 	
 	public boolean isEmpty() {
@@ -160,9 +160,8 @@ public class CCDateTimeList implements Iterable<CCDateTime> {
 		return false;
 	}
 
-	@Override
-	public Iterator<CCDateTime> iterator() {
-		return list.iterator();
+	public CCStream<CCDateTime> iterator() {
+		return new IterableStream<>(list);
 	}
 
 	/*

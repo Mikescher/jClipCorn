@@ -15,10 +15,10 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFSK;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieGenre;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieGenreList;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTyp;
+import de.jClipCorn.database.databaseElement.columnTypes.CCFSK;
+import de.jClipCorn.database.databaseElement.columnTypes.CCGenre;
+import de.jClipCorn.database.databaseElement.columnTypes.CCGenreList;
+import de.jClipCorn.database.databaseElement.columnTypes.CCDBElementTyp;
 import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReference;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
@@ -60,7 +60,7 @@ public class ImDBParser_Eng {
 	private final static String JSOUP_ALT_COVER = "div[class=poster] a[href~=/media/rm[0-9]+?/tt[0-9]+.*]";
 	private final static String JSOUP_ALT_COVER_2 = "div[class=poster] a img[src*=/images/]";
 	
-	public static String getSearchURL(String title, CCMovieTyp typ) {
+	public static String getSearchURL(String title, CCDBElementTyp typ) {
 		if (typ == null) {
 			return String.format(BASE_URL + SEARCH_URL_A, HTTPUtilities.escapeURL(title));
 		}
@@ -200,13 +200,13 @@ public class ImDBParser_Eng {
 		return genmap;
 	}
 	
-	public static CCMovieFSK getFSK(String url) {
+	public static CCFSK getFSK(String url) {
 		Map<String, Integer> genmap = getFSKList(url);
 		
 		if (genmap.get(FSK_STANDARD_1) != null) {
-			return CCMovieFSK.getNearest(genmap.get(FSK_STANDARD_1));
+			return CCFSK.getNearest(genmap.get(FSK_STANDARD_1));
 		} else if (genmap.get(FSK_STANDARD_2) != null) {
-			return CCMovieFSK.getNearest(genmap.get(FSK_STANDARD_2));
+			return CCFSK.getNearest(genmap.get(FSK_STANDARD_2));
 		} else { // Get Average from all other Countries
 			int count = 0;
 			double sum = 0;
@@ -222,17 +222,17 @@ public class ImDBParser_Eng {
 			
 			sum = Math.round(sum/count);
 			
-			return CCMovieFSK.getNearest((int) sum);
+			return CCFSK.getNearest((int) sum);
 		}
 	}
 	
-	public static CCMovieGenreList getGenres(String html) {
+	public static CCGenreList getGenres(String html) {
 		List<String> regfind = getContentListBySelector(html, JSOUP_GENRE);
 		
-		CCMovieGenreList result = new CCMovieGenreList();
+		CCGenreList result = new CCGenreList();
 		
 		for (String ng : regfind) {
-			CCMovieGenre genre = CCMovieGenre.parseFromIMDBName(ng.trim());
+			CCGenre genre = CCGenre.parseFromIMDBName(ng.trim());
 			if (! genre.isEmpty()) {
 				result.addGenre(genre);
 			}

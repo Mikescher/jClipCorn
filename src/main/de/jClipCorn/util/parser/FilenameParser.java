@@ -9,8 +9,8 @@ import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGroup;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGroupList;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFormat;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieLanguage;
+import de.jClipCorn.database.databaseElement.columnTypes.CCFileFormat;
+import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguage;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieZyklus;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
@@ -23,9 +23,9 @@ public class FilenameParser {
 	public static FilenameParserResult parse(CCMovieList movielist, String filepath) {
 		Map<Integer, String> addFiles = new HashMap<>();
 		CCGroupList groups = CCGroupList.createEmpty();
-		CCMovieLanguage lang = CCProperties.getInstance().PROP_DATABASE_DEFAULTPARSERLANG.getValue();
+		CCDBLanguage lang = CCProperties.getInstance().PROP_DATABASE_DEFAULTPARSERLANG.getValue();
 		CCMovieZyklus zyklus = null;
-		CCMovieFormat format = null;
+		CCFileFormat format = null;
 		String title = "";
 		
 		String path = PathFormatter.getFilepath(filepath);
@@ -86,7 +86,7 @@ public class FilenameParser {
 			slang = flang.substring(1, flang.length() - 1);
 			boolean succ = false;
 			
-			for (CCMovieLanguage itlang : CCMovieLanguage.values()) {
+			for (CCDBLanguage itlang : CCDBLanguage.values()) {
 				if (slang.equalsIgnoreCase(itlang.getShortString())) {
 					lang = itlang;
 					succ = true;
@@ -137,7 +137,7 @@ public class FilenameParser {
 		
 		// ###################  FORMAT  ###################
 		
-		CCMovieFormat cmf = CCMovieFormat.getMovieFormat(ext);
+		CCFileFormat cmf = CCFileFormat.getMovieFormat(ext);
 		if (cmf != null) {
 			format = cmf;
 		}

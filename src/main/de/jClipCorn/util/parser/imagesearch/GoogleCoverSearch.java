@@ -4,7 +4,7 @@ import java.awt.image.BufferedImage;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTyp;
+import de.jClipCorn.database.databaseElement.columnTypes.CCDBElementTyp;
 import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReference;
 import de.jClipCorn.util.helper.HTTPUtilities;
 import de.jClipCorn.util.listener.FinishListener;
@@ -19,7 +19,7 @@ public class GoogleCoverSearch extends AbstractImageSearch {
 	}
 
 	@Override
-	public void start(CopyOnWriteArrayList<String> exclusions, String searchText, CCMovieTyp typ, CCOnlineReference reference) {
+	public void start(CopyOnWriteArrayList<String> exclusions, String searchText, CCDBElementTyp typ, CCOnlineReference reference) {
 		String url = GoogleImageParser.getSearchURL(searchText, GoogleImageParser.SEARCH_APPENDIX_1);
 		String html = HTTPUtilities.getJavascriptHTML(url, GoogleImageParser.HTMLUNIT_JS_TIMEOUT);
 		List<String> links = GoogleImageParser.extractImageLinks(html, 16, exclusions, progressCallback);

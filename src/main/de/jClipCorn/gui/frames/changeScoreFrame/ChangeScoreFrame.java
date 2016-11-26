@@ -20,7 +20,7 @@ import javax.swing.SwingConstants;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.databaseElement.CCMovie;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieScore;
+import de.jClipCorn.database.databaseElement.columnTypes.CCUserScore;
 import de.jClipCorn.gui.guiComponents.PropertyCheckbox;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.CachedResourceLoader;
@@ -99,71 +99,71 @@ public class ChangeScoreFrame extends JFrame {
 		lblTitle.setBounds(10, 11, 356, 14);
 		getContentPane().add(lblTitle);
 		
-		btnScore0 = new JButton(CCMovieScore.RATING_0.asString());
+		btnScore0 = new JButton(CCUserScore.RATING_0.asString());
 		btnScore0.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				actionNextMovie(CCMovieScore.RATING_0);
+				actionNextMovie(CCUserScore.RATING_0);
 			}
 		});
 		btnScore0.setBounds(202, 36, 120, 23);
 		getContentPane().add(btnScore0);
 		
-		btnScore1 = new JButton(CCMovieScore.RATING_I.asString());
+		btnScore1 = new JButton(CCUserScore.RATING_I.asString());
 		btnScore1.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				actionNextMovie(CCMovieScore.RATING_I);
+				actionNextMovie(CCUserScore.RATING_I);
 			}
 		});
 		btnScore1.setBounds(202, 70, 120, 23);
 		getContentPane().add(btnScore1);
 		
-		btnScore2 = new JButton(CCMovieScore.RATING_II.asString());
+		btnScore2 = new JButton(CCUserScore.RATING_II.asString());
 		btnScore2.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				actionNextMovie(CCMovieScore.RATING_II);
+				actionNextMovie(CCUserScore.RATING_II);
 			}
 		});
 		btnScore2.setBounds(202, 104, 120, 23);
 		getContentPane().add(btnScore2);
 		
-		btnScore3 = new JButton(CCMovieScore.RATING_III.asString());
+		btnScore3 = new JButton(CCUserScore.RATING_III.asString());
 		btnScore3.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				actionNextMovie(CCMovieScore.RATING_III);
+				actionNextMovie(CCUserScore.RATING_III);
 			}
 		});
 		btnScore3.setBounds(202, 138, 120, 23);
 		getContentPane().add(btnScore3);
 		
-		btnScore4 = new JButton(CCMovieScore.RATING_IV.asString());
+		btnScore4 = new JButton(CCUserScore.RATING_IV.asString());
 		btnScore4.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				actionNextMovie(CCMovieScore.RATING_IV);
+				actionNextMovie(CCUserScore.RATING_IV);
 			}
 		});
 		btnScore4.setBounds(202, 172, 120, 23);
 		getContentPane().add(btnScore4);
 		
-		btnScore5 = new JButton(CCMovieScore.RATING_V.asString());
+		btnScore5 = new JButton(CCUserScore.RATING_V.asString());
 		btnScore5.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				actionNextMovie(CCMovieScore.RATING_V);
+				actionNextMovie(CCUserScore.RATING_V);
 			}
 		});
 		btnScore5.setBounds(202, 206, 120, 23);
 		getContentPane().add(btnScore5);
 		
-		btnScoreNo = new JButton(CCMovieScore.RATING_NO.asString());
+		btnScoreNo = new JButton(CCUserScore.RATING_NO.asString());
 		btnScoreNo.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				actionNextMovie(CCMovieScore.RATING_NO);
+				actionNextMovie(CCUserScore.RATING_NO);
 			}
 		});
 		btnScoreNo.setBounds(202, 240, 120, 23);
@@ -210,7 +210,7 @@ public class ChangeScoreFrame extends JFrame {
 		nextMovie();
 	}
 	
-	private void actionNextMovie(CCMovieScore score) {
+	private void actionNextMovie(CCUserScore score) {
 		if (! running) {
 			return;
 		}
@@ -230,7 +230,7 @@ public class ChangeScoreFrame extends JFrame {
 				CCMovie mov = (CCMovie) del;
 				
 				if (cbSkipRated.isSelected()) {
-					if (mov.getScore() != CCMovieScore.RATING_NO) {
+					if (mov.getScore() != CCUserScore.RATING_NO) {
 						nextMovie();
 						return;
 					}
@@ -280,49 +280,49 @@ public class ChangeScoreFrame extends JFrame {
 			private static final long serialVersionUID = -4772892852387370715L;
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				actionNextMovie(CCMovieScore.RATING_0);
+				actionNextMovie(CCUserScore.RATING_0);
 			}
 		});
 		act.put("KEYPRESSED_2", new AbstractAction() {
 			private static final long serialVersionUID = -4772892852387370715L;
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				actionNextMovie(CCMovieScore.RATING_I);
+				actionNextMovie(CCUserScore.RATING_I);
 			}
 		});
 		act.put("KEYPRESSED_3", new AbstractAction() {
 			private static final long serialVersionUID = -4772892852387370715L;
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				actionNextMovie(CCMovieScore.RATING_II);
+				actionNextMovie(CCUserScore.RATING_II);
 			}
 		});
 		act.put("KEYPRESSED_4", new AbstractAction() {
 			private static final long serialVersionUID = -4772892852387370715L;
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				actionNextMovie(CCMovieScore.RATING_III);
+				actionNextMovie(CCUserScore.RATING_III);
 			}
 		});
 		act.put("KEYPRESSED_5", new AbstractAction() {
 			private static final long serialVersionUID = -4772892852387370715L;
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				actionNextMovie(CCMovieScore.RATING_IV);
+				actionNextMovie(CCUserScore.RATING_IV);
 			}
 		});
 		act.put("KEYPRESSED_6", new AbstractAction() {
 			private static final long serialVersionUID = -4772892852387370715L;
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				actionNextMovie(CCMovieScore.RATING_V);
+				actionNextMovie(CCUserScore.RATING_V);
 			}
 		});
 		act.put("KEYPRESSED_B", new AbstractAction() {
 			private static final long serialVersionUID = -4772892852387370715L;
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				actionNextMovie(CCMovieScore.RATING_NO);
+				actionNextMovie(CCUserScore.RATING_NO);
 			}
 		});
 	}

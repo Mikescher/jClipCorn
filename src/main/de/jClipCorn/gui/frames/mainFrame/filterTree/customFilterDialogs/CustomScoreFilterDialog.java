@@ -14,7 +14,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieScore;
+import de.jClipCorn.database.databaseElement.columnTypes.CCUserScore;
 import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomScoreFilter;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.DecimalSearchType;
@@ -118,11 +118,11 @@ public class CustomScoreFilterDialog extends CustomFilterDialog {
 	}
 	
 	private void initValues() {
-		cbxLesser.setModel(new DefaultComboBoxModel<>(CCMovieScore.getWrapper().getList()));
-		cbxGreater.setModel(new DefaultComboBoxModel<>(CCMovieScore.getWrapper().getList()));
-		cbxBetween1.setModel(new DefaultComboBoxModel<>(CCMovieScore.getWrapper().getList()));
-		cbxBetween2.setModel(new DefaultComboBoxModel<>(CCMovieScore.getWrapper().getList()));
-		cbxExactly.setModel(new DefaultComboBoxModel<>(CCMovieScore.getWrapper().getList()));
+		cbxLesser.setModel(new DefaultComboBoxModel<>(CCUserScore.getWrapper().getList()));
+		cbxGreater.setModel(new DefaultComboBoxModel<>(CCUserScore.getWrapper().getList()));
+		cbxBetween1.setModel(new DefaultComboBoxModel<>(CCUserScore.getWrapper().getList()));
+		cbxBetween2.setModel(new DefaultComboBoxModel<>(CCUserScore.getWrapper().getList()));
+		cbxExactly.setModel(new DefaultComboBoxModel<>(CCUserScore.getWrapper().getList()));
 		
 		switch (getFilter().getSearchType()) {
 		case LESSER:
@@ -148,20 +148,20 @@ public class CustomScoreFilterDialog extends CustomFilterDialog {
 	@Override
 	protected void onAfterOK() {
 		if (rdbtnLesser.isSelected()) {
-			getFilter().setHigh(CCMovieScore.getWrapper().find( cbxLesser.getSelectedIndex()));
+			getFilter().setHigh(CCUserScore.getWrapper().find( cbxLesser.getSelectedIndex()));
 			
 			getFilter().setSearchType(DecimalSearchType.LESSER);
 		} else if (rdbtnGreater.isSelected()) {
-			getFilter().setLow(CCMovieScore.getWrapper().find(cbxGreater.getSelectedIndex()));
+			getFilter().setLow(CCUserScore.getWrapper().find(cbxGreater.getSelectedIndex()));
 			
 			getFilter().setSearchType(DecimalSearchType.GREATER);
 		} else if (rdbtnBetween.isSelected()) {
-			getFilter().setLow(CCMovieScore.getWrapper().find(cbxBetween1.getSelectedIndex()));
-			getFilter().setHigh(CCMovieScore.getWrapper().find(cbxBetween2.getSelectedIndex()));
+			getFilter().setLow(CCUserScore.getWrapper().find(cbxBetween1.getSelectedIndex()));
+			getFilter().setHigh(CCUserScore.getWrapper().find(cbxBetween2.getSelectedIndex()));
 			
 			getFilter().setSearchType(DecimalSearchType.IN_RANGE);
 		} else if (rdbtnExactly.isSelected()) {
-			getFilter().setLow(CCMovieScore.getWrapper().find(cbxExactly.getSelectedIndex()));
+			getFilter().setLow(CCUserScore.getWrapper().find(cbxExactly.getSelectedIndex()));
 			
 			getFilter().setSearchType(DecimalSearchType.EXACT);
 		}

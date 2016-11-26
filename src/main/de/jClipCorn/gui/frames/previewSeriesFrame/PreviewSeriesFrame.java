@@ -47,7 +47,7 @@ import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.database.databaseElement.CCSeries;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieScore;
+import de.jClipCorn.database.databaseElement.columnTypes.CCUserScore;
 import de.jClipCorn.database.util.CCDBUpdateListener;
 import de.jClipCorn.database.util.ExportHelper;
 import de.jClipCorn.gui.frames.addEpisodesFrame.AddEpisodesFrame;
@@ -371,7 +371,7 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 		
 		mntmRateSeries = new JMenu(LocaleBundle.getString("PreviewSeriesFrame.Menu.Series.RateSeries")); //$NON-NLS-1$
 		mnSerie.add(mntmRateSeries);
-		for (final CCMovieScore score : CCMovieScore.values()) {
+		for (final CCUserScore score : CCUserScore.values()) {
 			JMenuItem itm = new JMenuItem(score.asString(), score.getIcon());
 			mntmRateSeries.add(itm);
 			itm.addActionListener(new ActionListener() {
@@ -730,7 +730,7 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 			lblViewed.setIcon(ImageUtilities.sliceImage(CachedResourceLoader.getIcon(Resources.ICN_TABLE_VIEWED_TRUE), 0d, (dispSeries.getViewedCount() *1d) / dispSeries.getEpisodeCount()));
 		//}
 
-		if (dispSeries.getScore() == CCMovieScore.RATING_NO) {
+		if (dispSeries.getScore() == CCUserScore.RATING_NO) {
 			lblScore.setText(LocaleBundle.getString("PreviewSeriesFrame.lblScore.text") + " - "); //$NON-NLS-1$ //$NON-NLS-2$
 		} else {
 			lblScore.setText(LocaleBundle.getString("PreviewSeriesFrame.lblScore.text") + " " + dispSeries.getScore().asString()); //$NON-NLS-1$ //$NON-NLS-2$

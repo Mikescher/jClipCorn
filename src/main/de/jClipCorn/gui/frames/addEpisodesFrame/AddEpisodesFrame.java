@@ -38,8 +38,8 @@ import javax.swing.event.ListSelectionListener;
 import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.database.databaseElement.columnTypes.CCDateTimeList;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFormat;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieQuality;
+import de.jClipCorn.database.databaseElement.columnTypes.CCFileFormat;
+import de.jClipCorn.database.databaseElement.columnTypes.CCQuality;
 import de.jClipCorn.gui.frames.inputErrorFrame.InputErrorDialog;
 import de.jClipCorn.gui.frames.omniParserFrame.OmniParserFrame;
 import de.jClipCorn.gui.guiComponents.HFixListCellRenderer;
@@ -335,7 +335,7 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler, 
 		btnCalcQuality.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				CCMovieQuality q = CCMovieQuality.calculateQuality((long)spnSize.getValue(), (int) spnLength.getValue(), 1);
+				CCQuality q = CCQuality.calculateQuality((long)spnSize.getValue(), (int) spnLength.getValue(), 1);
 				
 				cbxQuality.setSelectedIndex(q.asInt());
 			}
@@ -637,7 +637,7 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler, 
 		videoFileChooser.setFileFilter(FileChooserHelper.createLocalFileFilter("AddMovieFrame.videoFileChooser.filterDescription", new Validator<String>() { //$NON-NLS-1$
 			@Override
 			public boolean validate(String val) {
-				return CCMovieFormat.isValidMovieFormat(val);
+				return CCFileFormat.isValidMovieFormat(val);
 			}
 		}));
 
@@ -650,7 +650,7 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler, 
 		massVideoFileChooser.setFileFilter(FileChooserHelper.createLocalFileFilter("AddMovieFrame.videoFileChooser.filterDescription", new Validator<String>() { //$NON-NLS-1$
 			@Override
 			public boolean validate(String val) {
-				return CCMovieFormat.isValidMovieFormat(val);
+				return CCFileFormat.isValidMovieFormat(val);
 			}
 		}));
 
@@ -701,11 +701,11 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler, 
 	}
 
 	private void setDefaultValues() {
-		cbxQuality.setModel(new DefaultComboBoxModel<>(CCMovieQuality.getWrapper().getList()));
-		cbxSideQuality.setModel(new DefaultComboBoxModel<>(CCMovieQuality.getWrapper().getList()));
+		cbxQuality.setModel(new DefaultComboBoxModel<>(CCQuality.getWrapper().getList()));
+		cbxSideQuality.setModel(new DefaultComboBoxModel<>(CCQuality.getWrapper().getList()));
 
-		cbxFormat.setModel(new DefaultComboBoxModel<>(CCMovieFormat.getWrapper().getList()));
-		cbxSideFormat.setModel(new DefaultComboBoxModel<>(CCMovieFormat.getWrapper().getList()));
+		cbxFormat.setModel(new DefaultComboBoxModel<>(CCFileFormat.getWrapper().getList()));
+		cbxSideFormat.setModel(new DefaultComboBoxModel<>(CCFileFormat.getWrapper().getList()));
 	}
 
 	private void onBtnNext() {
@@ -782,8 +782,8 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler, 
 
 		long fsize = (long) spnSize.getValue();
 		int quality = cbxQuality.getSelectedIndex();
-		String csExtn = CCMovieFormat.getWrapper().find(cbxFormat.getSelectedIndex()).asString();
-		String csExta = CCMovieFormat.getWrapper().find(cbxFormat.getSelectedIndex()).asStringAlt();
+		String csExtn = CCFileFormat.getWrapper().find(cbxFormat.getSelectedIndex()).asString();
+		String csExta = CCFileFormat.getWrapper().find(cbxFormat.getSelectedIndex()).asStringAlt();
 
 		String part = edPart.getText();
 
@@ -918,12 +918,12 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler, 
 			ep.setEpisodeNumber(epid);
 			ep.setViewed(false);
 			ep.setLength(0);
-			ep.setFormat(CCMovieFormat.getMovieFormatOrDefault(PathFormatter.getExtension(abspath)));
+			ep.setFormat(CCFileFormat.getMovieFormatOrDefault(PathFormatter.getExtension(abspath)));
 			ep.setFilesize(ff[i].length());
 
 			ep.setPart(PathFormatter.getCCPath(abspath, CCProperties.getInstance().PROP_ADD_MOVIE_RELATIVE_AUTO.getValue()));
 
-			ep.setQuality(CCMovieQuality.STREAM);
+			ep.setQuality(CCQuality.STREAM);
 			ep.setAddDate(CCDate.getCurrentDate());
 
 			ep.endUpdating();
@@ -1126,7 +1126,7 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler, 
 
 		for (int i = 0; i < parent.getEpisodeCount(); i++) {
 			CCEpisode ep = parent.getEpisodeByArrayIndex(i);
-			ep.setQuality(CCMovieQuality.calculateQuality(ep.getFilesize(), ep.getLength(), 1));
+			ep.setQuality(CCQuality.calculateQuality(ep.getFilesize(), ep.getLength(), 1));
 		}
 
 		updateList();
@@ -1170,9 +1170,9 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler, 
 
 			ep.setLength(len);
 			
-			ep.setFormat(CCMovieFormat.getMovieFormatOrDefault(PathFormatter.getExtension(ep.getAbsolutePart())));
+			ep.setFormat(CCFileFormat.getMovieFormatOrDefault(PathFormatter.getExtension(ep.getAbsolutePart())));
 			
-			ep.setQuality(CCMovieQuality.calculateQuality(ep.getFilesize(), ep.getLength(), 1));
+			ep.setQuality(CCQuality.calculateQuality(ep.getFilesize(), ep.getLength(), 1));
 		}
 		
 		//####################################

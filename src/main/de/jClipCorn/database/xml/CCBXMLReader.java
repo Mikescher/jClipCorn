@@ -18,7 +18,7 @@ import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.database.databaseElement.CCSeries;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieGenre;
+import de.jClipCorn.database.databaseElement.columnTypes.CCGenre;
 import de.jClipCorn.gui.frames.mainFrame.MainFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
@@ -238,9 +238,9 @@ public class CCBXMLReader {
 		}
 	}
 	
-	private CCMovieGenre translateGenre(int genre) {
-		if (genre == -1) return CCMovieGenre.getWrapper().find(CCMovieGenre.NO_GENRE);
-		return CCMovieGenre.getWrapper().find(genre);
+	private CCGenre translateGenre(int genre) {
+		if (genre == -1) return CCGenre.getWrapper().find(CCGenre.NO_GENRE);
+		return CCGenre.getWrapper().find(genre);
 	}
 	
 	private String getZyklusName(String fullz) {

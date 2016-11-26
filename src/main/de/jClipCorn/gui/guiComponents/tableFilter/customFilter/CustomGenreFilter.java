@@ -6,8 +6,8 @@ import java.util.regex.Pattern;
 import javax.swing.RowFilter.Entry;
 
 import de.jClipCorn.database.CCMovieList;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieGenre;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieGenreList;
+import de.jClipCorn.database.databaseElement.columnTypes.CCGenre;
+import de.jClipCorn.database.databaseElement.columnTypes.CCGenreList;
 import de.jClipCorn.gui.frames.mainFrame.clipTable.ClipTableModel;
 import de.jClipCorn.gui.frames.mainFrame.filterTree.customFilterDialogs.CustomFilterDialog;
 import de.jClipCorn.gui.frames.mainFrame.filterTree.customFilterDialogs.CustomGenreFilterDialog;
@@ -15,11 +15,11 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.listener.FinishListener;
 
 public class CustomGenreFilter extends AbstractCustomFilter {
-	private CCMovieGenre genre = CCMovieGenre.GENRE_000;
+	private CCGenre genre = CCGenre.GENRE_000;
 	
 	@Override
 	public boolean include(Entry<? extends ClipTableModel, ? extends Object> e) {
-		return ((CCMovieGenreList) e.getValue(ClipTableModel.COLUMN_GENRE)).includes(genre);
+		return ((CCGenreList) e.getValue(ClipTableModel.COLUMN_GENRE)).includes(genre);
 	}
 
 	@Override
@@ -32,11 +32,11 @@ public class CustomGenreFilter extends AbstractCustomFilter {
 		return LocaleBundle.getDeformattedString("FilterTree.Custom.CustomFilterNames.Genre").replace("()", "").trim(); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
 
-	public CCMovieGenre getGenre() {
+	public CCGenre getGenre() {
 		return genre;
 	}
 
-	public void setGenre(CCMovieGenre genre) {
+	public void setGenre(CCGenre genre) {
 		this.genre = genre;
 	}
 	
@@ -74,7 +74,7 @@ public class CustomGenreFilter extends AbstractCustomFilter {
 			return false;
 		}
 		
-		CCMovieGenre f = CCMovieGenre.getWrapper().find(intval);
+		CCGenre f = CCGenre.getWrapper().find(intval);
 		if (f == null) return false;
 		setGenre(f);
 		

@@ -27,35 +27,35 @@ import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.database.databaseElement.ICCDatedElement;
 import de.jClipCorn.database.databaseElement.ICCPlayableElement;
+import de.jClipCorn.database.databaseElement.columnTypes.CCFileSize;
+import de.jClipCorn.database.databaseElement.columnTypes.CCGenre;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGroup;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGroupList;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieGenre;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieSize;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieZyklus;
 import de.jClipCorn.database.driver.CCDatabase;
 import de.jClipCorn.database.driver.DatabaseConnectResult;
-import de.jClipCorn.database.util.CCCoverCache;
 import de.jClipCorn.database.util.CCDBUpdateListener;
 import de.jClipCorn.database.util.backupManager.BackupManager;
-import de.jClipCorn.database.util.iterator.DatabaseIterator;
-import de.jClipCorn.database.util.iterator.DatedElementsIterator;
-import de.jClipCorn.database.util.iterator.EpisodesIterator;
-import de.jClipCorn.database.util.iterator.MoviesIterator;
-import de.jClipCorn.database.util.iterator.PlayablesIterator;
-import de.jClipCorn.database.util.iterator.SeasonsIterator;
-import de.jClipCorn.database.util.iterator.SeriesIterator;
+import de.jClipCorn.database.util.covercache.CCCoverCache;
+import de.jClipCorn.database.util.iterators.DatedElementsIterator;
+import de.jClipCorn.database.util.iterators.EpisodesIterator;
+import de.jClipCorn.database.util.iterators.MoviesIterator;
+import de.jClipCorn.database.util.iterators.PlayablesIterator;
+import de.jClipCorn.database.util.iterators.SeasonsIterator;
+import de.jClipCorn.database.util.iterators.SeriesIterator;
 import de.jClipCorn.gui.frames.initialConfigFrame.InitialConfigFrame;
 import de.jClipCorn.gui.frames.mainFrame.MainFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.properties.CCProperties;
-import de.jClipCorn.util.cciterator.CCIterator;
 import de.jClipCorn.util.comparator.CCDatabaseElementComparator;
 import de.jClipCorn.util.comparator.CCMovieComparator;
 import de.jClipCorn.util.comparator.CCSeriesComparator;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.ApplicationHelper;
+import de.jClipCorn.util.stream.CCStream;
+import de.jClipCorn.util.stream.IterableStream;
 
 public class CCMovieList {
 	private static CCMovieList instance = null;
@@ -63,7 +63,6 @@ public class CCMovieList {
 	private List<CCDatabaseElement> list;
 	
 	private Map<CCGroup, List<CCDatabaseElement>> globalGroupList = new HashMap<>();
-	private CCCoverCache coverCache;
 	private List<CCDBUpdateListener> listener;
 	
 	private CCDatabase database;
@@ -81,7 +80,7 @@ public class CCMovieList {
 	}
 	
 	public static CCMovieList create() {
-		return new CCMovieList(CCDatabase.create());
+		return new CCMovieList(CCDatabase.create(CCProperties.getInstance().PROP_DATABASE_NAME.getValue()));
 	}
 	
 	public static CCMovieList createInMemory() {
@@ -100,7 +99,7 @@ public class CCMovieList {
 				ApplicationHelper.exitApplication(0);
 			}
 
-			database = CCDatabase.create(); // in case db type has changed
+			database = CCDatabase.create(CCProperties.getInstance().PROP_DATABASE_NAME.getValue()); // in case db type has changed
 		}
 	}
 	
@@ -117,7 +116,7 @@ public class CCMovieList {
 	
 					Globals.TIMINGS.start(Globals.TIMING_DATABASE_CONNECT);
 					{
-						DatabaseConnectResult dbcr = database.tryconnect(CCProperties.getInstance().PROP_DATABASE_NAME.getValue());
+						DatabaseConnectResult dbcr = database.tryconnect();
 						
 						if (dbcr == DatabaseConnectResult.ERROR_CANTCONNECT) {
 							CCLog.addFatalError(LocaleBundle.getString("LogMessage.ErrorConnectDB"), database.getLastError()); //$NON-NLS-1$
@@ -135,8 +134,6 @@ public class CCMovieList {
 					}
 					Globals.TIMINGS.stop(Globals.TIMING_MOVIELIST_FILL);
 	
-					coverCache = new CCCoverCache(CCMovieList.this);
-	
 					fireOnAfterLoad();
 				}
 				Globals.TIMINGS.stop(Globals.TIMING_LOAD_TOTAL);
@@ -147,9 +144,8 @@ public class CCMovieList {
 	}
 	
 	public void connectForTests() {
-		database.tryconnect(""); //$NON-NLS-1$
+		database.tryconnect();
 		database.fillMovieList(CCMovieList.this);
-		coverCache = new CCCoverCache(CCMovieList.this);
 	}
 
 	public CCDatabaseElement getDatabaseElementBySort(int row) { // WARNIG SORT <> MOVIEID || SORT IN DATABASE (SORTED BY MOVIEID)
@@ -441,7 +437,7 @@ public class CCMovieList {
 	}
 
 	public CCCoverCache getCoverCache() {
-		return coverCache;
+		return database.getCoverCache();
 	}
 	
 	public void removeEpisodeFromDatabase(CCEpisode ep) {
@@ -464,12 +460,12 @@ public class CCMovieList {
 		return v;
 	}
 
-	public CCMovieSize getTotalSize(boolean includeSeries) {
+	public CCFileSize getTotalSize(boolean includeSeries) {
 		long bytes = 0;
 		for (CCDatabaseElement m : list) {
 			bytes += m.getFilesize().getBytes();
 		}
-		return new CCMovieSize(bytes);
+		return new CCFileSize(bytes);
 	}
 
 	public boolean contains(CCDatabaseElement m) {
@@ -508,7 +504,7 @@ public class CCMovieList {
 		unlinkElementFromGroups(m, m.getGroups());
 		
 		if (! m.getCoverName().isEmpty()) {
-			coverCache.deleteCover(m);
+			getCoverCache().deleteCover(m);
 		}
 	}
 
@@ -521,7 +517,7 @@ public class CCMovieList {
 		unlinkElementFromGroups(s, s.getGroups());
 		
 		if (! s.getCoverName().isEmpty()) {
-			coverCache.deleteCover(s);
+			getCoverCache().deleteCover(s);
 		}
 		
 	}
@@ -580,8 +576,8 @@ public class CCMovieList {
 		return result;
 	}
 
-	public List<CCMovieGenre> getGenreList() {
-		List<CCMovieGenre> result = new ArrayList<>();
+	public List<CCGenre> getGenreList() {
+		List<CCGenre> result = new ArrayList<>();
 		
 		for (CCDatabaseElement el : list) {
 			for (int j = 0; j < el.getGenreCount(); j++) {
@@ -706,43 +702,43 @@ public class CCMovieList {
 		return map;
 	}
 	
-	public CCIterator<CCDatabaseElement> iteratorElements() {
-		return new DatabaseIterator(list);
+	public CCStream<CCDatabaseElement> iteratorElements() {
+		return new IterableStream<>(list);
 	}
 	
-	public CCIterator<CCDatabaseElement> iteratorElementsSorted() {
-		return new DatabaseIterator(list).asSorted(new CCDatabaseElementComparator());
+	public CCStream<CCDatabaseElement> iteratorElementsSorted() {
+		return new IterableStream<>(list).sort(new CCDatabaseElementComparator());
 	}
 	
-	public CCIterator<CCMovie> iteratorMovies() {
+	public CCStream<CCMovie> iteratorMovies() {
 		return new MoviesIterator(list);
 	}
 	
-	public CCIterator<CCMovie> iteratorMoviesSorted() {
-		return iteratorMovies().asSorted(new CCMovieComparator());
+	public CCStream<CCMovie> iteratorMoviesSorted() {
+		return iteratorMovies().sort(new CCMovieComparator());
 	}
 	
-	public CCIterator<CCSeries> iteratorSeries() {
+	public CCStream<CCSeries> iteratorSeries() {
 		return new SeriesIterator(list);
 	}
 
-	public CCIterator<CCSeries> iteratorSeriesSorted() {
-		return iteratorSeries().asSorted(new CCSeriesComparator());
+	public CCStream<CCSeries> iteratorSeriesSorted() {
+		return iteratorSeries().sort(new CCSeriesComparator());
 	}
 	
-	public CCIterator<CCEpisode> iteratorEpisodes() {
+	public CCStream<CCEpisode> iteratorEpisodes() {
 		return new EpisodesIterator(list);
 	}
 	
-	public CCIterator<ICCPlayableElement> iteratorPlayables() {
+	public CCStream<ICCPlayableElement> iteratorPlayables() {
 		return new PlayablesIterator(list);
 	}
 	
-	public CCIterator<CCSeason> iteratorSeasons() {
+	public CCStream<CCSeason> iteratorSeasons() {
 		return new SeasonsIterator(list);
 	}
 	
-	public CCIterator<ICCDatedElement> iteratorDatedElements() {
+	public CCStream<ICCDatedElement> iteratorDatedElements() {
 		return new DatedElementsIterator(list);
 	}
 

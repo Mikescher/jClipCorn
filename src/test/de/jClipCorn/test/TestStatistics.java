@@ -12,10 +12,10 @@ import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.database.databaseElement.ICCDatedElement;
 import de.jClipCorn.database.databaseElement.ICCPlayableElement;
-import de.jClipCorn.util.cciterator.CCIterator;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.datetime.CCDatespan;
 import de.jClipCorn.util.helper.StatisticsHelper;
+import de.jClipCorn.util.stream.CCStream;
 
 public class TestStatistics extends ClipCornBaseTest {
 
@@ -23,13 +23,13 @@ public class TestStatistics extends ClipCornBaseTest {
 	public void testStatisticsHelperSimple() throws Exception {
 		CCMovieList ml = createExampleDB();
 
-		assertEquals(11, StatisticsHelper.getViewedCount(ml.iteratorMovies().asCasted()));
-		assertEquals(86, StatisticsHelper.getViewedCount(ml.iteratorEpisodes().asCasted()));
-		assertEquals(97, StatisticsHelper.getViewedCount(ml.iteratorPlayables().asCasted()));
+		assertEquals(11, StatisticsHelper.getViewedCount(ml.iteratorMovies().cast()));
+		assertEquals(86, StatisticsHelper.getViewedCount(ml.iteratorEpisodes().cast()));
+		assertEquals(97, StatisticsHelper.getViewedCount(ml.iteratorPlayables().cast()));
 		
-		assertEquals(6, StatisticsHelper.getUnviewedCount(ml.iteratorMovies().asCasted()));
-		assertEquals(0, StatisticsHelper.getUnviewedCount(ml.iteratorEpisodes().asCasted()));
-		assertEquals(6, StatisticsHelper.getUnviewedCount(ml.iteratorPlayables().asCasted()));
+		assertEquals(6, StatisticsHelper.getUnviewedCount(ml.iteratorMovies().cast()));
+		assertEquals(0, StatisticsHelper.getUnviewedCount(ml.iteratorEpisodes().cast()));
+		assertEquals(6, StatisticsHelper.getUnviewedCount(ml.iteratorPlayables().cast()));
 		
 		assertEquals(2165, StatisticsHelper.getMovieDuration(ml));
 		assertEquals(2003, StatisticsHelper.getSeriesDuration(ml));
@@ -47,19 +47,19 @@ public class TestStatistics extends ClipCornBaseTest {
 		assertEquals(2003, StatisticsHelper.getViewedSeriesDuration(ml));
 		assertEquals(3548, StatisticsHelper.getViewedTotalDuration(ml));
 
-		assertEquals(CCDate.create(3, 8, 2010), StatisticsHelper.getFirstAddDate(ml.iteratorMovies().asCasted()));
-		assertEquals(CCDate.create(2, 7, 2016), StatisticsHelper.getLastAddDate(ml.iteratorMovies().asCasted()));
-		assertEquals(CCDate.create(13, 12, 2015), StatisticsHelper.getFirstAddDate(ml.iteratorEpisodes().asCasted()));
-		assertEquals(CCDate.create(3, 10, 2016), StatisticsHelper.getLastAddDate(ml.iteratorEpisodes().asCasted()));
+		assertEquals(CCDate.create(3, 8, 2010), StatisticsHelper.getFirstAddDate(ml.iteratorMovies().cast()));
+		assertEquals(CCDate.create(2, 7, 2016), StatisticsHelper.getLastAddDate(ml.iteratorMovies().cast()));
+		assertEquals(CCDate.create(13, 12, 2015), StatisticsHelper.getFirstAddDate(ml.iteratorEpisodes().cast()));
+		assertEquals(CCDate.create(3, 10, 2016), StatisticsHelper.getLastAddDate(ml.iteratorEpisodes().cast()));
 
-		assertEquals(CCDate.create(6, 5, 2016), StatisticsHelper.getFirstWatchedDate(ml.iteratorEpisodes().asCasted()));
-		assertEquals(CCDate.create(3, 10, 2016), StatisticsHelper.getLastWatchedDate(ml.iteratorEpisodes().asCasted()));
+		assertEquals(CCDate.create(6, 5, 2016), StatisticsHelper.getFirstWatchedDate(ml.iteratorEpisodes().cast()));
+		assertEquals(CCDate.create(3, 10, 2016), StatisticsHelper.getLastWatchedDate(ml.iteratorEpisodes().cast()));
 
-		assertEquals(1980, StatisticsHelper.getMinimumYear(ml.iteratorMovies().asCasted()));
-		assertEquals(2012, StatisticsHelper.getMaximumYear(ml.iteratorMovies().asCasted()));
+		assertEquals(1980, StatisticsHelper.getMinimumYear(ml.iteratorMovies().cast()));
+		assertEquals(2012, StatisticsHelper.getMaximumYear(ml.iteratorMovies().cast()));
 		
-		assertEquals(90, StatisticsHelper.getMinimumLength(ml.iteratorMovies().asCasted()));
-		assertEquals(201, StatisticsHelper.getMaximumLength(ml.iteratorMovies().asCasted()));
+		assertEquals(90, StatisticsHelper.getMinimumLength(ml.iteratorMovies().cast()));
+		assertEquals(201, StatisticsHelper.getMaximumLength(ml.iteratorMovies().cast()));
 
 	}
 
@@ -67,13 +67,13 @@ public class TestStatistics extends ClipCornBaseTest {
 	public void testStatisticsHelperGetMovieCountNoException() throws Exception {
 		CCMovieList ml = createExampleDB();
 		
-		StatisticsHelper.getCountForAllDates(CCDate.getMinimumDate(), 128, ml.iteratorPlayables().asCasted());
-		StatisticsHelper.getCountForAllDates(CCDate.getMinimumDate(), 128, ml.iteratorMovies().asCasted());
-		StatisticsHelper.getCountForAllDates(CCDate.getMinimumDate(), 128, ml.iteratorEpisodes().asCasted());
+		StatisticsHelper.getCountForAllDates(CCDate.getMinimumDate(), 128, ml.iteratorPlayables().cast());
+		StatisticsHelper.getCountForAllDates(CCDate.getMinimumDate(), 128, ml.iteratorMovies().cast());
+		StatisticsHelper.getCountForAllDates(CCDate.getMinimumDate(), 128, ml.iteratorEpisodes().cast());
 
-		CCIterator<ICCPlayableElement> it1 = ml.iteratorMovies().asCasted();
-		CCIterator<CCDatabaseElement>  it2 = ml.iteratorMovies().asCasted();
-		CCIterator<ICCDatedElement>    it3 = ml.iteratorMovies().asCasted();
+		CCStream<ICCPlayableElement> it1 = ml.iteratorMovies().cast();
+		CCStream<CCDatabaseElement>  it2 = ml.iteratorMovies().cast();
+		CCStream<ICCDatedElement>    it3 = ml.iteratorMovies().cast();
 		
 		StatisticsHelper.getCountForAllLengths(0, 500, it1);
 		StatisticsHelper.getCountForAllFormats(it1);
@@ -94,30 +94,30 @@ public class TestStatistics extends ClipCornBaseTest {
 		CCMovieList ml = createExampleDB();
 
 		{
-			CCDate mf = StatisticsHelper.getFirstAddDate(ml.iteratorMovies().asCasted());
-			int mdc = StatisticsHelper.getFirstAddDate(ml.iteratorMovies().asCasted()).getDayDifferenceTo(StatisticsHelper.getLastAddDate(ml.iteratorMovies().asCasted())) + 1;
+			CCDate mf = StatisticsHelper.getFirstAddDate(ml.iteratorMovies().cast());
+			int mdc = StatisticsHelper.getFirstAddDate(ml.iteratorMovies().cast()).getDayDifferenceTo(StatisticsHelper.getLastAddDate(ml.iteratorMovies().cast())) + 1;
 			
-			StatisticsHelper.getCumulativeByteCountForAllDates(mf, mdc, ml.iteratorMovies().asCasted());
-			StatisticsHelper.getCumulativeMinuteCountForAllDates(mf, mdc, ml.iteratorMovies().asCasted());
-			StatisticsHelper.getCumulativeFormatCountForAllDates(mf, mdc, ml.iteratorMovies().asCasted());
+			StatisticsHelper.getCumulativeByteCountForAllDates(mf, mdc, ml.iteratorMovies().cast());
+			StatisticsHelper.getCumulativeMinuteCountForAllDates(mf, mdc, ml.iteratorMovies().cast());
+			StatisticsHelper.getCumulativeFormatCountForAllDates(mf, mdc, ml.iteratorMovies().cast());
 		}
 
 		{
-			CCDate sf = StatisticsHelper.getFirstAddDate(ml.iteratorEpisodes().asCasted());
-			int sdc = StatisticsHelper.getFirstAddDate(ml.iteratorEpisodes().asCasted()).getDayDifferenceTo(StatisticsHelper.getLastAddDate(ml.iteratorEpisodes().asCasted())) + 1;
+			CCDate sf = StatisticsHelper.getFirstAddDate(ml.iteratorEpisodes().cast());
+			int sdc = StatisticsHelper.getFirstAddDate(ml.iteratorEpisodes().cast()).getDayDifferenceTo(StatisticsHelper.getLastAddDate(ml.iteratorEpisodes().cast())) + 1;
 	
-			StatisticsHelper.getCumulativeMinuteCountForAllDates(sf, sdc, ml.iteratorEpisodes().asCasted());
-			StatisticsHelper.getCumulativeMinuteCountForAllDates(sf, sdc, ml.iteratorEpisodes().asCasted());
-			StatisticsHelper.getCumulativeFormatCountForAllDates(sf, sdc, ml.iteratorEpisodes().asCasted());
+			StatisticsHelper.getCumulativeMinuteCountForAllDates(sf, sdc, ml.iteratorEpisodes().cast());
+			StatisticsHelper.getCumulativeMinuteCountForAllDates(sf, sdc, ml.iteratorEpisodes().cast());
+			StatisticsHelper.getCumulativeFormatCountForAllDates(sf, sdc, ml.iteratorEpisodes().cast());
 		}
 		
 		{
-			CCDate pf = StatisticsHelper.getFirstAddDate(ml.iteratorPlayables().asCasted());
-			int pdc = StatisticsHelper.getFirstAddDate(ml.iteratorPlayables().asCasted()).getDayDifferenceTo(StatisticsHelper.getLastAddDate(ml.iteratorPlayables().asCasted())) + 1;
+			CCDate pf = StatisticsHelper.getFirstAddDate(ml.iteratorPlayables().cast());
+			int pdc = StatisticsHelper.getFirstAddDate(ml.iteratorPlayables().cast()).getDayDifferenceTo(StatisticsHelper.getLastAddDate(ml.iteratorPlayables().cast())) + 1;
 			
-			StatisticsHelper.getCumulativeMinuteCountForAllDates(pf, pdc, ml.iteratorPlayables().asCasted());
-			StatisticsHelper.getCumulativeMinuteCountForAllDates(pf, pdc, ml.iteratorPlayables().asCasted());
-			StatisticsHelper.getCumulativeFormatCountForAllDates(pf, pdc, ml.iteratorPlayables().asCasted());
+			StatisticsHelper.getCumulativeMinuteCountForAllDates(pf, pdc, ml.iteratorPlayables().cast());
+			StatisticsHelper.getCumulativeMinuteCountForAllDates(pf, pdc, ml.iteratorPlayables().cast());
+			StatisticsHelper.getCumulativeFormatCountForAllDates(pf, pdc, ml.iteratorPlayables().cast());
 		}
 	}
 
@@ -125,11 +125,11 @@ public class TestStatistics extends ClipCornBaseTest {
 	public void testStatisticsHelperNoException() throws Exception {
 		CCMovieList ml = createExampleDB();
 
-		CCDate mindate = StatisticsHelper.getFirstWatchedDate(ml.iteratorEpisodes().asCasted()).getSubDay(1);
-		CCDate maxdate = StatisticsHelper.getLastWatchedDate(ml.iteratorEpisodes().asCasted());
+		CCDate mindate = StatisticsHelper.getFirstWatchedDate(ml.iteratorEpisodes().cast()).getSubDay(1);
+		CCDate maxdate = StatisticsHelper.getLastWatchedDate(ml.iteratorEpisodes().cast());
 		int daycount = mindate.getDayDifferenceTo(maxdate) + 1;
 		
-		StatisticsHelper.getViewedForAllDates(mindate, daycount, ml.iteratorEpisodes().asCasted());
+		StatisticsHelper.getViewedForAllDates(mindate, daycount, ml.iteratorEpisodes().cast());
 		StatisticsHelper.getAllSeriesTimespans(ml, 0);
 		StatisticsHelper.getAllSeriesTimespans(ml, 7);
 		StatisticsHelper.getAllSeriesTimespans(ml, 56);

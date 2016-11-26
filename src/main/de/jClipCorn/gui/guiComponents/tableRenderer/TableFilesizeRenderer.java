@@ -1,6 +1,6 @@
 package de.jClipCorn.gui.guiComponents.tableRenderer;
 
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieSize;
+import de.jClipCorn.database.databaseElement.columnTypes.CCFileSize;
 
 public class TableFilesizeRenderer extends TableRenderer {
 	private static final long serialVersionUID = 1L;
@@ -11,6 +11,6 @@ public class TableFilesizeRenderer extends TableRenderer {
 
 	@Override
     public void setValue(Object value) {
-		setText(((CCMovieSize)value).getFormatted());
+		setText(((CCFileSize)value).getFormatted());
     }
 }

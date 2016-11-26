@@ -1,6 +1,6 @@
 package de.jClipCorn.gui.guiComponents.tableRenderer;
 
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieGenreList;
+import de.jClipCorn.database.databaseElement.columnTypes.CCGenreList;
 import de.jClipCorn.properties.CCProperties;
 
 public class TableGenreRenderer extends TableRenderer {
@@ -13,8 +13,8 @@ public class TableGenreRenderer extends TableRenderer {
 	@Override
     public void setValue(Object value) {
 		if (CCProperties.getInstance().PROP_MAINFRAME_SORT_GENRES.getValue())
-			setText(((CCMovieGenreList)value).asSortedString());
+			setText(((CCGenreList)value).asSortedString());
 		else
-			setText(((CCMovieGenreList)value).asString());
+			setText(((CCGenreList)value).asString());
     }
 }

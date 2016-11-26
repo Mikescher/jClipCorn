@@ -15,9 +15,13 @@ import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.database.databaseElement.CCSeries;
+import de.jClipCorn.database.databaseElement.columnTypes.CCDBElementTyp;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGroup;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTyp;
 import de.jClipCorn.database.util.Statements;
+import de.jClipCorn.database.util.covercache.CCCoverCache;
+import de.jClipCorn.database.util.covercache.CCFolderCoverCache;
+import de.jClipCorn.database.util.covercache.CCMemoryCoverCache;
+import de.jClipCorn.database.util.covercache.CCStubCoverCache;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.properties.CCProperties;
@@ -103,52 +107,63 @@ public class CCDatabase {
 	public final static String TAB_GROUPS_COLUMN_COLOR             = "COLOR";           //$NON-NLS-1$
 	public final static String TAB_GROUPS_COLUMN_SERIALIZE         = "SERIALIZE";       //$NON-NLS-1$
 	
-	private String databasePath;
-	private GenericDatabase db;
+	private final String databasePath;
+	private final GenericDatabase db;
+	private final CCCoverCache coverCache;
 		
 	public final DatabaseUpgradeAssistant upgrader;
 	
-	private CCDatabase(CCDatabaseDriver driver) {
+	private CCDatabase(CCDatabaseDriver driver, String dbPath) {
 		super();
+		
+		databasePath = dbPath;
 		
 		switch (driver) {
 		case DERBY:
 			db = new DerbyDatabase();
+			coverCache = new CCFolderCoverCache(databasePath);
 			break;
 		case SQLITE:
 			db = new SQLiteDatabase();
+			coverCache = new CCFolderCoverCache(databasePath);
 			break;
 		case STUB:
 			db = new StubDatabase();
+			coverCache = new CCStubCoverCache();
 			break;
 		case INMEMORY:
 			db = new MemoryDatabase();
+			coverCache = new CCMemoryCoverCache();
 			break;
+		default:
+			CCLog.addDefaultSwitchError(this, driver);
+			db = null;
+			coverCache = null;
 		}
 		
 		upgrader = new DatabaseUpgradeAssistant(db);
 	}
 	
-	public static CCDatabase create() {
-		return new CCDatabase(CCProperties.getInstance().PROP_DATABASE_DRIVER.getValue());
+	public static CCDatabase create(String dbPath) {
+		return new CCDatabase(CCProperties.getInstance().PROP_DATABASE_DRIVER.getValue(), dbPath);
 	}
 	
 	public static CCDatabase createStub() {
-		return new CCDatabase(CCDatabaseDriver.STUB);
+		return new CCDatabase(CCDatabaseDriver.STUB, ""); //$NON-NLS-1$
 	}
 	
 	public static CCDatabase createInMemory() {
-		return new CCDatabase(CCDatabaseDriver.INMEMORY);
+		return new CCDatabase(CCDatabaseDriver.INMEMORY, ""); //$NON-NLS-1$
 	}
 	
 	public boolean exists(String path) {
 		return db.databaseExists(path);
 	}
 
-	public DatabaseConnectResult tryconnect(String path) {
-		if (db.databaseExists(path)) {
-			if (connect(path)) {
-				CCLog.addInformation(LocaleBundle.getFormattedString("LogMessage.DBConnect", path)); //$NON-NLS-1$
+	public DatabaseConnectResult tryconnect() {
+		if (db.databaseExists(databasePath)) {
+			if (driverConnect()) {
+				CCLog.addInformation(LocaleBundle.getFormattedString("LogMessage.DBConnect", databasePath)); //$NON-NLS-1$
 				
 				return DatabaseConnectResult.SUCESS_CONNECTED;
 			} else {
@@ -157,8 +172,8 @@ public class CCDatabase {
 				return DatabaseConnectResult.ERROR_CANTCONNECT;
 			}
 		} else {
-			if (create(path)) {
-				CCLog.addInformation(LocaleBundle.getFormattedString("LogMessage.DBCreated", path)); //$NON-NLS-1$
+			if (driverCreate()) {
+				CCLog.addInformation(LocaleBundle.getFormattedString("LogMessage.DBCreated", databasePath)); //$NON-NLS-1$
 				
 				return DatabaseConnectResult.SUCCESS_CREATED;
 			} else {
@@ -169,16 +184,18 @@ public class CCDatabase {
 		}
 	}
 
-	private boolean connect(String dbpath) {
+	private boolean driverConnect() {
 		try {
-			if (! db.databaseExists(dbpath)) return false;
+			if (! db.databaseExists(databasePath)) return false;
 			
-			db.establishDBConnection(dbpath);
-			databasePath = dbpath;
+			db.establishDBConnection(databasePath);
 			
 			upgrader.tryUpgrade();
 			
 			Statements.intialize(this);
+			
+			coverCache.connect();
+			
 			return true;
 		} catch (SQLException e) {
 			db.setLastError(e);
@@ -191,6 +208,22 @@ public class CCDatabase {
 			db.setLastError(e);
 			return false;
 		}
+	}
+
+	private boolean driverCreate() {
+		boolean res = db.createNewDatabasefromResourceXML('/' + XML_NAME, databasePath);
+		if (res) {
+			Statements.intialize(this);
+
+			writeNewInformationToDB(INFOKEY_DBVERSION, Main.DBVERSION);
+			writeNewInformationToDB(INFOKEY_DATE, CCDate.getCurrentDate().toStringSQL());
+			writeNewInformationToDB(INFOKEY_TIME, CCTime.getCurrentTime().toStringSQL());
+			writeNewInformationToDB(INFOKEY_USERNAME, ApplicationHelper.getCurrentUsername());
+		}
+		
+		coverCache.connect();
+		
+		return res;
 	}
 	
 	public void disconnect(boolean cleanshutdown) {
@@ -205,23 +238,9 @@ public class CCDatabase {
 	}
 	
 	public void reconnect() {
-		if (! connect(getDBPath())) {
+		if (! driverConnect()) {
 			CCLog.addFatalError(LocaleBundle.getString("LogMessage.CouldNotReconnectToDB"), db.getLastError()); //$NON-NLS-1$
 		}
-	}
-
-	private boolean create(String dbpath) {
-		boolean res = db.createNewDatabasefromResourceXML('/' + XML_NAME, dbpath);
-		if (res) {
-			databasePath = dbpath;
-			Statements.intialize(this);
-
-			writeNewInformationToDB(INFOKEY_DBVERSION, Main.DBVERSION);
-			writeNewInformationToDB(INFOKEY_DATE, CCDate.getCurrentDate().toStringSQL());
-			writeNewInformationToDB(INFOKEY_TIME, CCTime.getCurrentTime().toStringSQL());
-			writeNewInformationToDB(INFOKEY_USERNAME, ApplicationHelper.getCurrentUsername());
-		}
-		return res;
 	}
 
 	/**
@@ -232,7 +251,7 @@ public class CCDatabase {
 	}
 
 	private CCDatabaseElement createDatabaseElementFromDatabase(ResultSet rs, CCMovieList ml) throws SQLException, CCFormatException {
-		if (rs.getInt(TAB_MAIN_COLUMN_TYPE) == CCMovieTyp.MOVIE.asInt()) {
+		if (rs.getInt(TAB_MAIN_COLUMN_TYPE) == CCDBElementTyp.MOVIE.asInt()) {
 			CCMovie mov = new CCMovie(ml, rs.getInt(TAB_MAIN_COLUMN_LOCALID));
 
 			mov.beginUpdating();
@@ -432,7 +451,7 @@ public class CCDatabase {
 			s.setString(25, "");                          // 25   TAB_MAIN_COLUMN_PART_6                
 			s.setInt(26, 0);                              // 26   TAB_MAIN_COLUMN_SCORE                 
 			s.setString(27, "");                          // 27   TAB_MAIN_COLUMN_COVER                 
-			s.setInt(28, CCMovieTyp.MOVIE.asInt());       // 28   TAB_MAIN_COLUMN_TYPE                  
+			s.setInt(28, CCDBElementTyp.MOVIE.asInt());   // 28   TAB_MAIN_COLUMN_TYPE                  
 			s.setInt(29, -1);                             // 29   TAB_MAIN_COLUMN_SERIES_ID             
 
 			s.executeUpdate();
@@ -1088,5 +1107,9 @@ public class CCDatabase {
 
 	public boolean IsInMemory() {
 		return db.IsInMemory();
+	}
+
+	public CCCoverCache getCoverCache() {
+		return coverCache;
 	}
 }

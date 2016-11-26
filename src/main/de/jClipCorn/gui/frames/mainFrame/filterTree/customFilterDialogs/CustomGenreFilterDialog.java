@@ -11,7 +11,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
 
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieGenre;
+import de.jClipCorn.database.databaseElement.columnTypes.CCGenre;
 import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomGenreFilter;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.listener.FinishListener;
@@ -28,7 +28,7 @@ public class CustomGenreFilterDialog extends CustomFilterDialog {
 		super(ft, fl);
 		initGUI();
 		
-		cbxMiddle.setModel(new DefaultComboBoxModel<>(CCMovieGenre.getWrapper().getList()));
+		cbxMiddle.setModel(new DefaultComboBoxModel<>(CCGenre.getWrapper().getList()));
 		cbxMiddle.setSelectedIndex(ft.getGenre().asInt());
 		
 		setLocationRelativeTo(parent);
@@ -65,6 +65,6 @@ public class CustomGenreFilterDialog extends CustomFilterDialog {
 	
 	@Override
 	protected void onAfterOK() {
-		getFilter().setGenre(CCMovieGenre.getWrapper().find(cbxMiddle.getSelectedIndex()));
+		getFilter().setGenre(CCGenre.getWrapper().find(cbxMiddle.getSelectedIndex()));
 	}
 }

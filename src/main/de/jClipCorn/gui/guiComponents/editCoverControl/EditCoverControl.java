@@ -16,7 +16,7 @@ import javax.swing.JPopupMenu;
 import org.gpl.JSplitButton.JSplitButton;
 import org.gpl.JSplitButton.action.SplitButtonActionListener;
 
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTyp;
+import de.jClipCorn.database.databaseElement.columnTypes.CCDBElementTyp;
 import de.jClipCorn.gui.frames.coverCropFrame.CoverCropDialog;
 import de.jClipCorn.gui.frames.findCoverFrame.FindCoverDialog;
 import de.jClipCorn.gui.guiComponents.CoverLabel;
@@ -164,7 +164,7 @@ public class EditCoverControl extends AbstractEditCoverControl {
 	}
 
 	private void showFindCoverDialog() {
-		(new FindCoverDialog(ownerWindow, this, CCMovieTyp.MOVIE)).setVisible(true);
+		(new FindCoverDialog(ownerWindow, this, CCDBElementTyp.MOVIE)).setVisible(true);
 	}
 
 	private void showCropDialog() {

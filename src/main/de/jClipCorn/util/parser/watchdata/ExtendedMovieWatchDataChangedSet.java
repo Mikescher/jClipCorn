@@ -1,15 +1,15 @@
 package de.jClipCorn.util.parser.watchdata;
 
 import de.jClipCorn.database.databaseElement.CCMovie;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieScore;
+import de.jClipCorn.database.databaseElement.columnTypes.CCUserScore;
 import de.jClipCorn.util.datetime.CCDateTime;
 
 public class ExtendedMovieWatchDataChangedSet extends WatchDataChangeSet {
 	private CCMovie mov;
 	private CCDateTime date;
-	private CCMovieScore score;
+	private CCUserScore score;
 	
-	public ExtendedMovieWatchDataChangedSet(CCDateTime d, CCMovieScore s, CCMovie m, boolean newViewed) {
+	public ExtendedMovieWatchDataChangedSet(CCDateTime d, CCUserScore s, CCMovie m, boolean newViewed) {
 		super(newViewed);
 		this.mov = m;
 		this.date = d;
@@ -51,7 +51,7 @@ public class ExtendedMovieWatchDataChangedSet extends WatchDataChangeSet {
 		if (score != null && mov.getScore() != score) {
 			if (b.length()>0)b.append(" & ");
 			
-			if (score == CCMovieScore.RATING_NO) 
+			if (score == CCUserScore.RATING_NO) 
 				b.append("score = #");
 			else 
 				b.append(String.format("score = %d", score.asInt()));

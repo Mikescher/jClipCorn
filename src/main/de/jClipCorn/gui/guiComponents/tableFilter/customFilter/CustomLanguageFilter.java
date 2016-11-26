@@ -6,7 +6,7 @@ import java.util.regex.Pattern;
 import javax.swing.RowFilter.Entry;
 
 import de.jClipCorn.database.CCMovieList;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieLanguage;
+import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguage;
 import de.jClipCorn.gui.frames.mainFrame.clipTable.ClipTableModel;
 import de.jClipCorn.gui.frames.mainFrame.filterTree.customFilterDialogs.CustomFilterDialog;
 import de.jClipCorn.gui.frames.mainFrame.filterTree.customFilterDialogs.CustomLanguageFilterDialog;
@@ -14,7 +14,7 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.listener.FinishListener;
 
 public class CustomLanguageFilter extends AbstractCustomFilter {
-	private CCMovieLanguage language = CCMovieLanguage.GERMAN;
+	private CCDBLanguage language = CCDBLanguage.GERMAN;
 	
 	@Override
 	public boolean include(Entry<? extends ClipTableModel, ? extends Object> e) {
@@ -31,11 +31,11 @@ public class CustomLanguageFilter extends AbstractCustomFilter {
 		return LocaleBundle.getDeformattedString("FilterTree.Custom.CustomFilterNames.Language").replace("()", "").trim(); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
 
-	public CCMovieLanguage getLanguage() {
+	public CCDBLanguage getLanguage() {
 		return language;
 	}
 
-	public void setLanguage(CCMovieLanguage language) {
+	public void setLanguage(CCDBLanguage language) {
 		this.language = language;
 	}
 	
@@ -73,7 +73,7 @@ public class CustomLanguageFilter extends AbstractCustomFilter {
 			return false;
 		}
 		
-		CCMovieLanguage f = CCMovieLanguage.getWrapper().find(intval);
+		CCDBLanguage f = CCDBLanguage.getWrapper().find(intval);
 		if (f == null) return false;
 		setLanguage(f);
 		

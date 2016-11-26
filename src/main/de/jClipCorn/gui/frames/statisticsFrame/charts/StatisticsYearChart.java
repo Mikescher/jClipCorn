@@ -18,8 +18,8 @@ import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.ICCDatedElement;
 import de.jClipCorn.gui.frames.statisticsFrame.StatisticsTypeFilter;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.util.cciterator.CCIterator;
 import de.jClipCorn.util.helper.StatisticsHelper;
+import de.jClipCorn.util.stream.CCStream;
 
 public class StatisticsYearChart extends StatisticsChart {
 
@@ -68,7 +68,7 @@ public class StatisticsYearChart extends StatisticsChart {
 	}
 	
 	private IntervalXYDataset getDataSet(CCMovieList movielist, StatisticsTypeFilter source) {
-		CCIterator<ICCDatedElement> it = source.iteratorMoviesOrSeason(movielist);
+		CCStream<ICCDatedElement> it = source.iteratorMoviesOrSeason(movielist);
 		
 		int minYear = StatisticsHelper.getMinimumYear(movielist.iteratorDatedElements());
 		int maxYear = StatisticsHelper.getMaximumYear(movielist.iteratorDatedElements());

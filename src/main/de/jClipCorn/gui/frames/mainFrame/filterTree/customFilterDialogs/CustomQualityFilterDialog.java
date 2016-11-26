@@ -11,7 +11,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
 
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieQuality;
+import de.jClipCorn.database.databaseElement.columnTypes.CCQuality;
 import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomQualityFilter;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.listener.FinishListener;
@@ -28,7 +28,7 @@ public class CustomQualityFilterDialog extends CustomFilterDialog {
 		super(ft, fl);
 		initGUI();
 		
-		cbxMiddle.setModel(new DefaultComboBoxModel<>(CCMovieQuality.getWrapper().getList()));
+		cbxMiddle.setModel(new DefaultComboBoxModel<>(CCQuality.getWrapper().getList()));
 		cbxMiddle.setSelectedIndex(ft.getQuality().asInt());
 		
 		setLocationRelativeTo(parent);
@@ -65,6 +65,6 @@ public class CustomQualityFilterDialog extends CustomFilterDialog {
 
 	@Override
 	protected void onAfterOK() {
-		getFilter().setQuality(CCMovieQuality.getWrapper().find(cbxMiddle.getSelectedIndex()));
+		getFilter().setQuality(CCQuality.getWrapper().find(cbxMiddle.getSelectedIndex()));
 	}
 }

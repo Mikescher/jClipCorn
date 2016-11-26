@@ -6,7 +6,7 @@ import java.util.regex.Pattern;
 import javax.swing.RowFilter.Entry;
 
 import de.jClipCorn.database.CCMovieList;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFormat;
+import de.jClipCorn.database.databaseElement.columnTypes.CCFileFormat;
 import de.jClipCorn.gui.frames.mainFrame.clipTable.ClipTableModel;
 import de.jClipCorn.gui.frames.mainFrame.filterTree.customFilterDialogs.CustomFilterDialog;
 import de.jClipCorn.gui.frames.mainFrame.filterTree.customFilterDialogs.CustomFormatFilterDialog;
@@ -14,7 +14,7 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.listener.FinishListener;
 
 public class CustomFormatFilter extends AbstractCustomFilter {
-	private CCMovieFormat format = CCMovieFormat.AVI;
+	private CCFileFormat format = CCFileFormat.AVI;
 	
 	@Override
 	public boolean include(Entry<? extends ClipTableModel, ? extends Object> e) {
@@ -31,11 +31,11 @@ public class CustomFormatFilter extends AbstractCustomFilter {
 		return LocaleBundle.getDeformattedString("FilterTree.Custom.CustomFilterNames.Format").replace("()", "").trim(); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
 
-	public CCMovieFormat getFormat() {
+	public CCFileFormat getFormat() {
 		return format;
 	}
 
-	public void setFormat(CCMovieFormat format) {
+	public void setFormat(CCFileFormat format) {
 		this.format = format;
 	}
 	
@@ -78,7 +78,7 @@ public class CustomFormatFilter extends AbstractCustomFilter {
 			return false;
 		}
 		
-		CCMovieFormat f = CCMovieFormat.getWrapper().find(format);
+		CCFileFormat f = CCFileFormat.getWrapper().find(format);
 		if (f == null) return false;
 		setFormat(f);
 		

@@ -12,7 +12,7 @@ import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.database.databaseElement.CCSeries;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieScore;
+import de.jClipCorn.database.databaseElement.columnTypes.CCUserScore;
 import de.jClipCorn.util.Tuple;
 import de.jClipCorn.util.datetime.CCDateTime;
 
@@ -309,19 +309,19 @@ public class WatchDataParser {
 			return null;
 		}
 		
-		CCMovieScore rscore = null;
+		CCUserScore rscore = null;
 		
 		if (score != null && !score.trim().isEmpty()) {
 			score = score.trim();
 			score = score.substring(2, score.length() - 2);
 			
-			if (score.equals("+++")) rscore = CCMovieScore.RATING_V;
-			if (score.equals("++")) rscore = CCMovieScore.RATING_IV;
-			if (score.equals("+")) rscore = CCMovieScore.RATING_III;
-			if (score.equals("0")) rscore = CCMovieScore.RATING_NO;
-			if (score.equals("-")) rscore = CCMovieScore.RATING_II;
-			if (score.equals("--")) rscore = CCMovieScore.RATING_I;
-			if (score.equals("---")) rscore = CCMovieScore.RATING_0;
+			if (score.equals("+++")) rscore = CCUserScore.RATING_V;
+			if (score.equals("++")) rscore = CCUserScore.RATING_IV;
+			if (score.equals("+")) rscore = CCUserScore.RATING_III;
+			if (score.equals("0")) rscore = CCUserScore.RATING_NO;
+			if (score.equals("-")) rscore = CCUserScore.RATING_II;
+			if (score.equals("--")) rscore = CCUserScore.RATING_I;
+			if (score.equals("---")) rscore = CCUserScore.RATING_0;
 			
 			if (rscore == null) {
 				errors.add(String.format("Line[%d] \"%s\" : Score \"%s\" has an invalid value", currLine, line.trim(), score));

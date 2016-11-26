@@ -17,9 +17,9 @@ import javax.swing.SpinnerNumberModel;
 
 import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.database.databaseElement.CCSeries;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFormat;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieLanguage;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieQuality;
+import de.jClipCorn.database.databaseElement.columnTypes.CCFileFormat;
+import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguage;
+import de.jClipCorn.database.databaseElement.columnTypes.CCQuality;
 import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReference;
 import de.jClipCorn.gui.frames.inputErrorFrame.InputErrorDialog;
 import de.jClipCorn.gui.guiComponents.editCoverControl.EditCoverControl;
@@ -187,7 +187,7 @@ public class AddSeasonFrame extends JFrame implements UserDataProblemHandler, Pa
 	}
 
 	@Override
-	public void setMovieFormat(CCMovieFormat cmf) {
+	public void setMovieFormat(CCFileFormat cmf) {
 		// NOP
 	}
 
@@ -217,12 +217,12 @@ public class AddSeasonFrame extends JFrame implements UserDataProblemHandler, Pa
 	}
 
 	@Override
-	public void setMovieLanguage(CCMovieLanguage lang) {
+	public void setMovieLanguage(CCDBLanguage lang) {
 		// NOP
 	}
 
 	@Override
-	public void setQuality(CCMovieQuality q) {
+	public void setQuality(CCQuality q) {
 		// NOP
 	}
 

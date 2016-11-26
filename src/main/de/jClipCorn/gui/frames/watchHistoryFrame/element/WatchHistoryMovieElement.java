@@ -6,11 +6,11 @@ import javax.swing.ImageIcon;
 
 import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.columnTypes.CCDateTimeList;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFormat;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieLanguage;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieQuality;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieSize;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTags;
+import de.jClipCorn.database.databaseElement.columnTypes.CCFileFormat;
+import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguage;
+import de.jClipCorn.database.databaseElement.columnTypes.CCQuality;
+import de.jClipCorn.database.databaseElement.columnTypes.CCFileSize;
+import de.jClipCorn.database.databaseElement.columnTypes.CCTagList;
 import de.jClipCorn.gui.frames.previewMovieFrame.PreviewMovieFrame;
 import de.jClipCorn.gui.frames.watchHistoryFrame.WatchHistoryFrame;
 import de.jClipCorn.gui.resources.CachedResourceLoader;
@@ -42,12 +42,12 @@ public class WatchHistoryMovieElement extends WatchHistoryElement{
 	}
 
 	@Override
-	public CCMovieQuality getQuality() {
+	public CCQuality getQuality() {
 		return Movie.getQuality();
 	}
 
 	@Override
-	public CCMovieLanguage getLanguage() {
+	public CCDBLanguage getLanguage() {
 		return Movie.getLanguage();
 	}
 
@@ -57,17 +57,17 @@ public class WatchHistoryMovieElement extends WatchHistoryElement{
 	}
 
 	@Override
-	public CCMovieTags getTags() {
+	public CCTagList getTags() {
 		return Movie.getTags();
 	}
 
 	@Override
-	public CCMovieFormat getFormat() {
+	public CCFileFormat getFormat() {
 		return Movie.getFormat();
 	}
 
 	@Override
-	public CCMovieSize getSize() {
+	public CCFileSize getSize() {
 		return Movie.getFilesize();
 	}
 

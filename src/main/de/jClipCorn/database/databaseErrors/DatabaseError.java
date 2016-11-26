@@ -11,12 +11,12 @@ import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGroup;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFormat;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieGenre;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieGenreList;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieQuality;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieSize;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTags;
+import de.jClipCorn.database.databaseElement.columnTypes.CCFileFormat;
+import de.jClipCorn.database.databaseElement.columnTypes.CCGenre;
+import de.jClipCorn.database.databaseElement.columnTypes.CCGenreList;
+import de.jClipCorn.database.databaseElement.columnTypes.CCQuality;
+import de.jClipCorn.database.databaseElement.columnTypes.CCFileSize;
+import de.jClipCorn.database.databaseElement.columnTypes.CCTagList;
 import de.jClipCorn.gui.frames.editMovieFrame.EditMovieFrame;
 import de.jClipCorn.gui.frames.editSeriesFrame.EditSeriesFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
@@ -102,6 +102,8 @@ public class DatabaseError {
 			return "[" + ((File)el).getName() + "]"; //$NON-NLS-1$ //$NON-NLS-2$
 		} else if (el1 instanceof CCGroup) {
 			return "[" + ((CCGroup)el).Name + "]"; //$NON-NLS-1$ //$NON-NLS-2$
+		} else if (el1 instanceof String) {
+			return "[" + ((String)el) + "]"; //$NON-NLS-1$ //$NON-NLS-2$
 		} else {
 			return "[?]"; //$NON-NLS-1$
 		}
@@ -231,11 +233,11 @@ public class DatabaseError {
 	private boolean fixError_Duplicate_Genre() {
 		if (el1 instanceof CCDatabaseElement) {
 			CCDatabaseElement elem = (CCDatabaseElement) getElement1();
-			CCMovieGenreList ls = new CCMovieGenreList();
+			CCGenreList ls = new CCGenreList();
 			
 			boolean[] already_used = new boolean[256];
-			for (int i = 0; i < CCMovieGenreList.getMaxListSize(); i++) {
-				CCMovieGenre g = elem.getGenre(i);
+			for (int i = 0; i < CCGenreList.getMaxListSize(); i++) {
+				CCGenre g = elem.getGenre(i);
 				
 				if (! (g.isEmpty() || already_used[g.asInt()])) {
 					ls.addGenre(g);
@@ -255,9 +257,9 @@ public class DatabaseError {
 	private boolean fixError_Incontinous_Genrelist() {
 		if (el1 instanceof CCDatabaseElement) {
 			CCDatabaseElement elem = (CCDatabaseElement) getElement1();
-			CCMovieGenreList ls = new CCMovieGenreList();
+			CCGenreList ls = new CCGenreList();
 			
-			for (int i = 0; i < CCMovieGenreList.getMaxListSize(); i++) {
+			for (int i = 0; i < CCGenreList.getMaxListSize(); i++) {
 				if (! elem.getGenre(i).isEmpty()) {
 					ls.addGenre(elem.getGenre(i));
 				}
@@ -273,9 +275,9 @@ public class DatabaseError {
 	
 	private boolean fixError_Wrong_Filesize() {
 		if (el1 instanceof CCMovie) {
-			CCMovieSize size = CCMovieSize.ZERO;
+			CCFileSize size = CCFileSize.ZERO;
 			for (int i = 0; i < ((CCMovie) el1).getPartcount(); i++) {
-				size = CCMovieSize.addBytes(size, FileSizeFormatter.getFileSize(((CCMovie) el1).getAbsolutePart(i)));
+				size = CCFileSize.addBytes(size, FileSizeFormatter.getFileSize(((CCMovie) el1).getAbsolutePart(i)));
 			}
 			
 			if (size.getBytes() == 0) {
@@ -336,7 +338,7 @@ public class DatabaseError {
 	
 	private boolean fixError_Format_Not_Found() {
 		if (el1 instanceof CCMovie) {
-			CCMovieFormat fmt = CCMovieFormat.getMovieFormat(PathFormatter.getExtension(((CCMovie)el1).getAbsolutePart(0)));
+			CCFileFormat fmt = CCFileFormat.getMovieFormat(PathFormatter.getExtension(((CCMovie)el1).getAbsolutePart(0)));
 			if (fmt != null) {
 				((CCMovie)el1).setFormat(fmt);
 				return true;
@@ -348,7 +350,7 @@ public class DatabaseError {
 		} else if (el1 instanceof CCSeason) {
 			return false;
 		} else if (el1 instanceof CCEpisode) {
-			((CCEpisode)el1).setFormat(CCMovieFormat.getMovieFormat(PathFormatter.getExtension(((CCEpisode)el1).getAbsolutePart())));
+			((CCEpisode)el1).setFormat(CCFileFormat.getMovieFormat(PathFormatter.getExtension(((CCEpisode)el1).getAbsolutePart())));
 			return true;
 		}
 		
@@ -376,14 +378,14 @@ public class DatabaseError {
 	
 	private boolean fixError_Wrong_Quality() {
 		if (el1 instanceof CCMovie) {
-			((CCMovie)el1).setQuality(CCMovieQuality.calculateQuality(((CCMovie)el1).getFilesize(), ((CCMovie)el1).getLength(), ((CCMovie)el1).getPartcount()));
+			((CCMovie)el1).setQuality(CCQuality.calculateQuality(((CCMovie)el1).getFilesize(), ((CCMovie)el1).getLength(), ((CCMovie)el1).getPartcount()));
 			return true;
 		} else if (el1 instanceof CCSeries) {
 			return false;
 		} else if (el1 instanceof CCSeason) {
 			return false;
 		} else if (el1 instanceof CCEpisode) {
-			((CCEpisode)el1).setQuality(CCMovieQuality.calculateQuality(((CCEpisode)el1).getFilesize(), ((CCEpisode)el1).getLength(), 1));
+			((CCEpisode)el1).setQuality(CCQuality.calculateQuality(((CCEpisode)el1).getFilesize(), ((CCEpisode)el1).getLength(), 1));
 			return true;
 		}
 		
@@ -427,7 +429,7 @@ public class DatabaseError {
 		if (el1 instanceof CCMovie) {
 			CCMovie mov = ((CCMovie)el1);
 			
-			mov.setTag(CCMovieTags.TAG_WATCH_LATER, false);
+			mov.setTag(CCTagList.TAG_WATCH_LATER, false);
 
 			return true;
 		} else if (el1 instanceof CCSeries) {
@@ -437,7 +439,7 @@ public class DatabaseError {
 		} else if (el1 instanceof CCEpisode) {
 			CCEpisode epi = ((CCEpisode)el1);
 			
-			epi.setTag(CCMovieTags.TAG_WATCH_LATER, false);
+			epi.setTag(CCTagList.TAG_WATCH_LATER, false);
 
 			return true;
 		}
@@ -449,7 +451,7 @@ public class DatabaseError {
 		if (el1 instanceof CCMovie) {
 			CCMovie mov = ((CCMovie)el1);
 			
-			mov.setTag(CCMovieTags.TAG_WATCH_NEVER, false);
+			mov.setTag(CCTagList.TAG_WATCH_NEVER, false);
 
 			return true;
 		} else if (el1 instanceof CCSeries) {
@@ -459,7 +461,7 @@ public class DatabaseError {
 		} else if (el1 instanceof CCEpisode) {
 			CCEpisode epi = ((CCEpisode)el1);
 			
-			epi.setTag(CCMovieTags.TAG_WATCH_NEVER, false);
+			epi.setTag(CCTagList.TAG_WATCH_NEVER, false);
 
 			return true;
 		}

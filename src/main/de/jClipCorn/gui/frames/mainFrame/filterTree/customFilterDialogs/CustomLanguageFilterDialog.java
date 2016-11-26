@@ -11,7 +11,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
 
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieLanguage;
+import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguage;
 import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomLanguageFilter;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.listener.FinishListener;
@@ -28,7 +28,7 @@ public class CustomLanguageFilterDialog extends CustomFilterDialog {
 		super(ft, fl);
 		initGUI();
 		
-		cbxMiddle.setModel(new DefaultComboBoxModel<>(CCMovieLanguage.getWrapper().getList()));
+		cbxMiddle.setModel(new DefaultComboBoxModel<>(CCDBLanguage.getWrapper().getList()));
 		cbxMiddle.setSelectedIndex(ft.getLanguage().asInt());
 		
 		setLocationRelativeTo(parent);
@@ -65,6 +65,6 @@ public class CustomLanguageFilterDialog extends CustomFilterDialog {
 
 	@Override
 	protected void onAfterOK() {
-		getFilter().setLanguage(CCMovieLanguage.getWrapper().find(cbxMiddle.getSelectedIndex()));
+		getFilter().setLanguage(CCDBLanguage.getWrapper().find(cbxMiddle.getSelectedIndex()));
 	}
 }

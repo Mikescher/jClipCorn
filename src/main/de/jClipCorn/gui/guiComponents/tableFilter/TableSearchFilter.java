@@ -5,10 +5,10 @@ import javax.swing.RowFilter;
 import org.apache.commons.lang.StringUtils;
 
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFormat;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieGenreList;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieLanguage;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieQuality;
+import de.jClipCorn.database.databaseElement.columnTypes.CCFileFormat;
+import de.jClipCorn.database.databaseElement.columnTypes.CCGenreList;
+import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguage;
+import de.jClipCorn.database.databaseElement.columnTypes.CCQuality;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieZyklus;
 import de.jClipCorn.gui.frames.mainFrame.clipTable.ClipTableModel;
 import de.jClipCorn.util.datetime.CCDate;
@@ -38,15 +38,15 @@ public class TableSearchFilter extends RowFilter<ClipTableModel, Object> {
 			return true;
 		}
 		
-		if (((CCMovieQuality)e.getValue(ClipTableModel.COLUMN_QUALITY)).asString().equalsIgnoreCase(searchTerm)) {
+		if (((CCQuality)e.getValue(ClipTableModel.COLUMN_QUALITY)).asString().equalsIgnoreCase(searchTerm)) {
 			return true;
 		}
 		
-		if (((CCMovieLanguage)e.getValue(ClipTableModel.COLUMN_LANGUAGE)).asString().equalsIgnoreCase(searchTerm)) {
+		if (((CCDBLanguage)e.getValue(ClipTableModel.COLUMN_LANGUAGE)).asString().equalsIgnoreCase(searchTerm)) {
 			return true;
 		}
 		
-		if (((CCMovieFormat)e.getValue(ClipTableModel.COLUMN_FORMAT)).asString().equalsIgnoreCase(searchTerm)) {
+		if (((CCFileFormat)e.getValue(ClipTableModel.COLUMN_FORMAT)).asString().equalsIgnoreCase(searchTerm)) {
 			return true;
 		}
 		
@@ -62,7 +62,7 @@ public class TableSearchFilter extends RowFilter<ClipTableModel, Object> {
 			return true;
 		}
 		
-		CCMovieGenreList gl = (CCMovieGenreList) e.getValue(ClipTableModel.COLUMN_GENRE);
+		CCGenreList gl = (CCGenreList) e.getValue(ClipTableModel.COLUMN_GENRE);
 		for (int i = 0; i < gl.getGenreCount(); i++) {
 			if (gl.getGenre(i).asString().equalsIgnoreCase(searchTerm)) {
 				return true;

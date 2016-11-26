@@ -27,7 +27,7 @@ import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.FormSpecs;
 import com.jgoodies.forms.layout.RowSpec;
 
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFormat;
+import de.jClipCorn.database.databaseElement.columnTypes.CCFileFormat;
 import de.jClipCorn.gui.frames.addMovieFrame.AddMovieFrame;
 import de.jClipCorn.gui.frames.mainFrame.MainFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
@@ -223,7 +223,7 @@ public class ScanFolderFrame extends JFrame implements Runnable, MouseListener {
 		File[] files = dir.listFiles(new FileFilter() {
 			@Override
 			public boolean accept(File f) {
-				return (CCMovieFormat.isValidMovieFormat(PathFormatter.getExtension(f.getAbsolutePath())) && !(excludeIfos && PathFormatter.getExtension(f.getAbsolutePath()).equalsIgnoreCase("ifo"))) || f.isDirectory(); //$NON-NLS-1$
+				return (CCFileFormat.isValidMovieFormat(PathFormatter.getExtension(f.getAbsolutePath())) && !(excludeIfos && PathFormatter.getExtension(f.getAbsolutePath()).equalsIgnoreCase("ifo"))) || f.isDirectory(); //$NON-NLS-1$
 			}
 		});
 		

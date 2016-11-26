@@ -4,7 +4,7 @@ import java.awt.image.BufferedImage;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTyp;
+import de.jClipCorn.database.databaseElement.columnTypes.CCDBElementTyp;
 import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReference;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
@@ -21,11 +21,11 @@ public class TMDBPosterSearch extends AbstractImageSearch {
 	}
 
 	@Override
-	public void start(CopyOnWriteArrayList<String> exclusions, String searchText, CCMovieTyp typ, CCOnlineReference reference) {
+	public void start(CopyOnWriteArrayList<String> exclusions, String searchText, CCDBElementTyp typ, CCOnlineReference reference) {
 		CCOnlineReference tmpdbRef = reference;
 		
 		if (tmpdbRef.isUnset()) {
-			if (typ == CCMovieTyp.MOVIE)
+			if (typ == CCDBElementTyp.MOVIE)
 				tmpdbRef = TMDBParser.findMovieDirect(searchText);
 			else
 				tmpdbRef = TMDBParser.findSeriesDirect(searchText);

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTyp;
+import de.jClipCorn.database.databaseElement.columnTypes.CCDBElementTyp;
 import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReference;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.enumerations.ImageSearchImplementation;
@@ -17,12 +17,12 @@ public class CoverImageParser implements FinishListener {
 	private final UpdateCallbackListener updatelistener;
 	private final UpdateCallbackListener finishlistener;
 	private final String searchText;
-	private final CCMovieTyp typ;
+	private final CCDBElementTyp typ;
 	private final CCOnlineReference reference;
 	
 	private final List<AbstractImageSearch> searchImplementations;
 	
-	public CoverImageParser(ProgressCallbackListener pcl, UpdateCallbackListener ucl, UpdateCallbackListener fcl, CCMovieTyp typ, String search, CCOnlineReference ref) {
+	public CoverImageParser(ProgressCallbackListener pcl, UpdateCallbackListener ucl, UpdateCallbackListener fcl, CCDBElementTyp typ, String search, CCOnlineReference ref) {
 		this.proglistener = pcl;
 		this.updatelistener = ucl;
 		this.finishlistener = fcl;

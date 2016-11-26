@@ -18,9 +18,9 @@ import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.ICCPlayableElement;
 import de.jClipCorn.gui.frames.statisticsFrame.StatisticsTypeFilter;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.util.cciterator.CCIterator;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.helper.StatisticsHelper;
+import de.jClipCorn.util.stream.CCStream;
 
 public class StatisticsViewedOverTimeChart extends StatisticsChart {
 
@@ -64,7 +64,7 @@ public class StatisticsViewedOverTimeChart extends StatisticsChart {
 	}
 	
 	private XYDataset getDataSet(CCMovieList movielist, StatisticsTypeFilter source) {
-		CCIterator<ICCPlayableElement> it = source.iteratorMoviesOrEpisodes(movielist);
+		CCStream<ICCPlayableElement> it = source.iteratorMoviesOrEpisodes(movielist);
 		
 		CCDate mindate = StatisticsHelper.getFirstWatchedDate(movielist.iteratorPlayables());
 		CCDate maxdate = StatisticsHelper.getLastWatchedDate(movielist.iteratorPlayables());

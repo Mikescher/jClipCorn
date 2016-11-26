@@ -7,7 +7,7 @@ import javax.swing.RowFilter.Entry;
 
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTyp;
+import de.jClipCorn.database.databaseElement.columnTypes.CCDBElementTyp;
 import de.jClipCorn.gui.frames.mainFrame.clipTable.ClipTableModel;
 import de.jClipCorn.gui.frames.mainFrame.filterTree.customFilterDialogs.CustomFilterDialog;
 import de.jClipCorn.gui.frames.mainFrame.filterTree.customFilterDialogs.CustomTypFilterDialog;
@@ -15,7 +15,7 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.listener.FinishListener;
 
 public class CustomTypFilter extends AbstractCustomFilter {
-	private CCMovieTyp typ = CCMovieTyp.MOVIE;
+	private CCDBElementTyp typ = CCDBElementTyp.MOVIE;
 	
 	@Override
 	public boolean include(Entry<? extends ClipTableModel, ? extends Object> e) {
@@ -32,11 +32,11 @@ public class CustomTypFilter extends AbstractCustomFilter {
 		return LocaleBundle.getDeformattedString("FilterTree.Custom.CustomFilterNames.Typ").replace("()", "").trim(); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
 
-	public CCMovieTyp getTyp() {
+	public CCDBElementTyp getTyp() {
 		return typ;
 	}
 
-	public void setTyp(CCMovieTyp typ) {
+	public void setTyp(CCDBElementTyp typ) {
 		this.typ = typ;
 	}
 	
@@ -74,7 +74,7 @@ public class CustomTypFilter extends AbstractCustomFilter {
 			return false;
 		}
 		
-		CCMovieTyp f = CCMovieTyp.getWrapper().find(intval);
+		CCDBElementTyp f = CCDBElementTyp.getWrapper().find(intval);
 		if (f == null) return false;
 		setTyp(f);
 		

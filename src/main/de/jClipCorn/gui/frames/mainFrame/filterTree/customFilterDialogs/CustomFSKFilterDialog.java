@@ -11,7 +11,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
 
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFSK;
+import de.jClipCorn.database.databaseElement.columnTypes.CCFSK;
 import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomFSKFilter;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.listener.FinishListener;
@@ -28,7 +28,7 @@ public class CustomFSKFilterDialog extends CustomFilterDialog {
 		super(ft, fl);
 		initGUI();
 		
-		cbxMiddle.setModel(new DefaultComboBoxModel<>(CCMovieFSK.getWrapper().getList()));
+		cbxMiddle.setModel(new DefaultComboBoxModel<>(CCFSK.getWrapper().getList()));
 		cbxMiddle.setSelectedIndex(ft.getFSK().asInt());
 		
 		setLocationRelativeTo(parent);
@@ -65,6 +65,6 @@ public class CustomFSKFilterDialog extends CustomFilterDialog {
 	
 	@Override
 	protected void onAfterOK() {
-		getFilter().setFSK(CCMovieFSK.getWrapper().find(cbxMiddle.getSelectedIndex()));
+		getFilter().setFSK(CCFSK.getWrapper().find(cbxMiddle.getSelectedIndex()));
 	}
 }

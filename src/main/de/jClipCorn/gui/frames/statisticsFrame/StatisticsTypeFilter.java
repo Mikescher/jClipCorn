@@ -5,7 +5,7 @@ import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.databaseElement.ICCDatedElement;
 import de.jClipCorn.database.databaseElement.ICCPlayableElement;
 import de.jClipCorn.gui.log.CCLog;
-import de.jClipCorn.util.cciterator.CCIterator;
+import de.jClipCorn.util.stream.CCStream;
 
 public enum StatisticsTypeFilter {
 	MOVIES,
@@ -31,49 +31,49 @@ public enum StatisticsTypeFilter {
 			case BOTH: return containsBoth();
 			
 			default:
-				CCLog.addDefaultSwitchError(this);
+				CCLog.addDefaultSwitchError(this, source);
 				return false;
 		}
 	}
 	
-	public CCIterator<ICCPlayableElement> iteratorMoviesOrEpisodes(CCMovieList movielist) {
+	public CCStream<ICCPlayableElement> iteratorMoviesOrEpisodes(CCMovieList movielist) {
 		switch (this) {
 			case MOVIES: 
-				return movielist.iteratorMovies().asCasted();
+				return movielist.iteratorMovies().cast();
 			case SERIES: 
-				return movielist.iteratorEpisodes().asCasted();
+				return movielist.iteratorEpisodes().cast();
 			case BOTH:   
-				return movielist.iteratorPlayables().asCasted();
+				return movielist.iteratorPlayables().cast();
 			default:
-				CCLog.addDefaultSwitchError(this);
+				CCLog.addDefaultSwitchError(this, this);
 				return null;
 		}
 	}
 	
-	public CCIterator<CCDatabaseElement> iteratorMoviesOrSeries(CCMovieList movielist) {
+	public CCStream<CCDatabaseElement> iteratorMoviesOrSeries(CCMovieList movielist) {
 		switch (this) {
 			case MOVIES: 
-				return movielist.iteratorMovies().asCasted();
+				return movielist.iteratorMovies().cast();
 			case SERIES: 
-				return movielist.iteratorSeries().asCasted();
+				return movielist.iteratorSeries().cast();
 			case BOTH:   
-				return movielist.iteratorElements().asCasted();
+				return movielist.iteratorElements().cast();
 			default:
-				CCLog.addDefaultSwitchError(this);
+				CCLog.addDefaultSwitchError(this, this);
 				return null;
 		}
 	}
 
-	public CCIterator<ICCDatedElement> iteratorMoviesOrSeason(CCMovieList movielist) {
+	public CCStream<ICCDatedElement> iteratorMoviesOrSeason(CCMovieList movielist) {
 		switch (this) {
 			case MOVIES: 
-				return movielist.iteratorMovies().asCasted();
+				return movielist.iteratorMovies().cast();
 			case SERIES: 
-				return movielist.iteratorSeasons().asCasted();
+				return movielist.iteratorSeasons().cast();
 			case BOTH:   
-				return movielist.iteratorDatedElements().asCasted();
+				return movielist.iteratorDatedElements().cast();
 			default:
-				CCLog.addDefaultSwitchError(this);
+				CCLog.addDefaultSwitchError(this, this);
 				return null;
 		}
 	}

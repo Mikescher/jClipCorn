@@ -2,13 +2,13 @@ package de.jClipCorn.gui.guiComponents.tableFilter;
 
 import javax.swing.RowFilter;
 
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFormat;
+import de.jClipCorn.database.databaseElement.columnTypes.CCFileFormat;
 import de.jClipCorn.gui.frames.mainFrame.clipTable.ClipTableModel;
 
 public class TableFormatFilter extends RowFilter<ClipTableModel, Object> {
-	private CCMovieFormat defFormat;
+	private CCFileFormat defFormat;
 	
-	public TableFormatFilter(CCMovieFormat format) {
+	public TableFormatFilter(CCFileFormat format) {
 		super();
 		this.defFormat = format;
 	}

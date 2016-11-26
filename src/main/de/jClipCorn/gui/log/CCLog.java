@@ -32,8 +32,11 @@ public class CCLog {
 
 	private static boolean fatalExit = false;
 	
-	public static void setUnitTestMode() {
+	public static void initUnitTestMode() {
 		isUnitTest = true;
+		log = new Vector<>();
+		listener = new Vector<>();
+		changed = false;
 	}
 	
 	public static void setPath(String p) {
@@ -100,19 +103,22 @@ public class CCLog {
 		add('[' + Thread.currentThread().toString() + ']' + ' ' + msg, CCLogType.LOG_ELEM_UNDEFINED, new Exception().getStackTrace());
 	}
 
-	public static void addDefaultSwitchError(String owner) {
-		addUndefinied("Invalid jump to default switch statement for " + owner); //$NON-NLS-1$
-	}
-
-	public static void addDefaultSwitchError(Class<?> c) {
-		addDefaultSwitchError(c.getSimpleName());
-	}
-
-	public static void addDefaultSwitchError(Object o) {
-		if (o == null) 
-			addDefaultSwitchError("NULL"); //$NON-NLS-1$
+	public static void addDefaultSwitchError(String owner, Object value) {
+		if (value == null)
+			addUndefinied("Invalid jump to default switch statement for " + owner + " (value = NULL)"); //$NON-NLS-1$ //$NON-NLS-2$
 		else
-			addDefaultSwitchError(o.getClass());
+			addUndefinied("Invalid jump to default switch statement for " + owner + " (value = '" + value + "')"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+	}
+
+	public static void addDefaultSwitchError(Class<?> c, Object value) {
+		addDefaultSwitchError(c.getSimpleName(), value);
+	}
+
+	public static void addDefaultSwitchError(Object o, Object value) {
+		if (o == null) 
+			addDefaultSwitchError("NULL", value); //$NON-NLS-1$
+		else
+			addDefaultSwitchError(o.getClass(), value);
 	}
 	
 	public static void addDebug(String msg) {
@@ -129,7 +135,13 @@ public class CCLog {
 		} else {
 			log.add(cle);
 
-			System.out.println(cle.getFormatted().trim()); // This is desired - let it be
+			if (isUnitTest) {
+				// Don't show infos in unit tests
+				if (! cle.isType(CCLogType.LOG_ELEM_INFORMATION))
+					System.out.println(cle.getFormatted().trim());
+			} else {
+				System.out.println(cle.getFormatted().trim());
+			}
 
 			if (type == CCLogType.LOG_ELEM_FATALERROR) {
 				DialogHelper.showDispatchError(LocaleBundle.getString("Main.AbortCaption"), LocaleBundle.getFormattedString("Main.AbortMessage", cle.getFormatted(CCLogElement.FORMAT_LEVEL_MID))); //$NON-NLS-1$ //$NON-NLS-2$

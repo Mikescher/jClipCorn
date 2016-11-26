@@ -2,7 +2,7 @@ package de.jClipCorn.util.parser.imagesearch;
 
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTyp;
+import de.jClipCorn.database.databaseElement.columnTypes.CCDBElementTyp;
 import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReference;
 import de.jClipCorn.util.listener.FinishListener;
 import de.jClipCorn.util.listener.ProgressCallbackListener;
@@ -36,7 +36,7 @@ public abstract class AbstractImageSearch {
 		finishCallback.finish();
 	}
 	
-	public abstract void start(CopyOnWriteArrayList<String> exclusions, String searchText, CCMovieTyp typ, CCOnlineReference reference);
+	public abstract void start(CopyOnWriteArrayList<String> exclusions, String searchText, CCDBElementTyp typ, CCOnlineReference reference);
 
 	public abstract int getProgressMax();
 }

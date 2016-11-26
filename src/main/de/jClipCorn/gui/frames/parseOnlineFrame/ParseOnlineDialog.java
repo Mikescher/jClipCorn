@@ -33,10 +33,10 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFSK;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieGenre;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieGenreList;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTyp;
+import de.jClipCorn.database.databaseElement.columnTypes.CCFSK;
+import de.jClipCorn.database.databaseElement.columnTypes.CCGenre;
+import de.jClipCorn.database.databaseElement.columnTypes.CCGenreList;
+import de.jClipCorn.database.databaseElement.columnTypes.CCDBElementTyp;
 import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineRefType;
 import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReference;
 import de.jClipCorn.gui.frames.allRatingsFrame.AllRatingsDialog;
@@ -67,7 +67,7 @@ public class ParseOnlineDialog extends JDialog {
 	private Map<String, Integer> cbFSKlsAll = null;
 	
 	private final ParseResultHandler owner;
-	private final CCMovieTyp typ;
+	private final CCDBElementTyp typ;
 	
 	private CCOnlineReference selectedReference = CCOnlineReference.createNone();
 
@@ -128,7 +128,7 @@ public class ParseOnlineDialog extends JDialog {
 	private JButton btnFSKAll;
 	private JButton btnExtendedParse;
 
-	public ParseOnlineDialog(Component owner, ParseResultHandler handler, CCMovieTyp typ) {
+	public ParseOnlineDialog(Component owner, ParseResultHandler handler, CCDBElementTyp typ) {
 		setResizable(false);
 		this.owner = handler;
 		this.typ = typ;
@@ -440,16 +440,16 @@ public class ParseOnlineDialog extends JDialog {
 	}
 	
 	private void initComboboxes() {
-		cbxFSK.setModel(new DefaultComboBoxModel<>(CCMovieFSK.getWrapper().getList()));
+		cbxFSK.setModel(new DefaultComboBoxModel<>(CCFSK.getWrapper().getList()));
 		
-		cbxGenre0.setModel(new DefaultComboBoxModel<>(CCMovieGenre.getTrimmedList()));
-		cbxGenre1.setModel(new DefaultComboBoxModel<>(CCMovieGenre.getTrimmedList()));
-		cbxGenre2.setModel(new DefaultComboBoxModel<>(CCMovieGenre.getTrimmedList()));
-		cbxGenre3.setModel(new DefaultComboBoxModel<>(CCMovieGenre.getTrimmedList()));
-		cbxGenre4.setModel(new DefaultComboBoxModel<>(CCMovieGenre.getTrimmedList()));
-		cbxGenre5.setModel(new DefaultComboBoxModel<>(CCMovieGenre.getTrimmedList()));
-		cbxGenre6.setModel(new DefaultComboBoxModel<>(CCMovieGenre.getTrimmedList()));
-		cbxGenre7.setModel(new DefaultComboBoxModel<>(CCMovieGenre.getTrimmedList()));
+		cbxGenre0.setModel(new DefaultComboBoxModel<>(CCGenre.getTrimmedList()));
+		cbxGenre1.setModel(new DefaultComboBoxModel<>(CCGenre.getTrimmedList()));
+		cbxGenre2.setModel(new DefaultComboBoxModel<>(CCGenre.getTrimmedList()));
+		cbxGenre3.setModel(new DefaultComboBoxModel<>(CCGenre.getTrimmedList()));
+		cbxGenre4.setModel(new DefaultComboBoxModel<>(CCGenre.getTrimmedList()));
+		cbxGenre5.setModel(new DefaultComboBoxModel<>(CCGenre.getTrimmedList()));
+		cbxGenre6.setModel(new DefaultComboBoxModel<>(CCGenre.getTrimmedList()));
+		cbxGenre7.setModel(new DefaultComboBoxModel<>(CCGenre.getTrimmedList()));
 	}
 	
 	private void resetAll() {
@@ -572,7 +572,7 @@ public class ParseOnlineDialog extends JDialog {
 		
 		if (parseAll) {
 			results = TMDBParser.searchMulti(edSearchName.getText());
-		} else if (typ == CCMovieTyp.MOVIE) {
+		} else if (typ == CCDBElementTyp.MOVIE) {
 			results = TMDBParser.searchMovies(edSearchName.getText());
 		} else {
 			results = TMDBParser.searchSeries(edSearchName.getText());
@@ -663,8 +663,8 @@ public class ParseOnlineDialog extends JDialog {
 		final int year = ImDBParser.getYear(html);
 		final int score = ImDBParser.getRating(html);
 		final int length = ImDBParser.getLength(html);
-		final CCMovieFSK mfsk = ImDBParser.getFSK(html, url);
-		final CCMovieGenreList mgl = ImDBParser.getGenres(html);
+		final CCFSK mfsk = ImDBParser.getFSK(html, url);
+		final CCGenreList mgl = ImDBParser.getGenres(html);
 		final BufferedImage bci = ImDBParser.getCover(html);
 		cbFSKlsAll = ImDBParser.getFSKList(html, url);
 		
@@ -731,7 +731,7 @@ public class ParseOnlineDialog extends JDialog {
 		
 		TMDBFullResult metadata = TMDBParser.getMetadata(ref.id);
 		
-		CCMovieFSK _mfsk = null;
+		CCFSK _mfsk = null;
 		cbFSKlsAll = new HashMap<>();
 		
 		if (metadata.ImdbRef.isSet()) {
@@ -744,7 +744,7 @@ public class ParseOnlineDialog extends JDialog {
 
 		BufferedImage bci = HTTPUtilities.getImage(metadata.CoverPath);
 
-		final CCMovieFSK mfsk = _mfsk;
+		final CCFSK mfsk = _mfsk;
 		try {
 			SwingUtilities.invokeAndWait(new Runnable() {
 				@Override

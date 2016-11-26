@@ -11,8 +11,8 @@ import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.ICCPlayableElement;
 import de.jClipCorn.gui.frames.statisticsFrame.StatisticsTypeFilter;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.util.cciterator.CCIterator;
 import de.jClipCorn.util.helper.StatisticsHelper;
+import de.jClipCorn.util.stream.CCStream;
 
 public class StatisticsLengthChart extends StatisticsChart {
 	public StatisticsLengthChart(CCMovieList ml, StatisticsTypeFilter _source) {
@@ -48,7 +48,7 @@ public class StatisticsLengthChart extends StatisticsChart {
 	}
 	
 	private XYDataset getDataSet(CCMovieList movielist, StatisticsTypeFilter source) {
-		CCIterator<ICCPlayableElement> it = source.iteratorMoviesOrEpisodes(movielist);
+		CCStream<ICCPlayableElement> it = source.iteratorMoviesOrEpisodes(movielist);
 		
 		int minLen = StatisticsHelper.getMinimumLength(it);
 		int maxLen = StatisticsHelper.getMaximumLength(it);

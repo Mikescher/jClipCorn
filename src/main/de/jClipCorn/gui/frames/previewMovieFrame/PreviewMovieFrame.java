@@ -397,7 +397,7 @@ public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener 
 		
 		DefaultListModel<String> dlsmViewed;
 		lsHistory.setModel(dlsmViewed = new DefaultListModel<>());
-		for (CCDateTime dt : movie.getViewedHistory()) {
+		for (CCDateTime dt : movie.getViewedHistory().iterator()) {
 			dlsmViewed.addElement(dt.toStringUINormal());
 		}
 		

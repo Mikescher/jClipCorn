@@ -24,7 +24,7 @@ import com.sun.java.swing.plaf.windows.WindowsScrollBarUI;
 
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieScore;
+import de.jClipCorn.database.databaseElement.columnTypes.CCUserScore;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieZyklus;
 import de.jClipCorn.database.util.CCDBUpdateListener;
 import de.jClipCorn.gui.frames.mainFrame.MainFrame;
@@ -206,7 +206,7 @@ public class ClipTable extends JScrollPane implements CCDBUpdateListener, ListSe
 			setRowFilter(new TableZyklusFilter(zyklus), RowFilterSource.TABLE_CLICKED);
 		}
 		
-		CCMovieScore score = getScoreUnderMouse(e.getPoint());
+		CCUserScore score = getScoreUnderMouse(e.getPoint());
 		if (e.getButton() == MouseEvent.BUTTON1 && score != null) {
 			setRowFilter(new TableScoreFilter(score), RowFilterSource.TABLE_CLICKED);
 		}
@@ -220,7 +220,7 @@ public class ClipTable extends JScrollPane implements CCDBUpdateListener, ListSe
 	@Override
 	public void mouseMoved(MouseEvent e) {
 		CCMovieZyklus zyklus = getZyklusUnderMouse(e.getPoint());
-		CCMovieScore score = getScoreUnderMouse(e.getPoint());
+		CCUserScore score = getScoreUnderMouse(e.getPoint());
 	
 		if (zyklus == null && score == null) {
 			setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
@@ -314,7 +314,7 @@ public class ClipTable extends JScrollPane implements CCDBUpdateListener, ListSe
 		}
 	}
 	
-	private CCMovieScore getScoreUnderMouse(Point p) {
+	private CCUserScore getScoreUnderMouse(Point p) {
 		if (! CCProperties.getInstance().PROP_MAINFRAME_CLICKABLESCORE.getValue()) return null;
 		
 		int vcol = table.columnAtPoint(p);
@@ -331,9 +331,9 @@ public class ClipTable extends JScrollPane implements CCDBUpdateListener, ListSe
 			return null;
 		}
 		
-		CCMovieScore score = (CCMovieScore) table.getValueAt(vrow, vcol);
+		CCUserScore score = (CCUserScore) table.getValueAt(vrow, vcol);
 		
-		if (score == CCMovieScore.RATING_NO) return null;
+		if (score == CCUserScore.RATING_NO) return null;
 
 		Component renderer = table.getCellRenderer(vrow, vcol).getTableCellRendererComponent(table, score, false, false, mrow, mcol);
 		int width = renderer.getFontMetrics(renderer.getFont()).stringWidth(score.asString());

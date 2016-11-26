@@ -11,10 +11,10 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieFSK;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieGenre;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieGenreList;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTyp;
+import de.jClipCorn.database.databaseElement.columnTypes.CCFSK;
+import de.jClipCorn.database.databaseElement.columnTypes.CCGenre;
+import de.jClipCorn.database.databaseElement.columnTypes.CCGenreList;
+import de.jClipCorn.database.databaseElement.columnTypes.CCDBElementTyp;
 import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReference;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
@@ -49,7 +49,7 @@ public class ImDBParser_Ger {
 	private final static String REGEX_COVER_DIREKT_1 = "id=\"primary-img\"[^>]+src=\"[^\"]+\"[^>]*\\>"; // <img id="primary-img"[^>]+src="[^"]"[^>]\>
 	private final static String REGEX_COVER_DIREKT_2 = "(?<=src=\")[^\"]+(?=\")"; // (?<=src=")[^"]+(?=")
 	
-	public static String getSearchURL(String title, CCMovieTyp typ) {
+	public static String getSearchURL(String title, CCDBElementTyp typ) {
 		if (typ == null) {
 			return String.format(BASE_URL + SEARCH_URL_A, HTTPUtilities.escapeURL(title));
 		}
@@ -168,13 +168,13 @@ public class ImDBParser_Ger {
 		return genmap;
 	}
 	
-	public static CCMovieFSK getFSK(String html, String url) {
+	public static CCFSK getFSK(String html, String url) {
 		Map<String, Integer> genmap = getFSKList(html, url);
 		
 		if (genmap.get(FSK_STANDARD_1) != null) {
-			return CCMovieFSK.getNearest(genmap.get(FSK_STANDARD_1));
+			return CCFSK.getNearest(genmap.get(FSK_STANDARD_1));
 		} else if (genmap.get(FSK_STANDARD_2) != null) {
-			return CCMovieFSK.getNearest(genmap.get(FSK_STANDARD_2));
+			return CCFSK.getNearest(genmap.get(FSK_STANDARD_2));
 		} else { // Get Average from all other Countries
 			int count = 0;
 			double sum = 0;
@@ -193,19 +193,19 @@ public class ImDBParser_Ger {
 			
 			sum = Math.round(sum/count);
 			
-			return CCMovieFSK.getNearest((int) sum);
+			return CCFSK.getNearest((int) sum);
 		}
 	}
 	
-	public static CCMovieGenreList getGenres(String html) {
+	public static CCGenreList getGenres(String html) {
 		String regfind = RegExHelper.find(REGEX_GENRE, html);
 		
-		CCMovieGenreList result = new CCMovieGenreList();
+		CCGenreList result = new CCGenreList();
 		
 		String[] genres = regfind.split(REGEX_GENRE_SPLIT);
 		
 		for (String ng : genres) {
-			CCMovieGenre genre = CCMovieGenre.parseFromIMDBName(ng);
+			CCGenre genre = CCGenre.parseFromIMDBName(ng);
 			if (! genre.isEmpty()) {
 				result.addGenre(genre);
 			}

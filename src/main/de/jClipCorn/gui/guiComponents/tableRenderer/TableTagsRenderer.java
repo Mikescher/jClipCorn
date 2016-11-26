@@ -1,6 +1,6 @@
 package de.jClipCorn.gui.guiComponents.tableRenderer;
 
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieTags;
+import de.jClipCorn.database.databaseElement.columnTypes.CCTagList;
 
 public class TableTagsRenderer extends TableRenderer {
 	private static final long serialVersionUID = 1L;
@@ -11,6 +11,6 @@ public class TableTagsRenderer extends TableRenderer {
 
 	@Override
     public void setValue(Object value) {
-		setIcon(((CCMovieTags) value).getIcon());
+		setIcon(((CCTagList) value).getIcon());
     }
 }

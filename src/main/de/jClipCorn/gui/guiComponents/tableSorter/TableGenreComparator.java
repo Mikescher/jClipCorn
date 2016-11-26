@@ -2,11 +2,11 @@ package de.jClipCorn.gui.guiComponents.tableSorter;
 
 import java.util.Comparator;
 
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieGenreList;
+import de.jClipCorn.database.databaseElement.columnTypes.CCGenreList;
 
-public class TableGenreComparator implements Comparator<CCMovieGenreList>{
+public class TableGenreComparator implements Comparator<CCGenreList>{
 	@Override
-	public int compare(CCMovieGenreList o1, CCMovieGenreList o2) {
-		return CCMovieGenreList.compare(o1, o2);
+	public int compare(CCGenreList o1, CCGenreList o2) {
+		return CCGenreList.compare(o1, o2);
 	}
 }

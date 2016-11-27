@@ -23,17 +23,17 @@ public class TestStatistics extends ClipCornBaseTest {
 	public void testStatisticsHelperSimple() throws Exception {
 		CCMovieList ml = createExampleDB();
 
-		assertEquals(11, StatisticsHelper.getViewedCount(ml.iteratorMovies().cast()));
-		assertEquals(86, StatisticsHelper.getViewedCount(ml.iteratorEpisodes().cast()));
-		assertEquals(97, StatisticsHelper.getViewedCount(ml.iteratorPlayables().cast()));
+		assertEquals((Integer)11, StatisticsHelper.getViewedCount(ml.iteratorMovies().cast()));
+		assertEquals((Integer)86, StatisticsHelper.getViewedCount(ml.iteratorEpisodes().cast()));
+		assertEquals((Integer)97, StatisticsHelper.getViewedCount(ml.iteratorPlayables().cast()));
 		
-		assertEquals(6, StatisticsHelper.getUnviewedCount(ml.iteratorMovies().cast()));
-		assertEquals(0, StatisticsHelper.getUnviewedCount(ml.iteratorEpisodes().cast()));
-		assertEquals(6, StatisticsHelper.getUnviewedCount(ml.iteratorPlayables().cast()));
+		assertEquals((Integer)6, StatisticsHelper.getUnviewedCount(ml.iteratorMovies().cast()));
+		assertEquals((Integer)0, StatisticsHelper.getUnviewedCount(ml.iteratorEpisodes().cast()));
+		assertEquals((Integer)6, StatisticsHelper.getUnviewedCount(ml.iteratorPlayables().cast()));
 		
-		assertEquals(2165, StatisticsHelper.getMovieDuration(ml));
-		assertEquals(2003, StatisticsHelper.getSeriesDuration(ml));
-		assertEquals(4168, StatisticsHelper.getTotalDuration(ml));
+		assertEquals((Integer)2165, StatisticsHelper.getMovieDuration(ml));
+		assertEquals((Integer)2003, StatisticsHelper.getSeriesDuration(ml));
+		assertEquals((Integer)4168, StatisticsHelper.getTotalDuration(ml));
 		
 
 		assertEquals(82481336554L, StatisticsHelper.getMovieSize(ml).getBytes());
@@ -43,9 +43,9 @@ public class TestStatistics extends ClipCornBaseTest {
 		assertEquals(421838388L, StatisticsHelper.getAvgSeriesSize(ml).getBytes());
 		assertEquals(3.8, StatisticsHelper.getAvgImDbRating(ml), 0.1);
 		
-		assertEquals(1545, StatisticsHelper.getViewedMovieDuration(ml));
-		assertEquals(2003, StatisticsHelper.getViewedSeriesDuration(ml));
-		assertEquals(3548, StatisticsHelper.getViewedTotalDuration(ml));
+		assertEquals((Integer)1545, StatisticsHelper.getViewedMovieDuration(ml));
+		assertEquals((Integer)2003, StatisticsHelper.getViewedSeriesDuration(ml));
+		assertEquals((Integer)3548, StatisticsHelper.getViewedTotalDuration(ml));
 
 		assertEquals(CCDate.create(3, 8, 2010), StatisticsHelper.getFirstAddDate(ml.iteratorMovies().cast()));
 		assertEquals(CCDate.create(2, 7, 2016), StatisticsHelper.getLastAddDate(ml.iteratorMovies().cast()));
@@ -55,11 +55,11 @@ public class TestStatistics extends ClipCornBaseTest {
 		assertEquals(CCDate.create(6, 5, 2016), StatisticsHelper.getFirstWatchedDate(ml.iteratorEpisodes().cast()));
 		assertEquals(CCDate.create(3, 10, 2016), StatisticsHelper.getLastWatchedDate(ml.iteratorEpisodes().cast()));
 
-		assertEquals(1980, StatisticsHelper.getMinimumYear(ml.iteratorMovies().cast()));
-		assertEquals(2012, StatisticsHelper.getMaximumYear(ml.iteratorMovies().cast()));
+		assertEquals((Integer)1980, StatisticsHelper.getMinimumYear(ml.iteratorMovies().cast()));
+		assertEquals((Integer)2012, StatisticsHelper.getMaximumYear(ml.iteratorMovies().cast()));
 		
-		assertEquals(90, StatisticsHelper.getMinimumLength(ml.iteratorMovies().cast()));
-		assertEquals(201, StatisticsHelper.getMaximumLength(ml.iteratorMovies().cast()));
+		assertEquals((Integer)90, StatisticsHelper.getMinimumLength(ml.iteratorMovies().cast()));
+		assertEquals((Integer)201, StatisticsHelper.getMaximumLength(ml.iteratorMovies().cast()));
 
 	}
 

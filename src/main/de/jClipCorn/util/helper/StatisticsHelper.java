@@ -32,26 +32,30 @@ import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.datetime.CCDatespan;
 import de.jClipCorn.util.stream.CCStream;
 
+/*
+ * We need to return an unboxed Integer in many methods due to an OpenJDK compiler bug
+ * https://bugs.openjdk.java.net/browse/JDK-8056038
+ */
 public class StatisticsHelper {
 	public final static int[] CHART_COLORS = {0x4D4D4D, 0x5DA5DA, 0xFAA43A, 0x60BD68, 0xF17CB0, 0xB2912F, 0xB276B2, 0x000080, 0xF15854};
 	
-	public static int getViewedCount(CCStream<ICCPlayableElement> it) {
+	public static Integer getViewedCount(CCStream<ICCPlayableElement> it) {
 		return it.filter(e -> e.isViewed()).count();
 	}
 	
-	public static int getUnviewedCount(CCStream<ICCPlayableElement> it) {
+	public static Integer getUnviewedCount(CCStream<ICCPlayableElement> it) {
 		return it.filter(e -> !e.isViewed()).count();
 	}
 
-	public static int getMovieDuration(CCMovieList ml) {
+	public static Integer getMovieDuration(CCMovieList ml) {
 		return ml.iteratorMovies().sum(m -> m.getLength(), (a, b) -> a + b, 0);
 	}
 
-	public static int getSeriesDuration(CCMovieList ml) {
+	public static Integer getSeriesDuration(CCMovieList ml) {
 		return ml.iteratorEpisodes().sum(m -> m.getLength(), (a, b) -> a + b, 0);
 	}
 
-	public static int getTotalDuration(CCMovieList ml) {
+	public static Integer getTotalDuration(CCMovieList ml) {
 		return ml.iteratorPlayables().sum(m -> m.getLength(), (a, b) -> a + b, 0);
 	}
 
@@ -95,15 +99,15 @@ public class StatisticsHelper {
 		return ((int) ((c / (ml.getElementCount() * 1d)) * 5)) / 10d;
 	}
 
-	public static int getViewedMovieDuration(CCMovieList ml) {
+	public static Integer getViewedMovieDuration(CCMovieList ml) {
 		return ml.iteratorMovies().filter(m -> m.isViewed()).sum(m -> m.getLength(), (a, b) -> a + b, 0);
 	}
 
-	public static int getViewedSeriesDuration(CCMovieList ml) {
+	public static Integer getViewedSeriesDuration(CCMovieList ml) {
 		return ml.iteratorEpisodes().filter(m -> m.isViewed()).sum(m -> m.getLength(), (a, b) -> a + b, 0);
 	}
 
-	public static int getViewedTotalDuration(CCMovieList ml) {
+	public static Integer getViewedTotalDuration(CCMovieList ml) {
 		return ml.iteratorPlayables().filter(m -> m.isViewed()).sum(m -> m.getLength(), (a, b) -> a + b, 0);
 	}
 	
@@ -134,11 +138,11 @@ public class StatisticsHelper {
 		return ls;
 	}
 	
-	public static int getMinimumLength(CCStream<ICCPlayableElement> it) {
+	public static Integer getMinimumLength(CCStream<ICCPlayableElement> it) {
 		return it.minOrDefault(m -> m.getLength(), Integer::compare, -1);
 	}
 	
-	public static int getMaximumLength(CCStream<ICCPlayableElement> it) {
+	public static Integer getMaximumLength(CCStream<ICCPlayableElement> it) {
 		return it.maxOrDefault(m -> m.getLength(), Integer::compare, -1);
 	}
 	
@@ -229,11 +233,11 @@ public class StatisticsHelper {
 		return result;
 	}
 	
-	public static int getMinimumYear(CCStream<ICCDatedElement> it) {
+	public static Integer getMinimumYear(CCStream<ICCDatedElement> it) {
 		return it.minOrDefault(e -> e.getYear(), Integer::compare, 0);
 	}
 	
-	public static int getMaximumYear(CCStream<ICCDatedElement> it) {
+	public static Integer getMaximumYear(CCStream<ICCDatedElement> it) {
 		return it.maxOrDefault(e -> e.getYear(), Integer::compare, 0);
 	}
 	

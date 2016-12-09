@@ -77,6 +77,7 @@ jclipcorn.*
 *.exe
 *.7z
 *.zip
+*.jxmlbkp
 
 jClipCornPermissionTest.emptyfile
 

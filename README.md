@@ -25,7 +25,7 @@ jClipCorn [![Build Status](https://api.travis-ci.org/Mikescher/jClipCorn.svg)](h
 #[> DOWNLOAD](http://www.github.com/Mikescher/jClipCorn/releases)
 ###[> HOMEPAGE](http://www.mikescher.com/programs/view/jClipCorn)
 ###[> GITHUB WIKI](https://github.com/Mikescher/jClipCorn/wiki)
-###[> CHANGELOG](https://raw.githubusercontent.com/Mikescher/jClipCorn/master/changelog.txt)
+###[> CHANGELOG](https://raw.githubusercontent.com/Mikescher/jClipCorn/master/CHANGELOG.txt)
 
 ### Organization
 

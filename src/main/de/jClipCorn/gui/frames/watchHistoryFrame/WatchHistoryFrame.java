@@ -31,7 +31,6 @@ import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.gui.frames.watchHistoryFrame.element.WatchHistoryElement;
 import de.jClipCorn.gui.frames.watchHistoryFrame.element.WatchHistoryEpisodeElement;
 import de.jClipCorn.gui.frames.watchHistoryFrame.element.WatchHistoryMovieElement;
-import de.jClipCorn.gui.frames.watchHistoryFrame.table.WatchHistoryTable;
 import de.jClipCorn.gui.guiComponents.CoverLabel;
 import de.jClipCorn.gui.guiComponents.ReadableTextField;
 import de.jClipCorn.gui.guiComponents.jSimpleTree.SimpleTreeNode;

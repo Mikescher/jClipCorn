@@ -29,7 +29,7 @@ import de.jClipCorn.util.helper.SimpleFileUtils;
 public class TextExportFrame extends JFrame {
 	private static final long serialVersionUID = -807033167837187549L;
 	
-	private CCMovieList movielist;
+	private final CCMovieList movielist;
 	
 	private JTextArea memoResult;
 	private JScrollPane scrollPane;

@@ -1,4 +1,4 @@
-package de.jClipCorn.gui.frames.watchHistoryFrame.table;
+package de.jClipCorn.gui.guiComponents.jCCSimpleTable;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -12,32 +12,30 @@ import javax.swing.event.ListSelectionListener;
 import com.sun.java.swing.plaf.windows.WindowsScrollBarUI;
 
 import de.jClipCorn.gui.frames.mainFrame.clipTable.ClipVerticalScrollbarUI;
-import de.jClipCorn.gui.frames.watchHistoryFrame.WatchHistoryFrame;
-import de.jClipCorn.gui.frames.watchHistoryFrame.element.WatchHistoryElement;
 import de.jClipCorn.util.TableColumnAdjuster;
 
-public class WatchHistoryTable extends JScrollPane implements ListSelectionListener, MouseListener {
-	private static final long serialVersionUID = 4348817188505924336L;
+public abstract class JCCSimpleTable<TData> extends JScrollPane implements ListSelectionListener, MouseListener {
+	private static final long serialVersionUID = -87600498201225357L;
+	
+	private final List<JCCSimpleColumnPrototype<TData>> columns;
+	private final JCCSimpleTableModel<TData> model;
+	private final JCCSimpleSFixTable<TData> table;
 
-	private SFixWatchHistoryTable table;
-	private WatchHistoryTableModel model;
-	private WatchHistoryFrame owner;
-
-	private TableColumnAdjuster adjuster;
-
-	public WatchHistoryTable(WatchHistoryFrame owner) {
+	private final TableColumnAdjuster adjuster;
+	
+	public JCCSimpleTable() {
 		super();
-		this.owner = owner;
+		
+		columns = configureColumns();
+		model = new JCCSimpleTableModel<>(columns);
 
-		model = new WatchHistoryTableModel();
-
-		table = new SFixWatchHistoryTable(model);
+		table = new JCCSimpleSFixTable<>(model, columns);
 		configureTable();
 
 		this.setViewportView(table);
 
 		adjuster = new TableColumnAdjuster(table);
-		adjuster.setMaxAdjustWidth(400);
+		adjuster.setMaxAdjustWidth(getColumnAdjusterMaxWidth());
 		adjuster.setOnlyAdjustLarger(false);
 	}
 
@@ -58,13 +56,6 @@ public class WatchHistoryTable extends JScrollPane implements ListSelectionListe
 		adjuster.setResizeAdjuster(true);
 	}
 
-	@Override
-	public void valueChanged(ListSelectionEvent e) {
-		if (!e.getValueIsAdjusting() && getSelectedRow() >= 0) {
-			owner.onSelect(getSelectedElement());
-		}
-	}
-
 	public int getSelectedRow() {
 		int selrow = table.getSelectedRow();
 		if (selrow >= 0 && selrow < table.getRowCount()) {
@@ -73,7 +64,7 @@ public class WatchHistoryTable extends JScrollPane implements ListSelectionListe
 		return -1;
 	}
 
-	public WatchHistoryElement getSelectedElement() {
+	public TData getSelectedElement() {
 		int selrow = getSelectedRow();
 		if (selrow >= 0) {
 			return model.getElementAtRow(selrow);
@@ -81,16 +72,20 @@ public class WatchHistoryTable extends JScrollPane implements ListSelectionListe
 		return null;
 	}
 
+	public int getRowCount() {
+		return table.getRowCount();
+	}
+
+	public void setData(List<TData> newdata) {
+		model.setData(newdata);
+	}
+
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		if (e.getClickCount() == 2 && e.getButton() == MouseEvent.BUTTON1) {
-			WatchHistoryElement el = getSelectedElement();
-			if (el != null) el.open(owner);
+			TData el = getSelectedElement();
+			if (el != null) OnDoubleClickElement(el);
 		}
-	}
-
-	public int getRowCount() {
-		return table.getRowCount();
 	}
 
 	@Override
@@ -113,7 +108,16 @@ public class WatchHistoryTable extends JScrollPane implements ListSelectionListe
 		// NOP
 	}
 
-	public void setData(List<WatchHistoryElement> newdata) {
-		model.setData(newdata);
+	@Override
+	public void valueChanged(ListSelectionEvent e) {
+		if (!e.getValueIsAdjusting() && getSelectedRow() >= 0) {
+			TData el = getSelectedElement();
+			if (el != null) OnSelectElement(el);
+		}
 	}
+
+	protected abstract List<JCCSimpleColumnPrototype<TData>> configureColumns();
+	protected abstract void OnDoubleClickElement(TData element);
+	protected abstract void OnSelectElement(TData element);
+	protected abstract int getColumnAdjusterMaxWidth();
 }

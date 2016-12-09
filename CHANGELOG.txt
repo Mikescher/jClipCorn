@@ -1,3 +1,51 @@
+1.10.2 Bugfix: Work around some stupid OpenJDK compiler bug by returning Integer from lambda methods instead of int
+1.10.2 Feature: CCStream performance improvement (sort and reverse)
+1.10.2 Task: Implement database iterators with CCSimpleStream (performance wise better)
+1.10.2 Feature: New (and better) icon for 'open last played series'
+1.10.2 Task: Better class names for columnTypes classes
+1.10.2 Task: Various improvements in CCStream class
+1.10.2 Task: Implemented MemoryCoverCache and StubCoverCache
+1.10.2 Bugfix: Fixed unit test testJSCCRoundtrip
+1.10.2 Feature: Added QualityOverTimeChart
+1.10.2 Task: Made CCMovieSize immutable
+1.10.2 Feature: Added WatchCountChart
+1.10.2 Bugfix: Fixed FormatOverTimeStatistic missing legend
+1.10.2 Task: Updated unit tests to work with new statistics
+1.10.2 Feature: Restructure StatisticsFrame, added Movie/Season/Episode filter to all plots
+1.10.2 Bugfix: Fixed exception in TimelineStatistics (+ add unit tests for statistics)
+1.10.2 Task: Update changelog script: Better indentation
+1.10.2 Task: Show more detailed load time in tooltip
+1.10.2 Task: Refactor debug messages (stdout only)
+1.10.2 Bugfix: Fixed warning when creating new backup
+1.10.2 Task: Include backup info inside of backup file instead of in extra file
+1.10.2 Feature: Configurable Datetime format in UI (DE-de | En-US | ISO-8601)
+1.10.2 Feature: Option to sort genres in main table
+1.10.2 Feature: try to automatically insert correct base path in CreateSeriesFolderStructureFrame
+1.10.2 Feature: Added tooltip for zyklus in maintable
+1.10.2 Task: Better episode formatting in history window
+1.10.2 Bugfix: Fixed main table tag renderer glitches
+1.10.2 Bugfix: Fixed main table sort-by-viewed
+1.10.2 Bugfix: Fixed main table movies-popup containing duplicate entries
+1.10.2 Task: Unit tests for GenerateMoveFilename and GenerateSeriesFolderStructure
+1.10.2 Feature: Support for batch delete of Episodes in EditSeriesFrame
+1.10.2 Feature: Automatically try to parse pasted URL in OnlineRefenceChooser
+1.10.2 Feature: Added file name normalization for MULTIPLICATION_SIGN, EM_DASH and EN_DASH
+1.10.2 Feature: DatabaseError "Missing history" can be automatically resolved (by adding unspecified to history)
+1.10.2 Bugfix: Fixed column-width not adjustable in tables
+1.10.2 Feature: Added WatchHistoryFrame (History of watched episodes/movies)
+1.10.2 Task: Big refactoring of CachedResourceLoader
+1.10.2 Task: Added old database migrations to DatabaseUpgradeAssistant (mostly for future reference)
+1.10.2 Other: New (gradle) task to generate changelog
+1.10.2 Feature: New DatabaseError: Non-continoous season
+1.10.2 Task: CCActionTree and Properties refactoring
+1.10.2 Feature: Better DateTimeList editor (better UI, support for date only and unspecified date)
+1.10.2 Bugfix: Fixed DateTimeListEditor being too small for full representation
+1.10.2 Task: improved gradle buildscript
+  - automatically get version number from Main.java
+  - automatically get BETA attribute from Main.java
+  - added task 'releaseJar' to build releases (or beta-releases)
+
+
 ########################################################################
 ############ Wed Oct 12 21:20:42 2016 +0200  1.10.1 RELEASE ############
 ########################################################################

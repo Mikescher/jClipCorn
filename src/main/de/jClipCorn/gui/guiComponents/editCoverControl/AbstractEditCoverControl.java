@@ -7,9 +7,9 @@ import javax.swing.JPanel;
 import de.jClipCorn.database.databaseElement.columnTypes.CCFileFormat;
 import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguage;
 import de.jClipCorn.database.databaseElement.columnTypes.CCQuality;
+import de.jClipCorn.online.metadata.ParseResultHandler;
 import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReference;
 import de.jClipCorn.util.listener.ImageCropperResultListener;
-import de.jClipCorn.util.parser.onlineparser.ParseResultHandler;
 
 
 /**

@@ -1,4 +1,4 @@
-package de.jClipCorn.util.parser.onlineparser;
+package de.jClipCorn.online.metadata.tmdb;
 
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -15,12 +15,18 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCGenreList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReference;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
+import de.jClipCorn.online.OnlineSearchType;
+import de.jClipCorn.online.metadata.Metadataparser;
+import de.jClipCorn.online.metadata.OnlineMetadata;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.enumerations.BrowserLanguage;
+import de.jClipCorn.properties.enumerations.MetadataParserImplementation;
+import de.jClipCorn.util.Tuple;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.helper.HTTPUtilities;
+import de.jClipCorn.util.stream.CCStreams;
 
-public class TMDBParser {
+public class TMDBParser extends Metadataparser {
 	private final static String API_KEY = new String(Base64.getDecoder().decode("M2ZkYWMyNzcxYWY4ZjZlZjljNWY0ZDc4ZmEyOWRjZDUAAAA"), Charset.forName("UTF-8")).trim();  //$NON-NLS-1$//$NON-NLS-2$
 	private final static String URL_BASE = "http://api.themoviedb.org/3/"; //$NON-NLS-1$
 
@@ -30,35 +36,27 @@ public class TMDBParser {
 	private final static String URL_SEARCHSERIES = "search/tv"; //$NON-NLS-1$
 	private final static String URL_SEARCHMULTI = "search/multi"; //$NON-NLS-1$
 	private final static String URL_SEARCHCOVER = "/images"; //$NON-NLS-1$
-	
-	public static class TMDBSimpleResult {
-		public final String ID;
-		public final String Title;
-		
-		public TMDBSimpleResult(String id, String str) { ID=id; Title=str; }
-	}
-	
-	public static class TMDBFullResult {
-		public String ID;
-		public String Title;
-		public int Year;
-		public int Score;
-		public String CoverPath;
-		public CCOnlineReference ImdbRef;
-		public CCGenreList Genres;
-		public int Length;
-	}
 
-	public static List<TMDBSimpleResult> searchMovies(String query) throws JSONException {
-		return searchMovies(query, -1);
+	@Override
+	public List<Tuple<String, CCOnlineReference>> searchByText(String text, OnlineSearchType type) {
+		switch (type) {
+		case MOVIES:
+			return searchMovies(text, -1);
+		case SERIES:
+			return searchSeries(text, -1);
+		case BOTH:
+			return searchMulti(text, -1);
+		default:
+			CCLog.addDefaultSwitchError(this, type);
+			return null;
+		}
 	}
 	
 	@SuppressWarnings("nls")
-	public static List<TMDBSimpleResult> searchMovies(String query, int year) throws JSONException {
+	private List<Tuple<String, CCOnlineReference>> searchMovies(String query, int year) throws JSONException {
 		String url = URL_BASE + URL_SEARCHMOVIE + "?api_key=" + API_KEY + "&query=" + HTTPUtilities.escapeURL(query);
 		
-		if (year > 0)
-			url += "&year="+year;
+		if (year > 0) url += "&year="+year;
 		
 		String json = HTTPUtilities.getRateLimitedHTML(url, false, false);
 		try {
@@ -66,28 +64,25 @@ public class TMDBParser {
 			
 			JSONArray results = root.getJSONArray("results");
 			
-			List<TMDBSimpleResult> out = new ArrayList<>();
+			List<Tuple<String, CCOnlineReference>> out = new ArrayList<>();
 			for (int i = 0; i < results.length(); i++) {
 				JSONObject result = results.getJSONObject(i);
 		
 				String title = result.getString("title");
-				String id = "movie/" + result.getInt("id");
+				CCOnlineReference id = CCOnlineReference.createTMDB("movie/" + result.getInt("id"));
 				
-				out.add(new TMDBSimpleResult(id, title));
+				if (id != null) out.add(Tuple.Create(title, id));
 			}
-			return out;
+			
+			return CCStreams.iterate(out).unique(p -> p.Item2).enumerate();
 		} catch (Exception e) {
 			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.TMDBApiError", json), e);
 			return new ArrayList<>();
 		}
 	}
 
-	public static List<TMDBSimpleResult> searchSeries(String query) throws JSONException {
-		return searchSeries(query, -1);
-	}
-
 	@SuppressWarnings("nls")
-	public static List<TMDBSimpleResult> searchSeries(String query, int year) {
+	private List<Tuple<String, CCOnlineReference>> searchSeries(String query, int year) {
 		String url = URL_BASE + URL_SEARCHSERIES + "?api_key=" + API_KEY + "&query=" + HTTPUtilities.escapeURL(query);
 		
 		if (year > 0)
@@ -98,29 +93,26 @@ public class TMDBParser {
 			JSONObject root = new JSONObject(new JSONTokener(json));
 			
 			JSONArray results = root.getJSONArray("results");
-			
-			List<TMDBSimpleResult> out = new ArrayList<>();
+
+			List<Tuple<String, CCOnlineReference>> out = new ArrayList<>();
 			for (int i = 0; i < results.length(); i++) {
 				JSONObject result = results.getJSONObject(i);
 		
 				String title = result.getString("name");
-				String id = "tv/" + result.getInt("id");
-				
-				out.add(new TMDBSimpleResult(id, title));
+				CCOnlineReference id = CCOnlineReference.createTMDB("tv/" + result.getInt("id"));
+
+				if (id != null) out.add(Tuple.Create(title, id));
 			}
-			return out;
+			
+			return CCStreams.iterate(out).unique(p -> p.Item2).enumerate();
 		} catch (Exception e) {
 			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.TMDBApiError", json), e);
 			return new ArrayList<>();
 		}
 	}
 
-	public static List<TMDBSimpleResult> searchMulti(String query) throws JSONException {
-		return searchMulti(query, -1);
-	}
-
 	@SuppressWarnings("nls")
-	public static List<TMDBSimpleResult> searchMulti(String query, int year) {
+	private List<Tuple<String, CCOnlineReference>> searchMulti(String query, int year) {
 		String url = URL_BASE + URL_SEARCHMULTI + "?api_key=" + API_KEY + "&query=" + HTTPUtilities.escapeURL(query);
 		
 		if (year > 0)
@@ -131,8 +123,8 @@ public class TMDBParser {
 			JSONObject root = new JSONObject(new JSONTokener(json));
 			
 			JSONArray results = root.getJSONArray("results");
-			
-			List<TMDBSimpleResult> out = new ArrayList<>();
+
+			List<Tuple<String, CCOnlineReference>> out = new ArrayList<>();
 			for (int i = 0; i < results.length(); i++) {
 				JSONObject result = results.getJSONObject(i);
 
@@ -142,46 +134,41 @@ public class TMDBParser {
 					title = result.getString("name");
 				else
 					title = result.getString("title");
-				
-				String id = type + "/" + result.getInt("id");
-				
-				out.add(new TMDBSimpleResult(id, title));
+
+				CCOnlineReference id = CCOnlineReference.createTMDB(type + "/" + result.getInt("id"));
+
+				if (id != null) out.add(Tuple.Create(title, id));
 			}
-			return out;
+			
+			return CCStreams.iterate(out).unique(p -> p.Item2).enumerate();
 		} catch (JSONException e) {
 			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.TMDBApiError", json), e);
 			return new ArrayList<>();
 		}
 	}
-	
-	public static TMDBFullResult getMetadata(String id) {
+
+	@Override
+	public OnlineMetadata getMetadata(CCOnlineReference ref, boolean downloadCover) {
 		if (CCProperties.getInstance().PROP_TMDB_LANGUAGE.getValue() == BrowserLanguage.ENGLISH) {
 			
 			// simple call
 			
-			return getMetadataInternal(id, BrowserLanguage.ENGLISH);
+			return getMetadataInternal(ref, BrowserLanguage.ENGLISH, downloadCover);
 		} else {
-			
 			// specific call but fallback to en-Us for missing fields
 			
-			TMDBFullResult base = getMetadataInternal(id, BrowserLanguage.ENGLISH);
-			TMDBFullResult ext = getMetadataInternal(id, CCProperties.getInstance().PROP_TMDB_LANGUAGE.getValue());
+			OnlineMetadata base = getMetadataInternal(ref, BrowserLanguage.ENGLISH, downloadCover);
+			OnlineMetadata ext = getMetadataInternal(ref, CCProperties.getInstance().PROP_TMDB_LANGUAGE.getValue(), downloadCover);
 			
-			if (ext.Title == null || ext.Title.isEmpty()) ext.Title = base.Title;
-			if (ext.Year == 0) ext.Year = base.Year;
-			if (ext.Length == 0) ext.Length = base.Length;
-			if (ext.Title == null || ext.Title.isEmpty()) ext.CoverPath = base.CoverPath;
-			if (ext.Score == 0) ext.Score = base.Score;
-			if (ext.Genres == null || ext.Genres.isEmpty()) ext.Genres = base.Genres;
-			if (ext.ImdbRef == null || ext.ImdbRef.isUnset()) ext.ImdbRef = base.ImdbRef;
+			ext.setMissingFields(base);
 			
 			return ext;
 		}
 	}
 
 	@SuppressWarnings("nls")
-	public static TMDBFullResult getMetadataInternal(String id, BrowserLanguage lang) {
-		String url = URL_BASE + id + "?api_key=" + API_KEY;
+	private OnlineMetadata getMetadataInternal(CCOnlineReference ref, BrowserLanguage lang, boolean downloadCover) {
+		String url = URL_BASE + ref.id + "?api_key=" + API_KEY;
 		
 		if (CCProperties.getInstance().PROP_TMDB_LANGUAGE.getValue() != BrowserLanguage.ENGLISH) {
 			url += "&language=" + CCProperties.getInstance().PROP_TMDB_LANGUAGE.getValue().asLanguageID();
@@ -189,18 +176,25 @@ public class TMDBParser {
 		
 		String json = HTTPUtilities.getRateLimitedHTML(url, false, false);
 		try {
-			TMDBFullResult result = new TMDBFullResult();
+			OnlineMetadata result = new OnlineMetadata(ref);
 			
 			JSONObject root = new JSONObject(new JSONTokener(json));
 
 			result.Title = hasString(root, "title") ? root.getString("title") : root.getString("name");
-			result.Year = hasString(root, "release_date") ? CCDate.parse(root.getString("release_date"), "yyyy-MM-dd").getYear() : 0;
-			result.Length = root.optInt("runtime", 0);
-			result.CoverPath = hasString(root, "poster_path") ? (URL_IMAGE_BASE + root.getString("poster_path")) : "";
-			result.Score = (int) Math.round(root.optDouble("vote_average", 0));
 			
-			result.Genres = new CCGenreList();
+			result.Year = hasString(root, "release_date") ? CCDate.parse(root.getString("release_date"), "yyyy-MM-dd").getYear() : null;
+			
+			result.Length = root.optInt("runtime", 0);
+			if (result.Length == 0) result.Length = null;
+			
+			result.CoverURL = hasString(root, "poster_path") ? (URL_IMAGE_BASE + root.getString("poster_path")) : null;
+			if (result.CoverURL != null && downloadCover) result.Cover = HTTPUtilities.getImage(result.CoverURL);
+			
+			result.OnlineScore = (int) Math.round(root.optDouble("vote_average", 0));
+			if (result.OnlineScore == 0) result.OnlineScore = null;
+			
 			if (root.has("genres")) {
+				result.Genres = new CCGenreList();
 				JSONArray jsonGenres = root.getJSONArray("genres");
 				for (int i = 0; i < jsonGenres.length(); i++) {
 					CCGenre g = CCGenre.parseFromTMDbID(jsonGenres.getJSONObject(i).getInt("id"));
@@ -210,9 +204,7 @@ public class TMDBParser {
 			}
 			
 			if (hasString(root, "imdb_id")) 
-				result.ImdbRef = CCOnlineReference.createIMDB(root.getString("imdb_id"));
-			else
-				result.ImdbRef = CCOnlineReference.createNone();
+				result.AltRef = CCOnlineReference.createIMDB(root.getString("imdb_id"));
 			
 			return result;
 			
@@ -226,34 +218,34 @@ public class TMDBParser {
 		return obj.has(ident) && !obj.isNull(ident) && !obj.getString(ident).isEmpty();
 	}
 
-	public static CCOnlineReference findMovieDirect(String searchText) {
+	public CCOnlineReference findMovieDirect(String searchText) {
 		return findMovieDirect(searchText, -1);
 	}
 	
-	public static CCOnlineReference findMovieDirect(String searchText, int year) {
-		List<TMDBSimpleResult> r0 = searchMovies(searchText, year);
+	private CCOnlineReference findMovieDirect(String searchText, int year) {
+		List<Tuple<String, CCOnlineReference>> r0 = searchMovies(searchText, year);
 		if (r0.isEmpty()) {
 			return CCOnlineReference.createNone();
 		}
-		
-		return CCOnlineReference.createTMDB(r0.get(0).ID);
+
+		return r0.get(0).Item2;
 	}
 
-	public static CCOnlineReference findSeriesDirect(String searchText) {
+	public CCOnlineReference findSeriesDirect(String searchText) {
 		return findSeriesDirect(searchText, -1);
 	}
 
-	public static CCOnlineReference findSeriesDirect(String searchText, int year) {
-		List<TMDBSimpleResult> r0 = searchSeries(searchText, year);
+	private CCOnlineReference findSeriesDirect(String searchText, int year) {
+		List<Tuple<String, CCOnlineReference>> r0 = searchSeries(searchText, year);
 		if (r0.isEmpty()) {
 			return CCOnlineReference.createNone();
 		}
 		
-		return CCOnlineReference.createTMDB(r0.get(0).ID);
+		return r0.get(0).Item2;
 	}
 
 	@SuppressWarnings("nls")
-	public static List<String> findCovers(CCOnlineReference ref) {
+	public List<String> findCovers(CCOnlineReference ref) {
 		String url = URL_BASE + ref.id + URL_SEARCHCOVER + "?api_key=" + API_KEY;
 		
 		String json = HTTPUtilities.getRateLimitedHTML(url, false, false);
@@ -274,5 +266,10 @@ public class TMDBParser {
 			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.TMDBApiError", json), e);
 			return null;
 		}
+	}
+
+	@Override
+	public MetadataParserImplementation getImplType() {
+		return MetadataParserImplementation.TMDB;
 	}
 }

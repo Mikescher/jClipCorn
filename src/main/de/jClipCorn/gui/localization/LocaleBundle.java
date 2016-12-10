@@ -32,6 +32,8 @@ public class LocaleBundle {
 	
 	public static String getStringOrDefault(String ident, String def) {
 		try {
+			if (ident.startsWith("@")) return ident.substring(1); //$NON-NLS-1$
+			
 			if (bundle == null) {
 				return ResourceBundle.getBundle(DEFAULT_BASENAME, getDefaultLocale()).getString(ident);
 			} else {
@@ -47,6 +49,8 @@ public class LocaleBundle {
 	
 	public static String getString(String ident) {
 		try {
+			if (ident.startsWith("@")) return ident.substring(1); //$NON-NLS-1$
+			
 			if (bundle == null) {
 				return ResourceBundle.getBundle(DEFAULT_BASENAME, getDefaultLocale()).getString(ident);
 			} else {

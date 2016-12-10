@@ -1,4 +1,4 @@
-package de.jClipCorn.util.parser.imagesearch.imageparser;
+package de.jClipCorn.online.cover.google;
 
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
@@ -18,7 +18,7 @@ import de.jClipCorn.util.helper.HTTPUtilities;
 import de.jClipCorn.util.listener.ProgressCallbackListener;
 
 @SuppressWarnings("nls")
-public class GoogleImageParser {
+public class GoogleSearchCommon {
 	public final static String SEARCH_APPENDIX_1 = "cover";
 	public final static String SEARCH_APPENDIX_2 = "poster";
 

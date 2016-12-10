@@ -2,6 +2,10 @@ package de.jClipCorn.database.databaseElement.columnTypes;
 
 import javax.swing.Icon;
 
+import de.jClipCorn.gui.log.CCLog;
+import de.jClipCorn.online.metadata.Metadataparser;
+import de.jClipCorn.online.metadata.imdb.IMDBParserCommon;
+import de.jClipCorn.online.metadata.tmdb.TMDBParser;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.enumerations.BrowserLanguage;
 import de.jClipCorn.util.exceptions.OnlineRefFormatException;
@@ -92,6 +96,7 @@ public class CCOnlineReference {
 		case MYANIMELIST:
 			return "http://myanimelist.net/anime/" + id + "/";
 		default:
+			CCLog.addDefaultSwitchError(this, this);
 			return null;
 		}
 	}
@@ -125,5 +130,27 @@ public class CCOnlineReference {
 			return true;
 
 		return ((CCOnlineReference)obj).id.equals(id) && ((CCOnlineReference)obj).type == type;
+	}
+
+	public Metadataparser getMetadataParser() {
+		switch (type) {
+		case NONE:
+			return null;
+		case IMDB:
+			return IMDBParserCommon.GetConfiguredParser();
+		case AMAZON:
+			return null;
+		case MOVIEPILOT:
+			return null;
+		case THEMOVIEDB:
+			return new TMDBParser();
+		case PROXERME:
+			return null;
+		case MYANIMELIST:
+			return null;
+		default:
+			CCLog.addDefaultSwitchError(this, this);
+			return null;
+		}
 	}
 }

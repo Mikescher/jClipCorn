@@ -194,6 +194,10 @@ public abstract class CCStream<TType> implements Iterator<TType>, Iterable<TType
 		return new UniqueStream<>(this);
 	}
 
+	public <TAttrType> CCStream<TType> unique(Function<TType, TAttrType> selector) {
+		return new UniqueAttributeStream<>(this, selector);
+	}
+
 	public <TAttrType> CCStream<TAttrType> flatten(Function<TType, Iterator<TAttrType>> selector) {
 		return new FlattenedStream<>(this, selector);
 	}

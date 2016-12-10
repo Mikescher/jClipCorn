@@ -54,6 +54,7 @@ public class Resources {
 	public final static MultiIconRef ICN_MENUBAR_MOVEALLSERIES			= registerMultisizeIcon("/icons/toolbar/move_to_folder2.png");
 	public final static MultiIconRef ICN_MENUBAR_MOVEALLMOVIES			= registerMultisizeIcon("/icons/toolbar/move_to_folder3.png");
 	public final static MultiIconRef ICN_MENUBAR_FINDINCOMPLETEZYKLUS	= registerMultisizeIcon("/icons/toolbar/blackboard_steps.png");
+	public final static MultiIconRef ICN_MENUBAR_UPDATEMETADATA			= registerMultisizeIcon("/icons/toolbar/update_contact_info.png");
 	public final static MultiIconRef ICN_MENUBAR_FILENAMERULES			= registerMultisizeIcon("/icons/toolbar/books.png");
 	public final static MultiIconRef ICN_MENUBAR_CREATE_JXMLBKP			= registerMultisizeIcon("/icons/toolbar/source_code.png");
 	public final static MultiIconRef ICN_MENUBAR_COMPARE				= registerMultisizeIcon("/icons/toolbar/balance_unbalance.png");

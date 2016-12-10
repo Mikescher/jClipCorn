@@ -22,12 +22,12 @@ import de.jClipCorn.gui.frames.findCoverFrame.FindCoverDialog;
 import de.jClipCorn.gui.guiComponents.CoverLabel;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
+import de.jClipCorn.online.metadata.ParseResultHandler;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.ClipboardUtilities;
 import de.jClipCorn.util.helper.FileChooserHelper;
 import de.jClipCorn.util.helper.HTTPUtilities;
 import de.jClipCorn.util.helper.ImageUtilities;
-import de.jClipCorn.util.parser.onlineparser.ParseResultHandler;
 
 public class EditCoverControl extends AbstractEditCoverControl {
 	private static final long serialVersionUID = -4086336311809789696L;

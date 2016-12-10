@@ -1,10 +1,10 @@
-package de.jClipCorn.util.parser.onlineparser;
+package de.jClipCorn.online.cover.imdb;
 
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.enumextension.ContinoousEnum;
 import de.jClipCorn.util.enumextension.EnumWrapper;
 
-public enum ImDBLanguage implements ContinoousEnum<ImDBLanguage> {
+public enum IMDBLanguage implements ContinoousEnum<IMDBLanguage> {
 	GERMAN(0), 
 	ENGLISH(1);
 
@@ -15,13 +15,13 @@ public enum ImDBLanguage implements ContinoousEnum<ImDBLanguage> {
 
 	private int id;
 	
-	private static EnumWrapper<ImDBLanguage> wrapper = new EnumWrapper<>(GERMAN);
+	private static EnumWrapper<IMDBLanguage> wrapper = new EnumWrapper<>(GERMAN);
 
-	private ImDBLanguage(int val) {
+	private IMDBLanguage(int val) {
 		id = val;
 	}
 	
-	public static EnumWrapper<ImDBLanguage> getWrapper() {
+	public static EnumWrapper<IMDBLanguage> getWrapper() {
 		return wrapper;
 	}
 	
@@ -41,7 +41,7 @@ public enum ImDBLanguage implements ContinoousEnum<ImDBLanguage> {
 	}
 
 	@Override
-	public ImDBLanguage[] evalues() {
-		return ImDBLanguage.values();
+	public IMDBLanguage[] evalues() {
+		return IMDBLanguage.values();
 	}
 }

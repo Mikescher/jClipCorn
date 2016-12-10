@@ -22,6 +22,7 @@ import de.jClipCorn.properties.enumerations.DisplayDateAlgorithm;
 import de.jClipCorn.properties.enumerations.DoubleClickAction;
 import de.jClipCorn.properties.enumerations.ImageSearchImplementation;
 import de.jClipCorn.properties.enumerations.InitalSortingColumn;
+import de.jClipCorn.properties.enumerations.MetadataParserImplementation;
 import de.jClipCorn.properties.enumerations.UILanguage;
 import de.jClipCorn.properties.enumerations.UITableBackground;
 import de.jClipCorn.properties.property.CCBoolProperty;
@@ -161,12 +162,11 @@ public class CCProperties {
 	public CCPIntProperty 									PROP_STATISTICS_TIMELINEGRAVITY;
 	public CCEnumProperty<CCDatabaseDriver>					PROP_DATABASE_DRIVER;
 	public CCEnumProperty<DisplayDateAlgorithm>				PROP_SERIES_DISPLAYED_DATE;
-	public CCBoolProperty									PROP_QUERY_IMDB;
-	public CCBoolProperty									PROP_QUERY_TMDB;
 	public CCBoolProperty 									PROP_MAINFRAME_SHOWGROUPS;
 	public CCEnumProperty<CCDBLanguage> 					PROP_DATABASE_DEFAULTPARSERLANG;
 	public CCEnumProperty<BrowserLanguage> 					PROP_TMDB_LANGUAGE;
 	public CCEnumSetProperty<ImageSearchImplementation>		PROP_IMAGESEARCH_IMPL;
+	public CCEnumSetProperty<MetadataParserImplementation>	PROP_METAPARSER_IMPL;
 	public CCBoolProperty 									PROP_SHOW_EXTENDED_FEATURES;
 	public CCBoolProperty									PROP_MAINFRAME_SORT_GENRES;
 	public CCEnumProperty<CCDateTimeFormat>					PROP_UI_DATETIME_FORMAT;
@@ -248,11 +248,10 @@ public class CCProperties {
 		PROP_DATABASE_COVERCACHESIZE			= new CCPIntProperty(CAT_DATABASE, 			this, 	"PROP_DATABASE_COVERCACHESIZE", 			128);
 		PROP_LOG_MAX_LINECOUNT 					= new CCPIntProperty(CAT_DATABASE, 			this, 	"PROP_LOG_MAX_LINECOUNT", 					1048576); // 2^20
 
-		PROP_DATABASE_DEFAULTPARSERLANG			= new CCEnumProperty<>(CAT_PARSER, 			this, 	"PROP_DATABASE_DEFAULTPARSERLANG", 			CCDBLanguage.GERMAN, 			CCDBLanguage.getWrapper());
+		PROP_DATABASE_DEFAULTPARSERLANG			= new CCEnumProperty<>(CAT_PARSER, 			this, 	"PROP_DATABASE_DEFAULTPARSERLANG", 			CCDBLanguage.GERMAN, 				CCDBLanguage.getWrapper());
 		PROP_TMDB_LANGUAGE						= new CCEnumProperty<>(CAT_PARSER, 			this, 	"PROP_TMDB_LANGUAGE", 						getDefBLanguage(),					BrowserLanguage.getWrapper());
 		PROP_IMAGESEARCH_IMPL					= new CCEnumSetProperty<>(CAT_PARSER, 		this, 	"PROP_IMAGESEARCH_IMPL", 					EnumSetValue.ALL,					ImageSearchImplementation.getWrapper());
-		PROP_QUERY_IMDB							= new CCBoolProperty(CAT_PARSER,	 		this,   "PROP_QUERY_IMDB",							true);
-		PROP_QUERY_TMDB							= new CCBoolProperty(CAT_PARSER,	 		this,   "PROP_QUERY_TMDB",							true);
+		PROP_METAPARSER_IMPL					= new CCEnumSetProperty<>(CAT_PARSER, 		this, 	"PROP_METAPARSER_IMPL", 					EnumSetValue.ALL,					MetadataParserImplementation.getWrapper());
 
 		PROP_ON_DBLCLICK_MOVE					= new CCEnumProperty<>(CAT_MOVIES, 			this, 	"PROP_ON_DBLCLICK_MOVE", 					DoubleClickAction.PLAY, 			DoubleClickAction.getWrapper());
 		PROP_MAINFRAME_AUTOMATICRESETWATCHLATER = new CCBoolProperty(CAT_MOVIES,			this,   "PROP_MAINFRAME_AUTOMATICRESETWATCHLATER",	true);

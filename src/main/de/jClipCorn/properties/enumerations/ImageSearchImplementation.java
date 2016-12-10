@@ -1,17 +1,18 @@
 package de.jClipCorn.properties.enumerations;
 
 import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.gui.log.CCLog;
+import de.jClipCorn.online.cover.AbstractImageSearch;
+import de.jClipCorn.online.cover.google.GoogleCoverSearch;
+import de.jClipCorn.online.cover.google.GooglePosterSearch;
+import de.jClipCorn.online.cover.imdb.IMDBPrimaryCoverSearch;
+import de.jClipCorn.online.cover.imdb.IMDBSecondaryCoverSearch;
+import de.jClipCorn.online.cover.tmdb.TMDBPosterSearch;
 import de.jClipCorn.util.enumextension.ContinoousEnum;
 import de.jClipCorn.util.enumextension.EnumWrapper;
 import de.jClipCorn.util.listener.FinishListener;
 import de.jClipCorn.util.listener.ProgressCallbackListener;
 import de.jClipCorn.util.listener.UpdateCallbackListener;
-import de.jClipCorn.util.parser.imagesearch.AbstractImageSearch;
-import de.jClipCorn.util.parser.imagesearch.GoogleCoverSearch;
-import de.jClipCorn.util.parser.imagesearch.GooglePosterSearch;
-import de.jClipCorn.util.parser.imagesearch.IMDbCoverSearch;
-import de.jClipCorn.util.parser.imagesearch.IMDbSecondaryCoverSearch;
-import de.jClipCorn.util.parser.imagesearch.TMDBPosterSearch;
 
 public enum ImageSearchImplementation implements ContinoousEnum<ImageSearchImplementation> {
 	GOOGLE_COVER(0), 
@@ -72,12 +73,13 @@ public enum ImageSearchImplementation implements ContinoousEnum<ImageSearchImple
 		case GOOGLE_POSTER:
 			return new GooglePosterSearch(fl, uc, pc);
 		case IMDB_COVER:
-			return new IMDbCoverSearch(fl, uc, pc);
+			return new IMDBPrimaryCoverSearch(fl, uc, pc);
 		case IMDB_SEC_COVER:
-			return new IMDbSecondaryCoverSearch(fl, uc, pc);
+			return new IMDBSecondaryCoverSearch(fl, uc, pc);
 		case TMDP_POSTER:
 			return new TMDBPosterSearch(fl, uc, pc);
 		default:
+			CCLog.addDefaultSwitchError(this, this);
 			return null;
 		}
 	}

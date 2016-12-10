@@ -1,4 +1,4 @@
-package de.jClipCorn.util.parser.imagesearch;
+package de.jClipCorn.online.cover;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,6 +6,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import de.jClipCorn.database.databaseElement.columnTypes.CCDBElementTyp;
 import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReference;
+import de.jClipCorn.gui.log.CCLog;
+import de.jClipCorn.online.OnlineSearchType;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.enumerations.ImageSearchImplementation;
 import de.jClipCorn.util.listener.FinishListener;
@@ -17,7 +19,7 @@ public class CoverImageParser implements FinishListener {
 	private final UpdateCallbackListener updatelistener;
 	private final UpdateCallbackListener finishlistener;
 	private final String searchText;
-	private final CCDBElementTyp typ;
+	private final OnlineSearchType typ;
 	private final CCOnlineReference reference;
 	
 	private final List<AbstractImageSearch> searchImplementations;
@@ -27,7 +29,18 @@ public class CoverImageParser implements FinishListener {
 		this.updatelistener = ucl;
 		this.finishlistener = fcl;
 		this.searchText = search;
-		this.typ = typ;
+		switch (typ) {
+		case MOVIE:
+			this.typ = OnlineSearchType.MOVIES;
+			break;
+		case SERIES:
+			this.typ = OnlineSearchType.SERIES;
+			break;
+		default:
+			this.typ = OnlineSearchType.MOVIES;
+			CCLog.addDefaultSwitchError(this, typ);
+			break;
+		}
 		this.reference = ref;
 		
 		searchImplementations = new ArrayList<>();

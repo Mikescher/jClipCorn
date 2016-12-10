@@ -1,13 +1,9 @@
-package de.jClipCorn.util.parser.onlineparser;
+package de.jClipCorn.online.metadata.imdb;
 
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.jsoup.Jsoup;
@@ -18,99 +14,91 @@ import org.jsoup.select.Elements;
 import de.jClipCorn.database.databaseElement.columnTypes.CCFSK;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGenre;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGenreList;
-import de.jClipCorn.database.databaseElement.columnTypes.CCDBElementTyp;
 import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReference;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
-import de.jClipCorn.util.datatypes.DoubleString;
+import de.jClipCorn.online.OnlineSearchType;
+import de.jClipCorn.online.cover.imdb.AgeRatingParser;
+import de.jClipCorn.util.Tuple;
 import de.jClipCorn.util.helper.HTTPUtilities;
 import de.jClipCorn.util.helper.RegExHelper;
+import de.jClipCorn.util.stream.CCStreams;
 
 @SuppressWarnings("nls")
-public class ImDBParser_Eng {
+public class IMDBParserEnglish extends IMDBParserCommon {
 	public final static String BASE_URL = "http://www.imdb.com";
 	
-	private final static String SEARCH_URL_A = "/find?s=tt&q=%s";
-	private final static String SEARCH_URL_M = "/find?s=tt&ttype=ft&q=%s";
-	private final static String SEARCH_URL_S = "/find?s=tt&ttype=tv&q=%s";
+	private static final String SEARCH_URL_A = "/find?s=tt&q=%s";
+	private static final String SEARCH_URL_M = "/find?s=tt&ttype=ft&q=%s";
+	private static final String SEARCH_URL_S = "/find?s=tt&ttype=tv&q=%s";
 	
-	private final static String REGEX_FSK_BRACKETS = "\\([^\\)]*\\)";           // \([^\)]*\)
-	private final static String REGEX_COVER_URL = "/media/rm[0-9]+?/tt[0-9]+";  // /media/rm[0-9]+?/tt[0-9]+
-	private final static String REGEX_SEARCH_URL = "/title/tt[0-9]+/";          // /title/tt[0-9]+/
-	private final static String REGEX_ALT_YEAR = ".*\\(([0-9]{4})\\)";          // .*\(([0-9]{4})\)
-	private final static String REGEX_YEAR_SIMPLE = "\\([12][0-9]{3}\\)";       // \([12][0-9]{3}\)
+	private static final String REGEX_FSK_BRACKETS = "\\([^\\)]*\\)";           // \([^\)]*\)
+	private static final String REGEX_COVER_URL = "/media/rm[0-9]+?/tt[0-9]+";  // /media/rm[0-9]+?/tt[0-9]+
+	private static final String REGEX_SEARCH_URL = "/title/tt[0-9]+/";          // /title/tt[0-9]+/
+	private static final String REGEX_ALT_YEAR = ".*\\(([0-9]{4})\\)";          // .*\(([0-9]{4})\)
+	private static final String REGEX_YEAR_SIMPLE = "\\([12][0-9]{3}\\)";       // \([12][0-9]{3}\)
 	
-	private final static String FSK_STANDARD_1 = "Germany";
-	private final static String FSK_STANDARD_2 = "West Germany";
-	private final static String FSK_URL = "%sparentalguide";
+	private static final String FSK_STANDARD_1 = "Germany";
+	private static final String FSK_STANDARD_2 = "West Germany";
 	
-	private final static String JSOUP_SEARCH_HTML_A = "a[href~=/title/tt[0-9]+/.*]:matches(.+)";
-	private final static String JSOUP_TITLE = "h1.header span[itemprop=name][class=itemprop]";
-	private final static String JSOUP_YEAR = "h1.header span.nobr:matches(\\([12][0-9]{3}\\))"; // h1.header span.nobr:matches(\([12][0-9]{3}\))
-	private final static String JSOUP_RATING = "span[itemprop=ratingValue]:matches([0-9][,\\.]?[0-9]?)"; // span[itemprop=ratingValue]:matches([0-9][,\.]?[0-9]?)
-	private final static String JSOUP_LENGTH = "time[itemprop=duration]:matches([0-9]+ (M|m)in)";
-	private final static String JSOUP_LENGTH_2 = "time[itemprop=duration]:matches(([0-9]+)[Hh] ([0-9]+)[Mm]in)";
-	private final static String JSOUP_FSK = "h5:matches(Certification.*) + div.info-content a[href]";
-	private final static String JSOUP_GENRE = "div[itemprop=genre] a";
-	private final static String JSOUP_COVER = "div[class=image] a[href~=/media/rm[0-9]+?/tt[0-9]+.*]";
-	private final static String JSOUP_COVER_DIRECT = "img#primary-img[src]";
+	private static final String JSOUP_SEARCH_HTML_A = "a[href~=/title/tt[0-9]+/.*]:matches(.+)";
+	private static final String JSOUP_TITLE = "h1.header span[itemprop=name][class=itemprop]";
+	private static final String JSOUP_YEAR = "h1.header span.nobr:matches(\\([12][0-9]{3}\\))"; // h1.header span.nobr:matches(\([12][0-9]{3}\))
+	private static final String JSOUP_RATING = "span[itemprop=ratingValue]:matches([0-9][,\\.]?[0-9]?)"; // span[itemprop=ratingValue]:matches([0-9][,\.]?[0-9]?)
+	private static final String JSOUP_LENGTH = "time[itemprop=duration]:matches([0-9]+ (M|m)in)";
+	private static final String JSOUP_LENGTH_2 = "time[itemprop=duration]:matches(([0-9]+)[Hh] ([0-9]+)[Mm]in)";
+	private static final String JSOUP_FSK = "h5:matches(Certification.*) + div.info-content a[href]";
+	private static final String JSOUP_GENRE = "div[itemprop=genre] a";
+	private static final String JSOUP_COVER = "div[class=image] a[href~=/media/rm[0-9]+?/tt[0-9]+.*]";
+	public  static final String JSOUP_COVER_DIRECT = "img#primary-img[src]";
 
-	private final static String JSOUP_ALT_TITLE = "h1[itemprop=name]";
-	private final static String JSOUP_ALT_YEAR = "meta[property=og:title][content~=.*\\([0-9]{4}\\)]"; // meta[property=og:title][content~=.*\([0-9]{4}\)]
-	private final static String JSOUP_ALT_COVER = "div[class=poster] a[href~=/media/rm[0-9]+?/tt[0-9]+.*]";
-	private final static String JSOUP_ALT_COVER_2 = "div[class=poster] a img[src*=/images/]";
+	private static final String JSOUP_ALT_TITLE = "h1[itemprop=name]";
+	private static final String JSOUP_ALT_YEAR = "meta[property=og:title][content~=.*\\([0-9]{4}\\)]"; // meta[property=og:title][content~=.*\([0-9]{4}\)]
+	private static final String JSOUP_ALT_COVER = "div[class=poster] a[href~=/media/rm[0-9]+?/tt[0-9]+.*]";
+	private static final String JSOUP_ALT_COVER_2 = "div[class=poster] a img[src*=/images/]";
 	
-	public static String getSearchURL(String title, CCDBElementTyp typ) {
-		if (typ == null) {
-			return String.format(BASE_URL + SEARCH_URL_A, HTTPUtilities.escapeURL(title));
-		}
-		
+	@Override
+	public String getSearchURL(String title, OnlineSearchType typ) {
 		switch (typ) {
-		case MOVIE:
+		case MOVIES:
 			return String.format(BASE_URL + SEARCH_URL_M, HTTPUtilities.escapeURL(title));
 		case SERIES:
 			return String.format(BASE_URL + SEARCH_URL_S, HTTPUtilities.escapeURL(title));
+		case BOTH:
+			return String.format(BASE_URL + SEARCH_URL_A, HTTPUtilities.escapeURL(title));
 		default:
+			CCLog.addDefaultSwitchError(this, typ);
 			return null;
 		}
 	}
 	
-	public static String getURL(CCOnlineReference ref) {
+	@Override
+	protected String getURL(CCOnlineReference ref) {
 		return BASE_URL + "/title/" + ref.id;
 	}
 	
-	public static List<DoubleString> extractImDBLinks(String html) {
+	@Override
+	public List<Tuple<String, CCOnlineReference>> extractImDBLinks(String html) {
 		Document doc = Jsoup.parse(html);
 		
 		Elements searchresults = doc.select(JSOUP_SEARCH_HTML_A);
 		
-		List<DoubleString> result = new ArrayList<>();
+		List<Tuple<String, CCOnlineReference>> result = new ArrayList<>();
 		
 		for (Element sresult : searchresults) {
-			result.add(new DoubleString(BASE_URL + RegExHelper.find(REGEX_SEARCH_URL, sresult.attr("href")), sresult.text()));
+			String name = sresult.text();
+			String link = BASE_URL + RegExHelper.find(REGEX_SEARCH_URL, sresult.attr("href"));
+			
+			CCOnlineReference ref = CCOnlineReference.createIMDB(extractOnlineID(link));
+			
+			if (ref != null) result.add(Tuple.Create(name, ref));
 		}
 		
-		removeDuplicate(result);
-		
-		return result;
+		return CCStreams.iterate(result).unique(p -> p.Item2).enumerate();
 	}
 	
-	private static <T> void removeDuplicate(List<T> arlList) {
-		Set<T> set = new HashSet<>();
-		List<T> newList = new ArrayList<>();
-		
-		for (Iterator<T> iter = arlList.iterator(); iter.hasNext();) {
-			T element = iter.next();
-			if (set.add(element)) {
-				newList.add(element);
-			}
-		}
-		
-		arlList.clear();
-		arlList.addAll(newList);
-	}
-	
-	public static String getTitle(String html) {
+	@Override
+	protected String getTitle(String html) {
 		String cnt = getContentBySelector(html, JSOUP_TITLE);
 		
 		if (cnt.isEmpty()) {
@@ -122,7 +110,8 @@ public class ImDBParser_Eng {
 		return cnt;
 	}
 	
-	public static int getYear(String html) {
+	@Override
+	protected Integer getYear(String html) {
 		String y = StringUtils.strip(getContentBySelector(html, JSOUP_YEAR).trim(), "()");
 		
 		try {
@@ -135,21 +124,23 @@ public class ImDBParser_Eng {
 				return Integer.parseInt(y);
 			}
 			
-			return 0;
+			return null;
 		}
 	}
 	
-	public static int getRating(String html) {
+	@Override
+	protected Integer getRating(String html) {
 		String y = getContentBySelector(html, JSOUP_RATING);
 		
 		try {
 			return (int) Math.round(Double.parseDouble(y.replace(',', '.')));
 		} catch (NumberFormatException e) {
-			return 0;
+			return null;
 		}
 	}
 	
-	public static int getLength(String html) {
+	@Override
+	protected Integer getLength(String html) {
 		String y = RegExHelper.find("[0-9]*", getContentBySelector(html, JSOUP_LENGTH));
 		
 		if (y == null || "".equals(y)){
@@ -161,7 +152,7 @@ public class ImDBParser_Eng {
 			try {
 				return Integer.parseInt(sh)*60 + Integer.parseInt(sm);
 			} catch (NumberFormatException e) {
-				return 0;
+				return null;
 			}
 		}
 		
@@ -171,13 +162,17 @@ public class ImDBParser_Eng {
 			return 0;
 		}
 	}
-	
-	public static Map<String, Integer> getFSKList(String url) {
-		url = String.format(FSK_URL, url);
+
+	@Override
+	protected Map<String, Integer> getFSKList(String html, String url) {
+		if (url.endsWith("/")) 
+			url += "parentalguide";
+		else
+			url += "/parentalguide";
 		
-		String html = HTTPUtilities.getHTML(url, true, false);
+		String fsk_html = HTTPUtilities.getHTML(url, true, false);
 		
-		List<String> genarr = getContentListBySelector(html, JSOUP_FSK);
+		List<String> genarr = getContentListBySelector(fsk_html, JSOUP_FSK);
 		
 		HashMap<String, Integer> genmap = new HashMap<>();
 		
@@ -197,12 +192,12 @@ public class ImDBParser_Eng {
 			}
 		}
 		
+		if (genmap.isEmpty()) return null;
 		return genmap;
 	}
-	
-	public static CCFSK getFSK(String url) {
-		Map<String, Integer> genmap = getFSKList(url);
-		
+
+	@Override
+	protected CCFSK getFSK(Map<String, Integer> genmap, String html, String url) {
 		if (genmap.get(FSK_STANDARD_1) != null) {
 			return CCFSK.getNearest(genmap.get(FSK_STANDARD_1));
 		} else if (genmap.get(FSK_STANDARD_2) != null) {
@@ -226,7 +221,8 @@ public class ImDBParser_Eng {
 		}
 	}
 	
-	public static CCGenreList getGenres(String html) {
+	@Override
+	protected CCGenreList getGenres(String html) {
 		List<String> regfind = getContentListBySelector(html, JSOUP_GENRE);
 		
 		CCGenreList result = new CCGenreList();
@@ -241,7 +237,8 @@ public class ImDBParser_Eng {
 		return result;
 	}
 	
-	public static BufferedImage getCover(String html) {
+	@Override
+	public String getCoverURL(String html) {
 		String find = RegExHelper.find(REGEX_COVER_URL, getAttrBySelector(html, JSOUP_COVER, "href"));
 		
 		if (find.isEmpty()) {
@@ -256,14 +253,14 @@ public class ImDBParser_Eng {
 				if (!url.isEmpty() && urlStart > 0 && urlEnd > 0) {
 					find = url.replace(url.substring(urlStart+2, urlEnd), "");
 					
-					return HTTPUtilities.getImage(find);
+					return find;
 				}
 
 				urlStart = url.lastIndexOf("@");
 				if (!url.isEmpty() && urlStart > 0 && urlEnd > 0) {
 					find = url.replace(url.substring(urlStart+2, urlEnd), "");
 					
-					return HTTPUtilities.getImage(find);
+					return find;
 				}
 			}
 		}
@@ -276,36 +273,20 @@ public class ImDBParser_Eng {
 			return null;
 		}
 		
-		return getCoverDirekt(cpagehtml);
-	}
-
-	public static BufferedImage getCoverDirekt(String html) {
-		String curl = getAttrBySelector(html, JSOUP_COVER_DIRECT, "src");
-		
-		if (curl.trim().isEmpty()) {
-			return null;
-		}
-		
-		BufferedImage result = HTTPUtilities.getImage(curl);
-		
-		if (result == null) {
-			return null;
-		}
-
-		return result;
+		return getAttrBySelector(cpagehtml, JSOUP_COVER_DIRECT, "src");
 	}
 	
-	public static String getContentBySelector(String html, String cssQuery) {
+	private String getContentBySelector(String html, String cssQuery) {
 		Element e = Jsoup.parse(html).select(cssQuery).first();
 		return (e == null) ? "" : e.text();
 	}
 	
-	public static String getAttrBySelector(String html, String cssQuery, String attr) {
+	private String getAttrBySelector(String html, String cssQuery, String attr) {
 		Element e = Jsoup.parse(html).select(cssQuery).first();
 		return (e == null) ? "" : e.attr(attr);
 	}
 	
-	public static List<String> getContentListBySelector(String html, String cssQuery) {
+	private List<String> getContentListBySelector(String html, String cssQuery) {
 		Elements elst = Jsoup.parse(html).select(cssQuery);
 		
 		ArrayList<String> result = new ArrayList<>();

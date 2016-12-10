@@ -255,30 +255,15 @@ public class StatisticsFrame extends JFrame {
 		getContentPane().add(pnlCenter, BorderLayout.CENTER);
 		
 		btnMovies = new JToggleButton(LocaleBundle.getString("StatisticsFrame.this.toggleMovies")); //$NON-NLS-1$
-		btnMovies.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				setTypeFilter(StatisticsTypeFilter.MOVIES);
-			}
-		});
+		btnMovies.addActionListener(e -> setTypeFilter(StatisticsTypeFilter.MOVIES));
 		pnlTop.add(btnMovies, "10, 2"); //$NON-NLS-1$
 		
 		btnSeries = new JToggleButton(LocaleBundle.getString("StatisticsFrame.this.toggleSeries")); //$NON-NLS-1$
-		btnSeries.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				setTypeFilter(StatisticsTypeFilter.SERIES);
-			}
-		});
+		btnSeries.addActionListener(e -> setTypeFilter(StatisticsTypeFilter.SERIES));
 		pnlTop.add(btnSeries, "11, 2"); //$NON-NLS-1$
 		
 		btnBoth = new JToggleButton(LocaleBundle.getString("StatisticsFrame.this.toggleBoth")); //$NON-NLS-1$
-		btnBoth.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				setTypeFilter(StatisticsTypeFilter.BOTH);
-			}
-		});
+		btnBoth.addActionListener(e -> setTypeFilter(StatisticsTypeFilter.BOTH));
 		btnBoth.setSelected(true);
 		pnlTop.add(btnBoth, "12, 2"); //$NON-NLS-1$
 				

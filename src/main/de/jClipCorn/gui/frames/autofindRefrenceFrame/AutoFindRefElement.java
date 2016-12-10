@@ -1,28 +1,19 @@
 package de.jClipCorn.gui.frames.autofindRefrenceFrame;
 
-import java.awt.image.BufferedImage;
-
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
-import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReference;
-import de.jClipCorn.util.parser.onlineparser.ImDBParser.IMDBLimitedResult;
-import de.jClipCorn.util.parser.onlineparser.TMDBParser.TMDBFullResult;
+import de.jClipCorn.online.metadata.OnlineMetadata;
 
 public class AutoFindRefElement {
 	public final CCDatabaseElement local;
 	
-	public final CCOnlineReference tmdbRef;
-	public final TMDBFullResult tmdbMeta;
-	public final BufferedImage tmdbCover;
+	public final OnlineMetadata tmdbMeta;
 
-	public final IMDBLimitedResult imdbMeta;
+	public final OnlineMetadata imdbMeta;
 	
-	public AutoFindRefElement(CCDatabaseElement e, CCOnlineReference r, TMDBFullResult m, BufferedImage i, IMDBLimitedResult imdb) {
+	public AutoFindRefElement(CCDatabaseElement e, OnlineMetadata tmdb, OnlineMetadata imdb) {
 		local = e;
 		
-		tmdbRef = r;
-		tmdbMeta = m;
-		tmdbCover = i;
-		
+		tmdbMeta = tmdb;
 		imdbMeta = imdb;
 	}
 }

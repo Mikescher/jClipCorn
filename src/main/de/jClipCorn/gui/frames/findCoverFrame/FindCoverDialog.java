@@ -20,11 +20,11 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCDBElementTyp;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.CachedResourceLoader;
 import de.jClipCorn.gui.resources.Resources;
+import de.jClipCorn.online.cover.CoverImageParser;
+import de.jClipCorn.online.metadata.ParseResultHandler;
 import de.jClipCorn.util.helper.ExtendedFocusTraversalOnArray;
 import de.jClipCorn.util.listener.ProgressCallbackProgressBarHelper;
 import de.jClipCorn.util.listener.UpdateCallbackListener;
-import de.jClipCorn.util.parser.imagesearch.CoverImageParser;
-import de.jClipCorn.util.parser.onlineparser.ParseResultHandler;
 
 public class FindCoverDialog extends JDialog {
 	private static final long serialVersionUID = -5790203846014201695L;

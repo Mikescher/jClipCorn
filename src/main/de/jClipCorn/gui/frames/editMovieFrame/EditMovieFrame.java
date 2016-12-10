@@ -46,6 +46,7 @@ import de.jClipCorn.gui.guiComponents.referenceChooser.JReferenceChooser;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.CachedResourceLoader;
 import de.jClipCorn.gui.resources.Resources;
+import de.jClipCorn.online.metadata.ParseResultHandler;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.Validator;
 import de.jClipCorn.util.adapter.UpdateCallbackAdapter;
@@ -55,7 +56,6 @@ import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.FileChooserHelper;
 import de.jClipCorn.util.listener.ImageCropperResultListener;
 import de.jClipCorn.util.listener.UpdateCallbackListener;
-import de.jClipCorn.util.parser.onlineparser.ParseResultHandler;
 import de.jClipCorn.util.userdataProblem.UserDataProblem;
 import de.jClipCorn.util.userdataProblem.UserDataProblemHandler;
 

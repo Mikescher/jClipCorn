@@ -1,34 +1,38 @@
-package de.jClipCorn.util.parser.imagesearch;
+package de.jClipCorn.online.cover.imdb;
 
 import java.awt.image.BufferedImage;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import de.jClipCorn.database.databaseElement.columnTypes.CCDBElementTyp;
 import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReference;
+import de.jClipCorn.online.OnlineSearchType;
+import de.jClipCorn.online.cover.AbstractImageSearch;
 import de.jClipCorn.util.helper.HTTPUtilities;
 import de.jClipCorn.util.listener.FinishListener;
 import de.jClipCorn.util.listener.ProgressCallbackListener;
 import de.jClipCorn.util.listener.UpdateCallbackListener;
-import de.jClipCorn.util.parser.imagesearch.imageparser.ImDBImageParser;
 
-public class IMDbCoverSearch extends AbstractImageSearch {
+public abstract class IMDBCoverSearchCommon extends AbstractImageSearch {
 
-	public IMDbCoverSearch(FinishListener fl, UpdateCallbackListener uc, ProgressCallbackListener pc) {
-		super(fl, uc, pc);
+	protected IMDBImageParserHelper helper = IMDBImageParserHelper.GetConfiguredHelper();
+	
+	public IMDBCoverSearchCommon(FinishListener fc, UpdateCallbackListener uc, ProgressCallbackListener pc) {
+		super(fc, uc, pc);
 	}
-
+	
+	protected abstract String getSearchResultFromHTML(String searchhtml);
+	
 	@Override
-	public void start(CopyOnWriteArrayList<String> exclusions, String searchText, CCDBElementTyp typ, CCOnlineReference reference) {
-		String searchurl = ImDBImageParser.getSearchURL(searchText, typ);
+	public void start(CopyOnWriteArrayList<String> exclusions, String searchText, OnlineSearchType typ, CCOnlineReference reference) {
+		String searchurl = helper.getSearchURL(searchText, typ);
 		String searchhtml = HTTPUtilities.getHTML(searchurl, true, false);
-		String direkturl = ImDBImageParser.getFirstSearchResult(searchhtml);
+		String direkturl = getSearchResultFromHTML(searchhtml);
 		if (!direkturl.isEmpty()) {
 			String direkthtml = HTTPUtilities.getHTML(direkturl, true, false);
 
 			progressCallback.step();
 
-			BufferedImage imgMain = ImDBImageParser.getMainpageImage(direkthtml);
+			BufferedImage imgMain = helper.getMainpageImage(direkthtml);
 			if (imgMain != null) {
 				updateCallback.onUpdate(imgMain);
 			}
@@ -40,10 +44,10 @@ public class IMDbCoverSearch extends AbstractImageSearch {
 				return;
 			}
 
-			String posterurl = ImDBImageParser.getCoverUrlPoster(direkturl);
+			String posterurl = helper.getCoverUrlPoster(direkturl);
 			String posterhtml = HTTPUtilities.getHTML(posterurl, true, false);
 
-			List<String> posterlinks = ImDBImageParser.extractImageLinks(posterhtml);
+			List<String> posterlinks = helper.extractImageLinks(posterhtml);
 
 			if (posterlinks.size() > 0) {
 				int currCID = 0;
@@ -56,7 +60,7 @@ public class IMDbCoverSearch extends AbstractImageSearch {
 
 					String urlhtml = HTTPUtilities.getHTML(url, true, false);
 
-					BufferedImage imgurl = ImDBImageParser.getDirectImage(urlhtml);
+					BufferedImage imgurl = helper.getDirectImage(urlhtml);
 					if (imgurl != null) {
 						updateCallback.onUpdate(imgurl);
 					}
@@ -69,10 +73,10 @@ public class IMDbCoverSearch extends AbstractImageSearch {
 					progressCallback.step();
 				}
 			} else {
-				String allurl = ImDBImageParser.getCoverUrlAll(direkturl);
+				String allurl = helper.getCoverUrlAll(direkturl);
 				String allhtml = HTTPUtilities.getHTML(allurl, true, false);
 
-				List<String> alllinks = ImDBImageParser.extractImageLinks(allhtml);
+				List<String> alllinks = helper.extractImageLinks(allhtml);
 
 				int currCID = 0;
 				for (String url : alllinks) {
@@ -84,7 +88,7 @@ public class IMDbCoverSearch extends AbstractImageSearch {
 
 					String urlhtml = HTTPUtilities.getHTML(url, true, false);
 
-					BufferedImage imgurl = ImDBImageParser.getDirectImage(urlhtml);
+					BufferedImage imgurl = helper.getDirectImage(urlhtml);
 					if (imgurl != null) {
 						updateCallback.onUpdate(imgurl);
 					}
@@ -110,5 +114,4 @@ public class IMDbCoverSearch extends AbstractImageSearch {
 	public int getProgressMax() {
 		return 24;
 	}
-
 }

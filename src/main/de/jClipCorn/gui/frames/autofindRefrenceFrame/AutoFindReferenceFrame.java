@@ -10,7 +10,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.image.BufferedImage;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
@@ -44,12 +43,11 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.gui.resources.CachedResourceLoader;
 import de.jClipCorn.gui.resources.Resources;
-import de.jClipCorn.util.helper.HTTPUtilities;
+import de.jClipCorn.online.OnlineSearchType;
+import de.jClipCorn.online.metadata.OnlineMetadata;
+import de.jClipCorn.online.metadata.imdb.IMDBParserCommon;
+import de.jClipCorn.online.metadata.tmdb.TMDBParser;
 import de.jClipCorn.util.helper.ImageUtilities;
-import de.jClipCorn.util.parser.onlineparser.ImDBParser;
-import de.jClipCorn.util.parser.onlineparser.ImDBParser.IMDBLimitedResult;
-import de.jClipCorn.util.parser.onlineparser.TMDBParser;
-import de.jClipCorn.util.parser.onlineparser.TMDBParser.TMDBFullResult;
 
 public class AutoFindReferenceFrame extends JFrame {
 	private static final long serialVersionUID = 4658458278263596774L;
@@ -345,19 +343,19 @@ public class AutoFindReferenceFrame extends JFrame {
 			edYearTmdb.setText(""); //$NON-NLS-1$
 		}
 		
-		if (value.imdbMeta != null && value.imdbMeta.Year > 0) edYearImDB.setText(Integer.toString(value.imdbMeta.Year));
+		if (value.imdbMeta != null && value.imdbMeta.Year != null) edYearImDB.setText(Integer.toString(value.imdbMeta.Year));
 		if (value.imdbMeta != null && value.imdbMeta.Cover != null) cvrImDB.setIcon(new ImageIcon(ImageUtilities.resizeHalfCoverImage(value.imdbMeta.Cover)));
 		if (value.imdbMeta != null && value.imdbMeta.Title != null) edTitleIMDB.setText(value.imdbMeta.Title);
-		if (value.imdbMeta != null && value.imdbMeta.Reference != null) edRefIMDB.setText(value.imdbMeta.Reference.toSerializationString());
+		if (value.imdbMeta != null && value.imdbMeta.Source != null) edRefIMDB.setText(value.imdbMeta.Source.toSerializationString());
 				
 		edRefLocal.setText(value.local.getOnlineReference().toSerializationString());
-		edRefTmdb.setText(value.tmdbRef.toSerializationString());
+		edRefTmdb.setText(value.tmdbMeta.Source.toSerializationString());
 
 		cvrLocal.setIcon(new ImageIcon(value.local.getHalfsizeCover()));
-		if (value.tmdbCover != null) cvrTmdb.setIcon(new ImageIcon(ImageUtilities.resizeHalfCoverImage(value.tmdbCover)));
+		if (value.tmdbMeta.Cover != null) cvrTmdb.setIcon(new ImageIcon(ImageUtilities.resizeHalfCoverImage(value.tmdbMeta.Cover)));
 		
-		btnApplyTmdb.setEnabled(value.tmdbRef.isSet());
-		btnApplyImdb.setEnabled(value.imdbMeta != null && value.imdbMeta.Reference != null && value.imdbMeta.Reference.isSet());
+		btnApplyTmdb.setEnabled(value.tmdbMeta != null);
+		btnApplyImdb.setEnabled(value.imdbMeta != null && value.imdbMeta.Source != null && value.imdbMeta.Source.isSet());
 		btnIgnore.setEnabled(true);
 		
 		if (! edYearLocal.getText().equals(edYearImDB.getText()) && btnApplyImdb.isEnabled()) btnApplyImdb.setBackground(Color.RED);
@@ -460,6 +458,9 @@ public class AutoFindReferenceFrame extends JFrame {
 	
 	private List<AutoFindRefElement> run(List<CCDatabaseElement> source) {
 		List<AutoFindRefElement> result = new ArrayList<>();
+
+		TMDBParser tmdbParser = new TMDBParser();
+		IMDBParserCommon imdbParser = IMDBParserCommon.GetConfiguredParser();
 		
 		int count = 0;
 		for (CCDatabaseElement element : source) {
@@ -479,37 +480,34 @@ public class AutoFindReferenceFrame extends JFrame {
 			}
 			
 			try {
-				CCOnlineReference ref;
+				CCOnlineReference tmdbReference;
+				OnlineSearchType searchtype = element.isMovie() ? OnlineSearchType.MOVIES : OnlineSearchType.SERIES;
 				
 				if (element.isMovie())
-					ref = TMDBParser.findMovieDirect(element.getTitle());
+					tmdbReference = tmdbParser.findMovieDirect(element.getTitle());
 				else
-					ref = TMDBParser.findSeriesDirect(element.getTitle());
+					tmdbReference = tmdbParser.findSeriesDirect(element.getTitle());
 				
-				IMDBLimitedResult imdbMeta = null;
+				OnlineMetadata imdbMeta = null;
 				
-				if (ref.isUnset()) {
-					CCOnlineReference iref = ImDBParser.getFirstResultReference(element.getTitle(), !element.isMovie());
-					if (iref != null && iref.type == CCOnlineRefType.IMDB)
-						imdbMeta = ImDBParser.getMetadata(iref);
+				if (tmdbReference.isUnset()) {
+					CCOnlineReference imdbReference = imdbParser.getFirstResultReference(element.getTitle(), searchtype);
+					if (imdbReference != null && imdbReference.type == CCOnlineRefType.IMDB)
+						imdbMeta = imdbParser.getMetadata(imdbReference, true);
 					
-					result.add(new AutoFindRefElement(element, CCOnlineReference.createNone(), null, null, imdbMeta));
+					result.add(new AutoFindRefElement(element, null, imdbMeta));
 				} else {
-					TMDBFullResult meta = TMDBParser.getMetadata(ref.id);
+					OnlineMetadata tmdbMeta = tmdbParser.getMetadata(tmdbReference, true);
 					
-					BufferedImage img = null;
-					if (meta != null && ! meta.CoverPath.isEmpty())
-						img = HTTPUtilities.getImage(meta.CoverPath);
-					
-					if (meta != null && meta.ImdbRef != null && meta.ImdbRef.isSet()) {
-						imdbMeta = ImDBParser.getMetadata(meta.ImdbRef);
+					if (tmdbMeta != null && tmdbMeta.AltRef != null && tmdbMeta.AltRef.isSet() && tmdbMeta.AltRef.type == CCOnlineRefType.IMDB) {
+						imdbMeta = imdbParser.getMetadata(tmdbMeta.AltRef, true);
 					} else {
-						CCOnlineReference iref = ImDBParser.getFirstResultReference(element.getTitle(), !element.isMovie());
-						if (iref != null && iref.type == CCOnlineRefType.IMDB)
-							imdbMeta = ImDBParser.getMetadata(iref);
+						CCOnlineReference imdbReference = imdbParser.getFirstResultReference(element.getTitle(), searchtype);
+						if (imdbReference != null && imdbReference.type == CCOnlineRefType.IMDB)
+							imdbMeta = imdbParser.getMetadata(imdbReference, true);
 					}
 					
-					result.add(new AutoFindRefElement(element, ref, meta, img, imdbMeta));
+					result.add(new AutoFindRefElement(element, tmdbMeta, imdbMeta));
 				}
 				
 			} catch (Exception e) {
@@ -544,11 +542,11 @@ public class AutoFindReferenceFrame extends JFrame {
 
 		AutoFindRefElement value = listResults.getSelectedValue();
 		
-		if (value.tmdbRef.isUnset()) {
+		if (value.tmdbMeta == null) {
 			return;
 		}
 		
-		value.local.setOnlineReference(value.tmdbRef);
+		value.local.setOnlineReference(value.tmdbMeta.Source);
 		
 		if (listResults.getSelectedIndex() + 1 >= listModel.size()) {
 			listResults.setSelectedIndex(-1);
@@ -567,11 +565,11 @@ public class AutoFindReferenceFrame extends JFrame {
 
 		AutoFindRefElement value = listResults.getSelectedValue();
 		
-		if (value.imdbMeta == null || value.imdbMeta.Reference.isUnset()) {
+		if (value.imdbMeta == null || value.imdbMeta.Source.isUnset()) {
 			return;
 		}
 		
-		value.local.setOnlineReference(value.imdbMeta.Reference);
+		value.local.setOnlineReference(value.imdbMeta.Source);
 		
 		if (listResults.getSelectedIndex() + 1 >= listModel.size()) {
 			listResults.setSelectedIndex(-1);

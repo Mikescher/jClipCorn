@@ -57,6 +57,7 @@ import de.jClipCorn.gui.frames.showIncompleteFilmSeriesFrame.ShowIncompleteFilmS
 import de.jClipCorn.gui.frames.showUpdateFrame.ShowUpdateFrame;
 import de.jClipCorn.gui.frames.statisticsFrame.StatisticsFrame;
 import de.jClipCorn.gui.frames.textExportFrame.TextExportFrame;
+import de.jClipCorn.gui.frames.updateMetadataFrame.UpdateMetadataFrame;
 import de.jClipCorn.gui.frames.watchHistoryFrame.WatchHistoryFrame;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.gui.resources.Resources;
@@ -160,6 +161,7 @@ public class CCActionTree extends UIActionTree{
 				add(extras, "ShuffleTable",             null,      "ClipMenuBar.Extras.ShuffleTable",             Resources.ICN_MENUBAR_SHUFFLE,              false, this::onClickExtrasShuffleTable);
 				add(extras, "ParseWatchData",           null,      "ClipMenuBar.Extras.ParseWatchData",           Resources.ICN_MENUBAR_WATCHDATA,            true,  this::onClickExtrasParseWatchData);
 				add(extras, "ShowIncompleteFilmSeries", null,      "ClipMenuBar.Extras.ShowIncompleteFilmSeries", Resources.ICN_MENUBAR_FINDINCOMPLETEZYKLUS, false, this::onClickExtrasShowIncompleteFilmSeries);
+				add(extras, "UpdateMetadata",           null,      "ClipMenuBar.Extras.UpdateMetadata",           Resources.ICN_MENUBAR_UPDATEMETADATA,       true,  this::onClickExtrasUpdateMetadata);
 				add(extras, "ShowSettings",             null,      "ClipMenuBar.Extras.Settings",                 Resources.ICN_MENUBAR_SETTINGS,             false, this::onClickExtrasSettings);
 			}
 			
@@ -353,6 +355,11 @@ public class CCActionTree extends UIActionTree{
 	private void onClickExtrasShowIncompleteFilmSeries() {
 		ShowIncompleteFilmSeriesFrame sifsf = new ShowIncompleteFilmSeriesFrame(owner, movielist);
 		sifsf.setVisible(true);
+	}
+	
+	private void onClickExtrasUpdateMetadata() {
+		UpdateMetadataFrame umf = new UpdateMetadataFrame(owner, movielist);
+		umf.setVisible(true);
 	}
 	
 	private void onClickMaintenanceMassChangeViewed() {

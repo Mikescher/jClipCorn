@@ -37,7 +37,7 @@ import de.jClipCorn.gui.guiComponents.referenceChooser.JReferenceChooser;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.CachedResourceLoader;
 import de.jClipCorn.gui.resources.Resources;
-import de.jClipCorn.util.parser.onlineparser.ParseResultHandler;
+import de.jClipCorn.online.metadata.ParseResultHandler;
 import de.jClipCorn.util.userdataProblem.UserDataProblem;
 import de.jClipCorn.util.userdataProblem.UserDataProblemHandler;
 

@@ -1,4 +1,4 @@
-package de.jClipCorn.util.parser.onlineparser;
+package de.jClipCorn.online.cover.imdb;
 
 import java.util.HashMap;
 

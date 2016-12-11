@@ -80,6 +80,10 @@ public abstract class JCCSimpleTable<TData> extends JScrollPane implements ListS
 		model.setData(newdata);
 	}
 
+	public List<TData> getDataCopy() {
+		return model.getDataCopy();
+	}
+
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		if (e.getClickCount() == 2 && e.getButton() == MouseEvent.BUTTON1) {
@@ -114,6 +118,14 @@ public abstract class JCCSimpleTable<TData> extends JScrollPane implements ListS
 			TData el = getSelectedElement();
 			if (el != null) OnSelectElement(el);
 		}
+	}
+
+	public void changeData(int idx, TData newData) {
+		model.changeData(idx, newData);
+	}
+
+	public void changeData(TData oldData, TData newData) {
+		model.changeData(oldData, newData);
 	}
 
 	protected abstract List<JCCSimpleColumnPrototype<TData>> configureColumns();

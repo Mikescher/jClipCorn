@@ -6,6 +6,7 @@ import java.util.Map;
 import de.jClipCorn.database.databaseElement.columnTypes.CCFSK;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGenreList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReference;
+import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineScore;
 
 public class OnlineMetadata {
 
@@ -21,13 +22,11 @@ public class OnlineMetadata {
 	public Map<String, Integer> FSKList = null;
 	public CCFSK FSK = null;
 	public CCOnlineReference AltRef = null;
-
 	
 	public OnlineMetadata(CCOnlineReference source) {
 		super();
 		Source = source;
 	}
-
 
 	public void setMissingFields(OnlineMetadata base) {
 		if (this.Title == null || this.Title.isEmpty()) this.Title = base.Title;
@@ -39,5 +38,10 @@ public class OnlineMetadata {
 		if (this.Cover == null) {this.Cover = base.Cover; this.CoverURL = base.CoverURL; }
 		if (this.FSK == null) {this.FSK = base.FSK; this.FSKList = base.FSKList;}		
 		if (this.AltRef == null || this.AltRef.isUnset()) this.AltRef = base.AltRef;
+	}
+	
+	public CCOnlineScore getOnlineScore() {
+		if (OnlineScore==null) return null;
+		return CCOnlineScore.getWrapper().find(OnlineScore);
 	}
 }

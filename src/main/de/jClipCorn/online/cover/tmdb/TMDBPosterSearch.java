@@ -10,7 +10,7 @@ import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.online.OnlineSearchType;
 import de.jClipCorn.online.cover.AbstractImageSearch;
 import de.jClipCorn.online.metadata.tmdb.TMDBParser;
-import de.jClipCorn.util.helper.HTTPUtilities;
+import de.jClipCorn.util.http.HTTPUtilities;
 import de.jClipCorn.util.listener.FinishListener;
 import de.jClipCorn.util.listener.ProgressCallbackListener;
 import de.jClipCorn.util.listener.UpdateCallbackListener;

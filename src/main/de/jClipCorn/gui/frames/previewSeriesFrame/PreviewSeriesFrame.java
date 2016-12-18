@@ -71,9 +71,9 @@ import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.formatter.TimeIntervallFormatter;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.helper.FileChooserHelper;
-import de.jClipCorn.util.helper.HTTPUtilities;
 import de.jClipCorn.util.helper.ImageUtilities;
 import de.jClipCorn.util.helper.SimpleFileUtils;
+import de.jClipCorn.util.http.HTTPUtilities;
 import de.jClipCorn.util.listener.EpisodeSearchCallbackListener;
 import de.jClipCorn.util.listener.UpdateCallbackListener;
 

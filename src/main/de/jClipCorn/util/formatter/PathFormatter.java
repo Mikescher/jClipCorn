@@ -512,4 +512,49 @@ public class PathFormatter {
 		
 		return path;
 	}
+	
+	public static String getTempPath() {
+		return System.getProperty("java.io.tmpdir");
+	}
+	
+	public static String getHomePath() {
+		return System.getProperty("user.home");	
+	}
+	
+	private static String expandoReplace(String value, String search, String repl) {
+		if (search.endsWith(SEPERATOR)) search = search.substring(0, search.length()-1);
+		if (repl.endsWith(SEPERATOR)) repl = repl.substring(0, repl.length()-1);
+		
+		if (value.contains(search + SEPERATOR)) {
+			return value.replace(search + SEPERATOR, repl + SEPERATOR);
+		} else if (value.contains(search)) {
+			return value.replace(search, repl);
+		} else {
+			return value;
+		}
+		
+	}
+	
+	public static String convertStoragePathToDevicePath(String path) {
+		path = path.replace(SERIALIZATION_SEPERATOR, SEPERATOR);
+
+		path = expandoReplace(path, "%temp%", getTempPath());
+		path = expandoReplace(path, "%home%", getHomePath());
+		
+		return path;
+	}
+	
+	public static String convertDevicePathToStoragePath(String path) {
+		path = expandoReplace(path, getTempPath(), "%temp%");
+		path = expandoReplace(path, getHomePath(), "%home%");
+
+		path = path.replace(SEPERATOR, SERIALIZATION_SEPERATOR);
+
+		return path;
+	}
+	
+	public static boolean fileExists(String path) {
+		File f = new File(path);
+		return (f.exists() && !f.isDirectory());
+	}
 }

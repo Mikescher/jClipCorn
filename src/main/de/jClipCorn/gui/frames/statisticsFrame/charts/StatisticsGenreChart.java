@@ -13,9 +13,9 @@ import org.jfree.data.category.DefaultCategoryDataset;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGenre;
+import de.jClipCorn.gui.frames.statisticsFrame.StatisticsHelper;
 import de.jClipCorn.gui.frames.statisticsFrame.StatisticsTypeFilter;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.util.helper.StatisticsHelper;
 import de.jClipCorn.util.stream.CCStream;
 
 public class StatisticsGenreChart extends StatisticsChart {

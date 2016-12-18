@@ -39,13 +39,21 @@ public class CCStringProperty extends CCProperty<String> {
 			return standard;
 		}
 		
-		return val;
+		return transformFromStorage(val);
 	}
 
 	@Override
 	public String setValue(String val) {
-		properties.setProperty(identifier, val);
+		properties.setProperty(identifier, transformToStorage(val));
 		
 		return getValue();
+	}
+	
+	protected String transformToStorage(String value) {
+		return value;
+	}
+	
+	protected String transformFromStorage(String value) {
+		return value;
 	}
 }

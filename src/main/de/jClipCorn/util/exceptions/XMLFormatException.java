@@ -6,4 +6,8 @@ public class XMLFormatException extends Exception {
 	public XMLFormatException(String message) {
 		super(message);
 	}
+
+	public XMLFormatException(String message, Exception cause) {
+		super(message, cause);
+	}
 }

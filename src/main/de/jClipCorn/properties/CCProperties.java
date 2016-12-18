@@ -32,6 +32,7 @@ import de.jClipCorn.properties.property.CCEnumSetProperty;
 import de.jClipCorn.properties.property.CCEnumSetProperty.EnumSetValue;
 import de.jClipCorn.properties.property.CCPIntProperty;
 import de.jClipCorn.properties.property.CCPathProperty;
+import de.jClipCorn.properties.property.CCPathProperty.CCPathPropertyMode;
 import de.jClipCorn.properties.property.CCProperty;
 import de.jClipCorn.properties.property.CCRIntProperty;
 import de.jClipCorn.properties.property.CCSeasonRegexListProperty;
@@ -170,6 +171,8 @@ public class CCProperties {
 	public CCBoolProperty 									PROP_SHOW_EXTENDED_FEATURES;
 	public CCBoolProperty									PROP_MAINFRAME_SORT_GENRES;
 	public CCEnumProperty<CCDateTimeFormat>					PROP_UI_DATETIME_FORMAT;
+	public CCBoolProperty									PROP_DEBUG_USE_HTTPCACHE;
+	public CCPathProperty									PROP_DEBUG_HTTPCACHE_PATH;
 	
 	public boolean ARG_READONLY = false;
 	
@@ -268,7 +271,7 @@ public class CCProperties {
 		PROP_SHOW_PARTIAL_VIEWED_STATE			= new CCBoolProperty(CAT_SERIES,			this,   "PROP_SHOW_PARTIAL_VIEWED_STATE",			false);
 		PROP_SEASON_INDEX_REGEXPRESSIONS		= new CCSeasonRegexListProperty(CAT_SERIES, this, 	"PROP_SEASON_INDEX_REGEXPRESSIONS", 		getDefSeasonRegex());
 		
-		PROP_PLAY_VLC_PATH						= new CCPathProperty(CAT_PLAY, 				this,	"PROP_PLAY_VLC_PATH",						"", 								PathFormatter.appendAndPrependSeparator("vlc.exe"));
+		PROP_PLAY_VLC_PATH						= new CCPathProperty(CAT_PLAY, 				this,	"PROP_PLAY_VLC_PATH",						"", 								PathFormatter.appendAndPrependSeparator("vlc.exe"), CCPathPropertyMode.FILES);
 		PROP_PLAY_VLC_FULLSCREEN				= new CCBoolProperty(CAT_PLAY, 				this,   "PROP_PLAY_VLC_FULLSCREEN", 				false);
 		PROP_PLAY_VLC_AUTOPLAY					= new CCBoolProperty(CAT_PLAY, 				this,   "PROP_PLAY_VLC_AUTOPLAY", 					true);
 		PROP_PLAY_USESTANDARDONMISSINGVLC		= new CCBoolProperty(CAT_PLAY, 				this,   "PROP_PLAY_USESTANDARDONMISSINGVLC", 		true);
@@ -313,6 +316,8 @@ public class CCProperties {
 		PROP_MAINFRAME_HEIGHT					= new CCPIntProperty(NONVISIBLE,	 		this,   "PROP_MAINFRAME_HEIGHT",					getDefMFHeight());
 		PROP_DATABASE_DRIVER					= new CCEnumProperty<>(NONVISIBLE, 			this, 	"PROP_DATABASE_DRIVER", 					CCDatabaseDriver.SQLITE,			CCDatabaseDriver.getWrapper());
 		PROP_SHOW_EXTENDED_FEATURES				= new CCBoolProperty(NONVISIBLE,	 		this,   "PROP_SHOW_EXTENDED_FEATURES",				true);
+		PROP_DEBUG_USE_HTTPCACHE				= new CCBoolProperty(NONVISIBLE,	 		this,   "PROP_DEBUG_USE_HTTPCACHE",					false);
+		PROP_DEBUG_HTTPCACHE_PATH				= new CCPathProperty(NONVISIBLE,	 		this,   "PROP_DEBUG_HTTPCACHE_PATH",				"%temp%/jClipCorn/httpcache/", 		null, CCPathPropertyMode.DIRECTORIES);
 	}
 
 	private String getDefFLPath() {

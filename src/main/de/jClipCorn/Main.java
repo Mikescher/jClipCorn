@@ -130,7 +130,7 @@ public class Main {
 //   - can use multiple online-references (auto add imdb, add proxer and MAM for many)
 //   - Export and import reference mapping file (to get mappings to other dbs) ?
 
-// TODO get actors from online and save to db
+//TODO get actors from online and save to db
 //      add filter for actors. 
 //      don't show all actors, make it configurable which actors are "enabled" (?)
 
@@ -144,3 +144,5 @@ public class Main {
 //        -> everytime we change a mov/ep/sea/ser we copy its old state with a timestamp to the log_table
 //        -> then in the ui we can restore old states and even view the database at a specific timestamp
 //        -> option to clean up state (only keep 1 per day for older than month && only keep one per week for older than year)
+
+//TODO send useragent or sth with image(cover) requests (a lot of requests fail but work in browser)

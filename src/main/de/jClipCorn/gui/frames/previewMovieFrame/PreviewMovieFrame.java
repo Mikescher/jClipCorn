@@ -31,7 +31,7 @@ import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.formatter.FileSizeFormatter;
 import de.jClipCorn.util.formatter.TimeIntervallFormatter;
 import de.jClipCorn.util.helper.DialogHelper;
-import de.jClipCorn.util.helper.HTTPUtilities;
+import de.jClipCorn.util.http.HTTPUtilities;
 import de.jClipCorn.util.listener.UpdateCallbackListener;
 
 public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener {

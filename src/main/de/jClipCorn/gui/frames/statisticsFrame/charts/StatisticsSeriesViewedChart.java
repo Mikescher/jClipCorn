@@ -30,10 +30,10 @@ import org.jfree.ui.TextAnchor;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.CCSeries;
+import de.jClipCorn.gui.frames.statisticsFrame.StatisticsHelper;
 import de.jClipCorn.gui.frames.statisticsFrame.StatisticsTypeFilter;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.datetime.CCDate;
-import de.jClipCorn.util.helper.StatisticsHelper;
 
 public class StatisticsSeriesViewedChart extends StatisticsChart {
 

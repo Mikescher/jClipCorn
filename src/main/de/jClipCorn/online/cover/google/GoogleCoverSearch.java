@@ -7,7 +7,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReference;
 import de.jClipCorn.online.OnlineSearchType;
 import de.jClipCorn.online.cover.AbstractImageSearch;
-import de.jClipCorn.util.helper.HTTPUtilities;
+import de.jClipCorn.util.http.HTTPUtilities;
 import de.jClipCorn.util.listener.FinishListener;
 import de.jClipCorn.util.listener.ProgressCallbackListener;
 import de.jClipCorn.util.listener.UpdateCallbackListener;

@@ -23,7 +23,7 @@ import de.jClipCorn.properties.enumerations.BrowserLanguage;
 import de.jClipCorn.properties.enumerations.MetadataParserImplementation;
 import de.jClipCorn.util.Tuple;
 import de.jClipCorn.util.datetime.CCDate;
-import de.jClipCorn.util.helper.HTTPUtilities;
+import de.jClipCorn.util.http.HTTPUtilities;
 import de.jClipCorn.util.stream.CCStreams;
 
 public class TMDBParser extends Metadataparser {

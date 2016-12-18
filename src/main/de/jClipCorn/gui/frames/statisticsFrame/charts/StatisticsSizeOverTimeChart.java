@@ -13,11 +13,11 @@ import org.jfree.data.xy.XYDataset;
 
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.ICCPlayableElement;
+import de.jClipCorn.gui.frames.statisticsFrame.StatisticsHelper;
 import de.jClipCorn.gui.frames.statisticsFrame.StatisticsTypeFilter;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.formatter.ByteFormat;
-import de.jClipCorn.util.helper.StatisticsHelper;
 import de.jClipCorn.util.stream.CCStream;
 
 public class StatisticsSizeOverTimeChart extends StatisticsChart {

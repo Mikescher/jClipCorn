@@ -40,7 +40,6 @@ import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.TimeKeeper;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.formatter.TimeIntervallFormatter;
-import de.jClipCorn.util.helper.StatisticsHelper;
 
 public class StatisticsFrame extends JFrame {
 	private static final long serialVersionUID = 2443934162053374481L;

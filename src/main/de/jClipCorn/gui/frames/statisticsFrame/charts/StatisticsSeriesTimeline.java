@@ -17,6 +17,7 @@ import javax.swing.border.EmptyBorder;
 
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCSeries;
+import de.jClipCorn.gui.frames.statisticsFrame.StatisticsHelper;
 import de.jClipCorn.gui.frames.statisticsFrame.StatisticsPanel;
 import de.jClipCorn.gui.frames.statisticsFrame.StatisticsTypeFilter;
 import de.jClipCorn.gui.frames.statisticsFrame.timeline.TimelineCaptionComponent;
@@ -27,7 +28,6 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.datetime.CCDatespan;
-import de.jClipCorn.util.helper.StatisticsHelper;
 
 public class StatisticsSeriesTimeline extends StatisticsPanel {
 	private CCMovieList movielist;

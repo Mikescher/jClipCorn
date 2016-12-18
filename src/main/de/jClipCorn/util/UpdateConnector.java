@@ -5,7 +5,7 @@ import java.awt.event.ActionListener;
 
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
-import de.jClipCorn.util.helper.HTTPUtilities;
+import de.jClipCorn.util.http.HTTPUtilities;
 
 public class UpdateConnector implements Runnable {
 	private final static String HIGHSCORE_URL = "http://www.mikescher.com/update.php?Name=jClipCorn"; //$NON-NLS-1$

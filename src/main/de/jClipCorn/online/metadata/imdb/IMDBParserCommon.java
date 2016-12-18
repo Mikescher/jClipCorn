@@ -16,7 +16,7 @@ import de.jClipCorn.online.metadata.OnlineMetadata;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.enumerations.MetadataParserImplementation;
 import de.jClipCorn.util.Tuple;
-import de.jClipCorn.util.helper.HTTPUtilities;
+import de.jClipCorn.util.http.HTTPUtilities;
 
 public abstract class IMDBParserCommon extends Metadataparser {
 	

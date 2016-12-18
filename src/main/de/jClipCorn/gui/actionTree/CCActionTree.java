@@ -67,8 +67,8 @@ import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.ApplicationHelper;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.helper.FileChooserHelper;
-import de.jClipCorn.util.helper.HTTPUtilities;
 import de.jClipCorn.util.helper.SimpleFileUtils;
+import de.jClipCorn.util.http.HTTPUtilities;
 
 public class CCActionTree extends UIActionTree{
 	public final static String EVENT_ON_MOVIE_EXECUTED_0 = "PlayMovie"; //$NON-NLS-1$

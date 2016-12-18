@@ -14,7 +14,7 @@ import org.jsoup.select.Elements;
 
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
-import de.jClipCorn.util.helper.HTTPUtilities;
+import de.jClipCorn.util.http.HTTPUtilities;
 import de.jClipCorn.util.listener.ProgressCallbackListener;
 
 @SuppressWarnings("nls")

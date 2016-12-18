@@ -1,4 +1,4 @@
-package de.jClipCorn.util.helper;
+package de.jClipCorn.gui.frames.statisticsFrame;
 
 import java.util.ArrayList;
 import java.util.Arrays;

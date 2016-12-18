@@ -51,8 +51,8 @@ import de.jClipCorn.online.metadata.OnlineMetadata;
 import de.jClipCorn.online.metadata.ParseResultHandler;
 import de.jClipCorn.util.Tuple;
 import de.jClipCorn.util.helper.ExtendedFocusTraversalOnArray;
-import de.jClipCorn.util.helper.HTTPUtilities;
 import de.jClipCorn.util.helper.ImageUtilities;
+import de.jClipCorn.util.http.HTTPUtilities;
 
 public class ParseOnlineDialog extends JDialog {
 	private static final long serialVersionUID = 3777677368743220383L;

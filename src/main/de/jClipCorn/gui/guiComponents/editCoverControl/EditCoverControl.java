@@ -26,8 +26,8 @@ import de.jClipCorn.online.metadata.ParseResultHandler;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.ClipboardUtilities;
 import de.jClipCorn.util.helper.FileChooserHelper;
-import de.jClipCorn.util.helper.HTTPUtilities;
 import de.jClipCorn.util.helper.ImageUtilities;
+import de.jClipCorn.util.http.HTTPUtilities;
 
 public class EditCoverControl extends AbstractEditCoverControl {
 	private static final long serialVersionUID = -4086336311809789696L;

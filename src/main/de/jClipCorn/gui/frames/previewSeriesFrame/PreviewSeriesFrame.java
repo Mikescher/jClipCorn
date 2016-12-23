@@ -66,6 +66,7 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.gui.resources.CachedResourceLoader;
 import de.jClipCorn.gui.resources.Resources;
+import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.formatter.FileSizeFormatter;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.formatter.TimeIntervallFormatter;
@@ -152,7 +153,7 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 	public PreviewSeriesFrame(Component owner, CCSeries ser) {
 		this.dispSeries = ser;
 		initGUI();
-		setSize(new Dimension(1000, 700));
+		setSize(new Dimension(1000, getInitFrameHeight()));
 		setMinimumSize(new Dimension(750, 680));
 
 		updateData();
@@ -171,7 +172,7 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 	public PreviewSeriesFrame(Component owner, CCSeason sea) {
 		this.dispSeries = sea.getSeries();
 		initGUI();
-		setSize(new Dimension(1000, 700));
+		setSize(new Dimension(1000, getInitFrameHeight()));
 		setMinimumSize(new Dimension(750, 680));
 
 		updateData();
@@ -186,7 +187,7 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 	public PreviewSeriesFrame(Component owner, CCEpisode epi) {
 		this.dispSeries = epi.getSeries();
 		initGUI();
-		setSize(new Dimension(1000, 700));
+		setSize(new Dimension(1000, getInitFrameHeight()));
 		setMinimumSize(new Dimension(750, 680));
 
 		updateData();
@@ -200,6 +201,21 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 		initListener(epi.getSeries());
 	}
 
+	private static int getInitFrameHeight() {
+		int epCount = CCProperties.getInstance().PROP_SERIES_PREVIEWFRAME_HEIGHT.getValue();
+		
+		int szTitlebar     =  29;
+		int szMenubar      =  21;
+		int szTopArea      = 194;
+		int szTitleArea    =  42;
+		int szTableHeader  =  26;
+		int szTable        =  18 * epCount;
+		int szBottomMargin =  11;
+		int szBorderBottom =   8;
+		
+		return szTitlebar + szMenubar + szTopArea + szTitleArea + szTableHeader + szTable + szBottomMargin + szBorderBottom;
+	}
+	
 	private void initListener(CCSeries ser) {
 		ser.getMovieList().addChangeListener(new CCDBUpdateListener() {
 			@Override

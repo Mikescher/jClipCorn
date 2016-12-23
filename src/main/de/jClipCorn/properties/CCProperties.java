@@ -173,7 +173,8 @@ public class CCProperties {
 	public CCEnumProperty<CCDateTimeFormat>					PROP_UI_DATETIME_FORMAT;
 	public CCBoolProperty									PROP_DEBUG_USE_HTTPCACHE;
 	public CCPathProperty									PROP_DEBUG_HTTPCACHE_PATH;
-	
+	public CCPIntProperty 									PROP_SERIES_PREVIEWFRAME_HEIGHT;
+
 	public boolean ARG_READONLY = false;
 	
 	public boolean firstLaunch = false;
@@ -318,6 +319,7 @@ public class CCProperties {
 		PROP_SHOW_EXTENDED_FEATURES				= new CCBoolProperty(NONVISIBLE,	 		this,   "PROP_SHOW_EXTENDED_FEATURES",				true);
 		PROP_DEBUG_USE_HTTPCACHE				= new CCBoolProperty(NONVISIBLE,	 		this,   "PROP_DEBUG_USE_HTTPCACHE",					false);
 		PROP_DEBUG_HTTPCACHE_PATH				= new CCPathProperty(NONVISIBLE,	 		this,   "PROP_DEBUG_HTTPCACHE_PATH",				"%temp%/jClipCorn/httpcache/", 		null, CCPathPropertyMode.DIRECTORIES);
+		PROP_SERIES_PREVIEWFRAME_HEIGHT			= new CCPIntProperty(NONVISIBLE, 			this, 	"PROP_SERIES_PREVIEWFRAME_HEIGHT", 			22);
 	}
 
 	private String getDefFLPath() {

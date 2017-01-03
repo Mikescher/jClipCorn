@@ -146,3 +146,22 @@ public class Main {
 //        -> option to clean up state (only keep 1 per day for older than month && only keep one per week for older than year)
 
 //TODO send useragent or sth with image(cover) requests (a lot of requests fail but work in browser)
+
+//TODO use omdb instead of direct imdb query
+
+//TODO Custom Filter for AddDate
+//TODO Custom Filter for Viewed_Extended (Not, Partial, Full, Never)
+//TODO More missing CustomFilter (?)
+
+//TODO Don't reset filter on expand/collapse tree (excep click on /all/)
+//     Ctrl+Click to add element to current filter (interactive create custom filter)
+//     Entry to edit (and save) current temp filter
+
+//TODO test stuf under linux:
+//     Open in explorer
+//     Not all windows work under metal (or is GNOME etc the problem): not enough space, eg CustomFilter windows
+//     swing exceptions (in log)
+
+//TODO Dialog to copy movies to other folder 
+//     - only copy new ones, bzw otehr filters
+//     - progress, async, abort

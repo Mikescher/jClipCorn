@@ -159,7 +159,7 @@ public class CachedWebConnection extends WebConnectionLayer {
 	
 	private void sleep(int ms) {
 		try {
-			Thread.sleep(ms);
+			Thread.sleep(ms/100);
 		} catch (InterruptedException e) {
 			CCLog.addError(e);
 		}

@@ -168,7 +168,9 @@ public class TMDBParser extends Metadataparser {
 
 	@SuppressWarnings("nls")
 	private OnlineMetadata getMetadataInternal(CCOnlineReference ref, BrowserLanguage lang, boolean downloadCover) {
-		String url = URL_BASE + ref.id + "?api_key=" + API_KEY;
+		String urlRaw = URL_BASE + ref.id + "?api_key=" + API_KEY;
+		
+		String url = urlRaw;
 		
 		if (CCProperties.getInstance().PROP_TMDB_LANGUAGE.getValue() != BrowserLanguage.ENGLISH) {
 			url += "&language=" + CCProperties.getInstance().PROP_TMDB_LANGUAGE.getValue().asLanguageID();
@@ -177,7 +179,7 @@ public class TMDBParser extends Metadataparser {
 		String json = HTTPUtilities.getRateLimitedHTML(url, false, false);
 		try {
 			OnlineMetadata result = new OnlineMetadata(ref);
-			
+
 			JSONObject root = new JSONObject(new JSONTokener(json));
 
 			result.Title = hasString(root, "title") ? root.getString("title") : root.getString("name");
@@ -185,7 +187,15 @@ public class TMDBParser extends Metadataparser {
 			result.Year = hasString(root, "release_date") ? CCDate.parse(root.getString("release_date"), "yyyy-MM-dd").getYear() : null;
 			
 			result.Length = root.optInt("runtime", 0);
-			if (result.Length == 0) result.Length = null;
+			if (result.Length == 0) {
+				result.Length = null;
+				
+				if (!url.equals(urlRaw)) {
+					// sometimes runtime is only set in en-US (??)
+					JSONObject fallback = new JSONObject(new JSONTokener(HTTPUtilities.getRateLimitedHTML(urlRaw, false, false)));
+					if (fallback.optInt("runtime", 0) != 0) result.Length = fallback.optInt("runtime", 0);
+				}
+			}
 			
 			result.CoverURL = hasString(root, "poster_path") ? (URL_IMAGE_BASE + root.getString("poster_path")) : null;
 			if (result.CoverURL != null && downloadCover) result.Cover = HTTPUtilities.getImage(result.CoverURL);

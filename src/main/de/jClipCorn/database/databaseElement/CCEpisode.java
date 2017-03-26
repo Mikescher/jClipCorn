@@ -255,12 +255,14 @@ public class CCEpisode implements ICCPlayableElement{
 		int idx = 0;
 		
 		for (CCSeason season : getSeries().getSeasonsSorted()) {
-			if (season == getSeason()) break;
-			
-			if (!season.isEmpty()) idx += season.getLastEpisodeNumber();
+			for (CCEpisode episode : season.getEpisodeList()) {
+				idx++;
+				
+				if (episode == this) return idx;
+			}
 		}
 
-		return idx + episodeNumber;
+		return -999;
 	}
 
 	@Override

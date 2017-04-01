@@ -4,6 +4,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.UUID;
 
 import javax.imageio.ImageIO;
@@ -18,13 +19,15 @@ import de.jClipCorn.util.helper.SimpleFileUtils;
 
 @SuppressWarnings("nls")
 public class CachedWebConnection extends WebConnectionLayer {
-
+	private final float DELAY_FACTOR = 0.01f;
+	
 	private final WebConnectionLayer conn;
 	
 	private String cachePath;
 	private String cacheDatabasePath;
 	
 	private SimpleSerializableData db;
+	private HashMap<String, String> dbref;
 	
 	public CachedWebConnection(WebConnectionLayer realConnection) {
 		conn = realConnection;
@@ -41,8 +44,18 @@ public class CachedWebConnection extends WebConnectionLayer {
 		try {
 			if (PathFormatter.fileExists(cacheDatabasePath)) {
 				db = SimpleSerializableData.load(cacheDatabasePath);
+				dbref = new HashMap<>();
+				for (SimpleSerializableData dat : db.enumerateChildren()) {
+					try {
+						if (dat.getInt("type") == 0)
+							dbref.put(dat.getStr("result"), SimpleFileUtils.readUTF8TextFile(PathFormatter.combine(cachePath, dat.getStr("result"))));
+					} catch (Exception e) {
+						CCLog.addError(e);
+					}
+				}
 			} else {
 				db = SimpleSerializableData.createEmpty();
+				dbref = new HashMap<>();
 			}
 		} catch (XMLFormatException e) {
 			CCLog.addError(e);
@@ -63,7 +76,10 @@ public class CachedWebConnection extends WebConnectionLayer {
 				sleep(d.getInt("time"));
 				
 				if (d.getInt("type") == 0) {
-					return SimpleFileUtils.readUTF8TextFile(PathFormatter.combine(cachePath, d.getStr("result")));
+					if (dbref.containsKey(d.getStr("result")))
+						return dbref.get(d.getStr("result"));
+					else
+						return SimpleFileUtils.readUTF8TextFile(PathFormatter.combine(cachePath, d.getStr("result")));
 				} else if (d.getInt("type") == 1) {
 					throw new HTTPErrorCodeException(d.getInt("statuscode"));
 				} else if (d.getInt("type") == 2) {
@@ -158,8 +174,12 @@ public class CachedWebConnection extends WebConnectionLayer {
 	}
 	
 	private void sleep(int ms) {
+		ms = (int)(ms * DELAY_FACTOR);
+		
+		if (ms == 0) return;
+		
 		try {
-			Thread.sleep(ms/100);
+			Thread.sleep(ms);
 		} catch (InterruptedException e) {
 			CCLog.addError(e);
 		}

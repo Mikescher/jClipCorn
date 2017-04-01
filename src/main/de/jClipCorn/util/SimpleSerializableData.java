@@ -198,4 +198,8 @@ public class SimpleSerializableData {
 			e.addContent(sub);
 		}
 	}
+	
+	public Iterable<SimpleSerializableData> enumerateChildren() {
+		return children.values();
+	}
 }

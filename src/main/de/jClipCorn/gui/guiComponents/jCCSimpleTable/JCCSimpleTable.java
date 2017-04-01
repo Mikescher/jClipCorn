@@ -3,11 +3,13 @@ package de.jClipCorn.gui.guiComponents.jCCSimpleTable;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.List;
+import java.util.function.Function;
 
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.table.TableRowSorter;
 
 import com.sun.java.swing.plaf.windows.WindowsScrollBarUI;
 
@@ -20,6 +22,7 @@ public abstract class JCCSimpleTable<TData> extends JScrollPane implements ListS
 	private final List<JCCSimpleColumnPrototype<TData>> columns;
 	private final JCCSimpleTableModel<TData> model;
 	private final JCCSimpleSFixTable<TData> table;
+	private final TableRowSorter<JCCSimpleTableModel<TData>> sorter;
 
 	private final TableColumnAdjuster adjuster;
 	
@@ -28,6 +31,7 @@ public abstract class JCCSimpleTable<TData> extends JScrollPane implements ListS
 		
 		columns = configureColumns();
 		model = new JCCSimpleTableModel<>(columns);
+		sorter = new TableRowSorter<>(model);
 
 		table = new JCCSimpleSFixTable<>(model, columns);
 		configureTable();
@@ -46,6 +50,8 @@ public abstract class JCCSimpleTable<TData> extends JScrollPane implements ListS
 
 		table.getSelectionModel().addListSelectionListener(this);
 		table.addMouseListener(this);
+		
+		table.setRowSorter(sorter);
 		
 		if (this.getVerticalScrollBar().getUI() instanceof WindowsScrollBarUI)
 			this.getVerticalScrollBar().setUI(new ClipVerticalScrollbarUI(32));
@@ -82,6 +88,14 @@ public abstract class JCCSimpleTable<TData> extends JScrollPane implements ListS
 
 	public List<TData> getDataCopy() {
 		return model.getDataCopy();
+	}
+	
+	public void setFilter(Function<TData, Boolean> filter) {
+		sorter.setRowFilter(new JCCSimpleRowFilter<>(filter));
+	}
+	
+	public void resetFilter() {
+		sorter.setRowFilter(null);
 	}
 
 	@Override

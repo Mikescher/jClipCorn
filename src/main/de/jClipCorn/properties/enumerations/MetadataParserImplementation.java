@@ -4,18 +4,21 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.online.metadata.Metadataparser;
 import de.jClipCorn.online.metadata.imdb.IMDBParserCommon;
+import de.jClipCorn.online.metadata.mal.MALParser;
 import de.jClipCorn.online.metadata.tmdb.TMDBParser;
 import de.jClipCorn.util.enumextension.ContinoousEnum;
 import de.jClipCorn.util.enumextension.EnumWrapper;
 
 public enum MetadataParserImplementation implements ContinoousEnum<MetadataParserImplementation> {
 	IMDB(0), 
-	TMDB(1);
+	TMDB(1), 
+	MAL(2);
 	
 	@SuppressWarnings("nls")
 	private final static String NAMES[] = {
 		LocaleBundle.getString("MetadataSearchImplementation.IMDB"),
 		LocaleBundle.getString("MetadataSearchImplementation.TMDB"),
+		LocaleBundle.getString("MetadataSearchImplementation.MAL"),
 	};
 	
 	private int id;
@@ -60,6 +63,8 @@ public enum MetadataParserImplementation implements ContinoousEnum<MetadataParse
 			return IMDBParserCommon.GetConfiguredParser();
 		case TMDB:
 			return new TMDBParser();
+		case MAL:
+			return new MALParser();
 		default:
 			CCLog.addDefaultSwitchError(this, this);
 			return null;

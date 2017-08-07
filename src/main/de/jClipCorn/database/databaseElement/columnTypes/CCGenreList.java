@@ -98,6 +98,12 @@ public class CCGenreList {
 		addGenre(genre8);
 	}
 
+	public CCGenreList(List<CCGenre> data) {
+		genres = 0x0000000000000000L;
+		
+		for (CCGenre g : data) addGenre(g);
+	}
+
 	private int getGenreInt(int idx) {
 		return (int) ((genres & MASK[idx]) >> idx*GSIZE);
 	}

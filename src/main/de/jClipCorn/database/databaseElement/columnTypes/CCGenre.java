@@ -321,6 +321,10 @@ public enum CCGenre implements ContinoousEnum<CCGenre> {
 
 	}
 
+	public static CCGenre parseFromMAL(String txt) {
+	
+	}
+
 	public boolean isEmpty() {
 		return asInt() == NO_GENRE;
 	}

@@ -7,6 +7,10 @@ public final class CCStreams {
 		return new IterableStream<>(ls);
 	}
 
+	public static <T> CCStream<T> iterate(T[] ls) {
+		return new ArrayStream<>(ls);
+	}
+
 	public static <T> CCStream<T> single(T ls) {
 		return new SingleStream<>(ls);
 	}

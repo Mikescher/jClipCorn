@@ -5,6 +5,7 @@ import javax.swing.Icon;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.online.metadata.Metadataparser;
 import de.jClipCorn.online.metadata.imdb.IMDBParserCommon;
+import de.jClipCorn.online.metadata.mal.MALParser;
 import de.jClipCorn.online.metadata.tmdb.TMDBParser;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.enumerations.BrowserLanguage;
@@ -147,7 +148,7 @@ public class CCOnlineReference {
 		case PROXERME:
 			return null;
 		case MYANIMELIST:
-			return null;
+			return new MALParser();
 		default:
 			CCLog.addDefaultSwitchError(this, this);
 			return null;

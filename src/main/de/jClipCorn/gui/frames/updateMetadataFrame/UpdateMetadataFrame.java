@@ -19,6 +19,7 @@ import com.jgoodies.forms.layout.RowSpec;
 
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
+import de.jClipCorn.database.databaseElement.columnTypes.CCGenreList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReference;
 import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineScore;
 import de.jClipCorn.gui.localization.LocaleBundle;
@@ -61,9 +62,8 @@ public class UpdateMetadataFrame extends JFrame {
 	}
 
 	private void initGUI() {
-		setTitle(LocaleBundle.getString("TextExportFrame.this.title")); //$NON-NLS-1$
+		setTitle(LocaleBundle.getString("UpdateMetadataFrame.title")); //$NON-NLS-1$
 		setIconImage(CachedResourceLoader.getImage(Resources.IMG_FRAME_ICON));
-		setResizable(false);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		getContentPane().setLayout(new FormLayout(new ColumnSpec[] {
 				FormSpecs.RELATED_GAP_COLSPEC,
@@ -144,10 +144,17 @@ public class UpdateMetadataFrame extends JFrame {
 
 		CCOnlineScore os1 = el.getOnlinescore();
 		Integer os2 = md.OnlineScore;
-		
+
 		if (os1 == null || os2 == null) return true;
+		if (os1.asInt() != os2.intValue()) return true;
+
+		CCGenreList og1 = el.getGenres();
+		CCGenreList og2 = md.Genres;
+
+		if (og1 == null || og2 == null) return true;
+		if (!og1.asSortedString().equals(og2.asSortedString())) return true;
 		
-		return os1.asInt() != os2.intValue();
+		return false;
 	}
 
 	private void initTable() {

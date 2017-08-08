@@ -138,7 +138,7 @@ public class CachedWebConnection extends WebConnectionLayer {
 					return null;
 				} else {
 					try {
-						return ImageIO.read(new File(d.getStr("result")));
+						return ImageIO.read(new File(PathFormatter.combine(cachePath, d.getStr("result"))));
 					} catch (IOException e) {
 						CCLog.addError(e);
 						return null;
@@ -154,11 +154,13 @@ public class CachedWebConnection extends WebConnectionLayer {
 					BufferedImage r = conn.getImage(url);
 					String fn = UUID.randomUUID().toString();
 					ImageIO.write(r, "PNG", new File(PathFormatter.combine(cachePath, fn)));
+					d.set("type", 99);
 					d.set("null", false);
 					d.set("result", fn);
 					d.set("time", (int)(System.currentTimeMillis() - start));
 					return r;
 				} catch (IOException e) {
+					d.set("type", 99);
 					d.set("null", true);
 					d.set("time", (int)(System.currentTimeMillis() - start));
 					return null;

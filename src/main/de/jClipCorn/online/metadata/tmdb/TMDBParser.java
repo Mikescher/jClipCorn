@@ -160,6 +160,8 @@ public class TMDBParser extends Metadataparser {
 			OnlineMetadata base = getMetadataInternal(ref, BrowserLanguage.ENGLISH, downloadCover);
 			OnlineMetadata ext = getMetadataInternal(ref, CCProperties.getInstance().PROP_TMDB_LANGUAGE.getValue(), downloadCover);
 			
+			if (ext == null) return base;
+			
 			ext.setMissingFields(base);
 			
 			return ext;

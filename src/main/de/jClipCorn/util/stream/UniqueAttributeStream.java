@@ -20,8 +20,8 @@ public class UniqueAttributeStream<TType, TAttrType> extends CCSimpleStream<TTyp
 	public TType nextOrNothing(boolean first) {
 		while (source.hasNext()) {
 			TType v = source.next();
-
-			if (! oldValues.contains(v)) { oldValues.add(selector.apply(v)); return v; }
+			TAttrType av = selector.apply(v);
+			if (! oldValues.contains(av)) { oldValues.add(av); return v; }
 		}
 		
 		return finishStream();

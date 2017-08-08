@@ -74,4 +74,12 @@ public class RegExHelper {
 	private static String stringReplace(String input, int start, int end, String replace) {
 		return "".concat(input.substring(0, start)).concat(replace).concat(input.substring(end));
 	}
+
+	public static String getGroup(Pattern regex, String content, String group) {
+		Matcher m = regex.matcher(content);
+		
+		if (!m.matches()) return null;
+		
+		return m.group(group);
+	}
 }

@@ -2,6 +2,7 @@ package de.jClipCorn.online.cover.imdb;
 
 import java.util.HashMap;
 
+import de.jClipCorn.database.databaseElement.columnTypes.CCFSK;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.util.helper.RegExHelper;
@@ -209,5 +210,13 @@ public class AgeRatingParser {
 		CCLog.addWarning(LocaleBundle.getFormattedString("LogMessage.CouldNotParseFSK", rate, url));
 		
 		return -1;
+	}
+
+	public static CCFSK getFSK(String rate, String url) {
+		int v = getMinimumAge(rate, url);
+		
+		if (v < 0) return null;
+		
+		return CCFSK.getNearest(v);
 	}
 }

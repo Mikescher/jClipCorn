@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import de.jClipCorn.database.util.iterators.GenresIterator;
+import de.jClipCorn.util.stream.CCStream;
+
 public class CCGenreList {
 	private final static long[] MASK = {0x00000000000000FFL, 
 										0x000000000000FF00L, 
@@ -263,5 +266,9 @@ public class CCGenreList {
 
 	public boolean isEmpty() {
 		return getGenreCount() == 0;
+	}
+
+	public CCStream<CCGenre> iterate() {
+		return new GenresIterator(this);
 	}
 }

@@ -2,6 +2,7 @@ package de.jClipCorn.gui.guiComponents.jCCSimpleTable;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
@@ -15,6 +16,7 @@ import com.sun.java.swing.plaf.windows.WindowsScrollBarUI;
 
 import de.jClipCorn.gui.frames.mainFrame.clipTable.ClipVerticalScrollbarUI;
 import de.jClipCorn.util.TableColumnAdjuster;
+import de.jClipCorn.util.stream.CCStreams;
 
 public abstract class JCCSimpleTable<TData> extends JScrollPane implements ListSelectionListener, MouseListener {
 	private static final long serialVersionUID = -87600498201225357L;
@@ -47,6 +49,7 @@ public abstract class JCCSimpleTable<TData> extends JScrollPane implements ListS
 		table.setFillsViewportHeight(true);
 		table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 		table.setRowHeight(18);
+		table.MultiSelect = isMultiselect();
 
 		table.getSelectionModel().addListSelectionListener(this);
 		table.addMouseListener(this);
@@ -70,12 +73,34 @@ public abstract class JCCSimpleTable<TData> extends JScrollPane implements ListS
 		return -1;
 	}
 
+	public List<Integer> getSelectedRows() {
+		int[] selrow = table.getSelectedRows();
+		
+		List<Integer> result = new ArrayList<>();
+		
+		for (int i = 0; i < selrow.length; i++) {
+			if (selrow[i] >= 0 && selrow[i] < table.getRowCount()) {
+				result.add(table.convertRowIndexToModel(selrow[i]));
+			}
+		}
+		
+		return result;
+	}
+
 	public TData getSelectedElement() {
 		int selrow = getSelectedRow();
 		if (selrow >= 0) {
 			return model.getElementAtRow(selrow);
 		}
 		return null;
+	}
+
+	public List<TData> getSelectedElements() {
+		return CCStreams.iterate(getSelectedRows()).map(r -> model.getElementAtRow(r)).enumerate();
+	}
+
+	public List<TData> getSelectedDataCopy() {
+		return getSelectedElements();
 	}
 
 	public int getRowCount() {
@@ -141,9 +166,18 @@ public abstract class JCCSimpleTable<TData> extends JScrollPane implements ListS
 	public void changeData(TData oldData, TData newData) {
 		model.changeData(oldData, newData);
 	}
+	
+	public void forceFullRedraw() {
+		model.fireTableStructureChanged();
+	}
+	
+	public void forceDataChangedRedraw() {
+		model.fireTableDataChanged();
+	}
 
 	protected abstract List<JCCSimpleColumnPrototype<TData>> configureColumns();
 	protected abstract void OnDoubleClickElement(TData element);
 	protected abstract void OnSelectElement(TData element);
 	protected abstract int getColumnAdjusterMaxWidth();
+	protected abstract boolean isMultiselect();
 }

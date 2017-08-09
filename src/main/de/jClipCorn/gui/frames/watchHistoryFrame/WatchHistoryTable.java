@@ -89,4 +89,8 @@ public class WatchHistoryTable extends JCCSimpleTable<WatchHistoryElement> {
 		owner.onSelect(element);
 	}
 
+	@Override
+	protected boolean isMultiselect() {
+		return false;
+	}
 }

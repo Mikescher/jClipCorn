@@ -2,7 +2,6 @@ package de.jClipCorn.gui.frames.updateMetadataFrame;
 
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.util.List;
 
@@ -19,6 +18,7 @@ import com.jgoodies.forms.layout.RowSpec;
 
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
+import de.jClipCorn.database.databaseElement.columnTypes.CCGenre;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGenreList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReference;
 import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineScore;
@@ -49,10 +49,13 @@ public class UpdateMetadataFrame extends JFrame {
 
 	private Thread collThread = null;
 	private boolean cancelBackground;
+	private JButton btnUpdateAllGenres;
+	private JButton btnUpdateSelectedOnlineScore;
+	private JButton btnUpdateSelectedGenres;
 	
 	public UpdateMetadataFrame(Component owner, CCMovieList mlist) {
 		super();
-		setSize(new Dimension(803, 459));
+		setSize(new Dimension(1200, 475));
 		movielist = mlist;
 
 		initGUI();
@@ -103,15 +106,33 @@ public class UpdateMetadataFrame extends JFrame {
 		getContentPane().add(tableMain, "2, 4, 6, 1, fill, fill"); //$NON-NLS-1$
 		
 		panel = new JPanel();
-		FlowLayout flowLayout = (FlowLayout) panel.getLayout();
-		flowLayout.setVgap(0);
-		flowLayout.setHgap(0);
-		flowLayout.setAlignment(FlowLayout.LEFT);
 		getContentPane().add(panel, "2, 6, 6, 1, fill, fill"); //$NON-NLS-1$
+		panel.setLayout(new FormLayout(new ColumnSpec[] {
+				FormSpecs.PREF_COLSPEC,
+				ColumnSpec.decode("5dlu"), //$NON-NLS-1$
+				FormSpecs.PREF_COLSPEC,
+				ColumnSpec.decode("default:grow"), //$NON-NLS-1$
+				FormSpecs.PREF_COLSPEC,
+				ColumnSpec.decode("5dlu"), //$NON-NLS-1$
+				FormSpecs.PREF_COLSPEC,},
+			new RowSpec[] {
+				RowSpec.decode("default:grow"),})); //$NON-NLS-1$
 		
-		btnUpdateAllOnlinescore = new JButton(LocaleBundle.getString("UpdateMetadataFrame.BtnUpdate")); //$NON-NLS-1$
-		btnUpdateAllOnlinescore.addActionListener(this::UpdateDatabase);
-		panel.add(btnUpdateAllOnlinescore);
+		btnUpdateAllOnlinescore = new JButton(LocaleBundle.getString("UpdateMetadataFrame.BtnUpdate1")); //$NON-NLS-1$
+		panel.add(btnUpdateAllOnlinescore, "5, 1, fill, fill"); //$NON-NLS-1$
+		btnUpdateAllOnlinescore.addActionListener(this::UpdateScoreInDatabase);
+		
+		btnUpdateSelectedOnlineScore = new JButton(LocaleBundle.getString("UpdateMetadataFrame.BtnUpdate3")); //$NON-NLS-1$
+		panel.add(btnUpdateSelectedOnlineScore, "1, 1, fill, fill"); //$NON-NLS-1$
+		btnUpdateSelectedOnlineScore.addActionListener(this::SelectedUpdateScoreInDatabase);
+		
+		btnUpdateSelectedGenres = new JButton(LocaleBundle.getString("UpdateMetadataFrame.BtnUpdate4")); //$NON-NLS-1$
+		panel.add(btnUpdateSelectedGenres, "3, 1, fill, fill"); //$NON-NLS-1$
+		btnUpdateSelectedGenres.addActionListener(this::SelectedUpdateGenresInDatabase);
+		
+		btnUpdateAllGenres = new JButton(LocaleBundle.getString("UpdateMetadataFrame.BtnUpdate2")); //$NON-NLS-1$
+		panel.add(btnUpdateAllGenres, "7, 1, fill, fill"); //$NON-NLS-1$
+		btnUpdateAllGenres.addActionListener(this::UpdateGenresInDatabase);
 	}
 
 	private void setFiltered(FilterState state, boolean triggerUpdate) {
@@ -135,24 +156,30 @@ public class UpdateMetadataFrame extends JFrame {
 	}
 	
 	private boolean FilterHandlerChanged(UpdateMetadataTableElement d) {
-		if (d == null) return true;
+		if (d == null) return false;
 
+		if (!d.Processed) return true;
+		
 		CCDatabaseElement el = d.Element;
 		OnlineMetadata md = d.OnlineMeta;
 		
-		if (el == null || md == null) return true;
+		if (el == null || md == null) return false;
 
 		CCOnlineScore os1 = el.getOnlinescore();
 		Integer os2 = md.OnlineScore;
 
-		if (os1 == null || os2 == null) return true;
-		if (os1.asInt() != os2.intValue()) return true;
+		if (os1 != null && os2 != null) {
+			if (os1.asInt() != os2.intValue()) return true;
+		}
 
 		CCGenreList og1 = el.getGenres();
 		CCGenreList og2 = md.Genres;
 
-		if (og1 == null || og2 == null) return true;
-		if (!og1.asSortedString().equals(og2.asSortedString())) return true;
+		if (og1 != null && og2 != null) {
+			for (CCGenre online : og2.iterate()) {
+				if (!og1.includes(online) && !og1.isFull()) return true;
+			}
+		}
 		
 		return false;
 	}
@@ -176,7 +203,14 @@ public class UpdateMetadataFrame extends JFrame {
 		try {
 			List<UpdateMetadataTableElement> data = tableMain.getDataCopy();
 			
-			ThreadUtils.invokeAndWaitSafe(() -> { btnStartCollectingData.setText(LocaleBundle.getString("UpdateMetadataFrame.BtnCollect2")); }); //$NON-NLS-1$
+			ThreadUtils.invokeAndWaitSafe(() -> 
+			{ 
+				btnStartCollectingData.setText(LocaleBundle.getString("UpdateMetadataFrame.BtnCollect2"));  //$NON-NLS-1$
+				btnUpdateAllGenres.setEnabled(false);
+				btnUpdateAllOnlinescore.setEnabled(false);
+				btnUpdateSelectedGenres.setEnabled(false);
+				btnUpdateSelectedOnlineScore.setEnabled(false);
+			});
 			ThreadUtils.setProgressbarAndWait(progressBar, 0, 0, data.size()+1);
 			
 			int i = 1;
@@ -203,16 +237,25 @@ public class UpdateMetadataFrame extends JFrame {
 					CCLog.addDebug(e.toString());
 				}
 				
+				elem.Processed = true;
+				
 				if (cancelBackground) return;
 			}
 		} finally {
 			ThreadUtils.setProgressbarAndWait(progressBar, 0, 0, 1);
-			ThreadUtils.invokeAndWaitSafe(() -> { btnStartCollectingData.setText(LocaleBundle.getString("UpdateMetadataFrame.BtnCollect3")); }); //$NON-NLS-1$
+			ThreadUtils.invokeAndWaitSafe(() -> 
+			{ 
+				btnStartCollectingData.setText(LocaleBundle.getString("UpdateMetadataFrame.BtnCollect3"));  //$NON-NLS-1$
+				btnUpdateAllGenres.setEnabled(true);
+				btnUpdateAllOnlinescore.setEnabled(true);
+				btnUpdateSelectedGenres.setEnabled(true);
+				btnUpdateSelectedOnlineScore.setEnabled(true);
+			});
 			collThread = null;
 		}
 	}
 	
-	private void UpdateDatabase(ActionEvent e) {
+	private void UpdateScoreInDatabase(ActionEvent e) {
 		List<UpdateMetadataTableElement> data = tableMain.getDataCopy();
 
 		int count = 0;		
@@ -227,6 +270,74 @@ public class UpdateMetadataFrame extends JFrame {
 		}
 		
 		DialogHelper.showInformation(this, LocaleBundle.getString("Dialogs.MetadataUpdateSuccess_caption"), LocaleBundle.getFormattedString("Dialogs.MetadataUpdateSuccess", count)); //$NON-NLS-1$ //$NON-NLS-2$
-		dispose();
+
+		tableMain.forceDataChangedRedraw();
+	}
+	
+	private void UpdateGenresInDatabase(ActionEvent e) {
+		List<UpdateMetadataTableElement> data = tableMain.getDataCopy();
+
+		int count = 0;		
+		
+		for (UpdateMetadataTableElement elem : data) {
+			if (elem.OnlineMeta != null && elem.OnlineMeta.Genres != null) {
+				
+				for (CCGenre genre : elem.OnlineMeta.Genres.iterate()) {
+					
+					if (!elem.Element.getGenres().includes(genre) && !elem.Element.getGenres().isFull()) {
+						elem.Element.getGenres().addGenre(genre);
+						count++;
+					}
+					
+				}
+			}
+		}
+		
+		DialogHelper.showInformation(this, LocaleBundle.getString("Dialogs.MetadataUpdateSuccess_caption"), LocaleBundle.getFormattedString("Dialogs.MetadataUpdateSuccess", count)); //$NON-NLS-1$ //$NON-NLS-2$
+		
+		tableMain.forceDataChangedRedraw();
+	}
+	
+	private void SelectedUpdateScoreInDatabase(ActionEvent e) {
+		List<UpdateMetadataTableElement> data = tableMain.getSelectedDataCopy();
+
+		int count = 0;		
+		
+		for (UpdateMetadataTableElement elem : data) {
+			if (elem.OnlineMeta != null && elem.OnlineMeta.OnlineScore != null) {
+				if (elem.Element.getOnlinescore().asInt() != elem.OnlineMeta.OnlineScore.intValue()) {
+					elem.Element.setOnlinescore(elem.OnlineMeta.OnlineScore);
+					count++;
+				}
+			}
+		}
+		
+		DialogHelper.showInformation(this, LocaleBundle.getString("Dialogs.MetadataUpdateSuccess_caption"), LocaleBundle.getFormattedString("Dialogs.MetadataUpdateSuccess", count)); //$NON-NLS-1$ //$NON-NLS-2$
+
+		tableMain.forceDataChangedRedraw();
+	}
+	
+	private void SelectedUpdateGenresInDatabase(ActionEvent e) {
+		List<UpdateMetadataTableElement> data = tableMain.getSelectedDataCopy();
+
+		int count = 0;		
+		
+		for (UpdateMetadataTableElement elem : data) {
+			if (elem.OnlineMeta != null && elem.OnlineMeta.Genres != null) {
+				
+				for (CCGenre genre : elem.OnlineMeta.Genres.iterate()) {
+					
+					if (!elem.Element.getGenres().includes(genre) && !elem.Element.getGenres().isFull()) {
+						elem.Element.getGenres().addGenre(genre);
+						count++;
+					}
+					
+				}
+			}
+		}
+		
+		DialogHelper.showInformation(this, LocaleBundle.getString("Dialogs.MetadataUpdateSuccess_caption"), LocaleBundle.getFormattedString("Dialogs.MetadataUpdateSuccess", count)); //$NON-NLS-1$ //$NON-NLS-2$
+		
+		tableMain.forceDataChangedRedraw();
 	}
 }

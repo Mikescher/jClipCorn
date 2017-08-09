@@ -19,6 +19,8 @@ import javax.swing.table.TableModel;
 public abstract class SFixTable extends JTable {
 	private static final long serialVersionUID = 1082882838948078289L;
 
+	public boolean MultiSelect = false;
+	
 	public SFixTable(TableModel dm) {
 		super(dm);
 
@@ -61,11 +63,21 @@ public abstract class SFixTable extends JTable {
 
 	@Override
 	public void changeSelection(int rowIndex, int columnIndex, boolean toggle, boolean extend) {
-		super.changeSelection(rowIndex, columnIndex, toggle && (!extend), false);
+		
+		if (MultiSelect) {
+			
+			super.changeSelection(rowIndex, columnIndex, toggle, extend);
+			
+		} else {
+			
+			super.changeSelection(rowIndex, columnIndex, toggle && (!extend), false);
 
-		if (getSelectedRowCount() > 1) {
-			super.changeSelection(rowIndex, columnIndex, false, false);
+			if (getSelectedRowCount() > 1) {
+				super.changeSelection(rowIndex, columnIndex, false, false);
+			}
+			
 		}
+		
 	}
 
 	private void fixTableSort() {

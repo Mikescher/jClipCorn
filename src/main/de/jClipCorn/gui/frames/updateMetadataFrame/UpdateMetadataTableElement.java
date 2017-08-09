@@ -14,6 +14,8 @@ public class UpdateMetadataTableElement {
 	public final CCDatabaseElement Element;
 	
 	public OnlineMetadata OnlineMeta = null;
+
+	public boolean Processed = false;
 	
 	public UpdateMetadataTableElement(CCDatabaseElement el) {
 		super();

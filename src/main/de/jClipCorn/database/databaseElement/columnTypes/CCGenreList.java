@@ -268,6 +268,10 @@ public class CCGenreList {
 		return getGenreCount() == 0;
 	}
 
+	public boolean isFull() {
+		return getGenreCount() == SIZE;
+	}
+
 	public CCStream<CCGenre> iterate() {
 		return new GenresIterator(this);
 	}

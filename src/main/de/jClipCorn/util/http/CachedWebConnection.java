@@ -41,6 +41,8 @@ public class CachedWebConnection extends WebConnectionLayer {
 		
 		PathFormatter.createFolders(cacheDatabasePath);
 		
+		CCLog.addDebug("Start loading HTTP-Cache from drive");
+		
 		try {
 			if (PathFormatter.fileExists(cacheDatabasePath)) {
 				db = SimpleSerializableData.load(cacheDatabasePath);
@@ -60,6 +62,8 @@ public class CachedWebConnection extends WebConnectionLayer {
 		} catch (XMLFormatException e) {
 			CCLog.addError(e);
 		}
+
+		CCLog.addDebug("Finished loading HTTP-Cache from drive");
 		
 		CCLog.addWarning("You are using a cached web connection - if you see this message and are no developer you're fucked...");
 	}

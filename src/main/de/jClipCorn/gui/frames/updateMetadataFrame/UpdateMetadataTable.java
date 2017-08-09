@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.jClipCorn.database.databaseElement.columnTypes.CCGenre;
+import de.jClipCorn.database.databaseElement.columnTypes.CCGenreList;
 import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleColumnPrototype;
 import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleTable;
 
@@ -29,44 +30,44 @@ public class UpdateMetadataTable extends JCCSimpleTable<UpdateMetadataTableEleme
 				null));
 		
 		r.add(new JCCSimpleColumnPrototype<>(
-				"@Titel",
+				"UpdateMetadataFrame.Table.ColumnTitle",
 				e -> e.Element.getFullDisplayTitle(),
 				null,
 				null));
 
 		r.add(new JCCSimpleColumnPrototype<>(
-				"@ChangedScore",
+				"UpdateMetadataFrame.Table.ColumnChangedScore",
 				this::getScoreChange,
 				null,
 				null));
 
 		r.add(new JCCSimpleColumnPrototype<>(
-				"@ChangedGenres",
+				"UpdateMetadataFrame.Table.ColumnChangedGenres",
 				this::getGenreChange,
 				null,
 				null));
 		
 		r.add(new JCCSimpleColumnPrototype<>(
-				"@LocalScore",
+				"UpdateMetadataFrame.Table.ColumnLocalScore",
 				null,
 				e -> e.Element.getOnlinescore().getIcon(),
 				e -> e.Element.getOnlinescore().asInt() + "/10"));
 		
 		r.add(new JCCSimpleColumnPrototype<>(
-				"@OnlineScore",
+				"UpdateMetadataFrame.Table.ColumnOnlineScore",
 				null,
 				e -> (e.OnlineMeta != null && e.OnlineMeta.getOnlineScore() != null) ? (e.OnlineMeta.getOnlineScore().getIcon()) : (null),
 				e -> (e.OnlineMeta != null && e.OnlineMeta.getOnlineScore() != null) ? (e.OnlineMeta.getOnlineScore().asInt() + "/10") : (null)));
 
 		r.add(new JCCSimpleColumnPrototype<>(
-				"@LocalGenres",
-				e -> e.Element.getGenres().asString(),
+				"UpdateMetadataFrame.Table.ColumnLocalGenres",
+				e -> e.Element.getGenres().asSortedString(),
 				null,
 				null));
 		
 		r.add(new JCCSimpleColumnPrototype<>(
-				"@OnlineGenres",
-				e -> (e.OnlineMeta != null && e.OnlineMeta.Genres != null) ? e.OnlineMeta.Genres.asString() : (null),
+				"UpdateMetadataFrame.Table.ColumnOnlineGenres",
+				e -> (e.OnlineMeta != null && e.OnlineMeta.Genres != null) ? e.OnlineMeta.Genres.asSortedString() : (null),
 				null,
 				null));
 		
@@ -98,6 +99,8 @@ public class UpdateMetadataTable extends JCCSimpleTable<UpdateMetadataTableEleme
 			if (!e.Element.getGenres().includes(online)) gnew++;
 		}
 		
+		gnew = Math.min(gnew, CCGenreList.getMaxListSize() - e.Element.getGenres().getGenreCount());
+		
 		if (gnew == 0) return "-";
 		
 		return "+" + gnew;
@@ -116,6 +119,11 @@ public class UpdateMetadataTable extends JCCSimpleTable<UpdateMetadataTableEleme
 	@Override
 	protected void OnSelectElement(UpdateMetadataTableElement element) {
 		// NOP
+	}
+
+	@Override
+	protected boolean isMultiselect() {
+		return true;
 	}
 
 }

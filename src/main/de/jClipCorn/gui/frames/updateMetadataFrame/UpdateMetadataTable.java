@@ -13,6 +13,8 @@ public class UpdateMetadataTable extends JCCSimpleTable<UpdateMetadataTableEleme
 	
 	private final UpdateMetadataFrame owner;
 
+	public boolean DeleteLocalGenres;
+
 	public UpdateMetadataTable(UpdateMetadataFrame owner) {
 		super();
 		this.owner = owner;
@@ -93,17 +95,38 @@ public class UpdateMetadataTable extends JCCSimpleTable<UpdateMetadataTableEleme
 		if (e.OnlineMeta == null) return "";
 		if (e.OnlineMeta.Genres == null) return "ERR";
 
-		int gnew  = 0;
-		
-		for (CCGenre online : e.OnlineMeta.Genres.iterate()) {
-			if (!e.Element.getGenres().includes(online)) gnew++;
+		if (DeleteLocalGenres) {
+
+			int gnew = 0;
+			int gdel = 0;
+			
+			for (CCGenre online : e.OnlineMeta.Genres.iterate()) {
+				if (!e.Element.getGenres().includes(online)) gnew++;
+			}
+			for (CCGenre local : e.Element.getGenres().iterate()) {
+				if (!e.OnlineMeta.Genres.includes(local)) gdel++;
+			}
+			
+			if (gnew == 0 && gdel == 0) return "-";
+			
+			return "+" + gnew + " " + "-" + gdel;
+
+		} else {
+
+			int gnew = 0;
+			
+			for (CCGenre online : e.OnlineMeta.Genres.iterate()) {
+				if (!e.Element.getGenres().includes(online)) gnew++;
+			}
+			
+			gnew = Math.min(gnew, CCGenreList.getMaxListSize() - e.Element.getGenres().getGenreCount());
+			
+			if (gnew == 0) return "-";
+			
+			return "+" + gnew;
+
 		}
-		
-		gnew = Math.min(gnew, CCGenreList.getMaxListSize() - e.Element.getGenres().getGenreCount());
-		
-		if (gnew == 0) return "-";
-		
-		return "+" + gnew;
+
 	}
 	
 	@Override

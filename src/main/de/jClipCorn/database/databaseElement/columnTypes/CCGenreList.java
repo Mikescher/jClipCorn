@@ -201,6 +201,15 @@ public class CCGenreList {
 		return getGenres().stream().map(g -> g + "").collect(Collectors.joining("|")); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 	
+	public String asSimpleComparableString() {
+		return getGenres()
+			.stream()
+			.map(g -> g.asInt())
+			.sorted()
+			.map(g -> Integer.toString(g))
+			.collect(Collectors.joining("|")); //$NON-NLS-1$
+	}
+	
 	public CCGenreList getSorted() {
 		CCGenreList result = new CCGenreList();
 		
@@ -274,5 +283,27 @@ public class CCGenreList {
 
 	public CCStream<CCGenre> iterate() {
 		return new GenresIterator(this);
+	}
+
+	@Override
+	public int hashCode() {
+		return asSimpleComparableString().hashCode();
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) return true;
+		if (obj == null) return false;
+		if (!(obj instanceof CCGenreList))
+			return false;
+		CCGenreList other = (CCGenreList) obj;
+		return equals(other);
+	}
+	public void set(CCGenreList other) {
+		genres = other.genres;
+	}
+
+	public boolean equals(CCGenreList other) {
+		return asSimpleComparableString().equals(other.asSimpleComparableString());
 	}
 }

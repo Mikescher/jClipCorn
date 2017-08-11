@@ -6,9 +6,9 @@ import javax.swing.RowFilter.Entry;
 
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.gui.frames.mainFrame.clipTable.ClipTableModel;
-import de.jClipCorn.gui.frames.mainFrame.filterTree.customFilterDialogs.CustomFilterDialog;
-import de.jClipCorn.gui.frames.mainFrame.filterTree.customFilterDialogs.CustomOperatorFilterDialog;
-import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.AbstractCustomFilter;
+import de.jClipCorn.gui.guiComponents.tableFilter.AbstractCustomFilter;
+import de.jClipCorn.gui.guiComponents.tableFilter.CustomFilterDialog;
+import de.jClipCorn.gui.guiComponents.tableFilter.customFilterDialogs.CustomOperatorFilterDialog;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.listener.FinishListener;
 

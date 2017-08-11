@@ -8,8 +8,9 @@ import javax.swing.RowFilter.Entry;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.util.ExtendedViewedState;
 import de.jClipCorn.gui.frames.mainFrame.clipTable.ClipTableModel;
-import de.jClipCorn.gui.frames.mainFrame.filterTree.customFilterDialogs.CustomFilterDialog;
-import de.jClipCorn.gui.frames.mainFrame.filterTree.customFilterDialogs.CustomViewedFilterDialog;
+import de.jClipCorn.gui.guiComponents.tableFilter.AbstractCustomFilter;
+import de.jClipCorn.gui.guiComponents.tableFilter.CustomFilterDialog;
+import de.jClipCorn.gui.guiComponents.tableFilter.customFilterDialogs.CustomViewedFilterDialog;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.listener.FinishListener;
 
@@ -91,5 +92,11 @@ public class CustomViewedFilter extends AbstractCustomFilter {
 	@Override
 	public AbstractCustomFilter createNew() {
 		return new CustomViewedFilter();
+	}
+
+	public static AbstractCustomFilter create(boolean data) {
+		CustomViewedFilter f = new CustomViewedFilter();
+		f.setViewed(data);
+		return f;
 	}
 }

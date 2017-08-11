@@ -1,4 +1,4 @@
-package de.jClipCorn.gui.frames.mainFrame.filterTree.customFilterDialogs;
+package de.jClipCorn.gui.guiComponents.tableFilter.customFilterDialogs;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -11,12 +11,13 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
 
-import de.jClipCorn.database.databaseElement.columnTypes.CCQuality;
-import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomQualityFilter;
+import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineRefType;
+import de.jClipCorn.gui.guiComponents.tableFilter.CustomFilterDialog;
+import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomReferenceFilter;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.listener.FinishListener;
 
-public class CustomQualityFilterDialog extends CustomFilterDialog {
+public class CustomReferenceFilterDialog extends CustomFilterDialog {
 	private static final long serialVersionUID = -6822558028101935911L;
 	
 	private JPanel pnlMiddle;
@@ -24,19 +25,19 @@ public class CustomQualityFilterDialog extends CustomFilterDialog {
 	private JButton btnOk;
 	private JComboBox<String> cbxMiddle;
 
-	public CustomQualityFilterDialog(CustomQualityFilter ft, FinishListener fl, Component parent) {
+	public CustomReferenceFilterDialog(CustomReferenceFilter ft, FinishListener fl, Component parent) {
 		super(ft, fl);
 		initGUI();
 		
-		cbxMiddle.setModel(new DefaultComboBoxModel<>(CCQuality.getWrapper().getList()));
-		cbxMiddle.setSelectedIndex(ft.getQuality().asInt());
+		cbxMiddle.setModel(new DefaultComboBoxModel<>(CCOnlineRefType.getWrapper().getList()));
+		cbxMiddle.setSelectedIndex(ft.getReference().asInt());
 		
 		setLocationRelativeTo(parent);
 	}
 	
 	@Override
-	protected CustomQualityFilter getFilter() {
-		return (CustomQualityFilter) super.getFilter();
+	protected CustomReferenceFilter getFilter() {
+		return (CustomReferenceFilter) super.getFilter();
 	}
 	
 	private void initGUI() {
@@ -65,6 +66,6 @@ public class CustomQualityFilterDialog extends CustomFilterDialog {
 
 	@Override
 	protected void onAfterOK() {
-		getFilter().setQuality(CCQuality.getWrapper().find(cbxMiddle.getSelectedIndex()));
+		getFilter().setReference(CCOnlineRefType.getWrapper().find(cbxMiddle.getSelectedIndex()));
 	}
 }

@@ -1,4 +1,4 @@
-package de.jClipCorn.gui.frames.mainFrame.filterTree.customFilterDialogs;
+package de.jClipCorn.gui.guiComponents.tableFilter.customFilterDialogs;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -13,6 +13,7 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 
 import de.jClipCorn.gui.guiComponents.jCCDateSpinner.JCCDateSpinner;
+import de.jClipCorn.gui.guiComponents.tableFilter.CustomFilterDialog;
 import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomHistoryFilter;
 import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomHistoryFilter.CustomHistoryFilterType;
 import de.jClipCorn.gui.localization.LocaleBundle;

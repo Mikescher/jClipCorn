@@ -3,7 +3,7 @@ package de.jClipCorn.gui.guiComponents.tableFilter.customFilter.operators;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.AbstractCustomFilter;
+import de.jClipCorn.gui.guiComponents.tableFilter.AbstractCustomFilter;
 
 public abstract class CustomOperator extends AbstractCustomFilter {
 	protected List<AbstractCustomFilter> list = new ArrayList<>();

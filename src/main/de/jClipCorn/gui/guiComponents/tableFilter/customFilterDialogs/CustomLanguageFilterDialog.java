@@ -1,4 +1,4 @@
-package de.jClipCorn.gui.frames.mainFrame.filterTree.customFilterDialogs;
+package de.jClipCorn.gui.guiComponents.tableFilter.customFilterDialogs;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -11,12 +11,13 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
 
-import de.jClipCorn.database.databaseElement.columnTypes.CCFSK;
-import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomFSKFilter;
+import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguage;
+import de.jClipCorn.gui.guiComponents.tableFilter.CustomFilterDialog;
+import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomLanguageFilter;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.listener.FinishListener;
 
-public class CustomFSKFilterDialog extends CustomFilterDialog {
+public class CustomLanguageFilterDialog extends CustomFilterDialog {
 	private static final long serialVersionUID = -6822558028101935911L;
 	
 	private JPanel pnlMiddle;
@@ -24,19 +25,19 @@ public class CustomFSKFilterDialog extends CustomFilterDialog {
 	private JButton btnOk;
 	private JComboBox<String> cbxMiddle;
 
-	public CustomFSKFilterDialog(CustomFSKFilter ft, FinishListener fl, Component parent) {
+	public CustomLanguageFilterDialog(CustomLanguageFilter ft, FinishListener fl, Component parent) {
 		super(ft, fl);
 		initGUI();
 		
-		cbxMiddle.setModel(new DefaultComboBoxModel<>(CCFSK.getWrapper().getList()));
-		cbxMiddle.setSelectedIndex(ft.getFSK().asInt());
+		cbxMiddle.setModel(new DefaultComboBoxModel<>(CCDBLanguage.getWrapper().getList()));
+		cbxMiddle.setSelectedIndex(ft.getLanguage().asInt());
 		
 		setLocationRelativeTo(parent);
 	}
 	
 	@Override
-	protected CustomFSKFilter getFilter() {
-		return (CustomFSKFilter) super.getFilter();
+	protected CustomLanguageFilter getFilter() {
+		return (CustomLanguageFilter) super.getFilter();
 	}
 	
 	private void initGUI() {
@@ -62,9 +63,9 @@ public class CustomFSKFilterDialog extends CustomFilterDialog {
 		});
 		pnlBottom.add(btnOk);
 	}
-	
+
 	@Override
 	protected void onAfterOK() {
-		getFilter().setFSK(CCFSK.getWrapper().find(cbxMiddle.getSelectedIndex()));
+		getFilter().setLanguage(CCDBLanguage.getWrapper().find(cbxMiddle.getSelectedIndex()));
 	}
 }

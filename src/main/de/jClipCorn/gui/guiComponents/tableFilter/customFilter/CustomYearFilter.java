@@ -7,8 +7,9 @@ import javax.swing.RowFilter.Entry;
 
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.gui.frames.mainFrame.clipTable.ClipTableModel;
-import de.jClipCorn.gui.frames.mainFrame.filterTree.customFilterDialogs.CustomFilterDialog;
-import de.jClipCorn.gui.frames.mainFrame.filterTree.customFilterDialogs.CustomYearFilterDialog;
+import de.jClipCorn.gui.guiComponents.tableFilter.AbstractCustomFilter;
+import de.jClipCorn.gui.guiComponents.tableFilter.CustomFilterDialog;
+import de.jClipCorn.gui.guiComponents.tableFilter.customFilterDialogs.CustomYearFilterDialog;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.DecimalSearchType;
 import de.jClipCorn.util.datetime.CCDate;
@@ -157,5 +158,12 @@ public class CustomYearFilter extends AbstractCustomFilter {
 	@Override
 	public AbstractCustomFilter createNew() {
 		return new CustomYearFilter();
+	}
+
+	public static AbstractCustomFilter create(Integer data) {
+		CustomYearFilter f = new CustomYearFilter();
+		f.setLow(data);
+		f.setSearchType(DecimalSearchType.EXACT);
+		return f;
 	}
 }

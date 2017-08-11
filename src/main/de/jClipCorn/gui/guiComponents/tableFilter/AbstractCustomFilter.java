@@ -1,4 +1,4 @@
-package de.jClipCorn.gui.guiComponents.tableFilter.customFilter;
+package de.jClipCorn.gui.guiComponents.tableFilter;
 
 import java.awt.Component;
 import java.util.ArrayList;
@@ -9,7 +9,22 @@ import javax.swing.RowFilter.Entry;
 
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.gui.frames.mainFrame.clipTable.ClipTableModel;
-import de.jClipCorn.gui.frames.mainFrame.filterTree.customFilterDialogs.CustomFilterDialog;
+import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomFSKFilter;
+import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomFormatFilter;
+import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomGenreFilter;
+import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomGroupFilter;
+import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomHistoryFilter;
+import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomLanguageFilter;
+import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomOnlinescoreFilter;
+import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomQualityFilter;
+import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomReferenceFilter;
+import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomScoreFilter;
+import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomTagFilter;
+import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomTitleFilter;
+import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomTypFilter;
+import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomViewedFilter;
+import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomYearFilter;
+import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomZyklusFilter;
 import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.operators.CustomAndOperator;
 import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.operators.CustomNandOperator;
 import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.operators.CustomNorOperator;
@@ -37,6 +52,8 @@ public abstract class AbstractCustomFilter {
 	public final static int CUSTOMFILTERID_GROUP = 17;
 	public final static int CUSTOMFILTERID_REFERENCE = 18;
 	public final static int CUSTOMFILTERID_HISTORY = 19;
+	public final static int CUSTOMFILTERID_SEARCH = 20;
+	public final static int CUSTOMFILTERID_CHAR = 21;
 	
 	public abstract boolean include(Entry<? extends ClipTableModel, ? extends Object> e);
 	

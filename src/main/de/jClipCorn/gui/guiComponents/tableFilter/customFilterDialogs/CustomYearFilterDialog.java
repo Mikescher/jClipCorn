@@ -1,4 +1,4 @@
-package de.jClipCorn.gui.frames.mainFrame.filterTree.customFilterDialogs;
+package de.jClipCorn.gui.guiComponents.tableFilter.customFilterDialogs;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -14,6 +14,7 @@ import javax.swing.JRadioButton;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 
+import de.jClipCorn.gui.guiComponents.tableFilter.CustomFilterDialog;
 import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomYearFilter;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.DecimalSearchType;

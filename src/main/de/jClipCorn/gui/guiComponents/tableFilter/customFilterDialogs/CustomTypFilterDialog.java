@@ -1,4 +1,4 @@
-package de.jClipCorn.gui.frames.mainFrame.filterTree.customFilterDialogs;
+package de.jClipCorn.gui.guiComponents.tableFilter.customFilterDialogs;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -11,12 +11,13 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
 
-import de.jClipCorn.database.databaseElement.columnTypes.CCTagList;
-import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomTagFilter;
+import de.jClipCorn.database.databaseElement.columnTypes.CCDBElementTyp;
+import de.jClipCorn.gui.guiComponents.tableFilter.CustomFilterDialog;
+import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomTypFilter;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.listener.FinishListener;
 
-public class CustomTagFilterDialog extends CustomFilterDialog {
+public class CustomTypFilterDialog extends CustomFilterDialog {
 	private static final long serialVersionUID = -6822558028101935911L;
 	
 	private JPanel pnlMiddle;
@@ -24,19 +25,19 @@ public class CustomTagFilterDialog extends CustomFilterDialog {
 	private JButton btnOk;
 	private JComboBox<String> cbxMiddle;
 
-	public CustomTagFilterDialog(CustomTagFilter ft, FinishListener fl, Component parent) {
+	public CustomTypFilterDialog(CustomTypFilter ft, FinishListener fl, Component parent) {
 		super(ft, fl);
 		initGUI();
 		
-		cbxMiddle.setModel(new DefaultComboBoxModel<>(CCTagList.getList()));
-		cbxMiddle.setSelectedIndex(ft.getTag());
+		cbxMiddle.setModel(new DefaultComboBoxModel<>(CCDBElementTyp.getWrapper().getList()));
+		cbxMiddle.setSelectedIndex(ft.getTyp().asInt());
 		
 		setLocationRelativeTo(parent);
 	}
 	
 	@Override
-	protected CustomTagFilter getFilter() {
-		return (CustomTagFilter) super.getFilter();
+	protected CustomTypFilter getFilter() {
+		return (CustomTypFilter) super.getFilter();
 	}
 	
 	private void initGUI() {
@@ -65,6 +66,6 @@ public class CustomTagFilterDialog extends CustomFilterDialog {
 
 	@Override
 	protected void onAfterOK() {
-		getFilter().setTag(cbxMiddle.getSelectedIndex());
+		getFilter().setTyp(CCDBElementTyp.getWrapper().find(cbxMiddle.getSelectedIndex()));
 	}
 }

@@ -9,8 +9,9 @@ import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.databaseElement.columnTypes.CCDBElementTyp;
 import de.jClipCorn.gui.frames.mainFrame.clipTable.ClipTableModel;
-import de.jClipCorn.gui.frames.mainFrame.filterTree.customFilterDialogs.CustomFilterDialog;
-import de.jClipCorn.gui.frames.mainFrame.filterTree.customFilterDialogs.CustomTypFilterDialog;
+import de.jClipCorn.gui.guiComponents.tableFilter.AbstractCustomFilter;
+import de.jClipCorn.gui.guiComponents.tableFilter.CustomFilterDialog;
+import de.jClipCorn.gui.guiComponents.tableFilter.customFilterDialogs.CustomTypFilterDialog;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.listener.FinishListener;
 
@@ -89,5 +90,11 @@ public class CustomTypFilter extends AbstractCustomFilter {
 	@Override
 	public AbstractCustomFilter createNew() {
 		return new CustomTypFilter();
+	}
+
+	public static AbstractCustomFilter create(CCDBElementTyp data) {
+		CustomTypFilter f = new CustomTypFilter();
+		f.setTyp(data);
+		return f;
 	}
 }

@@ -37,7 +37,7 @@ import de.jClipCorn.gui.frames.mainFrame.popupMenus.ClipSeriesPopup;
 import de.jClipCorn.gui.frames.mainFrame.searchField.SearchField;
 import de.jClipCorn.gui.frames.showUpdateFrame.ShowUpdateFrame;
 import de.jClipCorn.gui.guiComponents.DatabaseElementPreviewLabel;
-import de.jClipCorn.gui.guiComponents.tableFilter.TableSearchFilter;
+import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomSearchFilter;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.gui.resources.CachedResourceLoader;
@@ -231,7 +231,7 @@ public class MainFrame extends JFrame implements CCDBUpdateListener {
 		if (search.isEmpty()) {
 			clipTable.setRowFilter(null, RowFilterSource.TEXTFIELD);
 		} else {
-			clipTable.setRowFilter(new TableSearchFilter(search), RowFilterSource.TEXTFIELD);
+			clipTable.setRowFilter(CustomSearchFilter.create(search), RowFilterSource.TEXTFIELD);
 		}
 	}
 

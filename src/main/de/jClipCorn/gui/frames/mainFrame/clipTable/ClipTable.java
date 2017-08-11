@@ -12,7 +12,6 @@ import java.util.List;
 
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
-import javax.swing.RowFilter;
 import javax.swing.RowSorter;
 import javax.swing.RowSorter.SortKey;
 import javax.swing.SortOrder;
@@ -24,12 +23,14 @@ import com.sun.java.swing.plaf.windows.WindowsScrollBarUI;
 
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
-import de.jClipCorn.database.databaseElement.columnTypes.CCUserScore;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieZyklus;
+import de.jClipCorn.database.databaseElement.columnTypes.CCUserScore;
 import de.jClipCorn.database.util.CCDBUpdateListener;
 import de.jClipCorn.gui.frames.mainFrame.MainFrame;
-import de.jClipCorn.gui.guiComponents.tableFilter.TableScoreFilter;
-import de.jClipCorn.gui.guiComponents.tableFilter.TableZyklusFilter;
+import de.jClipCorn.gui.guiComponents.tableFilter.AbstractCustomFilter;
+import de.jClipCorn.gui.guiComponents.tableFilter.TableCustomFilter;
+import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomScoreFilter;
+import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomZyklusFilter;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.TableColumnAdjuster;
 
@@ -203,12 +204,12 @@ public class ClipTable extends JScrollPane implements CCDBUpdateListener, ListSe
 		
 		CCMovieZyklus zyklus = getZyklusUnderMouse(e.getPoint());
 		if (e.getButton() == MouseEvent.BUTTON1 && zyklus != null) {
-			setRowFilter(new TableZyklusFilter(zyklus), RowFilterSource.TABLE_CLICKED);
+			setRowFilter(CustomZyklusFilter.create(zyklus), RowFilterSource.TABLE_CLICKED);
 		}
 		
 		CCUserScore score = getScoreUnderMouse(e.getPoint());
 		if (e.getButton() == MouseEvent.BUTTON1 && score != null) {
-			setRowFilter(new TableScoreFilter(score), RowFilterSource.TABLE_CLICKED);
+			setRowFilter(CustomScoreFilter.create(score), RowFilterSource.TABLE_CLICKED);
 		}
 	}
 	
@@ -230,7 +231,7 @@ public class ClipTable extends JScrollPane implements CCDBUpdateListener, ListSe
 	}
 	
 	@SuppressWarnings("unchecked")
-	public void setRowFilter(RowFilter<ClipTableModel, Object> filter, RowFilterSource source) { // Source kann null sein
+	public void setRowFilter(AbstractCustomFilter filterimpl, RowFilterSource source) { // Source kann null sein
 		model.clearMapping();
 		
 		if (!suppressRowFilterResetEvents) {
@@ -253,7 +254,10 @@ public class ClipTable extends JScrollPane implements CCDBUpdateListener, ListSe
 		
 		TableRowSorter<ClipTableModel> sorter = ((TableRowSorter<ClipTableModel>) table.getRowSorter());
 		
-		sorter.setRowFilter(filter);
+		if (filterimpl == null)
+			sorter.setRowFilter(null);
+		else
+			sorter.setRowFilter(new TableCustomFilter(filterimpl));
 		
 		if (! hasSortOrder()) {
 			initialSort();

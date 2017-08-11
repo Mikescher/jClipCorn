@@ -8,8 +8,9 @@ import javax.swing.RowFilter.Entry;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCUserScore;
 import de.jClipCorn.gui.frames.mainFrame.clipTable.ClipTableModel;
-import de.jClipCorn.gui.frames.mainFrame.filterTree.customFilterDialogs.CustomFilterDialog;
-import de.jClipCorn.gui.frames.mainFrame.filterTree.customFilterDialogs.CustomScoreFilterDialog;
+import de.jClipCorn.gui.guiComponents.tableFilter.AbstractCustomFilter;
+import de.jClipCorn.gui.guiComponents.tableFilter.CustomFilterDialog;
+import de.jClipCorn.gui.guiComponents.tableFilter.customFilterDialogs.CustomScoreFilterDialog;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.DecimalSearchType;
 import de.jClipCorn.util.listener.FinishListener;
@@ -159,5 +160,12 @@ public class CustomScoreFilter extends AbstractCustomFilter {
 	@Override
 	public AbstractCustomFilter createNew() {
 		return new CustomScoreFilter();
+	}
+
+	public static AbstractCustomFilter create(CCUserScore data) {
+		CustomScoreFilter f = new CustomScoreFilter();
+		f.setSearchType(DecimalSearchType.EXACT);
+		f.setLow(data);
+		return f;
 	}
 }

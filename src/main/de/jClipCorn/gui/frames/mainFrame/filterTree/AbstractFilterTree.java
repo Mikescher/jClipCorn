@@ -28,7 +28,7 @@ public abstract class AbstractFilterTree extends JScrollPane implements TreeSele
 	
 	private JTree tree;
 	private DefaultTreeModel model;
-	private DefaultMutableTreeNode root;
+	protected DefaultMutableTreeNode root;
 	
 	private boolean databaseHasLoaded = false;
 

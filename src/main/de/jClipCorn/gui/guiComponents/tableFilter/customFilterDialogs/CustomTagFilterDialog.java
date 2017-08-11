@@ -1,4 +1,4 @@
-package de.jClipCorn.gui.frames.mainFrame.filterTree.customFilterDialogs;
+package de.jClipCorn.gui.guiComponents.tableFilter.customFilterDialogs;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -11,13 +11,13 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
 
-import de.jClipCorn.database.CCMovieList;
-import de.jClipCorn.database.databaseElement.columnTypes.CCGroup;
-import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomGroupFilter;
+import de.jClipCorn.database.databaseElement.columnTypes.CCTagList;
+import de.jClipCorn.gui.guiComponents.tableFilter.CustomFilterDialog;
+import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomTagFilter;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.listener.FinishListener;
 
-public class CustomGroupFilterDialog extends CustomFilterDialog {
+public class CustomTagFilterDialog extends CustomFilterDialog {
 	private static final long serialVersionUID = -6822558028101935911L;
 	
 	private JPanel pnlMiddle;
@@ -25,30 +25,19 @@ public class CustomGroupFilterDialog extends CustomFilterDialog {
 	private JButton btnOk;
 	private JComboBox<String> cbxMiddle;
 
-	public CustomGroupFilterDialog(CustomGroupFilter ft, FinishListener fl, Component parent, CCMovieList ml) {
+	public CustomTagFilterDialog(CustomTagFilter ft, FinishListener fl, Component parent) {
 		super(ft, fl);
 		initGUI();
 		
-		DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
-
-		model.addElement(""); //$NON-NLS-1$
-		
-		boolean contained = false;
-		for (CCGroup g : ml.getGroupList()) {
-			model.addElement(g.Name);
-			if (g.Name.equals(ft.getGroup())) contained = true;
-		}
-		if (! ft.getGroup().trim().isEmpty() && !contained) model.insertElementAt(ft.getGroup(), 1);
-		
-		cbxMiddle.setModel(model);
-		cbxMiddle.setSelectedItem(ft.getGroup());
+		cbxMiddle.setModel(new DefaultComboBoxModel<>(CCTagList.getList()));
+		cbxMiddle.setSelectedIndex(ft.getTag());
 		
 		setLocationRelativeTo(parent);
 	}
 	
 	@Override
-	protected CustomGroupFilter getFilter() {
-		return (CustomGroupFilter) super.getFilter();
+	protected CustomTagFilter getFilter() {
+		return (CustomTagFilter) super.getFilter();
 	}
 	
 	private void initGUI() {
@@ -77,6 +66,6 @@ public class CustomGroupFilterDialog extends CustomFilterDialog {
 
 	@Override
 	protected void onAfterOK() {
-		getFilter().setGroup((String) cbxMiddle.getSelectedItem());
+		getFilter().setTag(cbxMiddle.getSelectedIndex());
 	}
 }

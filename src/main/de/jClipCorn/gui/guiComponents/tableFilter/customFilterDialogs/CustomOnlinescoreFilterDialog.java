@@ -1,4 +1,4 @@
-package de.jClipCorn.gui.frames.mainFrame.filterTree.customFilterDialogs;
+package de.jClipCorn.gui.guiComponents.tableFilter.customFilterDialogs;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -7,20 +7,21 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.ButtonGroup;
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
+import javax.swing.JSpinner;
+import javax.swing.SpinnerNumberModel;
 
-import de.jClipCorn.database.databaseElement.columnTypes.CCUserScore;
-import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomScoreFilter;
+import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineScore;
+import de.jClipCorn.gui.guiComponents.tableFilter.CustomFilterDialog;
+import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomOnlinescoreFilter;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.DecimalSearchType;
 import de.jClipCorn.util.listener.FinishListener;
 
-public class CustomScoreFilterDialog extends CustomFilterDialog {
+public class CustomOnlinescoreFilterDialog extends CustomFilterDialog {
 	private static final long serialVersionUID = -6822558028101935911L;
 	
 	private JPanel pnlMiddle;
@@ -32,13 +33,13 @@ public class CustomScoreFilterDialog extends CustomFilterDialog {
 	private JRadioButton rdbtnGreater;
 	private JRadioButton rdbtnBetween;
 	private JRadioButton rdbtnExactly;
-	private JComboBox<String> cbxLesser;
-	private JComboBox<String> cbxBetween1;
-	private JComboBox<String> cbxGreater;
-	private JComboBox<String> cbxBetween2;
-	private JComboBox<String> cbxExactly;
+	private JSpinner spnLesser;
+	private JSpinner spnGreater;
+	private JSpinner spnBetween1;
+	private JSpinner spnBetween2;
+	private JSpinner spnExactly;
 
-	public CustomScoreFilterDialog(CustomScoreFilter ft, FinishListener fl, Component parent) {
+	public CustomOnlinescoreFilterDialog(CustomOnlinescoreFilter ft, FinishListener fl, Component parent) {
 		super(ft, fl);
 		initGUI();
 		
@@ -48,18 +49,18 @@ public class CustomScoreFilterDialog extends CustomFilterDialog {
 	}
 	
 	@Override
-	protected CustomScoreFilter getFilter() {
-		return (CustomScoreFilter) super.getFilter();
+	protected CustomOnlinescoreFilter getFilter() {
+		return (CustomOnlinescoreFilter) super.getFilter();
 	}
 	
 	private void initGUI() {
-		setSize(new Dimension(400, 220));
+		setSize(new Dimension(300, 220));
 		
 		pnlMiddle = new JPanel();
 		getContentPane().add(pnlMiddle, BorderLayout.CENTER);
 		pnlMiddle.setLayout(null);
 		
-		lblType = new JLabel(LocaleBundle.getString("FilterTree.Custom.FilterFrames.Score")); //$NON-NLS-1$
+		lblType = new JLabel(LocaleBundle.getString("FilterTree.Custom.FilterFrames.Onlinescore")); //$NON-NLS-1$
 		lblType.setBounds(10, 11, 62, 14);
 		pnlMiddle.add(lblType);
 		
@@ -84,25 +85,30 @@ public class CustomScoreFilterDialog extends CustomFilterDialog {
 		rdbtnExactly.setBounds(10, 110, 109, 23);
 		pnlMiddle.add(rdbtnExactly);
 		
-		cbxLesser = new JComboBox<>();
-		cbxLesser.setBounds(125, 33, 259, 20);
-		pnlMiddle.add(cbxLesser);
+		spnLesser = new JSpinner();
+		spnLesser.setModel(new SpinnerNumberModel(0, 0, 10, 1));
+		spnLesser.setBounds(130, 33, 154, 20);
+		pnlMiddle.add(spnLesser);
 		
-		cbxBetween1 = new JComboBox<>();
-		cbxBetween1.setBounds(125, 85, 125, 20);
-		pnlMiddle.add(cbxBetween1);
+		spnGreater = new JSpinner();
+		spnGreater.setModel(new SpinnerNumberModel(0, 0, 10, 1));
+		spnGreater.setBounds(130, 59, 154, 20);
+		pnlMiddle.add(spnGreater);
 		
-		cbxGreater = new JComboBox<>();
-		cbxGreater.setBounds(125, 59, 259, 20);
-		pnlMiddle.add(cbxGreater);
+		spnBetween1 = new JSpinner();
+		spnBetween1.setModel(new SpinnerNumberModel(0, 0, 10, 1));
+		spnBetween1.setBounds(130, 85, 70, 20);
+		pnlMiddle.add(spnBetween1);
 		
-		cbxBetween2 = new JComboBox<>();
-		cbxBetween2.setBounds(259, 85, 125, 20);
-		pnlMiddle.add(cbxBetween2);
+		spnBetween2 = new JSpinner();
+		spnBetween2.setModel(new SpinnerNumberModel(0, 0, 10, 1));
+		spnBetween2.setBounds(214, 85, 70, 20);
+		pnlMiddle.add(spnBetween2);
 		
-		cbxExactly = new JComboBox<>();
-		cbxExactly.setBounds(125, 111, 259, 20);
-		pnlMiddle.add(cbxExactly);
+		spnExactly = new JSpinner();
+		spnExactly.setModel(new SpinnerNumberModel(0, 0, 10, 1));
+		spnExactly.setBounds(130, 111, 154, 20);
+		pnlMiddle.add(spnExactly);
 		
 		pnlBottom = new JPanel();
 		getContentPane().add(pnlBottom, BorderLayout.SOUTH);
@@ -118,28 +124,22 @@ public class CustomScoreFilterDialog extends CustomFilterDialog {
 	}
 	
 	private void initValues() {
-		cbxLesser.setModel(new DefaultComboBoxModel<>(CCUserScore.getWrapper().getList()));
-		cbxGreater.setModel(new DefaultComboBoxModel<>(CCUserScore.getWrapper().getList()));
-		cbxBetween1.setModel(new DefaultComboBoxModel<>(CCUserScore.getWrapper().getList()));
-		cbxBetween2.setModel(new DefaultComboBoxModel<>(CCUserScore.getWrapper().getList()));
-		cbxExactly.setModel(new DefaultComboBoxModel<>(CCUserScore.getWrapper().getList()));
-		
 		switch (getFilter().getSearchType()) {
 		case LESSER:
-			cbxLesser.setSelectedIndex(getFilter().getHigh().asInt());
+			spnLesser.setValue(getFilter().getHigh().asInt());
 			rdbtnLesser.setSelected(true);
 			break;
 		case GREATER:
-			cbxGreater.setSelectedIndex(getFilter().getLow().asInt());
+			spnGreater.setValue(getFilter().getLow().asInt());
 			rdbtnGreater.setSelected(true);
 			break;
 		case IN_RANGE:
-			cbxBetween1.setSelectedIndex(getFilter().getLow().asInt());
-			cbxBetween2.setSelectedIndex(getFilter().getHigh().asInt());
+			spnBetween1.setValue(getFilter().getLow().asInt());
+			spnBetween2.setValue(getFilter().getHigh().asInt());
 			rdbtnBetween.setSelected(true);
 			break;
 		case EXACT:
-			cbxExactly.setSelectedIndex(getFilter().getLow().asInt());
+			spnExactly.setValue(getFilter().getLow().asInt());
 			rdbtnExactly.setSelected(true);
 			break;
 		}
@@ -148,20 +148,20 @@ public class CustomScoreFilterDialog extends CustomFilterDialog {
 	@Override
 	protected void onAfterOK() {
 		if (rdbtnLesser.isSelected()) {
-			getFilter().setHigh(CCUserScore.getWrapper().find( cbxLesser.getSelectedIndex()));
+			getFilter().setHigh(CCOnlineScore.getWrapper().find((int) spnLesser.getValue()));
 			
 			getFilter().setSearchType(DecimalSearchType.LESSER);
 		} else if (rdbtnGreater.isSelected()) {
-			getFilter().setLow(CCUserScore.getWrapper().find(cbxGreater.getSelectedIndex()));
+			getFilter().setLow(CCOnlineScore.getWrapper().find((int) spnGreater.getValue()));
 			
 			getFilter().setSearchType(DecimalSearchType.GREATER);
 		} else if (rdbtnBetween.isSelected()) {
-			getFilter().setLow(CCUserScore.getWrapper().find(cbxBetween1.getSelectedIndex()));
-			getFilter().setHigh(CCUserScore.getWrapper().find(cbxBetween2.getSelectedIndex()));
+			getFilter().setLow(CCOnlineScore.getWrapper().find((int) spnBetween1.getValue()));
+			getFilter().setHigh(CCOnlineScore.getWrapper().find((int) spnBetween2.getValue()));
 			
 			getFilter().setSearchType(DecimalSearchType.IN_RANGE);
 		} else if (rdbtnExactly.isSelected()) {
-			getFilter().setLow(CCUserScore.getWrapper().find(cbxExactly.getSelectedIndex()));
+			getFilter().setLow(CCOnlineScore.getWrapper().find((int) spnExactly.getValue()));
 			
 			getFilter().setSearchType(DecimalSearchType.EXACT);
 		}

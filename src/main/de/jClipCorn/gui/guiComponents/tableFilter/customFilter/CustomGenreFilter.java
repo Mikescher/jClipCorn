@@ -9,8 +9,9 @@ import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGenre;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGenreList;
 import de.jClipCorn.gui.frames.mainFrame.clipTable.ClipTableModel;
-import de.jClipCorn.gui.frames.mainFrame.filterTree.customFilterDialogs.CustomFilterDialog;
-import de.jClipCorn.gui.frames.mainFrame.filterTree.customFilterDialogs.CustomGenreFilterDialog;
+import de.jClipCorn.gui.guiComponents.tableFilter.AbstractCustomFilter;
+import de.jClipCorn.gui.guiComponents.tableFilter.CustomFilterDialog;
+import de.jClipCorn.gui.guiComponents.tableFilter.customFilterDialogs.CustomGenreFilterDialog;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.listener.FinishListener;
 
@@ -89,5 +90,11 @@ public class CustomGenreFilter extends AbstractCustomFilter {
 	@Override
 	public AbstractCustomFilter createNew() {
 		return new CustomGenreFilter();
+	}
+
+	public static AbstractCustomFilter create(CCGenre data) {
+		CustomGenreFilter f = new CustomGenreFilter();
+		f.setGenre(data);
+		return f;
 	}
 }

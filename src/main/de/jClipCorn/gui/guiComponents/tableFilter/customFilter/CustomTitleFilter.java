@@ -7,8 +7,9 @@ import javax.swing.RowFilter.Entry;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.gui.frames.mainFrame.clipTable.ClipTableModel;
-import de.jClipCorn.gui.frames.mainFrame.filterTree.customFilterDialogs.CustomFilterDialog;
-import de.jClipCorn.gui.frames.mainFrame.filterTree.customFilterDialogs.CustomTitleFilterDialog;
+import de.jClipCorn.gui.guiComponents.tableFilter.AbstractCustomFilter;
+import de.jClipCorn.gui.guiComponents.tableFilter.CustomFilterDialog;
+import de.jClipCorn.gui.guiComponents.tableFilter.customFilterDialogs.CustomTitleFilterDialog;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.datatypes.StringMatchType;
 import de.jClipCorn.util.listener.FinishListener;
@@ -37,6 +38,8 @@ public class CustomTitleFilter extends AbstractCustomFilter {
 			return title.indexOf(search) != -1;
 		case SM_ENDSWITH:
 			return title.endsWith(search);
+		case SM_EQUALS:
+			return title.equals(search);
 		}
 		
 		return false;
@@ -86,9 +89,11 @@ public class CustomTitleFilter extends AbstractCustomFilter {
 			return "*** " + getSearchString() + " ***" + appendix; //$NON-NLS-1$ //$NON-NLS-2$
 		case SM_ENDSWITH:
 			return "*** " + getSearchString() + appendix; //$NON-NLS-1$
-		default:
-			return ""; //$NON-NLS-1$
+		case SM_EQUALS:
+			return "== " + getSearchString() + appendix; //$NON-NLS-1$
 		}
+		
+		return "?"; //$NON-NLS-1$
 	}
 	
 	@Override

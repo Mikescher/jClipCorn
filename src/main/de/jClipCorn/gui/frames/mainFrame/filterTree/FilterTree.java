@@ -4,42 +4,45 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Supplier;
 
+import javax.swing.Icon;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 import de.jClipCorn.database.CCMovieList;
-import de.jClipCorn.database.databaseElement.columnTypes.CCGroup;
+import de.jClipCorn.database.databaseElement.columnTypes.CCDBElementTyp;
+import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguage;
 import de.jClipCorn.database.databaseElement.columnTypes.CCFSK;
 import de.jClipCorn.database.databaseElement.columnTypes.CCFileFormat;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGenre;
-import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguage;
+import de.jClipCorn.database.databaseElement.columnTypes.CCGroup;
 import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineScore;
 import de.jClipCorn.database.databaseElement.columnTypes.CCQuality;
-import de.jClipCorn.database.databaseElement.columnTypes.CCUserScore;
 import de.jClipCorn.database.databaseElement.columnTypes.CCTagList;
-import de.jClipCorn.database.databaseElement.columnTypes.CCDBElementTyp;
+import de.jClipCorn.database.databaseElement.columnTypes.CCUserScore;
 import de.jClipCorn.gui.frames.mainFrame.clipTable.ClipTable;
 import de.jClipCorn.gui.frames.mainFrame.clipTable.RowFilterSource;
-import de.jClipCorn.gui.frames.mainFrame.filterTree.customFilterDialogs.CustomOperatorFilterDialog;
 import de.jClipCorn.gui.frames.organizeFilterFrame.OrganizeFilterDialog;
 import de.jClipCorn.gui.guiComponents.jSimpleTree.SimpleTreeObject;
-import de.jClipCorn.gui.guiComponents.tableFilter.TableCustomFilter;
-import de.jClipCorn.gui.guiComponents.tableFilter.TableFSKFilter;
-import de.jClipCorn.gui.guiComponents.tableFilter.TableFormatFilter;
-import de.jClipCorn.gui.guiComponents.tableFilter.TableGenreFilter;
-import de.jClipCorn.gui.guiComponents.tableFilter.TableGroupFilter;
-import de.jClipCorn.gui.guiComponents.tableFilter.TableLanguageFilter;
-import de.jClipCorn.gui.guiComponents.tableFilter.TableOnlinescoreFilter;
-import de.jClipCorn.gui.guiComponents.tableFilter.TableQualityFilter;
-import de.jClipCorn.gui.guiComponents.tableFilter.TableScoreFilter;
-import de.jClipCorn.gui.guiComponents.tableFilter.TableTagFilter;
-import de.jClipCorn.gui.guiComponents.tableFilter.TableTypFilter;
-import de.jClipCorn.gui.guiComponents.tableFilter.TableViewedFilter;
-import de.jClipCorn.gui.guiComponents.tableFilter.TableYearFilter;
-import de.jClipCorn.gui.guiComponents.tableFilter.TableZyklusFilter;
+import de.jClipCorn.gui.guiComponents.tableFilter.AbstractCustomFilter;
+import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomFSKFilter;
+import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomFormatFilter;
+import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomGenreFilter;
+import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomGroupFilter;
+import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomLanguageFilter;
+import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomOnlinescoreFilter;
+import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomQualityFilter;
+import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomScoreFilter;
+import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomTagFilter;
+import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomTypFilter;
+import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomViewedFilter;
+import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomYearFilter;
+import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomZyklusFilter;
 import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.operators.CustomAndOperator;
+import de.jClipCorn.gui.guiComponents.tableFilter.customFilterDialogs.CustomOperatorFilterDialog;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.CachedResourceLoader;
+import de.jClipCorn.gui.resources.IconRef;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.listener.FinishListener;
 
@@ -77,56 +80,49 @@ public class FilterTree extends AbstractFilterTree {
 
 	@Override
 	protected void addFields() {
-		ActionListener reset = new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				table.setRowFilter(null, RowFilterSource.SIDEBAR);
-			}
-		};
-		
 		node_all = addNodeI(null, null, null, null);
 		initAll();
 		
-		node_zyklus = addNode(null, Resources.ICN_SIDEBAR_ZYKLUS, LocaleBundle.getString("FilterTree.Zyklus"), reset); //$NON-NLS-1$
+		node_zyklus = addNode(null, Resources.ICN_SIDEBAR_ZYKLUS, LocaleBundle.getString("FilterTree.Zyklus"), null); //$NON-NLS-1$
 		initZyklus();
 		
-		node_groups = addNode(null, Resources.ICN_SIDEBAR_GROUPS, LocaleBundle.getString("FilterTree.Groups"), reset); //$NON-NLS-1$
+		node_groups = addNode(null, Resources.ICN_SIDEBAR_GROUPS, LocaleBundle.getString("FilterTree.Groups"), null); //$NON-NLS-1$
 		initGroups(); //TODO HIDE IF NO ELEMENTS
 		
-		node_genre = addNode(null, Resources.ICN_SIDEBAR_GENRE, LocaleBundle.getString("FilterTree.Genre"), reset); //$NON-NLS-1$
+		node_genre = addNode(null, Resources.ICN_SIDEBAR_GENRE, LocaleBundle.getString("FilterTree.Genre"), null); //$NON-NLS-1$
 		initGenre();
 		
-		node_onlinescore = addNode(null, Resources.ICN_SIDEBAR_ONLINESCORE, LocaleBundle.getString("FilterTree.IMDB"), reset); //$NON-NLS-1$
+		node_onlinescore = addNode(null, Resources.ICN_SIDEBAR_ONLINESCORE, LocaleBundle.getString("FilterTree.IMDB"), null); //$NON-NLS-1$
 		initOnlineScore();
 		
-		node_score = addNode(null, Resources.ICN_SIDEBAR_SCORE, LocaleBundle.getString("FilterTree.Score"), reset); //$NON-NLS-1$
+		node_score = addNode(null, Resources.ICN_SIDEBAR_SCORE, LocaleBundle.getString("FilterTree.Score"), null); //$NON-NLS-1$
 		initScore(); //TODO HIDE IF NO ELEMENTS
 		
-		node_fsk = addNode(null, Resources.ICN_TABLE_FSK_2, LocaleBundle.getString("FilterTree.FSK"), reset); //$NON-NLS-1$
+		node_fsk = addNode(null, Resources.ICN_TABLE_FSK_2, LocaleBundle.getString("FilterTree.FSK"), null); //$NON-NLS-1$
 		initFSK();
 		
-		node_year = addNode(null, Resources.ICN_SIDEBAR_YEAR, LocaleBundle.getString("FilterTree.Year"), reset); //$NON-NLS-1$
+		node_year = addNode(null, Resources.ICN_SIDEBAR_YEAR, LocaleBundle.getString("FilterTree.Year"), null); //$NON-NLS-1$
 		initYear();
 		
-		node_format = addNode(null, Resources.ICN_SIDEBAR_FORMAT, LocaleBundle.getString("FilterTree.Format"), reset); //$NON-NLS-1$
+		node_format = addNode(null, Resources.ICN_SIDEBAR_FORMAT, LocaleBundle.getString("FilterTree.Format"), null); //$NON-NLS-1$
 		initFormat();
 		
-		node_quality = addNode(null, Resources.ICN_SIDEBAR_QUALITY, LocaleBundle.getString("FilterTree.Quality"), reset); //$NON-NLS-1$
+		node_quality = addNode(null, Resources.ICN_SIDEBAR_QUALITY, LocaleBundle.getString("FilterTree.Quality"), null); //$NON-NLS-1$
 		initQuality();
 		
-		node_tags = addNode(null, Resources.ICN_SIDEBAR_TAGS, LocaleBundle.getString("FilterTree.Tags"), reset); //$NON-NLS-1$
+		node_tags = addNode(null, Resources.ICN_SIDEBAR_TAGS, LocaleBundle.getString("FilterTree.Tags"), null); //$NON-NLS-1$
 		initTags();
 		
-		node_language = addNode(null, Resources.ICN_SIDEBAR_LANGUAGE, LocaleBundle.getString("FilterTree.Language"), reset); //$NON-NLS-1$
+		node_language = addNode(null, Resources.ICN_SIDEBAR_LANGUAGE, LocaleBundle.getString("FilterTree.Language"), null); //$NON-NLS-1$
 		initLanguage();
 		
-		node_typ = addNode(null, Resources.ICN_SIDEBAR_TYP, LocaleBundle.getString("FilterTree.Type"), reset); //$NON-NLS-1$
+		node_typ = addNode(null, Resources.ICN_SIDEBAR_TYP, LocaleBundle.getString("FilterTree.Type"), null); //$NON-NLS-1$
 		initTyp();
 		
-		node_viewed = addNode(null, Resources.ICN_SIDEBAR_VIEWED, LocaleBundle.getString("FilterTree.Viewed"), reset); //$NON-NLS-1$
+		node_viewed = addNode(null, Resources.ICN_SIDEBAR_VIEWED, LocaleBundle.getString("FilterTree.Viewed"), null); //$NON-NLS-1$
 		initViewed();
 
-		node_custom = addNode(null,  Resources.ICN_SIDEBAR_CUSTOM, LocaleBundle.getString("FilterTree.Custom"), reset); //$NON-NLS-1$
+		node_custom = addNode(null,  Resources.ICN_SIDEBAR_CUSTOM, LocaleBundle.getString("FilterTree.Custom"), null); //$NON-NLS-1$
 		initCustom();
 	}
 	
@@ -141,129 +137,69 @@ public class FilterTree extends AbstractFilterTree {
 	}
 	
 	private void initViewed() {
-		addNode(node_viewed, Resources.ICN_SIDEBAR_VIEWED, LocaleBundle.getString("FilterTree.Viewed.Viewed"), new ActionListener() { //$NON-NLS-1$
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				table.setRowFilter(new TableViewedFilter(true), RowFilterSource.SIDEBAR);
-			}
-		});
+		addNodeF(node_viewed, Resources.ICN_SIDEBAR_VIEWED, LocaleBundle.getString("FilterTree.Viewed.Viewed"), () -> CustomViewedFilter.create(true)); //$NON-NLS-1$
 		
-		addNode(node_viewed, Resources.ICN_SIDEBAR_UNVIEWED, LocaleBundle.getString("FilterTree.Viewed.Unviewed"), new ActionListener() { //$NON-NLS-1$
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				table.setRowFilter(new TableViewedFilter(false), RowFilterSource.SIDEBAR);
-			}
-		});
+		addNodeF(node_viewed, Resources.ICN_SIDEBAR_UNVIEWED, LocaleBundle.getString("FilterTree.Viewed.Unviewed"), () -> CustomViewedFilter.create(false)); //$NON-NLS-1$
 	}
 	
 	private void initFSK() {
 		for (final CCFSK fsk : CCFSK.values()) {
-			addNodeI(node_fsk, fsk.getIcon(), fsk.asString(), new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					table.setRowFilter(new TableFSKFilter(fsk), RowFilterSource.SIDEBAR);
-				}
-			});
+			addNodeF(node_fsk, fsk.getIcon(), fsk.asString(), () -> CustomFSKFilter.create(fsk));
 		}
 	}
 	
 	private void initScore() {
 		for (final CCUserScore score : CCUserScore.values()) {
-			addNodeI(node_score, score.getIcon(), score.asString(), new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					table.setRowFilter(new TableScoreFilter(score), RowFilterSource.SIDEBAR);
-				}
-			});
+			addNodeF(node_score, score.getIcon(), score.asString(), () -> CustomScoreFilter.create(score));
 		}
 	}
 	
 	private void initOnlineScore() {
 		for (final CCOnlineScore oscore : CCOnlineScore.values()) {
-			addNodeI(node_onlinescore, oscore.getIcon(), oscore.asInt()/2.0+"", new ActionListener() { //$NON-NLS-1$
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					table.setRowFilter(new TableOnlinescoreFilter(oscore), RowFilterSource.SIDEBAR);
-				}
-			});
+			addNodeF(node_onlinescore, oscore.getIcon(), oscore.asInt()/2.0+"", () -> CustomOnlinescoreFilter.create(oscore)); //$NON-NLS-1$
 		}
 	}
 	
 	private void initFormat() {
 		for (final CCFileFormat format : CCFileFormat.values()) {
-			addNodeI(node_format, format.getIcon(), format.asString(), new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					table.setRowFilter(new TableFormatFilter(format), RowFilterSource.SIDEBAR);
-				}
-			});
+			addNodeF(node_format, format.getIcon(), format.asString(), () -> CustomFormatFilter.create(format));
 		}
 	}
 	
 	private void initQuality() {
 		for (final CCQuality quality : CCQuality.values()) {
-			addNodeI(node_quality, quality.getIcon(), quality.asString(), new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					table.setRowFilter(new TableQualityFilter(quality), RowFilterSource.SIDEBAR);
-				}
-			});
+			addNodeF(node_quality, quality.getIcon(), quality.asString(), () -> CustomQualityFilter.create(quality));
 		}
 	}
 	
 	private void initTags() {
 		for (int i = 0; i < CCTagList.ACTIVETAGS; i++) {
 			final int curr = i;
-			addNodeI(node_tags, CCTagList.getOnIcon(i), CCTagList.getName(i), new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					table.setRowFilter(new TableTagFilter(curr), RowFilterSource.SIDEBAR);
-				}
-			});
+			addNodeF(node_tags, CCTagList.getOnIcon(i), CCTagList.getName(i), () -> CustomTagFilter.create(curr));
 		}
 	}
 	
 	private void initLanguage() {
 		for (final CCDBLanguage language : CCDBLanguage.values()) {
-			addNodeI(node_language, language.getIcon(), language.asString(), new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					table.setRowFilter(new TableLanguageFilter(language), RowFilterSource.SIDEBAR);
-				}
-			});
+			addNodeF(node_language, language.getIcon(), language.asString(), () -> CustomLanguageFilter.create(language));
 		}
 	}
 	
 	private void initTyp() {
 		for (final CCDBElementTyp typ : CCDBElementTyp.values()) {
-			addNodeI(node_typ, typ.getIcon(), typ.asString(), new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					table.setRowFilter(new TableTypFilter(typ), RowFilterSource.SIDEBAR);
-				}
-			});
+			addNodeF(node_typ, typ.getIcon(), typ.asString(), () -> CustomTypFilter.create(typ));
 		}
 	}
 	
 	private void initZyklus() {
 		for (final String zyklus : movielist.getZyklusList()) {
-			addNodeI(node_zyklus, null, zyklus, new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					table.setRowFilter(new TableZyklusFilter(zyklus), RowFilterSource.SIDEBAR);
-				}
-			});
+			addNodeF(node_zyklus, (Icon)null, zyklus, () -> CustomZyklusFilter.create(zyklus));
 		}
 	}
 	
 	private void initGroups() {
 		for (final CCGroup group : movielist.getGroupList()) {
-			addNodeI(node_groups, null, group.Name, new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					table.setRowFilter(new TableGroupFilter(group), RowFilterSource.SIDEBAR);
-				}
-			});
+			addNodeF(node_groups, (Icon)null, group.Name, () -> CustomGroupFilter.create(group));
 		}
 	}
 	
@@ -277,35 +213,20 @@ public class FilterTree extends AbstractFilterTree {
 		Collections.sort(genres, CCGenre.getTextComparator());
 		
 		for (final CCGenre genre : genres) {
-			addNodeI(node_genre, null, genre.asString(), new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					table.setRowFilter(new TableGenreFilter(genre), RowFilterSource.SIDEBAR);
-				}
-			});
+			addNodeF(node_genre, (Icon)null, genre.asString(), () -> CustomGenreFilter.create(genre));
 		}
 	}
 	
 	private void initYear() {
 		for (final Integer year : movielist.getYearList()) {
-			addNodeI(node_year, null, year+"", new ActionListener() { //$NON-NLS-1$
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					table.setRowFilter(new TableYearFilter(year), RowFilterSource.SIDEBAR);
-				}
-			});
+			addNodeF(node_year, (Icon)null, year+"", () -> CustomYearFilter.create(year)); //$NON-NLS-1$
 		}
 	}
 	
 	private void initCustom() {
 		for (int i = 0; i < customFilterList.size(); i++) {
 			final CustomFilterObject fo = customFilterList.get(i);
-			addNode(node_custom, Resources.ICN_SIDEBAR_CUSTOM, fo.getName(), new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent arg0) {
-					table.setRowFilter(new TableCustomFilter(fo.getFilter()), RowFilterSource.SIDEBAR);
-				}
-			});
+			addNodeF(node_custom, Resources.ICN_SIDEBAR_CUSTOM, fo.getName(), () -> fo.getFilter());
 		}
 		
 		addNode(node_custom, Resources.ICN_SIDEBAR_CUSTOM, LocaleBundle.getString("FilterTree.Custom.OrganizeFilter"), new ActionListener() { //$NON-NLS-1$
@@ -340,8 +261,26 @@ public class FilterTree extends AbstractFilterTree {
 		new CustomOperatorFilterDialog(movielist, cfilter, new FinishListener() {
 			@Override
 			public void finish() {
-				table.setRowFilter(new TableCustomFilter(cfilter), RowFilterSource.SIDEBAR);
+				table.setRowFilter(cfilter, RowFilterSource.SIDEBAR);
 			}
 		}, table.getMainFrame(), true).setVisible(true);
+	}
+	
+	protected DefaultMutableTreeNode addNodeF(DefaultMutableTreeNode aroot, IconRef icon, String txt, Supplier<AbstractCustomFilter> filter) {
+		return addNodeF(aroot, CachedResourceLoader.getIcon(icon), txt, filter);
+	}
+	
+	protected DefaultMutableTreeNode addNodeF(DefaultMutableTreeNode aroot, Icon icon, String txt, Supplier<AbstractCustomFilter> filter) {
+		if (aroot == null) {
+			aroot = root;
+		}
+		DefaultMutableTreeNode node = new DefaultMutableTreeNode(new SimpleTreeObject(icon, txt, new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				table.setRowFilter(filter.get(), RowFilterSource.SIDEBAR);
+			}
+		}));
+		aroot.add(node);
+		return node;
 	}
 }

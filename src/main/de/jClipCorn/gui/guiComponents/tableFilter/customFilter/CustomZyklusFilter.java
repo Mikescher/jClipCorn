@@ -7,8 +7,9 @@ import javax.swing.RowFilter.Entry;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieZyklus;
 import de.jClipCorn.gui.frames.mainFrame.clipTable.ClipTableModel;
-import de.jClipCorn.gui.frames.mainFrame.filterTree.customFilterDialogs.CustomFilterDialog;
-import de.jClipCorn.gui.frames.mainFrame.filterTree.customFilterDialogs.CustomZyklusFilterDialog;
+import de.jClipCorn.gui.guiComponents.tableFilter.AbstractCustomFilter;
+import de.jClipCorn.gui.guiComponents.tableFilter.CustomFilterDialog;
+import de.jClipCorn.gui.guiComponents.tableFilter.customFilterDialogs.CustomZyklusFilterDialog;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.datatypes.StringMatchType;
 import de.jClipCorn.util.listener.FinishListener;
@@ -37,6 +38,10 @@ public class CustomZyklusFilter extends AbstractCustomFilter {
 			return zyklus.indexOf(search) != -1;
 		case SM_ENDSWITH:
 			return zyklus.endsWith(search);
+		case SM_EQUALS:
+			return zyklus.equals(search);
+		default:
+			break;
 		}
 		
 		return false;
@@ -86,6 +91,8 @@ public class CustomZyklusFilter extends AbstractCustomFilter {
 			return "*** " + getSearchString() + " ***" + appendix; //$NON-NLS-1$ //$NON-NLS-2$
 		case SM_ENDSWITH:
 			return "*** " + getSearchString() + appendix; //$NON-NLS-1$
+		case SM_EQUALS:
+			return "== " + getSearchString() + appendix; //$NON-NLS-1$
 		default:
 			return ""; //$NON-NLS-1$
 		}
@@ -159,5 +166,21 @@ public class CustomZyklusFilter extends AbstractCustomFilter {
 	@Override
 	public AbstractCustomFilter createNew() {
 		return new CustomZyklusFilter();
+	}
+
+	public static AbstractCustomFilter create(String data) {
+		CustomZyklusFilter f = new CustomZyklusFilter();
+		f.setSearchString(data);
+		f.setCaseSensitive(true);
+		f.setStringMatch(StringMatchType.SM_EQUALS);
+		return f;
+	}
+
+	public static AbstractCustomFilter create(CCMovieZyklus data) {
+		CustomZyklusFilter f = new CustomZyklusFilter();
+		f.setSearchString(data.getTitle());
+		f.setCaseSensitive(true);
+		f.setStringMatch(StringMatchType.SM_EQUALS);
+		return f;
 	}
 }

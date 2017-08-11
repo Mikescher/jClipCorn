@@ -1,4 +1,4 @@
-package de.jClipCorn.gui.frames.mainFrame.filterTree.customFilterDialogs;
+package de.jClipCorn.gui.guiComponents.tableFilter.customFilterDialogs;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -11,12 +11,14 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
 
-import de.jClipCorn.database.databaseElement.columnTypes.CCGenre;
-import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomGenreFilter;
+import de.jClipCorn.database.CCMovieList;
+import de.jClipCorn.database.databaseElement.columnTypes.CCGroup;
+import de.jClipCorn.gui.guiComponents.tableFilter.CustomFilterDialog;
+import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomGroupFilter;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.listener.FinishListener;
 
-public class CustomGenreFilterDialog extends CustomFilterDialog {
+public class CustomGroupFilterDialog extends CustomFilterDialog {
 	private static final long serialVersionUID = -6822558028101935911L;
 	
 	private JPanel pnlMiddle;
@@ -24,19 +26,30 @@ public class CustomGenreFilterDialog extends CustomFilterDialog {
 	private JButton btnOk;
 	private JComboBox<String> cbxMiddle;
 
-	public CustomGenreFilterDialog(CustomGenreFilter ft, FinishListener fl, Component parent) {
+	public CustomGroupFilterDialog(CustomGroupFilter ft, FinishListener fl, Component parent, CCMovieList ml) {
 		super(ft, fl);
 		initGUI();
 		
-		cbxMiddle.setModel(new DefaultComboBoxModel<>(CCGenre.getWrapper().getList()));
-		cbxMiddle.setSelectedIndex(ft.getGenre().asInt());
+		DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
+
+		model.addElement(""); //$NON-NLS-1$
+		
+		boolean contained = false;
+		for (CCGroup g : ml.getGroupList()) {
+			model.addElement(g.Name);
+			if (g.Name.equals(ft.getGroup())) contained = true;
+		}
+		if (! ft.getGroup().trim().isEmpty() && !contained) model.insertElementAt(ft.getGroup(), 1);
+		
+		cbxMiddle.setModel(model);
+		cbxMiddle.setSelectedItem(ft.getGroup());
 		
 		setLocationRelativeTo(parent);
 	}
 	
 	@Override
-	protected CustomGenreFilter getFilter() {
-		return (CustomGenreFilter) super.getFilter();
+	protected CustomGroupFilter getFilter() {
+		return (CustomGroupFilter) super.getFilter();
 	}
 	
 	private void initGUI() {
@@ -62,9 +75,9 @@ public class CustomGenreFilterDialog extends CustomFilterDialog {
 		});
 		pnlBottom.add(btnOk);
 	}
-	
+
 	@Override
 	protected void onAfterOK() {
-		getFilter().setGenre(CCGenre.getWrapper().find(cbxMiddle.getSelectedIndex()));
+		getFilter().setGroup((String) cbxMiddle.getSelectedItem());
 	}
 }

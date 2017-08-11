@@ -7,12 +7,14 @@ import de.jClipCorn.util.enumextension.EnumWrapper;
 public enum StringMatchType implements ContinoousEnum<StringMatchType> {
 	SM_STARTSWITH(0),
 	SM_INCLUDES(1),
-	SM_ENDSWITH(2);
+	SM_ENDSWITH(2),
+	SM_EQUALS(2);
 
 	private final static String NAMES[] = {
 		LocaleBundle.getString("StringMatchType.STARTSWITH"), //$NON-NLS-1$
 		LocaleBundle.getString("StringMatchType.INCLUDES"),   //$NON-NLS-1$
-		LocaleBundle.getString("StringMatchType.ENDSWITH")    //$NON-NLS-1$
+		LocaleBundle.getString("StringMatchType.ENDSWITH"),    //$NON-NLS-1$
+		LocaleBundle.getString("StringMatchType.EQUALS"),    //$NON-NLS-1$
 	};
 	
 	private final int id;

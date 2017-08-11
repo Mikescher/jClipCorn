@@ -1,4 +1,4 @@
-package de.jClipCorn.gui.frames.mainFrame.filterTree.customFilterDialogs;
+package de.jClipCorn.gui.guiComponents.tableFilter.customFilterDialogs;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -14,12 +14,13 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
-import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomTitleFilter;
+import de.jClipCorn.gui.guiComponents.tableFilter.CustomFilterDialog;
+import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomZyklusFilter;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.datatypes.StringMatchType;
 import de.jClipCorn.util.listener.FinishListener;
 
-public class CustomTitleFilterDialog extends CustomFilterDialog {
+public class CustomZyklusFilterDialog extends CustomFilterDialog {
 	private static final long serialVersionUID = -6822558028101935911L;
 	
 	private JPanel pnlMiddle;
@@ -33,7 +34,7 @@ public class CustomTitleFilterDialog extends CustomFilterDialog {
 	private JCheckBox chckbxCaseSensitive;
 	private final ButtonGroup rdioBtnGroup = new ButtonGroup();
 
-	public CustomTitleFilterDialog(CustomTitleFilter ft, FinishListener fl, Component parent) {
+	public CustomZyklusFilterDialog(CustomZyklusFilter ft, FinishListener fl, Component parent) {
 		super(ft, fl);
 		initGUI();
 		
@@ -41,8 +42,8 @@ public class CustomTitleFilterDialog extends CustomFilterDialog {
 	}
 	
 	@Override
-	protected CustomTitleFilter getFilter() {
-		return (CustomTitleFilter) super.getFilter();
+	protected CustomZyklusFilter getFilter() {
+		return (CustomZyklusFilter) super.getFilter();
 	}
 	
 	private void initGUI() {
@@ -52,8 +53,8 @@ public class CustomTitleFilterDialog extends CustomFilterDialog {
 		getContentPane().add(pnlMiddle, BorderLayout.CENTER);
 		pnlMiddle.setLayout(null);
 		
-		lblMovietitle = new JLabel(LocaleBundle.getString("FilterTree.Custom.FilterFrames.Title")); //$NON-NLS-1$
-		lblMovietitle.setBounds(10, 11, 46, 14);
+		lblMovietitle = new JLabel(LocaleBundle.getString("FilterTree.Custom.FilterFrames.Zyklus")); //$NON-NLS-1$
+		lblMovietitle.setBounds(10, 11, 71, 14);
 		pnlMiddle.add(lblMovietitle);
 		
 		rdbtnStartswith = new JRadioButton(LocaleBundle.getString("FilterTree.Custom.StringSearchType.StartsWith")); //$NON-NLS-1$
@@ -97,7 +98,7 @@ public class CustomTitleFilterDialog extends CustomFilterDialog {
 		});
 		pnlBottom.add(btnOk);
 	}
-	
+
 	@Override
 	protected void onAfterOK() {
 		if (rdbtnStartswith.isSelected()) getFilter().setStringMatch(StringMatchType.SM_STARTSWITH);

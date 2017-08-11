@@ -1,4 +1,4 @@
-package de.jClipCorn.gui.frames.mainFrame.filterTree.customFilterDialogs;
+package de.jClipCorn.gui.guiComponents.tableFilter.customFilterDialogs;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -6,49 +6,49 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
+import javax.swing.JCheckBox;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 
-import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineRefType;
-import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomReferenceFilter;
+import de.jClipCorn.gui.guiComponents.tableFilter.CustomFilterDialog;
+import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomViewedFilter;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.listener.FinishListener;
 
-public class CustomReferenceFilterDialog extends CustomFilterDialog {
+public class CustomViewedFilterDialog extends CustomFilterDialog {
 	private static final long serialVersionUID = -6822558028101935911L;
 	
 	private JPanel pnlMiddle;
 	private JPanel pnlBottom;
 	private JButton btnOk;
-	private JComboBox<String> cbxMiddle;
+	private JCheckBox chkbxMiddle;
 
-	public CustomReferenceFilterDialog(CustomReferenceFilter ft, FinishListener fl, Component parent) {
+	public CustomViewedFilterDialog(CustomViewedFilter ft, FinishListener fl, Component parent) {
 		super(ft, fl);
 		initGUI();
 		
-		cbxMiddle.setModel(new DefaultComboBoxModel<>(CCOnlineRefType.getWrapper().getList()));
-		cbxMiddle.setSelectedIndex(ft.getReference().asInt());
+		chkbxMiddle.setSelected(ft.getViewed());
 		
 		setLocationRelativeTo(parent);
 	}
 	
 	@Override
-	protected CustomReferenceFilter getFilter() {
-		return (CustomReferenceFilter) super.getFilter();
+	protected CustomViewedFilter getFilter() {
+		return (CustomViewedFilter) super.getFilter();
 	}
 	
 	private void initGUI() {
-		setSize(new Dimension(300, 105));
+		setSize(new Dimension(200, 95));
 		
 		pnlMiddle = new JPanel();
 		getContentPane().add(pnlMiddle, BorderLayout.CENTER);
 		pnlMiddle.setLayout(null);
 		
-		cbxMiddle = new JComboBox<>();
-		cbxMiddle.setBounds(10, 11, 274, 20);
-		pnlMiddle.add(cbxMiddle);
+		chkbxMiddle = new JCheckBox();
+		chkbxMiddle.setHorizontalAlignment(SwingConstants.CENTER);
+		chkbxMiddle.setBounds(6, 7, 182, 21);
+		pnlMiddle.add(chkbxMiddle);
 		
 		pnlBottom = new JPanel();
 		getContentPane().add(pnlBottom, BorderLayout.SOUTH);
@@ -65,6 +65,6 @@ public class CustomReferenceFilterDialog extends CustomFilterDialog {
 
 	@Override
 	protected void onAfterOK() {
-		getFilter().setReference(CCOnlineRefType.getWrapper().find(cbxMiddle.getSelectedIndex()));
+		getFilter().setViewed(chkbxMiddle.isSelected());
 	}
 }

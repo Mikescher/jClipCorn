@@ -8,8 +8,9 @@ import javax.swing.RowFilter.Entry;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCFileFormat;
 import de.jClipCorn.gui.frames.mainFrame.clipTable.ClipTableModel;
-import de.jClipCorn.gui.frames.mainFrame.filterTree.customFilterDialogs.CustomFilterDialog;
-import de.jClipCorn.gui.frames.mainFrame.filterTree.customFilterDialogs.CustomFormatFilterDialog;
+import de.jClipCorn.gui.guiComponents.tableFilter.AbstractCustomFilter;
+import de.jClipCorn.gui.guiComponents.tableFilter.CustomFilterDialog;
+import de.jClipCorn.gui.guiComponents.tableFilter.customFilterDialogs.CustomFormatFilterDialog;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.listener.FinishListener;
 
@@ -88,5 +89,11 @@ public class CustomFormatFilter extends AbstractCustomFilter {
 	@Override
 	public CustomFilterDialog CreateDialog(FinishListener fl, Component parent, CCMovieList ml) {
 		return new CustomFormatFilterDialog(this, fl, parent);
+	}
+	
+	public static AbstractCustomFilter create(CCFileFormat data) {
+		CustomFormatFilter f = new CustomFormatFilter();
+		f.setFormat(data);
+		return f;
 	}
 }

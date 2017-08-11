@@ -1,4 +1,4 @@
-package de.jClipCorn.gui.frames.mainFrame.filterTree.customFilterDialogs;
+package de.jClipCorn.gui.guiComponents.tableFilter.customFilterDialogs;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -11,12 +11,13 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
 
-import de.jClipCorn.database.databaseElement.columnTypes.CCDBElementTyp;
-import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomTypFilter;
+import de.jClipCorn.database.databaseElement.columnTypes.CCFSK;
+import de.jClipCorn.gui.guiComponents.tableFilter.CustomFilterDialog;
+import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomFSKFilter;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.listener.FinishListener;
 
-public class CustomTypFilterDialog extends CustomFilterDialog {
+public class CustomFSKFilterDialog extends CustomFilterDialog {
 	private static final long serialVersionUID = -6822558028101935911L;
 	
 	private JPanel pnlMiddle;
@@ -24,19 +25,19 @@ public class CustomTypFilterDialog extends CustomFilterDialog {
 	private JButton btnOk;
 	private JComboBox<String> cbxMiddle;
 
-	public CustomTypFilterDialog(CustomTypFilter ft, FinishListener fl, Component parent) {
+	public CustomFSKFilterDialog(CustomFSKFilter ft, FinishListener fl, Component parent) {
 		super(ft, fl);
 		initGUI();
 		
-		cbxMiddle.setModel(new DefaultComboBoxModel<>(CCDBElementTyp.getWrapper().getList()));
-		cbxMiddle.setSelectedIndex(ft.getTyp().asInt());
+		cbxMiddle.setModel(new DefaultComboBoxModel<>(CCFSK.getWrapper().getList()));
+		cbxMiddle.setSelectedIndex(ft.getFSK().asInt());
 		
 		setLocationRelativeTo(parent);
 	}
 	
 	@Override
-	protected CustomTypFilter getFilter() {
-		return (CustomTypFilter) super.getFilter();
+	protected CustomFSKFilter getFilter() {
+		return (CustomFSKFilter) super.getFilter();
 	}
 	
 	private void initGUI() {
@@ -62,9 +63,9 @@ public class CustomTypFilterDialog extends CustomFilterDialog {
 		});
 		pnlBottom.add(btnOk);
 	}
-
+	
 	@Override
 	protected void onAfterOK() {
-		getFilter().setTyp(CCDBElementTyp.getWrapper().find(cbxMiddle.getSelectedIndex()));
+		getFilter().setFSK(CCFSK.getWrapper().find(cbxMiddle.getSelectedIndex()));
 	}
 }

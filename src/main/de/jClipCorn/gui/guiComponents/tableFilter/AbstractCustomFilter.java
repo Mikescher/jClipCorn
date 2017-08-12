@@ -9,6 +9,7 @@ import javax.swing.RowFilter.Entry;
 
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.gui.frames.mainFrame.clipTable.ClipTableModel;
+import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomCharFilter;
 import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomFSKFilter;
 import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomFormatFilter;
 import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomGenreFilter;
@@ -19,6 +20,7 @@ import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomOnlinescore
 import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomQualityFilter;
 import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomReferenceFilter;
 import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomScoreFilter;
+import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomSearchFilter;
 import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomTagFilter;
 import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomTitleFilter;
 import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomTypFilter;
@@ -208,9 +210,13 @@ public abstract class AbstractCustomFilter {
 			return new CustomReferenceFilter();
 		case CUSTOMFILTERID_HISTORY:
 			return new CustomHistoryFilter();
-		default:
-			return null;
+		case CUSTOMFILTERID_SEARCH:
+			return new CustomSearchFilter();
+		case CUSTOMFILTERID_CHAR:
+			return new CustomCharFilter();
 		}
+
+		return null;
 	}
 	
 	public static AbstractCustomFilter[] getAllSimpleFilter() {

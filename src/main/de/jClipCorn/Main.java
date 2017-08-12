@@ -126,7 +126,6 @@ public class Main {
 //   - combined timeline row (like github commit overview)                                                                                                               
 //   - find missing seasons online
 //   - Auto retrieve length button
-//   - dialog to find onlinescore discrepancies (and optionally update them)
 //   - can use multiple online-references (auto add imdb, add proxer and MAM for many)
 //   - Export and import reference mapping file (to get mappings to other dbs) ?
 
@@ -165,3 +164,5 @@ public class Main {
 //TODO Dialog to copy movies to other folder 
 //     - only copy new ones, bzw otehr filters
 //     - progress, async, abort
+
+//TODO MainTable and SeriesTable as JCCSimpleTable

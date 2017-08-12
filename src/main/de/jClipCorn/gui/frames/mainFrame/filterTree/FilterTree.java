@@ -51,22 +51,6 @@ public class FilterTree extends AbstractFilterTree {
 
 	private CustomFilterList customFilterList = new CustomFilterList();
 	
-	private DefaultMutableTreeNode node_all;
-	private DefaultMutableTreeNode node_zyklus;
-	private DefaultMutableTreeNode node_groups;
-	private DefaultMutableTreeNode node_genre;
-	private DefaultMutableTreeNode node_onlinescore;
-	private DefaultMutableTreeNode node_score;
-	private DefaultMutableTreeNode node_fsk;
-	private DefaultMutableTreeNode node_year;
-	private DefaultMutableTreeNode node_format;
-	private DefaultMutableTreeNode node_quality;
-	private DefaultMutableTreeNode node_tags;
-	private DefaultMutableTreeNode node_language;
-	private DefaultMutableTreeNode node_typ;
-	private DefaultMutableTreeNode node_viewed;
-	private DefaultMutableTreeNode node_custom;
-
 	private final ClipTable table;
 	private final CCMovieList movielist;
 	
@@ -80,54 +64,56 @@ public class FilterTree extends AbstractFilterTree {
 
 	@Override
 	protected void addFields() {
-		node_all = addNodeI(null, null, null, null);
-		initAll();
+		DefaultMutableTreeNode node_all = addNodeI(null, null, null, null);
+		initAll(node_all);
 		
-		node_zyklus = addNode(null, Resources.ICN_SIDEBAR_ZYKLUS, LocaleBundle.getString("FilterTree.Zyklus"), null); //$NON-NLS-1$
-		initZyklus();
+		DefaultMutableTreeNode node_zyklus = addNode(null, Resources.ICN_SIDEBAR_ZYKLUS, LocaleBundle.getString("FilterTree.Zyklus"), null); //$NON-NLS-1$
+		initZyklus(node_zyklus);
 		
-		node_groups = addNode(null, Resources.ICN_SIDEBAR_GROUPS, LocaleBundle.getString("FilterTree.Groups"), null); //$NON-NLS-1$
-		initGroups(); //TODO HIDE IF NO ELEMENTS
+		if (movielist.getGroupList().size() > 0) {
+			DefaultMutableTreeNode node_groups = addNode(null, Resources.ICN_SIDEBAR_GROUPS, LocaleBundle.getString("FilterTree.Groups"), null); //$NON-NLS-1$
+			initGroups(node_groups);
+		}
 		
-		node_genre = addNode(null, Resources.ICN_SIDEBAR_GENRE, LocaleBundle.getString("FilterTree.Genre"), null); //$NON-NLS-1$
-		initGenre();
+		DefaultMutableTreeNode node_genre = addNode(null, Resources.ICN_SIDEBAR_GENRE, LocaleBundle.getString("FilterTree.Genre"), null); //$NON-NLS-1$
+		initGenre(node_genre);
 		
-		node_onlinescore = addNode(null, Resources.ICN_SIDEBAR_ONLINESCORE, LocaleBundle.getString("FilterTree.IMDB"), null); //$NON-NLS-1$
-		initOnlineScore();
+		DefaultMutableTreeNode node_onlinescore = addNode(null, Resources.ICN_SIDEBAR_ONLINESCORE, LocaleBundle.getString("FilterTree.IMDB"), null); //$NON-NLS-1$
+		initOnlineScore(node_onlinescore);
 		
-		node_score = addNode(null, Resources.ICN_SIDEBAR_SCORE, LocaleBundle.getString("FilterTree.Score"), null); //$NON-NLS-1$
-		initScore(); //TODO HIDE IF NO ELEMENTS
+		DefaultMutableTreeNode node_score = addNode(null, Resources.ICN_SIDEBAR_SCORE, LocaleBundle.getString("FilterTree.Score"), null); //$NON-NLS-1$
+		initScore(node_score);
 		
-		node_fsk = addNode(null, Resources.ICN_TABLE_FSK_2, LocaleBundle.getString("FilterTree.FSK"), null); //$NON-NLS-1$
-		initFSK();
+		DefaultMutableTreeNode node_fsk = addNode(null, Resources.ICN_TABLE_FSK_2, LocaleBundle.getString("FilterTree.FSK"), null); //$NON-NLS-1$
+		initFSK(node_fsk);
 		
-		node_year = addNode(null, Resources.ICN_SIDEBAR_YEAR, LocaleBundle.getString("FilterTree.Year"), null); //$NON-NLS-1$
-		initYear();
+		DefaultMutableTreeNode node_year = addNode(null, Resources.ICN_SIDEBAR_YEAR, LocaleBundle.getString("FilterTree.Year"), null); //$NON-NLS-1$
+		initYear(node_year);
 		
-		node_format = addNode(null, Resources.ICN_SIDEBAR_FORMAT, LocaleBundle.getString("FilterTree.Format"), null); //$NON-NLS-1$
-		initFormat();
+		DefaultMutableTreeNode node_format = addNode(null, Resources.ICN_SIDEBAR_FORMAT, LocaleBundle.getString("FilterTree.Format"), null); //$NON-NLS-1$
+		initFormat(node_format);
 		
-		node_quality = addNode(null, Resources.ICN_SIDEBAR_QUALITY, LocaleBundle.getString("FilterTree.Quality"), null); //$NON-NLS-1$
-		initQuality();
+		DefaultMutableTreeNode node_quality = addNode(null, Resources.ICN_SIDEBAR_QUALITY, LocaleBundle.getString("FilterTree.Quality"), null); //$NON-NLS-1$
+		initQuality(node_quality);
 		
-		node_tags = addNode(null, Resources.ICN_SIDEBAR_TAGS, LocaleBundle.getString("FilterTree.Tags"), null); //$NON-NLS-1$
-		initTags();
+		DefaultMutableTreeNode node_tags = addNode(null, Resources.ICN_SIDEBAR_TAGS, LocaleBundle.getString("FilterTree.Tags"), null); //$NON-NLS-1$
+		initTags(node_tags);
 		
-		node_language = addNode(null, Resources.ICN_SIDEBAR_LANGUAGE, LocaleBundle.getString("FilterTree.Language"), null); //$NON-NLS-1$
-		initLanguage();
+		DefaultMutableTreeNode node_language = addNode(null, Resources.ICN_SIDEBAR_LANGUAGE, LocaleBundle.getString("FilterTree.Language"), null); //$NON-NLS-1$
+		initLanguage(node_language);
 		
-		node_typ = addNode(null, Resources.ICN_SIDEBAR_TYP, LocaleBundle.getString("FilterTree.Type"), null); //$NON-NLS-1$
-		initTyp();
+		DefaultMutableTreeNode node_typ = addNode(null, Resources.ICN_SIDEBAR_TYP, LocaleBundle.getString("FilterTree.Type"), null); //$NON-NLS-1$
+		initTyp(node_typ);
 		
-		node_viewed = addNode(null, Resources.ICN_SIDEBAR_VIEWED, LocaleBundle.getString("FilterTree.Viewed"), null); //$NON-NLS-1$
-		initViewed();
+		DefaultMutableTreeNode node_viewed = addNode(null, Resources.ICN_SIDEBAR_VIEWED, LocaleBundle.getString("FilterTree.Viewed"), null); //$NON-NLS-1$
+		initViewed(node_viewed);
 
-		node_custom = addNode(null,  Resources.ICN_SIDEBAR_CUSTOM, LocaleBundle.getString("FilterTree.Custom"), null); //$NON-NLS-1$
-		initCustom();
+		DefaultMutableTreeNode node_custom = addNode(null,  Resources.ICN_SIDEBAR_CUSTOM, LocaleBundle.getString("FilterTree.Custom"), null); //$NON-NLS-1$
+		initCustom(node_custom);
 	}
 	
-	private void initAll() {
-		node_all.setUserObject(new SimpleTreeObject(CachedResourceLoader.getIcon(Resources.ICN_SIDEBAR_ALL), LocaleBundle.getString("FilterTree.All"), new ActionListener() { //$NON-NLS-1$
+	private void initAll(DefaultMutableTreeNode parent) {
+		parent.setUserObject(new SimpleTreeObject(CachedResourceLoader.getIcon(Resources.ICN_SIDEBAR_ALL), LocaleBundle.getString("FilterTree.All"), new ActionListener() { //$NON-NLS-1$
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				table.setRowFilter(null, RowFilterSource.SIDEBAR);
@@ -136,74 +122,74 @@ public class FilterTree extends AbstractFilterTree {
 		}));
 	}
 	
-	private void initViewed() {
-		addNodeF(node_viewed, Resources.ICN_SIDEBAR_VIEWED, LocaleBundle.getString("FilterTree.Viewed.Viewed"), () -> CustomViewedFilter.create(true)); //$NON-NLS-1$
+	private void initViewed(DefaultMutableTreeNode parent) {
+		addNodeF(parent, Resources.ICN_SIDEBAR_VIEWED, LocaleBundle.getString("FilterTree.Viewed.Viewed"), () -> CustomViewedFilter.create(true)); //$NON-NLS-1$
 		
-		addNodeF(node_viewed, Resources.ICN_SIDEBAR_UNVIEWED, LocaleBundle.getString("FilterTree.Viewed.Unviewed"), () -> CustomViewedFilter.create(false)); //$NON-NLS-1$
+		addNodeF(parent, Resources.ICN_SIDEBAR_UNVIEWED, LocaleBundle.getString("FilterTree.Viewed.Unviewed"), () -> CustomViewedFilter.create(false)); //$NON-NLS-1$
 	}
 	
-	private void initFSK() {
+	private void initFSK(DefaultMutableTreeNode parent) {
 		for (final CCFSK fsk : CCFSK.values()) {
-			addNodeF(node_fsk, fsk.getIcon(), fsk.asString(), () -> CustomFSKFilter.create(fsk));
+			addNodeF(parent, fsk.getIcon(), fsk.asString(), () -> CustomFSKFilter.create(fsk));
 		}
 	}
 	
-	private void initScore() {
+	private void initScore(DefaultMutableTreeNode parent) {
 		for (final CCUserScore score : CCUserScore.values()) {
-			addNodeF(node_score, score.getIcon(), score.asString(), () -> CustomScoreFilter.create(score));
+			addNodeF(parent, score.getIcon(), score.asString(), () -> CustomScoreFilter.create(score));
 		}
 	}
 	
-	private void initOnlineScore() {
+	private void initOnlineScore(DefaultMutableTreeNode parent) {
 		for (final CCOnlineScore oscore : CCOnlineScore.values()) {
-			addNodeF(node_onlinescore, oscore.getIcon(), oscore.asInt()/2.0+"", () -> CustomOnlinescoreFilter.create(oscore)); //$NON-NLS-1$
+			addNodeF(parent, oscore.getIcon(), oscore.asInt()/2.0+"", () -> CustomOnlinescoreFilter.create(oscore)); //$NON-NLS-1$
 		}
 	}
 	
-	private void initFormat() {
+	private void initFormat(DefaultMutableTreeNode parent) {
 		for (final CCFileFormat format : CCFileFormat.values()) {
-			addNodeF(node_format, format.getIcon(), format.asString(), () -> CustomFormatFilter.create(format));
+			addNodeF(parent, format.getIcon(), format.asString(), () -> CustomFormatFilter.create(format));
 		}
 	}
 	
-	private void initQuality() {
+	private void initQuality(DefaultMutableTreeNode parent) {
 		for (final CCQuality quality : CCQuality.values()) {
-			addNodeF(node_quality, quality.getIcon(), quality.asString(), () -> CustomQualityFilter.create(quality));
+			addNodeF(parent, quality.getIcon(), quality.asString(), () -> CustomQualityFilter.create(quality));
 		}
 	}
 	
-	private void initTags() {
+	private void initTags(DefaultMutableTreeNode parent) {
 		for (int i = 0; i < CCTagList.ACTIVETAGS; i++) {
 			final int curr = i;
-			addNodeF(node_tags, CCTagList.getOnIcon(i), CCTagList.getName(i), () -> CustomTagFilter.create(curr));
+			addNodeF(parent, CCTagList.getOnIcon(i), CCTagList.getName(i), () -> CustomTagFilter.create(curr));
 		}
 	}
 	
-	private void initLanguage() {
+	private void initLanguage(DefaultMutableTreeNode parent) {
 		for (final CCDBLanguage language : CCDBLanguage.values()) {
-			addNodeF(node_language, language.getIcon(), language.asString(), () -> CustomLanguageFilter.create(language));
+			addNodeF(parent, language.getIcon(), language.asString(), () -> CustomLanguageFilter.create(language));
 		}
 	}
 	
-	private void initTyp() {
+	private void initTyp(DefaultMutableTreeNode parent) {
 		for (final CCDBElementTyp typ : CCDBElementTyp.values()) {
-			addNodeF(node_typ, typ.getIcon(), typ.asString(), () -> CustomTypFilter.create(typ));
+			addNodeF(parent, typ.getIcon(), typ.asString(), () -> CustomTypFilter.create(typ));
 		}
 	}
 	
-	private void initZyklus() {
+	private void initZyklus(DefaultMutableTreeNode parent) {
 		for (final String zyklus : movielist.getZyklusList()) {
-			addNodeF(node_zyklus, (Icon)null, zyklus, () -> CustomZyklusFilter.create(zyklus));
+			addNodeF(parent, (Icon)null, zyklus, () -> CustomZyklusFilter.create(zyklus));
 		}
 	}
 	
-	private void initGroups() {
+	private void initGroups(DefaultMutableTreeNode parent) {
 		for (final CCGroup group : movielist.getGroupList()) {
-			addNodeF(node_groups, (Icon)null, group.Name, () -> CustomGroupFilter.create(group));
+			addNodeF(parent, (Icon)null, group.Name, () -> CustomGroupFilter.create(group));
 		}
 	}
 	
-	private void initGenre() {
+	private void initGenre(DefaultMutableTreeNode parent) {
 		if (CCMovieList.isBlocked()) {
 			return;
 		}
@@ -213,30 +199,30 @@ public class FilterTree extends AbstractFilterTree {
 		Collections.sort(genres, CCGenre.getTextComparator());
 		
 		for (final CCGenre genre : genres) {
-			addNodeF(node_genre, (Icon)null, genre.asString(), () -> CustomGenreFilter.create(genre));
+			addNodeF(parent, (Icon)null, genre.asString(), () -> CustomGenreFilter.create(genre));
 		}
 	}
 	
-	private void initYear() {
+	private void initYear(DefaultMutableTreeNode parent) {
 		for (final Integer year : movielist.getYearList()) {
-			addNodeF(node_year, (Icon)null, year+"", () -> CustomYearFilter.create(year)); //$NON-NLS-1$
+			addNodeF(parent, (Icon)null, year+"", () -> CustomYearFilter.create(year)); //$NON-NLS-1$
 		}
 	}
 	
-	private void initCustom() {
+	private void initCustom(DefaultMutableTreeNode parent) {
 		for (int i = 0; i < customFilterList.size(); i++) {
 			final CustomFilterObject fo = customFilterList.get(i);
-			addNodeF(node_custom, Resources.ICN_SIDEBAR_CUSTOM, fo.getName(), () -> fo.getFilter());
+			addNodeF(parent, Resources.ICN_SIDEBAR_CUSTOM, fo.getName(), () -> fo.getFilter());
 		}
 		
-		addNode(node_custom, Resources.ICN_SIDEBAR_CUSTOM, LocaleBundle.getString("FilterTree.Custom.OrganizeFilter"), new ActionListener() { //$NON-NLS-1$
+		addNode(parent, Resources.ICN_SIDEBAR_CUSTOM, LocaleBundle.getString("FilterTree.Custom.OrganizeFilter"), new ActionListener() { //$NON-NLS-1$
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				onOrganizeCustomFilterClicked();
 			}
 		});
 		
-		addNode(node_custom, Resources.ICN_SIDEBAR_CUSTOM, LocaleBundle.getString("FilterTree.Custom.NewFilter"), new ActionListener() { //$NON-NLS-1$
+		addNode(parent, Resources.ICN_SIDEBAR_CUSTOM, LocaleBundle.getString("FilterTree.Custom.NewFilter"), new ActionListener() { //$NON-NLS-1$
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				onNewCustomFilterClicked();

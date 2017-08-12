@@ -9,6 +9,7 @@ import javax.swing.RowFilter.Entry;
 
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.gui.frames.mainFrame.clipTable.ClipTableModel;
+import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomAddDateFilter;
 import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomCharFilter;
 import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomFSKFilter;
 import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomFormatFilter;
@@ -56,6 +57,7 @@ public abstract class AbstractCustomFilter {
 	public final static int CUSTOMFILTERID_HISTORY = 19;
 	public final static int CUSTOMFILTERID_SEARCH = 20;
 	public final static int CUSTOMFILTERID_CHAR = 21;
+	public final static int CUSTOMFILTERID_ADDDATE = 22;
 	
 	public abstract boolean include(Entry<? extends ClipTableModel, ? extends Object> e);
 	
@@ -214,6 +216,8 @@ public abstract class AbstractCustomFilter {
 			return new CustomSearchFilter();
 		case CUSTOMFILTERID_CHAR:
 			return new CustomCharFilter();
+		case CUSTOMFILTERID_ADDDATE:
+			return new CustomAddDateFilter();
 		}
 
 		return null;
@@ -237,6 +241,7 @@ public abstract class AbstractCustomFilter {
 			new CustomHistoryFilter(),
 			new CustomYearFilter(),
 			new CustomZyklusFilter(),
+			new CustomAddDateFilter(),
 		};
 	}
 	

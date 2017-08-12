@@ -7,7 +7,9 @@ import javax.swing.RowFilter.Entry;
 
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
+import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.CCMovie;
+import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.gui.frames.mainFrame.clipTable.ClipTableModel;
 import de.jClipCorn.gui.guiComponents.tableFilter.AbstractCustomFilter;
 import de.jClipCorn.gui.guiComponents.tableFilter.CustomFilterDialog;
@@ -24,41 +26,72 @@ public class CustomHistoryFilter extends AbstractCustomFilter {
 	public CCDate Second = CCDate.getMinimumDate();
 	
 	public CustomHistoryFilterType Type = CustomHistoryFilterType.CONTAINS;
+	public boolean Recursive = false;
 	
 	@Override
 	public boolean include(Entry<? extends ClipTableModel, ? extends Object> e) {
-		if (! ((CCDatabaseElement)e.getValue(ClipTableModel.COLUMN_TITLE)).isMovie()) return false;
 		
-		CCMovie mov = ((CCMovie)e.getValue(ClipTableModel.COLUMN_TITLE));
+		if (((CCDatabaseElement)e.getValue(ClipTableModel.COLUMN_TITLE)).isMovie()) {
+
+			CCMovie mov = ((CCMovie)e.getValue(ClipTableModel.COLUMN_TITLE));
+
+			switch (Type) {
+			case CONTAINS:
+				return mov.getViewedHistory().containsDate(First);
+			case CONTAINS_BETWEEN:
+				return ! mov.getViewedHistory().containsDate(First);
+			case CONTAINS_NOT:
+				return mov.getViewedHistory().containsDateBetween(First, Second);
+			case CONTAINS_NOT_BETWEEEN:
+				return ! mov.getViewedHistory().containsDateBetween(First, Second);
+			}
+		}
 		
-		switch (Type) {
-		case CONTAINS:
-			return mov.getViewedHistory().containsDate(First);
-		case CONTAINS_BETWEEN:
-			return ! mov.getViewedHistory().containsDate(First);
-		case CONTAINS_NOT:
-			return mov.getViewedHistory().containsDateBetween(First, Second);
-		case CONTAINS_NOT_BETWEEEN:
-			return ! mov.getViewedHistory().containsDateBetween(First, Second);
-		default:
+		if (((CCDatabaseElement)e.getValue(ClipTableModel.COLUMN_TITLE)).isSeries()) {
+
+			CCSeries ser = ((CCSeries)e.getValue(ClipTableModel.COLUMN_TITLE));
+			
+			for (CCEpisode epi : ser.iteratorEpisodes()) {
+				switch (Type) {
+				case CONTAINS:
+					if (epi.getViewedHistory().containsDate(First)) return true;
+					break;
+				case CONTAINS_BETWEEN:
+					if (! epi.getViewedHistory().containsDate(First)) return true;
+					break;
+				case CONTAINS_NOT:
+					if (epi.getViewedHistory().containsDateBetween(First, Second)) return true;
+					break;
+				case CONTAINS_NOT_BETWEEEN:
+					if (! epi.getViewedHistory().containsDateBetween(First, Second)) return true;
+					break;
+				}
+			}
+			
 			return false;
 		}
+		
+		return false;
 	}
 
 	@Override
 	public String getName() {
+		
+		String suffix = ""; //$NON-NLS-1$
+		if (Recursive) suffix = " [R]"; //$NON-NLS-1$
+		
 		switch (Type) {
 		case CONTAINS:
-			return LocaleBundle.getFormattedString("FilterTree.Custom.CustomFilterNames.History", First.toStringUIVerbose()); //$NON-NLS-1$
+			return LocaleBundle.getFormattedString("FilterTree.Custom.CustomFilterNames.History", First.toStringUIVerbose()) + suffix; //$NON-NLS-1$
 		case CONTAINS_BETWEEN:
-			return LocaleBundle.getFormattedString("FilterTree.Custom.CustomFilterNames.History", First.toStringUIVerbose() + " - " + Second.toStringUIVerbose()); //$NON-NLS-1$ //$NON-NLS-2$
+			return LocaleBundle.getFormattedString("FilterTree.Custom.CustomFilterNames.History", First.toStringUIVerbose() + " - " + Second.toStringUIVerbose()) + suffix; //$NON-NLS-1$ //$NON-NLS-2$
 		case CONTAINS_NOT:
-			return LocaleBundle.getFormattedString("FilterTree.Custom.CustomFilterNames.History", "not " + First.toStringUIVerbose()); //$NON-NLS-1$ //$NON-NLS-2$
+			return LocaleBundle.getFormattedString("FilterTree.Custom.CustomFilterNames.History", "not " + First.toStringUIVerbose()) + suffix; //$NON-NLS-1$ //$NON-NLS-2$
 		case CONTAINS_NOT_BETWEEEN:
-			return LocaleBundle.getFormattedString("FilterTree.Custom.CustomFilterNames.History", "not " + First.toStringUIVerbose() + " - " + Second.toStringUIVerbose()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-		default:
-			return LocaleBundle.getFormattedString("FilterTree.Custom.CustomFilterNames.History", "?"); //$NON-NLS-1$ //$NON-NLS-2$
+			return LocaleBundle.getFormattedString("FilterTree.Custom.CustomFilterNames.History", "not " + First.toStringUIVerbose() + " - " + Second.toStringUIVerbose()) + suffix; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		}
+		
+		return LocaleBundle.getFormattedString("FilterTree.Custom.CustomFilterNames.History", "?"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	@Override
@@ -92,10 +125,12 @@ public class CustomHistoryFilter extends AbstractCustomFilter {
 			b.append("3");
 			break;
 		}
-		b.append("|");
+		b.append(",");
 		b.append(First.toStringSQL());
-		b.append("|");
+		b.append(",");
 		b.append(Second.toStringSQL());
+		b.append(",");
+		b.append(Recursive ? "1" : "0");
 		b.append("]");
 		
 		return b.toString();
@@ -109,7 +144,7 @@ public class CustomHistoryFilter extends AbstractCustomFilter {
 			if (params == null) return false;
 			
 			String[] paramsplit = params.split(Pattern.quote(","));
-			if (paramsplit.length != 3) return false;
+			if (paramsplit.length != 4) return false;
 			
 			int intval = Integer.parseInt(paramsplit[0]);
 			
@@ -122,6 +157,8 @@ public class CustomHistoryFilter extends AbstractCustomFilter {
 			First = CCDate.createFromSQL(paramsplit[1]);
 
 			Second = CCDate.createFromSQL(paramsplit[2]);
+			
+			Recursive = Integer.parseInt(paramsplit[3]) != 0;
 			
 			return true;
 		} catch (NumberFormatException | DateFormatException e) {

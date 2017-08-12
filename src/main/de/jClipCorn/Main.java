@@ -149,7 +149,6 @@ public class Main {
 //TODO use omdb instead of direct imdb query
 
 //TODO Custom Filter for AddDate
-//TODO Custom Filter for Viewed_Extended (Not, Partial, Full, Never)
 //TODO More missing CustomFilter (?)
 
 //TODO Don't reset filter on expand/collapse tree (excep click on /all/)

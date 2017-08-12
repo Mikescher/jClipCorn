@@ -212,6 +212,9 @@ public class Resources {
 	public final static IconRef ICN_SIDEBAR_TYP	 			= register16x16Icon("/icons/sidebar/color_swatch.png");
 	public final static IconRef ICN_SIDEBAR_VIEWED 			= register16x16Icon("/icons/sidebar/viewed.png");
 	public final static IconRef ICN_SIDEBAR_UNVIEWED		= register16x16Icon("/icons/sidebar/unviewed.png");
+	public final static IconRef ICN_SIDEBAR_LATER			= register16x16Icon("/icons/sidebar/later.png");
+	public final static IconRef ICN_SIDEBAR_NEVER			= register16x16Icon("/icons/sidebar/never.png");
+	public final static IconRef ICN_SIDEBAR_PARTIALLY		= register16x16Icon("/icons/sidebar/partially.png");
 	public final static IconRef ICN_SIDEBAR_CUSTOM			= register16x16Icon("/icons/sidebar/tag.png");
 	// #############################################  </SIDEBAR>  ###########################################
 

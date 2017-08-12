@@ -3,23 +3,22 @@ package de.jClipCorn.gui.guiComponents.tableFilter.customFilter;
 import java.awt.Component;
 import java.util.regex.Pattern;
 
-import javax.swing.RowFilter.Entry;
-
 import de.jClipCorn.database.CCMovieList;
+import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.databaseElement.columnTypes.CCFSK;
-import de.jClipCorn.gui.frames.mainFrame.clipTable.ClipTableModel;
+import de.jClipCorn.gui.guiComponents.tableFilter.AbstractCustomDatabaseElementFilter;
 import de.jClipCorn.gui.guiComponents.tableFilter.AbstractCustomFilter;
 import de.jClipCorn.gui.guiComponents.tableFilter.CustomFilterDialog;
 import de.jClipCorn.gui.guiComponents.tableFilter.customFilterDialogs.CustomFSKFilterDialog;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.listener.FinishListener;
 
-public class CustomFSKFilter extends AbstractCustomFilter {
+public class CustomFSKFilter extends AbstractCustomDatabaseElementFilter {
 	private CCFSK fsk = CCFSK.RATING_0;
 	
 	@Override
-	public boolean include(Entry<? extends ClipTableModel, ? extends Object> e) {
-		return fsk.equals(e.getValue(ClipTableModel.COLUMN_FSK));
+	public boolean includes(CCDatabaseElement e) {
+		return fsk.equals(e.getFSK());
 	}
 
 	@Override
@@ -91,7 +90,7 @@ public class CustomFSKFilter extends AbstractCustomFilter {
 		return new CustomFSKFilter();
 	}
 
-	public static AbstractCustomFilter create(CCFSK data) {
+	public static CustomFSKFilter create(CCFSK data) {
 		CustomFSKFilter f = new CustomFSKFilter();
 		f.setFSK(data);
 		return f;

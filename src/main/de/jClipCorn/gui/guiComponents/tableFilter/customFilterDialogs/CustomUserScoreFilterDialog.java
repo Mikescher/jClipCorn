@@ -16,12 +16,12 @@ import javax.swing.JRadioButton;
 
 import de.jClipCorn.database.databaseElement.columnTypes.CCUserScore;
 import de.jClipCorn.gui.guiComponents.tableFilter.CustomFilterDialog;
-import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomScoreFilter;
+import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomUserScoreFilter;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.DecimalSearchType;
 import de.jClipCorn.util.listener.FinishListener;
 
-public class CustomScoreFilterDialog extends CustomFilterDialog {
+public class CustomUserScoreFilterDialog extends CustomFilterDialog {
 	private static final long serialVersionUID = -6822558028101935911L;
 	
 	private JPanel pnlMiddle;
@@ -39,7 +39,7 @@ public class CustomScoreFilterDialog extends CustomFilterDialog {
 	private JComboBox<String> cbxBetween2;
 	private JComboBox<String> cbxExactly;
 
-	public CustomScoreFilterDialog(CustomScoreFilter ft, FinishListener fl, Component parent) {
+	public CustomUserScoreFilterDialog(CustomUserScoreFilter ft, FinishListener fl, Component parent) {
 		super(ft, fl);
 		initGUI();
 		
@@ -49,8 +49,8 @@ public class CustomScoreFilterDialog extends CustomFilterDialog {
 	}
 	
 	@Override
-	protected CustomScoreFilter getFilter() {
-		return (CustomScoreFilter) super.getFilter();
+	protected CustomUserScoreFilter getFilter() {
+		return (CustomUserScoreFilter) super.getFilter();
 	}
 	
 	private void initGUI() {

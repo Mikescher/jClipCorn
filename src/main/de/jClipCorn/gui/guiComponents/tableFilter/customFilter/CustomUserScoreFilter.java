@@ -3,26 +3,25 @@ package de.jClipCorn.gui.guiComponents.tableFilter.customFilter;
 import java.awt.Component;
 import java.util.regex.Pattern;
 
-import javax.swing.RowFilter.Entry;
-
 import de.jClipCorn.database.CCMovieList;
+import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.databaseElement.columnTypes.CCUserScore;
-import de.jClipCorn.gui.frames.mainFrame.clipTable.ClipTableModel;
+import de.jClipCorn.gui.guiComponents.tableFilter.AbstractCustomDatabaseElementFilter;
 import de.jClipCorn.gui.guiComponents.tableFilter.AbstractCustomFilter;
 import de.jClipCorn.gui.guiComponents.tableFilter.CustomFilterDialog;
-import de.jClipCorn.gui.guiComponents.tableFilter.customFilterDialogs.CustomScoreFilterDialog;
+import de.jClipCorn.gui.guiComponents.tableFilter.customFilterDialogs.CustomUserScoreFilterDialog;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.DecimalSearchType;
 import de.jClipCorn.util.listener.FinishListener;
 
-public class CustomScoreFilter extends AbstractCustomFilter {
+public class CustomUserScoreFilter extends AbstractCustomDatabaseElementFilter {
 	private CCUserScore low = CCUserScore.RATING_0;
 	private CCUserScore high = CCUserScore.RATING_0;
 	private DecimalSearchType searchType = DecimalSearchType.EXACT;
 	
 	@Override
-	public boolean include(Entry<? extends ClipTableModel, ? extends Object> e) {
-		CCUserScore sco = (CCUserScore) e.getValue(ClipTableModel.COLUMN_SCORE);
+	public boolean includes(CCDatabaseElement e) {
+		CCUserScore sco = e.getScore();
 		
 		switch (searchType) {
 		case LESSER:
@@ -89,7 +88,7 @@ public class CustomScoreFilter extends AbstractCustomFilter {
 	
 	@Override
 	public int getID() {
-		return AbstractCustomFilter.CUSTOMFILTERID_SCORE;
+		return AbstractCustomFilter.CUSTOMFILTERID_USERSCORE;
 	}
 	
 	@SuppressWarnings("nls")
@@ -154,16 +153,16 @@ public class CustomScoreFilter extends AbstractCustomFilter {
 
 	@Override
 	public CustomFilterDialog CreateDialog(FinishListener fl, Component parent, CCMovieList ml) {
-		return new CustomScoreFilterDialog(this, fl, parent);
+		return new CustomUserScoreFilterDialog(this, fl, parent);
 	}
 
 	@Override
 	public AbstractCustomFilter createNew() {
-		return new CustomScoreFilter();
+		return new CustomUserScoreFilter();
 	}
 
-	public static AbstractCustomFilter create(CCUserScore data) {
-		CustomScoreFilter f = new CustomScoreFilter();
+	public static CustomUserScoreFilter create(CCUserScore data) {
+		CustomUserScoreFilter f = new CustomUserScoreFilter();
 		f.setSearchType(DecimalSearchType.EXACT);
 		f.setLow(data);
 		return f;

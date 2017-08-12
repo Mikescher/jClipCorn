@@ -3,11 +3,11 @@ package de.jClipCorn.gui.guiComponents.tableFilter.customFilter;
 import java.awt.Component;
 import java.util.regex.Pattern;
 
-import javax.swing.RowFilter.Entry;
-
 import de.jClipCorn.database.CCMovieList;
-import de.jClipCorn.gui.frames.mainFrame.clipTable.ClipTableModel;
+import de.jClipCorn.database.databaseElement.CCMovie;
+import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.gui.guiComponents.tableFilter.AbstractCustomFilter;
+import de.jClipCorn.gui.guiComponents.tableFilter.AbstractCustomMovieOrSeriesFilter;
 import de.jClipCorn.gui.guiComponents.tableFilter.CustomFilterDialog;
 import de.jClipCorn.gui.guiComponents.tableFilter.customFilterDialogs.CustomYearFilterDialog;
 import de.jClipCorn.gui.localization.LocaleBundle;
@@ -16,14 +16,32 @@ import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.datetime.YearRange;
 import de.jClipCorn.util.listener.FinishListener;
 
-public class CustomYearFilter extends AbstractCustomFilter {
+public class CustomYearFilter extends AbstractCustomMovieOrSeriesFilter {
 	private int low = 1900;
 	private int high = 1900;
 	private DecimalSearchType searchType = DecimalSearchType.EXACT;
 	
 	@Override
-	public boolean include(Entry<? extends ClipTableModel, ? extends Object> e) {
-		YearRange range = (YearRange)e.getValue(ClipTableModel.COLUMN_YEAR);
+	public boolean includes(CCMovie m) {
+		YearRange range = new YearRange(m.getYear());
+		
+		switch (searchType) {
+		case LESSER:
+			return range.isCompletelySmallerThan(new YearRange(high));
+		case GREATER:
+			return range.isCompletelyGreaterThan(new YearRange(low));
+		case IN_RANGE:
+			return range.isCompletelyBetween(new YearRange(low), new YearRange(high));
+		case EXACT:
+			return range.includes(low);
+		default:
+			return false;
+		}
+	}
+
+	@Override
+	public boolean includes(CCSeries s) {
+		YearRange range = s.getYearRange();
 		
 		switch (searchType) {
 		case LESSER:
@@ -160,7 +178,7 @@ public class CustomYearFilter extends AbstractCustomFilter {
 		return new CustomYearFilter();
 	}
 
-	public static AbstractCustomFilter create(Integer data) {
+	public static CustomYearFilter create(Integer data) {
 		CustomYearFilter f = new CustomYearFilter();
 		f.setLow(data);
 		f.setSearchType(DecimalSearchType.EXACT);

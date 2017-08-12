@@ -3,24 +3,22 @@ package de.jClipCorn.gui.guiComponents.tableFilter.customFilter;
 import java.awt.Component;
 import java.util.regex.Pattern;
 
-import javax.swing.RowFilter.Entry;
-
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGroup;
-import de.jClipCorn.gui.frames.mainFrame.clipTable.ClipTableModel;
+import de.jClipCorn.gui.guiComponents.tableFilter.AbstractCustomDatabaseElementFilter;
 import de.jClipCorn.gui.guiComponents.tableFilter.AbstractCustomFilter;
 import de.jClipCorn.gui.guiComponents.tableFilter.CustomFilterDialog;
 import de.jClipCorn.gui.guiComponents.tableFilter.customFilterDialogs.CustomGroupFilterDialog;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.listener.FinishListener;
 
-public class CustomGroupFilter extends AbstractCustomFilter {
+public class CustomGroupFilter extends AbstractCustomDatabaseElementFilter {
 	private String group = ""; //$NON-NLS-1$
 	
 	@Override
-	public boolean include(Entry<? extends ClipTableModel, ? extends Object> e) {
-		return ((CCDatabaseElement)e.getValue(ClipTableModel.COLUMN_TITLE)).getGroups().contains(group);
+	public boolean includes(CCDatabaseElement e) {
+		return e.getGroups().contains(group);
 	}
 
 	@Override
@@ -83,7 +81,7 @@ public class CustomGroupFilter extends AbstractCustomFilter {
 		return new CustomGroupFilter();
 	}
 
-	public static AbstractCustomFilter create(CCGroup data) {
+	public static CustomGroupFilter create(CCGroup data) {
 		CustomGroupFilter f = new CustomGroupFilter();
 		f.setGroup(data.Name);
 		return f;

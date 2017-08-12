@@ -23,7 +23,7 @@ import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.exceptions.CCFormatException;
 import de.jClipCorn.util.formatter.PathFormatter;
 
-public class CCEpisode implements ICCPlayableElement{
+public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElement {
 	private final CCSeason owner;
 	private final int localID;
 	

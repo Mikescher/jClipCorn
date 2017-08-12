@@ -3,24 +3,22 @@ package de.jClipCorn.gui.guiComponents.tableFilter.customFilter;
 import java.awt.Component;
 import java.util.regex.Pattern;
 
-import javax.swing.RowFilter.Entry;
-
 import de.jClipCorn.database.CCMovieList;
-import de.jClipCorn.database.util.ExtendedViewedState;
+import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.util.ExtendedViewedStateType;
-import de.jClipCorn.gui.frames.mainFrame.clipTable.ClipTableModel;
+import de.jClipCorn.gui.guiComponents.tableFilter.AbstractCustomDatabaseElementFilter;
 import de.jClipCorn.gui.guiComponents.tableFilter.AbstractCustomFilter;
 import de.jClipCorn.gui.guiComponents.tableFilter.CustomFilterDialog;
 import de.jClipCorn.gui.guiComponents.tableFilter.customFilterDialogs.CustomViewedFilterDialog;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.listener.FinishListener;
 
-public class CustomViewedFilter extends AbstractCustomFilter {
+public class CustomViewedFilter extends AbstractCustomDatabaseElementFilter {
 	private ExtendedViewedStateType state = ExtendedViewedStateType.NOT_VIEWED;
 	
 	@Override
-	public boolean include(Entry<? extends ClipTableModel, ? extends Object> e) {
-		return ((ExtendedViewedState)e.getValue(ClipTableModel.COLUMN_VIEWED)).Type == state;
+	public boolean includes(CCDatabaseElement e) {
+		return e.getExtendedViewedState().Type == state;
 	}
 
 	@Override
@@ -93,7 +91,7 @@ public class CustomViewedFilter extends AbstractCustomFilter {
 		return new CustomViewedFilter();
 	}
 
-	public static AbstractCustomFilter create(ExtendedViewedStateType data) {
+	public static CustomViewedFilter create(ExtendedViewedStateType data) {
 		CustomViewedFilter f = new CustomViewedFilter();
 		f.setState(data);
 		return f;

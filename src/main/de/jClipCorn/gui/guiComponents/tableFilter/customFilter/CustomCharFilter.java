@@ -3,28 +3,26 @@ package de.jClipCorn.gui.guiComponents.tableFilter.customFilter;
 import java.awt.Component;
 import java.util.regex.Pattern;
 
-import javax.swing.RowFilter.Entry;
-
 import org.apache.commons.lang.StringUtils;
 
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
-import de.jClipCorn.gui.frames.mainFrame.clipTable.ClipTableModel;
+import de.jClipCorn.gui.guiComponents.tableFilter.AbstractCustomDatabaseElementFilter;
 import de.jClipCorn.gui.guiComponents.tableFilter.AbstractCustomFilter;
 import de.jClipCorn.gui.guiComponents.tableFilter.CustomFilterDialog;
 import de.jClipCorn.gui.guiComponents.tableFilter.customFilterDialogs.CustomCharFilterDialog;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.listener.FinishListener;
 
-public class CustomCharFilter extends AbstractCustomFilter {
+public class CustomCharFilter extends AbstractCustomDatabaseElementFilter {
 	@SuppressWarnings("nls")
 	private final static String[] EXCLUSIONS = {"Der", "Die", "Das", "The", "Den", "Le"};
 	
 	private String charset = ""; //$NON-NLS-1$
 	
 	@Override
-	public boolean include(Entry<? extends ClipTableModel, ? extends Object> e) {
-		String first = ((CCDatabaseElement)e.getValue(ClipTableModel.COLUMN_TITLE)).getTitle();
+	public boolean includes(CCDatabaseElement e) {
+		String first = e.getTitle();
 		
 		for (String s : EXCLUSIONS) {
 			if (first.startsWith(s + " ")) { //$NON-NLS-1$
@@ -104,7 +102,7 @@ public class CustomCharFilter extends AbstractCustomFilter {
 		return new CustomCharFilter();
 	}
 
-	public static AbstractCustomFilter create(String data) {
+	public static CustomCharFilter create(String data) {
 		CustomCharFilter f = new CustomCharFilter();
 		f.setCharset(data);
 		return f;

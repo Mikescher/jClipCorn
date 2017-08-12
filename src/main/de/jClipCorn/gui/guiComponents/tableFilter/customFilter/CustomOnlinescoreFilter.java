@@ -3,11 +3,10 @@ package de.jClipCorn.gui.guiComponents.tableFilter.customFilter;
 import java.awt.Component;
 import java.util.regex.Pattern;
 
-import javax.swing.RowFilter.Entry;
-
 import de.jClipCorn.database.CCMovieList;
+import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineScore;
-import de.jClipCorn.gui.frames.mainFrame.clipTable.ClipTableModel;
+import de.jClipCorn.gui.guiComponents.tableFilter.AbstractCustomDatabaseElementFilter;
 import de.jClipCorn.gui.guiComponents.tableFilter.AbstractCustomFilter;
 import de.jClipCorn.gui.guiComponents.tableFilter.CustomFilterDialog;
 import de.jClipCorn.gui.guiComponents.tableFilter.customFilterDialogs.CustomOnlinescoreFilterDialog;
@@ -15,14 +14,14 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.DecimalSearchType;
 import de.jClipCorn.util.listener.FinishListener;
 
-public class CustomOnlinescoreFilter extends AbstractCustomFilter {
+public class CustomOnlinescoreFilter extends AbstractCustomDatabaseElementFilter {
 	private CCOnlineScore low = CCOnlineScore.STARS_0_0;
 	private CCOnlineScore high = CCOnlineScore.STARS_0_0;
 	private DecimalSearchType searchType = DecimalSearchType.EXACT;
 	
 	@Override
-	public boolean include(Entry<? extends ClipTableModel, ? extends Object> e) {
-		CCOnlineScore osco = (CCOnlineScore) e.getValue(ClipTableModel.COLUMN_ONLINESCORE);
+	public boolean includes(CCDatabaseElement e) {
+		CCOnlineScore osco = e.getOnlinescore();
 		
 		switch (searchType) {
 		case LESSER:
@@ -162,7 +161,7 @@ public class CustomOnlinescoreFilter extends AbstractCustomFilter {
 		return new CustomOnlinescoreFilter();
 	}
 
-	public static AbstractCustomFilter create(CCOnlineScore data) {
+	public static CustomOnlinescoreFilter create(CCOnlineScore data) {
 		CustomOnlinescoreFilter f = new CustomOnlinescoreFilter();
 		f.setSearchType(DecimalSearchType.EXACT);
 		f.setLow(data);

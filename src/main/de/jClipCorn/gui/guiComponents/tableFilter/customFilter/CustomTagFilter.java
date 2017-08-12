@@ -3,23 +3,22 @@ package de.jClipCorn.gui.guiComponents.tableFilter.customFilter;
 import java.awt.Component;
 import java.util.regex.Pattern;
 
-import javax.swing.RowFilter.Entry;
-
 import de.jClipCorn.database.CCMovieList;
+import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.databaseElement.columnTypes.CCTagList;
-import de.jClipCorn.gui.frames.mainFrame.clipTable.ClipTableModel;
+import de.jClipCorn.gui.guiComponents.tableFilter.AbstractCustomDatabaseElementFilter;
 import de.jClipCorn.gui.guiComponents.tableFilter.AbstractCustomFilter;
 import de.jClipCorn.gui.guiComponents.tableFilter.CustomFilterDialog;
 import de.jClipCorn.gui.guiComponents.tableFilter.customFilterDialogs.CustomTagFilterDialog;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.listener.FinishListener;
 
-public class CustomTagFilter extends AbstractCustomFilter {
+public class CustomTagFilter extends AbstractCustomDatabaseElementFilter {
 	private int tag = 0;
 	
 	@Override
-	public boolean include(Entry<? extends ClipTableModel, ? extends Object> e) {
-		return ((CCTagList)e.getValue(ClipTableModel.COLUMN_TAGS)).getTag(tag);
+	public boolean includes(CCDatabaseElement e) {
+		return e.getTags().getTag(tag);
 	}
 
 	@Override
@@ -90,7 +89,7 @@ public class CustomTagFilter extends AbstractCustomFilter {
 		return new CustomTagFilter();
 	}
 
-	public static AbstractCustomFilter create(int data) {
+	public static CustomTagFilter create(int data) {
 		CustomTagFilter f = new CustomTagFilter();
 		f.setTag(data);
 		return f;

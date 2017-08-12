@@ -2,6 +2,7 @@ package de.jClipCorn.gui.guiComponents.tableFilter;
 
 import javax.swing.RowFilter;
 
+import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.gui.frames.mainFrame.clipTable.ClipTableModel;
 
 public class TableCustomFilter extends RowFilter<ClipTableModel, Object> {
@@ -14,6 +15,8 @@ public class TableCustomFilter extends RowFilter<ClipTableModel, Object> {
 
 	@Override
 	public boolean include(Entry<? extends ClipTableModel, ? extends Object> e) {
-		return filter.include(e);
+		CCDatabaseElement elem = (CCDatabaseElement)e.getValue(ClipTableModel.COLUMN_TITLE);
+		
+		return filter.includes(elem);
 	}
 }

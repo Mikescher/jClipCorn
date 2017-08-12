@@ -2,11 +2,9 @@ package de.jClipCorn.gui.guiComponents.tableFilter.customFilter;
 
 import java.awt.Component;
 
-import javax.swing.RowFilter.Entry;
-
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
-import de.jClipCorn.gui.frames.mainFrame.clipTable.ClipTableModel;
+import de.jClipCorn.gui.guiComponents.tableFilter.AbstractCustomDatabaseElementFilter;
 import de.jClipCorn.gui.guiComponents.tableFilter.AbstractCustomFilter;
 import de.jClipCorn.gui.guiComponents.tableFilter.CustomFilterDialog;
 import de.jClipCorn.gui.guiComponents.tableFilter.customFilterDialogs.CustomTitleFilterDialog;
@@ -14,15 +12,15 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.datatypes.StringMatchType;
 import de.jClipCorn.util.listener.FinishListener;
 
-public class CustomTitleFilter extends AbstractCustomFilter {
+public class CustomTitleFilter extends AbstractCustomDatabaseElementFilter {
 	private String searchString = ""; //$NON-NLS-1$
 	
 	private StringMatchType stringMatch = StringMatchType.SM_INCLUDES;
 	private boolean caseSensitive = true;
 	
 	@Override
-	public boolean include(Entry<? extends ClipTableModel, ? extends Object> e) {
-		String title = ((CCDatabaseElement)e.getValue(ClipTableModel.COLUMN_TITLE)).getTitle();
+	public boolean includes(CCDatabaseElement e) {
+		String title = e.getTitle();
 		
 		String search = searchString;
 		

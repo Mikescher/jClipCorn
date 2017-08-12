@@ -29,7 +29,7 @@ import de.jClipCorn.database.util.CCDBUpdateListener;
 import de.jClipCorn.gui.frames.mainFrame.MainFrame;
 import de.jClipCorn.gui.guiComponents.tableFilter.AbstractCustomFilter;
 import de.jClipCorn.gui.guiComponents.tableFilter.TableCustomFilter;
-import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomScoreFilter;
+import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomUserScoreFilter;
 import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomZyklusFilter;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.TableColumnAdjuster;
@@ -209,7 +209,7 @@ public class ClipTable extends JScrollPane implements CCDBUpdateListener, ListSe
 		
 		CCUserScore score = getScoreUnderMouse(e.getPoint());
 		if (e.getButton() == MouseEvent.BUTTON1 && score != null) {
-			setRowFilter(CustomScoreFilter.create(score), RowFilterSource.TABLE_CLICKED);
+			setRowFilter(CustomUserScoreFilter.create(score), RowFilterSource.TABLE_CLICKED);
 		}
 	}
 	

@@ -5,10 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import javax.swing.RowFilter.Entry;
-
 import de.jClipCorn.database.CCMovieList;
-import de.jClipCorn.gui.frames.mainFrame.clipTable.ClipTableModel;
+import de.jClipCorn.database.databaseElement.ICCDatabaseStructureElement;
 import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomAddDateFilter;
 import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomCharFilter;
 import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomFSKFilter;
@@ -20,7 +18,7 @@ import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomLanguageFil
 import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomOnlinescoreFilter;
 import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomQualityFilter;
 import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomReferenceFilter;
-import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomScoreFilter;
+import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomUserScoreFilter;
 import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomSearchFilter;
 import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomTagFilter;
 import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomTitleFilter;
@@ -45,7 +43,7 @@ public abstract class AbstractCustomFilter {
 	public final static int CUSTOMFILTERID_LANGUAGE = 7;
 	public final static int CUSTOMFILTERID_ONLINESCORE = 8;
 	public final static int CUSTOMFILTERID_QUALITY = 9;
-	public final static int CUSTOMFILTERID_SCORE = 10;
+	public final static int CUSTOMFILTERID_USERSCORE = 10;
 	public final static int CUSTOMFILTERID_TAG = 11;
 	public final static int CUSTOMFILTERID_TITLE = 12;
 	public final static int CUSTOMFILTERID_TYP = 13;
@@ -58,9 +56,7 @@ public abstract class AbstractCustomFilter {
 	public final static int CUSTOMFILTERID_SEARCH = 20;
 	public final static int CUSTOMFILTERID_CHAR = 21;
 	public final static int CUSTOMFILTERID_ADDDATE = 22;
-	
-	public abstract boolean include(Entry<? extends ClipTableModel, ? extends Object> e);
-	
+		
 	public abstract String getName();
 	public abstract String getPrecreateName();
 	public abstract int getID();
@@ -70,6 +66,8 @@ public abstract class AbstractCustomFilter {
 
 	public abstract AbstractCustomFilter createNew();
 	public abstract CustomFilterDialog CreateDialog(FinishListener fl, Component parent, CCMovieList ml);
+	
+	public abstract boolean includes(ICCDatabaseStructureElement elem);
 	
 	public static String escape(String txt) {
 		StringBuilder builder = new StringBuilder();
@@ -192,8 +190,8 @@ public abstract class AbstractCustomFilter {
 			return new CustomOnlinescoreFilter();
 		case CUSTOMFILTERID_QUALITY:
 			return new CustomQualityFilter();
-		case CUSTOMFILTERID_SCORE:
-			return new CustomScoreFilter();
+		case CUSTOMFILTERID_USERSCORE:
+			return new CustomUserScoreFilter();
 		case CUSTOMFILTERID_TAG:
 			return new CustomTagFilter();
 		case CUSTOMFILTERID_TITLE:
@@ -232,7 +230,7 @@ public abstract class AbstractCustomFilter {
 			new CustomLanguageFilter(),
 			new CustomOnlinescoreFilter(),
 			new CustomQualityFilter(),
-			new CustomScoreFilter(),
+			new CustomUserScoreFilter(),
 			new CustomReferenceFilter(),
 			new CustomTagFilter(),
 			new CustomGroupFilter(),

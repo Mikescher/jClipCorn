@@ -3,24 +3,22 @@ package de.jClipCorn.gui.guiComponents.tableFilter.customFilter;
 import java.awt.Component;
 import java.util.regex.Pattern;
 
-import javax.swing.RowFilter.Entry;
-
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.databaseElement.columnTypes.CCDBElementTyp;
-import de.jClipCorn.gui.frames.mainFrame.clipTable.ClipTableModel;
+import de.jClipCorn.gui.guiComponents.tableFilter.AbstractCustomDatabaseElementFilter;
 import de.jClipCorn.gui.guiComponents.tableFilter.AbstractCustomFilter;
 import de.jClipCorn.gui.guiComponents.tableFilter.CustomFilterDialog;
 import de.jClipCorn.gui.guiComponents.tableFilter.customFilterDialogs.CustomTypFilterDialog;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.listener.FinishListener;
 
-public class CustomTypFilter extends AbstractCustomFilter {
+public class CustomTypFilter extends AbstractCustomDatabaseElementFilter {
 	private CCDBElementTyp typ = CCDBElementTyp.MOVIE;
 	
 	@Override
-	public boolean include(Entry<? extends ClipTableModel, ? extends Object> e) {
-		return ((CCDatabaseElement)e.getValue(ClipTableModel.COLUMN_TITLE)).getType() == typ;
+	public boolean includes(CCDatabaseElement e) {
+		return e.getType() == typ;
 	}
 
 	@Override
@@ -92,7 +90,7 @@ public class CustomTypFilter extends AbstractCustomFilter {
 		return new CustomTypFilter();
 	}
 
-	public static AbstractCustomFilter create(CCDBElementTyp data) {
+	public static CustomTypFilter create(CCDBElementTyp data) {
 		CustomTypFilter f = new CustomTypFilter();
 		f.setTyp(data);
 		return f;

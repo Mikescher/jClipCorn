@@ -3,11 +3,9 @@ package de.jClipCorn.gui.guiComponents.tableFilter.customFilter;
 import java.awt.Component;
 import java.util.regex.Pattern;
 
-import javax.swing.RowFilter.Entry;
-
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
-import de.jClipCorn.gui.frames.mainFrame.clipTable.ClipTableModel;
+import de.jClipCorn.gui.guiComponents.tableFilter.AbstractCustomDatabaseElementFilter;
 import de.jClipCorn.gui.guiComponents.tableFilter.AbstractCustomFilter;
 import de.jClipCorn.gui.guiComponents.tableFilter.CustomFilterDialog;
 import de.jClipCorn.gui.guiComponents.tableFilter.customFilterDialogs.CustomAddDateFilterDialog;
@@ -17,16 +15,14 @@ import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.exceptions.DateFormatException;
 import de.jClipCorn.util.listener.FinishListener;
 
-public class CustomAddDateFilter extends AbstractCustomFilter {
+public class CustomAddDateFilter extends AbstractCustomDatabaseElementFilter {
 	private CCDate low = CCDate.getCurrentDate();
 	private CCDate high = CCDate.getCurrentDate();
 	private DecimalSearchType searchType = DecimalSearchType.EXACT;
 	
 	@Override
-	public boolean include(Entry<? extends ClipTableModel, ? extends Object> e) {
-		CCDatabaseElement elem = (CCDatabaseElement)e.getValue(ClipTableModel.COLUMN_TITLE);
-		
-		CCDate d = elem.getAddDate();
+	public boolean includes(CCDatabaseElement e) {
+		CCDate d = e.getAddDate();
 		
 		switch (searchType) {
 		case LESSER:
@@ -149,7 +145,7 @@ public class CustomAddDateFilter extends AbstractCustomFilter {
 		return new CustomAddDateFilter();
 	}
 
-	public static AbstractCustomFilter create(CCDate data) {
+	public static CustomAddDateFilter create(CCDate data) {
 		CustomAddDateFilter f = new CustomAddDateFilter();
 		f.setLow(data);
 		f.setSearchType(DecimalSearchType.EXACT);

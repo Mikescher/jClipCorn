@@ -3,23 +3,22 @@ package de.jClipCorn.gui.guiComponents.tableFilter.customFilter;
 import java.awt.Component;
 import java.util.regex.Pattern;
 
-import javax.swing.RowFilter.Entry;
-
 import de.jClipCorn.database.CCMovieList;
+import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguage;
-import de.jClipCorn.gui.frames.mainFrame.clipTable.ClipTableModel;
+import de.jClipCorn.gui.guiComponents.tableFilter.AbstractCustomDatabaseElementFilter;
 import de.jClipCorn.gui.guiComponents.tableFilter.AbstractCustomFilter;
 import de.jClipCorn.gui.guiComponents.tableFilter.CustomFilterDialog;
 import de.jClipCorn.gui.guiComponents.tableFilter.customFilterDialogs.CustomLanguageFilterDialog;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.listener.FinishListener;
 
-public class CustomLanguageFilter extends AbstractCustomFilter {
+public class CustomLanguageFilter extends AbstractCustomDatabaseElementFilter {
 	private CCDBLanguage language = CCDBLanguage.GERMAN;
 	
 	@Override
-	public boolean include(Entry<? extends ClipTableModel, ? extends Object> e) {
-		return language.equals(e.getValue(ClipTableModel.COLUMN_LANGUAGE));
+	public boolean includes(CCDatabaseElement e) {
+		return language.equals(e.getLanguage());
 	}
 
 	@Override
@@ -91,7 +90,7 @@ public class CustomLanguageFilter extends AbstractCustomFilter {
 		return new CustomLanguageFilter();
 	}
 
-	public static AbstractCustomFilter create(CCDBLanguage data) {
+	public static CustomLanguageFilter create(CCDBLanguage data) {
 		CustomLanguageFilter f = new CustomLanguageFilter();
 		f.setLanguage(data);
 		return f;

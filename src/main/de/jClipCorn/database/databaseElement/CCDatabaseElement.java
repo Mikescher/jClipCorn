@@ -10,13 +10,17 @@ import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCDBElementTyp;
 import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguage;
 import de.jClipCorn.database.databaseElement.columnTypes.CCFSK;
+import de.jClipCorn.database.databaseElement.columnTypes.CCFileFormat;
 import de.jClipCorn.database.databaseElement.columnTypes.CCFileSize;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGenre;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGenreList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGroupList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReference;
 import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineScore;
+import de.jClipCorn.database.databaseElement.columnTypes.CCQuality;
+import de.jClipCorn.database.databaseElement.columnTypes.CCTagList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCUserScore;
+import de.jClipCorn.database.util.ExtendedViewedState;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.util.LargeMD5Calculator;
@@ -27,7 +31,7 @@ import de.jClipCorn.util.exceptions.OnlineRefFormatException;
 import de.jClipCorn.util.helper.ByteUtilies;
 import de.jClipCorn.util.helper.ImageUtilities;
 
-public abstract class CCDatabaseElement {
+public abstract class CCDatabaseElement implements ICCDatabaseStructureElement {
 	private final int localID;					// INTEGER
 	private final CCDBElementTyp typ;				// TINYINT
 	private String title; 						// LEN = 128
@@ -425,6 +429,14 @@ public abstract class CCDatabaseElement {
 	public abstract CCFileSize getFilesize();
 	
 	public abstract CCDate getAddDate();
+	
+	public abstract CCFileFormat getFormat();
+	
+	public abstract CCQuality getQuality();
+	
+	public abstract CCTagList getTags();
+	
+	public abstract ExtendedViewedState getExtendedViewedState();
 	
 	public abstract int getFirstYear();
 

@@ -3,23 +3,22 @@ package de.jClipCorn.gui.guiComponents.tableFilter.customFilter;
 import java.awt.Component;
 import java.util.regex.Pattern;
 
-import javax.swing.RowFilter.Entry;
-
 import de.jClipCorn.database.CCMovieList;
+import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.databaseElement.columnTypes.CCQuality;
-import de.jClipCorn.gui.frames.mainFrame.clipTable.ClipTableModel;
+import de.jClipCorn.gui.guiComponents.tableFilter.AbstractCustomDatabaseElementFilter;
 import de.jClipCorn.gui.guiComponents.tableFilter.AbstractCustomFilter;
 import de.jClipCorn.gui.guiComponents.tableFilter.CustomFilterDialog;
 import de.jClipCorn.gui.guiComponents.tableFilter.customFilterDialogs.CustomQualityFilterDialog;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.listener.FinishListener;
 
-public class CustomQualityFilter extends AbstractCustomFilter {
+public class CustomQualityFilter extends AbstractCustomDatabaseElementFilter {
 	private CCQuality quality = CCQuality.STREAM;
 	
 	@Override
-	public boolean include(Entry<? extends ClipTableModel, ? extends Object> e) {
-		return quality.equals(e.getValue(ClipTableModel.COLUMN_QUALITY));
+	public boolean includes(CCDatabaseElement e) {
+		return quality.equals(e.getQuality());
 	}
 
 	@Override
@@ -91,7 +90,7 @@ public class CustomQualityFilter extends AbstractCustomFilter {
 		return new CustomQualityFilter();
 	}
 
-	public static AbstractCustomFilter create(CCQuality data) {
+	public static CustomQualityFilter create(CCQuality data) {
 		CustomQualityFilter f = new CustomQualityFilter();
 		f.setQuality(data);
 		return f;

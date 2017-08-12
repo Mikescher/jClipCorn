@@ -25,7 +25,7 @@ import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.ByteUtilies;
 import de.jClipCorn.util.helper.ImageUtilities;
 
-public class CCSeason implements ICCDatedElement {
+public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement {
 	private final CCSeries owner;
 	private final int seasonID;
 	

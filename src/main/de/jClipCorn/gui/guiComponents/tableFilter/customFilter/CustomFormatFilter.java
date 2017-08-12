@@ -3,23 +3,22 @@ package de.jClipCorn.gui.guiComponents.tableFilter.customFilter;
 import java.awt.Component;
 import java.util.regex.Pattern;
 
-import javax.swing.RowFilter.Entry;
-
 import de.jClipCorn.database.CCMovieList;
+import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.databaseElement.columnTypes.CCFileFormat;
-import de.jClipCorn.gui.frames.mainFrame.clipTable.ClipTableModel;
+import de.jClipCorn.gui.guiComponents.tableFilter.AbstractCustomDatabaseElementFilter;
 import de.jClipCorn.gui.guiComponents.tableFilter.AbstractCustomFilter;
 import de.jClipCorn.gui.guiComponents.tableFilter.CustomFilterDialog;
 import de.jClipCorn.gui.guiComponents.tableFilter.customFilterDialogs.CustomFormatFilterDialog;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.listener.FinishListener;
 
-public class CustomFormatFilter extends AbstractCustomFilter {
+public class CustomFormatFilter extends AbstractCustomDatabaseElementFilter {
 	private CCFileFormat format = CCFileFormat.AVI;
 	
 	@Override
-	public boolean include(Entry<? extends ClipTableModel, ? extends Object> e) {
-		return format.equals(e.getValue(ClipTableModel.COLUMN_FORMAT));
+	public boolean includes(CCDatabaseElement e) {
+		return format.equals(e.getFormat());
 	}
 
 	@Override
@@ -91,7 +90,7 @@ public class CustomFormatFilter extends AbstractCustomFilter {
 		return new CustomFormatFilterDialog(this, fl, parent);
 	}
 	
-	public static AbstractCustomFilter create(CCFileFormat data) {
+	public static CustomFormatFilter create(CCFileFormat data) {
 		CustomFormatFilter f = new CustomFormatFilter();
 		f.setFormat(data);
 		return f;

@@ -3,15 +3,12 @@ package de.jClipCorn.gui.guiComponents.tableFilter.customFilter;
 import java.awt.Component;
 import java.util.regex.Pattern;
 
-import javax.swing.RowFilter.Entry;
-
 import de.jClipCorn.database.CCMovieList;
-import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.CCSeries;
-import de.jClipCorn.gui.frames.mainFrame.clipTable.ClipTableModel;
 import de.jClipCorn.gui.guiComponents.tableFilter.AbstractCustomFilter;
+import de.jClipCorn.gui.guiComponents.tableFilter.AbstractCustomMovieOrSeriesFilter;
 import de.jClipCorn.gui.guiComponents.tableFilter.CustomFilterDialog;
 import de.jClipCorn.gui.guiComponents.tableFilter.customFilterDialogs.CustomHistoryFilterDialog;
 import de.jClipCorn.gui.localization.LocaleBundle;
@@ -19,56 +16,51 @@ import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.exceptions.DateFormatException;
 import de.jClipCorn.util.listener.FinishListener;
 
-public class CustomHistoryFilter extends AbstractCustomFilter {
+public class CustomHistoryFilter extends AbstractCustomMovieOrSeriesFilter {
 	public enum CustomHistoryFilterType { CONTAINS, CONTAINS_NOT, CONTAINS_BETWEEN, CONTAINS_NOT_BETWEEEN }
 	
 	public CCDate First = CCDate.getMinimumDate();
 	public CCDate Second = CCDate.getMinimumDate();
 	
 	public CustomHistoryFilterType Type = CustomHistoryFilterType.CONTAINS;
-	public boolean Recursive = false;
+	public boolean Recursive = true;
 	
 	@Override
-	public boolean include(Entry<? extends ClipTableModel, ? extends Object> e) {
-		
-		if (((CCDatabaseElement)e.getValue(ClipTableModel.COLUMN_TITLE)).isMovie()) {
-
-			CCMovie mov = ((CCMovie)e.getValue(ClipTableModel.COLUMN_TITLE));
-
-			switch (Type) {
-			case CONTAINS:
-				return mov.getViewedHistory().containsDate(First);
-			case CONTAINS_BETWEEN:
-				return ! mov.getViewedHistory().containsDate(First);
-			case CONTAINS_NOT:
-				return mov.getViewedHistory().containsDateBetween(First, Second);
-			case CONTAINS_NOT_BETWEEEN:
-				return ! mov.getViewedHistory().containsDateBetween(First, Second);
-			}
+	public boolean includes(CCMovie mov) {
+		switch (Type) {
+		case CONTAINS:
+			return mov.getViewedHistory().containsDate(First);
+		case CONTAINS_BETWEEN:
+			return ! mov.getViewedHistory().containsDate(First);
+		case CONTAINS_NOT:
+			return mov.getViewedHistory().containsDateBetween(First, Second);
+		case CONTAINS_NOT_BETWEEEN:
+			return ! mov.getViewedHistory().containsDateBetween(First, Second);
 		}
 		
-		if (((CCDatabaseElement)e.getValue(ClipTableModel.COLUMN_TITLE)).isSeries()) {
+		return false;
+	}
 
-			CCSeries ser = ((CCSeries)e.getValue(ClipTableModel.COLUMN_TITLE));
-			
-			for (CCEpisode epi : ser.iteratorEpisodes()) {
-				switch (Type) {
-				case CONTAINS:
-					if (epi.getViewedHistory().containsDate(First)) return true;
-					break;
-				case CONTAINS_BETWEEN:
-					if (! epi.getViewedHistory().containsDate(First)) return true;
-					break;
-				case CONTAINS_NOT:
-					if (epi.getViewedHistory().containsDateBetween(First, Second)) return true;
-					break;
-				case CONTAINS_NOT_BETWEEEN:
-					if (! epi.getViewedHistory().containsDateBetween(First, Second)) return true;
-					break;
-				}
+	@Override
+	public boolean includes(CCSeries ser) {
+
+		if (!Recursive) return false;
+		
+		for (CCEpisode epi : ser.iteratorEpisodes()) {
+			switch (Type) {
+			case CONTAINS:
+				if (epi.getViewedHistory().containsDate(First)) return true;
+				break;
+			case CONTAINS_BETWEEN:
+				if (! epi.getViewedHistory().containsDate(First)) return true;
+				break;
+			case CONTAINS_NOT:
+				if (epi.getViewedHistory().containsDateBetween(First, Second)) return true;
+				break;
+			case CONTAINS_NOT_BETWEEEN:
+				if (! epi.getViewedHistory().containsDateBetween(First, Second)) return true;
+				break;
 			}
-			
-			return false;
 		}
 		
 		return false;

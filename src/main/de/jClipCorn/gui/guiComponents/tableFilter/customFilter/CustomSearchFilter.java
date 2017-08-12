@@ -3,85 +3,86 @@ package de.jClipCorn.gui.guiComponents.tableFilter.customFilter;
 import java.awt.Component;
 import java.util.regex.Pattern;
 
-import javax.swing.RowFilter.Entry;
-
 import org.apache.commons.lang.StringUtils;
 
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
-import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguage;
-import de.jClipCorn.database.databaseElement.columnTypes.CCFileFormat;
+import de.jClipCorn.database.databaseElement.CCMovie;
+import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGenreList;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieZyklus;
-import de.jClipCorn.database.databaseElement.columnTypes.CCQuality;
-import de.jClipCorn.gui.frames.mainFrame.clipTable.ClipTableModel;
+import de.jClipCorn.gui.guiComponents.tableFilter.AbstractCustomDatabaseElementFilter;
 import de.jClipCorn.gui.guiComponents.tableFilter.AbstractCustomFilter;
 import de.jClipCorn.gui.guiComponents.tableFilter.CustomFilterDialog;
 import de.jClipCorn.gui.guiComponents.tableFilter.customFilterDialogs.CustomSearchFilterDialog;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.datetime.YearRange;
 import de.jClipCorn.util.listener.FinishListener;
 
-public class CustomSearchFilter extends AbstractCustomFilter {
+public class CustomSearchFilter extends AbstractCustomDatabaseElementFilter {
 	private String searchTerm = ""; //$NON-NLS-1$
 	
 	@Override
 	@SuppressWarnings("nls")
-	public boolean include(Entry<? extends ClipTableModel, ? extends Object> e) {
-		CCDatabaseElement elem = ((CCDatabaseElement)e.getValue(ClipTableModel.COLUMN_TITLE));
-		
-		String title = elem.getTitle();
+	public boolean includes(CCDatabaseElement e) {
+		String title = e.getTitle();
 		
 		if (StringUtils.containsIgnoreCase(title.replace(".", ""), searchTerm.replace(".", ""))) {
 			return true;
 		}
 		
-		String zyklus = ((CCMovieZyklus)e.getValue(ClipTableModel.COLUMN_ZYKLUS)).getTitle();
-		if (StringUtils.containsIgnoreCase(zyklus.replace(".", ""), searchTerm.replace(".", ""))) {
+		if (e.isMovie()) {
+			String zyklus = ((CCMovie)e).getZyklus().getTitle();
+			if (StringUtils.containsIgnoreCase(zyklus.replace(".", ""), searchTerm.replace(".", ""))) {
+				return true;
+			}
+		}
+		
+		if (e.getQuality().asString().equalsIgnoreCase(searchTerm)) {
 			return true;
 		}
 		
-		if (((CCQuality)e.getValue(ClipTableModel.COLUMN_QUALITY)).asString().equalsIgnoreCase(searchTerm)) {
+		if (e.getLanguage().asString().equalsIgnoreCase(searchTerm)) {
 			return true;
 		}
 		
-		if (((CCDBLanguage)e.getValue(ClipTableModel.COLUMN_LANGUAGE)).asString().equalsIgnoreCase(searchTerm)) {
+		if (e.getFormat().asString().equalsIgnoreCase(searchTerm)) {
 			return true;
 		}
 		
-		if (((CCFileFormat)e.getValue(ClipTableModel.COLUMN_FORMAT)).asString().equalsIgnoreCase(searchTerm)) {
+		if (e.getAddDate().toStringSerialize().equalsIgnoreCase(searchTerm)) {
 			return true;
 		}
 		
-		if (((CCDate)e.getValue(ClipTableModel.COLUMN_DATE)).toStringSerialize().equalsIgnoreCase(searchTerm)) {
+		if (e.getAddDate().toStringSQL().equalsIgnoreCase(searchTerm)) {
 			return true;
 		}
 		
-		if (((CCDate)e.getValue(ClipTableModel.COLUMN_DATE)).toStringSQL().equalsIgnoreCase(searchTerm)) {
+		if (e.getAddDate().toStringUINormal().equalsIgnoreCase(searchTerm)) {
 			return true;
 		}
 		
-		if (((CCDate)e.getValue(ClipTableModel.COLUMN_DATE)).toStringUINormal().equalsIgnoreCase(searchTerm)) {
-			return true;
-		}
-		
-		CCGenreList gl = (CCGenreList) e.getValue(ClipTableModel.COLUMN_GENRE);
+		CCGenreList gl = e.getGenres();
 		for (int i = 0; i < gl.getGenreCount(); i++) {
 			if (gl.getGenre(i).asString().equalsIgnoreCase(searchTerm)) {
 				return true;
 			}
 		}
 		
-		if (((YearRange)e.getValue(ClipTableModel.COLUMN_YEAR)).asString().equalsIgnoreCase(searchTerm)) {
+		if (e.isMovie()) {
+			if (new YearRange(((CCMovie)e).getYear()).asString().equalsIgnoreCase(searchTerm)) {
+				return true;
+			}
+		} else if (e.isSeries()) {
+			if (((CCSeries)e).getYearRange().asString().equalsIgnoreCase(searchTerm)) {
+				return true;
+			}
+		}
+		
+		if (e.getGroups().containsIgnoreCase(searchTerm)) {
 			return true;
 		}
 		
-		if (elem.getGroups().containsIgnoreCase(searchTerm)) {
-			return true;
-		}
-		
-		if (elem.getOnlineReference().isSet() && (elem.getOnlineReference().toSerializationString().equals(searchTerm) || elem.getOnlineReference().id.equals(searchTerm))) {
+		if (e.getOnlineReference().isSet() && (e.getOnlineReference().toSerializationString().equals(searchTerm) || e.getOnlineReference().id.equals(searchTerm))) {
 			return true;
 		}
 		
@@ -152,7 +153,7 @@ public class CustomSearchFilter extends AbstractCustomFilter {
 		return new CustomSearchFilter();
 	}
 
-	public static AbstractCustomFilter create(String data) {
+	public static CustomSearchFilter create(String data) {
 		CustomSearchFilter f = new CustomSearchFilter();
 		f.setSearchTerm(data);
 		return f;

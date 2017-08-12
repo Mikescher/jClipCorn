@@ -2,27 +2,27 @@ package de.jClipCorn.gui.guiComponents.tableFilter.customFilter;
 
 import java.awt.Component;
 
-import javax.swing.RowFilter.Entry;
-
 import de.jClipCorn.database.CCMovieList;
+import de.jClipCorn.database.databaseElement.CCMovie;
+import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieZyklus;
-import de.jClipCorn.gui.frames.mainFrame.clipTable.ClipTableModel;
 import de.jClipCorn.gui.guiComponents.tableFilter.AbstractCustomFilter;
+import de.jClipCorn.gui.guiComponents.tableFilter.AbstractCustomMovieOrSeriesFilter;
 import de.jClipCorn.gui.guiComponents.tableFilter.CustomFilterDialog;
 import de.jClipCorn.gui.guiComponents.tableFilter.customFilterDialogs.CustomZyklusFilterDialog;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.datatypes.StringMatchType;
 import de.jClipCorn.util.listener.FinishListener;
 
-public class CustomZyklusFilter extends AbstractCustomFilter {
+public class CustomZyklusFilter extends AbstractCustomMovieOrSeriesFilter {
 	private String searchString = ""; //$NON-NLS-1$
 	
 	private StringMatchType stringMatch = StringMatchType.SM_INCLUDES;
 	private boolean caseSensitive = true;
 	
 	@Override
-	public boolean include(Entry<? extends ClipTableModel, ? extends Object> e) {
-		String zyklus = ((CCMovieZyklus)e.getValue(ClipTableModel.COLUMN_ZYKLUS)).getTitle();
+	public boolean includes(CCMovie m) {
+		String zyklus = m.getZyklus().getTitle();
 		
 		String search = searchString;
 		
@@ -44,6 +44,11 @@ public class CustomZyklusFilter extends AbstractCustomFilter {
 			break;
 		}
 		
+		return false;
+	}
+
+	@Override
+	public boolean includes(CCSeries m) {
 		return false;
 	}
 
@@ -176,7 +181,7 @@ public class CustomZyklusFilter extends AbstractCustomFilter {
 		return f;
 	}
 
-	public static AbstractCustomFilter create(CCMovieZyklus data) {
+	public static CustomZyklusFilter create(CCMovieZyklus data) {
 		CustomZyklusFilter f = new CustomZyklusFilter();
 		f.setSearchString(data.getTitle());
 		f.setCaseSensitive(true);

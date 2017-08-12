@@ -33,7 +33,7 @@ import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomGroupFilter
 import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomLanguageFilter;
 import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomOnlinescoreFilter;
 import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomQualityFilter;
-import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomScoreFilter;
+import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomUserScoreFilter;
 import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomTagFilter;
 import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomTypFilter;
 import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomViewedFilter;
@@ -145,7 +145,7 @@ public class FilterTree extends AbstractFilterTree {
 	
 	private void initScore(DefaultMutableTreeNode parent) {
 		for (final CCUserScore score : CCUserScore.values()) {
-			addNodeF(parent, score.getIcon(), score.asString(), () -> CustomScoreFilter.create(score));
+			addNodeF(parent, score.getIcon(), score.asString(), () -> CustomUserScoreFilter.create(score));
 		}
 	}
 	

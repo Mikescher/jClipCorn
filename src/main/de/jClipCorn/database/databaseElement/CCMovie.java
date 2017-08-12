@@ -506,6 +506,7 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 		return getZyklus().isSet();
 	}
 	
+	@Override
 	public ExtendedViewedState getExtendedViewedState() {
 		if (isViewed())
 			return new ExtendedViewedState(ExtendedViewedStateType.VIEWED, getViewedHistory());

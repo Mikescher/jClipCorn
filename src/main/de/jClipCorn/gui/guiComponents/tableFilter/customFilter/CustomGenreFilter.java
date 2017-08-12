@@ -3,24 +3,22 @@ package de.jClipCorn.gui.guiComponents.tableFilter.customFilter;
 import java.awt.Component;
 import java.util.regex.Pattern;
 
-import javax.swing.RowFilter.Entry;
-
 import de.jClipCorn.database.CCMovieList;
+import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGenre;
-import de.jClipCorn.database.databaseElement.columnTypes.CCGenreList;
-import de.jClipCorn.gui.frames.mainFrame.clipTable.ClipTableModel;
+import de.jClipCorn.gui.guiComponents.tableFilter.AbstractCustomDatabaseElementFilter;
 import de.jClipCorn.gui.guiComponents.tableFilter.AbstractCustomFilter;
 import de.jClipCorn.gui.guiComponents.tableFilter.CustomFilterDialog;
 import de.jClipCorn.gui.guiComponents.tableFilter.customFilterDialogs.CustomGenreFilterDialog;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.listener.FinishListener;
 
-public class CustomGenreFilter extends AbstractCustomFilter {
+public class CustomGenreFilter extends AbstractCustomDatabaseElementFilter {
 	private CCGenre genre = CCGenre.GENRE_000;
 	
 	@Override
-	public boolean include(Entry<? extends ClipTableModel, ? extends Object> e) {
-		return ((CCGenreList) e.getValue(ClipTableModel.COLUMN_GENRE)).includes(genre);
+	public boolean includes(CCDatabaseElement e) {
+		return e.getGenres().includes(genre);
 	}
 
 	@Override
@@ -92,7 +90,7 @@ public class CustomGenreFilter extends AbstractCustomFilter {
 		return new CustomGenreFilter();
 	}
 
-	public static AbstractCustomFilter create(CCGenre data) {
+	public static CustomGenreFilter create(CCGenre data) {
 		CustomGenreFilter f = new CustomGenreFilter();
 		f.setGenre(data);
 		return f;

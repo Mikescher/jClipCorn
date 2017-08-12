@@ -35,7 +35,7 @@ import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.formatter.TimeIntervallFormatter;
 import de.jClipCorn.util.stream.CCStream;
 
-public class CCSeries extends CCDatabaseElement {
+public class CCSeries extends CCDatabaseElement  {
 	private final static int GUIDE_W_BORDER = 2;
 	private final static int GUIDE_W_PADDING = 6;
 	
@@ -80,6 +80,7 @@ public class CCSeries extends CCDatabaseElement {
 		return !(isViewed() || isUnviewed());
 	}
 	
+	@Override
 	public CCQuality getQuality() {
 		int qs = 0;
 		int qc = 0;
@@ -171,6 +172,7 @@ public class CCSeries extends CCDatabaseElement {
 		return CCDate.getAverageDate(dlist);
 	}
 	
+	@Override
 	public CCFileFormat getFormat() {
 		return iteratorEpisodes().findMostCommon(e -> e.getFormat(), CCFileFormat.getWrapper().firstValue());
 	}
@@ -206,6 +208,7 @@ public class CCSeries extends CCDatabaseElement {
 		return getYearRange().getLowestYear();
 	}
 	
+	@Override
 	public CCTagList getTags() {
 		CCTagList i = new CCTagList();
 		
@@ -492,6 +495,7 @@ public class CCSeries extends CCDatabaseElement {
 		return pathMax;
 	}
 
+	@Override
 	public ExtendedViewedState getExtendedViewedState() {
 		if (isViewed())
 			return new ExtendedViewedState(ExtendedViewedStateType.VIEWED, CCDateTimeList.createEmpty());

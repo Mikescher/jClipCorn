@@ -2,10 +2,8 @@ package de.jClipCorn.gui.guiComponents.tableFilter.customFilter.operators;
 
 import java.awt.Component;
 
-import javax.swing.RowFilter.Entry;
-
 import de.jClipCorn.database.CCMovieList;
-import de.jClipCorn.gui.frames.mainFrame.clipTable.ClipTableModel;
+import de.jClipCorn.database.databaseElement.ICCDatabaseStructureElement;
 import de.jClipCorn.gui.guiComponents.tableFilter.AbstractCustomFilter;
 import de.jClipCorn.gui.guiComponents.tableFilter.CustomFilterDialog;
 import de.jClipCorn.gui.guiComponents.tableFilter.customFilterDialogs.CustomOperatorFilterDialog;
@@ -14,11 +12,11 @@ import de.jClipCorn.util.listener.FinishListener;
 
 public class CustomNorOperator extends CustomOperator {
 	@Override
-	public boolean include(Entry<? extends ClipTableModel, ? extends Object> e) {
+	public boolean includes(ICCDatabaseStructureElement e) {
 		boolean result = false;
 		
 		for (int i = 0; i < list.size(); i++) {
-			result |= list.get(i).include(e);
+			result |= list.get(i).includes(e);
 		}
 		
 		return ! result;

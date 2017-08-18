@@ -19,6 +19,7 @@ import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomOnlinescore
 import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomQualityFilter;
 import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomReferenceFilter;
 import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomUserScoreFilter;
+import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomViewcountFilter;
 import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomSearchFilter;
 import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomTagFilter;
 import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomTitleFilter;
@@ -56,6 +57,7 @@ public abstract class AbstractCustomFilter {
 	public final static int CUSTOMFILTERID_SEARCH = 20;
 	public final static int CUSTOMFILTERID_CHAR = 21;
 	public final static int CUSTOMFILTERID_ADDDATE = 22;
+	public final static int CUSTOMFILTERID_VIEWCOUNT = 23;
 		
 	public abstract String getName();
 	public abstract String getPrecreateName();
@@ -216,6 +218,8 @@ public abstract class AbstractCustomFilter {
 			return new CustomCharFilter();
 		case CUSTOMFILTERID_ADDDATE:
 			return new CustomAddDateFilter();
+		case CUSTOMFILTERID_VIEWCOUNT:
+			return new CustomViewcountFilter();
 		}
 
 		return null;
@@ -240,6 +244,7 @@ public abstract class AbstractCustomFilter {
 			new CustomYearFilter(),
 			new CustomZyklusFilter(),
 			new CustomAddDateFilter(),
+			new CustomViewcountFilter(),
 		};
 	}
 	

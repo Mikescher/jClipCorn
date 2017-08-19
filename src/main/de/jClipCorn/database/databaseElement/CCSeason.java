@@ -17,6 +17,7 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCFileFormat;
 import de.jClipCorn.database.databaseElement.columnTypes.CCQuality;
 import de.jClipCorn.database.databaseElement.columnTypes.CCFileSize;
 import de.jClipCorn.database.databaseElement.columnTypes.CCTagList;
+import de.jClipCorn.database.util.ExtendedViewedStateType;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.LargeMD5Calculator;
 import de.jClipCorn.util.datetime.CCDate;
@@ -541,5 +542,15 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement {
 		}
 		
 		return true;
+	}
+
+	public ExtendedViewedStateType getExtendedViewedStateType() {
+		if (isViewed()) return ExtendedViewedStateType.VIEWED;
+		if (!isViewed()) return ExtendedViewedStateType.NOT_VIEWED;
+		
+		if (CCProperties.getInstance().PROP_SHOW_PARTIAL_VIEWED_STATE.getValue())
+			return ExtendedViewedStateType.PARTIAL_VIEWED;
+		else
+			return ExtendedViewedStateType.NOT_VIEWED;
 	}
 }

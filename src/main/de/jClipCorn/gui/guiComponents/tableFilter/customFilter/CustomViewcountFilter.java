@@ -4,17 +4,18 @@ import java.awt.Component;
 import java.util.regex.Pattern;
 
 import de.jClipCorn.database.CCMovieList;
+import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.gui.guiComponents.tableFilter.AbstractCustomFilter;
-import de.jClipCorn.gui.guiComponents.tableFilter.AbstractCustomMovieOrSeriesFilter;
+import de.jClipCorn.gui.guiComponents.tableFilter.AbstractCustomStructureElementFilter;
 import de.jClipCorn.gui.guiComponents.tableFilter.CustomFilterDialog;
 import de.jClipCorn.gui.guiComponents.tableFilter.customFilterDialogs.CustomViewcountFilterDialog;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.DecimalSearchType;
 import de.jClipCorn.util.listener.FinishListener;
 
-public class CustomViewcountFilter extends AbstractCustomMovieOrSeriesFilter {
+public class CustomViewcountFilter extends AbstractCustomStructureElementFilter {
 	private int low = 1;
 	private int high = 1;
 	private DecimalSearchType searchType = DecimalSearchType.EXACT;
@@ -39,6 +40,31 @@ public class CustomViewcountFilter extends AbstractCustomMovieOrSeriesFilter {
 
 	@Override
 	public boolean includes(CCSeries s) {
+		int ct = 0;
+		int sm = 0;
+		for (CCEpisode ep : s.iteratorEpisodes()) {
+			ct++;
+			sm += ep.getViewedHistory().count();
+		}
+		
+		double c = (ct == 0) ? 0 : ((sm * 1.0 )/ ct);
+
+		switch (searchType) {
+		case LESSER:
+			return c < high;
+		case GREATER:
+			return c > low;
+		case IN_RANGE:
+			return c > low && c < high;
+		case EXACT:
+			return Math.round(c) == low;
+		default:
+			return false;
+		}
+	}
+
+	@Override
+	public boolean includes(CCEpisode e) {
 		return false;
 	}
 

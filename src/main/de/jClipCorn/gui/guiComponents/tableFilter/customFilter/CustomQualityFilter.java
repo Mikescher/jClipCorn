@@ -5,20 +5,23 @@ import java.util.regex.Pattern;
 
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
+import de.jClipCorn.database.databaseElement.CCEpisode;
+import de.jClipCorn.database.databaseElement.ICCDatabaseStructureElement;
 import de.jClipCorn.database.databaseElement.columnTypes.CCQuality;
-import de.jClipCorn.gui.guiComponents.tableFilter.AbstractCustomDatabaseElementFilter;
 import de.jClipCorn.gui.guiComponents.tableFilter.AbstractCustomFilter;
 import de.jClipCorn.gui.guiComponents.tableFilter.CustomFilterDialog;
 import de.jClipCorn.gui.guiComponents.tableFilter.customFilterDialogs.CustomQualityFilterDialog;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.listener.FinishListener;
 
-public class CustomQualityFilter extends AbstractCustomDatabaseElementFilter {
+public class CustomQualityFilter extends AbstractCustomFilter {
 	private CCQuality quality = CCQuality.STREAM;
 	
 	@Override
-	public boolean includes(CCDatabaseElement e) {
-		return quality.equals(e.getQuality());
+	public boolean includes(ICCDatabaseStructureElement e) {
+		if (e instanceof CCDatabaseElement) return quality.equals(((CCDatabaseElement)e).getQuality());
+		if (e instanceof CCEpisode) return quality.equals(((CCEpisode)e).getQuality());
+		return false;
 	}
 
 	@Override

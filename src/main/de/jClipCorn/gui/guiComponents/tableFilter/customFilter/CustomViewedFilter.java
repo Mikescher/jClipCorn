@@ -5,20 +5,28 @@ import java.util.regex.Pattern;
 
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
+import de.jClipCorn.database.databaseElement.CCEpisode;
+import de.jClipCorn.database.databaseElement.CCSeason;
+import de.jClipCorn.database.databaseElement.ICCDatabaseStructureElement;
 import de.jClipCorn.database.util.ExtendedViewedStateType;
-import de.jClipCorn.gui.guiComponents.tableFilter.AbstractCustomDatabaseElementFilter;
 import de.jClipCorn.gui.guiComponents.tableFilter.AbstractCustomFilter;
 import de.jClipCorn.gui.guiComponents.tableFilter.CustomFilterDialog;
 import de.jClipCorn.gui.guiComponents.tableFilter.customFilterDialogs.CustomViewedFilterDialog;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.listener.FinishListener;
 
-public class CustomViewedFilter extends AbstractCustomDatabaseElementFilter {
+public class CustomViewedFilter extends AbstractCustomFilter {
 	private ExtendedViewedStateType state = ExtendedViewedStateType.NOT_VIEWED;
 	
 	@Override
-	public boolean includes(CCDatabaseElement e) {
-		return e.getExtendedViewedState().Type == state;
+	public boolean includes(ICCDatabaseStructureElement e) {
+		if (e instanceof CCDatabaseElement) return ((CCDatabaseElement)e).getExtendedViewedState().Type == state;
+		
+		if (e instanceof CCEpisode) return ((CCEpisode)e).getExtendedViewedState().Type == state;
+
+		if (e instanceof CCSeason) return ((CCSeason)e).getExtendedViewedStateType() == state;
+		
+		return false;
 	}
 
 	@Override

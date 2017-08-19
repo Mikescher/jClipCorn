@@ -49,6 +49,8 @@ public class CustomOperatorFilterDialog extends CustomFilterDialog implements Fi
 	private JButton btnImport;
 
 	private final CCMovieList movielist;
+	private JComboBox<AbstractCustomFilter> cbxAggregator;
+	private JButton btnAddAggregator;
 	
 	public CustomOperatorFilterDialog(CCMovieList ml, CustomOperator op, FinishListener fl, Component parent, boolean showExporter) {
 		super(op, fl);
@@ -68,7 +70,7 @@ public class CustomOperatorFilterDialog extends CustomFilterDialog implements Fi
 	private void initGUI(boolean showExporter) {
 		setResizable(true);
 		setMinimumSize(new Dimension(450, 300));
-		setSize(new Dimension(450, 350));
+		setSize(new Dimension(450, 425));
 		
 		pnlMiddle = new JPanel();
 		getContentPane().add(pnlMiddle, BorderLayout.CENTER);
@@ -76,9 +78,15 @@ public class CustomOperatorFilterDialog extends CustomFilterDialog implements Fi
 				FormSpecs.RELATED_GAP_COLSPEC,
 				ColumnSpec.decode("default:grow"), //$NON-NLS-1$
 				FormSpecs.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("90dlu"), //$NON-NLS-1$
+				ColumnSpec.decode("90dlu:grow"), //$NON-NLS-1$
 				FormSpecs.RELATED_GAP_COLSPEC,},
 			new RowSpec[] {
+				FormSpecs.RELATED_GAP_ROWSPEC,
+				FormSpecs.DEFAULT_ROWSPEC,
+				FormSpecs.RELATED_GAP_ROWSPEC,
+				FormSpecs.DEFAULT_ROWSPEC,
+				FormSpecs.RELATED_GAP_ROWSPEC,
+				RowSpec.decode("10dlu"), //$NON-NLS-1$
 				FormSpecs.RELATED_GAP_ROWSPEC,
 				FormSpecs.DEFAULT_ROWSPEC,
 				FormSpecs.RELATED_GAP_ROWSPEC,
@@ -99,7 +107,7 @@ public class CustomOperatorFilterDialog extends CustomFilterDialog implements Fi
 				RowSpec.decode("default:grow"),})); //$NON-NLS-1$
 		
 		scrollPane = new JScrollPane();
-		pnlMiddle.add(scrollPane, "2, 2, 1, 17, fill, fill"); //$NON-NLS-1$
+		pnlMiddle.add(scrollPane, "2, 2, 1, 23, fill, fill"); //$NON-NLS-1$
 		
 		displayList = new JList<>();
 		scrollPane.setViewportView(displayList);
@@ -165,8 +173,32 @@ public class CustomOperatorFilterDialog extends CustomFilterDialog implements Fi
 				onEdit();
 			}
 		});
-		pnlMiddle.add(btnEdit, "4, 14"); //$NON-NLS-1$
-		pnlMiddle.add(btnDelete, "4, 16"); //$NON-NLS-1$
+		
+		cbxAggregator = new JComboBox<>();
+		cbxAggregator.setModel(new DefaultComboBoxModel<>(AbstractCustomFilter.getAllAggregatorFilter()));
+		cbxAggregator.setRenderer(new DefaultListCellRenderer() {
+			private static final long serialVersionUID = 1710057818185541683L;
+
+		    @Override
+			public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+		    	JLabel comp = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+		    	comp.setText(((AbstractCustomFilter)value).getPrecreateName());
+		        return comp;
+		    }
+		});
+		
+		pnlMiddle.add(cbxAggregator, "4, 14, fill, default"); //$NON-NLS-1$
+		
+		btnAddAggregator = new JButton("Add Aggregator"); //$NON-NLS-1$
+		btnAddAggregator.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				onAddAggregator();
+			}
+		});
+		pnlMiddle.add(btnAddAggregator, "4, 16"); //$NON-NLS-1$
+		pnlMiddle.add(btnEdit, "4, 20"); //$NON-NLS-1$
+		pnlMiddle.add(btnDelete, "4, 22"); //$NON-NLS-1$
 		
 		pnlBottom = new JPanel();
 		getContentPane().add(pnlBottom, BorderLayout.SOUTH);
@@ -221,6 +253,12 @@ public class CustomOperatorFilterDialog extends CustomFilterDialog implements Fi
 	private void onAddOperator() {
 		if (cbxOperator.getSelectedIndex() >= 0) {
 			onStartEdit(getFilter().add(((AbstractCustomFilter)cbxOperator.getSelectedItem()).createNew()));
+		}
+	}
+
+	private void onAddAggregator() {
+		if (cbxAggregator.getSelectedIndex() >= 0) {
+			onStartEdit(getFilter().add(((AbstractCustomFilter)cbxAggregator.getSelectedItem()).createNew()));
 		}
 	}
 	

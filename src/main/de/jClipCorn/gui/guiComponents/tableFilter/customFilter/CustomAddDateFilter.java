@@ -5,7 +5,8 @@ import java.util.regex.Pattern;
 
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
-import de.jClipCorn.gui.guiComponents.tableFilter.AbstractCustomDatabaseElementFilter;
+import de.jClipCorn.database.databaseElement.CCEpisode;
+import de.jClipCorn.database.databaseElement.ICCDatabaseStructureElement;
 import de.jClipCorn.gui.guiComponents.tableFilter.AbstractCustomFilter;
 import de.jClipCorn.gui.guiComponents.tableFilter.CustomFilterDialog;
 import de.jClipCorn.gui.guiComponents.tableFilter.customFilterDialogs.CustomAddDateFilterDialog;
@@ -15,14 +16,18 @@ import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.exceptions.DateFormatException;
 import de.jClipCorn.util.listener.FinishListener;
 
-public class CustomAddDateFilter extends AbstractCustomDatabaseElementFilter {
+public class CustomAddDateFilter extends AbstractCustomFilter {
 	private CCDate low = CCDate.getCurrentDate();
 	private CCDate high = CCDate.getCurrentDate();
 	private DecimalSearchType searchType = DecimalSearchType.EXACT;
 	
 	@Override
-	public boolean includes(CCDatabaseElement e) {
-		CCDate d = e.getAddDate();
+	public boolean includes(ICCDatabaseStructureElement e) {
+		CCDate d ;
+		
+		if (e instanceof CCDatabaseElement) d = ((CCDatabaseElement)e).getAddDate();
+		else if (e instanceof CCEpisode) d = ((CCEpisode)e).getAddDate();
+		else return false;
 		
 		switch (searchType) {
 		case LESSER:

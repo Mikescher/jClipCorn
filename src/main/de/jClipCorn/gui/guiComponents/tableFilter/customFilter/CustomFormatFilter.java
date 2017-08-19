@@ -5,20 +5,24 @@ import java.util.regex.Pattern;
 
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
+import de.jClipCorn.database.databaseElement.CCEpisode;
+import de.jClipCorn.database.databaseElement.ICCDatabaseStructureElement;
 import de.jClipCorn.database.databaseElement.columnTypes.CCFileFormat;
-import de.jClipCorn.gui.guiComponents.tableFilter.AbstractCustomDatabaseElementFilter;
 import de.jClipCorn.gui.guiComponents.tableFilter.AbstractCustomFilter;
 import de.jClipCorn.gui.guiComponents.tableFilter.CustomFilterDialog;
 import de.jClipCorn.gui.guiComponents.tableFilter.customFilterDialogs.CustomFormatFilterDialog;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.listener.FinishListener;
 
-public class CustomFormatFilter extends AbstractCustomDatabaseElementFilter {
+public class CustomFormatFilter extends AbstractCustomFilter {
 	private CCFileFormat format = CCFileFormat.AVI;
 	
 	@Override
-	public boolean includes(CCDatabaseElement e) {
-		return format.equals(e.getFormat());
+	public boolean includes(ICCDatabaseStructureElement e) {
+		if (e instanceof CCDatabaseElement) return format.equals(((CCDatabaseElement)e).getFormat());
+		if (e instanceof CCEpisode) return format.equals(((CCEpisode)e).getFormat());
+		
+		return false;
 	}
 
 	@Override

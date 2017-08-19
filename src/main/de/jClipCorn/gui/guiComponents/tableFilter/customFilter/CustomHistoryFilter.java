@@ -8,7 +8,7 @@ import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.gui.guiComponents.tableFilter.AbstractCustomFilter;
-import de.jClipCorn.gui.guiComponents.tableFilter.AbstractCustomMovieOrSeriesFilter;
+import de.jClipCorn.gui.guiComponents.tableFilter.AbstractCustomStructureElementFilter;
 import de.jClipCorn.gui.guiComponents.tableFilter.CustomFilterDialog;
 import de.jClipCorn.gui.guiComponents.tableFilter.customFilterDialogs.CustomHistoryFilterDialog;
 import de.jClipCorn.gui.localization.LocaleBundle;
@@ -16,7 +16,7 @@ import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.exceptions.DateFormatException;
 import de.jClipCorn.util.listener.FinishListener;
 
-public class CustomHistoryFilter extends AbstractCustomMovieOrSeriesFilter {
+public class CustomHistoryFilter extends AbstractCustomStructureElementFilter {
 	public enum CustomHistoryFilterType { CONTAINS, CONTAINS_NOT, CONTAINS_BETWEEN, CONTAINS_NOT_BETWEEEN }
 	
 	public CCDate First = CCDate.getMinimumDate();
@@ -61,6 +61,22 @@ public class CustomHistoryFilter extends AbstractCustomMovieOrSeriesFilter {
 				if (! epi.getViewedHistory().containsDateBetween(First, Second)) return true;
 				break;
 			}
+		}
+		
+		return false;
+	}
+	
+	@Override
+	public boolean includes(CCEpisode mov) {
+		switch (Type) {
+		case CONTAINS:
+			return mov.getViewedHistory().containsDate(First);
+		case CONTAINS_BETWEEN:
+			return ! mov.getViewedHistory().containsDate(First);
+		case CONTAINS_NOT:
+			return mov.getViewedHistory().containsDateBetween(First, Second);
+		case CONTAINS_NOT_BETWEEEN:
+			return ! mov.getViewedHistory().containsDateBetween(First, Second);
 		}
 		
 		return false;

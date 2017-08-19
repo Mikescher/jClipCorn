@@ -148,7 +148,6 @@ public class Main {
 
 //TODO use omdb instead of direct imdb query
 
-//TODO Custom Filter for ViewCount
 //TODO Custom Filter Operator for **AnyEpisode**
 //TODO Custom Filter Operator for **AllEpisodes**
 //TODO More missing CustomFilter (?)

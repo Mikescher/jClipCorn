@@ -18,15 +18,17 @@ import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomLanguageFil
 import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomOnlinescoreFilter;
 import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomQualityFilter;
 import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomReferenceFilter;
-import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomUserScoreFilter;
-import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomViewcountFilter;
 import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomSearchFilter;
 import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomTagFilter;
 import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomTitleFilter;
 import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomTypFilter;
+import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomUserScoreFilter;
+import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomViewcountFilter;
 import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomViewedFilter;
 import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomYearFilter;
 import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomZyklusFilter;
+import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.aggregators.CustomAllEpisodeAggregator;
+import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.aggregators.CustomAnyEpisodeAggregator;
 import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.operators.CustomAndOperator;
 import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.operators.CustomNandOperator;
 import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.operators.CustomNorOperator;
@@ -34,30 +36,32 @@ import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.operators.CustomO
 import de.jClipCorn.util.listener.FinishListener;
 
 public abstract class AbstractCustomFilter {
-	public final static int CUSTOMFILTERID_AND = 0;
-	public final static int CUSTOMFILTERID_NAND = 1;
-	public final static int CUSTOMFILTERID_NOR = 2;
-	public final static int CUSTOMFILTERID_OR = 3;
-	public final static int CUSTOMFILTERID_FORMAT = 4;
-	public final static int CUSTOMFILTERID_FSK = 5;
-	public final static int CUSTOMFILTERID_GENRE = 6;
-	public final static int CUSTOMFILTERID_LANGUAGE = 7;
+	public final static int CUSTOMFILTERID_AND         = 0;
+	public final static int CUSTOMFILTERID_NAND        = 1;
+	public final static int CUSTOMFILTERID_NOR         = 2;
+	public final static int CUSTOMFILTERID_OR          = 3;
+	public final static int CUSTOMFILTERID_FORMAT      = 4;
+	public final static int CUSTOMFILTERID_FSK         = 5;
+	public final static int CUSTOMFILTERID_GENRE       = 6;
+	public final static int CUSTOMFILTERID_LANGUAGE    = 7;
 	public final static int CUSTOMFILTERID_ONLINESCORE = 8;
-	public final static int CUSTOMFILTERID_QUALITY = 9;
-	public final static int CUSTOMFILTERID_USERSCORE = 10;
-	public final static int CUSTOMFILTERID_TAG = 11;
-	public final static int CUSTOMFILTERID_TITLE = 12;
-	public final static int CUSTOMFILTERID_TYP = 13;
-	public final static int CUSTOMFILTERID_VIEWED = 14;
-	public final static int CUSTOMFILTERID_YEAR = 15;
-	public final static int CUSTOMFILTERID_ZYKLUS = 16;
-	public final static int CUSTOMFILTERID_GROUP = 17;
-	public final static int CUSTOMFILTERID_REFERENCE = 18;
-	public final static int CUSTOMFILTERID_HISTORY = 19;
-	public final static int CUSTOMFILTERID_SEARCH = 20;
-	public final static int CUSTOMFILTERID_CHAR = 21;
-	public final static int CUSTOMFILTERID_ADDDATE = 22;
-	public final static int CUSTOMFILTERID_VIEWCOUNT = 23;
+	public final static int CUSTOMFILTERID_QUALITY     = 9;
+	public final static int CUSTOMFILTERID_USERSCORE   = 10;
+	public final static int CUSTOMFILTERID_TAG         = 11;
+	public final static int CUSTOMFILTERID_TITLE       = 12;
+	public final static int CUSTOMFILTERID_TYP         = 13;
+	public final static int CUSTOMFILTERID_VIEWED      = 14;
+	public final static int CUSTOMFILTERID_YEAR        = 15;
+	public final static int CUSTOMFILTERID_ZYKLUS      = 16;
+	public final static int CUSTOMFILTERID_GROUP       = 17;
+	public final static int CUSTOMFILTERID_REFERENCE   = 18;
+	public final static int CUSTOMFILTERID_HISTORY     = 19;
+	public final static int CUSTOMFILTERID_SEARCH      = 20;
+	public final static int CUSTOMFILTERID_CHAR        = 21;
+	public final static int CUSTOMFILTERID_ADDDATE     = 22;
+	public final static int CUSTOMFILTERID_VIEWCOUNT   = 23;
+	public final static int CUSTOMFILTERID_ANYEPISODE  = 24;
+	public final static int CUSTOMFILTERID_ALLEPISODE  = 25;
 		
 	public abstract String getName();
 	public abstract String getPrecreateName();
@@ -220,6 +224,10 @@ public abstract class AbstractCustomFilter {
 			return new CustomAddDateFilter();
 		case CUSTOMFILTERID_VIEWCOUNT:
 			return new CustomViewcountFilter();
+		case CUSTOMFILTERID_ANYEPISODE:
+			return new CustomAnyEpisodeAggregator();
+		case CUSTOMFILTERID_ALLEPISODE:
+			return new CustomAllEpisodeAggregator();
 		}
 
 		return null;
@@ -254,6 +262,29 @@ public abstract class AbstractCustomFilter {
 			new CustomOrOperator(),
 			new CustomNandOperator(),
 			new CustomNorOperator(),
+		};
+	}
+	
+	public static AbstractCustomFilter[] getAllAggregatorFilter() {
+		return new AbstractCustomFilter[] {
+			new CustomAnyEpisodeAggregator(),
+			new CustomAllEpisodeAggregator(),
+		};
+	}
+	
+	public static AbstractCustomFilter[] getAllEpisodesAndOperatorsFilter() {
+		return new AbstractCustomFilter[] {
+			new CustomAndOperator(),
+			new CustomOrOperator(),
+			new CustomNandOperator(),
+			new CustomNorOperator(),
+				
+			new CustomViewedFilter(),
+			new CustomAddDateFilter(),
+			new CustomFormatFilter(),
+			new CustomHistoryFilter(),
+			new CustomQualityFilter(),
+			new CustomViewcountFilter(),
 		};
 	}
 	

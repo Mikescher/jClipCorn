@@ -88,8 +88,10 @@ public class CustomAggregatorFilterDialog extends CustomFilterDialog implements 
 		lblHeader = new JLabel(""); //$NON-NLS-1$
 		pnlMiddle.add(lblHeader, "2, 2, 3, 1"); //$NON-NLS-1$
 		
+		AbstractCustomFilter[] acffilter = AbstractCustomFilter.getAllEpisodesAndOperatorsFilter();
+		
 		cbxProcessFilter = new JComboBox<>();
-		cbxProcessFilter.setModel(new DefaultComboBoxModel<>(AbstractCustomFilter.getAllEpisodesAndOperatorsFilter()));
+		cbxProcessFilter.setModel(new DefaultComboBoxModel<>(acffilter));
 		cbxProcessFilter.setRenderer(new DefaultListCellRenderer() {
 			private static final long serialVersionUID = 1710057818185541683L;
 
@@ -99,6 +101,11 @@ public class CustomAggregatorFilterDialog extends CustomFilterDialog implements 
 		    	comp.setText(((AbstractCustomFilter)value).getPrecreateName());
 		        return comp;
 		    }});
+		
+		for (int i = 0; i < acffilter.length; i++) 
+			if (acffilter[i].getClass().equals(getFilter().getProcessingFilter().getClass())) 
+				cbxProcessFilter.setSelectedIndex(i);
+		
 		cbxProcessFilter.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {

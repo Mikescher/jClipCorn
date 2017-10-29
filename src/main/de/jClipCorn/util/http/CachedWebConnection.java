@@ -47,14 +47,14 @@ public class CachedWebConnection extends WebConnectionLayer {
 			if (PathFormatter.fileExists(cacheDatabasePath)) {
 				db = SimpleSerializableData.load(cacheDatabasePath);
 				dbref = new HashMap<>();
-				for (SimpleSerializableData dat : db.enumerateChildren()) {
-					try {
-						if (dat.getInt("type") == 0)
-							dbref.put(dat.getStr("result"), SimpleFileUtils.readUTF8TextFile(PathFormatter.combine(cachePath, dat.getStr("result"))));
-					} catch (Exception e) {
-						CCLog.addError(e);
-					}
-				}
+				//for (SimpleSerializableData dat : db.enumerateChildren()) {
+				//	try {
+				//		if (dat.getInt("type") == 0)
+				//			dbref.put(dat.getStr("result"), SimpleFileUtils.readUTF8TextFile(PathFormatter.combine(cachePath, dat.getStr("result"))));
+				//	} catch (Exception e) {
+				//		CCLog.addError(e);
+				//	}
+				//}
 			} else {
 				db = SimpleSerializableData.createEmpty();
 				dbref = new HashMap<>();
@@ -80,10 +80,14 @@ public class CachedWebConnection extends WebConnectionLayer {
 				sleep(d.getInt("time"));
 				
 				if (d.getInt("type") == 0) {
-					if (dbref.containsKey(d.getStr("result")))
-						return dbref.get(d.getStr("result"));
-					else
-						return SimpleFileUtils.readUTF8TextFile(PathFormatter.combine(cachePath, d.getStr("result")));
+					if (dbref.containsKey(d.getStr("result"))) {
+						return dbref.get(d.getStr("result"));						
+					}
+					else {
+						String data = SimpleFileUtils.readUTF8TextFile(PathFormatter.combine(cachePath, d.getStr("result")));
+						dbref.put(d.getStr("result"), data);
+						return data;
+					}
 				} else if (d.getInt("type") == 1) {
 					throw new HTTPErrorCodeException(d.getInt("statuscode"));
 				} else if (d.getInt("type") == 2) {

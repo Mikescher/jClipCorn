@@ -181,7 +181,7 @@ public class TMDBParser extends Metadataparser {
 			url += "&language=" + CCProperties.getInstance().PROP_TMDB_LANGUAGE.getValue().asDinIsoID();
 		}
 		
-		url += "&append_to_response=release_dates";
+		url += "&append_to_response=release_dates,content_ratings";
 		
 		String json = HTTPUtilities.getRateLimitedHTML(url, false, false);
 		try {
@@ -223,7 +223,7 @@ public class TMDBParser extends Metadataparser {
 			if (hasString(root, "imdb_id")) 
 				result.AltRef = CCOnlineReference.createIMDB(root.getString("imdb_id"));
 			
-			if (root.has("release_dates")) {
+			if (result.FSKList == null && root.has("release_dates")) {
 				JSONObject releases = root.getJSONObject("release_dates");
 				if (releases.has("results")) {
 					JSONArray results = releases.getJSONArray("results");
@@ -231,14 +231,19 @@ public class TMDBParser extends Metadataparser {
 					result.FSKList = new HashMap<>();
 
 					for (int i = 0; i < results.length(); i++) {
-						String release_country = results.getJSONObject(i).getString("iso_3166_1");
+
+						JSONObject resObj = results.getJSONObject(i);
 						
-						JSONArray release_dates = results.getJSONObject(i).getJSONArray("release_dates");
+						String release_country = resObj.getString("iso_3166_1");
+						
+						JSONArray release_dates = resObj.getJSONArray("release_dates");
 						
 						if (release_dates.length() == 1) {
 
-							String release_lang = release_dates.getJSONObject(0).getString("iso_639_1");
-							String release_cert = release_dates.getJSONObject(0).getString("certification");
+							JSONObject rdObj = release_dates.getJSONObject(0);
+							
+							String release_lang = rdObj.getString("iso_639_1");
+							String release_cert = rdObj.getString("certification");
 							if (release_cert.isEmpty()) continue;
 							
 							int release_age = AgeRatingParser.getMinimumAge(release_cert, url);
@@ -255,9 +260,11 @@ public class TMDBParser extends Metadataparser {
 							
 							for (int j = 0; j < release_dates.length(); j++) {
 
-								String release_lang = release_dates.getJSONObject(j).getString("iso_639_1");
-								String release_cert = release_dates.getJSONObject(j).getString("certification");
-								String release_note = release_dates.getJSONObject(j).getString("note");
+								JSONObject rdObj = release_dates.getJSONObject(j);
+								
+								String release_lang = rdObj.getString("iso_639_1");
+								String release_cert = rdObj.getString("certification");
+								String release_note = hasString(rdObj, "note") ? rdObj.getString("note") : "";
 								if (release_cert.isEmpty()) continue;
 								
 								int release_age = AgeRatingParser.getMinimumAge(release_cert, url);
@@ -280,23 +287,47 @@ public class TMDBParser extends Metadataparser {
 						}
 						
 					}
+				}
+			}
+			
+			if (result.FSKList == null && root.has("content_ratings")) {
+
+				JSONObject ratings = root.getJSONObject("content_ratings");
+				if (ratings.has("results")) {
+					JSONArray results = ratings.getJSONArray("results");
 					
-					if (result.FSK == null && result.FSKList.size() > 0) {
+					result.FSKList = new HashMap<>();
 
-						int count = 0;
-						double sum = 0;
-						for (Integer geni: result.FSKList.values()) {
-							count++;
-							sum += geni;
-						}
+					for (int i = 0; i < results.length(); i++) {
+						String release_country = results.getJSONObject(i).getString("iso_3166_1");
+						String release_cert = results.getJSONObject(i).getString("rating");
+						if (release_cert.isEmpty()) continue;
 						
-						if (count <= 0) {
-							CCLog.addWarning(LocaleBundle.getFormattedString("LogMessage.CouldNotFindFSK", url));
-						} else {
-
-							result.FSK = CCFSK.getNearest((int) sum);
-						}
+						int release_age = AgeRatingParser.getMinimumAge(release_cert, url);
+						if (release_age < 0) continue;
+						
+						if (release_country.equals(CCProperties.getInstance().PROP_TMDB_LANGUAGE.getValue().asCountryID())) result.FSK = CCFSK.getNearest(release_age);
+						
+						result.FSKList.put(release_country, release_age);
 					}
+				}
+			}
+			
+			if (result.FSK == null && result.FSKList.size() > 0) {
+
+				int count = 0;
+				double sum = 0;
+				for (Integer geni: result.FSKList.values()) {
+					count++;
+					sum += geni;
+				}
+				
+				if (count <= 0) {
+					CCLog.addWarning(LocaleBundle.getFormattedString("LogMessage.CouldNotFindFSK", url));
+				} else {
+					sum = Math.round(sum/count);
+					
+					result.FSK = CCFSK.getNearest((int) sum);
 				}
 			}
 			

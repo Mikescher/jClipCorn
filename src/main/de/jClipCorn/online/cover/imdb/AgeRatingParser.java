@@ -143,6 +143,7 @@ public class AgeRatingParser {
 		ratingsMap.put("17+", 17);
 		ratingsMap.put("k-17", 17);
 		ratingsMap.put("nc-17", 17);
+		ratingsMap.put("tv-ma", 17);
 		
 		ratingsMap.put("x", 18);
 		ratingsMap.put("e18", 18);

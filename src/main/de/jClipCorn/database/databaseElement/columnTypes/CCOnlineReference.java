@@ -91,7 +91,7 @@ public class CCOnlineReference {
 			if (lang == BrowserLanguage.ENGLISH)
 				return "https://www.themoviedb.org/" + id;
 			else
-				return "https://www.themoviedb.org/" + id + "?language=" + lang.asLanguageID();
+				return "https://www.themoviedb.org/" + id + "?language=" + lang.asDinIsoID();
 		case PROXERME:
 			return "http://proxer.me/info/" + id;
 		case MYANIMELIST:

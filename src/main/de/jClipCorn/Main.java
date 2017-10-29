@@ -148,8 +148,6 @@ public class Main {
 
 //TODO use omdb instead of direct imdb query
 
-//TODO Custom Filter Operator for **AnyEpisode**
-//TODO Custom Filter Operator for **AllEpisodes**
 //TODO More missing CustomFilter (?)
 
 //TODO Don't reset filter on expand/collapse tree (excep click on /all/)

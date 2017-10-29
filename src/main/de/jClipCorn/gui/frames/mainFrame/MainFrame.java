@@ -37,12 +37,12 @@ import de.jClipCorn.gui.frames.mainFrame.popupMenus.ClipSeriesPopup;
 import de.jClipCorn.gui.frames.mainFrame.searchField.SearchField;
 import de.jClipCorn.gui.frames.showUpdateFrame.ShowUpdateFrame;
 import de.jClipCorn.gui.guiComponents.DatabaseElementPreviewLabel;
-import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomSearchFilter;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.gui.resources.CachedResourceLoader;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.properties.CCProperties;
+import de.jClipCorn.table.filter.customFilter.CustomSearchFilter;
 import de.jClipCorn.util.UpdateConnector;
 import de.jClipCorn.util.helper.LookAndFeelManager;
 

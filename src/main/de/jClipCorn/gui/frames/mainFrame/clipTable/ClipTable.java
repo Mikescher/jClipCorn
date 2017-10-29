@@ -27,11 +27,11 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCMovieZyklus;
 import de.jClipCorn.database.databaseElement.columnTypes.CCUserScore;
 import de.jClipCorn.database.util.CCDBUpdateListener;
 import de.jClipCorn.gui.frames.mainFrame.MainFrame;
-import de.jClipCorn.gui.guiComponents.tableFilter.AbstractCustomFilter;
-import de.jClipCorn.gui.guiComponents.tableFilter.TableCustomFilter;
-import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomUserScoreFilter;
-import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomZyklusFilter;
 import de.jClipCorn.properties.CCProperties;
+import de.jClipCorn.table.filter.AbstractCustomFilter;
+import de.jClipCorn.table.filter.TableCustomFilter;
+import de.jClipCorn.table.filter.customFilter.CustomUserScoreFilter;
+import de.jClipCorn.table.filter.customFilter.CustomZyklusFilter;
 import de.jClipCorn.util.TableColumnAdjuster;
 
 public class ClipTable extends JScrollPane implements CCDBUpdateListener, ListSelectionListener, MouseListener, MouseMotionListener {

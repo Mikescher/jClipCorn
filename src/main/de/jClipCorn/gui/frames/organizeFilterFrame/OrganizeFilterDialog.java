@@ -24,12 +24,12 @@ import com.jgoodies.forms.layout.RowSpec;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.gui.frames.mainFrame.filterTree.CustomFilterList;
 import de.jClipCorn.gui.frames.mainFrame.filterTree.CustomFilterObject;
-import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.operators.CustomAndOperator;
-import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.operators.CustomOperator;
-import de.jClipCorn.gui.guiComponents.tableFilter.customFilterDialogs.CustomOperatorFilterDialog;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.CachedResourceLoader;
 import de.jClipCorn.gui.resources.Resources;
+import de.jClipCorn.table.filter.customFilter.operators.CustomAndOperator;
+import de.jClipCorn.table.filter.customFilter.operators.CustomOperator;
+import de.jClipCorn.table.filter.customFilterDialogs.CustomOperatorFilterDialog;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.listener.FinishListener;
 

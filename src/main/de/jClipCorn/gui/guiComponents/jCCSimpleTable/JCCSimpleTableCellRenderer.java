@@ -4,7 +4,7 @@ import java.util.function.Function;
 
 import javax.swing.Icon;
 
-import de.jClipCorn.gui.guiComponents.tableRenderer.TableRenderer;
+import de.jClipCorn.table.renderer.TableRenderer;
 
 public class JCCSimpleTableCellRenderer<TData> extends TableRenderer {
 	private static final long serialVersionUID = 7572425038209544688L;

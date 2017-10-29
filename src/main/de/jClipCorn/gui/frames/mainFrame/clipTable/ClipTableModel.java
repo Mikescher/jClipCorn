@@ -15,9 +15,9 @@ import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieZyklus;
 import de.jClipCorn.gui.guiComponents.SFixTable;
-import de.jClipCorn.gui.guiComponents.tableRenderer.TableModelRowColorInterface;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.properties.CCProperties;
+import de.jClipCorn.table.renderer.TableModelRowColorInterface;
 import de.jClipCorn.util.datetime.YearRange;
 
 public class ClipTableModel extends AbstractTableModel implements TableModelRowColorInterface, TableModelListener {

@@ -8,7 +8,7 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.AbstractTableModel;
 
-import de.jClipCorn.gui.guiComponents.tableRenderer.TableModelRowColorInterface;
+import de.jClipCorn.table.renderer.TableModelRowColorInterface;
 
 public class JCCSimpleTableModel<TData> extends AbstractTableModel implements TableModelRowColorInterface, TableModelListener {
 	private static final long serialVersionUID = 6149171502941225947L;

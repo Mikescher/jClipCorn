@@ -4,11 +4,11 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.operators.CustomAndOperator;
-import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.operators.CustomOperator;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.properties.CCProperties;
+import de.jClipCorn.table.filter.customFilter.operators.CustomAndOperator;
+import de.jClipCorn.table.filter.customFilter.operators.CustomOperator;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.SimpleFileUtils;
 

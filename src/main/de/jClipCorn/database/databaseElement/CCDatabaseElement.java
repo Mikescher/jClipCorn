@@ -95,6 +95,7 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement {
 		return localID;
 	}
 
+	@Override
 	public String getTitle() {
 		return title;
 	}
@@ -428,14 +429,19 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement {
 
 	public abstract CCFileSize getFilesize();
 	
+	@Override
 	public abstract CCDate getAddDate();
 	
+	@Override
 	public abstract CCFileFormat getFormat();
 	
+	@Override
 	public abstract CCQuality getQuality();
 	
+	@Override
 	public abstract CCTagList getTags();
 	
+	@Override
 	public abstract ExtendedViewedState getExtendedViewedState();
 	
 	public abstract int getFirstYear();

@@ -13,10 +13,12 @@ import javax.swing.ImageIcon;
 import org.jdom2.Element;
 
 import de.jClipCorn.database.CCMovieList;
+import de.jClipCorn.database.databaseElement.columnTypes.CCDateTimeList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCFileFormat;
-import de.jClipCorn.database.databaseElement.columnTypes.CCQuality;
 import de.jClipCorn.database.databaseElement.columnTypes.CCFileSize;
+import de.jClipCorn.database.databaseElement.columnTypes.CCQuality;
 import de.jClipCorn.database.databaseElement.columnTypes.CCTagList;
+import de.jClipCorn.database.util.ExtendedViewedState;
 import de.jClipCorn.database.util.ExtendedViewedStateType;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.LargeMD5Calculator;
@@ -25,6 +27,8 @@ import de.jClipCorn.util.exceptions.CCFormatException;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.ByteUtilies;
 import de.jClipCorn.util.helper.ImageUtilities;
+import de.jClipCorn.util.stream.CCStream;
+import de.jClipCorn.util.stream.CCStreams;
 
 public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement {
 	private final CCSeries owner;
@@ -157,6 +161,11 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement {
 		return v;
 	}
 	
+	public boolean isPartialViewed() { // Some parts viewed - some not
+		return !(isViewed() || isUnviewed());
+	}
+	
+	@Override
 	public CCQuality getQuality() {
 		int qs = 0;
 		int qc = 0;
@@ -177,6 +186,7 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement {
 		}
 	}
 	
+	@Override
 	public CCTagList getTags() {
 		CCTagList i = new CCTagList();
 		
@@ -202,6 +212,7 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement {
 		return l;
 	}
 	
+	@Override
 	public CCDate getAddDate() {
 		switch (CCProperties.getInstance().PROP_SERIES_ADDDATECALCULATION.getValue()) {
 		case OLDEST_DATE:
@@ -243,6 +254,7 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement {
 		return CCDate.getAverageDate(dlist);
 	}
 	
+	@Override
 	public CCFileFormat getFormat() {
 		int l = CCFileFormat.values().length;
 		int[] ls = new int[l];
@@ -544,13 +556,17 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement {
 		return true;
 	}
 
-	public ExtendedViewedStateType getExtendedViewedStateType() {
-		if (isViewed()) return ExtendedViewedStateType.VIEWED;
-		if (!isViewed()) return ExtendedViewedStateType.NOT_VIEWED;
-		
-		if (CCProperties.getInstance().PROP_SHOW_PARTIAL_VIEWED_STATE.getValue())
-			return ExtendedViewedStateType.PARTIAL_VIEWED;
+	@Override
+	public ExtendedViewedState getExtendedViewedState() {
+		if (isViewed())
+			return new ExtendedViewedState(ExtendedViewedStateType.VIEWED, CCDateTimeList.createEmpty());
+		else if (CCProperties.getInstance().PROP_SHOW_PARTIAL_VIEWED_STATE.getValue() && isPartialViewed())
+			return new ExtendedViewedState(ExtendedViewedStateType.PARTIAL_VIEWED, CCDateTimeList.createEmpty());
 		else
-			return ExtendedViewedStateType.NOT_VIEWED;
+			return new ExtendedViewedState(ExtendedViewedStateType.NOT_VIEWED, CCDateTimeList.createEmpty());
+	}
+	
+	public CCStream<CCEpisode> iteratorEpisodes() {
+		return CCStreams.iterate(episodes);
 	}
 }

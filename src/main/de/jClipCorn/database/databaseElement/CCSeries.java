@@ -26,6 +26,7 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCTagList;
 import de.jClipCorn.database.util.ExtendedViewedState;
 import de.jClipCorn.database.util.ExtendedViewedStateType;
 import de.jClipCorn.database.util.iterators.DirectEpisodesIterator;
+import de.jClipCorn.database.util.iterators.DirectSeasonsIterator;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.comparator.CCSeasonComparator;
 import de.jClipCorn.util.datetime.CCDate;
@@ -596,5 +597,9 @@ public class CCSeries extends CCDatabaseElement  {
 	
 	public CCStream<CCEpisode> iteratorEpisodes() {
 		return new DirectEpisodesIterator(this);
+	}
+	
+	public CCStream<CCSeason> iteratorSeasons() {
+		return new DirectSeasonsIterator(this);
 	}
 }

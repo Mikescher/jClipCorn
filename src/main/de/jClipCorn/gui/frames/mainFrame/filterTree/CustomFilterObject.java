@@ -1,6 +1,6 @@
 package de.jClipCorn.gui.frames.mainFrame.filterTree;
 
-import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.operators.CustomOperator;
+import de.jClipCorn.table.filter.customFilter.operators.CustomOperator;
 
 public class CustomFilterObject {
 	private String name;

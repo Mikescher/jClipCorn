@@ -500,6 +500,7 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 		return path;
 	}
 
+	@Override
 	public ExtendedViewedState getExtendedViewedState() {
 		if (isViewed())
 			return new ExtendedViewedState(ExtendedViewedStateType.VIEWED, getViewedHistory());

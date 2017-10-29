@@ -4,7 +4,7 @@ import javax.swing.JToolBar;
 
 import de.jClipCorn.gui.frames.mainFrame.MainFrame;
 import de.jClipCorn.gui.frames.mainFrame.clipTable.RowFilterSource;
-import de.jClipCorn.gui.guiComponents.tableFilter.customFilter.CustomCharFilter;
+import de.jClipCorn.table.filter.customFilter.CustomCharFilter;
 
 public class AbstractClipCharSortSelector extends JToolBar {
 	private static final long serialVersionUID = -8270219279263812975L;

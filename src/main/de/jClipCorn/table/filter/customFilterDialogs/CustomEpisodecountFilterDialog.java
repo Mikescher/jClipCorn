@@ -16,11 +16,11 @@ import javax.swing.SpinnerNumberModel;
 
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.table.filter.CustomFilterDialog;
-import de.jClipCorn.table.filter.customFilter.CustomViewcountFilter;
+import de.jClipCorn.table.filter.customFilter.CustomEpisodecountFilter;
 import de.jClipCorn.util.DecimalSearchType;
 import de.jClipCorn.util.listener.FinishListener;
 
-public class CustomViewcountFilterDialog extends CustomFilterDialog {
+public class CustomEpisodecountFilterDialog extends CustomFilterDialog {
 	private static final long serialVersionUID = -6822558028101935911L;
 	
 	private JPanel pnlMiddle;
@@ -38,7 +38,7 @@ public class CustomViewcountFilterDialog extends CustomFilterDialog {
 	private JSpinner spnBetween2;
 	private JSpinner spnExactly;
 
-	public CustomViewcountFilterDialog(CustomViewcountFilter ft, FinishListener fl, Component parent) {
+	public CustomEpisodecountFilterDialog(CustomEpisodecountFilter ft, FinishListener fl, Component parent) {
 		super(ft, fl);
 		initGUI();
 		
@@ -48,8 +48,8 @@ public class CustomViewcountFilterDialog extends CustomFilterDialog {
 	}
 	
 	@Override
-	protected CustomViewcountFilter getFilter() {
-		return (CustomViewcountFilter) super.getFilter();
+	protected CustomEpisodecountFilter getFilter() {
+		return (CustomEpisodecountFilter) super.getFilter();
 	}
 	
 	private void initGUI() {

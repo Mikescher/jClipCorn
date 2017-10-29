@@ -148,10 +148,7 @@ public class Main {
 
 //TODO use omdb instead of direct imdb query
 
-//TODO More missing CustomFilter (?)
-//TODO   -> AnySeason
-//TODO   -> AllSeason
-//TODO   -> EpisodeCount (gt, let, ...)
+//TODO Click on temp filter to re-edit/save existing temp filter
 
 //TODO Don't reset filter on expand/collapse tree (excep click on /all/)
 //     Ctrl+Click to add element to current filter (interactive create custom filter)

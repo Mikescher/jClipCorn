@@ -5,6 +5,8 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListCellRenderer;
@@ -88,10 +90,12 @@ public class CustomAggregatorFilterDialog extends CustomFilterDialog implements 
 		lblHeader = new JLabel(""); //$NON-NLS-1$
 		pnlMiddle.add(lblHeader, "2, 2, 3, 1"); //$NON-NLS-1$
 		
-		AbstractCustomFilter[] acffilter = AbstractCustomFilter.getAllEpisodesAndOperatorsFilter();
+		List<AbstractCustomFilter> acffilter = new ArrayList<>();
+		for (AbstractCustomFilter f : AbstractCustomFilter.getAllOperatorFilter()) acffilter.add(f);
+		for (AbstractCustomFilter f : AbstractCustomFilter.getAllSimpleFilter()) acffilter.add(f);
 		
 		cbxProcessFilter = new JComboBox<>();
-		cbxProcessFilter.setModel(new DefaultComboBoxModel<>(acffilter));
+		cbxProcessFilter.setModel(new DefaultComboBoxModel<>(acffilter.toArray(new AbstractCustomFilter[acffilter.size()])));
 		cbxProcessFilter.setRenderer(new DefaultListCellRenderer() {
 			private static final long serialVersionUID = 1710057818185541683L;
 
@@ -102,8 +106,8 @@ public class CustomAggregatorFilterDialog extends CustomFilterDialog implements 
 		        return comp;
 		    }});
 		
-		for (int i = 0; i < acffilter.length; i++) 
-			if (acffilter[i].getClass().equals(getFilter().getProcessingFilter().getClass())) 
+		for (int i = 0; i < acffilter.size(); i++) 
+			if (acffilter.get(i).getClass().equals(getFilter().getProcessingFilter().getClass())) 
 				cbxProcessFilter.setSelectedIndex(i);
 		
 		cbxProcessFilter.addActionListener(new ActionListener() {

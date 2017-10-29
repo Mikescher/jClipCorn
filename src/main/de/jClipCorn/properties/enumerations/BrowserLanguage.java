@@ -28,16 +28,29 @@ public enum BrowserLanguage implements ContinoousEnum<BrowserLanguage> {
 	};
 	
 	@SuppressWarnings("nls")
-	private final static String IDS[] = {
-		"en-US", // yeah TMDB wants -US
-		"de-DE",
-		"cs-CZ",
-		"fr-FR",
-		"it-IT",
-		"ja-JP",
-		"ru-RU",
-		"es-ES",
-		"tr-TR",
+	private final static String LANGUAGE_IDS[] = {
+		"en", // yeah TMDB wants -US
+		"de",
+		"cs",
+		"fr",
+		"it",
+		"ja",
+		"ru",
+		"es",
+		"tr",
+	};
+	
+	@SuppressWarnings("nls")
+	private final static String COUNTRY_IDS[] = {
+		"US", // yeah TMDB wants -US
+		"DE",
+		"CZ",
+		"FR",
+		"IT",
+		"JP",
+		"RU",
+		"ES",
+		"TR",
 	};
 	
 	private int id;
@@ -71,8 +84,16 @@ public enum BrowserLanguage implements ContinoousEnum<BrowserLanguage> {
 		return NAMES[asInt()];
 	}
 	
+	public String asDinIsoID() {
+		return asCountryID() + "-" + asLanguageID(); //$NON-NLS-1$
+	}
+	
 	public String asLanguageID() {
-		return IDS[asInt()];
+		return LANGUAGE_IDS[asInt()];
+	}
+	
+	public String asCountryID() {
+		return COUNTRY_IDS[asInt()];
 	}
 
 	@Override

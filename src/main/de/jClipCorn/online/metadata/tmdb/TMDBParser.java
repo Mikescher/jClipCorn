@@ -3,6 +3,7 @@ package de.jClipCorn.online.metadata.tmdb;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.HashMap;
 import java.util.List;
 
 import org.json.JSONArray;
@@ -10,12 +11,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
+import de.jClipCorn.database.databaseElement.columnTypes.CCFSK;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGenre;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGenreList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReference;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.online.OnlineSearchType;
+import de.jClipCorn.online.cover.imdb.AgeRatingParser;
 import de.jClipCorn.online.metadata.Metadataparser;
 import de.jClipCorn.online.metadata.OnlineMetadata;
 import de.jClipCorn.properties.CCProperties;
@@ -175,8 +178,10 @@ public class TMDBParser extends Metadataparser {
 		String url = urlRaw;
 		
 		if (CCProperties.getInstance().PROP_TMDB_LANGUAGE.getValue() != BrowserLanguage.ENGLISH) {
-			url += "&language=" + CCProperties.getInstance().PROP_TMDB_LANGUAGE.getValue().asLanguageID();
+			url += "&language=" + CCProperties.getInstance().PROP_TMDB_LANGUAGE.getValue().asDinIsoID();
 		}
+		
+		url += "&append_to_response=release_dates";
 		
 		String json = HTTPUtilities.getRateLimitedHTML(url, false, false);
 		try {
@@ -217,6 +222,83 @@ public class TMDBParser extends Metadataparser {
 			
 			if (hasString(root, "imdb_id")) 
 				result.AltRef = CCOnlineReference.createIMDB(root.getString("imdb_id"));
+			
+			if (root.has("release_dates")) {
+				JSONObject releases = root.getJSONObject("release_dates");
+				if (releases.has("results")) {
+					JSONArray results = releases.getJSONArray("results");
+					
+					result.FSKList = new HashMap<>();
+
+					for (int i = 0; i < results.length(); i++) {
+						String release_country = results.getJSONObject(i).getString("iso_3166_1");
+						
+						JSONArray release_dates = results.getJSONObject(i).getJSONArray("release_dates");
+						
+						if (release_dates.length() == 1) {
+
+							String release_lang = release_dates.getJSONObject(0).getString("iso_639_1");
+							String release_cert = release_dates.getJSONObject(0).getString("certification");
+							if (release_cert.isEmpty()) continue;
+							
+							int release_age = AgeRatingParser.getMinimumAge(release_cert, url);
+							if (release_age < 0) continue;
+							
+							if (release_country.equals(CCProperties.getInstance().PROP_TMDB_LANGUAGE.getValue().asCountryID())) result.FSK = CCFSK.getNearest(release_age);
+							
+							String iso = release_lang + "-" + release_country;
+							if (release_lang.isEmpty()) iso = release_country;
+							
+							result.FSKList.put(iso, release_age);
+							
+						} else {
+							
+							for (int j = 0; j < release_dates.length(); j++) {
+
+								String release_lang = release_dates.getJSONObject(j).getString("iso_639_1");
+								String release_cert = release_dates.getJSONObject(j).getString("certification");
+								String release_note = release_dates.getJSONObject(j).getString("note");
+								if (release_cert.isEmpty()) continue;
+								
+								int release_age = AgeRatingParser.getMinimumAge(release_cert, url);
+								if (release_age < 0) continue;
+								
+								if (release_country.equals(CCProperties.getInstance().PROP_TMDB_LANGUAGE.getValue().asCountryID())) result.FSK = CCFSK.getNearest(release_age);
+
+								String iso = release_lang + "-" + release_country;
+								if (release_lang.isEmpty()) iso = release_country;
+								
+								if (release_note.isEmpty())
+									iso +=  " (" + (j+1) + ")";
+								else
+									iso +=  " (" + (j+1) + ": " + release_note + ")";
+								
+								result.FSKList.put(iso, release_age);
+								
+							}
+							
+						}
+						
+					}
+					
+					if (result.FSK == null && result.FSKList.size() > 0) {
+
+						int count = 0;
+						double sum = 0;
+						for (Integer geni: result.FSKList.values()) {
+							count++;
+							sum += geni;
+						}
+						
+						if (count <= 0) {
+							CCLog.addWarning(LocaleBundle.getFormattedString("LogMessage.CouldNotFindFSK", url));
+						} else {
+
+							result.FSK = CCFSK.getNearest((int) sum);
+						}
+					}
+				}
+			}
 			
 			return result;
 			

@@ -22,10 +22,10 @@ jClipCorn [![Build Status](https://api.travis-ci.org/Mikescher/jClipCorn.svg)](h
  - Tag and rate your watched movies
  - Works under Windows, Linux *(and probably OS X)*
 
-#[> DOWNLOAD](http://www.github.com/Mikescher/jClipCorn/releases)
-###[> HOMEPAGE](http://www.mikescher.com/programs/view/jClipCorn)
-###[> GITHUB WIKI](https://github.com/Mikescher/jClipCorn/wiki)
-###[> CHANGELOG](https://raw.githubusercontent.com/Mikescher/jClipCorn/master/CHANGELOG.txt)
+# [> DOWNLOAD](http://www.github.com/Mikescher/jClipCorn/releases)  
+### [> HOMEPAGE](http://www.mikescher.com/programs/view/jClipCorn)  
+### [> GITHUB WIKI](https://github.com/Mikescher/jClipCorn/wiki)  
+### [> CHANGELOG](https://raw.githubusercontent.com/Mikescher/jClipCorn/master/CHANGELOG.txt)  
 
 ### Organization
 
@@ -78,16 +78,16 @@ After that you can start adding your movies and series.
 
 ### Adding a movie
 
-####[(go to wiki)](https://github.com/Mikescher/jClipCorn/wiki/Add-new-movie)
+#### [(go to wiki)](https://github.com/Mikescher/jClipCorn/wiki/Add-new-movie)
 
 ### User Interface
 
-####[(go to wiki)](https://github.com/Mikescher/jClipCorn/wiki/User-Interface)
+#### [(go to wiki)](https://github.com/Mikescher/jClipCorn/wiki/User-Interface)
 
 ### Adding a series
 
-####[(go to wiki)](https://github.com/Mikescher/jClipCorn/wiki/Add-new-series)
+#### [(go to wiki)](https://github.com/Mikescher/jClipCorn/wiki/Add-new-series)
 
 ### Check Database for errors
 
-####[(go to wiki)](https://github.com/Mikescher/jClipCorn/wiki/Check-database)
+#### [(go to wiki)](https://github.com/Mikescher/jClipCorn/wiki/Check-database)

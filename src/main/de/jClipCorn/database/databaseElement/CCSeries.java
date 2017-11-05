@@ -23,6 +23,7 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCFileSize;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGroup;
 import de.jClipCorn.database.databaseElement.columnTypes.CCQuality;
 import de.jClipCorn.database.databaseElement.columnTypes.CCTagList;
+import de.jClipCorn.database.util.NextEpisodeHelper;
 import de.jClipCorn.database.util.ExtendedViewedState;
 import de.jClipCorn.database.util.ExtendedViewedStateType;
 import de.jClipCorn.database.util.iterators.DirectEpisodesIterator;
@@ -318,32 +319,7 @@ public class CCSeries extends CCDatabaseElement  {
 	}
 	
 	public CCEpisode getNextEpisode() {
-		List<CCEpisode> el = getEpisodeList();
-		
-		if (el.size() == 0) {
-			return null;
-		}
-		
-		if (isViewed()) {
-			CCDate d = CCDate.getMinimumDate();
-			
-			for (int i = 0; i < el.size(); i++) {
-				if (d.isGreaterThan(el.get(i).getViewedHistoryLast())) {
-					return el.get(i);
-				}
-				d = el.get(i).getViewedHistoryLast();
-			}
-			
-			return el.get(0);
-		} else {
-			for (int i = 0; i < el.size(); i++) {
-				if (! el.get(i).isViewed()) {
-					return el.get(i);
-				}
-			}
-		}
-		
-		return null;
+		return NextEpisodeHelper.findNextEpisode(this);
 	}
 
 	public int findSeason(CCSeason ccSeason) {

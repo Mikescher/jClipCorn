@@ -23,6 +23,7 @@ import de.jClipCorn.properties.enumerations.DoubleClickAction;
 import de.jClipCorn.properties.enumerations.ImageSearchImplementation;
 import de.jClipCorn.properties.enumerations.InitalSortingColumn;
 import de.jClipCorn.properties.enumerations.MetadataParserImplementation;
+import de.jClipCorn.properties.enumerations.NextEpisodeHeuristic;
 import de.jClipCorn.properties.enumerations.UILanguage;
 import de.jClipCorn.properties.enumerations.UITableBackground;
 import de.jClipCorn.properties.property.CCBoolProperty;
@@ -174,6 +175,7 @@ public class CCProperties {
 	public CCBoolProperty									PROP_DEBUG_USE_HTTPCACHE;
 	public CCPathProperty									PROP_DEBUG_HTTPCACHE_PATH;
 	public CCPIntProperty 									PROP_SERIES_PREVIEWFRAME_HEIGHT;
+	public CCEnumProperty<NextEpisodeHeuristic>				PROP_SERIES_NEXT_EPISODE_HEURISTIC;
 
 	public boolean ARG_READONLY = false;
 	
@@ -271,6 +273,7 @@ public class CCProperties {
 		PROP_VALIDATE_CHECK_SERIES_STRUCTURE	= new CCBoolProperty(CAT_SERIES,			this,   "PROP_VALIDATE_CHECK_SERIES_STRUCTURE",		false);
 		PROP_SHOW_PARTIAL_VIEWED_STATE			= new CCBoolProperty(CAT_SERIES,			this,   "PROP_SHOW_PARTIAL_VIEWED_STATE",			false);
 		PROP_SEASON_INDEX_REGEXPRESSIONS		= new CCSeasonRegexListProperty(CAT_SERIES, this, 	"PROP_SEASON_INDEX_REGEXPRESSIONS", 		getDefSeasonRegex());
+		PROP_SERIES_NEXT_EPISODE_HEURISTIC		= new CCEnumProperty<>(CAT_SERIES, 			this, 	"PROP_SERIES_NEXT_EPISODE_HEURISTIC", 		NextEpisodeHeuristic.AUTOMATIC, 	NextEpisodeHeuristic.getWrapper());
 		
 		PROP_PLAY_VLC_PATH						= new CCPathProperty(CAT_PLAY, 				this,	"PROP_PLAY_VLC_PATH",						"", 								PathFormatter.appendAndPrependSeparator("vlc.exe"), CCPathPropertyMode.FILES);
 		PROP_PLAY_VLC_FULLSCREEN				= new CCBoolProperty(CAT_PLAY, 				this,   "PROP_PLAY_VLC_FULLSCREEN", 				false);

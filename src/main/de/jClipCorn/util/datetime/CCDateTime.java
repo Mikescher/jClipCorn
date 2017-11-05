@@ -350,6 +350,10 @@ public class CCDateTime implements Comparable<CCDateTime>, StringSpecSupplier {
 		return date.isUnspecifiedDate();
 	}
 
+	public boolean isUnspecifiedOrMinimum() {
+		return isUnspecifiedDateTime() || isMinimum();
+	}
+
 	public CCDateTime getSpecifyTimeIfNeeded(CCTime fallbacktime) {
 		if (time.isUnspecifiedTime()) return new CCDateTime(date, fallbacktime);
 		return this;

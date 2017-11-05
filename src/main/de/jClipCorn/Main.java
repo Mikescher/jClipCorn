@@ -154,7 +154,7 @@ public class Main {
 //     Ctrl+Click to add element to current filter (interactive create custom filter)
 //     Entry to edit (and save) current temp filter
 
-//TODO test stuf under linux:
+//TODO test stuff under linux:
 //     Open in explorer
 //     Not all windows work under metal (or is GNOME etc the problem): not enough space, eg CustomFilter windows
 //     swing exceptions (in log)

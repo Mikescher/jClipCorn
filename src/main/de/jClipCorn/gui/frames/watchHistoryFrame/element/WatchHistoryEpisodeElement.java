@@ -89,19 +89,19 @@ public class WatchHistoryEpisodeElement extends WatchHistoryElement {
 	}
 
 	@Override
-	public String getFullNamePart1() {	
+	public String getFullNamePart1() {
 		return Episode.getSeries().getTitle();
 	}
 
 	@Override
-	public String getFullNamePart2() {	
-		return Episode.getSeason().getTitle();
+	@SuppressWarnings("nls")
+	public String getFullNamePart2() {
+		return MessageFormat.format("{0} - E{1}", Episode.getSeason().getTitle(), Episode.getEpisodeNumber());
 	}
 
 	@Override
-	@SuppressWarnings("nls")
-	public String getFullNamePart3() {	
-		return MessageFormat.format("E{0,number,##} - {1}", Episode.getEpisodeIndexInSeason(), Episode.getTitle());
+	public String getFullNamePart3() {
+		return Episode.getTitle();
 	}
 
 	@Override

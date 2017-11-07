@@ -153,6 +153,7 @@ public class Main {
 //TODO Don't reset filter on expand/collapse tree (excep click on /all/)
 //     Ctrl+Click to add element to current filter (interactive create custom filter)
 //     Entry to edit (and save) current temp filter
+//     right click to edit saved filter
 
 //TODO test stuff under linux:
 //     Open in explorer

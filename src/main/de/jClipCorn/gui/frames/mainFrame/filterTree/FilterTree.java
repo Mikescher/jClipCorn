@@ -41,7 +41,7 @@ import de.jClipCorn.table.filter.customFilter.CustomQualityFilter;
 import de.jClipCorn.table.filter.customFilter.CustomTagFilter;
 import de.jClipCorn.table.filter.customFilter.CustomTypFilter;
 import de.jClipCorn.table.filter.customFilter.CustomUserScoreFilter;
-import de.jClipCorn.table.filter.customFilter.CustomViewedFilter;
+import de.jClipCorn.table.filter.customFilter.CustomExtendedViewedFilter;
 import de.jClipCorn.table.filter.customFilter.CustomYearFilter;
 import de.jClipCorn.table.filter.customFilter.CustomZyklusFilter;
 import de.jClipCorn.table.filter.customFilter.operators.CustomAndOperator;
@@ -125,16 +125,16 @@ public class FilterTree extends AbstractFilterTree {
 	}
 	
 	private void initViewed(DefaultMutableTreeNode parent) {
-		addNodeF(parent, Resources.ICN_SIDEBAR_VIEWED, LocaleBundle.getString("FilterTree.Viewed.Viewed"), () -> CustomViewedFilter.create(ExtendedViewedStateType.VIEWED)); //$NON-NLS-1$
+		addNodeF(parent, Resources.ICN_SIDEBAR_VIEWED, LocaleBundle.getString("FilterTree.Viewed.Viewed"), () -> CustomExtendedViewedFilter.create(ExtendedViewedStateType.VIEWED)); //$NON-NLS-1$
 
 		if (CCProperties.getInstance().PROP_SHOW_PARTIAL_VIEWED_STATE.getValue())
-			addNodeF(parent, Resources.ICN_SIDEBAR_PARTIALLY, LocaleBundle.getString("FilterTree.Viewed.Partial"), () -> CustomViewedFilter.create(ExtendedViewedStateType.PARTIAL_VIEWED)); //$NON-NLS-1$
+			addNodeF(parent, Resources.ICN_SIDEBAR_PARTIALLY, LocaleBundle.getString("FilterTree.Viewed.Partial"), () -> CustomExtendedViewedFilter.create(ExtendedViewedStateType.PARTIAL_VIEWED)); //$NON-NLS-1$
 		
-		addNodeF(parent, Resources.ICN_SIDEBAR_UNVIEWED, LocaleBundle.getString("FilterTree.Viewed.Unviewed"), () -> CustomViewedFilter.create(ExtendedViewedStateType.NOT_VIEWED)); //$NON-NLS-1$
+		addNodeF(parent, Resources.ICN_SIDEBAR_UNVIEWED, LocaleBundle.getString("FilterTree.Viewed.Unviewed"), () -> CustomExtendedViewedFilter.create(ExtendedViewedStateType.NOT_VIEWED)); //$NON-NLS-1$
 
-		addNodeF(parent, Resources.ICN_SIDEBAR_LATER, LocaleBundle.getString("FilterTree.Viewed.Later"), () -> CustomViewedFilter.create(ExtendedViewedStateType.MARKED_FOR_LATER)); //$NON-NLS-1$
+		addNodeF(parent, Resources.ICN_SIDEBAR_LATER, LocaleBundle.getString("FilterTree.Viewed.Later"), () -> CustomExtendedViewedFilter.create(ExtendedViewedStateType.MARKED_FOR_LATER)); //$NON-NLS-1$
 
-		addNodeF(parent, Resources.ICN_SIDEBAR_NEVER, LocaleBundle.getString("FilterTree.Viewed.Never"), () -> CustomViewedFilter.create(ExtendedViewedStateType.MARKED_FOR_NEVER)); //$NON-NLS-1$
+		addNodeF(parent, Resources.ICN_SIDEBAR_NEVER, LocaleBundle.getString("FilterTree.Viewed.Never"), () -> CustomExtendedViewedFilter.create(ExtendedViewedStateType.MARKED_FOR_NEVER)); //$NON-NLS-1$
 	}
 	
 	private void initFSK(DefaultMutableTreeNode parent) {

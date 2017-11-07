@@ -26,6 +26,7 @@ import de.jClipCorn.table.filter.customFilter.CustomTypFilter;
 import de.jClipCorn.table.filter.customFilter.CustomUserScoreFilter;
 import de.jClipCorn.table.filter.customFilter.CustomViewcountFilter;
 import de.jClipCorn.table.filter.customFilter.CustomViewedFilter;
+import de.jClipCorn.table.filter.customFilter.CustomExtendedViewedFilter;
 import de.jClipCorn.table.filter.customFilter.CustomYearFilter;
 import de.jClipCorn.table.filter.customFilter.CustomZyklusFilter;
 import de.jClipCorn.table.filter.customFilter.aggregators.CustomAllEpisodeAggregator;
@@ -68,6 +69,7 @@ public abstract class AbstractCustomFilter {
 	public final static int CUSTOMFILTERID_ANYSEASON    = 26;
 	public final static int CUSTOMFILTERID_ALLSEASON    = 27;
 	public final static int CUSTOMFILTERID_EPISODECOUNT = 28;
+	public final static int CUSTOMFILTERID_EXTVIEWED    = 29;
 		
 	public abstract String getName();
 	public abstract String getPrecreateName();
@@ -238,6 +240,8 @@ public abstract class AbstractCustomFilter {
 			return new CustomAnySeasonAggregator();
 		case CUSTOMFILTERID_ALLSEASON:
 			return new CustomAllSeasonAggregator();
+		case CUSTOMFILTERID_EXTVIEWED:
+			return new CustomExtendedViewedFilter();
 		}
 
 		return null;
@@ -258,6 +262,7 @@ public abstract class AbstractCustomFilter {
 			new CustomGroupFilter(),
 			new CustomTypFilter(),
 			new CustomViewedFilter(),
+			new CustomExtendedViewedFilter(),
 			new CustomHistoryFilter(),
 			new CustomYearFilter(),
 			new CustomZyklusFilter(),

@@ -5,41 +5,42 @@ import java.util.regex.Pattern;
 
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.ICCDatabaseStructureElement;
+import de.jClipCorn.database.util.ExtendedViewedStateType;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.table.filter.AbstractCustomFilter;
 import de.jClipCorn.table.filter.CustomFilterDialog;
-import de.jClipCorn.table.filter.customFilterDialogs.CustomViewedFilterDialog;
+import de.jClipCorn.table.filter.customFilterDialogs.CustomExtendedViewedFilterDialog;
 import de.jClipCorn.util.listener.FinishListener;
 
-public class CustomViewedFilter extends AbstractCustomFilter {
-	private boolean viewed = false;
-
+public class CustomExtendedViewedFilter extends AbstractCustomFilter {
+	private ExtendedViewedStateType state = ExtendedViewedStateType.NOT_VIEWED;
+	
 	@Override
 	public boolean includes(ICCDatabaseStructureElement e) {
-		return ! viewed ^ e.getExtendedViewedState().toBool();
+		return e.getExtendedViewedState().Type == state;
 	}
 
 	@Override
 	public String getName() {
-		return LocaleBundle.getFormattedString("FilterTree.Custom.CustomFilterNames.Viewed", (viewed) ? (LocaleBundle.getString("FilterTree.Viewed.Viewed")) : (LocaleBundle.getString("FilterTree.Viewed.Unviewed"))); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		return LocaleBundle.getFormattedString("FilterTree.Custom.CustomFilterNames.ExtViewed", state.asString()); //$NON-NLS-1$
 	}
 
 	@Override
 	public String getPrecreateName() {
-		return LocaleBundle.getDeformattedString("FilterTree.Custom.CustomFilterNames.Viewed").replace("()", "").trim(); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		return LocaleBundle.getDeformattedString("FilterTree.Custom.CustomFilterNames.ExtViewed").replace("()", "").trim(); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
 
-	public boolean getViewed() {
-		return viewed;
+	public ExtendedViewedStateType getState() {
+		return state;
 	}
 
-	public void setViewed(boolean viewed) {
-		this.viewed = viewed;
+	public void setState(ExtendedViewedStateType state) {
+		this.state = state;
 	}
 	
 	@Override
 	public int getID() {
-		return AbstractCustomFilter.CUSTOMFILTERID_VIEWED;
+		return AbstractCustomFilter.CUSTOMFILTERID_EXTVIEWED;
 	}
 	
 	@SuppressWarnings("nls")
@@ -49,7 +50,7 @@ public class CustomViewedFilter extends AbstractCustomFilter {
 		b.append("[");
 		b.append(getID() + "");
 		b.append("|");
-		b.append((viewed)?("1"):("0"));
+		b.append(state.asInt());
 		b.append("]");
 		
 		return b.toString();
@@ -71,29 +72,27 @@ public class CustomViewedFilter extends AbstractCustomFilter {
 			return false;
 		}
 		
-		boolean f;
-		if (intval == 0) f = false;
-		else if (intval == 1) f = true;
-		else return false;
+		ExtendedViewedStateType f = ExtendedViewedStateType.getWrapper().find(intval);
+		if (f == null) return false;
 
-		setViewed(f);
+		setState(f);
 		
 		return true;
 	}
 
 	@Override
 	public CustomFilterDialog CreateDialog(FinishListener fl, Component parent, CCMovieList ml) {
-		return new CustomViewedFilterDialog(this, fl, parent);
+		return new CustomExtendedViewedFilterDialog(this, fl, parent);
 	}
 
 	@Override
 	public AbstractCustomFilter createNew() {
-		return new CustomViewedFilter();
+		return new CustomExtendedViewedFilter();
 	}
 
-	public static AbstractCustomFilter create(boolean data) {
-		CustomViewedFilter f = new CustomViewedFilter();
-		f.setViewed(data);
+	public static CustomExtendedViewedFilter create(ExtendedViewedStateType data) {
+		CustomExtendedViewedFilter f = new CustomExtendedViewedFilter();
+		f.setState(data);
 		return f;
 	}
 }

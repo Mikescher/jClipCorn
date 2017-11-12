@@ -1,6 +1,5 @@
 package de.jClipCorn.table.filter.customFilter;
 
-import java.awt.Component;
 import java.util.regex.Pattern;
 
 import de.jClipCorn.database.CCMovieList;
@@ -8,9 +7,8 @@ import de.jClipCorn.database.databaseElement.ICCDatabaseStructureElement;
 import de.jClipCorn.database.util.ExtendedViewedStateType;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.table.filter.AbstractCustomFilter;
-import de.jClipCorn.table.filter.CustomFilterDialog;
-import de.jClipCorn.table.filter.customFilterDialogs.CustomExtendedViewedFilterDialog;
-import de.jClipCorn.util.listener.FinishListener;
+import de.jClipCorn.table.filter.filterConfig.CustomFilterConfig;
+import de.jClipCorn.table.filter.filterConfig.CustomFilterEnumChooserConfig;
 
 public class CustomExtendedViewedFilter extends AbstractCustomFilter {
 	private ExtendedViewedStateType state = ExtendedViewedStateType.NOT_VIEWED;
@@ -81,11 +79,6 @@ public class CustomExtendedViewedFilter extends AbstractCustomFilter {
 	}
 
 	@Override
-	public CustomFilterDialog CreateDialog(FinishListener fl, Component parent, CCMovieList ml) {
-		return new CustomExtendedViewedFilterDialog(this, fl, parent);
-	}
-
-	@Override
 	public AbstractCustomFilter createNew() {
 		return new CustomExtendedViewedFilter();
 	}
@@ -94,5 +87,13 @@ public class CustomExtendedViewedFilter extends AbstractCustomFilter {
 		CustomExtendedViewedFilter f = new CustomExtendedViewedFilter();
 		f.setState(data);
 		return f;
+	}
+
+	@Override
+	public CustomFilterConfig[] createConfig(CCMovieList ml) {
+		return new CustomFilterConfig[]
+		{
+			new CustomFilterEnumChooserConfig<>(() -> state, p -> state = p, ExtendedViewedStateType.getWrapper()),
+		};
 	}
 }

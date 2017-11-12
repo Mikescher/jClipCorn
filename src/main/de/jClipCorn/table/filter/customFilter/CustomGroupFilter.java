@@ -1,6 +1,5 @@
 package de.jClipCorn.table.filter.customFilter;
 
-import java.awt.Component;
 import java.util.regex.Pattern;
 
 import de.jClipCorn.database.CCMovieList;
@@ -9,9 +8,9 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCGroup;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.table.filter.AbstractCustomDatabaseElementFilter;
 import de.jClipCorn.table.filter.AbstractCustomFilter;
-import de.jClipCorn.table.filter.CustomFilterDialog;
-import de.jClipCorn.table.filter.customFilterDialogs.CustomGroupFilterDialog;
-import de.jClipCorn.util.listener.FinishListener;
+import de.jClipCorn.table.filter.filterConfig.CustomFilterConfig;
+import de.jClipCorn.table.filter.filterConfig.CustomFilterStringChooserConfig;
+import de.jClipCorn.util.stream.CCStreams;
 
 public class CustomGroupFilter extends AbstractCustomDatabaseElementFilter {
 	private String group = ""; //$NON-NLS-1$
@@ -72,11 +71,6 @@ public class CustomGroupFilter extends AbstractCustomDatabaseElementFilter {
 	}
 
 	@Override
-	public CustomFilterDialog CreateDialog(FinishListener fl, Component parent, CCMovieList ml) {
-		return new CustomGroupFilterDialog(this, fl, parent, ml);
-	}
-
-	@Override
 	public AbstractCustomFilter createNew() {
 		return new CustomGroupFilter();
 	}
@@ -85,5 +79,13 @@ public class CustomGroupFilter extends AbstractCustomDatabaseElementFilter {
 		CustomGroupFilter f = new CustomGroupFilter();
 		f.setGroup(data.Name);
 		return f;
+	}
+
+	@Override
+	public CustomFilterConfig[] createConfig(CCMovieList ml) {
+		return new CustomFilterConfig[]
+		{
+			new CustomFilterStringChooserConfig(() -> group, a -> group = a, CCStreams.iterate(ml.getGroupList()).map(g -> g.Name).enumerate(), true, true),
+		};
 	}
 }

@@ -1,6 +1,5 @@
 package de.jClipCorn.table.filter.customFilter;
 
-import java.awt.Component;
 import java.util.regex.Pattern;
 
 import de.jClipCorn.database.CCMovieList;
@@ -9,10 +8,10 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineScore;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.table.filter.AbstractCustomDatabaseElementFilter;
 import de.jClipCorn.table.filter.AbstractCustomFilter;
-import de.jClipCorn.table.filter.CustomFilterDialog;
-import de.jClipCorn.table.filter.customFilterDialogs.CustomOnlinescoreFilterDialog;
+import de.jClipCorn.table.filter.filterConfig.CustomFilterConfig;
+import de.jClipCorn.table.filter.filterConfig.CustomFilterIntAreaConfig;
+import de.jClipCorn.util.CCIntArea;
 import de.jClipCorn.util.DecimalSearchType;
-import de.jClipCorn.util.listener.FinishListener;
 
 public class CustomOnlinescoreFilter extends AbstractCustomDatabaseElementFilter {
 	private CCOnlineScore low = CCOnlineScore.STARS_0_0;
@@ -152,11 +151,6 @@ public class CustomOnlinescoreFilter extends AbstractCustomDatabaseElementFilter
 	}
 
 	@Override
-	public CustomFilterDialog CreateDialog(FinishListener fl, Component parent, CCMovieList ml) {
-		return new CustomOnlinescoreFilterDialog(this, fl, parent);
-	}
-
-	@Override
 	public AbstractCustomFilter createNew() {
 		return new CustomOnlinescoreFilter();
 	}
@@ -166,5 +160,23 @@ public class CustomOnlinescoreFilter extends AbstractCustomDatabaseElementFilter
 		f.setSearchType(DecimalSearchType.EXACT);
 		f.setLow(data);
 		return f;
+	}
+
+	private CCIntArea getAsIntArea() {
+		return new CCIntArea(low.asInt(), high.asInt(), searchType);
+	}
+
+	private void setAsIntArea(CCIntArea a) {
+		low = CCOnlineScore.getWrapper().find(a.low);
+		high = CCOnlineScore.getWrapper().find(a.high);
+		searchType = a.type;
+	}
+	
+	@Override
+	public CustomFilterConfig[] createConfig(CCMovieList ml) {
+		return new CustomFilterConfig[]
+		{
+			new CustomFilterIntAreaConfig(this::getAsIntArea, this::setAsIntArea, 0, 10),
+		};
 	}
 }

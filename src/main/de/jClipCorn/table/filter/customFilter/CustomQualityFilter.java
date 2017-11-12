@@ -1,6 +1,5 @@
 package de.jClipCorn.table.filter.customFilter;
 
-import java.awt.Component;
 import java.util.regex.Pattern;
 
 import de.jClipCorn.database.CCMovieList;
@@ -8,9 +7,8 @@ import de.jClipCorn.database.databaseElement.ICCDatabaseStructureElement;
 import de.jClipCorn.database.databaseElement.columnTypes.CCQuality;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.table.filter.AbstractCustomFilter;
-import de.jClipCorn.table.filter.CustomFilterDialog;
-import de.jClipCorn.table.filter.customFilterDialogs.CustomQualityFilterDialog;
-import de.jClipCorn.util.listener.FinishListener;
+import de.jClipCorn.table.filter.filterConfig.CustomFilterConfig;
+import de.jClipCorn.table.filter.filterConfig.CustomFilterEnumChooserConfig;
 
 public class CustomQualityFilter extends AbstractCustomFilter {
 	private CCQuality quality = CCQuality.STREAM;
@@ -80,11 +78,6 @@ public class CustomQualityFilter extends AbstractCustomFilter {
 	}
 
 	@Override
-	public CustomFilterDialog CreateDialog(FinishListener fl, Component parent, CCMovieList ml) {
-		return new CustomQualityFilterDialog(this, fl, parent);
-	}
-
-	@Override
 	public AbstractCustomFilter createNew() {
 		return new CustomQualityFilter();
 	}
@@ -93,5 +86,13 @@ public class CustomQualityFilter extends AbstractCustomFilter {
 		CustomQualityFilter f = new CustomQualityFilter();
 		f.setQuality(data);
 		return f;
+	}
+
+	@Override
+	public CustomFilterConfig[] createConfig(CCMovieList ml) {
+		return new CustomFilterConfig[]
+		{
+			new CustomFilterEnumChooserConfig<>(() -> quality, p -> quality = p, CCQuality.getWrapper()),
+		};
 	}
 }

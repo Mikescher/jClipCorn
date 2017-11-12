@@ -42,6 +42,8 @@ public class ClipTable extends JScrollPane implements CCDBUpdateListener, ListSe
 	private MainFrame owner;
 
 	private TableColumnAdjuster adjuster;
+	
+	private TableCustomFilter currentFilter = null;
 
 	private boolean suppressRowFilterResetEvents = false;
 
@@ -254,16 +256,23 @@ public class ClipTable extends JScrollPane implements CCDBUpdateListener, ListSe
 		
 		TableRowSorter<ClipTableModel> sorter = ((TableRowSorter<ClipTableModel>) table.getRowSorter());
 		
-		if (filterimpl == null)
+		if (filterimpl == null) {
+			currentFilter = null;
 			sorter.setRowFilter(null);
-		else
-			sorter.setRowFilter(new TableCustomFilter(filterimpl));
+		} else {
+			currentFilter = new TableCustomFilter(filterimpl);
+			sorter.setRowFilter(currentFilter);
+		}
 		
 		if (! hasSortOrder()) {
 			initialSort();
 		}
 		
 		owner.getStatusBar().updateLables_Movies();
+	}
+	
+	public TableCustomFilter getRowFilter() {
+		return currentFilter;
 	}
 	
 	private boolean hasSortOrder() {

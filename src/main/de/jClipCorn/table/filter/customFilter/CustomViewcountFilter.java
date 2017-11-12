@@ -1,6 +1,5 @@
 package de.jClipCorn.table.filter.customFilter;
 
-import java.awt.Component;
 import java.util.regex.Pattern;
 
 import de.jClipCorn.database.CCMovieList;
@@ -11,32 +10,17 @@ import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.table.filter.AbstractCustomFilter;
 import de.jClipCorn.table.filter.AbstractCustomStructureElementFilter;
-import de.jClipCorn.table.filter.CustomFilterDialog;
-import de.jClipCorn.table.filter.customFilterDialogs.CustomViewcountFilterDialog;
+import de.jClipCorn.table.filter.filterConfig.CustomFilterConfig;
+import de.jClipCorn.table.filter.filterConfig.CustomFilterIntAreaConfig;
+import de.jClipCorn.util.CCIntArea;
 import de.jClipCorn.util.DecimalSearchType;
-import de.jClipCorn.util.listener.FinishListener;
 
 public class CustomViewcountFilter extends AbstractCustomStructureElementFilter {
-	private int low = 1;
-	private int high = 1;
-	private DecimalSearchType searchType = DecimalSearchType.EXACT;
+	private CCIntArea area = new CCIntArea(1, 1, DecimalSearchType.EXACT);
 	
 	@Override
 	public boolean includes(CCMovie m) {
-		int c = m.getViewedHistory().count();
-		
-		switch (searchType) {
-		case LESSER:
-			return c < high;
-		case GREATER:
-			return c > low;
-		case IN_RANGE:
-			return c > low && c < high;
-		case EXACT:
-			return c == low;
-		default:
-			return false;
-		}
+		return area.contains(m.getViewedHistory().count());
 	}
 
 	@Override
@@ -50,18 +34,7 @@ public class CustomViewcountFilter extends AbstractCustomStructureElementFilter 
 		
 		double c = (ct == 0) ? 0 : ((sm * 1.0 )/ ct);
 
-		switch (searchType) {
-		case LESSER:
-			return c < high;
-		case GREATER:
-			return c > low;
-		case IN_RANGE:
-			return c > low && c < high;
-		case EXACT:
-			return Math.round(c) == low;
-		default:
-			return false;
-		}
+		return area.contains(c);
 	}
 
 	@Override
@@ -75,18 +48,7 @@ public class CustomViewcountFilter extends AbstractCustomStructureElementFilter 
 		
 		double c = (ct == 0) ? 0 : ((sm * 1.0 )/ ct);
 
-		switch (searchType) {
-		case LESSER:
-			return c < high;
-		case GREATER:
-			return c > low;
-		case IN_RANGE:
-			return c > low && c < high;
-		case EXACT:
-			return Math.round(c) == low;
-		default:
-			return false;
-		}
+		return area.contains(c);
 	}
 
 	@Override
@@ -105,42 +67,42 @@ public class CustomViewcountFilter extends AbstractCustomStructureElementFilter 
 	}
 	
 	public String asString() {
-		switch (searchType) {
+		switch (area.type) {
 		case LESSER:
-			return "X < " + high; //$NON-NLS-1$
+			return "X < " + area.high; //$NON-NLS-1$
 		case GREATER:
-			return low + " < X"; //$NON-NLS-1$
+			return area.low + " < X"; //$NON-NLS-1$
 		case IN_RANGE:
-			return low + " < X < " + high; //$NON-NLS-1$
+			return area.low + " < X < " + area.high; //$NON-NLS-1$
 		case EXACT:
-			return "X == " + low; //$NON-NLS-1$
+			return "X == " + area.low; //$NON-NLS-1$
 		default:
 			return ""; //$NON-NLS-1$
 		}
 	}
 
 	public DecimalSearchType getSearchType() {
-		return searchType;
+		return area.type;
 	}
 
 	public void setSearchType(DecimalSearchType searchType) {
-		this.searchType = searchType;
+		this.area.type = searchType;
 	}
 
 	public int getHigh() {
-		return high;
+		return area.high;
 	}
 
 	public void setHigh(int high) {
-		this.high = high;
+		this.area.high = high;
 	}
 
 	public int getLow() {
-		return low;
+		return area.low;
 	}
 
 	public void setLow(int low) {
-		this.low = low;
+		this.area.low = low;
 	}
 	
 	@Override
@@ -155,11 +117,11 @@ public class CustomViewcountFilter extends AbstractCustomStructureElementFilter 
 		b.append("[");
 		b.append(getID() + "");
 		b.append("|");
-		b.append(low+"");
+		b.append(area.low+"");
 		b.append(",");
-		b.append(high+"");
+		b.append(area.high+"");
 		b.append(",");
-		b.append(searchType.asInt() + "");
+		b.append(area.type.asInt() + "");
 		b.append("]");
 		
 		return b.toString();
@@ -204,11 +166,6 @@ public class CustomViewcountFilter extends AbstractCustomStructureElementFilter 
 	}
 
 	@Override
-	public CustomFilterDialog CreateDialog(FinishListener fl, Component parent, CCMovieList ml) {
-		return new CustomViewcountFilterDialog(this, fl, parent);
-	}
-
-	@Override
 	public AbstractCustomFilter createNew() {
 		return new CustomViewcountFilter();
 	}
@@ -218,5 +175,13 @@ public class CustomViewcountFilter extends AbstractCustomStructureElementFilter 
 		f.setLow(data);
 		f.setSearchType(DecimalSearchType.EXACT);
 		return f;
+	}
+
+	@Override
+	public CustomFilterConfig[] createConfig(CCMovieList ml) {
+		return new CustomFilterConfig[]
+		{
+			new CustomFilterIntAreaConfig(() -> area, a -> area = a, 0, null),
+		};
 	}
 }

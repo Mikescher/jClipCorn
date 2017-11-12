@@ -1,40 +1,24 @@
 package de.jClipCorn.table.filter.customFilter;
 
-import java.awt.Component;
 import java.util.regex.Pattern;
 
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.ICCDatabaseStructureElement;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.table.filter.AbstractCustomFilter;
-import de.jClipCorn.table.filter.CustomFilterDialog;
-import de.jClipCorn.table.filter.customFilterDialogs.CustomAddDateFilterDialog;
+import de.jClipCorn.table.filter.filterConfig.CustomFilterConfig;
+import de.jClipCorn.table.filter.filterConfig.CustomFilterDateAreaConfig;
 import de.jClipCorn.util.DecimalSearchType;
 import de.jClipCorn.util.datetime.CCDate;
+import de.jClipCorn.util.datetime.CCDateArea;
 import de.jClipCorn.util.exceptions.DateFormatException;
-import de.jClipCorn.util.listener.FinishListener;
 
 public class CustomAddDateFilter extends AbstractCustomFilter {
-	private CCDate low = CCDate.getCurrentDate();
-	private CCDate high = CCDate.getCurrentDate();
-	private DecimalSearchType searchType = DecimalSearchType.EXACT;
+	private CCDateArea area = new CCDateArea();
 	
 	@Override
 	public boolean includes(ICCDatabaseStructureElement e) {
-		CCDate d = e.getAddDate();
-				
-		switch (searchType) {
-		case LESSER:
-			return d.isLessEqualsThan(high);
-		case GREATER:
-			return d.isGreaterEqualsThan(low);
-		case IN_RANGE:
-			return d.isGreaterEqualsThan(low) && d.isLessEqualsThan(high);
-		case EXACT:
-			return d.isEqual(low);
-		}
-
-		return false;
+		return area.contains(e.getAddDate());
 	}
 
 	@Override
@@ -48,42 +32,42 @@ public class CustomAddDateFilter extends AbstractCustomFilter {
 	}
 	
 	public String asString() {
-		switch (searchType) {
+		switch (area.type) {
 		case LESSER:
-			return "X < " + high.toStringUIShort(); //$NON-NLS-1$
+			return "X < " + area.high.toStringUIShort(); //$NON-NLS-1$
 		case GREATER:
-			return low.toStringUIShort() + " < X"; //$NON-NLS-1$
+			return area.low.toStringUIShort() + " < X"; //$NON-NLS-1$
 		case IN_RANGE:
-			return low.toStringUIShort() + " < X < " + high.toStringUIShort(); //$NON-NLS-1$
+			return area.low.toStringUIShort() + " < X < " + area.high.toStringUIShort(); //$NON-NLS-1$
 		case EXACT:
-			return "X == " + low.toStringUIShort(); //$NON-NLS-1$
+			return "X == " + area.low.toStringUIShort(); //$NON-NLS-1$
 		default:
 			return ""; //$NON-NLS-1$
 		}
 	}
 
 	public DecimalSearchType getSearchType() {
-		return searchType;
+		return area.type;
 	}
 
 	public void setSearchType(DecimalSearchType searchType) {
-		this.searchType = searchType;
+		area.type = searchType;
 	}
 
 	public CCDate getHigh() {
-		return high;
+		return area.high;
 	}
 
 	public void setHigh(CCDate high) {
-		this.high = high;
+		this.area.high = high;
 	}
 
 	public CCDate getLow() {
-		return low;
+		return area.low;
 	}
 
 	public void setLow(CCDate low) {
-		this.low = low;
+		this.area.low = low;
 	}
 	
 	@Override
@@ -98,11 +82,11 @@ public class CustomAddDateFilter extends AbstractCustomFilter {
 		b.append("[");
 		b.append(getID() + "");
 		b.append("|");
-		b.append(low.toStringSQL()+"");
+		b.append(area.low.toStringSQL()+"");
 		b.append(",");
-		b.append(high.toStringSQL()+"");
+		b.append(area.high.toStringSQL()+"");
 		b.append(",");
-		b.append(searchType.asInt() + "");
+		b.append(area.type.asInt() + "");
 		b.append("]");
 		
 		return b.toString();
@@ -135,11 +119,6 @@ public class CustomAddDateFilter extends AbstractCustomFilter {
 	}
 
 	@Override
-	public CustomFilterDialog CreateDialog(FinishListener fl, Component parent, CCMovieList ml) {
-		return new CustomAddDateFilterDialog(this, fl, parent);
-	}
-
-	@Override
 	public AbstractCustomFilter createNew() {
 		return new CustomAddDateFilter();
 	}
@@ -149,5 +128,13 @@ public class CustomAddDateFilter extends AbstractCustomFilter {
 		f.setLow(data);
 		f.setSearchType(DecimalSearchType.EXACT);
 		return f;
+	}
+
+	@Override
+	public CustomFilterConfig[] createConfig(CCMovieList ml) {
+		return new CustomFilterConfig[]
+		{
+			new CustomFilterDateAreaConfig(() -> area, a -> area = a),
+		};
 	}
 }

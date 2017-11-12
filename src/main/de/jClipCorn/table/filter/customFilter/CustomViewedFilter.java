@@ -1,15 +1,13 @@
 package de.jClipCorn.table.filter.customFilter;
 
-import java.awt.Component;
 import java.util.regex.Pattern;
 
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.ICCDatabaseStructureElement;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.table.filter.AbstractCustomFilter;
-import de.jClipCorn.table.filter.CustomFilterDialog;
-import de.jClipCorn.table.filter.customFilterDialogs.CustomViewedFilterDialog;
-import de.jClipCorn.util.listener.FinishListener;
+import de.jClipCorn.table.filter.filterConfig.CustomFilterBoolConfig;
+import de.jClipCorn.table.filter.filterConfig.CustomFilterConfig;
 
 public class CustomViewedFilter extends AbstractCustomFilter {
 	private boolean viewed = false;
@@ -82,11 +80,6 @@ public class CustomViewedFilter extends AbstractCustomFilter {
 	}
 
 	@Override
-	public CustomFilterDialog CreateDialog(FinishListener fl, Component parent, CCMovieList ml) {
-		return new CustomViewedFilterDialog(this, fl, parent);
-	}
-
-	@Override
 	public AbstractCustomFilter createNew() {
 		return new CustomViewedFilter();
 	}
@@ -95,5 +88,13 @@ public class CustomViewedFilter extends AbstractCustomFilter {
 		CustomViewedFilter f = new CustomViewedFilter();
 		f.setViewed(data);
 		return f;
+	}
+
+	@Override
+	public CustomFilterConfig[] createConfig(CCMovieList ml) {
+		return new CustomFilterConfig[]
+		{
+			new CustomFilterBoolConfig(() -> viewed, a -> viewed = a, LocaleBundle.getString("FilterTree.Viewed")), //$NON-NLS-1$
+		};
 	}
 }

@@ -1,6 +1,5 @@
 package de.jClipCorn.table.filter.customFilter;
 
-import java.awt.Component;
 import java.util.regex.Pattern;
 
 import de.jClipCorn.database.CCMovieList;
@@ -9,9 +8,8 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineRefType;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.table.filter.AbstractCustomDatabaseElementFilter;
 import de.jClipCorn.table.filter.AbstractCustomFilter;
-import de.jClipCorn.table.filter.CustomFilterDialog;
-import de.jClipCorn.table.filter.customFilterDialogs.CustomReferenceFilterDialog;
-import de.jClipCorn.util.listener.FinishListener;
+import de.jClipCorn.table.filter.filterConfig.CustomFilterConfig;
+import de.jClipCorn.table.filter.filterConfig.CustomFilterEnumChooserConfig;
 
 public class CustomReferenceFilter extends AbstractCustomDatabaseElementFilter {
 	private CCOnlineRefType reftype = CCOnlineRefType.NONE;
@@ -81,12 +79,15 @@ public class CustomReferenceFilter extends AbstractCustomDatabaseElementFilter {
 	}
 
 	@Override
-	public CustomFilterDialog CreateDialog(FinishListener fl, Component parent, CCMovieList ml) {
-		return new CustomReferenceFilterDialog(this, fl, parent);
+	public AbstractCustomFilter createNew() {
+		return new CustomReferenceFilter();
 	}
 
 	@Override
-	public AbstractCustomFilter createNew() {
-		return new CustomReferenceFilter();
+	public CustomFilterConfig[] createConfig(CCMovieList ml) {
+		return new CustomFilterConfig[]
+		{
+			new CustomFilterEnumChooserConfig<>(() -> reftype, p -> reftype = p, CCOnlineRefType.getWrapper()),
+		};
 	}
 }

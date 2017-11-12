@@ -1,15 +1,27 @@
 package de.jClipCorn.table.filter.customFilter.aggregators;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.table.filter.AbstractCustomDatabaseElementFilter;
 import de.jClipCorn.table.filter.AbstractCustomFilter;
 import de.jClipCorn.table.filter.customFilter.operators.CustomAndOperator;
+import de.jClipCorn.table.filter.filterConfig.CustomFilterConfig;
 
 public abstract class CustomAggregator extends AbstractCustomDatabaseElementFilter {
 
 	protected AbstractCustomFilter _filter = new CustomAndOperator();
 
+	@Override
+	public List<AbstractCustomFilter> getList() {
+		List<AbstractCustomFilter> result = new ArrayList<>();
+		result.add(_filter);
+		return result;
+	}
+	
 	@Override
 	public boolean includes(CCDatabaseElement e) {
 		if (e.isMovie()) return false;
@@ -53,5 +65,10 @@ public abstract class CustomAggregator extends AbstractCustomDatabaseElementFilt
 
 	public void setProcessorFilter(AbstractCustomFilter pf) {
 		_filter = pf;
+	}
+
+	@Override
+	public CustomFilterConfig[] createConfig(CCMovieList ml) {
+		return new CustomFilterConfig[0];
 	}
 }

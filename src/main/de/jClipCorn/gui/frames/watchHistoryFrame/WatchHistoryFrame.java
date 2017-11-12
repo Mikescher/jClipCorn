@@ -33,9 +33,9 @@ import de.jClipCorn.gui.frames.watchHistoryFrame.element.WatchHistoryEpisodeElem
 import de.jClipCorn.gui.frames.watchHistoryFrame.element.WatchHistoryMovieElement;
 import de.jClipCorn.gui.guiComponents.CoverLabel;
 import de.jClipCorn.gui.guiComponents.ReadableTextField;
+import de.jClipCorn.gui.guiComponents.jSimpleTree.JSimpleTree;
 import de.jClipCorn.gui.guiComponents.jSimpleTree.SimpleTreeNode;
 import de.jClipCorn.gui.guiComponents.jSimpleTree.SimpleTreeRenderer;
-import de.jClipCorn.gui.guiComponents.jSimpleTree.SimpleTreeSelectionListener;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.CachedResourceLoader;
 import de.jClipCorn.gui.resources.Resources;
@@ -103,7 +103,6 @@ public class WatchHistoryFrame extends JFrame {
 		contentPane.add(scrollPaneTree, "1, 1, fill, fill"); //$NON-NLS-1$
 		
 		treeTimespan = createTimespanRoot();
-		treeTimespan.getSelectionModel().addTreeSelectionListener(new SimpleTreeSelectionListener());
 		treeTimespan.addTreeExpansionListener(new TreeExpansionAdapter() {
 			@Override
 			public void treeExpanded(TreeExpansionEvent e) {
@@ -211,7 +210,7 @@ public class WatchHistoryFrame extends JFrame {
 		}
 		treeTimespanRoot.add(node_ser);
 		
-		JTree tree = new JTree(treeTimespanRoot);
+		JTree tree = new JSimpleTree(treeTimespanRoot);
 		tree.expandPath(new TreePath(node_all.getPath()));
 		tree.setRootVisible(false);
 		tree.setToggleClickCount(1);

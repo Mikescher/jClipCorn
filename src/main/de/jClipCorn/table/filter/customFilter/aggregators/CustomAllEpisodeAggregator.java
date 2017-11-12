@@ -1,15 +1,9 @@
 package de.jClipCorn.table.filter.customFilter.aggregators;
 
-import java.awt.Component;
-
-import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.table.filter.AbstractCustomFilter;
-import de.jClipCorn.table.filter.CustomFilterDialog;
-import de.jClipCorn.table.filter.customFilterDialogs.CustomAggregatorFilterDialog;
-import de.jClipCorn.util.listener.FinishListener;
 
 public class CustomAllEpisodeAggregator extends CustomAggregator {
 	
@@ -40,10 +34,5 @@ public class CustomAllEpisodeAggregator extends CustomAggregator {
 	@Override
 	public AbstractCustomFilter createNew() {
 		return new CustomAllEpisodeAggregator();
-	}
-
-	@Override
-	public CustomFilterDialog CreateDialog(FinishListener fl, Component parent, CCMovieList ml) {
-		return new CustomAggregatorFilterDialog(ml, this, fl, parent);
 	}
 }

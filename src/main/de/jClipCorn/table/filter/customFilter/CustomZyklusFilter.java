@@ -1,7 +1,5 @@
 package de.jClipCorn.table.filter.customFilter;
 
-import java.awt.Component;
-
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.CCSeason;
@@ -10,10 +8,11 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCMovieZyklus;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.table.filter.AbstractCustomFilter;
 import de.jClipCorn.table.filter.AbstractCustomMovieOrSeriesFilter;
-import de.jClipCorn.table.filter.CustomFilterDialog;
-import de.jClipCorn.table.filter.customFilterDialogs.CustomZyklusFilterDialog;
+import de.jClipCorn.table.filter.filterConfig.CustomFilterBoolConfig;
+import de.jClipCorn.table.filter.filterConfig.CustomFilterConfig;
+import de.jClipCorn.table.filter.filterConfig.CustomFilterEnumOptionConfig;
+import de.jClipCorn.table.filter.filterConfig.CustomFilterStringConfig;
 import de.jClipCorn.util.datatypes.StringMatchType;
-import de.jClipCorn.util.listener.FinishListener;
 
 public class CustomZyklusFilter extends AbstractCustomMovieOrSeriesFilter {
 	private String searchString = ""; //$NON-NLS-1$
@@ -170,11 +169,6 @@ public class CustomZyklusFilter extends AbstractCustomMovieOrSeriesFilter {
 	}
 
 	@Override
-	public CustomFilterDialog CreateDialog(FinishListener fl, Component parent, CCMovieList ml) {
-		return new CustomZyklusFilterDialog(this, fl, parent);
-	}
-
-	@Override
 	public AbstractCustomFilter createNew() {
 		return new CustomZyklusFilter();
 	}
@@ -193,5 +187,15 @@ public class CustomZyklusFilter extends AbstractCustomMovieOrSeriesFilter {
 		f.setCaseSensitive(true);
 		f.setStringMatch(StringMatchType.SM_EQUALS);
 		return f;
+	}
+
+	@Override
+	public CustomFilterConfig[] createConfig(CCMovieList ml) {
+		return new CustomFilterConfig[]
+		{
+			new CustomFilterEnumOptionConfig<>(() -> stringMatch, p -> stringMatch = p, StringMatchType.getWrapper()),
+			new CustomFilterStringConfig(() -> searchString, p -> searchString = p),
+			new CustomFilterBoolConfig(() -> caseSensitive, p -> caseSensitive = p, LocaleBundle.getString("FilterTree.Custom.FilterFrames.CaseSensitive")), //$NON-NLS-1$
+		};
 	}
 }

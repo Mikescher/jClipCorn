@@ -1,7 +1,5 @@
 package de.jClipCorn.gui.frames.mainFrame.filterTree;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Supplier;
@@ -21,6 +19,7 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCQuality;
 import de.jClipCorn.database.databaseElement.columnTypes.CCTagList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCUserScore;
 import de.jClipCorn.database.util.ExtendedViewedStateType;
+import de.jClipCorn.gui.frames.customFilterEditDialog.CustomFilterEditDialog;
 import de.jClipCorn.gui.frames.mainFrame.clipTable.ClipTable;
 import de.jClipCorn.gui.frames.mainFrame.clipTable.RowFilterSource;
 import de.jClipCorn.gui.frames.organizeFilterFrame.OrganizeFilterDialog;
@@ -31,6 +30,8 @@ import de.jClipCorn.gui.resources.IconRef;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.table.filter.AbstractCustomFilter;
+import de.jClipCorn.table.filter.TableCustomFilter;
+import de.jClipCorn.table.filter.customFilter.CustomExtendedViewedFilter;
 import de.jClipCorn.table.filter.customFilter.CustomFSKFilter;
 import de.jClipCorn.table.filter.customFilter.CustomFormatFilter;
 import de.jClipCorn.table.filter.customFilter.CustomGenreFilter;
@@ -41,11 +42,9 @@ import de.jClipCorn.table.filter.customFilter.CustomQualityFilter;
 import de.jClipCorn.table.filter.customFilter.CustomTagFilter;
 import de.jClipCorn.table.filter.customFilter.CustomTypFilter;
 import de.jClipCorn.table.filter.customFilter.CustomUserScoreFilter;
-import de.jClipCorn.table.filter.customFilter.CustomExtendedViewedFilter;
 import de.jClipCorn.table.filter.customFilter.CustomYearFilter;
 import de.jClipCorn.table.filter.customFilter.CustomZyklusFilter;
 import de.jClipCorn.table.filter.customFilter.operators.CustomAndOperator;
-import de.jClipCorn.table.filter.customFilterDialogs.CustomOperatorFilterDialog;
 import de.jClipCorn.util.listener.FinishListener;
 
 public class FilterTree extends AbstractFilterTree {
@@ -115,12 +114,10 @@ public class FilterTree extends AbstractFilterTree {
 	}
 	
 	private void initAll(DefaultMutableTreeNode parent) {
-		parent.setUserObject(new SimpleTreeObject(CachedResourceLoader.getIcon(Resources.ICN_SIDEBAR_ALL), LocaleBundle.getString("FilterTree.All"), new ActionListener() { //$NON-NLS-1$
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				table.setRowFilter(null, RowFilterSource.SIDEBAR);
-				collapseAll();
-			}
+		parent.setUserObject(new SimpleTreeObject(CachedResourceLoader.getIcon(Resources.ICN_SIDEBAR_ALL), LocaleBundle.getString("FilterTree.All"), e ->  //$NON-NLS-1$
+		{
+			table.setRowFilter(null, RowFilterSource.SIDEBAR);
+			collapseAll();
 		}));
 	}
 	
@@ -224,19 +221,9 @@ public class FilterTree extends AbstractFilterTree {
 			addNodeF(parent, Resources.ICN_SIDEBAR_CUSTOM, fo.getName(), () -> fo.getFilter());
 		}
 		
-		addNode(parent, Resources.ICN_SIDEBAR_CUSTOM, LocaleBundle.getString("FilterTree.Custom.OrganizeFilter"), new ActionListener() { //$NON-NLS-1$
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onOrganizeCustomFilterClicked();
-			}
-		});
+		addNode(parent, Resources.ICN_SIDEBAR_CUSTOM, LocaleBundle.getString("FilterTree.Custom.OrganizeFilter"), e -> onOrganizeCustomFilterClicked()); //$NON-NLS-1$
 		
-		addNode(parent, Resources.ICN_SIDEBAR_CUSTOM, LocaleBundle.getString("FilterTree.Custom.NewFilter"), new ActionListener() { //$NON-NLS-1$
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onNewCustomFilterClicked();
-			}
-		});
+		addNode(parent, Resources.ICN_SIDEBAR_CUSTOM, LocaleBundle.getString("FilterTree.Custom.NewFilter"), e -> onNewCustomFilterClicked()); //$NON-NLS-1$
 	}
 	
 	private void onOrganizeCustomFilterClicked() {
@@ -251,14 +238,35 @@ public class FilterTree extends AbstractFilterTree {
 	}
 	
 	private void onNewCustomFilterClicked() {
-		final CustomAndOperator cfilter = new CustomAndOperator();
+		CustomFilterObject cfo = new CustomFilterObject(CustomFilterList.NAME_TEMPORARY, new CustomAndOperator());
 		
-		new CustomOperatorFilterDialog(movielist, cfilter, new FinishListener() {
+		TableCustomFilter tcf = table.getRowFilter();
+		if (tcf != null) {
+			
+			AbstractCustomFilter acf = tcf.getFilter();
+			
+			if (acf instanceof CustomAndOperator) {
+				cfo = new CustomFilterObject(CustomFilterList.NAME_TEMPORARY, ((CustomAndOperator)tcf.getFilter().createCopy()));
+			} else {
+				cfo = new CustomFilterObject(CustomFilterList.NAME_TEMPORARY, new CustomAndOperator(tcf.getFilter().createCopy()));
+			}
+			
+		}
+		
+		final CustomFilterObject fcfilter = cfo;
+		
+		new CustomFilterEditDialog(table.getMainFrame(), movielist, fcfilter, new FinishListener() {
 			@Override
 			public void finish() {
-				table.setRowFilter(cfilter, RowFilterSource.SIDEBAR);
+				table.setRowFilter(fcfilter.getFilter(), RowFilterSource.SIDEBAR);
+				
+				if (! fcfilter.getName().equals(CustomFilterList.NAME_TEMPORARY) && !customFilterList.contains(fcfilter)) {
+					customFilterList.add(fcfilter);
+					updateTree();
+					customFilterList.save();
+				}
 			}
-		}, table.getMainFrame(), true).setVisible(true);
+		}).setVisible(true);
 	}
 	
 	protected DefaultMutableTreeNode addNodeF(DefaultMutableTreeNode aroot, IconRef icon, String txt, Supplier<AbstractCustomFilter> filter) {
@@ -266,15 +274,36 @@ public class FilterTree extends AbstractFilterTree {
 	}
 	
 	protected DefaultMutableTreeNode addNodeF(DefaultMutableTreeNode aroot, Icon icon, String txt, Supplier<AbstractCustomFilter> filter) {
-		if (aroot == null) {
-			aroot = root;
-		}
-		DefaultMutableTreeNode node = new DefaultMutableTreeNode(new SimpleTreeObject(icon, txt, new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
+		if (aroot == null) aroot = root;
+		
+		DefaultMutableTreeNode node = new DefaultMutableTreeNode(new SimpleTreeObject(icon, txt, e -> 
+		{
+			if (e.ctrlDown) {
+				
+				CustomAndOperator op = new CustomAndOperator();
+				
+				TableCustomFilter tcf = table.getRowFilter();
+				if (tcf != null) {
+					
+					AbstractCustomFilter acf = tcf.getFilter();
+					
+					if (acf instanceof CustomAndOperator) {
+						op = ((CustomAndOperator)tcf.getFilter().createCopy());
+					} else {
+						op = new CustomAndOperator(tcf.getFilter().createCopy());
+					}
+					
+				}
+				
+				op.combineWith(filter.get());
+
+				table.setRowFilter(op, RowFilterSource.SIDEBAR);
+			} else {
 				table.setRowFilter(filter.get(), RowFilterSource.SIDEBAR);
 			}
+			
 		}));
+		
 		aroot.add(node);
 		return node;
 	}

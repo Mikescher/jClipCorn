@@ -136,7 +136,6 @@ public class Main {
 //TODO Use http://www.iconarchive.com/show/series-season-folder-icons-by-aaron-sinuhe.html 
 
 //TODO Move Series into seperate table
-//TODO Settings to (additionally) show global episode numbers in series
 //TODO Option to mark season as extra (ordered last, special filename, not in carousal but on right side of it ...)
 
 //TODO full database transaction log 
@@ -147,13 +146,6 @@ public class Main {
 //TODO send useragent or sth with image(cover) requests (a lot of requests fail but work in browser)
 
 //TODO use omdb instead of direct imdb query
-
-//TODO Click on temp filter to re-edit/save existing temp filter
-
-//TODO Don't reset filter on expand/collapse tree (excep click on /all/)
-//     Ctrl+Click to add element to current filter (interactive create custom filter)
-//     Entry to edit (and save) current temp filter
-//     right click to edit saved filter
 
 //TODO test stuff under linux:
 //     Open in explorer

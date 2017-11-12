@@ -20,6 +20,8 @@ public class CCDateEditor extends JPanel implements ChangeListener, PropertyChan
 	
 	private JTextField tf;
 
+	public boolean preventCommit = false;
+	
 	public CCDateEditor(JCCDateSpinner owner) {
 		this.owner = owner;
 		tf = new JFormattedTextField();
@@ -52,6 +54,8 @@ public class CCDateEditor extends JPanel implements ChangeListener, PropertyChan
 	}
 
 	public void commitEdit() {
+		if (preventCommit) return;
+		
 		if (owner != null && owner.getModel() != null) {
 			String text = getTextField().getText();
 

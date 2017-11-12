@@ -1,6 +1,5 @@
 package de.jClipCorn.table.filter.customFilter;
 
-import java.awt.Component;
 import java.util.regex.Pattern;
 
 import de.jClipCorn.database.CCMovieList;
@@ -9,9 +8,8 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCGenre;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.table.filter.AbstractCustomDatabaseElementFilter;
 import de.jClipCorn.table.filter.AbstractCustomFilter;
-import de.jClipCorn.table.filter.CustomFilterDialog;
-import de.jClipCorn.table.filter.customFilterDialogs.CustomGenreFilterDialog;
-import de.jClipCorn.util.listener.FinishListener;
+import de.jClipCorn.table.filter.filterConfig.CustomFilterConfig;
+import de.jClipCorn.table.filter.filterConfig.CustomFilterEnumChooserConfig;
 
 public class CustomGenreFilter extends AbstractCustomDatabaseElementFilter {
 	private CCGenre genre = CCGenre.GENRE_000;
@@ -81,11 +79,6 @@ public class CustomGenreFilter extends AbstractCustomDatabaseElementFilter {
 	}
 
 	@Override
-	public CustomFilterDialog CreateDialog(FinishListener fl, Component parent, CCMovieList ml) {
-		return new CustomGenreFilterDialog(this, fl, parent);
-	}
-
-	@Override
 	public AbstractCustomFilter createNew() {
 		return new CustomGenreFilter();
 	}
@@ -94,5 +87,13 @@ public class CustomGenreFilter extends AbstractCustomDatabaseElementFilter {
 		CustomGenreFilter f = new CustomGenreFilter();
 		f.setGenre(data);
 		return f;
+	}
+
+	@Override
+	public CustomFilterConfig[] createConfig(CCMovieList ml) {
+		return new CustomFilterConfig[]
+		{
+			new CustomFilterEnumChooserConfig<>(() -> genre, p -> genre = p, CCGenre.getWrapper()),
+		};
 	}
 }

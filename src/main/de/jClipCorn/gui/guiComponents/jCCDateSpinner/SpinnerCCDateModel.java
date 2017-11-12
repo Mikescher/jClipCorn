@@ -51,7 +51,12 @@ public class SpinnerCCDateModel extends AbstractSpinnerModel {
 		if (isValidDate((CCDate) o) && ! current.equals(o)) {
 			current = (CCDate) o;
 			
-			fireStateChanged();
+			try {
+				if (owner != null) ((CCDateEditor)owner.getEditor()).preventCommit = true;
+				fireStateChanged();
+			} finally {
+				if (owner != null) ((CCDateEditor)owner.getEditor()).preventCommit = false;
+			}
 		}
 	}
 

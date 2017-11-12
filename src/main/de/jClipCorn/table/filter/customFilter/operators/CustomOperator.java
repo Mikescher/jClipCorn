@@ -3,13 +3,22 @@ package de.jClipCorn.table.filter.customFilter.operators;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.table.filter.AbstractCustomFilter;
+import de.jClipCorn.table.filter.filterConfig.CustomFilterConfig;
+import de.jClipCorn.util.stream.CCStream;
+import de.jClipCorn.util.stream.CCStreams;
 
 public abstract class CustomOperator extends AbstractCustomFilter {
 	protected List<AbstractCustomFilter> list = new ArrayList<>();
 
+	@Override
 	public List<AbstractCustomFilter> getList() {
 		return list;
+	}
+
+	public CCStream<AbstractCustomFilter> iterate() {
+		return CCStreams.iterate(list);
 	}
 	
 	public AbstractCustomFilter add(AbstractCustomFilter f) {
@@ -19,6 +28,10 @@ public abstract class CustomOperator extends AbstractCustomFilter {
 	
 	public boolean remove(AbstractCustomFilter f) {
 		return list.remove(f);
+	}
+
+	public void removeAll() {
+		list.clear();
 	}
 
 	@SuppressWarnings("nls")
@@ -58,5 +71,10 @@ public abstract class CustomOperator extends AbstractCustomFilter {
 		}
 		
 		return true;
+	}
+
+	@Override
+	public CustomFilterConfig[] createConfig(CCMovieList ml) {
+		return new CustomFilterConfig[0];
 	}
 }

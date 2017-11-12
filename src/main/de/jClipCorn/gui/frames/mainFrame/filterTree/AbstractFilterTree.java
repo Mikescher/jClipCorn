@@ -1,14 +1,12 @@
 package de.jClipCorn.gui.frames.mainFrame.filterTree;
 
-import java.awt.event.ActionListener;
+import java.util.Collections;
+import java.util.function.Consumer;
 
 import javax.swing.Icon;
 import javax.swing.JScrollPane;
-import javax.swing.JTree;
 import javax.swing.event.TreeExpansionEvent;
 import javax.swing.event.TreeExpansionListener;
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
@@ -17,16 +15,18 @@ import javax.swing.tree.TreeSelectionModel;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.util.CCDBUpdateListener;
+import de.jClipCorn.gui.guiComponents.jSimpleTree.JSimpleTree;
 import de.jClipCorn.gui.guiComponents.jSimpleTree.SimpleTreeObject;
+import de.jClipCorn.gui.guiComponents.jSimpleTree.SimpleTreeObject.SimpleTreeEvent;
 import de.jClipCorn.gui.guiComponents.jSimpleTree.SimpleTreeRenderer;
 import de.jClipCorn.gui.resources.CachedResourceLoader;
 import de.jClipCorn.gui.resources.IconRef;
 import de.jClipCorn.gui.resources.MultiIconRef;
 
-public abstract class AbstractFilterTree extends JScrollPane implements TreeSelectionListener, CCDBUpdateListener, TreeExpansionListener {
+public abstract class AbstractFilterTree extends JScrollPane implements CCDBUpdateListener, TreeExpansionListener {
 	private static final long serialVersionUID = -1226727910191440220L;
 	
-	private JTree tree;
+	private JSimpleTree tree;
 	private DefaultTreeModel model;
 	protected DefaultMutableTreeNode root;
 	
@@ -40,7 +40,7 @@ public abstract class AbstractFilterTree extends JScrollPane implements TreeSele
 		root = new DefaultMutableTreeNode(null);
 		model = new DefaultTreeModel(root);
 		
-		tree = new JTree(model);
+		tree = new JSimpleTree(model);
 		
 		configureTree();
 				
@@ -56,8 +56,6 @@ public abstract class AbstractFilterTree extends JScrollPane implements TreeSele
 		tree.setRowHeight(16 + 2);
 		
 		tree.addTreeExpansionListener(this);
-		tree.getSelectionModel().addTreeSelectionListener(this);		
-		
 		tree.setRootVisible(false);
 		
 		tree.setCellRenderer(new SimpleTreeRenderer());
@@ -65,15 +63,15 @@ public abstract class AbstractFilterTree extends JScrollPane implements TreeSele
 	
 	protected abstract void addFields();
 	
-	protected DefaultMutableTreeNode addNode(DefaultMutableTreeNode aroot, IconRef icon, String txt, ActionListener listener) {
+	protected DefaultMutableTreeNode addNode(DefaultMutableTreeNode aroot, IconRef icon, String txt, Consumer<SimpleTreeEvent> listener) {
 		return addNodeI(aroot, CachedResourceLoader.getIcon(icon), txt, listener);
 	}
 
-	protected DefaultMutableTreeNode addNode(DefaultMutableTreeNode aroot, MultiIconRef icon, String txt, ActionListener listener) {
+	protected DefaultMutableTreeNode addNode(DefaultMutableTreeNode aroot, MultiIconRef icon, String txt, Consumer<SimpleTreeEvent> listener) {
 		return addNodeI(aroot, CachedResourceLoader.getIcon(icon.icon16x16), txt, listener);
 	}
 	
-	protected DefaultMutableTreeNode addNodeI(DefaultMutableTreeNode aroot, Icon icon, String txt, ActionListener listener) {
+	protected DefaultMutableTreeNode addNodeI(DefaultMutableTreeNode aroot, Icon icon, String txt, Consumer<SimpleTreeEvent> listener) {
 		if (aroot == null) {
 			aroot = root;
 		}
@@ -81,28 +79,41 @@ public abstract class AbstractFilterTree extends JScrollPane implements TreeSele
 		aroot.add(node);
 		return node;
 	}
-
-	@Override
-	public void valueChanged(TreeSelectionEvent e) {
-		Object o = tree.getLastSelectedPathComponent();
-		if (o instanceof DefaultMutableTreeNode) {		
-			DefaultMutableTreeNode node = (DefaultMutableTreeNode) o;
-			
-			Object user = node.getUserObject();
-			if (user != null) {
-				((SimpleTreeObject) user).execute();
-			}
-		}
-	}
 	
+	@SuppressWarnings("unchecked")
 	protected void updateTree() {
+		TreePath sel = tree.getSelectionPath();
+		
 		root.removeAllChildren();
 		
 		addFields();
-		
+
 		tree.expandPath(new TreePath(root.getPath()));
 		
 		model.reload();
+
+		if (sel != null && sel.getPathCount() > 0) {
+			TreePath p = null;
+			
+			Object o =sel.getPathComponent(1);
+			if (o instanceof DefaultMutableTreeNode) {
+				DefaultMutableTreeNode dmtno = (DefaultMutableTreeNode)o;
+				if (dmtno.getUserObject() instanceof SimpleTreeObject) {
+					SimpleTreeObject sto = (SimpleTreeObject)dmtno.getUserObject();
+					
+					for (Object child : Collections.list(root.children())) {
+						if (!(child instanceof DefaultMutableTreeNode)) continue;
+						DefaultMutableTreeNode dmtn = (DefaultMutableTreeNode)child;
+						if (!(dmtn.getUserObject() instanceof SimpleTreeObject)) continue;
+						SimpleTreeObject sto2 = (SimpleTreeObject)dmtn.getUserObject();
+						
+						if (sto2.getText().equals(sto.getText())) p = new TreePath(dmtn.getPath());
+					}
+				}
+			}
+			
+			if (p != null) tree.expandPath(p);
+		}
 	}
 	
 	@Override

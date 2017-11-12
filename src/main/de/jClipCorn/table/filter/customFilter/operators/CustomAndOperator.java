@@ -1,16 +1,21 @@
 package de.jClipCorn.table.filter.customFilter.operators;
 
-import java.awt.Component;
-
-import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.ICCDatabaseStructureElement;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.table.filter.AbstractCustomFilter;
-import de.jClipCorn.table.filter.CustomFilterDialog;
-import de.jClipCorn.table.filter.customFilterDialogs.CustomOperatorFilterDialog;
-import de.jClipCorn.util.listener.FinishListener;
 
 public class CustomAndOperator extends CustomOperator {
+
+	public CustomAndOperator() {
+		super();
+	}
+	
+	public CustomAndOperator(AbstractCustomFilter inner) {
+		super();
+		
+		add(inner);
+	}
+	
 	@Override
 	public boolean includes(ICCDatabaseStructureElement e) {
 		boolean result = true;
@@ -38,12 +43,34 @@ public class CustomAndOperator extends CustomOperator {
 	}
 
 	@Override
-	public CustomFilterDialog CreateDialog(FinishListener fl, Component parent, CCMovieList ml) {
-		return new CustomOperatorFilterDialog(ml, this, fl, parent, false);
-	}
-
-	@Override
 	public AbstractCustomFilter createNew() {
 		return new CustomAndOperator();
+	}
+
+	public void combineWith(AbstractCustomFilter other) {
+
+		for (AbstractCustomFilter child : list) {
+			
+			if (child instanceof CustomOrOperator) {
+				
+				CustomOrOperator orChild = (CustomOrOperator)child;
+				if (orChild.iterate().any() && orChild.iterate().all(c -> c.getID() == other.getID())) {
+					orChild.add(other);
+					return;
+				}
+				
+			} else {
+				
+				if (child.getID() == other.getID()) {
+					remove(child);
+					add(new CustomOrOperator(child, other));
+					return;
+				}
+				
+			}
+	
+		}
+
+		add(other);
 	}
 }

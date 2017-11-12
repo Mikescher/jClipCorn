@@ -1,6 +1,5 @@
 package de.jClipCorn.table.filter;
 
-import java.awt.Component;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -10,6 +9,7 @@ import de.jClipCorn.database.databaseElement.ICCDatabaseStructureElement;
 import de.jClipCorn.table.filter.customFilter.CustomAddDateFilter;
 import de.jClipCorn.table.filter.customFilter.CustomCharFilter;
 import de.jClipCorn.table.filter.customFilter.CustomEpisodecountFilter;
+import de.jClipCorn.table.filter.customFilter.CustomExtendedViewedFilter;
 import de.jClipCorn.table.filter.customFilter.CustomFSKFilter;
 import de.jClipCorn.table.filter.customFilter.CustomFormatFilter;
 import de.jClipCorn.table.filter.customFilter.CustomGenreFilter;
@@ -26,7 +26,6 @@ import de.jClipCorn.table.filter.customFilter.CustomTypFilter;
 import de.jClipCorn.table.filter.customFilter.CustomUserScoreFilter;
 import de.jClipCorn.table.filter.customFilter.CustomViewcountFilter;
 import de.jClipCorn.table.filter.customFilter.CustomViewedFilter;
-import de.jClipCorn.table.filter.customFilter.CustomExtendedViewedFilter;
 import de.jClipCorn.table.filter.customFilter.CustomYearFilter;
 import de.jClipCorn.table.filter.customFilter.CustomZyklusFilter;
 import de.jClipCorn.table.filter.customFilter.aggregators.CustomAllEpisodeAggregator;
@@ -37,7 +36,7 @@ import de.jClipCorn.table.filter.customFilter.operators.CustomAndOperator;
 import de.jClipCorn.table.filter.customFilter.operators.CustomNandOperator;
 import de.jClipCorn.table.filter.customFilter.operators.CustomNorOperator;
 import de.jClipCorn.table.filter.customFilter.operators.CustomOrOperator;
-import de.jClipCorn.util.listener.FinishListener;
+import de.jClipCorn.table.filter.filterConfig.CustomFilterConfig;
 
 public abstract class AbstractCustomFilter {
 	public final static int CUSTOMFILTERID_AND          = 0;
@@ -79,9 +78,14 @@ public abstract class AbstractCustomFilter {
 	public abstract boolean importFromString(String txt);
 
 	public abstract AbstractCustomFilter createNew();
-	public abstract CustomFilterDialog CreateDialog(FinishListener fl, Component parent, CCMovieList ml);
+	//public abstract CustomFilterDialog CreateDialog(FinishListener fl, Component parent, CCMovieList ml);
+	public abstract CustomFilterConfig[] createConfig(CCMovieList ml);
 	
 	public abstract boolean includes(ICCDatabaseStructureElement elem);
+	
+	public List<AbstractCustomFilter> getList() {
+		return new ArrayList<>();
+	}
 	
 	public static String escape(String txt) {
 		StringBuilder builder = new StringBuilder();
@@ -303,5 +307,11 @@ public abstract class AbstractCustomFilter {
 		} else {
 			return null;
 		}
+	}
+
+	public AbstractCustomFilter createCopy() {
+		AbstractCustomFilter f = createNew();
+		f.importFromString(exportToString());
+		return f;
 	}
 }

@@ -1,6 +1,5 @@
 package de.jClipCorn.table.filter.customFilter;
 
-import java.awt.Component;
 import java.util.regex.Pattern;
 
 import de.jClipCorn.database.CCMovieList;
@@ -9,81 +8,25 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCUserScore;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.table.filter.AbstractCustomDatabaseElementFilter;
 import de.jClipCorn.table.filter.AbstractCustomFilter;
-import de.jClipCorn.table.filter.CustomFilterDialog;
-import de.jClipCorn.table.filter.customFilterDialogs.CustomUserScoreFilterDialog;
-import de.jClipCorn.util.DecimalSearchType;
-import de.jClipCorn.util.listener.FinishListener;
+import de.jClipCorn.table.filter.filterConfig.CustomFilterConfig;
+import de.jClipCorn.table.filter.filterConfig.CustomFilterEnumChooserConfig;
 
 public class CustomUserScoreFilter extends AbstractCustomDatabaseElementFilter {
-	private CCUserScore low = CCUserScore.RATING_0;
-	private CCUserScore high = CCUserScore.RATING_0;
-	private DecimalSearchType searchType = DecimalSearchType.EXACT;
+	private CCUserScore score = CCUserScore.RATING_NO;
 	
 	@Override
 	public boolean includes(CCDatabaseElement e) {
-		CCUserScore sco = e.getScore();
-		
-		switch (searchType) {
-		case LESSER:
-			return sco != CCUserScore.RATING_NO && sco.asInt() < high.asInt();
-		case GREATER:
-			return sco != CCUserScore.RATING_NO && low.asInt() < sco.asInt();
-		case IN_RANGE:
-			return low.asInt() < sco.asInt() && sco.asInt() < high.asInt();
-		case EXACT:
-			return low == sco;
-		default:
-			return false;
-		}
+		return e.getScore() == score;
 	}
 
 	@Override
 	public String getName() {
-		return LocaleBundle.getFormattedString("FilterTree.Custom.CustomFilterNames.Score", asString()); //$NON-NLS-1$
+		return LocaleBundle.getFormattedString("FilterTree.Custom.CustomFilterNames.Score", score.asString()); //$NON-NLS-1$
 	}
 
 	@Override
 	public String getPrecreateName() {
 		return LocaleBundle.getDeformattedString("FilterTree.Custom.CustomFilterNames.Score").replace("()", "").trim(); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-	}
-	
-	public String asString() {
-		switch (searchType) {
-		case LESSER:
-			return "X < " + low.asString(); //$NON-NLS-1$
-		case GREATER:
-			return low.asString() + " < X"; //$NON-NLS-1$
-		case IN_RANGE:
-			return low.asString() + " < X < " + high.asString(); //$NON-NLS-1$
-		case EXACT:
-			return "X == " + low.asString(); //$NON-NLS-1$
-		default:
-			return ""; //$NON-NLS-1$
-		}
-	}
-
-	public DecimalSearchType getSearchType() {
-		return searchType;
-	}
-
-	public void setSearchType(DecimalSearchType searchType) {
-		this.searchType = searchType;
-	}
-
-	public CCUserScore getHigh() {
-		return high;
-	}
-
-	public void setHigh(CCUserScore high) {
-		this.high = high;
-	}
-
-	public CCUserScore getLow() {
-		return low;
-	}
-
-	public void setLow(CCUserScore low) {
-		this.low = low;
 	}
 	
 	@Override
@@ -98,11 +41,7 @@ public class CustomUserScoreFilter extends AbstractCustomDatabaseElementFilter {
 		b.append("[");
 		b.append(getID() + "");
 		b.append("|");
-		b.append(low.asInt()+"");
-		b.append(",");
-		b.append(high.asInt()+"");
-		b.append(",");
-		b.append(searchType.asInt() + "");
+		b.append(score.asInt()+"");
 		b.append("]");
 		
 		return b.toString();
@@ -115,11 +54,10 @@ public class CustomUserScoreFilter extends AbstractCustomDatabaseElementFilter {
 		if (params == null) return false;
 		
 		String[] paramsplit = params.split(Pattern.quote(","));
-		if (paramsplit.length != 3) return false;
+		if (paramsplit.length != 1) return false;
 		
 		int intval;
 		CCUserScore f;
-		DecimalSearchType s;
 		
 		try {
 			intval = Integer.parseInt(paramsplit[0]);
@@ -128,32 +66,9 @@ public class CustomUserScoreFilter extends AbstractCustomDatabaseElementFilter {
 		}
 		f = CCUserScore.getWrapper().find(intval);
 		if (f == null) return false;
-		setLow(f);
-		
-		try {
-			intval = Integer.parseInt(paramsplit[1]);
-		} catch (NumberFormatException e) {
-			return false;
-		}
-		f = CCUserScore.getWrapper().find(intval);
-		if (f == null) return false;
-		setHigh(f);
-		
-		try {
-			intval = Integer.parseInt(paramsplit[2]);
-		} catch (NumberFormatException e) {
-			return false;
-		}
-		s = DecimalSearchType.getWrapper().find(intval);
-		if (s == null) return false;
-		setSearchType(s);
+		score = f;
 		
 		return true;
-	}
-
-	@Override
-	public CustomFilterDialog CreateDialog(FinishListener fl, Component parent, CCMovieList ml) {
-		return new CustomUserScoreFilterDialog(this, fl, parent);
 	}
 
 	@Override
@@ -163,8 +78,15 @@ public class CustomUserScoreFilter extends AbstractCustomDatabaseElementFilter {
 
 	public static CustomUserScoreFilter create(CCUserScore data) {
 		CustomUserScoreFilter f = new CustomUserScoreFilter();
-		f.setSearchType(DecimalSearchType.EXACT);
-		f.setLow(data);
+		f.score = data;
 		return f;
+	}
+
+	@Override
+	public CustomFilterConfig[] createConfig(CCMovieList ml) {
+		return new CustomFilterConfig[]
+		{
+			new CustomFilterEnumChooserConfig<>(() -> score, p -> score = p, CCUserScore.getWrapper()),
+		};
 	}
 }

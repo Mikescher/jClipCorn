@@ -1,6 +1,5 @@
 package de.jClipCorn.table.filter.customFilter;
 
-import java.awt.Component;
 import java.util.regex.Pattern;
 
 import de.jClipCorn.database.CCMovieList;
@@ -10,70 +9,29 @@ import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.table.filter.AbstractCustomFilter;
 import de.jClipCorn.table.filter.AbstractCustomMovieOrSeriesFilter;
-import de.jClipCorn.table.filter.CustomFilterDialog;
-import de.jClipCorn.table.filter.customFilterDialogs.CustomYearFilterDialog;
+import de.jClipCorn.table.filter.filterConfig.CustomFilterConfig;
+import de.jClipCorn.table.filter.filterConfig.CustomFilterIntAreaConfig;
+import de.jClipCorn.util.CCIntArea;
 import de.jClipCorn.util.DecimalSearchType;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.datetime.YearRange;
-import de.jClipCorn.util.listener.FinishListener;
 
 public class CustomYearFilter extends AbstractCustomMovieOrSeriesFilter {
-	private int low = 1900;
-	private int high = 1900;
-	private DecimalSearchType searchType = DecimalSearchType.EXACT;
+	private CCIntArea area = new CCIntArea(1900, 1900, DecimalSearchType.EXACT);
 	
 	@Override
 	public boolean includes(CCMovie m) {
-		YearRange range = new YearRange(m.getYear());
-		
-		switch (searchType) {
-		case LESSER:
-			return range.isCompletelySmallerThan(new YearRange(high));
-		case GREATER:
-			return range.isCompletelyGreaterThan(new YearRange(low));
-		case IN_RANGE:
-			return range.isCompletelyBetween(new YearRange(low), new YearRange(high));
-		case EXACT:
-			return range.includes(low);
-		default:
-			return false;
-		}
+		return area.contains(new YearRange(m.getYear()));
 	}
 
 	@Override
 	public boolean includes(CCSeries s) {
-		YearRange range = s.getYearRange();
-		
-		switch (searchType) {
-		case LESSER:
-			return range.isCompletelySmallerThan(new YearRange(high));
-		case GREATER:
-			return range.isCompletelyGreaterThan(new YearRange(low));
-		case IN_RANGE:
-			return range.isCompletelyBetween(new YearRange(low), new YearRange(high));
-		case EXACT:
-			return range.includes(low);
-		default:
-			return false;
-		}
+		return area.contains(s.getYearRange());
 	}
 
 	@Override
 	public boolean includes(CCSeason s) {
-		YearRange range = new YearRange(s.getYear());
-		
-		switch (searchType) {
-		case LESSER:
-			return range.isCompletelySmallerThan(new YearRange(high));
-		case GREATER:
-			return range.isCompletelyGreaterThan(new YearRange(low));
-		case IN_RANGE:
-			return range.isCompletelyBetween(new YearRange(low), new YearRange(high));
-		case EXACT:
-			return range.includes(low);
-		default:
-			return false;
-		}
+		return area.contains(new YearRange(s.getYear()));
 	}
 
 	@Override
@@ -87,42 +45,42 @@ public class CustomYearFilter extends AbstractCustomMovieOrSeriesFilter {
 	}
 	
 	public String asString() {
-		switch (searchType) {
+		switch (area.type) {
 		case LESSER:
-			return "X < " + high; //$NON-NLS-1$
+			return "X < " + area.high; //$NON-NLS-1$
 		case GREATER:
-			return low + " < X"; //$NON-NLS-1$
+			return area.low + " < X"; //$NON-NLS-1$
 		case IN_RANGE:
-			return low + " < X < " + high; //$NON-NLS-1$
+			return area.low + " < X < " + area.high; //$NON-NLS-1$
 		case EXACT:
-			return "X == " + low; //$NON-NLS-1$
+			return "X == " + area.low; //$NON-NLS-1$
 		default:
 			return ""; //$NON-NLS-1$
 		}
 	}
 
 	public DecimalSearchType getSearchType() {
-		return searchType;
+		return area.type;
 	}
 
 	public void setSearchType(DecimalSearchType searchType) {
-		this.searchType = searchType;
+		this.area.type = searchType;
 	}
 
 	public int getHigh() {
-		return high;
+		return area.high;
 	}
 
 	public void setHigh(int high) {
-		this.high = high;
+		this.area.high = high;
 	}
 
 	public int getLow() {
-		return low;
+		return area.low;
 	}
 
 	public void setLow(int low) {
-		this.low = low;
+		this.area.low = low;
 	}
 	
 	@Override
@@ -137,11 +95,11 @@ public class CustomYearFilter extends AbstractCustomMovieOrSeriesFilter {
 		b.append("[");
 		b.append(getID() + "");
 		b.append("|");
-		b.append(low+"");
+		b.append(area.low+"");
 		b.append(",");
-		b.append(high+"");
+		b.append(area.high+"");
 		b.append(",");
-		b.append(searchType.asInt() + "");
+		b.append(area.type.asInt() + "");
 		b.append("]");
 		
 		return b.toString();
@@ -188,11 +146,6 @@ public class CustomYearFilter extends AbstractCustomMovieOrSeriesFilter {
 	}
 
 	@Override
-	public CustomFilterDialog CreateDialog(FinishListener fl, Component parent, CCMovieList ml) {
-		return new CustomYearFilterDialog(this, fl, parent);
-	}
-
-	@Override
 	public AbstractCustomFilter createNew() {
 		return new CustomYearFilter();
 	}
@@ -202,5 +155,13 @@ public class CustomYearFilter extends AbstractCustomMovieOrSeriesFilter {
 		f.setLow(data);
 		f.setSearchType(DecimalSearchType.EXACT);
 		return f;
+	}
+
+	@Override
+	public CustomFilterConfig[] createConfig(CCMovieList ml) {
+		return new CustomFilterConfig[]
+		{
+			new CustomFilterIntAreaConfig(() -> area, a -> area = a, 1900, null),
+		};
 	}
 }

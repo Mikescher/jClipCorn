@@ -1,15 +1,14 @@
 package de.jClipCorn.table.filter.customFilter;
 
-import java.awt.Component;
-
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.ICCDatabaseStructureElement;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.table.filter.AbstractCustomFilter;
-import de.jClipCorn.table.filter.CustomFilterDialog;
-import de.jClipCorn.table.filter.customFilterDialogs.CustomTitleFilterDialog;
+import de.jClipCorn.table.filter.filterConfig.CustomFilterBoolConfig;
+import de.jClipCorn.table.filter.filterConfig.CustomFilterConfig;
+import de.jClipCorn.table.filter.filterConfig.CustomFilterEnumOptionConfig;
+import de.jClipCorn.table.filter.filterConfig.CustomFilterStringConfig;
 import de.jClipCorn.util.datatypes.StringMatchType;
-import de.jClipCorn.util.listener.FinishListener;
 
 public class CustomTitleFilter extends AbstractCustomFilter {
 	private String searchString = ""; //$NON-NLS-1$
@@ -154,12 +153,17 @@ public class CustomTitleFilter extends AbstractCustomFilter {
 	}
 
 	@Override
-	public CustomFilterDialog CreateDialog(FinishListener fl, Component parent, CCMovieList ml) {
-		return new CustomTitleFilterDialog(this, fl, parent);
+	public AbstractCustomFilter createNew() {
+		return new CustomTitleFilter();
 	}
 
 	@Override
-	public AbstractCustomFilter createNew() {
-		return new CustomTitleFilter();
+	public CustomFilterConfig[] createConfig(CCMovieList ml) {
+		return new CustomFilterConfig[]
+		{
+			new CustomFilterEnumOptionConfig<>(() -> stringMatch, p -> stringMatch = p, StringMatchType.getWrapper()),
+			new CustomFilterStringConfig(() -> searchString, p -> searchString = p),
+			new CustomFilterBoolConfig(() -> caseSensitive, p -> caseSensitive = p, LocaleBundle.getString("FilterTree.Custom.FilterFrames.CaseSensitive")), //$NON-NLS-1$
+		};
 	}
 }

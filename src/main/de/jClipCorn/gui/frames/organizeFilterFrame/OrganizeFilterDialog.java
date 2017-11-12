@@ -22,16 +22,16 @@ import com.jgoodies.forms.layout.FormSpecs;
 import com.jgoodies.forms.layout.RowSpec;
 
 import de.jClipCorn.database.CCMovieList;
+import de.jClipCorn.gui.frames.customFilterEditDialog.CustomFilterEditDialog;
 import de.jClipCorn.gui.frames.mainFrame.filterTree.CustomFilterList;
 import de.jClipCorn.gui.frames.mainFrame.filterTree.CustomFilterObject;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.CachedResourceLoader;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.table.filter.customFilter.operators.CustomAndOperator;
-import de.jClipCorn.table.filter.customFilter.operators.CustomOperator;
-import de.jClipCorn.table.filter.customFilterDialogs.CustomOperatorFilterDialog;
-import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.listener.FinishListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 public class OrganizeFilterDialog extends JDialog {
 	private static final long serialVersionUID = -8210148094781041350L;
@@ -47,7 +47,6 @@ public class OrganizeFilterDialog extends JDialog {
 	private JButton btnEdit;
 	private JPanel panel_1;
 	private JButton btnOK;
-	private JButton btnRename;
 	private JButton btnUp;
 	private JButton btnDown;
 	
@@ -162,17 +161,7 @@ public class OrganizeFilterDialog extends JDialog {
 			}
 		});
 		btnEdit.setFont(new Font("Tahoma", Font.BOLD, 11)); //$NON-NLS-1$
-		panel.add(btnEdit, "2, 14, fill, top"); //$NON-NLS-1$
-		
-		btnRename = new JButton(LocaleBundle.getString("OrganizeFilterDialog.btnRename.text")); //$NON-NLS-1$
-		btnRename.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onActionRename();
-			}
-		});
-		btnRename.setFont(new Font("Tahoma", Font.BOLD, 11)); //$NON-NLS-1$
-		panel.add(btnRename, "2, 16"); //$NON-NLS-1$
+		panel.add(btnEdit, "2, 16, fill, top"); //$NON-NLS-1$
 		
 		panel_1 = new JPanel();
 		getContentPane().add(panel_1, "1, 2, 2, 1"); //$NON-NLS-1$
@@ -185,6 +174,13 @@ public class OrganizeFilterDialog extends JDialog {
 			}
 		});
 		panel_1.add(btnOK);
+		
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosed(WindowEvent e) {
+				if (action != null) action.finish();
+			}
+		});
 	}
 
 	private void updateList() {
@@ -203,8 +199,6 @@ public class OrganizeFilterDialog extends JDialog {
 	
 	private void onActionOK() {
 		dispose();
-		
-		action.finish();
 	}
 	
 	private void onActionEdit() {
@@ -212,28 +206,15 @@ public class OrganizeFilterDialog extends JDialog {
 		
 		if (sel == -1) return;
 		
-		final CustomFilterObject cfo = filterlist.get(sel);
+		final CustomFilterObject cfo = filterlist.get(sel).copy();
 		
-		new CustomOperatorFilterDialog(movielist, cfo.getFilter(), new FinishListener() {
+		new CustomFilterEditDialog(this, movielist, cfo, new FinishListener() {
 			@Override
 			public void finish() {
+				filterlist.get(sel).apply(cfo);
 				updateList();
 			}
-		}, this, true).setVisible(true);
-	}
-
-	private void onActionRename() {
-		int sel = lstBoxFilter.getSelectedIndex();
-		
-		if (sel == -1) return;
-		
-		CustomFilterObject cfo = filterlist.get(sel);
-		
-		String name = DialogHelper.showLocalInputDialog(this, "OrganizeFilterDialog.nameDialog.text", cfo.getName()); //$NON-NLS-1$
-		
-		cfo.setName(name);
-		
-		updateList();
+		}).setVisible(true);
 	}
 	
 	private void onActionRem() {
@@ -247,18 +228,15 @@ public class OrganizeFilterDialog extends JDialog {
 	}
 
 	private void onActionAdd() {
-		final CustomOperator afilter;
+		final CustomFilterObject cfo = new CustomFilterObject("New filter", new CustomAndOperator()); //$NON-NLS-1$
 		
-		new CustomOperatorFilterDialog(movielist, afilter = new CustomAndOperator(), new FinishListener() {
+		new CustomFilterEditDialog(this, movielist, cfo, new FinishListener() {
 			@Override
 			public void finish() {
-				String name = DialogHelper.showLocalInputDialog(OrganizeFilterDialog.this, "OrganizeFilterDialog.nameDialog.text", "");  //$NON-NLS-1$ //$NON-NLS-2$
-				if (name != null && !name.trim().isEmpty()) {
-					filterlist.add(new CustomFilterObject(name, afilter));
-					updateList();
-				}
+				filterlist.add(cfo);
+				updateList();
 			}
-		}, this, true).setVisible(true);
+		}).setVisible(true);
 	}
 	
 	private void onActionDown() {
@@ -300,6 +278,5 @@ public class OrganizeFilterDialog extends JDialog {
 		btnDown.setEnabled(lstBoxFilter.getSelectedIndex() < (lstBoxFilter.getModel().getSize()-1));
 		btnRem.setEnabled(lstBoxFilter.getSelectedIndex() >= 0);
 		btnEdit.setEnabled(lstBoxFilter.getSelectedIndex() >= 0);
-		btnRename.setEnabled(lstBoxFilter.getSelectedIndex() >= 0);
 	}
 }

@@ -12,6 +12,10 @@ public class TableCustomFilter extends RowFilter<ClipTableModel, Object> {
 		super();
 		this.filter = filter;
 	}
+	
+	public AbstractCustomFilter getFilter() {
+		return filter;
+	}
 
 	@Override
 	public boolean include(Entry<? extends ClipTableModel, ? extends Object> e) {

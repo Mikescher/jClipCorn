@@ -32,6 +32,10 @@ public abstract class CCStream<TType> implements Iterator<TType>, Iterable<TType
 		return new CastStream<>(this);
 	}
 	
+	public <TCastType> CCStream<TCastType> cast(Class<TCastType> type) {
+		return new CastStream<>(this);
+	}
+	
 	public List<TType> enumerate() {
 		List<TType> result = new ArrayList<>();
 		
@@ -59,6 +63,22 @@ public abstract class CCStream<TType> implements Iterator<TType>, Iterable<TType
 
 	public boolean any() {
 		return cloneFresh().hasNext();
+	}
+
+	public boolean any(Function<TType, Boolean> condition) {
+		for (TType m : this) {
+			if (condition.apply(m)) return true;
+		}
+		
+		return false;
+	}
+
+	public boolean all(Function<TType, Boolean> condition) {
+		for (TType m : this) {
+			if (!condition.apply(m)) return false;
+		}
+		
+		return true;
 	}
 	
 	public TType maxOrDefault(Comparator<? super TType> comp, TType defValue) {

@@ -35,4 +35,13 @@ public class CustomFilterObject {
 	public String toString() {
 		return name;
 	}
+
+	public CustomFilterObject copy() {
+		return new CustomFilterObject(name, (CustomOperator)filter.createCopy());
+	}
+
+	public void apply(CustomFilterObject cfo) {
+		name = cfo.name;
+		filter = cfo.filter;
+	}
 }

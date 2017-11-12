@@ -1,16 +1,17 @@
 package de.jClipCorn.gui.guiComponents.jSimpleTree;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.util.function.Consumer;
 
 import javax.swing.Icon;
 
 public class SimpleTreeObject {
+	public class SimpleTreeEvent { public boolean ctrlDown; public SimpleTreeObject source; }
+	
 	private final Icon icon;
 	private final String text;
-	private final ActionListener listener;
+	private final Consumer<SimpleTreeEvent> listener;
 	
-	public SimpleTreeObject(Icon icon, String text, ActionListener listener) {
+	public SimpleTreeObject(Icon icon, String text, Consumer<SimpleTreeEvent> listener) {
 		this.icon = icon;
 		this.text = text;
 		this.listener = listener;
@@ -30,7 +31,13 @@ public class SimpleTreeObject {
 		return text;
 	}
 	
-	public void execute() {
-		if (listener != null) listener.actionPerformed(new ActionEvent(this, 0, null));
+	public void execute(boolean ctrlDown) {
+		
+		SimpleTreeEvent e = new SimpleTreeEvent();
+		
+		e.ctrlDown = ctrlDown;
+		e.source = this;
+		
+		if (listener != null) listener.accept(e);
 	}
 }

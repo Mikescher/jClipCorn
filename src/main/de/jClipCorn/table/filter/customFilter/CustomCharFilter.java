@@ -1,6 +1,5 @@
 package de.jClipCorn.table.filter.customFilter;
 
-import java.awt.Component;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
@@ -9,9 +8,8 @@ import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.ICCDatabaseStructureElement;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.table.filter.AbstractCustomFilter;
-import de.jClipCorn.table.filter.CustomFilterDialog;
-import de.jClipCorn.table.filter.customFilterDialogs.CustomCharFilterDialog;
-import de.jClipCorn.util.listener.FinishListener;
+import de.jClipCorn.table.filter.filterConfig.CustomFilterCharConfig;
+import de.jClipCorn.table.filter.filterConfig.CustomFilterConfig;
 
 public class CustomCharFilter extends AbstractCustomFilter {
 	@SuppressWarnings("nls")
@@ -92,11 +90,6 @@ public class CustomCharFilter extends AbstractCustomFilter {
 	}
 
 	@Override
-	public CustomFilterDialog CreateDialog(FinishListener fl, Component parent, CCMovieList ml) {
-		return new CustomCharFilterDialog(this, fl, parent);
-	}
-
-	@Override
 	public AbstractCustomFilter createNew() {
 		return new CustomCharFilter();
 	}
@@ -105,5 +98,13 @@ public class CustomCharFilter extends AbstractCustomFilter {
 		CustomCharFilter f = new CustomCharFilter();
 		f.setCharset(data);
 		return f;
+	}
+
+	@Override
+	public CustomFilterConfig[] createConfig(CCMovieList ml) {
+		return new CustomFilterConfig[]
+		{
+			new CustomFilterCharConfig(() -> charset, a -> charset = a),
+		};
 	}
 }

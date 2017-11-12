@@ -15,6 +15,8 @@ import de.jClipCorn.util.helper.SimpleFileUtils;
 public class CustomFilterList extends ArrayList<CustomFilterObject> {
 	private static final long serialVersionUID = -1658394481177986689L;
 
+	public static String NAME_TEMPORARY = "{{temporary}}"; //$NON-NLS-1$
+	
 	public void save() {
 		if (CCProperties.getInstance().ARG_READONLY) {
 			CCLog.addInformation(LocaleBundle.getString("LogMessage.OperationFailedDueToReadOnly")); //$NON-NLS-1$

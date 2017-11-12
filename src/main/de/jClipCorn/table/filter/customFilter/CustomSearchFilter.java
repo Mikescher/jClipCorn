@@ -1,6 +1,5 @@
 package de.jClipCorn.table.filter.customFilter;
 
-import java.awt.Component;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
@@ -13,10 +12,9 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCGenreList;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.table.filter.AbstractCustomDatabaseElementFilter;
 import de.jClipCorn.table.filter.AbstractCustomFilter;
-import de.jClipCorn.table.filter.CustomFilterDialog;
-import de.jClipCorn.table.filter.customFilterDialogs.CustomSearchFilterDialog;
+import de.jClipCorn.table.filter.filterConfig.CustomFilterConfig;
+import de.jClipCorn.table.filter.filterConfig.CustomFilterStringConfig;
 import de.jClipCorn.util.datetime.YearRange;
-import de.jClipCorn.util.listener.FinishListener;
 
 public class CustomSearchFilter extends AbstractCustomDatabaseElementFilter {
 	private String searchTerm = ""; //$NON-NLS-1$
@@ -144,11 +142,6 @@ public class CustomSearchFilter extends AbstractCustomDatabaseElementFilter {
 	}
 
 	@Override
-	public CustomFilterDialog CreateDialog(FinishListener fl, Component parent, CCMovieList ml) {
-		return new CustomSearchFilterDialog(this, fl, parent);
-	}
-
-	@Override
 	public AbstractCustomFilter createNew() {
 		return new CustomSearchFilter();
 	}
@@ -157,5 +150,13 @@ public class CustomSearchFilter extends AbstractCustomDatabaseElementFilter {
 		CustomSearchFilter f = new CustomSearchFilter();
 		f.setSearchTerm(data);
 		return f;
+	}
+
+	@Override
+	public CustomFilterConfig[] createConfig(CCMovieList ml) {
+		return new CustomFilterConfig[]
+		{
+			new CustomFilterStringConfig(() -> searchTerm, p -> searchTerm = p),
+		};
 	}
 }

@@ -1,6 +1,5 @@
 package de.jClipCorn.table.filter.customFilter;
 
-import java.awt.Component;
 import java.util.regex.Pattern;
 
 import de.jClipCorn.database.CCMovieList;
@@ -8,9 +7,9 @@ import de.jClipCorn.database.databaseElement.ICCDatabaseStructureElement;
 import de.jClipCorn.database.databaseElement.columnTypes.CCTagList;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.table.filter.AbstractCustomFilter;
-import de.jClipCorn.table.filter.CustomFilterDialog;
-import de.jClipCorn.table.filter.customFilterDialogs.CustomTagFilterDialog;
-import de.jClipCorn.util.listener.FinishListener;
+import de.jClipCorn.table.filter.filterConfig.CustomFilterConfig;
+import de.jClipCorn.table.filter.filterConfig.CustomFilterNamedIntChooserConfig;
+import de.jClipCorn.util.stream.CCStreams;
 
 public class CustomTagFilter extends AbstractCustomFilter {
 	private int tag = 0;
@@ -79,11 +78,6 @@ public class CustomTagFilter extends AbstractCustomFilter {
 	}
 
 	@Override
-	public CustomFilterDialog CreateDialog(FinishListener fl, Component parent, CCMovieList ml) {
-		return new CustomTagFilterDialog(this, fl, parent);
-	}
-
-	@Override
 	public AbstractCustomFilter createNew() {
 		return new CustomTagFilter();
 	}
@@ -92,5 +86,13 @@ public class CustomTagFilter extends AbstractCustomFilter {
 		CustomTagFilter f = new CustomTagFilter();
 		f.setTag(data);
 		return f;
+	}
+
+	@Override
+	public CustomFilterConfig[] createConfig(CCMovieList ml) {
+		return new CustomFilterConfig[]
+		{
+			new CustomFilterNamedIntChooserConfig(() -> tag, p -> tag = p, CCStreams.iterate(CCTagList.getList()).enumerate()),
+		};
 	}
 }

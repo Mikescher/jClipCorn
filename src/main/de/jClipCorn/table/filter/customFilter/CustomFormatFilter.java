@@ -1,6 +1,5 @@
 package de.jClipCorn.table.filter.customFilter;
 
-import java.awt.Component;
 import java.util.regex.Pattern;
 
 import de.jClipCorn.database.CCMovieList;
@@ -8,9 +7,8 @@ import de.jClipCorn.database.databaseElement.ICCDatabaseStructureElement;
 import de.jClipCorn.database.databaseElement.columnTypes.CCFileFormat;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.table.filter.AbstractCustomFilter;
-import de.jClipCorn.table.filter.CustomFilterDialog;
-import de.jClipCorn.table.filter.customFilterDialogs.CustomFormatFilterDialog;
-import de.jClipCorn.util.listener.FinishListener;
+import de.jClipCorn.table.filter.filterConfig.CustomFilterConfig;
+import de.jClipCorn.table.filter.filterConfig.CustomFilterEnumChooserConfig;
 
 public class CustomFormatFilter extends AbstractCustomFilter {
 	private CCFileFormat format = CCFileFormat.AVI;
@@ -84,14 +82,17 @@ public class CustomFormatFilter extends AbstractCustomFilter {
 		return true;
 	}
 
-	@Override
-	public CustomFilterDialog CreateDialog(FinishListener fl, Component parent, CCMovieList ml) {
-		return new CustomFormatFilterDialog(this, fl, parent);
-	}
-	
 	public static CustomFormatFilter create(CCFileFormat data) {
 		CustomFormatFilter f = new CustomFormatFilter();
 		f.setFormat(data);
 		return f;
+	}
+
+	@Override
+	public CustomFilterConfig[] createConfig(CCMovieList ml) {
+		return new CustomFilterConfig[]
+		{
+			new CustomFilterEnumChooserConfig<>(() -> format, f -> format = f, CCFileFormat.getWrapper()),
+		};
 	}
 }

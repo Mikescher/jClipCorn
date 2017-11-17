@@ -157,5 +157,3 @@ public class Main {
 //     - progress, async, abort
 
 //TODO MainTable and SeriesTable as JCCSimpleTable
-
-//TODO en for 'series' should be 'tv show'

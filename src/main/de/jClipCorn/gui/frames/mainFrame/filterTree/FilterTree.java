@@ -24,6 +24,8 @@ import de.jClipCorn.gui.frames.mainFrame.clipTable.ClipTable;
 import de.jClipCorn.gui.frames.mainFrame.clipTable.RowFilterSource;
 import de.jClipCorn.gui.frames.organizeFilterFrame.OrganizeFilterDialog;
 import de.jClipCorn.gui.guiComponents.jSimpleTree.SimpleTreeObject;
+import de.jClipCorn.gui.guiComponents.jSimpleTree.SimpleTreeObject.SimpleTreeEvent;
+import de.jClipCorn.gui.guiComponents.jSimpleTree.SimpletreeActionMode;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.CachedResourceLoader;
 import de.jClipCorn.gui.resources.IconRef;
@@ -60,6 +62,8 @@ public class FilterTree extends AbstractFilterTree {
 		this.table = table;
 		this.movielist = list;
 		
+		this.tree.ActionMode = SimpletreeActionMode.OnClick;
+		
 		customFilterList.load();
 	}
 
@@ -68,49 +72,53 @@ public class FilterTree extends AbstractFilterTree {
 		DefaultMutableTreeNode node_all = addNodeI(null, null, null, null);
 		initAll(node_all);
 		
-		DefaultMutableTreeNode node_zyklus = addNode(null, Resources.ICN_SIDEBAR_ZYKLUS, LocaleBundle.getString("FilterTree.Zyklus"), null); //$NON-NLS-1$
+		DefaultMutableTreeNode node_zyklus = addNode(null, Resources.ICN_SIDEBAR_ZYKLUS, LocaleBundle.getString("FilterTree.Zyklus"), this::expand); //$NON-NLS-1$
 		initZyklus(node_zyklus);
 		
 		if (movielist.getGroupList().size() > 0) {
-			DefaultMutableTreeNode node_groups = addNode(null, Resources.ICN_SIDEBAR_GROUPS, LocaleBundle.getString("FilterTree.Groups"), null); //$NON-NLS-1$
+			DefaultMutableTreeNode node_groups = addNode(null, Resources.ICN_SIDEBAR_GROUPS, LocaleBundle.getString("FilterTree.Groups"), this::expand); //$NON-NLS-1$
 			initGroups(node_groups);
 		}
 		
-		DefaultMutableTreeNode node_genre = addNode(null, Resources.ICN_SIDEBAR_GENRE, LocaleBundle.getString("FilterTree.Genre"), null); //$NON-NLS-1$
+		DefaultMutableTreeNode node_genre = addNode(null, Resources.ICN_SIDEBAR_GENRE, LocaleBundle.getString("FilterTree.Genre"), this::expand); //$NON-NLS-1$
 		initGenre(node_genre);
 		
-		DefaultMutableTreeNode node_onlinescore = addNode(null, Resources.ICN_SIDEBAR_ONLINESCORE, LocaleBundle.getString("FilterTree.IMDB"), null); //$NON-NLS-1$
+		DefaultMutableTreeNode node_onlinescore = addNode(null, Resources.ICN_SIDEBAR_ONLINESCORE, LocaleBundle.getString("FilterTree.IMDB"), this::expand); //$NON-NLS-1$
 		initOnlineScore(node_onlinescore);
 		
-		DefaultMutableTreeNode node_score = addNode(null, Resources.ICN_SIDEBAR_SCORE, LocaleBundle.getString("FilterTree.Score"), null); //$NON-NLS-1$
+		DefaultMutableTreeNode node_score = addNode(null, Resources.ICN_SIDEBAR_SCORE, LocaleBundle.getString("FilterTree.Score"), this::expand); //$NON-NLS-1$
 		initScore(node_score);
 		
-		DefaultMutableTreeNode node_fsk = addNode(null, Resources.ICN_TABLE_FSK_2, LocaleBundle.getString("FilterTree.FSK"), null); //$NON-NLS-1$
+		DefaultMutableTreeNode node_fsk = addNode(null, Resources.ICN_TABLE_FSK_2, LocaleBundle.getString("FilterTree.FSK"), this::expand); //$NON-NLS-1$
 		initFSK(node_fsk);
 		
-		DefaultMutableTreeNode node_year = addNode(null, Resources.ICN_SIDEBAR_YEAR, LocaleBundle.getString("FilterTree.Year"), null); //$NON-NLS-1$
+		DefaultMutableTreeNode node_year = addNode(null, Resources.ICN_SIDEBAR_YEAR, LocaleBundle.getString("FilterTree.Year"), this::expand); //$NON-NLS-1$
 		initYear(node_year);
 		
-		DefaultMutableTreeNode node_format = addNode(null, Resources.ICN_SIDEBAR_FORMAT, LocaleBundle.getString("FilterTree.Format"), null); //$NON-NLS-1$
+		DefaultMutableTreeNode node_format = addNode(null, Resources.ICN_SIDEBAR_FORMAT, LocaleBundle.getString("FilterTree.Format"), this::expand); //$NON-NLS-1$
 		initFormat(node_format);
 		
-		DefaultMutableTreeNode node_quality = addNode(null, Resources.ICN_SIDEBAR_QUALITY, LocaleBundle.getString("FilterTree.Quality"), null); //$NON-NLS-1$
+		DefaultMutableTreeNode node_quality = addNode(null, Resources.ICN_SIDEBAR_QUALITY, LocaleBundle.getString("FilterTree.Quality"), this::expand); //$NON-NLS-1$
 		initQuality(node_quality);
 		
-		DefaultMutableTreeNode node_tags = addNode(null, Resources.ICN_SIDEBAR_TAGS, LocaleBundle.getString("FilterTree.Tags"), null); //$NON-NLS-1$
+		DefaultMutableTreeNode node_tags = addNode(null, Resources.ICN_SIDEBAR_TAGS, LocaleBundle.getString("FilterTree.Tags"), this::expand); //$NON-NLS-1$
 		initTags(node_tags);
 		
-		DefaultMutableTreeNode node_language = addNode(null, Resources.ICN_SIDEBAR_LANGUAGE, LocaleBundle.getString("FilterTree.Language"), null); //$NON-NLS-1$
+		DefaultMutableTreeNode node_language = addNode(null, Resources.ICN_SIDEBAR_LANGUAGE, LocaleBundle.getString("FilterTree.Language"), this::expand); //$NON-NLS-1$
 		initLanguage(node_language);
 		
-		DefaultMutableTreeNode node_typ = addNode(null, Resources.ICN_SIDEBAR_TYP, LocaleBundle.getString("FilterTree.Type"), null); //$NON-NLS-1$
+		DefaultMutableTreeNode node_typ = addNode(null, Resources.ICN_SIDEBAR_TYP, LocaleBundle.getString("FilterTree.Type"), this::expand); //$NON-NLS-1$
 		initTyp(node_typ);
 		
-		DefaultMutableTreeNode node_viewed = addNode(null, Resources.ICN_SIDEBAR_VIEWED, LocaleBundle.getString("FilterTree.Viewed"), null); //$NON-NLS-1$
+		DefaultMutableTreeNode node_viewed = addNode(null, Resources.ICN_SIDEBAR_VIEWED, LocaleBundle.getString("FilterTree.Viewed"), this::expand); //$NON-NLS-1$
 		initViewed(node_viewed);
 
-		DefaultMutableTreeNode node_custom = addNode(null,  Resources.ICN_SIDEBAR_CUSTOM, LocaleBundle.getString("FilterTree.Custom"), null); //$NON-NLS-1$
+		DefaultMutableTreeNode node_custom = addNode(null,  Resources.ICN_SIDEBAR_CUSTOM, LocaleBundle.getString("FilterTree.Custom"), this::expand); //$NON-NLS-1$
 		initCustom(node_custom);
+	}
+	
+	private void expand(SimpleTreeEvent evt) {
+		tree.expandPath(evt.path);
 	}
 	
 	private void initAll(DefaultMutableTreeNode parent) {

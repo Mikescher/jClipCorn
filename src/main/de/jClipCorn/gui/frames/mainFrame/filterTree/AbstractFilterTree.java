@@ -26,7 +26,7 @@ import de.jClipCorn.gui.resources.MultiIconRef;
 public abstract class AbstractFilterTree extends JScrollPane implements CCDBUpdateListener, TreeExpansionListener {
 	private static final long serialVersionUID = -1226727910191440220L;
 	
-	private JSimpleTree tree;
+	protected JSimpleTree tree;
 	private DefaultTreeModel model;
 	protected DefaultMutableTreeNode root;
 	
@@ -51,7 +51,7 @@ public abstract class AbstractFilterTree extends JScrollPane implements CCDBUpda
 	
 	private void configureTree() {
 		tree.setVisibleRowCount(14);
-		tree.setToggleClickCount(1);
+		tree.setToggleClickCount(999);
 		tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
 		tree.setRowHeight(16 + 2);
 		

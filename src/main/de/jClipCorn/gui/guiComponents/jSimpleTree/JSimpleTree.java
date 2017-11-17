@@ -10,11 +10,14 @@ import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreePath;
 
 public class JSimpleTree extends JTree implements TreeSelectionListener {
 	private static final long serialVersionUID = 6361624518488393639L;
 
 	private int _lastModifier = 0;
+	
+	public SimpletreeActionMode ActionMode = SimpletreeActionMode.OnSelect;
 	
 	public JSimpleTree() {
 		super();
@@ -47,6 +50,14 @@ public class JSimpleTree extends JTree implements TreeSelectionListener {
 			@Override
 			public void mousePressed(MouseEvent e) {
 				_lastModifier = e.getModifiers(); 
+
+		        TreePath selPath = JSimpleTree.this.getPathForLocation(e.getX(), e.getY());
+		        if(selPath != null && e.getClickCount() == 1 && ActionMode == SimpletreeActionMode.OnClick) {
+	    			Object user = ((DefaultMutableTreeNode) selPath.getLastPathComponent()).getUserObject();
+	    			if (user != null) {
+	    				((SimpleTreeObject) user).execute(selPath, (_lastModifier & InputEvent.CTRL_MASK) == InputEvent.CTRL_MASK);
+	    			}
+		        }
 			}
 			
 			@Override
@@ -81,13 +92,16 @@ public class JSimpleTree extends JTree implements TreeSelectionListener {
 
 	@Override
 	public void valueChanged(TreeSelectionEvent e) {
-		Object o = this.getLastSelectedPathComponent();
-		if (o != null && o instanceof DefaultMutableTreeNode) {		
-			DefaultMutableTreeNode node = (DefaultMutableTreeNode) o;
-			
-			Object user = node.getUserObject();
-			if (user != null) {
-				((SimpleTreeObject) user).execute((_lastModifier & InputEvent.CTRL_MASK) == InputEvent.CTRL_MASK);
+		if (ActionMode == SimpletreeActionMode.OnSelect) {
+			TreePath p = this.getSelectionPath();
+			Object o = p.getLastPathComponent();
+			if (o != null && o instanceof DefaultMutableTreeNode) {		
+				DefaultMutableTreeNode node = (DefaultMutableTreeNode) o;
+				
+				Object user = node.getUserObject();
+				if (user != null) {
+					((SimpleTreeObject) user).execute(p, (_lastModifier & InputEvent.CTRL_MASK) == InputEvent.CTRL_MASK);
+				}
 			}
 		}
 	}

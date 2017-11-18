@@ -265,7 +265,7 @@ public class CoverCropDialog extends JDialog {
 		btnOk.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (listener != null) listener.editingFinished(getCroppedImage());
+				if (listener != null) listener.editingFinished(getNewCroppedImage());
 				dispose();
 			}
 		});
@@ -809,6 +809,14 @@ public class CoverCropDialog extends JDialog {
 
 	private BufferedImage getCroppedImage() {
 		return img.getSubimage(crop_tl.x, crop_tl.y, crop_br.x - crop_tl.x, crop_br.y - crop_tl.y);
+	}
+
+	private BufferedImage getNewCroppedImage() {
+	    BufferedImage b = new BufferedImage(crop_br.x - crop_tl.x, crop_br.y - crop_tl.y, img.getType());
+	    Graphics g = b.getGraphics();
+	    g.drawImage(img, -crop_tl.x, -crop_tl.y, null);
+	    g.dispose();
+	    return b;
 	}
 	
 	private void repaintPreviewImagesSmall(Graphics g) {

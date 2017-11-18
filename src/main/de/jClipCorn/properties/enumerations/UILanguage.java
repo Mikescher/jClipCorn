@@ -15,7 +15,7 @@ public enum UILanguage implements ContinoousEnum<UILanguage> {
 		LocaleBundle.getString("UILanguage.Opt0"),
 		LocaleBundle.getString("UILanguage.Opt1"),
 		LocaleBundle.getString("UILanguage.Opt2"),
-		LocaleBundle.getString("UILanguage.Opt2"),
+		LocaleBundle.getString("UILanguage.Opt3"),
 	};
 	
 	private int id;

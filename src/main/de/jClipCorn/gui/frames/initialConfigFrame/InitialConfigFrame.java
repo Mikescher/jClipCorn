@@ -134,6 +134,7 @@ public class InitialConfigFrame extends JDialog {
 		cbCheckForUpdates = new JCheckBox();
 		cbCheckForUpdates.setSelected(CCProperties.getInstance().PROP_COMMON_CHECKFORUPDATES.getValue());
 		cbCheckForUpdates.setBounds(269, 221, 175, 24);
+		cbCheckForUpdates.setSelected(true);
 		getContentPane().add(cbCheckForUpdates);
 		
 		lblCheckForUpdates = new JLabel(LocaleBundle.getString("InitialConfigFrame.lblUpdates")); //$NON-NLS-1$

@@ -27,6 +27,16 @@ public abstract class CCStream<TType> implements Iterator<TType>, Iterable<TType
 	public CCStream<TType> sort(Comparator<TType> _comparator) {
 		return new SortedStream<>(this, _comparator);
 	}
+
+	@SuppressWarnings("unchecked")
+	public <TType, TAttrType> CCStream<TType> sortByProperty(Function<TType, TAttrType> _selector, Comparator<TAttrType> _comparator) {
+		return new SortedStream<>((CCStream<TType>) this, new Comparator<TType>() {
+			@Override
+			public int compare(TType o1, TType o2) {
+				return _comparator.compare(_selector.apply(o1), _selector.apply(o2));
+			}
+		});
+	}
 	
 	public <TCastType> CCStream<TCastType> cast() {
 		return new CastStream<>(this);
@@ -42,6 +52,10 @@ public abstract class CCStream<TType> implements Iterator<TType>, Iterable<TType
 		for (TType v : this) result.add(v);
 		
 		return result;
+	}
+	
+	public TType[] toArray(TType[] a) {
+		return enumerate().toArray(a);
 	}
 
 	// enumerate this iterator, the stream is dead after this operation (!)

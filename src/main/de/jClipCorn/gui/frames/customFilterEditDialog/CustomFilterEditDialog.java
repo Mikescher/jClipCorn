@@ -351,7 +351,7 @@ public class CustomFilterEditDialog extends JDialog {
 	private void createEditPanel_Operator(JPanel pnl, CustomOperator filter) {
 		{
 			JComboBox<AbstractCustomFilter> cbxFilter = new JComboBox<>();
-			cbxFilter.setModel(new DefaultComboBoxModel<>(AbstractCustomFilter.getAllSimpleFilter()));
+			cbxFilter.setModel(new DefaultComboBoxModel<>(AbstractCustomFilter.iterateAllSimpleFilterSorted().toArray(new AbstractCustomFilter[0])));
 			cbxFilter.setRenderer(new CustomFilterEditFilterComboboxRenderer());
 			pnl.add(cbxFilter, "1, 2, fill, default"); //$NON-NLS-1$
 			

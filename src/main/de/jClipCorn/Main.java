@@ -117,7 +117,6 @@ public class Main {
 //TODO save original/alternative title (eng title) --> get from TMDB / IMDB
 
 //TODO
-//   - show cover in HD (right click in coverpanel + series cover control + cbl click coverpanel)                                             
 //   - Format/Quality etc also for Serien (everything for a;b;a+b with toggle control?  ->  only were applicable)                             
 //   - combined timeline row (like github commit overview)                                                                                                               
 //   - find missing seasons online
@@ -153,3 +152,5 @@ public class Main {
 //     - progress, async, abort
 
 //TODO MainTable and SeriesTable as JCCSimpleTable
+
+//TODO Improve Customfilter serialization (just give them list of properties and string write/read happens autom)

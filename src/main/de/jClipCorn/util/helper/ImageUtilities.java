@@ -42,7 +42,7 @@ public class ImageUtilities {
 	}
 
 	public static int getCoverHeight() {
-		return CCProperties.getInstance().PROP_DATABASE_MAX_COVER_SIZE.getValue().getWidth();
+		return CCProperties.getInstance().PROP_DATABASE_MAX_COVER_SIZE.getValue().getHeight();
 	}
 	
 	public static BufferedImage resizeCoverImageForFullSizeUI(BufferedImage bi) {

@@ -32,6 +32,7 @@ public class ImageUtilities {
 	public final static int HALF_COVER_HEIGHT = BASE_COVER_HEIGHT / 2;
 	
 	public final static double COVER_RATIO = BASE_COVER_WIDTH / (BASE_COVER_HEIGHT * 1d);
+	private final static double MAX_RATIO_DIFF = 0.02;
 	
 	private final static int SERIES_MASK_WIDTH  = 56;
 	private final static int SERIES_MASK_HEIGHT = 56;
@@ -453,5 +454,11 @@ public class ImageUtilities {
 
 		if (pixelStop < img.getWidth())
 			g.fillRect(pixelStop, 0, img.getWidth() - pixelStop, img.getHeight());
+	}
+	
+	public static boolean isImageRatioAcceptable(int w, int h) {
+		double cropdiff = Math.abs((w * 1d) / (h) - COVER_RATIO);
+		
+		return cropdiff <= MAX_RATIO_DIFF;
 	}
 }

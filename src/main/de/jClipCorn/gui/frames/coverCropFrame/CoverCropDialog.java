@@ -65,7 +65,6 @@ public class CoverCropDialog extends JDialog {
 	private final static int MIN_HEIGHT = 50;
 	
 	private final static float CROP_TRANSPARENCY = 0.85f;
-	private final static double MAX_CROP_DIFF = 0.02;
 	
 	private final static int CROPSTATE_NOTHING 		= 0b00000;
 	
@@ -640,9 +639,7 @@ public class CoverCropDialog extends JDialog {
 	}
 	
 	private boolean isRatioAcceptable() {
-		double cropdiff = Math.abs((crop_br.x - crop_tl.x * 1d) / (crop_br.y - crop_tl.y) - ImageUtilities.COVER_RATIO);
-		
-		return cropdiff <= MAX_CROP_DIFF;
+		return ImageUtilities.isImageRatioAcceptable(crop_br.x - crop_tl.x, crop_br.y - crop_tl.y);
 	}
 
 	public void repaintAll() {
@@ -1092,12 +1089,12 @@ public class CoverCropDialog extends JDialog {
 		int x = (int)(e.getX() / displayScale);
 		int y = (int)(e.getY() / displayScale);
 		
-		int clr = img.getRGB(x, y);
-		
 		String col = "?"; //$NON-NLS-1$
 		
-		if (x >= 0 && y >= 0 && x < img.getWidth() && y < img.getHeight())
+		if (x >= 0 && y >= 0 && x < img.getWidth() && y < img.getHeight()) {
+			int clr = img.getRGB(x, y);
 			col = String.format("#%02X%02X%02X", (clr & 0x00ff0000) >> 16, (clr & 0x0000ff00) >> 8, (clr & 0x000000ff) >> 0); //$NON-NLS-1$
+		}
 		
 		lblMouse.setText(LocaleBundle.getFormattedString("CoverCropFrame.lblMouse.text", x, y, col)); //$NON-NLS-1$
 	}

@@ -2,20 +2,20 @@ package de.jClipCorn.gui.guiComponents.editCoverControl;
 
 import java.awt.image.BufferedImage;
 
-import javax.swing.JPanel;
+import javax.swing.JLayeredPane;
 
-import de.jClipCorn.database.databaseElement.columnTypes.CCFileFormat;
 import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguage;
+import de.jClipCorn.database.databaseElement.columnTypes.CCFileFormat;
+import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReference;
 import de.jClipCorn.database.databaseElement.columnTypes.CCQuality;
 import de.jClipCorn.online.metadata.ParseResultHandler;
-import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReference;
 import de.jClipCorn.util.listener.ImageCropperResultListener;
 
 
 /**
- * Giant NOP Class to keep EditCOerCOntrol.java clean
+ * Giant NOP Class to keep EditCOerControl.java clean
  */
-public class AbstractEditCoverControl extends JPanel implements ParseResultHandler, ImageCropperResultListener {
+public class AbstractEditCoverControl extends JLayeredPane implements ParseResultHandler, ImageCropperResultListener {
 	private static final long serialVersionUID = 2645958195252886548L;
 
 	public AbstractEditCoverControl() {

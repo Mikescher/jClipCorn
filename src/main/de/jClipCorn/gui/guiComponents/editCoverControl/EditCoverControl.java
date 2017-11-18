@@ -1,14 +1,19 @@
 package de.jClipCorn.gui.guiComponents.editCoverControl;
 
+import java.awt.Color;
+import java.awt.Point;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
+import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 
@@ -21,6 +26,8 @@ import de.jClipCorn.gui.frames.findCoverFrame.FindCoverDialog;
 import de.jClipCorn.gui.guiComponents.CoverLabel;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
+import de.jClipCorn.gui.resources.CachedResourceLoader;
+import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.online.metadata.ParseResultHandler;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.ClipboardUtilities;
@@ -44,6 +51,7 @@ public class EditCoverControl extends AbstractEditCoverControl {
 	private CoverLabel lblCover;
 	private JSplitButton btnFind;
 	private JButton btnCrop;
+	private JLabel lblResolution;
 	private JPopupMenu popupMenu;
 	private JMenuItem mntmFind;
 	private JMenuItem mntmOpen;
@@ -75,7 +83,28 @@ public class EditCoverControl extends AbstractEditCoverControl {
 
 		lblCover = new CoverLabel(false);
 		lblCover.setPosition(0, 34);
-		add(lblCover);
+		add(lblCover, 1);
+		
+		lblResolution = new JLabel();
+		lblResolution.setBounds(0, 0, 0, 0);
+		lblResolution.setForeground(Color.WHITE);
+		lblResolution.setBackground(Color.DARK_GRAY);
+		lblResolution.setOpaque(true);
+		lblResolution.setFocusable(false);
+    	lblResolution.setVisible(false); 
+		add(lblResolution, 0);
+		
+		lblCover.addMouseListener(new MouseAdapter() {
+		    @Override
+			public void mouseEntered(MouseEvent e) { 
+		    	lblResolution.setVisible(true); 
+		    }
+
+		    @Override
+			public void mouseExited(MouseEvent e) { 
+		    	lblResolution.setVisible(false); 
+		    }
+		});
 
 		popupMenu = new JPopupMenu();
 		{
@@ -132,7 +161,7 @@ public class EditCoverControl extends AbstractEditCoverControl {
 		});
 		btnFind.setPopupMenu(popupMenu);
 		btnFind.setBounds(102, 0, 80, 23);
-		add(btnFind);
+		add(btnFind, 0);
 
 		btnCrop = new JButton(LocaleBundle.getString("EditCoverControl.btnCrop.text")); //$NON-NLS-1$
 		btnCrop.addActionListener(new ActionListener() {
@@ -142,7 +171,7 @@ public class EditCoverControl extends AbstractEditCoverControl {
 			}
 		});
 		btnCrop.setBounds(0, 0, 70, 23);
-		add(btnCrop);
+		add(btnCrop, 0);
 
 		setSize(CTRL_WIDTH, CTRL_HEIGHT);
 	}
@@ -225,11 +254,25 @@ public class EditCoverControl extends AbstractEditCoverControl {
 		if (nci != null) {
 			this.fullImage = nci;
 
-			lblCover.setAndResizeCover(fullImage);
+			BufferedImage resized = ImageUtilities.resizeCoverImageForFullSizeUI(nci);
+			
+			if (!ImageUtilities.isImageRatioAcceptable(nci.getWidth(), nci.getHeight())) {
+				Point tr = ImageUtilities.getTopRightNonTransparentPixel(resized);
+				
+				resized.getGraphics().drawImage(CachedResourceLoader.getImage(Resources.ICN_WARNING_TRIANGLE.icon32x32), tr.x - 32 - 2, tr.y + 2, null);
+			}
+					
+			lblCover.setCoverDirect(resized, nci);
+
+			lblResolution.setText(nci.getWidth() + " x " + nci.getHeight()); //$NON-NLS-1$
+			Point tl = ImageUtilities.getTopLeftNonTransparentPixel(resized);
+			lblResolution.setBounds(lblCover.getBounds().x + tl.x, lblCover.getBounds().y + tl.y, (int)lblResolution.getPreferredSize().getWidth(), (int)lblResolution.getPreferredSize().getHeight());
 		} else {
 			this.fullImage = null;
 
 			lblCover.clearCover();
+			
+			lblResolution.setText(""); //$NON-NLS-1$
 		}
 
 		btnCrop.setEnabled(isCoverSet() && isCoverSet());

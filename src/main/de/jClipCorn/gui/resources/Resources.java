@@ -19,6 +19,7 @@ public class Resources {
 	public final static ImageRef IMG_COVER_SERIES_MASK					= registerImage("/mask_series.png");
 	public final static ImageRef IMG_COVER_ERROR_ON						= registerImage("/cover_errror_on.png");
 	public final static ImageRef IMG_COVER_ERROR_OFF					= registerImage("/cover_errror_off.png");
+	public final static MultiIconRef ICN_WARNING_TRIANGLE		 		= registerMultisizeIcon("/icons/common/error.png");
 	// #############################################  </COMMON>  #############################################
 	
 	

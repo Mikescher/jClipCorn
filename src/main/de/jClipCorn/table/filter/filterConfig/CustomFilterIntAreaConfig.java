@@ -16,8 +16,8 @@ import com.jgoodies.forms.layout.FormSpecs;
 import com.jgoodies.forms.layout.RowSpec;
 
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.util.CCIntArea;
 import de.jClipCorn.util.DecimalSearchType;
+import de.jClipCorn.util.datatypes.CCIntArea;
 
 public class CustomFilterIntAreaConfig extends CustomFilterConfig {
 

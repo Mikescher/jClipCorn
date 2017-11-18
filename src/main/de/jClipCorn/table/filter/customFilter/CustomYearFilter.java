@@ -11,8 +11,8 @@ import de.jClipCorn.table.filter.AbstractCustomFilter;
 import de.jClipCorn.table.filter.AbstractCustomMovieOrSeriesFilter;
 import de.jClipCorn.table.filter.filterConfig.CustomFilterConfig;
 import de.jClipCorn.table.filter.filterConfig.CustomFilterIntAreaConfig;
-import de.jClipCorn.util.CCIntArea;
 import de.jClipCorn.util.DecimalSearchType;
+import de.jClipCorn.util.datatypes.CCIntArea;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.datetime.YearRange;
 

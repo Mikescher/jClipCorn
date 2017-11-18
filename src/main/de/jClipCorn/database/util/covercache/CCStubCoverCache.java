@@ -8,7 +8,7 @@ import java.util.List;
 
 import de.jClipCorn.gui.resources.CachedResourceLoader;
 import de.jClipCorn.gui.resources.Resources;
-import de.jClipCorn.util.Tuple;
+import de.jClipCorn.util.datatypes.Tuple;
 
 public class CCStubCoverCache extends CCCoverCache {
 	@Override
@@ -19,11 +19,6 @@ public class CCStubCoverCache extends CCCoverCache {
 	@Override
 	public BufferedImage getCover(String name) {
 		return CachedResourceLoader.getImage(Resources.IMG_COVER_STANDARD);
-	}
-
-	@Override
-	public BufferedImage getHalfsizeCover(String name) {
-		return CachedResourceLoader.getImage(Resources.IMG_COVER_STANDARD_SMALL);
 	}
 
 	@Override

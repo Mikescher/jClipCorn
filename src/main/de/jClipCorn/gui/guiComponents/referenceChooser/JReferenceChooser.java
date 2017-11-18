@@ -18,8 +18,8 @@ import javax.swing.event.DocumentEvent;
 import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineRefType;
 import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReference;
 import de.jClipCorn.gui.guiComponents.WideComboBox;
-import de.jClipCorn.util.Tuple;
 import de.jClipCorn.util.adapter.DocumentAdapter;
+import de.jClipCorn.util.datatypes.Tuple;
 
 public class JReferenceChooser extends JPanel {
 	private static final long serialVersionUID = 2696192041815168280L;

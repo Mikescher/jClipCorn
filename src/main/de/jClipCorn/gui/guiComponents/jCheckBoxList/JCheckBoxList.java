@@ -14,7 +14,7 @@ import javax.swing.ListSelectionModel;
 
 import de.jClipCorn.gui.guiComponents.StringDisplayConverter;
 import de.jClipCorn.gui.guiComponents.jCheckBoxList.CBListModel.CBFilter;
-import de.jClipCorn.util.Tuple;
+import de.jClipCorn.util.datatypes.Tuple;
 
 public class JCheckBoxList<T> extends JList<JCheckBox> {
 	private static final long serialVersionUID = -449508648731560934L;

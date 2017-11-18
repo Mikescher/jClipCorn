@@ -441,7 +441,7 @@ public class AddSeriesFrame extends JFrame implements ParseResultHandler, UserDa
 		
 		newS.setGroups(edGroups.getValue());
 		
-		newS.setCover(edCvrControl.getResizedImage());
+		newS.setCover(edCvrControl.getResizedImageForStorage());
 		
 		//#####################################################################################
 		
@@ -471,7 +471,7 @@ public class AddSeriesFrame extends JFrame implements ParseResultHandler, UserDa
 		
 		CCOnlineReference ref = edReference.getValue();
 		
-		UserDataProblem.testSeriesData(ret, edCvrControl.getResizedImage(), title, oscore, gen0, gen1, gen2, gen3, gen4, gen5, gen6, gen7, fskidx, ref);
+		UserDataProblem.testSeriesData(ret, edCvrControl.getResizedImageForStorage(), title, oscore, gen0, gen1, gen2, gen3, gen4, gen5, gen6, gen7, fskidx, ref);
 		
 		return ret.isEmpty();
 	}

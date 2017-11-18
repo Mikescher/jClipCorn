@@ -17,7 +17,7 @@ import de.jClipCorn.online.cover.imdb.AgeRatingParser;
 import de.jClipCorn.online.metadata.Metadataparser;
 import de.jClipCorn.online.metadata.OnlineMetadata;
 import de.jClipCorn.properties.enumerations.MetadataParserImplementation;
-import de.jClipCorn.util.Tuple;
+import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.helper.RegExHelper;
 import de.jClipCorn.util.http.HTTPUtilities;
 import de.jClipCorn.util.stream.CCStreams;

@@ -7,7 +7,6 @@ import java.util.Collections;
 import java.util.List;
 
 import javax.swing.DefaultListModel;
-import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -282,7 +281,7 @@ public class WatchHistoryFrame extends JFrame {
 	}
 
 	public void onSelect(WatchHistoryElement elem) {
-		lblCover.setIcon(new ImageIcon(elem.getCover()));
+		lblCover.setAndResizeCover(elem.getCover());
 		edName1.setText(elem.getFullNamePart1());
 		edName2.setText(elem.getFullNamePart2());
 		edName3.setText(elem.getFullNamePart3());

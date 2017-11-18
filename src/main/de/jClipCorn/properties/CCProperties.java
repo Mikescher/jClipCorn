@@ -22,6 +22,7 @@ import de.jClipCorn.properties.enumerations.DisplayDateAlgorithm;
 import de.jClipCorn.properties.enumerations.DoubleClickAction;
 import de.jClipCorn.properties.enumerations.ImageSearchImplementation;
 import de.jClipCorn.properties.enumerations.InitalSortingColumn;
+import de.jClipCorn.properties.enumerations.CoverImageSize;
 import de.jClipCorn.properties.enumerations.MetadataParserImplementation;
 import de.jClipCorn.properties.enumerations.NextEpisodeHeuristic;
 import de.jClipCorn.properties.enumerations.UILanguage;
@@ -176,6 +177,7 @@ public class CCProperties {
 	public CCPathProperty									PROP_DEBUG_HTTPCACHE_PATH;
 	public CCPIntProperty 									PROP_SERIES_PREVIEWFRAME_HEIGHT;
 	public CCEnumProperty<NextEpisodeHeuristic>				PROP_SERIES_NEXT_EPISODE_HEURISTIC;
+	public CCEnumProperty<CoverImageSize>					PROP_DATABASE_MAX_COVER_SIZE;
 
 	public boolean ARG_READONLY = false;
 	
@@ -252,6 +254,7 @@ public class CCProperties {
 		PROP_COVER_TYPE							= new CCStringProperty(CAT_DATABASE, 		this,	"PROP_COVER_TYPE",							"png");
 		PROP_DATABASE_CREATELOGFILE				= new CCBoolProperty(CAT_DATABASE,			this, 	"PROP_DATABASE_CREATELOGFILE", 				true);
 		PROP_DATABASE_COVERCACHESIZE			= new CCPIntProperty(CAT_DATABASE, 			this, 	"PROP_DATABASE_COVERCACHESIZE", 			128);
+		PROP_DATABASE_MAX_COVER_SIZE			= new CCEnumProperty<>(CAT_DATABASE, 		this, 	"PROP_DATABASE_MAX_COVER_SIZE", 			CoverImageSize.BASE_SIZE,			CoverImageSize.getWrapper());
 		PROP_LOG_MAX_LINECOUNT 					= new CCPIntProperty(CAT_DATABASE, 			this, 	"PROP_LOG_MAX_LINECOUNT", 					1048576); // 2^20
 
 		PROP_DATABASE_DEFAULTPARSERLANG			= new CCEnumProperty<>(CAT_PARSER, 			this, 	"PROP_DATABASE_DEFAULTPARSERLANG", 			CCDBLanguage.GERMAN, 				CCDBLanguage.getWrapper());

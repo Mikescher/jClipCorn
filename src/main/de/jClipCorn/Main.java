@@ -114,14 +114,10 @@ public class Main {
 
 //TODO autom find IMDb Score discrepancies (search Movie on imdb -> if found compare score) ~ not in CheckDB (too long) but own dialog
 
-//TODO Cover with higher resolution // <--
-
 //TODO save original/alternative title (eng title) --> get from TMDB / IMDB
 
 //TODO
-//   - jClipCorn  - better cover resolution,  
 //   - show cover in HD (right click in coverpanel + series cover control + cbl click coverpanel)                                             
-//   - mass reverse image search for better cover versions (more HD)                                                                     
 //   - Format/Quality etc also for Serien (everything for a;b;a+b with toggle control?  ->  only were applicable)                             
 //   - combined timeline row (like github commit overview)                                                                                                               
 //   - find missing seasons online

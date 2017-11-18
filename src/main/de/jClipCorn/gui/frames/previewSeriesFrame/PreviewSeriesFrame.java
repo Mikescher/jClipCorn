@@ -328,8 +328,8 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 		cvrChooser.setCurrSelected(0);
 		cvrChooser.setCoverGap(10);
 		cvrChooser.setCircleRadius(300);
-		cvrChooser.setCoverWidth(ImageUtilities.COVER_WIDTH / 2);
-		cvrChooser.setCoverHeight(ImageUtilities.COVER_HEIGHT / 2);
+		cvrChooser.setCoverWidth(ImageUtilities.HALF_COVER_WIDTH);
+		cvrChooser.setCoverHeight(ImageUtilities.HALF_COVER_HEIGHT);
 		cvrChooser.addSelectionListener(this);
 		cvrChooser.addPopupListener(this);
 
@@ -695,7 +695,7 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 		
 		cvrChooser.clear();
 		for (int i = 0; i < dispSeries.getSeasonCount(); i++) {
-			cvrChooser.addCover(dispSeries.getSeasonByArrayIndex(i).getHalfsizeCover());
+			cvrChooser.addCover(dispSeries.getSeasonByArrayIndex(i).getCover());
 		}
 
 		cvrChooser.setCurrSelected(ccidx);
@@ -760,7 +760,7 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 		lblfsk.setText(LocaleBundle.getFormattedString("PreviewSeriesFrame.lblFSK.text", dispSeries.getFSK().asString())); //$NON-NLS-1$
 		lblfsk.setIcon(dispSeries.getFSK().getIcon());
 
-		lblCover.setIcon(dispSeries.getCoverIcon());
+		lblCover.setAndResizeCover(dispSeries.getCover());
 		
 		btnOnline.setIcon(dispSeries.getOnlineReference().getIconButton());
 		btnOnline.setEnabled(dispSeries.getOnlineReference().isSet());

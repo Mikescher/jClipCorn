@@ -13,7 +13,7 @@ import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.database.databaseElement.columnTypes.CCUserScore;
-import de.jClipCorn.util.Tuple;
+import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.datetime.CCDateTime;
 
 public class WatchDataParser {

@@ -27,7 +27,7 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCQuality;
 import de.jClipCorn.database.databaseElement.columnTypes.CCTagList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCUserScore;
 import de.jClipCorn.util.SortableTuple;
-import de.jClipCorn.util.Tuple;
+import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.datetime.CCDatespan;
 import de.jClipCorn.util.stream.CCStream;

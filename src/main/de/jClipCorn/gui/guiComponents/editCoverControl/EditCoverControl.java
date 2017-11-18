@@ -7,7 +7,6 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JMenuItem;
@@ -32,8 +31,8 @@ import de.jClipCorn.util.http.HTTPUtilities;
 public class EditCoverControl extends AbstractEditCoverControl {
 	private static final long serialVersionUID = -4086336311809789696L;
 
-	public final static int CTRL_WIDTH = ImageUtilities.COVER_WIDTH;
-	public final static int CTRL_HEIGHT = 288;
+	public final static int CTRL_WIDTH = ImageUtilities.BASE_COVER_WIDTH;
+	public final static int CTRL_HEIGHT = ImageUtilities.BASE_COVER_HEIGHT + 34;
 
 	private BufferedImage fullImage;
 
@@ -75,7 +74,7 @@ public class EditCoverControl extends AbstractEditCoverControl {
 		setLayout(null);
 
 		lblCover = new CoverLabel(false);
-		lblCover.setBounds(0, 34, ImageUtilities.COVER_WIDTH, ImageUtilities.COVER_HEIGHT);
+		lblCover.setPosition(0, 34);
 		add(lblCover);
 
 		popupMenu = new JPopupMenu();
@@ -209,11 +208,11 @@ public class EditCoverControl extends AbstractEditCoverControl {
 		return fullImage;
 	}
 
-	public BufferedImage getResizedImage() {
+	public BufferedImage getResizedImageForStorage() {
 		if (!isCoverSet())
 			return null;
 
-		return ImageUtilities.resizeCoverImage(getFullImage());
+		return ImageUtilities.resizeCoverImageForStorage(getFullImage());
 	}
 
 	@Override
@@ -226,11 +225,11 @@ public class EditCoverControl extends AbstractEditCoverControl {
 		if (nci != null) {
 			this.fullImage = nci;
 
-			lblCover.setIcon(new ImageIcon(ImageUtilities.resizeCoverImage(fullImage)));
+			lblCover.setAndResizeCover(fullImage);
 		} else {
 			this.fullImage = null;
 
-			lblCover.setIcon(null);
+			lblCover.clearCover();
 		}
 
 		btnCrop.setEnabled(isCoverSet() && isCoverSet());

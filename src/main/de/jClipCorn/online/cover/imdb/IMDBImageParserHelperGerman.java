@@ -10,7 +10,7 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReference;
 import de.jClipCorn.online.OnlineSearchType;
 import de.jClipCorn.online.metadata.imdb.IMDBParserCommon;
 import de.jClipCorn.online.metadata.imdb.IMDBParserGerman;
-import de.jClipCorn.util.Tuple;
+import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.helper.RegExHelper;
 import de.jClipCorn.util.http.HTTPUtilities;
 @SuppressWarnings("nls")

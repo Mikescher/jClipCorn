@@ -27,7 +27,7 @@ import de.jClipCorn.database.util.covercache.CCCoverCache;
 import de.jClipCorn.database.util.covercache.CCFolderCoverCache;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.properties.CCProperties;
-import de.jClipCorn.util.Tuple;
+import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.formatter.FileSizeFormatter;
 import de.jClipCorn.util.formatter.PathFormatter;

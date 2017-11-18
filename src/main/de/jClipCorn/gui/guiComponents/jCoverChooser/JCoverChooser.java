@@ -27,8 +27,8 @@ public class JCoverChooser extends JComponent implements MouseListener {
 	private List<ListSelectionListener> listener_selection = new ArrayList<>();
 	private List<JCoverChooserPopupEvent> listener_popup = new ArrayList<>();
 
-	private int coverWidth = ImageUtilities.COVER_WIDTH;
-	private int coverHeight = ImageUtilities.COVER_HEIGHT;
+	private int coverWidth = ImageUtilities.BASE_COVER_WIDTH;
+	private int coverHeight = ImageUtilities.BASE_COVER_HEIGHT;
 	private int padding_top = 5;
 	private int padding_bottom = 5;
 	private int coverGap = 10;

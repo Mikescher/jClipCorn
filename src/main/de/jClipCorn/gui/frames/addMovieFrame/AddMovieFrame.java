@@ -776,7 +776,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		newM.setOnlineReference(edReference.getValue());
 		newM.setGroups(edGroups.getValue());
 
-		newM.setCover(edCvrControl.getResizedImage());
+		newM.setCover(edCvrControl.getResizedImageForStorage());
 		
 		newM.endUpdating();
 		
@@ -1151,7 +1151,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 	}
 	
 	public boolean checkUserData(List<UserDataProblem> ret) { 
-		BufferedImage i = edCvrControl.getResizedImage();
+		BufferedImage i = edCvrControl.getResizedImageForStorage();
 		
 		String p0 = ed_Part0.getText();
 		String p1 = ed_Part1.getText();

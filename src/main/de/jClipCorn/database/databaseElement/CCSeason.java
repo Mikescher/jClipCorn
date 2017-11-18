@@ -8,8 +8,6 @@ import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.swing.ImageIcon;
-
 import org.jdom2.Element;
 
 import de.jClipCorn.database.CCMovieList;
@@ -135,14 +133,6 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement {
 	
 	public BufferedImage getCover() {
 		return owner.getMovieList().getCoverCache().getCover(covername);
-	}
-	
-	public ImageIcon getCoverIcon() {
-		return owner.getMovieList().getCoverCache().getCoverIcon(covername);
-	}
-	
-	public BufferedImage getHalfsizeCover() {
-		return owner.getMovieList().getCoverCache().getHalfsizeCover(covername);
 	}
 	
 	public boolean isViewed() { // All parts viewed

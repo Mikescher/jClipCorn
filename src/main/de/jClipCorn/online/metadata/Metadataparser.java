@@ -7,7 +7,7 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReference;
 import de.jClipCorn.online.OnlineSearchType;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.enumerations.MetadataParserImplementation;
-import de.jClipCorn.util.Tuple;
+import de.jClipCorn.util.datatypes.Tuple;
 
 public abstract class Metadataparser {
 	

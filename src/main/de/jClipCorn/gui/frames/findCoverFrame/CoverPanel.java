@@ -33,7 +33,7 @@ public class CoverPanel extends JPanel implements UpdateCallbackListener {
 	
 	public void addCover(BufferedImage i) {
 		JLabel newlabel = new JLabel();
-		newlabel.setIcon(new ImageIcon(ImageUtilities.resizeHalfCoverImage(i)));
+		newlabel.setIcon(new ImageIcon(ImageUtilities.resizeCoverImageForHalfSizeUI(i)));
 		add(newlabel);
 		
 		final int id = labels.size();
@@ -74,12 +74,12 @@ public class CoverPanel extends JPanel implements UpdateCallbackListener {
 	
 	private void onLabelClicked(int id) {
 		if (selctionID >= 0) {
-			labels.get(selctionID).setIcon(new ImageIcon(ImageUtilities.resizeHalfCoverImage(images.get(selctionID))));
+			labels.get(selctionID).setIcon(new ImageIcon(ImageUtilities.resizeCoverImageForHalfSizeUI(images.get(selctionID))));
 		}
 		
 		selctionID = id;
 		
-		BufferedImage newImg = ImageUtilities.resizeHalfCoverImage(images.get(selctionID));
+		BufferedImage newImg = ImageUtilities.resizeCoverImageForHalfSizeUI(images.get(selctionID));
 		ImageUtilities.drawActualBorder(newImg, Color.BLUE, 2);
 		labels.get(selctionID).setIcon(new ImageIcon(newImg));
 	}

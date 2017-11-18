@@ -50,8 +50,8 @@ public class RandomMovieFrame extends JFrame implements Runnable {
 		chooser = new JCoverChooser();
 		chooser.set3DMode(true);
 		chooser.setEnabled(false);
-		chooser.setCoverWidth(ImageUtilities.COVER_WIDTH / 2);
-		chooser.setCoverHeight(ImageUtilities.COVER_HEIGHT / 2);
+		chooser.setCoverWidth(ImageUtilities.HALF_COVER_WIDTH);
+		chooser.setCoverHeight(ImageUtilities.HALF_COVER_HEIGHT);
 		chooser.setCoverGap(10);
 		chooser.setCircleRadius(300);
 		getContentPane().add(chooser, BorderLayout.CENTER);

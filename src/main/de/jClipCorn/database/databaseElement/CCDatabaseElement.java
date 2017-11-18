@@ -2,8 +2,6 @@ package de.jClipCorn.database.databaseElement;
 
 import java.awt.image.BufferedImage;
 
-import javax.swing.ImageIcon;
-
 import org.jdom2.Element;
 
 import de.jClipCorn.database.CCMovieList;
@@ -194,15 +192,7 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement {
 	public String getCoverMD5() {
 		return LargeMD5Calculator.calcMD5(getCover());
 	}
-	
-	public BufferedImage getHalfsizeCover() {
-		return movielist.getCoverCache().getHalfsizeCover(covername);
-	}
-	
-	public ImageIcon getCoverIcon() {
-		return movielist.getCoverCache().getCoverIcon(covername);
-	}
-	
+		
 	public CCDBLanguage getLanguage() {
 		return language;
 	}

@@ -10,8 +10,8 @@ import de.jClipCorn.table.filter.AbstractCustomDatabaseElementFilter;
 import de.jClipCorn.table.filter.AbstractCustomFilter;
 import de.jClipCorn.table.filter.filterConfig.CustomFilterConfig;
 import de.jClipCorn.table.filter.filterConfig.CustomFilterIntAreaConfig;
-import de.jClipCorn.util.CCIntArea;
 import de.jClipCorn.util.DecimalSearchType;
+import de.jClipCorn.util.datatypes.CCIntArea;
 
 public class CustomOnlinescoreFilter extends AbstractCustomDatabaseElementFilter {
 	private CCOnlineScore low = CCOnlineScore.STARS_0_0;

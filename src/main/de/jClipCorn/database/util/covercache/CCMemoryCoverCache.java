@@ -18,8 +18,7 @@ import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.gui.resources.CachedResourceLoader;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.properties.CCProperties;
-import de.jClipCorn.util.Tuple;
-import de.jClipCorn.util.helper.ImageUtilities;
+import de.jClipCorn.util.datatypes.Tuple;
 
 public class CCMemoryCoverCache extends CCCoverCache {
 	private Map<String, BufferedImage> data;
@@ -42,29 +41,6 @@ public class CCMemoryCoverCache extends CCCoverCache {
 		if (res == null) {
 			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CoverFileBroken", name)); //$NON-NLS-1$
 			return CachedResourceLoader.getImage(Resources.IMG_COVER_NOTFOUND);
-		}
-
-		return res;
-	}
-
-	@Override
-	public BufferedImage getHalfsizeCover(String name) {
-		if ((name == null) || name.isEmpty()) {
-			return CachedResourceLoader.getImage(Resources.IMG_COVER_NOTFOUND);
-		}
-
-		BufferedImage res = data.get(name + "_halfsize"); //$NON-NLS-1$
-
-		if (res == null) {
-			BufferedImage resFull = data.get(name);
-
-			if (resFull == null) {
-				CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CoverFileBroken", name)); //$NON-NLS-1$
-				return CachedResourceLoader.getImage(Resources.IMG_COVER_NOTFOUND);
-			}
-
-			res = ImageUtilities.resize(resFull, ImageUtilities.COVER_WIDTH / 2, ImageUtilities.COVER_HEIGHT / 2);
-			data.put(name + "_halfsize", res); //$NON-NLS-1$
 		}
 
 		return res;

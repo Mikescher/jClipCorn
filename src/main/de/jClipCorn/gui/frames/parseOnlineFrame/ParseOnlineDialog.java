@@ -14,7 +14,6 @@ import java.util.Map;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JDialog;
@@ -49,9 +48,8 @@ import de.jClipCorn.online.OnlineSearchType;
 import de.jClipCorn.online.metadata.Metadataparser;
 import de.jClipCorn.online.metadata.OnlineMetadata;
 import de.jClipCorn.online.metadata.ParseResultHandler;
-import de.jClipCorn.util.Tuple;
+import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.helper.ExtendedFocusTraversalOnArray;
-import de.jClipCorn.util.helper.ImageUtilities;
 import de.jClipCorn.util.http.HTTPUtilities;
 
 public class ParseOnlineDialog extends JDialog {
@@ -366,7 +364,7 @@ public class ParseOnlineDialog extends JDialog {
 		
 		imgCover = new CoverLabel(false);
 		imgCover.setHorizontalAlignment(SwingConstants.CENTER);
-		imgCover.setBounds(107, 164, ImageUtilities.COVER_WIDTH, ImageUtilities.COVER_HEIGHT);
+		imgCover.setPosition(107, 164);
 		pnlMain.add(imgCover);
 		
 		lblCover = new JLabel(LocaleBundle.getString("AddMovieFrame.lblCover.text")); //$NON-NLS-1$
@@ -460,7 +458,7 @@ public class ParseOnlineDialog extends JDialog {
 		spnScore.setValue(0);
 		spnYear.setValue(0);
 		cbxFSK.setSelectedIndex(-1);
-		imgCover.setIcon(null);
+		imgCover.clearCover();
 		
 		cbxGenre0.setSelectedIndex(-1);
 		cbxGenre1.setSelectedIndex(-1);
@@ -621,7 +619,7 @@ public class ParseOnlineDialog extends JDialog {
 					if (md.OnlineScore != null) spnScore.setValue(md.OnlineScore);
 					if (md.Length != null) spnLength.setValue(md.Length);
 					if (md.FSK != null) cbxFSK.setSelectedIndex(md.FSK.asInt());
-					if (md.Cover != null) {imgCover.setIcon(new ImageIcon(ImageUtilities.resizeCoverImage(md.Cover))); imgCoverBI = md.Cover; }
+					if (md.Cover != null) { imgCover.setAndResizeCover(md.Cover); imgCoverBI = md.Cover; }
 					if (md.FSKList !=null) cbFSKlsAll =md.FSKList;
 					
 					if (md.Genres != null) cbxGenre0.setSelectedIndex(md.Genres.getGenre(0).asInt());

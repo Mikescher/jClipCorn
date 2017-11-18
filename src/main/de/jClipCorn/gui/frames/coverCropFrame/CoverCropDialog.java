@@ -626,8 +626,13 @@ public class CoverCropDialog extends JDialog {
 	private void updateCropInfoLabel() {
 		if (lblPosition == null || lblSize == null || lblRatio == null) return;
 
+		int widthCurr = crop_br.x - crop_tl.x;
+		int heightCurr = crop_br.y - crop_tl.y;
+		int widthStorage = ImageUtilities.calcImageSizeForStorage(widthCurr, heightCurr).Item1;
+		int heightStorage = ImageUtilities.calcImageSizeForStorage(widthCurr, heightCurr).Item2;
+		
 		lblPosition.setText(LocaleBundle.getFormattedString("CoverCropFrame.lblPosition.text", crop_tl.x, crop_tl.y)); //$NON-NLS-1$
-		lblSize.setText(LocaleBundle.getFormattedString("CoverCropFrame.lblSize.text", crop_br.x - crop_tl.x, crop_br.y - crop_tl.y)); //$NON-NLS-1$
+		lblSize.setText(LocaleBundle.getFormattedString("CoverCropFrame.lblSize.text", widthCurr, heightCurr, widthStorage, heightStorage)); //$NON-NLS-1$
 		lblRatio.setText(LocaleBundle.getFormattedString("CoverCropFrame.lblRatio.text", (crop_br.x - crop_tl.x * 1d) / (crop_br.y - crop_tl.y), ImageUtilities.COVER_RATIO)); //$NON-NLS-1$
 		
 		lblRatioState.setText(LocaleBundle.getString(isRatioAcceptable() ? "CoverCropFrame.lblOK.textOK" : "CoverCropFrame.lblOK.textNOK")); //$NON-NLS-1$ //$NON-NLS-2$
@@ -685,22 +690,22 @@ public class CoverCropDialog extends JDialog {
 			((Graphics2D)g).setPaint(transparencyPattern);
 		else
 			g.setColor(Color.WHITE);
-		g.fillRect(0, 0, ImageUtilities.COVER_WIDTH, ImageUtilities.COVER_HEIGHT);
+		g.fillRect(0, 0, ImageUtilities.BASE_COVER_WIDTH, ImageUtilities.BASE_COVER_HEIGHT);
 		
 		if (chckbxSeriesPreview.isSelected()) {
-			BufferedImage bid = ImageUtilities.resizeCoverImage(getCroppedImage());
-			ImageUtilities.makeSeriesCover(bid);
+			BufferedImage bid = ImageUtilities.resizeCoverImageForFullSizeUI(getCroppedImage());
+			ImageUtilities.makeFullSizeSeriesCover(bid);
 			g.drawImage(bid, 0, 0, null);
-		} else
-			g.drawImage(ImageUtilities.resizeCoverImage(getCroppedImage()), 0, 0, null);
-		
+		} else {
+			g.drawImage(ImageUtilities.resizeCoverImageForFullSizeUI(getCroppedImage()), 0, 0, null);
+		}
 		
 		if(chckbxShowImageBorders.isSelected()) {
 			g.setColor(Color.BLACK);
-			g.drawLine(0, 0, 0, ImageUtilities.COVER_HEIGHT-1);
-			g.drawLine(0, ImageUtilities.COVER_HEIGHT-1, ImageUtilities.COVER_WIDTH-1, ImageUtilities.COVER_HEIGHT-1);
-			g.drawLine(ImageUtilities.COVER_WIDTH-1, ImageUtilities.COVER_HEIGHT-1, ImageUtilities.COVER_WIDTH-1, 0);
-			g.drawLine(ImageUtilities.COVER_WIDTH-1, 0, 0, 0);
+			g.drawLine(0, 0, 0, ImageUtilities.BASE_COVER_HEIGHT-1);
+			g.drawLine(0, ImageUtilities.BASE_COVER_HEIGHT-1, ImageUtilities.BASE_COVER_WIDTH-1, ImageUtilities.BASE_COVER_HEIGHT-1);
+			g.drawLine(ImageUtilities.BASE_COVER_WIDTH-1, ImageUtilities.BASE_COVER_HEIGHT-1, ImageUtilities.BASE_COVER_WIDTH-1, 0);
+			g.drawLine(ImageUtilities.BASE_COVER_WIDTH-1, 0, 0, 0);
 		}
 	}
 
@@ -715,21 +720,21 @@ public class CoverCropDialog extends JDialog {
 			((Graphics2D)g).setPaint(transparencyPattern);
 		else
 			g.setColor(Color.WHITE);
-		g.fillRect(0, 0, ImageUtilities.COVER_WIDTH, ImageUtilities.COVER_HEIGHT);
+		g.fillRect(0, 0, ImageUtilities.BASE_COVER_WIDTH, ImageUtilities.BASE_COVER_HEIGHT);
 		
 		if (chckbxSeriesPreview.isSelected()) {
-			BufferedImage bid = ImageUtilities.resizeCoverImage(getCroppedImage());
-			ImageUtilities.makeSeriesCover(bid);
-			g.drawImage(ImageUtilities.resizeHalfCoverImage(bid), 0, 0, null);
+			BufferedImage bid = ImageUtilities.resizeCoverImageForFullSizeUI(getCroppedImage());
+			ImageUtilities.makeFullSizeSeriesCover(bid);
+			g.drawImage(ImageUtilities.resizeCoverImageForHalfSizeUI(bid), 0, 0, null);
 		} else
-			g.drawImage(ImageUtilities.resizeHalfCoverImage(getCroppedImage()), 0, 0, null);
+			g.drawImage(ImageUtilities.resizeCoverImageForHalfSizeUI(getCroppedImage()), 0, 0, null);
 		
 		if(chckbxShowImageBorders.isSelected()) {
 			g.setColor(Color.BLACK);
-			g.drawLine(0, 0, 0, ImageUtilities.COVER_HEIGHT/2-1);
-			g.drawLine(0, ImageUtilities.COVER_HEIGHT/2-1, ImageUtilities.COVER_WIDTH/2-1, ImageUtilities.COVER_HEIGHT/2-1);
-			g.drawLine(ImageUtilities.COVER_WIDTH/2-1, ImageUtilities.COVER_HEIGHT/2-1, ImageUtilities.COVER_WIDTH/2-1, 0);
-			g.drawLine(ImageUtilities.COVER_WIDTH/2-1, 0, 0, 0);
+			g.drawLine(0, 0, 0, ImageUtilities.HALF_COVER_HEIGHT-1);
+			g.drawLine(0, ImageUtilities.HALF_COVER_HEIGHT-1, ImageUtilities.HALF_COVER_WIDTH-1, ImageUtilities.HALF_COVER_HEIGHT-1);
+			g.drawLine(ImageUtilities.HALF_COVER_WIDTH-1, ImageUtilities.HALF_COVER_HEIGHT-1, ImageUtilities.HALF_COVER_WIDTH-1, 0);
+			g.drawLine(ImageUtilities.HALF_COVER_WIDTH-1, 0, 0, 0);
 		}
 	}
 	
@@ -1084,7 +1089,17 @@ public class CoverCropDialog extends JDialog {
 	}
 
 	private void updateMouseInfoLabel(MouseEvent e) {
-		lblMouse.setText(LocaleBundle.getFormattedString("CoverCropFrame.lblMouse.text", (int)(e.getX() / displayScale), (int)(e.getY() / displayScale))); //$NON-NLS-1$
+		int x = (int)(e.getX() / displayScale);
+		int y = (int)(e.getY() / displayScale);
+		
+		int clr = img.getRGB(x, y);
+		
+		String col = "?"; //$NON-NLS-1$
+		
+		if (x >= 0 && y >= 0 && x < img.getWidth() && y < img.getHeight())
+			col = String.format("#%02X%02X%02X", (clr & 0x00ff0000) >> 16, (clr & 0x0000ff00) >> 8, (clr & 0x000000ff) >> 0); //$NON-NLS-1$
+		
+		lblMouse.setText(LocaleBundle.getFormattedString("CoverCropFrame.lblMouse.text", x, y, col)); //$NON-NLS-1$
 	}
 
 	private void resetCrops() {

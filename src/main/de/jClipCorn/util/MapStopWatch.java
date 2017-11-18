@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.function.BiConsumer;
 
 import de.jClipCorn.gui.log.CCLog;
+import de.jClipCorn.util.datatypes.Tuple;
 
 @SuppressWarnings("nls")
 public class MapStopWatch {

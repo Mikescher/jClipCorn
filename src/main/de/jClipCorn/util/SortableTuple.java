@@ -1,5 +1,7 @@
 package de.jClipCorn.util;
 
+import de.jClipCorn.util.datatypes.Tuple;
+
 public class SortableTuple<X extends Comparable<? super X>, Y> extends Tuple<X, Y> implements Comparable<SortableTuple<X, Y>> {
 	public SortableTuple(X i1, Y i2) {
 		super(i1, i2);

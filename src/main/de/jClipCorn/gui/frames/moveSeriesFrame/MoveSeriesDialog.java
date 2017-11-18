@@ -157,7 +157,7 @@ public class MoveSeriesDialog extends JDialog {
 	
 	private void init() {
 		lblTitel.setText(series.getTitle());
-		lblCover.setIcon(series.getCoverIcon());
+		lblCover.setAndResizeCover(series.getCover());
 		edSearch.setText(series.getCommonPathStart(false));
 	}
 	

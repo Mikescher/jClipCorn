@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
@@ -26,8 +27,11 @@ import de.jClipCorn.util.helper.ImageUtilities;
 
 public class CoverLabel extends JLabel implements MouseListener {
 	private static final long serialVersionUID = -1565590903873295610L;
+
 	private final boolean isHalfSize;
 
+	private BufferedImage original = null;
+	
 	public CoverLabel(boolean halfsize) {
 		super();
 		isHalfSize = halfsize;
@@ -53,6 +57,51 @@ public class CoverLabel extends JLabel implements MouseListener {
 		} else {
 			return getStandardIcon();
 		}
+	}
+	
+	public BufferedImage getOriginalCover() {
+		if (original != null) return original;
+		return ImageUtilities.iconToImage((ImageIcon) getIcon());
+	}
+	
+	@Override
+	public void setBounds(int x, int y, int width, int height) {
+	    super.setBounds(
+	    		x, 
+	    		y, 
+	    		isHalfSize ? ImageUtilities.HALF_COVER_WIDTH  : ImageUtilities.BASE_COVER_WIDTH, 
+	    		isHalfSize ? ImageUtilities.HALF_COVER_HEIGHT : ImageUtilities.BASE_COVER_HEIGHT);
+	}
+	
+	public void setPosition(int x, int y) {
+	    super.setBounds(
+	    		x, 
+	    		y, 
+	    		isHalfSize ? ImageUtilities.HALF_COVER_WIDTH  : ImageUtilities.BASE_COVER_WIDTH, 
+	    		isHalfSize ? ImageUtilities.HALF_COVER_HEIGHT : ImageUtilities.BASE_COVER_HEIGHT);
+	}
+
+	public void setCoverDirect(BufferedImage cover, BufferedImage orig) {
+		original = orig;
+		
+		if (isHalfSize)
+			setIcon(new ImageIcon(ImageUtilities.resizeCoverImageForHalfSizeUI(cover)));
+		else
+			setIcon(new ImageIcon(ImageUtilities.resizeCoverImageForFullSizeUI(cover)));
+	}
+	
+	public void setAndResizeCover(BufferedImage cover) {
+		original = cover;
+		
+		if (isHalfSize)
+			setIcon(new ImageIcon(ImageUtilities.resizeCoverImageForHalfSizeUI(cover)));
+		else
+			setIcon(new ImageIcon(ImageUtilities.resizeCoverImageForFullSizeUI(cover)));
+	}
+	
+	public void clearCover() {
+		original = null;
+		setIcon(null);
 	}
 
 	@Override
@@ -133,7 +182,7 @@ public class CoverLabel extends JLabel implements MouseListener {
 			path = PathFormatter.forceExtension(path, format);
 
 			try {
-				ImageIO.write(ImageUtilities.iconToImage((ImageIcon) getIcon()), format, new File(path));
+				ImageIO.write(getOriginalCover(), format, new File(path));
 			} catch (IOException e) {
 				CCLog.addError(e);
 			}

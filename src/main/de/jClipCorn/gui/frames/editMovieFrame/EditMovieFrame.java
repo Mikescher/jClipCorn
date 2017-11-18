@@ -1082,7 +1082,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		movie.setTags(tagPnl.getValue());
 		movie.setScore(cbxScore.getSelectedIndex());
 		
-		movie.setCover(edCvrControl.getResizedImage());
+		movie.setCover(edCvrControl.getResizedImageForStorage());
 
 		movie.setViewedHistory(edViewedHistory.getValue());
 		movie.setOnlineReference(edReference.getValue());
@@ -1100,7 +1100,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 	}
 	
 	public boolean checkUserData(List<UserDataProblem> ret) {
-		BufferedImage i = edCvrControl.getResizedImage();
+		BufferedImage i = edCvrControl.getResizedImageForStorage();
 		
 		String p0 = edPart0.getText();
 		String p1 = edPart1.getText();

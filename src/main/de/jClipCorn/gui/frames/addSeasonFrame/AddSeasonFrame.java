@@ -149,7 +149,7 @@ public class AddSeasonFrame extends JFrame implements UserDataProblemHandler, Pa
 
 		newS.setTitle(edTitle.getText());
 		newS.setYear((int) spnYear.getValue());
-		newS.setCover(edCvrControl.getResizedImage());
+		newS.setCover(edCvrControl.getResizedImageForStorage());
 		
 		//#####################################################################################
 		
@@ -166,7 +166,7 @@ public class AddSeasonFrame extends JFrame implements UserDataProblemHandler, Pa
 		String title = edTitle.getText();
 		int year = (int) spnYear.getValue();
 
-		UserDataProblem.testSeasonData(ret, edCvrControl.getResizedImage(), title, year);
+		UserDataProblem.testSeasonData(ret, edCvrControl.getResizedImageForStorage(), title, year);
 		
 		return ret.isEmpty();
 	}

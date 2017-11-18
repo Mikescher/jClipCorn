@@ -64,8 +64,7 @@ public class ChangeViewedFrame extends JFrame {
 		getContentPane().setLayout(null);
 		
 		lblCover = new CoverLabel(false);
-		lblCover.setIcon(CachedResourceLoader.getIcon(Resources.IMG_COVER_STANDARD));
-		lblCover.setBounds(100, 47, 182, 254);
+		lblCover.setPosition(100, 47);
 		getContentPane().add(lblCover);
 		
 		btnViewed = new JButton(LocaleBundle.getString("FilterTree.Viewed.Viewed")); //$NON-NLS-1$
@@ -146,7 +145,7 @@ public class ChangeViewedFrame extends JFrame {
 					}
 				}
 				
-				lblCover.setIcon(mov.getCoverIcon());
+				lblCover.setAndResizeCover(mov.getCover());
 				lblCurrent.setIcon(CachedResourceLoader.getIcon((mov.isViewed() ? (Resources.ICN_TABLE_VIEWED_TRUE) : (Resources.ICN_TABLE_VIEWED_FALSE))));
 				lblTitle.setText(mov.getCompleteTitle());
 			} else {

@@ -155,7 +155,7 @@ public class CreateSeriesFolderStructureFrame extends JFrame {
 	}
 	
 	private void init() {
-		lblCover.setIcon(series.getCoverIcon());
+		lblCover.setAndResizeCover(series.getCover());
 		lblTitel.setText(series.getTitle());
 		lblCommonPath.setText(PathFormatter.fromCCPath(series.getCommonPathStart(false)));
 		edPath.setText(series.guessSeriesRootPath());

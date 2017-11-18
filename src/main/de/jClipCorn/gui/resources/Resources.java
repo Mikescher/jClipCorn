@@ -3,7 +3,7 @@ package de.jClipCorn.gui.resources;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
-import de.jClipCorn.util.Tuple;
+import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.formatter.PathFormatter;
 
 @SuppressWarnings("nls")

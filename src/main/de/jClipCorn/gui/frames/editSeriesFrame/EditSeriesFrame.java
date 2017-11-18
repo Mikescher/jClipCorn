@@ -1018,7 +1018,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		
 		//#####################################################################################
 		
-		series.setCover(edSeriesCvrControl.getResizedImage());
+		series.setCover(edSeriesCvrControl.getResizedImageForStorage());
 		series.setTitle(edSeriesTitle.getText());
 		series.setLanguage(cbxSeriesLanguage.getSelectedIndex());
 		series.setOnlinescore((int) spnSeriesOnlineScore.getValue());
@@ -1062,7 +1062,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		
 		CCOnlineReference ref = edSeriesReference.getValue();
 		
-		UserDataProblem.testSeriesData(ret, edSeriesCvrControl.getResizedImage(), title, oscore, gen0, gen1, gen2, gen3, gen4, gen5, gen6, gen7, fskidx, ref);
+		UserDataProblem.testSeriesData(ret, edSeriesCvrControl.getResizedImageForStorage(), title, oscore, gen0, gen1, gen2, gen3, gen4, gen5, gen6, gen7, fskidx, ref);
 		
 		return ret.isEmpty();
 	}
@@ -1164,7 +1164,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		
 		//#####################################################################################
 		
-		season.setCover(edSeasonCvrControl.getResizedImage());
+		season.setCover(edSeasonCvrControl.getResizedImageForStorage());
 		season.setTitle(edSeasonTitle.getText());
 		season.setYear((int) spnSeasonYear.getValue());
 		
@@ -1184,7 +1184,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		String title = edSeasonTitle.getText();
 		int year = (int) spnSeasonYear.getValue();
 
-		UserDataProblem.testSeasonData(ret, edSeasonCvrControl.getResizedImage(), title, year);
+		UserDataProblem.testSeasonData(ret, edSeasonCvrControl.getResizedImageForStorage(), title, year);
 		
 		return ret.isEmpty();
 	}

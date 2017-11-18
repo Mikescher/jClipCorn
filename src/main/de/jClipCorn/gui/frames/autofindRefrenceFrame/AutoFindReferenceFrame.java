@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.DefaultListModel;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -47,7 +46,6 @@ import de.jClipCorn.online.OnlineSearchType;
 import de.jClipCorn.online.metadata.OnlineMetadata;
 import de.jClipCorn.online.metadata.imdb.IMDBParserCommon;
 import de.jClipCorn.online.metadata.tmdb.TMDBParser;
-import de.jClipCorn.util.helper.ImageUtilities;
 
 public class AutoFindReferenceFrame extends JFrame {
 	private static final long serialVersionUID = 4658458278263596774L;
@@ -314,9 +312,9 @@ public class AutoFindReferenceFrame extends JFrame {
 		edRefTmdb.setText(""); //$NON-NLS-1$
 		edRefIMDB.setText(""); //$NON-NLS-1$
 		
-		cvrLocal.setIcon(null);
-		cvrImDB.setIcon(null);
-		cvrTmdb.setIcon(null);
+		cvrLocal.clearCover();
+		cvrImDB.clearCover();
+		cvrTmdb.clearCover();
 		
 		btnIgnore.setEnabled(false);
 		btnApplyTmdb.setEnabled(false);
@@ -344,15 +342,15 @@ public class AutoFindReferenceFrame extends JFrame {
 		}
 		
 		if (value.imdbMeta != null && value.imdbMeta.Year != null) edYearImDB.setText(Integer.toString(value.imdbMeta.Year));
-		if (value.imdbMeta != null && value.imdbMeta.Cover != null) cvrImDB.setIcon(new ImageIcon(ImageUtilities.resizeHalfCoverImage(value.imdbMeta.Cover)));
+		if (value.imdbMeta != null && value.imdbMeta.Cover != null) cvrImDB.setAndResizeCover(value.imdbMeta.Cover);
 		if (value.imdbMeta != null && value.imdbMeta.Title != null) edTitleIMDB.setText(value.imdbMeta.Title);
 		if (value.imdbMeta != null && value.imdbMeta.Source != null) edRefIMDB.setText(value.imdbMeta.Source.toSerializationString());
 				
 		edRefLocal.setText(value.local.getOnlineReference().toSerializationString());
 		edRefTmdb.setText(value.tmdbMeta.Source.toSerializationString());
 
-		cvrLocal.setIcon(new ImageIcon(value.local.getHalfsizeCover()));
-		if (value.tmdbMeta.Cover != null) cvrTmdb.setIcon(new ImageIcon(ImageUtilities.resizeHalfCoverImage(value.tmdbMeta.Cover)));
+		cvrLocal.setAndResizeCover(value.local.getCover());
+		if (value.tmdbMeta.Cover != null) cvrTmdb.setAndResizeCover(value.tmdbMeta.Cover);
 		
 		btnApplyTmdb.setEnabled(value.tmdbMeta != null);
 		btnApplyImdb.setEnabled(value.imdbMeta != null && value.imdbMeta.Source != null && value.imdbMeta.Source.isSet());

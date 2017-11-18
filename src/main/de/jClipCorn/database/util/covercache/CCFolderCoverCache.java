@@ -22,10 +22,9 @@ import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.gui.resources.CachedResourceLoader;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.properties.CCProperties;
-import de.jClipCorn.util.Tuple;
 import de.jClipCorn.util.datatypes.CachedHashMap;
+import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.formatter.PathFormatter;
-import de.jClipCorn.util.helper.ImageUtilities;
 
 public class CCFolderCoverCache extends CCCoverCache {
 	private final static String COVER_DIRECTORY = PathFormatter.appendAndPrependSeparator("cover"); //$NON-NLS-1$
@@ -72,28 +71,6 @@ public class CCFolderCoverCache extends CCCoverCache {
 				} else {
 					CCLog.addDebug(String.format("Cover not found (%s)", name)); //$NON-NLS-1$
 				}
-				return CachedResourceLoader.getImage(Resources.IMG_COVER_NOTFOUND);
-			}
-		}
-
-		return res;
-	}
-	
-	@Override
-	public BufferedImage getHalfsizeCover(String name) {
-		if ((name == null) || name.isEmpty()) {
-			return CachedResourceLoader.getImage(Resources.IMG_COVER_NOTFOUND);
-		}
-
-		BufferedImage res = cache.get(name + "_halfsize"); //$NON-NLS-1$
-
-		if (res == null) {
-			try {
-				res = ImageIO.read(new File(PathFormatter.combine(coverPath, name)));
-				res = ImageUtilities.resize(res, ImageUtilities.COVER_WIDTH / 2, ImageUtilities.COVER_HEIGHT / 2);
-				cache.put(name + "_halfsize", res); //$NON-NLS-1$
-			} catch (IOException e) {
-				CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CoverNotFound", coverPath + name)); //$NON-NLS-1$
 				return CachedResourceLoader.getImage(Resources.IMG_COVER_NOTFOUND);
 			}
 		}

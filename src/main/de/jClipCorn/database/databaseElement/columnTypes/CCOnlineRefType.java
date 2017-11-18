@@ -8,7 +8,7 @@ import javax.swing.Icon;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.CachedResourceLoader;
 import de.jClipCorn.gui.resources.Resources;
-import de.jClipCorn.util.Tuple;
+import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.enumextension.ContinoousEnum;
 import de.jClipCorn.util.enumextension.EnumWrapper;
 import de.jClipCorn.util.exceptions.OnlineRefFormatException;

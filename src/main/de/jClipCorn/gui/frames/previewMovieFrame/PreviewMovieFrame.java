@@ -102,7 +102,7 @@ public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener 
 		getContentPane().setLayout(null);
 		
 		lblCover = new CoverLabel(false);
-		lblCover.setBounds(10, 53, 182, 254);
+		lblCover.setPosition(10, 53);
 		getContentPane().add(lblCover);
 		
 		label = new JLabel();
@@ -350,7 +350,7 @@ public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener 
 			setTitle(movie.getCompleteTitle());
 		}
 		
-		lblCover.setIcon(movie.getCoverIcon());
+		lblCover.setAndResizeCover(movie.getCover());
 		label.setText(movie.getCompleteTitle());
 		
 		lblViewed.setIcon(movie.isViewed()?CachedResourceLoader.getIcon(Resources.ICN_TABLE_VIEWED_TRUE):null);

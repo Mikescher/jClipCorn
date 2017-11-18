@@ -21,6 +21,7 @@ import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.columnTypes.CCUserScore;
+import de.jClipCorn.gui.guiComponents.CoverLabel;
 import de.jClipCorn.gui.guiComponents.PropertyCheckbox;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.CachedResourceLoader;
@@ -34,7 +35,7 @@ public class ChangeScoreFrame extends JFrame {
 	private int position;
 	private boolean running = false;
 	
-	private JLabel lblCover;
+	private CoverLabel lblCover;
 	private JButton btnScore0;
 	private JButton btnScore3;
 	private JLabel lblCurrent;
@@ -74,9 +75,8 @@ public class ChangeScoreFrame extends JFrame {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		getContentPane().setLayout(null);
 		
-		lblCover = new JLabel();
-		lblCover.setIcon(CachedResourceLoader.getIcon(Resources.IMG_COVER_STANDARD));
-		lblCover.setBounds(10, 36, 182, 254);
+		lblCover = new CoverLabel(false);
+		lblCover.setPosition(10, 36);
 		getContentPane().add(lblCover);
 		
 		lblCurrent = new JLabel();
@@ -243,7 +243,7 @@ public class ChangeScoreFrame extends JFrame {
 					}
 				}
 				
-				lblCover.setIcon(mov.getCoverIcon());
+				lblCover.setAndResizeCover(mov.getCover());
 				lblCurrent.setIcon(mov.getScore().getIcon());
 				lblTitle.setText(mov.getCompleteTitle());
 			} else {

@@ -5,8 +5,6 @@ import java.awt.image.BufferedImage;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import javax.swing.ImageIcon;
-
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.gui.actionTree.CCActionTree;
@@ -51,10 +49,10 @@ public class DatabaseElementPreviewLabel extends CoverLabel {
 		boolean drawGroups = CCProperties.getInstance().PROP_MAINFRAME_SHOWGROUPS.getValue() && el.hasGroups();
 		
 		if (drawSCorner || drawTag || drawGroups) {
-			BufferedImage bi = ImageUtilities.deepCopyImage(el.getCover());
+			BufferedImage bi = ImageUtilities.resizeCoverImageForFullSizeUI(el.getCover());
 			
 			if (drawSCorner) {
-				ImageUtilities.makeSeriesCover(bi);
+				ImageUtilities.makeFullSizeSeriesCover(bi);
 			}
 			
 			if (drawTag) {
@@ -64,10 +62,10 @@ public class DatabaseElementPreviewLabel extends CoverLabel {
 			if (drawGroups) {
 				el.getGroups().drawOnImage(el.getMovieList(), bi);
 			}
-			
-			setIcon(new ImageIcon(bi));
+
+			super.setCoverDirect(bi, el.getCover());
 		} else {
-			super.setIcon(el.getCoverIcon());
+			super.setAndResizeCover(el.getCover());
 		}
 	}
 	

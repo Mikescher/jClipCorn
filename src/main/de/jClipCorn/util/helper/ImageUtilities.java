@@ -21,25 +21,43 @@ import javax.swing.ImageIcon;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.gui.resources.CachedResourceLoader;
 import de.jClipCorn.gui.resources.Resources;
+import de.jClipCorn.properties.CCProperties;
+import de.jClipCorn.util.datatypes.Tuple;
 
 public class ImageUtilities {
-	public final static int COVER_WIDTH  = 182;
-	public final static int COVER_HEIGHT = 254;
-	public final static double COVER_RATIO = COVER_WIDTH / (COVER_HEIGHT * 1d);
+	public final static int BASE_COVER_WIDTH  = 182;
+	public final static int BASE_COVER_HEIGHT = 254;
+
+	public final static int HALF_COVER_WIDTH  = BASE_COVER_WIDTH / 2;
+	public final static int HALF_COVER_HEIGHT = BASE_COVER_HEIGHT / 2;
+	
+	public final static double COVER_RATIO = BASE_COVER_WIDTH / (BASE_COVER_HEIGHT * 1d);
 	
 	private final static int SERIES_MASK_WIDTH  = 56;
 	private final static int SERIES_MASK_HEIGHT = 56;
-	
-	public static BufferedImage resizeCoverImage(BufferedImage bi) {
-		return resizeImageProportional(bi, COVER_WIDTH, COVER_HEIGHT, COVER_RATIO);
+
+	public static int getCoverWidth() {
+		return CCProperties.getInstance().PROP_DATABASE_MAX_COVER_SIZE.getValue().getWidth();
+	}
+
+	public static int getCoverHeight() {
+		return CCProperties.getInstance().PROP_DATABASE_MAX_COVER_SIZE.getValue().getWidth();
 	}
 	
-	public static BufferedImage resizeHalfCoverImage(BufferedImage bi) {
-		return resizeImageProportional(bi, COVER_WIDTH / 2, COVER_HEIGHT / 2, COVER_RATIO);
+	public static BufferedImage resizeCoverImageForFullSizeUI(BufferedImage bi) {
+		return resizeImageProportional(bi, BASE_COVER_WIDTH, BASE_COVER_HEIGHT, COVER_RATIO);
 	}
 	
-	public static boolean isCorrectlySized(BufferedImage bb) {
-		return isCorrectlySized(bb, COVER_WIDTH, COVER_HEIGHT);
+	public static BufferedImage resizeCoverImageForHalfSizeUI(BufferedImage bi) {
+		return resizeImageProportional(bi, HALF_COVER_WIDTH, HALF_COVER_HEIGHT, COVER_RATIO);
+	}
+
+	public static BufferedImage resizeCoverImageForStorage(BufferedImage bi) {
+		return resizeImageToBounds(bi, BASE_COVER_WIDTH, BASE_COVER_HEIGHT, getCoverWidth(), getCoverHeight());
+	}
+
+	public static Tuple<Integer, Integer> calcImageSizeForStorage(int widthCurr, int heightCurr) {
+		return calcImagesizeToBounds(widthCurr, heightCurr, BASE_COVER_WIDTH, BASE_COVER_HEIGHT, getCoverWidth(), getCoverHeight());
 	}
 	
 	private static BufferedImage resizeImageProportional(BufferedImage bi, final int newWidth, final int newHeight, final double newRatio) {
@@ -69,6 +87,78 @@ public class ImageUtilities {
 		result.createGraphics().drawImage(progressiveResize(bi, nW, nH), nX, nY, null);
 		
 		return result;
+	}
+	
+	private static BufferedImage resizeImageToBounds(BufferedImage bi, int minW, int minH, int maxW, int maxH) {
+		
+		Tuple<Integer, Integer> size = calcImagesizeToBounds(bi.getWidth(), bi.getHeight(), minW, minH, maxW, maxH);
+
+		if (size.Item1 == bi.getWidth() && size.Item2 == bi.getHeight()) return bi;
+		
+		return progressiveResize(bi, size.Item1, size.Item2);
+		
+	}
+	
+	private static Tuple<Integer, Integer> calcImagesizeToBounds(int w, int h, int minW, int minH, int maxW, int maxH) {
+		if (w > maxW || h > maxH) {
+			
+			// make smaller -> set to [ maxW | maxH ]
+
+			double ratio = w / (h * 1d);
+			double newRatio = maxW / (maxH * 1d);
+			
+			int nW;
+			int nH;
+			
+			if (ratio > newRatio) {
+				nW = maxW;
+				nH = (int) Math.round(1 / ratio * maxW);
+			} else {
+				nH = maxH;
+				nW = (int) Math.round(ratio * maxH);
+			}
+			
+			nW = Math.max(1, nW);
+			nH = Math.max(1, nH);
+
+			return Tuple.Create(nW, nH);
+			
+		} else if (w < minW || h < minH) {
+			
+			// make bigger ->  [ minW | minH ] but no bigger than [ maxW | maxH ]
+
+			double ratio = w / (h * 1d);
+			double newRatio = minW / (minH * 1d);
+
+			int nW;
+			int nH;
+
+			if (ratio > newRatio) {
+				nW = minW;
+				nH = (int) Math.round(1 / ratio * minW);
+			} else {
+				nH = minH;
+				nW = (int) Math.round(ratio * minH);
+			}
+
+			if (nW > maxW) {
+				nH *= maxW / (1d * nW);
+				nW *= maxW;
+			}
+
+			if (nH > maxH) {
+				nW *= maxH / (1d * nH);
+				nH *= maxH;
+			}
+
+			return Tuple.Create(nW, nH);
+			
+		} else {
+			
+			// ok
+			
+			return Tuple.Create(w, h);
+		}
 	}
 	
 	private static BufferedImage progressiveResize(BufferedImage source, int width, int height) {
@@ -119,9 +209,12 @@ public class ImageUtilities {
 		return (bb != null) && (bb.getWidth() == prefWidth) && (bb.getHeight() == prefHeight);
 	}
 	
-	public static void makeSeriesCover(BufferedImage cvr) {
+	public static void makeFullSizeSeriesCover(BufferedImage cvr) {
+		
+		cvr = resizeCoverImageForFullSizeUI(cvr);
+		
 		Point tl = getTopLeftNonTransparentPixel(cvr);
-		tl.setLocation(Math.min(tl.x, COVER_WIDTH - SERIES_MASK_WIDTH), Math.min(tl.y, COVER_HEIGHT - SERIES_MASK_HEIGHT)); // Nicht zu weit rechts | Nicht zu weit unten
+		tl.setLocation(Math.min(tl.x, BASE_COVER_WIDTH - SERIES_MASK_WIDTH), Math.min(tl.y, BASE_COVER_HEIGHT - SERIES_MASK_HEIGHT)); // Nicht zu weit rechts | Nicht zu weit unten
 		
 		cvr.getGraphics().drawImage(CachedResourceLoader.getImage(Resources.IMG_COVER_SERIES_MASK), tl.x, tl.y, null);
 	}

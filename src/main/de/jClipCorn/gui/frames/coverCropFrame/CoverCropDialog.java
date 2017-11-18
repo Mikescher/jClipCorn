@@ -10,6 +10,7 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Insets;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.TexturePaint;
@@ -144,6 +145,12 @@ public class CoverCropDialog extends JDialog {
 	private JLabel lblRatioState;
 	private JCheckBox chckbxSeriesPreview;
 	private JButton btnCancel;
+	private JPanel panel;
+	private JPanel panel_1;
+	private JButton btnResizeTop;
+	private JButton btnResizeLeft;
+	private JButton btnResizeRight;
+	private JButton btnResizeBottom;
 	
 	/**
 	 * Constructor (isSeries = false)
@@ -445,6 +452,100 @@ public class CoverCropDialog extends JDialog {
 		strut_3 = Box.createHorizontalStrut(5);
 		pnlInnerPreview.add(strut_3);
 		
+		panel = new JPanel();
+		pnlInnerPreview.add(panel);
+		panel.setOpaque(false);
+		panel.setLayout(new FormLayout(new ColumnSpec[] {
+				ColumnSpec.decode("default:grow"), //$NON-NLS-1$
+				FormSpecs.DEFAULT_COLSPEC,},
+			new RowSpec[] {
+				RowSpec.decode("default:grow"), //$NON-NLS-1$
+				FormSpecs.DEFAULT_ROWSPEC,}));
+		
+		panel_1 = new JPanel();
+		panel_1.setOpaque(false);
+		panel.add(panel_1, "2, 2, left, top"); //$NON-NLS-1$
+		panel_1.setLayout(new FormLayout(new ColumnSpec[] {
+				ColumnSpec.decode("max(18dlu;pref):grow"), //$NON-NLS-1$
+				ColumnSpec.decode("max(18dlu;pref):grow"), //$NON-NLS-1$
+				ColumnSpec.decode("max(18dlu;pref):grow"),}, //$NON-NLS-1$
+			new RowSpec[] {
+				RowSpec.decode("max(18dlu;pref):grow"), //$NON-NLS-1$
+				RowSpec.decode("max(18dlu;pref):grow"), //$NON-NLS-1$
+				RowSpec.decode("max(18dlu;pref):grow"),})); //$NON-NLS-1$
+		
+		btnResizeTop = new JButton("▲"); //$NON-NLS-1$
+		btnResizeTop.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				int widthCurr = crop_br.x - crop_tl.x;
+				int heightCurr = crop_br.y - crop_tl.y;
+				
+				int neededH = (int) Math.round(widthCurr / ImageUtilities.COVER_RATIO);
+
+				setBottomCropChecked(crop_br.y - (heightCurr - neededH));
+				
+				updateCropInfoLabel();
+				repaintAll();
+			}
+		});
+		btnResizeTop.setMargin(new Insets(0, 0, 0, 0));
+		panel_1.add(btnResizeTop, "2, 1, fill, fill"); //$NON-NLS-1$
+		
+		btnResizeLeft = new JButton("◀"); //$NON-NLS-1$
+		btnResizeLeft.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				int widthCurr = crop_br.x - crop_tl.x;
+				int heightCurr = crop_br.y - crop_tl.y;
+				
+				int neededW = (int) Math.round(heightCurr * ImageUtilities.COVER_RATIO);
+				
+				setRightCropChecked(crop_br.x - (widthCurr - neededW));
+				
+				updateCropInfoLabel();
+				repaintAll();
+			}
+		});
+		btnResizeLeft.setMargin(new Insets(0, 0, 0, 0));
+		panel_1.add(btnResizeLeft, "1, 2, fill, fill"); //$NON-NLS-1$
+		
+		btnResizeRight = new JButton("▶"); //$NON-NLS-1$
+		btnResizeRight.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				int widthCurr = crop_br.x - crop_tl.x;
+				int heightCurr = crop_br.y - crop_tl.y;
+				
+				int neededW = (int) Math.round(heightCurr * ImageUtilities.COVER_RATIO);
+				
+				setLeftCropChecked(crop_tl.x + (widthCurr - neededW));
+				
+				updateCropInfoLabel();
+				repaintAll();
+			}
+		});
+		btnResizeRight.setMargin(new Insets(0, 0, 0, 0));
+		panel_1.add(btnResizeRight, "3, 2, fill, fill"); //$NON-NLS-1$
+		
+		btnResizeBottom = new JButton("▼"); //$NON-NLS-1$
+		btnResizeBottom.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				int widthCurr = crop_br.x - crop_tl.x;
+				int heightCurr = crop_br.y - crop_tl.y;
+				
+				int neededH = (int) Math.round(widthCurr / ImageUtilities.COVER_RATIO);
+				
+				setTopCropChecked(crop_tl.y + (heightCurr - neededH));
+				
+				updateCropInfoLabel();
+				repaintAll();
+			}
+		});
+		btnResizeBottom.setMargin(new Insets(0, 0, 0, 0));
+		panel_1.add(btnResizeBottom, "2, 3, fill, fill"); //$NON-NLS-1$
+		
 		lblPreview = new JLabel(LocaleBundle.getString("CoverCropFrame.btnPreview.text")); //$NON-NLS-1$
 		lblPreview.setFont(new Font("Tahoma", Font.BOLD, 11)); //$NON-NLS-1$
 		lblPreview.setHorizontalAlignment(SwingConstants.CENTER);
@@ -552,16 +653,6 @@ public class CoverCropDialog extends JDialog {
 		pnlSidebarOptions.add(pnlZoom, BorderLayout.CENTER);
 		pnlZoom.setLayout(new BorderLayout(0, 0));
 		
-		lblZoom = new JLabel() {
-			private static final long serialVersionUID = 1093249790L;
-
-			@Override
-			protected void paintComponent(Graphics g) {
-				repaintZoomImage(g, null);
-			}
-		};
-		pnlZoom.add(lblZoom, BorderLayout.CENTER);
-		
 		spnZoom = new JSpinner();
 		spnZoom.addChangeListener(new ChangeListener() {
 			
@@ -575,6 +666,16 @@ public class CoverCropDialog extends JDialog {
 		
 		horizontalStrut = Box.createHorizontalStrut(250);
 		pnlZoom.add(horizontalStrut, BorderLayout.SOUTH);
+		
+		lblZoom = new JLabel() {
+			private static final long serialVersionUID = 1093249790L;
+
+			@Override
+			protected void paintComponent(Graphics g) {
+				repaintZoomImage(g, null);
+			}
+		};
+		pnlZoom.add(lblZoom, BorderLayout.CENTER);
 	}
 	
 	private void firstInit() {

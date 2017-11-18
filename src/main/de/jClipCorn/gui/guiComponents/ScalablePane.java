@@ -36,6 +36,14 @@ public class ScalablePane extends JPanel {
 		return master == null ? super.getPreferredSize() : new Dimension(master.getWidth(this), master.getHeight(this));
 	}
 
+	public void setImage(Image master) {
+		this.master = master;
+		this.scaled = null;
+		
+		invalidate();
+		repaint();
+	}
+	
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);

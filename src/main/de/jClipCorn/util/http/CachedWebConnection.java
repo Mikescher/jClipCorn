@@ -26,6 +26,7 @@ public class CachedWebConnection extends WebConnectionLayer {
 	private String cachePath;
 	private String cacheDatabasePath;
 	
+	private Object dblock = new Object();
 	private SimpleSerializableData db;
 	private HashMap<String, String> dbref;
 	
@@ -35,37 +36,39 @@ public class CachedWebConnection extends WebConnectionLayer {
 
 	@Override
 	public void init() {
-		cachePath = CCProperties.getInstance().PROP_DEBUG_HTTPCACHE_PATH.getValue();
-		cachePath = PathFormatter.appendSeparator(cachePath);
-		cacheDatabasePath = PathFormatter.combine(cachePath, "cache.xml");
-		
-		PathFormatter.createFolders(cacheDatabasePath);
-		
-		CCLog.addDebug("Start loading HTTP-Cache from drive");
-		
-		try {
-			if (PathFormatter.fileExists(cacheDatabasePath)) {
-				db = SimpleSerializableData.load(cacheDatabasePath);
-				dbref = new HashMap<>();
-				//for (SimpleSerializableData dat : db.enumerateChildren()) {
-				//	try {
-				//		if (dat.getInt("type") == 0)
-				//			dbref.put(dat.getStr("result"), SimpleFileUtils.readUTF8TextFile(PathFormatter.combine(cachePath, dat.getStr("result"))));
-				//	} catch (Exception e) {
-				//		CCLog.addError(e);
-				//	}
-				//}
-			} else {
-				db = SimpleSerializableData.createEmpty();
-				dbref = new HashMap<>();
+		synchronized(dblock) {
+			cachePath = CCProperties.getInstance().PROP_DEBUG_HTTPCACHE_PATH.getValue();
+			cachePath = PathFormatter.appendSeparator(cachePath);
+			cacheDatabasePath = PathFormatter.combine(cachePath, "cache.xml");
+			
+			PathFormatter.createFolders(cacheDatabasePath);
+			
+			CCLog.addDebug("Start loading HTTP-Cache from drive");
+			
+			try {
+				if (PathFormatter.fileExists(cacheDatabasePath)) {
+					db = SimpleSerializableData.load(cacheDatabasePath);
+					dbref = new HashMap<>();
+					//for (SimpleSerializableData dat : db.enumerateChildren()) {
+					//	try {
+					//		if (dat.getInt("type") == 0)
+					//			dbref.put(dat.getStr("result"), SimpleFileUtils.readUTF8TextFile(PathFormatter.combine(cachePath, dat.getStr("result"))));
+					//	} catch (Exception e) {
+					//		CCLog.addError(e);
+					//	}
+					//}
+				} else {
+					db = SimpleSerializableData.createEmpty();
+					dbref = new HashMap<>();
+				}
+			} catch (XMLFormatException e) {
+				CCLog.addError(e);
 			}
-		} catch (XMLFormatException e) {
-			CCLog.addError(e);
+	
+			CCLog.addDebug("Finished loading HTTP-Cache from drive");
+			
+			CCLog.addWarning("You are using a cached web connection - if you see this message and are no developer you're fucked...");
 		}
-
-		CCLog.addDebug("Finished loading HTTP-Cache from drive");
-		
-		CCLog.addWarning("You are using a cached web connection - if you see this message and are no developer you're fucked...");
 	}
 
 	@Override
@@ -124,7 +127,7 @@ public class CachedWebConnection extends WebConnectionLayer {
 			}
 		} finally {
 			try {
-				db.save(cacheDatabasePath);
+				synchronized(dblock) { db.save(cacheDatabasePath);}
 			} catch (IOException e) {
 				CCLog.addError(e);
 			}
@@ -176,7 +179,7 @@ public class CachedWebConnection extends WebConnectionLayer {
 			}
 		} finally {
 			try {
-				db.save(cacheDatabasePath);
+				synchronized(dblock) { db.save(cacheDatabasePath); }
 			} catch (IOException e) {
 				CCLog.addError(e);
 			}

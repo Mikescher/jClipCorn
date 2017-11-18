@@ -6,6 +6,7 @@ import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -25,6 +26,8 @@ public class CoverPanel extends JPanel implements UpdateCallbackListener {
 	private List<BufferedImage> images = new ArrayList<>();
 	private List<JLabel> labels = new ArrayList<>();
 	private int selctionID = -1;
+	
+	public Consumer<BufferedImage> onSelectEvent;
 	
 	public CoverPanel(JScrollPane pane) {
 		this.scrollpane = pane;
@@ -82,6 +85,8 @@ public class CoverPanel extends JPanel implements UpdateCallbackListener {
 		BufferedImage newImg = ImageUtilities.resizeCoverImageForHalfSizeUI(images.get(selctionID));
 		ImageUtilities.drawActualBorder(newImg, Color.BLUE, 2);
 		labels.get(selctionID).setIcon(new ImageIcon(newImg));
+		
+		if (onSelectEvent != null) onSelectEvent.accept(images.get(selctionID));
 	}
 
 	@Override

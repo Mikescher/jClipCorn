@@ -17,6 +17,7 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingUtilities;
 
 import de.jClipCorn.database.databaseElement.columnTypes.CCDBElementTyp;
+import de.jClipCorn.gui.guiComponents.ScalablePane;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.CachedResourceLoader;
 import de.jClipCorn.gui.resources.Resources;
@@ -25,6 +26,9 @@ import de.jClipCorn.online.metadata.ParseResultHandler;
 import de.jClipCorn.util.helper.ExtendedFocusTraversalOnArray;
 import de.jClipCorn.util.listener.ProgressCallbackProgressBarHelper;
 import de.jClipCorn.util.listener.UpdateCallbackListener;
+import javax.swing.JSplitPane;
+import javax.swing.JLabel;
+import javax.swing.SwingConstants;
 
 public class FindCoverDialog extends JDialog {
 	private static final long serialVersionUID = -5790203846014201695L;
@@ -48,6 +52,10 @@ public class FindCoverDialog extends JDialog {
 	private final ParseResultHandler handler;
 	private final CCDBElementTyp typ;
 	private JButton btnStop;
+	private JSplitPane splitPane;
+	private ScalablePane pnlPreview;
+	private JPanel pnCenterRight;
+	private JLabel lblSize;
 	
 	public FindCoverDialog(Component owner, ParseResultHandler handler, CCDBElementTyp typ) {
 		super();
@@ -130,15 +138,36 @@ public class FindCoverDialog extends JDialog {
 		});
 		pnlBottom.add(btnOk);
 		
+		splitPane = new JSplitPane();
+		splitPane.setResizeWeight(0.88);
+		getContentPane().add(splitPane, BorderLayout.CENTER);
+		
 		scrollPane = new JScrollPane();
+		splitPane.setLeftComponent(scrollPane);
 		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		getContentPane().add(scrollPane, BorderLayout.CENTER);
 		
 		pnlCover = new CoverPanel(scrollPane);
+		pnlCover.onSelectEvent = this::onCoverSelected;
 		scrollPane.setViewportView(pnlCover);
 		
-		setSize(800, 680);
+		pnCenterRight = new JPanel();
+		splitPane.setRightComponent(pnCenterRight);
+		pnCenterRight.setLayout(new BorderLayout(0, 0));
+		
+		pnlPreview = new ScalablePane(CachedResourceLoader.getImage(Resources.IMG_COVER_STANDARD), true);
+		pnCenterRight.add(pnlPreview);
+		
+		lblSize = new JLabel("?"); //$NON-NLS-1$
+		lblSize.setHorizontalAlignment(SwingConstants.CENTER);
+		pnCenterRight.add(lblSize, BorderLayout.SOUTH);
+		
+		setSize(800, 480);
+	}
+	
+	private void onCoverSelected(BufferedImage bi) {
+		pnlPreview.setImage(bi);
+		lblSize.setText(bi.getWidth() + " x " + bi.getHeight()); //$NON-NLS-1$
 	}
 	
 	private void onOK() {

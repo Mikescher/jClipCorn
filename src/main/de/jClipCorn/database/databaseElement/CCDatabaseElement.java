@@ -29,7 +29,7 @@ import de.jClipCorn.util.exceptions.OnlineRefFormatException;
 import de.jClipCorn.util.helper.ByteUtilies;
 import de.jClipCorn.util.helper.ImageUtilities;
 
-public abstract class CCDatabaseElement implements ICCDatabaseStructureElement {
+public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, ICCCoveredElement {
 	private final int localID;					// INTEGER
 	private final CCDBElementTyp typ;				// TINYINT
 	private String title; 						// LEN = 128
@@ -166,8 +166,7 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement {
 		if (name == null) {
 			return;
 		}
-			
-		
+
 		if (! covername.isEmpty() && name.equals(getCover())) {
 			return;
 		}
@@ -181,14 +180,17 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement {
 		updateDB();
 	}
 	
+	@Override
 	public String getCoverName() {
 		return covername;
 	}
 
+	@Override
 	public BufferedImage getCover() {
 		return movielist.getCoverCache().getCover(covername);
 	}
 	
+	@Override
 	public String getCoverMD5() {
 		return LargeMD5Calculator.calcMD5(getCover());
 	}

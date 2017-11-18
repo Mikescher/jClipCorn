@@ -17,6 +17,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.filechooser.FileFilter;
 
+import de.jClipCorn.gui.frames.coverPreviewFrame.CoverPreviewFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.gui.resources.CachedResourceLoader;
@@ -136,13 +137,22 @@ public class CoverLabel extends JLabel implements MouseListener {
 			}
 
 			JPopupMenu menu = new JPopupMenu();
-			JMenuItem item = new JMenuItem(LocaleBundle.getString("MainFrame.saveCoverPopup")); //$NON-NLS-1$
-			menu.add(item);
+			JMenuItem item2 = new JMenuItem(LocaleBundle.getString("MainFrame.showCoverPopup"), CachedResourceLoader.getIcon(Resources.ICN_MENUBAR_SHOWCOVER.icon16x16)); //$NON-NLS-1$
+			JMenuItem item1 = new JMenuItem(LocaleBundle.getString("MainFrame.saveCoverPopup"), CachedResourceLoader.getIcon(Resources.ICN_MENUBAR_SAVE.icon16x16)); //$NON-NLS-1$
+			menu.add(item2);
+			menu.add(item1);
 
-			item.addActionListener(new ActionListener() {
+			item1.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e2) {
 					saveIconAction();
+				}
+			});
+
+			item2.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e2) {
+					new CoverPreviewFrame(CoverLabel.this, getOriginalCover()).setVisible(true);
 				}
 			});
 

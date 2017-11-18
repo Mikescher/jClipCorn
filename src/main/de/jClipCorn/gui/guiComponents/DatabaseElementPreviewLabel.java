@@ -8,6 +8,7 @@ import java.util.TimerTask;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.gui.actionTree.CCActionTree;
+import de.jClipCorn.gui.frames.coverPreviewFrame.CoverPreviewFrame;
 import de.jClipCorn.gui.resources.CachedResourceLoader;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.properties.CCProperties;
@@ -22,9 +23,10 @@ public class DatabaseElementPreviewLabel extends CoverLabel {
 	private boolean timerSwitch = false;
 	private Timer timer;
 	
+	private CCDatabaseElement element;
+	
 	public DatabaseElementPreviewLabel() {
 		super(false);
-		addMouseListener(this);
 		
 		timer = new Timer();
 		timer.schedule(new TimerTask() {
@@ -43,6 +45,8 @@ public class DatabaseElementPreviewLabel extends CoverLabel {
 		if (isError()) {
 			setErrorDisplay(false);
 		}
+		
+		element = el;
 		
 		boolean drawSCorner = CCProperties.getInstance().PROP_MAINFRAME_SHOWCOVERCORNER.getValue()  && el.isSeries();
 		boolean drawTag = CCProperties.getInstance().PROP_MAINFRAME_SHOWTAGS.getValue() && el.isMovie() && ((CCMovie)el).getTags().hasTags();
@@ -75,6 +79,8 @@ public class DatabaseElementPreviewLabel extends CoverLabel {
 			if (! isError()) {
 				setIcon(getStandardIcon());
 			}
+
+			element = null;
 		}
 	}
 
@@ -95,6 +101,9 @@ public class DatabaseElementPreviewLabel extends CoverLabel {
 		if (e.getButton() == MouseEvent.BUTTON1 && isError()) {
 			CCActionTree.getInstance().find("ShowLog").execute(); //$NON-NLS-1$
 			setErrorDisplay(false);
+		}
+		else if (e.getClickCount() == 2) {
+			if (element != null) new CoverPreviewFrame(this, element).setVisible(true);
 		}
 	}
 }

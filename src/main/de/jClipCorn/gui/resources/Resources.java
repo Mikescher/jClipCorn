@@ -87,6 +87,7 @@ public class Resources {
 	public final static MultiIconRef ICN_MENUBAR_TAG_5_1 				= registerMultisizeIcon("/icons/tags/tag_5_on.png");
 	public final static MultiIconRef ICN_MENUBAR_CREATEFOLDERSTRUCTURE	= registerMultisizeIcon("/icons/toolbar/folders_explorer.png");
 	public final static MultiIconRef ICN_MENUBAR_SAVE					= registerMultisizeIcon("/icons/toolbar/save_as.png");
+	public final static MultiIconRef ICN_MENUBAR_SHOWCOVER				= registerMultisizeIcon("/icons/toolbar/images.png");
 	public final static MultiIconRef ICN_MENUBAR_STATISTICS				= registerMultisizeIcon("/icons/toolbar/statistics.png");
 	public final static MultiIconRef ICN_MENUBAR_SHUFFLE				= registerMultisizeIcon("/icons/toolbar/cards.png");
 	public final static MultiIconRef ICN_MENUBAR_UPDATES				= registerMultisizeIcon("/icons/toolbar/upload_for_cloud.png");

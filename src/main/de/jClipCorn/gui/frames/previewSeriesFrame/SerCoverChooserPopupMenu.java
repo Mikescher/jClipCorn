@@ -13,6 +13,7 @@ import javax.swing.filechooser.FileFilter;
 
 import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.gui.frames.addEpisodesFrame.AddEpisodesFrame;
+import de.jClipCorn.gui.frames.coverPreviewFrame.CoverPreviewFrame;
 import de.jClipCorn.gui.frames.editSeriesFrame.EditSeriesFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
@@ -76,6 +77,15 @@ public class SerCoverChooserPopupMenu extends JPopupMenu {
 		add(delSeason);
 		
 		addSeparator();
+		
+		JMenuItem showCover = new JMenuItem(LocaleBundle.getString("PreviewSeriesFrame.PopupMenuCover.ShowCover"), CachedResourceLoader.getIcon(Resources.ICN_MENUBAR_SHOWCOVER.icon16x16)); //$NON-NLS-1$
+		showCover.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				new CoverPreviewFrame(SerCoverChooserPopupMenu.this, s).setVisible(true);
+			}
+		});
+		add(showCover);
 		
 		JMenuItem saveCover = new JMenuItem(LocaleBundle.getString("PreviewSeriesFrame.PopupMenuCover.SaveCover"), CachedResourceLoader.getIcon(Resources.ICN_MENUBAR_SAVE.icon16x16)); //$NON-NLS-1$
 		saveCover.addActionListener(new ActionListener() {

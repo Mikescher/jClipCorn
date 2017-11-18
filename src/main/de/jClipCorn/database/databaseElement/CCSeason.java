@@ -28,7 +28,7 @@ import de.jClipCorn.util.helper.ImageUtilities;
 import de.jClipCorn.util.stream.CCStream;
 import de.jClipCorn.util.stream.CCStreams;
 
-public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement {
+public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, ICCCoveredElement {
 	private final CCSeries owner;
 	private final int seasonID;
 	
@@ -127,10 +127,12 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement {
 		return year;
 	}
 
+	@Override
 	public String getCoverName() {
 		return covername;
 	}
 	
+	@Override
 	public BufferedImage getCover() {
 		return owner.getMovieList().getCoverCache().getCover(covername);
 	}
@@ -452,6 +454,7 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement {
 		endUpdating();
 	}
 	
+	@Override
 	public String getCoverMD5() {
 		return LargeMD5Calculator.calcMD5(getCover());
 	}

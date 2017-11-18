@@ -578,4 +578,9 @@ public class CCSeries extends CCDatabaseElement  {
 	public CCStream<CCSeason> iteratorSeasons() {
 		return new DirectSeasonsIterator(this);
 	}
+
+	public boolean isEmpty() {
+		for (CCSeason se : seasons) if (!se.isEmpty()) return false;
+		return true;
+	}
 }

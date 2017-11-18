@@ -32,6 +32,7 @@ import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.formatter.FileSizeFormatter;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.formatter.RomanNumberFormatter;
+import de.jClipCorn.util.helper.ImageUtilities;
 import de.jClipCorn.util.listener.ProgressCallbackListener;
 
 public class DatabaseValidator {
@@ -120,7 +121,7 @@ public class DatabaseValidator {
 		// Wrong AddDate
 		// ###############################################
 		
-		if (series.getAddDate().isLessEqualsThan(MIN_DATE) || series.getAddDate().isGreaterThan(CCDate.getCurrentDate())) {
+		if (!series.isEmpty() && (series.getAddDate().isLessEqualsThan(MIN_DATE) || series.getAddDate().isGreaterThan(CCDate.getCurrentDate()))) {
 			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_WRONG_ADDDATE, series));
 		}
 
@@ -176,6 +177,22 @@ public class DatabaseValidator {
 				e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_INVALID_GROUPLIST, series));
 				break;
 			}
+		}
+
+		// ###############################################
+		// Cover too small
+		// ###############################################
+
+		if (series.getCover().getWidth() < ImageUtilities.BASE_COVER_WIDTH && series.getCover().getWidth() < ImageUtilities.BASE_COVER_HEIGHT) {
+			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_COVER_TOO_SMALL, series));
+		}
+
+		// ###############################################
+		// Cover too big
+		// ###############################################
+
+		if (series.getCover().getWidth() > ImageUtilities.getCoverWidth() && series.getCover().getHeight() < ImageUtilities.getCoverHeight()) {
+			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_COVER_TOO_BIG, series));
 		}
 	}
 
@@ -442,6 +459,22 @@ public class DatabaseValidator {
 		if (mov.isViewed() && mov.getViewedHistory().isEmpty()) {
 			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_VIEWED_BUT_NO_HISTORY, mov));
 		}
+
+		// ###############################################
+		// Cover too small
+		// ###############################################
+
+		if (mov.getCover().getWidth() < ImageUtilities.BASE_COVER_WIDTH && mov.getCover().getWidth() < ImageUtilities.BASE_COVER_HEIGHT) {
+			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_COVER_TOO_SMALL, mov));
+		}
+
+		// ###############################################
+		// Cover too big
+		// ###############################################
+
+		if (mov.getCover().getWidth() > ImageUtilities.getCoverWidth() && mov.getCover().getHeight() < ImageUtilities.getCoverHeight()) {
+			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_COVER_TOO_BIG, mov));
+		}
 	}
 
 	private static void validateSeason(List<DatabaseError> e, CCMovieList movielist, CCSeason season) {
@@ -465,7 +498,7 @@ public class DatabaseValidator {
 		// Wrong AddDate
 		// ###############################################
 		
-		if (season.getEpisodeCount() > 0 && (season.getAddDate().isLessEqualsThan(MIN_DATE) || season.getAddDate().isGreaterThan(CCDate.getCurrentDate()))) {
+		if (!season.isEmpty() && (season.getAddDate().isLessEqualsThan(MIN_DATE) || season.getAddDate().isGreaterThan(CCDate.getCurrentDate()))) {
 			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_WRONG_ADDDATE, season));
 		}
 
@@ -483,6 +516,22 @@ public class DatabaseValidator {
 		
 		if (! season.isContinoousEpisodeNumbers()) {
 			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_NON_CONTINOOUS_EPISODES, season));
+		}
+
+		// ###############################################
+		// Cover too small
+		// ###############################################
+
+		if (season.getCover().getWidth() < ImageUtilities.BASE_COVER_WIDTH && season.getCover().getWidth() < ImageUtilities.BASE_COVER_HEIGHT) {
+			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_COVER_TOO_SMALL, season));
+		}
+
+		// ###############################################
+		// Cover too big
+		// ###############################################
+
+		if (season.getCover().getWidth() > ImageUtilities.getCoverWidth() && season.getCover().getHeight() < ImageUtilities.getCoverHeight()) {
+			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_COVER_TOO_BIG, season));
 		}
 	}
 

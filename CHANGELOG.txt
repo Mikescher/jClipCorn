@@ -1,3 +1,73 @@
+
+
+########################################################################
+############ Sun Nov 19 13:01:42 2017 +0100  1.10.3 RELEASE ############
+########################################################################
+
+
+1.10.3 Bugfix: Fixed wrong values for CoverImageSize
+1.10.3 Bugfix: Fixed IllegalArgumentException when cropping the same image twice
+1.10.3 Feature: CropDialog: auto adjust single side
+1.10.3 Feature: Big preview in FindCoverDialog
+1.10.3 Feature: CoverEdit Improvements
+  - how warning icon when non-acceptable ratio
+  - show resolution on hover
+1.10.3 Feature: New CustomFilter: CoverDimension
+1.10.3 Feature: New DatabaseErrors: 'Cover too big' & 'Cover too small'
+1.10.3 Feature: Show full size image on CoverLabel doubleclick
+1.10.3 Feature: Bigger Cover size (setting), up to 1820x2540 (x10)
+1.10.3 Task: Better default values for InitialConfigFrame
+1.10.3 Task: fallback language dictionary should equal [en-US]
+1.10.3 Bugfix: Fixed (many) english translations
+  - fixed space before punctuation
+  - changed 'series' to 'tv show'
+  - fixed wrong language (de-DE instead of en-US)
+  - fixed wrong capitalization
+1.10.3 Bugfix: Fixed clicking on [temporary filter] directly after closing dialog not working
+1.10.3 Feature: New single-dialog custom filter editor [[WIP]]
+  - Use tree view for AST representation
+  - easier filter creation (no longer special window for each one)
+  - edit temporary filters
+  - make temporary filters permanent
+  - do not change filters before pressing [OK]
+  - ctrl+click to interactively add to current filter
+1.10.3 Bugfix: Fixed regression in CustomViewedFilter (wrong serialization)
+1.10.3 Feature: Setting to control 'next episode' heuristic (+ better smart heuristic)
+1.10.3 Bugfix: Wrong Episodenumbers in WatchHistoryFrame
+1.10.3 Feature: Get FSK from TMDB API (for tv shows)
+1.10.3 Feature: New custom filter: 'episode count'
+1.10.3 Feature: New custom filter aggregators (any season + all seasons)
+1.10.3 Task: Versioncheck from Github API
+1.10.3 Feature: Get FSK from TMDB API
+1.10.3 Task: Faster Debug-HTTP-Cache
+1.10.3 Bugfix: Fixed CustomAggregatorFilterDialog showing wrong data on init
+1.10.3 Feature: New custom filters: Aggregators (Any & All)
+1.10.3 Feature: New custom filter: Viewcount
+1.10.3 Other: Improved filter interface for later additions of episodes+seasons
+1.10.3 Feature: New custom filter: AddDate
+1.10.3 Feature: New Sidebar filter options: viewed:partial, viewed:never, viewed:later
+1.10.3 Task: Don't show group filter with no groups
+1.10.3 Task: Unified MainTable filter into AbstractCustomFilter system
+1.10.3 Feature: Delete Genres with UpdateMetadataDialog
+1.10.3 Feature: Update Genres with UpdateMetadataDialog
+1.10.3 Feature: New Metadataparser _MAL_ (FIN)
+1.10.3 Feature: New Metadataparser _MAL_ (WIP)
+1.10.3 Feature: Added Update Metadata (OnlineScore) from OnlineRef Dialog (Finished)
+1.10.3 Bugfix: Fixed getGlobalEpisodeNumber() for continoous numbered series
+1.10.3 Bugfix: Fixed TMDB parser sometimes returning runtime=0 (api returns runtime only for en-US)
+1.10.3 Feature: Set initial PreviewSeriesFrame height by setting
+1.10.3 Task: Added CachedWebConnection (for API debugging)
+1.10.3 Feature: Added Update Metadata (OnlineScore) from OnlineRef Dialog (WIP)
+1.10.3 Task: Refactoring OnlineCoverParser and OnlineMetadataParser
+1.10.3 Task: Added JCCSimpleTable and used it in HistoryFrame
+
+
+#######################################################################
+############ Fri Dec 9 22:19:18 2016 +0100  1.10.2 RELEASE ############
+#######################################################################
+
+
+1.10.2 Other: Moved WindowsWrapper creation (launch4j) to gradle task
 1.10.2 Bugfix: Work around some stupid OpenJDK compiler bug by returning Integer from lambda methods instead of int
 1.10.2 Feature: CCStream performance improvement (sort and reverse)
 1.10.2 Task: Implement database iterators with CCSimpleStream (performance wise better)

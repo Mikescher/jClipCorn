@@ -82,6 +82,7 @@ public class CCProperties {
 	
 	private static CCProperties mainInstance = null;
 	
+	private Object _fileLock = new Object();
 	private List<CCProperty<Object>> propertylist = new Vector<>();
 	
 	public CCBoolProperty 									PROP_ADD_MOVIE_RELATIVE_AUTO;
@@ -396,9 +397,11 @@ public class CCProperties {
 	
 	public void load(String path) {
 		try {
-			FileInputStream stream = new FileInputStream(path);
-			properties.load(stream);
-			stream.close();
+			synchronized (_fileLock) {
+				FileInputStream stream = new FileInputStream(path);
+				properties.load(stream);
+				stream.close();
+			}
 		} catch (IOException e) {
 			firstLaunch = true;
 			CCLog.addWarning(LocaleBundle.getFormattedString("LogMessage.PropFileNotFound", path)); //$NON-NLS-1$
@@ -409,9 +412,11 @@ public class CCProperties {
 		if (path == null) return;
 		
 		try {
-			FileOutputStream stream = new FileOutputStream(path);
-			properties.store(stream, HEADER);
-			stream.close();
+			synchronized (_fileLock) {
+				FileOutputStream stream = new FileOutputStream(path);
+				properties.store(stream, HEADER);
+				stream.close();
+			}
 		} catch (IOException e) {
 			CCLog.addError(e);
 		}

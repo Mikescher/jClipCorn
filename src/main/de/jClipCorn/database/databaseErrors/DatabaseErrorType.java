@@ -28,7 +28,7 @@ public class DatabaseErrorType {
 	public static DatabaseErrorType ERROR_DUPLICATE_FILELINK = new DatabaseErrorType(21, null);
 	public static DatabaseErrorType ERROR_WRONG_FILENAME = new DatabaseErrorType(22, DatabaseAutofixer::fixError_Wrong_Filename);
 	public static DatabaseErrorType ERROR_NONLINKED_COVERFILE = new DatabaseErrorType(23, null);
-	public static DatabaseErrorType ERROR_IMPOSSIBLE_WATCH_LATER = new DatabaseErrorType(24, DatabaseAutofixer::fixError_Impossible_WatchLater);
+	//public static DatabaseErrorType ERROR_IMPOSSIBLE_WATCH_LATER = new DatabaseErrorType(24, DatabaseAutofixer::fixError_Impossible_WatchLater);
 	public static DatabaseErrorType ERROR_LASTWATCHED_TOO_OLD = new DatabaseErrorType(25, null);
 	public static DatabaseErrorType ERROR_INVALID_SERIES_STRUCTURE = new DatabaseErrorType(26, null);
 	public static DatabaseErrorType ERROR_IMPOSSIBLE_WATCH_NEVER = new DatabaseErrorType(27, DatabaseAutofixer::fixError_Impossible_WatchNever);

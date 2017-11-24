@@ -110,6 +110,7 @@ public class Resources {
 	public final static IconRef ICN_TABLE_VIEWED_LATER 		= registerOtherIcon("/icons/table/viewed_2.png");
 	public final static IconRef ICN_TABLE_VIEWED_NEVER 		= registerOtherIcon("/icons/table/viewed_3.png");
 	public final static IconRef ICN_TABLE_VIEWED_PARTIAL	= registerOtherIcon("/icons/table/viewed_4.png");
+	public final static IconRef ICN_TABLE_VIEWED_AGAIN		= registerOtherIcon("/icons/table/viewed_5.png");
 	
 	public final static IconRef ICN_TABLE_QUALITY_0 		= register16x16Icon("/icons/table/quality_0.png");
 	public final static IconRef ICN_TABLE_QUALITY_1 		= register16x16Icon("/icons/table/quality_1.png");
@@ -217,6 +218,7 @@ public class Resources {
 	public final static IconRef ICN_SIDEBAR_LATER				= register16x16Icon("/icons/sidebar/later.png");
 	public final static IconRef ICN_SIDEBAR_NEVER				= register16x16Icon("/icons/sidebar/never.png");
 	public final static IconRef ICN_SIDEBAR_PARTIALLY			= register16x16Icon("/icons/sidebar/partially.png");
+	public final static IconRef ICN_SIDEBAR_AGAIN				= register16x16Icon("/icons/sidebar/again.png");
 	public final static IconRef ICN_SIDEBAR_CUSTOM				= register16x16Icon("/icons/sidebar/tag.png");
 	public final static IconRef ICN_SIDEBAR_CUSTOM_OPERATOR 	= register16x16Icon("/icons/sidebar/box_front_open.png");
 	public final static IconRef ICN_SIDEBAR_CUSTOM_AGGREGATOR 	= register16x16Icon("/icons/sidebar/hbox.png");

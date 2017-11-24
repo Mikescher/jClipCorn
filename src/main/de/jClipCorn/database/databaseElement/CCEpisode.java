@@ -93,10 +93,6 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 				fullResetViewedHistory();
 			}
 
-			if (viewed && getTag(CCTagList.TAG_WATCH_LATER) && CCProperties.getInstance().PROP_MAINFRAME_AUTOMATICRESETWATCHLATER.getValue()) {
-				setTag(CCTagList.TAG_WATCH_LATER, false);
-			}
-
 			updateDB();
 		}
 	}
@@ -104,6 +100,10 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 	public void addToViewedHistory(CCDateTime datetime) {
 		this.viewedHistory = this.viewedHistory.add(datetime);
 		
+		if (getTag(CCTagList.TAG_WATCH_LATER) && CCProperties.getInstance().PROP_MAINFRAME_AUTOMATICRESETWATCHLATER.getValue()) {
+			setTag(CCTagList.TAG_WATCH_LATER, false);
+		}
+
 		updateDB();
 	}
 	
@@ -502,10 +502,12 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 
 	@Override
 	public ExtendedViewedState getExtendedViewedState() {
-		if (isViewed())
-			return new ExtendedViewedState(ExtendedViewedStateType.VIEWED, getViewedHistory());
-		else if (tags.getTag(CCTagList.TAG_WATCH_LATER))
+		if (!viewed && tags.getTag(CCTagList.TAG_WATCH_LATER))
 			return new ExtendedViewedState(ExtendedViewedStateType.MARKED_FOR_LATER, getViewedHistory());
+		else if (viewed && tags.getTag(CCTagList.TAG_WATCH_LATER))
+			return new ExtendedViewedState(ExtendedViewedStateType.MARKED_FOR_AGAIN, getViewedHistory());
+		else if (isViewed())
+			return new ExtendedViewedState(ExtendedViewedStateType.VIEWED, getViewedHistory());
 		else if (tags.getTag(CCTagList.TAG_WATCH_NEVER))
 			return new ExtendedViewedState(ExtendedViewedStateType.MARKED_FOR_NEVER, getViewedHistory());
 		else

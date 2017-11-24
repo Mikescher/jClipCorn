@@ -330,28 +330,6 @@ public class DatabaseAutofixer {
 		return false;
 	}
 	
-	public static boolean fixError_Impossible_WatchLater(DatabaseError err) {
-		if (err.getElement1() instanceof CCMovie) {
-			CCMovie mov = ((CCMovie)err.getElement1());
-			
-			mov.setTag(CCTagList.TAG_WATCH_LATER, false);
-
-			return true;
-		} else if (err.getElement1() instanceof CCSeries) {
-			return false;
-		} else if (err.getElement1() instanceof CCSeason) {
-			return false;
-		} else if (err.getElement1() instanceof CCEpisode) {
-			CCEpisode epi = ((CCEpisode)err.getElement1());
-			
-			epi.setTag(CCTagList.TAG_WATCH_LATER, false);
-
-			return true;
-		}
-		
-		return false;
-	}
-	
 	public static boolean fixError_Impossible_WatchNever(DatabaseError err) {
 		if (err.getElement1() instanceof CCMovie) {
 			CCMovie mov = ((CCMovie)err.getElement1());

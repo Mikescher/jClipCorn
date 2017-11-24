@@ -14,7 +14,8 @@ public enum ExtendedViewedStateType implements ContinoousEnum<ExtendedViewedStat
 	NOT_VIEWED(1), 
 	MARKED_FOR_LATER(2), 
 	MARKED_FOR_NEVER(3),
-	PARTIAL_VIEWED(4);
+	PARTIAL_VIEWED(4),
+	MARKED_FOR_AGAIN(5);
 	
 	private final static String NAMES[] = 
 		{ 
@@ -23,6 +24,7 @@ public enum ExtendedViewedStateType implements ContinoousEnum<ExtendedViewedStat
 			LocaleBundle.getString("FilterTree.Viewed.Later"), 		//$NON-NLS-1$
 			LocaleBundle.getString("FilterTree.Viewed.Never"), 		//$NON-NLS-1$
 			LocaleBundle.getString("FilterTree.Viewed.Partial"),	//$NON-NLS-1$
+			LocaleBundle.getString("FilterTree.Viewed.Again"),		//$NON-NLS-1$
 		};
 	private int id;
 	
@@ -67,6 +69,8 @@ public enum ExtendedViewedStateType implements ContinoousEnum<ExtendedViewedStat
 			return CachedResourceLoader.getIcon(Resources.ICN_TABLE_VIEWED_NEVER);
 		case PARTIAL_VIEWED:
 			return CachedResourceLoader.getIcon(Resources.ICN_TABLE_VIEWED_PARTIAL);
+		case MARKED_FOR_AGAIN:
+			return CachedResourceLoader.getIcon(Resources.ICN_TABLE_VIEWED_AGAIN);
 		}
 		
 		return null;
@@ -84,6 +88,8 @@ public enum ExtendedViewedStateType implements ContinoousEnum<ExtendedViewedStat
 			return CachedResourceLoader.getIcon(Resources.ICN_SIDEBAR_NEVER);
 		case PARTIAL_VIEWED:
 			return CachedResourceLoader.getIcon(Resources.ICN_SIDEBAR_PARTIALLY);
+		case MARKED_FOR_AGAIN:
+			return CachedResourceLoader.getIcon(Resources.ICN_SIDEBAR_AGAIN);
 		}
 		
 		return null;
@@ -101,6 +107,7 @@ public enum ExtendedViewedStateType implements ContinoousEnum<ExtendedViewedStat
 			case MARKED_FOR_LATER: return false;
 			case MARKED_FOR_NEVER: return false;
 			case PARTIAL_VIEWED: return false;
+			case MARKED_FOR_AGAIN: return true;
 		}
 		
 		CCLog.addError(new Exception());

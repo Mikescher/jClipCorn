@@ -132,12 +132,14 @@ public class FilterTree extends AbstractFilterTree {
 	private void initViewed(DefaultMutableTreeNode parent) {
 		addNodeF(parent, Resources.ICN_SIDEBAR_VIEWED, LocaleBundle.getString("FilterTree.Viewed.Viewed"), () -> CustomExtendedViewedFilter.create(ExtendedViewedStateType.VIEWED)); //$NON-NLS-1$
 
-		if (CCProperties.getInstance().PROP_SHOW_PARTIAL_VIEWED_STATE.getValue())
+		if (CCProperties.getInstance().PROP_SHOW_PARTIAL_VIEWED_STATE.getValue()) 
 			addNodeF(parent, Resources.ICN_SIDEBAR_PARTIALLY, LocaleBundle.getString("FilterTree.Viewed.Partial"), () -> CustomExtendedViewedFilter.create(ExtendedViewedStateType.PARTIAL_VIEWED)); //$NON-NLS-1$
 		
 		addNodeF(parent, Resources.ICN_SIDEBAR_UNVIEWED, LocaleBundle.getString("FilterTree.Viewed.Unviewed"), () -> CustomExtendedViewedFilter.create(ExtendedViewedStateType.NOT_VIEWED)); //$NON-NLS-1$
 
 		addNodeF(parent, Resources.ICN_SIDEBAR_LATER, LocaleBundle.getString("FilterTree.Viewed.Later"), () -> CustomExtendedViewedFilter.create(ExtendedViewedStateType.MARKED_FOR_LATER)); //$NON-NLS-1$
+
+		addNodeF(parent, Resources.ICN_SIDEBAR_AGAIN, LocaleBundle.getString("FilterTree.Viewed.Again"), () -> CustomExtendedViewedFilter.create(ExtendedViewedStateType.MARKED_FOR_AGAIN)); //$NON-NLS-1$
 
 		addNodeF(parent, Resources.ICN_SIDEBAR_NEVER, LocaleBundle.getString("FilterTree.Viewed.Never"), () -> CustomExtendedViewedFilter.create(ExtendedViewedStateType.MARKED_FOR_NEVER)); //$NON-NLS-1$
 	}

@@ -369,14 +369,6 @@ public class DatabaseValidator {
 		}
 		
 		// ###############################################
-		// Watch later <> ViewedState
-		// ###############################################
-		
-		if (mov.isViewed() && mov.getTag(CCTagList.TAG_WATCH_LATER)) {
-			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_IMPOSSIBLE_WATCH_LATER, mov));
-		}
-		
-		// ###############################################
 		// Watch never <> ViewedState
 		// ###############################################
 		
@@ -608,14 +600,6 @@ public class DatabaseValidator {
 		
 		if (CCQuality.calculateQuality(episode.getFilesize(), episode.getLength(), 1) != episode.getQuality()) {
 			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_WRONG_QUALITY, episode));
-		}
-		
-		// ###############################################
-		// Watch later <> ViewedState
-		// ###############################################
-		
-		if (episode.isViewed() && episode.getTag(CCTagList.TAG_WATCH_LATER)) {
-			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_IMPOSSIBLE_WATCH_LATER, episode));
 		}
 		
 		// ###############################################

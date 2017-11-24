@@ -35,6 +35,7 @@ import de.jClipCorn.gui.frames.changeViewedFrame.ChangeViewedFrame;
 import de.jClipCorn.gui.frames.checkDatabaseFrame.CheckDatabaseFrame;
 import de.jClipCorn.gui.frames.compareDatabaseFrame.CompareDatabaseFrame;
 import de.jClipCorn.gui.frames.compareDatabaseFrame.DatabaseComparator;
+import de.jClipCorn.gui.frames.coverPreviewFrame.CoverPreviewFrame;
 import de.jClipCorn.gui.frames.createSeriesFolderStructureFrame.CreateSeriesFolderStructureFrame;
 import de.jClipCorn.gui.frames.editMovieFrame.EditMovieFrame;
 import de.jClipCorn.gui.frames.editSeriesFrame.EditSeriesFrame;
@@ -192,6 +193,7 @@ public class CCActionTree extends UIActionTree{
 				add(other, "UndoMovieViewed",  null, "ClipMenuBar.Other.UndoMovieViewed", Resources.ICN_MENUBAR_UNDOVIEWED,      this::onClickOtherOtherUndoMovieViewed);
 				add(other, "OpenFolder",       null, "ClipMenuBar.Other.OpenFolder",      Resources.ICN_MENUBAR_FOLDER,          this::onClickOtherOpenFolder);
 				add(other, "ShowInBrowser",    null, "ClipMenuBar.Other.ShowInBrowser",   Resources.ICN_MENUBAR_ONLINEREFERENCE, this::onClickOtherShowInBrowser);
+				add(other, "ShowCover", 	   null, "ClipMenuBar.Other.ShowCover",   	  Resources.ICN_MENUBAR_SHOWCOVER,       this::onClickOtherShowCover);
 				
 				CCActionElement movRating = add(other, "SetMovieRating", null, "ClipMenuBar.Other.SetMovieRating", Resources.ICN_SIDEBAR_SCORE);
 				{
@@ -792,6 +794,14 @@ public class CCActionTree extends UIActionTree{
 		} else {
 			HTTPUtilities.openInBrowser(ref.getURL());
 		}
+	}
+	
+	private void onClickOtherShowCover(CCTreeActionEvent e) {
+		CCDatabaseElement el = owner.getSelectedElement();
+		if (el == null) return;
+
+		CoverPreviewFrame cpf = new CoverPreviewFrame(owner, el);
+		cpf.setVisible(true);
 	}
 	
 	private void onClickSwitchTag(int c) {

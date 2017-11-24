@@ -153,6 +153,4 @@ public class Main {
 
 //TODO MainTable and SeriesTable as JCCSimpleTable
 
-//TODO Watch Later --> Watch again
-
 //TODO Define group parent (results in subgroups etc) ; new db version

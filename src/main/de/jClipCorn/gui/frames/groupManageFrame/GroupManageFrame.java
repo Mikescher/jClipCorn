@@ -459,9 +459,20 @@ public class GroupManageFrame extends JFrame {
 				return;
 			}
 			
-			if (DialogHelper.showLocaleYesNo(this, "Dialogs.RenameGroup")) { //$NON-NLS-1$
+			CCGroup gOld = movielist.getGroupOrNull(group.Name);
+			
+			if (gOld != null && DialogHelper.showLocaleYesNo(this, "Dialogs.RenameGroup")) { //$NON-NLS-1$
+				
+				movielist.updateGroup(gOld, CCGroup.create(edDataName.getText(), gOld.Order, gOld.Color, gOld.DoSerialize, gOld.Parent, gOld.Visible));
+				
 				for (CCDatabaseElement el : new ArrayList<>(movielist.getDatabaseElementsbyGroup(group))) {
 					el.setGroups(el.getGroups().getRemove(group).getAdd(movielist, edDataName.getText()));
+				}
+				
+				for (CCGroup og : movielist.getGroupList()) {
+					if (og.Parent.equals(gOld.Name)) {
+						movielist.updateGroup(og, CCGroup.create(og.Name, og.Order, og.Color, og.DoSerialize, edDataName.getText(), og.Visible));
+					}
 				}
 			}
 		}

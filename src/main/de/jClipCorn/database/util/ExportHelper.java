@@ -12,6 +12,7 @@ import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
@@ -68,17 +69,17 @@ public class ExportHelper {
 	public final static String FILENAME_BACKUPINFO = "info.ini"; 			// = jClipCornBackupInfo 							//$NON-NLS-1$ 
 	
 	public static void zipDir(File owner, File zipDir, ZipOutputStream zos, boolean recursively) {
-		doZipDir(owner, zipDir, zos, recursively, null);
+		doZipDir(owner, zipDir, zos, recursively, f->false, null);
 	}
 	
-	public static void zipDir(File owner, File zipDir, ZipOutputStream zos, boolean recursively, ProgressCallbackListener pcl) {
+	public static void zipDir(File owner, File zipDir, ZipOutputStream zos, boolean recursively, Function<File, Boolean> excluded, ProgressCallbackListener pcl) {
 		pcl.reset();
 		pcl.setMax(PathFormatter.countAllFiles(zipDir));
 		
-		doZipDir(owner, zipDir, zos, recursively, pcl);
+		doZipDir(owner, zipDir, zos, recursively, excluded, pcl);
 	}
 	
-	private static void doZipDir(File owner, File zipDir, ZipOutputStream zos, boolean recursively, ProgressCallbackListener pcl) {
+	private static void doZipDir(File owner, File zipDir, ZipOutputStream zos, boolean recursively, Function<File, Boolean> excluded, ProgressCallbackListener pcl) {
 		try {
 			String[] dirList = zipDir.list();
 			byte[] readBuffer = new byte[2156];
@@ -88,9 +89,12 @@ public class ExportHelper {
 				if (dirList[i].toLowerCase().endsWith("thumbs.db")) continue; //$NON-NLS-1$
 				
 				File file = new File(zipDir, dirList[i]);
+
+				if (excluded.apply(file)) continue;
+
 				if (file.isDirectory()) {
 					if (recursively) {
-						doZipDir(owner, file, zos, recursively, pcl);
+						doZipDir(owner, file, zos, recursively, excluded, pcl);
 					}
 					continue;
 				}

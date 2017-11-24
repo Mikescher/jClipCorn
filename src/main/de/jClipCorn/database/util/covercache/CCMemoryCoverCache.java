@@ -99,4 +99,8 @@ public class CCMemoryCoverCache extends CCCoverCache {
 		return r;
 	}
 
+	@Override
+	public void getBackupExclusions(List<String> excludedFolders, List<String> excludedFiles) {
+		// do nothing
+	}
 }

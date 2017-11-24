@@ -56,4 +56,8 @@ public class CCStubCoverCache extends CCCoverCache {
 		return new ArrayList<>();
 	}
 
+	@Override
+	public void getBackupExclusions(List<String> excludedFolders, List<String> excludedFiles) {
+		// do nothing
+	}
 }

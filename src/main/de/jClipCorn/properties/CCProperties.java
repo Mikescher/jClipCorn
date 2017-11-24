@@ -119,6 +119,7 @@ public class CCProperties {
 	public CCRIntProperty 									PROP_BACKUP_COMPRESSION;
 	public CCBoolProperty 									PROP_BACKUP_AUTODELETEBACKUPS;
 	public CCPIntProperty 									PROP_BACKUP_LIFETIME;
+	public CCBoolProperty 									PROP_BACKUP_EXCLUDECOVERS;
 	public CCBoolProperty 									PROP_LOG_APPEND;
 	public CCPIntProperty 									PROP_LOG_MAX_LINECOUNT;
 	public CCEnumProperty<InitalSortingColumn> 				PROP_VIEW_DB_START_SORT;
@@ -290,7 +291,8 @@ public class CCProperties {
 		PROP_BACKUP_COMPRESSION					= new CCRIntProperty(CAT_BACKUP, 			this, 	"PROP_BACKUP_COMPRESSION", 					0,									10);
 		PROP_BACKUP_AUTODELETEBACKUPS			= new CCBoolProperty(CAT_BACKUP, 			this,   "PROP_BACKUP_AUTODELETEBACKUPS", 			true);
 		PROP_BACKUP_LIFETIME					= new CCPIntProperty(CAT_BACKUP, 			this, 	"PROP_BACKUP_LIFETIME", 					56);
-		
+		PROP_BACKUP_EXCLUDECOVERS				= new CCBoolProperty(CAT_BACKUP, 			this, 	"PROP_BACKUP_EXCLUDECOVERS", 				false);
+
 		PROP_STATBAR_ELCOUNT					= new CCBoolProperty(CAT_STATUSBAR,	 		this,   "PROP_STATBAR_ELCOUNT",						true);
 		PROP_STATBAR_PROGRESSBAR				= new CCBoolProperty(CAT_STATUSBAR,	 		this,   "PROP_STATBAR_PROGRESSBAR",					true);
 		PROP_STATBAR_LOG						= new CCBoolProperty(CAT_STATUSBAR,	 		this,   "PROP_STATBAR_LOG",							true);

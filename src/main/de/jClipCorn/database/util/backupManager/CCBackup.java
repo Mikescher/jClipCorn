@@ -36,6 +36,7 @@ public class CCBackup {
 	private final static String PROP_PERSISTENT = "persistent"; //$NON-NLS-1$
 	private final static String PROP_CCVERSION = "jcc-version"; //$NON-NLS-1$
 	private final static String PROP_DBVERSION = "db-version"; //$NON-NLS-1$
+	private final static String PROP_EXCLUDECOVERS = "exclude-covers"; //$NON-NLS-1$
 
 	private final static String REGEXNAME = "(?<= \\[)[0-9]{1,2}\\.[0-9]{1,2}\\.[0-9]{4}(?=\\])"; // (?<= \[)[0-9]{1,2}\.[0-9]{1,2}\.[0-9]{4}(?=\]) //$NON-NLS-1$
 	
@@ -53,7 +54,7 @@ public class CCBackup {
 		if (! result.Item2) saveToFile();
 	}
 
-	public CCBackup(File archive, String name, CCDate date, boolean persistent, String jccversion, String dbversion) {
+	public CCBackup(File archive, String name, CCDate date, boolean persistent, String jccversion, String dbversion, boolean excludeCovers) {
 		this.archive = archive;
 
 		properties = new Properties();
@@ -63,6 +64,7 @@ public class CCBackup {
 		properties.setProperty(PROP_PERSISTENT, persistent ? "1" : "0"); //$NON-NLS-1$ //$NON-NLS-2$
 		properties.setProperty(PROP_CCVERSION, jccversion);
 		properties.setProperty(PROP_DBVERSION, dbversion);
+		properties.setProperty(PROP_EXCLUDECOVERS, excludeCovers ? "1" : "0");
 	}
 
 	public File getArchive() {

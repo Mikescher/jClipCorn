@@ -27,7 +27,8 @@ import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.formatter.PathFormatter;
 
 public class CCFolderCoverCache extends CCCoverCache {
-	private final static String COVER_DIRECTORY = PathFormatter.appendAndPrependSeparator("cover"); //$NON-NLS-1$
+	private final static String COVER_DIRECTORY_NAME = "cover";
+	private final static String COVER_DIRECTORY = PathFormatter.appendAndPrependSeparator(COVER_DIRECTORY_NAME); //$NON-NLS-1$
 
 	private Map<String, BufferedImage> cache;
 
@@ -216,5 +217,10 @@ public class CCFolderCoverCache extends CCCoverCache {
 		}
 		
 		return result;
+	}
+	
+	@Override
+	public void getBackupExclusions(List<String> excludedFolders, List<String> excludedFiles) {
+		excludedFolders.add(COVER_DIRECTORY_NAME);
 	}
 }

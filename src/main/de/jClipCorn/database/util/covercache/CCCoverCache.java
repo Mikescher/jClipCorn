@@ -28,4 +28,6 @@ public abstract class CCCoverCache {
 	public void deleteCover(CCDatabaseElement remMov) {
 		deleteCover(remMov.getCoverName());
 	}
+
+	public abstract void getBackupExclusions(List<String> excludedFolders, List<String> excludedFiles);
 }

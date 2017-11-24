@@ -187,13 +187,41 @@ public class BackupManager {
 		ZipOutputStream zos = new ZipOutputStream(os);
 		zos.setLevel(CCProperties.getInstance().PROP_BACKUP_COMPRESSION.getValue());
 
-		ExportHelper.zipDir(movielist.getDatabaseDirectory().getParentFile(), movielist.getDatabaseDirectory(), zos, true, mon);
+		final List<String> excludedFolders = new ArrayList<>();
+		final List<String> excludedFiles   = new ArrayList<>();
+
+		boolean excludeCovers = CCProperties.getInstance().PROP_BACKUP_EXCLUDECOVERS.getValue() && !persistent;
+
+		if (excludeCovers) {
+			movielist.getCoverCache().getBackupExclusions(excludedFolders, excludedFiles);
+		}
+
+		ExportHelper.zipDir(
+			movielist.getDatabaseDirectory().getParentFile(), 
+			movielist.getDatabaseDirectory(), 
+			zos, 
+			true, 
+			(f) -> testExclusion(excludedFolders, excludedFiles, f),
+			mon);
 
 		zos.close();
 
-		CCBackup backup = new CCBackup(file, name, date, persistent, jccversion, dbversion);
+		CCBackup backup = new CCBackup(file, name, date, persistent, jccversion, dbversion, excludeCovers);
 		backup.saveToFile();
 		backuplist.add(backup);
+	}
+
+	private boolean testExclusion(List<String> excludedFolders, List<String> excludedFiles, File f) {
+		if (f.isDirectory()) {
+			for (String ex : excludedFolders) {
+				if (f.getName().equalsIgnoreCase(ex)) return true;
+			}
+		} else {
+			for (String ex : excludedFiles) {
+				if (f.getName().equalsIgnoreCase(ex)) return true;
+			}
+		}
+		return false;
 	}
 
 	public boolean restoreBackup(Component c, CCBackup bkp) {

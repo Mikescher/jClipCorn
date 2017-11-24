@@ -601,7 +601,7 @@ public class CCMovieList {
 	public String getDatabasePath() {
 		return database.getDBPath();
 	}
-	
+
 	public File getDatabaseDirectory() {
 		return new File(PathFormatter.combineAndAppend(PathFormatter.getRealSelfDirectory(), CCProperties.getInstance().PROP_DATABASE_NAME.getValue()));
 	}

@@ -56,6 +56,12 @@ public class SQLiteDatabase extends GenericDatabase {
 		String dbFilePath = getDatabaseFilePath(dbPath);
 		
 		try {
+			try {
+				Class.forName(DRIVER).newInstance();
+			} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
+				CCLog.addError(e);
+			}
+			
 			if (databaseExists(dbPath)) throw new FileAlreadyExistsException(dbFilePath);
 			if (FileLockManager.isLocked(dbFilePath)) throw new FileLockedException(dbFilePath);
 			

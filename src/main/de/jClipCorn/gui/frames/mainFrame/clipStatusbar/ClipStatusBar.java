@@ -12,6 +12,7 @@ import de.jClipCorn.Globals;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.util.CCDBUpdateListener;
+import de.jClipCorn.gui.actionTree.ActionSource;
 import de.jClipCorn.gui.actionTree.CCActionTree;
 import de.jClipCorn.gui.frames.mainFrame.MainFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
@@ -123,7 +124,7 @@ public class ClipStatusBar extends AbstractClipStatusbar implements CCDBUpdateLi
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				if (e.getClickCount() == 2) {
-					CCActionTree.getInstance().find("ShowLog").execute(); //$NON-NLS-1$
+					CCActionTree.getInstance().find("ShowLog").execute(ActionSource.DIRECT_CLICK); //$NON-NLS-1$
 				}
 			}
 		});

@@ -1,7 +1,6 @@
 package de.jClipCorn.gui.actionTree;
 
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -37,7 +36,7 @@ public class CCActionElement {
 	
 	private CCKeyStrokeProperty keyStrokeProperty = null;
 	
-	private final List<ActionListener> listener;
+	private final List<CCActionTreeListener> listener;
 	private final List<CCActionElement> children;
 	
 	private CCActionElement parent = null;
@@ -98,11 +97,11 @@ public class CCActionElement {
 		return CachedResourceLoader.getIcon(iconRes.icon32x32);
 	}
 	
-	public void addListener(ActionListener al) {
+	public void addListener(CCActionTreeListener al) {
 		listener.add(al);
 	}
 	
-	public boolean removeListener(ActionListener al) {
+	public boolean removeListener(CCActionTreeListener al) {
 		return listener.remove(al);
 	}
 	
@@ -110,18 +109,18 @@ public class CCActionElement {
 		listener.clear();
 	}
 	
-	public void execute() {
-		execute(""); //$NON-NLS-1$
+	public void execute(ActionSource src) {
+		execute("", src); //$NON-NLS-1$
 	}
 	
-	public void execute(String cmd) {
+	public void execute(String cmd, ActionSource src) {
 		if (isProhibitedInReadOnly && CCProperties.getInstance().ARG_READONLY) {
 			CCLog.addInformation(LocaleBundle.getString("LogMessage.OperationFailedDueToReadOnly")); //$NON-NLS-1$
 			return;
 		}
 		
-		for (ActionListener al : listener) {
-			al.actionPerformed(new ActionEvent(this, 0, cmd));
+		for (CCActionTreeListener al : listener) {
+			al.onTreeAction(new CCTreeActionEvent(this, cmd, src));
 		}
 	}
 	
@@ -247,7 +246,7 @@ public class CCActionElement {
 		
 		for (int i = 0; i < childs.size(); i++) {
 			if (stroke.equals(childs.get(i).getKeyStroke())) {
-				childs.get(i).execute();
+				childs.get(i).execute(ActionSource.SHORTCUT);
 			}
 		}
 	}

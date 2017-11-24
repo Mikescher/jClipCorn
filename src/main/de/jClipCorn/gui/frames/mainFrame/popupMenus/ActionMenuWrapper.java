@@ -5,7 +5,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
-
+import de.jClipCorn.gui.actionTree.ActionSource;
 import de.jClipCorn.gui.actionTree.CCActionElement;
 import de.jClipCorn.gui.actionTree.CCActionTree;
 import de.jClipCorn.gui.localization.LocaleBundle;
@@ -41,7 +41,7 @@ public class ActionMenuWrapper {
 		item.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				el.execute();
+				el.execute(ActionSource.POPUP_MENU);
 			}
 		});
 		

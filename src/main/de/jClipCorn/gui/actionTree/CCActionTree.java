@@ -195,31 +195,31 @@ public class CCActionTree extends UIActionTree{
 				
 				CCActionElement movRating = add(other, "SetMovieRating", null, "ClipMenuBar.Other.SetMovieRating", Resources.ICN_SIDEBAR_SCORE);
 				{
-					add(movRating, "SetMovRatingNO", null, "CCMovieScore.RNO", CCUserScore.RATING_NO.getIconRef(),  true, () -> onClickOtherSetRating(CCUserScore.RATING_NO));
-					add(movRating, "SetMovRating0",  null, "CCMovieScore.R0",  CCUserScore.RATING_0.getIconRef(),   true, () -> onClickOtherSetRating(CCUserScore.RATING_0));
-					add(movRating, "SetMovRating1",  null, "CCMovieScore.R1",  CCUserScore.RATING_I.getIconRef(),   true, () -> onClickOtherSetRating(CCUserScore.RATING_I));
-					add(movRating, "SetMovRating2",  null, "CCMovieScore.R2",  CCUserScore.RATING_II.getIconRef(),  true, () -> onClickOtherSetRating(CCUserScore.RATING_II));
-					add(movRating, "SetMovRating3",  null, "CCMovieScore.R3",  CCUserScore.RATING_III.getIconRef(), true, () -> onClickOtherSetRating(CCUserScore.RATING_III));
-					add(movRating, "SetMovRating4",  null, "CCMovieScore.R4",  CCUserScore.RATING_IV.getIconRef(),  true, () -> onClickOtherSetRating(CCUserScore.RATING_IV));
-					add(movRating, "SetMovRating5",  null, "CCMovieScore.R5",  CCUserScore.RATING_V.getIconRef(),   true, () -> onClickOtherSetRating(CCUserScore.RATING_V));
+					add(movRating, "SetMovRatingNO", null, "CCMovieScore.RNO", CCUserScore.RATING_NO.getIconRef(),  true, (e) -> onClickOtherSetRating(e, CCUserScore.RATING_NO));
+					add(movRating, "SetMovRating0",  null, "CCMovieScore.R0",  CCUserScore.RATING_0.getIconRef(),   true, (e) -> onClickOtherSetRating(e, CCUserScore.RATING_0));
+					add(movRating, "SetMovRating1",  null, "CCMovieScore.R1",  CCUserScore.RATING_I.getIconRef(),   true, (e) -> onClickOtherSetRating(e, CCUserScore.RATING_I));
+					add(movRating, "SetMovRating2",  null, "CCMovieScore.R2",  CCUserScore.RATING_II.getIconRef(),  true, (e) -> onClickOtherSetRating(e, CCUserScore.RATING_II));
+					add(movRating, "SetMovRating3",  null, "CCMovieScore.R3",  CCUserScore.RATING_III.getIconRef(), true, (e) -> onClickOtherSetRating(e, CCUserScore.RATING_III));
+					add(movRating, "SetMovRating4",  null, "CCMovieScore.R4",  CCUserScore.RATING_IV.getIconRef(),  true, (e) -> onClickOtherSetRating(e, CCUserScore.RATING_IV));
+					add(movRating, "SetMovRating5",  null, "CCMovieScore.R5",  CCUserScore.RATING_V.getIconRef(),   true, (e) -> onClickOtherSetRating(e, CCUserScore.RATING_V));
 				}
 
 				CCActionElement serRating = add(other, "SetSeriesRating", null, "ClipMenuBar.Other.SetSeriesRating", Resources.ICN_SIDEBAR_SCORE);
 				{
-					add(serRating, "SetSerRatingNO", null, "CCMovieScore.RNO", CCUserScore.RATING_NO.getIconRef(),  true, () -> onClickOtherSetRating(CCUserScore.RATING_NO));
-					add(serRating, "SetSerRating0",  null, "CCMovieScore.R0",  CCUserScore.RATING_0.getIconRef(),   true, () -> onClickOtherSetRating(CCUserScore.RATING_0));
-					add(serRating, "SetSerRating1",  null, "CCMovieScore.R1",  CCUserScore.RATING_I.getIconRef(),   true, () -> onClickOtherSetRating(CCUserScore.RATING_I));
-					add(serRating, "SetSerRating2",  null, "CCMovieScore.R2",  CCUserScore.RATING_II.getIconRef(),  true, () -> onClickOtherSetRating(CCUserScore.RATING_II));
-					add(serRating, "SetSerRating3",  null, "CCMovieScore.R3",  CCUserScore.RATING_III.getIconRef(), true, () -> onClickOtherSetRating(CCUserScore.RATING_III));
-					add(serRating, "SetSerRating4",  null, "CCMovieScore.R4",  CCUserScore.RATING_IV.getIconRef(),  true, () -> onClickOtherSetRating(CCUserScore.RATING_IV));
-					add(serRating, "SetSerRating5",  null, "CCMovieScore.R5",  CCUserScore.RATING_V.getIconRef(),   true, () -> onClickOtherSetRating(CCUserScore.RATING_V));
+					add(serRating, "SetSerRatingNO", null, "CCMovieScore.RNO", CCUserScore.RATING_NO.getIconRef(),  true, (e) -> onClickOtherSetRating(e, CCUserScore.RATING_NO));
+					add(serRating, "SetSerRating0",  null, "CCMovieScore.R0",  CCUserScore.RATING_0.getIconRef(),   true, (e) -> onClickOtherSetRating(e, CCUserScore.RATING_0));
+					add(serRating, "SetSerRating1",  null, "CCMovieScore.R1",  CCUserScore.RATING_I.getIconRef(),   true, (e) -> onClickOtherSetRating(e, CCUserScore.RATING_I));
+					add(serRating, "SetSerRating2",  null, "CCMovieScore.R2",  CCUserScore.RATING_II.getIconRef(),  true, (e) -> onClickOtherSetRating(e, CCUserScore.RATING_II));
+					add(serRating, "SetSerRating3",  null, "CCMovieScore.R3",  CCUserScore.RATING_III.getIconRef(), true, (e) -> onClickOtherSetRating(e, CCUserScore.RATING_III));
+					add(serRating, "SetSerRating4",  null, "CCMovieScore.R4",  CCUserScore.RATING_IV.getIconRef(),  true, (e) -> onClickOtherSetRating(e, CCUserScore.RATING_IV));
+					add(serRating, "SetSerRating5",  null, "CCMovieScore.R5",  CCUserScore.RATING_V.getIconRef(),   true, (e) -> onClickOtherSetRating(e, CCUserScore.RATING_V));
 				}
 
 				CCActionElement elemTags = add(other, "SetTags", null, "ClipMenuBar.Other.SetTags", Resources.ICN_MENUBAR_TAGS);
 				{
 					for (int i = 0; i < CCTagList.ACTIVETAGS; i++) {
 						final int idx = i;
-						add(elemTags, String.format("SwitchTag_%02d", idx), null, String.format("CCMovieTags.TAG_%02d", idx), Resources.ICN_TABLE_TAG_X_1[idx], true, () -> onClickSwitchTag(idx));
+						add(elemTags, String.format("SwitchTag_%02d", idx), null, String.format("CCMovieTags.TAG_%02d", idx), Resources.ICN_TABLE_TAG_X_1[idx], true, (e) -> onClickSwitchTag(idx));
 					}
 				}
 			}
@@ -236,7 +236,7 @@ public class CCActionTree extends UIActionTree{
 	// ############################################### EVENTS ################################################
 	// #######################################################################################################
 	
-	private void onClickFileOpen() {
+	private void onClickFileOpen(CCTreeActionEvent e) {
 		final JFileChooser chooser = new JFileChooser();
 		chooser.setAcceptAllFileFilterUsed(false);
 		
@@ -269,15 +269,15 @@ public class CCActionTree extends UIActionTree{
 		}
 	}
 
-	private void onClickFileRestart() {
+	private void onClickFileRestart(CCTreeActionEvent e) {
 		ApplicationHelper.restartApplication();
 	}
 	
-	private void onClickFileExit() {
+	private void onClickFileExit(CCTreeActionEvent e) {
 		ApplicationHelper.exitApplication();
 	}
 
-	private void onClickMaintenanceXML() {
+	private void onClickMaintenanceXML(CCTreeActionEvent e) {
 		final JFileChooser chooser = new JFileChooser();
 		chooser.setFileFilter(FileChooserHelper.createLocalFileFilter("ExportHelper.filechooser_ccbxml.description", ExportHelper.EXTENSION_CCBACKUP));  //$NON-NLS-1$
 		chooser.setCurrentDirectory(new File(PathFormatter.getRealSelfDirectory()));
@@ -289,100 +289,100 @@ public class CCActionTree extends UIActionTree{
 		}
 	}
 	
-	private void onClickExtrasSettings() {
+	private void onClickExtrasSettings(CCTreeActionEvent e) {
 		SettingsFrame sf = new SettingsFrame(owner, CCProperties.getInstance());
 		sf.setVisible(true);
 	}
 	
-	private void onClickExtrasScanFolder() {
+	private void onClickExtrasScanFolder(CCTreeActionEvent e) {
 		ScanFolderFrame sff = new ScanFolderFrame(owner);
 		sff.setVisible(true);
 	}
 	
-	private void onClickExtrasCompareDBs() {
+	private void onClickExtrasCompareDBs(CCTreeActionEvent e) {
 		CompareDatabaseFrame cdf = new CompareDatabaseFrame(owner, movielist);
 		cdf.setVisible(true);
 	}
 	
-	private void onClickExtrasShowWatchHistory() {
+	private void onClickExtrasShowWatchHistory(CCTreeActionEvent e) {
 		WatchHistoryFrame whf = new WatchHistoryFrame(owner, movielist);
 		whf.setVisible(true);
 	}
 	
-	private void onClickMaintenanceResetViewed() {
+	private void onClickMaintenanceResetViewed(CCTreeActionEvent e) {
 		if (DialogHelper.showLocaleYesNo(owner, "Dialogs.ResetViewed")) { //$NON-NLS-1$
 			owner.getMovielist().resetAllMovieViewed(false);
 		}
 	}
 	
-	private void onClickMaintenanceRegenerateDUUID() {
+	private void onClickMaintenanceRegenerateDUUID(CCTreeActionEvent e) {
 		if (DialogHelper.showLocaleYesNo(owner, "Dialogs.ResetDUUID")) { //$NON-NLS-1$
 			owner.getMovielist().resetLocalDUUID();
 		}
 	}
 	
-	private void onClickMaintenanceAutoFindReferences() {
+	private void onClickMaintenanceAutoFindReferences(CCTreeActionEvent e) {
 		AutoFindReferenceFrame afrf = new AutoFindReferenceFrame(owner, movielist);
 		afrf.setVisible(true);
 	}
 	
-	private void onClickExtrasRandomMovie() {
+	private void onClickExtrasRandomMovie(CCTreeActionEvent e) {
 		if (movielist.getMovieCount() > 0) {
 			RandomMovieFrame rmf = new RandomMovieFrame(owner, movielist);
 			rmf.setVisible(true);
 		}
 	}
 	
-	private void onClickExtrasBackupManager() {
+	private void onClickExtrasBackupManager(CCTreeActionEvent e) {
 		BackupsManagerFrame bmf = new BackupsManagerFrame(owner);
 		bmf.setVisible(true);
 	}
 	
-	private void onClickExtrasShowStatistics() {
+	private void onClickExtrasShowStatistics(CCTreeActionEvent e) {
 		StatisticsFrame sf = new StatisticsFrame(owner, movielist);
 		sf.setVisible(true);
 	}
 	
-	private void onClickExtrasShuffleTable() {
+	private void onClickExtrasShuffleTable(CCTreeActionEvent e) {
 		owner.getClipTable().shuffle();
 	}
 	
-	private void onClickExtrasParseWatchData() {
+	private void onClickExtrasParseWatchData(CCTreeActionEvent e) {
 		ParseWatchDataFrame pwdf = new ParseWatchDataFrame(owner, movielist);
 		pwdf.setVisible(true);
 	}
 	
-	private void onClickExtrasShowIncompleteFilmSeries() {
+	private void onClickExtrasShowIncompleteFilmSeries(CCTreeActionEvent e) {
 		ShowIncompleteFilmSeriesFrame sifsf = new ShowIncompleteFilmSeriesFrame(owner, movielist);
 		sifsf.setVisible(true);
 	}
 	
-	private void onClickExtrasUpdateMetadata() {
+	private void onClickExtrasUpdateMetadata(CCTreeActionEvent e) {
 		UpdateMetadataFrame umf = new UpdateMetadataFrame(owner, movielist);
 		umf.setVisible(true);
 	}
 	
-	private void onClickMaintenanceMassChangeViewed() {
+	private void onClickMaintenanceMassChangeViewed(CCTreeActionEvent e) {
 		ChangeViewedFrame cvf = new ChangeViewedFrame(owner, movielist);
 		cvf.setVisible(true);
 	}
 	
-	private void onClickMaintenanceMassChangeScore() {
+	private void onClickMaintenanceMassChangeScore(CCTreeActionEvent e) {
 		ChangeScoreFrame csf = new ChangeScoreFrame(owner, movielist);
 		csf.setVisible(true);
 	}
 	
-	private void onClickMaintenanceMassMoveSeries() {
+	private void onClickMaintenanceMassMoveSeries(CCTreeActionEvent e) {
 		MassMoveSeriesDialog mmsd = new MassMoveSeriesDialog(owner, movielist);
 		mmsd.setVisible(true);
 	}
 	
-	private void onClickMaintenanceMassMoveMovies() {
+	private void onClickMaintenanceMassMoveMovies(CCTreeActionEvent e) {
 		MassMoveMoviesDialog mmmd = new MassMoveMoviesDialog(owner, movielist);
 		mmmd.setVisible(true);
 	}
 	
-	private void onClickMoviesPlay() {
+	private void onClickMoviesPlay(CCTreeActionEvent e) {
 		CCDatabaseElement element = owner.getSelectedElement();
 
 		if (element != null && element.isMovie()) {
@@ -390,7 +390,7 @@ public class CCActionTree extends UIActionTree{
 		}
 	}
 	
-	private void onClickMoviesPlayAnonymous() {
+	private void onClickMoviesPlayAnonymous(CCTreeActionEvent e) {
 		CCDatabaseElement element = owner.getSelectedElement();
 
 		if (element != null && element.isMovie()) {
@@ -398,7 +398,7 @@ public class CCActionTree extends UIActionTree{
 		}
 	}
 
-	private void onClickMoviesPrev() {
+	private void onClickMoviesPrev(CCTreeActionEvent e) {
 		CCDatabaseElement element = owner.getSelectedElement();
 		
 		if (element != null && element.isMovie()) {
@@ -408,13 +408,13 @@ public class CCActionTree extends UIActionTree{
 		}
 	}
 
-	private void onClickMoviesAdd() {
+	private void onClickMoviesAdd(CCTreeActionEvent e) {
 		AddMovieFrame nFrame = new AddMovieFrame(owner, movielist);
 
 		nFrame.setVisible(true);
 	}
 	
-	private void onClickMoviesExportSingle() {
+	private void onClickMoviesExportSingle(CCTreeActionEvent e) {
 		final CCDatabaseElement element = owner.getSelectedElement();
 
 		if (element != null && element.isMovie()) {
@@ -441,7 +441,7 @@ public class CCActionTree extends UIActionTree{
 		}
 	}
 	
-	private void onClickMoviesAddToExportList() {
+	private void onClickMoviesAddToExportList(CCTreeActionEvent e) {
 		CCDatabaseElement element = owner.getSelectedElement();
 
 		if (element != null && element.isMovie()) {
@@ -449,7 +449,7 @@ public class CCActionTree extends UIActionTree{
 		}
 	}
 	
-	private void onClickMoviesImportSingle() {
+	private void onClickMoviesImportSingle(CCTreeActionEvent e) {
 		final JFileChooser chooser = new JFileChooser();
 		chooser.setFileFilter(FileChooserHelper.createLocalFileFilter("ExportHelper.filechooser_jsccexport.description", ExportHelper.EXTENSION_SINGLEEXPORT)); //$NON-NLS-1$
 		chooser.setCurrentDirectory(new File(PathFormatter.getRealSelfDirectory()));
@@ -461,7 +461,7 @@ public class CCActionTree extends UIActionTree{
 		}
 	}
 
-	private void onClickMoviesRem() {
+	private void onClickMoviesRem(CCTreeActionEvent e) {
 		if (owner.getSelectedElement() != null && owner.getSelectedElement().isMovie()) {
 			if (DialogHelper.showLocaleYesNo(owner, "Dialogs.DeleteMovie")) { //$NON-NLS-1$
 				movielist.remove(owner.getSelectedElement());
@@ -469,13 +469,13 @@ public class CCActionTree extends UIActionTree{
 		}
 	}
 
-	private void onClickDatabaseCheck() {
+	private void onClickDatabaseCheck(CCTreeActionEvent e) {
 		CheckDatabaseFrame cdd = new CheckDatabaseFrame(movielist, owner);
 
 		cdd.setVisible(true);
 	}
 
-	private void onClickDatabaseClear() {
+	private void onClickDatabaseClear(CCTreeActionEvent e) {
 		if (DialogHelper.showLocaleYesNo(owner, "Dialogs.ClearDatabase")) { //$NON-NLS-1$
 			new Thread(new Runnable() {
 				@Override
@@ -486,7 +486,7 @@ public class CCActionTree extends UIActionTree{
 		}
 	}
 	
-	private void onClickDatabaseExportAsJxmBKP() {
+	private void onClickDatabaseExportAsJxmBKP(CCTreeActionEvent e) {
 		final JFileChooser chooser = new JFileChooser();
 		chooser.setFileFilter(FileChooserHelper.createLocalFileFilter("ExportHelper.filechooser_jxmlbkp.description", ExportHelper.EXTENSION_FULLEXPORT));  //$NON-NLS-1$
 		chooser.setCurrentDirectory(new File(PathFormatter.getRealSelfDirectory()));
@@ -507,7 +507,7 @@ public class CCActionTree extends UIActionTree{
 		}
 	}
 	
-	private void onClickDatabaseImportAsJxmBKP() {
+	private void onClickDatabaseImportAsJxmBKP(CCTreeActionEvent e) {
 		final JFileChooser chooser = new JFileChooser();
 		chooser.setFileFilter(FileChooserHelper.createLocalFileFilter("ExportHelper.filechooser_jxmlbkp.description", ExportHelper.EXTENSION_FULLEXPORT));  //$NON-NLS-1$
 		chooser.setCurrentDirectory(new File(PathFormatter.getRealSelfDirectory()));
@@ -519,7 +519,7 @@ public class CCActionTree extends UIActionTree{
 		}
 	}
 	
-	private void onClickDatabaseImportMultipleElements() {
+	private void onClickDatabaseImportMultipleElements(CCTreeActionEvent e) {
 		final JFileChooser chooser = new JFileChooser();
 		chooser.setFileFilter(FileChooserHelper.createLocalFileFilter("ExportHelper.filechooser_jmccexport.description", ExportHelper.EXTENSION_MULTIPLEEXPORT)); //$NON-NLS-1$
 		chooser.setCurrentDirectory(new File(PathFormatter.getRealSelfDirectory()));
@@ -531,22 +531,22 @@ public class CCActionTree extends UIActionTree{
 		}
 	}
 	
-	private void onClickDatabaseSearchDatabase() {
+	private void onClickDatabaseSearchDatabase(CCTreeActionEvent e) {
 		SearchFrame sf = new SearchFrame(movielist, owner);
 		sf.setVisible(true);
 	}
 	
-	private void onClickDatabaseTextExportDatabase() {
+	private void onClickDatabaseTextExportDatabase(CCTreeActionEvent e) {
 		TextExportFrame tef = new TextExportFrame(movielist, owner);
 		tef.setVisible(true);
 	}
 	
-	private void onClickDatabaseManageGroups() {
+	private void onClickDatabaseManageGroups(CCTreeActionEvent e) {
 		GroupManageFrame gm = new GroupManageFrame(movielist, owner);
 		gm.setVisible(true);
 	}
 	
-	private void onClickSeriesPreview() {
+	private void onClickSeriesPreview(CCTreeActionEvent e) {
 		CCDatabaseElement el = owner.getSelectedElement();
 
 		if (el != null && el.isSeries()) {
@@ -555,7 +555,7 @@ public class CCActionTree extends UIActionTree{
 		}
 	}
 	
-	private void onClickSeriesMove() {
+	private void onClickSeriesMove(CCTreeActionEvent e) {
 		CCDatabaseElement el = owner.getSelectedElement();
 
 		if (el != null && el.isSeries()) {
@@ -564,7 +564,7 @@ public class CCActionTree extends UIActionTree{
 		}
 	}
 	
-	private void onClickSeriesCreateFolderStructure() {
+	private void onClickSeriesCreateFolderStructure(CCTreeActionEvent e) {
 		CCDatabaseElement el = owner.getSelectedElement();
 
 		if (el != null && el.isSeries()) {
@@ -573,11 +573,11 @@ public class CCActionTree extends UIActionTree{
 		}
 	}
 
-	private void onClickSeriesAdd() {
+	private void onClickSeriesAdd(CCTreeActionEvent e) {
 		(new AddSeriesFrame(owner, movielist)).setVisible(true);
 	}
 	
-	private void onClickSeriesExportSingle() {
+	private void onClickSeriesExportSingle(CCTreeActionEvent e) {
 		final CCDatabaseElement element = owner.getSelectedElement();
 
 		if (element != null && element.isSeries()) {
@@ -604,7 +604,7 @@ public class CCActionTree extends UIActionTree{
 		}
 	}
 	
-	private void onClickSeriesAddToExportList() {
+	private void onClickSeriesAddToExportList(CCTreeActionEvent e) {
 		CCDatabaseElement element = owner.getSelectedElement();
 
 		if (element != null && element.isSeries()) {
@@ -612,7 +612,7 @@ public class CCActionTree extends UIActionTree{
 		}
 	}
 	
-	private void onClickSeriesCreateTXTEpisodeguide() {
+	private void onClickSeriesCreateTXTEpisodeguide(CCTreeActionEvent e) {
 		CCDatabaseElement element = owner.getSelectedElement();
 
 		if (element != null && element.isSeries()) {
@@ -625,14 +625,14 @@ public class CCActionTree extends UIActionTree{
 			if (returnval == JFileChooser.APPROVE_OPTION) {
 				try {
 					SimpleFileUtils.writeTextFile(PathFormatter.forceExtension(chooser.getSelectedFile(), ExportHelper.EXTENSION_EPISODEGUIDE), ((CCSeries)element).getEpisodeGuide());
-				} catch (IOException e) {
-					CCLog.addError(e);
+				} catch (IOException e2) {
+					CCLog.addError(e2);
 				}
 			}
 		}
 	}
 	
-	private void onClickSeriesImportSingle() {
+	private void onClickSeriesImportSingle(CCTreeActionEvent e) {
 		final JFileChooser chooser = new JFileChooser();
 		chooser.setFileFilter(FileChooserHelper.createLocalFileFilter("ExportHelper.filechooser_jsccexport.description", ExportHelper.EXTENSION_SINGLEEXPORT)); //$NON-NLS-1$
 		chooser.setCurrentDirectory(new File(PathFormatter.getRealSelfDirectory()));
@@ -644,7 +644,7 @@ public class CCActionTree extends UIActionTree{
 		}
 	}
 
-	private void onClickSeriesEdit() {		
+	private void onClickSeriesEdit(CCTreeActionEvent e) {		
 		CCDatabaseElement el = owner.getSelectedElement();
 
 		if (el != null && el.isSeries()) {
@@ -653,7 +653,7 @@ public class CCActionTree extends UIActionTree{
 		}
 	}
 
-	private void onClickSeasonAdd() {
+	private void onClickSeasonAdd(CCTreeActionEvent e) {
 		CCDatabaseElement el = owner.getSelectedElement();
 
 		if (el != null && el.isSeries()) {
@@ -662,7 +662,7 @@ public class CCActionTree extends UIActionTree{
 		}
 	}
 	
-	private void onClickSeasonOpenLast() {
+	private void onClickSeasonOpenLast(CCTreeActionEvent e) {
 		CCEpisode ep = movielist.getLastPlayedEpisode();
 			
 		if (ep != null) {
@@ -670,7 +670,7 @@ public class CCActionTree extends UIActionTree{
 		}
 	}
 
-	private void onClickMoviesEdit() {
+	private void onClickMoviesEdit(CCTreeActionEvent e) {
 		CCDatabaseElement el = owner.getSelectedElement();
 
 		if (el != null && el.isMovie()) {
@@ -679,7 +679,7 @@ public class CCActionTree extends UIActionTree{
 		}
 	}
 
-	private void onClickSeriesRem() {
+	private void onClickSeriesRem(CCTreeActionEvent e) {
 		if (owner.getSelectedElement() != null && owner.getSelectedElement().isSeries()) {
 			if (DialogHelper.showLocaleYesNo(owner, "Dialogs.DeleteSeries")) {//$NON-NLS-1$
 				movielist.remove(owner.getSelectedElement());
@@ -687,17 +687,17 @@ public class CCActionTree extends UIActionTree{
 		}
 	}
 	
-	private void onClickHelpShowLog() {
+	private void onClickHelpShowLog(CCTreeActionEvent e) {
 		LogFrame lf = new LogFrame(owner);
 		lf.setVisible(true);
 	}
 	
-	private void onClickHelpShowRules() {
+	private void onClickHelpShowRules(CCTreeActionEvent e) {
 		FilenameRuleFrame frf = new FilenameRuleFrame(owner);
 		frf.setVisible(true);
 	}
 
-	private void onClickHelpCheckUpdates() {
+	private void onClickHelpCheckUpdates(CCTreeActionEvent e) {
 		new UpdateConnector(Main.TITLE, Main.VERSION, new ActionListener() {
 			@Override
 			public void actionPerformed(final ActionEvent e) {
@@ -717,12 +717,12 @@ public class CCActionTree extends UIActionTree{
 		}, false);
 	}
 	
-	private void onClickHelpShowAbout() {
+	private void onClickHelpShowAbout(CCTreeActionEvent e) {
 		AboutFrame af = new AboutFrame(owner);
 		af.setVisible(true);
 	}
 	
-	private void onClickOtherOpenFolder() {
+	private void onClickOtherOpenFolder(CCTreeActionEvent e) {
 		CCDatabaseElement el = owner.getSelectedElement();
 		
 		if (el == null) {
@@ -736,21 +736,21 @@ public class CCActionTree extends UIActionTree{
 		}
 	}
 
-	private void onClickOtherSetUnviewed() {
+	private void onClickOtherSetUnviewed(CCTreeActionEvent e) {
 		CCDatabaseElement el = owner.getSelectedElement();
 		if (el != null && el.isMovie()) {
 			((CCMovie)el).setViewed(false);
 		}
 	}
 
-	private void onClickOtherSetViewed() {
+	private void onClickOtherSetViewed(CCTreeActionEvent e) {
 		CCDatabaseElement el = owner.getSelectedElement();
 		if (el != null && el.isMovie()) {
 			((CCMovie)el).setViewed(true);
 		}
 	}
 	
-	private void onClickOtherOtherUndoMovieViewed() {
+	private void onClickOtherOtherUndoMovieViewed(CCTreeActionEvent e) {
 		CCDatabaseElement el = owner.getSelectedElement();
 		if (el != null && el.isMovie() && ((CCMovie)el).isViewed()) {
 			CCMovie mov = ((CCMovie)el);
@@ -764,14 +764,20 @@ public class CCActionTree extends UIActionTree{
 		}
 	}
 	
-	private void onClickOtherSetRating(CCUserScore rating) {
+	private void onClickOtherSetRating(CCTreeActionEvent e, CCUserScore rating) {
 		CCDatabaseElement el = owner.getSelectedElement();
 		if (el != null) {
+
+			if (e.SourceType == ActionSource.SHORTCUT && el.getScore() == rating && rating != CCUserScore.RATING_NO) {
+				el.setScore(CCUserScore.RATING_NO);
+				return;
+			}
+			
 			el.setScore(rating);
 		}
 	}
 	
-	private void onClickOtherShowInBrowser() {
+	private void onClickOtherShowInBrowser(CCTreeActionEvent e) {
 		CCDatabaseElement el = owner.getSelectedElement();
 		if (el == null) return;
 		

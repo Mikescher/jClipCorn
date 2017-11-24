@@ -153,9 +153,6 @@ public class Main {
 
 //TODO MainTable and SeriesTable as JCCSimpleTable
 
-//TODO Shortcut: increase rating +1 + decrease rating -1
-//              and/or (toggle rating on click ??)
-
 //TODO Watch Later --> Watch again
 
 //TODO Define group parent (results in subgroups etc) ; new db version

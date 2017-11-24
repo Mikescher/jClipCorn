@@ -22,6 +22,7 @@ import de.jClipCorn.Main;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.util.CCDBUpdateListener;
+import de.jClipCorn.gui.actionTree.ActionSource;
 import de.jClipCorn.gui.actionTree.CCActionTree;
 import de.jClipCorn.gui.frames.mainFrame.clipCharSelector.AbstractClipCharSortSelector;
 import de.jClipCorn.gui.frames.mainFrame.clipCharSelector.FullClipCharSortSelector;
@@ -255,17 +256,17 @@ public class MainFrame extends JFrame implements CCDBUpdateListener {
 		if (ccDatabaseElement.isMovie()) {
 			switch (CCProperties.getInstance().PROP_ON_DBLCLICK_MOVE.getValue()) {
 			case PLAY:
-				CCActionTree.getInstance().find(CCActionTree.EVENT_ON_MOVIE_EXECUTED_0).execute();
+				CCActionTree.getInstance().find(CCActionTree.EVENT_ON_MOVIE_EXECUTED_0).execute(ActionSource.DIRECT_CLICK);
 				break;
 			case PREVIEW:
-				CCActionTree.getInstance().find(CCActionTree.EVENT_ON_MOVIE_EXECUTED_1).execute();
+				CCActionTree.getInstance().find(CCActionTree.EVENT_ON_MOVIE_EXECUTED_1).execute(ActionSource.DIRECT_CLICK);
 				break;
 			case EDIT:
-				CCActionTree.getInstance().find(CCActionTree.EVENT_ON_MOVIE_EXECUTED_2).execute();
+				CCActionTree.getInstance().find(CCActionTree.EVENT_ON_MOVIE_EXECUTED_2).execute(ActionSource.DIRECT_CLICK);
 				break;
 			}
 		} else {
-			CCActionTree.getInstance().find(CCActionTree.EVENT_ON_SERIES_EXECUTED).execute();
+			CCActionTree.getInstance().find(CCActionTree.EVENT_ON_SERIES_EXECUTED).execute(ActionSource.DIRECT_CLICK);
 		}
 	}
 	

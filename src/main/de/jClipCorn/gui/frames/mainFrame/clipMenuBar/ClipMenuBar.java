@@ -7,7 +7,7 @@ import java.util.Iterator;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-
+import de.jClipCorn.gui.actionTree.ActionSource;
 import de.jClipCorn.gui.actionTree.CCActionElement;
 import de.jClipCorn.gui.actionTree.CCActionTree;
 import de.jClipCorn.gui.actionTree.UIActionTree;
@@ -34,7 +34,7 @@ public class ClipMenuBar extends JMenuBar {
 				newm.addActionListener(new ActionListener() {
 					@Override
 					public void actionPerformed(ActionEvent e) {
-						el.execute();
+						el.execute(ActionSource.MENU_BAR);
 					}
 				});
 
@@ -57,7 +57,7 @@ public class ClipMenuBar extends JMenuBar {
 				mi.addActionListener(new ActionListener() {
 					@Override
 					public void actionPerformed(ActionEvent e) {
-						el.execute();
+						el.execute(ActionSource.MENU_BAR);
 					}
 				});
 

@@ -5,7 +5,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JToolBar;
-
+import de.jClipCorn.gui.actionTree.ActionSource;
 import de.jClipCorn.gui.actionTree.CCActionElement;
 import de.jClipCorn.gui.actionTree.CCActionTree;
 import de.jClipCorn.gui.localization.LocaleBundle;
@@ -34,7 +34,7 @@ public class AbstractClipToolbar extends JToolBar {
 		tmp.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				el.execute();
+				el.execute(ActionSource.TOOLBAR);
 			}
 		});
 		

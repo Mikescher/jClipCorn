@@ -7,6 +7,7 @@ import java.util.TimerTask;
 
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.databaseElement.CCMovie;
+import de.jClipCorn.gui.actionTree.ActionSource;
 import de.jClipCorn.gui.actionTree.CCActionTree;
 import de.jClipCorn.gui.frames.coverPreviewFrame.CoverPreviewFrame;
 import de.jClipCorn.gui.resources.CachedResourceLoader;
@@ -99,7 +100,7 @@ public class DatabaseElementPreviewLabel extends CoverLabel {
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		if (e.getButton() == MouseEvent.BUTTON1 && isError()) {
-			CCActionTree.getInstance().find("ShowLog").execute(); //$NON-NLS-1$
+			CCActionTree.getInstance().find("ShowLog").execute(ActionSource.DIRECT_CLICK); //$NON-NLS-1$
 			setErrorDisplay(false);
 		}
 		else if (e.getClickCount() == 2) {

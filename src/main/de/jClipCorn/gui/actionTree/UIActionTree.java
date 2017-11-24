@@ -35,14 +35,14 @@ public abstract class UIActionTree {
 		return addMaster(name, stroke, caption, iconRes, true);
 	}
 
-	protected CCActionElement add(CCActionElement parent, String name, KeyStroke stroke, String caption, MultiIconRef iconRes, boolean readOnlyRestriction, Runnable action) {
+	protected CCActionElement add(CCActionElement parent, String name, KeyStroke stroke, String caption, MultiIconRef iconRes, boolean readOnlyRestriction, CCActionTreeListener action) {
 		CCActionElement e = parent.addChild(new CCActionElement(name, stroke, caption, iconRes));
-		if (action != null) e.addListener(a -> action.run());
+		if (action != null) e.addListener(action);
 		if (readOnlyRestriction) e.setReadOnlyRestriction();
 		return e;
 	}
 
-	protected CCActionElement add(CCActionElement parent, String name, KeyStroke stroke, String caption, MultiIconRef iconRes, Runnable action) {
+	protected CCActionElement add(CCActionElement parent, String name, KeyStroke stroke, String caption, MultiIconRef iconRes, CCActionTreeListener action) {
 		return add(parent, name, stroke, caption, iconRes, false, action);
 	}
 

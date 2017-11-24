@@ -7,6 +7,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 
+import de.jClipCorn.gui.actionTree.ActionSource;
 import de.jClipCorn.gui.actionTree.CCActionElement;
 import de.jClipCorn.gui.actionTree.CCActionTree;
 import de.jClipCorn.gui.localization.LocaleBundle;
@@ -42,7 +43,7 @@ public abstract class ClipPopupMenu extends JPopupMenu {
 		item.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				el.execute();
+				el.execute(ActionSource.POPUP_MENU);
 			}
 		});
 		
@@ -68,7 +69,7 @@ public abstract class ClipPopupMenu extends JPopupMenu {
 		item.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				el.execute();
+				el.execute(ActionSource.POPUP_MENU);
 			}
 		});
 		

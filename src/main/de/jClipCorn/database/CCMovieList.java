@@ -5,11 +5,9 @@ import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.TreeMap;
 import java.util.Vector;
 
@@ -55,6 +53,7 @@ import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.ApplicationHelper;
 import de.jClipCorn.util.stream.CCStream;
+import de.jClipCorn.util.stream.CCStreams;
 import de.jClipCorn.util.stream.IterableStream;
 
 public class CCMovieList {
@@ -62,11 +61,11 @@ public class CCMovieList {
 	
 	private List<CCDatabaseElement> list;
 	
-	private Map<CCGroup, List<CCDatabaseElement>> globalGroupList = new HashMap<>();
 	private List<CCDBUpdateListener> listener;
 	
 	private CCDatabase database;
-	
+	private List<CCGroup> databaseGroups = new ArrayList<>();
+
 	private boolean blocked = false;
 
 	private CCMovieList(CCDatabase db) {
@@ -356,7 +355,7 @@ public class CCMovieList {
 		}
 	}
 	
-	private void fireOnRefresh() {
+	public void fireOnRefresh() {
 		if (!EventQueue.isDispatchThread()) {
 			SwingUtilities.invokeLater(new Runnable() {
 				@Override
@@ -501,7 +500,6 @@ public class CCMovieList {
 	private void removeMovie(CCMovie m) {
 		list.remove(m);
 		database.removeFromMain(m.getLocalID());
-		unlinkElementFromGroups(m, m.getGroups());
 		
 		if (! m.getCoverName().isEmpty()) {
 			getCoverCache().deleteCover(m);
@@ -514,7 +512,6 @@ public class CCMovieList {
 			s.deleteSeason(s.getSeasonByArrayIndex(i));
 		}
 		database.removeFromMain(s.getLocalID());
-		unlinkElementFromGroups(s, s.getGroups());
 		
 		if (! s.getCoverName().isEmpty()) {
 			getCoverCache().deleteCover(s);
@@ -778,15 +775,15 @@ public class CCMovieList {
 		Element relg = new Element("groups");
 		root.addContent(relg);
 		
-		relg.setAttribute("count", Integer.toString(globalGroupList.size()));
+		relg.setAttribute("count", Integer.toString(databaseGroups.size()));
 		
-		for (Entry<CCGroup, List<CCDatabaseElement>> el : globalGroupList.entrySet()) {
+		for (CCGroup el : databaseGroups) {
 			Element g = new Element("group");
-			g.setAttribute("name", el.getKey().Name);
-			g.setAttribute("ordering", Integer.toString(el.getKey().Order));
-			g.setAttribute("color", el.getKey().getHexColor());
-			g.setAttribute("serialize", el.getKey().DoSerialize ? "true" : "false");
-			g.setAttribute("parent", el.getKey().Parent);
+			g.setAttribute("name", el.Name);
+			g.setAttribute("ordering", Integer.toString(el.Order));
+			g.setAttribute("color", el.getHexColor());
+			g.setAttribute("serialize", el.DoSerialize ? "true" : "false");
+			g.setAttribute("parent", el.Parent);
 			relg.addContent(g);
 		}
 		
@@ -891,35 +888,48 @@ public class CCMovieList {
 	}
 	
 	public boolean groupExists(String name) {
-		for (Entry<CCGroup, List<CCDatabaseElement>> entry : globalGroupList.entrySet()) {
-			if (entry.getKey().Name.equals(name)) return true;
+		for (CCGroup entry : databaseGroups) {
+			if (entry.Name.equals(name)) return true;
 		}
 		return false;
 	}
 	
 	public List<CCGroup> getGroupList() {
-		return new ArrayList<>(globalGroupList.keySet());
+		return new ArrayList<>(databaseGroups);
 	}
 	
 	public List<CCGroup> getSortedGroupList() {
-		ArrayList<CCGroup> gl =  new ArrayList<>(globalGroupList.keySet());
+		ArrayList<CCGroup> gl =  new ArrayList<>(databaseGroups);
 		
 		Collections.sort(gl);
 		
 		return gl;
 	}
 	
-	public CCGroup getOrCreateGroup(String name) {
-		for (Entry<CCGroup, List<CCDatabaseElement>> entry : globalGroupList.entrySet()) {
-			if (entry.getKey().Name.equals(name)) return entry.getKey();
+	public CCGroup getOrCreateAndAddGroup(String name) {
+		for (CCGroup g : databaseGroups) {
+			if (g.Name.equals(name)) return g;
 		}
 		
-		return CCGroup.create(name);
+		CCGroup g = CCGroup.create(name);
+		
+		addGroup(g);
+		
+		return g;
+	}
+	
+	public CCGroup getOrCreateAndAddGroup(CCGroup template) {
+		for (CCGroup g : databaseGroups) {
+			if (g.Name.equals(template.Name)) return g;
+		}
+		
+		addGroup(template);
+		return template;
 	}
 	
 	public CCGroup getGroupOrNull(String name) {
-		for (Entry<CCGroup, List<CCDatabaseElement>> entry : globalGroupList.entrySet()) {
-			if (entry.getKey().Name.equals(name)) return entry.getKey();
+		for (CCGroup entry : databaseGroups) {
+			if (entry.Name.equals(name)) return entry;
 		}
 		
 		return null;
@@ -927,137 +937,62 @@ public class CCMovieList {
 
 	public int getGroupIndex(CCGroup value) {
 		int idx = 0;
-		for (CCGroup key : globalGroupList.keySet()) {
+		for (CCGroup key : databaseGroups) {
 			if (key.equals(value)) return idx;
 			idx++;
 		}
 		return -1;
 	}
-	
-	public void unlinkElementFromGroups(CCDatabaseElement source, CCGroupList grouplist) {
-		for (CCGroup g : grouplist) {
-			List<CCDatabaseElement> lst = globalGroupList.get(g);
-			lst.remove(source);
-			if (lst.isEmpty()) {
-				globalGroupList.remove(g);
-				database.removeGroup(g.Name);
-			}
-		}
-	}
-	
-	public void linkElementToGroups(CCDatabaseElement source, CCGroupList grouplist) {
-		for (CCGroup g : grouplist) {
-			List<CCDatabaseElement> lst = globalGroupList.get(g);
-			if (lst == null) {
-				lst = new ArrayList<>();
-				globalGroupList.put(g, lst);
-				database.addGroup(g.Name, g.Order, g.Color, g.DoSerialize, g.Parent, g.Visible);
-			}
-			lst.add(source);
-		}
-	}
 
-	public void recalculateGroupCache(boolean validateExisting) {
-		
-		// Create new Map
-		
-		Map<CCGroup, List<CCDatabaseElement>> gm = new HashMap<>();
-		for (Iterator<CCDatabaseElement> it = iteratorElements(); it.hasNext();) {
-			CCDatabaseElement el = it.next();
-			
-			for (CCGroup group : el.getGroups()) {
-				List<CCDatabaseElement> list = gm.get(group);
-				if (list == null) {
-					list = new ArrayList<>();
-					gm.put(group, list);
-				}
-				list.add(el);
-			}
-		}
-		
-		// compare with existing
-		
-		if (validateExisting) {
-			compareGroupMaps(globalGroupList, gm);
-		}
-		
-		// set new one
-		
-		globalGroupList = gm;
-		
-		database.clearGroups();
-		for (CCGroup g : globalGroupList.keySet()) {
-			database.addGroup(g.Name, g.Order, g.Color, g.DoSerialize, g.Parent, g.Visible);
-		}
-	}
-	
-	@SuppressWarnings("nls")
-	private void compareGroupMaps(Map<CCGroup, List<CCDatabaseElement>> current, Map<CCGroup, List<CCDatabaseElement>> created) {
-		for (CCGroup g : current.keySet()) {
-			if (!created.containsKey(g)) {
-				CCLog.addError(LocaleBundle.getString("LogMessage.GroupCacheInvalid") + "\r\nCache has one key too many: " + g.Name);
-			} else {
-				List<CCDatabaseElement> lsCreatedMising = new ArrayList<>(current.get(g));
-				lsCreatedMising.removeAll(created.get(g));
-				
-				for (CCDatabaseElement miss : lsCreatedMising) {
-					CCLog.addError(LocaleBundle.getString("LogMessage.GroupCacheInvalid") + "\r\nSuperfluous mapping in current: " + miss.getFullDisplayTitle());
-				}
-				
-				List<CCDatabaseElement> lsCurrentMising = new ArrayList<>(created.get(g));
-				lsCurrentMising.removeAll(current.get(g));
-				
-				for (CCDatabaseElement miss : lsCurrentMising) {
-					CCLog.addError(LocaleBundle.getString("LogMessage.GroupCacheInvalid") + "\r\nMissing mapping in current: " + miss.getFullDisplayTitle());
-				}
-			}
-		}
-		
-		for (CCGroup g : created.keySet()) {
-			if (!created.containsKey(g)) {
-				CCLog.addError(LocaleBundle.getString("LogMessage.GroupCacheInvalid") + "\r\nCache is missing one key: " + g.Name);
-			} else {
-				List<CCDatabaseElement> lsCreatedMising = new ArrayList<>(current.get(g));
-				lsCreatedMising.removeAll(created.get(g));
-				
-				for (CCDatabaseElement miss : lsCreatedMising) {
-					CCLog.addError(LocaleBundle.getString("LogMessage.GroupCacheInvalid") + "\r\nSuperfluous mapping in current: " + miss.getFullDisplayTitle());
-				}
-				
-				List<CCDatabaseElement> lsCurrentMising = new ArrayList<>(created.get(g));
-				lsCurrentMising.removeAll(current.get(g));
-				
-				for (CCDatabaseElement miss : lsCurrentMising) {
-					CCLog.addError(LocaleBundle.getString("LogMessage.GroupCacheInvalid") + "\r\nMissing mapping in current: " + miss.getFullDisplayTitle());
-				}
-			}
-		}
-	}
-	
 	public List<CCDatabaseElement> getInternalListCopy() {
 		return new ArrayList<>(list);
 	}
 
 	public List<CCDatabaseElement> getDatabaseElementsbyGroup(CCGroup group) {
-		List<CCDatabaseElement> result = globalGroupList.get(group);
-		if (result == null) result = new ArrayList<>();
-		
-		return result;
+		return iteratorElements().filter(elem -> elem.getGroups().contains(group)).enumerate();
 	}
 
-	public void directlyAddGroup(CCGroup g) {
-		globalGroupList.put(g, new ArrayList<>());
+	public void addGroup(CCGroup g) {
+		databaseGroups.add(g);
+		
+		database.addGroup(g.Name, g.Order, g.Color, g.DoSerialize, g.Parent, g.Visible);
+	}
+
+	public void addGroupInternal(CCGroup g) {
+		databaseGroups.add(g);
+	}
+
+	public CCGroupList addMissingGroups(CCGroupList grouplist) {
+		
+		List<CCGroup> r = new ArrayList<>();
+		
+		for (CCGroup g : grouplist) {
+			r.add(getOrCreateAndAddGroup(g));
+		}
+		
+		return CCGroupList.create(r);
 	}
 
 	public void updateGroup(CCGroup gOld, CCGroup gNew) {
+		
+		databaseGroups.remove(gOld);
+		databaseGroups.add(gNew);
+		
 		for (CCDatabaseElement el : new ArrayList<>(getDatabaseElementsbyGroup(gOld))) {
 			el.setGroupsInternal(el.getGroups().getRemove(gOld).getAdd(gNew));
 		}
 		
-		List<CCDatabaseElement> garb = globalGroupList.remove(gOld);
-		if (garb != null) globalGroupList.put(gNew, garb);
-		
 		database.updateGroup(gNew.Name, gNew.Order, gNew.Color, gNew.DoSerialize, gNew.Parent, gNew.Visible);
+	}
+
+	public void removeGroup(CCGroup gOld) {
+		
+		databaseGroups.remove(gOld);
+
+		for (CCDatabaseElement el : new ArrayList<>(getDatabaseElementsbyGroup(gOld))) {
+			el.setGroups(el.getGroups().getRemove(gOld));
+		}
+		
 	}
 	
 	public boolean isInMemory() {
@@ -1078,5 +1013,9 @@ public class CCMovieList {
 		}
 		
 		return null;
+	}
+
+	public List<CCGroup> getSubGroups(CCGroup group) {
+		return CCStreams.iterate(databaseGroups).filter(g -> g.Parent.equals(group.Name)).enumerate();
 	}
 }

@@ -47,6 +47,7 @@ public class DatabaseErrorType {
 	public static DatabaseErrorType ERROR_COVER_TOO_BIG = new DatabaseErrorType(40, DatabaseAutofixer::fixError_CoverTooBig);
 	public static DatabaseErrorType ERROR_GROUP_NESTING_TOO_DEEP = new DatabaseErrorType(41, null);
 	public static DatabaseErrorType ERROR_INVALID_GROUP_PARENT = new DatabaseErrorType(42, null);
+	public static DatabaseErrorType ERROR_UNUSED_GROUP = new DatabaseErrorType(43,  DatabaseAutofixer::fixError_UnusedGroup);
 
 	private final int type;
 	

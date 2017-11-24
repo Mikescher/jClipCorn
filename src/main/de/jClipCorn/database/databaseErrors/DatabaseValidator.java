@@ -815,6 +815,13 @@ public class DatabaseValidator {
 			}
 			
 		}
+
+		for (CCGroup group : movielist.getGroupList()) {
+			
+			if (movielist.getDatabaseElementsbyGroup(group).isEmpty() && movielist.getSubGroups(group).isEmpty()) {
+				e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_UNUSED_GROUP, group));
+			}
+		}
 		
 	}
 	

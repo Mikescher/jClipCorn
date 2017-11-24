@@ -9,6 +9,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -84,6 +86,7 @@ public class GroupManageFrame extends JFrame {
 	private JComboBox<String> cbxDataParent;
 	private JCheckBox cbDataVisible;
 	private JLabel lblNewLabel;
+	private JButton btnAdd;
 	
 	/**
 	 * Create the frame.
@@ -180,6 +183,8 @@ public class GroupManageFrame extends JFrame {
 				FormSpecs.DEFAULT_ROWSPEC,
 				FormSpecs.RELATED_GAP_ROWSPEC,
 				FormSpecs.DEFAULT_ROWSPEC,
+				FormSpecs.PARAGRAPH_GAP_ROWSPEC,
+				FormSpecs.DEFAULT_ROWSPEC,
 				FormSpecs.RELATED_GAP_ROWSPEC,
 				RowSpec.decode("default:grow"),})); //$NON-NLS-1$
 		
@@ -200,6 +205,15 @@ public class GroupManageFrame extends JFrame {
 			}
 		});
 		panel.add(btnMoveDown, "1, 5, fill, top"); //$NON-NLS-1$
+		
+		btnAdd = new JButton("+"); //$NON-NLS-1$
+		btnAdd.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				onAddGroup();
+			}
+		});
+		panel.add(btnAdd, "1, 7"); //$NON-NLS-1$
 		
 		scrollPane_1 = new JScrollPane();
 		contentPane.add(scrollPane_1, "6, 3, fill, fill"); //$NON-NLS-1$
@@ -312,6 +326,14 @@ public class GroupManageFrame extends JFrame {
 			}
 		});
 		pnlButtonRight.add(btnUpdate);
+		
+		addWindowListener(new WindowAdapter() {
+
+		    @Override
+			public void windowClosed(WindowEvent e) {
+		    	movielist.fireOnRefresh();
+		    }
+		});
 	}
 
 	private void onResetColors() {
@@ -328,6 +350,27 @@ public class GroupManageFrame extends JFrame {
 				return;
 			}
 		}
+	}
+
+	private void onAddGroup() {
+		String name = DialogHelper.showLocalInputDialog(this, "GroupManagerFrame.addGroupDialogText", ""); //$NON-NLS-1$ //$NON-NLS-2$
+		
+		if (name == null || name.isEmpty()) return;
+		
+		if (!CCGroup.isValidGroupName(name)) {
+			DialogHelper.showLocalError(this, "Dialogs.WrongGroupName"); //$NON-NLS-1$
+			return;
+		}
+		
+		CCGroup search = movielist.getGroupOrNull(name);
+		if (search != null) {
+			DialogHelper.showLocalError(this, "Dialogs.WrongGroupName"); //$NON-NLS-1$
+			return;
+		}
+		
+		movielist.addGroup(CCGroup.create(name));
+		
+		reinitData();
 	}
 	
 	private void onMoveUp() {
@@ -394,26 +437,35 @@ public class GroupManageFrame extends JFrame {
 		CCGroup group = getSelectedGroup();
 		if (group == null) return;
 		if (!DialogHelper.showLocaleYesNo(this, "Dialogs.EditGroup")) return; //$NON-NLS-1$
-
-		if (!CCGroup.isValidGroupName(edDataName.getText())) {
-			DialogHelper.showLocalError(this, "Dialogs.WrongGroupName"); //$NON-NLS-1$
-			return;
-		}
-		
-		CCGroup search = movielist.getGroupOrNull(edDataName.getText());
-		if (search != null && search != group) {
-			DialogHelper.showLocalError(this, "Dialogs.WrongGroupName"); //$NON-NLS-1$
-			return;
-		}
 		
 		movielist.updateGroup(group, CCGroup.create(
-				edDataName.getText(), 
+				group.Name, 
 				group.Order, 
 				pnlDataColor.getBackground(), 
 				cbDataSerialization.isSelected(), 
 				cbxDataParent.getSelectedItem().toString(),
 				cbDataVisible.isSelected()));
 
+		if (!group.Name.equals(edDataName.getText())) {
+
+			if (!CCGroup.isValidGroupName(edDataName.getText())) {
+				DialogHelper.showLocalError(this, "Dialogs.WrongGroupName"); //$NON-NLS-1$
+				return;
+			}
+			
+			CCGroup search = movielist.getGroupOrNull(edDataName.getText());
+			if (search != null && search != group) {
+				DialogHelper.showLocalError(this, "Dialogs.WrongGroupName"); //$NON-NLS-1$
+				return;
+			}
+			
+			if (DialogHelper.showLocaleYesNo(this, "Dialogs.RenameGroup")) { //$NON-NLS-1$
+				for (CCDatabaseElement el : new ArrayList<>(movielist.getDatabaseElementsbyGroup(group))) {
+					el.setGroups(el.getGroups().getRemove(group).getAdd(movielist, edDataName.getText()));
+				}
+			}
+		}
+		
 		reinitData();
 	}
 
@@ -422,9 +474,7 @@ public class GroupManageFrame extends JFrame {
 		if (group == null) return;
 		if (!DialogHelper.showLocaleYesNo(this, "Dialogs.DeleteGroup")) return; //$NON-NLS-1$
 		
-		for (CCDatabaseElement el : new ArrayList<>(movielist.getDatabaseElementsbyGroup(group))) {
-			el.setGroups(el.getGroups().getRemove(group));
-		}
+		movielist.removeGroup(group);
 
 		initData();
 	}
@@ -514,7 +564,7 @@ public class GroupManageFrame extends JFrame {
 	}
 	
 	private void initData() {
-		movielist.recalculateGroupCache(true);
+		//movielist.recalculateGroupCache(true);
 		
 		reinitData();
 		

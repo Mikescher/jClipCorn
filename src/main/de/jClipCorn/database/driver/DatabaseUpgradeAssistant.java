@@ -164,12 +164,12 @@ public class DatabaseUpgradeAssistant {
 		
 		db.executeSQLThrow("CREATE TABLE GROUPS(NAME VARCHAR(256) PRIMARY KEY,ORDERING INTEGER NOT NULL,COLOR INTEGER NOT NULL,SERIALIZE BIT NOT NULL)");
 		
-		afterConnectActions.add(new UpgradeAction() {
-			@Override
-			public void onAfterConnect(CCMovieList ml, CCDatabase db) {
-				ml.recalculateGroupCache(false);
-			}
-		});
+		//afterConnectActions.add(new UpgradeAction() {
+		//	@Override
+		//	public void onAfterConnect(CCMovieList ml, CCDatabase db) {
+		//		ml.recalculateGroupCache(false);
+		//	}
+		//});
 	}
 
 	@SuppressWarnings("nls")

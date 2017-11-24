@@ -6,8 +6,8 @@ import java.util.regex.Pattern;
 public class CCGroup implements Comparable<CCGroup> {
 	private final static int COLOR_TAG_ALPHA = 224;
 
-	public final static Pattern REGEX_GROUP_SYNTAX = Pattern.compile("\\[\\[[A-Za-z0-0\\-_ ]+\\]\\]"); //$NON-NLS-1$
-	private final static Pattern REGEX_GROUP_NAME = Pattern.compile("^[A-Za-z0-0\\-_ ]+$"); //$NON-NLS-1$
+	public final static Pattern REGEX_GROUP_SYNTAX = Pattern.compile("\\[\\[[A-Za-z0-9\\-_ ]+\\]\\]"); //$NON-NLS-1$
+	private final static Pattern REGEX_GROUP_NAME = Pattern.compile("^[A-Za-z0-9\\-_ ]+$"); //$NON-NLS-1$
 	
 	private static int staticGroupCounter = 10000;
 	

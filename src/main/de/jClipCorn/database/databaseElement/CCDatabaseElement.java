@@ -244,19 +244,17 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 	}
 
 	public void setGroups(String data) throws GroupFormatException {
-		setGroups(CCGroupList.parse(movielist, data));
+		setGroups(CCGroupList.parseWithoutAddingNewGroups(movielist, data));
 	}
 
 	public void setGroups(CCGroupList value) {
 		if (linkedGroups.equals(value)) return;
 		
-		movielist.unlinkElementFromGroups(this, linkedGroups);
+		value = movielist.addMissingGroups(value);
 		
 		setGroupsInternal(value);
 		
 		updateDB();
-		
-		movielist.linkElementToGroups(this, value);
 	}
 
 	public void setGroupsInternal(CCGroupList value) {

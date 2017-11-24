@@ -5,6 +5,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.CCMovie;
@@ -14,6 +15,7 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCFileFormat;
 import de.jClipCorn.database.databaseElement.columnTypes.CCFileSize;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGenre;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGenreList;
+import de.jClipCorn.database.databaseElement.columnTypes.CCGroup;
 import de.jClipCorn.database.databaseElement.columnTypes.CCQuality;
 import de.jClipCorn.database.databaseElement.columnTypes.CCTagList;
 import de.jClipCorn.gui.localization.LocaleBundle;
@@ -439,6 +441,17 @@ public class DatabaseAutofixer {
 			return true;
 		} else if (err.getElement1() instanceof CCEpisode) {
 			return false;
+		}
+		
+		return false;
+	}
+	
+	public static boolean fixError_UnusedGroup(DatabaseError err) {
+		if (err.getElement1() instanceof CCGroup) {
+			
+			CCMovieList.getInstance().removeGroup((CCGroup)err.getElement1());
+			return true;
+			
 		}
 		
 		return false;

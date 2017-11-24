@@ -241,10 +241,6 @@ public class FilterTree extends AbstractFilterTree {
 			}
 			
 		}
-		
-		for (final CCGroup group : movielist.getGroupList()) {
-			addNodeF(parent, (Icon)null, group.Name, () -> CustomGroupFilter.create(group));
-		}
 	}
 	
 	private void initGenre(DefaultMutableTreeNode parent) {

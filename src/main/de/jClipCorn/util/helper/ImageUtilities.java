@@ -135,11 +135,11 @@ public class ImageUtilities {
 			int nH;
 
 			if (ratio > newRatio) {
-				nW = minW;
-				nH = (int) Math.round(1 / ratio * minW);
-			} else {
 				nH = minH;
 				nW = (int) Math.round(ratio * minH);
+			} else {
+				nW = minW;
+				nH = (int) Math.round(1 / ratio * minW);
 			}
 
 			if (nW > maxW) {

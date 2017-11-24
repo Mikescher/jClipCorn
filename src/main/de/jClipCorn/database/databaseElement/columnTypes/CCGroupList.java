@@ -53,7 +53,7 @@ public class CCGroupList implements Iterable<CCGroup> {
 		return list.size();
 	}
 
-	public static CCGroupList parse(CCMovieList ml, String data) throws GroupFormatException {
+	public static CCGroupList parseWithoutAddingNewGroups(CCMovieList ml, String data) throws GroupFormatException {
 		if (data.isEmpty()) return new CCGroupList();
 		
 		List<CCGroup> gl = new ArrayList<>();
@@ -61,7 +61,10 @@ public class CCGroupList implements Iterable<CCGroup> {
 			if (! CCGroup.isValidGroupName(str))
 				throw new GroupFormatException(str);
 			
-			gl.add(ml.getOrCreateGroup(str));
+			CCGroup g = ml.getGroupOrNull(str);
+			if (g == null) g = CCGroup.create(str);
+			
+			gl.add(g);
 		}
 		
 		return new CCGroupList(gl);
@@ -76,7 +79,7 @@ public class CCGroupList implements Iterable<CCGroup> {
 				
 		List<CCGroup> new_list = new ArrayList<>(list);
 		
-		if (! contains(value)) new_list.add(ml.getOrCreateGroup(value));
+		if (! contains(value)) new_list.add(ml.getOrCreateAndAddGroup(value));
 		
 		return new CCGroupList(new_list);
 	}

@@ -811,7 +811,7 @@ public class CCDatabase {
 					boolean gv = rs.getBoolean(TAB_GROUPS_COLUMN_VISIBLE);
 					if (gp == null) gp = ""; //$NON-NLS-1$
 					
-					ml.directlyAddGroup(CCGroup.create(gn, go, gc, gs, gp, gv));
+					ml.addGroupInternal(CCGroup.create(gn, go, gc, gs, gp, gv));
 				}
 				
 				rs.close();

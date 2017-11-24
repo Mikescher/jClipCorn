@@ -1,6 +1,20 @@
 
 
 ########################################################################
+############ Fri Nov 24 19:08:07 2017 +0100  1.10.4 RELEASE ############
+########################################################################
+
+
+1.10.4 Bugfix: Fixed non synchronized access to jClipCorn.properties
+1.10.4 Bugfix: SQLite initial database creation failed
+1.10.4 Feature: [WatchLater] on viewed element = [WatchAgain]
+1.10.4 Feature: When setting user rating via shortcut toggle value instead of directly writing
+1.10.4 Task: Big refactoring of CustomFilter serialization
+1.10.4 Task: Automatically adjust size of CoverPreviewFrame
+1.10.4 Feature: Setting to exclude covers from automatic backup
+
+
+########################################################################
 ############ Sun Nov 19 13:01:42 2017 +0100  1.10.3 RELEASE ############
 ########################################################################
 

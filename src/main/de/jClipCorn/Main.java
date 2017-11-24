@@ -155,8 +155,5 @@ public class Main {
 
 //TODO Improve Customfilter serialization (just give them list of properties and string write/read happens autom)
 
-//TODO [Option] exclude covers in auto backup (but optionally include in manual backups)
-//TODO fix coverpreviewframe size
-
 //TODO Shortcut: increase rating +1 + decrease rating -1
 //              and/or (toggle rating on click ??)

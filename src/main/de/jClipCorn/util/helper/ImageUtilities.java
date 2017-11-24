@@ -144,12 +144,12 @@ public class ImageUtilities {
 
 			if (nW > maxW) {
 				nH *= maxW / (1d * nW);
-				nW *= maxW;
+				nW  = maxW;
 			}
 
 			if (nH > maxH) {
 				nW *= maxH / (1d * nH);
-				nH *= maxH;
+				nH  = maxH;
 			}
 
 			return Tuple.Create(nW, nH);

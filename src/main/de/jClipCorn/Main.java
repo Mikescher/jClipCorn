@@ -151,5 +151,3 @@ public class Main {
 //     - progress, async, abort
 
 //TODO MainTable and SeriesTable as JCCSimpleTable
-
-//TODO Define group parent (results in subgroups etc) ; new db version

@@ -183,7 +183,7 @@ public class DatabaseValidator {
 		// Cover too small
 		// ###############################################
 
-		if (series.getCover().getWidth() < ImageUtilities.BASE_COVER_WIDTH && series.getCover().getWidth() < ImageUtilities.BASE_COVER_HEIGHT) {
+		if (series.getCover().getWidth() < ImageUtilities.BASE_COVER_WIDTH && series.getCover().getHeight() < ImageUtilities.BASE_COVER_HEIGHT) {
 			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_COVER_TOO_SMALL, series));
 		}
 
@@ -456,7 +456,7 @@ public class DatabaseValidator {
 		// Cover too small
 		// ###############################################
 
-		if (mov.getCover().getWidth() < ImageUtilities.BASE_COVER_WIDTH && mov.getCover().getWidth() < ImageUtilities.BASE_COVER_HEIGHT) {
+		if (mov.getCover().getWidth() < ImageUtilities.BASE_COVER_WIDTH && mov.getCover().getHeight() < ImageUtilities.BASE_COVER_HEIGHT) {
 			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_COVER_TOO_SMALL, mov));
 		}
 
@@ -514,7 +514,7 @@ public class DatabaseValidator {
 		// Cover too small
 		// ###############################################
 
-		if (season.getCover().getWidth() < ImageUtilities.BASE_COVER_WIDTH && season.getCover().getWidth() < ImageUtilities.BASE_COVER_HEIGHT) {
+		if (season.getCover().getWidth() < ImageUtilities.BASE_COVER_WIDTH && season.getCover().getHeight() < ImageUtilities.BASE_COVER_HEIGHT) {
 			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_COVER_TOO_SMALL, season));
 		}
 

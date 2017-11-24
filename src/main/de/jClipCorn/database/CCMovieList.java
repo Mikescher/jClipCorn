@@ -786,6 +786,7 @@ public class CCMovieList {
 			g.setAttribute("ordering", Integer.toString(el.getKey().Order));
 			g.setAttribute("color", el.getKey().getHexColor());
 			g.setAttribute("serialize", el.getKey().DoSerialize ? "true" : "false");
+			g.setAttribute("parent", el.getKey().Parent);
 			relg.addContent(g);
 		}
 		
@@ -950,7 +951,7 @@ public class CCMovieList {
 			if (lst == null) {
 				lst = new ArrayList<>();
 				globalGroupList.put(g, lst);
-				database.addGroup(g.Name, g.Order, g.Color, g.DoSerialize);
+				database.addGroup(g.Name, g.Order, g.Color, g.DoSerialize, g.Parent, g.Visible);
 			}
 			lst.add(source);
 		}
@@ -986,7 +987,7 @@ public class CCMovieList {
 		
 		database.clearGroups();
 		for (CCGroup g : globalGroupList.keySet()) {
-			database.addGroup(g.Name, g.Order, g.Color, g.DoSerialize);
+			database.addGroup(g.Name, g.Order, g.Color, g.DoSerialize, g.Parent, g.Visible);
 		}
 	}
 	
@@ -1056,7 +1057,7 @@ public class CCMovieList {
 		List<CCDatabaseElement> garb = globalGroupList.remove(gOld);
 		if (garb != null) globalGroupList.put(gNew, garb);
 		
-		database.updateGroup(gNew.Name, gNew.Order, gNew.Color, gNew.DoSerialize);
+		database.updateGroup(gNew.Name, gNew.Order, gNew.Color, gNew.DoSerialize, gNew.Parent, gNew.Visible);
 	}
 	
 	public boolean isInMemory() {

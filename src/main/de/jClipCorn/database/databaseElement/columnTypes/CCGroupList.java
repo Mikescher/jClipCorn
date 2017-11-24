@@ -190,16 +190,20 @@ public class CCGroupList implements Iterable<CCGroup> {
 		List<CCGroup> groupsSorted = new ArrayList<>(list);
 		groupsSorted.sort((a, b) -> Integer.compare(b.Name.length(), a.Name.length()));
 		
-		for (int i = 0; i < groupsSorted.size(); i++) {
-			String group = groupsSorted.get(i).Name;
+		int di = 0;
+		for (int ii = 0; ii < groupsSorted.size(); ii++) {
+			
+			if (!groupsSorted.get(ii).Visible) continue;
+				
+			String group = groupsSorted.get(ii).Name;
 			
 			int width = fm.stringWidth(group);
 			
-			g.setColor(groupsSorted.get(i).Color);
+			g.setColor(groupsSorted.get(ii).Color);
 			
 			g.fillRoundRect(
 					right - MARGIN - PADDING_X - width - PADDING_X, 
-					top + i * (height + 2 * PADDING_Y + 2 * MARGIN) + MARGIN, 
+					top + di * (height + 2 * PADDING_Y + 2 * MARGIN) + MARGIN, 
 					2 * PADDING_X + width, 
 					2 * PADDING_Y + height, 
 					RADIUS, 
@@ -209,7 +213,7 @@ public class CCGroupList implements Iterable<CCGroup> {
 			
 			g.drawRoundRect(
 					right - MARGIN - PADDING_X - width - PADDING_X, 
-					top + i * (height + 2 * PADDING_Y + 2 * MARGIN) + MARGIN, 
+					top + di * (height + 2 * PADDING_Y + 2 * MARGIN) + MARGIN, 
 					2 * PADDING_X + width, 
 					2 * PADDING_Y + height, 
 					RADIUS, 
@@ -218,7 +222,9 @@ public class CCGroupList implements Iterable<CCGroup> {
 			g.drawString(
 					group, 
 					right - MARGIN - PADDING_X - width, 
-					top + i * (height + 2 * PADDING_Y + 2 * MARGIN) + MARGIN + PADDING_Y + height - offset);
+					top + di * (height + 2 * PADDING_Y + 2 * MARGIN) + MARGIN + PADDING_Y + height - offset);
+			
+			di++;
 		}
 		
 		g.dispose();

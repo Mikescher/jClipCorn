@@ -45,6 +45,8 @@ public class DatabaseErrorType {
 	public static DatabaseErrorType ERROR_NON_CONTINOOUS_EPISODES = new DatabaseErrorType(38, null);
 	public static DatabaseErrorType ERROR_COVER_TOO_SMALL = new DatabaseErrorType(39, DatabaseAutofixer::fixError_CoverTooSmall);
 	public static DatabaseErrorType ERROR_COVER_TOO_BIG = new DatabaseErrorType(40, DatabaseAutofixer::fixError_CoverTooBig);
+	public static DatabaseErrorType ERROR_GROUP_NESTING_TOO_DEEP = new DatabaseErrorType(41, null);
+	public static DatabaseErrorType ERROR_INVALID_GROUP_PARENT = new DatabaseErrorType(42, null);
 
 	private final int type;
 	

@@ -7,19 +7,25 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JColorChooser;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.TitledBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
@@ -44,6 +50,7 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.CachedResourceLoader;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.helper.DialogHelper;
+import de.jClipCorn.util.stream.CCStreams;
 
 public class GroupManageFrame extends JFrame {
 	private static final long serialVersionUID = -5967105649409137866L;
@@ -56,19 +63,27 @@ public class GroupManageFrame extends JFrame {
 	private JScrollPane scrollPane_1;
 	private JCheckBoxList<CCDatabaseElement> listElements;
 	private JPanel pnlButtonLeft;
-	private JButton btnRename;
 	private JPanel pnlButtonRight;
 	private JButton btnUpdate;
 	private JTextField edFilter;
 
 	private final CCMovieList movielist;
-	private JButton btnToggleSerialization;
-	private JButton btnSetColor;
 	private JButton btnDelete;
 	private JPanel panel;
 	private JButton btnMoveUp;
 	private JButton btnMoveDown;
 	private JButton btnResetColors;
+	private JLabel lblName;
+	private JTextField edDataName;
+	private JLabel lblSerialization;
+	private JCheckBox cbDataSerialization;
+	private JButton btnUpdateData;
+	private JLabel lblColor;
+	private JPanel pnlDataColor;
+	private JLabel lblParent;
+	private JComboBox<String> cbxDataParent;
+	private JCheckBox cbDataVisible;
+	private JLabel lblNewLabel;
 	
 	/**
 	 * Create the frame.
@@ -91,7 +106,7 @@ public class GroupManageFrame extends JFrame {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setIconImage(CachedResourceLoader.getImage(Resources.IMG_FRAME_ICON));
 		
-		setBounds(100, 100, 750, 500);
+		setBounds(100, 100, 800, 700);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -99,7 +114,7 @@ public class GroupManageFrame extends JFrame {
 				FormSpecs.RELATED_GAP_COLSPEC,
 				FormSpecs.PREF_COLSPEC,
 				FormSpecs.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("170dlu"), //$NON-NLS-1$
+				ColumnSpec.decode("240dlu"), //$NON-NLS-1$
 				FormSpecs.UNRELATED_GAP_COLSPEC,
 				ColumnSpec.decode("default:grow"),}, //$NON-NLS-1$
 			new RowSpec[] {
@@ -158,7 +173,7 @@ public class GroupManageFrame extends JFrame {
 		panel = new JPanel();
 		contentPane.add(panel, "2, 1, 1, 3, fill, fill"); //$NON-NLS-1$
 		panel.setLayout(new FormLayout(new ColumnSpec[] {
-				ColumnSpec.decode("41px"),}, //$NON-NLS-1$
+				ColumnSpec.decode("50px"),}, //$NON-NLS-1$
 			new RowSpec[] {
 				RowSpec.decode("26px:grow"), //$NON-NLS-1$
 				FormSpecs.RELATED_GAP_ROWSPEC,
@@ -168,23 +183,23 @@ public class GroupManageFrame extends JFrame {
 				FormSpecs.RELATED_GAP_ROWSPEC,
 				RowSpec.decode("default:grow"),})); //$NON-NLS-1$
 		
-		btnMoveUp = new JButton("^"); //$NON-NLS-1$
+		btnMoveUp = new JButton("▲"); //$NON-NLS-1$
 		btnMoveUp.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				onMoveUp();
 			}
 		});
-		panel.add(btnMoveUp, "1, 3, left, top"); //$NON-NLS-1$
+		panel.add(btnMoveUp, "1, 3, fill, top"); //$NON-NLS-1$
 		
-		btnMoveDown = new JButton("v"); //$NON-NLS-1$
+		btnMoveDown = new JButton("▼"); //$NON-NLS-1$
 		btnMoveDown.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				onMoveDown();
 			}
 		});
-		panel.add(btnMoveDown, "1, 5, left, top"); //$NON-NLS-1$
+		panel.add(btnMoveDown, "1, 5, fill, top"); //$NON-NLS-1$
 		
 		scrollPane_1 = new JScrollPane();
 		contentPane.add(scrollPane_1, "6, 3, fill, fill"); //$NON-NLS-1$
@@ -198,35 +213,29 @@ public class GroupManageFrame extends JFrame {
 		scrollPane_1.setViewportView(listElements);
 		
 		pnlButtonLeft = new JPanel();
+		pnlButtonLeft.setBorder(new TitledBorder(null, LocaleBundle.getString("GroupManagerFrame.hdrData"), TitledBorder.LEADING, TitledBorder.TOP, null, null)); //$NON-NLS-1$
 		contentPane.add(pnlButtonLeft, "2, 5, 3, 1, fill, fill"); //$NON-NLS-1$
-		
-		btnRename = new JButton(LocaleBundle.getString("GroupManagerFrame.btnRename")); //$NON-NLS-1$
-		btnRename.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onRename();
-			}
-		});
 		pnlButtonLeft.setLayout(new FormLayout(new ColumnSpec[] {
-				ColumnSpec.decode("max(80dlu;default):grow"), //$NON-NLS-1$
+				ColumnSpec.decode("default:grow(2)"), //$NON-NLS-1$
 				FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
-				ColumnSpec.decode("max(80dlu;default):grow"),}, //$NON-NLS-1$
+				ColumnSpec.decode("default:grow"), //$NON-NLS-1$
+				FormSpecs.RELATED_GAP_COLSPEC,
+				ColumnSpec.decode("default:grow"),}, //$NON-NLS-1$
 			new RowSpec[] {
-				RowSpec.decode("26px"), //$NON-NLS-1$
-				FormSpecs.LINE_GAP_ROWSPEC,
-				RowSpec.decode("26px"), //$NON-NLS-1$
+				FormSpecs.DEFAULT_ROWSPEC,
+				FormSpecs.RELATED_GAP_ROWSPEC,
+				FormSpecs.DEFAULT_ROWSPEC,
+				FormSpecs.RELATED_GAP_ROWSPEC,
+				RowSpec.decode("default:grow"), //$NON-NLS-1$
+				FormSpecs.RELATED_GAP_ROWSPEC,
+				FormSpecs.DEFAULT_ROWSPEC,
+				FormSpecs.RELATED_GAP_ROWSPEC,
+				FormSpecs.DEFAULT_ROWSPEC,
 				FormSpecs.RELATED_GAP_ROWSPEC,
 				FormSpecs.DEFAULT_ROWSPEC,}));
-		pnlButtonLeft.add(btnRename, "1, 1, fill, top"); //$NON-NLS-1$
 		
-		btnToggleSerialization = new JButton(LocaleBundle.getString("GroupManagerFrame.btnToggleSerialization")); //$NON-NLS-1$
-		btnToggleSerialization.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onToggleSerialization();
-			}
-		});
-		pnlButtonLeft.add(btnToggleSerialization, "3, 1, fill, top"); //$NON-NLS-1$
+		lblName = new JLabel(LocaleBundle.getString("GroupManagerFrame.colName")); //$NON-NLS-1$
+		pnlButtonLeft.add(lblName, "1, 1, right, default"); //$NON-NLS-1$
 		
 		btnDelete = new JButton(LocaleBundle.getString("GroupManagerFrame.btnDelete")); //$NON-NLS-1$
 		btnDelete.addActionListener(new ActionListener() {
@@ -235,30 +244,65 @@ public class GroupManageFrame extends JFrame {
 				onDelete();
 			}
 		});
-		pnlButtonLeft.add(btnDelete, "1, 3, fill, default"); //$NON-NLS-1$
 		
-		btnSetColor = new JButton(LocaleBundle.getString("GroupManagerFrame.btnSetColor")); //$NON-NLS-1$
-		btnSetColor.addActionListener(new ActionListener() {
+		edDataName = new JTextField();
+		pnlButtonLeft.add(edDataName, "3, 1, fill, default"); //$NON-NLS-1$
+		edDataName.setColumns(10);
+		
+		lblSerialization = new JLabel(LocaleBundle.getString("GroupManagerFrame.colSerialization")); //$NON-NLS-1$
+		pnlButtonLeft.add(lblSerialization, "1, 3, right, default"); //$NON-NLS-1$
+		
+		cbDataSerialization = new JCheckBox(""); //$NON-NLS-1$
+		pnlButtonLeft.add(cbDataSerialization, "3, 3"); //$NON-NLS-1$
+		
+		lblColor = new JLabel(LocaleBundle.getString("GroupManagerFrame.colColor")); //$NON-NLS-1$
+		pnlButtonLeft.add(lblColor, "1, 5, right, default"); //$NON-NLS-1$
+		
+		pnlDataColor = new JPanel();
+		pnlDataColor.addMouseListener(new MouseAdapter() {
 			@Override
-			public void actionPerformed(ActionEvent e) {
-				onSetColor();
+			public void mouseClicked(MouseEvent e) {
+				if (pnlDataColor.isEnabled()) onSetColor();
 			}
 		});
-		pnlButtonLeft.add(btnSetColor, "3, 3, fill, top"); //$NON-NLS-1$
+		pnlDataColor.setBackground(Color.YELLOW);
+		pnlButtonLeft.add(pnlDataColor, "3, 5, fill, fill"); //$NON-NLS-1$
 		
-		btnResetColors = new JButton("Reset Colors"); //$NON-NLS-1$
+		btnResetColors = new JButton(LocaleBundle.getString("GroupManagerFrame.btnResetColors")); //$NON-NLS-1$
 		btnResetColors.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				onResetColors();
 			}
 		});
-		pnlButtonLeft.add(btnResetColors, "1, 5"); //$NON-NLS-1$
+		pnlButtonLeft.add(btnResetColors, "5, 5"); //$NON-NLS-1$
+		
+		lblParent = new JLabel(LocaleBundle.getString("GroupManagerFrame.colParent")); //$NON-NLS-1$
+		pnlButtonLeft.add(lblParent, "1, 7, right, default"); //$NON-NLS-1$
+		
+		cbxDataParent = new JComboBox<>();
+		pnlButtonLeft.add(cbxDataParent, "3, 7, fill, default"); //$NON-NLS-1$
+		
+		lblNewLabel = new JLabel(LocaleBundle.getString("GroupManagerFrame.lblVisible")); //$NON-NLS-1$
+		pnlButtonLeft.add(lblNewLabel, "1, 9, right, default"); //$NON-NLS-1$
+		
+		cbDataVisible = new JCheckBox(""); //$NON-NLS-1$
+		pnlButtonLeft.add(cbDataVisible, "3, 9"); //$NON-NLS-1$
+		pnlButtonLeft.add(btnDelete, "1, 11, fill, default"); //$NON-NLS-1$
+		
+		btnUpdateData = new JButton(LocaleBundle.getString("GroupManagerFrame.btnUpdate2")); //$NON-NLS-1$
+		btnUpdateData.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				onUpdateData();
+			}
+		});
+		pnlButtonLeft.add(btnUpdateData, "5, 11"); //$NON-NLS-1$
 		
 		pnlButtonRight = new JPanel();
 		FlowLayout fl_pnlButtonRight = (FlowLayout) pnlButtonRight.getLayout();
 		fl_pnlButtonRight.setAlignment(FlowLayout.RIGHT);
-		contentPane.add(pnlButtonRight, "6, 5, right, bottom"); //$NON-NLS-1$
+		contentPane.add(pnlButtonRight, "6, 5, right, top"); //$NON-NLS-1$
 		
 		btnUpdate = new JButton(LocaleBundle.getString("GroupManagerFrame.btnUpdate")); //$NON-NLS-1$
 		btnUpdate.addActionListener(new ActionListener() {
@@ -271,17 +315,19 @@ public class GroupManageFrame extends JFrame {
 	}
 
 	private void onResetColors() {
-		if (!DialogHelper.showLocaleYesNo(this, "Dialogs.ChangeGroup")) return; //$NON-NLS-1$
+		CCGroup group = getSelectedGroup();
+		if (group == null) return;
 
 		List<CCGroup> list = movielist.getSortedGroupList();
 		
 		for (int i = 0; i < list.size(); i++) {
 			CCGroup g = list.get(i);
 			
-			movielist.updateGroup(g, CCGroup.create(g.Name, g.Order, CCGroup.TAG_COLORS[i % CCGroup.TAG_COLORS.length], g.DoSerialize));
+			if (g == group) {
+				pnlDataColor.setBackground(CCGroup.TAG_COLORS[i % CCGroup.TAG_COLORS.length]);
+				return;
+			}
 		}
-				
-		reinitData();
 	}
 	
 	private void onMoveUp() {
@@ -299,7 +345,7 @@ public class GroupManageFrame extends JFrame {
 		for (int i = 0; i < list.size(); i++) {
 			CCGroup g = list.get(i);
 			
-			movielist.updateGroup(g, CCGroup.create(g.Name, 100 + i*10, g.Color, g.DoSerialize));
+			movielist.updateGroup(g, CCGroup.create(g.Name, 100 + i*10, g.Color, g.DoSerialize, g.Parent, g.Visible));
 		}
 		
 		reinitData();
@@ -322,34 +368,12 @@ public class GroupManageFrame extends JFrame {
 		for (int i = 0; i < list.size(); i++) {
 			CCGroup g = list.get(i);
 			
-			movielist.updateGroup(g, CCGroup.create(g.Name, 100 + i*10, g.Color, g.DoSerialize));
+			movielist.updateGroup(g, CCGroup.create(g.Name, 100 + i*10, g.Color, g.DoSerialize, g.Parent, g.Visible));
 		}
 		
 		reinitData();
 		
 		tabGroups.getSelectionModel().setSelectionInterval(idx+1, idx+1);
-	}
-	
-	private void onSetColor() {
-		CCGroup group = getSelectedGroup();
-		if (group == null) return;
-
-		Color newColor = JColorChooser.showDialog(null, LocaleBundle.getString("GroupManagerFrame.ChooseColorDialog"), group.Color); //$NON-NLS-1$
-		if (newColor == null) return;
-
-		movielist.updateGroup(group, CCGroup.create(group.Name, group.Order, newColor, group.DoSerialize));
-
-		reinitData();
-	}
-	
-	private void onToggleSerialization() {
-		CCGroup group = getSelectedGroup();
-		if (group == null) return;
-		if (!DialogHelper.showLocaleYesNo(this, "Dialogs.ChangeGroup")) return; //$NON-NLS-1$
-
-		movielist.updateGroup(group, CCGroup.create(group.Name, group.Order, group.Color, !group.DoSerialize));
-		
-		reinitData();
 	}
 
 	private void onUpdate() {
@@ -366,6 +390,33 @@ public class GroupManageFrame extends JFrame {
 		}
 	}
 
+	private void onUpdateData() {
+		CCGroup group = getSelectedGroup();
+		if (group == null) return;
+		if (!DialogHelper.showLocaleYesNo(this, "Dialogs.EditGroup")) return; //$NON-NLS-1$
+
+		if (!CCGroup.isValidGroupName(edDataName.getText())) {
+			DialogHelper.showLocalError(this, "Dialogs.WrongGroupName"); //$NON-NLS-1$
+			return;
+		}
+		
+		CCGroup search = movielist.getGroupOrNull(edDataName.getText());
+		if (search != null && search != group) {
+			DialogHelper.showLocalError(this, "Dialogs.WrongGroupName"); //$NON-NLS-1$
+			return;
+		}
+		
+		movielist.updateGroup(group, CCGroup.create(
+				edDataName.getText(), 
+				group.Order, 
+				pnlDataColor.getBackground(), 
+				cbDataSerialization.isSelected(), 
+				cbxDataParent.getSelectedItem().toString(),
+				cbDataVisible.isSelected()));
+
+		reinitData();
+	}
+
 	private void onDelete() {
 		CCGroup group = getSelectedGroup();
 		if (group == null) return;
@@ -376,22 +427,6 @@ public class GroupManageFrame extends JFrame {
 		}
 
 		initData();
-	}
-
-	private void onRename() {
-		CCGroup group = getSelectedGroup();
-		if (group == null) return;
-
-		String newName = DialogHelper.showLocalInputDialog(this, "Dialogs.NewGroupName_caption", group.Name); //$NON-NLS-1$
-		if (newName == null || !CCGroup.isValidGroupName(newName)) return;
-
-		if (!DialogHelper.showLocaleYesNo(this, "Dialogs.RenameGroup")) return; //$NON-NLS-1$
-		
-		for (CCDatabaseElement el : new ArrayList<>(movielist.getDatabaseElementsbyGroup(group))) {
-			el.setGroups(el.getGroups().getRemove(group).getAdd(movielist, newName));
-		}
-		
-		reinitData();
 	}
 
 	private void onFilter() {
@@ -416,13 +451,59 @@ public class GroupManageFrame extends JFrame {
 	protected void updateElementList() {
 		CCGroup g = getSelectedGroup();
 		if (g != null) {
+			
 			for (CCDatabaseElement elem : movielist.getInternalListCopy()) {
 				listElements.setCheckedFast(elem, elem.getGroups().contains(g));
 			}
 			listElements.repaint();
+			
+			edDataName.setText(g.Name);
+			pnlDataColor.setBackground(g.Color);
+			cbDataSerialization.setSelected(g.DoSerialize);
+			List<String> cbxdata = CCStreams.iterate(movielist.getSortedGroupList()).map(p -> p.Name).prepend(g.Parent).autosort().prepend("").unique().enumerate(); //$NON-NLS-1$
+			cbxDataParent.setModel(new DefaultComboBoxModel<>(cbxdata.toArray(new String[0])));
+			cbxDataParent.setSelectedIndex(CCStreams.iterate(cbxdata).findIndex(p -> p.equals(g.Parent)));
+			cbDataVisible.setSelected(g.Visible);
+			
+			edDataName.setEnabled(true);
+			pnlDataColor.setEnabled(true);
+			cbDataSerialization.setEnabled(true);
+			cbxDataParent.setEnabled(true);
+			pnlButtonLeft.setEnabled(true);
+			cbDataVisible.setEnabled(true);
+			
+			pnlButtonLeft.repaint();
+			
+		} else {
+
+			edDataName.setText(""); //$NON-NLS-1$
+			pnlDataColor.setBackground(Color.WHITE);
+			cbDataSerialization.setSelected(false);
+			cbxDataParent.setModel(new DefaultComboBoxModel<>(new String[] {""})); //$NON-NLS-1$
+			cbxDataParent.setSelectedItem(""); //$NON-NLS-1$
+			cbDataVisible.setSelected(false);
+
+			edDataName.setEnabled(false);
+			pnlDataColor.setEnabled(false);
+			cbDataSerialization.setEnabled(false);
+			cbxDataParent.setEnabled(false);
+			cbDataVisible.setEnabled(false);
+			
+			pnlButtonLeft.setEnabled(false);
+			
 		}
 		
 		edFilter.setText(""); //$NON-NLS-1$
+	}
+	
+	private void onSetColor() {
+		CCGroup group = getSelectedGroup();
+		if (group == null) return;
+
+		Color newColor = JColorChooser.showDialog(null, LocaleBundle.getString("GroupManagerFrame.ChooseColorDialog"), group.Color); //$NON-NLS-1$
+		if (newColor == null) return;
+
+		pnlDataColor.setBackground(newColor);
 	}
 
 	private CCGroup getSelectedGroup() {
@@ -436,6 +517,8 @@ public class GroupManageFrame extends JFrame {
 		movielist.recalculateGroupCache(true);
 		
 		reinitData();
+		
+		updateElementList();
 	}
 
 	private void reinitData() {
@@ -456,7 +539,9 @@ public class GroupManageFrame extends JFrame {
 				
 				if (columnIndex == 2) return group.DoSerialize 
 						? LocaleBundle.getString("ImportElementsFrame.common.bool_true")   //$NON-NLS-1$	
-						: LocaleBundle.getString("ImportElementsFrame.common.bool_false"); //$NON-NLS-1$		
+						: LocaleBundle.getString("ImportElementsFrame.common.bool_false"); //$NON-NLS-1$	
+						
+				if (columnIndex == 3) return group.Parent;	
 				
 				return null;
 			}
@@ -468,7 +553,7 @@ public class GroupManageFrame extends JFrame {
 			
 			@Override
 			public int getColumnCount() {
-				return 3;
+				return 4;
 			}
 		};
 		
@@ -501,6 +586,7 @@ public class GroupManageFrame extends JFrame {
 		tabGroups.getColumnModel().getColumn(0).setHeaderValue(LocaleBundle.getString("GroupManagerFrame.colColor")); //$NON-NLS-1$
 		tabGroups.getColumnModel().getColumn(1).setHeaderValue(LocaleBundle.getString("GroupManagerFrame.colName")); //$NON-NLS-1$
 		tabGroups.getColumnModel().getColumn(2).setHeaderValue(LocaleBundle.getString("GroupManagerFrame.colSerialization")); //$NON-NLS-1$
+		tabGroups.getColumnModel().getColumn(3).setHeaderValue(LocaleBundle.getString("GroupManagerFrame.colParent")); //$NON-NLS-1$
 		
 		//-----------------------------------------------------------------------------
 		

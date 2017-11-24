@@ -68,27 +68,33 @@ public class DatabaseUpgradeAssistant {
 			BackupManager.getInstance().createMigrationBackup(version);
 			
 			if (version.equals("1.5")) {
-				upgrade_15_16();
+				upgrade_06_07();
 				setDBVersion("1.6");
 				version = "1.6";
 			}
 			
 			if (version.equals("1.6")) {
-				upgrade_16_17();
+				upgrade_07_08();
 				setDBVersion("1.7");
 				version = "1.7";
 			}
 			
 			if (version.equals("1.7")) {
-				upgrade_17_18();
+				upgrade_08_09();
 				setDBVersion("1.8");
 				version = "1.8";
 			}
 			
 			if (version.equals("1.8")) {
-				upgrade_18_19();
+				upgrade_09_10();
 				setDBVersion("1.9");
 				version = "1.9";
+			}
+			
+			if (version.equals("1.9")) {
+				upgrade_10_11();
+				setDBVersion("11");
+				version = "11";
 			}
 						
 			if (! getDBVersion().equals(Main.DBVERSION)) {
@@ -105,7 +111,7 @@ public class DatabaseUpgradeAssistant {
 	}
 
 	@SuppressWarnings("nls")
-	private void upgrade_15_16() throws SQLException {
+	private void upgrade_06_07() throws SQLException {
 		CCLog.addInformation("[UPGRADE 1.5 -> 1.6] Rename column 'STATUS' to 'TAGS'");
 
 		db.executeSQLThrow("ALTER TABLE MOVIES ADD COLUMN TAGS SMALLINT");
@@ -118,7 +124,7 @@ public class DatabaseUpgradeAssistant {
 	}
 
 	@SuppressWarnings("nls")
-	private void upgrade_16_17() throws SQLException {
+	private void upgrade_07_08() throws SQLException {
 		CCLog.addInformation("[UPGRADE 1.6 -> 1.7] Add Info Table");
 
 		String date = CCDate.getCurrentDate().toStringSQL();
@@ -133,7 +139,7 @@ public class DatabaseUpgradeAssistant {
 	}
 
 	@SuppressWarnings("nls")
-	private void upgrade_17_18() throws SQLException {
+	private void upgrade_08_09() throws SQLException {
 		CCLog.addInformation("[UPGRADE 1.7 -> 1.8] Added Groups to movies and series");
 		CCLog.addInformation("[UPGRADE 1.7 -> 1.8] Added viewed-history to movies and series (and removed LastViewed)");
 		CCLog.addInformation("[UPGRADE 1.7 -> 1.8] Added OnlineReference to Movies and series");
@@ -153,7 +159,7 @@ public class DatabaseUpgradeAssistant {
 	}
 	
 	@SuppressWarnings("nls")
-	private void upgrade_18_19() throws SQLException {
+	private void upgrade_09_10() throws SQLException {
 		CCLog.addInformation("[UPGRADE 1.8 -> 1.9] Create Table Groups");
 		
 		db.executeSQLThrow("CREATE TABLE GROUPS(NAME VARCHAR(256) PRIMARY KEY,ORDERING INTEGER NOT NULL,COLOR INTEGER NOT NULL,SERIALIZE BIT NOT NULL)");
@@ -164,6 +170,17 @@ public class DatabaseUpgradeAssistant {
 				ml.recalculateGroupCache(false);
 			}
 		});
+	}
+
+	@SuppressWarnings("nls")
+	private void upgrade_10_11() throws SQLException {
+		CCLog.addInformation("[UPGRADE 1.9 -> v11] Added ParentGroup identifier to groups");
+
+		db.executeSQLThrow("ALTER TABLE GROUPS ADD COLUMN PARENTGROUP VARCHAR(256)");
+		db.executeSQLThrow("UPDATE GROUPS SET PARENTGROUP = \"\"");
+
+		db.executeSQLThrow("ALTER TABLE GROUPS ADD COLUMN VISIBLE BIT");
+		db.executeSQLThrow("UPDATE GROUPS SET VISIBLE = 1");
 	}
 
 	public void onAfterConnect(CCMovieList ml, CCDatabase db) {

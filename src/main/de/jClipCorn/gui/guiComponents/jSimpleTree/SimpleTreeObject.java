@@ -32,6 +32,9 @@ public class SimpleTreeObject {
 		return text;
 	}
 	
+	@Override
+	public String toString() {return "[STO] " + text;} //$NON-NLS-1$
+	
 	public void execute(TreePath p, boolean ctrlDown) {
 		
 		SimpleTreeEvent e = new SimpleTreeEvent();

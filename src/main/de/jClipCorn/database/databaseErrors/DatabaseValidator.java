@@ -777,6 +777,45 @@ public class DatabaseValidator {
 				break;
 			}
 		}
+		
+		for (CCGroup group : movielist.getGroupList()) {
+			
+			if (group.Parent.isEmpty()) continue;
+			
+			CCGroup parent = movielist.getGroupOrNull(group.Parent);
+			if (parent == null) {
+				e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_INVALID_GROUP_PARENT, group));
+				break;
+			}
+			
+		}
+
+		for (CCGroup group : movielist.getGroupList()) {
+			
+			CCGroup g = group;
+			
+			for(int i = 0; i < 6; i++) {
+				if (g.Parent.isEmpty()) {
+					g = null;
+					break;
+				}
+				
+				CCGroup parent = movielist.getGroupOrNull(g.Parent);
+				if (parent == null) {
+					// parent is invalid - error was throw above
+					g = null;
+					break;
+				} else {
+					g = parent;
+				}
+			}
+			
+			if (g != null) {
+				e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_GROUP_NESTING_TOO_DEEP, group));
+			}
+			
+		}
+		
 	}
 	
 	private static void findDuplicateOnlineRef(List<DatabaseError> e, CCMovieList movielist, ProgressCallbackListener pcl) {

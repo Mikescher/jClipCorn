@@ -1,11 +1,15 @@
 package de.jClipCorn.gui.frames.mainFrame.filterTree;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Supplier;
 
 import javax.swing.Icon;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreePath;
 
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCDBElementTyp;
@@ -48,6 +52,7 @@ import de.jClipCorn.table.filter.customFilter.CustomYearFilter;
 import de.jClipCorn.table.filter.customFilter.CustomZyklusFilter;
 import de.jClipCorn.table.filter.customFilter.operators.CustomAndOperator;
 import de.jClipCorn.util.listener.FinishListener;
+import de.jClipCorn.util.stream.CCStreams;
 
 public class FilterTree extends AbstractFilterTree {
 	private static final long serialVersionUID = 592519777667038909L;
@@ -117,8 +122,28 @@ public class FilterTree extends AbstractFilterTree {
 		initCustom(node_custom);
 	}
 	
+	@SuppressWarnings("unchecked")
 	private void expand(SimpleTreeEvent evt) {
 		tree.expandPath(evt.path);
+		
+		if (evt.path.getLastPathComponent() instanceof DefaultMutableTreeNode) {
+			DefaultMutableTreeNode node = (DefaultMutableTreeNode)evt.path.getLastPathComponent();
+			
+			for (Object o : CCStreams.iterate(node.depthFirstEnumeration())) {
+				
+				if (o == node) continue;
+				
+				if (o instanceof DefaultMutableTreeNode) {
+					
+					DefaultMutableTreeNode comp = ((DefaultMutableTreeNode)o);
+					
+					TreePath p = new TreePath(comp.getPath());
+					
+					tree.collapsePath(p);
+					
+				}
+			}
+		}
 	}
 	
 	private void initAll(DefaultMutableTreeNode parent) {
@@ -200,6 +225,23 @@ public class FilterTree extends AbstractFilterTree {
 	}
 	
 	private void initGroups(DefaultMutableTreeNode parent) {
+		List<CCGroup> groups_list = movielist.getGroupList();
+		Map<String, DefaultMutableTreeNode> groups_done = new HashMap<>();
+		groups_done.put("", parent); //$NON-NLS-1$
+		
+		for(int i = 0; i < 12; i++) {
+			
+			for (final CCGroup group : new ArrayList<>(groups_list)) {
+				DefaultMutableTreeNode pp = groups_done.get(group.Parent);
+				if (pp == null) continue;
+				
+				groups_list.remove(group);
+				DefaultMutableTreeNode n = addNodeF(pp, (Icon)null, group.Name, () -> CustomGroupFilter.create(group));
+				groups_done.put(group.Name, n);
+			}
+			
+		}
+		
 		for (final CCGroup group : movielist.getGroupList()) {
 			addNodeF(parent, (Icon)null, group.Name, () -> CustomGroupFilter.create(group));
 		}

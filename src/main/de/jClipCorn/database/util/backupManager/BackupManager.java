@@ -151,7 +151,7 @@ public class BackupManager {
 	public void createMigrationBackup(String oldVersion) throws IOException {
 		String name = "Automatic backup (database migration from " + oldVersion + ")"; //$NON-NLS-1$ //$NON-NLS-2$
 		
-		createBackupInternal(name, CCDate.getCurrentDate(), false, Main.VERSION, Main.DBVERSION, new ProgressCallbackSink());
+		createBackupInternal(name, CCDate.getCurrentDate(), false, Main.VERSION, Main.DBVERSION, new ProgressCallbackSink(), true);
 	}
 
 	public void createBackup(Component c, String name, CCDate date, boolean persistent, String jccversion, String dbversion) {
@@ -165,7 +165,7 @@ public class BackupManager {
 		ProgressMonitor monitor = DialogHelper.getLocalPersistentProgressMonitor(c, "MainFrame.backupRunning"); //$NON-NLS-1$
 
 		try {
-			createBackupInternal(name, date, persistent, jccversion, dbversion, new ProgressCallbackProgressMonitorHelper(monitor));
+			createBackupInternal(name, date, persistent, jccversion, dbversion, new ProgressCallbackProgressMonitorHelper(monitor), false);
 		} catch (IOException e) {
 			CCLog.addError(e);
 			monitor.setProgress(monitor.getMaximum());
@@ -180,7 +180,7 @@ public class BackupManager {
 		CCProperties.getInstance().PROP_BACKUP_LASTBACKUP.setValue(CCDate.getCurrentDate());
 	}
 
-	private void createBackupInternal(String name, CCDate date, boolean persistent, String jccversion, String dbversion, ProgressCallbackListener mon) throws IOException {
+	private void createBackupInternal(String name, CCDate date, boolean persistent, String jccversion, String dbversion, ProgressCallbackListener mon, boolean forceExcludeCovers) throws IOException {
 		File file = getNewBackupName();
 
 		FileOutputStream os = new FileOutputStream(file);
@@ -190,7 +190,7 @@ public class BackupManager {
 		final List<String> excludedFolders = new ArrayList<>();
 		final List<String> excludedFiles   = new ArrayList<>();
 
-		boolean excludeCovers = CCProperties.getInstance().PROP_BACKUP_EXCLUDECOVERS.getValue() && !persistent;
+		boolean excludeCovers = forceExcludeCovers || (CCProperties.getInstance().PROP_BACKUP_EXCLUDECOVERS.getValue() && !persistent);
 
 		if (excludeCovers) {
 			movielist.getCoverCache().getBackupExclusions(excludedFolders, excludedFiles);

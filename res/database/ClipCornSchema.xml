@@ -80,6 +80,9 @@
         <column name="ORDERING"     type="INTEGER"  required="true"                             />
         <column name="COLOR"        type="INTEGER"  required="true"                             />
         <column name="SERIALIZE"    type="BIT"      required="true"                             />    <!-- WRITE GROUP TO FILENAME/FOLDERNAME -->
+        <column name="VISIBLE"      type="BIT"      required="true"                             />
+        
+        <column name="PARENTGROUP"  type="VARCHAR"  required="true" size="256" />
     </table>
 
 </database>

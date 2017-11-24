@@ -29,30 +29,34 @@ public class CCGroup implements Comparable<CCGroup> {
 	public final int Order;
 	public final Color Color;
 	public final boolean DoSerialize;
+	public final String Parent;
+	public final boolean Visible;
 	
-	private CCGroup(String n, int o, Color c, boolean s) {
+	private CCGroup(String n, int o, Color c, boolean s, String p, boolean v) {
 		Name = n;
 		Order = o;
 		Color = new Color(c.getRed(), c.getGreen(), c.getBlue(), COLOR_TAG_ALPHA);
 		DoSerialize = s;
+		Parent = p;
+		Visible = v;
 	}
 	
 	public static CCGroup create(String name) {
-		CCGroup g = new CCGroup(name, staticGroupCounter, TAG_COLORS[staticGroupCounter % TAG_COLORS.length], true);
+		CCGroup g = new CCGroup(name, staticGroupCounter, TAG_COLORS[staticGroupCounter % TAG_COLORS.length], true, "", true); //$NON-NLS-1$
 		staticGroupCounter++;
 		
 		return g;
 	}
 	
-	public static CCGroup create(String name, int order, int color, boolean ser) {
-		CCGroup g = new CCGroup(name, order, new Color(color), ser);
+	public static CCGroup create(String name, int order, int color, boolean ser, String parent, boolean visible) {
+		CCGroup g = new CCGroup(name, order, new Color(color), ser, parent, visible);
 		staticGroupCounter++;
 		
 		return g;
 	}
 	
-	public static CCGroup create(String name, int order, Color color, boolean ser) {
-		CCGroup g = new CCGroup(name, order, color, ser);
+	public static CCGroup create(String name, int order, Color color, boolean ser, String parent, boolean visible) {
+		CCGroup g = new CCGroup(name, order, color, ser, parent, visible);
 		staticGroupCounter++;
 		
 		return g;

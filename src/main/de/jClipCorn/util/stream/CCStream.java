@@ -10,6 +10,8 @@ import java.util.Map.Entry;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
 
+import org.apache.commons.lang3.ObjectUtils;
+
 /**
  * 
  * Friday night, 23:10, Germany
@@ -26,6 +28,11 @@ public abstract class CCStream<TType> implements Iterator<TType>, Iterable<TType
 	
 	public CCStream<TType> sort(Comparator<TType> _comparator) {
 		return new SortedStream<>(this, _comparator);
+	}
+
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public CCStream<TType> autosort() {
+		return new SortedStream<>(this, (a,b) -> ObjectUtils.compare((Comparable)a, (Comparable)b));
 	}
 
 	@SuppressWarnings("unchecked")
@@ -281,5 +288,14 @@ public abstract class CCStream<TType> implements Iterator<TType>, Iterable<TType
 		TType value = null;
 		for (int i = 0; i <= idx; i++) value = next();
 		return value;
+	}
+
+	public int findIndex(Function<TType, Boolean> filter) {
+		int i = 0;
+		for (TType t : this) {
+			if (filter.apply(t)) return i;
+			i++;
+		}
+		return -1;
 	}
 }

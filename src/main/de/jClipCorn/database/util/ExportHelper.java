@@ -304,7 +304,9 @@ public class ExportHelper {
 						String name = e.getAttributeValue("name"); //$NON-NLS-1$
 						int order = Integer.parseInt(e.getAttributeValue("ordering")); //$NON-NLS-1$
 						String colorStr = e.getAttributeValue("color"); //$NON-NLS-1$
-						boolean doser = !e.getAttributeValue("serialize").equalsIgnoreCase("false"); //$NON-NLS-1$ //$NON-NLS-2$
+						boolean doser = !(e.getAttributeValue("serialize").equalsIgnoreCase("false")); //$NON-NLS-1$ //$NON-NLS-2$
+						String parent = e.getAttributeValue("parent", ""); //$NON-NLS-1$ //$NON-NLS-2$
+						boolean visible = !(e.getAttributeValue("visible", "true").equalsIgnoreCase("false")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 						
 						Color color = new Color(
 					            Integer.valueOf( colorStr.substring( 1, 3 ), 16 ),
@@ -313,7 +315,7 @@ public class ExportHelper {
 						
 						CCGroup group = movielist.getGroupOrNull(name);
 						if (group != null) {
-							movielist.updateGroup(group, CCGroup.create(group.Name, order, color, doser));
+							movielist.updateGroup(group, CCGroup.create(group.Name, order, color, doser, parent, visible));
 						}
 					}
 				}

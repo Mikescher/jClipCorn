@@ -106,6 +106,8 @@ public class CCDatabase {
 	public final static String TAB_GROUPS_COLUMN_ORDER             = "ORDERING";        //$NON-NLS-1$
 	public final static String TAB_GROUPS_COLUMN_COLOR             = "COLOR";           //$NON-NLS-1$
 	public final static String TAB_GROUPS_COLUMN_SERIALIZE         = "SERIALIZE";       //$NON-NLS-1$
+	public final static String TAB_GROUPS_COLUMN_PARENT            = "PARENTGROUP";     //$NON-NLS-1$
+	public final static String TAB_GROUPS_COLUMN_VISIBLE           = "VISIBLE";         //$NON-NLS-1$
 	
 	private final String databasePath;
 	private final GenericDatabase db;
@@ -800,7 +802,16 @@ public class CCDatabase {
 				ResultSet rs = s.executeQuery();
 				
 				while (rs.next()) {
-					ml.directlyAddGroup(CCGroup.create(rs.getString(TAB_GROUPS_COLUMN_NAME), rs.getInt(TAB_GROUPS_COLUMN_ORDER), rs.getInt(TAB_GROUPS_COLUMN_COLOR), rs.getBoolean(TAB_GROUPS_COLUMN_SERIALIZE)));
+					
+					String gn = rs.getString(TAB_GROUPS_COLUMN_NAME);
+					int go = rs.getInt(TAB_GROUPS_COLUMN_ORDER);
+					int gc = rs.getInt(TAB_GROUPS_COLUMN_COLOR);
+					boolean gs = rs.getBoolean(TAB_GROUPS_COLUMN_SERIALIZE);
+					String gp = rs.getString(TAB_GROUPS_COLUMN_PARENT);
+					boolean gv = rs.getBoolean(TAB_GROUPS_COLUMN_VISIBLE);
+					if (gp == null) gp = ""; //$NON-NLS-1$
+					
+					ml.directlyAddGroup(CCGroup.create(gn, go, gc, gs, gp, gv));
 				}
 				
 				rs.close();
@@ -1048,7 +1059,7 @@ public class CCDatabase {
 		}
 	}
 
-	public void addGroup(String name, int order, Color color, boolean doSerialize) {
+	public void addGroup(String name, int order, Color color, boolean doSerialize, String parent, boolean visible) {
 		try {
 			PreparedStatement s = Statements.insertGroupStatement;
 			s.clearParameters();
@@ -1057,6 +1068,8 @@ public class CCDatabase {
 			s.setInt(2, order);
 			s.setInt(3, color.getRGB());
 			s.setBoolean(4, doSerialize);
+			s.setString(5, parent);
+			s.setBoolean(6, visible);
 			
 			s.executeUpdate();
 		} catch (SQLException e) {
@@ -1064,7 +1077,7 @@ public class CCDatabase {
 		}
 	}
 
-	public void updateGroup(String name, int order, Color color, boolean doSerialize) {
+	public void updateGroup(String name, int order, Color color, boolean doSerialize, String parent, boolean visible) {
 		try {
 			PreparedStatement s = Statements.updateGroupStatement;
 			s.clearParameters();
@@ -1072,8 +1085,10 @@ public class CCDatabase {
 			s.setInt(1, order);
 			s.setInt(2, color.getRGB());
 			s.setBoolean(3, doSerialize);
+			s.setString(4, parent);
+			s.setBoolean(5, visible);
 			
-			s.setString(4, name);
+			s.setString(6, name);
 			
 			s.executeUpdate();
 		} catch (SQLException e) {

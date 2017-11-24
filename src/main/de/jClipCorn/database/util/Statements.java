@@ -394,6 +394,8 @@ public class Statements {
 		ih.addPreparedField(CCDatabase.TAB_GROUPS_COLUMN_ORDER);
 		ih.addPreparedField(CCDatabase.TAB_GROUPS_COLUMN_COLOR);
 		ih.addPreparedField(CCDatabase.TAB_GROUPS_COLUMN_SERIALIZE);
+		ih.addPreparedField(CCDatabase.TAB_GROUPS_COLUMN_PARENT);
+		ih.addPreparedField(CCDatabase.TAB_GROUPS_COLUMN_VISIBLE);
 		
 		insertGroupStatement = ih.prepare(d);
 	}
@@ -404,6 +406,8 @@ public class Statements {
 		uh.addPreparedField(CCDatabase.TAB_GROUPS_COLUMN_ORDER);
 		uh.addPreparedField(CCDatabase.TAB_GROUPS_COLUMN_COLOR);
 		uh.addPreparedField(CCDatabase.TAB_GROUPS_COLUMN_SERIALIZE);
+		uh.addPreparedField(CCDatabase.TAB_GROUPS_COLUMN_PARENT);
+		uh.addPreparedField(CCDatabase.TAB_GROUPS_COLUMN_VISIBLE);
 		
 		updateGroupStatement = uh.prepare(d);
 	}

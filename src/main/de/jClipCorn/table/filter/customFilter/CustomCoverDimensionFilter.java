@@ -1,13 +1,13 @@
 package de.jClipCorn.table.filter.customFilter;
 
 import java.awt.image.BufferedImage;
-import java.util.regex.Pattern;
 
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.ICCCoveredElement;
 import de.jClipCorn.database.databaseElement.ICCDatabaseStructureElement;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.table.filter.AbstractCustomFilter;
+import de.jClipCorn.table.filter.FilterSerializationConfig;
 import de.jClipCorn.table.filter.filterConfig.CustomFilterConfig;
 import de.jClipCorn.table.filter.filterConfig.CustomFilterEnumChooserConfig;
 import de.jClipCorn.table.filter.filterConfig.CustomFilterIntAreaConfig;
@@ -61,73 +61,15 @@ public class CustomCoverDimensionFilter extends AbstractCustomFilter {
 		return AbstractCustomFilter.CUSTOMFILTERID_COVERDIMENSION;
 	}
 	
-	@SuppressWarnings("nls")
 	@Override
-	public String exportToString() {
-		StringBuilder b = new StringBuilder();
-		b.append("[");
-		b.append(getID() + "");
-		b.append("|");
-		b.append(range.low+"");
-		b.append(",");
-		b.append(range.high+"");
-		b.append(",");
-		b.append(range.type.asInt() + "");
-		b.append(",");
-		b.append(axis.asInt()+"");
-		b.append("]");
-		
-		return b.toString();
+	@SuppressWarnings("nls")
+	protected void initSerialization(FilterSerializationConfig cfg) {
+		cfg.addInt("low", (d) -> this.range.low = d,  () -> this.range.low);
+		cfg.addInt("high", (d) -> this.range.high = d, () -> this.range.high);
+		cfg.addCCEnum("type", DecimalSearchType.getWrapper(), (d) -> this.range.type = d, () -> this.range.type);
+		cfg.addCCEnum("axis", DimensionAxisType.getWrapper(), (d) -> this.axis = d, () -> this.axis);
 	}
 	
-	@Override
-	@SuppressWarnings("nls")
-	public boolean importFromString(String txt) {
-		String params = AbstractCustomFilter.getParameterFromExport(txt);
-		if (params == null) return false;
-		
-		String[] paramsplit = params.split(Pattern.quote(","));
-		if (paramsplit.length != 4) return false;
-		
-		int intval;
-		DecimalSearchType s;
-		DimensionAxisType a;
-		
-		try {
-			intval = Integer.parseInt(paramsplit[0]);
-		} catch (NumberFormatException e) {
-			return false;
-		}
-		range.low = intval;
-		
-		try {
-			intval = Integer.parseInt(paramsplit[1]);
-		} catch (NumberFormatException e) {
-			return false;
-		}
-		range.high = intval;
-		
-		try {
-			intval = Integer.parseInt(paramsplit[2]);
-		} catch (NumberFormatException e) {
-			return false;
-		}
-		s = DecimalSearchType.getWrapper().find(intval);
-		if (s == null) return false;
-		range.type = s;
-		
-		try {
-			intval = Integer.parseInt(paramsplit[3]);
-		} catch (NumberFormatException e) {
-			return false;
-		}
-		a = DimensionAxisType.getWrapper().find(intval);
-		if (a == null) return false;
-		axis = a;
-		
-		return true;
-	}
-
 	@Override
 	public AbstractCustomFilter createNew() {
 		return new CustomCoverDimensionFilter();

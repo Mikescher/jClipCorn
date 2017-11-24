@@ -1,17 +1,15 @@
 package de.jClipCorn.table.filter.customFilter;
 
-import java.util.regex.Pattern;
-
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.ICCDatabaseStructureElement;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.table.filter.AbstractCustomFilter;
+import de.jClipCorn.table.filter.FilterSerializationConfig;
 import de.jClipCorn.table.filter.filterConfig.CustomFilterConfig;
 import de.jClipCorn.table.filter.filterConfig.CustomFilterDateAreaConfig;
 import de.jClipCorn.util.DecimalSearchType;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.datetime.CCDateArea;
-import de.jClipCorn.util.exceptions.DateFormatException;
 
 public class CustomAddDateFilter extends AbstractCustomFilter {
 	private CCDateArea area = new CCDateArea();
@@ -46,76 +44,17 @@ public class CustomAddDateFilter extends AbstractCustomFilter {
 		}
 	}
 
-	public DecimalSearchType getSearchType() {
-		return area.type;
-	}
-
-	public void setSearchType(DecimalSearchType searchType) {
-		area.type = searchType;
-	}
-
-	public CCDate getHigh() {
-		return area.high;
-	}
-
-	public void setHigh(CCDate high) {
-		this.area.high = high;
-	}
-
-	public CCDate getLow() {
-		return area.low;
-	}
-
-	public void setLow(CCDate low) {
-		this.area.low = low;
-	}
-	
 	@Override
 	public int getID() {
 		return AbstractCustomFilter.CUSTOMFILTERID_ADDDATE;
 	}
 	
-	@SuppressWarnings("nls")
 	@Override
-	public String exportToString() {
-		StringBuilder b = new StringBuilder();
-		b.append("[");
-		b.append(getID() + "");
-		b.append("|");
-		b.append(area.low.toStringSQL()+"");
-		b.append(",");
-		b.append(area.high.toStringSQL()+"");
-		b.append(",");
-		b.append(area.type.asInt() + "");
-		b.append("]");
-		
-		return b.toString();
-	}
-	
 	@SuppressWarnings("nls")
-	@Override
-	public boolean importFromString(String txt) {
-		try {
-			String params = AbstractCustomFilter.getParameterFromExport(txt);
-			if (params == null) return false;
-			
-			String[] paramsplit = params.split(Pattern.quote(","));
-			if (paramsplit.length != 3) return false;
-			
-			setLow(CCDate.createFromSQL(paramsplit[0]));
-			
-			setHigh(CCDate.createFromSQL(paramsplit[1]));
-
-			try {
-				setSearchType(DecimalSearchType.getWrapper().find(Integer.parseInt(paramsplit[2])));
-			} catch (NumberFormatException e) {
-				return false;
-			}
-			
-			return true;
-		} catch (NumberFormatException | DateFormatException e) {
-			return false;
-		}
+	protected void initSerialization(FilterSerializationConfig cfg) {
+		cfg.addDate("low", (d) -> this.area.low = d,  () -> this.area.low);
+		cfg.addDate("high", (d) -> this.area.high = d, () -> this.area.high);
+		cfg.addCCEnum("type", DecimalSearchType.getWrapper(), (d) -> this.area.type = d, () -> this.area.type);
 	}
 
 	@Override
@@ -125,8 +64,7 @@ public class CustomAddDateFilter extends AbstractCustomFilter {
 
 	public static CustomAddDateFilter create(CCDate data) {
 		CustomAddDateFilter f = new CustomAddDateFilter();
-		f.setLow(data);
-		f.setSearchType(DecimalSearchType.EXACT);
+		f.area.setExact(data);
 		return f;
 	}
 

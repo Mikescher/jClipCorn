@@ -2,7 +2,6 @@ package de.jClipCorn.table.filter.customFilter;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Pattern;
 
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCEpisode;
@@ -14,14 +13,12 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.table.filter.AbstractCustomFilter;
 import de.jClipCorn.table.filter.AbstractCustomStructureElementFilter;
+import de.jClipCorn.table.filter.FilterSerializationConfig;
 import de.jClipCorn.table.filter.filterConfig.CustomFilterBoolConfig;
 import de.jClipCorn.table.filter.filterConfig.CustomFilterConfig;
 import de.jClipCorn.table.filter.filterConfig.CustomFilterDateSearchConfig;
-import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.datetime.CCDateSearchParameter;
-import de.jClipCorn.util.datetime.CCDateSearchParameter.DateSearchType;
 import de.jClipCorn.util.datetime.CCDateTime;
-import de.jClipCorn.util.exceptions.DateFormatException;
 
 public class CustomHistoryFilter extends AbstractCustomStructureElementFilter {
 	public CCDateSearchParameter Search = new CCDateSearchParameter();
@@ -90,72 +87,15 @@ public class CustomHistoryFilter extends AbstractCustomStructureElementFilter {
 		return AbstractCustomFilter.CUSTOMFILTERID_HISTORY;
 	}
 	
-	@SuppressWarnings("nls")
 	@Override
-	public String exportToString() {
-		StringBuilder b = new StringBuilder();
-		b.append("[");
-		b.append(getID() + "");
-		b.append("|");
-		switch (Search.Type) {
-		case CONTAINS: 
-			b.append("0");
-			break;
-		case CONTAINS_BETWEEN:
-			b.append("1");
-			break;
-		case CONTAINS_NOT:
-			b.append("2");
-			break;
-		case CONTAINS_NOT_BETWEEEN:
-			b.append("3");
-			break;
-		case CONTAINS_ONLY_BETWEEN:
-			b.append("3");
-			break;
-		}
-		b.append(",");
-		b.append(Search.First.toStringSQL());
-		b.append(",");
-		b.append(Search.Second.toStringSQL());
-		b.append(",");
-		b.append(Recursive ? "1" : "0");
-		b.append("]");
-		
-		return b.toString();
+	@SuppressWarnings("nls")
+	protected void initSerialization(FilterSerializationConfig cfg) {
+		cfg.addCCEnum("type", CCDateSearchParameter.DateSearchType.getWrapper(), (d) -> this.Search.Type = d,  () -> this.Search.Type);
+		cfg.addDate("first", (d) -> this.Search.First = d,  () -> this.Search.First);
+		cfg.addDate("second", (d) -> this.Search.Second = d,  () -> this.Search.Second);
+		cfg.addBool("recursive", (d) -> this.Recursive = d,  () -> this.Recursive);
 	}
 	
-	@SuppressWarnings("nls")
-	@Override
-	public boolean importFromString(String txt) {
-		try {
-			String params = AbstractCustomFilter.getParameterFromExport(txt);
-			if (params == null) return false;
-			
-			String[] paramsplit = params.split(Pattern.quote(","));
-			if (paramsplit.length != 4) return false;
-			
-			int intval = Integer.parseInt(paramsplit[0]);
-			
-			if (intval == 0)      Search.Type = DateSearchType.CONTAINS;
-			else if (intval == 1) Search.Type = DateSearchType.CONTAINS_BETWEEN;
-			else if (intval == 2) Search.Type = DateSearchType.CONTAINS_NOT;
-			else if (intval == 3) Search.Type = DateSearchType.CONTAINS_NOT_BETWEEEN;
-			else if (intval == 4) Search.Type = DateSearchType.CONTAINS_ONLY_BETWEEN;
-			else return false;
-			
-			Search.First = CCDate.createFromSQL(paramsplit[1]);
-
-			Search.Second = CCDate.createFromSQL(paramsplit[2]);
-			
-			Recursive = Integer.parseInt(paramsplit[3]) != 0;
-			
-			return true;
-		} catch (NumberFormatException | DateFormatException e) {
-			return false;
-		}
-	}
-
 	@Override
 	public AbstractCustomFilter createNew() {
 		return new CustomHistoryFilter();

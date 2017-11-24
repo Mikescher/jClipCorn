@@ -64,19 +64,18 @@ public class CCBackup {
 		properties.setProperty(PROP_PERSISTENT, persistent ? "1" : "0"); //$NON-NLS-1$ //$NON-NLS-2$
 		properties.setProperty(PROP_CCVERSION, jccversion);
 		properties.setProperty(PROP_DBVERSION, dbversion);
-		properties.setProperty(PROP_EXCLUDECOVERS, excludeCovers ? "1" : "0");
+		properties.setProperty(PROP_EXCLUDECOVERS, excludeCovers ? "1" : "0"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	public File getArchive() {
 		return archive;
 	}
 	
-	@SuppressWarnings("nls")
 	public void saveToFile() {
 		try {
 			Map<String, String> env = new HashMap<>(); 
-			env.put("create", "false");
-			URI uri = URI.create("jar:" + archive.toURI());
+			env.put("create", "false"); //$NON-NLS-1$ //$NON-NLS-2$
+			URI uri = URI.create("jar:" + archive.toURI()); //$NON-NLS-1$
 			try (FileSystem fs = FileSystems.newFileSystem(uri, env))
 			{
 			    try (Writer writer = Files.newBufferedWriter(fs.getPath(ExportHelper.FILENAME_BACKUPINFO), StandardCharsets.UTF_8, StandardOpenOption.CREATE)) {
@@ -199,14 +198,13 @@ public class CCBackup {
 		return new File(PathFormatter.getWithoutExtension(archive.getAbsolutePath()) + "." + ExportHelper.EXTENSION_BACKUPPROPERTIES); //$NON-NLS-1$
 	}
 
-	@SuppressWarnings("nls")
 	private Tuple<Properties, Boolean> loadProperties(File f) {
 
 		// load from info.ini in zip file
 		try {
 			Map<String, String> env = new HashMap<>(); 
-			env.put("create", "false");
-			URI uri = URI.create("jar:" + archive.toURI());
+			env.put("create", "false"); //$NON-NLS-1$ //$NON-NLS-2$
+			URI uri = URI.create("jar:" + archive.toURI()); //$NON-NLS-1$
 			try (FileSystem fs = FileSystems.newFileSystem(uri, env))
 			{
 			    if (Files.exists(fs.getPath(ExportHelper.FILENAME_BACKUPINFO))) {
@@ -241,7 +239,7 @@ public class CCBackup {
 		Properties result3 = new Properties();
 		result3.setProperty(PROP_NAME, PathFormatter.getFilename(f.getAbsolutePath()));
 		result3.setProperty(PROP_DATE, getBackupDateFromOldFileFormat(f).toStringSerialize());
-		result3.setProperty(PROP_PERSISTENT, "0");
+		result3.setProperty(PROP_PERSISTENT, "0"); //$NON-NLS-1$
 		result3.setProperty(PROP_CCVERSION, Main.VERSION);
 		result3.setProperty(PROP_DBVERSION, Main.DBVERSION);
 		return Tuple.Create(result3, false);

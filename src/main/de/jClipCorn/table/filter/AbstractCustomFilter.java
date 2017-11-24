@@ -7,7 +7,6 @@ import java.util.regex.Pattern;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.ICCDatabaseStructureElement;
 import de.jClipCorn.table.filter.customFilter.CustomAddDateFilter;
-import de.jClipCorn.table.filter.customFilter.CustomCharFilter;
 import de.jClipCorn.table.filter.customFilter.CustomCoverDimensionFilter;
 import de.jClipCorn.table.filter.customFilter.CustomEpisodecountFilter;
 import de.jClipCorn.table.filter.customFilter.CustomExtendedViewedFilter;
@@ -20,7 +19,6 @@ import de.jClipCorn.table.filter.customFilter.CustomLanguageFilter;
 import de.jClipCorn.table.filter.customFilter.CustomOnlinescoreFilter;
 import de.jClipCorn.table.filter.customFilter.CustomQualityFilter;
 import de.jClipCorn.table.filter.customFilter.CustomReferenceFilter;
-import de.jClipCorn.table.filter.customFilter.CustomSearchFilter;
 import de.jClipCorn.table.filter.customFilter.CustomTagFilter;
 import de.jClipCorn.table.filter.customFilter.CustomTitleFilter;
 import de.jClipCorn.table.filter.customFilter.CustomTypFilter;
@@ -78,15 +76,32 @@ public abstract class AbstractCustomFilter {
 	public abstract String getName();
 	public abstract String getPrecreateName();
 	public abstract int getID();
-	
-	public abstract String exportToString();
-	public abstract boolean importFromString(String txt);
 
 	public abstract AbstractCustomFilter createNew();
 	public abstract CustomFilterConfig[] createConfig(CCMovieList ml);
 	
 	public abstract boolean includes(ICCDatabaseStructureElement elem);
 	
+	protected abstract void initSerialization(FilterSerializationConfig cfg);
+
+	private FilterSerializationConfig _cfgSerialization = null;
+
+	private FilterSerializationConfig getSerializationConfig() {
+		if (_cfgSerialization == null) {
+			_cfgSerialization = new FilterSerializationConfig(getID());
+			initSerialization(_cfgSerialization);
+		}
+		return _cfgSerialization;
+	}
+	
+	public String exportToString() {
+		return getSerializationConfig().serialize();
+	}
+
+	public boolean importFromString(String txt) {
+		return getSerializationConfig().deserialize(txt);
+	}
+
 	public List<AbstractCustomFilter> getList() {
 		return new ArrayList<>();
 	}
@@ -142,116 +157,18 @@ public abstract class AbstractCustomFilter {
 		}
 	}
 	
-	public static String getParameterFromExport(String txt) {
-		if (txt.length() < 4) return null;
-		txt = txt.substring(1, txt.length() - 1);
-		int pos = txt.indexOf('|');
-		if (pos > 3 || pos < 1) return null;
-		return txt.substring(pos + 1);
-	}
-	
-	public static String[] splitParameterFromExport(String txt) {
-		List<String> resultlist = new ArrayList<>();
-		
-		StringBuilder builder = new StringBuilder();
-		
-		int depth = 0;
-		boolean escape = false;
-		for (int i = 0; i < txt.length(); i++) {
-			boolean skip = false;
-			char c = txt.charAt(i);
-			
-			if (escape) {
-				escape = false;
-			} else {
-				if (c == '&') {
-					escape = true;
-				} else if (c == '[') {
-					depth++;
-				} else if (c == ']') {
-					depth--;
-				} else if (c == ',') {
-					if (depth == 0) {
-						skip = true;
-						resultlist.add(builder.toString());
-						builder = new StringBuilder(); // clear
-					}
-				}
-			}
-			
-			if (! skip) {
-				builder.append(c);
-			}
-		}
-		if (builder.length() > 0) {
-			resultlist.add(builder.toString());
-		}
-		
-		return resultlist.toArray(new String[resultlist.size()]);
-	}
-	
 	public static AbstractCustomFilter getFilterByID(int id) {
-		switch (id) {
-		case CUSTOMFILTERID_AND:
-			return new CustomAndOperator();
-		case CUSTOMFILTERID_NAND:
-			return new CustomNandOperator();
-		case CUSTOMFILTERID_NOR:
-			return new CustomNorOperator();
-		case CUSTOMFILTERID_OR:
-			return new CustomOrOperator();
-		case CUSTOMFILTERID_FORMAT:
-			return new CustomFormatFilter();
-		case CUSTOMFILTERID_FSK:
-			return new CustomFSKFilter();
-		case CUSTOMFILTERID_GENRE:
-			return new CustomGenreFilter();
-		case CUSTOMFILTERID_LANGUAGE:
-			return new CustomLanguageFilter();
-		case CUSTOMFILTERID_ONLINESCORE:
-			return new CustomOnlinescoreFilter();
-		case CUSTOMFILTERID_QUALITY:
-			return new CustomQualityFilter();
-		case CUSTOMFILTERID_USERSCORE:
-			return new CustomUserScoreFilter();
-		case CUSTOMFILTERID_TAG:
-			return new CustomTagFilter();
-		case CUSTOMFILTERID_TITLE:
-			return new CustomTitleFilter();
-		case CUSTOMFILTERID_TYP:
-			return new CustomTypFilter();
-		case CUSTOMFILTERID_VIEWED:
-			return new CustomViewedFilter();
-		case CUSTOMFILTERID_YEAR:
-			return new CustomYearFilter();
-		case CUSTOMFILTERID_ZYKLUS:
-			return new CustomZyklusFilter();
-		case CUSTOMFILTERID_GROUP:
-			return new CustomGroupFilter();
-		case CUSTOMFILTERID_REFERENCE:
-			return new CustomReferenceFilter();
-		case CUSTOMFILTERID_HISTORY:
-			return new CustomHistoryFilter();
-		case CUSTOMFILTERID_SEARCH:
-			return new CustomSearchFilter();
-		case CUSTOMFILTERID_CHAR:
-			return new CustomCharFilter();
-		case CUSTOMFILTERID_ADDDATE:
-			return new CustomAddDateFilter();
-		case CUSTOMFILTERID_VIEWCOUNT:
-			return new CustomViewcountFilter();
-		case CUSTOMFILTERID_ANYEPISODE:
-			return new CustomAnyEpisodeAggregator();
-		case CUSTOMFILTERID_ALLEPISODE:
-			return new CustomAllEpisodeAggregator();
-		case CUSTOMFILTERID_ANYSEASON:
-			return new CustomAnySeasonAggregator();
-		case CUSTOMFILTERID_ALLSEASON:
-			return new CustomAllSeasonAggregator();
-		case CUSTOMFILTERID_EXTVIEWED:
-			return new CustomExtendedViewedFilter();
-		case CUSTOMFILTERID_COVERDIMENSION:
-			return new CustomCoverDimensionFilter();
+
+		for (AbstractCustomFilter f : getAllOperatorFilter()) {
+			if (f.getID() == id) return f;
+		}
+		
+		for (AbstractCustomFilter f : getAllSimpleFilter()) {
+			if (f.getID() == id) return f;
+		}
+		
+		for (AbstractCustomFilter f : getAllAggregatorFilter()) {
+			if (f.getID() == id) return f;
 		}
 
 		return null;

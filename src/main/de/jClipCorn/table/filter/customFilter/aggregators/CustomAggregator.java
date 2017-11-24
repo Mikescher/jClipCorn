@@ -8,6 +8,7 @@ import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.table.filter.AbstractCustomDatabaseElementFilter;
 import de.jClipCorn.table.filter.AbstractCustomFilter;
+import de.jClipCorn.table.filter.FilterSerializationConfig;
 import de.jClipCorn.table.filter.customFilter.operators.CustomAndOperator;
 import de.jClipCorn.table.filter.filterConfig.CustomFilterConfig;
 
@@ -32,6 +33,11 @@ public abstract class CustomAggregator extends AbstractCustomDatabaseElementFilt
 	public abstract boolean includes(CCSeries e);
 
 	@Override
+	protected void initSerialization(FilterSerializationConfig cfg) {
+		// manual
+	}
+
+	@Override
 	@SuppressWarnings("nls")
 	public String exportToString() {
 		StringBuilder b = new StringBuilder();
@@ -48,10 +54,10 @@ public abstract class CustomAggregator extends AbstractCustomDatabaseElementFilt
 	public boolean importFromString(String txt) {
 		if (txt == null) return false;
 		
-		String params = AbstractCustomFilter.getParameterFromExport(txt);
+		String params = FilterSerializationConfig.getParameterFromExport(txt);
 		if (params == null) return false;
 
-		String[] paramlist = AbstractCustomFilter.splitParameterFromExport(params);
+		String[] paramlist = FilterSerializationConfig.splitParameterFromExport(params);
 		if (paramlist.length != 1) return false;
 
 		_filter = AbstractCustomFilter.createFilterFromExport(paramlist[0]);

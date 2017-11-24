@@ -27,8 +27,8 @@ import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.formatter.PathFormatter;
 
 public class CCFolderCoverCache extends CCCoverCache {
-	private final static String COVER_DIRECTORY_NAME = "cover";
-	private final static String COVER_DIRECTORY = PathFormatter.appendAndPrependSeparator(COVER_DIRECTORY_NAME); //$NON-NLS-1$
+	private final static String COVER_DIRECTORY_NAME = "cover"; //$NON-NLS-1$
+	private final static String COVER_DIRECTORY = PathFormatter.appendAndPrependSeparator(COVER_DIRECTORY_NAME);
 
 	private Map<String, BufferedImage> cache;
 

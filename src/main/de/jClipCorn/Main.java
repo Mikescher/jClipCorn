@@ -153,7 +153,9 @@ public class Main {
 
 //TODO MainTable and SeriesTable as JCCSimpleTable
 
-//TODO Improve Customfilter serialization (just give them list of properties and string write/read happens autom)
-
 //TODO Shortcut: increase rating +1 + decrease rating -1
 //              and/or (toggle rating on click ??)
+
+//TODO Watch Later --> Watch again
+
+//TODO Define group parent (results in subgroups etc) ; new db version

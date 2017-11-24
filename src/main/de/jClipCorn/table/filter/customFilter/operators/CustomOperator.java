@@ -5,6 +5,7 @@ import java.util.List;
 
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.table.filter.AbstractCustomFilter;
+import de.jClipCorn.table.filter.FilterSerializationConfig;
 import de.jClipCorn.table.filter.filterConfig.CustomFilterConfig;
 import de.jClipCorn.util.stream.CCStream;
 import de.jClipCorn.util.stream.CCStreams;
@@ -34,6 +35,11 @@ public abstract class CustomOperator extends AbstractCustomFilter {
 		list.clear();
 	}
 
+	@Override
+	protected void initSerialization(FilterSerializationConfig cfg) {
+		// manual
+	}
+
 	@SuppressWarnings("nls")
 	@Override
 	public String exportToString() {
@@ -60,9 +66,9 @@ public abstract class CustomOperator extends AbstractCustomFilter {
 		
 		int id = AbstractCustomFilter.getIDFromExport(txt);
 		if (id < 0) return false;
-		String params = AbstractCustomFilter.getParameterFromExport(txt);
+		String params = FilterSerializationConfig.getParameterFromExport(txt);
 		if (params == null) return false;
-		String[] paramlist = AbstractCustomFilter.splitParameterFromExport(params);
+		String[] paramlist = FilterSerializationConfig.splitParameterFromExport(params);
 		
 		for (int i = 0; i < paramlist.length; i++) {
 			AbstractCustomFilter f = AbstractCustomFilter.createFilterFromExport(paramlist[i]);

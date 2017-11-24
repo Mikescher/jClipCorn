@@ -1,13 +1,12 @@
 package de.jClipCorn.table.filter.customFilter;
 
-import java.util.regex.Pattern;
-
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineScore;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.table.filter.AbstractCustomDatabaseElementFilter;
 import de.jClipCorn.table.filter.AbstractCustomFilter;
+import de.jClipCorn.table.filter.FilterSerializationConfig;
 import de.jClipCorn.table.filter.filterConfig.CustomFilterConfig;
 import de.jClipCorn.table.filter.filterConfig.CustomFilterIntAreaConfig;
 import de.jClipCorn.util.DecimalSearchType;
@@ -61,93 +60,17 @@ public class CustomOnlinescoreFilter extends AbstractCustomDatabaseElementFilter
 		}
 	}
 
-	public DecimalSearchType getSearchType() {
-		return searchType;
-	}
-
-	public void setSearchType(DecimalSearchType searchType) {
-		this.searchType = searchType;
-	}
-
-	public CCOnlineScore getHigh() {
-		return high;
-	}
-
-	public void setHigh(CCOnlineScore high) {
-		this.high = high;
-	}
-
-	public CCOnlineScore getLow() {
-		return low;
-	}
-
-	public void setLow(CCOnlineScore low) {
-		this.low = low;
-	}
-	
 	@Override
 	public int getID() {
 		return AbstractCustomFilter.CUSTOMFILTERID_ONLINESCORE;
 	}
-	
-	@SuppressWarnings("nls")
+		
 	@Override
-	public String exportToString() {
-		StringBuilder b = new StringBuilder();
-		b.append("[");
-		b.append(getID() + "");
-		b.append("|");
-		b.append(low.asInt()+"");
-		b.append(",");
-		b.append(high.asInt()+"");
-		b.append(",");
-		b.append(searchType.asInt() + "");
-		b.append("]");
-		
-		return b.toString();
-	}
-	
 	@SuppressWarnings("nls")
-	@Override
-	public boolean importFromString(String txt) {
-		String params = AbstractCustomFilter.getParameterFromExport(txt);
-		if (params == null) return false;
-		
-		String[] paramsplit = params.split(Pattern.quote(","));
-		if (paramsplit.length != 3) return false;
-		
-		int intval;
-		CCOnlineScore f;
-		DecimalSearchType s;
-		
-		try {
-			intval = Integer.parseInt(paramsplit[0]);
-		} catch (NumberFormatException e) {
-			return false;
-		}
-		f = CCOnlineScore.getWrapper().find(intval);
-		if (f == null) return false;
-		setLow(f);
-		
-		try {
-			intval = Integer.parseInt(paramsplit[1]);
-		} catch (NumberFormatException e) {
-			return false;
-		}
-		f = CCOnlineScore.getWrapper().find(intval);
-		if (f == null) return false;
-		setHigh(f);
-		
-		try {
-			intval = Integer.parseInt(paramsplit[2]);
-		} catch (NumberFormatException e) {
-			return false;
-		}
-		s = DecimalSearchType.getWrapper().find(intval);
-		if (s == null) return false;
-		setSearchType(s);
-		
-		return true;
+	protected void initSerialization(FilterSerializationConfig cfg) {
+		cfg.addCCEnum("low", CCOnlineScore.getWrapper(), (d) -> this.low = d,  () -> this.low);
+		cfg.addCCEnum("high", CCOnlineScore.getWrapper(), (d) -> this.high = d,  () -> this.high);
+		cfg.addCCEnum("searchtype", DecimalSearchType.getWrapper(), (d) -> this.searchType = d,  () -> this.searchType);
 	}
 
 	@Override
@@ -157,8 +80,8 @@ public class CustomOnlinescoreFilter extends AbstractCustomDatabaseElementFilter
 
 	public static CustomOnlinescoreFilter create(CCOnlineScore data) {
 		CustomOnlinescoreFilter f = new CustomOnlinescoreFilter();
-		f.setSearchType(DecimalSearchType.EXACT);
-		f.setLow(data);
+		f.searchType = DecimalSearchType.EXACT;
+		f.low = data;
 		return f;
 	}
 

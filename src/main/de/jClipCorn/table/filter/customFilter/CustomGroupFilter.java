@@ -1,13 +1,12 @@
 package de.jClipCorn.table.filter.customFilter;
 
-import java.util.regex.Pattern;
-
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGroup;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.table.filter.AbstractCustomDatabaseElementFilter;
 import de.jClipCorn.table.filter.AbstractCustomFilter;
+import de.jClipCorn.table.filter.FilterSerializationConfig;
 import de.jClipCorn.table.filter.filterConfig.CustomFilterConfig;
 import de.jClipCorn.table.filter.filterConfig.CustomFilterStringChooserConfig;
 import de.jClipCorn.util.stream.CCStreams;
@@ -30,46 +29,17 @@ public class CustomGroupFilter extends AbstractCustomDatabaseElementFilter {
 		return LocaleBundle.getDeformattedString("FilterTree.Custom.CustomFilterNames.Groups").replace("()", "").trim(); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
 
-	public String getGroup() {
-		return group;
-	}
-
-	public void setGroup(String group) {
-		this.group = group;
-	}
-	
 	@Override
 	public int getID() {
 		return AbstractCustomFilter.CUSTOMFILTERID_GROUP;
 	}
 	
-	@SuppressWarnings("nls")
 	@Override
-	public String exportToString() {
-		StringBuilder b = new StringBuilder();
-		b.append("[");
-		b.append(getID() + "");
-		b.append("|");
-		b.append(AbstractCustomFilter.escape(group));
-		b.append("]");
-		
-		return b.toString();
+	@SuppressWarnings("nls")
+	protected void initSerialization(FilterSerializationConfig cfg) {
+		cfg.addString("group", (d) -> this.group = d,  () -> this.group);
 	}
 	
-	@SuppressWarnings("nls")
-	@Override
-	public boolean importFromString(String txt) {
-		String params = AbstractCustomFilter.getParameterFromExport(txt);
-		if (params == null) return false;
-		
-		String[] paramsplit = params.split(Pattern.quote(","));
-		if (paramsplit.length != 1) return false;
-
-		setGroup(AbstractCustomFilter.descape(paramsplit[0]));
-		
-		return true;
-	}
-
 	@Override
 	public AbstractCustomFilter createNew() {
 		return new CustomGroupFilter();
@@ -77,7 +47,7 @@ public class CustomGroupFilter extends AbstractCustomDatabaseElementFilter {
 
 	public static CustomGroupFilter create(CCGroup data) {
 		CustomGroupFilter f = new CustomGroupFilter();
-		f.setGroup(data.Name);
+		f.group = data.Name;
 		return f;
 	}
 

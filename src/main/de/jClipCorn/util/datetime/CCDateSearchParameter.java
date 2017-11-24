@@ -2,15 +2,39 @@ package de.jClipCorn.util.datetime;
 
 import de.jClipCorn.database.databaseElement.columnTypes.CCDateTimeList;
 import de.jClipCorn.gui.log.CCLog;
+import de.jClipCorn.util.enumextension.ContinoousEnum;
+import de.jClipCorn.util.enumextension.EnumWrapper;
 
 public class CCDateSearchParameter {
 
-	public enum DateSearchType { 
-		CONTAINS,               // contains [A] at least once
-		CONTAINS_NOT,           // does not contain any [A]
-		CONTAINS_BETWEEN,       // contains at least one value between [A] and [B]
-		CONTAINS_NOT_BETWEEEN,  // contains no value between [A] and [B]
-		CONTAINS_ONLY_BETWEEN,  // all values are between [A] and [B]
+	public enum DateSearchType implements ContinoousEnum<DateSearchType> { 
+		CONTAINS(0),               // contains [A] at least once
+		CONTAINS_NOT(1),           // does not contain any [A]
+		CONTAINS_BETWEEN(2),       // contains at least one value between [A] and [B]
+		CONTAINS_NOT_BETWEEEN(3),  // contains no value between [A] and [B]
+		CONTAINS_ONLY_BETWEEN(4);  // all values are between [A] and [B]
+
+		private final static String NAMES[] = { "CONTAINS", "CONTAINS_NOT", "CONTAINS_BETWEEN", "CONTAINS_NOT_BETWEEEN", "CONTAINS_ONLY_BETWEEN" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+
+		private final int id;
+
+		private static EnumWrapper<DateSearchType> wrapper = new EnumWrapper<>(CONTAINS);
+
+		private DateSearchType(int val) { id = val; }
+		
+		public static EnumWrapper<DateSearchType> getWrapper() { return wrapper; }
+		
+		@Override
+		public int asInt() { return id; }
+
+		@Override
+		public String asString() { return NAMES[asInt()]; }
+
+		@Override
+		public String[] getList() { return NAMES; }
+
+		@Override
+		public DateSearchType[] evalues() { return DateSearchType.values(); }
 	}
 	
 	public CCDate First;

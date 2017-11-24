@@ -1,13 +1,12 @@
 package de.jClipCorn.table.filter.customFilter;
 
-import java.util.regex.Pattern;
-
 import org.apache.commons.lang.StringUtils;
 
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.ICCDatabaseStructureElement;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.table.filter.AbstractCustomFilter;
+import de.jClipCorn.table.filter.FilterSerializationConfig;
 import de.jClipCorn.table.filter.filterConfig.CustomFilterCharConfig;
 import de.jClipCorn.table.filter.filterConfig.CustomFilterConfig;
 
@@ -49,44 +48,15 @@ public class CustomCharFilter extends AbstractCustomFilter {
 		return charset;
 	}
 
-	public String getCharset() {
-		return charset;
-	}
-
-	public void setCharset(String charset) {
-		this.charset = charset;
-	}
-
 	@Override
 	public int getID() {
 		return AbstractCustomFilter.CUSTOMFILTERID_CHAR;
 	}
 	
-	@SuppressWarnings("nls")
 	@Override
-	public String exportToString() {
-		StringBuilder b = new StringBuilder();
-		b.append("[");
-		b.append(getID() + "");
-		b.append("|");
-		b.append(AbstractCustomFilter.escape(charset));
-		b.append("]");
-		
-		return b.toString();
-	}
-	
 	@SuppressWarnings("nls")
-	@Override
-	public boolean importFromString(String txt) {
-		String params = AbstractCustomFilter.getParameterFromExport(txt);
-		if (params == null) return false;
-		
-		String[] paramsplit = params.split(Pattern.quote(","));
-		if (paramsplit.length != 1) return false;
-
-		setCharset(AbstractCustomFilter.descape(paramsplit[0]));
-		
-		return true;
+	protected void initSerialization(FilterSerializationConfig cfg) {
+		cfg.addChar("char",  (d) -> this.charset = d,  () -> this.charset);
 	}
 
 	@Override
@@ -96,7 +66,7 @@ public class CustomCharFilter extends AbstractCustomFilter {
 
 	public static CustomCharFilter create(String data) {
 		CustomCharFilter f = new CustomCharFilter();
-		f.setCharset(data);
+		f.charset = data;
 		return f;
 	}
 

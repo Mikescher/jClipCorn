@@ -982,7 +982,13 @@ public class CCMovieList {
 			el.setGroupsInternal(el.getGroups().getRemove(gOld).getAdd(gNew));
 		}
 		
-		database.updateGroup(gNew.Name, gNew.Order, gNew.Color, gNew.DoSerialize, gNew.Parent, gNew.Visible);
+		if (gOld.Name.equals(gNew.Name)) {
+			database.updateGroup(gNew.Name, gNew.Order, gNew.Color, gNew.DoSerialize, gNew.Parent, gNew.Visible);
+		} else {
+			database.removeGroup(gOld.Name);
+			database.addGroup(gNew.Name, gNew.Order, gNew.Color, gNew.DoSerialize, gNew.Parent, gNew.Visible);
+		}
+		
 	}
 
 	public void removeGroup(CCGroup gOld) {

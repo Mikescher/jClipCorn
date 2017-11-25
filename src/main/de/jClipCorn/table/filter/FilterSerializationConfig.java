@@ -105,7 +105,7 @@ public class FilterSerializationConfig {
 			setter.accept(Integer.parseInt(v) != 0);
 			return true;
 		};
-		Supplier<String> g = () -> getter.get() ? "0" : "1"; //$NON-NLS-1$ //$NON-NLS-2$
+		Supplier<String> g = () -> getter.get() ? "1" : "0"; //$NON-NLS-1$ //$NON-NLS-2$
 
 		FSCProperty prop = new FSCProperty(pname, s, g);
 

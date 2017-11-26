@@ -256,6 +256,9 @@ public class CCTagList {
 		
 		for (int i = 0; i < ACTIVETAGS; i++) {
 			if (getTag(i)) {
+				
+				if (i == TAG_WATCH_LATER || i == TAG_WATCH_NEVER) continue;
+				
 				if (use32px) {
 					bi.getGraphics().drawImage(CachedResourceLoader.getImage(IMGS_ON[i].icon32x32), posX, 8, null);
 					posX += 32;

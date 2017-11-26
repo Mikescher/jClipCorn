@@ -14,6 +14,8 @@ import javax.swing.JComponent;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import de.jClipCorn.database.databaseElement.ICCCoveredElement;
+import de.jClipCorn.gui.frames.coverPreviewFrame.CoverPreviewFrame;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.helper.ImageUtilities;
 
@@ -139,10 +141,6 @@ public class JCoverChooser extends JComponent implements MouseListener {
 		return coverWidth;
 	}
 
-	public void addCover(BufferedImage bi) {
-		addCover(bi, null);
-	}
-	
 	public void addCover(BufferedImage bi, Object obj) {
 		images.add(bi);
 		objects.add(obj);
@@ -215,10 +213,25 @@ public class JCoverChooser extends JComponent implements MouseListener {
 	public void mouseClicked(MouseEvent e) {
 		if (isEnabled()) {
 			if (e.getButton() == MouseEvent.BUTTON1) {
+
 				int imgid = getCoverForPoint(e.getX(), e.getY());
 
 				if (imgid != Integer.MIN_VALUE) {
+
 					setCurrSelected(imgid);
+					
+					if (e.getClickCount() == 2) {
+						
+						Object o = getSelectedObject();
+						BufferedImage i = getSelectedImage();
+						
+						if (o != null && o instanceof ICCCoveredElement) {
+							new CoverPreviewFrame(this, (ICCCoveredElement)o).setVisible(true);
+						} else if (i != null) {
+							new CoverPreviewFrame(this, i).setVisible(true);
+						}
+						
+					}
 				}
 			} else if (e.getButton() == MouseEvent.BUTTON3) {
 				int imgid = getCoverForPoint(e.getX(), e.getY());

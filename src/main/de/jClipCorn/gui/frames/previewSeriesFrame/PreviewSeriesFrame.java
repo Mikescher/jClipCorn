@@ -695,7 +695,7 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 		
 		cvrChooser.clear();
 		for (int i = 0; i < dispSeries.getSeasonCount(); i++) {
-			cvrChooser.addCover(dispSeries.getSeasonByArrayIndex(i).getCover());
+			cvrChooser.addCover(dispSeries.getSeasonByArrayIndex(i).getCover(), dispSeries.getSeasonByArrayIndex(i));
 		}
 
 		cvrChooser.setCurrSelected(ccidx);

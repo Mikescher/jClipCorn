@@ -20,6 +20,7 @@ import javax.swing.SwingConstants;
 
 import de.jClipCorn.Main;
 import de.jClipCorn.database.databaseElement.CCMovie;
+import de.jClipCorn.database.databaseElement.columnTypes.CCGroup;
 import de.jClipCorn.gui.frames.editMovieFrame.EditMovieFrame;
 import de.jClipCorn.gui.guiComponents.CoverLabel;
 import de.jClipCorn.gui.guiComponents.ReadableTextField;
@@ -84,6 +85,9 @@ public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener 
 	private JLabel lblViewedHistory;
 	private JScrollPane scrollPane;
 	private JScrollPane scrollPane_1;
+	private JLabel lblGruppen;
+	private JScrollPane scrollPane_2;
+	private JList<String> lsGroups;
 	
 	public PreviewMovieFrame(Component owner, CCMovie m) {
 		super();
@@ -323,6 +327,19 @@ public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener 
 		lblViewedHistory = new JLabel(LocaleBundle.getString("EditSeriesFrame.lblHistory.text")); //$NON-NLS-1$
 		lblViewedHistory.setBounds(462, 317, 46, 14);
 		getContentPane().add(lblViewedHistory);
+		
+		lblGruppen = new JLabel(LocaleBundle.getString("EditSeriesFrame.lblGroups.text")); //$NON-NLS-1$
+		lblGruppen.setBounds(462, 269, 55, 16);
+		getContentPane().add(lblGruppen);
+		
+		scrollPane_2 = new JScrollPane();
+		scrollPane_2.setBorder(null);
+		scrollPane_2.setBounds(535, 270, 147, 48);
+		getContentPane().add(scrollPane_2);
+		
+		lsGroups = new JList<>();
+		lsGroups.setOpaque(false);
+		scrollPane_2.setViewportView(lsGroups);
 	}
 	
 	private void playMovie() {
@@ -387,7 +404,13 @@ public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener 
 		for (int i = 0; i < movie.getGenreCount(); i++) {
 			dlsmGenre.addElement(movie.getGenre(i).asString());
 		}
-		
+
+		DefaultListModel<String> dlsmGroups;
+		lsGroups.setModel(dlsmGroups = new DefaultListModel<>());
+		for (CCGroup group : movie.getGroups()) {
+			dlsmGroups.addElement(group.Name);
+		}
+				
 		edPart0.setText(movie.getPart(0));
 		edPart1.setText(movie.getPart(1));
 		edPart2.setText(movie.getPart(2));

@@ -171,7 +171,7 @@ public class CCGroupList implements Iterable<CCGroup> {
 		return hc;
 	}
 
-	public void drawOnImage(CCMovieList ml, BufferedImage bi) {
+	public void drawOnImage(CCMovieList ml, BufferedImage bi, boolean alpha) {
 		final int PADDING_X = 4;
 		final int PADDING_Y = 2;
 		final int RADIUS = 5;
@@ -204,7 +204,10 @@ public class CCGroupList implements Iterable<CCGroup> {
 			
 			int width = fm.stringWidth(group);
 			
-			g.setColor(groupsSorted.get(ii).Color);
+			if (alpha)
+				g.setColor(groupsSorted.get(ii).Color);
+			else
+				g.setColor(new Color(groupsSorted.get(ii).Color.getRed(), groupsSorted.get(ii).Color.getGreen(), groupsSorted.get(ii).Color.getBlue()));
 			
 			g.fillRoundRect(
 					right - MARGIN - PADDING_X - width - PADDING_X, 

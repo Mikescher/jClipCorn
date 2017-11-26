@@ -55,10 +55,10 @@ public class DatabaseElementPreviewLabel extends CoverLabel {
 		if (CCProperties.getInstance().PROP_MAINFRAME_SHOW_GROUP_ONLY_ON_HOVER.getValue()) {
 			image_original = el.getCover();
 			image_normal   = getImageWithoutOverlay(el);
-			image_hover    = getImageWithOverlay(el);
+			image_hover    = getImageWithOverlay(el, false);
 		} else {
 			image_original = el.getCover();
-			image_normal   = getImageWithOverlay(el);
+			image_normal   = getImageWithOverlay(el, true);
 			image_hover    = image_normal;
 		}
 		
@@ -84,7 +84,7 @@ public class DatabaseElementPreviewLabel extends CoverLabel {
 		}
 	}
 	
-	private BufferedImage getImageWithOverlay(CCDatabaseElement el) {
+	private BufferedImage getImageWithOverlay(CCDatabaseElement el, boolean alpha) {
 		boolean drawSCorner = CCProperties.getInstance().PROP_MAINFRAME_SHOWCOVERCORNER.getValue()  && el.isSeries();
 		boolean drawTag = CCProperties.getInstance().PROP_MAINFRAME_SHOWTAGS.getValue() && el.isMovie() && ((CCMovie)el).getTags().hasTags();
 		boolean drawGroups = CCProperties.getInstance().PROP_MAINFRAME_SHOWGROUPS.getValue() && el.hasGroups();
@@ -104,7 +104,7 @@ public class DatabaseElementPreviewLabel extends CoverLabel {
 			}
 			
 			if (drawGroups) {
-				el.getGroups().drawOnImage(el.getMovieList(), bi);
+				el.getGroups().drawOnImage(el.getMovieList(), bi, alpha);
 			}
 
 			return bi;

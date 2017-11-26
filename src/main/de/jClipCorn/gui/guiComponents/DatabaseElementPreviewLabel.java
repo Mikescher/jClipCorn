@@ -54,7 +54,10 @@ public class DatabaseElementPreviewLabel extends CoverLabel {
 		boolean drawGroups = CCProperties.getInstance().PROP_MAINFRAME_SHOWGROUPS.getValue() && el.hasGroups();
 		
 		if (drawSCorner || drawTag || drawGroups) {
-			BufferedImage bi = ImageUtilities.resizeCoverImageForFullSizeUI(el.getCover());
+			BufferedImage biorig = el.getCover();
+			
+			BufferedImage bi = ImageUtilities.resizeCoverImageForFullSizeUI(biorig);
+			if (bi == biorig) bi = ImageUtilities.deepCopyImage(bi);
 			
 			if (drawSCorner) {
 				ImageUtilities.makeFullSizeSeriesCover(bi);

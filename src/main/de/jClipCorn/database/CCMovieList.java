@@ -999,6 +999,8 @@ public class CCMovieList {
 			el.setGroups(el.getGroups().getRemove(gOld));
 		}
 		
+		database.removeGroup(gOld.Name);
+		
 	}
 	
 	public boolean isInMemory() {

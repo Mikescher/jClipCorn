@@ -46,6 +46,13 @@ public class CoverPreviewFrame extends JFrame {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		initGUI(img, LocaleBundle.getString("CoverPreviewFrame.title")); //$NON-NLS-1$
 		setLocationRelativeTo(findWindow(owner));
+		
+		addKeyListener(new KeyAdapter() {
+		    @Override
+			public void keyPressed(KeyEvent e) {
+		    	if (e.getKeyCode() == KeyEvent.VK_ESCAPE) CoverPreviewFrame.this.dispose();
+		    }
+		});
 	}
 	
 	private static Component findWindow(Component c) {

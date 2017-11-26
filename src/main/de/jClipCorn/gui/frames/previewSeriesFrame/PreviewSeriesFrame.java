@@ -202,7 +202,7 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 		int szTopArea = 194;
 		int szTitleArea = 42;
 		int szTableHeader = 26;
-		int szTable = 22 * epCount;
+		int szTable = 20 * epCount;
 		int szBottomMargin = 11;
 		int szBorderBottom = 8;
 

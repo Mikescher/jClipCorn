@@ -180,6 +180,7 @@ public class CCProperties {
 	public CCPIntProperty 									PROP_SERIES_PREVIEWFRAME_HEIGHT;
 	public CCEnumProperty<NextEpisodeHeuristic>				PROP_SERIES_NEXT_EPISODE_HEURISTIC;
 	public CCEnumProperty<CoverImageSize>					PROP_DATABASE_MAX_COVER_SIZE;
+	public CCBoolProperty									PROP_MAINFRAME_SHOW_GROUP_ONLY_ON_HOVER;
 
 	public boolean ARG_READONLY = false;
 	
@@ -248,6 +249,7 @@ public class CCProperties {
 		PROP_MAINFRAME_SHOWCOVERCORNER			= new CCBoolProperty(CAT_VIEW,		 		this,   "PROP_MAINFRAME_SHOWCOVERCORNER",			true);
 		PROP_MAINFRAME_DONT_FILTER_WATCHNEVER	= new CCBoolProperty(CAT_VIEW,				this, 	"PROP_MAINFRAME_DONT_FILTER_WATCHNEVER", 	true);
 		PROP_MAINFRAME_SORT_GENRES				= new CCBoolProperty(CAT_VIEW,				this, 	"PROP_MAINFRAME_SORT_GENRES", 				true);
+		PROP_MAINFRAME_SHOW_GROUP_ONLY_ON_HOVER = new CCBoolProperty(CAT_VIEW,				this, 	"PROP_MAINFRAME_SHOW_GROUP_ONLY_ON_HOVER", 	false);
 		
 		PROP_DATABASE_NAME 						= new CCStringProperty(CAT_DATABASE, 		this,	"PROP_DATABASE_NAME",						"ClipCornDB");
 		PROP_LOG_PATH							= new CCStringProperty(CAT_DATABASE, 		this,	"PROP_LOG_PATH",							"jClipcorn.log");

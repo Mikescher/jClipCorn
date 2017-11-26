@@ -23,7 +23,10 @@ public class DatabaseElementPreviewLabel extends CoverLabel {
 	private boolean isError = false;
 	private boolean timerSwitch = false;
 	private Timer timer;
-	
+
+	private BufferedImage image_normal;
+	private BufferedImage image_hover;
+	private BufferedImage image_original;
 	private CCDatabaseElement element;
 	
 	public DatabaseElementPreviewLabel() {
@@ -49,6 +52,39 @@ public class DatabaseElementPreviewLabel extends CoverLabel {
 		
 		element = el;
 		
+		if (CCProperties.getInstance().PROP_MAINFRAME_SHOW_GROUP_ONLY_ON_HOVER.getValue()) {
+			image_original = el.getCover();
+			image_normal   = getImageWithoutOverlay(el);
+			image_hover    = getImageWithOverlay(el);
+		} else {
+			image_original = el.getCover();
+			image_normal   = getImageWithOverlay(el);
+			image_hover    = image_normal;
+		}
+		
+		super.setCoverDirect(image_normal, image_original);
+	}
+	
+	private BufferedImage getImageWithoutOverlay(CCDatabaseElement el) {
+		boolean drawSCorner = CCProperties.getInstance().PROP_MAINFRAME_SHOWCOVERCORNER.getValue()  && el.isSeries();
+		
+		if (drawSCorner) {
+			BufferedImage biorig = el.getCover();
+			
+			BufferedImage bi = ImageUtilities.resizeCoverImageForFullSizeUI(biorig);
+			if (bi == biorig) bi = ImageUtilities.deepCopyImage(bi);
+			
+			if (drawSCorner) {
+				ImageUtilities.makeFullSizeSeriesCover(bi);
+			}
+
+			return bi;
+		} else {
+			return ImageUtilities.resizeCoverImageForFullSizeUI(el.getCover());
+		}
+	}
+	
+	private BufferedImage getImageWithOverlay(CCDatabaseElement el) {
 		boolean drawSCorner = CCProperties.getInstance().PROP_MAINFRAME_SHOWCOVERCORNER.getValue()  && el.isSeries();
 		boolean drawTag = CCProperties.getInstance().PROP_MAINFRAME_SHOWTAGS.getValue() && el.isMovie() && ((CCMovie)el).getTags().hasTags();
 		boolean drawGroups = CCProperties.getInstance().PROP_MAINFRAME_SHOWGROUPS.getValue() && el.hasGroups();
@@ -71,9 +107,9 @@ public class DatabaseElementPreviewLabel extends CoverLabel {
 				el.getGroups().drawOnImage(el.getMovieList(), bi);
 			}
 
-			super.setCoverDirect(bi, el.getCover());
+			return bi;
 		} else {
-			super.setAndResizeCover(el.getCover());
+			return ImageUtilities.resizeCoverImageForFullSizeUI(el.getCover());
 		}
 	}
 	
@@ -84,7 +120,10 @@ public class DatabaseElementPreviewLabel extends CoverLabel {
 				setIcon(getStandardIcon());
 			}
 
-			element = null;
+			element        = null;
+			image_hover    = null;
+			image_normal   = null;
+			image_original = null;
 		}
 	}
 
@@ -110,4 +149,15 @@ public class DatabaseElementPreviewLabel extends CoverLabel {
 			if (element != null) new CoverPreviewFrame(this, element).setVisible(true);
 		}
 	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		if (image_hover != null) setCoverDirect(image_hover, image_original);
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+		if (image_hover != null) setCoverDirect(image_normal, image_original);
+	}
+	
 }

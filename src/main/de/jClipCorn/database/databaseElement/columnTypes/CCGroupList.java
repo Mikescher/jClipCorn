@@ -15,6 +15,8 @@ import java.util.List;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.util.exceptions.GroupFormatException;
 import de.jClipCorn.util.helper.ImageUtilities;
+import de.jClipCorn.util.stream.CCStream;
+import de.jClipCorn.util.stream.CCStreams;
 
 public class CCGroupList implements Iterable<CCGroup> {
 	private static final String SEPERATOR = ";"; //$NON-NLS-1$
@@ -231,5 +233,9 @@ public class CCGroupList implements Iterable<CCGroup> {
 		}
 		
 		g.dispose();
+	}
+
+	public CCStream<CCGroup> iterate() {
+		return CCStreams.iterate(list);
 	}
 }

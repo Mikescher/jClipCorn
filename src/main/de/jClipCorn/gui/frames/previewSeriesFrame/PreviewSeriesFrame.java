@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.Box;
-import javax.swing.BoxLayout;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
@@ -31,6 +30,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.BevelBorder;
+import javax.swing.border.EmptyBorder;
 import javax.swing.border.SoftBevelBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -82,9 +82,8 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 	private static final long serialVersionUID = 5484205983855802992L;
 
 	private CCSeries dispSeries;
-	
+
 	private JPanel pnlTop;
-	private JPanel pnlInfo;
 	private JPanel pnlMainIntern;
 	private CoverLabel lblCover;
 	private JCoverChooser cvrChooser;
@@ -105,21 +104,12 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 	private JPanel pnlOnlinescore;
 	private JLabel lblLength;
 	private JLabel lblSize;
-	private Component vStrut_4;
-	private Component vStrut_5;
-	private Component vStrut_3;
-	private Component vStrut_2;
 	private JLabel lblViewed;
-	private Component vStrut_6;
 	private JLabel lblScore;
-	private Component vStrut_7;
 	private JLabel lblLanguage;
-	private Component vStrut_8;
-	private JPanel pnlLeft;
 	private JPanel pnlAddInfo;
 	private JButton btnAdditionalInfo;
 	private JLabel lblfsk;
-	private Component verticalStrut;
 	private JMenu mnSerie;
 	private JMenu mnStaffel;
 	private JMenuItem mntmEpisodeHinzufgen;
@@ -146,6 +136,9 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 	private JPanel pnlTopLeft;
 	private JButton btnPlayNext;
 	private JButton btnOnline;
+	private JLabel lblGroupsMark;
+	private JLabel lblGroups;
+	private JPanel pnlInfo2;
 
 	/**
 	 * @wbp.parser.constructor
@@ -164,11 +157,11 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 
 			cvrChooser.setCurrSelected(sea.getSeasonNumber());
 		}
-		
+
 		setLocationRelativeTo(owner);
 		initListener(ser);
 	}
-	
+
 	public PreviewSeriesFrame(Component owner, CCSeason sea) {
 		this.dispSeries = sea.getSeries();
 		initGUI();
@@ -179,11 +172,11 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 
 		changeSeason(sea);
 		cvrChooser.setCurrSelected(sea.getSeasonNumber());
-		
+
 		setLocationRelativeTo(owner);
 		initListener(sea.getSeries());
 	}
-	
+
 	public PreviewSeriesFrame(Component owner, CCEpisode epi) {
 		this.dispSeries = epi.getSeries();
 		initGUI();
@@ -194,52 +187,52 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 
 		changeSeason(epi.getSeason());
 		cvrChooser.setCurrSelected(epi.getSeason().getSeasonNumber());
-		
+
 		tabSeason.select(epi);
-		
+
 		setLocationRelativeTo(owner);
 		initListener(epi.getSeries());
 	}
 
 	private static int getInitFrameHeight() {
 		int epCount = CCProperties.getInstance().PROP_SERIES_PREVIEWFRAME_HEIGHT.getValue();
-		
-		int szTitlebar     =  29;
-		int szMenubar      =  21;
-		int szTopArea      = 194;
-		int szTitleArea    =  42;
-		int szTableHeader  =  26;
-		int szTable        =  18 * epCount;
-		int szBottomMargin =  11;
-		int szBorderBottom =   8;
-		
+
+		int szTitlebar = 29;
+		int szMenubar = 21;
+		int szTopArea = 194;
+		int szTitleArea = 42;
+		int szTableHeader = 26;
+		int szTable = 22 * epCount;
+		int szBottomMargin = 11;
+		int szBorderBottom = 8;
+
 		return szTitlebar + szMenubar + szTopArea + szTitleArea + szTableHeader + szTable + szBottomMargin + szBorderBottom;
 	}
-	
+
 	private void initListener(CCSeries ser) {
 		ser.getMovieList().addChangeListener(new CCDBUpdateListener() {
 			@Override
 			public void onRemMovie(CCDatabaseElement el) {
 				// Do nothing
 			}
-			
+
 			@Override
 			public void onRefresh() {
 				// Do nothing
 			}
-			
+
 			@Override
 			public void onAfterLoad() {
 				// Do nothing
 			}
-			
+
 			@Override
 			public void onChangeDatabaseElement(CCDatabaseElement el) {
 				if (el.equals(dispSeries)) {
 					updateData();
 				}
 			}
-			
+
 			@Override
 			public void onAddDatabaseElement(CCDatabaseElement mov) {
 				if (mov.equals(dispSeries)) {
@@ -253,13 +246,13 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 		setIconImage(CachedResourceLoader.getImage(Resources.IMG_FRAME_ICON));
 
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		
+
 		if (Main.DEBUG) {
 			setTitle("<LID:" + dispSeries.getLocalID() + "><SID:" + dispSeries.getSeriesID() + "> " + dispSeries.getTitle() + " (" + dispSeries.getCoverName() + ")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 		} else {
 			setTitle(dispSeries.getTitle());
 		}
-		
+
 		pnlTop = new JPanel();
 		getContentPane().add(pnlTop, BorderLayout.NORTH);
 		pnlTop.setLayout(new BorderLayout(0, 0));
@@ -284,16 +277,11 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 				startSearch();
 			}
 		});
-		pnlSearch.setLayout(new FormLayout(new ColumnSpec[] {
-				FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
-				ColumnSpec.decode("268px"), //$NON-NLS-1$
-				FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
-				ColumnSpec.decode("50px"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_COLSPEC,},
-			new RowSpec[] {
-				FormSpecs.LINE_GAP_ROWSPEC,
-				RowSpec.decode("26px"), //$NON-NLS-1$
-				FormSpecs.LINE_GAP_ROWSPEC,}));
+		pnlSearch.setLayout(new FormLayout(new ColumnSpec[] { FormSpecs.LABEL_COMPONENT_GAP_COLSPEC, ColumnSpec.decode("268px"), //$NON-NLS-1$
+				FormSpecs.LABEL_COMPONENT_GAP_COLSPEC, ColumnSpec.decode("50px"), //$NON-NLS-1$
+				FormSpecs.RELATED_GAP_COLSPEC, },
+				new RowSpec[] { FormSpecs.LINE_GAP_ROWSPEC, RowSpec.decode("26px"), //$NON-NLS-1$
+						FormSpecs.LINE_GAP_ROWSPEC, }));
 		pnlSearch.add(edSearch, "2, 2, fill, fill"); //$NON-NLS-1$
 		edSearch.setColumns(24);
 
@@ -306,11 +294,11 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 		});
 		btnSearch.setIcon(CachedResourceLoader.getIcon(Resources.ICN_FRAMES_SEARCH.icon16x16));
 		pnlSearch.add(btnSearch, "4, 2, left, top"); //$NON-NLS-1$
-		
+
 		pnlTopLeft = new JPanel();
 		pnlTopInfo.add(pnlTopLeft, BorderLayout.WEST);
 		pnlTopLeft.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
-		
+
 		btnPlayNext = new JButton(LocaleBundle.getString("PreviewSeriesFrame.btnPlayNext.caption")); //$NON-NLS-1$
 		btnPlayNext.addActionListener(new ActionListener() {
 			@Override
@@ -358,7 +346,7 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 
 		vStrut_1 = Box.createVerticalStrut(8);
 		pnlMain.add(vStrut_1, BorderLayout.SOUTH);
-		
+
 		vStrut_9 = Box.createVerticalStrut(8);
 		pnlMain.add(vStrut_9, BorderLayout.NORTH);
 
@@ -384,7 +372,7 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 				(new EditSeriesFrame(PreviewSeriesFrame.this, dispSeries, PreviewSeriesFrame.this)).setVisible(true);
 			}
 		});
-		
+
 		mntmRateSeries = new JMenu(LocaleBundle.getString("PreviewSeriesFrame.Menu.Series.RateSeries")); //$NON-NLS-1$
 		mnSerie.add(mntmRateSeries);
 		for (final CCUserScore score : CCUserScore.values()) {
@@ -398,7 +386,7 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 				}
 			});
 		}
-		
+
 		mntmShowInFolder = new JMenuItem(LocaleBundle.getString("PreviewSeriesFrame.Menu.Series.ShowInFolder")); //$NON-NLS-1$
 		mntmShowInFolder.addActionListener(new ActionListener() {
 			@Override
@@ -440,12 +428,12 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 			public void actionPerformed(ActionEvent e) {
 				if (DialogHelper.showLocaleYesNo(PreviewSeriesFrame.this, "Dialogs.DeleteSeason")) {//$NON-NLS-1$
 					tabSeason.getSeason().delete();
-					
+
 					onUpdate(tabSeason.getSeason());
 				}
 			}
 		});
-		
+
 		mntmEditSeason = new JMenuItem(LocaleBundle.getString("PreviewSeriesFrame.Menu.Season.EditSeason")); //$NON-NLS-1$
 		mntmEditSeason.addActionListener(new ActionListener() {
 			@Override
@@ -455,7 +443,7 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 			}
 		});
 		mnStaffel.add(mntmEditSeason);
-		
+
 		mntmShowSeasonInFolder = new JMenuItem(LocaleBundle.getString("PreviewSeriesFrame.Menu.Season.ShowInFolder")); //$NON-NLS-1$
 		mntmShowSeasonInFolder.addActionListener(new ActionListener() {
 			@Override
@@ -507,7 +495,7 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 					HTTPUtilities.openInBrowser(dispSeries.getOnlineReference().getURL());
 			}
 		});
-		
+
 		mntmResumePlaying = new JMenuItem(LocaleBundle.getString("PreviewSeriesFrame.Menu.Extras.ResumePlay")); //$NON-NLS-1$
 		mntmResumePlaying.addActionListener(new ActionListener() {
 			@Override
@@ -516,7 +504,7 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 			}
 		});
 		mnExtras.add(mntmResumePlaying);
-		
+
 		mntmExportSeries = new JMenuItem(LocaleBundle.getString("PreviewSeriesFrame.Menu.Extras.ExportSeries")); //$NON-NLS-1$
 		mntmExportSeries.addActionListener(new ActionListener() {
 			@Override
@@ -525,7 +513,7 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 			}
 		});
 		mnExtras.add(mntmExportSeries);
-		
+
 		mntmEpisodeguide = new JMenuItem(LocaleBundle.getString("PreviewSeriesFrame.Menu.Extras.ExportEpisodeGuide")); //$NON-NLS-1$
 		mntmEpisodeguide.addActionListener(new ActionListener() {
 			@Override
@@ -534,7 +522,7 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 			}
 		});
 		mnExtras.add(mntmEpisodeguide);
-		
+
 		mntmMoveSeries = new JMenuItem(LocaleBundle.getString("PreviewSeriesFrame.Menu.Extras.MoveSeries")); //$NON-NLS-1$
 		mntmMoveSeries.addActionListener(new ActionListener() {
 			@Override
@@ -544,7 +532,7 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 			}
 		});
 		mnExtras.add(mntmMoveSeries);
-		
+
 		mntmCreateFolderStruct = new JMenuItem(LocaleBundle.getString("PreviewSeriesFrame.Menu.Extras.CreateFolderStructure")); //$NON-NLS-1$
 		mntmCreateFolderStruct.addActionListener(new ActionListener() {
 			@Override
@@ -556,24 +544,19 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 		mnExtras.add(mntmCreateFolderStruct);
 		mnExtras.add(mntmAufImdbAnzeigen);
 
-		pnlLeft = new JPanel();
-		getContentPane().add(pnlLeft, BorderLayout.WEST);
-		pnlLeft.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 0));
-
-		pnlInfo = new JPanel();
-		pnlLeft.add(pnlInfo);
-		pnlInfo.setLayout(new BoxLayout(pnlInfo, BoxLayout.Y_AXIS));
+		pnlInfo2 = new JPanel();
+		getContentPane().add(pnlInfo2, BorderLayout.WEST);
+		pnlInfo2.setSize(new Dimension(100, 100));
+		pnlInfo2.setBorder(new EmptyBorder(0, 4, 8, 4));
+		pnlInfo2.setLayout(new FormLayout(new ColumnSpec[] { FormSpecs.DEFAULT_COLSPEC, }, new RowSpec[] { FormSpecs.DEFAULT_ROWSPEC, FormSpecs.RELATED_GAP_ROWSPEC, FormSpecs.DEFAULT_ROWSPEC, FormSpecs.RELATED_GAP_ROWSPEC, FormSpecs.DEFAULT_ROWSPEC, FormSpecs.RELATED_GAP_ROWSPEC, FormSpecs.DEFAULT_ROWSPEC, FormSpecs.RELATED_GAP_ROWSPEC, FormSpecs.DEFAULT_ROWSPEC, FormSpecs.RELATED_GAP_ROWSPEC, FormSpecs.DEFAULT_ROWSPEC, FormSpecs.RELATED_GAP_ROWSPEC, FormSpecs.DEFAULT_ROWSPEC, FormSpecs.RELATED_GAP_ROWSPEC, FormSpecs.DEFAULT_ROWSPEC, FormSpecs.RELATED_GAP_ROWSPEC, FormSpecs.DEFAULT_ROWSPEC, FormSpecs.DEFAULT_ROWSPEC, RowSpec.decode("default:grow"), RowSpec.decode("default:grow"), FormSpecs.DEFAULT_ROWSPEC, })); //$NON-NLS-1$ //$NON-NLS-2$
 
 		lblCover = new CoverLabel(false);
-		pnlInfo.add(lblCover);
-
-		vStrut_2 = Box.createVerticalStrut(4);
-		pnlInfo.add(vStrut_2);
+		pnlInfo2.add(lblCover, "1, 1"); //$NON-NLS-1$
 
 		pnlOnlinescore = new JPanel();
+		pnlInfo2.add(pnlOnlinescore, "1, 3"); //$NON-NLS-1$
 		pnlOnlinescore.setAlignmentY(Component.TOP_ALIGNMENT);
 		pnlOnlinescore.setAlignmentX(Component.LEFT_ALIGNMENT);
-		pnlInfo.add(pnlOnlinescore);
 
 		lblOnlineScore = new JLabel();
 		lblOnlineScore.setHorizontalAlignment(SwingConstants.CENTER);
@@ -582,58 +565,49 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 		gl_pnlOnlinescore.setVerticalGroup(gl_pnlOnlinescore.createParallelGroup(Alignment.LEADING).addComponent(lblOnlineScore));
 		pnlOnlinescore.setLayout(gl_pnlOnlinescore);
 
-		vStrut_3 = Box.createVerticalStrut(4);
-		pnlInfo.add(vStrut_3);
-
 		lblLength = new JLabel();
+		pnlInfo2.add(lblLength, "1, 5"); //$NON-NLS-1$
 		lblLength.setFont(new Font("Tahoma", Font.PLAIN, 12)); //$NON-NLS-1$
-		pnlInfo.add(lblLength);
-
-		vStrut_4 = Box.createVerticalStrut(4);
-		pnlInfo.add(vStrut_4);
 
 		lblSize = new JLabel();
+		pnlInfo2.add(lblSize, "1, 7"); //$NON-NLS-1$
 		lblSize.setFont(new Font("Tahoma", Font.PLAIN, 12)); //$NON-NLS-1$
-		pnlInfo.add(lblSize);
-
-		vStrut_5 = Box.createVerticalStrut(4);
-		pnlInfo.add(vStrut_5);
 
 		lblViewed = new JLabel();
+		pnlInfo2.add(lblViewed, "1, 9"); //$NON-NLS-1$
 		lblViewed.setFont(new Font("Tahoma", Font.PLAIN, 12)); //$NON-NLS-1$
 		lblViewed.setHorizontalTextPosition(SwingConstants.LEADING);
-		pnlInfo.add(lblViewed);
-
-		vStrut_6 = Box.createVerticalStrut(4);
-		pnlInfo.add(vStrut_6);
 
 		lblScore = new JLabel();
+		pnlInfo2.add(lblScore, "1, 11"); //$NON-NLS-1$
 		lblScore.setFont(new Font("Tahoma", Font.PLAIN, 12)); //$NON-NLS-1$
 		lblScore.setHorizontalTextPosition(SwingConstants.LEADING);
-		pnlInfo.add(lblScore);
-
-		vStrut_7 = Box.createVerticalStrut(4);
-		pnlInfo.add(vStrut_7);
 
 		lblLanguage = new JLabel();
+		pnlInfo2.add(lblLanguage, "1, 13"); //$NON-NLS-1$
 		lblLanguage.setFont(new Font("Tahoma", Font.PLAIN, 12)); //$NON-NLS-1$
 		lblLanguage.setHorizontalTextPosition(SwingConstants.LEADING);
-		pnlInfo.add(lblLanguage);
-
-		vStrut_8 = Box.createVerticalStrut(4);
-		pnlInfo.add(vStrut_8);
 
 		lblfsk = new JLabel();
+		pnlInfo2.add(lblfsk, "1, 15"); //$NON-NLS-1$
 		lblfsk.setHorizontalTextPosition(SwingConstants.LEADING);
 		lblfsk.setFont(new Font("Tahoma", Font.PLAIN, 12)); //$NON-NLS-1$
-		pnlInfo.add(lblfsk);
 
-		verticalStrut = Box.createVerticalStrut(4);
-		pnlInfo.add(verticalStrut);
+		lblGroupsMark = new JLabel(LocaleBundle.getString("PreviewSeriesFrame.lblGroups")); //$NON-NLS-1$
+		pnlInfo2.add(lblGroupsMark, "1, 17"); //$NON-NLS-1$
+		lblGroupsMark.setFont(new Font("Tahoma", Font.PLAIN, 12)); //$NON-NLS-1$
+
+		lblGroups = new JLabel("<dynamic>"); //$NON-NLS-1$
+		pnlInfo2.add(lblGroups, "1, 18"); //$NON-NLS-1$
+		lblGroups.setBorder(new EmptyBorder(0, 64, 0, 0));
+		lblGroups.setFont(new Font("Tahoma", Font.PLAIN, 12)); //$NON-NLS-1$
 
 		pnlAddInfo = new JPanel();
+		FlowLayout flowLayout = (FlowLayout) pnlAddInfo.getLayout();
+		flowLayout.setVgap(0);
+		pnlAddInfo.setBorder(null);
+		pnlInfo2.add(pnlAddInfo, "1, 21"); //$NON-NLS-1$
 		pnlAddInfo.setAlignmentX(Component.LEFT_ALIGNMENT);
-		pnlInfo.add(pnlAddInfo);
 
 		btnAdditionalInfo = new JButton("Genres"); //$NON-NLS-1$
 		btnAdditionalInfo.addActionListener(new ActionListener() {
@@ -644,7 +618,7 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 			}
 		});
 		pnlAddInfo.add(btnAdditionalInfo);
-		
+
 		btnOnline = new JButton(" "); //$NON-NLS-1$
 		btnOnline.addActionListener(new ActionListener() {
 			@Override
@@ -653,20 +627,21 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 			}
 		});
 		pnlAddInfo.add(btnOnline);
-		
+
 		KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new KeyEventDispatcher() {
 			@Override
 			public boolean dispatchKeyEvent(KeyEvent e) {
 				if (e.getID() == KeyEvent.KEY_PRESSED && containsKeyboardFocus()) {
 					if (e.getKeyCode() == KeyEvent.VK_LEFT && cvrChooser.getSelectedIndex() > 0) {
 						cvrChooser.setCurrSelected(cvrChooser.getSelectedIndex() - 1);
-					} else if (e.getKeyCode() == KeyEvent.VK_RIGHT && cvrChooser.getSelectedIndex()+1 < cvrChooser.getElementCount()) {
+					} else if (e.getKeyCode() == KeyEvent.VK_RIGHT && cvrChooser.getSelectedIndex() + 1 < cvrChooser.getElementCount()) {
 						cvrChooser.setCurrSelected(cvrChooser.getSelectedIndex() + 1);
 					} else if (e.getKeyCode() == KeyEvent.VK_DOWN || e.getKeyCode() == KeyEvent.VK_UP) {
-						if (! tabSeason.isFocusOwner()) tabSeason.requestFocus();
+						if (!tabSeason.isFocusOwner())
+							tabSeason.requestFocus();
 					}
 				}
-				
+
 				return false;
 			}
 		});
@@ -674,16 +649,17 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 
 	private boolean containsKeyboardFocus() {
 		Component focus = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
-		
+
 		while (focus != null) {
-			if (focus == this) return true;
+			if (focus == this)
+				return true;
 
 			focus = focus.getParent();
 		}
-		
+
 		return false;
 	}
-	
+
 	private void updateData() {
 		if (dispSeries == null) {
 			return;
@@ -692,7 +668,7 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 		lblTitle.setText(dispSeries.getTitle());
 
 		int ccidx = cvrChooser.getSelectedIndex();
-		
+
 		cvrChooser.clear();
 		for (int i = 0; i < dispSeries.getSeasonCount(); i++) {
 			cvrChooser.addCover(dispSeries.getSeasonByArrayIndex(i).getCover(), dispSeries.getSeasonByArrayIndex(i));
@@ -741,10 +717,10 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 		lblSize.setText(LocaleBundle.getFormattedString("PreviewSeriesFrame.lblSize.text", FileSizeFormatter.format(dispSeries.getFilesize()))); //$NON-NLS-1$
 
 		lblViewed.setText(LocaleBundle.getFormattedString("PreviewSeriesFrame.lblViewed.text", dispSeries.getViewedCount(), dispSeries.getEpisodeCount())); //$NON-NLS-1$
-		
-		//if (dispSeries.isViewed()) {
-			lblViewed.setIcon(ImageUtilities.sliceImage(CachedResourceLoader.getIcon(Resources.ICN_TABLE_VIEWED_TRUE), 0d, (dispSeries.getViewedCount() *1d) / dispSeries.getEpisodeCount()));
-		//}
+
+		// if (dispSeries.isViewed()) {
+		lblViewed.setIcon(ImageUtilities.sliceImage(CachedResourceLoader.getIcon(Resources.ICN_TABLE_VIEWED_TRUE), 0d, (dispSeries.getViewedCount() * 1d) / dispSeries.getEpisodeCount()));
+		// }
 
 		if (dispSeries.getScore() == CCUserScore.RATING_NO) {
 			lblScore.setText(LocaleBundle.getString("PreviewSeriesFrame.lblScore.text") + " - "); //$NON-NLS-1$ //$NON-NLS-2$
@@ -761,16 +737,20 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 		lblfsk.setIcon(dispSeries.getFSK().getIcon());
 
 		lblCover.setAndResizeCover(dispSeries.getCover());
-		
+
 		btnOnline.setIcon(dispSeries.getOnlineReference().getIconButton());
 		btnOnline.setEnabled(dispSeries.getOnlineReference().isSet());
+
+		lblGroups.setText("<html>" + dispSeries.getGroups().iterate().stringjoin(g -> "[" + g.Name + "]", "<br>") + "</html>"); //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+		lblGroups.setVisible(!dispSeries.getGroups().isEmpty());
+		lblGroupsMark.setVisible(!dispSeries.getGroups().isEmpty());
 	}
-	
+
 	@Override
 	public void valueChanged(ListSelectionEvent e) {
 		changeSeason(dispSeries.getSeasonByArrayIndex(cvrChooser.getSelectedIndex()));
 	}
-	
+
 	@Override
 	public void onPopup(int coverID, MouseEvent e) {
 		(new SerCoverChooserPopupMenu(dispSeries.getSeasonByArrayIndex(coverID), this)).show(cvrChooser, e.getX(), e.getY());
@@ -779,32 +759,29 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 	public void changeSeason(CCSeason s) {
 		if (s == null)
 			return;
-		
+
 		if (Main.DEBUG) {
 			lblStaffel.setText(String.format("<%d> %s (%d) (%s)", s.getSeasonID(), s.getTitle(), s.getYear(), s.getCoverName())); //$NON-NLS-1$
 		} else {
 			lblStaffel.setText(String.format("%s (%d)", s.getTitle(), s.getYear())); //$NON-NLS-1$
 		}
-		
-		if (tabSeason.getSeason() == s)
-		{
+
+		if (tabSeason.getSeason() == s) {
 			int row_s = tabSeason.getSelectedRow();
 			int pos_v = tabSeason.getVerticalScrollBar().getValue();
 			int pos_h = tabSeason.getHorizontalScrollBar().getValue();
 
 			tabSeason.changeSeason(s);
-			
+
 			tabSeason.getVerticalScrollBar().setValue(pos_v);
 			tabSeason.getHorizontalScrollBar().setValue(pos_h);
 			tabSeason.setSelectedRow(row_s);
+		} else {
+			tabSeason.changeSeason(s);
 		}
-		else
-		{
-			tabSeason.changeSeason(s);			
-		}
-		
+
 	}
-	
+
 	public void updateSeason() {
 		changeSeason(tabSeason.getSeason());
 	}
@@ -813,57 +790,57 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 	public void onUpdate(Object o) {
 		updateData();
 
-//		if (dispSeries.getSeasonCount() > 0) {
-//			changeSeason(dispSeries.getSeason(0));
-//		}
+		// if (dispSeries.getSeasonCount() > 0) {
+		// changeSeason(dispSeries.getSeason(0));
+		// }
 	}
-	
+
 	public void onEpisodeDblClick(CCEpisode ep) {
 		if (ep != null) {
 			ep.play(true);
 		}
 	}
-	
+
 	private void playRandomEpisode() {
 		CCEpisode e = dispSeries.getRandomEpisode();
-		
+
 		if (e != null) {
 			cvrChooser.setCurrSelected(e.getSeason().getSeasonNumber());
 			tabSeason.select(e);
 			e.play(true);
 		}
 	}
-	
+
 	private void playRandomViewedStateEpisode(boolean v) {
 		CCEpisode e = dispSeries.getRandomEpisodeWithViewState(v);
-		
+
 		if (e != null) {
 			cvrChooser.setCurrSelected(e.getSeason().getSeasonNumber());
 			tabSeason.select(e);
 			e.play(true);
 		}
 	}
-	
+
 	private void resumePlaying() {
 		CCEpisode e = dispSeries.getNextEpisode();
-		
+
 		if (e != null) {
 			cvrChooser.setCurrSelected(e.getSeason().getSeasonNumber());
 			tabSeason.select(e);
 			e.play(true);
 		}
 	}
-	
+
 	private void startSearch() {
 		List<CCEpisode> el = dispSeries.getEpisodeList();
 		List<CCEpisode> found = new ArrayList<>();
-		
+
 		for (int i = 0; i < el.size(); i++) {
 			if (StringUtils.containsIgnoreCase(el.get(i).getTitle(), edSearch.getText())) {
 				found.add(el.get(i));
 			}
 		}
-		
+
 		if (found.isEmpty()) {
 			DisplaySearchResultsDialog.disposeInstance();
 		} else {
@@ -895,13 +872,13 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 					MainFrame.getInstance().beginBlockingIntermediate();
 
 					ExportHelper.exportSeries(PathFormatter.forceExtension(chooser.getSelectedFile(), ExportHelper.EXTENSION_SINGLEEXPORT), dispSeries.getMovieList(), dispSeries, includeCover);
-					
+
 					MainFrame.getInstance().endBlockingIntermediate();
 				}
 			}, "THREAD_EXPORT_JSCCEXPORT_SERIES").start(); //$NON-NLS-1$
 		}
 	}
-	
+
 	private void onExportEpisodeGuide() {
 		final JFileChooser chooser = new JFileChooser();
 		chooser.setFileFilter(FileChooserHelper.createLocalFileFilter("ExportHelper.filechooser_txtguide.description", ExportHelper.EXTENSION_EPISODEGUIDE)); //$NON-NLS-1$

@@ -42,6 +42,8 @@ public class JCoverChooser extends JComponent implements MouseListener {
 	private List<Object> objects = new ArrayList<>();
 	private int currSelected = 0;
 
+	private int lastClickTarget = -1;
+	
 	public JCoverChooser() {
 		addMouseListener(this);
 		update(false);
@@ -220,7 +222,7 @@ public class JCoverChooser extends JComponent implements MouseListener {
 
 					setCurrSelected(imgid);
 					
-					if (e.getClickCount() == 2) {
+					if (e.getClickCount() == 2 && imgid == lastClickTarget) {
 						
 						Object o = getSelectedObject();
 						BufferedImage i = getSelectedImage();
@@ -233,6 +235,9 @@ public class JCoverChooser extends JComponent implements MouseListener {
 						
 					}
 				}
+				
+				lastClickTarget = imgid;
+				
 			} else if (e.getButton() == MouseEvent.BUTTON3) {
 				int imgid = getCoverForPoint(e.getX(), e.getY());
 
@@ -241,6 +246,8 @@ public class JCoverChooser extends JComponent implements MouseListener {
 						ev.onPopup(imgid, e);
 					}
 				}
+				
+				lastClickTarget = -1;
 			}
 		}
 	}

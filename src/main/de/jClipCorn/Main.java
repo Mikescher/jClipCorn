@@ -155,7 +155,3 @@ public class Main {
 //TODO cover loading in background (for seriespreview and mainpage control --> show loader until cover is loaded)
 
 //TODO better scaling algorithm in JCoverChooser (-> same as CoverPreviewPanel)
-
-//TODO MainSidebar focus change via up/down arrow does not work
-
-//TODO CustomGroupFilter -> cb 'include subgroups' (default (or option) in sidebar)

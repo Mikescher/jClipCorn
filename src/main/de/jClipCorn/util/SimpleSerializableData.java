@@ -94,6 +94,10 @@ public class SimpleSerializableData {
 		return r;
 	}
 
+	public void removeChild(String id) {
+		children.remove(id);
+	}
+
 	public static SimpleSerializableData createEmpty() {
 		return new SimpleSerializableData();
 	}

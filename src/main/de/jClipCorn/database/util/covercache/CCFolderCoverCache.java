@@ -38,7 +38,7 @@ public class CCFolderCoverCache extends CCCoverCache {
 	private final static String COVER_DIRECTORY = PathFormatter.appendAndPrependSeparator(COVER_DIRECTORY_NAME);
 
 	private Map<String, BufferedImage> cache;
-	private SimpleSerializableData fullcache = SimpleSerializableData.createEmpty();
+	private SimpleSerializableData metacache = SimpleSerializableData.createEmpty();
 	
 	private String coverPath;
 	private String cacheFilepath;
@@ -59,9 +59,9 @@ public class CCFolderCoverCache extends CCCoverCache {
 		calculateBiggestCID();
 		
 		try {
-			if (PathFormatter.fileExists(cacheFilepath)) fullcache = SimpleSerializableData.load(cacheFilepath);
+			if (PathFormatter.fileExists(cacheFilepath)) metacache = SimpleSerializableData.load(cacheFilepath);
 		} catch (XMLFormatException e) {
-			fullcache = SimpleSerializableData.createEmpty();
+			metacache = SimpleSerializableData.createEmpty();
 			CCLog.addError("CoverCache loading failed", e); //$NON-NLS-1$
 		}
 	}
@@ -69,8 +69,8 @@ public class CCFolderCoverCache extends CCCoverCache {
 	@Override
 	@SuppressWarnings("nls")
 	public Tuple<Integer, Integer> getDimensions(String name) {
-		if (fullcache.containsChild(name)) {
-			SimpleSerializableData d = fullcache.getChild(name);
+		if (metacache.containsChild(name)) {
+			SimpleSerializableData d = metacache.getChild(name);
 			return Tuple.Create(d.getInt("width"), d.getInt("height"));
 		}
 		
@@ -92,10 +92,7 @@ public class CCFolderCoverCache extends CCCoverCache {
 				res = ImageIO.read(f);
 				if (res != null) {
 					cache.put(name, res);
-					
-					try (FileInputStream fis = new FileInputStream(f)) {
-						updateCache(name, res.getWidth(), res.getHeight(), f.length(), DigestUtils.sha256Hex(fis));
-					}
+					updateMetaCache(name, res, f);
 				} else {
 					CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CoverFileBroken", name)); //$NON-NLS-1$
 					return CachedResourceLoader.getImage(Resources.IMG_COVER_NOTFOUND);
@@ -114,38 +111,54 @@ public class CCFolderCoverCache extends CCCoverCache {
 	}
 	
 	@SuppressWarnings("nls")
-	private void updateCache(String name, int width, int height, long filesize, String hash) {
+	private void updateMetaCache(String name, BufferedImage img, File f) {
 		try {
-			if (fullcache.containsChild(name)) {
-				SimpleSerializableData child = fullcache.getChild(name);
+			try (FileInputStream fis = new FileInputStream(f)) {
 
-				int oldWidth   = child.getInt("width");
-				int oldHeight  = child.getInt("height");
-				int oldSize    = child.getInt("filesize");
-				String oldHash = child.getStr("hash");
+				int width = img.getWidth();
+				int height = img.getHeight();
+				long filesize = f.length();
+				String hash = DigestUtils.md5Hex(fis);
 				
-				if (width != oldWidth || height != oldHeight || filesize != oldSize || !hash.equals(oldHash)) {
+				if (metacache.containsChild(name)) {
+					SimpleSerializableData child = metacache.getChild(name);
+
+					int oldWidth   = child.getInt("width");
+					int oldHeight  = child.getInt("height");
+					int oldSize    = child.getInt("filesize");
+					String oldHash = child.getStr("hash");
+					
+					if (width != oldWidth || height != oldHeight || filesize != oldSize || !hash.equals(oldHash)) {
+						child.set("width", width);
+						child.set("height", height);
+						child.set("filesize", filesize);
+						child.set("hash", hash);
+
+						SaveMetaCache();
+					}
+				} else {
+					SimpleSerializableData child = metacache.addChild(name);
 
 					child.set("width", width);
 					child.set("height", height);
 					child.set("filesize", filesize);
 					child.set("hash", hash);
 					
-					fullcache.save(cacheFilepath);
+					SaveMetaCache();
 				}
-			} else {
-				SimpleSerializableData child = fullcache.addChild(name);
-
-				child.set("width", width);
-				child.set("height", height);
-				child.set("filesize", filesize);
-				child.set("hash", hash);
-				
-				fullcache.save(cacheFilepath);
 			}
 		}
 		catch (IOException e) {
-			CCLog.addError("Could not save cover cache", e);
+			CCLog.addError("Could not update cover cache", e);
+		}
+	}
+	
+	private void SaveMetaCache() {
+		try {
+			metacache.save(cacheFilepath);
+		}
+		catch (IOException e) {
+			CCLog.addError("Could not save cover cache", e); //$NON-NLS-1$
 		}
 	}
 
@@ -217,6 +230,7 @@ public class CCFolderCoverCache extends CCCoverCache {
 			File f = new File(path);
 			if (! f.exists()) {
 				ImageIO.write(newCover, CCProperties.getInstance().PROP_COVER_TYPE.getValue(), f);
+				updateMetaCache(fname, newCover, f);
 			} else {
 				CCLog.addError(LocaleBundle.getFormattedString("LogMessage.TryOverwriteFile", path)); //$NON-NLS-1$
 			}
@@ -238,6 +252,9 @@ public class CCFolderCoverCache extends CCCoverCache {
 		if (!f.delete()) {
 			CCLog.addWarning(LocaleBundle.getFormattedString("LogMessage.DeleteCover", covername)); //$NON-NLS-1$
 		}
+		
+		metacache.removeChild(covername);
+		SaveMetaCache();
 		
 		CCLog.addDebug("removing Cover from Folder: " + covername); //$NON-NLS-1$
 	}

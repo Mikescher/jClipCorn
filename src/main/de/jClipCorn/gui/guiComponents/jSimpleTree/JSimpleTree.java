@@ -16,6 +16,8 @@ public class JSimpleTree extends JTree implements TreeSelectionListener {
 	private static final long serialVersionUID = 6361624518488393639L;
 
 	private int _lastModifier = 0;
+	private SimpleTreeObject _lastExecBySelection = null;
+	private long _lastExecBySelectionTime = 0;
 	
 	public SimpletreeActionMode ActionMode = SimpletreeActionMode.OnSelect;
 	
@@ -55,6 +57,8 @@ public class JSimpleTree extends JTree implements TreeSelectionListener {
 		        if(selPath != null && e.getClickCount() == 1 && ActionMode == SimpletreeActionMode.OnClick) {
 	    			Object user = ((DefaultMutableTreeNode) selPath.getLastPathComponent()).getUserObject();
 	    			if (user != null) {
+	    				if (user == _lastExecBySelection && (System.currentTimeMillis() - _lastExecBySelectionTime) < 300) return; // skip
+	    				
 	    				((SimpleTreeObject) user).execute(selPath, (_lastModifier & InputEvent.CTRL_MASK) == InputEvent.CTRL_MASK);
 	    			}
 		        }
@@ -92,16 +96,17 @@ public class JSimpleTree extends JTree implements TreeSelectionListener {
 
 	@Override
 	public void valueChanged(TreeSelectionEvent e) {
-		if (ActionMode == SimpletreeActionMode.OnSelect) {
-			TreePath p = this.getSelectionPath();
-			Object o = p.getLastPathComponent();
-			if (o != null && o instanceof DefaultMutableTreeNode) {		
-				DefaultMutableTreeNode node = (DefaultMutableTreeNode) o;
+		TreePath p = this.getSelectionPath();
+		Object o = p.getLastPathComponent();
+		if (o != null && o instanceof DefaultMutableTreeNode) {		
+			DefaultMutableTreeNode node = (DefaultMutableTreeNode) o;
+			
+			Object user = node.getUserObject();
+			if (user != null) {
+				((SimpleTreeObject) user).execute(p, (_lastModifier & InputEvent.CTRL_MASK) == InputEvent.CTRL_MASK);
 				
-				Object user = node.getUserObject();
-				if (user != null) {
-					((SimpleTreeObject) user).execute(p, (_lastModifier & InputEvent.CTRL_MASK) == InputEvent.CTRL_MASK);
-				}
+				_lastExecBySelection = ((SimpleTreeObject) user);
+				_lastExecBySelectionTime = System.currentTimeMillis();
 			}
 		}
 	}

@@ -1,7 +1,5 @@
 package de.jClipCorn.table.filter.customFilter;
 
-import java.awt.image.BufferedImage;
-
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.ICCCoveredElement;
 import de.jClipCorn.database.databaseElement.ICCDatabaseStructureElement;
@@ -14,6 +12,7 @@ import de.jClipCorn.table.filter.filterConfig.CustomFilterIntAreaConfig;
 import de.jClipCorn.util.DecimalSearchType;
 import de.jClipCorn.util.datatypes.CCIntArea;
 import de.jClipCorn.util.datatypes.DimensionAxisType;
+import de.jClipCorn.util.datatypes.Tuple;
 
 public class CustomCoverDimensionFilter extends AbstractCustomFilter {
 	private DimensionAxisType axis = DimensionAxisType.WIDTH;
@@ -22,11 +21,10 @@ public class CustomCoverDimensionFilter extends AbstractCustomFilter {
 	@Override
 	public boolean includes(ICCDatabaseStructureElement e) {
 		if (e instanceof ICCCoveredElement) {
-			BufferedImage cvr = ((ICCCoveredElement)e).getCover();
+			Tuple<Integer, Integer> cvr = ((ICCCoveredElement)e).getCoverDimensions();
 
-			if (axis == DimensionAxisType.WIDTH) return range.contains(cvr.getWidth());
-			if (axis == DimensionAxisType.HEIGHT) return range.contains(cvr.getHeight());
-			
+			if (axis == DimensionAxisType.WIDTH) return range.contains(cvr.Item1);
+			if (axis == DimensionAxisType.HEIGHT) return range.contains(cvr.Item2);
 		}
 		return false;
 	}

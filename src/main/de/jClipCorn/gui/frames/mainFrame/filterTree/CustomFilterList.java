@@ -73,7 +73,6 @@ public class CustomFilterList extends ArrayList<CustomFilterObject> {
 					add(new CustomFilterObject(line[0], op));
 				} else {
 					CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CouldNotParseFilterList", i)); //$NON-NLS-1$
-					return;
 				}
 			}
 		}

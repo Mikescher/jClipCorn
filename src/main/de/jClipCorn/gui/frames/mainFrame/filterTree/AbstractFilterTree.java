@@ -151,7 +151,6 @@ public abstract class AbstractFilterTree extends JScrollPane implements CCDBUpda
 
 	@Override
 	public void treeExpanded(TreeExpansionEvent e) {
-		
 		if (e.getPath().getPathCount() > 2) return;
 		
 		for (int i = 0; i < root.getChildCount(); i++) {

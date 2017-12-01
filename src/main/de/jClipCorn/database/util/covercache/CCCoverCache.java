@@ -1,12 +1,12 @@
 package de.jClipCorn.database.util.covercache;
 
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.util.datatypes.Tuple;
+import de.jClipCorn.util.lambda.Func0to1WithIOException;
 
 public abstract class CCCoverCache {
 	public abstract void connect();
@@ -23,7 +23,7 @@ public abstract class CCCoverCache {
 	
 	public abstract void deleteCover(String covername);
 
-	public abstract List<Tuple<String, BufferedImage>> listCoversNonCached() throws IOException;
+	public abstract List<Tuple<String, Func0to1WithIOException<BufferedImage>>> listCoversNonCached();
 	
 	public void deleteCover(CCDatabaseElement remMov) {
 		deleteCover(remMov.getCoverName());

@@ -46,6 +46,7 @@ import de.jClipCorn.util.exceptions.CCFormatException;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.helper.SimpleFileUtils;
+import de.jClipCorn.util.lambda.Func0to1WithIOException;
 import de.jClipCorn.util.listener.ProgressCallbackListener;
 
 public class ExportHelper {
@@ -194,10 +195,10 @@ public class ExportHelper {
 				// fast track for already serialized images (~ 6 times faster)
 				zipDir(((CCFolderCoverCache)cc).getCoverDirectory().getParentFile(), ((CCFolderCoverCache)cc).getCoverDirectory(), zos, false);
 			} else {
-				for (Tuple<String, BufferedImage> cover : cc.listCoversNonCached()) {
+				for (Tuple<String, Func0to1WithIOException<BufferedImage>> cover : cc.listCoversNonCached()) {
 					ZipEntry coverEntry = new ZipEntry(PathFormatter.combine("cover", cover.Item1)); //$NON-NLS-1$
 					zos.putNextEntry(coverEntry);
-					ImageIO.write(cover.Item2, "PNG", zos); //$NON-NLS-1$
+					ImageIO.write(cover.Item2.get(), "PNG", zos); //$NON-NLS-1$
 				}
 			}
 			

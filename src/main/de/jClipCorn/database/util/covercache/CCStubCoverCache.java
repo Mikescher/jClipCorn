@@ -1,7 +1,6 @@
 package de.jClipCorn.database.util.covercache;
 
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,6 +8,7 @@ import java.util.List;
 import de.jClipCorn.gui.resources.CachedResourceLoader;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.datatypes.Tuple;
+import de.jClipCorn.util.lambda.Func0to1WithIOException;
 
 public class CCStubCoverCache extends CCCoverCache {
 	@Override
@@ -52,7 +52,7 @@ public class CCStubCoverCache extends CCCoverCache {
 	}
 
 	@Override
-	public List<Tuple<String, BufferedImage>> listCoversNonCached() throws IOException {
+	public List<Tuple<String, Func0to1WithIOException<BufferedImage>>> listCoversNonCached() {
 		return new ArrayList<>();
 	}
 

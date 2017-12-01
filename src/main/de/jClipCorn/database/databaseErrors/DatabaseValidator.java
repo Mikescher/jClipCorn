@@ -2,7 +2,6 @@ package de.jClipCorn.database.databaseErrors;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -25,7 +24,6 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCQuality;
 import de.jClipCorn.database.databaseElement.columnTypes.CCTagList;
 import de.jClipCorn.database.util.covercache.CCCoverCache;
 import de.jClipCorn.database.util.covercache.CCFolderCoverCache;
-import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.datetime.CCDate;
@@ -33,6 +31,7 @@ import de.jClipCorn.util.formatter.FileSizeFormatter;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.formatter.RomanNumberFormatter;
 import de.jClipCorn.util.helper.ImageUtilities;
+import de.jClipCorn.util.lambda.Func0to1WithIOException;
 import de.jClipCorn.util.listener.ProgressCallbackListener;
 
 public class DatabaseValidator {
@@ -691,30 +690,25 @@ public class DatabaseValidator {
 		// ###############################################
 		// Too much Cover in Folder
 		// ###############################################
-		
-		try {
-			CCCoverCache cc = movielist.getCoverCache();
-			
-			List<Tuple<String, BufferedImage>> files = cc.listCoversNonCached();
 
-			for (int i = 0; i < files.size(); i++) {
-				String cvrname = files.get(i).Item1;
-				boolean found = false;
-				for (int j = 0; j < cvrList.size(); j++) {
-					found |= cvrList.get(j).getCover().equalsIgnoreCase(cvrname); // All hayl the Shortcut evaluation
-				}
-				if (! found) {
-					if (cc instanceof CCFolderCoverCache) {
-						e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_NONLINKED_COVERFILE, new File(PathFormatter.combine(((CCFolderCoverCache)cc).getCoverPath(), cvrname))));
-					} else {
-						e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_NONLINKED_COVERFILE, cvrname));
-					}
+		CCCoverCache cc = movielist.getCoverCache();
+		
+		List<Tuple<String, Func0to1WithIOException<BufferedImage>>> files = cc.listCoversNonCached();
+
+		for (int i = 0; i < files.size(); i++) {
+			String cvrname = files.get(i).Item1;
+			boolean found = false;
+			for (int j = 0; j < cvrList.size(); j++) {
+				found |= cvrList.get(j).getCover().equalsIgnoreCase(cvrname); // All hayl the Shortcut evaluation
+			}
+			if (! found) {
+				if (cc instanceof CCFolderCoverCache) {
+					e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_NONLINKED_COVERFILE, new File(PathFormatter.combine(((CCFolderCoverCache)cc).getCoverPath(), cvrname))));
+				} else {
+					e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_NONLINKED_COVERFILE, cvrname));
 				}
 			}
-		} catch (IOException e1) {
-			CCLog.addError(e1);
 		}
-		
 	}
 
 	private static void findDuplicateFiles(List<DatabaseError> e, CCMovieList movielist, ProgressCallbackListener pcl) {

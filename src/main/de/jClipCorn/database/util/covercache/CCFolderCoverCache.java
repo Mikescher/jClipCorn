@@ -25,6 +25,7 @@ import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.datatypes.CachedHashMap;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.formatter.PathFormatter;
+import de.jClipCorn.util.lambda.Func0to1WithIOException;
 
 public class CCFolderCoverCache extends CCCoverCache {
 	private final static String COVER_DIRECTORY_NAME = "cover"; //$NON-NLS-1$
@@ -200,7 +201,7 @@ public class CCFolderCoverCache extends CCCoverCache {
 	}
 
 	@Override
-	public List<Tuple<String, BufferedImage>> listCoversNonCached() throws IOException {
+	public List<Tuple<String, Func0to1WithIOException<BufferedImage>>> listCoversNonCached() {
 		final String prefix = CCProperties.getInstance().PROP_COVER_PREFIX.getValue();
 		final String suffix = "." + CCProperties.getInstance().PROP_COVER_TYPE.getValue();  //$NON-NLS-1$
 		
@@ -211,9 +212,11 @@ public class CCFolderCoverCache extends CCCoverCache {
 			}
 		});
 		
-		List<Tuple<String, BufferedImage>> result = new ArrayList<>();
+		List<Tuple<String, Func0to1WithIOException<BufferedImage>>> result = new ArrayList<>();
 		for (String file : files) {
-			result.add(Tuple.Create(file, ImageIO.read(new File(PathFormatter.combine(getCoverPath(), file)))));
+			String t1 = file;
+			Func0to1WithIOException<BufferedImage> t2 = () -> ImageIO.read(new File(PathFormatter.combine(getCoverPath(), file)));
+			result.add(Tuple.Create(t1, t2));
 		}
 		
 		return result;

@@ -1,7 +1,6 @@
 package de.jClipCorn.database.util.covercache;
 
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,6 +18,7 @@ import de.jClipCorn.gui.resources.CachedResourceLoader;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.datatypes.Tuple;
+import de.jClipCorn.util.lambda.Func0to1WithIOException;
 
 public class CCMemoryCoverCache extends CCCoverCache {
 	private Map<String, BufferedImage> data;
@@ -91,10 +91,12 @@ public class CCMemoryCoverCache extends CCCoverCache {
 	}
 
 	@Override
-	public List<Tuple<String, BufferedImage>> listCoversNonCached() throws IOException {
-		List<Tuple<String, BufferedImage>> r = new ArrayList<>();
+	public List<Tuple<String, Func0to1WithIOException<BufferedImage>>> listCoversNonCached() {
+		List<Tuple<String, Func0to1WithIOException<BufferedImage>>> r = new ArrayList<>();
 		for (Entry<String, BufferedImage> datum : data.entrySet()) {
-			r.add(Tuple.Create(datum.getKey(), datum.getValue()));
+			String t1 = datum.getKey();
+			Func0to1WithIOException<BufferedImage> t2 = () -> datum.getValue();
+			r.add(Tuple.Create(t1, t2));
 		}
 		return r;
 	}

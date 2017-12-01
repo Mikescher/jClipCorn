@@ -788,7 +788,7 @@ public class DatabaseValidator {
 			
 			CCGroup g = group;
 			
-			for(int i = 0; i < 6; i++) {
+			for(int i = 0; i < CCGroup.MAX_SUBGROUP_DEPTH; i++) {
 				if (g.Parent.isEmpty()) {
 					g = null;
 					break;

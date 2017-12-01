@@ -7,16 +7,40 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.table.filter.AbstractCustomDatabaseElementFilter;
 import de.jClipCorn.table.filter.AbstractCustomFilter;
 import de.jClipCorn.table.filter.FilterSerializationConfig;
+import de.jClipCorn.table.filter.filterConfig.CustomFilterBoolConfig;
 import de.jClipCorn.table.filter.filterConfig.CustomFilterConfig;
 import de.jClipCorn.table.filter.filterConfig.CustomFilterStringChooserConfig;
 import de.jClipCorn.util.stream.CCStreams;
 
 public class CustomGroupFilter extends AbstractCustomDatabaseElementFilter {
 	private String group = ""; //$NON-NLS-1$
+	private boolean allowSubgroups = true;
 	
 	@Override
 	public boolean includes(CCDatabaseElement e) {
-		return e.getGroups().contains(group);
+		
+		if (allowSubgroups) {
+			
+			return e.getGroups().iterate().any(g -> RecursiveMatch(e.getMovieList(), g, 0));
+			
+		} else {
+			
+			return e.getGroups().contains(group);
+			
+		}
+	}
+	
+	private boolean RecursiveMatch(CCMovieList ml, CCGroup g, int depth) {
+		if (depth > CCGroup.MAX_SUBGROUP_DEPTH) return false;
+		
+		if (g.Name.equalsIgnoreCase(group)) return true;
+		
+		if (g.Parent.isEmpty()) return false;
+		
+		CCGroup pg = ml.getGroupOrNull(g.Parent);
+		if (pg == null) return false;
+		
+		return RecursiveMatch(ml, pg, depth + 1);
 	}
 
 	@Override
@@ -38,6 +62,7 @@ public class CustomGroupFilter extends AbstractCustomDatabaseElementFilter {
 	@SuppressWarnings("nls")
 	protected void initSerialization(FilterSerializationConfig cfg) {
 		cfg.addString("group", (d) -> this.group = d,  () -> this.group);
+		cfg.addBool("subgroups", (d) -> this.allowSubgroups = d,  () -> this.allowSubgroups);
 	}
 	
 	@Override
@@ -45,9 +70,10 @@ public class CustomGroupFilter extends AbstractCustomDatabaseElementFilter {
 		return new CustomGroupFilter();
 	}
 
-	public static CustomGroupFilter create(CCGroup data) {
+	public static CustomGroupFilter create(CCGroup data, boolean subgroupmatches) {
 		CustomGroupFilter f = new CustomGroupFilter();
 		f.group = data.Name;
+		f.allowSubgroups = subgroupmatches;
 		return f;
 	}
 
@@ -56,6 +82,7 @@ public class CustomGroupFilter extends AbstractCustomDatabaseElementFilter {
 		return new CustomFilterConfig[]
 		{
 			new CustomFilterStringChooserConfig(() -> group, a -> group = a, CCStreams.iterate(ml.getGroupList()).map(g -> g.Name).enumerate(), true, true),
+			new CustomFilterBoolConfig(() -> allowSubgroups, a -> allowSubgroups = a, LocaleBundle.getString("FilterTree.Custom.AllowSubgroups")), //$NON-NLS-1$
 		};
 	}
 }

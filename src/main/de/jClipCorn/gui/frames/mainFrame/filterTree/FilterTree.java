@@ -236,7 +236,7 @@ public class FilterTree extends AbstractFilterTree {
 				if (pp == null) continue;
 				
 				groups_list.remove(group);
-				DefaultMutableTreeNode n = addNodeF(pp, (Icon)null, group.Name, () -> CustomGroupFilter.create(group));
+				DefaultMutableTreeNode n = addNodeF(pp, (Icon)null, group.Name, () -> CustomGroupFilter.create(group, true));
 				groups_done.put(group.Name, n);
 			}
 			

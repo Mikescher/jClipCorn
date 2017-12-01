@@ -158,8 +158,4 @@ public class Main {
 
 //TODO MainSidebar focus change via up/down arrow does not work
 
-//TODO cache cover size --> cover.xml cache(!) file (covers, dimension, hash, filesize)
-
-//TODO progressbar while loading covers in checkdatabase
-
 //TODO CustomGroupFilter -> cb 'include subgroups' (default (or option) in sidebar)

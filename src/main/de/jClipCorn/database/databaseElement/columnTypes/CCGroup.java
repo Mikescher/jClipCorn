@@ -9,6 +9,8 @@ public class CCGroup implements Comparable<CCGroup> {
 	public final static Pattern REGEX_GROUP_SYNTAX = Pattern.compile("\\[\\[[A-Za-z0-9\\-_ ]+\\]\\]"); //$NON-NLS-1$
 	private final static Pattern REGEX_GROUP_NAME = Pattern.compile("^[A-Za-z0-9\\-_ ]+$"); //$NON-NLS-1$
 	
+	public final static int MAX_SUBGROUP_DEPTH = 6;
+	
 	private static int staticGroupCounter = 10000;
 	
 	public final static Color[] TAG_COLORS = new Color[]

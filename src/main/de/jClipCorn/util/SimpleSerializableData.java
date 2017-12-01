@@ -32,6 +32,7 @@ public class SimpleSerializableData {
 	private final Map<String, SimpleSerializableData> children = new HashMap<>();
 	private final Map<String, String> dataString = new HashMap<>();
 	private final Map<String, Integer> dataInt = new HashMap<>();
+	private final Map<String, Long> dataLong = new HashMap<>();
 	private final Map<String, Boolean> dataBool = new HashMap<>();
 	private final Map<String, Byte[]> dataRaw = new HashMap<>();
 	
@@ -45,6 +46,10 @@ public class SimpleSerializableData {
 	
 	public int getInt(String id) {
 		return dataInt.get(id);
+	}
+	
+	public long getLong(String id) {
+		return dataLong.get(id);
 	}
 	
 	public byte[] getRaw(String id) {
@@ -61,6 +66,10 @@ public class SimpleSerializableData {
 	
 	public void set(String id, int val) {
 		dataInt.put(id, val);
+	}
+	
+	public void set(String id, long val) {
+		dataLong.put(id, val);
 	}
 	
 	public void set(String id, boolean val) {
@@ -138,6 +147,8 @@ public class SimpleSerializableData {
 				r.dataRaw.put(attr.getName().substring(4), ArrayUtils.toObject(B64_DECODER.decode(attr.getValue())));
 			} else if (attr.getName().startsWith("bool_")) {
 				r.dataBool.put(attr.getName().substring(5), attr.getValue().equals("true"));
+			} else if (attr.getName().startsWith("long_")) {
+				r.dataLong.put(attr.getName().substring(5), attr.getLongValue());
 			} else {
 				throw new XMLFormatException("found unsupported attribute-type: " + attr.getName());
 			}
@@ -152,6 +163,8 @@ public class SimpleSerializableData {
 				r.dataInt.put(child.getAttributeValue("name"), Integer.parseInt(child.getText()));
 			else if (child.getName().equals("attr_bool"))
 				r.dataBool.put(child.getAttributeValue("name"), child.getText().equals("true"));
+			else if (child.getName().equals("attr_long"))
+				r.dataLong.put(child.getAttributeValue("name"), Long.parseLong(child.getText()));
 			else if (child.getName().equals("attr_raw"))
 				r.dataRaw.put(child.getAttributeValue("name"), ArrayUtils.toObject(B64_DECODER.decode(child.getText())));
 			else 
@@ -164,6 +177,10 @@ public class SimpleSerializableData {
 	private void serialize(Element e) {
 		for (Entry<String, Integer> data : dataInt.entrySet()) {
 			e.setAttribute("int_"+data.getKey(), Integer.toString(data.getValue()));
+		}
+
+		for (Entry<String, Long> data : dataLong.entrySet()) {
+			e.setAttribute("long_"+data.getKey(), Long.toString(data.getValue()));
 		}
 
 		for (Entry<String, Boolean> data : dataBool.entrySet()) {
@@ -193,8 +210,8 @@ public class SimpleSerializableData {
 		
 		for (Entry<String, SimpleSerializableData> child : children.entrySet()) {
 			Element sub = new Element("element");
-			child.getValue().serialize(sub);
 			sub.setAttribute("id", child.getKey());
+			child.getValue().serialize(sub);
 			e.addContent(sub);
 		}
 	}

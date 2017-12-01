@@ -20,6 +20,7 @@ import de.jClipCorn.database.util.ExtendedViewedState;
 import de.jClipCorn.database.util.ExtendedViewedStateType;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.LargeMD5Calculator;
+import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.exceptions.CCFormatException;
 import de.jClipCorn.util.formatter.PathFormatter;
@@ -135,6 +136,11 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 	@Override
 	public BufferedImage getCover() {
 		return owner.getMovieList().getCoverCache().getCover(covername);
+	}
+
+	@Override
+	public Tuple<Integer, Integer> getCoverDimensions() {
+		return owner.getMovieList().getCoverCache().getDimensions(covername);
 	}
 	
 	public boolean isViewed() { // All parts viewed

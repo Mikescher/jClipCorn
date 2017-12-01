@@ -22,6 +22,7 @@ import de.jClipCorn.database.util.ExtendedViewedState;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.util.LargeMD5Calculator;
+import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.exceptions.CCFormatException;
 import de.jClipCorn.util.exceptions.GroupFormatException;
@@ -188,6 +189,11 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 	@Override
 	public BufferedImage getCover() {
 		return movielist.getCoverCache().getCover(covername);
+	}
+
+	@Override
+	public Tuple<Integer, Integer> getCoverDimensions() {
+		return movielist.getCoverCache().getDimensions(covername);
 	}
 	
 	@Override

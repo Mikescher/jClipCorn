@@ -2,6 +2,7 @@ package de.jClipCorn.database.util.covercache;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
@@ -16,24 +17,31 @@ import java.util.regex.Pattern;
 
 import javax.imageio.ImageIO;
 
+import org.apache.commons.codec.digest.DigestUtils;
+
 import de.jClipCorn.Main;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.gui.resources.CachedResourceLoader;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.properties.CCProperties;
+import de.jClipCorn.util.SimpleSerializableData;
 import de.jClipCorn.util.datatypes.CachedHashMap;
 import de.jClipCorn.util.datatypes.Tuple;
+import de.jClipCorn.util.exceptions.XMLFormatException;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.lambda.Func0to1WithIOException;
 
 public class CCFolderCoverCache extends CCCoverCache {
 	private final static String COVER_DIRECTORY_NAME = "cover"; //$NON-NLS-1$
+	private final static String COVER_CACHEFILE_NAME = "covercache.xml"; //$NON-NLS-1$
 	private final static String COVER_DIRECTORY = PathFormatter.appendAndPrependSeparator(COVER_DIRECTORY_NAME);
 
 	private Map<String, BufferedImage> cache;
-
+	private SimpleSerializableData fullcache = SimpleSerializableData.createEmpty();
+	
 	private String coverPath;
+	private String cacheFilepath;
 	
 	private Vector<Integer> usedCoverIDs;
 	
@@ -41,6 +49,7 @@ public class CCFolderCoverCache extends CCCoverCache {
 		cache = new CachedHashMap<>(CCProperties.getInstance().PROP_DATABASE_COVERCACHESIZE.getValue());
 		
 		coverPath = PathFormatter.combine(PathFormatter.getRealSelfDirectory(), dbPath, COVER_DIRECTORY);
+		cacheFilepath = PathFormatter.combine(PathFormatter.getRealSelfDirectory(), dbPath, COVER_CACHEFILE_NAME);
 	}
 
 	@Override
@@ -48,6 +57,25 @@ public class CCFolderCoverCache extends CCCoverCache {
 		tryCreatePath();
 
 		calculateBiggestCID();
+		
+		try {
+			if (PathFormatter.fileExists(cacheFilepath)) fullcache = SimpleSerializableData.load(cacheFilepath);
+		} catch (XMLFormatException e) {
+			fullcache = SimpleSerializableData.createEmpty();
+			CCLog.addError("CoverCache loading failed", e); //$NON-NLS-1$
+		}
+	}
+	
+	@Override
+	@SuppressWarnings("nls")
+	public Tuple<Integer, Integer> getDimensions(String name) {
+		if (fullcache.containsChild(name)) {
+			SimpleSerializableData d = fullcache.getChild(name);
+			return Tuple.Create(d.getInt("width"), d.getInt("height"));
+		}
+		
+		BufferedImage bi = getCover(name);
+		return Tuple.Create(bi.getWidth(), bi.getHeight());
 	}
 	
 	@Override
@@ -60,9 +88,14 @@ public class CCFolderCoverCache extends CCCoverCache {
 
 		if (res == null) {
 			try {
-				res = ImageIO.read(new File(PathFormatter.combine(coverPath, name)));
+				File f = new File(PathFormatter.combine(coverPath, name));
+				res = ImageIO.read(f);
 				if (res != null) {
 					cache.put(name, res);
+					
+					try (FileInputStream fis = new FileInputStream(f)) {
+						updateCache(name, res.getWidth(), res.getHeight(), f.length(), DigestUtils.sha256Hex(fis));
+					}
 				} else {
 					CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CoverFileBroken", name)); //$NON-NLS-1$
 					return CachedResourceLoader.getImage(Resources.IMG_COVER_NOTFOUND);
@@ -76,10 +109,46 @@ public class CCFolderCoverCache extends CCCoverCache {
 				return CachedResourceLoader.getImage(Resources.IMG_COVER_NOTFOUND);
 			}
 		}
-
+		
 		return res;
 	}
 	
+	@SuppressWarnings("nls")
+	private void updateCache(String name, int width, int height, long filesize, String hash) {
+		try {
+			if (fullcache.containsChild(name)) {
+				SimpleSerializableData child = fullcache.getChild(name);
+
+				int oldWidth   = child.getInt("width");
+				int oldHeight  = child.getInt("height");
+				int oldSize    = child.getInt("filesize");
+				String oldHash = child.getStr("hash");
+				
+				if (width != oldWidth || height != oldHeight || filesize != oldSize || !hash.equals(oldHash)) {
+
+					child.set("width", width);
+					child.set("height", height);
+					child.set("filesize", filesize);
+					child.set("hash", hash);
+					
+					fullcache.save(cacheFilepath);
+				}
+			} else {
+				SimpleSerializableData child = fullcache.addChild(name);
+
+				child.set("width", width);
+				child.set("height", height);
+				child.set("filesize", filesize);
+				child.set("hash", hash);
+				
+				fullcache.save(cacheFilepath);
+			}
+		}
+		catch (IOException e) {
+			CCLog.addError("Could not save cover cache", e);
+		}
+	}
+
 	@Override
 	public boolean coverExists(String name) {
 		return new File(PathFormatter.combine(coverPath, name)).exists();

@@ -13,6 +13,7 @@ public abstract class CCCoverCache {
 	
 	public abstract BufferedImage getCover(String name);
 	public abstract void preloadCover(String name);
+	public abstract Tuple<Integer, Integer> getDimensions(String covername);
 
 	public abstract boolean coverExists(String name);
 
@@ -30,4 +31,5 @@ public abstract class CCCoverCache {
 	}
 
 	public abstract void getBackupExclusions(List<String> excludedFolders, List<String> excludedFiles);
+
 }

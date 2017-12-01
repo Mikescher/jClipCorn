@@ -22,6 +22,12 @@ public class CCStubCoverCache extends CCCoverCache {
 	}
 
 	@Override
+	public Tuple<Integer, Integer> getDimensions(String covername) {
+		BufferedImage bi = getCover(covername);
+		return Tuple.Create(bi.getWidth(), bi.getHeight());
+	}
+
+	@Override
 	public void preloadCover(String name) {
 		// NOP
 	}

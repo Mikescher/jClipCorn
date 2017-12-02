@@ -64,7 +64,7 @@ public class CustomFilterList extends ArrayList<CustomFilterObject> {
 				String[] line = lines[i].split("\t"); //$NON-NLS-1$
 				
 				if (line.length != 2) {
-					CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CouldNotParseFilterList", i)); //$NON-NLS-1$
+					CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CouldNotParseFilterList", i+1)); //$NON-NLS-1$
 					return;
 				}
 				
@@ -72,7 +72,7 @@ public class CustomFilterList extends ArrayList<CustomFilterObject> {
 				if ((op = new CustomAndOperator()).importFromString(line[1])) {
 					add(new CustomFilterObject(line[0], op));
 				} else {
-					CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CouldNotParseFilterList", i)); //$NON-NLS-1$
+					CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CouldNotParseFilterList", i+1)); //$NON-NLS-1$
 				}
 			}
 		}

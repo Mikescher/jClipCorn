@@ -97,18 +97,21 @@ public class JSimpleTree extends JTree implements TreeSelectionListener {
 	@Override
 	public void valueChanged(TreeSelectionEvent e) {
 		TreePath p = this.getSelectionPath();
+		if (p == null) return;
+		
 		Object o = p.getLastPathComponent();
-		if (o != null && o instanceof DefaultMutableTreeNode) {		
-			DefaultMutableTreeNode node = (DefaultMutableTreeNode) o;
-			
-			Object user = node.getUserObject();
-			if (user != null) {
-				((SimpleTreeObject) user).execute(p, (_lastModifier & InputEvent.CTRL_MASK) == InputEvent.CTRL_MASK);
-				
-				_lastExecBySelection = ((SimpleTreeObject) user);
-				_lastExecBySelectionTime = System.currentTimeMillis();
-			}
-		}
+		if (o == null) return;
+		if (!(o instanceof DefaultMutableTreeNode)) return;
+
+		DefaultMutableTreeNode node = (DefaultMutableTreeNode) o;
+		
+		Object user = node.getUserObject();
+		if (user == null) return;
+
+		((SimpleTreeObject) user).execute(p, (_lastModifier & InputEvent.CTRL_MASK) == InputEvent.CTRL_MASK);
+		
+		_lastExecBySelection = ((SimpleTreeObject) user);
+		_lastExecBySelectionTime = System.currentTimeMillis();
 	}
 	
 }

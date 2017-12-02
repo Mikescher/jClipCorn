@@ -2,7 +2,6 @@ package de.jClipCorn.table.filter;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Pattern;
 
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.ICCDatabaseStructureElement;
@@ -144,14 +143,15 @@ public abstract class AbstractCustomFilter {
 		return builder.toString();
 	}
 	
-	@SuppressWarnings("nls")
 	public static int getIDFromExport(String txt) {
 		if (txt.length() < 4) return -1;
 		txt = txt.substring(1, txt.length() - 1);
-		String[] split = txt.split(Pattern.quote("|"));
-		if (split.length < 2) return -1;
+		
+		int idx = txt.indexOf('|');
+		if (idx < 0) return -1;
+		
 		try {
-			return Integer.parseInt(split[0]);
+			return Integer.parseInt(txt.substring(0, idx));
 		} catch (NumberFormatException e) {
 			return -1;
 		}

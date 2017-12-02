@@ -94,7 +94,8 @@ public final class CCDate implements Comparable<CCDate>, StringSpecSupplier {
 	}
 	
 	public static CCDate createFromSQL(String sqlRep) throws DateFormatException {
-		if (sqlRep.length() != 10) throw new DateFormatException(sqlRep);
+		// [yyyy-MM-dd]  or  [yyyy-MM-dd HH:mm]  or  [yyyy-MM-dd HH:mm:ss]  
+		if (sqlRep.length() != 10 && sqlRep.length() != 16 && sqlRep.length() != 19) throw new DateFormatException(sqlRep);
 		
 		int y = (sqlRep.charAt(0)-'0') * 1000 + // Y
 				(sqlRep.charAt(1)-'0') * 100 +  // Y
@@ -109,6 +110,9 @@ public final class CCDate implements Comparable<CCDate>, StringSpecSupplier {
 
 		if (sqlRep.charAt(4) != '-') throw new DateFormatException(sqlRep);
 		if (sqlRep.charAt(7) != '-') throw new DateFormatException(sqlRep);
+		if (sqlRep.length() > 10 && sqlRep.charAt(10) != ' ') throw new DateFormatException(sqlRep);
+		if (sqlRep.length() > 10 && sqlRep.charAt(13) != ':') throw new DateFormatException(sqlRep);
+		if (sqlRep.length() > 16 && sqlRep.charAt(16) != ':') throw new DateFormatException(sqlRep);
 		
 		return new CCDate(d, m, y);
 	}

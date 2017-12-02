@@ -125,7 +125,7 @@ public class CCFolderCoverCache extends CCCoverCache {
 
 					int oldWidth   = child.getInt("width");
 					int oldHeight  = child.getInt("height");
-					int oldSize    = child.getInt("filesize");
+					long oldSize   = child.getLong("filesize");
 					String oldHash = child.getStr("hash");
 					
 					if (width != oldWidth || height != oldHeight || filesize != oldSize || !hash.equals(oldHash)) {

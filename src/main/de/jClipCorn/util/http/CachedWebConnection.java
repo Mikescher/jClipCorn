@@ -47,7 +47,7 @@ public class CachedWebConnection extends WebConnectionLayer {
 			
 			try {
 				if (PathFormatter.fileExists(cacheDatabasePath)) {
-					db = SimpleSerializableData.load(cacheDatabasePath);
+					db = SimpleSerializableData.load(cacheDatabasePath, false);
 					dbref = new HashMap<>();
 					//for (SimpleSerializableData dat : db.enumerateChildren()) {
 					//	try {
@@ -58,7 +58,7 @@ public class CachedWebConnection extends WebConnectionLayer {
 					//	}
 					//}
 				} else {
-					db = SimpleSerializableData.createEmpty();
+					db = SimpleSerializableData.createEmpty(false);
 					dbref = new HashMap<>();
 				}
 			} catch (XMLFormatException e) {

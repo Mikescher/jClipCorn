@@ -35,9 +35,12 @@ public abstract class CCStream<TType> implements Iterator<TType>, Iterable<TType
 		return new SortedStream<>(this, (a,b) -> ObjectUtils.compare((Comparable)a, (Comparable)b));
 	}
 
-	@SuppressWarnings("unchecked")
-	public <TType, TAttrType> CCStream<TType> sortByProperty(Function<TType, TAttrType> _selector, Comparator<TAttrType> _comparator) {
-		return new SortedStream<>((CCStream<TType>) this, new Comparator<TType>() {
+	public <TAttrType extends Comparable<? super TAttrType>> CCStream<TType> autosortByProperty(Function<TType, TAttrType> _selector) {
+		return new SortedStream<>(this, (a, b) -> ObjectUtils.compare(_selector.apply(a), _selector.apply(b)));
+	}
+
+	public <TAttrType> CCStream<TType> sortByProperty(Function<TType, TAttrType> _selector, Comparator<TAttrType> _comparator) {
+		return new SortedStream<>(this, new Comparator<TType>() {
 			@Override
 			public int compare(TType o1, TType o2) {
 				return _comparator.compare(_selector.apply(o1), _selector.apply(o2));

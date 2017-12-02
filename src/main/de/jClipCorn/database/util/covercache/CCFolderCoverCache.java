@@ -18,6 +18,7 @@ import java.util.regex.Pattern;
 import javax.imageio.ImageIO;
 
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import de.jClipCorn.Main;
 import de.jClipCorn.gui.localization.LocaleBundle;
@@ -38,7 +39,7 @@ public class CCFolderCoverCache extends CCCoverCache {
 	private final static String COVER_DIRECTORY = PathFormatter.appendAndPrependSeparator(COVER_DIRECTORY_NAME);
 
 	private Map<String, BufferedImage> cache;
-	private SimpleSerializableData metacache = SimpleSerializableData.createEmpty();
+	private SimpleSerializableData metacache = null;
 	
 	private String coverPath;
 	private String cacheFilepath;
@@ -59,9 +60,9 @@ public class CCFolderCoverCache extends CCCoverCache {
 		calculateBiggestCID();
 		
 		try {
-			if (PathFormatter.fileExists(cacheFilepath)) metacache = SimpleSerializableData.load(cacheFilepath);
+			if (PathFormatter.fileExists(cacheFilepath)) metacache = SimpleSerializableData.load(cacheFilepath, true);
 		} catch (XMLFormatException e) {
-			metacache = SimpleSerializableData.createEmpty();
+			metacache = SimpleSerializableData.createEmpty(true);
 			CCLog.addError("CoverCache loading failed", e); //$NON-NLS-1$
 		}
 	}
@@ -219,7 +220,7 @@ public class CCFolderCoverCache extends CCCoverCache {
 
 	@Override
 	public String addCover(BufferedImage newCover) {
-		int id = getNewCoverID();
+		String id = StringUtils.leftPad(Integer.toString(getNewCoverID()), 5);
 		
 		CCLog.addDebug("addingCoverToFolder: " + id); //$NON-NLS-1$
 

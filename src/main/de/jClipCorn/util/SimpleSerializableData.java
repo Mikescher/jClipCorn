@@ -22,6 +22,7 @@ import org.jdom2.output.XMLOutputter;
 
 import de.jClipCorn.util.exceptions.XMLFormatException;
 import de.jClipCorn.util.helper.SimpleFileUtils;
+import de.jClipCorn.util.stream.CCStreams;
 
 @SuppressWarnings("nls")
 public class SimpleSerializableData {
@@ -36,8 +37,10 @@ public class SimpleSerializableData {
 	private final Map<String, Boolean> dataBool = new HashMap<>();
 	private final Map<String, Byte[]> dataRaw = new HashMap<>();
 	
-	private SimpleSerializableData() {
-		
+	private final boolean sortBeforeSerialize;
+	
+	private SimpleSerializableData(boolean outputSorted) {
+		sortBeforeSerialize = outputSorted;
 	}
 	
 	public String getStr(String id) {
@@ -89,7 +92,7 @@ public class SimpleSerializableData {
 	}
 	
 	public SimpleSerializableData addChild(String id) {
-		SimpleSerializableData r = new SimpleSerializableData();
+		SimpleSerializableData r = new SimpleSerializableData(sortBeforeSerialize);
 		children.put(id, r);
 		return r;
 	}
@@ -98,11 +101,11 @@ public class SimpleSerializableData {
 		children.remove(id);
 	}
 
-	public static SimpleSerializableData createEmpty() {
-		return new SimpleSerializableData();
+	public static SimpleSerializableData createEmpty(boolean outputSorted) {
+		return new SimpleSerializableData(outputSorted);
 	}
 	
-	public static SimpleSerializableData load(String filename) throws XMLFormatException {
+	public static SimpleSerializableData load(String filename, boolean outputSorted) throws XMLFormatException {
 		try {
 			Document doc = new SAXBuilder().build(new StringReader(SimpleFileUtils.readUTF8TextFile(filename)));
 			
@@ -110,7 +113,7 @@ public class SimpleSerializableData {
 			
 			if (! root.getName().equals("root")) throw new XMLFormatException("found unsupported element: <" + root.getName() + ">");
 			
-			return deserialize(root);
+			return deserialize(root, outputSorted);
 		} catch (Exception e) {
 			throw new XMLFormatException(e.getMessage(), e);
 		}
@@ -137,8 +140,8 @@ public class SimpleSerializableData {
 		}
 	}
 	
-	private static SimpleSerializableData deserialize(Element el) throws XMLFormatException, DataConversionException, NumberFormatException {	
-		SimpleSerializableData r = new SimpleSerializableData();
+	private static SimpleSerializableData deserialize(Element el, boolean sbs) throws XMLFormatException, DataConversionException, NumberFormatException {	
+		SimpleSerializableData r = new SimpleSerializableData(sbs);
 		
 		for (Attribute attr : el.getAttributes()) {
 			if (attr.getName().equals("id")) {
@@ -160,7 +163,7 @@ public class SimpleSerializableData {
 		
 		for (Element child : el.getChildren()) {
 			if (child.getName().equals("element"))
-				r.children.put(child.getAttributeValue("id"), deserialize(child));
+				r.children.put(child.getAttributeValue("id"), deserialize(child, sbs));
 			else if (child.getName().equals("attr_str"))
 				r.dataString.put(child.getAttributeValue("name"), new String(B64_DECODER.decode(child.getText()), Charset.forName("UTF-8")));
 			else if (child.getName().equals("attr_int"))
@@ -212,12 +215,22 @@ public class SimpleSerializableData {
 			}
 		}
 		
-		for (Entry<String, SimpleSerializableData> child : children.entrySet()) {
-			Element sub = new Element("element");
-			sub.setAttribute("id", child.getKey());
-			child.getValue().serialize(sub);
-			e.addContent(sub);
+		if (sortBeforeSerialize) {
+			for (Entry<String, SimpleSerializableData> child : CCStreams.iterate(children.entrySet()).autosortByProperty(p -> p.getKey())) {
+				Element sub = new Element("element");
+				sub.setAttribute("id", child.getKey());
+				child.getValue().serialize(sub);
+				e.addContent(sub);
+			}
+		} else {
+			for (Entry<String, SimpleSerializableData> child : children.entrySet()) {
+				Element sub = new Element("element");
+				sub.setAttribute("id", child.getKey());
+				child.getValue().serialize(sub);
+				e.addContent(sub);
+			}
 		}
+		
 	}
 	
 	public Iterable<SimpleSerializableData> enumerateChildren() {

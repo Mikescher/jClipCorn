@@ -157,6 +157,12 @@ public class CCBackup {
 		
 		saveToFile();
 	}
+
+	public boolean containsCovers() {
+		String result = properties.getProperty(PROP_EXCLUDECOVERS);
+		if (result == null) return true;
+		return result.equals("0"); //$NON-NLS-1$
+	}
 	
 	public boolean isExpired() {
 		if (isPersistent()) return false;

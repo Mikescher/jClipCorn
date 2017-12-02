@@ -360,7 +360,7 @@ public class BackupsManagerFrame extends JFrame {
 		btnMakePersistent.setEnabled(isElementSelected() && ra);
 		btnOpenInExplorer.setEnabled(isElementSelected());
 		btnDelete.setEnabled(isElementSelected() && ra);
-		btnInsert.setEnabled(isElementSelected() && ra);
+		btnInsert.setEnabled(isElementSelected() && ra && currentSelected.containsCovers());
 	}
 	
 	private void createBackup(final boolean persistent, final String name) {

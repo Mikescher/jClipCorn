@@ -14,7 +14,7 @@
         <column name="VIEWED"         type="BIT"      required="true"                  />
         <column name="VIEWED_HISTORY" type="VARCHAR"  required="true" size="4096"      />
         <column name="ZYKLUS"         type="VARCHAR"  required="true" size="128"       />
-        <column name="ZYKLUSNUMBER"   type="TINYINT"  required="true"                  />
+        <column name="ZYKLUSNUMBER"   type="INTEGER"  required="true"                  />
         <column name="QUALITY"        type="TINYINT"  required="true"                  />
         <column name="LANGUAGE"       type="TINYINT"  required="true"                  />    <!-- ALSO USED FOR SERIES -->
         <column name="GENRE"          type="BIGINT"   required="true"                  />    <!-- ALSO USED FOR SERIES -->
@@ -48,8 +48,8 @@
         <column name="SEASONYEAR"   type="SMALLINT" required="true"                  />
         <column name="COVERNAME"    type="VARCHAR"  required="true" size="256"       />
 
-        <foreign-key foreignTable="SEASONS">
-            <reference local="SERIESID" foreign="SERIESID"/>
+        <foreign-key foreignTable="ELEMENTS">
+            <reference local="SERIESID" foreign="LOCALID"/>
         </foreign-key> 
     </table>
 

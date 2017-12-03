@@ -220,7 +220,7 @@ public class CCFolderCoverCache extends CCCoverCache {
 
 	@Override
 	public String addCover(BufferedImage newCover) {
-		String id = StringUtils.leftPad(Integer.toString(getNewCoverID()), 5);
+		String id = StringUtils.leftPad(Integer.toString(getNewCoverID()), 5, '0');
 		
 		CCLog.addDebug("addingCoverToFolder: " + id); //$NON-NLS-1$
 

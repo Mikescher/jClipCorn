@@ -1,8 +1,5 @@
 package de.jClipCorn.table.filter.filterConfig;
 
-import java.util.function.Consumer;
-import java.util.function.Supplier;
-
 import javax.swing.ButtonGroup;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
@@ -18,6 +15,8 @@ import com.jgoodies.forms.layout.RowSpec;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.DecimalSearchType;
 import de.jClipCorn.util.datatypes.CCIntArea;
+import de.jClipCorn.util.lambda.Func0to1;
+import de.jClipCorn.util.lambda.Func1to0;
 
 public class CustomFilterIntAreaConfig extends CustomFilterConfig {
 
@@ -36,13 +35,13 @@ public class CustomFilterIntAreaConfig extends CustomFilterConfig {
 		public JRadioButton rdbtnExactly;
 	}
 	
-	private final Supplier<CCIntArea> valueGetter;
-	private final Consumer<CCIntArea> valueSetter;
+	private final Func0to1<CCIntArea> valueGetter;
+	private final Func1to0<CCIntArea> valueSetter;
 
 	private final Comparable<?> minimum;
 	private final Comparable<?> maximum;
 	
-	public CustomFilterIntAreaConfig(Supplier<CCIntArea> get, Consumer<CCIntArea> set, Comparable<?> min, Comparable<?> max) {
+	public CustomFilterIntAreaConfig(Func0to1<CCIntArea> get, Func1to0<CCIntArea> set, Comparable<?> min, Comparable<?> max) {
 		valueGetter = get;
 		valueSetter = set;
 
@@ -53,7 +52,7 @@ public class CustomFilterIntAreaConfig extends CustomFilterConfig {
 	@Override
 	public JComponent getComponent(Runnable onChange) {
 
-		CCIntArea initial = valueGetter.get();
+		CCIntArea initial = valueGetter.invoke();
 		CFIAFContainer container = new CFIAFContainer();
 		container.onChange = onChange;
 		
@@ -148,27 +147,27 @@ public class CustomFilterIntAreaConfig extends CustomFilterConfig {
 
 	private void onChanged(CFIAFContainer container) {
 
-		CCIntArea old = valueGetter.get();
+		CCIntArea old = valueGetter.invoke();
 		
 		if (container.rdbtnLesser.isSelected()) {
 			CCIntArea a = new CCIntArea(old.low, (int) container.spnLesser.getValue(), DecimalSearchType.LESSER);
 
-			valueSetter.accept(a);
+			valueSetter.invoke(a);
 			container.onChange.run();
 		} else if (container.rdbtnGreater.isSelected()) {
 			CCIntArea a = new CCIntArea((int) container.spnGreater.getValue(), old.high, DecimalSearchType.GREATER);
 
-			valueSetter.accept(a);
+			valueSetter.invoke(a);
 			container.onChange.run();
 		} else if (container.rdbtnBetween.isSelected()) {
 			CCIntArea a = new CCIntArea((int) container.spnBetween1.getValue(), (int) container.spnBetween2.getValue(), DecimalSearchType.IN_RANGE);
 
-			valueSetter.accept(a);
+			valueSetter.invoke(a);
 			container.onChange.run();
 		} else if (container.rdbtnExactly.isSelected()) {
 			CCIntArea a = new CCIntArea((int) container.spnExactly.getValue(), old.high, DecimalSearchType.EXACT);
 
-			valueSetter.accept(a);
+			valueSetter.invoke(a);
 			container.onChange.run();
 		}
 

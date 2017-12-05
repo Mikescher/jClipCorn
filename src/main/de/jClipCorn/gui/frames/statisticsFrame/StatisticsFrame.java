@@ -8,7 +8,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -40,6 +39,7 @@ import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.TimeKeeper;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.formatter.TimeIntervallFormatter;
+import de.jClipCorn.util.lambda.Func1to1;
 
 public class StatisticsFrame extends JFrame {
 	private static final long serialVersionUID = 2443934162053374481L;
@@ -356,8 +356,8 @@ public class StatisticsFrame extends JFrame {
 	}
 	
 	private void initCharts() {
-		for (Function<CCMovieList, StatisticsGroup> supplier : ClipCornStatistics.STATISTICS) {
-			cbxChooseChart.addItem(supplier.apply(movielist));
+		for (Func1to1<CCMovieList, StatisticsGroup> supplier : ClipCornStatistics.STATISTICS) {
+			cbxChooseChart.addItem(supplier.invoke(movielist));
 		}
 	}
 	

@@ -2,19 +2,19 @@ package de.jClipCorn.table.filter.filterConfig;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 import javax.swing.JComponent;
 
 import de.jClipCorn.gui.guiComponents.JTextFieldLimit;
+import de.jClipCorn.util.lambda.Func0to1;
+import de.jClipCorn.util.lambda.Func1to0;
 
 public class CustomFilterCharConfig extends CustomFilterConfig {
 
-	private final Supplier<String> valueGetter;
-	private final Consumer<String> valueSetter;
+	private final Func0to1<String> valueGetter;
+	private final Func1to0<String> valueSetter;
 	
-	public CustomFilterCharConfig(Supplier<String> get, Consumer<String> set) {
+	public CustomFilterCharConfig(Func0to1<String> get, Func1to0<String> set) {
 		valueGetter = get;
 		valueSetter = set;
 	}
@@ -24,7 +24,7 @@ public class CustomFilterCharConfig extends CustomFilterConfig {
 
 		JTextFieldLimit tf = new JTextFieldLimit();
 		tf.setMaxLength(1);
-		tf.setText(valueGetter.get());
+		tf.setText(valueGetter.invoke());
 		
 		tf.addActionListener(new ActionListener() {
 			@Override
@@ -32,7 +32,7 @@ public class CustomFilterCharConfig extends CustomFilterConfig {
 				String txt = tf.getText();
 				if (txt.length() == 0) return;
 
-				valueSetter.accept(txt.substring(0, 1));
+				valueSetter.invoke(txt.substring(0, 1));
 				onChange.run();
 			}
 		});

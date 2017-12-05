@@ -1,8 +1,5 @@
 package de.jClipCorn.table.filter.filterConfig;
 
-import java.util.function.Consumer;
-import java.util.function.Supplier;
-
 import javax.swing.ButtonGroup;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
@@ -17,6 +14,8 @@ import de.jClipCorn.gui.guiComponents.jCCDateSpinner.JCCDateSpinner;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.DecimalSearchType;
 import de.jClipCorn.util.datetime.CCDateArea;
+import de.jClipCorn.util.lambda.Func0to1;
+import de.jClipCorn.util.lambda.Func1to0;
 
 public class CustomFilterDateAreaConfig extends CustomFilterConfig {
 
@@ -35,10 +34,10 @@ public class CustomFilterDateAreaConfig extends CustomFilterConfig {
 		public JRadioButton rdbtnExactly;
 	}
 	
-	private final Supplier<CCDateArea> valueGetter;
-	private final Consumer<CCDateArea> valueSetter;
+	private final Func0to1<CCDateArea> valueGetter;
+	private final Func1to0<CCDateArea> valueSetter;
 	
-	public CustomFilterDateAreaConfig(Supplier<CCDateArea> get, Consumer<CCDateArea> set) {
+	public CustomFilterDateAreaConfig(Func0to1<CCDateArea> get, Func1to0<CCDateArea> set) {
 		valueGetter = get;
 		valueSetter = set;
 	}
@@ -46,7 +45,7 @@ public class CustomFilterDateAreaConfig extends CustomFilterConfig {
 	@Override
 	public JComponent getComponent(Runnable onChange) {
 
-		CCDateArea initial = valueGetter.get();
+		CCDateArea initial = valueGetter.invoke();
 		CFDAFContainer container = new CFDAFContainer();
 		container.onChange = onChange;
 		
@@ -138,27 +137,27 @@ public class CustomFilterDateAreaConfig extends CustomFilterConfig {
 
 	private void onChanged(CFDAFContainer container) {
 
-		CCDateArea old = valueGetter.get();
+		CCDateArea old = valueGetter.invoke();
 		
 		if (container.rdbtnLesser.isSelected()) {
 			CCDateArea a = new CCDateArea(old.low, container.spnLesser.getValue(), DecimalSearchType.LESSER);
 
-			valueSetter.accept(a);
+			valueSetter.invoke(a);
 			container.onChange.run();
 		} else if (container.rdbtnGreater.isSelected()) {
 			CCDateArea a = new CCDateArea(container.spnGreater.getValue(), old.high, DecimalSearchType.GREATER);
 
-			valueSetter.accept(a);
+			valueSetter.invoke(a);
 			container.onChange.run();
 		} else if (container.rdbtnBetween.isSelected()) {
 			CCDateArea a = new CCDateArea(container.spnBetween1.getValue(), container.spnBetween2.getValue(), DecimalSearchType.IN_RANGE);
 
-			valueSetter.accept(a);
+			valueSetter.invoke(a);
 			container.onChange.run();
 		} else if (container.rdbtnExactly.isSelected()) {
 			CCDateArea a = new CCDateArea(container.spnExactly.getValue(), old.high, DecimalSearchType.EXACT);
 
-			valueSetter.accept(a);
+			valueSetter.invoke(a);
 			container.onChange.run();
 		}
 

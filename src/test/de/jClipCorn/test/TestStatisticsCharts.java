@@ -1,7 +1,6 @@
 package de.jClipCorn.test;
 
 import java.util.Collection;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.junit.Test;
@@ -13,6 +12,7 @@ import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.gui.frames.statisticsFrame.ClipCornStatistics;
 import de.jClipCorn.gui.frames.statisticsFrame.StatisticsGroup;
 import de.jClipCorn.gui.frames.statisticsFrame.StatisticsTypeFilter;
+import de.jClipCorn.util.lambda.Func1to1;
 
 @RunWith(Parameterized.class)
 public class TestStatisticsCharts extends ClipCornBaseTest {
@@ -20,8 +20,8 @@ public class TestStatisticsCharts extends ClipCornBaseTest {
 	@Parameters
 	public static Collection<Object[]> data() { return ClipCornStatistics.STATISTICS.stream().map(p -> new Object[]{p}).collect(Collectors.toList()); }
 	
-	private final Function<CCMovieList, StatisticsGroup> supplier;
-	public TestStatisticsCharts(Function<CCMovieList, StatisticsGroup> _supplier) {
+	private final Func1to1<CCMovieList, StatisticsGroup> supplier;
+	public TestStatisticsCharts(Func1to1<CCMovieList, StatisticsGroup> _supplier) {
 		supplier = _supplier;
 	}
 	
@@ -29,7 +29,7 @@ public class TestStatisticsCharts extends ClipCornBaseTest {
 	public void testStatisticsChartCreation() throws Exception {
 		CCMovieList ml = createExampleDB();
 
-		StatisticsGroup group = supplier.apply(ml);
+		StatisticsGroup group = supplier.invoke(ml);
 		
 		if (group.supportedTypes().containsMovies()) group.getComponent(StatisticsTypeFilter.MOVIES);
 
@@ -42,7 +42,7 @@ public class TestStatisticsCharts extends ClipCornBaseTest {
 	public void testStatisticsChartCreationWithEmptyDB() throws Exception {
 		CCMovieList ml = createEmptyDB();
 
-		StatisticsGroup group = supplier.apply(ml);
+		StatisticsGroup group = supplier.invoke(ml);
 		
 		if (group.supportedTypes().containsMovies()) group.getComponent(StatisticsTypeFilter.MOVIES);
 

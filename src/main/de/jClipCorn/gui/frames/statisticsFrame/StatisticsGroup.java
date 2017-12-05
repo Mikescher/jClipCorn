@@ -4,29 +4,29 @@ import java.awt.event.ComponentEvent;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.function.Function;
 
 import javax.swing.JComponent;
 
 import de.jClipCorn.database.databaseElement.CCSeries;
+import de.jClipCorn.util.lambda.Func1to1;
 
 public class StatisticsGroup {
 	private StatisticsPanel template;
 	
-	private final Function<StatisticsTypeFilter, StatisticsPanel> constructor;
+	private final Func1to1<StatisticsTypeFilter, StatisticsPanel> constructor;
 	
 	protected Map<StatisticsTypeFilter, StatisticsPanel> chartPanels;
 
-	public StatisticsGroup(Function<StatisticsTypeFilter, StatisticsPanel> _ctr) {
+	public StatisticsGroup(Func1to1<StatisticsTypeFilter, StatisticsPanel> _ctr) {
 		super();
 		this.chartPanels = new HashMap<>();
 		this.constructor = _ctr;
-		this.template = _ctr.apply(StatisticsTypeFilter.MOVIES);
+		this.template = _ctr.invoke(StatisticsTypeFilter.MOVIES);
 	}
 	
 	public JComponent getComponent(StatisticsTypeFilter source) {
 		if (! chartPanels.containsKey(source)) {
-			StatisticsPanel chartPanel = constructor.apply(source);
+			StatisticsPanel chartPanel = constructor.invoke(source);
 			
 			chartPanels.put(source, chartPanel);
 		}

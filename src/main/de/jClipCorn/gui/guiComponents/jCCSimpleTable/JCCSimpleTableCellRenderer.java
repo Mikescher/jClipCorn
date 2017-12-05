@@ -1,18 +1,17 @@
 package de.jClipCorn.gui.guiComponents.jCCSimpleTable;
 
-import java.util.function.Function;
-
 import javax.swing.Icon;
 
 import de.jClipCorn.table.renderer.TableRenderer;
+import de.jClipCorn.util.lambda.Func1to1;
 
 public class JCCSimpleTableCellRenderer<TData> extends TableRenderer {
 	private static final long serialVersionUID = 7572425038209544688L;
 
-	private Function<TData, String> text;
-	private Function<TData, Icon> icon;
+	private Func1to1<TData, String> text;
+	private Func1to1<TData, Icon> icon;
 
-	public JCCSimpleTableCellRenderer(Function<TData, String> _text, Function<TData, Icon> _icon) {
+	public JCCSimpleTableCellRenderer(Func1to1<TData, String> _text, Func1to1<TData, Icon> _icon) {
 		super();
 
 		text = _text;
@@ -24,7 +23,7 @@ public class JCCSimpleTableCellRenderer<TData> extends TableRenderer {
 	public void setValue(Object value) {
 		TData el = (TData) value;
 
-		setText((text == null) ? ("") : (text.apply(el)));
-		setIcon((icon == null) ? (null) : (icon.apply(el)));
+		setText((text == null) ? ("") : (text.invoke(el)));
+		setIcon((icon == null) ? (null) : (icon.invoke(el)));
 	}
 }

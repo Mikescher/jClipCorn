@@ -7,10 +7,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.function.BinaryOperator;
-import java.util.function.Function;
 
 import org.apache.commons.lang3.ObjectUtils;
+
+import de.jClipCorn.util.lambda.Func1to1;
+import de.jClipCorn.util.lambda.Func2to1;
 
 /**
  * 
@@ -35,15 +36,15 @@ public abstract class CCStream<TType> implements Iterator<TType>, Iterable<TType
 		return new SortedStream<>(this, (a,b) -> ObjectUtils.compare((Comparable)a, (Comparable)b));
 	}
 
-	public <TAttrType extends Comparable<? super TAttrType>> CCStream<TType> autosortByProperty(Function<TType, TAttrType> _selector) {
-		return new SortedStream<>(this, (a, b) -> ObjectUtils.compare(_selector.apply(a), _selector.apply(b)));
+	public <TAttrType extends Comparable<? super TAttrType>> CCStream<TType> autosortByProperty(Func1to1<TType, TAttrType> _selector) {
+		return new SortedStream<>(this, (a, b) -> ObjectUtils.compare(_selector.invoke(a), _selector.invoke(b)));
 	}
 
-	public <TAttrType> CCStream<TType> sortByProperty(Function<TType, TAttrType> _selector, Comparator<TAttrType> _comparator) {
+	public <TAttrType> CCStream<TType> sortByProperty(Func1to1<TType, TAttrType> _selector, Comparator<TAttrType> _comparator) {
 		return new SortedStream<>(this, new Comparator<TType>() {
 			@Override
 			public int compare(TType o1, TType o2) {
-				return _comparator.compare(_selector.apply(o1), _selector.apply(o2));
+				return _comparator.compare(_selector.invoke(o1), _selector.invoke(o2));
 			}
 		});
 	}
@@ -89,17 +90,17 @@ public abstract class CCStream<TType> implements Iterator<TType>, Iterable<TType
 		return cloneFresh().hasNext();
 	}
 
-	public boolean any(Function<TType, Boolean> condition) {
+	public boolean any(Func1to1<TType, Boolean> condition) {
 		for (TType m : this) {
-			if (condition.apply(m)) return true;
+			if (condition.invoke(m)) return true;
 		}
 		
 		return false;
 	}
 
-	public boolean all(Function<TType, Boolean> condition) {
+	public boolean all(Func1to1<TType, Boolean> condition) {
 		for (TType m : this) {
-			if (!condition.apply(m)) return false;
+			if (!condition.invoke(m)) return false;
 		}
 		
 		return true;
@@ -113,12 +114,12 @@ public abstract class CCStream<TType> implements Iterator<TType>, Iterable<TType
 		return minOrDefault(p -> p, comp, defValue);
 	}
 	
-	public <TAttrType> TAttrType maxOrDefault(Function<TType, TAttrType> selector, Comparator<? super TAttrType> comp, TAttrType defValue) {
+	public <TAttrType> TAttrType maxOrDefault(Func1to1<TType, TAttrType> selector, Comparator<? super TAttrType> comp, TAttrType defValue) {
 		TAttrType current = defValue;
 		boolean first = true;
 		
 		for (TType m : this) {
-			TAttrType mattr = selector.apply(m);
+			TAttrType mattr = selector.invoke(m);
 			if (first) {
 				current = mattr;
 			} else {
@@ -133,12 +134,12 @@ public abstract class CCStream<TType> implements Iterator<TType>, Iterable<TType
 			return current;
 	}
 	
-	public <TAttrType> TAttrType minOrDefault(Function<TType, TAttrType> selector, Comparator<? super TAttrType> comp, TAttrType defValue) {
+	public <TAttrType> TAttrType minOrDefault(Func1to1<TType, TAttrType> selector, Comparator<? super TAttrType> comp, TAttrType defValue) {
 		TAttrType current = defValue;
 		boolean first = true;
 		
 		for (TType m : this) {
-			TAttrType mattr = selector.apply(m);
+			TAttrType mattr = selector.invoke(m);
 			if (first) {
 				current = mattr;
 			} else {
@@ -153,11 +154,11 @@ public abstract class CCStream<TType> implements Iterator<TType>, Iterable<TType
 			return current;
 	}
 
-	public <TAttrType> TAttrType findMostCommon(Function<TType, TAttrType> selector, TAttrType defValue) {
+	public <TAttrType> TAttrType findMostCommon(Func1to1<TType, TAttrType> selector, TAttrType defValue) {
 		Map<TAttrType, Integer> cache = new HashMap<>();
 		
 		for (TType m : this) {
-			TAttrType mattr = selector.apply(m);
+			TAttrType mattr = selector.invoke(m);
 
 			Integer v = cache.get(mattr);
 			if (v == null) v = 0;
@@ -177,11 +178,11 @@ public abstract class CCStream<TType> implements Iterator<TType>, Iterable<TType
 		return maxValue;
 	}
 
-	public <TAttrType> TAttrType findLeastCommon(Function<TType, TAttrType> selector, TAttrType defValue) {
+	public <TAttrType> TAttrType findLeastCommon(Func1to1<TType, TAttrType> selector, TAttrType defValue) {
 		Map<TAttrType, Integer> cache = new HashMap<>();
 		
 		for (TType m : this) {
-			TAttrType mattr = selector.apply(m);
+			TAttrType mattr = selector.invoke(m);
 
 			Integer v = cache.get(mattr);
 			if (v == null) v = 0;
@@ -201,11 +202,11 @@ public abstract class CCStream<TType> implements Iterator<TType>, Iterable<TType
 		return maxValue;
 	}
 
-	public CCStream<TType> filter(Function<TType, Boolean> filter) {
+	public CCStream<TType> filter(Func1to1<TType, Boolean> filter) {
 		return new FilterStream<>(this, filter);
 	}
 
-	public <TAttrType> CCStream<TAttrType> map(Function<TType, TAttrType> selector) {
+	public <TAttrType> CCStream<TAttrType> map(Func1to1<TType, TAttrType> selector) {
 		return new MapStream<>(this, selector);
 	}
 
@@ -222,15 +223,15 @@ public abstract class CCStream<TType> implements Iterator<TType>, Iterable<TType
 		return last;
 	}
 	
-	public TType sum(BinaryOperator<TType> op, TType startValue) {
+	public TType sum(Func2to1<TType, TType, TType> op, TType startValue) {
 		TType v = startValue;
-		for (TType t : this) v = op.apply(v, t);
+		for (TType t : this) v = op.invoke(v, t);
 		return v;
 	}
 	
-	public <TAttrType> TAttrType sum(Function<TType, TAttrType> selector, BinaryOperator<TAttrType> op, TAttrType startValue) {
+	public <TAttrType> TAttrType sum(Func1to1<TType, TAttrType> selector, Func2to1<TAttrType, TAttrType, TAttrType> op, TAttrType startValue) {
 		TAttrType v = startValue;
-		for (TType t : this) v = op.apply(v, selector.apply(t));
+		for (TType t : this) v = op.invoke(v, selector.invoke(t));
 		return v;
 	}
 
@@ -238,29 +239,29 @@ public abstract class CCStream<TType> implements Iterator<TType>, Iterable<TType
 		return new UniqueStream<>(this);
 	}
 
-	public <TAttrType> CCStream<TType> unique(Function<TType, TAttrType> selector) {
+	public <TAttrType> CCStream<TType> unique(Func1to1<TType, TAttrType> selector) {
 		return new UniqueAttributeStream<>(this, selector);
 	}
 
-	public <TAttrType> CCStream<TAttrType> flatten(Function<TType, Iterator<TAttrType>> selector) {
+	public <TAttrType> CCStream<TAttrType> flatten(Func1to1<TType, Iterator<TAttrType>> selector) {
 		return new FlattenedStream<>(this, selector);
 	}
 	
-	public String stringjoin(Function<TType, String> selector) {
+	public String stringjoin(Func1to1<TType, String> selector) {
 		StringBuilder buildr = new StringBuilder();
 
-		for (TType t : this) buildr.append(selector.apply(t));
+		for (TType t : this) buildr.append(selector.invoke(t));
 		
 		return buildr.toString();
 	}
 	
-	public String stringjoin(Function<TType, String> selector, String seperator) {
+	public String stringjoin(Func1to1<TType, String> selector, String seperator) {
 		StringBuilder buildr = new StringBuilder();
 
 		boolean first = true;
 		for (TType t : this) {
 			if (! first) buildr.append(seperator);
-			buildr.append(selector.apply(t));
+			buildr.append(selector.invoke(t));
 			first = false;
 		}
 		
@@ -293,10 +294,10 @@ public abstract class CCStream<TType> implements Iterator<TType>, Iterable<TType
 		return value;
 	}
 
-	public int findIndex(Function<TType, Boolean> filter) {
+	public int findIndex(Func1to1<TType, Boolean> filter) {
 		int i = 0;
 		for (TType t : this) {
-			if (filter.apply(t)) return i;
+			if (filter.invoke(t)) return i;
 			i++;
 		}
 		return -1;

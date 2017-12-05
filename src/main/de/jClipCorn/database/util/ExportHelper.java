@@ -12,7 +12,6 @@ import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
@@ -47,6 +46,7 @@ import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.helper.SimpleFileUtils;
 import de.jClipCorn.util.lambda.Func0to1WithIOException;
+import de.jClipCorn.util.lambda.Func1to1;
 import de.jClipCorn.util.listener.ProgressCallbackListener;
 
 public class ExportHelper {
@@ -73,14 +73,14 @@ public class ExportHelper {
 		doZipDir(owner, zipDir, zos, recursively, f->false, null);
 	}
 	
-	public static void zipDir(File owner, File zipDir, ZipOutputStream zos, boolean recursively, Function<File, Boolean> excluded, ProgressCallbackListener pcl) {
+	public static void zipDir(File owner, File zipDir, ZipOutputStream zos, boolean recursively, Func1to1<File, Boolean> excluded, ProgressCallbackListener pcl) {
 		pcl.reset();
 		pcl.setMax(PathFormatter.countAllFiles(zipDir));
 		
 		doZipDir(owner, zipDir, zos, recursively, excluded, pcl);
 	}
 	
-	private static void doZipDir(File owner, File zipDir, ZipOutputStream zos, boolean recursively, Function<File, Boolean> excluded, ProgressCallbackListener pcl) {
+	private static void doZipDir(File owner, File zipDir, ZipOutputStream zos, boolean recursively, Func1to1<File, Boolean> excluded, ProgressCallbackListener pcl) {
 		try {
 			String[] dirList = zipDir.list();
 			byte[] readBuffer = new byte[2156];
@@ -91,7 +91,7 @@ public class ExportHelper {
 				
 				File file = new File(zipDir, dirList[i]);
 
-				if (excluded.apply(file)) continue;
+				if (excluded.invoke(file)) continue;
 
 				if (file.isDirectory()) {
 					if (recursively) {
@@ -198,7 +198,7 @@ public class ExportHelper {
 				for (Tuple<String, Func0to1WithIOException<BufferedImage>> cover : cc.listCoversNonCached()) {
 					ZipEntry coverEntry = new ZipEntry(PathFormatter.combine("cover", cover.Item1)); //$NON-NLS-1$
 					zos.putNextEntry(coverEntry);
-					ImageIO.write(cover.Item2.get(), "PNG", zos); //$NON-NLS-1$
+					ImageIO.write(cover.Item2.invoke(), "PNG", zos); //$NON-NLS-1$
 				}
 			}
 			

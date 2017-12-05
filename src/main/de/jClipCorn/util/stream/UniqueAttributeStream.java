@@ -2,15 +2,16 @@ package de.jClipCorn.util.stream;
 
 import java.util.HashSet;
 import java.util.Set;
-import java.util.function.Function;
+
+import de.jClipCorn.util.lambda.Func1to1;
 
 public class UniqueAttributeStream<TType, TAttrType> extends CCSimpleStream<TType> {
 	private final CCStream<TType> source;
 	
 	private final Set<TAttrType> oldValues = new HashSet<>();
-	private final Function<TType, TAttrType> selector;
+	private final Func1to1<TType, TAttrType> selector;
 	
-	public UniqueAttributeStream(CCStream<TType> _source, Function<TType, TAttrType> _selector) {
+	public UniqueAttributeStream(CCStream<TType> _source, Func1to1<TType, TAttrType> _selector) {
 		super();
 		source = _source;
 		selector = _selector;
@@ -20,7 +21,7 @@ public class UniqueAttributeStream<TType, TAttrType> extends CCSimpleStream<TTyp
 	public TType nextOrNothing(boolean first) {
 		while (source.hasNext()) {
 			TType v = source.next();
-			TAttrType av = selector.apply(v);
+			TAttrType av = selector.invoke(v);
 			if (! oldValues.contains(av)) { oldValues.add(av); return v; }
 		}
 		

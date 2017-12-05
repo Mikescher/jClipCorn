@@ -1,19 +1,19 @@
 package de.jClipCorn.table.filter.filterConfig;
 
-import java.util.function.Consumer;
-import java.util.function.Supplier;
-
 import javax.swing.JComponent;
 import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+import de.jClipCorn.util.lambda.Func0to1;
+import de.jClipCorn.util.lambda.Func1to0;
+
 public class CustomFilterStringConfig extends CustomFilterConfig {
 
-	private final Supplier<String> valueGetter;
-	private final Consumer<String> valueSetter;
+	private final Func0to1<String> valueGetter;
+	private final Func1to0<String> valueSetter;
 	
-	public CustomFilterStringConfig(Supplier<String> get, Consumer<String> set) {
+	public CustomFilterStringConfig(Func0to1<String> get, Func1to0<String> set) {
 		valueGetter = get;
 		valueSetter = set;
 	}
@@ -22,25 +22,25 @@ public class CustomFilterStringConfig extends CustomFilterConfig {
 	public JComponent getComponent(Runnable onChange) {
 
 		JTextField tf = new JTextField();
-		tf.setText(valueGetter.get());
+		tf.setText(valueGetter.invoke());
 		
 		tf.getDocument().addDocumentListener(new DocumentListener() {
 			
 			@Override
 			public void removeUpdate(DocumentEvent e) {
-				valueSetter.accept(tf.getText());
+				valueSetter.invoke(tf.getText());
 				onChange.run();
 			}
 			
 			@Override
 			public void insertUpdate(DocumentEvent e) {
-				valueSetter.accept(tf.getText());
+				valueSetter.invoke(tf.getText());
 				onChange.run();
 			}
 			
 			@Override
 			public void changedUpdate(DocumentEvent e) {
-				valueSetter.accept(tf.getText());
+				valueSetter.invoke(tf.getText());
 				onChange.run();
 			}
 		});

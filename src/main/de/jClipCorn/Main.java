@@ -153,5 +153,3 @@ public class Main {
 //TODO MainTable and SeriesTable as JCCSimpleTable
 
 //TODO cover loading in background (for seriespreview and mainpage control --> show loader until cover is loaded)
-
-//TODO use custom interfaces for lambda

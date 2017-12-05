@@ -1,13 +1,13 @@
 package de.jClipCorn.util.stream;
 
-import java.util.function.Function;
+import de.jClipCorn.util.lambda.Func1to1;
 
 public class MapStream<TSourceType, TTargetType> extends CCStream<TTargetType> {
 
 	private final CCStream<TSourceType> source;
-	private final Function<TSourceType, TTargetType> selector;
+	private final Func1to1<TSourceType, TTargetType> selector;
 	
-	public MapStream(CCStream<TSourceType> _source, Function<TSourceType, TTargetType> _selector) {
+	public MapStream(CCStream<TSourceType> _source, Func1to1<TSourceType, TTargetType> _selector) {
 		source = _source;
 		selector = _selector;
 	}
@@ -19,7 +19,7 @@ public class MapStream<TSourceType, TTargetType> extends CCStream<TTargetType> {
 
 	@Override
 	public TTargetType next() {
-		return selector.apply(source.next());
+		return selector.invoke(source.next());
 	}
 
 	@Override

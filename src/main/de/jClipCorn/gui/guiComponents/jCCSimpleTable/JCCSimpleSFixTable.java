@@ -52,6 +52,6 @@ public class JCCSimpleSFixTable<TData> extends SFixTable {
 		
 		TData el = (TData)value;
 		
-		return columns.get(column).GetTooltip.apply(el);
+		return columns.get(column).GetTooltip.invoke(el);
 	}
 }

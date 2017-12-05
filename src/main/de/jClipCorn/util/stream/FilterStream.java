@@ -1,13 +1,13 @@
 package de.jClipCorn.util.stream;
 
-import java.util.function.Function;
+import de.jClipCorn.util.lambda.Func1to1;
 
 public class FilterStream<TType> extends CCSimpleStream<TType> {
 
 	private CCStream<TType> source;
-	private Function<TType, Boolean> filter;
+	private Func1to1<TType, Boolean> filter;
 	
-	public FilterStream(CCStream<TType> _source, Function<TType, Boolean> _filter) {
+	public FilterStream(CCStream<TType> _source, Func1to1<TType, Boolean> _filter) {
 		super();
 		source = _source;
 		filter = _filter;
@@ -17,7 +17,7 @@ public class FilterStream<TType> extends CCSimpleStream<TType> {
 	public TType nextOrNothing(boolean first) {
 		while(source.hasNext()) {
 			TType v = source.next();
-			if (filter.apply(v)) return v;
+			if (filter.invoke(v)) return v;
 		}
 		
 		return finishStream();

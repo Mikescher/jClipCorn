@@ -6,7 +6,6 @@ import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -16,6 +15,7 @@ import javax.swing.SwingUtilities;
 
 import de.jClipCorn.gui.guiComponents.WrapFlowLayout;
 import de.jClipCorn.util.helper.ImageUtilities;
+import de.jClipCorn.util.lambda.Func1to0;
 import de.jClipCorn.util.listener.UpdateCallbackListener;
 
 public class CoverPanel extends JPanel implements UpdateCallbackListener {
@@ -27,7 +27,7 @@ public class CoverPanel extends JPanel implements UpdateCallbackListener {
 	private List<JLabel> labels = new ArrayList<>();
 	private int selctionID = -1;
 	
-	public Consumer<BufferedImage> onSelectEvent;
+	public Func1to0<BufferedImage> onSelectEvent;
 	
 	public CoverPanel(JScrollPane pane) {
 		this.scrollpane = pane;
@@ -86,7 +86,7 @@ public class CoverPanel extends JPanel implements UpdateCallbackListener {
 		ImageUtilities.drawActualBorder(newImg, Color.BLUE, 2);
 		labels.get(selctionID).setIcon(new ImageIcon(newImg));
 		
-		if (onSelectEvent != null) onSelectEvent.accept(images.get(selctionID));
+		if (onSelectEvent != null) onSelectEvent.invoke(images.get(selctionID));
 	}
 
 	@Override

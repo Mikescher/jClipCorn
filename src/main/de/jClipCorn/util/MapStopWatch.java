@@ -2,16 +2,16 @@ package de.jClipCorn.util;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.BiConsumer;
 
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.util.datatypes.Tuple;
+import de.jClipCorn.util.lambda.Func2to0;
 
 @SuppressWarnings("nls")
 public class MapStopWatch {
 
 	private Map<Integer, Tuple<Long, Boolean>> watches = new HashMap<>();
-	private BiConsumer<Integer, Long> event_timerStop = (id, time) -> {/**/};
+	private Func2to0<Integer, Long> event_timerStop = (id, time) -> {/**/};
 	
 	public void start(int id) {
 		if (watches.containsKey(id)) {
@@ -39,7 +39,7 @@ public class MapStopWatch {
 		
 		watches.put(id, curr);
 		
-		event_timerStop.accept(id, curr.Item1);
+		event_timerStop.invoke(id, curr.Item1);
 		
 		return curr.Item1;
 	}
@@ -88,7 +88,7 @@ public class MapStopWatch {
 		return ((int)Math.round((v.Item1 / 1000.0) * e)) / e;
 	}
 
-	public void setOnTimerStop(BiConsumer<Integer, Long> evt) {
+	public void setOnTimerStop(Func2to0<Integer, Long> evt) {
 		event_timerStop = evt;
 	}
 

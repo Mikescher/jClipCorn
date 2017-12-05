@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Supplier;
 
 import javax.swing.Icon;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -51,6 +50,7 @@ import de.jClipCorn.table.filter.customFilter.CustomUserScoreFilter;
 import de.jClipCorn.table.filter.customFilter.CustomYearFilter;
 import de.jClipCorn.table.filter.customFilter.CustomZyklusFilter;
 import de.jClipCorn.table.filter.customFilter.operators.CustomAndOperator;
+import de.jClipCorn.util.lambda.Func0to1;
 import de.jClipCorn.util.listener.FinishListener;
 import de.jClipCorn.util.stream.CCStreams;
 
@@ -317,11 +317,11 @@ public class FilterTree extends AbstractFilterTree {
 		}).setVisible(true);
 	}
 	
-	protected DefaultMutableTreeNode addNodeF(DefaultMutableTreeNode aroot, IconRef icon, String txt, Supplier<AbstractCustomFilter> filter) {
+	protected DefaultMutableTreeNode addNodeF(DefaultMutableTreeNode aroot, IconRef icon, String txt, Func0to1<AbstractCustomFilter> filter) {
 		return addNodeF(aroot, CachedResourceLoader.getIcon(icon), txt, filter);
 	}
 	
-	protected DefaultMutableTreeNode addNodeF(DefaultMutableTreeNode aroot, Icon icon, String txt, Supplier<AbstractCustomFilter> filter) {
+	protected DefaultMutableTreeNode addNodeF(DefaultMutableTreeNode aroot, Icon icon, String txt, Func0to1<AbstractCustomFilter> filter) {
 		if (aroot == null) aroot = root;
 		
 		DefaultMutableTreeNode node = new DefaultMutableTreeNode(new SimpleTreeObject(icon, txt, e -> 
@@ -343,11 +343,11 @@ public class FilterTree extends AbstractFilterTree {
 					
 				}
 				
-				op.combineWith(filter.get());
+				op.combineWith(filter.invoke());
 
 				table.setRowFilter(op, RowFilterSource.SIDEBAR);
 			} else {
-				table.setRowFilter(filter.get(), RowFilterSource.SIDEBAR);
+				table.setRowFilter(filter.invoke(), RowFilterSource.SIDEBAR);
 			}
 			
 		}));

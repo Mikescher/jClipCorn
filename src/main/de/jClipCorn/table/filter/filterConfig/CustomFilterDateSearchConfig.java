@@ -1,8 +1,5 @@
 package de.jClipCorn.table.filter.filterConfig;
 
-import java.util.function.Consumer;
-import java.util.function.Supplier;
-
 import javax.swing.ButtonGroup;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
@@ -17,6 +14,8 @@ import de.jClipCorn.gui.guiComponents.jCCDateSpinner.JCCDateSpinner;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.datetime.CCDateSearchParameter;
 import de.jClipCorn.util.datetime.CCDateSearchParameter.DateSearchType;
+import de.jClipCorn.util.lambda.Func0to1;
+import de.jClipCorn.util.lambda.Func1to0;
 
 public class CustomFilterDateSearchConfig extends CustomFilterConfig {
 
@@ -39,10 +38,10 @@ public class CustomFilterDateSearchConfig extends CustomFilterConfig {
 		public JRadioButton rdbtnContainsOnlyBetween;
 	}
 	
-	private final Supplier<CCDateSearchParameter> valueGetter;
-	private final Consumer<CCDateSearchParameter> valueSetter;
+	private final Func0to1<CCDateSearchParameter> valueGetter;
+	private final Func1to0<CCDateSearchParameter> valueSetter;
 	
-	public CustomFilterDateSearchConfig(Supplier<CCDateSearchParameter> get, Consumer<CCDateSearchParameter> set) {
+	public CustomFilterDateSearchConfig(Func0to1<CCDateSearchParameter> get, Func1to0<CCDateSearchParameter> set) {
 		valueGetter = get;
 		valueSetter = set;
 	}
@@ -50,7 +49,7 @@ public class CustomFilterDateSearchConfig extends CustomFilterConfig {
 	@Override
 	public JComponent getComponent(Runnable onChange) {
 
-		CCDateSearchParameter initial = valueGetter.get();
+		CCDateSearchParameter initial = valueGetter.invoke();
 		CFDAFContainer container = new CFDAFContainer();
 		container.onChange = onChange;
 		
@@ -167,41 +166,41 @@ public class CustomFilterDateSearchConfig extends CustomFilterConfig {
 
 	private void onChanged(CFDAFContainer container) {
 
-		CCDateSearchParameter old = valueGetter.get();
+		CCDateSearchParameter old = valueGetter.invoke();
 		
 		if (container.rdbtnContains.isSelected()) {
 			
 			CCDateSearchParameter a = new CCDateSearchParameter(container.spnContains.getValue(), old.Second, DateSearchType.CONTAINS);
 
-			valueSetter.accept(a);
+			valueSetter.invoke(a);
 			container.onChange.run();
 			
 		} else if (container.rdbtnContainsNot.isSelected()) {
 
 			CCDateSearchParameter a = new CCDateSearchParameter(container.spnContainsNot.getValue(), old.Second, DateSearchType.CONTAINS_NOT);
 
-			valueSetter.accept(a);
+			valueSetter.invoke(a);
 			container.onChange.run();
 			
 		} else if (container.rdbtnContainsBetween.isSelected()) {
 
 			CCDateSearchParameter a = new CCDateSearchParameter(container.spnContainsBetween1.getValue(), container.spnContainsBetween2.getValue(), DateSearchType.CONTAINS_BETWEEN);
 
-			valueSetter.accept(a);
+			valueSetter.invoke(a);
 			container.onChange.run();
 			
 		} else if (container.rdbtnContainsNotBetween.isSelected()) {
 
 			CCDateSearchParameter a = new CCDateSearchParameter(container.spnContainsNotBetween1.getValue(), container.spnContainsNotBetween2.getValue(), DateSearchType.CONTAINS_NOT_BETWEEEN);
 
-			valueSetter.accept(a);
+			valueSetter.invoke(a);
 			container.onChange.run();
 			
 		} else if (container.rdbtnContainsOnlyBetween.isSelected()) {
 
 			CCDateSearchParameter a = new CCDateSearchParameter(container.spnContainsOnlyBetween1.getValue(), container.spnContainsOnlyBetween2.getValue(), DateSearchType.CONTAINS_ONLY_BETWEEN);
 
-			valueSetter.accept(a);
+			valueSetter.invoke(a);
 			container.onChange.run();
 			
 		}

@@ -4,7 +4,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
 
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
@@ -16,6 +15,7 @@ import com.sun.java.swing.plaf.windows.WindowsScrollBarUI;
 
 import de.jClipCorn.gui.frames.mainFrame.clipTable.ClipVerticalScrollbarUI;
 import de.jClipCorn.util.TableColumnAdjuster;
+import de.jClipCorn.util.lambda.Func1to1;
 import de.jClipCorn.util.stream.CCStreams;
 
 public abstract class JCCSimpleTable<TData> extends JScrollPane implements ListSelectionListener, MouseListener {
@@ -115,7 +115,7 @@ public abstract class JCCSimpleTable<TData> extends JScrollPane implements ListS
 		return model.getDataCopy();
 	}
 	
-	public void setFilter(Function<TData, Boolean> filter) {
+	public void setFilter(Func1to1<TData, Boolean> filter) {
 		sorter.setRowFilter(new JCCSimpleRowFilter<>(filter));
 	}
 	

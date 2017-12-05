@@ -1,23 +1,24 @@
 package de.jClipCorn.table.filter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.enumextension.ContinoousEnum;
 import de.jClipCorn.util.enumextension.EnumWrapper;
 import de.jClipCorn.util.exceptions.DateFormatException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.function.Supplier;
+import de.jClipCorn.util.lambda.Func0to1;
+import de.jClipCorn.util.lambda.Func1to0;
+import de.jClipCorn.util.lambda.Func1to1;
 
 public class FilterSerializationConfig {
 
 	public class FSCProperty  {
 		public final String Name; 
-		public final Function<String, Boolean> Setter;
-		public final Supplier<String> Getter;
+		public final Func1to1<String, Boolean> Setter;
+		public final Func0to1<String> Getter;
 
-		public FSCProperty(String n, Function<String, Boolean> set, Supplier<String> get) {
+		public FSCProperty(String n, Func1to1<String, Boolean> set, Func0to1<String> get) {
 			Name = n;
 			Setter = set;
 			Getter = get;
@@ -31,81 +32,81 @@ public class FilterSerializationConfig {
 		ID = id;
 	}
 
-	public void addInt(String pname, Consumer<Integer> setter, Supplier<Integer> getter) {
-		Function<String, Boolean> s = v -> 
+	public void addInt(String pname, Func1to0<Integer> setter, Func0to1<Integer> getter) {
+		Func1to1<String, Boolean> s = v -> 
 		{
-			setter.accept(Integer.parseInt(v));
+			setter.invoke(Integer.parseInt(v));
 			return true;
 		};
-		Supplier<String> g = () -> getter.get().toString();
+		Func0to1<String> g = () -> getter.invoke().toString();
 
 		FSCProperty prop = new FSCProperty(pname, s, g);
 
 		Properties.add(prop);
 	}
 	
-	public void addDate(String pname, Consumer<CCDate> setter, Supplier<CCDate> getter) {
-		Function<String, Boolean> s = v -> 
+	public void addDate(String pname, Func1to0<CCDate> setter, Func0to1<CCDate> getter) {
+		Func1to1<String, Boolean> s = v -> 
 		{
-			try { setter.accept(CCDate.createFromSQL(v)); return true; } catch (DateFormatException e) { return false; }
+			try { setter.invoke(CCDate.createFromSQL(v)); return true; } catch (DateFormatException e) { return false; }
 		};
-		Supplier<String> g = () -> getter.get().toStringSQL();
+		Func0to1<String> g = () -> getter.invoke().toStringSQL();
 
 		FSCProperty prop = new FSCProperty(pname, s, g);
 
 		Properties.add(prop);
 	}
 	
-	public <T extends ContinoousEnum<T>> void addCCEnum(String pname, EnumWrapper<T> wrapper, Consumer<T> setter, Supplier<T> getter) {
-		Function<String, Boolean> s = v -> 
+	public <T extends ContinoousEnum<T>> void addCCEnum(String pname, EnumWrapper<T> wrapper, Func1to0<T> setter, Func0to1<T> getter) {
+		Func1to1<String, Boolean> s = v -> 
 		{
 			T result = wrapper.find(Integer.parseInt(v));
 			if (result == null) return false;
-			setter.accept(result);
+			setter.invoke(result);
 			return true;
 		};
-		Supplier<String> g = () -> Integer.toString(getter.get().asInt());
+		Func0to1<String> g = () -> Integer.toString(getter.invoke().asInt());
 
 		FSCProperty prop = new FSCProperty(pname, s, g);
 
 		Properties.add(prop);
 	}
 
-	public void addString(String pname, Consumer<String> setter, Supplier<String> getter) {
-		Function<String, Boolean> s = v -> 
+	public void addString(String pname, Func1to0<String> setter, Func0to1<String> getter) {
+		Func1to1<String, Boolean> s = v -> 
 		{
-			setter.accept(AbstractCustomFilter.descape(v));
+			setter.invoke(AbstractCustomFilter.descape(v));
 			return true;
 		};
-		Supplier<String> g = () -> AbstractCustomFilter.escape(getter.get());
+		Func0to1<String> g = () -> AbstractCustomFilter.escape(getter.invoke());
 
 		FSCProperty prop = new FSCProperty(pname, s, g);
 
 		Properties.add(prop);
 	}
 
-	public void addChar(String pname, Consumer<String> setter, Supplier<String> getter) {
-		Function<String, Boolean> s = v -> 
+	public void addChar(String pname, Func1to0<String> setter, Func0to1<String> getter) {
+		Func1to1<String, Boolean> s = v -> 
 		{
 			String str = AbstractCustomFilter.descape(v);
 			if (str.length() != 1) return false;
-			setter.accept(str);
+			setter.invoke(str);
 			return true;
 		};
-		Supplier<String> g = () -> AbstractCustomFilter.escape(getter.get().substring(0, 1));
+		Func0to1<String> g = () -> AbstractCustomFilter.escape(getter.invoke().substring(0, 1));
 
 		FSCProperty prop = new FSCProperty(pname, s, g);
 
 		Properties.add(prop);
 	}
 
-	public void addBool(String pname, Consumer<Boolean> setter, Supplier<Boolean> getter) {
-		Function<String, Boolean> s = v -> 
+	public void addBool(String pname, Func1to0<Boolean> setter, Func0to1<Boolean> getter) {
+		Func1to1<String, Boolean> s = v -> 
 		{
-			setter.accept(Integer.parseInt(v) != 0);
+			setter.invoke(Integer.parseInt(v) != 0);
 			return true;
 		};
-		Supplier<String> g = () -> getter.get() ? "1" : "0"; //$NON-NLS-1$ //$NON-NLS-2$
+		Func0to1<String> g = () -> getter.invoke() ? "1" : "0"; //$NON-NLS-1$ //$NON-NLS-2$
 
 		FSCProperty prop = new FSCProperty(pname, s, g);
 
@@ -168,7 +169,7 @@ public class FilterSerializationConfig {
 		b.append("|"); //$NON-NLS-1$
 		for (int i=0; i < Properties.size(); i++) {
 			if (i>0) b.append(","); //$NON-NLS-1$
-			b.append(Properties.get(i).Getter.get());
+			b.append(Properties.get(i).Getter.invoke());
 		}
 		b.append("]"); //$NON-NLS-1$
 		
@@ -184,7 +185,7 @@ public class FilterSerializationConfig {
 			if (paramsplit.length != Properties.size()) return false;
 			
 			for (int i=0; i < Properties.size(); i++) {
-				boolean b = Properties.get(i).Setter.apply(paramsplit[i]);
+				boolean b = Properties.get(i).Setter.invoke(paramsplit[i]);
 				if (!b) return false;
 			}
 			

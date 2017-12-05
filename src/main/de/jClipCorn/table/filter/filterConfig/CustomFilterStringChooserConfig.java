@@ -3,23 +3,24 @@ package de.jClipCorn.table.filter.filterConfig;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 
+import de.jClipCorn.util.lambda.Func0to1;
+import de.jClipCorn.util.lambda.Func1to0;
+
 public class CustomFilterStringChooserConfig extends CustomFilterConfig {
 
-	private final Supplier<String> valueGetter;
-	private final Consumer<String> valueSetter;
+	private final Func0to1<String> valueGetter;
+	private final Func1to0<String> valueSetter;
 
 	private final List<String> values;
 	private final boolean allowNotInList;
 	private final boolean allowEmpty;
 	
-	public CustomFilterStringChooserConfig(Supplier<String> get, Consumer<String> set, List<String> v, boolean nil, boolean e) {
+	public CustomFilterStringChooserConfig(Func0to1<String> get, Func1to0<String> set, List<String> v, boolean nil, boolean e) {
 		valueGetter = get;
 		valueSetter = set;
 		values = v;
@@ -30,7 +31,7 @@ public class CustomFilterStringChooserConfig extends CustomFilterConfig {
 	@Override
 	public JComponent getComponent(Runnable onChange) {
 
-		String initial = valueGetter.get();
+		String initial = valueGetter.invoke();
 		
 		DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
 
@@ -58,7 +59,7 @@ public class CustomFilterStringChooserConfig extends CustomFilterConfig {
 		cbx.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				valueSetter.accept((String)cbx.getSelectedItem());
+				valueSetter.invoke((String)cbx.getSelectedItem());
 				onChange.run();
 			}
 		});

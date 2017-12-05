@@ -3,21 +3,22 @@ package de.jClipCorn.table.filter.filterConfig;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 
+import de.jClipCorn.util.lambda.Func0to1;
+import de.jClipCorn.util.lambda.Func1to0;
+
 public class CustomFilterNamedIntChooserConfig extends CustomFilterConfig {
 
-	private final Supplier<Integer> valueGetter;
-	private final Consumer<Integer> valueSetter;
+	private final Func0to1<Integer> valueGetter;
+	private final Func1to0<Integer> valueSetter;
 
 	private final List<String> names;
 	
-	public CustomFilterNamedIntChooserConfig(Supplier<Integer> get, Consumer<Integer> set, List<String> v) {
+	public CustomFilterNamedIntChooserConfig(Func0to1<Integer> get, Func1to0<Integer> set, List<String> v) {
 		valueGetter = get;
 		valueSetter = set;
 		names = v;
@@ -26,7 +27,7 @@ public class CustomFilterNamedIntChooserConfig extends CustomFilterConfig {
 	@Override
 	public JComponent getComponent(Runnable onChange) {
 
-		int initial = valueGetter.get();
+		int initial = valueGetter.invoke();
 		
 		DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
 		for (String str : names) model.addElement(str);
@@ -38,7 +39,7 @@ public class CustomFilterNamedIntChooserConfig extends CustomFilterConfig {
 		cbx.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				valueSetter.accept(cbx.getSelectedIndex());
+				valueSetter.invoke(cbx.getSelectedIndex());
 				onChange.run();
 			}
 		});

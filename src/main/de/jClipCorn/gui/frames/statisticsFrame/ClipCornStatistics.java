@@ -2,7 +2,6 @@ package de.jClipCorn.gui.frames.statisticsFrame;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
 
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsAddDateChart;
@@ -27,11 +26,12 @@ import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsViewedChart;
 import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsViewedOverTimeChart;
 import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsWatchCountChart;
 import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsYearChart;
+import de.jClipCorn.util.lambda.Func1to1;
 
 public final class ClipCornStatistics {
 	private ClipCornStatistics() { throw new InstantiationError(); }
 	
-	public final static List<Function<CCMovieList, StatisticsGroup>> STATISTICS = new ArrayList<>();
+	public final static List<Func1to1<CCMovieList, StatisticsGroup>> STATISTICS = new ArrayList<>();
 	
 	static {
 		

@@ -1,8 +1,7 @@
 package de.jClipCorn.database.databaseErrors;
 
-import java.util.function.Function;
-
 import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.util.lambda.Func1to1;
 
 public class DatabaseErrorType {
 	public static DatabaseErrorType ERROR_INCONTINUOUS_GENRELIST = new DatabaseErrorType(1, DatabaseAutofixer::fixError_Incontinous_Genrelist);
@@ -53,9 +52,9 @@ public class DatabaseErrorType {
 	
 	private int count = 0;
 	
-	private final Function<DatabaseError, Boolean> autoFixFunction;
+	private final Func1to1<DatabaseError, Boolean> autoFixFunction;
 
-	public DatabaseErrorType(int ptype, Function<DatabaseError, Boolean> fix) {
+	public DatabaseErrorType(int ptype, Func1to1<DatabaseError, Boolean> fix) {
 		super();
 		
 		this.type = ptype;
@@ -102,7 +101,7 @@ public class DatabaseErrorType {
 		if (autoFixFunction == null) return false;
 		if (e.getType().type != this.type) return false;
 		
-		return autoFixFunction.apply(e);
+		return autoFixFunction.invoke(e);
 	}
 
 	public void incCount() {

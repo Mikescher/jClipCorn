@@ -59,6 +59,8 @@ public class JSimpleTree extends JTree implements TreeSelectionListener {
 	    			if (user != null) {
 	    				if (user == _lastExecBySelection && (System.currentTimeMillis() - _lastExecBySelectionTime) < 300) return; // skip
 	    				
+	    				if (!JSimpleTree.this.isPathSelected(selPath)) return;
+	    				
 	    				((SimpleTreeObject) user).execute(selPath, (_lastModifier & InputEvent.CTRL_MASK) == InputEvent.CTRL_MASK);
 	    			}
 		        }

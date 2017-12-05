@@ -154,6 +154,4 @@ public class Main {
 
 //TODO cover loading in background (for seriespreview and mainpage control --> show loader until cover is loaded)
 
-//TODO sidebar click on expading parent node registers as click n children that is at mouse pos after expand (test on click if undermouse==selected)
-
 //TODO use custom interfaces for lambda

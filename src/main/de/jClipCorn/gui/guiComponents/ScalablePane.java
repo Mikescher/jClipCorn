@@ -6,11 +6,12 @@ import java.awt.Graphics2D;
 import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsEnvironment;
 import java.awt.Image;
-import java.awt.RenderingHints;
 import java.awt.Transparency;
 import java.awt.image.BufferedImage;
 
 import javax.swing.JPanel;
+
+import de.jClipCorn.util.helper.ImageUtilities;
 
 /*
  * https://stackoverflow.com/a/14553003/1761622
@@ -98,12 +99,12 @@ public class ScalablePane extends JPanel {
 
 	public Image getScaledInstanceToFit(Image master, Dimension size) {
 		Dimension masterSize = new Dimension(master.getWidth(this), master.getHeight(this));
-		return getScaledInstance(toBufferedImage(master), getScaleFactorToFit(masterSize, size), RenderingHints.VALUE_INTERPOLATION_BILINEAR, true);
+		return ImageUtilities.getScaledInstance(toBufferedImage(master), getScaleFactorToFit(masterSize, size));
 	}
 
 	public Image getScaledInstanceToFill(Image master, Dimension size) {
 		Dimension masterSize = new Dimension(master.getWidth(this), master.getHeight(this));
-		return getScaledInstance(toBufferedImage(master), getScaleFactorToFill(masterSize, size), RenderingHints.VALUE_INTERPOLATION_BILINEAR, true);
+		return ImageUtilities.getScaledInstance(toBufferedImage(master), getScaleFactorToFill(masterSize, size));
 	}
 
 	public Dimension getSizeToFit(Dimension original, Dimension toFit) {
@@ -156,115 +157,5 @@ public class ScalablePane extends JPanel {
 		BufferedImage image = gc.createCompatibleImage(width, height, Transparency.TRANSLUCENT);
 		image.coerceData(true);
 		return image;
-	}
-
-	protected BufferedImage getScaledInstance(BufferedImage img, double dScaleFactor, Object hint, boolean bHighQuality) {
-		BufferedImage imgScale = img;
-		int iImageWidth = (int) Math.round(img.getWidth() * dScaleFactor);
-		int iImageHeight = (int) Math.round(img.getHeight() * dScaleFactor);
-
-		if (dScaleFactor <= 1.0d) {
-			imgScale = getScaledDownInstance(img, iImageWidth, iImageHeight, hint, bHighQuality);
-		} else {
-			imgScale = getScaledUpInstance(img, iImageWidth, iImageHeight, hint, bHighQuality);
-		}
-
-		return imgScale;
-	}
-
-	protected BufferedImage getScaledDownInstance(BufferedImage img, int targetWidth, int targetHeight, Object hint, boolean higherQuality) {
-
-		int type = (img.getTransparency() == Transparency.OPAQUE) ? BufferedImage.TYPE_INT_RGB : BufferedImage.TYPE_INT_ARGB;
-
-		BufferedImage ret = img;
-
-		if (targetHeight > 0 || targetWidth > 0) {
-			int w, h;
-			if (higherQuality) {
-				// Use multi-step technique: start with original size, then
-				// scale down in multiple passes with drawImage()
-				// until the target size is reached
-				w = img.getWidth();
-				h = img.getHeight();
-			} else {
-				// Use one-step technique: scale directly from original
-				// size to target size with a single drawImage() call
-				w = targetWidth;
-				h = targetHeight;
-			}
-
-			do {
-				if (higherQuality && w > targetWidth) {
-					w /= 2;
-					if (w < targetWidth) {
-						w = targetWidth;
-					}
-				}
-				if (higherQuality && h > targetHeight) {
-					h /= 2;
-					if (h < targetHeight) {
-						h = targetHeight;
-					}
-				}
-
-				BufferedImage tmp = new BufferedImage(Math.max(w, 1), Math.max(h, 1), type);
-				Graphics2D g2 = tmp.createGraphics();
-				g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, hint);
-				g2.drawImage(ret, 0, 0, w, h, null);
-				g2.dispose();
-
-				ret = tmp;
-			} while (w != targetWidth || h != targetHeight);
-		} else {
-			ret = new BufferedImage(1, 1, type);
-		}
-
-		return ret;
-	}
-
-	protected BufferedImage getScaledUpInstance(BufferedImage img, int targetWidth, int targetHeight, Object hint, boolean higherQuality) {
-
-		int type = BufferedImage.TYPE_INT_ARGB;
-
-		BufferedImage ret = img;
-		int w, h;
-		if (higherQuality) {
-			// Use multi-step technique: start with original size, then
-			// scale down in multiple passes with drawImage()
-			// until the target size is reached
-			w = img.getWidth();
-			h = img.getHeight();
-		} else {
-			// Use one-step technique: scale directly from original
-			// size to target size with a single drawImage() call
-			w = targetWidth;
-			h = targetHeight;
-		}
-
-		do {
-			if (higherQuality && w < targetWidth) {
-				w *= 2;
-				if (w > targetWidth) {
-					w = targetWidth;
-				}
-			}
-
-			if (higherQuality && h < targetHeight) {
-				h *= 2;
-				if (h > targetHeight) {
-					h = targetHeight;
-				}
-			}
-
-			BufferedImage tmp = new BufferedImage(w, h, type);
-			Graphics2D g2 = tmp.createGraphics();
-			g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, hint);
-			g2.drawImage(ret, 0, 0, w, h, null);
-			g2.dispose();
-
-			ret = tmp;
-			tmp = null;
-		} while (w != targetWidth || h != targetHeight);
-		return ret;
 	}
 }

@@ -19,6 +19,7 @@ import javax.swing.event.ListSelectionListener;
 import de.jClipCorn.database.databaseElement.ICCCoveredElement;
 import de.jClipCorn.gui.frames.coverPreviewFrame.CoverPreviewFrame;
 import de.jClipCorn.properties.CCProperties;
+import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.helper.ImageUtilities;
 
 public class JCoverChooser extends JComponent implements MouseListener {
@@ -33,14 +34,13 @@ public class JCoverChooser extends JComponent implements MouseListener {
 
 	private int coverWidth = ImageUtilities.BASE_COVER_WIDTH;
 	private int coverHeight = ImageUtilities.BASE_COVER_HEIGHT;
-	private int padding_top = 5;
-	private int padding_bottom = 5;
 	private int coverGap = 10;
 	private int circleRadius = 500;
 	
 	private boolean mode3d = CCProperties.getInstance().PROP_PREVSERIES_3DCOVER.getValue();
 
-	private List<BufferedImage> images = new ArrayList<>();
+	private List<BufferedImage> images_full  = new ArrayList<>();
+	private List<BufferedImage> images_scale = new ArrayList<>();
 	private List<Object> objects = new ArrayList<>();
 	private int currSelected = 0;
 
@@ -60,7 +60,7 @@ public class JCoverChooser extends JComponent implements MouseListener {
 	}
 	
 	public void setCurrSelected(int ns) {
-		if (ns >= 0 && ns <= images.size()) {
+		if (ns >= 0 && ns <= images_full.size()) {
 			currSelected = ns;
 		
 			update();
@@ -84,7 +84,7 @@ public class JCoverChooser extends JComponent implements MouseListener {
 	}
 	
 	public BufferedImage getSelectedImage() {
-		return images.get(getSelectedIndex());
+		return images_full.get(getSelectedIndex());
 	}
 	
 	public Object getSelectedObject() {
@@ -93,13 +93,6 @@ public class JCoverChooser extends JComponent implements MouseListener {
 
 	public void setCircleRadius(int rad) {
 		circleRadius = rad;
-
-		update();
-	}
-
-	public void setPadding(int padTop, int padBot) {
-		padding_bottom = padBot;
-		padding_top = padTop;
 
 		update();
 	}
@@ -138,7 +131,7 @@ public class JCoverChooser extends JComponent implements MouseListener {
 	}
 
 	private int getCoverHeight() {
-		return coverHeight + padding_top + padding_bottom;
+		return coverHeight;
 	}
 
 	private int getCoverWidth() {
@@ -146,7 +139,10 @@ public class JCoverChooser extends JComponent implements MouseListener {
 	}
 
 	public void addCover(BufferedImage bi, Object obj) {
-		images.add(bi);
+		images_full.add(bi);
+		Tuple<Integer, Integer> sz = ImageUtilities.calcImageSizeToFit(bi.getWidth(), bi.getHeight(), coverWidth, coverHeight);
+		images_scale.add(ImageUtilities.getScaledInstance(bi, sz.Item1, sz.Item2));
+		
 		objects.add(obj);
 		
 		update();
@@ -173,7 +169,7 @@ public class JCoverChooser extends JComponent implements MouseListener {
 	}
 	
 	private boolean coverIsSet(int id) {
-		return id >= 0 && id < images.size();
+		return id >= 0 && id < images_full.size();
 	}
 
 	private void paintCover(Graphics g) {
@@ -183,7 +179,13 @@ public class JCoverChooser extends JComponent implements MouseListener {
 			TransformRectangle tr = rectangles.get(i);
 
 			if (coverIsSet(imgid)) {
-				tr.draw(g, images.get(imgid), i == 0);
+				
+				if (i == 0) {
+					g.drawImage(images_scale.get(imgid), tr.topLeft.x, tr.topLeft.y, tr.bottomRight.x - tr.topLeft.x, tr.bottomRight.y - tr.topLeft.y, null);
+				} else {
+					tr.draw(g, images_scale.get(imgid), i == 0);
+				}
+				
 			}
 		}
 	}
@@ -307,7 +309,8 @@ public class JCoverChooser extends JComponent implements MouseListener {
 
 	public void clear() {
 		currSelected = 0;
-		images.clear();
+		images_full.clear();
+		images_scale.clear();
 		objects.clear();
 		rectangles.clear();
 		
@@ -319,6 +322,6 @@ public class JCoverChooser extends JComponent implements MouseListener {
 	}
 	
 	public int getElementCount() {
-		return images.size();
+		return images_full.size();
 	}
 }

@@ -156,5 +156,4 @@ public class Main {
 
 //TODO sidebar click on expading parent node registers as click n children that is at mouse pos after expand (test on click if undermouse==selected)
 
-//TODO (still) needs better filtering for jCoverChooser front cover
-//TODO jCoverchooser (blue border not rendered on hq covers?)
+//TODO use custom interfaces for lambda

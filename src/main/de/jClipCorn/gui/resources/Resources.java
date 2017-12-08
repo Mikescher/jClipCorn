@@ -19,6 +19,14 @@ public class Resources {
 	public final static ImageRef IMG_COVER_SERIES_MASK					= registerImage("/mask_series.png");
 	public final static ImageRef IMG_COVER_ERROR_ON						= registerImage("/cover_errror_on.png");
 	public final static ImageRef IMG_COVER_ERROR_OFF					= registerImage("/cover_errror_off.png");
+	public final static ImageRef IMG_COVER_LOADING_P0					= registerImage("/loading_p0.png");
+	public final static ImageRef IMG_COVER_LOADING_P1					= registerImage("/loading_p1.png");
+	public final static ImageRef IMG_COVER_LOADING_P2					= registerImage("/loading_p2.png");
+	public final static ImageRef IMG_COVER_LOADING_P3					= registerImage("/loading_p3.png");
+	public final static ImageRef IMG_COVER_LOADING_P4					= registerImage("/loading_p4.png");
+	public final static ImageRef IMG_COVER_LOADING_P5					= registerImage("/loading_p5.png");
+	public final static ImageRef IMG_COVER_LOADING_P6					= registerImage("/loading_p6.png");
+	public final static ImageRef IMG_COVER_LOADING_P7					= registerImage("/loading_p7.png");
 	public final static MultiIconRef ICN_WARNING_TRIANGLE		 		= registerMultisizeIcon("/icons/common/error.png");
 	// #############################################  </COMMON>  #############################################
 	

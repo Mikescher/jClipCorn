@@ -110,6 +110,11 @@ public class CCFolderCoverCache extends CCCoverCache {
 		
 		return res;
 	}
+
+	@Override
+	public boolean isCached(String coverName) {
+		return cache.containsKey(coverName);
+	}
 	
 	@SuppressWarnings("nls")
 	private void updateMetaCache(String name, BufferedImage img, File f) {

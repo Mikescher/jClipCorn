@@ -107,13 +107,9 @@ public class CoverLabel extends JLabel implements MouseListener {
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-
 		if (e.getClickCount() == 2) {
-
 			new CoverPreviewFrame(CoverLabel.this, getOriginalCover()).setVisible(true);
-			
 		}
-		
 	}
 
 	@Override

@@ -365,7 +365,7 @@ public class CCLog {
 						MainFrame mf =  MainFrame.getInstance();
 						if (mf != null) {
 							DatabaseElementPreviewLabel pl =  mf.getCoverLabel();
-							if (pl != null) pl.setErrorDisplay(true);
+							if (pl != null) pl.setModeError();
 						}
 					}
 				});
@@ -376,7 +376,7 @@ public class CCLog {
 			MainFrame mf =  MainFrame.getInstance();
 			if (mf != null) {
 				DatabaseElementPreviewLabel pl =  mf.getCoverLabel();
-				if (pl != null) pl.setErrorDisplay(true);
+				if (pl != null) pl.setModeError();
 			}
 		}
 	}

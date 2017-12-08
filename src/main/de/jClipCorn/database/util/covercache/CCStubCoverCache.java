@@ -38,6 +38,11 @@ public class CCStubCoverCache extends CCCoverCache {
 	}
 
 	@Override
+	public boolean isCached(String coverName) {
+		return true;
+	}
+
+	@Override
 	public int getNewCoverID() {
 		return 80085;
 	}

@@ -153,8 +153,8 @@ public class MainFrame extends JFrame implements CCDBUpdateListener {
 
 		coverImage = new DatabaseElementPreviewLabel();
 		coverPanel.add(coverImage);
-		coverImage.setErrorDisplay(CCLog.hasErrors());
-		
+		if (CCLog.hasErrors()) coverImage.setModeError();
+
 		statusbar = new ClipStatusBar(this, movielist);
 		getContentPane().add(statusbar, BorderLayout.SOUTH);
 
@@ -245,7 +245,7 @@ public class MainFrame extends JFrame implements CCDBUpdateListener {
 	}
 	
 	public void onClipTableSelectionChanged(CCDatabaseElement ccDatabaseElement) {
-		coverImage.setDatabaseElement(ccDatabaseElement);
+		coverImage.setModeCover(ccDatabaseElement);
 	}
 	
 	public void onClipTableExecute(CCDatabaseElement ccDatabaseElement) {

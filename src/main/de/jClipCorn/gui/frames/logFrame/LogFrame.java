@@ -17,6 +17,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.ScrollPaneConstants;
 
 import de.jClipCorn.gui.frames.mainFrame.MainFrame;
+import de.jClipCorn.gui.guiComponents.DatabaseElementPreviewLabel;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.gui.log.CCLogChangedListener;
@@ -56,7 +57,8 @@ public class LogFrame extends JFrame implements CCLogChangedListener{
 		setLocationRelativeTo(owner);
 		setModels();
 		
-		MainFrame.getInstance().getCoverLabel().setErrorDisplay(false);
+		DatabaseElementPreviewLabel cl = MainFrame.getInstance().getCoverLabel();
+		if (cl.isErrorMode()) cl.setModeDefault();
 		
 		CCLog.addChangeListener(this);
 	}

@@ -75,6 +75,10 @@ public class BackupManager {
 				backuplist.add(backup);
 			} catch (IOException e) {
 				CCLog.addError(LocaleBundle.getFormattedString("LogMessage.ErrorInitBackupList", f.getName()), e); //$NON-NLS-1$
+			} catch (UnsupportedOperationException e) {
+				CCLog.addError(LocaleBundle.getFormattedString("LogMessage.ErrorInitBackupList", f.getName()), e); //$NON-NLS-1$
+			} catch (Exception e) {
+				CCLog.addError(LocaleBundle.getFormattedString("LogMessage.ErrorInitBackupList", f.getName()), e); //$NON-NLS-1$
 			}
 		}
 

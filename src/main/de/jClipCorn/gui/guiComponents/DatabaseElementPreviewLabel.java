@@ -267,9 +267,9 @@ public class DatabaseElementPreviewLabel extends CoverLabel {
 			while (System.currentTimeMillis() - starttime < 100) {
 				if (threadLoadFinished) { 
 					mode = DEPLMode.MODE_COVER; 
-					image_hover    = v_image_hover;
-					image_normal   = v_image_normal;
 					image_original = v_image_original;
+					image_normal   = v_image_normal;
+					image_hover    = v_image_hover;
 					super.setCoverDirect(v_image_normal, v_image_original);
 					return; 
 				} // fast loading
@@ -295,24 +295,24 @@ public class DatabaseElementPreviewLabel extends CoverLabel {
 		} else {
 			i1 = el.getCover();
 			i2 = getImageWithOverlay(el, true);
-			i3 = image_normal;
+			i3 = i2;
 		}
 		
 		if (element != el) return;
 		
 		threadLoadFinished = true;
 
-		v_image_hover    = i1;
+		v_image_original = i1;
 		v_image_normal   = i2;
-		v_image_original = i3;
+		v_image_hover    = i3;
 		
 		swingInvoke(() -> 
 		{
 			if (element != el) return;
 
-			image_hover    = i1;
+			image_original = i1;
 			image_normal   = i2;
-			image_original = i3;
+			image_hover    = i3;
 
 			mode = DEPLMode.MODE_COVER;
 			super.setCoverDirect(image_normal, image_original);

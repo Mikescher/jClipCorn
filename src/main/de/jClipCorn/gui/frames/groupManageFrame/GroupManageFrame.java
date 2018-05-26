@@ -388,6 +388,8 @@ public class GroupManageFrame extends JFrame {
 		for (int i = 0; i < list.size(); i++) {
 			CCGroup g = list.get(i);
 			
+			if (g.Order == (100 + i*10)) continue;
+			
 			movielist.updateGroup(g, CCGroup.create(g.Name, 100 + i*10, g.Color, g.DoSerialize, g.Parent, g.Visible));
 		}
 		
@@ -410,6 +412,8 @@ public class GroupManageFrame extends JFrame {
 		
 		for (int i = 0; i < list.size(); i++) {
 			CCGroup g = list.get(i);
+			
+			if (g.Order == (100 + i*10)) continue;
 			
 			movielist.updateGroup(g, CCGroup.create(g.Name, 100 + i*10, g.Color, g.DoSerialize, g.Parent, g.Visible));
 		}

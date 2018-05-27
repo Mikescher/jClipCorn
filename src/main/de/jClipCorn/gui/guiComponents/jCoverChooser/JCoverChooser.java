@@ -8,19 +8,25 @@ import java.awt.RenderingHints;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import javax.swing.JComponent;
+import javax.swing.SwingUtilities;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import de.jClipCorn.database.databaseElement.ICCCoveredElement;
 import de.jClipCorn.gui.frames.coverPreviewFrame.CoverPreviewFrame;
+import de.jClipCorn.gui.log.CCLog;
+import de.jClipCorn.gui.resources.CachedResourceLoader;
+import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.helper.ImageUtilities;
+import de.jClipCorn.util.lambda.Func0to0;
 
 public class JCoverChooser extends JComponent implements MouseListener {
 	private static final long serialVersionUID = 4981485357566897454L;
@@ -46,7 +52,11 @@ public class JCoverChooser extends JComponent implements MouseListener {
 
 	private int lastClickTarget = -1;
 	
-	public JCoverChooser() {
+	private final boolean asyncLoading;
+	
+	public JCoverChooser(boolean forcenoAsync) {
+		asyncLoading = CCProperties.getInstance().PROP_MAINFRAME_ASYNC_COVER_LOADING.getValue() && !forcenoAsync;
+		
 		addMouseListener(this);
 		update(false);
 	}
@@ -138,14 +148,61 @@ public class JCoverChooser extends JComponent implements MouseListener {
 		return coverWidth;
 	}
 
-	public void addCover(BufferedImage bi, Object obj) {
-		images_full.add(bi);
-		Tuple<Integer, Integer> sz = ImageUtilities.calcImageSizeToFit(bi.getWidth(), bi.getHeight(), coverWidth, coverHeight);
-		images_scale.add(ImageUtilities.getScaledInstance(bi, sz.Item1, sz.Item2));
+	public void addCover(ICCCoveredElement elem, Object obj) {
+
+		if (asyncLoading) {
+
+			BufferedImage bi = CachedResourceLoader.getImage(Resources.IMG_COVER_STANDARD);
+			
+			int idx = images_full.size();
+			
+			images_full.add(bi);
+			Tuple<Integer, Integer> sz = ImageUtilities.calcImageSizeToFit(bi.getWidth(), bi.getHeight(), coverWidth, coverHeight);
+			images_scale.add(ImageUtilities.getScaledInstance(bi, sz.Item1, sz.Item2));
+			
+			objects.add(obj);
+			
+			update();
+			
+			Thread t = new Thread(() -> LoadAsync(elem, idx));
+			t.start();
+			
+		} else {
+
+			BufferedImage bi = elem.getCover();
+			
+			images_full.add(bi);
+			Tuple<Integer, Integer> sz = ImageUtilities.calcImageSizeToFit(bi.getWidth(), bi.getHeight(), coverWidth, coverHeight);
+			images_scale.add(ImageUtilities.getScaledInstance(bi, sz.Item1, sz.Item2));
+			
+			objects.add(obj);
+			
+			update();
+		}
+	}
+
+	private void LoadAsync(ICCCoveredElement elem, int idx) {
+		BufferedImage img_full = elem.getCover();
+		Tuple<Integer, Integer> sz = ImageUtilities.calcImageSizeToFit(img_full.getWidth(), img_full.getHeight(), coverWidth, coverHeight);
+		BufferedImage img_scale = ImageUtilities.getScaledInstance(img_full, sz.Item1, sz.Item2);
 		
-		objects.add(obj);
-		
-		update();
+		swingInvoke(() -> 
+		{
+			images_full.set(idx, img_full);
+			images_scale.set(idx, img_scale);
+			
+			update(true);
+		});
+	}
+	
+	private void swingInvoke(Func0to0 f) {
+		try	{
+			SwingUtilities.invokeAndWait(() -> f.invoke());
+		} catch (InterruptedException e) {
+			CCLog.addError(e);
+		} catch (InvocationTargetException e) {
+			CCLog.addError(e);
+		}
 	}
 
 	@Override

@@ -47,7 +47,7 @@ public class RandomMovieFrame extends JFrame implements Runnable {
 		setIconImage(CachedResourceLoader.getImage(Resources.IMG_FRAME_ICON));
 		setTitle(LocaleBundle.getString("RandomMovieFrame.this.title")); //$NON-NLS-1$
 
-		chooser = new JCoverChooser();
+		chooser = new JCoverChooser(true);
 		chooser.set3DMode(true);
 		chooser.setEnabled(false);
 		chooser.setCoverWidth(ImageUtilities.HALF_COVER_WIDTH);
@@ -105,7 +105,7 @@ public class RandomMovieFrame extends JFrame implements Runnable {
 					@Override
 					public void run() {
 						CCMovie mov = getNextRandMovie();
-						chooser.addCover(mov.getCover(), mov);
+						chooser.addCover(mov, mov);
 						chooser.inc();
 						chooser.repaint();
 					}
@@ -115,7 +115,7 @@ public class RandomMovieFrame extends JFrame implements Runnable {
 					@Override
 					public void run() {
 						CCMovie mov = getNextRandMovie();
-						chooser.addCover(mov.getCover(), mov);
+						chooser.addCover(mov, mov);
 						chooser.repaint();
 					}
 				});

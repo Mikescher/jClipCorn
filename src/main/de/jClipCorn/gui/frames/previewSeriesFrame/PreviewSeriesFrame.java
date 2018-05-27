@@ -58,7 +58,7 @@ import de.jClipCorn.gui.frames.editSeriesFrame.EditSeriesFrame;
 import de.jClipCorn.gui.frames.mainFrame.MainFrame;
 import de.jClipCorn.gui.frames.moveSeriesFrame.MoveSeriesDialog;
 import de.jClipCorn.gui.frames.previewSeriesFrame.serTable.SerTable;
-import de.jClipCorn.gui.guiComponents.CoverLabel;
+import de.jClipCorn.gui.guiComponents.DatabaseElementPreviewLabel;
 import de.jClipCorn.gui.guiComponents.displaySearchResultsDialog.DisplaySearchResultsDialog;
 import de.jClipCorn.gui.guiComponents.jCoverChooser.JCoverChooser;
 import de.jClipCorn.gui.guiComponents.jCoverChooser.JCoverChooserPopupEvent;
@@ -85,7 +85,7 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 
 	private JPanel pnlTop;
 	private JPanel pnlMainIntern;
-	private CoverLabel lblCover;
+	private DatabaseElementPreviewLabel lblCover;
 	private JCoverChooser cvrChooser;
 	private JLabel lblStaffel;
 	private SerTable tabSeason;
@@ -311,7 +311,7 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 		pnlCoverChooser = new JPanel();
 		pnlTop.add(pnlCoverChooser, BorderLayout.CENTER);
 
-		cvrChooser = new JCoverChooser();
+		cvrChooser = new JCoverChooser(false);
 		pnlCoverChooser.add(cvrChooser);
 		cvrChooser.setCurrSelected(0);
 		cvrChooser.setCoverGap(10);
@@ -550,7 +550,7 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 		pnlInfo2.setBorder(new EmptyBorder(0, 4, 8, 4));
 		pnlInfo2.setLayout(new FormLayout(new ColumnSpec[] { FormSpecs.DEFAULT_COLSPEC, }, new RowSpec[] { FormSpecs.DEFAULT_ROWSPEC, FormSpecs.RELATED_GAP_ROWSPEC, FormSpecs.DEFAULT_ROWSPEC, FormSpecs.RELATED_GAP_ROWSPEC, FormSpecs.DEFAULT_ROWSPEC, FormSpecs.RELATED_GAP_ROWSPEC, FormSpecs.DEFAULT_ROWSPEC, FormSpecs.RELATED_GAP_ROWSPEC, FormSpecs.DEFAULT_ROWSPEC, FormSpecs.RELATED_GAP_ROWSPEC, FormSpecs.DEFAULT_ROWSPEC, FormSpecs.RELATED_GAP_ROWSPEC, FormSpecs.DEFAULT_ROWSPEC, FormSpecs.RELATED_GAP_ROWSPEC, FormSpecs.DEFAULT_ROWSPEC, FormSpecs.RELATED_GAP_ROWSPEC, FormSpecs.DEFAULT_ROWSPEC, FormSpecs.DEFAULT_ROWSPEC, RowSpec.decode("default:grow"), RowSpec.decode("default:grow"), FormSpecs.DEFAULT_ROWSPEC, })); //$NON-NLS-1$ //$NON-NLS-2$
 
-		lblCover = new CoverLabel(false);
+		lblCover = new DatabaseElementPreviewLabel(true);
 		pnlInfo2.add(lblCover, "1, 1"); //$NON-NLS-1$
 
 		pnlOnlinescore = new JPanel();
@@ -671,7 +671,7 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 
 		cvrChooser.clear();
 		for (int i = 0; i < dispSeries.getSeasonCount(); i++) {
-			cvrChooser.addCover(dispSeries.getSeasonByArrayIndex(i).getCover(), dispSeries.getSeasonByArrayIndex(i));
+			cvrChooser.addCover(dispSeries.getSeasonByArrayIndex(i), dispSeries.getSeasonByArrayIndex(i));
 		}
 
 		cvrChooser.setCurrSelected(ccidx);
@@ -736,7 +736,7 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 		lblfsk.setText(LocaleBundle.getFormattedString("PreviewSeriesFrame.lblFSK.text", dispSeries.getFSK().asString())); //$NON-NLS-1$
 		lblfsk.setIcon(dispSeries.getFSK().getIcon());
 
-		lblCover.setAndResizeCover(dispSeries.getCover());
+		lblCover.setModeCover(dispSeries);
 
 		btnOnline.setIcon(dispSeries.getOnlineReference().getIconButton());
 		btnOnline.setEnabled(dispSeries.getOnlineReference().isSet());

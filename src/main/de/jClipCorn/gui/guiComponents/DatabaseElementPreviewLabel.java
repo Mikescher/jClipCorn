@@ -37,6 +37,7 @@ public class DatabaseElementPreviewLabel extends CoverLabel {
 	private volatile int timerCounter = 0;
 	private volatile boolean threadLoadFinished = false;
 	private Timer timer;
+	private final boolean noOverlay;
 
 	private volatile BufferedImage v_image_normal;
 	private volatile BufferedImage v_image_hover;
@@ -47,8 +48,11 @@ public class DatabaseElementPreviewLabel extends CoverLabel {
 	private BufferedImage image_original;
 	private CCDatabaseElement element;
 	
-	public DatabaseElementPreviewLabel() {
+	
+	public DatabaseElementPreviewLabel(boolean noOverlayRender) {
 		super(false);
+		
+		noOverlay = noOverlayRender;
 		
 		timer = new Timer();
 		timer.schedule(new TimerTask() {
@@ -62,7 +66,7 @@ public class DatabaseElementPreviewLabel extends CoverLabel {
 	private BufferedImage getImageWithoutOverlay(CCDatabaseElement el) {
 		boolean drawSCorner = CCProperties.getInstance().PROP_MAINFRAME_SHOWCOVERCORNER.getValue()  && el.isSeries();
 		
-		if (drawSCorner) {
+		if (drawSCorner && !noOverlay) {
 			BufferedImage biorig = el.getCover();
 			
 			BufferedImage bi = ImageUtilities.resizeCoverImageForFullSizeUI(biorig);
@@ -79,6 +83,8 @@ public class DatabaseElementPreviewLabel extends CoverLabel {
 	}
 	
 	private BufferedImage getImageWithOverlay(CCDatabaseElement el, boolean alpha) {
+		if (noOverlay) return getImageWithoutOverlay(el);
+		
 		boolean drawSCorner = CCProperties.getInstance().PROP_MAINFRAME_SHOWCOVERCORNER.getValue()  && el.isSeries();
 		boolean drawTag = CCProperties.getInstance().PROP_MAINFRAME_SHOWTAGS.getValue() && el.isMovie() && ((CCMovie)el).getTags().hasTags();
 		boolean drawGroups = CCProperties.getInstance().PROP_MAINFRAME_SHOWGROUPS.getValue() && el.hasGroups();

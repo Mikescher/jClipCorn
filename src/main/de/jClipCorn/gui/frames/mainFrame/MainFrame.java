@@ -151,7 +151,7 @@ public class MainFrame extends JFrame implements CCDBUpdateListener {
 		coverPanel.add(gapPanel, BorderLayout.NORTH);
 		gapPanel.setLayout(null);
 
-		coverImage = new DatabaseElementPreviewLabel();
+		coverImage = new DatabaseElementPreviewLabel(false);
 		coverPanel.add(coverImage);
 		if (CCLog.hasErrors()) coverImage.setModeError();
 

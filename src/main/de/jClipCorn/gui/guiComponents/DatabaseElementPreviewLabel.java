@@ -306,11 +306,11 @@ public class DatabaseElementPreviewLabel extends CoverLabel {
 		
 		if (element != el) return;
 		
-		threadLoadFinished = true;
-
 		v_image_original = i1;
 		v_image_normal   = i2;
 		v_image_hover    = i3;
+
+		threadLoadFinished = true;
 		
 		swingInvoke(() -> 
 		{

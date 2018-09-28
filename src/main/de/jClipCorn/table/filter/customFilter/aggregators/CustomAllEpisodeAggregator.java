@@ -1,6 +1,7 @@
 package de.jClipCorn.table.filter.customFilter.aggregators;
 
 import de.jClipCorn.database.databaseElement.CCEpisode;
+import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.table.filter.AbstractCustomFilter;
@@ -10,6 +11,15 @@ public class CustomAllEpisodeAggregator extends CustomAggregator {
 	@Override
 	public boolean includes(CCSeries series) {
 		for (CCEpisode ep : series.iteratorEpisodes()) {
+			if (!_filter.includes(ep)) return false;
+		}
+		
+		return true;
+	}
+
+	@Override
+	public boolean includes(CCSeason season) {
+		for (CCEpisode ep : season.iteratorEpisodes()) {
 			if (!_filter.includes(ep)) return false;
 		}
 		

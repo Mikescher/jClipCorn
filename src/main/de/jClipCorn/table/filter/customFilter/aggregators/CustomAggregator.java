@@ -4,15 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.jClipCorn.database.CCMovieList;
-import de.jClipCorn.database.databaseElement.CCDatabaseElement;
-import de.jClipCorn.database.databaseElement.CCSeries;
-import de.jClipCorn.table.filter.AbstractCustomDatabaseElementFilter;
 import de.jClipCorn.table.filter.AbstractCustomFilter;
+import de.jClipCorn.table.filter.AbstractCustomStructureElementFilter;
 import de.jClipCorn.table.filter.FilterSerializationConfig;
 import de.jClipCorn.table.filter.customFilter.operators.CustomAndOperator;
 import de.jClipCorn.table.filter.filterConfig.CustomFilterConfig;
 
-public abstract class CustomAggregator extends AbstractCustomDatabaseElementFilter {
+public abstract class CustomAggregator extends AbstractCustomStructureElementFilter {
 
 	protected AbstractCustomFilter _filter = new CustomAndOperator();
 
@@ -23,15 +21,6 @@ public abstract class CustomAggregator extends AbstractCustomDatabaseElementFilt
 		return result;
 	}
 	
-	@Override
-	public boolean includes(CCDatabaseElement e) {
-		if (e.isMovie()) return false;
-		
-		return includes((CCSeries)e);
-	}
-	
-	public abstract boolean includes(CCSeries e);
-
 	@Override
 	protected void initSerialization(FilterSerializationConfig cfg) {
 		// manual

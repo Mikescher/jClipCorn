@@ -2,6 +2,7 @@ package de.jClipCorn.database.databaseElement.columnTypes;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import de.jClipCorn.database.util.iterators.GenresIterator;
@@ -19,7 +20,7 @@ public class CCGenreList {
 	private final static int SIZE = 8; 	// Number of Genres in List
 	private final static int GSIZE = 8;	// Bitsize of a Genre
 	
-	private long genres;
+	private final long genres;
 	
 	public CCGenreList() {
 		genres = 0x0000000000000000L;
@@ -34,87 +35,92 @@ public class CCGenreList {
 	}
 	
 	public CCGenreList(CCGenre genre1) {
-		genres = 0x0000000000000000L;
-		addGenre(genre1);
+		Optional<Long> _g = Optional.of(0x0000000000000000L);
+		_g = calcAddGenre(_g, genre1);
+		genres = _g.get();
 	}
 	
 	public CCGenreList(CCGenre genre1, CCGenre genre2) {
-		genres = 0x0000000000000000L;
-		addGenre(genre1);
-		addGenre(genre2);
+		Optional<Long> _g = Optional.of(0x0000000000000000L);
+		_g = calcAddGenre(_g, genre1);
+		_g = calcAddGenre(_g, genre2);
+		genres = _g.get();
 	}
 	
 	public CCGenreList(CCGenre genre1, CCGenre genre2, CCGenre genre3) {
-		genres = 0x0000000000000000L;
-		addGenre(genre1);
-		addGenre(genre2);
-		addGenre(genre3);
+		Optional<Long> _g = Optional.of(0x0000000000000000L);
+		_g = calcAddGenre(_g, genre1);
+		_g = calcAddGenre(_g, genre2);
+		_g = calcAddGenre(_g, genre3);
+		genres = _g.get();
 	}
 	
 	public CCGenreList(CCGenre genre1, CCGenre genre2, CCGenre genre3, CCGenre genre4) {
-		genres = 0x0000000000000000L;
-		addGenre(genre1);
-		addGenre(genre2);
-		addGenre(genre3);
-		addGenre(genre4);
+		Optional<Long> _g = Optional.of(0x0000000000000000L);
+		_g = calcAddGenre(_g, genre1);
+		_g = calcAddGenre(_g, genre2);
+		_g = calcAddGenre(_g, genre3);
+		_g = calcAddGenre(_g, genre4);
+		genres = _g.get();
 	}
 	
 	public CCGenreList(CCGenre genre1, CCGenre genre2, CCGenre genre3, CCGenre genre4, CCGenre genre5) {
-		genres = 0x0000000000000000L;
-		addGenre(genre1);
-		addGenre(genre2);
-		addGenre(genre3);
-		addGenre(genre4);
-		addGenre(genre5);
+		Optional<Long> _g = Optional.of(0x0000000000000000L);
+		_g = calcAddGenre(_g, genre1);
+		_g = calcAddGenre(_g, genre2);
+		_g = calcAddGenre(_g, genre3);
+		_g = calcAddGenre(_g, genre4);
+		_g = calcAddGenre(_g, genre5);
+		genres = _g.get();
 	}
 	
 	public CCGenreList(CCGenre genre1, CCGenre genre2, CCGenre genre3, CCGenre genre4, CCGenre genre5, CCGenre genre6) {
-		genres = 0x0000000000000000L;
-		addGenre(genre1);
-		addGenre(genre2);
-		addGenre(genre3);
-		addGenre(genre4);
-		addGenre(genre5);
-		addGenre(genre6);
+		Optional<Long> _g = Optional.of(0x0000000000000000L);
+		_g = calcAddGenre(_g, genre1);
+		_g = calcAddGenre(_g, genre2);
+		_g = calcAddGenre(_g, genre3);
+		_g = calcAddGenre(_g, genre4);
+		_g = calcAddGenre(_g, genre5);
+		_g = calcAddGenre(_g, genre6);
+		genres = _g.get();
 	}
 	
 	public CCGenreList(CCGenre genre1, CCGenre genre2, CCGenre genre3, CCGenre genre4, CCGenre genre5, CCGenre genre6, CCGenre genre7) {
-		genres = 0x0000000000000000L;
-		addGenre(genre1);
-		addGenre(genre2);
-		addGenre(genre3);
-		addGenre(genre4);
-		addGenre(genre5);
-		addGenre(genre6);
-		addGenre(genre7);
+		Optional<Long> _g = Optional.of(0x0000000000000000L);
+		_g = calcAddGenre(_g, genre1);
+		_g = calcAddGenre(_g, genre2);
+		_g = calcAddGenre(_g, genre3);
+		_g = calcAddGenre(_g, genre4);
+		_g = calcAddGenre(_g, genre5);
+		_g = calcAddGenre(_g, genre6);
+		_g = calcAddGenre(_g, genre7);
+		genres = _g.get();
 	}
 	
 	public CCGenreList(CCGenre genre1, CCGenre genre2, CCGenre genre3, CCGenre genre4, CCGenre genre5, CCGenre genre6, CCGenre genre7, CCGenre genre8) {
-		genres = 0x0000000000000000L;
-		addGenre(genre1);
-		addGenre(genre2);
-		addGenre(genre3);
-		addGenre(genre4);
-		addGenre(genre5);
-		addGenre(genre6);
-		addGenre(genre7);
-		addGenre(genre8);
+		Optional<Long> _g = Optional.of(0x0000000000000000L);
+		_g = calcAddGenre(_g, genre1);
+		_g = calcAddGenre(_g, genre2);
+		_g = calcAddGenre(_g, genre3);
+		_g = calcAddGenre(_g, genre4);
+		_g = calcAddGenre(_g, genre5);
+		_g = calcAddGenre(_g, genre6);
+		_g = calcAddGenre(_g, genre8);
+		genres = _g.get();
 	}
 
 	public CCGenreList(List<CCGenre> data) {
-		genres = 0x0000000000000000L;
+		Optional<Long> _g = Optional.of(0x0000000000000000L);
 		
-		for (CCGenre g : data) addGenre(g);
+		for (CCGenre g : data) _g = calcAddGenre(_g, g);
+
+		genres = _g.get();
 	}
 
 	private int getGenreInt(int idx) {
 		return (int) ((genres & MASK[idx]) >> idx*GSIZE);
 	}
 	
-	private void setGenreInt(int idx, int val) {
-		genres = (genres & ~MASK[idx]) | ((val*1L) << (idx*GSIZE));
-	}
-
 	public CCGenre getGenre(int idx) {
 		if (idx >= 0 && idx < SIZE) {
 			return CCGenre.getWrapper().find(getGenreInt(idx));
@@ -134,19 +140,6 @@ public class CCGenreList {
 		return result;
 	}
 	
-	public boolean setGenre(int idx, CCGenre val) {
-		return setGenre(idx, val.asInt());
-	}
-	
-	public boolean setGenre(int idx, int val) {
-		if (idx >= 0 && idx < SIZE) {
-			setGenreInt(idx, val);
-			return true;
-		} else {
-			return false;
-		}
-	}
-	
 	public int getGenreCount() {
 		int i = 0;
 		while(i < SIZE) {
@@ -154,34 +147,6 @@ public class CCGenreList {
 			i++;
 		}
 		return i;
-	}
-	
-	public boolean addGenre(CCGenre val) {
-		return addGenre(val.asInt());
-	}
-	
-	public boolean addGenre(int val) {
-		int size = getGenreCount();
-		if (size < GSIZE) {
-			setGenre(size, val);
-			return true;
-		} else {
-			return false;
-		}
-	}
-	
-	public boolean removeGenre(int idx) {
-		if (idx >= 0 && idx < SIZE) {
-			idx++;
-			while(idx < SIZE) {
-				setGenreInt(idx-1, getGenreInt(idx));
-				idx++;
-			}
-			setGenreInt(idx - 1, CCGenre.NO_GENRE);
-			return true;
-		} else {
-			return false;
-		}
 	}
 	
 	public String asString() {
@@ -211,7 +176,7 @@ public class CCGenreList {
 	}
 	
 	public CCGenreList getSorted() {
-		CCGenreList result = new CCGenreList();
+		Optional<Long> _g = Optional.of(0x0000000000000000L);
 		
 		int count = getGenreCount();
 		
@@ -223,7 +188,7 @@ public class CCGenreList {
 			}
 		}
 		
-		result.addGenre(actual);
+		_g = calcAddGenre(_g, actual);
 		int last = actual;
 		
 		for (int i = 0; i < (count-1); i++) {
@@ -235,11 +200,11 @@ public class CCGenreList {
 					}
 				}
 			}
-			result.addGenre(actual);
+			_g = calcAddGenre(_g, actual);
 			last = actual;
 		}
 		
-		return result;
+		return new CCGenreList(_g.get());
 	}
 	
 	public long getAllGenres() {
@@ -255,8 +220,8 @@ public class CCGenreList {
 		return Long.compare(o1.getSorted().getAllGenres(), o2.getSorted().getAllGenres());
 	}
 
-	public void clear() {
-		genres = 0;
+	public static CCGenreList createEmpty() {
+		return new CCGenreList();
 	}
 	
 	public static int getMaxListSize() {
@@ -299,11 +264,60 @@ public class CCGenreList {
 		CCGenreList other = (CCGenreList) obj;
 		return equals(other);
 	}
-	public void set(CCGenreList other) {
-		genres = other.genres;
-	}
-
+	
 	public boolean equals(CCGenreList other) {
 		return asSimpleComparableString().equals(other.asSimpleComparableString());
+	}
+	
+	private static long calcSetGenreInt(long rawval, int idx, int val) {
+		return (rawval & ~MASK[idx]) | ((val*1L) << (idx*GSIZE));
+	}
+	
+	private static Optional<Long> calcSetGenre(long rawval, int idx, int genre) {
+		if (idx >= 0 && idx < SIZE) {
+			return Optional.of(calcSetGenreInt(rawval, idx, genre));
+		} else {
+			return Optional.empty();
+		}
+	}
+	
+	private static Optional<Long> calcAddGenre(long rawval, int genre) {
+		int size = calcGetGenreCount(rawval);
+		if (size < GSIZE) {
+			return calcSetGenre(rawval, size, genre);
+		} else {
+			return Optional.empty();
+		}
+	}
+	
+	public static Optional<Long> calcAddGenre(long rawval, CCGenre val) {
+		return calcAddGenre(rawval, val.asInt());
+	}
+	
+	public static Optional<Long> calcAddGenre(Optional<Long> rawval, CCGenre val) {
+		return (rawval.isPresent()) ? calcAddGenre(rawval.get(), val.asInt()) : rawval;
+	}
+	
+	public static Optional<Long> calcAddGenre(Optional<Long> rawval, int val) {
+		return (rawval.isPresent()) ? calcAddGenre(rawval.get(), val) : rawval;
+	}
+
+	private static int calcGetGenreCount(long rawval) {
+		int i = 0;
+		while(i < SIZE) {
+			if (calcGetGenreInt(rawval, i) == CCGenre.NO_GENRE) return i;
+			i++;
+		}
+		return i;
+	}
+	
+	private static int calcGetGenreInt(long rawval, int idx) {
+		return (int) ((rawval & MASK[idx]) >> idx*GSIZE);
+	}
+
+	public CCGenreList getSetGenre(int idx, CCGenre genre) {
+		Optional<Long> _g = calcSetGenre(genres, idx, genre.asInt());
+		if (!_g.isPresent()) return null;
+		return new CCGenreList(_g.get());
 	}
 }

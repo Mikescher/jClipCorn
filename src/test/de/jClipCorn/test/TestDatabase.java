@@ -73,7 +73,7 @@ public class TestDatabase extends ClipCornBaseTest {
 		assertEquals(2012, movWrite.getYear());
 		assertEquals(CCUserScore.RATING_III, movWrite.getScore());
 		assertEquals(CCFSK.RATING_III, movWrite.getFSK());
-		assertEquals(CCOnlineRefType.THEMOVIEDB, movWrite.getOnlineReference().type);
+		assertEquals(CCOnlineRefType.THEMOVIEDB, movWrite.getOnlineReference().Main.type);
 		assertEquals(CCOnlineScore.STARS_3_0, movWrite.getOnlinescore());
 		assertEquals("C:\test.mov", movWrite.getPart(0));
 	}
@@ -99,8 +99,8 @@ public class TestDatabase extends ClipCornBaseTest {
 		assertEquals(2010, mov.getYear());
 		assertEquals(CCUserScore.RATING_NO, mov.getScore());
 		assertEquals(CCFSK.RATING_III, mov.getFSK());
-		assertEquals(CCOnlineRefType.THEMOVIEDB, mov.getOnlineReference().type);
-		assertEquals("movie/39514", mov.getOnlineReference().id);
+		assertEquals(CCOnlineRefType.THEMOVIEDB, mov.getOnlineReference().Main.type);
+		assertEquals("movie/39514", mov.getOnlineReference().Main.id);
 		assertEquals(CCOnlineScore.STARS_3_5, mov.getOnlinescore());
 		assertEquals("<?self>R.E.D. I - Älter. Härter. Besser..avi", mov.getPart(0));
 	}

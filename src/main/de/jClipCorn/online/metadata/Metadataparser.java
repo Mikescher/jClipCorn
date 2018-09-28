@@ -3,7 +3,7 @@ package de.jClipCorn.online.metadata;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReference;
+import de.jClipCorn.database.databaseElement.columnTypes.CCSingleOnlineReference;
 import de.jClipCorn.online.OnlineSearchType;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.enumerations.MetadataParserImplementation;
@@ -19,8 +19,8 @@ public abstract class Metadataparser {
 		return result;
 	}
 	
-	public abstract List<Tuple<String, CCOnlineReference>> searchByText(String text, OnlineSearchType type);
+	public abstract List<Tuple<String, CCSingleOnlineReference>> searchByText(String text, OnlineSearchType type);
 	public abstract MetadataParserImplementation getImplType();
 
-	public abstract OnlineMetadata getMetadata(CCOnlineReference ref, boolean downloadCover);
+	public abstract OnlineMetadata getMetadata(CCSingleOnlineReference ref, boolean downloadCover);
 }

@@ -22,6 +22,7 @@ import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.database.databaseElement.CCSeries;
+import de.jClipCorn.database.databaseElement.columnTypes.CCSingleOnlineReference;
 import de.jClipCorn.gui.frames.previewMovieFrame.PreviewMovieFrame;
 import de.jClipCorn.gui.frames.previewSeriesFrame.PreviewSeriesFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
@@ -162,22 +163,24 @@ public class SearchFrame extends JFrame {
 				continue;
 			}
 			
-			if (StringUtils.equalsIgnoreCase(mov.getOnlineReference().type.asString(), searchString)) {
-				addToList(mov);
-				continue;
-			}
-			
-			if (StringUtils.equalsIgnoreCase(mov.getOnlineReference().type.getIdentifier(), searchString)) {
-				addToList(mov);
-				continue;
+			for (CCSingleOnlineReference soref : mov.getOnlineReference()) {
+				if (StringUtils.equalsIgnoreCase(soref.type.asString(), searchString)) {
+					addToList(mov);
+					continue;
+				}
+				
+				if (StringUtils.equalsIgnoreCase(soref.type.getIdentifier(), searchString)) {
+					addToList(mov);
+					continue;
+				}
+
+				if (soref.toSerializationString().equals(searchString) || soref.id.equals(searchString)) {
+					addToList(mov);
+					continue;
+				}
 			}
 			
 			if (mov.getGroups().containsIgnoreCase(searchString)) {
-				addToList(mov);
-				continue;
-			}
-			
-			if (mov.getOnlineReference().isSet() && (mov.getOnlineReference().toSerializationString().equals(searchString) || mov.getOnlineReference().id.equals(searchString))) {
 				addToList(mov);
 				continue;
 			}
@@ -223,23 +226,25 @@ public class SearchFrame extends JFrame {
 				addToList(ser);
 				continue;
 			}
-			
-			if (StringUtils.equalsIgnoreCase(ser.getOnlineReference().type.asString(), searchString)) {
-				addToList(ser);
-				continue;
-			}
-			
-			if (StringUtils.equalsIgnoreCase(ser.getOnlineReference().type.getIdentifier(), searchString)) {
-				addToList(ser);
-				continue;
-			}
 
-			if (ser.getGroups().containsIgnoreCase(searchString)) {
-				addToList(ser);
-				continue;
+			for (CCSingleOnlineReference soref : ser.getOnlineReference()) {
+				if (StringUtils.equalsIgnoreCase(soref.type.asString(), searchString)) {
+					addToList(ser);
+					continue;
+				}
+				
+				if (StringUtils.equalsIgnoreCase(soref.type.getIdentifier(), searchString)) {
+					addToList(ser);
+					continue;
+				}
+
+				if (soref.toSerializationString().equals(searchString) || soref.id.equals(searchString)) {
+					addToList(ser);
+					continue;
+				}
 			}
 			
-			if (ser.getOnlineReference().isSet() && (ser.getOnlineReference().toSerializationString().equals(searchString) || ser.getOnlineReference().id.equals(searchString))) {
+			if (ser.getGroups().containsIgnoreCase(searchString)) {
 				addToList(ser);
 				continue;
 			}

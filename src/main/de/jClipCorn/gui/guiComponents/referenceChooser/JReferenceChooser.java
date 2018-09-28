@@ -1,153 +1,73 @@
 package de.jClipCorn.gui.guiComponents.referenceChooser;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
+import java.util.ArrayList;
+import java.util.List;
 
-import javax.swing.DefaultComboBoxModel;
+import javax.swing.JButton;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.border.EmptyBorder;
-import javax.swing.border.EtchedBorder;
-import javax.swing.event.DocumentEvent;
 
-import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineRefType;
-import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReference;
-import de.jClipCorn.gui.guiComponents.WideComboBox;
-import de.jClipCorn.util.adapter.DocumentAdapter;
-import de.jClipCorn.util.datatypes.Tuple;
+import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReferenceList;
+import de.jClipCorn.database.databaseElement.columnTypes.CCSingleOnlineReference;
 
 public class JReferenceChooser extends JPanel {
 	private static final long serialVersionUID = 2696192041815168280L;
 
-	private DefaultComboBoxModel<CCOnlineRefType> cbxModel;
+	private JButton btnAdditional;
+	private JSingleReferenceChooser mainChooser;
 
-	private WideComboBox<CCOnlineRefType> cbxType;
-	private JTextField edID;
-	private JPanel panel;
-	private JPanel pnlState;
-	private JPanel panel_1;
-
+	private List<CCSingleOnlineReference> _additional = new ArrayList<>();
+	
 	public JReferenceChooser() {
 		initGUI();
 	}
 
 	private void initGUI() {
 		setLayout(new BorderLayout(0, 0));
-
-		cbxType = new WideComboBox<>();
-		cbxType.setPreferredSize(new Dimension(46, 20));
-		add(cbxType, BorderLayout.EAST);
-		cbxModel = new DefaultComboBoxModel<>(CCOnlineRefType.values());
-		cbxType.setModel(cbxModel);
-		cbxType.setRenderer(new RefChooserComboBoxRenderer());
-		cbxType.setEditor(new RefChooserComboBoxEditor(cbxType));
-		cbxType.setEditable(true);
-
-		edID = new JTextField();
-		add(edID, BorderLayout.CENTER);
-		edID.setColumns(10);
-		edID.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyReleased(KeyEvent e) {
-                if ((e.getKeyCode() == KeyEvent.VK_V) && ((e.getModifiers() & KeyEvent.CTRL_MASK) != 0)) {
-                    CCOnlineRefType guess = CCOnlineRefType.guessType(edID.getText());
-                    if (guess != null && guess != cbxType.getSelectedItem()) {
-                    	cbxType.setSelectedItem(guess);
-                    	return;
-                    }
-                    
-                    Tuple<CCOnlineRefType, String> extraction = CCOnlineRefType.extractType(edID.getText());
-                    if (extraction != null) {
-                    	if (extraction.Item1 != cbxType.getSelectedItem()) cbxType.setSelectedItem(extraction.Item1);
-                    	if (! edID.getText().equals(extraction.Item2)) edID.setText(extraction.Item2);
-                    	return;
-                    }
-                }
-            }
-        });
-
-		cbxType.addActionListener(new ActionListener() {
+		
+		btnAdditional = new JButton("+0"); //$NON-NLS-1$
+		add(btnAdditional, BorderLayout.EAST);
+		btnAdditional.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				updateColor();
+				ReferenceChooserPopup popup = new ReferenceChooserPopup(_additional, JReferenceChooser.this);
+				popup.setVisible(true);
 			}
 		});
-
-		edID.getDocument().addDocumentListener(new DocumentAdapter() {
-			@Override
-			public void changedUpdate(DocumentEvent e) {
-				updateColor();
-			}
-
-			@Override
-			public void removeUpdate(DocumentEvent e) {
-				updateColor();
-			}
-
-			@Override
-			public void insertUpdate(DocumentEvent e) {
-				updateColor();
-			}
-		});
+		btnAdditional.setMargin(new Insets(2, 4, 2, 4));
 		
-		edID.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				updateColor();
-			}
-		});
-
-		panel = new JPanel();
-		panel.setBackground(Color.WHITE);
-		panel.setBorder(new EmptyBorder(2, 2, 2, 2));
-		add(panel, BorderLayout.WEST);
-		panel.setLayout(new BorderLayout(0, 0));
-		
-		panel_1 = new JPanel();
-		panel_1.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
-		panel_1.setPreferredSize(new Dimension(16, 16));
-		panel_1.setMinimumSize(new Dimension(16, 16));
-		panel.add(panel_1, BorderLayout.NORTH);
-				panel_1.setLayout(new BorderLayout(0, 0));
-		
-				pnlState = new JPanel();
-				panel_1.add(pnlState);
-				pnlState.setBackground(Color.YELLOW);
-				pnlState.setBorder(null);
-				pnlState.setLayout(new BorderLayout(0, 0));
+		mainChooser = new JSingleReferenceChooser();
+		add(mainChooser, BorderLayout.CENTER);
 	}
 
-	public CCOnlineReference getValue() {
-		return new CCOnlineReference((CCOnlineRefType) cbxType.getSelectedItem(), edID.getText());
+	public CCOnlineReferenceList getValue() {
+		return CCOnlineReferenceList.create(mainChooser.getValue(), _additional);
 	}
 
-	public void setValue(CCOnlineReference ref) {
-		edID.setText(ref.id);
-		cbxType.setSelectedItem(ref.type);
+	public void setValue(CCOnlineReferenceList ref) {
+		mainChooser.setValue(ref.Main);
+		_additional = new ArrayList<>(ref.Additional);
+		updateUIControls();
 	}
 	
 	@Override
 	public void setEnabled(boolean flag) {
 		super.setEnabled(flag);
 
-		edID.setEnabled(flag);
-		cbxType.setEnabled(flag);
+		mainChooser.setEnabled(flag);
+		btnAdditional.setEnabled(flag);
 	}
-
-	private void updateColor() {
-		CCOnlineReference value = getValue();
-
-		if (!value.isValid()) {
-			pnlState.setBackground(Color.RED);
-		} else if (value.isUnset()) {
-			pnlState.setBackground(Color.YELLOW);
-		} else {
-			pnlState.setBackground(Color.GREEN);
-		}
+	
+	public void updateUIControls() {
+		mainChooser.updateUIControls();
+		btnAdditional.setText("+"+_additional.size()); //$NON-NLS-1$
+	}
+	
+	public void setAdditional(List<CCSingleOnlineReference> a) {
+		_additional = a;
+		updateUIControls();
 	}
 }

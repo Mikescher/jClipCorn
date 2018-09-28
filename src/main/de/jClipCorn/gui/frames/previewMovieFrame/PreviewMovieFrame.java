@@ -21,8 +21,10 @@ import javax.swing.SwingConstants;
 import de.jClipCorn.Main;
 import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGroup;
+import de.jClipCorn.database.databaseElement.columnTypes.CCSingleOnlineReference;
 import de.jClipCorn.gui.frames.editMovieFrame.EditMovieFrame;
 import de.jClipCorn.gui.guiComponents.CoverLabel;
+import de.jClipCorn.gui.guiComponents.OnlineRefButton;
 import de.jClipCorn.gui.guiComponents.ReadableTextField;
 import de.jClipCorn.gui.guiComponents.TagPanel;
 import de.jClipCorn.gui.localization.LocaleBundle;
@@ -58,7 +60,7 @@ public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener 
 	private JLabel lblFormat;
 	private JLabel lblYear;
 	private JLabel lblSize;
-	private JButton btnOnlineRef;
+	private OnlineRefButton btnOnlineRef;
 	private JLabel lblGenre;
 	private JLabel lblScore_1;
 	private JLabel lbl_Quality;
@@ -76,7 +78,6 @@ public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener 
 	private JMenuItem mntmEditMovie;
 	private JMenuItem mntmDeleetMovie;
 	private JMenu mnExtras;
-	private JMenuItem mntmShowInImdb;
 	private JButton btnPlay;
 	private JMenuItem mntmPlayMovie;
 	private TagPanel pnlTags;
@@ -128,7 +129,7 @@ public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener 
 		scrollPane.setViewportView(lsGenres);
 		
 		edPart0 = new ReadableTextField();
-		edPart0.setBounds(201, 53, 416, 20);
+		edPart0.setBounds(201, 53, 370, 20);
 		getContentPane().add(edPart0);
 		edPart0.setColumns(10);
 		
@@ -193,14 +194,8 @@ public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener 
 		lblSize.setBounds(10, 493, 63, 14);
 		getContentPane().add(lblSize);
 		
-		btnOnlineRef = new JButton();
-		btnOnlineRef.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				openInBrowser();
-			}
-		});
-		btnOnlineRef.setBounds(627, 50, 57, 23);
+		btnOnlineRef = new OnlineRefButton();
+		btnOnlineRef.setBounds(583, 50, 101, 23);
 		getContentPane().add(btnOnlineRef);
 		
 		lblGenre = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGenre.text")); //$NON-NLS-1$
@@ -288,14 +283,31 @@ public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener 
 		mnExtras = new JMenu(LocaleBundle.getString("PreviewMovieFrame.Menubar.Extras")); //$NON-NLS-1$
 		menuBar.add(mnExtras);
 		
-		mntmShowInImdb = new JMenuItem(LocaleBundle.getString("PreviewMovieFrame.Menubar.Extras.ImDB")); //$NON-NLS-1$
-		mntmShowInImdb.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				openInBrowser();
+		if (movie.getOnlineReference().hasAdditional()) {
+			JMenu mntmShowOnline = new JMenu(LocaleBundle.getString("PreviewMovieFrame.Menubar.Extras.ViewOnline")); //$NON-NLS-1$
+			for	(final CCSingleOnlineReference soref : movie.getOnlineReference()) {
+				JMenuItem subitem = new JMenuItem(soref.type.asString());
+				subitem.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						if (soref.isSet() && soref.isValid()) HTTPUtilities.openInBrowser(soref.getURL());
+					}
+				});
+				mntmShowOnline.add(subitem);
 			}
-		});
-		mnExtras.add(mntmShowInImdb);
+			mnExtras.add(mntmShowOnline);
+		}
+		else {
+			JMenuItem mntmShowOnline = new JMenuItem(LocaleBundle.getString("PreviewMovieFrame.Menubar.Extras.ViewOnline")); //$NON-NLS-1$
+			mntmShowOnline.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					if (movie.getOnlineReference().Main.isSet() && movie.getOnlineReference().isValid())
+						HTTPUtilities.openInBrowser(movie.getOnlineReference().Main.getURL());
+				}
+			});
+			mnExtras.add(mntmShowOnline);
+		}
 		
 		btnPlay = new JButton(CachedResourceLoader.getIcon(Resources.ICN_MENUBAR_PLAY.icon32x32));
 		btnPlay.addActionListener(new ActionListener() {
@@ -424,12 +436,7 @@ public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener 
 			dlsmViewed.addElement(dt.toStringUINormal());
 		}
 		
-		btnOnlineRef.setIcon(movie.getOnlineReference().getIconButton());
-		btnOnlineRef.setEnabled(movie.getOnlineReference().isSet());
-	}
-
-	private void openInBrowser() {
-		HTTPUtilities.openInBrowser(movie.getOnlineReference().getURL());
+		btnOnlineRef.setValue(movie.getOnlineReference());
 	}
 
 	@Override

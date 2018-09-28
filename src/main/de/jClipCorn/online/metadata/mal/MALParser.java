@@ -11,7 +11,7 @@ import org.jsoup.nodes.Element;
 
 import de.jClipCorn.database.databaseElement.columnTypes.CCGenre;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGenreList;
-import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReference;
+import de.jClipCorn.database.databaseElement.columnTypes.CCSingleOnlineReference;
 import de.jClipCorn.online.OnlineSearchType;
 import de.jClipCorn.online.cover.imdb.AgeRatingParser;
 import de.jClipCorn.online.metadata.Metadataparser;
@@ -40,11 +40,11 @@ public class MALParser extends Metadataparser {
 	private final static String SOUP_BORDER = "#content .borderClass div"; //$NON-NLS-1$
 	
 	@Override
-	public List<Tuple<String, CCOnlineReference>> searchByText(String title, OnlineSearchType type) {
+	public List<Tuple<String, CCSingleOnlineReference>> searchByText(String title, OnlineSearchType type) {
 		String url = String.format(SEARCH_URL, HTTPUtilities.escapeURL(title));
 		String html = HTTPUtilities.getHTML(url, true, true);
 
-		List<Tuple<String, CCOnlineReference>> result = new ArrayList<>();
+		List<Tuple<String, CCSingleOnlineReference>> result = new ArrayList<>();
 		
 		Document soup = Jsoup.parse(html);
 
@@ -53,7 +53,7 @@ public class MALParser extends Metadataparser {
 			if (name.trim().isEmpty()) continue;
 			
 			Matcher matcher = REGEX_MYAL.matcher(elem.attr("href")); //$NON-NLS-1$
-			if (matcher.find()) result.add(Tuple.Create(name, CCOnlineReference.createMyAnimeList(matcher.group("id")))); //$NON-NLS-1$
+			if (matcher.find()) result.add(Tuple.Create(name, CCSingleOnlineReference.createMyAnimeList(matcher.group("id")))); //$NON-NLS-1$
 		}
 		
 		return CCStreams.iterate(result).unique(p -> p.Item2).enumerate();
@@ -65,7 +65,7 @@ public class MALParser extends Metadataparser {
 	}
 
 	@Override
-	public OnlineMetadata getMetadata(CCOnlineReference ref, boolean downloadCover) {
+	public OnlineMetadata getMetadata(CCSingleOnlineReference ref, boolean downloadCover) {
 		String url = ref.getURL();
 		String html = HTTPUtilities.getHTML(url, true, true);
 		Document soup = Jsoup.parse(html);

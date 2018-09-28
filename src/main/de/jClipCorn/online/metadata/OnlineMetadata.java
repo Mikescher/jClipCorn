@@ -5,12 +5,12 @@ import java.util.Map;
 
 import de.jClipCorn.database.databaseElement.columnTypes.CCFSK;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGenreList;
-import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReference;
 import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineScore;
+import de.jClipCorn.database.databaseElement.columnTypes.CCSingleOnlineReference;
 
 public class OnlineMetadata {
 
-	public final CCOnlineReference Source;
+	public final CCSingleOnlineReference Source;
 	
 	public String Title = null;
 	public Integer Year = null;
@@ -21,9 +21,9 @@ public class OnlineMetadata {
 	public BufferedImage Cover = null;
 	public Map<String, Integer> FSKList = null;
 	public CCFSK FSK = null;
-	public CCOnlineReference AltRef = null;
+	public CCSingleOnlineReference AltRef = null;
 	
-	public OnlineMetadata(CCOnlineReference source) {
+	public OnlineMetadata(CCSingleOnlineReference source) {
 		super();
 		Source = source;
 	}

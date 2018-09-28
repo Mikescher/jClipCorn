@@ -288,6 +288,14 @@ public abstract class CCStream<TType> implements Iterator<TType>, Iterable<TType
 		return new ConcatStream<>(this, t);
 	}
 
+	public CCStream<TType> append(Iterable<TType> t) {
+		return new ConcatStream<>(this, CCStreams.iterate(t));
+	}
+
+	public CCStream<TType> append(TType[] t) {
+		return new ConcatStream<>(this, CCStreams.iterate(t));
+	}
+
 	public TType get(int idx) {
 		TType value = null;
 		for (int i = 0; i <= idx; i++) value = next();

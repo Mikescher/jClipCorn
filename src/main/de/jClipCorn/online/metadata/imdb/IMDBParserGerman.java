@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
 import de.jClipCorn.database.databaseElement.columnTypes.CCFSK;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGenre;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGenreList;
-import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReference;
+import de.jClipCorn.database.databaseElement.columnTypes.CCSingleOnlineReference;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.online.OnlineSearchType;
@@ -63,8 +63,8 @@ public class IMDBParserGerman extends IMDBParserCommon {
 	}
 	
 	@Override
-	public List<Tuple<String, CCOnlineReference>> extractImDBLinks(String html) {
-		List<Tuple<String, CCOnlineReference>> result = new ArrayList<>();
+	public List<Tuple<String, CCSingleOnlineReference>> extractImDBLinks(String html) {
+		List<Tuple<String, CCSingleOnlineReference>> result = new ArrayList<>();
 		
 		Pattern pat = Pattern.compile(REGEX_SEARCH_HTMl_A);
 		
@@ -74,7 +74,7 @@ public class IMDBParserGerman extends IMDBParserCommon {
 			String name = getNameFromHREF(matcher.group());
 			String link = getLinkFromHREF(matcher.group());
 			
-			CCOnlineReference ref = CCOnlineReference.createIMDB(extractOnlineID(link));
+			CCSingleOnlineReference ref = CCSingleOnlineReference.createIMDB(extractOnlineID(link));
 			
 			if (ref != null) result.add(Tuple.Create(name, ref));
 		}
@@ -83,7 +83,7 @@ public class IMDBParserGerman extends IMDBParserCommon {
 	}
 	
 	@Override
-	protected String getURL(CCOnlineReference ref) {
+	protected String getURL(CCSingleOnlineReference ref) {
 		return BASE_URL + "/title/" + ref.id;
 	}
 	
@@ -201,7 +201,7 @@ public class IMDBParserGerman extends IMDBParserCommon {
 		for (String ng : genres) {
 			CCGenre genre = CCGenre.parseFromIMDBName(ng);
 			if (! genre.isEmpty()) {
-				result.addGenre(genre);
+				result = result.getTryAddGenre(genre);
 			}
 		}
 		

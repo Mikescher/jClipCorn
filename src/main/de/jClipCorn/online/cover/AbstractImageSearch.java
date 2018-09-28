@@ -2,7 +2,7 @@ package de.jClipCorn.online.cover;
 
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReference;
+import de.jClipCorn.database.databaseElement.columnTypes.CCSingleOnlineReference;
 import de.jClipCorn.online.OnlineSearchType;
 import de.jClipCorn.util.listener.FinishListener;
 import de.jClipCorn.util.listener.ProgressCallbackListener;
@@ -36,7 +36,7 @@ public abstract class AbstractImageSearch {
 		finishCallback.finish();
 	}
 	
-	public abstract void start(CopyOnWriteArrayList<String> exclusions, String searchText, OnlineSearchType typ, CCOnlineReference reference);
+	public abstract void start(CopyOnWriteArrayList<String> exclusions, String searchText, OnlineSearchType typ, CCSingleOnlineReference reference);
 
 	public abstract int getProgressMax();
 }

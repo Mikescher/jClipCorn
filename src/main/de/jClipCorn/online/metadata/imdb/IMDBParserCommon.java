@@ -7,7 +7,7 @@ import java.util.regex.Pattern;
 
 import de.jClipCorn.database.databaseElement.columnTypes.CCFSK;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGenreList;
-import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReference;
+import de.jClipCorn.database.databaseElement.columnTypes.CCSingleOnlineReference;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.online.OnlineSearchType;
 import de.jClipCorn.online.cover.imdb.IMDBLanguage;
@@ -37,10 +37,10 @@ public abstract class IMDBParserCommon extends Metadataparser {
 	}
 	
 	@Override
-	public List<Tuple<String, CCOnlineReference>> searchByText(String text, OnlineSearchType type) {
+	public List<Tuple<String, CCSingleOnlineReference>> searchByText(String text, OnlineSearchType type) {
 		String url = getSearchURL(text, type);
 		String html = HTTPUtilities.getHTML(url, true, true);
-		List<Tuple<String, CCOnlineReference>> res = extractImDBLinks(html);
+		List<Tuple<String, CCSingleOnlineReference>> res = extractImDBLinks(html);
 		
 		return res;
 	}
@@ -56,7 +56,7 @@ public abstract class IMDBParserCommon extends Metadataparser {
 	}
 
 	@Override
-	public OnlineMetadata getMetadata(CCOnlineReference ref, boolean downloadCover) {
+	public OnlineMetadata getMetadata(CCSingleOnlineReference ref, boolean downloadCover) {
 		final String url = getURL(ref);
 
 		String html = HTTPUtilities.getHTML(url, true, true);
@@ -76,12 +76,12 @@ public abstract class IMDBParserCommon extends Metadataparser {
 		return result;
 	}
 	
-	public CCOnlineReference getFirstResultReference(String title, OnlineSearchType type) {
+	public CCSingleOnlineReference getFirstResultReference(String title, OnlineSearchType type) {
 		String url = getSearchURL(title, type);
 		String html = HTTPUtilities.getHTML(url, true, true);
-		final List<Tuple<String,CCOnlineReference>> res = extractImDBLinks(html);
+		final List<Tuple<String,CCSingleOnlineReference>> res = extractImDBLinks(html);
 		
-		if (res.isEmpty()) return CCOnlineReference.createNone();
+		if (res.isEmpty()) return CCSingleOnlineReference.createNone();
 		
 		return res.get(0).Item2;
 	}
@@ -92,9 +92,9 @@ public abstract class IMDBParserCommon extends Metadataparser {
 	}
 
 	public abstract String getSearchURL(String title, OnlineSearchType typ);
-	public abstract List<Tuple<String, CCOnlineReference>> extractImDBLinks(String html);
+	public abstract List<Tuple<String, CCSingleOnlineReference>> extractImDBLinks(String html);
 
-	protected abstract String getURL(CCOnlineReference ref);
+	protected abstract String getURL(CCSingleOnlineReference ref);
 	
 	protected abstract String getTitle(String html);
 	protected abstract Integer getYear(String html);

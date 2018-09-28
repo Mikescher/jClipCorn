@@ -4,7 +4,7 @@ import java.awt.image.BufferedImage;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReference;
+import de.jClipCorn.database.databaseElement.columnTypes.CCSingleOnlineReference;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.online.OnlineSearchType;
@@ -24,8 +24,8 @@ public class TMDBPosterSearch extends AbstractImageSearch {
 	}
 
 	@Override
-	public void start(CopyOnWriteArrayList<String> exclusions, String searchText, OnlineSearchType typ, CCOnlineReference reference) {
-		CCOnlineReference tmpdbRef = reference;
+	public void start(CopyOnWriteArrayList<String> exclusions, String searchText, OnlineSearchType typ, CCSingleOnlineReference reference) {
+		CCSingleOnlineReference tmpdbRef = reference;
 		
 		if (tmpdbRef.isUnset()) {
 			switch (typ) {

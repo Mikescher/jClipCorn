@@ -320,4 +320,16 @@ public class CCGenreList {
 		if (!_g.isPresent()) return null;
 		return new CCGenreList(_g.get());
 	}
+
+	public CCGenreList getTryAddGenre(CCGenre genre){
+		Optional<Long> _g = calcAddGenre(genres, genre);
+		if (!_g.isPresent()) return this;
+		return new CCGenreList(_g.get());
+	}
+
+	public CCGenreList getAddGenre(CCGenre genre){
+		Optional<Long> _g = calcAddGenre(genres, genre.asInt());
+		if (!_g.isPresent()) return null;
+		return new CCGenreList(_g.get());
+	}
 }

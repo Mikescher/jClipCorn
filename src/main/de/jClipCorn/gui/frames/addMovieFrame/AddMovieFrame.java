@@ -45,7 +45,7 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCQuality;
 import de.jClipCorn.database.databaseElement.columnTypes.CCUserScore;
 import de.jClipCorn.database.databaseElement.columnTypes.CCFileSize;
 import de.jClipCorn.database.databaseElement.columnTypes.CCDBElementTyp;
-import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReference;
+import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReferenceList;
 import de.jClipCorn.gui.frames.inputErrorFrame.InputErrorDialog;
 import de.jClipCorn.gui.frames.parseOnlineFrame.ParseOnlineDialog;
 import de.jClipCorn.gui.guiComponents.ReadableTextField;
@@ -835,7 +835,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		spnAddDate.setValue(CCDate.getCurrentDate());
 		spnZyklus.setValue(-1);
 		
-		edReference.setValue(CCOnlineReference.createNone());
+		edReference.setValue(CCOnlineReferenceList.createEmpty());
 		
 		updateByteDisp();
 	}
@@ -1102,7 +1102,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 	}
 
 	@Override
-	public CCOnlineReference getSearchReference() {
+	public CCOnlineReferenceList getSearchReference() {
 		return edReference.getValue();
 	}
 	
@@ -1142,7 +1142,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 	}
 	
 	@Override
-	public void setOnlineReference(CCOnlineReference ref) {
+	public void setOnlineReference(CCOnlineReferenceList ref) {
 		edReference.setValue(ref);
 	}
 	
@@ -1185,7 +1185,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		int g6 = cbxGenre6.getSelectedIndex();
 		int g7 = cbxGenre7.getSelectedIndex();
 		
-		CCOnlineReference ref = edReference.getValue();
+		CCOnlineReferenceList ref = edReference.getValue();
 		
 		UserDataProblem.testMovieData(ret, null, i, movieList, p0, p1, p2, p3, p4, p5, title, zyklus, zyklusID, len, adddate, oscore, fskidx, year, fsize, csExtn, csExta, g0, g1, g2, g3, g4, g5, g6, g7, quality, lang, ref);
 	

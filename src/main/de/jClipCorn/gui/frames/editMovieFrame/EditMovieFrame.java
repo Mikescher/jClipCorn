@@ -34,7 +34,7 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguage;
 import de.jClipCorn.database.databaseElement.columnTypes.CCQuality;
 import de.jClipCorn.database.databaseElement.columnTypes.CCUserScore;
 import de.jClipCorn.database.databaseElement.columnTypes.CCFileSize;
-import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReference;
+import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReferenceList;
 import de.jClipCorn.gui.frames.inputErrorFrame.InputErrorDialog;
 import de.jClipCorn.gui.guiComponents.ReadableTextField;
 import de.jClipCorn.gui.guiComponents.TagPanel;
@@ -675,7 +675,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		spnZyklus.setValue(-1);
 		
 		edViewedHistory.setValue(CCDateTimeList.createEmpty());
-		edReference.setValue(CCOnlineReference.createNone());
+		edReference.setValue(CCOnlineReferenceList.createEmpty());
 		edGroups.setValue(CCGroupList.createEmpty());
 		
 		updateByteDisp();
@@ -821,7 +821,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 	}
 	
 	@Override
-	public void setOnlineReference(CCOnlineReference ref) {
+	public void setOnlineReference(CCOnlineReferenceList ref) {
 		edReference.setValue(ref);
 	}
 
@@ -848,7 +848,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 	}
 
 	@Override
-	public CCOnlineReference getSearchReference() {
+	public CCOnlineReferenceList getSearchReference() {
 		return edReference.getValue();
 	}
 
@@ -1134,7 +1134,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		int g6 = cbxGenre6.getSelectedIndex();
 		int g7 = cbxGenre7.getSelectedIndex();
 		
-		CCOnlineReference ref = edReference.getValue();
+		CCOnlineReferenceList ref = edReference.getValue();
 		
 		UserDataProblem.testMovieData(ret, movie, i, movie.getMovieList(), p0, p1, p2, p3, p4, p5, title, zyklus, zyklusID, len, adddate, oscore, fskidx, year, fsize, csExtn, csExta, g0, g1, g2, g3, g4, g5, g6, g7, quality, lang, ref);
 		

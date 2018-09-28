@@ -4,7 +4,7 @@ import java.awt.image.BufferedImage;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReference;
+import de.jClipCorn.database.databaseElement.columnTypes.CCSingleOnlineReference;
 import de.jClipCorn.online.OnlineSearchType;
 import de.jClipCorn.online.cover.AbstractImageSearch;
 import de.jClipCorn.util.http.HTTPUtilities;
@@ -19,7 +19,7 @@ public class GooglePosterSearch extends AbstractImageSearch {
 	}
 
 	@Override
-	public void start(CopyOnWriteArrayList<String> exclusions, String searchText, OnlineSearchType typ, CCOnlineReference reference) {
+	public void start(CopyOnWriteArrayList<String> exclusions, String searchText, OnlineSearchType typ, CCSingleOnlineReference reference) {
 		String url = GoogleSearchCommon.getSearchURL(searchText, GoogleSearchCommon.SEARCH_APPENDIX_2);
 		String html = HTTPUtilities.getJavascriptHTML(url, GoogleSearchCommon.HTMLUNIT_JS_TIMEOUT);
 		List<String> links = GoogleSearchCommon.extractImageLinks(html, 16, exclusions, progressCallback);

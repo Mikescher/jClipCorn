@@ -6,11 +6,10 @@ import javax.swing.JLayeredPane;
 
 import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguage;
 import de.jClipCorn.database.databaseElement.columnTypes.CCFileFormat;
-import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReference;
+import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReferenceList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCQuality;
 import de.jClipCorn.online.metadata.ParseResultHandler;
 import de.jClipCorn.util.listener.ImageCropperResultListener;
-
 
 /**
  * Giant NOP Class to keep EditCOerControl.java clean
@@ -109,7 +108,7 @@ public class AbstractEditCoverControl extends JLayeredPane implements ParseResul
 	}
 	
 	@Override
-	public void setOnlineReference(CCOnlineReference ref) {
+	public void setOnlineReference(CCOnlineReferenceList ref) {
 		// NOP
 	}
 
@@ -119,8 +118,8 @@ public class AbstractEditCoverControl extends JLayeredPane implements ParseResul
 	}
 
 	@Override
-	public CCOnlineReference getSearchReference() {
-		return CCOnlineReference.createNone();
+	public CCOnlineReferenceList getSearchReference() {
+		return CCOnlineReferenceList.createEmpty();
 	}
 
 }

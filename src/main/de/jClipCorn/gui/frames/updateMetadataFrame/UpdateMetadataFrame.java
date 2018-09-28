@@ -21,8 +21,8 @@ import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGenre;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGenreList;
-import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReference;
 import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineScore;
+import de.jClipCorn.database.databaseElement.columnTypes.CCSingleOnlineReference;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.gui.resources.CachedResourceLoader;
@@ -243,7 +243,7 @@ public class UpdateMetadataFrame extends JFrame {
 				ThreadUtils.setProgressbarAndWait(progressBar, i);
 				i++;
 				
-				CCOnlineReference ref = elem.Element.getOnlineReference();
+				CCSingleOnlineReference ref = elem.Element.getOnlineReference().Main;
 				if (! ref.isSet()) continue;
 				
 				if (elem.OnlineMeta != null && elem.OnlineMeta.OnlineScore != null) continue;
@@ -327,14 +327,14 @@ public class UpdateMetadataFrame extends JFrame {
 			if (elem.OnlineMeta != null && elem.OnlineMeta.Genres != null) {
 				if (tableMain.DeleteLocalGenres) {
 					if (!elem.Element.getGenres().equals(elem.OnlineMeta.Genres)) {
-						elem.Element.getGenres().set(elem.OnlineMeta.Genres);
+						elem.Element.setGenres(elem.OnlineMeta.Genres);
 						count++;
 					}
 				} else {
 					boolean diff = false;
 					for (CCGenre genre : elem.OnlineMeta.Genres.iterate()) {
 						if (!elem.Element.getGenres().includes(genre) && !elem.Element.getGenres().isFull()) {
-							elem.Element.getGenres().addGenre(genre);
+							elem.Element.tryAddGenre(genre);
 							diff = true;
 						}
 					}
@@ -357,14 +357,14 @@ public class UpdateMetadataFrame extends JFrame {
 			if (elem.OnlineMeta != null && elem.OnlineMeta.Genres != null) {
 				if (tableMain.DeleteLocalGenres) {
 					if (!elem.Element.getGenres().equals(elem.OnlineMeta.Genres)) {
-						elem.Element.getGenres().set(elem.OnlineMeta.Genres);
+						elem.Element.setGenres(elem.OnlineMeta.Genres);
 						count++;
 					}
 				} else {
 					boolean diff = false;
 					for (CCGenre genre : elem.OnlineMeta.Genres.iterate()) {
 						if (!elem.Element.getGenres().includes(genre) && !elem.Element.getGenres().isFull()) {
-							elem.Element.getGenres().addGenre(genre);
+							elem.Element.tryAddGenre(genre);
 							diff = true;
 						}
 					}

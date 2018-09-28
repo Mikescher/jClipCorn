@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 
-import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReference;
+import de.jClipCorn.database.databaseElement.columnTypes.CCSingleOnlineReference;
 import de.jClipCorn.online.OnlineSearchType;
 import de.jClipCorn.online.metadata.imdb.IMDBParserCommon;
 import de.jClipCorn.online.metadata.imdb.IMDBParserEnglish;
@@ -43,7 +43,7 @@ public class IMDBImageParserHelperEnglish extends IMDBImageParserHelper{
 	
 	@Override
 	public String getFirstSearchResult(String html) {
-		List<Tuple<String, CCOnlineReference>> alds = parser.extractImDBLinks(html);
+		List<Tuple<String, CCSingleOnlineReference>> alds = parser.extractImDBLinks(html);
 		if (!alds.isEmpty()) {
 			return alds.get(0).Item2.getURL();
 		} else {
@@ -53,7 +53,7 @@ public class IMDBImageParserHelperEnglish extends IMDBImageParserHelper{
 	
 	@Override
 	public String getSecondSearchResult(String html) {
-		List<Tuple<String, CCOnlineReference>> alds = parser.extractImDBLinks(html);
+		List<Tuple<String, CCSingleOnlineReference>> alds = parser.extractImDBLinks(html);
 		if (alds.size() >= 2) {
 			return alds.get(1).Item2.getURL();
 		} else {

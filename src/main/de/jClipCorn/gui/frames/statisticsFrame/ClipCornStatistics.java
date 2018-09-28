@@ -13,7 +13,8 @@ import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsLanguageChart;
 import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsLengthChart;
 import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsLengthOverTimeChart;
 import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsOnlinescoreChart;
-import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsProviderChart;
+import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsProviderAnyChart;
+import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsProviderMainChart;
 import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsQualityChart;
 import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsQualityOverTimeChart;
 import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsScoreChart;
@@ -49,7 +50,8 @@ public final class ClipCornStatistics {
 		STATISTICS.add(ml -> new StatisticsGroup(s -> new StatisticsFSKChart(ml, s)));
 		STATISTICS.add(ml -> new StatisticsGroup(s -> new StatisticsLanguageChart(ml, s)));
 		STATISTICS.add(ml -> new StatisticsGroup(s -> new StatisticsTagChart(ml, s)));
-		STATISTICS.add(ml -> new StatisticsGroup(s -> new StatisticsProviderChart(ml, s)));
+		STATISTICS.add(ml -> new StatisticsGroup(s -> new StatisticsProviderMainChart(ml, s)));
+		STATISTICS.add(ml -> new StatisticsGroup(s -> new StatisticsProviderAnyChart(ml, s)));
 
 		// ======== SPECIAL PROPERTIES =========
 

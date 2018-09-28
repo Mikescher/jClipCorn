@@ -7,6 +7,7 @@ import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGenreList;
+import de.jClipCorn.database.databaseElement.columnTypes.CCSingleOnlineReference;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.table.filter.AbstractCustomDatabaseElementFilter;
 import de.jClipCorn.table.filter.AbstractCustomFilter;
@@ -79,8 +80,10 @@ public class CustomSearchFilter extends AbstractCustomDatabaseElementFilter {
 			return true;
 		}
 		
-		if (e.getOnlineReference().isSet() && (e.getOnlineReference().toSerializationString().equals(searchTerm) || e.getOnlineReference().id.equals(searchTerm))) {
-			return true;
+		for (CCSingleOnlineReference soref : e.getOnlineReference()) {
+			if ((soref.toSerializationString().equals(searchTerm) || soref.id.equals(searchTerm))) {
+				return true;
+			}
 		}
 		
 		return false;

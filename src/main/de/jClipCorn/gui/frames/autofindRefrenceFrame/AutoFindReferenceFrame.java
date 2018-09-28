@@ -34,7 +34,8 @@ import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineRefType;
-import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReference;
+import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReferenceList;
+import de.jClipCorn.database.databaseElement.columnTypes.CCSingleOnlineReference;
 import de.jClipCorn.gui.frames.editMovieFrame.EditMovieFrame;
 import de.jClipCorn.gui.frames.editSeriesFrame.EditSeriesFrame;
 import de.jClipCorn.gui.guiComponents.CoverLabel;
@@ -400,7 +401,7 @@ public class AutoFindReferenceFrame extends JFrame {
 		
 		List<CCDatabaseElement> elements = new ArrayList<>();
 		for (CCDatabaseElement el : database.iteratorElements()) {
-			if (el.getOnlineReference().isUnset())
+			if (el.getOnlineReference().Main.isUnset())
 				elements.add(el);
 			
 			if (elements.size() >= 250) // 250 max, prevent OutOfMemory and other fun stuff
@@ -478,7 +479,7 @@ public class AutoFindReferenceFrame extends JFrame {
 			}
 			
 			try {
-				CCOnlineReference tmdbReference;
+				CCSingleOnlineReference tmdbReference;
 				OnlineSearchType searchtype = element.isMovie() ? OnlineSearchType.MOVIES : OnlineSearchType.SERIES;
 				
 				if (element.isMovie())
@@ -489,7 +490,7 @@ public class AutoFindReferenceFrame extends JFrame {
 				OnlineMetadata imdbMeta = null;
 				
 				if (tmdbReference.isUnset()) {
-					CCOnlineReference imdbReference = imdbParser.getFirstResultReference(element.getTitle(), searchtype);
+					CCSingleOnlineReference imdbReference = imdbParser.getFirstResultReference(element.getTitle(), searchtype);
 					if (imdbReference != null && imdbReference.type == CCOnlineRefType.IMDB)
 						imdbMeta = imdbParser.getMetadata(imdbReference, true);
 					
@@ -500,7 +501,7 @@ public class AutoFindReferenceFrame extends JFrame {
 					if (tmdbMeta != null && tmdbMeta.AltRef != null && tmdbMeta.AltRef.isSet() && tmdbMeta.AltRef.type == CCOnlineRefType.IMDB) {
 						imdbMeta = imdbParser.getMetadata(tmdbMeta.AltRef, true);
 					} else {
-						CCOnlineReference imdbReference = imdbParser.getFirstResultReference(element.getTitle(), searchtype);
+						CCSingleOnlineReference imdbReference = imdbParser.getFirstResultReference(element.getTitle(), searchtype);
 						if (imdbReference != null && imdbReference.type == CCOnlineRefType.IMDB)
 							imdbMeta = imdbParser.getMetadata(imdbReference, true);
 					}
@@ -544,7 +545,7 @@ public class AutoFindReferenceFrame extends JFrame {
 			return;
 		}
 		
-		value.local.setOnlineReference(value.tmdbMeta.Source);
+		value.local.setOnlineReference(CCOnlineReferenceList.create(value.tmdbMeta.Source, value.tmdbMeta.AltRef));
 		
 		if (listResults.getSelectedIndex() + 1 >= listModel.size()) {
 			listResults.setSelectedIndex(-1);
@@ -567,7 +568,7 @@ public class AutoFindReferenceFrame extends JFrame {
 			return;
 		}
 		
-		value.local.setOnlineReference(value.imdbMeta.Source);
+		value.local.setOnlineReference(CCOnlineReferenceList.create(value.imdbMeta.Source, value.imdbMeta.AltRef));
 		
 		if (listResults.getSelectedIndex() + 1 >= listModel.size()) {
 			listResults.setSelectedIndex(-1);

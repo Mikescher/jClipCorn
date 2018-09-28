@@ -6,6 +6,7 @@ import java.util.List;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.ICCDatabaseStructureElement;
 import de.jClipCorn.table.filter.customFilter.CustomAddDateFilter;
+import de.jClipCorn.table.filter.customFilter.CustomAnyReferenceFilter;
 import de.jClipCorn.table.filter.customFilter.CustomCoverDimensionFilter;
 import de.jClipCorn.table.filter.customFilter.CustomEpisodecountFilter;
 import de.jClipCorn.table.filter.customFilter.CustomExtendedViewedFilter;
@@ -17,7 +18,7 @@ import de.jClipCorn.table.filter.customFilter.CustomHistoryFilter;
 import de.jClipCorn.table.filter.customFilter.CustomLanguageFilter;
 import de.jClipCorn.table.filter.customFilter.CustomOnlinescoreFilter;
 import de.jClipCorn.table.filter.customFilter.CustomQualityFilter;
-import de.jClipCorn.table.filter.customFilter.CustomReferenceFilter;
+import de.jClipCorn.table.filter.customFilter.CustomMainReferenceFilter;
 import de.jClipCorn.table.filter.customFilter.CustomTagFilter;
 import de.jClipCorn.table.filter.customFilter.CustomTitleFilter;
 import de.jClipCorn.table.filter.customFilter.CustomTypFilter;
@@ -58,7 +59,7 @@ public abstract class AbstractCustomFilter {
 	public final static int CUSTOMFILTERID_YEAR           = 15;
 	public final static int CUSTOMFILTERID_ZYKLUS         = 16;
 	public final static int CUSTOMFILTERID_GROUP          = 17;
-	public final static int CUSTOMFILTERID_REFERENCE      = 18;
+	public final static int CUSTOMFILTERID_MAINREFERENCE  = 18;
 	public final static int CUSTOMFILTERID_HISTORY        = 19;
 	public final static int CUSTOMFILTERID_SEARCH         = 20;
 	public final static int CUSTOMFILTERID_CHAR           = 21;
@@ -71,6 +72,7 @@ public abstract class AbstractCustomFilter {
 	public final static int CUSTOMFILTERID_EPISODECOUNT   = 28;
 	public final static int CUSTOMFILTERID_EXTVIEWED      = 29;
 	public final static int CUSTOMFILTERID_COVERDIMENSION = 30;
+	public final static int CUSTOMFILTERID_ANYREFERENCE   = 31;
 		
 	public abstract String getName();
 	public abstract String getPrecreateName();
@@ -188,7 +190,8 @@ public abstract class AbstractCustomFilter {
 			new CustomOnlinescoreFilter(),
 			new CustomQualityFilter(),
 			new CustomUserScoreFilter(),
-			new CustomReferenceFilter(),
+			new CustomMainReferenceFilter(),
+			new CustomAnyReferenceFilter(),
 			new CustomTagFilter(),
 			new CustomGroupFilter(),
 			new CustomTypFilter(),

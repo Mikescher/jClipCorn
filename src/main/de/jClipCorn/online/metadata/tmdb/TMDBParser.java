@@ -14,7 +14,7 @@ import org.json.JSONTokener;
 import de.jClipCorn.database.databaseElement.columnTypes.CCFSK;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGenre;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGenreList;
-import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReference;
+import de.jClipCorn.database.databaseElement.columnTypes.CCSingleOnlineReference;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.online.OnlineSearchType;
@@ -41,7 +41,7 @@ public class TMDBParser extends Metadataparser {
 	private final static String URL_SEARCHCOVER = "/images"; //$NON-NLS-1$
 
 	@Override
-	public List<Tuple<String, CCOnlineReference>> searchByText(String text, OnlineSearchType type) {
+	public List<Tuple<String, CCSingleOnlineReference>> searchByText(String text, OnlineSearchType type) {
 		switch (type) {
 		case MOVIES:
 			return searchMovies(text, -1);
@@ -56,7 +56,7 @@ public class TMDBParser extends Metadataparser {
 	}
 	
 	@SuppressWarnings("nls")
-	private List<Tuple<String, CCOnlineReference>> searchMovies(String query, int year) throws JSONException {
+	private List<Tuple<String, CCSingleOnlineReference>> searchMovies(String query, int year) throws JSONException {
 		String url = URL_BASE + URL_SEARCHMOVIE + "?api_key=" + API_KEY + "&query=" + HTTPUtilities.escapeURL(query);
 		
 		if (year > 0) url += "&year="+year;
@@ -67,12 +67,12 @@ public class TMDBParser extends Metadataparser {
 			
 			JSONArray results = root.getJSONArray("results");
 			
-			List<Tuple<String, CCOnlineReference>> out = new ArrayList<>();
+			List<Tuple<String, CCSingleOnlineReference>> out = new ArrayList<>();
 			for (int i = 0; i < results.length(); i++) {
 				JSONObject result = results.getJSONObject(i);
 		
 				String title = result.getString("title");
-				CCOnlineReference id = CCOnlineReference.createTMDB("movie/" + result.getInt("id"));
+				CCSingleOnlineReference id = CCSingleOnlineReference.createTMDB("movie/" + result.getInt("id"));
 				
 				if (id != null) out.add(Tuple.Create(title, id));
 			}
@@ -85,7 +85,7 @@ public class TMDBParser extends Metadataparser {
 	}
 
 	@SuppressWarnings("nls")
-	private List<Tuple<String, CCOnlineReference>> searchSeries(String query, int year) {
+	private List<Tuple<String, CCSingleOnlineReference>> searchSeries(String query, int year) {
 		String url = URL_BASE + URL_SEARCHSERIES + "?api_key=" + API_KEY + "&query=" + HTTPUtilities.escapeURL(query);
 		
 		if (year > 0)
@@ -97,12 +97,12 @@ public class TMDBParser extends Metadataparser {
 			
 			JSONArray results = root.getJSONArray("results");
 
-			List<Tuple<String, CCOnlineReference>> out = new ArrayList<>();
+			List<Tuple<String, CCSingleOnlineReference>> out = new ArrayList<>();
 			for (int i = 0; i < results.length(); i++) {
 				JSONObject result = results.getJSONObject(i);
 		
 				String title = result.getString("name");
-				CCOnlineReference id = CCOnlineReference.createTMDB("tv/" + result.getInt("id"));
+				CCSingleOnlineReference id = CCSingleOnlineReference.createTMDB("tv/" + result.getInt("id"));
 
 				if (id != null) out.add(Tuple.Create(title, id));
 			}
@@ -115,7 +115,7 @@ public class TMDBParser extends Metadataparser {
 	}
 
 	@SuppressWarnings("nls")
-	private List<Tuple<String, CCOnlineReference>> searchMulti(String query, int year) {
+	private List<Tuple<String, CCSingleOnlineReference>> searchMulti(String query, int year) {
 		String url = URL_BASE + URL_SEARCHMULTI + "?api_key=" + API_KEY + "&query=" + HTTPUtilities.escapeURL(query);
 		
 		if (year > 0)
@@ -127,7 +127,7 @@ public class TMDBParser extends Metadataparser {
 			
 			JSONArray results = root.getJSONArray("results");
 
-			List<Tuple<String, CCOnlineReference>> out = new ArrayList<>();
+			List<Tuple<String, CCSingleOnlineReference>> out = new ArrayList<>();
 			for (int i = 0; i < results.length(); i++) {
 				JSONObject result = results.getJSONObject(i);
 
@@ -138,7 +138,7 @@ public class TMDBParser extends Metadataparser {
 				else
 					title = result.getString("title");
 
-				CCOnlineReference id = CCOnlineReference.createTMDB(type + "/" + result.getInt("id"));
+				CCSingleOnlineReference id = CCSingleOnlineReference.createTMDB(type + "/" + result.getInt("id"));
 
 				if (id != null) out.add(Tuple.Create(title, id));
 			}
@@ -151,7 +151,7 @@ public class TMDBParser extends Metadataparser {
 	}
 
 	@Override
-	public OnlineMetadata getMetadata(CCOnlineReference ref, boolean downloadCover) {
+	public OnlineMetadata getMetadata(CCSingleOnlineReference ref, boolean downloadCover) {
 		if (CCProperties.getInstance().PROP_TMDB_LANGUAGE.getValue() == BrowserLanguage.ENGLISH) {
 			
 			// simple call
@@ -172,7 +172,7 @@ public class TMDBParser extends Metadataparser {
 	}
 
 	@SuppressWarnings("nls")
-	private OnlineMetadata getMetadataInternal(CCOnlineReference ref, BrowserLanguage lang, boolean downloadCover) {
+	private OnlineMetadata getMetadataInternal(CCSingleOnlineReference ref, BrowserLanguage lang, boolean downloadCover) {
 		String urlRaw = URL_BASE + ref.id + "?api_key=" + API_KEY;
 		
 		String url = urlRaw;
@@ -216,12 +216,12 @@ public class TMDBParser extends Metadataparser {
 				for (int i = 0; i < jsonGenres.length(); i++) {
 					CCGenre g = CCGenre.parseFromTMDbID(jsonGenres.getJSONObject(i).getInt("id"));
 					if (g.isValid())
-						result.Genres.addGenre(g);
+						result.Genres = result.Genres.getTryAddGenre(g);
 				}
 			}
 			
 			if (hasString(root, "imdb_id")) 
-				result.AltRef = CCOnlineReference.createIMDB(root.getString("imdb_id"));
+				result.AltRef = CCSingleOnlineReference.createIMDB(root.getString("imdb_id"));
 			
 			if (result.FSKList == null && root.has("release_dates")) {
 				JSONObject releases = root.getJSONObject("release_dates");
@@ -343,34 +343,34 @@ public class TMDBParser extends Metadataparser {
 		return obj.has(ident) && !obj.isNull(ident) && !obj.getString(ident).isEmpty();
 	}
 
-	public CCOnlineReference findMovieDirect(String searchText) {
+	public CCSingleOnlineReference findMovieDirect(String searchText) {
 		return findMovieDirect(searchText, -1);
 	}
 	
-	private CCOnlineReference findMovieDirect(String searchText, int year) {
-		List<Tuple<String, CCOnlineReference>> r0 = searchMovies(searchText, year);
+	private CCSingleOnlineReference findMovieDirect(String searchText, int year) {
+		List<Tuple<String, CCSingleOnlineReference>> r0 = searchMovies(searchText, year);
 		if (r0.isEmpty()) {
-			return CCOnlineReference.createNone();
+			return CCSingleOnlineReference.createNone();
 		}
 
 		return r0.get(0).Item2;
 	}
 
-	public CCOnlineReference findSeriesDirect(String searchText) {
+	public CCSingleOnlineReference findSeriesDirect(String searchText) {
 		return findSeriesDirect(searchText, -1);
 	}
 
-	private CCOnlineReference findSeriesDirect(String searchText, int year) {
-		List<Tuple<String, CCOnlineReference>> r0 = searchSeries(searchText, year);
+	private CCSingleOnlineReference findSeriesDirect(String searchText, int year) {
+		List<Tuple<String, CCSingleOnlineReference>> r0 = searchSeries(searchText, year);
 		if (r0.isEmpty()) {
-			return CCOnlineReference.createNone();
+			return CCSingleOnlineReference.createNone();
 		}
 		
 		return r0.get(0).Item2;
 	}
 
 	@SuppressWarnings("nls")
-	public List<String> findCovers(CCOnlineReference ref) {
+	public List<String> findCovers(CCSingleOnlineReference ref) {
 		String url = URL_BASE + ref.id + URL_SEARCHCOVER + "?api_key=" + API_KEY;
 		
 		String json = HTTPUtilities.getRateLimitedHTML(url, false, false);

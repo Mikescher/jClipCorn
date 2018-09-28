@@ -21,7 +21,7 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCDateTimeList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCUserScore;
 import de.jClipCorn.database.databaseElement.columnTypes.CCTagList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCDBElementTyp;
-import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReference;
+import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReferenceList;
 import de.jClipCorn.database.util.ExportHelper;
 import de.jClipCorn.database.xml.CCBXMLReader;
 import de.jClipCorn.gui.frames.aboutFrame.AboutFrame;
@@ -783,16 +783,16 @@ public class CCActionTree extends UIActionTree{
 		CCDatabaseElement el = owner.getSelectedElement();
 		if (el == null) return;
 		
-		CCOnlineReference ref = el.getOnlineReference();
+		CCOnlineReferenceList ref = el.getOnlineReference();
 		
-		if (ref.isUnset()) {
+		if (ref.Main.isUnset()) {
 			if (el.isMovie()) {
 				HTTPUtilities.searchInBrowser(((CCMovie)el).getCompleteTitle());
 			} else if (el.isSeries()) {
 				HTTPUtilities.searchInBrowser(((CCSeries)el).getTitle());
 			}
 		} else {
-			HTTPUtilities.openInBrowser(ref.getURL());
+			HTTPUtilities.openInBrowser(ref.Main.getURL());
 		}
 	}
 	

@@ -147,7 +147,7 @@ public class DatabaseAutofixer {
 				CCGenre g = elem.getGenre(i);
 				
 				if (! (g.isEmpty() || already_used[g.asInt()])) {
-					ls.addGenre(g);
+					ls = ls.getTryAddGenre(g);
 					
 					already_used[g.asInt()] = true;
 				}
@@ -168,7 +168,7 @@ public class DatabaseAutofixer {
 			
 			for (int i = 0; i < CCGenreList.getMaxListSize(); i++) {
 				if (! elem.getGenre(i).isEmpty()) {
-					ls.addGenre(elem.getGenre(i));
+					ls = ls.getTryAddGenre(elem.getGenre(i));
 				}
 			}
 			

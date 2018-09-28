@@ -11,41 +11,41 @@ import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.enumerations.BrowserLanguage;
 import de.jClipCorn.util.exceptions.OnlineRefFormatException;
 
-public class CCOnlineReference {
+public class CCSingleOnlineReference {
 	public final CCOnlineRefType type;
 	public final String id;
 	
-	public CCOnlineReference(CCOnlineRefType type, String id) {
+	public CCSingleOnlineReference(CCOnlineRefType type, String id) {
 		this.type = type;
 		this.id = id;
 	}
 
-	public static CCOnlineReference createNone() {
-		return new CCOnlineReference(CCOnlineRefType.NONE, ""); //$NON-NLS-1$
+	public static CCSingleOnlineReference createNone() {
+		return new CCSingleOnlineReference(CCOnlineRefType.NONE, ""); //$NON-NLS-1$
 	}
 
-	public static CCOnlineReference createIMDB(String id) {
-		return new CCOnlineReference(CCOnlineRefType.IMDB, id);
+	public static CCSingleOnlineReference createIMDB(String id) {
+		return new CCSingleOnlineReference(CCOnlineRefType.IMDB, id);
 	}
 
-	public static CCOnlineReference createAmazon(String id) {
-		return new CCOnlineReference(CCOnlineRefType.AMAZON, id);
+	public static CCSingleOnlineReference createAmazon(String id) {
+		return new CCSingleOnlineReference(CCOnlineRefType.AMAZON, id);
 	}
 
-	public static CCOnlineReference createMoviepilot(String id) {
-		return new CCOnlineReference(CCOnlineRefType.MOVIEPILOT, id);
+	public static CCSingleOnlineReference createMoviepilot(String id) {
+		return new CCSingleOnlineReference(CCOnlineRefType.MOVIEPILOT, id);
 	}
 
-	public static CCOnlineReference createTMDB(String id) {
-		return new CCOnlineReference(CCOnlineRefType.THEMOVIEDB, id);
+	public static CCSingleOnlineReference createTMDB(String id) {
+		return new CCSingleOnlineReference(CCOnlineRefType.THEMOVIEDB, id);
 	}
 
-	public static CCOnlineReference createProxer(String id) {
-		return new CCOnlineReference(CCOnlineRefType.PROXERME, id);
+	public static CCSingleOnlineReference createProxer(String id) {
+		return new CCSingleOnlineReference(CCOnlineRefType.PROXERME, id);
 	}
 
-	public static CCOnlineReference createMyAnimeList(String id) {
-		return new CCOnlineReference(CCOnlineRefType.MYANIMELIST, id);
+	public static CCSingleOnlineReference createMyAnimeList(String id) {
+		return new CCSingleOnlineReference(CCOnlineRefType.MYANIMELIST, id);
 	}
 
 	public String toSerializationString() {
@@ -53,8 +53,8 @@ public class CCOnlineReference {
 		return type.getIdentifier() + ":" + id; //$NON-NLS-1$
 	}
 
-	public static CCOnlineReference parse(String data) throws OnlineRefFormatException {
-		if (data.isEmpty()) return CCOnlineReference.createNone();
+	public static CCSingleOnlineReference parse(String data) throws OnlineRefFormatException {
+		if (data.isEmpty()) return CCSingleOnlineReference.createNone();
 		
 		int idx = data.indexOf(':');
 
@@ -63,7 +63,7 @@ public class CCOnlineReference {
 		
 		CCOnlineRefType type = CCOnlineRefType.parse(strtype);
 		
-		return new CCOnlineReference(type, strid);
+		return new CCSingleOnlineReference(type, strid);
 	}
 
 	public boolean isUnset() {
@@ -114,6 +114,10 @@ public class CCOnlineReference {
 		return type.getIconButton();
 	}
 
+	public boolean isInvalid() {
+		return !isValid();
+	}
+
 	public boolean isValid() {
 		return type.isValid(id);
 	}
@@ -125,12 +129,12 @@ public class CCOnlineReference {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (!(obj instanceof CCOnlineReference))
+		if (!(obj instanceof CCSingleOnlineReference))
 			return false;
 		if (obj == this)
 			return true;
 
-		return ((CCOnlineReference)obj).id.equals(id) && ((CCOnlineReference)obj).type == type;
+		return ((CCSingleOnlineReference)obj).id.equals(id) && ((CCSingleOnlineReference)obj).type == type;
 	}
 
 	public Metadataparser getMetadataParser() {

@@ -28,7 +28,7 @@ public class UpdateMetadataTable extends JCCSimpleTable<UpdateMetadataTableEleme
 		r.add(new JCCSimpleColumnPrototype<>(
 				"",
 				null,
-				e -> e.Element.getOnlineReference().getIcon16x16(),
+				e -> e.Element.getOnlineReference().Main.getIcon16x16(),
 				null));
 		
 		r.add(new JCCSimpleColumnPrototype<>(

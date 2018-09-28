@@ -43,7 +43,7 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCGenre;
 import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguage;
 import de.jClipCorn.database.databaseElement.columnTypes.CCQuality;
 import de.jClipCorn.database.databaseElement.columnTypes.CCUserScore;
-import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReference;
+import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReferenceList;
 import de.jClipCorn.gui.frames.addEpisodesFrame.AddEpisodesFrame;
 import de.jClipCorn.gui.frames.addSeasonFrame.AddSeasonFrame;
 import de.jClipCorn.gui.frames.inputErrorFrame.InputErrorDialog;
@@ -875,7 +875,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 	}
 
 	@Override
-	public CCOnlineReference getSearchReference() {
+	public CCOnlineReferenceList getSearchReference() {
 		return edSeriesReference.getValue();
 	}
 
@@ -950,7 +950,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 	}
 	
 	@Override
-	public void setOnlineReference(CCOnlineReference ref) {
+	public void setOnlineReference(CCOnlineReferenceList ref) {
 		edSeriesReference.setValue(ref);
 	}
 	
@@ -1060,7 +1060,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		int gen6 = cbxSeriesGenre_6.getSelectedIndex();
 		int gen7 = cbxSeriesGenre_7.getSelectedIndex();
 		
-		CCOnlineReference ref = edSeriesReference.getValue();
+		CCOnlineReferenceList ref = edSeriesReference.getValue();
 		
 		UserDataProblem.testSeriesData(ret, edSeriesCvrControl.getResizedImageForStorage(), title, oscore, gen0, gen1, gen2, gen3, gen4, gen5, gen6, gen7, fskidx, ref);
 		

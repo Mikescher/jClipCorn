@@ -47,6 +47,7 @@ import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.database.databaseElement.CCSeries;
+import de.jClipCorn.database.databaseElement.columnTypes.CCSingleOnlineReference;
 import de.jClipCorn.database.databaseElement.columnTypes.CCUserScore;
 import de.jClipCorn.database.util.CCDBUpdateListener;
 import de.jClipCorn.database.util.ExportHelper;
@@ -59,6 +60,7 @@ import de.jClipCorn.gui.frames.mainFrame.MainFrame;
 import de.jClipCorn.gui.frames.moveSeriesFrame.MoveSeriesDialog;
 import de.jClipCorn.gui.frames.previewSeriesFrame.serTable.SerTable;
 import de.jClipCorn.gui.guiComponents.DatabaseElementPreviewLabel;
+import de.jClipCorn.gui.guiComponents.OnlineRefButton;
 import de.jClipCorn.gui.guiComponents.displaySearchResultsDialog.DisplaySearchResultsDialog;
 import de.jClipCorn.gui.guiComponents.jCoverChooser.JCoverChooser;
 import de.jClipCorn.gui.guiComponents.jCoverChooser.JCoverChooserPopupEvent;
@@ -118,7 +120,6 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 	private JMenuItem mntmSerieBearbeiten;
 	private JMenuItem mntmSerieLschen;
 	private JMenu mnExtras;
-	private JMenuItem mntmAufImdbAnzeigen;
 	private JMenu mnZuflligeEpisodeAbspielen;
 	private JMenuItem mntmAlle;
 	private JMenuItem mntmGesehene;
@@ -135,7 +136,7 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 	private JMenuItem mntmCreateFolderStruct;
 	private JPanel pnlTopLeft;
 	private JButton btnPlayNext;
-	private JButton btnOnline;
+	private OnlineRefButton btnOnline;
 	private JLabel lblGroupsMark;
 	private JLabel lblGroups;
 	private JPanel pnlInfo2;
@@ -487,14 +488,31 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 		});
 		mnZuflligeEpisodeAbspielen.add(mntmNewMenuItem);
 
-		mntmAufImdbAnzeigen = new JMenuItem(LocaleBundle.getString("PreviewSeriesFrame.Menu.Extras.ViewOnline")); //$NON-NLS-1$
-		mntmAufImdbAnzeigen.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if (dispSeries.getOnlineReference().isSet() && dispSeries.getOnlineReference().isValid())
-					HTTPUtilities.openInBrowser(dispSeries.getOnlineReference().getURL());
+		if (dispSeries.getOnlineReference().hasAdditional()) {
+			JMenu mntmShowOnline = new JMenu(LocaleBundle.getString("PreviewSeriesFrame.Menu.Extras.ViewOnline")); //$NON-NLS-1$
+			for	(final CCSingleOnlineReference soref : dispSeries.getOnlineReference()) {
+				JMenuItem subitem = new JMenuItem(soref.type.asString());
+				subitem.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						if (soref.isSet() && soref.isValid()) HTTPUtilities.openInBrowser(soref.getURL());
+					}
+				});
+				mntmShowOnline.add(subitem);
 			}
-		});
+			mnExtras.add(mntmShowOnline);
+		}
+		else {
+			JMenuItem mntmShowOnline = new JMenuItem(LocaleBundle.getString("PreviewSeriesFrame.Menu.Extras.ViewOnline")); //$NON-NLS-1$
+			mntmShowOnline.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					if (dispSeries.getOnlineReference().Main.isSet() && dispSeries.getOnlineReference().isValid())
+						HTTPUtilities.openInBrowser(dispSeries.getOnlineReference().Main.getURL());
+				}
+			});
+			mnExtras.add(mntmShowOnline);
+		}
 
 		mntmResumePlaying = new JMenuItem(LocaleBundle.getString("PreviewSeriesFrame.Menu.Extras.ResumePlay")); //$NON-NLS-1$
 		mntmResumePlaying.addActionListener(new ActionListener() {
@@ -542,7 +560,6 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 			}
 		});
 		mnExtras.add(mntmCreateFolderStruct);
-		mnExtras.add(mntmAufImdbAnzeigen);
 
 		pnlInfo2 = new JPanel();
 		getContentPane().add(pnlInfo2, BorderLayout.WEST);
@@ -619,13 +636,7 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 		});
 		pnlAddInfo.add(btnAdditionalInfo);
 
-		btnOnline = new JButton(" "); //$NON-NLS-1$
-		btnOnline.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				HTTPUtilities.openInBrowser(dispSeries.getOnlineReference().getURL());
-			}
-		});
+		btnOnline = new OnlineRefButton();
 		pnlAddInfo.add(btnOnline);
 
 		KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new KeyEventDispatcher() {
@@ -738,8 +749,7 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 
 		lblCover.setModeCover(dispSeries);
 
-		btnOnline.setIcon(dispSeries.getOnlineReference().getIconButton());
-		btnOnline.setEnabled(dispSeries.getOnlineReference().isSet());
+		btnOnline.setValue(dispSeries.getOnlineReference());
 
 		lblGroups.setText("<html>" + dispSeries.getGroups().iterate().stringjoin(g -> "[" + g.Name + "]", "<br>") + "</html>"); //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 		lblGroups.setVisible(!dispSeries.getGroups().isEmpty());

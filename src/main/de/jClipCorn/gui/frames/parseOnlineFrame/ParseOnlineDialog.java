@@ -34,7 +34,8 @@ import javax.swing.event.ListSelectionListener;
 import de.jClipCorn.database.databaseElement.columnTypes.CCDBElementTyp;
 import de.jClipCorn.database.databaseElement.columnTypes.CCFSK;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGenre;
-import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReference;
+import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReferenceList;
+import de.jClipCorn.database.databaseElement.columnTypes.CCSingleOnlineReference;
 import de.jClipCorn.gui.frames.allRatingsFrame.AllRatingsDialog;
 import de.jClipCorn.gui.guiComponents.CoverLabel;
 import de.jClipCorn.gui.guiComponents.ReadableCombobox;
@@ -51,6 +52,7 @@ import de.jClipCorn.online.metadata.ParseResultHandler;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.helper.ExtendedFocusTraversalOnArray;
 import de.jClipCorn.util.http.HTTPUtilities;
+import de.jClipCorn.gui.guiComponents.referenceChooser.JSingleReferenceChooser;
 
 public class ParseOnlineDialog extends JDialog {
 	private static final long serialVersionUID = 3777677368743220383L;
@@ -62,7 +64,7 @@ public class ParseOnlineDialog extends JDialog {
 	private final ParseResultHandler owner;
 	private final CCDBElementTyp typ;
 	
-	private CCOnlineReference selectedReference = CCOnlineReference.createNone();
+	private CCSingleOnlineReference selectedReference = CCSingleOnlineReference.createNone();
 	
 	private JList<ParseOnlineDialogElement> lsDBList;
 	private JPanel panel;
@@ -117,6 +119,7 @@ public class ParseOnlineDialog extends JDialog {
 	private JButton btnOk;
 	private JButton btnFSKAll;
 	private JButton btnExtendedParse;
+	private JSingleReferenceChooser ctrlAltRef;
 
 	public ParseOnlineDialog(Component owner, ParseResultHandler handler, CCDBElementTyp typ) {
 		setResizable(false);
@@ -384,7 +387,7 @@ public class ParseOnlineDialog extends JDialog {
 				}
 			}
 		});
-		btnRef.setBounds(6, 190, 94, 23);
+		btnRef.setBounds(6, 190, 142, 23);
 		pnlMain.add(btnRef);
 		
 		btnOk = new JButton(LocaleBundle.getString("UIGeneric.btnOK.text")); //$NON-NLS-1$
@@ -405,8 +408,12 @@ public class ParseOnlineDialog extends JDialog {
 				showAllRatingsDialog();
 			}
 		});
-		btnFSKAll.setBounds(6, 219, 94, 23);
+		btnFSKAll.setBounds(6, 248, 142, 23);
 		pnlMain.add(btnFSKAll);
+		
+		ctrlAltRef = new JSingleReferenceChooser();
+		ctrlAltRef.setBounds(6, 220, 142, 20);
+		pnlMain.add(ctrlAltRef);
 		
 		pbarSearch = new JProgressBar();
 		pbarSearch.setBounds(10, 485, 217, 16);
@@ -549,7 +556,7 @@ public class ParseOnlineDialog extends JDialog {
 	}
 	
 	private void runSearch(Metadataparser parser, boolean parseAll) {
-		final List<Tuple<String, CCOnlineReference>> links;
+		final List<Tuple<String, CCSingleOnlineReference>> links;
 		if (parseAll) {
 			links = parser.searchByText(edSearchName.getText(), OnlineSearchType.BOTH);
 		} else if (typ == CCDBElementTyp.MOVIE) {
@@ -563,7 +570,7 @@ public class ParseOnlineDialog extends JDialog {
 				@Override
 				public void run() {
 					int ordering = 0;
-					for (Tuple<String, CCOnlineReference> result : links) {
+					for (Tuple<String, CCSingleOnlineReference> result : links) {
 						mdlLsDBList.addElement(new ParseOnlineDialogElement(result.Item1, ordering++, result.Item2));
 					}
 					
@@ -590,7 +597,7 @@ public class ParseOnlineDialog extends JDialog {
 	    }
 	}
 	
-	private void parseAndDisplayRef(final CCOnlineReference ref) {
+	private void parseAndDisplayRef(final CCSingleOnlineReference ref) {
 		final Metadataparser parser = ref.getMetadataParser();
 		
 		if (parser == null) return;
@@ -632,6 +639,7 @@ public class ParseOnlineDialog extends JDialog {
 					if (md.Genres != null) cbxGenre7.setSelectedIndex(md.Genres.getGenre(7).asInt());
 					
 					btnRef.setIcon(selectedReference.getIconButton());
+					ctrlAltRef.setValue(md.AltRef);
 					
 					btnOk.setEnabled(true);
 					
@@ -657,7 +665,7 @@ public class ParseOnlineDialog extends JDialog {
 	}
 	
 	private void insertDataIntoFrame() {
-		owner.setOnlineReference(selectedReference);
+		owner.setOnlineReference(CCOnlineReferenceList.create(selectedReference, ctrlAltRef.getValue()));
 		
 		if (cbTitle.isSelected()) {
 			owner.setMovieName(edTitle.getText());

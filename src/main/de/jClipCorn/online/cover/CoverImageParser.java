@@ -5,7 +5,8 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import de.jClipCorn.database.databaseElement.columnTypes.CCDBElementTyp;
-import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReference;
+import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReferenceList;
+import de.jClipCorn.database.databaseElement.columnTypes.CCSingleOnlineReference;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.online.OnlineSearchType;
 import de.jClipCorn.properties.CCProperties;
@@ -20,11 +21,11 @@ public class CoverImageParser implements FinishListener {
 	private final UpdateCallbackListener finishlistener;
 	private final String searchText;
 	private final OnlineSearchType typ;
-	private final CCOnlineReference reference;
+	private final CCOnlineReferenceList reference;
 	
 	private final List<AbstractImageSearch> searchImplementations;
 	
-	public CoverImageParser(ProgressCallbackListener pcl, UpdateCallbackListener ucl, UpdateCallbackListener fcl, CCDBElementTyp typ, String search, CCOnlineReference ref) {
+	public CoverImageParser(ProgressCallbackListener pcl, UpdateCallbackListener ucl, UpdateCallbackListener fcl, CCDBElementTyp typ, String search, CCOnlineReferenceList ref) {
 		this.proglistener = pcl;
 		this.updatelistener = ucl;
 		this.finishlistener = fcl;
@@ -60,12 +61,15 @@ public class CoverImageParser implements FinishListener {
 		proglistener.setMax(max);
 
 		for (AbstractImageSearch impl : searchImplementations) {
-			new Thread(new Runnable() {
-				@Override
-				public void run() {
-					impl.start(exclusions, searchText, typ, reference);
-				}
-			}, "THREAD_COVERIMAGEPARSER_" + impl.getClass().getSimpleName().toUpperCase()).start(); //$NON-NLS-1$
+			for	(CCSingleOnlineReference soref : reference)
+			{
+				new Thread(new Runnable() {
+					@Override
+					public void run() {
+						impl.start(exclusions, searchText, typ, soref);
+					}
+				}, "THREAD_COVERIMAGEPARSER_" + impl.getClass().getSimpleName().toUpperCase() + "_" + soref.type).start(); //$NON-NLS-1$ //$NON-NLS-2$
+			}
 		}
 		
 		// test for zero threads

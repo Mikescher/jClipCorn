@@ -24,6 +24,7 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCGenre;
 import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineRefType;
 import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineScore;
 import de.jClipCorn.database.databaseElement.columnTypes.CCQuality;
+import de.jClipCorn.database.databaseElement.columnTypes.CCSingleOnlineReference;
 import de.jClipCorn.database.databaseElement.columnTypes.CCTagList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCUserScore;
 import de.jClipCorn.util.SortableTuple;
@@ -175,7 +176,7 @@ public class StatisticsHelper {
 		return result;
 	}
 	
-	public static int[] getElementCountForAllProvider(CCStream<CCDatabaseElement> it) {
+	public static int[] getElementCountForAllProviderAny(CCStream<CCDatabaseElement> it) {
 		int[] result = new int[CCOnlineRefType.values().length];
 		
 		for (int i = 0; i < CCOnlineRefType.values().length; i++) {
@@ -183,7 +184,21 @@ public class StatisticsHelper {
 		}
 		
 		for (CCDatabaseElement m : it) {
-			result[m.getOnlineReference().type.asInt()]++;
+			for (CCSingleOnlineReference r : m.getOnlineReference()) result[r.type.asInt()]++;
+		}
+		
+		return result;
+	}
+	
+	public static int[] getElementCountForAllProviderMain(CCStream<CCDatabaseElement> it) {
+		int[] result = new int[CCOnlineRefType.values().length];
+		
+		for (int i = 0; i < CCOnlineRefType.values().length; i++) {
+			result[i] = 0;
+		}
+		
+		for (CCDatabaseElement m : it) {
+			result[m.getOnlineReference().Main.type.asInt()]++;
 		}
 		
 		return result;

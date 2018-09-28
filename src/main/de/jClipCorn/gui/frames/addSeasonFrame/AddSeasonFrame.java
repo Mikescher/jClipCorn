@@ -20,7 +20,7 @@ import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.database.databaseElement.columnTypes.CCFileFormat;
 import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguage;
 import de.jClipCorn.database.databaseElement.columnTypes.CCQuality;
-import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReference;
+import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReferenceList;
 import de.jClipCorn.gui.frames.inputErrorFrame.InputErrorDialog;
 import de.jClipCorn.gui.guiComponents.editCoverControl.EditCoverControl;
 import de.jClipCorn.gui.localization.LocaleBundle;
@@ -182,8 +182,8 @@ public class AddSeasonFrame extends JFrame implements UserDataProblemHandler, Pa
 	}
 
 	@Override
-	public CCOnlineReference getSearchReference() {
-		return CCOnlineReference.createNone();
+	public CCOnlineReferenceList getSearchReference() {
+		return CCOnlineReferenceList.createEmpty();
 	}
 
 	@Override
@@ -252,7 +252,7 @@ public class AddSeasonFrame extends JFrame implements UserDataProblemHandler, Pa
 	}
 	
 	@Override
-	public void setOnlineReference(CCOnlineReference ref) {
+	public void setOnlineReference(CCOnlineReferenceList ref) {
 		// NOP
 	}
 	

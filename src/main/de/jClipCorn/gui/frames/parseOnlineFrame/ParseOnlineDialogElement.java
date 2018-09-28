@@ -1,13 +1,13 @@
 package de.jClipCorn.gui.frames.parseOnlineFrame;
 
-import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReference;
+import de.jClipCorn.database.databaseElement.columnTypes.CCSingleOnlineReference;
 import de.jClipCorn.util.datatypes.SortableString;
 
 public class ParseOnlineDialogElement implements Comparable<ParseOnlineDialogElement> {
 	public final SortableString Title;
-	public final CCOnlineReference Reference;
+	public final CCSingleOnlineReference Reference;
 	
-	public ParseOnlineDialogElement(String t, int o, CCOnlineReference r) {
+	public ParseOnlineDialogElement(String t, int o, CCSingleOnlineReference r) {
 		Title = new SortableString(t, o);
 		Reference = r;
 	}

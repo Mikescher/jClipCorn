@@ -14,8 +14,8 @@ import de.jClipCorn.gui.frames.statisticsFrame.StatisticsTypeFilter;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.stream.CCStream;
 
-public class StatisticsProviderChart extends StatisticsChart {
-	public StatisticsProviderChart(CCMovieList ml, StatisticsTypeFilter _source) {
+public class StatisticsProviderMainChart extends StatisticsChart {
+	public StatisticsProviderMainChart(CCMovieList ml, StatisticsTypeFilter _source) {
 		super(ml, _source);
 	}
 
@@ -54,7 +54,7 @@ public class StatisticsProviderChart extends StatisticsChart {
 		
 		DefaultPieDataset dataset = new DefaultPieDataset();
 		
-		int[] values = StatisticsHelper.getElementCountForAllProvider(it);
+		int[] values = StatisticsHelper.getElementCountForAllProviderMain(it);
 		
 		for (int i = 0; i < values.length; i++) {
 			if (values[i] > 0) {
@@ -67,7 +67,7 @@ public class StatisticsProviderChart extends StatisticsChart {
 
 	@Override
 	protected String createTitle() {
-		return LocaleBundle.getString("StatisticsFrame.charttitles.provider"); //$NON-NLS-1$
+		return LocaleBundle.getString("StatisticsFrame.charttitles.providerMain"); //$NON-NLS-1$
 	}
 
 	@Override

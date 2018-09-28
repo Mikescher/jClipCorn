@@ -13,7 +13,7 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCFileSize;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGenre;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGenreList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGroupList;
-import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReference;
+import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReferenceList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineScore;
 import de.jClipCorn.database.databaseElement.columnTypes.CCQuality;
 import de.jClipCorn.database.databaseElement.columnTypes.CCTagList;
@@ -31,18 +31,18 @@ import de.jClipCorn.util.helper.ByteUtilies;
 import de.jClipCorn.util.helper.ImageUtilities;
 
 public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, ICCCoveredElement {
-	private final int localID;					// INTEGER
-	private final CCDBElementTyp typ;				// TINYINT
-	private String title; 						// LEN = 128
-	private CCDBLanguage language;			// TINYINT
-	private CCGenreList genres;			// BIGINT - unsigned
-	private CCOnlineScore onlinescore;		// TINYINT
-	private CCFSK fsk;						// TINYINT
-	private CCUserScore score;					// TINYINT
-	private String covername;					// LEN = 256
-	private final int seriesID;					// INTEGER
-	private CCOnlineReference onlineReference;	// VARCHAR
-	private CCGroupList linkedGroups;			// VARCHAR
+	private final int localID;                      // INTEGER
+	private final CCDBElementTyp typ;               // TINYINT
+	private String title;                           // LEN = 128
+	private CCDBLanguage language;                  // TINYINT
+	private CCGenreList genres;                     // BIGINT - unsigned
+	private CCOnlineScore onlinescore;              // TINYINT
+	private CCFSK fsk;                              // TINYINT
+	private CCUserScore score;                      // TINYINT
+	private String covername;                       // LEN = 256
+	private final int seriesID;                     // INTEGER
+	private CCOnlineReferenceList onlineReference;  // VARCHAR
+	private CCGroupList linkedGroups;               // VARCHAR
 	
 	protected final CCMovieList movielist;
 	protected boolean isUpdating = false;
@@ -53,21 +53,21 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 		this.seriesID = seriesID;
 		this.movielist = ml;
 		
-		onlineReference = CCOnlineReference.createNone();
-		linkedGroups = CCGroupList.createEmpty();
-		genres = new CCGenreList();
+		onlineReference = CCOnlineReferenceList.createEmpty();
+		linkedGroups    = CCGroupList.createEmpty();
+		genres          = CCGenreList.createEmpty();
 	}
 	
 	public void setDefaultValues(boolean updateDB) {
-		title = ""; //$NON-NLS-1$
-		language = CCDBLanguage.GERMAN;
-		genres.clear();
-		onlinescore = CCOnlineScore.STARS_0_0;
-		fsk = CCFSK.RATING_0;
-		score = CCUserScore.RATING_NO;
-		covername = ""; //$NON-NLS-1$
-		onlineReference = CCOnlineReference.createNone();
-		linkedGroups = CCGroupList.createEmpty();
+		title           = ""; //$NON-NLS-1$
+		language        = CCDBLanguage.GERMAN;
+		genres          = CCGenreList.createEmpty();
+		onlinescore     = CCOnlineScore.STARS_0_0;
+		fsk             = CCFSK.RATING_0;
+		score           = CCUserScore.RATING_NO;
+		covername       = ""; //$NON-NLS-1$
+		onlineReference = CCOnlineReferenceList.createEmpty();
+		linkedGroups    = CCGroupList.createEmpty();
 		
 		if (updateDB) {
 			updateDB();
@@ -234,16 +234,16 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 	}
 
 	public void setOnlineReference(String data) throws OnlineRefFormatException {
-		onlineReference = CCOnlineReference.parse(data);
+		onlineReference = CCOnlineReferenceList.parse(data);
 		
 		updateDB();
 	}
 
-	public CCOnlineReference getOnlineReference() {
+	public CCOnlineReferenceList getOnlineReference() {
 		return onlineReference;
 	}
 
-	public void setOnlineReference(CCOnlineReference value) {
+	public void setOnlineReference(CCOnlineReferenceList value) {
 		onlineReference = value;
 		
 		updateDB();
@@ -276,11 +276,14 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 	}
 
 	public void setGenre(CCGenre genre, int idx) {
-		boolean succ = genres.setGenre(idx, genre);
+		CCGenreList glnew = genres.getSetGenre(idx, genre);
 		
-		if (! succ) {
+		if (glnew == null) {
 			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.ErroneousDatabaseValues", idx)); //$NON-NLS-1$
+			return;
 		}
+		
+		genres = glnew;
 		
 		updateDB();
 	}
@@ -299,6 +302,13 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 	
 	public CCGenreList getGenres() {
 		return genres;
+	}
+	
+	public boolean tryAddGenre(CCGenre g) {
+		CCGenreList l = genres.getAddGenre(g);
+		if (l == null) return false;
+		genres = l;
+		return true;
 	}
 	
 	public boolean hasHoleInGenres() {

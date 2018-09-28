@@ -4,7 +4,7 @@ import java.awt.image.BufferedImage;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReference;
+import de.jClipCorn.database.databaseElement.columnTypes.CCSingleOnlineReference;
 import de.jClipCorn.online.OnlineSearchType;
 import de.jClipCorn.online.cover.AbstractImageSearch;
 import de.jClipCorn.util.http.HTTPUtilities;
@@ -23,7 +23,7 @@ public abstract class IMDBCoverSearchCommon extends AbstractImageSearch {
 	protected abstract String getSearchResultFromHTML(String searchhtml);
 	
 	@Override
-	public void start(CopyOnWriteArrayList<String> exclusions, String searchText, OnlineSearchType typ, CCOnlineReference reference) {
+	public void start(CopyOnWriteArrayList<String> exclusions, String searchText, OnlineSearchType typ, CCSingleOnlineReference reference) {
 		String searchurl = helper.getSearchURL(searchText, typ);
 		String searchhtml = HTTPUtilities.getHTML(searchurl, true, false);
 		String direkturl = getSearchResultFromHTML(searchhtml);

@@ -21,6 +21,7 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCFileSize;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGenreList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGroup;
 import de.jClipCorn.database.databaseElement.columnTypes.CCQuality;
+import de.jClipCorn.database.databaseElement.columnTypes.CCSingleOnlineReference;
 import de.jClipCorn.database.databaseElement.columnTypes.CCTagList;
 import de.jClipCorn.database.util.covercache.CCCoverCache;
 import de.jClipCorn.database.util.covercache.CCFolderCoverCache;
@@ -823,8 +824,8 @@ public class DatabaseValidator {
 		Set<String> refSet = new HashSet<>();
 
 		for (CCDatabaseElement el : movielist.iteratorElements()) {
-			if (el.getOnlineReference().isSet()) {
-				if (! refSet.add(el.getLanguage().asInt() + '_' + el.getOnlineReference().toSerializationString())) {
+			for(CCSingleOnlineReference soref : el.getOnlineReference()) {
+				if (! refSet.add(el.getLanguage().asInt() + '_' + soref.toSerializationString())) {
 					e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_DUPLICATE_REF, el));
 				}
 			}

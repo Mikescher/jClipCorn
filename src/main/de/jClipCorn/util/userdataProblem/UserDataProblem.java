@@ -16,7 +16,7 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCDateTimeList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCFSK;
 import de.jClipCorn.database.databaseElement.columnTypes.CCQuality;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieZyklus;
-import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReference;
+import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReferenceList;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.datetime.CCDateTime;
@@ -74,7 +74,7 @@ public class UserDataProblem {
 									 String title, String zyklus, int zyklusID, int len, CCDate adddate, 
 									 int oscore, int fskidx, int year, long fsize, String csExtn, String csExta, 
 									 int gen0, int gen1, int gen2, int gen3, int gen4, int gen5, int gen6, int gen7, 
-									 int quality, int language, CCOnlineReference ref) {
+									 int quality, int language, CCOnlineReferenceList ref) {
 		
 		int partcount = 0;
 		
@@ -302,7 +302,7 @@ public class UserDataProblem {
 		}
 	}
 	
-	public static void testSeriesData(List<UserDataProblem> ret, BufferedImage cvr, String title, int oscore, int gen0, int gen1, int gen2, int gen3, int gen4, int gen5, int gen6, int gen7, int fskidx, CCOnlineReference ref) {
+	public static void testSeriesData(List<UserDataProblem> ret, BufferedImage cvr, String title, int oscore, int gen0, int gen1, int gen2, int gen3, int gen4, int gen5, int gen6, int gen7, int fskidx, CCOnlineReferenceList ref) {
 		if (title.isEmpty()) {
 			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_EMPTY_TITLE));
 		}

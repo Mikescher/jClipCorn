@@ -14,7 +14,7 @@ import org.jsoup.select.Elements;
 import de.jClipCorn.database.databaseElement.columnTypes.CCFSK;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGenre;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGenreList;
-import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReference;
+import de.jClipCorn.database.databaseElement.columnTypes.CCSingleOnlineReference;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.online.OnlineSearchType;
@@ -73,23 +73,23 @@ public class IMDBParserEnglish extends IMDBParserCommon {
 	}
 	
 	@Override
-	protected String getURL(CCOnlineReference ref) {
+	protected String getURL(CCSingleOnlineReference ref) {
 		return BASE_URL + "/title/" + ref.id;
 	}
 	
 	@Override
-	public List<Tuple<String, CCOnlineReference>> extractImDBLinks(String html) {
+	public List<Tuple<String, CCSingleOnlineReference>> extractImDBLinks(String html) {
 		Document doc = Jsoup.parse(html);
 		
 		Elements searchresults = doc.select(JSOUP_SEARCH_HTML_A);
 		
-		List<Tuple<String, CCOnlineReference>> result = new ArrayList<>();
+		List<Tuple<String, CCSingleOnlineReference>> result = new ArrayList<>();
 		
 		for (Element sresult : searchresults) {
 			String name = sresult.text();
 			String link = BASE_URL + RegExHelper.find(REGEX_SEARCH_URL, sresult.attr("href"));
 			
-			CCOnlineReference ref = CCOnlineReference.createIMDB(extractOnlineID(link));
+			CCSingleOnlineReference ref = CCSingleOnlineReference.createIMDB(extractOnlineID(link));
 			
 			if (ref != null) result.add(Tuple.Create(name, ref));
 		}
@@ -230,7 +230,7 @@ public class IMDBParserEnglish extends IMDBParserCommon {
 		for (String ng : regfind) {
 			CCGenre genre = CCGenre.parseFromIMDBName(ng.trim());
 			if (! genre.isEmpty()) {
-				result.addGenre(genre);
+				result = result.getTryAddGenre(genre);
 			}
 		}
 		

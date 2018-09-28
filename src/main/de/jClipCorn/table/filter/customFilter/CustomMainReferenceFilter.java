@@ -10,27 +10,27 @@ import de.jClipCorn.table.filter.FilterSerializationConfig;
 import de.jClipCorn.table.filter.filterConfig.CustomFilterConfig;
 import de.jClipCorn.table.filter.filterConfig.CustomFilterEnumChooserConfig;
 
-public class CustomReferenceFilter extends AbstractCustomDatabaseElementFilter {
+public class CustomMainReferenceFilter extends AbstractCustomDatabaseElementFilter {
 	private CCOnlineRefType reftype = CCOnlineRefType.NONE;
 	
 	@Override
 	public boolean includes(CCDatabaseElement e) {
-		return e.getOnlineReference().type.equals(reftype);
+		return e.getOnlineReference().Main.type.equals(reftype);
 	}
 
 	@Override
 	public String getName() {
-		return LocaleBundle.getFormattedString("FilterTree.Custom.CustomFilterNames.Reference", reftype.asString()); //$NON-NLS-1$
+		return LocaleBundle.getFormattedString("FilterTree.Custom.CustomFilterNames.MainReference", reftype.asString()); //$NON-NLS-1$
 	}
 
 	@Override
 	public String getPrecreateName() {
-		return LocaleBundle.getDeformattedString("FilterTree.Custom.CustomFilterNames.Reference").replace("()", "").trim(); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		return LocaleBundle.getDeformattedString("FilterTree.Custom.CustomFilterNames.MainReference").replace("()", "").trim(); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
 
 	@Override
 	public int getID() {
-		return AbstractCustomFilter.CUSTOMFILTERID_REFERENCE;
+		return AbstractCustomFilter.CUSTOMFILTERID_MAINREFERENCE;
 	}
 
 	@Override
@@ -41,7 +41,7 @@ public class CustomReferenceFilter extends AbstractCustomDatabaseElementFilter {
 	
 	@Override
 	public AbstractCustomFilter createNew() {
-		return new CustomReferenceFilter();
+		return new CustomMainReferenceFilter();
 	}
 
 	@Override

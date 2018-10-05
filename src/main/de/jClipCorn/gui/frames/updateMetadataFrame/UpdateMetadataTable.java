@@ -5,8 +5,11 @@ import java.util.List;
 
 import de.jClipCorn.database.databaseElement.columnTypes.CCGenre;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGenreList;
+import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReferenceList;
+import de.jClipCorn.database.databaseElement.columnTypes.CCSingleOnlineReference;
 import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleColumnPrototype;
 import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleTable;
+import de.jClipCorn.util.stream.CCStreams;
 
 public class UpdateMetadataTable extends JCCSimpleTable<UpdateMetadataTableElement> {
 	private static final long serialVersionUID = 3308858204018846266L;
@@ -14,6 +17,7 @@ public class UpdateMetadataTable extends JCCSimpleTable<UpdateMetadataTableEleme
 	private final UpdateMetadataFrame owner;
 
 	public boolean DeleteLocalGenres;
+	public boolean DeleteLocalReferences;
 
 	public UpdateMetadataTable(UpdateMetadataFrame owner) {
 		super();
@@ -48,6 +52,12 @@ public class UpdateMetadataTable extends JCCSimpleTable<UpdateMetadataTableEleme
 				this::getGenreChange,
 				null,
 				null));
+
+		r.add(new JCCSimpleColumnPrototype<>(
+				"UpdateMetadataFrame.Table.ColumnChangedReferences",
+				this::getReferencesChange,
+				null,
+				null));
 		
 		r.add(new JCCSimpleColumnPrototype<>(
 				"UpdateMetadataFrame.Table.ColumnLocalScore",
@@ -70,6 +80,18 @@ public class UpdateMetadataTable extends JCCSimpleTable<UpdateMetadataTableEleme
 		r.add(new JCCSimpleColumnPrototype<>(
 				"UpdateMetadataFrame.Table.ColumnOnlineGenres",
 				e -> (e.OnlineMeta != null && e.OnlineMeta.Genres != null) ? e.OnlineMeta.Genres.asSortedString() : (null),
+				null,
+				null));
+		
+		r.add(new JCCSimpleColumnPrototype<>(
+				"UpdateMetadataFrame.Table.ColumnLocalReferences",
+				e -> e.Element.getOnlineReference().toSourceConcatString(),
+				null,
+				null));
+		
+		r.add(new JCCSimpleColumnPrototype<>(
+				"UpdateMetadataFrame.Table.ColumnOnlineReferences",
+				e -> (e.OnlineMeta != null) ? e.OnlineMeta.getFullReference().toSourceConcatString() : (null),
 				null,
 				null));
 		
@@ -96,7 +118,6 @@ public class UpdateMetadataTable extends JCCSimpleTable<UpdateMetadataTableEleme
 		if (e.OnlineMeta.Genres == null) return "ERR";
 
 		if (DeleteLocalGenres) {
-
 			int gnew = 0;
 			int gdel = 0;
 			
@@ -110,9 +131,7 @@ public class UpdateMetadataTable extends JCCSimpleTable<UpdateMetadataTableEleme
 			if (gnew == 0 && gdel == 0) return "-";
 			
 			return "+" + gnew + " " + "-" + gdel;
-
 		} else {
-
 			int gnew = 0;
 			
 			for (CCGenre online : e.OnlineMeta.Genres.iterate()) {
@@ -124,9 +143,43 @@ public class UpdateMetadataTable extends JCCSimpleTable<UpdateMetadataTableEleme
 			if (gnew == 0) return "-";
 			
 			return "+" + gnew;
-
 		}
+	}
 
+	@SuppressWarnings("nls")
+	private String getReferencesChange(UpdateMetadataTableElement e) {
+		if (e.OnlineMeta == null) return "";
+
+		CCOnlineReferenceList onlineref = e.OnlineMeta.getFullReference();
+		CCOnlineReferenceList localref  = e.Element.getOnlineReference();
+		
+		if (onlineref == null || onlineref.Main.isUnset()) return "ERR";
+	
+		if (DeleteLocalReferences) {
+			int gnew = 0;
+			int gdel = 0;
+
+			if (!onlineref.Main.equals(localref.Main)) {
+				gnew++;
+				if (localref.Main.isSet()) gdel++;
+			}
+			
+			for (CCSingleOnlineReference r : onlineref.Additional) if (!localref.Additional.contains(r)) gnew++; // online but not local
+
+			for (CCSingleOnlineReference r : localref.Additional) if (!onlineref.Additional.contains(r)) gdel++; // local but not online
+			
+			if (gnew == 0 && gdel == 0) return "-";
+			
+			return "+" + gnew + " " + "-" + gdel;
+		} else {
+			int gnew = 0;
+			
+			for (CCSingleOnlineReference r : onlineref) if (!CCStreams.iterate(localref).contains(r)) gnew++;
+			
+			if (gnew == 0) return "-";
+			
+			return "+" + gnew;
+		}
 	}
 	
 	@Override

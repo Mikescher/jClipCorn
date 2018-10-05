@@ -310,4 +310,11 @@ public abstract class CCStream<TType> implements Iterator<TType>, Iterable<TType
 		}
 		return -1;
 	}
+
+	public boolean contains(TType other) {
+		for (TType t : this) {
+			if (other == null ? t == null : other.equals(t)) return true;
+		}
+		return false;
+	}
 }

@@ -5,6 +5,7 @@ import java.util.Map;
 
 import de.jClipCorn.database.databaseElement.columnTypes.CCFSK;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGenreList;
+import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReferenceList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineScore;
 import de.jClipCorn.database.databaseElement.columnTypes.CCSingleOnlineReference;
 
@@ -43,5 +44,10 @@ public class OnlineMetadata {
 	public CCOnlineScore getOnlineScore() {
 		if (OnlineScore==null) return null;
 		return CCOnlineScore.getWrapper().find(OnlineScore);
+	}
+
+	public CCOnlineReferenceList getFullReference() {
+		if (Source == null) return CCOnlineReferenceList.createEmpty();
+		return CCOnlineReferenceList.create(Source, AltRef);
 	}
 }

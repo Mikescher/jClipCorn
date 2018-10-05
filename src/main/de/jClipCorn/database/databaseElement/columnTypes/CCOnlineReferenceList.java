@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import de.jClipCorn.util.exceptions.OnlineRefFormatException;
+import de.jClipCorn.util.helper.ObjectUtils;
 import de.jClipCorn.util.stream.CCStreams;
 
 public class CCOnlineReferenceList implements Iterable<CCSingleOnlineReference> {
@@ -31,11 +32,24 @@ public class CCOnlineReferenceList implements Iterable<CCSingleOnlineReference> 
 		
 		CCOnlineReferenceList gl = (CCOnlineReferenceList) o;
 
-		if (gl.Main != this.Main) return false;
+		if (!ObjectUtils.IsEqual(gl.Main, this.Main)) return false;
 		if (gl.Additional.size() != this.Additional.size()) return false;
 		
 		for (int i = 0; i < Additional.size(); i++) {
-			if (! gl.Additional.get(i).equals(Additional.get(i))) return false;
+			if (!ObjectUtils.IsEqual(gl.Additional.get(i), this.Additional.get(i))) return false;
+		}
+		
+		return true;
+	}
+
+	public boolean equalsIgnoreAdditionalOrder(CCOnlineReferenceList gl) {
+		if (gl == null) return false;
+		
+		if (!ObjectUtils.IsEqual(gl.Main, this.Main)) return false;
+		if (gl.Additional.size() != this.Additional.size()) return false;
+
+		for (int i = 0; i < Additional.size(); i++) {
+			if (!gl.Additional.contains(this.Additional.get(i))) return false;
 		}
 		
 		return true;
@@ -101,5 +115,13 @@ public class CCOnlineReferenceList implements Iterable<CCSingleOnlineReference> 
 
 	public boolean hasAdditional() {
 		return !Additional.isEmpty();
+	}
+	
+	public String toSourceConcatString() {
+		return CCStreams.iterate(this).stringjoin(r -> r.type.asString(), " | "); //$NON-NLS-1$
+	}
+
+	public CCOnlineReferenceList addAdditional(CCSingleOnlineReference ref) {
+		return new CCOnlineReferenceList(this.Main, CCStreams.iterate(Additional).append(ref).unique().enumerate());
 	}
 }

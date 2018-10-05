@@ -71,7 +71,7 @@ public class JReferenceChooser extends JPanel {
 	public void setAdditional(List<CCSingleOnlineReference> a) {
 		_additional = CCStreams
 				.iterate(a)
-				.filter(r -> !ObjectUtils.IsEqual(a, mainChooser.getValue()))
+				.filter(r -> !ObjectUtils.IsEqual(r, mainChooser.getValue()))
 				.unique()
 				.enumerate();
 		updateUIControls();

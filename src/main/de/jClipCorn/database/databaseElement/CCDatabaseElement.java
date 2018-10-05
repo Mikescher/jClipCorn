@@ -307,7 +307,8 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 	public boolean tryAddGenre(CCGenre g) {
 		CCGenreList l = genres.getAddGenre(g);
 		if (l == null) return false;
-		genres = l;
+		
+		setGenres(l);
 		return true;
 	}
 	

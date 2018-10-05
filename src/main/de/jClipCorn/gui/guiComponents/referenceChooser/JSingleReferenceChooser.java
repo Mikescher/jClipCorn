@@ -7,6 +7,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JPanel;
@@ -20,6 +22,7 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCSingleOnlineReference
 import de.jClipCorn.gui.guiComponents.WideComboBox;
 import de.jClipCorn.util.adapter.DocumentAdapter;
 import de.jClipCorn.util.datatypes.Tuple;
+import de.jClipCorn.util.http.HTTPUtilities;
 
 public class JSingleReferenceChooser extends JPanel {
 	private static final long serialVersionUID = 2696192041815168280L;
@@ -120,6 +123,16 @@ public class JSingleReferenceChooser extends JPanel {
 		pnlState.setBackground(Color.YELLOW);
 		pnlState.setBorder(null);
 		pnlState.setLayout(new BorderLayout(0, 0));
+		pnlState.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				super.mouseClicked(e);
+				if (e.getClickCount() == 2) {
+					CCSingleOnlineReference v = getValue();
+					if (v.isSet() && v.isValid()) HTTPUtilities.openInBrowser(v.getURL());
+				}
+			}
+		});
 	}
 
 	public CCSingleOnlineReference getValue() {

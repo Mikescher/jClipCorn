@@ -108,6 +108,7 @@ public class ReferenceChooserPopup extends JDialog implements WindowFocusListene
 		for (CCSingleOnlineReference soref : data) {
 			addSingleControl(soref);
 		}
+		addSingleControl(CCSingleOnlineReference.createNone());
 
 		updateHeight();
 	}

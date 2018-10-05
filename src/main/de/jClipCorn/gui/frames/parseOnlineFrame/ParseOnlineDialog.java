@@ -367,7 +367,7 @@ public class ParseOnlineDialog extends JDialog {
 		
 		imgCover = new CoverLabel(false);
 		imgCover.setHorizontalAlignment(SwingConstants.CENTER);
-		lblCover.setBounds(107, 164, 182, 254);
+		imgCover.setBounds(107, 164, 182, 254);
 		pnlMain.add(imgCover);
 		
 		lblCover = new JLabel(LocaleBundle.getString("AddMovieFrame.lblCover.text")); //$NON-NLS-1$
@@ -413,6 +413,7 @@ public class ParseOnlineDialog extends JDialog {
 		
 		ctrlAltRef = new JSingleReferenceChooser();
 		ctrlAltRef.setBounds(377, 322, 169, 20);
+		ctrlAltRef.setEnabled(false);
 		pnlMain.add(ctrlAltRef);
 		
 		pbarSearch = new JProgressBar();
@@ -639,7 +640,7 @@ public class ParseOnlineDialog extends JDialog {
 					if (md.Genres != null) cbxGenre7.setSelectedIndex(md.Genres.getGenre(7).asInt());
 					
 					btnRef.setIcon(selectedReference.getIconButton());
-					ctrlAltRef.setValue(md.AltRef);
+					if (md.AltRef != null) ctrlAltRef.setValue(md.AltRef);
 					
 					btnOk.setEnabled(true);
 					

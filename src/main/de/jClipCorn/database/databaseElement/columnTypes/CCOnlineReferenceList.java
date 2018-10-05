@@ -105,7 +105,9 @@ public class CCOnlineReferenceList implements Iterable<CCSingleOnlineReference> 
 
 	public boolean isValid() {
 		if (!Main.isValid()) return false;
-		for (CCSingleOnlineReference sor : Additional) if (!sor.isValid()) return false;
+		for (CCSingleOnlineReference sor : Additional) if (sor.isInvalid()) return false;
+		for (CCSingleOnlineReference sor : Additional) if (sor.isUnset()) return false;
+		if (Main.isUnset() && Additional.size()>0) return false;
 		return true;
 	}
 

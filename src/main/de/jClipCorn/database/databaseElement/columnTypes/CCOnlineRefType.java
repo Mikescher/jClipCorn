@@ -29,10 +29,10 @@ public enum CCOnlineRefType implements ContinoousEnum<CCOnlineRefType> {
 	private static final Pattern REGEX_PROX = Pattern.compile("^[0-9]+$"); //$NON-NLS-1$
 	private static final Pattern REGEX_MYAL = Pattern.compile("^[0-9]+$"); //$NON-NLS-1$
 
-	private static final Pattern REGEX_PASTE_IMDB = Pattern.compile("^(http://|https://)?(www\\.)?imdb\\.(com|de)/title/(?<id>tt[0-9]+)(/.*)?$"); //$NON-NLS-1$
-	private static final Pattern REGEX_PASTE_TMDB = Pattern.compile("^(http://|https://)?(www\\.)?themoviedb\\.org/(?<id>(movie|tv)/[0-9]+)(\\-.*)?(/.*)?$"); //$NON-NLS-1$
-	private static final Pattern REGEX_PASTE_MYAL = Pattern.compile("^(http://|https://)?(www\\.)?myanimelist\\.net/anime/(?<id>[0-9]+)(/.*)?$"); //$NON-NLS-1$
-	private static final Pattern REGEX_PASTE_PROX = Pattern.compile("^(http://|https://)?(www\\.)?proxer\\.me/info/(?<id>[0-9]+)(/.*)?$"); //$NON-NLS-1$
+	private static final Pattern REGEX_PASTE_IMDB = Pattern.compile("^(http://|https://)?(www\\.)?imdb\\.(com|de)/title/(?<id>tt[0-9]+)(/.*)?(\\?.*)?$"); //$NON-NLS-1$
+	private static final Pattern REGEX_PASTE_TMDB = Pattern.compile("^(http://|https://)?(www\\.)?themoviedb\\.org/(?<id>(movie|tv)/[0-9]+)(\\-.*)?(/.*)?(\\?.*)?$"); //$NON-NLS-1$
+	private static final Pattern REGEX_PASTE_MYAL = Pattern.compile("^(http://|https://)?(www\\.)?myanimelist\\.net/anime/(?<id>[0-9]+)(/.*)?(\\?.*)?$"); //$NON-NLS-1$
+	private static final Pattern REGEX_PASTE_PROX = Pattern.compile("^(http://|https://)?(www\\.)?proxer\\.me/info/(?<id>[0-9]+)(/.*)?(\\?.*)?$"); //$NON-NLS-1$
 	
 	private final static String IDENTIFIER[] = {
 		"",   			//$NON-NLS-1$

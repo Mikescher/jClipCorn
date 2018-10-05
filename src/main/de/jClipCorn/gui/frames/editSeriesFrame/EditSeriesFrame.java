@@ -165,6 +165,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 	private JLabel label;
 	private JLabel lblGroups;
 	private GroupListEditor edSeriesGroups;
+	private JButton btnOkClose;
 
 	/**
 	 * @wbp.parser.constructor
@@ -427,6 +428,16 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		});
 		btnSeriesOk.setBounds(162, 612, 89, 23);
 		pnlSeries.add(btnSeriesOk);
+		
+		btnOkClose = new JButton(LocaleBundle.getString("UIGeneric.btnOK_and_Close.text")); //$NON-NLS-1$
+		btnOkClose.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (onOKSeries(true)) EditSeriesFrame.this.dispatchEvent(new WindowEvent(EditSeriesFrame.this, WindowEvent.WINDOW_CLOSING));
+			}
+		});
+		btnOkClose.setBounds(263, 612, 98, 23);
+		pnlSeries.add(btnOkClose);
 		
 		edSeriesCvrControl = new EditCoverControl(this, this);
 		edSeriesCvrControl.setBounds(12, 14, EditCoverControl.CTRL_WIDTH, EditCoverControl.CTRL_HEIGHT);
@@ -988,7 +999,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		updateSeriesPanel();
 	}
 	
-	private void onOKSeries(boolean check) {
+	private boolean onOKSeries(boolean check) {
 		List<UserDataProblem> problems = new ArrayList<>();
 
 		boolean probvalue = !check || checkUserDataSeries(problems);
@@ -1011,7 +1022,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 				}
 			}, this);
 			amied.setVisible(true);
-			return;
+			return false;
 		}
 		
 		series.beginUpdating();
@@ -1042,6 +1053,8 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		series.endUpdating();
 		
 		updateSeriesPanel();
+
+		return true;
 	}
 	
 	public boolean checkUserDataSeries(List<UserDataProblem> ret) {

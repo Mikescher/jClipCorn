@@ -85,6 +85,8 @@ public class CoverLabel extends JLabel implements MouseListener {
 	public void setCoverDirect(BufferedImage cover, BufferedImage orig) {
 		original = orig;
 		
+		if (cover == null) { setIcon(null); return; }
+		
 		if (isHalfSize)
 			setIcon(new ImageIcon(ImageUtilities.resizeCoverImageForHalfSizeUI(cover)));
 		else
@@ -93,6 +95,8 @@ public class CoverLabel extends JLabel implements MouseListener {
 	
 	public void setAndResizeCover(BufferedImage cover) {
 		original = cover;
+		
+		if (cover == null) { setIcon(null); return; }
 		
 		if (isHalfSize)
 			setIcon(new ImageIcon(ImageUtilities.resizeCoverImageForHalfSizeUI(cover)));

@@ -29,8 +29,11 @@ test {
 	}
 }
 
-ext.extractVersion = {-> file('src/main/de/jClipCorn/Main.java').text.replaceAll(/(?s)^.*public\s+(final\s+)?(static\s+)?(final\s+)?String\s+VERSION\s*=\s*\"([0-9\.]+)\";.*$/, '$4') }
-ext.isBetaRelease  = {-> file('src/main/de/jClipCorn/Main.java').text.replaceAll(/(?s)^.*public\s+(final\s+)?(static\s+)?(final\s+)?boolean\s+BETA\s*=\s*([A-Za-z]+)\s*;.*$/, '$4') == "true" }
+ext.rexMainVers = {-> java.util.regex.Pattern.compile('(?<=\\/\\*<gradle_version_marker>\\*\\/")[0-9\\.]*(?="\\/\\*<\\/gradle_version_marker>\\*\\/)') }
+ext.rexMainBeta = {-> java.util.regex.Pattern.compile('(?<=boolean\\s{1,10}BETA\\s{1,10}=\\s{1,10})(false|true)(?=;)') }
+
+ext.extractVersion = {-> file('src/main/de/jClipCorn/Main.java').text.findAll(rexMainVers())[0] }
+ext.isBetaRelease  = {-> file('src/main/de/jClipCorn/Main.java').text.findAll(rexMainBeta()) == "true" }
 
 project.ext {
 	appmain    = 'de.jClipCorn.Main'
@@ -89,94 +92,135 @@ task releaseJar(type: Jar) {
 	from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } } with jar
 
 	doLast {
-		if (! isBetaRelease() && Os.isFamily(Os.FAMILY_WINDOWS))
+		if (! isBetaRelease() /* && Os.isFamily(Os.FAMILY_WINDOWS) */)
 		{
 			new File('launch4j/launch4j.cfg.xml').write createLaunch4jConfig()
 
-			def stdout = ['launch4j/launch4jc.exe', 'launch4j.cfg.xml'].execute(null, new File("launch4j")).text
+			def stdout = ['launch4j/launch4jc.jar', 'launch4j.cfg.xml'].execute(null, new File("launch4j")).text
 			println stdout
 
 			new File('launch4j/launch4j.cfg.xml').delete()
 		}
+		
+		createChangelog()
 	}
 }
 
+task tryCreateRelease() << {
+    def tagVersion = ['git', 'describe', "--abbrev=0", "--tags"].execute().text.replaceAll('v', '').trim()
+    
+    def mainContent = new File('src/main/de/jClipCorn/Main.java').text
+    def currVersion = mainContent.findAll(rexMainVers())[0]
+    
+    println "Version (Tag):  " + tagVersion
+    println "Version (Code): " + currVersion
+    
+    if (new File(".do_publish_release").exists()) new File(".do_publish_release").delete()
+    
+    if (currVersion == tagVersion) {
+        println "This version was already built - skip deployment"
+    } else {
+        mainContent = mainContent.replaceFirst(rexMainVers(), tagVersion);
+        mainContent = mainContent.replaceFirst(rexMainBeta(), "boolean BETA = false;");
+        
+        println ""
+        println "==========================================================="
+        println "==========================================================="
+        println "(!) This is a new  release - create deployment trigger file"
+        println "==========================================================="
+        println "==========================================================="
+        println ""
+        
+        new File('src/main/de/jClipCorn/Main.java').write mainContent 
+        
+        new File(".do_publish_release").createNewFile()
+        
+        // Do build
+        tryCreateRelease.finalizedBy releaseJar
+    }
+}
+
 task changelog << {
-	def log = ['git', 'log', "--format=%H_____INNERDEL_____%ad_____INNERDEL_____%B_____OUTERDELIM_____"].execute().text.trim().split('_____OUTERDELIM_____')
+	createChangelog()
+}
 
-	File file = new File("CHANGELOG.txt")
-	file.text = ""
 
-	def lastRelease = ""
+ext.createChangelog = {-> 
+    def log = ['git', 'log', "--format=%H_____INNERDEL_____%ad_____INNERDEL_____%B_____OUTERDELIM_____"].execute().text.trim().split('_____OUTERDELIM_____')
 
-	def rex_Normal  = /(?i)^[0-9]+\.[0-9]+(\.[0-9]+)?(\.[0-9]+)?\s+((Big|Possible) )?(WIP\-)?(Fixes( and Tasks)?|Libraryfix|Glitchfix|Code Cleanup|Documentation|Changelog|Tasks?|Features?|(Emergency\-)?Bugfixe?s?|Updates?|Rea?leases?|Others?|Features\+Bugfix)[ \r\n\t\s:]/
-	def rex_Release = /(?i)^[0-9]+\.[0-9]+(\.[0-9]+)?\s+Rea?leases?/
+    File file = new File("CHANGELOG.txt")
+    file.text = ""
 
-	log.each 
-	{ 
-		def (partHash, partDate, partMessage) = "${it}".split('_____INNERDEL_____')
+    def lastRelease = ""
 
-		partHash = partHash.trim()
-		partDate = partDate.trim()
-		partMessage = partMessage.trim()
+    def rex_Normal  = /(?i)^[0-9]+\.[0-9]+(\.[0-9]+)?(\.[0-9]+)?\s+((Big|Possible) )?(WIP\-)?(Fixes( and Tasks)?|Libraryfix|Glitchfix|Code Cleanup|Documentation|Changelog|Tasks?|Features?|(Emergency\-)?Bugfixe?s?|Updates?|Rea?leases?|Others?|Features\+Bugfix)[ \r\n\t\s:]/
+    def rex_Release = /(?i)^[0-9]+\.[0-9]+(\.[0-9]+)?\s+Rea?leases?/
 
-		def isNormal = partMessage.find(rex_Normal)
-		def isRelease = partMessage.find(rex_Release) && (partMessage.split('\n').getAt(0).trim().split(' ').getAt(0).trim() != lastRelease.trim())
+    log.each 
+    { 
+        def (partHash, partDate, partMessage) = "${it}".split('_____INNERDEL_____')
 
-		partMessage = partMessage.replaceAll('\r\n', '\n')                     // normalize linebreaks
-		partMessage = partMessage.replaceAll(/\n\n+/, '\n')                    // remove empty lines
-		partMessage = partMessage.replaceAll(/^1\.10\.10/, '1.10.0')           // fix misspelling
+        partHash = partHash.trim()
+        partDate = partDate.trim()
+        partMessage = partMessage.trim()
 
-		partMessage = partMessage.replace('Emergency-Bugfix', 'Bugfix')        // word replacement
-		partMessage = partMessage.replace('Libraryfix', 'Bugfix')              // word replacement
-		partMessage = partMessage.replace('Glitchfix', 'Bugfix')               // word replacement
-		partMessage = partMessage.replace('Code Cleanup', 'Other')             // word replacement
-		partMessage = partMessage.replace('Documentation', 'Other')            // word replacement
-		partMessage = partMessage.replace('Changelog', 'Other')                // word replacement
-		partMessage = partMessage.replace('Changelog', 'Other')                // word replacement
+        def isNormal = partMessage.find(rex_Normal)
+        def isRelease = partMessage.find(rex_Release) && (partMessage.split('\n').getAt(0).trim().split(' ').getAt(0).trim() != lastRelease.trim())
 
-		if (isRelease)
-		{
-			def partMessageHeader = partMessage.split('\n').getAt(0).trim()
-			file << "\n\n"
-			file << ("#" * (12 + 1 + partDate.size() + 2 + partMessageHeader.size() + 1 + 12))
-			file << "\n"
-			file << "############ ${partDate}  ${partMessageHeader} ############\n"
-			file << ("#" * (12 + 1 + partDate.size() + 2 + partMessageHeader.size() + 1 + 12))
-			file << "\n\n\n"
+        partMessage = partMessage.replaceAll('\r\n', '\n')                     // normalize linebreaks
+        partMessage = partMessage.replaceAll(/\n\n+/, '\n')                    // remove empty lines
+        partMessage = partMessage.replaceAll(/^1\.10\.10/, '1.10.0')           // fix misspelling
 
-			if (partMessage.split('\n').size() > 1) 
-			{
-				partMessage.split('\n').eachWithIndex
-				{ line , i ->
-					line = line.trim()
-					def isNewGroup = line.find(rex_Normal)
-					if (i == 0 || isNewGroup)
-						file << "${line}\n"
-					else
-						file << "  ${line}\n"
-				}
-			}
+        partMessage = partMessage.replace('Emergency-Bugfix', 'Bugfix')        // word replacement
+        partMessage = partMessage.replace('Libraryfix', 'Bugfix')              // word replacement
+        partMessage = partMessage.replace('Glitchfix', 'Bugfix')               // word replacement
+        partMessage = partMessage.replace('Code Cleanup', 'Other')             // word replacement
+        partMessage = partMessage.replace('Documentation', 'Other')            // word replacement
+        partMessage = partMessage.replace('Changelog', 'Other')                // word replacement
+        partMessage = partMessage.replace('Changelog', 'Other')                // word replacement
 
-			lastRelease = partMessageHeader.split(' ').getAt(0).trim()
-		} 
-		else if (isNormal) 
-		{
-			partMessage.split('\n').eachWithIndex 
-			{ line , i ->
-				line = line.trim()
-				def isNewGroup = line.find(rex_Normal)
-				if (i == 0 || isNewGroup)
-					file << "${line}\n"
-				else
-					file << "  ${line}\n"
-			}
-		} 
-		else 
-		{
-			println "IGNORE: " + partMessage.replaceAll('\r', '').replaceAll('\n', ' ')
-		}
-	}
+        if (isRelease)
+        {
+            def partMessageHeader = partMessage.split('\n').getAt(0).trim()
+            file << "\n\n"
+            file << ("#" * (12 + 1 + partDate.size() + 2 + partMessageHeader.size() + 1 + 12))
+            file << "\n"
+            file << "############ ${partDate}  ${partMessageHeader} ############\n"
+            file << ("#" * (12 + 1 + partDate.size() + 2 + partMessageHeader.size() + 1 + 12))
+            file << "\n\n\n"
+
+            if (partMessage.split('\n').size() > 1) 
+            {
+                partMessage.split('\n').eachWithIndex
+                { line , i ->
+                    line = line.trim()
+                    def isNewGroup = line.find(rex_Normal)
+                    if (i == 0 || isNewGroup)
+                        file << "${line}\n"
+                    else
+                        file << "  ${line}\n"
+                }
+            }
+
+            lastRelease = partMessageHeader.split(' ').getAt(0).trim()
+        } 
+        else if (isNormal) 
+        {
+            partMessage.split('\n').eachWithIndex 
+            { line , i ->
+                line = line.trim()
+                def isNewGroup = line.find(rex_Normal)
+                if (i == 0 || isNewGroup)
+                    file << "${line}\n"
+                else
+                    file << "  ${line}\n"
+            }
+        } 
+        else 
+        {
+            println "IGNORE: " + partMessage.replaceAll('\r', '').replaceAll('\n', ' ')
+        }
+    }
 }
 
 configurations {

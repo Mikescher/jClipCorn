@@ -17,15 +17,18 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
 import javax.swing.event.DocumentEvent;
 
+import com.jgoodies.forms.layout.ColumnSpec;
+import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.RowSpec;
+
 import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineRefType;
 import de.jClipCorn.database.databaseElement.columnTypes.CCSingleOnlineReference;
 import de.jClipCorn.gui.guiComponents.WideComboBox;
-import de.jClipCorn.util.Str;
 import de.jClipCorn.util.adapter.DocumentAdapter;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.http.HTTPUtilities;
 
-public class JSingleReferenceChooser extends JPanel {
+public class JSingleSubReferenceChooser extends JPanel {
 	private static final long serialVersionUID = 2696192041815168280L;
 
 	private DefaultComboBoxModel<CCOnlineRefType> cbxModel;
@@ -35,17 +38,24 @@ public class JSingleReferenceChooser extends JPanel {
 	private JPanel panel;
 	private JPanel pnlState;
 	private JPanel panel_1;
+	private JTextField edDesc;
 
-	public JSingleReferenceChooser() {
+	public JSingleSubReferenceChooser() {
 		initGUI();
 	}
 
 	private void initGUI() {
-		setLayout(new BorderLayout(0, 0));
+		setLayout(new FormLayout(new ColumnSpec[] {
+				ColumnSpec.decode("20px"), //$NON-NLS-1$
+				ColumnSpec.decode("default:grow"), //$NON-NLS-1$
+				ColumnSpec.decode("46px"), //$NON-NLS-1$
+				ColumnSpec.decode("default:grow"),}, //$NON-NLS-1$
+			new RowSpec[] {
+				RowSpec.decode("fill:15dlu"),})); //$NON-NLS-1$
 
 		cbxType = new WideComboBox<>();
 		cbxType.setPreferredSize(new Dimension(46, 20));
-		add(cbxType, BorderLayout.EAST);
+		add(cbxType, "3, 1, left, fill"); //$NON-NLS-1$
 		cbxModel = new DefaultComboBoxModel<>(CCOnlineRefType.values());
 		cbxType.setModel(cbxModel);
 		cbxType.setRenderer(new RefChooserComboBoxRenderer());
@@ -53,7 +63,7 @@ public class JSingleReferenceChooser extends JPanel {
 		cbxType.setEditable(true);
 
 		edID = new JTextField();
-		add(edID, BorderLayout.CENTER);
+		add(edID, "2, 1, fill, fill"); //$NON-NLS-1$
 		edID.setColumns(10);
 		edID.addKeyListener(new KeyAdapter() {
             @Override
@@ -109,7 +119,7 @@ public class JSingleReferenceChooser extends JPanel {
 		panel = new JPanel();
 		panel.setBackground(Color.WHITE);
 		panel.setBorder(new EmptyBorder(2, 2, 2, 2));
-		add(panel, BorderLayout.WEST);
+		add(panel, "1, 1, left, fill"); //$NON-NLS-1$
 		panel.setLayout(new BorderLayout(0, 0));
 		
 		panel_1 = new JPanel();
@@ -134,15 +144,20 @@ public class JSingleReferenceChooser extends JPanel {
 				}
 			}
 		});
+		
+		edDesc = new JTextField();
+		add(edDesc, "4, 1, fill, fill"); //$NON-NLS-1$
+		edDesc.setColumns(10);
 	}
 
 	public CCSingleOnlineReference getValue() {
-		return new CCSingleOnlineReference((CCOnlineRefType) cbxType.getSelectedItem(), edID.getText(), Str.Empty);
+		return new CCSingleOnlineReference((CCOnlineRefType) cbxType.getSelectedItem(), edID.getText(), edDesc.getText());
 	}
 
 	public void setValue(CCSingleOnlineReference ref) {
 		edID.setText(ref.id);
 		cbxType.setSelectedItem(ref.type);
+		edDesc.setText(ref.description);
 	}
 	
 	@Override
@@ -151,6 +166,7 @@ public class JSingleReferenceChooser extends JPanel {
 
 		edID.setEnabled(flag);
 		cbxType.setEnabled(flag);
+		edDesc.setEnabled(flag);
 	}
 
 	public void updateUIControls() {

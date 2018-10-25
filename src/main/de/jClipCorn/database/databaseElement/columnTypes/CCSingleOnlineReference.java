@@ -9,61 +9,79 @@ import de.jClipCorn.online.metadata.mal.MALParser;
 import de.jClipCorn.online.metadata.tmdb.TMDBParser;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.enumerations.BrowserLanguage;
+import de.jClipCorn.util.Str;
 import de.jClipCorn.util.exceptions.OnlineRefFormatException;
 
 public class CCSingleOnlineReference {
 	public final CCOnlineRefType type;
 	public final String id;
+	public final String description;
 	
-	public CCSingleOnlineReference(CCOnlineRefType type, String id) {
-		this.type = type;
-		this.id = id;
+	public CCSingleOnlineReference(CCOnlineRefType type, String id, String desc) {
+		this.type        = type;
+		this.id          = id;
+		this.description = desc;
 	}
 
 	public static CCSingleOnlineReference createNone() {
-		return new CCSingleOnlineReference(CCOnlineRefType.NONE, ""); //$NON-NLS-1$
+		return new CCSingleOnlineReference(CCOnlineRefType.NONE, Str.Empty, Str.Empty);
 	}
 
 	public static CCSingleOnlineReference createIMDB(String id) {
-		return new CCSingleOnlineReference(CCOnlineRefType.IMDB, id);
+		return new CCSingleOnlineReference(CCOnlineRefType.IMDB, id, Str.Empty);
 	}
 
 	public static CCSingleOnlineReference createAmazon(String id) {
-		return new CCSingleOnlineReference(CCOnlineRefType.AMAZON, id);
+		return new CCSingleOnlineReference(CCOnlineRefType.AMAZON, id, Str.Empty);
 	}
 
 	public static CCSingleOnlineReference createMoviepilot(String id) {
-		return new CCSingleOnlineReference(CCOnlineRefType.MOVIEPILOT, id);
+		return new CCSingleOnlineReference(CCOnlineRefType.MOVIEPILOT, id, Str.Empty);
 	}
 
 	public static CCSingleOnlineReference createTMDB(String id) {
-		return new CCSingleOnlineReference(CCOnlineRefType.THEMOVIEDB, id);
+		return new CCSingleOnlineReference(CCOnlineRefType.THEMOVIEDB, id, Str.Empty);
 	}
 
 	public static CCSingleOnlineReference createProxer(String id) {
-		return new CCSingleOnlineReference(CCOnlineRefType.PROXERME, id);
+		return new CCSingleOnlineReference(CCOnlineRefType.PROXERME, id, Str.Empty);
 	}
 
 	public static CCSingleOnlineReference createMyAnimeList(String id) {
-		return new CCSingleOnlineReference(CCOnlineRefType.MYANIMELIST, id);
+		return new CCSingleOnlineReference(CCOnlineRefType.MYANIMELIST, id, Str.Empty);
 	}
 
 	public String toSerializationString() {
 		if (type == CCOnlineRefType.NONE) return ""; //$NON-NLS-1$
-		return type.getIdentifier() + ":" + id; //$NON-NLS-1$
+		if (!hasDescription()) return type.getIdentifier() + ":" + id; //$NON-NLS-1$
+		return type.getIdentifier() + ":" + id + ":" + Str.toBase64(description); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	public static CCSingleOnlineReference parse(String data) throws OnlineRefFormatException {
 		if (data.isEmpty()) return CCSingleOnlineReference.createNone();
-		
-		int idx = data.indexOf(':');
 
-		String strtype = data.substring(0, idx);
-		String strid = data.substring(idx+1);
-		
-		CCOnlineRefType type = CCOnlineRefType.parse(strtype);
-		
-		return new CCSingleOnlineReference(type, strid);
+		int idx1 = data.indexOf(':');
+		int idx2 = data.lastIndexOf(':');
+
+		if (idx1 == idx2) {
+
+			String strtype = data.substring(0, idx1);
+			String strid = data.substring(idx1+1);
+			
+			CCOnlineRefType type = CCOnlineRefType.parse(strtype);
+			
+			return new CCSingleOnlineReference(type, strid, Str.Empty);
+			
+		} else {
+
+			String strtype = data.substring(0, idx1);
+			String strid   = data.substring(idx1+1, idx2);
+			String strdesc = data.substring(idx2+1);
+			
+			CCOnlineRefType type = CCOnlineRefType.parse(strtype);
+			
+			return new CCSingleOnlineReference(type, strid, Str.fromBase64(strdesc));
+		}
 	}
 
 	public boolean isUnset() {
@@ -157,5 +175,9 @@ public class CCSingleOnlineReference {
 			CCLog.addDefaultSwitchError(this, this);
 			return null;
 		}
+	}
+
+	public boolean hasDescription() {
+		return !Str.isNullOrWhitespace(description);
 	}
 }

@@ -51,7 +51,8 @@ public class OnlineRefButton extends JPanel {
 			public void mouseClicked(MouseEvent e) {
 				JPopupMenu menu = new JPopupMenu();
 				for (final CCSingleOnlineReference soref : value.Additional) {
-					JMenuItem mi = new JMenuItem(soref.type.asString());
+					JMenuItem mi = new JMenuItem(soref.hasDescription() ? soref.description : soref.type.asString());
+					mi.setIcon(soref.type.getIcon16x16());
 					mi.addActionListener(new ActionListener() {
 						@Override
 						public void actionPerformed(ActionEvent e) {

@@ -12,7 +12,6 @@ import javax.swing.JPanel;
 
 import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReferenceList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCSingleOnlineReference;
-import de.jClipCorn.util.helper.ObjectUtils;
 import de.jClipCorn.util.stream.CCStreams;
 
 public class JReferenceChooser extends JPanel {
@@ -71,7 +70,7 @@ public class JReferenceChooser extends JPanel {
 	public void setAdditional(List<CCSingleOnlineReference> a) {
 		_additional = CCStreams
 				.iterate(a)
-				.filter(r -> !ObjectUtils.IsEqual(r, mainChooser.getValue()))
+				//.filter(r -> !ObjectUtils.IsEqual(r, mainChooser.getValue()))
 				.unique()
 				.enumerate();
 		updateUIControls();

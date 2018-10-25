@@ -153,4 +153,4 @@ public class Main {
 //TODO MainTable and SeriesTable as JCCSimpleTable
 
 //TODO AniList as OnlineRef https://github.com/AniList/ApiV2-GraphQL-Docs
-//TODO Support for multiple (secondary) online refs
+//TODO Kitsu   as OnlineRef https://kitsu.docs.apiary.io/

@@ -28,7 +28,7 @@ public class ReferenceChooserPopup extends JDialog implements WindowFocusListene
 
 	private JReferenceChooser parent;
 
-	private List<JSingleReferenceChooser> uiList = new ArrayList<>();
+	private List<JSingleSubReferenceChooser> uiList = new ArrayList<>();
 	
 	private JScrollPane pnlScroll;
 	private JPanel pnlContent;
@@ -57,7 +57,7 @@ public class ReferenceChooserPopup extends JDialog implements WindowFocusListene
 	}
 
 	private void initGUI(JReferenceChooser parent) { 
-		setSize(Math.max(200, parent.getWidth()), 25);
+		setSize(450, 25);
 		
 		setUndecorated(true);
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
@@ -114,7 +114,7 @@ public class ReferenceChooserPopup extends JDialog implements WindowFocusListene
 	}
 
 	private void addSingleControl(CCSingleOnlineReference soref) {
-		JSingleReferenceChooser chsr = new JSingleReferenceChooser();
+		JSingleSubReferenceChooser chsr = new JSingleSubReferenceChooser();
 		chsr.setValue(soref);
 		chsr.setSize(pnlContent.getWidth(), (int) chsr.getPreferredSize().getHeight());
 		chsr.setBorder(new EmptyBorder(2, 2, 2, 2));
@@ -136,7 +136,7 @@ public class ReferenceChooserPopup extends JDialog implements WindowFocusListene
 				
 		int contentHeight = pnlContent.getHeight();
 		
-		int width = Math.max(200, parent.getWidth());
+		int width = 450;
 		int height = pnllBottom.getHeight() + contentHeight;
 		
 		//if (height > 250) height = 250;
@@ -164,7 +164,7 @@ public class ReferenceChooserPopup extends JDialog implements WindowFocusListene
 
 	private void onOK() {
 		List<CCSingleOnlineReference> value = new ArrayList<>();
-		for	(JSingleReferenceChooser c : uiList) {
+		for	(JSingleSubReferenceChooser c : uiList) {
 			CCSingleOnlineReference soref = c.getValue();
 			if (soref.isUnset()) continue;
 			if (soref.isInvalid()) continue;

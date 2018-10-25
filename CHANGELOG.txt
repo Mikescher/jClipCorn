@@ -1,6 +1,67 @@
 
 
 ########################################################################
+############ Thu Oct 25 22:42:10 2018 +0200  1.10.5 RELEASE ############
+########################################################################
+
+
+1.10.5 Feature: Ability to add descriptions to OnlineRefs
+1.10.5 Bugfix: Improved OnlineRef Paste Regexes
+1.10.5 Bugfix: TryAddGenres did not save data to db
+1.10.5 Bugfix: Fixed Exception in CoverLabel when calling setCoverDirect(null)
+1.10.5 Feature: Open OnlineRef in Browser when double-clicking on StatePanel
+1.10.5 Bugfix: Disallow adding duplicate AdditonalOnlineRefs
+1.10.5 Task: Improved CCOnlineReferenceList.isValid()
+1.10.5 Feature: Get additional OnlineRefs from UpdateMetadataDialog
+1.10.5 Bugfix: Fixed layout in ParseOnlineDialog
+1.10.5 Feature: Add additional onlinereferences to elements
+1.10.5 Bugfix: Fixed NullpointerException in CoverPreview
+1.10.5 Task: Immutable CCGenreList
+1.10.5 Bugfix: EpisodeAggregator did not work with Seasons
+1.10.5 Feature: Asynchronous cover loading in PreviewSeriesFrame
+1.10.5 Task: Faster movement of groups in GroupManagmentFrame
+1.10.5 Feature: Added new tags CamRip + MicDubbed
+1.10.5 Bugfix: Fixed wrong cover on first hover
+1.10.5 Bugfix: Fixed fatal error in initBackupsList
+1.10.5 Feature: Async loading of covers (fixes freeze on hdd spinup time)
+1.10.5 Task: Unification of FunctionalInterface's
+1.10.5 Bugfix: Fixed sidebar selection on expand
+1.10.5 Feature: Better scaling algorithm in JCoverChooser (multi-step scaling)
+1.10.5 Bugfix: Fixed covername padded with space instead of zeroes
+1.10.5 Bugfix: Do not allow backup restore without covers
+1.10.5 Task: CCDate.createFromSQL should also work with extended Date strings (can happen when someone else edits db)
+1.10.5 Task: Save covercache ordered
+1.10.5 Bugfix: Fixed SQLite problems in schema
+1.10.5 Bugfix: Fixed Serialization error for filters with empty operators
+1.10.5 Feature: Better scaling algorithm in JCoverChooser (bicubic interpolation, antialising)
+1.10.5 Bugfix: CoverMetaCache hash too long
+1.10.5 Bugfix: Deleted cover were not removed from CoverMetaCache
+1.10.5 Bugfix: Selection via Keys in FilterTree was not registered
+1.10.5 Bugfix: CustomCoverDimensionFilter did not use CoverMetaCache
+1.10.5 Feature: CustomGroupFilter also matches subgroups (filter setting)
+1.10.5 Feature: Remember cover informations (dimensions, size, hash) in cachefile
+1.10.5 Bugfix: Fixed OOM Exception in DatabaseValidator (with too many/big covers)
+1.10.5 Task: No alpha for groups on hover
+1.10.5 Bugfix: Fixed CoverPreviewFrame not closing on [Esc]
+1.10.5 Bugfix: Fixed CoverPreviewFrame opening on single-click in JCoverChooser
+1.10.5 Feature: Show groups in MainFrame only on hover (setting)
+1.10.5 Feature: Show groups in PreviewSeriesFrame
+1.10.5 Task: Do not render [[WATCH_LATER]] + [[WATCH_NEVER]] on cover
+1.10.5 Feature: Show CoverPreview on double-click
+1.10.5 Bugfix: cover overlay got permanent for cover that didnt need down-scaling
+1.10.5 Feature: Show groups in PreviewMoviesFrame
+1.10.5 Bugfix: removed groups were not removed from db
+1.10.5 Bugfix: bool filter properties were inverted serialized
+1.10.5 Bugfix: Renaming groups didn't update parents of children
+1.10.5 Bugfix: CoverTooSmall Error triggered too early
+1.10.5 Feature: Groups are now permanent and _need_ to be managed with the ManageGroupFrame
+1.10.5 Feature: Improvements for groups ( -> database v11 )
+  - Groups can have subgroups
+  - Groups can be non-visible (= not drawn on cover)
+  - better group managment dialog
+
+
+########################################################################
 ############ Fri Nov 24 19:08:07 2017 +0100  1.10.4 RELEASE ############
 ########################################################################
 

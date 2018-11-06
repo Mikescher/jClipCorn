@@ -20,7 +20,8 @@ public enum CCOnlineRefType implements ContinoousEnum<CCOnlineRefType> {
 	MOVIEPILOT(3),
 	THEMOVIEDB(4),
 	PROXERME(5),
-	MYANIMELIST(6);
+	MYANIMELIST(6),
+	ANILIST(7);
 	
 	private static final Pattern REGEX_IMDB = Pattern.compile("^tt[0-9]+$"); //$NON-NLS-1$
 	private static final Pattern REGEX_AMZN = Pattern.compile("^[A-Z0-9]+$"); //$NON-NLS-1$
@@ -28,11 +29,13 @@ public enum CCOnlineRefType implements ContinoousEnum<CCOnlineRefType> {
 	private static final Pattern REGEX_TMDB = Pattern.compile("^(movie|tv)/[0-9]+$"); //$NON-NLS-1$
 	private static final Pattern REGEX_PROX = Pattern.compile("^[0-9]+$"); //$NON-NLS-1$
 	private static final Pattern REGEX_MYAL = Pattern.compile("^[0-9]+$"); //$NON-NLS-1$
+	private static final Pattern REGEX_ANIL = Pattern.compile("^[0-9]+$"); //$NON-NLS-1$
 
 	private static final Pattern REGEX_PASTE_IMDB = Pattern.compile("^(http://|https://)?(www\\.)?imdb\\.(com|de)/title/(?<id>tt[0-9]+)(/.*)?(\\?.*)?$"); //$NON-NLS-1$
 	private static final Pattern REGEX_PASTE_TMDB = Pattern.compile("^(http://|https://)?(www\\.)?themoviedb\\.org/(?<id>(movie|tv)/[0-9]+)(\\-.*)?(/.*)?(\\?.*)?$"); //$NON-NLS-1$
 	private static final Pattern REGEX_PASTE_MYAL = Pattern.compile("^(http://|https://)?(www\\.)?myanimelist\\.net/anime/(?<id>[0-9]+)(/.*)?(\\?.*)?$"); //$NON-NLS-1$
 	private static final Pattern REGEX_PASTE_PROX = Pattern.compile("^(http://|https://)?(www\\.)?proxer\\.me/info/(?<id>[0-9]+)(/.*)?(\\?.*)?$"); //$NON-NLS-1$
+	private static final Pattern REGEX_PASTE_ANIL = Pattern.compile("^(http://|https://)?(www\\.)?anilist\\.co/anime/(?<id>[0-9]+)(/.*)?(\\?.*)?$"); //$NON-NLS-1$
 	
 	private final static String IDENTIFIER[] = {
 		"",   			//$NON-NLS-1$
@@ -42,16 +45,18 @@ public enum CCOnlineRefType implements ContinoousEnum<CCOnlineRefType> {
 		"tmdb",   		//$NON-NLS-1$
 		"prox",   		//$NON-NLS-1$
 		"myal",   		//$NON-NLS-1$
+		"anil",   		//$NON-NLS-1$
 	};
 	
 	private final static String NAMES[] = {
-		LocaleBundle.getString("CCOnlineRefType.NONE"),	//$NON-NLS-1$
-		LocaleBundle.getString("CCOnlineRefType.IMDB"), //$NON-NLS-1$
-		LocaleBundle.getString("CCOnlineRefType.AMAZON"), //$NON-NLS-1$
-		LocaleBundle.getString("CCOnlineRefType.MOVIEPILOT"), //$NON-NLS-1$
-		LocaleBundle.getString("CCOnlineRefType.THEMOVIEDB"), //$NON-NLS-1$
-		LocaleBundle.getString("CCOnlineRefType.PROXERME"), //$NON-NLS-1$
+		LocaleBundle.getString("CCOnlineRefType.NONE"),	       //$NON-NLS-1$
+		LocaleBundle.getString("CCOnlineRefType.IMDB"),        //$NON-NLS-1$
+		LocaleBundle.getString("CCOnlineRefType.AMAZON"),      //$NON-NLS-1$
+		LocaleBundle.getString("CCOnlineRefType.MOVIEPILOT"),  //$NON-NLS-1$
+		LocaleBundle.getString("CCOnlineRefType.THEMOVIEDB"),  //$NON-NLS-1$
+		LocaleBundle.getString("CCOnlineRefType.PROXERME"),    //$NON-NLS-1$
 		LocaleBundle.getString("CCOnlineRefType.MYANIMELIST"), //$NON-NLS-1$
+		LocaleBundle.getString("CCOnlineRefType.ANILIST"),     //$NON-NLS-1$
 	};
 	
 	private int id;
@@ -113,6 +118,8 @@ public enum CCOnlineRefType implements ContinoousEnum<CCOnlineRefType> {
 			return CachedResourceLoader.getIcon(Resources.ICN_REF_5.icon32x32);
 		case MYANIMELIST:
 			return CachedResourceLoader.getIcon(Resources.ICN_REF_6.icon32x32);
+		case ANILIST:
+			return CachedResourceLoader.getIcon(Resources.ICN_REF_7.icon32x32);
 		default:
 			return null;
 		}
@@ -134,6 +141,8 @@ public enum CCOnlineRefType implements ContinoousEnum<CCOnlineRefType> {
 			return CachedResourceLoader.getIcon(Resources.ICN_REF_5.icon16x16);
 		case MYANIMELIST:
 			return CachedResourceLoader.getIcon(Resources.ICN_REF_6.icon16x16);
+		case ANILIST:
+			return CachedResourceLoader.getIcon(Resources.ICN_REF_7.icon16x16);
 		default:
 			return null;
 		}
@@ -155,6 +164,8 @@ public enum CCOnlineRefType implements ContinoousEnum<CCOnlineRefType> {
 			return CachedResourceLoader.getIcon(Resources.ICN_REF_5_BUTTON);
 		case MYANIMELIST:
 			return CachedResourceLoader.getIcon(Resources.ICN_REF_6_BUTTON);
+		case ANILIST:
+			return CachedResourceLoader.getIcon(Resources.ICN_REF_7_BUTTON);
 		default:
 			return null;
 		}
@@ -176,6 +187,8 @@ public enum CCOnlineRefType implements ContinoousEnum<CCOnlineRefType> {
 			return REGEX_PROX.matcher(id).matches();
 		case MYANIMELIST:
 			return REGEX_MYAL.matcher(id).matches();
+		case ANILIST:
+			return REGEX_ANIL.matcher(id).matches();
 		default:
 			return false;
 		}
@@ -215,6 +228,11 @@ public enum CCOnlineRefType implements ContinoousEnum<CCOnlineRefType> {
 		matcher = REGEX_PASTE_PROX.matcher(input);
 		if (matcher.find()) {
 			return Tuple.Create(CCOnlineRefType.PROXERME, matcher.group("id"));
+		}
+		
+		matcher = REGEX_PASTE_ANIL.matcher(input);
+		if (matcher.find()) {
+			return Tuple.Create(CCOnlineRefType.ANILIST, matcher.group("id"));
 		}
 		
 		return null;

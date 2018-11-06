@@ -262,6 +262,9 @@ public class Resources {
 	
 	public final static MultiIconRef ICN_REF_6				= registerMultisizeIcon("/icons/onlineReferences/ref6.png");
 	public final static IconRef ICN_REF_6_BUTTON			= registerOtherIcon("/icons/onlineReferences/ref6_large.png");
+	
+	public final static MultiIconRef ICN_REF_7				= registerMultisizeIcon("/icons/onlineReferences/ref7.png");
+	public final static IconRef ICN_REF_7_BUTTON			= registerOtherIcon("/icons/onlineReferences/ref7_large.png");
 	// ###############################################  </LOG>  ##############################################
 	
 	

@@ -3,6 +3,7 @@ package de.jClipCorn.gui.resources;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
+import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.formatter.PathFormatter;
 
@@ -268,6 +269,9 @@ public class Resources {
 	
 	public final static MultiIconRef ICN_REF_8				= registerMultisizeIcon("/icons/onlineReferences/ref8.png");
 	public final static IconRef ICN_REF_8_BUTTON			= registerOtherIcon("/icons/onlineReferences/ref8_large.png");
+	
+	public final static MultiIconRef ICN_REF_9				= registerMultisizeIcon("/icons/onlineReferences/ref9.png");
+	public final static IconRef ICN_REF_9_BUTTON			= registerOtherIcon("/icons/onlineReferences/ref9_large.png");
 	// ###############################################  </LOG>  ##############################################
 	
 	
@@ -275,6 +279,12 @@ public class Resources {
 	// #######################################################################################################
 	// #######################################################################################################
 	
+	public static void init() {
+		// actual register code happens in static initialization
+		
+		CCLog.addDebug(icn_ressources.size() + " icons in resources registered"); //$NON-NLS-1$
+		CCLog.addDebug(img_ressources.size() + " images in resources registered"); //$NON-NLS-1$
+	}
 	
 	private static MultiIconRef registerMultisizeIcon(String s) {
 		IconRef i16 = register16x16Icon(s);

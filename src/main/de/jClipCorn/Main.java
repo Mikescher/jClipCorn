@@ -70,6 +70,8 @@ public class Main {
 			DriveMap.preScan(); // creates a new Thread
 		}
 
+		Resources.init();
+		
 		if (CCProperties.getInstance().PROP_LOADING_PRELOADRESOURCES.getValue()) {
 			Globals.TIMINGS.start(Globals.TIMING_LOAD_PRELOADRESOURCES);
 			Resources.preload();

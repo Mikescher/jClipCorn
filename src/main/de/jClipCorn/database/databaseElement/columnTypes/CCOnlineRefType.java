@@ -5,6 +5,7 @@ import java.util.regex.Pattern;
 
 import javax.swing.Icon;
 
+import de.jClipCorn.database.util.CCOnlineRefTypeHelper;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.CachedResourceLoader;
 import de.jClipCorn.gui.resources.IconRef;
@@ -21,12 +22,13 @@ public enum CCOnlineRefType implements ContinoousEnum<CCOnlineRefType> {
 	NONE       (0, "",     "CCOnlineRefType.NONE",        CCOnlineRefTypeHelper.REGEX_NONE, null,                                   Resources.ICN_REF_0, Resources.ICN_REF_0_BUTTON),
 	IMDB       (1, "imdb", "CCOnlineRefType.IMDB",        CCOnlineRefTypeHelper.REGEX_IMDB, CCOnlineRefTypeHelper.REGEX_PASTE_IMDB, Resources.ICN_REF_1, Resources.ICN_REF_1_BUTTON),
 	AMAZON     (2, "amzn", "CCOnlineRefType.AMAZON",      CCOnlineRefTypeHelper.REGEX_AMZN, null,                                   Resources.ICN_REF_2, Resources.ICN_REF_2_BUTTON),
-	MOVIEPILOT (3, "mvpt", "CCOnlineRefType.MOVIEPILOT",  CCOnlineRefTypeHelper.REGEX_MVPT, null,                                   Resources.ICN_REF_3, Resources.ICN_REF_3_BUTTON),
+	MOVIEPILOT (3, "mvpt", "CCOnlineRefType.MOVIEPILOT",  CCOnlineRefTypeHelper.REGEX_MVPT, CCOnlineRefTypeHelper.REGEX_PASTE_MVPT, Resources.ICN_REF_3, Resources.ICN_REF_3_BUTTON),
 	THEMOVIEDB (4, "tmdb", "CCOnlineRefType.THEMOVIEDB",  CCOnlineRefTypeHelper.REGEX_TMDB, CCOnlineRefTypeHelper.REGEX_PASTE_TMDB, Resources.ICN_REF_4, Resources.ICN_REF_4_BUTTON),
-	PROXERME   (5, "prox", "CCOnlineRefType.PROXERME",    CCOnlineRefTypeHelper.REGEX_PROX, null,                                   Resources.ICN_REF_5, Resources.ICN_REF_5_BUTTON),
+	PROXERME   (5, "prox", "CCOnlineRefType.PROXERME",    CCOnlineRefTypeHelper.REGEX_PROX, CCOnlineRefTypeHelper.REGEX_PASTE_PROX, Resources.ICN_REF_5, Resources.ICN_REF_5_BUTTON),
 	MYANIMELIST(6, "myal", "CCOnlineRefType.MYANIMELIST", CCOnlineRefTypeHelper.REGEX_MYAL, CCOnlineRefTypeHelper.REGEX_PASTE_MYAL, Resources.ICN_REF_6, Resources.ICN_REF_6_BUTTON),
 	ANILIST    (7, "anil", "CCOnlineRefType.ANILIST",     CCOnlineRefTypeHelper.REGEX_ANIL, CCOnlineRefTypeHelper.REGEX_PASTE_ANIL, Resources.ICN_REF_7, Resources.ICN_REF_7_BUTTON),
-	ANIMEPLANET(8, "anpl", "CCOnlineRefType.ANIMEPLANET", CCOnlineRefTypeHelper.REGEX_ANPL, CCOnlineRefTypeHelper.REGEX_PASTE_ANPL, Resources.ICN_REF_8, Resources.ICN_REF_8_BUTTON);
+	ANIMEPLANET(8, "anpl", "CCOnlineRefType.ANIMEPLANET", CCOnlineRefTypeHelper.REGEX_ANPL, CCOnlineRefTypeHelper.REGEX_PASTE_ANPL, Resources.ICN_REF_8, Resources.ICN_REF_8_BUTTON),
+	KITSU      (9, "kisu", "CCOnlineRefType.KITSU",       CCOnlineRefTypeHelper.REGEX_KISU, CCOnlineRefTypeHelper.REGEX_PASTE_KISU, Resources.ICN_REF_9, Resources.ICN_REF_9_BUTTON);
 	
 	private final int id;
 	private final String identifier;

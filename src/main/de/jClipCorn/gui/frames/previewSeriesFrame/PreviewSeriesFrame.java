@@ -491,7 +491,8 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 		if (dispSeries.getOnlineReference().hasAdditional()) {
 			JMenu mntmShowOnline = new JMenu(LocaleBundle.getString("PreviewSeriesFrame.Menu.Extras.ViewOnline")); //$NON-NLS-1$
 			for	(final CCSingleOnlineReference soref : dispSeries.getOnlineReference()) {
-				JMenuItem subitem = new JMenuItem(soref.type.asString());
+				JMenuItem subitem = new JMenuItem(soref.hasDescription() ? soref.description : soref.type.asString());
+				subitem.setIcon(soref.getIcon16x16());
 				subitem.addActionListener(new ActionListener() {
 					@Override
 					public void actionPerformed(ActionEvent e) {
@@ -499,6 +500,8 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 					}
 				});
 				mntmShowOnline.add(subitem);
+
+				if (soref == dispSeries.getOnlineReference().Main && dispSeries.getOnlineReference().hasAdditional()) mntmShowOnline.addSeparator();
 			}
 			mnExtras.add(mntmShowOnline);
 		}

@@ -17,11 +17,10 @@ import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.CCSeries;
-import de.jClipCorn.database.databaseElement.columnTypes.CCDateTimeList;
-import de.jClipCorn.database.databaseElement.columnTypes.CCUserScore;
-import de.jClipCorn.database.databaseElement.columnTypes.CCTagList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCDBElementTyp;
-import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReferenceList;
+import de.jClipCorn.database.databaseElement.columnTypes.CCDateTimeList;
+import de.jClipCorn.database.databaseElement.columnTypes.CCTagList;
+import de.jClipCorn.database.databaseElement.columnTypes.CCUserScore;
 import de.jClipCorn.database.util.ExportHelper;
 import de.jClipCorn.database.xml.CCBXMLReader;
 import de.jClipCorn.gui.frames.aboutFrame.AboutFrame;
@@ -69,7 +68,6 @@ import de.jClipCorn.util.helper.ApplicationHelper;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.helper.FileChooserHelper;
 import de.jClipCorn.util.helper.SimpleFileUtils;
-import de.jClipCorn.util.http.HTTPUtilities;
 
 public class CCActionTree extends UIActionTree{
 	public final static String EVENT_ON_MOVIE_EXECUTED_0 = "PlayMovie"; //$NON-NLS-1$
@@ -783,17 +781,7 @@ public class CCActionTree extends UIActionTree{
 		CCDatabaseElement el = owner.getSelectedElement();
 		if (el == null) return;
 		
-		CCOnlineReferenceList ref = el.getOnlineReference();
-		
-		if (ref.Main.isUnset()) {
-			if (el.isMovie()) {
-				HTTPUtilities.searchInBrowser(((CCMovie)el).getCompleteTitle());
-			} else if (el.isSeries()) {
-				HTTPUtilities.searchInBrowser(((CCSeries)el).getTitle());
-			}
-		} else {
-			HTTPUtilities.openInBrowser(ref.Main.getURL());
-		}
+		el.getOnlineReference().Main.openInBrowser(el);
 	}
 	
 	private void onClickOtherShowCover(CCTreeActionEvent e) {

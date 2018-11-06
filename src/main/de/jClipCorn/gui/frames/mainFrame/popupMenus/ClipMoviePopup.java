@@ -1,10 +1,16 @@
 package de.jClipCorn.gui.frames.mainFrame.popupMenus;
 
+import de.jClipCorn.database.databaseElement.CCMovie;
+
 public class ClipMoviePopup extends ClipPopupMenu {
 	private static final long serialVersionUID = -3030683884876620182L;
 
-	public ClipMoviePopup() {
+	private final CCMovie mov;
+	
+	public ClipMoviePopup(CCMovie m) {
 		super();
+		mov = m;
+		init();
 	}
 
 	@SuppressWarnings("nls")
@@ -36,7 +42,7 @@ public class ClipMoviePopup extends ClipPopupMenu {
 		//#############
 		
 		addAction("OpenFolder");
-		addAction("ShowInBrowser");
+		addOpenInBrowserAction(mov, mov.getOnlineReference());
 		
 		//#############
 		addSeparator();

@@ -21,6 +21,8 @@ import javax.swing.SwingUtilities;
 import de.jClipCorn.Main;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
+import de.jClipCorn.database.databaseElement.CCMovie;
+import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.database.util.CCDBUpdateListener;
 import de.jClipCorn.gui.actionTree.ActionSource;
 import de.jClipCorn.gui.actionTree.CCActionTree;
@@ -272,9 +274,9 @@ public class MainFrame extends JFrame implements CCDBUpdateListener {
 	
 	public void onClipTableSecondaryExecute(CCDatabaseElement element, MouseEvent e) {
 		if (element.isMovie()) {
-			(new ClipMoviePopup()).show(e.getComponent(), e.getX(), e.getY());
-		} else {
-			(new ClipSeriesPopup()).show(e.getComponent(), e.getX(), e.getY());
+			(new ClipMoviePopup((CCMovie)element)).show(e.getComponent(), e.getX(), e.getY());
+		} else if (element.isSeries()) {
+			(new ClipSeriesPopup((CCSeries)element)).show(e.getComponent(), e.getX(), e.getY());
 		}
 	}
 
@@ -398,7 +400,7 @@ public class MainFrame extends JFrame implements CCDBUpdateListener {
 		builder.append(Main.VERSION);
 		
 		if (Main.BETA) {
-			builder.append("-beta");
+			builder.append(" [BETA]");
 		}
 		
 		if (Main.DEBUG) {

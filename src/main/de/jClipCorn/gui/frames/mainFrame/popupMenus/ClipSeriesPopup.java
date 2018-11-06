@@ -1,11 +1,16 @@
 package de.jClipCorn.gui.frames.mainFrame.popupMenus;
 
+import de.jClipCorn.database.databaseElement.CCSeries;
 
 public class ClipSeriesPopup extends ClipPopupMenu {
 	private static final long serialVersionUID = -6475272518552625501L;
 
-	public ClipSeriesPopup() {
+	private final CCSeries ser;
+	
+	public ClipSeriesPopup(CCSeries s) {
 		super();
+		ser = s;
+		init();
 	}
 
 	@SuppressWarnings("nls")
@@ -32,8 +37,7 @@ public class ClipSeriesPopup extends ClipPopupMenu {
 		//#############
 		
 		addActionMenuTree("SetSeriesRating");
-		addAction("OpenFolder");
-		addAction("ShowInBrowser");
+		addOpenInBrowserAction(ser, ser.getOnlineReference());
 		addAction("MoveSeries");
 		addAction("CreateFolderStructSeries");
 		

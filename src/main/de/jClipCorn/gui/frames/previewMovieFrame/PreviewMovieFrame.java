@@ -286,7 +286,8 @@ public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener 
 		if (movie.getOnlineReference().hasAdditional()) {
 			JMenu mntmShowOnline = new JMenu(LocaleBundle.getString("PreviewMovieFrame.Menubar.Extras.ViewOnline")); //$NON-NLS-1$
 			for	(final CCSingleOnlineReference soref : movie.getOnlineReference()) {
-				JMenuItem subitem = new JMenuItem(soref.type.asString());
+				JMenuItem subitem = new JMenuItem(soref.hasDescription() ? soref.description : soref.type.asString());
+				subitem.setIcon(soref.getIcon16x16());
 				subitem.addActionListener(new ActionListener() {
 					@Override
 					public void actionPerformed(ActionEvent e) {
@@ -294,6 +295,7 @@ public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener 
 					}
 				});
 				mntmShowOnline.add(subitem);
+				if (soref == movie.getOnlineReference().Main && movie.getOnlineReference().hasAdditional()) mntmShowOnline.addSeparator();
 			}
 			mnExtras.add(mntmShowOnline);
 		}

@@ -7,64 +7,44 @@ import javax.swing.Icon;
 
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.CachedResourceLoader;
+import de.jClipCorn.gui.resources.IconRef;
+import de.jClipCorn.gui.resources.MultiIconRef;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.enumextension.ContinoousEnum;
 import de.jClipCorn.util.enumextension.EnumWrapper;
 import de.jClipCorn.util.exceptions.OnlineRefFormatException;
+import de.jClipCorn.util.stream.CCStreams;
 
+@SuppressWarnings("nls")
 public enum CCOnlineRefType implements ContinoousEnum<CCOnlineRefType> {
-	NONE(0),
-	IMDB(1),
-	AMAZON(2),
-	MOVIEPILOT(3),
-	THEMOVIEDB(4),
-	PROXERME(5),
-	MYANIMELIST(6),
-	ANILIST(7);
+	NONE       (0, "",     "CCOnlineRefType.NONE",        CCOnlineRefTypeHelper.REGEX_NONE, null,                                   Resources.ICN_REF_0, Resources.ICN_REF_0_BUTTON),
+	IMDB       (1, "imdb", "CCOnlineRefType.IMDB",        CCOnlineRefTypeHelper.REGEX_IMDB, CCOnlineRefTypeHelper.REGEX_PASTE_IMDB, Resources.ICN_REF_1, Resources.ICN_REF_1_BUTTON),
+	AMAZON     (2, "amzn", "CCOnlineRefType.AMAZON",      CCOnlineRefTypeHelper.REGEX_AMZN, null,                                   Resources.ICN_REF_2, Resources.ICN_REF_2_BUTTON),
+	MOVIEPILOT (3, "mvpt", "CCOnlineRefType.MOVIEPILOT",  CCOnlineRefTypeHelper.REGEX_MVPT, null,                                   Resources.ICN_REF_3, Resources.ICN_REF_3_BUTTON),
+	THEMOVIEDB (4, "tmdb", "CCOnlineRefType.THEMOVIEDB",  CCOnlineRefTypeHelper.REGEX_TMDB, CCOnlineRefTypeHelper.REGEX_PASTE_TMDB, Resources.ICN_REF_4, Resources.ICN_REF_4_BUTTON),
+	PROXERME   (5, "prox", "CCOnlineRefType.PROXERME",    CCOnlineRefTypeHelper.REGEX_PROX, null,                                   Resources.ICN_REF_5, Resources.ICN_REF_5_BUTTON),
+	MYANIMELIST(6, "myal", "CCOnlineRefType.MYANIMELIST", CCOnlineRefTypeHelper.REGEX_MYAL, CCOnlineRefTypeHelper.REGEX_PASTE_MYAL, Resources.ICN_REF_6, Resources.ICN_REF_6_BUTTON),
+	ANILIST    (7, "anil", "CCOnlineRefType.ANILIST",     CCOnlineRefTypeHelper.REGEX_ANIL, CCOnlineRefTypeHelper.REGEX_PASTE_ANIL, Resources.ICN_REF_7, Resources.ICN_REF_7_BUTTON);
 	
-	private static final Pattern REGEX_IMDB = Pattern.compile("^tt[0-9]+$"); //$NON-NLS-1$
-	private static final Pattern REGEX_AMZN = Pattern.compile("^[A-Z0-9]+$"); //$NON-NLS-1$
-	private static final Pattern REGEX_MVPT = Pattern.compile("^(movies|serie)/.+$"); //$NON-NLS-1$
-	private static final Pattern REGEX_TMDB = Pattern.compile("^(movie|tv)/[0-9]+$"); //$NON-NLS-1$
-	private static final Pattern REGEX_PROX = Pattern.compile("^[0-9]+$"); //$NON-NLS-1$
-	private static final Pattern REGEX_MYAL = Pattern.compile("^[0-9]+$"); //$NON-NLS-1$
-	private static final Pattern REGEX_ANIL = Pattern.compile("^[0-9]+$"); //$NON-NLS-1$
-
-	private static final Pattern REGEX_PASTE_IMDB = Pattern.compile("^(http://|https://)?(www\\.)?imdb\\.(com|de)/title/(?<id>tt[0-9]+)(/.*)?(\\?.*)?$"); //$NON-NLS-1$
-	private static final Pattern REGEX_PASTE_TMDB = Pattern.compile("^(http://|https://)?(www\\.)?themoviedb\\.org/(?<id>(movie|tv)/[0-9]+)(\\-.*)?(/.*)?(\\?.*)?$"); //$NON-NLS-1$
-	private static final Pattern REGEX_PASTE_MYAL = Pattern.compile("^(http://|https://)?(www\\.)?myanimelist\\.net/anime/(?<id>[0-9]+)(/.*)?(\\?.*)?$"); //$NON-NLS-1$
-	private static final Pattern REGEX_PASTE_PROX = Pattern.compile("^(http://|https://)?(www\\.)?proxer\\.me/info/(?<id>[0-9]+)(/.*)?(\\?.*)?$"); //$NON-NLS-1$
-	private static final Pattern REGEX_PASTE_ANIL = Pattern.compile("^(http://|https://)?(www\\.)?anilist\\.co/anime/(?<id>[0-9]+)(/.*)?(\\?.*)?$"); //$NON-NLS-1$
-	
-	private final static String IDENTIFIER[] = {
-		"",   			//$NON-NLS-1$
-		"imdb",   		//$NON-NLS-1$
-		"amzn",   		//$NON-NLS-1$
-		"mvpt",  		//$NON-NLS-1$
-		"tmdb",   		//$NON-NLS-1$
-		"prox",   		//$NON-NLS-1$
-		"myal",   		//$NON-NLS-1$
-		"anil",   		//$NON-NLS-1$
-	};
-	
-	private final static String NAMES[] = {
-		LocaleBundle.getString("CCOnlineRefType.NONE"),	       //$NON-NLS-1$
-		LocaleBundle.getString("CCOnlineRefType.IMDB"),        //$NON-NLS-1$
-		LocaleBundle.getString("CCOnlineRefType.AMAZON"),      //$NON-NLS-1$
-		LocaleBundle.getString("CCOnlineRefType.MOVIEPILOT"),  //$NON-NLS-1$
-		LocaleBundle.getString("CCOnlineRefType.THEMOVIEDB"),  //$NON-NLS-1$
-		LocaleBundle.getString("CCOnlineRefType.PROXERME"),    //$NON-NLS-1$
-		LocaleBundle.getString("CCOnlineRefType.MYANIMELIST"), //$NON-NLS-1$
-		LocaleBundle.getString("CCOnlineRefType.ANILIST"),     //$NON-NLS-1$
-	};
-	
-	private int id;
+	private final int id;
+	private final String identifier;
+	private final String name;
+	private final Pattern regexVerification;
+	private final Pattern regexPaste;
+	private final MultiIconRef icon;
+	private final IconRef iconButton;
 
 	private static EnumWrapper<CCOnlineRefType> wrapper = new EnumWrapper<>(NONE);
 
-	private CCOnlineRefType(int val) {
-		id = val;
+	private CCOnlineRefType(int refid, String strid, String bundleid, Pattern regex_value, Pattern regex_paste, MultiIconRef icnSquare, IconRef icnButton) {
+		id                = refid;
+		identifier        = strid;
+		name              = LocaleBundle.getString(bundleid);
+		regexVerification = regex_value;
+		regexPaste        = regex_paste;
+		icon              = icnSquare;
+		iconButton        = icnButton;
 	}
 	
 	public static EnumWrapper<CCOnlineRefType> getWrapper() {
@@ -82,116 +62,40 @@ public enum CCOnlineRefType implements ContinoousEnum<CCOnlineRefType> {
 	
 	@Override
 	public String[] getList() {
-		return NAMES;
+		return CCStreams.iterate(wrapper.allValues()).map(p -> p.name).toArray(new String[0]);
 	}
 	
 	public String getIdentifier() {
-		return IDENTIFIER[asInt()];
+		return identifier;
 	}
 	
 	@Override
 	public String asString() {
-		return NAMES[asInt()];
+		return name;
 	}
 
 	public static CCOnlineRefType parse(String strtype) throws OnlineRefFormatException {
-		for (int i = 0; i < IDENTIFIER.length; i++) {
-			if (IDENTIFIER[i].equalsIgnoreCase(strtype)) return CCOnlineRefType.values()[i];
+		for (CCOnlineRefType val : wrapper.allValues()) {
+			if (val.identifier.equalsIgnoreCase(strtype)) return val;
 		}
 		
 		throw new OnlineRefFormatException(strtype);
 	}
 
 	public Icon getIcon() {
-		switch (this) {
-		case NONE:
-			return CachedResourceLoader.getIcon(Resources.ICN_REF_0.icon32x32);
-		case IMDB:
-			return CachedResourceLoader.getIcon(Resources.ICN_REF_1.icon32x32);
-		case AMAZON:
-			return CachedResourceLoader.getIcon(Resources.ICN_REF_2.icon32x32);
-		case MOVIEPILOT:
-			return CachedResourceLoader.getIcon(Resources.ICN_REF_3.icon32x32);
-		case THEMOVIEDB:
-			return CachedResourceLoader.getIcon(Resources.ICN_REF_4.icon32x32);
-		case PROXERME:
-			return CachedResourceLoader.getIcon(Resources.ICN_REF_5.icon32x32);
-		case MYANIMELIST:
-			return CachedResourceLoader.getIcon(Resources.ICN_REF_6.icon32x32);
-		case ANILIST:
-			return CachedResourceLoader.getIcon(Resources.ICN_REF_7.icon32x32);
-		default:
-			return null;
-		}
+		return CachedResourceLoader.getIcon(icon.icon32x32);
 	}
 
 	public Icon getIcon16x16() {
-		switch (this) {
-		case NONE:
-			return CachedResourceLoader.getIcon(Resources.ICN_REF_0.icon16x16);
-		case IMDB:
-			return CachedResourceLoader.getIcon(Resources.ICN_REF_1.icon16x16);
-		case AMAZON:
-			return CachedResourceLoader.getIcon(Resources.ICN_REF_2.icon16x16);
-		case MOVIEPILOT:
-			return CachedResourceLoader.getIcon(Resources.ICN_REF_3.icon16x16);
-		case THEMOVIEDB:
-			return CachedResourceLoader.getIcon(Resources.ICN_REF_4.icon16x16);
-		case PROXERME:
-			return CachedResourceLoader.getIcon(Resources.ICN_REF_5.icon16x16);
-		case MYANIMELIST:
-			return CachedResourceLoader.getIcon(Resources.ICN_REF_6.icon16x16);
-		case ANILIST:
-			return CachedResourceLoader.getIcon(Resources.ICN_REF_7.icon16x16);
-		default:
-			return null;
-		}
+		return CachedResourceLoader.getIcon(icon.icon16x16);
 	}
 
 	public Icon getIconButton() {
-		switch (this) {
-		case NONE:
-			return CachedResourceLoader.getIcon(Resources.ICN_REF_0_BUTTON);
-		case IMDB:
-			return CachedResourceLoader.getIcon(Resources.ICN_REF_1_BUTTON);
-		case AMAZON:
-			return CachedResourceLoader.getIcon(Resources.ICN_REF_2_BUTTON);
-		case MOVIEPILOT:
-			return CachedResourceLoader.getIcon(Resources.ICN_REF_3_BUTTON);
-		case THEMOVIEDB:
-			return CachedResourceLoader.getIcon(Resources.ICN_REF_4_BUTTON);
-		case PROXERME:
-			return CachedResourceLoader.getIcon(Resources.ICN_REF_5_BUTTON);
-		case MYANIMELIST:
-			return CachedResourceLoader.getIcon(Resources.ICN_REF_6_BUTTON);
-		case ANILIST:
-			return CachedResourceLoader.getIcon(Resources.ICN_REF_7_BUTTON);
-		default:
-			return null;
-		}
+		return CachedResourceLoader.getIcon(iconButton);
 	}
 	
 	public boolean isValid(String id) {
-		switch (this) {
-		case NONE:
-			return id.isEmpty();
-		case IMDB:
-			return REGEX_IMDB.matcher(id).matches();
-		case AMAZON:
-			return REGEX_AMZN.matcher(id).matches();
-		case MOVIEPILOT:
-			return REGEX_MVPT.matcher(id).matches();
-		case THEMOVIEDB:
-			return REGEX_TMDB.matcher(id).matches();
-		case PROXERME:
-			return REGEX_PROX.matcher(id).matches();
-		case MYANIMELIST:
-			return REGEX_MYAL.matcher(id).matches();
-		case ANILIST:
-			return REGEX_ANIL.matcher(id).matches();
-		default:
-			return false;
-		}
+		return regexVerification.matcher(id).matches();
 	}
 
 	public static CCOnlineRefType guessType(String id) {
@@ -205,34 +109,11 @@ public enum CCOnlineRefType implements ContinoousEnum<CCOnlineRefType> {
 		}
 		return result;
 	}
-
-	@SuppressWarnings("nls")
+	
 	public static Tuple<CCOnlineRefType, String> extractType(String input) {
-		Matcher matcher;
-		
-		matcher = REGEX_PASTE_IMDB.matcher(input);
-		if (matcher.find()) {
-			return Tuple.Create(CCOnlineRefType.IMDB, matcher.group("id"));
-		}
-		
-		matcher = REGEX_PASTE_TMDB.matcher(input);
-		if (matcher.find()) {
-			return Tuple.Create(CCOnlineRefType.THEMOVIEDB, matcher.group("id"));
-		}
-		
-		matcher = REGEX_PASTE_MYAL.matcher(input);
-		if (matcher.find()) {
-			return Tuple.Create(CCOnlineRefType.MYANIMELIST, matcher.group("id"));
-		}
-		
-		matcher = REGEX_PASTE_PROX.matcher(input);
-		if (matcher.find()) {
-			return Tuple.Create(CCOnlineRefType.PROXERME, matcher.group("id"));
-		}
-		
-		matcher = REGEX_PASTE_ANIL.matcher(input);
-		if (matcher.find()) {
-			return Tuple.Create(CCOnlineRefType.ANILIST, matcher.group("id"));
+		for (CCOnlineRefType val : CCStreams.iterate(wrapper.allValues()).filter(v -> v.regexPaste != null)) {
+			Matcher matcher = val.regexPaste.matcher(input);
+			if (matcher.find()) return Tuple.Create(val, matcher.group("id"));
 		}
 		
 		return null;

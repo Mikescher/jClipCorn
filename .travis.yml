@@ -8,7 +8,7 @@ jdk:
 before_install:
  - chmod +x gradlew
 
-install: ./gradlew fatJar
+install: ./gradlew jar
 
 script: 
  - ./gradlew check

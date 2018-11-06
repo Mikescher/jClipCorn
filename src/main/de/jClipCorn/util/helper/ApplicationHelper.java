@@ -8,6 +8,7 @@ import java.util.List;
 
 import de.jClipCorn.Main;
 import de.jClipCorn.gui.frames.mainFrame.MainFrame;
+import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.util.formatter.PathFormatter;
 
@@ -93,5 +94,15 @@ public class ApplicationHelper {
 
 	public static String getCurrentUsername() {
 		return System.getProperty("user.name"); //$NON-NLS-1$
+	}
+
+	@SuppressWarnings("nls")
+	public static String getNullFile() {
+		if (isWindows()) return "NUL";
+		if (isUnix())    return "/dev/null";
+		if (isMac())     return "/dev/null";
+		
+		CCLog.addError(LocaleBundle.getString("LogMessage.UnknownOperatingSystem"));
+		return "";
 	}
 }

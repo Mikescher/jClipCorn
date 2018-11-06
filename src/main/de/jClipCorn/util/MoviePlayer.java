@@ -99,7 +99,12 @@ public class MoviePlayer {
 			}
 			
 			try {
-				new ProcessBuilder(parameters).start();
+				
+				ProcessBuilder pb = new ProcessBuilder(parameters);
+				pb.redirectOutput(new File(ApplicationHelper.getNullFile()));
+				pb.redirectError(new File(ApplicationHelper.getNullFile()));
+				pb.start();
+				
 			} catch (IOException e) {
 				CCLog.addError(e);
 			}

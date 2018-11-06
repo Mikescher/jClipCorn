@@ -51,6 +51,7 @@ public class JSingleReferenceChooser extends JPanel {
 		cbxType.setRenderer(new RefChooserComboBoxRenderer());
 		cbxType.setEditor(new RefChooserComboBoxEditor(cbxType));
 		cbxType.setEditable(true);
+		cbxType.setMaximumRowCount(16);
 
 		edID = new JTextField();
 		add(edID, BorderLayout.CENTER);

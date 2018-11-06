@@ -61,6 +61,7 @@ public class JSingleSubReferenceChooser extends JPanel {
 		cbxType.setRenderer(new RefChooserComboBoxRenderer());
 		cbxType.setEditor(new RefChooserComboBoxEditor(cbxType));
 		cbxType.setEditable(true);
+		cbxType.setMaximumRowCount(16);
 
 		edID = new JTextField();
 		add(edID, "2, 1, fill, fill"); //$NON-NLS-1$

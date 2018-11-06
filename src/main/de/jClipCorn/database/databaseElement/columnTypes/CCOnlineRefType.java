@@ -25,7 +25,8 @@ public enum CCOnlineRefType implements ContinoousEnum<CCOnlineRefType> {
 	THEMOVIEDB (4, "tmdb", "CCOnlineRefType.THEMOVIEDB",  CCOnlineRefTypeHelper.REGEX_TMDB, CCOnlineRefTypeHelper.REGEX_PASTE_TMDB, Resources.ICN_REF_4, Resources.ICN_REF_4_BUTTON),
 	PROXERME   (5, "prox", "CCOnlineRefType.PROXERME",    CCOnlineRefTypeHelper.REGEX_PROX, null,                                   Resources.ICN_REF_5, Resources.ICN_REF_5_BUTTON),
 	MYANIMELIST(6, "myal", "CCOnlineRefType.MYANIMELIST", CCOnlineRefTypeHelper.REGEX_MYAL, CCOnlineRefTypeHelper.REGEX_PASTE_MYAL, Resources.ICN_REF_6, Resources.ICN_REF_6_BUTTON),
-	ANILIST    (7, "anil", "CCOnlineRefType.ANILIST",     CCOnlineRefTypeHelper.REGEX_ANIL, CCOnlineRefTypeHelper.REGEX_PASTE_ANIL, Resources.ICN_REF_7, Resources.ICN_REF_7_BUTTON);
+	ANILIST    (7, "anil", "CCOnlineRefType.ANILIST",     CCOnlineRefTypeHelper.REGEX_ANIL, CCOnlineRefTypeHelper.REGEX_PASTE_ANIL, Resources.ICN_REF_7, Resources.ICN_REF_7_BUTTON),
+	ANIMEPLANET(8, "anpl", "CCOnlineRefType.ANIMEPLANET", CCOnlineRefTypeHelper.REGEX_ANPL, CCOnlineRefTypeHelper.REGEX_PASTE_ANPL, Resources.ICN_REF_8, Resources.ICN_REF_8_BUTTON);
 	
 	private final int id;
 	private final String identifier;

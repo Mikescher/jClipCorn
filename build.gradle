@@ -33,12 +33,15 @@ ext.rexMainVers = {-> java.util.regex.Pattern.compile('(?<=\\/\\*<gradle_version
 ext.rexMainBeta = {-> java.util.regex.Pattern.compile('(?<=boolean\\s{1,10}BETA\\s{1,10}=\\s{1,10})(false|true)(?=;)') }
 
 ext.extractVersion = {-> file('src/main/de/jClipCorn/Main.java').text.findAll(rexMainVers())[0] }
-ext.isBetaRelease  = {-> file('src/main/de/jClipCorn/Main.java').text.findAll(rexMainBeta()) == "true" }
+ext.extractProjectVersion = {-> extractVersion() /*+ (isBetaRelease() ? ("-beta") : ("")) */ }
+ext.isBetaRelease  = {-> file('src/main/de/jClipCorn/Main.java').text.findAll(rexMainBeta())[0] == "true" }
+
+ext.make3Dot = {i -> i.findAll("^[0-9]+\\.[0-9]+\\.[0-9]+")[0] }
 
 project.ext {
 	appmain    = 'de.jClipCorn.Main'
 
-	appversion = {-> extractVersion() + (isBetaRelease() ? ("-beta") : (""))}()
+	appversion = extractProjectVersion()
 
 	appname    = 'jClipCorn'
 }
@@ -49,6 +52,20 @@ targetCompatibility = 1.8
 mainClassName = project.appmain
 
 compileJava.options.encoding = 'UTF-8'
+
+//
+// Direct Callable:
+// ================
+// 
+// [betaJar]          Used by local   - create a new beta version, increment version etc
+// [tryCreateRelease] Used by jenkins - build new release if git tag is set, increment version etc
+//
+// Other:
+// ======
+//
+// [anyReleaseJar] create release/beta, depending on config in Main.java
+// [changelog]     create changelog
+//
 
 jar {
 	manifest {
@@ -61,31 +78,15 @@ jar {
 	version = project.appversion
 }
 
-task fatJar(type: Jar) { //  ->  file ends up in ./build/libs/smth.jar
+task anyReleaseJar(type: Jar) {
 	manifest {
-		attributes 'Implementation-Title':   project.appname,  
-				   'Implementation-Version': project.version,
-				   'Main-Class':             project.appmain
-	}
-
-	baseName = project.appname + '_fat'
-	version  = project.appversion
-
-	archiveName = "${baseName} ${version}.${extension}"
-
-	from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
-	with jar
-}
-
-task releaseJar(type: Jar) {
-	manifest {
-		attributes 'Implementation-Title':   project.appname,  
+		attributes 'Implementation-Title':   project.appname,
 				   'Implementation-Version': project.version,
 				   'Main-Class':             project.appmain
 	}
 
 	baseName       = project.appname
-	version        = project.appversion
+	version        = extractProjectVersion()
 	destinationDir = file("$rootDir/mybuilds")
 	archiveName    = "${baseName} ${version}.${extension}"
 
@@ -96,13 +97,13 @@ task releaseJar(type: Jar) {
 		{
 			new File('launch4j/launch4j.cfg.xml').write createLaunch4jConfig()
 
-			def stdout = ['launch4j/launch4jc.jar', 'launch4j.cfg.xml'].execute(null, new File("launch4j")).text
+			def stdout = ['java', '-jar', 'launch4j/launch4jc.jar', 'launch4j.cfg.xml'].execute(null, new File("launch4j")).text
 			println stdout
 
 			new File('launch4j/launch4j.cfg.xml').delete()
+
+			createChangelog()
 		}
-		
-		createChangelog()
 	}
 }
 
@@ -112,6 +113,9 @@ task tryCreateRelease() << {
     def mainContent = new File('src/main/de/jClipCorn/Main.java').text
     def currVersion = mainContent.findAll(rexMainVers())[0]
     
+    tagVersion  = make3Dot(tagVersion)
+    currVersion = make3Dot(currVersion)
+
     println "Version (Tag):  " + tagVersion
     println "Version (Code): " + currVersion
     
@@ -121,7 +125,7 @@ task tryCreateRelease() << {
         println "This version was already built - skip deployment"
     } else {
         mainContent = mainContent.replaceFirst(rexMainVers(), tagVersion);
-        mainContent = mainContent.replaceFirst(rexMainBeta(), "boolean BETA = false;");
+        mainContent = mainContent.replaceFirst(rexMainBeta(), "false");
         
         println ""
         println "==========================================================="
@@ -136,14 +140,38 @@ task tryCreateRelease() << {
         new File(".do_publish_release").createNewFile()
         
         // Do build
-        tryCreateRelease.finalizedBy releaseJar
+        tryCreateRelease.finalizedBy anyReleaseJar
     }
 }
+
+task betaJar() << {
+    def mainContent = new File('src/main/de/jClipCorn/Main.java').text
+    def currVersion = mainContent.findAll(rexMainVers())[0]
+
+    def lastDot = 0
+    if (make3Dot(currVersion) != currVersion) lastDot = currVersion.substring(make3Dot(currVersion).length()+1) as Integer
+    def newVersion = make3Dot(currVersion) + "." + (lastDot+1);
+
+    println "";
+    println "Update version from " + currVersion + " to " + newVersion;
+    println "Setting BETA flag from " + isBetaRelease() + " to true";
+    println "";
+
+    mainContent = mainContent.replaceFirst(rexMainVers(), newVersion);
+    mainContent = mainContent.replaceFirst(rexMainBeta(), "true");
+        
+    new File('src/main/de/jClipCorn/Main.java').write mainContent
+
+    project.appversion = extractProjectVersion()
+    version = extractProjectVersion()
+    anyReleaseJar.version = extractProjectVersion()
+    anyReleaseJar.archiveName    = "${anyReleaseJar.baseName} ${anyReleaseJar.version}.${anyReleaseJar.extension}"
+}
+betaJar.finalizedBy anyReleaseJar
 
 task changelog << {
 	createChangelog()
 }
-
 
 ext.createChangelog = {-> 
     def log = ['git', 'log', "--format=%H_____INNERDEL_____%ad_____INNERDEL_____%B_____OUTERDELIM_____"].execute().text.trim().split('_____OUTERDELIM_____')

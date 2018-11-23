@@ -1,9 +1,13 @@
 package de.jClipCorn.table.filter.customFilter.aggregators;
 
+import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.table.filter.AbstractCustomFilter;
+import de.jClipCorn.table.filter.FilterSerializationConfig;
+import de.jClipCorn.table.filter.filterConfig.CustomChildConfig;
+import de.jClipCorn.table.filter.filterConfig.CustomFilterConfig;
 
 public class CustomAnySeasonAggregator extends CustomAggregator {
 	
@@ -14,6 +18,20 @@ public class CustomAnySeasonAggregator extends CustomAggregator {
 		}
 		
 		return false;
+	}
+	
+	@Override
+	@SuppressWarnings("nls")
+	protected void initSerialization(FilterSerializationConfig cfg) {
+		cfg.addChild("filter", (d) -> this.setProcessorFilter(d),  () -> this.getProcessingFilter());
+	}
+
+	@Override
+	public CustomFilterConfig[] createConfig(CCMovieList ml) {
+		return new CustomFilterConfig[]
+		{
+			new CustomChildConfig(() -> getProcessingFilter(), a -> setProcessorFilter(a), LocaleBundle.getString("FilterTree.Custom.CustomOperatorFilterDialog.ChangeFilter.text")), //$NON-NLS-1$
+		};
 	}
 
 	@Override

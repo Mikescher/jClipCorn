@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.jClipCorn.database.CCMovieList;
+import de.jClipCorn.gui.resources.IconRef;
+import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.table.filter.AbstractCustomFilter;
 import de.jClipCorn.table.filter.FilterSerializationConfig;
 import de.jClipCorn.table.filter.filterConfig.CustomFilterConfig;
@@ -37,50 +39,16 @@ public abstract class CustomOperator extends AbstractCustomFilter {
 
 	@Override
 	protected void initSerialization(FilterSerializationConfig cfg) {
-		// manual
-	}
-
-	@SuppressWarnings("nls")
-	@Override
-	public String exportToString() {
-		StringBuilder b = new StringBuilder();
-		b.append("[");
-		b.append(getID() + "");
-		b.append("|");
-		for (int i = 0; i < list.size(); i++) {
-			if (i != 0) {
-				b.append(",");
-			}
-			b.append(list.get(i).exportToString());
-		}
-		b.append("]");
-		
-		return b.toString();
-	}
-
-	@Override
-	public boolean importFromString(String txt) {
-		list.clear();
-		
-		if (txt == null) return false;
-		
-		int id = AbstractCustomFilter.getIDFromExport(txt);
-		if (id < 0) return false;
-		String params = FilterSerializationConfig.getParameterFromExport(txt);
-		if (params == null) return false;
-		String[] paramlist = FilterSerializationConfig.splitParameterFromExport(params);
-		
-		for (int i = 0; i < paramlist.length; i++) {
-			AbstractCustomFilter f = AbstractCustomFilter.createFilterFromExport(paramlist[i]);
-			if (f == null) return false;
-			add(f);
-		}
-		
-		return true;
+		cfg.addChildren("children", (d) -> list = new ArrayList<>(d),  () -> list); //$NON-NLS-1$
 	}
 
 	@Override
 	public CustomFilterConfig[] createConfig(CCMovieList ml) {
 		return new CustomFilterConfig[0];
+	}
+
+	@Override
+	public IconRef getListIcon() {
+		return Resources.ICN_FILTER_OPERATOR;
 	}
 }

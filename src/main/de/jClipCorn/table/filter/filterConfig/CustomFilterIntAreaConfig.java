@@ -139,7 +139,11 @@ public class CustomFilterIntAreaConfig extends CustomFilterConfig {
 	
 	private JSpinner createSpinner(int value) {
 		JSpinner s = new JSpinner();
-		s.setModel(new SpinnerNumberModel(1, minimum, maximum, 1));
+		
+		if (maximum != null && maximum instanceof Integer && value > (int)maximum) value = (int)maximum;
+		if (minimum != null && minimum instanceof Integer && value < (int)minimum) value = (int)minimum;
+		
+		s.setModel(new SpinnerNumberModel(value, minimum, maximum, 1));
 		s.setEditor(new JSpinner.NumberEditor(s, "0")); //$NON-NLS-1$
 		s.setValue(value);
 		return s;

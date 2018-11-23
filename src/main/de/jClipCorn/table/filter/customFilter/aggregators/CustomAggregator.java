@@ -3,15 +3,13 @@ package de.jClipCorn.table.filter.customFilter.aggregators;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.jClipCorn.database.CCMovieList;
+import de.jClipCorn.gui.resources.IconRef;
+import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.table.filter.AbstractCustomFilter;
 import de.jClipCorn.table.filter.AbstractCustomStructureElementFilter;
-import de.jClipCorn.table.filter.FilterSerializationConfig;
 import de.jClipCorn.table.filter.customFilter.operators.CustomAndOperator;
-import de.jClipCorn.table.filter.filterConfig.CustomFilterConfig;
 
 public abstract class CustomAggregator extends AbstractCustomStructureElementFilter {
-
 	protected AbstractCustomFilter _filter = new CustomAndOperator();
 
 	@Override
@@ -21,39 +19,6 @@ public abstract class CustomAggregator extends AbstractCustomStructureElementFil
 		return result;
 	}
 	
-	@Override
-	protected void initSerialization(FilterSerializationConfig cfg) {
-		// manual
-	}
-
-	@Override
-	@SuppressWarnings("nls")
-	public String exportToString() {
-		StringBuilder b = new StringBuilder();
-		b.append("[");
-		b.append(getID() + "");
-		b.append("|");
-		b.append(_filter.exportToString());
-		b.append("]");
-		
-		return b.toString();
-	}
-
-	@Override
-	public boolean importFromString(String txt) {
-		if (txt == null) return false;
-		
-		String params = FilterSerializationConfig.getParameterFromExport(txt);
-		if (params == null) return false;
-
-		String[] paramlist = FilterSerializationConfig.splitParameterFromExport(params);
-		if (paramlist.length != 1) return false;
-
-		_filter = AbstractCustomFilter.createFilterFromExport(paramlist[0]);
-		
-		return true;
-	}
-
 	public AbstractCustomFilter getProcessingFilter() {
 		return _filter;
 	}
@@ -63,7 +28,7 @@ public abstract class CustomAggregator extends AbstractCustomStructureElementFil
 	}
 
 	@Override
-	public CustomFilterConfig[] createConfig(CCMovieList ml) {
-		return new CustomFilterConfig[0];
+	public IconRef getListIcon() {
+		return Resources.ICN_FILTER_AGGREGATOR;
 	}
 }

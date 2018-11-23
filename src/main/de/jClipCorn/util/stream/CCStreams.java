@@ -25,4 +25,8 @@ public final class CCStreams {
 	public static <T> CCStream<T> iterate(Enumeration<T> ls) {
 		return iterate(Collections.list(ls));
 	}
+
+	public static CounterStream countRange(int start, int end) {
+		return new CounterStream(start, end-start); // start included | end excluded
+	}
 }

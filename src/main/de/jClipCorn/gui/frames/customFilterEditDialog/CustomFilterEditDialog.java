@@ -7,8 +7,6 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
@@ -40,7 +38,6 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.CachedResourceLoader;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.table.filter.AbstractCustomFilter;
-import de.jClipCorn.table.filter.customFilter.aggregators.CustomAggregator;
 import de.jClipCorn.table.filter.customFilter.operators.CustomOperator;
 import de.jClipCorn.table.filter.filterConfig.CustomFilterConfig;
 import de.jClipCorn.util.helper.DialogHelper;
@@ -328,12 +325,6 @@ public class CustomFilterEditDialog extends JDialog {
 			createEditPanel_Operator(pnl, filter);
 			lblCaption.setText(filter.getPrecreateName());
 			
-		} else if (f instanceof CustomAggregator) {
-			
-			CustomAggregator filter = (CustomAggregator)f;
-			createEditPanel_Aggregator(pnl, filter);
-			lblCaption.setText(filter.getPrecreateName());
-			
 		} else {
 			
 			AbstractCustomFilter filter = f;
@@ -407,30 +398,6 @@ public class CustomFilterEditDialog extends JDialog {
 		}
 	}
 
-	private void createEditPanel_Aggregator(JPanel pnl, CustomAggregator filter) {
-
-		List<AbstractCustomFilter> acffilter = new ArrayList<>();
-		for (AbstractCustomFilter f : AbstractCustomFilter.getAllOperatorFilter()) acffilter.add(f);
-		for (AbstractCustomFilter f : AbstractCustomFilter.getAllSimpleFilter()) acffilter.add(f);
-		
-		JComboBox<AbstractCustomFilter> cbxFilter = new JComboBox<>();
-		cbxFilter.setModel(new DefaultComboBoxModel<>(acffilter.toArray(new AbstractCustomFilter[acffilter.size()])));
-		cbxFilter.setRenderer(new CustomFilterEditFilterComboboxRenderer());
-		pnl.add(cbxFilter, "1, 2, fill, default"); //$NON-NLS-1$
-		
-		JButton btnAddFilter = new JButton(LocaleBundle.getString("FilterTree.Custom.CustomOperatorFilterDialog.ChangeFilter.text")); //$NON-NLS-1$
-		btnAddFilter.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if (cbxFilter.getSelectedIndex() >= 0) {
-					filter.setProcessorFilter(((AbstractCustomFilter)cbxFilter.getSelectedItem()).createNew());
-					updateTree();
-				}
-			}
-		});
-		pnl.add(btnAddFilter, "1, 4"); //$NON-NLS-1$
-	}
-	
 	private void createEditPanel_Simple(JPanel pnl, AbstractCustomFilter filter) {
 		
 		int row = 2;

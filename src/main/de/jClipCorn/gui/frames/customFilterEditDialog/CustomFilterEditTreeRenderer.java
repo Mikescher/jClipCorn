@@ -7,10 +7,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 
 import de.jClipCorn.gui.resources.CachedResourceLoader;
-import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.table.filter.AbstractCustomFilter;
-import de.jClipCorn.table.filter.customFilter.aggregators.CustomAggregator;
-import de.jClipCorn.table.filter.customFilter.operators.CustomOperator;
 
 public class CustomFilterEditTreeRenderer extends DefaultTreeCellRenderer {
 	private static final long serialVersionUID = -1327828202075208415L;
@@ -23,12 +20,7 @@ public class CustomFilterEditTreeRenderer extends DefaultTreeCellRenderer {
 			AbstractCustomFilter node = (AbstractCustomFilter)((DefaultMutableTreeNode)value).getUserObject();
 			if (node != null) {
 				
-				if (node instanceof CustomOperator)
-					setIcon(CachedResourceLoader.getIcon(Resources.ICN_SIDEBAR_CUSTOM_OPERATOR));
-				else if (node instanceof CustomAggregator)
-					setIcon(CachedResourceLoader.getIcon(Resources.ICN_SIDEBAR_CUSTOM_AGGREGATOR));
-				else
-					setIcon(CachedResourceLoader.getIcon(Resources.ICN_SIDEBAR_CUSTOM));
+				setIcon(CachedResourceLoader.getIcon(node.getListIcon()));
 				
 				setText(node.getName());
 				

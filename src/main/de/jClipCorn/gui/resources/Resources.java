@@ -218,27 +218,33 @@ public class Resources {
 	
 	
 	// #############################################  <SIDEBAR>  ############################################
-	public final static IconRef ICN_SIDEBAR_ALL	 				= register16x16Icon("/icons/sidebar/jar_empty.png");
-	public final static IconRef ICN_SIDEBAR_ZYKLUS 				= register16x16Icon("/icons/sidebar/asterisk_orange.png");
-	public final static IconRef ICN_SIDEBAR_GROUPS 				= register16x16Icon("/icons/sidebar/function_recently_used.png");
-	public final static IconRef ICN_SIDEBAR_GENRE 				= register16x16Icon("/icons/sidebar/book_spelling.png");
-	public final static IconRef ICN_SIDEBAR_ONLINESCORE			= register16x16Icon("/icons/sidebar/star.png");
-	public final static MultiIconRef ICN_SIDEBAR_SCORE 			= registerMultisizeIcon("/icons/sidebar/to_do_list.png");
-	public final static IconRef ICN_SIDEBAR_YEAR	 			= register16x16Icon("/icons/sidebar/calendar.png");
-	public final static IconRef ICN_SIDEBAR_FORMAT 				= register16x16Icon("/icons/sidebar/file_extension_txt.png");
-	public final static IconRef ICN_SIDEBAR_QUALITY 			= register16x16Icon("/icons/sidebar/server_components.png");
-	public final static IconRef ICN_SIDEBAR_TAGS 				= register16x16Icon("/icons/sidebar/tags_cloud.png");
-	public final static IconRef ICN_SIDEBAR_LANGUAGE			= register16x16Icon("/icons/sidebar/flag_red.png");
-	public final static IconRef ICN_SIDEBAR_TYP	 				= register16x16Icon("/icons/sidebar/color_swatch.png");
-	public final static IconRef ICN_SIDEBAR_VIEWED 				= register16x16Icon("/icons/sidebar/viewed.png");
-	public final static IconRef ICN_SIDEBAR_UNVIEWED			= register16x16Icon("/icons/sidebar/unviewed.png");
-	public final static IconRef ICN_SIDEBAR_LATER				= register16x16Icon("/icons/sidebar/later.png");
-	public final static IconRef ICN_SIDEBAR_NEVER				= register16x16Icon("/icons/sidebar/never.png");
-	public final static IconRef ICN_SIDEBAR_PARTIALLY			= register16x16Icon("/icons/sidebar/partially.png");
-	public final static IconRef ICN_SIDEBAR_AGAIN				= register16x16Icon("/icons/sidebar/again.png");
-	public final static IconRef ICN_SIDEBAR_CUSTOM				= register16x16Icon("/icons/sidebar/tag.png");
-	public final static IconRef ICN_SIDEBAR_CUSTOM_OPERATOR 	= register16x16Icon("/icons/sidebar/box_front_open.png");
-	public final static IconRef ICN_SIDEBAR_CUSTOM_AGGREGATOR 	= register16x16Icon("/icons/sidebar/hbox.png");
+	public final static IconRef ICN_SIDEBAR_ALL	 			= register16x16Icon("/icons/sidebar/jar_empty.png");
+	public final static IconRef ICN_SIDEBAR_ZYKLUS 			= register16x16Icon("/icons/sidebar/asterisk_orange.png");
+	public final static IconRef ICN_SIDEBAR_GROUPS 			= register16x16Icon("/icons/sidebar/function_recently_used.png");
+	public final static IconRef ICN_SIDEBAR_GENRE 			= register16x16Icon("/icons/sidebar/book_spelling.png");
+	public final static IconRef ICN_SIDEBAR_ONLINESCORE		= register16x16Icon("/icons/sidebar/star.png");
+	public final static MultiIconRef ICN_SIDEBAR_SCORE 		= registerMultisizeIcon("/icons/sidebar/to_do_list.png");
+	public final static IconRef ICN_SIDEBAR_YEAR	 		= register16x16Icon("/icons/sidebar/calendar.png");
+	public final static IconRef ICN_SIDEBAR_FORMAT 			= register16x16Icon("/icons/sidebar/file_extension_txt.png");
+	public final static IconRef ICN_SIDEBAR_QUALITY 		= register16x16Icon("/icons/sidebar/server_components.png");
+	public final static IconRef ICN_SIDEBAR_TAGS 			= register16x16Icon("/icons/sidebar/tags_cloud.png");
+	public final static IconRef ICN_SIDEBAR_LANGUAGE		= register16x16Icon("/icons/sidebar/flag_red.png");
+	public final static IconRef ICN_SIDEBAR_TYP	 			= register16x16Icon("/icons/sidebar/color_swatch.png");
+	public final static IconRef ICN_SIDEBAR_VIEWED 			= register16x16Icon("/icons/sidebar/viewed.png");
+	public final static IconRef ICN_SIDEBAR_UNVIEWED		= register16x16Icon("/icons/sidebar/unviewed.png");
+	public final static IconRef ICN_SIDEBAR_LATER			= register16x16Icon("/icons/sidebar/later.png");
+	public final static IconRef ICN_SIDEBAR_NEVER			= register16x16Icon("/icons/sidebar/never.png");
+	public final static IconRef ICN_SIDEBAR_PARTIALLY		= register16x16Icon("/icons/sidebar/partially.png");
+	public final static IconRef ICN_SIDEBAR_AGAIN			= register16x16Icon("/icons/sidebar/again.png");
+	public final static IconRef ICN_SIDEBAR_CUSTOM			= register16x16Icon("/icons/sidebar/tag.png");
+	// #############################################  </SIDEBAR>  ###########################################
+
+	
+	// ##############################################  <LOG>  ################################################
+	public final static IconRef ICN_FILTER_METHOD			= register16x16Icon("/icons/filter/tag.png");
+	public final static IconRef ICN_FILTER_OPERATOR 		= register16x16Icon("/icons/filter/box_front_open.png");
+	public final static IconRef ICN_FILTER_AGGREGATOR 		= register16x16Icon("/icons/filter/hbox.png");
+	public final static IconRef ICN_FILTER_COUNTER	 		= register16x16Icon("/icons/filter/counter.png");
 	// #############################################  </SIDEBAR>  ###########################################
 
 	

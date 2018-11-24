@@ -2,6 +2,7 @@ package de.jClipCorn.table.filter.filterConfig;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Random;
 
 import javax.swing.JCheckBox;
 import javax.swing.JComponent;
@@ -37,5 +38,10 @@ public class CustomFilterBoolConfig extends CustomFilterConfig {
 		});
 		
 		return cb;
+	}
+
+	@Override
+	public void setValueRandom(Random r) {
+		valueSetter.invoke(r.nextBoolean());
 	}
 }

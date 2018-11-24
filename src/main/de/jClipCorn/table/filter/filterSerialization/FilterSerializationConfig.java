@@ -1,11 +1,16 @@
-package de.jClipCorn.table.filter;
+package de.jClipCorn.table.filter.filterSerialization;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.regex.Pattern;
+
+import org.apache.commons.lang3.StringUtils;
 
 import de.jClipCorn.Main;
 import de.jClipCorn.gui.log.CCLog;
+import de.jClipCorn.table.filter.AbstractCustomFilter;
+import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.enumextension.ContinoousEnum;
 import de.jClipCorn.util.enumextension.EnumWrapper;
@@ -44,6 +49,8 @@ public class FilterSerializationConfig {
 		}
 	}
 
+	private static final Pattern REGEX_STR_DATA = Pattern.compile("^([0-2][0-9][0-9])*$"); //$NON-NLS-1$
+	
 	private final int ID;
 	private final List<FSCProperty> Properties = new ArrayList<>();
 
@@ -54,10 +61,10 @@ public class FilterSerializationConfig {
 	public void addInt(String pname, Func1to0<Integer> setter, Func0to1<Integer> getter) {
 		Func1to1<String, Boolean> s = v -> 
 		{
-			setter.invoke(Integer.parseInt(v));
+			try { setter.invoke(convertDataToInt(v)); } catch (Exception e) { return false; }
 			return true;
 		};
-		Func0to1<String> g = () -> getter.invoke().toString();
+		Func0to1<String> g = () -> convertIntToData(getter.invoke());
 
 		FSCProperty prop = new FSCProperty(pname, s, g);
 
@@ -69,9 +76,11 @@ public class FilterSerializationConfig {
 	public void addDate(String pname, Func1to0<CCDate> setter, Func0to1<CCDate> getter) {
 		Func1to1<String, Boolean> s = v -> 
 		{
-			try { setter.invoke(CCDate.createFromSQL(v)); return true; } catch (DateFormatException e) { return false; }
+			if (v.length() == 10) try { setter.invoke(CCDate.createFromSQL(v)); return true; } catch (DateFormatException e) { return false; } // old schema
+			if (v.length() ==  8) { setter.invoke(convertDataToDate(v)); return true; }
+			return false;
 		};
-		Func0to1<String> g = () -> getter.invoke().toStringSQL();
+		Func0to1<String> g = () -> convertDateToData(getter.invoke());
 
 		FSCProperty prop = new FSCProperty(pname, s, g);
 
@@ -83,12 +92,12 @@ public class FilterSerializationConfig {
 	public <T extends ContinoousEnum<T>> void addCCEnum(String pname, EnumWrapper<T> wrapper, Func1to0<T> setter, Func0to1<T> getter) {
 		Func1to1<String, Boolean> s = v -> 
 		{
-			T result = wrapper.find(Integer.parseInt(v));
+			T result = wrapper.find(convertDataToInt(v));
 			if (result == null) return false;
 			setter.invoke(result);
 			return true;
 		};
-		Func0to1<String> g = () -> Integer.toString(getter.invoke().asInt());
+		Func0to1<String> g = () -> convertIntToData(getter.invoke().asInt());
 
 		FSCProperty prop = new FSCProperty(pname, s, g);
 
@@ -100,10 +109,16 @@ public class FilterSerializationConfig {
 	public void addString(String pname, Func1to0<String> setter, Func0to1<String> getter) {
 		Func1to1<String, Boolean> s = v -> 
 		{
-			setter.invoke(AbstractCustomFilter.descape(v));
+			try { 
+				if (REGEX_STR_DATA.matcher(v).matches() || v.equals("0"))  //$NON-NLS-1$
+					setter.invoke(convertDataToString(v));
+				else
+					setter.invoke(AbstractCustomFilter.descape(v));  // old schema
+			} catch (Exception e) { return false; }
+			
 			return true;
 		};
-		Func0to1<String> g = () -> AbstractCustomFilter.escape(getter.invoke());
+		Func0to1<String> g = () -> convertStringToData(getter.invoke());
 
 		FSCProperty prop = new FSCProperty(pname, s, g);
 
@@ -115,12 +130,16 @@ public class FilterSerializationConfig {
 	public void addChar(String pname, Func1to0<String> setter, Func0to1<String> getter) {
 		Func1to1<String, Boolean> s = v -> 
 		{
-			String str = AbstractCustomFilter.descape(v);
-			if (str.length() != 1) return false;
-			setter.invoke(str);
-			return true;
+			if (v.length() == 1) { String str = AbstractCustomFilter.descape(v); if (str.length() != 1) return false; setter.invoke(str); return true; } // old schema
+			try {
+				int cpoint = Integer.valueOf(v);
+				if (!Character.isDefined(cpoint)) return false;
+				if (!Character.isValidCodePoint(cpoint)) return false;
+				setter.invoke(StringUtils.leftPad(String.valueOf((char)cpoint), 2, '0'));
+				return true;
+			} catch (Exception e) { return false; }
 		};
-		Func0to1<String> g = () -> AbstractCustomFilter.escape(getter.invoke().substring(0, 1));
+		Func0to1<String> g = () -> String.valueOf((int)getter.invoke().charAt(0));
 
 		FSCProperty prop = new FSCProperty(pname, s, g);
 
@@ -132,7 +151,7 @@ public class FilterSerializationConfig {
 	public void addBool(String pname, Func1to0<Boolean> setter, Func0to1<Boolean> getter) {
 		Func1to1<String, Boolean> s = v -> 
 		{
-			setter.invoke(Integer.parseInt(v) != 0);
+			try { setter.invoke(Integer.parseInt(v) != 0); } catch (Exception e) { return false; }
 			return true;
 		};
 		Func0to1<String> g = () -> getter.invoke() ? "1" : "0"; //$NON-NLS-1$ //$NON-NLS-2$
@@ -147,7 +166,9 @@ public class FilterSerializationConfig {
 	public void addChild(String pname, Func1to0<AbstractCustomFilter> setter, Func0to1<AbstractCustomFilter> getter) {
 		Func1to1<String, Boolean> s = v -> 
 		{
-			setter.invoke(AbstractCustomFilter.createFilterFromExport(v));
+			AbstractCustomFilter f = AbstractCustomFilter.createFilterFromExport(v);
+			if (f == null) return false;
+			setter.invoke(f);
 			return true;
 		};
 		Func0to1<String> g = () -> getter.invoke().exportToString();
@@ -162,7 +183,9 @@ public class FilterSerializationConfig {
 	public void addChildren(String pname, Func1to0<List<AbstractCustomFilter>> setter, Func0to1<List<AbstractCustomFilter>> getter) {
 		Func1to1<String[], Boolean> s = v -> 
 		{
-			setter.invoke(CCStreams.iterate(v).map(p -> AbstractCustomFilter.createFilterFromExport(p)).enumerate());
+			List<AbstractCustomFilter> l = CCStreams.iterate(v).map(p -> AbstractCustomFilter.createFilterFromExport(p)).enumerate();
+			if (CCStreams.iterate(l).any(p -> p == null)) return false;
+			setter.invoke(l);
 			return true;
 		};
 		Func0to1<String[]> g = () -> CCStreams.iterate(getter.invoke()).map(p -> p.exportToString()).toArray(new String[0]);
@@ -172,6 +195,58 @@ public class FilterSerializationConfig {
 		Properties.add(prop);
 		
 		validate();
+	}
+	
+	@SuppressWarnings("nls")
+	private String convertIntToData(int v) {
+		return (v>=0) ? Integer.toString(v) : ("0" + Integer.toString(-v));
+	}
+	
+	@SuppressWarnings("nls")
+	private int convertDataToInt(String v) {
+		if (v.equals("0")) return 0;
+		if (v.startsWith("0")) return -1 * Integer.parseInt(v);
+		return Integer.parseInt(v);
+	}
+	
+	private String convertStringToData(String v) {
+		if (Str.isNullOrEmpty(v)) return "0"; //$NON-NLS-1$
+		return CCStreams.iterate(v.getBytes(Str.UTF8)).map(b -> StringUtils.leftPad(String.valueOf(b2i(b)), 3, '0')).stringjoin(b -> b);
+	}
+	
+	private String convertDataToString(String v) {
+		if (v.equals("0")) return Str.Empty; //$NON-NLS-1$
+		
+		byte[] arr = new byte[v.length()/3];
+		
+		for (int i = 0; i < v.length() / 3; i++) {
+			arr[i] = i2b(Integer.valueOf(v.substring(i*3, (i+1)*3)));
+		}
+		
+		return new String(arr, Str.UTF8);
+	}
+	
+	@SuppressWarnings("cast")
+	private int b2i(byte b) {
+		return (((int)b) + 256) % 256;
+	}
+	
+	private byte i2b(int i) {
+		return (i < 128) ? ((byte)i) : ((byte)(i-256));
+	}
+	
+	private String convertDateToData(CCDate v) {
+		return StringUtils.leftPad(String.valueOf(v.getYear()),  4, '0') + 
+		       StringUtils.leftPad(String.valueOf(v.getMonth()), 2, '0') + 
+		       StringUtils.leftPad(String.valueOf(v.getDay()),   2, '0');
+	}
+	
+	private CCDate convertDataToDate(String v) {
+		int y = Integer.valueOf(v.substring(0, 4));
+		int m = Integer.valueOf(v.substring(4, 6));
+		int d = Integer.valueOf(v.substring(6, 8));
+		
+		return CCDate.create(d, m, y);
 	}
 	
 	private void validate() {
@@ -199,11 +274,33 @@ public class FilterSerializationConfig {
 	}
 	
 	public static String getParameterFromExport(String txt) {
-		if (txt.length() < 4) return null;
-		txt = txt.substring(1, txt.length() - 1);
+		if (txt.length() < 3) return null;
+		
 		int pos = txt.indexOf('|');
+		int pos2 = txt.indexOf(']');
+		if ((pos2 < pos || pos == -1) && pos2 >=0) return Str.Empty;
+		
 		if (pos > 3 || pos < 1) return null;
-		return txt.substring(pos + 1);
+				
+		return txt.substring(pos+1, txt.length()-1);
+	}
+	
+	public static int getIDFromExport(String txt) {
+		if (txt.length() < 3) return -1;
+
+		int pos1 = txt.indexOf('|');
+		int pos2 = txt.indexOf(']');
+		if (pos1 < 0) pos1 = Integer.MAX_VALUE;
+		if (pos2 < 0) pos2 = Integer.MAX_VALUE;
+		int pos = Math.min(pos1, pos2);
+		
+		if (pos > 3 || pos < 1) return -1;
+
+		try {
+			return Integer.parseInt(txt.substring(1, pos));
+		} catch (NumberFormatException e) {
+			return -1;
+		}
 	}
 	
 	public static String[] splitParameterFromExport(String txt) {
@@ -251,20 +348,25 @@ public class FilterSerializationConfig {
 
 		b.append("["); //$NON-NLS-1$
 		b.append(ID + ""); //$NON-NLS-1$
-		b.append("|"); //$NON-NLS-1$
-		for (int i=0; i < Properties.size(); i++) {
-			FSCProperty prop = Properties.get(i);
+		if (Properties.isEmpty() || Properties.size()==1 && Properties.get(0).IsParams && Properties.get(0).GetterParams.invoke().length==0) {
 			
-			if (i>0) b.append(","); //$NON-NLS-1$
+			// empty
 			
-			if (!prop.IsParams) {
-				b.append(prop.GetterSingle.invoke());
-			} else {
-				boolean first = true;
-				for (String v : prop.GetterParams.invoke()) {
-					if (!first) b.append(","); //$NON-NLS-1$
-					b.append(v);
-					first = false;
+		} else {
+			b.append("|"); //$NON-NLS-1$
+			for (int i=0; i < Properties.size(); i++) {
+				FSCProperty prop = Properties.get(i);
+				
+				if (!prop.IsParams) {
+					if (i>0) b.append(","); //$NON-NLS-1$
+					b.append(prop.GetterSingle.invoke());
+				} else {
+					boolean first = true;
+					for (String v : prop.GetterParams.invoke()) {
+						if (!first || i>0) b.append(","); //$NON-NLS-1$
+						b.append(v);
+						first = false;
+					}
 				}
 			}
 		}
@@ -291,12 +393,14 @@ public class FilterSerializationConfig {
 				if (!prop.IsParams) {
 
 					boolean b = prop.SetterSingle.invoke(paramsplit[i]);
-					if (!b) return false;
+					if (!b) 
+						return false; 
 					
 				} else {
 
 					boolean b = prop.SetterParams.invoke(CCStreams.countRange(i, paramsplit.length).map(p -> paramsplit[p]).toArray(new String[0]));
-					if (!b) return false;
+					if (!b) 
+						return false;
 					break;
 					
 				}

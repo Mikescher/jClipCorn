@@ -1,5 +1,7 @@
 package de.jClipCorn.table.filter.filterConfig;
 
+import java.util.Random;
+
 import javax.swing.JComponent;
 import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
@@ -46,5 +48,15 @@ public class CustomFilterStringConfig extends CustomFilterConfig {
 		});
 		
 		return tf;
+	}
+
+	@Override
+	public void setValueRandom(Random r) {
+		StringBuilder b = new StringBuilder();
+		int len = r.nextInt(128);
+		for (int i = 0; i < len; i++) {
+			b.append(String.valueOf((char)(Math.abs(r.nextInt())+1)));
+		}
+		valueSetter.invoke(b.toString());
 	}
 }

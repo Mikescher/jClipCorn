@@ -3,6 +3,7 @@ package de.jClipCorn.table.filter.filterConfig;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
+import java.util.Random;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
@@ -45,5 +46,10 @@ public class CustomFilterNamedIntChooserConfig extends CustomFilterConfig {
 		});
 		
 		return cbx;
+	}
+
+	@Override
+	public void setValueRandom(Random r) {
+		valueSetter.invoke(r.nextInt(names.size()));
 	}
 }

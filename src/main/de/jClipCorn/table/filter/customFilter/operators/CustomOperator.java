@@ -7,8 +7,8 @@ import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.gui.resources.IconRef;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.table.filter.AbstractCustomFilter;
-import de.jClipCorn.table.filter.FilterSerializationConfig;
 import de.jClipCorn.table.filter.filterConfig.CustomFilterConfig;
+import de.jClipCorn.table.filter.filterSerialization.FilterSerializationConfig;
 import de.jClipCorn.util.stream.CCStream;
 import de.jClipCorn.util.stream.CCStreams;
 

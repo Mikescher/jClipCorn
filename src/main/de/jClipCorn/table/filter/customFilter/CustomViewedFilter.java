@@ -4,9 +4,9 @@ import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.ICCDatabaseStructureElement;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.table.filter.AbstractCustomFilter;
-import de.jClipCorn.table.filter.FilterSerializationConfig;
 import de.jClipCorn.table.filter.filterConfig.CustomFilterBoolConfig;
 import de.jClipCorn.table.filter.filterConfig.CustomFilterConfig;
+import de.jClipCorn.table.filter.filterSerialization.FilterSerializationConfig;
 
 public class CustomViewedFilter extends AbstractCustomFilter {
 	private boolean viewed = false;

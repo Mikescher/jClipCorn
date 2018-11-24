@@ -2,6 +2,7 @@ package de.jClipCorn.table.filter.filterConfig;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Random;
 
 import javax.swing.JComponent;
 
@@ -38,5 +39,10 @@ public class CustomFilterCharConfig extends CustomFilterConfig {
 		});
 		
 		return tf;
+	}
+
+	@Override
+	public void setValueRandom(Random r) {
+		valueSetter.invoke(String.valueOf((char)r.nextInt()));
 	}
 }

@@ -6,9 +6,9 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCUserScore;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.table.filter.AbstractCustomDatabaseElementFilter;
 import de.jClipCorn.table.filter.AbstractCustomFilter;
-import de.jClipCorn.table.filter.FilterSerializationConfig;
 import de.jClipCorn.table.filter.filterConfig.CustomFilterConfig;
 import de.jClipCorn.table.filter.filterConfig.CustomFilterEnumChooserConfig;
+import de.jClipCorn.table.filter.filterSerialization.FilterSerializationConfig;
 
 public class CustomUserScoreFilter extends AbstractCustomDatabaseElementFilter {
 	private CCUserScore score = CCUserScore.RATING_NO;

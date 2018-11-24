@@ -5,6 +5,8 @@ import java.util.List;
 
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.ICCDatabaseStructureElement;
+import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.gui.resources.IconRef;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.table.filter.customFilter.CustomAddDateFilter;
@@ -42,6 +44,7 @@ import de.jClipCorn.table.filter.customFilter.operators.CustomNorOperator;
 import de.jClipCorn.table.filter.customFilter.operators.CustomOperator;
 import de.jClipCorn.table.filter.customFilter.operators.CustomOrOperator;
 import de.jClipCorn.table.filter.filterConfig.CustomFilterConfig;
+import de.jClipCorn.table.filter.filterSerialization.FilterSerializationConfig;
 import de.jClipCorn.util.comparator.StringComparator;
 import de.jClipCorn.util.stream.CCStream;
 import de.jClipCorn.util.stream.CCStreams;
@@ -108,7 +111,12 @@ public abstract class AbstractCustomFilter {
 	}
 
 	public boolean importFromString(String txt) {
-		return getSerializationConfig().deserialize(txt);
+		try {
+			return getSerializationConfig().deserialize(txt);
+		} catch (Exception e) {
+			CCLog.addError(LocaleBundle.getString("LogMessage.ExceptionInFilterParse"), e); //$NON-NLS-1$
+			return false;
+		}
 	}
 
 	public List<AbstractCustomFilter> getList() {
@@ -151,20 +159,6 @@ public abstract class AbstractCustomFilter {
 		}
 		
 		return builder.toString();
-	}
-	
-	public static int getIDFromExport(String txt) {
-		if (txt.length() < 4) return -1;
-		txt = txt.substring(1, txt.length() - 1);
-		
-		int idx = txt.indexOf('|');
-		if (idx < 0) return -1;
-		
-		try {
-			return Integer.parseInt(txt.substring(0, idx));
-		} catch (NumberFormatException e) {
-			return -1;
-		}
 	}
 	
 	public static AbstractCustomFilter getFilterByID(int id) {
@@ -238,7 +232,7 @@ public abstract class AbstractCustomFilter {
 	}
 	
 	public static AbstractCustomFilter createFilterFromExport(String txt) {
-		int id = getIDFromExport(txt);
+		int id = FilterSerializationConfig.getIDFromExport(txt);
 		if (id < 0) return null;
 		
 		AbstractCustomFilter f = getFilterByID(id);
@@ -253,7 +247,8 @@ public abstract class AbstractCustomFilter {
 
 	public AbstractCustomFilter createCopy() {
 		AbstractCustomFilter f = createNew();
-		f.importFromString(exportToString());
+		boolean r = f.importFromString(exportToString());
+		if (!r)return null;
 		return f;
 	}
 	

@@ -2,6 +2,7 @@ package de.jClipCorn.table.filter.filterConfig;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Random;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
@@ -39,5 +40,10 @@ public class CustomFilterEnumChooserConfig<T extends ContinoousEnum<T>> extends 
 		});
 		
 		return cbx;
+	}
+
+	@Override
+	public void setValueRandom(Random r) {
+		valueSetter.invoke(enumWrapper.randomValue(r));
 	}
 }

@@ -5,9 +5,9 @@ import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.table.filter.AbstractCustomFilter;
-import de.jClipCorn.table.filter.FilterSerializationConfig;
 import de.jClipCorn.table.filter.filterConfig.CustomChildConfig;
 import de.jClipCorn.table.filter.filterConfig.CustomFilterConfig;
+import de.jClipCorn.table.filter.filterSerialization.FilterSerializationConfig;
 
 public class CustomAllSeasonAggregator extends CustomAggregator {
 	

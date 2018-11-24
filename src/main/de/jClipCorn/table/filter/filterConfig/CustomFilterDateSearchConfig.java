@@ -1,5 +1,7 @@
 package de.jClipCorn.table.filter.filterConfig;
 
+import java.util.Random;
+
 import javax.swing.ButtonGroup;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
@@ -12,6 +14,7 @@ import com.jgoodies.forms.layout.RowSpec;
 
 import de.jClipCorn.gui.guiComponents.jCCDateSpinner.JCCDateSpinner;
 import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.datetime.CCDateSearchParameter;
 import de.jClipCorn.util.datetime.CCDateSearchParameter.DateSearchType;
 import de.jClipCorn.util.lambda.Func0to1;
@@ -79,6 +82,8 @@ public class CustomFilterDateSearchConfig extends CustomFilterConfig {
 					FormSpecs.PREF_ROWSPEC,
 					FormSpecs.LABEL_COMPONENT_GAP_ROWSPEC,
 					FormSpecs.PREF_ROWSPEC,
+					FormSpecs.LABEL_COMPONENT_GAP_ROWSPEC,
+					FormSpecs.PREF_ROWSPEC,
 				}));
 		
 		{
@@ -91,7 +96,7 @@ public class CustomFilterDateSearchConfig extends CustomFilterConfig {
 			container.spnContains = new JCCDateSpinner();
 			container.spnContains.setValue(initial.First);
 			container.spnContains.addChangeListener((e) -> onChanged(container));
-			pnl.add(container.spnContains, "6, 2, 3, 1, fill, default"); //$NON-NLS-1$
+			pnl.add(container.spnContains, "4, 2, 3, 1, fill, default"); //$NON-NLS-1$
 		}
 		
 		{
@@ -205,5 +210,10 @@ public class CustomFilterDateSearchConfig extends CustomFilterConfig {
 			
 		}
 
+	}
+
+	@Override
+	public void setValueRandom(Random r) {
+		valueSetter.invoke(new CCDateSearchParameter(CCDate.createRandom(r), CCDate.createRandom(r), DateSearchType.getWrapper().randomValue(r)));
 	}
 }

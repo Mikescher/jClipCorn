@@ -11,9 +11,9 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCSingleOnlineReference
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.table.filter.AbstractCustomDatabaseElementFilter;
 import de.jClipCorn.table.filter.AbstractCustomFilter;
-import de.jClipCorn.table.filter.FilterSerializationConfig;
 import de.jClipCorn.table.filter.filterConfig.CustomFilterConfig;
 import de.jClipCorn.table.filter.filterConfig.CustomFilterStringConfig;
+import de.jClipCorn.table.filter.filterSerialization.FilterSerializationConfig;
 import de.jClipCorn.util.datetime.YearRange;
 
 public class CustomSearchFilter extends AbstractCustomDatabaseElementFilter {

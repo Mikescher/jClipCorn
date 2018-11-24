@@ -13,10 +13,10 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.table.filter.AbstractCustomFilter;
 import de.jClipCorn.table.filter.AbstractCustomStructureElementFilter;
-import de.jClipCorn.table.filter.FilterSerializationConfig;
 import de.jClipCorn.table.filter.filterConfig.CustomFilterBoolConfig;
 import de.jClipCorn.table.filter.filterConfig.CustomFilterConfig;
 import de.jClipCorn.table.filter.filterConfig.CustomFilterDateSearchConfig;
+import de.jClipCorn.table.filter.filterSerialization.FilterSerializationConfig;
 import de.jClipCorn.util.datetime.CCDateSearchParameter;
 import de.jClipCorn.util.datetime.CCDateTime;
 

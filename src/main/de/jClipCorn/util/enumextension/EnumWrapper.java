@@ -2,6 +2,7 @@ package de.jClipCorn.util.enumextension;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class EnumWrapper<T extends ContinoousEnum<T>> {
 
@@ -37,5 +38,11 @@ public class EnumWrapper<T extends ContinoousEnum<T>> {
 		for (T val : defValue.evalues()) lst.add(val);
 		
 		return lst;
+	}
+
+	public T randomValue(Random r) {
+		T[] a = defValue.evalues();
+		if (a.length == 0) return null;
+		return a[r.nextInt(a.length)];
 	}
 }

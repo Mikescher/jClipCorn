@@ -1,5 +1,7 @@
 package de.jClipCorn.table.filter.filterConfig;
 
+import java.util.Random;
+
 import javax.swing.ButtonGroup;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
@@ -140,8 +142,8 @@ public class CustomFilterIntAreaConfig extends CustomFilterConfig {
 	private JSpinner createSpinner(int value) {
 		JSpinner s = new JSpinner();
 		
-		if (maximum != null && maximum instanceof Integer && value > (int)maximum) value = (int)maximum;
-		if (minimum != null && minimum instanceof Integer && value < (int)minimum) value = (int)minimum;
+		if (maximum != null && maximum instanceof Integer && value > (Integer)maximum) value = (Integer)maximum;
+		if (minimum != null && minimum instanceof Integer && value < (Integer)minimum) value = (Integer)minimum;
 		
 		s.setModel(new SpinnerNumberModel(value, minimum, maximum, 1));
 		s.setEditor(new JSpinner.NumberEditor(s, "0")); //$NON-NLS-1$
@@ -175,5 +177,20 @@ public class CustomFilterIntAreaConfig extends CustomFilterConfig {
 			container.onChange.run();
 		}
 
+	}
+
+	@Override
+	public void setValueRandom(Random r) {
+		int a = rand(r);
+		int b = rand(r);
+		if (a>b) { int t=b; b=a; a=t; }
+		valueSetter.invoke(new CCIntArea(a, b, DecimalSearchType.getWrapper().randomValue(r)));
+	}
+	
+	private int rand(Random r) {
+		if (maximum != null && maximum instanceof Integer && minimum != null && minimum instanceof Integer) return (Integer)minimum + r.nextInt((Integer)maximum - (Integer)minimum);
+		if (minimum != null && minimum instanceof Integer) return (Integer)minimum + r.nextInt(Integer.MAX_VALUE - (Integer)minimum);
+		if (maximum != null && maximum instanceof Integer) return r.nextInt((Integer)maximum);
+		return r.nextInt();
 	}
 }

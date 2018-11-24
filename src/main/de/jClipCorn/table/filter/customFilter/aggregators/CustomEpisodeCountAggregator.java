@@ -8,10 +8,10 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.IconRef;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.table.filter.AbstractCustomFilter;
-import de.jClipCorn.table.filter.FilterSerializationConfig;
 import de.jClipCorn.table.filter.filterConfig.CustomChildConfig;
 import de.jClipCorn.table.filter.filterConfig.CustomFilterConfig;
 import de.jClipCorn.table.filter.filterConfig.CustomFilterIntAreaConfig;
+import de.jClipCorn.table.filter.filterSerialization.FilterSerializationConfig;
 import de.jClipCorn.util.DecimalSearchType;
 import de.jClipCorn.util.datatypes.CCIntArea;
 

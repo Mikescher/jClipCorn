@@ -230,7 +230,7 @@ public class CustomFilterEditDialog extends JDialog {
 				
 				AbstractCustomFilter copy = filterObject.getFilter().createCopy();
 				
-				if (imp != null && !copy.importFromString(imp)) {
+				if (imp != null && (copy == null || !copy.importFromString(imp))) {
 					DialogHelper.showLocalError(CustomFilterEditDialog.this, "Dialogs.CustomFilterImportFailed"); //$NON-NLS-1$
 					return;
 				} 

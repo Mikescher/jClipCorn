@@ -6,9 +6,9 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineScore;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.table.filter.AbstractCustomDatabaseElementFilter;
 import de.jClipCorn.table.filter.AbstractCustomFilter;
-import de.jClipCorn.table.filter.FilterSerializationConfig;
 import de.jClipCorn.table.filter.filterConfig.CustomFilterConfig;
 import de.jClipCorn.table.filter.filterConfig.CustomFilterIntAreaConfig;
+import de.jClipCorn.table.filter.filterSerialization.FilterSerializationConfig;
 import de.jClipCorn.util.DecimalSearchType;
 import de.jClipCorn.util.datatypes.CCIntArea;
 
@@ -91,7 +91,9 @@ public class CustomOnlinescoreFilter extends AbstractCustomDatabaseElementFilter
 
 	private void setAsIntArea(CCIntArea a) {
 		low = CCOnlineScore.getWrapper().find(a.low);
+		if (low==null)low=CCOnlineScore.STARS_0_0;
 		high = CCOnlineScore.getWrapper().find(a.high);
+		if (high==null)high=CCOnlineScore.STARS_5_0;
 		searchType = a.type;
 	}
 	

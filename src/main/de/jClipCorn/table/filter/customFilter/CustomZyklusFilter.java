@@ -8,11 +8,11 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCMovieZyklus;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.table.filter.AbstractCustomFilter;
 import de.jClipCorn.table.filter.AbstractCustomMovieOrSeriesFilter;
-import de.jClipCorn.table.filter.FilterSerializationConfig;
 import de.jClipCorn.table.filter.filterConfig.CustomFilterBoolConfig;
 import de.jClipCorn.table.filter.filterConfig.CustomFilterConfig;
 import de.jClipCorn.table.filter.filterConfig.CustomFilterEnumOptionConfig;
 import de.jClipCorn.table.filter.filterConfig.CustomFilterStringConfig;
+import de.jClipCorn.table.filter.filterSerialization.FilterSerializationConfig;
 import de.jClipCorn.util.datatypes.StringMatchType;
 
 public class CustomZyklusFilter extends AbstractCustomMovieOrSeriesFilter {

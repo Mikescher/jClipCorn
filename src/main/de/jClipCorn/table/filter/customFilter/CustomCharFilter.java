@@ -6,9 +6,9 @@ import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.ICCDatabaseStructureElement;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.table.filter.AbstractCustomFilter;
-import de.jClipCorn.table.filter.FilterSerializationConfig;
 import de.jClipCorn.table.filter.filterConfig.CustomFilterCharConfig;
 import de.jClipCorn.table.filter.filterConfig.CustomFilterConfig;
+import de.jClipCorn.table.filter.filterSerialization.FilterSerializationConfig;
 
 public class CustomCharFilter extends AbstractCustomFilter {
 	@SuppressWarnings("nls")

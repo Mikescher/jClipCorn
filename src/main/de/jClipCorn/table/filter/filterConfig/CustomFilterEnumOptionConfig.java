@@ -2,6 +2,7 @@ package de.jClipCorn.table.filter.filterConfig;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Random;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JComponent;
@@ -68,5 +69,10 @@ public class CustomFilterEnumOptionConfig<T extends ContinoousEnum<T>> extends C
 		}
 		
 		return pnl;
+	}
+
+	@Override
+	public void setValueRandom(Random r) {
+		valueSetter.invoke(enumWrapper.randomValue(r));
 	}
 }

@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
@@ -87,5 +88,10 @@ public class CustomChildConfig extends CustomFilterConfig {
 	private void onChanged(AbstractCustomFilter f, Runnable onChange) {
 		valueSetter.invoke(f);
 		onChange.run();
+	}
+
+	@Override
+	public void setValueRandom(Random r) {
+		// does not work
 	}
 }

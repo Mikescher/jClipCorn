@@ -5,9 +5,9 @@ import de.jClipCorn.database.databaseElement.ICCDatabaseStructureElement;
 import de.jClipCorn.database.databaseElement.columnTypes.CCFileFormat;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.table.filter.AbstractCustomFilter;
-import de.jClipCorn.table.filter.FilterSerializationConfig;
 import de.jClipCorn.table.filter.filterConfig.CustomFilterConfig;
 import de.jClipCorn.table.filter.filterConfig.CustomFilterEnumChooserConfig;
+import de.jClipCorn.table.filter.filterSerialization.FilterSerializationConfig;
 
 public class CustomFormatFilter extends AbstractCustomFilter {
 	private CCFileFormat format = CCFileFormat.AVI;

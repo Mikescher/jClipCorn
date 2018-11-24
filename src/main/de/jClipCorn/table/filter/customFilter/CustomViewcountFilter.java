@@ -8,9 +8,9 @@ import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.table.filter.AbstractCustomFilter;
 import de.jClipCorn.table.filter.AbstractCustomStructureElementFilter;
-import de.jClipCorn.table.filter.FilterSerializationConfig;
 import de.jClipCorn.table.filter.filterConfig.CustomFilterConfig;
 import de.jClipCorn.table.filter.filterConfig.CustomFilterIntAreaConfig;
+import de.jClipCorn.table.filter.filterSerialization.FilterSerializationConfig;
 import de.jClipCorn.util.DecimalSearchType;
 import de.jClipCorn.util.datatypes.CCIntArea;
 

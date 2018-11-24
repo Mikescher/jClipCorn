@@ -3,11 +3,13 @@ package de.jClipCorn.table.filter.filterConfig;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
+import java.util.Random;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 
+import de.jClipCorn.util.Str;
 import de.jClipCorn.util.lambda.Func0to1;
 import de.jClipCorn.util.lambda.Func1to0;
 
@@ -65,5 +67,10 @@ public class CustomFilterStringChooserConfig extends CustomFilterConfig {
 		});
 		
 		return cbx;
+	}
+
+	@Override
+	public void setValueRandom(Random r) {
+		valueSetter.invoke(values.size()==0 ? Str.Empty : values.get(r.nextInt(values.size())));
 	}
 }

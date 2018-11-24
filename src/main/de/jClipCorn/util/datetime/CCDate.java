@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.exceptions.CCFormatException;
@@ -115,6 +116,13 @@ public final class CCDate implements Comparable<CCDate>, StringSpecSupplier {
 		if (sqlRep.length() > 16 && sqlRep.charAt(16) != ':') throw new DateFormatException(sqlRep);
 		
 		return new CCDate(d, m, y);
+	}
+
+	public static CCDate createRandom(Random r) {
+		int y = r.nextInt(YEAR_MAX-YEAR_MIN)+YEAR_MIN;
+		int m = r.nextInt(12)+1;
+		int d = r.nextInt(getDaysOfMonth(m, y)) + 1;
+		return create(d, m, y);
 	}
 	
 	public static CCDate getMinimumDate() {

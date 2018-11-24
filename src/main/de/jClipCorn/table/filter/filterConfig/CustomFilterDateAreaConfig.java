@@ -1,5 +1,7 @@
 package de.jClipCorn.table.filter.filterConfig;
 
+import java.util.Random;
+
 import javax.swing.ButtonGroup;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
@@ -13,6 +15,7 @@ import com.jgoodies.forms.layout.RowSpec;
 import de.jClipCorn.gui.guiComponents.jCCDateSpinner.JCCDateSpinner;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.DecimalSearchType;
+import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.datetime.CCDateArea;
 import de.jClipCorn.util.lambda.Func0to1;
 import de.jClipCorn.util.lambda.Func1to0;
@@ -161,5 +164,10 @@ public class CustomFilterDateAreaConfig extends CustomFilterConfig {
 			container.onChange.run();
 		}
 
+	}
+
+	@Override
+	public void setValueRandom(Random r) {
+		valueSetter.invoke(new CCDateArea(CCDate.createRandom(r), CCDate.createRandom(r), DecimalSearchType.getWrapper().randomValue(r)));
 	}
 }

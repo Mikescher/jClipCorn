@@ -117,7 +117,7 @@ public class CCSingleOnlineReference {
 		case NONE:
 			return null;
 		case IMDB:
-			return "http://www.imdb.com/title/" + id;
+			return "https://www.imdb.com/title/" + id;
 		case AMAZON:
 			return "https://www.amazon.com/dp/" + id;
 		case MOVIEPILOT:
@@ -128,9 +128,15 @@ public class CCSingleOnlineReference {
 			else
 				return "https://www.themoviedb.org/" + id + "?language=" + lang.asDinIsoID();
 		case PROXERME:
-			return "http://proxer.me/info/" + id;
+			return "https://proxer.me/info/" + id;
 		case MYANIMELIST:
-			return "http://myanimelist.net/anime/" + id + "/";
+			return "https://myanimelist.net/anime/" + id + "/";
+		case ANILIST:
+			return "https://anilist.co/anime/" + id + "/";
+		case ANIMEPLANET:
+			return "https://www.anime-planet.com/anime/" + id;
+		case KITSU:
+			return "https://kitsu.io/anime/" + id;
 		default:
 			CCLog.addDefaultSwitchError(this, this);
 			return null;

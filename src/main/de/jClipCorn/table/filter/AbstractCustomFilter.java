@@ -91,6 +91,7 @@ public abstract class AbstractCustomFilter {
 
 	public boolean importFromString(String txt) {
 		try {
+			txt = txt.replaceAll("\\s", ""); // remove whitespaces
 			return getSerializationConfig().deserialize(txt);
 		} catch (Exception e) {
 			CCLog.addError(LocaleBundle.getString("LogMessage.ExceptionInFilterParse"), e); //$NON-NLS-1$
@@ -222,6 +223,7 @@ public abstract class AbstractCustomFilter {
 	}
 	
 	public static AbstractCustomFilter createFilterFromExport(String txt) {
+
 		int id = FilterSerializationConfig.getIDFromExport(txt);
 		if (id < 0) return null;
 		

@@ -28,6 +28,7 @@ public class TestFilterSerialization extends ClipCornBaseTest {
 			"[0|[15|1900,1900,3]]",
 			"[0|[12|ÄÖÜß,1,1]]",
 			"[0|[12|\"&|&,&&\\\"\\\\_\\&&\\\",1,1]]",
+			"\n [0|[31|6] , [2|[31\t|\t\t7]]] \n\n",
 		};
 		
 		for (String s : T1) {

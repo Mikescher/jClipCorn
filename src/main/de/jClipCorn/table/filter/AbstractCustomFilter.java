@@ -9,28 +9,7 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.gui.resources.IconRef;
 import de.jClipCorn.gui.resources.Resources;
-import de.jClipCorn.table.filter.customFilter.CustomAddDateFilter;
-import de.jClipCorn.table.filter.customFilter.CustomAnyReferenceFilter;
-import de.jClipCorn.table.filter.customFilter.CustomCoverDimensionFilter;
-import de.jClipCorn.table.filter.customFilter.CustomEpisodecountFilter;
-import de.jClipCorn.table.filter.customFilter.CustomExtendedViewedFilter;
-import de.jClipCorn.table.filter.customFilter.CustomFSKFilter;
-import de.jClipCorn.table.filter.customFilter.CustomFormatFilter;
-import de.jClipCorn.table.filter.customFilter.CustomGenreFilter;
-import de.jClipCorn.table.filter.customFilter.CustomGroupFilter;
-import de.jClipCorn.table.filter.customFilter.CustomHistoryFilter;
-import de.jClipCorn.table.filter.customFilter.CustomLanguageFilter;
-import de.jClipCorn.table.filter.customFilter.CustomMainReferenceFilter;
-import de.jClipCorn.table.filter.customFilter.CustomOnlinescoreFilter;
-import de.jClipCorn.table.filter.customFilter.CustomQualityFilter;
-import de.jClipCorn.table.filter.customFilter.CustomTagFilter;
-import de.jClipCorn.table.filter.customFilter.CustomTitleFilter;
-import de.jClipCorn.table.filter.customFilter.CustomTypFilter;
-import de.jClipCorn.table.filter.customFilter.CustomUserScoreFilter;
-import de.jClipCorn.table.filter.customFilter.CustomViewcountFilter;
-import de.jClipCorn.table.filter.customFilter.CustomViewedFilter;
-import de.jClipCorn.table.filter.customFilter.CustomYearFilter;
-import de.jClipCorn.table.filter.customFilter.CustomZyklusFilter;
+import de.jClipCorn.table.filter.customFilter.*;
 import de.jClipCorn.table.filter.customFilter.aggregators.CustomAggregator;
 import de.jClipCorn.table.filter.customFilter.aggregators.CustomAllEpisodeAggregator;
 import de.jClipCorn.table.filter.customFilter.aggregators.CustomAllSeasonAggregator;
@@ -175,6 +154,10 @@ public abstract class AbstractCustomFilter {
 			if (f.getID() == id) return f;
 		}
 
+		for (AbstractCustomFilter f : getAllHiddenFilter()) {
+			if (f.getID() == id) return f;
+		}
+
 		return null;
 	}
 
@@ -228,6 +211,13 @@ public abstract class AbstractCustomFilter {
 
 			new CustomEpisodeCountAggregator(),
 			new CustomSeasonCountAggregator(),
+		};
+	}
+
+	public static AbstractCustomFilter[] getAllHiddenFilter() {
+		return new AbstractCustomFilter[] {
+			new CustomSearchFilter(),
+			new CustomCharFilter(),
 		};
 	}
 	

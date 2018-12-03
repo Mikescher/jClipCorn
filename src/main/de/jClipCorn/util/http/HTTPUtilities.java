@@ -8,10 +8,14 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.StringEscapeUtils;
+import org.json.JSONObject;
+import org.json.JSONTokener;
 
 import com.gargoylesoftware.htmlunit.BrowserVersion;
 import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
@@ -20,6 +24,7 @@ import com.gargoylesoftware.htmlunit.html.HtmlPage;
 
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
+import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.exceptions.HTTPErrorCodeException;
 
 @SuppressWarnings("nls")
@@ -202,5 +207,37 @@ public class HTTPUtilities {
 
 	public static void searchInBrowser(String text) {
 		openInBrowser("https://www.google.de/search?q=" + escapeURL(text));
+	}
+
+	public static JSONObject getGraphQL(String apiurl, String command, HashMap<String, Object> variables) {
+
+		JSONObject jvars = new JSONObject();
+		for (Map.Entry<String, Object> v : variables.entrySet()) jvars.put(v.getKey(), v.getValue());
+
+		JSONObject jobj = new JSONObject();
+
+		jobj.put("query", command);
+		jobj.put("variables", jvars);
+
+		try {
+			URL url = new URL(apiurl);
+
+			for (int i = 0; i < MAX_CONNECTION_TRY; i++) {
+				try {
+					Tuple<String, List<Tuple<String, String>>> html = WebConnectionLayer.instance.getUncaughtPostContent(url, jobj.toString());
+
+					return new JSONObject(new JSONTokener(html.Item1));
+
+				} catch (IOException | HTTPErrorCodeException e) {
+					if ((i + 1) == MAX_CONNECTION_TRY) {
+						CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CouldNotGetHTML", apiurl), e);
+					}
+				}
+			}
+		} catch (MalformedURLException e) {
+			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CouldNotGetHTML", apiurl), e);
+			return null;
+		}
+		return null;
 	}
 }

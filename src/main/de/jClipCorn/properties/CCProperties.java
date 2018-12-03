@@ -15,18 +15,7 @@ import de.jClipCorn.database.util.ExportHelper;
 import de.jClipCorn.gui.frames.mainFrame.clipToolbar.ClipToolbar;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
-import de.jClipCorn.properties.enumerations.AddDateAlgorithm;
-import de.jClipCorn.properties.enumerations.BrowserLanguage;
-import de.jClipCorn.properties.enumerations.CCDatabaseDriver;
-import de.jClipCorn.properties.enumerations.DisplayDateAlgorithm;
-import de.jClipCorn.properties.enumerations.DoubleClickAction;
-import de.jClipCorn.properties.enumerations.ImageSearchImplementation;
-import de.jClipCorn.properties.enumerations.InitalSortingColumn;
-import de.jClipCorn.properties.enumerations.CoverImageSize;
-import de.jClipCorn.properties.enumerations.MetadataParserImplementation;
-import de.jClipCorn.properties.enumerations.NextEpisodeHeuristic;
-import de.jClipCorn.properties.enumerations.UILanguage;
-import de.jClipCorn.properties.enumerations.UITableBackground;
+import de.jClipCorn.properties.enumerations.*;
 import de.jClipCorn.properties.property.CCBoolProperty;
 import de.jClipCorn.properties.property.CCDateProperty;
 import de.jClipCorn.properties.property.CCEnumProperty;
@@ -182,6 +171,8 @@ public class CCProperties {
 	public CCEnumProperty<CoverImageSize>					PROP_DATABASE_MAX_COVER_SIZE;
 	public CCBoolProperty									PROP_MAINFRAME_SHOW_GROUP_ONLY_ON_HOVER;
 	public CCBoolProperty									PROP_MAINFRAME_ASYNC_COVER_LOADING;
+	public CCEnumProperty<AniListTitleLang>					PROP_ANILIST_PREFERRED_TITLE_LANG;
+	public CCBoolProperty                                   DISABLE_SSL_VERIFY;
 
 	public boolean ARG_READONLY = false;
 	
@@ -333,6 +324,8 @@ public class CCProperties {
 		PROP_DEBUG_USE_HTTPCACHE				= new CCBoolProperty(NONVISIBLE,	 		this,   "PROP_DEBUG_USE_HTTPCACHE",					false);
 		PROP_DEBUG_HTTPCACHE_PATH				= new CCPathProperty(NONVISIBLE,	 		this,   "PROP_DEBUG_HTTPCACHE_PATH",				"%temp%/jClipCorn/httpcache/", 		null, CCPathPropertyMode.DIRECTORIES);
 		PROP_SERIES_PREVIEWFRAME_HEIGHT			= new CCPIntProperty(NONVISIBLE, 			this, 	"PROP_SERIES_PREVIEWFRAME_HEIGHT", 			22);
+		PROP_ANILIST_PREFERRED_TITLE_LANG       = new CCEnumProperty<>(NONVISIBLE, 			this, 	"PROP_ANILIST_PREFERRED_TITLE_LANG", 		AniListTitleLang.PREFERRED,			AniListTitleLang.getWrapper());
+		DISABLE_SSL_VERIFY						= new CCBoolProperty(NONVISIBLE,	 		this,   "DISABLE_SSL_VERIFY",						false);
 	}
 
 	private String getDefFLPath() {

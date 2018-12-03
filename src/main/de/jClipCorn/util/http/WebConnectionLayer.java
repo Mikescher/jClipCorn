@@ -3,8 +3,10 @@ package de.jClipCorn.util.http;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 
 import de.jClipCorn.properties.CCProperties;
+import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.exceptions.HTTPErrorCodeException;
 
 public abstract class WebConnectionLayer {
@@ -30,5 +32,6 @@ public abstract class WebConnectionLayer {
 	public abstract void init();
 	
 	public abstract String getUncaughtHTML(URL url, boolean stripLineBreaks) throws IOException, HTTPErrorCodeException;
+	public abstract Tuple<String, List<Tuple<String, String>>> getUncaughtPostContent(URL url, String body) throws IOException, HTTPErrorCodeException;
 	public abstract BufferedImage getImage(String urlToRead);
 }

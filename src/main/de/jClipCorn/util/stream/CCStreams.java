@@ -1,7 +1,11 @@
 package de.jClipCorn.util.stream;
 
+import org.sqlite.core.CoreStatement;
+
 import java.util.Collections;
 import java.util.Enumeration;
+import java.util.List;
+import java.util.Map;
 
 public final class CCStreams {
 	private CCStreams() { throw new InstantiationError(); }
@@ -36,5 +40,9 @@ public final class CCStreams {
 
 	public static CCStream<Integer> countRange(int start, int end) {
 		return new CounterStream(start, end-start); // start included | end excluded
+	}
+
+	public static <K, V> CCStream<Map.Entry<K, V>> iterate(Map<K, V> map) {
+		return new IterableStream<>(map.entrySet());
 	}
 }

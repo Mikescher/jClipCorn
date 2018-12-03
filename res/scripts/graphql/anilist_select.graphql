@@ -1,0 +1,20 @@
+query ($id: Int) {
+  Media(id: $id) {
+    id
+    idMal
+    title {
+      userPreferred
+      english
+      native
+    }
+    type
+    coverImage {
+      extraLarge
+    }
+    duration
+    genres
+    averageScore
+    isAdult
+    startDate { year }
+  }
+}

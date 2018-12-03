@@ -7,6 +7,7 @@ import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.online.metadata.Metadataparser;
+import de.jClipCorn.online.metadata.anilist.AniListParser;
 import de.jClipCorn.online.metadata.imdb.IMDBParserCommon;
 import de.jClipCorn.online.metadata.mal.MALParser;
 import de.jClipCorn.online.metadata.tmdb.TMDBParser;
@@ -53,6 +54,18 @@ public class CCSingleOnlineReference {
 
 	public static CCSingleOnlineReference createMyAnimeList(String id) {
 		return new CCSingleOnlineReference(CCOnlineRefType.MYANIMELIST, id, Str.Empty);
+	}
+
+	public static CCSingleOnlineReference createMyAnimeList(int id) {
+		return new CCSingleOnlineReference(CCOnlineRefType.MYANIMELIST, String.valueOf(id), Str.Empty);
+	}
+
+	public static CCSingleOnlineReference createAniList(String id) {
+		return new CCSingleOnlineReference(CCOnlineRefType.ANILIST, id, Str.Empty);
+	}
+
+	public static CCSingleOnlineReference createAniList(int id) {
+		return new CCSingleOnlineReference(CCOnlineRefType.ANILIST, String.valueOf(id), Str.Empty);
 	}
 
 	public String toSerializationString() {
@@ -175,6 +188,8 @@ public class CCSingleOnlineReference {
 			return null;
 		case MYANIMELIST:
 			return new MALParser();
+		case ANILIST:
+			return new AniListParser();
 		default:
 			CCLog.addDefaultSwitchError(this, this);
 			return null;

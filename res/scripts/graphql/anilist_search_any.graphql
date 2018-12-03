@@ -1,0 +1,20 @@
+query ($stxt: String) {
+  Page(page: 0, perPage: 50) {
+    pageInfo {
+      total
+      currentPage
+      lastPage
+      hasNextPage
+      perPage
+    }
+    media(search: $stxt, format_in: [TV, TV_SHORT, OVA, SPECIAL, MOVIE, ONE_SHOT], sort: SEARCH_MATCH) {
+      id
+      title {
+        userPreferred
+        english
+        native
+      }
+      type
+    }
+  }
+}

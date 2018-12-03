@@ -1,17 +1,22 @@
 package de.jClipCorn.util.http;
 
 import java.awt.image.BufferedImage;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLConnection;
+import java.util.List;
 
 import javax.imageio.ImageIO;
+import javax.net.ssl.HttpsURLConnection;
 
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
+import de.jClipCorn.util.Str;
+import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.exceptions.HTTPErrorCodeException;
+import de.jClipCorn.util.stream.CCStreams;
+import org.apache.commons.io.IOUtils;
 
 @SuppressWarnings("nls")
 public class RealWebConnection extends WebConnectionLayer {
@@ -64,16 +69,75 @@ public class RealWebConnection extends WebConnectionLayer {
 		}
 		return HTTPUtilities.descapeHTML(resultbuilder.toString());
 	}
+
+	@Override
+	public Tuple<String, List<Tuple<String, String>>> getUncaughtPostContent(URL url, String body) throws IOException, HTTPErrorCodeException {
+		HttpURLConnection conn;
+		BufferedReader rd = null;
+		String line;
+		StringBuilder resultbuilder = new StringBuilder();
+		List<Tuple<String, String>> resultHeader = null;
+		try {
+			conn = (HttpURLConnection) url.openConnection();
+			conn.setRequestMethod("POST");
+			conn.setRequestProperty("Accept-Charset", "UTF-8");
+			conn.setRequestProperty("User-Agent", "Mozilla/4.76");
+			conn.setRequestProperty("Content-Type", "application/json");
+			conn.setRequestProperty("Content-length", String.valueOf(body.getBytes(Str.UTF8).length));
+			conn.setDoInput(true);
+			conn.setDoOutput(true);
+
+			try (OutputStream os = conn.getOutputStream())
+			{
+				os.write(body.getBytes(Str.UTF8));
+			}
+
+			conn.connect();
+
+			String encoding = conn.getContentEncoding();
+			if (encoding == null) encoding = "UTF-8";
+
+			switch (conn.getResponseCode()) {
+				case HttpURLConnection.HTTP_MOVED_PERM:
+				case HttpURLConnection.HTTP_MOVED_TEMP:
+					return getUncaughtPostContent(new URL(url, conn.getHeaderField("location")), body);
+
+				case HTTPUtilities.HTTP_TOO_MANY_REQUESTS:
+				case HttpURLConnection.HTTP_NOT_FOUND:
+				case HttpURLConnection.HTTP_FORBIDDEN:
+					throw new HTTPErrorCodeException(conn.getResponseCode());
+			}
+
+			rd = new BufferedReader(new InputStreamReader(conn.getInputStream(), encoding));
+			while ((line = rd.readLine()) != null) {
+				resultbuilder.append("\n");
+				resultbuilder.append(line);
+			}
+			rd.close();
+			resultHeader = CCStreams.iterate(conn.getHeaderFields()).flatten(k -> CCStreams.iterate(k.getValue()).map(v -> Tuple.Create(k.getKey(), v))).enumerate();
+			conn.disconnect();
+		} finally {
+			if (rd != null) {
+				rd.close();
+			}
+		}
+		return Tuple.Create(resultbuilder.toString(), resultHeader);
+	}
 	
 	@Override
 	public BufferedImage getImage(String urlToRead) {
 		try {
 			URL url = new URL(urlToRead);
-			return ImageIO.read(url);
-		} catch (IOException e) {
-			CCLog.addWarning(LocaleBundle.getFormattedString("LogMessage.CouldNotGetImage", urlToRead));
-			return null;
-		} catch (OutOfMemoryError e) {
+			URLConnection conn = url.openConnection();
+			conn.setRequestProperty("User-Agent", "Mozilla/4.76");
+
+			conn.connect();
+
+			try(InputStream is = conn.getInputStream()) {
+				return ImageIO.read(is);
+			}
+
+		} catch (IOException | OutOfMemoryError e) {
 			CCLog.addWarning(LocaleBundle.getFormattedString("LogMessage.CouldNotGetImage", urlToRead));
 			return null;
 		}

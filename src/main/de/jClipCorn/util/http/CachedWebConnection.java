@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 
 import javax.imageio.ImageIO;
@@ -12,21 +13,24 @@ import javax.imageio.ImageIO;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.SimpleSerializableData;
+import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.exceptions.HTTPErrorCodeException;
 import de.jClipCorn.util.exceptions.XMLFormatException;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.SimpleFileUtils;
+import de.jClipCorn.util.stream.CCStreams;
+import org.apache.commons.codec.digest.DigestUtils;
 
-@SuppressWarnings("nls")
+@SuppressWarnings({"nls", "Duplicates"})
 public class CachedWebConnection extends WebConnectionLayer {
-	private final float DELAY_FACTOR = 0.01f;
+	private final static float DELAY_FACTOR = 0.01f;
 	
 	private final WebConnectionLayer conn;
 	
 	private String cachePath;
 	private String cacheDatabasePath;
 	
-	private Object dblock = new Object();
+	private final Object dblock = new Object();
 	private SimpleSerializableData db;
 	private HashMap<String, String> dbref;
 	
@@ -71,6 +75,17 @@ public class CachedWebConnection extends WebConnectionLayer {
 		}
 	}
 
+	private String getResult(SimpleSerializableData d) throws IOException {
+		if (dbref.containsKey(d.getStr("result"))) {
+			return dbref.get(d.getStr("result"));
+		}
+		else {
+			String data = SimpleFileUtils.readUTF8TextFile(PathFormatter.combine(cachePath, d.getStr("result")));
+			dbref.put(d.getStr("result"), data);
+			return data;
+		}
+	}
+
 	@Override
 	public String getUncaughtHTML(URL url, boolean stripLineBreaks) throws IOException, HTTPErrorCodeException {
 		try {
@@ -83,14 +98,7 @@ public class CachedWebConnection extends WebConnectionLayer {
 				sleep(d.getInt("time"));
 				
 				if (d.getInt("type") == 0) {
-					if (dbref.containsKey(d.getStr("result"))) {
-						return dbref.get(d.getStr("result"));						
-					}
-					else {
-						String data = SimpleFileUtils.readUTF8TextFile(PathFormatter.combine(cachePath, d.getStr("result")));
-						dbref.put(d.getStr("result"), data);
-						return data;
-					}
+					return getResult(d);
 				} else if (d.getInt("type") == 1) {
 					throw new HTTPErrorCodeException(d.getInt("statuscode"));
 				} else if (d.getInt("type") == 2) {
@@ -122,6 +130,84 @@ public class CachedWebConnection extends WebConnectionLayer {
 					d.set("type", 2);
 					d.set("exceptionmessage", e.getMessage());
 					d.set("time", (int)(System.currentTimeMillis() - start));
+					throw e;
+				}
+			}
+		} finally {
+			try {
+				synchronized(dblock) { db.save(cacheDatabasePath);}
+			} catch (IOException e) {
+				CCLog.addError(e);
+			}
+		}
+	}
+
+	@Override
+	public Tuple<String, List<Tuple<String, String>>> getUncaughtPostContent(URL url, String body) throws IOException, HTTPErrorCodeException {
+		try {
+			String id1 = "getUncaughtPostContent<1>|" + url.toExternalForm() + "|" + DigestUtils.md5Hex(body);
+			String id2 = "getUncaughtPostContent<2>|" + url.toExternalForm() + "|" + DigestUtils.md5Hex(body);
+
+			if (db.containsChild(id1) && db.containsChild(id2)) {
+				CCLog.addDebug("[HTTP-CACHE] load from Cache: " + id1);
+
+				SimpleSerializableData d1 = db.getChild(id1);
+				SimpleSerializableData d2 = db.getChild(id2);
+
+				sleep(d1.getInt("time"));
+
+				if (d1.getInt("type") == 0) {
+					String r1 = getResult(d1);
+					List<Tuple<String, String>> r2 = CCStreams.iterate(getResult(d2).split("\n")).map(p -> Tuple.Create(p.split("\t")[0], p.split("\t")[1])).enumerate();
+					return Tuple.Create(r1, r2);
+				} else if (d1.getInt("type") == 1) {
+					throw new HTTPErrorCodeException(d1.getInt("statuscode"));
+				} else if (d1.getInt("type") == 2) {
+					throw new IOException(d1.getStr("exceptionmessage"));
+				} else {
+					CCLog.addError("http cache db invalid state (56)");
+					return null;
+				}
+			} else {
+				CCLog.addDebug("[HTTP-CACHE] load from real connection: " + id1);
+
+				SimpleSerializableData d1 = db.addChild(id1);
+				SimpleSerializableData d2 = db.addChild(id2);
+
+				long start = System.currentTimeMillis();
+				try {
+					Tuple<String, List<Tuple<String, String>>> r = conn.getUncaughtPostContent(url, body);
+
+					String fn1 = UUID.randomUUID().toString();
+					SimpleFileUtils.writeTextFile(PathFormatter.combine(cachePath, fn1), r.Item1);
+					d1.set("type", 0);
+					d1.set("result", fn1);
+					d1.set("time", (int)(System.currentTimeMillis() - start));
+
+					String fn2 = UUID.randomUUID().toString();
+					SimpleFileUtils.writeTextFile(PathFormatter.combine(cachePath, fn1), CCStreams.iterate(r.Item2).stringjoin(b -> b.Item1+"\t"+b.Item2, "\n"));
+					d2.set("type", 0);
+					d2.set("result", fn2);
+					d2.set("time", (int)(System.currentTimeMillis() - start));
+
+					return r;
+				} catch (HTTPErrorCodeException e) {
+					d1.set("type", 1);
+					d1.set("statuscode", e.Errorcode);
+					d1.set("time", (int)(System.currentTimeMillis() - start));
+
+					d2.set("type", 1);
+					d2.set("statuscode", e.Errorcode);
+					d2.set("time", (int)(System.currentTimeMillis() - start));
+					throw e;
+				} catch (IOException e) {
+					d1.set("type", 2);
+					d1.set("exceptionmessage", e.getMessage());
+					d1.set("time", (int)(System.currentTimeMillis() - start));
+
+					d2.set("type", 2);
+					d2.set("exceptionmessage", e.getMessage());
+					d2.set("time", (int)(System.currentTimeMillis() - start));
 					throw e;
 				}
 			}

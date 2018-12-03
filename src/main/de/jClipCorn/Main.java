@@ -10,6 +10,7 @@ import de.jClipCorn.gui.log.ExceptionHandler;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.DriveMap;
+import de.jClipCorn.util.SSLUtilities;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.LookAndFeelManager;
 
@@ -23,7 +24,7 @@ import de.jClipCorn.util.helper.LookAndFeelManager;
 
 public class Main {
 	public final static String TITLE = "jClipCorn"; //$NON-NLS-1$
-	public final static String VERSION = /*<gradle_version_marker>*/"1.10.5.3"/*</gradle_version_marker>*/;	//$NON-NLS-1$
+	public final static String VERSION = /*<gradle_version_marker>*/"1.10.5.4"/*</gradle_version_marker>*/;	//$NON-NLS-1$
 	public final static String DBVERSION = "11"; 	//$NON-NLS-1$
 	
 	private final static String PROPERTIES_PATH = "jClipcorn.properties"; //$NON-NLS-1$
@@ -87,6 +88,12 @@ public class Main {
 		}
 		
 		CCLog.addDebug(LocaleBundle.getTranslationCount() + " Translations in Locale " + LocaleBundle.getCurrentLocale()); //$NON-NLS-1$
+
+		if (CCProperties.getInstance().DISABLE_SSL_VERIFY.getValue()) {
+			SSLUtilities.trustAllHostnames();
+			SSLUtilities.trustAllHttpsCertificates();
+			CCLog.addDebug("SSL Verification disabled"); //$NON-NLS-1$
+		}
 	}
 }
 

@@ -49,6 +49,7 @@ import de.jClipCorn.online.OnlineSearchType;
 import de.jClipCorn.online.metadata.Metadataparser;
 import de.jClipCorn.online.metadata.OnlineMetadata;
 import de.jClipCorn.online.metadata.ParseResultHandler;
+import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.helper.ExtendedFocusTraversalOnArray;
 import de.jClipCorn.util.http.HTTPUtilities;
@@ -557,6 +558,9 @@ public class ParseOnlineDialog extends JDialog {
 	}
 	
 	private void runSearch(Metadataparser parser, boolean parseAll) {
+
+		if (Str.isNullOrWhitespace(edSearchName.getText())) return;
+
 		final List<Tuple<String, CCSingleOnlineReference>> links;
 		if (parseAll) {
 			links = parser.searchByText(edSearchName.getText(), OnlineSearchType.BOTH);
@@ -565,6 +569,8 @@ public class ParseOnlineDialog extends JDialog {
 		} else {
 			links = parser.searchByText(edSearchName.getText(), OnlineSearchType.SERIES);
 		}
+		
+		if (links == null) return;
 		
 		try {
 			SwingUtilities.invokeAndWait(new Runnable() {
@@ -640,7 +646,7 @@ public class ParseOnlineDialog extends JDialog {
 					if (md.Genres != null) cbxGenre7.setSelectedIndex(md.Genres.getGenre(7).asInt());
 					
 					btnRef.setIcon(selectedReference.getIconButton());
-					if (md.AltRef != null) ctrlAltRef.setValue(md.AltRef);
+					if (md.AltRef != null) ctrlAltRef.setValue(md.AltRef); else ctrlAltRef.setValue(CCSingleOnlineReference.createNone());
 					
 					btnOk.setEnabled(true);
 					

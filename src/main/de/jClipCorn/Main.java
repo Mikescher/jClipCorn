@@ -24,7 +24,7 @@ import de.jClipCorn.util.helper.LookAndFeelManager;
 
 public class Main {
 	public final static String TITLE = "jClipCorn"; //$NON-NLS-1$
-	public final static String VERSION = /*<gradle_version_marker>*/"1.10.5.6"/*</gradle_version_marker>*/;	//$NON-NLS-1$
+	public final static String VERSION = /*<gradle_version_marker>*/"1.10.5.8"/*</gradle_version_marker>*/;	//$NON-NLS-1$
 	public final static String DBVERSION = "11"; 	//$NON-NLS-1$
 	
 	private final static String PROPERTIES_PATH = "jClipcorn.properties"; //$NON-NLS-1$
@@ -174,6 +174,3 @@ public class Main {
 
 //TODO localsync: also autosave to dropbox (or directly sync with server??)
 //     php viewer: view synced data online with webpage(read-only) 
-
-//TODO: OpenDirectory (via menu & right-click) on series
-

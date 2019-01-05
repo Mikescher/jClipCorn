@@ -38,7 +38,18 @@ public class ClipSeriesPopup extends ClipPopupMenu {
 		
 		addActionMenuTree("SetSeriesRating");
 		addActionMenuTree("SetTags");
+
+		//#############
+		addSeparator();
+		//#############
+
+		addAction("OpenFolder");
 		addOpenInBrowserAction(ser, ser.getOnlineReference());
+
+		//#############
+		addSeparator();
+		//#############
+
 		addAction("MoveSeries");
 		addAction("CreateFolderStructSeries");
 		

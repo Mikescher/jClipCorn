@@ -344,6 +344,7 @@ public class CustomFilterEditDialog extends JDialog {
 			JComboBox<AbstractCustomFilter> cbxFilter = new JComboBox<>();
 			cbxFilter.setModel(new DefaultComboBoxModel<>(AbstractCustomFilter.iterateAllSimpleFilterSorted().toArray(new AbstractCustomFilter[0])));
 			cbxFilter.setRenderer(new CustomFilterEditFilterComboboxRenderer());
+			cbxFilter.setMaximumRowCount(32);
 			pnl.add(cbxFilter, "1, 2, fill, default"); //$NON-NLS-1$
 			
 			JButton btnAddFilter = new JButton(LocaleBundle.getString("FilterTree.Custom.CustomOperatorFilterDialog.btnAddFilter.text")); //$NON-NLS-1$
@@ -363,6 +364,7 @@ public class CustomFilterEditDialog extends JDialog {
 			JComboBox<AbstractCustomFilter> cbxOperator = new JComboBox<>();
 			cbxOperator.setModel(new DefaultComboBoxModel<>(AbstractCustomFilter.getAllOperatorFilter()));
 			cbxOperator.setRenderer(new CustomFilterEditFilterComboboxRenderer());
+			cbxOperator.setMaximumRowCount(32);
 			pnl.add(cbxOperator, "1, 6, fill, default"); //$NON-NLS-1$
 			
 			JButton btnAddOperator = new JButton(LocaleBundle.getString("FilterTree.Custom.CustomOperatorFilterDialog.btnAddOp.text")); //$NON-NLS-1$
@@ -382,6 +384,7 @@ public class CustomFilterEditDialog extends JDialog {
 			JComboBox<AbstractCustomFilter> cbxAggregator = new JComboBox<>();
 			cbxAggregator.setModel(new DefaultComboBoxModel<>(AbstractCustomFilter.getAllAggregatorFilter()));
 			cbxAggregator.setRenderer(new CustomFilterEditFilterComboboxRenderer());
+			cbxAggregator.setMaximumRowCount(32);
 			pnl.add(cbxAggregator, "1, 10, fill, default"); //$NON-NLS-1$
 			
 			JButton btnAddAggregator = new JButton(LocaleBundle.getString("FilterTree.Custom.CustomOperatorFilterDialog.btnAddAgg.text")); //$NON-NLS-1$

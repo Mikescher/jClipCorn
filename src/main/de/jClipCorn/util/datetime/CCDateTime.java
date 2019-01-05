@@ -71,8 +71,9 @@ public class CCDateTime implements Comparable<CCDateTime>, StringSpecSupplier {
 
 	@Override
 	public int compareTo(CCDateTime o) {
+		if (isUnspecifiedDateTime() && o.isUnspecifiedDateTime()) return 0;
 		if (isUnspecifiedDateTime()) return -1;
-		
+
 		int c = date.compareTo(o.date);
 		if (c != 0) return c;
 		

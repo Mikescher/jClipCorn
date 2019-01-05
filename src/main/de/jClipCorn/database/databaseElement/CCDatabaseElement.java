@@ -43,6 +43,7 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 	private final int seriesID;                     // INTEGER
 	private CCOnlineReferenceList onlineReference;  // VARCHAR
 	private CCGroupList linkedGroups;               // VARCHAR
+	private CCTagList tags;							// SMALLINT
 	
 	protected final CCMovieList movielist;
 	protected boolean isUpdating = false;
@@ -56,6 +57,7 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 		onlineReference = CCOnlineReferenceList.createEmpty();
 		linkedGroups    = CCGroupList.createEmpty();
 		genres          = CCGenreList.createEmpty();
+		tags            = CCTagList.createEmpty();
 	}
 	
 	public void setDefaultValues(boolean updateDB) {
@@ -68,10 +70,10 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 		covername       = ""; //$NON-NLS-1$
 		onlineReference = CCOnlineReferenceList.createEmpty();
 		linkedGroups    = CCGroupList.createEmpty();
+
+		tags.clear();
 		
-		if (updateDB) {
-			updateDB();
-		}
+		if (updateDB) updateDB();
 	}
 	
 	public void beginUpdating() {
@@ -336,17 +338,18 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 	
 	@SuppressWarnings({ "nls"})
 	protected void setXMLAttributes(Element e, boolean fileHash, boolean coverHash, boolean coverData) {
-		e.setAttribute("localid", localID + "");
-		e.setAttribute("typ", typ.asInt() + "");
-		e.setAttribute("title", title);
-		e.setAttribute("language", language.asInt() + "");
-		e.setAttribute("genres", genres.getAllGenres() + "");
-		e.setAttribute("onlinescore", onlinescore.asInt() + "");
-		e.setAttribute("fsk", fsk.asInt() + "");
-		e.setAttribute("score", score.asInt() + "");
-		e.setAttribute("seriesid", seriesID + "");
-		e.setAttribute("groups", linkedGroups.toSerializationString());
-		e.setAttribute("onlinreref", onlineReference.toSerializationString());
+		e.setAttribute("localid",      localID + "");
+		e.setAttribute("typ",          typ.asInt() + "");
+		e.setAttribute("title",        title);
+		e.setAttribute("language",     language.asInt() + "");
+		e.setAttribute("genres",       genres.getAllGenres() + "");
+		e.setAttribute("onlinescore",  onlinescore.asInt() + "");
+		e.setAttribute("fsk",          fsk.asInt() + "");
+		e.setAttribute("score",        score.asInt() + "");
+		e.setAttribute("seriesid",     seriesID + "");
+		e.setAttribute("groups",       linkedGroups.toSerializationString());
+		e.setAttribute("onlinreref",   onlineReference.toSerializationString());
+		e.setAttribute("tags",         tags.asShort() + "");
 
 		if (! coverData) {
 			e.setAttribute("covername", covername);
@@ -383,6 +386,12 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 		
 		if (e.getAttributeValue("score") != null)
 			setScore(Integer.parseInt(e.getAttributeValue("score")));
+
+		if (e.getAttributeValue("tags") != null)
+			setTags(Short.parseShort(e.getAttributeValue("tags")));
+
+		if (resetTags)
+			setTags(new CCTagList());
 		
 		if (resetScore)
 			setScore(CCUserScore.RATING_NO);
@@ -434,6 +443,37 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 		updateDB();
 	}
 
+	@Override
+	public CCTagList getTags() {
+		return tags;
+	}
+
+	public void setTags(short ptags) {
+		tags.parseFromShort(ptags);
+	}
+
+	public void setTags(CCTagList ptags) {
+		this.tags = ptags;
+
+		updateDB();
+	}
+
+	public void switchTag(int c) {
+		tags.switchTag(c);
+
+		updateDB();
+	}
+
+	public void setTag(int c, boolean v) {
+		tags.setTag(c, v);
+
+		updateDB();
+	}
+
+	public boolean getTag(int c) {
+		return tags.getTag(c);
+	}
+
 	public abstract CCFileSize getFilesize();
 	
 	@Override
@@ -444,10 +484,7 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 	
 	@Override
 	public abstract CCQuality getQuality();
-	
-	@Override
-	public abstract CCTagList getTags();
-	
+
 	@Override
 	public abstract ExtendedViewedState getExtendedViewedState();
 	

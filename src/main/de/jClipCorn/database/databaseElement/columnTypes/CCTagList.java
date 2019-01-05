@@ -302,4 +302,8 @@ public class CCTagList {
 	public boolean hasTags() {
 		return getTagCount() > 0;
 	}
+
+	public static CCTagList createEmpty() {
+		return new CCTagList();
+	}
 }

@@ -794,8 +794,8 @@ public class CCActionTree extends UIActionTree{
 	
 	private void onClickSwitchTag(int c) {
 		CCDatabaseElement el = owner.getSelectedElement();
-		if (el != null && el.isMovie()) {
-			((CCMovie)el).switchTag(c);
+		if (el != null) {
+			el.switchTag(c);
 		}
 	}
 }

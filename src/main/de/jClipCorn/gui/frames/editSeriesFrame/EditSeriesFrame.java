@@ -166,6 +166,8 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 	private JLabel lblGroups;
 	private GroupListEditor edSeriesGroups;
 	private JButton btnOkClose;
+	private TagPanel tagPanel;
+	private JLabel label_14;
 
 	/**
 	 * @wbp.parser.constructor
@@ -364,7 +366,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		pnlSeries.add(label_10);
 		
 		scrollPane = new JScrollPane();
-		scrollPane.setBounds(12, 475, 182, 126);
+		scrollPane.setBounds(12, 506, 182, 95);
 		pnlSeries.add(scrollPane);
 		
 		lsSeasons = new JList<>();
@@ -396,7 +398,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 				addSeason();
 			}
 		});
-		btnAddSeason.setBounds(206, 507, 167, 23);
+		btnAddSeason.setBounds(206, 541, 167, 23);
 		pnlSeries.add(btnAddSeason);
 		
 		btnRemoveSeason = new JButton(LocaleBundle.getString("EditSeriesFrame.btnRemoveSeason.text")); //$NON-NLS-1$
@@ -406,7 +408,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 				removeSeason();
 			}
 		});
-		btnRemoveSeason.setBounds(206, 541, 167, 23);
+		btnRemoveSeason.setBounds(206, 576, 167, 23);
 		pnlSeries.add(btnRemoveSeason);
 		
 		btnAddEmptySeason = new JButton(LocaleBundle.getString("EditSeriesFrame.btnAddEmptySeason.text")); //$NON-NLS-1$
@@ -416,7 +418,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 				addEmptySeason();
 			}
 		});
-		btnAddEmptySeason.setBounds(206, 473, 167, 23);
+		btnAddEmptySeason.setBounds(206, 506, 167, 23);
 		pnlSeries.add(btnAddEmptySeason);
 		
 		btnSeriesOk = new JButton(LocaleBundle.getString("UIGeneric.btnOK.text")); //$NON-NLS-1$
@@ -458,6 +460,14 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		edSeriesGroups = new GroupListEditor(series.getMovieList());
 		edSeriesGroups.setBounds(263, 288, 141, 20);
 		pnlSeries.add(edSeriesGroups);
+		
+		tagPanel = new TagPanel();
+		tagPanel.setBounds(74, 472, 299, 22);
+		pnlSeries.add(tagPanel);
+		
+		label_14 = new JLabel("Tags"); //$NON-NLS-1$
+		label_14.setBounds(12, 474, 52, 16);
+		pnlSeries.add(label_14);
 		
 		pnlSeason = new JPanel();
 		pnlSeason.setBorder(new LineBorder(new Color(0, 0, 0)));
@@ -802,6 +812,8 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		
 		edSeriesReference.setValue(series.getOnlineReference());
 		
+		tagPanel.setValue(series.getTags());
+		
 		lsSeasons.setSelectedIndex(-1);
 		DefaultListModel<String> ml;
 		lsSeasons.setModel(ml = new DefaultListModel<>());
@@ -1047,6 +1059,8 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		
 		series.setOnlineReference(edSeriesReference.getValue());
 		series.setGroups(edSeriesGroups.getValue());
+		
+		series.setTags(tagPanel.getValue());
 		
 		//#####################################################################################
 		

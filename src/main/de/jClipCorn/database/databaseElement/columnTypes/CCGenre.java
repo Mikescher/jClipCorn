@@ -368,6 +368,7 @@ public enum CCGenre implements ContinoousEnum<CCGenre> {
 		else                                            return CCGenre.GENRE_000;
 	}
 
+	@SuppressWarnings("nls")
 	public static CCGenre parseFromAniList(String txt) {
 		     if (txt.equalsIgnoreCase("Action"))          return CCGenre.GENRE_019;
 		else if (txt.equalsIgnoreCase("Adventure"))       return CCGenre.GENRE_035;

@@ -260,6 +260,7 @@ public class Statements {
 		uh.addPreparedField(CCDatabase.TAB_MAIN_COLUMN_COVER);          // 09     TAB_MAIN_COLUMN_COVER
 		uh.addPreparedField(CCDatabase.TAB_MAIN_COLUMN_TYPE);           // 10     TAB_MAIN_COLUMN_TYPE
 		uh.addPreparedField(CCDatabase.TAB_MAIN_COLUMN_SERIES_ID);      // 11     TAB_MAIN_COLUMN_SERIES_ID
+		uh.addPreparedField(CCDatabase.TAB_MAIN_COLUMN_TAGS);           // 12     TAB_MAIN_COLUMN_TAGS
 		
 		updateSeriesTabStatement = uh.prepare(d);
 	}

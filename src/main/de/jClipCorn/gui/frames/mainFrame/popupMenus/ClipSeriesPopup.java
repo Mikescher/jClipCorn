@@ -37,6 +37,7 @@ public class ClipSeriesPopup extends ClipPopupMenu {
 		//#############
 		
 		addActionMenuTree("SetSeriesRating");
+		addActionMenuTree("SetTags");
 		addOpenInBrowserAction(ser, ser.getOnlineReference());
 		addAction("MoveSeries");
 		addAction("CreateFolderStructSeries");

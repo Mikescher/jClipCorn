@@ -29,20 +29,15 @@ import de.jClipCorn.util.formatter.PathFormatter;
 
 public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, ICCDatedElement {
 	public final static int PARTCOUNT_MAX = 6; // 0 - 5
-	public final static int NAME_LENGTH_MAX = 128;
-	public final static int ZYKLUS_LENGTH_MAX = 128;
-	public final static int FILENAME_LENGTH_MAX = 512;
-	public final static int PART_LENGTH_MAX = 512;
-	
+
 	private boolean viewed;					// BIT
 	private CCMovieZyklus zyklus;			// LEN = 128 + INTEGER
-	private CCQuality quality;			// TINYINT
+	private CCQuality quality;				// TINYINT
 	private int length;						// INTEGER - in minutes
 	private CCDate addDate;					// DATE
 	private CCFileFormat format;			// TINYINT
 	private	int year;						// SMALLINT
 	private CCFileSize filesize;			// BIGINT - signed (unfortunately)
-	private CCTagList tags;				// SMALLINT
 	private String[] parts;					// [0..5] -> LEN = 512
 	private CCDateTimeList viewedHistory;   // VARCHAR
 	
@@ -52,7 +47,6 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 		
 		zyklus = new CCMovieZyklus();
 		filesize = CCFileSize.ZERO;
-		tags = new CCTagList();
 		addDate = CCDate.getMinimumDate();
 		viewedHistory = CCDateTimeList.createEmpty();
 	}
@@ -68,7 +62,6 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 		format = CCFileFormat.MKV;
 		year = 1900;
 		filesize = CCFileSize.ZERO;
-		tags.clear();
 		parts[0] = ""; //$NON-NLS-1$
 		parts[1] = ""; //$NON-NLS-1$
 		parts[2] = ""; //$NON-NLS-1$
@@ -76,11 +69,8 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 		parts[4] = ""; //$NON-NLS-1$
 		parts[5] = ""; //$NON-NLS-1$
 		viewedHistory = CCDateTimeList.createEmpty();
-		
-		
-		if (updateDB) {
-			updateDB();
-		}
+
+		if (updateDB) updateDB();
 	}
 	
 	@Override
@@ -260,38 +250,6 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 	public void setFilesize(CCFileSize filesize) {
 		setFilesize(filesize.getBytes());
 	}
-	
-	@Override
-	public CCTagList getTags() {
-		return tags;
-	}
-	
-	public void setTags(short ptags) {
-		tags.parseFromShort(ptags);
-	}
-	
-	public void setTags(CCTagList ptags) {
-		this.tags = ptags;
-		
-		updateDB();
-	}
-	
-	public void switchTag(int c) {
-		tags.switchTag(c);
-		
-		updateDB();
-	}
-	
-	public void setTag(int c, boolean v) {
-		tags.setTag(c, v);
-		
-		updateDB();
-	}
-	
-	@Override
-	public boolean getTag(int c) {
-		return tags.getTag(c);
-	}
 
 	public String getPart(int idx) {
 		return parts[idx];
@@ -386,12 +344,11 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 			e.setAttribute("part_"+i, parts[i]);
 		}
 		
-		e.setAttribute("quality", quality.asInt() + "");
-		e.setAttribute("tags", tags.asShort() + "");
-		e.setAttribute("viewed", viewed + "");
-		e.setAttribute("history", viewedHistory.toSerializationString());
-		e.setAttribute("year", year + "");
-		e.setAttribute("zyklus", zyklus.getTitle());
+		e.setAttribute("quality",      quality.asInt() + "");
+		e.setAttribute("viewed",       viewed + "");
+		e.setAttribute("history",      viewedHistory.toSerializationString());
+		e.setAttribute("year",         year + "");
+		e.setAttribute("zyklus",       zyklus.getTitle());
 		e.setAttribute("zyklusnumber", zyklus.getNumber() + "");
 		
 		if (fileHash) {
@@ -430,12 +387,6 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 		
 		if (e.getAttributeValue("quality") != null)
 			setQuality(Integer.parseInt(e.getAttributeValue("quality")));
-		
-		if (e.getAttributeValue("tags") != null)
-			setTags(Short.parseShort(e.getAttributeValue("tags")));
-		
-		if (resetTags)
-			setTags(new CCTagList());
 		
 		if (e.getAttributeValue("viewed") != null)
 			setViewed(e.getAttributeValue("viewed").equals(true + ""));
@@ -508,15 +459,18 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 	
 	@Override
 	public ExtendedViewedState getExtendedViewedState() {
-		if (!viewed && tags.getTag(CCTagList.TAG_WATCH_LATER))
+		if (!viewed && getTag(CCTagList.TAG_WATCH_LATER))
 			return new ExtendedViewedState(ExtendedViewedStateType.MARKED_FOR_LATER, getViewedHistory());
-		else if (viewed && tags.getTag(CCTagList.TAG_WATCH_LATER))
+
+		if (viewed && getTag(CCTagList.TAG_WATCH_LATER))
 			return new ExtendedViewedState(ExtendedViewedStateType.MARKED_FOR_AGAIN, getViewedHistory());
-		else if (isViewed())
+
+		if (isViewed())
 			return new ExtendedViewedState(ExtendedViewedStateType.VIEWED, getViewedHistory());
-		else if (tags.getTag(CCTagList.TAG_WATCH_NEVER))
+
+		if (getTag(CCTagList.TAG_WATCH_NEVER))
 			return new ExtendedViewedState(ExtendedViewedStateType.MARKED_FOR_NEVER, getViewedHistory());
-		else
-			return new ExtendedViewedState(ExtendedViewedStateType.NOT_VIEWED, getViewedHistory());
+
+		return new ExtendedViewedState(ExtendedViewedStateType.NOT_VIEWED, getViewedHistory());
 	}
 }

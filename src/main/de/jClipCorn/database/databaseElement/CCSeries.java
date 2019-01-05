@@ -209,17 +209,6 @@ public class CCSeries extends CCDatabaseElement  {
 	public int getFirstYear() {
 		return getYearRange().getLowestYear();
 	}
-	
-	@Override
-	public CCTagList getTags() {
-		CCTagList i = new CCTagList();
-		
-		for (int j = 0; j < getSeasonCount(); j++) {
-			i.doUnion(getSeasonByArrayIndex(j).getTags());
-		}
-		
-		return i;
-	}
 
 	public CCSeason getSeasonByArrayIndex(int ss) {
 		if (ss < 0 || ss >= seasons.size())
@@ -476,10 +465,14 @@ public class CCSeries extends CCDatabaseElement  {
 	public ExtendedViewedState getExtendedViewedState() {
 		if (isViewed())
 			return new ExtendedViewedState(ExtendedViewedStateType.VIEWED, CCDateTimeList.createEmpty());
-		else if (CCProperties.getInstance().PROP_SHOW_PARTIAL_VIEWED_STATE.getValue() && isPartialViewed())
+
+		if (getTag(CCTagList.TAG_WATCH_NEVER))
+			return new ExtendedViewedState(ExtendedViewedStateType.MARKED_FOR_NEVER, CCDateTimeList.createEmpty());
+
+		if (CCProperties.getInstance().PROP_SHOW_PARTIAL_VIEWED_STATE.getValue() && isPartialViewed())
 			return new ExtendedViewedState(ExtendedViewedStateType.PARTIAL_VIEWED, CCDateTimeList.createEmpty());
-		else
-			return new ExtendedViewedState(ExtendedViewedStateType.NOT_VIEWED, CCDateTimeList.createEmpty());
+
+		return new ExtendedViewedState(ExtendedViewedStateType.NOT_VIEWED, CCDateTimeList.createEmpty());
 	}
 
 	@SuppressWarnings("nls")

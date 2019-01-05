@@ -3,6 +3,7 @@ package de.jClipCorn.table.filter.filterConfig;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -55,24 +56,19 @@ public class CustomChildConfig extends CustomFilterConfig {
 			}));
 
 		List<AbstractCustomFilter> acffilter = new ArrayList<>();
-		for (AbstractCustomFilter f : AbstractCustomFilter.getAllOperatorFilter()) acffilter.add(f);
-		for (AbstractCustomFilter f : AbstractCustomFilter.getAllSimpleFilter()) acffilter.add(f);
+		acffilter.addAll(Arrays.asList(AbstractCustomFilter.getAllOperatorFilter()));
+		acffilter.addAll(Arrays.asList(AbstractCustomFilter.getAllSimpleFilter()));
 		
 		JComboBox<AbstractCustomFilter> cbxFilter = new JComboBox<>();
 		AbstractCustomFilter[] arr = acffilter.toArray(new AbstractCustomFilter[acffilter.size()]);
 		cbxFilter.setModel(new DefaultComboBoxModel<>(arr));
 		cbxFilter.setRenderer(new CustomFilterEditFilterComboboxRenderer());
 		cbxFilter.setSelectedIndex(getIndex(arr, valueGetter.invoke(), 0));
+		cbxFilter.setMaximumRowCount(32);
 		pnl.add(cbxFilter, "1, 2, fill, default"); //$NON-NLS-1$
 		
 		JButton btnAddFilter = new JButton(btnText);
-		btnAddFilter.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onChanged((AbstractCustomFilter)cbxFilter.getSelectedItem(), onChange);
-				onChange.run();
-			}
-		});
+		btnAddFilter.addActionListener(e -> { onChanged((AbstractCustomFilter)cbxFilter.getSelectedItem(), onChange); onChange.run(); });
 		pnl.add(btnAddFilter, "1, 4"); //$NON-NLS-1$
 		
 		return pnl;

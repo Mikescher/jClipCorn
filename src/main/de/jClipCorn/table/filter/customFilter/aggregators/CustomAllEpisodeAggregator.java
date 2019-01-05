@@ -33,14 +33,14 @@ public class CustomAllEpisodeAggregator extends CustomAggregator {
 	@Override
 	@SuppressWarnings("nls")
 	protected void initSerialization(FilterSerializationConfig cfg) {
-		cfg.addChild("filter", (d) -> this.setProcessorFilter(d),  () -> this.getProcessingFilter());
+		cfg.addChild("filter", this::setProcessorFilter, this::getProcessingFilter);
 	}
 
 	@Override
 	public CustomFilterConfig[] createConfig(CCMovieList ml) {
 		return new CustomFilterConfig[]
 		{
-			new CustomChildConfig(() -> getProcessingFilter(), a -> setProcessorFilter(a), LocaleBundle.getString("FilterTree.Custom.CustomOperatorFilterDialog.ChangeFilter.text")), //$NON-NLS-1$
+			new CustomChildConfig(this::getProcessingFilter, this::setProcessorFilter, LocaleBundle.getString("FilterTree.Custom.CustomOperatorFilterDialog.ChangeFilter.text")), //$NON-NLS-1$
 		};
 	}
 

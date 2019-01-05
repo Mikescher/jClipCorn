@@ -3,6 +3,7 @@ package de.jClipCorn.util.datatypes;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.util.DecimalSearchType;
 import de.jClipCorn.util.datetime.YearRange;
+import de.jClipCorn.util.stream.CCStream;
 
 public class CCIntArea {
 	public int low;
@@ -63,7 +64,6 @@ public class CCIntArea {
 				CCLog.addDefaultSwitchError(this, type);
 				return false;
 		}
-
 	}
 
 	public boolean contains(double c) {
@@ -85,7 +85,6 @@ public class CCIntArea {
 				CCLog.addDefaultSwitchError(this, type);
 				return false;
 		}
-
 	}
 
 	public boolean contains(YearRange range) {
@@ -108,5 +107,8 @@ public class CCIntArea {
 				return false;
 		}
 	}
-	
+
+	public boolean contains(CCStream<Integer> c) {
+		return c.any(this::contains);
+	}
 }

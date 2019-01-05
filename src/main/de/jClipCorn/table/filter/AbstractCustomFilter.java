@@ -29,40 +29,41 @@ import de.jClipCorn.util.stream.CCStream;
 import de.jClipCorn.util.stream.CCStreams;
 
 public abstract class AbstractCustomFilter {
-	public final static int CUSTOMFILTERID_AND            = 0;
-	public final static int CUSTOMFILTERID_NAND           = 1;
-	public final static int CUSTOMFILTERID_NOR            = 2;
-	public final static int CUSTOMFILTERID_OR             = 3;
-	public final static int CUSTOMFILTERID_FORMAT         = 4;
-	public final static int CUSTOMFILTERID_FSK            = 5;
-	public final static int CUSTOMFILTERID_GENRE          = 6;
-	public final static int CUSTOMFILTERID_LANGUAGE       = 7;
-	public final static int CUSTOMFILTERID_ONLINESCORE    = 8;
-	public final static int CUSTOMFILTERID_QUALITY        = 9;
-	public final static int CUSTOMFILTERID_USERSCORE      = 10;
-	public final static int CUSTOMFILTERID_TAG            = 11;
-	public final static int CUSTOMFILTERID_TITLE          = 12;
-	public final static int CUSTOMFILTERID_TYP            = 13;
-	public final static int CUSTOMFILTERID_VIEWED         = 14;
-	public final static int CUSTOMFILTERID_YEAR           = 15;
-	public final static int CUSTOMFILTERID_ZYKLUS         = 16;
-	public final static int CUSTOMFILTERID_GROUP          = 17;
-	public final static int CUSTOMFILTERID_MAINREFERENCE  = 18;
-	public final static int CUSTOMFILTERID_HISTORY        = 19;
-	public final static int CUSTOMFILTERID_SEARCH         = 20;
-	public final static int CUSTOMFILTERID_CHAR           = 21;
-	public final static int CUSTOMFILTERID_ADDDATE        = 22;
-	public final static int CUSTOMFILTERID_VIEWCOUNT      = 23;
-	public final static int CUSTOMFILTERID_ANYEPISODE     = 24;
-	public final static int CUSTOMFILTERID_ALLEPISODE     = 25;
-	public final static int CUSTOMFILTERID_ANYSEASON      = 26;
-	public final static int CUSTOMFILTERID_ALLSEASON      = 27;
-	public final static int CUSTOMFILTERID_EPISODECOUNT   = 28;
-	public final static int CUSTOMFILTERID_EXTVIEWED      = 29;
-	public final static int CUSTOMFILTERID_COVERDIMENSION = 30;
-	public final static int CUSTOMFILTERID_ANYREFERENCE   = 31;
-	public final static int CUSTOMFILTERID_EPISODECOUNTER = 32;
-	public final static int CUSTOMFILTERID_SEASONCOUNTER  = 33;
+	public final static int CUSTOMFILTERID_AND              = 0;
+	public final static int CUSTOMFILTERID_NAND             = 1;
+	public final static int CUSTOMFILTERID_NOR              = 2;
+	public final static int CUSTOMFILTERID_OR               = 3;
+	public final static int CUSTOMFILTERID_FORMAT           = 4;
+	public final static int CUSTOMFILTERID_FSK              = 5;
+	public final static int CUSTOMFILTERID_GENRE            = 6;
+	public final static int CUSTOMFILTERID_LANGUAGE         = 7;
+	public final static int CUSTOMFILTERID_ONLINESCORE      = 8;
+	public final static int CUSTOMFILTERID_QUALITY          = 9;
+	public final static int CUSTOMFILTERID_USERSCORE        = 10;
+	public final static int CUSTOMFILTERID_TAG              = 11;
+	public final static int CUSTOMFILTERID_TITLE            = 12;
+	public final static int CUSTOMFILTERID_TYP              = 13;
+	public final static int CUSTOMFILTERID_VIEWED           = 14;
+	public final static int CUSTOMFILTERID_YEAR             = 15;
+	public final static int CUSTOMFILTERID_ZYKLUS           = 16;
+	public final static int CUSTOMFILTERID_GROUP            = 17;
+	public final static int CUSTOMFILTERID_MAINREFERENCE    = 18;
+	public final static int CUSTOMFILTERID_HISTORY          = 19;
+	public final static int CUSTOMFILTERID_SEARCH           = 20;
+	public final static int CUSTOMFILTERID_CHAR             = 21;
+	public final static int CUSTOMFILTERID_ADDDATE          = 22;
+	public final static int CUSTOMFILTERID_VIEWCOUNT        = 23;
+	public final static int CUSTOMFILTERID_ANYEPISODE       = 24;
+	public final static int CUSTOMFILTERID_ALLEPISODE       = 25;
+	public final static int CUSTOMFILTERID_ANYSEASON        = 26;
+	public final static int CUSTOMFILTERID_ALLSEASON        = 27;
+	public final static int CUSTOMFILTERID_EPISODECOUNT     = 28;
+	public final static int CUSTOMFILTERID_EXTVIEWED        = 29;
+	public final static int CUSTOMFILTERID_COVERDIMENSION   = 30;
+	public final static int CUSTOMFILTERID_ANYREFERENCE     = 31;
+	public final static int CUSTOMFILTERID_EPISODECOUNTER   = 32;
+	public final static int CUSTOMFILTERID_SEASONCOUNTER    = 33;
+	public final static int CUSTOMFILTERID_RELATIVE_HISTORY = 34;
 		
 	public abstract String getName();
 	public abstract String getPrecreateName();
@@ -190,6 +191,7 @@ public abstract class AbstractCustomFilter {
 			new CustomViewcountFilter(),
 			new CustomEpisodecountFilter(),
 			new CustomCoverDimensionFilter(),
+			new CustomRelativeHistoryFilter(),
 		};
 	}
 	

@@ -175,6 +175,4 @@ public class Main {
 //TODO localsync: also autosave to dropbox (or directly sync with server??)
 //     php viewer: view synced data online with webpage(read-only) 
 
-//TODO new tag: [aborted]  (for series i no longer watch - to remove them from ToWatch)
-
 //TODO: OpenDirectory (via menu & right-click) on series

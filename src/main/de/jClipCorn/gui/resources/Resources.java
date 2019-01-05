@@ -99,6 +99,8 @@ public class Resources {
 	public final static MultiIconRef ICN_MENUBAR_TAG_6_1 				= registerMultisizeIcon("/icons/tags/tag_6_on.png");
 	public final static MultiIconRef ICN_MENUBAR_TAG_7_0 				= registerMultisizeIcon("/icons/tags/tag_7_off.png");
 	public final static MultiIconRef ICN_MENUBAR_TAG_7_1 				= registerMultisizeIcon("/icons/tags/tag_7_on.png");
+	public final static MultiIconRef ICN_MENUBAR_TAG_8_0 				= registerMultisizeIcon("/icons/tags/tag_7_off.png");
+	public final static MultiIconRef ICN_MENUBAR_TAG_8_1 				= registerMultisizeIcon("/icons/tags/tag_7_on.png");
 	public final static MultiIconRef ICN_MENUBAR_CREATEFOLDERSTRUCTURE	= registerMultisizeIcon("/icons/toolbar/folders_explorer.png");
 	public final static MultiIconRef ICN_MENUBAR_SAVE					= registerMultisizeIcon("/icons/toolbar/save_as.png");
 	public final static MultiIconRef ICN_MENUBAR_SHOWCOVER				= registerMultisizeIcon("/icons/toolbar/images.png");
@@ -188,9 +190,11 @@ public class Resources {
 	public final static MultiIconRef ICN_TABLE_TAG_6_1 		= registerMultisizeIcon("/icons/tags/tag_6_on.png");
 	public final static MultiIconRef ICN_TABLE_TAG_7_0 		= registerMultisizeIcon("/icons/tags/tag_7_off.png");
 	public final static MultiIconRef ICN_TABLE_TAG_7_1 		= registerMultisizeIcon("/icons/tags/tag_7_on.png");
+	public final static MultiIconRef ICN_TABLE_TAG_8_0 		= registerMultisizeIcon("/icons/tags/tag_8_off.png");
+	public final static MultiIconRef ICN_TABLE_TAG_8_1 		= registerMultisizeIcon("/icons/tags/tag_8_on.png");
 
-	public final static MultiIconRef[] ICN_TABLE_TAG_X_0 	= new MultiIconRef[] {ICN_TABLE_TAG_0_0, ICN_TABLE_TAG_1_0, ICN_TABLE_TAG_2_0, ICN_TABLE_TAG_3_0, ICN_TABLE_TAG_4_0, ICN_TABLE_TAG_5_0, ICN_TABLE_TAG_6_0, ICN_TABLE_TAG_7_0};
-	public final static MultiIconRef[] ICN_TABLE_TAG_X_1 	= new MultiIconRef[] {ICN_TABLE_TAG_0_1, ICN_TABLE_TAG_1_1, ICN_TABLE_TAG_2_1, ICN_TABLE_TAG_3_1, ICN_TABLE_TAG_4_1, ICN_TABLE_TAG_5_1, ICN_TABLE_TAG_6_1, ICN_TABLE_TAG_7_1};
+	public final static MultiIconRef[] ICN_TABLE_TAG_X_0 	= new MultiIconRef[] {ICN_TABLE_TAG_0_0, ICN_TABLE_TAG_1_0, ICN_TABLE_TAG_2_0, ICN_TABLE_TAG_3_0, ICN_TABLE_TAG_4_0, ICN_TABLE_TAG_5_0, ICN_TABLE_TAG_6_0, ICN_TABLE_TAG_7_0, ICN_TABLE_TAG_8_0 };
+	public final static MultiIconRef[] ICN_TABLE_TAG_X_1 	= new MultiIconRef[] {ICN_TABLE_TAG_0_1, ICN_TABLE_TAG_1_1, ICN_TABLE_TAG_2_1, ICN_TABLE_TAG_3_1, ICN_TABLE_TAG_4_1, ICN_TABLE_TAG_5_1, ICN_TABLE_TAG_6_1, ICN_TABLE_TAG_7_1, ICN_TABLE_TAG_8_1 };
 	// #############################################  </TABLE>  ##############################################
 
 	

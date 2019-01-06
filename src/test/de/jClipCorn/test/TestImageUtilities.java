@@ -14,6 +14,8 @@ public class TestImageUtilities extends ClipCornBaseTest {
 
 	@Test
 	public void testResizeToBounds_1() {
+		createEmptyDB();
+
 		CCProperties.getInstance().PROP_DATABASE_MAX_COVER_SIZE.setValue(CoverImageSize.DEC_SIZE); // 1820 x 2540
 
 		Tuple<Integer, Integer> s0 = ImageUtilities.calcImageSizeForStorage(182, 254);
@@ -25,6 +27,8 @@ public class TestImageUtilities extends ClipCornBaseTest {
 
 	@Test
 	public void testResizeToBounds_2() {
+		createEmptyDB();
+
 		CCProperties.getInstance().PROP_DATABASE_MAX_COVER_SIZE.setValue(CoverImageSize.DEC_SIZE); // 1820 x 2540
 
 		Tuple<Integer, Integer> s0 = ImageUtilities.calcImageSizeForStorage(1820, 2540);
@@ -36,6 +40,8 @@ public class TestImageUtilities extends ClipCornBaseTest {
 
 	@Test
 	public void testResizeToBounds_3() {
+		createEmptyDB();
+
 		CCProperties.getInstance().PROP_DATABASE_MAX_COVER_SIZE.setValue(CoverImageSize.DEC_SIZE); // 1820 x 2540
 
 		Tuple<Integer, Integer> s0 = ImageUtilities.calcImageSizeForStorage(150, 254);
@@ -45,6 +51,8 @@ public class TestImageUtilities extends ClipCornBaseTest {
 
 	@Test
 	public void testResizeToBounds_4() {
+		createEmptyDB();
+
 		CCProperties.getInstance().PROP_DATABASE_MAX_COVER_SIZE.setValue(CoverImageSize.DEC_SIZE); // 1820 x 2540
 
 		Tuple<Integer, Integer> s0 = ImageUtilities.calcImageSizeForStorage(182, 200);
@@ -54,6 +62,8 @@ public class TestImageUtilities extends ClipCornBaseTest {
 
 	@Test
 	public void testResizeToBounds_5() {
+		createEmptyDB();
+
 		CCProperties.getInstance().PROP_DATABASE_MAX_COVER_SIZE.setValue(CoverImageSize.DEC_SIZE); // 1820 x 2540
 
 		Tuple<Integer, Integer> s0 = ImageUtilities.calcImageSizeForStorage(150, 200);
@@ -63,6 +73,8 @@ public class TestImageUtilities extends ClipCornBaseTest {
 
 	@Test
 	public void testResizeToBounds_6() {
+		createEmptyDB();
+
 		CCProperties.getInstance().PROP_DATABASE_MAX_COVER_SIZE.setValue(CoverImageSize.DEC_SIZE); // 1820 x 2540
 
 		Tuple<Integer, Integer> s0 = ImageUtilities.calcImageSizeForStorage(1950, 2540);
@@ -72,6 +84,8 @@ public class TestImageUtilities extends ClipCornBaseTest {
 
 	@Test
 	public void testResizeToBounds_7() {
+		createEmptyDB();
+
 		CCProperties.getInstance().PROP_DATABASE_MAX_COVER_SIZE.setValue(CoverImageSize.DEC_SIZE); // 1820 x 2540
 
 		Tuple<Integer, Integer> s0 = ImageUtilities.calcImageSizeForStorage(1820, 2950);
@@ -81,6 +95,8 @@ public class TestImageUtilities extends ClipCornBaseTest {
 
 	@Test
 	public void testResizeToBounds_8() {
+		createEmptyDB();
+
 		CCProperties.getInstance().PROP_DATABASE_MAX_COVER_SIZE.setValue(CoverImageSize.DEC_SIZE); // 1820 x 2540
 
 		Tuple<Integer, Integer> s0 = ImageUtilities.calcImageSizeForStorage(1950, 2950);
@@ -90,6 +106,8 @@ public class TestImageUtilities extends ClipCornBaseTest {
 
 	@Test
 	public void testResizeToBounds_9() {
+		createEmptyDB();
+
 		CCProperties.getInstance().PROP_DATABASE_MAX_COVER_SIZE.setValue(CoverImageSize.DEC_SIZE); // 1820 x 2540
 
 		Tuple<Integer, Integer> s0 = ImageUtilities.calcImageSizeForStorage(300, 500);

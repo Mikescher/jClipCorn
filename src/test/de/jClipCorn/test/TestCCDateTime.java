@@ -77,7 +77,7 @@ public class TestCCDateTime extends ClipCornBaseTest {
 		assertEquals(+1, CCDateTime.create(19,8,2020, 7,50,35).compareTo(CCDateTime.getUnspecified()));
 		assertEquals(-1, CCDateTime.getUnspecified().compareTo(CCDateTime.createDateOnly(19,8,2020)));
 		
-		assertFalse(00 == CCDateTime.getUnspecified().compareTo(CCDateTime.getUnspecified()));
+		assertTrue(00 == CCDateTime.getUnspecified().compareTo(CCDateTime.getUnspecified()));
 		
 		assertFalse(CCDateTime.getUnspecified().isEqual(CCDateTime.getUnspecified()));
 		assertFalse(CCDateTime.create(19,8,2020, 7,50,35).isEqual(CCDateTime.getUnspecified()));

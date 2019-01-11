@@ -366,13 +366,13 @@ public final class CCDate implements Comparable<CCDate>, StringSpecSupplier {
 		
 		while (newday <= 0) {
 			newmonth--;
-			newday += getDaysOfMonth(newmonth, newyear);
-			
-			
+
 			while (newmonth <= 0) {
 				newmonth += 12;
 				newyear--;
 			}
+
+			newday += getDaysOfMonth(newmonth, newyear);
 		}
 		
 		return create(newday, newmonth, newyear);

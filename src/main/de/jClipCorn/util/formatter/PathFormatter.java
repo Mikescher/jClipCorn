@@ -2,6 +2,7 @@ package de.jClipCorn.util.formatter;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -556,5 +557,16 @@ public class PathFormatter {
 	public static boolean fileExists(String path) {
 		File f = new File(path);
 		return (f.exists() && !f.isDirectory());
+	}
+
+	public static boolean isValid(String path) {
+
+	    try {
+	        Paths.get(path);
+	        new File(path).getCanonicalPath();
+	    } catch (Exception ex) {
+	        return false;
+	    }
+	    return true;
 	}
 }

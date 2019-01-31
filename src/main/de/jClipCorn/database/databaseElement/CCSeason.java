@@ -594,27 +594,27 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 		return CCStreams.iterate(episodes);
 	}
 
-	public File getFileForCreatedFolderstructure(File parentfolder, String title, int episodeNumber) {
+	public File getFileForCreatedFolderstructure(File parentfolder, String title, int episodeNumber, CCFileFormat format) {
 		if (! parentfolder.isDirectory()) {
 			return null; // meehp
 		}
 
 		String parent = PathFormatter.appendSeparator(parentfolder.getAbsolutePath());
 
-		String path = parent + getRelativeFileForCreatedFolderstructure(title, episodeNumber);
+		String path = parent + getRelativeFileForCreatedFolderstructure(title, episodeNumber, format);
 
 		return new File(path);
 	}
 
 	@SuppressWarnings("nls")
-	public String getRelativeFileForCreatedFolderstructure(String title, int episodeNumber) {
+	public String getRelativeFileForCreatedFolderstructure(String title, int episodeNumber, CCFileFormat format) {
 		DecimalFormat decFormattter = new DecimalFormat("00");
 
 		String seriesfoldername = getSeries().getFolderNameForCreatedFolderStructure();
 		String seasonfoldername = getFolderNameForCreatedFolderStructure();
 		int seasonIndex = getIndexForCreatedFolderStructure();
 
-		String filename = PathFormatter.fixStringToFilesystemname(String.format("S%sE%s - %s.%s", decFormattter.format(seasonIndex), decFormattter.format(episodeNumber), title, this.getFormat().asString()));
+		String filename = PathFormatter.fixStringToFilesystemname(String.format("S%sE%s - %s.%s", decFormattter.format(seasonIndex), decFormattter.format(episodeNumber), title, format.asString()));
 
 		return PathFormatter.combine(seriesfoldername, seasonfoldername, filename);
 	}

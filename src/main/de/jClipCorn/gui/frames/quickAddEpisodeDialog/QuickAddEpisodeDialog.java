@@ -78,7 +78,7 @@ public class QuickAddEpisodeDialog extends JDialog {
 	private void initGUI() {
 		setTitle(LocaleBundle.getString("QuickAddEpisodeDialog.title")); //$NON-NLS-1$
 		setIconImage(CachedResourceLoader.getImage(Resources.IMG_FRAME_ICON));
-		setBounds(100, 100, 400, 300);
+		setBounds(100, 100, 550, 300);
 		setMinimumSize(new Dimension(300, 300));
 		setModal(true);
 
@@ -217,19 +217,20 @@ public class QuickAddEpisodeDialog extends JDialog {
 		spnEpisode.setValue(season.getNextEpisodeNumber());
 		spnLength.setValue(season.getSeries().getAutoEpisodeLength(season));
 
-		edTitle.setText(autoExtractTitle(source.getAbsolutePath()));
+		EpisodeFilenameParserResult result = FilenameParser.parseEpisode(source.getAbsolutePath());
+		if (result != null) {
+			spnEpisode.setValue(result.EpisodeNumber);
+			edTitle.setText(result.Title);
+		} else {
+			edTitle.setText(PathFormatter.getFilename(source.getAbsolutePath()));
+		}
+
 		edTarget.setText(createTarget());
 
-		cbCopy.setSelected(true);
-		cbRename.setSelected(true);
+		cbCopy.setSelected(!PathFormatter.fromCCPath(edTarget.getText()).equalsIgnoreCase(edSource.getText()));
+		cbRename.setSelected(cbCopy.isSelected());
 	}
 
-	private String autoExtractTitle(String fpath) {
-		EpisodeFilenameParserResult result = FilenameParser.parseEpisode(fpath);
-		if (result != null) return result.Title;
-		return PathFormatter.getFilename(fpath);
-	}
-	
 	public static void show(PreviewSeriesFrame owner, CCSeason s, File f) {
 		QuickAddEpisodeDialog qaed = new QuickAddEpisodeDialog(owner, owner, s, f);
 		qaed.setVisible(true);
@@ -243,7 +244,7 @@ public class QuickAddEpisodeDialog extends JDialog {
 		String root = season.getSeries().guessSeriesRootPath();
 		if (Str.isNullOrWhitespace(root)) return Str.Empty;
 
-		File dst = season.getFileForCreatedFolderstructure(new File(root), title, episode);
+		File dst = season.getFileForCreatedFolderstructure(new File(root), title, episode, CCFileFormat.getMovieFormatFromPath(edSource.getText()));
 
 		return PathFormatter.getCCPath(dst.getAbsolutePath(), CCProperties.getInstance().PROP_ADD_MOVIE_RELATIVE_AUTO.getValue());
 	}
@@ -269,7 +270,7 @@ public class QuickAddEpisodeDialog extends JDialog {
 			CCFileFormat format = CCFileFormat.getMovieFormatFromPath(src);
 
 			List<UserDataProblem> problems = new ArrayList<>();
-			boolean probvalue = !check || checkUserDataEpisode(problems, title, length, episodenumber, adddate, history, filesize, quality.asInt(), format.asString(), format.asStringAlt(), src, fullDst);
+			boolean probvalue = !check || checkUserDataEpisode(problems, title, length, episodenumber, adddate, history, filesize, quality.asInt(), format.asString(), format.asStringAlt(), src, dst, fullDst);
 
 			// some problems are too fatal
 			if (probvalue && Str.isNullOrWhitespace(title)) {
@@ -313,15 +314,15 @@ public class QuickAddEpisodeDialog extends JDialog {
 		}
 	}
 
-	private boolean checkUserDataEpisode(List<UserDataProblem> ret, String title, int len, int epNum, CCDate adddate, CCDateTimeList lvdate, long fsize, int quality, String csExtn, String csExta, String src, String dst) {
+	private boolean checkUserDataEpisode(List<UserDataProblem> ret, String title, int len, int epNum, CCDate adddate, CCDateTimeList lvdate, long fsize, int quality, String csExtn, String csExta, String src, String dst, String fullDst) {
 
-		UserDataProblem.testEpisodeData(ret, season, null, title, len, epNum, adddate, lvdate, fsize, csExtn, csExta, src, quality);
+		UserDataProblem.testEpisodeData(ret, season, null, title, len, epNum, adddate, lvdate, fsize, csExtn, csExta, dst, quality);
 
-		if (!new File(src).exists() || !new File(src).isFile()) {
+		if (!PathFormatter.fileExists(src)) {
 			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_INPUT_FILE_NOT_FOUND));
 		}
 
-		if (new File(dst).exists()) {
+		if (PathFormatter.fileExists(fullDst)) {
 			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_DESTINTAION_FILE_ALREADY_EXISTS));
 		}
 

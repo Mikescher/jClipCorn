@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 
 import javax.swing.JButton;
@@ -26,6 +27,7 @@ import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.database.util.CCDBUpdateListener;
 import de.jClipCorn.gui.actionTree.ActionSource;
 import de.jClipCorn.gui.actionTree.CCActionTree;
+import de.jClipCorn.gui.frames.addMovieFrame.AddMovieFrame;
 import de.jClipCorn.gui.frames.mainFrame.clipCharSelector.AbstractClipCharSortSelector;
 import de.jClipCorn.gui.frames.mainFrame.clipCharSelector.FullClipCharSortSelector;
 import de.jClipCorn.gui.frames.mainFrame.clipCharSelector.SmallClipCharSortSelector;
@@ -38,8 +40,11 @@ import de.jClipCorn.gui.frames.mainFrame.filterTree.FilterTree;
 import de.jClipCorn.gui.frames.mainFrame.popupMenus.ClipMoviePopup;
 import de.jClipCorn.gui.frames.mainFrame.popupMenus.ClipSeriesPopup;
 import de.jClipCorn.gui.frames.mainFrame.searchField.SearchField;
+import de.jClipCorn.gui.frames.quickAddEpisodeDialog.QuickAddEpisodeDialog;
+import de.jClipCorn.gui.frames.quickAddMoviesDialog.QuickAddMoviesDialog;
 import de.jClipCorn.gui.frames.showUpdateFrame.ShowUpdateFrame;
 import de.jClipCorn.gui.guiComponents.DatabaseElementPreviewLabel;
+import de.jClipCorn.gui.guiComponents.FileDrop;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.gui.resources.CachedResourceLoader;
@@ -49,7 +54,7 @@ import de.jClipCorn.table.filter.customFilter.CustomSearchFilter;
 import de.jClipCorn.util.UpdateConnector;
 import de.jClipCorn.util.helper.LookAndFeelManager;
 
-public class MainFrame extends JFrame implements CCDBUpdateListener {
+public class MainFrame extends JFrame implements CCDBUpdateListener, FileDrop.Listener {
 	private static final long serialVersionUID = 1002435986107998058L;
 
 	private final static int FRAME_WIDTH = 875;
@@ -57,23 +62,15 @@ public class MainFrame extends JFrame implements CCDBUpdateListener {
 	
 	private static MainFrame instance = null;
 
-	private Container content;
-	private ClipMenuBar mainMenu;
-	private ClipToolbar toolbar;
 	private JPanel leftPanel;
 	private FilterTree filterTree;
 	private DatabaseElementPreviewLabel coverImage;
 	private JPanel middlePanel;
 	private ClipTable clipTable;
-	private AbstractClipCharSortSelector charSelector;
 	private CCMovieList movielist;
-	private JPanel coverPanel;
-	private JPanel gapPanel;
 	private ClipStatusBar statusbar;
-	private JPanel topPanel;
 	private JPanel toprightPanel;
 	private SearchField edSearch;
-	private JButton btnSearch;
 
 	public MainFrame(CCMovieList movielist) {
 		super();
@@ -105,7 +102,7 @@ public class MainFrame extends JFrame implements CCDBUpdateListener {
 		setMinimumSize(new Dimension(FRAME_WIDTH, FRAME_HEIGHT));
 		setLocationRelativeTo(null);
 
-		content = getContentPane();
+		Container content = getContentPane();
 
 		getContentPane().setLayout(new BorderLayout(3, 5));
 
@@ -114,20 +111,15 @@ public class MainFrame extends JFrame implements CCDBUpdateListener {
 		edSearch = new SearchField(this);
 		toprightPanel.add(edSearch);
 		edSearch.setColumns(16);
-		
-		btnSearch = new JButton();
+
+		JButton btnSearch = new JButton();
 		btnSearch.setMinimumSize(new Dimension(20, 20));
 		btnSearch.setMaximumSize(new Dimension(20, 20));
 		btnSearch.setPreferredSize(new Dimension(20, 20));
 		btnSearch.setContentAreaFilled(false);
 		btnSearch.setBorderPainted(false);
 		btnSearch.setFocusPainted(false);
-		btnSearch.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				startSearch();
-			}
-		});
+		btnSearch.addActionListener(e -> startSearch());
 		btnSearch.setIcon(CachedResourceLoader.getIcon(Resources.ICN_FRAMES_SEARCH.icon16x16));
 		toprightPanel.add(btnSearch);
 		content.add(leftPanel, BorderLayout.WEST);
@@ -135,6 +127,7 @@ public class MainFrame extends JFrame implements CCDBUpdateListener {
 
 		clipTable = new ClipTable(movielist, this);
 		filterTree = new FilterTree(movielist, clipTable);
+		AbstractClipCharSortSelector charSelector;
 		if (LookAndFeelManager.isSubstance())
 			charSelector = new SmallClipCharSortSelector(this);
 		else
@@ -145,11 +138,11 @@ public class MainFrame extends JFrame implements CCDBUpdateListener {
 
 		leftPanel.add(filterTree, BorderLayout.CENTER);
 
-		coverPanel = new JPanel();
+		JPanel coverPanel = new JPanel();
 		leftPanel.add(coverPanel, BorderLayout.SOUTH);
 		coverPanel.setLayout(new BorderLayout(0, 5));
 
-		gapPanel = new JPanel();
+		JPanel gapPanel = new JPanel();
 		coverPanel.add(gapPanel, BorderLayout.NORTH);
 		gapPanel.setLayout(null);
 
@@ -163,19 +156,19 @@ public class MainFrame extends JFrame implements CCDBUpdateListener {
 		pack();
 
 		setSize(CCProperties.getInstance().PROP_MAINFRAME_WIDTH.getValue(), CCProperties.getInstance().PROP_MAINFRAME_HEIGHT.getValue());
+		
+		new FileDrop(clipTable, true, this);
 	}
 	
 	public void beginBlockingIntermediate() {
 		CCMovieList.beginBlocking();
 		
 		try {
-			SwingUtilities.invokeAndWait(new Runnable() {
-				@Override
-				public void run() {
-					getProgressBar().setValue(0);
-					getProgressBar().setIndeterminate(true);
-					setEnabled(false);
-				}
+			SwingUtilities.invokeAndWait(() ->
+			{
+				getProgressBar().setValue(0);
+				getProgressBar().setIndeterminate(true);
+				setEnabled(false);
 			});
 		} catch (InvocationTargetException | InterruptedException e) {
 			CCLog.addError(e);
@@ -185,12 +178,10 @@ public class MainFrame extends JFrame implements CCDBUpdateListener {
 	public void endBlockingIntermediate() {
 		CCMovieList.endBlocking();
 
-		Runnable runnner = new Runnable() {
-			@Override
-			public void run() {
-				getProgressBar().setIndeterminate(false);
-				setEnabled(true);
-			}
+		Runnable runnner = () ->
+		{
+			getProgressBar().setIndeterminate(false);
+			setEnabled(true);
 		};
 		
 		if (SwingUtilities.isEventDispatchThread()) {
@@ -209,16 +200,16 @@ public class MainFrame extends JFrame implements CCDBUpdateListener {
 	}
 
 	private void createLayout() {
-		mainMenu = new ClipMenuBar();
+		ClipMenuBar mainMenu = new ClipMenuBar();
 		leftPanel = new JPanel(new BorderLayout());
 
 		middlePanel = new JPanel(new BorderLayout());
 		setJMenuBar(mainMenu); // $hide$
-		
-		topPanel = new JPanel();
+
+		JPanel topPanel = new JPanel();
 		getContentPane().add(topPanel, BorderLayout.NORTH);
 		topPanel.setLayout(new BorderLayout(0, 0));
-		toolbar = new ClipToolbar();
+		ClipToolbar toolbar = new ClipToolbar();
 		topPanel.add(toolbar);
 		
 		toprightPanel = new JPanel();
@@ -365,24 +356,17 @@ public class MainFrame extends JFrame implements CCDBUpdateListener {
 	@Override
 	public void onAfterLoad() {
 		if (CCProperties.getInstance().PROP_COMMON_CHECKFORUPDATES.getValue() && ! Main.BETA) {
-			new UpdateConnector(Main.TITLE, Main.VERSION, new ActionListener() {
-				@Override
-				public void actionPerformed(final ActionEvent e) {
-					SwingUtilities.invokeLater(new Runnable() {
-						@Override
-						public void run() {
-							if (e.getID() == 1) {
-								if (Main.DEBUG) {
-									CCLog.addDebug("Update found"); //$NON-NLS-1$
-								} else {
-									ShowUpdateFrame suf = new ShowUpdateFrame(MainFrame.this, (UpdateConnector) e.getSource(), true);
-									suf.setVisible(true);
-								}
-							}
-						}
-					});
+			new UpdateConnector(Main.TITLE, Main.VERSION, e -> SwingUtilities.invokeLater(() -> 
+			{
+				if (e.getID() == 1) {
+					if (Main.DEBUG) {
+						CCLog.addDebug("Update found"); //$NON-NLS-1$
+					} else {
+						ShowUpdateFrame suf = new ShowUpdateFrame(MainFrame.this, (UpdateConnector) e.getSource(), true);
+						suf.setVisible(true);
+					}
 				}
-			}, true);
+			}), true);
 		}
 	}
 
@@ -420,5 +404,12 @@ public class MainFrame extends JFrame implements CCDBUpdateListener {
 
 	public DatabaseElementPreviewLabel getCoverLabel() {
 		return coverImage;
+	}
+
+	@Override
+	public void filesDropped(File[] files) {
+		if (files.length>0) {
+			new QuickAddMoviesDialog(this, getMovielist(), files).setVisible(true);
+		}
 	}
 }

@@ -469,11 +469,11 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 	}
 	
 	public File getFileForCreatedFolderstructure(File parentfolder) {
-		return getSeason().getFileForCreatedFolderstructure(parentfolder, getTitle(), getEpisodeNumber());
+		return getSeason().getFileForCreatedFolderstructure(parentfolder, getTitle(), getEpisodeNumber(), getFormat());
 	}
 	
 	public String getRelativeFileForCreatedFolderstructure() {
-		return getSeason().getRelativeFileForCreatedFolderstructure(getTitle(), getEpisodeNumber());
+		return getSeason().getRelativeFileForCreatedFolderstructure(getTitle(), getEpisodeNumber(), getFormat());
 	}
 
 	@Override

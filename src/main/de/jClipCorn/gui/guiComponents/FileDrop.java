@@ -60,7 +60,7 @@ public class FileDrop {
 
 	private static Boolean supportsDnD;
 
-	private static java.awt.Color defaultBorderColor = new java.awt.Color(0x1A, 0x8F, 0xC6);
+	private static java.awt.Color defaultBorderColor = new java.awt.Color(0x33, 0x99, 0xFF);
 
 	public FileDrop(final Component c, final Listener listener) {
 		this(null, c, BorderFactory.createMatteBorder(2, 2, 2, 2, defaultBorderColor), true, listener);

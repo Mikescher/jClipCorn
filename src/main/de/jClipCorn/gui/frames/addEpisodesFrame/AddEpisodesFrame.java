@@ -1145,6 +1145,7 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler, 
 		lsEpisodes.setSelectedIndex(-1);
 
 		Integer len = parent.getCommonEpisodeLength();
+		if (len == 0) len = parent.getConsensEpisodeLength();
 
 		while (len == null || len <= 0) {
 			try {

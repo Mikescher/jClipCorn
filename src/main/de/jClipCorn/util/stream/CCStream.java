@@ -178,6 +178,19 @@ public abstract class CCStream<TType> implements Iterator<TType>, Iterable<TType
 		return maxValue;
 	}
 
+	public <TAttrType> CCStream<Map.Entry<TAttrType, List<TType>>> groupBy(Func1to1<TType, TAttrType> selector) {
+		Map<TAttrType, List<TType>> result = new HashMap<>();
+
+		for (TType m : this) {
+			TAttrType mattr = selector.invoke(m);
+
+			List<TType> v = result.computeIfAbsent(mattr, k -> new ArrayList<>());
+			v.add(m);
+		}
+
+		return CCStreams.iterate(result);
+	}
+
 	public <TAttrType> TAttrType findLeastCommon(Func1to1<TType, TAttrType> selector, TAttrType defValue) {
 		Map<TAttrType, Integer> cache = new HashMap<>();
 		
@@ -221,6 +234,24 @@ public abstract class CCStream<TType> implements Iterator<TType>, Iterable<TType
 		TType last = null;
 		while (it.hasNext()) last = it.next();
 		return last;
+	}
+	
+	public int sumInt(Func1to1<TType, Integer> op) {
+		int v = 0;
+		for (TType t : this) v += op.invoke(t);
+		return v;
+	}
+	
+	public float sumFloat(Func1to1<TType, Float> op) {
+		float v = 0;
+		for (TType t : this) v += op.invoke(t);
+		return v;
+	}
+	
+	public double sumDouble(Func1to1<TType, Double> op) {
+		double v = 0;
+		for (TType t : this) v += op.invoke(t);
+		return v;
 	}
 	
 	public TType sum(Func2to1<TType, TType, TType> op, TType startValue) {

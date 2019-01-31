@@ -576,4 +576,30 @@ public class CCSeries extends CCDatabaseElement  {
 		for (CCSeason se : seasons) if (!se.isEmpty()) return false;
 		return true;
 	}
+
+	public int getAutoEpisodeLength(CCSeason season) {
+		Integer i0 = season.getCommonEpisodeLength();
+		if (i0 != null) return i0;
+
+		Integer i1 = season.getConsensEpisodeLength();
+		if (i1 != null) return i1;
+		
+		Integer i2 = season.getAverageEpisodeLength();
+		if (i2 != null) return i2;
+		
+		for (CCSeason s : iteratorSeasons().reverse()) {
+			if (s.isSpecialSeason()) continue;
+
+			Integer i3 = season.getCommonEpisodeLength();
+			if (i3 != null) return i3;
+
+			Integer i4 = season.getConsensEpisodeLength();
+			if (i4 != null) return i4;
+
+			Integer i5 = season.getAverageEpisodeLength();
+			if (i5 != null) return i5;
+		}
+		
+		return 0;
+	}
 }

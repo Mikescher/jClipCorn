@@ -29,7 +29,7 @@ public class DnDList<T> extends JList<T> implements DragSourceListener, DragGest
 	    setDropMode(DropMode.INSERT);
 		ds = new DragSource();
 	    ds.createDefaultDragGestureRecognizer(this, DnDConstants.ACTION_MOVE, this);
-	    setTransferHandler(new MyListDropHandler<>(this));
+	    setTransferHandler(new DnDHandler<>(this));
 	}
 
 	@Override

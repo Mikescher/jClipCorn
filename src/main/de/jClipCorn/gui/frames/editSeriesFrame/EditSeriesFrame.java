@@ -1107,6 +1107,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		newEp.setAddDate(CCDate.getCurrentDate());
 		newEp.setEpisodeNumber(season.getNextEpisodeNumber());
 		Integer commonLen = season.getCommonEpisodeLength();
+		if (commonLen == null) commonLen = season.getConsensEpisodeLength();
 		if (commonLen != null) newEp.setLength(commonLen);
 		
 		updateSeasonPanel();

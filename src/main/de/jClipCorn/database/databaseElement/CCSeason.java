@@ -2,8 +2,10 @@ package de.jClipCorn.database.databaseElement;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -351,6 +353,25 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 		
 		return len;
 	}
+
+	public Integer getAverageEpisodeLength() {
+		if (getEpisodeCount() == 0) return null;
+
+		return (int)Math.round((iteratorEpisodes().sumInt(CCEpisode::getLength)*1d) / getEpisodeCount());
+	}
+
+	public Integer getConsensEpisodeLength() {
+		if (getEpisodeCount() == 0) return null;
+
+		Map.Entry<Integer, List<CCEpisode>> mostCommon = iteratorEpisodes().groupBy(CCEpisode::getLength).autosortByProperty(e -> e.getValue().size()).lastOrNull();
+		if (mostCommon == null) return null;
+
+		if (mostCommon.getValue().size() * 3 >= getEpisodeCount() * 2) { // 66% of episodes have same length
+			return mostCommon.getKey();
+		}
+
+		return null;
+	}
 	
 	public int getNextEpisodeNumber() {
 		int ep = -1;
@@ -513,6 +534,10 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 		
 		return getSortedSeasonNumber() + 1;
 	}
+
+	public boolean isSpecialSeason() {
+		return getIndexForCreatedFolderStructure() == 0;
+	}
 	
 	public int getFirstEpisodeNumber() {
 		if (getEpisodeCount() == 0) return -1;
@@ -567,5 +592,30 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 	
 	public CCStream<CCEpisode> iteratorEpisodes() {
 		return CCStreams.iterate(episodes);
+	}
+
+	public File getFileForCreatedFolderstructure(File parentfolder, String title, int episodeNumber) {
+		if (! parentfolder.isDirectory()) {
+			return null; // meehp
+		}
+
+		String parent = PathFormatter.appendSeparator(parentfolder.getAbsolutePath());
+
+		String path = parent + getRelativeFileForCreatedFolderstructure(title, episodeNumber);
+
+		return new File(path);
+	}
+
+	@SuppressWarnings("nls")
+	public String getRelativeFileForCreatedFolderstructure(String title, int episodeNumber) {
+		DecimalFormat decFormattter = new DecimalFormat("00");
+
+		String seriesfoldername = getSeries().getFolderNameForCreatedFolderStructure();
+		String seasonfoldername = getFolderNameForCreatedFolderStructure();
+		int seasonIndex = getIndexForCreatedFolderStructure();
+
+		String filename = PathFormatter.fixStringToFilesystemname(String.format("S%sE%s - %s.%s", decFormattter.format(seasonIndex), decFormattter.format(episodeNumber), title, this.getFormat().asString()));
+
+		return PathFormatter.combine(seriesfoldername, seasonfoldername, filename);
 	}
 }

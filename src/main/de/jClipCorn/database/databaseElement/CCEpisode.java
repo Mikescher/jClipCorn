@@ -469,35 +469,11 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 	}
 	
 	public File getFileForCreatedFolderstructure(File parentfolder) {
-		if (! parentfolder.isDirectory()) {
-			return null; // meehp
-		}
-
-		String parent = PathFormatter.appendSeparator(parentfolder.getAbsolutePath());
-
-		String path = parent + getRelativeFileForCreatedFolderstructure();
-		
-		return new File(path);
+		return getSeason().getFileForCreatedFolderstructure(parentfolder, getTitle(), getEpisodeNumber());
 	}
 	
-	@SuppressWarnings("nls")
-	public String getRelativeFileForCreatedFolderstructure() {		
-		DecimalFormat decFormattter = new DecimalFormat("00");
-		
-		CCSeason season = this.getSeason();
-		CCSeries series = season.getSeries();
-		
-		String seriesfoldername = series.getFolderNameForCreatedFolderStructure();
-		String seasonfoldername = season.getFolderNameForCreatedFolderStructure();
-		int seasonIndex = season.getIndexForCreatedFolderStructure();
-		
-		String filename = String.format("S%sE%s - %s", decFormattter.format(seasonIndex), decFormattter.format(this.getEpisodeNumber()), this.getTitle());
-		filename += "." + this.getFormat().asString();
-		filename = PathFormatter.fixStringToFilesystemname(filename);
-		
-		String path = PathFormatter.combine(seriesfoldername, seasonfoldername, filename);
-		
-		return path;
+	public String getRelativeFileForCreatedFolderstructure() {
+		return getSeason().getRelativeFileForCreatedFolderstructure(getTitle(), getEpisodeNumber());
 	}
 
 	@Override

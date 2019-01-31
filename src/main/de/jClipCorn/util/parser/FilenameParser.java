@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCMovie;
@@ -20,6 +21,9 @@ import de.jClipCorn.util.formatter.RomanNumberFormatter;
 
 @SuppressWarnings("nls")
 public class FilenameParser {
+
+	private final static Pattern REGEX_EPISODE = Pattern.compile("^S(?<s>[0-9])+E(?<e>[0-9]+) - (?<n>.*)\\.(?<x>[a-zA-Z][a-zA-Z][a-zA-Z]+)$");
+
 	public static FilenameParserResult parse(CCMovieList movielist, String filepath) {
 		Map<Integer, String> addFiles = new HashMap<>();
 		CCGroupList groups = CCGroupList.createEmpty();
@@ -143,5 +147,13 @@ public class FilenameParser {
 		}
 		
 		return new FilenameParserResult(zyklus, title, lang, format, groups, addFiles);
+	}
+
+	public static EpisodeFilenameParserResult parseEpisode(String filepath) {
+		Matcher m = REGEX_EPISODE.matcher(PathFormatter.getFilenameWithExt(filepath));
+		if (m.matches()) {
+			return new EpisodeFilenameParserResult(Integer.parseInt(m.group("s")), Integer.parseInt(m.group("e")), m.group("n"), m.group("x"));
+		}
+		return null;
 	}
 }

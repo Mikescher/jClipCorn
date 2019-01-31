@@ -55,16 +55,14 @@ public class Main {
 		
 		init();
 		
-		SwingUtilities.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-				mList.showInitialWizard();
-								
-				final MainFrame myFrame = new MainFrame(mList);
-				myFrame.start();
-				
-				mList.connect(myFrame);
-			}
+		SwingUtilities.invokeLater(() ->
+		{
+			mList.showInitialWizard();
+
+			final MainFrame myFrame = new MainFrame(mList);
+			myFrame.start();
+
+			mList.connect(myFrame);
 		});
 	}
 	
@@ -146,7 +144,7 @@ public class Main {
 
 //TODO Use http://www.iconarchive.com/show/series-season-folder-icons-by-aaron-sinuhe.html 
 
-//TODO Move Series into seperate table
+//TODO Move Series into separate table
 //TODO Option to mark season as extra (ordered last, special filename, not in carousal but on right side of it ...)
 
 //TODO full database transaction log 
@@ -169,8 +167,7 @@ public class Main {
 
 //TODO MainTable and SeriesTable as JCCSimpleTable
 
-//TODO AniList as OnlineRef https://github.com/AniList/ApiV2-GraphQL-Docs
-//TODO Kitsu   as OnlineRef https://kitsu.docs.apiary.io/
-
 //TODO localsync: also autosave to dropbox (or directly sync with server??)
 //     php viewer: view synced data online with webpage(read-only) 
+
+// Statistic: Groups

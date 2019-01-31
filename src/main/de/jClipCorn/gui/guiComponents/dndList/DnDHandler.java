@@ -7,12 +7,12 @@ import javax.swing.DefaultListModel;
 import javax.swing.JList;
 import javax.swing.TransferHandler;
 
-class MyListDropHandler<T> extends TransferHandler {
+class DnDHandler<T> extends TransferHandler {
 	private static final long serialVersionUID = -6298554952267257444L;
 
 	private DnDList<T> list;
 
-	public MyListDropHandler(DnDList<T> list) {
+	public DnDHandler(DnDList<T> list) {
 		this.list = list;
 	}
 

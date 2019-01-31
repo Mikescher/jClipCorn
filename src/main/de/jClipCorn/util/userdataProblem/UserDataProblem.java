@@ -50,7 +50,9 @@ public class UserDataProblem {
 	public final static int PROBLEM_INVALID_PATH_CHARACTERS = 24;
 	public final static int PROBLEM_INVALID_REFERENCE = 25;
 	public final static int PROBLEM_NO_COVER = 26;
-	
+	public final static int PROBLEM_INPUT_FILE_NOT_FOUND = 27;
+	public final static int PROBLEM_DESTINTAION_FILE_ALREADY_EXISTS = 28;
+
 	private final int pid; // Problem ID
 	
 	public UserDataProblem(int problemID) {
@@ -402,7 +404,7 @@ public class UserDataProblem {
 		//################################################################################################################
 		
 		CCEpisode eqEp = season.getEpisodeByNumber(epNum);
-		if (eqEp != null && eqEp != episode) {
+		if (eqEp != null && (eqEp != episode)) {
 			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_EPISODENUMBER_ALREADY_EXISTS));
 		}
 		

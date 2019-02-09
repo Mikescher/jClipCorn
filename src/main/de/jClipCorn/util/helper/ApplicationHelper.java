@@ -75,21 +75,21 @@ public class ApplicationHelper {
 	public static boolean isWindows() {
 		if (os_property == null) os_property = System.getProperty("os.name").toLowerCase();
 		
-		return os_property.indexOf("win") >= 0;
+		return os_property.contains("win");
 	}
 	
 	@SuppressWarnings("nls")
 	public static boolean isUnix() {
 		if (os_property == null) os_property = System.getProperty("os.name").toLowerCase();
 		
-		return (os_property.indexOf("nix") >= 0 || os_property.indexOf("nux") >= 0 || os_property.indexOf("aix") > 0 );
+		return (os_property.contains("nix") || os_property.contains("nux") || os_property.indexOf("aix") > 0 );
 	}
 	
 	@SuppressWarnings("nls")
 	public static boolean isMac() {
 		if (os_property == null) os_property = System.getProperty("os.name").toLowerCase();
 
-		return os_property.indexOf("mac") >= 0;
+		return os_property.contains("mac");
 	}
 
 	public static String getCurrentUsername() {

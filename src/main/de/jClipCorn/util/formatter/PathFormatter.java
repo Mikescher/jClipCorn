@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import de.jClipCorn.util.Str;
 import org.apache.commons.lang3.StringUtils;
 
 import de.jClipCorn.gui.localization.LocaleBundle;
@@ -42,9 +43,9 @@ public class PathFormatter {
     static
     {
     	FILENAME_REPLACEMENT_CHARS = new HashMap<>();
-    	FILENAME_REPLACEMENT_CHARS.put('×', 'x'); // MULTIPLICATION SIGN  -->  	LATIN SMALL LETTER X
-    	FILENAME_REPLACEMENT_CHARS.put('—', '-'); // EM DASH              -->  	HYPHEN-MINUS
-    	FILENAME_REPLACEMENT_CHARS.put('–', '-'); // EN DASH              -->  	HYPHEN-MINUS
+    	FILENAME_REPLACEMENT_CHARS.put('×', 'x');  // MULTIPLICATION SIGN  -->      LATIN SMALL LETTER X
+    	FILENAME_REPLACEMENT_CHARS.put('—', '-'); // EM DASH              -->      HYPHEN-MINUS
+    	FILENAME_REPLACEMENT_CHARS.put('–', '-');  // EN DASH              -->      HYPHEN-MINUS
     }
 	
 	private final static ArrayList<Character> INVALID_PATH_CHARS_SERIALIZED = new ArrayList<>(Arrays.asList('\\', '"', '<', '>', '?', '*', '|'));
@@ -52,17 +53,18 @@ public class PathFormatter {
 	
 	private final static String TESTFILE_NAME = "jClipCornPermissionTest.emptyfile";
 	
-	private final static String REGEX_SELF = "\\<\\?self\\>"; // \<\?self\>
-	private final static String REGEX_DRIVENAME = "\\<\\?vLabel=\"[^\\\"]+?\"\\>"; // <\?vLabel="[^\"]+?"\>
-	private final static String REGEX_DRIVELETTER = "\\<\\?vLetter=\"[A-Z]\"\\>"; // <\?vLetter="[A-Z]"\>
-	private final static String REGEX_SELFDRIVE = "\\<\\?self\\[dir\\]\\>";
-	
+	private final static String REGEX_SELF = "\\<\\?self\\>";                       // <?self>                 <\?self\>
+	private final static String REGEX_DRIVENAME = "\\<\\?vLabel=\"[^\\\"]+?\"\\>";  // <?vLabel="...">         <\?vLabel="[^\"]+?"\>
+	private final static String REGEX_DRIVELETTER = "\\<\\?vLetter=\"[A-Z]\"\\>";   // <?vLetter="...">        <\?vLetter="[A-Z]"\>
+	private final static String REGEX_SELFDRIVE = "\\<\\?self\\[dir\\]\\>";         // <?self[dir]>            <\?self\[dir\]\>
+	private final static String REGEX_NETDRIVE = "\\<\\?vNetwork=\"[^\"]+?\"\\>";   // <?vNetwork="...">       <\?vNetwork="[^"]+?"\>
+
 	private final static String WILDCARD_SELF = "<?self>";
 	private final static String WILDCARD_DRIVENAME = "<?vLabel=\"%s\">";
-	@SuppressWarnings("unused")
 	private final static String WILDCARD_DRIVELETTER = "<?vLetter=\"%s\">";
 	private final static String WILDCARD_SELFDRIVE = "<?self[dir]>";
-	
+	private final static String WILDCARD_NETDRIVE = "<?vNetwork=\"%s\">";
+
 	private final static String WORKINGDIR = getWorkingDir();
 	
 	public static void SetPathModeUnix() {
@@ -75,7 +77,7 @@ public class PathFormatter {
 		SEPERATOR_CHAR = '\\';
 	}
 	
-	private static String getWorkingDir() {// Dafuq - wasn code (wird ja nur 1mal executed)
+	private static String getWorkingDir() {
 		try {
 			return new File(".").getCanonicalPath();
 		} catch (IOException e) {
@@ -105,7 +107,7 @@ public class PathFormatter {
 		} else if (RegExHelper.startsWithRegEx(REGEX_DRIVENAME, rPath)) {
 			String card = RegExHelper.find(REGEX_DRIVENAME, rPath);
 			String name = card.substring(10, card.length() - 2);
-			char letter = DriveMap.getDriveLetter(name);
+			char letter = DriveMap.getDriveLetterByLabel(name);
 			if (letter != '#') {
 				rPath = RegExHelper.replace(REGEX_DRIVENAME, rPath, letter + ":" + SEPERATOR);
 			} else {
@@ -123,6 +125,16 @@ public class PathFormatter {
 			} else if (ApplicationHelper.isUnix() || ApplicationHelper.isMac()) {
 				rPath = RegExHelper.replace(REGEX_SELFDRIVE, rPath, "/");
 			}
+		} else if (RegExHelper.startsWithRegEx(REGEX_NETDRIVE, rPath)) {
+			String card = RegExHelper.find(REGEX_NETDRIVE, rPath);
+			String name = card.substring(12, card.length() - 2);
+			char letter = DriveMap.getDriveLetterByUNC(name);
+			if (letter != '#') {
+				rPath = RegExHelper.replace(REGEX_NETDRIVE, rPath, letter + ":" + SEPERATOR);
+			} else {
+				CCLog.addWarning(LocaleBundle.getFormattedString("LogMessage.DriveNotFound", name));
+				rPath = RegExHelper.replace(REGEX_NETDRIVE, rPath, name + SEPERATOR);
+			}
 		}
 		
 		return rPath.replace(SERIALIZATION_SEPERATOR, SEPERATOR);
@@ -133,21 +145,40 @@ public class PathFormatter {
 		
 		if (relative) {
 			String self = getAbsoluteSelfDirectory().replace(SEPERATOR, SERIALIZATION_SEPERATOR);
-			
-			if (aPath.startsWith(self)) {
-				return aPath.replace(self, WILDCARD_SELF);
-			} else if (ApplicationHelper.isWindows() && aPath.charAt(0) == WORKINGDIR.charAt(0)) {
-				return WILDCARD_SELFDRIVE.concat(aPath.substring(3));
-			} else if (ApplicationHelper.isWindows() && aPath.length() > 3 && Character.isLetter(aPath.charAt(0)) && aPath.charAt(1) == ':' && (aPath.charAt(2) == SEPERATOR_CHAR || aPath.charAt(2) == SERIALIZATION_SEPERATOR_CHAR) && DriveMap.hasDriveName(aPath.charAt(0))){
-				return String.format(WILDCARD_DRIVENAME, DriveMap.getDriveName(aPath.charAt(0))).concat(aPath.substring(3));
-			} else {
-				return aPath;
+
+			// <?vNetwork="...">
+			if (isWinDriveIdentifiedPath(aPath) && DriveMap.hasDriveUNC(aPath.charAt(0))) {
+				return String.format(WILDCARD_NETDRIVE, DriveMap.getDriveUNC(aPath.charAt(0))).concat(aPath.substring(3));
 			}
-		} else {
-			return aPath;
+
+			// <?self>
+			if (!Str.isNullOrWhitespace(self) && aPath.startsWith(self)) {
+				return WILDCARD_SELF.concat(aPath.substring(self.length()));
+			}
+
+			// <?self[dir]>
+			if (ApplicationHelper.isWindows() && aPath.charAt(0) == WORKINGDIR.charAt(0)) {
+				return WILDCARD_SELFDRIVE.concat(aPath.substring(3));
+			}
+
+			// <?vLabel="...">
+			if (isWinDriveIdentifiedPath(aPath) && DriveMap.hasDriveLabel(aPath.charAt(0))){
+				return String.format(WILDCARD_DRIVENAME, DriveMap.getDriveLabel(aPath.charAt(0))).concat(aPath.substring(3));
+			}
 		}
+
+		return aPath;
 	}
-	
+
+	public static boolean isWinDriveIdentifiedPath(String aPath) {
+		if (! ApplicationHelper.isWindows()) return false;
+		if (aPath.length() <= 3) return false;
+		if (! Character.isLetter(aPath.charAt(0))) return false;
+		if (aPath.charAt(1) != ':') return false;
+		if (aPath.charAt(2) != SEPERATOR_CHAR && aPath.charAt(2) != SERIALIZATION_SEPERATOR_CHAR) return false;
+		return true;
+	}
+
 	public static String getExtension(String path) {
 		return path.substring(path.lastIndexOf('.') + 1, path.length()); // ganz neat, returned den ganzen string wenn kein '.' gefunden ;)
 	}

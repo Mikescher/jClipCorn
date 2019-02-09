@@ -371,12 +371,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		
 		lsSeasons = new JList<>();
 		lsSeasons.setCellRenderer(new HFixListCellRenderer());
-		lsSeasons.addListSelectionListener(new ListSelectionListener() {
-			@Override
-			public void valueChanged(ListSelectionEvent arg0) {
-				updateSeasonPanel();
-			}
-		});
+		lsSeasons.addListSelectionListener(arg0 -> updateSeasonPanel());
 		scrollPane.setViewportView(lsSeasons);
 
 		label_1 = new JLabel(LocaleBundle.getString("AddMovieFrame.label_1.text")); //$NON-NLS-1$
@@ -392,51 +387,28 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		pnlSeries.add(lblScore);
 		
 		btnAddSeason = new JButton(LocaleBundle.getString("EditSeriesFrame.btnAddSeason.text")); //$NON-NLS-1$
-		btnAddSeason.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				addSeason();
-			}
-		});
+		btnAddSeason.addActionListener(e -> addSeason());
 		btnAddSeason.setBounds(206, 541, 167, 23);
 		pnlSeries.add(btnAddSeason);
 		
 		btnRemoveSeason = new JButton(LocaleBundle.getString("EditSeriesFrame.btnRemoveSeason.text")); //$NON-NLS-1$
-		btnRemoveSeason.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				removeSeason();
-			}
-		});
+		btnRemoveSeason.addActionListener(e -> removeSeason());
 		btnRemoveSeason.setBounds(206, 576, 167, 23);
 		pnlSeries.add(btnRemoveSeason);
 		
 		btnAddEmptySeason = new JButton(LocaleBundle.getString("EditSeriesFrame.btnAddEmptySeason.text")); //$NON-NLS-1$
-		btnAddEmptySeason.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				addEmptySeason();
-			}
-		});
+		btnAddEmptySeason.addActionListener(e -> addEmptySeason());
 		btnAddEmptySeason.setBounds(206, 506, 167, 23);
 		pnlSeries.add(btnAddEmptySeason);
 		
 		btnSeriesOk = new JButton(LocaleBundle.getString("UIGeneric.btnOK.text")); //$NON-NLS-1$
-		btnSeriesOk.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onOKSeries(true);
-			}
-		});
+		btnSeriesOk.addActionListener(e -> onOKSeries(true));
 		btnSeriesOk.setBounds(162, 612, 89, 23);
 		pnlSeries.add(btnSeriesOk);
 		
 		btnOkClose = new JButton(LocaleBundle.getString("UIGeneric.btnOK_and_Close.text")); //$NON-NLS-1$
-		btnOkClose.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if (onOKSeries(true)) EditSeriesFrame.this.dispatchEvent(new WindowEvent(EditSeriesFrame.this, WindowEvent.WINDOW_CLOSING));
-			}
+		btnOkClose.addActionListener(e -> {
+			if (onOKSeries(true)) EditSeriesFrame.this.dispatchEvent(new WindowEvent(EditSeriesFrame.this, WindowEvent.WINDOW_CLOSING));
 		});
 		btnOkClose.setBounds(263, 612, 98, 23);
 		pnlSeries.add(btnOkClose);
@@ -499,12 +471,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		
 		lsEpisodes = new JList<>();
 		lsEpisodes.setCellRenderer(new HFixListCellRenderer());
-		lsEpisodes.addListSelectionListener(new ListSelectionListener() {
-			@Override
-			public void valueChanged(ListSelectionEvent e) {
-				updateEpisodePanel();
-			}
-		});
+		lsEpisodes.addListSelectionListener(e -> updateEpisodePanel());
 		scrollPane_1.setViewportView(lsEpisodes);
 		
 		lblSeasonID = new JLabel();
@@ -512,42 +479,22 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		pnlSeason.add(lblSeasonID);
 		
 		btnAddEpisode = new JButton(LocaleBundle.getString("EditSeriesFrame.btnAddEmptyEpisode.text")); //$NON-NLS-1$
-		btnAddEpisode.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				addEmptyEpisode();
-			}
-		});
+		btnAddEpisode.addActionListener(e -> addEmptyEpisode());
 		btnAddEpisode.setBounds(204, 378, 153, 23);
 		pnlSeason.add(btnAddEpisode);
 		
 		btnRemoveEpisode = new JButton(LocaleBundle.getString("EditSeriesFrame.btnRemoveEpisode.text")); //$NON-NLS-1$
-		btnRemoveEpisode.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				removeEpisode();
-			}
-		});
+		btnRemoveEpisode.addActionListener(e -> removeEpisode());
 		btnRemoveEpisode.setBounds(204, 446, 153, 23);
 		pnlSeason.add(btnRemoveEpisode);
 		
 		btnAddMultipleEpisodes = new JButton(LocaleBundle.getString("EditSeriesFrame.btnAddMultipleEpisodes.text")); //$NON-NLS-1$
-		btnAddMultipleEpisodes.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				addMultipleEpisodes();
-			}
-		});
+		btnAddMultipleEpisodes.addActionListener(e -> addMultipleEpisodes());
 		btnAddMultipleEpisodes.setBounds(204, 412, 153, 23);
 		pnlSeason.add(btnAddMultipleEpisodes);
 		
 		btnSeasonOK = new JButton(LocaleBundle.getString("UIGeneric.btnOK.text")); //$NON-NLS-1$
-		btnSeasonOK.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onOKSeason(true);
-			}
-		});
+		btnSeasonOK.addActionListener(e -> onOKSeason(true));
 		btnSeasonOK.setBounds(145, 612, 89, 23);
 		pnlSeason.add(btnSeasonOK);
 		
@@ -625,12 +572,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		pnlEpisode.add(lblEpisodeFilesize);
 		
 		spnEpisodeSize = new JSpinner();
-		spnEpisodeSize.addChangeListener(new ChangeListener() {
-			@Override
-			public void stateChanged(ChangeEvent arg0) {
-				updateEpisodesFilesizeDisplay();
-			}
-		});
+		spnEpisodeSize.addChangeListener(arg0 -> updateEpisodesFilesizeDisplay());
 		spnEpisodeSize.setModel(new SpinnerNumberModel(0L, 0L, null, 1L));
 		spnEpisodeSize.setBounds(74, 234, 165, 20);
 		pnlEpisode.add(spnEpisodeSize);
@@ -640,22 +582,12 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		pnlEpisode.add(label_26);
 		
 		button_2 = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnRecalcSizes.text")); //$NON-NLS-1$
-		button_2.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				recalcEpisodeFilesize();
-			}
-		});
+		button_2.addActionListener(e -> recalcEpisodeFilesize());
 		button_2.setBounds(74, 296, 273, 23);
 		pnlEpisode.add(button_2);
 		
 		btnEpisodeToday = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnToday.text")); //$NON-NLS-1$
-		btnEpisodeToday.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				spnEpisodeAdded.setValue(CCDate.getCurrentDate());
-			}
-		});
+		btnEpisodeToday.addActionListener(e -> spnEpisodeAdded.setValue(CCDate.getCurrentDate()));
 		btnEpisodeToday.setBounds(251, 331, 96, 23);
 		pnlEpisode.add(btnEpisodeToday);
 		
@@ -677,12 +609,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		pnlEpisode.add(edEpisodePart);
 		
 		btnEpisodeOpenPart = new JButton(LocaleBundle.getString("EditSeriesFrame.btnEpisodeOpenPart.text")); //$NON-NLS-1$
-		btnEpisodeOpenPart.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				openEpisodePart();
-			}
-		});
+		btnEpisodeOpenPart.addActionListener(e -> openEpisodePart());
 		btnEpisodeOpenPart.setBounds(295, 368, 52, 23);
 		pnlEpisode.add(btnEpisodeOpenPart);
 		
@@ -778,7 +705,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		CCSeason season = getSelectedSeason();
 		
 		if (season == null) {
-			return null;
+			return new ArrayList<>();
 		}
 		
 		List<CCEpisode> result = new ArrayList<>();
@@ -1027,12 +954,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		}
 		
 		if (! probvalue) {
-			InputErrorDialog amied = new InputErrorDialog(problems, new UserDataProblemHandler() {
-				@Override
-				public void onAMIEDIgnoreClicked() {
-					onOKSeries(false);
-				}
-			}, this);
+			InputErrorDialog amied = new InputErrorDialog(problems, () -> onOKSeries(false), this);
 			amied.setVisible(true);
 			return false;
 		}
@@ -1130,11 +1052,12 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 	
 	private void removeEpisode() {
 		CCSeason season = getSelectedSeason();
+		if (season == null) return;
 		
 		if (getSelectedEpisodes().size() <= 1) {
 			CCEpisode episode = getSelectedEpisode();
 			
-			if (episode == null || season == null) {
+			if (episode == null) {
 				return;
 			}
 			
@@ -1176,12 +1099,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		}
 		
 		if (! probvalue) {
-			InputErrorDialog amied = new InputErrorDialog(problems, new UserDataProblemHandler() {
-				@Override
-				public void onAMIEDIgnoreClicked() {
-					onOKSeason(false);
-				}
-			}, this);
+			InputErrorDialog amied = new InputErrorDialog(problems, () -> onOKSeason(false), this);
 			amied.setVisible(true);
 			return;
 		}
@@ -1285,12 +1203,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		}
 		
 		if (! probvalue) {
-			InputErrorDialog amied = new InputErrorDialog(problems, new UserDataProblemHandler() {
-				@Override
-				public void onAMIEDIgnoreClicked() {
-					onOKEpisode(false);
-				}
-			}, this);
+			InputErrorDialog amied = new InputErrorDialog(problems, () -> onOKEpisode(false), this);
 			amied.setVisible(true);
 			return;
 		}

@@ -57,7 +57,7 @@ public class PathFormatter {
 	private final static String REGEX_DRIVENAME = "\\<\\?vLabel=\"[^\\\"]+?\"\\>";  // <?vLabel="...">         <\?vLabel="[^\"]+?"\>
 	private final static String REGEX_DRIVELETTER = "\\<\\?vLetter=\"[A-Z]\"\\>";   // <?vLetter="...">        <\?vLetter="[A-Z]"\>
 	private final static String REGEX_SELFDRIVE = "\\<\\?self\\[dir\\]\\>";         // <?self[dir]>            <\?self\[dir\]\>
-	private final static String REGEX_NETDRIVE = "\\<\\?vNetwork=\"[^\"]+?\"\\>";   // <?vNetwork="...">       <\?vNetwork="[^"]+?"\>
+	private final static String REGEX_NETDRIVE = "\\<\\?vNetwork=\"[^\\\"]+?\"\\>";   // <?vNetwork="...">     <\?vNetwork="[^\"]+?"\>
 
 	private final static String WILDCARD_SELF = "<?self>";
 	private final static String WILDCARD_DRIVENAME = "<?vLabel=\"%s\">";
@@ -127,7 +127,7 @@ public class PathFormatter {
 			}
 		} else if (RegExHelper.startsWithRegEx(REGEX_NETDRIVE, rPath)) {
 			String card = RegExHelper.find(REGEX_NETDRIVE, rPath);
-			String name = card.substring(12, card.length() - 2);
+			String name = "\\\\" + card.substring(12, card.length() - 2).replace('/', '\\');
 			char letter = DriveMap.getDriveLetterByUNC(name);
 			if (letter != '#') {
 				rPath = RegExHelper.replace(REGEX_NETDRIVE, rPath, letter + ":" + SEPERATOR);
@@ -148,7 +148,8 @@ public class PathFormatter {
 
 			// <?vNetwork="...">
 			if (isWinDriveIdentifiedPath(aPath) && DriveMap.hasDriveUNC(aPath.charAt(0))) {
-				return String.format(WILDCARD_NETDRIVE, DriveMap.getDriveUNC(aPath.charAt(0))).concat(aPath.substring(3));
+				String unc = DriveMap.getDriveUNC(aPath.charAt(0)).substring(2).replace('\\', '/');
+				return String.format(WILDCARD_NETDRIVE, unc).concat(aPath.substring(3));
 			}
 
 			// <?self>

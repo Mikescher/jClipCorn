@@ -1,5 +1,7 @@
 package de.jClipCorn.util.helper;
 
+import de.jClipCorn.util.Str;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -39,11 +41,11 @@ public class SimpleFileUtils {
 	}
 	
 	public static String readTextFile(BufferedReader reader) throws IOException {
-		StringBuffer content = new StringBuffer();
+		StringBuilder content = new StringBuilder();
 		boolean first = true;
 
 		try {
-			String s = null;
+			String s;
 
 			while ((s = reader.readLine()) != null) {
 				if (!first) {
@@ -62,13 +64,13 @@ public class SimpleFileUtils {
 
 	public static String readTextResource(String resourcename, Class<?> c) throws IOException {
 		BufferedReader reader = null;
-		StringBuffer content = new StringBuffer();
+		StringBuilder content = new StringBuilder();
 		
 		try {
 			InputStream is = c.getResourceAsStream(resourcename);
 			if (is == null) throw new IOException();
-			reader = new BufferedReader(new InputStreamReader(is));
-			String s = null;
+			reader = new BufferedReader(new InputStreamReader(is, Str.UTF8));
+			String s;
 			boolean first = true;
 
 			while ((s = reader.readLine()) != null) {
@@ -87,15 +89,10 @@ public class SimpleFileUtils {
 	}
 
 	public static void writeTextResource(File out, String resourcename, Class<?> c) throws IOException {
-		InputStream is = null;
-		
-		try {
-			is = c.getResourceAsStream(resourcename);
+
+		try (InputStream is = c.getResourceAsStream(resourcename)) {
 			if (is == null) throw new IOException();
-			
 			Files.copy(is, out.toPath());
-		} finally {
-			if (is != null) is.close();
 		}
 	}
 	
@@ -104,13 +101,13 @@ public class SimpleFileUtils {
 	}
 	
 	public static void writeTextFile(File file, String text) throws IOException {
-		FileOutputStream fos = null;
-		OutputStreamWriter osw = null;
+		FileOutputStream fos;
+		OutputStreamWriter osw;
 		BufferedWriter bw = null;
 		
 		try {
 			fos = new FileOutputStream(file);
-			osw = new OutputStreamWriter(fos, "UTF8"); //$NON-NLS-1$
+			osw = new OutputStreamWriter(fos, Str.UTF8); //$NON-NLS-1$
 			bw = new BufferedWriter(osw);
 		
 			bw.write(text);

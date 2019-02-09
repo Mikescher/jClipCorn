@@ -400,7 +400,7 @@
 1.9.8 Feature: Show (optionally) icons for partially viewed series
 1.9.8 Task: Properties re-organized (UI and code)
 1.9.8 Feature: Added new Property PROP_SERIES_KEEP_LASTVIEWED_PERSISTANT
-1.9.8 Task: CCProperty.getDefault() and CCProperty.getStandard() are redundant methods -.-
+1.9.8 Task: erty.getDefault() and CCProperty.getStandard() are redundant methods -.-
 1.9.8 Bugfix: Progressmonitor (create backup) can no longer be closed by [X]
 1.9.8 Task: Better default value for statusbar under Metal L'n'F
 1.9.8 Bugfix: Fixed YearRange visibility in StatisticsFrame

@@ -246,7 +246,7 @@ public class QuickAddEpisodeDialog extends JDialog {
 
 		File dst = season.getFileForCreatedFolderstructure(new File(root), title, episode, CCFileFormat.getMovieFormatFromPath(edSource.getText()));
 
-		return PathFormatter.getCCPath(dst.getAbsolutePath(), CCProperties.getInstance().PROP_ADD_MOVIE_RELATIVE_AUTO.getValue());
+		return PathFormatter.getCCPath(dst.getAbsolutePath());
 	}
 
 	private void tryAdd(boolean check) {

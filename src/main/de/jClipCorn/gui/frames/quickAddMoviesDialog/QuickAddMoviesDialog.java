@@ -121,7 +121,7 @@ public class QuickAddMoviesDialog extends JDialog {
 
 	private Tuple<String, String> getPaths(File f) {
 		String f0 = f.getAbsolutePath();
-		String f1 = PathFormatter.getCCPath(PathFormatter.combine(edRoot.getText(), PathFormatter.getFilenameWithExt(f0)), CCProperties.getInstance().PROP_ADD_MOVIE_RELATIVE_AUTO.getValue());
+		String f1 = PathFormatter.getCCPath(PathFormatter.combine(edRoot.getText(), PathFormatter.getFilenameWithExt(f0)));
 		
 		return Tuple.Create(f0, f1);
 	}

@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import de.jClipCorn.properties.types.PathSyntaxVar;
 import de.jClipCorn.util.Str;
 import org.apache.commons.lang3.StringUtils;
 
@@ -53,17 +54,19 @@ public class PathFormatter {
 	
 	private final static String TESTFILE_NAME = "jClipCornPermissionTest.emptyfile";
 	
-	private final static String REGEX_SELF = "\\<\\?self\\>";                       // <?self>                 <\?self\>
-	private final static String REGEX_DRIVENAME = "\\<\\?vLabel=\"[^\\\"]+?\"\\>";  // <?vLabel="...">         <\?vLabel="[^\"]+?"\>
-	private final static String REGEX_DRIVELETTER = "\\<\\?vLetter=\"[A-Z]\"\\>";   // <?vLetter="...">        <\?vLetter="[A-Z]"\>
-	private final static String REGEX_SELFDRIVE = "\\<\\?self\\[dir\\]\\>";         // <?self[dir]>            <\?self\[dir\]\>
-	private final static String REGEX_NETDRIVE = "\\<\\?vNetwork=\"[^\\\"]+?\"\\>";   // <?vNetwork="...">     <\?vNetwork="[^\"]+?"\>
+	private final static String REGEX_SELF        = "\\<\\?self\\>";                   // <?self>                 <\?self\>
+	private final static String REGEX_DRIVENAME   = "\\<\\?vLabel=\"[^\\\"]+?\"\\>";   // <?vLabel="...">         <\?vLabel="[^\"]+?"\>
+	private final static String REGEX_DRIVELETTER = "\\<\\?vLetter=\"[A-Z]\"\\>";      // <?vLetter="...">        <\?vLetter="[A-Z]"\>
+	private final static String REGEX_SELFDRIVE   = "\\<\\?self\\[dir\\]\\>";          // <?self[dir]>            <\?self\[dir\]\>
+	private final static String REGEX_NETDRIVE    = "\\<\\?vNetwork=\"[^\"]+?\"\\>";   // <?vNetwork="...">       <\?vNetwork="[^\"]+?"\>
+	private final static String REGEX_VARIABLE    = "\\<\\?[^\\\"]+\\]\\>";            // <?[...]>                <\?[^\"]+\]\>
 
-	private final static String WILDCARD_SELF = "<?self>";
-	private final static String WILDCARD_DRIVENAME = "<?vLabel=\"%s\">";
+	private final static String WILDCARD_SELF        = "<?self>";
+	private final static String WILDCARD_DRIVENAME   = "<?vLabel=\"%s\">";
 	private final static String WILDCARD_DRIVELETTER = "<?vLetter=\"%s\">";
-	private final static String WILDCARD_SELFDRIVE = "<?self[dir]>";
-	private final static String WILDCARD_NETDRIVE = "<?vNetwork=\"%s\">";
+	private final static String WILDCARD_SELFDRIVE   = "<?self[dir]>";
+	private final static String WILDCARD_NETDRIVE    = "<?vNetwork=\"%s\">";
+	private final static String WILDCARD_VARIABLE    = "<?[%s]>";
 
 	private final static String WORKINGDIR = getWorkingDir();
 	
@@ -102,6 +105,18 @@ public class PathFormatter {
 	}
 	
 	public static String fromCCPath(String rPath) {
+
+		if (RegExHelper.startsWithRegEx(REGEX_VARIABLE, rPath)) {
+			String card = RegExHelper.find(REGEX_VARIABLE, rPath);
+			String keyident = card.substring(3, card.length() - 2);
+			for (PathSyntaxVar psv : CCProperties.getInstance().getActivePathVariables()) {
+			    if (psv.Key.equals(keyident)) {
+					rPath =  RegExHelper.replace(REGEX_VARIABLE, rPath, psv.Value);
+					break;
+				}
+			}
+		}
+
 		if (RegExHelper.startsWithRegEx(REGEX_SELF, rPath)) {
 			rPath =  RegExHelper.replace(REGEX_SELF, rPath, getAbsoluteSelfDirectory());
 		} else if (RegExHelper.startsWithRegEx(REGEX_DRIVENAME, rPath)) {
@@ -127,7 +142,7 @@ public class PathFormatter {
 			}
 		} else if (RegExHelper.startsWithRegEx(REGEX_NETDRIVE, rPath)) {
 			String card = RegExHelper.find(REGEX_NETDRIVE, rPath);
-			String name = "\\\\" + card.substring(12, card.length() - 2).replace('/', '\\');
+			String name = card.substring(12, card.length() - 2);
 			char letter = DriveMap.getDriveLetterByUNC(name);
 			if (letter != '#') {
 				rPath = RegExHelper.replace(REGEX_NETDRIVE, rPath, letter + ":" + SEPERATOR);
@@ -140,35 +155,46 @@ public class PathFormatter {
 		return rPath.replace(SERIALIZATION_SEPERATOR, SEPERATOR);
 	}
 	
-	public static String getCCPath(String aPath, boolean relative) {
+	public static String getCCPath(String aPath) {
 		aPath = aPath.replace(SEPERATOR, SERIALIZATION_SEPERATOR);
 		
-		if (relative) {
+		if (CCProperties.getInstance().PROP_ADD_MOVIE_RELATIVE_AUTO.getValue()) {
 			String self = getAbsoluteSelfDirectory().replace(SEPERATOR, SERIALIZATION_SEPERATOR);
 
 			// <?vNetwork="...">
-			if (isWinDriveIdentifiedPath(aPath) && DriveMap.hasDriveUNC(aPath.charAt(0))) {
-				String unc = DriveMap.getDriveUNC(aPath.charAt(0)).substring(2).replace('\\', '/');
-				return String.format(WILDCARD_NETDRIVE, unc).concat(aPath.substring(3));
+			if (CCProperties.getInstance().PROP_PATHSYNTAX_NETDRIVE.getValue() && isWinDriveIdentifiedPath(aPath) && DriveMap.hasDriveUNC(aPath.charAt(0))) {
+				String unc = DriveMap.getDriveUNC(aPath.charAt(0));
+				String cc = String.format(WILDCARD_NETDRIVE, unc).concat(aPath.substring(3));
+				return insertCCPathVariables(cc);
 			}
 
 			// <?self>
-			if (!Str.isNullOrWhitespace(self) && aPath.startsWith(self)) {
-				return WILDCARD_SELF.concat(aPath.substring(self.length()));
+			if (CCProperties.getInstance().PROP_PATHSYNTAX_SELF.getValue() && !Str.isNullOrWhitespace(self) && aPath.startsWith(self)) {
+				String cc = WILDCARD_SELF.concat(aPath.substring(self.length()));
+				return insertCCPathVariables(cc);
 			}
 
 			// <?self[dir]>
-			if (ApplicationHelper.isWindows() && aPath.charAt(0) == WORKINGDIR.charAt(0)) {
-				return WILDCARD_SELFDRIVE.concat(aPath.substring(3));
+			if (CCProperties.getInstance().PROP_PATHSYNTAX_SELFDIR.getValue() && ApplicationHelper.isWindows() && aPath.charAt(0) == WORKINGDIR.charAt(0)) {
+				String cc = WILDCARD_SELFDRIVE.concat(aPath.substring(3));
+				return insertCCPathVariables(cc);
 			}
 
 			// <?vLabel="...">
-			if (isWinDriveIdentifiedPath(aPath) && DriveMap.hasDriveLabel(aPath.charAt(0))){
-				return String.format(WILDCARD_DRIVENAME, DriveMap.getDriveLabel(aPath.charAt(0))).concat(aPath.substring(3));
+			if (CCProperties.getInstance().PROP_PATHSYNTAX_DRIVELABEL.getValue() && isWinDriveIdentifiedPath(aPath) && DriveMap.hasDriveLabel(aPath.charAt(0))){
+				String cc = String.format(WILDCARD_DRIVENAME, DriveMap.getDriveLabel(aPath.charAt(0))).concat(aPath.substring(3));
+				return insertCCPathVariables(cc);
 			}
 		}
 
 		return aPath;
+	}
+
+	private static String insertCCPathVariables(String path) {
+		for (PathSyntaxVar psv : CCProperties.getInstance().getActivePathVariables()) {
+		    if (path.startsWith(psv.Value)) return String.format(WILDCARD_VARIABLE, psv.Key) + path.substring(psv.Value.length());
+		}
+		return path;
 	}
 
 	public static boolean isWinDriveIdentifiedPath(String aPath) {
@@ -181,7 +207,7 @@ public class PathFormatter {
 	}
 
 	public static String getExtension(String path) {
-		return path.substring(path.lastIndexOf('.') + 1, path.length()); // ganz neat, returned den ganzen string wenn kein '.' gefunden ;)
+		return path.substring(path.lastIndexOf('.') + 1); // ganz neat, returned den ganzen string wenn kein '.' gefunden ;)
 	}
 	
 	public static String getFilenameWithExt(String path) {
@@ -475,6 +501,10 @@ public class PathFormatter {
 			rPath = RegExHelper.replace(REGEX_DRIVELETTER, rPath, "");
 		} else if (RegExHelper.startsWithRegEx(REGEX_SELFDRIVE, rPath)) {
 			rPath = RegExHelper.replace(REGEX_SELFDRIVE, rPath, "");
+		} else if (RegExHelper.startsWithRegEx(REGEX_VARIABLE, rPath)) {
+			rPath = RegExHelper.replace(REGEX_VARIABLE, rPath, "");
+		} else if (RegExHelper.startsWithRegEx(REGEX_NETDRIVE, rPath)) {
+			rPath = RegExHelper.replace(REGEX_NETDRIVE, rPath, "");
 		}
 		
 		for (Character chr : INVALID_PATH_CHARS_SERIALIZED) {

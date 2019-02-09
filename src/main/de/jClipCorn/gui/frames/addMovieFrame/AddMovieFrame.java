@@ -959,7 +959,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 
 	@Override
 	public void setFilepath(int p, String t) {
-		t = PathFormatter.getCCPath(t, CCProperties.getInstance().PROP_ADD_MOVIE_RELATIVE_AUTO.getValue());
+		t = PathFormatter.getCCPath(t);
 				
 		setDirectFilepath(p, t);
 		

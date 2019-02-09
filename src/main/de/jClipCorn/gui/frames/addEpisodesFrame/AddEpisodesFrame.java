@@ -865,7 +865,7 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler, 
 	}
 
 	public void setFilepath(String t) {
-		String pt = PathFormatter.getCCPath(t, CCProperties.getInstance().PROP_ADD_MOVIE_RELATIVE_AUTO.getValue());
+		String pt = PathFormatter.getCCPath(t);
 
 		edPart.setText(pt);
 		edPart.setCaretPosition(0);
@@ -921,7 +921,7 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler, 
 			ep.setFormat(CCFileFormat.getMovieFormatOrDefault(PathFormatter.getExtension(abspath)));
 			ep.setFilesize(ff[i].length());
 
-			ep.setPart(PathFormatter.getCCPath(abspath, CCProperties.getInstance().PROP_ADD_MOVIE_RELATIVE_AUTO.getValue()));
+			ep.setPart(PathFormatter.getCCPath(abspath));
 
 			ep.setQuality(CCQuality.STREAM);
 			ep.setAddDate(CCDate.getCurrentDate());

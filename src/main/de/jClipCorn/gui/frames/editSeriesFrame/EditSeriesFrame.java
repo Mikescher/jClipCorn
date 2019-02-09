@@ -1173,7 +1173,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		String abspath = videoFileChooser.getSelectedFile().getAbsolutePath();
 		String path = abspath;
 		if (CCProperties.getInstance().PROP_ADD_MOVIE_RELATIVE_AUTO.getValue()) {
-			path = PathFormatter.getCCPath(abspath, CCProperties.getInstance().PROP_ADD_MOVIE_RELATIVE_AUTO.getValue());
+			path = PathFormatter.getCCPath(abspath);
 		}
 		
 		edEpisodePart.setText(path);

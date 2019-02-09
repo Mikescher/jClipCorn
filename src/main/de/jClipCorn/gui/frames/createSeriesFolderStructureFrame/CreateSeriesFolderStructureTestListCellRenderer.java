@@ -17,7 +17,7 @@ public class CreateSeriesFolderStructureTestListCellRenderer extends DefaultList
 	public Component getListCellRendererComponent(JList paramlist, Object value, int index, boolean isSelected, boolean cellHasFocus) {
 		DefaultListCellRenderer result = (DefaultListCellRenderer) super.getListCellRendererComponent(paramlist, value, index, isSelected, cellHasFocus);
 		
-		result.setText(PathFormatter.getCCPath(((String)value).substring(1), CCProperties.getInstance().PROP_ADD_MOVIE_RELATIVE_AUTO.getValue()));
+		result.setText(PathFormatter.getCCPath(((String)value).substring(1)));
 		
 		switch (((String) value).charAt(0)) {
 		case '0':

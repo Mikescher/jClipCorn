@@ -861,7 +861,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 	public void setFilepath(int p, String t) {
 		String pt = t;
 		if (!t.isEmpty() && CCProperties.getInstance().PROP_ADD_MOVIE_RELATIVE_AUTO.getValue()) {
-			pt = PathFormatter.getCCPath(t, CCProperties.getInstance().PROP_ADD_MOVIE_RELATIVE_AUTO.getValue());
+			pt = PathFormatter.getCCPath(t);
 		}
 				
 		switch (p) {

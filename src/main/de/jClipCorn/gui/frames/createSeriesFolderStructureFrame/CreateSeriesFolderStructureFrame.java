@@ -260,7 +260,7 @@ public class CreateSeriesFolderStructureFrame extends JFrame {
 						return false;
 					}
 					
-					episode.setPart(PathFormatter.getCCPath(newfile.getAbsolutePath(), CCProperties.getInstance().PROP_ADD_MOVIE_RELATIVE_AUTO.getValue()));
+					episode.setPart(PathFormatter.getCCPath(newfile.getAbsolutePath()));
 				}
 			}
 		}

@@ -69,7 +69,7 @@ public abstract class AutomaticSettingsFrame extends JFrame {
 		if (LookAndFeelManager.isMetal())
 			setSize(new Dimension(825, 525));
 		else
-			setSize(new Dimension(775, 475));
+			setSize(new Dimension(800, 475));
 		
 		setMinimumSize(new Dimension(650, 400));
 		setTitle(LocaleBundle.getString("Settingsframe.this.title")); //$NON-NLS-1$

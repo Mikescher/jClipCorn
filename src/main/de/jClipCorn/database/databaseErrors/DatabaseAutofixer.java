@@ -105,7 +105,7 @@ public class DatabaseAutofixer {
 				if (! mov.getPart(i).isEmpty()) {
 					String old = mov.getPart(i);
 					String abs = mov.getAbsolutePart(i);
-					String rel = PathFormatter.getCCPath(abs.replace("\\", PathFormatter.SERIALIZATION_SEPERATOR), CCProperties.getInstance().PROP_ADD_MOVIE_RELATIVE_AUTO.getValue()); //$NON-NLS-1$
+					String rel = PathFormatter.getCCPath(abs.replace("\\", PathFormatter.SERIALIZATION_SEPERATOR)); //$NON-NLS-1$
 				
 					if (old.length() == rel.length() && rel.length() > 3) {
 						mov.setPart(i, rel);
@@ -122,7 +122,7 @@ public class DatabaseAutofixer {
 			if (! episode.getPart().isEmpty()) {
 				String old = episode.getPart();
 				String abs = episode.getAbsolutePart();
-				String rel = PathFormatter.getCCPath(abs.replace("\\", PathFormatter.SERIALIZATION_SEPERATOR), CCProperties.getInstance().PROP_ADD_MOVIE_RELATIVE_AUTO.getValue()); //$NON-NLS-1$
+				String rel = PathFormatter.getCCPath(abs.replace("\\", PathFormatter.SERIALIZATION_SEPERATOR)); //$NON-NLS-1$
 			
 				if (old.length() == rel.length() && rel.length() > 3) {
 					episode.setPart(rel);
@@ -313,7 +313,7 @@ public class DatabaseAutofixer {
 				File fnew = new File(npath);
 				
 				boolean succ = fold.renameTo(fnew);
-				mov.setPart(i, PathFormatter.getCCPath(npath, CCProperties.getInstance().PROP_ADD_MOVIE_RELATIVE_AUTO.getValue()));
+				mov.setPart(i, PathFormatter.getCCPath(npath));
 				
 				if (! succ) {
 					return false;

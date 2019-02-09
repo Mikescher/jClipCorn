@@ -87,11 +87,7 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 		if (viewed ^ this.viewed) {
 			this.viewed = viewed;
 
-			if (! viewed) {
-				String.format("Clear ViewedHistory of %s ( %s )", getTitle(), viewedHistory.toSerializationString()); //$NON-NLS-1$
-				
-				fullResetViewedHistory();
-			}
+			if (! viewed) fullResetViewedHistory();
 
 			updateDB();
 		}

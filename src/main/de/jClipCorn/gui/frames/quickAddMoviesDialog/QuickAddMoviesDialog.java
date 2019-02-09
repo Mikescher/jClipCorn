@@ -1,7 +1,6 @@
 package de.jClipCorn.gui.frames.quickAddMoviesDialog;
 
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 
@@ -15,6 +14,8 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 import de.jClipCorn.database.databaseElement.CCMovie;
+import de.jClipCorn.gui.resources.CachedResourceLoader;
+import de.jClipCorn.gui.resources.Resources;
 import org.apache.commons.io.FileUtils;
 
 import com.jgoodies.forms.layout.ColumnSpec;
@@ -67,7 +68,12 @@ public class QuickAddMoviesDialog extends JDialog {
 	}
 	
 	private void initGUI() {
+		setTitle(LocaleBundle.getString("QuickAddMoviesDialog.title")); //$NON-NLS-1$
+		setIconImage(CachedResourceLoader.getImage(Resources.IMG_FRAME_ICON));
 		setBounds(100, 100, 500, 300);
+		setMinimumSize(new Dimension(300, 300));
+		setModal(true);
+
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);

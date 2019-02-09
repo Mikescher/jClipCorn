@@ -58,7 +58,7 @@ public class DatabaseElementPreviewLabel extends CoverLabel {
 		timer.schedule(new TimerTask() {
 			@Override
 			public void run() {
-				onTimer();
+				swingInvoke(() -> onTimer());
 			}
 		}, 0, TIMER_DELAY);
 	}
@@ -71,10 +71,8 @@ public class DatabaseElementPreviewLabel extends CoverLabel {
 			
 			BufferedImage bi = ImageUtilities.resizeCoverImageForFullSizeUI(biorig);
 			if (bi == biorig) bi = ImageUtilities.deepCopyImage(bi);
-			
-			if (drawSCorner) {
-				ImageUtilities.makeFullSizeSeriesCover(bi);
-			}
+
+			ImageUtilities.makeFullSizeSeriesCover(bi);
 
 			return bi;
 		} else {
@@ -100,7 +98,7 @@ public class DatabaseElementPreviewLabel extends CoverLabel {
 			}
 			
 			if (drawTag) {
-				((CCMovie)el).getTags().drawOnImage(bi, false);
+				el.getTags().drawOnImage(bi, false);
 			}
 			
 			if (drawGroups) {
@@ -137,31 +135,29 @@ public class DatabaseElementPreviewLabel extends CoverLabel {
 			boolean bNew = (tcNew/4)%2 == 0;
 			if (bOld != bNew) {
 				if (bNew)
-					swingInvoke(() -> {setIcon(CachedResourceLoader.getIcon(Resources.IMG_COVER_ERROR_ON));});
+					setIcon(CachedResourceLoader.getIcon(Resources.IMG_COVER_ERROR_ON));
 				else
-					swingInvoke(() -> {setIcon(CachedResourceLoader.getIcon(Resources.IMG_COVER_ERROR_OFF));});
+					setIcon(CachedResourceLoader.getIcon(Resources.IMG_COVER_ERROR_OFF));
 			}
 			break;
 			
 		case MODE_LOADING:
-			if (tcNew % 16 ==  0) swingInvoke(() -> {setIcon(CachedResourceLoader.getIcon(Resources.IMG_COVER_LOADING_P7));});
-			if (tcNew % 16 ==  2) swingInvoke(() -> {setIcon(CachedResourceLoader.getIcon(Resources.IMG_COVER_LOADING_P0));});
-			if (tcNew % 16 ==  4) swingInvoke(() -> {setIcon(CachedResourceLoader.getIcon(Resources.IMG_COVER_LOADING_P1));});
-			if (tcNew % 16 ==  6) swingInvoke(() -> {setIcon(CachedResourceLoader.getIcon(Resources.IMG_COVER_LOADING_P2));});
-			if (tcNew % 16 ==  8) swingInvoke(() -> {setIcon(CachedResourceLoader.getIcon(Resources.IMG_COVER_LOADING_P3));});
-			if (tcNew % 16 == 10) swingInvoke(() -> {setIcon(CachedResourceLoader.getIcon(Resources.IMG_COVER_LOADING_P4));});
-			if (tcNew % 16 == 12) swingInvoke(() -> {setIcon(CachedResourceLoader.getIcon(Resources.IMG_COVER_LOADING_P5));});
-			if (tcNew % 16 == 14) swingInvoke(() -> {setIcon(CachedResourceLoader.getIcon(Resources.IMG_COVER_LOADING_P6));});
+			if (tcNew % 16 ==  0) setIcon(CachedResourceLoader.getIcon(Resources.IMG_COVER_LOADING_P7));
+			if (tcNew % 16 ==  2) setIcon(CachedResourceLoader.getIcon(Resources.IMG_COVER_LOADING_P0));
+			if (tcNew % 16 ==  4) setIcon(CachedResourceLoader.getIcon(Resources.IMG_COVER_LOADING_P1));
+			if (tcNew % 16 ==  6) setIcon(CachedResourceLoader.getIcon(Resources.IMG_COVER_LOADING_P2));
+			if (tcNew % 16 ==  8) setIcon(CachedResourceLoader.getIcon(Resources.IMG_COVER_LOADING_P3));
+			if (tcNew % 16 == 10) setIcon(CachedResourceLoader.getIcon(Resources.IMG_COVER_LOADING_P4));
+			if (tcNew % 16 == 12) setIcon(CachedResourceLoader.getIcon(Resources.IMG_COVER_LOADING_P5));
+			if (tcNew % 16 == 14) setIcon(CachedResourceLoader.getIcon(Resources.IMG_COVER_LOADING_P6));
 			break;
 		}
 	}
 	
 	private void swingInvoke(Func0to0 f) {
 		try	{
-			SwingUtilities.invokeAndWait(() -> f.invoke());
-		} catch (InterruptedException e) {
-			CCLog.addError(e);
-		} catch (InvocationTargetException e) {
+			SwingUtilities.invokeAndWait(f::invoke);
+		} catch (InterruptedException | InvocationTargetException e) {
 			CCLog.addError(e);
 		}
 	}
@@ -196,7 +192,7 @@ public class DatabaseElementPreviewLabel extends CoverLabel {
 		image_original = null;
 
 		mode = DEPLMode.MODE_DEFAULT;
-		super.setCoverDirect(image_normal, image_original);
+		super.setCoverDirect(null, null);
 	}
 	
 	public void setModeError() {

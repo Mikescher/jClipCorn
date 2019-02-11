@@ -115,7 +115,7 @@ public class TestDatabase extends ClipCornBaseTest {
 		CCMovie mov = ml.iteratorMovies().firstOrNull();
 		assertEquals(1, ml.getElementCount());
 
-		File filep = new File(SimpleFileUtils.getTempFile("xml"));
+		File filep = new File(SimpleFileUtils.getTempFilename("xml"));
 		ExportHelper.exportMovie(filep, ml, mov, true);
 		
 		ml.remove(mov);
@@ -155,7 +155,7 @@ public class TestDatabase extends ClipCornBaseTest {
 		CCSeries ser = ml.iteratorSeries().firstOrNull();
 		assertEquals(1, ml.getElementCount());
 
-		File filep = new File(SimpleFileUtils.getTempFile("xml"));
+		File filep = new File(SimpleFileUtils.getTempFilename("xml"));
 		ExportHelper.exportSeries(filep, ml, ser, true);
 		
 		ml.remove(ser);

@@ -8,10 +8,7 @@ import java.io.Reader;
 import java.io.Writer;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.FileSystem;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
-import java.nio.file.StandardOpenOption;
+import java.nio.file.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -27,6 +24,8 @@ import de.jClipCorn.util.exceptions.CCFormatException;
 import de.jClipCorn.util.formatter.FileSizeFormatter;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.RegExHelper;
+import de.jClipCorn.util.helper.SimpleFileUtils;
+import org.apache.commons.io.FileUtils;
 
 public class CCBackup {
 	private final static String HEADER = "Backup Info File"; //$NON-NLS-1$
@@ -43,7 +42,7 @@ public class CCBackup {
 	private File archive;
 	private Properties properties;
 	
-	public CCBackup(File archive) throws FileNotFoundException, IOException {
+	public CCBackup(File archive) throws IOException {
 		this.archive = archive;
 		if (! archive.exists()) throw new FileNotFoundException();
 		
@@ -71,9 +70,9 @@ public class CCBackup {
 		return archive;
 	}
 	
-	public void saveToFile() {
+	public boolean saveToFile() {
 		try {
-			Map<String, String> env = new HashMap<>(); 
+			Map<String, String> env = new HashMap<>();
 			env.put("create", "false"); //$NON-NLS-1$ //$NON-NLS-2$
 			URI uri = URI.create("jar:" + archive.toURI()); //$NON-NLS-1$
 			try (FileSystem fs = FileSystems.newFileSystem(uri, env))
@@ -82,7 +81,7 @@ public class CCBackup {
 					properties.store(writer, HEADER);
 			    }
 			}
-			
+
 			// delete old prop file if exits
 			try {
 				File externalInfoFile = getPropertyFileFor(archive);
@@ -90,8 +89,49 @@ public class CCBackup {
 			} catch(Exception e) {
 				CCLog.addError(e);
 			}
-		} catch (IOException e) {
+
+			return true;
+		} catch (ReadOnlyFileSystemException e) {
+			// "Bug" in JRE with zip files and network drives under Windows
+			// https://stackoverflow.com/questions/24863465
+			return saveToFileFallback();
+		} catch (Exception e) {
 			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CouldNotUpdateBackupInfo", getName()), e); //$NON-NLS-1$
+			return false;
+		}
+	}
+
+	public boolean saveToFileFallback() {
+		try {
+			File tempFile = new File(SimpleFileUtils.getSystemTempFile("zip")); //$NON-NLS-1$
+
+			FileUtils.copyFile(archive, tempFile);
+
+			Map<String, String> env = new HashMap<>();
+			env.put("create", "false"); //$NON-NLS-1$ //$NON-NLS-2$
+			URI uri = URI.create("jar:" + tempFile.toURI()); //$NON-NLS-1$
+			try (FileSystem fs = FileSystems.newFileSystem(uri, env))
+			{
+				try (Writer writer = Files.newBufferedWriter(fs.getPath(ExportHelper.FILENAME_BACKUPINFO), StandardCharsets.UTF_8, StandardOpenOption.CREATE)) {
+					properties.store(writer, HEADER);
+				}
+			}
+
+			FileUtils.copyFile(tempFile, archive);
+			FileUtils.forceDelete(tempFile);
+
+			// delete old prop file if exits
+			try {
+				File externalInfoFile = getPropertyFileFor(archive);
+				if (externalInfoFile.exists()) externalInfoFile.delete();
+			} catch(Exception e) {
+				CCLog.addError(e);
+			}
+
+			return true;
+		} catch (Exception e) {
+			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CouldNotUpdateBackupInfo", getName()), e); //$NON-NLS-1$
+			return false;
 		}
 	}
 	
@@ -110,10 +150,8 @@ public class CCBackup {
 	public CCDate getDate() {
 		String result = properties.getProperty(PROP_DATE);
 		if (result == null) return CCDate.getMinimumDate();
-		
-		CCDate dateresult = CCDate.deserializeOrDefault(result, CCDate.getMinimumDate());
-		
-		return dateresult;
+
+		return CCDate.deserializeOrDefault(result, CCDate.getMinimumDate());
 	}
 
 	public void setDate(CCDate date) {

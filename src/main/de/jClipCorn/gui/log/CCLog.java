@@ -43,7 +43,7 @@ public class CCLog {
 		path = p;
 	}
 
-	public static void addInformation(Exception e) {
+	public static void addInformation(Throwable e) {
 		add(e.toString(), CCLogType.LOG_ELEM_INFORMATION, e.getStackTrace());
 	}
 	
@@ -55,8 +55,8 @@ public class CCLog {
 		add(e, CCLogType.LOG_ELEM_WARNING);
 	}
 	
-	public static void addWarning(String s, Exception e) {
-		add(s + '\n' + "\tcaused by" + e.toString(), CCLogType.LOG_ELEM_WARNING, e.getStackTrace()); //$NON-NLS-1$
+	public static void addWarning(String s, Throwable e) {
+		add(s + '\n' + "\t caused by " + e.toString(), CCLogType.LOG_ELEM_WARNING, e.getStackTrace()); //$NON-NLS-1$
 	}
 
 	public static void addError(String e) {
@@ -67,15 +67,15 @@ public class CCLog {
 		add(e, CCLogType.LOG_ELEM_ERROR, trace);
 	}
 
-	public static void addError(Exception e) {
+	public static void addError(Throwable e) {
 		add(e.toString(), CCLogType.LOG_ELEM_ERROR, e.getStackTrace());
 	}
-	
-	public static void addError(String s, Exception e) {
-		add(s + '\n' + "\tcaused by" + e.toString(), CCLogType.LOG_ELEM_ERROR, e.getStackTrace()); //$NON-NLS-1$
+
+	public static void addError(String s, Throwable e) {
+		add(s + '\n' + "\t caused by " + e.toString(), CCLogType.LOG_ELEM_ERROR, e.getStackTrace()); //$NON-NLS-1$
 	}
 	
-	public static void addFatalError(Exception e) {
+	public static void addFatalError(Throwable e) {
 		add(e.toString(), CCLogType.LOG_ELEM_FATALERROR, e.getStackTrace());
 	}
 	
@@ -87,8 +87,8 @@ public class CCLog {
 		add(e, CCLogType.LOG_ELEM_FATALERROR, trace);
 	}
 	
-	public static void addFatalError(String s, Exception e) {
-		add(s + '\n' + "\tcaused by" + e.toString(), CCLogType.LOG_ELEM_FATALERROR, e.getStackTrace()); //$NON-NLS-1$
+	public static void addFatalError(String s, Throwable e) {
+		add(s + '\n' + "\t caused by " + e.toString(), CCLogType.LOG_ELEM_FATALERROR, e.getStackTrace()); //$NON-NLS-1$
 	}
 
 	private static void add(String txt, CCLogType type) {

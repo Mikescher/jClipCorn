@@ -1,6 +1,7 @@
 package de.jClipCorn.util.helper;
 
 import de.jClipCorn.util.Str;
+import de.jClipCorn.util.formatter.PathFormatter;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -123,9 +124,16 @@ public class SimpleFileUtils {
 	}
 
 	@SuppressWarnings("nls")
-	public static String getTempFile(String ext) {
+	public static String getTempFilename(String ext) {
 		String fileName = MessageFormat.format("{0}.{1}", UUID.randomUUID(), ext);
-		
+
 		return new File(fileName).getAbsolutePath();
+	}
+
+	@SuppressWarnings("nls")
+	public static String getSystemTempFile(String ext) {
+		String fileName = MessageFormat.format("{0}.{1}", UUID.randomUUID(), ext);
+
+		return PathFormatter.combine(System.getProperty("java.io.tmpdir"), fileName);
 	}
 }

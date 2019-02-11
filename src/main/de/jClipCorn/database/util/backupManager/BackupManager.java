@@ -24,6 +24,7 @@ import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.listener.ProgressCallbackListener;
 import de.jClipCorn.util.listener.ProgressCallbackProgressMonitorHelper;
 import de.jClipCorn.util.listener.ProgressCallbackSink;
+import org.apache.commons.io.FileUtils;
 
 public class BackupManager {
 	private final static String BACKUPFILENAME = "jCC-Backup %s_%d." + ExportHelper.EXTENSION_BACKUP; //$NON-NLS-1$
@@ -170,7 +171,7 @@ public class BackupManager {
 
 		try {
 			createBackupInternal(name, date, persistent, jccversion, dbversion, new ProgressCallbackProgressMonitorHelper(monitor), false);
-		} catch (IOException e) {
+		} catch (Exception | Error e) {
 			CCLog.addError(e);
 			monitor.setProgress(monitor.getMaximum());
 			monitor.close();
@@ -211,7 +212,11 @@ public class BackupManager {
 		zos.close();
 
 		CCBackup backup = new CCBackup(file, name, date, persistent, jccversion, dbversion, excludeCovers);
-		backup.saveToFile();
+		boolean ok = backup.saveToFile();
+		if (!ok) {
+			if (file.exists()) FileUtils.deleteQuietly(file);
+			throw new IOException("saveToFile failed");
+		}
 		backuplist.add(backup);
 	}
 

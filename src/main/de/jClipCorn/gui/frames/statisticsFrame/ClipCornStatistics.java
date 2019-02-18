@@ -4,29 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.jClipCorn.database.CCMovieList;
-import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsAddDateChart;
-import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsFSKChart;
-import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsFormatChart;
-import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsFormatOverTimeChart;
-import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsGenreChart;
-import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsLanguageChart;
-import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsLengthChart;
-import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsLengthOverTimeChart;
-import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsOnlinescoreChart;
-import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsProviderAnyChart;
-import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsProviderMainChart;
-import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsQualityChart;
-import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsQualityOverTimeChart;
-import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsScoreChart;
-import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsSeriesTimeline;
-import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsSeriesTotalViewedChart;
-import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsSeriesViewedChart;
-import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsSizeOverTimeChart;
-import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsTagChart;
-import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsViewedChart;
-import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsViewedOverTimeChart;
-import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsWatchCountChart;
-import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsYearChart;
+import de.jClipCorn.gui.frames.statisticsFrame.charts.*;
 import de.jClipCorn.util.lambda.Func1to1;
 
 public final class ClipCornStatistics {
@@ -52,6 +30,7 @@ public final class ClipCornStatistics {
 		STATISTICS.add(ml -> new StatisticsGroup(s -> new StatisticsTagChart(ml, s)));
 		STATISTICS.add(ml -> new StatisticsGroup(s -> new StatisticsProviderMainChart(ml, s)));
 		STATISTICS.add(ml -> new StatisticsGroup(s -> new StatisticsProviderAnyChart(ml, s)));
+		STATISTICS.add(ml -> new StatisticsGroup(s -> new StatisticsGroupChart(ml, s)));
 
 		// ======== SPECIAL PROPERTIES =========
 

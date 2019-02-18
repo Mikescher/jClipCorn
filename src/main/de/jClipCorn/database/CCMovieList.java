@@ -928,6 +928,8 @@ public class CCMovieList {
 	}
 	
 	public CCGroup getGroupOrNull(String name) {
+		if (name == null) return null;
+
 		for (CCGroup entry : databaseGroups) {
 			if (entry.Name.equals(name)) return entry;
 		}

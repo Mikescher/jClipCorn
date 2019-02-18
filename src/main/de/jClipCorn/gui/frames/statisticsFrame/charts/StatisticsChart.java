@@ -51,7 +51,7 @@ public abstract class StatisticsChart extends StatisticsPanel {
 		JFreeChart chart = getChart();
 		if (chart == null) return null;
 		
-		JComponent chartPanel;
+		ChartPanel chartPanel;
 		
 		if (CCProperties.getInstance().PROP_STATISTICS_INTERACTIVECHARTS.getValue()) {
 			chartPanel = new ChartPanel(new JFreeChart(new XYPlot()));
@@ -77,7 +77,7 @@ public abstract class StatisticsChart extends StatisticsPanel {
 			public void componentHidden(ComponentEvent e) {/**/}
 		});
 		
-		((ChartPanel)chartPanel).setChart(chart);	
+		chartPanel.setChart(chart);
 		
 		
 		if (source == StatisticsTypeFilter.MOVIES && ! movielist.containsMovies()) 

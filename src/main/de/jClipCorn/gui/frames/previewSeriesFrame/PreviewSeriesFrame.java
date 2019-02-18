@@ -13,22 +13,12 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.Box;
-import javax.swing.GroupLayout;
+import javax.swing.*;
 import javax.swing.GroupLayout.Alignment;
-import javax.swing.JButton;
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.SwingConstants;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.SoftBevelBorder;
@@ -816,9 +806,12 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 	public void filesDropped(File[] files) {
 		if (files.length != 1) return;
 
-		CCSeason s = tabSeason.getSeason();
+		final CCSeason s = tabSeason.getSeason();
 		if (s == null) return;
 
-		QuickAddEpisodeDialog.show(this, s, files[0]);
+		final File f = files[0];
+		if (f == null) return;
+
+		SwingUtilities.invokeLater(() -> QuickAddEpisodeDialog.show(this, s, f));
 	}
 }

@@ -407,9 +407,9 @@ public class MainFrame extends JFrame implements CCDBUpdateListener, FileDrop.Li
 	}
 
 	@Override
-	public void filesDropped(File[] files) {
+	public void filesDropped(final File[] files) {
 		if (files.length>0) {
-			new QuickAddMoviesDialog(this, getMovielist(), files).setVisible(true);
+			SwingUtilities.invokeLater(() -> new QuickAddMoviesDialog(this, getMovielist(), files).setVisible(true));
 		}
 	}
 }

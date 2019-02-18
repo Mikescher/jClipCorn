@@ -126,6 +126,7 @@ public class PathFormatter {
 			if (letter != '#') {
 				rPath = RegExHelper.replace(REGEX_DRIVENAME, rPath, letter + ":" + SEPERATOR);
 			} else {
+				DriveMap.conditionalRescan();
 				CCLog.addWarning(LocaleBundle.getFormattedString("LogMessage.DriveNotFound", name));
 				return "";
 			}
@@ -147,6 +148,7 @@ public class PathFormatter {
 			if (letter != '#') {
 				rPath = RegExHelper.replace(REGEX_NETDRIVE, rPath, letter + ":" + SEPERATOR);
 			} else {
+				DriveMap.conditionalRescan();
 				CCLog.addWarning(LocaleBundle.getFormattedString("LogMessage.DriveNotFound", name));
 				rPath = RegExHelper.replace(REGEX_NETDRIVE, rPath, name + SEPERATOR);
 			}

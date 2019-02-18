@@ -161,7 +161,7 @@ public class CCProperties {
 	public CCBoolProperty                                   PROP_MAINFRAME_SHOW_GROUP_ONLY_ON_HOVER;
 	public CCBoolProperty                                   PROP_MAINFRAME_ASYNC_COVER_LOADING;
 	public CCEnumProperty<AniListTitleLang>                 PROP_ANILIST_PREFERRED_TITLE_LANG;
-	public CCBoolProperty                                   DISABLE_SSL_VERIFY;
+	public CCBoolProperty                                   PROP_DISABLE_SSL_VERIFY;
 	public CCBoolProperty                                   PROP_PATHSYNTAX_SELF;
 	public CCBoolProperty                                   PROP_PATHSYNTAX_DRIVELABEL;
 	public CCBoolProperty                                   PROP_PATHSYNTAX_SELFDIR;
@@ -171,6 +171,7 @@ public class CCProperties {
 	public CCPathVarProperty                                PROP_PATHSYNTAX_VAR3;
 	public CCPathVarProperty                                PROP_PATHSYNTAX_VAR4;
 	public CCPathVarProperty                                PROP_PATHSYNTAX_VAR5;
+	public CCPIntProperty                                   PROP_MIN_DRIVEMAP_RESCAN_TIME;
 
 	public boolean ARG_READONLY = false;
 	
@@ -322,7 +323,8 @@ public class CCProperties {
 		PROP_DEBUG_HTTPCACHE_PATH               = new CCPathProperty(NONVISIBLE,            this,   "PROP_DEBUG_HTTPCACHE_PATH",                "%temp%/jClipCorn/httpcache/",      null, CCPathPropertyMode.DIRECTORIES);
 		PROP_SERIES_PREVIEWFRAME_HEIGHT         = new CCPIntProperty(NONVISIBLE,            this,   "PROP_SERIES_PREVIEWFRAME_HEIGHT",          22);
 		PROP_ANILIST_PREFERRED_TITLE_LANG       = new CCEnumProperty<>(NONVISIBLE,          this,   "PROP_ANILIST_PREFERRED_TITLE_LANG",        AniListTitleLang.PREFERRED,         AniListTitleLang.getWrapper());
-		DISABLE_SSL_VERIFY                      = new CCBoolProperty(NONVISIBLE,            this,   "DISABLE_SSL_VERIFY",                       false);
+		PROP_DISABLE_SSL_VERIFY                 = new CCBoolProperty(NONVISIBLE,            this,   "PROP_DISABLE_SSL_VERIFY",                  false);
+		PROP_MIN_DRIVEMAP_RESCAN_TIME           = new CCPIntProperty(NONVISIBLE,            this,   "MIN_DRIVEMAP_RESCAN_TIME",                 30*1000);
 
 		PROP_ADD_MOVIE_RELATIVE_AUTO            = new CCBoolProperty(CAT_PATHSYNTAX,        this,   "PROP_ADD_MOVIE_RELATIVE_AUTO",             true);
 		PROP_PATHSYNTAX_SELF                    = new CCBoolProperty(CAT_PATHSYNTAX,        this,   "PROP_PATHSYNTAX_SELF",                     true);

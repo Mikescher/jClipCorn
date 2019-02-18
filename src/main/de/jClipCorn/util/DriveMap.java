@@ -13,6 +13,7 @@ import javax.swing.filechooser.FileSystemView;
 import de.jClipCorn.Globals;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
+import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.helper.ApplicationHelper;
 import de.jClipCorn.util.helper.RegExHelper;
@@ -28,10 +29,18 @@ public class DriveMap {
 	private static Map<Character, Tuple<String, String>> driveMap = null;
 	private static Map<String, Character> driveLabelToLetterMap = null;
 	private static Map<String, Character> driveUNCToLetterMap = null;
-	private static boolean created = false;
-	private static boolean is_creating = false;
+
+	private static volatile boolean is_created    = false;
+	private static volatile boolean is_creating   = false;
+	private static volatile boolean is_rescanning = false;
+
 	private static int current_delay = 0;
-	
+
+	private static long lastScanStart = 0;
+
+	private static final Object _rescanLock = new Object();
+	private static final Object _scanLock = new Object();
+
 	public static Character getDriveLetterByLabel(String name) {
 		if (! isCreated()) {
 			if (isCreating()) {
@@ -121,11 +130,11 @@ public class DriveMap {
 		Globals.TIMINGS.start(Globals.TIMING_SCAN_DRIVES);
 		
 		is_creating = true;
-		created = false;
-		
-		driveMap = new HashMap<>();
-		driveLabelToLetterMap = new HashMap<>();
-		driveUNCToLetterMap = new HashMap<>();
+		is_created = false;
+
+		Map<Character, Tuple<String, String>> threadDriveMap = new HashMap<>();
+		Map<String, Character> threadDriveLabelToLetterMap   = new HashMap<>();
+		Map<String, Character> threadDriveUNCToLetterMap     = new HashMap<>();
 
 		List<FileStore> fstores;
 		try {
@@ -145,16 +154,67 @@ public class DriveMap {
 				if (Str.isNullOrWhitespace(net)) net = Str.Empty;
 				if (!net.startsWith("\\\\")) net = Str.Empty;
 
-				driveMap.put(letter, Tuple.Create(drive, net));
-				driveLabelToLetterMap.put(cleanDriveName(drive), letter);
-				if (!Str.isNullOrWhitespace(net)) driveUNCToLetterMap.put(net.toLowerCase(), letter);
+				threadDriveMap.put(letter, Tuple.Create(drive, net));
+				threadDriveLabelToLetterMap.put(cleanDriveName(drive), letter);
+				if (!Str.isNullOrWhitespace(net)) threadDriveUNCToLetterMap.put(net.toLowerCase(), letter);
 			}
 		}
+
+		synchronized (_scanLock) {
+			driveMap              = threadDriveMap;
+			driveLabelToLetterMap = threadDriveLabelToLetterMap;
+			driveUNCToLetterMap   = threadDriveUNCToLetterMap;
+		}
 		
-		created = true;
+		is_created = true;
 		is_creating = false;
 
 		Globals.TIMINGS.stop(Globals.TIMING_SCAN_DRIVES);
+	}
+
+	private static void updateMap() {
+		try {
+			long startTime = lastScanStart = System.currentTimeMillis();
+
+			Map<Character, Tuple<String, String>> threadDriveMap = new HashMap<>();
+			Map<String, Character> threadDriveLabelToLetterMap   = new HashMap<>();
+			Map<String, Character> threadDriveUNCToLetterMap     = new HashMap<>();
+
+			List<FileStore> fstores;
+			try {
+				fstores = ApplicationHelper.isWindows() ? CCStreams.iterate(FileSystems.getDefault().getFileStores()).enumerate() : new ArrayList<>();
+			} catch (Exception e) {
+				fstores = new ArrayList<>();
+				CCLog.addWarning(LocaleBundle.getFormattedString("LogMessage.CouldNotEnumerateFileStores", e));
+			}
+
+			for (File root : File.listRoots()) {
+				if(isFileSystem(root)) {
+					String drive = getDriveName(root);
+					String net = getDriveNetworkIdent(fstores, root, drive);
+					Character letter = root.getAbsolutePath().charAt(0);
+
+					if (!ApplicationHelper.isWindows()) net = Str.Empty;
+					if (Str.isNullOrWhitespace(net)) net = Str.Empty;
+					if (!net.startsWith("\\\\")) net = Str.Empty;
+
+					threadDriveMap.put(letter, Tuple.Create(drive, net));
+					threadDriveLabelToLetterMap.put(cleanDriveName(drive), letter);
+					if (!Str.isNullOrWhitespace(net)) threadDriveUNCToLetterMap.put(net.toLowerCase(), letter);
+				}
+			}
+
+			synchronized (_scanLock) {
+				driveMap.putAll(threadDriveMap);
+				driveLabelToLetterMap.putAll(threadDriveLabelToLetterMap);
+				driveUNCToLetterMap.putAll(threadDriveUNCToLetterMap);
+			}
+
+			long delta = System.currentTimeMillis() - startTime;
+			CCLog.addInformation(LocaleBundle.getFormattedString("LogMessage.DriveMapRescan", delta));
+		} finally {
+			is_rescanning = false;
+		}
 	}
 
 	private static String getDriveName(File f) {
@@ -194,7 +254,7 @@ public class DriveMap {
 	}
 
 	public static boolean isCreated() {
-		return created;
+		return is_created;
 	}
 	
 	public static boolean isCreating() {
@@ -223,5 +283,22 @@ public class DriveMap {
 		if (! isCreated() && isCreating()) {
 			waitForCreateFinished();
 		}
+	}
+
+	public static void conditionalRescan() {
+		if (! isCreated()) return;
+		if (isCreating()) return;
+		if (is_rescanning) return;
+
+		if (System.currentTimeMillis() - lastScanStart <= CCProperties.getInstance().PROP_MIN_DRIVEMAP_RESCAN_TIME.getValue()) return;
+		synchronized (_rescanLock) {
+			if (is_rescanning) return;
+			if (System.currentTimeMillis() - lastScanStart <= CCProperties.getInstance().PROP_MIN_DRIVEMAP_RESCAN_TIME.getValue()) return;
+
+			lastScanStart = System.currentTimeMillis();
+			is_rescanning = true;
+			new Thread(DriveMap::updateMap, "THREAD_RESCAN_FILESYSTEM").start();
+		}
+
 	}
 }

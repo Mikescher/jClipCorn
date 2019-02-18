@@ -87,7 +87,7 @@ public class Main {
 		
 		CCLog.addDebug(LocaleBundle.getTranslationCount() + " Translations in Locale " + LocaleBundle.getCurrentLocale()); //$NON-NLS-1$
 
-		if (CCProperties.getInstance().DISABLE_SSL_VERIFY.getValue()) {
+		if (CCProperties.getInstance().PROP_DISABLE_SSL_VERIFY.getValue()) {
 			SSLUtilities.trustAllHostnames();
 			SSLUtilities.trustAllHttpsCertificates();
 			CCLog.addDebug("SSL Verification disabled"); //$NON-NLS-1$

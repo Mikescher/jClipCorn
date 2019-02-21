@@ -33,37 +33,43 @@ public class Main {
 	public static boolean BETA = true;
 		
 	public static void main(String[] arg) {
-		Globals.TIMINGS.start(Globals.TIMING_LOAD_PROPERTIES);
+		Globals.TIMINGS.start(Globals.TIMING_STARTUP_TOTAL);
+		
+		Globals.TIMINGS.start(Globals.TIMING_INIT_TOTAL);
 		{
-			CCProperties.create(PROPERTIES_PATH, arg); // FIRST ACTION - CACHE THIS SHIT - FUCKING IMPORTANT
+			Globals.TIMINGS.start(Globals.TIMING_INIT_LOAD_PROPERTIES);
+			{
+				CCProperties.create(PROPERTIES_PATH, arg); // FIRST ACTION - CACHE THIS SHIT - FUCKING IMPORTANT
+			}
+			Globals.TIMINGS.stop(Globals.TIMING_INIT_LOAD_PROPERTIES);
+
+			CCLog.setPath(CCProperties.getInstance().PROP_LOG_PATH.getValue());
+
+			Thread.setDefaultUncaughtExceptionHandler(ExceptionHandler.getInstance()); // For Main Thread
+
+			Globals.TIMINGS.start(Globals.TIMING_INIT_TESTREADONLY);
+			{
+				PathFormatter.testWritePermissions();
+			}
+			Globals.TIMINGS.stop(Globals.TIMING_INIT_TESTREADONLY);
+
+			LookAndFeelManager.setLookAndFeel(CCProperties.getInstance().PROP_UI_LOOKANDFEEL.getValue());
+
+			final CCMovieList mList = CCMovieList.create();
+
+			init();
+
+			SwingUtilities.invokeLater(() ->
+			{
+				mList.showInitialWizard();
+
+				final MainFrame myFrame = new MainFrame(mList);
+				myFrame.start();
+
+				mList.connect(myFrame);
+			});
 		}
-		Globals.TIMINGS.stop(Globals.TIMING_LOAD_PROPERTIES);
-		
-		CCLog.setPath(CCProperties.getInstance().PROP_LOG_PATH.getValue());
-		
-		Thread.setDefaultUncaughtExceptionHandler(ExceptionHandler.getInstance()); // For Main Thread
-
-		Globals.TIMINGS.start(Globals.TIMING_LOAD_TESTREADONLY);
-		{
-			PathFormatter.testWritePermissions();
-		}
-		Globals.TIMINGS.stop(Globals.TIMING_LOAD_TESTREADONLY);
-
-		LookAndFeelManager.setLookAndFeel(CCProperties.getInstance().PROP_UI_LOOKANDFEEL.getValue());
-
-		final CCMovieList mList = CCMovieList.create();
-		
-		init();
-		
-		SwingUtilities.invokeLater(() ->
-		{
-			mList.showInitialWizard();
-
-			final MainFrame myFrame = new MainFrame(mList);
-			myFrame.start();
-
-			mList.connect(myFrame);
-		});
+		Globals.TIMINGS.stop(Globals.TIMING_INIT_TOTAL);
 	}
 	
 	private static void init() {
@@ -80,9 +86,9 @@ public class Main {
 		Resources.init();
 		
 		if (CCProperties.getInstance().PROP_LOADING_PRELOADRESOURCES.getValue()) {
-			Globals.TIMINGS.start(Globals.TIMING_LOAD_PRELOADRESOURCES);
+			Globals.TIMINGS.start(Globals.TIMING_INIT_PRELOADRESOURCES);
 			Resources.preload();
-			Globals.TIMINGS.stop(Globals.TIMING_LOAD_PRELOADRESOURCES);
+			Globals.TIMINGS.stop(Globals.TIMING_INIT_PRELOADRESOURCES);
 		}
 		
 		CCLog.addDebug(LocaleBundle.getTranslationCount() + " Translations in Locale " + LocaleBundle.getCurrentLocale()); //$NON-NLS-1$

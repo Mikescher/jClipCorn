@@ -103,42 +103,42 @@ public class CCMovieList {
 	}
 	
 	public void connect(final MainFrame mf) {
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				Globals.TIMINGS.start(Globals.TIMING_LOAD_TOTAL);
-				{
-					BackupManager bm = new BackupManager(CCMovieList.this);
-					bm.doActions(mf);
-	
-					mf.beginBlockingIntermediate();
-	
-					Globals.TIMINGS.start(Globals.TIMING_DATABASE_CONNECT);
-					{
-						DatabaseConnectResult dbcr = database.tryconnect();
-						
-						if (dbcr == DatabaseConnectResult.ERROR_CANTCONNECT) {
-							CCLog.addFatalError(LocaleBundle.getString("LogMessage.ErrorConnectDB"), database.getLastError()); //$NON-NLS-1$
-						} else if (dbcr == DatabaseConnectResult.ERROR_CANTCREATE) {
-							CCLog.addFatalError(LocaleBundle.getString("LogMessage.ErrorCreateDB"), database.getLastError()); //$NON-NLS-1$
-						}
-					}
-					Globals.TIMINGS.stop(Globals.TIMING_DATABASE_CONNECT);
-					
-					testDatabaseVersion();
-	
-					Globals.TIMINGS.start(Globals.TIMING_MOVIELIST_FILL);
-					{
-						database.fillMovieList(CCMovieList.this);
-					}
-					Globals.TIMINGS.stop(Globals.TIMING_MOVIELIST_FILL);
-	
-					fireOnAfterLoad();
-				}
-				Globals.TIMINGS.stop(Globals.TIMING_LOAD_TOTAL);
+		new Thread(() ->
+		{
+			Globals.TIMINGS.start(Globals.TIMING_LOAD_TOTAL);
+			{
+				BackupManager bm = new BackupManager(CCMovieList.this);
+				bm.doActions(mf);
 
-				mf.endBlockingIntermediate();
+				mf.beginBlockingIntermediate();
+
+				Globals.TIMINGS.start(Globals.TIMING_LOAD_DATABASE_CONNECT);
+				{
+					DatabaseConnectResult dbcr = database.tryconnect();
+
+					if (dbcr == DatabaseConnectResult.ERROR_CANTCONNECT) {
+						CCLog.addFatalError(LocaleBundle.getString("LogMessage.ErrorConnectDB"), database.getLastError()); //$NON-NLS-1$
+					} else if (dbcr == DatabaseConnectResult.ERROR_CANTCREATE) {
+						CCLog.addFatalError(LocaleBundle.getString("LogMessage.ErrorCreateDB"), database.getLastError()); //$NON-NLS-1$
+					}
+				}
+				Globals.TIMINGS.stop(Globals.TIMING_LOAD_DATABASE_CONNECT);
+
+				testDatabaseVersion();
+
+				Globals.TIMINGS.start(Globals.TIMING_LOAD_MOVIELIST_FILL);
+				{
+					database.fillMovieList(CCMovieList.this);
+				}
+				Globals.TIMINGS.stop(Globals.TIMING_LOAD_MOVIELIST_FILL);
+
+				fireOnAfterLoad();
 			}
+			Globals.TIMINGS.stop(Globals.TIMING_LOAD_TOTAL);
+
+			Globals.TIMINGS.stop(Globals.TIMING_STARTUP_TOTAL);
+
+			mf.endBlockingIntermediate();
 		}, "THREAD_LOAD_DATABASE").start(); //$NON-NLS-1$
 	}
 	

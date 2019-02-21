@@ -65,7 +65,7 @@ public class BackupManager {
 	}
 
 	private void initBackupsList() {
-		Globals.TIMINGS.start(Globals.TIMING_INIT_BACKUPMANAGER);
+		Globals.TIMINGS.start(Globals.TIMING_LOAD_INIT_BACKUPMANAGER);
 		
 		File[] archives = getArchiveFiles();
 		
@@ -83,7 +83,7 @@ public class BackupManager {
 			}
 		}
 
-		Globals.TIMINGS.stop(Globals.TIMING_INIT_BACKUPMANAGER);
+		Globals.TIMINGS.stop(Globals.TIMING_LOAD_INIT_BACKUPMANAGER);
 	}
 
 	public void doActions(Component c) {

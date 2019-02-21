@@ -10,29 +10,39 @@ import de.jClipCorn.util.MapStopWatch;
 @SuppressWarnings("nls")
 public final class Globals {
 	private Globals () { throw new InstantiationError(); }
-	
-	public static int TIMING_LOAD_TOTAL            = 0x00;
-	public static int TIMING_LOAD_PROPERTIES       = 0x01;
-	public static int TIMING_LOAD_TESTREADONLY     = 0x02;
-	public static int TIMING_LOAD_PRELOADRESOURCES = 0x03;
-	public static int TIMING_SCAN_DRIVES           = 0x04;
-	public static int TIMING_INIT_BACKUPMANAGER    = 0x05;
-	public static int TIMING_DATABASE_CONNECT      = 0x06;
-	public static int TIMING_MOVIELIST_FILL        = 0x07;
+
+	public static int TIMING_INIT_TOTAL              = 0x000;
+	public static int TIMING_INIT_LOAD_PROPERTIES    = 0x001;
+	public static int TIMING_INIT_TESTREADONLY       = 0x002;
+	public static int TIMING_INIT_PRELOADRESOURCES   = 0x003;
+
+	public static int TIMING_LOAD_TOTAL              = 0x100;
+	public static int TIMING_LOAD_INIT_BACKUPMANAGER = 0x102;
+	public static int TIMING_LOAD_DATABASE_CONNECT   = 0x103;
+	public static int TIMING_LOAD_MOVIELIST_FILL     = 0x104;
+
+	public static int TIMING_STARTUP_TOTAL           = 0x200;
+
+	public static int TIMING_BACKGROUND_SCAN_DRIVES  = 0x301;
 	
 	public final static Map<Integer, String> TIMING_IDS = new HashMap<>();
 	
 	public final static MapStopWatch TIMINGS = new MapStopWatch();
 
 	static {
-		TIMING_IDS.put(TIMING_LOAD_TOTAL,            "LOAD_TOTAL");
-		TIMING_IDS.put(TIMING_LOAD_PROPERTIES,       "LOAD_PROPERTIES");
-		TIMING_IDS.put(TIMING_LOAD_TESTREADONLY,     "LOAD_TESTREADONLY");
-		TIMING_IDS.put(TIMING_LOAD_PRELOADRESOURCES, "LOAD_PRELOADRESOURCES");
-		TIMING_IDS.put(TIMING_SCAN_DRIVES,           "SCAN_DRIVES");
-		TIMING_IDS.put(TIMING_INIT_BACKUPMANAGER,    "INIT_BACKUPMANAGER");
-		TIMING_IDS.put(TIMING_DATABASE_CONNECT,      "DATABASE_CONNECT");
-		TIMING_IDS.put(TIMING_MOVIELIST_FILL,        "MOVIELIST_FILL");
+		TIMING_IDS.put(TIMING_INIT_LOAD_PROPERTIES,    "INIT_LOAD_PROPERTIE");
+		TIMING_IDS.put(TIMING_INIT_TESTREADONLY,       "INIT_TESTREADONLY");
+		TIMING_IDS.put(TIMING_INIT_PRELOADRESOURCES,   "INIT_PRELOADRESOURCES");
+		TIMING_IDS.put(TIMING_INIT_TOTAL,              "INIT_TOTAL");
+
+		TIMING_IDS.put(TIMING_LOAD_INIT_BACKUPMANAGER, "LOAD_INIT_BACKUPMANAGER");
+		TIMING_IDS.put(TIMING_LOAD_DATABASE_CONNECT,   "LOAD_DATABASE_CONNECT");
+		TIMING_IDS.put(TIMING_LOAD_MOVIELIST_FILL,     "LOAD_MOVIELIST_FILL");
+		TIMING_IDS.put(TIMING_LOAD_TOTAL,              "LOAD_TOTAL");
+
+		TIMING_IDS.put(TIMING_STARTUP_TOTAL,           "STARTUP_TOTAL");
+
+		TIMING_IDS.put(TIMING_BACKGROUND_SCAN_DRIVES,  "BACKGROUND_SCAN_DRIVES");
 		
 		TIMINGS.setOnTimerStop((id, time) -> {
 			//CCLog.addDebug("Timer " + TIMING_IDS.get(id) + " finished := " + time + "ms");

@@ -127,7 +127,7 @@ public class DriveMap {
 	}
 
 	private static void createMap() {
-		Globals.TIMINGS.start(Globals.TIMING_SCAN_DRIVES);
+		Globals.TIMINGS.start(Globals.TIMING_BACKGROUND_SCAN_DRIVES);
 		
 		is_creating = true;
 		is_created = false;
@@ -169,7 +169,7 @@ public class DriveMap {
 		is_created = true;
 		is_creating = false;
 
-		Globals.TIMINGS.stop(Globals.TIMING_SCAN_DRIVES);
+		Globals.TIMINGS.stop(Globals.TIMING_BACKGROUND_SCAN_DRIVES);
 	}
 
 	private static void updateMap() {

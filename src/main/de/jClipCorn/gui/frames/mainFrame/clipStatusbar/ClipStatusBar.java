@@ -21,6 +21,7 @@ import de.jClipCorn.gui.log.CCLogChangedListener;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.formatter.FileSizeFormatter;
 import de.jClipCorn.util.formatter.TimeIntervallFormatter;
+import org.apache.commons.lang3.StringUtils;
 
 public class ClipStatusBar extends AbstractClipStatusbar implements CCDBUpdateListener, CCLogChangedListener {
 	private static final long serialVersionUID = -5283785610114988490L;
@@ -174,22 +175,37 @@ public class ClipStatusBar extends AbstractClipStatusbar implements CCDBUpdateLi
 		StringBuilder tooltip = new StringBuilder();
 		
 		tooltip.append("<html>"); //$NON-NLS-1$
-		condAppend(tooltip, Globals.TIMING_LOAD_PROPERTIES);
-		condAppend(tooltip, Globals.TIMING_LOAD_TESTREADONLY);
-		condAppend(tooltip, Globals.TIMING_INIT_BACKUPMANAGER);
-		condAppend(tooltip, Globals.TIMING_LOAD_PRELOADRESOURCES);
+		condAppend(tooltip, Globals.TIMING_INIT_LOAD_PROPERTIES);
+		condAppend(tooltip, Globals.TIMING_INIT_TESTREADONLY);
+		condAppend(tooltip, Globals.TIMING_INIT_PRELOADRESOURCES);
+		condAppend(tooltip, Globals.TIMING_INIT_TOTAL);
+
+		tooltip.append("<hr/>"); //$NON-NLS-1$
+
+		condAppend(tooltip, Globals.TIMING_LOAD_INIT_BACKUPMANAGER);
+		condAppend(tooltip, Globals.TIMING_LOAD_DATABASE_CONNECT);
+		condAppend(tooltip, Globals.TIMING_LOAD_MOVIELIST_FILL);
 		condAppend(tooltip, Globals.TIMING_LOAD_TOTAL);
-		condAppend(tooltip, Globals.TIMING_MOVIELIST_FILL);
-		condAppend(tooltip, Globals.TIMING_SCAN_DRIVES);
+
+		tooltip.append("<hr/>"); //$NON-NLS-1$
+
+		condAppend(tooltip, Globals.TIMING_STARTUP_TOTAL);
+
+		tooltip.append("<hr/>"); //$NON-NLS-1$
+
+		condAppend(tooltip, Globals.TIMING_BACKGROUND_SCAN_DRIVES);
 		tooltip.append("</html>"); //$NON-NLS-1$
 		
-		lblStarttime.setText(LocaleBundle.getFormattedString("ClipStatusBar.Starttime", (int)Globals.TIMINGS.getSecondsOrZero(Globals.TIMING_LOAD_TOTAL, 0), movielist.getTotalDatabaseCount())); //$NON-NLS-1$
+		lblStarttime.setText(LocaleBundle.getFormattedString("ClipStatusBar.Starttime", (int)Globals.TIMINGS.getSecondsOrZero(Globals.TIMING_STARTUP_TOTAL, 0), movielist.getTotalDatabaseCount())); //$NON-NLS-1$
 		lblStarttime.setToolTipText(tooltip.toString());
 	}
 	
 	private void condAppend(StringBuilder builder, int id) {
-		if (Globals.TIMINGS.contains(id))
-			builder.append(String.format("%s := %dms<br/>", Globals.TIMING_IDS.get(id), Globals.TIMINGS.getMilliseconds(id))); //$NON-NLS-1$
+		if (Globals.TIMINGS.contains(id)) {
+			String strid = StringUtils.rightPad(Globals.TIMING_IDS.get(id), 26).replace(" ", "&nbsp;"); //$NON-NLS-1$
+			String strvl = StringUtils.leftPad(Long.toString(Globals.TIMINGS.getMilliseconds(id)), 5).replace(" ", "&nbsp;"); //$NON-NLS-1$
+			builder.append(String.format("<font face=\"monospace\">%s := %sms</font><br/>", strid, strvl)); //$NON-NLS-1$
+		}
 	}
 
 	@Override
@@ -214,12 +230,7 @@ public class ClipStatusBar extends AbstractClipStatusbar implements CCDBUpdateLi
 
 	@Override
 	public void onAfterLoad() {
-		SwingUtilities.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-				updateLabels();
-			}
-		});
+		SwingUtilities.invokeLater(this::updateLabels);
 	}
 	
 	public JProgressBar getProgressbar() {

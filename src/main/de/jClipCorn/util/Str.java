@@ -4,6 +4,7 @@ import java.nio.charset.Charset;
 import java.text.MessageFormat;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang3.StringUtils;
 
 @SuppressWarnings("nls")
 public final class Str {
@@ -46,4 +47,5 @@ public final class Str {
 	public static String fromBase64(String v) {
 		return new String(Base64.decodeBase64(v), UTF8);
 	}
+
 }

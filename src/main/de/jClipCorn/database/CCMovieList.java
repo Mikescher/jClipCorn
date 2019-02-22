@@ -447,22 +447,20 @@ public class CCMovieList {
 		database.removeFromSeasons(s.getSeasonID());
 	}
 
-	public int getTotalLength(boolean includeSeries) {
+	public int getTotalLength(boolean includeMovies, boolean includeSeries) {
 		int v = 0;
 		for (CCDatabaseElement m : list) {
-			if (m.isMovie()) {
-				v += ((CCMovie) m).getLength();
-			} else if (includeSeries) {
-				v += ((CCSeries) m).getLength();
-			}
+			if (includeMovies && m.isMovie())  v += ((CCMovie) m).getLength();
+			if (includeSeries && m.isSeries()) v += ((CCSeries) m).getLength();
 		}
 		return v;
 	}
 
-	public CCFileSize getTotalSize(boolean includeSeries) {
+	public CCFileSize getTotalSize(boolean includeMovies, boolean includeSeries) {
 		long bytes = 0;
 		for (CCDatabaseElement m : list) {
-			bytes += m.getFilesize().getBytes();
+			if (includeMovies && m.isMovie())  bytes += m.getFilesize().getBytes();
+			if (includeSeries && m.isSeries()) bytes += m.getFilesize().getBytes();
 		}
 		return new CCFileSize(bytes);
 	}
@@ -541,6 +539,10 @@ public class CCMovieList {
 
 	public int getEpisodeCount() {
 		return iteratorEpisodes().count();
+	}
+
+	public int getSeasonCount() {
+		return iteratorSeasons().count();
 	}
 
 	public List<String> getZyklusList() {

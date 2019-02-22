@@ -34,7 +34,7 @@ public class Main {
 		
 	public static void main(String[] arg) {
 		Globals.TIMINGS.start(Globals.TIMING_STARTUP_TOTAL);
-		
+
 		Globals.TIMINGS.start(Globals.TIMING_INIT_TOTAL);
 		{
 			Globals.TIMINGS.start(Globals.TIMING_INIT_LOAD_PROPERTIES);

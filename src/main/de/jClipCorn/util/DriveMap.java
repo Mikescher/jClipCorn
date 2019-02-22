@@ -8,13 +8,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.*;
 import javax.swing.filechooser.FileSystemView;
 
 import de.jClipCorn.Globals;
+import de.jClipCorn.gui.frames.mainFrame.MainFrame;
+import de.jClipCorn.gui.frames.mainFrame.clipStatusbar.ClipStatusBar;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.datatypes.Tuple;
+import de.jClipCorn.util.datatypes.Tuple3;
 import de.jClipCorn.util.helper.ApplicationHelper;
 import de.jClipCorn.util.helper.RegExHelper;
 import de.jClipCorn.util.stream.CCStreams;
@@ -42,88 +46,68 @@ public class DriveMap {
 	private static final Object _scanLock = new Object();
 
 	public static Character getDriveLetterByLabel(String name) {
-		if (! isCreated()) {
-			if (isCreating()) {
-				waitForCreateFinished();
-			} else {
-				createMap();
-			}
+		waitOrCreate();
+
+		synchronized (_scanLock) {
+			Character letter = driveLabelToLetterMap.get(name);
+			return (letter == null) ? ('#') : (letter);
 		}
-		
-		Character letter = driveLabelToLetterMap.get(name);
-		
-		return (letter == null) ? ('#') : (letter);
 	}
 
 	public static Character getDriveLetterByUNC(String netident) {
-		if (! isCreated()) {
-			if (isCreating()) {
-				waitForCreateFinished();
-			} else {
-				createMap();
-			}
+		waitOrCreate();
+
+		synchronized (_scanLock) {
+			Character letter = driveUNCToLetterMap.get(netident.toLowerCase());
+			return (letter == null) ? ('#') : (letter);
 		}
-
-		Character letter = driveUNCToLetterMap.get(netident.toLowerCase());
-
-		return (letter == null) ? ('#') : (letter);
 
 	}
 
 	public static String getDriveLabel(Character letter) {
-		if (! isCreated()) {
-			if (isCreating()) {
-				waitForCreateFinished();
-			} else {
-				createMap();
-			}
+		waitOrCreate();
+
+		synchronized (_scanLock) {
+			Tuple<String, String> info = driveMap.get(letter);
+			return (info == null) ? Str.Empty : (info.Item1);
 		}
-
-		Tuple<String, String> info = driveMap.get(letter);
-
-		return (info == null) ? Str.Empty : (info.Item1);
 	}
 
 	public static String getDriveUNC(Character letter) {
-		if (! isCreated()) {
-			if (isCreating()) {
-				waitForCreateFinished();
-			} else {
-				createMap();
-			}
+		waitOrCreate();
+
+		synchronized (_scanLock) {
+			Tuple<String, String> info = driveMap.get(letter);
+			return (info == null || info.Item2 == null) ? Str.Empty : (info.Item2);
 		}
-
-		Tuple<String, String> info = driveMap.get(letter);
-
-		return (info == null || info.Item2 == null) ? Str.Empty : (info.Item2);
 	}
 	
 	public static boolean hasDriveLabel(Character letter) {
-		if (! isCreated()) {
-			if (isCreating()) {
-				waitForCreateFinished();
-			} else {
-				createMap();
-			}
-		}
+		waitOrCreate();
 
-		Tuple<String, String> name = driveMap.get(letter);
-		
-		return name != null && !Str.isNullOrWhitespace(name.Item1);
+		synchronized (_scanLock) {
+			Tuple<String, String> name = driveMap.get(letter);
+			return name != null && !Str.isNullOrWhitespace(name.Item1);
+		}
 	}
 
 	public static boolean hasDriveUNC(Character letter) {
-		if (! isCreated()) {
-			if (isCreating()) {
+		waitOrCreate();
+
+		synchronized (_scanLock) {
+			Tuple<String, String> name = driveMap.get(letter);
+			return name != null && !Str.isNullOrWhitespace(name.Item2);
+		}
+	}
+
+	private static void waitOrCreate() {
+		if (!is_created) {
+			if (is_creating) {
 				waitForCreateFinished();
 			} else {
 				createMap();
 			}
 		}
-
-		Tuple<String, String> name = driveMap.get(letter);
-
-		return name != null && !Str.isNullOrWhitespace(name.Item2);
 	}
 
 	private static void createMap() {
@@ -131,6 +115,8 @@ public class DriveMap {
 		
 		is_creating = true;
 		is_created = false;
+
+		triggerOnChanged();
 
 		Map<Character, Tuple<String, String>> threadDriveMap = new HashMap<>();
 		Map<String, Character> threadDriveLabelToLetterMap   = new HashMap<>();
@@ -168,6 +154,8 @@ public class DriveMap {
 		
 		is_created = true;
 		is_creating = false;
+
+		triggerOnChanged();
 
 		Globals.TIMINGS.stop(Globals.TIMING_BACKGROUND_SCAN_DRIVES);
 	}
@@ -210,10 +198,14 @@ public class DriveMap {
 				driveUNCToLetterMap.putAll(threadDriveUNCToLetterMap);
 			}
 
+			triggerOnChanged();
+
 			long delta = System.currentTimeMillis() - startTime;
 			CCLog.addInformation(LocaleBundle.getFormattedString("LogMessage.DriveMapRescan", delta));
 		} finally {
 			is_rescanning = false;
+
+			triggerOnChanged();
 		}
 	}
 
@@ -253,16 +245,8 @@ public class DriveMap {
 		new Thread(DriveMap::createMap, "THREAD_SCAN_FILESYSTEM").start(); //$NON-NLS-1$
 	}
 
-	public static boolean isCreated() {
-		return is_created;
-	}
-	
-	public static boolean isCreating() {
-		return is_creating;
-	}
-	
 	private static void waitForCreateFinished() {
-		while(isCreating()) {
+		while(is_creating) {
 			if (current_delay > MAX_DELAY_COUNT) {
 				CCLog.addError(LocaleBundle.getString("LogMessage.DriveMapTookTooLong")); //$NON-NLS-1$
 				return;
@@ -280,14 +264,14 @@ public class DriveMap {
 	}
 	
 	public static void tryWait() {
-		if (! isCreated() && isCreating()) {
+		if (! is_created && is_creating) {
 			waitForCreateFinished();
 		}
 	}
 
 	public static void conditionalRescan() {
-		if (! isCreated()) return;
-		if (isCreating()) return;
+		if (! is_created) return;
+		if (is_creating) return;
 		if (is_rescanning) return;
 
 		if (System.currentTimeMillis() - lastScanStart <= CCProperties.getInstance().PROP_MIN_DRIVEMAP_RESCAN_TIME.getValue()) return;
@@ -297,8 +281,46 @@ public class DriveMap {
 
 			lastScanStart = System.currentTimeMillis();
 			is_rescanning = true;
+
+			triggerOnChanged();
+
 			new Thread(DriveMap::updateMap, "THREAD_RESCAN_FILESYSTEM").start();
 		}
 
+	}
+
+	public static String getStatus()
+	{
+		if (! is_created)  return LocaleBundle.getString("DriveMap.Status.NotCreated");
+		if (is_creating)   return LocaleBundle.getString("DriveMap.Status.Creating");
+		if (is_rescanning) return LocaleBundle.getString("DriveMap.Status.Rescanning");
+
+		return LocaleBundle.getString("DriveMap.Status.Idle");
+	}
+
+	public static List<Tuple3<Character, String, String>> getCopy() {
+		if (! is_created)  return new ArrayList<>();
+		if (is_creating)   return new ArrayList<>();
+		if (is_rescanning) return new ArrayList<>();
+
+
+		synchronized (_scanLock) {
+			return CCStreams
+					.iterate(driveMap)
+					.map(p -> Tuple3.Create(p.getKey(), p.getValue().Item1, p.getValue().Item2))
+					.autosortByProperty(p -> p.Item1)
+					.enumerate();
+		}
+	}
+
+	private static void triggerOnChanged() {
+		SwingUtilities.invokeLater(() ->
+		{
+			MainFrame inst = MainFrame.getInstance();
+			if (inst != null) {
+				ClipStatusBar sb = inst.getStatusBar();
+				if (sb != null) sb.updateLables_DriveScan();
+			}
+		});
 	}
 }

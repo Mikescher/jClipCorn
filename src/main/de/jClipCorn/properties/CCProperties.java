@@ -172,6 +172,7 @@ public class CCProperties {
 	public CCPathVarProperty                                PROP_PATHSYNTAX_VAR4;
 	public CCPathVarProperty                                PROP_PATHSYNTAX_VAR5;
 	public CCPIntProperty                                   PROP_MIN_DRIVEMAP_RESCAN_TIME;
+	public CCBoolProperty                                   PROP_STATBAR_DRIVESCAN;
 
 	public boolean ARG_READONLY = false;
 	
@@ -296,6 +297,7 @@ public class CCProperties {
 		PROP_STATBAR_LENGTH                     = new CCBoolProperty(CAT_STATUSBAR,         this,   "PROP_STATBAR_LENGTH",                      getDefStatbarLength());
 		PROP_STATBAR_SIZE                       = new CCBoolProperty(CAT_STATUSBAR,         this,   "PROP_STATBAR_SIZE",                        true);
 		PROP_STATBAR_STARTTIME                  = new CCBoolProperty(CAT_STATUSBAR,         this,   "PROP_STATBAR_STARTTIME",                   true);
+		PROP_STATBAR_DRIVESCAN                  = new CCBoolProperty(CAT_STATUSBAR,         this,   "PROP_STATBAR_DRIVESCAN",                   false);
 
 		PROP_SCANFOLDER_INCLUDESERIES           = new CCBoolProperty(CAT_OTHERFRAMES,       this,   "PROP_SCANFOLDER_INCLUDESERIES",            false);
 		PROP_SCANFOLDER_EXCLUDEIFOS             = new CCBoolProperty(CAT_OTHERFRAMES,       this,   "PROP_SCANFOLDER_EXCLUDEIFOS",              false);

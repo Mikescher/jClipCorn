@@ -126,25 +126,36 @@ public class CCSeries extends CCDatabaseElement  {
 	@Override
 	public CCDate getAddDate() {
 		switch (CCProperties.getInstance().PROP_SERIES_ADDDATECALCULATION.getValue()) {
-		case OLDEST_DATE:
-			return calcMinimumAddDate();
-		case NEWEST_DATE:
-			return calcMaximumAddDate();
-		case AVERAGE_DATE:
-			return calcAverageAddDate();
-		default:
-			return null;
+			case OLDEST_DATE:
+				return calcMinimumAddDate();
+			case NEWEST_DATE:
+				return calcMaximumAddDate();
+			case AVERAGE_DATE:
+				return calcAverageAddDate();
+			case NEWEST_BY_SEASON:
+				return calcMaximumAddDateBySeason();
+			default:
+				return null;
 		}
+	}
+
+	public CCDate calcMaximumAddDateBySeason() {
+		CCDate cd = CCDate.getMinimumDate();
+		for (CCSeason se: seasons) {
+			if (se.getEpisodeCount()==0) continue;
+			CCDate scd = se.calcMinimumAddDate();
+			if (scd.isGreaterThan(cd)) cd = scd;
+		}
+		return cd;
 	}
 	
 	public CCDate calcMaximumAddDate() {
 		CCDate cd = CCDate.getMinimumDate();
 		for (CCSeason se: seasons) {
+			if (se.getEpisodeCount()==0) continue;
+
 			CCDate scd = se.calcMaximumAddDate();
-			
-			if (scd.isGreaterThan(cd)) {
-				cd = scd;
-			}
+			if (scd.isGreaterThan(cd)) cd = scd;
 		}
 		return cd;
 	}
@@ -152,11 +163,10 @@ public class CCSeries extends CCDatabaseElement  {
 	public CCDate calcMinimumAddDate() {
 		CCDate cd = CCDate.getMaximumDate();
 		for (CCSeason se: seasons) {
+			if (se.getEpisodeCount()==0) continue;
+
 			CCDate scd = se.calcMinimumAddDate();
-			
-			if (scd.isLessThan(cd)) {
-				cd = scd;
-			}
+			if (scd.isLessThan(cd)) cd = scd;
 		}
 		return cd;
 	}
@@ -164,12 +174,12 @@ public class CCSeries extends CCDatabaseElement  {
 	public CCDate calcAverageAddDate() {
 		List<CCDate> dlist = new ArrayList<>();
 		for (CCSeason se: seasons) {
+			if (se.getEpisodeCount()==0) continue;
+
 			dlist.add(se.calcAverageAddDate());
 		}
 		
-		if (dlist.isEmpty()) {
-			return CCDate.getMinimumDate();
-		}
+		if (dlist.isEmpty()) return CCDate.getMinimumDate();
 		
 		return CCDate.getAverageDate(dlist);
 	}

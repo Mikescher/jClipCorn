@@ -7,13 +7,15 @@ import de.jClipCorn.util.enumextension.EnumWrapper;
 public enum AddDateAlgorithm implements ContinoousEnum<AddDateAlgorithm> {
 	OLDEST_DATE(0), 
 	NEWEST_DATE(1), 
-	AVERAGE_DATE(2);
+	AVERAGE_DATE(2),
+	NEWEST_BY_SEASON(3);
 	
 	@SuppressWarnings("nls")
-	private final static String NAMES[] = {
+	private final static String[] NAMES = {
 		LocaleBundle.getString("AddDateAlgorithm.Opt0"),
 		LocaleBundle.getString("AddDateAlgorithm.Opt1"),
 		LocaleBundle.getString("AddDateAlgorithm.Opt2"),
+		LocaleBundle.getString("AddDateAlgorithm.Opt3"),
 	};
 	
 	private int id;

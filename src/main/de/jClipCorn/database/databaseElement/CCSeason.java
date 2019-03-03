@@ -216,6 +216,7 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 	public CCDate getAddDate() {
 		switch (CCProperties.getInstance().PROP_SERIES_ADDDATECALCULATION.getValue()) {
 		case OLDEST_DATE:
+		case NEWEST_BY_SEASON:
 			return calcMinimumAddDate();
 		case NEWEST_DATE:
 			return calcMaximumAddDate();

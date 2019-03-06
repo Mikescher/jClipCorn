@@ -1,0 +1,145 @@
+import java.util.regex.Pattern
+
+ext.rexMainVers           = { -> rexMainVers() }
+ext.rexMainBeta           = { -> rexMainBeta() }
+ext.extractVersion        = { -> extractVersion() }
+ext.extractProjectVersion = { -> extractProjectVersion() }
+ext.isBetaRelease         = { -> isBetaRelease() }
+ext.make3Dot              = {s -> make3Dot(s) }
+ext.createLaunch4jConfig  = { -> createLaunch4jConfig() }
+ext.createChangelog       = { -> createChangelog() }
+
+Pattern rexMainVers()
+{
+	return Pattern.compile('(?<=/\\*<gradle_version_marker>\\*/")[0-9.]*(?="/\\*</gradle_version_marker>\\*/)')
+}
+
+Pattern rexMainBeta()
+{
+	return Pattern.compile('(?<=boolean\\s{1,10}BETA\\s{1,10}=\\s{1,10})(false|true)(?=;)')
+}
+
+String extractVersion()
+{
+	return file('src/main/de/jClipCorn/Main.java').text.findAll(rexMainVers())[0]
+}
+
+String extractProjectVersion()
+{
+	return extractVersion() /*+ (isBetaRelease() ? ("-beta") : ("")) */
+}
+
+boolean isBetaRelease()
+{
+	return file('src/main/de/jClipCorn/Main.java').text.findAll(rexMainBeta())[0] == "true"
+}
+
+String make3Dot(String i)
+{
+	return i.findAll("^[0-9]+\\.[0-9]+\\.[0-9]+")[0] as String
+}
+
+String createLaunch4jConfig()
+{
+	return  "<launch4jConfig>"+
+			"<dontWrapJar>false</dontWrapJar>"+
+			"<headerType>gui</headerType>"+
+			"<jar>..\\mybuilds\\jClipCorn " + extractVersion() + ".jar</jar>"+
+			"<outfile>..\\mybuilds\\jClipCorn " + extractVersion() + ".exe</outfile>"+
+			"<errTitle></errTitle>"+
+			"<cmdLine></cmdLine>"+
+			"<chdir></chdir>"+
+			"<priority>normal</priority>"+
+			"<downloadUrl>http://java.com/download</downloadUrl>"+
+			"<supportUrl></supportUrl>"+
+			"<customProcName>false</customProcName>"+
+			"<stayAlive>false</stayAlive>"+
+			"<manifest></manifest>"+
+			"<icon>launch.ico</icon>"+
+			"<jre>"+
+			"	<path></path>"+
+			"	<minVersion>1.7.0</minVersion>"+
+			"	<maxVersion></maxVersion>"+
+			"	<jdkPreference>preferJre</jdkPreference>"+
+			"</jre>"+
+			"</launch4jConfig>"
+}
+
+void createChangelog()
+{
+	def log = ['git', 'log', "--format=%H_____INNERDEL_____%ad_____INNERDEL_____%B_____OUTERDELIM_____"].execute().text.trim().split('_____OUTERDELIM_____')
+
+	File file = new File("CHANGELOG.txt")
+	file.text = ""
+
+	def lastRelease = ""
+
+	def rex_Normal  = /(?i)^[0-9]+\.[0-9]+(\.[0-9]+)?(\.[0-9]+)?\s+((Big|Possible) )?(WIP\-)?(Fixes( and Tasks)?|Libraryfix|Glitchfix|Code Cleanup|Documentation|Changelog|Tasks?|Features?|(Emergency\-)?Bugfixe?s?|Updates?|Rea?leases?|Others?|Features\+Bugfix)[ \r\n\t\s:]/
+	def rex_Release = /(?i)^[0-9]+\.[0-9]+(\.[0-9]+)?\s+Rea?leases?/
+
+	log.each
+	{
+		def (String partHash, String partDate, String partMessage) = "${it}".split('_____INNERDEL_____')
+
+		partHash = partHash.trim()
+		partDate = partDate.trim()
+		partMessage = partMessage.trim()
+
+		def isNormal = partMessage.find(rex_Normal)
+		def isRelease = partMessage.find(rex_Release) && (partMessage.split('\n')[0].trim().split(' ')[0].trim() != lastRelease.trim())
+
+		partMessage = partMessage.replaceAll('\r\n', '\n')                     // normalize linebreaks
+		partMessage = partMessage.replaceAll(/\n\n+/, '\n')                    // remove empty lines
+		partMessage = partMessage.replaceAll(/^1\.10\.10/, '1.10.0')           // fix misspelling
+
+		partMessage = partMessage.replace('Emergency-Bugfix', 'Bugfix')        // word replacement
+		partMessage = partMessage.replace('Libraryfix', 'Bugfix')              // word replacement
+		partMessage = partMessage.replace('Glitchfix', 'Bugfix')               // word replacement
+		partMessage = partMessage.replace('Code Cleanup', 'Other')             // word replacement
+		partMessage = partMessage.replace('Documentation', 'Other')            // word replacement
+		partMessage = partMessage.replace('Changelog', 'Other')                // word replacement
+		partMessage = partMessage.replace('Changelog', 'Other')                // word replacement
+
+		if (isRelease)
+		{
+			def partMessageHeader = partMessage.split('\n')[0].trim()
+			file << "\n\n"
+			file << ("#" * (12 + 1 + partDate.size() + 2 + partMessageHeader.size() + 1 + 12))
+			file << "\n"
+			file << "############ ${partDate}  ${partMessageHeader} ############\n"
+			file << ("#" * (12 + 1 + partDate.size() + 2 + partMessageHeader.size() + 1 + 12))
+			file << "\n\n\n"
+
+			if (partMessage.split('\n').size() > 1)
+			{
+				partMessage.split('\n').eachWithIndex
+						{ line , i ->
+							line = line.trim()
+							def isNewGroup = line.find(rex_Normal)
+							if (i == 0 || isNewGroup)
+								file << "${line}\n"
+							else
+								file << "  ${line}\n"
+						}
+			}
+
+			lastRelease = partMessageHeader.split(' ')[0].trim()
+		}
+		else if (isNormal)
+		{
+			partMessage.split('\n').eachWithIndex
+					{ line , i ->
+						line = line.trim()
+						def isNewGroup = line.find(rex_Normal)
+						if (i == 0 || isNewGroup)
+							file << "${line}\n"
+						else
+							file << "  ${line}\n"
+					}
+		}
+		else
+		{
+			println ("IGNORE: " + partMessage.replaceAll('\r', '').replaceAll('\n', ' '))
+		}
+	}
+}

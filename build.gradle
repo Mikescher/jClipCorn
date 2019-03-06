@@ -1,8 +1,8 @@
-import org.apache.tools.ant.taskdefs.condition.Os
-
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'application'
+
+apply from: 'build_util.gradle'
 
 repositories {
 	mavenCentral()
@@ -29,15 +29,6 @@ test {
 	}
 }
 
-ext.rexMainVers = {-> java.util.regex.Pattern.compile('(?<=\\/\\*<gradle_version_marker>\\*\\/")[0-9\\.]*(?="\\/\\*<\\/gradle_version_marker>\\*\\/)') }
-ext.rexMainBeta = {-> java.util.regex.Pattern.compile('(?<=boolean\\s{1,10}BETA\\s{1,10}=\\s{1,10})(false|true)(?=;)') }
-
-ext.extractVersion = {-> file('src/main/de/jClipCorn/Main.java').text.findAll(rexMainVers())[0] }
-ext.extractProjectVersion = {-> extractVersion() /*+ (isBetaRelease() ? ("-beta") : ("")) */ }
-ext.isBetaRelease  = {-> file('src/main/de/jClipCorn/Main.java').text.findAll(rexMainBeta())[0] == "true" }
-
-ext.make3Dot = {i -> i.findAll("^[0-9]+\\.[0-9]+\\.[0-9]+")[0] }
-
 project.ext {
 	appmain    = 'de.jClipCorn.Main'
 
@@ -52,6 +43,13 @@ targetCompatibility = 1.8
 mainClassName = project.appmain
 
 compileJava.options.encoding = 'UTF-8'
+
+configurations {
+	all*.transitive = false
+
+	runtime.exclude group: 'commons-beanutils'
+	compile.exclude group: 'commons-beanutils'
+}
 
 //
 // Direct Callable:
@@ -78,7 +76,9 @@ jar {
 	version = project.appversion
 }
 
-task anyReleaseJar(type: Jar) {
+tasks.register("anyReleaseJar", Jar) {
+	group = 'Custom'
+
 	manifest {
 		attributes 'Implementation-Title':   project.appname,
 				   'Implementation-Version': project.version,
@@ -107,186 +107,90 @@ task anyReleaseJar(type: Jar) {
 	}
 }
 
-task tryCreateRelease() << {
-    def tagVersion = ['git', 'describe', "--abbrev=0", "--tags"].execute().text.replaceAll('v', '').trim()
-    
-    def mainContent = new File('src/main/de/jClipCorn/Main.java').text
-    def currVersion = mainContent.findAll(rexMainVers())[0]
-    
-    tagVersion  = make3Dot(tagVersion)
-    currVersion = make3Dot(currVersion)
 
-    println "Version (Tag):  " + tagVersion
-    println "Version (Code): " + currVersion
-    
-    if (new File(".do_publish_release").exists()) new File(".do_publish_release").delete()
-    
-    if (currVersion == tagVersion) {
-        println "This version was already built - skip deployment"
-    } else {
-        mainContent = mainContent.replaceFirst(rexMainVers(), tagVersion);
-        mainContent = mainContent.replaceFirst(rexMainBeta(), "false");
-        
-        println ""
-        println "==========================================================="
-        println "==========================================================="
-        println "(!) This is a new  release - create deployment trigger file"
-        println "==========================================================="
-        println "==========================================================="
-        println ""
-        
-        new File('src/main/de/jClipCorn/Main.java').write mainContent 
-        
-        new File(".do_publish_release").createNewFile()
-        
-        // Do build
-        tryCreateRelease.finalizedBy anyReleaseJar
-    }
+
+tasks.register("tryCreateRelease") {
+	group = 'Custom'
+
+	doLast {
+		def tagVersion = ['git', 'describe', "--abbrev=0", "--tags"].execute().text.replaceAll('v', '').trim()
+
+		def mainContent = new File('src/main/de/jClipCorn/Main.java').text
+		def currVersion = mainContent.findAll(rexMainVers())[0]
+
+		tagVersion  = make3Dot(tagVersion)
+		currVersion = make3Dot(currVersion)
+
+		println "Version (Tag):  " + tagVersion
+		println "Version (Code): " + currVersion
+
+		if (new File(".do_publish_release").exists()) new File(".do_publish_release").delete()
+
+		if (currVersion == tagVersion) {
+			println "This version was already built - skip deployment"
+		} else {
+			mainContent = mainContent.replaceFirst(rexMainVers(), tagVersion);
+			mainContent = mainContent.replaceFirst(rexMainBeta(), "false");
+
+			println ""
+			println "==========================================================="
+			println "==========================================================="
+			println "(!) This is a new  release - create deployment trigger file"
+			println "==========================================================="
+			println "==========================================================="
+			println ""
+
+			new File('src/main/de/jClipCorn/Main.java').write mainContent
+
+			new File(".do_publish_release").createNewFile()
+
+			// Do build
+			tryCreateRelease.finalizedBy anyReleaseJar
+		}
+	}
 }
 
-task betaJar() << {
-    def mainContent = new File('src/main/de/jClipCorn/Main.java').text
-    def currVersion = mainContent.findAll(rexMainVers())[0]
+tasks.register("betaJar") {
+	group = 'Custom'
 
-    def lastDot = 0
-    if (make3Dot(currVersion) != currVersion) lastDot = currVersion.substring(make3Dot(currVersion).length()+1) as Integer
-    def newVersion = make3Dot(currVersion) + "." + (lastDot+1);
+	doLast {
+		def mainContent = new File('src/main/de/jClipCorn/Main.java').text
+		def currVersion = mainContent.findAll(rexMainVers())[0]
 
-    println "";
-    println "Update version from " + currVersion + " to " + newVersion;
-    println "Setting BETA flag from " + isBetaRelease() + " to true";
-    println "";
+		def lastDot = 0
+		if (make3Dot(currVersion) != currVersion) lastDot = currVersion.substring(make3Dot(currVersion).length() + 1) as Integer
+		def newVersion = make3Dot(currVersion) + "." + (lastDot + 1);
 
-    mainContent = mainContent.replaceFirst(rexMainVers(), newVersion);
-    mainContent = mainContent.replaceFirst(rexMainBeta(), "true");
-        
-    new File('src/main/de/jClipCorn/Main.java').write mainContent
+		println("")
+		println("Update version from " + currVersion + " to " + newVersion)
+		println("Setting BETA flag from " + isBetaRelease() + " to true")
+		println("")
 
-    project.appversion = extractProjectVersion()
-    version = extractProjectVersion()
-    anyReleaseJar.version = extractProjectVersion()
-    anyReleaseJar.archiveName    = "${anyReleaseJar.baseName} ${anyReleaseJar.version}.${anyReleaseJar.extension}"
+		mainContent = mainContent.replaceFirst(rexMainVers(), newVersion);
+		mainContent = mainContent.replaceFirst(rexMainBeta(), "true");
+
+		new File('src/main/de/jClipCorn/Main.java').write mainContent
+
+		project.appversion = extractProjectVersion()
+		version = extractProjectVersion()
+		anyReleaseJar.version = extractProjectVersion()
+		anyReleaseJar.archiveName = "${anyReleaseJar.baseName} ${anyReleaseJar.version}.${anyReleaseJar.extension}"
+	}
 }
+
 betaJar.finalizedBy anyReleaseJar
 
-task changelog << {
-	createChangelog()
-}
+tasks.register("changelog") {
+	group = 'Custom'
 
-ext.createChangelog = {-> 
-    def log = ['git', 'log', "--format=%H_____INNERDEL_____%ad_____INNERDEL_____%B_____OUTERDELIM_____"].execute().text.trim().split('_____OUTERDELIM_____')
-
-    File file = new File("CHANGELOG.txt")
-    file.text = ""
-
-    def lastRelease = ""
-
-    def rex_Normal  = /(?i)^[0-9]+\.[0-9]+(\.[0-9]+)?(\.[0-9]+)?\s+((Big|Possible) )?(WIP\-)?(Fixes( and Tasks)?|Libraryfix|Glitchfix|Code Cleanup|Documentation|Changelog|Tasks?|Features?|(Emergency\-)?Bugfixe?s?|Updates?|Rea?leases?|Others?|Features\+Bugfix)[ \r\n\t\s:]/
-    def rex_Release = /(?i)^[0-9]+\.[0-9]+(\.[0-9]+)?\s+Rea?leases?/
-
-    log.each 
-    { 
-        def (partHash, partDate, partMessage) = "${it}".split('_____INNERDEL_____')
-
-        partHash = partHash.trim()
-        partDate = partDate.trim()
-        partMessage = partMessage.trim()
-
-        def isNormal = partMessage.find(rex_Normal)
-        def isRelease = partMessage.find(rex_Release) && (partMessage.split('\n').getAt(0).trim().split(' ').getAt(0).trim() != lastRelease.trim())
-
-        partMessage = partMessage.replaceAll('\r\n', '\n')                     // normalize linebreaks
-        partMessage = partMessage.replaceAll(/\n\n+/, '\n')                    // remove empty lines
-        partMessage = partMessage.replaceAll(/^1\.10\.10/, '1.10.0')           // fix misspelling
-
-        partMessage = partMessage.replace('Emergency-Bugfix', 'Bugfix')        // word replacement
-        partMessage = partMessage.replace('Libraryfix', 'Bugfix')              // word replacement
-        partMessage = partMessage.replace('Glitchfix', 'Bugfix')               // word replacement
-        partMessage = partMessage.replace('Code Cleanup', 'Other')             // word replacement
-        partMessage = partMessage.replace('Documentation', 'Other')            // word replacement
-        partMessage = partMessage.replace('Changelog', 'Other')                // word replacement
-        partMessage = partMessage.replace('Changelog', 'Other')                // word replacement
-
-        if (isRelease)
-        {
-            def partMessageHeader = partMessage.split('\n').getAt(0).trim()
-            file << "\n\n"
-            file << ("#" * (12 + 1 + partDate.size() + 2 + partMessageHeader.size() + 1 + 12))
-            file << "\n"
-            file << "############ ${partDate}  ${partMessageHeader} ############\n"
-            file << ("#" * (12 + 1 + partDate.size() + 2 + partMessageHeader.size() + 1 + 12))
-            file << "\n\n\n"
-
-            if (partMessage.split('\n').size() > 1) 
-            {
-                partMessage.split('\n').eachWithIndex
-                { line , i ->
-                    line = line.trim()
-                    def isNewGroup = line.find(rex_Normal)
-                    if (i == 0 || isNewGroup)
-                        file << "${line}\n"
-                    else
-                        file << "  ${line}\n"
-                }
-            }
-
-            lastRelease = partMessageHeader.split(' ').getAt(0).trim()
-        } 
-        else if (isNormal) 
-        {
-            partMessage.split('\n').eachWithIndex 
-            { line , i ->
-                line = line.trim()
-                def isNewGroup = line.find(rex_Normal)
-                if (i == 0 || isNewGroup)
-                    file << "${line}\n"
-                else
-                    file << "  ${line}\n"
-            }
-        } 
-        else 
-        {
-            println "IGNORE: " + partMessage.replaceAll('\r', '').replaceAll('\n', ' ')
-        }
-    }
-}
-
-configurations {
-	all*.transitive = false
-
-	runtime.exclude group: 'commons-beanutils'
-	compile.exclude group: 'commons-beanutils'
+	doLast {
+		createChangelog()
+	}
 }
 
 tasks.withType(JavaCompile) {
 	options.encoding = 'UTF-8'
 }
-
-ext.createLaunch4jConfig = {->
-	"<launch4jConfig>"+
-	"<dontWrapJar>false</dontWrapJar>"+
-	"<headerType>gui</headerType>"+
-	"<jar>..\\mybuilds\\jClipCorn "+extractVersion()+".jar</jar>"+
-	"<outfile>..\\mybuilds\\jClipCorn "+extractVersion()+".exe</outfile>"+
-	"<errTitle></errTitle>"+
-	"<cmdLine></cmdLine>"+
-	"<chdir></chdir>"+
-	"<priority>normal</priority>"+
-	"<downloadUrl>http://java.com/download</downloadUrl>"+
-	"<supportUrl></supportUrl>"+
-	"<customProcName>false</customProcName>"+
-	"<stayAlive>false</stayAlive>"+
-	"<manifest></manifest>"+
-	"<icon>launch.ico</icon>"+
-	"<jre>"+
-	"	<path></path>"+
-	"	<minVersion>1.7.0</minVersion>"+
-	"	<maxVersion></maxVersion>"+
-	"	<jdkPreference>preferJre</jdkPreference>"+
-	"</jre>"+
-	"</launch4jConfig>"
-}
-
 
 //=====================================================================================================================
 
@@ -346,4 +250,4 @@ dependencies {
 	compile 'org.hamcrest:hamcrest-core:1.3'
 }
 
-apply from: 'eclipse_config.gradle'
+apply from: 'build_eclipse_config.gradle'

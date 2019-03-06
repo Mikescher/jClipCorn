@@ -11,7 +11,7 @@ import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.util.lambda.Func1to1;
 
 public class StatisticsGroup {
-	private StatisticsPanel template;
+	private final StatisticsPanel template;
 	
 	private final Func1to1<StatisticsTypeFilter, StatisticsPanel> constructor;
 	
@@ -32,6 +32,10 @@ public class StatisticsGroup {
 		}
 		
 		return chartPanels.get(source).getCachedComponent();
+	}
+
+	public StatisticsPanel getTemplate() {
+		return template;
 	}
 	
 	public String getTitle() {
@@ -62,6 +66,10 @@ public class StatisticsGroup {
 	public boolean resetFrameOnFilter() {
 		return template.resetFrameOnFilter();
 	}
+
+	public boolean resetFrameOnYearRange() {
+		return template.resetFrameOnYearRange();
+	}
 	
 	public void onResize(ComponentEvent e) {
 		for (Entry<StatisticsTypeFilter, StatisticsPanel> pnl : chartPanels.entrySet()) {
@@ -78,6 +86,12 @@ public class StatisticsGroup {
 	public void onFilterYearRange(int year) {
 		for (Entry<StatisticsTypeFilter, StatisticsPanel> pnl : chartPanels.entrySet()) {
 			pnl.getValue().tryFilterYearRange(year);
+		}
+	}
+
+	public void onShow() {
+		for (Entry<StatisticsTypeFilter, StatisticsPanel> pnl : chartPanels.entrySet()) {
+			pnl.getValue().onShow();
 		}
 	}
 }

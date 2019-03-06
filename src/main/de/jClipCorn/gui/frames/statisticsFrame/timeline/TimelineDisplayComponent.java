@@ -138,7 +138,7 @@ public class TimelineDisplayComponent extends JComponent implements MouseListene
 			for (CCDatespan span : elementsNoGravity.get(key)) {
 				int x = start.getDayDifferenceTo(span.start) * CELL_WIDTH;
 				int y = i*CELL_HEIGHT + 2;
-				int w = (span.start.getDayDifferenceTo(span.end) + 1) * CELL_WIDTH;
+				int w = span.start.getDayDifferenceTo(span.end) * CELL_WIDTH;
 				int h = CELL_HEIGHT - 4;
 
 				graphics.setColor(Color.RED);
@@ -148,7 +148,7 @@ public class TimelineDisplayComponent extends JComponent implements MouseListene
 			for (CCDatespan span : elements.getOrDefault(key, new ArrayList<>())) {
 				int x = start.getDayDifferenceTo(span.start) * CELL_WIDTH;
 				int y = i*CELL_HEIGHT + 2;
-				int w = (span.start.getDayDifferenceTo(span.end) + 1) * CELL_WIDTH;
+				int w = span.start.getDayDifferenceTo(span.end) * CELL_WIDTH;
 				int h = CELL_HEIGHT - 4;
 
 				graphics.setColor(new Color(255, 0, 0, 160));

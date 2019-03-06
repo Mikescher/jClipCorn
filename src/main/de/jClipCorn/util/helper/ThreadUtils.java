@@ -1,5 +1,7 @@
 package de.jClipCorn.util.helper;
 
+import org.omg.CORBA.Environment;
+
 import java.lang.reflect.InvocationTargetException;
 
 import javax.swing.JProgressBar;
@@ -21,5 +23,15 @@ public class ThreadUtils {
 	
 	public static void setProgressbarAndWait(JProgressBar pbar, int val) {
 		invokeAndWaitSafe(() -> { pbar.setValue(val); });
+	}
+
+	@SuppressWarnings("StatementWithEmptyBody")
+	public static void safeSleep(int millis) {
+		long s = System.currentTimeMillis();
+		try {
+			Thread.sleep(millis);
+		} catch (InterruptedException e) {
+			while (System.currentTimeMillis() - s < millis) { /* */ }
+		}
 	}
 }

@@ -46,18 +46,11 @@ public class StatisticsSeriesTimeline extends StatisticsPanel {
 	}
 	
 	private void collectData() {
-		Comparator<CCSeries> comp = new Comparator<CCSeries>() {
-			@Override
-			public int compare(CCSeries o1, CCSeries o2) {
-				return o1.getTitle().toLowerCase().compareTo(o2.getTitle().toLowerCase());
-			}
-		};
-		
 		seriesMap = StatisticsHelper.getAllSeriesTimespans(movielist, CCProperties.getInstance().PROP_STATISTICS_TIMELINEGRAVITY.getValue());
 		seriesMapZero = StatisticsHelper.getAllSeriesTimespans(movielist, 0);
-		seriesList = StatisticsHelper.convertMapToOrderedKeyList(seriesMap, comp);
+		seriesList = StatisticsHelper.convertMapToOrderedKeyList(seriesMap, Comparator.comparing(o -> o.getTitle().toLowerCase()));
 		seriesMapStart = StatisticsHelper.getSeriesTimespansStart(seriesMap);
-		seriesMapEnd = CCDate.max(StatisticsHelper.getSeriesTimespansEnd(seriesMap), CCDate.getCurrentDate());
+		seriesMapEnd = CCDate.max(StatisticsHelper.getSeriesTimespansEnd(seriesMap).getSubDay(1), CCDate.getCurrentDate());
 	}
 
 	@Override
@@ -72,19 +65,9 @@ public class StatisticsSeriesTimeline extends StatisticsPanel {
 		TimelineDisplayComponent rightBody = new TimelineDisplayComponent(seriesList, seriesMap, seriesMapZero, seriesMapStart, seriesMapEnd, map);
 		TimelineDateCaptionComponent rightHeader = new TimelineDateCaptionComponent(seriesMapStart, seriesMapEnd);
 		
-		leftBody.onSelectedChanged = new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				rightBody.setSelectedDirect((CCSeries)e.getSource());
-			}
-		};
+		leftBody.onSelectedChanged = e -> rightBody.setSelectedDirect((CCSeries)e.getSource());
 
-		rightBody.onSelectedChanged = new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				leftBody.setSelectedDirect((CCSeries)e.getSource());
-			}
-		};
+		rightBody.onSelectedChanged = e -> leftBody.setSelectedDirect((CCSeries)e.getSource());
 		
 		JScrollPane left;
 		JScrollPane right;
@@ -116,29 +99,15 @@ public class StatisticsSeriesTimeline extends StatisticsPanel {
 				right = new JScrollPane(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,  JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
 				right.setBorder(new EmptyBorder(0, 0, 0, 0));
 				{	
-					right.getVerticalScrollBar().addAdjustmentListener(new AdjustmentListener() {
-						@Override
-						public void adjustmentValueChanged(AdjustmentEvent e) {
-							left.getVerticalScrollBar().setValue(right.getVerticalScrollBar().getValue());
-						}
-					});
-					right.getHorizontalScrollBar().addAdjustmentListener(new AdjustmentListener() {
-						@Override
-						public void adjustmentValueChanged(AdjustmentEvent e) {
-							rightTop.getHorizontalScrollBar().setValue(right.getHorizontalScrollBar().getValue());
-						}
-					});
+					right.getVerticalScrollBar().addAdjustmentListener(e -> left.getVerticalScrollBar().setValue(right.getVerticalScrollBar().getValue()));
+					right.getHorizontalScrollBar().addAdjustmentListener(e -> rightTop.getHorizontalScrollBar().setValue(right.getHorizontalScrollBar().getValue()));
 					right.setViewportView(rightBody);
 				}
 				rightRoot.add(right, BorderLayout.CENTER);
 			}
 			root.add(rightRoot, BorderLayout.CENTER);
 		}
-		
 
-		root.setVisible(movielist.containsMovies());
-		
-		
 		return root;
 	}
 

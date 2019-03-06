@@ -73,6 +73,11 @@ public abstract class StatisticsPanel {
 		return false;
 	}
 
+	public boolean resetFrameOnYearRange() {
+		// Overwrite me
+		return false;
+	}
+
 	private boolean FilterEquals(Map<CCSeries, Boolean> a, Map<CCSeries, Boolean> b) {
 		if (a == null && b == null) return true;
 		if (a == null && FilterAllTrue(b)) return true;
@@ -100,5 +105,9 @@ public abstract class StatisticsPanel {
 			if (!entry.getValue()) return false;
 		}
 		return true;
+	}
+
+	public void onShow() {
+		// Overwrite me
 	}
 }

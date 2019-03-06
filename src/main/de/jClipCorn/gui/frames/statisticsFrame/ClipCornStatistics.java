@@ -49,6 +49,8 @@ public final class ClipCornStatistics {
 		STATISTICS.add(ml -> new StatisticsGroup(s -> new StatisticsSeriesViewedChart(ml, s)));
 		STATISTICS.add(ml -> new StatisticsGroup(s -> new StatisticsSeriesTotalViewedChart(ml, s)));
 		STATISTICS.add(ml -> new StatisticsGroup(s -> new StatisticsSeriesTimeline(ml, s)));
+		STATISTICS.add(ml -> new StatisticsGroup(s -> new StatisticsSeriesTimelineCombined(ml, s)));
+
 		
 	}
 }

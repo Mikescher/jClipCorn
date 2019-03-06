@@ -13,6 +13,8 @@ import java.util.Vector;
 
 import javax.swing.SwingUtilities;
 
+import de.jClipCorn.util.helper.SwingUtils;
+import de.jClipCorn.util.lambda.Func0to0;
 import org.jdom2.Document;
 import org.jdom2.Element;
 
@@ -102,7 +104,7 @@ public class CCMovieList {
 		}
 	}
 	
-	public void connect(final MainFrame mf) {
+	public void connect(final MainFrame mf, Func0to0 postInit) {
 		new Thread(() ->
 		{
 			Globals.TIMINGS.start(Globals.TIMING_LOAD_TOTAL);
@@ -133,6 +135,8 @@ public class CCMovieList {
 				Globals.TIMINGS.stop(Globals.TIMING_LOAD_MOVIELIST_FILL);
 
 				fireOnAfterLoad();
+
+				if (postInit != null) SwingUtilities.invokeLater(postInit::invoke);
 			}
 			Globals.TIMINGS.stop(Globals.TIMING_LOAD_TOTAL);
 

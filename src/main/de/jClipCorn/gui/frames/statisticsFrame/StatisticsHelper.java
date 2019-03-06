@@ -515,18 +515,18 @@ public class StatisticsHelper {
 			dates.remove(0);
 			
 			if (end.Item1.getDayDifferenceTo(curr.Item1) > gravity) {
-				span.add(new CCDatespan(start.Item1, end.Item1));
+				span.add(new CCDatespan(start.Item1, end.Item1.getAddDay(1)));
 				start = curr;
 				end = start;
 			} else if (curr.Item2 < end.Item2) {
-				span.add(new CCDatespan(start.Item1, end.Item1));
+				span.add(new CCDatespan(start.Item1, end.Item1.getAddDay(1)));
 				start = curr;
 				end = start;
 			}  else {
 				end = curr;
 			}
 		}
-		span.add(new CCDatespan(start.Item1, end.Item1));
+		span.add(new CCDatespan(start.Item1, end.Item1.getAddDay(1)));
 		
 		return span;
 	}

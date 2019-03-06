@@ -165,9 +165,9 @@ public class TestStatistics extends ClipCornBaseTest {
 		assertEquals(CCDate.create(6, 5, 2016), StatisticsHelper.getSeriesTimespansStart(map_1));
 		assertEquals(CCDate.create(6, 5, 2016), StatisticsHelper.getSeriesTimespansStart(map_2));
 
-		assertEquals(CCDate.create(03, 10, 2016), StatisticsHelper.getSeriesTimespansEnd(map_0));
-		assertEquals(CCDate.create(03, 10, 2016), StatisticsHelper.getSeriesTimespansEnd(map_1));
-		assertEquals(CCDate.create(03, 10, 2016), StatisticsHelper.getSeriesTimespansEnd(map_2));
+		assertEquals(CCDate.create(4, 10, 2016), StatisticsHelper.getSeriesTimespansEnd(map_0));
+		assertEquals(CCDate.create(4, 10, 2016), StatisticsHelper.getSeriesTimespansEnd(map_1));
+		assertEquals(CCDate.create(4, 10, 2016), StatisticsHelper.getSeriesTimespansEnd(map_2));
 
 		assertEquals(8, map_0.get(ml.findDatabaseSeries(10)).size());
 		assertEquals(8, map_0.get(ml.findDatabaseSeries(11)).size());

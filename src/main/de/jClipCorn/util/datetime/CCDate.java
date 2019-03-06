@@ -441,7 +441,8 @@ public final class CCDate implements Comparable<CCDate>, StringSpecSupplier {
 	public int getYear() {
 		return year;
 	}
-	
+
+	// return days([other] - [this])
 	public int getDayDifferenceTo(CCDate other) {
 		if (isEqual(other)) {
 			return 0;

@@ -4,6 +4,8 @@ import javax.swing.SwingUtilities;
 
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.gui.frames.mainFrame.MainFrame;
+import de.jClipCorn.gui.frames.statisticsFrame.StatisticsFrame;
+import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsSeriesTimelineCombined;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.gui.log.ExceptionHandler;
@@ -24,7 +26,7 @@ import de.jClipCorn.util.helper.LookAndFeelManager;
 
 public class Main {
 	public final static String TITLE = "jClipCorn"; //$NON-NLS-1$
-	public final static String VERSION = /*<gradle_version_marker>*/"1.10.5.19"/*</gradle_version_marker>*/;	//$NON-NLS-1$
+	public final static String VERSION = /*<gradle_version_marker>*/"1.10.5.24"/*</gradle_version_marker>*/;	//$NON-NLS-1$
 	public final static String DBVERSION = "11"; 	//$NON-NLS-1$
 	
 	private final static String PROPERTIES_PATH = "jClipcorn.properties"; //$NON-NLS-1$
@@ -66,7 +68,7 @@ public class Main {
 				final MainFrame myFrame = new MainFrame(mList);
 				myFrame.start();
 
-				mList.connect(myFrame);
+				mList.connect(myFrame, DEBUG ? Main::post_init : null);
 			});
 		}
 		Globals.TIMINGS.stop(Globals.TIMING_INIT_TOTAL);
@@ -98,6 +100,12 @@ public class Main {
 			SSLUtilities.trustAllHttpsCertificates();
 			CCLog.addDebug("SSL Verification disabled"); //$NON-NLS-1$
 		}
+	}
+
+	private static void post_init() {
+		StatisticsFrame sf = new StatisticsFrame(MainFrame.getInstance(), MainFrame.getInstance().getMovielist());
+		sf.setVisible(true);
+		sf.switchTo(StatisticsSeriesTimelineCombined.class);
 	}
 }
 

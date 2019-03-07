@@ -49,8 +49,8 @@ public class StatisticsSeriesTimelineCombined extends StatisticsPanel {
 	
 	private void collectData()
 	{
-		HashMap<CCSeries, List<CCDatespan>> seriesMapStretch = StatisticsHelper.getAllSeriesTimespans(movielist, CCProperties.getInstance().PROP_STATISTICS_TIMELINEGRAVITY.getValue());
-		HashMap<CCSeries, List<CCDatespan>> seriesMapZero    = StatisticsHelper.getAllSeriesTimespans(movielist, 0);
+		HashMap<CCSeries, List<CCDatespan>> seriesMapStretch = StatisticsHelper.getAllSeriesTimespans(movielist, CCProperties.getInstance().PROP_STATISTICS_TIMELINEGRAVITY.getValue(), false);
+		HashMap<CCSeries, List<CCDatespan>> seriesMapZero    = StatisticsHelper.getAllSeriesTimespans(movielist, 0, false);
 
 		CCDate start = StatisticsHelper.getSeriesTimespansStart(seriesMapZero);
 		CCDate end = CCDate.max(StatisticsHelper.getSeriesTimespansEnd(seriesMapZero).getSubDay(1), CCDate.getCurrentDate());
@@ -101,6 +101,11 @@ public class StatisticsSeriesTimelineCombined extends StatisticsPanel {
 
 		HashSet<CCSeries> hsEmpty = new HashSet<>();
 
+		BufferedImage tmpimg = new BufferedImage(32, 32, BufferedImage.TYPE_4BYTE_ABGR);
+		Graphics2D g2d = tmpimg.createGraphics();
+		g2d.setFont(new Font("Segeo UI", Font.PLAIN, 12)); //$NON-NLS-1$
+		FontMetrics fm = g2d.getFontMetrics();
+
 		gridData = new ArrayList<>();
 
 		List<Tuple<CCSeries, Boolean>> lastData = new ArrayList<>();
@@ -116,13 +121,13 @@ public class StatisticsSeriesTimelineCombined extends StatisticsPanel {
 			{
 				Tuple<CCSeries, Boolean> dat = lastData.get(i);
 
-				if (dat != null && serStretch.contains(dat.Item1)) listSet(currData, countdown, i, Tuple.Create(dat.Item1, serZero.contains(dat.Item1)));
+				if (dat != null && serStretch.contains(dat.Item1)) listSet(currData, countdown, i, Tuple.Create(dat.Item1, serZero.contains(dat.Item1)), d.isFirstOfMonth(), fm);
 			}
 
 			for (CCSeries s : serStretch)
 			{
 				if (listContains(currData, s)) continue;
-				listInsert(currData, countdown, Tuple.Create(s, serZero.contains(s)));
+				listInsert(currData, countdown, Tuple.Create(s, serZero.contains(s)), fm);
 			}
 
 			gridData.add(Tuple.Create(d, currData));
@@ -130,6 +135,8 @@ public class StatisticsSeriesTimelineCombined extends StatisticsPanel {
 
 			for (int i=0; i<countdown.size();i++)countdown.set(i, countdown.get(i)-1);
 		}
+
+		g2d.dispose();
 
 		int maxHeight = 1 + Math.max(1, CCStreams.iterate(gridData).maxOrDefault(p -> p.Item2.size(), Comparator.comparingInt(q->q), 1));
 
@@ -262,7 +269,7 @@ public class StatisticsSeriesTimelineCombined extends StatisticsPanel {
 			}
 
 			g.setColor(Color.BLACK);
-			g.setFont(new Font("Arial", Font.PLAIN, fontsize_title)); //$NON-NLS-1$
+			g.setFont(new Font("Segeo UI", Font.PLAIN, fontsize_title)); //$NON-NLS-1$
 			for (Tuple3<String, Integer, Integer> str : strings) {
 				g.drawString(str.Item1, str.Item2, str.Item3);
 			}
@@ -295,21 +302,21 @@ public class StatisticsSeriesTimelineCombined extends StatisticsPanel {
 		return gridData.get(diff).Item2;
 	}
 
-	private void listInsert(List<Tuple<CCSeries, Boolean>> list, List<Integer> countdown, Tuple<CCSeries, Boolean> value)
+	private void listInsert(List<Tuple<CCSeries, Boolean>> list, List<Integer> countdown, Tuple<CCSeries, Boolean> value, FontMetrics fm)
 	{
 		for (int i = 0; i < list.size(); i++)
 		{
 			if (list.get(i) == null && countdown.get(i)<=0)
 			{
 				list.set(i, value);
-				listSet(countdown, i, value.Item1);
+				listSet(countdown, i, value.Item1, fm);
 				return;
 			}
 		}
 
 		while(list.size() < countdown.size() && countdown.get(list.size())>0)list.add(null);
 		list.add(value);
-		listSet(countdown, list.size()-1, value.Item1);
+		listSet(countdown, list.size()-1, value.Item1, fm);
 	}
 
 	private boolean listContains(List<Tuple<CCSeries, Boolean>> list, CCSeries value)
@@ -320,17 +327,18 @@ public class StatisticsSeriesTimelineCombined extends StatisticsPanel {
 		return false;
 	}
 
-	private void listSet(List<Tuple<CCSeries, Boolean>> list, List<Integer> countdown, int idx, Tuple<CCSeries, Boolean> value)
+	private void listSet(List<Tuple<CCSeries, Boolean>> list, List<Integer> countdown, int idx, Tuple<CCSeries, Boolean> value, boolean refreshCountdown, FontMetrics fm)
 	{
 		while (list.size() <= idx) list.add(null);
 		list.set(idx, value);
-		listSet(countdown, idx, value.Item1);
+		if (refreshCountdown) listSet(countdown, idx, value.Item1, fm);
 	}
 
-	private void listSet(List<Integer> list, int idx, CCSeries value)
+	private void listSet(List<Integer> list, int idx, CCSeries value, FontMetrics fm)
 	{
 		while (list.size() <= idx) list.add(null);
-		list.set(idx, value.getTitle().length()/2);
+		int len = (int)Math.ceil((fm.stringWidth(value.getTitle()) + 8) / 16.0);
+		list.set(idx, len);
 	}
 
 	@Override

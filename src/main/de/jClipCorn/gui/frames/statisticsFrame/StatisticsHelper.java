@@ -491,7 +491,7 @@ public class StatisticsHelper {
 		return ls;
 	}
 
-	public static List<CCDatespan> getDatespanFromSeries(CCSeries series, int gravity) {
+	public static List<CCDatespan> getDatespanFromSeries(CCSeries series, int gravity, boolean enforceOrder) {
 		List<CCDatespan> span = new ArrayList<>();
 		
 		List<SortableTuple<CCDate, Integer>> dates = series
@@ -518,7 +518,7 @@ public class StatisticsHelper {
 				span.add(new CCDatespan(start.Item1, end.Item1.getAddDay(1)));
 				start = curr;
 				end = start;
-			} else if (curr.Item2 < end.Item2) {
+			} else if (enforceOrder && curr.Item2 < end.Item2) {
 				span.add(new CCDatespan(start.Item1, end.Item1.getAddDay(1)));
 				start = curr;
 				end = start;
@@ -531,11 +531,11 @@ public class StatisticsHelper {
 		return span;
 	}
 	
-	public static HashMap<CCSeries, List<CCDatespan>> getAllSeriesTimespans(CCMovieList ml, int gravity) {
+	public static HashMap<CCSeries, List<CCDatespan>> getAllSeriesTimespans(CCMovieList ml, int gravity, boolean enforceOrder) {
 		HashMap<CCSeries, List<CCDatespan>> r = new HashMap<>();
 
 		for (CCSeries series : ml.iteratorSeries()) {
-			List<CCDatespan> span = getDatespanFromSeries(series, gravity);
+			List<CCDatespan> span = getDatespanFromSeries(series, gravity, enforceOrder);
 			
 			if (span.size() > 0) r.put(series, span);
 		}

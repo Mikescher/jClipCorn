@@ -103,9 +103,9 @@ public class Main {
 	}
 
 	private static void post_init() {
-		StatisticsFrame sf = new StatisticsFrame(MainFrame.getInstance(), MainFrame.getInstance().getMovielist());
-		sf.setVisible(true);
-		sf.switchTo(StatisticsSeriesTimelineCombined.class);
+		//StatisticsFrame sf = new StatisticsFrame(MainFrame.getInstance(), MainFrame.getInstance().getMovielist());
+		//sf.setVisible(true);
+		//sf.switchTo(StatisticsSeriesTimelineCombined.class);
 	}
 }
 

@@ -635,4 +635,9 @@ public final class CCDate implements Comparable<CCDate>, StringSpecSupplier {
 	public int compareTo(CCDate o) {
 		return compare(this, o);
 	}
+
+	public boolean isFirstOfMonth()
+	{
+		return !isMinimum() && !isUnspecifiedDate() && isValidDate() && getDay()==1;
+	}
 }

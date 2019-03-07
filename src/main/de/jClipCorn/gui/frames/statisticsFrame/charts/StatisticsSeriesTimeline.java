@@ -46,8 +46,8 @@ public class StatisticsSeriesTimeline extends StatisticsPanel {
 	}
 	
 	private void collectData() {
-		seriesMap = StatisticsHelper.getAllSeriesTimespans(movielist, CCProperties.getInstance().PROP_STATISTICS_TIMELINEGRAVITY.getValue());
-		seriesMapZero = StatisticsHelper.getAllSeriesTimespans(movielist, 0);
+		seriesMap = StatisticsHelper.getAllSeriesTimespans(movielist, CCProperties.getInstance().PROP_STATISTICS_TIMELINEGRAVITY.getValue(), true);
+		seriesMapZero = StatisticsHelper.getAllSeriesTimespans(movielist, 0, true);
 		seriesList = StatisticsHelper.convertMapToOrderedKeyList(seriesMap, Comparator.comparing(o -> o.getTitle().toLowerCase()));
 		seriesMapStart = StatisticsHelper.getSeriesTimespansStart(seriesMap);
 		seriesMapEnd = CCDate.max(StatisticsHelper.getSeriesTimespansEnd(seriesMap).getSubDay(1), CCDate.getCurrentDate());

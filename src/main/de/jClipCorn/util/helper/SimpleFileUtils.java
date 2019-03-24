@@ -2,16 +2,13 @@ package de.jClipCorn.util.helper;
 
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.formatter.PathFormatter;
+import de.jClipCorn.util.lambda.Func1to0;
+import de.jClipCorn.util.lambda.Func2to0;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
+import java.io.*;
+import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
+import java.nio.channels.ReadableByteChannel;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.text.MessageFormat;
@@ -21,7 +18,7 @@ public class SimpleFileUtils {
 	public final static Charset CHARSET_UTF8 = Charset.forName("UTF-8"); //$NON-NLS-1$
 	
 	public final static String LINE_END = System.getProperty("line.separator"); //$NON-NLS-1$
-	
+
 	public static String readTextFile(InputStreamReader reader) throws IOException {
 		return readTextFile(new BufferedReader(reader));
 	}
@@ -135,5 +132,26 @@ public class SimpleFileUtils {
 		String fileName = MessageFormat.format("{0}.{1}", UUID.randomUUID(), ext);
 
 		return PathFormatter.combine(System.getProperty("java.io.tmpdir"), fileName);
+	}
+
+	public static void copyWithProgress(File src, File dst, Func2to0<Long, Long> feedback) throws IOException
+	{
+		FileInputStream fis  = new FileInputStream(src);
+		FileOutputStream fos = new FileOutputStream(dst);
+
+		long fullsize = src.length();
+
+		byte[] buf = new byte[1024*1024*32];
+		int size = 0;
+		long flag = 0;
+		while ((size = fis.read(buf)) != -1)
+		{
+			fos.write(buf, 0, size);
+			flag += size;
+			feedback.invoke(flag, fullsize);
+		}
+
+		fis.close();
+		fos.close();
 	}
 }

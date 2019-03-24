@@ -23,6 +23,7 @@ import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.formatter.FileSizeFormatter;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.DialogHelper;
+import de.jClipCorn.util.helper.SimpleFileUtils;
 import de.jClipCorn.util.listener.UpdateCallbackListener;
 import de.jClipCorn.util.parser.EpisodeFilenameParserResult;
 import de.jClipCorn.util.parser.FilenameParser;
@@ -58,6 +59,7 @@ public class QuickAddEpisodeDialog extends JDialog {
 	private final UpdateCallbackListener ucListener;
 
 	private boolean suppressEdTargetEvents = false;
+	private JProgressBar progressBar;
 
 	/**
 	 * @wbp.parser.constructor
@@ -198,16 +200,31 @@ public class QuickAddEpisodeDialog extends JDialog {
 		contentPanel.add(lblMin, "5, 15"); //$NON-NLS-1$
 
 		JPanel buttonPane = new JPanel();
-		buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 		getContentPane().add(buttonPane, BorderLayout.SOUTH);
-
-		JButton okButton = new JButton(LocaleBundle.getString("UIGeneric.btnOK.text")); //$NON-NLS-1$
-		buttonPane.add(okButton);
-		getRootPane().setDefaultButton(okButton);
-		okButton.addActionListener((e) -> tryAdd(true));
-
-		JButton cancelButton = new JButton(LocaleBundle.getString("UIGeneric.btnCancel.text")); //$NON-NLS-1$
-		buttonPane.add(cancelButton);
+		buttonPane.setLayout(new FormLayout(new ColumnSpec[] {
+				FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
+				ColumnSpec.decode("default:grow"),
+				FormSpecs.RELATED_GAP_COLSPEC,
+				ColumnSpec.decode("51px"),
+				FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
+				ColumnSpec.decode("96px"),
+				FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,},
+			new RowSpec[] {
+				FormSpecs.LINE_GAP_ROWSPEC,
+				RowSpec.decode("26px"),
+				FormSpecs.RELATED_GAP_ROWSPEC,}));
+				
+				progressBar = new JProgressBar();
+				buttonPane.add(progressBar, "2, 2, fill, fill");
+				progressBar.setVisible(false);
+		
+				JButton okButton = new JButton(LocaleBundle.getString("UIGeneric.btnOK.text")); //$NON-NLS-1$
+				buttonPane.add(okButton, "4, 2, left, top");
+				getRootPane().setDefaultButton(okButton);
+				okButton.addActionListener((e) -> tryAdd(true));
+		
+				JButton cancelButton = new JButton(LocaleBundle.getString("UIGeneric.btnCancel.text")); //$NON-NLS-1$
+				buttonPane.add(cancelButton, "6, 2, left, top");
 		cancelButton.addActionListener((e) -> dispose());
 	}
 
@@ -250,69 +267,102 @@ public class QuickAddEpisodeDialog extends JDialog {
 		return PathFormatter.getCCPath(dst.getAbsolutePath());
 	}
 
+	private volatile int progressValueCache;
+
 	private void tryAdd(boolean check) {
-		try {
-			String src = edSource.getText();
-			String dst = cbCopy.isSelected() ? edTarget.getText() : edSource.getText();
 
-			String fullDst = PathFormatter.fromCCPath(dst);
-			File srcFile = new File(src);
-			File dstFile = new File(fullDst);
+		String src = edSource.getText();
+		String dst = cbCopy.isSelected() ? edTarget.getText() : edSource.getText();
 
-			int episodenumber = (int)spnEpisode.getValue();
-			int length = (int)spnLength.getValue();
-			String title = edTitle.getText();
+		int episodenumber = (int)spnEpisode.getValue();
+		int length = (int)spnLength.getValue();
+		String title = edTitle.getText();
 
-			CCDate adddate = CCDate.getCurrentDate();
-			CCDateTimeList history = CCDateTimeList.createEmpty();
-			CCTagList tags = CCTagList.createEmpty();
-			long filesize = FileSizeFormatter.getFileSize(new File(src));
-			CCQuality quality = CCQuality.calculateQuality(filesize, length, 1);
-			CCFileFormat format = CCFileFormat.getMovieFormatFromPath(src);
+		String fullDst = PathFormatter.fromCCPath(dst);
+		File srcFile = new File(src);
+		File dstFile = new File(fullDst);
 
-			List<UserDataProblem> problems = new ArrayList<>();
-			boolean probvalue = !check || checkUserDataEpisode(problems, title, length, episodenumber, adddate, history, filesize, quality.asInt(), format.asString(), format.asStringAlt(), src, dst, fullDst);
+		CCDate adddate = CCDate.getCurrentDate();
+		CCDateTimeList history = CCDateTimeList.createEmpty();
+		CCTagList tags = CCTagList.createEmpty();
+		long filesize = FileSizeFormatter.getFileSize(new File(src));
+		CCQuality quality = CCQuality.calculateQuality(filesize, length, 1);
+		CCFileFormat format = CCFileFormat.getMovieFormatFromPath(src);
 
-			// some problems are too fatal
-			if (probvalue && Str.isNullOrWhitespace(title)) {
-				problems.add(new UserDataProblem(UserDataProblem.PROBLEM_EMPTY_TITLE));
-				probvalue = false;
-			}
+		List<UserDataProblem> problems = new ArrayList<>();
+		boolean probvalue = !check || checkUserDataEpisode(problems, title, length, episodenumber, adddate, history, filesize, quality.asInt(), format.asString(), format.asStringAlt(), src, dst, fullDst);
 
-			if (! probvalue) {
-				InputErrorDialog amied = new InputErrorDialog(problems, () -> tryAdd(false), this);
-				amied.setVisible(true);
-				return;
-			}
-
-			if (cbCopy.isSelected())
-			{
-				FileUtils.forceMkdir(dstFile.getParentFile());
-				FileUtils.copyFile(srcFile, dstFile);
-			}
-
-			CCEpisode newEp = season.createNewEmptyEpisode();
-			newEp.beginUpdating();
-			newEp.setTitle(title);
-			newEp.setEpisodeNumber(episodenumber);
-			newEp.setViewed(false);
-			newEp.setFormat(format);
-			newEp.setQuality(quality);
-			newEp.setLength(length);
-			newEp.setFilesize(filesize);
-			newEp.setAddDate(adddate);
-			newEp.setViewedHistory(history);
-			newEp.setPart(dst);
-			newEp.setTags(tags);
-			newEp.endUpdating();
-
-			if (ucListener != null) ucListener.onUpdate(newEp);
-			dispose();
-
-		} catch (Exception e) {
-			CCLog.addError(e);
-			DialogHelper.showError(this, LocaleBundle.getString("QuickAddEpisodeDialog.dialogs.error_caption"), LocaleBundle.getString("QuickAddEpisodeDialog.dialogs.error")); //$NON-NLS-1$ //$NON-NLS-2$
+		// some problems are too fatal
+		if (probvalue && Str.isNullOrWhitespace(title)) {
+			problems.add(new UserDataProblem(UserDataProblem.PROBLEM_EMPTY_TITLE));
+			probvalue = false;
 		}
+
+		if (! probvalue) {
+			InputErrorDialog amied = new InputErrorDialog(problems, () -> tryAdd(false), this);
+			amied.setVisible(true);
+			return;
+		}
+
+		contentPanel.setEnabled(false);
+		new Thread(() ->
+		{
+			try
+			{
+				if (cbCopy.isSelected())
+				{
+					FileUtils.forceMkdir(dstFile.getParentFile());
+
+					progressValueCache = 0;
+					SwingUtilities.invokeAndWait(() ->
+					{
+						progressBar.setVisible(true);
+						progressBar.setMaximum(100);
+					});
+
+					//FileUtils.copyFile(srcFile, dstFile);
+					SimpleFileUtils.copyWithProgress(srcFile, dstFile, (val, max) ->
+					{
+						int newvalue = (int)(((val * 100) / max));
+						if (progressValueCache != newvalue)
+						{
+							progressValueCache = newvalue;
+							SwingUtilities.invokeLater(() -> { progressBar.setValue(newvalue); });
+						}
+					});
+				}
+
+				SwingUtilities.invokeLater(() ->
+				{
+					CCEpisode newEp = season.createNewEmptyEpisode();
+					newEp.beginUpdating();
+					newEp.setTitle(title);
+					newEp.setEpisodeNumber(episodenumber);
+					newEp.setViewed(false);
+					newEp.setFormat(format);
+					newEp.setQuality(quality);
+					newEp.setLength(length);
+					newEp.setFilesize(filesize);
+					newEp.setAddDate(adddate);
+					newEp.setViewedHistory(history);
+					newEp.setPart(dst);
+					newEp.setTags(tags);
+					newEp.endUpdating();
+
+					if (ucListener != null) ucListener.onUpdate(newEp);
+					dispose();
+				});
+
+			} catch (Exception e) {
+				SwingUtilities.invokeLater(() ->
+				{
+					CCLog.addError(e);
+					DialogHelper.showError(this, LocaleBundle.getString("QuickAddEpisodeDialog.dialogs.error_caption"), LocaleBundle.getString("QuickAddEpisodeDialog.dialogs.error")); //$NON-NLS-1$ //$NON-NLS-2$
+				});
+			} finally {
+				SwingUtilities.invokeLater(() -> contentPanel.setEnabled(true) );
+			}
+		}).start();
 	}
 
 	private boolean checkUserDataEpisode(List<UserDataProblem> ret, String title, int len, int epNum, CCDate adddate, CCDateTimeList lvdate, long fsize, int quality, String csExtn, String csExta, String src, String dst, String fullDst) {

@@ -9,6 +9,7 @@ import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.gui.log.ExceptionHandler;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.properties.CCProperties;
+import de.jClipCorn.properties.enumerations.ResourcePreloadMode;
 import de.jClipCorn.util.DriveMap;
 import de.jClipCorn.util.SSLUtilities;
 import de.jClipCorn.util.formatter.PathFormatter;
@@ -85,9 +86,13 @@ public class Main {
 
 		Resources.init();
 		
-		if (CCProperties.getInstance().PROP_LOADING_PRELOADRESOURCES.getValue()) {
+		if (CCProperties.getInstance().PROP_LOADING_PRELOADRESOURCES.getValue() == ResourcePreloadMode.SYNC_PRELOAD) {
 			Globals.TIMINGS.start(Globals.TIMING_INIT_PRELOADRESOURCES);
 			Resources.preload();
+			Globals.TIMINGS.stop(Globals.TIMING_INIT_PRELOADRESOURCES);
+		} else if (CCProperties.getInstance().PROP_LOADING_PRELOADRESOURCES.getValue() == ResourcePreloadMode.ASYNC_PRELOAD) {
+			Globals.TIMINGS.start(Globals.TIMING_INIT_PRELOADRESOURCES);
+			Resources.preload_async();
 			Globals.TIMINGS.stop(Globals.TIMING_INIT_PRELOADRESOURCES);
 		}
 		

@@ -240,6 +240,8 @@ public class ClipStatusBar extends AbstractClipStatusbar implements CCDBUpdateLi
 		tooltip.append("<hr/>"); //$NON-NLS-1$
 
 		condAppend(tooltip, Globals.TIMING_BACKGROUND_SCAN_DRIVES);
+		condAppend(tooltip, Globals.TIMING_BACKGROUND_PRELOADRESOURCES);
+
 		tooltip.append("</html>"); //$NON-NLS-1$
 		
 		lblStarttime.setText(LocaleBundle.getFormattedString("ClipStatusBar.Starttime", (int)Globals.TIMINGS.getSecondsOrZero(Globals.TIMING_STARTUP_TOTAL, 0), movielist.getTotalDatabaseCount())); //$NON-NLS-1$
@@ -285,7 +287,7 @@ public class ClipStatusBar extends AbstractClipStatusbar implements CCDBUpdateLi
 
 	private void condAppend(StringBuilder builder, int id) {
 		if (Globals.TIMINGS.contains(id)) {
-			String strid = StringUtils.rightPad(Globals.TIMING_IDS.get(id), 26).replace(" ", "&nbsp;"); //$NON-NLS-1$ //$NON-NLS-2$
+			String strid = StringUtils.rightPad(Globals.TIMING_IDS.get(id), 30).replace(" ", "&nbsp;"); //$NON-NLS-1$ //$NON-NLS-2$
 			String strvl = StringUtils.leftPad(Long.toString(Globals.TIMINGS.getMilliseconds(id)), 5).replace(" ", "&nbsp;"); //$NON-NLS-1$ //$NON-NLS-2$
 			builder.append(String.format("<font face=\"monospace\">%s := %sms</font><br/>", strid, strvl)); //$NON-NLS-1$
 		}

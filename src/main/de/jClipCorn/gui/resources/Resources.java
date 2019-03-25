@@ -1,11 +1,16 @@
 package de.jClipCorn.gui.resources;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
+import de.jClipCorn.Globals;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.formatter.PathFormatter;
+import de.jClipCorn.util.helper.ThreadUtils;
+
+import javax.swing.*;
 
 @SuppressWarnings("nls")
 public class Resources {
@@ -337,14 +342,40 @@ public class Resources {
 		
 		return ref;
 	}
-	
+
 	public static void preload() {
 		for (Entry<Tuple<String, CachedIconType>, IconRef> s : icn_ressources.entrySet()) {
 			CachedResourceLoader.preload(s.getValue());
 		}
-		
+
 		for (Entry<String, ImageRef> s : img_ressources.entrySet()) {
 			CachedResourceLoader.preload(s.getValue());
 		}
+	}
+
+	public static void preload_async() {
+		new Thread(() ->
+		{
+			ThreadUtils.safeSleep(5000);
+
+			Globals.TIMINGS.start(Globals.TIMING_BACKGROUND_PRELOADRESOURCES);
+			for (Entry<Tuple<String, CachedIconType>, IconRef> s : icn_ressources.entrySet()) {
+				try {
+					SwingUtilities.invokeAndWait(() -> CachedResourceLoader.preload(s.getValue()));
+				} catch (InterruptedException | InvocationTargetException e) {
+					CCLog.addError(e);
+				}
+			}
+
+			for (Entry<String, ImageRef> s : img_ressources.entrySet()) {
+				try {
+					SwingUtilities.invokeAndWait(() -> CachedResourceLoader.preload(s.getValue()));
+				} catch (InterruptedException | InvocationTargetException e) {
+					CCLog.addError(e);
+				}
+			}
+
+			Globals.TIMINGS.stop(Globals.TIMING_BACKGROUND_PRELOADRESOURCES);
+		}, "RESOURCE_PRELOAD").start();
 	}
 }

@@ -92,7 +92,7 @@ public abstract class AbstractCustomFilter {
 
 	public boolean importFromString(String txt) {
 		try {
-			txt = txt.replaceAll("\\s", ""); // remove whitespaces
+			txt = txt.replaceAll("\\s", ""); // remove whitespaces //$NON-NLS-1$ //$NON-NLS-2$
 			return getSerializationConfig().deserialize(txt);
 		} catch (Exception e) {
 			CCLog.addError(LocaleBundle.getString("LogMessage.ExceptionInFilterParse"), e); //$NON-NLS-1$

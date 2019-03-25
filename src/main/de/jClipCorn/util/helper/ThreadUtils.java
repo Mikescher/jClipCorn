@@ -1,7 +1,5 @@
 package de.jClipCorn.util.helper;
 
-import org.omg.CORBA.Environment;
-
 import java.lang.reflect.InvocationTargetException;
 
 import javax.swing.JProgressBar;

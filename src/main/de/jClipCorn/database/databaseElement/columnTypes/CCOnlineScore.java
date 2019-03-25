@@ -21,7 +21,7 @@ public enum CCOnlineScore implements ContinoousEnum<CCOnlineScore> {
 	STARS_4_5(9),
 	STARS_5_0(10);
 
-	private final static String NAMES[] = {
+	private final static String[] NAMES = {
 		LocaleBundle.getString("CCMovieOnlineScore.00"), //$NON-NLS-1$
 		LocaleBundle.getString("CCMovieOnlineScore.05"), //$NON-NLS-1$
 		LocaleBundle.getString("CCMovieOnlineScore.10"), //$NON-NLS-1$

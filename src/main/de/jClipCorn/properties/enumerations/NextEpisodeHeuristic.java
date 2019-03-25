@@ -11,7 +11,7 @@ public enum NextEpisodeHeuristic implements ContinoousEnum<NextEpisodeHeuristic>
 	CONTINUOUS(3);
 	
 	@SuppressWarnings("nls")
-	private final static String NAMES[] = {
+	private final static String[] NAMES = {
 		LocaleBundle.getString("NextEpisodeHeuristic.Opt0"),
 		LocaleBundle.getString("NextEpisodeHeuristic.Opt1"),
 		LocaleBundle.getString("NextEpisodeHeuristic.Opt2"),

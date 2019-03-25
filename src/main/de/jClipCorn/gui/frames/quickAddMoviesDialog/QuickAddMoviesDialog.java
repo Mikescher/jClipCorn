@@ -16,8 +16,6 @@ import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.gui.resources.CachedResourceLoader;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.helper.SimpleFileUtils;
-import org.apache.commons.io.FileUtils;
-
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.FormSpecs;
@@ -27,7 +25,6 @@ import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.gui.frames.addMovieFrame.AddMovieFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
-import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.stream.CCStreams;
@@ -111,34 +108,34 @@ public class QuickAddMoviesDialog extends JDialog {
 		getContentPane().add(buttonPane, BorderLayout.SOUTH);
 		buttonPane.setLayout(new FormLayout(new ColumnSpec[] {
 				FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
-				ColumnSpec.decode("default:grow"),
+				ColumnSpec.decode("default:grow"), //$NON-NLS-1$
 				FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
-				ColumnSpec.decode("51px"),
+				ColumnSpec.decode("51px"), //$NON-NLS-1$
 				FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
-				ColumnSpec.decode("96px"),
+				ColumnSpec.decode("96px"), //$NON-NLS-1$
 				FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,},
 			new RowSpec[] {
 				FormSpecs.LINE_GAP_ROWSPEC,
-				RowSpec.decode("13px"),
+				RowSpec.decode("13px"), //$NON-NLS-1$
 				FormSpecs.LINE_GAP_ROWSPEC,
-				RowSpec.decode("13px"),
+				RowSpec.decode("13px"), //$NON-NLS-1$
 				FormSpecs.LINE_GAP_ROWSPEC,}));
 						
 		progressBar1 = new JProgressBar();
-		buttonPane.add(progressBar1, "2, 2, fill, fill");
+		buttonPane.add(progressBar1, "2, 2, fill, fill"); //$NON-NLS-1$
 		progressBar1.setVisible(false);
 
 		JButton okButton = new JButton(LocaleBundle.getString("UIGeneric.btnOK.text")); //$NON-NLS-1$
 		okButton.addActionListener((e) -> onOK());
-		buttonPane.add(okButton, "4, 2, 1, 3, fill, fill");
+		buttonPane.add(okButton, "4, 2, 1, 3, fill, fill"); //$NON-NLS-1$
 		getRootPane().setDefaultButton(okButton);
 
 		JButton cancelButton = new JButton(LocaleBundle.getString("UIGeneric.btnCancel.text")); //$NON-NLS-1$
 		cancelButton.addActionListener((e) -> dispose());
-		buttonPane.add(cancelButton, "6, 2, 1, 3, fill, fill");
+		buttonPane.add(cancelButton, "6, 2, 1, 3, fill, fill"); //$NON-NLS-1$
 
 		progressBar2 = new JProgressBar();
-		buttonPane.add(progressBar2, "2, 4, fill, fill");
+		buttonPane.add(progressBar2, "2, 4, fill, fill"); //$NON-NLS-1$
 		progressBar2.setVisible(false);
 	}
 

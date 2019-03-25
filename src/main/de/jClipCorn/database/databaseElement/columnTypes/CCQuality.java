@@ -19,7 +19,7 @@ public enum CCQuality implements ContinoousEnum<CCQuality> {
 	private static long FSIZE_MAX_CD = 		20 * 1024 * 1024;	// 20 MB/min
 	private static long FSIZE_MAX_DVD = 	50 * 1024 * 1024; 	// 50 MB/min
 	
-	private final static String NAMES[] = {
+	private final static String[] NAMES = {
 		LocaleBundle.getString("CCMovieQuality.Quality0"),  //$NON-NLS-1$
 		LocaleBundle.getString("CCMovieQuality.Quality1"),  //$NON-NLS-1$
 		LocaleBundle.getString("CCMovieQuality.Quality2"),  //$NON-NLS-1$

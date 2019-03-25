@@ -16,7 +16,11 @@ import java.awt.*;
 
 public class CCPathVarProperty extends CCProperty<PathSyntaxVar> {
 
-	private class CCPathVarPropertyPanel extends JPanel { JTextField Field1; JTextField Field2; }
+	private class CCPathVarPropertyPanel extends JPanel {
+		private static final long serialVersionUID = -9214196751986446909L;
+		JTextField Field1; 
+		JTextField Field2;
+	}
 
 	public CCPathVarProperty(CCPropertyCategory cat, CCProperties prop, String ident, PathSyntaxVar standard) {
 		super(cat, PathSyntaxVar.class, prop, ident, standard);
@@ -74,7 +78,7 @@ public class CCPathVarProperty extends CCProperty<PathSyntaxVar> {
 		}
 
 		try {
-			String[] sval = val.split(";");
+			String[] sval = val.split(";"); //$NON-NLS-1$
 			if (sval.length == 0 || sval.length == 1) return PathSyntaxVar.EMPTY;
 			return new PathSyntaxVar(Str.fromBase64(sval[0]), Str.fromBase64(sval[1]));
 		} catch(NumberFormatException e) {

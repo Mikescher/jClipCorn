@@ -10,7 +10,7 @@ public enum DisplayDateAlgorithm implements ContinoousEnum<DisplayDateAlgorithm>
 	AVERAGE(2);
 	
 	@SuppressWarnings("nls")
-	private final static String NAMES[] = {
+	private final static String[] NAMES = {
 		LocaleBundle.getString("DisplayDateAlgorithm.Opt0"),
 		LocaleBundle.getString("DisplayDateAlgorithm.Opt1"),
 		LocaleBundle.getString("DisplayDateAlgorithm.Opt2"),

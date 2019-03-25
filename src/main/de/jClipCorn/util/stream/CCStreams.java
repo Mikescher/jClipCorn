@@ -10,6 +10,7 @@ public final class CCStreams {
 		throw new InstantiationError();
 	}
 
+	@SuppressWarnings("rawtypes")
 	public static CCStream<Object> iterateList(List ls) {
 		return new ArrayStream<>(ls.toArray());
 	}

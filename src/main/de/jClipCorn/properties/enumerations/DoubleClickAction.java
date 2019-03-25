@@ -10,7 +10,7 @@ public enum DoubleClickAction implements ContinoousEnum<DoubleClickAction> {
 	EDIT(2);
 	
 	@SuppressWarnings("nls")
-	private final static String NAMES[] = {
+	private final static String[] NAMES = {
 		LocaleBundle.getString("DoubleClickAction.Opt0"),
 		LocaleBundle.getString("DoubleClickAction.Opt1"),
 		LocaleBundle.getString("DoubleClickAction.Opt2"),

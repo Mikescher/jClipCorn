@@ -12,7 +12,7 @@ public enum CCDBElementTyp implements ContinoousEnum<CCDBElementTyp> {
 	MOVIE(0),
 	SERIES(1);
 	
-	private final static String NAMES[] = {
+	private final static String[] NAMES = {
 		LocaleBundle.getString("CCMovieTyp.Movie"),  //$NON-NLS-1$
 		LocaleBundle.getString("CCMovieTyp.Series") //$NON-NLS-1$
 	};

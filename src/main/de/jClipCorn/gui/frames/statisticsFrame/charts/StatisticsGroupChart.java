@@ -2,9 +2,7 @@ package de.jClipCorn.gui.frames.statisticsFrame.charts;
 
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
-import de.jClipCorn.database.databaseElement.columnTypes.CCGenre;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGroup;
-import de.jClipCorn.gui.frames.statisticsFrame.StatisticsHelper;
 import de.jClipCorn.gui.frames.statisticsFrame.StatisticsTypeFilter;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.datatypes.Tuple;
@@ -29,14 +27,16 @@ public class StatisticsGroupChart extends StatisticsChart {
 		super(ml, _source);
 	}
 
-	private class CustomBarRenderer extends BarRenderer
-	{
+	private class CustomBarRenderer extends BarRenderer {
+		private static final long serialVersionUID = 7129766928866125281L;
+		
 		public final CCGroup[] groups;
 
 		private CustomBarRenderer(CCGroup[] g) {
 			groups = g;
 		}
 
+		@Override
 		public Paint getItemPaint(final int row, final int column) {
 			if (groups == null || column < 0 || column >= groups.length) return super.getItemPaint(row, column);
 			return groups[column].Color;

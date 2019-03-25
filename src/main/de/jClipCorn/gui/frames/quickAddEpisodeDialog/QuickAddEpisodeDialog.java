@@ -17,7 +17,6 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.gui.resources.CachedResourceLoader;
 import de.jClipCorn.gui.resources.Resources;
-import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.formatter.FileSizeFormatter;
@@ -203,28 +202,28 @@ public class QuickAddEpisodeDialog extends JDialog {
 		getContentPane().add(buttonPane, BorderLayout.SOUTH);
 		buttonPane.setLayout(new FormLayout(new ColumnSpec[] {
 				FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
-				ColumnSpec.decode("default:grow"),
+				ColumnSpec.decode("default:grow"), //$NON-NLS-1$
 				FormSpecs.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("51px"),
+				ColumnSpec.decode("51px"), //$NON-NLS-1$
 				FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
-				ColumnSpec.decode("96px"),
+				ColumnSpec.decode("96px"), //$NON-NLS-1$
 				FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,},
 			new RowSpec[] {
 				FormSpecs.LINE_GAP_ROWSPEC,
-				RowSpec.decode("26px"),
+				RowSpec.decode("26px"), //$NON-NLS-1$
 				FormSpecs.RELATED_GAP_ROWSPEC,}));
 				
 				progressBar = new JProgressBar();
-				buttonPane.add(progressBar, "2, 2, fill, fill");
+				buttonPane.add(progressBar, "2, 2, fill, fill"); //$NON-NLS-1$
 				progressBar.setVisible(false);
 		
 				JButton okButton = new JButton(LocaleBundle.getString("UIGeneric.btnOK.text")); //$NON-NLS-1$
-				buttonPane.add(okButton, "4, 2, left, top");
+				buttonPane.add(okButton, "4, 2, left, top"); //$NON-NLS-1$
 				getRootPane().setDefaultButton(okButton);
 				okButton.addActionListener((e) -> tryAdd(true));
 		
 				JButton cancelButton = new JButton(LocaleBundle.getString("UIGeneric.btnCancel.text")); //$NON-NLS-1$
-				buttonPane.add(cancelButton, "6, 2, left, top");
+				buttonPane.add(cancelButton, "6, 2, left, top"); //$NON-NLS-1$
 		cancelButton.addActionListener((e) -> dispose());
 	}
 

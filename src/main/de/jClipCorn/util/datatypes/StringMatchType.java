@@ -10,7 +10,7 @@ public enum StringMatchType implements ContinoousEnum<StringMatchType> {
 	SM_ENDSWITH(2),
 	SM_EQUALS(2);
 
-	private final static String NAMES[] = {
+	private final static String[] NAMES = {
 		LocaleBundle.getString("StringMatchType.STARTSWITH"), //$NON-NLS-1$
 		LocaleBundle.getString("StringMatchType.INCLUDES"),   //$NON-NLS-1$
 		LocaleBundle.getString("StringMatchType.ENDSWITH"),    //$NON-NLS-1$

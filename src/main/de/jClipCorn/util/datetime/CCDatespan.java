@@ -2,7 +2,6 @@ package de.jClipCorn.util.datetime;
 
 import de.jClipCorn.util.stream.CCStream;
 import de.jClipCorn.util.stream.DatespanStream;
-import org.jfree.data.time.DateRange;
 
 public class CCDatespan {
 	public final CCDate start; // inclusive

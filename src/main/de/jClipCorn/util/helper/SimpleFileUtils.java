@@ -2,13 +2,9 @@ package de.jClipCorn.util.helper;
 
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.formatter.PathFormatter;
-import de.jClipCorn.util.lambda.Func1to0;
 import de.jClipCorn.util.lambda.Func2to0;
 
 import java.io.*;
-import java.nio.ByteBuffer;
-import java.nio.channels.FileChannel;
-import java.nio.channels.ReadableByteChannel;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.text.MessageFormat;
@@ -105,7 +101,7 @@ public class SimpleFileUtils {
 		
 		try {
 			fos = new FileOutputStream(file);
-			osw = new OutputStreamWriter(fos, Str.UTF8); //$NON-NLS-1$
+			osw = new OutputStreamWriter(fos, Str.UTF8);
 			bw = new BufferedWriter(osw);
 		
 			bw.write(text);

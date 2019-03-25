@@ -14,7 +14,7 @@ public enum CCWeekday implements ContinoousEnum<CCWeekday> {
 	SATURDAY(6),
 	SUNDAY(7);
 
-	private final static String NAMES[] = { 
+	private final static String[] NAMES = {
 			LocaleBundle.getString("CCDate.Month0"), //$NON-NLS-1$
 			LocaleBundle.getString("CCDate.Day1"), //$NON-NLS-1$
 			LocaleBundle.getString("CCDate.Day2"), //$NON-NLS-1$

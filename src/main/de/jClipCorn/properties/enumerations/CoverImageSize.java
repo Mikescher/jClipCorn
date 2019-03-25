@@ -43,7 +43,7 @@ public enum CoverImageSize implements ContinoousEnum<CoverImageSize> {
 	};
 	
 	@SuppressWarnings("nls")
-	private final static String NAMES[] = {
+	private final static String[] NAMES = {
 		WIDTHS[0]  + "x" + HEIGHTS[0] + " (x1)",
 		WIDTHS[1]  + "x" + HEIGHTS[1] + " (x2)",
 		WIDTHS[2]  + "x" + HEIGHTS[2] + " (x3)",

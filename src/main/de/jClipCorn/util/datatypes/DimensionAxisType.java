@@ -8,7 +8,7 @@ public enum DimensionAxisType implements ContinoousEnum<DimensionAxisType> {
 	WIDTH(0),
 	HEIGHT(1);
 
-	private final static String NAMES[] = {
+	private final static String[] NAMES = {
 		LocaleBundle.getString("DimensionAxisType.WIDTH"), //$NON-NLS-1$
 		LocaleBundle.getString("DimensionAxisType.HEIGHT"),   //$NON-NLS-1$
 	};

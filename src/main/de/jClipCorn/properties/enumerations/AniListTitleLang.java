@@ -10,7 +10,7 @@ public enum AniListTitleLang implements ContinoousEnum<AniListTitleLang> {
 	NATIVE(2);
 
 	@SuppressWarnings("nls")
-	private final static String NAMES[] = {
+	private final static String[] NAMES = {
 		LocaleBundle.getString("AniListTitleLang.Opt0"),
 		LocaleBundle.getString("AniListTitleLang.Opt1"),
 		LocaleBundle.getString("AniListTitleLang.Opt2"),

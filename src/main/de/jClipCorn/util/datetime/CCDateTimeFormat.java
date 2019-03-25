@@ -9,7 +9,7 @@ public enum CCDateTimeFormat implements ContinoousEnum<CCDateTimeFormat> {
 	GERMAN(1),
 	AMERICA(2);
 
-	private final static String NAMES[] = { 
+	private final static String[] NAMES = {
 		LocaleBundle.getString("CCDateTimeFormat.ISO_8601"), //$NON-NLS-1$
 		LocaleBundle.getString("CCDateTimeFormat.GERMAN"),   //$NON-NLS-1$
 		LocaleBundle.getString("CCDateTimeFormat.AMERICA"),  //$NON-NLS-1$

@@ -35,12 +35,9 @@ public class CachedResourceLoader {
 				mapImages1.put(name, result);
 			}
 			return result;
-		} catch (IOException e) {
+		} catch (IOException | IllegalArgumentException e) {
 			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.RessourceNotFound", name.path)); //$NON-NLS-1$
 			return new BufferedImage(1, 1, BufferedImage.TYPE_4BYTE_ABGR);
-		} catch (IllegalArgumentException e) {
-			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.RessourceNotFound", name.path)); //$NON-NLS-1$
-			return null;
 		}
 	}
 	
@@ -61,12 +58,9 @@ public class CachedResourceLoader {
 				mapIcon1.put(name, result);
 			}
 			return result;
-		} catch (IOException e) {
+		} catch (IOException | IllegalArgumentException e) {
 			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.RessourceNotFound", name.path)); //$NON-NLS-1$
 			return new BufferedImage(1, 1, BufferedImage.TYPE_4BYTE_ABGR);
-		} catch (IllegalArgumentException e) {
-			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.RessourceNotFound", name.path)); //$NON-NLS-1$
-			return null;
 		}
 	}
 	

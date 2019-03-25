@@ -22,7 +22,7 @@ public enum ImageSearchImplementation implements ContinoousEnum<ImageSearchImple
 	TMDP_POSTER(4);
 	
 	@SuppressWarnings("nls")
-	private final static String NAMES[] = {
+	private final static String[] NAMES = {
 		LocaleBundle.getString("ImageSearchImplementations.GOOGLE_COVER"),
 		LocaleBundle.getString("ImageSearchImplementations.GOOGLE_POSTER"),
 		LocaleBundle.getString("ImageSearchImplementations.IMDB_COVER"),

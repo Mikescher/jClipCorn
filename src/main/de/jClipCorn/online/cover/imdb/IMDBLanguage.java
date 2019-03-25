@@ -8,7 +8,7 @@ public enum IMDBLanguage implements ContinoousEnum<IMDBLanguage> {
 	GERMAN(0), 
 	ENGLISH(1);
 
-	private final static String NAMES[] = {
+	private final static String[] NAMES = {
 		LocaleBundle.getString("ImDBLanguage.GERMAN"),    //$NON-NLS-1$
 		LocaleBundle.getString("ImDBLanguage.ENGLISH")    //$NON-NLS-1$
 	};

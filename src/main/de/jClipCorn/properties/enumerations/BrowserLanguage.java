@@ -15,7 +15,7 @@ public enum BrowserLanguage implements ContinoousEnum<BrowserLanguage> {
 	TURKISH(8);
 	
 	@SuppressWarnings("nls")
-	private final static String NAMES[] = {
+	private final static String[] NAMES = {
 		"English",
 		"German",
 		"Czech",

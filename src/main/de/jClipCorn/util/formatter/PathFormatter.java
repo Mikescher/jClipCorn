@@ -63,7 +63,6 @@ public class PathFormatter {
 
 	private final static String WILDCARD_SELF        = "<?self>";
 	private final static String WILDCARD_DRIVENAME   = "<?vLabel=\"%s\">";
-	private final static String WILDCARD_DRIVELETTER = "<?vLetter=\"%s\">";
 	private final static String WILDCARD_SELFDRIVE   = "<?self[dir]>";
 	private final static String WILDCARD_NETDRIVE    = "<?vNetwork=\"%s\">";
 	private final static String WILDCARD_VARIABLE    = "<?[%s]>";

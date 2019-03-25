@@ -10,7 +10,7 @@ public enum DecimalSearchType implements ContinoousEnum<DecimalSearchType> {
 	IN_RANGE(2),
 	EXACT(3);
 
-	private final static String NAMES[] = {
+	private final static String[] NAMES = {
 		LocaleBundle.getString("DecimalSearchType.LESSER"),    //$NON-NLS-1$
 		LocaleBundle.getString("DecimalSearchType.GREATER"),   //$NON-NLS-1$
 		LocaleBundle.getString("DecimalSearchType.IN_RANGE"),  //$NON-NLS-1$

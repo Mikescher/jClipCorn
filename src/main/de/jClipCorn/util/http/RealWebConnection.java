@@ -8,15 +8,12 @@ import java.net.URLConnection;
 import java.util.List;
 
 import javax.imageio.ImageIO;
-import javax.net.ssl.HttpsURLConnection;
-
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.exceptions.HTTPErrorCodeException;
 import de.jClipCorn.util.stream.CCStreams;
-import org.apache.commons.io.IOUtils;
 
 @SuppressWarnings("nls")
 public class RealWebConnection extends WebConnectionLayer {

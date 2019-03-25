@@ -163,10 +163,10 @@ public class ClipStatusBar extends AbstractClipStatusbar implements CCDBUpdateLi
 
 			StringBuilder tooltip = new StringBuilder();
 			tooltip.append("<html>"); //$NON-NLS-1$
-			tooltip.append(LocaleBundle.getString("CCLog.Informations")).append(": ").append(CCLog.getCount(CCLogType.LOG_ELEM_INFORMATION)).append("<br/>"); //$NON-NLS-1$
-			tooltip.append(LocaleBundle.getString("CCLog.Warnings")).append(": ").append(CCLog.getCount(CCLogType.LOG_ELEM_WARNING)).append("<br/>"); //$NON-NLS-1$
-			tooltip.append(LocaleBundle.getString("CCLog.Errors")).append(": ").append(CCLog.getCount(CCLogType.LOG_ELEM_ERROR)).append("<br/>"); //$NON-NLS-1$
-			tooltip.append(LocaleBundle.getString("CCLog.Undefinieds")).append(": ").append(CCLog.getCount(CCLogType.LOG_ELEM_UNDEFINED)).append("<br/>"); //$NON-NLS-1$
+			tooltip.append(LocaleBundle.getString("CCLog.Informations")).append(": ").append(CCLog.getCount(CCLogType.LOG_ELEM_INFORMATION)).append("<br/>"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			tooltip.append(LocaleBundle.getString("CCLog.Warnings")).append(": ").append(CCLog.getCount(CCLogType.LOG_ELEM_WARNING)).append("<br/>"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			tooltip.append(LocaleBundle.getString("CCLog.Errors")).append(": ").append(CCLog.getCount(CCLogType.LOG_ELEM_ERROR)).append("<br/>"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			tooltip.append(LocaleBundle.getString("CCLog.Undefinieds")).append(": ").append(CCLog.getCount(CCLogType.LOG_ELEM_UNDEFINED)).append("<br/>"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			tooltip.append("</html>"); //$NON-NLS-1$
 			lblLog.setToolTipText(tooltip.toString());
 		}
@@ -177,11 +177,11 @@ public class ClipStatusBar extends AbstractClipStatusbar implements CCDBUpdateLi
 
 		StringBuilder tooltip = new StringBuilder();
 		tooltip.append("<html>"); //$NON-NLS-1$
-		tooltip.append(LocaleBundle.getFormattedString("ClipStatusBar.Viewed",   movielist.getViewedCount())).append("<br/>"); //$NON-NLS-1$
-		tooltip.append(LocaleBundle.getFormattedString("ClipStatusBar.Movies",   movielist.getMovieCount())).append("<br/>"); //$NON-NLS-1$
-		tooltip.append(LocaleBundle.getFormattedString("ClipStatusBar.Series",   movielist.getSeriesCount())).append("<br/>"); //$NON-NLS-1$
-		tooltip.append(LocaleBundle.getFormattedString("ClipStatusBar.Seasons",  movielist.getSeasonCount())).append("<br/>"); //$NON-NLS-1$
-		tooltip.append(LocaleBundle.getFormattedString("ClipStatusBar.Episodes", movielist.getEpisodeCount())).append("<br/>"); //$NON-NLS-1$
+		tooltip.append(LocaleBundle.getFormattedString("ClipStatusBar.Viewed",   movielist.getViewedCount())).append("<br/>"); //$NON-NLS-1$ //$NON-NLS-2$
+		tooltip.append(LocaleBundle.getFormattedString("ClipStatusBar.Movies",   movielist.getMovieCount())).append("<br/>"); //$NON-NLS-1$ //$NON-NLS-2$
+		tooltip.append(LocaleBundle.getFormattedString("ClipStatusBar.Series",   movielist.getSeriesCount())).append("<br/>"); //$NON-NLS-1$ //$NON-NLS-2$
+		tooltip.append(LocaleBundle.getFormattedString("ClipStatusBar.Seasons",  movielist.getSeasonCount())).append("<br/>"); //$NON-NLS-1$ //$NON-NLS-2$
+		tooltip.append(LocaleBundle.getFormattedString("ClipStatusBar.Episodes", movielist.getEpisodeCount())).append("<br/>"); //$NON-NLS-1$ //$NON-NLS-2$
 		tooltip.append("</html>"); //$NON-NLS-1$
 		lblMovies.setToolTipText(tooltip.toString());
 	}
@@ -199,9 +199,9 @@ public class ClipStatusBar extends AbstractClipStatusbar implements CCDBUpdateLi
 
 		StringBuilder tooltip = new StringBuilder();
 		tooltip.append("<html>"); //$NON-NLS-1$
-		tooltip.append(LocaleBundle.getFormattedString("ClipStatusBar.Length_Movies", TimeIntervallFormatter.formatPointed(movielist.getTotalLength(true, false)))).append("<br/>"); //$NON-NLS-1$
-		tooltip.append(LocaleBundle.getFormattedString("ClipStatusBar.Length_Series", TimeIntervallFormatter.formatPointed(movielist.getTotalLength(false, true)))).append("<br/>"); //$NON-NLS-1$
-		tooltip.append(LocaleBundle.getFormattedString("ClipStatusBar.Length",        TimeIntervallFormatter.formatPointed(movielist.getTotalLength(true, true)))).append("<br/>"); //$NON-NLS-1$
+		tooltip.append(LocaleBundle.getFormattedString("ClipStatusBar.Length_Movies", TimeIntervallFormatter.formatPointed(movielist.getTotalLength(true, false)))).append("<br/>"); //$NON-NLS-1$ //$NON-NLS-2$
+		tooltip.append(LocaleBundle.getFormattedString("ClipStatusBar.Length_Series", TimeIntervallFormatter.formatPointed(movielist.getTotalLength(false, true)))).append("<br/>"); //$NON-NLS-1$ //$NON-NLS-2$
+		tooltip.append(LocaleBundle.getFormattedString("ClipStatusBar.Length",        TimeIntervallFormatter.formatPointed(movielist.getTotalLength(true, true)))).append("<br/>"); //$NON-NLS-1$ //$NON-NLS-2$
 		tooltip.append("</html>"); //$NON-NLS-1$
 		lblLength.setToolTipText(tooltip.toString());
 	}
@@ -211,8 +211,8 @@ public class ClipStatusBar extends AbstractClipStatusbar implements CCDBUpdateLi
 
 		StringBuilder tooltip = new StringBuilder();
 		tooltip.append("<html>"); //$NON-NLS-1$
-		tooltip.append(LocaleBundle.getFormattedString("ClipStatusBar.Size_Movies", FileSizeFormatter.format(movielist.getTotalSize(true, false)))).append("<br/>"); //$NON-NLS-1$
-		tooltip.append(LocaleBundle.getFormattedString("ClipStatusBar.Size_Series", FileSizeFormatter.format(movielist.getTotalSize(false, true)))).append("<br/>"); //$NON-NLS-1$
+		tooltip.append(LocaleBundle.getFormattedString("ClipStatusBar.Size_Movies", FileSizeFormatter.format(movielist.getTotalSize(true, false)))).append("<br/>"); //$NON-NLS-1$ //$NON-NLS-2$
+		tooltip.append(LocaleBundle.getFormattedString("ClipStatusBar.Size_Series", FileSizeFormatter.format(movielist.getTotalSize(false, true)))).append("<br/>"); //$NON-NLS-1$ //$NON-NLS-2$
 		tooltip.append("</html>"); //$NON-NLS-1$
 		lblSize.setToolTipText(tooltip.toString());
 	}
@@ -263,10 +263,10 @@ public class ClipStatusBar extends AbstractClipStatusbar implements CCDBUpdateLi
 			if (Str.isNullOrWhitespace(v.Item2) && Str.isNullOrWhitespace(v.Item3)) continue;
 
 			tooltip.append("<font face=\"monospace\">"); //$NON-NLS-1$
-			tooltip.append("[").append(v.Item1).append("]&nbsp;"); //$NON-NLS-1$
-			tooltip.append(StringUtils.rightPad(v.Item2==null ? Str.Empty : v.Item2, l2).replace(" ", "&nbsp;")); //$NON-NLS-1$
+			tooltip.append("[").append(v.Item1).append("]&nbsp;"); //$NON-NLS-1$ //$NON-NLS-2$
+			tooltip.append(StringUtils.rightPad(v.Item2==null ? Str.Empty : v.Item2, l2).replace(" ", "&nbsp;")); //$NON-NLS-1$ //$NON-NLS-2$
 			tooltip.append("&nbsp;&nbsp;|&nbsp;&nbsp;"); //$NON-NLS-1$
-			tooltip.append(StringUtils.rightPad(v.Item3==null ? Str.Empty : v.Item3, l3).replace(" ", "&nbsp;")); //$NON-NLS-1$
+			tooltip.append(StringUtils.rightPad(v.Item3==null ? Str.Empty : v.Item3, l3).replace(" ", "&nbsp;")); //$NON-NLS-1$ //$NON-NLS-2$
 			tooltip.append("<br/>"); //$NON-NLS-1$
 			tooltip.append("</font>"); //$NON-NLS-1$
 			tooltip.append("\r\n"); //$NON-NLS-1$
@@ -277,16 +277,16 @@ public class ClipStatusBar extends AbstractClipStatusbar implements CCDBUpdateLi
 		if (drives.isEmpty())
 			lblDriveScan.setToolTipText(null);
 		else
-			lblDriveScan.setToolTipText(tooltip.toString()); //$NON-NLS-1$
+			lblDriveScan.setToolTipText(tooltip.toString());
 
-		lblDriveScan.setText(String.format("%s: %s", LocaleBundle.getString("ClipStatusBar.DriveScan"), DriveMap.getStatus())); //$NON-NLS-1$
+		lblDriveScan.setText(String.format("%s: %s", LocaleBundle.getString("ClipStatusBar.DriveScan"), DriveMap.getStatus())); //$NON-NLS-1$ //$NON-NLS-2$
 		lblDriveScan.setToolTipText(tooltip.toString());
 	}
 
 	private void condAppend(StringBuilder builder, int id) {
 		if (Globals.TIMINGS.contains(id)) {
-			String strid = StringUtils.rightPad(Globals.TIMING_IDS.get(id), 26).replace(" ", "&nbsp;"); //$NON-NLS-1$
-			String strvl = StringUtils.leftPad(Long.toString(Globals.TIMINGS.getMilliseconds(id)), 5).replace(" ", "&nbsp;"); //$NON-NLS-1$
+			String strid = StringUtils.rightPad(Globals.TIMING_IDS.get(id), 26).replace(" ", "&nbsp;"); //$NON-NLS-1$ //$NON-NLS-2$
+			String strvl = StringUtils.leftPad(Long.toString(Globals.TIMINGS.getMilliseconds(id)), 5).replace(" ", "&nbsp;"); //$NON-NLS-1$ //$NON-NLS-2$
 			builder.append(String.format("<font face=\"monospace\">%s := %sms</font><br/>", strid, strvl)); //$NON-NLS-1$
 		}
 	}

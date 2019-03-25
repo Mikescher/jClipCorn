@@ -2,7 +2,6 @@ package de.jClipCorn.database.util.backupManager;
 
 import java.awt.Component;
 import java.io.File;
-import java.io.FileFilter;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -204,7 +203,7 @@ public class BackupManager {
 		boolean ok = backup.saveToFile();
 		if (!ok) {
 			if (file.exists()) FileUtils.deleteQuietly(file);
-			throw new IOException("saveToFile failed");
+			throw new IOException("saveToFile failed"); //$NON-NLS-1$
 		}
 		backuplist.add(backup);
 	}

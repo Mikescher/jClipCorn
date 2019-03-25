@@ -18,7 +18,7 @@ public enum CCUserScore implements ContinoousEnum<CCUserScore> {
 	RATING_V(5),	// I f*** love this piece of movie-artwork
 	RATING_NO(6);	// Unrated
 	
-	private final static String NAMES[] = {
+	private final static String[] NAMES = {
 		LocaleBundle.getString("CCMovieScore.R0"),   //$NON-NLS-1$
 		LocaleBundle.getString("CCMovieScore.R1"),   //$NON-NLS-1$
 		LocaleBundle.getString("CCMovieScore.R2"),   //$NON-NLS-1$

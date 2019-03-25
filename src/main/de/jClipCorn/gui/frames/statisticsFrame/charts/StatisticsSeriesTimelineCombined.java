@@ -6,10 +6,8 @@ import de.jClipCorn.gui.frames.statisticsFrame.StatisticsHelper;
 import de.jClipCorn.gui.frames.statisticsFrame.StatisticsPanel;
 import de.jClipCorn.gui.frames.statisticsFrame.StatisticsTypeFilter;
 import de.jClipCorn.gui.guiComponents.HorizontalScalablePane;
-import de.jClipCorn.gui.guiComponents.ScalablePane;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.properties.CCProperties;
-import de.jClipCorn.util.datatypes.CollectionHelper;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.datatypes.Tuple3;
 import de.jClipCorn.util.datetime.CCDate;
@@ -17,12 +15,9 @@ import de.jClipCorn.util.datetime.CCDatespan;
 import de.jClipCorn.util.stream.CCStreams;
 import org.apache.commons.lang3.StringUtils;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.*;
 import java.util.List;
 
@@ -171,7 +166,7 @@ public class StatisticsSeriesTimelineCombined extends StatisticsPanel {
 
 		final int margin_right           = scale * 160;
 
-		String header = (cdd.getMonthName() + " " + cdd.getYear());
+		String header = (cdd.getMonthName() + " " + cdd.getYear()); //$NON-NLS-1$
 		int headersize = (int)Math.round(header.length() / 2d);
 
 		int dom = CCDate.getDaysOfMonth(cdd.getMonth(), cdd.getYear());
@@ -283,7 +278,7 @@ public class StatisticsSeriesTimelineCombined extends StatisticsPanel {
 
 			g.setColor(Color.BLACK);
 			g.setFont(new Font("Consolas", Font.PLAIN, fontsize_header)); //$NON-NLS-1$
-			g.drawString(cdd.getMonthName() + " " + cdd.getYear(), outer_line_width + (grid_sidelen - fontsize_header)/2, outer_line_width + (grid_sidelen - (grid_sidelen - fontsize_header)/2));
+			g.drawString(cdd.getMonthName() + " " + cdd.getYear(), outer_line_width + (grid_sidelen - fontsize_header)/2, outer_line_width + (grid_sidelen - (grid_sidelen - fontsize_header)/2)); //$NON-NLS-1$
 
 			g.translate(-outer_offset, -outer_offset);
 
@@ -349,6 +344,7 @@ public class StatisticsSeriesTimelineCombined extends StatisticsPanel {
 		gridData = null;
 	}
 
+	@Override
 	protected void onFilterYearRange(int year) {
 		if (year == yearFilter) return;
 		yearFilter = year;
@@ -356,6 +352,7 @@ public class StatisticsSeriesTimelineCombined extends StatisticsPanel {
 		gridData = null;
 	}
 
+	@Override
 	public void onShow() {
 		if (scrlPane != null) {
 			JScrollBar sb = scrlPane.getVerticalScrollBar();

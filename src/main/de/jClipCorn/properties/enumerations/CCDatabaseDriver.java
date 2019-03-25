@@ -10,7 +10,7 @@ public enum CCDatabaseDriver implements ContinoousEnum<CCDatabaseDriver> {
 	STUB(2), 
 	INMEMORY(3);
 	
-	private final static String NAMES[] = {
+	private final static String[] NAMES = {
 		LocaleBundle.getString("CCDatabaseDriver.DERBY"),   //$NON-NLS-1$
 		LocaleBundle.getString("CCDatabaseDriver.SQLITE"),  //$NON-NLS-1$
 		LocaleBundle.getString("CCDatabaseDriver.STUB"),    //$NON-NLS-1$

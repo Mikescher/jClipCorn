@@ -17,7 +17,7 @@ public enum ExtendedViewedStateType implements ContinoousEnum<ExtendedViewedStat
 	PARTIAL_VIEWED(4),
 	MARKED_FOR_AGAIN(5);
 	
-	private final static String NAMES[] = 
+	private final static String[] NAMES =
 		{ 
 			LocaleBundle.getString("FilterTree.Viewed.Viewed"), 	//$NON-NLS-1$
 			LocaleBundle.getString("FilterTree.Viewed.Unviewed"), 	//$NON-NLS-1$

@@ -10,7 +10,7 @@ public enum UITableBackground implements ContinoousEnum<UITableBackground> {
 	SCORE(2);
 	
 	@SuppressWarnings("nls")
-	private final static String NAMES[] = {
+	private final static String[] NAMES = {
 		LocaleBundle.getString("UITableBackground.Opt0"),
 		LocaleBundle.getString("UITableBackground.Opt1"),
 		LocaleBundle.getString("UITableBackground.Opt2"),

@@ -17,6 +17,7 @@ import javax.net.ssl.X509TrustManager;
  *
  * @author    Francis Labrie
  */
+@SuppressWarnings("deprecation")
 public final class SSLUtilities {
 
 	private static com.sun.net.ssl.HostnameVerifier __hostnameVerifier;
@@ -35,7 +36,7 @@ public final class SSLUtilities {
 		if(__trustManagers == null) __trustManagers = new com.sun.net.ssl.TrustManager[]{new _FakeX509TrustManager()};
 
 		try {
-			context = com.sun.net.ssl.SSLContext.getInstance("SSL");
+			context = com.sun.net.ssl.SSLContext.getInstance("SSL"); //$NON-NLS-1$
 			context.init(null, __trustManagers, new SecureRandom());
 		} catch(GeneralSecurityException gse) {
 			throw new IllegalStateException(gse.getMessage());
@@ -44,7 +45,7 @@ public final class SSLUtilities {
 	}
 
 	private static boolean isDeprecatedSSLProtocol() {
-		return("com.sun.net.ssl.internal.www.protocol".equals(System.getProperty("java.protocol.handler.pkgs")));
+		return("com.sun.net.ssl.internal.www.protocol".equals(System.getProperty("java.protocol.handler.pkgs"))); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	private static void _trustAllHostnames() {
@@ -58,7 +59,7 @@ public final class SSLUtilities {
 		if(_trustManagers == null) _trustManagers = new TrustManager[] {new FakeX509TrustManager()};
 
 		try {
-			context = SSLContext.getInstance("SSL");
+			context = SSLContext.getInstance("SSL"); //$NON-NLS-1$
 			context.init(null, _trustManagers, new SecureRandom());
 		} catch(GeneralSecurityException gse) {
 			throw new IllegalStateException(gse.getMessage());
@@ -85,6 +86,7 @@ public final class SSLUtilities {
 
 	public static class _FakeHostnameVerifier implements com.sun.net.ssl.HostnameVerifier {
 
+		@Override
 		public boolean verify(String hostname, String session) {
 			return(true);
 		}
@@ -94,14 +96,17 @@ public final class SSLUtilities {
 
 		private static final X509Certificate[] _AcceptedIssuers = new X509Certificate[] {};
 
+		@Override
 		public boolean isClientTrusted(X509Certificate[] chain) {
 			return true;
 		}
 
+		@Override
 		public boolean isServerTrusted(X509Certificate[] chain) {
 			return true;
 		}
 
+		@Override
 		public X509Certificate[] getAcceptedIssuers() {
 			return(_AcceptedIssuers);
 		}
@@ -109,6 +114,7 @@ public final class SSLUtilities {
 
 	public static class FakeHostnameVerifier implements HostnameVerifier {
 
+		@Override
 		public boolean verify(String hostname, javax.net.ssl.SSLSession session) {
 			return true;
 		}
@@ -118,14 +124,17 @@ public final class SSLUtilities {
 
 		private static final X509Certificate[] _AcceptedIssuers = new X509Certificate[] {};
 
+		@Override
 		public void checkClientTrusted(X509Certificate[] chain, String authType) {
 			// .
 		}
 
+		@Override
 		public void checkServerTrusted(X509Certificate[] chain, String authType) {
 			// .
 		}
 
+		@Override
 		public X509Certificate[] getAcceptedIssuers() {
 			return(_AcceptedIssuers);
 		}

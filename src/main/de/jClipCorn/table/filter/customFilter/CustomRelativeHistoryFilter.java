@@ -5,25 +5,18 @@ import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.database.databaseElement.CCSeries;
-import de.jClipCorn.database.databaseElement.columnTypes.CCDateTimeList;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.table.filter.AbstractCustomFilter;
 import de.jClipCorn.table.filter.AbstractCustomStructureElementFilter;
 import de.jClipCorn.table.filter.filterConfig.CustomFilterBoolConfig;
 import de.jClipCorn.table.filter.filterConfig.CustomFilterConfig;
-import de.jClipCorn.table.filter.filterConfig.CustomFilterDateSearchConfig;
 import de.jClipCorn.table.filter.filterConfig.CustomFilterIntAreaConfig;
 import de.jClipCorn.table.filter.filterSerialization.FilterSerializationConfig;
 import de.jClipCorn.util.DecimalSearchType;
 import de.jClipCorn.util.datatypes.CCIntArea;
 import de.jClipCorn.util.datetime.CCDate;
-import de.jClipCorn.util.datetime.CCDateSearchParameter;
 import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.stream.CCStream;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class CustomRelativeHistoryFilter extends AbstractCustomStructureElementFilter {
 	private CCIntArea Search = new CCIntArea(1, 1, DecimalSearchType.EXACT);

@@ -2,8 +2,6 @@ package de.jClipCorn.database.databaseElement;
 
 import java.io.File;
 import java.sql.Date;
-import java.text.DecimalFormat;
-
 import org.jdom2.Element;
 
 import de.jClipCorn.database.databaseElement.columnTypes.CCDateTimeList;

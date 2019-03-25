@@ -1,26 +1,5 @@
 package de.jClipCorn.gui.log;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.RandomAccessFile;
-import java.lang.reflect.InvocationTargetException;
-import java.util.List;
-import java.util.Vector;
-
-import javax.swing.SwingUtilities;
-
-import de.jClipCorn.gui.frames.mainFrame.MainFrame;
-import de.jClipCorn.gui.guiComponents.DatabaseElementPreviewLabel;
-import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.properties.CCProperties;
-import de.jClipCorn.util.datetime.CCDate;
-import de.jClipCorn.util.helper.ApplicationHelper;
-import de.jClipCorn.util.helper.DialogHelper;
-
 public class CCLog {
 	
 	public static void initUnitTestMode() {
@@ -109,10 +88,6 @@ public class CCLog {
 		CCLogInternal.addDebug(msg);
 	}
 
-	private static void fatalabort() {
-		CCLogInternal.fatalabort();
-	}
-	
 	public static void addChangeListener (CCLogChangedListener lst) {
 		CCLogInternal.addChangeListener(lst);
 	}

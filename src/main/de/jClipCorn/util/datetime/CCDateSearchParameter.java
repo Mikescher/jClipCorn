@@ -14,7 +14,7 @@ public class CCDateSearchParameter {
 		CONTAINS_NOT_BETWEEEN(3),  // contains no value between [A] and [B]
 		CONTAINS_ONLY_BETWEEN(4);  // all values are between [A] and [B]
 
-		private final static String NAMES[] = { "CONTAINS", "CONTAINS_NOT", "CONTAINS_BETWEEN", "CONTAINS_NOT_BETWEEEN", "CONTAINS_ONLY_BETWEEN" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+		private final static String[] NAMES = { "CONTAINS", "CONTAINS_NOT", "CONTAINS_BETWEEN", "CONTAINS_NOT_BETWEEEN", "CONTAINS_ONLY_BETWEEN" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 
 		private final int id;
 

@@ -127,7 +127,7 @@ public class DriveMap {
 			fstores = ApplicationHelper.isWindows() ? CCStreams.iterate(FileSystems.getDefault().getFileStores()).enumerate() : new ArrayList<>();
 		} catch (Exception e) {
 			fstores = new ArrayList<>();
-			CCLog.addWarning(LocaleBundle.getFormattedString("LogMessage.CouldNotEnumerateFileStores", e));
+			CCLog.addWarning(LocaleBundle.getFormattedString("LogMessage.CouldNotEnumerateFileStores", e)); //$NON-NLS-1$
 		}
 
 		for (File root : File.listRoots()) {
@@ -138,7 +138,7 @@ public class DriveMap {
 
 				if (!ApplicationHelper.isWindows()) net = Str.Empty;
 				if (Str.isNullOrWhitespace(net)) net = Str.Empty;
-				if (!net.startsWith("\\\\")) net = Str.Empty;
+				if (!net.startsWith("\\\\")) net = Str.Empty; //$NON-NLS-1$
 
 				threadDriveMap.put(letter, Tuple.Create(drive, net));
 				threadDriveLabelToLetterMap.put(cleanDriveName(drive), letter);
@@ -173,7 +173,7 @@ public class DriveMap {
 				fstores = ApplicationHelper.isWindows() ? CCStreams.iterate(FileSystems.getDefault().getFileStores()).enumerate() : new ArrayList<>();
 			} catch (Exception e) {
 				fstores = new ArrayList<>();
-				CCLog.addWarning(LocaleBundle.getFormattedString("LogMessage.CouldNotEnumerateFileStores", e));
+				CCLog.addWarning(LocaleBundle.getFormattedString("LogMessage.CouldNotEnumerateFileStores", e)); //$NON-NLS-1$
 			}
 
 			for (File root : File.listRoots()) {
@@ -184,7 +184,7 @@ public class DriveMap {
 
 					if (!ApplicationHelper.isWindows()) net = Str.Empty;
 					if (Str.isNullOrWhitespace(net)) net = Str.Empty;
-					if (!net.startsWith("\\\\")) net = Str.Empty;
+					if (!net.startsWith("\\\\")) net = Str.Empty; //$NON-NLS-1$
 
 					threadDriveMap.put(letter, Tuple.Create(drive, net));
 					threadDriveLabelToLetterMap.put(cleanDriveName(drive), letter);
@@ -201,7 +201,7 @@ public class DriveMap {
 			triggerOnChanged();
 
 			long delta = System.currentTimeMillis() - startTime;
-			CCLog.addInformation(LocaleBundle.getFormattedString("LogMessage.DriveMapRescan", delta));
+			CCLog.addInformation(LocaleBundle.getFormattedString("LogMessage.DriveMapRescan", delta)); //$NON-NLS-1$
 		} finally {
 			is_rescanning = false;
 
@@ -284,18 +284,18 @@ public class DriveMap {
 
 			triggerOnChanged();
 
-			new Thread(DriveMap::updateMap, "THREAD_RESCAN_FILESYSTEM").start();
+			new Thread(DriveMap::updateMap, "THREAD_RESCAN_FILESYSTEM").start(); //$NON-NLS-1$
 		}
 
 	}
 
 	public static String getStatus()
 	{
-		if (! is_created)  return LocaleBundle.getString("DriveMap.Status.NotCreated");
-		if (is_creating)   return LocaleBundle.getString("DriveMap.Status.Creating");
-		if (is_rescanning) return LocaleBundle.getString("DriveMap.Status.Rescanning");
+		if (! is_created)  return LocaleBundle.getString("DriveMap.Status.NotCreated"); //$NON-NLS-1$
+		if (is_creating)   return LocaleBundle.getString("DriveMap.Status.Creating"); //$NON-NLS-1$
+		if (is_rescanning) return LocaleBundle.getString("DriveMap.Status.Rescanning"); //$NON-NLS-1$
 
-		return LocaleBundle.getString("DriveMap.Status.Idle");
+		return LocaleBundle.getString("DriveMap.Status.Idle"); //$NON-NLS-1$
 	}
 
 	public static List<Tuple3<Character, String, String>> getCopy() {

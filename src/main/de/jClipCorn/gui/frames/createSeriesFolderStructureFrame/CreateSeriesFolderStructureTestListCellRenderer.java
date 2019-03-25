@@ -6,7 +6,6 @@ import java.awt.Component;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JList;
 
-import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.formatter.PathFormatter;
 
 public class CreateSeriesFolderStructureTestListCellRenderer extends DefaultListCellRenderer {

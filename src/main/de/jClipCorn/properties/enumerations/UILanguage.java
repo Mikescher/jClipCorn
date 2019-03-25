@@ -11,7 +11,7 @@ public enum UILanguage implements ContinoousEnum<UILanguage> {
 	ENGLISCH(3);
 	
 	@SuppressWarnings("nls")
-	private final static String NAMES[] = {
+	private final static String[] NAMES = {
 		LocaleBundle.getString("UILanguage.Opt0"),
 		LocaleBundle.getString("UILanguage.Opt1"),
 		LocaleBundle.getString("UILanguage.Opt2"),

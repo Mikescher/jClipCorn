@@ -94,6 +94,7 @@ public class FileDrop {
 
 		if (supportsDnD()) {
 			dropListener = new java.awt.dnd.DropTargetListener() {
+				@Override
 				public void dragEnter(java.awt.dnd.DropTargetDragEvent evt) {
 					log(out, "FileDrop: dragEnter event.");
 
@@ -114,10 +115,13 @@ public class FileDrop {
 					}
 				}
 
+				@Override
 				public void dragOver(java.awt.dnd.DropTargetDragEvent evt) {
 					// over the drag target.
 				}
 
+				@Override
+				@SuppressWarnings("rawtypes")
 				public void drop(java.awt.dnd.DropTargetDropEvent evt) {
 					log(out, "FileDrop: drop event.");
 					try {
@@ -183,6 +187,7 @@ public class FileDrop {
 					}
 				}
 
+				@Override
 				public void dragExit(java.awt.dnd.DropTargetEvent evt) {
 					log(out, "FileDrop: dragExit event.");
 
@@ -193,6 +198,7 @@ public class FileDrop {
 					}
 				}
 
+				@Override
 				public void dropActionChanged(java.awt.dnd.DropTargetDragEvent evt) {
 					log(out, "FileDrop: dropActionChanged event.");
 
@@ -217,7 +223,7 @@ public class FileDrop {
 		if (supportsDnD == null) {
 			boolean support = false;
 			try {
-				Class arbitraryDndClass = Class.forName("java.awt.dnd.DnDConstants");
+				Class<?> arbitraryDndClass = Class.forName("java.awt.dnd.DnDConstants");
 				support = true;
 			}
 			catch (Exception e) {
@@ -340,6 +346,8 @@ public class FileDrop {
 	}
 
 	public static class Event extends java.util.EventObject {
+		private static final long serialVersionUID = -518804634017703480L;
+		
 		private java.io.File[] files;
 
 		public Event(java.io.File[] files, Object source) {
@@ -371,7 +379,7 @@ public class FileDrop {
 			this.fetcher = fetcher;
 		}
 
-		public TransferableObject(Class dataClass, Fetcher fetcher) {
+		public TransferableObject(Class<?> dataClass, Fetcher fetcher) {
 			this.fetcher = fetcher;
 			this.customFlavor = new java.awt.datatransfer.DataFlavor(dataClass, MIME_TYPE);
 		}
@@ -380,6 +388,7 @@ public class FileDrop {
 			return customFlavor;
 		}
 
+		@Override
 		public java.awt.datatransfer.DataFlavor[] getTransferDataFlavors() {
 			if (customFlavor != null)
 				return new DataFlavor[] {customFlavor, DATA_FLAVOR, DataFlavor.stringFlavor };
@@ -387,6 +396,7 @@ public class FileDrop {
 				return new DataFlavor[] { DATA_FLAVOR, DataFlavor.stringFlavor };
 		}
 
+		@Override
 		public Object getTransferData(java.awt.datatransfer.DataFlavor flavor) throws java.awt.datatransfer.UnsupportedFlavorException {
 			if (flavor.equals(DATA_FLAVOR)) return fetcher == null ? data : fetcher.getObject();
 
@@ -395,6 +405,7 @@ public class FileDrop {
 			throw new java.awt.datatransfer.UnsupportedFlavorException(flavor);
 		}
 
+		@Override
 		public boolean isDataFlavorSupported(java.awt.datatransfer.DataFlavor flavor) {
 			if (flavor.equals(DATA_FLAVOR)) return true;
 

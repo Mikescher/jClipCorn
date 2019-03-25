@@ -4,8 +4,6 @@ import javax.swing.SwingUtilities;
 
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.gui.frames.mainFrame.MainFrame;
-import de.jClipCorn.gui.frames.statisticsFrame.StatisticsFrame;
-import de.jClipCorn.gui.frames.statisticsFrame.charts.StatisticsSeriesTimelineCombined;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.gui.log.ExceptionHandler;

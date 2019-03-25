@@ -20,7 +20,6 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCQuality;
 import de.jClipCorn.database.databaseElement.columnTypes.CCTagList;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
-import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.DriveMap;
 import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.formatter.FileSizeFormatter;

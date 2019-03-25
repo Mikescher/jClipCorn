@@ -5,7 +5,6 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.KeyEventDispatcher;
 import java.awt.KeyboardFocusManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -13,7 +12,6 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -69,7 +67,6 @@ import de.jClipCorn.util.helper.FileChooserHelper;
 import de.jClipCorn.util.helper.ImageUtilities;
 import de.jClipCorn.util.helper.SimpleFileUtils;
 import de.jClipCorn.util.http.HTTPUtilities;
-import de.jClipCorn.util.listener.EpisodeSearchCallbackListener;
 import de.jClipCorn.util.listener.UpdateCallbackListener;
 
 public class PreviewSeriesFrame extends JFrame implements ListSelectionListener, JCoverChooserPopupEvent, UpdateCallbackListener, FileDrop.Listener {

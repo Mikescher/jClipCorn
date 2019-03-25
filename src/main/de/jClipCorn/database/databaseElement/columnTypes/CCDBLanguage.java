@@ -16,7 +16,7 @@ public enum CCDBLanguage implements ContinoousEnum<CCDBLanguage> {
 	FRENCH(3),
 	JAPANESE(4);
 
-	private final static String NAMES[] = {
+	private final static String[] NAMES = {
 		LocaleBundle.getString("CCMovieLanguage.German"),   //$NON-NLS-1$
 		LocaleBundle.getString("CCMovieLanguage.English"),  //$NON-NLS-1$
 		LocaleBundle.getString("CCMovieLanguage.Muted"),    //$NON-NLS-1$

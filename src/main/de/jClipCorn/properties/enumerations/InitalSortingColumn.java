@@ -10,7 +10,7 @@ public enum InitalSortingColumn implements ContinoousEnum<InitalSortingColumn> {
 	ADDDATE(2);
 	
 	@SuppressWarnings("nls")
-	private final static String NAMES[] = {
+	private final static String[] NAMES = {
 		LocaleBundle.getString("ClipTableModel.LocalID"),
 		LocaleBundle.getString("ClipTableModel.Title"),
 		LocaleBundle.getString("ClipTableModel.Added"),

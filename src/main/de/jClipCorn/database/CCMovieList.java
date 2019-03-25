@@ -13,7 +13,6 @@ import java.util.Vector;
 
 import javax.swing.SwingUtilities;
 
-import de.jClipCorn.util.helper.SwingUtils;
 import de.jClipCorn.util.lambda.Func0to0;
 import org.jdom2.Document;
 import org.jdom2.Element;

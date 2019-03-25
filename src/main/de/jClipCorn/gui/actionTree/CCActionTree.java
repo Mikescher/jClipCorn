@@ -135,13 +135,13 @@ public class CCActionTree extends UIActionTree{
 			
 			CCActionElement series = addMaster("Serien", null, "ClipMenuBar.Series", null);
 			{
-				add(series, "PrevSeries",               KS_ENTER,        "ClipMenuBar.Series.Preview",              Resources.ICN_MENUBAR_PREVIEW_SER,           true,  this::onClickSeriesPreview);
+				add(series, "PrevSeries",               KS_ENTER,        "ClipMenuBar.Series.Preview",              Resources.ICN_MENUBAR_PREVIEW_SER,           false, this::onClickSeriesPreview);
 				add(series, "AddSeries",                KS_CTRL_SHIFT_I, "ClipMenuBar.Series.Add",                  Resources.ICN_MENUBAR_ADD_SER,               true,  this::onClickSeriesAdd);
 				add(series, "EditSeries",               KS_CTRL_E,       "ClipMenuBar.Series.Edit",                 Resources.ICN_MENUBAR_EDIT_SER,              true,  this::onClickSeriesEdit);
 				add(series, "AddSeason",                null,            "ClipMenuBar.Series.AddSeason",            Resources.ICN_MENUBAR_ADD_SEA,               true,  this::onClickSeasonAdd);
-				add(series, "OpenLastPlayedSeries",     null,            "ClipMenuBar.Series.OpenLastPlayedSeries", Resources.ICN_MENUBAR_OPENLASTSERIES,        true,  this::onClickSeasonOpenLast);
-				add(series, "ExportSingleSeries",       null,            "ClipMenuBar.Series.ExportSingle",         Resources.ICN_MENUBAR_EXPORTSERIES,          true,  this::onClickSeriesExportSingle);
-				add(series, "AddSeriesToExportList",    KS_CTRL_S,       "ClipMenuBar.Series.ExportMultiple",       Resources.ICN_MENUBAR_EXPORTELEMENTS,        true,  this::onClickSeriesAddToExportList);
+				add(series, "OpenLastPlayedSeries",     null,            "ClipMenuBar.Series.OpenLastPlayedSeries", Resources.ICN_MENUBAR_OPENLASTSERIES,        false, this::onClickSeasonOpenLast);
+				add(series, "ExportSingleSeries",       null,            "ClipMenuBar.Series.ExportSingle",         Resources.ICN_MENUBAR_EXPORTSERIES,          false, this::onClickSeriesExportSingle);
+				add(series, "AddSeriesToExportList",    KS_CTRL_S,       "ClipMenuBar.Series.ExportMultiple",       Resources.ICN_MENUBAR_EXPORTELEMENTS,        false, this::onClickSeriesAddToExportList);
 				add(series, "ImportSingleSeries",       null,            "ClipMenuBar.Series.ImportSingle",         Resources.ICN_MENUBAR_IMPORTSERIES,          true,  this::onClickSeriesImportSingle);
 				add(series, "SaveTXTEpisodeguide",      null,            "ClipMenuBar.Series.SaveTXTEpisodeguide",  Resources.ICN_MENUBAR_EPISODEGUIDE,          false, this::onClickSeriesCreateTXTEpisodeguide);
 				add(series, "MoveSeries",               null,            "ClipMenuBar.Series.MoveSeries",           Resources.ICN_MENUBAR_MOVESERIES,            true,  this::onClickSeriesMove);

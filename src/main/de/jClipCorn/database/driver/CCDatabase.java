@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -252,7 +253,7 @@ public class CCDatabase {
 		return db.getRowCount(TAB_MAIN);
 	}
 
-	private CCDatabaseElement createDatabaseElementFromDatabase(ResultSet rs, CCMovieList ml) throws SQLException, CCFormatException {
+	private CCDatabaseElement createDatabaseElementFromDatabase(ResultSet rs, CCMovieList ml, boolean fillSeries) throws SQLException, CCFormatException {
 		if (rs.getInt(TAB_MAIN_COLUMN_TYPE) == CCDBElementTyp.MOVIE.asInt()) {
 			CCMovie mov = new CCMovie(ml, rs.getInt(TAB_MAIN_COLUMN_LOCALID));
 
@@ -274,13 +275,13 @@ public class CCDatabase {
 
 			ser.abortUpdating();
 
-			fillSeries(ser);
+			if (fillSeries) fillSeries(ser);
 
 			return ser;
 		}
 	}
 
-	private CCSeason createSeasonFromDatabase(ResultSet rs, CCSeries ser) throws SQLException {
+	private CCSeason createSeasonFromDatabase(ResultSet rs, CCSeries ser, boolean fillSeason) throws SQLException {
 		CCSeason seas = new CCSeason(ser, rs.getInt(TAB_SEASONS_COLUMN_SEASONID));
 
 		seas.beginUpdating();
@@ -289,7 +290,7 @@ public class CCDatabase {
 
 		seas.abortUpdating();
 
-		fillSeason(seas);
+		if (fillSeason) fillSeason(seas);
 
 		return seas;
 	}
@@ -796,7 +797,9 @@ public class CCDatabase {
 	}
 
 	public void fillMovieList(CCMovieList ml) {
-		try {
+		try
+		{
+			// GROUPS
 			{
 				PreparedStatement s = Statements.selectGroupsStatement;
 				s.clearParameters();
@@ -818,26 +821,85 @@ public class CCDatabase {
 				
 				rs.close();
 			}
-			
+
+			if (CCProperties.getInstance().PROP_LOADING_LIVEUPDATE.getValue())
 			{
-				PreparedStatement s = Statements.selectMainTabStatement;
+				PreparedStatement s = Statements.selectAllMainTabStatement;
 				s.clearParameters();
-				
+
 				ResultSet rs = s.executeQuery();
-				
-				if (CCProperties.getInstance().PROP_LOADING_LIVEUPDATE.getValue()) {
-					while (rs.next()) {
-						ml.directlyInsert(createDatabaseElementFromDatabase(rs, ml));
-					}
-				} else {
+
+				while (rs.next()) ml.directlyInsert(createDatabaseElementFromDatabase(rs, ml, true));
+
+				rs.close();
+			}
+			else
+			{
+				HashMap<Integer, CCSeries> seriesMap = new HashMap<>();
+
+				// MOVIES & SERIES
+				{
+					PreparedStatement s = Statements.selectAllMainTabStatement;
+					s.clearParameters();
+
+					ResultSet rs = s.executeQuery();
+
 					List<CCDatabaseElement> temp = new ArrayList<>();
 					while (rs.next()) {
-						temp.add(createDatabaseElementFromDatabase(rs, ml));
+						CCDatabaseElement de = createDatabaseElementFromDatabase(rs, ml, false);
+						temp.add(de);
+						if (de.getClass() == CCSeries.class) seriesMap.put(de.getSeriesID(), (CCSeries) de);
 					}
 					ml.directlyInsert(temp);
+
+					rs.close();
 				}
-				
-				rs.close();
+
+				HashMap<Integer, CCSeason> seasonMap = new HashMap<>();
+
+				// SEASONS
+				{
+					PreparedStatement s = Statements.selectAllSeasonTabStatement;
+					s.clearParameters();
+
+					CCSeries lastSeries = null;
+
+					ResultSet rs = s.executeQuery();
+					while (rs.next()) {
+						int sid = rs.getInt(TAB_SEASONS_COLUMN_SERIESID);
+						CCSeries ser = lastSeries;
+						if (ser == null || ser.getSeriesID() != sid) ser = seriesMap.get(sid);
+						lastSeries = ser;
+
+						ser.beginUpdating();
+						CCSeason season = createSeasonFromDatabase(rs, ser, false);
+						ser.directlyInsertSeason(season);
+						seasonMap.put(season.getSeasonID(), season);
+						ser.abortUpdating();
+					}
+					rs.close();
+				}
+
+				// EPISODES
+				{
+					PreparedStatement s = Statements.selectAllEpisodeTabStatement;
+					s.clearParameters();
+
+					CCSeason lastSeason = null;
+
+					ResultSet rs = s.executeQuery();
+					while (rs.next()) {
+						int sid = rs.getInt(TAB_EPISODES_COLUMN_SEASONID);
+						CCSeason sea = lastSeason;
+						if (sea == null || sea.getSeasonID() != sid) sea = seasonMap.get(sid);
+						lastSeason = sea;
+
+						sea.beginUpdating();
+						sea.directlyInsertEpisode(createEpisodeFromDatabase(rs, sea));
+						sea.abortUpdating();
+					}
+					rs.close();
+				}
 			}
 		} catch (SQLException | CCFormatException e) {
 			CCLog.addError(e);
@@ -856,7 +918,7 @@ public class CCDatabase {
 			ser.beginUpdating();
 
 			while (rs.next()) {
-				ser.directlyInsertSeason(createSeasonFromDatabase(rs, ser));
+				ser.directlyInsertSeason(createSeasonFromDatabase(rs, ser, true));
 			}
 
 			ser.abortUpdating();

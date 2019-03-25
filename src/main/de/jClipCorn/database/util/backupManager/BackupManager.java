@@ -54,14 +54,7 @@ public class BackupManager {
 	}
 
 	private File[] getArchiveFiles() {
-		File[] result = getBackupDirectory().listFiles(new FileFilter() {
-			@Override
-			public boolean accept(File f) {
-				return PathFormatter.getExtension(f.getAbsolutePath()).equalsIgnoreCase(ExportHelper.EXTENSION_BACKUP);
-			}
-		});
-
-		return result;
+		return getBackupDirectory().listFiles(f -> PathFormatter.getExtension(f.getAbsolutePath()).equalsIgnoreCase(ExportHelper.EXTENSION_BACKUP));
 	}
 
 	private void initBackupsList() {
@@ -74,10 +67,6 @@ public class BackupManager {
 				CCBackup backup = new CCBackup(f);
 
 				backuplist.add(backup);
-			} catch (IOException e) {
-				CCLog.addError(LocaleBundle.getFormattedString("LogMessage.ErrorInitBackupList", f.getName()), e); //$NON-NLS-1$
-			} catch (UnsupportedOperationException e) {
-				CCLog.addError(LocaleBundle.getFormattedString("LogMessage.ErrorInitBackupList", f.getName()), e); //$NON-NLS-1$
 			} catch (Exception e) {
 				CCLog.addError(LocaleBundle.getFormattedString("LogMessage.ErrorInitBackupList", f.getName()), e); //$NON-NLS-1$
 			}
@@ -159,7 +148,7 @@ public class BackupManager {
 		createBackupInternal(name, CCDate.getCurrentDate(), false, Main.VERSION, Main.DBVERSION, new ProgressCallbackSink(), true);
 	}
 
-	public void createBackup(Component c, String name, CCDate date, boolean persistent, String jccversion, String dbversion) {
+	private void createBackup(Component c, String name, CCDate date, boolean persistent, String jccversion, String dbversion) {
 		if (CCProperties.getInstance().ARG_READONLY) {
 			CCLog.addInformation(LocaleBundle.getString("LogMessage.OperationFailedDueToReadOnly")); //$NON-NLS-1$
 			return;

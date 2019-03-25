@@ -29,7 +29,10 @@ public class Statements {
 	public static PreparedStatement updateSeasonTabStatement;
 	public static PreparedStatement updateEpisodeTabStatement;
 	
-	public static PreparedStatement selectMainTabStatement;
+	public static PreparedStatement selectAllMainTabStatement;
+	public static PreparedStatement selectAllSeasonTabStatement;
+	public static PreparedStatement selectAllEpisodeTabStatement;
+
 	public static PreparedStatement selectSeasonTabStatement;
 	public static PreparedStatement selectEpisodeTabStatement;
 	
@@ -102,8 +105,11 @@ public class Statements {
 			TryClose(updateSeriesTabStatement);
 			TryClose(updateSeasonTabStatement);
 			TryClose(updateEpisodeTabStatement);
-					
-			TryClose(selectMainTabStatement);
+
+			TryClose(selectAllMainTabStatement);
+			TryClose(selectAllSeasonTabStatement);
+			TryClose(selectAllEpisodeTabStatement);
+
 			TryClose(selectSeasonTabStatement);
 			TryClose(selectEpisodeTabStatement);
 					
@@ -296,12 +302,30 @@ public class Statements {
 	}
 	
 	private static void intialize_selectMainTab(CCDatabase d) throws SQLException {
-		SQLSelectHelper sh = new SQLSelectHelper(CCDatabase.TAB_MAIN);
-		
-		sh.setOrderBy(CCDatabase.TAB_MAIN_COLUMN_LOCALID);
-		sh.setOrder(SQLOrder.ASC);		
-		
-		selectMainTabStatement = sh.prepare(d);
+		{
+			SQLSelectHelper sh = new SQLSelectHelper(CCDatabase.TAB_MAIN);
+
+			sh.setOrderBy(CCDatabase.TAB_MAIN_COLUMN_LOCALID);
+			sh.setOrder(SQLOrder.ASC);
+
+			selectAllMainTabStatement = sh.prepare(d);
+		}
+		{
+			SQLSelectHelper sh = new SQLSelectHelper(CCDatabase.TAB_SEASONS);
+
+			sh.setOrderBy(CCDatabase.TAB_SEASONS_COLUMN_SERIESID);
+			sh.setOrder(SQLOrder.ASC);
+
+			selectAllSeasonTabStatement = sh.prepare(d);
+		}
+		{
+			SQLSelectHelper sh = new SQLSelectHelper(CCDatabase.TAB_EPISODES);
+
+			sh.setOrderBy(CCDatabase.TAB_EPISODES_COLUMN_SEASONID);
+			sh.setOrder(SQLOrder.ASC);
+
+			selectAllEpisodeTabStatement = sh.prepare(d);
+		}
 	}
 	
 	private static void intialize_selectSeasonTab(CCDatabase d) throws SQLException {

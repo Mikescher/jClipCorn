@@ -258,35 +258,38 @@ public class Resources {
 
 	
 	// ##############################################  <LOG>  ################################################
-	public final static MultiIconRef ICN_REF_0				= registerMultisizeIcon("/icons/onlineReferences/ref0.png");
-	public final static IconRef ICN_REF_0_BUTTON			= registerOtherIcon("/icons/onlineReferences/ref0_large.png");
+	public final static MultiIconRef ICN_REF_00				= registerMultisizeIcon("/icons/onlineReferences/ref00.png");
+	public final static IconRef ICN_REF_00_BUTTON			= registerOtherIcon("/icons/onlineReferences/ref00_large.png");
 	
-	public final static MultiIconRef ICN_REF_1				= registerMultisizeIcon("/icons/onlineReferences/ref1.png");
-	public final static IconRef ICN_REF_1_BUTTON			= registerOtherIcon("/icons/onlineReferences/ref1_large.png");
+	public final static MultiIconRef ICN_REF_01				= registerMultisizeIcon("/icons/onlineReferences/ref01.png");
+	public final static IconRef ICN_REF_01_BUTTON			= registerOtherIcon("/icons/onlineReferences/ref01_large.png");
 	
-	public final static MultiIconRef ICN_REF_2				= registerMultisizeIcon("/icons/onlineReferences/ref2.png");
-	public final static IconRef ICN_REF_2_BUTTON			= registerOtherIcon("/icons/onlineReferences/ref2_large.png");
+	public final static MultiIconRef ICN_REF_02				= registerMultisizeIcon("/icons/onlineReferences/ref02.png");
+	public final static IconRef ICN_REF_02_BUTTON			= registerOtherIcon("/icons/onlineReferences/ref02_large.png");
 	
-	public final static MultiIconRef ICN_REF_3				= registerMultisizeIcon("/icons/onlineReferences/ref3.png");
-	public final static IconRef ICN_REF_3_BUTTON			= registerOtherIcon("/icons/onlineReferences/ref3_large.png");
+	public final static MultiIconRef ICN_REF_03				= registerMultisizeIcon("/icons/onlineReferences/ref03.png");
+	public final static IconRef ICN_REF_03_BUTTON			= registerOtherIcon("/icons/onlineReferences/ref03_large.png");
 	
-	public final static MultiIconRef ICN_REF_4				= registerMultisizeIcon("/icons/onlineReferences/ref4.png");
-	public final static IconRef ICN_REF_4_BUTTON			= registerOtherIcon("/icons/onlineReferences/ref4_large.png");
+	public final static MultiIconRef ICN_REF_04				= registerMultisizeIcon("/icons/onlineReferences/ref04.png");
+	public final static IconRef ICN_REF_04_BUTTON			= registerOtherIcon("/icons/onlineReferences/ref04_large.png");
 	
-	public final static MultiIconRef ICN_REF_5				= registerMultisizeIcon("/icons/onlineReferences/ref5.png");
-	public final static IconRef ICN_REF_5_BUTTON			= registerOtherIcon("/icons/onlineReferences/ref5_large.png");
+	public final static MultiIconRef ICN_REF_05				= registerMultisizeIcon("/icons/onlineReferences/ref05.png");
+	public final static IconRef ICN_REF_05_BUTTON			= registerOtherIcon("/icons/onlineReferences/ref05_large.png");
 	
-	public final static MultiIconRef ICN_REF_6				= registerMultisizeIcon("/icons/onlineReferences/ref6.png");
-	public final static IconRef ICN_REF_6_BUTTON			= registerOtherIcon("/icons/onlineReferences/ref6_large.png");
+	public final static MultiIconRef ICN_REF_06				= registerMultisizeIcon("/icons/onlineReferences/ref06.png");
+	public final static IconRef ICN_REF_06_BUTTON			= registerOtherIcon("/icons/onlineReferences/ref06_large.png");
 	
-	public final static MultiIconRef ICN_REF_7				= registerMultisizeIcon("/icons/onlineReferences/ref7.png");
-	public final static IconRef ICN_REF_7_BUTTON			= registerOtherIcon("/icons/onlineReferences/ref7_large.png");
+	public final static MultiIconRef ICN_REF_07				= registerMultisizeIcon("/icons/onlineReferences/ref07.png");
+	public final static IconRef ICN_REF_07_BUTTON			= registerOtherIcon("/icons/onlineReferences/ref07_large.png");
 	
-	public final static MultiIconRef ICN_REF_8				= registerMultisizeIcon("/icons/onlineReferences/ref8.png");
-	public final static IconRef ICN_REF_8_BUTTON			= registerOtherIcon("/icons/onlineReferences/ref8_large.png");
-	
-	public final static MultiIconRef ICN_REF_9				= registerMultisizeIcon("/icons/onlineReferences/ref9.png");
-	public final static IconRef ICN_REF_9_BUTTON			= registerOtherIcon("/icons/onlineReferences/ref9_large.png");
+	public final static MultiIconRef ICN_REF_08				= registerMultisizeIcon("/icons/onlineReferences/ref08.png");
+	public final static IconRef ICN_REF_08_BUTTON			= registerOtherIcon("/icons/onlineReferences/ref08_large.png");
+
+	public final static MultiIconRef ICN_REF_09				= registerMultisizeIcon("/icons/onlineReferences/ref09.png");
+	public final static IconRef ICN_REF_09_BUTTON			= registerOtherIcon("/icons/onlineReferences/ref09_large.png");
+
+	public final static MultiIconRef ICN_REF_10				= registerMultisizeIcon("/icons/onlineReferences/ref10.png");
+	public final static IconRef ICN_REF_10_BUTTON			= registerOtherIcon("/icons/onlineReferences/ref10_large.png");
 	// ###############################################  </LOG>  ##############################################
 	
 	

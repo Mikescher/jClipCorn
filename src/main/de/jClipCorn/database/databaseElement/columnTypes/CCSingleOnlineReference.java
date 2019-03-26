@@ -5,6 +5,7 @@ import javax.swing.Icon;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.CCSeries;
+import de.jClipCorn.database.util.CCOnlineRefTypeHelper;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.online.metadata.Metadataparser;
 import de.jClipCorn.online.metadata.anilist.AniListParser;
@@ -111,36 +112,7 @@ public class CCSingleOnlineReference {
 
 	@SuppressWarnings("nls")
 	public String getURL() {
-		BrowserLanguage lang = CCProperties.getInstance().PROP_TMDB_LANGUAGE.getValue();
-		
-		switch (type) {
-		case NONE:
-			return null;
-		case IMDB:
-			return "https://www.imdb.com/title/" + id;
-		case AMAZON:
-			return "https://www.amazon.com/dp/" + id;
-		case MOVIEPILOT:
-			return "https://www.moviepilot.de/" + id;
-		case THEMOVIEDB:
-			if (lang == BrowserLanguage.ENGLISH)
-				return "https://www.themoviedb.org/" + id;
-			else
-				return "https://www.themoviedb.org/" + id + "?language=" + lang.asDinIsoID();
-		case PROXERME:
-			return "https://proxer.me/info/" + id;
-		case MYANIMELIST:
-			return "https://myanimelist.net/anime/" + id + "/";
-		case ANILIST:
-			return "https://anilist.co/anime/" + id + "/";
-		case ANIMEPLANET:
-			return "https://www.anime-planet.com/anime/" + id;
-		case KITSU:
-			return "https://kitsu.io/anime/" + id;
-		default:
-			CCLog.addDefaultSwitchError(this, this);
-			return null;
-		}
+		return CCOnlineRefTypeHelper.getURL(this);
 	}
 
 	public Icon getIcon() {

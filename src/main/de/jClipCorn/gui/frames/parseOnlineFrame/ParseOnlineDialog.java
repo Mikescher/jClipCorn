@@ -379,7 +379,7 @@ public class ParseOnlineDialog extends JDialog {
 		cbCover.setBounds(6, 157, 21, 23);
 		pnlMain.add(cbCover);
 		
-		btnRef = new JButton(CachedResourceLoader.getIcon(Resources.ICN_REF_0_BUTTON));
+		btnRef = new JButton(CachedResourceLoader.getIcon(Resources.ICN_REF_00_BUTTON));
 		btnRef.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -478,7 +478,7 @@ public class ParseOnlineDialog extends JDialog {
 		cbxGenre6.setSelectedIndex(-1);
 		cbxGenre7.setSelectedIndex(-1);
 		
-		btnRef.setIcon(CachedResourceLoader.getIcon(Resources.ICN_REF_0_BUTTON));
+		btnRef.setIcon(CachedResourceLoader.getIcon(Resources.ICN_REF_00_BUTTON));
 	}
 	
 	private void resetCheckboxes() {

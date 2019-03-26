@@ -186,5 +186,3 @@ public class Main {
 
 //TODO localsync: also autosave to dropbox (or directly sync with server??)
 //     php viewer: view synced data online with webpage(read-only) 
-
-//TODO add support for [[ https://anidb.net ]]

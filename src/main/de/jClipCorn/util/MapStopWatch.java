@@ -10,6 +10,8 @@ import de.jClipCorn.util.lambda.Func2to0;
 @SuppressWarnings("nls")
 public class MapStopWatch {
 
+	public enum TimerState { NotFound, Running, Finished }
+
 	private Map<Integer, Tuple<Long, Boolean>> watches = new HashMap<>();
 	private Func2to0<Integer, Long> event_timerStop = (id, time) -> {/**/};
 	
@@ -18,6 +20,8 @@ public class MapStopWatch {
 			CCLog.addDebug("MapStopWatch.start() called for already existing value for " + id);
 			return;
 		}
+
+		//CCLog.addDebug("Start Timer ["+id+"]");
 		
 		watches.put(id, Tuple.Create(System.currentTimeMillis(), false));
 	}
@@ -40,6 +44,8 @@ public class MapStopWatch {
 		watches.put(id, curr);
 		
 		event_timerStop.invoke(id, curr.Item1);
+
+		//CCLog.addDebug("Stop Timer ["+id+"] with "+curr.Item1+"ms");
 		
 		return curr.Item1;
 	}
@@ -92,8 +98,10 @@ public class MapStopWatch {
 		event_timerStop = evt;
 	}
 
-	public boolean contains(int id) {
+	public TimerState contains(int id) {
 		Tuple<Long, Boolean> v = watches.get(id);
-		return v != null && v.Item2;
+		if (v == null) return TimerState.NotFound;
+		if (!v.Item2) return TimerState.Running;
+		return TimerState.Finished;
 	}
 }

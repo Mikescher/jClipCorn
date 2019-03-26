@@ -65,7 +65,7 @@ public class DatabaseUpgradeAssistant {
 				return;
 			}
 			
-			BackupManager.getInstance().createMigrationBackup(version);
+			BackupManager.getInstanceDirect().createMigrationBackupWithWait(version);
 			
 			if (version.equals("1.5")) {
 				upgrade_06_07();

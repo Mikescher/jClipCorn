@@ -4,14 +4,9 @@ import java.awt.Component;
 import java.awt.event.WindowListener;
 import java.lang.reflect.InvocationTargetException;
 
+import javax.accessibility.Accessible;
 import javax.accessibility.AccessibleContext;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.ProgressMonitor;
-import javax.swing.SwingUtilities;
-import javax.swing.WindowConstants;
+import javax.swing.*;
 
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
@@ -82,43 +77,57 @@ public class DialogHelper {
 	public static String showPlainInputDialog(Component frame) {
 		return showPlainInputDialog(frame, ""); //$NON-NLS-1$
 	}
-	
+
+	public static ProgressMonitor getLocalPersistentIndeterminateProgressMonitor(Component frame, String messageIdent) {
+		return getPersistentProgressMonitor(frame, LocaleBundle.getString(messageIdent), true);
+	}
 	public static ProgressMonitor getLocalPersistentProgressMonitor(Component frame, String messageIdent) {
-		return getPersistentProgressMonitor(frame, LocaleBundle.getString(messageIdent));
+		return getPersistentProgressMonitor(frame, LocaleBundle.getString(messageIdent), false);
 	}
 	
-	public static ProgressMonitor getPersistentProgressMonitor(Component frame, String message) {
-		final ProgressMonitor monitor = new ProgressMonitor(frame, message, "", 0, 1); //$NON-NLS-1$
+	private static ProgressMonitor getPersistentProgressMonitor(Component frame, String message, final boolean indeterminate) {
+		final ProgressMonitor monitor = new ProgressMonitor(frame, message, "", 0, indeterminate ? 100 : 1); //$NON-NLS-1$
 		monitor.setMillisToDecideToPopup(0);
 		monitor.setMillisToPopup(0);
 		
-		SwingUtilities.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-				try {
-					monitor.setProgress(0);
+		SwingUtilities.invokeLater(() ->
+		{
+			try {
+				monitor.setProgress(indeterminate ? 50 : 0);
 
-					AccessibleContext ac = monitor.getAccessibleContext();
-					if (ac == null) throw new Exception();
-					
-					JDialog dialog = (JDialog) ac.getAccessibleParent();
-					if (dialog == null) throw new Exception();
-					
-					dialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-					for (WindowListener listener : dialog.getWindowListeners()) {
-						dialog.removeWindowListener(listener);
-					}
-					
-					java.util.List<JButton> components = SwingUtils.getDescendantsOfType(JButton.class, dialog, true);
-					if (components.isEmpty()) throw new Exception();
-					
-					JButton button = components.get(0);
-					if (button == null) throw new Exception();
-					
-					button.setVisible(false);
-				} catch (Exception e) {
-					CCLog.addError(LocaleBundle.getString("LogMessage.ErrorOmitingProgressMonitor"), e); //$NON-NLS-1$
+				AccessibleContext ac = monitor.getAccessibleContext();
+				if (ac == null) throw new Exception();
+
+				JDialog dialog = (JDialog) ac.getAccessibleParent();
+				if (dialog == null) throw new Exception();
+
+				dialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+				for (WindowListener listener : dialog.getWindowListeners()) {
+					dialog.removeWindowListener(listener);
 				}
+
+				java.util.List<JButton> components = SwingUtils.getDescendantsOfType(JButton.class, dialog, true);
+				if (components.isEmpty()) throw new Exception();
+
+				JButton button = components.get(0);
+				if (button == null) throw new Exception();
+
+				button.setVisible(false);
+
+				if (indeterminate)
+				{
+					int acc = ac.getAccessibleChildrenCount();
+					for (int i = 0; i < acc; i++) {
+						Accessible c = ac.getAccessibleChild(i);
+						if (c instanceof JProgressBar) {
+							((JProgressBar)c).setIndeterminate(true);
+							break;
+						}
+					}
+				}
+
+			} catch (Exception e) {
+				CCLog.addError(LocaleBundle.getString("LogMessage.ErrorOmitingProgressMonitor"), e); //$NON-NLS-1$
 			}
 		});
 		

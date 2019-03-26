@@ -109,6 +109,7 @@ public class CCMovieList {
 			Globals.TIMINGS.start(Globals.TIMING_LOAD_TOTAL);
 			{
 				BackupManager bm = new BackupManager(CCMovieList.this);
+				bm.init();
 				bm.doActions(mf);
 
 				mf.beginBlockingIntermediate();

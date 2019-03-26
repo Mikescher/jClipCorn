@@ -85,6 +85,7 @@ public class CCProperties {
 	public CCPIntProperty                                   PROP_MAINFRAME_SCROLLSPEED;
 	public CCEnumProperty<UITableBackground>                PROP_MAINFRAME_TABLEBACKGROUND;
 	public CCEnumProperty<ResourcePreloadMode>              PROP_LOADING_PRELOADRESOURCES;
+	public CCBoolProperty                                   PROP_LOADING_INITBACKUPMANAGERASYNC;
 	public CCBoolProperty                                   PROP_DATABASE_CREATELOGFILE;
 	public CCPIntProperty                                   PROP_DATABASE_COVERCACHESIZE;
 	public CCBoolProperty                                   PROP_COMMON_CHECKFORUPDATES;
@@ -220,6 +221,7 @@ public class CCProperties {
 		PROP_UI_LANG                            = new CCEnumProperty<>(CAT_COMMON,          this,   "PROP_UI_LANG",                             getDefLanguage(),                   UILanguage.getWrapper());
 		PROP_UI_DATETIME_FORMAT                 = new CCEnumProperty<>(CAT_COMMON,          this,   "PROP_UI_DATETIME_FORMAT",                  getDefDTFormat(),                   CCDateTimeFormat.getWrapper());
 		PROP_LOADING_PRELOADRESOURCES           = new CCEnumProperty<>(CAT_COMMON,          this,   "PROP_LOADING_PRELOADRESOURCES",            ResourcePreloadMode.SYNC_PRELOAD,   ResourcePreloadMode.getWrapper());
+		PROP_LOADING_INITBACKUPMANAGERASYNC     = new CCBoolProperty(CAT_COMMON,            this,   "PROP_LOADING_INITBACKUPMANAGERASYNC",      false);
 		PROP_USE_INTELLISORT                    = new CCBoolProperty(CAT_COMMON,            this,   "PROP_USE_INTELLISORT",                     false);
 		PROP_COMMON_CHECKFORUPDATES             = new CCBoolProperty(CAT_COMMON,            this,   "PROP_COMMON_CHECKFORUPDATES",              true);
 		PROP_COMMON_PRESCANFILESYSTEM           = new CCBoolProperty(CAT_COMMON,            this,   "PROP_COMMON_PRESCANFILESYSTEM",            true);

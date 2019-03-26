@@ -356,7 +356,7 @@ public class Resources {
 	public static void preload_async() {
 		new Thread(() ->
 		{
-			ThreadUtils.safeSleep(5000);
+			ThreadUtils.safeSleep(Globals.ASYNC_TIME_OFFSET_RESOURCES);
 
 			Globals.TIMINGS.start(Globals.TIMING_BACKGROUND_PRELOADRESOURCES);
 			for (Entry<Tuple<String, CachedIconType>, IconRef> s : icn_ressources.entrySet()) {

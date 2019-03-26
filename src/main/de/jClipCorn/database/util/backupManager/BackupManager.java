@@ -4,11 +4,13 @@ import java.awt.Component;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.zip.ZipOutputStream;
 
-import javax.swing.ProgressMonitor;
+import javax.swing.*;
 
 import de.jClipCorn.Globals;
 import de.jClipCorn.Main;
@@ -20,6 +22,10 @@ import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.DialogHelper;
+import de.jClipCorn.util.helper.ThreadUtils;
+import de.jClipCorn.util.lambda.Func0to0;
+import de.jClipCorn.util.lambda.Func0to0WithIOException;
+import de.jClipCorn.util.lambda.Func1to0;
 import de.jClipCorn.util.listener.ProgressCallbackListener;
 import de.jClipCorn.util.listener.ProgressCallbackProgressMonitorHelper;
 import de.jClipCorn.util.listener.ProgressCallbackSink;
@@ -33,13 +39,32 @@ public class BackupManager {
 
 	private final CCMovieList movielist;
 
+	private final AtomicBoolean isInitialised = new AtomicBoolean(false);
+
 	private List<CCBackup> backuplist = new ArrayList<>();
 
 	public BackupManager(CCMovieList ml) {
 		this.movielist = ml;
 		instance = this;
+	}
 
-		initBackupsList();
+	public void init() {
+		Globals.TIMINGS.start(Globals.TIMING_LOAD_INIT_BACKUPMANAGER);
+		{
+			if (CCProperties.getInstance().PROP_LOADING_INITBACKUPMANAGERASYNC.getValue()) {
+				new Thread(() ->
+				{
+					ThreadUtils.safeSleep(Globals.ASYNC_TIME_OFFSET_BACKUPMANAGER);
+					Globals.TIMINGS.start(Globals.TIMING_BACKGROUND_INITBACKUPMANAGER);
+					initBackupsList();
+					Globals.TIMINGS.stop(Globals.TIMING_BACKGROUND_INITBACKUPMANAGER);
+
+				}, "INIT_BACKUP_MANAGER").start(); //$NON-NLS-1$
+			} else {
+				initBackupsList();
+			}
+		}
+		Globals.TIMINGS.stop(Globals.TIMING_LOAD_INIT_BACKUPMANAGER);
 	}
 
 	private File getBackupDirectory() {
@@ -57,32 +82,32 @@ public class BackupManager {
 	}
 
 	private void initBackupsList() {
-		Globals.TIMINGS.start(Globals.TIMING_LOAD_INIT_BACKUPMANAGER);
-		
-		File[] archives = getArchiveFiles();
-		
-		for (File f : archives) {
-			try {
-				CCBackup backup = new CCBackup(f);
+		try {
+			File[] archives = getArchiveFiles();
 
-				backuplist.add(backup);
-			} catch (Exception e) {
-				CCLog.addError(LocaleBundle.getFormattedString("LogMessage.ErrorInitBackupList", f.getName()), e); //$NON-NLS-1$
+			for (File f : archives) {
+				try {
+					CCBackup backup = new CCBackup(f);
+
+					backuplist.add(backup);
+				} catch (Exception e) {
+					CCLog.addError(LocaleBundle.getFormattedString("LogMessage.ErrorInitBackupList", f.getName()), e); //$NON-NLS-1$
+				}
 			}
+		} finally {
+			isInitialised.set(true);
 		}
-
-		Globals.TIMINGS.stop(Globals.TIMING_LOAD_INIT_BACKUPMANAGER);
 	}
 
 	public void doActions(Component c) {
-		if (!CCProperties.getInstance().ARG_READONLY) {
-			if (CCProperties.getInstance().PROP_BACKUP_CREATEBACKUPS.getValue()) {
-				tryCreateBackup(c);
-			}
+		if (CCProperties.getInstance().ARG_READONLY) return;
 
-			if (CCProperties.getInstance().PROP_BACKUP_AUTODELETEBACKUPS.getValue()) {
-				tryDeleteOldBackups();
-			}
+		if (CCProperties.getInstance().PROP_BACKUP_CREATEBACKUPS.getValue() && needsCreateBackup()) {
+			waitForInitialized(() -> tryCreateBackup(c));
+		}
+
+		if (CCProperties.getInstance().PROP_BACKUP_AUTODELETEBACKUPS.getValue()) {
+			runWhenInitialized(this::tryDeleteOldBackups);
 		}
 	}
 
@@ -90,13 +115,15 @@ public class BackupManager {
 		for (int i = backuplist.size() - 1; i >= 0; i--) {
 			CCBackup backup = backuplist.get(i);
 
-			if (backup.isExpired()) {
-				deleteBackup(backup);
-			}
+			if (backup.isExpired()) deleteBackup(backup);
 		}
 	}
 
-	public void deleteBackup(CCBackup bkp) {
+	public void deleteBackupWithWait(CCBackup bkp) {
+		waitForInitialized(() -> deleteBackup(bkp));
+	}
+
+	private void deleteBackup(CCBackup bkp) {
 		String name = bkp.getName();
 		if (bkp.delete()) {
 			backuplist.remove(bkp);
@@ -106,14 +133,16 @@ public class BackupManager {
 		}
 	}
 
-	private void tryCreateBackup(Component c) {
+	private boolean needsCreateBackup() {
 		int minDiff = CCProperties.getInstance().PROP_BACKUP_BACKUPTIME.getValue();
 		CCDate lastBackup = CCProperties.getInstance().PROP_BACKUP_LASTBACKUP.getValue();
 		CCDate now = CCDate.getCurrentDate();
 
-		if (lastBackup.getDayDifferenceTo(now) > minDiff && movielist.getDatabaseDirectory().exists()) {
-			createBackup(c);
-		}
+		return lastBackup.getDayDifferenceTo(now) > minDiff && movielist.getDatabaseDirectory().exists();
+	}
+
+	private void tryCreateBackup(Component c) {
+		if (needsCreateBackup()) createBackup(c);
 	}
 
 	private File getNewBackupName() {
@@ -133,18 +162,28 @@ public class BackupManager {
 		return String.format(BACKUPNAME, CCProperties.getInstance().PROP_DATABASE_NAME.getValue());
 	}
 
-	public void createBackup(Component c) {
+	public void createBackupWithWait(Component c) {
+		waitForInitialized(() -> createBackup(c));
+	}
+
+	public void createBackupWithWait(Component c, String name, boolean persistent) {
+		waitForInitialized(() -> createBackup(c, name, persistent));
+	}
+
+	private void createBackup(Component c) {
 		createBackup(c, getStandardBackupname(), false);
 	}
 
-	public void createBackup(Component c, String name, boolean persistent) {
+	private void createBackup(Component c, String name, boolean persistent) {
 		createBackup(c, name, CCDate.getCurrentDate(), persistent, Main.VERSION, Main.DBVERSION);
 	}
 
-	public void createMigrationBackup(String oldVersion) throws IOException {
-		String name = "Automatic backup (database migration from " + oldVersion + ")"; //$NON-NLS-1$ //$NON-NLS-2$
-		
-		createBackupInternal(name, CCDate.getCurrentDate(), false, Main.VERSION, Main.DBVERSION, new ProgressCallbackSink(), true);
+	public void createMigrationBackupWithWait(String oldVersion) throws IOException {
+		waitForInitialized_IO(() ->
+		{
+			String name = "Automatic backup (database migration from " + oldVersion + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+			createBackupInternal(name, CCDate.getCurrentDate(), false, Main.VERSION, Main.DBVERSION, new ProgressCallbackSink(), true);
+		});
 	}
 
 	private void createBackup(Component c, String name, CCDate date, boolean persistent, String jccversion, String dbversion) {
@@ -221,11 +260,14 @@ public class BackupManager {
 		return false;
 	}
 
-	public boolean restoreBackup(Component c, CCBackup bkp) {
+	public boolean restoreBackupWithWait(Component c, CCBackup bkp) {
 		if (CCProperties.getInstance().ARG_READONLY) {
 			CCLog.addInformation(LocaleBundle.getString("LogMessage.OperationFailedDueToReadOnly")); //$NON-NLS-1$
 			return false;
 		}
+
+		waitForInitialized(Func0to0.NOOP);
+
 		CCLog.addInformation(LocaleBundle.getString("LogMessage.RestoreStarted")); //$NON-NLS-1$
 
 		File archive = bkp.getArchive();
@@ -250,11 +292,62 @@ public class BackupManager {
 		return true;
 	}
 
-	public static BackupManager getInstance() {
+	public static BackupManager getInstanceDirect() {
 		return instance; // Can be null
 	}
 
-	public List<CCBackup> getBackupList() {
+	public static BackupManager getInstanceWithProgress(Component c) {
+		if (instance == null) return null;
+		if (instance.isInitialised.get()) return instance;
+
+		ProgressMonitor monitor = DialogHelper.getLocalPersistentIndeterminateProgressMonitor(c, "MainFrame.backupInitialising"); //$NON-NLS-1$
+		instance.waitForInitialized(Func0to0.NOOP);
+		monitor.close();
+
+		return instance; // Can be null
+	}
+
+
+	public List<CCBackup> getBackupListWithWait() {
+		instance.waitForInitialized(Func0to0.NOOP);
 		return backuplist;
+	}
+
+	private void waitForInitialized(Func0to0 action) {
+		while (!isInitialised.get()) ThreadUtils.safeSleep(25);
+		action.invoke();
+	}
+
+	private void waitForInitialized_IO(Func0to0WithIOException action) throws IOException {
+		while (!isInitialised.get()) ThreadUtils.safeSleep(25);
+		action.invoke();
+	}
+
+	private void runWhenInitialized(Func0to0 action) {
+		if(isInitialised.get()) {
+			action.invoke();
+		} else {
+			new Thread(() -> waitForInitialized(action), "BACKUPMANAGER_DEFERRED_ACTION").start(); //$NON-NLS-1$
+		}
+	}
+
+	public void runWhenInitializedWithProgress(Component c, Func1to0<BackupManager> action) {
+		if(isInitialised.get()) {
+			action.invoke(this);
+		} else {
+			ProgressMonitor monitor = DialogHelper.getLocalPersistentIndeterminateProgressMonitor(c, "MainFrame.backupInitialising"); //$NON-NLS-1$
+
+			monitor.close();
+			new Thread(() ->
+			{
+				waitForInitialized(Func0to0.NOOP);
+				SwingUtilities.invokeLater(() ->
+				{
+					monitor.close();
+					action.invoke(this);
+				});
+
+			}, "BACKUPMANAGER_DEFERRED_ACTION").start(); //$NON-NLS-1$
+		}
 	}
 }

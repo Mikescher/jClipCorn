@@ -70,9 +70,9 @@ public class BackupsManagerFrame extends JFrame {
 	private JLabel lblInfoAutoDeletAfter;
 	private JLabel lblInfoLastBackup;
 
-	public BackupsManagerFrame(Component parent) {
+	public BackupsManagerFrame(BackupManager bm, Component parent) {
 		super();
-		this.manager = BackupManager.getInstance();
+		this.manager = bm;
 		this.movielist = CCMovieList.getInstance();
 		
 		initGUI();
@@ -260,7 +260,7 @@ public class BackupsManagerFrame extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (isElementSelected()) {
-					manager.deleteBackup(currentSelected);
+					manager.deleteBackupWithWait(currentSelected);
 					updateList();
 				}
 			}
@@ -334,7 +334,7 @@ public class BackupsManagerFrame extends JFrame {
 	}
 
 	private void updateList() {
-		List<CCBackup> backups = manager.getBackupList();
+		List<CCBackup> backups = manager.getBackupListWithWait();
 		
 		Collections.sort(backups, new Comparator<CCBackup>() {
 			@Override
@@ -369,11 +369,11 @@ public class BackupsManagerFrame extends JFrame {
 			public void run() {
 				if (persistent) {
 					movielist.disconnectDatabase(false);
-					manager.createBackup(BackupsManagerFrame.this, name, true);
+					manager.createBackupWithWait(BackupsManagerFrame.this, name, true);
 					movielist.reconnectDatabase();
 				} else {
 					movielist.disconnectDatabase(false);
-					manager.createBackup(BackupsManagerFrame.this);
+					manager.createBackupWithWait(BackupsManagerFrame.this);
 					movielist.reconnectDatabase();
 				}
 				
@@ -393,7 +393,7 @@ public class BackupsManagerFrame extends JFrame {
 			public void run() {
 				movielist.disconnectDatabase(true);
 				
-				if (manager.restoreBackup(BackupsManagerFrame.this, bkp)) {
+				if (manager.restoreBackupWithWait(BackupsManagerFrame.this, bkp)) {
 					SwingUtilities.invokeLater(new Runnable() {
 						@Override
 						public void run() {

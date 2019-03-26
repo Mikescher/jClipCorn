@@ -241,6 +241,7 @@ public class ClipStatusBar extends AbstractClipStatusbar implements CCDBUpdateLi
 
 		condAppend(tooltip, Globals.TIMING_BACKGROUND_SCAN_DRIVES);
 		condAppend(tooltip, Globals.TIMING_BACKGROUND_PRELOADRESOURCES);
+		condAppend(tooltip, Globals.TIMING_BACKGROUND_INITBACKUPMANAGER);
 
 		tooltip.append("</html>"); //$NON-NLS-1$
 		
@@ -286,10 +287,27 @@ public class ClipStatusBar extends AbstractClipStatusbar implements CCDBUpdateLi
 	}
 
 	private void condAppend(StringBuilder builder, int id) {
-		if (Globals.TIMINGS.contains(id)) {
-			String strid = StringUtils.rightPad(Globals.TIMING_IDS.get(id), 30).replace(" ", "&nbsp;"); //$NON-NLS-1$ //$NON-NLS-2$
-			String strvl = StringUtils.leftPad(Long.toString(Globals.TIMINGS.getMilliseconds(id)), 5).replace(" ", "&nbsp;"); //$NON-NLS-1$ //$NON-NLS-2$
-			builder.append(String.format("<font face=\"monospace\">%s := %sms</font><br/>", strid, strvl)); //$NON-NLS-1$
+		switch (Globals.TIMINGS.contains(id))
+		{
+			case NotFound:
+				{
+					// Nothing
+				}
+				break;
+			case Running:
+				{
+					String strid = StringUtils.rightPad(Globals.TIMING_IDS.get(id), 31).replace(" ", "&nbsp;"); //$NON-NLS-1$ //$NON-NLS-2$
+					String strvl = StringUtils.leftPad("[RUNNING]", 5).replace(" ", "&nbsp;"); //$NON-NLS-1$ //$NON-NLS-2$
+					builder.append(String.format("<font face=\"monospace\">%s := %sms</font><br/>", strid, strvl)); //$NON-NLS-1$
+				}
+				break;
+			case Finished:
+				{
+					String strid = StringUtils.rightPad(Globals.TIMING_IDS.get(id), 31).replace(" ", "&nbsp;"); //$NON-NLS-1$ //$NON-NLS-2$
+					String strvl = StringUtils.leftPad(Long.toString(Globals.TIMINGS.getMilliseconds(id)), 5).replace(" ", "&nbsp;"); //$NON-NLS-1$ //$NON-NLS-2$
+					builder.append(String.format("<font face=\"monospace\">%s := %s</font><br/>", strid, strvl)); //$NON-NLS-1$
+				}
+				break;
 		}
 	}
 

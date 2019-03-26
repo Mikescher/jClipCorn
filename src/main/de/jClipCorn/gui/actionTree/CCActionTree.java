@@ -22,6 +22,7 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCDateTimeList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCTagList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCUserScore;
 import de.jClipCorn.database.util.ExportHelper;
+import de.jClipCorn.database.util.backupManager.BackupManager;
 import de.jClipCorn.database.xml.CCBXMLReader;
 import de.jClipCorn.gui.frames.aboutFrame.AboutFrame;
 import de.jClipCorn.gui.frames.addMovieFrame.AddMovieFrame;
@@ -334,8 +335,11 @@ public class CCActionTree extends UIActionTree{
 	}
 	
 	private void onClickExtrasBackupManager(CCTreeActionEvent e) {
-		BackupsManagerFrame bmf = new BackupsManagerFrame(owner);
-		bmf.setVisible(true);
+		BackupManager.getInstanceDirect().runWhenInitializedWithProgress(owner, bm ->
+		{
+			BackupsManagerFrame bmf = new BackupsManagerFrame(bm, owner);
+			bmf.setVisible(true);
+		});
 	}
 	
 	private void onClickExtrasShowStatistics(CCTreeActionEvent e) {

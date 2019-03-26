@@ -58,8 +58,9 @@ public enum CCGenre implements ContinoousEnum<CCGenre> {
 		LocaleBundle.getString("CCMovieGenre.Genre036"), LocaleBundle.getString("CCMovieGenre.Genre037"), LocaleBundle.getString("CCMovieGenre.Genre038"), LocaleBundle.getString("CCMovieGenre.Genre039"), 
 		LocaleBundle.getString("CCMovieGenre.Genre040"), LocaleBundle.getString("CCMovieGenre.Genre041"), LocaleBundle.getString("CCMovieGenre.Genre042"), LocaleBundle.getString("CCMovieGenre.Genre043"),
 		LocaleBundle.getString("CCMovieGenre.Genre044"), LocaleBundle.getString("CCMovieGenre.Genre045"), LocaleBundle.getString("CCMovieGenre.Genre046"), LocaleBundle.getString("CCMovieGenre.Genre047"), 
-		LocaleBundle.getString("CCMovieGenre.Genre048"), LocaleBundle.getString("CCMovieGenre.Genre049"), LocaleBundle.getString("CCMovieGenre.Genre050"), LocaleBundle.getString("CCMovieGenre.Genre051"), 
+		LocaleBundle.getString("CCMovieGenre.Genre048"), LocaleBundle.getString("CCMovieGenre.Genre049"), LocaleBundle.getString("CCMovieGenre.Genre050"), LocaleBundle.getString("CCMovieGenre.Genre051"),
 		LocaleBundle.getString("CCMovieGenre.Genre052"), LocaleBundle.getString("CCMovieGenre.Genre053"), LocaleBundle.getString("CCMovieGenre.Genre054"), LocaleBundle.getString("CCMovieGenre.Genre055"),
+		LocaleBundle.getString("CCMovieGenre.Genre056"),
 	};
 	
 	private int id;
@@ -109,7 +110,6 @@ public enum CCGenre implements ContinoousEnum<CCGenre> {
 	@SuppressWarnings("nls")
 	public static CCGenre[] parseFromIMDBName(String ng) {
 		ng = ng.toLowerCase();
-
 
 		if (ng.equals("katastrophenfilm"))       return new CCGenre[]{CCGenre.GENRE_001};
 		if (ng.equals("road movie"))             return new CCGenre[]{CCGenre.GENRE_002};
@@ -185,39 +185,40 @@ public enum CCGenre implements ContinoousEnum<CCGenre> {
 	}
 
 	public static CCGenre[] parseFromTMDbID(int id) {
-		switch (id) {
-		case 28:    return new CCGenre[]{CCGenre.GENRE_019};                    // Action
-		case 12:    return new CCGenre[]{CCGenre.GENRE_035};                    // Adventure
-		case 16:    return new CCGenre[]{CCGenre.GENRE_026};                    // Animation
-		case 35:    return new CCGenre[]{CCGenre.GENRE_010};                    // Comedy
-		case 80:    return new CCGenre[]{CCGenre.GENRE_014};                    // Crime
-		case 99:    return new CCGenre[]{CCGenre.GENRE_034};                    // Documentary
-		case 18:    return new CCGenre[]{CCGenre.GENRE_040};                    // Drama
-		case 10751: return new CCGenre[]{CCGenre.GENRE_039};                    // Family
-		case 14:    return new CCGenre[]{CCGenre.GENRE_038};                    // Fantasy
-		case 10769: return new CCGenre[]{};                                     // Foreign
-		case 36:    return new CCGenre[]{CCGenre.GENRE_046};                    // History
-		case 27:    return new CCGenre[]{CCGenre.GENRE_029};                    // Horror
-		case 10402: return new CCGenre[]{CCGenre.GENRE_045};                    // Music
-		case 9648:  return new CCGenre[]{CCGenre.GENRE_037};                    // Mystery
-		case 10749: return new CCGenre[]{CCGenre.GENRE_036};                    // Romance
-		case 878:   return new CCGenre[]{CCGenre.GENRE_009};                    // Science Fiction
-		case 10770: return new CCGenre[]{};                                     // TV Movie
-		case 53:    return new CCGenre[]{CCGenre.GENRE_006};                    // Thriller
-		case 10752: return new CCGenre[]{CCGenre.GENRE_015};                    // War
-		case 37:    return new CCGenre[]{CCGenre.GENRE_037};                    // Western
-		case 10759: return new CCGenre[]{CCGenre.GENRE_035, CCGenre.GENRE_035}; // Action & Adventure
-		case 10762: return new CCGenre[]{CCGenre.GENRE_048};                    // Kids
-		case 10763: return new CCGenre[]{};                                     // News
-		case 10764: return new CCGenre[]{};                                     // Reality
-		case 10765: return new CCGenre[]{CCGenre.GENRE_009, CCGenre.GENRE_038}; // Sci-Fi & Fantasy
-		case 10766: return new CCGenre[]{CCGenre.GENRE_049};                    // Soap
-		case 10767: return new CCGenre[]{};                                     // Talk
-		case 10768: return new CCGenre[]{CCGenre.GENRE_015};                    // War & Politics
+		switch (id)
+		{
+			case 28:    return new CCGenre[]{CCGenre.GENRE_019};                    // Action
+			case 12:    return new CCGenre[]{CCGenre.GENRE_035};                    // Adventure
+			case 16:    return new CCGenre[]{CCGenre.GENRE_026};                    // Animation
+			case 35:    return new CCGenre[]{CCGenre.GENRE_010};                    // Comedy
+			case 80:    return new CCGenre[]{CCGenre.GENRE_014};                    // Crime
+			case 99:    return new CCGenre[]{CCGenre.GENRE_034};                    // Documentary
+			case 18:    return new CCGenre[]{CCGenre.GENRE_040};                    // Drama
+			case 10751: return new CCGenre[]{CCGenre.GENRE_039};                    // Family
+			case 14:    return new CCGenre[]{CCGenre.GENRE_038};                    // Fantasy
+			case 10769: return new CCGenre[]{};                                     // Foreign
+			case 36:    return new CCGenre[]{CCGenre.GENRE_046};                    // History
+			case 27:    return new CCGenre[]{CCGenre.GENRE_029};                    // Horror
+			case 10402: return new CCGenre[]{CCGenre.GENRE_045};                    // Music
+			case 9648:  return new CCGenre[]{CCGenre.GENRE_037};                    // Mystery
+			case 10749: return new CCGenre[]{CCGenre.GENRE_036};                    // Romance
+			case 878:   return new CCGenre[]{CCGenre.GENRE_009};                    // Science Fiction
+			case 10770: return new CCGenre[]{};                                     // TV Movie
+			case 53:    return new CCGenre[]{CCGenre.GENRE_006};                    // Thriller
+			case 10752: return new CCGenre[]{CCGenre.GENRE_015};                    // War
+			case 37:    return new CCGenre[]{CCGenre.GENRE_037};                    // Western
+			case 10759: return new CCGenre[]{CCGenre.GENRE_035, CCGenre.GENRE_035}; // Action & Adventure
+			case 10762: return new CCGenre[]{CCGenre.GENRE_048};                    // Kids
+			case 10763: return new CCGenre[]{};                                     // News
+			case 10764: return new CCGenre[]{};                                     // Reality
+			case 10765: return new CCGenre[]{CCGenre.GENRE_009, CCGenre.GENRE_038}; // Sci-Fi & Fantasy
+			case 10766: return new CCGenre[]{CCGenre.GENRE_049};                    // Soap
+			case 10767: return new CCGenre[]{};                                     // Talk
+			case 10768: return new CCGenre[]{CCGenre.GENRE_015};                    // War & Politics
 
-		default:
-			CCLog.addWarning(LocaleBundle.getFormattedString("LogMessage.CouldNotParseGenreID", id)); //$NON-NLS-1$
-			return new CCGenre[]{};
+			default:
+				CCLog.addWarning(LocaleBundle.getFormattedString("LogMessage.CouldNotParseGenreID", id)); //$NON-NLS-1$
+				return new CCGenre[]{};
 		}
 
 	}
@@ -293,7 +294,6 @@ public enum CCGenre implements ContinoousEnum<CCGenre> {
 
 		return new CCGenre[]{};
 	}
-
 
 	public boolean isEmpty() {
 		return asInt() == NO_GENRE;

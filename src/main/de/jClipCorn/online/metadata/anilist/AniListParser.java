@@ -107,7 +107,7 @@ public class AniListParser extends Metadataparser {
 		if (!med.isNull("averageScore")) om.OnlineScore = (int)Math.round(med.getInt("averageScore")/10.0);
 		om.Length      = med.getInt("duration");
 		om.Year        = med.getJSONObject("startDate").getInt("year");
-		om.Genres      = new CCGenreList(CCStreams.iterate(med.getJSONArray("genres")).<String>cast().map(CCGenre::parseFromAniList).enumerate());
+		om.Genres      = new CCGenreList(CCStreams.iterate(med.getJSONArray("genres")).<String>cast().map(CCGenre::parseFromAniList).flatten(CCStreams::iterate).unique().enumerate());
 
 		if (downloadCover && om.CoverURL != null) om.Cover = HTTPUtilities.getImage(om.CoverURL);
 

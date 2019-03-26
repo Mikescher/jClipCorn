@@ -66,7 +66,7 @@ public enum CCGenre implements ContinoousEnum<CCGenre> {
 	
 	private static EnumWrapper<CCGenre> wrapper = new EnumWrapper<>(GENRE_000);
 
-	private CCGenre(int val) {
+	CCGenre(int val) {
 		id = val;
 	}
 	
@@ -103,293 +103,195 @@ public enum CCGenre implements ContinoousEnum<CCGenre> {
 				res.add(s);
 			}
 		}
-		return res.toArray(new String[res.size()]);
+		return res.toArray(new String[0]);
 	}
 
 	@SuppressWarnings("nls")
-	public static CCGenre parseFromIMDBName(String ng) {
+	public static CCGenre[] parseFromIMDBName(String ng) {
 		ng = ng.toLowerCase();
-		
-		int genID = 0;
 
-		if (ng.equals("katastrophenfilm")) {
-			genID = 1;
-		} else if (ng.equals("road movie")) {
-			genID = 2;
-		} else if (ng.equals("western")) {
-			genID = 3;
-		} else if (ng.equals("italo-western")) {
-			genID = 4;
-		} else if (ng.equals("heimatfilm")) {
-			genID = 5;
-		} else if (ng.equals("thriller")) {
-			genID = 6;
-		} else if (ng.equals("actionthriller")) {
-			genID = 7;
-		} else if (ng.equals("psychothriller")) {
-			genID = 8;
-		} else if (ng.equals("sci-fi")) {
-			genID = 9;
-		} else if (ng.equals("science-fiction")) {
-			genID = 9;
-		} else if (ng.equals("science fiction")) {
-			genID = 9;
-		} else if (ng.equals("comedy")) {
-			genID = 10;
-		} else if (ng.equals("komödie")) {
-			genID = 10;
-		} else if (ng.equals("slapstick-comedy")) {
-			genID = 11;
-		} else if (ng.equals("screwball-comedy")) {
-			genID = 12;
-		} else if (ng.equals("gangsterfilm")) {
-			genID = 13;
-		} else if (ng.equals("krimi")) {
-			genID = 14;
-		} else if (ng.equals("crime")) {
-			genID = 14;
-		} else if (ng.equals("kriegsfilm")) {
-			genID = 15;
-		} else if (ng.equals("war")) {
-			genID = 15;
-		} else if (ng.equals("war")) {
-			genID = 15;
-		} else if (ng.equals("krieg")) {
-			genID = 15;
-		} else if (ng.equals("porno")) {
-			genID = 16;
-		} else if (ng.equals("softporno")) {
-			genID = 17;
-		} else if (ng.equals("hardcore-porno")) {
-			genID = 18;
-		} else if (ng.equals("action")) {
-			genID = 19;
-		} else if (ng.equals("trickfilm")) {
-			genID = 20;
-		} else if (ng.equals("zeichentrickfilm")) {
-			genID = 21;
-		} else if (ng.equals("zeichentrick")) {
-			genID = 21;
-		} else if (ng.equals("anime")) {
-			genID = 22;
-		} else if (ng.equals("stop-motion-film")) {
-			genID = 23;
-		} else if (ng.equals("puppentrickfilm")) {
-			genID = 24;
-		} else if (ng.equals("claymation")) {
-			genID = 25;
-		} else if (ng.equals("computeranimationsfilm")) {
-			genID = 26;
-		} else if (ng.equals("animation")) {
-			genID = 26;
-		} else if (ng.equals("martial-arts-film")) {
-			genID = 27;
-		} else if (ng.equals("samuraifilm")) {
-			genID = 28;
-		} else if (ng.equals("horror")) {
-			genID = 29;
-		} else if (ng.equals("slasher")) {
-			genID = 30;
-		} else if (ng.equals("teenhorror")) {
-			genID = 31;
-		} else if (ng.equals("creature")) {
-			genID = 32;
-		} else if (ng.equals("comingofage")) {
-			genID = 33;
-		} else if (ng.equals("dokumentarfilm")) {
-			genID = 34;
-		} else if (ng.equals("documentary")) {
-			genID = 34;
-		} else if (ng.equals("abenteuer")) {
-			genID = 35;
-		} else if (ng.equals("adventure")) {
-			genID = 35;
-		} else if (ng.equals("action & adventure")) {
-			genID = 35;
-		} else if (ng.equals("romanze")) {
-			genID = 36;
-		} else if (ng.equals("romance")) {
-			genID = 36;
-		} else if (ng.equals("mystery")) {
-			genID = 37;
-		} else if (ng.equals("fantasy")) {
-			genID = 38;
-		} else if (ng.equals("familie")) {
-			genID = 39;
-		} else if (ng.equals("family")) {
-			genID = 39;
-		} else if (ng.equals("drama")) {
-			genID = 40;
-		} else if (ng.equals("anti-kriegsfilm")) {
-			genID = 41;
-		} else if (ng.equals("biographie")) {
-			genID = 42;
-		} else if (ng.equals("biography")) {
-			genID = 42;
-		} else if (ng.equals("sport")) {
-			genID = 43;
-		} else if (ng.equals("musical")) {
-			genID = 44;
-		} else if (ng.equals("musik")) {
-			genID = 45;
-		} else if (ng.equals("music")) {
-			genID = 45;
-		} else if (ng.equals("history")) {
-			genID = 46;
-		} else if (ng.equals("film-noir")) {
-			genID = 47;
-		} else if (ng.equals("kids")) {
-			genID = 48;
-		} else if (ng.equals("kinder")) {
-			genID = 48;
-		} else if (ng.equals("kinderfilm")) {
-			genID = 48;
-		} else if (ng.equals("soap")) {
-			genID = 49;
-		} else if (ng.equals("soap opera")) {
-			genID = 49;
-		} else if (ng.equals("seifenoper")) {
-			genID = 49;
-		} else {
-			CCLog.addWarning(LocaleBundle.getFormattedString("LogMessage.CouldNotParseGenre", ng));
-		}
 
-		return getWrapper().find(genID);
+		if (ng.equals("katastrophenfilm"))       return new CCGenre[]{CCGenre.GENRE_001};
+		if (ng.equals("road movie"))             return new CCGenre[]{CCGenre.GENRE_002};
+		if (ng.equals("western"))                return new CCGenre[]{CCGenre.GENRE_003};
+		if (ng.equals("italo-western"))          return new CCGenre[]{CCGenre.GENRE_004};
+		if (ng.equals("heimatfilm"))             return new CCGenre[]{CCGenre.GENRE_005};
+		if (ng.equals("thriller"))               return new CCGenre[]{CCGenre.GENRE_006};
+		if (ng.equals("actionthriller"))         return new CCGenre[]{CCGenre.GENRE_007};
+		if (ng.equals("psychothriller"))         return new CCGenre[]{CCGenre.GENRE_008};
+		if (ng.equals("sci-fi"))                 return new CCGenre[]{CCGenre.GENRE_009};
+		if (ng.equals("science-fiction"))        return new CCGenre[]{CCGenre.GENRE_009};
+		if (ng.equals("science fiction"))        return new CCGenre[]{CCGenre.GENRE_009};
+		if (ng.equals("comedy"))                 return new CCGenre[]{CCGenre.GENRE_010};
+		if (ng.equals("komödie"))                return new CCGenre[]{CCGenre.GENRE_010};
+		if (ng.equals("slapstick-comedy"))       return new CCGenre[]{CCGenre.GENRE_011};
+		if (ng.equals("screwball-comedy"))       return new CCGenre[]{CCGenre.GENRE_012};
+		if (ng.equals("gangsterfilm"))           return new CCGenre[]{CCGenre.GENRE_013};
+		if (ng.equals("krimi"))                  return new CCGenre[]{CCGenre.GENRE_014};
+		if (ng.equals("crime"))                  return new CCGenre[]{CCGenre.GENRE_014};
+		if (ng.equals("kriegsfilm"))             return new CCGenre[]{CCGenre.GENRE_015};
+		if (ng.equals("war"))                    return new CCGenre[]{CCGenre.GENRE_015};
+		if (ng.equals("krieg"))                  return new CCGenre[]{CCGenre.GENRE_015};
+		if (ng.equals("porno"))                  return new CCGenre[]{CCGenre.GENRE_016};
+		if (ng.equals("softporno"))              return new CCGenre[]{CCGenre.GENRE_017};
+		if (ng.equals("hardcore-porno"))         return new CCGenre[]{CCGenre.GENRE_018};
+		if (ng.equals("action"))                 return new CCGenre[]{CCGenre.GENRE_019};
+		if (ng.equals("trickfilm"))              return new CCGenre[]{CCGenre.GENRE_020};
+		if (ng.equals("zeichentrickfilm"))       return new CCGenre[]{CCGenre.GENRE_021};
+		if (ng.equals("zeichentrick"))           return new CCGenre[]{CCGenre.GENRE_021};
+		if (ng.equals("anime"))                  return new CCGenre[]{CCGenre.GENRE_022};
+		if (ng.equals("stop-motion-film"))       return new CCGenre[]{CCGenre.GENRE_023};
+		if (ng.equals("puppentrickfilm"))        return new CCGenre[]{CCGenre.GENRE_024};
+		if (ng.equals("claymation"))             return new CCGenre[]{CCGenre.GENRE_025};
+		if (ng.equals("computeranimationsfilm")) return new CCGenre[]{CCGenre.GENRE_026};
+		if (ng.equals("animation"))              return new CCGenre[]{CCGenre.GENRE_026};
+		if (ng.equals("martial-arts-film"))      return new CCGenre[]{CCGenre.GENRE_027};
+		if (ng.equals("samuraifilm"))            return new CCGenre[]{CCGenre.GENRE_028};
+		if (ng.equals("horror"))                 return new CCGenre[]{CCGenre.GENRE_029};
+		if (ng.equals("slasher"))                return new CCGenre[]{CCGenre.GENRE_030};
+		if (ng.equals("teenhorror"))             return new CCGenre[]{CCGenre.GENRE_031};
+		if (ng.equals("creature"))               return new CCGenre[]{CCGenre.GENRE_032};
+		if (ng.equals("comingofage"))            return new CCGenre[]{CCGenre.GENRE_033};
+		if (ng.equals("dokumentarfilm"))         return new CCGenre[]{CCGenre.GENRE_034};
+		if (ng.equals("documentary"))            return new CCGenre[]{CCGenre.GENRE_034};
+		if (ng.equals("abenteuer"))              return new CCGenre[]{CCGenre.GENRE_035};
+		if (ng.equals("adventure"))              return new CCGenre[]{CCGenre.GENRE_035};
+		if (ng.equals("action & adventure"))     return new CCGenre[]{CCGenre.GENRE_035};
+		if (ng.equals("romanze"))                return new CCGenre[]{CCGenre.GENRE_036};
+		if (ng.equals("romance"))                return new CCGenre[]{CCGenre.GENRE_036};
+		if (ng.equals("mystery"))                return new CCGenre[]{CCGenre.GENRE_037};
+		if (ng.equals("fantasy"))                return new CCGenre[]{CCGenre.GENRE_038};
+		if (ng.equals("familie"))                return new CCGenre[]{CCGenre.GENRE_039};
+		if (ng.equals("family"))                 return new CCGenre[]{CCGenre.GENRE_039};
+		if (ng.equals("drama"))                  return new CCGenre[]{CCGenre.GENRE_040};
+		if (ng.equals("anti-kriegsfilm"))        return new CCGenre[]{CCGenre.GENRE_041};
+		if (ng.equals("biographie"))             return new CCGenre[]{CCGenre.GENRE_042};
+		if (ng.equals("biography"))              return new CCGenre[]{CCGenre.GENRE_042};
+		if (ng.equals("sport"))                  return new CCGenre[]{CCGenre.GENRE_043};
+		if (ng.equals("musical"))                return new CCGenre[]{CCGenre.GENRE_044};
+		if (ng.equals("musik"))                  return new CCGenre[]{CCGenre.GENRE_045};
+		if (ng.equals("music"))                  return new CCGenre[]{CCGenre.GENRE_045};
+		if (ng.equals("history"))                return new CCGenre[]{CCGenre.GENRE_046};
+		if (ng.equals("film-noir"))              return new CCGenre[]{CCGenre.GENRE_047};
+		if (ng.equals("kids"))                   return new CCGenre[]{CCGenre.GENRE_048};
+		if (ng.equals("kinder"))                 return new CCGenre[]{CCGenre.GENRE_048};
+		if (ng.equals("kinderfilm"))             return new CCGenre[]{CCGenre.GENRE_048};
+		if (ng.equals("soap"))                   return new CCGenre[]{CCGenre.GENRE_049};
+		if (ng.equals("soap opera"))             return new CCGenre[]{CCGenre.GENRE_049};
+		if (ng.equals("seifenoper"))             return new CCGenre[]{CCGenre.GENRE_049};
+
+		CCLog.addWarning(LocaleBundle.getFormattedString("LogMessage.CouldNotParseGenre", ng));
+		return new CCGenre[]{};
 	}
 
-	public static CCGenre parseFromTMDbID(int id) {
+	public static CCGenre[] parseFromTMDbID(int id) {
 		switch (id) {
-		case 28:
-			return CCGenre.GENRE_019; // Action
-		case 12:
-			return CCGenre.GENRE_035; // Adventure
-		case 16:
-			return CCGenre.GENRE_026; // Animation
-		case 35:
-			return CCGenre.GENRE_010; // Comedy
-		case 80:
-			return CCGenre.GENRE_014; // Crime
-		case 99:
-			return CCGenre.GENRE_034; // Documentary
-		case 18:
-			return CCGenre.GENRE_040; // Drama
-		case 10751:
-			return CCGenre.GENRE_039; // Family
-		case 14:
-			return CCGenre.GENRE_038; // Fantasy
-		case 10769:
-			return CCGenre.GENRE_000; // Foreign
-		case 36:
-			return CCGenre.GENRE_046; // History
-		case 27:
-			return CCGenre.GENRE_029; // Horror
-		case 10402:
-			return CCGenre.GENRE_045; // Music
-		case 9648:
-			return CCGenre.GENRE_037; // Mystery
-		case 10749:
-			return CCGenre.GENRE_036; // Romance
-		case 878:
-			return CCGenre.GENRE_009; // Science Fiction
-		case 10770:
-			return CCGenre.GENRE_000; // TV Movie
-		case 53:
-			return CCGenre.GENRE_006; // Thriller
-		case 10752:
-			return CCGenre.GENRE_015; // War
-		case 37:
-			return CCGenre.GENRE_037; // Western
-		case 10759:
-			return CCGenre.GENRE_035; // Action & Adventure
-		case 10762:
-			return CCGenre.GENRE_048; // Kids
-		case 10763:
-			return CCGenre.GENRE_000; // News
-		case 10764:
-			return CCGenre.GENRE_000; // Reality
-		case 10765:
-			return CCGenre.GENRE_000; // Sci-Fi & Fantasy
-		case 10766:
-			return CCGenre.GENRE_049; // Soap
-		case 10767:
-			return CCGenre.GENRE_000; // Talk
-		case 10768:
-			return CCGenre.GENRE_000; // War & Politics
+		case 28:    return new CCGenre[]{CCGenre.GENRE_019};                    // Action
+		case 12:    return new CCGenre[]{CCGenre.GENRE_035};                    // Adventure
+		case 16:    return new CCGenre[]{CCGenre.GENRE_026};                    // Animation
+		case 35:    return new CCGenre[]{CCGenre.GENRE_010};                    // Comedy
+		case 80:    return new CCGenre[]{CCGenre.GENRE_014};                    // Crime
+		case 99:    return new CCGenre[]{CCGenre.GENRE_034};                    // Documentary
+		case 18:    return new CCGenre[]{CCGenre.GENRE_040};                    // Drama
+		case 10751: return new CCGenre[]{CCGenre.GENRE_039};                    // Family
+		case 14:    return new CCGenre[]{CCGenre.GENRE_038};                    // Fantasy
+		case 10769: return new CCGenre[]{};                                     // Foreign
+		case 36:    return new CCGenre[]{CCGenre.GENRE_046};                    // History
+		case 27:    return new CCGenre[]{CCGenre.GENRE_029};                    // Horror
+		case 10402: return new CCGenre[]{CCGenre.GENRE_045};                    // Music
+		case 9648:  return new CCGenre[]{CCGenre.GENRE_037};                    // Mystery
+		case 10749: return new CCGenre[]{CCGenre.GENRE_036};                    // Romance
+		case 878:   return new CCGenre[]{CCGenre.GENRE_009};                    // Science Fiction
+		case 10770: return new CCGenre[]{};                                     // TV Movie
+		case 53:    return new CCGenre[]{CCGenre.GENRE_006};                    // Thriller
+		case 10752: return new CCGenre[]{CCGenre.GENRE_015};                    // War
+		case 37:    return new CCGenre[]{CCGenre.GENRE_037};                    // Western
+		case 10759: return new CCGenre[]{CCGenre.GENRE_035, CCGenre.GENRE_035}; // Action & Adventure
+		case 10762: return new CCGenre[]{CCGenre.GENRE_048};                    // Kids
+		case 10763: return new CCGenre[]{};                                     // News
+		case 10764: return new CCGenre[]{};                                     // Reality
+		case 10765: return new CCGenre[]{CCGenre.GENRE_009, CCGenre.GENRE_038}; // Sci-Fi & Fantasy
+		case 10766: return new CCGenre[]{CCGenre.GENRE_049};                    // Soap
+		case 10767: return new CCGenre[]{};                                     // Talk
+		case 10768: return new CCGenre[]{CCGenre.GENRE_015};                    // War & Politics
+
 		default:
 			CCLog.addWarning(LocaleBundle.getFormattedString("LogMessage.CouldNotParseGenreID", id)); //$NON-NLS-1$
-			return CCGenre.GENRE_000;
+			return new CCGenre[]{};
 		}
 
 	}
 
 	@SuppressWarnings("nls")
-	public static CCGenre parseFromMAL(String txt) {
-		     if (txt.equalsIgnoreCase("Action"))        return CCGenre.GENRE_019;
-		else if (txt.equalsIgnoreCase("Adventure"))     return CCGenre.GENRE_035;
-		else if (txt.equalsIgnoreCase("Cars"))          return CCGenre.GENRE_000; // x
-		else if (txt.equalsIgnoreCase("Comedy"))        return CCGenre.GENRE_010;
-		else if (txt.equalsIgnoreCase("Dementia"))      return CCGenre.GENRE_000; // x
-		else if (txt.equalsIgnoreCase("Demons"))        return CCGenre.GENRE_038;
-		else if (txt.equalsIgnoreCase("Drama"))         return CCGenre.GENRE_040;
-		else if (txt.equalsIgnoreCase("Ecchi"))         return CCGenre.GENRE_000; // x
-		else if (txt.equalsIgnoreCase("Fantasy"))       return CCGenre.GENRE_038;
-		else if (txt.equalsIgnoreCase("Game"))          return CCGenre.GENRE_043;
-		else if (txt.equalsIgnoreCase("Harem"))         return CCGenre.GENRE_000; // x
-		else if (txt.equalsIgnoreCase("Hentai"))        return CCGenre.GENRE_000; // x
-		else if (txt.equalsIgnoreCase("Historical"))    return CCGenre.GENRE_046;
-		else if (txt.equalsIgnoreCase("Horror"))        return CCGenre.GENRE_029;
-		else if (txt.equalsIgnoreCase("Kids"))          return CCGenre.GENRE_048;
-		else if (txt.equalsIgnoreCase("Magic"))         return CCGenre.GENRE_038;
-		else if (txt.equalsIgnoreCase("Martial Arts"))  return CCGenre.GENRE_027;
-		else if (txt.equalsIgnoreCase("Mecha"))         return CCGenre.GENRE_054;
-		else if (txt.equalsIgnoreCase("Military"))      return CCGenre.GENRE_015;
-		else if (txt.equalsIgnoreCase("Music"))         return CCGenre.GENRE_044;
-		else if (txt.equalsIgnoreCase("Mystery"))       return CCGenre.GENRE_037;
-		else if (txt.equalsIgnoreCase("Parody"))        return CCGenre.GENRE_055;
-		else if (txt.equalsIgnoreCase("Police"))        return CCGenre.GENRE_000; // x
-		else if (txt.equalsIgnoreCase("Psychological")) return CCGenre.GENRE_008;
-		else if (txt.equalsIgnoreCase("Romance"))       return CCGenre.GENRE_036;
-		else if (txt.equalsIgnoreCase("Samurai"))       return CCGenre.GENRE_027;
-		else if (txt.equalsIgnoreCase("School"))        return CCGenre.GENRE_053;
-		else if (txt.equalsIgnoreCase("Sci-Fi"))        return CCGenre.GENRE_009;
-		else if (txt.equalsIgnoreCase("Shoujo"))        return CCGenre.GENRE_052;
-		else if (txt.equalsIgnoreCase("Shoujo Ai"))     return CCGenre.GENRE_052;
-		else if (txt.equalsIgnoreCase("Shounen"))       return CCGenre.GENRE_051;
-		else if (txt.equalsIgnoreCase("Shounen Ai"))    return CCGenre.GENRE_051;
-		else if (txt.equalsIgnoreCase("Slice of Life")) return CCGenre.GENRE_050;
-		else if (txt.equalsIgnoreCase("Space"))         return CCGenre.GENRE_009;
-		else if (txt.equalsIgnoreCase("Sports"))        return CCGenre.GENRE_043;
-		else if (txt.equalsIgnoreCase("Super Power"))   return CCGenre.GENRE_038;
-		else if (txt.equalsIgnoreCase("Supernatural"))  return CCGenre.GENRE_038;
-		else if (txt.equalsIgnoreCase("Thriller"))      return CCGenre.GENRE_006;
-		else if (txt.equalsIgnoreCase("Vampire"))       return CCGenre.GENRE_038;
-		else if (txt.equalsIgnoreCase("Yaoi"))          return CCGenre.GENRE_000; // x
-		else if (txt.equalsIgnoreCase("Yuri"))          return CCGenre.GENRE_000; // x
-		else                                            return CCGenre.GENRE_000;
+	public static CCGenre[] parseFromMAL(String txt) {
+		if (txt.equalsIgnoreCase("Action"))        return new CCGenre[]{CCGenre.GENRE_019};
+		if (txt.equalsIgnoreCase("Adventure"))     return new CCGenre[]{CCGenre.GENRE_035};
+		if (txt.equalsIgnoreCase("Cars"))          return new CCGenre[]{};
+		if (txt.equalsIgnoreCase("Comedy"))        return new CCGenre[]{CCGenre.GENRE_010};
+		if (txt.equalsIgnoreCase("Dementia"))      return new CCGenre[]{};
+		if (txt.equalsIgnoreCase("Demons"))        return new CCGenre[]{CCGenre.GENRE_038};
+		if (txt.equalsIgnoreCase("Drama"))         return new CCGenre[]{CCGenre.GENRE_040};
+		if (txt.equalsIgnoreCase("Ecchi"))         return new CCGenre[]{};
+		if (txt.equalsIgnoreCase("Fantasy"))       return new CCGenre[]{CCGenre.GENRE_038};
+		if (txt.equalsIgnoreCase("Game"))          return new CCGenre[]{CCGenre.GENRE_043};
+		if (txt.equalsIgnoreCase("Harem"))         return new CCGenre[]{};
+		if (txt.equalsIgnoreCase("Hentai"))        return new CCGenre[]{};
+		if (txt.equalsIgnoreCase("Historical"))    return new CCGenre[]{CCGenre.GENRE_046};
+		if (txt.equalsIgnoreCase("Horror"))        return new CCGenre[]{CCGenre.GENRE_029};
+		if (txt.equalsIgnoreCase("Kids"))          return new CCGenre[]{CCGenre.GENRE_048};
+		if (txt.equalsIgnoreCase("Magic"))         return new CCGenre[]{CCGenre.GENRE_038};
+		if (txt.equalsIgnoreCase("Martial Arts"))  return new CCGenre[]{CCGenre.GENRE_027};
+		if (txt.equalsIgnoreCase("Mecha"))         return new CCGenre[]{CCGenre.GENRE_054};
+		if (txt.equalsIgnoreCase("Military"))      return new CCGenre[]{CCGenre.GENRE_015};
+		if (txt.equalsIgnoreCase("Music"))         return new CCGenre[]{CCGenre.GENRE_044};
+		if (txt.equalsIgnoreCase("Mystery"))       return new CCGenre[]{CCGenre.GENRE_037};
+		if (txt.equalsIgnoreCase("Parody"))        return new CCGenre[]{CCGenre.GENRE_055};
+		if (txt.equalsIgnoreCase("Police"))        return new CCGenre[]{};
+		if (txt.equalsIgnoreCase("Psychological")) return new CCGenre[]{CCGenre.GENRE_008};
+		if (txt.equalsIgnoreCase("Romance"))       return new CCGenre[]{CCGenre.GENRE_036};
+		if (txt.equalsIgnoreCase("Samurai"))       return new CCGenre[]{CCGenre.GENRE_027};
+		if (txt.equalsIgnoreCase("School"))        return new CCGenre[]{CCGenre.GENRE_053};
+		if (txt.equalsIgnoreCase("Sci-Fi"))        return new CCGenre[]{CCGenre.GENRE_009};
+		if (txt.equalsIgnoreCase("Shoujo"))        return new CCGenre[]{CCGenre.GENRE_052};
+		if (txt.equalsIgnoreCase("Shoujo Ai"))     return new CCGenre[]{CCGenre.GENRE_052};
+		if (txt.equalsIgnoreCase("Shounen"))       return new CCGenre[]{CCGenre.GENRE_051};
+		if (txt.equalsIgnoreCase("Shounen Ai"))    return new CCGenre[]{CCGenre.GENRE_051};
+		if (txt.equalsIgnoreCase("Slice of Life")) return new CCGenre[]{CCGenre.GENRE_050};
+		if (txt.equalsIgnoreCase("Space"))         return new CCGenre[]{CCGenre.GENRE_009};
+		if (txt.equalsIgnoreCase("Sports"))        return new CCGenre[]{CCGenre.GENRE_043};
+		if (txt.equalsIgnoreCase("Super Power"))   return new CCGenre[]{CCGenre.GENRE_038};
+		if (txt.equalsIgnoreCase("Supernatural"))  return new CCGenre[]{CCGenre.GENRE_038};
+		if (txt.equalsIgnoreCase("Thriller"))      return new CCGenre[]{CCGenre.GENRE_006};
+		if (txt.equalsIgnoreCase("Vampire"))       return new CCGenre[]{CCGenre.GENRE_038};
+		if (txt.equalsIgnoreCase("Yaoi"))          return new CCGenre[]{};
+		if (txt.equalsIgnoreCase("Yuri"))          return new CCGenre[]{};
+
+		return new CCGenre[]{};
 	}
 
 	@SuppressWarnings("nls")
-	public static CCGenre parseFromAniList(String txt) {
-		     if (txt.equalsIgnoreCase("Action"))          return CCGenre.GENRE_019;
-		else if (txt.equalsIgnoreCase("Adventure"))       return CCGenre.GENRE_035;
-		else if (txt.equalsIgnoreCase("Comedy"))          return CCGenre.GENRE_010;
-		else if (txt.equalsIgnoreCase("Drama"))           return CCGenre.GENRE_040;
-		else if (txt.equalsIgnoreCase("Ecchi"))           return CCGenre.GENRE_000; // x
-		else if (txt.equalsIgnoreCase("Fantasy"))         return CCGenre.GENRE_000;
-		else if (txt.equalsIgnoreCase("Hentai"))          return CCGenre.GENRE_000; // x
-		else if (txt.equalsIgnoreCase("Horror"))          return CCGenre.GENRE_029;
-		else if (txt.equalsIgnoreCase("Mahou Shoujo"))    return CCGenre.GENRE_000; // x
-		else if (txt.equalsIgnoreCase("Mecha"))           return CCGenre.GENRE_054;
-		else if (txt.equalsIgnoreCase("Music"))           return CCGenre.GENRE_044;
-		else if (txt.equalsIgnoreCase("Mystery"))         return CCGenre.GENRE_037;
-		else if (txt.equalsIgnoreCase("Psychological"))   return CCGenre.GENRE_008;
-		else if (txt.equalsIgnoreCase("Romance"))         return CCGenre.GENRE_036;
-		else if (txt.equalsIgnoreCase("Sci-Fi"))          return CCGenre.GENRE_009;
-		else if (txt.equalsIgnoreCase("Slice of Life"))   return CCGenre.GENRE_050;
-		else if (txt.equalsIgnoreCase("Sports"))          return CCGenre.GENRE_043;
-		else if (txt.equalsIgnoreCase("Supernatural"))    return CCGenre.GENRE_038;
-		else if (txt.equalsIgnoreCase("Thriller"))        return CCGenre.GENRE_006;
-		else                                              return CCGenre.GENRE_000;
+	public static CCGenre[] parseFromAniList(String txt) {
+		if (txt.equalsIgnoreCase("Action"))          return new CCGenre[]{CCGenre.GENRE_019};
+		if (txt.equalsIgnoreCase("Adventure"))       return new CCGenre[]{CCGenre.GENRE_035};
+		if (txt.equalsIgnoreCase("Comedy"))          return new CCGenre[]{CCGenre.GENRE_010};
+		if (txt.equalsIgnoreCase("Drama"))           return new CCGenre[]{CCGenre.GENRE_040};
+		if (txt.equalsIgnoreCase("Ecchi"))           return new CCGenre[]{};
+		if (txt.equalsIgnoreCase("Fantasy"))         return new CCGenre[]{CCGenre.GENRE_038};
+		if (txt.equalsIgnoreCase("Hentai"))          return new CCGenre[]{};
+		if (txt.equalsIgnoreCase("Horror"))          return new CCGenre[]{CCGenre.GENRE_029};
+		if (txt.equalsIgnoreCase("Mahou Shoujo"))    return new CCGenre[]{};
+		if (txt.equalsIgnoreCase("Mecha"))           return new CCGenre[]{CCGenre.GENRE_054};
+		if (txt.equalsIgnoreCase("Music"))           return new CCGenre[]{CCGenre.GENRE_044};
+		if (txt.equalsIgnoreCase("Mystery"))         return new CCGenre[]{CCGenre.GENRE_037};
+		if (txt.equalsIgnoreCase("Psychological"))   return new CCGenre[]{CCGenre.GENRE_008};
+		if (txt.equalsIgnoreCase("Romance"))         return new CCGenre[]{CCGenre.GENRE_036};
+		if (txt.equalsIgnoreCase("Sci-Fi"))          return new CCGenre[]{CCGenre.GENRE_009};
+		if (txt.equalsIgnoreCase("Slice of Life"))   return new CCGenre[]{CCGenre.GENRE_050};
+		if (txt.equalsIgnoreCase("Sports"))          return new CCGenre[]{CCGenre.GENRE_043};
+		if (txt.equalsIgnoreCase("Supernatural"))    return new CCGenre[]{CCGenre.GENRE_038};
+		if (txt.equalsIgnoreCase("Thriller"))        return new CCGenre[]{CCGenre.GENRE_006};
+
+		return new CCGenre[]{};
 	}
 
 
@@ -402,21 +304,11 @@ public enum CCGenre implements ContinoousEnum<CCGenre> {
 	}
 	
 	public static Comparator<CCGenre> getTextComparator() {
-		return new Comparator<CCGenre>() {
-			@Override
-			public int compare(CCGenre o1, CCGenre o2) {
-				return o1.asString().compareTo(o2.asString());
-			}
-		};
+		return Comparator.comparing(CCGenre::asString);
 	}
 	
 	public static Comparator<CCGenre> getIDComparator() {
-		return new Comparator<CCGenre>() {
-			@Override
-			public int compare(CCGenre o1, CCGenre o2) {
-				return Integer.compare(o1.asInt(), o2.asInt());
-			}
-		};
+		return Comparator.comparingInt(CCGenre::asInt);
 	}
 
 	@Override

@@ -98,7 +98,7 @@ public class MALParser extends Metadataparser {
 				List<CCGenre> genres = CCStreams
 						.iterate(content.split(",")) //$NON-NLS-1$
 						.map(c -> CCGenre.parseFromMAL(c.trim()))
-						.filter(f -> !f.isEmpty())
+						.flatten(CCStreams::iterate)
 						.prepend(CCGenre.GENRE_022)
 						.unique()
 						.enumerate();

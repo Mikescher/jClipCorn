@@ -193,19 +193,15 @@ public class IMDBParserGerman extends IMDBParserCommon {
 	@Override
 	protected CCGenreList getGenres(String html) {
 		String regfind = RegExHelper.find(REGEX_GENRE, html);
+
+		List<CCGenre> genres = CCStreams
+				.iterate(regfind.split(REGEX_GENRE_SPLIT))
+				.map(c -> CCGenre.parseFromIMDBName(c.trim()))
+				.flatten(CCStreams::iterate)
+				.unique()
+				.enumerate();
 		
-		CCGenreList result = new CCGenreList();
-		
-		String[] genres = regfind.split(REGEX_GENRE_SPLIT);
-		
-		for (String ng : genres) {
-			CCGenre genre = CCGenre.parseFromIMDBName(ng);
-			if (! genre.isEmpty()) {
-				result = result.getTryAddGenre(genre);
-			}
-		}
-		
-		return result;
+		return new CCGenreList(genres);
 	}
 	
 	@Override

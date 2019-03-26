@@ -73,8 +73,8 @@ public class TMDBParser extends Metadataparser {
 		
 				String title = result.getString("title");
 				CCSingleOnlineReference id = CCSingleOnlineReference.createTMDB("movie/" + result.getInt("id"));
-				
-				if (id != null) out.add(Tuple.Create(title, id));
+
+				out.add(Tuple.Create(title, id));
 			}
 			
 			return CCStreams.iterate(out).unique(p -> p.Item2).enumerate();
@@ -104,7 +104,7 @@ public class TMDBParser extends Metadataparser {
 				String title = result.getString("name");
 				CCSingleOnlineReference id = CCSingleOnlineReference.createTMDB("tv/" + result.getInt("id"));
 
-				if (id != null) out.add(Tuple.Create(title, id));
+				out.add(Tuple.Create(title, id));
 			}
 			
 			return CCStreams.iterate(out).unique(p -> p.Item2).enumerate();
@@ -140,7 +140,7 @@ public class TMDBParser extends Metadataparser {
 
 				CCSingleOnlineReference id = CCSingleOnlineReference.createTMDB(type + "/" + result.getInt("id"));
 
-				if (id != null) out.add(Tuple.Create(title, id));
+				out.add(Tuple.Create(title, id));
 			}
 			
 			return CCStreams.iterate(out).unique(p -> p.Item2).enumerate();
@@ -211,13 +211,16 @@ public class TMDBParser extends Metadataparser {
 			if (result.OnlineScore == 0) result.OnlineScore = null;
 			
 			if (root.has("genres")) {
-				result.Genres = new CCGenreList();
-				JSONArray jsonGenres = root.getJSONArray("genres");
-				for (int i = 0; i < jsonGenres.length(); i++) {
-					CCGenre g = CCGenre.parseFromTMDbID(jsonGenres.getJSONObject(i).getInt("id"));
-					if (g.isValid())
-						result.Genres = result.Genres.getTryAddGenre(g);
-				}
+
+				List<CCGenre> genres = CCStreams
+						.iterate(root.getJSONArray("genres"))
+						.cast(JSONObject.class)
+						.map(c -> CCGenre.parseFromTMDbID(c.getInt("id")))
+						.flatten(CCStreams::iterate)
+						.unique()
+						.enumerate();
+				
+				result.Genres = new CCGenreList(genres);
 			}
 			
 			if (hasString(root, "imdb_id")) 
@@ -313,7 +316,7 @@ public class TMDBParser extends Metadataparser {
 				}
 			}
 			
-			if (result.FSK == null && result.FSKList.size() > 0) {
+			if (result.FSK == null && result.FSKList != null && result.FSKList.size() > 0) {
 
 				int count = 0;
 				double sum = 0;

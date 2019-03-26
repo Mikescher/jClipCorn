@@ -110,11 +110,11 @@ public class CCGenreList {
 	}
 
 	public CCGenreList(List<CCGenre> data) {
-		Optional<Long> _g = Optional.of(0x0000000000000000L);
+		long _g = 0x0000000000000000L;
 		
-		for (CCGenre g : data) _g = calcAddGenre(_g, g);
+		for (CCGenre g : data) _g = calcAddGenreSafe(_g, g.asInt());
 
-		genres = _g.get();
+		genres = _g;
 	}
 
 	private int getGenreInt(int idx) {
@@ -281,9 +281,18 @@ public class CCGenreList {
 		}
 	}
 	
+	private static Long calcAddGenreSafe(long rawval, int genre) {
+		int size = calcGetGenreCount(rawval);
+		if (size < SIZE) {
+			return calcSetGenreInt(rawval, size, genre);
+		} else {
+			return rawval;
+		}
+	}
+	
 	private static Optional<Long> calcAddGenre(long rawval, int genre) {
 		int size = calcGetGenreCount(rawval);
-		if (size < GSIZE) {
+		if (size < SIZE) {
 			return calcSetGenre(rawval, size, genre);
 		} else {
 			return Optional.empty();
@@ -295,11 +304,13 @@ public class CCGenreList {
 	}
 	
 	public static Optional<Long> calcAddGenre(Optional<Long> rawval, CCGenre val) {
-		return (rawval.isPresent()) ? calcAddGenre(rawval.get(), val.asInt()) : rawval;
+		if (!rawval.isPresent()) return Optional.empty();
+		return calcAddGenre(rawval.get(), val.asInt());
 	}
 	
 	public static Optional<Long> calcAddGenre(Optional<Long> rawval, int val) {
-		return (rawval.isPresent()) ? calcAddGenre(rawval.get(), val) : rawval;
+		if (!rawval.isPresent()) return Optional.empty();
+		return calcAddGenre(rawval.get(), val);
 	}
 
 	private static int calcGetGenreCount(long rawval) {

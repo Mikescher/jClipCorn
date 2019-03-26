@@ -297,7 +297,7 @@ public class ClipStatusBar extends AbstractClipStatusbar implements CCDBUpdateLi
 			case Running:
 				{
 					String strid = StringUtils.rightPad(Globals.TIMING_IDS.get(id), 31).replace(" ", "&nbsp;"); //$NON-NLS-1$ //$NON-NLS-2$
-					String strvl = StringUtils.leftPad("[RUNNING]", 5).replace(" ", "&nbsp;"); //$NON-NLS-1$ //$NON-NLS-2$
+					String strvl = StringUtils.leftPad("[RUNNING]", 5).replace(" ", "&nbsp;"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 					builder.append(String.format("<font face=\"monospace\">%s := %sms</font><br/>", strid, strvl)); //$NON-NLS-1$
 				}
 				break;

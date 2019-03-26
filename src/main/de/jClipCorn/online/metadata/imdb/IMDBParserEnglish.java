@@ -224,17 +224,15 @@ public class IMDBParserEnglish extends IMDBParserCommon {
 	@Override
 	protected CCGenreList getGenres(String html) {
 		List<String> regfind = getContentListBySelector(html, JSOUP_GENRE);
+
+		List<CCGenre> genres = CCStreams
+				.iterate(regfind)
+				.map(c -> CCGenre.parseFromIMDBName(c.trim()))
+				.flatten(CCStreams::iterate)
+				.unique()
+				.enumerate();
 		
-		CCGenreList result = new CCGenreList();
-		
-		for (String ng : regfind) {
-			CCGenre genre = CCGenre.parseFromIMDBName(ng.trim());
-			if (! genre.isEmpty()) {
-				result = result.getTryAddGenre(genre);
-			}
-		}
-		
-		return result;
+		return new CCGenreList(genres);
 	}
 	
 	@Override

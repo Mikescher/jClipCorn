@@ -102,7 +102,9 @@ public class BackupManager {
 		if (CCProperties.getInstance().ARG_READONLY) return;
 
 		if (CCProperties.getInstance().PROP_BACKUP_CREATEBACKUPS.getValue() && needsCreateBackup()) {
+			Globals.TIMINGS.start(Globals.TIMING_LOAD_CREATEBACKUP);
 			waitForInitialized(() -> tryCreateBackup(c));
+			Globals.TIMINGS.stop(Globals.TIMING_LOAD_CREATEBACKUP);
 		}
 
 		if (CCProperties.getInstance().PROP_BACKUP_AUTODELETEBACKUPS.getValue()) {

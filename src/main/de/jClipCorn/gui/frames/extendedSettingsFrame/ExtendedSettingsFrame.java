@@ -36,6 +36,7 @@ import de.jClipCorn.gui.resources.CachedResourceLoader;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.property.CCProperty;
+import de.jClipCorn.util.Str;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.helper.LookAndFeelManager;
 
@@ -130,18 +131,16 @@ public class ExtendedSettingsFrame extends JFrame implements ListSelectionListen
 
 		btnReset = new JButton(LocaleBundle.getString("extendedSettingsFrame.btnReset.title")); //$NON-NLS-1$
 		pnlContent.add(btnReset, "10, 8, left, center"); //$NON-NLS-1$
-		btnReset.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				int sel = tabSettings.convertRowIndexToModel(tabSettings.getSelectedRow());
+		btnReset.addActionListener(arg0 ->
+		{
+			int sel = tabSettings.convertRowIndexToModel(tabSettings.getSelectedRow());
 
-				lsEditor.stopCellEditing();
+			lsEditor.stopCellEditing();
 
-				if (sel >= 0) {
-					CCProperty<?> prop = properties.getPropertyList().get(sel);
-					prop.setDefault();
-					refresh();
-				}
+			if (sel >= 0) {
+				CCProperty<?> prop = properties.getPropertyList().get(sel);
+				prop.setDefault();
+				refresh();
 			}
 		});
 
@@ -157,24 +156,21 @@ public class ExtendedSettingsFrame extends JFrame implements ListSelectionListen
 
 		btnOK = new JButton(LocaleBundle.getString("UIGeneric.btnOK.text")); //$NON-NLS-1$
 		pnlContent.add(btnOK, "4, 12, right, center"); //$NON-NLS-1$
-		btnOK.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				lsEditor.stopCellEditing();
-				dispose();
-			}
+		btnOK.addActionListener(arg0 ->
+		{
+			lsEditor.stopCellEditing();
+			dispose();
 		});
+		btnOK.setEnabled(!CCProperties.getInstance().ARG_READONLY);
 
 		btnResetAll = new JButton(LocaleBundle.getString("extendedSettingsFrame.btnResetAll.title")); //$NON-NLS-1$
 		pnlContent.add(btnResetAll, "6, 12, left, center"); //$NON-NLS-1$
-		btnResetAll.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				if (DialogHelper.showLocaleYesNo(ExtendedSettingsFrame.this, "extendedSettingsFrame.dlgResetAll.dlg")) { //$NON-NLS-1$
-					properties.resetAll();
+		btnResetAll.addActionListener(arg0 ->
+		{
+			if (DialogHelper.showLocaleYesNo(ExtendedSettingsFrame.this, "extendedSettingsFrame.dlgResetAll.dlg")) { //$NON-NLS-1$
+				properties.resetAll();
 
-					refresh();
-				}
+				refresh();
 			}
 		});
 
@@ -221,21 +217,17 @@ public class ExtendedSettingsFrame extends JFrame implements ListSelectionListen
 			for (ActionListener l : btnValueSet.getActionListeners()) btnValueSet.removeActionListener(l);
 			for (ActionListener l : btnValueReset.getActionListeners()) btnValueReset.removeActionListener(l);
 			
-			btnValueSet.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent arg0) {
-					prop.setValue(prop.getComponentValue(comp1));
-					refresh();
-				}
+			btnValueSet.addActionListener(arg0 ->
+			{
+				prop.setValue(prop.getComponentValue(comp1));
+				refresh();
 			});
 			
-			btnValueReset.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent arg0) {
-					prop.setValue(prop.getDefault());
-					prop.setComponentValueToValue(comp1, prop.getValue());
-					refresh();
-				}
+			btnValueReset.addActionListener(arg0 ->
+			{
+				prop.setValue(prop.getDefault());
+				prop.setComponentValueToValue(comp1, prop.getValue());
+				refresh();
 			});
 
 			prop.setComponentValueToValue(comp1, prop.getValue());
@@ -250,10 +242,10 @@ public class ExtendedSettingsFrame extends JFrame implements ListSelectionListen
 			lblDescription.setText(prop.getDescriptionOrEmpty());
 			lblCategory.setText(prop.getCategory().Index + " :: " + (prop.getCategory().isVisble() ? prop.getCategory().Name :  "~~HIDDEN~~")); //$NON-NLS-1$ //$NON-NLS-2$
 		} else {
-			edName.setText(new String());
-			edTyp.setText(new String());
-			lblDescription.setText(new String());
-			lblCategory.setText(new String());
+			edName.setText(Str.Empty);
+			edTyp.setText(Str.Empty);
+			lblDescription.setText(Str.Empty);
+			lblCategory.setText(Str.Empty);
 
 			for (ActionListener l : btnValueSet.getActionListeners()) btnValueSet.removeActionListener(l);
 			for (ActionListener l : btnValueReset.getActionListeners()) btnValueReset.removeActionListener(l);

@@ -105,42 +105,33 @@ public abstract class AutomaticSettingsFrame extends JFrame {
 				FormSpecs.LINE_GAP_ROWSPEC,}));
 		
 		btnOk = new JButton(LocaleBundle.getString("UIGeneric.btnOK.text")); //$NON-NLS-1$
-		btnOk.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				if (! validateValues()) {
-					return;
-				}
-				
-				if (! Main.DEBUG) {
-					DialogHelper.showInformation(AutomaticSettingsFrame.this, LocaleBundle.getString("Settingsframe.informationDlg.caption"), LocaleBundle.getString("Settingsframe.informationDlg.text")); //$NON-NLS-1$ //$NON-NLS-2$
-				}
-				
-				okValues();
-				
-				dispose();
+		btnOk.addActionListener(arg0 ->
+		{
+			if (! validateValues()) return;
+			if (CCProperties.getInstance().ARG_READONLY) return;
+
+			if (! Main.DEBUG) {
+				DialogHelper.showInformation(AutomaticSettingsFrame.this, LocaleBundle.getString("Settingsframe.informationDlg.caption"), LocaleBundle.getString("Settingsframe.informationDlg.text")); //$NON-NLS-1$ //$NON-NLS-2$
 			}
+
+			okValues();
+
+			dispose();
 		});
 		pnlBottom.add(btnOk, "4, 2, fill, top"); //$NON-NLS-1$
+		btnOk.setEnabled(!CCProperties.getInstance().ARG_READONLY);
 		tabOrder.add(btnOk);
 		
 		btnCancel = new JButton(LocaleBundle.getString("UIGeneric.btnCancel.text")); //$NON-NLS-1$
-		btnCancel.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				dispose();
-			}
-		});
+		btnCancel.addActionListener(arg0 -> dispose());
 		pnlBottom.add(btnCancel, "6, 2, fill, top"); //$NON-NLS-1$
 		tabOrder.add(btnCancel);
 		
 		btnExtended = new JButton(LocaleBundle.getString("Settingsframe.btnExtended.title")); //$NON-NLS-1$
-		btnExtended.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				(new ExtendedSettingsFrame(AutomaticSettingsFrame.this, properties)).setVisible(true);
-				dispose();
-			}
+		btnExtended.addActionListener(e ->
+		{
+			(new ExtendedSettingsFrame(AutomaticSettingsFrame.this, properties)).setVisible(true);
+			dispose();
 		});
 		pnlBottom.add(btnExtended, "10, 2"); //$NON-NLS-1$
 		tabOrder.add(btnExtended);
@@ -194,12 +185,7 @@ public abstract class AutomaticSettingsFrame extends JFrame {
 				}
 
 				JButton btnReset = new JButton(LocaleBundle.getString("Settingsframe.btnReset.title")); //$NON-NLS-1$
-				btnReset.addActionListener(new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						p.setComponentValueToValue(comp1, p.getDefault());
-					}
-				});
+				btnReset.addActionListener(e -> p.setComponentValueToValue(comp1, p.getDefault()));
 				pnlTab.add(btnReset, "8, " + c*2); //$NON-NLS-1$
 				tabOrder.add(btnReset);
 				

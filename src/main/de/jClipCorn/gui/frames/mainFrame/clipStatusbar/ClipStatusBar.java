@@ -231,6 +231,7 @@ public class ClipStatusBar extends AbstractClipStatusbar implements CCDBUpdateLi
 		condAppend(tooltip, Globals.TIMING_LOAD_INIT_BACKUPMANAGER);
 		condAppend(tooltip, Globals.TIMING_LOAD_DATABASE_CONNECT);
 		condAppend(tooltip, Globals.TIMING_LOAD_MOVIELIST_FILL);
+		condAppend(tooltip, Globals.TIMING_LOAD_CREATEBACKUP);
 		condAppend(tooltip, Globals.TIMING_LOAD_TOTAL);
 
 		tooltip.append("<hr/>"); //$NON-NLS-1$

@@ -216,7 +216,7 @@ public class CCActionTree extends UIActionTree{
 				{
 					for (final CCSingleTag tag : CCTagList.TAGS) {
 						if (!tag.IsMovieTag) continue;
-						add(elemTagsMov, String.format("SwitchTag_%02d", tag.Index), null, String.format("CCMovieTags.TAG_%02d", tag.Index), tag.IconOn, true, (e) -> onClickSwitchTag(tag));
+						add(elemTagsMov, String.format("SwitchTag_Movie_%02d", tag.Index), null, String.format("CCMovieTags.TAG_%02d", tag.Index), tag.IconOn, true, (e) -> onClickSwitchTag(tag));
 					}
 				}
 
@@ -224,7 +224,7 @@ public class CCActionTree extends UIActionTree{
 				{
 					for (final CCSingleTag tag : CCTagList.TAGS) {
 						if (!tag.IsSeriesTag) continue;
-						add(elemTagsSer, String.format("SwitchTag_%02d", tag.Index), null, String.format("CCMovieTags.TAG_%02d", tag.Index), tag.IconOn, true, (e) -> onClickSwitchTag(tag));
+						add(elemTagsSer, String.format("SwitchTag_Series_%02d", tag.Index), null, String.format("CCMovieTags.TAG_%02d", tag.Index), tag.IconOn, true, (e) -> onClickSwitchTag(tag));
 					}
 				}
 			}

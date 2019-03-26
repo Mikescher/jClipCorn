@@ -22,9 +22,10 @@ public final class Globals {
 	public static int TIMING_INIT_PRELOADRESOURCES        = 0x003;
 
 	public static int TIMING_LOAD_TOTAL                   = 0x100;
-	public static int TIMING_LOAD_INIT_BACKUPMANAGER      = 0x102;
-	public static int TIMING_LOAD_DATABASE_CONNECT        = 0x103;
-	public static int TIMING_LOAD_MOVIELIST_FILL          = 0x104;
+	public static int TIMING_LOAD_INIT_BACKUPMANAGER      = 0x101;
+	public static int TIMING_LOAD_DATABASE_CONNECT        = 0x102;
+	public static int TIMING_LOAD_MOVIELIST_FILL          = 0x103;
+	public static int TIMING_LOAD_CREATEBACKUP            = 0x104;
 
 	public static int TIMING_STARTUP_TOTAL                = 0x200;
 
@@ -45,6 +46,7 @@ public final class Globals {
 		TIMING_IDS.put(TIMING_LOAD_INIT_BACKUPMANAGER,      "LOAD_INIT_BACKUPMANAGER");
 		TIMING_IDS.put(TIMING_LOAD_DATABASE_CONNECT,        "LOAD_DATABASE_CONNECT");
 		TIMING_IDS.put(TIMING_LOAD_MOVIELIST_FILL,          "LOAD_MOVIELIST_FILL");
+		TIMING_IDS.put(TIMING_LOAD_CREATEBACKUP,            "TIMING_LOAD_CREATEBACKUP");
 		TIMING_IDS.put(TIMING_LOAD_TOTAL,                   "LOAD_TOTAL");
 
 		TIMING_IDS.put(TIMING_STARTUP_TOTAL,                "STARTUP_TOTAL");

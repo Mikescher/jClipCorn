@@ -229,7 +229,7 @@ public class MainFrame extends JFrame implements CCDBUpdateListener, FileDrop.Li
 		setVisible(true);
 	}
 	
-	public JProgressBar getProgressBar() {
+	private JProgressBar getProgressBar() {
 		return statusbar.getProgressbar();
 	}
 	
@@ -352,13 +352,13 @@ public class MainFrame extends JFrame implements CCDBUpdateListener, FileDrop.Li
 	@Override
 	public void onAfterLoad() {
 		if (CCProperties.getInstance().PROP_COMMON_CHECKFORUPDATES.getValue() && ! Main.BETA) {
-			new UpdateConnector(Main.TITLE, Main.VERSION, e -> SwingUtilities.invokeLater(() -> 
+			new UpdateConnector(Main.TITLE, Main.VERSION, (src, available, version) -> SwingUtilities.invokeLater(() -> 
 			{
-				if (e.getID() == 1) {
+				if (available) {
 					if (Main.DEBUG) {
 						CCLog.addDebug("Update found"); //$NON-NLS-1$
 					} else {
-						ShowUpdateFrame suf = new ShowUpdateFrame(MainFrame.this, (UpdateConnector) e.getSource(), true);
+						ShowUpdateFrame suf = new ShowUpdateFrame(MainFrame.this, src, true);
 						suf.setVisible(true);
 					}
 				}

@@ -2,13 +2,10 @@ package de.jClipCorn.database.databaseElement;
 
 import java.io.File;
 import java.sql.Date;
+
+import de.jClipCorn.database.databaseElement.columnTypes.*;
 import org.jdom2.Element;
 
-import de.jClipCorn.database.databaseElement.columnTypes.CCDateTimeList;
-import de.jClipCorn.database.databaseElement.columnTypes.CCFileFormat;
-import de.jClipCorn.database.databaseElement.columnTypes.CCQuality;
-import de.jClipCorn.database.databaseElement.columnTypes.CCFileSize;
-import de.jClipCorn.database.databaseElement.columnTypes.CCTagList;
 import de.jClipCorn.database.util.ExtendedViewedState;
 import de.jClipCorn.database.util.ExtendedViewedStateType;
 import de.jClipCorn.gui.localization.LocaleBundle;
@@ -188,10 +185,22 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 		
 		updateDB();
 	}
+
+	public void switchTag(CCSingleTag t) {
+		tags.switchTag(t);
+
+		updateDB();
+	}
 	
 	public void switchTag(int c) {
 		tags.switchTag(c);
 		
+		updateDB();
+	}
+
+	public void setTag(CCSingleTag t, boolean v) {
+		tags.setTag(t, v);
+
 		updateDB();
 	}
 	
@@ -200,7 +209,12 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 		
 		updateDB();
 	}
-	
+
+	@Override
+	public boolean getTag(CCSingleTag t) {
+		return tags.getTag(t);
+	}
+
 	@Override
 	public boolean getTag(int c) {
 		return tags.getTag(c);

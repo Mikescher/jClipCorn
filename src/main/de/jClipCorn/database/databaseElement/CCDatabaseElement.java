@@ -2,22 +2,10 @@ package de.jClipCorn.database.databaseElement;
 
 import java.awt.image.BufferedImage;
 
+import de.jClipCorn.database.databaseElement.columnTypes.*;
 import org.jdom2.Element;
 
 import de.jClipCorn.database.CCMovieList;
-import de.jClipCorn.database.databaseElement.columnTypes.CCDBElementTyp;
-import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguage;
-import de.jClipCorn.database.databaseElement.columnTypes.CCFSK;
-import de.jClipCorn.database.databaseElement.columnTypes.CCFileFormat;
-import de.jClipCorn.database.databaseElement.columnTypes.CCFileSize;
-import de.jClipCorn.database.databaseElement.columnTypes.CCGenre;
-import de.jClipCorn.database.databaseElement.columnTypes.CCGenreList;
-import de.jClipCorn.database.databaseElement.columnTypes.CCGroupList;
-import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReferenceList;
-import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineScore;
-import de.jClipCorn.database.databaseElement.columnTypes.CCQuality;
-import de.jClipCorn.database.databaseElement.columnTypes.CCTagList;
-import de.jClipCorn.database.databaseElement.columnTypes.CCUserScore;
 import de.jClipCorn.database.util.ExtendedViewedState;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
@@ -458,8 +446,20 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 		updateDB();
 	}
 
+	public void switchTag(CCSingleTag t) {
+		tags.switchTag(t);
+
+		updateDB();
+	}
+
 	public void switchTag(int c) {
 		tags.switchTag(c);
+
+		updateDB();
+	}
+
+	public void setTag(CCSingleTag t, boolean v) {
+		tags.setTag(t, v);
 
 		updateDB();
 	}
@@ -468,6 +468,10 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 		tags.setTag(c, v);
 
 		updateDB();
+	}
+
+	public boolean getTag(CCSingleTag t) {
+		return tags.getTag(t);
 	}
 
 	public boolean getTag(int c) {

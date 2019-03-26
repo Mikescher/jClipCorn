@@ -2,8 +2,6 @@ package de.jClipCorn.gui.frames.checkDatabaseFrame;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.lang.reflect.InvocationTargetException;
@@ -24,8 +22,6 @@ import javax.swing.ListModel;
 import javax.swing.ListSelectionModel;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingUtilities;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseErrors.DatabaseAutofixer;
@@ -37,6 +33,7 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.log.CCLog;
 import de.jClipCorn.gui.resources.CachedResourceLoader;
 import de.jClipCorn.gui.resources.Resources;
+import de.jClipCorn.util.datatypes.CountAppendix;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.listener.ProgressCallbackProgressBarHelper;
 
@@ -56,7 +53,7 @@ public class CheckDatabaseFrame extends JFrame {
 	private JProgressBar pBar;
 	private JButton btnAutofix;
 	private JScrollPane scrlPnlLeft;
-	private JList<DatabaseErrorType> lsCategories;
+	private JList<CountAppendix<DatabaseErrorType>> lsCategories;
 	private JSplitPane pnlCenter;
 	private JButton btnFixselected;
 	
@@ -86,12 +83,7 @@ public class CheckDatabaseFrame extends JFrame {
 		contentPanel.add(pnlTop, BorderLayout.NORTH);
 		
 		btnValidate = new JButton(LocaleBundle.getString("CheckDatabaseDialog.btnValidate.text")); //$NON-NLS-1$
-		btnValidate.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				startValidate();
-			}
-		});
+		btnValidate.addActionListener(arg0 -> startValidate());
 		pnlTop.add(btnValidate);
 		
 		pBar = new JProgressBar();
@@ -101,12 +93,7 @@ public class CheckDatabaseFrame extends JFrame {
 		pnlTop.add(lblInfo);
 		
 		btnAutofix = new JButton(LocaleBundle.getString("CheckDatabaseDialog.btnAutofix.text")); //$NON-NLS-1$
-		btnAutofix.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				autoFix();
-			}
-		});
+		btnAutofix.addActionListener(arg0 -> autoFix());
 		btnAutofix.setEnabled(false);
 		pnlTop.add(btnAutofix);
 		
@@ -159,23 +146,16 @@ public class CheckDatabaseFrame extends JFrame {
 			}
 		});
 		
-		lsCategories.addListSelectionListener(new ListSelectionListener() {
-			@Override
-			public void valueChanged(ListSelectionEvent arg0) {
-				ListModel<DatabaseError> lm = lsMain.getModel();
-				if (lm instanceof DatabaseErrorListModel) {
-					((DatabaseErrorListModel)lm).updateFilter(lsCategories.getSelectedValue());
-				}
+		lsCategories.addListSelectionListener(arg0 ->
+		{
+			ListModel<DatabaseError> lm = lsMain.getModel();
+			if (lm instanceof DatabaseErrorListModel) {
+				((DatabaseErrorListModel)lm).updateFilter(lsCategories.getSelectedValue().Value);
 			}
 		});
 		
 		btnFixselected = new JButton(LocaleBundle.getString("CheckDatabaseDialog.btnFixSelected.text")); //$NON-NLS-1$
-		btnFixselected.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				fixSelected();
-			}
-		});
+		btnFixselected.addActionListener(arg0 -> fixSelected());
 		btnFixselected.setEnabled(false);
 		pnlTop.add(btnFixselected);
 	}
@@ -190,39 +170,33 @@ public class CheckDatabaseFrame extends JFrame {
 		btnValidate.setEnabled(false);
 		btnAutofix.setEnabled(false);
 		
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				boolean succ = DatabaseAutofixer.fixErrors(errorList, new ProgressCallbackProgressBarHelper(pBar));
-				endFixThread(succ);
-			}
+		new Thread(() ->
+		{
+			boolean succ = DatabaseAutofixer.fixErrors(errorList, new ProgressCallbackProgressBarHelper(pBar));
+			endFixThread(succ);
 		}, "THREAD_AUTOFIX_DB").start(); //$NON-NLS-1$
 	}
 	
 	private void endThread() {
-		SwingUtilities.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-				btnValidate.setEnabled(true);
-				btnFixselected.setEnabled(errorList.size() > 0);
-				btnAutofix.setEnabled(errorList.size() > 0);
-				lblInfo.setText(LocaleBundle.getFormattedString("CheckDatabaseDialog.lblInfo.text_2", errorList.size())); //$NON-NLS-1$
-			}
+		SwingUtilities.invokeLater(() ->
+		{
+			btnValidate.setEnabled(true);
+			btnFixselected.setEnabled(errorList.size() > 0);
+			btnAutofix.setEnabled(errorList.size() > 0);
+			lblInfo.setText(LocaleBundle.getFormattedString("CheckDatabaseDialog.lblInfo.text_2", errorList.size())); //$NON-NLS-1$
 		});
 	}
 	
 	private void endFixThread(final boolean success) {
-		SwingUtilities.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-				btnValidate.setEnabled(true);
-				btnAutofix.setEnabled(true);
-				
-				if (success) {
-					DialogHelper.showLocalInformation(CheckDatabaseFrame.this, "CheckDatabaseDialog.Autofix.dialogSuccessfull"); //$NON-NLS-1$
-				} else {
-					DialogHelper.showLocalInformation(CheckDatabaseFrame.this, "CheckDatabaseDialog.Autofix.dialogUnsuccessfull"); //$NON-NLS-1$
-				}
+		SwingUtilities.invokeLater(() ->
+		{
+			btnValidate.setEnabled(true);
+			btnAutofix.setEnabled(true);
+
+			if (success) {
+				DialogHelper.showLocalInformation(CheckDatabaseFrame.this, "CheckDatabaseDialog.Autofix.dialogSuccessfull"); //$NON-NLS-1$
+			} else {
+				DialogHelper.showLocalInformation(CheckDatabaseFrame.this, "CheckDatabaseDialog.Autofix.dialogUnsuccessfull"); //$NON-NLS-1$
 			}
 		});
 	}
@@ -232,29 +206,19 @@ public class CheckDatabaseFrame extends JFrame {
 			lsMain.setModel(lm);
 		} else {
 			try {
-				SwingUtilities.invokeAndWait(new Runnable() {
-					@Override
-					public void run() {
-						lsMain.setModel(lm);
-					}
-				});
+				SwingUtilities.invokeAndWait(() -> lsMain.setModel(lm));
 			} catch (InvocationTargetException | InterruptedException e) {
 				CCLog.addError(e);
 			}
 		}
 	}
 	
-	private void setCategoriesListModel(final ListModel<DatabaseErrorType> lm) {
+	private void setCategoriesListModel(final ListModel<CountAppendix<DatabaseErrorType>> lm) {
 		if (SwingUtilities.isEventDispatchThread()) {
 			lsCategories.setModel(lm);
 		} else {
 			try {
-				SwingUtilities.invokeAndWait(new Runnable() {
-					@Override
-					public void run() {
-						lsCategories.setModel(lm);
-					}
-				});
+				SwingUtilities.invokeAndWait(() -> lsCategories.setModel(lm));
 			} catch (InvocationTargetException | InterruptedException e) {
 				CCLog.addError(e);
 			}
@@ -266,25 +230,23 @@ public class CheckDatabaseFrame extends JFrame {
 		btnValidate.setEnabled(false);
 		btnAutofix.setEnabled(false);
 		
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				List<DatabaseError> errors = new ArrayList<>();
-				
-				DatabaseValidator.startValidate(errors, movielist, new ProgressCallbackProgressBarHelper(pBar));
-				
-				errorList = errors;
-				
-				updateLists();
-				
-				endThread();
-			}
+		new Thread(() ->
+		{
+			List<DatabaseError> errors = new ArrayList<>();
+
+			DatabaseValidator.startValidate(errors, movielist, new ProgressCallbackProgressBarHelper(pBar));
+
+			errorList = errors;
+
+			updateLists();
+
+			endThread();
 		}, "THREAD_VALIDATE_DATABASE").start(); //$NON-NLS-1$
 	}
 
 	private void updateLists() { // Threadsafe
 		DatabaseErrorListModel dlm = new DatabaseErrorListModel();
-		DefaultListModel<DatabaseErrorType> clm = new DefaultListModel<>();
+		DefaultListModel<CountAppendix<DatabaseErrorType>> clm = new DefaultListModel<>();
 		
 		clm.addElement(null); //null = "All" (not sure if good code or lazy code)
 		
@@ -294,14 +256,16 @@ public class CheckDatabaseFrame extends JFrame {
 			boolean found = false;
 			
 			for (int i = 0; i < clm.getSize(); i++) {
-				if (! found && de.getType().equals(clm.get(i))) {
+				CountAppendix<DatabaseErrorType> idxval = clm.get(i);
+				if (idxval != null && de.getType().equals(idxval.Value)) {
 					found = true;
 					clm.get(i).incCount();
+					break;
 				}
 			}
 			
 			if (! found) {
-				clm.addElement(de.getType().copy(1));
+				clm.addElement(new CountAppendix<>(de.getType(), 1, this::typeToString));
 			}
 		}
 		
@@ -313,7 +277,16 @@ public class CheckDatabaseFrame extends JFrame {
 		
 		setCategoriesListModel(clm);
 	}
-	
+
+	@SuppressWarnings("nls")
+	private String typeToString(CountAppendix<DatabaseErrorType> v) {
+		if (v.getCount() == 0) {
+			return LocaleBundle.getString(String.format("CheckDatabaseDialog.Errornames.ERR_%02d", v.Value.getType()));
+		} else {
+			return LocaleBundle.getString(String.format("CheckDatabaseDialog.Errornames.ERR_%02d", v.Value.getType())) + " (" + v.getCount() + ")";
+		}
+	}
+
 	private void fixSelected() {
 		List<DatabaseError> errlist = lsMain.getSelectedValuesList();
 		

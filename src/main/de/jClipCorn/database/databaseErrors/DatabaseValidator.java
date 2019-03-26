@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import de.jClipCorn.database.databaseElement.columnTypes.*;
 import org.apache.commons.lang.StringUtils;
 
 import de.jClipCorn.database.CCMovieList;
@@ -16,13 +17,6 @@ import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.database.databaseElement.CCSeries;
-import de.jClipCorn.database.databaseElement.columnTypes.CCFileFormat;
-import de.jClipCorn.database.databaseElement.columnTypes.CCFileSize;
-import de.jClipCorn.database.databaseElement.columnTypes.CCGenreList;
-import de.jClipCorn.database.databaseElement.columnTypes.CCGroup;
-import de.jClipCorn.database.databaseElement.columnTypes.CCQuality;
-import de.jClipCorn.database.databaseElement.columnTypes.CCSingleOnlineReference;
-import de.jClipCorn.database.databaseElement.columnTypes.CCTagList;
 import de.jClipCorn.database.util.covercache.CCCoverCache;
 import de.jClipCorn.database.util.covercache.CCFolderCoverCache;
 import de.jClipCorn.properties.CCProperties;
@@ -193,6 +187,14 @@ public class DatabaseValidator {
 
 		if (series.getCoverDimensions().Item1 > ImageUtilities.getCoverWidth() && series.getCoverDimensions().Item2 < ImageUtilities.getCoverHeight()) {
 			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_COVER_TOO_BIG, series));
+		}
+
+		// ###############################################
+		// Invalid Tag for series
+		// ###############################################
+
+		for (CCSingleTag t : series.getTags().iterate()) {
+			if (!t.IsMovieTag) e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_TAG_NOT_VALID_ON_SERIES, series));
 		}
 	}
 
@@ -467,6 +469,14 @@ public class DatabaseValidator {
 		if (mov.getCoverDimensions().Item1 > ImageUtilities.getCoverWidth() && mov.getCoverDimensions().Item2 < ImageUtilities.getCoverHeight()) {
 			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_COVER_TOO_BIG, mov));
 		}
+
+		// ###############################################
+		// Invalid Tag for movies
+		// ###############################################
+
+		for (CCSingleTag t : mov.getTags().iterate()) {
+			if (!t.IsMovieTag) e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_TAG_NOT_VALID_ON_MOVIE, mov));
+		}
 	}
 
 	private static void validateSeason(List<DatabaseError> e, CCMovieList movielist, CCSeason season) {
@@ -656,6 +666,14 @@ public class DatabaseValidator {
 
 		if (! episode.getViewedHistory().isValid()) {
 			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_INVALID_HISTORY, episode));
+		}
+
+		// ###############################################
+		// Invalid Tag for episode
+		// ###############################################
+
+		for (CCSingleTag t : episode.getTags().iterate()) {
+			if (!t.IsMovieTag) e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_TAG_NOT_VALID_ON_EPISODE, episode));
 		}
 	}
 

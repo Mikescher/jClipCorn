@@ -1,7 +1,5 @@
 package de.jClipCorn.gui.actionTree;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.io.File;
@@ -17,10 +15,7 @@ import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.CCSeries;
-import de.jClipCorn.database.databaseElement.columnTypes.CCDBElementTyp;
-import de.jClipCorn.database.databaseElement.columnTypes.CCDateTimeList;
-import de.jClipCorn.database.databaseElement.columnTypes.CCTagList;
-import de.jClipCorn.database.databaseElement.columnTypes.CCUserScore;
+import de.jClipCorn.database.databaseElement.columnTypes.*;
 import de.jClipCorn.database.util.ExportHelper;
 import de.jClipCorn.database.util.backupManager.BackupManager;
 import de.jClipCorn.database.xml.CCBXMLReader;
@@ -70,6 +65,7 @@ import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.helper.FileChooserHelper;
 import de.jClipCorn.util.helper.SimpleFileUtils;
 
+@SuppressWarnings("unused")
 public class CCActionTree extends UIActionTree{
 	public final static String EVENT_ON_MOVIE_EXECUTED_0 = "PlayMovie"; //$NON-NLS-1$
 	public final static String EVENT_ON_MOVIE_EXECUTED_1 = "PrevMovie"; //$NON-NLS-1$
@@ -216,11 +212,19 @@ public class CCActionTree extends UIActionTree{
 					add(serRating, "SetSerRating5",  null, "CCMovieScore.R5",  CCUserScore.RATING_V.getIconRef(),   true, (e) -> onClickOtherSetRating(e, CCUserScore.RATING_V));
 				}
 
-				CCActionElement elemTags = add(other, "SetTags", null, "ClipMenuBar.Other.SetTags", Resources.ICN_MENUBAR_TAGS);
+				CCActionElement elemTagsMov = add(other, "SetTags_Movies", null, "ClipMenuBar.Other.SetTags", Resources.ICN_MENUBAR_TAGS);
 				{
-					for (int i = 0; i < CCTagList.ACTIVETAGS; i++) {
-						final int idx = i;
-						add(elemTags, String.format("SwitchTag_%02d", idx), null, String.format("CCMovieTags.TAG_%02d", idx), Resources.ICN_TABLE_TAG_X_1[idx], true, (e) -> onClickSwitchTag(idx));
+					for (final CCSingleTag tag : CCTagList.TAGS) {
+						if (!tag.IsMovieTag) continue;
+						add(elemTagsMov, String.format("SwitchTag_%02d", tag.Index), null, String.format("CCMovieTags.TAG_%02d", tag.Index), tag.IconOn, true, (e) -> onClickSwitchTag(tag));
+					}
+				}
+
+				CCActionElement elemTagsSer = add(other, "SetTags_Series", null, "ClipMenuBar.Other.SetTags", Resources.ICN_MENUBAR_TAGS);
+				{
+					for (final CCSingleTag tag : CCTagList.TAGS) {
+						if (!tag.IsSeriesTag) continue;
+						add(elemTagsSer, String.format("SwitchTag_%02d", tag.Index), null, String.format("CCMovieTags.TAG_%02d", tag.Index), tag.IconOn, true, (e) -> onClickSwitchTag(tag));
 					}
 				}
 			}
@@ -299,7 +303,7 @@ public class CCActionTree extends UIActionTree{
 		ScanFolderFrame sff = new ScanFolderFrame(owner);
 		sff.setVisible(true);
 	}
-	
+
 	private void onClickExtrasCompareDBs(CCTreeActionEvent e) {
 		CompareDatabaseFrame cdf = new CompareDatabaseFrame(owner, movielist);
 		cdf.setVisible(true);
@@ -431,15 +435,13 @@ public class CCActionTree extends UIActionTree{
 			if (returnval == JFileChooser.APPROVE_OPTION) {
 				final boolean includeCover = 0 == DialogHelper.showLocaleOptions(owner, "ExportHelper.dialogs.exportCover"); //$NON-NLS-1$
 
-				new Thread(new Runnable() {
-					@Override
-					public void run() {
-						owner.beginBlockingIntermediate();
+				new Thread(() ->
+				{
+					owner.beginBlockingIntermediate();
 
-						ExportHelper.exportMovie(PathFormatter.forceExtension(chooser.getSelectedFile(), ExportHelper.EXTENSION_SINGLEEXPORT), movielist, (CCMovie) element, includeCover);
-						
-						owner.endBlockingIntermediate();
-					}
+					ExportHelper.exportMovie(PathFormatter.forceExtension(chooser.getSelectedFile(), ExportHelper.EXTENSION_SINGLEEXPORT), movielist, (CCMovie) element, includeCover);
+
+					owner.endBlockingIntermediate();
 				}, "THREAD_EXPORT_JSCCEXPORT_MOVIE").start(); //$NON-NLS-1$
 			}
 		}
@@ -481,12 +483,7 @@ public class CCActionTree extends UIActionTree{
 
 	private void onClickDatabaseClear(CCTreeActionEvent e) {
 		if (DialogHelper.showLocaleYesNo(owner, "Dialogs.ClearDatabase")) { //$NON-NLS-1$
-			new Thread(new Runnable() {
-				@Override
-				public void run() {
-					movielist.clear();
-				}
-			}, "THREAD_CLEAR_DATABASE").start(); //$NON-NLS-1$
+			new Thread(() -> movielist.clear(), "THREAD_CLEAR_DATABASE").start(); //$NON-NLS-1$
 		}
 	}
 	
@@ -498,15 +495,13 @@ public class CCActionTree extends UIActionTree{
 		int returnval = chooser.showSaveDialog(owner);
 
 		if (returnval == JFileChooser.APPROVE_OPTION) {
-			new Thread(new Runnable() {
-				@Override
-				public void run() {
-					owner.beginBlockingIntermediate();
+			new Thread(() ->
+			{
+				owner.beginBlockingIntermediate();
 
-					ExportHelper.exportDatabase(PathFormatter.forceExtension(chooser.getSelectedFile(), ExportHelper.EXTENSION_FULLEXPORT), movielist);
+				ExportHelper.exportDatabase(PathFormatter.forceExtension(chooser.getSelectedFile(), ExportHelper.EXTENSION_FULLEXPORT), movielist);
 
-					owner.endBlockingIntermediate();
-				}
+				owner.endBlockingIntermediate();
 			}, "THREAD_EXPORT_JXMLBKP").start(); //$NON-NLS-1$
 		}
 	}
@@ -594,15 +589,13 @@ public class CCActionTree extends UIActionTree{
 			if (returnval == JFileChooser.APPROVE_OPTION) {
 				final boolean includeCover = 0 == DialogHelper.showLocaleOptions(owner, "ExportHelper.dialogs.exportCover"); //$NON-NLS-1$
 
-				new Thread(new Runnable() {
-					@Override
-					public void run() {
-						owner.beginBlockingIntermediate();
+				new Thread(() ->
+				{
+					owner.beginBlockingIntermediate();
 
-						ExportHelper.exportSeries(PathFormatter.forceExtension(chooser.getSelectedFile(), ExportHelper.EXTENSION_SINGLEEXPORT), movielist, (CCSeries) element, includeCover);
-						
-						owner.endBlockingIntermediate();
-					}
+					ExportHelper.exportSeries(PathFormatter.forceExtension(chooser.getSelectedFile(), ExportHelper.EXTENSION_SINGLEEXPORT), movielist, (CCSeries) element, includeCover);
+
+					owner.endBlockingIntermediate();
 				}, "THREAD_EXPORT_JSCCEXPORT_SERIES").start(); //$NON-NLS-1$
 			}
 		}
@@ -702,23 +695,11 @@ public class CCActionTree extends UIActionTree{
 	}
 
 	private void onClickHelpCheckUpdates(CCTreeActionEvent e) {
-		new UpdateConnector(Main.TITLE, Main.VERSION, new ActionListener() {
-			@Override
-			public void actionPerformed(final ActionEvent e) {
-				SwingUtilities.invokeLater(new Runnable() {
-					@Override
-					public void run() {
-						if (e.getID() == 1) {
-							ShowUpdateFrame suf = new ShowUpdateFrame(owner, (UpdateConnector) e.getSource(), true);
-							suf.setVisible(true);
-						} else {
-							ShowUpdateFrame suf = new ShowUpdateFrame(owner, (UpdateConnector) e.getSource(), false);
-							suf.setVisible(true);
-						}
-					}
-				});
-			}
-		}, false);
+		new UpdateConnector(Main.TITLE, Main.VERSION, (src, available, version) -> SwingUtilities.invokeLater(() ->
+		{
+			ShowUpdateFrame suf = new ShowUpdateFrame(owner, src, available);
+			suf.setVisible(true);
+		}), false);
 	}
 	
 	private void onClickHelpShowAbout(CCTreeActionEvent e) {
@@ -796,10 +777,10 @@ public class CCActionTree extends UIActionTree{
 		cpf.setVisible(true);
 	}
 	
-	private void onClickSwitchTag(int c) {
+	private void onClickSwitchTag(CCSingleTag t) {
 		CCDatabaseElement el = owner.getSelectedElement();
 		if (el != null) {
-			el.switchTag(c);
+			el.switchTag(t);
 		}
 	}
 }

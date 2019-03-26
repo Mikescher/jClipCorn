@@ -6,61 +6,38 @@ import java.awt.image.BufferedImage;
 
 import javax.swing.ImageIcon;
 
-import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.database.util.iterators.TagsIterator;
 import de.jClipCorn.gui.resources.CachedResourceLoader;
-import de.jClipCorn.gui.resources.MultiIconRef;
 import de.jClipCorn.gui.resources.Resources;
+import de.jClipCorn.util.stream.CCStream;
 
 public class CCTagList {
-	public final static int TAGCOUNT = 16;
-	public final static int ACTIVETAGS = 9;
 	
-	public final static int TAG_BAD_QUALITY 	= 0;
-	public final static int TAG_MISSING_TIME 	= 1;
-	public final static int TAG_FILE_CORRUPTED 	= 2;
-	public final static int TAG_WATCH_LATER 	= 3;
-	public final static int TAG_WRONG_LANGUAGE 	= 4;
-	public final static int TAG_WATCH_NEVER 	= 5;
-	public final static int TAG_WATCH_CAMRIP	= 6;
-	public final static int TAG_WATCH_MICDUBBED	= 7;
-	public final static int TAG_WATCH_CANCELLED	= 8;
+	public final static CCSingleTag TAG_BAD_QUALITY 	= new CCSingleTag(0, "CCMovieTags.TAG_00", Resources.ICN_TABLE_TAG_0_0, Resources.ICN_TABLE_TAG_0_1, Resources.ICN_MENUBAR_TAG_0_1, true,  true,  true);  //$NON-NLS-1$
+	public final static CCSingleTag TAG_MISSING_TIME 	= new CCSingleTag(1, "CCMovieTags.TAG_01", Resources.ICN_TABLE_TAG_1_0, Resources.ICN_TABLE_TAG_1_1, Resources.ICN_MENUBAR_TAG_1_1, true,  false, true);  //$NON-NLS-1$
+	public final static CCSingleTag TAG_FILE_CORRUPTED 	= new CCSingleTag(2, "CCMovieTags.TAG_02", Resources.ICN_TABLE_TAG_2_0, Resources.ICN_TABLE_TAG_2_1, Resources.ICN_MENUBAR_TAG_2_1, true,  false, true);  //$NON-NLS-1$
+	public final static CCSingleTag TAG_WATCH_LATER 	= new CCSingleTag(3, "CCMovieTags.TAG_03", Resources.ICN_TABLE_TAG_3_0, Resources.ICN_TABLE_TAG_3_1, Resources.ICN_MENUBAR_TAG_3_1, true,  true,  true);  //$NON-NLS-1$
+	public final static CCSingleTag TAG_WRONG_LANGUAGE 	= new CCSingleTag(4, "CCMovieTags.TAG_04", Resources.ICN_TABLE_TAG_4_0, Resources.ICN_TABLE_TAG_4_1, Resources.ICN_MENUBAR_TAG_4_1, true,  true,  true);  //$NON-NLS-1$
+	public final static CCSingleTag TAG_WATCH_NEVER 	= new CCSingleTag(5, "CCMovieTags.TAG_05", Resources.ICN_TABLE_TAG_5_0, Resources.ICN_TABLE_TAG_5_1, Resources.ICN_MENUBAR_TAG_5_1, true,  true,  true);  //$NON-NLS-1$
+	public final static CCSingleTag TAG_WATCH_CAMRIP	= new CCSingleTag(6, "CCMovieTags.TAG_06", Resources.ICN_TABLE_TAG_6_0, Resources.ICN_TABLE_TAG_6_1, Resources.ICN_MENUBAR_TAG_6_1, true,  true,  true);  //$NON-NLS-1$
+	public final static CCSingleTag TAG_WATCH_MICDUBBED	= new CCSingleTag(7, "CCMovieTags.TAG_07", Resources.ICN_TABLE_TAG_7_0, Resources.ICN_TABLE_TAG_7_1, Resources.ICN_MENUBAR_TAG_7_1, true,  true,  true);  //$NON-NLS-1$
+	public final static CCSingleTag TAG_WATCH_CANCELLED	= new CCSingleTag(8, "CCMovieTags.TAG_08", Resources.ICN_TABLE_TAG_8_0, Resources.ICN_TABLE_TAG_8_1, Resources.ICN_MENUBAR_TAG_8_1, false, true,  false); //$NON-NLS-1$
 
-	private final static MultiIconRef[] ICONS_OFF = 
-	{ 
-		Resources.ICN_TABLE_TAG_0_0, Resources.ICN_TABLE_TAG_1_0,   
-		Resources.ICN_TABLE_TAG_2_0, Resources.ICN_TABLE_TAG_3_0,   
-		Resources.ICN_TABLE_TAG_4_0, Resources.ICN_TABLE_TAG_5_0,   
-		Resources.ICN_TABLE_TAG_6_0, Resources.ICN_TABLE_TAG_7_0,
-		Resources.ICN_TABLE_TAG_8_0,
-	};
-	private final static MultiIconRef[] ICONS_ON  = 
-	{ 
-		Resources.ICN_TABLE_TAG_0_1, Resources.ICN_TABLE_TAG_1_1,   
-		Resources.ICN_TABLE_TAG_2_1, Resources.ICN_TABLE_TAG_3_1,   
-		Resources.ICN_TABLE_TAG_4_1, Resources.ICN_TABLE_TAG_5_1,   
-		Resources.ICN_TABLE_TAG_6_1, Resources.ICN_TABLE_TAG_7_1,
-		Resources.ICN_TABLE_TAG_8_1,
-	};
-	private final static MultiIconRef[] IMGS_ON   = 
-	{ 
-		Resources.ICN_MENUBAR_TAG_0_1, Resources.ICN_MENUBAR_TAG_1_1, 
-		Resources.ICN_MENUBAR_TAG_2_1, Resources.ICN_MENUBAR_TAG_3_1, 
-		Resources.ICN_MENUBAR_TAG_4_1, Resources.ICN_MENUBAR_TAG_5_1, 
-		Resources.ICN_MENUBAR_TAG_6_1, Resources.ICN_MENUBAR_TAG_7_1,
-		Resources.ICN_MENUBAR_TAG_8_1,
+	public final static CCSingleTag[] TAGS =
+	{
+		TAG_BAD_QUALITY,
+		TAG_MISSING_TIME,
+		TAG_FILE_CORRUPTED,
+		TAG_WATCH_LATER,
+		TAG_WRONG_LANGUAGE,
+		TAG_WATCH_NEVER,
+		TAG_WATCH_CAMRIP,
+		TAG_WATCH_MICDUBBED,
+		TAG_WATCH_CANCELLED,
 	};
 
-	private final static String[] NAMES = { 
-		LocaleBundle.getString("CCMovieTags.TAG_00"), //$NON-NLS-1$
-		LocaleBundle.getString("CCMovieTags.TAG_01"), //$NON-NLS-1$
-		LocaleBundle.getString("CCMovieTags.TAG_02"), //$NON-NLS-1$
-		LocaleBundle.getString("CCMovieTags.TAG_03"), //$NON-NLS-1$
-		LocaleBundle.getString("CCMovieTags.TAG_04"), //$NON-NLS-1$
-		LocaleBundle.getString("CCMovieTags.TAG_05"), //$NON-NLS-1$
-		LocaleBundle.getString("CCMovieTags.TAG_06"), //$NON-NLS-1$
-		LocaleBundle.getString("CCMovieTags.TAG_07"), //$NON-NLS-1$
-		LocaleBundle.getString("CCMovieTags.TAG_08"), //$NON-NLS-1$
-	};
+	public final static int TAGCOUNT = 16;
+	public final static int ACTIVETAGS = TAGS.length;
 
 	private boolean[] tags = new boolean[16];
 	private boolean createIcon = true;
@@ -78,6 +55,7 @@ public class CCTagList {
 		onUpdate();
 	}
 
+	@SuppressWarnings("CopyConstructorMissesField")
 	public CCTagList(CCTagList t) {
 		for (int i = 0; i < TAGCOUNT; i++) {
 			tags[i] = t.getTag(i);
@@ -113,17 +91,24 @@ public class CCTagList {
 		return v;
 	}
 
+	public boolean getTag(CCSingleTag t) {
+		return tags[t.Index];
+	}
+
 	public boolean getTag(int c) {
 		return tags[c];
 	}
 
-	public boolean setTag(int c, boolean v) {
+	public void setTag(CCSingleTag t, boolean v) {
+		tags[t.Index] = v;
+		onUpdate();
+	}
+
+	public void setTag(int c, boolean v) {
 		if (isTagActive(c)) {
 			tags[c] = v;
 			onUpdate();
-			return true;
 		}
-		return false;
 	}
 
 	public void doUnion(CCTagList t) {
@@ -133,60 +118,41 @@ public class CCTagList {
 		onUpdate();
 	}
 
-	public static boolean isTagActive(int c) {
+	private static boolean isTagActive(int c) {
 		return c >= 0 && c < ACTIVETAGS;
 	}
 
-	public Image getTagImage(int c) {
-		if (isTagActive(c)) {
-			if (tags[c]) {
-				return CachedResourceLoader.getImage(ICONS_ON[c].icon16x16);
-			} else {
-				return CachedResourceLoader.getImage(ICONS_OFF[c].icon16x16);
-			}
-		} else {
-			return null;
-		}
+	private Image getTagIconImage(int c) {
+		if (!isTagActive(c)) return null;
+
+		return (tags[c]) ? TAGS[c].getOnImage() : TAGS[c].getOffImage();
 	}
 	
 	public static ImageIcon getOnIcon(int c) {
-		if (isTagActive(c)) {
-			return CachedResourceLoader.getIcon(ICONS_ON[c].icon16x16);
-		} else {
-			return null;
-		}
-	}
-	
-	public static ImageIcon getOffIcon(int c) {
-		if (isTagActive(c)) {
-			return CachedResourceLoader.getIcon(ICONS_OFF[c].icon16x16);
-		} else {
-			return null;
-		}
+		if (!isTagActive(c)) return null;
+		return TAGS[c].getOnIcon();
 	}
 	
 	public ImageIcon getTagIcon(int c) {
-		if (isTagActive(c)) {
-			if (tags[c]) {
-				return CachedResourceLoader.getIcon(ICONS_ON[c].icon16x16);
-			} else {
-				return CachedResourceLoader.getIcon(ICONS_OFF[c].icon16x16);
-			}
-		} else {
-			return null;
-		}
+		if (!isTagActive(c)) return null;
+
+		return (tags[c]) ? TAGS[c].getOnIcon() : TAGS[c].getOffIcon();
 	}
 	
 	private void onUpdate() {
 		createIcon = true;
 	}
 
-	public boolean switchTag(int c) {
+	public void switchTag(CCSingleTag t) {
+		tags[t.Index] = !tags[t.Index];
+		onUpdate();
+	}
+
+	public void switchTag(int c) {
 		if (isTagActive(c)) {
 			tags[c] = !tags[c];
 			onUpdate();
 		}
-		return tags[c];
 	}
 
 	public CCTagList copy() {
@@ -194,11 +160,8 @@ public class CCTagList {
 	}
 
 	public static String getName(int c) {
-		if (isTagActive(c)) {
-			return NAMES[c];
-		} else {
-			return "{??}"; //$NON-NLS-1$
-		}
+		if (!isTagActive(c)) return "{??}"; //$NON-NLS-1$
+		return TAGS[c].Description;
 	}
 	
 	public static String[] getList() {
@@ -233,7 +196,7 @@ public class CCTagList {
 		return getAsString();
 	}
 	
-	public int getTagCount() {
+	private int getTagCount() {
 		int c = 0;
 		for (int i = 0; i < ACTIVETAGS; i++) {
 			c += tags[i] ? 1 : 0;
@@ -255,7 +218,7 @@ public class CCTagList {
 		int  pos = 0;
 		for (int i = 0; i < ACTIVETAGS; i++) {
 			if (tags[i]) {
-				g.drawImage(getTagImage(i), pos*18, 0, null);
+				g.drawImage(getTagIconImage(i), pos*18, 0, null);
 				
 				pos++;
 			}
@@ -267,9 +230,7 @@ public class CCTagList {
 	}
 	
 	public ImageIcon getIcon() {
-		if (createIcon) {
-			createIcon();
-		}
+		if (createIcon) createIcon();
 		
 		return iconcache;
 	}
@@ -284,14 +245,14 @@ public class CCTagList {
 		for (int i = 0; i < ACTIVETAGS; i++) {
 			if (getTag(i)) {
 				
-				if (i == TAG_WATCH_LATER || i == TAG_WATCH_NEVER) continue;
+				if (i == TAG_WATCH_LATER.Index || i == TAG_WATCH_NEVER.Index) continue;
 				
 				if (use32px) {
-					bi.getGraphics().drawImage(CachedResourceLoader.getImage(IMGS_ON[i].icon32x32), posX, 8, null);
+					bi.getGraphics().drawImage(CachedResourceLoader.getImage(TAGS[i].Image.icon32x32), posX, 8, null);
 					posX += 32;
 					posX += 8;
 				} else {
-					bi.getGraphics().drawImage(CachedResourceLoader.getImage(IMGS_ON[i].icon16x16), posX, 8, null);
+					bi.getGraphics().drawImage(CachedResourceLoader.getImage(TAGS[i].Image.icon16x16), posX, 8, null);
 					posX += 16;
 					posX += 4;
 				}
@@ -305,5 +266,9 @@ public class CCTagList {
 
 	public static CCTagList createEmpty() {
 		return new CCTagList();
+	}
+
+	public CCStream<CCSingleTag> iterate() {
+		return new TagsIterator(this);
 	}
 }

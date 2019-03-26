@@ -37,7 +37,7 @@ public class ClipSeriesPopup extends ClipPopupMenu {
 		//#############
 		
 		addActionMenuTree("SetSeriesRating");
-		addActionMenuTree("SetTags");
+		addActionMenuTree("SetTags_Series");
 
 		//#############
 		addSeparator();

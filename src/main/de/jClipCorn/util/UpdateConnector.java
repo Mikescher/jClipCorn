@@ -1,8 +1,6 @@
 package de.jClipCorn.util;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
+import de.jClipCorn.util.lambda.Func3to0;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
@@ -13,7 +11,7 @@ import de.jClipCorn.util.http.HTTPUtilities;
 public class UpdateConnector implements Runnable {
 	private final static String HIGHSCORE_URL = "https://api.github.com/repos/Mikescher/jClipCorn/releases/latest"; //$NON-NLS-1$
 	
-	private final ActionListener listener;
+	private final Func3to0<UpdateConnector, Boolean, String> listener;
 	private final String title;
 	private final String version;
 	
@@ -22,7 +20,7 @@ public class UpdateConnector implements Runnable {
 	private boolean updateAvailable = false;
 	private String updateName;
 	
-	public UpdateConnector(String title, String version, ActionListener listener, boolean threaded) {
+	public UpdateConnector(String title, String version, Func3to0<UpdateConnector, Boolean, String> listener, boolean threaded) {
 		this.listener = listener;
 		this.title = title;
 		this.version = version;
@@ -49,7 +47,6 @@ public class UpdateConnector implements Runnable {
 		}
 		
 		try {
-
 			JSONObject root = new JSONObject(new JSONTokener(resultCode));
 			
 			if (!root.has("tag_name")) {
@@ -71,11 +68,7 @@ public class UpdateConnector implements Runnable {
 			return;
 		}
 
-		if (updateAvailable) {
-			listener.actionPerformed(new ActionEvent(this, 1, updateVersion));
-		} else {
-			listener.actionPerformed(new ActionEvent(this, 0, updateVersion));
-		}
+		listener.invoke(this, updateAvailable, updateVersion);
 	}
 	
 	public boolean isUpdateAvaiable() {

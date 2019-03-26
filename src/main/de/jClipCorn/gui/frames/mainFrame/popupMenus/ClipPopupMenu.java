@@ -1,8 +1,5 @@
 package de.jClipCorn.gui.frames.mainFrame.popupMenus;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
@@ -31,6 +28,7 @@ public abstract class ClipPopupMenu extends JPopupMenu {
 		
 		if (el == null) {
 			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.ErrorActionNotFound", actionIdent)); //$NON-NLS-1$
+			return null;
 		}
 		
 		JMenuItem item = add(el.getCaption());
@@ -41,12 +39,7 @@ public abstract class ClipPopupMenu extends JPopupMenu {
 			item.setAccelerator(el.getKeyStroke());
 		}
 		
-		item.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				el.execute(ActionSource.POPUP_MENU);
-			}
-		});
+		item.addActionListener(arg0 -> el.execute(ActionSource.POPUP_MENU));
 		
 		return item;
 	}
@@ -68,12 +61,7 @@ public abstract class ClipPopupMenu extends JPopupMenu {
 			item.setAccelerator(el.getKeyStroke());
 		}
 		
-		item.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				el.execute(ActionSource.POPUP_MENU);
-			}
-		});
+		item.addActionListener(arg0 -> el.execute(ActionSource.POPUP_MENU));
 		
 		ActionMenuWrapper amw = new ActionMenuWrapper(item);
 		
@@ -110,12 +98,7 @@ public abstract class ClipPopupMenu extends JPopupMenu {
 				subitem.setAccelerator(el0.getKeyStroke());
 			}
 			
-			subitem.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent arg0) {
-					soref.openInBrowser(src);
-				}
-			});
+			subitem.addActionListener(arg0 -> soref.openInBrowser(src));
 			
 			menu.add(subitem);
 			

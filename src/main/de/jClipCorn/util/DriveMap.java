@@ -223,11 +223,11 @@ public class DriveMap {
 		return drive;
 	}
 
+	@SuppressWarnings("deprecation")
 	private static String getDriveNetworkIdent(List<FileStore> fsl, File f, String name) {
 		try {
 			for (FileStore fs : fsl) {
 				if (fs.name().equals(name)) {
-					//noinspection deprecation
 					return (String) sun.awt.shell.ShellFolder.getShellFolder(f).getFolderColumnValue(6);
 				}
 			}

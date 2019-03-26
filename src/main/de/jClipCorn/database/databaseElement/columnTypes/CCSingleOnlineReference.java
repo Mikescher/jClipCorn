@@ -12,8 +12,6 @@ import de.jClipCorn.online.metadata.anilist.AniListParser;
 import de.jClipCorn.online.metadata.imdb.IMDBParserCommon;
 import de.jClipCorn.online.metadata.mal.MALParser;
 import de.jClipCorn.online.metadata.tmdb.TMDBParser;
-import de.jClipCorn.properties.CCProperties;
-import de.jClipCorn.properties.enumerations.BrowserLanguage;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.exceptions.OnlineRefFormatException;
 import de.jClipCorn.util.http.HTTPUtilities;
@@ -110,7 +108,6 @@ public class CCSingleOnlineReference {
 		return type != CCOnlineRefType.NONE & !id.trim().isEmpty();
 	}
 
-	@SuppressWarnings("nls")
 	public String getURL() {
 		return CCOnlineRefTypeHelper.getURL(this);
 	}

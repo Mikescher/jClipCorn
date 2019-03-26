@@ -25,7 +25,7 @@ public class ClipMoviePopup extends ClipPopupMenu {
 		//#############
 		
 		addActionMenuTree("SetMovieRating");
-		addActionMenuTree("SetTags");
+		addActionMenuTree("SetTags_Movies");
 		addAction("SetMovieViewed");
 		addAction("SetMovieUnviewed");
 		addAction("UndoMovieViewed");

@@ -8,6 +8,7 @@ import javax.swing.JList;
 
 import de.jClipCorn.database.databaseErrors.DatabaseErrorType;
 import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.util.datatypes.CountAppendix;
 
 public class ErrorTypeListCellRenderer extends DefaultListCellRenderer {
 	private static final long serialVersionUID = -7242329712702777086L;
@@ -18,8 +19,8 @@ public class ErrorTypeListCellRenderer extends DefaultListCellRenderer {
 		defColor = getForeground();
 	}
 	
-	@SuppressWarnings("rawtypes")
 	@Override
+	@SuppressWarnings({"rawtypes", "unchecked"})
 	public Component getListCellRendererComponent(JList paramlist, Object value, int index, boolean isSelected, boolean cellHasFocus) {
 		DefaultListCellRenderer result = (DefaultListCellRenderer) super.getListCellRendererComponent(paramlist, value, index, isSelected, cellHasFocus);
 		
@@ -30,7 +31,7 @@ public class ErrorTypeListCellRenderer extends DefaultListCellRenderer {
 		} else {
 			result.setText(value.toString());
 		
-			result.setForeground((((DatabaseErrorType)value).isAutoFixable()) ? defColor : Color.RED);
+			result.setForeground((((CountAppendix<DatabaseErrorType>)value).Value.isAutoFixable()) ? defColor : Color.RED);
 		}
 		return result;
 	}

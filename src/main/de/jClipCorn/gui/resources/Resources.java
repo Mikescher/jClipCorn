@@ -34,6 +34,11 @@ public class Resources {
 	public final static ImageRef IMG_COVER_LOADING_P6					= registerImage("/loading_p6.png");
 	public final static ImageRef IMG_COVER_LOADING_P7					= registerImage("/loading_p7.png");
 	public final static MultiIconRef ICN_WARNING_TRIANGLE		 		= registerMultisizeIcon("/icons/common/error.png");
+
+	public final static MultiIconRef ICN_GENERIC_ORB_GRAY		 		= registerMultisizeIcon("/icons/common/orb_gray.png");
+	public final static MultiIconRef ICN_GENERIC_ORB_ORANGE		 		= registerMultisizeIcon("/icons/common/orb_orange.png");
+	public final static MultiIconRef ICN_GENERIC_ORB_RED		 		= registerMultisizeIcon("/icons/common/orb_red.png");
+	public final static MultiIconRef ICN_GENERIC_ORB_GREEN		 		= registerMultisizeIcon("/icons/common/orb_green.png");
 	// #############################################  </COMMON>  #############################################
 	
 	

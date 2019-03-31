@@ -444,15 +444,42 @@ public class DatabaseAutofixer {
 		
 		return false;
 	}
-	
+
 	public static boolean fixError_UnusedGroup(DatabaseError err) {
 		if (err.getElement1() instanceof CCGroup) {
-			
+
 			CCMovieList.getInstance().removeGroup((CCGroup)err.getElement1());
 			return true;
-			
 		}
-		
+
+		return false;
+	}
+
+	public static boolean fixError_NonNormalizedPath(DatabaseError err) {
+		if (err.getElement1() instanceof CCEpisode) {
+
+			String pold = ((CCEpisode)err.getElement1()).getPart();
+			String pnew = PathFormatter.getCCPath(((CCEpisode)err.getElement1()).getAbsolutePart());
+
+			if (pold.equals(pnew)) return false;
+
+			((CCEpisode)err.getElement1()).setPart(pnew);
+
+			return true;
+		} else if (err.getElement1() instanceof CCMovie) {
+			for (int i = 0; i < ((CCMovie)err.getElement1()).getPartcount(); i++) {
+				String pold = ((CCMovie)err.getElement1()).getPart(i);
+				String pnew = PathFormatter.getCCPath(((CCMovie)err.getElement1()).getAbsolutePart(i));
+
+				if (pold.equals(pnew)) continue;
+
+				((CCMovie)err.getElement1()).setPart(i, pnew);
+				return true;
+			}
+
+			return false;
+		}
+
 		return false;
 	}
 }

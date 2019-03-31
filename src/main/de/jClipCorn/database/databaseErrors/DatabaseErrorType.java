@@ -46,10 +46,11 @@ public class DatabaseErrorType {
 	public final static DatabaseErrorType ERROR_COVER_TOO_BIG                      = new DatabaseErrorType(40, DatabaseAutofixer::fixError_CoverTooBig);
 	public final static DatabaseErrorType ERROR_GROUP_NESTING_TOO_DEEP             = new DatabaseErrorType(41, null);
 	public final static DatabaseErrorType ERROR_INVALID_GROUP_PARENT               = new DatabaseErrorType(42, null);
-	public final static DatabaseErrorType ERROR_UNUSED_GROUP                       = new DatabaseErrorType(43,  DatabaseAutofixer::fixError_UnusedGroup);
+	public final static DatabaseErrorType ERROR_UNUSED_GROUP                       = new DatabaseErrorType(43, DatabaseAutofixer::fixError_UnusedGroup);
 	public final static DatabaseErrorType ERROR_TAG_NOT_VALID_ON_MOVIE             = new DatabaseErrorType(44, null);
 	public final static DatabaseErrorType ERROR_TAG_NOT_VALID_ON_SERIES            = new DatabaseErrorType(45, null);
 	public final static DatabaseErrorType ERROR_TAG_NOT_VALID_ON_EPISODE           = new DatabaseErrorType(46, null);
+	public final static DatabaseErrorType ERROR_NON_NORMALIZED_PATH                = new DatabaseErrorType(47, DatabaseAutofixer::fixError_NonNormalizedPath);
 
 	private final int type;
 

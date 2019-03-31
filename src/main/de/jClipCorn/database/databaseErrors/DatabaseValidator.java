@@ -477,6 +477,17 @@ public class DatabaseValidator {
 		for (CCSingleTag t : mov.getTags().iterate()) {
 			if (!t.IsMovieTag) e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_TAG_NOT_VALID_ON_MOVIE, mov));
 		}
+
+		// ###############################################
+		// Not-normalized path
+		// ###############################################
+
+		for (int i = 0; i < mov.getPartcount(); i++) {
+			if (!PathFormatter.getCCPath(mov.getAbsolutePart(i)).equals(mov.getPart(i))) {
+				e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_NON_NORMALIZED_PATH, mov));
+				break;
+			}
+		}
 	}
 
 	private static void validateSeason(List<DatabaseError> e, CCMovieList movielist, CCSeason season) {
@@ -674,6 +685,14 @@ public class DatabaseValidator {
 
 		for (CCSingleTag t : episode.getTags().iterate()) {
 			if (!t.IsEpisodeTag) e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_TAG_NOT_VALID_ON_EPISODE, episode));
+		}
+
+		// ###############################################
+		// Not-normalized path
+		// ###############################################
+
+		if (! PathFormatter.getCCPath(episode.getAbsolutePart()).equals(episode.getPart())) {
+			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_NON_NORMALIZED_PATH, episode));
 		}
 	}
 

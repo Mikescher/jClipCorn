@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CSFSTable extends JCCSimpleTable<CSFSElement> {
+	private static final long serialVersionUID = 1363346001268230117L;
 
 	@Override
 	@SuppressWarnings("nls")
@@ -34,7 +35,7 @@ public class CSFSTable extends JCCSimpleTable<CSFSElement> {
 
 	@Override
 	protected int getColumnAdjusterMaxWidth() {
-		return 250;
+		return 225;
 	}
 
 	@Override

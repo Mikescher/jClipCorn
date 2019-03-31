@@ -186,3 +186,7 @@ public class Main {
 
 //TODO localsync: also autosave to dropbox (or directly sync with server??)
 //     php viewer: view synced data online with webpage(read-only) 
+
+//TODO Edit OnlineRef in own dialog with more options (move, sort, insert, ...)
+
+//TODO (optional) add a season ref to an online ref to associate it with a specific season

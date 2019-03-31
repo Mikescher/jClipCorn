@@ -194,7 +194,7 @@ public class DatabaseValidator {
 		// ###############################################
 
 		for (CCSingleTag t : series.getTags().iterate()) {
-			if (!t.IsMovieTag) e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_TAG_NOT_VALID_ON_SERIES, series));
+			if (!t.IsSeriesTag) e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_TAG_NOT_VALID_ON_SERIES, series));
 		}
 	}
 
@@ -673,7 +673,7 @@ public class DatabaseValidator {
 		// ###############################################
 
 		for (CCSingleTag t : episode.getTags().iterate()) {
-			if (!t.IsMovieTag) e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_TAG_NOT_VALID_ON_EPISODE, episode));
+			if (!t.IsEpisodeTag) e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_TAG_NOT_VALID_ON_EPISODE, episode));
 		}
 	}
 

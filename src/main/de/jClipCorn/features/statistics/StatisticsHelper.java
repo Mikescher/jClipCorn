@@ -39,7 +39,13 @@ import de.jClipCorn.util.stream.CCStream;
  */
 public class StatisticsHelper {
 	public final static int[] CHART_COLORS = {0x4D4D4D, 0x5DA5DA, 0xFAA43A, 0x60BD68, 0xF17CB0, 0xB2912F, 0xB276B2, 0x000080, 0xF15854};
-	
+
+	public enum OrderMode {
+		IGNORED,  // Episode order does not matter
+		ENFORCED, // Episode order must be strictly increasing
+		STRICT,   // Episode order must be strictly increasing without gaps
+	}
+
 	public static Integer getViewedCount(CCStream<ICCPlayableElement> it) {
 		return it.filter(e -> e.isViewed()).count();
 	}
@@ -491,14 +497,14 @@ public class StatisticsHelper {
 		return ls;
 	}
 
-	public static List<CCDatespan> getDatespanFromSeries(CCSeries series, int gravity, boolean enforceOrder) {
+	public static List<CCDatespan> getDatespanFromSeries(CCSeries series, int gravity, OrderMode omode) {
 		List<CCDatespan> span = new ArrayList<>();
 		
 		List<SortableTuple<CCDate, Integer>> dates = series
 				.iteratorEpisodes()
 				.flatten(e -> e.getViewedHistory().iterator().map(h -> Tuple.Create(e, h)))
 				.filter(t -> !t.Item2.isUnspecifiedDateTime())
-				.map(t -> new SortableTuple<>(t.Item2.date, t.Item1.getSeason().getSeasonNumber() * 10000 + t.Item1.getEpisodeNumber()))
+				.map(t -> new SortableTuple<>(t.Item2.date, t.Item1.getGlobalEpisodeNumber()))
 				.enumerate();
 		
 		if (dates.size() == 0) return span;
@@ -513,29 +519,57 @@ public class StatisticsHelper {
 		while (dates.size() > 0) {
 			SortableTuple<CCDate, Integer> curr = dates.get(0);
 			dates.remove(0);
-			
-			if (end.Item1.getDayDifferenceTo(curr.Item1) > gravity) {
-				span.add(new CCDatespan(start.Item1, end.Item1.getAddDay(1)));
-				start = curr;
-				end = start;
-			} else if (enforceOrder && curr.Item2 < end.Item2) {
-				span.add(new CCDatespan(start.Item1, end.Item1.getAddDay(1)));
-				start = curr;
-				end = start;
-			}  else {
-				end = curr;
+
+			switch (omode)
+			{
+				case IGNORED:
+					if (end.Item1.getDayDifferenceTo(curr.Item1) > gravity) {
+						span.add(new CCDatespan(start.Item1, end.Item1.getAddDay(1)));
+						start = curr;
+						end = start;
+					} else {
+						end = curr;
+					}
+					break;
+				case ENFORCED:
+					if (end.Item1.getDayDifferenceTo(curr.Item1) > gravity) {
+						span.add(new CCDatespan(start.Item1, end.Item1.getAddDay(1)));
+						start = curr;
+						end = start;
+					} else if (curr.Item2 < end.Item2) {
+						span.add(new CCDatespan(start.Item1, end.Item1.getAddDay(1)));
+						start = curr;
+						end = start;
+					}  else {
+						end = curr;
+					}
+					break;
+				case STRICT:
+					if (end.Item1.getDayDifferenceTo(curr.Item1) > gravity) {
+						span.add(new CCDatespan(start.Item1, end.Item1.getAddDay(1)));
+						start = curr;
+						end = start;
+					} else if (curr.Item2 - 1 != end.Item2) {
+						span.add(new CCDatespan(start.Item1, end.Item1.getAddDay(1)));
+						start = curr;
+						end = start;
+					}  else {
+						end = curr;
+					}
+					break;
 			}
+
 		}
 		span.add(new CCDatespan(start.Item1, end.Item1.getAddDay(1)));
 		
 		return span;
 	}
 	
-	public static HashMap<CCSeries, List<CCDatespan>> getAllSeriesTimespans(CCMovieList ml, int gravity, boolean enforceOrder) {
+	public static HashMap<CCSeries, List<CCDatespan>> getAllSeriesTimespans(CCMovieList ml, int gravity, OrderMode omode) {
 		HashMap<CCSeries, List<CCDatespan>> r = new HashMap<>();
 
 		for (CCSeries series : ml.iteratorSeries()) {
-			List<CCDatespan> span = getDatespanFromSeries(series, gravity, enforceOrder);
+			List<CCDatespan> span = getDatespanFromSeries(series, gravity, omode);
 			
 			if (span.size() > 0) r.put(series, span);
 		}

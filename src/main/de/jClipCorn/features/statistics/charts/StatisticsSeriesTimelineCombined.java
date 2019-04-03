@@ -44,8 +44,8 @@ public class StatisticsSeriesTimelineCombined extends StatisticsPanel {
 	
 	private void collectData()
 	{
-		HashMap<CCSeries, List<CCDatespan>> seriesMapStretch = StatisticsHelper.getAllSeriesTimespans(movielist, CCProperties.getInstance().PROP_STATISTICS_TIMELINEGRAVITY.getValue(), false);
-		HashMap<CCSeries, List<CCDatespan>> seriesMapZero    = StatisticsHelper.getAllSeriesTimespans(movielist, 0, false);
+		HashMap<CCSeries, List<CCDatespan>> seriesMapStretch = StatisticsHelper.getAllSeriesTimespans(movielist, CCProperties.getInstance().PROP_STATISTICS_TIMELINEGRAVITY.getValue(), StatisticsHelper.OrderMode.STRICT);
+		HashMap<CCSeries, List<CCDatespan>> seriesMapZero    = StatisticsHelper.getAllSeriesTimespans(movielist, 0, StatisticsHelper.OrderMode.IGNORED);
 
 		CCDate start = StatisticsHelper.getSeriesTimespansStart(seriesMapZero);
 		CCDate end = CCDate.max(StatisticsHelper.getSeriesTimespansEnd(seriesMapZero).getSubDay(1), CCDate.getCurrentDate());
@@ -67,6 +67,8 @@ public class StatisticsSeriesTimelineCombined extends StatisticsPanel {
 			if (!seriesList.contains(entry.getKey())) continue;
 			for (CCDatespan ds : entry.getValue())
 			{
+				if (ds.getDayCount() == 1) continue;
+
 				for (CCDate d : ds.iterateDays())
 				{
 					if (d.isLessThan(start)) continue;

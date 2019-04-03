@@ -3,6 +3,9 @@ package de.jClipCorn;
 import javax.swing.SwingUtilities;
 
 import de.jClipCorn.database.CCMovieList;
+import de.jClipCorn.gui.frames.settingsFrame.SettingsFrame;
+import de.jClipCorn.gui.frames.statisticsFrame.StatisticsFrame;
+import de.jClipCorn.gui.frames.statisticsFrame.StatisticsPanel;
 import de.jClipCorn.gui.mainFrame.MainFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.features.log.CCLog;
@@ -67,7 +70,7 @@ public class Main {
 				final MainFrame myFrame = new MainFrame(mList);
 				myFrame.start();
 
-				mList.connect(myFrame, DEBUG ? Main::post_init : null);
+				mList.connect(myFrame, () -> post_init(arg));
 			});
 		}
 		Globals.TIMINGS.stop(Globals.TIMING_INIT_TOTAL);
@@ -105,10 +108,31 @@ public class Main {
 		}
 	}
 
-	private static void post_init() {
-		//StatisticsFrame sf = new StatisticsFrame(MainFrame.getInstance(), MainFrame.getInstance().getMovielist());
-		//sf.setVisible(true);
-		//sf.switchTo(StatisticsSeriesTimelineCombined.class);
+	@SuppressWarnings({"unchecked", "nls"})
+	private static void post_init(String[] args) {
+		try {
+			for (String a : args) {
+				if (a.toLowerCase().startsWith("--statistics="))
+				{
+					String cname = "de.jClipCorn.features.statistics.charts." + a.substring("--statistics=".length());
+					Class<? extends StatisticsPanel> c = (Class<? extends StatisticsPanel>)Class.forName(cname);
+
+					StatisticsFrame sf = new StatisticsFrame(MainFrame.getInstance(), MainFrame.getInstance().getMovielist());
+					sf.setVisible(true);
+					sf.switchTo(c);
+
+					return;
+				}
+
+				if (a.toLowerCase().startsWith("--settings"))
+				{
+					SettingsFrame sf = new SettingsFrame(MainFrame.getInstance(), CCProperties.getInstance());
+					sf.setVisible(true);
+				}
+			}
+		} catch (Exception e) {
+			CCLog.addFatalError(e);
+		}
 	}
 }
 
@@ -190,8 +214,6 @@ public class Main {
 //TODO Edit OnlineRef in own dialog with more options (move, sort, insert, ...)
 
 //TODO (optional) add a season ref to an online ref to associate it with a specific season
-
-//TODO (Timeline) - Only connect consecutive episodes + don't show one-element markers (= only show serial watching)
 
 //TODO Allow multiple MovieLang's per element
 //TODO auto get languages from files

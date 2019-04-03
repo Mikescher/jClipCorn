@@ -131,39 +131,39 @@ public class TestStatistics extends ClipCornBaseTest {
 		int daycount = mindate.getDayDifferenceTo(maxdate) + 1;
 		
 		StatisticsHelper.getViewedForAllDates(mindate, daycount, ml.iteratorEpisodes().cast());
-		StatisticsHelper.getAllSeriesTimespans(ml, 0, true);
-		StatisticsHelper.getAllSeriesTimespans(ml, 0, false);
-		StatisticsHelper.getAllSeriesTimespans(ml, 7, true);
-		StatisticsHelper.getAllSeriesTimespans(ml, 56, true);
+		StatisticsHelper.getAllSeriesTimespans(ml, 0, StatisticsHelper.OrderMode.ENFORCED);
+		StatisticsHelper.getAllSeriesTimespans(ml, 0, StatisticsHelper.OrderMode.IGNORED);
+		StatisticsHelper.getAllSeriesTimespans(ml, 7, StatisticsHelper.OrderMode.ENFORCED);
+		StatisticsHelper.getAllSeriesTimespans(ml, 56, StatisticsHelper.OrderMode.ENFORCED);
 	}
 
 	@Test
 	public void testStatisticsHelperGetDatespanFromSeries() throws Exception {
 		CCMovieList ml = createExampleDB();
 
-		assertEquals(8, StatisticsHelper.getDatespanFromSeries(ml.findDatabaseSeries(10), 0, true).size());
-		assertEquals(8, StatisticsHelper.getDatespanFromSeries(ml.findDatabaseSeries(10), 0, false).size());
-		assertEquals(3, StatisticsHelper.getDatespanFromSeries(ml.findDatabaseSeries(10), 7, true).size());
-		assertEquals(2, StatisticsHelper.getDatespanFromSeries(ml.findDatabaseSeries(10), 56, true).size());
+		assertEquals(8, StatisticsHelper.getDatespanFromSeries(ml.findDatabaseSeries(10), 0, StatisticsHelper.OrderMode.ENFORCED).size());
+		assertEquals(8, StatisticsHelper.getDatespanFromSeries(ml.findDatabaseSeries(10), 0, StatisticsHelper.OrderMode.IGNORED).size());
+		assertEquals(3, StatisticsHelper.getDatespanFromSeries(ml.findDatabaseSeries(10), 7, StatisticsHelper.OrderMode.ENFORCED).size());
+		assertEquals(2, StatisticsHelper.getDatespanFromSeries(ml.findDatabaseSeries(10), 56, StatisticsHelper.OrderMode.ENFORCED).size());
 
-		assertEquals(8, StatisticsHelper.getDatespanFromSeries(ml.findDatabaseSeries(11), 0, true).size());
-		assertEquals(8, StatisticsHelper.getDatespanFromSeries(ml.findDatabaseSeries(11), 0, false).size());
-		assertEquals(1, StatisticsHelper.getDatespanFromSeries(ml.findDatabaseSeries(11), 7, true).size());
-		assertEquals(1, StatisticsHelper.getDatespanFromSeries(ml.findDatabaseSeries(11), 56, true).size());
+		assertEquals(8, StatisticsHelper.getDatespanFromSeries(ml.findDatabaseSeries(11), 0, StatisticsHelper.OrderMode.ENFORCED).size());
+		assertEquals(8, StatisticsHelper.getDatespanFromSeries(ml.findDatabaseSeries(11), 0, StatisticsHelper.OrderMode.IGNORED).size());
+		assertEquals(1, StatisticsHelper.getDatespanFromSeries(ml.findDatabaseSeries(11), 7, StatisticsHelper.OrderMode.ENFORCED).size());
+		assertEquals(1, StatisticsHelper.getDatespanFromSeries(ml.findDatabaseSeries(11), 56, StatisticsHelper.OrderMode.ENFORCED).size());
 
-		assertEquals(1, StatisticsHelper.getDatespanFromSeries(ml.findDatabaseSeries(19), 0, true).size());
-		assertEquals(1, StatisticsHelper.getDatespanFromSeries(ml.findDatabaseSeries(19), 0, false).size());
-		assertEquals(1, StatisticsHelper.getDatespanFromSeries(ml.findDatabaseSeries(19), 7, true).size());
-		assertEquals(1, StatisticsHelper.getDatespanFromSeries(ml.findDatabaseSeries(19), 56, true).size());
+		assertEquals(1, StatisticsHelper.getDatespanFromSeries(ml.findDatabaseSeries(19), 0, StatisticsHelper.OrderMode.ENFORCED).size());
+		assertEquals(1, StatisticsHelper.getDatespanFromSeries(ml.findDatabaseSeries(19), 0, StatisticsHelper.OrderMode.IGNORED).size());
+		assertEquals(1, StatisticsHelper.getDatespanFromSeries(ml.findDatabaseSeries(19), 7, StatisticsHelper.OrderMode.ENFORCED).size());
+		assertEquals(1, StatisticsHelper.getDatespanFromSeries(ml.findDatabaseSeries(19), 56, StatisticsHelper.OrderMode.ENFORCED).size());
 	}
 
 	@Test
 	public void testStatisticsHelperGetSeriesTimespansStartEnd() throws Exception {
 		CCMovieList ml = createExampleDB();
 
-		HashMap<CCSeries, List<CCDatespan>> map_0 = StatisticsHelper.getAllSeriesTimespans(ml, 0, true);
-		HashMap<CCSeries, List<CCDatespan>> map_1 = StatisticsHelper.getAllSeriesTimespans(ml, 7, true);
-		HashMap<CCSeries, List<CCDatespan>> map_2 = StatisticsHelper.getAllSeriesTimespans(ml, 56, true);
+		HashMap<CCSeries, List<CCDatespan>> map_0 = StatisticsHelper.getAllSeriesTimespans(ml, 0, StatisticsHelper.OrderMode.ENFORCED);
+		HashMap<CCSeries, List<CCDatespan>> map_1 = StatisticsHelper.getAllSeriesTimespans(ml, 7, StatisticsHelper.OrderMode.ENFORCED);
+		HashMap<CCSeries, List<CCDatespan>> map_2 = StatisticsHelper.getAllSeriesTimespans(ml, 56, StatisticsHelper.OrderMode.ENFORCED);
 
 		assertEquals(CCDate.create(6, 5, 2016), StatisticsHelper.getSeriesTimespansStart(map_0));
 		assertEquals(CCDate.create(6, 5, 2016), StatisticsHelper.getSeriesTimespansStart(map_1));

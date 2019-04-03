@@ -15,4 +15,8 @@ public class CCDatespan {
 	public CCStream<CCDate> iterateDays() {
 		return new DatespanStream(start, end.getAddDay(1));
 	}
+
+	public int getDayCount() {
+		return start.getDayDifferenceTo(end);
+	}
 }

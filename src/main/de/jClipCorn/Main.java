@@ -3,10 +3,10 @@ package de.jClipCorn;
 import javax.swing.SwingUtilities;
 
 import de.jClipCorn.database.CCMovieList;
-import de.jClipCorn.gui.frames.mainFrame.MainFrame;
+import de.jClipCorn.gui.mainFrame.MainFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.gui.log.CCLog;
-import de.jClipCorn.gui.log.ExceptionHandler;
+import de.jClipCorn.features.log.CCLog;
+import de.jClipCorn.features.log.ExceptionHandler;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.enumerations.ResourcePreloadMode;
@@ -190,3 +190,10 @@ public class Main {
 //TODO Edit OnlineRef in own dialog with more options (move, sort, insert, ...)
 
 //TODO (optional) add a season ref to an online ref to associate it with a specific season
+
+//TODO (Timeline) - Only connect consecutive episodes + don't show one-element markers (= only show serial watching)
+
+//TODO Allow multiple MovieLang's per element
+//TODO auto get languages from files
+
+//TODO show viewcount in tables (mov + series), either as "asdf [+n]" in last_viewed or as small text bottom-left of viewed icon

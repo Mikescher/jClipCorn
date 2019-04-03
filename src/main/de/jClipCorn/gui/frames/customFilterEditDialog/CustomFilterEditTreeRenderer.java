@@ -7,7 +7,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 
 import de.jClipCorn.gui.resources.CachedResourceLoader;
-import de.jClipCorn.table.filter.AbstractCustomFilter;
+import de.jClipCorn.features.table.filter.AbstractCustomFilter;
 
 public class CustomFilterEditTreeRenderer extends DefaultTreeCellRenderer {
 	private static final long serialVersionUID = -1327828202075208415L;

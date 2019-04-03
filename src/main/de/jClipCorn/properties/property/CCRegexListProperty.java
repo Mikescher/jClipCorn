@@ -11,7 +11,7 @@ import javax.swing.JButton;
 
 import de.jClipCorn.gui.frames.editStringListPropertyFrame.EditRegexListPropertyFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.gui.log.CCLog;
+import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.CCPropertyCategory;
 

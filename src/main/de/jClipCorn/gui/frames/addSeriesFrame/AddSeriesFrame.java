@@ -37,9 +37,9 @@ import de.jClipCorn.gui.guiComponents.referenceChooser.JReferenceChooser;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.CachedResourceLoader;
 import de.jClipCorn.gui.resources.Resources;
-import de.jClipCorn.online.metadata.ParseResultHandler;
-import de.jClipCorn.util.userdataProblem.UserDataProblem;
-import de.jClipCorn.util.userdataProblem.UserDataProblemHandler;
+import de.jClipCorn.features.online.metadata.ParseResultHandler;
+import de.jClipCorn.features.userdataProblem.UserDataProblem;
+import de.jClipCorn.features.userdataProblem.UserDataProblemHandler;
 
 public class AddSeriesFrame extends JFrame implements ParseResultHandler, UserDataProblemHandler {
 	private static final long serialVersionUID = -4500039578109890172L;

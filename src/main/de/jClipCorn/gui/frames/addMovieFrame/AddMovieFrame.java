@@ -56,7 +56,7 @@ import de.jClipCorn.gui.guiComponents.referenceChooser.JReferenceChooser;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.CachedResourceLoader;
 import de.jClipCorn.gui.resources.Resources;
-import de.jClipCorn.online.metadata.ParseResultHandler;
+import de.jClipCorn.features.online.metadata.ParseResultHandler;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.Validator;
 import de.jClipCorn.util.datetime.CCDate;
@@ -66,8 +66,8 @@ import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.FileChooserHelper;
 import de.jClipCorn.util.parser.FilenameParser;
 import de.jClipCorn.util.parser.FilenameParserResult;
-import de.jClipCorn.util.userdataProblem.UserDataProblem;
-import de.jClipCorn.util.userdataProblem.UserDataProblemHandler;
+import de.jClipCorn.features.userdataProblem.UserDataProblem;
+import de.jClipCorn.features.userdataProblem.UserDataProblemHandler;
 
 public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDataProblemHandler {
 	private static final long serialVersionUID = -5912378114066741528L;

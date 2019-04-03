@@ -1,7 +1,7 @@
 package de.jClipCorn.gui.frames.autofindRefrenceFrame;
 
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
-import de.jClipCorn.online.metadata.OnlineMetadata;
+import de.jClipCorn.features.online.metadata.OnlineMetadata;
 
 public class AutoFindRefElement {
 	public final CCDatabaseElement local;

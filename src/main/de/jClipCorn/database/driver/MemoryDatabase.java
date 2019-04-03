@@ -3,7 +3,7 @@ package de.jClipCorn.database.driver;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-import de.jClipCorn.gui.log.CCLog;
+import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.properties.enumerations.CCDatabaseDriver;
 import de.jClipCorn.util.helper.SimpleFileUtils;
 import de.jClipCorn.util.parser.TurbineParser;

@@ -9,7 +9,7 @@ import javax.swing.JTextField;
 import de.jClipCorn.gui.guiComponents.StringDisplayConverter;
 import de.jClipCorn.gui.guiComponents.jCheckBoxList.JCheckBoxList;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.gui.log.CCLog;
+import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.CCPropertyCategory;
 import de.jClipCorn.util.enumextension.ContinoousEnum;

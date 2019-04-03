@@ -46,7 +46,7 @@ import de.jClipCorn.gui.frames.addSeasonFrame.AddSeasonFrame;
 import de.jClipCorn.gui.frames.createSeriesFolderStructureFrame.CreateSeriesFolderStructureFrame;
 import de.jClipCorn.gui.frames.displayGenresDialog.DisplayGenresDialog;
 import de.jClipCorn.gui.frames.editSeriesFrame.EditSeriesFrame;
-import de.jClipCorn.gui.frames.mainFrame.MainFrame;
+import de.jClipCorn.gui.mainFrame.MainFrame;
 import de.jClipCorn.gui.frames.moveSeriesFrame.MoveSeriesDialog;
 import de.jClipCorn.gui.frames.previewSeriesFrame.serTable.SerTable;
 import de.jClipCorn.gui.guiComponents.DatabaseElementPreviewLabel;
@@ -55,7 +55,7 @@ import de.jClipCorn.gui.guiComponents.displaySearchResultsDialog.DisplaySearchRe
 import de.jClipCorn.gui.guiComponents.jCoverChooser.JCoverChooser;
 import de.jClipCorn.gui.guiComponents.jCoverChooser.JCoverChooserPopupEvent;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.gui.log.CCLog;
+import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.gui.resources.CachedResourceLoader;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.properties.CCProperties;

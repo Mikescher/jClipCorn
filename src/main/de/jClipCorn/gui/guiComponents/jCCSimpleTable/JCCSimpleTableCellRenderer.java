@@ -2,7 +2,7 @@ package de.jClipCorn.gui.guiComponents.jCCSimpleTable;
 
 import javax.swing.Icon;
 
-import de.jClipCorn.table.renderer.TableRenderer;
+import de.jClipCorn.features.table.renderer.TableRenderer;
 import de.jClipCorn.util.lambda.Func1to1;
 
 public class JCCSimpleTableCellRenderer<TData> extends TableRenderer {

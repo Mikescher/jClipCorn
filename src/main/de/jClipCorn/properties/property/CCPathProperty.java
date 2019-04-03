@@ -10,7 +10,7 @@ import javax.swing.JFileChooser;
 import org.apache.commons.lang.StringUtils;
 
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.gui.log.CCLog;
+import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.CCPropertyCategory;
 import de.jClipCorn.util.formatter.PathFormatter;

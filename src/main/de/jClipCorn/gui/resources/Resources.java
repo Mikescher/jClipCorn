@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Map.Entry;
 
 import de.jClipCorn.Globals;
-import de.jClipCorn.gui.log.CCLog;
+import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.ThreadUtils;

@@ -14,7 +14,7 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCTagList;
 import de.jClipCorn.gui.frames.inputErrorFrame.InputErrorDialog;
 import de.jClipCorn.gui.frames.previewSeriesFrame.PreviewSeriesFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.gui.log.CCLog;
+import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.gui.resources.CachedResourceLoader;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.Str;
@@ -37,7 +37,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.jClipCorn.gui.guiComponents.ReadableTextField;
-import de.jClipCorn.util.userdataProblem.UserDataProblem;
+import de.jClipCorn.features.userdataProblem.UserDataProblem;
 import org.apache.commons.io.FileUtils;
 
 public class QuickAddEpisodeDialog extends JDialog {

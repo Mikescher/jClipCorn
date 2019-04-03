@@ -10,9 +10,9 @@ import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.UIManager;
 
-import de.jClipCorn.gui.actionTree.CCActionElement;
-import de.jClipCorn.gui.actionTree.CCActionTree;
-import de.jClipCorn.gui.frames.mainFrame.clipToolbar.ClipToolbar;
+import de.jClipCorn.features.actionTree.CCActionElement;
+import de.jClipCorn.features.actionTree.CCActionTree;
+import de.jClipCorn.gui.mainFrame.clipToolbar.ClipToolbar;
 import de.jClipCorn.properties.property.CCToolbarProperty;
 
 public class ToolbarConfigPanel extends JPanel {

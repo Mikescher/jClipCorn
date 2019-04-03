@@ -10,7 +10,7 @@ import javax.swing.ImageIcon;
 
 import de.jClipCorn.Main;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.gui.log.CCLog;
+import de.jClipCorn.features.log.CCLog;
 
 public class CachedResourceLoader {
 	private static Map<ImageRef, BufferedImage> mapImages1 = new HashMap<>();

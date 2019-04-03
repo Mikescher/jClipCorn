@@ -6,7 +6,7 @@ import org.apache.commons.lang.mutable.MutableInt;
 
 import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.CCSeries;
-import de.jClipCorn.gui.log.CCLog;
+import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.enumerations.NextEpisodeHeuristic;
 import de.jClipCorn.util.datetime.CCDate;

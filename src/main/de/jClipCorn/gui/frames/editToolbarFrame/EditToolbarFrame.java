@@ -18,9 +18,8 @@ import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.border.EmptyBorder;
 
-import de.jClipCorn.gui.actionTree.CCActionTree;
-import de.jClipCorn.gui.frames.editToolbarFrame.toolbarElementsList.ToolbarElementsCellRenderer;
-import de.jClipCorn.gui.frames.mainFrame.clipToolbar.ClipToolbar;
+import de.jClipCorn.features.actionTree.CCActionTree;
+import de.jClipCorn.gui.mainFrame.clipToolbar.ClipToolbar;
 import de.jClipCorn.gui.guiComponents.ToolbarConfigPanel;
 import de.jClipCorn.gui.guiComponents.dndList.DnDList;
 import de.jClipCorn.gui.localization.LocaleBundle;

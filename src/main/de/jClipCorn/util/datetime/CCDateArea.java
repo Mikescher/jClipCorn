@@ -1,6 +1,6 @@
 package de.jClipCorn.util.datetime;
 
-import de.jClipCorn.gui.log.CCLog;
+import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.util.DecimalSearchType;
 
 public class CCDateArea {

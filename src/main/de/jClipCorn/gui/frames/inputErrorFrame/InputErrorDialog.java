@@ -23,8 +23,8 @@ import javax.swing.border.EmptyBorder;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.CachedResourceLoader;
 import de.jClipCorn.gui.resources.Resources;
-import de.jClipCorn.util.userdataProblem.UserDataProblem;
-import de.jClipCorn.util.userdataProblem.UserDataProblemHandler;
+import de.jClipCorn.features.userdataProblem.UserDataProblem;
+import de.jClipCorn.features.userdataProblem.UserDataProblemHandler;
 
 public class InputErrorDialog extends JDialog {
 	private static final long serialVersionUID = 2988199599783528024L;

@@ -5,8 +5,8 @@ import java.util.List;
 
 import javax.swing.DefaultListModel;
 
-import de.jClipCorn.database.databaseErrors.DatabaseError;
-import de.jClipCorn.database.databaseErrors.DatabaseErrorType;
+import de.jClipCorn.features.databaseErrors.DatabaseError;
+import de.jClipCorn.features.databaseErrors.DatabaseErrorType;
 
 public class DatabaseErrorListModel extends DefaultListModel<DatabaseError> {
 	private static final long serialVersionUID = -4911426146819969962L;

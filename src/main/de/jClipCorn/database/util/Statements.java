@@ -5,7 +5,7 @@ import java.sql.SQLException;
 
 import de.jClipCorn.database.driver.CCDatabase;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.gui.log.CCLog;
+import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.util.datatypes.DoubleString;
 import de.jClipCorn.util.sql.SQLDeleteHelper;
 import de.jClipCorn.util.sql.SQLInsertHelper;

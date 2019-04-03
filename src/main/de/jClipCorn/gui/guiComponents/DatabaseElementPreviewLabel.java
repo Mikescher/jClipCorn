@@ -10,10 +10,10 @@ import javax.swing.SwingUtilities;
 
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.databaseElement.CCMovie;
-import de.jClipCorn.gui.actionTree.ActionSource;
-import de.jClipCorn.gui.actionTree.CCActionTree;
+import de.jClipCorn.features.actionTree.ActionSource;
+import de.jClipCorn.features.actionTree.CCActionTree;
 import de.jClipCorn.gui.frames.coverPreviewFrame.CoverPreviewFrame;
-import de.jClipCorn.gui.log.CCLog;
+import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.gui.resources.CachedResourceLoader;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.properties.CCProperties;

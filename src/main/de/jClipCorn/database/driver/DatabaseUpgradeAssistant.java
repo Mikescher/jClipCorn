@@ -8,10 +8,10 @@ import javax.swing.JFrame;
 
 import de.jClipCorn.Main;
 import de.jClipCorn.database.CCMovieList;
-import de.jClipCorn.database.util.backupManager.BackupManager;
-import de.jClipCorn.gui.frames.mainFrame.MainFrame;
+import de.jClipCorn.features.backupManager.BackupManager;
+import de.jClipCorn.gui.mainFrame.MainFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.gui.log.CCLog;
+import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.datetime.CCTime;

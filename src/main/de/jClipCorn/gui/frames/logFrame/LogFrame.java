@@ -16,12 +16,12 @@ import javax.swing.JTextArea;
 import javax.swing.ListSelectionModel;
 import javax.swing.ScrollPaneConstants;
 
-import de.jClipCorn.gui.frames.mainFrame.MainFrame;
+import de.jClipCorn.gui.mainFrame.MainFrame;
 import de.jClipCorn.gui.guiComponents.DatabaseElementPreviewLabel;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.gui.log.CCLog;
-import de.jClipCorn.gui.log.CCLogChangedListener;
-import de.jClipCorn.gui.log.CCLogType;
+import de.jClipCorn.features.log.CCLog;
+import de.jClipCorn.features.log.CCLogChangedListener;
+import de.jClipCorn.features.log.CCLogType;
 import de.jClipCorn.gui.resources.CachedResourceLoader;
 import de.jClipCorn.gui.resources.Resources;
 

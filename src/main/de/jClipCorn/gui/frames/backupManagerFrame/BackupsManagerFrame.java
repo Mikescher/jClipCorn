@@ -27,8 +27,8 @@ import com.jgoodies.forms.layout.RowSpec;
 
 import de.jClipCorn.Main;
 import de.jClipCorn.database.CCMovieList;
-import de.jClipCorn.database.util.backupManager.BackupManager;
-import de.jClipCorn.database.util.backupManager.CCBackup;
+import de.jClipCorn.features.backupManager.BackupManager;
+import de.jClipCorn.features.backupManager.CCBackup;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.CachedResourceLoader;
 import de.jClipCorn.gui.resources.Resources;

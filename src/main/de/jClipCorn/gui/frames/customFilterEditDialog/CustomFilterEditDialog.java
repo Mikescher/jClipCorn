@@ -33,13 +33,13 @@ import com.jgoodies.forms.layout.FormSpecs;
 import com.jgoodies.forms.layout.RowSpec;
 
 import de.jClipCorn.database.CCMovieList;
-import de.jClipCorn.gui.frames.mainFrame.filterTree.CustomFilterObject;
+import de.jClipCorn.gui.mainFrame.filterTree.CustomFilterObject;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.CachedResourceLoader;
 import de.jClipCorn.gui.resources.Resources;
-import de.jClipCorn.table.filter.AbstractCustomFilter;
-import de.jClipCorn.table.filter.customFilter.operators.CustomOperator;
-import de.jClipCorn.table.filter.filterConfig.CustomFilterConfig;
+import de.jClipCorn.features.table.filter.AbstractCustomFilter;
+import de.jClipCorn.features.table.filter.customFilter.operators.CustomOperator;
+import de.jClipCorn.features.table.filter.filterConfig.CustomFilterConfig;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.listener.FinishListener;
 import de.jClipCorn.util.stream.CCStreams;

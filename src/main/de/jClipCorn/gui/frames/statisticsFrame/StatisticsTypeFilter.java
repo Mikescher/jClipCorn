@@ -4,7 +4,7 @@ import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.databaseElement.ICCDatedElement;
 import de.jClipCorn.database.databaseElement.ICCPlayableElement;
-import de.jClipCorn.gui.log.CCLog;
+import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.util.stream.CCStream;
 
 public enum StatisticsTypeFilter {

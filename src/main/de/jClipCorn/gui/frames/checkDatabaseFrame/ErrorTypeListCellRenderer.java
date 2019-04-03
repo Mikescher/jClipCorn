@@ -6,7 +6,7 @@ import java.awt.Component;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JList;
 
-import de.jClipCorn.database.databaseErrors.DatabaseErrorType;
+import de.jClipCorn.features.databaseErrors.DatabaseErrorType;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.datatypes.CountAppendix;
 

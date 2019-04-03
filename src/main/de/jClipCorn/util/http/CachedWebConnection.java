@@ -10,7 +10,7 @@ import java.util.UUID;
 
 import javax.imageio.ImageIO;
 
-import de.jClipCorn.gui.log.CCLog;
+import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.SimpleSerializableData;
 import de.jClipCorn.util.datatypes.Tuple;

@@ -12,7 +12,7 @@ import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.database.databaseElement.ICCDatedElement;
 import de.jClipCorn.database.databaseElement.ICCPlayableElement;
-import de.jClipCorn.gui.frames.statisticsFrame.StatisticsHelper;
+import de.jClipCorn.features.statistics.StatisticsHelper;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.datetime.CCDatespan;
 import de.jClipCorn.util.stream.CCStream;

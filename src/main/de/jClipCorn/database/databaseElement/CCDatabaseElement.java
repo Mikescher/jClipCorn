@@ -8,7 +8,7 @@ import org.jdom2.Element;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.util.ExtendedViewedState;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.gui.log.CCLog;
+import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.util.LargeMD5Calculator;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.datetime.CCDate;

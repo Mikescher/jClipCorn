@@ -14,7 +14,7 @@ import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
 
 import de.jClipCorn.database.CCMovieList;
-import de.jClipCorn.gui.log.CCLog;
+import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.util.listener.ProgressCallbackListener;
 
 public class DatabaseComparator {

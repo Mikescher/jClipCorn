@@ -24,7 +24,7 @@ import com.jgoodies.forms.layout.RowSpec;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.gui.frames.addMovieFrame.AddMovieFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.gui.log.CCLog;
+import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.stream.CCStreams;

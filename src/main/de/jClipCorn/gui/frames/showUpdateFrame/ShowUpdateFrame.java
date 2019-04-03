@@ -13,7 +13,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
-import de.jClipCorn.gui.frames.mainFrame.MainFrame;
+import de.jClipCorn.gui.mainFrame.MainFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.UpdateConnector;
 

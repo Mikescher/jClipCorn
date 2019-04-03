@@ -7,7 +7,7 @@ import java.nio.file.FileAlreadyExistsException;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-import de.jClipCorn.gui.log.CCLog;
+import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.properties.enumerations.CCDatabaseDriver;
 import de.jClipCorn.util.exceptions.FileLockedException;
 import de.jClipCorn.util.formatter.PathFormatter;

@@ -19,7 +19,7 @@ import javax.swing.filechooser.FileFilter;
 
 import de.jClipCorn.gui.frames.coverPreviewFrame.CoverPreviewFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.gui.log.CCLog;
+import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.gui.resources.CachedResourceLoader;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.formatter.PathFormatter;

@@ -5,7 +5,7 @@ import org.json.JSONObject;
 import org.json.JSONTokener;
 
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.gui.log.CCLog;
+import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.util.http.HTTPUtilities;
 
 public class UpdateConnector implements Runnable {

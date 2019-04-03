@@ -2,7 +2,7 @@ package de.jClipCorn.util;
 
 import java.util.Stack;
 
-import de.jClipCorn.gui.log.CCLog;
+import de.jClipCorn.features.log.CCLog;
 
 public class TimeKeeper {
 	static Stack<Long> time_ms = new Stack<>();

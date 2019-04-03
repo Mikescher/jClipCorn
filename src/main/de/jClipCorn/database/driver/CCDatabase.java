@@ -24,7 +24,7 @@ import de.jClipCorn.database.util.covercache.CCFolderCoverCache;
 import de.jClipCorn.database.util.covercache.CCMemoryCoverCache;
 import de.jClipCorn.database.util.covercache.CCStubCoverCache;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.gui.log.CCLog;
+import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.enumerations.CCDatabaseDriver;
 import de.jClipCorn.util.datetime.CCDate;

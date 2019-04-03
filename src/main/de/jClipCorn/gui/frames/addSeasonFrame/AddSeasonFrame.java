@@ -26,11 +26,11 @@ import de.jClipCorn.gui.guiComponents.editCoverControl.EditCoverControl;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.CachedResourceLoader;
 import de.jClipCorn.gui.resources.Resources;
-import de.jClipCorn.online.metadata.ParseResultHandler;
+import de.jClipCorn.features.online.metadata.ParseResultHandler;
 import de.jClipCorn.util.helper.ExtendedFocusTraversalOnArray;
 import de.jClipCorn.util.listener.UpdateCallbackListener;
-import de.jClipCorn.util.userdataProblem.UserDataProblem;
-import de.jClipCorn.util.userdataProblem.UserDataProblemHandler;
+import de.jClipCorn.features.userdataProblem.UserDataProblem;
+import de.jClipCorn.features.userdataProblem.UserDataProblemHandler;
 
 public class AddSeasonFrame extends JFrame implements UserDataProblemHandler, ParseResultHandler {
 	private static final long serialVersionUID = -5479523926638394942L;

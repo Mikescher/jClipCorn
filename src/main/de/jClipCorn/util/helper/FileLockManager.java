@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.gui.log.CCLog;
+import de.jClipCorn.features.log.CCLog;
 
 /*
  * Cross plattfom lock file implementation

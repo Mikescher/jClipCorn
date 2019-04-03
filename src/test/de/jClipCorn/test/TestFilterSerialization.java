@@ -8,11 +8,11 @@ import java.util.Random;
 import org.junit.Test;
 
 import de.jClipCorn.database.CCMovieList;
-import de.jClipCorn.table.filter.AbstractCustomFilter;
-import de.jClipCorn.table.filter.customFilter.aggregators.CustomAggregator;
-import de.jClipCorn.table.filter.customFilter.operators.CustomAndOperator;
-import de.jClipCorn.table.filter.customFilter.operators.CustomOperator;
-import de.jClipCorn.table.filter.filterConfig.CustomFilterConfig;
+import de.jClipCorn.features.table.filter.AbstractCustomFilter;
+import de.jClipCorn.features.table.filter.customFilter.aggregators.CustomAggregator;
+import de.jClipCorn.features.table.filter.customFilter.operators.CustomAndOperator;
+import de.jClipCorn.features.table.filter.customFilter.operators.CustomOperator;
+import de.jClipCorn.features.table.filter.filterConfig.CustomFilterConfig;
 
 @SuppressWarnings("nls")
 public class TestFilterSerialization extends ClipCornBaseTest {

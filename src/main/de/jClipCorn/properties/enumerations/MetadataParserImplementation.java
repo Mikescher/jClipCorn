@@ -1,12 +1,12 @@
 package de.jClipCorn.properties.enumerations;
 
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.gui.log.CCLog;
-import de.jClipCorn.online.metadata.Metadataparser;
-import de.jClipCorn.online.metadata.anilist.AniListParser;
-import de.jClipCorn.online.metadata.imdb.IMDBParserCommon;
-import de.jClipCorn.online.metadata.mal.MALParser;
-import de.jClipCorn.online.metadata.tmdb.TMDBParser;
+import de.jClipCorn.features.log.CCLog;
+import de.jClipCorn.features.online.metadata.Metadataparser;
+import de.jClipCorn.features.online.metadata.anilist.AniListParser;
+import de.jClipCorn.features.online.metadata.imdb.IMDBParserCommon;
+import de.jClipCorn.features.online.metadata.mal.MALParser;
+import de.jClipCorn.features.online.metadata.tmdb.TMDBParser;
 import de.jClipCorn.util.enumextension.ContinoousEnum;
 import de.jClipCorn.util.enumextension.EnumWrapper;
 

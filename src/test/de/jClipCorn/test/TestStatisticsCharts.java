@@ -9,8 +9,8 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
 import de.jClipCorn.database.CCMovieList;
-import de.jClipCorn.gui.frames.statisticsFrame.ClipCornStatistics;
-import de.jClipCorn.gui.frames.statisticsFrame.StatisticsGroup;
+import de.jClipCorn.features.statistics.ClipCornStatistics;
+import de.jClipCorn.features.statistics.StatisticsGroup;
 import de.jClipCorn.gui.frames.statisticsFrame.StatisticsTypeFilter;
 import de.jClipCorn.util.lambda.Func1to1;
 

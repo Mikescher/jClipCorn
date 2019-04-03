@@ -1,13 +1,13 @@
 package de.jClipCorn.properties.enumerations;
 
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.gui.log.CCLog;
-import de.jClipCorn.online.cover.AbstractImageSearch;
-import de.jClipCorn.online.cover.google.GoogleCoverSearch;
-import de.jClipCorn.online.cover.google.GooglePosterSearch;
-import de.jClipCorn.online.cover.imdb.IMDBPrimaryCoverSearch;
-import de.jClipCorn.online.cover.imdb.IMDBSecondaryCoverSearch;
-import de.jClipCorn.online.cover.tmdb.TMDBPosterSearch;
+import de.jClipCorn.features.log.CCLog;
+import de.jClipCorn.features.online.cover.AbstractImageSearch;
+import de.jClipCorn.features.online.cover.google.GoogleCoverSearch;
+import de.jClipCorn.features.online.cover.google.GooglePosterSearch;
+import de.jClipCorn.features.online.cover.imdb.IMDBPrimaryCoverSearch;
+import de.jClipCorn.features.online.cover.imdb.IMDBSecondaryCoverSearch;
+import de.jClipCorn.features.online.cover.tmdb.TMDBPosterSearch;
 import de.jClipCorn.util.enumextension.ContinoousEnum;
 import de.jClipCorn.util.enumextension.EnumWrapper;
 import de.jClipCorn.util.listener.FinishListener;

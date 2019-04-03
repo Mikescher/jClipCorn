@@ -14,7 +14,7 @@ import de.jClipCorn.util.Str;
 import org.apache.commons.lang3.StringUtils;
 
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.gui.log.CCLog;
+import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.DriveMap;
 import de.jClipCorn.util.datetime.CCDate;

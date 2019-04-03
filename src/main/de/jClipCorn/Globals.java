@@ -3,8 +3,8 @@ package de.jClipCorn;
 import java.util.HashMap;
 import java.util.Map;
 
-import de.jClipCorn.gui.frames.mainFrame.MainFrame;
-import de.jClipCorn.gui.frames.mainFrame.clipStatusbar.ClipStatusBar;
+import de.jClipCorn.gui.mainFrame.MainFrame;
+import de.jClipCorn.gui.mainFrame.clipStatusbar.ClipStatusBar;
 import de.jClipCorn.util.MapStopWatch;
 
 @SuppressWarnings("nls")

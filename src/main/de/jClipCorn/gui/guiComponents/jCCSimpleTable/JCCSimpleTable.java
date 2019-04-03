@@ -13,7 +13,7 @@ import javax.swing.table.TableRowSorter;
 
 import com.sun.java.swing.plaf.windows.WindowsScrollBarUI;
 
-import de.jClipCorn.gui.frames.mainFrame.clipTable.ClipVerticalScrollbarUI;
+import de.jClipCorn.gui.mainFrame.clipTable.ClipVerticalScrollbarUI;
 import de.jClipCorn.util.TableColumnAdjuster;
 import de.jClipCorn.util.lambda.Func1to1;
 import de.jClipCorn.util.stream.CCStreams;

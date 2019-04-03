@@ -9,7 +9,7 @@ import javax.accessibility.AccessibleContext;
 import javax.swing.*;
 
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.gui.log.CCLog;
+import de.jClipCorn.features.log.CCLog;
 
 public class DialogHelper {
 	public static boolean showYesNoDlg(Component frame, String caption, String txt) {

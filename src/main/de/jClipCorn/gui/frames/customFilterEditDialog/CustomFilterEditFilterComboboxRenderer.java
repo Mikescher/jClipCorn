@@ -6,7 +6,7 @@ import javax.swing.DefaultListCellRenderer;
 import javax.swing.JLabel;
 import javax.swing.JList;
 
-import de.jClipCorn.table.filter.AbstractCustomFilter;
+import de.jClipCorn.features.table.filter.AbstractCustomFilter;
 
 public class CustomFilterEditFilterComboboxRenderer extends DefaultListCellRenderer {
 	private static final long serialVersionUID = -1317965356139131912L;

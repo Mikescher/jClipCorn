@@ -1,7 +1,7 @@
 package de.jClipCorn.database.util;
 
 import de.jClipCorn.database.databaseElement.columnTypes.CCSingleOnlineReference;
-import de.jClipCorn.gui.log.CCLog;
+import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.enumerations.BrowserLanguage;
 

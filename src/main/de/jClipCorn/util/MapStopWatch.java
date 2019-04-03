@@ -3,7 +3,7 @@ package de.jClipCorn.util;
 import java.util.HashMap;
 import java.util.Map;
 
-import de.jClipCorn.gui.log.CCLog;
+import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.lambda.Func2to0;
 

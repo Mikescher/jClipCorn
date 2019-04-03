@@ -56,8 +56,8 @@ import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.helper.FileChooserHelper;
 import de.jClipCorn.util.listener.OmniParserCallbackListener;
 import de.jClipCorn.util.listener.UpdateCallbackListener;
-import de.jClipCorn.util.userdataProblem.UserDataProblem;
-import de.jClipCorn.util.userdataProblem.UserDataProblemHandler;
+import de.jClipCorn.features.userdataProblem.UserDataProblem;
+import de.jClipCorn.features.userdataProblem.UserDataProblemHandler;
 
 public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler, OmniParserCallbackListener {
 	private static final long serialVersionUID = 8825373383589912037L;

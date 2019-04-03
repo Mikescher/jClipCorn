@@ -7,9 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.jClipCorn.Main;
-import de.jClipCorn.gui.frames.mainFrame.MainFrame;
+import de.jClipCorn.gui.mainFrame.MainFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.gui.log.CCLog;
+import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.util.formatter.PathFormatter;
 
 public class ApplicationHelper {

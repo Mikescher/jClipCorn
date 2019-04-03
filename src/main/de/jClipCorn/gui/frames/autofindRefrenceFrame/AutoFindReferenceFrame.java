@@ -40,13 +40,13 @@ import de.jClipCorn.gui.frames.editMovieFrame.EditMovieFrame;
 import de.jClipCorn.gui.frames.editSeriesFrame.EditSeriesFrame;
 import de.jClipCorn.gui.guiComponents.CoverLabel;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.gui.log.CCLog;
+import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.gui.resources.CachedResourceLoader;
 import de.jClipCorn.gui.resources.Resources;
-import de.jClipCorn.online.OnlineSearchType;
-import de.jClipCorn.online.metadata.OnlineMetadata;
-import de.jClipCorn.online.metadata.imdb.IMDBParserCommon;
-import de.jClipCorn.online.metadata.tmdb.TMDBParser;
+import de.jClipCorn.features.online.OnlineSearchType;
+import de.jClipCorn.features.online.metadata.OnlineMetadata;
+import de.jClipCorn.features.online.metadata.imdb.IMDBParserCommon;
+import de.jClipCorn.features.online.metadata.tmdb.TMDBParser;
 
 public class AutoFindReferenceFrame extends JFrame {
 	private static final long serialVersionUID = 4658458278263596774L;

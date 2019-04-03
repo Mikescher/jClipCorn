@@ -14,9 +14,9 @@ public abstract class StatisticsPanel {
 	
 	public abstract boolean usesFilterableSeries();
 	public abstract boolean usesFilterableYearRange();
-	protected abstract StatisticsTypeFilter supportedTypes();
+	public abstract StatisticsTypeFilter supportedTypes();
 
-	protected abstract String createTitle();
+	public abstract String createTitle();
 	public abstract String createToggleTwoCaption();
 
 	private JComponent cache;

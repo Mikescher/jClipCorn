@@ -8,7 +8,7 @@ import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.properties.CCProperties;
-import de.jClipCorn.table.renderer.TableModelRowColorInterface;
+import de.jClipCorn.features.table.renderer.TableModelRowColorInterface;
 
 public class SerTableModel extends AbstractTableModel implements TableModelRowColorInterface{
 	private static final long serialVersionUID = -2056843389761330885L;

@@ -9,7 +9,7 @@ import java.io.IOException;
 import com.twmacinta.util.MD5;
 
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.gui.log.CCLog;
+import de.jClipCorn.features.log.CCLog;
 
 public class LargeMD5Calculator {
 	private final static String MD5_ERROR_RESULT = "0"; //$NON-NLS-1$

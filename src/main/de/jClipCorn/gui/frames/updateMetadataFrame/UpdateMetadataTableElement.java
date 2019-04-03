@@ -7,7 +7,7 @@ import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.gui.frames.previewMovieFrame.PreviewMovieFrame;
 import de.jClipCorn.gui.frames.previewSeriesFrame.PreviewSeriesFrame;
-import de.jClipCorn.online.metadata.OnlineMetadata;
+import de.jClipCorn.features.online.metadata.OnlineMetadata;
 
 public class UpdateMetadataTableElement {
 

@@ -6,7 +6,7 @@ import java.awt.Component;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JList;
 
-import de.jClipCorn.database.databaseErrors.DatabaseError;
+import de.jClipCorn.features.databaseErrors.DatabaseError;
 
 public class DatabaseErrorListCellRenderer extends DefaultListCellRenderer {
 	private static final long serialVersionUID = -7242329712702777086L;

@@ -9,12 +9,12 @@ import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JTextField;
 
-import de.jClipCorn.gui.actionTree.CCActionTree;
+import de.jClipCorn.features.actionTree.CCActionTree;
 import de.jClipCorn.gui.frames.editToolbarFrame.EditToolbarFrame;
-import de.jClipCorn.gui.frames.mainFrame.clipToolbar.ClipToolbar;
+import de.jClipCorn.gui.mainFrame.clipToolbar.ClipToolbar;
 import de.jClipCorn.gui.guiComponents.ToolbarConfigPanel;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.gui.log.CCLog;
+import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.CCPropertyCategory;
 

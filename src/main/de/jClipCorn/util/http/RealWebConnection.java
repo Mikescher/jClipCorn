@@ -9,7 +9,7 @@ import java.util.List;
 
 import javax.imageio.ImageIO;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.gui.log.CCLog;
+import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.exceptions.HTTPErrorCodeException;

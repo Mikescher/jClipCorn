@@ -101,7 +101,7 @@ public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener 
 	
 	private void initGUI() {
 		setSize(new Dimension(700, 565));
-		setIconImage(CachedResourceLoader.getImage(Resources.IMG_FRAME_ICON));
+		setIconImage(Resources.IMG_FRAME_ICON.get());
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		getContentPane().setLayout(null);
@@ -311,7 +311,7 @@ public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener 
 			mnExtras.add(mntmShowOnline);
 		}
 		
-		btnPlay = new JButton(CachedResourceLoader.getIcon(Resources.ICN_MENUBAR_PLAY.icon32x32));
+		btnPlay = new JButton(Resources.ICN_MENUBAR_PLAY.get32x32());
 		btnPlay.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -384,7 +384,7 @@ public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener 
 		lblCover.setAndResizeCover(movie.getCover());
 		label.setText(movie.getCompleteTitle());
 		
-		lblViewed.setIcon(movie.isViewed()?CachedResourceLoader.getIcon(Resources.ICN_TABLE_VIEWED_TRUE):null);
+		lblViewed.setIcon(movie.isViewed()?Resources.ICN_TABLE_VIEWED_TRUE.get():null);
 		
 		lbl_Quality.setIcon(movie.getQuality().getIcon());
 		lbl_Quality.setText(movie.getQuality().asString());

@@ -152,7 +152,7 @@ public class JCoverChooser extends JComponent implements MouseListener {
 
 		if (asyncLoading) {
 
-			BufferedImage bi = CachedResourceLoader.getImage(Resources.IMG_COVER_STANDARD);
+			BufferedImage bi = Resources.IMG_COVER_STANDARD.get();
 			
 			int idx = images_full.size();
 			

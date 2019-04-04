@@ -179,7 +179,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 	
 	private void initGUI() {
 		setTitle(LocaleBundle.getFormattedString("EditMovieFrame.this.title", movie.getCompleteTitle())); //$NON-NLS-1$
-		setIconImage(CachedResourceLoader.getImage(Resources.IMG_FRAME_ICON));
+		setIconImage(Resources.IMG_FRAME_ICON.get());
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setResizable(false);
 		getContentPane().setLayout(null);

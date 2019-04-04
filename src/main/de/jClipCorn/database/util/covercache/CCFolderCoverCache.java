@@ -82,7 +82,7 @@ public class CCFolderCoverCache extends CCCoverCache {
 	@Override
 	public BufferedImage getCover(String name) {
 		if ((name == null) || name.isEmpty()) {
-			return CachedResourceLoader.getImage(Resources.IMG_COVER_NOTFOUND);
+			return Resources.IMG_COVER_NOTFOUND.get();
 		}
 
 		BufferedImage res = cache.get(name);
@@ -96,7 +96,7 @@ public class CCFolderCoverCache extends CCCoverCache {
 					updateMetaCache(name, res, f);
 				} else {
 					CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CoverFileBroken", name)); //$NON-NLS-1$
-					return CachedResourceLoader.getImage(Resources.IMG_COVER_NOTFOUND);
+					return Resources.IMG_COVER_NOTFOUND.get();
 				}
 			} catch (IOException e) {
 				if (! Main.DEBUG) {
@@ -104,7 +104,7 @@ public class CCFolderCoverCache extends CCCoverCache {
 				} else {
 					CCLog.addDebug(String.format("Cover not found (%s)", name)); //$NON-NLS-1$
 				}
-				return CachedResourceLoader.getImage(Resources.IMG_COVER_NOTFOUND);
+				return Resources.IMG_COVER_NOTFOUND.get();
 			}
 		}
 		

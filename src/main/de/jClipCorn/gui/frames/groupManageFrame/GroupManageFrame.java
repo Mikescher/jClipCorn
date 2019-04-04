@@ -107,7 +107,7 @@ public class GroupManageFrame extends JFrame {
 		setMinimumSize(new Dimension(500, 300));
 		setTitle(LocaleBundle.getString("GroupManagerFrame.title")); //$NON-NLS-1$
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setIconImage(CachedResourceLoader.getImage(Resources.IMG_FRAME_ICON));
+		setIconImage(Resources.IMG_FRAME_ICON.get());
 		
 		setBounds(100, 100, 800, 700);
 		contentPane = new JPanel();

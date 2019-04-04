@@ -78,7 +78,7 @@ public class QuickAddEpisodeDialog extends JDialog {
 
 	private void initGUI() {
 		setTitle(LocaleBundle.getString("QuickAddEpisodeDialog.title")); //$NON-NLS-1$
-		setIconImage(CachedResourceLoader.getImage(Resources.IMG_FRAME_ICON));
+		setIconImage(Resources.IMG_FRAME_ICON.get());
 		setBounds(100, 100, 550, 300);
 		setMinimumSize(new Dimension(300, 300));
 		setModal(true);

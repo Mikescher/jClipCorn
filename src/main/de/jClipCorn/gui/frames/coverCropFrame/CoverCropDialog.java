@@ -188,7 +188,7 @@ public class CoverCropDialog extends JDialog {
 	private void initGUI() {
 		setTitle(LocaleBundle.getString("CoverCropFrame.this.title")); //$NON-NLS-1$
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setIconImage(CachedResourceLoader.getImage(Resources.IMG_FRAME_ICON));
+		setIconImage(Resources.IMG_FRAME_ICON.get());
 		setMinimumSize(new Dimension(800, 600));
 		setSize(new Dimension(1000, 625));
 		setModal(true);

@@ -61,15 +61,15 @@ public enum CCQuality implements ContinoousEnum<CCQuality> {
 	public ImageIcon getIcon() {
 		switch (this) {
 		case STREAM:
-			return CachedResourceLoader.getIcon(Resources.ICN_TABLE_QUALITY_0);
+			return Resources.ICN_TABLE_QUALITY_0.get();
 		case ONE_CD:
-			return CachedResourceLoader.getIcon(Resources.ICN_TABLE_QUALITY_1);
+			return Resources.ICN_TABLE_QUALITY_1.get();
 		case MULTIPLE_CD:
-			return CachedResourceLoader.getIcon(Resources.ICN_TABLE_QUALITY_2);
+			return Resources.ICN_TABLE_QUALITY_2.get();
 		case DVD:
-			return CachedResourceLoader.getIcon(Resources.ICN_TABLE_QUALITY_3);
+			return Resources.ICN_TABLE_QUALITY_3.get();
 		case BLURAY:
-			return CachedResourceLoader.getIcon(Resources.ICN_TABLE_QUALITY_4);
+			return Resources.ICN_TABLE_QUALITY_4.get();
 		default:
 			return null;
 		}

@@ -222,7 +222,7 @@ public class ImageUtilities {
 		Point tl = getTopLeftNonTransparentPixel(cvr);
 		tl.setLocation(Math.min(tl.x, BASE_COVER_WIDTH - SERIES_MASK_WIDTH), Math.min(tl.y, BASE_COVER_HEIGHT - SERIES_MASK_HEIGHT)); // Nicht zu weit rechts | Nicht zu weit unten
 		
-		cvr.getGraphics().drawImage(CachedResourceLoader.getImage(Resources.IMG_COVER_SERIES_MASK), tl.x, tl.y, null);
+		cvr.getGraphics().drawImage(Resources.IMG_COVER_SERIES_MASK.get(), tl.x, tl.y, null);
 	}
 	
 	public static Point getTopLeftNonTransparentPixel(BufferedImage i) {

@@ -259,7 +259,7 @@ public class EditCoverControl extends AbstractEditCoverControl {
 			if (!ImageUtilities.isImageRatioAcceptable(nci.getWidth(), nci.getHeight())) {
 				Point tr = ImageUtilities.getTopRightNonTransparentPixel(resized);
 				
-				resized.getGraphics().drawImage(CachedResourceLoader.getImage(Resources.ICN_WARNING_TRIANGLE.icon32x32), tr.x - 32 - 2, tr.y + 2, null);
+				resized.getGraphics().drawImage(Resources.ICN_WARNING_TRIANGLE.getImage32x32(), tr.x - 32 - 2, tr.y + 2, null);
 			}
 					
 			lblCover.setCoverDirect(resized, nci);
@@ -275,7 +275,7 @@ public class EditCoverControl extends AbstractEditCoverControl {
 			lblResolution.setText(""); //$NON-NLS-1$
 		}
 
-		btnCrop.setEnabled(isCoverSet() && isCoverSet());
+		btnCrop.setEnabled(isCoverSet() && isEnabled());
 	}
 
 	@Override

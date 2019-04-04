@@ -18,7 +18,7 @@ public class CCStubCoverCache extends CCCoverCache {
 
 	@Override
 	public BufferedImage getCover(String name) {
-		return CachedResourceLoader.getImage(Resources.IMG_COVER_STANDARD);
+		return Resources.IMG_COVER_STANDARD.get();
 	}
 
 	@Override

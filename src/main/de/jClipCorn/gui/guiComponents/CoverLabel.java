@@ -41,9 +41,9 @@ public class CoverLabel extends JLabel implements MouseListener {
 
 	public Icon getStandardIcon() {
 		if (isHalfSize) {
-			return CachedResourceLoader.getIcon(Resources.IMG_COVER_STANDARD_SMALL);
+			return Resources.ICN_COVER_STANDARD_SMALL.get();
 		} else {
-			return CachedResourceLoader.getIcon(Resources.IMG_COVER_STANDARD);
+			return Resources.ICN_COVER_STANDARD.get();
 		}
 	}
 
@@ -59,51 +59,51 @@ public class CoverLabel extends JLabel implements MouseListener {
 			return getStandardIcon();
 		}
 	}
-	
+
 	public BufferedImage getOriginalCover() {
 		if (original != null) return original;
 		return ImageUtilities.iconToImage((ImageIcon) getIcon());
 	}
-	
+
 	@Override
 	public void setBounds(int x, int y, int width, int height) {
 	    super.setBounds(
-	    		x, 
-	    		y, 
-	    		isHalfSize ? ImageUtilities.HALF_COVER_WIDTH  : ImageUtilities.BASE_COVER_WIDTH, 
+	    		x,
+	    		y,
+	    		isHalfSize ? ImageUtilities.HALF_COVER_WIDTH  : ImageUtilities.BASE_COVER_WIDTH,
 	    		isHalfSize ? ImageUtilities.HALF_COVER_HEIGHT : ImageUtilities.BASE_COVER_HEIGHT);
 	}
-	
+
 	public void setPosition(int x, int y) {
 	    super.setBounds(
-	    		x, 
-	    		y, 
-	    		isHalfSize ? ImageUtilities.HALF_COVER_WIDTH  : ImageUtilities.BASE_COVER_WIDTH, 
+	    		x,
+	    		y,
+	    		isHalfSize ? ImageUtilities.HALF_COVER_WIDTH  : ImageUtilities.BASE_COVER_WIDTH,
 	    		isHalfSize ? ImageUtilities.HALF_COVER_HEIGHT : ImageUtilities.BASE_COVER_HEIGHT);
 	}
 
 	public void setCoverDirect(BufferedImage cover, BufferedImage orig) {
 		original = orig;
-		
+
 		if (cover == null) { setIcon(null); return; }
-		
+
 		if (isHalfSize)
 			setIcon(new ImageIcon(ImageUtilities.resizeCoverImageForHalfSizeUI(cover)));
 		else
 			setIcon(new ImageIcon(ImageUtilities.resizeCoverImageForFullSizeUI(cover)));
 	}
-	
+
 	public void setAndResizeCover(BufferedImage cover) {
 		original = cover;
-		
+
 		if (cover == null) { setIcon(null); return; }
-		
+
 		if (isHalfSize)
 			setIcon(new ImageIcon(ImageUtilities.resizeCoverImageForHalfSizeUI(cover)));
 		else
 			setIcon(new ImageIcon(ImageUtilities.resizeCoverImageForFullSizeUI(cover)));
 	}
-	
+
 	public void clearCover() {
 		original = null;
 		setIcon(null);
@@ -143,24 +143,14 @@ public class CoverLabel extends JLabel implements MouseListener {
 			}
 
 			JPopupMenu menu = new JPopupMenu();
-			JMenuItem item2 = new JMenuItem(LocaleBundle.getString("MainFrame.showCoverPopup"), CachedResourceLoader.getIcon(Resources.ICN_MENUBAR_SHOWCOVER.icon16x16)); //$NON-NLS-1$
-			JMenuItem item1 = new JMenuItem(LocaleBundle.getString("MainFrame.saveCoverPopup"), CachedResourceLoader.getIcon(Resources.ICN_MENUBAR_SAVE.icon16x16)); //$NON-NLS-1$
+			JMenuItem item2 = new JMenuItem(LocaleBundle.getString("MainFrame.showCoverPopup"), Resources.ICN_MENUBAR_SHOWCOVER.get16x16()); //$NON-NLS-1$
+			JMenuItem item1 = new JMenuItem(LocaleBundle.getString("MainFrame.saveCoverPopup"), Resources.ICN_MENUBAR_SAVE.get16x16()); //$NON-NLS-1$
 			menu.add(item2);
 			menu.add(item1);
 
-			item1.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e2) {
-					saveIconAction();
-				}
-			});
+			item1.addActionListener(e2 -> saveIconAction());
 
-			item2.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e2) {
-					new CoverPreviewFrame(CoverLabel.this, getOriginalCover()).setVisible(true);
-				}
-			});
+			item2.addActionListener(e2 -> new CoverPreviewFrame(CoverLabel.this, getOriginalCover()).setVisible(true));
 
 			menu.show(this, e.getX(), e.getY());
 		}

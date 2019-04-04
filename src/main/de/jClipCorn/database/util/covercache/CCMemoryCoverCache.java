@@ -33,14 +33,14 @@ public class CCMemoryCoverCache extends CCCoverCache {
 	@Override
 	public BufferedImage getCover(String name) {
 		if ((name == null) || name.isEmpty()) {
-			return CachedResourceLoader.getImage(Resources.IMG_COVER_NOTFOUND);
+			return Resources.IMG_COVER_NOTFOUND.get();
 		}
 
 		BufferedImage res = data.get(name);
 
 		if (res == null) {
 			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CoverFileBroken", name)); //$NON-NLS-1$
-			return CachedResourceLoader.getImage(Resources.IMG_COVER_NOTFOUND);
+			return Resources.IMG_COVER_NOTFOUND.get();
 		}
 
 		return res;

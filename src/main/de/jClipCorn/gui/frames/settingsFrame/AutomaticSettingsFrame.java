@@ -62,7 +62,7 @@ public abstract class AutomaticSettingsFrame extends JFrame {
 	private void initGUI() {
 		List<Component> tabOrder = new ArrayList<>();
 		
-		setIconImage(CachedResourceLoader.getImage(Resources.IMG_FRAME_ICON));
+		setIconImage(Resources.IMG_FRAME_ICON.get());
 		
 		if (LookAndFeelManager.isMetal())
 			setSize(new Dimension(825, 525));

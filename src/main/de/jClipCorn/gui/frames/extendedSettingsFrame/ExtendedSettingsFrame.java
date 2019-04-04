@@ -71,7 +71,7 @@ public class ExtendedSettingsFrame extends JFrame implements ListSelectionListen
 
 	private void initGUI() {
 		setTitle(LocaleBundle.getString("extendedSettingsFrame.title")); //$NON-NLS-1$
-		setIconImage(CachedResourceLoader.getImage(Resources.IMG_FRAME_ICON));
+		setIconImage(Resources.IMG_FRAME_ICON.get());
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		getContentPane().setLayout(new BorderLayout(0, 0));
 

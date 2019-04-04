@@ -31,8 +31,8 @@ import de.jClipCorn.gui.guiComponents.jSimpleTree.SimpleTreeObject.SimpleTreeEve
 import de.jClipCorn.gui.guiComponents.jSimpleTree.SimpletreeActionMode;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.CachedResourceLoader;
-import de.jClipCorn.gui.resources.IconRef;
 import de.jClipCorn.gui.resources.Resources;
+import de.jClipCorn.gui.resources.reftypes.IconRef;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.features.table.filter.AbstractCustomFilter;
 import de.jClipCorn.features.table.filter.TableCustomFilter;
@@ -147,7 +147,7 @@ public class FilterTree extends AbstractFilterTree {
 	}
 	
 	private void initAll(DefaultMutableTreeNode parent) {
-		parent.setUserObject(new SimpleTreeObject(CachedResourceLoader.getIcon(Resources.ICN_SIDEBAR_ALL), LocaleBundle.getString("FilterTree.All"), e ->  //$NON-NLS-1$
+		parent.setUserObject(new SimpleTreeObject(Resources.ICN_SIDEBAR_ALL.get(), LocaleBundle.getString("FilterTree.All"), e ->  //$NON-NLS-1$
 		{
 			table.setRowFilter(null, RowFilterSource.SIDEBAR);
 			collapseAll();
@@ -318,7 +318,7 @@ public class FilterTree extends AbstractFilterTree {
 	}
 	
 	protected DefaultMutableTreeNode addNodeF(DefaultMutableTreeNode aroot, IconRef icon, String txt, Func0to1<AbstractCustomFilter> filter) {
-		return addNodeF(aroot, CachedResourceLoader.getIcon(icon), txt, filter);
+		return addNodeF(aroot, icon.get(), txt, filter);
 	}
 	
 	protected DefaultMutableTreeNode addNodeF(DefaultMutableTreeNode aroot, Icon icon, String txt, Func0to1<AbstractCustomFilter> filter) {

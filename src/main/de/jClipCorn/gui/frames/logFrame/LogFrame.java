@@ -65,7 +65,7 @@ public class LogFrame extends JFrame implements CCLogChangedListener{
 	
 	private void initGUI() {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setIconImage(CachedResourceLoader.getImage(Resources.IMG_FRAME_ICON));
+		setIconImage(Resources.IMG_FRAME_ICON.get());
 		setTitle(LocaleBundle.getString("CCLogFrame.this.title")); //$NON-NLS-1$
 		getContentPane().setLayout(new BorderLayout(0, 0));
 		

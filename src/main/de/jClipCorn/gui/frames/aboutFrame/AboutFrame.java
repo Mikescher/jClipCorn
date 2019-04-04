@@ -36,10 +36,10 @@ public class AboutFrame extends JFrame implements ComponentListener {
 	
 	private void initGUI() {
 		setTitle(LocaleBundle.getString("UberDialog.this.title") + " v" + Main.VERSION); //$NON-NLS-1$ //$NON-NLS-2$
-		setIconImage(CachedResourceLoader.getImage(Resources.IMG_FRAME_ICON));
+		setIconImage(Resources.IMG_FRAME_ICON.get());
 		addComponentListener(this);
-		
-		lblImg = new JLabel(CachedResourceLoader.getIcon(Resources.IMG_FRAMES_ABOUT));
+
+		lblImg = new JLabel(Resources.ICN_FRAMES_ABOUT.get());
 		lblImg.addMouseListener(new MouseListener() {
 			
 			@Override

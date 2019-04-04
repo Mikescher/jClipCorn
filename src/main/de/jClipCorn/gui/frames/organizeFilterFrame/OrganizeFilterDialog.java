@@ -68,7 +68,7 @@ public class OrganizeFilterDialog extends JDialog {
 	
 	private void initGUI() {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setIconImage(CachedResourceLoader.getImage(Resources.IMG_FRAME_ICON));
+		setIconImage(Resources.IMG_FRAME_ICON.get());
 		setModal(true);
 		setTitle(LocaleBundle.getString("OrganizeFilterDialog.this.title")); //$NON-NLS-1$
 		getContentPane().setLayout(new FormLayout(new ColumnSpec[] {

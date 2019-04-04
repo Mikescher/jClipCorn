@@ -92,7 +92,7 @@ public class StatisticsFrame extends JFrame {
 	
 	private void initGUI() {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setIconImage(CachedResourceLoader.getImage(Resources.IMG_FRAME_ICON));
+		setIconImage(Resources.IMG_FRAME_ICON.get());
 		
 		BorderLayout borderLayout = (BorderLayout) getContentPane().getLayout();
 		borderLayout.setVgap(5);

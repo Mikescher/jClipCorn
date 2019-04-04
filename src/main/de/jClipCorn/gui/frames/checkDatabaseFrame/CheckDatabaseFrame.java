@@ -70,7 +70,7 @@ public class CheckDatabaseFrame extends JFrame {
 	
 	private void initGUI() {
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-		setIconImage(CachedResourceLoader.getImage(Resources.IMG_FRAME_ICON));
+		setIconImage(Resources.IMG_FRAME_ICON.get());
 		setTitle(LocaleBundle.getString("CheckDatabaseDialog.this.title")); //$NON-NLS-1$
 		setBounds(100, 100, 750, 400);
 		

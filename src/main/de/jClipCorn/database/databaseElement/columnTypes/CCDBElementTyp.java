@@ -47,9 +47,9 @@ public enum CCDBElementTyp implements ContinoousEnum<CCDBElementTyp> {
 	public ImageIcon getIcon() {
 		switch (this) {
 		case MOVIE:
-			return CachedResourceLoader.getIcon(Resources.ICN_TABLE_MOVIE);
+			return Resources.ICN_TABLE_MOVIE.get();
 		case SERIES:
-			return CachedResourceLoader.getIcon(Resources.ICN_TABLE_SERIES);
+			return Resources.ICN_TABLE_SERIES.get();
 		default:
 			return null;
 		}

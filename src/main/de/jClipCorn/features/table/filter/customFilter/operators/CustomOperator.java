@@ -4,11 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.jClipCorn.database.CCMovieList;
-import de.jClipCorn.gui.resources.IconRef;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.features.table.filter.AbstractCustomFilter;
 import de.jClipCorn.features.table.filter.filterConfig.CustomFilterConfig;
 import de.jClipCorn.features.table.filter.filterSerialization.FilterSerializationConfig;
+import de.jClipCorn.gui.resources.reftypes.IconRef;
+import de.jClipCorn.gui.resources.reftypes.SingleIconRef;
 import de.jClipCorn.util.stream.CCStream;
 import de.jClipCorn.util.stream.CCStreams;
 

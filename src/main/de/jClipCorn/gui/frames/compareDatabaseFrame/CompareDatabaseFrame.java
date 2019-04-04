@@ -147,7 +147,7 @@ public class CompareDatabaseFrame extends JFrame {
 
 	private void initGUI() {
 		setTitle(LocaleBundle.getString("CompareDatabaseFrame.this.title")); //$NON-NLS-1$
-		setIconImage(CachedResourceLoader.getImage(Resources.IMG_FRAME_ICON));
+		setIconImage(Resources.IMG_FRAME_ICON.get());
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
 		pnlTop = new JPanel();

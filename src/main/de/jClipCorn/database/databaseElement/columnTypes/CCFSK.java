@@ -69,15 +69,15 @@ public enum CCFSK implements ContinoousEnum<CCFSK> {
 	public ImageIcon getIcon() {
 		switch (this) {
 		case RATING_0:
-			return CachedResourceLoader.getIcon(Resources.ICN_TABLE_FSK_0);
+			return Resources.ICN_TABLE_FSK_0.get();
 		case RATING_I:
-			return CachedResourceLoader.getIcon(Resources.ICN_TABLE_FSK_1);
+			return Resources.ICN_TABLE_FSK_1.get();
 		case RATING_II:
-			return CachedResourceLoader.getIcon(Resources.ICN_TABLE_FSK_2);
+			return Resources.ICN_TABLE_FSK_2.get();
 		case RATING_III:
-			return CachedResourceLoader.getIcon(Resources.ICN_TABLE_FSK_3);
+			return Resources.ICN_TABLE_FSK_3.get();
 		case RATING_IV:
-			return CachedResourceLoader.getIcon(Resources.ICN_TABLE_FSK_4);
+			return Resources.ICN_TABLE_FSK_4.get();
 		default:
 			return null;
 		}

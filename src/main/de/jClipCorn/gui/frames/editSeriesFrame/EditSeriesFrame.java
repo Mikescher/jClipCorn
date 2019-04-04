@@ -249,7 +249,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 
 	private void initGUI() {
 		setSize(new Dimension(1200, 700));
-		setIconImage(CachedResourceLoader.getImage(Resources.IMG_FRAME_ICON));
+		setIconImage(Resources.IMG_FRAME_ICON.get());
 		setResizable(false);
 		setTitle(LocaleBundle.getString("EditSeriesFrame.this.title")); //$NON-NLS-1$
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

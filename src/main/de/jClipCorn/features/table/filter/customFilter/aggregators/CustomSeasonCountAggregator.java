@@ -5,13 +5,13 @@ import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.gui.resources.IconRef;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.features.table.filter.AbstractCustomFilter;
 import de.jClipCorn.features.table.filter.filterConfig.CustomChildConfig;
 import de.jClipCorn.features.table.filter.filterConfig.CustomFilterConfig;
 import de.jClipCorn.features.table.filter.filterConfig.CustomFilterIntAreaConfig;
 import de.jClipCorn.features.table.filter.filterSerialization.FilterSerializationConfig;
+import de.jClipCorn.gui.resources.reftypes.IconRef;
 import de.jClipCorn.util.DecimalSearchType;
 import de.jClipCorn.util.datatypes.CCIntArea;
 

@@ -92,7 +92,7 @@ public class MainFrame extends JFrame implements CCDBUpdateListener, FileDrop.Li
 
 	private void initGUI() {
 		setTitle(createTitle());
-		setIconImage(CachedResourceLoader.getImage(Resources.IMG_FRAME_ICON));
+		setIconImage(Resources.IMG_FRAME_ICON.get());
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setMinimumSize(new Dimension(FRAME_WIDTH, FRAME_HEIGHT));
@@ -116,7 +116,7 @@ public class MainFrame extends JFrame implements CCDBUpdateListener, FileDrop.Li
 		btnSearch.setBorderPainted(false);
 		btnSearch.setFocusPainted(false);
 		btnSearch.addActionListener(e -> startSearch());
-		btnSearch.setIcon(CachedResourceLoader.getIcon(Resources.ICN_FRAMES_SEARCH.icon16x16));
+		btnSearch.setIcon(Resources.ICN_FRAMES_SEARCH.get16x16());
 		toprightPanel.add(btnSearch);
 		content.add(leftPanel, BorderLayout.WEST);
 		content.add(middlePanel, BorderLayout.CENTER);

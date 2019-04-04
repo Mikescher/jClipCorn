@@ -85,7 +85,7 @@ public class WatchHistoryEpisodeElement extends WatchHistoryElement {
 
 	@Override
 	public ImageIcon getNameIcon() {
-		return CachedResourceLoader.getIcon(Resources.ICN_HISTORY_SERIES);
+		return Resources.ICN_HISTORY_SERIES.get();
 	}
 
 	@Override

@@ -52,7 +52,7 @@ public class EditRegexListPropertyFrame extends JDialog {
 	private void initGUI() {
 		setTitle(LocaleBundle.getString("EditRegexListPropertyFrame.this.title")); //$NON-NLS-1$
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-		setIconImage(CachedResourceLoader.getImage(Resources.IMG_FRAME_ICON));
+		setIconImage(Resources.IMG_FRAME_ICON.get());
 		setType(Type.UTILITY);
 		setMinimumSize(new Dimension(250, 200));
 		setSize(new Dimension(550, 300));

@@ -59,27 +59,27 @@ public enum CCOnlineScore implements ContinoousEnum<CCOnlineScore> {
 	public ImageIcon getIcon() {
 		switch (this) {
 		case STARS_0_0:
-			return CachedResourceLoader.getIcon(Resources.ICN_TABLE_ONLINESCORE_0);
+			return Resources.ICN_TABLE_ONLINESCORE_0.get();
 		case STARS_0_5:
-			return CachedResourceLoader.getIcon(Resources.ICN_TABLE_ONLINESCORE_1);
+			return Resources.ICN_TABLE_ONLINESCORE_1.get();
 		case STARS_1_0:
-			return CachedResourceLoader.getIcon(Resources.ICN_TABLE_ONLINESCORE_2);
+			return Resources.ICN_TABLE_ONLINESCORE_2.get();
 		case STARS_1_5:
-			return CachedResourceLoader.getIcon(Resources.ICN_TABLE_ONLINESCORE_3);
+			return Resources.ICN_TABLE_ONLINESCORE_3.get();
 		case STARS_2_0:
-			return CachedResourceLoader.getIcon(Resources.ICN_TABLE_ONLINESCORE_4);
+			return Resources.ICN_TABLE_ONLINESCORE_4.get();
 		case STARS_2_5:
-			return CachedResourceLoader.getIcon(Resources.ICN_TABLE_ONLINESCORE_5);
+			return Resources.ICN_TABLE_ONLINESCORE_5.get();
 		case STARS_3_0:
-			return CachedResourceLoader.getIcon(Resources.ICN_TABLE_ONLINESCORE_6);
+			return Resources.ICN_TABLE_ONLINESCORE_6.get();
 		case STARS_3_5:
-			return CachedResourceLoader.getIcon(Resources.ICN_TABLE_ONLINESCORE_7);
+			return Resources.ICN_TABLE_ONLINESCORE_7.get();
 		case STARS_4_0:
-			return CachedResourceLoader.getIcon(Resources.ICN_TABLE_ONLINESCORE_8);
+			return Resources.ICN_TABLE_ONLINESCORE_8.get();
 		case STARS_4_5:
-			return CachedResourceLoader.getIcon(Resources.ICN_TABLE_ONLINESCORE_9);
+			return Resources.ICN_TABLE_ONLINESCORE_9.get();
 		case STARS_5_0:
-			return CachedResourceLoader.getIcon(Resources.ICN_TABLE_ONLINESCORE_10);
+			return Resources.ICN_TABLE_ONLINESCORE_10.get();
 		default:
 			return null;
 		}

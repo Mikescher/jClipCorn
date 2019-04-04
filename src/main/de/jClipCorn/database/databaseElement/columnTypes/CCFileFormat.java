@@ -118,23 +118,23 @@ public enum CCFileFormat implements ContinoousEnum<CCFileFormat> {
 	public ImageIcon getIcon() {
 		switch (this) {
 		case MKV:
-			return CachedResourceLoader.getIcon(Resources.ICN_TABLE_FORMAT_0);
+			return Resources.ICN_TABLE_FORMAT_0.get();
 		case AVI:
-			return CachedResourceLoader.getIcon(Resources.ICN_TABLE_FORMAT_1);
+			return Resources.ICN_TABLE_FORMAT_1.get();
 		case MPEG:
-			return CachedResourceLoader.getIcon(Resources.ICN_TABLE_FORMAT_2);
+			return Resources.ICN_TABLE_FORMAT_2.get();
 		case IMG:
-			return CachedResourceLoader.getIcon(Resources.ICN_TABLE_FORMAT_3);
+			return Resources.ICN_TABLE_FORMAT_3.get();
 		case IFO:
-			return CachedResourceLoader.getIcon(Resources.ICN_TABLE_FORMAT_4);
+			return Resources.ICN_TABLE_FORMAT_4.get();
 		case WMV:
-			return CachedResourceLoader.getIcon(Resources.ICN_TABLE_FORMAT_5);
+			return Resources.ICN_TABLE_FORMAT_5.get();
 		case MP4:
-			return CachedResourceLoader.getIcon(Resources.ICN_TABLE_FORMAT_6);
+			return Resources.ICN_TABLE_FORMAT_6.get();
 		case DIVX:
-			return CachedResourceLoader.getIcon(Resources.ICN_TABLE_FORMAT_7);
+			return Resources.ICN_TABLE_FORMAT_7.get();
 		case FLV:
-			return CachedResourceLoader.getIcon(Resources.ICN_TABLE_FORMAT_8);
+			return Resources.ICN_TABLE_FORMAT_8.get();
 		default:
 			return null;
 		}

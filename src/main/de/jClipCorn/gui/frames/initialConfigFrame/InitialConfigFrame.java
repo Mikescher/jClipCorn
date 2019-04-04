@@ -57,7 +57,7 @@ public class InitialConfigFrame extends JDialog {
 	private void initGUI() {
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		setTitle(LocaleBundle.getString("InitialConfigFrame.title")); //$NON-NLS-1$
-		setIconImage(CachedResourceLoader.getImage(Resources.IMG_FRAME_ICON));
+		setIconImage(Resources.IMG_FRAME_ICON.get());
 		setModal(true);
 		setResizable(false);
 		setBounds(100, 100, 501, 410);

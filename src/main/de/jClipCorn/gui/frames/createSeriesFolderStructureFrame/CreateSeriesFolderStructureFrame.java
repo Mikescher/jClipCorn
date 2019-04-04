@@ -63,7 +63,7 @@ public class CreateSeriesFolderStructureFrame extends JFrame {
 	
 	private void initGUI() {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setIconImage(CachedResourceLoader.getImage(Resources.IMG_FRAME_ICON));
+		setIconImage(Resources.IMG_FRAME_ICON.get());
 		setTitle(LocaleBundle.getString("CreateSeriesFolderStructureFrame.this.title")); //$NON-NLS-1$
 		
 		pnlTop = new JPanel();

@@ -69,7 +69,7 @@ public class ChangeScoreFrame extends JFrame {
 	
 	private void initGUI() {
 		setTitle(LocaleBundle.getString("ChangedScoreFrame.this.title")); //$NON-NLS-1$
-		setIconImage(CachedResourceLoader.getImage(Resources.IMG_FRAME_ICON));
+		setIconImage(Resources.IMG_FRAME_ICON.get());
 		setSize(new Dimension(430, 375));
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

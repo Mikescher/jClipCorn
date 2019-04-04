@@ -233,7 +233,7 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 	}
 
 	private void initGUI() {
-		setIconImage(CachedResourceLoader.getImage(Resources.IMG_FRAME_ICON));
+		setIconImage(Resources.IMG_FRAME_ICON.get());
 
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
@@ -272,7 +272,7 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 
 		btnSearch = new JButton();
 		btnSearch.addActionListener(e -> startSearch());
-		btnSearch.setIcon(CachedResourceLoader.getIcon(Resources.ICN_FRAMES_SEARCH.icon16x16));
+		btnSearch.setIcon(Resources.ICN_FRAMES_SEARCH.get16x16());
 		pnlSearch.add(btnSearch, "4, 2, left, top"); //$NON-NLS-1$
 
 		pnlTopLeft = new JPanel();
@@ -589,37 +589,37 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 
 		switch (dispSeries.getOnlinescore()) {
 		case STARS_0_0:
-			lblOnlineScore.setIcon(CachedResourceLoader.getIcon(Resources.ICN_TABLE_ONLINESCORE_0));
+			lblOnlineScore.setIcon(Resources.ICN_TABLE_ONLINESCORE_0.get());
 			break;
 		case STARS_0_5:
-			lblOnlineScore.setIcon(CachedResourceLoader.getIcon(Resources.ICN_TABLE_ONLINESCORE_1));
+			lblOnlineScore.setIcon(Resources.ICN_TABLE_ONLINESCORE_1.get());
 			break;
 		case STARS_1_0:
-			lblOnlineScore.setIcon(CachedResourceLoader.getIcon(Resources.ICN_TABLE_ONLINESCORE_2));
+			lblOnlineScore.setIcon(Resources.ICN_TABLE_ONLINESCORE_2.get());
 			break;
 		case STARS_1_5:
-			lblOnlineScore.setIcon(CachedResourceLoader.getIcon(Resources.ICN_TABLE_ONLINESCORE_3));
+			lblOnlineScore.setIcon(Resources.ICN_TABLE_ONLINESCORE_3.get());
 			break;
 		case STARS_2_0:
-			lblOnlineScore.setIcon(CachedResourceLoader.getIcon(Resources.ICN_TABLE_ONLINESCORE_4));
+			lblOnlineScore.setIcon(Resources.ICN_TABLE_ONLINESCORE_4.get());
 			break;
 		case STARS_2_5:
-			lblOnlineScore.setIcon(CachedResourceLoader.getIcon(Resources.ICN_TABLE_ONLINESCORE_5));
+			lblOnlineScore.setIcon(Resources.ICN_TABLE_ONLINESCORE_5.get());
 			break;
 		case STARS_3_0:
-			lblOnlineScore.setIcon(CachedResourceLoader.getIcon(Resources.ICN_TABLE_ONLINESCORE_6));
+			lblOnlineScore.setIcon(Resources.ICN_TABLE_ONLINESCORE_6.get());
 			break;
 		case STARS_3_5:
-			lblOnlineScore.setIcon(CachedResourceLoader.getIcon(Resources.ICN_TABLE_ONLINESCORE_7));
+			lblOnlineScore.setIcon(Resources.ICN_TABLE_ONLINESCORE_7.get());
 			break;
 		case STARS_4_0:
-			lblOnlineScore.setIcon(CachedResourceLoader.getIcon(Resources.ICN_TABLE_ONLINESCORE_8));
+			lblOnlineScore.setIcon(Resources.ICN_TABLE_ONLINESCORE_8.get());
 			break;
 		case STARS_4_5:
-			lblOnlineScore.setIcon(CachedResourceLoader.getIcon(Resources.ICN_TABLE_ONLINESCORE_9));
+			lblOnlineScore.setIcon(Resources.ICN_TABLE_ONLINESCORE_9.get());
 			break;
 		case STARS_5_0:
-			lblOnlineScore.setIcon(CachedResourceLoader.getIcon(Resources.ICN_TABLE_ONLINESCORE_10));
+			lblOnlineScore.setIcon(Resources.ICN_TABLE_ONLINESCORE_10.get());
 			break;
 		}
 
@@ -630,7 +630,7 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 		lblViewed.setText(LocaleBundle.getFormattedString("PreviewSeriesFrame.lblViewed.text", dispSeries.getViewedCount(), dispSeries.getEpisodeCount())); //$NON-NLS-1$
 
 		// if (dispSeries.isViewed()) {
-		lblViewed.setIcon(ImageUtilities.sliceImage(CachedResourceLoader.getIcon(Resources.ICN_TABLE_VIEWED_TRUE), 0d, (dispSeries.getViewedCount() * 1d) / dispSeries.getEpisodeCount()));
+		lblViewed.setIcon(ImageUtilities.sliceImage(Resources.ICN_TABLE_VIEWED_TRUE.get(), 0d, (dispSeries.getViewedCount() * 1d) / dispSeries.getEpisodeCount()));
 		// }
 
 		if (dispSeries.getScore() == CCUserScore.RATING_NO) {

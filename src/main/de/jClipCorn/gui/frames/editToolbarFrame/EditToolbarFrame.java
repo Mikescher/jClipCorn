@@ -65,7 +65,7 @@ public class EditToolbarFrame extends JFrame {
 	private void initGUI() {
 		setTitle(LocaleBundle.getString("EditToolbarFrame.this.title")); //$NON-NLS-1$
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setIconImage(CachedResourceLoader.getImage(Resources.IMG_FRAME_ICON));
+		setIconImage(Resources.IMG_FRAME_ICON.get());
 		setType(Type.UTILITY);
 		setMinimumSize(new Dimension(250, 200));
 		setSize(new Dimension(550, 300));

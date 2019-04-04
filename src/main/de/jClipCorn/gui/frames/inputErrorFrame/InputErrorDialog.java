@@ -49,7 +49,7 @@ public class InputErrorDialog extends JDialog {
 
 	private void initGUI(Component parent) {
 		setTitle(LocaleBundle.getString("AddMovieInputErrorDialog.this.title")); //$NON-NLS-1$
-		setIconImage(CachedResourceLoader.getImage(Resources.IMG_FRAME_ICON));
+		setIconImage(Resources.IMG_FRAME_ICON.get());
 		setModal(true);
 		setResizable(false);
 		setBounds(100, 100, 500, 300);

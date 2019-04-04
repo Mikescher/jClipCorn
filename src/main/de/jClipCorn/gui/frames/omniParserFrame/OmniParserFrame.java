@@ -111,7 +111,7 @@ public class OmniParserFrame extends JFrame {
 	private void initGUI() {
 		setTitle(LocaleBundle.getString("OmniParserFrame.this.title")); //$NON-NLS-1$
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setIconImage(CachedResourceLoader.getImage(Resources.IMG_FRAME_ICON));
+		setIconImage(Resources.IMG_FRAME_ICON.get());
 		setResizable(true);
 		setBounds(100, 100, 891, 531);
 		

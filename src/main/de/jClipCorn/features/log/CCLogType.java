@@ -15,15 +15,14 @@ public enum CCLogType {
 	public ImageIcon getSmallIcon() {
 		switch (this) {
 		case LOG_ELEM_UNDEFINED:
-			return CachedResourceLoader.getIcon(Resources.ICN_LOG_UNDEFINIED.icon16x16);
+			return Resources.ICN_LOG_UNDEFINIED.get16x16();
 		case LOG_ELEM_INFORMATION:
-			return CachedResourceLoader.getIcon(Resources.ICN_LOG_OK.icon16x16);
+			return Resources.ICN_LOG_OK.get16x16();
 		case LOG_ELEM_WARNING:
-			return CachedResourceLoader.getIcon(Resources.ICN_LOG_WARNING.icon16x16);
+			return Resources.ICN_LOG_WARNING.get16x16();
 		case LOG_ELEM_ERROR:
-			return CachedResourceLoader.getIcon(Resources.ICN_LOG_ERROR.icon16x16);
-		case LOG_ELEM_FATALERROR:
-			return CachedResourceLoader.getIcon(Resources.ICN_LOG_ERROR.icon16x16);
+			case LOG_ELEM_FATALERROR:
+			return Resources.ICN_LOG_ERROR.get16x16();
 		default:
 			return null;
 		}

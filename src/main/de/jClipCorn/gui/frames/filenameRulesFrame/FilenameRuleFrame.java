@@ -37,7 +37,7 @@ public class FilenameRuleFrame extends JFrame {
 	private void initGUI() {
 		setTitle(LocaleBundle.getString("FilenameRulesFrame.btnTitle.text")); //$NON-NLS-1$
 		setSize(new Dimension(750, 500));
-		setIconImage(CachedResourceLoader.getImage(Resources.IMG_FRAME_ICON));
+		setIconImage(Resources.IMG_FRAME_ICON.get());
 		
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		

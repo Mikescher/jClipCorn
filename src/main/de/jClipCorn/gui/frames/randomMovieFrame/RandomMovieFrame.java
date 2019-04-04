@@ -44,7 +44,7 @@ public class RandomMovieFrame extends JFrame implements Runnable {
 
 	private void initGUI() {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setIconImage(CachedResourceLoader.getImage(Resources.IMG_FRAME_ICON));
+		setIconImage(Resources.IMG_FRAME_ICON.get());
 		setTitle(LocaleBundle.getString("RandomMovieFrame.this.title")); //$NON-NLS-1$
 
 		chooser = new JCoverChooser(true);

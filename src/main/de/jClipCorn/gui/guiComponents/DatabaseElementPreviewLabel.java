@@ -135,21 +135,21 @@ public class DatabaseElementPreviewLabel extends CoverLabel {
 			boolean bNew = (tcNew/4)%2 == 0;
 			if (bOld != bNew) {
 				if (bNew)
-					setIcon(CachedResourceLoader.getIcon(Resources.IMG_COVER_ERROR_ON));
+					setIcon(Resources.ICN_COVER_ERROR_ON.get());
 				else
-					setIcon(CachedResourceLoader.getIcon(Resources.IMG_COVER_ERROR_OFF));
+					setIcon(Resources.ICN_COVER_ERROR_OFF.get());
 			}
 			break;
 			
 		case MODE_LOADING:
-			if (tcNew % 16 ==  0) setIcon(CachedResourceLoader.getIcon(Resources.IMG_COVER_LOADING_P7));
-			if (tcNew % 16 ==  2) setIcon(CachedResourceLoader.getIcon(Resources.IMG_COVER_LOADING_P0));
-			if (tcNew % 16 ==  4) setIcon(CachedResourceLoader.getIcon(Resources.IMG_COVER_LOADING_P1));
-			if (tcNew % 16 ==  6) setIcon(CachedResourceLoader.getIcon(Resources.IMG_COVER_LOADING_P2));
-			if (tcNew % 16 ==  8) setIcon(CachedResourceLoader.getIcon(Resources.IMG_COVER_LOADING_P3));
-			if (tcNew % 16 == 10) setIcon(CachedResourceLoader.getIcon(Resources.IMG_COVER_LOADING_P4));
-			if (tcNew % 16 == 12) setIcon(CachedResourceLoader.getIcon(Resources.IMG_COVER_LOADING_P5));
-			if (tcNew % 16 == 14) setIcon(CachedResourceLoader.getIcon(Resources.IMG_COVER_LOADING_P6));
+			if (tcNew % 16 ==  0) setIcon(Resources.ICN_COVER_LOADING_P7.get());
+			if (tcNew % 16 ==  2) setIcon(Resources.ICN_COVER_LOADING_P0.get());
+			if (tcNew % 16 ==  4) setIcon(Resources.ICN_COVER_LOADING_P1.get());
+			if (tcNew % 16 ==  6) setIcon(Resources.ICN_COVER_LOADING_P2.get());
+			if (tcNew % 16 ==  8) setIcon(Resources.ICN_COVER_LOADING_P3.get());
+			if (tcNew % 16 == 10) setIcon(Resources.ICN_COVER_LOADING_P4.get());
+			if (tcNew % 16 == 12) setIcon(Resources.ICN_COVER_LOADING_P5.get());
+			if (tcNew % 16 == 14) setIcon(Resources.ICN_COVER_LOADING_P6.get());
 			break;
 		}
 	}
@@ -204,7 +204,7 @@ public class DatabaseElementPreviewLabel extends CoverLabel {
 		image_original = null;
 		
 		mode = DEPLMode.MODE_ERROR;
-		super.setCoverDirect(CachedResourceLoader.getImage(Resources.IMG_COVER_ERROR_ON), null);
+		super.setCoverDirect(Resources.IMG_COVER_ERROR_ON.get(), null);
 	}
 	
 	public void setModeCover(CCDatabaseElement el) {

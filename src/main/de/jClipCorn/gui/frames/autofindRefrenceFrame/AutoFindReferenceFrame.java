@@ -104,7 +104,7 @@ public class AutoFindReferenceFrame extends JFrame {
 				onClose();
 			}
 		});
-		setIconImage(CachedResourceLoader.getImage(Resources.IMG_FRAME_ICON));
+		setIconImage(Resources.IMG_FRAME_ICON.get());
 		setTitle(LocaleBundle.getString("AutoFindReferencesFrame.title")); //$NON-NLS-1$
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

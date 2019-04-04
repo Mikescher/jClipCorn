@@ -61,7 +61,7 @@ public class AddSeasonFrame extends JFrame implements UserDataProblemHandler, Pa
 	
 	private void initGUI() {
 		setTitle(LocaleBundle.getFormattedString("AddSeasonFrame.this.title", parent.getTitle())); //$NON-NLS-1$
-		setIconImage(CachedResourceLoader.getImage(Resources.IMG_FRAME_ICON));
+		setIconImage(Resources.IMG_FRAME_ICON.get());
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setResizable(false);
 		
@@ -77,22 +77,12 @@ public class AddSeasonFrame extends JFrame implements UserDataProblemHandler, Pa
 		getContentPane().add(edTitle);
 		
 		btnCancel = new JButton(LocaleBundle.getString("UIGeneric.btnCancel.text")); //$NON-NLS-1$
-		btnCancel.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				cancel();
-			}
-		});
+		btnCancel.addActionListener(e -> cancel());
 		btnCancel.setBounds(244, 334, 95, 25);
 		getContentPane().add(btnCancel);
 		
 		btnOK = new JButton(LocaleBundle.getString("UIGeneric.btnOK.text")); //$NON-NLS-1$
-		btnOK.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onBtnOK(true);
-			}
-		});
+		btnOK.addActionListener(e -> onBtnOK(true));
 		btnOK.setBounds(137, 334, 95, 25);
 		getContentPane().add(btnOK);
 		

@@ -19,7 +19,7 @@ import de.jClipCorn.gui.mainFrame.clipToolbar.ClipToolbar;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.gui.resources.CachedResourceLoader;
-import de.jClipCorn.gui.resources.MultiIconRef;
+import de.jClipCorn.gui.resources.MultiSizeIconRef;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.property.CCCaptionedKeyStrokeProperty;
 import de.jClipCorn.properties.property.CCKeyStrokeProperty;
@@ -28,7 +28,7 @@ import de.jClipCorn.util.helper.KeyStrokeUtil;
 public class CCActionElement {
 	private final String name;
 	private final String captionIdent;
-	private final MultiIconRef iconRes;
+	private final MultiSizeIconRef iconRes;
 	private final boolean visible;
 	private final KeyStroke defaultKeyStroke;
 	
@@ -41,7 +41,7 @@ public class CCActionElement {
 	
 	private CCActionElement parent = null;
 	
-	public CCActionElement(String name, KeyStroke stroke, String caption, MultiIconRef iconRes) {
+	public CCActionElement(String name, KeyStroke stroke, String caption, MultiSizeIconRef iconRes) {
 		this.name = name;
 		this.captionIdent = caption;
 		this.iconRes = iconRes;
@@ -51,7 +51,7 @@ public class CCActionElement {
 		this.defaultKeyStroke = stroke;
 	}
 	
-	public CCActionElement(String name, KeyStroke stroke, String caption, MultiIconRef iconRes, boolean vis) {
+	public CCActionElement(String name, KeyStroke stroke, String caption, MultiSizeIconRef iconRes, boolean vis) {
 		this.name = name;
 		this.captionIdent = caption;
 		this.iconRes = iconRes;
@@ -86,7 +86,7 @@ public class CCActionElement {
 			return null;
 		}
 		
-		return CachedResourceLoader.getIcon(iconRes.icon16x16);
+		return iconRes.get16x16();
 	}
 	
 	public ImageIcon getIcon() {
@@ -94,7 +94,7 @@ public class CCActionElement {
 			return null;
 		}
 
-		return CachedResourceLoader.getIcon(iconRes.icon32x32);
+		return iconRes.get32x32();
 	}
 	
 	public void addListener(CCActionTreeListener al) {

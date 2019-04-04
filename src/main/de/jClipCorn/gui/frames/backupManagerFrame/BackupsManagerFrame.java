@@ -86,7 +86,7 @@ public class BackupsManagerFrame extends JFrame {
 		setTitle(LocaleBundle.getString("BackupsManagerFrame.this.title")); //$NON-NLS-1$
 		setMinimumSize(new Dimension(650, 400));
 		setSize(new Dimension(800, 500));
-		setIconImage(CachedResourceLoader.getImage(Resources.IMG_FRAME_ICON));
+		setIconImage(Resources.IMG_FRAME_ICON.get());
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		
 		getContentPane().setLayout(new FormLayout(new ColumnSpec[] {

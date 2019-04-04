@@ -68,7 +68,7 @@ public class QuickAddMoviesDialog extends JDialog {
 	
 	private void initGUI() {
 		setTitle(LocaleBundle.getString("QuickAddMoviesDialog.title")); //$NON-NLS-1$
-		setIconImage(CachedResourceLoader.getImage(Resources.IMG_FRAME_ICON));
+		setIconImage(Resources.IMG_FRAME_ICON.get());
 		setBounds(100, 100, 500, 300);
 		setMinimumSize(new Dimension(300, 300));
 		setModal(true);

@@ -78,7 +78,7 @@ public class ParseWatchDataFrame extends JFrame {
 		setMinimumSize(new Dimension(600, 500));
 		
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setIconImage(CachedResourceLoader.getImage(Resources.IMG_FRAME_ICON));
+		setIconImage(Resources.IMG_FRAME_ICON.get());
 		setTitle(LocaleBundle.getString("ParseWatchDataFrame.this.title")); //$NON-NLS-1$
 		
 		getContentPane().setLayout(new BorderLayout(0, 0));

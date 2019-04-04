@@ -80,7 +80,7 @@ public class WatchHistoryFrame extends JFrame {
 
 	private void initGUI() {
 		setTitle(LocaleBundle.getString("WatchHistoryFrame.title")); //$NON-NLS-1$
-		setIconImage(CachedResourceLoader.getImage(Resources.IMG_FRAME_ICON));
+		setIconImage(Resources.IMG_FRAME_ICON.get());
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
 		setMinimumSize(new Dimension(600, 415));
@@ -176,36 +176,36 @@ public class WatchHistoryFrame extends JFrame {
 	private JTree createTimespanRoot() {
 		treeTimespanRoot = new SimpleTreeNode();
 		
-		SimpleTreeNode node_all = new SimpleTreeNode(CachedResourceLoader.getIcon(Resources.ICN_HISTORY_CHRONIK), LocaleBundle.getString("WatchHistoryFrame.tree.Timeline")); //$NON-NLS-1$
+		SimpleTreeNode node_all = new SimpleTreeNode(Resources.ICN_HISTORY_CHRONIK.get(), LocaleBundle.getString("WatchHistoryFrame.tree.Timeline")); //$NON-NLS-1$
 		{
-			node_all.add(new SimpleTreeNode(CachedResourceLoader.getIcon(Resources.ICN_HISTORY_ELEMENT), LocaleBundle.getString("WatchHistoryFrame.tree.Today"),     () -> filterTable(WatchHistoryFilterType.ALL, WatchHistoryTimespanType.TODAY))); //$NON-NLS-1$
-			node_all.add(new SimpleTreeNode(CachedResourceLoader.getIcon(Resources.ICN_HISTORY_ELEMENT), LocaleBundle.getString("WatchHistoryFrame.tree.Yesterday"), () -> filterTable(WatchHistoryFilterType.ALL, WatchHistoryTimespanType.YESTERDAY))); //$NON-NLS-1$
-			node_all.add(new SimpleTreeNode(CachedResourceLoader.getIcon(Resources.ICN_HISTORY_ELEMENT), LocaleBundle.getString("WatchHistoryFrame.tree.SevenDays"), () -> filterTable(WatchHistoryFilterType.ALL, WatchHistoryTimespanType.SEVEN_DAYS))); //$NON-NLS-1$
-			node_all.add(new SimpleTreeNode(CachedResourceLoader.getIcon(Resources.ICN_HISTORY_ELEMENT), LocaleBundle.getString("WatchHistoryFrame.tree.Month"),     () -> filterTable(WatchHistoryFilterType.ALL, WatchHistoryTimespanType.THIS_MONTH))); //$NON-NLS-1$
-			node_all.add(new SimpleTreeNode(CachedResourceLoader.getIcon(Resources.ICN_HISTORY_ELEMENT), LocaleBundle.getString("WatchHistoryFrame.tree.Year"),      () -> filterTable(WatchHistoryFilterType.ALL, WatchHistoryTimespanType.THIS_YEAR))); //$NON-NLS-1$
-			node_all.add(new SimpleTreeNode(CachedResourceLoader.getIcon(Resources.ICN_HISTORY_ELEMENT), LocaleBundle.getString("WatchHistoryFrame.tree.All"),       () -> filterTable(WatchHistoryFilterType.ALL, WatchHistoryTimespanType.EVERYTHING))); //$NON-NLS-1$
+			node_all.add(new SimpleTreeNode(Resources.ICN_HISTORY_ELEMENT.get(), LocaleBundle.getString("WatchHistoryFrame.tree.Today"),     () -> filterTable(WatchHistoryFilterType.ALL, WatchHistoryTimespanType.TODAY))); //$NON-NLS-1$
+			node_all.add(new SimpleTreeNode(Resources.ICN_HISTORY_ELEMENT.get(), LocaleBundle.getString("WatchHistoryFrame.tree.Yesterday"), () -> filterTable(WatchHistoryFilterType.ALL, WatchHistoryTimespanType.YESTERDAY))); //$NON-NLS-1$
+			node_all.add(new SimpleTreeNode(Resources.ICN_HISTORY_ELEMENT.get(), LocaleBundle.getString("WatchHistoryFrame.tree.SevenDays"), () -> filterTable(WatchHistoryFilterType.ALL, WatchHistoryTimespanType.SEVEN_DAYS))); //$NON-NLS-1$
+			node_all.add(new SimpleTreeNode(Resources.ICN_HISTORY_ELEMENT.get(), LocaleBundle.getString("WatchHistoryFrame.tree.Month"),     () -> filterTable(WatchHistoryFilterType.ALL, WatchHistoryTimespanType.THIS_MONTH))); //$NON-NLS-1$
+			node_all.add(new SimpleTreeNode(Resources.ICN_HISTORY_ELEMENT.get(), LocaleBundle.getString("WatchHistoryFrame.tree.Year"),      () -> filterTable(WatchHistoryFilterType.ALL, WatchHistoryTimespanType.THIS_YEAR))); //$NON-NLS-1$
+			node_all.add(new SimpleTreeNode(Resources.ICN_HISTORY_ELEMENT.get(), LocaleBundle.getString("WatchHistoryFrame.tree.All"),       () -> filterTable(WatchHistoryFilterType.ALL, WatchHistoryTimespanType.EVERYTHING))); //$NON-NLS-1$
 		}
 		treeTimespanRoot.add(node_all);
 
-		SimpleTreeNode node_mov = new SimpleTreeNode(CachedResourceLoader.getIcon(Resources.ICN_HISTORY_MOVIES), LocaleBundle.getString("WatchHistoryFrame.tree.Movies")); //$NON-NLS-1$
+		SimpleTreeNode node_mov = new SimpleTreeNode(Resources.ICN_HISTORY_MOVIES.get(), LocaleBundle.getString("WatchHistoryFrame.tree.Movies")); //$NON-NLS-1$
 		{
-			node_mov.add(new SimpleTreeNode(CachedResourceLoader.getIcon(Resources.ICN_HISTORY_ELEMENT), LocaleBundle.getString("WatchHistoryFrame.tree.Today"),     () -> filterTable(WatchHistoryFilterType.MOVIES, WatchHistoryTimespanType.TODAY)));      //$NON-NLS-1$
-			node_mov.add(new SimpleTreeNode(CachedResourceLoader.getIcon(Resources.ICN_HISTORY_ELEMENT), LocaleBundle.getString("WatchHistoryFrame.tree.Yesterday"), () -> filterTable(WatchHistoryFilterType.MOVIES, WatchHistoryTimespanType.YESTERDAY)));  //$NON-NLS-1$
-			node_mov.add(new SimpleTreeNode(CachedResourceLoader.getIcon(Resources.ICN_HISTORY_ELEMENT), LocaleBundle.getString("WatchHistoryFrame.tree.SevenDays"), () -> filterTable(WatchHistoryFilterType.MOVIES, WatchHistoryTimespanType.SEVEN_DAYS))); //$NON-NLS-1$
-			node_mov.add(new SimpleTreeNode(CachedResourceLoader.getIcon(Resources.ICN_HISTORY_ELEMENT), LocaleBundle.getString("WatchHistoryFrame.tree.Month"),     () -> filterTable(WatchHistoryFilterType.MOVIES, WatchHistoryTimespanType.THIS_MONTH))); //$NON-NLS-1$
-			node_mov.add(new SimpleTreeNode(CachedResourceLoader.getIcon(Resources.ICN_HISTORY_ELEMENT), LocaleBundle.getString("WatchHistoryFrame.tree.Year"),      () -> filterTable(WatchHistoryFilterType.MOVIES, WatchHistoryTimespanType.THIS_YEAR)));  //$NON-NLS-1$
-			node_mov.add(new SimpleTreeNode(CachedResourceLoader.getIcon(Resources.ICN_HISTORY_ELEMENT), LocaleBundle.getString("WatchHistoryFrame.tree.All"),       () -> filterTable(WatchHistoryFilterType.MOVIES, WatchHistoryTimespanType.EVERYTHING))); //$NON-NLS-1$
+			node_mov.add(new SimpleTreeNode(Resources.ICN_HISTORY_ELEMENT.get(), LocaleBundle.getString("WatchHistoryFrame.tree.Today"),     () -> filterTable(WatchHistoryFilterType.MOVIES, WatchHistoryTimespanType.TODAY)));      //$NON-NLS-1$
+			node_mov.add(new SimpleTreeNode(Resources.ICN_HISTORY_ELEMENT.get(), LocaleBundle.getString("WatchHistoryFrame.tree.Yesterday"), () -> filterTable(WatchHistoryFilterType.MOVIES, WatchHistoryTimespanType.YESTERDAY)));  //$NON-NLS-1$
+			node_mov.add(new SimpleTreeNode(Resources.ICN_HISTORY_ELEMENT.get(), LocaleBundle.getString("WatchHistoryFrame.tree.SevenDays"), () -> filterTable(WatchHistoryFilterType.MOVIES, WatchHistoryTimespanType.SEVEN_DAYS))); //$NON-NLS-1$
+			node_mov.add(new SimpleTreeNode(Resources.ICN_HISTORY_ELEMENT.get(), LocaleBundle.getString("WatchHistoryFrame.tree.Month"),     () -> filterTable(WatchHistoryFilterType.MOVIES, WatchHistoryTimespanType.THIS_MONTH))); //$NON-NLS-1$
+			node_mov.add(new SimpleTreeNode(Resources.ICN_HISTORY_ELEMENT.get(), LocaleBundle.getString("WatchHistoryFrame.tree.Year"),      () -> filterTable(WatchHistoryFilterType.MOVIES, WatchHistoryTimespanType.THIS_YEAR)));  //$NON-NLS-1$
+			node_mov.add(new SimpleTreeNode(Resources.ICN_HISTORY_ELEMENT.get(), LocaleBundle.getString("WatchHistoryFrame.tree.All"),       () -> filterTable(WatchHistoryFilterType.MOVIES, WatchHistoryTimespanType.EVERYTHING))); //$NON-NLS-1$
 		}
 		treeTimespanRoot.add(node_mov);
 
-		SimpleTreeNode node_ser = new SimpleTreeNode(CachedResourceLoader.getIcon(Resources.ICN_HISTORY_SERIES), LocaleBundle.getString("WatchHistoryFrame.tree.Series")); //$NON-NLS-1$
+		SimpleTreeNode node_ser = new SimpleTreeNode(Resources.ICN_HISTORY_SERIES.get(), LocaleBundle.getString("WatchHistoryFrame.tree.Series")); //$NON-NLS-1$
 		{
-			node_ser.add(new SimpleTreeNode(CachedResourceLoader.getIcon(Resources.ICN_HISTORY_ELEMENT), LocaleBundle.getString("WatchHistoryFrame.tree.Today"),     () -> filterTable(WatchHistoryFilterType.SERIES, WatchHistoryTimespanType.TODAY)));      //$NON-NLS-1$
-			node_ser.add(new SimpleTreeNode(CachedResourceLoader.getIcon(Resources.ICN_HISTORY_ELEMENT), LocaleBundle.getString("WatchHistoryFrame.tree.Yesterday"), () -> filterTable(WatchHistoryFilterType.SERIES, WatchHistoryTimespanType.YESTERDAY)));  //$NON-NLS-1$
-			node_ser.add(new SimpleTreeNode(CachedResourceLoader.getIcon(Resources.ICN_HISTORY_ELEMENT), LocaleBundle.getString("WatchHistoryFrame.tree.SevenDays"), () -> filterTable(WatchHistoryFilterType.SERIES, WatchHistoryTimespanType.SEVEN_DAYS))); //$NON-NLS-1$
-			node_ser.add(new SimpleTreeNode(CachedResourceLoader.getIcon(Resources.ICN_HISTORY_ELEMENT), LocaleBundle.getString("WatchHistoryFrame.tree.Month"),     () -> filterTable(WatchHistoryFilterType.SERIES, WatchHistoryTimespanType.THIS_MONTH))); //$NON-NLS-1$
-			node_ser.add(new SimpleTreeNode(CachedResourceLoader.getIcon(Resources.ICN_HISTORY_ELEMENT), LocaleBundle.getString("WatchHistoryFrame.tree.Year"),      () -> filterTable(WatchHistoryFilterType.SERIES, WatchHistoryTimespanType.THIS_YEAR)));  //$NON-NLS-1$
-			node_ser.add(new SimpleTreeNode(CachedResourceLoader.getIcon(Resources.ICN_HISTORY_ELEMENT), LocaleBundle.getString("WatchHistoryFrame.tree.All"),       () -> filterTable(WatchHistoryFilterType.SERIES, WatchHistoryTimespanType.EVERYTHING))); //$NON-NLS-1$
+			node_ser.add(new SimpleTreeNode(Resources.ICN_HISTORY_ELEMENT.get(), LocaleBundle.getString("WatchHistoryFrame.tree.Today"),     () -> filterTable(WatchHistoryFilterType.SERIES, WatchHistoryTimespanType.TODAY)));      //$NON-NLS-1$
+			node_ser.add(new SimpleTreeNode(Resources.ICN_HISTORY_ELEMENT.get(), LocaleBundle.getString("WatchHistoryFrame.tree.Yesterday"), () -> filterTable(WatchHistoryFilterType.SERIES, WatchHistoryTimespanType.YESTERDAY)));  //$NON-NLS-1$
+			node_ser.add(new SimpleTreeNode(Resources.ICN_HISTORY_ELEMENT.get(), LocaleBundle.getString("WatchHistoryFrame.tree.SevenDays"), () -> filterTable(WatchHistoryFilterType.SERIES, WatchHistoryTimespanType.SEVEN_DAYS))); //$NON-NLS-1$
+			node_ser.add(new SimpleTreeNode(Resources.ICN_HISTORY_ELEMENT.get(), LocaleBundle.getString("WatchHistoryFrame.tree.Month"),     () -> filterTable(WatchHistoryFilterType.SERIES, WatchHistoryTimespanType.THIS_MONTH))); //$NON-NLS-1$
+			node_ser.add(new SimpleTreeNode(Resources.ICN_HISTORY_ELEMENT.get(), LocaleBundle.getString("WatchHistoryFrame.tree.Year"),      () -> filterTable(WatchHistoryFilterType.SERIES, WatchHistoryTimespanType.THIS_YEAR)));  //$NON-NLS-1$
+			node_ser.add(new SimpleTreeNode(Resources.ICN_HISTORY_ELEMENT.get(), LocaleBundle.getString("WatchHistoryFrame.tree.All"),       () -> filterTable(WatchHistoryFilterType.SERIES, WatchHistoryTimespanType.EVERYTHING))); //$NON-NLS-1$
 		}
 		treeTimespanRoot.add(node_ser);
 		

@@ -16,11 +16,11 @@ public class CustomFilterEditTreeRenderer extends DefaultTreeCellRenderer {
 	public Component getTreeCellRendererComponent(JTree tree, Object value, boolean sel, boolean expanded, boolean leaf, int row, boolean hasFocus) {
 		super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
 
-		if (value != null && value instanceof DefaultMutableTreeNode) {
+		if (value instanceof DefaultMutableTreeNode) {
 			AbstractCustomFilter node = (AbstractCustomFilter)((DefaultMutableTreeNode)value).getUserObject();
 			if (node != null) {
 				
-				setIcon(CachedResourceLoader.getIcon(node.getListIcon()));
+				setIcon(node.getListIcon().get());
 				
 				setText(node.getName());
 				

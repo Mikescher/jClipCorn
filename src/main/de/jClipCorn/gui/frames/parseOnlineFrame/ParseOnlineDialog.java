@@ -140,7 +140,7 @@ public class ParseOnlineDialog extends JDialog {
 	
 	private void initGUI() {
 		setTitle(LocaleBundle.getString("parseImDBFrame.this.title")); //$NON-NLS-1$
-		setIconImage(CachedResourceLoader.getImage(Resources.IMG_FRAME_ICON));
+		setIconImage(Resources.IMG_FRAME_ICON.get());
 		setModal(true);
 		setBounds(0, 0, 807, 538);
 		getContentPane().setLayout(null);
@@ -379,7 +379,7 @@ public class ParseOnlineDialog extends JDialog {
 		cbCover.setBounds(6, 157, 21, 23);
 		pnlMain.add(cbCover);
 		
-		btnRef = new JButton(CachedResourceLoader.getIcon(Resources.ICN_REF_00_BUTTON));
+		btnRef = new JButton(Resources.ICN_REF_00_BUTTON.get());
 		btnRef.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -478,7 +478,7 @@ public class ParseOnlineDialog extends JDialog {
 		cbxGenre6.setSelectedIndex(-1);
 		cbxGenre7.setSelectedIndex(-1);
 		
-		btnRef.setIcon(CachedResourceLoader.getIcon(Resources.ICN_REF_00_BUTTON));
+		btnRef.setIcon(Resources.ICN_REF_00_BUTTON.get());
 	}
 	
 	private void resetCheckboxes() {

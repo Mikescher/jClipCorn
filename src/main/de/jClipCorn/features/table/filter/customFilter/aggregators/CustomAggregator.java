@@ -3,11 +3,11 @@ package de.jClipCorn.features.table.filter.customFilter.aggregators;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.jClipCorn.gui.resources.IconRef;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.features.table.filter.AbstractCustomFilter;
 import de.jClipCorn.features.table.filter.AbstractCustomStructureElementFilter;
 import de.jClipCorn.features.table.filter.customFilter.operators.CustomAndOperator;
+import de.jClipCorn.gui.resources.reftypes.IconRef;
 
 public abstract class CustomAggregator extends AbstractCustomStructureElementFilter {
 	protected AbstractCustomFilter _filter = new CustomAndOperator();

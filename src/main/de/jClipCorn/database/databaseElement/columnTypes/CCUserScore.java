@@ -4,7 +4,7 @@ import javax.swing.ImageIcon;
 
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.CachedResourceLoader;
-import de.jClipCorn.gui.resources.MultiIconRef;
+import de.jClipCorn.gui.resources.MultiSizeIconRef;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.enumextension.ContinoousEnum;
 import de.jClipCorn.util.enumextension.EnumWrapper;
@@ -62,24 +62,24 @@ public enum CCUserScore implements ContinoousEnum<CCUserScore> {
 	public ImageIcon getIcon() {
 		switch (this) {
 		case RATING_0:
-			return CachedResourceLoader.getIcon(Resources.ICN_TABLE_SCORE_0.icon16x16);
+			return Resources.ICN_TABLE_SCORE_0.get16x16();
 		case RATING_I:
-			return CachedResourceLoader.getIcon(Resources.ICN_TABLE_SCORE_1.icon16x16);
+			return Resources.ICN_TABLE_SCORE_1.get16x16();
 		case RATING_II:
-			return CachedResourceLoader.getIcon(Resources.ICN_TABLE_SCORE_2.icon16x16);
+			return Resources.ICN_TABLE_SCORE_2.get16x16();
 		case RATING_III:
-			return CachedResourceLoader.getIcon(Resources.ICN_TABLE_SCORE_3.icon16x16);
+			return Resources.ICN_TABLE_SCORE_3.get16x16();
 		case RATING_IV:
-			return CachedResourceLoader.getIcon(Resources.ICN_TABLE_SCORE_4.icon16x16);
+			return Resources.ICN_TABLE_SCORE_4.get16x16();
 		case RATING_V:
-			return CachedResourceLoader.getIcon(Resources.ICN_TABLE_SCORE_5.icon16x16);
+			return Resources.ICN_TABLE_SCORE_5.get16x16();
 		case RATING_NO:
 		default:
 			return null;
 		}
 	}
 	
-	public MultiIconRef getIconRef() {
+	public MultiSizeIconRef getIconRef() {
 		switch (this) {
 		case RATING_0:
 			return Resources.ICN_TABLE_SCORE_0;

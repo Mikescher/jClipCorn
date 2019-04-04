@@ -204,7 +204,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 
 	private void initGUI() {
 		setTitle(LocaleBundle.getString("AddMovieFrame.this.title")); //$NON-NLS-1$
-		setIconImage(CachedResourceLoader.getImage(Resources.IMG_FRAME_ICON));
+		setIconImage(Resources.IMG_FRAME_ICON.get());
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 747, 785);
 		contentPane = new JPanel();
@@ -218,12 +218,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		ed_Part0.setColumns(10);
 		
 		btnChoose0 = new JButton(LocaleBundle.getString("AddMovieFrame.btnChoose.text")); //$NON-NLS-1$
-		btnChoose0.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				onBtnChooseClicked(0);
-			}
-		});
+		btnChoose0.addActionListener(arg0 -> onBtnChooseClicked(0));
 		btnChoose0.setBounds(369, 13, 41, 25);
 		contentPane.add(btnChoose0);
 		
@@ -233,22 +228,12 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		contentPane.add(ed_Part1);
 		
 		btnChoose1 = new JButton(LocaleBundle.getString("AddMovieFrame.btnChoose.text")); //$NON-NLS-1$
-		btnChoose1.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onBtnChooseClicked(1);
-			}
-		});
+		btnChoose1.addActionListener(e -> onBtnChooseClicked(1));
 		btnChoose1.setBounds(279, 41, 41, 25);
 		contentPane.add(btnChoose1);
 		
 		btnClear1 = new JButton(LocaleBundle.getString("AddMovieFrame.btnClear.text")); //$NON-NLS-1$
-		btnClear1.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onBtnClearClicked(1);
-			}
-		});
+		btnClear1.addActionListener(e -> onBtnClearClicked(1));
 		btnClear1.setBounds(332, 41, 78, 25);
 		contentPane.add(btnClear1);
 		
@@ -262,22 +247,12 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		contentPane.add(ed_Part2);
 		
 		btnChoose2 = new JButton(LocaleBundle.getString("AddMovieFrame.btnChoose.text")); //$NON-NLS-1$
-		btnChoose2.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onBtnChooseClicked(2);
-			}
-		});
+		btnChoose2.addActionListener(e -> onBtnChooseClicked(2));
 		btnChoose2.setBounds(279, 69, 41, 25);
 		contentPane.add(btnChoose2);
 		
 		btnClear2 = new JButton(LocaleBundle.getString("AddMovieFrame.btnClear.text")); //$NON-NLS-1$
-		btnClear2.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onBtnClearClicked(2);
-			}
-		});
+		btnClear2.addActionListener(e -> onBtnClearClicked(2));
 		btnClear2.setBounds(332, 69, 78, 25);
 		contentPane.add(btnClear2);
 		
@@ -287,22 +262,12 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		contentPane.add(ed_Part3);
 		
 		btnChoose3 = new JButton(LocaleBundle.getString("AddMovieFrame.btnChoose.text")); //$NON-NLS-1$
-		btnChoose3.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onBtnChooseClicked(3);
-			}
-		});
+		btnChoose3.addActionListener(e -> onBtnChooseClicked(3));
 		btnChoose3.setBounds(279, 97, 41, 25);
 		contentPane.add(btnChoose3);
 		
 		btnClear3 = new JButton(LocaleBundle.getString("AddMovieFrame.btnClear.text")); //$NON-NLS-1$
-		btnClear3.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onBtnClearClicked(3);
-			}
-		});
+		btnClear3.addActionListener(e -> onBtnClearClicked(3));
 		btnClear3.setBounds(332, 97, 78, 25);
 		contentPane.add(btnClear3);
 		
@@ -312,22 +277,12 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		contentPane.add(ed_Part4);
 		
 		btnChoose4 = new JButton(LocaleBundle.getString("AddMovieFrame.btnChoose.text")); //$NON-NLS-1$
-		btnChoose4.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onBtnChooseClicked(4);
-			}
-		});
+		btnChoose4.addActionListener(e -> onBtnChooseClicked(4));
 		btnChoose4.setBounds(279, 125, 41, 25);
 		contentPane.add(btnChoose4);
 		
 		btnClear4 = new JButton(LocaleBundle.getString("AddMovieFrame.btnClear.text")); //$NON-NLS-1$
-		btnClear4.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onBtnClearClicked(4);
-			}
-		});
+		btnClear4.addActionListener(e -> onBtnClearClicked(4));
 		btnClear4.setBounds(332, 125, 78, 25);
 		contentPane.add(btnClear4);
 		
@@ -337,22 +292,12 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		contentPane.add(ed_Part5);
 		
 		btnChoose5 = new JButton(LocaleBundle.getString("AddMovieFrame.btnChoose.text")); //$NON-NLS-1$
-		btnChoose5.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onBtnChooseClicked(5);
-			}
-		});
+		btnChoose5.addActionListener(e -> onBtnChooseClicked(5));
 		btnChoose5.setBounds(279, 153, 41, 25);
 		contentPane.add(btnChoose5);
 		
 		btnClear5 = new JButton(LocaleBundle.getString("AddMovieFrame.btnClear.text")); //$NON-NLS-1$
-		btnClear5.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onBtnClearClicked(5);
-			}
-		});
+		btnClear5.addActionListener(e -> onBtnClearClicked(5));
 		btnClear5.setBounds(332, 153, 78, 25);
 		contentPane.add(btnClear5);
 		
@@ -392,12 +337,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		pnlRelPaths.setLayout(new GridLayout(0, 1, 0, 0));
 		
 		rdbtnEnableAutomRelative = new JRadioButton(LocaleBundle.getString("AddMovieFrame.radioButton.text")); //$NON-NLS-1$
-		rdbtnEnableAutomRelative.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				CCProperties.getInstance().PROP_ADD_MOVIE_RELATIVE_AUTO.setValue(true);
-			}
-		});
+		rdbtnEnableAutomRelative.addActionListener(arg0 -> CCProperties.getInstance().PROP_ADD_MOVIE_RELATIVE_AUTO.setValue(true));
 		rdbtnEnableAutomRelative.setSelected(true);
 		bgrpRelPaths.add(rdbtnEnableAutomRelative);
 		rdbtnEnableAutomRelative.setVerticalAlignment(SwingConstants.TOP);
@@ -405,12 +345,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		pnlRelPaths.add(rdbtnEnableAutomRelative);
 		
 		rdbtnDisableAutomRelative = new JRadioButton(LocaleBundle.getString("AddMovieFrame.rdbtnEnableAutomRelative.text")); //$NON-NLS-1$
-		rdbtnDisableAutomRelative.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				CCProperties.getInstance().PROP_ADD_MOVIE_RELATIVE_AUTO.setValue(false);
-			}
-		});
+		rdbtnDisableAutomRelative.addActionListener(e -> CCProperties.getInstance().PROP_ADD_MOVIE_RELATIVE_AUTO.setValue(false));
 		bgrpRelPaths.add(rdbtnDisableAutomRelative);
 		rdbtnDisableAutomRelative.setHorizontalAlignment(SwingConstants.LEFT);
 		rdbtnDisableAutomRelative.setVerticalAlignment(SwingConstants.TOP);
@@ -561,12 +496,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		contentPane.add(lblYear);
 		
 		spnSize = new JSpinner();
-		spnSize.addChangeListener(new ChangeListener() {
-			@Override
-			public void stateChanged(ChangeEvent arg0) {
-				updateByteDisp();
-			}
-		});
+		spnSize.addChangeListener(arg0 -> updateByteDisp());
 		spnSize.setModel(new SpinnerNumberModel(0L, 0L, null, 1L));
 		spnSize.setBounds(95, 641, 212, 20);
 		contentPane.add(spnSize);
@@ -580,22 +510,12 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		contentPane.add(lblNewLabel);
 		
 		btnOK = new JButton(LocaleBundle.getString("UIGeneric.btnOK.text")); //$NON-NLS-1$
-		btnOK.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onBtnOK(true);
-			}
-		});
+		btnOK.addActionListener(e -> onBtnOK(true));
 		btnOK.setBounds(265, 724, 95, 25);
 		contentPane.add(btnOK);
 		
 		btnCancel = new JButton(LocaleBundle.getString("UIGeneric.btnCancel.text")); //$NON-NLS-1$
-		btnCancel.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				cancel();
-			}
-		});
+		btnCancel.addActionListener(arg0 -> cancel());
 		btnCancel.setBounds(379, 724, 125, 25);
 		contentPane.add(btnCancel);
 		
@@ -614,12 +534,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		contentPane.add(spnZyklus);
 		
 		btnParseIMDB = new JButton(LocaleBundle.getString("AddMovieFrame.btnParseIMDB.text")); //$NON-NLS-1$
-		btnParseIMDB.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				showIMDBParser();
-			}
-		});
+		btnParseIMDB.addActionListener(arg0 -> showIMDBParser());
 		btnParseIMDB.setFont(new Font("Tahoma", Font.BOLD, 15)); //$NON-NLS-1$
 		btnParseIMDB.setBounds(508, 368, 212, 42);
 		contentPane.add(btnParseIMDB);
@@ -637,12 +552,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		contentPane.add(lblScore);
 		
 		btnCalcQuality = new JButton(LocaleBundle.getString("AddMovieFrame.btnCalcQuality.text")); //$NON-NLS-1$
-		btnCalcQuality.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onCalcQuality();
-			}
-		});
+		btnCalcQuality.addActionListener(e -> onCalcQuality());
 		btnCalcQuality.setEnabled(false);
 		btnCalcQuality.setBounds(319, 434, 91, 23);
 		contentPane.add(btnCalcQuality);
@@ -792,12 +702,8 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 	}
 	
 	private void initFileChooser() {
-		videoFileChooser.setFileFilter(FileChooserHelper.createLocalFileFilter("AddMovieFrame.videoFileChooser.filterDescription", new Validator<String>() { //$NON-NLS-1$
-			@Override
-			public boolean validate(String val) {
-				return CCFileFormat.isValidMovieFormat(val);
-			}
-		}));
+		//$NON-NLS-1$
+		videoFileChooser.setFileFilter(FileChooserHelper.createLocalFileFilter("AddMovieFrame.videoFileChooser.filterDescription", CCFileFormat::isValidMovieFormat));
 		
 		videoFileChooser.setDialogTitle(LocaleBundle.getString("AddMovieFrame.videoFileChooser.title")); //$NON-NLS-1$
 	}

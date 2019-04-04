@@ -72,7 +72,7 @@ public class FindCoverDialog extends JDialog {
 		setModal(true);
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		setTitle(LocaleBundle.getString("FindCoverDialog.this.title")); //$NON-NLS-1$
-		setIconImage(CachedResourceLoader.getImage(Resources.IMG_FRAME_ICON));
+		setIconImage(Resources.IMG_FRAME_ICON.get());
 		
 		pnlTop = new JPanel();
 		getContentPane().add(pnlTop, BorderLayout.NORTH);
@@ -155,7 +155,7 @@ public class FindCoverDialog extends JDialog {
 		splitPane.setRightComponent(pnCenterRight);
 		pnCenterRight.setLayout(new BorderLayout(0, 0));
 		
-		pnlPreview = new ScalablePane(CachedResourceLoader.getImage(Resources.IMG_COVER_STANDARD), true);
+		pnlPreview = new ScalablePane(Resources.IMG_COVER_STANDARD.get(), true);
 		pnCenterRight.add(pnlPreview);
 		
 		lblSize = new JLabel("?"); //$NON-NLS-1$

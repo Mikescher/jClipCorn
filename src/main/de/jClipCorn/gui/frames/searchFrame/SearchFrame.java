@@ -55,7 +55,7 @@ public class SearchFrame extends JFrame {
 	
 	private void initGUI() {
 		setTitle(LocaleBundle.getString("SearchFrame.this.title")); //$NON-NLS-1$
-		setIconImage(CachedResourceLoader.getImage(Resources.IMG_FRAME_ICON));
+		setIconImage(Resources.IMG_FRAME_ICON.get());
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		
 		pnTop = new JPanel();

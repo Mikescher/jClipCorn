@@ -11,7 +11,6 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCTagList;
 import de.jClipCorn.gui.frames.editSeriesFrame.EditSeriesFrame;
 import de.jClipCorn.gui.frames.previewSeriesFrame.PreviewSeriesFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.gui.resources.CachedResourceLoader;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.formatter.PathFormatter;
@@ -28,11 +27,11 @@ public class SerTablePopupMenu extends JPopupMenu {
 		this.episode = e;
 		this.owner = frame;
 
-		JMenuItem play = new JMenuItem(LocaleBundle.getString("PreviewSeriesFrame.PopupMenu.Play"), CachedResourceLoader.getIcon(Resources.ICN_MENUBAR_PLAY.icon16x16)); //$NON-NLS-1$
+		JMenuItem play = new JMenuItem(LocaleBundle.getString("PreviewSeriesFrame.PopupMenu.Play"), Resources.ICN_MENUBAR_PLAY.get16x16()); //$NON-NLS-1$
 		play.addActionListener(arg0 -> owner.onEpisodeDblClick(episode));
 		add(play);
 		
-		JMenuItem playHidden = new JMenuItem(LocaleBundle.getString("PreviewSeriesFrame.PopupMenu.PlayHidden"), CachedResourceLoader.getIcon(Resources.ICN_MENUBAR_HIDDENPLAY.icon16x16)); //$NON-NLS-1$
+		JMenuItem playHidden = new JMenuItem(LocaleBundle.getString("PreviewSeriesFrame.PopupMenu.PlayHidden"), Resources.ICN_MENUBAR_HIDDENPLAY.get16x16()); //$NON-NLS-1$
 		playHidden.addActionListener(arg0 -> episode.play(false));
 		add(playHidden);
 		
@@ -40,7 +39,7 @@ public class SerTablePopupMenu extends JPopupMenu {
 		addSeparator();
 		//#############
 
-		JMenuItem setViewed = new JMenuItem(LocaleBundle.getString("PreviewSeriesFrame.PopupMenu.SetViewed"), CachedResourceLoader.getIcon(Resources.ICN_SIDEBAR_VIEWED)); //$NON-NLS-1$
+		JMenuItem setViewed = new JMenuItem(LocaleBundle.getString("PreviewSeriesFrame.PopupMenu.SetViewed"), Resources.ICN_SIDEBAR_VIEWED.get()); //$NON-NLS-1$
 		setViewed.addActionListener(arg0 ->
 		{
 			episode.setViewed(true);
@@ -49,7 +48,7 @@ public class SerTablePopupMenu extends JPopupMenu {
 		});
 		add(setViewed);
 
-		JMenuItem undoViewed = new JMenuItem(LocaleBundle.getString("PreviewSeriesFrame.PopupMenu.UndoViewed"), CachedResourceLoader.getIcon(Resources.ICN_MENUBAR_UNDOVIEWED.icon16x16)); //$NON-NLS-1$
+		JMenuItem undoViewed = new JMenuItem(LocaleBundle.getString("PreviewSeriesFrame.PopupMenu.UndoViewed"), Resources.ICN_MENUBAR_UNDOVIEWED.get16x16()); //$NON-NLS-1$
 		undoViewed.addActionListener(arg0 ->
 		{
 			if (episode != null && episode.isViewed()) {
@@ -63,7 +62,7 @@ public class SerTablePopupMenu extends JPopupMenu {
 		});
 		add(undoViewed);
 
-		JMenuItem setUnviewed = new JMenuItem(LocaleBundle.getString("PreviewSeriesFrame.PopupMenu.SetUnviewed"), CachedResourceLoader.getIcon(Resources.ICN_SIDEBAR_UNVIEWED)); //$NON-NLS-1$
+		JMenuItem setUnviewed = new JMenuItem(LocaleBundle.getString("PreviewSeriesFrame.PopupMenu.SetUnviewed"), Resources.ICN_SIDEBAR_UNVIEWED.get()); //$NON-NLS-1$
 		setUnviewed.addActionListener(arg0 ->
 		{
 			episode.setViewed(false);
@@ -76,7 +75,7 @@ public class SerTablePopupMenu extends JPopupMenu {
 		//#############
 		
 		JMenu tags = new JMenu(LocaleBundle.getString("PreviewSeriesFrame.PopupMenu.ChangeTags")); //$NON-NLS-1$
-		tags.setIcon(CachedResourceLoader.getIcon(Resources.ICN_MENUBAR_TAGS.icon16x16));
+		tags.setIcon(Resources.ICN_MENUBAR_TAGS.get16x16());
 		for (final CCSingleTag tag : CCTagList.TAGS) {
 			if (!tag.IsEpisodeTag) continue;
 			JMenuItem mi = new JMenuItem(tag.Description, tag.getOnIcon());
@@ -89,7 +88,7 @@ public class SerTablePopupMenu extends JPopupMenu {
 		}
 		add(tags);
 
-		JMenuItem openFolder = new JMenuItem(LocaleBundle.getString("PreviewSeriesFrame.PopupMenu.OpenFolder"), CachedResourceLoader.getIcon(Resources.ICN_MENUBAR_FOLDER.icon16x16)); //$NON-NLS-1$
+		JMenuItem openFolder = new JMenuItem(LocaleBundle.getString("PreviewSeriesFrame.PopupMenu.OpenFolder"), Resources.ICN_MENUBAR_FOLDER.get16x16()); //$NON-NLS-1$
 		openFolder.addActionListener(arg0 ->
 		{
 			PathFormatter.showInExplorer(episode.getAbsolutePart());
@@ -101,7 +100,7 @@ public class SerTablePopupMenu extends JPopupMenu {
 		addSeparator();
 		//#############
 
-		JMenuItem edit = new JMenuItem(LocaleBundle.getString("PreviewSeriesFrame.PopupMenu.Edit"), CachedResourceLoader.getIcon(Resources.ICN_MENUBAR_EDIT_MOV.icon16x16)); //$NON-NLS-1$
+		JMenuItem edit = new JMenuItem(LocaleBundle.getString("PreviewSeriesFrame.PopupMenu.Edit"), Resources.ICN_MENUBAR_EDIT_MOV.get16x16()); //$NON-NLS-1$
 		edit.addActionListener(arg0 ->
 		{
 			EditSeriesFrame esf = new EditSeriesFrame(owner, episode, owner);
@@ -109,7 +108,7 @@ public class SerTablePopupMenu extends JPopupMenu {
 		});
 		add(edit);
 
-		JMenuItem delete = new JMenuItem(LocaleBundle.getString("PreviewSeriesFrame.PopupMenu.Delete"), CachedResourceLoader.getIcon(Resources.ICN_MENUBAR_REMOVE.icon16x16)); //$NON-NLS-1$
+		JMenuItem delete = new JMenuItem(LocaleBundle.getString("PreviewSeriesFrame.PopupMenu.Delete"), Resources.ICN_MENUBAR_REMOVE.get16x16()); //$NON-NLS-1$
 		delete.addActionListener(arg0 ->
 		{
 			if (DialogHelper.showLocaleYesNo(owner, "Dialogs.DeleteEpisode")) { //$NON-NLS-1$

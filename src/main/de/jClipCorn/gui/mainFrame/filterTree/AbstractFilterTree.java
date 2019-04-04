@@ -19,8 +19,8 @@ import de.jClipCorn.gui.guiComponents.jSimpleTree.SimpleTreeObject;
 import de.jClipCorn.gui.guiComponents.jSimpleTree.SimpleTreeObject.SimpleTreeEvent;
 import de.jClipCorn.gui.guiComponents.jSimpleTree.SimpleTreeRenderer;
 import de.jClipCorn.gui.resources.CachedResourceLoader;
-import de.jClipCorn.gui.resources.IconRef;
-import de.jClipCorn.gui.resources.MultiIconRef;
+import de.jClipCorn.gui.resources.MultiSizeIconRef;
+import de.jClipCorn.gui.resources.reftypes.IconRef;
 import de.jClipCorn.util.lambda.Func1to0;
 
 public abstract class AbstractFilterTree extends JScrollPane implements CCDBUpdateListener, TreeExpansionListener {
@@ -64,11 +64,11 @@ public abstract class AbstractFilterTree extends JScrollPane implements CCDBUpda
 	protected abstract void addFields();
 	
 	protected DefaultMutableTreeNode addNode(DefaultMutableTreeNode aroot, IconRef icon, String txt, Func1to0<SimpleTreeEvent> listener) {
-		return addNodeI(aroot, CachedResourceLoader.getIcon(icon), txt, listener);
+		return addNodeI(aroot, icon.get(), txt, listener);
 	}
 
-	protected DefaultMutableTreeNode addNode(DefaultMutableTreeNode aroot, MultiIconRef icon, String txt, Func1to0<SimpleTreeEvent> listener) {
-		return addNodeI(aroot, CachedResourceLoader.getIcon(icon.icon16x16), txt, listener);
+	protected DefaultMutableTreeNode addNode(DefaultMutableTreeNode aroot, MultiSizeIconRef icon, String txt, Func1to0<SimpleTreeEvent> listener) {
+		return addNodeI(aroot, icon.get16x16(), txt, listener);
 	}
 	
 	protected DefaultMutableTreeNode addNodeI(DefaultMutableTreeNode aroot, Icon icon, String txt, Func1to0<SimpleTreeEvent> listener) {

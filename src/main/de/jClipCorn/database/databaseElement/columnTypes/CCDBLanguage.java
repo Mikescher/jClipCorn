@@ -81,15 +81,15 @@ public enum CCDBLanguage implements ContinoousEnum<CCDBLanguage> {
 	public ImageIcon getIcon() {
 		switch (this) {
 		case GERMAN:
-			return CachedResourceLoader.getIcon(Resources.ICN_TABLE_LANGUAGE_0);
+			return Resources.ICN_TABLE_LANGUAGE_0.get();
 		case ENGLISH:
-			return CachedResourceLoader.getIcon(Resources.ICN_TABLE_LANGUAGE_1);
+			return Resources.ICN_TABLE_LANGUAGE_1.get();
 		case MUTED:
-			return CachedResourceLoader.getIcon(Resources.ICN_TABLE_LANGUAGE_2);
+			return Resources.ICN_TABLE_LANGUAGE_2.get();
 		case FRENCH:
-			return CachedResourceLoader.getIcon(Resources.ICN_TABLE_LANGUAGE_3);
+			return Resources.ICN_TABLE_LANGUAGE_3.get();
 		case JAPANESE:
-			return CachedResourceLoader.getIcon(Resources.ICN_TABLE_LANGUAGE_4);
+			return Resources.ICN_TABLE_LANGUAGE_4.get();
 		default:
 			return null;
 		}

@@ -57,7 +57,7 @@ public class ChangeViewedFrame extends JFrame {
 	
 	private void initGUI() {
 		setTitle(LocaleBundle.getString("ChangedViewedFrame.this.title")); //$NON-NLS-1$
-		setIconImage(CachedResourceLoader.getImage(Resources.IMG_FRAME_ICON));
+		setIconImage(Resources.IMG_FRAME_ICON.get());
 		setSize(new Dimension(382, 445));
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -146,7 +146,7 @@ public class ChangeViewedFrame extends JFrame {
 				}
 				
 				lblCover.setAndResizeCover(mov.getCover());
-				lblCurrent.setIcon(CachedResourceLoader.getIcon((mov.isViewed() ? (Resources.ICN_TABLE_VIEWED_TRUE) : (Resources.ICN_TABLE_VIEWED_FALSE))));
+				lblCurrent.setIcon((mov.isViewed() ? (Resources.ICN_TABLE_VIEWED_TRUE.get()) : (Resources.ICN_TABLE_VIEWED_FALSE.get())));
 				lblTitle.setText(mov.getCompleteTitle());
 			} else {
 				nextMovie();

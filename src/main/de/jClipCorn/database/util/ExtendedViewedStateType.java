@@ -60,17 +60,17 @@ public enum ExtendedViewedStateType implements ContinoousEnum<ExtendedViewedStat
 	public ImageIcon getIconTable() {
 		switch (this) {
 		case VIEWED:
-			return CachedResourceLoader.getIcon(Resources.ICN_TABLE_VIEWED_TRUE);
+			return Resources.ICN_TABLE_VIEWED_TRUE.get();
 		case NOT_VIEWED:
-			return CachedResourceLoader.getIcon(Resources.ICN_TABLE_VIEWED_FALSE);
+			return Resources.ICN_TABLE_VIEWED_FALSE.get();
 		case MARKED_FOR_LATER:
-			return CachedResourceLoader.getIcon(Resources.ICN_TABLE_VIEWED_LATER);
+			return Resources.ICN_TABLE_VIEWED_LATER.get();
 		case MARKED_FOR_NEVER:
-			return CachedResourceLoader.getIcon(Resources.ICN_TABLE_VIEWED_NEVER);
+			return Resources.ICN_TABLE_VIEWED_NEVER.get();
 		case PARTIAL_VIEWED:
-			return CachedResourceLoader.getIcon(Resources.ICN_TABLE_VIEWED_PARTIAL);
+			return Resources.ICN_TABLE_VIEWED_PARTIAL.get();
 		case MARKED_FOR_AGAIN:
-			return CachedResourceLoader.getIcon(Resources.ICN_TABLE_VIEWED_AGAIN);
+			return Resources.ICN_TABLE_VIEWED_AGAIN.get();
 		}
 		
 		return null;
@@ -79,17 +79,17 @@ public enum ExtendedViewedStateType implements ContinoousEnum<ExtendedViewedStat
 	public ImageIcon getIconSidebar() {
 		switch (this) {
 		case VIEWED:
-			return CachedResourceLoader.getIcon(Resources.ICN_SIDEBAR_VIEWED);
+			return Resources.ICN_SIDEBAR_VIEWED.get();
 		case NOT_VIEWED:
-			return CachedResourceLoader.getIcon(Resources.ICN_SIDEBAR_UNVIEWED);
+			return Resources.ICN_SIDEBAR_UNVIEWED.get();
 		case MARKED_FOR_LATER:
-			return CachedResourceLoader.getIcon(Resources.ICN_SIDEBAR_LATER);
+			return Resources.ICN_SIDEBAR_LATER.get();
 		case MARKED_FOR_NEVER:
-			return CachedResourceLoader.getIcon(Resources.ICN_SIDEBAR_NEVER);
+			return Resources.ICN_SIDEBAR_NEVER.get();
 		case PARTIAL_VIEWED:
-			return CachedResourceLoader.getIcon(Resources.ICN_SIDEBAR_PARTIALLY);
+			return Resources.ICN_SIDEBAR_PARTIALLY.get();
 		case MARKED_FOR_AGAIN:
-			return CachedResourceLoader.getIcon(Resources.ICN_SIDEBAR_AGAIN);
+			return Resources.ICN_SIDEBAR_AGAIN.get();
 		}
 		
 		return null;

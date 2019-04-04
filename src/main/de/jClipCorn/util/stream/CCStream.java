@@ -76,13 +76,17 @@ public abstract class CCStream<TType> implements Iterator<TType>, Iterable<TType
 		return result;
 	}
 
+	public int count(Func1to1<TType, Boolean> condition) {
+		return this.filter(condition).count();
+	}
+
 	public int count() {
 		int c = 0;
-		
+
 		for (Iterator<TType> it = this.iterator(); it.hasNext(); c++) {
 			it.next();
 		}
-		
+
 		return c;
 	}
 

@@ -94,7 +94,7 @@ public class AddSeriesFrame extends JFrame implements ParseResultHandler, UserDa
 
 	private void initGUI() {
 		setTitle(LocaleBundle.getString("AddSeriesFrame.this.title")); //$NON-NLS-1$
-		setIconImage(CachedResourceLoader.getImage(Resources.IMG_FRAME_ICON));
+		setIconImage(Resources.IMG_FRAME_ICON.get());
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		getContentPane().setLayout(null);
 

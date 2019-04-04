@@ -43,7 +43,7 @@ public class AllRatingsDialog extends JDialog {
 		setResizable(false);
 		setModal(true);
 		setTitle(LocaleBundle.getString("AllRatingsFrame.this.title")); //$NON-NLS-1$
-		setIconImage(CachedResourceLoader.getImage(Resources.IMG_FRAME_ICON));
+		setIconImage(Resources.IMG_FRAME_ICON.get());
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		setLocationRelativeTo(owner);

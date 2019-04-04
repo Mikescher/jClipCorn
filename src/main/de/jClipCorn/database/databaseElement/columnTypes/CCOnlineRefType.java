@@ -8,9 +8,9 @@ import javax.swing.Icon;
 import de.jClipCorn.database.util.CCOnlineRefTypeHelper;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.CachedResourceLoader;
-import de.jClipCorn.gui.resources.IconRef;
-import de.jClipCorn.gui.resources.MultiIconRef;
+import de.jClipCorn.gui.resources.MultiSizeIconRef;
 import de.jClipCorn.gui.resources.Resources;
+import de.jClipCorn.gui.resources.reftypes.IconRef;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.enumextension.ContinoousEnum;
 import de.jClipCorn.util.enumextension.EnumWrapper;
@@ -36,12 +36,12 @@ public enum CCOnlineRefType implements ContinoousEnum<CCOnlineRefType> {
 	private final String name;
 	private final Pattern regexVerification;
 	private final Pattern regexPaste;
-	private final MultiIconRef icon;
+	private final MultiSizeIconRef icon;
 	private final IconRef iconButton;
 
 	private static EnumWrapper<CCOnlineRefType> wrapper = new EnumWrapper<>(NONE);
 
-	private CCOnlineRefType(int refid, String strid, String bundleid, Pattern regex_value, Pattern regex_paste, MultiIconRef icnSquare, IconRef icnButton) {
+	private CCOnlineRefType(int refid, String strid, String bundleid, Pattern regex_value, Pattern regex_paste, MultiSizeIconRef icnSquare, IconRef icnButton) {
 		id                = refid;
 		identifier        = strid;
 		name              = LocaleBundle.getString(bundleid);
@@ -87,15 +87,15 @@ public enum CCOnlineRefType implements ContinoousEnum<CCOnlineRefType> {
 	}
 
 	public Icon getIcon() {
-		return CachedResourceLoader.getIcon(icon.icon32x32);
+		return icon.get32x32();
 	}
 
 	public Icon getIcon16x16() {
-		return CachedResourceLoader.getIcon(icon.icon16x16);
+		return icon.get16x16();
 	}
 
 	public Icon getIconButton() {
-		return CachedResourceLoader.getIcon(iconButton);
+		return iconButton.get();
 	}
 	
 	public boolean isValid(String id) {

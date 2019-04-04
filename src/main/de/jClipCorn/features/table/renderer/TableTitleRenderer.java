@@ -16,7 +16,7 @@ public class TableTitleRenderer extends TableRenderer {
 		setText(((CCDatabaseElement)value).getTitle());
 		
 		if (((CCDatabaseElement)value).isSeries()) {
-			setIcon(CachedResourceLoader.getIcon(Resources.ICN_TABLE_SERIES));
+			setIcon(Resources.ICN_TABLE_SERIES.get());
 		} else {
 			setIcon(null);
 		}

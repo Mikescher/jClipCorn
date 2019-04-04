@@ -13,15 +13,15 @@ import de.jClipCorn.util.stream.CCStream;
 
 public class CCTagList {
 	
-	public final static CCSingleTag TAG_BAD_QUALITY 	= new CCSingleTag(0, "CCMovieTags.TAG_00", Resources.ICN_TABLE_TAG_0_0, Resources.ICN_TABLE_TAG_0_1, Resources.ICN_MENUBAR_TAG_0_1, true,  true,  true);  //$NON-NLS-1$
-	public final static CCSingleTag TAG_MISSING_TIME 	= new CCSingleTag(1, "CCMovieTags.TAG_01", Resources.ICN_TABLE_TAG_1_0, Resources.ICN_TABLE_TAG_1_1, Resources.ICN_MENUBAR_TAG_1_1, true,  false, true);  //$NON-NLS-1$
-	public final static CCSingleTag TAG_FILE_CORRUPTED 	= new CCSingleTag(2, "CCMovieTags.TAG_02", Resources.ICN_TABLE_TAG_2_0, Resources.ICN_TABLE_TAG_2_1, Resources.ICN_MENUBAR_TAG_2_1, true,  false, true);  //$NON-NLS-1$
-	public final static CCSingleTag TAG_WATCH_LATER 	= new CCSingleTag(3, "CCMovieTags.TAG_03", Resources.ICN_TABLE_TAG_3_0, Resources.ICN_TABLE_TAG_3_1, Resources.ICN_MENUBAR_TAG_3_1, true,  true,  true);  //$NON-NLS-1$
-	public final static CCSingleTag TAG_WRONG_LANGUAGE 	= new CCSingleTag(4, "CCMovieTags.TAG_04", Resources.ICN_TABLE_TAG_4_0, Resources.ICN_TABLE_TAG_4_1, Resources.ICN_MENUBAR_TAG_4_1, true,  true,  true);  //$NON-NLS-1$
-	public final static CCSingleTag TAG_WATCH_NEVER 	= new CCSingleTag(5, "CCMovieTags.TAG_05", Resources.ICN_TABLE_TAG_5_0, Resources.ICN_TABLE_TAG_5_1, Resources.ICN_MENUBAR_TAG_5_1, true,  true,  true);  //$NON-NLS-1$
-	public final static CCSingleTag TAG_WATCH_CAMRIP	= new CCSingleTag(6, "CCMovieTags.TAG_06", Resources.ICN_TABLE_TAG_6_0, Resources.ICN_TABLE_TAG_6_1, Resources.ICN_MENUBAR_TAG_6_1, true,  true,  true);  //$NON-NLS-1$
-	public final static CCSingleTag TAG_WATCH_MICDUBBED	= new CCSingleTag(7, "CCMovieTags.TAG_07", Resources.ICN_TABLE_TAG_7_0, Resources.ICN_TABLE_TAG_7_1, Resources.ICN_MENUBAR_TAG_7_1, true,  true,  true);  //$NON-NLS-1$
-	public final static CCSingleTag TAG_WATCH_CANCELLED	= new CCSingleTag(8, "CCMovieTags.TAG_08", Resources.ICN_TABLE_TAG_8_0, Resources.ICN_TABLE_TAG_8_1, Resources.ICN_MENUBAR_TAG_8_1, false, true,  false); //$NON-NLS-1$
+	public final static CCSingleTag TAG_BAD_QUALITY 	= new CCSingleTag(0, "CCMovieTags.TAG_00", Resources.ICN_TABLE_TAG_0_0, Resources.ICN_TABLE_TAG_0_1, Resources.ICN_MENUBAR_TAG_0, true,  true,  true);  //$NON-NLS-1$
+	public final static CCSingleTag TAG_MISSING_TIME 	= new CCSingleTag(1, "CCMovieTags.TAG_01", Resources.ICN_TABLE_TAG_1_0, Resources.ICN_TABLE_TAG_1_1, Resources.ICN_MENUBAR_TAG_1, true,  false, true);  //$NON-NLS-1$
+	public final static CCSingleTag TAG_FILE_CORRUPTED 	= new CCSingleTag(2, "CCMovieTags.TAG_02", Resources.ICN_TABLE_TAG_2_0, Resources.ICN_TABLE_TAG_2_1, Resources.ICN_MENUBAR_TAG_2, true,  false, true);  //$NON-NLS-1$
+	public final static CCSingleTag TAG_WATCH_LATER 	= new CCSingleTag(3, "CCMovieTags.TAG_03", Resources.ICN_TABLE_TAG_3_0, Resources.ICN_TABLE_TAG_3_1, Resources.ICN_MENUBAR_TAG_3, true,  true,  true);  //$NON-NLS-1$
+	public final static CCSingleTag TAG_WRONG_LANGUAGE 	= new CCSingleTag(4, "CCMovieTags.TAG_04", Resources.ICN_TABLE_TAG_4_0, Resources.ICN_TABLE_TAG_4_1, Resources.ICN_MENUBAR_TAG_4, true,  true,  true);  //$NON-NLS-1$
+	public final static CCSingleTag TAG_WATCH_NEVER 	= new CCSingleTag(5, "CCMovieTags.TAG_05", Resources.ICN_TABLE_TAG_5_0, Resources.ICN_TABLE_TAG_5_1, Resources.ICN_MENUBAR_TAG_5, true,  true,  true);  //$NON-NLS-1$
+	public final static CCSingleTag TAG_WATCH_CAMRIP	= new CCSingleTag(6, "CCMovieTags.TAG_06", Resources.ICN_TABLE_TAG_6_0, Resources.ICN_TABLE_TAG_6_1, Resources.ICN_MENUBAR_TAG_6, true,  true,  true);  //$NON-NLS-1$
+	public final static CCSingleTag TAG_WATCH_MICDUBBED	= new CCSingleTag(7, "CCMovieTags.TAG_07", Resources.ICN_TABLE_TAG_7_0, Resources.ICN_TABLE_TAG_7_1, Resources.ICN_MENUBAR_TAG_7, true,  true,  true);  //$NON-NLS-1$
+	public final static CCSingleTag TAG_WATCH_CANCELLED	= new CCSingleTag(8, "CCMovieTags.TAG_08", Resources.ICN_TABLE_TAG_8_0, Resources.ICN_TABLE_TAG_8_1, Resources.ICN_MENUBAR_TAG_8, false, true,  false); //$NON-NLS-1$
 
 	public final static CCSingleTag[] TAGS =
 	{
@@ -248,11 +248,11 @@ public class CCTagList {
 				if (i == TAG_WATCH_LATER.Index || i == TAG_WATCH_NEVER.Index) continue;
 				
 				if (use32px) {
-					bi.getGraphics().drawImage(CachedResourceLoader.getImage(TAGS[i].Image.icon32x32), posX, 8, null);
+					bi.getGraphics().drawImage(TAGS[i].Image.getImage32x32(), posX, 8, null);
 					posX += 32;
 					posX += 8;
 				} else {
-					bi.getGraphics().drawImage(CachedResourceLoader.getImage(TAGS[i].Image.icon16x16), posX, 8, null);
+					bi.getGraphics().drawImage(TAGS[i].Image.getImage16x16(), posX, 8, null);
 					posX += 16;
 					posX += 4;
 				}

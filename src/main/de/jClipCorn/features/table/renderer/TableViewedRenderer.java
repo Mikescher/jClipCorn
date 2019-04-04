@@ -11,6 +11,6 @@ public class TableViewedRenderer extends TableRenderer {
 
 	@Override
     public void setValue(Object value) {
-		setIcon(((ExtendedViewedState)value).getType().getIconTable());
+		setIcon(((ExtendedViewedState)value).getIconTable());
     }
 }

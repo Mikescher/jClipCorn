@@ -460,17 +460,17 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 	@Override
 	public ExtendedViewedState getExtendedViewedState() {
 		if (!viewed && getTag(CCTagList.TAG_WATCH_LATER))
-			return new ExtendedViewedState(ExtendedViewedStateType.MARKED_FOR_LATER, getViewedHistory());
+			return new ExtendedViewedState(ExtendedViewedStateType.MARKED_FOR_LATER, getViewedHistory(), null);
 
 		if (viewed && getTag(CCTagList.TAG_WATCH_LATER))
-			return new ExtendedViewedState(ExtendedViewedStateType.MARKED_FOR_AGAIN, getViewedHistory());
+			return new ExtendedViewedState(ExtendedViewedStateType.MARKED_FOR_AGAIN, getViewedHistory(), null);
 
 		if (isViewed())
-			return new ExtendedViewedState(ExtendedViewedStateType.VIEWED, getViewedHistory());
+			return new ExtendedViewedState(ExtendedViewedStateType.VIEWED, getViewedHistory(), null);
 
 		if (getTag(CCTagList.TAG_WATCH_NEVER))
-			return new ExtendedViewedState(ExtendedViewedStateType.MARKED_FOR_NEVER, getViewedHistory());
+			return new ExtendedViewedState(ExtendedViewedStateType.MARKED_FOR_NEVER, getViewedHistory(), null);
 
-		return new ExtendedViewedState(ExtendedViewedStateType.NOT_VIEWED, getViewedHistory());
+		return new ExtendedViewedState(ExtendedViewedStateType.NOT_VIEWED, getViewedHistory(), null);
 	}
 }

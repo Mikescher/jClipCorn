@@ -487,15 +487,15 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 	@Override
 	public ExtendedViewedState getExtendedViewedState() {
 		if (!viewed && tags.getTag(CCTagList.TAG_WATCH_LATER))
-			return new ExtendedViewedState(ExtendedViewedStateType.MARKED_FOR_LATER, getViewedHistory());
+			return new ExtendedViewedState(ExtendedViewedStateType.MARKED_FOR_LATER, getViewedHistory(), null);
 		else if (viewed && tags.getTag(CCTagList.TAG_WATCH_LATER))
-			return new ExtendedViewedState(ExtendedViewedStateType.MARKED_FOR_AGAIN, getViewedHistory());
+			return new ExtendedViewedState(ExtendedViewedStateType.MARKED_FOR_AGAIN, getViewedHistory(), null);
 		else if (isViewed())
-			return new ExtendedViewedState(ExtendedViewedStateType.VIEWED, getViewedHistory());
+			return new ExtendedViewedState(ExtendedViewedStateType.VIEWED, getViewedHistory(), null);
 		else if (tags.getTag(CCTagList.TAG_WATCH_NEVER))
-			return new ExtendedViewedState(ExtendedViewedStateType.MARKED_FOR_NEVER, getViewedHistory());
+			return new ExtendedViewedState(ExtendedViewedStateType.MARKED_FOR_NEVER, getViewedHistory(), null);
 		else
-			return new ExtendedViewedState(ExtendedViewedStateType.NOT_VIEWED, getViewedHistory());
+			return new ExtendedViewedState(ExtendedViewedStateType.NOT_VIEWED, getViewedHistory(), null);
 	}
 
 	public boolean checkFolderStructure() {

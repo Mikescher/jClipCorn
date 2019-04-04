@@ -55,7 +55,7 @@ public class CachedResourceLoader {
 		BufferedImage result = mapImages.get(ref.id);
 		if (result == null)
 		{
-			BufferedImage img = getOrLoad(ref.layers[0]);
+			BufferedImage img = ImageUtilities.deepCopyImage(getOrLoad(ref.layers[0]));
 
 			Graphics g = img.getGraphics();
 			for (int i = 1; i < ref.layers.length; i++)

@@ -218,4 +218,3 @@ public class Main {
 //TODO Allow multiple MovieLang's per element
 //TODO auto get languages from files
 
-//TODO show viewcount in tables (mov + series), either as "asdf [+n]" in last_viewed or as small text bottom-left of viewed icon

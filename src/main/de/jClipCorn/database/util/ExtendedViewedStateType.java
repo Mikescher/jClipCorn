@@ -57,25 +57,6 @@ public enum ExtendedViewedStateType implements ContinoousEnum<ExtendedViewedStat
 		return Integer.compare(o1.asInt(), o2.asInt());
 	}
 
-	public ImageIcon getIconTable() {
-		switch (this) {
-		case VIEWED:
-			return Resources.ICN_TABLE_VIEWED_TRUE.get();
-		case NOT_VIEWED:
-			return Resources.ICN_TABLE_VIEWED_FALSE.get();
-		case MARKED_FOR_LATER:
-			return Resources.ICN_TABLE_VIEWED_LATER.get();
-		case MARKED_FOR_NEVER:
-			return Resources.ICN_TABLE_VIEWED_NEVER.get();
-		case PARTIAL_VIEWED:
-			return Resources.ICN_TABLE_VIEWED_PARTIAL.get();
-		case MARKED_FOR_AGAIN:
-			return Resources.ICN_TABLE_VIEWED_AGAIN.get();
-		}
-		
-		return null;
-	}
-
 	public ImageIcon getIconSidebar() {
 		switch (this) {
 		case VIEWED:

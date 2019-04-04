@@ -474,15 +474,26 @@ public class CCSeries extends CCDatabaseElement  {
 	@Override
 	public ExtendedViewedState getExtendedViewedState() {
 		if (isViewed())
-			return new ExtendedViewedState(ExtendedViewedStateType.VIEWED, CCDateTimeList.createEmpty());
+			return new ExtendedViewedState(ExtendedViewedStateType.VIEWED, CCDateTimeList.createEmpty(), getFullViewCount());
 
 		if (getTag(CCTagList.TAG_WATCH_NEVER))
-			return new ExtendedViewedState(ExtendedViewedStateType.MARKED_FOR_NEVER, CCDateTimeList.createEmpty());
+			return new ExtendedViewedState(ExtendedViewedStateType.MARKED_FOR_NEVER, CCDateTimeList.createEmpty(), getFullViewCount());
 
 		if (CCProperties.getInstance().PROP_SHOW_PARTIAL_VIEWED_STATE.getValue() && isPartialViewed())
-			return new ExtendedViewedState(ExtendedViewedStateType.PARTIAL_VIEWED, CCDateTimeList.createEmpty());
+			return new ExtendedViewedState(ExtendedViewedStateType.PARTIAL_VIEWED, CCDateTimeList.createEmpty(), getFullViewCount());
 
-		return new ExtendedViewedState(ExtendedViewedStateType.NOT_VIEWED, CCDateTimeList.createEmpty());
+		return new ExtendedViewedState(ExtendedViewedStateType.NOT_VIEWED, CCDateTimeList.createEmpty(), getFullViewCount());
+	}
+
+	private int getFullViewCount() {
+		int vc = Integer.MAX_VALUE;
+		for (CCSeason s : seasons) {
+			for (CCEpisode e : s.getEpisodeList()) {
+				vc = Math.min(e.getViewedHistory().count(), vc);
+			}
+		}
+		if (vc == Integer.MAX_VALUE) return 0;
+		return vc;
 	}
 
 	@SuppressWarnings("nls")

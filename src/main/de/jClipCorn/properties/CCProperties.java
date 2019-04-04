@@ -174,6 +174,7 @@ public class CCProperties {
 	public CCPathVarProperty                                PROP_PATHSYNTAX_VAR5;
 	public CCPIntProperty                                   PROP_MIN_DRIVEMAP_RESCAN_TIME;
 	public CCBoolProperty                                   PROP_STATBAR_DRIVESCAN;
+	public CCBoolProperty                                   PROP_MAINFRAME_SHOW_VIEWCOUNT;
 
 	public boolean ARG_READONLY = false;
 	
@@ -245,6 +246,7 @@ public class CCProperties {
 		PROP_MAINFRAME_SORT_GENRES              = new CCBoolProperty(CAT_VIEW,              this,   "PROP_MAINFRAME_SORT_GENRES",               true);
 		PROP_MAINFRAME_SHOW_GROUP_ONLY_ON_HOVER = new CCBoolProperty(CAT_VIEW,              this,   "PROP_MAINFRAME_SHOW_GROUP_ONLY_ON_HOVER",  false);
 		PROP_MAINFRAME_ASYNC_COVER_LOADING      = new CCBoolProperty(CAT_VIEW,              this,   "PROP_MAINFRAME_ASYNC_COVER_LOADING",       false);
+		PROP_MAINFRAME_SHOW_VIEWCOUNT      		= new CCBoolProperty(CAT_VIEW,              this,   "PROP_MAINFRAME_SHOW_VIEWCOUNT",       		true);
 
 		PROP_DATABASE_NAME                      = new CCStringProperty(CAT_DATABASE,        this,   "PROP_DATABASE_NAME",                       "ClipCornDB");
 		PROP_LOG_PATH                           = new CCStringProperty(CAT_DATABASE,        this,   "PROP_LOG_PATH",                            "jClipcorn.log");

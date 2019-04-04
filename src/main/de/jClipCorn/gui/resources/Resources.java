@@ -132,6 +132,78 @@ public class Resources {
 	public final static IconRef ICN_TABLE_VIEWED_PARTIAL	= registerOtherIcon("/icons/table/viewed_4.png");
 	public final static IconRef ICN_TABLE_VIEWED_AGAIN		= registerOtherIcon("/icons/table/viewed_5.png");
 
+	public final static IconRef ICN_TABLE_VIEWED_TRUE_CTR_00		= registerCombinedIcon("/icons/table/viewed_1.png", "/icons/table/counter_00.png");
+	public final static IconRef ICN_TABLE_VIEWED_TRUE_CTR_01		= registerCombinedIcon("/icons/table/viewed_1.png", "/icons/table/counter_01.png");
+	public final static IconRef ICN_TABLE_VIEWED_TRUE_CTR_02		= registerCombinedIcon("/icons/table/viewed_1.png", "/icons/table/counter_02.png");
+	public final static IconRef ICN_TABLE_VIEWED_TRUE_CTR_03		= registerCombinedIcon("/icons/table/viewed_1.png", "/icons/table/counter_03.png");
+	public final static IconRef ICN_TABLE_VIEWED_TRUE_CTR_04		= registerCombinedIcon("/icons/table/viewed_1.png", "/icons/table/counter_04.png");
+	public final static IconRef ICN_TABLE_VIEWED_TRUE_CTR_05		= registerCombinedIcon("/icons/table/viewed_1.png", "/icons/table/counter_05.png");
+	public final static IconRef ICN_TABLE_VIEWED_TRUE_CTR_06		= registerCombinedIcon("/icons/table/viewed_1.png", "/icons/table/counter_06.png");
+	public final static IconRef ICN_TABLE_VIEWED_TRUE_CTR_07		= registerCombinedIcon("/icons/table/viewed_1.png", "/icons/table/counter_07.png");
+	public final static IconRef ICN_TABLE_VIEWED_TRUE_CTR_08		= registerCombinedIcon("/icons/table/viewed_1.png", "/icons/table/counter_08.png");
+	public final static IconRef ICN_TABLE_VIEWED_TRUE_CTR_09		= registerCombinedIcon("/icons/table/viewed_1.png", "/icons/table/counter_09.png");
+	public final static IconRef ICN_TABLE_VIEWED_TRUE_CTR_10		= registerCombinedIcon("/icons/table/viewed_1.png", "/icons/table/counter_10.png");
+	public final static IconRef ICN_TABLE_VIEWED_TRUE_CTR_11		= registerCombinedIcon("/icons/table/viewed_1.png", "/icons/table/counter_11.png");
+	public final static IconRef ICN_TABLE_VIEWED_TRUE_CTR_12		= registerCombinedIcon("/icons/table/viewed_1.png", "/icons/table/counter_12.png");
+	public final static IconRef ICN_TABLE_VIEWED_TRUE_CTR_13		= registerCombinedIcon("/icons/table/viewed_1.png", "/icons/table/counter_13.png");
+	public final static IconRef ICN_TABLE_VIEWED_TRUE_CTR_14		= registerCombinedIcon("/icons/table/viewed_1.png", "/icons/table/counter_14.png");
+	public final static IconRef ICN_TABLE_VIEWED_TRUE_CTR_15		= registerCombinedIcon("/icons/table/viewed_1.png", "/icons/table/counter_15.png");
+	public final static IconRef ICN_TABLE_VIEWED_TRUE_CTR_16		= registerCombinedIcon("/icons/table/viewed_1.png", "/icons/table/counter_16.png");
+	public final static IconRef ICN_TABLE_VIEWED_TRUE_CTR_17		= registerCombinedIcon("/icons/table/viewed_1.png", "/icons/table/counter_17.png");
+	public final static IconRef ICN_TABLE_VIEWED_TRUE_CTR_18		= registerCombinedIcon("/icons/table/viewed_1.png", "/icons/table/counter_18.png");
+	public final static IconRef ICN_TABLE_VIEWED_TRUE_CTR_19		= registerCombinedIcon("/icons/table/viewed_1.png", "/icons/table/counter_19.png");
+	public final static IconRef ICN_TABLE_VIEWED_TRUE_CTR_20		= registerCombinedIcon("/icons/table/viewed_1.png", "/icons/table/counter_20.png");
+	public final static IconRef ICN_TABLE_VIEWED_TRUE_CTR_21		= registerCombinedIcon("/icons/table/viewed_1.png", "/icons/table/counter_21.png");
+	public final static IconRef ICN_TABLE_VIEWED_TRUE_CTR_22		= registerCombinedIcon("/icons/table/viewed_1.png", "/icons/table/counter_22.png");
+	public final static IconRef ICN_TABLE_VIEWED_TRUE_CTR_23		= registerCombinedIcon("/icons/table/viewed_1.png", "/icons/table/counter_23.png");
+	public final static IconRef ICN_TABLE_VIEWED_TRUE_CTR_24		= registerCombinedIcon("/icons/table/viewed_1.png", "/icons/table/counter_24.png");
+	public final static IconRef ICN_TABLE_VIEWED_TRUE_CTR_MORE		= registerCombinedIcon("/icons/table/viewed_1.png", "/icons/table/counter_dot.png");
+
+	public final static IconRef[] ICN_TABLE_VIEWED_TRUE_CTR = new IconRef[]
+	{
+		ICN_TABLE_VIEWED_TRUE_CTR_00, ICN_TABLE_VIEWED_TRUE_CTR_01, ICN_TABLE_VIEWED_TRUE_CTR_02, ICN_TABLE_VIEWED_TRUE_CTR_03, ICN_TABLE_VIEWED_TRUE_CTR_04,
+		ICN_TABLE_VIEWED_TRUE_CTR_05, ICN_TABLE_VIEWED_TRUE_CTR_06, ICN_TABLE_VIEWED_TRUE_CTR_07, ICN_TABLE_VIEWED_TRUE_CTR_08, ICN_TABLE_VIEWED_TRUE_CTR_09,
+		ICN_TABLE_VIEWED_TRUE_CTR_10, ICN_TABLE_VIEWED_TRUE_CTR_11, ICN_TABLE_VIEWED_TRUE_CTR_12, ICN_TABLE_VIEWED_TRUE_CTR_13, ICN_TABLE_VIEWED_TRUE_CTR_14,
+		ICN_TABLE_VIEWED_TRUE_CTR_15, ICN_TABLE_VIEWED_TRUE_CTR_16, ICN_TABLE_VIEWED_TRUE_CTR_17, ICN_TABLE_VIEWED_TRUE_CTR_18, ICN_TABLE_VIEWED_TRUE_CTR_19,
+		ICN_TABLE_VIEWED_TRUE_CTR_20, ICN_TABLE_VIEWED_TRUE_CTR_21, ICN_TABLE_VIEWED_TRUE_CTR_22, ICN_TABLE_VIEWED_TRUE_CTR_23, ICN_TABLE_VIEWED_TRUE_CTR_24
+	};
+
+	public final static IconRef ICN_TABLE_VIEWED_AGAIN_CTR_00		= registerCombinedIcon("/icons/table/viewed_5.png", "/icons/table/counter_00.png");
+	public final static IconRef ICN_TABLE_VIEWED_AGAIN_CTR_01		= registerCombinedIcon("/icons/table/viewed_5.png", "/icons/table/counter_01.png");
+	public final static IconRef ICN_TABLE_VIEWED_AGAIN_CTR_02		= registerCombinedIcon("/icons/table/viewed_5.png", "/icons/table/counter_02.png");
+	public final static IconRef ICN_TABLE_VIEWED_AGAIN_CTR_03		= registerCombinedIcon("/icons/table/viewed_5.png", "/icons/table/counter_03.png");
+	public final static IconRef ICN_TABLE_VIEWED_AGAIN_CTR_04		= registerCombinedIcon("/icons/table/viewed_5.png", "/icons/table/counter_04.png");
+	public final static IconRef ICN_TABLE_VIEWED_AGAIN_CTR_05		= registerCombinedIcon("/icons/table/viewed_5.png", "/icons/table/counter_05.png");
+	public final static IconRef ICN_TABLE_VIEWED_AGAIN_CTR_06		= registerCombinedIcon("/icons/table/viewed_5.png", "/icons/table/counter_06.png");
+	public final static IconRef ICN_TABLE_VIEWED_AGAIN_CTR_07		= registerCombinedIcon("/icons/table/viewed_5.png", "/icons/table/counter_07.png");
+	public final static IconRef ICN_TABLE_VIEWED_AGAIN_CTR_08		= registerCombinedIcon("/icons/table/viewed_5.png", "/icons/table/counter_08.png");
+	public final static IconRef ICN_TABLE_VIEWED_AGAIN_CTR_09		= registerCombinedIcon("/icons/table/viewed_5.png", "/icons/table/counter_09.png");
+	public final static IconRef ICN_TABLE_VIEWED_AGAIN_CTR_10		= registerCombinedIcon("/icons/table/viewed_5.png", "/icons/table/counter_10.png");
+	public final static IconRef ICN_TABLE_VIEWED_AGAIN_CTR_11		= registerCombinedIcon("/icons/table/viewed_5.png", "/icons/table/counter_11.png");
+	public final static IconRef ICN_TABLE_VIEWED_AGAIN_CTR_12		= registerCombinedIcon("/icons/table/viewed_5.png", "/icons/table/counter_12.png");
+	public final static IconRef ICN_TABLE_VIEWED_AGAIN_CTR_13		= registerCombinedIcon("/icons/table/viewed_5.png", "/icons/table/counter_13.png");
+	public final static IconRef ICN_TABLE_VIEWED_AGAIN_CTR_14		= registerCombinedIcon("/icons/table/viewed_5.png", "/icons/table/counter_14.png");
+	public final static IconRef ICN_TABLE_VIEWED_AGAIN_CTR_15		= registerCombinedIcon("/icons/table/viewed_5.png", "/icons/table/counter_15.png");
+	public final static IconRef ICN_TABLE_VIEWED_AGAIN_CTR_16		= registerCombinedIcon("/icons/table/viewed_5.png", "/icons/table/counter_16.png");
+	public final static IconRef ICN_TABLE_VIEWED_AGAIN_CTR_17		= registerCombinedIcon("/icons/table/viewed_5.png", "/icons/table/counter_17.png");
+	public final static IconRef ICN_TABLE_VIEWED_AGAIN_CTR_18		= registerCombinedIcon("/icons/table/viewed_5.png", "/icons/table/counter_18.png");
+	public final static IconRef ICN_TABLE_VIEWED_AGAIN_CTR_19		= registerCombinedIcon("/icons/table/viewed_5.png", "/icons/table/counter_19.png");
+	public final static IconRef ICN_TABLE_VIEWED_AGAIN_CTR_20		= registerCombinedIcon("/icons/table/viewed_5.png", "/icons/table/counter_20.png");
+	public final static IconRef ICN_TABLE_VIEWED_AGAIN_CTR_21		= registerCombinedIcon("/icons/table/viewed_5.png", "/icons/table/counter_21.png");
+	public final static IconRef ICN_TABLE_VIEWED_AGAIN_CTR_22		= registerCombinedIcon("/icons/table/viewed_5.png", "/icons/table/counter_22.png");
+	public final static IconRef ICN_TABLE_VIEWED_AGAIN_CTR_23		= registerCombinedIcon("/icons/table/viewed_5.png", "/icons/table/counter_23.png");
+	public final static IconRef ICN_TABLE_VIEWED_AGAIN_CTR_24		= registerCombinedIcon("/icons/table/viewed_5.png", "/icons/table/counter_24.png");
+	public final static IconRef ICN_TABLE_VIEWED_AGAIN_CTR_MORE		= registerCombinedIcon("/icons/table/viewed_5.png", "/icons/table/counter_dot.png");
+
+	public final static IconRef[] ICN_TABLE_VIEWED_AGAIN_CTR = new IconRef[]
+	{
+		ICN_TABLE_VIEWED_AGAIN_CTR_00, ICN_TABLE_VIEWED_AGAIN_CTR_01, ICN_TABLE_VIEWED_AGAIN_CTR_02, ICN_TABLE_VIEWED_AGAIN_CTR_03, ICN_TABLE_VIEWED_AGAIN_CTR_04,
+		ICN_TABLE_VIEWED_AGAIN_CTR_05, ICN_TABLE_VIEWED_AGAIN_CTR_06, ICN_TABLE_VIEWED_AGAIN_CTR_07, ICN_TABLE_VIEWED_AGAIN_CTR_08, ICN_TABLE_VIEWED_AGAIN_CTR_09,
+		ICN_TABLE_VIEWED_AGAIN_CTR_10, ICN_TABLE_VIEWED_AGAIN_CTR_11, ICN_TABLE_VIEWED_AGAIN_CTR_12, ICN_TABLE_VIEWED_AGAIN_CTR_13, ICN_TABLE_VIEWED_AGAIN_CTR_14,
+		ICN_TABLE_VIEWED_AGAIN_CTR_15, ICN_TABLE_VIEWED_AGAIN_CTR_16, ICN_TABLE_VIEWED_AGAIN_CTR_17, ICN_TABLE_VIEWED_AGAIN_CTR_18, ICN_TABLE_VIEWED_AGAIN_CTR_19,
+		ICN_TABLE_VIEWED_AGAIN_CTR_20, ICN_TABLE_VIEWED_AGAIN_CTR_21, ICN_TABLE_VIEWED_AGAIN_CTR_22, ICN_TABLE_VIEWED_AGAIN_CTR_23, ICN_TABLE_VIEWED_AGAIN_CTR_24
+	};
+
 	public final static IconRef ICN_TABLE_QUALITY_0 		= register16x16Icon("/icons/table/quality_0.png");
 	public final static IconRef ICN_TABLE_QUALITY_1 		= register16x16Icon("/icons/table/quality_1.png");
 	public final static IconRef ICN_TABLE_QUALITY_2 		= register16x16Icon("/icons/table/quality_2.png");
@@ -330,7 +402,7 @@ public class Resources {
 		return register(new CombinedImageRef(CCStreams.iterate(s).map(Resources::registerImage).toArray(new SingleImageRef[0])));
 	}
 
-	private static IconRef registerCombinedIcon(String[] s) {
+	private static IconRef registerCombinedIcon(String... s) {
 		return register(new CombinedIconRef(registerCombinedImage(s)));
 	}
 	

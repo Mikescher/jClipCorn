@@ -584,13 +584,22 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 	@Override
 	public ExtendedViewedState getExtendedViewedState() {
 		if (isViewed())
-			return new ExtendedViewedState(ExtendedViewedStateType.VIEWED, CCDateTimeList.createEmpty());
+			return new ExtendedViewedState(ExtendedViewedStateType.VIEWED, CCDateTimeList.createEmpty(), getFullViewCount());
 		else if (CCProperties.getInstance().PROP_SHOW_PARTIAL_VIEWED_STATE.getValue() && isPartialViewed())
-			return new ExtendedViewedState(ExtendedViewedStateType.PARTIAL_VIEWED, CCDateTimeList.createEmpty());
+			return new ExtendedViewedState(ExtendedViewedStateType.PARTIAL_VIEWED, CCDateTimeList.createEmpty(), getFullViewCount());
 		else
-			return new ExtendedViewedState(ExtendedViewedStateType.NOT_VIEWED, CCDateTimeList.createEmpty());
+			return new ExtendedViewedState(ExtendedViewedStateType.NOT_VIEWED, CCDateTimeList.createEmpty(), getFullViewCount());
 	}
-	
+
+	private int getFullViewCount() {
+		int vc = Integer.MAX_VALUE;
+		for (CCEpisode e : episodes) {
+		    vc = Math.min(e.getViewedHistory().count(), vc);
+		}
+		if (vc == Integer.MAX_VALUE) return 0;
+		return vc;
+	}
+
 	public CCStream<CCEpisode> iteratorEpisodes() {
 		return CCStreams.iterate(episodes);
 	}

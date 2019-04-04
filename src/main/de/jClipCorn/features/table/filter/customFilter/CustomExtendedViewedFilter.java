@@ -14,7 +14,7 @@ public class CustomExtendedViewedFilter extends AbstractCustomFilter {
 	
 	@Override
 	public boolean includes(ICCDatabaseStructureElement e) {
-		return e.getExtendedViewedState().Type == state;
+		return e.getExtendedViewedState().getType() == state;
 	}
 
 	@Override

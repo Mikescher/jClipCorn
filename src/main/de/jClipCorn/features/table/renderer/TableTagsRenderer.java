@@ -13,4 +13,9 @@ public class TableTagsRenderer extends TableRenderer {
     public void setValue(Object value) {
 		setIcon(((CCTagList) value).getIcon());
     }
+
+	@Override
+	public boolean getNeedsExtraSpacing() {
+		return false; // unnecessary for icon-only columns
+	}
 }

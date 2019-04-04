@@ -13,4 +13,9 @@ public class TableViewedRenderer extends TableRenderer {
     public void setValue(Object value) {
 		setIcon(((ExtendedViewedState)value).getIconTable());
     }
+
+	@Override
+	public boolean getNeedsExtraSpacing() {
+		return false; // unnecessary for icon-only columns
+	}
 }

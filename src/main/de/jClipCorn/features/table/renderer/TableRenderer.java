@@ -8,7 +8,7 @@ import org.pushingpixels.substance.api.renderers.SubstanceDefaultTableCellRender
 
 import de.jClipCorn.util.helper.LookAndFeelManager;
 
-public class TableRenderer extends SubstanceDefaultTableCellRenderer {
+public class TableRenderer extends SubstanceDefaultTableCellRenderer implements ResizableColumnRenderer {
 	private static final long serialVersionUID = -5742763325569140076L;
 
 	public TableRenderer() {
@@ -24,5 +24,10 @@ public class TableRenderer extends SubstanceDefaultTableCellRenderer {
 		}
 
 		return c;
+	}
+
+	@Override
+	public boolean getNeedsExtraSpacing() {
+		return true; // default for text columns
 	}
 }

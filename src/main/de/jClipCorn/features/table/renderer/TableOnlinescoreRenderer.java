@@ -13,4 +13,9 @@ public class TableOnlinescoreRenderer extends TableRenderer {
     public void setValue(Object value) {
 		setIcon(((CCOnlineScore)value).getIcon());
     }
+
+	@Override
+	public boolean getNeedsExtraSpacing() {
+		return false; // unnecessary for icon-only columns
+	}
 }

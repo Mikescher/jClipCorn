@@ -1,5 +1,7 @@
 package de.jClipCorn.util;
 
+import de.jClipCorn.features.table.renderer.ResizableColumnRenderer;
+
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ComponentEvent;
@@ -9,10 +11,7 @@ import java.beans.PropertyChangeListener;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.JTable;
-import javax.swing.KeyStroke;
+import javax.swing.*;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableCellRenderer;
@@ -108,7 +107,7 @@ public class TableColumnAdjuster implements PropertyChangeListener, TableModelLi
 		
 		if (tabLeft < contWid) {
 			preferredWidth = contWid - tabPos - COLUMNBORDER_WIDTH;
-			updateTableColumn(column, preferredWidth);
+			updateTableColumn(column, preferredWidth, true);
 		}
 	}
 	
@@ -146,6 +145,7 @@ public class TableColumnAdjuster implements PropertyChangeListener, TableModelLi
 			return;
 
 		int oldWidth = tableColumn.getWidth();
+		boolean needsSpacing = getNeedsSpacing(column);
 		int columnHeaderWidth = getColumnHeaderWidth(column);
 		int columnDataWidth = getColumnDataWidth(column);
 		int preferredWidth = Math.max(columnHeaderWidth, columnDataWidth);
@@ -154,7 +154,15 @@ public class TableColumnAdjuster implements PropertyChangeListener, TableModelLi
 			preferredWidth = Math.min(maxAutoWidth, Math.max(preferredWidth, oldWidth));
 		}
 		
-		updateTableColumn(column, preferredWidth);
+		updateTableColumn(column, preferredWidth, needsSpacing);
+	}
+
+	private boolean getNeedsSpacing(int column) {
+		TableCellRenderer cellRenderer = table.getCellRenderer(0, column);
+
+		if (cellRenderer instanceof ResizableColumnRenderer) return ((ResizableColumnRenderer) cellRenderer).getNeedsExtraSpacing();
+
+		return true;
 	}
 
 	private int getColumnHeaderWidth(int column) {
@@ -194,23 +202,22 @@ public class TableColumnAdjuster implements PropertyChangeListener, TableModelLi
 	private int getCellDataWidth(int row, int column) {
 		TableCellRenderer cellRenderer = table.getCellRenderer(row, column);
 		Component c = table.prepareRenderer(cellRenderer, row, column);
-		int width = c.getPreferredSize().width + table.getIntercellSpacing().width;
-		return width;
+		return c.getPreferredSize().width + table.getIntercellSpacing().width;
 	}
 
-	private void updateTableColumn(int column, int width) {
+	private void updateTableColumn(int column, int width, boolean needsSpacing) {
 		TableColumn tableColumn = table.getColumnModel().getColumn(column);
 
 		if (!tableColumn.getResizable())
 			return;
 
-		width += spacing;
+		if (needsSpacing) width += spacing;
 
 		if (isOnlyAdjustLarger) {
 			width = Math.max(width, tableColumn.getPreferredWidth());
 		}
 
-		columnSizes.put(tableColumn, new Integer(tableColumn.getWidth()));
+		columnSizes.put(tableColumn, tableColumn.getWidth());
 
 		setColumnWidth(tableColumn, width);
 	}
@@ -234,7 +241,7 @@ public class TableColumnAdjuster implements PropertyChangeListener, TableModelLi
 
 		if (width != null) {
 			table.getTableHeader().setResizingColumn(tableColumn);
-			tableColumn.setWidth(width.intValue());
+			tableColumn.setWidth(width);
 		}
 	}
 
@@ -295,7 +302,8 @@ public class TableColumnAdjuster implements PropertyChangeListener, TableModelLi
 
 				if (tableColumn.getResizable()) {
 					int width = getCellDataWidth(row, column);
-					updateTableColumn(column, width);
+					boolean needsSpacing = getNeedsSpacing(column);
+					updateTableColumn(column, width, needsSpacing);
 				}
 			}
 
@@ -348,11 +356,11 @@ public class TableColumnAdjuster implements PropertyChangeListener, TableModelLi
 			if (isSelectedColumn) {
 				int[] columns = table.getSelectedColumns();
 
-				for (int i = 0; i < columns.length; i++) {
+				for (int column : columns) {
 					if (isAdjust)
-						adjustColumn(columns[i]);
+						adjustColumn(column);
 					else
-						restoreColumn(columns[i]);
+						restoreColumn(column);
 				}
 			} else {
 				if (isAdjust)

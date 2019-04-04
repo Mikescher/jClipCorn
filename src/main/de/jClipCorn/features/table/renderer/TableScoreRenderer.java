@@ -14,4 +14,8 @@ public class TableScoreRenderer extends TableRenderer {
 		setIcon(((CCUserScore)value).getIcon());
     }
 
+	@Override
+	public boolean getNeedsExtraSpacing() {
+		return false; // unnecessary for icon-only columns
+	}
 }

@@ -60,7 +60,7 @@ public class CCProperties {
 	
 	private static CCProperties mainInstance = null;
 	
-	private Object _fileLock = new Object();
+	private final Object _fileLock = new Object();
 	private List<CCProperty<Object>> propertylist = new Vector<>();
 
 	public CCBoolProperty                                   PROP_ADD_MOVIE_RELATIVE_AUTO;
@@ -175,6 +175,7 @@ public class CCProperties {
 	public CCPIntProperty                                   PROP_MIN_DRIVEMAP_RESCAN_TIME;
 	public CCBoolProperty                                   PROP_STATBAR_DRIVESCAN;
 	public CCBoolProperty                                   PROP_MAINFRAME_SHOW_VIEWCOUNT;
+	public CCBoolProperty                                   PROP_DRIVEMAP_REMOUNT_NETDRIVES;
 
 	public boolean ARG_READONLY = false;
 	
@@ -330,7 +331,8 @@ public class CCProperties {
 		PROP_SERIES_PREVIEWFRAME_HEIGHT         = new CCPIntProperty(NONVISIBLE,            this,   "PROP_SERIES_PREVIEWFRAME_HEIGHT",          22);
 		PROP_ANILIST_PREFERRED_TITLE_LANG       = new CCEnumProperty<>(NONVISIBLE,          this,   "PROP_ANILIST_PREFERRED_TITLE_LANG",        AniListTitleLang.PREFERRED,         AniListTitleLang.getWrapper());
 		PROP_DISABLE_SSL_VERIFY                 = new CCBoolProperty(NONVISIBLE,            this,   "PROP_DISABLE_SSL_VERIFY",                  false);
-		PROP_MIN_DRIVEMAP_RESCAN_TIME           = new CCPIntProperty(NONVISIBLE,            this,   "MIN_DRIVEMAP_RESCAN_TIME",                 30*1000);
+		PROP_MIN_DRIVEMAP_RESCAN_TIME           = new CCPIntProperty(NONVISIBLE,            this,   "PROP_MIN_DRIVEMAP_RESCAN_TIME",            30*1000);
+		PROP_DRIVEMAP_REMOUNT_NETDRIVES         = new CCBoolProperty(NONVISIBLE,            this,   "PROP_DRIVEMAP_REMOUNT_NETDRIVES",          false);
 
 		PROP_ADD_MOVIE_RELATIVE_AUTO            = new CCBoolProperty(CAT_PATHSYNTAX,        this,   "PROP_ADD_MOVIE_RELATIVE_AUTO",             true);
 		PROP_PATHSYNTAX_SELF                    = new CCBoolProperty(CAT_PATHSYNTAX,        this,   "PROP_PATHSYNTAX_SELF",                     true);
@@ -494,13 +496,13 @@ public class CCProperties {
 		return cat + 1;
 	}
 
-	private void interpreteArgs(String args[]) {
-		for (int i = 0; i < args.length; i++) {
-			for (int j = 0; j < readOnlyArgs.length; j++) {
-				if (args[i].equalsIgnoreCase(readOnlyArgs[j])) {
+	private void interpreteArgs(String[] args) {
+		for (String arg : args) {
+			for (String readOnlyArg : readOnlyArgs) {
+				if (arg.equalsIgnoreCase(readOnlyArg)) {
 					ARG_READONLY = true;
 
-					CCLog.addDebug("ReadOnly Mode activated (" + args[i] + ")"); //$NON-NLS-1$ //$NON-NLS-2$
+					CCLog.addDebug("ReadOnly Mode activated (" + arg + ")"); //$NON-NLS-1$ //$NON-NLS-2$
 				}
 			}
 		}

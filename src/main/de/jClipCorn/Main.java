@@ -218,3 +218,4 @@ public class Main {
 //TODO Allow multiple MovieLang's per element
 //TODO auto get languages from files
 
+//TODO warn on close if there are un-watched errors

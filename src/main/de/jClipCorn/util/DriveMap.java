@@ -19,7 +19,9 @@ import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.datatypes.Tuple3;
+import de.jClipCorn.util.datatypes.Tuple4;
 import de.jClipCorn.util.helper.ApplicationHelper;
+import de.jClipCorn.util.helper.ProcessHelper;
 import de.jClipCorn.util.helper.RegExHelper;
 import de.jClipCorn.util.stream.CCStreams;
 
@@ -146,6 +148,11 @@ public class DriveMap {
 			}
 		}
 
+		if (ApplicationHelper.isWindows() && CCProperties.getInstance().PROP_DRIVEMAP_REMOUNT_NETDRIVES.getValue())
+		{
+			autoMountWinNetDrives(threadDriveMap, threadDriveLabelToLetterMap, threadDriveUNCToLetterMap);
+		}
+
 		synchronized (_scanLock) {
 			driveMap              = threadDriveMap;
 			driveLabelToLetterMap = threadDriveLabelToLetterMap;
@@ -192,6 +199,11 @@ public class DriveMap {
 				}
 			}
 
+			if (ApplicationHelper.isWindows() && CCProperties.getInstance().PROP_DRIVEMAP_REMOUNT_NETDRIVES.getValue())
+			{
+				autoMountWinNetDrives(threadDriveMap, threadDriveLabelToLetterMap, threadDriveUNCToLetterMap);
+			}
+
 			synchronized (_scanLock) {
 				driveMap.putAll(threadDriveMap);
 				driveLabelToLetterMap.putAll(threadDriveLabelToLetterMap);
@@ -206,6 +218,42 @@ public class DriveMap {
 			is_rescanning = false;
 
 			triggerOnChanged();
+		}
+	}
+
+	@SuppressWarnings("nls")
+	private static void autoMountWinNetDrives(Map<Character, Tuple<String, String>> driveMap, Map<String, Character> driveLabelToLetterMap, Map<String, Character> driveUNCToLetterMap)
+	{
+		try
+		{
+			for (Tuple4<String, String, String, String> d : ApplicationHelper.getNetUse())
+			{
+				char letter = d.Item2.charAt(0);
+				String net = d.Item3;
+
+				if (driveMap.containsKey(letter)) continue;
+				if (!new File(net).exists()) continue;
+
+				Tuple3<Integer, String, String> ex = ProcessHelper.winExec("net", "use", d.Item2, net);
+				if (ex.Item1 != 0)
+				{
+					CCLog.addWarning(LocaleBundle.getFormattedString("LogMessage.RemountFailed", d.Item2, net), new Exception(ex.Item3));
+					continue;
+				}
+
+				File root = new File(d.Item2);
+				String drive = getDriveName(root);
+
+				driveMap.put(letter, Tuple.Create(drive, net));
+				driveLabelToLetterMap.put(cleanDriveName(drive), letter);
+				driveUNCToLetterMap.put(net.toLowerCase(), letter);
+
+				CCLog.addInformation(LocaleBundle.getFormattedString("LogMessage.MountSuccess", d.Item2, net, drive));
+			}
+		}
+		catch (Exception e)
+		{
+			CCLog.addError(e);
 		}
 	}
 

@@ -47,4 +47,10 @@ public final class Str {
 		return new String(Base64.decodeBase64(v), UTF8);
 	}
 
+	public static String safeSubstring(String s, int start, int len)
+	{
+		if (start > s.length()) return Str.Empty;
+
+		return s.substring(start, Math.min(s.length(), start + len));
+	}
 }

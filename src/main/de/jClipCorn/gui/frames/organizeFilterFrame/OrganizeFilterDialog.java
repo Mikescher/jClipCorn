@@ -26,7 +26,6 @@ import de.jClipCorn.gui.frames.customFilterEditDialog.CustomFilterEditDialog;
 import de.jClipCorn.gui.mainFrame.filterTree.CustomFilterList;
 import de.jClipCorn.gui.mainFrame.filterTree.CustomFilterObject;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.gui.resources.CachedResourceLoader;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.features.table.filter.customFilter.operators.CustomAndOperator;
 import de.jClipCorn.util.listener.FinishListener;

@@ -45,7 +45,6 @@ import com.jgoodies.forms.layout.RowSpec;
 import de.jClipCorn.gui.guiComponents.DefaultReadOnlyTableModel;
 import de.jClipCorn.gui.guiComponents.VerticalScrollPaneSynchronizer;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.gui.resources.CachedResourceLoader;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.SimpleFileUtils;

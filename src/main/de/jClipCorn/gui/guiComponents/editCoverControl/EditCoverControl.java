@@ -26,7 +26,6 @@ import de.jClipCorn.gui.frames.findCoverFrame.FindCoverDialog;
 import de.jClipCorn.gui.guiComponents.CoverLabel;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.features.log.CCLog;
-import de.jClipCorn.gui.resources.CachedResourceLoader;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.features.online.metadata.ParseResultHandler;
 import de.jClipCorn.util.formatter.PathFormatter;

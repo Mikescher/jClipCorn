@@ -49,7 +49,6 @@ import de.jClipCorn.gui.guiComponents.StringDisplayConverter;
 import de.jClipCorn.gui.guiComponents.jCheckBoxList.CBListModel.CBFilter;
 import de.jClipCorn.gui.guiComponents.jCheckBoxList.JCheckBoxList;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.gui.resources.CachedResourceLoader;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.stream.CCStreams;

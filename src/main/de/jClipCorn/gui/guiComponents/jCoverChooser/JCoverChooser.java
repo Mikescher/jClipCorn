@@ -21,7 +21,6 @@ import javax.swing.event.ListSelectionListener;
 import de.jClipCorn.database.databaseElement.ICCCoveredElement;
 import de.jClipCorn.gui.frames.coverPreviewFrame.CoverPreviewFrame;
 import de.jClipCorn.features.log.CCLog;
-import de.jClipCorn.gui.resources.CachedResourceLoader;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.datatypes.Tuple;

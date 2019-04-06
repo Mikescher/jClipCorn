@@ -1,7 +1,6 @@
 package de.jClipCorn.database.databaseElement.columnTypes;
 
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.gui.resources.CachedResourceLoader;
 import de.jClipCorn.gui.resources.MultiSizeIconRef;
 
 import javax.swing.*;

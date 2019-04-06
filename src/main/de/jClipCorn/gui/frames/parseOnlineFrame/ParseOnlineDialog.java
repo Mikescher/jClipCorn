@@ -43,7 +43,6 @@ import de.jClipCorn.gui.guiComponents.ReadableSpinner;
 import de.jClipCorn.gui.guiComponents.ReadableTextField;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.features.log.CCLog;
-import de.jClipCorn.gui.resources.CachedResourceLoader;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.features.online.OnlineSearchType;
 import de.jClipCorn.features.online.metadata.Metadataparser;

@@ -13,7 +13,6 @@ import javax.swing.JFrame;
 import de.jClipCorn.database.databaseElement.ICCCoveredElement;
 import de.jClipCorn.gui.guiComponents.ScalablePane;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.gui.resources.CachedResourceLoader;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.helper.ImageUtilities;
 

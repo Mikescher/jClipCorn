@@ -7,7 +7,6 @@ import javax.swing.Icon;
 
 import de.jClipCorn.database.util.CCOnlineRefTypeHelper;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.gui.resources.CachedResourceLoader;
 import de.jClipCorn.gui.resources.MultiSizeIconRef;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.gui.resources.reftypes.IconRef;

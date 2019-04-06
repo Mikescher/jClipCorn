@@ -31,7 +31,6 @@ import de.jClipCorn.features.databaseErrors.DatabaseValidator;
 import de.jClipCorn.gui.mainFrame.MainFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.features.log.CCLog;
-import de.jClipCorn.gui.resources.CachedResourceLoader;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.datatypes.CountAppendix;
 import de.jClipCorn.util.helper.DialogHelper;

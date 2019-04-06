@@ -30,7 +30,6 @@ import de.jClipCorn.gui.guiComponents.jSimpleTree.SimpleTreeObject;
 import de.jClipCorn.gui.guiComponents.jSimpleTree.SimpleTreeObject.SimpleTreeEvent;
 import de.jClipCorn.gui.guiComponents.jSimpleTree.SimpletreeActionMode;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.gui.resources.CachedResourceLoader;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.gui.resources.reftypes.IconRef;
 import de.jClipCorn.properties.CCProperties;

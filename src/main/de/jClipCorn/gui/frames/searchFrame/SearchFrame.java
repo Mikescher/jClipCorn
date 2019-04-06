@@ -26,7 +26,6 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCSingleOnlineReference
 import de.jClipCorn.gui.frames.previewMovieFrame.PreviewMovieFrame;
 import de.jClipCorn.gui.frames.previewSeriesFrame.PreviewSeriesFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.gui.resources.CachedResourceLoader;
 import de.jClipCorn.gui.resources.Resources;
 
 public class SearchFrame extends JFrame {

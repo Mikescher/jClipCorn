@@ -13,7 +13,6 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 import de.jClipCorn.database.databaseElement.CCMovie;
-import de.jClipCorn.gui.resources.CachedResourceLoader;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.helper.SimpleFileUtils;
 import com.jgoodies.forms.layout.ColumnSpec;

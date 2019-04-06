@@ -36,7 +36,6 @@ import de.jClipCorn.gui.guiComponents.jSimpleTree.JSimpleTree;
 import de.jClipCorn.gui.guiComponents.jSimpleTree.SimpleTreeNode;
 import de.jClipCorn.gui.guiComponents.jSimpleTree.SimpleTreeRenderer;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.gui.resources.CachedResourceLoader;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.adapter.TreeExpansionAdapter;
 import de.jClipCorn.util.datetime.CCDate;

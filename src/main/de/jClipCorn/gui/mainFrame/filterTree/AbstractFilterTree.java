@@ -18,7 +18,6 @@ import de.jClipCorn.gui.guiComponents.jSimpleTree.JSimpleTree;
 import de.jClipCorn.gui.guiComponents.jSimpleTree.SimpleTreeObject;
 import de.jClipCorn.gui.guiComponents.jSimpleTree.SimpleTreeObject.SimpleTreeEvent;
 import de.jClipCorn.gui.guiComponents.jSimpleTree.SimpleTreeRenderer;
-import de.jClipCorn.gui.resources.CachedResourceLoader;
 import de.jClipCorn.gui.resources.MultiSizeIconRef;
 import de.jClipCorn.gui.resources.reftypes.IconRef;
 import de.jClipCorn.util.lambda.Func1to0;

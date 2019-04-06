@@ -2,7 +2,6 @@ package de.jClipCorn.gui.resources;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
-import java.util.Map.Entry;
 
 import de.jClipCorn.Globals;
 import de.jClipCorn.features.log.CCLog;
@@ -376,7 +375,25 @@ public class Resources {
 				CCStreams.iterate(resources).count(r -> r.getKey().Item2.isImage())
 		)); //$NON-NLS-1$
 	}
-	
+
+	@SuppressWarnings("unused")
+	private static void dumpInfo() {
+		StringBuilder stroutbuilder = new StringBuilder();
+		for (ResourceRef r : CCStreams.iterate(resources.values()).autosortByProperty(p -> p.ident))
+		{
+			stroutbuilder
+					.append(r.ident)
+					.append('\t')
+					.append(r.id)
+					.append('\t')
+					.append(r.type)
+					.append('\t')
+					.append(CCStreams.iterate(r.getDirectDependencies()).stringjoin(d -> d.id.toString(), ";"))
+					.append("\r\n");
+		}
+		System.out.println(stroutbuilder.toString());
+	}
+
 	private static MultiSizeIconRef registerMultisizeIcon(String s) {
 		SingleIconRef i16 = register16x16Icon(s);
 		SingleIconRef i32 = register32x32Icon(s);

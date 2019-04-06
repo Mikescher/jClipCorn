@@ -53,7 +53,6 @@ import com.jgoodies.forms.layout.RowSpec;
 import de.jClipCorn.gui.guiComponents.CoverLabel;
 import de.jClipCorn.gui.guiComponents.SimpleDoubleBufferStrategy;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.gui.resources.CachedResourceLoader;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.helper.ImageUtilities;
 import de.jClipCorn.util.listener.ImageCropperResultListener;

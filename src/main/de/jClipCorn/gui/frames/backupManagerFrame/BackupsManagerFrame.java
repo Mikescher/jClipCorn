@@ -30,7 +30,6 @@ import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.features.backupManager.BackupManager;
 import de.jClipCorn.features.backupManager.CCBackup;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.gui.resources.CachedResourceLoader;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.datetime.CCDate;

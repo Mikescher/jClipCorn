@@ -6,7 +6,6 @@ import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 
-import de.jClipCorn.gui.resources.CachedResourceLoader;
 import de.jClipCorn.features.table.filter.AbstractCustomFilter;
 
 public class CustomFilterEditTreeRenderer extends DefaultTreeCellRenderer {

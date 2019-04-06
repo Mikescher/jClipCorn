@@ -2,7 +2,6 @@ package de.jClipCorn.features.log;
 
 import javax.swing.ImageIcon;
 
-import de.jClipCorn.gui.resources.CachedResourceLoader;
 import de.jClipCorn.gui.resources.Resources;
 
 public enum CCLogType {

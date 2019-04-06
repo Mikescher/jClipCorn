@@ -1,7 +1,6 @@
 package de.jClipCorn.features.table.renderer;
 
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
-import de.jClipCorn.gui.resources.CachedResourceLoader;
 import de.jClipCorn.gui.resources.Resources;
 
 public class TableTitleRenderer extends TableRenderer {

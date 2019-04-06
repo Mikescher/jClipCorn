@@ -26,4 +26,9 @@ public class JCCSimpleTableCellRenderer<TData> extends TableRenderer {
 		setText((text == null) ? ("") : (text.invoke(el)));
 		setIcon((icon == null) ? (null) : (icon.invoke(el)));
 	}
+
+	@Override
+	public boolean getNeedsExtraSpacing() {
+		return true; // default for text columns
+	}
 }

@@ -2,6 +2,7 @@ package de.jClipCorn.gui.resources.reftypes;
 
 import de.jClipCorn.gui.resources.ResourceRefType;
 
+import java.util.List;
 import java.util.UUID;
 
 public abstract class ResourceRef {
@@ -16,4 +17,6 @@ public abstract class ResourceRef {
 	}
 
 	public abstract void preload();
+
+	public abstract List<ResourceRef> getDirectDependencies();
 }

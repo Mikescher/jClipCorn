@@ -5,6 +5,7 @@ import de.jClipCorn.gui.resources.ResourceRefType;
 
 import javax.swing.*;
 import java.awt.image.BufferedImage;
+import java.util.*;
 
 public class SingleIconRef extends IconRef {
 	public final SingleImageRef img;
@@ -18,6 +19,11 @@ public class SingleIconRef extends IconRef {
 	public void preload() {
 		img.preload();
 		CachedResourceLoader.getOrLoad(this);
+	}
+
+	@Override
+	public List<ResourceRef> getDirectDependencies() {
+		return Collections.singletonList(img);
 	}
 
 	@Override

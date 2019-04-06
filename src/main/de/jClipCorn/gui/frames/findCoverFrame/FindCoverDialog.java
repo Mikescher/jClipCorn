@@ -19,7 +19,6 @@ import javax.swing.SwingUtilities;
 import de.jClipCorn.database.databaseElement.columnTypes.CCDBElementTyp;
 import de.jClipCorn.gui.guiComponents.ScalablePane;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.gui.resources.CachedResourceLoader;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.features.online.cover.CoverImageParser;
 import de.jClipCorn.features.online.metadata.ParseResultHandler;

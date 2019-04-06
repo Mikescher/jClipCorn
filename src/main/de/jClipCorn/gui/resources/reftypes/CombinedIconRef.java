@@ -6,12 +6,14 @@ import de.jClipCorn.util.stream.CCStreams;
 
 import javax.swing.*;
 import java.awt.image.BufferedImage;
+import java.util.Collections;
+import java.util.List;
 
 public class CombinedIconRef extends IconRef {
 	public final CombinedImageRef inner_img;
 
 	public CombinedIconRef(CombinedImageRef _inner) {
-		super("combinedicon://" + CCStreams.iterate(_inner.layers).stringjoin(l -> l.path, "|"), ResourceRefType.ICON_OTHER_COMBINED); //$NON-NLS-1$
+		super("combinedicon://" + CCStreams.iterate(_inner.layers).stringjoin(l -> l.path, "|"), ResourceRefType.ICON_OTHER_COMBINED); //$NON-NLS-1$ //$NON-NLS-2$
 		inner_img = _inner;
 	}
 
@@ -19,6 +21,11 @@ public class CombinedIconRef extends IconRef {
 	public void preload() {
 		inner_img.preload();
 		CachedResourceLoader.getOrLoad(this);
+	}
+
+	@Override
+	public List<ResourceRef> getDirectDependencies() {
+		return Collections.singletonList(inner_img);
 	}
 
 	@Override

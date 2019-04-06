@@ -7,7 +7,6 @@ import java.awt.image.BufferedImage;
 import javax.swing.ImageIcon;
 
 import de.jClipCorn.database.util.iterators.TagsIterator;
-import de.jClipCorn.gui.resources.CachedResourceLoader;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.stream.CCStream;
 

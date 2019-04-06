@@ -22,7 +22,6 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.features.log.CCLogChangedListener;
 import de.jClipCorn.features.log.CCLogType;
-import de.jClipCorn.gui.resources.CachedResourceLoader;
 import de.jClipCorn.gui.resources.Resources;
 
 public class LogFrame extends JFrame implements CCLogChangedListener{ 

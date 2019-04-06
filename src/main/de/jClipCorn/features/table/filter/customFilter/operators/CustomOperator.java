@@ -9,7 +9,6 @@ import de.jClipCorn.features.table.filter.AbstractCustomFilter;
 import de.jClipCorn.features.table.filter.filterConfig.CustomFilterConfig;
 import de.jClipCorn.features.table.filter.filterSerialization.FilterSerializationConfig;
 import de.jClipCorn.gui.resources.reftypes.IconRef;
-import de.jClipCorn.gui.resources.reftypes.SingleIconRef;
 import de.jClipCorn.util.stream.CCStream;
 import de.jClipCorn.util.stream.CCStreams;
 

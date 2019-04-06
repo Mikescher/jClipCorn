@@ -23,7 +23,6 @@ import de.jClipCorn.gui.mainFrame.clipToolbar.ClipToolbar;
 import de.jClipCorn.gui.guiComponents.ToolbarConfigPanel;
 import de.jClipCorn.gui.guiComponents.dndList.DnDList;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.gui.resources.CachedResourceLoader;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.properties.property.CCToolbarProperty;
 

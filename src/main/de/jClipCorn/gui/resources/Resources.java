@@ -121,42 +121,42 @@ public class Resources {
 	
 	
 	// #############################################  <TABLE>  ###############################################
-	public final static IconRef ICN_TABLE_SERIES 			= register16x16Icon("/icons/table/series.png");
-	public final static IconRef ICN_TABLE_MOVIE 			= register16x16Icon("/icons/table/movie.png");
-	
-	public final static IconRef ICN_TABLE_VIEWED_FALSE 		= registerOtherIcon("/icons/table/viewed_0.png");
-	public final static IconRef ICN_TABLE_VIEWED_TRUE  		= registerOtherIcon("/icons/table/viewed_1.png");
-	public final static IconRef ICN_TABLE_VIEWED_LATER 		= registerOtherIcon("/icons/table/viewed_2.png");
-	public final static IconRef ICN_TABLE_VIEWED_NEVER 		= registerOtherIcon("/icons/table/viewed_3.png");
-	public final static IconRef ICN_TABLE_VIEWED_PARTIAL	= registerOtherIcon("/icons/table/viewed_4.png");
-	public final static IconRef ICN_TABLE_VIEWED_AGAIN		= registerOtherIcon("/icons/table/viewed_5.png");
+	public final static IconRef ICN_TABLE_SERIES 			= register16x16Icon("/icons/table/type/series.png");
+	public final static IconRef ICN_TABLE_MOVIE 			= register16x16Icon("/icons/table/type/movie.png");
 
-	public final static IconRef ICN_TABLE_VIEWED_TRUE_CTR_00		= registerCombinedIcon("/icons/table/viewed_1.png", "/icons/table/counter_00.png");
-	public final static IconRef ICN_TABLE_VIEWED_TRUE_CTR_01		= registerCombinedIcon("/icons/table/viewed_1.png", "/icons/table/counter_01.png");
-	public final static IconRef ICN_TABLE_VIEWED_TRUE_CTR_02		= registerCombinedIcon("/icons/table/viewed_1.png", "/icons/table/counter_02.png");
-	public final static IconRef ICN_TABLE_VIEWED_TRUE_CTR_03		= registerCombinedIcon("/icons/table/viewed_1.png", "/icons/table/counter_03.png");
-	public final static IconRef ICN_TABLE_VIEWED_TRUE_CTR_04		= registerCombinedIcon("/icons/table/viewed_1.png", "/icons/table/counter_04.png");
-	public final static IconRef ICN_TABLE_VIEWED_TRUE_CTR_05		= registerCombinedIcon("/icons/table/viewed_1.png", "/icons/table/counter_05.png");
-	public final static IconRef ICN_TABLE_VIEWED_TRUE_CTR_06		= registerCombinedIcon("/icons/table/viewed_1.png", "/icons/table/counter_06.png");
-	public final static IconRef ICN_TABLE_VIEWED_TRUE_CTR_07		= registerCombinedIcon("/icons/table/viewed_1.png", "/icons/table/counter_07.png");
-	public final static IconRef ICN_TABLE_VIEWED_TRUE_CTR_08		= registerCombinedIcon("/icons/table/viewed_1.png", "/icons/table/counter_08.png");
-	public final static IconRef ICN_TABLE_VIEWED_TRUE_CTR_09		= registerCombinedIcon("/icons/table/viewed_1.png", "/icons/table/counter_09.png");
-	public final static IconRef ICN_TABLE_VIEWED_TRUE_CTR_10		= registerCombinedIcon("/icons/table/viewed_1.png", "/icons/table/counter_10.png");
-	public final static IconRef ICN_TABLE_VIEWED_TRUE_CTR_11		= registerCombinedIcon("/icons/table/viewed_1.png", "/icons/table/counter_11.png");
-	public final static IconRef ICN_TABLE_VIEWED_TRUE_CTR_12		= registerCombinedIcon("/icons/table/viewed_1.png", "/icons/table/counter_12.png");
-	public final static IconRef ICN_TABLE_VIEWED_TRUE_CTR_13		= registerCombinedIcon("/icons/table/viewed_1.png", "/icons/table/counter_13.png");
-	public final static IconRef ICN_TABLE_VIEWED_TRUE_CTR_14		= registerCombinedIcon("/icons/table/viewed_1.png", "/icons/table/counter_14.png");
-	public final static IconRef ICN_TABLE_VIEWED_TRUE_CTR_15		= registerCombinedIcon("/icons/table/viewed_1.png", "/icons/table/counter_15.png");
-	public final static IconRef ICN_TABLE_VIEWED_TRUE_CTR_16		= registerCombinedIcon("/icons/table/viewed_1.png", "/icons/table/counter_16.png");
-	public final static IconRef ICN_TABLE_VIEWED_TRUE_CTR_17		= registerCombinedIcon("/icons/table/viewed_1.png", "/icons/table/counter_17.png");
-	public final static IconRef ICN_TABLE_VIEWED_TRUE_CTR_18		= registerCombinedIcon("/icons/table/viewed_1.png", "/icons/table/counter_18.png");
-	public final static IconRef ICN_TABLE_VIEWED_TRUE_CTR_19		= registerCombinedIcon("/icons/table/viewed_1.png", "/icons/table/counter_19.png");
-	public final static IconRef ICN_TABLE_VIEWED_TRUE_CTR_20		= registerCombinedIcon("/icons/table/viewed_1.png", "/icons/table/counter_20.png");
-	public final static IconRef ICN_TABLE_VIEWED_TRUE_CTR_21		= registerCombinedIcon("/icons/table/viewed_1.png", "/icons/table/counter_21.png");
-	public final static IconRef ICN_TABLE_VIEWED_TRUE_CTR_22		= registerCombinedIcon("/icons/table/viewed_1.png", "/icons/table/counter_22.png");
-	public final static IconRef ICN_TABLE_VIEWED_TRUE_CTR_23		= registerCombinedIcon("/icons/table/viewed_1.png", "/icons/table/counter_23.png");
-	public final static IconRef ICN_TABLE_VIEWED_TRUE_CTR_24		= registerCombinedIcon("/icons/table/viewed_1.png", "/icons/table/counter_24.png");
-	public final static IconRef ICN_TABLE_VIEWED_TRUE_CTR_MORE		= registerCombinedIcon("/icons/table/viewed_1.png", "/icons/table/counter_dot.png");
+	public final static IconRef ICN_TABLE_VIEWED_FALSE 		= registerOtherIcon("/icons/table/viewed/viewed_0.png");
+	public final static IconRef ICN_TABLE_VIEWED_TRUE  		= registerOtherIcon("/icons/table/viewed/viewed_1.png");
+	public final static IconRef ICN_TABLE_VIEWED_LATER 		= registerOtherIcon("/icons/table/viewed/viewed_2.png");
+	public final static IconRef ICN_TABLE_VIEWED_NEVER 		= registerOtherIcon("/icons/table/viewed/viewed_3.png");
+	public final static IconRef ICN_TABLE_VIEWED_PARTIAL	= registerOtherIcon("/icons/table/viewed/viewed_4.png");
+	public final static IconRef ICN_TABLE_VIEWED_AGAIN		= registerOtherIcon("/icons/table/viewed/viewed_5.png");
+
+	public final static IconRef ICN_TABLE_VIEWED_TRUE_CTR_00		= registerCombinedIcon("/icons/table/viewed/viewed_1.png", "/icons/table/viewed/counter_00.png");
+	public final static IconRef ICN_TABLE_VIEWED_TRUE_CTR_01		= registerCombinedIcon("/icons/table/viewed/viewed_1.png", "/icons/table/viewed/counter_01.png");
+	public final static IconRef ICN_TABLE_VIEWED_TRUE_CTR_02		= registerCombinedIcon("/icons/table/viewed/viewed_1.png", "/icons/table/viewed/counter_02.png");
+	public final static IconRef ICN_TABLE_VIEWED_TRUE_CTR_03		= registerCombinedIcon("/icons/table/viewed/viewed_1.png", "/icons/table/viewed/counter_03.png");
+	public final static IconRef ICN_TABLE_VIEWED_TRUE_CTR_04		= registerCombinedIcon("/icons/table/viewed/viewed_1.png", "/icons/table/viewed/counter_04.png");
+	public final static IconRef ICN_TABLE_VIEWED_TRUE_CTR_05		= registerCombinedIcon("/icons/table/viewed/viewed_1.png", "/icons/table/viewed/counter_05.png");
+	public final static IconRef ICN_TABLE_VIEWED_TRUE_CTR_06		= registerCombinedIcon("/icons/table/viewed/viewed_1.png", "/icons/table/viewed/counter_06.png");
+	public final static IconRef ICN_TABLE_VIEWED_TRUE_CTR_07		= registerCombinedIcon("/icons/table/viewed/viewed_1.png", "/icons/table/viewed/counter_07.png");
+	public final static IconRef ICN_TABLE_VIEWED_TRUE_CTR_08		= registerCombinedIcon("/icons/table/viewed/viewed_1.png", "/icons/table/viewed/counter_08.png");
+	public final static IconRef ICN_TABLE_VIEWED_TRUE_CTR_09		= registerCombinedIcon("/icons/table/viewed/viewed_1.png", "/icons/table/viewed/counter_09.png");
+	public final static IconRef ICN_TABLE_VIEWED_TRUE_CTR_10		= registerCombinedIcon("/icons/table/viewed/viewed_1.png", "/icons/table/viewed/counter_10.png");
+	public final static IconRef ICN_TABLE_VIEWED_TRUE_CTR_11		= registerCombinedIcon("/icons/table/viewed/viewed_1.png", "/icons/table/viewed/counter_11.png");
+	public final static IconRef ICN_TABLE_VIEWED_TRUE_CTR_12		= registerCombinedIcon("/icons/table/viewed/viewed_1.png", "/icons/table/viewed/counter_12.png");
+	public final static IconRef ICN_TABLE_VIEWED_TRUE_CTR_13		= registerCombinedIcon("/icons/table/viewed/viewed_1.png", "/icons/table/viewed/counter_13.png");
+	public final static IconRef ICN_TABLE_VIEWED_TRUE_CTR_14		= registerCombinedIcon("/icons/table/viewed/viewed_1.png", "/icons/table/viewed/counter_14.png");
+	public final static IconRef ICN_TABLE_VIEWED_TRUE_CTR_15		= registerCombinedIcon("/icons/table/viewed/viewed_1.png", "/icons/table/viewed/counter_15.png");
+	public final static IconRef ICN_TABLE_VIEWED_TRUE_CTR_16		= registerCombinedIcon("/icons/table/viewed/viewed_1.png", "/icons/table/viewed/counter_16.png");
+	public final static IconRef ICN_TABLE_VIEWED_TRUE_CTR_17		= registerCombinedIcon("/icons/table/viewed/viewed_1.png", "/icons/table/viewed/counter_17.png");
+	public final static IconRef ICN_TABLE_VIEWED_TRUE_CTR_18		= registerCombinedIcon("/icons/table/viewed/viewed_1.png", "/icons/table/viewed/counter_18.png");
+	public final static IconRef ICN_TABLE_VIEWED_TRUE_CTR_19		= registerCombinedIcon("/icons/table/viewed/viewed_1.png", "/icons/table/viewed/counter_19.png");
+	public final static IconRef ICN_TABLE_VIEWED_TRUE_CTR_20		= registerCombinedIcon("/icons/table/viewed/viewed_1.png", "/icons/table/viewed/counter_20.png");
+	public final static IconRef ICN_TABLE_VIEWED_TRUE_CTR_21		= registerCombinedIcon("/icons/table/viewed/viewed_1.png", "/icons/table/viewed/counter_21.png");
+	public final static IconRef ICN_TABLE_VIEWED_TRUE_CTR_22		= registerCombinedIcon("/icons/table/viewed/viewed_1.png", "/icons/table/viewed/counter_22.png");
+	public final static IconRef ICN_TABLE_VIEWED_TRUE_CTR_23		= registerCombinedIcon("/icons/table/viewed/viewed_1.png", "/icons/table/viewed/counter_23.png");
+	public final static IconRef ICN_TABLE_VIEWED_TRUE_CTR_24		= registerCombinedIcon("/icons/table/viewed/viewed_1.png", "/icons/table/viewed/counter_24.png");
+	public final static IconRef ICN_TABLE_VIEWED_TRUE_CTR_MORE		= registerCombinedIcon("/icons/table/viewed/viewed_1.png", "/icons/table/viewed/counter_dot.png");
 
 	public final static IconRef[] ICN_TABLE_VIEWED_TRUE_CTR = new IconRef[]
 	{
@@ -167,32 +167,32 @@ public class Resources {
 		ICN_TABLE_VIEWED_TRUE_CTR_20, ICN_TABLE_VIEWED_TRUE_CTR_21, ICN_TABLE_VIEWED_TRUE_CTR_22, ICN_TABLE_VIEWED_TRUE_CTR_23, ICN_TABLE_VIEWED_TRUE_CTR_24
 	};
 
-	public final static IconRef ICN_TABLE_VIEWED_AGAIN_CTR_00		= registerCombinedIcon("/icons/table/viewed_5.png", "/icons/table/counter_00.png");
-	public final static IconRef ICN_TABLE_VIEWED_AGAIN_CTR_01		= registerCombinedIcon("/icons/table/viewed_5.png", "/icons/table/counter_01.png");
-	public final static IconRef ICN_TABLE_VIEWED_AGAIN_CTR_02		= registerCombinedIcon("/icons/table/viewed_5.png", "/icons/table/counter_02.png");
-	public final static IconRef ICN_TABLE_VIEWED_AGAIN_CTR_03		= registerCombinedIcon("/icons/table/viewed_5.png", "/icons/table/counter_03.png");
-	public final static IconRef ICN_TABLE_VIEWED_AGAIN_CTR_04		= registerCombinedIcon("/icons/table/viewed_5.png", "/icons/table/counter_04.png");
-	public final static IconRef ICN_TABLE_VIEWED_AGAIN_CTR_05		= registerCombinedIcon("/icons/table/viewed_5.png", "/icons/table/counter_05.png");
-	public final static IconRef ICN_TABLE_VIEWED_AGAIN_CTR_06		= registerCombinedIcon("/icons/table/viewed_5.png", "/icons/table/counter_06.png");
-	public final static IconRef ICN_TABLE_VIEWED_AGAIN_CTR_07		= registerCombinedIcon("/icons/table/viewed_5.png", "/icons/table/counter_07.png");
-	public final static IconRef ICN_TABLE_VIEWED_AGAIN_CTR_08		= registerCombinedIcon("/icons/table/viewed_5.png", "/icons/table/counter_08.png");
-	public final static IconRef ICN_TABLE_VIEWED_AGAIN_CTR_09		= registerCombinedIcon("/icons/table/viewed_5.png", "/icons/table/counter_09.png");
-	public final static IconRef ICN_TABLE_VIEWED_AGAIN_CTR_10		= registerCombinedIcon("/icons/table/viewed_5.png", "/icons/table/counter_10.png");
-	public final static IconRef ICN_TABLE_VIEWED_AGAIN_CTR_11		= registerCombinedIcon("/icons/table/viewed_5.png", "/icons/table/counter_11.png");
-	public final static IconRef ICN_TABLE_VIEWED_AGAIN_CTR_12		= registerCombinedIcon("/icons/table/viewed_5.png", "/icons/table/counter_12.png");
-	public final static IconRef ICN_TABLE_VIEWED_AGAIN_CTR_13		= registerCombinedIcon("/icons/table/viewed_5.png", "/icons/table/counter_13.png");
-	public final static IconRef ICN_TABLE_VIEWED_AGAIN_CTR_14		= registerCombinedIcon("/icons/table/viewed_5.png", "/icons/table/counter_14.png");
-	public final static IconRef ICN_TABLE_VIEWED_AGAIN_CTR_15		= registerCombinedIcon("/icons/table/viewed_5.png", "/icons/table/counter_15.png");
-	public final static IconRef ICN_TABLE_VIEWED_AGAIN_CTR_16		= registerCombinedIcon("/icons/table/viewed_5.png", "/icons/table/counter_16.png");
-	public final static IconRef ICN_TABLE_VIEWED_AGAIN_CTR_17		= registerCombinedIcon("/icons/table/viewed_5.png", "/icons/table/counter_17.png");
-	public final static IconRef ICN_TABLE_VIEWED_AGAIN_CTR_18		= registerCombinedIcon("/icons/table/viewed_5.png", "/icons/table/counter_18.png");
-	public final static IconRef ICN_TABLE_VIEWED_AGAIN_CTR_19		= registerCombinedIcon("/icons/table/viewed_5.png", "/icons/table/counter_19.png");
-	public final static IconRef ICN_TABLE_VIEWED_AGAIN_CTR_20		= registerCombinedIcon("/icons/table/viewed_5.png", "/icons/table/counter_20.png");
-	public final static IconRef ICN_TABLE_VIEWED_AGAIN_CTR_21		= registerCombinedIcon("/icons/table/viewed_5.png", "/icons/table/counter_21.png");
-	public final static IconRef ICN_TABLE_VIEWED_AGAIN_CTR_22		= registerCombinedIcon("/icons/table/viewed_5.png", "/icons/table/counter_22.png");
-	public final static IconRef ICN_TABLE_VIEWED_AGAIN_CTR_23		= registerCombinedIcon("/icons/table/viewed_5.png", "/icons/table/counter_23.png");
-	public final static IconRef ICN_TABLE_VIEWED_AGAIN_CTR_24		= registerCombinedIcon("/icons/table/viewed_5.png", "/icons/table/counter_24.png");
-	public final static IconRef ICN_TABLE_VIEWED_AGAIN_CTR_MORE		= registerCombinedIcon("/icons/table/viewed_5.png", "/icons/table/counter_dot.png");
+	public final static IconRef ICN_TABLE_VIEWED_AGAIN_CTR_00		= registerCombinedIcon("/icons/table/viewed/viewed_5.png", "/icons/table/viewed/counter_00.png");
+	public final static IconRef ICN_TABLE_VIEWED_AGAIN_CTR_01		= registerCombinedIcon("/icons/table/viewed/viewed_5.png", "/icons/table/viewed/counter_01.png");
+	public final static IconRef ICN_TABLE_VIEWED_AGAIN_CTR_02		= registerCombinedIcon("/icons/table/viewed/viewed_5.png", "/icons/table/viewed/counter_02.png");
+	public final static IconRef ICN_TABLE_VIEWED_AGAIN_CTR_03		= registerCombinedIcon("/icons/table/viewed/viewed_5.png", "/icons/table/viewed/counter_03.png");
+	public final static IconRef ICN_TABLE_VIEWED_AGAIN_CTR_04		= registerCombinedIcon("/icons/table/viewed/viewed_5.png", "/icons/table/viewed/counter_04.png");
+	public final static IconRef ICN_TABLE_VIEWED_AGAIN_CTR_05		= registerCombinedIcon("/icons/table/viewed/viewed_5.png", "/icons/table/viewed/counter_05.png");
+	public final static IconRef ICN_TABLE_VIEWED_AGAIN_CTR_06		= registerCombinedIcon("/icons/table/viewed/viewed_5.png", "/icons/table/viewed/counter_06.png");
+	public final static IconRef ICN_TABLE_VIEWED_AGAIN_CTR_07		= registerCombinedIcon("/icons/table/viewed/viewed_5.png", "/icons/table/viewed/counter_07.png");
+	public final static IconRef ICN_TABLE_VIEWED_AGAIN_CTR_08		= registerCombinedIcon("/icons/table/viewed/viewed_5.png", "/icons/table/viewed/counter_08.png");
+	public final static IconRef ICN_TABLE_VIEWED_AGAIN_CTR_09		= registerCombinedIcon("/icons/table/viewed/viewed_5.png", "/icons/table/viewed/counter_09.png");
+	public final static IconRef ICN_TABLE_VIEWED_AGAIN_CTR_10		= registerCombinedIcon("/icons/table/viewed/viewed_5.png", "/icons/table/viewed/counter_10.png");
+	public final static IconRef ICN_TABLE_VIEWED_AGAIN_CTR_11		= registerCombinedIcon("/icons/table/viewed/viewed_5.png", "/icons/table/viewed/counter_11.png");
+	public final static IconRef ICN_TABLE_VIEWED_AGAIN_CTR_12		= registerCombinedIcon("/icons/table/viewed/viewed_5.png", "/icons/table/viewed/counter_12.png");
+	public final static IconRef ICN_TABLE_VIEWED_AGAIN_CTR_13		= registerCombinedIcon("/icons/table/viewed/viewed_5.png", "/icons/table/viewed/counter_13.png");
+	public final static IconRef ICN_TABLE_VIEWED_AGAIN_CTR_14		= registerCombinedIcon("/icons/table/viewed/viewed_5.png", "/icons/table/viewed/counter_14.png");
+	public final static IconRef ICN_TABLE_VIEWED_AGAIN_CTR_15		= registerCombinedIcon("/icons/table/viewed/viewed_5.png", "/icons/table/viewed/counter_15.png");
+	public final static IconRef ICN_TABLE_VIEWED_AGAIN_CTR_16		= registerCombinedIcon("/icons/table/viewed/viewed_5.png", "/icons/table/viewed/counter_16.png");
+	public final static IconRef ICN_TABLE_VIEWED_AGAIN_CTR_17		= registerCombinedIcon("/icons/table/viewed/viewed_5.png", "/icons/table/viewed/counter_17.png");
+	public final static IconRef ICN_TABLE_VIEWED_AGAIN_CTR_18		= registerCombinedIcon("/icons/table/viewed/viewed_5.png", "/icons/table/viewed/counter_18.png");
+	public final static IconRef ICN_TABLE_VIEWED_AGAIN_CTR_19		= registerCombinedIcon("/icons/table/viewed/viewed_5.png", "/icons/table/viewed/counter_19.png");
+	public final static IconRef ICN_TABLE_VIEWED_AGAIN_CTR_20		= registerCombinedIcon("/icons/table/viewed/viewed_5.png", "/icons/table/viewed/counter_20.png");
+	public final static IconRef ICN_TABLE_VIEWED_AGAIN_CTR_21		= registerCombinedIcon("/icons/table/viewed/viewed_5.png", "/icons/table/viewed/counter_21.png");
+	public final static IconRef ICN_TABLE_VIEWED_AGAIN_CTR_22		= registerCombinedIcon("/icons/table/viewed/viewed_5.png", "/icons/table/viewed/counter_22.png");
+	public final static IconRef ICN_TABLE_VIEWED_AGAIN_CTR_23		= registerCombinedIcon("/icons/table/viewed/viewed_5.png", "/icons/table/viewed/counter_23.png");
+	public final static IconRef ICN_TABLE_VIEWED_AGAIN_CTR_24		= registerCombinedIcon("/icons/table/viewed/viewed_5.png", "/icons/table/viewed/counter_24.png");
+	public final static IconRef ICN_TABLE_VIEWED_AGAIN_CTR_MORE		= registerCombinedIcon("/icons/table/viewed/viewed_5.png", "/icons/table/viewed/counter_dot.png");
 
 	public final static IconRef[] ICN_TABLE_VIEWED_AGAIN_CTR = new IconRef[]
 	{
@@ -203,71 +203,107 @@ public class Resources {
 		ICN_TABLE_VIEWED_AGAIN_CTR_20, ICN_TABLE_VIEWED_AGAIN_CTR_21, ICN_TABLE_VIEWED_AGAIN_CTR_22, ICN_TABLE_VIEWED_AGAIN_CTR_23, ICN_TABLE_VIEWED_AGAIN_CTR_24
 	};
 
-	public final static IconRef ICN_TABLE_QUALITY_0 		= register16x16Icon("/icons/table/quality_0.png");
-	public final static IconRef ICN_TABLE_QUALITY_1 		= register16x16Icon("/icons/table/quality_1.png");
-	public final static IconRef ICN_TABLE_QUALITY_2 		= register16x16Icon("/icons/table/quality_2.png");
-	public final static IconRef ICN_TABLE_QUALITY_3 		= register16x16Icon("/icons/table/quality_3.png");
-	public final static IconRef ICN_TABLE_QUALITY_4 		= register16x16Icon("/icons/table/quality_4.png");
+	public final static IconRef ICN_TABLE_QUALITY_0 		= register16x16Icon("/icons/table/quality/quality_0.png");
+	public final static IconRef ICN_TABLE_QUALITY_1 		= register16x16Icon("/icons/table/quality/quality_1.png");
+	public final static IconRef ICN_TABLE_QUALITY_2 		= register16x16Icon("/icons/table/quality/quality_2.png");
+	public final static IconRef ICN_TABLE_QUALITY_3 		= register16x16Icon("/icons/table/quality/quality_3.png");
+	public final static IconRef ICN_TABLE_QUALITY_4 		= register16x16Icon("/icons/table/quality/quality_4.png");
 	
-	public final static IconRef ICN_TABLE_ONLINESCORE_0 	= register16x16Icon("/icons/table/stars_0.png");
-	public final static IconRef ICN_TABLE_ONLINESCORE_1 	= register16x16Icon("/icons/table/stars_1.png");
-	public final static IconRef ICN_TABLE_ONLINESCORE_2  	= register16x16Icon("/icons/table/stars_2.png");
-	public final static IconRef ICN_TABLE_ONLINESCORE_3 	= register16x16Icon("/icons/table/stars_3.png");
-	public final static IconRef ICN_TABLE_ONLINESCORE_4 	= register16x16Icon("/icons/table/stars_4.png");
-	public final static IconRef ICN_TABLE_ONLINESCORE_5 	= register16x16Icon("/icons/table/stars_5.png");
-	public final static IconRef ICN_TABLE_ONLINESCORE_6 	= register16x16Icon("/icons/table/stars_6.png");
-	public final static IconRef ICN_TABLE_ONLINESCORE_7 	= register16x16Icon("/icons/table/stars_7.png");
-	public final static IconRef ICN_TABLE_ONLINESCORE_8  	= register16x16Icon("/icons/table/stars_8.png");
-	public final static IconRef ICN_TABLE_ONLINESCORE_9 	= register16x16Icon("/icons/table/stars_9.png");
-	public final static IconRef ICN_TABLE_ONLINESCORE_10 	= register16x16Icon("/icons/table/stars_10.png");
+	public final static IconRef ICN_TABLE_ONLINESCORE_0 	= register16x16Icon("/icons/table/stars/stars_0.png");
+	public final static IconRef ICN_TABLE_ONLINESCORE_1 	= register16x16Icon("/icons/table/stars/stars_1.png");
+	public final static IconRef ICN_TABLE_ONLINESCORE_2  	= register16x16Icon("/icons/table/stars/stars_2.png");
+	public final static IconRef ICN_TABLE_ONLINESCORE_3 	= register16x16Icon("/icons/table/stars/stars_3.png");
+	public final static IconRef ICN_TABLE_ONLINESCORE_4 	= register16x16Icon("/icons/table/stars/stars_4.png");
+	public final static IconRef ICN_TABLE_ONLINESCORE_5 	= register16x16Icon("/icons/table/stars/stars_5.png");
+	public final static IconRef ICN_TABLE_ONLINESCORE_6 	= register16x16Icon("/icons/table/stars/stars_6.png");
+	public final static IconRef ICN_TABLE_ONLINESCORE_7 	= register16x16Icon("/icons/table/stars/stars_7.png");
+	public final static IconRef ICN_TABLE_ONLINESCORE_8  	= register16x16Icon("/icons/table/stars/stars_8.png");
+	public final static IconRef ICN_TABLE_ONLINESCORE_9 	= register16x16Icon("/icons/table/stars/stars_9.png");
+	public final static IconRef ICN_TABLE_ONLINESCORE_10 	= register16x16Icon("/icons/table/stars/stars_10.png");
 	
-	public final static IconRef ICN_TABLE_FSK_0 			= register16x16Icon("/icons/table/fsk_0.png");
-	public final static IconRef ICN_TABLE_FSK_1 			= register16x16Icon("/icons/table/fsk_1.png");
-	public final static IconRef ICN_TABLE_FSK_2 			= register16x16Icon("/icons/table/fsk_2.png");
-	public final static IconRef ICN_TABLE_FSK_3 			= register16x16Icon("/icons/table/fsk_3.png");
-	public final static IconRef ICN_TABLE_FSK_4 			= register16x16Icon("/icons/table/fsk_4.png");
+	public final static IconRef ICN_TABLE_FSK_0 			= register16x16Icon("/icons/table/fsk/fsk_0.png");
+	public final static IconRef ICN_TABLE_FSK_1 			= register16x16Icon("/icons/table/fsk/fsk_1.png");
+	public final static IconRef ICN_TABLE_FSK_2 			= register16x16Icon("/icons/table/fsk/fsk_2.png");
+	public final static IconRef ICN_TABLE_FSK_3 			= register16x16Icon("/icons/table/fsk/fsk_3.png");
+	public final static IconRef ICN_TABLE_FSK_4 			= register16x16Icon("/icons/table/fsk/fsk_4.png");
+
+	public final static IconRef ICN_TABLE_LANGUAGE_0_0 		= register16x16Icon("/icons/table/language/language_0.png");
+	public final static IconRef ICN_TABLE_LANGUAGE_0_1 		= registerCombined16x16Icon("/icons/table/language/language_0_A.png", "/icons/table/language/language_1_B.png");
+	public final static IconRef ICN_TABLE_LANGUAGE_0_2 		= registerCombined16x16Icon("/icons/table/language/language_0_A.png", "/icons/table/language/language_2_B.png");
+	public final static IconRef ICN_TABLE_LANGUAGE_0_3 		= registerCombined16x16Icon("/icons/table/language/language_0_A.png", "/icons/table/language/language_3_B.png");
+	public final static IconRef ICN_TABLE_LANGUAGE_0_4 		= registerCombined16x16Icon("/icons/table/language/language_0_A.png", "/icons/table/language/language_4_B.png");
+
+	public final static IconRef ICN_TABLE_LANGUAGE_1_0 		= registerCombined16x16Icon("/icons/table/language/language_0_A.png", "/icons/table/language/language_1_B.png");
+	public final static IconRef ICN_TABLE_LANGUAGE_1_1 		= register16x16Icon("/icons/table/language/language_1.png");
+	public final static IconRef ICN_TABLE_LANGUAGE_1_2 		= registerCombined16x16Icon("/icons/table/language/language_1_A.png", "/icons/table/language/language_2_B.png");
+	public final static IconRef ICN_TABLE_LANGUAGE_1_3 		= registerCombined16x16Icon("/icons/table/language/language_1_A.png", "/icons/table/language/language_3_B.png");
+	public final static IconRef ICN_TABLE_LANGUAGE_1_4 		= registerCombined16x16Icon("/icons/table/language/language_1_A.png", "/icons/table/language/language_4_B.png");
+
+	public final static IconRef ICN_TABLE_LANGUAGE_2_0 		= registerCombined16x16Icon("/icons/table/language/language_0_A.png", "/icons/table/language/language_2_B.png");
+	public final static IconRef ICN_TABLE_LANGUAGE_2_1 		= registerCombined16x16Icon("/icons/table/language/language_1_A.png", "/icons/table/language/language_2_B.png");
+	public final static IconRef ICN_TABLE_LANGUAGE_2_2 		= register16x16Icon("/icons/table/language/language_2.png");
+	public final static IconRef ICN_TABLE_LANGUAGE_2_3 		= registerCombined16x16Icon("/icons/table/language/language_3_A.png", "/icons/table/language/language_2_B.png");
+	public final static IconRef ICN_TABLE_LANGUAGE_2_4		= registerCombined16x16Icon("/icons/table/language/language_4_A.png", "/icons/table/language/language_2_B.png");
+
+	public final static IconRef ICN_TABLE_LANGUAGE_3_0 		= registerCombined16x16Icon("/icons/table/language/language_0_A.png", "/icons/table/language/language_3_B.png");
+	public final static IconRef ICN_TABLE_LANGUAGE_3_1 		= registerCombined16x16Icon("/icons/table/language/language_1_A.png", "/icons/table/language/language_3_B.png");
+	public final static IconRef ICN_TABLE_LANGUAGE_3_2 		= registerCombined16x16Icon("/icons/table/language/language_3_A.png", "/icons/table/language/language_2_B.png");
+	public final static IconRef ICN_TABLE_LANGUAGE_3_3 		= register16x16Icon("/icons/table/language/language_3.png");
+	public final static IconRef ICN_TABLE_LANGUAGE_3_4 		= registerCombined16x16Icon("/icons/table/language/language_4_A.png", "/icons/table/language/language_3_B.png");
+
+	public final static IconRef ICN_TABLE_LANGUAGE_4_0 		= registerCombined16x16Icon("/icons/table/language/language_0_A.png", "/icons/table/language/language_4_B.png");
+	public final static IconRef ICN_TABLE_LANGUAGE_4_1 		= registerCombined16x16Icon("/icons/table/language/language_1_A.png", "/icons/table/language/language_4_B.png");
+	public final static IconRef ICN_TABLE_LANGUAGE_4_2		= registerCombined16x16Icon("/icons/table/language/language_4_A.png", "/icons/table/language/language_2_B.png");
+	public final static IconRef ICN_TABLE_LANGUAGE_4_3 		= registerCombined16x16Icon("/icons/table/language/language_4_A.png", "/icons/table/language/language_3_B.png");
+	public final static IconRef ICN_TABLE_LANGUAGE_4_4 		= register16x16Icon("/icons/table/language/language_4.png");
+
+	public final static IconRef[][] ICN_TABLE_LANGUAGE = new IconRef[][]
+	{
+		new IconRef[]{ ICN_TABLE_LANGUAGE_0_0, ICN_TABLE_LANGUAGE_0_1, ICN_TABLE_LANGUAGE_0_2, ICN_TABLE_LANGUAGE_0_3, ICN_TABLE_LANGUAGE_0_4 },
+		new IconRef[]{ ICN_TABLE_LANGUAGE_1_0, ICN_TABLE_LANGUAGE_1_1, ICN_TABLE_LANGUAGE_1_2, ICN_TABLE_LANGUAGE_1_3, ICN_TABLE_LANGUAGE_1_4 },
+		new IconRef[]{ ICN_TABLE_LANGUAGE_2_0, ICN_TABLE_LANGUAGE_2_1, ICN_TABLE_LANGUAGE_2_2, ICN_TABLE_LANGUAGE_2_3, ICN_TABLE_LANGUAGE_2_4 },
+		new IconRef[]{ ICN_TABLE_LANGUAGE_3_0, ICN_TABLE_LANGUAGE_3_1, ICN_TABLE_LANGUAGE_3_2, ICN_TABLE_LANGUAGE_3_3, ICN_TABLE_LANGUAGE_3_4 },
+		new IconRef[]{ ICN_TABLE_LANGUAGE_4_0, ICN_TABLE_LANGUAGE_4_1, ICN_TABLE_LANGUAGE_4_2, ICN_TABLE_LANGUAGE_4_3, ICN_TABLE_LANGUAGE_4_4 },
+	};
+
+	public final static IconRef ICN_TABLE_LANGUAGE_NONE		= register16x16Icon("/icons/table/language/language_none.png");
+	public final static IconRef ICN_TABLE_LANGUAGE_MORE		= register16x16Icon("/icons/table/language/language_more.png");
+
+	public final static MultiSizeIconRef ICN_TABLE_SCORE_0 	= registerMultisizeIcon("/icons/table/score/poo.png");
+	public final static MultiSizeIconRef ICN_TABLE_SCORE_1 	= registerMultisizeIcon("/icons/table/score/emotion_sick.png");
+	public final static MultiSizeIconRef ICN_TABLE_SCORE_2 	= registerMultisizeIcon("/icons/table/score/thumb_down.png");
+	public final static MultiSizeIconRef ICN_TABLE_SCORE_3 	= registerMultisizeIcon("/icons/table/score/thumb_up.png");
+	public final static MultiSizeIconRef ICN_TABLE_SCORE_4 	= registerMultisizeIcon("/icons/table/score/heart.png");
+	public final static MultiSizeIconRef ICN_TABLE_SCORE_5 	= registerMultisizeIcon("/icons/table/score/award_star_gold_3.png");
 	
-	public final static IconRef ICN_TABLE_LANGUAGE_0 		= register16x16Icon("/icons/table/language_0.png");
-	public final static IconRef ICN_TABLE_LANGUAGE_1 		= register16x16Icon("/icons/table/language_1.png");
-	public final static IconRef ICN_TABLE_LANGUAGE_2 		= register16x16Icon("/icons/table/language_2.png");
-	public final static IconRef ICN_TABLE_LANGUAGE_3 		= register16x16Icon("/icons/table/language_3.png");
-	public final static IconRef ICN_TABLE_LANGUAGE_4 		= register16x16Icon("/icons/table/language_4.png");
+	public final static IconRef ICN_TABLE_FORMAT_0 			= register16x16Icon("/icons/table/format/ext0.png");
+	public final static IconRef ICN_TABLE_FORMAT_1 			= register16x16Icon("/icons/table/format/ext1.png");
+	public final static IconRef ICN_TABLE_FORMAT_2 			= register16x16Icon("/icons/table/format/ext2.png");
+	public final static IconRef ICN_TABLE_FORMAT_3 			= register16x16Icon("/icons/table/format/ext3.png");
+	public final static IconRef ICN_TABLE_FORMAT_4 			= register16x16Icon("/icons/table/format/ext4.png");
+	public final static IconRef ICN_TABLE_FORMAT_5 			= register16x16Icon("/icons/table/format/ext0.png");
+	public final static IconRef ICN_TABLE_FORMAT_6 			= register16x16Icon("/icons/table/format/ext6.png");
+	public final static IconRef ICN_TABLE_FORMAT_7 			= register16x16Icon("/icons/table/format/ext7.png");
+	public final static IconRef ICN_TABLE_FORMAT_8 			= register16x16Icon("/icons/table/format/ext8.png");
 	
-	public final static MultiSizeIconRef ICN_TABLE_SCORE_0 		= registerMultisizeIcon("/icons/table/poo.png");
-	public final static MultiSizeIconRef ICN_TABLE_SCORE_1 		= registerMultisizeIcon("/icons/table/emotion_sick.png");
-	public final static MultiSizeIconRef ICN_TABLE_SCORE_2 		= registerMultisizeIcon("/icons/table/thumb_down.png");
-	public final static MultiSizeIconRef ICN_TABLE_SCORE_3 		= registerMultisizeIcon("/icons/table/thumb_up.png");
-	public final static MultiSizeIconRef ICN_TABLE_SCORE_4 		= registerMultisizeIcon("/icons/table/heart.png");
-	public final static MultiSizeIconRef ICN_TABLE_SCORE_5 		= registerMultisizeIcon("/icons/table/award_star_gold_3.png");
-	
-	public final static IconRef ICN_TABLE_FORMAT_0 			= register16x16Icon("/icons/table/ext0.png");
-	public final static IconRef ICN_TABLE_FORMAT_1 			= register16x16Icon("/icons/table/ext1.png");
-	public final static IconRef ICN_TABLE_FORMAT_2 			= register16x16Icon("/icons/table/ext2.png");
-	public final static IconRef ICN_TABLE_FORMAT_3 			= register16x16Icon("/icons/table/ext3.png");
-	public final static IconRef ICN_TABLE_FORMAT_4 			= register16x16Icon("/icons/table/ext4.png");
-	public final static IconRef ICN_TABLE_FORMAT_5 			= register16x16Icon("/icons/table/ext0.png");
-	public final static IconRef ICN_TABLE_FORMAT_6 			= register16x16Icon("/icons/table/ext6.png");
-	public final static IconRef ICN_TABLE_FORMAT_7 			= register16x16Icon("/icons/table/ext7.png");
-	public final static IconRef ICN_TABLE_FORMAT_8 			= register16x16Icon("/icons/table/ext8.png");
-	
-	public final static MultiSizeIconRef ICN_TABLE_TAG_0_0 		= registerMultisizeIcon("/icons/tags/tag_0_off.png");
-	public final static MultiSizeIconRef ICN_TABLE_TAG_0_1 		= registerMultisizeIcon("/icons/tags/tag_0_on.png");
-	public final static MultiSizeIconRef ICN_TABLE_TAG_1_0 		= registerMultisizeIcon("/icons/tags/tag_1_off.png");
-	public final static MultiSizeIconRef ICN_TABLE_TAG_1_1 		= registerMultisizeIcon("/icons/tags/tag_1_on.png");
-	public final static MultiSizeIconRef ICN_TABLE_TAG_2_0 		= registerMultisizeIcon("/icons/tags/tag_2_off.png");
-	public final static MultiSizeIconRef ICN_TABLE_TAG_2_1 		= registerMultisizeIcon("/icons/tags/tag_2_on.png");
-	public final static MultiSizeIconRef ICN_TABLE_TAG_3_0 		= registerMultisizeIcon("/icons/tags/tag_3_off.png");
-	public final static MultiSizeIconRef ICN_TABLE_TAG_3_1 		= registerMultisizeIcon("/icons/tags/tag_3_on.png");
-	public final static MultiSizeIconRef ICN_TABLE_TAG_4_0 		= registerMultisizeIcon("/icons/tags/tag_4_off.png");
-	public final static MultiSizeIconRef ICN_TABLE_TAG_4_1 		= registerMultisizeIcon("/icons/tags/tag_4_on.png");
-	public final static MultiSizeIconRef ICN_TABLE_TAG_5_0 		= registerMultisizeIcon("/icons/tags/tag_5_off.png");
-	public final static MultiSizeIconRef ICN_TABLE_TAG_5_1 		= registerMultisizeIcon("/icons/tags/tag_5_on.png");
-	public final static MultiSizeIconRef ICN_TABLE_TAG_6_0 		= registerMultisizeIcon("/icons/tags/tag_6_off.png");
-	public final static MultiSizeIconRef ICN_TABLE_TAG_6_1 		= registerMultisizeIcon("/icons/tags/tag_6_on.png");
-	public final static MultiSizeIconRef ICN_TABLE_TAG_7_0 		= registerMultisizeIcon("/icons/tags/tag_7_off.png");
-	public final static MultiSizeIconRef ICN_TABLE_TAG_7_1 		= registerMultisizeIcon("/icons/tags/tag_7_on.png");
-	public final static MultiSizeIconRef ICN_TABLE_TAG_8_0 		= registerMultisizeIcon("/icons/tags/tag_8_off.png");
-	public final static MultiSizeIconRef ICN_TABLE_TAG_8_1 		= registerMultisizeIcon("/icons/tags/tag_8_on.png");
+	public final static MultiSizeIconRef ICN_TABLE_TAG_0_0 	= registerMultisizeIcon("/icons/tags/tag_0_off.png");
+	public final static MultiSizeIconRef ICN_TABLE_TAG_0_1 	= registerMultisizeIcon("/icons/tags/tag_0_on.png");
+	public final static MultiSizeIconRef ICN_TABLE_TAG_1_0 	= registerMultisizeIcon("/icons/tags/tag_1_off.png");
+	public final static MultiSizeIconRef ICN_TABLE_TAG_1_1 	= registerMultisizeIcon("/icons/tags/tag_1_on.png");
+	public final static MultiSizeIconRef ICN_TABLE_TAG_2_0 	= registerMultisizeIcon("/icons/tags/tag_2_off.png");
+	public final static MultiSizeIconRef ICN_TABLE_TAG_2_1 	= registerMultisizeIcon("/icons/tags/tag_2_on.png");
+	public final static MultiSizeIconRef ICN_TABLE_TAG_3_0 	= registerMultisizeIcon("/icons/tags/tag_3_off.png");
+	public final static MultiSizeIconRef ICN_TABLE_TAG_3_1 	= registerMultisizeIcon("/icons/tags/tag_3_on.png");
+	public final static MultiSizeIconRef ICN_TABLE_TAG_4_0 	= registerMultisizeIcon("/icons/tags/tag_4_off.png");
+	public final static MultiSizeIconRef ICN_TABLE_TAG_4_1 	= registerMultisizeIcon("/icons/tags/tag_4_on.png");
+	public final static MultiSizeIconRef ICN_TABLE_TAG_5_0 	= registerMultisizeIcon("/icons/tags/tag_5_off.png");
+	public final static MultiSizeIconRef ICN_TABLE_TAG_5_1 	= registerMultisizeIcon("/icons/tags/tag_5_on.png");
+	public final static MultiSizeIconRef ICN_TABLE_TAG_6_0 	= registerMultisizeIcon("/icons/tags/tag_6_off.png");
+	public final static MultiSizeIconRef ICN_TABLE_TAG_6_1 	= registerMultisizeIcon("/icons/tags/tag_6_on.png");
+	public final static MultiSizeIconRef ICN_TABLE_TAG_7_0 	= registerMultisizeIcon("/icons/tags/tag_7_off.png");
+	public final static MultiSizeIconRef ICN_TABLE_TAG_7_1 	= registerMultisizeIcon("/icons/tags/tag_7_on.png");
+	public final static MultiSizeIconRef ICN_TABLE_TAG_8_0 	= registerMultisizeIcon("/icons/tags/tag_8_off.png");
+	public final static MultiSizeIconRef ICN_TABLE_TAG_8_1 	= registerMultisizeIcon("/icons/tags/tag_8_on.png");
 
 	// #############################################  </TABLE>  ##############################################
 
@@ -275,8 +311,8 @@ public class Resources {
 	// ############################################  <HISTORY>  ##############################################
 	public final static IconRef ICN_HISTORY_CHRONIK 		= register16x16Icon("/icons/toolbar/radiolocator.png");
 	public final static IconRef ICN_HISTORY_ELEMENT 		= register16x16Icon("/icons/history/document_index.png");
-	public final static IconRef ICN_HISTORY_MOVIES 			= register16x16Icon("/icons/table/movie.png");	
-	public final static IconRef ICN_HISTORY_SERIES 			= register16x16Icon("/icons/table/series.png");
+	public final static IconRef ICN_HISTORY_MOVIES 			= register16x16Icon("/icons/table/type/movie.png");
+	public final static IconRef ICN_HISTORY_SERIES 			= register16x16Icon("/icons/table/type/series.png");
 	// ############################################  </HISTORY>  #############################################
 	
 	
@@ -400,11 +436,13 @@ public class Resources {
 		
 		return new MultiSizeIconRef(i16, i32);
 	}
-	
+
+	private static String get16x16Filename(String s) {
+		return PathFormatter.getWithoutExtension(s) + "_16x16." + PathFormatter.getExtension(s);
+	}
+
 	private static SingleIconRef register16x16Icon(String s) {
-		s = PathFormatter.getWithoutExtension(s) + "_16x16." + PathFormatter.getExtension(s);
-		
-		return registerIcon(s, ResourceRefType.ICON_16);
+		return registerIcon(get16x16Filename(s), ResourceRefType.ICON_16);
 	}
 	
 	private static SingleIconRef register32x32Icon(String s) {
@@ -415,11 +453,15 @@ public class Resources {
 		return registerIcon(s, ResourceRefType.ICON_OTHER);
 	}
 
-	private static CombinedImageRef registerCombinedImage(String[] s) {
+	private static CombinedImageRef registerCombinedImage(String... s) {
 		return register(new CombinedImageRef(CCStreams.iterate(s).map(Resources::registerImage).toArray(new SingleImageRef[0])));
 	}
 
-	private static IconRef registerCombinedIcon(String... s) {
+	private static CombinedIconRef registerCombined16x16Icon(String... s) {
+		return register(new CombinedIconRef(registerCombinedImage(CCStreams.iterate(s).map(Resources::get16x16Filename).toArray(new String[0]))));
+	}
+
+	private static CombinedIconRef registerCombinedIcon(String... s) {
 		return register(new CombinedIconRef(registerCombinedImage(s)));
 	}
 	

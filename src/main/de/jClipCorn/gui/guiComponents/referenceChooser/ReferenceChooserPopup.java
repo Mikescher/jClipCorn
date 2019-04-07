@@ -4,8 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowFocusListener;
 import java.util.ArrayList;
@@ -75,22 +73,12 @@ public class ReferenceChooserPopup extends JDialog implements WindowFocusListene
 		pnllBottom.setLayout(new BorderLayout(0, 0));
 
 		btnAdd = new JButton("+"); //$NON-NLS-1$
-		btnAdd.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onAdd();
-			}
-		});
+		btnAdd.addActionListener(e -> onAdd());
 		btnAdd.setMargin(new java.awt.Insets(1, 2, 1, 2));
 		pnllBottom.add(btnAdd, BorderLayout.EAST);
 
 		btnOK = new JButton(LocaleBundle.getString("UIGeneric.btnOK.text")); //$NON-NLS-1$
-		btnOK.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onOK();
-			}
-		});
+		btnOK.addActionListener(e -> onOK());
 		btnOK.setFont(new Font(btnOK.getFont().getFontName(), Font.BOLD, btnOK.getFont().getSize()));
 		pnllBottom.add(btnOK, BorderLayout.WEST);
 		

@@ -206,7 +206,8 @@ public class Statements {
 		ih.addPreparedField(CCDatabase.TAB_EPISODES_COLUMN_PART_1);            // 11   TAB_EPISODES_COLUMN_PART_1
 		ih.addPreparedField(CCDatabase.TAB_EPISODES_COLUMN_TAGS);              // 12   TAB_EPISODES_COLUMN_TAGS
 		ih.addPreparedField(CCDatabase.TAB_EPISODES_COLUMN_ADDDATE);           // 13   TAB_EPISODES_COLUMN_ADDDATE
-		
+		ih.addPreparedField(CCDatabase.TAB_EPISODES_COLUMN_LANGUAGE);          // 14   TAB_EPISODES_COLUMN_LANGUAGE
+
 		addEmptyEpisodeTabStatement = ih.prepare(d);
 	}
 	
@@ -256,17 +257,16 @@ public class Statements {
 		SQLUpdateHelper uh = new SQLUpdateHelper(CCDatabase.TAB_MAIN, DoubleString.createPrepared(CCDatabase.TAB_MAIN_COLUMN_LOCALID));
 		
 		uh.addPreparedField(CCDatabase.TAB_MAIN_COLUMN_NAME);           // 01     TAB_MAIN_COLUMN_NAME
-		uh.addPreparedField(CCDatabase.TAB_MAIN_COLUMN_LANGUAGE);       // 02     TAB_MAIN_COLUMN_LANGUAGE
-		uh.addPreparedField(CCDatabase.TAB_MAIN_COLUMN_GENRE);          // 03     TAB_MAIN_COLUMN_GENRE
-		uh.addPreparedField(CCDatabase.TAB_MAIN_COLUMN_ONLINESCORE);    // 04     TAB_MAIN_COLUMN_ONLINESCORE
-		uh.addPreparedField(CCDatabase.TAB_MAIN_COLUMN_FSK);            // 05     TAB_MAIN_COLUMN_FSK
-		uh.addPreparedField(CCDatabase.TAB_MAIN_COLUMN_ONLINEREF);      // 06     TAB_MAIN_COLUMN_ONLINEREF
-		uh.addPreparedField(CCDatabase.TAB_MAIN_COLUMN_GROUPS);         // 07     TAB_MAIN_COLUMN_GROUPS
-		uh.addPreparedField(CCDatabase.TAB_MAIN_COLUMN_SCORE);          // 08     TAB_MAIN_COLUMN_SCORE
-		uh.addPreparedField(CCDatabase.TAB_MAIN_COLUMN_COVER);          // 09     TAB_MAIN_COLUMN_COVER
-		uh.addPreparedField(CCDatabase.TAB_MAIN_COLUMN_TYPE);           // 10     TAB_MAIN_COLUMN_TYPE
-		uh.addPreparedField(CCDatabase.TAB_MAIN_COLUMN_SERIES_ID);      // 11     TAB_MAIN_COLUMN_SERIES_ID
-		uh.addPreparedField(CCDatabase.TAB_MAIN_COLUMN_TAGS);           // 12     TAB_MAIN_COLUMN_TAGS
+		uh.addPreparedField(CCDatabase.TAB_MAIN_COLUMN_GENRE);          // 02     TAB_MAIN_COLUMN_GENRE
+		uh.addPreparedField(CCDatabase.TAB_MAIN_COLUMN_ONLINESCORE);    // 03     TAB_MAIN_COLUMN_ONLINESCORE
+		uh.addPreparedField(CCDatabase.TAB_MAIN_COLUMN_FSK);            // 04     TAB_MAIN_COLUMN_FSK
+		uh.addPreparedField(CCDatabase.TAB_MAIN_COLUMN_ONLINEREF);      // 05     TAB_MAIN_COLUMN_ONLINEREF
+		uh.addPreparedField(CCDatabase.TAB_MAIN_COLUMN_GROUPS);         // 06     TAB_MAIN_COLUMN_GROUPS
+		uh.addPreparedField(CCDatabase.TAB_MAIN_COLUMN_SCORE);          // 07     TAB_MAIN_COLUMN_SCORE
+		uh.addPreparedField(CCDatabase.TAB_MAIN_COLUMN_COVER);          // 08     TAB_MAIN_COLUMN_COVER
+		uh.addPreparedField(CCDatabase.TAB_MAIN_COLUMN_TYPE);           // 09     TAB_MAIN_COLUMN_TYPE
+		uh.addPreparedField(CCDatabase.TAB_MAIN_COLUMN_SERIES_ID);      // 10     TAB_MAIN_COLUMN_SERIES_ID
+		uh.addPreparedField(CCDatabase.TAB_MAIN_COLUMN_TAGS);           // 11     TAB_MAIN_COLUMN_TAGS
 		
 		updateSeriesTabStatement = uh.prepare(d);
 	}
@@ -297,7 +297,8 @@ public class Statements {
 		uh.addPreparedField(CCDatabase.TAB_EPISODES_COLUMN_PART_1);           // TAB_EPISODES_COLUMN_PART_1
 		uh.addPreparedField(CCDatabase.TAB_EPISODES_COLUMN_TAGS);             // TAB_EPISODES_COLUMN_TAGS
 		uh.addPreparedField(CCDatabase.TAB_EPISODES_COLUMN_ADDDATE);          // TAB_EPISODES_COLUMN_ADDDATE
-		
+		uh.addPreparedField(CCDatabase.TAB_EPISODES_COLUMN_LANGUAGE);         // TAB_EPISODES_COLUMN_LANGUAGE
+
 		updateEpisodeTabStatement = uh.prepare(d);
 	}
 	

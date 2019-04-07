@@ -15,6 +15,7 @@ import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguage;
 import org.apache.commons.lang.StringUtils;
 
 import de.jClipCorn.database.CCMovieList;
@@ -146,7 +147,10 @@ public class SearchFrame extends JFrame {
 		
 		lsmdl.clear();
 		
-		for (CCMovie mov : movielist.iteratorMovies()) {
+		for (CCMovie mov : movielist.iteratorMovies())
+		{
+			boolean movFound = false;
+
 			if ((mov.getLocalID() + "").equals(searchString)) { //$NON-NLS-1$
 				addToList(mov);
 				continue;
@@ -165,36 +169,58 @@ public class SearchFrame extends JFrame {
 			for (CCSingleOnlineReference soref : mov.getOnlineReference()) {
 				if (StringUtils.equalsIgnoreCase(soref.type.asString(), searchString)) {
 					addToList(mov);
-					continue;
+					movFound = true;
+					break;
 				}
 				
 				if (StringUtils.equalsIgnoreCase(soref.type.getIdentifier(), searchString)) {
 					addToList(mov);
-					continue;
+					movFound = true;
+					break;
 				}
 
 				if (soref.toSerializationString().equals(searchString) || soref.id.equals(searchString)) {
 					addToList(mov);
-					continue;
+					movFound = true;
+					break;
 				}
 			}
+			if (movFound) continue;
 			
 			if (mov.getGroups().containsIgnoreCase(searchString)) {
 				addToList(mov);
 				continue;
 			}
-			
-			boolean movFound = false;
+
 			for (int i = 0; i < mov.getPartcount(); i++) {
 				if (StringUtils.containsIgnoreCase(mov.getAbsolutePart(i), searchString)) {
-					movFound = true;
 					addToList(mov);
+					movFound = true;
 					break;
 				}
 			}
-			if (movFound) {
+			if (movFound) continue;
+
+			for (CCDBLanguage lang : mov.getLanguage())
+			{
+				if (lang.asString().equalsIgnoreCase(searchString)) {
+					addToList(mov);
+					movFound = true;
+					break;
+				}
+				if (lang.getLongString().equalsIgnoreCase(searchString)) {
+					addToList(mov);
+					movFound = true;
+					break;
+				}
+			}
+			if (movFound) continue;
+
+			if (mov.getQuality().asString().equalsIgnoreCase(searchString)) {
+				addToList(mov);
 				continue;
 			}
+
 		}
 		
 		for (CCSeries ser : movielist.iteratorSeries()) {
@@ -203,16 +229,34 @@ public class SearchFrame extends JFrame {
 				
 				for (int j = 0; j < sea.getEpisodeCount(); j++) {
 					CCEpisode epi = sea.getEpisodeByArrayIndex(j);
+
+					boolean epiFound = false;
 					
 					if (StringUtils.containsIgnoreCase(epi.getTitle(), searchString)) {
 						addToList(epi);
 						continue;
 					}
-					
-					//if (StringUtils.containsIgnoreCase(epi.getAbsolutePart(), searchString)) {
-					//	addToList(epi);
-					//	continue;
-					//}
+
+
+					for (CCDBLanguage lang : epi.getLanguage())
+					{
+						if (lang.asString().equalsIgnoreCase(searchString)) {
+							addToList(epi);
+							epiFound = true;
+							break;
+						}
+						if (lang.getLongString().equalsIgnoreCase(searchString)) {
+							addToList(epi);
+							epiFound = true;
+							break;
+						}
+					}
+					if (epiFound) continue;
+
+					if (epi.getQuality().asString().equalsIgnoreCase(searchString)) {
+						addToList(epi);
+						continue;
+					}
 				}
 				
 				if (StringUtils.containsIgnoreCase(sea.getTitle(), searchString)) {

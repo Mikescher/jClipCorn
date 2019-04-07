@@ -43,7 +43,7 @@ public class ClipCornBaseTest {
 		CCMovieList ml = CCMovieList.createInMemory();
 		ml.connectForTests();
 		File filep = new File(SimpleFileUtils.getTempFilename("jxmlbkp"));
-		SimpleFileUtils.writeTextResource(filep, "/example_data_full.jxmlbkp", new ClipCornBaseTest().getClass());
+		SimpleFileUtils.writeTextResource(filep, "/example_data_full.jxmlbkp", ClipCornBaseTest.class);
 		ExportHelper.restoreDatabaseFromBackup(filep, ml);
 		filep.delete();
 		

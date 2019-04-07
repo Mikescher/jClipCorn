@@ -320,7 +320,7 @@ public class UpdateMetadataFrame extends JFrame {
 			}
 		}
 		
-		DialogHelper.showInformation(this, LocaleBundle.getString("Dialogs.MetadataUpdateSuccess_caption"), LocaleBundle.getFormattedString("Dialogs.MetadataUpdateSuccess", count)); //$NON-NLS-1$ //$NON-NLS-2$
+		DialogHelper.showDispatchInformation(this, LocaleBundle.getString("Dialogs.MetadataUpdateSuccess_caption"), LocaleBundle.getFormattedString("Dialogs.MetadataUpdateSuccess", count)); //$NON-NLS-1$ //$NON-NLS-2$
 
 		tableMain.forceDataChangedRedraw();
 	}
@@ -350,7 +350,7 @@ public class UpdateMetadataFrame extends JFrame {
 			}
 		}
 		
-		DialogHelper.showInformation(this, LocaleBundle.getString("Dialogs.MetadataUpdateSuccess_caption"), LocaleBundle.getFormattedString("Dialogs.MetadataUpdateSuccess", count)); //$NON-NLS-1$ //$NON-NLS-2$
+		DialogHelper.showDispatchInformation(this, LocaleBundle.getString("Dialogs.MetadataUpdateSuccess_caption"), LocaleBundle.getFormattedString("Dialogs.MetadataUpdateSuccess", count)); //$NON-NLS-1$ //$NON-NLS-2$
 		
 		tableMain.forceDataChangedRedraw();
 	}
@@ -386,7 +386,7 @@ public class UpdateMetadataFrame extends JFrame {
 			}
 		}
 		
-		DialogHelper.showInformation(this, LocaleBundle.getString("Dialogs.MetadataUpdateSuccess_caption"), LocaleBundle.getFormattedString("Dialogs.MetadataUpdateSuccess", count)); //$NON-NLS-1$ //$NON-NLS-2$
+		DialogHelper.showDispatchInformation(this, LocaleBundle.getString("Dialogs.MetadataUpdateSuccess_caption"), LocaleBundle.getFormattedString("Dialogs.MetadataUpdateSuccess", count)); //$NON-NLS-1$ //$NON-NLS-2$
 		
 		tableMain.forceDataChangedRedraw();
 	}

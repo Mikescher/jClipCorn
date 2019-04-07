@@ -19,19 +19,18 @@ import de.jClipCorn.util.helper.ByteUtilies;
 import de.jClipCorn.util.helper.ImageUtilities;
 
 public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, ICCCoveredElement {
-	private final int localID;                      // INTEGER
-	private final CCDBElementTyp typ;               // TINYINT
-	private String title;                           // LEN = 128
-	private CCDBLanguage language;                  // TINYINT
-	private CCGenreList genres;                     // BIGINT - unsigned
-	private CCOnlineScore onlinescore;              // TINYINT
-	private CCFSK fsk;                              // TINYINT
-	private CCUserScore score;                      // TINYINT
-	private String covername;                       // LEN = 256
-	private final int seriesID;                     // INTEGER
-	private CCOnlineReferenceList onlineReference;  // VARCHAR
-	private CCGroupList linkedGroups;               // VARCHAR
-	private CCTagList tags;							// SMALLINT
+	private final int localID;
+	private final CCDBElementTyp typ;
+	private String title;
+	private CCGenreList genres;
+	private CCOnlineScore onlinescore;
+	private CCFSK fsk;
+	private CCUserScore score;
+	private String covername;
+	private final int seriesID;
+	private CCOnlineReferenceList onlineReference;
+	private CCGroupList linkedGroups;
+	private CCTagList tags;
 	
 	protected final CCMovieList movielist;
 	protected boolean isUpdating = false;
@@ -50,7 +49,6 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 	
 	public void setDefaultValues(boolean updateDB) {
 		title           = ""; //$NON-NLS-1$
-		language        = CCDBLanguage.GERMAN;
 		genres          = CCGenreList.createEmpty();
 		onlinescore     = CCOnlineScore.STARS_0_0;
 		fsk             = CCFSK.RATING_0;
@@ -190,30 +188,6 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 	public String getCoverMD5() {
 		return LargeMD5Calculator.calcMD5(getCover());
 	}
-		
-	public CCDBLanguage getLanguage() {
-		return language;
-	}
-
-	public void setLanguage(int language) {
-		this.language = CCDBLanguage.getWrapper().find(language);
-		
-		if (this.language == null) {
-			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.ErroneousDatabaseValues", language)); //$NON-NLS-1$
-		}
-		
-		updateDB();
-	}
-
-	public void setLanguage(CCDBLanguage language) {
-		this.language = language;
-		
-		if (this.language == null) {
-			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.ErroneousDatabaseValues", language)); //$NON-NLS-1$
-		}
-		
-		updateDB();
-	}
 
 	public CCGenre getGenre(int idx) {
 		return genres.getGenre(idx);
@@ -329,7 +303,6 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 		e.setAttribute("localid",      localID + "");
 		e.setAttribute("typ",          typ.asInt() + "");
 		e.setAttribute("title",        title);
-		e.setAttribute("language",     language.asInt() + "");
 		e.setAttribute("genres",       genres.getAllGenres() + "");
 		e.setAttribute("onlinescore",  onlinescore.asInt() + "");
 		e.setAttribute("fsk",          fsk.asInt() + "");
@@ -359,9 +332,6 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 	public void parseFromXML(Element e, boolean resetAddDate, boolean resetViewed, boolean resetScore, boolean resetTags, boolean ignoreCoverData) throws CCFormatException {
 		if (e.getAttributeValue("title") != null)
 			setTitle(e.getAttributeValue("title"));
-		
-		if (e.getAttributeValue("language") != null)
-			setLanguage(Integer.parseInt(e.getAttributeValue("language")));
 		
 		if (e.getAttributeValue("genres") != null)
 			setGenres(Long.parseLong(e.getAttributeValue("genres")));

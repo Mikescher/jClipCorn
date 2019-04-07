@@ -49,7 +49,7 @@ public class DatabaseJSONExporter extends DatabaseTextExporter {
 					attributes.add("\t\t\"zyklusNummer\": " + mov.getZyklus().getNumber());
 				}
 				attributes.add("\t\t\"titel\": \"" + simpleEscape(mov.getTitle()) + "\"");
-				if (addLanguage) attributes.add("\t\t\"language\": \"" + mov.getLanguage().asString() + "\"");
+				if (addLanguage) attributes.add("\t\t\"languages\": [" + mov.getLanguage().iterate().stringjoin(l -> "\""+l.getLongString()+"\"", ", ") + "]");
 				if (addFormat) attributes.add("\t\t\"format\": \"" + mov.getFormat().asString() + "\"");
 				if (addQuality) attributes.add("\t\t\"quality\": \"" + mov.getQuality().asString() + "\"");
 				if (addYear) attributes.add("\t\t\"year\": " + mov.getYear());
@@ -62,12 +62,11 @@ public class DatabaseJSONExporter extends DatabaseTextExporter {
 				CCSeries ser = (CCSeries) ccd_el;
 				
 				builder.append("\t\t");
-				builder.append("\"titel\": \"" + simpleEscape(ser.getTitle()) + "\",");
+				builder.append("\"titel\": \"").append(simpleEscape(ser.getTitle())).append("\",");
 				builder.append(System.lineSeparator());
 				
 				if (addLanguage) {
 					builder.append("\t\t");
-					builder.append("\"language\": \"" + ser.getLanguage().asString() + "\",");
 					builder.append(System.lineSeparator());
 				}
 				
@@ -85,7 +84,7 @@ public class DatabaseJSONExporter extends DatabaseTextExporter {
 					builder.append(System.lineSeparator());
 					
 					builder.append("\t\t\t\t");
-					builder.append("\"titel\": \"" + simpleEscape(season.getTitle()) + "\",");
+					builder.append("\"titel\": \"").append(simpleEscape(season.getTitle())).append("\",");
 					builder.append(System.lineSeparator());
 
 					if (addYear) {
@@ -111,18 +110,12 @@ public class DatabaseJSONExporter extends DatabaseTextExporter {
 						
 						attributes.add("\t\t\t\t\t\t\"titel\": \"" + simpleEscape(episode.getTitle()) + "\"");
 
-						if (addFormat) 
-							attributes.add("\t\t\t\t\t\t\"format\": \"" + episode.getFormat().asString() + "\"");
+						if (addLanguage) attributes.add("\t\t\t\t\t\t\"languages\": [" + episode.getLanguage().iterate().stringjoin(l -> "\""+l.getLongString()+"\"", ", ") + "\"");
+						if (addFormat) attributes.add("\t\t\t\t\t\t\"format\": \"" + episode.getFormat().asString() + "\"");
+						if (addQuality) attributes.add("\t\t\t\t\t\t\"quality\": \"" + episode.getQuality().asString() + "\"");
+						if (addSize) attributes.add("\t\t\t\t\t\t\"size\": " + episode.getFilesize().getBytes());
+						if (addViewed) attributes.add("\t\t\t\t\t\t\"viewed\": " + (episode.isViewed() ? "true" : "false"));
 
-						if (addQuality) 
-							attributes.add("\t\t\t\t\t\t\"quality\": \"" + episode.getQuality().asString() + "\"");
-
-						if (addSize) 
-							attributes.add("\t\t\t\t\t\t\"size\": " + episode.getFilesize().getBytes());
-						
-						if (addViewed) 
-							attributes.add("\t\t\t\t\t\t\"viewed\": " + (episode.isViewed() ? "true" : "false"));
-						
 						builder.append(StringUtils.join(attributes, "," + System.lineSeparator()));
 						builder.append(System.lineSeparator());
 						

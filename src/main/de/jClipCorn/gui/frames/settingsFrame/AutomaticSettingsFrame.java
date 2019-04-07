@@ -108,7 +108,7 @@ public abstract class AutomaticSettingsFrame extends JFrame {
 			if (CCProperties.getInstance().ARG_READONLY) return;
 
 			if (! Main.DEBUG) {
-				DialogHelper.showInformation(AutomaticSettingsFrame.this, LocaleBundle.getString("Settingsframe.informationDlg.caption"), LocaleBundle.getString("Settingsframe.informationDlg.text")); //$NON-NLS-1$ //$NON-NLS-2$
+				DialogHelper.showDispatchInformation(AutomaticSettingsFrame.this, LocaleBundle.getString("Settingsframe.informationDlg.caption"), LocaleBundle.getString("Settingsframe.informationDlg.text")); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 
 			okValues();

@@ -1,9 +1,9 @@
 package de.jClipCorn.util.helper;
 
+import de.jClipCorn.features.log.CCLog;
 import java.lang.reflect.InvocationTargetException;
 
-import javax.swing.JProgressBar;
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 
 public class ThreadUtils {
 	public static boolean invokeAndWaitSafe(Runnable r) {
@@ -14,7 +14,19 @@ public class ThreadUtils {
 			return false;
 		}
 	}
-	
+
+	public static void invokeAndWaitConditional(Runnable r) {
+		if (! SwingUtilities.isEventDispatchThread()) {
+			try {
+				SwingUtilities.invokeAndWait(r);
+			} catch (InvocationTargetException | InterruptedException e) {
+				CCLog.addError(e);
+			}
+		} else {
+			r.run();
+		}
+	}
+
 	public static void setProgressbarAndWait(JProgressBar pbar, int val, int min, int max) {
 		invokeAndWaitSafe(() -> { pbar.setMinimum(min); pbar.setMaximum(max); pbar.setValue(val); });
 	}

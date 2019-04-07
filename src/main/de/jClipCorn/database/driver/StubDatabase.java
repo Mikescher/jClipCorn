@@ -37,10 +37,10 @@ public class StubDatabase extends GenericDatabase {
 	}
 
 	@Override
-	public String GetDBTypeName() {
-		return CCDatabaseDriver.STUB.asString();
+	public CCDatabaseDriver getDBType() {
+		return CCDatabaseDriver.STUB;
 	}
 
 	@Override
-	public boolean IsInMemory() {return true;}
+	public boolean isInMemory() {return true;}
 }

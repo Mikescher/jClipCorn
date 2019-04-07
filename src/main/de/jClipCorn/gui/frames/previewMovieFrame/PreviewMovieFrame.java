@@ -27,6 +27,7 @@ import de.jClipCorn.gui.guiComponents.CoverLabel;
 import de.jClipCorn.gui.guiComponents.OnlineRefButton;
 import de.jClipCorn.gui.guiComponents.ReadableTextField;
 import de.jClipCorn.gui.guiComponents.TagPanel;
+import de.jClipCorn.gui.guiComponents.language.LanguageDisplay;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.datetime.CCDateTime;
@@ -63,7 +64,7 @@ public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener 
 	private JLabel lblGenre;
 	private JLabel lblScore_1;
 	private JLabel lbl_Quality;
-	private JLabel lbl_Language;
+	private LanguageDisplay lbl_Language;
 	private JLabel lbl_Length;
 	private JLabel lbl_Added;
 	private JLabel lbl_FSK;
@@ -209,7 +210,7 @@ public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener 
 		lbl_Quality.setBounds(93, 317, 99, 16);
 		getContentPane().add(lbl_Quality);
 		
-		lbl_Language = new JLabel();
+		lbl_Language = new LanguageDisplay();
 		lbl_Language.setBounds(93, 342, 99, 16);
 		getContentPane().add(lbl_Language);
 		
@@ -388,8 +389,7 @@ public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener 
 		lbl_Quality.setIcon(movie.getQuality().getIcon());
 		lbl_Quality.setText(movie.getQuality().asString());
 		
-		lbl_Language.setIcon(movie.getLanguage().getIcon());
-		lbl_Language.setText(movie.getLanguage().asString());
+		lbl_Language.setValue(movie.getLanguage());
 		
 		lbl_Length.setText(TimeIntervallFormatter.formatPointed(movie.getLength()));
 		

@@ -6,12 +6,7 @@ import java.text.MessageFormat;
 import javax.swing.ImageIcon;
 
 import de.jClipCorn.database.databaseElement.CCEpisode;
-import de.jClipCorn.database.databaseElement.columnTypes.CCDateTimeList;
-import de.jClipCorn.database.databaseElement.columnTypes.CCFileFormat;
-import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguage;
-import de.jClipCorn.database.databaseElement.columnTypes.CCQuality;
-import de.jClipCorn.database.databaseElement.columnTypes.CCFileSize;
-import de.jClipCorn.database.databaseElement.columnTypes.CCTagList;
+import de.jClipCorn.database.databaseElement.columnTypes.*;
 import de.jClipCorn.gui.frames.previewSeriesFrame.PreviewSeriesFrame;
 import de.jClipCorn.gui.frames.watchHistoryFrame.WatchHistoryFrame;
 import de.jClipCorn.gui.resources.Resources;
@@ -48,8 +43,8 @@ public class WatchHistoryEpisodeElement extends WatchHistoryElement {
 	}
 
 	@Override
-	public CCDBLanguage getLanguage() {
-		return Episode.getSeries().getLanguage();
+	public CCDBLanguageList getLanguage() {
+		return Episode.getLanguage();
 	}
 
 	@Override

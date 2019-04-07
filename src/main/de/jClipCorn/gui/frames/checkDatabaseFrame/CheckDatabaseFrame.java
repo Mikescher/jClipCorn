@@ -193,9 +193,9 @@ public class CheckDatabaseFrame extends JFrame {
 			btnAutofix.setEnabled(true);
 
 			if (success) {
-				DialogHelper.showLocalInformation(CheckDatabaseFrame.this, "CheckDatabaseDialog.Autofix.dialogSuccessfull"); //$NON-NLS-1$
+				DialogHelper.showDispatchLocalInformation(CheckDatabaseFrame.this, "CheckDatabaseDialog.Autofix.dialogSuccessfull"); //$NON-NLS-1$
 			} else {
-				DialogHelper.showLocalInformation(CheckDatabaseFrame.this, "CheckDatabaseDialog.Autofix.dialogUnsuccessfull"); //$NON-NLS-1$
+				DialogHelper.showDispatchLocalInformation(CheckDatabaseFrame.this, "CheckDatabaseDialog.Autofix.dialogUnsuccessfull"); //$NON-NLS-1$
 			}
 		});
 	}
@@ -290,12 +290,12 @@ public class CheckDatabaseFrame extends JFrame {
 		List<DatabaseError> errlist = lsMain.getSelectedValuesList();
 		
 		if (errlist == null || errlist.isEmpty()) {
-			DialogHelper.showInformation(this, getTitle(), LocaleBundle.getString("CheckDatabaseDialog.fixSelectedMessage.NoSelection")); //$NON-NLS-1$
+			DialogHelper.showDispatchInformation(this, getTitle(), LocaleBundle.getString("CheckDatabaseDialog.fixSelectedMessage.NoSelection")); //$NON-NLS-1$
 			return;
 		}
 		
 		if (! DatabaseAutofixer.canFix(errorList, errlist)) {
-			DialogHelper.showInformation(this, getTitle(), LocaleBundle.getString("CheckDatabaseDialog.fixSelectedMessage.Unfixable")); //$NON-NLS-1$
+			DialogHelper.showDispatchInformation(this, getTitle(), LocaleBundle.getString("CheckDatabaseDialog.fixSelectedMessage.Unfixable")); //$NON-NLS-1$
 			return;
 		}
 		
@@ -309,9 +309,9 @@ public class CheckDatabaseFrame extends JFrame {
 		}
 		
 		if (hasFixedAll) {
-			DialogHelper.showInformation(this, getTitle(), LocaleBundle.getString("CheckDatabaseDialog.fixSelectedMessage.Fixed")); //$NON-NLS-1$
+			DialogHelper.showDispatchInformation(this, getTitle(), LocaleBundle.getString("CheckDatabaseDialog.fixSelectedMessage.Fixed")); //$NON-NLS-1$
 		} else {
-			DialogHelper.showInformation(this, getTitle(), LocaleBundle.getString("CheckDatabaseDialog.fixSelectedMessage.Failed")); //$NON-NLS-1$
+			DialogHelper.showDispatchInformation(this, getTitle(), LocaleBundle.getString("CheckDatabaseDialog.fixSelectedMessage.Failed")); //$NON-NLS-1$
 		}
 		
 		updateLists();

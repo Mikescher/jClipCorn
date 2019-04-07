@@ -117,7 +117,7 @@ public class ImportElementsFrame extends JFrame {
 				try {
 					onAddAll();
 				} catch (CCFormatException e) {
-					DialogHelper.showError(ImportElementsFrame.this, LocaleBundle.getString("Dialogs.GenericCaption.Error"), LocaleBundle.getString("LogMessage.FormatErrorInExport")); //$NON-NLS-1$ //$NON-NLS-2$
+					DialogHelper.showDispatchError(ImportElementsFrame.this, LocaleBundle.getString("Dialogs.GenericCaption.Error"), LocaleBundle.getString("LogMessage.FormatErrorInExport")); //$NON-NLS-1$ //$NON-NLS-2$
 					CCLog.addWarning(LocaleBundle.getString("LogMessage.FormatErrorInExport"), e); //$NON-NLS-1$
 				}
 			}
@@ -226,7 +226,7 @@ public class ImportElementsFrame extends JFrame {
 				try {
 					onAdd();
 				} catch (CCFormatException e) {
-					DialogHelper.showError(ImportElementsFrame.this, LocaleBundle.getString("Dialogs.GenericCaption.Error"), LocaleBundle.getString("LogMessage.FormatErrorInExportf")); //$NON-NLS-1$ //$NON-NLS-2$
+					DialogHelper.showDispatchError(ImportElementsFrame.this, LocaleBundle.getString("Dialogs.GenericCaption.Error"), LocaleBundle.getString("LogMessage.FormatErrorInExportf")); //$NON-NLS-1$ //$NON-NLS-2$
 					CCLog.addWarning(LocaleBundle.getString("LogMessage.FormatErrorInExport"), e); //$NON-NLS-1$
 				}
 			}

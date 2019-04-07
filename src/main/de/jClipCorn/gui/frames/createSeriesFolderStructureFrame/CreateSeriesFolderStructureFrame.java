@@ -29,8 +29,10 @@ import de.jClipCorn.gui.guiComponents.ReadableTextField;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.properties.CCProperties;
+import de.jClipCorn.util.Str;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.DialogHelper;
+import de.jClipCorn.util.stream.CCStreams;
 
 public class CreateSeriesFolderStructureFrame extends JFrame {
 	private static final long serialVersionUID = 8494757660196292481L;
@@ -164,9 +166,7 @@ public class CreateSeriesFolderStructureFrame extends JFrame {
 		List<CSFSElement> elements = new ArrayList<>();
 		
 		File parentfolder = new File(edPath.getText());
-		
-		boolean hasErrors = false;
-		
+
 		for (int sea = 0; sea < series.getSeasonCount(); sea++) {
 			CCSeason season = series.getSeasonByArrayIndex(sea);
 		
@@ -180,10 +180,14 @@ public class CreateSeriesFolderStructureFrame extends JFrame {
 				elem.CCPathOld = episode.getPart();
 				elem.FSPathOld = episode.getAbsolutePart();
 
-				elem.FSPathNew = fileNew.getAbsolutePath();
+				elem.FSPathNew = (fileNew==null)? Str.Empty:fileNew.getAbsolutePath();
 				elem.CCPathNew = PathFormatter.getCCPath(elem.FSPathNew);
 
-				if (elem.FSPathNew.equals(elem.FSPathOld))
+				if (fileNew==null)
+				{
+					elem.State = CSFSElement.CSFSState.Error;
+				}
+				else if (elem.FSPathNew.equals(elem.FSPathOld))
 				{
 					elem.State = CSFSElement.CSFSState.Nothing;
 				}
@@ -199,7 +203,6 @@ public class CreateSeriesFolderStructureFrame extends JFrame {
 				for (CSFSElement e : elements) {
 				    if (e.FSPathNew.equals(elem.FSPathNew) || e.CCPathNew.equals(elem.CCPathNew)) {
 				    	e.State = CSFSElement.CSFSState.Error;
-						hasErrors = true;
 					}
 				}
 
@@ -211,14 +214,14 @@ public class CreateSeriesFolderStructureFrame extends JFrame {
 
 		lsTest.autoResize();
 
-		btnOk.setEnabled(! hasErrors && ! CCProperties.getInstance().ARG_READONLY);
+		btnOk.setEnabled(!CCStreams.iterate(elements).any(e -> e.State== CSFSElement.CSFSState.Error) && ! CCProperties.getInstance().ARG_READONLY);
 	}
 	
 	private boolean startMoving() {
 		lsTest.setData(new ArrayList<>());
 
 		if (! testMoving()) {
-			DialogHelper.showLocalInformation(this, "CreateSeriesFolderStructureFrame.dialogs.couldnotmove"); //$NON-NLS-1$
+			DialogHelper.showDispatchLocalInformation(this, "CreateSeriesFolderStructureFrame.dialogs.couldnotmove"); //$NON-NLS-1$
 			return false;
 		}
 		
@@ -240,7 +243,7 @@ public class CreateSeriesFolderStructureFrame extends JFrame {
 						if (file.equals(newfile)) {
 							continue; // Skip already existing and correct Files
 						} else {
-							DialogHelper.showError(this, LocaleBundle.getString("CreateSeriesFolderStructureFrame.dialogs.error_caption"), LocaleBundle.getFormattedString("CreateSeriesFolderStructureFrame.dialogs.error", episode.getTitle())); //$NON-NLS-1$ //$NON-NLS-2$
+							DialogHelper.showDispatchError(this, LocaleBundle.getString("CreateSeriesFolderStructureFrame.dialogs.error_caption"), LocaleBundle.getFormattedString("CreateSeriesFolderStructureFrame.dialogs.error", episode.getTitle())); //$NON-NLS-1$ //$NON-NLS-2$
 							
 							return false;
 						}
@@ -255,7 +258,7 @@ public class CreateSeriesFolderStructureFrame extends JFrame {
 					}
 					
 					if (! succ) {
-						DialogHelper.showError(this, LocaleBundle.getString("CreateSeriesFolderStructureFrame.dialogs.error_caption"), LocaleBundle.getFormattedString("CreateSeriesFolderStructureFrame.dialogs.error", episode.getTitle())); //$NON-NLS-1$ //$NON-NLS-2$
+						DialogHelper.showDispatchError(this, LocaleBundle.getString("CreateSeriesFolderStructureFrame.dialogs.error_caption"), LocaleBundle.getFormattedString("CreateSeriesFolderStructureFrame.dialogs.error", episode.getTitle())); //$NON-NLS-1$ //$NON-NLS-2$
 						
 						return false;
 					}

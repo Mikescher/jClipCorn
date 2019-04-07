@@ -81,10 +81,10 @@ public class MemoryDatabase extends GenericDatabase {
 	}
 
 	@Override
-	public String GetDBTypeName() {
-		return CCDatabaseDriver.INMEMORY.asString();
+	public CCDatabaseDriver getDBType() {
+		return CCDatabaseDriver.INMEMORY;
 	}
 
 	@Override
-	public boolean IsInMemory() {return true;}
+	public boolean isInMemory() {return true;}
 }

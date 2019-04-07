@@ -2,6 +2,7 @@ package de.jClipCorn.util.parser;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -12,6 +13,7 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCGroup;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGroupList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCFileFormat;
 import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguage;
+import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguageList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieZyklus;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.features.log.CCLog;
@@ -27,7 +29,7 @@ public class FilenameParser {
 	public static FilenameParserResult parse(CCMovieList movielist, String filepath) {
 		Map<Integer, String> addFiles = new HashMap<>();
 		CCGroupList groups = CCGroupList.createEmpty();
-		CCDBLanguage lang = CCProperties.getInstance().PROP_DATABASE_DEFAULTPARSERLANG.getValue();
+		CCDBLanguageList lang = new CCDBLanguageList(CCProperties.getInstance().PROP_DATABASE_DEFAULTPARSERLANG.getValue());
 		CCMovieZyklus zyklus = null;
 		CCFileFormat format = null;
 		String title = "";
@@ -85,20 +87,22 @@ public class FilenameParser {
 		// ###################  LANGUAGE  ###################
 		
 		String flang = moviename.substring(moviename.lastIndexOf(' ') + 1);
-		String slang = "";
 		if ((! flang.equals(moviename)) && (flang.charAt(0) =='[') && flang.endsWith("]")) {
-			slang = flang.substring(1, flang.length() - 1);
-			boolean succ = false;
+			String slang = flang.substring(1, flang.length() - 1);
 			
-			for (CCDBLanguage itlang : CCDBLanguage.values()) {
-				if (slang.equalsIgnoreCase(itlang.getShortString())) {
-					lang = itlang;
-					succ = true;
+			HashSet<CCDBLanguage> dll = new HashSet<>();
+			for	(String str : slang.split("\\+"))
+			{
+				for (CCDBLanguage itlang : CCDBLanguage.values()) {
+					if (str.equalsIgnoreCase(itlang.getShortString())) {
+						dll.add(itlang);
+					}
 				}
 			}
 			
-			if (succ) {
+			if (dll.size()>0) {
 				moviename = moviename.substring(0, moviename.length() - (flang.length() + 1));
+				lang = CCDBLanguageList.createDirect(dll);
 			}
 		}
 		
@@ -107,7 +111,7 @@ public class FilenameParser {
 		String mZyklus = "";
 		String mRoman = "";
 		int iRoman = -1;
-		if (moviename.indexOf(" - ") >= 0) { // There is A Zyklus
+		if (moviename.contains(" - ")) { // There is A Zyklus
 			iRoman = 0;
 			mZyklus = moviename.substring(0, moviename.indexOf(" - "));
 			mRoman = mZyklus.substring(mZyklus.lastIndexOf(' ') + 1);

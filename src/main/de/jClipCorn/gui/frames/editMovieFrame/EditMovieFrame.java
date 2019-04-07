@@ -25,16 +25,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import de.jClipCorn.database.databaseElement.CCMovie;
-import de.jClipCorn.database.databaseElement.columnTypes.CCDateTimeList;
-import de.jClipCorn.database.databaseElement.columnTypes.CCGroupList;
-import de.jClipCorn.database.databaseElement.columnTypes.CCFSK;
-import de.jClipCorn.database.databaseElement.columnTypes.CCFileFormat;
-import de.jClipCorn.database.databaseElement.columnTypes.CCGenre;
-import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguage;
-import de.jClipCorn.database.databaseElement.columnTypes.CCQuality;
-import de.jClipCorn.database.databaseElement.columnTypes.CCUserScore;
-import de.jClipCorn.database.databaseElement.columnTypes.CCFileSize;
-import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReferenceList;
+import de.jClipCorn.database.databaseElement.columnTypes.*;
 import de.jClipCorn.gui.frames.inputErrorFrame.InputErrorDialog;
 import de.jClipCorn.gui.guiComponents.ReadableTextField;
 import de.jClipCorn.gui.guiComponents.TagPanel;
@@ -42,6 +33,7 @@ import de.jClipCorn.gui.guiComponents.dateTimeListEditor.DateTimeListEditor;
 import de.jClipCorn.gui.guiComponents.editCoverControl.EditCoverControl;
 import de.jClipCorn.gui.guiComponents.groupListEditor.GroupListEditor;
 import de.jClipCorn.gui.guiComponents.jCCDateSpinner.JCCDateSpinner;
+import de.jClipCorn.gui.guiComponents.language.LanguageChooser;
 import de.jClipCorn.gui.guiComponents.referenceChooser.JReferenceChooser;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
@@ -115,7 +107,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 	private JLabel label_18;
 	private JCheckBox cbViewed;
 	private JComboBox<String> cbxQuality;
-	private JComboBox<String> cbxLanguage;
+	private LanguageChooser cbxLanguage;
 	private JSpinner spnLength;
 	private JLabel label_19;
 	private JCCDateSpinner spnAddDate;
@@ -440,7 +432,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		cbxQuality.setBounds(93, 345, 212, 22);
 		getContentPane().add(cbxQuality);
 		
-		cbxLanguage = new JComboBox<>();
+		cbxLanguage = new LanguageChooser();
 		cbxLanguage.setBounds(93, 375, 212, 22);
 		getContentPane().add(cbxLanguage);
 		
@@ -653,9 +645,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 
 	private void setDefaultValues() {
 		cbxQuality.setModel(new DefaultComboBoxModel<>(CCQuality.getWrapper().getList()));
-		
-		cbxLanguage.setModel(new DefaultComboBoxModel<>(CCDBLanguage.getWrapper().getList()));
-		
+
 		cbxFSK.setModel(new DefaultComboBoxModel<>(CCFSK.getWrapper().getList()));
 		
 		cbxFormat.setModel(new DefaultComboBoxModel<>(CCFileFormat.getWrapper().getList()));
@@ -783,7 +773,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		spnZyklus.setValue(movie.getZyklus().getNumber());
 		cbViewed.setSelected(movie.isViewed());
 		cbxQuality.setSelectedIndex(movie.getQuality().asInt());
-		cbxLanguage.setSelectedIndex(movie.getLanguage().asInt());
+		cbxLanguage.setValue(movie.getLanguage());
 		spnLength.setValue(movie.getLength());
 		spnAddDate.setValue(movie.getAddDate());
 		spnOnlineScore.setValue(movie.getOnlinescore().asInt());
@@ -921,13 +911,6 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 	}
 
 	@Override
-	public void setMovieLanguage(CCDBLanguage lang) {
-		cbxLanguage.setSelectedIndex(lang.asInt());
-		
-		testPaths();
-	}
-
-	@Override
 	public void setQuality(CCQuality q) {
 		cbxQuality.setSelectedIndex(q.asInt());
 	}
@@ -1055,7 +1038,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		movie.setViewed(cbViewed.isSelected());
 		
 		movie.setQuality(cbxQuality.getSelectedIndex());
-		movie.setLanguage(cbxLanguage.getSelectedIndex());
+		movie.setLanguage(cbxLanguage.getValue());
 		
 		movie.setLength((int) spnLength.getValue());
 		
@@ -1120,7 +1103,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		int year = (int) spnYear.getValue();
 		long fsize = (long) spnSize.getValue();
 		int quality = cbxQuality.getSelectedIndex();
-		int lang = cbxLanguage.getSelectedIndex();
+		CCDBLanguageList lang = cbxLanguage.getValue();
 		String csExtn  = CCFileFormat.getWrapper().find(cbxFormat.getSelectedIndex()).asString();
 		String csExta = CCFileFormat.getWrapper().find(cbxFormat.getSelectedIndex()).asStringAlt();
 		

@@ -31,96 +31,92 @@ public class DatabasePlainTextExporter extends DatabaseTextExporter {
 		StringBuilder builder = new StringBuilder();
 		
 		List<CCMovie> last = null;
-		for (int i = 0; i < elements.size(); i++) {
-			CCDatabaseElement ccd_el = elements.get(i);
-			
-			if (ccd_el.isMovie()) {				
+		for (CCDatabaseElement ccd_el : elements)
+		{
+			if (ccd_el.isMovie()) {
 				CCMovie mov = (CCMovie) ccd_el;
-				
-				if (last != null && (mov.getZyklus().isEmpty() || ! last.get(0).getZyklus().getTitle().equals(mov.getZyklus().getTitle()))) {
+
+				if (last != null && (mov.getZyklus().isEmpty() || !last.get(0).getZyklus().getTitle().equals(mov.getZyklus().getTitle()))) {
 					// ###### flush ######
-					
+
 					last = flushZyklusList(builder, last);
 				}
-				
+
 				if (mov.getZyklus().isSet() && last != null && last.get(0).getZyklus().getTitle().equals(mov.getZyklus().getTitle())) {
 					// ###### add #######
-					
+
 					last.add(mov);
 				} else if (mov.getZyklus().isSet()) {
 					// ###### create ######
-					
+
 					last = new ArrayList<>();
 					last.add(mov);
-				} else if (last == null && mov.getZyklus().isEmpty()){
+				} else if (last == null && mov.getZyklus().isEmpty()) {
 					// ###### out ######
-					
+
 					if (addViewed) builder.append(mov.isViewed() ? "[X] " : "[ ] ");
 					builder.append(mov.getTitle());
-					
-					if (addLanguage) builder.append(" [" + mov.getLanguage().getShortString() + "]");
-					if (addFormat) builder.append(" (" + mov.getFormat().asString().toUpperCase() + ")");
-					if (addQuality) builder.append(" (" + mov.getQuality().asString() + ")");
-					if (addYear) builder.append(" (" + mov.getYear() + ")");
-					if (addSize) builder.append(" (" + mov.getFilesize().getFormatted() + ")");
+
+					if (addLanguage) builder.append(" [").append(mov.getLanguage().toOutputString()).append("]");
+					if (addFormat) builder.append(" (").append(mov.getFormat().asString().toUpperCase()).append(")");
+					if (addQuality) builder.append(" (").append(mov.getQuality().asString()).append(")");
+					if (addYear) builder.append(" (").append(mov.getYear()).append(")");
+					if (addSize) builder.append(" (").append(mov.getFilesize().getFormatted()).append(")");
 
 					builder.append(System.lineSeparator());
 				} else {
 					// ###### error ######
-					
+
 					CCLog.addError("WTF");
 					return null;
 				}
 			} else if (ccd_el.isSeries()) {
 				CCSeries ser = (CCSeries) ccd_el;
-				
-				if (last != null) 
+
+				if (last != null)
 					last = flushZyklusList(builder, last);
 
 				if (addViewed) builder.append(ser.isViewed() ? "[X] " : "[ ] ");
 				builder.append(ser.getTitle());
-				
-				if (addLanguage) builder.append(" [" + ser.getLanguage().getShortString() + "]");
-				if (addFormat) builder.append(" (" + ser.getFormat().asString().toUpperCase() + ")");
-				if (addQuality) builder.append(" (" + ser.getQuality().asString() + ")");
-				if (addYear) builder.append(" (" + ser.getYearRange().asString() + ")");
-				if (addSize) builder.append(" (" + ser.getFilesize().getFormatted() + ")");
+
+				if (addLanguage) builder.append(" [").append(ser.getCommonOrAllLanguages().toOutputString()).append("]");
+				if (addFormat) builder.append(" (").append(ser.getFormat().asString().toUpperCase()).append(")");
+				if (addQuality) builder.append(" (").append(ser.getQuality().asString()).append(")");
+				if (addYear) builder.append(" (").append(ser.getYearRange().asString()).append(")");
+				if (addSize) builder.append(" (").append(ser.getFilesize().getFormatted()).append(")");
 
 				builder.append(SimpleFileUtils.LINE_END);
-				
+
 				for (int j = 0; j < ser.getSeasonCount(); j++) {
 					CCSeason season = ser.getSeasonByArrayIndex(j);
-					
+
 					builder.append("\t");
 					builder.append(season.getTitle());
-					if (addYear) builder.append(" (" + season.getYear() + ")");
-					
+					if (addYear) builder.append(" (").append(season.getYear()).append(")");
+
 					builder.append(System.lineSeparator());
-					
+
 					for (int k = 0; k < season.getEpisodeCount(); k++) {
 						CCEpisode episode = season.getEpisodeByArrayIndex(k);
-						
+
 						builder.append("\t\t");
 
 						if (addViewed) builder.append(episode.isViewed() ? "[X] " : "[ ] ");
 						if (season.getEpisodeCount() <= 90)
-							builder.append(String.format("%02d", episode.getEpisodeNumber()) + " - " + episode.getTitle());
+							builder.append(String.format("%02d", episode.getEpisodeNumber())).append(" - ").append(episode.getTitle());
 						else
-							builder.append(String.format("%03d", episode.getEpisodeNumber()) + " - " + episode.getTitle());
+							builder.append(String.format("%03d", episode.getEpisodeNumber())).append(" - ").append(episode.getTitle());
 
-						if (addFormat) builder.append(" (" + episode.getFormat().asString().toUpperCase() + ")");
-						if (addQuality) builder.append(" (" + episode.getQuality().asString() + ")");
-						if (addSize) builder.append(" (" + episode.getFilesize().getFormatted() + ")");
+						if (addFormat) builder.append(" (").append(episode.getFormat().asString().toUpperCase()).append(")");
+						if (addQuality) builder.append(" (").append(episode.getQuality().asString()).append(")");
+						if (addSize) builder.append(" (").append(episode.getFilesize().getFormatted()).append(")");
 
 						builder.append(System.lineSeparator());
 					}
 				}
 			}
 		}
-		
-		if (last != null) 
-			last = flushZyklusList(builder, last);
-		
+
 		return builder.toString();
 	}
 
@@ -139,7 +135,7 @@ public class DatabasePlainTextExporter extends DatabaseTextExporter {
 		
 		if (addViewed) builder.append((vcount == last.size()) ? "[X] " : ((vcount == 0) ? "[ ] " : "[/] "));
 		builder.append(last.get(0).getZyklus().getTitle());
-		if (addSize) builder.append(" (" + FileSizeFormatter.format(bytesum) + ")");
+		if (addSize) builder.append(" (").append(FileSizeFormatter.format(bytesum)).append(")");
 		builder.append(SimpleFileUtils.LINE_END);		
 		
 		for (CCMovie mov : last) {
@@ -151,17 +147,16 @@ public class DatabasePlainTextExporter extends DatabaseTextExporter {
 			builder.append(" - ");
 			builder.append(mov.getTitle());
 			
-			if (addLanguage) builder.append(" [" + mov.getLanguage().getShortString() + "]");
-			if (addFormat) builder.append(" (" + mov.getFormat().asString().toUpperCase() + ")");
-			if (addQuality) builder.append(" (" + mov.getQuality().asString() + ")");
-			if (addYear) builder.append(" (" + mov.getYear() + ")");
-			if (addSize) builder.append(" (" + mov.getFilesize().getFormatted() + ")");
+			if (addLanguage) builder.append(" [").append(mov.getLanguage().toOutputString()).append("]");
+			if (addFormat) builder.append(" (").append(mov.getFormat().asString().toUpperCase()).append(")");
+			if (addQuality) builder.append(" (").append(mov.getQuality().asString()).append(")");
+			if (addYear) builder.append(" (").append(mov.getYear()).append(")");
+			if (addSize) builder.append(" (").append(mov.getFilesize().getFormatted()).append(")");
 
 			builder.append(SimpleFileUtils.LINE_END);
 		}
-		
-		last = null;
-		return last;
+
+		return null;
 	}
 
 	@Override

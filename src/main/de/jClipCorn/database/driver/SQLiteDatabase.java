@@ -141,10 +141,10 @@ public class SQLiteDatabase extends GenericDatabase {
 	}
 
 	@Override
-	public String GetDBTypeName() {
-		return CCDatabaseDriver.SQLITE.asString();
+	public CCDatabaseDriver getDBType() {
+		return CCDatabaseDriver.SQLITE;
 	}
 
 	@Override
-	public boolean IsInMemory() {return false;}
+	public boolean isInMemory() {return false;}
 }

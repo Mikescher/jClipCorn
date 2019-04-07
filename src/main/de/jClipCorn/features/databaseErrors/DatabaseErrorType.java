@@ -51,6 +51,9 @@ public class DatabaseErrorType {
 	public final static DatabaseErrorType ERROR_TAG_NOT_VALID_ON_SERIES            = new DatabaseErrorType(45, null);
 	public final static DatabaseErrorType ERROR_TAG_NOT_VALID_ON_EPISODE           = new DatabaseErrorType(46, null);
 	public final static DatabaseErrorType ERROR_NON_NORMALIZED_PATH                = new DatabaseErrorType(47, DatabaseAutofixer::fixError_NonNormalizedPath);
+	public final static DatabaseErrorType ERROR_NO_LANG                            = new DatabaseErrorType(48, null);
+	public final static DatabaseErrorType ERROR_LANG_MUTED_SUBSET                  = new DatabaseErrorType(49, null);
+
 
 	private final int type;
 

@@ -3,18 +3,10 @@ package de.jClipCorn.database.databaseElement;
 import java.io.File;
 import java.sql.Date;
 
+import de.jClipCorn.database.databaseElement.columnTypes.*;
 import org.jdom2.Element;
 
 import de.jClipCorn.database.CCMovieList;
-import de.jClipCorn.database.databaseElement.columnTypes.CCDBElementTyp;
-import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguage;
-import de.jClipCorn.database.databaseElement.columnTypes.CCDateTimeList;
-import de.jClipCorn.database.databaseElement.columnTypes.CCFileFormat;
-import de.jClipCorn.database.databaseElement.columnTypes.CCFileSize;
-import de.jClipCorn.database.databaseElement.columnTypes.CCGroup;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieZyklus;
-import de.jClipCorn.database.databaseElement.columnTypes.CCQuality;
-import de.jClipCorn.database.databaseElement.columnTypes.CCTagList;
 import de.jClipCorn.database.util.ExtendedViewedState;
 import de.jClipCorn.database.util.ExtendedViewedStateType;
 import de.jClipCorn.gui.localization.LocaleBundle;
@@ -30,16 +22,17 @@ import de.jClipCorn.util.formatter.PathFormatter;
 public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, ICCDatedElement {
 	public final static int PARTCOUNT_MAX = 6; // 0 - 5
 
-	private boolean viewed;					// BIT
-	private CCMovieZyklus zyklus;			// LEN = 128 + INTEGER
-	private CCQuality quality;				// TINYINT
-	private int length;						// INTEGER - in minutes
-	private CCDate addDate;					// DATE
-	private CCFileFormat format;			// TINYINT
-	private	int year;						// SMALLINT
-	private CCFileSize filesize;			// BIGINT - signed (unfortunately)
-	private String[] parts;					// [0..5] -> LEN = 512
-	private CCDateTimeList viewedHistory;   // VARCHAR
+	private boolean viewed;
+	private CCMovieZyklus zyklus;
+	private CCQuality quality;
+	private int length; // in minutes
+	private CCDate addDate;
+	private CCFileFormat format;
+	private	int year;
+	private CCFileSize filesize;
+	private String[] parts;
+	private CCDateTimeList viewedHistory;
+	private CCDBLanguageList language;
 	
 	public CCMovie(CCMovieList ml, int id) {
 		super(ml, CCDBElementTyp.MOVIE, id, -1);
@@ -49,6 +42,7 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 		filesize = CCFileSize.ZERO;
 		addDate = CCDate.getMinimumDate();
 		viewedHistory = CCDateTimeList.createEmpty();
+		language = CCDBLanguageList.EMPTY;
 	}
 	
 	@Override
@@ -69,6 +63,7 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 		parts[4] = ""; //$NON-NLS-1$
 		parts[5] = ""; //$NON-NLS-1$
 		viewedHistory = CCDateTimeList.createEmpty();
+		language = CCDBLanguageList.EMPTY;
 
 		if (updateDB) updateDB();
 	}
@@ -251,6 +246,27 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 		setFilesize(filesize.getBytes());
 	}
 
+	@Override
+	public CCDBLanguageList getLanguage() {
+		return language;
+	}
+
+	public void setLanguage(CCDBLanguageList language) {
+		this.language = language;
+
+		if (this.language == null) {
+			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.ErroneousDatabaseValues", language)); //$NON-NLS-1$
+		}
+
+		updateDB();
+	}
+
+	public void setLanguage(long dbdata) {
+		this.language = CCDBLanguageList.fromBitmask(dbdata);
+
+		updateDB();
+	}
+
 	public String getPart(int idx) {
 		return parts[idx];
 	}
@@ -339,6 +355,7 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 		e.setAttribute("filesize", filesize.getBytes() + "");
 		e.setAttribute("format", format.asInt() + "");
 		e.setAttribute("length", length  + "");
+		e.setAttribute("languages", language.serializeToString());
 		
 		for (int i = 0; i < parts.length; i++) {
 			e.setAttribute("part_"+i, parts[i]);
@@ -379,7 +396,13 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 		
 		if (e.getAttributeValue("length") != null)
 			setLength(Integer.parseInt(e.getAttributeValue("length")));
-		
+
+		if (e.getAttributeValue("language") != null)
+			setLanguage(new CCDBLanguageList(CCDBLanguage.getWrapper().find(Integer.parseInt(e.getAttributeValue("language")))));
+
+		if (e.getAttributeValue("languages") != null)
+			setLanguage(CCDBLanguageList.parseFromString(e.getAttributeValue("languages")));
+
 		for (int i = 0; i < PARTCOUNT_MAX; i++) {
 			if (e.getAttributeValue("part_"+i) != null)
 				setPart(i, e.getAttributeValue("part_"+i));
@@ -406,7 +429,7 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 		if (e.getAttributeValue("history") != null)
 			setViewedHistory(e.getAttributeValue("history"));
 		
-		endUpdating();
+		endUpdating(); // TODO sanity check here (eg no values==null, etc) (also in series, season, episode, ...)
 	}
 	
 	public String getFastMD5() {
@@ -424,33 +447,33 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 	
 	@SuppressWarnings("nls")
 	public String generateFilename(int part) { //Test if database has no errors
-		String filename = "";
+		StringBuilder filename = new StringBuilder();
 		
 		if (getZyklus().isSet()) {
-			filename += getZyklus().getFormatted() + " - ";
+			filename.append(getZyklus().getFormatted()).append(" - ");
 			
-			filename += getTitle().replace(": ", " - ");
+			filename.append(getTitle().replace(": ", " - "));
 		} else {
-			filename += getTitle().replace(": ", " - ");
+			filename.append(getTitle().replace(": ", " - "));
 		}
 		
 		for (CCGroup group : getGroups()) {
-			if (group.DoSerialize) filename += " [["+group.Name+"]]";
+			if (group.DoSerialize) filename.append(" [[").append(group.Name).append("]]");
 		}
 				
-		if (getLanguage() != CCDBLanguage.GERMAN) {
-			filename += " [" + getLanguage().getShortString() + "]";
+		if (!getLanguage().isExact(CCProperties.getInstance().PROP_DATABASE_DEFAULTPARSERLANG.getValue())) {
+			filename.append(" [").append(getLanguage().serializeToFilenameString()).append("]");
 		}
 		
 		if (getPartcount() > 1) {
-			filename += " (Part " + (part+1) + ")";
+			filename.append(" (Part ").append(part + 1).append(")");
 		}
 		
-		filename += "." + getFormat().asString();
+		filename.append(".").append(getFormat().asString());
 		
-		filename = PathFormatter.fixStringToFilesystemname(filename);
+		filename = new StringBuilder(PathFormatter.fixStringToFilesystemname(filename.toString()));
 		
-		return filename;
+		return filename.toString();
 	}
 
 	public boolean hasZyklus() {

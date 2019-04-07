@@ -29,7 +29,7 @@ import de.jClipCorn.util.helper.LookAndFeelManager;
 public class Main {
 	public final static String TITLE = "jClipCorn"; //$NON-NLS-1$
 	public final static String VERSION = /*<gradle_version_marker>*/"1.10.5.29"/*</gradle_version_marker>*/;	//$NON-NLS-1$
-	public final static String DBVERSION = "11"; 	//$NON-NLS-1$
+	public final static String DBVERSION = "12"; 	//$NON-NLS-1$
 	
 	private final static String PROPERTIES_PATH = "jClipcorn.properties"; //$NON-NLS-1$
 	
@@ -208,7 +208,7 @@ public class Main {
 
 //TODO MainTable and SeriesTable as JCCSimpleTable
 
-//TODO localsync: also autosave to dropbox (or directly sync with server??)
+//TODO localsync: also autosave to other dir (== nextcloud) (or directly sync with server??)
 //     php viewer: view synced data online with webpage(read-only) 
 
 //TODO Edit OnlineRef in own dialog with more options (move, sort, insert, ...)
@@ -219,3 +219,11 @@ public class Main {
 //TODO auto get languages from files
 
 //TODO warn on close if there are un-watched errors
+
+//TODO re-do PlainTextExporter
+
+//TODO EditSeriesFrame re-do layout (resizable)
+
+//TODO remove viewed field from db (get from history)
+
+//TODO serialize dates as iso in xml export (backwards compatible by writing them "[yyyy-MM-dd]" in square braces )

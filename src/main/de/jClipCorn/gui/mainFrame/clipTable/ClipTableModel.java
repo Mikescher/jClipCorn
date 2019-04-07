@@ -49,7 +49,7 @@ public class ClipTableModel extends AbstractTableModel implements TableModelRowC
 			"", 												//$NON-NLS-1$
 			LocaleBundle.getString("ClipTableModel.Zyklus"),  	//$NON-NLS-1$
 			LocaleBundle.getString("ClipTableModel.Quality"),  	//$NON-NLS-1$
-			LocaleBundle.getString("ClipTableModel.Language"),  //$NON-NLS-1$
+			"",                                                 //$NON-NLS-1$
 			LocaleBundle.getString("ClipTableModel.Genre"),  	//$NON-NLS-1$
 			LocaleBundle.getString("ClipTableModel.Parts"), 	//$NON-NLS-1$
 			LocaleBundle.getString("ClipTableModel.Length"),  	//$NON-NLS-1$
@@ -170,7 +170,7 @@ public class ClipTableModel extends AbstractTableModel implements TableModelRowC
 			case COLUMN_QUALITY: // Quality
 				return ser.getQuality();
 			case COLUMN_LANGUAGE: // Language
-				return ser.getLanguage();
+				return ser.getCommonOrAllLanguages();
 			case COLUMN_GENRE: // Genres
 				return ser.getGenres();
 			case COLUMN_PARTCOUNT: // Partcount

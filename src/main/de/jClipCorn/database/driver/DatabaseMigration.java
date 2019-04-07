@@ -8,16 +8,19 @@ import javax.swing.JFrame;
 
 import de.jClipCorn.Main;
 import de.jClipCorn.database.CCMovieList;
+import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguage;
 import de.jClipCorn.features.backupManager.BackupManager;
 import de.jClipCorn.gui.mainFrame.MainFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.properties.CCProperties;
+import de.jClipCorn.properties.enumerations.CCDatabaseDriver;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.datetime.CCTime;
 import de.jClipCorn.util.helper.DialogHelper;
+import de.jClipCorn.util.stream.CCStreams;
 
-public class DatabaseUpgradeAssistant {
+public class DatabaseMigration {
 	private final GenericDatabase db;
 	
 	public interface UpgradeAction {
@@ -26,7 +29,7 @@ public class DatabaseUpgradeAssistant {
 	
 	private final List<UpgradeAction> afterConnectActions = new ArrayList<>();
 	
-	public DatabaseUpgradeAssistant(GenericDatabase db) {
+	public DatabaseMigration(GenericDatabase db) {
 		super();
 		
 		this.db = db;
@@ -56,7 +59,7 @@ public class DatabaseUpgradeAssistant {
 			
 			if (version.equals(Main.DBVERSION)) return;
 
-			DialogHelper.showLocalInformation(MainFrame.getInstance() != null ? MainFrame.getInstance() : new JFrame(), "Dialogs.DatabaseMigration");
+			DialogHelper.showDispatchLocalInformation(MainFrame.getInstance() != null ? MainFrame.getInstance() : new JFrame(), "Dialogs.DatabaseMigration");
 			
 			CCLog.addInformation(LocaleBundle.getString("LogMessage.DatabaseUpgradeStarted"));
 
@@ -90,11 +93,17 @@ public class DatabaseUpgradeAssistant {
 				setDBVersion("1.9");
 				version = "1.9";
 			}
-			
+
 			if (version.equals("1.9")) {
 				upgrade_10_11();
 				setDBVersion("11");
 				version = "11";
+			}
+
+			if (version.equals("11")) {
+				upgrade_11_12();
+				setDBVersion("12");
+				version = "12";
 			}
 						
 			if (! getDBVersion().equals(Main.DBVERSION)) {
@@ -103,7 +112,7 @@ public class DatabaseUpgradeAssistant {
 			
 			CCLog.addInformation(LocaleBundle.getString("LogMessage.DatabaseUpgradeSucess"));
 			
-			DialogHelper.showLocalInformation(MainFrame.getInstance() != null ? MainFrame.getInstance() : new JFrame(), "Dialogs.DatabaseMigrationSucess");
+			DialogHelper.showDispatchLocalInformation(MainFrame.getInstance() != null ? MainFrame.getInstance() : new JFrame(), "Dialogs.DatabaseMigrationSucess");
 			
 		} catch (Exception e) {
 			CCLog.addFatalError(LocaleBundle.getString("LogMessage.DatabaseUpgradeFailed"), e);
@@ -181,6 +190,36 @@ public class DatabaseUpgradeAssistant {
 
 		db.executeSQLThrow("ALTER TABLE GROUPS ADD COLUMN VISIBLE BIT");
 		db.executeSQLThrow("UPDATE GROUPS SET VISIBLE = 1");
+	}
+
+	@SuppressWarnings("nls")
+	private void upgrade_11_12() throws SQLException {
+		CCLog.addInformation("[UPGRADE v11 -> v12] Extend language column size in elements table");
+		CCLog.addInformation("[UPGRADE v11 -> v12] Convert language column in elements table");
+		CCLog.addInformation("[UPGRADE v11 -> v12] Add language column to episodes");
+		CCLog.addInformation("[UPGRADE v11 -> v12] Update language for episodes");
+		CCLog.addInformation("[UPGRADE v11 -> v12] Update language for series");
+		CCLog.addInformation("[UPGRADE v11 -> v12] Convert language column in episodes table");
+
+		if (db.getDBType() != CCDatabaseDriver.SQLITE) db.executeSQLThrow("ALTER TABLE ELEMENTS ALTER COLUMN LANGUAGE BIGINT");
+
+		db.executeSQLThrow("ALTER TABLE EPISODES ADD COLUMN LANGUAGE BIGINT");
+
+		for (Object[] series : db.querySQL("SELECT LANGUAGE, SERIESID, TYPE FROM ELEMENTS WHERE TYPE=1", 3))
+		{
+			for (Object[] season : db.querySQL("SELECT SEASONID, SERIESID FROM SEASONS WHERE SERIESID="+series[1], 2))
+			{
+				db.executeSQLThrow("UPDATE EPISODES SET LANGUAGE="+series[0]+" WHERE SEASONID="+season[0]);
+			}
+		}
+
+		for (CCDBLanguage lng : CCStreams.iterate(CCDBLanguage.values()).autosortByProperty(CCDBLanguage::asInt).reverse())
+		{
+			db.executeSQLThrow("UPDATE ELEMENTS SET LANGUAGE = "+lng.asBitMask()+" WHERE LANGUAGE = "+lng.asInt());
+			db.executeSQLThrow("UPDATE EPISODES SET LANGUAGE = "+lng.asBitMask()+" WHERE LANGUAGE = "+lng.asInt());
+		}
+
+		db.executeSQLThrow("UPDATE ELEMENTS SET LANGUAGE=0 WHERE TYPE=1");
 	}
 
 	public void onAfterConnect(CCMovieList ml, CCDatabase db) {

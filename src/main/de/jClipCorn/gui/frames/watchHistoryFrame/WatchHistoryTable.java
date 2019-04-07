@@ -6,6 +6,7 @@ import java.util.List;
 import de.jClipCorn.gui.frames.watchHistoryFrame.element.WatchHistoryElement;
 import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleColumnPrototype;
 import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleTable;
+import de.jClipCorn.util.Str;
 import de.jClipCorn.util.formatter.FileSizeFormatter;
 import de.jClipCorn.util.formatter.TimeIntervallFormatter;
 
@@ -26,8 +27,8 @@ public class WatchHistoryTable extends JCCSimpleTable<WatchHistoryElement> {
 		
 		r.add(new JCCSimpleColumnPrototype<>(
 				"ClipTableModel.Title",
-				e -> e.getName(),
-				e -> e.getNameIcon(),
+				WatchHistoryElement::getName,
+				WatchHistoryElement::getNameIcon,
 				null));
 		
 		r.add(new JCCSimpleColumnPrototype<>(
@@ -43,15 +44,16 @@ public class WatchHistoryTable extends JCCSimpleTable<WatchHistoryElement> {
 				null));
 		
 		r.add(new JCCSimpleColumnPrototype<>(
-				"ClipTableModel.Language",
-				e -> TimeIntervallFormatter.formatShort(e.getLength()),
-				null,
-				e -> TimeIntervallFormatter.format(e.getLength())));
+				Str.Empty,
+				e -> Str.Empty,
+				e -> e.getLanguage().getIcon(),
+				e -> e.getLanguage().toOutputString()));
 		
 		r.add(new JCCSimpleColumnPrototype<>(
 				"ClipTableModel.Length",
-				e -> e.getLanguage().asString(),
-				e -> e.getLanguage().getIcon(), null));
+				e -> TimeIntervallFormatter.formatShort(e.getLength()),
+				null,
+				e -> TimeIntervallFormatter.format(e.getLength())));
 		
 		r.add(new JCCSimpleColumnPrototype<>(
 				"ClipTableModel.Tags",

@@ -1,21 +1,33 @@
 package de.jClipCorn.features.table.filter.customFilter;
 
 import de.jClipCorn.database.CCMovieList;
-import de.jClipCorn.database.databaseElement.CCDatabaseElement;
+import de.jClipCorn.database.databaseElement.CCEpisode;
+import de.jClipCorn.database.databaseElement.CCMovie;
+import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguage;
+import de.jClipCorn.features.table.filter.AbstractCustomStructureElementFilter;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.features.table.filter.AbstractCustomDatabaseElementFilter;
 import de.jClipCorn.features.table.filter.AbstractCustomFilter;
 import de.jClipCorn.features.table.filter.filterConfig.CustomFilterConfig;
 import de.jClipCorn.features.table.filter.filterConfig.CustomFilterEnumChooserConfig;
 import de.jClipCorn.features.table.filter.filterSerialization.FilterSerializationConfig;
 
-public class CustomLanguageFilter extends AbstractCustomDatabaseElementFilter {
+public class CustomLanguageFilter extends AbstractCustomStructureElementFilter {
 	private CCDBLanguage language = CCDBLanguage.GERMAN;
-	
+
 	@Override
-	public boolean includes(CCDatabaseElement e) {
-		return language.equals(e.getLanguage());
+	public boolean includes(CCMovie e) {
+		return e.getLanguage().contains(language);
+	}
+
+	@Override
+	public boolean includes(CCSeries e) {
+		return e.getAllLanguages().contains(language);
+	}
+
+	@Override
+	public boolean includes(CCEpisode e) {
+		return e.getLanguage().contains(language);
 	}
 
 	@Override

@@ -264,7 +264,7 @@ public class ScanFolderFrame extends JFrame implements Runnable, MouseListener {
 	
 	private void addAll() {
 		if (lsModel.size() > 16) {
-			DialogHelper.showLocalInformation(this, "Dialogs.TooManyAddFrames"); //$NON-NLS-1$
+			DialogHelper.showDispatchLocalInformation(this, "Dialogs.TooManyAddFrames"); //$NON-NLS-1$
 			return;
 		}
 		

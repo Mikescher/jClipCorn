@@ -12,31 +12,16 @@ public class ProgressCallbackProgressBarHelper implements ProgressCallbackListen
 
 	@Override
 	public void step() {
-		SwingUtilities.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-				progressBar.setValue(progressBar.getValue() + 1);
-			}
-		});
+		SwingUtilities.invokeLater(() -> progressBar.setValue(progressBar.getValue() + 1));
 	}
 
 	@Override
 	public void setMax(final int max) {
-		SwingUtilities.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-				progressBar.setMaximum(max);
-			}
-		});
+		SwingUtilities.invokeLater(() -> progressBar.setMaximum(max));
 	}
 
 	@Override
 	public void reset() {
-		SwingUtilities.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-				progressBar.setValue(0);
-			}
-		});
+		SwingUtilities.invokeLater(() -> progressBar.setValue(0));
 	}
 }

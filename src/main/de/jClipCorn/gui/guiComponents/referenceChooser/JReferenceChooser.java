@@ -2,8 +2,6 @@ package de.jClipCorn.gui.guiComponents.referenceChooser;
 
 import java.awt.BorderLayout;
 import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,14 +29,13 @@ public class JReferenceChooser extends JPanel {
 		
 		btnAdditional = new JButton("+0"); //$NON-NLS-1$
 		add(btnAdditional, BorderLayout.EAST);
-		btnAdditional.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				ReferenceChooserPopup popup = new ReferenceChooserPopup(_additional, JReferenceChooser.this);
-				popup.setVisible(true);
-			}
+		btnAdditional.addActionListener(e ->
+		{
+			ReferenceChooserPopup popup = new ReferenceChooserPopup(_additional, JReferenceChooser.this);
+			popup.setVisible(true);
 		});
 		btnAdditional.setMargin(new Insets(2, 4, 2, 4));
+		btnAdditional.setFocusable(false);
 		
 		mainChooser = new JSingleReferenceChooser();
 		add(mainChooser, BorderLayout.CENTER);
@@ -62,7 +59,7 @@ public class JReferenceChooser extends JPanel {
 		btnAdditional.setEnabled(flag);
 	}
 	
-	public void updateUIControls() {
+	private void updateUIControls() {
 		mainChooser.updateUIControls();
 		btnAdditional.setText("+"+_additional.size()); //$NON-NLS-1$
 	}

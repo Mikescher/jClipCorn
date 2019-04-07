@@ -25,22 +25,13 @@ import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
+
+import de.jClipCorn.database.databaseElement.columnTypes.*;
+import de.jClipCorn.gui.guiComponents.language.LanguageChooser;
 import org.jdom2.Element;
 
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCMovie;
-import de.jClipCorn.database.databaseElement.columnTypes.CCDateTimeList;
-import de.jClipCorn.database.databaseElement.columnTypes.CCGroupList;
-import de.jClipCorn.database.databaseElement.columnTypes.CCFSK;
-import de.jClipCorn.database.databaseElement.columnTypes.CCFileFormat;
-import de.jClipCorn.database.databaseElement.columnTypes.CCGenre;
-import de.jClipCorn.database.databaseElement.columnTypes.CCGenreList;
-import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguage;
-import de.jClipCorn.database.databaseElement.columnTypes.CCQuality;
-import de.jClipCorn.database.databaseElement.columnTypes.CCUserScore;
-import de.jClipCorn.database.databaseElement.columnTypes.CCFileSize;
-import de.jClipCorn.database.databaseElement.columnTypes.CCDBElementTyp;
-import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReferenceList;
 import de.jClipCorn.gui.frames.inputErrorFrame.InputErrorDialog;
 import de.jClipCorn.gui.frames.parseOnlineFrame.ParseOnlineDialog;
 import de.jClipCorn.gui.guiComponents.ReadableTextField;
@@ -106,7 +97,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 	private JComboBox<String> cbxGenre5;
 	private JComboBox<String> cbxGenre6;
 	private JComboBox<String> cbxQuality;
-	private JComboBox<String> cbxLanguage;
+	private LanguageChooser cbxLanguage;
 	private JSpinner spnLength;
 	private JCCDateSpinner spnAddDate;
 	private JSpinner spnOnlineScore;
@@ -424,7 +415,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		cbxQuality.setBounds(95, 434, 212, 22);
 		contentPane.add(cbxQuality);
 		
-		cbxLanguage = new JComboBox<>();
+		cbxLanguage = new LanguageChooser();
 		cbxLanguage.setBounds(95, 403, 212, 22);
 		contentPane.add(cbxLanguage);
 		
@@ -652,7 +643,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		newM.setZyklusID((int) spnZyklus.getValue());
 		
 		newM.setQuality(cbxQuality.getSelectedIndex());
-		newM.setLanguage(cbxLanguage.getSelectedIndex());
+		newM.setLanguage(cbxLanguage.getValue());
 		
 		newM.setLength((int) spnLength.getValue());
 		
@@ -708,8 +699,6 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		}
 		
 		cbxQuality.setModel(new DefaultComboBoxModel<>(CCQuality.getWrapper().getList()));
-		
-		cbxLanguage.setModel(new DefaultComboBoxModel<>(CCDBLanguage.getWrapper().getList()));
 		
 		cbxScore.setModel(new DefaultComboBoxModel<>(CCUserScore.getWrapper().getList()));
 		cbxScore.setSelectedIndex(cbxScore.getModel().getSize() - 1);
@@ -913,9 +902,8 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		spnSize.setValue(size);
 	}
 
-	@Override
-	public void setMovieLanguage(CCDBLanguage lang) {
-		cbxLanguage.setSelectedIndex(lang.asInt());
+	public void setMovieLanguage(CCDBLanguageList lang) {
+		cbxLanguage.setValue(lang);
 	}
 
 	@Override
@@ -1070,7 +1058,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		int year = (int) spnYear.getValue();
 		long fsize = (long) spnSize.getValue();
 		int quality = cbxQuality.getSelectedIndex();
-		int lang = cbxLanguage.getSelectedIndex();
+		CCDBLanguageList lang = cbxLanguage.getValue();
 		String csExtn  = CCFileFormat.getWrapper().find(cbxFormat.getSelectedIndex()).asString();
 		String csExta = CCFileFormat.getWrapper().find(cbxFormat.getSelectedIndex()).asStringAlt();
 		

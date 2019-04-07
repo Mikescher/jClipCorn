@@ -880,7 +880,7 @@ public class CCMovieList {
 		String real = database.getInformation_DBVersion();
 		String expected = Main.DBVERSION;
 		String name = CCProperties.getInstance().PROP_DATABASE_NAME.getValue();
-		String type = database.GetDBTypeName();
+		String type = database.getDBTypeName();
 		
 		if (! real.equals(Main.DBVERSION)) {
 			CCLog.addFatalError(LocaleBundle.getFormattedString("LogMessage.WrongDatabaseVersion", real, expected)); //$NON-NLS-1$
@@ -1012,7 +1012,7 @@ public class CCMovieList {
 	}
 	
 	public boolean isInMemory() {
-		return database.IsInMemory();
+		return database.isInMemory();
 	}
 
 	public CCSeries getSeries(String title) {

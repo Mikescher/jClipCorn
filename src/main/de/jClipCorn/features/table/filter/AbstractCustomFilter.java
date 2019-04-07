@@ -64,6 +64,7 @@ public abstract class AbstractCustomFilter {
 	public final static int CUSTOMFILTERID_EPISODECOUNTER   = 32;
 	public final static int CUSTOMFILTERID_SEASONCOUNTER    = 33;
 	public final static int CUSTOMFILTERID_RELATIVE_HISTORY = 34;
+	public final static int CUSTOMFILTERID_EXACTLANGUAGE    = 35;
 		
 	public abstract String getName();
 	public abstract String getPrecreateName();
@@ -174,6 +175,7 @@ public abstract class AbstractCustomFilter {
 			new CustomFSKFilter(),
 			new CustomGenreFilter(),
 			new CustomLanguageFilter(),
+			new CustomExactLanguageFilter(),
 			new CustomOnlinescoreFilter(),
 			new CustomQualityFilter(),
 			new CustomUserScoreFilter(),

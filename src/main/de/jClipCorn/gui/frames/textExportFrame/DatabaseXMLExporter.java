@@ -2,6 +2,7 @@ package de.jClipCorn.gui.frames.textExportFrame;
 
 import java.util.List;
 
+import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguage;
 import org.jdom2.Attribute;
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -46,7 +47,7 @@ public class DatabaseXMLExporter extends DatabaseTextExporter {
 				
 				jdom_elem.setAttribute(new Attribute("title", mov.getTitle()));
 				
-				if (addLanguage) jdom_elem.setAttribute(new Attribute("language", mov.getLanguage().asString()));
+				if (addLanguage) jdom_elem.setAttribute(new Attribute("languages", mov.getLanguage().iterate().stringjoin(CCDBLanguage::getLongString, ";")));
 				if (addFormat) jdom_elem.setAttribute(new Attribute("format", mov.getFormat().asString()));
 				if (addQuality) jdom_elem.setAttribute(new Attribute("quality", mov.getQuality().asString()));
 				if (addYear) jdom_elem.setAttribute(new Attribute("year", mov.getYear() + ""));
@@ -60,8 +61,7 @@ public class DatabaseXMLExporter extends DatabaseTextExporter {
 				root.addContent(jdom_elem_ser);
 				
 				jdom_elem_ser.setAttribute(new Attribute("title", ser.getTitle()));
-				if (addLanguage) jdom_elem_ser.setAttribute(new Attribute("language", ser.getLanguage().asString()));
-				
+
 				for (int j = 0; j < ser.getSeasonCount(); j++) {
 					CCSeason season = ser.getSeasonByArrayIndex(j);
 
@@ -78,6 +78,7 @@ public class DatabaseXMLExporter extends DatabaseTextExporter {
 						jdom_elem_sea.addContent(jdom_elem_epi);
 						
 						jdom_elem_epi.setAttribute(new Attribute("title", episode.getTitle()));
+						if (addLanguage) jdom_elem_epi.setAttribute(new Attribute("language", episode.getLanguage().iterate().stringjoin(CCDBLanguage::getLongString, ";")));
 						if (addFormat) jdom_elem_epi.setAttribute(new Attribute("format", episode.getFormat().asString()));
 						if (addQuality) jdom_elem_epi.setAttribute(new Attribute("quality", episode.getQuality().asString()));
 						if (addSize) jdom_elem_epi.setAttribute(new Attribute("size", episode.getFilesize().getBytes() + " bytes"));

@@ -67,7 +67,7 @@ public class CCLogInternal {
 			}
 
 			if (type == CCLogType.LOG_ELEM_FATALERROR) {
-				DialogHelper.showDispatchError(LocaleBundle.getString("Main.AbortCaption"), LocaleBundle.getFormattedString("Main.AbortMessage", cle.getFormatted(CCLogElement.FORMAT_LEVEL_MID))); //$NON-NLS-1$ //$NON-NLS-2$
+				DialogHelper.showDispatchError(null, LocaleBundle.getString("Main.AbortCaption"), LocaleBundle.getFormattedString("Main.AbortMessage", cle.getFormatted(CCLogElement.FORMAT_LEVEL_MID))); //$NON-NLS-1$ //$NON-NLS-2$
 				fatalabort();
 			}
 

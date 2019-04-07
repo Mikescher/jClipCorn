@@ -9,11 +9,7 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
-import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineScore;
-import de.jClipCorn.database.databaseElement.columnTypes.CCUserScore;
-import de.jClipCorn.database.databaseElement.columnTypes.CCFileSize;
-import de.jClipCorn.database.databaseElement.columnTypes.CCTagList;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieZyklus;
+import de.jClipCorn.database.databaseElement.columnTypes.*;
 import de.jClipCorn.database.util.ExtendedViewedState;
 import de.jClipCorn.gui.guiComponents.SFixTable;
 import de.jClipCorn.gui.localization.LocaleBundle;
@@ -245,7 +241,7 @@ public class SFixClipTable extends SFixTable {
 			case ClipTableModel.COLUMN_QUALITY:
 				return null;
 			case ClipTableModel.COLUMN_LANGUAGE:
-				return null;
+				return ((CCDBLanguageList)value).toOutputString();
 			case ClipTableModel.COLUMN_GENRE:
 				return null;
 			case ClipTableModel.COLUMN_PARTCOUNT:

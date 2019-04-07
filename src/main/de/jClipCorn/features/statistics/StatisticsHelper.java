@@ -10,23 +10,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import de.jClipCorn.database.CCMovieList;
-import de.jClipCorn.database.databaseElement.CCDatabaseElement;
-import de.jClipCorn.database.databaseElement.CCEpisode;
-import de.jClipCorn.database.databaseElement.CCSeason;
-import de.jClipCorn.database.databaseElement.CCSeries;
-import de.jClipCorn.database.databaseElement.ICCDatedElement;
-import de.jClipCorn.database.databaseElement.ICCPlayableElement;
-import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguage;
-import de.jClipCorn.database.databaseElement.columnTypes.CCFSK;
-import de.jClipCorn.database.databaseElement.columnTypes.CCFileFormat;
-import de.jClipCorn.database.databaseElement.columnTypes.CCFileSize;
-import de.jClipCorn.database.databaseElement.columnTypes.CCGenre;
-import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineRefType;
-import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineScore;
-import de.jClipCorn.database.databaseElement.columnTypes.CCQuality;
-import de.jClipCorn.database.databaseElement.columnTypes.CCSingleOnlineReference;
-import de.jClipCorn.database.databaseElement.columnTypes.CCTagList;
-import de.jClipCorn.database.databaseElement.columnTypes.CCUserScore;
+import de.jClipCorn.database.databaseElement.*;
+import de.jClipCorn.database.databaseElement.columnTypes.*;
 import de.jClipCorn.util.SortableTuple;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.datetime.CCDate;
@@ -47,7 +32,7 @@ public class StatisticsHelper {
 	}
 
 	public static Integer getViewedCount(CCStream<ICCPlayableElement> it) {
-		return it.filter(e -> e.isViewed()).count();
+		return it.filter(ICCPlayableElement::isViewed).count();
 	}
 	
 	public static Integer getUnviewedCount(CCStream<ICCPlayableElement> it) {
@@ -55,27 +40,27 @@ public class StatisticsHelper {
 	}
 
 	public static Integer getMovieDuration(CCMovieList ml) {
-		return ml.iteratorMovies().sum(m -> m.getLength(), (a, b) -> a + b, 0);
+		return ml.iteratorMovies().sum(CCMovie::getLength, Integer::sum, 0);
 	}
 
 	public static Integer getSeriesDuration(CCMovieList ml) {
-		return ml.iteratorEpisodes().sum(m -> m.getLength(), (a, b) -> a + b, 0);
+		return ml.iteratorEpisodes().sum(CCEpisode::getLength, Integer::sum, 0);
 	}
 
 	public static Integer getTotalDuration(CCMovieList ml) {
-		return ml.iteratorPlayables().sum(m -> m.getLength(), (a, b) -> a + b, 0);
+		return ml.iteratorPlayables().sum(ICCPlayableElement::getLength, Integer::sum, 0);
 	}
 
 	public static CCFileSize getMovieSize(CCMovieList ml) {
-		return ml.iteratorMovies().sum(m -> m.getFilesize(), CCFileSize::add, CCFileSize.ZERO);
+		return ml.iteratorMovies().sum(CCMovie::getFilesize, CCFileSize::add, CCFileSize.ZERO);
 	}
 
 	public static CCFileSize getSeriesSize(CCMovieList ml) {
-		return ml.iteratorSeries().sum(m -> m.getFilesize(), CCFileSize::add, CCFileSize.ZERO);
+		return ml.iteratorSeries().sum(CCSeries::getFilesize, CCFileSize::add, CCFileSize.ZERO);
 	}
 
 	public static CCFileSize getTotalSize(CCMovieList ml) {
-		return ml.iteratorElements().sum(m -> m.getFilesize(), CCFileSize::add, CCFileSize.ZERO);
+		return ml.iteratorElements().sum(CCDatabaseElement::getFilesize, CCFileSize::add, CCFileSize.ZERO);
 	}
 
 	public static CCFileSize getAvgMovieSize(CCMovieList ml) {
@@ -107,23 +92,23 @@ public class StatisticsHelper {
 	}
 
 	public static Integer getViewedMovieDuration(CCMovieList ml) {
-		return ml.iteratorMovies().filter(m -> m.isViewed()).sum(m -> m.getLength(), (a, b) -> a + b, 0);
+		return ml.iteratorMovies().filter(CCMovie::isViewed).sum(CCMovie::getLength, Integer::sum, 0);
 	}
 
 	public static Integer getViewedSeriesDuration(CCMovieList ml) {
-		return ml.iteratorEpisodes().filter(m -> m.isViewed()).sum(m -> m.getLength(), (a, b) -> a + b, 0);
+		return ml.iteratorEpisodes().filter(CCEpisode::isViewed).sum(CCEpisode::getLength, Integer::sum, 0);
 	}
 
 	public static Integer getViewedTotalDuration(CCMovieList ml) {
-		return ml.iteratorPlayables().filter(m -> m.isViewed()).sum(m -> m.getLength(), (a, b) -> a + b, 0);
+		return ml.iteratorPlayables().filter(ICCPlayableElement::isViewed).sum(ICCPlayableElement::getLength, Integer::sum, 0);
 	}
 	
 	public static CCDate getFirstAddDate(CCStream<ICCPlayableElement> it) {
-		return it.minOrDefault(m -> m.getAddDate(), CCDate::compare, CCDate.getUnspecified());
+		return it.minOrDefault(ICCPlayableElement::getAddDate, CCDate::compare, CCDate.getUnspecified());
 	}
 	
 	public static CCDate getLastAddDate(CCStream<ICCPlayableElement> it) {
-		return it.maxOrDefault(m -> m.getAddDate(), CCDate::compare, CCDate.getUnspecified());
+		return it.maxOrDefault(ICCPlayableElement::getAddDate, CCDate::compare, CCDate.getUnspecified());
 	}
 	
 	public static List<Integer> getCountForAllDates(CCDate startDate, int count, CCStream<ICCPlayableElement> source) {
@@ -146,11 +131,11 @@ public class StatisticsHelper {
 	}
 	
 	public static Integer getMinimumLength(CCStream<ICCPlayableElement> it) {
-		return it.minOrDefault(m -> m.getLength(), Integer::compare, -1);
+		return it.minOrDefault(ICCPlayableElement::getLength, Integer::compare, -1);
 	}
 	
 	public static Integer getMaximumLength(CCStream<ICCPlayableElement> it) {
-		return it.maxOrDefault(m -> m.getLength(), Integer::compare, -1);
+		return it.maxOrDefault(ICCPlayableElement::getLength, Integer::compare, -1);
 	}
 	
 	public static double[][] getCountForAllLengths(int minLength, int count, CCStream<ICCPlayableElement> it) {
@@ -255,11 +240,11 @@ public class StatisticsHelper {
 	}
 	
 	public static Integer getMinimumYear(CCStream<ICCDatedElement> it) {
-		return it.minOrDefault(e -> e.getYear(), Integer::compare, 0);
+		return it.minOrDefault(ICCDatedElement::getYear, Integer::compare, 0);
 	}
 	
 	public static Integer getMaximumYear(CCStream<ICCDatedElement> it) {
-		return it.maxOrDefault(e -> e.getYear(), Integer::compare, 0);
+		return it.maxOrDefault(ICCDatedElement::getYear, Integer::compare, 0);
 	}
 	
 	public static int[] getCountForAllYears(int minYear, int count, CCStream<ICCDatedElement> it) {
@@ -305,18 +290,29 @@ public class StatisticsHelper {
 		
 		return result;
 	}
-	
-	public static int[] getCountForAllLanguages(CCStream<CCDatabaseElement> it) {
+
+	public static int[] getCountForAllLanguages(CCStream<ICCPlayableElement> it) {
 		int[] result = new int[CCDBLanguage.values().length];
-		
-		for (int i = 0; i < CCDBLanguage.values().length; i++) {
-			result[i] = 0;
+
+		for (int i = 0; i < CCDBLanguage.values().length; i++) result[i] = 0;
+
+		for (ICCPlayableElement m : it) {
+			for(CCDBLanguage lng: m.getLanguage()) result[lng.asInt()]++;
 		}
 
-		for (CCDatabaseElement m : it) {
-			result[m.getLanguage().asInt()]++;
+		return result;
+	}
+
+	public static HashMap<CCDBLanguageList, Integer> getCountForAllLanguageLists(CCStream<ICCPlayableElement> it) {
+		HashMap<CCDBLanguageList, Integer> result = new HashMap<>();
+
+		for (ICCPlayableElement m : it)
+		{
+			Integer vn = result.getOrDefault(m.getLanguage(), null);
+			if (vn == null) result.put(m.getLanguage(), 1);
+			else result.put(m.getLanguage(), vn + 1);
 		}
-		
+
 		return result;
 	}
 	
@@ -409,7 +405,7 @@ public class StatisticsHelper {
 			ls.add(0);
 		}
 		
-		for (ICCPlayableElement elem : it.filter(el -> el.isViewed())) {
+		for (ICCPlayableElement elem : it.filter(ICCPlayableElement::isViewed)) {
 			if (elem.getViewedHistory().getLastDateOrInvalid().isMinimum()) {
 				initialcount++;
 			} else {
@@ -447,12 +443,7 @@ public class StatisticsHelper {
 			}
 		}
 		
-		Collections.sort(result, new Comparator<CCEpisode>() {
-			@Override
-			public int compare(CCEpisode o1, CCEpisode o2) {
-				return CCDate.compare(o1.getViewedHistoryLast(), o2.getViewedHistoryLast());
-			}
-		});
+		result.sort((o1, o2) -> CCDate.compare(o1.getViewedHistoryLast(), o2.getViewedHistoryLast()));
 		
 		return result;
 	}
@@ -578,14 +569,8 @@ public class StatisticsHelper {
 	}
 
 	public static <T, U> List<U> convertMapToOrderedKeyList(HashMap<U, T> m, Comparator<U> c) {
-		List<U> r = new ArrayList<>();
-
-		for (U key : m.keySet()) {
-			r.add(key);
-		}
-		
-		Collections.sort(r, c);
-		
+		List<U> r = new ArrayList<>(m.keySet());
+		r.sort(c);
 		return r;
 	}
 

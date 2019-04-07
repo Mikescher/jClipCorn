@@ -2,8 +2,6 @@ package de.jClipCorn.util.helper;
 
 import java.awt.Component;
 import java.awt.event.WindowListener;
-import java.lang.reflect.InvocationTargetException;
-
 import javax.accessibility.Accessible;
 import javax.accessibility.AccessibleContext;
 import javax.swing.*;
@@ -21,36 +19,23 @@ public class DialogHelper {
 	}
 	
 	public static void showLocalError(Component frame, String id) {
-		JOptionPane.showMessageDialog(frame, LocaleBundle.getString(id), LocaleBundle.getString(id + "_caption"), JOptionPane.ERROR_MESSAGE); //$NON-NLS-1$
-	}
-	
-	public static void showError(Component frame, String caption, String text) {
-		JOptionPane.showMessageDialog(frame, text, caption, JOptionPane.ERROR_MESSAGE);
-	}
-	
-	public static void showLocalInformation(Component frame, String id) {
-		JOptionPane.showMessageDialog(frame, LocaleBundle.getString(id), LocaleBundle.getString(id + "_caption"), JOptionPane.INFORMATION_MESSAGE); //$NON-NLS-1$
-	}
-	
-	public static void showInformation(Component frame, String caption, String text) {
-		JOptionPane.showMessageDialog(frame, text, caption, JOptionPane.INFORMATION_MESSAGE);
+		String text = LocaleBundle.getString(id);
+		String caption = LocaleBundle.getString(id + "_caption"); //$NON-NLS-1$
+		ThreadUtils.invokeAndWaitConditional(() -> JOptionPane.showMessageDialog(frame==null?new JFrame():frame, text, caption, JOptionPane.ERROR_MESSAGE));
 	}
 
-	public static void showDispatchError(final String caption, final String text) {
-		if (! SwingUtilities.isEventDispatchThread()) {
-			try {
-				SwingUtilities.invokeAndWait(new Runnable() {
-					@Override
-					public void run() {
-						showError(new JFrame(), caption, text);
-					}
-				});
-			} catch (InvocationTargetException | InterruptedException e) {
-				CCLog.addError(e);
-			}
-		} else {
-			showError(new JFrame(), caption, text);
-		}
+	public static void showDispatchLocalInformation(Component frame, String id) {
+		String text = LocaleBundle.getString(id);
+		String caption = LocaleBundle.getString(id + "_caption"); //$NON-NLS-1$
+		ThreadUtils.invokeAndWaitConditional(() -> JOptionPane.showMessageDialog(frame==null?new JFrame():frame, text, caption, JOptionPane.INFORMATION_MESSAGE));
+	}
+	
+	public static void showDispatchInformation(Component frame, String caption, String text) {
+		ThreadUtils.invokeAndWaitConditional(() -> JOptionPane.showMessageDialog(frame==null?new JFrame():frame, text, caption, JOptionPane.INFORMATION_MESSAGE));
+	}
+
+	public static void showDispatchError(Component frame, final String caption, final String text) {
+		ThreadUtils.invokeAndWaitConditional(() -> JOptionPane.showMessageDialog(frame==null?new JFrame():frame, text, caption, JOptionPane.ERROR_MESSAGE));
 	}
 	
 	public static int showOptions(Component frame, String caption, String text, String option1, String option2, int standard) {

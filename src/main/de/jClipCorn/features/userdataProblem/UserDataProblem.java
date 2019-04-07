@@ -4,6 +4,7 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.jClipCorn.database.databaseElement.columnTypes.*;
 import org.apache.commons.lang.StringUtils;
 
 import de.jClipCorn.database.CCMovieList;
@@ -12,11 +13,6 @@ import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.database.databaseElement.CCSeries;
-import de.jClipCorn.database.databaseElement.columnTypes.CCDateTimeList;
-import de.jClipCorn.database.databaseElement.columnTypes.CCFSK;
-import de.jClipCorn.database.databaseElement.columnTypes.CCQuality;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieZyklus;
-import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReferenceList;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.datetime.CCDateTime;
@@ -52,6 +48,8 @@ public class UserDataProblem {
 	public final static int PROBLEM_NO_COVER = 26;
 	public final static int PROBLEM_INPUT_FILE_NOT_FOUND = 27;
 	public final static int PROBLEM_DESTINTAION_FILE_ALREADY_EXISTS = 28;
+	public final static int PROBLEM_NO_LANG = 29;
+	public final static int PROBLEM_LANG_MUTED_SUBSET = 30;
 
 	private final int pid; // Problem ID
 	
@@ -71,12 +69,12 @@ public class UserDataProblem {
 	//####################################################################################################################################################
 	//####################################################################################################################################################
 	
-	public static void testMovieData(List<UserDataProblem> ret, CCMovie mov, BufferedImage cvr, CCMovieList l, 
-									 String p0, String p1, String p2, String p3, String p4, String p5, 
-									 String title, String zyklus, int zyklusID, int len, CCDate adddate, 
-									 int oscore, int fskidx, int year, long fsize, String csExtn, String csExta, 
-									 int gen0, int gen1, int gen2, int gen3, int gen4, int gen5, int gen6, int gen7, 
-									 int quality, int language, CCOnlineReferenceList ref) {
+	public static void testMovieData(List<UserDataProblem> ret, CCMovie mov, BufferedImage cvr, CCMovieList l,
+									 String p0, String p1, String p2, String p3, String p4, String p5,
+									 String title, String zyklus, int zyklusID, int len, CCDate adddate,
+									 int oscore, int fskidx, int year, long fsize, String csExtn, String csExta,
+									 int gen0, int gen1, int gen2, int gen3, int gen4, int gen5, int gen6, int gen7,
+									 int quality, CCDBLanguageList language, CCOnlineReferenceList ref) {
 		
 		int partcount = 0;
 		
@@ -253,7 +251,7 @@ public class UserDataProblem {
 		//################################################################################################################
 		
 		for (CCMovie imov : l.iteratorMovies()) {
-			if (StringUtils.equalsIgnoreCase(imov.getTitle(), title) && StringUtils.equalsIgnoreCase(imov.getZyklus().getTitle(), zyklus)  && imov.getLanguage().asInt() == language) {
+			if (StringUtils.equalsIgnoreCase(imov.getTitle(), title) && StringUtils.equalsIgnoreCase(imov.getZyklus().getTitle(), zyklus)  && imov.getLanguage() == language) {
 				if (mov == null || mov.getLocalID() != imov.getLocalID()) {
 					ret.add(new UserDataProblem(PROBLEM_TITLE_ALREADYEXISTS));
 				}
@@ -301,6 +299,16 @@ public class UserDataProblem {
 		
 		if (!ref.isValid()) {
 			ret.add(new UserDataProblem(PROBLEM_INVALID_REFERENCE));
+		}
+
+		//################################################################################################################
+		
+		if (language.isEmpty()) {
+			ret.add(new UserDataProblem(PROBLEM_NO_LANG));
+		}
+		
+		if (language.contains(CCDBLanguage.MUTED) && !language.isSingle()) {
+			ret.add(new UserDataProblem(PROBLEM_LANG_MUTED_SUBSET));
 		}
 	}
 	
@@ -396,7 +404,7 @@ public class UserDataProblem {
 		}
 	}
 	
-	public static void testEpisodeData(List<UserDataProblem> ret, CCSeason season, CCEpisode episode, String title, int len, int epNum, CCDate adddate, CCDateTimeList lvdates, long fsize, String csExtn, String csExta, String part, int quality) {
+	public static void testEpisodeData(List<UserDataProblem> ret, CCSeason season, CCEpisode episode, String title, int len, int epNum, CCDate adddate, CCDateTimeList lvdates, long fsize, String csExtn, String csExta, String part, int quality, CCDBLanguageList language) {
 		if (title.isEmpty()) {
 			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_EMPTY_TITLE));
 		}
@@ -486,6 +494,16 @@ public class UserDataProblem {
 		
 		if (PathFormatter.containsIllegalPathSymbolsInSerializedFormat(part)) {
 			ret.add(new UserDataProblem(PROBLEM_INVALID_PATH_CHARACTERS));
+		}
+
+		//################################################################################################################
+		
+		if (language.isEmpty()) {
+			ret.add(new UserDataProblem(PROBLEM_NO_LANG));
+		}
+		
+		if (language.contains(CCDBLanguage.MUTED) && !language.isSingle()) {
+			ret.add(new UserDataProblem(PROBLEM_LANG_MUTED_SUBSET));
 		}
 	}
 	

@@ -27,6 +27,7 @@ public final class ClipCornStatistics {
 		STATISTICS.add(ml -> new StatisticsGroup(s -> new StatisticsGenreChart(ml, s)));
 		STATISTICS.add(ml -> new StatisticsGroup(s -> new StatisticsFSKChart(ml, s)));
 		STATISTICS.add(ml -> new StatisticsGroup(s -> new StatisticsLanguageChart(ml, s)));
+		STATISTICS.add(ml -> new StatisticsGroup(s -> new StatisticsLanguageListChart(ml, s)));
 		STATISTICS.add(ml -> new StatisticsGroup(s -> new StatisticsTagChart(ml, s)));
 		STATISTICS.add(ml -> new StatisticsGroup(s -> new StatisticsProviderMainChart(ml, s)));
 		STATISTICS.add(ml -> new StatisticsGroup(s -> new StatisticsProviderAnyChart(ml, s)));

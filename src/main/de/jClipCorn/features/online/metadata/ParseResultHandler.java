@@ -2,30 +2,26 @@ package de.jClipCorn.features.online.metadata;
 
 import java.awt.image.BufferedImage;
 
-import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguage;
-import de.jClipCorn.database.databaseElement.columnTypes.CCFileFormat;
-import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReferenceList;
-import de.jClipCorn.database.databaseElement.columnTypes.CCQuality;
+import de.jClipCorn.database.databaseElement.columnTypes.*;
 
 public interface ParseResultHandler {
-	public String getFullTitle();
-	public CCOnlineReferenceList getSearchReference();
+	String getFullTitle();
+	CCOnlineReferenceList getSearchReference();
 	
-	public void setMovieFormat(CCFileFormat cmf);
-	public void setFilepath(int p, String t);
-	public void setMovieName(String name);
-	public void setZyklus(String mZyklusTitle);
-	public void setZyklusNumber(int iRoman);
-	public void setFilesize(long size);
-	public void setMovieLanguage(CCDBLanguage lang);
-	public void setQuality(CCQuality q);
-	public void setYear(int y);
-	public void setGenre(int gid, int movGenre);
-	public void setFSK(int fsk);
-	public void setLength(int l);
-	public void setScore(int s);
-	public void setCover(BufferedImage nci);
-	public void setOnlineReference(CCOnlineReferenceList ref);
+	void setMovieFormat(CCFileFormat cmf);
+	void setFilepath(int p, String t);
+	void setMovieName(String name);
+	void setZyklus(String mZyklusTitle);
+	void setZyklusNumber(int iRoman);
+	void setFilesize(long size);
+	void setQuality(CCQuality q);
+	void setYear(int y);
+	void setGenre(int gid, int movGenre);
+	void setFSK(int fsk);
+	void setLength(int l);
+	void setScore(int s);
+	void setCover(BufferedImage nci);
+	void setOnlineReference(CCOnlineReferenceList ref);
 	
-	public void onFinishInserting();
+	void onFinishInserting();
 }

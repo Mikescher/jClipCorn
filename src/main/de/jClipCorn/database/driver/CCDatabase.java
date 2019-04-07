@@ -102,6 +102,7 @@ public class CCDatabase {
 	public final static String TAB_EPISODES_COLUMN_PART_1          = "PART1";           //$NON-NLS-1$
 	public final static String TAB_EPISODES_COLUMN_TAGS            = "TAGS";            //$NON-NLS-1$
 	public final static String TAB_EPISODES_COLUMN_ADDDATE         = "ADDDATE";         //$NON-NLS-1$
+	public final static String TAB_EPISODES_COLUMN_LANGUAGE        = "LANGUAGE";        //$NON-NLS-1$
 
 	public final static String TAB_GROUPS_COLUMN_NAME              = "NAME";            //$NON-NLS-1$
 	public final static String TAB_GROUPS_COLUMN_ORDER             = "ORDERING";        //$NON-NLS-1$
@@ -114,7 +115,7 @@ public class CCDatabase {
 	private final GenericDatabase db;
 	private final CCCoverCache coverCache;
 		
-	public final DatabaseUpgradeAssistant upgrader;
+	public final DatabaseMigration upgrader;
 	
 	private CCDatabase(CCDatabaseDriver driver, String dbPath) {
 		super();
@@ -144,7 +145,7 @@ public class CCDatabase {
 			coverCache = null;
 		}
 		
-		upgrader = new DatabaseUpgradeAssistant(db);
+		upgrader = new DatabaseMigration(db);
 	}
 	
 	public static CCDatabase create(String dbPath) {
@@ -319,6 +320,7 @@ public class CCDatabase {
 		ep.setPart(rs.getString(TAB_EPISODES_COLUMN_PART_1));
 		ep.setAddDate(getDateFromResultSet(rs, TAB_EPISODES_COLUMN_ADDDATE));
 		ep.setTags(rs.getShort(TAB_EPISODES_COLUMN_TAGS));
+		ep.setLanguage(rs.getLong(TAB_EPISODES_COLUMN_LANGUAGE));
 	}
 	
 	private void updateSeasonFromResultSet(ResultSet rs, CCSeason seas) throws SQLException {
@@ -329,7 +331,6 @@ public class CCDatabase {
 	
 	private void updateSeriesFromResultSet(ResultSet rs, CCSeries ser) throws SQLException, CCFormatException {
 		ser.setTitle(rs.getString(TAB_MAIN_COLUMN_NAME));
-		ser.setLanguage(rs.getInt(TAB_MAIN_COLUMN_LANGUAGE));
 		ser.setGenres(rs.getLong(TAB_MAIN_COLUMN_GENRE));
 		ser.setOnlinescore(rs.getInt(TAB_MAIN_COLUMN_ONLINESCORE));
 		ser.setFsk(rs.getInt(TAB_MAIN_COLUMN_FSK));
@@ -347,7 +348,7 @@ public class CCDatabase {
 		mov.setZyklusTitle(rs.getString(TAB_MAIN_COLUMN_ZYKLUS));
 		mov.setZyklusID(rs.getInt(TAB_MAIN_COLUMN_ZYKLUSNUMBER));
 		mov.setQuality(rs.getInt(TAB_MAIN_COLUMN_QUALITY));
-		mov.setLanguage(rs.getInt(TAB_MAIN_COLUMN_LANGUAGE));
+		mov.setLanguage(rs.getLong(TAB_MAIN_COLUMN_LANGUAGE));
 		mov.setGenres(rs.getLong(TAB_MAIN_COLUMN_GENRE));
 		mov.setLength(rs.getInt(TAB_MAIN_COLUMN_LENGTH));
 		mov.setAddDate(getDateFromResultSet(rs, TAB_MAIN_COLUMN_ADDDATE));
@@ -508,7 +509,8 @@ public class CCDatabase {
 			s.setInt(10, 0);                             // 10   TAB_EPISODES_COLUMN_FILESIZE       
 			s.setString(11, "");                         // 11   TAB_EPISODES_COLUMN_PART_1         
 			s.setInt(12, 0);                             // 12   TAB_EPISODES_COLUMN_TAGS           
-			s.setString(13, CCDate.MIN_SQL);             // 13   TAB_EPISODES_COLUMN_ADDDATE        
+			s.setString(13, CCDate.MIN_SQL);             // 13   TAB_EPISODES_COLUMN_ADDDATE
+			s.setInt(14, 0);                             // 14   TAB_EPISODES_COLUMN_LANGUAGE
 
 			s.executeUpdate();
 
@@ -601,7 +603,7 @@ public class CCDatabase {
 			s.setString(4, mov.getZyklus().getTitle());                        // TAB_MAIN_COLUMN_ZYKLUS
 			s.setInt(5, mov.getZyklus().getNumber());                          // TAB_MAIN_COLUMN_ZYKLUSNUMBER
 			s.setInt(6, mov.getQuality().asInt());                             // TAB_MAIN_COLUMN_QUALITY
-			s.setInt(7, mov.getLanguage().asInt());                            // TAB_MAIN_COLUMN_LANGUAGE
+			s.setLong(7, mov.getLanguage().serializeToLong());                  // TAB_MAIN_COLUMN_LANGUAGE
 			s.setLong(8, mov.getGenres().getAllGenres());                      // TAB_MAIN_COLUMN_GENRE
 			s.setInt(9, mov.getLength());                                      // TAB_MAIN_COLUMN_LENGTH
 			s.setString(10, mov.getAddDate().toStringSQL());    			   // TAB_MAIN_COLUMN_ADDDATE
@@ -641,20 +643,19 @@ public class CCDatabase {
 			PreparedStatement s = Statements.updateSeriesTabStatement;
 			s.clearParameters();
 
-			s.setString(1, ser.getTitle());                                     // 01     TAB_MAIN_COLUMN_NAME        
-			s.setInt(2, ser.getLanguage().asInt());                             // 02     TAB_MAIN_COLUMN_LANGUAGE    
-			s.setLong(3, ser.getGenres().getAllGenres());                       // 03     TAB_MAIN_COLUMN_GENRE       
-			s.setInt(4, ser.getOnlinescore().asInt());                          // 04     TAB_MAIN_COLUMN_ONLINESCORE 
-			s.setInt(5, ser.getFSK().asInt());                                  // 05     TAB_MAIN_COLUMN_FSK         
-			s.setString(6, ser.getOnlineReference().toSerializationString());   // 06     TAB_MAIN_COLUMN_ONLINEREF   
-			s.setString(7, ser.getGroups().toSerializationString());            // 07     TAB_MAIN_COLUMN_GROUPS      
-			s.setInt(8, ser.getScore().asInt());                                // 08     TAB_MAIN_COLUMN_SCORE       
-			s.setString(9, ser.getCoverName());                                 // 09     TAB_MAIN_COLUMN_COVER       
-			s.setInt(10, ser.getType().asInt());                                // 10     TAB_MAIN_COLUMN_TYPE        
-			s.setInt(11, ser.getSeriesID());                                    // 11     TAB_MAIN_COLUMN_SERIES_ID
-			s.setShort(12, ser.getTags().asShort());                            // 12     TAB_MAIN_COLUMN_TAGS
+			s.setString(1, ser.getTitle());                                     // 01     TAB_MAIN_COLUMN_NAME
+			s.setLong(2, ser.getGenres().getAllGenres());                       // 02     TAB_MAIN_COLUMN_GENRE
+			s.setInt(3, ser.getOnlinescore().asInt());                          // 03     TAB_MAIN_COLUMN_ONLINESCORE
+			s.setInt(4, ser.getFSK().asInt());                                  // 04     TAB_MAIN_COLUMN_FSK
+			s.setString(5, ser.getOnlineReference().toSerializationString());   // 05     TAB_MAIN_COLUMN_ONLINEREF
+			s.setString(6, ser.getGroups().toSerializationString());            // 06     TAB_MAIN_COLUMN_GROUPS
+			s.setInt(7, ser.getScore().asInt());                                // 07     TAB_MAIN_COLUMN_SCORE
+			s.setString(8, ser.getCoverName());                                 // 08     TAB_MAIN_COLUMN_COVER
+			s.setInt(9, ser.getType().asInt());                                 // 09     TAB_MAIN_COLUMN_TYPE
+			s.setInt(10, ser.getSeriesID());                                    // 10     TAB_MAIN_COLUMN_SERIES_ID
+			s.setShort(11, ser.getTags().asShort());                            // 11     TAB_MAIN_COLUMN_TAGS
 
-			s.setInt(13, ser.getLocalID());
+			s.setInt(12, ser.getLocalID());
 
 			s.executeUpdate();
 
@@ -704,8 +705,9 @@ public class CCDatabase {
 			s.setString(10, ep.getPart());                                   // TAB_EPISODES_COLUMN_PART_1
 			s.setShort(11, ep.getTags().asShort());                          // TAB_EPISODES_COLUMN_TAGS
 			s.setString(12, ep.getAddDate().toStringSQL());					 // TAB_EPISODES_COLUMN_ADDDATE
+			s.setLong(13, ep.getLanguage().serializeToLong());			     // TAB_EPISODES_COLUMN_ADDDATE
 
-			s.setInt(13, ep.getLocalID());
+			s.setInt(14, ep.getLocalID());
 
 			s.execute();
 
@@ -1180,12 +1182,12 @@ public class CCDatabase {
 		return db.createPreparedStatement(sql);
 	}
 
-	public String GetDBTypeName() {
-		return db.GetDBTypeName();
+	public String getDBTypeName() {
+		return db.getDBTypeName();
 	}
 
-	public boolean IsInMemory() {
-		return db.IsInMemory();
+	public boolean isInMemory() {
+		return db.isInMemory();
 	}
 
 	public CCCoverCache getCoverCache() {

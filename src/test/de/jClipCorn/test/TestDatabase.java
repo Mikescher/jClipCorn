@@ -13,7 +13,7 @@ import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.database.databaseElement.columnTypes.CCFSK;
 import de.jClipCorn.database.databaseElement.columnTypes.CCFileFormat;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGenre;
-import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguage;
+import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguageList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineScore;
 import de.jClipCorn.database.databaseElement.columnTypes.CCQuality;
 import de.jClipCorn.database.databaseElement.columnTypes.CCUserScore;
@@ -45,7 +45,7 @@ public class TestDatabase extends ClipCornBaseTest {
 		movWrite.setGenre(CCGenre.GENRE_002, 0);
 		movWrite.setGenre(CCGenre.GENRE_004, 1);
 		movWrite.setGenre(CCGenre.GENRE_006, 2);
-		movWrite.setLanguage(CCDBLanguage.ENGLISH);
+		movWrite.setLanguage(CCDBLanguageList.ENGLISH);
 		movWrite.setLength(120);
 		movWrite.setOnlinescore(CCOnlineScore.STARS_3_0);
 		movWrite.setViewed(true);
@@ -68,7 +68,7 @@ public class TestDatabase extends ClipCornBaseTest {
 		assertEquals("Zyklus IV", movWrite.getZyklus().getFormatted());
 		assertEquals("Zyklus IV - Title", movWrite.getCompleteTitle());
 		assertEquals(1024, movWrite.getFilesize().getBytes());
-		assertEquals(CCDBLanguage.ENGLISH, movWrite.getLanguage());
+		assertEquals(CCDBLanguageList.ENGLISH, movWrite.getLanguage());
 		assertEquals(120, movWrite.getLength());
 		assertEquals(2012, movWrite.getYear());
 		assertEquals(CCUserScore.RATING_III, movWrite.getScore());
@@ -94,7 +94,7 @@ public class TestDatabase extends ClipCornBaseTest {
 		assertEquals(CCFileFormat.AVI, mov.getFormat());
 		assertEquals("R.E.D. I - Älter. Härter. Besser.", mov.getCompleteTitle());
 		assertEquals(714502144, mov.getFilesize().getBytes());
-		assertEquals(CCDBLanguage.GERMAN, mov.getLanguage());
+		assertEquals(CCDBLanguageList.GERMAN, mov.getLanguage());
 		assertEquals(111, mov.getLength());
 		assertEquals(2010, mov.getYear());
 		assertEquals(CCUserScore.RATING_NO, mov.getScore());

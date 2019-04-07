@@ -16,7 +16,8 @@ public interface ICCPlayableElement {
 	boolean getTag(int c);
 	CCDateTimeList getViewedHistory();
 	CCDate getAddDate();
+	CCDBLanguageList getLanguage();
 
 	void play(boolean updateViewedAndHistory);
-	
+
 }

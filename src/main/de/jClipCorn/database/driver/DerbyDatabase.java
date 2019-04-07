@@ -168,10 +168,10 @@ public class DerbyDatabase extends GenericDatabase {
 	}
 
 	@Override
-	public String GetDBTypeName() {
-		return CCDatabaseDriver.DERBY.asString();
+	public CCDatabaseDriver getDBType() {
+		return CCDatabaseDriver.DERBY;
 	}
 
 	@Override
-	public boolean IsInMemory() {return false;}
+	public boolean isInMemory() {return false;}
 }

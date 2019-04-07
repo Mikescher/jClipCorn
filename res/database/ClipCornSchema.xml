@@ -16,7 +16,7 @@
         <column name="ZYKLUS"         type="VARCHAR"  required="true" size="128"       />
         <column name="ZYKLUSNUMBER"   type="INTEGER"  required="true"                  />
         <column name="QUALITY"        type="TINYINT"  required="true"                  />
-        <column name="LANGUAGE"       type="TINYINT"  required="true"                  />    <!-- ALSO USED FOR SERIES -->
+        <column name="LANGUAGE"       type="BIGINT"   required="true"                  />
         <column name="GENRE"          type="BIGINT"   required="true"                  />    <!-- ALSO USED FOR SERIES -->
         <column name="LENGTH"         type="INTEGER"  required="true"                  />
         <column name="ADDDATE"        type="DATE"     required="true"                  />
@@ -62,6 +62,7 @@
         <column name="VIEWED"         type="BIT"      required="true"                  />
         <column name="VIEWED_HISTORY" type="VARCHAR"  required="true" size="4096"      />
         <column name="QUALITY"        type="TINYINT"  required="true"                  />
+        <column name="LANGUAGE"       type="BIGINT"   required="true"                  />
         <column name="LENGTH"         type="INTEGER"  required="true"                  />
         <column name="FORMAT"         type="TINYINT"  required="true"                  />
         <column name="FILESIZE"       type="BIGINT"   required="true"                  />

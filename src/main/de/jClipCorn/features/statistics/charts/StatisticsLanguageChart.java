@@ -1,5 +1,6 @@
 package de.jClipCorn.features.statistics.charts;
 
+import de.jClipCorn.database.databaseElement.ICCPlayableElement;
 import de.jClipCorn.features.statistics.PieRotator;
 import de.jClipCorn.features.statistics.StatisticsChart;
 import org.jfree.chart.ChartFactory;
@@ -10,7 +11,6 @@ import org.jfree.data.general.PieDataset;
 import org.jfree.util.Rotation;
 
 import de.jClipCorn.database.CCMovieList;
-import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguage;
 import de.jClipCorn.features.statistics.StatisticsHelper;
 import de.jClipCorn.gui.frames.statisticsFrame.StatisticsTypeFilter;
@@ -52,7 +52,7 @@ public class StatisticsLanguageChart extends StatisticsChart {
 	}
 	
 	private PieDataset getDataSet(CCMovieList movielist, StatisticsTypeFilter source) {
-		CCStream<CCDatabaseElement> it = source.iteratorMoviesOrSeries(movielist);
+		CCStream<ICCPlayableElement> it = source.iteratorMoviesOrEpisodes(movielist);
 		
 		DefaultPieDataset dataset = new DefaultPieDataset();
 		
@@ -89,6 +89,6 @@ public class StatisticsLanguageChart extends StatisticsChart {
 
 	@Override
 	public String createToggleTwoCaption() {
-		return LocaleBundle.getString("StatisticsFrame.this.toggleSeries"); //$NON-NLS-1$
+		return LocaleBundle.getString("StatisticsFrame.this.toggleEpisodes"); //$NON-NLS-1$
 	}
 }

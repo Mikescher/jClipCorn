@@ -16,7 +16,6 @@ import javax.swing.SpinnerNumberModel;
 import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.database.databaseElement.columnTypes.CCFileFormat;
-import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguage;
 import de.jClipCorn.database.databaseElement.columnTypes.CCQuality;
 import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReferenceList;
 import de.jClipCorn.gui.frames.inputErrorFrame.InputErrorDialog;
@@ -200,11 +199,6 @@ public class AddSeasonFrame extends JFrame implements UserDataProblemHandler, Pa
 
 	@Override
 	public void setFilesize(long size) {
-		// NOP
-	}
-
-	@Override
-	public void setMovieLanguage(CCDBLanguage lang) {
 		// NOP
 	}
 

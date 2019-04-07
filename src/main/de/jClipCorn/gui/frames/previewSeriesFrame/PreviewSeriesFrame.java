@@ -54,6 +54,7 @@ import de.jClipCorn.gui.guiComponents.OnlineRefButton;
 import de.jClipCorn.gui.guiComponents.displaySearchResultsDialog.DisplaySearchResultsDialog;
 import de.jClipCorn.gui.guiComponents.jCoverChooser.JCoverChooser;
 import de.jClipCorn.gui.guiComponents.jCoverChooser.JCoverChooserPopupEvent;
+import de.jClipCorn.gui.guiComponents.language.LanguageDisplay;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.gui.resources.Resources;
@@ -128,6 +129,8 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 	private JLabel lblGroupsMark;
 	private JLabel lblGroups;
 	private JPanel pnlInfo2;
+	private JPanel pnlLang;
+	private LanguageDisplay ctrlLang;
 
 	/**
 	 * @wbp.parser.constructor
@@ -466,7 +469,30 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 		getContentPane().add(pnlInfo2, BorderLayout.WEST);
 		pnlInfo2.setSize(new Dimension(100, 100));
 		pnlInfo2.setBorder(new EmptyBorder(0, 4, 8, 4));
-		pnlInfo2.setLayout(new FormLayout(new ColumnSpec[] { FormSpecs.DEFAULT_COLSPEC, }, new RowSpec[] { FormSpecs.DEFAULT_ROWSPEC, FormSpecs.RELATED_GAP_ROWSPEC, FormSpecs.DEFAULT_ROWSPEC, FormSpecs.RELATED_GAP_ROWSPEC, FormSpecs.DEFAULT_ROWSPEC, FormSpecs.RELATED_GAP_ROWSPEC, FormSpecs.DEFAULT_ROWSPEC, FormSpecs.RELATED_GAP_ROWSPEC, FormSpecs.DEFAULT_ROWSPEC, FormSpecs.RELATED_GAP_ROWSPEC, FormSpecs.DEFAULT_ROWSPEC, FormSpecs.RELATED_GAP_ROWSPEC, FormSpecs.DEFAULT_ROWSPEC, FormSpecs.RELATED_GAP_ROWSPEC, FormSpecs.DEFAULT_ROWSPEC, FormSpecs.RELATED_GAP_ROWSPEC, FormSpecs.DEFAULT_ROWSPEC, FormSpecs.DEFAULT_ROWSPEC, RowSpec.decode("default:grow"), RowSpec.decode("default:grow"), FormSpecs.DEFAULT_ROWSPEC, })); //$NON-NLS-1$ //$NON-NLS-2$
+		pnlInfo2.setLayout(new FormLayout(new ColumnSpec[] {
+				FormSpecs.DEFAULT_COLSPEC,},
+			new RowSpec[] {
+				FormSpecs.DEFAULT_ROWSPEC,
+				FormSpecs.RELATED_GAP_ROWSPEC,
+				FormSpecs.DEFAULT_ROWSPEC,
+				FormSpecs.RELATED_GAP_ROWSPEC,
+				FormSpecs.DEFAULT_ROWSPEC,
+				FormSpecs.RELATED_GAP_ROWSPEC,
+				FormSpecs.DEFAULT_ROWSPEC,
+				FormSpecs.RELATED_GAP_ROWSPEC,
+				FormSpecs.DEFAULT_ROWSPEC,
+				FormSpecs.RELATED_GAP_ROWSPEC,
+				FormSpecs.DEFAULT_ROWSPEC,
+				FormSpecs.RELATED_GAP_ROWSPEC,
+				RowSpec.decode("max(22px;default)"), //$NON-NLS-1$
+				FormSpecs.RELATED_GAP_ROWSPEC,
+				FormSpecs.DEFAULT_ROWSPEC,
+				FormSpecs.RELATED_GAP_ROWSPEC,
+				FormSpecs.DEFAULT_ROWSPEC,
+				FormSpecs.DEFAULT_ROWSPEC,
+				RowSpec.decode("default:grow"), //$NON-NLS-1$
+				RowSpec.decode("default:grow"), //$NON-NLS-1$
+				FormSpecs.DEFAULT_ROWSPEC,}));
 
 		lblCover = new DatabaseElementPreviewLabel(true);
 		pnlInfo2.add(lblCover, "1, 1"); //$NON-NLS-1$
@@ -500,11 +526,23 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 		pnlInfo2.add(lblScore, "1, 11"); //$NON-NLS-1$
 		lblScore.setFont(new Font("Tahoma", Font.PLAIN, 12)); //$NON-NLS-1$
 		lblScore.setHorizontalTextPosition(SwingConstants.LEADING);
-
-		lblLanguage = new JLabel();
-		pnlInfo2.add(lblLanguage, "1, 13"); //$NON-NLS-1$
+		
+		pnlLang = new JPanel();
+		pnlInfo2.add(pnlLang, "1, 13, fill, fill"); //$NON-NLS-1$
+		pnlLang.setLayout(new FormLayout(new ColumnSpec[] {
+				FormSpecs.DEFAULT_COLSPEC,
+				FormSpecs.RELATED_GAP_COLSPEC,
+				ColumnSpec.decode("default:grow"),}, //$NON-NLS-1$
+			new RowSpec[] {
+				RowSpec.decode("default:grow"),})); //$NON-NLS-1$
+				
+		lblLanguage = new JLabel(LocaleBundle.getString("AddMovieFrame.lblSprache.text")); //$NON-NLS-1$
+		pnlLang.add(lblLanguage, "1, 1, left, center"); //$NON-NLS-1$
 		lblLanguage.setFont(new Font("Tahoma", Font.PLAIN, 12)); //$NON-NLS-1$
 		lblLanguage.setHorizontalTextPosition(SwingConstants.LEADING);
+		
+		ctrlLang = new LanguageDisplay();
+		pnlLang.add(ctrlLang, "3, 1, fill, center"); //$NON-NLS-1$
 
 		lblfsk = new JLabel();
 		pnlInfo2.add(lblfsk, "1, 15"); //$NON-NLS-1$
@@ -640,8 +678,7 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 
 		lblScore.setIcon(dispSeries.getScore().getIcon());
 
-		lblLanguage.setText(LocaleBundle.getFormattedString("PreviewSeriesFrame.lblLanguage.text", dispSeries.getLanguage().asString())); //$NON-NLS-1$
-		lblLanguage.setIcon(dispSeries.getLanguage().getIcon());
+		ctrlLang.setValue(dispSeries.getAllLanguages());
 
 		lblfsk.setText(LocaleBundle.getFormattedString("PreviewSeriesFrame.lblFSK.text", dispSeries.getFSK().asString())); //$NON-NLS-1$
 		lblfsk.setIcon(dispSeries.getFSK().getIcon());

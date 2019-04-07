@@ -396,7 +396,7 @@ public class BackupsManagerFrame extends JFrame {
 					SwingUtilities.invokeLater(new Runnable() {
 						@Override
 						public void run() {
-							DialogHelper.showLocalInformation(BackupsManagerFrame.this, "BackupsManagerFrame.dialogs.ApplicationIsRestarting"); //$NON-NLS-1$
+							DialogHelper.showDispatchLocalInformation(BackupsManagerFrame.this, "BackupsManagerFrame.dialogs.ApplicationIsRestarting"); //$NON-NLS-1$
 
 							if (! ApplicationHelper.restartApplication()) {
 								DialogHelper.showLocalError(BackupsManagerFrame.this, "BackupsManagerFrame.dialogs.RestartFailed"); //$NON-NLS-1$

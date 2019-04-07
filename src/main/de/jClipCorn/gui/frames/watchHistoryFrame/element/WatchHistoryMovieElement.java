@@ -5,12 +5,7 @@ import java.awt.image.BufferedImage;
 import javax.swing.ImageIcon;
 
 import de.jClipCorn.database.databaseElement.CCMovie;
-import de.jClipCorn.database.databaseElement.columnTypes.CCDateTimeList;
-import de.jClipCorn.database.databaseElement.columnTypes.CCFileFormat;
-import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguage;
-import de.jClipCorn.database.databaseElement.columnTypes.CCQuality;
-import de.jClipCorn.database.databaseElement.columnTypes.CCFileSize;
-import de.jClipCorn.database.databaseElement.columnTypes.CCTagList;
+import de.jClipCorn.database.databaseElement.columnTypes.*;
 import de.jClipCorn.gui.frames.previewMovieFrame.PreviewMovieFrame;
 import de.jClipCorn.gui.frames.watchHistoryFrame.WatchHistoryFrame;
 import de.jClipCorn.gui.resources.Resources;
@@ -46,7 +41,7 @@ public class WatchHistoryMovieElement extends WatchHistoryElement{
 	}
 
 	@Override
-	public CCDBLanguage getLanguage() {
+	public CCDBLanguageList getLanguage() {
 		return Movie.getLanguage();
 	}
 

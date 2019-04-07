@@ -1,5 +1,6 @@
 package de.jClipCorn.features.table.filter.customFilter;
 
+import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguage;
 import org.apache.commons.lang.StringUtils;
 
 import de.jClipCorn.database.CCMovieList;
@@ -38,9 +39,19 @@ public class CustomSearchFilter extends AbstractCustomDatabaseElementFilter {
 		if (e.getQuality().asString().equalsIgnoreCase(searchTerm)) {
 			return true;
 		}
-		
-		if (e.getLanguage().asString().equalsIgnoreCase(searchTerm)) {
-			return true;
+
+		if (e.isMovie()) {
+			for (CCDBLanguage lang : ((CCMovie)e).getLanguage()) {
+				if (lang.asString().equalsIgnoreCase(searchTerm)) {
+					return true;
+				}
+			}
+		} else if (e.isSeries()) {
+			for (CCDBLanguage lang : ((CCSeries)e).getAllLanguages()) {
+				if (lang.asString().equalsIgnoreCase(searchTerm)) {
+					return true;
+				}
+			}
 		}
 		
 		if (e.getFormat().asString().equalsIgnoreCase(searchTerm)) {

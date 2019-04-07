@@ -21,13 +21,7 @@ import javax.swing.SpinnerNumberModel;
 
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCSeries;
-import de.jClipCorn.database.databaseElement.columnTypes.CCFSK;
-import de.jClipCorn.database.databaseElement.columnTypes.CCFileFormat;
-import de.jClipCorn.database.databaseElement.columnTypes.CCGenre;
-import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguage;
-import de.jClipCorn.database.databaseElement.columnTypes.CCQuality;
-import de.jClipCorn.database.databaseElement.columnTypes.CCDBElementTyp;
-import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReferenceList;
+import de.jClipCorn.database.databaseElement.columnTypes.*;
 import de.jClipCorn.gui.frames.editSeriesFrame.EditSeriesFrame;
 import de.jClipCorn.gui.frames.inputErrorFrame.InputErrorDialog;
 import de.jClipCorn.gui.frames.parseOnlineFrame.ParseOnlineDialog;
@@ -64,8 +58,6 @@ public class AddSeriesFrame extends JFrame implements ParseResultHandler, UserDa
 	private JButton btnParse;
 	private JLabel label_8;
 	private JTextField edTitle;
-	private JLabel label_10;
-	private JComboBox<String> cbxLanguage;
 	private JLabel label_11;
 	private JComboBox<String> cbxFSK;
 	private JLabel label_12;
@@ -80,7 +72,7 @@ public class AddSeriesFrame extends JFrame implements ParseResultHandler, UserDa
 	private JLabel lblGroups;
 
 	public AddSeriesFrame(Component owner, CCMovieList mlist) {
-		setSize(new Dimension(675, 530));
+		setSize(new Dimension(675, 500));
 		movieList = mlist;
 		
 		setResizable(false);
@@ -169,7 +161,7 @@ public class AddSeriesFrame extends JFrame implements ParseResultHandler, UserDa
 			}
 		});
 		btnParse.setFont(new Font("Tahoma", Font.BOLD, 15)); //$NON-NLS-1$
-		btnParse.setBounds(445, 110, 212, 42);
+		btnParse.setBounds(445, 80, 212, 42);
 		getContentPane().add(btnParse);
 
 		label_8 = new JLabel(LocaleBundle.getString("AddMovieFrame.label_1.text")); //$NON-NLS-1$
@@ -180,14 +172,6 @@ public class AddSeriesFrame extends JFrame implements ParseResultHandler, UserDa
 		edTitle.setColumns(10);
 		edTitle.setBounds(87, 10, 212, 20);
 		getContentPane().add(edTitle);
-
-		label_10 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblSprache.text")); //$NON-NLS-1$
-		label_10.setBounds(368, 13, 59, 16);
-		getContentPane().add(label_10);
-
-		cbxLanguage = new JComboBox<>();
-		cbxLanguage.setBounds(445, 10, 212, 22);
-		getContentPane().add(cbxLanguage);
 
 		label_11 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblFsk.text")); //$NON-NLS-1$
 		label_11.setBounds(10, 73, 71, 16);
@@ -217,7 +201,7 @@ public class AddSeriesFrame extends JFrame implements ParseResultHandler, UserDa
 				onBtnOK(true);
 			}
 		});
-		btnOK.setBounds(176, 470, 116, 25);
+		btnOK.setBounds(176, 437, 116, 25);
 		getContentPane().add(btnOK);
 
 		btnCancel = new JButton(LocaleBundle.getString("UIGeneric.btnCancel.text")); //$NON-NLS-1$
@@ -227,33 +211,31 @@ public class AddSeriesFrame extends JFrame implements ParseResultHandler, UserDa
 				cancel();
 			}
 		});
-		btnCancel.setBounds(311, 470, 116, 25);
+		btnCancel.setBounds(311, 437, 116, 25);
 		getContentPane().add(btnCancel);
 		
 		edCvrControl = new EditCoverControl(this, this);
-		edCvrControl.setBounds(475, 170, EditCoverControl.CTRL_WIDTH, EditCoverControl.CTRL_HEIGHT);
+		edCvrControl.setBounds(475, 133, EditCoverControl.CTRL_WIDTH, EditCoverControl.CTRL_HEIGHT);
 		getContentPane().add(edCvrControl);
 		
 		label_9 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblOnlineID.text")); //$NON-NLS-1$
-		label_9.setBounds(368, 42, 87, 16);
+		label_9.setBounds(368, 12, 87, 16);
 		getContentPane().add(label_9);
 		
 		edReference = new JReferenceChooser();
-		edReference.setBounds(445, 40, 212, 20);
+		edReference.setBounds(445, 10, 212, 20);
 		getContentPane().add(edReference);
 		
 		edGroups = new GroupListEditor(movieList);
-		edGroups.setBounds(445, 70, 212, 22);
+		edGroups.setBounds(445, 40, 212, 22);
 		getContentPane().add(edGroups);
 		
 		lblGroups = new JLabel(LocaleBundle.getString("EditSeriesFrame.lblGroups.text")); //$NON-NLS-1$
-		lblGroups.setBounds(368, 73, 87, 16);
+		lblGroups.setBounds(368, 43, 87, 16);
 		getContentPane().add(lblGroups);
 	}
 	
 	private void setDefaultValues() {
-		cbxLanguage.setModel(new DefaultComboBoxModel<>(CCDBLanguage.getWrapper().getList()));
-		
 		DefaultComboBoxModel<String> cbFSKdcbm;
 		cbxFSK.setModel(cbFSKdcbm = new DefaultComboBoxModel<>(CCFSK.getWrapper().getList()));
 		cbFSKdcbm.addElement(" "); //$NON-NLS-1$
@@ -316,11 +298,6 @@ public class AddSeriesFrame extends JFrame implements ParseResultHandler, UserDa
 	@Override
 	public void setFilesize(long size) {
 		// No such field
-	}
-
-	@Override
-	public void setMovieLanguage(CCDBLanguage lang) {
-		cbxLanguage.setSelectedIndex(lang.asInt());
 	}
 
 	@Override
@@ -420,9 +397,7 @@ public class AddSeriesFrame extends JFrame implements ParseResultHandler, UserDa
 		//#####################################################################################
 		
 		newS.setTitle(edTitle.getText());
-		
-		newS.setLanguage(cbxLanguage.getSelectedIndex());
-		
+
 		newS.setOnlinescore((int) spnOnlinescore.getValue());
 		
 		newS.setFsk(cbxFSK.getSelectedIndex());

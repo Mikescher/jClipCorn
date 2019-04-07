@@ -11,18 +11,11 @@ import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import de.jClipCorn.database.databaseElement.columnTypes.*;
 import org.apache.commons.lang.text.StrBuilder;
 import org.jdom2.Element;
 
 import de.jClipCorn.database.CCMovieList;
-import de.jClipCorn.database.databaseElement.columnTypes.CCDBElementTyp;
-import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguage;
-import de.jClipCorn.database.databaseElement.columnTypes.CCDateTimeList;
-import de.jClipCorn.database.databaseElement.columnTypes.CCFileFormat;
-import de.jClipCorn.database.databaseElement.columnTypes.CCFileSize;
-import de.jClipCorn.database.databaseElement.columnTypes.CCGroup;
-import de.jClipCorn.database.databaseElement.columnTypes.CCQuality;
-import de.jClipCorn.database.databaseElement.columnTypes.CCTagList;
 import de.jClipCorn.database.util.NextEpisodeHelper;
 import de.jClipCorn.database.util.ExtendedViewedState;
 import de.jClipCorn.database.util.ExtendedViewedStateType;
@@ -496,21 +489,55 @@ public class CCSeries extends CCDatabaseElement  {
 		return vc;
 	}
 
+	public CCDBLanguageList getAllLanguages() {
+		HashSet<CCDBLanguage> langs = new HashSet<>();
+		for (CCSeason s : seasons)
+		{
+			for (CCEpisode e : s.getEpisodeList())
+			{
+				langs.addAll(e.getLanguage().getInternalData());
+			}
+		}
+
+		return CCDBLanguageList.createDirect(langs);
+	}
+
+	public CCDBLanguageList getCommonLanguages() {
+		HashSet<CCDBLanguage> langs = null;
+		for (CCSeason s : seasons)
+		{
+			for (CCEpisode e : s.getEpisodeList())
+			{
+				if (langs == null) { langs = new HashSet<>(e.getLanguage().getInternalData()); continue; }
+				langs.retainAll(e.getLanguage().getInternalData());
+				if (langs.size()==0) return CCDBLanguageList.EMPTY;
+			}
+		}
+		if (langs == null) return CCDBLanguageList.EMPTY;
+		return CCDBLanguageList.createDirect(langs);
+	}
+
+	public CCDBLanguageList getCommonOrAllLanguages() {
+		CCDBLanguageList com = getCommonLanguages();
+		return com.isEmpty() ? getAllLanguages() : com;
+	}
+
 	@SuppressWarnings("nls")
 	public String getFolderNameForCreatedFolderStructure() {
-		String seriesfoldername = getTitle();
+		StringBuilder seriesfoldername = new StringBuilder(getTitle());
 		
 		for (CCGroup group : getGroups()) {
-			if (group.DoSerialize) seriesfoldername += " [["+group.Name+"]]";
+			if (group.DoSerialize) seriesfoldername.append(" [[").append(group.Name).append("]]");
+		}
+
+		CCDBLanguageList lang = getCommonOrAllLanguages();
+		if (!lang.isExact(CCDBLanguage.GERMAN) && !lang.isEmpty()) {
+			seriesfoldername.append(String.format(" [%s]", lang.serializeToFilenameString()));
 		}
 		
-		if (getLanguage() != CCDBLanguage.GERMAN) {
-			seriesfoldername += String.format(" [%s]", getLanguage().getShortString());
-		}
+		seriesfoldername = new StringBuilder(PathFormatter.fixStringToFilesystemname(seriesfoldername.toString()));
 		
-		seriesfoldername = PathFormatter.fixStringToFilesystemname(seriesfoldername);
-		
-		return seriesfoldername;
+		return seriesfoldername.toString();
 	}
 
 	@SuppressWarnings("nls")
@@ -622,5 +649,9 @@ public class CCSeries extends CCDatabaseElement  {
 		}
 		
 		return 0;
+	}
+
+	public CCEpisode getLastAddedEpisode() {
+		return iteratorEpisodes().autosortByProperty(CCEpisode::getAddDate).lastOrNull();
 	}
 }

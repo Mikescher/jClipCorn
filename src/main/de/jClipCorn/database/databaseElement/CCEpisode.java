@@ -33,6 +33,7 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 	private String part;
 	private CCDate addDate;
 	private CCDateTimeList viewedHistory;
+	private CCDBLanguageList language;
 	
 	private boolean isUpdating = false;
 	
@@ -44,6 +45,7 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 		tags = new CCTagList();
 		addDate = CCDate.getMinimumDate();
 		viewedHistory = CCDateTimeList.createEmpty();
+		language = CCDBLanguageList.EMPTY;
 	}
 
 	public void beginUpdating() {
@@ -219,6 +221,28 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 	public boolean getTag(int c) {
 		return tags.getTag(c);
 	}
+
+	@Override
+	public CCDBLanguageList getLanguage() {
+		return language;
+	}
+
+	public void setLanguage(CCDBLanguageList language) {
+		this.language = language;
+
+		if (this.language == null) {
+			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.ErroneousDatabaseValues", language)); //$NON-NLS-1$
+			this.language = CCDBLanguageList.EMPTY;
+		}
+
+		updateDB();
+	}
+
+	public void setLanguage(long dbdata) {
+		this.language = CCDBLanguageList.fromBitmask(dbdata);
+
+		updateDB();
+	}
 	
 	public CCSeason getSeason() {
 		return owner;
@@ -240,6 +264,7 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 		part = ""; //$NON-NLS-1$
 		addDate = CCDate.getMinimumDate();
 		viewedHistory = CCDateTimeList.createEmpty();
+		language = CCDBLanguageList.EMPTY;
 		
 		if (updateDB) {
 			updateDB();
@@ -395,7 +420,8 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 		e.setAttribute("part", part);
 		e.setAttribute("quality", quality.asInt() + "");
 		e.setAttribute("tags", tags.asShort() + "");
-		
+		e.setAttribute("languages", language.serializeToString());
+
 		if (fileHash) {
 			e.setAttribute("filehash", getFastMD5());
 		}
@@ -449,8 +475,11 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 		if (e.getAttributeValue("quality") != null)
 			setQuality(Integer.parseInt(e.getAttributeValue("quality")));
 		
-		if (e.getAttributeValue("short") != null)
-			setTags(Short.parseShort(e.getAttributeValue("short")));
+		if (e.getAttributeValue("tags") != null)
+			setTags(Short.parseShort(e.getAttributeValue("tags")));
+
+		if (e.getAttributeValue("languages") != null)
+			setLanguage(CCDBLanguageList.parseFromString(e.getAttributeValue("languages")));
 
 		if (resetTags)
 			setTags(new CCTagList());

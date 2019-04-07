@@ -35,7 +35,7 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCDateTimeList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCFSK;
 import de.jClipCorn.database.databaseElement.columnTypes.CCFileFormat;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGenre;
-import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguage;
+import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguageList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCQuality;
 import de.jClipCorn.database.databaseElement.columnTypes.CCUserScore;
 import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReferenceList;
@@ -49,6 +49,7 @@ import de.jClipCorn.gui.guiComponents.dateTimeListEditor.DateTimeListEditor;
 import de.jClipCorn.gui.guiComponents.editCoverControl.EditCoverControl;
 import de.jClipCorn.gui.guiComponents.groupListEditor.GroupListEditor;
 import de.jClipCorn.gui.guiComponents.jCCDateSpinner.JCCDateSpinner;
+import de.jClipCorn.gui.guiComponents.language.LanguageChooser;
 import de.jClipCorn.gui.guiComponents.referenceChooser.JReferenceChooser;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
@@ -94,8 +95,6 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 	private JComboBox<String> cbxSeriesGenre_4;
 	private JComboBox<String> cbxSeriesGenre_5;
 	private JComboBox<String> cbxSeriesGenre_6;
-	private JComboBox<String> cbxSeriesLanguage;
-	private JLabel label_10;
 	private JLabel label_11;
 	private JSpinner spnSeriesOnlineScore;
 	private JLabel label_12;
@@ -161,6 +160,8 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 	private JButton btnOkClose;
 	private TagPanel tagPanel;
 	private JLabel label_14;
+	private JLabel lblLanguage;
+	private LanguageChooser ctrlLang;
 
 	/**
 	 * @wbp.parser.constructor
@@ -328,35 +329,27 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		cbxSeriesGenre_6 = new JComboBox<>();
 		cbxSeriesGenre_6.setBounds(263, 175, 141, 22);
 		pnlSeries.add(cbxSeriesGenre_6);
-		
-		cbxSeriesLanguage = new JComboBox<>();
-		cbxSeriesLanguage.setBounds(76, 345, 118, 22);
-		pnlSeries.add(cbxSeriesLanguage);
-		
+
 		label_11 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblOnlinescore.text")); //$NON-NLS-1$
-		label_11.setBounds(12, 381, 71, 16);
+		label_11.setBounds(12, 348, 97, 16);
 		pnlSeries.add(label_11);
 		
 		spnSeriesOnlineScore = new JSpinner();
 		spnSeriesOnlineScore.setModel(new SpinnerNumberModel(0, 0, 10, 1));
-		spnSeriesOnlineScore.setBounds(95, 380, 98, 20);
+		spnSeriesOnlineScore.setBounds(118, 347, 75, 20);
 		pnlSeries.add(spnSeriesOnlineScore);
 		
 		label_12 = new JLabel("/ 10"); //$NON-NLS-1$
-		label_12.setBounds(206, 381, 52, 16);
+		label_12.setBounds(206, 348, 52, 16);
 		pnlSeries.add(label_12);
 		
 		label_13 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblFsk.text")); //$NON-NLS-1$
-		label_13.setBounds(12, 413, 52, 16);
+		label_13.setBounds(12, 380, 52, 16);
 		pnlSeries.add(label_13);
 		
 		cbxSeriesFSK = new JComboBox<>();
-		cbxSeriesFSK.setBounds(76, 410, 118, 22);
+		cbxSeriesFSK.setBounds(74, 377, 120, 22);
 		pnlSeries.add(cbxSeriesFSK);
-		
-		label_10 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblSprache.text")); //$NON-NLS-1$
-		label_10.setBounds(12, 348, 182, 16);
-		pnlSeries.add(label_10);
 		
 		scrollPane = new JScrollPane();
 		scrollPane.setBounds(12, 506, 182, 95);
@@ -372,11 +365,11 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		pnlSeries.add(label_1);
 		
 		cbxSeriesScore = new JComboBox<>();
-		cbxSeriesScore.setBounds(74, 442, 120, 20);
+		cbxSeriesScore.setBounds(74, 409, 120, 20);
 		pnlSeries.add(cbxSeriesScore);
 		
 		lblScore = new JLabel(LocaleBundle.getString("EditSeriesFrame.lblScore.text")); //$NON-NLS-1$
-		lblScore.setBounds(12, 446, 46, 14);
+		lblScore.setBounds(12, 413, 46, 14);
 		pnlSeries.add(lblScore);
 		
 		btnAddSeason = new JButton(LocaleBundle.getString("EditSeriesFrame.btnAddSeason.text")); //$NON-NLS-1$
@@ -511,107 +504,107 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		pnlEpisode.add(edEpisodeTitle);
 		
 		label_18 = new JLabel(LocaleBundle.getString("AddEpisodeFrame.lblEpisode.text")); //$NON-NLS-1$
-		label_18.setBounds(12, 51, 46, 14);
+		label_18.setBounds(12, 45, 46, 14);
 		pnlEpisode.add(label_18);
 		
 		spnEpisodeEpisode = new JSpinner();
 		spnEpisodeEpisode.setModel(new SpinnerNumberModel(0, 0, null, 1));
-		spnEpisodeEpisode.setBounds(74, 49, 271, 20);
+		spnEpisodeEpisode.setBounds(74, 43, 271, 20);
 		pnlEpisode.add(spnEpisodeEpisode);
 		
 		label_19 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGesehen.text")); //$NON-NLS-1$
-		label_19.setBounds(12, 89, 52, 16);
+		label_19.setBounds(12, 77, 52, 16);
 		pnlEpisode.add(label_19);
 		
 		cbEpisodeViewed = new JCheckBox();
-		cbEpisodeViewed.setBounds(74, 84, 212, 25);
+		cbEpisodeViewed.setBounds(74, 72, 212, 25);
 		pnlEpisode.add(cbEpisodeViewed);
 		
 		label_20 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblFormat.text")); //$NON-NLS-1$
-		label_20.setBounds(12, 127, 52, 16);
+		label_20.setBounds(12, 109, 52, 16);
 		pnlEpisode.add(label_20);
 		
 		cbxEpisodeFormat = new JComboBox<>();
-		cbxEpisodeFormat.setBounds(74, 123, 271, 22);
+		cbxEpisodeFormat.setBounds(74, 105, 271, 22);
 		pnlEpisode.add(cbxEpisodeFormat);
 		
 		label_21 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblQuality.text")); //$NON-NLS-1$
-		label_21.setBounds(12, 164, 46, 14);
+		label_21.setBounds(12, 173, 46, 14);
 		pnlEpisode.add(label_21);
 		
 		cbxEpisodeQuality = new JComboBox<>();
-		cbxEpisodeQuality.setBounds(74, 160, 165, 22);
+		cbxEpisodeQuality.setBounds(74, 169, 165, 22);
 		pnlEpisode.add(cbxEpisodeQuality);
 		
 		label_22 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblLength.text")); //$NON-NLS-1$
-		label_22.setBounds(12, 197, 52, 16);
+		label_22.setBounds(12, 205, 52, 16);
 		pnlEpisode.add(label_22);
 		
 		spnEpisodeLength = new JSpinner();
 		spnEpisodeLength.setModel(new SpinnerNumberModel(0, 0, null, 1));
-		spnEpisodeLength.setBounds(74, 197, 165, 20);
+		spnEpisodeLength.setBounds(74, 205, 165, 20);
 		pnlEpisode.add(spnEpisodeLength);
 		
 		label_23 = new JLabel("min."); //$NON-NLS-1$
-		label_23.setBounds(245, 199, 94, 16);
+		label_23.setBounds(245, 207, 94, 16);
 		pnlEpisode.add(label_23);
 		
 		label_24 = new JLabel("Byte = "); //$NON-NLS-1$
-		label_24.setBounds(245, 235, 100, 16);
+		label_24.setBounds(245, 239, 100, 16);
 		pnlEpisode.add(label_24);
 		
 		lblEpisodeFilesize = new JLabel();
-		lblEpisodeFilesize.setBounds(74, 267, 193, 16);
+		lblEpisodeFilesize.setBounds(74, 269, 193, 16);
 		pnlEpisode.add(lblEpisodeFilesize);
 		
 		spnEpisodeSize = new JSpinner();
 		spnEpisodeSize.addChangeListener(arg0 -> updateEpisodesFilesizeDisplay());
 		spnEpisodeSize.setModel(new SpinnerNumberModel(0L, 0L, null, 1L));
-		spnEpisodeSize.setBounds(74, 234, 165, 20);
+		spnEpisodeSize.setBounds(74, 237, 165, 20);
 		pnlEpisode.add(spnEpisodeSize);
 		
 		label_26 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGre.text")); //$NON-NLS-1$
-		label_26.setBounds(12, 235, 52, 16);
+		label_26.setBounds(12, 237, 52, 16);
 		pnlEpisode.add(label_26);
 		
 		button_2 = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnRecalcSizes.text")); //$NON-NLS-1$
 		button_2.addActionListener(e -> recalcEpisodeFilesize());
-		button_2.setBounds(74, 296, 273, 23);
+		button_2.setBounds(74, 301, 273, 23);
 		pnlEpisode.add(button_2);
 		
 		btnEpisodeToday = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnToday.text")); //$NON-NLS-1$
 		btnEpisodeToday.addActionListener(e -> spnEpisodeAdded.setValue(CCDate.getCurrentDate()));
-		btnEpisodeToday.setBounds(251, 331, 96, 23);
+		btnEpisodeToday.setBounds(251, 330, 96, 23);
 		pnlEpisode.add(btnEpisodeToday);
 		
 		spnEpisodeAdded = new JCCDateSpinner(CCDate.getMinimumDate(), MIN_DATE, null);
-		spnEpisodeAdded.setBounds(74, 332, 165, 20);
+		spnEpisodeAdded.setBounds(74, 331, 165, 20);
 		pnlEpisode.add(spnEpisodeAdded);
 		
 		label_28 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblEinfgDatum.text")); //$NON-NLS-1$
-		label_28.setBounds(12, 334, 71, 16);
+		label_28.setBounds(12, 333, 71, 16);
 		pnlEpisode.add(label_28);
 		
 		label_29 = new JLabel(LocaleBundle.getString("AddEpisodeFrame.lblPart.text")); //$NON-NLS-1$
-		label_29.setBounds(12, 372, 46, 14);
+		label_29.setBounds(12, 365, 46, 14);
 		pnlEpisode.add(label_29);
 		
 		edEpisodePart = new ReadableTextField();
 		edEpisodePart.setColumns(10);
-		edEpisodePart.setBounds(74, 369, 212, 20);
+		edEpisodePart.setBounds(74, 363, 212, 20);
 		pnlEpisode.add(edEpisodePart);
 		
 		btnEpisodeOpenPart = new JButton(LocaleBundle.getString("EditSeriesFrame.btnEpisodeOpenPart.text")); //$NON-NLS-1$
 		btnEpisodeOpenPart.addActionListener(e -> openEpisodePart());
-		btnEpisodeOpenPart.setBounds(295, 368, 52, 23);
+		btnEpisodeOpenPart.setBounds(295, 361, 52, 23);
 		pnlEpisode.add(btnEpisodeOpenPart);
 		
 		lblTags = new JLabel(LocaleBundle.getString("EditSeriesFrame.lblTags.text")); //$NON-NLS-1$
-		lblTags.setBounds(12, 410, 52, 14);
+		lblTags.setBounds(12, 397, 52, 14);
 		pnlEpisode.add(lblTags);
 		
 		tagPnl = new TagPanel();
-		tagPnl.setBounds(74, 406, 273, 22);
+		tagPnl.setBounds(74, 393, 273, 22);
 		pnlEpisode.add(tagPnl);
 		
 		btnEpisodeOK = new JButton(LocaleBundle.getString("UIGeneric.btnOK.text")); //$NON-NLS-1$
@@ -631,17 +624,25 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 				recalcEpisodeQuality();
 			}
 		});
-		btnEpisodeCalcQuality.setBounds(251, 159, 94, 23);
+		btnEpisodeCalcQuality.setBounds(251, 168, 94, 23);
 		pnlEpisode.add(btnEpisodeCalcQuality);
 		
 		lblHistory = new JLabel(LocaleBundle.getString("EditSeriesFrame.lblHistory.text")); //$NON-NLS-1$
-		lblHistory.setBounds(12, 448, 52, 14);
+		lblHistory.setBounds(12, 429, 52, 14);
 		pnlEpisode.add(lblHistory);
 		
 		cmpEpisodeViewedHistory = new DateTimeListEditor();
 		cmpEpisodeViewedHistory.setBackground(Color.WHITE);
-		cmpEpisodeViewedHistory.setBounds(74, 448, 271, 152);
+		cmpEpisodeViewedHistory.setBounds(74, 429, 271, 170);
 		pnlEpisode.add(cmpEpisodeViewedHistory);
+		
+		lblLanguage = new JLabel(LocaleBundle.getString("AddMovieFrame.lblSprache.text")); //$NON-NLS-1$
+		lblLanguage.setBounds(12, 141, 58, 16);
+		pnlEpisode.add(lblLanguage);
+		
+		ctrlLang = new LanguageChooser();
+		ctrlLang.setBounds(74, 137, 271, 22);
+		pnlEpisode.add(ctrlLang);
 	}
 
 	private void setDefaultValues() {
@@ -657,7 +658,6 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		cbxSeriesGenre_7.setModel(new DefaultComboBoxModel<>(CCGenre.getTrimmedList()));
 	
 		cbxSeriesFSK.setModel(new DefaultComboBoxModel<>(CCFSK.getWrapper().getList()));
-		cbxSeriesLanguage.setModel(new DefaultComboBoxModel<>(CCDBLanguage.getWrapper().getList()));
 		cbxSeriesScore.setModel(new DefaultComboBoxModel<>(CCUserScore.getWrapper().getList()));
 		
 		//#########################   SEASON   ############################################################
@@ -714,7 +714,6 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		edSeriesCvrControl.setCover(series.getCover());
 		
 		edSeriesTitle.setText(series.getTitle());
-		cbxSeriesLanguage.setSelectedIndex(series.getLanguage().asInt());
 		spnSeriesOnlineScore.setValue(series.getOnlinescore().asInt());
 		cbxSeriesFSK.setSelectedIndex(series.getFSK().asInt());
 		cbxSeriesScore.setSelectedIndex(series.getScore().asInt());
@@ -788,6 +787,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		cmpEpisodeViewedHistory.setValue(episode.getViewedHistory());
 		edEpisodePart.setText(episode.getPart());
 		tagPnl.setValue(episode.getTags());
+		ctrlLang.setValue(episode.getLanguage());
 		
 		updateEpisodesFilesizeDisplay();
 		testEpisodePart();
@@ -849,11 +849,6 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 
 	@Override
 	public void setFilesize(long size) {
-		// NOP
-	}
-
-	@Override
-	public void setMovieLanguage(CCDBLanguage lang) {
 		// NOP
 	}
 
@@ -958,7 +953,6 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		
 		series.setCover(edSeriesCvrControl.getResizedImageForStorage());
 		series.setTitle(edSeriesTitle.getText());
-		series.setLanguage(cbxSeriesLanguage.getSelectedIndex());
 		series.setOnlinescore((int) spnSeriesOnlineScore.getValue());
 		series.setFsk(cbxSeriesFSK.getSelectedIndex());
 		series.setScore(cbxSeriesScore.getSelectedIndex());
@@ -1218,6 +1212,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		episode.setViewedHistory(cmpEpisodeViewedHistory.getValue());
 		episode.setPart(edEpisodePart.getText());
 		episode.setTags(tagPnl.getValue());
+		episode.setLanguage(ctrlLang.getValue());
 		
 		//#####################################################################################
 		
@@ -1246,10 +1241,11 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		int quality = cbxEpisodeQuality.getSelectedIndex();
 		String csExtn  = CCFileFormat.getWrapper().find(cbxEpisodeFormat.getSelectedIndex()).asString();
 		String csExta = CCFileFormat.getWrapper().find(cbxEpisodeFormat.getSelectedIndex()).asStringAlt();
+		CCDBLanguageList lng = ctrlLang.getValue();
 		
 		String part = edEpisodePart.getText();
 		
-		UserDataProblem.testEpisodeData(ret, season, episode, title, len, epNum, adddate, lvdate, fsize, csExtn, csExta, part, quality);
+		UserDataProblem.testEpisodeData(ret, season, episode, title, len, epNum, adddate, lvdate, fsize, csExtn, csExta, part, quality, lng);
 		
 		return ret.isEmpty();
 	}

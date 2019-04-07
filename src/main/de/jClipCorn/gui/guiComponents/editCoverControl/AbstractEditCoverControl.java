@@ -4,7 +4,6 @@ import java.awt.image.BufferedImage;
 
 import javax.swing.JLayeredPane;
 
-import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguage;
 import de.jClipCorn.database.databaseElement.columnTypes.CCFileFormat;
 import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReferenceList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCQuality;
@@ -64,11 +63,6 @@ public class AbstractEditCoverControl extends JLayeredPane implements ParseResul
 
 	@Override
 	public void setFilesize(long size) {
-		// NOP
-	}
-
-	@Override
-	public void setMovieLanguage(CCDBLanguage lang) {
 		// NOP
 	}
 

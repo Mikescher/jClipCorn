@@ -157,6 +157,9 @@ public class PathFormatter {
 	}
 	
 	public static String getCCPath(String aPath) {
+		if (aPath == null) return null;
+		if (aPath.isEmpty()) return Str.Empty;
+
 		aPath = aPath.replace(SEPERATOR, SERIALIZATION_SEPERATOR);
 		
 		if (CCProperties.getInstance().PROP_ADD_MOVIE_RELATIVE_AUTO.getValue()) {

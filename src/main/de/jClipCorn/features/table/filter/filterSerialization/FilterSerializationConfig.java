@@ -72,6 +72,21 @@ public class FilterSerializationConfig {
 		
 		validate();
 	}
+
+	public void addLong(String pname, Func1to0<Long> setter, Func0to1<Long> getter) {
+		Func1to1<String, Boolean> s = v ->
+		{
+			try { setter.invoke(convertDataToLong(v)); } catch (Exception e) { return false; }
+			return true;
+		};
+		Func0to1<String> g = () -> convertLongToData(getter.invoke());
+
+		FSCProperty prop = new FSCProperty(pname, s, g);
+
+		Properties.add(prop);
+
+		validate();
+	}
 	
 	public void addDate(String pname, Func1to0<CCDate> setter, Func0to1<CCDate> getter) {
 		Func1to1<String, Boolean> s = v -> 
@@ -207,6 +222,18 @@ public class FilterSerializationConfig {
 		if (v.equals("0")) return 0;
 		if (v.startsWith("0")) return -1 * Integer.parseInt(v);
 		return Integer.parseInt(v);
+	}
+
+	@SuppressWarnings("nls")
+	private String convertLongToData(long v) {
+		return (v>=0) ? Long.toString(v) : ("0" + Long.toString(-v));
+	}
+
+	@SuppressWarnings("nls")
+	private long convertDataToLong(String v) {
+		if (v.equals("0")) return 0;
+		if (v.startsWith("0")) return -1 * Long.parseLong(v);
+		return Long.parseLong(v);
 	}
 	
 	private String convertStringToData(String v) {

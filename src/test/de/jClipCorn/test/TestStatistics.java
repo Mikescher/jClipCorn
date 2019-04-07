@@ -84,7 +84,7 @@ public class TestStatistics extends ClipCornBaseTest {
 		StatisticsHelper.getCountForAllTags(it1);
 		StatisticsHelper.getCountForAllScores(it2);
 		StatisticsHelper.getCountForAllYears(1900, 512, it3);
-		StatisticsHelper.getCountForAllLanguages(it2);
+		StatisticsHelper.getCountForAllLanguages(it1);
 
 		StatisticsHelper.getElementCountForAllProviderMain(it2);
 		StatisticsHelper.getElementCountForAllProviderAny(it2);

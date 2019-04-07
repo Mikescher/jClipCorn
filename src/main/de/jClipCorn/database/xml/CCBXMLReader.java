@@ -7,6 +7,8 @@ import java.util.Iterator;
 
 import javax.swing.SwingUtilities;
 
+import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguage;
+import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguageList;
 import org.jdom2.DataConversionException;
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -140,9 +142,10 @@ public class CCBXMLReader {
 	private void createSeries(Element e) throws DataConversionException, CCFormatException {
 		CCSeries newSer = movielist.createNewEmptySeries();
 		newSer.beginUpdating();
-		
+
+		CCDBLanguage lang = CCDBLanguage.getWrapper().find(e.getChild("info").getChild("sprache").getAttribute("dec").getIntValue());
+
 		newSer.setTitle(e.getChild("info").getChildText("serientitel"));
-		newSer.setLanguage(e.getChild("info").getChild("sprache").getAttribute("dec").getIntValue());
 		newSer.setGenre(translateGenre(e.getChild("info").getChild("genre").getChild("genre00").getAttribute("dec").getIntValue()), 0);
 		newSer.setGenre(translateGenre(e.getChild("info").getChild("genre").getChild("genre01").getAttribute("dec").getIntValue()), 1);
 		newSer.setGenre(translateGenre(e.getChild("info").getChild("genre").getChild("genre02").getAttribute("dec").getIntValue()), 2);
@@ -158,7 +161,7 @@ public class CCBXMLReader {
 		for (Iterator<Element> itseries = e.getChildren().iterator(); itseries.hasNext();) {
 			Element eseries = itseries.next();
 			if (eseries.getName().equals("season")) {
-				createSeason(newSer, eseries);
+				createSeason(newSer, eseries, lang);
 			}
 		}
 		
@@ -175,7 +178,7 @@ public class CCBXMLReader {
 		}
 	}
 	
-	private void createSeason(CCSeries series, Element owner) throws DataConversionException, CCFormatException {
+	private void createSeason(CCSeries series, Element owner, CCDBLanguage lang) throws DataConversionException, CCFormatException {
 		CCSeason newSeas = series.createNewEmptySeason();
 		
 		newSeas.beginUpdating();
@@ -188,7 +191,7 @@ public class CCBXMLReader {
 		for (Iterator<Element> itseason = owner.getChildren().iterator(); itseason.hasNext();) {
 			Element eseason = itseason.next();
 			if (eseason.getName().equals("episode")) {
-				createEpisode(newSeas, eseason);
+				createEpisode(newSeas, eseason, lang);
 			}
 		}
 		
@@ -205,7 +208,7 @@ public class CCBXMLReader {
 		}
 	}
 	
-	private void createEpisode(CCSeason season, Element owner) throws DataConversionException, CCFormatException {
+	private void createEpisode(CCSeason season, Element owner, CCDBLanguage lang) throws DataConversionException, CCFormatException {
 		CCEpisode newEp = season.createNewEmptyEpisode();
 		
 		newEp.beginUpdating();
@@ -219,6 +222,7 @@ public class CCBXMLReader {
 		newEp.setFilesize(owner.getChild("größe").getAttribute("dec").getLongValue() * 1024);
 		newEp.setPart(owner.getChildText("pathpart1"));
 		newEp.setAddDate(CCDate.deserialize(owner.getChildText("adddate")));
+		newEp.setLanguage(new CCDBLanguageList(lang));
 		
 		final CCEpisode finep = newEp;
 		try {

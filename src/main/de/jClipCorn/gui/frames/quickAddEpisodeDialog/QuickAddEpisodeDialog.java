@@ -7,6 +7,7 @@ import com.jgoodies.forms.layout.RowSpec;
 
 import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.CCSeason;
+import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguageList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCDateTimeList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCFileFormat;
 import de.jClipCorn.database.databaseElement.columnTypes.CCQuality;
@@ -16,6 +17,7 @@ import de.jClipCorn.gui.frames.previewSeriesFrame.PreviewSeriesFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.gui.resources.Resources;
+import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.formatter.FileSizeFormatter;
@@ -36,6 +38,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.jClipCorn.gui.guiComponents.ReadableTextField;
+import de.jClipCorn.gui.guiComponents.language.LanguageChooser;
 import de.jClipCorn.features.userdataProblem.UserDataProblem;
 import org.apache.commons.io.FileUtils;
 
@@ -78,7 +81,7 @@ public class QuickAddEpisodeDialog extends JDialog {
 	private void initGUI() {
 		setTitle(LocaleBundle.getString("QuickAddEpisodeDialog.title")); //$NON-NLS-1$
 		setIconImage(Resources.IMG_FRAME_ICON.get());
-		setBounds(100, 100, 550, 300);
+		setBounds(100, 100, 550, 350);
 		setMinimumSize(new Dimension(300, 300));
 		setModal(true);
 
@@ -106,7 +109,9 @@ public class QuickAddEpisodeDialog extends JDialog {
 				FormSpecs.RELATED_GAP_ROWSPEC,
 				FormSpecs.DEFAULT_ROWSPEC,
 				FormSpecs.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("default:grow"), //$NON-NLS-1$
+				FormSpecs.DEFAULT_ROWSPEC,
+				FormSpecs.RELATED_GAP_ROWSPEC,
+				RowSpec.decode("22px"), //$NON-NLS-1$
 				RowSpec.decode("default:grow"),})); //$NON-NLS-1$
 
 		JLabel lblSource = new JLabel(LocaleBundle.getString("QuickAddEpisodeDialog.lblSource")); //$NON-NLS-1$
@@ -148,7 +153,7 @@ public class QuickAddEpisodeDialog extends JDialog {
 		cbRename = new JCheckBox(LocaleBundle.getString("QuickAddEpisodeDialog.cbRename")); //$NON-NLS-1$
 		contentPanel.add(cbRename, "3, 7, 3, 1"); //$NON-NLS-1$
 		JSeparator separator = new JSeparator();
-		contentPanel.add(separator, "1, 9, 3, 1"); //$NON-NLS-1$
+		contentPanel.add(separator, "1, 9, 5, 1"); //$NON-NLS-1$
 
 		JLabel lblEpisode = new JLabel(LocaleBundle.getString("QuickAddEpisodeDialog.lblEpisode")); //$NON-NLS-1$
 		lblEpisode.setHorizontalAlignment(SwingConstants.TRAILING);
@@ -157,13 +162,13 @@ public class QuickAddEpisodeDialog extends JDialog {
 		spnEpisode = new JSpinner();
 		spnEpisode.setModel(new SpinnerNumberModel(0, 0, null, 1));
 		spnEpisode.addChangeListener((e) -> { if (cbRename.isSelected()) edTarget.setText(createTarget()); });
-		contentPanel.add(spnEpisode, "3, 11, 3, 1"); //$NON-NLS-1$
+		contentPanel.add(spnEpisode, "3, 11"); //$NON-NLS-1$
 
 		JLabel lblTitle = new JLabel(LocaleBundle.getString("QuickAddEpisodeDialog.lblTitle")); //$NON-NLS-1$
 		lblTitle.setHorizontalAlignment(SwingConstants.TRAILING);
 		contentPanel.add(lblTitle, "1, 13, right, default"); //$NON-NLS-1$
 		edTitle = new JTextField();
-		contentPanel.add(edTitle, "3, 13, 3, 1, fill, default"); //$NON-NLS-1$
+		contentPanel.add(edTitle, "3, 13, fill, default"); //$NON-NLS-1$
 		edTitle.setColumns(10);
 		edTitle.getDocument().addDocumentListener(new DocumentListener() {
 			@Override
@@ -196,6 +201,12 @@ public class QuickAddEpisodeDialog extends JDialog {
 
 		JLabel lblMin = new JLabel("min."); //$NON-NLS-1$
 		contentPanel.add(lblMin, "5, 15"); //$NON-NLS-1$
+		
+		JLabel lblNewLabel = new JLabel(LocaleBundle.getString("AddMovieFrame.lblSprache.text")); //$NON-NLS-1$
+		contentPanel.add(lblNewLabel, "1, 17"); //$NON-NLS-1$
+		
+		ctrlLang = new LanguageChooser();
+		contentPanel.add(ctrlLang, "3, 17, fill, fill"); //$NON-NLS-1$
 
 		JPanel buttonPane = new JPanel();
 		getContentPane().add(buttonPane, BorderLayout.SOUTH);
@@ -244,6 +255,11 @@ public class QuickAddEpisodeDialog extends JDialog {
 
 		cbCopy.setSelected(!PathFormatter.fromCCPath(edTarget.getText()).equalsIgnoreCase(edSource.getText()));
 		cbRename.setSelected(cbCopy.isSelected());
+		
+		CCEpisode last = season.getSeries().getLastAddedEpisode();
+		CCDBLanguageList lang = new CCDBLanguageList(CCProperties.getInstance().PROP_DATABASE_DEFAULTPARSERLANG.getValue());
+		if (last != null) lang = last.getLanguage();
+		ctrlLang.setValue(lang);
 	}
 
 	public static void show(PreviewSeriesFrame owner, CCSeason s, File f) {
@@ -266,6 +282,7 @@ public class QuickAddEpisodeDialog extends JDialog {
 	}
 
 	private volatile int progressValueCache;
+	private LanguageChooser ctrlLang;
 
 	private void tryAdd(boolean check) {
 
@@ -275,6 +292,7 @@ public class QuickAddEpisodeDialog extends JDialog {
 		int episodenumber = (int)spnEpisode.getValue();
 		int length = (int)spnLength.getValue();
 		String title = edTitle.getText();
+		CCDBLanguageList lang = ctrlLang.getValue();
 
 		String fullDst = PathFormatter.fromCCPath(dst);
 		File srcFile = new File(src);
@@ -288,7 +306,7 @@ public class QuickAddEpisodeDialog extends JDialog {
 		CCFileFormat format = CCFileFormat.getMovieFormatFromPath(src);
 
 		List<UserDataProblem> problems = new ArrayList<>();
-		boolean probvalue = !check || checkUserDataEpisode(problems, title, length, episodenumber, adddate, history, filesize, quality.asInt(), format.asString(), format.asStringAlt(), src, dst, fullDst);
+		boolean probvalue = !check || checkUserDataEpisode(problems, title, length, episodenumber, adddate, history, filesize, quality.asInt(), format.asString(), format.asStringAlt(), src, dst, fullDst, lang);
 
 		// some problems are too fatal
 		if (probvalue && Str.isNullOrWhitespace(title)) {
@@ -345,6 +363,7 @@ public class QuickAddEpisodeDialog extends JDialog {
 					newEp.setViewedHistory(history);
 					newEp.setPart(dst);
 					newEp.setTags(tags);
+					newEp.setLanguage(lang);
 					newEp.endUpdating();
 
 					if (ucListener != null) ucListener.onUpdate(newEp);
@@ -355,7 +374,7 @@ public class QuickAddEpisodeDialog extends JDialog {
 				SwingUtilities.invokeLater(() ->
 				{
 					CCLog.addError(e);
-					DialogHelper.showError(this, LocaleBundle.getString("QuickAddEpisodeDialog.dialogs.error_caption"), LocaleBundle.getString("QuickAddEpisodeDialog.dialogs.error")); //$NON-NLS-1$ //$NON-NLS-2$
+					DialogHelper.showDispatchError(this, LocaleBundle.getString("QuickAddEpisodeDialog.dialogs.error_caption"), LocaleBundle.getString("QuickAddEpisodeDialog.dialogs.error")); //$NON-NLS-1$ //$NON-NLS-2$
 				});
 			} finally {
 				SwingUtilities.invokeLater(() -> contentPanel.setEnabled(true) );
@@ -363,9 +382,9 @@ public class QuickAddEpisodeDialog extends JDialog {
 		}).start();
 	}
 
-	private boolean checkUserDataEpisode(List<UserDataProblem> ret, String title, int len, int epNum, CCDate adddate, CCDateTimeList lvdate, long fsize, int quality, String csExtn, String csExta, String src, String dst, String fullDst) {
+	private boolean checkUserDataEpisode(List<UserDataProblem> ret, String title, int len, int epNum, CCDate adddate, CCDateTimeList lvdate, long fsize, int quality, String csExtn, String csExta, String src, String dst, String fullDst, CCDBLanguageList lang) {
 
-		UserDataProblem.testEpisodeData(ret, season, null, title, len, epNum, adddate, lvdate, fsize, csExtn, csExta, dst, quality);
+		UserDataProblem.testEpisodeData(ret, season, null, title, len, epNum, adddate, lvdate, fsize, csExtn, csExta, dst, quality, lang);
 
 		if (!PathFormatter.fileExists(src)) {
 			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_INPUT_FILE_NOT_FOUND));

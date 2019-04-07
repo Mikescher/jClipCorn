@@ -2,11 +2,7 @@ package de.jClipCorn.features.databaseErrors;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import de.jClipCorn.database.databaseElement.columnTypes.*;
 import org.apache.commons.lang.StringUtils;
@@ -33,7 +29,7 @@ public class DatabaseValidator {
 	private final static CCDate MIN_DATE = CCDate.getMinimumDate();
 	
 	public static void startValidate(List<DatabaseError> e, CCMovieList ml, ProgressCallbackListener pcl) {
-		pcl.setMax(ml.getElementCount() * 5); // 1x Normal  +  2x  checkCover  +  2x CheckFiles
+		pcl.setMax(ml.getElementCount() * 6); // 1x Normal  +  4x ExtraMethods //TODO Max does not (even remotely) match real iterations....
 		pcl.reset();
 		
 		for (CCDatabaseElement el : ml.getRawList()) {
@@ -58,10 +54,10 @@ public class DatabaseValidator {
 			pcl.step();
 		}
 		
-		findCoverErrors(e, ml, pcl);
-		findDuplicateFiles(e, ml, pcl);
-		findErrorInGroups(e, ml, pcl);
-		findDuplicateOnlineRef(e, ml, pcl);
+		findCoverErrors(e, ml, pcl);         // [2]
+		findDuplicateFiles(e, ml, pcl);      // [3]
+		findErrorInGroups(e, ml);            // [-]
+		findDuplicateOnlineRef(e, ml, pcl);  // [4]
 		
 		pcl.reset();
 	}
@@ -348,7 +344,7 @@ public class DatabaseValidator {
 		// ###############################################
 		
 		for (CCMovie imov : movielist.iteratorMovies()) {
-			if (StringUtils.equalsIgnoreCase(imov.getCompleteTitle(), mov.getCompleteTitle()) && imov.getLanguage() == mov.getLanguage()) {
+			if (StringUtils.equalsIgnoreCase(imov.getCompleteTitle(), mov.getCompleteTitle()) && (imov.getLanguage().isSubsetOf(mov.getLanguage()) || mov.getLanguage().isSubsetOf(imov.getLanguage()))) {
 				if (mov.getLocalID() != imov.getLocalID()) {
 					e.add(DatabaseError.createDouble(DatabaseErrorType.ERROR_DUPLICATE_TITLE, mov, imov));
 				}
@@ -487,6 +483,22 @@ public class DatabaseValidator {
 				e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_NON_NORMALIZED_PATH, mov));
 				break;
 			}
+		}
+
+		// ###############################################
+		// No language
+		// ###############################################
+
+		if (mov.getLanguage().isEmpty()) {
+			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_NO_LANG, mov));
+		}
+
+		// ###############################################
+		// Muted language must be single
+		// ###############################################
+
+		if (mov.getLanguage().contains(CCDBLanguage.MUTED) && !mov.getLanguage().isSingle()) {
+			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_LANG_MUTED_SUBSET, mov));
 		}
 	}
 
@@ -694,6 +706,22 @@ public class DatabaseValidator {
 		if (! PathFormatter.getCCPath(episode.getAbsolutePart()).equals(episode.getPart())) {
 			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_NON_NORMALIZED_PATH, episode));
 		}
+
+		// ###############################################
+		// No language
+		// ###############################################
+
+		if (episode.getLanguage().isEmpty()) {
+			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_NO_LANG, episode));
+		}
+
+		// ###############################################
+		// Muted language must be single
+		// ###############################################
+
+		if (episode.getLanguage().contains(CCDBLanguage.MUTED) && !episode.getLanguage().isSingle()) {
+			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_LANG_MUTED_SUBSET, episode));
+		}
 	}
 
 	private static void findCoverErrors(List<DatabaseError> e, CCMovieList movielist, ProgressCallbackListener pcl) {
@@ -791,7 +819,7 @@ public class DatabaseValidator {
 		}
 	}
 
-	private static void findErrorInGroups(List<DatabaseError> e, CCMovieList movielist, ProgressCallbackListener pcl) {
+	private static void findErrorInGroups(List<DatabaseError> e, CCMovieList movielist) {
 		Set<String> groupSet = new HashSet<>();
 		for (CCGroup group : movielist.getGroupList()) {
 			if (! groupSet.add(group.Name.toLowerCase().trim())) {
@@ -860,12 +888,24 @@ public class DatabaseValidator {
 	private static void findDuplicateOnlineRef(List<DatabaseError> e, CCMovieList movielist, ProgressCallbackListener pcl) {
 		Set<String> refSet = new HashSet<>();
 
-		for (CCDatabaseElement el : movielist.iteratorElements()) {
+		for (CCMovie el : movielist.iteratorMovies()) {
 			for(CCSingleOnlineReference soref : el.getOnlineReference()) {
-				if (! refSet.add(el.getLanguage().asInt() + '_' + soref.toSerializationString())) {
+				if (! refSet.add(el.getLanguage().serializeToLong() + '_' + soref.toSerializationString())) {
 					e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_DUPLICATE_REF, el));
 				}
 			}
+
+			pcl.step();
+		}
+
+		for (CCSeries el : movielist.iteratorSeries()) {
+			for(CCSingleOnlineReference soref : el.getOnlineReference()) {
+				if (! refSet.add("series" + '_' + soref.toSerializationString())) { //$NON-NLS-1$
+					e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_DUPLICATE_REF, el));
+				}
+			}
+
+			pcl.step();
 		}
 	}
 }

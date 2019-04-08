@@ -12,9 +12,9 @@ import java.util.List;
 public class CombinedIconRef extends IconRef {
 	public final CombinedImageRef inner_img;
 
-	public CombinedIconRef(CombinedImageRef _inner) {
-		super("combinedicon://" + CCStreams.iterate(_inner.layers).stringjoin(l -> l.path, "|"), ResourceRefType.ICON_OTHER_COMBINED); //$NON-NLS-1$ //$NON-NLS-2$
-		inner_img = _inner;
+	public CombinedIconRef(CombinedImageRef inner, boolean preload) {
+		super("combinedicon://" + CCStreams.iterate(inner.layers).stringjoin(l -> l.path, "|"), ResourceRefType.ICON_OTHER_COMBINED, preload); //$NON-NLS-1$ //$NON-NLS-2$
+		inner_img = inner;
 	}
 
 	@Override

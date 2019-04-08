@@ -10,9 +10,9 @@ import java.util.List;
 public final class SingleImageRef extends ImageRef {
 	public final String path;
 
-	public SingleImageRef(String _path) {
-		super("image://" + _path, ResourceRefType.IMAGE); //$NON-NLS-1$
-		path = _path;
+	public SingleImageRef(String respath, boolean preload) {
+		super("image://" + respath, ResourceRefType.IMAGE, preload); //$NON-NLS-1$
+		path = respath;
 	}
 
 	@Override

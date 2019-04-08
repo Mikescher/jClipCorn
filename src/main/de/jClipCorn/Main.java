@@ -227,3 +227,5 @@ public class Main {
 //TODO remove viewed field from db (get from history)
 
 //TODO serialize dates as iso in xml export (backwards compatible by writing them "[yyyy-MM-dd]" in square braces )
+
+//TODO Use ClipMoviePopup.java spec for PreviewMovieFrame menu (PMF has practically no options)

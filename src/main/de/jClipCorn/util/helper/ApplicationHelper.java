@@ -114,13 +114,13 @@ public class ApplicationHelper {
 	@SuppressWarnings("nls")
 	public static List<Tuple4<String, String, String, String>> getNetUse() throws Exception
 	{
-		Tuple3<Integer, String, String> out = ProcessHelper.winExec("net", "use");
+		Tuple3<Integer, String, String> out = ProcessHelper.procExec("net", "use");
 		if (out.Item1 != 0) throw new Exception("Parser Error: Exec of net-use returned: " + out.Item1);
 
 		String[] lines = out.Item2.split("\\r\\n");
 
 		int start = CCStreams.iterate(lines).findIndex(l -> Pattern.matches("^-----+$", l.trim()));
-		if (start == -1 || start == 0) throw new Exception("Parser Error: Table starrt not found");
+		if (start == -1 || start == 0) throw new Exception("Parser Error: Table start not found");
 
 		String header = lines[start - 1];
 

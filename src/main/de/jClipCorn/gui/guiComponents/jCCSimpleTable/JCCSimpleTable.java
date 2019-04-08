@@ -1,11 +1,14 @@
 package de.jClipCorn.gui.guiComponents.jCCSimpleTable;
 
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JScrollPane;
+import javax.swing.JViewport;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -165,6 +168,14 @@ public abstract class JCCSimpleTable<TData> extends JScrollPane implements ListS
 
 	public void changeData(TData oldData, TData newData) {
 		model.changeData(oldData, newData);
+	}
+
+	public void scrollIntoView(TData data) {
+		int idx = model.getIndex(data);
+		if (idx >= 0) {
+			Rectangle rect = table.getCellRect(idx, 0, true);
+			if (rect.width>0 && rect.height>0) table.scrollRectToVisible(rect);
+		}
 	}
 	
 	public void forceFullRedraw() {

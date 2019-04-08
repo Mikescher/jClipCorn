@@ -2,6 +2,8 @@ package de.jClipCorn.database.databaseElement;
 
 import java.io.File;
 import java.sql.Date;
+import java.util.Arrays;
+import java.util.List;
 
 import de.jClipCorn.database.databaseElement.columnTypes.*;
 import org.jdom2.Element;
@@ -122,6 +124,7 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 		updateDB();
 	}
 	
+	@Override
 	public void setLength(int length) {
 		this.length = length;
 		
@@ -227,6 +230,7 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 		return language;
 	}
 
+	@Override
 	public void setLanguage(CCDBLanguageList language) {
 		this.language = language;
 
@@ -329,6 +333,11 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 	
 	public String getAbsolutePart() {
 		return PathFormatter.fromCCPath(getPart());
+	}
+
+	@Override
+	public List<String> getParts() {
+		return Arrays.asList(part);
 	}
 
 	@Override

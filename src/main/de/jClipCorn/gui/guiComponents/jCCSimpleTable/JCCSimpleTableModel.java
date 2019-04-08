@@ -80,6 +80,10 @@ public class JCCSimpleTableModel<TData> extends AbstractTableModel implements Ta
 		if (idx >= 0) changeData(idx, newData);
 	}
 
+	public int getIndex(TData needle) {
+		return data.indexOf(needle);
+	}
+
 	public List<TData> getDataCopy() {
 		return new ArrayList<>(data);
 	}

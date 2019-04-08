@@ -3,6 +3,8 @@ package de.jClipCorn.database.databaseElement;
 import de.jClipCorn.database.databaseElement.columnTypes.*;
 import de.jClipCorn.util.datetime.CCDate;
 
+import java.util.List;
+
 public interface ICCPlayableElement {
 
 	String getTitle();
@@ -17,7 +19,12 @@ public interface ICCPlayableElement {
 	CCDateTimeList getViewedHistory();
 	CCDate getAddDate();
 	CCDBLanguageList getLanguage();
+	List<String> getParts();
+
+
+	void setLanguage(CCDBLanguageList lang);
+	void setLength(int len);
+
 
 	void play(boolean updateViewedAndHistory);
-
 }

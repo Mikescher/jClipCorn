@@ -2,6 +2,8 @@ package de.jClipCorn.database.databaseElement;
 
 import java.io.File;
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 import de.jClipCorn.database.databaseElement.columnTypes.*;
 import org.jdom2.Element;
@@ -153,7 +155,7 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 		
 		updateDB();
 	}
-	
+
 	public void setQuality(CCQuality quality) {
 		this.quality = quality;
 		
@@ -175,6 +177,7 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 		return length;
 	}
 
+	@Override
 	public void setLength(int length) {
 		this.length = length;
 		
@@ -251,6 +254,7 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 		return language;
 	}
 
+	@Override
 	public void setLanguage(CCDBLanguageList language) {
 		this.language = language;
 
@@ -269,6 +273,13 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 
 	public String getPart(int idx) {
 		return parts[idx];
+	}
+
+	@Override
+	public List<String> getParts() {
+		List<String> r = new ArrayList<>();
+		for (int i = 0; i < PARTCOUNT_MAX; i++) if (!parts[i].isEmpty()) r.add(parts[i]);
+		return r;
 	}
 	
 	public String getAbsolutePart(int idx) {
@@ -429,7 +440,7 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 		if (e.getAttributeValue("history") != null)
 			setViewedHistory(e.getAttributeValue("history"));
 		
-		endUpdating(); // TODO sanity check here (eg no values==null, etc) (also in series, season, episode, ...)
+		endUpdating();
 	}
 	
 	public String getFastMD5() {

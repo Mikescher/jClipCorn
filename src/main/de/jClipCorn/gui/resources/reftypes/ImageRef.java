@@ -5,8 +5,8 @@ import de.jClipCorn.gui.resources.ResourceRefType;
 import java.awt.image.BufferedImage;
 
 public abstract class ImageRef extends ResourceRef {
-	public ImageRef(String id, ResourceRefType _type) {
-		super(id, _type);
+	public ImageRef(String id, ResourceRefType type, boolean preload) {
+		super(id, type, preload);
 	}
 
 	public abstract BufferedImage get();

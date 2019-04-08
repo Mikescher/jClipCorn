@@ -10,8 +10,8 @@ import java.util.*;
 public class SingleIconRef extends IconRef {
 	public final SingleImageRef img;
 
-	public SingleIconRef(SingleImageRef iref, ResourceRefType _type) {
-		super("icon://" + iref.path, _type); //$NON-NLS-1$
+	public SingleIconRef(SingleImageRef iref, ResourceRefType type, boolean preload) {
+		super("icon://" + iref.path, type, preload); //$NON-NLS-1$
 		img = iref;
 	}
 

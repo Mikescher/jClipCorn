@@ -12,16 +12,47 @@ public enum CCDBLanguage implements ContinoousEnum<CCDBLanguage> {
 	ENGLISH(1),
 	MUTED(2),
 	FRENCH(3),
-	JAPANESE(4);
+	JAPANESE(4),
+	ITALIAN(5),
+	SPANISH(6),
+	PORTUGUESE(7),
+	DANISH(8),
+	FINNISH(9),
+	SWEDISH(10),
+	NORWEGIAN(11),
+	DUTCH(12),
+	CZECH(13),
+	POLISH(14),
+	TURKISH(15),
+	HUNGARIAN(16),
+	BULGARIAN(17),
+	RUSSIAN(18),
+	CHINESE(19);
+
 
 	private static EnumWrapper<CCDBLanguage> wrapper = new EnumWrapper<>(GERMAN);
 
 	private final static String[] NAMES = {
-		LocaleBundle.getString("CCMovieLanguage.German"),   //$NON-NLS-1$
-		LocaleBundle.getString("CCMovieLanguage.English"),  //$NON-NLS-1$
-		LocaleBundle.getString("CCMovieLanguage.Muted"),    //$NON-NLS-1$
-		LocaleBundle.getString("CCMovieLanguage.French"),   //$NON-NLS-1$
-		LocaleBundle.getString("CCMovieLanguage.Japanese")  //$NON-NLS-1$
+			LocaleBundle.getString("CCMovieLanguage.German"),     //$NON-NLS-1$
+			LocaleBundle.getString("CCMovieLanguage.English"),    //$NON-NLS-1$
+			LocaleBundle.getString("CCMovieLanguage.Muted"),      //$NON-NLS-1$
+			LocaleBundle.getString("CCMovieLanguage.French"),     //$NON-NLS-1$
+			LocaleBundle.getString("CCMovieLanguage.Japanese"),   //$NON-NLS-1$
+			LocaleBundle.getString("CCMovieLanguage.Italian"),    //$NON-NLS-1$
+			LocaleBundle.getString("CCMovieLanguage.Spanish"),    //$NON-NLS-1$
+			LocaleBundle.getString("CCMovieLanguage.Portuguese"), //$NON-NLS-1$
+			LocaleBundle.getString("CCMovieLanguage.Danish"),     //$NON-NLS-1$
+			LocaleBundle.getString("CCMovieLanguage.Finnish"),    //$NON-NLS-1$
+			LocaleBundle.getString("CCMovieLanguage.Swedisch"),   //$NON-NLS-1$
+			LocaleBundle.getString("CCMovieLanguage.Norwegian"),  //$NON-NLS-1$
+			LocaleBundle.getString("CCMovieLanguage.Dutch"),      //$NON-NLS-1$
+			LocaleBundle.getString("CCMovieLanguage.Czech"),      //$NON-NLS-1$
+			LocaleBundle.getString("CCMovieLanguage.Polish"),     //$NON-NLS-1$
+			LocaleBundle.getString("CCMovieLanguage.Turkish"),    //$NON-NLS-1$
+			LocaleBundle.getString("CCMovieLanguage.Hungarian"),  //$NON-NLS-1$
+			LocaleBundle.getString("CCMovieLanguage.Bulgarian"),  //$NON-NLS-1$
+			LocaleBundle.getString("CCMovieLanguage.Russian"),    //$NON-NLS-1$
+			LocaleBundle.getString("CCMovieLanguage.Chinese"),    //$NON-NLS-1$
 	};
 
 	private final static String[] SHORTNAMES = {
@@ -29,15 +60,45 @@ public enum CCDBLanguage implements ContinoousEnum<CCDBLanguage> {
 			"ENG",   //$NON-NLS-1$
 			"MUT",   //$NON-NLS-1$
 			"FR",    //$NON-NLS-1$
-			"JAP"    //$NON-NLS-1$
+			"JAP",   //$NON-NLS-1$
+			"IT",    //$NON-NLS-1$
+			"SPA",   //$NON-NLS-1$
+			"POR",   //$NON-NLS-1$
+			"DAN",   //$NON-NLS-1$
+			"FIN",   //$NON-NLS-1$
+			"SWE",   //$NON-NLS-1$
+			"NOR",   //$NON-NLS-1$
+			"NL",    //$NON-NLS-1$
+			"CS",    //$NON-NLS-1$
+			"POL",   //$NON-NLS-1$
+			"TR",    //$NON-NLS-1$
+			"HU",    //$NON-NLS-1$
+			"BUL",   //$NON-NLS-1$
+			"RUS",   //$NON-NLS-1$
+			"CHI",   //$NON-NLS-1$
 	};
 
 	private final static String[] LONGNAMES = {
-			"German",    //$NON-NLS-1$
-			"English",   //$NON-NLS-1$
-			"Muted",     //$NON-NLS-1$
-			"French",    //$NON-NLS-1$
-			"Japanese"   //$NON-NLS-1$
+			"German",     //$NON-NLS-1$
+			"English",    //$NON-NLS-1$
+			"Muted",      //$NON-NLS-1$
+			"French",     //$NON-NLS-1$
+			"Japanese",   //$NON-NLS-1$
+			"Italian",    //$NON-NLS-1$
+			"Spanish",    //$NON-NLS-1$
+			"Portuguese", //$NON-NLS-1$
+			"Danish",     //$NON-NLS-1$
+			"Finnish",    //$NON-NLS-1$
+			"Swedisch",   //$NON-NLS-1$
+			"Norwegian",  //$NON-NLS-1$
+			"Dutch",      //$NON-NLS-1$
+			"Czech",      //$NON-NLS-1$
+			"Polish",     //$NON-NLS-1$
+			"Turkish",    //$NON-NLS-1$
+			"Hungarian",  //$NON-NLS-1$
+			"Bulgarian",  //$NON-NLS-1$
+			"Russian",    //$NON-NLS-1$
+			"Chinese",    //$NON-NLS-1$
 	};
 
 	private final int id;
@@ -77,20 +138,7 @@ public enum CCDBLanguage implements ContinoousEnum<CCDBLanguage> {
 	}
 
 	public ImageIcon getIcon() {
-		switch (this) {
-		case GERMAN:
-			return Resources.ICN_TABLE_LANGUAGE_0_0.get();
-		case ENGLISH:
-			return Resources.ICN_TABLE_LANGUAGE_1_1.get();
-		case MUTED:
-			return Resources.ICN_TABLE_LANGUAGE_2_2.get();
-		case FRENCH:
-			return Resources.ICN_TABLE_LANGUAGE_3_3.get();
-		case JAPANESE:
-			return Resources.ICN_TABLE_LANGUAGE_4_4.get();
-		default:
-			return null;
-		}
+		return Resources.ICN_TABLE_LANGUAGE[this.asInt()].get();
 	}
 
 	public String getShortString() {

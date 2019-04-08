@@ -2,6 +2,7 @@ package de.jClipCorn.database.databaseElement.columnTypes;
 
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
+import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.stream.CCStream;
 import de.jClipCorn.util.stream.CCStreams;
 
@@ -61,6 +62,16 @@ public class CCDBLanguageList implements Iterable<CCDBLanguage> {
 		return CCStreams.iterate(_languages).autosort().stringjoin(CCDBLanguage::asString, ", "); //$NON-NLS-1$
 	}
 
+	public String toOutputString(String emptyStr) {
+		if (isEmpty()) return emptyStr;
+		return CCStreams.iterate(_languages).autosort().stringjoin(CCDBLanguage::asString, ", "); //$NON-NLS-1$
+	}
+
+	public String toShortOutputString(String emptyStr) {
+		if (isEmpty()) return emptyStr;
+		return CCStreams.iterate(_languages).autosort().stringjoin(CCDBLanguage::getShortString, ","); //$NON-NLS-1$
+	}
+
 	public boolean isExact(CCDBLanguage lang) {
 		return _languages.size()==1 && _languages.contains(lang);
 	}
@@ -84,6 +95,11 @@ public class CCDBLanguageList implements Iterable<CCDBLanguage> {
 		CCDBLanguageList that = (CCDBLanguageList) o;
 
 		return Objects.equals(_languages, that._languages);
+	}
+
+	public static boolean equals(CCDBLanguageList a, CCDBLanguageList b) {
+		if (a != null) return a.equals(b);
+		return b == null;
 	}
 
 	@Override
@@ -115,11 +131,12 @@ public class CCDBLanguageList implements Iterable<CCDBLanguage> {
 	public ImageIcon getIcon() {
 		if (isEmpty()) return Resources.ICN_TABLE_LANGUAGE_NONE.get();
 		if (isSingle()) return _languages.iterator().next().getIcon();
+
 		if (_languages.size() == 2)
 		{
 			List<CCDBLanguage> langs = CCStreams.iterate(_languages).enumerate();
 
-			return Resources.ICN_TABLE_LANGUAGE[langs.get(0).asInt()][langs.get(1).asInt()].get();
+			return Resources.ICN_TABLE_LANGUAGE_COMBINED.get(Tuple.Create(langs.get(0).asInt(), langs.get(1).asInt())).get();
 		}
 
 		return Resources.ICN_TABLE_LANGUAGE_MORE.get();
@@ -147,4 +164,19 @@ public class CCDBLanguageList implements Iterable<CCDBLanguage> {
 		}
 		return new CCDBLanguageList(v);
 	}
+
+	public static CCDBLanguageList intersection(CCDBLanguageList a, CCDBLanguageList b)
+	{
+		HashSet<CCDBLanguage> v = new HashSet<>(a._languages);
+		v.retainAll(b._languages);
+		return CCDBLanguageList.createDirect(v);
+	}
+
+	public static CCDBLanguageList union(CCDBLanguageList a, CCDBLanguageList b) {
+		HashSet<CCDBLanguage> v = new HashSet<>(a._languages);
+		v.addAll(b._languages);
+		return CCDBLanguageList.createDirect(v);
+	}
+
+
 }

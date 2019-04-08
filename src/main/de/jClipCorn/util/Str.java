@@ -53,4 +53,9 @@ public final class Str {
 
 		return s.substring(start, Math.min(s.length(), start + len));
 	}
+
+	public static String coalesce(String str) {
+		if (str == null) return Empty;
+		return str;
+	}
 }

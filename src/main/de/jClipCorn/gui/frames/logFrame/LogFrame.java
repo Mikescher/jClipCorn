@@ -5,7 +5,6 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.GridLayout;
 
 import javax.swing.JFrame;
 import javax.swing.JList;
@@ -17,12 +16,18 @@ import javax.swing.ListSelectionModel;
 import javax.swing.ScrollPaneConstants;
 
 import de.jClipCorn.gui.mainFrame.MainFrame;
+import de.jClipCorn.gui.frames.genericTextDialog.GenericTextDialog;
 import de.jClipCorn.gui.guiComponents.DatabaseElementPreviewLabel;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.features.log.CCLogChangedListener;
 import de.jClipCorn.features.log.CCLogType;
 import de.jClipCorn.gui.resources.Resources;
+import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.ColumnSpec;
+import com.jgoodies.forms.layout.FormSpecs;
+import com.jgoodies.forms.layout.RowSpec;
+import javax.swing.JButton;
 
 public class LogFrame extends JFrame implements CCLogChangedListener{ 
 	private static final long serialVersionUID = -8838227410250810646L;
@@ -48,6 +53,10 @@ public class LogFrame extends JFrame implements CCLogChangedListener{
 	private JScrollPane spnWarningsList;
 	private JScrollPane spnInformationsList;
 	private JScrollPane spnUndefiniedList;
+	private JButton btnMoreErr;
+	private JButton btnMoreUndef;
+	private JButton btnMoreInfo;
+	private JButton btnMoreWarn;
 
 	public LogFrame(Component owner) {
 		super();
@@ -74,11 +83,18 @@ public class LogFrame extends JFrame implements CCLogChangedListener{
 		getContentPane().add(tpnlMainPanel);
 		
 		tabErrors = new JPanel();
-		tpnlMainPanel.addTab(LocaleBundle.getString("CCLog.Errors") + " (" + CCLog.getCount(CCLogType.LOG_ELEM_ERROR) + ")", null, tabErrors, null);   //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
-		tabErrors.setLayout(new GridLayout(1, 2, 5, 0));
+		tpnlMainPanel.addTab(LocaleBundle.getString("CCLog.Errors") + " (" + CCLog.getCount(CCLogType.LOG_ELEM_ERROR) + ")", null, tabErrors, null); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		tabErrors.setLayout(new FormLayout(new ColumnSpec[] {
+				ColumnSpec.decode("550px"), //$NON-NLS-1$
+				FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
+				ColumnSpec.decode("default:grow"),}, //$NON-NLS-1$
+			new RowSpec[] {
+				RowSpec.decode("default:grow"), //$NON-NLS-1$
+				FormSpecs.RELATED_GAP_ROWSPEC,
+				FormSpecs.DEFAULT_ROWSPEC,}));
 		
 		spnErrorList = new JScrollPane();
-		tabErrors.add(spnErrorList);
+		tabErrors.add(spnErrorList, "1, 1, fill, fill"); //$NON-NLS-1$
 		
 		lsErrors = new JList<>();
 		spnErrorList.setViewportView(lsErrors);
@@ -87,7 +103,7 @@ public class LogFrame extends JFrame implements CCLogChangedListener{
 		
 		spnErrors = new JScrollPane();
 		spnErrors.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		tabErrors.add(spnErrors);
+		tabErrors.add(spnErrors, "3, 1, fill, fill"); //$NON-NLS-1$
 		
 		memoErrors = new JTextArea();
 		memoErrors.setFont(new Font("Lucida Console", Font.PLAIN, 13)); //$NON-NLS-1$
@@ -96,12 +112,25 @@ public class LogFrame extends JFrame implements CCLogChangedListener{
 		memoErrors.setEditable(false);
 		spnErrors.setViewportView(memoErrors);
 		
+		btnMoreErr = new JButton("..."); //$NON-NLS-1$
+		btnMoreErr.addActionListener(e -> {
+			if (!memoErrors.getText().isEmpty()) GenericTextDialog.showText(LogFrame.this, LocaleBundle.getString("CCLogFrame.this.title"), memoErrors.getText(), false); //$NON-NLS-1$
+		});
+		tabErrors.add(btnMoreErr, "3, 3, right, fill"); //$NON-NLS-1$
+		
 		tabWarnings = new JPanel();
-		tpnlMainPanel.addTab(LocaleBundle.getString("CCLog.Warnings") + " (" + CCLog.getCount(CCLogType.LOG_ELEM_WARNING) + ")", null, tabWarnings, null);   //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
-		tabWarnings.setLayout(new GridLayout(1, 2, 5, 0));
+		tpnlMainPanel.addTab(LocaleBundle.getString("CCLog.Warnings") + " (" + CCLog.getCount(CCLogType.LOG_ELEM_WARNING) + ")", null, tabWarnings, null); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		tabWarnings.setLayout(new FormLayout(new ColumnSpec[] {
+				ColumnSpec.decode("550px"), //$NON-NLS-1$
+				FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
+				ColumnSpec.decode("default:grow"),}, //$NON-NLS-1$
+			new RowSpec[] {
+				RowSpec.decode("default:grow"), //$NON-NLS-1$
+				FormSpecs.RELATED_GAP_ROWSPEC,
+				FormSpecs.DEFAULT_ROWSPEC,}));
 		
 		spnWarningsList = new JScrollPane();
-		tabWarnings.add(spnWarningsList);
+		tabWarnings.add(spnWarningsList, "1, 1, fill, fill"); //$NON-NLS-1$
 		
 		lsWarnings = new JList<>();
 		spnWarningsList.setViewportView(lsWarnings);
@@ -110,7 +139,7 @@ public class LogFrame extends JFrame implements CCLogChangedListener{
 		
 		spnWarnings = new JScrollPane();
 		spnWarnings.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		tabWarnings.add(spnWarnings);
+		tabWarnings.add(spnWarnings, "3, 1, fill, fill"); //$NON-NLS-1$
 		
 		memoWarnings = new JTextArea();
 		memoWarnings.setFont(new Font("Lucida Console", Font.PLAIN, 13)); //$NON-NLS-1$
@@ -119,12 +148,25 @@ public class LogFrame extends JFrame implements CCLogChangedListener{
 		memoWarnings.setEditable(false);
 		spnWarnings.setViewportView(memoWarnings);
 		
+		btnMoreWarn = new JButton("..."); //$NON-NLS-1$
+		btnMoreWarn.addActionListener(e -> {
+			if (!memoWarnings.getText().isEmpty()) GenericTextDialog.showText(LogFrame.this, LocaleBundle.getString("CCLogFrame.this.title"), memoWarnings.getText(), false); //$NON-NLS-1$
+		});
+		tabWarnings.add(btnMoreWarn, "3, 3, right, fill"); //$NON-NLS-1$
+		
 		tabInformations = new JPanel();
-		tpnlMainPanel.addTab(LocaleBundle.getString("CCLog.Informations") + " (" + CCLog.getCount(CCLogType.LOG_ELEM_INFORMATION) + ")", null, tabInformations, null);  //$NON-NLS-1$ //$NON-NLS-2$//$NON-NLS-3$
-		tabInformations.setLayout(new GridLayout(1, 2, 5, 0));
+		tpnlMainPanel.addTab(LocaleBundle.getString("CCLog.Informations") + " (" + CCLog.getCount(CCLogType.LOG_ELEM_INFORMATION) + ")", null, tabInformations, null); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		tabInformations.setLayout(new FormLayout(new ColumnSpec[] {
+				ColumnSpec.decode("550px"), //$NON-NLS-1$
+				FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
+				ColumnSpec.decode("default:grow"),}, //$NON-NLS-1$
+			new RowSpec[] {
+				RowSpec.decode("default:grow"), //$NON-NLS-1$
+				FormSpecs.RELATED_GAP_ROWSPEC,
+				FormSpecs.DEFAULT_ROWSPEC,}));
 		
 		spnInformationsList = new JScrollPane();
-		tabInformations.add(spnInformationsList);
+		tabInformations.add(spnInformationsList, "1, 1, fill, fill"); //$NON-NLS-1$
 		
 		lsInformations = new JList<>();
 		spnInformationsList.setViewportView(lsInformations);
@@ -133,7 +175,7 @@ public class LogFrame extends JFrame implements CCLogChangedListener{
 		
 		spnInformations = new JScrollPane();
 		spnInformations.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		tabInformations.add(spnInformations);
+		tabInformations.add(spnInformations, "3, 1, fill, fill"); //$NON-NLS-1$
 		
 		memoInformations = new JTextArea();
 		memoInformations.setFont(new Font("Lucida Console", Font.PLAIN, 13)); //$NON-NLS-1$
@@ -142,12 +184,25 @@ public class LogFrame extends JFrame implements CCLogChangedListener{
 		memoInformations.setEditable(false);
 		spnInformations.setViewportView(memoInformations);
 		
+		btnMoreInfo = new JButton("..."); //$NON-NLS-1$
+		btnMoreInfo.addActionListener(e -> {
+			if (!memoInformations.getText().isEmpty()) GenericTextDialog.showText(LogFrame.this, LocaleBundle.getString("CCLogFrame.this.title"), memoInformations.getText(), false); //$NON-NLS-1$
+		});
+		tabInformations.add(btnMoreInfo, "3, 3, right, fill"); //$NON-NLS-1$
+		
 		tabUndefinied = new JPanel();
-		tpnlMainPanel.addTab(LocaleBundle.getString("CCLog.Undefinieds") + " (" + CCLog.getCount(CCLogType.LOG_ELEM_UNDEFINED) + ")", null, tabUndefinied, null);   //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
-		tabUndefinied.setLayout(new GridLayout(1, 2, 5, 0));
+		tpnlMainPanel.addTab(LocaleBundle.getString("CCLog.Undefinieds") + " (" + CCLog.getCount(CCLogType.LOG_ELEM_UNDEFINED) + ")", null, tabUndefinied, null); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		tabUndefinied.setLayout(new FormLayout(new ColumnSpec[] {
+				ColumnSpec.decode("550px"), //$NON-NLS-1$
+				FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
+				ColumnSpec.decode("default:grow"),}, //$NON-NLS-1$
+			new RowSpec[] {
+				RowSpec.decode("default:grow"), //$NON-NLS-1$
+				FormSpecs.RELATED_GAP_ROWSPEC,
+				FormSpecs.DEFAULT_ROWSPEC,}));
 		
 		spnUndefiniedList = new JScrollPane();
-		tabUndefinied.add(spnUndefiniedList);
+		tabUndefinied.add(spnUndefiniedList, "1, 1, fill, fill"); //$NON-NLS-1$
 		
 		lsUndefinied = new JList<>();
 		spnUndefiniedList.setViewportView(lsUndefinied);
@@ -156,7 +211,7 @@ public class LogFrame extends JFrame implements CCLogChangedListener{
 		
 		spnUndefinied = new JScrollPane();
 		spnUndefinied.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		tabUndefinied.add(spnUndefinied);
+		tabUndefinied.add(spnUndefinied, "3, 1, fill, fill"); //$NON-NLS-1$
 		
 		memoUndefinied = new JTextArea();
 		memoUndefinied.setFont(new Font("Lucida Console", Font.PLAIN, 13)); //$NON-NLS-1$
@@ -164,6 +219,12 @@ public class LogFrame extends JFrame implements CCLogChangedListener{
 		memoUndefinied.setForeground(Color.GREEN);
 		memoUndefinied.setEditable(false);
 		spnUndefinied.setViewportView(memoUndefinied);
+		
+		btnMoreUndef = new JButton("..."); //$NON-NLS-1$
+		btnMoreUndef.addActionListener(e -> {
+			if (!memoUndefinied.getText().isEmpty()) GenericTextDialog.showText(LogFrame.this, LocaleBundle.getString("CCLogFrame.this.title"), memoUndefinied.getText(), false); //$NON-NLS-1$
+		});
+		tabUndefinied.add(btnMoreUndef, "3, 3, right, fill"); //$NON-NLS-1$
 	}
 	
 	private void setModels() {

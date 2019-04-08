@@ -10,13 +10,21 @@ public abstract class ResourceRef {
 	public final UUID id;
 	public final ResourceRefType type;
 
-	protected ResourceRef(String _ident, ResourceRefType t) {
+	public boolean doPreload;
+
+	protected ResourceRef(String _ident, ResourceRefType t, boolean preload) {
 		ident = _ident;
 		id = UUID.randomUUID();
 		type = t;
+		doPreload = preload;
 	}
 
 	public abstract void preload();
 
 	public abstract List<ResourceRef> getDirectDependencies();
+
+	public void preloadRootElement()
+	{
+		if (doPreload) preload();
+	}
 }

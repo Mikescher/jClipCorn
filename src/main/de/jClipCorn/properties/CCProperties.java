@@ -19,7 +19,6 @@ import de.jClipCorn.properties.types.PathSyntaxVar;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.datetime.CCDateTimeFormat;
-import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.ApplicationHelper;
 import de.jClipCorn.util.helper.LookAndFeelManager;
 
@@ -176,6 +175,7 @@ public class CCProperties {
 	public CCBoolProperty                                   PROP_STATBAR_DRIVESCAN;
 	public CCBoolProperty                                   PROP_MAINFRAME_SHOW_VIEWCOUNT;
 	public CCBoolProperty                                   PROP_DRIVEMAP_REMOUNT_NETDRIVES;
+	public CCStringProperty                                 PROP_PLAY_MEDIAINFO_PATH;
 
 	public boolean ARG_READONLY = false;
 	
@@ -280,7 +280,8 @@ public class CCProperties {
 		PROP_SEASON_INDEX_REGEXPRESSIONS        = new CCSeasonRegexListProperty(CAT_SERIES, this,   "PROP_SEASON_INDEX_REGEXPRESSIONS",         getDefSeasonRegex());
 		PROP_SERIES_NEXT_EPISODE_HEURISTIC      = new CCEnumProperty<>(CAT_SERIES,          this,   "PROP_SERIES_NEXT_EPISODE_HEURISTIC",       NextEpisodeHeuristic.AUTOMATIC,     NextEpisodeHeuristic.getWrapper());
 
-		PROP_PLAY_VLC_PATH                      = new CCPathProperty(CAT_PLAY,              this,   "PROP_PLAY_VLC_PATH",                       "",                                 PathFormatter.appendAndPrependSeparator("vlc.exe"), CCPathPropertyMode.FILES);
+		PROP_PLAY_VLC_PATH                      = new CCPathProperty(CAT_PLAY,              this,   "PROP_PLAY_VLC_PATH",                       "",                                 "vlc.exe",       CCPathPropertyMode.FILES);
+		PROP_PLAY_MEDIAINFO_PATH                = new CCPathProperty(CAT_PLAY,              this,   "PROP_PLAY_MEDIAINFO_PATH",                 "",                                 "mediainfo.exe", CCPathPropertyMode.FILES);
 		PROP_PLAY_VLC_FULLSCREEN                = new CCBoolProperty(CAT_PLAY,              this,   "PROP_PLAY_VLC_FULLSCREEN",                 false);
 		PROP_PLAY_VLC_AUTOPLAY                  = new CCBoolProperty(CAT_PLAY,              this,   "PROP_PLAY_VLC_AUTOPLAY",                   true);
 		PROP_PLAY_USESTANDARDONMISSINGVLC       = new CCBoolProperty(CAT_PLAY,              this,   "PROP_PLAY_USESTANDARDONMISSINGVLC",        true);

@@ -234,7 +234,7 @@ public class DriveMap {
 				if (driveMap.containsKey(letter)) continue;
 				if (!new File(net).exists()) continue;
 
-				Tuple3<Integer, String, String> ex = ProcessHelper.winExec("net", "use", d.Item2, net);
+				Tuple3<Integer, String, String> ex = ProcessHelper.procExec("net", "use", d.Item2, net);
 				if (ex.Item1 != 0)
 				{
 					CCLog.addWarning(LocaleBundle.getFormattedString("LogMessage.RemountFailed", d.Item2, net), new Exception(ex.Item3));

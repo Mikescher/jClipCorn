@@ -6,6 +6,7 @@ import java.util.HashMap;
 import de.jClipCorn.Globals;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.gui.resources.reftypes.*;
+import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.ThreadUtils;
@@ -43,6 +44,9 @@ public class Resources {
 	public final static MultiSizeIconRef ICN_GENERIC_ORB_ORANGE		 		= registerMultisizeIcon("/icons/common/orb_orange.png");
 	public final static MultiSizeIconRef ICN_GENERIC_ORB_RED		 		= registerMultisizeIcon("/icons/common/orb_red.png");
 	public final static MultiSizeIconRef ICN_GENERIC_ORB_GREEN		 		= registerMultisizeIcon("/icons/common/orb_green.png");
+	public final static MultiSizeIconRef ICN_GENERIC_ORB_YELLOW		 		= registerMultisizeIcon("/icons/common/orb_yellow.png");
+
+	public final static MultiSizeIconRef ICN_TRANSPARENT			 		= registerMultisizeIcon("/icons/common/void.png");
 	// #############################################  </COMMON>  #############################################
 	
 	
@@ -79,6 +83,7 @@ public class Resources {
 	public final static MultiSizeIconRef ICN_MENUBAR_MOVEALLMOVIES			= registerMultisizeIcon("/icons/toolbar/move_to_folder3.png");
 	public final static MultiSizeIconRef ICN_MENUBAR_FINDINCOMPLETEZYKLUS	= registerMultisizeIcon("/icons/toolbar/blackboard_steps.png");
 	public final static MultiSizeIconRef ICN_MENUBAR_UPDATEMETADATA			= registerMultisizeIcon("/icons/toolbar/update_contact_info.png");
+	public final static MultiSizeIconRef ICN_MENUBAR_UPDATECODECDATA		= registerMultisizeIcon("/icons/toolbar/video_mode.png");
 	public final static MultiSizeIconRef ICN_MENUBAR_FILENAMERULES			= registerMultisizeIcon("/icons/toolbar/books.png");
 	public final static MultiSizeIconRef ICN_MENUBAR_CREATE_JXMLBKP			= registerMultisizeIcon("/icons/toolbar/source_code.png");
 	public final static MultiSizeIconRef ICN_MENUBAR_COMPARE				= registerMultisizeIcon("/icons/toolbar/balance_unbalance.png");
@@ -227,44 +232,37 @@ public class Resources {
 	public final static IconRef ICN_TABLE_FSK_3 			= register16x16Icon("/icons/table/fsk/fsk_3.png");
 	public final static IconRef ICN_TABLE_FSK_4 			= register16x16Icon("/icons/table/fsk/fsk_4.png");
 
-	public final static IconRef ICN_TABLE_LANGUAGE_0_0 		= register16x16Icon("/icons/table/language/language_0.png");
-	public final static IconRef ICN_TABLE_LANGUAGE_0_1 		= registerCombined16x16Icon("/icons/table/language/language_0_A.png", "/icons/table/language/language_1_B.png");
-	public final static IconRef ICN_TABLE_LANGUAGE_0_2 		= registerCombined16x16Icon("/icons/table/language/language_0_A.png", "/icons/table/language/language_2_B.png");
-	public final static IconRef ICN_TABLE_LANGUAGE_0_3 		= registerCombined16x16Icon("/icons/table/language/language_0_A.png", "/icons/table/language/language_3_B.png");
-	public final static IconRef ICN_TABLE_LANGUAGE_0_4 		= registerCombined16x16Icon("/icons/table/language/language_0_A.png", "/icons/table/language/language_4_B.png");
+	public final static IconRef ICN_TABLE_LANGUAGE_00 		= register16x16Icon("/icons/table/language/language_00.png");
+	public final static IconRef ICN_TABLE_LANGUAGE_01 		= register16x16Icon("/icons/table/language/language_01.png");
+	public final static IconRef ICN_TABLE_LANGUAGE_02 		= register16x16Icon("/icons/table/language/language_02.png");
+	public final static IconRef ICN_TABLE_LANGUAGE_03 		= register16x16Icon("/icons/table/language/language_03.png");
+	public final static IconRef ICN_TABLE_LANGUAGE_04 		= register16x16Icon("/icons/table/language/language_04.png");
+	public final static IconRef ICN_TABLE_LANGUAGE_05 		= register16x16Icon("/icons/table/language/language_05.png");
+	public final static IconRef ICN_TABLE_LANGUAGE_06 		= register16x16Icon("/icons/table/language/language_06.png");
+	public final static IconRef ICN_TABLE_LANGUAGE_07 		= register16x16Icon("/icons/table/language/language_07.png");
+	public final static IconRef ICN_TABLE_LANGUAGE_08 		= register16x16Icon("/icons/table/language/language_08.png");
+	public final static IconRef ICN_TABLE_LANGUAGE_09 		= register16x16Icon("/icons/table/language/language_09.png");
+	public final static IconRef ICN_TABLE_LANGUAGE_10 		= register16x16Icon("/icons/table/language/language_10.png");
+	public final static IconRef ICN_TABLE_LANGUAGE_11 		= register16x16Icon("/icons/table/language/language_11.png");
+	public final static IconRef ICN_TABLE_LANGUAGE_12 		= register16x16Icon("/icons/table/language/language_12.png");
+	public final static IconRef ICN_TABLE_LANGUAGE_13 		= register16x16Icon("/icons/table/language/language_13.png");
+	public final static IconRef ICN_TABLE_LANGUAGE_14 		= register16x16Icon("/icons/table/language/language_14.png");
+	public final static IconRef ICN_TABLE_LANGUAGE_15 		= register16x16Icon("/icons/table/language/language_15.png");
+	public final static IconRef ICN_TABLE_LANGUAGE_16 		= register16x16Icon("/icons/table/language/language_16.png");
+	public final static IconRef ICN_TABLE_LANGUAGE_17 		= register16x16Icon("/icons/table/language/language_17.png");
+	public final static IconRef ICN_TABLE_LANGUAGE_18 		= register16x16Icon("/icons/table/language/language_18.png");
+	public final static IconRef ICN_TABLE_LANGUAGE_19 		= register16x16Icon("/icons/table/language/language_19.png");
 
-	public final static IconRef ICN_TABLE_LANGUAGE_1_0 		= registerCombined16x16Icon("/icons/table/language/language_0_A.png", "/icons/table/language/language_1_B.png");
-	public final static IconRef ICN_TABLE_LANGUAGE_1_1 		= register16x16Icon("/icons/table/language/language_1.png");
-	public final static IconRef ICN_TABLE_LANGUAGE_1_2 		= registerCombined16x16Icon("/icons/table/language/language_1_A.png", "/icons/table/language/language_2_B.png");
-	public final static IconRef ICN_TABLE_LANGUAGE_1_3 		= registerCombined16x16Icon("/icons/table/language/language_1_A.png", "/icons/table/language/language_3_B.png");
-	public final static IconRef ICN_TABLE_LANGUAGE_1_4 		= registerCombined16x16Icon("/icons/table/language/language_1_A.png", "/icons/table/language/language_4_B.png");
-
-	public final static IconRef ICN_TABLE_LANGUAGE_2_0 		= registerCombined16x16Icon("/icons/table/language/language_0_A.png", "/icons/table/language/language_2_B.png");
-	public final static IconRef ICN_TABLE_LANGUAGE_2_1 		= registerCombined16x16Icon("/icons/table/language/language_1_A.png", "/icons/table/language/language_2_B.png");
-	public final static IconRef ICN_TABLE_LANGUAGE_2_2 		= register16x16Icon("/icons/table/language/language_2.png");
-	public final static IconRef ICN_TABLE_LANGUAGE_2_3 		= registerCombined16x16Icon("/icons/table/language/language_3_A.png", "/icons/table/language/language_2_B.png");
-	public final static IconRef ICN_TABLE_LANGUAGE_2_4		= registerCombined16x16Icon("/icons/table/language/language_4_A.png", "/icons/table/language/language_2_B.png");
-
-	public final static IconRef ICN_TABLE_LANGUAGE_3_0 		= registerCombined16x16Icon("/icons/table/language/language_0_A.png", "/icons/table/language/language_3_B.png");
-	public final static IconRef ICN_TABLE_LANGUAGE_3_1 		= registerCombined16x16Icon("/icons/table/language/language_1_A.png", "/icons/table/language/language_3_B.png");
-	public final static IconRef ICN_TABLE_LANGUAGE_3_2 		= registerCombined16x16Icon("/icons/table/language/language_3_A.png", "/icons/table/language/language_2_B.png");
-	public final static IconRef ICN_TABLE_LANGUAGE_3_3 		= register16x16Icon("/icons/table/language/language_3.png");
-	public final static IconRef ICN_TABLE_LANGUAGE_3_4 		= registerCombined16x16Icon("/icons/table/language/language_4_A.png", "/icons/table/language/language_3_B.png");
-
-	public final static IconRef ICN_TABLE_LANGUAGE_4_0 		= registerCombined16x16Icon("/icons/table/language/language_0_A.png", "/icons/table/language/language_4_B.png");
-	public final static IconRef ICN_TABLE_LANGUAGE_4_1 		= registerCombined16x16Icon("/icons/table/language/language_1_A.png", "/icons/table/language/language_4_B.png");
-	public final static IconRef ICN_TABLE_LANGUAGE_4_2		= registerCombined16x16Icon("/icons/table/language/language_4_A.png", "/icons/table/language/language_2_B.png");
-	public final static IconRef ICN_TABLE_LANGUAGE_4_3 		= registerCombined16x16Icon("/icons/table/language/language_4_A.png", "/icons/table/language/language_3_B.png");
-	public final static IconRef ICN_TABLE_LANGUAGE_4_4 		= register16x16Icon("/icons/table/language/language_4.png");
-
-	public final static IconRef[][] ICN_TABLE_LANGUAGE = new IconRef[][]
+	public final static IconRef[] ICN_TABLE_LANGUAGE = new IconRef[]
 	{
-		new IconRef[]{ ICN_TABLE_LANGUAGE_0_0, ICN_TABLE_LANGUAGE_0_1, ICN_TABLE_LANGUAGE_0_2, ICN_TABLE_LANGUAGE_0_3, ICN_TABLE_LANGUAGE_0_4 },
-		new IconRef[]{ ICN_TABLE_LANGUAGE_1_0, ICN_TABLE_LANGUAGE_1_1, ICN_TABLE_LANGUAGE_1_2, ICN_TABLE_LANGUAGE_1_3, ICN_TABLE_LANGUAGE_1_4 },
-		new IconRef[]{ ICN_TABLE_LANGUAGE_2_0, ICN_TABLE_LANGUAGE_2_1, ICN_TABLE_LANGUAGE_2_2, ICN_TABLE_LANGUAGE_2_3, ICN_TABLE_LANGUAGE_2_4 },
-		new IconRef[]{ ICN_TABLE_LANGUAGE_3_0, ICN_TABLE_LANGUAGE_3_1, ICN_TABLE_LANGUAGE_3_2, ICN_TABLE_LANGUAGE_3_3, ICN_TABLE_LANGUAGE_3_4 },
-		new IconRef[]{ ICN_TABLE_LANGUAGE_4_0, ICN_TABLE_LANGUAGE_4_1, ICN_TABLE_LANGUAGE_4_2, ICN_TABLE_LANGUAGE_4_3, ICN_TABLE_LANGUAGE_4_4 },
+		ICN_TABLE_LANGUAGE_00, ICN_TABLE_LANGUAGE_01, ICN_TABLE_LANGUAGE_02, ICN_TABLE_LANGUAGE_03,
+		ICN_TABLE_LANGUAGE_04, ICN_TABLE_LANGUAGE_05, ICN_TABLE_LANGUAGE_06, ICN_TABLE_LANGUAGE_07,
+		ICN_TABLE_LANGUAGE_08, ICN_TABLE_LANGUAGE_09, ICN_TABLE_LANGUAGE_10, ICN_TABLE_LANGUAGE_11,
+		ICN_TABLE_LANGUAGE_12, ICN_TABLE_LANGUAGE_13, ICN_TABLE_LANGUAGE_14, ICN_TABLE_LANGUAGE_15,
+		ICN_TABLE_LANGUAGE_16, ICN_TABLE_LANGUAGE_17, ICN_TABLE_LANGUAGE_18, ICN_TABLE_LANGUAGE_19,
 	};
+
+	public static HashMap<Tuple<Integer, Integer>, IconRef> ICN_TABLE_LANGUAGE_COMBINED = createCombinedlanguageIcons(ICN_TABLE_LANGUAGE);
 
 	public final static IconRef ICN_TABLE_LANGUAGE_NONE		= register16x16Icon("/icons/table/language/language_none.png");
 	public final static IconRef ICN_TABLE_LANGUAGE_MORE		= register16x16Icon("/icons/table/language/language_more.png");
@@ -363,37 +361,37 @@ public class Resources {
 
 	
 	// ##############################################  <LOG>  ################################################
-	public final static MultiSizeIconRef ICN_REF_00				= registerMultisizeIcon("/icons/onlineReferences/ref00.png");
+	public final static MultiSizeIconRef ICN_REF_00			= registerMultisizeIcon("/icons/onlineReferences/ref00.png");
 	public final static IconRef ICN_REF_00_BUTTON			= registerOtherIcon("/icons/onlineReferences/ref00_large.png");
 	
-	public final static MultiSizeIconRef ICN_REF_01				= registerMultisizeIcon("/icons/onlineReferences/ref01.png");
+	public final static MultiSizeIconRef ICN_REF_01			= registerMultisizeIcon("/icons/onlineReferences/ref01.png");
 	public final static IconRef ICN_REF_01_BUTTON			= registerOtherIcon("/icons/onlineReferences/ref01_large.png");
 	
-	public final static MultiSizeIconRef ICN_REF_02				= registerMultisizeIcon("/icons/onlineReferences/ref02.png");
+	public final static MultiSizeIconRef ICN_REF_02			= registerMultisizeIcon("/icons/onlineReferences/ref02.png");
 	public final static IconRef ICN_REF_02_BUTTON			= registerOtherIcon("/icons/onlineReferences/ref02_large.png");
 	
-	public final static MultiSizeIconRef ICN_REF_03				= registerMultisizeIcon("/icons/onlineReferences/ref03.png");
+	public final static MultiSizeIconRef ICN_REF_03			= registerMultisizeIcon("/icons/onlineReferences/ref03.png");
 	public final static IconRef ICN_REF_03_BUTTON			= registerOtherIcon("/icons/onlineReferences/ref03_large.png");
 	
-	public final static MultiSizeIconRef ICN_REF_04				= registerMultisizeIcon("/icons/onlineReferences/ref04.png");
+	public final static MultiSizeIconRef ICN_REF_04			= registerMultisizeIcon("/icons/onlineReferences/ref04.png");
 	public final static IconRef ICN_REF_04_BUTTON			= registerOtherIcon("/icons/onlineReferences/ref04_large.png");
 	
-	public final static MultiSizeIconRef ICN_REF_05				= registerMultisizeIcon("/icons/onlineReferences/ref05.png");
+	public final static MultiSizeIconRef ICN_REF_05			= registerMultisizeIcon("/icons/onlineReferences/ref05.png");
 	public final static IconRef ICN_REF_05_BUTTON			= registerOtherIcon("/icons/onlineReferences/ref05_large.png");
 	
-	public final static MultiSizeIconRef ICN_REF_06				= registerMultisizeIcon("/icons/onlineReferences/ref06.png");
+	public final static MultiSizeIconRef ICN_REF_06			= registerMultisizeIcon("/icons/onlineReferences/ref06.png");
 	public final static IconRef ICN_REF_06_BUTTON			= registerOtherIcon("/icons/onlineReferences/ref06_large.png");
 	
-	public final static MultiSizeIconRef ICN_REF_07				= registerMultisizeIcon("/icons/onlineReferences/ref07.png");
+	public final static MultiSizeIconRef ICN_REF_07			= registerMultisizeIcon("/icons/onlineReferences/ref07.png");
 	public final static IconRef ICN_REF_07_BUTTON			= registerOtherIcon("/icons/onlineReferences/ref07_large.png");
 	
-	public final static MultiSizeIconRef ICN_REF_08				= registerMultisizeIcon("/icons/onlineReferences/ref08.png");
+	public final static MultiSizeIconRef ICN_REF_08			= registerMultisizeIcon("/icons/onlineReferences/ref08.png");
 	public final static IconRef ICN_REF_08_BUTTON			= registerOtherIcon("/icons/onlineReferences/ref08_large.png");
 
-	public final static MultiSizeIconRef ICN_REF_09				= registerMultisizeIcon("/icons/onlineReferences/ref09.png");
+	public final static MultiSizeIconRef ICN_REF_09			= registerMultisizeIcon("/icons/onlineReferences/ref09.png");
 	public final static IconRef ICN_REF_09_BUTTON			= registerOtherIcon("/icons/onlineReferences/ref09_large.png");
 
-	public final static MultiSizeIconRef ICN_REF_10				= registerMultisizeIcon("/icons/onlineReferences/ref10.png");
+	public final static MultiSizeIconRef ICN_REF_10			= registerMultisizeIcon("/icons/onlineReferences/ref10.png");
 	public final static IconRef ICN_REF_10_BUTTON			= registerOtherIcon("/icons/onlineReferences/ref10_large.png");
 	// ###############################################  </LOG>  ##############################################
 	
@@ -405,11 +403,12 @@ public class Resources {
 	public static void init() {
 		// actual register code happens in static initialization
 		
-		CCLog.addDebug(String.format("%d resources registered (%d icons and %d images)",
+		CCLog.addDebug(String.format("%d resources registered (%d icons and %d images) (%d cached)", //$NON-NLS-1$
 				resources.size(),
 				CCStreams.iterate(resources).count(r -> r.getKey().Item2.isIcon()),
-				CCStreams.iterate(resources).count(r -> r.getKey().Item2.isImage())
-		)); //$NON-NLS-1$
+				CCStreams.iterate(resources).count(r -> r.getKey().Item2.isImage()),
+				CCStreams.iterate(resources).count(r -> r.getValue().doPreload)
+		));
 	}
 
 	@SuppressWarnings("unused")
@@ -453,24 +452,36 @@ public class Resources {
 		return registerIcon(s, ResourceRefType.ICON_OTHER);
 	}
 
+	private static CombinedImageRef registerCombinedImage_nopreload(String... s) {
+		return register(new CombinedImageRef(CCStreams.iterate(s).map(Resources::registerImage_nopreload).toArray(new SingleImageRef[0]), false));
+	}
+
 	private static CombinedImageRef registerCombinedImage(String... s) {
-		return register(new CombinedImageRef(CCStreams.iterate(s).map(Resources::registerImage).toArray(new SingleImageRef[0])));
+		return register(new CombinedImageRef(CCStreams.iterate(s).map(Resources::registerImage).toArray(new SingleImageRef[0]), true));
 	}
 
 	private static CombinedIconRef registerCombined16x16Icon(String... s) {
-		return register(new CombinedIconRef(registerCombinedImage(CCStreams.iterate(s).map(Resources::get16x16Filename).toArray(new String[0]))));
+		return register(new CombinedIconRef(registerCombinedImage(CCStreams.iterate(s).map(Resources::get16x16Filename).toArray(new String[0])), true));
+	}
+
+	private static CombinedIconRef registerCombined16x16Icon_nopreload(String... s) {
+		return register(new CombinedIconRef(registerCombinedImage_nopreload(CCStreams.iterate(s).map(Resources::get16x16Filename).toArray(new String[0])), false));
 	}
 
 	private static CombinedIconRef registerCombinedIcon(String... s) {
-		return register(new CombinedIconRef(registerCombinedImage(s)));
+		return register(new CombinedIconRef(registerCombinedImage(s), true));
 	}
 	
 	private static SingleIconRef registerIcon(String s, ResourceRefType t) {
-		return register(new SingleIconRef(register(new SingleImageRef(s)), t));
+		return register(new SingleIconRef(register(new SingleImageRef(s, true)), t, true));
 	}
-	
+
+	private static SingleImageRef registerImage_nopreload(String s) {
+		return register(new SingleImageRef(s, false));
+	}
+
 	private static SingleImageRef registerImage(String s) {
-		return register(new SingleImageRef(s));
+		return register(new SingleImageRef(s, true));
 	}
 
 	@SuppressWarnings("unchecked")
@@ -478,7 +489,11 @@ public class Resources {
 		Tuple<String, ResourceRefType> key = Tuple.Create(ref.ident, ref.type);
 
 		ResourceRef data = resources.getOrDefault(key, null);
-		if (data != null) return (T)data;
+		if (data != null)
+		{
+			if (ref.doPreload && !data.doPreload) data.doPreload = true;
+			return (T)data;
+		}
 
 		resources.put(key, ref);
 		return ref;
@@ -486,7 +501,7 @@ public class Resources {
 
 	public static void preload() {
 		for (ResourceRef s : resources.values()) {
-			s.preload();
+			s.preloadRootElement();
 		}
 	}
 
@@ -498,7 +513,7 @@ public class Resources {
 			Globals.TIMINGS.start(Globals.TIMING_BACKGROUND_PRELOADRESOURCES);
 			for (ResourceRef s : resources.values()) {
 				try {
-					SwingUtilities.invokeAndWait(s::preload);
+					SwingUtilities.invokeAndWait(s::preloadRootElement);
 				} catch (InterruptedException | InvocationTargetException e) {
 					CCLog.addError(e);
 				}
@@ -506,5 +521,43 @@ public class Resources {
 
 			Globals.TIMINGS.stop(Globals.TIMING_BACKGROUND_PRELOADRESOURCES);
 		}, "RESOURCE_PRELOAD").start();
+	}
+
+	private static HashMap<Tuple<Integer, Integer>, IconRef> createCombinedlanguageIcons(IconRef[] icns)
+	{
+		HashMap<Tuple<Integer, Integer>, IconRef> result = new HashMap<>();
+
+		for (int i1 = 0; i1 < icns.length; i1++)
+		{
+			result.put(Tuple.Create(i1, i1), icns[i1]);
+
+			for (int i2 = i1+1; i2 < icns.length; i2++)
+			{
+				boolean swap = false; // special cases - icon looks better with swapped sides
+				if (i1 == 2 && i2 ==  3) swap = true;
+				if (i1 == 2 && i2 ==  4) swap = true;
+				if (i1 == 3 && i2 ==  4) swap = true;
+				if (           i2 == 19) swap = true;
+
+				String icn_1 = Str.format("/icons/table/language/language_{0,number,00}_A.png", i1);
+				String icn_2 = Str.format("/icons/table/language/language_{0,number,00}_B.png", i2);
+
+				if (swap) {
+					icn_1 = Str.format("/icons/table/language/language_{0,number,00}_A.png", i2);
+					icn_2 = Str.format("/icons/table/language/language_{0,number,00}_B.png", i1);
+				}
+
+				IconRef ref;
+				if (i1<5 || i2<5)
+					ref = registerCombined16x16Icon(icn_1, icn_2); // first 5x5 languages get preloaded
+				else
+					ref = registerCombined16x16Icon_nopreload(icn_1, icn_2);
+
+				result.put(Tuple.Create(i1, i2), ref);
+				result.put(Tuple.Create(i2, i1), ref);
+			}
+		}
+
+		return result;
 	}
 }

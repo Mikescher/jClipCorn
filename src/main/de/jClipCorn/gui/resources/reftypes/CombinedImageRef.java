@@ -11,9 +11,9 @@ import java.util.List;
 public class CombinedImageRef extends ImageRef {
 	public final SingleImageRef[] layers;
 
-	public CombinedImageRef(SingleImageRef[] _layers) {
-		super("combinedimage://" + CCStreams.iterate(_layers).stringjoin(l -> l.path, "|"), ResourceRefType.IMAGE_COMBINED); //$NON-NLS-1$ //$NON-NLS-2$
-		layers = _layers;
+	public CombinedImageRef(SingleImageRef[] innerlayers, boolean preload) {
+		super("combinedimage://" + CCStreams.iterate(innerlayers).stringjoin(l -> l.path, "|"), ResourceRefType.IMAGE_COMBINED, preload); //$NON-NLS-1$ //$NON-NLS-2$
+		layers = innerlayers;
 
 		if (layers.length == 0) throw new Error("CombinedIconRef invariant failed"); //$NON-NLS-1$
 	}

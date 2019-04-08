@@ -38,6 +38,7 @@ import de.jClipCorn.gui.frames.exportElementsFrame.ExportElementsFrame;
 import de.jClipCorn.gui.frames.filenameRulesFrame.FilenameRuleFrame;
 import de.jClipCorn.gui.frames.groupManageFrame.GroupManageFrame;
 import de.jClipCorn.gui.frames.logFrame.LogFrame;
+import de.jClipCorn.gui.frames.updateCodecFrame.UpdateCodecFrame;
 import de.jClipCorn.gui.mainFrame.MainFrame;
 import de.jClipCorn.gui.frames.moveSeriesFrame.MassMoveMoviesDialog;
 import de.jClipCorn.gui.frames.moveSeriesFrame.MassMoveSeriesDialog;
@@ -157,7 +158,8 @@ public class CCActionTree extends UIActionTree{
 				add(extras, "ShuffleTable",             null,      "ClipMenuBar.Extras.ShuffleTable",             Resources.ICN_MENUBAR_SHUFFLE,              false, this::onClickExtrasShuffleTable);
 				add(extras, "ParseWatchData",           null,      "ClipMenuBar.Extras.ParseWatchData",           Resources.ICN_MENUBAR_WATCHDATA,            true,  this::onClickExtrasParseWatchData);
 				add(extras, "ShowIncompleteFilmSeries", null,      "ClipMenuBar.Extras.ShowIncompleteFilmSeries", Resources.ICN_MENUBAR_FINDINCOMPLETEZYKLUS, false, this::onClickExtrasShowIncompleteFilmSeries);
-				add(extras, "UpdateMetadata",           null,      "ClipMenuBar.Extras.UpdateMetadata",           Resources.ICN_MENUBAR_UPDATEMETADATA,       true,  this::onClickExtrasUpdateMetadata);
+				add(extras, "UpdateMetadata",           null,      "ClipMenuBar.Extras.UpdateMetadata",           Resources.ICN_MENUBAR_UPDATEMETADATA,       false, this::onClickExtrasUpdateMetadata);
+				add(extras, "UpdateCodecData",          null,      "ClipMenuBar.Extras.UpdateCodecData",          Resources.ICN_MENUBAR_UPDATECODECDATA,      false, this::onClickExtrasUpdateCodecData);
 				add(extras, "ShowSettings",             null,      "ClipMenuBar.Extras.Settings",                 Resources.ICN_MENUBAR_SETTINGS,             false, this::onClickExtrasSettings);
 			}
 			
@@ -364,9 +366,14 @@ public class CCActionTree extends UIActionTree{
 		ShowIncompleteFilmSeriesFrame sifsf = new ShowIncompleteFilmSeriesFrame(owner, movielist);
 		sifsf.setVisible(true);
 	}
-	
+
 	private void onClickExtrasUpdateMetadata(CCTreeActionEvent e) {
 		UpdateMetadataFrame umf = new UpdateMetadataFrame(owner, movielist);
+		umf.setVisible(true);
+	}
+
+	private void onClickExtrasUpdateCodecData(CCTreeActionEvent e) {
+		UpdateCodecFrame umf = new UpdateCodecFrame(owner, movielist);
 		umf.setVisible(true);
 	}
 	

@@ -4,7 +4,6 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguage;
 import de.jClipCorn.util.exceptions.InnerMediaQueryException;
 
 import de.jClipCorn.util.xml.CCXMLElement;
-import de.jClipCorn.util.xml.CCXMLException;
 
 public class MediaQueryResultAudioTrack {
 	public final String Format;   // NULL if not set
@@ -20,7 +19,7 @@ public class MediaQueryResultAudioTrack {
 	}
 
 	@SuppressWarnings("nls")
-	public static MediaQueryResultAudioTrack parse(CCXMLElement xml) throws InnerMediaQueryException, CCXMLException {
+	public static MediaQueryResultAudioTrack parse(CCXMLElement xml) throws InnerMediaQueryException {
 		String format;
 		String language;
 		String codecID;

@@ -53,11 +53,14 @@ import de.jClipCorn.gui.guiComponents.language.LanguageChooser;
 import de.jClipCorn.gui.guiComponents.referenceChooser.JReferenceChooser;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
+import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.features.online.metadata.ParseResultHandler;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.Validator;
 import de.jClipCorn.util.adapter.UpdateCallbackAdapter;
 import de.jClipCorn.util.datetime.CCDate;
+import de.jClipCorn.util.exceptions.CCFormatException;
+import de.jClipCorn.util.exceptions.EnumFormatException;
 import de.jClipCorn.util.formatter.FileSizeFormatter;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.DialogHelper;
@@ -388,13 +391,21 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		pnlSeries.add(btnAddEmptySeason);
 		
 		btnSeriesOk = new JButton(LocaleBundle.getString("UIGeneric.btnOK.text")); //$NON-NLS-1$
-		btnSeriesOk.addActionListener(e -> onOKSeries(true));
+		btnSeriesOk.addActionListener(e -> {try {
+			onOKSeries(true);
+		} catch (EnumFormatException e1) {
+			CCLog.addError(e1);
+		}});
 		btnSeriesOk.setBounds(162, 612, 89, 23);
 		pnlSeries.add(btnSeriesOk);
 		
 		btnOkClose = new JButton(LocaleBundle.getString("UIGeneric.btnOK_and_Close.text")); //$NON-NLS-1$
 		btnOkClose.addActionListener(e -> {
-			if (onOKSeries(true)) EditSeriesFrame.this.dispatchEvent(new WindowEvent(EditSeriesFrame.this, WindowEvent.WINDOW_CLOSING));
+			try {
+				if (onOKSeries(true)) EditSeriesFrame.this.dispatchEvent(new WindowEvent(EditSeriesFrame.this, WindowEvent.WINDOW_CLOSING));
+			} catch (EnumFormatException e1) {
+				CCLog.addError(e1);
+			}
 		});
 		btnOkClose.setBounds(263, 612, 98, 23);
 		pnlSeries.add(btnOkClose);
@@ -611,7 +622,11 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		btnEpisodeOK.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				onOKEpisode(true);
+				try {
+					onOKEpisode(true);
+				} catch (EnumFormatException e1) {
+					CCLog.addError(e1);
+				}
 			}
 		});
 		btnEpisodeOK.setBounds(148, 612, 89, 23);
@@ -926,7 +941,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		updateSeriesPanel();
 	}
 	
-	private boolean onOKSeries(boolean check) {
+	private boolean onOKSeries(boolean check) throws EnumFormatException {
 		List<UserDataProblem> problems = new ArrayList<>();
 
 		boolean probvalue = !check || checkUserDataSeries(problems);
@@ -942,7 +957,13 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		}
 		
 		if (! probvalue) {
-			InputErrorDialog amied = new InputErrorDialog(problems, () -> onOKSeries(false), this);
+			InputErrorDialog amied = new InputErrorDialog(problems, () -> {
+				try {
+					onOKSeries(false);
+				} catch (CCFormatException e) {
+					CCLog.addError(e);
+				}
+			}, this) ;
 			amied.setVisible(true);
 			return false;
 		}
@@ -957,14 +978,14 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		series.setFsk(cbxSeriesFSK.getSelectedIndex());
 		series.setScore(cbxSeriesScore.getSelectedIndex());
 		
-		series.setGenre(CCGenre.getWrapper().find(cbxSeriesGenre_0.getSelectedIndex()), 0);
-		series.setGenre(CCGenre.getWrapper().find(cbxSeriesGenre_1.getSelectedIndex()), 1);
-		series.setGenre(CCGenre.getWrapper().find(cbxSeriesGenre_2.getSelectedIndex()), 2);
-		series.setGenre(CCGenre.getWrapper().find(cbxSeriesGenre_3.getSelectedIndex()), 3);
-		series.setGenre(CCGenre.getWrapper().find(cbxSeriesGenre_4.getSelectedIndex()), 4);
-		series.setGenre(CCGenre.getWrapper().find(cbxSeriesGenre_5.getSelectedIndex()), 5);
-		series.setGenre(CCGenre.getWrapper().find(cbxSeriesGenre_6.getSelectedIndex()), 6);
-		series.setGenre(CCGenre.getWrapper().find(cbxSeriesGenre_7.getSelectedIndex()), 7);
+		series.setGenre(CCGenre.getWrapper().findOrException(cbxSeriesGenre_0.getSelectedIndex()), 0);
+		series.setGenre(CCGenre.getWrapper().findOrException(cbxSeriesGenre_1.getSelectedIndex()), 1);
+		series.setGenre(CCGenre.getWrapper().findOrException(cbxSeriesGenre_2.getSelectedIndex()), 2);
+		series.setGenre(CCGenre.getWrapper().findOrException(cbxSeriesGenre_3.getSelectedIndex()), 3);
+		series.setGenre(CCGenre.getWrapper().findOrException(cbxSeriesGenre_4.getSelectedIndex()), 4);
+		series.setGenre(CCGenre.getWrapper().findOrException(cbxSeriesGenre_5.getSelectedIndex()), 5);
+		series.setGenre(CCGenre.getWrapper().findOrException(cbxSeriesGenre_6.getSelectedIndex()), 6);
+		series.setGenre(CCGenre.getWrapper().findOrException(cbxSeriesGenre_7.getSelectedIndex()), 7);
 		
 		series.setOnlineReference(edSeriesReference.getValue());
 		series.setGroups(edSeriesGroups.getValue());
@@ -1172,7 +1193,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		testEpisodePart();
 	}
 	
-	private void onOKEpisode(boolean check) {
+	private void onOKEpisode(boolean check) throws EnumFormatException {
 		CCEpisode episode = getSelectedEpisode();
 		
 		if (episode == null) {
@@ -1190,7 +1211,13 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		}
 		
 		if (! probvalue) {
-			InputErrorDialog amied = new InputErrorDialog(problems, () -> onOKEpisode(false), this);
+			InputErrorDialog amied = new InputErrorDialog(problems, () -> {
+				try {
+					onOKEpisode(false);
+				} catch (CCFormatException e) {
+					CCLog.addError(e);
+				}
+			}, this) ;
 			amied.setVisible(true);
 			return;
 		}
@@ -1237,17 +1264,21 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		CCDate adddate = spnEpisodeAdded.getValue();
 		CCDateTimeList lvdate = cmpEpisodeViewedHistory.getValue();
 
-		long fsize = (long) spnEpisodeSize.getValue();
-		int quality = cbxEpisodeQuality.getSelectedIndex();
-		String csExtn  = CCFileFormat.getWrapper().find(cbxEpisodeFormat.getSelectedIndex()).asString();
-		String csExta = CCFileFormat.getWrapper().find(cbxEpisodeFormat.getSelectedIndex()).asStringAlt();
-		CCDBLanguageList lng = ctrlLang.getValue();
-		
-		String part = edEpisodePart.getText();
-		
-		UserDataProblem.testEpisodeData(ret, season, episode, title, len, epNum, adddate, lvdate, fsize, csExtn, csExta, part, quality, lng);
-		
-		return ret.isEmpty();
+		try {
+			long fsize = (long) spnEpisodeSize.getValue();
+			int quality = cbxEpisodeQuality.getSelectedIndex();
+			String csExtn  = CCFileFormat.getWrapper().findOrException(cbxEpisodeFormat.getSelectedIndex()).asString();
+			String csExta = CCFileFormat.getWrapper().findOrException(cbxEpisodeFormat.getSelectedIndex()).asStringAlt();
+			CCDBLanguageList lng = ctrlLang.getValue();
+			
+			String part = edEpisodePart.getText();
+			
+			UserDataProblem.testEpisodeData(ret, season, episode, title, len, epNum, adddate, lvdate, fsize, csExtn, csExta, part, quality, lng);
+			
+			return ret.isEmpty();
+		} catch (CCFormatException e) {
+			return false;
+		}
 	}
 
 	@Override

@@ -41,10 +41,12 @@ import de.jClipCorn.gui.guiComponents.jCCDateSpinner.JCCDateSpinner;
 import de.jClipCorn.gui.guiComponents.referenceChooser.JReferenceChooser;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
+import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.features.online.metadata.ParseResultHandler;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.exceptions.CCFormatException;
+import de.jClipCorn.util.exceptions.EnumFormatException;
 import de.jClipCorn.util.formatter.FileSizeFormatter;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.FileChooserHelper;
@@ -494,7 +496,11 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		contentPane.add(lblNewLabel);
 		
 		btnOK = new JButton(LocaleBundle.getString("UIGeneric.btnOK.text")); //$NON-NLS-1$
-		btnOK.addActionListener(e -> onBtnOK(true));
+		btnOK.addActionListener(e -> {try {
+			onBtnOK(true);
+		} catch (EnumFormatException e1) {
+			CCLog.addError(e1);
+		}});
 		btnOK.setBounds(265, 724, 95, 25);
 		contentPane.add(btnOK);
 		
@@ -600,7 +606,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		firstChooseClick = false;
 	}
 	
-	private void onBtnOK(boolean check) {
+	private void onBtnOK(boolean check) throws EnumFormatException {
 		List<UserDataProblem> problems = new ArrayList<>();
 
 		boolean probvalue = !check || checkUserData(problems);
@@ -657,14 +663,14 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		newM.setYear((int) spnYear.getValue());
 		newM.setFilesize((long) spnSize.getValue());
 		
-		newM.setGenre(CCGenre.getWrapper().find(cbxGenre0.getSelectedIndex()), 0);
-		newM.setGenre(CCGenre.getWrapper().find(cbxGenre1.getSelectedIndex()), 1);
-		newM.setGenre(CCGenre.getWrapper().find(cbxGenre2.getSelectedIndex()), 2);
-		newM.setGenre(CCGenre.getWrapper().find(cbxGenre3.getSelectedIndex()), 3);
-		newM.setGenre(CCGenre.getWrapper().find(cbxGenre4.getSelectedIndex()), 4);
-		newM.setGenre(CCGenre.getWrapper().find(cbxGenre5.getSelectedIndex()), 5);
-		newM.setGenre(CCGenre.getWrapper().find(cbxGenre6.getSelectedIndex()), 6);
-		newM.setGenre(CCGenre.getWrapper().find(cbxGenre7.getSelectedIndex()), 7);
+		newM.setGenre(CCGenre.getWrapper().findOrException(cbxGenre0.getSelectedIndex()), 0);
+		newM.setGenre(CCGenre.getWrapper().findOrException(cbxGenre1.getSelectedIndex()), 1);
+		newM.setGenre(CCGenre.getWrapper().findOrException(cbxGenre2.getSelectedIndex()), 2);
+		newM.setGenre(CCGenre.getWrapper().findOrException(cbxGenre3.getSelectedIndex()), 3);
+		newM.setGenre(CCGenre.getWrapper().findOrException(cbxGenre4.getSelectedIndex()), 4);
+		newM.setGenre(CCGenre.getWrapper().findOrException(cbxGenre5.getSelectedIndex()), 5);
+		newM.setGenre(CCGenre.getWrapper().findOrException(cbxGenre6.getSelectedIndex()), 6);
+		newM.setGenre(CCGenre.getWrapper().findOrException(cbxGenre7.getSelectedIndex()), 7);
 		
 		newM.setScore(cbxScore.getSelectedIndex());
 		newM.setOnlineReference(edReference.getValue());
@@ -1054,28 +1060,32 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		CCDate adddate = spnAddDate.getValue();
 		int oscore = (int) spnOnlineScore.getValue();
 		
-		int fskidx = cbxFSK.getSelectedIndex();
-		int year = (int) spnYear.getValue();
-		long fsize = (long) spnSize.getValue();
-		int quality = cbxQuality.getSelectedIndex();
-		CCDBLanguageList lang = cbxLanguage.getValue();
-		String csExtn  = CCFileFormat.getWrapper().find(cbxFormat.getSelectedIndex()).asString();
-		String csExta = CCFileFormat.getWrapper().find(cbxFormat.getSelectedIndex()).asStringAlt();
+		try {
+			int fskidx = cbxFSK.getSelectedIndex();
+			int year = (int) spnYear.getValue();
+			long fsize = (long) spnSize.getValue();
+			int quality = cbxQuality.getSelectedIndex();
+			CCDBLanguageList lang = cbxLanguage.getValue();
+			String csExtn  = CCFileFormat.getWrapper().findOrException(cbxFormat.getSelectedIndex()).asString();
+			String csExta = CCFileFormat.getWrapper().findOrException(cbxFormat.getSelectedIndex()).asStringAlt();
+			
+			int g0 = cbxGenre0.getSelectedIndex();
+			int g1 = cbxGenre1.getSelectedIndex();
+			int g2 = cbxGenre2.getSelectedIndex();
+			int g3 = cbxGenre3.getSelectedIndex();
+			int g4 = cbxGenre4.getSelectedIndex();
+			int g5 = cbxGenre5.getSelectedIndex();
+			int g6 = cbxGenre6.getSelectedIndex();
+			int g7 = cbxGenre7.getSelectedIndex();
+			
+			CCOnlineReferenceList ref = edReference.getValue();
+			
+			UserDataProblem.testMovieData(ret, null, i, movieList, p0, p1, p2, p3, p4, p5, title, zyklus, zyklusID, len, adddate, oscore, fskidx, year, fsize, csExtn, csExta, g0, g1, g2, g3, g4, g5, g6, g7, quality, lang, ref);
 		
-		int g0 = cbxGenre0.getSelectedIndex();
-		int g1 = cbxGenre1.getSelectedIndex();
-		int g2 = cbxGenre2.getSelectedIndex();
-		int g3 = cbxGenre3.getSelectedIndex();
-		int g4 = cbxGenre4.getSelectedIndex();
-		int g5 = cbxGenre5.getSelectedIndex();
-		int g6 = cbxGenre6.getSelectedIndex();
-		int g7 = cbxGenre7.getSelectedIndex();
-		
-		CCOnlineReferenceList ref = edReference.getValue();
-		
-		UserDataProblem.testMovieData(ret, null, i, movieList, p0, p1, p2, p3, p4, p5, title, zyklus, zyklusID, len, adddate, oscore, fskidx, year, fsize, csExtn, csExta, g0, g1, g2, g3, g4, g5, g6, g7, quality, lang, ref);
-	
-		return ret.isEmpty();
+			return ret.isEmpty();
+		} catch (Exception e) {
+			return false;
+		}
 	}
 	
 	private int getPartCount() {
@@ -1091,6 +1101,10 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 
 	@Override
 	public void onAMIEDIgnoreClicked() {
-		onBtnOK(false);
+		try {
+			onBtnOK(false);
+		} catch (EnumFormatException e) {
+			CCLog.addError(e);
+		}
 	}
 }

@@ -9,14 +9,8 @@ import de.jClipCorn.util.xml.CCXMLElement;
 import de.jClipCorn.util.xml.CCXMLException;
 import de.jClipCorn.util.xml.CCXMLParser;
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.jdom2.Document;
-import org.jdom2.Element;
-import org.jdom2.Namespace;
-import org.jdom2.input.SAXBuilder;
-
 import java.io.File;
 import java.io.IOException;
-import java.io.StringReader;
 
 public class MediaQueryRunner {
 

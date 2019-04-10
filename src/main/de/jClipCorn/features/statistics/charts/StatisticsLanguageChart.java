@@ -60,7 +60,7 @@ public class StatisticsLanguageChart extends StatisticsChart {
 		
 		for (int i = 0; i < values.length; i++) {
 			if (values[i] > 0) {
-				dataset.setValue(CCDBLanguage.getWrapper().find(i).asString() + " [" + values[i] + "]", values[i]); //$NON-NLS-1$ //$NON-NLS-2$
+				dataset.setValue(CCDBLanguage.getWrapper().findOrNull(i).asString() + " [" + values[i] + "]", values[i]); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		}
 		

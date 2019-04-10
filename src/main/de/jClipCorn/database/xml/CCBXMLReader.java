@@ -26,6 +26,7 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.exceptions.CCFormatException;
+import de.jClipCorn.util.exceptions.EnumFormatException;
 import de.jClipCorn.util.formatter.RomanNumberFormatter;
 import de.jClipCorn.util.helper.DialogHelper;
 
@@ -143,7 +144,7 @@ public class CCBXMLReader {
 		CCSeries newSer = movielist.createNewEmptySeries();
 		newSer.beginUpdating();
 
-		CCDBLanguage lang = CCDBLanguage.getWrapper().find(e.getChild("info").getChild("sprache").getAttribute("dec").getIntValue());
+		CCDBLanguage lang = CCDBLanguage.getWrapper().findOrException(e.getChild("info").getChild("sprache").getAttribute("dec").getIntValue());
 
 		newSer.setTitle(e.getChild("info").getChildText("serientitel"));
 		newSer.setGenre(translateGenre(e.getChild("info").getChild("genre").getChild("genre00").getAttribute("dec").getIntValue()), 0);
@@ -242,9 +243,9 @@ public class CCBXMLReader {
 		}
 	}
 	
-	private CCGenre translateGenre(int genre) {
-		if (genre == -1) return CCGenre.getWrapper().find(CCGenre.NO_GENRE);
-		return CCGenre.getWrapper().find(genre);
+	private CCGenre translateGenre(int genre) throws EnumFormatException {
+		if (genre == -1) return CCGenre.getWrapper().findOrException(CCGenre.NO_GENRE);
+		return CCGenre.getWrapper().findOrException(genre);
 	}
 	
 	private String getZyklusName(String fullz) {

@@ -43,7 +43,7 @@ public class OnlineMetadata {
 	
 	public CCOnlineScore getOnlineScore() {
 		if (OnlineScore==null) return null;
-		return CCOnlineScore.getWrapper().find(OnlineScore);
+		return CCOnlineScore.getWrapper().findOrNull(OnlineScore);
 	}
 
 	public CCOnlineReferenceList getFullReference() {

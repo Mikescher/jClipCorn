@@ -23,7 +23,7 @@ public abstract class IMDBParserCommon extends Metadataparser {
 	private final Pattern REGEX_IMDB_ID = Pattern.compile("^.*imdb\\.com/[a-z]+/(tt[0-9]+)(/.*)?$", Pattern.CASE_INSENSITIVE); //$NON-NLS-1$
 
 	public static IMDBParserCommon GetConfiguredParser() {
-		IMDBLanguage lang = IMDBLanguage.getWrapper().find(CCProperties.getInstance().PROP_PARSEIMDB_LANGUAGE.getValue());
+		IMDBLanguage lang = IMDBLanguage.getWrapper().findOrNull(CCProperties.getInstance().PROP_PARSEIMDB_LANGUAGE.getValue());
 		
 		switch (lang) {
 		case GERMAN:

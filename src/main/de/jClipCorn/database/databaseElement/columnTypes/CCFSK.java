@@ -58,7 +58,9 @@ public enum CCFSK implements ContinoousEnum<CCFSK> {
 			}
 		}
 
-		return getWrapper().find(val);
+		if (val == -1) return null;
+		
+		return getWrapper().findOrFatalError(val);
 	}
 
 	public static int compare(CCFSK o1, CCFSK o2) {

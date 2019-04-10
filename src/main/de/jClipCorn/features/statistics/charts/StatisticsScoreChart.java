@@ -65,7 +65,7 @@ public class StatisticsScoreChart extends StatisticsChart {
 		int[] values = StatisticsHelper.getCountForAllScores(it);
 		
 		for (int i = 0; i < values.length; i++) {
-			dataset.addValue(values[i], "Series0", CCUserScore.getWrapper().find(i).asString()); //$NON-NLS-1$
+			dataset.addValue(values[i], "Series0", CCUserScore.getWrapper().findOrNull(i).asString()); //$NON-NLS-1$
 		}
 		
         return dataset;

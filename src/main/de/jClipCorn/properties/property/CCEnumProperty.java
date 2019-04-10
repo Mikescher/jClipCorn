@@ -34,7 +34,7 @@ public class CCEnumProperty<T extends ContinoousEnum<T>> extends CCProperty<T> {
 
 	@Override
 	public T getComponentValue(Component c) {
-		return source.find(((JComboBox<?>)c).getSelectedIndex());
+		return source.findOrNull(((JComboBox<?>)c).getSelectedIndex());
 	}
 
 	@Override
@@ -50,7 +50,7 @@ public class CCEnumProperty<T extends ContinoousEnum<T>> extends CCProperty<T> {
 		try {
 			int ival = Integer.parseInt(val);
 			
-			T eval = source.find(ival);
+			T eval = source.findOrNull(ival);
 			
 			if (eval == null) {
 				CCLog.addWarning(LocaleBundle.getFormattedString("LogMessage.PropFormatErrorEnum", identifier, mclass.getName())); //$NON-NLS-1$

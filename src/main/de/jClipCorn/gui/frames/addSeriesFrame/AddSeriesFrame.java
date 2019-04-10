@@ -30,6 +30,8 @@ import de.jClipCorn.gui.guiComponents.groupListEditor.GroupListEditor;
 import de.jClipCorn.gui.guiComponents.referenceChooser.JReferenceChooser;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
+import de.jClipCorn.util.exceptions.EnumFormatException;
+import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.features.online.metadata.ParseResultHandler;
 import de.jClipCorn.features.userdataProblem.UserDataProblem;
 import de.jClipCorn.features.userdataProblem.UserDataProblemHandler;
@@ -198,7 +200,11 @@ public class AddSeriesFrame extends JFrame implements ParseResultHandler, UserDa
 		btnOK.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				onBtnOK(true);
+				try {
+					onBtnOK(true);
+				} catch (EnumFormatException e1) {
+					CCLog.addError(e1);
+				}
 			}
 		});
 		btnOK.setBounds(176, 437, 116, 25);
@@ -369,7 +375,7 @@ public class AddSeriesFrame extends JFrame implements ParseResultHandler, UserDa
 		this.dispose();
 	}
 	
-	private void onBtnOK(boolean check) {
+	private void onBtnOK(boolean check) throws EnumFormatException {
 		List<UserDataProblem> problems = new ArrayList<>();
 
 		boolean probvalue = !check || checkUserData(problems);
@@ -404,14 +410,14 @@ public class AddSeriesFrame extends JFrame implements ParseResultHandler, UserDa
 		
 		newS.setOnlineReference(edReference.getValue());
 		
-		newS.setGenre(CCGenre.getWrapper().find(cbxGenre0.getSelectedIndex()), 0);
-		newS.setGenre(CCGenre.getWrapper().find(cbxGenre1.getSelectedIndex()), 1);
-		newS.setGenre(CCGenre.getWrapper().find(cbxGenre2.getSelectedIndex()), 2);
-		newS.setGenre(CCGenre.getWrapper().find(cbxGenre3.getSelectedIndex()), 3);
-		newS.setGenre(CCGenre.getWrapper().find(cbxGenre4.getSelectedIndex()), 4);
-		newS.setGenre(CCGenre.getWrapper().find(cbxGenre5.getSelectedIndex()), 5);
-		newS.setGenre(CCGenre.getWrapper().find(cbxGenre6.getSelectedIndex()), 6);
-		newS.setGenre(CCGenre.getWrapper().find(cbxGenre7.getSelectedIndex()), 7);
+		newS.setGenre(CCGenre.getWrapper().findOrException(cbxGenre0.getSelectedIndex()), 0);
+		newS.setGenre(CCGenre.getWrapper().findOrException(cbxGenre1.getSelectedIndex()), 1);
+		newS.setGenre(CCGenre.getWrapper().findOrException(cbxGenre2.getSelectedIndex()), 2);
+		newS.setGenre(CCGenre.getWrapper().findOrException(cbxGenre3.getSelectedIndex()), 3);
+		newS.setGenre(CCGenre.getWrapper().findOrException(cbxGenre4.getSelectedIndex()), 4);
+		newS.setGenre(CCGenre.getWrapper().findOrException(cbxGenre5.getSelectedIndex()), 5);
+		newS.setGenre(CCGenre.getWrapper().findOrException(cbxGenre6.getSelectedIndex()), 6);
+		newS.setGenre(CCGenre.getWrapper().findOrException(cbxGenre7.getSelectedIndex()), 7);
 		
 		newS.setGroups(edGroups.getValue());
 		
@@ -452,6 +458,10 @@ public class AddSeriesFrame extends JFrame implements ParseResultHandler, UserDa
 	
 	@Override
 	public void onAMIEDIgnoreClicked() {
-		onBtnOK(false);
+		try {
+			onBtnOK(false);
+		} catch (EnumFormatException e) {
+			CCLog.addError(e);
+		}
 	}
 }

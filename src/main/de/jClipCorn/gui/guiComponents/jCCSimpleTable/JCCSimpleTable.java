@@ -1,6 +1,5 @@
 package de.jClipCorn.gui.guiComponents.jCCSimpleTable;
 
-import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -8,7 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JScrollPane;
-import javax.swing.JViewport;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;

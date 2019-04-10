@@ -110,7 +110,7 @@ public class CompareElement {
 	@Override
 	public String toString() {
 		if (language != CCDBLanguage.GERMAN.asInt()) {
-			return getCompleteTitle() + "[" + CCDBLanguage.getWrapper().find(language).asString() + "]"; //$NON-NLS-1$ //$NON-NLS-2$
+			return getCompleteTitle() + "[" + CCDBLanguage.getWrapper().findOrNull(language).asString() + "]"; //$NON-NLS-1$ //$NON-NLS-2$
 		} else {
 			return getCompleteTitle();
 		}

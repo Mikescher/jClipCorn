@@ -3,7 +3,6 @@ package de.jClipCorn.util.mediaquery;
 import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguage;
 import de.jClipCorn.util.exceptions.InnerMediaQueryException;
 import de.jClipCorn.util.xml.CCXMLElement;
-import de.jClipCorn.util.xml.CCXMLException;
 
 public class MediaQueryResultSubtitleTrack {
 	public final String Format;    // NULL if not set
@@ -21,7 +20,7 @@ public class MediaQueryResultSubtitleTrack {
 	}
 
 	@SuppressWarnings("nls")
-	public static MediaQueryResultSubtitleTrack parse(CCXMLElement xml) throws InnerMediaQueryException, CCXMLException {
+	public static MediaQueryResultSubtitleTrack parse(CCXMLElement xml) throws InnerMediaQueryException {
 		String format;
 		String title;
 		String codecID;

@@ -123,7 +123,7 @@ public class CCGenreList {
 	
 	public CCGenre getGenre(int idx) {
 		if (idx >= 0 && idx < SIZE) {
-			return CCGenre.getWrapper().find(getGenreInt(idx));
+			return CCGenre.getWrapper().findOrFatalError(getGenreInt(idx));
 		} else {
 			return null;
 		}

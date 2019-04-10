@@ -107,7 +107,7 @@ public class FilterSerializationConfig {
 	public <T extends ContinoousEnum<T>> void addCCEnum(String pname, EnumWrapper<T> wrapper, Func1to0<T> setter, Func0to1<T> getter) {
 		Func1to1<String, Boolean> s = v -> 
 		{
-			T result = wrapper.find(convertDataToInt(v));
+			T result = wrapper.findOrNull(convertDataToInt(v));
 			if (result == null) return false;
 			setter.invoke(result);
 			return true;

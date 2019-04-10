@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import de.jClipCorn.features.log.CCLog;
+import de.jClipCorn.util.exceptions.EnumFormatException;
+
 public class EnumWrapper<T extends ContinoousEnum<T>> {
 
 	private final T defValue;
@@ -12,11 +15,33 @@ public class EnumWrapper<T extends ContinoousEnum<T>> {
 		defValue = defaultValue;
 	}
 	
-	public T find(int val) {
+	public T findOrNull(int val) {
 		if (val >= 0 && val < defValue.evalues().length) {
 			return defValue.evalues()[val]; // Geht nur wenn alle Zahlen nach der Reihe da sind
 		}
 		return null;
+	}
+
+	public T findOrException(int val) throws EnumFormatException {
+		if (val >= 0 && val < defValue.evalues().length) {
+			return defValue.evalues()[val]; // Geht nur wenn alle Zahlen nach der Reihe da sind
+		}
+		throw new EnumFormatException(val, defValue.getClass());
+	}
+
+	public T findOrFatalError(int val) {
+		if (val >= 0 && val < defValue.evalues().length) {
+			return defValue.evalues()[val]; // Geht nur wenn alle Zahlen nach der Reihe da sind
+		}
+		CCLog.addFatalError("Value '" + val + "' is not a valid element of enum " + defValue.getClass().getSimpleName()); //$NON-NLS-1$ //$NON-NLS-2$
+		throw new Error("Value '" + val + "' is not a valid element of enum " + defValue.getClass().getSimpleName()); //$NON-NLS-1$ //$NON-NLS-2$
+	}
+
+	public T findOrDefault(int val, T def) {
+		if (val >= 0 && val < defValue.evalues().length) {
+			return defValue.evalues()[val]; // Geht nur wenn alle Zahlen nach der Reihe da sind
+		}
+		return def;
 	}
 
 	public String[] getList() {

@@ -159,6 +159,6 @@ public enum CCDBLanguage implements ContinoousEnum<CCDBLanguage> {
 	}
 
 	public CCDBLanguage nextLanguage() {
-		return wrapper.find((id+1)%NAMES.length);
+		return wrapper.findOrFatalError((id+1)%NAMES.length);
 	}
 }

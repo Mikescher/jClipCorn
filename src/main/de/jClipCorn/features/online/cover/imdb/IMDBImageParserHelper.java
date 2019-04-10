@@ -18,7 +18,7 @@ public abstract class IMDBImageParserHelper {
 	public abstract List<String> extractImageLinks(String html);
 	
 	public static IMDBImageParserHelper GetConfiguredHelper() {
-		IMDBLanguage lang = IMDBLanguage.getWrapper().find(CCProperties.getInstance().PROP_PARSEIMDB_LANGUAGE.getValue());
+		IMDBLanguage lang = IMDBLanguage.getWrapper().findOrNull(CCProperties.getInstance().PROP_PARSEIMDB_LANGUAGE.getValue());
 		
 		switch (lang) {
 		case GERMAN:

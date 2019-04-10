@@ -60,7 +60,7 @@ public class StatisticsProviderAnyChart extends StatisticsChart {
 		
 		for (int i = 0; i < values.length; i++) {
 			if (values[i] > 0) {
-				dataset.setValue(CCOnlineRefType.getWrapper().find(i).asString() + " [" + values[i] + "]", values[i]);
+				dataset.setValue(CCOnlineRefType.getWrapper().findOrNull(i).asString() + " [" + values[i] + "]", values[i]);
 			}
 		}
 		

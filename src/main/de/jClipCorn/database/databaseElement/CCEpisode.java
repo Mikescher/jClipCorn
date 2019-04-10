@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import de.jClipCorn.database.databaseElement.columnTypes.*;
+import de.jClipCorn.util.exceptions.EnumFormatException;
 import org.jdom2.Element;
 
 import de.jClipCorn.database.util.ExtendedViewedState;
@@ -107,42 +108,63 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 		
 		updateDB();
 	}
-	
-	public void setQuality(int quality) {
-		this.quality = CCQuality.getWrapper().find(quality);
-		
+
+	public void setQualitySafe(int quality) {
+		this.quality = CCQuality.getWrapper().findOrNull(quality);
+
 		if (this.quality == null) {
 			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.ErroneousDatabaseValues", quality)); //$NON-NLS-1$
+			this.quality = CCQuality.STREAM;
 		}
-		
+
 		updateDB();
 	}
-	
+
+	public void setQuality(int quality) throws EnumFormatException {
+		this.quality = CCQuality.getWrapper().findOrException(quality);
+
+		updateDB();
+	}
+
 	public void setQuality(CCQuality quality) {
+		if (quality == null) {CCLog.addUndefinied("Prevented setting CCEpisode.Quality to NULL"); return; } //$NON-NLS-1$
+
 		this.quality = quality;
-		
+
 		updateDB();
 	}
-	
+
 	@Override
 	public void setLength(int length) {
 		this.length = length;
 		
 		updateDB();
 	}
-	
-	public void setFormat(int format) {
-		this.format = CCFileFormat.getWrapper().find(format);
-		
+
+	public void setFormatSafe(int format) {
+		this.format = CCFileFormat.getWrapper().findOrNull(format);
+
+		if (this.format == null) {
+			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.ErroneousDatabaseValues", format)); //$NON-NLS-1$
+			this.format = CCFileFormat.MKV;
+		}
+
 		updateDB();
 	}
-	
+
+	public void setFormat(int format) throws EnumFormatException {
+		this.format = CCFileFormat.getWrapper().findOrException(format);
+
+		updateDB();
+	}
+
 	public void setFormat(CCFileFormat format) {
+		if (format == null) {CCLog.addUndefinied("Prevented setting CCEpisode.Format to NULL"); return; } //$NON-NLS-1$
+
 		this.format = format;
-		
 		updateDB();
 	}
-	
+
 	public void setFilesize(long filesize) {
 		this.filesize = new CCFileSize(filesize);
 		
@@ -156,6 +178,8 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 	}
 	
 	public void setAddDate(CCDate date) {
+		if (date == null) {CCLog.addUndefinied("Prevented setting CCEpisode.AddDate to NULL"); return; } //$NON-NLS-1$
+
 		this.addDate = date;
 		
 		updateDB();

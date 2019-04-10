@@ -1,10 +1,12 @@
 package de.jClipCorn.util.xml;
 
-import de.jClipCorn.util.Str;
-import de.jClipCorn.util.stream.CCStreams;
 import org.jdom2.Attribute;
 import org.jdom2.Element;
 
+import de.jClipCorn.util.Str;
+import de.jClipCorn.util.stream.CCStreams;
+
+@SuppressWarnings("nls")
 public class CCXMLElement {
 
 	private final CCXMLParser _owner;
@@ -24,7 +26,7 @@ public class CCXMLElement {
 		throw new CCXMLException(Str.format("Could not find child <{0}> in {1}", name, _path), _owner.getXMLString());
 	}
 
-	public CCXMLElement getFirstChildOrNull(String name) throws CCXMLException {
+	public CCXMLElement getFirstChildOrNull(String name) {
 		for (Element e : _element.getChildren()) {
 			if (e.getName().equals(name)) return new CCXMLElement(_owner, _path + "/" + name, e);
 		}
@@ -99,7 +101,7 @@ public class CCXMLElement {
 		}
 	}
 
-	public String getFirstChildValueOrDefault(String name, String defaultValue) throws CCXMLException {
+	public String getFirstChildValueOrDefault(String name, String defaultValue) {
 		CCXMLElement e = getFirstChildOrNull(name);
 		if (e == null) return defaultValue;
 		return e.getContent();

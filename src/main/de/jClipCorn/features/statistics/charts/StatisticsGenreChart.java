@@ -71,7 +71,7 @@ public class StatisticsGenreChart extends StatisticsChart {
 		
 		for (int i = 0; i < values.length; i++) {
 			if (tvalues[i] > 0) {
-				dataset.addValue(values[i], "Series0", CCGenre.getWrapper().find(i).asString()); //$NON-NLS-1$
+				dataset.addValue(values[i], "Series0", CCGenre.getWrapper().findOrNull(i).asString()); //$NON-NLS-1$
 			}
 		}
 		

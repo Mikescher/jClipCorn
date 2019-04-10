@@ -75,13 +75,13 @@ public enum CCFileFormat implements ContinoousEnum<CCFileFormat> {
 	public static CCFileFormat getMovieFormat(String ext) {
 		for (int i = 0; i < NAMES.length; i++) {
 			if (NAMES[i].equalsIgnoreCase(ext)) {
-				return wrapper.find(i);
+				return wrapper.findOrFatalError(i);
 			}
 		}
 		
 		for (int i = 0; i < ALTNAMES.length; i++) {
 			if (ALTNAMES[i].equalsIgnoreCase(ext)) {
-				return wrapper.find(i);
+				return wrapper.findOrFatalError(i);
 			}
 		}
 		

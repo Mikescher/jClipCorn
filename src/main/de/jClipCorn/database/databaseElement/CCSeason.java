@@ -180,7 +180,9 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 			qual = Math.max(0, qual);
 			qual = Math.min(qual, CCQuality.values().length - 1);
 			
-			return CCQuality.getWrapper().find(qual);
+			CCQuality q = CCQuality.getWrapper().findOrNull(qual);
+			if (q != null) return q;
+			return getFirstEpisode().getQuality(); // shouldn't be possible
 		} else {
 			return CCQuality.STREAM;
 		}
@@ -276,7 +278,9 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 			}
 		}
 		
-		return CCFileFormat.getWrapper().find(maxid);
+		CCFileFormat f = CCFileFormat.getWrapper().findOrNull(maxid);
+		if (f != null) return f;
+		return getFirstEpisode().getFormat(); // shouldn't be possible
 	}
 	
 	public CCFileSize getFilesize() {

@@ -243,7 +243,7 @@ public class InitialConfigFrame extends JDialog {
 		CCProperties.getInstance().PROP_BACKUP_CREATEBACKUPS.setValue(cbBackups.isSelected());
 		
 		if (CCProperties.getInstance().PROP_UI_LANG.getValue().asInt() != cbxLanguage.getSelectedIndex()) {
-			CCProperties.getInstance().PROP_UI_LANG.setValue(UILanguage.getWrapper().find(cbxLanguage.getSelectedIndex()));
+			CCProperties.getInstance().PROP_UI_LANG.setValue(UILanguage.getWrapper().findOrDefault(cbxLanguage.getSelectedIndex(), UILanguage.ENGLISCH));
 			LocaleBundle.updateLang();
 		}
 

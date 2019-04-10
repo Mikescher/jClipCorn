@@ -90,7 +90,9 @@ public class CCSeries extends CCDatabaseElement  {
 			qual = Math.max(0, qual);
 			qual = Math.min(qual, CCQuality.values().length - 1);
 			
-			return CCQuality.getWrapper().find(qual);
+			CCQuality q = CCQuality.getWrapper().findOrNull(qual);
+			if (q != null) return q;
+			return getFirstEpisode().getQuality(); // shouldn't be possible
 		} else {
 			return CCQuality.STREAM;
 		}

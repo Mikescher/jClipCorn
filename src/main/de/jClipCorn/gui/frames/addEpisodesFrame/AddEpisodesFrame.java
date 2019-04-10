@@ -28,12 +28,15 @@ import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
+
 import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguageList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCDateTimeList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCFileFormat;
 import de.jClipCorn.database.databaseElement.columnTypes.CCQuality;
+import de.jClipCorn.features.userdataProblem.UserDataProblem;
+import de.jClipCorn.features.userdataProblem.UserDataProblemHandler;
 import de.jClipCorn.gui.frames.inputErrorFrame.InputErrorDialog;
 import de.jClipCorn.gui.frames.omniParserFrame.OmniParserFrame;
 import de.jClipCorn.gui.guiComponents.HFixListCellRenderer;
@@ -44,14 +47,13 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.datetime.CCDate;
+import de.jClipCorn.util.exceptions.CCFormatException;
 import de.jClipCorn.util.formatter.FileSizeFormatter;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.helper.FileChooserHelper;
 import de.jClipCorn.util.listener.OmniParserCallbackListener;
 import de.jClipCorn.util.listener.UpdateCallbackListener;
-import de.jClipCorn.features.userdataProblem.UserDataProblem;
-import de.jClipCorn.features.userdataProblem.UserDataProblemHandler;
 
 public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler, OmniParserCallbackListener {
 	private static final long serialVersionUID = 8825373383589912037L;
@@ -609,15 +611,19 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler, 
 
 		episode.beginUpdating();
 
-		episode.setTitle(edTitle.getText());
-		episode.setEpisodeNumber((int) spnEpisode.getValue());
-		episode.setFormat(cbxFormat.getSelectedIndex());
-		episode.setLength((int) spnLength.getValue());
-		episode.setFilesize((long) spnSize.getValue());
-		episode.setAddDate(spnAddDate.getValue());
-		episode.setPart(edPart.getText());
-		episode.setQuality(cbxQuality.getSelectedIndex());
-		episode.setLanguage(ctrlLang.getValue());
+		try {
+			episode.setTitle(edTitle.getText());
+			episode.setEpisodeNumber((int) spnEpisode.getValue());
+			episode.setFormat(cbxFormat.getSelectedIndex());
+			episode.setLength((int) spnLength.getValue());
+			episode.setFilesize((long) spnSize.getValue());
+			episode.setAddDate(spnAddDate.getValue());
+			episode.setPart(edPart.getText());
+			episode.setQuality(cbxQuality.getSelectedIndex());
+			episode.setLanguage(ctrlLang.getValue());
+		} catch (CCFormatException e) {
+			return false;
+		}
 
 		episode.endUpdating();
 
@@ -628,26 +634,31 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler, 
 	}
 
 	public boolean checkUserData(List<UserDataProblem> ret) {
-		CCEpisode sel = getSelectedEpisode();
-
-		String title = edTitle.getText();
-
-		int len = (int) spnLength.getValue();
-		int epNum = (int) spnEpisode.getValue();
-		CCDate adddate = spnAddDate.getValue();
-		CCDateTimeList lvdate = CCDateTimeList.createEmpty();
-		CCDBLanguageList lang = ctrlLang.getValue();
-
-		long fsize = (long) spnSize.getValue();
-		int quality = cbxQuality.getSelectedIndex();
-		String csExtn = CCFileFormat.getWrapper().find(cbxFormat.getSelectedIndex()).asString();
-		String csExta = CCFileFormat.getWrapper().find(cbxFormat.getSelectedIndex()).asStringAlt();
-
-		String part = edPart.getText();
-
-		UserDataProblem.testEpisodeData(ret, parent, sel, title, len, epNum, adddate, lvdate, fsize, csExtn, csExta, part, quality, lang);
-
-		return ret.isEmpty();
+		try {
+			CCEpisode sel = getSelectedEpisode();
+	
+			String title = edTitle.getText();
+	
+			int len = (int) spnLength.getValue();
+			int epNum = (int) spnEpisode.getValue();
+			CCDate adddate = spnAddDate.getValue();
+			CCDateTimeList lvdate = CCDateTimeList.createEmpty();
+			CCDBLanguageList lang = ctrlLang.getValue();
+	
+			long fsize = (long) spnSize.getValue();
+			int quality = cbxQuality.getSelectedIndex();
+			String csExtn = CCFileFormat.getWrapper().findOrException(cbxFormat.getSelectedIndex()).asString();
+			String csExta = CCFileFormat.getWrapper().findOrException(cbxFormat.getSelectedIndex()).asStringAlt();
+	
+			String part = edPart.getText();
+	
+			UserDataProblem.testEpisodeData(ret, parent, sel, title, len, epNum, adddate, lvdate, fsize, csExtn, csExta, part, quality, lang);
+	
+			return ret.isEmpty();
+		}
+		catch (CCFormatException e) {
+			return false;
+		}
 	}
 
 	private void cancelInfoDisplay() {
@@ -964,24 +975,30 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler, 
 	}
 
 	private void massSetFormat() {
+		CCFileFormat ff = CCFileFormat.getWrapper().findOrNull(cbxSideFormat.getSelectedIndex());
+		if (ff == null) return;
+		
 		lsEpisodes.setSelectedIndex(-1);
 
 		for (int i = 0; i < parent.getEpisodeCount(); i++) {
 			CCEpisode ep = parent.getEpisodeByArrayIndex(i);
 
-			ep.setFormat(cbxSideFormat.getSelectedIndex());
+			ep.setFormat(ff);
 		}
 
 		updateList();
 	}
 
 	private void massSetQuality() {
+		CCQuality qq = CCQuality.getWrapper().findOrNull(cbxSideQuality.getSelectedIndex());
+		if (qq == null) return;
+		
 		lsEpisodes.setSelectedIndex(-1);
 
 		for (int i = 0; i < parent.getEpisodeCount(); i++) {
 			CCEpisode ep = parent.getEpisodeByArrayIndex(i);
 
-			ep.setQuality(cbxSideQuality.getSelectedIndex());
+			ep.setQuality(qq);
 		}
 
 		updateList();

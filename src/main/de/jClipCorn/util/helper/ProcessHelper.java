@@ -14,15 +14,14 @@ public class ProcessHelper {
 		private StringBuilder result;
 
 		private InputStream is;
-		private String type;
 
-		public StreamGobbler(InputStream is, String type)
+		public StreamGobbler(InputStream is)
 		{
 			this.is = is;
-			this.type = type;
 			this.result = new StringBuilder();
 		}
 
+		@Override
 		public void run()
 		{
 			try
@@ -61,8 +60,8 @@ public class ProcessHelper {
 		String[] commands = CCStreams.iterate(args).prepend(cmd).toArray(new String[0]);
 		Process proc = rt.exec(commands);
 
-		StreamGobbler errorGobbler = new StreamGobbler(proc.getErrorStream(), "ERROR"); //$NON-NLS-1$
-		StreamGobbler outputGobbler = new StreamGobbler(proc.getInputStream(), "OUTPUT"); //$NON-NLS-1$
+		StreamGobbler errorGobbler = new StreamGobbler(proc.getErrorStream());
+		StreamGobbler outputGobbler = new StreamGobbler(proc.getInputStream());
 
 		errorGobbler.start();
 		outputGobbler.start();

@@ -1,6 +1,5 @@
 package de.jClipCorn.util.mediaquery;
 
-import de.jClipCorn.util.Str;
 import de.jClipCorn.util.xml.CCXMLElement;
 import de.jClipCorn.util.xml.CCXMLException;
 

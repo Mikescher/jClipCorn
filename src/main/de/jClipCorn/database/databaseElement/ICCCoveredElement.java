@@ -6,13 +6,13 @@ import de.jClipCorn.util.datatypes.Tuple;
 
 public interface ICCCoveredElement {
 
-	public String getTitle();
+	String getTitle();
 	
-	public String getCoverName();
+	String getCoverName();
 
-	public BufferedImage getCover();
-	public Tuple<Integer, Integer> getCoverDimensions();
+	BufferedImage getCover();
+	Tuple<Integer, Integer> getCoverDimensions();
 	
-	public String getCoverMD5();
+	String getCoverMD5();
 	
 }

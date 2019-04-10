@@ -34,7 +34,7 @@ public class CustomFilterEnumChooserConfig<T extends ContinoousEnum<T>> extends 
 		cbx.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				valueSetter.invoke(enumWrapper.find(cbx.getSelectedIndex()));
+				valueSetter.invoke(enumWrapper.findOrNull(cbx.getSelectedIndex()));
 				onChange.run();
 			}
 		});

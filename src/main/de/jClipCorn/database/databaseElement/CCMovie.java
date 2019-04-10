@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.jClipCorn.database.databaseElement.columnTypes.*;
+import de.jClipCorn.util.exceptions.EnumFormatException;
 import org.jdom2.Element;
 
 import de.jClipCorn.database.CCMovieList;
@@ -146,17 +147,26 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 		return quality;
 	}
 
-	public void setQuality(int quality) {
-		this.quality = CCQuality.getWrapper().find(quality);
-		
+	public void setQualitySafe(int quality) {
+		this.quality = CCQuality.getWrapper().findOrNull(quality);
+
 		if (this.quality == null) {
 			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.ErroneousDatabaseValues", quality)); //$NON-NLS-1$
+			this.quality = CCQuality.STREAM;
 		}
-		
+
+		updateDB();
+	}
+
+	public void setQuality(int quality) throws EnumFormatException {
+		this.quality = CCQuality.getWrapper().findOrException(quality);
+
 		updateDB();
 	}
 
 	public void setQuality(CCQuality quality) {
+		if (quality == null) {CCLog.addUndefinied("Prevented setting CCMovie.Quality to NULL"); return; } //$NON-NLS-1$
+
 		this.quality = quality;
 		
 		updateDB();
@@ -190,6 +200,8 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 	}
 
 	public void setAddDate(CCDate date) {
+		if (date == null) {CCLog.addUndefinied("Prevented setting CCMovie.AddDate to NULL"); return; } //$NON-NLS-1$
+
 		this.addDate = date;
 		
 		updateDB();
@@ -206,15 +218,27 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 		return format;
 	}
 
-	public void setFormat(int format) {
-		this.format = CCFileFormat.getWrapper().find(format);
-		
+	public void setFormatSafe(int format) {
+		this.format = CCFileFormat.getWrapper().findOrNull(format);
+
+		if (this.format == null) {
+			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.ErroneousDatabaseValues", format)); //$NON-NLS-1$
+			this.format = CCFileFormat.MKV;
+		}
+
+		updateDB();
+	}
+
+	public void setFormat(int format) throws EnumFormatException {
+		this.format = CCFileFormat.getWrapper().findOrException(format);
+
 		updateDB();
 	}
 	
 	public void setFormat(CCFileFormat format) {
+		if (format == null) {CCLog.addUndefinied("Prevented setting CCMovie.Format to NULL"); return; } //$NON-NLS-1$
+
 		this.format = format;
-		
 		updateDB();
 	}
 
@@ -256,11 +280,9 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 
 	@Override
 	public void setLanguage(CCDBLanguageList language) {
-		this.language = language;
+		if (language == null) {CCLog.addUndefinied("Prevented setting CCMovie.Language to NULL"); return; } //$NON-NLS-1$
 
-		if (this.language == null) {
-			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.ErroneousDatabaseValues", language)); //$NON-NLS-1$
-		}
+		this.language = language;
 
 		updateDB();
 	}
@@ -303,6 +325,8 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 	}
 
 	public void setViewedHistory(CCDateTimeList value) {
+		if (format == null) {CCLog.addUndefinied("Prevented setting CCMovie.ViewedHistory to NULL"); return; } //$NON-NLS-1$
+
 		viewedHistory = value;
 		
 		updateDB();
@@ -409,7 +433,7 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 			setLength(Integer.parseInt(e.getAttributeValue("length")));
 
 		if (e.getAttributeValue("language") != null)
-			setLanguage(new CCDBLanguageList(CCDBLanguage.getWrapper().find(Integer.parseInt(e.getAttributeValue("language")))));
+			setLanguage(new CCDBLanguageList(CCDBLanguage.getWrapper().findOrException(Integer.parseInt(e.getAttributeValue("language")))));
 
 		if (e.getAttributeValue("languages") != null)
 			setLanguage(CCDBLanguageList.parseFromString(e.getAttributeValue("languages")));

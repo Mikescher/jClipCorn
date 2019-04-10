@@ -3,6 +3,7 @@ package de.jClipCorn.database.databaseElement;
 import java.awt.image.BufferedImage;
 
 import de.jClipCorn.database.databaseElement.columnTypes.*;
+import de.jClipCorn.util.exceptions.EnumFormatException;
 import org.jdom2.Element;
 
 import de.jClipCorn.database.CCMovieList;
@@ -97,13 +98,26 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 		return onlinescore;
 	}
 
-	public void setOnlinescore(int onlinescore) {
-		this.onlinescore = CCOnlineScore.getWrapper().find(onlinescore);
+	public void setOnlinescoreSafe(int onlinescore) {
+		this.onlinescore = CCOnlineScore.getWrapper().findOrNull(onlinescore);
+
+		if (this.onlinescore == null) {
+			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.ErroneousDatabaseValues", score)); //$NON-NLS-1$
+			this.onlinescore = CCOnlineScore.STARS_0_0;
+		}
+
+		updateDB();
+	}
+
+	public void setOnlinescore(int onlinescore) throws EnumFormatException {
+		this.onlinescore = CCOnlineScore.getWrapper().findOrException(onlinescore);
 		
 		updateDB();
 	}
 
 	public void setOnlinescore(CCOnlineScore onlinescore) {
+		if (onlinescore == null) {CCLog.addUndefinied("Prevented setting CCDBElem.Onlinescore to NULL"); return; } //$NON-NLS-1$
+
 		this.onlinescore = onlinescore;
 		
 		updateDB();
@@ -113,13 +127,26 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 		return fsk;
 	}
 
-	public void setFsk(int fsk) {
-		this.fsk = CCFSK.getWrapper().find(fsk);
+	public void setFskSafe(int fsk) {
+		this.fsk = CCFSK.getWrapper().findOrNull(fsk);
+
+		if (this.fsk == null) {
+			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.ErroneousDatabaseValues", fsk)); //$NON-NLS-1$
+			this.fsk = CCFSK.RATING_0;
+		}
+
+		updateDB();
+	}
+
+	public void setFsk(int fsk) throws EnumFormatException {
+		this.fsk = CCFSK.getWrapper().findOrException(fsk);
 		
 		updateDB();
 	}
 
 	public void setFsk(CCFSK fsk) {
+		if (fsk == null) {CCLog.addUndefinied("Prevented setting CCDBElem.FSK to NULL"); return; } //$NON-NLS-1$
+
 		this.fsk = fsk;
 		
 		updateDB();
@@ -133,13 +160,26 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 		return score;
 	}
 
-	public void setScore(int score) {
-		this.score = CCUserScore.getWrapper().find(score);
+	public void setScoreSafe(int score) {
+		this.score = CCUserScore.getWrapper().findOrNull(score);
+
+		if (this.score == null) {
+			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.ErroneousDatabaseValues", score)); //$NON-NLS-1$
+			this.score = CCUserScore.RATING_NO;
+		}
+
+		updateDB();
+	}
+
+	public void setScore(int score) throws EnumFormatException {
+		this.score = CCUserScore.getWrapper().findOrException(score);
 		
 		updateDB();
 	}
 	
 	public void setScore(CCUserScore score) {
+		if (score == null) {CCLog.addUndefinied("Prevented setting CCDBElem.Score to NULL"); return; } //$NON-NLS-1$
+
 		this.score = score;
 		
 		updateDB();
@@ -208,6 +248,8 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 	}
 
 	public void setOnlineReference(CCOnlineReferenceList value) {
+		if (value == null) {CCLog.addUndefinied("Prevented setting CCDBElem.OnlineReference to NULL"); return; } //$NON-NLS-1$
+
 		onlineReference = value;
 		
 		updateDB();
@@ -218,6 +260,8 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 	}
 
 	public void setGroups(CCGroupList value) {
+		if (value == null) {CCLog.addUndefinied("Prevented setting CCDBElem.Groups to NULL"); return; } //$NON-NLS-1$
+
 		if (linkedGroups.equals(value)) return;
 		
 		value = movielist.addMissingGroups(value);
@@ -259,6 +303,8 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 	}
 	
 	public void setGenres(CCGenreList grs) {
+		if (grs == null) { CCLog.addUndefinied("Prevented setting CCDBElem.Genres to NULL"); return; } //$NON-NLS-1$
+
 		genres =  new CCGenreList(grs);
 		
 		updateDB();
@@ -324,10 +370,7 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 			e.setAttribute("coverdata", ByteUtilies.byteArrayToHexString(ImageUtilities.imageToByteArray(getCover())));
 		}
 	}
-	
-	/**
-	 * @throws CCFormatException  
-	 */
+
 	@SuppressWarnings("nls")
 	public void parseFromXML(Element e, boolean resetAddDate, boolean resetViewed, boolean resetScore, boolean resetTags, boolean ignoreCoverData) throws CCFormatException {
 		if (e.getAttributeValue("title") != null)
@@ -411,6 +454,7 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 	}
 
 	public void setTags(CCTagList ptags) {
+		if (tags == null) {CCLog.addUndefinied("Prevented setting CCDBElem.Tags to NULL"); return; } //$NON-NLS-1$
 		this.tags = ptags;
 
 		updateDB();

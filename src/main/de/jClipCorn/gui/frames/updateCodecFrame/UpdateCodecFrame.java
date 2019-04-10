@@ -176,8 +176,8 @@ public class UpdateCodecFrame extends JFrame {
 			GenericTextDialog.showText(UpdateCodecFrame.this, title, textArea.getText(), false);
 		});
 		
-		cbAutoScroll = new JCheckBox(LocaleBundle.getString("UpdateCodecFrame.CBScroll"));
-		panel.add(cbAutoScroll, "1, 5, left, bottom");
+		cbAutoScroll = new JCheckBox(LocaleBundle.getString("UpdateCodecFrame.CBScroll")); //$NON-NLS-1$
+		panel.add(cbAutoScroll, "1, 5, left, bottom"); //$NON-NLS-1$
 		panel.add(button, "3, 5, right, bottom"); //$NON-NLS-1$
 	}
 

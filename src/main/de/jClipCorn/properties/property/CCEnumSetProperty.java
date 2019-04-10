@@ -113,7 +113,7 @@ public class CCEnumSetProperty<T extends ContinoousEnum<T>> extends CCProperty<S
 			
 			int ival = Integer.parseInt(strVal);
 			
-			T singleval = source.find(ival);
+			T singleval = source.findOrNull(ival);
 			
 			if (singleval == null) {
 				continue;
@@ -146,7 +146,7 @@ public class CCEnumSetProperty<T extends ContinoousEnum<T>> extends CCProperty<S
 				
 				int ival = Integer.parseInt(strVal);
 				
-				T singleval = source.find(ival);
+				T singleval = source.findOrNull(ival);
 				
 				if (singleval == null) {
 					CCLog.addWarning(LocaleBundle.getFormattedString("LogMessage.PropFormatErrorEnum", identifier, mclass.getName())); //$NON-NLS-1$

@@ -90,9 +90,9 @@ public class CustomOnlinescoreFilter extends AbstractCustomDatabaseElementFilter
 	}
 
 	private void setAsIntArea(CCIntArea a) {
-		low = CCOnlineScore.getWrapper().find(a.low);
+		low = CCOnlineScore.getWrapper().findOrNull(a.low);
 		if (low==null)low=CCOnlineScore.STARS_0_0;
-		high = CCOnlineScore.getWrapper().find(a.high);
+		high = CCOnlineScore.getWrapper().findOrNull(a.high);
 		if (high==null)high=CCOnlineScore.STARS_5_0;
 		searchType = a.type;
 	}

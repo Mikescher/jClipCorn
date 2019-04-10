@@ -30,6 +30,7 @@ import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.features.online.metadata.Metadataparser;
 import de.jClipCorn.features.online.metadata.OnlineMetadata;
 import de.jClipCorn.properties.CCProperties;
+import de.jClipCorn.util.exceptions.EnumFormatException;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.helper.ThreadUtils;
 import de.jClipCorn.util.stream.CCStreams;
@@ -317,7 +318,11 @@ public class UpdateMetadataFrame extends JFrame {
 		for (UpdateMetadataTableElement elem : data) {
 			if (elem.OnlineMeta != null && elem.OnlineMeta.OnlineScore != null) {
 				if (elem.Element.getOnlinescore().asInt() != elem.OnlineMeta.OnlineScore.intValue()) {
-					elem.Element.setOnlinescore(elem.OnlineMeta.OnlineScore);
+					try {
+						elem.Element.setOnlinescore(elem.OnlineMeta.OnlineScore);
+					} catch (EnumFormatException e1) {
+						CCLog.addError(e1);
+					}
 					count++;
 				}
 			}

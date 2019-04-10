@@ -61,7 +61,7 @@ public class CustomFilterEnumOptionConfig<T extends ContinoousEnum<T>> extends C
 			btn.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					valueSetter.invoke(enumWrapper.find(fi));
+					valueSetter.invoke(enumWrapper.findOrNull(fi));
 					onChange.run();
 				}
 			});

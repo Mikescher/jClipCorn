@@ -27,7 +27,9 @@ import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 
 import de.jClipCorn.database.databaseElement.columnTypes.*;
+import de.jClipCorn.features.serialization.xmlimport.ImportOptions;
 import de.jClipCorn.gui.guiComponents.language.LanguageChooser;
+import de.jClipCorn.util.xml.CCXMLElement;
 import org.jdom2.Element;
 
 import de.jClipCorn.database.CCMovieList;
@@ -565,10 +567,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		contentPane.add(edGroups);
 	}
 	
-	public void parseFromXML(Element e, int xmlver, boolean resetAddDate, boolean resetViewed, boolean resetScore) throws CCFormatException {
-		CCMovie tmpMov = new CCMovie(CCMovieList.createStub(), -1);
-		tmpMov.parseFromXML(e, xmlver, resetAddDate, resetViewed, resetScore, false, true);
-		
+	public void parseFromTemp(CCMovie tmpMov, boolean resetAddDate, boolean resetScore) {
 		if (!tmpMov.getAddDate().isMinimum() && !resetAddDate)
 			spnAddDate.setValue(tmpMov.getAddDate());
 		
@@ -588,7 +587,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		setYear(tmpMov.getYear());
 		setZyklus(tmpMov.getZyklus().getTitle());
 		setZyklusNumber(tmpMov.getZyklus().getNumber());
-		setTitle(tmpMov.getTitle());
+		setMovieName(tmpMov.getTitle());
 		setOnlineReference(tmpMov.getOnlineReference());
 		setGroups(tmpMov.getGroups());
 		setScore(tmpMov.getOnlinescore().asInt());

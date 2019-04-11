@@ -5,6 +5,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 
+import de.jClipCorn.features.serialization.xmlimport.ImportOptions;
 import org.junit.Test;
 
 import de.jClipCorn.database.CCMovieList;
@@ -84,7 +85,7 @@ public class TestDatabase extends ClipCornBaseTest {
 		
 		String data = SimpleFileUtils.readTextResource("/example_single_01.jsccexport", getClass());
 		
-		ExportHelper.importSingleElement(ml, data, true, true, true, true);
+		ExportHelper.importSingleElement(ml, data, new ImportOptions(true, true, true, true, false));
 
 		assertEquals(1, ml.getElementCount());
 		CCMovie mov = ml.iteratorMovies().next();
@@ -111,7 +112,7 @@ public class TestDatabase extends ClipCornBaseTest {
 		
 		String data = SimpleFileUtils.readTextResource("/example_single_01.jsccexport", getClass());
 		
-		ExportHelper.importSingleElement(ml, data, true, true, true, true);
+		ExportHelper.importSingleElement(ml, data, new ImportOptions(true, true, true, true, false));
 		CCMovie mov = ml.iteratorMovies().firstOrNull();
 		assertEquals(1, ml.getElementCount());
 
@@ -122,7 +123,7 @@ public class TestDatabase extends ClipCornBaseTest {
 		assertEquals(0, ml.getElementCount());
 
 		String dataExpected = SimpleFileUtils.readUTF8TextFile(filep);
-		ExportHelper.importSingleElement(ml, dataExpected, true, true, true, true);
+		ExportHelper.importSingleElement(ml, dataExpected, new ImportOptions(true, true, true, true, false));
 		mov = ml.iteratorMovies().firstOrNull();
 		assertEquals(1, ml.getElementCount());
 
@@ -132,7 +133,7 @@ public class TestDatabase extends ClipCornBaseTest {
 		assertEquals(0, ml.getElementCount());
 		
 		String dataActual = SimpleFileUtils.readUTF8TextFile(filep);
-		ExportHelper.importSingleElement(ml, dataExpected, true, true, true, true);
+		ExportHelper.importSingleElement(ml, dataExpected, new ImportOptions(true, true, true, true, false));
 		mov = ml.iteratorMovies().firstOrNull();
 		assertEquals(1, ml.getElementCount());
 		
@@ -151,7 +152,7 @@ public class TestDatabase extends ClipCornBaseTest {
 		
 		String data = SimpleFileUtils.readTextResource("/example_single_02.jsccexport", getClass());
 		
-		ExportHelper.importSingleElement(ml, data, true, true, true, true);
+		ExportHelper.importSingleElement(ml, data, new ImportOptions(true, true, true, true, false));
 		CCSeries ser = ml.iteratorSeries().firstOrNull();
 		assertEquals(1, ml.getElementCount());
 
@@ -162,7 +163,7 @@ public class TestDatabase extends ClipCornBaseTest {
 		assertEquals(0, ml.getElementCount());
 
 		String dataExpected = SimpleFileUtils.readUTF8TextFile(filep);
-		ExportHelper.importSingleElement(ml, dataExpected, true, true, true, true);
+		ExportHelper.importSingleElement(ml, dataExpected, new ImportOptions(true, true, true, true, false));
 		ser = ml.iteratorSeries().firstOrNull();
 		assertEquals(1, ml.getElementCount());
 
@@ -172,7 +173,7 @@ public class TestDatabase extends ClipCornBaseTest {
 		assertEquals(0, ml.getElementCount());
 		
 		String dataActual = SimpleFileUtils.readUTF8TextFile(filep);
-		ExportHelper.importSingleElement(ml, dataExpected, true, true, true, true);
+		ExportHelper.importSingleElement(ml, dataExpected, new ImportOptions(true, true, true, true, false));
 		ser = ml.iteratorSeries().firstOrNull();
 		assertEquals(1, ml.getElementCount());
 		

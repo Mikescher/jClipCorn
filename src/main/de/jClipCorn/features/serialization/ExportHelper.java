@@ -9,7 +9,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.ZipEntry;
@@ -19,11 +18,16 @@ import java.util.zip.ZipOutputStream;
 import javax.imageio.ImageIO;
 
 import de.jClipCorn.features.serialization.xmlexport.DatabaseXMLExporter;
-import de.jClipCorn.features.serialization.xmlexport.ExportState;
+import de.jClipCorn.features.serialization.xmlexport.ExportOptions;
+import de.jClipCorn.features.serialization.xmlimport.DatabaseXMLImporter;
+import de.jClipCorn.features.serialization.xmlimport.ImportOptions;
+import de.jClipCorn.features.serialization.xmlimport.ImportState;
+import de.jClipCorn.util.datatypes.Tuple3;
+import de.jClipCorn.util.exceptions.SerializationException;
+import de.jClipCorn.util.xml.CCXMLElement;
+import de.jClipCorn.util.xml.CCXMLException;
+import de.jClipCorn.util.xml.CCXMLParser;
 import org.jdom2.Document;
-import org.jdom2.Element;
-import org.jdom2.JDOMException;
-import org.jdom2.input.SAXBuilder;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
 
@@ -277,41 +281,26 @@ public class ExportHelper {
 				if (contentMain == null) {
 					throw new Exception("File not found: " + DB_XML_FILENAME_MAIN); //$NON-NLS-1$
 				}
-	
-				Document doc = new SAXBuilder().build(new StringReader(contentMain));
-					
-				Element root = doc.getRootElement();
 
-				int xmlver = Integer.parseInt(root.getAttributeValue("xmlversion", "1")); //$NON-NLS-1$ //$NON-NLS-2$
-	
-				for (Element e : root.getChildren()) {
-					if (e.getName().equals("movie")) { //$NON-NLS-1$
-						CCMovie mov = movielist.createNewEmptyMovie();
-						mov.parseFromXML(e, xmlver, false, false, false, false, false);
-					} else if (e.getName().equals("series")) { //$NON-NLS-1$
-						CCSeries ser = movielist.createNewEmptySeries();
-						ser.parseFromXML(e, xmlver, false, false, false, false, false);
-					}
-				}
+				DatabaseXMLImporter.run(contentMain, movielist::createNewEmptyMovie, movielist::createNewEmptySeries, new ImportOptions(false, false, false, false, false));
 			}
 						
 			{
 				String contentGroups = getXMLContentFromBackup(backup, DB_XML_FILENAME_GROUPS);
 	
 				if (contentGroups != null) {
-					Document doc = new SAXBuilder().build(new StringReader(contentGroups));
+					CCXMLParser doc = CCXMLParser.parse(contentGroups);
 					
-					Element root = doc.getRootElement();
-					Element groups = root.getChild("groups"); //$NON-NLS-1$
+					CCXMLElement groups = doc.getRoot("database").getFirstChildOrThrow("groups"); //$NON-NLS-1$
 		
-					for (Element e : groups.getChildren()) {
+					for (CCXMLElement e : groups.getAllChildren("group")) {
 						
-						String name = e.getAttributeValue("name"); //$NON-NLS-1$
-						int order = Integer.parseInt(e.getAttributeValue("ordering")); //$NON-NLS-1$
-						String colorStr = e.getAttributeValue("color"); //$NON-NLS-1$
-						boolean doser = !(e.getAttributeValue("serialize").equalsIgnoreCase("false")); //$NON-NLS-1$ //$NON-NLS-2$
-						String parent = e.getAttributeValue("parent", ""); //$NON-NLS-1$ //$NON-NLS-2$
-						boolean visible = !(e.getAttributeValue("visible", "true").equalsIgnoreCase("false")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+						String name = e.getAttributeValueOrThrow("name"); //$NON-NLS-1$
+						int order = e.getAttributeIntValueOrThrow("ordering"); //$NON-NLS-1$
+						String colorStr = e.getAttributeValueOrThrow("color"); //$NON-NLS-1$
+						boolean doser = e.getAttributeBoolValueOrThrow("serialize"); //$NON-NLS-1$ //$NON-NLS-2$
+						String parent = e.getAttributeValueOrDefault("parent", ""); //$NON-NLS-1$ //$NON-NLS-2$
+						boolean visible = e.getAttributeBoolValueOrDefault("visible", true); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 						
 						Color color = new Color(
 					            Integer.valueOf( colorStr.substring( 1, 3 ), 16 ),
@@ -344,7 +333,7 @@ public class ExportHelper {
 	}
 	
 	public static void exportDBElements(File file, CCMovieList movielist, List<CCDatabaseElement> elements, boolean includeCover) {
-		Document xml = DatabaseXMLExporter.export(elements, new ExportState(false, false, includeCover));
+		Document xml = DatabaseXMLExporter.export(elements, new ExportOptions(false, false, includeCover));
 		
 		XMLOutputter xout = new XMLOutputter();
 		xout.setFormat(Format.getPrettyFormat());
@@ -366,45 +355,39 @@ public class ExportHelper {
 		}
 	}
 	
-	public static Tuple<Integer, Element> getFirstElementOfExport(String xmlcontent) {
-		Document doc = null;
-		try {
-			doc = new SAXBuilder().build(new StringReader(xmlcontent));
-		} catch (JDOMException | IOException e) {
-			CCLog.addError(e);
-			return null;
-		}
+	private static Tuple3<Integer, CCXMLElement, CCXMLParser> getFirstElementOfExport(String xmlcontent) throws CCXMLException {
+		CCXMLParser doc = CCXMLParser.parse(xmlcontent);
+		CCXMLElement root = doc.getRoot("database"); //$NON-NLS-1$
 
-		Element root = doc.getRootElement();
-
-		int xmlver = Integer.parseInt(root.getAttributeValue("xmlversion", "1")); //$NON-NLS-1$ //$NON-NLS-2$
+		int xmlver = root.getAttributeIntValueOrDefault("xmlversion", 1); //$NON-NLS-1$
 		
-		List<Element> elements = root.getChildren();
+		List<CCXMLElement> elements = root.getAllChildren(new String[]{"movie", "series"}).enumerate(); //$NON-NLS-1$  //$NON-NLS-2$
 		
 		if (elements.size() > 0) {
-			return Tuple.Create(xmlver, elements.get(0));
+			return Tuple3.Create(xmlver, elements.get(0), doc);
 		}
 		
 		return null;
 	}
 	
-	public static void importSingleElement(CCMovieList movielist, String xmlcontent, boolean resetAddDate, boolean resetViewed, boolean resetScore, boolean resetTags) throws CCFormatException {
-		Tuple<Integer, Element> value = getFirstElementOfExport(xmlcontent);
+	public static void importSingleElement(CCMovieList movielist, String xmlcontent, ImportOptions opt) throws CCFormatException, CCXMLException, SerializationException {
+		Tuple3<Integer, CCXMLElement, CCXMLParser> value = getFirstElementOfExport(xmlcontent);
 		
 		if (value != null) {
 			if (value.Item2.getName().equalsIgnoreCase("movie")) {  //$NON-NLS-1$
 				CCMovie mov = movielist.createNewEmptyMovie();
-				mov.parseFromXML(value.Item2, value.Item1, resetAddDate, resetViewed, resetScore, resetTags, false);
+				DatabaseXMLImporter.parseSingleMovie(mov, value.Item2, new ImportState(value.Item3, value.Item1, opt));
 			} else if (value.Item2.getName().equalsIgnoreCase("series")) { //$NON-NLS-1$
 				CCSeries ser = movielist.createNewEmptySeries();
-				ser.parseFromXML(value.Item2, value.Item1, resetAddDate, resetViewed, resetScore, resetTags, false);
+				DatabaseXMLImporter.parseSingleSeries(ser, value.Item2, new ImportState(value.Item3, value.Item1, opt));
 			}
 		}
 	}
 	
-	public static CCDBElementTyp getTypOfFirstElementOfExport(String xmlcontent) {
-		Tuple<Integer, Element> value = getFirstElementOfExport(xmlcontent);
-		
+	private static CCDBElementTyp getTypOfFirstElementOfExport(String xmlcontent) throws CCXMLException {
+		Tuple3<Integer, CCXMLElement, CCXMLParser> value = getFirstElementOfExport(xmlcontent);
+		if (value == null) return null;
+
 		if (value.Item2.getName().equalsIgnoreCase("movie")) {  //$NON-NLS-1$
 			return CCDBElementTyp.MOVIE;
 		} else if (value.Item2.getName().equalsIgnoreCase("series")) { //$NON-NLS-1$
@@ -417,14 +400,15 @@ public class ExportHelper {
 	public static void openSingleElementFile(File f, MainFrame owner, CCMovieList movielist, CCDBElementTyp forceTyp) {
 		try {
 			String xml = SimpleFileUtils.readUTF8TextFile(f);
-			CCDBElementTyp type = null;
-			if (forceTyp != null && (type = ExportHelper.getTypOfFirstElementOfExport(xml)) != forceTyp) {
+			CCDBElementTyp type = ExportHelper.getTypOfFirstElementOfExport(xml);
+			if (forceTyp != null && type != forceTyp) {
 				CCLog.addError(LocaleBundle.getString("LogMessage.FormatErrorInExport")); //$NON-NLS-1$
 				return;
 			}
 			
 			int methodval = 0;
-			if (type == CCDBElementTyp.MOVIE) {
+			if (type == CCDBElementTyp.MOVIE)
+			{
 				methodval = DialogHelper.showLocaleOptions(owner, "ExportHelper.dialogs.importDirect", 1); //$NON-NLS-1$
 			}
 			
@@ -433,15 +417,25 @@ public class ExportHelper {
 			boolean resetScore = DialogHelper.showLocaleYesNo(owner, "ExportHelper.dialogs.resetScore"); //$NON-NLS-1$
 			boolean resetTags = DialogHelper.showLocaleYesNo(owner, "ExportHelper.dialogs.resetTags"); //$NON-NLS-1$
 			
-			if (methodval == 0) { // Direct
-				ExportHelper.importSingleElement(movielist, xml, resetDate, resetViewed, resetScore, resetTags);
-			} else if (methodval == 1) { // Edit & Add
-				Tuple<Integer, Element> value = ExportHelper.getFirstElementOfExport(xml);
-				AddMovieFrame amf = new AddMovieFrame(owner, movielist);
-				amf.parseFromXML(value.Item2, value.Item1, resetDate, resetViewed, resetScore);
-				amf.setVisible(true);
+			if (methodval == 0)  // Direct
+			{
+				ExportHelper.importSingleElement(movielist, xml, new ImportOptions(resetDate, resetViewed, resetScore, resetTags, false));
 			}
-		} catch (IOException | CCFormatException e) {
+			else if (methodval == 1) // Edit & Add
+			{
+				Tuple3<Integer, CCXMLElement, CCXMLParser> value = ExportHelper.getFirstElementOfExport(xml);
+				if (value != null)
+				{
+					CCMovie tmpMov = new CCMovie(CCMovieList.createStub(), -1);
+					tmpMov.setDefaultValues(false);
+					DatabaseXMLImporter.parseSingleMovie(tmpMov, value.Item2, new ImportState(value.Item3, value.Item1, new ImportOptions(resetDate, resetViewed, resetScore, false, true)));
+
+					AddMovieFrame amf = new AddMovieFrame(owner, movielist);
+					amf.parseFromTemp(tmpMov, resetDate, resetScore);
+					amf.setVisible(true);
+				}
+			}
+		} catch (IOException | CCFormatException | SerializationException | CCXMLException e) {
 			CCLog.addError(LocaleBundle.getString("LogMessage.FormatErrorInExport"), e); //$NON-NLS-1$
 		}
 	}

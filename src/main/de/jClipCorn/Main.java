@@ -30,7 +30,7 @@ public class Main {
 	public final static String TITLE = "jClipCorn"; //$NON-NLS-1$
 	public final static String VERSION = /*<gradle_version_marker>*/"1.10.5.29"/*</gradle_version_marker>*/;	//$NON-NLS-1$
 	public final static String DBVERSION = "12"; 	//$NON-NLS-1$
-	public final static String JXMLVER = "2"; 	//$NON-NLS-1$
+	public final static String JXMLVER = "1"; 	//$NON-NLS-1$
 
 	private final static String PROPERTIES_PATH = "jClipcorn.properties"; //$NON-NLS-1$
 	
@@ -222,6 +222,6 @@ public class Main {
 
 //TODO remove viewed field from db (get from history)
 
-//TODO serialize dates as iso in xml xmlexport (backwards compatible by writing them "[yyyy-MM-dd]" in square braces )
+//TODO serialize dates as iso in xml xmlexport (xmlver=2), also better serialize: seriesid, genres, tags, multiple parts
 
 //TODO Use ClipMoviePopup.java spec for PreviewMovieFrame menu (PMF has practically no options)

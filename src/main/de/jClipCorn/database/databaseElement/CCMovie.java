@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.jClipCorn.database.databaseElement.columnTypes.*;
+import de.jClipCorn.util.Str;
 import de.jClipCorn.util.exceptions.EnumFormatException;
 import org.jdom2.Element;
 
@@ -40,7 +41,7 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 	public CCMovie(CCMovieList ml, int id) {
 		super(ml, CCDBElementTyp.MOVIE, id, -1);
 		parts = new String[PARTCOUNT_MAX];
-		
+
 		zyklus = new CCMovieZyklus();
 		filesize = CCFileSize.ZERO;
 		addDate = CCDate.getMinimumDate();
@@ -381,65 +382,6 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 		}
 	}
 
-	@Override
-	@SuppressWarnings("nls")
-	public void parseFromXML(Element e, int xmlver, boolean resetAddDate, boolean resetViewed, boolean resetScore, boolean resetTags, boolean ignoreCoverData) throws CCFormatException {
-		beginUpdating();
-		
-		super.parseFromXML(e, xmlver, resetAddDate, resetViewed, resetScore, resetTags, ignoreCoverData);
-		
-		if (e.getAttributeValue("adddate") != null) {
-			setAddDate(CCDate.deserialize(e.getAttributeValue("adddate")));
-		}
-		
-		if (resetAddDate) {
-			setAddDate(CCDate.getCurrentDate());
-		}
-		
-		if (e.getAttributeValue("filesize") != null)
-			setFilesize(Long.parseLong(e.getAttributeValue("filesize")));
-		
-		if (e.getAttributeValue("format") != null)
-			setFormat(Integer.parseInt(e.getAttributeValue("format")));
-		
-		if (e.getAttributeValue("length") != null)
-			setLength(Integer.parseInt(e.getAttributeValue("length")));
-
-		if (e.getAttributeValue("language") != null)
-			setLanguage(new CCDBLanguageList(CCDBLanguage.getWrapper().findOrException(Integer.parseInt(e.getAttributeValue("language")))));
-
-		if (e.getAttributeValue("languages") != null)
-			setLanguage(CCDBLanguageList.parseFromString(e.getAttributeValue("languages")));
-
-		for (int i = 0; i < PARTCOUNT_MAX; i++) {
-			if (e.getAttributeValue("part_"+i) != null)
-				setPart(i, e.getAttributeValue("part_"+i));
-		}
-		
-		if (e.getAttributeValue("quality") != null)
-			setQuality(Integer.parseInt(e.getAttributeValue("quality")));
-		
-		if (e.getAttributeValue("viewed") != null)
-			setViewed(e.getAttributeValue("viewed").equals(true + ""));
-		
-		if (resetViewed)
-			setViewed(false);
-		
-		if (e.getAttributeValue("year") != null)
-			setYear(Integer.parseInt(e.getAttributeValue("year")));
-		
-		if (e.getAttributeValue("zyklus") != null)
-			setZyklusTitle(e.getAttributeValue("zyklus"));
-		
-		if (e.getAttributeValue("zyklusnumber") != null)
-			setZyklusID(Integer.parseInt(e.getAttributeValue("zyklusnumber")));
-		
-		if (e.getAttributeValue("history") != null)
-			setViewedHistory(e.getAttributeValue("history"));
-		
-		endUpdating();
-	}
-	
 	public String getFastMD5() {
 		File[] f = new File[getPartcount()];
 		for (int i = 0; i < getPartcount(); i++) {

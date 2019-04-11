@@ -2,6 +2,7 @@ package de.jClipCorn.features.serialization.xmlexport;
 
 import de.jClipCorn.database.databaseElement.*;
 import de.jClipCorn.features.log.CCLog;
+import de.jClipCorn.features.serialization.xmlexport.impl.DatabaseXMLExporterImpl;
 import de.jClipCorn.util.listener.ProgressCallbackListener;
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -10,11 +11,11 @@ import java.util.List;
 
 @SuppressWarnings("nls")
 public class DatabaseXMLExporter {
-	public static Document export(List<CCDatabaseElement> elements, ExportState s) {
+	public static Document export(List<CCDatabaseElement> elements, ExportOptions s) {
 		return export(elements, s, null);
 	}
 
-	public static Document export(List<CCDatabaseElement> elements, ExportState s, ProgressCallbackListener l) {
+	public static Document export(List<CCDatabaseElement> elements, ExportOptions s, ProgressCallbackListener l) {
 
 		Document doc = DatabaseXMLExporterImpl.createDocument();
 		Element root = doc.getRootElement();
@@ -31,7 +32,7 @@ public class DatabaseXMLExporter {
 		return doc;
 	}
 
-	public static Element export(CCDatabaseElement e, ExportState s) {
+	public static Element export(CCDatabaseElement e, ExportOptions s) {
 
 		if (e.isMovie()) return export((CCMovie)e, s);
 		if (e.isSeries()) return export((CCSeries) e, s);
@@ -40,13 +41,13 @@ public class DatabaseXMLExporter {
 		return null;
 	}
 
-	public static Element export(CCMovie movie, ExportState s) {
+	public static Element export(CCMovie movie, ExportOptions s) {
 		Element movie_xml = new Element("movie");
 		DatabaseXMLExporterImpl.exportMovie(movie_xml, movie, s);
 		return movie_xml;
 	}
 
-	public static Element export(CCSeries series, ExportState s) {
+	public static Element export(CCSeries series, ExportOptions s) {
 		Element series_xml = new Element("series");
 		DatabaseXMLExporterImpl.exportSeries(series_xml, series, s);
 

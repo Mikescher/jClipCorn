@@ -1,7 +1,8 @@
-package de.jClipCorn.features.serialization.xmlexport;
+package de.jClipCorn.features.serialization.xmlexport.impl;
 
 import de.jClipCorn.Main;
 import de.jClipCorn.database.databaseElement.*;
+import de.jClipCorn.features.serialization.xmlexport.ExportOptions;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.helper.ByteUtilies;
@@ -25,7 +26,7 @@ public class DatabaseXMLExporterImpl {
 		return xml;
 	}
 
-	public static void exportDatabaseElement(Element e, CCDatabaseElement o, ExportState s) {
+	public static void exportDatabaseElement(Element e, CCDatabaseElement o, ExportOptions s) {
 
 		e.setAttribute("localid",      o.getLocalID() + "");
 		e.setAttribute("typ",          o.getType().asInt() + "");
@@ -44,7 +45,7 @@ public class DatabaseXMLExporterImpl {
 		if (s.CoverData) e.setAttribute("coverdata", ByteUtilies.byteArrayToHexString(ImageUtilities.imageToByteArray(o.getCover())));
 	}
 
-	public static void exportMovie(Element e, CCMovie o, ExportState s) {
+	public static void exportMovie(Element e, CCMovie o, ExportOptions s) {
 		exportDatabaseElement(e, o, s);
 
 		e.setAttribute("adddate",      o.getAddDate().toStringSerialize());
@@ -68,13 +69,13 @@ public class DatabaseXMLExporterImpl {
 		if (s.FileHash) e.setAttribute("filehash", o.getFastMD5());
 	}
 
-	public static void exportSeries(Element e, CCSeries o, ExportState s) {
+	public static void exportSeries(Element e, CCSeries o, ExportOptions s) {
 		exportDatabaseElement(e, o, s);
 
 		// series has no more attributes than CCDatabaseElement - for now
 	}
 
-	public static void exportSeason(Element e, CCSeason o, ExportState s) {
+	public static void exportSeason(Element e, CCSeason o, ExportOptions s) {
 		e.setAttribute("seasonid", o.getSeasonID() + "");
 		e.setAttribute("title", o.getTitle());
 		e.setAttribute("year", o.getYear() + "");
@@ -86,7 +87,7 @@ public class DatabaseXMLExporterImpl {
 		if (s.CoverData) e.setAttribute("coverdata", ByteUtilies.byteArrayToHexString(ImageUtilities.imageToByteArray(o.getCover())));
 	}
 
-	public static void exportEpisode(Element e, CCEpisode o, ExportState s) {
+	public static void exportEpisode(Element e, CCEpisode o, ExportOptions s) {
 		e.setAttribute("localid",       o.getLocalID() + "");
 		e.setAttribute("title",         o.getTitle());
 		e.setAttribute("viewed",        o.isViewed() + "");

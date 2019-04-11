@@ -344,47 +344,6 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 		return getType().equals(CCDBElementTyp.SERIES);
 	}
 
-	@SuppressWarnings("nls")
-	public void parseFromXML(Element e, int xmlver, boolean resetAddDate, boolean resetViewed, boolean resetScore, boolean resetTags, boolean ignoreCoverData) throws CCFormatException {
-		if (e.getAttributeValue("title") != null)
-			setTitle(e.getAttributeValue("title"));
-		
-		if (e.getAttributeValue("genres") != null)
-			setGenres(Long.parseLong(e.getAttributeValue("genres")));
-		
-		if (e.getAttributeValue("onlinescore") != null)
-			setOnlinescore(Integer.parseInt(e.getAttributeValue("onlinescore")));
-		
-		if (e.getAttributeValue("fsk") != null)
-			setFsk(Integer.parseInt(e.getAttributeValue("fsk")));
-		
-		if (e.getAttributeValue("score") != null)
-			setScore(Integer.parseInt(e.getAttributeValue("score")));
-
-		if (e.getAttributeValue("tags") != null)
-			setTags(Short.parseShort(e.getAttributeValue("tags")));
-
-		if (resetTags)
-			setTags(new CCTagList());
-		
-		if (resetScore)
-			setScore(CCUserScore.RATING_NO);
-		
-		if (e.getAttributeValue("covername") != null)
-			setCover(e.getAttributeValue("covername"));
-		
-		if (!ignoreCoverData && e.getAttributeValue("coverdata") != null) {
-			setCover(""); //Damit er nicht probiert was zu löschen
-			setCover(ImageUtilities.byteArrayToImage(ByteUtilies.hexStringToByteArray(e.getAttributeValue("coverdata"))));
-		}
-		
-		if (e.getAttributeValue("groups") != null)
-			setGroups(e.getAttributeValue("groups"));
-		
-		if (e.getAttributeValue("onlinreref") != null)
-			setOnlineReference(e.getAttributeValue("onlinreref"));
-	}
-
 	public int getMovieListPosition() {
 		return movielist.getSortByDatabaseElement(this);
 	}

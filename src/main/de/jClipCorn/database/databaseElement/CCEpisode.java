@@ -439,66 +439,6 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 		return getTitle();
 	}
 
-	@SuppressWarnings("nls")
-	public void parseFromXML(Element e, int xmlver, boolean resetAddDate, boolean resetViewed, boolean resetTags) throws CCFormatException {
-		beginUpdating();
-		
-		if (e.getAttributeValue("title") != null)
-			setTitle(e.getAttributeValue("title"));
-		
-		if (e.getAttributeValue("viewed") != null)
-			setViewed(e.getAttributeValue("viewed").equals(true + ""));
-		
-		if (resetViewed)
-			setViewed(false);
-		
-		if (e.getAttributeValue("adddate") != null) {
-			setAddDate(CCDate.deserialize(e.getAttributeValue("adddate")));
-		}
-		
-		if (resetAddDate) {
-			setAddDate(CCDate.getCurrentDate());
-		}
-		
-		if (e.getAttributeValue("episodenumber") != null)
-			setEpisodeNumber(Integer.parseInt(e.getAttributeValue("episodenumber")));
-		
-		if (e.getAttributeValue("filesize") != null)
-			setFilesize(Long.parseLong(e.getAttributeValue("filesize")));
-		
-		if (e.getAttributeValue("format") != null)
-			setFormat(Integer.parseInt(e.getAttributeValue("format")));
-
-		if (e.getAttributeValue("lastviewed") != null) { // backwards compatibility
-			CCDate d = CCDate.deserialize(e.getAttributeValue("lastviewed"));
-			if (!d.isMinimum())
-				setViewedHistory(CCDateTimeList.create(d));
-		}		
-		
-		if (e.getAttributeValue("history") != null)
-			setViewedHistory(CCDateTimeList.parse(e.getAttributeValue("history")));
-		
-		if (e.getAttributeValue("length") != null)
-			setLength(Integer.parseInt(e.getAttributeValue("length")));
-		
-		if (e.getAttributeValue("part") != null)
-			setPart(e.getAttributeValue("part"));
-		
-		if (e.getAttributeValue("quality") != null)
-			setQuality(Integer.parseInt(e.getAttributeValue("quality")));
-		
-		if (e.getAttributeValue("tags") != null)
-			setTags(Short.parseShort(e.getAttributeValue("tags")));
-
-		if (e.getAttributeValue("languages") != null)
-			setLanguage(CCDBLanguageList.parseFromString(e.getAttributeValue("languages")));
-
-		if (resetTags)
-			setTags(new CCTagList());
-		
-		endUpdating();
-	}
-
 	public String getFastMD5() {
 		File[] f = new File[1];
 		f[0] = new File(getAbsolutePart());

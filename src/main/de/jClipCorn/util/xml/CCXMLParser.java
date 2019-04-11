@@ -43,6 +43,12 @@ public class CCXMLParser {
 		return new CCXMLElement(this, "/"+r.getName(), r);
 	}
 
+	public CCXMLElement getRoot(String name) throws CCXMLException {
+		Element r = _document.getRootElement();
+		if (!r.getName().equalsIgnoreCase(name)) throw new CCXMLException("Wrong root node: <" + r.getName() + "> (expected: <"+name+">)", getXMLString());
+		return new CCXMLElement(this, "/"+r.getName(), r);
+	}
+
 	public String getXMLString() {
 		return _content;
 	}

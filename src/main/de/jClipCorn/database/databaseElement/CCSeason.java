@@ -442,31 +442,6 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 		return episodes.indexOf(ccEpisode);
 	}
 
-	@SuppressWarnings("nls")
-	public void parseFromXML(Element e, int xmlver, boolean resetAddDate, boolean resetViewed, boolean resetTags) throws CCFormatException {
-		beginUpdating();
-		
-		if (e.getAttributeValue("title") != null)
-			setTitle(e.getAttributeValue("title"));
-		
-		if (e.getAttributeValue("year") != null)
-			setYear(Integer.parseInt(e.getAttributeValue("year")));
-		
-		if (e.getAttributeValue("covername") != null)
-			setCover(e.getAttributeValue("covername"));
-		
-		for (Element e2 : e.getChildren("episode")) {
-			createNewEmptyEpisode().parseFromXML(e2, xmlver, resetAddDate, resetViewed, resetTags);
-		}
-		
-		if (e.getAttributeValue("coverdata") != null) {
-			setCover(""); //Damit er nicht probiert was zu löschen
-			setCover(ImageUtilities.byteArrayToImage(ByteUtilies.hexStringToByteArray(e.getAttributeValue("coverdata"))));
-		}
-		
-		endUpdating();
-	}
-	
 	@Override
 	public String getCoverMD5() {
 		return LargeMD5Calculator.calcMD5(getCover());

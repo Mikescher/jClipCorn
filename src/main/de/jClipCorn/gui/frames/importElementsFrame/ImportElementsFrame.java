@@ -23,6 +23,13 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import de.jClipCorn.features.serialization.xmlimport.DatabaseXMLImporter;
+import de.jClipCorn.features.serialization.xmlimport.ImportOptions;
+import de.jClipCorn.features.serialization.xmlimport.ImportState;
+import de.jClipCorn.util.exceptions.SerializationException;
+import de.jClipCorn.util.xml.CCXMLElement;
+import de.jClipCorn.util.xml.CCXMLException;
+import de.jClipCorn.util.xml.CCXMLParser;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.JDOMException;
@@ -54,7 +61,7 @@ public class ImportElementsFrame extends JFrame {
 	private JLabel lblElementsFound;
 	private JButton btnAddAll;
 	private JScrollPane scrollPane;
-	private JList<Element> lbContent;
+	private JList<CCXMLElement> lbContent;
 	private JPanel pnlInfo;
 	private JLabel lblTXT2;
 	private JLabel lblName;
@@ -74,9 +81,11 @@ public class ImportElementsFrame extends JFrame {
 	private JLabel lblChilds;
 	private JButton btnEditAdd;
 	
-	private DefaultListModel<Element> listModel;
+	private DefaultListModel<CCXMLElement> listModel;
+
 	private CCMovieList movielist;
 	private int data_xmlver = 1;
+	private CCXMLParser document;
 
 	public ImportElementsFrame(Component owner, String xmlcontent, CCMovieList movielist) {
 		super();
@@ -112,15 +121,13 @@ public class ImportElementsFrame extends JFrame {
 		pnlTopRight.setLayout(new BorderLayout(0, 0));
 		
 		btnAddAll = new JButton(LocaleBundle.getString("ImportElementsFrame.btnAddAll.caption")); //$NON-NLS-1$
-		btnAddAll.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				try {
-					onAddAll();
-				} catch (CCFormatException e) {
-					DialogHelper.showDispatchError(ImportElementsFrame.this, LocaleBundle.getString("Dialogs.GenericCaption.Error"), LocaleBundle.getString("LogMessage.FormatErrorInExport")); //$NON-NLS-1$ //$NON-NLS-2$
-					CCLog.addWarning(LocaleBundle.getString("LogMessage.FormatErrorInExport"), e); //$NON-NLS-1$
-				}
+		btnAddAll.addActionListener(arg0 ->
+		{
+			try {
+				onAddAll();
+			} catch (CCFormatException | CCXMLException | SerializationException e) {
+				DialogHelper.showDispatchError(ImportElementsFrame.this, LocaleBundle.getString("Dialogs.GenericCaption.Error"), LocaleBundle.getString("LogMessage.FormatErrorInExport")); //$NON-NLS-1$ //$NON-NLS-2$
+				CCLog.addWarning(LocaleBundle.getString("LogMessage.FormatErrorInExport"), e); //$NON-NLS-1$
 			}
 		});
 		pnlTopRight.add(btnAddAll);
@@ -221,15 +228,13 @@ public class ImportElementsFrame extends JFrame {
 		pnlInfo.add(btnEditAdd, "2, 12, 4, 1"); //$NON-NLS-1$
 		
 		btnAdd = new JButton(LocaleBundle.getString("ImportElementsFrame.btnAdd.caption")); //$NON-NLS-1$
-		btnAdd.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				try {
-					onAdd();
-				} catch (CCFormatException e) {
-					DialogHelper.showDispatchError(ImportElementsFrame.this, LocaleBundle.getString("Dialogs.GenericCaption.Error"), LocaleBundle.getString("LogMessage.FormatErrorInExportf")); //$NON-NLS-1$ //$NON-NLS-2$
-					CCLog.addWarning(LocaleBundle.getString("LogMessage.FormatErrorInExport"), e); //$NON-NLS-1$
-				}
+		btnAdd.addActionListener(arg0 ->
+		{
+			try {
+				onAdd();
+			} catch (CCFormatException | CCXMLException | SerializationException e) {
+				DialogHelper.showDispatchError(ImportElementsFrame.this, LocaleBundle.getString("Dialogs.GenericCaption.Error"), LocaleBundle.getString("LogMessage.FormatErrorInExportf")); //$NON-NLS-1$ //$NON-NLS-2$
+				CCLog.addWarning(LocaleBundle.getString("LogMessage.FormatErrorInExport"), e); //$NON-NLS-1$
 			}
 		});
 		btnAdd.setEnabled(false);
@@ -251,98 +256,97 @@ public class ImportElementsFrame extends JFrame {
 		setMinimumSize(new Dimension(550, 250));
 	}
 
+	@SuppressWarnings("nls")
 	private void initData(String xmlcontent) {
-		Document doc;
 		try {
-			doc = new SAXBuilder().build(new StringReader(xmlcontent));
-		} catch (JDOMException | IOException e) {
+			document = CCXMLParser.parse(xmlcontent);
+
+			CCXMLElement root = document.getRoot("database");
+
+			data_xmlver = root.getAttributeIntValueOrDefault("xmlversion", 1);
+
+			List<CCXMLElement> elements = root.getAllChildren(new String[]{"movie", "series"}).enumerate();
+
+			lblElementsFound.setText(LocaleBundle.getFormattedString("ImportElementsFrame.lblInfo.text", elements.size()));
+
+			for (CCXMLElement e : elements) {
+				listModel.addElement(e);
+			}
+
+		} catch (CCXMLException e) {
 			CCLog.addError(e);
 			return;
 		}
-
-		Element root = doc.getRootElement();
-
-		data_xmlver = Integer.parseInt(root.getAttributeValue("xmlversion", "1")); //$NON-NLS-1$ //$NON-NLS-2$
-
-		List<Element> elements = root.getChildren();
-		
-		lblElementsFound.setText(LocaleBundle.getFormattedString("ImportElementsFrame.lblInfo.text", elements.size())); //$NON-NLS-1$
-		
-		for (Element e : elements) {
-			listModel.addElement(e);
-		}
-		
 	}
 	
 	@SuppressWarnings("nls")
 	private void updateInfoPanel() {
-		if (lbContent.getSelectedValue() != null) {
-			Element value = lbContent.getSelectedValue();
-			if (value.getName().equalsIgnoreCase("movie")) {  //$NON-NLS-1$
-				if (value.getAttributeValue("zyklus").isEmpty()) {  //$NON-NLS-1$
-					lblName.setText(value.getAttributeValue("title")); //$NON-NLS-1$
-				} else {
-					lblName.setText(value.getAttributeValue("zyklus") + " " + value.getAttributeValue("zyklusnumber") + " - " + value.getAttributeValue("title")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
-				}
-				
-				lblChilds.setText("0"); //$NON-NLS-1$
-				
-				lblViewed.setText(LocaleBundle.getString((value.getAttributeValue("viewed").equals("true")) ? ("ImportElementsFrame.common.bool_true") : ("ImportElementsFrame.common.bool_false"))); //$NON-NLS-1$ //$NON-NLS-2$
-			} else {
-				lblName.setText(value.getAttributeValue("title")); //$NON-NLS-1$
-				
-				int count = 0;
-				List<Element> childs = value.getChildren();
-				for (Element e : childs) {
-					count += e.getChildren().size();
-				}
-				lblChilds.setText("" + count); //$NON-NLS-1$
+		try {
+			if (lbContent.getSelectedValue() != null) {
+				CCXMLElement value = lbContent.getSelectedValue();
 
+				if (value.getName().equalsIgnoreCase("movie")) {
+					if (value.getAttributeValueOrThrow("zyklus").isEmpty()) {
+						lblName.setText(value.getAttributeValueOrThrow("title"));
+					} else {
+						lblName.setText(value.getAttributeValueOrThrow("zyklus") + " " + value.getAttributeValueOrThrow("zyklusnumber") + " - " + value.getAttributeValueOrThrow("title"));
+					}
+
+					lblChilds.setText("0"); //$NON-NLS-1$
+
+					lblViewed.setText(LocaleBundle.getString((value.getAttributeValueOrThrow("viewed").equals("true")) ? ("ImportElementsFrame.common.bool_true") : ("ImportElementsFrame.common.bool_false")));
+				} else {
+					lblName.setText(value.getAttributeValueOrThrow("title")); //$NON-NLS-1$
+
+					int count = value.getAllChildren().sumInt(c -> c.getAllChildren().count());
+					lblChilds.setText("" + count); //$NON-NLS-1$
+
+					lblViewed.setText(""); //$NON-NLS-1$
+				}
+
+				lblCover.setText(LocaleBundle.getString((value.getAttributeValueOrThrow("coverdata") != null) ? ("ImportElementsFrame.common.bool_true") : ("ImportElementsFrame.common.bool_false"))); //$NON-NLS-1$
+
+				btnEditAdd.setEnabled(value.getName().equalsIgnoreCase("movie")); //$NON-NLS-1$
+				btnAdd.setEnabled(true);
+			} else {
+				lblChilds.setText(""); //$NON-NLS-1$
+				lblCover.setText(""); //$NON-NLS-1$
+				lblName.setText(""); //$NON-NLS-1$
 				lblViewed.setText(""); //$NON-NLS-1$
+
+				btnEditAdd.setEnabled(false);
+				btnAdd.setEnabled(false);
 			}
-			
-			lblCover.setText(LocaleBundle.getString((value.getAttributeValue("coverdata") != null) ? ("ImportElementsFrame.common.bool_true") : ("ImportElementsFrame.common.bool_false"))); //$NON-NLS-1$
-		
-			btnEditAdd.setEnabled(value.getName().equalsIgnoreCase("movie")); //$NON-NLS-1$
-			btnAdd.setEnabled(true);
-		} else {
-			lblChilds.setText(""); //$NON-NLS-1$
-			lblCover.setText(""); //$NON-NLS-1$
-			lblName.setText(""); //$NON-NLS-1$
-			lblViewed.setText(""); //$NON-NLS-1$
-			
-			btnEditAdd.setEnabled(false);
-			btnAdd.setEnabled(false);
+		}
+		catch (CCXMLException e)
+		{
+			CCLog.addError(e);
 		}
 	}
 	
-	private void onAdd() throws CCFormatException {
+	private void onAdd() throws CCFormatException, CCXMLException, SerializationException {
 		if (lbContent.getSelectedValue() == null) {
 			return;
 		}
 		
-		Element value = lbContent.getSelectedValue();
+		CCXMLElement value = lbContent.getSelectedValue();
 		
 		if (value.getName().equalsIgnoreCase("movie")) {  //$NON-NLS-1$
-			onAddMovie(value, data_xmlver, lbContent.getSelectedIndex());
+			onAddMovie(value, lbContent.getSelectedIndex());
 		} else if (value.getName().equalsIgnoreCase("series")) { //$NON-NLS-1$
-			onAddSeries(value, data_xmlver, lbContent.getSelectedIndex());
+			onAddSeries(value, lbContent.getSelectedIndex());
 		}
 	}
 		
-	private void onAddMovie(Element value, int xmlver, int index) throws CCFormatException {
+	private void onAddMovie(CCXMLElement value, int index) throws CCFormatException, CCXMLException, SerializationException {
 		CCMovie mov = movielist.createNewEmptyMovie();
-		
-		mov.parseFromXML(value, xmlver, chckbxResetDate.isSelected(), chcbxResetViewed.isSelected(), chcbxResetScore.isSelected(), chckbxResetTags.isSelected(), false);
-		
+		DatabaseXMLImporter.parseSingleMovie(mov, value, new ImportState(document, data_xmlver, new ImportOptions(chckbxResetDate.isSelected(), chcbxResetViewed.isSelected(), chcbxResetScore.isSelected(), chckbxResetTags.isSelected(), false)));
 		listModel.remove(index);
 	}
 	
-	private void onAddSeries(Element value, int xmlver, int index) throws CCFormatException {
+	private void onAddSeries(CCXMLElement value, int index) throws CCFormatException, CCXMLException, SerializationException {
 		CCSeries ser = movielist.createNewEmptySeries();
-		
-		ser.parseFromXML(value, xmlver, chckbxResetDate.isSelected(), chcbxResetViewed.isSelected(), chcbxResetScore.isSelected(), chckbxResetTags.isSelected(), false);
-		
+		DatabaseXMLImporter.parseSingleSeries(ser, value, new ImportState(document, data_xmlver, new ImportOptions(chckbxResetDate.isSelected(), chcbxResetViewed.isSelected(), chcbxResetScore.isSelected(), chckbxResetTags.isSelected(), false)));
 		listModel.remove(index);
 	}
 	
@@ -351,7 +355,7 @@ public class ImportElementsFrame extends JFrame {
 			return;
 		}
 		
-		Element value = lbContent.getSelectedValue();
+		CCXMLElement value = lbContent.getSelectedValue();
 		
 		if (! value.getName().equalsIgnoreCase("movie")) { //$NON-NLS-1$
 			return;
@@ -360,8 +364,10 @@ public class ImportElementsFrame extends JFrame {
 		AddMovieFrame amf = new AddMovieFrame(this, movielist);
 		
 		try {
-			amf.parseFromXML(value, data_xmlver, chckbxResetDate.isSelected(), chcbxResetViewed.isSelected(), chcbxResetScore.isSelected());
-		} catch (CCFormatException e) {
+			CCMovie tmpMov = new CCMovie(CCMovieList.createStub(), -1);
+			tmpMov.setDefaultValues(false);
+			DatabaseXMLImporter.parseSingleMovie(tmpMov, value, new ImportState(document, data_xmlver, new ImportOptions(chckbxResetDate.isSelected(), chcbxResetViewed.isSelected(), chcbxResetScore.isSelected(), false, true)));
+		} catch (CCFormatException | SerializationException | CCXMLException e) {
 			CCLog.addError(e);
 			return;
 		}
@@ -370,16 +376,21 @@ public class ImportElementsFrame extends JFrame {
 		
 		listModel.remove(lbContent.getSelectedIndex());
 	}
-	
-	private void onAddAll() throws CCFormatException {
+
+	@SuppressWarnings("nls")
+	private void onAddAll() throws CCFormatException, CCXMLException, SerializationException {
 		for (int i = listModel.size()-1; i >= 0; i--) {
-			Element value = listModel.get(i);
+			CCXMLElement value = listModel.get(i);
 			
-			if ((! chckbxOnlyCover.isSelected()) || (value.getAttributeValue("coverdata") != null)) { //$NON-NLS-1$
-				if (value.getName().equalsIgnoreCase("movie")) {  //$NON-NLS-1$
-					onAddMovie(value, data_xmlver, i);
-				} else if (value.getName().equalsIgnoreCase("series")) { //$NON-NLS-1$
-					onAddSeries(value, data_xmlver, i);
+			if ((! chckbxOnlyCover.isSelected()) || value.hasAttribute("coverdata"))
+			{
+				if (value.getName().equalsIgnoreCase("movie"))   //$NON-NLS-1$
+				{
+					onAddMovie(value, i);
+				}
+				else if (value.getName().equalsIgnoreCase("series"))  //$NON-NLS-1$
+				{
+					onAddSeries(value, i);
 				}
 			}
 		}

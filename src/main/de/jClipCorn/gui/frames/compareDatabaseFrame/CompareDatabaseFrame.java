@@ -28,7 +28,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import de.jClipCorn.features.serialization.xmlexport.DatabaseXMLExporter;
-import de.jClipCorn.features.serialization.xmlexport.ExportState;
+import de.jClipCorn.features.serialization.xmlexport.ExportOptions;
 import org.jdom2.Document;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
@@ -544,7 +544,7 @@ public class CompareDatabaseFrame extends JFrame {
 
 		Document xml = DatabaseXMLExporter.export(
 				movielist.getInternalListCopy(),
-				new ExportState(true, true, false),
+				new ExportOptions(true, true, false),
 				new ProgressCallbackProgressBarHelper(progressBar));
 
 		XMLOutputter xout = new XMLOutputter();

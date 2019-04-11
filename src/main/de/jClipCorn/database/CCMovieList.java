@@ -14,7 +14,7 @@ import java.util.Vector;
 import javax.swing.SwingUtilities;
 
 import de.jClipCorn.features.serialization.xmlexport.DatabaseXMLExporter;
-import de.jClipCorn.features.serialization.xmlexport.ExportState;
+import de.jClipCorn.features.serialization.xmlexport.ExportOptions;
 import de.jClipCorn.util.lambda.Func0to0;
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -748,7 +748,7 @@ public class CCMovieList {
 	}
 
 	public Document getElementsAsXML() {
-		return DatabaseXMLExporter.export(list, new ExportState(false, false, false));
+		return DatabaseXMLExporter.export(list, new ExportOptions(false, false, false));
 	}
 	
 	@SuppressWarnings("nls")

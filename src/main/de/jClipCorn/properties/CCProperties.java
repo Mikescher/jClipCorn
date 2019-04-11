@@ -7,7 +7,7 @@ import java.util.*;
 
 import de.jClipCorn.Main;
 import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguage;
-import de.jClipCorn.database.util.ExportHelper;
+import de.jClipCorn.features.serialization.ExportHelper;
 import de.jClipCorn.gui.mainFrame.clipToolbar.ClipToolbar;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.features.log.CCLog;

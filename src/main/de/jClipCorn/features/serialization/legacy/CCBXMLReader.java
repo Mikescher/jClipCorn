@@ -1,4 +1,4 @@
-package de.jClipCorn.database.xml;
+package de.jClipCorn.features.serialization.legacy;
 
 import java.io.File;
 import java.io.IOException;
@@ -32,7 +32,7 @@ import de.jClipCorn.util.helper.DialogHelper;
 
 @SuppressWarnings("nls")
 /*
- * Old (pascal) ClipCorn database export format
+ * Old (pascal) ClipCorn database xmlexport format
  */
 public class CCBXMLReader {
 	private String filename;

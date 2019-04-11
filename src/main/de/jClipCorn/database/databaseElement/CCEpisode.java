@@ -440,28 +440,7 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 	}
 
 	@SuppressWarnings("nls")
-	protected void setXMLAttributes(Element e, boolean fileHash) {
-		e.setAttribute("localid", localID + "");
-		e.setAttribute("title", title);
-		e.setAttribute("viewed", viewed + "");
-		e.setAttribute("adddate", addDate.toStringSerialize());
-		e.setAttribute("episodenumber", episodeNumber + "");
-		e.setAttribute("filesize", filesize.getBytes() + "");
-		e.setAttribute("format", format.asInt() + "");
-		e.setAttribute("history", viewedHistory.toSerializationString());
-		e.setAttribute("length", length + "");
-		e.setAttribute("part", part);
-		e.setAttribute("quality", quality.asInt() + "");
-		e.setAttribute("tags", tags.asShort() + "");
-		e.setAttribute("languages", language.serializeToString());
-
-		if (fileHash) {
-			e.setAttribute("filehash", getFastMD5());
-		}
-	}
-	
-	@SuppressWarnings("nls")
-	public void parseFromXML(Element e, boolean resetAddDate, boolean resetViewed, boolean resetTags) throws CCFormatException {
+	public void parseFromXML(Element e, int xmlver, boolean resetAddDate, boolean resetViewed, boolean resetTags) throws CCFormatException {
 		beginUpdating();
 		
 		if (e.getAttributeValue("title") != null)
@@ -520,17 +499,6 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 		endUpdating();
 	}
 
-	@SuppressWarnings("nls")
-	public Element generateXML(Element el, boolean fileHash) {
-		Element epis = new Element("episode");
-		
-		setXMLAttributes(epis, fileHash);
-		
-		el.addContent(epis);
-		
-		return epis;
-	}
-	
 	public String getFastMD5() {
 		File[] f = new File[1];
 		f[0] = new File(getAbsolutePart());

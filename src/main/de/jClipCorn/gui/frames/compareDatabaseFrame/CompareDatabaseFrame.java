@@ -27,8 +27,9 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import de.jClipCorn.features.serialization.xmlexport.DatabaseXMLExporter;
+import de.jClipCorn.features.serialization.xmlexport.ExportState;
 import org.jdom2.Document;
-import org.jdom2.Element;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
 
@@ -37,17 +38,14 @@ import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.FormSpecs;
 import com.jgoodies.forms.layout.RowSpec;
 
-import de.jClipCorn.Main;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
-import de.jClipCorn.database.databaseElement.CCMovie;
-import de.jClipCorn.database.util.ExportHelper;
+import de.jClipCorn.features.serialization.ExportHelper;
 import de.jClipCorn.gui.frames.exportElementsFrame.ExportElementsFrame;
 import de.jClipCorn.gui.guiComponents.ReadableTextField;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.gui.resources.Resources;
-import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.ExtendedFocusTraversalOnArray;
 import de.jClipCorn.util.helper.FileChooserHelper;
@@ -543,25 +541,11 @@ public class CompareDatabaseFrame extends JFrame {
 
 	@SuppressWarnings("nls")
 	private void generateCompareFile(String path) {
-		Document xml = new Document(new Element("database"));
 
-		Element root = xml.getRootElement();
-
-		root.setAttribute("version", Main.VERSION);
-		root.setAttribute("dbversion", Main.DBVERSION);
-		root.setAttribute("date", CCDate.getCurrentDate().toStringUINormal());
-		root.setAttribute("elementcount", movielist.getElementCount() + "");
-
-		for (CCMovie mov : movielist.iteratorMovies()) {
-			mov.generateXML(root, true, true, false);
-
-			SwingUtilities.invokeLater(new Runnable() {
-				@Override
-				public void run() {
-					progressBar.setValue(progressBar.getValue() + 1);
-				}
-			});
-		}
+		Document xml = DatabaseXMLExporter.export(
+				movielist.getInternalListCopy(),
+				new ExportState(true, true, false),
+				new ProgressCallbackProgressBarHelper(progressBar));
 
 		XMLOutputter xout = new XMLOutputter();
 		xout.setFormat(Format.getPrettyFormat());
@@ -575,18 +559,11 @@ public class CompareDatabaseFrame extends JFrame {
 	}
 
 	private void startCompare() {
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				final List<CompareElement> fl = DatabaseComparator.compare(new File(edDB1.getText()), new File(edDB2.getText()), new ProgressCallbackProgressBarHelper(progressBar));
+		new Thread(() ->
+		{
+			final List<CompareElement> fl = DatabaseComparator.compare(new File(edDB1.getText()), new File(edDB2.getText()), new ProgressCallbackProgressBarHelper(progressBar));
 
-				SwingUtilities.invokeLater(new Runnable() {
-					@Override
-					public void run() {
-						updateGUI(fl);
-					}
-				});
-			}
+			SwingUtilities.invokeLater(() -> updateGUI(fl));
 		}, "THREAD_COMPARE_DATABASES").start(); //$NON-NLS-1$
 	}
 

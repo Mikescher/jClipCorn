@@ -1,4 +1,4 @@
-package de.jClipCorn.database.util;
+package de.jClipCorn.features.serialization;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
@@ -18,6 +18,8 @@ import java.util.zip.ZipOutputStream;
 
 import javax.imageio.ImageIO;
 
+import de.jClipCorn.features.serialization.xmlexport.DatabaseXMLExporter;
+import de.jClipCorn.features.serialization.xmlexport.ExportState;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.JDOMException;
@@ -277,16 +279,18 @@ public class ExportHelper {
 				}
 	
 				Document doc = new SAXBuilder().build(new StringReader(contentMain));
-	
+					
 				Element root = doc.getRootElement();
+
+				int xmlver = Integer.parseInt(root.getAttributeValue("xmlversion", "1")); //$NON-NLS-1$ //$NON-NLS-2$
 	
 				for (Element e : root.getChildren()) {
 					if (e.getName().equals("movie")) { //$NON-NLS-1$
 						CCMovie mov = movielist.createNewEmptyMovie();
-						mov.parseFromXML(e, false, false, false, false, false);
+						mov.parseFromXML(e, xmlver, false, false, false, false, false);
 					} else if (e.getName().equals("series")) { //$NON-NLS-1$
 						CCSeries ser = movielist.createNewEmptySeries();
-						ser.parseFromXML(e, false, false, false, false, false);
+						ser.parseFromXML(e, xmlver, false, false, false, false, false);
 					}
 				}
 			}
@@ -340,15 +344,7 @@ public class ExportHelper {
 	}
 	
 	public static void exportDBElements(File file, CCMovieList movielist, List<CCDatabaseElement> elements, boolean includeCover) {
-		Document xml = movielist.getEmptyXML();
-		
-		Element root = xml.getRootElement();
-		
-		root.setAttribute("elementcount", elements.size() + ""); //$NON-NLS-1$ //$NON-NLS-2$
-		
-		for (CCDatabaseElement el : elements) {
-			el.generateXML(root, false, false, includeCover);
-		}
+		Document xml = DatabaseXMLExporter.export(elements, new ExportState(false, false, includeCover));
 		
 		XMLOutputter xout = new XMLOutputter();
 		xout.setFormat(Format.getPrettyFormat());
@@ -370,7 +366,7 @@ public class ExportHelper {
 		}
 	}
 	
-	public static Element getFirstElementOfExport(String xmlcontent) {
+	public static Tuple<Integer, Element> getFirstElementOfExport(String xmlcontent) {
 		Document doc = null;
 		try {
 			doc = new SAXBuilder().build(new StringReader(xmlcontent));
@@ -380,36 +376,38 @@ public class ExportHelper {
 		}
 
 		Element root = doc.getRootElement();
+
+		int xmlver = Integer.parseInt(root.getAttributeValue("xmlversion", "1")); //$NON-NLS-1$ //$NON-NLS-2$
 		
 		List<Element> elements = root.getChildren();
 		
 		if (elements.size() > 0) {
-			return elements.get(0);
+			return Tuple.Create(xmlver, elements.get(0));
 		}
 		
 		return null;
 	}
 	
 	public static void importSingleElement(CCMovieList movielist, String xmlcontent, boolean resetAddDate, boolean resetViewed, boolean resetScore, boolean resetTags) throws CCFormatException {
-		Element value = getFirstElementOfExport(xmlcontent);
+		Tuple<Integer, Element> value = getFirstElementOfExport(xmlcontent);
 		
 		if (value != null) {
-			if (value.getName().equalsIgnoreCase("movie")) {  //$NON-NLS-1$
+			if (value.Item2.getName().equalsIgnoreCase("movie")) {  //$NON-NLS-1$
 				CCMovie mov = movielist.createNewEmptyMovie();
-				mov.parseFromXML(value, resetAddDate, resetViewed, resetScore, resetTags, false);
-			} else if (value.getName().equalsIgnoreCase("series")) { //$NON-NLS-1$
+				mov.parseFromXML(value.Item2, value.Item1, resetAddDate, resetViewed, resetScore, resetTags, false);
+			} else if (value.Item2.getName().equalsIgnoreCase("series")) { //$NON-NLS-1$
 				CCSeries ser = movielist.createNewEmptySeries();
-				ser.parseFromXML(value, resetAddDate, resetViewed, resetScore, resetTags, false);
+				ser.parseFromXML(value.Item2, value.Item1, resetAddDate, resetViewed, resetScore, resetTags, false);
 			}
 		}
 	}
 	
 	public static CCDBElementTyp getTypOfFirstElementOfExport(String xmlcontent) {
-		Element value = getFirstElementOfExport(xmlcontent);
+		Tuple<Integer, Element> value = getFirstElementOfExport(xmlcontent);
 		
-		if (value.getName().equalsIgnoreCase("movie")) {  //$NON-NLS-1$
+		if (value.Item2.getName().equalsIgnoreCase("movie")) {  //$NON-NLS-1$
 			return CCDBElementTyp.MOVIE;
-		} else if (value.getName().equalsIgnoreCase("series")) { //$NON-NLS-1$
+		} else if (value.Item2.getName().equalsIgnoreCase("series")) { //$NON-NLS-1$
 			return CCDBElementTyp.SERIES;
 		}
 		
@@ -438,9 +436,9 @@ public class ExportHelper {
 			if (methodval == 0) { // Direct
 				ExportHelper.importSingleElement(movielist, xml, resetDate, resetViewed, resetScore, resetTags);
 			} else if (methodval == 1) { // Edit & Add
-				Element value = ExportHelper.getFirstElementOfExport(xml);
+				Tuple<Integer, Element> value = ExportHelper.getFirstElementOfExport(xml);
 				AddMovieFrame amf = new AddMovieFrame(owner, movielist);
-				amf.parseFromXML(value, resetDate, resetViewed, resetScore);
+				amf.parseFromXML(value.Item2, value.Item1, resetDate, resetViewed, resetScore);
 				amf.setVisible(true);
 			}
 		} catch (IOException | CCFormatException e) {

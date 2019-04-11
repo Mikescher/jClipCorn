@@ -14,7 +14,7 @@ import java.util.Map;
 import java.util.Properties;
 
 import de.jClipCorn.Main;
-import de.jClipCorn.database.util.ExportHelper;
+import de.jClipCorn.features.serialization.ExportHelper;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.properties.CCProperties;

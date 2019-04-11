@@ -7,7 +7,7 @@ import org.junit.After;
 import org.junit.Before;
 
 import de.jClipCorn.database.CCMovieList;
-import de.jClipCorn.database.util.ExportHelper;
+import de.jClipCorn.features.serialization.ExportHelper;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.helper.ApplicationHelper;

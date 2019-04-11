@@ -380,40 +380,13 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 			addToViewedHistory(CCDateTime.getCurrentDateTime());
 		}
 	}
-	
-	@SuppressWarnings("nls")
-	@Override
-	protected void setXMLAttributes(Element e, boolean fileHash, boolean coverHash, boolean coverData) {
-		super.setXMLAttributes(e, fileHash, coverHash, coverData);
-		
-		e.setAttribute("adddate", addDate.toStringSerialize());
-		e.setAttribute("filesize", filesize.getBytes() + "");
-		e.setAttribute("format", format.asInt() + "");
-		e.setAttribute("length", length  + "");
-		e.setAttribute("languages", language.serializeToString());
-		
-		for (int i = 0; i < parts.length; i++) {
-			e.setAttribute("part_"+i, parts[i]);
-		}
-		
-		e.setAttribute("quality",      quality.asInt() + "");
-		e.setAttribute("viewed",       viewed + "");
-		e.setAttribute("history",      viewedHistory.toSerializationString());
-		e.setAttribute("year",         year + "");
-		e.setAttribute("zyklus",       zyklus.getTitle());
-		e.setAttribute("zyklusnumber", zyklus.getNumber() + "");
-		
-		if (fileHash) {
-			e.setAttribute("filehash", getFastMD5());
-		}
-	}
-	
+
 	@Override
 	@SuppressWarnings("nls")
-	public void parseFromXML(Element e, boolean resetAddDate, boolean resetViewed, boolean resetScore, boolean resetTags, boolean ignoreCoverData) throws CCFormatException {
+	public void parseFromXML(Element e, int xmlver, boolean resetAddDate, boolean resetViewed, boolean resetScore, boolean resetTags, boolean ignoreCoverData) throws CCFormatException {
 		beginUpdating();
 		
-		super.parseFromXML(e, resetAddDate, resetViewed, resetScore, resetTags, ignoreCoverData);
+		super.parseFromXML(e, xmlver, resetAddDate, resetViewed, resetScore, resetTags, ignoreCoverData);
 		
 		if (e.getAttributeValue("adddate") != null) {
 			setAddDate(CCDate.deserialize(e.getAttributeValue("adddate")));

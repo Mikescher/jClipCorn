@@ -443,26 +443,7 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 	}
 
 	@SuppressWarnings("nls")
-	protected void setXMLAttributes(Element e, boolean coverHash, boolean coverData) {
-		e.setAttribute("seasonid", seasonID + "");
-		e.setAttribute("title", title);
-		e.setAttribute("year", year + "");
-		
-		if (! coverData) {
-			e.setAttribute("covername", covername);
-		}
-		
-		if (coverHash) {
-			e.setAttribute("coverhash", getCoverMD5());
-		}
-		
-		if (coverData) {
-			e.setAttribute("coverdata", ByteUtilies.byteArrayToHexString(ImageUtilities.imageToByteArray(getCover())));
-		}
-	}
-	
-	@SuppressWarnings("nls")
-	public void parseFromXML(Element e, boolean resetAddDate, boolean resetViewed, boolean resetTags) throws CCFormatException {
+	public void parseFromXML(Element e, int xmlver, boolean resetAddDate, boolean resetViewed, boolean resetTags) throws CCFormatException {
 		beginUpdating();
 		
 		if (e.getAttributeValue("title") != null)
@@ -475,7 +456,7 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 			setCover(e.getAttributeValue("covername"));
 		
 		for (Element e2 : e.getChildren("episode")) {
-			createNewEmptyEpisode().parseFromXML(e2, resetAddDate, resetViewed, resetTags);
+			createNewEmptyEpisode().parseFromXML(e2, xmlver, resetAddDate, resetViewed, resetTags);
 		}
 		
 		if (e.getAttributeValue("coverdata") != null) {
@@ -491,21 +472,6 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 		return LargeMD5Calculator.calcMD5(getCover());
 	}
 
-	@SuppressWarnings("nls")
-	public Element generateXML(Element el, boolean fileHash, boolean coverHash, boolean coverData) {
-		Element sea = new Element("season");
-		
-		setXMLAttributes(sea, coverHash, coverData);
-		
-		el.addContent(sea);
-		
-		for (int i = 0; i < episodes.size(); i++) {
-			episodes.get(i).generateXML(sea, fileHash);
-		}
-		
-		return sea;
-	}
-	
 	@Override
 	public String toString() {
 		return getTitle();

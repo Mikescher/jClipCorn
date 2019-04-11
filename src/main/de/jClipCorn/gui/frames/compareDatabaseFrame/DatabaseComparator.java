@@ -74,12 +74,7 @@ public class DatabaseComparator {
 			pcl.step();
 		}
 		
-		SwingUtilities.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-				pcl.reset();
-			}
-		});
+		SwingUtilities.invokeLater(pcl::reset);
 		
 		return resultlist;
 	}

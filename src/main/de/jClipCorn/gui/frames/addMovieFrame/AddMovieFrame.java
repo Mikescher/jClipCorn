@@ -565,9 +565,9 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		contentPane.add(edGroups);
 	}
 	
-	public void parseFromXML(Element e, boolean resetAddDate, boolean resetViewed, boolean resetScore) throws CCFormatException {
+	public void parseFromXML(Element e, int xmlver, boolean resetAddDate, boolean resetViewed, boolean resetScore) throws CCFormatException {
 		CCMovie tmpMov = new CCMovie(CCMovieList.createStub(), -1);
-		tmpMov.parseFromXML(e, resetAddDate, resetViewed, resetScore, false, true);
+		tmpMov.parseFromXML(e, xmlver, resetAddDate, resetViewed, resetScore, false, true);
 		
 		if (!tmpMov.getAddDate().isMinimum() && !resetAddDate)
 			spnAddDate.setValue(tmpMov.getAddDate());

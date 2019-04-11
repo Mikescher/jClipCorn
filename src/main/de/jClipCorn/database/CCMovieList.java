@@ -13,6 +13,8 @@ import java.util.Vector;
 
 import javax.swing.SwingUtilities;
 
+import de.jClipCorn.features.serialization.xmlexport.DatabaseXMLExporter;
+import de.jClipCorn.features.serialization.xmlexport.ExportState;
 import de.jClipCorn.util.lambda.Func0to0;
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -745,39 +747,18 @@ public class CCMovieList {
 		return new DatedElementsIterator(list);
 	}
 
-	@SuppressWarnings("nls")
-	public Document getEmptyXML() {
-		Document xml = new Document(new Element("database"));
-		
-		Element root = xml.getRootElement();
-		
-		root.setAttribute("version", Main.VERSION);
-		root.setAttribute("dbversion", Main.DBVERSION);
-		root.setAttribute("date", CCDate.getCurrentDate().toStringSerialize());
-		
-		return xml;
-	}
-	
-	@SuppressWarnings("nls")
 	public Document getElementsAsXML() {
-		Document xml = getEmptyXML();
-		
-		Element root = xml.getRootElement();
-		
-		root.setAttribute("elementcount", getElementCount() + "");
-		
-		for (CCDatabaseElement el : list) {
-			el.generateXML(root, false, false, false);
-		}
-		
-		return xml;
+		return DatabaseXMLExporter.export(list, new ExportState(false, false, false));
 	}
 	
 	@SuppressWarnings("nls")
 	public Document getGroupsAsXML() {
-		Document xml = getEmptyXML();
-		
+		Document xml = new Document(new Element("database"));
 		Element root = xml.getRootElement();
+		root.setAttribute("version", Main.VERSION);
+		root.setAttribute("dbversion", Main.DBVERSION);
+		root.setAttribute("date", CCDate.getCurrentDate().toStringSerialize());
+		
 		Element relg = new Element("groups");
 		root.addContent(relg);
 		
@@ -798,9 +779,12 @@ public class CCMovieList {
 	
 	@SuppressWarnings("nls")
 	public Document getDBInfoAsXML() {
-		Document xml = getEmptyXML();
-		
+		Document xml = new Document(new Element("database"));
 		Element root = xml.getRootElement();
+		root.setAttribute("version", Main.VERSION);
+		root.setAttribute("dbversion", Main.DBVERSION);
+		root.setAttribute("date", CCDate.getCurrentDate().toStringSerialize());
+		
 		Element rdbi = new Element("info");
 		root.addContent(rdbi);
 		

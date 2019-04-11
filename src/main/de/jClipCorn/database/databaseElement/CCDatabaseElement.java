@@ -343,36 +343,9 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 	public boolean isSeries() {
 		return getType().equals(CCDBElementTyp.SERIES);
 	}
-	
-	@SuppressWarnings({ "nls"})
-	protected void setXMLAttributes(Element e, boolean fileHash, boolean coverHash, boolean coverData) {
-		e.setAttribute("localid",      localID + "");
-		e.setAttribute("typ",          typ.asInt() + "");
-		e.setAttribute("title",        title);
-		e.setAttribute("genres",       genres.getAllGenres() + "");
-		e.setAttribute("onlinescore",  onlinescore.asInt() + "");
-		e.setAttribute("fsk",          fsk.asInt() + "");
-		e.setAttribute("score",        score.asInt() + "");
-		e.setAttribute("seriesid",     seriesID + "");
-		e.setAttribute("groups",       linkedGroups.toSerializationString());
-		e.setAttribute("onlinreref",   onlineReference.toSerializationString());
-		e.setAttribute("tags",         tags.asShort() + "");
-
-		if (! coverData) {
-			e.setAttribute("covername", covername);
-		}
-		
-		if (coverHash) {
-			e.setAttribute("coverhash", getCoverMD5());
-		}
-		
-		if (coverData) {
-			e.setAttribute("coverdata", ByteUtilies.byteArrayToHexString(ImageUtilities.imageToByteArray(getCover())));
-		}
-	}
 
 	@SuppressWarnings("nls")
-	public void parseFromXML(Element e, boolean resetAddDate, boolean resetViewed, boolean resetScore, boolean resetTags, boolean ignoreCoverData) throws CCFormatException {
+	public void parseFromXML(Element e, int xmlver, boolean resetAddDate, boolean resetViewed, boolean resetScore, boolean resetTags, boolean ignoreCoverData) throws CCFormatException {
 		if (e.getAttributeValue("title") != null)
 			setTitle(e.getAttributeValue("title"));
 		
@@ -412,26 +385,6 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 			setOnlineReference(e.getAttributeValue("onlinreref"));
 	}
 
-	@SuppressWarnings("nls")
-	public Element generateXML(Element el, boolean fileHash, boolean coverHash, boolean coverData) {
-		Element dbelement = null;
-		
-		switch (typ) {
-		case MOVIE:
-			dbelement = new Element("movie");
-			break;
-		case SERIES:
-			dbelement = new Element("series");
-			break;
-		}
-		
-		setXMLAttributes(dbelement, fileHash, coverHash, coverData);
-		
-		el.addContent(dbelement);
-		
-		return dbelement;
-	}
-	
 	public int getMovieListPosition() {
 		return movielist.getSortByDatabaseElement(this);
 	}

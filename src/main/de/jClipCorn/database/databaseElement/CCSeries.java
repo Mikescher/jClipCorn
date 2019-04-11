@@ -335,39 +335,21 @@ public class CCSeries extends CCDatabaseElement  {
 	public int findSeasoninSorted(CCSeason ccSeason) {
 		return getSeasonsSorted().indexOf(ccSeason);
 	}
-	
-	@Override
-	protected void setXMLAttributes(Element e, boolean fileHash, boolean coverHash, boolean coverData) {
-		super.setXMLAttributes(e, fileHash, coverHash, coverData);
-		
-		// series has no more attributes than CCDatabaseElement - for now
-	}
-	
+
 	@Override
 	@SuppressWarnings("nls")
-	public void parseFromXML(Element e, boolean resetAddDate, boolean resetViewed, boolean resetScore, boolean resetTags, boolean ignoreCoverData) throws CCFormatException {
+	public void parseFromXML(Element e, int xmlver, boolean resetAddDate, boolean resetViewed, boolean resetScore, boolean resetTags, boolean ignoreCoverData) throws CCFormatException {
 		beginUpdating();
 		
-		super.parseFromXML(e, resetAddDate, resetViewed, resetScore, resetTags, ignoreCoverData);
+		super.parseFromXML(e, xmlver, resetAddDate, resetViewed, resetScore, resetTags, ignoreCoverData);
 		
 		for (Element e2 : e.getChildren("season")) {
-			createNewEmptySeason().parseFromXML(e2, resetAddDate, resetViewed, resetTags);
+			createNewEmptySeason().parseFromXML(e2, xmlver, resetAddDate, resetViewed, resetTags);
 		}
 		
 		endUpdating();
 	}
-	
-	@Override
-	public Element generateXML(Element el, boolean fileHash, boolean coverHash, boolean coverData) {
-		Element ser = super.generateXML(el, fileHash, coverHash, coverData);
-		
-		for (int i = 0; i < seasons.size(); i++) {
-			seasons.get(i).generateXML(ser, fileHash, coverHash, coverData);
-		}
-		
-		return ser;
-	}
-	
+
 	@Override
 	public String toString() {
 		return getTitle();

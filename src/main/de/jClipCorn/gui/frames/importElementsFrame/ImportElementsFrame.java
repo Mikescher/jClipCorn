@@ -76,6 +76,7 @@ public class ImportElementsFrame extends JFrame {
 	
 	private DefaultListModel<Element> listModel;
 	private CCMovieList movielist;
+	private int data_xmlver = 1;
 
 	public ImportElementsFrame(Component owner, String xmlcontent, CCMovieList movielist) {
 		super();
@@ -251,7 +252,7 @@ public class ImportElementsFrame extends JFrame {
 	}
 
 	private void initData(String xmlcontent) {
-		Document doc = null;
+		Document doc;
 		try {
 			doc = new SAXBuilder().build(new StringReader(xmlcontent));
 		} catch (JDOMException | IOException e) {
@@ -260,7 +261,9 @@ public class ImportElementsFrame extends JFrame {
 		}
 
 		Element root = doc.getRootElement();
-		
+
+		data_xmlver = Integer.parseInt(root.getAttributeValue("xmlversion", "1")); //$NON-NLS-1$ //$NON-NLS-2$
+
 		List<Element> elements = root.getChildren();
 		
 		lblElementsFound.setText(LocaleBundle.getFormattedString("ImportElementsFrame.lblInfo.text", elements.size())); //$NON-NLS-1$
@@ -321,24 +324,24 @@ public class ImportElementsFrame extends JFrame {
 		Element value = lbContent.getSelectedValue();
 		
 		if (value.getName().equalsIgnoreCase("movie")) {  //$NON-NLS-1$
-			onAddMovie(value, lbContent.getSelectedIndex());
+			onAddMovie(value, data_xmlver, lbContent.getSelectedIndex());
 		} else if (value.getName().equalsIgnoreCase("series")) { //$NON-NLS-1$
-			onAddSeries(value, lbContent.getSelectedIndex());
+			onAddSeries(value, data_xmlver, lbContent.getSelectedIndex());
 		}
 	}
 		
-	private void onAddMovie(Element value, int index) throws CCFormatException {
+	private void onAddMovie(Element value, int xmlver, int index) throws CCFormatException {
 		CCMovie mov = movielist.createNewEmptyMovie();
 		
-		mov.parseFromXML(value, chckbxResetDate.isSelected(), chcbxResetViewed.isSelected(), chcbxResetScore.isSelected(), chckbxResetTags.isSelected(), false);
+		mov.parseFromXML(value, xmlver, chckbxResetDate.isSelected(), chcbxResetViewed.isSelected(), chcbxResetScore.isSelected(), chckbxResetTags.isSelected(), false);
 		
 		listModel.remove(index);
 	}
 	
-	private void onAddSeries(Element value, int index) throws CCFormatException {
+	private void onAddSeries(Element value, int xmlver, int index) throws CCFormatException {
 		CCSeries ser = movielist.createNewEmptySeries();
 		
-		ser.parseFromXML(value, chckbxResetDate.isSelected(), chcbxResetViewed.isSelected(), chcbxResetScore.isSelected(), chckbxResetTags.isSelected(), false);
+		ser.parseFromXML(value, xmlver, chckbxResetDate.isSelected(), chcbxResetViewed.isSelected(), chcbxResetScore.isSelected(), chckbxResetTags.isSelected(), false);
 		
 		listModel.remove(index);
 	}
@@ -357,7 +360,7 @@ public class ImportElementsFrame extends JFrame {
 		AddMovieFrame amf = new AddMovieFrame(this, movielist);
 		
 		try {
-			amf.parseFromXML(value, chckbxResetDate.isSelected(), chcbxResetViewed.isSelected(), chcbxResetScore.isSelected());
+			amf.parseFromXML(value, data_xmlver, chckbxResetDate.isSelected(), chcbxResetViewed.isSelected(), chcbxResetScore.isSelected());
 		} catch (CCFormatException e) {
 			CCLog.addError(e);
 			return;
@@ -374,9 +377,9 @@ public class ImportElementsFrame extends JFrame {
 			
 			if ((! chckbxOnlyCover.isSelected()) || (value.getAttributeValue("coverdata") != null)) { //$NON-NLS-1$
 				if (value.getName().equalsIgnoreCase("movie")) {  //$NON-NLS-1$
-					onAddMovie(value, i);
+					onAddMovie(value, data_xmlver, i);
 				} else if (value.getName().equalsIgnoreCase("series")) { //$NON-NLS-1$
-					onAddSeries(value, i);
+					onAddSeries(value, data_xmlver, i);
 				}
 			}
 		}

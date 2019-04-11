@@ -69,6 +69,8 @@ public class LogFrame extends JFrame implements CCLogChangedListener{
 		if (cl.isErrorMode()) cl.setModeDefault();
 		
 		CCLog.addChangeListener(this);
+
+		CCLog.setAllWatched();
 	}
 	
 	private void initGUI() {

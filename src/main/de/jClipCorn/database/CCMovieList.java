@@ -96,7 +96,7 @@ public class CCMovieList {
 			boolean cont = InitialConfigFrame.ShowWizard();
 			
 			if (! cont) {
-				ApplicationHelper.exitApplication(0);
+				ApplicationHelper.exitApplication(0, true);
 			}
 
 			database = CCDatabase.create(CCProperties.getInstance().PROP_DATABASE_NAME.getValue()); // in case db type has changed

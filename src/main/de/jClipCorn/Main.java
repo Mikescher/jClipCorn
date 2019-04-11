@@ -215,11 +215,6 @@ public class Main {
 
 //TODO (optional) add a season ref to an online ref to associate it with a specific season
 
-//TODO Allow multiple MovieLang's per element
-//TODO auto get languages from files
-
-//TODO warn on close if there are un-watched errors
-
 //TODO re-do PlainTextExporter
 
 //TODO EditSeriesFrame re-do layout (resizable)

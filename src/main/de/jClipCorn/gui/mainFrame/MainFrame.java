@@ -47,6 +47,7 @@ import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.features.table.filter.customFilter.CustomSearchFilter;
 import de.jClipCorn.util.UpdateConnector;
+import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.helper.LookAndFeelManager;
 
 public class MainFrame extends JFrame implements CCDBUpdateListener, FileDrop.Listener {
@@ -93,7 +94,7 @@ public class MainFrame extends JFrame implements CCDBUpdateListener, FileDrop.Li
 		setTitle(createTitle());
 		setIconImage(Resources.IMG_FRAME_ICON.get());
 
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		setMinimumSize(new Dimension(FRAME_WIDTH, FRAME_HEIGHT));
 		setLocationRelativeTo(null);
 
@@ -184,6 +185,13 @@ public class MainFrame extends JFrame implements CCDBUpdateListener, FileDrop.Li
 		} else {
 			SwingUtilities.invokeLater(runnner);
 		}
+	}
+
+	public boolean tryTerminate() {
+		if (CCLog.hasUnwatchedErrorsOrUndef()) {
+			return DialogHelper.showLocaleYesNo(this, "Dialogs.QuitWithLog"); //$NON-NLS-1$
+		}
+		return true;
 	}
 
 	/**
@@ -294,7 +302,11 @@ public class MainFrame extends JFrame implements CCDBUpdateListener, FileDrop.Li
 
 			@Override
 			public void windowClosing(WindowEvent e) {
-				terminate();
+				if (tryTerminate()) {
+					dispose();
+					terminate();
+					System.exit(0);
+				}
 			}
 
 			@Override

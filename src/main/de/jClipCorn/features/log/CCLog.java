@@ -1,7 +1,7 @@
 package de.jClipCorn.features.log;
 
 public class CCLog {
-	
+
 	public static void initUnitTestMode() {
 		CCLogInternal.initUnitTestMode();
 	}
@@ -142,5 +142,17 @@ public class CCLog {
 
 	public static CCLogElement getElement(CCLogType type, int idx) {
 		return CCLogInternal.getElement(type, idx);
+	}
+
+	public static void setAllWatched() {
+		CCLogInternal.setAllWatched();
+	}
+
+	public static boolean hasUnwatchedErrorsOrUndef() {
+		return CCLogInternal.hasUnwatchedErrorsOrUndef();
+	}
+
+	public static boolean hasUnwatched(CCLogType type) {
+		return CCLogInternal.hasUnwatched(type);
 	}
 }

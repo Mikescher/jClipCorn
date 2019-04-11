@@ -58,22 +58,34 @@ public class ApplicationHelper {
 			return false;
 		}
 		
-		exitApplication();
+		exitApplication(true);
 		
 		return true;
 	}
 	
-	public static void exitApplication() {
-		exitApplication(0);
+	public static void exitApplication(boolean force) {
+		exitApplication(0, force);
 	}
 
-	public static void exitApplication(int errorcode) {
-		MainFrame inst = MainFrame.getInstance();
-		if (inst != null) {
-			inst.terminate();
-			inst.dispose();
+	public static void exitApplication(int errorcode, boolean force) {
+		if (force) {
+			MainFrame inst = MainFrame.getInstance();
+			if (inst != null) {
+				inst.terminate();
+				inst.dispose();
+			}
+			System.exit(errorcode);
+		} else {
+
+			MainFrame inst = MainFrame.getInstance();
+			if (inst != null) {
+				if (!inst.tryTerminate()) return;
+				inst.terminate();
+				inst.dispose();
+			}
+
+			System.exit(errorcode);
 		}
-		System.exit(errorcode);
 	}
 
 	@SuppressWarnings("nls")

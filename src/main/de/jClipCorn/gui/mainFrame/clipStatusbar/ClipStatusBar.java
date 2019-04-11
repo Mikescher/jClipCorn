@@ -15,6 +15,7 @@ import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.util.CCDBUpdateListener;
 import de.jClipCorn.features.actionTree.ActionSource;
 import de.jClipCorn.features.actionTree.CCActionTree;
+import de.jClipCorn.features.log.CCLogInternal;
 import de.jClipCorn.gui.mainFrame.MainFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.features.log.CCLog;
@@ -156,17 +157,31 @@ public class ClipStatusBar extends AbstractClipStatusbar implements CCDBUpdateLi
 		updateLables_DriveScan();
 		updateLabels_Log();
 	}
-	
+
+	@SuppressWarnings("nls")
 	private void updateLabels_Log() {
 		if (lblLog != null) {
 			lblLog.setIcon(CCLog.getHighestType().getSmallIcon());
 
 			StringBuilder tooltip = new StringBuilder();
-			tooltip.append("<html>"); //$NON-NLS-1$
-			tooltip.append(LocaleBundle.getString("CCLog.Informations")).append(": ").append(CCLog.getCount(CCLogType.LOG_ELEM_INFORMATION)).append("<br/>"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-			tooltip.append(LocaleBundle.getString("CCLog.Warnings")).append(": ").append(CCLog.getCount(CCLogType.LOG_ELEM_WARNING)).append("<br/>"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-			tooltip.append(LocaleBundle.getString("CCLog.Errors")).append(": ").append(CCLog.getCount(CCLogType.LOG_ELEM_ERROR)).append("<br/>"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-			tooltip.append(LocaleBundle.getString("CCLog.Undefinieds")).append(": ").append(CCLog.getCount(CCLogType.LOG_ELEM_UNDEFINED)).append("<br/>"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			tooltip.append("<html>");
+
+			tooltip.append(LocaleBundle.getString("CCLog.Informations")).append(": ").append(CCLog.getCount(CCLogType.LOG_ELEM_INFORMATION));
+			if (CCLog.hasUnwatched(CCLogType.LOG_ELEM_INFORMATION))tooltip.append(" (!)");
+			tooltip.append("<br/>");
+
+			tooltip.append(LocaleBundle.getString("CCLog.Warnings")).append(": ").append(CCLog.getCount(CCLogType.LOG_ELEM_WARNING));
+			if (CCLog.hasUnwatched(CCLogType.LOG_ELEM_WARNING))tooltip.append(" (!)");
+			tooltip.append("<br/>");
+
+			tooltip.append(LocaleBundle.getString("CCLog.Errors")).append(": ").append(CCLog.getCount(CCLogType.LOG_ELEM_ERROR));
+			if (CCLog.hasUnwatched(CCLogType.LOG_ELEM_ERROR))tooltip.append(" (!)");
+			tooltip.append("<br/>");
+
+			tooltip.append(LocaleBundle.getString("CCLog.Undefinieds")).append(": ").append(CCLog.getCount(CCLogType.LOG_ELEM_UNDEFINED));
+			if (CCLog.hasUnwatched(CCLogType.LOG_ELEM_UNDEFINED))tooltip.append(" (!)");
+			tooltip.append("<br/>");
+
 			tooltip.append("</html>"); //$NON-NLS-1$
 			lblLog.setToolTipText(tooltip.toString());
 		}

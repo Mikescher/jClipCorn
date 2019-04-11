@@ -281,7 +281,7 @@ public class CCActionTree extends UIActionTree{
 	}
 	
 	private void onClickFileExit(CCTreeActionEvent e) {
-		ApplicationHelper.exitApplication();
+		ApplicationHelper.exitApplication(false);
 	}
 
 	private void onClickMaintenanceXML(CCTreeActionEvent e) {

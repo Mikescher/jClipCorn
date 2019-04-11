@@ -13,6 +13,7 @@ import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Vector;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class CCLogInternal {
 	private static List<CCLogElement> log = new Vector<>();
@@ -28,6 +29,11 @@ public class CCLogInternal {
 	private static final Object _dataLock = new Object();
 	private static final Object _fileLock = new Object();
 	private static final Object _obsLock  = new Object();
+
+	private static AtomicBoolean hasUnwatchedInformation = new AtomicBoolean(false);
+	private static AtomicBoolean hasUnwatchedWarnings    = new AtomicBoolean(false);
+	private static AtomicBoolean hasUnwatchedErrors      = new AtomicBoolean(false);
+	private static AtomicBoolean hasUnwatchedUndefineds  = new AtomicBoolean(false);
 
 	public static void initUnitTestMode() {
 		synchronized (_dataLock) {
@@ -75,6 +81,11 @@ public class CCLogInternal {
 				updateMainFrameLabel();
 			}
 		}
+
+		if (cle.isType(CCLogType.LOG_ELEM_ERROR)) hasUnwatchedErrors.set(true);
+		if (cle.isType(CCLogType.LOG_ELEM_WARNING)) hasUnwatchedWarnings.set(true);
+		if (cle.isType(CCLogType.LOG_ELEM_INFORMATION)) hasUnwatchedInformation.set(true);
+		if (cle.isType(CCLogType.LOG_ELEM_UNDEFINED)) hasUnwatchedUndefineds.set(true);
 
 		setChangedFlag();
 	}
@@ -205,7 +216,7 @@ public class CCLogInternal {
 
 		fatalExit = true;
 
-		ApplicationHelper.exitApplication(-1);
+		ApplicationHelper.exitApplication(-1, true);
 	}
 
 	public static void addChangeListener (CCLogChangedListener lst) {
@@ -289,5 +300,29 @@ public class CCLogInternal {
 				if (pl != null) pl.setModeError();
 			}
 		}
+	}
+
+	public static void setAllWatched() {
+		hasUnwatchedErrors.set(false);
+		hasUnwatchedWarnings.set(false);
+		hasUnwatchedInformation.set(false);
+		hasUnwatchedUndefineds.set(false);
+
+		setChangedFlag();
+	}
+
+	public static boolean hasUnwatchedErrorsOrUndef() {
+		return hasUnwatchedErrors.get() || hasUnwatchedUndefineds.get();
+	}
+
+	public static boolean hasUnwatched(CCLogType type) {
+		switch (type) {
+			case LOG_ELEM_UNDEFINED:   return hasUnwatchedUndefineds.get();
+			case LOG_ELEM_INFORMATION: return hasUnwatchedInformation.get();
+			case LOG_ELEM_WARNING:     return hasUnwatchedWarnings.get();
+			case LOG_ELEM_ERROR:       return hasUnwatchedErrors.get();
+			case LOG_ELEM_FATALERROR:  return false;
+		}
+		return false;
 	}
 }

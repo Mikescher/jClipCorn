@@ -401,7 +401,7 @@ public class BackupsManagerFrame extends JFrame {
 							if (! ApplicationHelper.restartApplication()) {
 								DialogHelper.showLocalError(BackupsManagerFrame.this, "BackupsManagerFrame.dialogs.RestartFailed"); //$NON-NLS-1$
 								
-								ApplicationHelper.exitApplication();
+								ApplicationHelper.exitApplication(true);
 							}
 						}
 					});

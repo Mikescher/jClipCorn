@@ -8,4 +8,5 @@ public enum ActionSource {
 	SHORTCUT,
 	DIRECT_CLICK,
 	TOOLBAR,
+	PREV_SER_FRAME,
 }

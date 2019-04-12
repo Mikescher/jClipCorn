@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import de.jClipCorn.database.databaseElement.columnTypes.*;
+import de.jClipCorn.features.actionTree.IActionSourceObject;
 import de.jClipCorn.util.exceptions.EnumFormatException;
 
 import de.jClipCorn.database.util.ExtendedViewedState;
@@ -20,7 +21,7 @@ import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.exceptions.CCFormatException;
 import de.jClipCorn.util.formatter.PathFormatter;
 
-public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElement {
+public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElement, IActionSourceObject {
 	private final CCSeason owner;
 	private final int localID;
 	

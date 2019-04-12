@@ -1,23 +1,28 @@
 package de.jClipCorn.features.actionTree.menus.impl;
 
+import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.CCMovie;
-import de.jClipCorn.database.databaseElement.columnTypes.CCSingleOnlineReference;
 import de.jClipCorn.features.actionTree.ActionSource;
 import de.jClipCorn.features.actionTree.IActionSourceObject;
 import de.jClipCorn.features.actionTree.menus.ClipMenuBar;
-import de.jClipCorn.gui.resources.Resources;
-import de.jClipCorn.util.http.HTTPUtilities;
+import de.jClipCorn.gui.frames.previewMovieFrame.PreviewMovieFrame;
 import de.jClipCorn.util.lambda.Func0to0;
+import de.jClipCorn.util.listener.ActionCallbackListener;
+import java.awt.*;
+import java.util.Collections;
+import java.util.List;
 
 public class PreviewMovieMenuBar extends ClipMenuBar {
 	private static final long serialVersionUID = 1164878970843040517L;
 	
 	private final CCMovie _movie;
+	private final PreviewMovieFrame _frame;
 
-	public PreviewMovieMenuBar(CCMovie m, Func0to0 postAction)
+	public PreviewMovieMenuBar(PreviewMovieFrame f, CCMovie m, Func0to0 postAction)
 	{
 		super(postAction);
 		_movie = m;
+		_frame = f;
 		init();
 	}
 
@@ -42,7 +47,7 @@ public class PreviewMovieMenuBar extends ClipMenuBar {
 		addMaster("PreviewMovieFrame.Menubar.Extras"); //$NON-NLS-1$
 		{
 			addActionNode("OpenFolder"); //$NON-NLS-1$
-			addOpenInBrowserActionNodets();
+			addOpenInBrowserActionNodes(_movie.getOnlineReference());
 		}
 		addMaster("PreviewMovieFrame.Menubar.Export"); //$NON-NLS-1$
 		{
@@ -52,8 +57,8 @@ public class PreviewMovieMenuBar extends ClipMenuBar {
 	}
 
 	@Override
-	protected IActionSourceObject getActionSourceObject() {
-		return _movie;
+	protected List<IActionSourceObject> getActionSourceObject() {
+		return Collections.singletonList(_movie);
 	}
 
 	@Override
@@ -61,22 +66,19 @@ public class PreviewMovieMenuBar extends ClipMenuBar {
 		return ActionSource.OTHER_MENU_BAR;
 	}
 
-	private void addOpenInBrowserActionNodets() {
-		if (_movie.getOnlineReference().hasAdditional())
+	@Override
+	protected ActionCallbackListener getSourceListener() {
+		return new ActionCallbackListener()
 		{
-			addSubMaster("PreviewMovieFrame.Menubar.Extras.ViewOnline", Resources.ICN_MENUBAR_ONLINEREFERENCE); //$NON-NLS-1$
-			for	(final CCSingleOnlineReference soref : _movie.getOnlineReference()) {
-				addSubNode("@" + (soref.hasDescription() ? soref.description : soref.type.asString()), () -> open(soref), soref.getIconRef(), false); //$NON-NLS-1$
-				if (soref == _movie.getOnlineReference().Main && _movie.getOnlineReference().hasAdditional()) addSubSeparator();
-			}
-		}
-		else
-		{
-			addNode("PreviewMovieFrame.Menubar.Extras.ViewOnline", () -> open(_movie.getOnlineReference().Main), Resources.ICN_MENUBAR_ONLINEREFERENCE, false); //$NON-NLS-1$
-		}
+			@Override
+			public void onUpdate(Object o) { _frame.onUpdate(o); }
+			@Override
+			public void onCallbackPlayed(CCEpisode e) { }
+		};
 	}
 
-	private void open(CCSingleOnlineReference r) {
-		if (r.isSet() && r.isValid()) HTTPUtilities.openInBrowser(r.getURL());
+	@Override
+	protected Component getSourceComponent() {
+		return _frame;
 	}
 }

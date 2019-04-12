@@ -30,7 +30,7 @@ public class AbstractClipToolbar extends JToolBar {
 			tmp.setToolTipText(el.getCaption());
 		}
 		
-		tmp.addActionListener(arg0 -> el.execute(ActionSource.TOOLBAR, MainFrame.getInstance().getSelectedElement()));
+		tmp.addActionListener(arg0 -> el.execute(MainFrame.getInstance(), ActionSource.TOOLBAR, MainFrame.getInstance().getSelectedElement(), null));
 		
 		add(tmp);
 		

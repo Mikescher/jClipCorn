@@ -18,6 +18,7 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCQuality;
 import de.jClipCorn.database.databaseElement.columnTypes.CCTagList;
 import de.jClipCorn.database.util.ExtendedViewedState;
 import de.jClipCorn.database.util.ExtendedViewedStateType;
+import de.jClipCorn.features.actionTree.IActionSourceObject;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.LargeMD5Calculator;
 import de.jClipCorn.util.datatypes.Tuple;
@@ -26,7 +27,7 @@ import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.stream.CCStream;
 import de.jClipCorn.util.stream.CCStreams;
 
-public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, ICCCoveredElement {
+public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, ICCCoveredElement, IActionSourceObject {
 	private final CCSeries owner;
 	private final int seasonID;
 	

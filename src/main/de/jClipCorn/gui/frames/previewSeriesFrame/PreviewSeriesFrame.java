@@ -6,13 +6,11 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.KeyboardFocusManager;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.swing.*;
@@ -23,8 +21,12 @@ import javax.swing.border.SoftBevelBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import de.jClipCorn.features.actionTree.ActionSource;
+import de.jClipCorn.features.actionTree.CCActionTree;
+import de.jClipCorn.features.actionTree.menus.impl.PreviewSeriesMenuBar;
 import de.jClipCorn.gui.frames.quickAddEpisodeDialog.QuickAddEpisodeDialog;
 import de.jClipCorn.gui.guiComponents.FileDrop;
+import de.jClipCorn.util.listener.ActionCallbackListener;
 import org.apache.commons.lang.StringUtils;
 
 import com.jgoodies.forms.layout.ColumnSpec;
@@ -37,17 +39,9 @@ import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.database.databaseElement.CCSeries;
-import de.jClipCorn.database.databaseElement.columnTypes.CCSingleOnlineReference;
 import de.jClipCorn.database.databaseElement.columnTypes.CCUserScore;
 import de.jClipCorn.database.util.CCDBUpdateListener;
-import de.jClipCorn.features.serialization.ExportHelper;
-import de.jClipCorn.gui.frames.addEpisodesFrame.AddEpisodesFrame;
-import de.jClipCorn.gui.frames.addSeasonFrame.AddSeasonFrame;
-import de.jClipCorn.gui.frames.createSeriesFolderStructureFrame.CreateSeriesFolderStructureFrame;
 import de.jClipCorn.gui.frames.displayGenresDialog.DisplayGenresDialog;
-import de.jClipCorn.gui.frames.editSeriesFrame.EditSeriesFrame;
-import de.jClipCorn.gui.mainFrame.MainFrame;
-import de.jClipCorn.gui.frames.moveSeriesFrame.MoveSeriesDialog;
 import de.jClipCorn.gui.frames.previewSeriesFrame.serTable.SerTable;
 import de.jClipCorn.gui.guiComponents.DatabaseElementPreviewLabel;
 import de.jClipCorn.gui.guiComponents.OnlineRefButton;
@@ -56,20 +50,14 @@ import de.jClipCorn.gui.guiComponents.jCoverChooser.JCoverChooser;
 import de.jClipCorn.gui.guiComponents.jCoverChooser.JCoverChooserPopupEvent;
 import de.jClipCorn.gui.guiComponents.language.LanguageDisplay;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.formatter.FileSizeFormatter;
-import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.formatter.TimeIntervallFormatter;
-import de.jClipCorn.util.helper.DialogHelper;
-import de.jClipCorn.util.helper.FileChooserHelper;
 import de.jClipCorn.util.helper.ImageUtilities;
-import de.jClipCorn.util.helper.SimpleFileUtils;
-import de.jClipCorn.util.http.HTTPUtilities;
 import de.jClipCorn.util.listener.UpdateCallbackListener;
 
-public class PreviewSeriesFrame extends JFrame implements ListSelectionListener, JCoverChooserPopupEvent, UpdateCallbackListener, FileDrop.Listener {
+public class PreviewSeriesFrame extends JFrame implements ListSelectionListener, JCoverChooserPopupEvent, UpdateCallbackListener, FileDrop.Listener, ActionCallbackListener {
 	private static final long serialVersionUID = 5484205983855802992L;
 
 	private CCSeries dispSeries;
@@ -91,7 +79,7 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 	private JTextField edSearch;
 	private JPanel pnlSearch;
 	private JButton btnSearch;
-	private JMenuBar menuBar;
+	private PreviewSeriesMenuBar menuBar;
 	private JPanel pnlOnlinescore;
 	private JLabel lblLength;
 	private JLabel lblSize;
@@ -101,28 +89,7 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 	private JPanel pnlAddInfo;
 	private JButton btnAdditionalInfo;
 	private JLabel lblfsk;
-	private JMenu mnSerie;
-	private JMenu mnStaffel;
-	private JMenuItem mntmEpisodeHinzufgen;
-	private JMenuItem mntmStaffelLschen;
-	private JMenuItem mntmStaffelHinzufgen;
-	private JMenuItem mntmSerieBearbeiten;
-	private JMenuItem mntmSerieLschen;
-	private JMenu mnExtras;
-	private JMenu mnZuflligeEpisodeAbspielen;
-	private JMenuItem mntmAlle;
-	private JMenuItem mntmGesehene;
-	private JMenuItem mntmNewMenuItem;
 	private Component vStrut_9;
-	private JMenuItem mntmResumePlaying;
-	private JMenu mntmRateSeries;
-	private JMenuItem mntmShowInFolder;
-	private JMenuItem mntmEditSeason;
-	private JMenuItem mntmShowSeasonInFolder;
-	private JMenuItem mntmExportSeries;
-	private JMenuItem mntmEpisodeguide;
-	private JMenuItem mntmMoveSeries;
-	private JMenuItem mntmCreateFolderStruct;
 	private JPanel pnlTopLeft;
 	private JButton btnPlayNext;
 	private OnlineRefButton btnOnline;
@@ -282,7 +249,7 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 		pnlTopLeft.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 
 		btnPlayNext = new JButton(LocaleBundle.getString("PreviewSeriesFrame.btnPlayNext.caption")); //$NON-NLS-1$
-		btnPlayNext.addActionListener(e -> resumePlaying());
+		btnPlayNext.addActionListener(e -> CCActionTree.getInstance().find("ResumeSeries").execute(this, ActionSource.PREV_SER_FRAME, Collections.singletonList(dispSeries), this)); //$NON-NLS-1$
 		pnlTopLeft.add(btnPlayNext);
 
 		pnlCoverChooser = new JPanel();
@@ -327,143 +294,8 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 		vStrut_9 = Box.createVerticalStrut(8);
 		pnlMain.add(vStrut_9, BorderLayout.NORTH);
 
-		menuBar = new JMenuBar();
+		menuBar = new PreviewSeriesMenuBar(this, this.dispSeries, () -> onUpdate(null));
 		setJMenuBar(menuBar);
-
-		mnSerie = new JMenu(LocaleBundle.getString("PreviewSeriesFrame.Menu.Series")); //$NON-NLS-1$
-		menuBar.add(mnSerie);
-
-		mntmStaffelHinzufgen = new JMenuItem(LocaleBundle.getString("PreviewSeriesFrame.Menu.Series.AddSeason")); //$NON-NLS-1$
-		mntmStaffelHinzufgen.addActionListener(e -> (new AddSeasonFrame(PreviewSeriesFrame.this, dispSeries, PreviewSeriesFrame.this)).setVisible(true));
-		mnSerie.add(mntmStaffelHinzufgen);
-
-		mntmSerieBearbeiten = new JMenuItem(LocaleBundle.getString("PreviewSeriesFrame.Menu.Series.EditSeries")); //$NON-NLS-1$
-		mntmSerieBearbeiten.addActionListener(e -> (new EditSeriesFrame(PreviewSeriesFrame.this, dispSeries, PreviewSeriesFrame.this)).setVisible(true));
-
-		mntmRateSeries = new JMenu(LocaleBundle.getString("PreviewSeriesFrame.Menu.Series.RateSeries")); //$NON-NLS-1$
-		mnSerie.add(mntmRateSeries);
-		for (final CCUserScore score : CCUserScore.values()) {
-			JMenuItem itm = new JMenuItem(score.asString(), score.getIcon());
-			mntmRateSeries.add(itm);
-			itm.addActionListener(e -> {dispSeries.setScore(score); updateData(); });
-		}
-
-		mntmShowInFolder = new JMenuItem(LocaleBundle.getString("PreviewSeriesFrame.Menu.Series.ShowInFolder")); //$NON-NLS-1$
-		mntmShowInFolder.addActionListener(e -> PathFormatter.showInExplorer(PathFormatter.fromCCPath(dispSeries.getCommonPathStart(false))));
-		mnSerie.add(mntmShowInFolder);
-		mnSerie.add(mntmSerieBearbeiten);
-
-		mntmSerieLschen = new JMenuItem(LocaleBundle.getString("PreviewSeriesFrame.Menu.Series.DeleteSeries")); //$NON-NLS-1$
-		mntmSerieLschen.addActionListener(e ->
-		{
-			if (DialogHelper.showLocaleYesNo(PreviewSeriesFrame.this, "Dialogs.DeleteSeries")) {//$NON-NLS-1$
-				dispSeries.delete();
-				dispose();
-			}
-		});
-		mnSerie.add(mntmSerieLschen);
-
-		mnStaffel = new JMenu(LocaleBundle.getString("PreviewSeriesFrame.Menu.Season")); //$NON-NLS-1$
-		menuBar.add(mnStaffel);
-
-		mntmEpisodeHinzufgen = new JMenuItem(LocaleBundle.getString("PreviewSeriesFrame.Menu.Season.AddEpisodes")); //$NON-NLS-1$
-		mntmEpisodeHinzufgen.addActionListener(e -> (new AddEpisodesFrame(PreviewSeriesFrame.this, tabSeason.getSeason(), PreviewSeriesFrame.this)).setVisible(true));
-		mnStaffel.add(mntmEpisodeHinzufgen);
-
-		mntmStaffelLschen = new JMenuItem(LocaleBundle.getString("PreviewSeriesFrame.Menu.Season.DeleteSeason")); //$NON-NLS-1$
-		mntmStaffelLschen.addActionListener(e ->
-		{
-			if (DialogHelper.showLocaleYesNo(PreviewSeriesFrame.this, "Dialogs.DeleteSeason")) {//$NON-NLS-1$
-				tabSeason.getSeason().delete();
-
-				onUpdate(tabSeason.getSeason());
-			}
-		});
-
-		mntmEditSeason = new JMenuItem(LocaleBundle.getString("PreviewSeriesFrame.Menu.Season.EditSeason")); //$NON-NLS-1$
-		mntmEditSeason.addActionListener(e ->
-		{
-			EditSeriesFrame esf = new EditSeriesFrame(PreviewSeriesFrame.this, tabSeason.getSeason(), PreviewSeriesFrame.this);
-			esf.setVisible(true);
-		});
-		mnStaffel.add(mntmEditSeason);
-
-		mntmShowSeasonInFolder = new JMenuItem(LocaleBundle.getString("PreviewSeriesFrame.Menu.Season.ShowInFolder")); //$NON-NLS-1$
-		mntmShowSeasonInFolder.addActionListener(e -> PathFormatter.showInExplorer(PathFormatter.fromCCPath(tabSeason.getSeason().getCommonPathStart())));
-		mnStaffel.add(mntmShowSeasonInFolder);
-		mnStaffel.add(mntmStaffelLschen);
-
-		mnExtras = new JMenu(LocaleBundle.getString("PreviewSeriesFrame.Menu.Extras")); //$NON-NLS-1$
-		menuBar.add(mnExtras);
-
-		mnZuflligeEpisodeAbspielen = new JMenu(LocaleBundle.getString("PreviewSeriesFrame.Menu.Extras.Random")); //$NON-NLS-1$
-		mnExtras.add(mnZuflligeEpisodeAbspielen);
-
-		mntmAlle = new JMenuItem(LocaleBundle.getString("PreviewSeriesFrame.Menu.Extras.Random.All")); //$NON-NLS-1$
-		mntmAlle.addActionListener(e -> playRandomEpisode());
-		mnZuflligeEpisodeAbspielen.add(mntmAlle);
-
-		mntmGesehene = new JMenuItem(LocaleBundle.getString("PreviewSeriesFrame.Menu.Extras.Random.Viewed")); //$NON-NLS-1$
-		mntmGesehene.addActionListener(e -> playRandomViewedStateEpisode(true));
-		mnZuflligeEpisodeAbspielen.add(mntmGesehene);
-
-		mntmNewMenuItem = new JMenuItem(LocaleBundle.getString("PreviewSeriesFrame.Menu.Extras.Random.NotViewed")); //$NON-NLS-1$
-		mntmNewMenuItem.addActionListener(e -> playRandomViewedStateEpisode(false));
-		mnZuflligeEpisodeAbspielen.add(mntmNewMenuItem);
-
-		if (dispSeries.getOnlineReference().hasAdditional()) {
-			JMenu mntmShowOnline = new JMenu(LocaleBundle.getString("PreviewSeriesFrame.Menu.Extras.ViewOnline")); //$NON-NLS-1$
-			for	(final CCSingleOnlineReference soref : dispSeries.getOnlineReference()) {
-				JMenuItem subitem = new JMenuItem(soref.hasDescription() ? soref.description : soref.type.asString());
-				subitem.setIcon(soref.getIcon16x16());
-				subitem.addActionListener(new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						if (soref.isSet() && soref.isValid()) HTTPUtilities.openInBrowser(soref.getURL());
-					}
-				});
-				mntmShowOnline.add(subitem);
-
-				if (soref == dispSeries.getOnlineReference().Main && dispSeries.getOnlineReference().hasAdditional()) mntmShowOnline.addSeparator();
-			}
-			mnExtras.add(mntmShowOnline);
-		}
-		else {
-			JMenuItem mntmShowOnline = new JMenuItem(LocaleBundle.getString("PreviewSeriesFrame.Menu.Extras.ViewOnline")); //$NON-NLS-1$
-			mntmShowOnline.addActionListener(e ->
-			{
-				if (dispSeries.getOnlineReference().Main.isSet() && dispSeries.getOnlineReference().isValid())
-					HTTPUtilities.openInBrowser(dispSeries.getOnlineReference().Main.getURL());
-			});
-			mnExtras.add(mntmShowOnline);
-		}
-
-		mntmResumePlaying = new JMenuItem(LocaleBundle.getString("PreviewSeriesFrame.Menu.Extras.ResumePlay")); //$NON-NLS-1$
-		mntmResumePlaying.addActionListener(e -> resumePlaying());
-		mnExtras.add(mntmResumePlaying);
-
-		mntmExportSeries = new JMenuItem(LocaleBundle.getString("PreviewSeriesFrame.Menu.Extras.ExportSeries")); //$NON-NLS-1$
-		mntmExportSeries.addActionListener(e -> onExportSeries());
-		mnExtras.add(mntmExportSeries);
-
-		mntmEpisodeguide = new JMenuItem(LocaleBundle.getString("PreviewSeriesFrame.Menu.Extras.ExportEpisodeGuide")); //$NON-NLS-1$
-		mntmEpisodeguide.addActionListener(e -> onExportEpisodeGuide());
-		mnExtras.add(mntmEpisodeguide);
-
-		mntmMoveSeries = new JMenuItem(LocaleBundle.getString("PreviewSeriesFrame.Menu.Extras.MoveSeries")); //$NON-NLS-1$
-		mntmMoveSeries.addActionListener(e -> {
-			MoveSeriesDialog msf = new MoveSeriesDialog(PreviewSeriesFrame.this, dispSeries);
-			msf.setVisible(true);
-		});
-		mnExtras.add(mntmMoveSeries);
-
-		mntmCreateFolderStruct = new JMenuItem(LocaleBundle.getString("PreviewSeriesFrame.Menu.Extras.CreateFolderStructure")); //$NON-NLS-1$
-		mntmCreateFolderStruct.addActionListener(e ->
-		{
-			CreateSeriesFolderStructureFrame csfsf = new CreateSeriesFolderStructureFrame(PreviewSeriesFrame.this, dispSeries);
-			csfsf.setVisible(true);
-		});
-		mnExtras.add(mntmCreateFolderStruct);
 
 		pnlInfo2 = new JPanel();
 		getContentPane().add(pnlInfo2, BorderLayout.WEST);
@@ -741,39 +573,16 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 		// }
 	}
 
+	@Override
+	public void onCallbackPlayed(CCEpisode e) {
+		if (e == null) return;
+		cvrChooser.setCurrSelected(e.getSeason().getSeasonNumber());
+		tabSeason.select(e);
+	}
+
 	public void onEpisodeDblClick(CCEpisode ep) {
 		if (ep != null) {
 			ep.play(true);
-		}
-	}
-
-	private void playRandomEpisode() {
-		CCEpisode e = dispSeries.getRandomEpisode();
-
-		if (e != null) {
-			cvrChooser.setCurrSelected(e.getSeason().getSeasonNumber());
-			tabSeason.select(e);
-			e.play(true);
-		}
-	}
-
-	private void playRandomViewedStateEpisode(boolean v) {
-		CCEpisode e = dispSeries.getRandomEpisodeWithViewState(v);
-
-		if (e != null) {
-			cvrChooser.setCurrSelected(e.getSeason().getSeasonNumber());
-			tabSeason.select(e);
-			e.play(true);
-		}
-	}
-
-	private void resumePlaying() {
-		CCEpisode e = dispSeries.getNextEpisode();
-
-		if (e != null) {
-			cvrChooser.setCurrSelected(e.getSeason().getSeasonNumber());
-			tabSeason.select(e);
-			e.play(true);
 		}
 	}
 
@@ -800,41 +609,6 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 		}
 	}
 
-	private void onExportSeries() {
-		final JFileChooser chooser = new JFileChooser();
-		chooser.setFileFilter(FileChooserHelper.createLocalFileFilter("ExportHelper.filechooser_jsccexport.description", ExportHelper.EXTENSION_SINGLEEXPORT)); //$NON-NLS-1$
-		chooser.setCurrentDirectory(new File(PathFormatter.getRealSelfDirectory()));
-
-		int returnval = chooser.showSaveDialog(PreviewSeriesFrame.this);
-
-		if (returnval == JFileChooser.APPROVE_OPTION) {
-			final boolean includeCover = 0 == DialogHelper.showLocaleOptions(PreviewSeriesFrame.this, "ExportHelper.dialogs.exportCover"); //$NON-NLS-1$
-
-			new Thread(() ->
-			{
-				MainFrame.getInstance().beginBlockingIntermediate();
-				ExportHelper.exportSeries(PathFormatter.forceExtension(chooser.getSelectedFile(), ExportHelper.EXTENSION_SINGLEEXPORT), dispSeries.getMovieList(), dispSeries, includeCover);
-				MainFrame.getInstance().endBlockingIntermediate();
-			}, "THREAD_EXPORT_JSCCEXPORT_SERIES").start(); //$NON-NLS-1$
-		}
-	}
-
-	private void onExportEpisodeGuide() {
-		final JFileChooser chooser = new JFileChooser();
-		chooser.setFileFilter(FileChooserHelper.createLocalFileFilter("ExportHelper.filechooser_txtguide.description", ExportHelper.EXTENSION_EPISODEGUIDE)); //$NON-NLS-1$
-		chooser.setCurrentDirectory(new File(PathFormatter.getRealSelfDirectory()));
-
-		int returnval = chooser.showSaveDialog(PreviewSeriesFrame.this);
-
-		if (returnval == JFileChooser.APPROVE_OPTION) {
-			try {
-				SimpleFileUtils.writeTextFile(PathFormatter.forceExtension(chooser.getSelectedFile(), ExportHelper.EXTENSION_EPISODEGUIDE), dispSeries.getEpisodeGuide());
-			} catch (IOException e) {
-				CCLog.addError(e);
-			}
-		}
-	}
-
 	@Override
 	public void filesDropped(File[] files) {
 		if (files.length != 1) return;
@@ -846,5 +620,13 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 		if (f == null) return;
 
 		SwingUtilities.invokeLater(() -> QuickAddEpisodeDialog.show(this, s, f));
+	}
+
+	public CCSeason getSelectedSeason() {
+		return tabSeason.getSeason();
+	}
+
+	public CCEpisode getSelectedEpisode() {
+		return tabSeason.getSelectedEpisode();
 	}
 }

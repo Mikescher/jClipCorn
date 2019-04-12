@@ -1,8 +1,8 @@
 package de.jClipCorn.features.actionTree;
 
+import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.*;
 import java.util.List;
 
 import javax.swing.AbstractAction;
@@ -13,6 +13,7 @@ import javax.swing.JComponent;
 import javax.swing.KeyStroke;
 
 import de.jClipCorn.gui.mainFrame.MainFrame;
+import de.jClipCorn.util.listener.ActionCallbackListener;
 import org.apache.commons.lang.StringUtils;
 
 import de.jClipCorn.database.CCMovieList;
@@ -112,19 +113,19 @@ public class CCActionElement {
 	public void clearActionListeners() {
 		listener.clear();
 	}
-	
-	public void execute(ActionSource src, IActionSourceObject obj) {
-		execute("", src, obj); //$NON-NLS-1$
+
+	public void execute(Component swingsrc, ActionSource src, IActionSourceObject obj, ActionCallbackListener ltnr) {
+		execute(swingsrc, src, Collections.singletonList(obj), ltnr);
 	}
-	
-	public void execute(String cmd, ActionSource src, IActionSourceObject obj) {
+
+	public void execute(Component swingsrc, ActionSource src, List<IActionSourceObject> obj, ActionCallbackListener ltnr) {
 		if (isProhibitedInReadOnly && CCProperties.getInstance().ARG_READONLY) {
 			CCLog.addInformation(LocaleBundle.getString("LogMessage.OperationFailedDueToReadOnly")); //$NON-NLS-1$
 			return;
 		}
 		
 		for (CCActionTreeListener al : listener) {
-			al.onTreeAction(new CCTreeActionEvent(this, cmd, src, obj));
+			al.onTreeAction(new CCTreeActionEvent(swingsrc, this, src, obj, ltnr));
 		}
 	}
 	
@@ -235,12 +236,12 @@ public class CCActionElement {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				e.onKeyPressed(stroke, f.getSelectedElement());
+				e.onKeyPressed(f, stroke);
 			}
 		});
 	}
 	
-	private void onKeyPressed(KeyStroke stroke, IActionSourceObject obj) {
+	private void onKeyPressed(MainFrame f, KeyStroke stroke) {
 		if (CCMovieList.isBlocked()) {
 			return;
 		}
@@ -250,7 +251,7 @@ public class CCActionElement {
 		
 		for (int i = 0; i < childs.size(); i++) {
 			if (stroke.equals(childs.get(i).getKeyStroke())) {
-				childs.get(i).execute(ActionSource.SHORTCUT, obj);
+				childs.get(i).execute(f, ActionSource.SHORTCUT, Collections.singletonList(f.getSelectedElement()), null);
 			}
 		}
 	}

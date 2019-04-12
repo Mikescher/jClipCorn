@@ -9,7 +9,6 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
-
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -252,25 +251,25 @@ public class MainFrame extends JFrame implements CCDBUpdateListener, FileDrop.Li
 		if (cde.isMovie()) {
 			switch (CCProperties.getInstance().PROP_ON_DBLCLICK_MOVE.getValue()) {
 			case PLAY:
-				CCActionTree.getInstance().find(CCActionTree.EVENT_ON_MOVIE_EXECUTED_0).execute(ActionSource.DIRECT_CLICK, cde);
+				CCActionTree.getInstance().find(CCActionTree.EVENT_ON_MOVIE_EXECUTED_0).execute(this, ActionSource.DIRECT_CLICK, cde, null);
 				break;
 			case PREVIEW:
-				CCActionTree.getInstance().find(CCActionTree.EVENT_ON_MOVIE_EXECUTED_1).execute(ActionSource.DIRECT_CLICK, cde);
+				CCActionTree.getInstance().find(CCActionTree.EVENT_ON_MOVIE_EXECUTED_1).execute(this, ActionSource.DIRECT_CLICK, cde, null);
 				break;
 			case EDIT:
-				CCActionTree.getInstance().find(CCActionTree.EVENT_ON_MOVIE_EXECUTED_2).execute(ActionSource.DIRECT_CLICK, cde);
+				CCActionTree.getInstance().find(CCActionTree.EVENT_ON_MOVIE_EXECUTED_2).execute(this, ActionSource.DIRECT_CLICK, cde, null);
 				break;
 			}
 		} else {
-			CCActionTree.getInstance().find(CCActionTree.EVENT_ON_SERIES_EXECUTED).execute(ActionSource.DIRECT_CLICK, cde);
+			CCActionTree.getInstance().find(CCActionTree.EVENT_ON_SERIES_EXECUTED).execute(this, ActionSource.DIRECT_CLICK, cde, null);
 		}
 	}
 	
 	public void onClipTableSecondaryExecute(CCDatabaseElement element, MouseEvent e) {
 		if (element.isMovie()) {
-			(new ClipMoviePopup((CCMovie)element)).show(e.getComponent(), e.getX(), e.getY());
+			(new ClipMoviePopup(this, (CCMovie)element)).show(e.getComponent(), e.getX(), e.getY());
 		} else if (element.isSeries()) {
-			(new ClipSeriesPopup((CCSeries)element)).show(e.getComponent(), e.getX(), e.getY());
+			(new ClipSeriesPopup(this, (CCSeries)element)).show(e.getComponent(), e.getX(), e.getY());
 		}
 	}
 

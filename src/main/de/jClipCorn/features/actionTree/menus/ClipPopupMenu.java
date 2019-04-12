@@ -14,6 +14,8 @@ import de.jClipCorn.features.actionTree.IActionSourceObject;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.util.helper.KeyStrokeUtil;
+import de.jClipCorn.util.listener.ActionCallbackListener;
+import java.awt.*;
 
 public abstract class ClipPopupMenu extends JPopupMenu {
 	private static final long serialVersionUID = -3924972933691119441L;
@@ -25,6 +27,8 @@ public abstract class ClipPopupMenu extends JPopupMenu {
 	protected abstract void init();
 
 	protected abstract IActionSourceObject getSourceObject();
+	protected abstract Component getSourceFrame();
+	protected abstract ActionCallbackListener getSourceListener();
 
 	protected JMenuItem addAction(String actionIdent) {
 		final CCActionElement el = CCActionTree.getInstance().find(actionIdent);
@@ -42,7 +46,7 @@ public abstract class ClipPopupMenu extends JPopupMenu {
 			item.setAccelerator(el.getKeyStroke());
 		}
 		
-		item.addActionListener(arg0 -> el.execute(ActionSource.POPUP_MENU, getSourceObject()));
+		item.addActionListener(arg0 -> el.execute(getSourceFrame(), ActionSource.POPUP_MENU, getSourceObject(), getSourceListener()));
 		
 		return item;
 	}
@@ -64,12 +68,12 @@ public abstract class ClipPopupMenu extends JPopupMenu {
 			item.setAccelerator(el.getKeyStroke());
 		}
 		
-		item.addActionListener(arg0 -> el.execute(ActionSource.POPUP_MENU, getSourceObject()));
+		item.addActionListener(arg0 -> el.execute(getSourceFrame(), ActionSource.POPUP_MENU, getSourceObject(), getSourceListener()));
 		
 		ActionMenuWrapper amw = new ActionMenuWrapper(item);
 		
 		for (CCActionElement child : el.getAllChildren()) {
-			amw.add(child, getSourceObject());
+			amw.add(getSourceFrame(), child, getSourceObject(), getSourceListener());
 		}
 		
 		return amw;

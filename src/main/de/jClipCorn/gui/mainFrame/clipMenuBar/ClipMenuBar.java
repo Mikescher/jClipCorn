@@ -28,7 +28,7 @@ public class ClipMenuBar extends JMenuBar {
 			if (el.isVisible()) {
 				JMenu newm = add(new JMenu(el.getCaption()));
 
-				newm.addActionListener(e -> el.execute(ActionSource.MAINFRAME_MENU_BAR, MainFrame.getInstance().getSelectedElement()));
+				newm.addActionListener(e -> el.execute(this, ActionSource.MAINFRAME_MENU_BAR, MainFrame.getInstance().getSelectedElement(), null));
 
 				createSubMenu(newm, el);
 			}
@@ -46,7 +46,7 @@ public class ClipMenuBar extends JMenuBar {
 					mi.setAccelerator(el.getKeyStroke());
 				}
 
-				mi.addActionListener(e -> el.execute(ActionSource.MAINFRAME_MENU_BAR, MainFrame.getInstance().getSelectedElement()));
+				mi.addActionListener(e -> el.execute(MainFrame.getInstance(), ActionSource.MAINFRAME_MENU_BAR, MainFrame.getInstance().getSelectedElement(), null));
 
 				owner.add(mi);
 			}

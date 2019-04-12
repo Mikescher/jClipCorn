@@ -3,15 +3,19 @@ package de.jClipCorn.features.actionTree.menus.impl;
 import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.features.actionTree.IActionSourceObject;
 import de.jClipCorn.features.actionTree.menus.ClipPopupMenu;
+import de.jClipCorn.util.listener.ActionCallbackListener;
+import java.awt.*;
 
 public class ClipMoviePopup extends ClipPopupMenu {
 	private static final long serialVersionUID = -3030683884876620182L;
 
-	private final CCMovie mov;
-	
-	public ClipMoviePopup(CCMovie m) {
+	private final CCMovie _movie;
+	private final Component _frame;
+
+	public ClipMoviePopup(Component f, CCMovie m) {
 		super();
-		mov = m;
+		_movie = m;
+		_frame = f;
 		init();
 	}
 
@@ -44,7 +48,7 @@ public class ClipMoviePopup extends ClipPopupMenu {
 		//#############
 		
 		addAction("OpenFolder");
-		addOpenInBrowserAction(mov, mov.getOnlineReference());
+		addOpenInBrowserAction(_movie, _movie.getOnlineReference());
 		
 		//#############
 		addSeparator();
@@ -56,6 +60,16 @@ public class ClipMoviePopup extends ClipPopupMenu {
 
 	@Override
 	protected IActionSourceObject getSourceObject() {
-		return mov;
+		return _movie;
+	}
+
+	@Override
+	protected Component getSourceFrame() {
+		return _frame;
+	}
+
+	@Override
+	protected ActionCallbackListener getSourceListener() {
+		return null;
 	}
 }

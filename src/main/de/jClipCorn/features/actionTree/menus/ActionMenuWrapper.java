@@ -9,6 +9,8 @@ import de.jClipCorn.features.actionTree.IActionSourceObject;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.util.helper.KeyStrokeUtil;
+import de.jClipCorn.util.listener.ActionCallbackListener;
+import java.awt.*;
 
 public class ActionMenuWrapper {
 	private final JMenu menu;
@@ -17,7 +19,7 @@ public class ActionMenuWrapper {
 		this.menu = menu;
 	}
 
-	public ActionMenuWrapper add(String actionIdent, IActionSourceObject aso) {
+	public ActionMenuWrapper add(Component swingsrc, String actionIdent, IActionSourceObject aso, ActionCallbackListener ucl) {
 		final CCActionElement el = CCActionTree.getInstance().find(actionIdent);
 		
 		if (el == null) {
@@ -25,10 +27,10 @@ public class ActionMenuWrapper {
 			return this;
 		}
 		
-		return add(el, aso);
+		return add(swingsrc, el, aso, ucl);
 	}
 	
-	public ActionMenuWrapper add(CCActionElement el, IActionSourceObject aso) {
+	public ActionMenuWrapper add(Component swingsrc, CCActionElement el, IActionSourceObject aso, ActionCallbackListener ucl) {
 		JMenuItem item = menu.add(el.getCaption());
 		
 		item.setIcon(el.getSmallIcon());
@@ -37,7 +39,7 @@ public class ActionMenuWrapper {
 			item.setAccelerator(el.getKeyStroke());
 		}
 		
-		item.addActionListener(arg0 -> el.execute(ActionSource.POPUP_MENU, aso));
+		item.addActionListener(arg0 -> el.execute(swingsrc, ActionSource.POPUP_MENU, aso, ucl));
 		
 		return this;
 	}

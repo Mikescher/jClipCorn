@@ -2,6 +2,7 @@ package de.jClipCorn.gui.mainFrame.clipStatusbar;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.Collections;
 import java.util.ConcurrentModificationException;
 import java.util.List;
 
@@ -136,7 +137,7 @@ public class ClipStatusBar extends AbstractClipStatusbar implements CCDBUpdateLi
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				if (e.getClickCount() == 2) {
-					CCActionTree.getInstance().find("ShowLog").execute(ActionSource.DIRECT_CLICK, null); //$NON-NLS-1$
+					CCActionTree.getInstance().find("ShowLog").execute(owner, ActionSource.DIRECT_CLICK, Collections.emptyList(), null); //$NON-NLS-1$
 				}
 			}
 		});

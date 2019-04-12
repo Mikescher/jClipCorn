@@ -232,7 +232,7 @@ public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener 
 		lbl_Score.setBounds(258, 440, 16, 16);
 		getContentPane().add(lbl_Score);
 		
-		menuBar = new PreviewMovieMenuBar(m, this::updateFields);
+		menuBar = new PreviewMovieMenuBar(this, m, this::updateFields);
 		setJMenuBar(menuBar);
 
 		btnPlay = new JButton(Resources.ICN_MENUBAR_PLAY.get32x32());

@@ -567,10 +567,7 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 	@Override
 	public void onUpdate(Object o) {
 		updateData();
-
-		// if (dispSeries.getSeasonCount() > 0) {
-		// changeSeason(dispSeries.getSeason(0));
-		// }
+		if (tabSeason.getSeason() != null) changeSeason(tabSeason.getSeason());
 	}
 
 	@Override

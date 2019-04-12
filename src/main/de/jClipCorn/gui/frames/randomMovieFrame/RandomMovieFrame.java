@@ -2,8 +2,6 @@ package de.jClipCorn.gui.frames.randomMovieFrame;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,18 +57,16 @@ public class RandomMovieFrame extends JFrame implements Runnable {
 		getContentPane().add(panel, BorderLayout.SOUTH);
 
 		btnMain = new JButton(LocaleBundle.getString("RandomMovieFrame.btnShuffle.text")); //$NON-NLS-1$
-		btnMain.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				if (! isShuffled) {
-				btnMain.setText(LocaleBundle.getString("RandomMovieFrame.btnPlay.text")); //$NON-NLS-1$
-				btnMain.setEnabled(false);
-				new Thread(RandomMovieFrame.this).start();
-				} else {
-					CCMovie m = (CCMovie) chooser.getSelectedObject();
-					m.play();
-					dispose();
-				}
+		btnMain.addActionListener(arg0 ->
+		{
+			if (! isShuffled) {
+			btnMain.setText(LocaleBundle.getString("RandomMovieFrame.btnPlay.text")); //$NON-NLS-1$
+			btnMain.setEnabled(false);
+			new Thread(RandomMovieFrame.this).start();
+			} else {
+				CCMovie m = (CCMovie) chooser.getSelectedObject();
+				m.play(true);
+				dispose();
 			}
 		});
 		panel.add(btnMain);

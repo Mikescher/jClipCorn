@@ -21,7 +21,7 @@ import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.exceptions.CCFormatException;
 import de.jClipCorn.util.formatter.PathFormatter;
 
-public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElement, IActionSourceObject {
+public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElement, IActionSourceObject, ICCTaggedElement {
 	private final CCSeason owner;
 	private final int localID;
 	
@@ -203,6 +203,7 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 		updateDB();
 	}
 	
+	@Override
 	public void setTags(CCTagList stat) {
 		tags = stat;
 		
@@ -215,6 +216,7 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 		updateDB();
 	}
 
+	@Override
 	public void switchTag(CCSingleTag t) {
 		tags.switchTag(t);
 

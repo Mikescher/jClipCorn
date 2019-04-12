@@ -58,9 +58,9 @@ public class PreviewSeriesMenuBar extends ClipMenuBar {
 	@Override
 	protected List<IActionSourceObject> getActionSourceObject() {
 		List<IActionSourceObject> r = new ArrayList<>();
-		r.add(_series);
-		if (_frame.getSelectedSeason() != null) r.add(_frame.getSelectedSeason());
 		if (_frame.getSelectedEpisode() != null) r.add(_frame.getSelectedEpisode());
+		if (_frame.getSelectedSeason() != null) r.add(_frame.getSelectedSeason());
+		r.add(_series);
 		return r;
 	}
 

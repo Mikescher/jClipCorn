@@ -5,6 +5,7 @@ import java.awt.image.BufferedImage;
 import de.jClipCorn.util.datatypes.Tuple;
 
 public interface ICCCoveredElement {
+	// Movie, Season, Series
 
 	String getTitle();
 	

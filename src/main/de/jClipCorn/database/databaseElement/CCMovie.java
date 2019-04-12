@@ -366,10 +366,6 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 		movielist.remove(this);
 	}
 
-	public void play() {
-		play(true);
-	}
-	
 	@Override
 	public void play(boolean updateViewedAndHistory) {
 		MoviePlayer.play(this);

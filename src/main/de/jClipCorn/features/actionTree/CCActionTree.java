@@ -58,6 +58,7 @@ import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.UpdateConnector;
+import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.ApplicationHelper;
 import de.jClipCorn.util.helper.DialogHelper;
@@ -182,72 +183,96 @@ public class CCActionTree extends UIActionTree{
 			
 			CCActionElement other = addMaster("Other", null, "", null, false);
 			{
-				add(other, "SetMovieViewed",   null, "ClipMenuBar.Other.SetViewed",       Resources.ICN_MENUBAR_VIEWED,          this::onClickOtherSetViewed);
-				add(other, "SetMovieUnviewed", null, "ClipMenuBar.Other.SetUnviewed",     Resources.ICN_MENUBAR_UNVIEWED,        this::onClickOtherSetUnviewed);
-				add(other, "UndoMovieViewed",  null, "ClipMenuBar.Other.UndoMovieViewed", Resources.ICN_MENUBAR_UNDOVIEWED,      this::onClickOtherOtherUndoMovieViewed);
-				add(other, "OpenFolder",       null, "ClipMenuBar.Other.OpenFolder",      Resources.ICN_MENUBAR_FOLDER,          this::onClickOtherOpenFolder);
-				add(other, "ShowInBrowser",    null, "ClipMenuBar.Other.ShowInBrowser",   Resources.ICN_MENUBAR_ONLINEREFERENCE, this::onClickOtherShowInBrowser);
-				add(other, "ShowCover", 	   null, "ClipMenuBar.Other.ShowCover",   	  Resources.ICN_MENUBAR_SHOWCOVER,       this::onClickOtherShowCover);
-				
-				CCActionElement movRating = add(other, "SetMovieRating", null, "ClipMenuBar.Other.SetMovieRating", Resources.ICN_SIDEBAR_SCORE);
-				{
-					add(movRating, "SetMovRatingNO", null, "CCMovieScore.RNO", CCUserScore.RATING_NO.getIconRef(),  true, (e) -> onClickOtherSetRating(e, CCUserScore.RATING_NO));
-					add(movRating, "SetMovRating0",  null, "CCMovieScore.R0",  CCUserScore.RATING_0.getIconRef(),   true, (e) -> onClickOtherSetRating(e, CCUserScore.RATING_0));
-					add(movRating, "SetMovRating1",  null, "CCMovieScore.R1",  CCUserScore.RATING_I.getIconRef(),   true, (e) -> onClickOtherSetRating(e, CCUserScore.RATING_I));
-					add(movRating, "SetMovRating2",  null, "CCMovieScore.R2",  CCUserScore.RATING_II.getIconRef(),  true, (e) -> onClickOtherSetRating(e, CCUserScore.RATING_II));
-					add(movRating, "SetMovRating3",  null, "CCMovieScore.R3",  CCUserScore.RATING_III.getIconRef(), true, (e) -> onClickOtherSetRating(e, CCUserScore.RATING_III));
-					add(movRating, "SetMovRating4",  null, "CCMovieScore.R4",  CCUserScore.RATING_IV.getIconRef(),  true, (e) -> onClickOtherSetRating(e, CCUserScore.RATING_IV));
-					add(movRating, "SetMovRating5",  null, "CCMovieScore.R5",  CCUserScore.RATING_V.getIconRef(),   true, (e) -> onClickOtherSetRating(e, CCUserScore.RATING_V));
-				}
 
-				CCActionElement serRating = add(other, "SetSeriesRating", null, "ClipMenuBar.Other.SetSeriesRating", Resources.ICN_SIDEBAR_SCORE);
+				CCActionElement movieExtra = add(other, "MovieExtra", null, "", null);
 				{
-					add(serRating, "SetSerRatingNO", null, "CCMovieScore.RNO", CCUserScore.RATING_NO.getIconRef(),  true, (e) -> onClickOtherSetRating(e, CCUserScore.RATING_NO));
-					add(serRating, "SetSerRating0",  null, "CCMovieScore.R0",  CCUserScore.RATING_0.getIconRef(),   true, (e) -> onClickOtherSetRating(e, CCUserScore.RATING_0));
-					add(serRating, "SetSerRating1",  null, "CCMovieScore.R1",  CCUserScore.RATING_I.getIconRef(),   true, (e) -> onClickOtherSetRating(e, CCUserScore.RATING_I));
-					add(serRating, "SetSerRating2",  null, "CCMovieScore.R2",  CCUserScore.RATING_II.getIconRef(),  true, (e) -> onClickOtherSetRating(e, CCUserScore.RATING_II));
-					add(serRating, "SetSerRating3",  null, "CCMovieScore.R3",  CCUserScore.RATING_III.getIconRef(), true, (e) -> onClickOtherSetRating(e, CCUserScore.RATING_III));
-					add(serRating, "SetSerRating4",  null, "CCMovieScore.R4",  CCUserScore.RATING_IV.getIconRef(),  true, (e) -> onClickOtherSetRating(e, CCUserScore.RATING_IV));
-					add(serRating, "SetSerRating5",  null, "CCMovieScore.R5",  CCUserScore.RATING_V.getIconRef(),   true, (e) -> onClickOtherSetRating(e, CCUserScore.RATING_V));
-				}
+					add(movieExtra, "SetMovieViewed",   null, "ClipMenuBar.Other.MovieExtra.SetViewed",       Resources.ICN_MENUBAR_VIEWED,          this::onClickOtherSetViewed);
+					add(movieExtra, "SetMovieUnviewed", null, "ClipMenuBar.Other.MovieExtra.SetUnviewed",     Resources.ICN_MENUBAR_UNVIEWED,        this::onClickOtherSetUnviewed);
+					add(movieExtra, "UndoMovieViewed",  null, "ClipMenuBar.Other.MovieExtra.UndoMovieViewed", Resources.ICN_MENUBAR_UNDOVIEWED,      this::onClickOtherOtherUndoMovieViewed);
+					add(movieExtra, "OpenFolder",       null, "ClipMenuBar.Other.MovieExtra.OpenFolder",      Resources.ICN_MENUBAR_FOLDER,          this::onClickOtherOpenFolder);
+					add(movieExtra, "ShowInBrowser",    null, "ClipMenuBar.Other.MovieExtra.ShowInBrowser",   Resources.ICN_MENUBAR_ONLINEREFERENCE, this::onClickOtherShowInBrowser);
+					add(movieExtra, "ShowCover",        null, "ClipMenuBar.Other.MovieExtra.ShowCover",       Resources.ICN_MENUBAR_SHOWCOVER,       this::onClickOtherShowCover);
 
-				CCActionElement elemTagsMov = add(other, "SetTags_Movies", null, "ClipMenuBar.Other.SetTags", Resources.ICN_MENUBAR_TAGS);
-				{
-					for (final CCSingleTag tag : CCTagList.TAGS) {
-						if (!tag.IsMovieTag) continue;
-						add(elemTagsMov, String.format("SwitchTag_Movie_%02d", tag.Index), null, String.format("CCMovieTags.TAG_%02d", tag.Index), tag.IconOn, true, (e) -> onClickSwitchTag(e, tag));
+					CCActionElement movRating = add(movieExtra, "SetMovieRating", null, "ClipMenuBar.Other.MovieExtra.SetMovieRating", Resources.ICN_SIDEBAR_SCORE);
+					{
+						add(movRating, "SetMovRatingNO", null, "CCMovieScore.RNO", CCUserScore.RATING_NO.getIconRef(),  true, (e) -> onClickOtherSetRating(e, CCUserScore.RATING_NO));
+						add(movRating, "SetMovRating0",  null, "CCMovieScore.R0",  CCUserScore.RATING_0.getIconRef(),   true, (e) -> onClickOtherSetRating(e, CCUserScore.RATING_0));
+						add(movRating, "SetMovRating1",  null, "CCMovieScore.R1",  CCUserScore.RATING_I.getIconRef(),   true, (e) -> onClickOtherSetRating(e, CCUserScore.RATING_I));
+						add(movRating, "SetMovRating2",  null, "CCMovieScore.R2",  CCUserScore.RATING_II.getIconRef(),  true, (e) -> onClickOtherSetRating(e, CCUserScore.RATING_II));
+						add(movRating, "SetMovRating3",  null, "CCMovieScore.R3",  CCUserScore.RATING_III.getIconRef(), true, (e) -> onClickOtherSetRating(e, CCUserScore.RATING_III));
+						add(movRating, "SetMovRating4",  null, "CCMovieScore.R4",  CCUserScore.RATING_IV.getIconRef(),  true, (e) -> onClickOtherSetRating(e, CCUserScore.RATING_IV));
+						add(movRating, "SetMovRating5",  null, "CCMovieScore.R5",  CCUserScore.RATING_V.getIconRef(),   true, (e) -> onClickOtherSetRating(e, CCUserScore.RATING_V));
 					}
-				}
 
-				CCActionElement elemTagsSer = add(other, "SetTags_Series", null, "ClipMenuBar.Other.SetTags", Resources.ICN_MENUBAR_TAGS);
-				{
-					for (final CCSingleTag tag : CCTagList.TAGS) {
-						if (!tag.IsSeriesTag) continue;
-						add(elemTagsSer, String.format("SwitchTag_Series_%02d", tag.Index), null, String.format("CCMovieTags.TAG_%02d", tag.Index), tag.IconOn, true, (e) -> onClickSwitchTag(e, tag));
+					CCActionElement elemTagsMov = add(movieExtra, "SetTags_Movies", null, "ClipMenuBar.Other.MovieExtra.SetTags", Resources.ICN_MENUBAR_TAGS);
+					{
+						for (final CCSingleTag tag : CCTagList.TAGS) {
+							if (!tag.IsMovieTag) continue;
+							add(elemTagsMov, String.format("SwitchTag_Movie_%02d", tag.Index), null, String.format("CCMovieTags.TAG_%02d", tag.Index), tag.IconOn, true, (e) -> onClickSwitchTag(e, tag));
+						}
 					}
 				}
 
 				CCActionElement season = add(other, "Season", null, "", null);
 				{
-					add(season, "AddEpisodes",      null, "ClipMenuBar.Season.AddEpisodes",      null,                         true,  this::onClickOtherSeasonAddEpisodes);
-					add(season, "RemSeason",        null, "ClipMenuBar.Season.RemSeason",        null,                         true,  this::onClickOtherSeasonDeleteSeason);
-					add(season, "EditSeason",       null, "ClipMenuBar.Season.EditSeason",       null,                         true,  this::onClickOtherSeasonEditSeason);
-					add(season, "OpenSeasonFolder", null, "ClipMenuBar.Season.OpenSeasonFolder", Resources.ICN_MENUBAR_FOLDER, false, this::onClickOtherSeasonOpenFolder);
+					add(season, "AddEpisodes",      null, "ClipMenuBar.Other.Season.AddEpisodes",      null,                         true,  this::onClickOtherSeasonAddEpisodes);
+					add(season, "RemSeason",        null, "ClipMenuBar.Other.Season.RemSeason",        null,                         true,  this::onClickOtherSeasonDeleteSeason);
+					add(season, "EditSeason",       null, "ClipMenuBar.Other.Season.EditSeason",       null,                         true,  this::onClickOtherSeasonEditSeason);
+					add(season, "OpenSeasonFolder", null, "ClipMenuBar.Other.Season.OpenSeasonFolder", Resources.ICN_MENUBAR_FOLDER, false, this::onClickOtherSeasonOpenFolder);
 				}
 
 				CCActionElement seriesExtra = add(other, "SeriesExtra", null, "", null);
 				{
-					add(seriesExtra, "ResumeSeries", null, "ClipMenuBar.SeriesExtra.ResumeSeries", null, false, this::onClickOtherSeriesResumePlay);
-
-					CCActionElement rnd = add(seriesExtra, "PlayRandomEpisode", null, "ClipMenuBar.SeriesExtra.PlayRandomEpisode", null, null);
+					CCActionElement serRating = add(seriesExtra, "SetSeriesRating", null, "ClipMenuBar.Other.SeriesExtra.SetSeriesRating", Resources.ICN_SIDEBAR_SCORE);
 					{
-						add(rnd, "PlayRandomEpisodeAll",       null, "ClipMenuBar.SeriesExtra.PlayRandomEpisode.All",       null, false, this::onClickOtherSeriesPlayRandomAll);
-						add(rnd, "PlayRandomEpisodeViewed",    null, "ClipMenuBar.SeriesExtra.PlayRandomEpisode.Viewed",    null, false, this::onClickOtherSeriesPlayRandomViewed);
-						add(rnd, "PlayRandomEpisodeNotViewed", null, "ClipMenuBar.SeriesExtra.PlayRandomEpisode.NotViewed", null, false, this::onClickOtherSeriesPlayRandomNotViewed);
+						add(serRating, "SetSerRatingNO", null, "CCMovieScore.RNO", CCUserScore.RATING_NO.getIconRef(),  true, (e) -> onClickOtherSetRating(e, CCUserScore.RATING_NO));
+						add(serRating, "SetSerRating0",  null, "CCMovieScore.R0",  CCUserScore.RATING_0.getIconRef(),   true, (e) -> onClickOtherSetRating(e, CCUserScore.RATING_0));
+						add(serRating, "SetSerRating1",  null, "CCMovieScore.R1",  CCUserScore.RATING_I.getIconRef(),   true, (e) -> onClickOtherSetRating(e, CCUserScore.RATING_I));
+						add(serRating, "SetSerRating2",  null, "CCMovieScore.R2",  CCUserScore.RATING_II.getIconRef(),  true, (e) -> onClickOtherSetRating(e, CCUserScore.RATING_II));
+						add(serRating, "SetSerRating3",  null, "CCMovieScore.R3",  CCUserScore.RATING_III.getIconRef(), true, (e) -> onClickOtherSetRating(e, CCUserScore.RATING_III));
+						add(serRating, "SetSerRating4",  null, "CCMovieScore.R4",  CCUserScore.RATING_IV.getIconRef(),  true, (e) -> onClickOtherSetRating(e, CCUserScore.RATING_IV));
+						add(serRating, "SetSerRating5",  null, "CCMovieScore.R5",  CCUserScore.RATING_V.getIconRef(),   true, (e) -> onClickOtherSetRating(e, CCUserScore.RATING_V));
+					}
+
+					CCActionElement elemTagsSer = add(seriesExtra, "SetTags_Series", null, "ClipMenuBar.Other.SeriesExtra.SetTags", Resources.ICN_MENUBAR_TAGS);
+					{
+						for (final CCSingleTag tag : CCTagList.TAGS) {
+							if (!tag.IsSeriesTag) continue;
+							add(elemTagsSer, String.format("SwitchTag_Series_%02d", tag.Index), null, String.format("CCMovieTags.TAG_%02d", tag.Index), tag.IconOn, true, (e) -> onClickSwitchTag(e, tag));
+						}
+					}
+
+					add(seriesExtra, "ResumeSeries", null, "ClipMenuBar.Other.SeriesExtra.ResumeSeries", null, false, this::onClickOtherSeriesResumePlay);
+
+					CCActionElement rnd = add(seriesExtra, "PlayRandomEpisode", null, "ClipMenuBar.Other.SeriesExtra.PlayRandomEpisode", null, null);
+					{
+						add(rnd, "PlayRandomEpisodeAll",       null, "ClipMenuBar.Other.SeriesExtra.PlayRandomEpisode.All",       null, false, this::onClickOtherSeriesPlayRandomAll);
+						add(rnd, "PlayRandomEpisodeViewed",    null, "ClipMenuBar.Other.SeriesExtra.PlayRandomEpisode.Viewed",    null, false, this::onClickOtherSeriesPlayRandomViewed);
+						add(rnd, "PlayRandomEpisodeNotViewed", null, "ClipMenuBar.Other.SeriesExtra.PlayRandomEpisode.NotViewed", null, false, this::onClickOtherSeriesPlayRandomNotViewed);
 					}
 				}
-			}
 
+				CCActionElement episode = add(other, "Episode", null, "", null);
+				{
+					add(episode, "PlayEpisode",          null, "ClipMenuBar.Other.Episode.PlayEpisode",          Resources.ICN_MENUBAR_PLAY,         false, this::onClickOtherEpisodePlay);
+					add(episode, "PlayEpisodeAnonymous", null, "ClipMenuBar.Other.Episode.PlayEpisodeAnonymous", Resources.ICN_MENUBAR_HIDDENPLAY,   false, this::onClickOtherEpisodePlayAnonymous);
+					add(episode, "SetEpisodeViewed",     null, "ClipMenuBar.Other.Episode.SetEpisodeViewed",     Resources.ICN_MENUBAR_VIEWED,       true,  this::onClickOtherEpisodeSetViewed);
+					add(episode, "SetEpisodeUnviewed",   null, "ClipMenuBar.Other.Episode.SetEpisodeUnviewed",   Resources.ICN_MENUBAR_UNVIEWED,     true,  this::onClickOtherEpisodeUnviewed);
+					add(episode, "UndoEpisodeViewed",    null, "ClipMenuBar.Other.Episode.UndoEpisodeViewed",    Resources.ICN_MENUBAR_UNDOVIEWED,   true,  this::onClickOtherEpisodeUndoViewed);
+
+					CCActionElement elemTagsEpi = add(episode, "SetTags_Episode", null, "ClipMenuBar.Other.Episode.SetTags", Resources.ICN_MENUBAR_TAGS);
+					{
+						for (final CCSingleTag tag : CCTagList.TAGS) {
+							if (!tag.IsEpisodeTag) continue;
+							add(elemTagsEpi, String.format("SwitchTag_Episode_%02d", tag.Index), null, String.format("CCMovieTags.TAG_%02d", tag.Index), tag.IconOn, true, (e) -> onClickSwitchTag(e, tag));
+						}
+					}
+
+					add(episode, "OpenEpisodeFolder", null, "ClipMenuBar.Other.Episode.OpenEpisodeFolder", Resources.ICN_MENUBAR_FOLDER,   false, this::onClickOtherEpisodeOpenFolder);
+					add(episode, "EditEpisode",       null, "ClipMenuBar.Other.Episode.EditEpisode",       Resources.ICN_MENUBAR_EDIT_MOV, true,  this::onClickOtherEpisodeEdit);
+					add(episode, "RemEpisode",        null, "ClipMenuBar.Other.Episode.RemEpisode",        Resources.ICN_MENUBAR_REMOVE,   true,  this::onClickOtherEpisodeDelete);
+				}
+			}
 		}
 
 		if (Main.DEBUG) {
@@ -684,7 +709,7 @@ public class CCActionTree extends UIActionTree{
 	}
 	
 	private void onClickSwitchTag(CCTreeActionEvent e, CCSingleTag t) {
-		e.ifDatabaseElementSource(d -> d.switchTag(t));
+		e.ifTaggedElementSource(d -> d.switchTag(t));
 	}
 
 	private void onClickOtherSeasonAddEpisodes(CCTreeActionEvent e) {
@@ -754,4 +779,52 @@ public class CCActionTree extends UIActionTree{
 		});
 	}
 
+	private void onClickOtherEpisodePlay(CCTreeActionEvent e) {
+		e.ifEpisodeSource(p -> p.play(true));
+	}
+
+	private void onClickOtherEpisodePlayAnonymous(CCTreeActionEvent e) {
+		e.ifEpisodeSource(p -> p.play(false));
+	}
+
+	private void onClickOtherEpisodeSetViewed(CCTreeActionEvent e) {
+		e.ifEpisodeSource(p ->
+		{
+			p.setViewed(true);
+			p.addToViewedHistory(CCDateTime.getCurrentDateTime());
+		});
+	}
+
+	private void onClickOtherEpisodeUnviewed(CCTreeActionEvent e) {
+		e.ifEpisodeSource(p -> p.setViewed(false));
+	}
+
+	private void onClickOtherEpisodeUndoViewed(CCTreeActionEvent e) {
+		e.ifEpisodeSource(p ->
+		{
+			if (!p.isViewed()) return;
+
+			CCDateTimeList history = p.getViewedHistory();
+			history = history.removeLast();
+			p.setViewedHistory(history);
+
+			if (history.isEmpty()) p.setViewed(false);
+		});
+	}
+
+	private void onClickOtherEpisodeOpenFolder(CCTreeActionEvent e) {
+		e.ifEpisodeSource(p -> PathFormatter.showInExplorer(p.getAbsolutePart()));
+	}
+
+	private void onClickOtherEpisodeEdit(CCTreeActionEvent e) {
+		e.ifEpisodeSource(p -> new EditSeriesFrame(e.SwingOwner, p, ActionCallbackListener.toUpdateCallbackListener(e.SpecialListener)).setVisible(true));
+	}
+
+	private void onClickOtherEpisodeDelete(CCTreeActionEvent e) {
+		e.ifEpisodeSource(p ->
+		{
+			if (!DialogHelper.showLocaleYesNo(e.SwingOwner, "Dialogs.DeleteEpisode")) return; //$NON-NLS-1$
+			p.delete();
+		});
+	}
 }

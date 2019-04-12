@@ -6,6 +6,7 @@ import de.jClipCorn.util.datetime.CCDate;
 import java.util.List;
 
 public interface ICCPlayableElement {
+	// Episode, Movie
 
 	String getTitle();
 	boolean isViewed();

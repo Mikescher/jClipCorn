@@ -1,7 +1,5 @@
 package de.jClipCorn.gui.frames.previewSeriesFrame;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 
@@ -34,43 +32,25 @@ public class SerCoverChooserPopupMenu extends JPopupMenu {
 		this.owner = frame;
 
 		JMenuItem addEpisodes = new JMenuItem(LocaleBundle.getString("PreviewSeriesFrame.PopupMenuCover.AddEpisodes"), Resources.ICN_MENUBAR_ADD_SEA.get16x16()); //$NON-NLS-1$
-		addEpisodes.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				AddEpisodesFrame aef = new AddEpisodesFrame(owner, season, owner);
-				aef.setVisible(true);
-			}
-		});
+		addEpisodes.addActionListener(arg0 -> new AddEpisodesFrame(owner, season, owner).setVisible(true));
 		add(addEpisodes);
 		
 		JMenuItem editSeason = new JMenuItem(LocaleBundle.getString("PreviewSeriesFrame.PopupMenuCover.Edit"), Resources.ICN_MENUBAR_EDIT_SER.get16x16()); //$NON-NLS-1$
-		editSeason.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				EditSeriesFrame esf = new EditSeriesFrame(owner, season, owner);
-				esf.setVisible(true);
-			}
-		});
+		editSeason.addActionListener(arg0 -> new EditSeriesFrame(owner, season, owner).setVisible(true));
 		add(editSeason);
 		
 		JMenuItem openFolder = new JMenuItem(LocaleBundle.getString("PreviewSeriesFrame.PopupMenuCover.OpenFolder"), Resources.ICN_MENUBAR_FOLDER.get16x16()); //$NON-NLS-1$
-		openFolder.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				PathFormatter.showInExplorer(PathFormatter.fromCCPath(season.getCommonPathStart()));
-				owner.updateSeason();
-			}
+		openFolder.addActionListener(arg0 -> {
+			PathFormatter.showInExplorer(PathFormatter.fromCCPath(season.getCommonPathStart()));
+			owner.updateSeason();
 		});
 		add(openFolder);
 		
 		JMenuItem delSeason = new JMenuItem(LocaleBundle.getString("PreviewSeriesFrame.PopupMenuCover.Delete"), Resources.ICN_MENUBAR_REMOVE.get16x16()); //$NON-NLS-1$
-		delSeason.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				if (DialogHelper.showLocaleYesNo(owner, "Dialogs.DeleteSeason")) { //$NON-NLS-1$
-					season.delete();
-					owner.updateSeason();
-				}
+		delSeason.addActionListener(arg0 -> {
+			if (DialogHelper.showLocaleYesNo(owner, "Dialogs.DeleteSeason")) { //$NON-NLS-1$
+				season.delete();
+				owner.updateSeason();
 			}
 		});
 		add(delSeason);
@@ -78,53 +58,45 @@ public class SerCoverChooserPopupMenu extends JPopupMenu {
 		addSeparator();
 		
 		JMenuItem showCover = new JMenuItem(LocaleBundle.getString("PreviewSeriesFrame.PopupMenuCover.ShowCover"), Resources.ICN_MENUBAR_SHOWCOVER.get16x16()); //$NON-NLS-1$
-		showCover.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				new CoverPreviewFrame(SerCoverChooserPopupMenu.this, s).setVisible(true);
-			}
-		});
+		showCover.addActionListener(arg0 -> new CoverPreviewFrame(SerCoverChooserPopupMenu.this, s).setVisible(true));
 		add(showCover);
 		
 		JMenuItem saveCover = new JMenuItem(LocaleBundle.getString("PreviewSeriesFrame.PopupMenuCover.SaveCover"), Resources.ICN_MENUBAR_SAVE.get16x16()); //$NON-NLS-1$
-		saveCover.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				JFileChooser fc = new JFileChooser();
-				fc.setAcceptAllFileFilterUsed(false);
+		saveCover.addActionListener(arg0 -> {
+			JFileChooser fc = new JFileChooser();
+			fc.setAcceptAllFileFilterUsed(false);
 
-				FileFilter filterPng;
-				FileFilter filterJpg;
-				FileFilter filterBmp;
+			FileFilter filterPng;
+			FileFilter filterJpg;
+			FileFilter filterBmp;
 
-				fc.setFileFilter(filterPng = FileChooserHelper.createFileFilter("PNG-Image (*.png)", "png")); //$NON-NLS-1$ //$NON-NLS-2$
+			fc.setFileFilter(filterPng = FileChooserHelper.createFileFilter("PNG-Image (*.png)", "png")); //$NON-NLS-1$ //$NON-NLS-2$
 
-				fc.addChoosableFileFilter(filterJpg = FileChooserHelper.createFileFilter("JPEG-Image (*.jpg)", "jpg", "jpeg")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			fc.addChoosableFileFilter(filterJpg = FileChooserHelper.createFileFilter("JPEG-Image (*.jpg)", "jpg", "jpeg")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
-				fc.addChoosableFileFilter(filterBmp = FileChooserHelper.createFileFilter("Bitmap-Image (*.bmp)", "bmp")); //$NON-NLS-1$ //$NON-NLS-2$
+			fc.addChoosableFileFilter(filterBmp = FileChooserHelper.createFileFilter("Bitmap-Image (*.bmp)", "bmp")); //$NON-NLS-1$ //$NON-NLS-2$
 
-				if (fc.showSaveDialog(SerCoverChooserPopupMenu.this) == JFileChooser.APPROVE_OPTION) {
-					FileFilter choosen = fc.getFileFilter();
-					String path = fc.getSelectedFile().getAbsolutePath();
-					String format = ""; //$NON-NLS-1$
+			if (fc.showSaveDialog(SerCoverChooserPopupMenu.this) == JFileChooser.APPROVE_OPTION) {
+				FileFilter choosen = fc.getFileFilter();
+				String path = fc.getSelectedFile().getAbsolutePath();
+				String format = ""; //$NON-NLS-1$
 
-					if (choosen.equals(filterPng)) {
-						format = "png"; //$NON-NLS-1$
+				if (choosen.equals(filterPng)) {
+					format = "png"; //$NON-NLS-1$
 
-					} else if (choosen.equals(filterJpg)) {
-						format = "jpg"; //$NON-NLS-1$
+				} else if (choosen.equals(filterJpg)) {
+					format = "jpg"; //$NON-NLS-1$
 
-					} else if (choosen.equals(filterBmp)) {
-						format = "bmp"; //$NON-NLS-1$
-					}
+				} else if (choosen.equals(filterBmp)) {
+					format = "bmp"; //$NON-NLS-1$
+				}
 
-					path = PathFormatter.forceExtension(path, format);
+				path = PathFormatter.forceExtension(path, format);
 
-					try {
-						ImageIO.write(season.getCover(), format, new File(path));
-					} catch (IOException e) {
-						CCLog.addError(e);
-					}
+				try {
+					ImageIO.write(season.getCover(), format, new File(path));
+				} catch (IOException e) {
+					CCLog.addError(e);
 				}
 			}
 		});

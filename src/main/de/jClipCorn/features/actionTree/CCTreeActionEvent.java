@@ -1,9 +1,6 @@
 package de.jClipCorn.features.actionTree;
 
-import de.jClipCorn.database.databaseElement.CCDatabaseElement;
-import de.jClipCorn.database.databaseElement.CCMovie;
-import de.jClipCorn.database.databaseElement.CCSeason;
-import de.jClipCorn.database.databaseElement.CCSeries;
+import de.jClipCorn.database.databaseElement.*;
 import de.jClipCorn.util.lambda.Func1to0;
 import de.jClipCorn.util.listener.ActionCallbackListener;
 
@@ -46,9 +43,21 @@ public class CCTreeActionEvent {
 		}
 	}
 
+	public void ifEpisodeSource(Func1to0<CCEpisode> fn) {
+		for (IActionSourceObject sobj : SourceObject) {
+			if (sobj instanceof CCEpisode) { fn.invoke((CCEpisode)sobj); return; }
+		}
+	}
+
 	public void ifDatabaseElementSource(Func1to0<CCDatabaseElement> fn) {
 		for (IActionSourceObject sobj : SourceObject) {
 			if (sobj instanceof CCDatabaseElement) { fn.invoke((CCDatabaseElement)sobj); return; }
+		}
+	}
+
+	public void ifTaggedElementSource(Func1to0<ICCTaggedElement> fn) {
+		for (IActionSourceObject sobj : SourceObject) {
+			if (sobj instanceof ICCTaggedElement) { fn.invoke((ICCTaggedElement)sobj); return; }
 		}
 	}
 

@@ -10,6 +10,7 @@ import javax.swing.event.ListSelectionListener;
 
 import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.CCSeason;
+import de.jClipCorn.features.actionTree.menus.impl.ClipEpisodePopup;
 import de.jClipCorn.gui.frames.previewSeriesFrame.PreviewSeriesFrame;
 import de.jClipCorn.util.TableColumnAdjuster;
 
@@ -150,7 +151,7 @@ public class SerTable extends JScrollPane implements ListSelectionListener, Mous
 			if (rowindex >= 0) {
 				if (e.isPopupTrigger()) {
 					if (getSelectedEpisode() != null) {
-						(new SerTablePopupMenu(getSelectedEpisode(), owner)).show(e.getComponent(), e.getX(), e.getY());
+						new ClipEpisodePopup(owner, getSelectedEpisode()).show(e.getComponent(), e.getX(), e.getY());
 					}
 				}
 			}

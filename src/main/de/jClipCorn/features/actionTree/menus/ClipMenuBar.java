@@ -138,7 +138,7 @@ public abstract class ClipMenuBar extends JMenuBar {
 	protected void addOpenInBrowserActionNodes(CCOnlineReferenceList ref) {
 		if (ref.hasAdditional())
 		{
-			addSubMaster("ClipMenuBar.Other.ShowInBrowser", Resources.ICN_MENUBAR_ONLINEREFERENCE); //$NON-NLS-1$
+			addSubMaster("ClipMenuBar.Other.MovieExtra.ShowInBrowser", Resources.ICN_MENUBAR_ONLINEREFERENCE); //$NON-NLS-1$
 			for	(final CCSingleOnlineReference soref : ref) {
 				addSubNode("@" + (soref.hasDescription() ? soref.description : soref.type.asString()), () -> openRef(soref), soref.getIconRef(), false); //$NON-NLS-1$
 				if (soref == ref.Main && ref.hasAdditional()) addSubSeparator();
@@ -146,7 +146,7 @@ public abstract class ClipMenuBar extends JMenuBar {
 		}
 		else
 		{
-			addNode("ClipMenuBar.Other.ShowInBrowser", () -> openRef(ref.Main), Resources.ICN_MENUBAR_ONLINEREFERENCE, false); //$NON-NLS-1$
+			addNode("ClipMenuBar.Other.MovieExtra.ShowInBrowser", () -> openRef(ref.Main), Resources.ICN_MENUBAR_ONLINEREFERENCE, false); //$NON-NLS-1$
 		}
 	}
 

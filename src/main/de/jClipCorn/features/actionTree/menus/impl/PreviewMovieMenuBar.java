@@ -73,7 +73,7 @@ public class PreviewMovieMenuBar extends ClipMenuBar {
 			@Override
 			public void onUpdate(Object o) { _frame.onUpdate(o); }
 			@Override
-			public void onCallbackPlayed(CCEpisode e) { }
+			public void onCallbackPlayed(CCEpisode e) { /* */ }
 		};
 	}
 

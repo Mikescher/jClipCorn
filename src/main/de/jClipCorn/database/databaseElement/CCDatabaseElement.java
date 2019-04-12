@@ -15,7 +15,7 @@ import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.exceptions.GroupFormatException;
 import de.jClipCorn.util.exceptions.OnlineRefFormatException;
 
-public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, ICCCoveredElement, IActionSourceObject {
+public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, ICCCoveredElement, IActionSourceObject, ICCTaggedElement {
 	private final int localID;
 	private final CCDBElementTyp typ;
 	private String title;
@@ -361,6 +361,7 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 		tags.parseFromShort(ptags);
 	}
 
+	@Override
 	public void setTags(CCTagList ptags) {
 		if (tags == null) {CCLog.addUndefinied("Prevented setting CCDBElem.Tags to NULL"); return; } //$NON-NLS-1$
 		this.tags = ptags;
@@ -368,6 +369,7 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 		updateDB();
 	}
 
+	@Override
 	public void switchTag(CCSingleTag t) {
 		tags.switchTag(t);
 

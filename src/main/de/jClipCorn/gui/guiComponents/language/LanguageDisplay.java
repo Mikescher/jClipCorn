@@ -9,7 +9,7 @@ import java.awt.*;
 public class LanguageDisplay extends JPanel {
 	private static final long serialVersionUID = 2017286148720080714L;
 
-	private CCDBLanguageList value = new CCDBLanguageList();
+	private CCDBLanguageList value = CCDBLanguageList.EMPTY;
 
 	public LanguageDisplay() {
 		super();

@@ -776,7 +776,7 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler, 
 		File[] ff = massVideoFileChooser.getSelectedFiles();
 
 		CCEpisode last = parent.getSeries().getLastAddedEpisode();
-		CCDBLanguageList lang = new CCDBLanguageList(CCProperties.getInstance().PROP_DATABASE_DEFAULTPARSERLANG.getValue());
+		CCDBLanguageList lang = CCDBLanguageList.single(CCProperties.getInstance().PROP_DATABASE_DEFAULTPARSERLANG.getValue());
 		if (last != null) lang = last.getLanguage();
 
 		ctrlMultiLang.setValue(lang);

@@ -58,7 +58,7 @@ public class DatabaseXMLExporter {
 			DatabaseXMLExporterImpl.exportSeason(season_xml, season, s);
 
 			for (int j = 0; j < season.getEpisodeCount(); j++) {
-				Element episode_xml = new Element("season");
+				Element episode_xml = new Element("episode");
 				CCEpisode episode = season.getEpisodeByArrayIndex(i);
 
 				DatabaseXMLExporterImpl.exportEpisode(episode_xml, episode, s);

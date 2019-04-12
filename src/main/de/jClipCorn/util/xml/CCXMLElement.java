@@ -90,7 +90,7 @@ public class CCXMLElement
 		for (Attribute e : _element.getAttributes()) {
 			if (e.getName().equals(attrName)) return e.getValue();
 		}
-		throw new CCXMLException(Str.format("Could not find attribute '{0}' in element {1}", attrName, _path), _owner.getXMLString());
+		throw new CCXMLException(Str.format("Could not find attribute ''{0}'' in element {1}", attrName, _path), _owner.getXMLString());
 	}
 
 	public String getAttributeValueOrDefault(String attrName, String defaultValue) {
@@ -105,7 +105,7 @@ public class CCXMLElement
 		try {
 			return Integer.parseInt(v);
 		} catch (NumberFormatException e) {
-			throw new CCXMLException(Str.format("The value \"{0}\" in the attribute '{1}' in {2} is not an integer", v, attrName, _path), _owner.getXMLString());
+			throw new CCXMLException(Str.format("The value \"{0}\" in the attribute ''{1}'' in {2} is not an integer", v, attrName, _path), _owner.getXMLString());
 		}
 	}
 
@@ -115,7 +115,7 @@ public class CCXMLElement
 		try {
 			return Integer.parseInt(v);
 		} catch (NumberFormatException e) {
-			throw new CCXMLException(Str.format("The value \"{0}\" in the attribute '{1}' in {2} is not an integer", v, attrName, _path), _owner.getXMLString());
+			throw new CCXMLException(Str.format("The value \"{0}\" in the attribute ''{1}'' in {2} is not an integer", v, attrName, _path), _owner.getXMLString());
 		}
 	}
 
@@ -124,7 +124,7 @@ public class CCXMLElement
 		try {
 			return parseBool(v);
 		} catch (BooleanFormatException e) {
-			throw new CCXMLException(Str.format("The value \"{0}\" in the attribute '{1}' in {2} is not a boolean", v, attrName, _path), _owner.getXMLString());
+			throw new CCXMLException(Str.format("The value \"{0}\" in the attribute ''{1}'' in {2} is not a boolean", v, attrName, _path), _owner.getXMLString());
 		}
 	}
 
@@ -134,7 +134,7 @@ public class CCXMLElement
 		try {
 			return parseBool(v);
 		} catch (BooleanFormatException e) {
-			throw new CCXMLException(Str.format("The value \"{0}\" in the attribute '{1}' in {2} is not an boolean", v, attrName, _path), _owner.getXMLString());
+			throw new CCXMLException(Str.format("The value \"{0}\" in the attribute ''{1}'' in {2} is not an boolean", v, attrName, _path), _owner.getXMLString());
 		}
 	}
 
@@ -224,7 +224,7 @@ public class CCXMLElement
 		try {
 			cv = Integer.parseInt(v);
 		} catch (NumberFormatException e) {
-			throw new CCXMLException(Str.format("The value \"{0}\" in the attribute '{1}' in {2} is not an integer", v, attrName, _path), _owner.getXMLString());
+			throw new CCXMLException(Str.format("The value \"{0}\" in the attribute ''{1}'' in {2} is not an integer", v, attrName, _path), _owner.getXMLString());
 		}
 
 		func.invoke(cv);
@@ -238,7 +238,7 @@ public class CCXMLElement
 		try {
 			cv = Short.parseShort(v);
 		} catch (NumberFormatException e) {
-			throw new CCXMLException(Str.format("The value \"{0}\" in the attribute '{1}' in {2} is not an short", v, attrName, _path), _owner.getXMLString());
+			throw new CCXMLException(Str.format("The value \"{0}\" in the attribute ''{1}'' in {2} is not an short", v, attrName, _path), _owner.getXMLString());
 		}
 
 		func.invoke(cv);
@@ -252,7 +252,7 @@ public class CCXMLElement
 		try {
 			cv = Long.parseLong(v);
 		} catch (NumberFormatException e) {
-			throw new CCXMLException(Str.format("The value \"{0}\" in the attribute '{1}' in {2} is not a long", v, attrName, _path), _owner.getXMLString());
+			throw new CCXMLException(Str.format("The value \"{0}\" in the attribute ''{1}'' in {2} is not a long", v, attrName, _path), _owner.getXMLString());
 		}
 
 		func.invoke(cv);
@@ -266,7 +266,7 @@ public class CCXMLElement
 		try {
 			cv = parseBool(v);
 		} catch (BooleanFormatException e) {
-			throw new CCXMLException(Str.format("The value \"{0}\" in the attribute '{1}' in {2} is not a long", v, attrName, _path), _owner.getXMLString());
+			throw new CCXMLException(Str.format("The value \"{0}\" in the attribute ''{1}'' in {2} is not a long", v, attrName, _path), _owner.getXMLString());
 		}
 
 		func.invoke(cv);

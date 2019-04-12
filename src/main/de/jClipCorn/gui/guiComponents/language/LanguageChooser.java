@@ -87,7 +87,7 @@ public class LanguageChooser extends JPanel {
 		if (value.isEmpty()) return;
 		if (value.isSingle())
 		{
-			setValue(new CCDBLanguageList(value.iterate().firstOrNull().nextLanguage()));
+			setValue(CCDBLanguageList.single(value.iterate().firstOrNull().nextLanguage()));
 			return;
 		}
 		setValue(value.getRemove(lang));

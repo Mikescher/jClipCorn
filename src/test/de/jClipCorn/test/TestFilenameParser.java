@@ -49,7 +49,7 @@ public class TestFilenameParser extends ClipCornBaseTest {
 
 			assertEquals(CCFileFormat.FLV, r.Format);
 			assertEquals(0, r.Groups.count());
-			assertEquals(new CCDBLanguageList(CCDBLanguage.GERMAN, CCDBLanguage.FRENCH), r.Language);
+			assertEquals(CCDBLanguageList.create(CCDBLanguage.GERMAN, CCDBLanguage.FRENCH), r.Language);
 			assertEquals("Inglourious Basterds", r.Title);
 			assertEquals(true, r.Zyklus.isEmpty());
 			assertEquals(-1, r.Zyklus.getNumber());

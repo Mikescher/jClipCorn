@@ -257,7 +257,7 @@ public class QuickAddEpisodeDialog extends JDialog {
 		cbRename.setSelected(cbCopy.isSelected());
 		
 		CCEpisode last = season.getSeries().getLastAddedEpisode();
-		CCDBLanguageList lang = new CCDBLanguageList(CCProperties.getInstance().PROP_DATABASE_DEFAULTPARSERLANG.getValue());
+		CCDBLanguageList lang = CCDBLanguageList.single(CCProperties.getInstance().PROP_DATABASE_DEFAULTPARSERLANG.getValue());
 		if (last != null) lang = last.getLanguage();
 		ctrlLang.setValue(lang);
 	}

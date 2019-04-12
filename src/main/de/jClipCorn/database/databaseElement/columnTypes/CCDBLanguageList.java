@@ -17,15 +17,16 @@ public class CCDBLanguageList implements Iterable<CCDBLanguage> {
 
 	private final Set<CCDBLanguage> _languages;
 
-	public CCDBLanguageList(CCDBLanguage... langs) {
+	private CCDBLanguageList(CCDBLanguage... langs) {
 		_languages = new HashSet<>(Arrays.asList(langs));
 	}
 
-	public CCDBLanguageList(CCStream<CCDBLanguage> langs) {
+	private CCDBLanguageList(CCStream<CCDBLanguage> langs) {
 		_languages = new HashSet<>(langs.enumerate());
 	}
 
 	private CCDBLanguageList(Set<CCDBLanguage> direct) {
+		if (direct == null) throw new NullPointerException();
 		_languages = direct;
 	}
 
@@ -43,6 +44,14 @@ public class CCDBLanguageList implements Iterable<CCDBLanguage> {
 
 	public static CCDBLanguageList createDirect(Set<CCDBLanguage> v) { // no copy !
 		return new CCDBLanguageList(v);
+	}
+
+	public static CCDBLanguageList single(CCDBLanguage lang) {
+		return new CCDBLanguageList(lang);
+	}
+
+	public static CCDBLanguageList create(CCDBLanguage... langs) {
+		return new CCDBLanguageList(langs);
 	}
 
 	public long serializeToLong() {
@@ -178,5 +187,8 @@ public class CCDBLanguageList implements Iterable<CCDBLanguage> {
 		return CCDBLanguageList.createDirect(v);
 	}
 
-
+	@Override
+	public String toString() {
+		return "{{" + CCStreams.iterate(_languages).stringjoin(CCDBLanguage::getShortString, "|") + "}}";
+	}
 }

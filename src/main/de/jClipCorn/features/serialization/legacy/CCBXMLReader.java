@@ -223,7 +223,7 @@ public class CCBXMLReader {
 		newEp.setFilesize(owner.getChild("größe").getAttribute("dec").getLongValue() * 1024);
 		newEp.setPart(owner.getChildText("pathpart1"));
 		newEp.setAddDate(CCDate.deserialize(owner.getChildText("adddate")));
-		newEp.setLanguage(new CCDBLanguageList(lang));
+		newEp.setLanguage(CCDBLanguageList.single(lang));
 		
 		final CCEpisode finep = newEp;
 		try {

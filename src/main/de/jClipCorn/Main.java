@@ -225,3 +225,5 @@ public class Main {
 //TODO serialize dates as iso in xml xmlexport (xmlver=2), also better serialize: seriesid, genres, tags, multiple parts
 
 //TODO Use ClipMoviePopup.java spec for PreviewMovieFrame menu (PMF has practically no options)
+
+//TODO RELEASE 1.10.6.0

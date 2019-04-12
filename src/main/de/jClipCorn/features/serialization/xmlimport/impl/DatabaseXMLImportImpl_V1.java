@@ -52,7 +52,7 @@ public class DatabaseXMLImportImpl_V1 implements IDatabaseXMLImporterImpl {
 			e.execIfLongAttrExists("filesize", o::setFilesize);
 			e.execIfIntAttrExists("format", o::setFormat);
 			e.execIfIntAttrExists("length", o::setLength);
-			e.execIfIntAttrExists("language", o::setLanguage); // backwards compatibility
+			e.execIfIntAttrExists("language", v -> o.setLanguage(CCDBLanguageList.single(CCDBLanguage.getWrapper().findOrException(v)))); // backwards compatibility
 			e.execIfAttrExists("languages", v -> o.setLanguage(CCDBLanguageList.parseFromString(v)));
 
 			for (int i = 0; i < CCMovie.PARTCOUNT_MAX; i++) {
@@ -142,7 +142,7 @@ public class DatabaseXMLImportImpl_V1 implements IDatabaseXMLImporterImpl {
 
 			if (s.ResetTags) o.setTags(new CCTagList());
 
-			e.execIfIntAttrExists("languages", o::setLanguage);
+			e.execIfAttrExists("languages", v -> o.setLanguage(CCDBLanguageList.parseFromString(v)));
 		}
 		o.endUpdating();
 	}

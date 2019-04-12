@@ -2,6 +2,7 @@ package de.jClipCorn.database.databaseElement.columnTypes;
 
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.MultiSizeIconRef;
+import de.jClipCorn.util.exceptions.TagNotFoundException;
 
 import javax.swing.*;
 import java.awt.image.BufferedImage;
@@ -28,6 +29,13 @@ public class CCSingleTag
 		IsMovieTag = mov;
 		IsSeriesTag = ser;
 		IsEpisodeTag = epi;
+	}
+
+	public static CCSingleTag find(int v) throws TagNotFoundException {
+		for (CCSingleTag t : CCTagList.TAGS) {
+		    if (t.Index == v) return t;
+		}
+		throw new TagNotFoundException(v);
 	}
 
 	public ImageIcon getOnIcon() {

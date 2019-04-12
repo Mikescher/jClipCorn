@@ -7,4 +7,8 @@ public class SerializationException extends Exception {
 		super(msg);
 	}
 
+	public SerializationException(String msg, Exception inner) {
+		super(msg, inner);
+	}
+
 }

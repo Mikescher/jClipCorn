@@ -19,7 +19,7 @@ public enum CCFSK implements ContinoousEnum<CCFSK> {
 			LocaleBundle.getString("CCMovieFSK.FSK2"), //$NON-NLS-1$
 			LocaleBundle.getString("CCMovieFSK.FSK3"), //$NON-NLS-1$
 			LocaleBundle.getString("CCMovieFSK.FSK4") }; //$NON-NLS-1$
-	private final static int AGES[] = { 0, 6, 12, 16, 18 };
+	private final static int[] AGES = {0, 6, 12, 16, 18};
 	private int id;
 	
 	private static EnumWrapper<CCFSK> wrapper = new EnumWrapper<>(RATING_0);

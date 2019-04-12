@@ -29,16 +29,14 @@ public class DatabaseXMLExporterImpl {
 	public static void exportDatabaseElement(Element e, CCDatabaseElement o, ExportOptions s) {
 
 		e.setAttribute("localid",      o.getLocalID() + "");
-		e.setAttribute("typ",          o.getType().asInt() + "");
 		e.setAttribute("title",        o.getTitle());
-		e.setAttribute("genres",       o.getGenres().getAllGenres() + "");
-		e.setAttribute("onlinescore",  o.getOnlinescore().asInt() + "");
-		e.setAttribute("fsk",          o.getFSK().asInt() + "");
-		e.setAttribute("score",        o.getScore().asInt() + "");
-		e.setAttribute("seriesid",     o.getSeriesID() + "");
+		e.setAttribute("genres",       o.getGenres().serialize());
+		e.setAttribute("onlinescore",  String.valueOf(o.getOnlinescore().asInt()));
+		e.setAttribute("fsk",          String.valueOf(o.getFSK().asInt()));
+		e.setAttribute("score",        String.valueOf(o.getScore().asInt()));
 		e.setAttribute("groups",       o.getGroups().toSerializationString());
 		e.setAttribute("onlinreref",   o.getOnlineReference().toSerializationString());
-		e.setAttribute("tags",         o.getTags().asShort() + "");
+		e.setAttribute("tags",         o.getTags().serialize());
 
 		if (! s.CoverData) e.setAttribute("covername", o.getCoverName());
 		if (s.CoverHash) e.setAttribute("coverhash", o.getCoverMD5());
@@ -48,7 +46,7 @@ public class DatabaseXMLExporterImpl {
 	public static void exportMovie(Element e, CCMovie o, ExportOptions s) {
 		exportDatabaseElement(e, o, s);
 
-		e.setAttribute("adddate",      o.getAddDate().toStringSerialize());
+		e.setAttribute("adddate",      o.getAddDate().toStringSQL());
 		e.setAttribute("filesize",     o.getFilesize().getBytes() + "");
 		e.setAttribute("format",       o.getFormat().asInt() + "");
 		e.setAttribute("length",       o.getLength()  + "");
@@ -91,7 +89,7 @@ public class DatabaseXMLExporterImpl {
 		e.setAttribute("localid",       o.getLocalID() + "");
 		e.setAttribute("title",         o.getTitle());
 		e.setAttribute("viewed",        o.isViewed() + "");
-		e.setAttribute("adddate",       o.getAddDate().toStringSerialize());
+		e.setAttribute("adddate",       o.getAddDate().toStringSQL());
 		e.setAttribute("episodenumber", o.getEpisodeNumber() + "");
 		e.setAttribute("filesize",      o.getFilesize().getBytes() + "");
 		e.setAttribute("format",        o.getFormat().asInt() + "");
@@ -99,7 +97,7 @@ public class DatabaseXMLExporterImpl {
 		e.setAttribute("length",        o.getLength() + "");
 		e.setAttribute("part",          o.getPart());
 		e.setAttribute("quality",       o.getQuality().asInt() + "");
-		e.setAttribute("tags",          o.getTags().asShort() + "");
+		e.setAttribute("tags",          o.getTags().serialize());
 		e.setAttribute("languages",     o.getLanguage().serializeToString());
 
 		if (s.FileHash) e.setAttribute("filehash", o.getFastMD5());

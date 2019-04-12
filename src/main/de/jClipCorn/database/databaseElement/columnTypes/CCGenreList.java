@@ -6,6 +6,9 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import de.jClipCorn.database.util.iterators.GenresIterator;
+import de.jClipCorn.util.Str;
+import de.jClipCorn.util.exceptions.EnumFormatException;
+import de.jClipCorn.util.exceptions.GenreOverflowException;
 import de.jClipCorn.util.stream.CCStream;
 
 public class CCGenreList {
@@ -105,6 +108,7 @@ public class CCGenreList {
 		_g = calcAddGenre(_g, genre4);
 		_g = calcAddGenre(_g, genre5);
 		_g = calcAddGenre(_g, genre6);
+		_g = calcAddGenre(_g, genre7);
 		_g = calcAddGenre(_g, genre8);
 		genres = _g.get();
 	}
@@ -150,7 +154,7 @@ public class CCGenreList {
 	}
 	
 	public String asString() {
-		return getGenres().stream().map(g -> g.asString()).collect(Collectors.joining("|")); //$NON-NLS-1$
+		return getGenres().stream().map(CCGenre::asString).collect(Collectors.joining("|")); //$NON-NLS-1$
 	}
 	
 	/*
@@ -159,7 +163,7 @@ public class CCGenreList {
 	 * asSorted sorts based on the ID, this sorts based on translation
 	 */
 	public String asSortedString() {
-		return getGenres().stream().sorted(CCGenre.getTextComparator()).map(g -> g.asString()).collect(Collectors.joining("|")); //$NON-NLS-1$
+		return getGenres().stream().sorted(CCGenre.getTextComparator()).map(CCGenre::asString).collect(Collectors.joining("|")); //$NON-NLS-1$
 	}
 	
 	public String asSimpleString() {
@@ -328,19 +332,31 @@ public class CCGenreList {
 
 	public CCGenreList getSetGenre(int idx, CCGenre genre) {
 		Optional<Long> _g = calcSetGenre(genres, idx, genre.asInt());
-		if (!_g.isPresent()) return null;
-		return new CCGenreList(_g.get());
+		return _g.map(CCGenreList::new).orElse(null);
 	}
 
 	public CCGenreList getTryAddGenre(CCGenre genre){
 		Optional<Long> _g = calcAddGenre(genres, genre);
-		if (!_g.isPresent()) return this;
-		return new CCGenreList(_g.get());
+		return _g.map(CCGenreList::new).orElse(this);
 	}
 
 	public CCGenreList getAddGenre(CCGenre genre){
 		Optional<Long> _g = calcAddGenre(genres, genre.asInt());
-		if (!_g.isPresent()) return null;
+		return _g.map(CCGenreList::new).orElse(null);
+	}
+
+	public String serialize() {
+		return iterate().stringjoin(g -> String.valueOf(g.asInt()), ";");
+	}
+
+	public static CCGenreList deserialize(String v) throws EnumFormatException, GenreOverflowException
+	{
+		Optional<Long> _g = Optional.of(0x0000000000000000L);
+		for (String str : v.split(";")) {
+			if (!Str.isNullOrWhitespace(str)) _g = calcAddGenre(_g, CCGenre.getWrapper().findOrException(Integer.parseInt(str)));
+		}
+		if (!_g.isPresent()) throw new GenreOverflowException();
+
 		return new CCGenreList(_g.get());
 	}
 }

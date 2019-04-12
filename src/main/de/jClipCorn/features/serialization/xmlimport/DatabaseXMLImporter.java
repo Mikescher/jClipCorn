@@ -39,19 +39,23 @@ public class DatabaseXMLImporter {
 
 		List<CCDatabaseElement> result = new ArrayList<>();
 
-		for (CCXMLElement xchild : root.getAllChildren())
-		{
-			if (xchild.getName().equals("movie")) { //$NON-NLS-1$
-				CCMovie mov = fm.invoke();
-				impl.importMovie(mov, xchild, state);
-				result.add(mov);
-			} else if (xchild.getName().equals("series")) { //$NON-NLS-1$
-				CCSeries ser = fs.invoke();
-				impl.importSeries(ser, xchild, state);
-				result.add(ser);
-			}
+		try {
+			for (CCXMLElement xchild : root.getAllChildren())
+			{
+				if (xchild.getName().equals("movie")) { //$NON-NLS-1$
+					CCMovie mov = fm.invoke();
+					impl.importMovie(mov, xchild, state);
+					result.add(mov);
+				} else if (xchild.getName().equals("series")) { //$NON-NLS-1$
+					CCSeries ser = fs.invoke();
+					impl.importSeries(ser, xchild, state);
+					result.add(ser);
+				}
 
-			if (l != null) l.step();
+				if (l != null) l.step();
+			}
+		} catch (NumberFormatException e) {
+			throw new SerializationException(e.getMessage(), e);
 		}
 
 		return result;
@@ -67,13 +71,21 @@ public class DatabaseXMLImporter {
 
 	public static void parseSingleMovie(CCMovie mov, CCXMLElement xml, ImportState state) throws SerializationException, CCFormatException, CCXMLException
 	{
-		IDatabaseXMLImporterImpl impl = getImportImpl(state);
-		impl.importMovie(mov, xml, state);
+		try {
+			IDatabaseXMLImporterImpl impl = getImportImpl(state);
+			impl.importMovie(mov, xml, state);
+		} catch (NumberFormatException e) {
+			throw new SerializationException(e.getMessage(), e);
+		}
 	}
 
 	public static void parseSingleSeries(CCSeries ser, CCXMLElement xml, ImportState state) throws SerializationException, CCFormatException, CCXMLException
 	{
-		IDatabaseXMLImporterImpl impl = getImportImpl(state);
-		impl.importSeries(ser, xml, state);
+		try {
+			IDatabaseXMLImporterImpl impl = getImportImpl(state);
+			impl.importSeries(ser, xml, state);
+		} catch (NumberFormatException e) {
+			throw new SerializationException(e.getMessage(), e);
+		}
 	}
 }

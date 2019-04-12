@@ -281,11 +281,15 @@ public final class CCDate implements Comparable<CCDate>, StringSpecSupplier {
 	public String toStringUIVerbose() { 
 		return InternationalDateTimeFormatHelper.fmtUIVerbose(this);
 	}
-	
+
 	public static CCDate deserialize(String rawData) throws CCFormatException {
 		return parse(rawData, InternationalDateTimeFormatHelper.SERIALIZE_DATE);
 	}
-	
+
+	public static CCDate deserializeSQL(String rawData) throws CCFormatException {
+		return parse(rawData, InternationalDateTimeFormatHelper.DATE_SQL);
+	}
+
 	public static CCDate deserializeOrDefault(String rawData, CCDate defaultValue) {
 		return parseOrDefault(rawData, InternationalDateTimeFormatHelper.SERIALIZE_DATE, defaultValue);
 	}

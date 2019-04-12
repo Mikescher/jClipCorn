@@ -7,7 +7,6 @@ import java.util.List;
 
 import de.jClipCorn.database.databaseElement.columnTypes.*;
 import de.jClipCorn.util.exceptions.EnumFormatException;
-import org.jdom2.Element;
 
 import de.jClipCorn.database.util.ExtendedViewedState;
 import de.jClipCorn.database.util.ExtendedViewedStateType;

@@ -1,8 +1,6 @@
 package de.jClipCorn.util.xml;
 
 import de.jClipCorn.util.exceptions.BooleanFormatException;
-import de.jClipCorn.util.exceptions.CCFormatException;
-import de.jClipCorn.util.lambda.Func1to0;
 import de.jClipCorn.util.lambda.Func1to0WithGenericException;
 import de.jClipCorn.util.stream.CCStream;
 import org.jdom2.Attribute;

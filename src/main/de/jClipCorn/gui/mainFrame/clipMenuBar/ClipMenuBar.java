@@ -1,16 +1,13 @@
 package de.jClipCorn.gui.mainFrame.clipMenuBar;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.Iterator;
 
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import de.jClipCorn.features.actionTree.ActionSource;
-import de.jClipCorn.features.actionTree.CCActionElement;
-import de.jClipCorn.features.actionTree.CCActionTree;
-import de.jClipCorn.features.actionTree.UIActionTree;
+
+import de.jClipCorn.features.actionTree.*;
+import de.jClipCorn.gui.mainFrame.MainFrame;
 import de.jClipCorn.util.helper.KeyStrokeUtil;
 
 public class ClipMenuBar extends JMenuBar {
@@ -31,12 +28,7 @@ public class ClipMenuBar extends JMenuBar {
 			if (el.isVisible()) {
 				JMenu newm = add(new JMenu(el.getCaption()));
 
-				newm.addActionListener(new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						el.execute(ActionSource.MENU_BAR);
-					}
-				});
+				newm.addActionListener(e -> el.execute(ActionSource.MAINFRAME_MENU_BAR, MainFrame.getInstance().getSelectedElement()));
 
 				createSubMenu(newm, el);
 			}
@@ -54,12 +46,7 @@ public class ClipMenuBar extends JMenuBar {
 					mi.setAccelerator(el.getKeyStroke());
 				}
 
-				mi.addActionListener(new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						el.execute(ActionSource.MENU_BAR);
-					}
-				});
+				mi.addActionListener(e -> el.execute(ActionSource.MAINFRAME_MENU_BAR, MainFrame.getInstance().getSelectedElement()));
 
 				owner.add(mi);
 			}

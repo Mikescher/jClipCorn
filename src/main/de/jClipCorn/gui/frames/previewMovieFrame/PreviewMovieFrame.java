@@ -3,17 +3,11 @@ package de.jClipCorn.gui.frames.previewMovieFrame;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
@@ -21,8 +15,7 @@ import javax.swing.SwingConstants;
 import de.jClipCorn.Main;
 import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGroup;
-import de.jClipCorn.database.databaseElement.columnTypes.CCSingleOnlineReference;
-import de.jClipCorn.gui.frames.editMovieFrame.EditMovieFrame;
+import de.jClipCorn.features.actionTree.menus.impl.PreviewMovieMenuBar;
 import de.jClipCorn.gui.guiComponents.CoverLabel;
 import de.jClipCorn.gui.guiComponents.OnlineRefButton;
 import de.jClipCorn.gui.guiComponents.ReadableTextField;
@@ -33,8 +26,6 @@ import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.formatter.FileSizeFormatter;
 import de.jClipCorn.util.formatter.TimeIntervallFormatter;
-import de.jClipCorn.util.helper.DialogHelper;
-import de.jClipCorn.util.http.HTTPUtilities;
 import de.jClipCorn.util.listener.UpdateCallbackListener;
 
 public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener {
@@ -73,13 +64,8 @@ public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener 
 	private JLabel lbl_Size;
 	private JLabel lbl_OnlineScore;
 	private JLabel lbl_Score;
-	private JMenuBar menuBar;
-	private JMenu mnMovie;
-	private JMenuItem mntmEditMovie;
-	private JMenuItem mntmDeleetMovie;
-	private JMenu mnExtras;
+	private PreviewMovieMenuBar menuBar;
 	private JButton btnPlay;
-	private JMenuItem mntmPlayMovie;
 	private TagPanel pnlTags;
 	private JLabel lblTags;
 	private JList<String> lsHistory;
@@ -93,13 +79,13 @@ public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener 
 	public PreviewMovieFrame(Component owner, CCMovie m) {
 		super();
 		this.movie = m;
-		initGUI();
+		initGUI(m);
 		updateFields();
 		
 		setLocationRelativeTo(owner);
 	}
 	
-	private void initGUI() {
+	private void initGUI(CCMovie m) {
 		setSize(new Dimension(700, 565));
 		setIconImage(Resources.IMG_FRAME_ICON.get());
 		setResizable(false);
@@ -246,78 +232,11 @@ public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener 
 		lbl_Score.setBounds(258, 440, 16, 16);
 		getContentPane().add(lbl_Score);
 		
-		menuBar = new JMenuBar();
+		menuBar = new PreviewMovieMenuBar(m, this::updateFields);
 		setJMenuBar(menuBar);
-		
-		mnMovie = new JMenu(LocaleBundle.getString("PreviewMovieFrame.Menubar.Movie")); //$NON-NLS-1$
-		menuBar.add(mnMovie);
-		
-		mntmPlayMovie = new JMenuItem(LocaleBundle.getString("PreviewMovieFrame.Menubar.Movie.Play")); //$NON-NLS-1$
-		mntmPlayMovie.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				playMovie();
-				updateFields();
-			}
-		});
-		mnMovie.add(mntmPlayMovie);
-		
-		mntmEditMovie = new JMenuItem(LocaleBundle.getString("PreviewMovieFrame.Menubar.Movie.Edit")); //$NON-NLS-1$
-		mntmEditMovie.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				editMovie();
-			}
-		});
-		mnMovie.add(mntmEditMovie);
-		
-		mntmDeleetMovie = new JMenuItem(LocaleBundle.getString("PreviewMovieFrame.Menubar.Movie.Delete")); //$NON-NLS-1$
-		mntmDeleetMovie.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				deleteMovie();
-			}
-		});
-		mnMovie.add(mntmDeleetMovie);
-		
-		mnExtras = new JMenu(LocaleBundle.getString("PreviewMovieFrame.Menubar.Extras")); //$NON-NLS-1$
-		menuBar.add(mnExtras);
-		
-		if (movie.getOnlineReference().hasAdditional()) {
-			JMenu mntmShowOnline = new JMenu(LocaleBundle.getString("PreviewMovieFrame.Menubar.Extras.ViewOnline")); //$NON-NLS-1$
-			for	(final CCSingleOnlineReference soref : movie.getOnlineReference()) {
-				JMenuItem subitem = new JMenuItem(soref.hasDescription() ? soref.description : soref.type.asString());
-				subitem.setIcon(soref.getIcon16x16());
-				subitem.addActionListener(new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						if (soref.isSet() && soref.isValid()) HTTPUtilities.openInBrowser(soref.getURL());
-					}
-				});
-				mntmShowOnline.add(subitem);
-				if (soref == movie.getOnlineReference().Main && movie.getOnlineReference().hasAdditional()) mntmShowOnline.addSeparator();
-			}
-			mnExtras.add(mntmShowOnline);
-		}
-		else {
-			JMenuItem mntmShowOnline = new JMenuItem(LocaleBundle.getString("PreviewMovieFrame.Menubar.Extras.ViewOnline")); //$NON-NLS-1$
-			mntmShowOnline.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					if (movie.getOnlineReference().Main.isSet() && movie.getOnlineReference().isValid())
-						HTTPUtilities.openInBrowser(movie.getOnlineReference().Main.getURL());
-				}
-			});
-			mnExtras.add(mntmShowOnline);
-		}
-		
+
 		btnPlay = new JButton(Resources.ICN_MENUBAR_PLAY.get32x32());
-		btnPlay.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				playMovie();
-			}
-		});
+		btnPlay.addActionListener(e -> playMovie());
 		btnPlay.setBounds(619, 466, 65, 41);
 		getContentPane().add(btnPlay);
 		
@@ -359,21 +278,7 @@ public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener 
 	private void playMovie() {
 		movie.play();
 	}
-	
-	private void deleteMovie() {
-		if (DialogHelper.showLocaleYesNo(this, "Dialogs.DeleteMovie")) { //$NON-NLS-1$
-			movie.delete();
-			
-			dispose();
-		}
-	}
-	
-	private void editMovie() {
-		EditMovieFrame emf =  new EditMovieFrame(this, movie, this);
-		
-		emf.setVisible(true);
-	}
-	
+
 	private void updateFields() {
 		if (Main.DEBUG) {
 			setTitle("<" + movie.getLocalID() + "> " + movie.getCompleteTitle() + " (" + movie.getCoverName() + ")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$

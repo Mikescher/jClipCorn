@@ -85,6 +85,10 @@ public enum CCOnlineRefType implements ContinoousEnum<CCOnlineRefType> {
 		throw new OnlineRefFormatException(strtype);
 	}
 
+	public MultiSizeIconRef getIconRef() {
+		return icon;
+	}
+
 	public Icon getIcon() {
 		return icon.get32x32();
 	}

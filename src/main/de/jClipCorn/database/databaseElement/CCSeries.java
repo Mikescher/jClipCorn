@@ -13,8 +13,6 @@ import java.util.regex.Pattern;
 
 import de.jClipCorn.database.databaseElement.columnTypes.*;
 import org.apache.commons.lang.text.StrBuilder;
-import org.jdom2.Element;
-
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.util.NextEpisodeHelper;
 import de.jClipCorn.database.util.ExtendedViewedState;
@@ -25,12 +23,11 @@ import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.comparator.CCSeasonComparator;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.datetime.YearRange;
-import de.jClipCorn.util.exceptions.CCFormatException;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.formatter.TimeIntervallFormatter;
 import de.jClipCorn.util.stream.CCStream;
 
-public class CCSeries extends CCDatabaseElement  {
+public class CCSeries extends CCDatabaseElement {
 	private final static int GUIDE_W_BORDER = 2;
 	private final static int GUIDE_W_PADDING = 6;
 	

@@ -189,6 +189,6 @@ public class CCDBLanguageList implements Iterable<CCDBLanguage> {
 
 	@Override
 	public String toString() {
-		return "{{" + CCStreams.iterate(_languages).stringjoin(CCDBLanguage::getShortString, "|") + "}}";
+		return "{{" + CCStreams.iterate(_languages).stringjoin(CCDBLanguage::getShortString, "|") + "}}"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
 }

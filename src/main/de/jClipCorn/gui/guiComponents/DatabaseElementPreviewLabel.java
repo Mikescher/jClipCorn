@@ -164,7 +164,7 @@ public class DatabaseElementPreviewLabel extends CoverLabel {
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		if (e.getButton() == MouseEvent.BUTTON1 && mode == DEPLMode.MODE_ERROR) {
-			CCActionTree.getInstance().find("ShowLog").execute(ActionSource.DIRECT_CLICK); //$NON-NLS-1$
+			CCActionTree.getInstance().find("ShowLog").execute(ActionSource.DIRECT_CLICK, null); //$NON-NLS-1$
 			setModeDefault();
 		}
 		else if (e.getClickCount() == 2) {

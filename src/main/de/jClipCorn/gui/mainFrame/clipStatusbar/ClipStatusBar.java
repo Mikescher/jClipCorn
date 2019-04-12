@@ -136,7 +136,7 @@ public class ClipStatusBar extends AbstractClipStatusbar implements CCDBUpdateLi
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				if (e.getClickCount() == 2) {
-					CCActionTree.getInstance().find("ShowLog").execute(ActionSource.DIRECT_CLICK); //$NON-NLS-1$
+					CCActionTree.getInstance().find("ShowLog").execute(ActionSource.DIRECT_CLICK, null); //$NON-NLS-1$
 				}
 			}
 		});

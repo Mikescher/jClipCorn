@@ -3,6 +3,7 @@ package de.jClipCorn.features.actionTree;
 import javax.swing.JComponent;
 import javax.swing.KeyStroke;
 
+import de.jClipCorn.gui.mainFrame.MainFrame;
 import de.jClipCorn.gui.resources.MultiSizeIconRef;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.property.CCBoolProperty;
@@ -62,8 +63,8 @@ public abstract class UIActionTree {
 		return root.find(name);
 	}
 	
-	public void implementKeyListener(JComponent comp) {
-		getRoot().implementAllKeyListener(comp);
+	public void implementKeyListener(MainFrame f, JComponent comp) {
+		getRoot().implementAllKeyListener(f, comp);
 	}
 	
 	private void createProperties() {

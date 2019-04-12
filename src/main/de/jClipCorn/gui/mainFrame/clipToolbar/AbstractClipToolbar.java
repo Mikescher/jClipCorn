@@ -1,15 +1,14 @@
 package de.jClipCorn.gui.mainFrame.clipToolbar;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
 import javax.swing.JButton;
 import javax.swing.JToolBar;
+
 import de.jClipCorn.features.actionTree.ActionSource;
 import de.jClipCorn.features.actionTree.CCActionElement;
 import de.jClipCorn.features.actionTree.CCActionTree;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.features.log.CCLog;
+import de.jClipCorn.gui.mainFrame.MainFrame;
 import de.jClipCorn.util.helper.KeyStrokeUtil;
 
 public class AbstractClipToolbar extends JToolBar {
@@ -31,12 +30,7 @@ public class AbstractClipToolbar extends JToolBar {
 			tmp.setToolTipText(el.getCaption());
 		}
 		
-		tmp.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				el.execute(ActionSource.TOOLBAR);
-			}
-		});
+		tmp.addActionListener(arg0 -> el.execute(ActionSource.TOOLBAR, MainFrame.getInstance().getSelectedElement()));
 		
 		add(tmp);
 		

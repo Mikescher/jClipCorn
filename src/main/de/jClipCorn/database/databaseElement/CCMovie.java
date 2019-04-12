@@ -6,9 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.jClipCorn.database.databaseElement.columnTypes.*;
-import de.jClipCorn.util.Str;
 import de.jClipCorn.util.exceptions.EnumFormatException;
-import org.jdom2.Element;
 
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.util.ExtendedViewedState;

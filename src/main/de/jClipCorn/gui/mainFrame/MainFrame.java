@@ -34,8 +34,8 @@ import de.jClipCorn.gui.mainFrame.clipTable.ClipTable;
 import de.jClipCorn.gui.mainFrame.clipTable.RowFilterSource;
 import de.jClipCorn.gui.mainFrame.clipToolbar.ClipToolbar;
 import de.jClipCorn.gui.mainFrame.filterTree.FilterTree;
-import de.jClipCorn.gui.mainFrame.popupMenus.ClipMoviePopup;
-import de.jClipCorn.gui.mainFrame.popupMenus.ClipSeriesPopup;
+import de.jClipCorn.features.actionTree.menus.impl.ClipMoviePopup;
+import de.jClipCorn.features.actionTree.menus.impl.ClipSeriesPopup;
 import de.jClipCorn.gui.mainFrame.searchField.SearchField;
 import de.jClipCorn.gui.frames.quickAddMoviesDialog.QuickAddMoviesDialog;
 import de.jClipCorn.gui.frames.showUpdateFrame.ShowUpdateFrame;
@@ -78,7 +78,7 @@ public class MainFrame extends JFrame implements CCDBUpdateListener, FileDrop.Li
 		initGUI();
 
 		createWindowListener();
-		actionTree.implementKeyListener((JPanel) getContentPane());
+		actionTree.implementKeyListener(this, (JPanel) getContentPane());
 		
 		instance = this;
 		
@@ -244,25 +244,25 @@ public class MainFrame extends JFrame implements CCDBUpdateListener, FileDrop.Li
 		coverImage.setModeCover(ccDatabaseElement);
 	}
 	
-	public void onClipTableExecute(CCDatabaseElement ccDatabaseElement) {
-		if (ccDatabaseElement == null) {
+	public void onClipTableExecute(CCDatabaseElement cde) {
+		if (cde == null) {
 			return;
 		}
 		
-		if (ccDatabaseElement.isMovie()) {
+		if (cde.isMovie()) {
 			switch (CCProperties.getInstance().PROP_ON_DBLCLICK_MOVE.getValue()) {
 			case PLAY:
-				CCActionTree.getInstance().find(CCActionTree.EVENT_ON_MOVIE_EXECUTED_0).execute(ActionSource.DIRECT_CLICK);
+				CCActionTree.getInstance().find(CCActionTree.EVENT_ON_MOVIE_EXECUTED_0).execute(ActionSource.DIRECT_CLICK, cde);
 				break;
 			case PREVIEW:
-				CCActionTree.getInstance().find(CCActionTree.EVENT_ON_MOVIE_EXECUTED_1).execute(ActionSource.DIRECT_CLICK);
+				CCActionTree.getInstance().find(CCActionTree.EVENT_ON_MOVIE_EXECUTED_1).execute(ActionSource.DIRECT_CLICK, cde);
 				break;
 			case EDIT:
-				CCActionTree.getInstance().find(CCActionTree.EVENT_ON_MOVIE_EXECUTED_2).execute(ActionSource.DIRECT_CLICK);
+				CCActionTree.getInstance().find(CCActionTree.EVENT_ON_MOVIE_EXECUTED_2).execute(ActionSource.DIRECT_CLICK, cde);
 				break;
 			}
 		} else {
-			CCActionTree.getInstance().find(CCActionTree.EVENT_ON_SERIES_EXECUTED).execute(ActionSource.DIRECT_CLICK);
+			CCActionTree.getInstance().find(CCActionTree.EVENT_ON_SERIES_EXECUTED).execute(ActionSource.DIRECT_CLICK, cde);
 		}
 	}
 	

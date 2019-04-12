@@ -12,6 +12,7 @@ import javax.swing.InputMap;
 import javax.swing.JComponent;
 import javax.swing.KeyStroke;
 
+import de.jClipCorn.gui.mainFrame.MainFrame;
 import org.apache.commons.lang.StringUtils;
 
 import de.jClipCorn.database.CCMovieList;
@@ -95,6 +96,10 @@ public class CCActionElement {
 
 		return iconRes.get32x32();
 	}
+
+	public MultiSizeIconRef getIconRef() {
+		return iconRes;
+	}
 	
 	public void addListener(CCActionTreeListener al) {
 		listener.add(al);
@@ -108,18 +113,18 @@ public class CCActionElement {
 		listener.clear();
 	}
 	
-	public void execute(ActionSource src) {
-		execute("", src); //$NON-NLS-1$
+	public void execute(ActionSource src, IActionSourceObject obj) {
+		execute("", src, obj); //$NON-NLS-1$
 	}
 	
-	public void execute(String cmd, ActionSource src) {
+	public void execute(String cmd, ActionSource src, IActionSourceObject obj) {
 		if (isProhibitedInReadOnly && CCProperties.getInstance().ARG_READONLY) {
 			CCLog.addInformation(LocaleBundle.getString("LogMessage.OperationFailedDueToReadOnly")); //$NON-NLS-1$
 			return;
 		}
 		
 		for (CCActionTreeListener al : listener) {
-			al.onTreeAction(new CCTreeActionEvent(this, cmd, src));
+			al.onTreeAction(new CCTreeActionEvent(this, cmd, src, obj));
 		}
 	}
 	
@@ -214,7 +219,7 @@ public class CCActionElement {
 		return keyStrokeProperty.getValue();
 	}
 	
-	private void implementKeyListener(JComponent comp, final CCActionElement e) {
+	private void implementKeyListener(MainFrame f, JComponent comp, final CCActionElement e) {
 		final KeyStroke stroke = getKeyStroke();
 		
 		if (KeyStrokeUtil.isEmpty(stroke)) {
@@ -230,12 +235,12 @@ public class CCActionElement {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				e.onKeyPressed(stroke);
+				e.onKeyPressed(stroke, f.getSelectedElement());
 			}
 		});
 	}
 	
-	private void onKeyPressed(KeyStroke stroke) {
+	private void onKeyPressed(KeyStroke stroke, IActionSourceObject obj) {
 		if (CCMovieList.isBlocked()) {
 			return;
 		}
@@ -245,18 +250,18 @@ public class CCActionElement {
 		
 		for (int i = 0; i < childs.size(); i++) {
 			if (stroke.equals(childs.get(i).getKeyStroke())) {
-				childs.get(i).execute(ActionSource.SHORTCUT);
+				childs.get(i).execute(ActionSource.SHORTCUT, obj);
 			}
 		}
 	}
 	
-	public void implementAllKeyListener(JComponent comp) {
+	public void implementAllKeyListener(MainFrame f, JComponent comp) {
 		List<CCActionElement> childs = getAllChildren();
 		
-		implementKeyListener(comp, this);
+		implementKeyListener(f, comp, this);
 		
 		for (int i = 0; i < childs.size(); i++) {
-			childs.get(i).implementKeyListener(comp, this);
+			childs.get(i).implementKeyListener(f, comp, this);
 		}
 	}
 	
@@ -334,5 +339,9 @@ public class CCActionElement {
 
 	public void setReadOnlyRestriction() {
 		isProhibitedInReadOnly = true;
+	}
+
+	public boolean isReadOnlyRestricted() {
+		return isProhibitedInReadOnly;
 	}
 }

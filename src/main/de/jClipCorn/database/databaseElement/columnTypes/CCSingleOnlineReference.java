@@ -12,6 +12,7 @@ import de.jClipCorn.features.online.metadata.anilist.AniListParser;
 import de.jClipCorn.features.online.metadata.imdb.IMDBParserCommon;
 import de.jClipCorn.features.online.metadata.mal.MALParser;
 import de.jClipCorn.features.online.metadata.tmdb.TMDBParser;
+import de.jClipCorn.gui.resources.MultiSizeIconRef;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.exceptions.OnlineRefFormatException;
 import de.jClipCorn.util.http.HTTPUtilities;
@@ -114,6 +115,10 @@ public class CCSingleOnlineReference {
 
 	public Icon getIcon() {
 		return type.getIcon();
+	}
+
+	public MultiSizeIconRef getIconRef() {
+		return type.getIconRef();
 	}
 
 	public Icon getIcon16x16() {

@@ -1,6 +1,8 @@
-package de.jClipCorn.gui.mainFrame.popupMenus;
+package de.jClipCorn.features.actionTree.menus.impl;
 
 import de.jClipCorn.database.databaseElement.CCMovie;
+import de.jClipCorn.features.actionTree.IActionSourceObject;
+import de.jClipCorn.features.actionTree.menus.ClipPopupMenu;
 
 public class ClipMoviePopup extends ClipPopupMenu {
 	private static final long serialVersionUID = -3030683884876620182L;
@@ -50,5 +52,10 @@ public class ClipMoviePopup extends ClipPopupMenu {
 		
 		addAction("EditMovie");
 		addAction("RemMovie");
+	}
+
+	@Override
+	protected IActionSourceObject getSourceObject() {
+		return mov;
 	}
 }

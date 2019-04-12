@@ -1,6 +1,8 @@
-package de.jClipCorn.gui.mainFrame.popupMenus;
+package de.jClipCorn.features.actionTree.menus.impl;
 
 import de.jClipCorn.database.databaseElement.CCSeries;
+import de.jClipCorn.features.actionTree.IActionSourceObject;
+import de.jClipCorn.features.actionTree.menus.ClipPopupMenu;
 
 public class ClipSeriesPopup extends ClipPopupMenu {
 	private static final long serialVersionUID = -6475272518552625501L;
@@ -59,5 +61,10 @@ public class ClipSeriesPopup extends ClipPopupMenu {
 		
 		addAction("EditSeries");
 		addAction("RemSeries");
+	}
+
+	@Override
+	protected IActionSourceObject getSourceObject() {
+		return ser;
 	}
 }

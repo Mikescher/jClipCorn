@@ -3,9 +3,8 @@ package de.jClipCorn.database.databaseElement;
 import java.awt.image.BufferedImage;
 
 import de.jClipCorn.database.databaseElement.columnTypes.*;
+import de.jClipCorn.features.actionTree.IActionSourceObject;
 import de.jClipCorn.util.exceptions.EnumFormatException;
-import org.jdom2.Element;
-
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.util.ExtendedViewedState;
 import de.jClipCorn.gui.localization.LocaleBundle;
@@ -13,13 +12,10 @@ import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.util.LargeMD5Calculator;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.datetime.CCDate;
-import de.jClipCorn.util.exceptions.CCFormatException;
 import de.jClipCorn.util.exceptions.GroupFormatException;
 import de.jClipCorn.util.exceptions.OnlineRefFormatException;
-import de.jClipCorn.util.helper.ByteUtilies;
-import de.jClipCorn.util.helper.ImageUtilities;
 
-public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, ICCCoveredElement {
+public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, ICCCoveredElement, IActionSourceObject {
 	private final int localID;
 	private final CCDBElementTyp typ;
 	private String title;

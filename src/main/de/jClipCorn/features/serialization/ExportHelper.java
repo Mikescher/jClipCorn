@@ -291,16 +291,16 @@ public class ExportHelper {
 				if (contentGroups != null) {
 					CCXMLParser doc = CCXMLParser.parse(contentGroups);
 					
-					CCXMLElement groups = doc.getRoot("database").getFirstChildOrThrow("groups"); //$NON-NLS-1$
+					CCXMLElement groups = doc.getRoot("database").getFirstChildOrThrow("groups"); //$NON-NLS-1$ //$NON-NLS-2$
 		
-					for (CCXMLElement e : groups.getAllChildren("group")) {
+					for (CCXMLElement e : groups.getAllChildren("group")) { //$NON-NLS-1$
 						
 						String name = e.getAttributeValueOrThrow("name"); //$NON-NLS-1$
 						int order = e.getAttributeIntValueOrThrow("ordering"); //$NON-NLS-1$
 						String colorStr = e.getAttributeValueOrThrow("color"); //$NON-NLS-1$
-						boolean doser = e.getAttributeBoolValueOrThrow("serialize"); //$NON-NLS-1$ //$NON-NLS-2$
+						boolean doser = e.getAttributeBoolValueOrThrow("serialize"); //$NON-NLS-1$
 						String parent = e.getAttributeValueOrDefault("parent", ""); //$NON-NLS-1$ //$NON-NLS-2$
-						boolean visible = e.getAttributeBoolValueOrDefault("visible", true); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+						boolean visible = e.getAttributeBoolValueOrDefault("visible", true); //$NON-NLS-1$
 						
 						Color color = new Color(
 					            Integer.valueOf( colorStr.substring( 1, 3 ), 16 ),

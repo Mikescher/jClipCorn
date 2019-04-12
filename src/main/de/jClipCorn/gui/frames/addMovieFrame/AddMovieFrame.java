@@ -27,11 +27,7 @@ import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 
 import de.jClipCorn.database.databaseElement.columnTypes.*;
-import de.jClipCorn.features.serialization.xmlimport.ImportOptions;
 import de.jClipCorn.gui.guiComponents.language.LanguageChooser;
-import de.jClipCorn.util.xml.CCXMLElement;
-import org.jdom2.Element;
-
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.gui.frames.inputErrorFrame.InputErrorDialog;
@@ -47,7 +43,6 @@ import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.features.online.metadata.ParseResultHandler;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.datetime.CCDate;
-import de.jClipCorn.util.exceptions.CCFormatException;
 import de.jClipCorn.util.exceptions.EnumFormatException;
 import de.jClipCorn.util.formatter.FileSizeFormatter;
 import de.jClipCorn.util.formatter.PathFormatter;

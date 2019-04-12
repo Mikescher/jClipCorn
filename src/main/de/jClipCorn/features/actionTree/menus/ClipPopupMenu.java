@@ -1,4 +1,4 @@
-package de.jClipCorn.gui.mainFrame.popupMenus;
+package de.jClipCorn.features.actionTree.menus;
 
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
@@ -10,6 +10,7 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCSingleOnlineReference
 import de.jClipCorn.features.actionTree.ActionSource;
 import de.jClipCorn.features.actionTree.CCActionElement;
 import de.jClipCorn.features.actionTree.CCActionTree;
+import de.jClipCorn.features.actionTree.IActionSourceObject;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.util.helper.KeyStrokeUtil;
@@ -22,7 +23,9 @@ public abstract class ClipPopupMenu extends JPopupMenu {
 	}
 	
 	protected abstract void init();
-	
+
+	protected abstract IActionSourceObject getSourceObject();
+
 	protected JMenuItem addAction(String actionIdent) {
 		final CCActionElement el = CCActionTree.getInstance().find(actionIdent);
 		
@@ -39,7 +42,7 @@ public abstract class ClipPopupMenu extends JPopupMenu {
 			item.setAccelerator(el.getKeyStroke());
 		}
 		
-		item.addActionListener(arg0 -> el.execute(ActionSource.POPUP_MENU));
+		item.addActionListener(arg0 -> el.execute(ActionSource.POPUP_MENU, getSourceObject()));
 		
 		return item;
 	}
@@ -61,12 +64,12 @@ public abstract class ClipPopupMenu extends JPopupMenu {
 			item.setAccelerator(el.getKeyStroke());
 		}
 		
-		item.addActionListener(arg0 -> el.execute(ActionSource.POPUP_MENU));
+		item.addActionListener(arg0 -> el.execute(ActionSource.POPUP_MENU, getSourceObject()));
 		
 		ActionMenuWrapper amw = new ActionMenuWrapper(item);
 		
 		for (CCActionElement child : el.getAllChildren()) {
-			amw.add(child);
+			amw.add(child, getSourceObject());
 		}
 		
 		return amw;
@@ -106,4 +109,6 @@ public abstract class ClipPopupMenu extends JPopupMenu {
 		}
 		
 	}
+
+
 }

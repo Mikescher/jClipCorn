@@ -3,10 +3,7 @@ package de.jClipCorn.database.databaseElement;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Vector;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -21,6 +18,7 @@ import de.jClipCorn.database.util.ExtendedViewedStateType;
 import de.jClipCorn.features.actionTree.IActionSourceObject;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.LargeMD5Calculator;
+import de.jClipCorn.util.comparator.CCEpisodeComparator;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.formatter.PathFormatter;
@@ -76,6 +74,10 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 	
 	public void directlyInsertEpisode(CCEpisode ep) { // ONLY CALLED FROM CCDATABASE
 		episodes.add(ep);
+	}
+
+	public void enforceOrder() {
+		episodes.sort(Comparator.comparingInt(CCEpisode::getEpisodeNumber));
 	}
 
 	public int getSeasonID() {

@@ -902,6 +902,8 @@ public class CCDatabase {
 					}
 					rs.close();
 				}
+
+				for (CCSeason s : seasonMap.values()) s.enforceOrder();
 			}
 		} catch (SQLException | CCFormatException e) {
 			CCLog.addError(e);
@@ -948,6 +950,7 @@ public class CCDatabase {
 			}
 
 			se.abortUpdating();
+			se.enforceOrder();
 			
 			rs.close();
 			

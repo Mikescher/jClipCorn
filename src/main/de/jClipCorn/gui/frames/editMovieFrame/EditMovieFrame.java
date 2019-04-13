@@ -7,6 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +27,7 @@ import javax.swing.event.ChangeListener;
 
 import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.columnTypes.*;
+import de.jClipCorn.gui.frames.genericTextDialog.GenericTextDialog;
 import de.jClipCorn.gui.frames.inputErrorFrame.InputErrorDialog;
 import de.jClipCorn.gui.guiComponents.ReadableTextField;
 import de.jClipCorn.gui.guiComponents.TagPanel;
@@ -40,18 +42,27 @@ import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.features.online.metadata.ParseResultHandler;
 import de.jClipCorn.properties.CCProperties;
+import de.jClipCorn.util.Str;
 import de.jClipCorn.util.Validator;
 import de.jClipCorn.util.adapter.UpdateCallbackAdapter;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.exceptions.CCFormatException;
 import de.jClipCorn.util.exceptions.EnumFormatException;
+import de.jClipCorn.util.exceptions.MediaQueryException;
 import de.jClipCorn.util.formatter.FileSizeFormatter;
 import de.jClipCorn.util.formatter.PathFormatter;
+import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.helper.FileChooserHelper;
 import de.jClipCorn.util.listener.ImageCropperResultListener;
 import de.jClipCorn.util.listener.UpdateCallbackListener;
 import de.jClipCorn.features.userdataProblem.UserDataProblem;
 import de.jClipCorn.features.userdataProblem.UserDataProblemHandler;
+import de.jClipCorn.util.mediaquery.MediaQueryResult;
+import de.jClipCorn.util.mediaquery.MediaQueryRunner;
+import de.jClipCorn.util.stream.CCStreams;
+import org.apache.commons.lang3.exception.ExceptionUtils;
+
+import javax.swing.Icon;
 
 public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDataProblemHandler, ImageCropperResultListener {
 	private static final long serialVersionUID = 4392838185334567222L;
@@ -150,6 +161,9 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 	private JLabel label_30;
 	private JLabel lblGruppen;
 	private GroupListEditor edGroups;
+	private JButton btnMediaInfo1;
+	private JButton btnMediaInfoRaw;
+	private JButton btnMediaInfo2;
 
 	public EditMovieFrame(Component owner, CCMovie movie, UpdateCallbackListener ucl) {
 		super();
@@ -184,12 +198,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		getContentPane().add(edPart0);
 		
 		btnChoose0 = new JButton(LocaleBundle.getString("AddMovieFrame.btnChoose.text")); //$NON-NLS-1$
-		btnChoose0.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onBtnChooseClicked(0);
-			}
-		});
+		btnChoose0.addActionListener(e -> onBtnChooseClicked(0));
 		btnChoose0.setBounds(367, 11, 41, 25);
 		getContentPane().add(btnChoose0);
 		
@@ -199,22 +208,12 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		getContentPane().add(edPart1);
 		
 		btnChoose1 = new JButton(LocaleBundle.getString("AddMovieFrame.btnChoose.text")); //$NON-NLS-1$
-		btnChoose1.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onBtnChooseClicked(1);
-			}
-		});
+		btnChoose1.addActionListener(e -> onBtnChooseClicked(1));
 		btnChoose1.setBounds(277, 41, 41, 25);
 		getContentPane().add(btnChoose1);
 		
 		btnClear1 = new JButton(LocaleBundle.getString("AddMovieFrame.btnClear.text")); //$NON-NLS-1$
-		btnClear1.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onBtnClearClicked(1);
-			}
-		});
+		btnClear1.addActionListener(e -> onBtnClearClicked(1));
 		btnClear1.setBounds(330, 41, 78, 25);
 		getContentPane().add(btnClear1);
 		
@@ -228,22 +227,12 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		getContentPane().add(edPart2);
 		
 		btnChoose2 = new JButton(LocaleBundle.getString("AddMovieFrame.btnChoose.text")); //$NON-NLS-1$
-		btnChoose2.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onBtnChooseClicked(2);
-			}
-		});
+		btnChoose2.addActionListener(e -> onBtnChooseClicked(2));
 		btnChoose2.setBounds(277, 71, 41, 25);
 		getContentPane().add(btnChoose2);
 		
 		btnClear2 = new JButton(LocaleBundle.getString("AddMovieFrame.btnClear.text")); //$NON-NLS-1$
-		btnClear2.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onBtnClearClicked(2);
-			}
-		});
+		btnClear2.addActionListener(e -> onBtnClearClicked(2));
 		btnClear2.setBounds(330, 71, 78, 25);
 		getContentPane().add(btnClear2);
 		
@@ -253,22 +242,12 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		getContentPane().add(edPart3);
 		
 		btnChoose3 = new JButton(LocaleBundle.getString("AddMovieFrame.btnChoose.text")); //$NON-NLS-1$
-		btnChoose3.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onBtnChooseClicked(3);
-			}
-		});
+		btnChoose3.addActionListener(e -> onBtnChooseClicked(3));
 		btnChoose3.setBounds(277, 101, 41, 25);
 		getContentPane().add(btnChoose3);
 		
 		btnClear3 = new JButton(LocaleBundle.getString("AddMovieFrame.btnClear.text")); //$NON-NLS-1$
-		btnClear3.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onBtnClearClicked(3);
-			}
-		});
+		btnClear3.addActionListener(e -> onBtnClearClicked(3));
 		btnClear3.setBounds(330, 101, 78, 25);
 		getContentPane().add(btnClear3);
 		
@@ -278,22 +257,12 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		getContentPane().add(edPart4);
 		
 		btnChoose4 = new JButton(LocaleBundle.getString("AddMovieFrame.btnChoose.text")); //$NON-NLS-1$
-		btnChoose4.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onBtnChooseClicked(4);
-			}
-		});
+		btnChoose4.addActionListener(e -> onBtnChooseClicked(4));
 		btnChoose4.setBounds(277, 131, 41, 25);
 		getContentPane().add(btnChoose4);
 		
 		btnClear4 = new JButton(LocaleBundle.getString("AddMovieFrame.btnClear.text")); //$NON-NLS-1$
-		btnClear4.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onBtnClearClicked(4);
-			}
-		});
+		btnClear4.addActionListener(e -> onBtnClearClicked(4));
 		btnClear4.setBounds(330, 131, 78, 25);
 		getContentPane().add(btnClear4);
 		
@@ -303,22 +272,12 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		getContentPane().add(edPart5);
 		
 		btnChoose5 = new JButton(LocaleBundle.getString("AddMovieFrame.btnChoose.text")); //$NON-NLS-1$
-		btnChoose5.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onBtnChooseClicked(5);
-			}
-		});
+		btnChoose5.addActionListener(e -> onBtnChooseClicked(5));
 		btnChoose5.setBounds(277, 161, 41, 25);
 		getContentPane().add(btnChoose5);
 		
 		btnClear5 = new JButton(LocaleBundle.getString("AddMovieFrame.btnClear.text")); //$NON-NLS-1$
-		btnClear5.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onBtnClearClicked(5);
-			}
-		});
+		btnClear5.addActionListener(e -> onBtnClearClicked(5));
 		btnClear5.setBounds(330, 161, 78, 25);
 		getContentPane().add(btnClear5);
 		
@@ -453,7 +412,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		getContentPane().add(spnAddDate);
 		
 		label_20 = new JLabel("min."); //$NON-NLS-1$
-		label_20.setBounds(322, 406, 52, 16);
+		label_20.setBounds(314, 407, 52, 16);
 		getContentPane().add(label_20);
 		
 		label_21 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblEinfgDatum.text")); //$NON-NLS-1$
@@ -500,12 +459,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		getContentPane().add(label_26);
 		
 		spnSize = new JSpinner();
-		spnSize.addChangeListener(new ChangeListener() {
-			@Override
-			public void stateChanged(ChangeEvent arg0) {
-				updateByteDisp();
-			}
-		});
+		spnSize.addChangeListener(arg0 -> updateByteDisp());
 		spnSize.setModel(new SpinnerNumberModel(0L, 0L, null, 1L));
 		spnSize.setBounds(93, 585, 212, 20);
 		getContentPane().add(spnSize);
@@ -519,26 +473,19 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		getContentPane().add(label_28);
 		
 		btnOK = new JButton(LocaleBundle.getString("UIGeneric.btnOK.text")); //$NON-NLS-1$
-		btnOK.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				try {
-					onBtnOK(true);
-				} catch (EnumFormatException e1) {
-					CCLog.addError(e1);
-				}
+		btnOK.addActionListener(e ->
+		{
+			try {
+				onBtnOK(true);
+			} catch (EnumFormatException e1) {
+				CCLog.addError(e1);
 			}
 		});
 		btnOK.setBounds(263, 722, 95, 25);
 		getContentPane().add(btnOK);
 		
 		btnCancel = new JButton(LocaleBundle.getString("UIGeneric.btnCancel.text")); //$NON-NLS-1$
-		btnCancel.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				dispose();
-			}
-		});
+		btnCancel.addActionListener(e -> dispose());
 		btnCancel.setBounds(377, 722, 105, 25);
 		getContentPane().add(btnCancel);
 		
@@ -552,7 +499,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		getContentPane().add(label_29);
 		
 		spnZyklus = new JSpinner();
-		spnZyklus.setModel(new SpinnerNumberModel(0, new Integer(-1), null, 1));
+		spnZyklus.setModel(new SpinnerNumberModel(0, -1, null, 1));
 		spnZyklus.setBounds(253, 285, 52, 20);
 		getContentPane().add(spnZyklus);
 		
@@ -566,12 +513,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		
 		btnRecalculateSize = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnRecalcSizes.text")); //$NON-NLS-1$
 		btnRecalculateSize.setToolTipText(LocaleBundle.getString("AddEpisodeFrame.btnRecalcSizes.text")); //$NON-NLS-1$
-		btnRecalculateSize.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				updateFilesize();
-			}
-		});
+		btnRecalculateSize.addActionListener(e -> updateFilesize());
 		btnRecalculateSize.setBounds(93, 615, 212, 23);
 		getContentPane().add(btnRecalculateSize);
 		
@@ -592,32 +534,17 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		getContentPane().add(label_33);
 		
 		btnToday = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnToday.text")); //$NON-NLS-1$
-		btnToday.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				spnAddDate.setValue(CCDate.getCurrentDate());
-			}
-		});
+		btnToday.addActionListener(arg0 -> spnAddDate.setValue(CCDate.getCurrentDate()));
 		btnToday.setBounds(313, 435, 95, 23);
 		getContentPane().add(btnToday);
 		
 		btnTestParts = new JButton(LocaleBundle.getString("EditMovieFrame.btnTestParts.text")); //$NON-NLS-1$
-		btnTestParts.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				testPaths();
-			}
-		});
+		btnTestParts.addActionListener(arg0 -> testPaths());
 		btnTestParts.setBounds(277, 191, 131, 23);
 		getContentPane().add(btnTestParts);
 		
 		btnCalcQuality = new JButton(LocaleBundle.getString("AddMovieFrame.btnCalcQuality.text")); //$NON-NLS-1$
-		btnCalcQuality.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				recalcQuality();
-			}
-		});
+		btnCalcQuality.addActionListener(e -> recalcQuality());
 		btnCalcQuality.setBounds(313, 345, 95, 23);
 		getContentPane().add(btnCalcQuality);
 		
@@ -648,6 +575,21 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		edGroups = new GroupListEditor(movie.getMovieList());
 		edGroups.setBounds(506, 230, 212, 22);
 		getContentPane().add(edGroups);
+		
+		btnMediaInfo1 = new JButton(Resources.ICN_MENUBAR_UPDATECODECDATA.get16x16());
+		btnMediaInfo1.setBounds(386, 375, 22, 22);
+		btnMediaInfo1.addActionListener(e -> parseCodecMetadata_Lang());
+		getContentPane().add(btnMediaInfo1);
+		
+		btnMediaInfoRaw = new JButton("...");
+		btnMediaInfoRaw.setBounds(411, 375, 32, 22);
+		btnMediaInfoRaw.addActionListener(e -> showCodecMetadata());
+		getContentPane().add(btnMediaInfoRaw);
+		
+		btnMediaInfo2 = new JButton(Resources.ICN_MENUBAR_UPDATECODECDATA.get16x16());
+		btnMediaInfo2.setBounds(386, 402, 22, 22);
+		btnMediaInfo2.addActionListener(e -> parseCodecMetadata_Len());
+		getContentPane().add(btnMediaInfo2);
 	}
 
 	private void setDefaultValues() {
@@ -855,6 +797,10 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 	@Override
 	public void setMovieFormat(CCFileFormat cmf) {
 		cbxFormat.setSelectedIndex(cmf.asInt());
+	}
+
+	public void setMovieLanguage(CCDBLanguageList lang) {
+		cbxLanguage.setValue(lang);
 	}
 
 	@Override
@@ -1146,5 +1092,100 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 	@Override
 	public void editingCanceled() {
 		// nothing
+	}
+
+	private void parseCodecMetadata_Lang() {
+		String mqp = CCProperties.getInstance().PROP_PLAY_MEDIAINFO_PATH.getValue();
+		if (Str.isNullOrWhitespace(mqp) || !new File(mqp).exists() || !new File(mqp).isFile() || !new File(mqp).canExecute()) {
+			DialogHelper.showLocalError(this, "Dialogs.MediaInfoNotFound"); //$NON-NLS-1$
+			return;
+		}
+
+		try {
+			List<MediaQueryResult> dat = new ArrayList<>();
+
+			if (!Str.isNullOrWhitespace(edPart0.getText())) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(edPart0.getText())));
+			if (!Str.isNullOrWhitespace(edPart1.getText())) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(edPart1.getText())));
+			if (!Str.isNullOrWhitespace(edPart2.getText())) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(edPart2.getText())));
+			if (!Str.isNullOrWhitespace(edPart3.getText())) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(edPart3.getText())));
+			if (!Str.isNullOrWhitespace(edPart4.getText())) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(edPart4.getText())));
+			if (!Str.isNullOrWhitespace(edPart5.getText())) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(edPart5.getText())));
+
+			if (dat.isEmpty()) {
+				DialogHelper.showLocalError(this, "Dialogs.MediaInfoEmpty"); //$NON-NLS-1$
+				return;
+			}
+
+			if (CCStreams.iterate(dat).any(d -> d.AudioLanguages == null)) {
+				DialogHelper.showLocalError(this, "Dialogs.MediaInfoFailed"); //$NON-NLS-1$
+				return;
+			}
+
+			CCDBLanguageList dbll = dat.get(0).AudioLanguages;
+			for (int i = 1; i < dat.size(); i++) dbll = CCDBLanguageList.intersection(dbll, dat.get(i).AudioLanguages);
+
+			if (dbll.isEmpty()) {
+				DialogHelper.showLocalError(this, "Dialogs.MediaInfoEmpty"); //$NON-NLS-1$
+				return;
+			} else {
+				setMovieLanguage(dbll);
+			}
+
+		} catch (IOException | MediaQueryException e) {
+			GenericTextDialog.showText(this, getTitle(), e.getMessage() + "\n\n" + ExceptionUtils.getMessage(e) + "\n\n" + ExceptionUtils.getStackTrace(e), false); //$NON-NLS-1$ //$NON-NLS-2$
+		}
+	}
+
+	private void parseCodecMetadata_Len() {
+		String mqp = CCProperties.getInstance().PROP_PLAY_MEDIAINFO_PATH.getValue();
+		if (Str.isNullOrWhitespace(mqp) || !new File(mqp).exists() || !new File(mqp).isFile() || !new File(mqp).canExecute()) {
+			DialogHelper.showLocalError(this, "Dialogs.MediaInfoNotFound"); //$NON-NLS-1$
+			return;
+		}
+
+		try {
+			List<MediaQueryResult> dat = new ArrayList<>();
+
+			if (!Str.isNullOrWhitespace(edPart0.getText())) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(edPart0.getText())));
+			if (!Str.isNullOrWhitespace(edPart1.getText())) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(edPart1.getText())));
+			if (!Str.isNullOrWhitespace(edPart2.getText())) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(edPart2.getText())));
+			if (!Str.isNullOrWhitespace(edPart3.getText())) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(edPart3.getText())));
+			if (!Str.isNullOrWhitespace(edPart4.getText())) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(edPart4.getText())));
+			if (!Str.isNullOrWhitespace(edPart5.getText())) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(edPart5.getText())));
+
+			if (dat.isEmpty()) {
+				DialogHelper.showLocalError(this, "Dialogs.MediaInfoEmpty"); //$NON-NLS-1$
+				return;
+			}
+
+			int dur = (int) (CCStreams.iterate(dat).any(d -> d.Duration == -1) ? -1 : (CCStreams.iterate(dat).sumDouble(d -> d.Duration)/60));
+			setLength(dur);
+
+		} catch (IOException | MediaQueryException e) {
+			GenericTextDialog.showText(this, getTitle(), e.getMessage() + "\n\n" + ExceptionUtils.getMessage(e) + "\n\n" + ExceptionUtils.getStackTrace(e), false); //$NON-NLS-1$ //$NON-NLS-2$
+		}
+	}
+
+	private void showCodecMetadata() {
+		String mqp = CCProperties.getInstance().PROP_PLAY_MEDIAINFO_PATH.getValue();
+		if (Str.isNullOrWhitespace(mqp) || !new File(mqp).exists() || !new File(mqp).isFile() || !new File(mqp).canExecute()) {
+			DialogHelper.showLocalError(this, "Dialogs.MediaInfoNotFound"); //$NON-NLS-1$
+			return;
+		}
+
+		StringBuilder b = new StringBuilder();
+
+		try {
+			if (!Str.isNullOrWhitespace(edPart0.getText())) b.append(MediaQueryRunner.queryRaw(PathFormatter.fromCCPath(edPart0.getText()))).append("\n\n\n\n\n"); //$NON-NLS-1$
+			if (!Str.isNullOrWhitespace(edPart1.getText())) b.append(MediaQueryRunner.queryRaw(PathFormatter.fromCCPath(edPart1.getText()))).append("\n\n\n\n\n"); //$NON-NLS-1$
+			if (!Str.isNullOrWhitespace(edPart2.getText())) b.append(MediaQueryRunner.queryRaw(PathFormatter.fromCCPath(edPart2.getText()))).append("\n\n\n\n\n"); //$NON-NLS-1$
+			if (!Str.isNullOrWhitespace(edPart3.getText())) b.append(MediaQueryRunner.queryRaw(PathFormatter.fromCCPath(edPart3.getText()))).append("\n\n\n\n\n"); //$NON-NLS-1$
+			if (!Str.isNullOrWhitespace(edPart4.getText())) b.append(MediaQueryRunner.queryRaw(PathFormatter.fromCCPath(edPart4.getText()))).append("\n\n\n\n\n"); //$NON-NLS-1$
+			if (!Str.isNullOrWhitespace(edPart5.getText())) b.append(MediaQueryRunner.queryRaw(PathFormatter.fromCCPath(edPart5.getText()))).append("\n\n\n\n\n"); //$NON-NLS-1$
+
+			GenericTextDialog.showText(this, getTitle(), b.toString(), false);
+		} catch (IOException | MediaQueryException e) {
+			GenericTextDialog.showText(this, getTitle(), e.getMessage() + "\n\n" + ExceptionUtils.getMessage(e) + "\n\n" + ExceptionUtils.getStackTrace(e), false); //$NON-NLS-1$ //$NON-NLS-2$
+		}
 	}
 }

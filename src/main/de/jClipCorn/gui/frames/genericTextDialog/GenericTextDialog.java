@@ -2,8 +2,7 @@ package de.jClipCorn.gui.frames.genericTextDialog;
 
 import java.awt.*;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
 import de.jClipCorn.gui.localization.LocaleBundle;
@@ -12,10 +11,6 @@ import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.RowSpec;
 import com.jgoodies.forms.layout.FormSpecs;
-import javax.swing.JTextArea;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JScrollPane;
 
 public class GenericTextDialog extends JDialog {
 	private static final long serialVersionUID = 315192508785168630L;
@@ -66,6 +61,8 @@ public class GenericTextDialog extends JDialog {
 		scrollPane.setViewportView(textArea);
 		textArea.setEditable(false);
 		textArea.setText(content);
+		scrollPane.getVerticalScrollBar().setValue(0);
+		SwingUtilities.invokeLater(() -> scrollPane.getVerticalScrollBar().setValue(0));
 		
 		panel = new JPanel();
 		FlowLayout flowLayout = (FlowLayout) panel.getLayout();

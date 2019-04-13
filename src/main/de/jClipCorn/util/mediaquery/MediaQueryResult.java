@@ -101,6 +101,8 @@ public class MediaQueryResult {
 		if (!foundGeneral) throw new InnerMediaQueryException("No track 'General' found"); //$NON-NLS-1$
 		if (!foundVideo) throw new InnerMediaQueryException("No track 'Video' found"); //$NON-NLS-1$
 
+		if (vtracks.size() == 1 && vtracks.get(0).Duration != -1) duration = vtracks.get(0).Duration;
+
 		CCDBLanguageList alng = getLang(atracks);
 		
 		return new MediaQueryResult(format, format_Version, fileSize, duration, overallBitRate, frameRate, vtracks.get(0), vtracks, atracks, stracks, alng);
@@ -276,6 +278,8 @@ public class MediaQueryResult {
 		if (Str.isNullOrWhitespace(langval)) return true;
 		if (langval.equalsIgnoreCase("Undefined")) return true; //$NON-NLS-1$
 		if (langval.equalsIgnoreCase("Keine Angabe")) return true; //$NON-NLS-1$
+		if (langval.equalsIgnoreCase("unk")) return true; //$NON-NLS-1$
+		if (langval.equalsIgnoreCase("Unknown")) return true; //$NON-NLS-1$
 
 		return false;
 	}

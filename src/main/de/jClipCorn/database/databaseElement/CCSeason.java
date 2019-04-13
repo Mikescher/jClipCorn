@@ -18,7 +18,7 @@ import de.jClipCorn.database.util.ExtendedViewedStateType;
 import de.jClipCorn.features.actionTree.IActionSourceObject;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.LargeMD5Calculator;
-import de.jClipCorn.util.comparator.CCEpisodeComparator;
+import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.formatter.PathFormatter;
@@ -567,7 +567,7 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 		String seasonfoldername = getFolderNameForCreatedFolderStructure();
 		int seasonIndex = getIndexForCreatedFolderStructure();
 
-		String filename = PathFormatter.fixStringToFilesystemname(String.format("S%sE%s - %s.%s", decFormattter.format(seasonIndex), decFormattter.format(episodeNumber), title, format.asString()));
+		String filename = PathFormatter.fixStringToFilesystemname(String.format("S%sE%s - %s.%s", decFormattter.format(seasonIndex), decFormattter.format(episodeNumber), Str.limit(title, 128), format.asString()));
 
 		return PathFormatter.combine(seriesfoldername, seasonfoldername, filename);
 	}

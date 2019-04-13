@@ -61,6 +61,9 @@ public class UpdateCodecFrame extends JFrame {
 	private JButton button;
 	private JScrollPane scrollPane;
 	private JCheckBox cbAutoScroll;
+	private JSpinner spinnerDynLen;
+	private JPanel panel_2;
+	private JLabel lblApproxLength;
 	
 	public UpdateCodecFrame(Component owner, CCMovieList mlist) {
 		super();
@@ -94,7 +97,7 @@ public class UpdateCodecFrame extends JFrame {
 				FormSpecs.RELATED_GAP_ROWSPEC,}));
 		
 		btnStartCollectingData = new JButton(LocaleBundle.getString("UpdateMetadataFrame.BtnCollect1")); //$NON-NLS-1$
-		btnStartCollectingData.addActionListener(this::queryOnline);
+		btnStartCollectingData.addActionListener(this::queryMetadata);
 		getContentPane().add(btnStartCollectingData, "2, 2"); //$NON-NLS-1$
 		
 		progressBar = new JProgressBar();
@@ -115,32 +118,32 @@ public class UpdateCodecFrame extends JFrame {
 		
 		btnShowAll = new JToggleButton("All"); //$NON-NLS-1$
 		panel_1.add(btnShowAll, "1, 1"); //$NON-NLS-1$
-		btnShowAll.addActionListener(e -> setFiltered(FilterState.ALL, true));
+		btnShowAll.addActionListener(e -> setFiltered(FilterState.ALL, true, true));
 		btnShowAll.setSelected(true);
 		
 		btnShowFiltered = new JToggleButton(LocaleBundle.getString("UpdateCodecFrame.Filter1")); //$NON-NLS-1$
 		panel_1.add(btnShowFiltered, "2, 1"); //$NON-NLS-1$
-		btnShowFiltered.addActionListener(e -> setFiltered(FilterState.CHANGED, true));
+		btnShowFiltered.addActionListener(e -> setFiltered(FilterState.CHANGED, true, true));
 		
 		btnShowFilteredLang = new JToggleButton(LocaleBundle.getString("UpdateCodecFrame.Filter2")); //$NON-NLS-1$
 		panel_1.add(btnShowFilteredLang, "3, 1"); //$NON-NLS-1$
-		btnShowFilteredLang.addActionListener(e -> setFiltered(FilterState.CHANGED_LANG, true));
+		btnShowFilteredLang.addActionListener(e -> setFiltered(FilterState.CHANGED_LANG, true, true));
 		
 		btnShowFilteredLen = new JToggleButton(LocaleBundle.getString("UpdateCodecFrame.Filter3")); //$NON-NLS-1$
 		panel_1.add(btnShowFilteredLen, "4, 1"); //$NON-NLS-1$
-		btnShowFilteredLen.addActionListener(e -> setFiltered(FilterState.CHANGED_LEN, true));
+		btnShowFilteredLen.addActionListener(e -> setFiltered(FilterState.CHANGED_LEN, true, true));
 		
 		btnShowFilteredDynLen = new JToggleButton(LocaleBundle.getString("UpdateCodecFrame.Filter4")); //$NON-NLS-1$
 		panel_1.add(btnShowFilteredDynLen, "5, 1"); //$NON-NLS-1$
-		btnShowFilteredDynLen.addActionListener(e -> setFiltered(FilterState.CHANGED_LEN_DYN, true));
+		btnShowFilteredDynLen.addActionListener(e -> setFiltered(FilterState.CHANGED_LEN_DYN, true, true));
 
 		btnShowFilteredErr = new JToggleButton(LocaleBundle.getString("UpdateCodecFrame.Filter5")); //$NON-NLS-1$
 		panel_1.add(btnShowFilteredErr, "6, 1"); //$NON-NLS-1$
-		btnShowFilteredErr.addActionListener(e -> setFiltered(FilterState.ELEM_ERROR, true));
+		btnShowFilteredErr.addActionListener(e -> setFiltered(FilterState.ELEM_ERROR, true, true));
 
 		btnShowFilteredWarn = new JToggleButton(LocaleBundle.getString("UpdateCodecFrame.Filter6")); //$NON-NLS-1$
 		panel_1.add(btnShowFilteredWarn, "7, 1"); //$NON-NLS-1$
-		btnShowFilteredWarn.addActionListener(e -> setFiltered(FilterState.ELEM_WARN, true));
+		btnShowFilteredWarn.addActionListener(e -> setFiltered(FilterState.ELEM_WARN, true, true));
 		
 		tableMain = new UpdateCodecTable(this);
 		getContentPane().add(tableMain, "2, 4, 4, 1, fill, fill"); //$NON-NLS-1$
@@ -157,7 +160,9 @@ public class UpdateCodecFrame extends JFrame {
 				FormSpecs.RELATED_GAP_ROWSPEC,
 				RowSpec.decode("16dlu"), //$NON-NLS-1$
 				FormSpecs.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("32dlu"),})); //$NON-NLS-1$
+				FormSpecs.DEFAULT_ROWSPEC,
+				FormSpecs.RELATED_GAP_ROWSPEC,
+				RowSpec.decode("20dlu"),})); //$NON-NLS-1$
 		
 		btnUpdateSelectedLang = new JButton(LocaleBundle.getString("UpdateCodecFrame.Button1")); //$NON-NLS-1$
 		btnUpdateSelectedLang.setEnabled(false);
@@ -169,7 +174,7 @@ public class UpdateCodecFrame extends JFrame {
 		btnUpdateSelectedLen.addActionListener(e -> updateSelectedLengths(true));
 		
 		scrollPane = new JScrollPane();
-		panel.add(scrollPane, "2, 1, 1, 5, fill, fill"); //$NON-NLS-1$
+		panel.add(scrollPane, "2, 1, 1, 7, fill, fill"); //$NON-NLS-1$
 		
 		textArea = new JTextArea();
 		scrollPane.setViewportView(textArea);
@@ -183,9 +188,26 @@ public class UpdateCodecFrame extends JFrame {
 			GenericTextDialog.showText(UpdateCodecFrame.this, title, textArea.getText(), false);
 		});
 		
+		panel_2 = new JPanel();
+		panel.add(panel_2, "1, 5, fill, fill"); //$NON-NLS-1$
+		panel_2.setLayout(new FormLayout(new ColumnSpec[] {
+				FormSpecs.PREF_COLSPEC,
+				FormSpecs.RELATED_GAP_COLSPEC,
+				ColumnSpec.decode("default:grow"),}, //$NON-NLS-1$
+			new RowSpec[] {
+				FormSpecs.DEFAULT_ROWSPEC,}));
+		
+		lblApproxLength = new JLabel("Approx. Length (%):"); //$NON-NLS-1$
+		panel_2.add(lblApproxLength, "1, 1"); //$NON-NLS-1$
+		
+		spinnerDynLen = new JSpinner();
+		panel_2.add(spinnerDynLen, "3, 1"); //$NON-NLS-1$
+		spinnerDynLen.setModel(new SpinnerNumberModel(15.0, 0.0, 100.0, 1));
+		spinnerDynLen.addChangeListener(e -> { setFiltered(selectedFilter, true, true); });
+		
 		cbAutoScroll = new JCheckBox(LocaleBundle.getString("UpdateCodecFrame.CBScroll")); //$NON-NLS-1$
-		panel.add(cbAutoScroll, "1, 5, left, bottom"); //$NON-NLS-1$
-		panel.add(button, "3, 5, right, bottom"); //$NON-NLS-1$
+		panel.add(cbAutoScroll, "1, 7, left, bottom"); //$NON-NLS-1$
+		panel.add(button, "3, 7, right, bottom"); //$NON-NLS-1$
 	}
 
 	public void setSelection(UpdateCodecTableElement element)
@@ -201,7 +223,7 @@ public class UpdateCodecFrame extends JFrame {
 		SwingUtilities.invokeLater(() -> scrollPane.getVerticalScrollBar().setValue(0));
 	}
 
-	private void setFiltered(FilterState state, boolean triggerUpdate) {
+	private void setFiltered(FilterState state, boolean triggerUpdate, boolean force) {
 		boolean changed = (selectedFilter != state);
 		
 		selectedFilter = state;
@@ -214,13 +236,13 @@ public class UpdateCodecFrame extends JFrame {
 		btnShowFilteredLen.setSelected(state == FilterState.CHANGED_LEN);
 		btnShowFilteredWarn.setSelected(state == FilterState.ELEM_WARN);
 
-		if (triggerUpdate && changed) {
+		if (triggerUpdate && (changed || force)) {
 			switch (state) {
 			case ALL:
 				tableMain.resetFilter();
 				break;
 			case CHANGED:
-				tableMain.setFilter(e -> e.Processed && e.hasDiff(0.15));
+				tableMain.setFilter(e -> e.Processed && e.hasDiff(((double)spinnerDynLen.getValue())/100.0));
 				break;
 			case CHANGED_LANG:
 				tableMain.setFilter(e -> e.Processed && e.hasDiff(-1));
@@ -229,13 +251,13 @@ public class UpdateCodecFrame extends JFrame {
 				tableMain.setFilter(e -> e.Processed && e.hasLenDiff(0.0));
 				break;
 			case CHANGED_LEN_DYN:
-				tableMain.setFilter(e -> e.Processed && e.hasLenDiff(10.0));
+				tableMain.setFilter(e -> e.Processed && e.hasLenDiff(((double)spinnerDynLen.getValue())/100.0));
 				break;
 			case ELEM_ERROR:
 				tableMain.setFilter(e -> e.Processed && e.MQError != null);
 				break;
 			case ELEM_WARN:
-				tableMain.setFilter(e -> e.Processed && e.hasDiff(0.15) && e.getOldLanguage().iterate().any(ol -> !e.getNewLanguage().contains(ol)) );
+				tableMain.setFilter(e -> e.Processed && e.hasDiff(-1) && e.getOldLanguage().iterate().any(ol -> !e.getNewLanguage().contains(ol)) );
 				break;
 			}
 		}
@@ -252,7 +274,7 @@ public class UpdateCodecFrame extends JFrame {
 		tableMain.autoResize();
 	}
 	
-	private void queryOnline(ActionEvent e) {
+	private void queryMetadata(ActionEvent e) {
 		if (collThread != null && collThread.isAlive()) {
 			cancelBackground = true;
 		} else {
@@ -368,7 +390,7 @@ public class UpdateCodecFrame extends JFrame {
 			CCDBLanguageList v = elem.getNewLanguage();
 			if (v.isEmpty()) continue;
 
-			if (CCDBLanguageList.equals(v, elem.Element.getLanguage())) elem.Element.setLanguage(v);
+			if (!CCDBLanguageList.equals(v, elem.Element.getLanguage())) {elem.Element.setLanguage(v); count++; }
 		}
 
 		DialogHelper.showDispatchInformation(this, LocaleBundle.getString("Dialogs.CodecUpdateSuccess_caption"), LocaleBundle.getFormattedString("Dialogs.CodecUpdateSuccess", count)); //$NON-NLS-1$ //$NON-NLS-2$
@@ -390,7 +412,7 @@ public class UpdateCodecFrame extends JFrame {
 			int v = elem.getNewDuration();
 			if (v == -1) continue;
 
-			if (v != elem.Element.getLength()) elem.Element.setLength(v);
+			if (v != elem.Element.getLength()) { elem.Element.setLength(v); count++; }
 		}
 
 		DialogHelper.showDispatchInformation(this, LocaleBundle.getString("Dialogs.CodecUpdateSuccess_caption"), LocaleBundle.getFormattedString("Dialogs.CodecUpdateSuccess", count)); //$NON-NLS-1$ //$NON-NLS-2$

@@ -13,8 +13,9 @@ public class MediaQueryResultVideoTrack {
 	public final double FrameRate;        // -1 if not set
 	public final int FrameCount;          // -1 if not set
 	public final int BitDepth;            // -1 if not set
+	public final double Duration;        // -1 if not set
 
-	private MediaQueryResultVideoTrack(String format, String format_Profile, String codecID, int bitRate, int width, int height, double frameRate, int frameCount, int bitDepth) {
+	private MediaQueryResultVideoTrack(String format, String format_Profile, String codecID, int bitRate, int width, int height, double frameRate, int frameCount, int bitDepth, double duration) {
 		Format = format;
 		Format_Profile = format_Profile;
 		CodecID = codecID;
@@ -24,6 +25,7 @@ public class MediaQueryResultVideoTrack {
 		FrameRate = frameRate;
 		FrameCount = frameCount;
 		BitDepth = bitDepth;
+		Duration = duration;
 	}
 
 	@SuppressWarnings("nls")
@@ -35,6 +37,7 @@ public class MediaQueryResultVideoTrack {
 		int width;
 		int height;
 		double frameRate;
+		double duration;
 		int frameCount;
 		int bitDepth;
 
@@ -47,7 +50,8 @@ public class MediaQueryResultVideoTrack {
 		frameRate = xml.getFirstChildDoubleValueOrDefault("FrameRate", -1);
 		frameCount = xml.getFirstChildIntValueOrDefault("FrameCount", -1);
 		bitDepth = xml.getFirstChildIntValueOrDefault("BitDepth", -1);
+		duration = xml.getFirstChildDoubleValueOrDefault("Duration", -1);
 
-		return new MediaQueryResultVideoTrack(format,format_Profile, codecID, bitRate, width, height, frameRate, frameCount, bitDepth);
+		return new MediaQueryResultVideoTrack(format,format_Profile, codecID, bitRate, width, height, frameRate, frameCount, bitDepth, duration);
 	}
 }

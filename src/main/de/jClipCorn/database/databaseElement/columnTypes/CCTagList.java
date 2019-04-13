@@ -3,15 +3,12 @@ package de.jClipCorn.database.databaseElement.columnTypes;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
-import java.util.Optional;
 
 import javax.swing.ImageIcon;
 
 import de.jClipCorn.database.util.iterators.TagsIterator;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.Str;
-import de.jClipCorn.util.exceptions.EnumFormatException;
-import de.jClipCorn.util.exceptions.GenreOverflowException;
 import de.jClipCorn.util.exceptions.TagNotFoundException;
 import de.jClipCorn.util.stream.CCStream;
 
@@ -277,13 +274,13 @@ public class CCTagList {
 	}
 
 	public String serialize() {
-		return iterate().stringjoin(g -> String.valueOf(g.Index), ";");
+		return iterate().stringjoin(g -> String.valueOf(g.Index), ";"); //$NON-NLS-1$
 	}
 
 	public static CCTagList deserialize(String v) throws TagNotFoundException
 	{
 		CCTagList r = CCTagList.createEmpty();
-		for (String str : v.split(";")) if (!Str.isNullOrWhitespace(str)) r.setTag(CCSingleTag.find(Integer.parseInt(str)), true);
+		for (String str : v.split(";")) if (!Str.isNullOrWhitespace(str)) r.setTag(CCSingleTag.find(Integer.parseInt(str)), true); //$NON-NLS-1$
 		return r;
 	}
 }

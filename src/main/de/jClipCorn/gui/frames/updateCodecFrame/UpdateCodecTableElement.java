@@ -46,7 +46,7 @@ public class UpdateCodecTableElement {
 		if (!Processed) return Resources.ICN_TRANSPARENT.get16x16();
 		if (MQError != null) return Resources.ICN_GENERIC_ORB_RED.get16x16();
 
-		if (hasDiff(0.15))
+		if (hasDiff(-1))
 			return Resources.ICN_GENERIC_ORB_YELLOW.get16x16(); // has diff
 		else
 			return Resources.ICN_GENERIC_ORB_GRAY.get16x16(); // no diff

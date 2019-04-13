@@ -346,13 +346,13 @@ public class CCGenreList {
 	}
 
 	public String serialize() {
-		return iterate().stringjoin(g -> String.valueOf(g.asInt()), ";");
+		return iterate().stringjoin(g -> String.valueOf(g.asInt()), ";"); //$NON-NLS-1$
 	}
 
 	public static CCGenreList deserialize(String v) throws EnumFormatException, GenreOverflowException
 	{
 		Optional<Long> _g = Optional.of(0x0000000000000000L);
-		for (String str : v.split(";")) {
+		for (String str : v.split(";")) { //$NON-NLS-1$
 			if (!Str.isNullOrWhitespace(str)) _g = calcAddGenre(_g, CCGenre.getWrapper().findOrException(Integer.parseInt(str)));
 		}
 		if (!_g.isPresent()) throw new GenreOverflowException();

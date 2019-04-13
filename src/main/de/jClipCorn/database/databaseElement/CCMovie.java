@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.jClipCorn.database.databaseElement.columnTypes.*;
+import de.jClipCorn.util.Str;
 import de.jClipCorn.util.exceptions.EnumFormatException;
 
 import de.jClipCorn.database.CCMovieList;
@@ -396,7 +397,7 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 		if (getZyklus().isSet()) {
 			filename.append(getZyklus().getFormatted()).append(" - ");
 			
-			filename.append(getTitle().replace(": ", " - "));
+			filename.append(Str.limit(getTitle().replace(": ", " - "), 128));
 		} else {
 			filename.append(getTitle().replace(": ", " - "));
 		}

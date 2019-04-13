@@ -35,6 +35,7 @@ public abstract class JCCSimpleTable<TData> extends JScrollPane implements ListS
 		columns = configureColumns();
 		model = new JCCSimpleTableModel<>(columns);
 		sorter = new TableRowSorter<>(model);
+		sorter.setSortsOnUpdates(true);
 
 		table = new JCCSimpleSFixTable<>(model, columns);
 		configureTable();

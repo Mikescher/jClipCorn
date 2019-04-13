@@ -900,7 +900,7 @@ public class DatabaseValidator {
 
 		for (CCSeries el : movielist.iteratorSeries()) {
 			for(CCSingleOnlineReference soref : el.getOnlineReference()) {
-				if (! refSet.add(el.getCommonLanguages().serializeToLong() + '_' + soref.toSerializationString())) { //$NON-NLS-1$
+				if (! refSet.add(el.getCommonLanguages().serializeToLong() + '_' + soref.toSerializationString())) {
 					e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_DUPLICATE_REF, el));
 				}
 			}

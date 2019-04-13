@@ -73,6 +73,7 @@ public class JCCSimpleTableModel<TData> extends AbstractTableModel implements Ta
 		data.set(idx, newData);
 		
 		for (int col = 0; col < columns.size(); col++) fireTableCellUpdated(idx, col);
+		fireTableRowsUpdated(idx, idx);
 	}
 
 	public void changeData(TData oldData, TData newData) {

@@ -4,6 +4,8 @@ import java.awt.Component;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
@@ -27,6 +29,7 @@ import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 
 import de.jClipCorn.database.databaseElement.columnTypes.*;
+import de.jClipCorn.gui.frames.genericTextDialog.GenericTextDialog;
 import de.jClipCorn.gui.guiComponents.language.LanguageChooser;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCMovie;
@@ -42,15 +45,22 @@ import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.features.online.metadata.ParseResultHandler;
 import de.jClipCorn.properties.CCProperties;
+import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.exceptions.EnumFormatException;
+import de.jClipCorn.util.exceptions.MediaQueryException;
 import de.jClipCorn.util.formatter.FileSizeFormatter;
 import de.jClipCorn.util.formatter.PathFormatter;
+import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.helper.FileChooserHelper;
+import de.jClipCorn.util.mediaquery.MediaQueryResult;
+import de.jClipCorn.util.mediaquery.MediaQueryRunner;
 import de.jClipCorn.util.parser.FilenameParser;
 import de.jClipCorn.util.parser.FilenameParserResult;
 import de.jClipCorn.features.userdataProblem.UserDataProblem;
 import de.jClipCorn.features.userdataProblem.UserDataProblemHandler;
+import de.jClipCorn.util.stream.CCStreams;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 
 public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDataProblemHandler {
 	private static final long serialVersionUID = -5912378114066741528L;
@@ -146,6 +156,9 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 	private JLabel lblOnlineid;
 	private JLabel lblGroups;
 	private GroupListEditor edGroups;
+	private JButton btnMediaInfo;
+	private JButton btnMediaInfo2;
+	private JLabel lblLenAuto;
 
 	/**
 	 * @wbp.parser.constructor
@@ -191,6 +204,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 747, 785);
 		contentPane = new JPanel();
+		contentPane.setFocusable(false);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
@@ -560,6 +574,20 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		edGroups.setEnabled(false);
 		edGroups.setBounds(95, 337, 212, 20);
 		contentPane.add(edGroups);
+		
+		btnMediaInfo = new JButton(Resources.ICN_MENUBAR_UPDATECODECDATA.get16x16());
+		btnMediaInfo.setBounds(319, 403, 22, 22);
+		btnMediaInfo.addActionListener(e -> parseCodecMetadata());
+		contentPane.add(btnMediaInfo);
+		
+		btnMediaInfo2 = new JButton("..."); //$NON-NLS-1$
+		btnMediaInfo2.setBounds(344, 403, 32, 22);
+		btnMediaInfo2.addActionListener(e -> showCodecMetadata());
+		contentPane.add(btnMediaInfo2);
+		
+		lblLenAuto = new JLabel(""); //$NON-NLS-1$
+		lblLenAuto.setBounds(384, 374, 78, 16);
+		contentPane.add(lblLenAuto);
 	}
 	
 	public void parseFromTemp(CCMovie tmpMov, boolean resetAddDate, boolean resetScore) {
@@ -1099,6 +1127,75 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 			onBtnOK(false);
 		} catch (EnumFormatException e) {
 			CCLog.addError(e);
+		}
+	}
+
+	private void parseCodecMetadata() {
+		String mqp = CCProperties.getInstance().PROP_PLAY_MEDIAINFO_PATH.getValue();
+		if (Str.isNullOrWhitespace(mqp) || !new File(mqp).exists() || !new File(mqp).isFile() || !new File(mqp).canExecute()) {
+			DialogHelper.showLocalError(this, "Dialogs.MediaInfoNotFound"); //$NON-NLS-1$
+			return;
+		}
+
+		try {
+			List<MediaQueryResult> dat = new ArrayList<>();
+
+			if (!Str.isNullOrWhitespace(ed_Part0.getText())) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(ed_Part0.getText())));
+			if (!Str.isNullOrWhitespace(ed_Part1.getText())) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(ed_Part1.getText())));
+			if (!Str.isNullOrWhitespace(ed_Part2.getText())) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(ed_Part2.getText())));
+			if (!Str.isNullOrWhitespace(ed_Part3.getText())) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(ed_Part3.getText())));
+			if (!Str.isNullOrWhitespace(ed_Part4.getText())) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(ed_Part4.getText())));
+			if (!Str.isNullOrWhitespace(ed_Part5.getText())) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(ed_Part5.getText())));
+
+			if (dat.isEmpty()) {
+				lblLenAuto.setText(Str.Empty);
+				DialogHelper.showLocalError(this, "Dialogs.MediaInfoEmpty"); //$NON-NLS-1$
+				return;
+			}
+
+			int dur = (int) (CCStreams.iterate(dat).any(d -> d.Duration == -1) ? -1 : (CCStreams.iterate(dat).sumDouble(d -> d.Duration)/60));
+			lblLenAuto.setText("("+dur+")"); //$NON-NLS-1$ //$NON-NLS-2$
+
+			if (CCStreams.iterate(dat).any(d -> d.AudioLanguages == null)) {
+				DialogHelper.showLocalError(this, "Dialogs.MediaInfoFailed"); //$NON-NLS-1$
+				return;
+			}
+
+			CCDBLanguageList dbll = dat.get(0).AudioLanguages;
+			for (int i = 1; i < dat.size(); i++) dbll = CCDBLanguageList.intersection(dbll, dat.get(i).AudioLanguages);
+
+			if (dbll.isEmpty()) {
+				DialogHelper.showLocalError(this, "Dialogs.MediaInfoEmpty"); //$NON-NLS-1$
+				return;
+			} else {
+				setMovieLanguage(dbll);
+			}
+
+		} catch (IOException | MediaQueryException e) {
+			GenericTextDialog.showText(this, getTitle(), e.getMessage() + "\n\n" + ExceptionUtils.getMessage(e) + "\n\n" + ExceptionUtils.getStackTrace(e), false); //$NON-NLS-1$ //$NON-NLS-2$
+		}
+	}
+
+	private void showCodecMetadata() {
+		String mqp = CCProperties.getInstance().PROP_PLAY_MEDIAINFO_PATH.getValue();
+		if (Str.isNullOrWhitespace(mqp) || !new File(mqp).exists() || !new File(mqp).isFile() || !new File(mqp).canExecute()) {
+			DialogHelper.showLocalError(this, "Dialogs.MediaInfoNotFound"); //$NON-NLS-1$
+			return;
+		}
+
+		StringBuilder b = new StringBuilder();
+
+		try {
+			if (!Str.isNullOrWhitespace(ed_Part0.getText())) b.append(MediaQueryRunner.queryRaw(PathFormatter.fromCCPath(ed_Part0.getText()))).append("\n\n\n\n\n"); //$NON-NLS-1$
+			if (!Str.isNullOrWhitespace(ed_Part1.getText())) b.append(MediaQueryRunner.queryRaw(PathFormatter.fromCCPath(ed_Part1.getText()))).append("\n\n\n\n\n"); //$NON-NLS-1$
+			if (!Str.isNullOrWhitespace(ed_Part2.getText())) b.append(MediaQueryRunner.queryRaw(PathFormatter.fromCCPath(ed_Part2.getText()))).append("\n\n\n\n\n"); //$NON-NLS-1$
+			if (!Str.isNullOrWhitespace(ed_Part3.getText())) b.append(MediaQueryRunner.queryRaw(PathFormatter.fromCCPath(ed_Part3.getText()))).append("\n\n\n\n\n"); //$NON-NLS-1$
+			if (!Str.isNullOrWhitespace(ed_Part4.getText())) b.append(MediaQueryRunner.queryRaw(PathFormatter.fromCCPath(ed_Part4.getText()))).append("\n\n\n\n\n"); //$NON-NLS-1$
+			if (!Str.isNullOrWhitespace(ed_Part5.getText())) b.append(MediaQueryRunner.queryRaw(PathFormatter.fromCCPath(ed_Part5.getText()))).append("\n\n\n\n\n"); //$NON-NLS-1$
+
+			GenericTextDialog.showText(this, getTitle(), b.toString(), false);
+		} catch (IOException | MediaQueryException e) {
+			GenericTextDialog.showText(this, getTitle(), e.getMessage() + "\n\n" + ExceptionUtils.getMessage(e) + "\n\n" + ExceptionUtils.getStackTrace(e), false); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 }

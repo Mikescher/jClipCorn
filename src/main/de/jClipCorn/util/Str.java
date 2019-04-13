@@ -58,4 +58,10 @@ public final class Str {
 		if (str == null) return Empty;
 		return str;
 	}
+
+	public static String limit(String str, int max) {
+		if (str == null) return null;
+		if (str.length()<=max)return str;
+		return str.substring(0, max-3)+"...";
+	}
 }

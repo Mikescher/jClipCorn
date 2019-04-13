@@ -1411,5 +1411,4 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 			GenericTextDialog.showText(this, getTitle(), e.getMessage() + "\n\n" + ExceptionUtils.getMessage(e) + "\n\n" + ExceptionUtils.getStackTrace(e), false); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
-
 }

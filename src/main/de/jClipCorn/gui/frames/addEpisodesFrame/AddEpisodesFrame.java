@@ -7,6 +7,7 @@ import java.awt.Font;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,6 +30,8 @@ import javax.swing.UIManager;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
+
 import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguageList;
@@ -37,6 +40,7 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCFileFormat;
 import de.jClipCorn.database.databaseElement.columnTypes.CCQuality;
 import de.jClipCorn.features.userdataProblem.UserDataProblem;
 import de.jClipCorn.features.userdataProblem.UserDataProblemHandler;
+import de.jClipCorn.gui.frames.genericTextDialog.GenericTextDialog;
 import de.jClipCorn.gui.frames.inputErrorFrame.InputErrorDialog;
 import de.jClipCorn.gui.frames.omniParserFrame.OmniParserFrame;
 import de.jClipCorn.gui.guiComponents.HFixListCellRenderer;
@@ -46,14 +50,18 @@ import de.jClipCorn.gui.guiComponents.language.LanguageChooser;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.properties.CCProperties;
+import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.exceptions.CCFormatException;
+import de.jClipCorn.util.exceptions.MediaQueryException;
 import de.jClipCorn.util.formatter.FileSizeFormatter;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.helper.FileChooserHelper;
 import de.jClipCorn.util.listener.OmniParserCallbackListener;
 import de.jClipCorn.util.listener.UpdateCallbackListener;
+import de.jClipCorn.util.mediaquery.MediaQueryResult;
+import de.jClipCorn.util.mediaquery.MediaQueryRunner;
 
 public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler, OmniParserCallbackListener {
 	private static final long serialVersionUID = 8825373383589912037L;
@@ -135,10 +143,15 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler, 
 	private LanguageChooser ctrlLang;
 	private LanguageChooser ctrlMultiLang;
 	private JButton btnSpracheSetzen;
+	private JButton btnMediaInfo1;
+	private JButton btnMediaInfo2;
+	private JButton btnMediaInfoRaw;
+	private JButton btnSideAutoLang;
+	private JButton btnSideAutoLen;
 
 	public AddEpisodesFrame(Component owner, CCSeason ss, UpdateCallbackListener ucl) {
 		super();
-		setSize(new Dimension(1100, 650));
+		setSize(new Dimension(1100, 750));
 		this.parent = ss;
 		this.listener = ucl;
 		
@@ -165,12 +178,12 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler, 
 		getContentPane().setLayout(null);
 
 		pnlEpisodeInfo = new JPanel();
-		pnlEpisodeInfo.setBounds(355, 3, 358, 581);
+		pnlEpisodeInfo.setBounds(355, 3, 358, 681);
 		getContentPane().add(pnlEpisodeInfo);
 		pnlEpisodeInfo.setLayout(null);
 
 		pnlInfo = new JPanel();
-		pnlInfo.setBounds(0, 10, 357, 560);
+		pnlInfo.setBounds(0, 10, 357, 660);
 		pnlEpisodeInfo.add(pnlInfo);
 		pnlInfo.setBorder(new LineBorder(new Color(0, 0, 0)));
 		pnlInfo.setLayout(null);
@@ -249,18 +262,18 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler, 
 
 		btnEpCancel = new JButton(LocaleBundle.getString("UIGeneric.btnCancel.text")); //$NON-NLS-1$
 		btnEpCancel.addActionListener(e -> cancelInfoDisplay());
-		btnEpCancel.setBounds(12, 526, 97, 23);
+		btnEpCancel.setBounds(12, 626, 97, 23);
 		pnlInfo.add(btnEpCancel);
 
 		btnEpOk = new JButton(LocaleBundle.getString("UIGeneric.btnOK.text")); //$NON-NLS-1$
 		btnEpOk.addActionListener(e -> okInfoDisplay(true));
-		btnEpOk.setBounds(121, 526, 85, 23);
+		btnEpOk.setBounds(121, 626, 85, 23);
 		pnlInfo.add(btnEpOk);
 
 		btnNext = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnNext.text")); //$NON-NLS-1$
 		btnNext.setFont(new Font("Dialog", Font.BOLD | Font.ITALIC, 12)); //$NON-NLS-1$
 		btnNext.addActionListener(e -> onBtnNext());
-		btnNext.setBounds(276, 526, 71, 23);
+		btnNext.setBounds(276, 626, 71, 23);
 		pnlInfo.add(btnNext);
 
 		btnRecalcSize = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnRecalcSizes.text")); //$NON-NLS-1$
@@ -283,11 +296,11 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler, 
 		pnlInfo.add(lblNewLabel);
 
 		cbxQuality = new JComboBox<>();
-		cbxQuality.setBounds(74, 155, 193, 22);
+		cbxQuality.setBounds(74, 123, 193, 22);
 		pnlInfo.add(cbxQuality);
 
 		lblQuality = new JLabel(LocaleBundle.getString("AddMovieFrame.lblQuality.text")); //$NON-NLS-1$
-		lblQuality.setBounds(12, 158, 46, 14);
+		lblQuality.setBounds(12, 126, 46, 14);
 		pnlInfo.add(lblQuality);
 
 		btnOpen = new JButton(LocaleBundle.getString("AddMovieFrame.btnChoose.text")); //$NON-NLS-1$
@@ -297,19 +310,37 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler, 
 		
 		btnCalcQuality = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnCalcQuality.text")); //$NON-NLS-1$
 		btnCalcQuality.addActionListener(e -> cbxQuality.setSelectedIndex(CCQuality.calculateQuality((long)spnSize.getValue(), (int) spnLength.getValue(), 1).asInt()));
-		btnCalcQuality.setBounds(276, 155, 71, 22);
+		btnCalcQuality.setBounds(276, 123, 71, 22);
 		pnlInfo.add(btnCalcQuality);
 		
 		label_1 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblSprache.text")); //$NON-NLS-1$
-		label_1.setBounds(12, 123, 55, 16);
+		label_1.setBounds(12, 160, 55, 16);
 		pnlInfo.add(label_1);
 		
 		ctrlLang = new LanguageChooser();
-		ctrlLang.setBounds(73, 120, 194, 22);
+		ctrlLang.setBounds(74, 157, 194, 22);
 		pnlInfo.add(ctrlLang);
+		
+		btnMediaInfo1 = new JButton(Resources.ICN_MENUBAR_UPDATECODECDATA.get16x16());
+		btnMediaInfo1.setToolTipText("MediaInfo"); //$NON-NLS-1$
+		btnMediaInfo1.setBounds(325, 157, 22, 22);
+		btnMediaInfo1.addActionListener(e -> parseCodecMetadata_Lang());
+		pnlInfo.add(btnMediaInfo1);
+		
+		btnMediaInfo2 = new JButton(Resources.ICN_MENUBAR_UPDATECODECDATA.get16x16());
+		btnMediaInfo2.setToolTipText("MediaInfo"); //$NON-NLS-1$
+		btnMediaInfo2.setBounds(325, 192, 22, 22);
+		btnMediaInfo2.addActionListener(e -> parseCodecMetadata_Len());
+		pnlInfo.add(btnMediaInfo2);
+		
+		btnMediaInfoRaw = new JButton("..."); //$NON-NLS-1$
+		btnMediaInfoRaw.setToolTipText("MediaInfo"); //$NON-NLS-1$
+		btnMediaInfoRaw.setBounds(286, 157, 32, 22);
+		btnMediaInfoRaw.addActionListener(e -> showCodecMetadata());
+		pnlInfo.add(btnMediaInfoRaw);
 
 		scrollPane = new JScrollPane();
-		scrollPane.setBounds(12, 47, 329, 503);
+		scrollPane.setBounds(12, 47, 329, 603);
 		getContentPane().add(scrollPane);
 
 		lsEpisodes = new JList<>();
@@ -320,7 +351,7 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler, 
 
 		btnOK = new JButton(LocaleBundle.getString("UIGeneric.btnOK.text")); //$NON-NLS-1$
 		btnOK.addActionListener(e -> onOKClicked(true));
-		btnOK.setBounds(507, 588, 89, 23);
+		btnOK.setBounds(507, 688, 89, 23);
 		getContentPane().add(btnOK);
 
 		btnAddEpisodes = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnAddEpisodes.text")); //$NON-NLS-1$
@@ -335,7 +366,7 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler, 
 		getContentPane().add(lblSeason);
 
 		pnlEdit = new JPanel();
-		pnlEdit.setBounds(725, 3, 358, 569);
+		pnlEdit.setBounds(725, 3, 358, 669);
 		getContentPane().add(pnlEdit);
 		pnlEdit.setBorder(new TitledBorder(new LineBorder(UIManager.getColor("TitledBorder.titleColor")), LocaleBundle.getString("AddEpisodeFrame.pnlEdit.caption"), TitledBorder.LEFT, TitledBorder.TOP, null, UIManager.getColor("TitledBorder.titleColor"))); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		pnlEdit.setLayout(null);
@@ -490,17 +521,27 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler, 
 		btnSpracheSetzen.setBounds(165, 367, 181, 23);
 		pnlEdit.add(btnSpracheSetzen);
 		
+		btnSideAutoLang = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnMassSetLang.title")); //$NON-NLS-1$
+		btnSideAutoLang.addActionListener(e -> massMediaInfoLang());
+		btnSideAutoLang.setBounds(14, 571, 332, 23);
+		pnlEdit.add(btnSideAutoLang);
+		
+		btnSideAutoLen = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnMassSetLen.title")); //$NON-NLS-1$
+		btnSideAutoLen.addActionListener(e -> massMediaInfoLen());
+		btnSideAutoLen.setBounds(12, 606, 334, 23);
+		pnlEdit.add(btnSideAutoLen);
+		
 		btnOmniparser = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnOmniParser.text")); //$NON-NLS-1$
 		btnOmniparser.addActionListener(arg0 -> {
 			OmniParserFrame oframe = new OmniParserFrame(AddEpisodesFrame.this, AddEpisodesFrame.this, getTitleList(), getCommonFolderPathStart());
 			oframe.setVisible(true);
 		});
-		btnOmniparser.setBounds(12, 561, 110, 23);
+		btnOmniparser.setBounds(12, 661, 110, 23);
 		getContentPane().add(btnOmniparser);
 		
 		btnAutoMeta = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnAutoMeta.text")); //$NON-NLS-1$
 		btnAutoMeta.addActionListener(arg0 -> autoMetaDataCalc());
-		btnAutoMeta.setBounds(134, 561, 207, 23);
+		btnAutoMeta.setBounds(134, 661, 207, 23);
 		getContentPane().add(btnAutoMeta);
 	}
 
@@ -1036,6 +1077,71 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler, 
 		updateList();
 	}
 
+	private void massMediaInfoLang() {
+		lsEpisodes.setSelectedIndex(-1);
+
+		StringBuilder err = new StringBuilder();
+		
+		for (int i = 0; i < parent.getEpisodeCount(); i++) {
+			CCEpisode ep = parent.getEpisodeByArrayIndex(i);
+
+			try {
+				MediaQueryResult dat = MediaQueryRunner.query(PathFormatter.fromCCPath(ep.getPart()));
+
+				if (dat.AudioLanguages == null) {
+					err.append("[").append(ep.getEpisodeNumber()).append("] ").append(ep.getTitle()).append("\n").append("No language in file").append("\n\n"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+					continue;
+				}
+
+				CCDBLanguageList dbll = dat.AudioLanguages;
+
+				if (dbll.isEmpty()) {
+					err.append("[").append(ep.getEpisodeNumber()).append("] ").append(ep.getTitle()).append("\n").append("Language is empty").append("\n\n"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+					DialogHelper.showLocalError(this, "Dialogs.MediaInfoEmpty"); //$NON-NLS-1$
+					continue;
+				} else {
+					ep.setLanguage(dbll);
+				}
+
+			} catch (IOException | MediaQueryException e) {
+				err.append("[").append(ep.getEpisodeNumber()).append("] ").append(ep.getTitle()).append("\n").append(ExceptionUtils.getMessage(e)).append("\n\n"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			}
+		}
+
+		updateList();
+		
+		if (!err.toString().isEmpty()) {
+			GenericTextDialog.showText(this, getTitle(), err.toString(), true);
+		}
+	}
+
+	private void massMediaInfoLen() {
+		lsEpisodes.setSelectedIndex(-1);
+
+		StringBuilder err = new StringBuilder();
+		
+		for (int i = 0; i < parent.getEpisodeCount(); i++) {
+			CCEpisode ep = parent.getEpisodeByArrayIndex(i);
+
+			try {
+				MediaQueryResult dat = MediaQueryRunner.query(PathFormatter.fromCCPath(ep.getPart()));
+
+				int dur = (dat.Duration==-1)?(-1):(int)(dat.Duration/60);
+				if (dur == -1) throw new MediaQueryException("Duration == -1"); //$NON-NLS-1$
+				ep.setLength(dur);
+
+			} catch (IOException | MediaQueryException e) {
+				err.append("[").append(ep.getEpisodeNumber()).append("] ").append(ep.getTitle()).append("\n").append(ExceptionUtils.getMessage(e)).append("\n\n"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			}
+		}
+
+		updateList();
+		
+		if (!err.toString().isEmpty()) {
+			GenericTextDialog.showText(this, getTitle(), err.toString(), true);
+		}
+	}
+
 	public void autoMetaDataCalc() {
 		lsEpisodes.setSelectedIndex(-1);
 
@@ -1075,4 +1181,69 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler, 
 
 		updateList();
 	}
+	
+	private void parseCodecMetadata_Lang() {
+		String mqp = CCProperties.getInstance().PROP_PLAY_MEDIAINFO_PATH.getValue();
+		if (Str.isNullOrWhitespace(mqp) || !new File(mqp).exists() || !new File(mqp).isFile() || !new File(mqp).canExecute()) {
+			DialogHelper.showLocalError(this, "Dialogs.MediaInfoNotFound"); //$NON-NLS-1$
+			return;
+		}
+
+		try {
+			MediaQueryResult dat = MediaQueryRunner.query(PathFormatter.fromCCPath(edPart.getText()));
+
+			if (dat.AudioLanguages == null) {
+				DialogHelper.showLocalError(this, "Dialogs.MediaInfoFailed"); //$NON-NLS-1$
+				return;
+			}
+
+			CCDBLanguageList dbll = dat.AudioLanguages;
+
+			if (dbll.isEmpty()) {
+				DialogHelper.showLocalError(this, "Dialogs.MediaInfoEmpty"); //$NON-NLS-1$
+				return;
+			} else {
+				ctrlLang.setValue(dbll);
+			}
+
+		} catch (IOException | MediaQueryException e) {
+			GenericTextDialog.showText(this, getTitle(), e.getMessage() + "\n\n" + ExceptionUtils.getMessage(e) + "\n\n" + ExceptionUtils.getStackTrace(e), false); //$NON-NLS-1$ //$NON-NLS-2$
+		}
+	}
+
+	private void parseCodecMetadata_Len() {
+		String mqp = CCProperties.getInstance().PROP_PLAY_MEDIAINFO_PATH.getValue();
+		if (Str.isNullOrWhitespace(mqp) || !new File(mqp).exists() || !new File(mqp).isFile() || !new File(mqp).canExecute()) {
+			DialogHelper.showLocalError(this, "Dialogs.MediaInfoNotFound"); //$NON-NLS-1$
+			return;
+		}
+
+		try {
+			MediaQueryResult dat = MediaQueryRunner.query(PathFormatter.fromCCPath(edPart.getText()));
+
+			int dur = (dat.Duration==-1)?(-1):(int)(dat.Duration/60);
+			if (dur == -1) throw new MediaQueryException("Duration == -1"); //$NON-NLS-1$
+			spnLength.setValue(dur);
+
+		} catch (IOException | MediaQueryException e) {
+			GenericTextDialog.showText(this, getTitle(), e.getMessage() + "\n\n" + ExceptionUtils.getMessage(e) + "\n\n" + ExceptionUtils.getStackTrace(e), false); //$NON-NLS-1$ //$NON-NLS-2$
+		}
+	}
+
+	private void showCodecMetadata() {
+		String mqp = CCProperties.getInstance().PROP_PLAY_MEDIAINFO_PATH.getValue();
+		if (Str.isNullOrWhitespace(mqp) || !new File(mqp).exists() || !new File(mqp).isFile() || !new File(mqp).canExecute()) {
+			DialogHelper.showLocalError(this, "Dialogs.MediaInfoNotFound"); //$NON-NLS-1$
+			return;
+		}
+
+		try {
+			String dat = MediaQueryRunner.queryRaw(PathFormatter.fromCCPath(edPart.getText()));
+
+			GenericTextDialog.showText(this, getTitle(), dat, false);
+		} catch (IOException | MediaQueryException e) {
+			GenericTextDialog.showText(this, getTitle(), e.getMessage() + "\n\n" + ExceptionUtils.getMessage(e) + "\n\n" + ExceptionUtils.getStackTrace(e), false); //$NON-NLS-1$ //$NON-NLS-2$
+		}
+	}
+
 }

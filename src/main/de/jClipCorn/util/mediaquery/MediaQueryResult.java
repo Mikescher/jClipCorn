@@ -271,4 +271,12 @@ public class MediaQueryResult {
 
 		throw new InnerMediaQueryException("Unknown audio language '" + langval + "'"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
+
+	public static boolean isNullLanguage(String langval) {
+		if (Str.isNullOrWhitespace(langval)) return true;
+		if (langval.equalsIgnoreCase("Undefined")) return true; //$NON-NLS-1$
+		if (langval.equalsIgnoreCase("Keine Angabe")) return true; //$NON-NLS-1$
+
+		return false;
+	}
 }

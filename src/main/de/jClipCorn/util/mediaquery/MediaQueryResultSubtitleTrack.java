@@ -14,7 +14,7 @@ public class MediaQueryResultSubtitleTrack {
 	private MediaQueryResultSubtitleTrack(String format, String title, String codecID, String language, boolean aDefault) {
 		Format = format;
 		Title = title;
-		Language = language;
+		Language = MediaQueryResult.isNullLanguage(language) ? null : language;
 		CodecID = codecID;
 		Default = aDefault;
 	}

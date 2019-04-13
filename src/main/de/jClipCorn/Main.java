@@ -28,7 +28,7 @@ import de.jClipCorn.util.helper.LookAndFeelManager;
 
 public class Main {
 	public final static String TITLE = "jClipCorn"; //$NON-NLS-1$
-	public final static String VERSION = /*<gradle_version_marker>*/"1.10.5.29"/*</gradle_version_marker>*/;	//$NON-NLS-1$
+	public final static String VERSION = /*<gradle_version_marker>*/"1.10.5.31"/*</gradle_version_marker>*/;	//$NON-NLS-1$
 	public final static String DBVERSION = "12"; 	//$NON-NLS-1$
 	public final static String JXMLVER = "2"; 	//$NON-NLS-1$
 
@@ -225,3 +225,5 @@ public class Main {
 //TODO CCTagList should be immutable (like the other column objects)
 
 //TODO RELEASE 1.10.6.0
+
+//TODO MKVMediaInfo in [AddMovie] [EditMovie] [EditEpisode] [AddMultipleEpisodes] [QuickAddEpisode]

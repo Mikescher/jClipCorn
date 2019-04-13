@@ -148,7 +148,7 @@ public class CheckDatabaseFrame extends JFrame {
 		lsCategories.addListSelectionListener(arg0 ->
 		{
 			ListModel<DatabaseError> lm = lsMain.getModel();
-			if (lm instanceof DatabaseErrorListModel) {
+			if (lm instanceof DatabaseErrorListModel && lsCategories.getSelectedValue() != null) {
 				((DatabaseErrorListModel)lm).updateFilter(lsCategories.getSelectedValue().Value);
 			}
 		});

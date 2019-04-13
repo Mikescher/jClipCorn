@@ -13,7 +13,7 @@ public class MediaQueryResultAudioTrack {
 
 	private MediaQueryResultAudioTrack(String format, String language, String codecID, boolean aDefault) {
 		Format = format;
-		Language = language;
+		Language = MediaQueryResult.isNullLanguage(language) ? null : language;
 		CodecID = codecID;
 		Default = aDefault;
 	}

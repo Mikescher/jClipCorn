@@ -12,6 +12,7 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCDateTimeList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCFileFormat;
 import de.jClipCorn.database.databaseElement.columnTypes.CCQuality;
 import de.jClipCorn.database.databaseElement.columnTypes.CCTagList;
+import de.jClipCorn.gui.frames.genericTextDialog.GenericTextDialog;
 import de.jClipCorn.gui.frames.inputErrorFrame.InputErrorDialog;
 import de.jClipCorn.gui.frames.previewSeriesFrame.PreviewSeriesFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
@@ -20,11 +21,14 @@ import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datetime.CCDate;
+import de.jClipCorn.util.exceptions.MediaQueryException;
 import de.jClipCorn.util.formatter.FileSizeFormatter;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.helper.SimpleFileUtils;
 import de.jClipCorn.util.listener.UpdateCallbackListener;
+import de.jClipCorn.util.mediaquery.MediaQueryResult;
+import de.jClipCorn.util.mediaquery.MediaQueryRunner;
 import de.jClipCorn.util.parser.EpisodeFilenameParserResult;
 import de.jClipCorn.util.parser.FilenameParser;
 
@@ -34,6 +38,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,6 +46,7 @@ import de.jClipCorn.gui.guiComponents.ReadableTextField;
 import de.jClipCorn.gui.guiComponents.language.LanguageChooser;
 import de.jClipCorn.features.userdataProblem.UserDataProblem;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 
 public class QuickAddEpisodeDialog extends JDialog {
 	private static final long serialVersionUID = -184393538006518026L;
@@ -93,7 +99,12 @@ public class QuickAddEpisodeDialog extends JDialog {
 				FormSpecs.RELATED_GAP_COLSPEC,
 				ColumnSpec.decode("default:grow"), //$NON-NLS-1$
 				FormSpecs.RELATED_GAP_COLSPEC,
-				FormSpecs.DEFAULT_COLSPEC,},
+				FormSpecs.DEFAULT_COLSPEC,
+				FormSpecs.RELATED_GAP_COLSPEC,
+				FormSpecs.DEFAULT_COLSPEC,
+				FormSpecs.RELATED_GAP_COLSPEC,
+				FormSpecs.DEFAULT_COLSPEC,
+				FormSpecs.RELATED_GAP_COLSPEC,},
 			new RowSpec[] {
 				FormSpecs.DEFAULT_ROWSPEC,
 				FormSpecs.RELATED_GAP_ROWSPEC,
@@ -109,7 +120,7 @@ public class QuickAddEpisodeDialog extends JDialog {
 				FormSpecs.RELATED_GAP_ROWSPEC,
 				FormSpecs.DEFAULT_ROWSPEC,
 				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
+				RowSpec.decode("22px"), //$NON-NLS-1$
 				FormSpecs.RELATED_GAP_ROWSPEC,
 				RowSpec.decode("22px"), //$NON-NLS-1$
 				RowSpec.decode("default:grow"),})); //$NON-NLS-1$
@@ -190,23 +201,41 @@ public class QuickAddEpisodeDialog extends JDialog {
 				suppressEdTargetEvents = false;
 			}
 		});
-
-		JLabel lblLength = new JLabel(LocaleBundle.getString("QuickAddEpisodeDialog.lblLength")); //$NON-NLS-1$
-		lblLength.setHorizontalAlignment(SwingConstants.TRAILING);
-		contentPanel.add(lblLength, "1, 15"); //$NON-NLS-1$
-
-		spnLength = new JSpinner();
-		spnLength.setModel(new SpinnerNumberModel(0, 0, null, 1));
-		contentPanel.add(spnLength, "3, 15"); //$NON-NLS-1$
-
-		JLabel lblMin = new JLabel("min."); //$NON-NLS-1$
-		contentPanel.add(lblMin, "5, 15"); //$NON-NLS-1$
 		
 		JLabel lblNewLabel = new JLabel(LocaleBundle.getString("AddMovieFrame.lblSprache.text")); //$NON-NLS-1$
-		contentPanel.add(lblNewLabel, "1, 17"); //$NON-NLS-1$
+		contentPanel.add(lblNewLabel, "1, 15"); //$NON-NLS-1$
 		
 		ctrlLang = new LanguageChooser();
-		contentPanel.add(ctrlLang, "3, 17, fill, fill"); //$NON-NLS-1$
+		contentPanel.add(ctrlLang, "3, 15, fill, fill"); //$NON-NLS-1$
+		
+		JButton btnMediaInfo1 = new JButton(Resources.ICN_MENUBAR_UPDATECODECDATA.get16x16());
+		btnMediaInfo1.setPreferredSize(new Dimension(22, 22));
+		btnMediaInfo1.setToolTipText("MediaInfo"); //$NON-NLS-1$
+		btnMediaInfo1.addActionListener(e -> parseCodecMetadata_Lang());
+		contentPanel.add(btnMediaInfo1, "7, 15"); //$NON-NLS-1$
+		
+		JButton btnMediaInfoRaw = new JButton("..."); //$NON-NLS-1$
+		btnMediaInfoRaw.setPreferredSize(new Dimension(43, 22));
+		btnMediaInfoRaw.setToolTipText("MediaInfo"); //$NON-NLS-1$
+		btnMediaInfoRaw.addActionListener(e -> showCodecMetadata());
+		contentPanel.add(btnMediaInfoRaw, "9, 15"); //$NON-NLS-1$
+		
+		JLabel lblLength = new JLabel(LocaleBundle.getString("QuickAddEpisodeDialog.lblLength")); //$NON-NLS-1$
+		lblLength.setHorizontalAlignment(SwingConstants.TRAILING);
+		contentPanel.add(lblLength, "1, 17"); //$NON-NLS-1$
+		
+				spnLength = new JSpinner();
+				spnLength.setModel(new SpinnerNumberModel(0, 0, null, 1));
+				contentPanel.add(spnLength, "3, 17"); //$NON-NLS-1$
+
+		JLabel lblMin = new JLabel("min."); //$NON-NLS-1$
+		contentPanel.add(lblMin, "5, 17"); //$NON-NLS-1$
+		
+		JButton btnMediaInfo2 = new JButton(Resources.ICN_MENUBAR_UPDATECODECDATA.get16x16());
+		btnMediaInfo2.setPreferredSize(new Dimension(22, 22));
+		btnMediaInfo2.setToolTipText("MediaInfo"); //$NON-NLS-1$
+		btnMediaInfo2.addActionListener(e -> parseCodecMetadata_Len());
+		contentPanel.add(btnMediaInfo2, "7, 17"); //$NON-NLS-1$
 
 		JPanel buttonPane = new JPanel();
 		getContentPane().add(buttonPane, BorderLayout.SOUTH);
@@ -260,6 +289,18 @@ public class QuickAddEpisodeDialog extends JDialog {
 		CCDBLanguageList lang = CCDBLanguageList.single(CCProperties.getInstance().PROP_DATABASE_DEFAULTPARSERLANG.getValue());
 		if (last != null) lang = last.getLanguage();
 		ctrlLang.setValue(lang);
+
+		try {
+			MediaQueryResult dat = MediaQueryRunner.query(edSource.getText());
+
+			if (dat.AudioLanguages != null) {
+				CCDBLanguageList dbll = dat.AudioLanguages;
+
+				if (!dbll.isEmpty()) ctrlLang.setValue(dbll);
+			}
+		} catch (IOException | MediaQueryException e) {
+			// ignore
+		}
 	}
 
 	public static void show(PreviewSeriesFrame owner, CCSeason s, File f) {
@@ -395,5 +436,69 @@ public class QuickAddEpisodeDialog extends JDialog {
 		}
 
 		return ret.isEmpty();
+	}
+	
+	private void parseCodecMetadata_Lang() {
+		String mqp = CCProperties.getInstance().PROP_PLAY_MEDIAINFO_PATH.getValue();
+		if (Str.isNullOrWhitespace(mqp) || !new File(mqp).exists() || !new File(mqp).isFile() || !new File(mqp).canExecute()) {
+			DialogHelper.showLocalError(this, "Dialogs.MediaInfoNotFound"); //$NON-NLS-1$
+			return;
+		}
+
+		try {
+			MediaQueryResult dat = MediaQueryRunner.query(edSource.getText());
+
+			if (dat.AudioLanguages == null) {
+				DialogHelper.showLocalError(this, "Dialogs.MediaInfoFailed"); //$NON-NLS-1$
+				return;
+			}
+
+			CCDBLanguageList dbll = dat.AudioLanguages;
+
+			if (dbll.isEmpty()) {
+				DialogHelper.showLocalError(this, "Dialogs.MediaInfoEmpty"); //$NON-NLS-1$
+				return;
+			} else {
+				ctrlLang.setValue(dbll);
+			}
+
+		} catch (IOException | MediaQueryException e) {
+			GenericTextDialog.showText(this, getTitle(), e.getMessage() + "\n\n" + ExceptionUtils.getMessage(e) + "\n\n" + ExceptionUtils.getStackTrace(e), false); //$NON-NLS-1$ //$NON-NLS-2$
+		}
+	}
+
+	private void parseCodecMetadata_Len() {
+		String mqp = CCProperties.getInstance().PROP_PLAY_MEDIAINFO_PATH.getValue();
+		if (Str.isNullOrWhitespace(mqp) || !new File(mqp).exists() || !new File(mqp).isFile() || !new File(mqp).canExecute()) {
+			DialogHelper.showLocalError(this, "Dialogs.MediaInfoNotFound"); //$NON-NLS-1$
+			return;
+		}
+
+		try {
+			MediaQueryResult dat = MediaQueryRunner.query(edSource.getText());
+
+			int dur = (dat.Duration==-1)?(-1):(int)(dat.Duration/60);
+			if (dur == -1) throw new MediaQueryException("Duration == -1"); //$NON-NLS-1$
+			spnLength.setValue(dur);
+
+		} catch (IOException | MediaQueryException e) {
+			GenericTextDialog.showText(this, getTitle(), e.getMessage() + "\n\n" + ExceptionUtils.getMessage(e) + "\n\n" + ExceptionUtils.getStackTrace(e), false); //$NON-NLS-1$ //$NON-NLS-2$
+		}
+	}
+
+	private void showCodecMetadata() {
+		String mqp = CCProperties.getInstance().PROP_PLAY_MEDIAINFO_PATH.getValue();
+		if (Str.isNullOrWhitespace(mqp) || !new File(mqp).exists() || !new File(mqp).isFile() || !new File(mqp).canExecute()) {
+			DialogHelper.showLocalError(this, "Dialogs.MediaInfoNotFound"); //$NON-NLS-1$
+			return;
+		}
+
+		try {
+			String dat = MediaQueryRunner.queryRaw(edSource.getText());
+
+			GenericTextDialog.showText(this, getTitle(), dat, false);
+		} catch (IOException | MediaQueryException e) {
+			GenericTextDialog.showText(this, getTitle(), e.getMessage() + "\n\n" + ExceptionUtils.getMessage(e) + "\n\n" + ExceptionUtils.getStackTrace(e), false); //$NON-NLS-1$ //$NON-NLS-2$
+		}
 	}
 }

@@ -497,7 +497,7 @@ public class CCSeries extends CCDatabaseElement {
 			if (group.DoSerialize) seriesfoldername.append(" [[").append(group.Name).append("]]");
 		}
 
-		CCDBLanguageList lang = getCommonOrAllLanguages();
+		CCDBLanguageList lang = getCommonLanguages();
 		if (!lang.isExact(CCDBLanguage.GERMAN) && !lang.isEmpty()) {
 			seriesfoldername.append(String.format(" [%s]", lang.serializeToFilenameString()));
 		}

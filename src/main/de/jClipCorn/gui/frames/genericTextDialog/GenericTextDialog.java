@@ -31,6 +31,7 @@ public class GenericTextDialog extends JDialog {
 	}
 	
 	public static void showText(Component owner, String title, String content, boolean modal) {
+		if (owner instanceof JDialog && ((JDialog)owner).isModal()) modal = true;
 		new GenericTextDialog(owner, title, content, modal).setVisible(true);
 	}
 

@@ -578,11 +578,13 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		btnMediaInfo = new JButton(Resources.ICN_MENUBAR_UPDATECODECDATA.get16x16());
 		btnMediaInfo.setBounds(319, 403, 22, 22);
 		btnMediaInfo.addActionListener(e -> parseCodecMetadata());
+		btnMediaInfo.setToolTipText("MediaInfo"); //$NON-NLS-1$
 		contentPane.add(btnMediaInfo);
 		
 		btnMediaInfo2 = new JButton("..."); //$NON-NLS-1$
 		btnMediaInfo2.setBounds(344, 403, 32, 22);
 		btnMediaInfo2.addActionListener(e -> showCodecMetadata());
+		btnMediaInfo2.setToolTipText("MediaInfo"); //$NON-NLS-1$
 		contentPane.add(btnMediaInfo2);
 		
 		lblLenAuto = new JLabel(""); //$NON-NLS-1$
@@ -1154,7 +1156,8 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 			}
 
 			int dur = (int) (CCStreams.iterate(dat).any(d -> d.Duration == -1) ? -1 : (CCStreams.iterate(dat).sumDouble(d -> d.Duration)/60));
-			lblLenAuto.setText("("+dur+")"); //$NON-NLS-1$ //$NON-NLS-2$
+			if (dur != -1) lblLenAuto.setText("("+dur+")"); //$NON-NLS-1$ //$NON-NLS-2$
+			if (dur == -1) lblLenAuto.setText(Str.Empty);
 
 			if (CCStreams.iterate(dat).any(d -> d.AudioLanguages == null)) {
 				DialogHelper.showLocalError(this, "Dialogs.MediaInfoFailed"); //$NON-NLS-1$

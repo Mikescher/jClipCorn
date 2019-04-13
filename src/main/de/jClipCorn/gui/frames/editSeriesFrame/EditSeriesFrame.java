@@ -9,6 +9,7 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,6 +29,9 @@ import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.UIManager;
 import javax.swing.border.LineBorder;
+
+import org.apache.commons.lang3.exception.ExceptionUtils;
+
 import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.database.databaseElement.CCSeries;
@@ -41,6 +45,7 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCUserScore;
 import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReferenceList;
 import de.jClipCorn.gui.frames.addEpisodesFrame.AddEpisodesFrame;
 import de.jClipCorn.gui.frames.addSeasonFrame.AddSeasonFrame;
+import de.jClipCorn.gui.frames.genericTextDialog.GenericTextDialog;
 import de.jClipCorn.gui.frames.inputErrorFrame.InputErrorDialog;
 import de.jClipCorn.gui.guiComponents.HFixListCellRenderer;
 import de.jClipCorn.gui.guiComponents.ReadableTextField;
@@ -56,16 +61,20 @@ import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.features.online.metadata.ParseResultHandler;
 import de.jClipCorn.properties.CCProperties;
+import de.jClipCorn.util.Str;
 import de.jClipCorn.util.Validator;
 import de.jClipCorn.util.adapter.UpdateCallbackAdapter;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.exceptions.CCFormatException;
 import de.jClipCorn.util.exceptions.EnumFormatException;
+import de.jClipCorn.util.exceptions.MediaQueryException;
 import de.jClipCorn.util.formatter.FileSizeFormatter;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.helper.FileChooserHelper;
 import de.jClipCorn.util.listener.UpdateCallbackListener;
+import de.jClipCorn.util.mediaquery.MediaQueryResult;
+import de.jClipCorn.util.mediaquery.MediaQueryRunner;
 import de.jClipCorn.features.userdataProblem.UserDataProblem;
 
 public class EditSeriesFrame extends JFrame implements ParseResultHandler, WindowListener {
@@ -165,6 +174,9 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 	private JLabel label_14;
 	private JLabel lblLanguage;
 	private LanguageChooser ctrlLang;
+	private JButton btnMediaInfo1;
+	private JButton btnMediaInfo2;
+	private JButton btnMediaInfoRaw;
 
 	/**
 	 * @wbp.parser.constructor
@@ -540,11 +552,11 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		pnlEpisode.add(cbxEpisodeFormat);
 		
 		label_21 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblQuality.text")); //$NON-NLS-1$
-		label_21.setBounds(12, 173, 46, 14);
+		label_21.setBounds(12, 142, 46, 14);
 		pnlEpisode.add(label_21);
 		
 		cbxEpisodeQuality = new JComboBox<>();
-		cbxEpisodeQuality.setBounds(74, 169, 165, 22);
+		cbxEpisodeQuality.setBounds(74, 138, 165, 22);
 		pnlEpisode.add(cbxEpisodeQuality);
 		
 		label_22 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblLength.text")); //$NON-NLS-1$
@@ -557,7 +569,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		pnlEpisode.add(spnEpisodeLength);
 		
 		label_23 = new JLabel("min."); //$NON-NLS-1$
-		label_23.setBounds(245, 207, 94, 16);
+		label_23.setBounds(245, 205, 52, 16);
 		pnlEpisode.add(label_23);
 		
 		label_24 = new JLabel("Byte = "); //$NON-NLS-1$
@@ -639,7 +651,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 				recalcEpisodeQuality();
 			}
 		});
-		btnEpisodeCalcQuality.setBounds(251, 168, 94, 23);
+		btnEpisodeCalcQuality.setBounds(251, 137, 94, 23);
 		pnlEpisode.add(btnEpisodeCalcQuality);
 		
 		lblHistory = new JLabel(LocaleBundle.getString("EditSeriesFrame.lblHistory.text")); //$NON-NLS-1$
@@ -652,12 +664,30 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		pnlEpisode.add(cmpEpisodeViewedHistory);
 		
 		lblLanguage = new JLabel(LocaleBundle.getString("AddMovieFrame.lblSprache.text")); //$NON-NLS-1$
-		lblLanguage.setBounds(12, 141, 58, 16);
+		lblLanguage.setBounds(12, 173, 58, 16);
 		pnlEpisode.add(lblLanguage);
 		
 		ctrlLang = new LanguageChooser();
-		ctrlLang.setBounds(74, 137, 271, 22);
+		ctrlLang.setBounds(74, 169, 165, 22);
 		pnlEpisode.add(ctrlLang);
+		
+		btnMediaInfo1 = new JButton(Resources.ICN_MENUBAR_UPDATECODECDATA.get16x16());
+		btnMediaInfo1.setBounds(288, 172, 22, 22);
+		btnMediaInfo1.addActionListener(e -> parseCodecMetadata_Lang());
+		btnMediaInfo1.setToolTipText("MediaInfo"); //$NON-NLS-1$
+		pnlEpisode.add(btnMediaInfo1);
+		
+		btnMediaInfo2 = new JButton(Resources.ICN_MENUBAR_UPDATECODECDATA.get16x16());
+		btnMediaInfo2.setBounds(288, 205, 22, 22);
+		btnMediaInfo2.addActionListener(e -> parseCodecMetadata_Len());
+		btnMediaInfo2.setToolTipText("MediaInfo"); //$NON-NLS-1$
+		pnlEpisode.add(btnMediaInfo2);
+		
+		btnMediaInfoRaw = new JButton("..."); //$NON-NLS-1$
+		btnMediaInfoRaw.setBounds(313, 172, 32, 22);
+		btnMediaInfoRaw.addActionListener(e -> showCodecMetadata());
+		btnMediaInfoRaw.setToolTipText("MediaInfo"); //$NON-NLS-1$
+		pnlEpisode.add(btnMediaInfoRaw);
 	}
 
 	private void setDefaultValues() {
@@ -1317,4 +1347,69 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 	public void windowOpened(WindowEvent arg0) {
 		// nothing to do
 	}
+
+	private void parseCodecMetadata_Lang() {
+		String mqp = CCProperties.getInstance().PROP_PLAY_MEDIAINFO_PATH.getValue();
+		if (Str.isNullOrWhitespace(mqp) || !new File(mqp).exists() || !new File(mqp).isFile() || !new File(mqp).canExecute()) {
+			DialogHelper.showLocalError(this, "Dialogs.MediaInfoNotFound"); //$NON-NLS-1$
+			return;
+		}
+
+		try {
+			MediaQueryResult dat = MediaQueryRunner.query(PathFormatter.fromCCPath(edEpisodePart.getText()));
+
+			if (dat.AudioLanguages == null) {
+				DialogHelper.showLocalError(this, "Dialogs.MediaInfoFailed"); //$NON-NLS-1$
+				return;
+			}
+
+			CCDBLanguageList dbll = dat.AudioLanguages;
+
+			if (dbll.isEmpty()) {
+				DialogHelper.showLocalError(this, "Dialogs.MediaInfoEmpty"); //$NON-NLS-1$
+				return;
+			} else {
+				ctrlLang.setValue(dbll);
+			}
+
+		} catch (IOException | MediaQueryException e) {
+			GenericTextDialog.showText(this, getTitle(), e.getMessage() + "\n\n" + ExceptionUtils.getMessage(e) + "\n\n" + ExceptionUtils.getStackTrace(e), false); //$NON-NLS-1$ //$NON-NLS-2$
+		}
+	}
+
+	private void parseCodecMetadata_Len() {
+		String mqp = CCProperties.getInstance().PROP_PLAY_MEDIAINFO_PATH.getValue();
+		if (Str.isNullOrWhitespace(mqp) || !new File(mqp).exists() || !new File(mqp).isFile() || !new File(mqp).canExecute()) {
+			DialogHelper.showLocalError(this, "Dialogs.MediaInfoNotFound"); //$NON-NLS-1$
+			return;
+		}
+
+		try {
+			MediaQueryResult dat = MediaQueryRunner.query(PathFormatter.fromCCPath(edEpisodePart.getText()));
+
+			int dur = (dat.Duration==-1)?(-1):(int)(dat.Duration/60);
+			if (dur == -1) throw new MediaQueryException("Duration == -1"); //$NON-NLS-1$
+			spnEpisodeLength.setValue(dur);
+
+		} catch (IOException | MediaQueryException e) {
+			GenericTextDialog.showText(this, getTitle(), e.getMessage() + "\n\n" + ExceptionUtils.getMessage(e) + "\n\n" + ExceptionUtils.getStackTrace(e), false); //$NON-NLS-1$ //$NON-NLS-2$
+		}
+	}
+
+	private void showCodecMetadata() {
+		String mqp = CCProperties.getInstance().PROP_PLAY_MEDIAINFO_PATH.getValue();
+		if (Str.isNullOrWhitespace(mqp) || !new File(mqp).exists() || !new File(mqp).isFile() || !new File(mqp).canExecute()) {
+			DialogHelper.showLocalError(this, "Dialogs.MediaInfoNotFound"); //$NON-NLS-1$
+			return;
+		}
+
+		try {
+			String dat = MediaQueryRunner.queryRaw(PathFormatter.fromCCPath(edEpisodePart.getText()));
+
+			GenericTextDialog.showText(this, getTitle(), dat, false);
+		} catch (IOException | MediaQueryException e) {
+			GenericTextDialog.showText(this, getTitle(), e.getMessage() + "\n\n" + ExceptionUtils.getMessage(e) + "\n\n" + ExceptionUtils.getStackTrace(e), false); //$NON-NLS-1$ //$NON-NLS-2$
+		}
+	}
+
 }

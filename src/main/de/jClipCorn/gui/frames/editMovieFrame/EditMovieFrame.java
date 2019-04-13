@@ -3,8 +3,6 @@ package de.jClipCorn.gui.frames.editMovieFrame;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -22,9 +20,6 @@ import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.UIManager;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-
 import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.columnTypes.*;
 import de.jClipCorn.gui.frames.genericTextDialog.GenericTextDialog;
@@ -61,8 +56,6 @@ import de.jClipCorn.util.mediaquery.MediaQueryResult;
 import de.jClipCorn.util.mediaquery.MediaQueryRunner;
 import de.jClipCorn.util.stream.CCStreams;
 import org.apache.commons.lang3.exception.ExceptionUtils;
-
-import javax.swing.Icon;
 
 public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDataProblemHandler, ImageCropperResultListener {
 	private static final long serialVersionUID = 4392838185334567222L;
@@ -579,16 +572,19 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		btnMediaInfo1 = new JButton(Resources.ICN_MENUBAR_UPDATECODECDATA.get16x16());
 		btnMediaInfo1.setBounds(386, 375, 22, 22);
 		btnMediaInfo1.addActionListener(e -> parseCodecMetadata_Lang());
+		btnMediaInfo1.setToolTipText("MediaInfo"); //$NON-NLS-1$
 		getContentPane().add(btnMediaInfo1);
 		
-		btnMediaInfoRaw = new JButton("...");
+		btnMediaInfoRaw = new JButton("..."); //$NON-NLS-1$
 		btnMediaInfoRaw.setBounds(411, 375, 32, 22);
 		btnMediaInfoRaw.addActionListener(e -> showCodecMetadata());
+		btnMediaInfoRaw.setToolTipText("MediaInfo"); //$NON-NLS-1$
 		getContentPane().add(btnMediaInfoRaw);
 		
 		btnMediaInfo2 = new JButton(Resources.ICN_MENUBAR_UPDATECODECDATA.get16x16());
 		btnMediaInfo2.setBounds(386, 402, 22, 22);
 		btnMediaInfo2.addActionListener(e -> parseCodecMetadata_Len());
+		btnMediaInfo2.setToolTipText("MediaInfo"); //$NON-NLS-1$
 		getContentPane().add(btnMediaInfo2);
 	}
 
@@ -1159,6 +1155,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 			}
 
 			int dur = (int) (CCStreams.iterate(dat).any(d -> d.Duration == -1) ? -1 : (CCStreams.iterate(dat).sumDouble(d -> d.Duration)/60));
+			if (dur == -1) throw new MediaQueryException("Duration == -1"); //$NON-NLS-1$
 			setLength(dur);
 
 		} catch (IOException | MediaQueryException e) {

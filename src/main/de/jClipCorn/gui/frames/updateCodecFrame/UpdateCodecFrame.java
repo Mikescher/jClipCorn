@@ -17,6 +17,7 @@ import com.jgoodies.forms.layout.RowSpec;
 
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguageList;
+import de.jClipCorn.database.databaseElement.columnTypes.CCFileFormat;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.gui.frames.genericTextDialog.GenericTextDialog;
 import de.jClipCorn.gui.localization.LocaleBundle;
@@ -34,7 +35,7 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 public class UpdateCodecFrame extends JFrame {
 	private static final long serialVersionUID = -2163175118745491143L;
 
-	private enum FilterState { ALL, CHANGED, CHANGED_LANG, CHANGED_LEN, CHANGED_LEN_DYN, ELEM_ERROR }
+	private enum FilterState { ALL, CHANGED, CHANGED_LANG, CHANGED_LEN, CHANGED_LEN_DYN, ELEM_ERROR, ELEM_WARN }
 	
 	private final CCMovieList movielist;
 	private FilterState selectedFilter;
@@ -46,6 +47,7 @@ public class UpdateCodecFrame extends JFrame {
 	private JToggleButton btnShowFilteredLang;
 	private JToggleButton btnShowFilteredLen;
 	private JToggleButton btnShowFilteredErr;
+	private JToggleButton btnShowFilteredWarn;
 	private JButton btnStartCollectingData;
 	private JProgressBar progressBar;
 	private JPanel panel;
@@ -106,6 +108,7 @@ public class UpdateCodecFrame extends JFrame {
 				FormSpecs.DEFAULT_COLSPEC,
 				FormSpecs.DEFAULT_COLSPEC,
 				FormSpecs.DEFAULT_COLSPEC,
+				FormSpecs.DEFAULT_COLSPEC,
 				FormSpecs.DEFAULT_COLSPEC,},
 			new RowSpec[] {
 				FormSpecs.DEFAULT_ROWSPEC,}));
@@ -130,10 +133,14 @@ public class UpdateCodecFrame extends JFrame {
 		btnShowFilteredDynLen = new JToggleButton(LocaleBundle.getString("UpdateCodecFrame.Filter4")); //$NON-NLS-1$
 		panel_1.add(btnShowFilteredDynLen, "5, 1"); //$NON-NLS-1$
 		btnShowFilteredDynLen.addActionListener(e -> setFiltered(FilterState.CHANGED_LEN_DYN, true));
-		
+
 		btnShowFilteredErr = new JToggleButton(LocaleBundle.getString("UpdateCodecFrame.Filter5")); //$NON-NLS-1$
 		panel_1.add(btnShowFilteredErr, "6, 1"); //$NON-NLS-1$
 		btnShowFilteredErr.addActionListener(e -> setFiltered(FilterState.ELEM_ERROR, true));
+
+		btnShowFilteredWarn = new JToggleButton(LocaleBundle.getString("UpdateCodecFrame.Filter6")); //$NON-NLS-1$
+		panel_1.add(btnShowFilteredWarn, "7, 1"); //$NON-NLS-1$
+		btnShowFilteredWarn.addActionListener(e -> setFiltered(FilterState.ELEM_WARN, true));
 		
 		tableMain = new UpdateCodecTable(this);
 		getContentPane().add(tableMain, "2, 4, 4, 1, fill, fill"); //$NON-NLS-1$
@@ -205,6 +212,7 @@ public class UpdateCodecFrame extends JFrame {
 		btnShowFilteredErr.setSelected(state == FilterState.ELEM_ERROR);
 		btnShowFilteredLang.setSelected(state == FilterState.CHANGED_LANG);
 		btnShowFilteredLen.setSelected(state == FilterState.CHANGED_LEN);
+		btnShowFilteredWarn.setSelected(state == FilterState.ELEM_WARN);
 
 		if (triggerUpdate && changed) {
 			switch (state) {
@@ -226,12 +234,21 @@ public class UpdateCodecFrame extends JFrame {
 			case ELEM_ERROR:
 				tableMain.setFilter(e -> e.Processed && e.MQError != null);
 				break;
+			case ELEM_WARN:
+				tableMain.setFilter(e -> e.Processed && e.hasDiff(0.15) && e.getOldLanguage().iterate().any(ol -> !e.getNewLanguage().contains(ol)) );
+				break;
 			}
 		}
 	}
 	
 	private void initTable() {
-		tableMain.setData(movielist.iteratorPlayables().map(UpdateCodecTableElement::new).enumerate());
+		tableMain.setData(movielist
+				.iteratorPlayables()
+				.filter(p -> p.getFormat() != CCFileFormat.IFO)
+				.filter(p -> p.getFormat() != CCFileFormat.IMG)
+				.map(UpdateCodecTableElement::new)
+				.enumerate());
+
 		tableMain.autoResize();
 	}
 	

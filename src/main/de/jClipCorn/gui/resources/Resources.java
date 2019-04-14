@@ -46,6 +46,11 @@ public class Resources {
 	public final static MultiSizeIconRef ICN_GENERIC_ORB_GREEN		 		= registerMultisizeIcon("/icons/common/orb_green.png");
 	public final static MultiSizeIconRef ICN_GENERIC_ORB_YELLOW		 		= registerMultisizeIcon("/icons/common/orb_yellow.png");
 
+	public final static IconRef ICN_GENERIC_BULLET_ADD		 		 		= register16x16Icon("/icons/common/bullet_add.png");
+	public final static IconRef ICN_GENERIC_BULLET_REM		 		 		= register16x16Icon("/icons/common/bullet_delete.png");
+	public final static IconRef ICN_GENERIC_BULLET_UP		 		 		= register16x16Icon("/icons/common/bullet_arrow_up.png");
+	public final static IconRef ICN_GENERIC_BULLET_DOWN	 			 		= register16x16Icon("/icons/common/bullet_arrow_down.png");
+
 	public final static MultiSizeIconRef ICN_TRANSPARENT			 		= registerMultisizeIcon("/icons/common/void.png");
 	// #############################################  </COMMON>  #############################################
 	

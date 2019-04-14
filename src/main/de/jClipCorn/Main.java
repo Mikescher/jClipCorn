@@ -28,7 +28,7 @@ import de.jClipCorn.util.helper.LookAndFeelManager;
 
 public class Main {
 	public final static String TITLE = "jClipCorn"; //$NON-NLS-1$
-	public final static String VERSION = /*<gradle_version_marker>*/"1.10.5.35"/*</gradle_version_marker>*/;	//$NON-NLS-1$
+	public final static String VERSION = /*<gradle_version_marker>*/"1.10.5.36"/*</gradle_version_marker>*/;	//$NON-NLS-1$
 	public final static String DBVERSION = "12"; 	//$NON-NLS-1$
 	public final static String JXMLVER = "2"; 	//$NON-NLS-1$
 
@@ -211,8 +211,6 @@ public class Main {
 
 //TODO localsync: also autosave to other dir (== nextcloud) (or directly sync with server??)
 //     php viewer: view synced data online with webpage(read-only) 
-
-//TODO Edit OnlineRef in own dialog with more options (move, sort, insert, ...)
 
 //TODO (optional) add a season ref to an online ref to associate it with a specific season
 

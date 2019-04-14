@@ -2,6 +2,7 @@ package de.jClipCorn.gui.guiComponents.referenceChooser;
 
 import java.awt.BorderLayout;
 import java.awt.Insets;
+import java.awt.event.InputEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,8 +32,13 @@ public class JReferenceChooser extends JPanel {
 		add(btnAdditional, BorderLayout.EAST);
 		btnAdditional.addActionListener(e ->
 		{
-			ReferenceChooserPopup popup = new ReferenceChooserPopup(_additional, JReferenceChooser.this);
-			popup.setVisible(true);
+			if ((e.getModifiers() & InputEvent.CTRL_MASK) == InputEvent.CTRL_MASK) {
+				ReferenceChooserDialog dialog = new ReferenceChooserDialog(mainChooser.getValue(), _additional, JReferenceChooser.this);
+				dialog.setVisible(true);
+			} else {
+				ReferenceChooserPopup popup = new ReferenceChooserPopup(_additional, JReferenceChooser.this);
+				popup.setVisible(true);
+			}
 		});
 		btnAdditional.setMargin(new Insets(2, 4, 2, 4));
 		btnAdditional.setFocusable(false);
@@ -62,6 +68,11 @@ public class JReferenceChooser extends JPanel {
 	private void updateUIControls() {
 		mainChooser.updateUIControls();
 		btnAdditional.setText("+"+_additional.size()); //$NON-NLS-1$
+	}
+
+	public void setMain(CCSingleOnlineReference a) {
+		mainChooser.setValue(a);
+		updateUIControls();
 	}
 	
 	public void setAdditional(List<CCSingleOnlineReference> a) {

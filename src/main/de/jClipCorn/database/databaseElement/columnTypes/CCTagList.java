@@ -256,7 +256,7 @@ public class CCTagList {
 		boolean[] n = new boolean[TAGCOUNT];
 		for (int i = 0; i < TAGCOUNT; i++) n[i] = false;
 
-		for (String str : v.split(";"))
+		for (String str : v.split(";")) //$NON-NLS-1$
 		{
 			if (!Str.isNullOrWhitespace(str)) n[CCSingleTag.find(Integer.parseInt(str)).Index] = true;
 		}

@@ -393,7 +393,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		
 		spnLength = new JSpinner();
 		spnLength.setModel(new SpinnerNumberModel(0, 0, null, 1));
-		spnLength.setBounds(93, 405, 212, 20);
+		spnLength.setBounds(93, 405, 163, 20);
 		getContentPane().add(spnLength);
 		
 		label_19 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblLength.text")); //$NON-NLS-1$
@@ -405,7 +405,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		getContentPane().add(spnAddDate);
 		
 		label_20 = new JLabel("min."); //$NON-NLS-1$
-		label_20.setBounds(314, 407, 52, 16);
+		label_20.setBounds(266, 407, 52, 16);
 		getContentPane().add(label_20);
 		
 		label_21 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblEinfgDatum.text")); //$NON-NLS-1$
@@ -570,19 +570,19 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		getContentPane().add(edGroups);
 		
 		btnMediaInfo1 = new JButton(Resources.ICN_MENUBAR_UPDATECODECDATA.get16x16());
-		btnMediaInfo1.setBounds(386, 375, 22, 22);
+		btnMediaInfo1.setBounds(314, 376, 22, 22);
 		btnMediaInfo1.addActionListener(e -> parseCodecMetadata_Lang());
 		btnMediaInfo1.setToolTipText("MediaInfo"); //$NON-NLS-1$
 		getContentPane().add(btnMediaInfo1);
 		
 		btnMediaInfoRaw = new JButton("..."); //$NON-NLS-1$
-		btnMediaInfoRaw.setBounds(411, 375, 32, 22);
+		btnMediaInfoRaw.setBounds(339, 376, 32, 22);
 		btnMediaInfoRaw.addActionListener(e -> showCodecMetadata());
 		btnMediaInfoRaw.setToolTipText("MediaInfo"); //$NON-NLS-1$
 		getContentPane().add(btnMediaInfoRaw);
 		
 		btnMediaInfo2 = new JButton(Resources.ICN_MENUBAR_UPDATECODECDATA.get16x16());
-		btnMediaInfo2.setBounds(386, 402, 22, 22);
+		btnMediaInfo2.setBounds(314, 403, 22, 22);
 		btnMediaInfo2.addActionListener(e -> parseCodecMetadata_Len());
 		btnMediaInfo2.setToolTipText("MediaInfo"); //$NON-NLS-1$
 		getContentPane().add(btnMediaInfo2);

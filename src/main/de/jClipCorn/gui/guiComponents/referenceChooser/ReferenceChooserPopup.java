@@ -18,6 +18,10 @@ import javax.swing.border.EmptyBorder;
 
 import de.jClipCorn.database.databaseElement.columnTypes.CCSingleOnlineReference;
 import de.jClipCorn.gui.localization.LocaleBundle;
+import java.awt.FlowLayout;
+import java.awt.Insets;
+import java.awt.Component;
+import javax.swing.Box;
 
 public class ReferenceChooserPopup extends JDialog implements WindowFocusListener {
 	private static final long serialVersionUID = 1286034649164678546L;
@@ -34,6 +38,9 @@ public class ReferenceChooserPopup extends JDialog implements WindowFocusListene
 	private JButton btnAdd;
 	private JButton btnOK;
 	private JPanel pnlBase;
+	private JPanel panel;
+	private JButton btnPopout;
+	private Component horizontalStrut;
 	
 	public ReferenceChooserPopup(List<CCSingleOnlineReference> data, JReferenceChooser parent) {
 		super();
@@ -72,15 +79,36 @@ public class ReferenceChooserPopup extends JDialog implements WindowFocusListene
 		pnlBase.add(pnllBottom, BorderLayout.SOUTH);
 		pnllBottom.setLayout(new BorderLayout(0, 0));
 
-		btnAdd = new JButton("+"); //$NON-NLS-1$
-		btnAdd.addActionListener(e -> onAdd());
-		btnAdd.setMargin(new java.awt.Insets(1, 2, 1, 2));
-		pnllBottom.add(btnAdd, BorderLayout.EAST);
-
 		btnOK = new JButton(LocaleBundle.getString("UIGeneric.btnOK.text")); //$NON-NLS-1$
 		btnOK.addActionListener(e -> onOK());
 		btnOK.setFont(new Font(btnOK.getFont().getFontName(), Font.BOLD, btnOK.getFont().getSize()));
 		pnllBottom.add(btnOK, BorderLayout.WEST);
+		
+		panel = new JPanel();
+		FlowLayout flowLayout = (FlowLayout) panel.getLayout();
+		flowLayout.setVgap(0);
+		flowLayout.setHgap(0);
+		pnllBottom.add(panel, BorderLayout.EAST);
+				
+		btnPopout = new JButton("..."); //$NON-NLS-1$
+		btnPopout.addActionListener(e ->
+		{
+			ReferenceChooserDialog dialog = new ReferenceChooserDialog(parent.getValue().Main, parent.getValue().Additional, parent);
+			dialog.setVisible(true);
+
+			dispose();
+			disposeInstance();
+		});
+		btnPopout.setMargin(new Insets(1, 2, 1, 2));
+		panel.add(btnPopout);
+
+		horizontalStrut = Box.createHorizontalStrut(20);
+		panel.add(horizontalStrut);
+
+		btnAdd = new JButton("+"); //$NON-NLS-1$
+		panel.add(btnAdd);
+		btnAdd.addActionListener(e -> onAdd());
+		btnAdd.setMargin(new java.awt.Insets(1, 2, 1, 2));
 		
 		pnlScroll = new JScrollPane();
 		pnlScroll.getVerticalScrollBar().setUnitIncrement(16);
@@ -113,7 +141,7 @@ public class ReferenceChooserPopup extends JDialog implements WindowFocusListene
 		uiList.add(chsr);
 	}
 
-	public void updateHeight() {
+	private void updateHeight() {
 		pack();
 		
 		if (uiList.isEmpty()) {

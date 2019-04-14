@@ -139,7 +139,7 @@ public class DatabaseAutofixer {
 	public static boolean fixError_Duplicate_Genre(DatabaseError err) {
 		if (err.getElement1() instanceof CCDatabaseElement) {
 			CCDatabaseElement elem = (CCDatabaseElement) err.getElement1();
-			CCGenreList ls = new CCGenreList();
+			CCGenreList ls = CCGenreList.EMPTY;
 			
 			boolean[] already_used = new boolean[256];
 			for (int i = 0; i < CCGenreList.getMaxListSize(); i++) {
@@ -163,7 +163,7 @@ public class DatabaseAutofixer {
 	public static boolean fixError_Incontinous_Genrelist(DatabaseError err) {
 		if (err.getElement1() instanceof CCDatabaseElement) {
 			CCDatabaseElement elem = (CCDatabaseElement) err.getElement1();
-			CCGenreList ls = new CCGenreList();
+			CCGenreList ls = CCGenreList.EMPTY;
 			
 			for (int i = 0; i < CCGenreList.getMaxListSize(); i++) {
 				if (! elem.getGenre(i).isEmpty()) {

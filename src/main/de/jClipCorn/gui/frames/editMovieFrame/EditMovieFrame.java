@@ -609,8 +609,8 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		spnZyklus.setValue(-1);
 		
 		edViewedHistory.setValue(CCDateTimeList.createEmpty());
-		edReference.setValue(CCOnlineReferenceList.createEmpty());
-		edGroups.setValue(CCGroupList.createEmpty());
+		edReference.setValue(CCOnlineReferenceList.EMPTY);
+		edGroups.setValue(CCGroupList.EMPTY);
 		
 		updateByteDisp();
 	}

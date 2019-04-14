@@ -169,7 +169,7 @@ public class AddSeasonFrame extends JFrame implements UserDataProblemHandler, Pa
 
 	@Override
 	public CCOnlineReferenceList getSearchReference() {
-		return CCOnlineReferenceList.createEmpty();
+		return CCOnlineReferenceList.EMPTY;
 	}
 
 	@Override

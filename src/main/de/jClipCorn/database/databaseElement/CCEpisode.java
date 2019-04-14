@@ -45,7 +45,7 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 		this.localID = localID;
 		
 		filesize = CCFileSize.ZERO;
-		tags = new CCTagList();
+		tags = CCTagList.EMPTY;
 		addDate = CCDate.getMinimumDate();
 		viewedHistory = CCDateTimeList.createEmpty();
 		language = CCDBLanguageList.EMPTY;
@@ -211,32 +211,32 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 	}
 	
 	public void setTags(short stat) {
-		tags.parseFromShort(stat);
+		tags = CCTagList.fromShort(stat);
 		
 		updateDB();
 	}
 
 	@Override
 	public void switchTag(CCSingleTag t) {
-		tags.switchTag(t);
+		tags = tags.getSwitchTag(t);
 
 		updateDB();
 	}
 	
 	public void switchTag(int c) {
-		tags.switchTag(c);
+		tags = tags.getSwitchTag(c);
 		
 		updateDB();
 	}
 
 	public void setTag(CCSingleTag t, boolean v) {
-		tags.setTag(t, v);
+		tags = tags.getSetTag(t, v);
 
 		updateDB();
 	}
 	
 	public void setTag(int c, boolean v) {
-		tags.setTag(c, v);
+		tags = tags.getSetTag(c, v);
 		
 		updateDB();
 	}
@@ -290,7 +290,7 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 		length = 0;
 		format = CCFileFormat.MKV;
 		filesize = CCFileSize.ZERO;
-		tags.clear();
+		tags = CCTagList.EMPTY;
 		part = ""; //$NON-NLS-1$
 		addDate = CCDate.getMinimumDate();
 		viewedHistory = CCDateTimeList.createEmpty();

@@ -222,8 +222,4 @@ public class Main {
 
 //TODO remove viewed field from db (get from history)
 
-//TODO CCTagList should be immutable (like the other column objects)
-
 //TODO RELEASE 1.10.6.0
-
-//TODO MKVMediaInfo in [AddMovie] [EditMovie] [EditEpisode] [AddMultipleEpisodes] [QuickAddEpisode]

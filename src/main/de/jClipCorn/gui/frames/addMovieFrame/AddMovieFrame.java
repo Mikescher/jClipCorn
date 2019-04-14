@@ -752,7 +752,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		spnAddDate.setValue(CCDate.getCurrentDate());
 		spnZyklus.setValue(-1);
 		
-		edReference.setValue(CCOnlineReferenceList.createEmpty());
+		edReference.setValue(CCOnlineReferenceList.EMPTY);
 		
 		updateByteDisp();
 	}

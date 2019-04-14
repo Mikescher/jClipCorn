@@ -113,7 +113,7 @@ public class AbstractEditCoverControl extends JLayeredPane implements ParseResul
 
 	@Override
 	public CCOnlineReferenceList getSearchReference() {
-		return CCOnlineReferenceList.createEmpty();
+		return CCOnlineReferenceList.EMPTY;
 	}
 
 }

@@ -20,7 +20,7 @@ public class GroupListEditor extends JPanel {
 
 	private final CCMovieList db;
 	
-	private CCGroupList value = CCGroupList.createEmpty();
+	private CCGroupList value = CCGroupList.EMPTY;
 	
 	private JTextField edEditor;
 	private JButton btnDropDown;

@@ -47,7 +47,7 @@ public class OnlineMetadata {
 	}
 
 	public CCOnlineReferenceList getFullReference() {
-		if (Source == null) return CCOnlineReferenceList.createEmpty();
+		if (Source == null) return CCOnlineReferenceList.EMPTY;
 		return CCOnlineReferenceList.create(Source, AltRef);
 	}
 }

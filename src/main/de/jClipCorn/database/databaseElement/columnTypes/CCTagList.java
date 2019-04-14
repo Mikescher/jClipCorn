@@ -13,6 +13,7 @@ import de.jClipCorn.util.exceptions.TagNotFoundException;
 import de.jClipCorn.util.stream.CCStream;
 
 public class CCTagList {
+	public static final CCTagList EMPTY = new CCTagList();
 	
 	public final static CCSingleTag TAG_BAD_QUALITY 	= new CCSingleTag(0, "CCMovieTags.TAG_00", Resources.ICN_TABLE_TAG_0_0, Resources.ICN_TABLE_TAG_0_1, Resources.ICN_MENUBAR_TAG_0, true,  true,  true);  //$NON-NLS-1$
 	public final static CCSingleTag TAG_MISSING_TIME 	= new CCSingleTag(1, "CCMovieTags.TAG_01", Resources.ICN_TABLE_TAG_1_0, Resources.ICN_TABLE_TAG_1_1, Resources.ICN_MENUBAR_TAG_1, true,  false, true);  //$NON-NLS-1$
@@ -40,43 +41,33 @@ public class CCTagList {
 	public final static int TAGCOUNT = 16;
 	public final static int ACTIVETAGS = TAGS.length;
 
-	private boolean[] tags = new boolean[16];
+	private boolean[] tags = new boolean[TAGCOUNT];
 	private boolean createIcon = true;
 	private ImageIcon iconcache;
 
-	public CCTagList() {
-		clear();
-		
-		onUpdate();
+	private CCTagList()
+	{
+		for (int i = 0; i < TAGCOUNT; i++) tags[i] = false;
 	}
 
-	public CCTagList(short val) {
-		parseFromShort(val);
-		
-		onUpdate();
+	private CCTagList(short val)
+	{
+		for (int i = 0; i < TAGCOUNT; i++) tags[i] = (val & (1 << i)) != 0;
 	}
 
-	@SuppressWarnings("CopyConstructorMissesField")
-	public CCTagList(CCTagList t) {
-		for (int i = 0; i < TAGCOUNT; i++) {
-			tags[i] = t.getTag(i);
-		}
-		
-		onUpdate();
+	private CCTagList(CCTagList t, int idx, boolean val)
+	{
+		for (int i = 0; i < TAGCOUNT; i++) tags[i] = t.getTag(i);
+		tags[idx]=val;
 	}
 
-	public void clear() {
-		for (int i = 0; i < TAGCOUNT; i++) {
-			tags[i] = false;
-		}
-		onUpdate();
+	private CCTagList(boolean[] dat)
+	{
+		System.arraycopy(dat, 0, tags, 0, TAGCOUNT);
 	}
 
-	public void parseFromShort(short val) {
-		for (int i = 0; i < TAGCOUNT; i++) {
-			tags[i] = (val & (1 << i)) != 0;
-		}
-		onUpdate();
+	public static CCTagList fromShort(short data) {
+		return new CCTagList(data);
 	}
 
 	public short asShort() {
@@ -100,23 +91,21 @@ public class CCTagList {
 		return tags[c];
 	}
 
-	public void setTag(CCSingleTag t, boolean v) {
-		tags[t.Index] = v;
-		onUpdate();
+	public CCTagList getSetTag(CCSingleTag t, boolean v) {
+		if (getTag(t) == v) return this;
+		return new CCTagList(this, t.Index, v);
 	}
 
-	public void setTag(int c, boolean v) {
-		if (isTagActive(c)) {
-			tags[c] = v;
-			onUpdate();
-		}
+	public CCTagList getSetTag(int c, boolean v) {
+		if (!isTagActive(c)) return this;
+		if (getTag(c) == v) return this;
+		return new CCTagList(this, c, v);
 	}
 
-	public void doUnion(CCTagList t) {
-		for (int i = 0; i < TAGCOUNT; i++) {
-			tags[i] |= t.getTag(i);
-		}
-		onUpdate();
+	public CCTagList getUnion(CCTagList t) {
+		boolean[] n = new boolean[TAGCOUNT];
+		for (int i = 0; i < TAGCOUNT; i++) n[i] = tags[i] | t.getTag(i);
+		return new CCTagList(n);
 	}
 
 	private static boolean isTagActive(int c) {
@@ -139,25 +128,14 @@ public class CCTagList {
 
 		return (tags[c]) ? TAGS[c].getOnIcon() : TAGS[c].getOffIcon();
 	}
-	
-	private void onUpdate() {
-		createIcon = true;
+
+	public CCTagList getSwitchTag(CCSingleTag t) {
+		return new CCTagList(this, t.Index, !getTag(t));
 	}
 
-	public void switchTag(CCSingleTag t) {
-		tags[t.Index] = !tags[t.Index];
-		onUpdate();
-	}
-
-	public void switchTag(int c) {
-		if (isTagActive(c)) {
-			tags[c] = !tags[c];
-			onUpdate();
-		}
-	}
-
-	public CCTagList copy() {
-		return new CCTagList(this);
+	public CCTagList getSwitchTag(int c) {
+		if (!isTagActive(c)) return this;
+		return new CCTagList(this, c, !getTag(c));
 	}
 
 	public static String getName(int c) {
@@ -265,10 +243,6 @@ public class CCTagList {
 		return getTagCount() > 0;
 	}
 
-	public static CCTagList createEmpty() {
-		return new CCTagList();
-	}
-
 	public CCStream<CCSingleTag> iterate() {
 		return new TagsIterator(this);
 	}
@@ -279,8 +253,13 @@ public class CCTagList {
 
 	public static CCTagList deserialize(String v) throws TagNotFoundException
 	{
-		CCTagList r = CCTagList.createEmpty();
-		for (String str : v.split(";")) if (!Str.isNullOrWhitespace(str)) r.setTag(CCSingleTag.find(Integer.parseInt(str)), true); //$NON-NLS-1$
-		return r;
+		boolean[] n = new boolean[TAGCOUNT];
+		for (int i = 0; i < TAGCOUNT; i++) n[i] = false;
+
+		for (String str : v.split(";"))
+		{
+			if (!Str.isNullOrWhitespace(str)) n[CCSingleTag.find(Integer.parseInt(str)).Index] = true;
+		}
+		return new CCTagList(n);
 	}
 }

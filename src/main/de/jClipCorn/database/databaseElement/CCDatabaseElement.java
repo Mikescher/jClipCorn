@@ -38,23 +38,22 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 		this.seriesID = seriesID;
 		this.movielist = ml;
 		
-		onlineReference = CCOnlineReferenceList.createEmpty();
-		linkedGroups    = CCGroupList.createEmpty();
-		genres          = CCGenreList.createEmpty();
-		tags            = CCTagList.createEmpty();
+		onlineReference = CCOnlineReferenceList.EMPTY;
+		linkedGroups    = CCGroupList.EMPTY;
+		genres          = CCGenreList.EMPTY;
+		tags            = CCTagList.EMPTY;
 	}
 	
 	public void setDefaultValues(boolean updateDB) {
 		title           = ""; //$NON-NLS-1$
-		genres          = CCGenreList.createEmpty();
+		genres          = CCGenreList.EMPTY;
 		onlinescore     = CCOnlineScore.STARS_0_0;
 		fsk             = CCFSK.RATING_0;
 		score           = CCUserScore.RATING_NO;
 		covername       = ""; //$NON-NLS-1$
-		onlineReference = CCOnlineReferenceList.createEmpty();
-		linkedGroups    = CCGroupList.createEmpty();
-
-		tags.clear();
+		onlineReference = CCOnlineReferenceList.EMPTY;
+		linkedGroups    = CCGroupList.EMPTY;
+		tags            = CCTagList.EMPTY;
 		
 		if (updateDB) updateDB();
 	}
@@ -301,7 +300,7 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 	public void setGenres(CCGenreList grs) {
 		if (grs == null) { CCLog.addUndefinied("Prevented setting CCDBElem.Genres to NULL"); return; } //$NON-NLS-1$
 
-		genres =  new CCGenreList(grs);
+		genres = grs;
 		
 		updateDB();
 	}
@@ -358,7 +357,7 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 	}
 
 	public void setTags(short ptags) {
-		tags.parseFromShort(ptags);
+		tags = CCTagList.fromShort(ptags);
 	}
 
 	@Override
@@ -371,25 +370,25 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 
 	@Override
 	public void switchTag(CCSingleTag t) {
-		tags.switchTag(t);
+		tags = tags.getSwitchTag(t);
 
 		updateDB();
 	}
 
 	public void switchTag(int c) {
-		tags.switchTag(c);
+		tags = tags.getSwitchTag(c);
 
 		updateDB();
 	}
 
 	public void setTag(CCSingleTag t, boolean v) {
-		tags.setTag(t, v);
+		tags = tags.getSetTag(t, v);
 
 		updateDB();
 	}
 
 	public void setTag(int c, boolean v) {
-		tags.setTag(c, v);
+		tags = tags.getSetTag(c, v);
 
 		updateDB();
 	}

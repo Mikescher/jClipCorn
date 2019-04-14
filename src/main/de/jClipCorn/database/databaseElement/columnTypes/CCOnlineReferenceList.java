@@ -11,6 +11,8 @@ import de.jClipCorn.util.helper.ObjectUtils;
 import de.jClipCorn.util.stream.CCStreams;
 
 public class CCOnlineReferenceList implements Iterable<CCSingleOnlineReference> {
+	public static final CCOnlineReferenceList EMPTY = new CCOnlineReferenceList(CCSingleOnlineReference.createNone(), new ArrayList<>());
+
 	private static final String SEPERATOR = ";"; //$NON-NLS-1$
 
 	public final CCSingleOnlineReference Main;
@@ -64,18 +66,14 @@ public class CCOnlineReferenceList implements Iterable<CCSingleOnlineReference> 
 		return hc;
 	}
 
-	public static CCOnlineReferenceList createEmpty() {
-		return new CCOnlineReferenceList(CCSingleOnlineReference.createNone(), new ArrayList<>());
-	}
-
 	public static CCOnlineReferenceList create(CCSingleOnlineReference primary, List<CCSingleOnlineReference> additional) {
 		return new CCOnlineReferenceList(primary, additional);
 	}
 
 	public static CCOnlineReferenceList create(CCSingleOnlineReference primary, CCSingleOnlineReference secondary) {
-		if (primary == null) return createEmpty();
+		if (primary == null) return EMPTY;
 		if (secondary == null || secondary.isUnset()) return new CCOnlineReferenceList(primary, new ArrayList<>());
-		return new CCOnlineReferenceList(primary, Arrays.asList(secondary));
+		return new CCOnlineReferenceList(primary, Collections.singletonList(secondary));
 	}
 
 	public static CCOnlineReferenceList parse(String data) throws OnlineRefFormatException {

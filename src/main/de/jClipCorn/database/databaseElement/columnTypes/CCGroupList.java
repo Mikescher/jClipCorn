@@ -6,11 +6,7 @@ import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.util.exceptions.GroupFormatException;
@@ -19,28 +15,26 @@ import de.jClipCorn.util.stream.CCStream;
 import de.jClipCorn.util.stream.CCStreams;
 
 public class CCGroupList implements Iterable<CCGroup> {
+	public static final CCGroupList EMPTY = new CCGroupList();
+
 	private static final String SEPERATOR = ";"; //$NON-NLS-1$
 	
 	private final List<CCGroup> list;
 	
 	private CCGroupList(List<CCGroup> lst) {
-		list = lst;
-		
-		Collections.sort(list);
+		Collections.sort(lst);
+		list = Collections.unmodifiableList(lst);
 	}
 
 	private CCGroupList() {
-		list = new ArrayList<>();
+		list = Collections.unmodifiableList(new ArrayList<>());
 	}
 
 	private CCGroupList(CCGroup[] groups) {
-		list = new ArrayList<>();
-		
-		for (CCGroup str : groups) {
-			list.add(str);
-		}
 
-		Collections.sort(list);
+		ArrayList<CCGroup> gl = new ArrayList<>(Arrays.asList(groups));
+		Collections.sort(gl);
+		list = Collections.unmodifiableList(gl);
 	}
 
 	public static CCGroupList create(Collection<CCGroup> keySet) {
@@ -70,10 +64,6 @@ public class CCGroupList implements Iterable<CCGroup> {
 		}
 		
 		return new CCGroupList(gl);
-	}
-
-	public static CCGroupList createEmpty() {
-		return new CCGroupList();
 	}
 
 	public CCGroupList getAdd(CCMovieList ml, String value) {

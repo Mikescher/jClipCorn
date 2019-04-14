@@ -188,10 +188,10 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 	
 	@Override
 	public CCTagList getTags() {
-		CCTagList i = new CCTagList();
+		CCTagList i = CCTagList.EMPTY;
 		
 		for (int j = 0; j < getEpisodeCount(); j++) {
-			i.doUnion(getEpisodeByArrayIndex(j).getTags());
+			i = i.getUnion(getEpisodeByArrayIndex(j).getTags());
 		}
 		return i;
 	}

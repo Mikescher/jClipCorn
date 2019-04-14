@@ -12,6 +12,8 @@ import de.jClipCorn.util.exceptions.GenreOverflowException;
 import de.jClipCorn.util.stream.CCStream;
 
 public class CCGenreList {
+	public static final CCGenreList EMPTY = new CCGenreList();
+
 	private final static long[] MASK = {0x00000000000000FFL, 
 										0x000000000000FF00L, 
 										0x0000000000FF0000L, 
@@ -25,18 +27,14 @@ public class CCGenreList {
 	
 	private final long genres;
 	
-	public CCGenreList() {
+	private CCGenreList() {
 		genres = 0x0000000000000000L;
 	}
 	
 	public CCGenreList(long lrep) {
 		genres = lrep;
 	}
-	
-	public CCGenreList(CCGenreList l) {
-		genres = l.getAllGenres();
-	}
-	
+
 	public CCGenreList(CCGenre genre1) {
 		Optional<Long> _g = Optional.of(0x0000000000000000L);
 		_g = calcAddGenre(_g, genre1);
@@ -224,10 +222,6 @@ public class CCGenreList {
 		return Long.compare(o1.getSorted().getAllGenres(), o2.getSorted().getAllGenres());
 	}
 
-	public static CCGenreList createEmpty() {
-		return new CCGenreList();
-	}
-	
 	public static int getMaxListSize() {
 		return SIZE;
 	}

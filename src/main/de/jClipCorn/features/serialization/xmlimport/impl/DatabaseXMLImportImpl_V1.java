@@ -23,7 +23,7 @@ public class DatabaseXMLImportImpl_V1 implements IDatabaseXMLImporterImpl {
 		e.execIfIntAttrExists("score", o::setScore);
 		e.execIfShortAttrExists("tags", o::setTags);
 
-		if (s.ResetTags) o.setTags(new CCTagList());
+		if (s.ResetTags) o.setTags(CCTagList.EMPTY);
 
 		if (s.ResetScore) o.setScore(CCUserScore.RATING_NO);
 
@@ -140,7 +140,7 @@ public class DatabaseXMLImportImpl_V1 implements IDatabaseXMLImporterImpl {
 			e.execIfIntAttrExists("quality", o::setQuality);
 			e.execIfShortAttrExists("tags", o::setTags);
 
-			if (s.ResetTags) o.setTags(new CCTagList());
+			if (s.ResetTags) o.setTags(CCTagList.EMPTY);
 
 			e.execIfAttrExists("languages", v -> o.setLanguage(CCDBLanguageList.parseFromString(v)));
 		}

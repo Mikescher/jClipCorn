@@ -28,7 +28,7 @@ public class FilenameParser {
 
 	public static FilenameParserResult parse(CCMovieList movielist, String filepath) {
 		Map<Integer, String> addFiles = new HashMap<>();
-		CCGroupList groups = CCGroupList.createEmpty();
+		CCGroupList groups = CCGroupList.EMPTY;
 		CCDBLanguageList lang = CCDBLanguageList.single(CCProperties.getInstance().PROP_DATABASE_DEFAULTPARSERLANG.getValue());
 		CCMovieZyklus zyklus = null;
 		CCFileFormat format = null;
@@ -64,7 +64,7 @@ public class FilenameParser {
 		// ###################  GROUPS  ###################
 		
 		Matcher mGroups = CCGroup.REGEX_GROUP_SYNTAX.matcher(moviename);
-		CCGroupList grouplist = CCGroupList.createEmpty();
+		CCGroupList grouplist = CCGroupList.EMPTY;
 		while (mGroups.find()) {
 			String group = mGroups.group();
 			String groupname = group.substring(2, group.length() - 2);

@@ -341,7 +341,7 @@ public class QuickAddEpisodeDialog extends JDialog {
 
 		CCDate adddate = CCDate.getCurrentDate();
 		CCDateTimeList history = CCDateTimeList.createEmpty();
-		CCTagList tags = CCTagList.createEmpty();
+		CCTagList tags = CCTagList.EMPTY;
 		long filesize = FileSizeFormatter.getFileSize(new File(src));
 		CCQuality quality = CCQuality.calculateQuality(filesize, length, 1);
 		CCFileFormat format = CCFileFormat.getMovieFormatFromPath(src);

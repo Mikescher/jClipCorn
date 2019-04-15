@@ -16,7 +16,7 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.helper.ImageUtilities;
 
-public class CoverPreviewFrame extends JFrame {
+public class CoverPreviewFrame extends JDialog {
 	private static final long serialVersionUID = -807033167837187549L;
 	
 	private ScalablePane lblImg;
@@ -34,6 +34,8 @@ public class CoverPreviewFrame extends JFrame {
 		    	if (e.getKeyCode() == KeyEvent.VK_ESCAPE) CoverPreviewFrame.this.dispose();
 		    }
 		});
+
+		fixModality(owner);
 	}
 	
 	/**
@@ -45,15 +47,30 @@ public class CoverPreviewFrame extends JFrame {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		initGUI(img, LocaleBundle.getString("CoverPreviewFrame.title")); //$NON-NLS-1$
 		setLocationRelativeTo(findWindow(owner));
-		
+
 		addKeyListener(new KeyAdapter() {
 		    @Override
 			public void keyPressed(KeyEvent e) {
 		    	if (e.getKeyCode() == KeyEvent.VK_ESCAPE) CoverPreviewFrame.this.dispose();
 		    }
 		});
+
+		fixModality(owner);
 	}
-	
+
+	private void fixModality(Component owner) {
+		if (owner == null) {
+			return;
+		} else if (owner instanceof JFrame) {
+			return;
+		} else if (owner instanceof JDialog) {
+			if (((JDialog)owner).isModal()) setModal(true);
+			return;
+		}
+
+		fixModality(owner.getParent());
+	}
+
 	private static Component findWindow(Component c) {
 		
 		Component rec = c;

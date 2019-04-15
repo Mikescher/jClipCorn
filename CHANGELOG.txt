@@ -1,6 +1,100 @@
 
 
 ########################################################################
+############ Mon Apr 15 13:30:29 2019 +0200  1.10.6 RELEASE ############
+########################################################################
+
+
+1.10.6 Feature: Edit OnlineRef dialog
+1.10.6 Task: Made CCTagList immutable
+1.10.6 Feature: Call MediaInfo from QuickAddEpisodesFrame
+1.10.6 Feature: Call MediaInfo from AddEpisodesFrame
+1.10.6 Feature: Call MediaInfo from EditSeriesFrame
+1.10.6 Feature: Call MediaInfo from EditMovieFrame
+1.10.6 Feature: Call MediaInfo from AddMovieFrame
+1.10.6 Task: Show warnings in UpdateCodecFrame
+1.10.6 Bugfix: Fixed unordered episodes keep being unordered
+1.10.6 Task: Minor MediaInfo fixes
+1.10.6 Task: New XML Serialization version (v2)
+1.10.6 Task: Use ActionTree commands in PreviewSeriesFrame popup
+1.10.6 Task: Use ActionTree commands in PreviewSeriesFrame menu
+1.10.6 Task: Refactoring of CCActionTree (+ more elements in PreviewMovieFrame menu)
+1.10.6 Bugfix: Fixed unit tests
+1.10.6 Task: Refactor DB XML Serialization (Part 2 - Import)
+1.10.6 Task: Refactor DB XML Serialization (Part 1 - Export)
+1.10.6 Feature: Warn when exiting with unread errors
+1.10.6 Task: Explicitly throw error on wrong values in Movies/Series/Season/Episodes
+1.10.6 Feature: Update metadata via MediaQuery (language + length)
+1.10.6 Feature: Multiple languages per element & Different Language per episode (db schema changes)
+1.10.6 Task: Eclipse cleanup
+1.10.6 Feature: Try to auto mount missing network drives (windows)
+1.10.6 Task: Less left padding in only-icon columns in the main table
+1.10.6 Feature: Show view count in table(s) (left side of icon)
+1.10.6 Task: Major refactoring of Resources.java
+1.10.6 Task: Switch back to java-1.8
+1.10.6 Task: Upgrade to java-11
+1.10.6 Feature: Statistics Timeline: Only show consecutive episodes
+1.10.6 Task: java package restructuring
+1.10.6 Feature: Added validation 'ERROR_NON_NORMALIZED_PATH'
+1.10.6 Task: Better UI for CreateSeriesFolderStructureFrame
+1.10.6 Bugfix: Fixed ERROR_TAG_NOT_VALID_ON_SERIE
+1.10.6 Bugfix: Fixed writing Settings in readonly mode
+1.10.6 Task: Added Tag->Type associations (Movie|Series|Episode) and validations
+1.10.6 Feature: New OnlineRefType: ANIDB
+1.10.6 Feature: Add genre: Isekai
+1.10.6 Task: Support for combined genres in CCGenre parsing from online metadata
+1.10.6 Feature: Async operation of InitBackupmanager
+1.10.6 Feature: Async operation of PreloadResources
+1.10.6 Task: Code cleanup (Eclipse Oxygen)
+1.10.6 Task: Faster startup time (reduced initial db queries)
+1.10.6 Bugfix: Fixed PreviewSeries action being labeled as read-only-restricted
+1.10.6 Feature: Show Progressbars in QuickAdd dialogs
+1.10.6 Task: Visual improvements of combined timeline statistic
+1.10.6 Feature: New statistic: [[Combined series timeline]]
+1.10.6 Task: Gradle cleanup stuff
+1.10.6 Feature: Added new AddDate Algorithm (Newest_Season_by_oldest_Episode)
+1.10.6 Task: A bit more tooltip infos in Statusbar
+1.10.6 Task: Add new statusbar item: DriveMapStatus
+1.10.6 Task: Better Globals.Timer Output
+1.10.6 Feature: New statistics: Groups
+1.10.6 Feature: Rescan drive after 30sec if unreferenced drives are used
+1.10.6 Bugfix: Fixed ConcurrentModificationException in CCLog
+1.10.6 Bugfix: Fixed exception when creating backup on remote drive (windows)
+1.10.6 Bugfix: Fixed async cover loading sometimes not updating JLabel
+1.10.6 Feature: New CCPath syntax for variables: <?[...]>
+1.10.6 Bugfix: Fixed illegal characters in <?vNetwork> syntax
+1.10.6 Bugfix: Fixed loading of test resources under non-UTF8 environments (win cmd)
+1.10.6 Feature: New CCPath syntax: <?vNetwork="...">
+1.10.6 Bugfix: Missing icon in QuickAddMoviesDialog
+1.10.6 Feature: QuickAdd (+copy) movies by drag'n'dropping them into the MainWindow
+1.10.6 Feature: QuickAdd Episode by drag'n'dropping it into the PreviewSeriesFrame
+1.10.6 Bugfix: Fixed CCDate.sub across year boundaries
+1.10.6 Task: Fixed unit tests (2)
+1.10.6 Task: Fixed unit tests
+1.10.6 Feature: OpenDirectory (via menu & right-click) on series
+1.10.6 Feature: Tags in Series
+1.10.6 Feature: Cancelled Tag
+1.10.6 Feature: Relative Viewed-History Filter
+1.10.6 Bugfix: Fixed Comparable interface of CCDateTime
+1.10.6 Bugfix: Fixed Exception when [OpenInBrowser] with new RefTypes
+1.10.6 Task: Ignore spaces in CustomFilterSyntax
+1.10.6 Bugfix: Fixed Import-Filter not working if SearchText is currently set
+1.10.6 Feature: AniList OnlineParser (GraphQL API)
+1.10.6 Task: Use IntelliJ IDEA as (second) IDE
+1.10.6 Task: Filter serialization schema v2
+1.10.6 Feature: Added CounterAggregator filter
+1.10.6 Feature: Added OnlineRefType [Kitsu]
+1.10.6 Feature: Added OnlineRefType [AnimePlanet]
+1.10.6 Task: OnlineRefType refactoring
+1.10.6 Feature: Added OnlineRefType [AniList]
+1.10.6 Feature: Open Subreferences via popupmenu
+1.10.6 Task: Fix travis builds
+1.10.6 Task: Re-add ability to do local grade beta builds
+1.10.6 Bugfix: Fixed VLC not starting until jCC is closed
+1.10.6 Task: Enable gradle builds on jenkins
+
+
+########################################################################
 ############ Thu Oct 25 22:42:10 2018 +0200  1.10.5 RELEASE ############
 ########################################################################
 
@@ -400,7 +494,7 @@
 1.9.8 Feature: Show (optionally) icons for partially viewed series
 1.9.8 Task: Properties re-organized (UI and code)
 1.9.8 Feature: Added new Property PROP_SERIES_KEEP_LASTVIEWED_PERSISTANT
-1.9.8 Task: erty.getDefault() and CCProperty.getStandard() are redundant methods -.-
+1.9.8 Task: CCProperty.getDefault() and CCProperty.getStandard() are redundant methods -.-
 1.9.8 Bugfix: Progressmonitor (create backup) can no longer be closed by [X]
 1.9.8 Task: Better default value for statusbar under Metal L'n'F
 1.9.8 Bugfix: Fixed YearRange visibility in StatisticsFrame

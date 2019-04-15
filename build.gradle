@@ -55,8 +55,8 @@ configurations {
 // Direct Callable:
 // ================
 // 
-// [betaJar]          Used by local   - create a new beta version, increment version etc
-// [tryCreateRelease] Used by jenkins - build new release if git tag is set, increment version etc
+// [betaJar]          Used by local - create a new beta version, increment version etc
+// [manualReleaseJar] Used by local - create a new release, based on the latest tag version
 //
 // Other:
 // ======
@@ -95,12 +95,12 @@ tasks.register("anyReleaseJar", Jar) {
 	doLast {
 		if (! isBetaRelease() /* && Os.isFamily(Os.FAMILY_WINDOWS) */)
 		{
+			println "Running Launch4j"
+			if (new File("launch4j/launch4j.cfg.xml").exists()) new File("launch4j/launch4j.cfg.xml").delete()
 			new File('launch4j/launch4j.cfg.xml').write createLaunch4jConfig()
 
-			def stdout = ['java', '-jar', 'launch4j/launch4jc.jar', 'launch4j.cfg.xml'].execute(null, new File("launch4j")).text
+			def stdout = ['java', '-jar', 'launch4j.jar', 'launch4j.cfg.xml'].execute(null, new File("launch4j")).text
 			println stdout
-
-			new File('launch4j/launch4j.cfg.xml').delete()
 
 			createChangelog()
 		}
@@ -109,7 +109,9 @@ tasks.register("anyReleaseJar", Jar) {
 
 
 
-tasks.register("tryCreateRelease") {
+
+
+tasks.register("manualReleaseJar") {
 	group = 'Custom'
 
 	doLast {
@@ -124,31 +126,14 @@ tasks.register("tryCreateRelease") {
 		println "Version (Tag):  " + tagVersion
 		println "Version (Code): " + currVersion
 
-		if (new File(".do_publish_release").exists()) new File(".do_publish_release").delete()
+		mainContent = mainContent.replaceFirst(rexMainVers(), tagVersion);
+		mainContent = mainContent.replaceFirst(rexMainBeta(), "false");
 
-		if (currVersion == tagVersion) {
-			println "This version was already built - skip deployment"
-		} else {
-			mainContent = mainContent.replaceFirst(rexMainVers(), tagVersion);
-			mainContent = mainContent.replaceFirst(rexMainBeta(), "false");
-
-			println ""
-			println "==========================================================="
-			println "==========================================================="
-			println "(!) This is a new  release - create deployment trigger file"
-			println "==========================================================="
-			println "==========================================================="
-			println ""
-
-			new File('src/main/de/jClipCorn/Main.java').write mainContent
-
-			new File(".do_publish_release").createNewFile()
-
-			// Do build
-			tryCreateRelease.finalizedBy anyReleaseJar
-		}
+		new File('src/main/de/jClipCorn/Main.java').write mainContent
 	}
 }
+manualReleaseJar.finalizedBy anyReleaseJar
+
 
 tasks.register("betaJar") {
 	group = 'Custom'

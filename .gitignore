@@ -131,3 +131,5 @@ jClipCorn Wiki
 jClipCorn Wiki/*
 
 .do_publish_release
+
+launch4j/launch4j.cfg.xml

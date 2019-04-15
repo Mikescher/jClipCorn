@@ -2,6 +2,7 @@ package de.jClipCorn.util.formatter;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,6 +12,7 @@ import java.util.Map;
 
 import de.jClipCorn.properties.types.PathSyntaxVar;
 import de.jClipCorn.util.Str;
+import de.jClipCorn.util.helper.ThreadUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import de.jClipCorn.gui.localization.LocaleBundle;
@@ -257,7 +259,14 @@ public class PathFormatter {
 	
 	public static void showInExplorer(String abspath) {
 		try {
-			Runtime.getRuntime().exec(String.format("explorer.exe /select,\"%s\"", abspath));
+			// [JRE Bug] https://stackoverflow.com/questions/6686592/runtime-exec-on-argument-containing-multiple-spaces
+
+			final File batch = File.createTempFile( "jClipCorn_exec_", ".bat" );
+			try( PrintStream ps = new PrintStream(batch)) {
+				ps.println( "explorer.exe /select,\"" + abspath + '"');
+			}
+			Runtime.getRuntime().exec( batch.getAbsolutePath());
+			batch.deleteOnExit();
 		} catch (IOException e) {
 			CCLog.addError(e);
 		}

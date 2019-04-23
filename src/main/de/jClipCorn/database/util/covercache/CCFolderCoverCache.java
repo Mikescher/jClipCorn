@@ -4,7 +4,6 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -59,7 +58,10 @@ public class CCFolderCoverCache extends CCCoverCache {
 		calculateBiggestCID();
 		
 		try {
-			if (PathFormatter.fileExists(cacheFilepath)) metacache = SimpleSerializableData.load(cacheFilepath, true);
+			if (PathFormatter.fileExists(cacheFilepath))
+				metacache = SimpleSerializableData.load(cacheFilepath, true);
+			else
+				metacache = SimpleSerializableData.createEmpty(true);
 		} catch (XMLFormatException e) {
 			metacache = SimpleSerializableData.createEmpty(true);
 			CCLog.addError("CoverCache loading failed", e); //$NON-NLS-1$
@@ -296,18 +298,12 @@ public class CCFolderCoverCache extends CCCoverCache {
 		final String prefix = CCProperties.getInstance().PROP_COVER_PREFIX.getValue();
 		final String suffix = "." + CCProperties.getInstance().PROP_COVER_TYPE.getValue();  //$NON-NLS-1$
 		
-		String[] files = getCoverDirectory().list(new FilenameFilter() {
-			@Override
-			public boolean accept(File path, String name) {
-				return name.startsWith(prefix) && name.endsWith(suffix);
-			}
-		});
+		String[] files = getCoverDirectory().list((path, name) -> name.startsWith(prefix) && name.endsWith(suffix));
 		
 		List<Tuple<String, Func0to1WithIOException<BufferedImage>>> result = new ArrayList<>();
 		for (String file : files) {
-			String t1 = file;
 			Func0to1WithIOException<BufferedImage> t2 = () -> ImageIO.read(new File(PathFormatter.combine(getCoverPath(), file)));
-			result.add(Tuple.Create(t1, t2));
+			result.add(Tuple.Create(file, t2));
 		}
 		
 		return result;

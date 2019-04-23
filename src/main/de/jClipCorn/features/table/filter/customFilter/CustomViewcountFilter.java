@@ -52,7 +52,7 @@ public class CustomViewcountFilter extends AbstractCustomStructureElementFilter 
 
 	@Override
 	public boolean includes(CCEpisode e) {
-		return false;
+		return area.contains(e.getViewedHistory().count());
 	}
 
 	@Override

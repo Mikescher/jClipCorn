@@ -12,7 +12,6 @@ import java.util.Map;
 
 import de.jClipCorn.properties.types.PathSyntaxVar;
 import de.jClipCorn.util.Str;
-import de.jClipCorn.util.helper.ThreadUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import de.jClipCorn.gui.localization.LocaleBundle;

@@ -442,22 +442,27 @@ public class ExportHelper {
 	
 	public static void openFullBackupFile(final File f, final MainFrame owner, final CCMovieList movielist) {
 		if (DialogHelper.showLocaleYesNo(owner, "Dialogs.LoadBackup")) { //$NON-NLS-1$
-			new Thread(new Runnable() {
-				@Override
-				public void run() {
-					owner.beginBlockingIntermediate();
-					
-					ExportHelper.restoreDatabaseFromBackup(f, movielist);
-					owner.getClipTable().autoResize();
-					
-					owner.endBlockingIntermediate();
-				}
+			new Thread(() ->
+			{
+				owner.beginBlockingIntermediate();
+
+				ExportHelper.restoreDatabaseFromBackup(f, movielist);
+				owner.getClipTable().autoResize();
+
+				owner.endBlockingIntermediate();
 			}, "THREAD_IMPORT_JXMLBKP").start(); //$NON-NLS-1$
 		}
 	}
 	
 	public static void openMultipleElementFile(File f, MainFrame owner, CCMovieList movielist) {
 		try {
+			long maxmem = Runtime.getRuntime().maxMemory();
+			long fsize = f.length();
+			if (fsize > maxmem/2)
+			{
+				if (!DialogHelper.showLocaleYesNo(owner, "Dialogs.NotEnoughMem")) return; //$NON-NLS-1$
+			}
+
 			String xml = SimpleFileUtils.readUTF8TextFile(f);
 			
 			ImportElementsFrame ief = new ImportElementsFrame(owner, xml, movielist);

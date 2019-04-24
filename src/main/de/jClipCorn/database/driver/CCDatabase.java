@@ -904,6 +904,7 @@ public class CCDatabase {
 				}
 
 				for (CCSeason s : seasonMap.values()) s.enforceOrder();
+				for (CCSeries s : seriesMap.values()) s.enforceOrder();
 			}
 		} catch (SQLException | CCFormatException e) {
 			CCLog.addError(e);
@@ -926,6 +927,7 @@ public class CCDatabase {
 			}
 
 			ser.abortUpdating();
+			ser.enforceOrder();
 			
 			rs.close();
 			

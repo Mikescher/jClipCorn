@@ -1,13 +1,7 @@
 package de.jClipCorn.database.databaseElement;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Vector;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -46,6 +40,10 @@ public class CCSeries extends CCDatabaseElement {
 
 	public void directlyInsertSeason(CCSeason s) { // !! ONLY CALLED FROM CCDatabase
 		seasons.add(s);
+	}
+
+	public void enforceOrder() {
+		seasons.sort(Comparator.comparingInt(CCSeason::getSortedSeasonNumber));
 	}
 
 	public CCSeason createNewEmptySeason() {
@@ -318,14 +316,9 @@ public class CCSeries extends CCDatabaseElement {
 	}
 	
 	public List<CCSeason> getSeasonsSorted() {
-		List<CCSeason> sortedseasons = new ArrayList<>();
-		
-		for (CCSeason cs : seasons) {
-			sortedseasons.add(cs);
-		}
-		
-		Collections.sort(sortedseasons, new CCSeasonComparator());
-		
+
+		List<CCSeason> sortedseasons = new ArrayList<>(seasons);
+		sortedseasons.sort(new CCSeasonComparator());
 		return sortedseasons;
 	}
 	

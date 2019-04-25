@@ -102,7 +102,6 @@ public class WatchHistoryMovieElement extends WatchHistoryElement{
 
 	@Override
 	public void open(WatchHistoryFrame owner) {
-		PreviewMovieFrame pmf = new PreviewMovieFrame(owner, Movie);
-		pmf.setVisible(true);
+		PreviewMovieFrame.show(owner, Movie);
 	}
 }

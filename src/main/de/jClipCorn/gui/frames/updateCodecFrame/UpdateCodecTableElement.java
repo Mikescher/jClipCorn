@@ -35,11 +35,9 @@ public class UpdateCodecTableElement {
 	}
 
 	public void preview(JFrame owner) {
-		if (Element instanceof CCMovie) 
-			new PreviewMovieFrame(owner, (CCMovie)Element).setVisible(true);
+		if (Element instanceof CCMovie) PreviewMovieFrame.show(owner, (CCMovie)Element);
 		
-		if (Element instanceof CCEpisode) 
-			new PreviewSeriesFrame(owner, (CCEpisode)Element).setVisible(true);
+		if (Element instanceof CCEpisode) PreviewSeriesFrame.show(owner, (CCEpisode)Element);
 	}
 
 	public ImageIcon getStatusIcon() {

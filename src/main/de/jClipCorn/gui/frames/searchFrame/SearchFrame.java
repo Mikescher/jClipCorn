@@ -146,7 +146,9 @@ public class SearchFrame extends JFrame {
 		String searchString = edSearch.getText().trim();
 		
 		lsmdl.clear();
-		
+
+		if (searchString.isEmpty()) return;
+
 		for (CCMovie mov : movielist.iteratorMovies())
 		{
 			boolean movFound = false;
@@ -295,21 +297,13 @@ public class SearchFrame extends JFrame {
 	}
 	
 	private void onDblClick() {
-		if (lsMain.getSelectedIndex() >= 0) {
+		if (lsMain.getSelectedIndex() >= 0)
+		{
 			Object v = lsMain.getSelectedValue();
-			if (v instanceof CCMovie) {
-				PreviewMovieFrame pmf = new PreviewMovieFrame(this, (CCMovie)v);
-				pmf.setVisible(true);
-			} else if (v instanceof CCSeries) {
-				PreviewSeriesFrame psf = new PreviewSeriesFrame(this, (CCSeries) v);
-				psf.setVisible(true);
-			} else if (v instanceof CCSeason) {
-				PreviewSeriesFrame psf = new PreviewSeriesFrame(this, (CCSeason) v);
-				psf.setVisible(true);
-			} else if (v instanceof CCEpisode) {
-				PreviewSeriesFrame psf = new PreviewSeriesFrame(this, (CCEpisode) v);
-				psf.setVisible(true);
-			}
+			if (v instanceof CCMovie)   PreviewMovieFrame.show(this,  (CCMovie)   v);
+			if (v instanceof CCSeries)  PreviewSeriesFrame.show(this, (CCSeries)  v);
+			if (v instanceof CCSeason)  PreviewSeriesFrame.show(this, (CCSeason)  v);
+			if (v instanceof CCEpisode) PreviewSeriesFrame.show(this, (CCEpisode) v);
 		}
 	}
 	

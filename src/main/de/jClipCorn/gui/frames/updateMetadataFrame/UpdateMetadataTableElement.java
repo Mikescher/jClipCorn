@@ -23,10 +23,7 @@ public class UpdateMetadataTableElement {
 	}
 
 	public void preview(JFrame owner) {
-		if (Element instanceof CCMovie) 
-			new PreviewMovieFrame(owner, (CCMovie)Element).setVisible(true);
-		
-		if (Element instanceof CCSeries) 
-			new PreviewSeriesFrame(owner, (CCSeries)Element).setVisible(true);
+		if (Element instanceof CCMovie)  PreviewMovieFrame.show(owner,  (CCMovie)  Element);
+		if (Element instanceof CCSeries) PreviewSeriesFrame.show(owner, (CCSeries) Element);
 	}
 }

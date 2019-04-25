@@ -1,8 +1,10 @@
 package de.jClipCorn.gui.frames.previewMovieFrame;
 
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Font;
+import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -23,14 +25,19 @@ import de.jClipCorn.gui.guiComponents.TagPanel;
 import de.jClipCorn.gui.guiComponents.language.LanguageDisplay;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
+import de.jClipCorn.properties.CCProperties;
+import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.formatter.FileSizeFormatter;
 import de.jClipCorn.util.formatter.TimeIntervallFormatter;
 import de.jClipCorn.util.listener.UpdateCallbackListener;
+import de.jClipCorn.util.stream.CCStreams;
 
 public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener {
 	private static final long serialVersionUID = 7483476533745432416L;
-	
+
+	private static List<Tuple<CCMovie, PreviewMovieFrame>> _activeFrames = new ArrayList<>();
+
 	private final CCMovie movie;
 	private CoverLabel lblCover;
 	private JLabel label;
@@ -76,13 +83,43 @@ public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener 
 	private JScrollPane scrollPane_2;
 	private JList<String> lsGroups;
 	
-	public PreviewMovieFrame(Component owner, CCMovie m) {
+	private PreviewMovieFrame(Component owner, CCMovie m) {
 		super();
 		this.movie = m;
 		initGUI(m);
 		updateFields();
 		
 		setLocationRelativeTo(owner);
+		initListener(m);
+	}
+
+	public static void show(Component owner, CCMovie data) {
+		if (!CCProperties.getInstance().PROP_PREVIEWMOVIE_SINGLETON.getValue()) {
+			new PreviewMovieFrame(owner, data).setVisible(true);
+			return;
+		}
+
+		Tuple<CCMovie, PreviewMovieFrame> frame = CCStreams.iterate(_activeFrames).firstOrNull(f -> f.Item1 == data);
+		if (frame != null) {
+			if(frame.Item2.getState() != Frame.NORMAL) frame.Item2.setState(Frame.NORMAL);
+			frame.Item2.toFront();
+			frame.Item2.repaint();
+			return;
+		}
+
+		new PreviewMovieFrame(owner, data).setVisible(true);
+	}
+
+	private void initListener(CCMovie mov) {
+		final Tuple<CCMovie, PreviewMovieFrame> d = Tuple.Create(mov, this);
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosed(WindowEvent e) {
+				super.windowClosed(e);
+				_activeFrames.remove(d);
+			}
+		});
+		_activeFrames.add(d);
 	}
 	
 	private void initGUI(CCMovie m) {

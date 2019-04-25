@@ -81,7 +81,7 @@ public class ShowIncompleteFilmSeriesFrame extends JDialog {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				if (e.getClickCount() == 2 && listMain.getSelectedValue() != null) {
-					new PreviewMovieFrame(ShowIncompleteFilmSeriesFrame.this, listMain.getSelectedValue().target).setVisible(true);
+					PreviewMovieFrame.show(ShowIncompleteFilmSeriesFrame.this, listMain.getSelectedValue().target);
 				}
 			}
 		});

@@ -176,6 +176,8 @@ public class CCProperties {
 	public CCBoolProperty                                   PROP_MAINFRAME_SHOW_VIEWCOUNT;
 	public CCBoolProperty                                   PROP_DRIVEMAP_REMOUNT_NETDRIVES;
 	public CCStringProperty                                 PROP_PLAY_MEDIAINFO_PATH;
+	public CCBoolProperty                                   PROP_PREVIEWSERIES_SINGLETON;
+	public CCBoolProperty                                   PROP_PREVIEWMOVIE_SINGLETON;
 
 	public boolean ARG_READONLY = false;
 	
@@ -267,6 +269,7 @@ public class CCProperties {
 		PROP_ON_DBLCLICK_MOVE                   = new CCEnumProperty<>(CAT_MOVIES,          this,   "PROP_ON_DBLCLICK_MOVE",                    DoubleClickAction.PLAY,             DoubleClickAction.getWrapper());
 		PROP_MAINFRAME_AUTOMATICRESETWATCHLATER = new CCBoolProperty(CAT_MOVIES,            this,   "PROP_MAINFRAME_AUTOMATICRESETWATCHLATER",  true);
 		PROP_MAINFRAME_AUTOMATICRESETWATCHNEVER = new CCBoolProperty(CAT_MOVIES,            this,   "PROP_MAINFRAME_AUTOMATICRESETWATCHNEVER",  true);
+		PROP_PREVIEWMOVIE_SINGLETON             = new CCBoolProperty(CAT_MOVIES,            this,   "PROP_PREVIEWMOVIE_SINGLETON",              true);
 
 		PROP_STATUSBAR_CALC_SERIES_IN_LENGTH    = new CCBoolProperty(CAT_SERIES,            this,   "PROP_STATUSBAR_CALC_SERIES_IN_LENGTH",     false);
 		PROP_STATUSBAR_CALC_SERIES_IN_SIZE      = new CCBoolProperty(CAT_SERIES,            this,   "PROP_STATUSBAR_CALC_SERIES_IN_SIZE",       false);
@@ -279,6 +282,7 @@ public class CCProperties {
 		PROP_SHOW_PARTIAL_VIEWED_STATE          = new CCBoolProperty(CAT_SERIES,            this,   "PROP_SHOW_PARTIAL_VIEWED_STATE",           false);
 		PROP_SEASON_INDEX_REGEXPRESSIONS        = new CCSeasonRegexListProperty(CAT_SERIES, this,   "PROP_SEASON_INDEX_REGEXPRESSIONS",         getDefSeasonRegex());
 		PROP_SERIES_NEXT_EPISODE_HEURISTIC      = new CCEnumProperty<>(CAT_SERIES,          this,   "PROP_SERIES_NEXT_EPISODE_HEURISTIC",       NextEpisodeHeuristic.AUTOMATIC,     NextEpisodeHeuristic.getWrapper());
+		PROP_PREVIEWSERIES_SINGLETON            = new CCBoolProperty(CAT_SERIES,            this,   "PROP_PREVIEWSERIES_SINGLETON",             true);
 
 		PROP_PLAY_VLC_PATH                      = new CCPathProperty(CAT_PLAY,              this,   "PROP_PLAY_VLC_PATH",                       "",                                 "vlc.exe",       CCPathPropertyMode.FILES);
 		PROP_PLAY_MEDIAINFO_PATH                = new CCPathProperty(CAT_PLAY,              this,   "PROP_PLAY_MEDIAINFO_PATH",                 "",                                 "mediainfo.exe", CCPathPropertyMode.FILES);

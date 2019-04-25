@@ -228,11 +228,19 @@ public abstract class CCStream<TType> implements Iterator<TType>, Iterable<TType
 		return null;
 	}
 
+	public TType firstOrNull(Func1to1<TType, Boolean> filter) {
+		return this.filter(filter).firstOrNull();
+	}
+
 	public TType lastOrNull() {
 		CCStream<TType> it = cloneFresh();
 		TType last = null;
 		while (it.hasNext()) last = it.next();
 		return last;
+	}
+
+	public TType lastOrNull(Func1to1<TType, Boolean> filter) {
+		return this.filter(filter).lastOrNull();
 	}
 	
 	public int sumInt(Func1to1<TType, Integer> op) {

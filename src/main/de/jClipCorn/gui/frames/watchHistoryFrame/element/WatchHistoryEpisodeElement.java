@@ -105,7 +105,6 @@ public class WatchHistoryEpisodeElement extends WatchHistoryElement {
 
 	@Override
 	public void open(WatchHistoryFrame owner) {
-		PreviewSeriesFrame psf = new PreviewSeriesFrame(owner, Episode);
-		psf.setVisible(true);
+		PreviewSeriesFrame.show(owner, Episode);
 	}
 }

@@ -1,13 +1,7 @@
 package de.jClipCorn.gui.frames.previewSeriesFrame;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Font;
-import java.awt.KeyboardFocusManager;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
+import java.awt.*;
+import java.awt.event.*;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -26,7 +20,9 @@ import de.jClipCorn.features.actionTree.CCActionTree;
 import de.jClipCorn.features.actionTree.menus.impl.PreviewSeriesMenuBar;
 import de.jClipCorn.gui.frames.quickAddEpisodeDialog.QuickAddEpisodeDialog;
 import de.jClipCorn.gui.guiComponents.FileDrop;
+import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.listener.ActionCallbackListener;
+import de.jClipCorn.util.stream.CCStreams;
 import org.apache.commons.lang.StringUtils;
 
 import com.jgoodies.forms.layout.ColumnSpec;
@@ -59,6 +55,8 @@ import de.jClipCorn.util.listener.UpdateCallbackListener;
 
 public class PreviewSeriesFrame extends JFrame implements ListSelectionListener, JCoverChooserPopupEvent, UpdateCallbackListener, FileDrop.Listener, ActionCallbackListener {
 	private static final long serialVersionUID = 5484205983855802992L;
+
+	private static List<Tuple<CCSeries, PreviewSeriesFrame>> _activeFrames = new ArrayList<>();
 
 	private CCSeries dispSeries;
 
@@ -102,7 +100,7 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 	/**
 	 * @wbp.parser.constructor
 	 */
-	public PreviewSeriesFrame(Component owner, CCSeries ser) {
+	private PreviewSeriesFrame(Component owner, CCSeries ser) {
 		this.dispSeries = ser;
 		initGUI();
 		setSize(new Dimension(1000, getInitFrameHeight()));
@@ -121,7 +119,7 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 		initListener(ser);
 	}
 
-	public PreviewSeriesFrame(Component owner, CCSeason sea) {
+	private PreviewSeriesFrame(Component owner, CCSeason sea) {
 		this.dispSeries = sea.getSeries();
 		initGUI();
 		setSize(new Dimension(1000, getInitFrameHeight()));
@@ -136,7 +134,7 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 		initListener(sea.getSeries());
 	}
 
-	public PreviewSeriesFrame(Component owner, CCEpisode epi) {
+	private PreviewSeriesFrame(Component owner, CCEpisode epi) {
 		this.dispSeries = epi.getSeries();
 		initGUI();
 		setSize(new Dimension(1000, getInitFrameHeight()));
@@ -151,6 +149,64 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 
 		setLocationRelativeTo(owner);
 		initListener(epi.getSeries());
+	}
+
+	public static void show(Component owner, CCSeries data) {
+		if (!CCProperties.getInstance().PROP_PREVIEWSERIES_SINGLETON.getValue()) {
+			new PreviewSeriesFrame(owner, data).setVisible(true);
+			return;
+		}
+
+		Tuple<CCSeries, PreviewSeriesFrame> frame = CCStreams.iterate(_activeFrames).firstOrNull(f -> f.Item1 == data);
+		if (frame != null) {
+			if(frame.Item2.getState() != Frame.NORMAL) frame.Item2.setState(Frame.NORMAL);
+			frame.Item2.toFront();
+			frame.Item2.repaint();
+			return;
+		}
+
+		new PreviewSeriesFrame(owner, data).setVisible(true);
+	}
+
+	public static void show(Component owner, CCSeason data) {
+		if (!CCProperties.getInstance().PROP_PREVIEWSERIES_SINGLETON.getValue()) {
+			new PreviewSeriesFrame(owner, data).setVisible(true);
+			return;
+		}
+
+		Tuple<CCSeries, PreviewSeriesFrame> frame = CCStreams.iterate(_activeFrames).firstOrNull(f -> f.Item1 == data.getSeries());
+		if (frame != null) {
+			if(frame.Item2.getState() != Frame.NORMAL) frame.Item2.setState(Frame.NORMAL);
+			frame.Item2.toFront();
+			frame.Item2.repaint();
+			frame.Item2.changeSeason(data);
+			frame.Item2.cvrChooser.setCurrSelected(data.getSeasonNumber());
+			frame.Item2.repaint();
+			return;
+		}
+
+		new PreviewSeriesFrame(owner, data).setVisible(true);
+	}
+
+	public static void show(Component owner, CCEpisode data) {
+		if (!CCProperties.getInstance().PROP_PREVIEWSERIES_SINGLETON.getValue()) {
+			new PreviewSeriesFrame(owner, data).setVisible(true);
+			return;
+		}
+
+		Tuple<CCSeries, PreviewSeriesFrame> frame = CCStreams.iterate(_activeFrames).firstOrNull(f -> f.Item1 == data.getSeries());
+		if (frame != null) {
+			if(frame.Item2.getState() != Frame.NORMAL) frame.Item2.setState(Frame.NORMAL);
+			frame.Item2.toFront();
+			frame.Item2.repaint();
+			frame.Item2.changeSeason(data.getSeason());
+			frame.Item2.cvrChooser.setCurrSelected(data.getSeason().getSeasonNumber());
+			frame.Item2.tabSeason.select(data);
+			frame.Item2.repaint();
+			return;
+		}
+
+		new PreviewSeriesFrame(owner, data).setVisible(true);
 	}
 
 	private static int getInitFrameHeight() {
@@ -169,6 +225,16 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 	}
 
 	private void initListener(CCSeries ser) {
+		final Tuple<CCSeries, PreviewSeriesFrame> d = Tuple.Create(ser, this);
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosed(WindowEvent e) {
+				super.windowClosed(e);
+				_activeFrames.remove(d);
+			}
+		});
+		_activeFrames.add(d);
+
 		ser.getMovieList().addChangeListener(new CCDBUpdateListener() {
 			@Override
 			public void onRemMovie(CCDatabaseElement el) {

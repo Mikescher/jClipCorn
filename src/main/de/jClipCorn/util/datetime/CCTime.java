@@ -353,6 +353,10 @@ public class CCTime implements Comparable<CCTime>, StringSpecSupplier {
 		return getSub(0, 0, s);
 	}
 
+	public int getMinuteOfDay() {
+		return getHours()*60 + getMinutes();
+	}
+
 	@SuppressWarnings("nls")
 	@Override
 	public String resolveStringSpecifier(char c, int count) {

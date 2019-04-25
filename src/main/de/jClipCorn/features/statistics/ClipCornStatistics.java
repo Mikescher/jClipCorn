@@ -36,6 +36,7 @@ public final class ClipCornStatistics {
 		// ======== SPECIAL PROPERTIES =========
 
 		STATISTICS.add(ml -> new StatisticsGroup(s -> new StatisticsWatchCountChart(ml, s)));
+		STATISTICS.add(ml -> new StatisticsGroup(s -> new StatisticsWatchTimeChart(ml, s)));
 
 		// ======== PROPERTIES PLOTTED OVER TIME =========
 

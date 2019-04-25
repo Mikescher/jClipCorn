@@ -15,6 +15,7 @@ import de.jClipCorn.database.databaseElement.columnTypes.*;
 import de.jClipCorn.util.SortableTuple;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.datetime.CCDate;
+import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.datetime.CCDatespan;
 import de.jClipCorn.util.stream.CCStream;
 
@@ -621,4 +622,24 @@ public class StatisticsHelper {
 		}
 		return result;
 	}
+
+	public static int[] getPlayedMinutes(CCStream<ICCPlayableElement> it) {
+		int[] result = new int[60*24];
+
+		for (ICCPlayableElement e : it)
+		{
+			for (CCDateTime v : e.getViewedHistory().iterator())
+			{
+				if (v.time.isUnspecifiedTime()) continue;
+				if (!v.isValidDateTime()) continue;
+				if (v.isUnspecifiedOrMinimum()) continue;
+
+				int t = v.time.getMinuteOfDay();
+				for (int i=0; i < e.getLength(); i++) result[(t+i)%(60*24)]++;
+			}
+		}
+
+		return result;
+	}
+
 }

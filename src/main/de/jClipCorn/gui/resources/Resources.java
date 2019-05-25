@@ -268,6 +268,8 @@ public class Resources {
 	};
 
 	public static HashMap<Tuple<Integer, Integer>, IconRef> ICN_TABLE_LANGUAGE_COMBINED = createCombinedlanguageIcons(ICN_TABLE_LANGUAGE);
+	public static IconRef ICN_TABLE_LANGUAGE_SPECIAL_00_01_04 = registerCombined16x16Icon("/icons/table/language/language_special_00_01_04.png");
+	public static IconRef ICN_TABLE_LANGUAGE_SPECIAL_00_01_06 = registerCombined16x16Icon("/icons/table/language/language_special_00_01_06.png");
 
 	public final static IconRef ICN_TABLE_LANGUAGE_NONE		= register16x16Icon("/icons/table/language/language_none.png");
 	public final static IconRef ICN_TABLE_LANGUAGE_MORE		= register16x16Icon("/icons/table/language/language_more.png");

@@ -173,11 +173,7 @@ public class Main {
 //TODO save original/alternative title (eng title) --> get from TMDB / IMDB
 
 //TODO
-//   - Format/Quality etc also for Serien (everything for a;b;a+b with toggle control?  ->  only were applicable)                             
-//   - combined timeline row (like github commit overview)                                                                                                               
 //   - find missing seasons online
-//   - Auto retrieve length button
-//   - can use multiple online-references (auto add imdb, add proxer and MAM for many)
 //   - Export and import reference mapping file (to get mappings to other dbs) ?
 
 //TODO get actors from online and save to db

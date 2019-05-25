@@ -85,6 +85,20 @@ public class CCDBLanguageList implements Iterable<CCDBLanguage> {
 		return _languages.size()==1 && _languages.contains(lang);
 	}
 
+	public boolean isExact(int... langs) {
+		if (_languages.size() != langs.length) return false;
+		for (int lid : langs)
+		{
+			boolean found = false;
+			for (CCDBLanguage lng : _languages)
+			{
+				if (lng.asInt() == lid) {found=true; break;}
+			}
+			if (!found) return false;
+		}
+		return true;
+	}
+
 	public boolean isSingle() {
 		return _languages.size()==1;
 	}
@@ -140,6 +154,9 @@ public class CCDBLanguageList implements Iterable<CCDBLanguage> {
 	public ImageIcon getIcon() {
 		if (isEmpty()) return Resources.ICN_TABLE_LANGUAGE_NONE.get();
 		if (isSingle()) return _languages.iterator().next().getIcon();
+
+		if (isExact(0, 1, 4)) return Resources.ICN_TABLE_LANGUAGE_SPECIAL_00_01_04.get();
+		if (isExact(0, 1, 6)) return Resources.ICN_TABLE_LANGUAGE_SPECIAL_00_01_06.get();
 
 		if (_languages.size() == 2)
 		{

@@ -81,7 +81,7 @@ public abstract class IMDBParserCommon extends Metadataparser {
 		String html = HTTPUtilities.getHTML(url, true, true);
 		final List<Tuple<String,CCSingleOnlineReference>> res = extractImDBLinks(html);
 		
-		if (res.isEmpty()) return CCSingleOnlineReference.createNone();
+		if (res.isEmpty()) return CCSingleOnlineReference.EMPTY;
 		
 		return res.get(0).Item2;
 	}

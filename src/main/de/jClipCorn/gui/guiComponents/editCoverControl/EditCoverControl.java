@@ -17,6 +17,7 @@ import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 
+import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReferenceList;
 import org.gpl.JSplitButton.JSplitButton;
 import org.gpl.JSplitButton.action.SplitButtonActionListener;
 
@@ -108,41 +109,21 @@ public class EditCoverControl extends AbstractEditCoverControl {
 		popupMenu = new JPopupMenu();
 		{
 			mntmFind = new JMenuItem(LocaleBundle.getString("EditCoverControl.btnFindExtended.text")); //$NON-NLS-1$
-			mntmFind.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					showFindCoverDialog();
-				}
-			});
+			mntmFind.addActionListener(e -> showFindCoverDialog());
 			popupMenu.add(mntmFind);
 
 			popupMenu.addSeparator();
 
 			mntmOpen = new JMenuItem(LocaleBundle.getString("EditCoverControl.btnOpen.text")); //$NON-NLS-1$
-			mntmOpen.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					showChooseCoverDialog();
-				}
-			});
+			mntmOpen.addActionListener(e -> showChooseCoverDialog());
 			popupMenu.add(mntmOpen);
 
 			mntmPasteurl = new JMenuItem(LocaleBundle.getString("EditCoverControl.btnPasteURL.text")); //$NON-NLS-1$
-			mntmPasteurl.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					parseURL();
-				}
-			});
+			mntmPasteurl.addActionListener(e -> parseURL());
 			popupMenu.add(mntmPasteurl); //
 
 			mntmPasteImg = new JMenuItem(LocaleBundle.getString("EditCoverControl.btnPasteIMG.text")); //$NON-NLS-1$
-			mntmPasteImg.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					parseImage();
-				}
-			});
+			mntmPasteImg.addActionListener(e -> parseImage());
 			popupMenu.add(mntmPasteImg);
 		}
 
@@ -163,12 +144,7 @@ public class EditCoverControl extends AbstractEditCoverControl {
 		add(btnFind, 0);
 
 		btnCrop = new JButton(LocaleBundle.getString("EditCoverControl.btnCrop.text")); //$NON-NLS-1$
-		btnCrop.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				showCropDialog();
-			}
-		});
+		btnCrop.addActionListener(e -> showCropDialog());
 		btnCrop.setBounds(0, 0, 70, 23);
 		add(btnCrop, 0);
 
@@ -275,6 +251,11 @@ public class EditCoverControl extends AbstractEditCoverControl {
 		}
 
 		btnCrop.setEnabled(isCoverSet() && isEnabled());
+	}
+
+	@Override
+	public CCOnlineReferenceList getSearchReference() {
+		return owner.getSearchReference();
 	}
 
 	@Override

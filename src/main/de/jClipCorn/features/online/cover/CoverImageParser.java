@@ -61,14 +61,18 @@ public class CoverImageParser implements FinishListener {
 		proglistener.setMax(max);
 
 		for (AbstractImageSearch impl : searchImplementations) {
-			for	(CCSingleOnlineReference soref : reference)
+			if (!reference.isEmpty())
 			{
-				new Thread(new Runnable() {
-					@Override
-					public void run() {
-						impl.start(exclusions, searchText, typ, soref);
-					}
-				}, "THREAD_COVERIMAGEPARSER_" + impl.getClass().getSimpleName().toUpperCase() + "_" + soref.type).start(); //$NON-NLS-1$ //$NON-NLS-2$
+				for	(CCSingleOnlineReference soref : reference)
+				{
+					String tname = "THREAD_COVERIMAGEPARSER_" + impl.getClass().getSimpleName().toUpperCase() + "_" + soref.type; //$NON-NLS-1$ //$NON-NLS-2$
+					new Thread(() -> impl.start(exclusions, searchText, typ, soref), tname).start();
+				}
+			}
+			else
+			{
+				String tname = "THREAD_COVERIMAGEPARSER_" + impl.getClass().getSimpleName().toUpperCase() + "_" + "EMPTY"; //$NON-NLS-1$ //$NON-NLS-2$
+				new Thread(() -> impl.start(exclusions, searchText, typ, CCSingleOnlineReference.EMPTY), tname).start();
 			}
 		}
 		

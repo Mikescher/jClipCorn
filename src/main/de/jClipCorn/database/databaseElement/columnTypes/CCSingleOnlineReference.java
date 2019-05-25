@@ -18,6 +18,8 @@ import de.jClipCorn.util.exceptions.OnlineRefFormatException;
 import de.jClipCorn.util.http.HTTPUtilities;
 
 public class CCSingleOnlineReference {
+	public final static CCSingleOnlineReference EMPTY = new CCSingleOnlineReference(CCOnlineRefType.NONE, Str.Empty, Str.Empty);
+
 	public final CCOnlineRefType type;
 	public final String id;
 	public final String description;
@@ -26,10 +28,6 @@ public class CCSingleOnlineReference {
 		this.type        = type;
 		this.id          = id;
 		this.description = desc;
-	}
-
-	public static CCSingleOnlineReference createNone() {
-		return new CCSingleOnlineReference(CCOnlineRefType.NONE, Str.Empty, Str.Empty);
 	}
 
 	public static CCSingleOnlineReference createIMDB(String id) {
@@ -75,7 +73,7 @@ public class CCSingleOnlineReference {
 	}
 
 	public static CCSingleOnlineReference parse(String data) throws OnlineRefFormatException {
-		if (data.isEmpty()) return CCSingleOnlineReference.createNone();
+		if (data.isEmpty()) return EMPTY;
 
 		int idx1 = data.indexOf(':');
 		int idx2 = data.lastIndexOf(':');

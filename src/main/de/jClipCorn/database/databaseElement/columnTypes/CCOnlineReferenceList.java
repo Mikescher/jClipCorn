@@ -10,7 +10,7 @@ import de.jClipCorn.util.helper.ObjectUtils;
 import de.jClipCorn.util.stream.CCStreams;
 
 public class CCOnlineReferenceList implements Iterable<CCSingleOnlineReference> {
-	public static final CCOnlineReferenceList EMPTY = new CCOnlineReferenceList(CCSingleOnlineReference.createNone(), new ArrayList<>());
+	public static final CCOnlineReferenceList EMPTY = new CCOnlineReferenceList(CCSingleOnlineReference.EMPTY, new ArrayList<>());
 
 	private static final String SEPERATOR = ";"; //$NON-NLS-1$
 
@@ -24,7 +24,11 @@ public class CCOnlineReferenceList implements Iterable<CCSingleOnlineReference> 
 
 	@Override
 	public Iterator<CCSingleOnlineReference> iterator() {
-		return CCStreams.single(Main).append(Additional).filter(r -> r.isSet());
+		return CCStreams.single(Main).append(Additional).filter(CCSingleOnlineReference::isSet);
+	}
+
+	public boolean isEmpty() {
+		return Main.isUnset() && Additional.isEmpty();
 	}
 	
 	@Override
@@ -84,7 +88,7 @@ public class CCOnlineReferenceList implements Iterable<CCSingleOnlineReference> 
 			else lst.add(CCSingleOnlineReference.parse(str));
 		}
 		
-		if (main == null) main = CCSingleOnlineReference.createNone();
+		if (main == null) main = CCSingleOnlineReference.EMPTY;
 		
 		return new CCOnlineReferenceList(main, lst);
 	}

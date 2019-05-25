@@ -352,9 +352,7 @@ public class TMDBParser extends Metadataparser {
 	
 	private CCSingleOnlineReference findMovieDirect(String searchText, int year) {
 		List<Tuple<String, CCSingleOnlineReference>> r0 = searchMovies(searchText, year);
-		if (r0.isEmpty()) {
-			return CCSingleOnlineReference.createNone();
-		}
+		if (r0.isEmpty()) return CCSingleOnlineReference.EMPTY;
 
 		return r0.get(0).Item2;
 	}
@@ -365,9 +363,7 @@ public class TMDBParser extends Metadataparser {
 
 	private CCSingleOnlineReference findSeriesDirect(String searchText, int year) {
 		List<Tuple<String, CCSingleOnlineReference>> r0 = searchSeries(searchText, year);
-		if (r0.isEmpty()) {
-			return CCSingleOnlineReference.createNone();
-		}
+		if (r0.isEmpty()) return CCSingleOnlineReference.EMPTY;
 		
 		return r0.get(0).Item2;
 	}

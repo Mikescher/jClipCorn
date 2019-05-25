@@ -64,7 +64,7 @@ public class ParseOnlineDialog extends JDialog {
 	private final ParseResultHandler owner;
 	private final CCDBElementTyp typ;
 	
-	private CCSingleOnlineReference selectedReference = CCSingleOnlineReference.createNone();
+	private CCSingleOnlineReference selectedReference = CCSingleOnlineReference.EMPTY;
 	
 	private JList<ParseOnlineDialogElement> lsDBList;
 	private JPanel panel;
@@ -645,7 +645,7 @@ public class ParseOnlineDialog extends JDialog {
 					if (md.Genres != null) cbxGenre7.setSelectedIndex(md.Genres.getGenre(7).asInt());
 					
 					btnRef.setIcon(selectedReference.getIconButton());
-					if (md.AltRef != null) ctrlAltRef.setValue(md.AltRef); else ctrlAltRef.setValue(CCSingleOnlineReference.createNone());
+					if (md.AltRef != null) ctrlAltRef.setValue(md.AltRef); else ctrlAltRef.setValue(CCSingleOnlineReference.EMPTY);
 					
 					btnOk.setEnabled(true);
 					

@@ -11,7 +11,7 @@ import de.jClipCorn.features.online.metadata.ParseResultHandler;
 import de.jClipCorn.util.listener.ImageCropperResultListener;
 
 /**
- * Giant NOP Class to keep EditCOerControl.java clean
+ * Giant NOP Class to keep EditCoverControl.java clean
  */
 public class AbstractEditCoverControl extends JLayeredPane implements ParseResultHandler, ImageCropperResultListener {
 	private static final long serialVersionUID = 2645958195252886548L;

@@ -82,34 +82,19 @@ public class FindCoverDialog extends JDialog {
 		pnlTopInner.setLayout(new BorderLayout(5, 5));
 		
 		edSearchTerm = new JTextField(handler.getFullTitle());
-		edSearchTerm.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				startParse();
-			}
-		});
+		edSearchTerm.addActionListener(e -> startParse());
 		pnlTopInner.add(edSearchTerm);
 		edSearchTerm.setColumns(10);
 		
 		btnParse = new JButton(LocaleBundle.getString("FindCoverDialog.btnParse.text")); //$NON-NLS-1$
-		btnParse.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				startParse();
-			}
-		});
+		btnParse.addActionListener(arg0 -> startParse());
 		pnlTopInner.add(btnParse, BorderLayout.EAST);
 		
 		progressBar = new JProgressBar();
 		pnlTopInner.add(progressBar, BorderLayout.SOUTH);
 		
 		btnStop = new JButton(LocaleBundle.getString("FindCoverDialog.btnStop.text")); //$NON-NLS-1$
-		btnStop.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				stopParse();
-			}
-		});
+		btnStop.addActionListener(arg0 -> stopParse());
 		btnStop.setEnabled(false);
 		pnlTopInner.add(btnStop, BorderLayout.WEST);
 		
@@ -129,12 +114,7 @@ public class FindCoverDialog extends JDialog {
 		getContentPane().add(pnlBottom, BorderLayout.SOUTH);
 		
 		btnOk = new JButton(LocaleBundle.getString("UIGeneric.btnOK.text")); //$NON-NLS-1$
-		btnOk.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onOK();
-			}
-		});
+		btnOk.addActionListener(e -> onOK());
 		pnlBottom.add(btnOk);
 		
 		splitPane = new JSplitPane();
@@ -192,18 +172,11 @@ public class FindCoverDialog extends JDialog {
 		btnParse.setEnabled(false);
 		btnStop.setEnabled(true);
 		
-		UpdateCallbackListener finishlistener = new UpdateCallbackListener() {
-			@Override
-			public void onUpdate(Object o) {
-				SwingUtilities.invokeLater(new Runnable() {
-					@Override
-					public void run() {
-						btnParse.setEnabled(true);
-						btnStop.setEnabled(false);
-					}
-				});
-			}
-		};
+		UpdateCallbackListener finishlistener = o -> SwingUtilities.invokeLater(() ->
+		{
+			btnParse.setEnabled(true);
+			btnStop.setEnabled(false);
+		});
 		
 		parser = new CoverImageParser(new ProgressCallbackProgressBarHelper(progressBar), pnlCover, finishlistener, typ, edSearchTerm.getText(), handler.getSearchReference());
 		parser.start();

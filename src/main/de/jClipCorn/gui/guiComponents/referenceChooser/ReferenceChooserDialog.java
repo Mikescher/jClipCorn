@@ -203,8 +203,8 @@ public class ReferenceChooserDialog extends JDialog {
 
 	private void insertNewRef(int idx) {
 		Tuple<CCSingleOnlineReference, List<CCSingleOnlineReference>> d = getActual();
-		if (idx == d.Item2.size()) d.Item2.add(CCSingleOnlineReference.createNone());
-		else d.Item2.add(idx+1, CCSingleOnlineReference.createNone());
+		if (idx == d.Item2.size()) d.Item2.add(CCSingleOnlineReference.EMPTY);
+		else d.Item2.add(idx+1, CCSingleOnlineReference.EMPTY);
 		updateControls(d.Item1, d.Item2);
 	}
 

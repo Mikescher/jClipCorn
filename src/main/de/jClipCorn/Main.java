@@ -212,6 +212,4 @@ public class Main {
 
 //TODO re-do PlainTextExporter
 
-//TODO EditSeriesFrame re-do layout (resizable)
-
 //TODO remove viewed field from db (get from history)

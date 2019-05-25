@@ -1,6 +1,7 @@
 package de.jClipCorn.gui.guiComponents.editCoverControl;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
@@ -148,6 +149,27 @@ public class EditCoverControl extends AbstractEditCoverControl {
 		add(btnCrop, 0);
 
 		setSize(CTRL_WIDTH, CTRL_HEIGHT);
+		setPreferredSize(new Dimension(CTRL_WIDTH, CTRL_HEIGHT));
+	}
+	
+	@Override
+	public Dimension getPreferredSize() {
+		return new Dimension(CTRL_WIDTH, CTRL_HEIGHT);
+	}
+	
+	@Override
+	public Dimension getMinimumSize() {
+		return new Dimension(CTRL_WIDTH, CTRL_HEIGHT);
+	}
+	
+	@Override
+	public Dimension getMaximumSize() {
+		return new Dimension(CTRL_WIDTH, CTRL_HEIGHT);
+	}
+	
+	@Override
+	public Dimension getSize() {
+		return new Dimension(CTRL_WIDTH, CTRL_HEIGHT);
 	}
 
 	private void showChooseCoverDialog() {

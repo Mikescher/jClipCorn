@@ -1,6 +1,7 @@
 package de.jClipCorn.gui.guiComponents.referenceChooser;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.Insets;
 import java.awt.event.InputEvent;
 import java.util.ArrayList;
@@ -45,6 +46,11 @@ public class JReferenceChooser extends JPanel {
 		
 		mainChooser = new JSingleReferenceChooser();
 		add(mainChooser, BorderLayout.CENTER);
+	}
+	
+	@Override
+	public Dimension getPreferredSize() {
+		return new Dimension(80, 20);
 	}
 
 	public CCOnlineReferenceList getValue() {

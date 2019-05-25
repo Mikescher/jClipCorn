@@ -76,6 +76,12 @@ import de.jClipCorn.util.listener.UpdateCallbackListener;
 import de.jClipCorn.util.mediaquery.MediaQueryResult;
 import de.jClipCorn.util.mediaquery.MediaQueryRunner;
 import de.jClipCorn.features.userdataProblem.UserDataProblem;
+import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.ColumnSpec;
+import com.jgoodies.forms.layout.RowSpec;
+import com.jgoodies.forms.layout.FormSpecs;
+import javax.swing.border.EmptyBorder;
+import java.awt.BorderLayout;
 
 public class EditSeriesFrame extends JFrame implements ParseResultHandler, WindowListener {
 	private static final long serialVersionUID = -3694533463871522503L;
@@ -112,18 +118,15 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 	private JLabel label_12;
 	private JLabel label_13;
 	private JComboBox<String> cbxSeriesFSK;
-	private JPanel pnlSeries;
 	private JScrollPane scrollPane;
 	private JComboBox<String> cbxSeriesScore;
 	private JLabel lblScore;
-	private JPanel pnlSeason;
 	private JLabel label_15;
 	private JTextField edSeasonTitle;
 	private JLabel label_16;
 	private JSpinner spnSeasonYear;
 	private JList<String> lsEpisodes;
 	private JScrollPane scrollPane_1;
-	private JPanel pnlEpisode;
 	private JLabel label_17;
 	private JTextField edEpisodeTitle;
 	private JLabel label_18;
@@ -177,12 +180,25 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 	private JButton btnMediaInfo1;
 	private JButton btnMediaInfo2;
 	private JButton btnMediaInfoRaw;
+	private JPanel panel;
+	private JPanel pnlEditSeriesInner;
+	private JPanel pnlEditSeasonInner;
+	private JPanel pnlEditEpisodeInner;
+	private JPanel panel_1;
+	private JPanel panel_4;
+	private JPanel pnlEditSeriesOuter;
+	private JPanel pnlEditSeasonOuter;
+	private JPanel panel_7;
+	private JPanel pnlEditEpisodeOuter;
+	private JPanel panel_2;
+	private JPanel panel_3;
 
 	/**
 	 * @wbp.parser.constructor
 	 */
 	public EditSeriesFrame(Component owner, CCSeries ser, UpdateCallbackListener ucl) {
 		super();
+		setMinimumSize(new Dimension(1163, 775));
 		this.series = ser;
 		this.videoFileChooser = new JFileChooser(PathFormatter.fromCCPath(ser.getCommonPathStart(true)));
 
@@ -263,431 +279,509 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 	}
 
 	private void initGUI() {
-		setSize(new Dimension(1200, 700));
+		setSize(new Dimension(1300, 800));
 		setIconImage(Resources.IMG_FRAME_ICON.get());
-		setResizable(false);
 		setTitle(LocaleBundle.getString("EditSeriesFrame.this.title")); //$NON-NLS-1$
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		getContentPane().setLayout(null);
+		getContentPane().setLayout(new BorderLayout(0, 0));
 		
-		pnlSeries = new JPanel();
-		pnlSeries.setBorder(new LineBorder(new Color(0, 0, 0)));
-		pnlSeries.setBounds(12, 13, 419, 646);
-		getContentPane().add(pnlSeries);
-		pnlSeries.setLayout(null);
+		panel = new JPanel();
+		panel.setBorder(new EmptyBorder(4, 4, 4, 4));
+		getContentPane().add(panel);
+		panel.setLayout(new FormLayout(new ColumnSpec[] {
+				ColumnSpec.decode("32dlu:grow"), //$NON-NLS-1$
+				FormSpecs.RELATED_GAP_COLSPEC,
+				ColumnSpec.decode("32dlu:grow"), //$NON-NLS-1$
+				FormSpecs.RELATED_GAP_COLSPEC,
+				ColumnSpec.decode("32dlu:grow"),}, //$NON-NLS-1$
+			new RowSpec[] {
+				RowSpec.decode("default:grow"),})); //$NON-NLS-1$
 		
-		edSeriesTitle = new JTextField();
-		edSeriesTitle.setBounds(74, 314, 120, 20);
-		pnlSeries.add(edSeriesTitle);
-		edSeriesTitle.setColumns(10);
+		pnlEditSeriesOuter = new JPanel();
+		pnlEditSeriesOuter.setBorder(new LineBorder(new Color(0, 0, 0)));
+		panel.add(pnlEditSeriesOuter, "1, 1, fill, fill"); //$NON-NLS-1$
+		pnlEditSeriesOuter.setLayout(new BorderLayout(0, 0));
 		
-		cbxSeriesGenre_7 = new JComboBox<>();
-		cbxSeriesGenre_7.setBounds(263, 202, 141, 22);
-		pnlSeries.add(cbxSeriesGenre_7);
-		
-		label_2 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGenre_7.text")); //$NON-NLS-1$
-		label_2.setBounds(206, 204, 52, 16);
-		pnlSeries.add(label_2);
-		
-		label_3 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGenre_6.text")); //$NON-NLS-1$
-		label_3.setBounds(206, 177, 52, 16);
-		pnlSeries.add(label_3);
-		
-		label_4 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGenre_5.text")); //$NON-NLS-1$
-		label_4.setBounds(206, 150, 52, 16);
-		pnlSeries.add(label_4);
-		
-		label_5 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGenre_4.text")); //$NON-NLS-1$
-		label_5.setBounds(206, 123, 52, 16);
-		pnlSeries.add(label_5);
-		
-		label_6 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGenre_3.text")); //$NON-NLS-1$
-		label_6.setBounds(206, 96, 52, 16);
-		pnlSeries.add(label_6);
-		
-		label_7 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGenre_2.text")); //$NON-NLS-1$
-		label_7.setBounds(206, 69, 52, 16);
-		pnlSeries.add(label_7);
-		
-		label_8 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGenre_1.text")); //$NON-NLS-1$
-		label_8.setBounds(206, 42, 52, 16);
-		pnlSeries.add(label_8);
-		
-		label_9 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGenre.text"));   //$NON-NLS-1$
-		label_9.setBounds(206, 15, 76, 16);
-		pnlSeries.add(label_9);
-		
-		cbxSeriesGenre_0 = new JComboBox<>();
-		cbxSeriesGenre_0.setBounds(263, 13, 141, 22);
-		pnlSeries.add(cbxSeriesGenre_0);
-		
-		cbxSeriesGenre_1 = new JComboBox<>();
-		cbxSeriesGenre_1.setBounds(263, 40, 141, 22);
-		pnlSeries.add(cbxSeriesGenre_1);
-		
-		cbxSeriesGenre_2 = new JComboBox<>();
-		cbxSeriesGenre_2.setBounds(263, 67, 141, 22);
-		pnlSeries.add(cbxSeriesGenre_2);
-		
-		cbxSeriesGenre_3 = new JComboBox<>();
-		cbxSeriesGenre_3.setBounds(263, 94, 141, 22);
-		pnlSeries.add(cbxSeriesGenre_3);
-		
-		cbxSeriesGenre_4 = new JComboBox<>();
-		cbxSeriesGenre_4.setBounds(263, 121, 141, 22);
-		pnlSeries.add(cbxSeriesGenre_4);
-		
-		cbxSeriesGenre_5 = new JComboBox<>();
-		cbxSeriesGenre_5.setBounds(263, 148, 141, 22);
-		pnlSeries.add(cbxSeriesGenre_5);
-		
-		cbxSeriesGenre_6 = new JComboBox<>();
-		cbxSeriesGenre_6.setBounds(263, 175, 141, 22);
-		pnlSeries.add(cbxSeriesGenre_6);
-
-		label_11 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblOnlinescore.text")); //$NON-NLS-1$
-		label_11.setBounds(12, 348, 97, 16);
-		pnlSeries.add(label_11);
-		
-		spnSeriesOnlineScore = new JSpinner();
-		spnSeriesOnlineScore.setModel(new SpinnerNumberModel(0, 0, 10, 1));
-		spnSeriesOnlineScore.setBounds(118, 347, 75, 20);
-		pnlSeries.add(spnSeriesOnlineScore);
-		
-		label_12 = new JLabel("/ 10"); //$NON-NLS-1$
-		label_12.setBounds(206, 348, 52, 16);
-		pnlSeries.add(label_12);
-		
-		label_13 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblFsk.text")); //$NON-NLS-1$
-		label_13.setBounds(12, 380, 52, 16);
-		pnlSeries.add(label_13);
-		
-		cbxSeriesFSK = new JComboBox<>();
-		cbxSeriesFSK.setBounds(74, 377, 120, 22);
-		pnlSeries.add(cbxSeriesFSK);
-		
-		scrollPane = new JScrollPane();
-		scrollPane.setBounds(12, 506, 182, 95);
-		pnlSeries.add(scrollPane);
-		
-		lsSeasons = new JList<>();
-		lsSeasons.setCellRenderer(new HFixListCellRenderer());
-		lsSeasons.addListSelectionListener(arg0 -> updateSeasonPanel());
-		scrollPane.setViewportView(lsSeasons);
-
-		label_1 = new JLabel(LocaleBundle.getString("AddMovieFrame.label_1.text")); //$NON-NLS-1$
-		label_1.setBounds(12, 316, 52, 16);
-		pnlSeries.add(label_1);
-		
-		cbxSeriesScore = new JComboBox<>();
-		cbxSeriesScore.setBounds(74, 409, 120, 20);
-		pnlSeries.add(cbxSeriesScore);
-		
-		lblScore = new JLabel(LocaleBundle.getString("EditSeriesFrame.lblScore.text")); //$NON-NLS-1$
-		lblScore.setBounds(12, 413, 46, 14);
-		pnlSeries.add(lblScore);
-		
-		btnAddSeason = new JButton(LocaleBundle.getString("EditSeriesFrame.btnAddSeason.text")); //$NON-NLS-1$
-		btnAddSeason.addActionListener(e -> addSeason());
-		btnAddSeason.setBounds(206, 541, 167, 23);
-		pnlSeries.add(btnAddSeason);
-		
-		btnRemoveSeason = new JButton(LocaleBundle.getString("EditSeriesFrame.btnRemoveSeason.text")); //$NON-NLS-1$
-		btnRemoveSeason.addActionListener(e -> removeSeason());
-		btnRemoveSeason.setBounds(206, 576, 167, 23);
-		pnlSeries.add(btnRemoveSeason);
-		
-		btnAddEmptySeason = new JButton(LocaleBundle.getString("EditSeriesFrame.btnAddEmptySeason.text")); //$NON-NLS-1$
-		btnAddEmptySeason.addActionListener(e -> addEmptySeason());
-		btnAddEmptySeason.setBounds(206, 506, 167, 23);
-		pnlSeries.add(btnAddEmptySeason);
-		
-		btnSeriesOk = new JButton(LocaleBundle.getString("UIGeneric.btnOK.text")); //$NON-NLS-1$
-		btnSeriesOk.addActionListener(e -> {try {
-			onOKSeries(true);
-		} catch (EnumFormatException e1) {
-			CCLog.addError(e1);
-		}});
-		btnSeriesOk.setBounds(162, 612, 89, 23);
-		pnlSeries.add(btnSeriesOk);
-		
-		btnOkClose = new JButton(LocaleBundle.getString("UIGeneric.btnOK_and_Close.text")); //$NON-NLS-1$
-		btnOkClose.addActionListener(e -> {
-			try {
-				if (onOKSeries(true)) EditSeriesFrame.this.dispatchEvent(new WindowEvent(EditSeriesFrame.this, WindowEvent.WINDOW_CLOSING));
-			} catch (EnumFormatException e1) {
-				CCLog.addError(e1);
-			}
-		});
-		btnOkClose.setBounds(263, 612, 98, 23);
-		pnlSeries.add(btnOkClose);
+		pnlEditSeriesInner = new JPanel();
+		pnlEditSeriesOuter.add(pnlEditSeriesInner);
+		pnlEditSeriesInner.setBorder(new EmptyBorder(4, 4, 4, 4));
+		pnlEditSeriesInner.setLayout(new FormLayout(new ColumnSpec[] {
+				FormSpecs.PREF_COLSPEC,
+				FormSpecs.RELATED_GAP_COLSPEC,
+				ColumnSpec.decode("120px"), //$NON-NLS-1$
+				FormSpecs.RELATED_GAP_COLSPEC,
+				ColumnSpec.decode("0dlu:grow"), //$NON-NLS-1$
+				FormSpecs.RELATED_GAP_COLSPEC,
+				FormSpecs.DEFAULT_COLSPEC,},
+			new RowSpec[] {
+				FormSpecs.PREF_ROWSPEC,
+				FormSpecs.RELATED_GAP_ROWSPEC,
+				FormSpecs.PREF_ROWSPEC,
+				FormSpecs.RELATED_GAP_ROWSPEC,
+				FormSpecs.DEFAULT_ROWSPEC,
+				FormSpecs.RELATED_GAP_ROWSPEC,
+				FormSpecs.DEFAULT_ROWSPEC,
+				FormSpecs.RELATED_GAP_ROWSPEC,
+				FormSpecs.DEFAULT_ROWSPEC,
+				FormSpecs.RELATED_GAP_ROWSPEC,
+				FormSpecs.DEFAULT_ROWSPEC,
+				FormSpecs.RELATED_GAP_ROWSPEC,
+				FormSpecs.DEFAULT_ROWSPEC,
+				FormSpecs.RELATED_GAP_ROWSPEC,
+				FormSpecs.DEFAULT_ROWSPEC,
+				FormSpecs.RELATED_GAP_ROWSPEC,
+				RowSpec.decode("default:grow"), //$NON-NLS-1$
+				FormSpecs.RELATED_GAP_ROWSPEC,
+				FormSpecs.DEFAULT_ROWSPEC,}));
 		
 		edSeriesCvrControl = new EditCoverControl(this, this);
-		edSeriesCvrControl.setBounds(12, 14, EditCoverControl.CTRL_WIDTH, EditCoverControl.CTRL_HEIGHT);
-		pnlSeries.add(edSeriesCvrControl);
+		pnlEditSeriesInner.add(edSeriesCvrControl, "1, 1, 3, 1, left, default"); //$NON-NLS-1$
+				
+				panel_2 = new JPanel();
+				pnlEditSeriesInner.add(panel_2, "5, 1, 3, 1, fill, fill"); //$NON-NLS-1$
+				panel_2.setLayout(new FormLayout(new ColumnSpec[] {
+						FormSpecs.DEFAULT_COLSPEC,
+						FormSpecs.RELATED_GAP_COLSPEC,
+						ColumnSpec.decode("0dlu:grow"),}, //$NON-NLS-1$
+					new RowSpec[] {
+						FormSpecs.DEFAULT_ROWSPEC,
+						FormSpecs.RELATED_GAP_ROWSPEC,
+						FormSpecs.DEFAULT_ROWSPEC,
+						FormSpecs.RELATED_GAP_ROWSPEC,
+						FormSpecs.DEFAULT_ROWSPEC,
+						FormSpecs.RELATED_GAP_ROWSPEC,
+						FormSpecs.DEFAULT_ROWSPEC,
+						FormSpecs.RELATED_GAP_ROWSPEC,
+						FormSpecs.DEFAULT_ROWSPEC,
+						FormSpecs.RELATED_GAP_ROWSPEC,
+						FormSpecs.DEFAULT_ROWSPEC,
+						FormSpecs.RELATED_GAP_ROWSPEC,
+						FormSpecs.DEFAULT_ROWSPEC,
+						FormSpecs.RELATED_GAP_ROWSPEC,
+						FormSpecs.DEFAULT_ROWSPEC,}));
+				
+				label_9 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGenre.text")); //$NON-NLS-1$
+				panel_2.add(label_9, "1, 1"); //$NON-NLS-1$
+				
+				cbxSeriesGenre_0 = new JComboBox<>();
+				panel_2.add(cbxSeriesGenre_0, "3, 1"); //$NON-NLS-1$
+				
+				label_8 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGenre_1.text")); //$NON-NLS-1$
+				panel_2.add(label_8, "1, 3"); //$NON-NLS-1$
+				
+				cbxSeriesGenre_1 = new JComboBox<>();
+				panel_2.add(cbxSeriesGenre_1, "3, 3"); //$NON-NLS-1$
+				
+				label_7 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGenre_2.text")); //$NON-NLS-1$
+				panel_2.add(label_7, "1, 5"); //$NON-NLS-1$
+				
+				cbxSeriesGenre_2 = new JComboBox<>();
+				panel_2.add(cbxSeriesGenre_2, "3, 5"); //$NON-NLS-1$
+				
+				label_6 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGenre_3.text")); //$NON-NLS-1$
+				panel_2.add(label_6, "1, 7"); //$NON-NLS-1$
+				
+				cbxSeriesGenre_3 = new JComboBox<>();
+				panel_2.add(cbxSeriesGenre_3, "3, 7"); //$NON-NLS-1$
+				
+				label_5 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGenre_4.text")); //$NON-NLS-1$
+				panel_2.add(label_5, "1, 9"); //$NON-NLS-1$
+				
+				cbxSeriesGenre_4 = new JComboBox<>();
+				panel_2.add(cbxSeriesGenre_4, "3, 9"); //$NON-NLS-1$
+				
+				label_4 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGenre_5.text")); //$NON-NLS-1$
+				panel_2.add(label_4, "1, 11"); //$NON-NLS-1$
+				
+				cbxSeriesGenre_5 = new JComboBox<>();
+				panel_2.add(cbxSeriesGenre_5, "3, 11"); //$NON-NLS-1$
+				
+				label_3 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGenre_6.text")); //$NON-NLS-1$
+				panel_2.add(label_3, "1, 13"); //$NON-NLS-1$
+				
+				cbxSeriesGenre_6 = new JComboBox<>();
+				panel_2.add(cbxSeriesGenre_6, "3, 13"); //$NON-NLS-1$
+				
+				label_2 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGenre_7.text")); //$NON-NLS-1$
+				panel_2.add(label_2, "1, 15"); //$NON-NLS-1$
+				
+				cbxSeriesGenre_7 = new JComboBox<>();
+				panel_2.add(cbxSeriesGenre_7, "3, 15"); //$NON-NLS-1$
 		
-		edSeriesReference = new JReferenceChooser();
-		edSeriesReference.setBounds(263, 256, 141, 20);
-		pnlSeries.add(edSeriesReference);
-		
-		label = new JLabel(LocaleBundle.getString("AddMovieFrame.lblOnlineID.text")); //$NON-NLS-1$
-		label.setBounds(206, 258, 52, 16);
-		pnlSeries.add(label);
-		
-		lblGroups = new JLabel(LocaleBundle.getString("EditSeriesFrame.lblGroups.text")); //$NON-NLS-1$
-		lblGroups.setBounds(206, 290, 52, 16);
-		pnlSeries.add(lblGroups);
-		
-		edSeriesGroups = new GroupListEditor(series.getMovieList());
-		edSeriesGroups.setBounds(263, 288, 141, 20);
-		pnlSeries.add(edSeriesGroups);
-		
-		tagPanel = new TagPanel();
-		tagPanel.setBounds(74, 472, 299, 22);
-		pnlSeries.add(tagPanel);
-		
-		label_14 = new JLabel("Tags"); //$NON-NLS-1$
-		label_14.setBounds(12, 474, 52, 16);
-		pnlSeries.add(label_14);
-		
-		pnlSeason = new JPanel();
-		pnlSeason.setBorder(new LineBorder(new Color(0, 0, 0)));
-		pnlSeason.setBounds(446, 13, 367, 646);
-		getContentPane().add(pnlSeason);
-		pnlSeason.setLayout(null);
-		
-		label_15 = new JLabel(LocaleBundle.getString("AddMovieFrame.label_1.text")); //$NON-NLS-1$
-		label_15.setBounds(12, 318, 52, 16);
-		pnlSeason.add(label_15);
-		
-		edSeasonTitle = new JTextField();
-		edSeasonTitle.setColumns(10);
-		edSeasonTitle.setBounds(74, 316, 118, 20);
-		pnlSeason.add(edSeasonTitle);
-		
-		label_16 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblYear.text")); //$NON-NLS-1$
-		label_16.setBounds(12, 351, 52, 16);
-		pnlSeason.add(label_16);
-		
-		spnSeasonYear = new JSpinner();
-		spnSeasonYear.setBounds(74, 349, 118, 20);
-		spnSeasonYear.setEditor(new JSpinner.NumberEditor(spnSeasonYear, "0")); //$NON-NLS-1$
-		pnlSeason.add(spnSeasonYear);
-		
-		scrollPane_1 = new JScrollPane();
-		scrollPane_1.setBounds(12, 378, 182, 223);
-		pnlSeason.add(scrollPane_1);
-		
-		lsEpisodes = new JList<>();
-		lsEpisodes.setCellRenderer(new HFixListCellRenderer());
-		lsEpisodes.addListSelectionListener(e -> updateEpisodePanel());
-		scrollPane_1.setViewportView(lsEpisodes);
-		
-		lblSeasonID = new JLabel();
-		lblSeasonID.setBounds(177, 320, 17, 14);
-		pnlSeason.add(lblSeasonID);
-		
-		btnAddEpisode = new JButton(LocaleBundle.getString("EditSeriesFrame.btnAddEmptyEpisode.text")); //$NON-NLS-1$
-		btnAddEpisode.addActionListener(e -> addEmptyEpisode());
-		btnAddEpisode.setBounds(204, 378, 153, 23);
-		pnlSeason.add(btnAddEpisode);
-		
-		btnRemoveEpisode = new JButton(LocaleBundle.getString("EditSeriesFrame.btnRemoveEpisode.text")); //$NON-NLS-1$
-		btnRemoveEpisode.addActionListener(e -> removeEpisode());
-		btnRemoveEpisode.setBounds(204, 446, 153, 23);
-		pnlSeason.add(btnRemoveEpisode);
-		
-		btnAddMultipleEpisodes = new JButton(LocaleBundle.getString("EditSeriesFrame.btnAddMultipleEpisodes.text")); //$NON-NLS-1$
-		btnAddMultipleEpisodes.addActionListener(e -> addMultipleEpisodes());
-		btnAddMultipleEpisodes.setBounds(204, 412, 153, 23);
-		pnlSeason.add(btnAddMultipleEpisodes);
-		
-		btnSeasonOK = new JButton(LocaleBundle.getString("UIGeneric.btnOK.text")); //$NON-NLS-1$
-		btnSeasonOK.addActionListener(e -> onOKSeason(true));
-		btnSeasonOK.setBounds(145, 612, 89, 23);
-		pnlSeason.add(btnSeasonOK);
-		
-		edSeasonCvrControl = new EditCoverControl(this, this);
-		edSeasonCvrControl.setBounds(12, 13, EditCoverControl.CTRL_WIDTH, EditCoverControl.CTRL_HEIGHT);
-		pnlSeason.add(edSeasonCvrControl);
-		
-		pnlEpisode = new JPanel();
-		pnlEpisode.setBorder(new LineBorder(new Color(0, 0, 0)));
-		pnlEpisode.setBounds(823, 13, 361, 646);
-		getContentPane().add(pnlEpisode);
-		pnlEpisode.setLayout(null);
-		
-		label_17 = new JLabel(LocaleBundle.getString("AddMovieFrame.label_1.text")); //$NON-NLS-1$
-		label_17.setBounds(12, 13, 52, 16);
-		pnlEpisode.add(label_17);
-		
-		edEpisodeTitle = new JTextField();
-		edEpisodeTitle.setColumns(10);
-		edEpisodeTitle.setBounds(74, 13, 271, 20);
-		pnlEpisode.add(edEpisodeTitle);
-		
-		label_18 = new JLabel(LocaleBundle.getString("AddEpisodeFrame.lblEpisode.text")); //$NON-NLS-1$
-		label_18.setBounds(12, 45, 46, 14);
-		pnlEpisode.add(label_18);
-		
-		spnEpisodeEpisode = new JSpinner();
-		spnEpisodeEpisode.setModel(new SpinnerNumberModel(0, 0, null, 1));
-		spnEpisodeEpisode.setBounds(74, 43, 271, 20);
-		pnlEpisode.add(spnEpisodeEpisode);
-		
-		label_19 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGesehen.text")); //$NON-NLS-1$
-		label_19.setBounds(12, 77, 52, 16);
-		pnlEpisode.add(label_19);
-		
-		cbEpisodeViewed = new JCheckBox();
-		cbEpisodeViewed.setBounds(74, 72, 212, 25);
-		pnlEpisode.add(cbEpisodeViewed);
-		
-		label_20 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblFormat.text")); //$NON-NLS-1$
-		label_20.setBounds(12, 109, 52, 16);
-		pnlEpisode.add(label_20);
-		
-		cbxEpisodeFormat = new JComboBox<>();
-		cbxEpisodeFormat.setBounds(74, 105, 271, 22);
-		pnlEpisode.add(cbxEpisodeFormat);
-		
-		label_21 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblQuality.text")); //$NON-NLS-1$
-		label_21.setBounds(12, 142, 46, 14);
-		pnlEpisode.add(label_21);
-		
-		cbxEpisodeQuality = new JComboBox<>();
-		cbxEpisodeQuality.setBounds(74, 138, 165, 22);
-		pnlEpisode.add(cbxEpisodeQuality);
-		
-		label_22 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblLength.text")); //$NON-NLS-1$
-		label_22.setBounds(12, 205, 52, 16);
-		pnlEpisode.add(label_22);
-		
-		spnEpisodeLength = new JSpinner();
-		spnEpisodeLength.setModel(new SpinnerNumberModel(0, 0, null, 1));
-		spnEpisodeLength.setBounds(74, 205, 165, 20);
-		pnlEpisode.add(spnEpisodeLength);
-		
-		label_23 = new JLabel("min."); //$NON-NLS-1$
-		label_23.setBounds(245, 205, 52, 16);
-		pnlEpisode.add(label_23);
-		
-		label_24 = new JLabel("Byte = "); //$NON-NLS-1$
-		label_24.setBounds(245, 239, 100, 16);
-		pnlEpisode.add(label_24);
-		
-		lblEpisodeFilesize = new JLabel();
-		lblEpisodeFilesize.setBounds(74, 269, 193, 16);
-		pnlEpisode.add(lblEpisodeFilesize);
-		
-		spnEpisodeSize = new JSpinner();
-		spnEpisodeSize.addChangeListener(arg0 -> updateEpisodesFilesizeDisplay());
-		spnEpisodeSize.setModel(new SpinnerNumberModel(0L, 0L, null, 1L));
-		spnEpisodeSize.setBounds(74, 237, 165, 20);
-		pnlEpisode.add(spnEpisodeSize);
-		
-		label_26 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGre.text")); //$NON-NLS-1$
-		label_26.setBounds(12, 237, 52, 16);
-		pnlEpisode.add(label_26);
-		
-		button_2 = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnRecalcSizes.text")); //$NON-NLS-1$
-		button_2.addActionListener(e -> recalcEpisodeFilesize());
-		button_2.setBounds(74, 301, 273, 23);
-		pnlEpisode.add(button_2);
-		
-		btnEpisodeToday = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnToday.text")); //$NON-NLS-1$
-		btnEpisodeToday.addActionListener(e -> spnEpisodeAdded.setValue(CCDate.getCurrentDate()));
-		btnEpisodeToday.setBounds(251, 330, 96, 23);
-		pnlEpisode.add(btnEpisodeToday);
-		
-		spnEpisodeAdded = new JCCDateSpinner(CCDate.getMinimumDate(), MIN_DATE, null);
-		spnEpisodeAdded.setBounds(74, 331, 165, 20);
-		pnlEpisode.add(spnEpisodeAdded);
-		
-		label_28 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblEinfgDatum.text")); //$NON-NLS-1$
-		label_28.setBounds(12, 333, 71, 16);
-		pnlEpisode.add(label_28);
-		
-		label_29 = new JLabel(LocaleBundle.getString("AddEpisodeFrame.lblPart.text")); //$NON-NLS-1$
-		label_29.setBounds(12, 365, 46, 14);
-		pnlEpisode.add(label_29);
-		
-		edEpisodePart = new ReadableTextField();
-		edEpisodePart.setColumns(10);
-		edEpisodePart.setBounds(74, 363, 212, 20);
-		pnlEpisode.add(edEpisodePart);
-		
-		btnEpisodeOpenPart = new JButton(LocaleBundle.getString("EditSeriesFrame.btnEpisodeOpenPart.text")); //$NON-NLS-1$
-		btnEpisodeOpenPart.addActionListener(e -> openEpisodePart());
-		btnEpisodeOpenPart.setBounds(295, 361, 52, 23);
-		pnlEpisode.add(btnEpisodeOpenPart);
-		
-		lblTags = new JLabel(LocaleBundle.getString("EditSeriesFrame.lblTags.text")); //$NON-NLS-1$
-		lblTags.setBounds(12, 397, 52, 14);
-		pnlEpisode.add(lblTags);
-		
-		tagPnl = new TagPanel();
-		tagPnl.setBounds(74, 393, 273, 22);
-		pnlEpisode.add(tagPnl);
-		
-		btnEpisodeOK = new JButton(LocaleBundle.getString("UIGeneric.btnOK.text")); //$NON-NLS-1$
-		btnEpisodeOK.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				try {
-					onOKEpisode(true);
-				} catch (EnumFormatException e1) {
-					CCLog.addError(e1);
-				}
-			}
-		});
-		btnEpisodeOK.setBounds(148, 612, 89, 23);
-		pnlEpisode.add(btnEpisodeOK);
-		
-		btnEpisodeCalcQuality = new JButton(LocaleBundle.getString("EditSeriesFrame.btnCalcQuality.text")); //$NON-NLS-1$
-		btnEpisodeCalcQuality.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				recalcEpisodeQuality();
-			}
-		});
-		btnEpisodeCalcQuality.setBounds(251, 137, 94, 23);
-		pnlEpisode.add(btnEpisodeCalcQuality);
-		
-		lblHistory = new JLabel(LocaleBundle.getString("EditSeriesFrame.lblHistory.text")); //$NON-NLS-1$
-		lblHistory.setBounds(12, 429, 52, 14);
-		pnlEpisode.add(lblHistory);
-		
-		cmpEpisodeViewedHistory = new DateTimeListEditor();
-		cmpEpisodeViewedHistory.setBackground(Color.WHITE);
-		cmpEpisodeViewedHistory.setBounds(74, 429, 271, 170);
-		pnlEpisode.add(cmpEpisodeViewedHistory);
-		
-		lblLanguage = new JLabel(LocaleBundle.getString("AddMovieFrame.lblSprache.text")); //$NON-NLS-1$
-		lblLanguage.setBounds(12, 173, 58, 16);
-		pnlEpisode.add(lblLanguage);
-		
-		ctrlLang = new LanguageChooser();
-		ctrlLang.setBounds(74, 169, 165, 22);
-		pnlEpisode.add(ctrlLang);
-		
-		btnMediaInfo1 = new JButton(Resources.ICN_MENUBAR_UPDATECODECDATA.get16x16());
-		btnMediaInfo1.setBounds(288, 172, 22, 22);
-		btnMediaInfo1.addActionListener(e -> parseCodecMetadata_Lang());
-		btnMediaInfo1.setToolTipText("MediaInfo"); //$NON-NLS-1$
-		pnlEpisode.add(btnMediaInfo1);
-		
-		btnMediaInfo2 = new JButton(Resources.ICN_MENUBAR_UPDATECODECDATA.get16x16());
-		btnMediaInfo2.setBounds(288, 205, 22, 22);
-		btnMediaInfo2.addActionListener(e -> parseCodecMetadata_Len());
-		btnMediaInfo2.setToolTipText("MediaInfo"); //$NON-NLS-1$
-		pnlEpisode.add(btnMediaInfo2);
-		
-		btnMediaInfoRaw = new JButton("..."); //$NON-NLS-1$
-		btnMediaInfoRaw.setBounds(313, 172, 32, 22);
-		btnMediaInfoRaw.addActionListener(e -> showCodecMetadata());
-		btnMediaInfoRaw.setToolTipText("MediaInfo"); //$NON-NLS-1$
-		pnlEpisode.add(btnMediaInfoRaw);
+				label_1 = new JLabel(LocaleBundle.getString("AddMovieFrame.label_1.text")); //$NON-NLS-1$
+				pnlEditSeriesInner.add(label_1, "1, 3"); //$NON-NLS-1$
+				
+				edSeriesTitle = new JTextField();
+				pnlEditSeriesInner.add(edSeriesTitle, "3, 3, 5, 1"); //$NON-NLS-1$
+				edSeriesTitle.setColumns(10);
+				
+						label_11 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblOnlinescore.text")); //$NON-NLS-1$
+						pnlEditSeriesInner.add(label_11, "1, 5"); //$NON-NLS-1$
+						
+						spnSeriesOnlineScore = new JSpinner();
+						pnlEditSeriesInner.add(spnSeriesOnlineScore, "3, 5, 3, 1"); //$NON-NLS-1$
+						spnSeriesOnlineScore.setModel(new SpinnerNumberModel(0, 0, 10, 1));
+						
+						label_12 = new JLabel(" / 10"); //$NON-NLS-1$
+						pnlEditSeriesInner.add(label_12, "7, 5"); //$NON-NLS-1$
+						
+						label_13 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblFsk.text")); //$NON-NLS-1$
+						pnlEditSeriesInner.add(label_13, "1, 7"); //$NON-NLS-1$
+						
+						cbxSeriesFSK = new JComboBox<>();
+						pnlEditSeriesInner.add(cbxSeriesFSK, "3, 7, 5, 1"); //$NON-NLS-1$
+						
+						lblScore = new JLabel(LocaleBundle.getString("EditSeriesFrame.lblScore.text")); //$NON-NLS-1$
+						pnlEditSeriesInner.add(lblScore, "1, 9"); //$NON-NLS-1$
+						
+						cbxSeriesScore = new JComboBox<>();
+						pnlEditSeriesInner.add(cbxSeriesScore, "3, 9, 5, 1"); //$NON-NLS-1$
+						
+						label = new JLabel(LocaleBundle.getString("AddMovieFrame.lblOnlineID.text")); //$NON-NLS-1$
+						pnlEditSeriesInner.add(label, "1, 11"); //$NON-NLS-1$
+						
+						edSeriesReference = new JReferenceChooser();
+						pnlEditSeriesInner.add(edSeriesReference, "3, 11, 5, 1"); //$NON-NLS-1$
+						
+						lblGroups = new JLabel(LocaleBundle.getString("EditSeriesFrame.lblGroups.text")); //$NON-NLS-1$
+						pnlEditSeriesInner.add(lblGroups, "1, 13"); //$NON-NLS-1$
+						
+						edSeriesGroups = new GroupListEditor(series.getMovieList());
+						pnlEditSeriesInner.add(edSeriesGroups, "3, 13, 5, 1"); //$NON-NLS-1$
+						
+						label_14 = new JLabel("Tags"); //$NON-NLS-1$
+						pnlEditSeriesInner.add(label_14, "1, 15"); //$NON-NLS-1$
+						
+						tagPanel = new TagPanel();
+						pnlEditSeriesInner.add(tagPanel, "3, 15, 5, 1"); //$NON-NLS-1$
+						
+						panel_3 = new JPanel();
+						pnlEditSeriesInner.add(panel_3, "1, 17, 7, 1, fill, fill"); //$NON-NLS-1$
+						panel_3.setLayout(new FormLayout(new ColumnSpec[] {
+								FormSpecs.RELATED_GAP_COLSPEC,
+								ColumnSpec.decode("default:grow"), //$NON-NLS-1$
+								FormSpecs.RELATED_GAP_COLSPEC,
+								FormSpecs.DEFAULT_COLSPEC,},
+							new RowSpec[] {
+								FormSpecs.RELATED_GAP_ROWSPEC,
+								FormSpecs.DEFAULT_ROWSPEC,
+								FormSpecs.RELATED_GAP_ROWSPEC,
+								FormSpecs.DEFAULT_ROWSPEC,
+								FormSpecs.RELATED_GAP_ROWSPEC,
+								RowSpec.decode("default:grow"),})); //$NON-NLS-1$
+						
+						scrollPane = new JScrollPane();
+						panel_3.add(scrollPane, "2, 2, 1, 5"); //$NON-NLS-1$
+						
+						lsSeasons = new JList<>();
+						lsSeasons.setCellRenderer(new HFixListCellRenderer());
+						lsSeasons.addListSelectionListener(arg0 -> updateSeasonPanel());
+						scrollPane.setViewportView(lsSeasons);
+						
+						btnAddEmptySeason = new JButton(LocaleBundle.getString("EditSeriesFrame.btnAddEmptySeason.text")); //$NON-NLS-1$
+						panel_3.add(btnAddEmptySeason, "4, 2"); //$NON-NLS-1$
+						
+						btnAddSeason = new JButton(LocaleBundle.getString("EditSeriesFrame.btnAddSeason.text")); //$NON-NLS-1$
+						panel_3.add(btnAddSeason, "4, 4"); //$NON-NLS-1$
+						
+						btnRemoveSeason = new JButton(LocaleBundle.getString("EditSeriesFrame.btnRemoveSeason.text")); //$NON-NLS-1$
+						panel_3.add(btnRemoveSeason, "4, 6, default, top"); //$NON-NLS-1$
+						btnRemoveSeason.addActionListener(e -> removeSeason());
+						btnAddSeason.addActionListener(e -> addSeason());
+						btnAddEmptySeason.addActionListener(e -> addEmptySeason());
+						
+						panel_4 = new JPanel();
+						pnlEditSeriesInner.add(panel_4, "1, 19, 7, 1, fill, fill"); //$NON-NLS-1$
+						
+						btnSeriesOk = new JButton(LocaleBundle.getString("UIGeneric.btnOK.text")); //$NON-NLS-1$
+						btnSeriesOk.setPreferredSize(new Dimension(100, 26));
+						panel_4.add(btnSeriesOk);
+						
+						btnOkClose = new JButton(LocaleBundle.getString("UIGeneric.btnOK_and_Close.text")); //$NON-NLS-1$
+						btnOkClose.setPreferredSize(new Dimension(100, 26));
+						panel_4.add(btnOkClose);
+						btnOkClose.addActionListener(e -> {
+							try {
+								if (onOKSeries(true)) EditSeriesFrame.this.dispatchEvent(new WindowEvent(EditSeriesFrame.this, WindowEvent.WINDOW_CLOSING));
+							} catch (EnumFormatException e1) {
+								CCLog.addError(e1);
+							}
+						});
+						btnSeriesOk.addActionListener(e -> {try {
+							onOKSeries(true);
+						} catch (EnumFormatException e1) {
+							CCLog.addError(e1);
+						}});
+						
+						pnlEditSeasonOuter = new JPanel();
+						pnlEditSeasonOuter.setBorder(new LineBorder(new Color(0, 0, 0)));
+						panel.add(pnlEditSeasonOuter, "3, 1, fill, fill"); //$NON-NLS-1$
+						pnlEditSeasonOuter.setLayout(new BorderLayout(0, 0));
+						
+						pnlEditSeasonInner = new JPanel();
+						pnlEditSeasonOuter.add(pnlEditSeasonInner);
+						pnlEditSeasonInner.setBorder(new EmptyBorder(4, 4, 4, 4));
+						pnlEditSeasonInner.setLayout(new FormLayout(new ColumnSpec[] {
+								ColumnSpec.decode("max(30dlu;default)"), //$NON-NLS-1$
+								FormSpecs.RELATED_GAP_COLSPEC,
+								ColumnSpec.decode("100px:grow"), //$NON-NLS-1$
+								FormSpecs.RELATED_GAP_COLSPEC,
+								FormSpecs.PREF_COLSPEC,},
+							new RowSpec[] {
+								FormSpecs.PREF_ROWSPEC,
+								FormSpecs.RELATED_GAP_ROWSPEC,
+								FormSpecs.DEFAULT_ROWSPEC,
+								FormSpecs.RELATED_GAP_ROWSPEC,
+								FormSpecs.DEFAULT_ROWSPEC,
+								FormSpecs.RELATED_GAP_ROWSPEC,
+								FormSpecs.DEFAULT_ROWSPEC,
+								FormSpecs.RELATED_GAP_ROWSPEC,
+								FormSpecs.DEFAULT_ROWSPEC,
+								FormSpecs.RELATED_GAP_ROWSPEC,
+								FormSpecs.DEFAULT_ROWSPEC,
+								FormSpecs.RELATED_GAP_ROWSPEC,
+								RowSpec.decode("default:grow"), //$NON-NLS-1$
+								FormSpecs.RELATED_GAP_ROWSPEC,
+								FormSpecs.DEFAULT_ROWSPEC,}));
+						
+						edSeasonCvrControl = new EditCoverControl(this, this);
+						pnlEditSeasonInner.add(edSeasonCvrControl, "1, 1, 3, 1, left, default"); //$NON-NLS-1$
+						
+						label_15 = new JLabel(LocaleBundle.getString("AddMovieFrame.label_1.text")); //$NON-NLS-1$
+						pnlEditSeasonInner.add(label_15, "1, 3"); //$NON-NLS-1$
+						
+						edSeasonTitle = new JTextField();
+						pnlEditSeasonInner.add(edSeasonTitle, "3, 3"); //$NON-NLS-1$
+						edSeasonTitle.setColumns(10);
+						
+						lblSeasonID = new JLabel();
+						pnlEditSeasonInner.add(lblSeasonID, "5, 3"); //$NON-NLS-1$
+						
+						label_16 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblYear.text")); //$NON-NLS-1$
+						pnlEditSeasonInner.add(label_16, "1, 5"); //$NON-NLS-1$
+						
+						spnSeasonYear = new JSpinner();
+						pnlEditSeasonInner.add(spnSeasonYear, "3, 5"); //$NON-NLS-1$
+						spnSeasonYear.setEditor(new JSpinner.NumberEditor(spnSeasonYear, "0")); //$NON-NLS-1$
+						
+						scrollPane_1 = new JScrollPane();
+						pnlEditSeasonInner.add(scrollPane_1, "1, 7, 3, 7, fill, fill"); //$NON-NLS-1$
+						
+						lsEpisodes = new JList<>();
+						lsEpisodes.setCellRenderer(new HFixListCellRenderer());
+						lsEpisodes.addListSelectionListener(e -> updateEpisodePanel());
+						scrollPane_1.setViewportView(lsEpisodes);
+						
+						btnAddEpisode = new JButton(LocaleBundle.getString("EditSeriesFrame.btnAddEmptyEpisode.text")); //$NON-NLS-1$
+						pnlEditSeasonInner.add(btnAddEpisode, "5, 7"); //$NON-NLS-1$
+						btnAddEpisode.addActionListener(e -> addEmptyEpisode());
+						
+						btnAddMultipleEpisodes = new JButton(LocaleBundle.getString("EditSeriesFrame.btnAddMultipleEpisodes.text")); //$NON-NLS-1$
+						pnlEditSeasonInner.add(btnAddMultipleEpisodes, "5, 9"); //$NON-NLS-1$
+						btnAddMultipleEpisodes.addActionListener(e -> addMultipleEpisodes());
+						
+						btnRemoveEpisode = new JButton(LocaleBundle.getString("EditSeriesFrame.btnRemoveEpisode.text")); //$NON-NLS-1$
+						pnlEditSeasonInner.add(btnRemoveEpisode, "5, 11"); //$NON-NLS-1$
+						btnRemoveEpisode.addActionListener(e -> removeEpisode());
+						
+						panel_1 = new JPanel();
+						pnlEditSeasonInner.add(panel_1, "1, 15, 5, 1, fill, fill"); //$NON-NLS-1$
+						
+						btnSeasonOK = new JButton(LocaleBundle.getString("UIGeneric.btnOK.text")); //$NON-NLS-1$
+						btnSeasonOK.setPreferredSize(new Dimension(128, 26));
+						panel_1.add(btnSeasonOK);
+						btnSeasonOK.addActionListener(e -> onOKSeason(true));
+						
+						pnlEditEpisodeOuter = new JPanel();
+						pnlEditEpisodeOuter.setBorder(new LineBorder(new Color(0, 0, 0)));
+						panel.add(pnlEditEpisodeOuter, "5, 1, fill, fill"); //$NON-NLS-1$
+						pnlEditEpisodeOuter.setLayout(new BorderLayout(0, 0));
+						
+						pnlEditEpisodeInner = new JPanel();
+						pnlEditEpisodeOuter.add(pnlEditEpisodeInner);
+						pnlEditEpisodeInner.setBorder(new EmptyBorder(4, 4, 4, 4));
+						pnlEditEpisodeInner.setLayout(new FormLayout(new ColumnSpec[] {
+								FormSpecs.DEFAULT_COLSPEC,
+								FormSpecs.RELATED_GAP_COLSPEC,
+								ColumnSpec.decode("10dlu:grow"), //$NON-NLS-1$
+								FormSpecs.RELATED_GAP_COLSPEC,
+								FormSpecs.DEFAULT_COLSPEC,
+								FormSpecs.RELATED_GAP_COLSPEC,
+								ColumnSpec.decode("22px"), //$NON-NLS-1$
+								FormSpecs.RELATED_GAP_COLSPEC,
+								FormSpecs.DEFAULT_COLSPEC,},
+							new RowSpec[] {
+								FormSpecs.RELATED_GAP_ROWSPEC,
+								FormSpecs.DEFAULT_ROWSPEC,
+								FormSpecs.RELATED_GAP_ROWSPEC,
+								FormSpecs.DEFAULT_ROWSPEC,
+								FormSpecs.RELATED_GAP_ROWSPEC,
+								FormSpecs.DEFAULT_ROWSPEC,
+								FormSpecs.RELATED_GAP_ROWSPEC,
+								FormSpecs.DEFAULT_ROWSPEC,
+								FormSpecs.RELATED_GAP_ROWSPEC,
+								FormSpecs.DEFAULT_ROWSPEC,
+								FormSpecs.RELATED_GAP_ROWSPEC,
+								RowSpec.decode("22px"), //$NON-NLS-1$
+								FormSpecs.RELATED_GAP_ROWSPEC,
+								RowSpec.decode("22px"), //$NON-NLS-1$
+								FormSpecs.RELATED_GAP_ROWSPEC,
+								FormSpecs.DEFAULT_ROWSPEC,
+								FormSpecs.RELATED_GAP_ROWSPEC,
+								FormSpecs.DEFAULT_ROWSPEC,
+								RowSpec.decode("12dlu"), //$NON-NLS-1$
+								FormSpecs.DEFAULT_ROWSPEC,
+								FormSpecs.RELATED_GAP_ROWSPEC,
+								FormSpecs.DEFAULT_ROWSPEC,
+								FormSpecs.RELATED_GAP_ROWSPEC,
+								FormSpecs.DEFAULT_ROWSPEC,
+								FormSpecs.RELATED_GAP_ROWSPEC,
+								FormSpecs.DEFAULT_ROWSPEC,
+								FormSpecs.RELATED_GAP_ROWSPEC,
+								RowSpec.decode("default:grow"), //$NON-NLS-1$
+								FormSpecs.RELATED_GAP_ROWSPEC,
+								FormSpecs.DEFAULT_ROWSPEC,}));
+						
+						label_17 = new JLabel(LocaleBundle.getString("AddMovieFrame.label_1.text")); //$NON-NLS-1$
+						pnlEditEpisodeInner.add(label_17, "1, 2"); //$NON-NLS-1$
+						
+						edEpisodeTitle = new JTextField();
+						pnlEditEpisodeInner.add(edEpisodeTitle, "3, 2, 7, 1"); //$NON-NLS-1$
+						edEpisodeTitle.setColumns(10);
+						
+						label_18 = new JLabel(LocaleBundle.getString("AddEpisodeFrame.lblEpisode.text")); //$NON-NLS-1$
+						pnlEditEpisodeInner.add(label_18, "1, 4"); //$NON-NLS-1$
+						
+						spnEpisodeEpisode = new JSpinner();
+						pnlEditEpisodeInner.add(spnEpisodeEpisode, "3, 4, 7, 1"); //$NON-NLS-1$
+						spnEpisodeEpisode.setModel(new SpinnerNumberModel(0, 0, null, 1));
+						
+						label_19 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGesehen.text")); //$NON-NLS-1$
+						pnlEditEpisodeInner.add(label_19, "1, 6"); //$NON-NLS-1$
+						
+						cbEpisodeViewed = new JCheckBox();
+						pnlEditEpisodeInner.add(cbEpisodeViewed, "3, 6, 7, 1"); //$NON-NLS-1$
+						
+						label_20 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblFormat.text")); //$NON-NLS-1$
+						pnlEditEpisodeInner.add(label_20, "1, 8"); //$NON-NLS-1$
+						
+						cbxEpisodeFormat = new JComboBox<>();
+						pnlEditEpisodeInner.add(cbxEpisodeFormat, "3, 8, 7, 1"); //$NON-NLS-1$
+						
+						label_21 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblQuality.text")); //$NON-NLS-1$
+						pnlEditEpisodeInner.add(label_21, "1, 10"); //$NON-NLS-1$
+						
+						cbxEpisodeQuality = new JComboBox<>();
+						pnlEditEpisodeInner.add(cbxEpisodeQuality, "3, 10"); //$NON-NLS-1$
+						
+						btnEpisodeCalcQuality = new JButton(LocaleBundle.getString("EditSeriesFrame.btnCalcQuality.text")); //$NON-NLS-1$
+						pnlEditEpisodeInner.add(btnEpisodeCalcQuality, "5, 10, 5, 1"); //$NON-NLS-1$
+						btnEpisodeCalcQuality.addActionListener(new ActionListener() {
+							@Override
+							public void actionPerformed(ActionEvent arg0) {
+								recalcEpisodeQuality();
+							}
+						});
+						
+						lblLanguage = new JLabel(LocaleBundle.getString("AddMovieFrame.lblSprache.text")); //$NON-NLS-1$
+						pnlEditEpisodeInner.add(lblLanguage, "1, 12"); //$NON-NLS-1$
+						
+						ctrlLang = new LanguageChooser();
+						pnlEditEpisodeInner.add(ctrlLang, "3, 12"); //$NON-NLS-1$
+						
+						btnMediaInfo1 = new JButton(Resources.ICN_MENUBAR_UPDATECODECDATA.get16x16());
+						pnlEditEpisodeInner.add(btnMediaInfo1, "7, 12"); //$NON-NLS-1$
+						btnMediaInfo1.addActionListener(e -> parseCodecMetadata_Lang());
+						btnMediaInfo1.setToolTipText("MediaInfo"); //$NON-NLS-1$
+						
+						btnMediaInfoRaw = new JButton("..."); //$NON-NLS-1$
+						pnlEditEpisodeInner.add(btnMediaInfoRaw, "9, 12"); //$NON-NLS-1$
+						btnMediaInfoRaw.addActionListener(e -> showCodecMetadata());
+						btnMediaInfoRaw.setToolTipText("MediaInfo"); //$NON-NLS-1$
+						
+						label_22 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblLength.text")); //$NON-NLS-1$
+						pnlEditEpisodeInner.add(label_22, "1, 14"); //$NON-NLS-1$
+						
+						spnEpisodeLength = new JSpinner();
+						pnlEditEpisodeInner.add(spnEpisodeLength, "3, 14"); //$NON-NLS-1$
+						spnEpisodeLength.setModel(new SpinnerNumberModel(0, 0, null, 1));
+						
+						label_23 = new JLabel("min."); //$NON-NLS-1$
+						pnlEditEpisodeInner.add(label_23, "5, 14"); //$NON-NLS-1$
+						
+						btnMediaInfo2 = new JButton(Resources.ICN_MENUBAR_UPDATECODECDATA.get16x16());
+						pnlEditEpisodeInner.add(btnMediaInfo2, "7, 14"); //$NON-NLS-1$
+						btnMediaInfo2.addActionListener(e -> parseCodecMetadata_Len());
+						btnMediaInfo2.setToolTipText("MediaInfo"); //$NON-NLS-1$
+						
+						label_26 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGre.text")); //$NON-NLS-1$
+						pnlEditEpisodeInner.add(label_26, "1, 16"); //$NON-NLS-1$
+						
+						spnEpisodeSize = new JSpinner();
+						pnlEditEpisodeInner.add(spnEpisodeSize, "3, 16"); //$NON-NLS-1$
+						spnEpisodeSize.addChangeListener(arg0 -> updateEpisodesFilesizeDisplay());
+						spnEpisodeSize.setModel(new SpinnerNumberModel(0L, 0L, null, 1L));
+						
+						label_24 = new JLabel("Byte = "); //$NON-NLS-1$
+						pnlEditEpisodeInner.add(label_24, "5, 16, 5, 1"); //$NON-NLS-1$
+						
+						lblEpisodeFilesize = new JLabel();
+						pnlEditEpisodeInner.add(lblEpisodeFilesize, "3, 18, 7, 1"); //$NON-NLS-1$
+						
+						button_2 = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnRecalcSizes.text")); //$NON-NLS-1$
+						pnlEditEpisodeInner.add(button_2, "3, 20, 7, 1"); //$NON-NLS-1$
+						
+						label_28 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblEinfgDatum.text")); //$NON-NLS-1$
+						pnlEditEpisodeInner.add(label_28, "1, 22"); //$NON-NLS-1$
+						
+						spnEpisodeAdded = new JCCDateSpinner(CCDate.getMinimumDate(), MIN_DATE, null);
+						pnlEditEpisodeInner.add(spnEpisodeAdded, "3, 22"); //$NON-NLS-1$
+						
+						btnEpisodeToday = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnToday.text")); //$NON-NLS-1$
+						pnlEditEpisodeInner.add(btnEpisodeToday, "5, 22, 5, 1"); //$NON-NLS-1$
+						
+						label_29 = new JLabel(LocaleBundle.getString("AddEpisodeFrame.lblPart.text")); //$NON-NLS-1$
+						pnlEditEpisodeInner.add(label_29, "1, 24"); //$NON-NLS-1$
+						
+						edEpisodePart = new ReadableTextField();
+						pnlEditEpisodeInner.add(edEpisodePart, "3, 24, 3, 1"); //$NON-NLS-1$
+						edEpisodePart.setColumns(10);
+						
+						btnEpisodeOpenPart = new JButton(LocaleBundle.getString("EditSeriesFrame.btnEpisodeOpenPart.text")); //$NON-NLS-1$
+						pnlEditEpisodeInner.add(btnEpisodeOpenPart, "7, 24, 3, 1"); //$NON-NLS-1$
+						
+						lblTags = new JLabel(LocaleBundle.getString("EditSeriesFrame.lblTags.text")); //$NON-NLS-1$
+						pnlEditEpisodeInner.add(lblTags, "1, 26"); //$NON-NLS-1$
+						
+						tagPnl = new TagPanel();
+						pnlEditEpisodeInner.add(tagPnl, "3, 26, 7, 1"); //$NON-NLS-1$
+						
+						lblHistory = new JLabel(LocaleBundle.getString("EditSeriesFrame.lblHistory.text")); //$NON-NLS-1$
+						pnlEditEpisodeInner.add(lblHistory, "1, 28, default, top"); //$NON-NLS-1$
+						
+						cmpEpisodeViewedHistory = new DateTimeListEditor();
+						pnlEditEpisodeInner.add(cmpEpisodeViewedHistory, "3, 28, 7, 1, fill, fill"); //$NON-NLS-1$
+						cmpEpisodeViewedHistory.setBackground(Color.WHITE);
+						
+						panel_7 = new JPanel();
+						pnlEditEpisodeInner.add(panel_7, "1, 30, 9, 1, fill, fill"); //$NON-NLS-1$
+						
+						btnEpisodeOK = new JButton(LocaleBundle.getString("UIGeneric.btnOK.text")); //$NON-NLS-1$
+						btnEpisodeOK.setPreferredSize(new Dimension(100, 26));
+						panel_7.add(btnEpisodeOK);
+						btnEpisodeOK.addActionListener(new ActionListener() {
+							@Override
+							public void actionPerformed(ActionEvent e) {
+								try {
+									onOKEpisode(true);
+								} catch (EnumFormatException e1) {
+									CCLog.addError(e1);
+								}
+							}
+						});
+						btnEpisodeOpenPart.addActionListener(e -> openEpisodePart());
+						btnEpisodeToday.addActionListener(e -> spnEpisodeAdded.setValue(CCDate.getCurrentDate()));
+						button_2.addActionListener(e -> recalcEpisodeFilesize());
 	}
 
 	private void setDefaultValues() {
@@ -792,9 +886,9 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		CCSeason season = getSelectedSeason();
 		
 		if (season == null) {
-			pnlSeason.setVisible(false);
+			pnlEditSeasonOuter.setVisible(false);
 		} else {
-			pnlSeason.setVisible(true);
+			pnlEditSeasonOuter.setVisible(true);
 			
 			edSeasonCvrControl.setCover(season.getCover());
 			edSeasonTitle.setText(season.getTitle());
@@ -815,10 +909,10 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		CCEpisode episode = getSelectedEpisode();
 		
 		if (episode == null) {
-			pnlEpisode.setVisible(false);
+			pnlEditEpisodeOuter.setVisible(false);
 			return;
 		} else {
-			pnlEpisode.setVisible(true);
+			pnlEditEpisodeOuter.setVisible(true);
 		}
 		
 		edEpisodeTitle.setText(episode.getTitle());

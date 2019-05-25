@@ -2,6 +2,7 @@ package de.jClipCorn.gui.guiComponents.groupListEditor;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -61,6 +62,11 @@ public class GroupListEditor extends JPanel {
 		btnDropDown.setFocusPainted(false);
 		btnDropDown.setMargin(new java.awt.Insets(1, 2, 1, 2));
 		add(btnDropDown, BorderLayout.EAST);
+	}
+	
+	@Override
+	public Dimension getPreferredSize() {
+		return new Dimension(80, 20);
 	}
 
 	private void updateEditor() {

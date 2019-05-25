@@ -13,8 +13,6 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.ScrollPaneConstants;
 
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
@@ -45,7 +43,6 @@ public class CreateSeriesFolderStructureFrame extends JFrame {
 	private JLabel lblTitel;
 	private ReadableTextField edPath;
 	private JButton btnChoose;
-	private JScrollPane scrlPnlBottom;
 	private CSFSTable lsTest;
 	private JButton btnOk;
 	private JButton btnTest;
@@ -126,13 +123,9 @@ public class CreateSeriesFolderStructureFrame extends JFrame {
 		btnTest.addActionListener(arg0 -> startTest());
 		btnTest.setEnabled(false);
 		pnlLeft.add(btnTest, "4, 10, center, default"); //$NON-NLS-1$
-		
-		scrlPnlBottom = new JScrollPane();
-		scrlPnlBottom.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		getContentPane().add(scrlPnlBottom, BorderLayout.CENTER);
 
 		lsTest = new CSFSTable();
-		scrlPnlBottom.setViewportView(lsTest);
+		getContentPane().add(lsTest, BorderLayout.CENTER);
 		
 		setSize(1050, 800);
 	}

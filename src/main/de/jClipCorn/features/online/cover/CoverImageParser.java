@@ -71,7 +71,7 @@ public class CoverImageParser implements FinishListener {
 			}
 			else
 			{
-				String tname = "THREAD_COVERIMAGEPARSER_" + impl.getClass().getSimpleName().toUpperCase() + "_" + "EMPTY"; //$NON-NLS-1$ //$NON-NLS-2$
+				String tname = "THREAD_COVERIMAGEPARSER_" + impl.getClass().getSimpleName().toUpperCase() + "_" + "EMPTY"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				new Thread(() -> impl.start(exclusions, searchText, typ, CCSingleOnlineReference.EMPTY), tname).start();
 			}
 		}

@@ -9,6 +9,7 @@ import javax.swing.JFrame;
 import de.jClipCorn.Main;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguage;
+import de.jClipCorn.database.util.Statements;
 import de.jClipCorn.features.backupManager.BackupManager;
 import de.jClipCorn.gui.mainFrame.MainFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
@@ -37,18 +38,18 @@ public class DatabaseMigration {
 	
 	private String getDBVersion() throws SQLException {
 		return db.querySingleStringSQLThrow(String.format("SELECT %s FROM %s WHERE %s = '%s'",  //$NON-NLS-1$
-				CCDatabase.TAB_INFO_COLUMN_VALUE, 
-				CCDatabase.TAB_INFO, 
-				CCDatabase.TAB_INFO_COLUMN_KEY, 
+				Statements.COL_INFO_VALUE.Name,
+				Statements.TAB_INFO,
+				Statements.COL_INFO_KEY.Name,
 				CCDatabase.INFOKEY_DBVERSION), 0);
 	}
 
 	private void setDBVersion(String version) throws SQLException {
 		db.executeSQLThrow(String.format("UPDATE %s SET %s='%s' WHERE %s='%s'",  //$NON-NLS-1$
-				CCDatabase.TAB_INFO, 
-				CCDatabase.TAB_INFO_COLUMN_VALUE, 
+				Statements.TAB_INFO,
+				Statements.COL_INFO_VALUE.Name,
 				version,
-				CCDatabase.TAB_INFO_COLUMN_KEY, 
+				Statements.COL_INFO_KEY.Name,
 				CCDatabase.INFOKEY_DBVERSION));
 	}
 	

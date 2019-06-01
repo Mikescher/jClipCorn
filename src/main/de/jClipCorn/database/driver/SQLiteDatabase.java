@@ -7,6 +7,7 @@ import java.nio.file.FileAlreadyExistsException;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+import de.jClipCorn.database.util.Statements;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.properties.enumerations.CCDatabaseDriver;
 import de.jClipCorn.util.exceptions.FileLockedException;
@@ -129,10 +130,10 @@ public class SQLiteDatabase extends GenericDatabase {
 		connection.setAutoCommit(true);
 		
 		// Test if newly created
-		executeSQLThrow("SELECT * FROM " + CCDatabase.TAB_INFO + " LIMIT 1");
+		executeSQLThrow("SELECT * FROM " + Statements.TAB_INFO + " LIMIT 1");
 		
 		// Test if writeable
-		executeSQLThrow("REPLACE INTO " + CCDatabase.TAB_INFO + " (" + CCDatabase.TAB_INFO_COLUMN_KEY + ", " + CCDatabase.TAB_INFO_COLUMN_VALUE + ") VALUES ('" + CCDatabase.INFOKEY_RAND + "', '" + Math.random() + "')");
+		executeSQLThrow("REPLACE INTO " + Statements.TAB_INFO + " (" + Statements.COL_INFO_KEY.Name + ", " + Statements.COL_INFO_VALUE.Name + ") VALUES ('" + CCDatabase.INFOKEY_RAND + "', '" + Math.random() + "')");
 	}
 
 	@Override

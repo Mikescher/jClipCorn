@@ -213,3 +213,7 @@ public class Main {
 //TODO re-do PlainTextExporter
 
 //TODO remove viewed field from db (get from history)
+
+//TODO covercache as table [coverid, size, width, height, lowrescache(16x10, or smth), checksum]
+
+//TODO evtl update dependencies ( gradlew dependencyUpdates )

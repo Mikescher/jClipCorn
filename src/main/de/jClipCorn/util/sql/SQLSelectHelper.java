@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.jClipCorn.util.datatypes.DoubleString;
+import de.jClipCorn.util.sqlwrapper.SQLOrder;
 
 public class SQLSelectHelper extends SQLHelper {
 

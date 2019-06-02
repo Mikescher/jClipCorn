@@ -1,4 +1,4 @@
-package de.jClipCorn.database.util;
+package de.jClipCorn.database.driver;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -6,12 +6,7 @@ import java.util.ArrayList;
 import de.jClipCorn.database.driver.CCDatabase;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.features.log.CCLog;
-import de.jClipCorn.util.datatypes.DoubleString;
-import de.jClipCorn.util.sql.SQLDeleteHelper;
-import de.jClipCorn.util.sql.SQLInsertHelper;
 import de.jClipCorn.util.sqlwrapper.SQLOrder;
-import de.jClipCorn.util.sql.SQLSelectHelper;
-import de.jClipCorn.util.sql.SQLUpdateHelper;
 import de.jClipCorn.util.sqlwrapper.*;
 
 @SuppressWarnings("nls")
@@ -21,6 +16,7 @@ public class Statements {
 	public final static String TAB_EPISODES              = "EPISODES";  //$NON-NLS-1$
 	public final static String TAB_INFO                  = "INFO";      //$NON-NLS-1$
 	public final static String TAB_GROUPS                = "GROUPS";    //$NON-NLS-1$
+	public final static String TAB_COVERS                = "COVERS";    //$NON-NLS-1$
 
 	public final static CCSQLColDef COL_INFO_KEY             = new CCSQLColDef("IKEY",            CCSQLType.VARCHAR);    //$NON-NLS-1$
 	public final static CCSQLColDef COL_INFO_VALUE           = new CCSQLColDef("IVALUE",          CCSQLType.VARCHAR);    //$NON-NLS-1$
@@ -51,7 +47,7 @@ public class Statements {
 	public final static CCSQLColDef COL_MAIN_PART_5           = new CCSQLColDef("PART5",          CCSQLType.VARCHAR);    //$NON-NLS-1$
 	public final static CCSQLColDef COL_MAIN_PART_6           = new CCSQLColDef("PART6",          CCSQLType.VARCHAR);    //$NON-NLS-1$
 	public final static CCSQLColDef COL_MAIN_SCORE            = new CCSQLColDef("SCORE",          CCSQLType.TINYINT);    //$NON-NLS-1$
-	public final static CCSQLColDef COL_MAIN_COVER            = new CCSQLColDef("COVERNAME",      CCSQLType.VARCHAR);    //$NON-NLS-1$
+	public final static CCSQLColDef COL_MAIN_COVERID          = new CCSQLColDef("COVERID",        CCSQLType.INTEGER);    //$NON-NLS-1$
 	public final static CCSQLColDef COL_MAIN_TYPE             = new CCSQLColDef("TYPE",           CCSQLType.TINYINT);    //$NON-NLS-1$
 	public final static CCSQLColDef COL_MAIN_SERIES_ID        = new CCSQLColDef("SERIESID",       CCSQLType.INTEGER);    //$NON-NLS-1$
 
@@ -59,7 +55,7 @@ public class Statements {
 	public final static CCSQLColDef COL_SEAS_SERIESID         = new CCSQLColDef("SERIESID",       CCSQLType.INTEGER);    //$NON-NLS-1$
 	public final static CCSQLColDef COL_SEAS_NAME             = new CCSQLColDef("NAME",           CCSQLType.VARCHAR);    //$NON-NLS-1$
 	public final static CCSQLColDef COL_SEAS_YEAR             = new CCSQLColDef("SEASONYEAR",     CCSQLType.SMALLINT);   //$NON-NLS-1$
-	public final static CCSQLColDef COL_SEAS_COVERNAME        = new CCSQLColDef("COVERNAME",      CCSQLType.VARCHAR);    //$NON-NLS-1$
+	public final static CCSQLColDef COL_SEAS_COVERID          = new CCSQLColDef("COVERID",        CCSQLType.INTEGER);    //$NON-NLS-1$
 
 	public final static CCSQLColDef COL_EPIS_LOCALID          = new CCSQLColDef("LOCALID",        CCSQLType.INTEGER);    //$NON-NLS-1$
 	public final static CCSQLColDef COL_EPIS_SEASONID         = new CCSQLColDef("SEASONID",       CCSQLType.INTEGER);    //$NON-NLS-1$
@@ -83,8 +79,17 @@ public class Statements {
 	public final static CCSQLColDef COL_GRPS_PARENT           = new CCSQLColDef("PARENTGROUP",    CCSQLType.VARCHAR);    //$NON-NLS-1$
 	public final static CCSQLColDef COL_GRPS_VISIBLE          = new CCSQLColDef("VISIBLE",        CCSQLType.BIT);        //$NON-NLS-1$
 
-	//--------------------------------------------------------------------------------------------------
+	public final static CCSQLColDef COL_CVRS_ID               = new CCSQLColDef("ID",             CCSQLType.INTEGER);    //$NON-NLS-1$
+	public final static CCSQLColDef COL_CVRS_FILENAME         = new CCSQLColDef("FILENAME",       CCSQLType.VARCHAR);    //$NON-NLS-1$
+	public final static CCSQLColDef COL_CVRS_WIDTH            = new CCSQLColDef("WIDTH",          CCSQLType.INTEGER);    //$NON-NLS-1$
+	public final static CCSQLColDef COL_CVRS_HEIGHT           = new CCSQLColDef("HEIGHT",         CCSQLType.INTEGER);    //$NON-NLS-1$
+	public final static CCSQLColDef COL_CVRS_HASH_FILE        = new CCSQLColDef("HASH_FILE",      CCSQLType.VARCHAR);    //$NON-NLS-1$
+	public final static CCSQLColDef COL_CVRS_FILESIZE         = new CCSQLColDef("FILESIZE",       CCSQLType.BIGINT);     //$NON-NLS-1$
+	public final static CCSQLColDef COL_CVRS_PREVIEWTYPE      = new CCSQLColDef("PREVIEW_TYPE",   CCSQLType.INTEGER);    //$NON-NLS-1$
+	public final static CCSQLColDef COL_CVRS_PREVIEW          = new CCSQLColDef("PREVIEW",        CCSQLType.BLOB);       //$NON-NLS-1$
+	public final static CCSQLColDef COL_CVRS_CREATED          = new CCSQLColDef("CREATED",        CCSQLType.BIGINT);     //$NON-NLS-1$
 
+	//--------------------------------------------------------------------------------------------------
 
 	public static CCSQLStatement addEmptyMainTabStatement;
 	public static CCSQLStatement addEmptySeasonTabStatement;
@@ -94,7 +99,7 @@ public class Statements {
 	public static CCSQLStatement newSeriesIDStatement;
 	public static CCSQLStatement newSeasonIDStatement;
 	public static CCSQLStatement newEpisodeIDStatement;
-	
+
 	public static CCSQLStatement updateMainTabStatement;
 	public static CCSQLStatement updateSeriesTabStatement;
 	public static CCSQLStatement updateSeasonTabStatement;
@@ -125,6 +130,12 @@ public class Statements {
 	public static CCSQLStatement updateGroupStatement;
 	public static CCSQLStatement removeAllGroupsStatement;
 
+	public static CCSQLStatement selectCoversFullStatement;
+	public static CCSQLStatement selectCoversFastStatement;
+	public static CCSQLStatement selectCoversSingleStatement;
+	public static CCSQLStatement insertCoversStatement;
+	public static CCSQLStatement removeCoversStatement;
+
 	private static ArrayList<CCSQLStatement> statements = new ArrayList<>();
 
 	public static void intialize(CCDatabase d) {
@@ -134,11 +145,11 @@ public class Statements {
 					.addPreparedFields(COL_MAIN_QUALITY, COL_MAIN_LANGUAGE, COL_MAIN_GENRE, COL_MAIN_LENGTH, COL_MAIN_ADDDATE, COL_MAIN_ONLINESCORE)
 					.addPreparedFields(COL_MAIN_FSK, COL_MAIN_FORMAT, COL_MAIN_MOVIEYEAR, COL_MAIN_ONLINEREF, COL_MAIN_GROUPS, COL_MAIN_FILESIZE, COL_MAIN_TAGS)
 					.addPreparedFields(COL_MAIN_PART_1, COL_MAIN_PART_2, COL_MAIN_PART_3, COL_MAIN_PART_4, COL_MAIN_PART_5, COL_MAIN_PART_6)
-					.addPreparedFields(COL_MAIN_SCORE, COL_MAIN_COVER, COL_MAIN_TYPE, COL_MAIN_SERIES_ID)
+					.addPreparedFields(COL_MAIN_SCORE, COL_MAIN_COVERID, COL_MAIN_TYPE, COL_MAIN_SERIES_ID)
 				.build(d, statements);
 
 			addEmptySeasonTabStatement = SQLBuilder.createInsert(TAB_SEASONS)
-					.addPreparedFields(COL_SEAS_SEASONID, COL_SEAS_SERIESID, COL_SEAS_NAME, COL_SEAS_YEAR, COL_SEAS_COVERNAME)
+					.addPreparedFields(COL_SEAS_SEASONID, COL_SEAS_SERIESID, COL_SEAS_NAME, COL_SEAS_YEAR, COL_SEAS_COVERID)
 					.build(d, statements);
 
 			addEmptyEpisodeTabStatement = SQLBuilder.createInsert(TAB_EPISODES)
@@ -161,18 +172,18 @@ public class Statements {
 					.addPreparedFields(COL_MAIN_LANGUAGE, COL_MAIN_GENRE, COL_MAIN_LENGTH, COL_MAIN_ADDDATE, COL_MAIN_ONLINESCORE, COL_MAIN_FSK, COL_MAIN_FORMAT)
 					.addPreparedFields(COL_MAIN_MOVIEYEAR, COL_MAIN_ONLINEREF, COL_MAIN_GROUPS, COL_MAIN_FILESIZE, COL_MAIN_TAGS)
 					.addPreparedFields(COL_MAIN_PART_1, COL_MAIN_PART_2, COL_MAIN_PART_3, COL_MAIN_PART_4, COL_MAIN_PART_5, COL_MAIN_PART_6)
-					.addPreparedFields(COL_MAIN_SCORE, COL_MAIN_COVER, COL_MAIN_TYPE, COL_MAIN_SERIES_ID)
+					.addPreparedFields(COL_MAIN_SCORE, COL_MAIN_COVERID, COL_MAIN_TYPE, COL_MAIN_SERIES_ID)
 					.build(d, statements);
 
 			updateSeriesTabStatement = SQLBuilder.createUpdate(TAB_MAIN)
 					.addPreparedWhereCondition(COL_MAIN_LOCALID)
 					.addPreparedFields(COL_MAIN_NAME, COL_MAIN_GENRE, COL_MAIN_ONLINESCORE, COL_MAIN_FSK, COL_MAIN_ONLINEREF, COL_MAIN_GROUPS)
-					.addPreparedFields(COL_MAIN_SCORE, COL_MAIN_COVER, COL_MAIN_TYPE, COL_MAIN_SERIES_ID, COL_MAIN_TAGS)
+					.addPreparedFields(COL_MAIN_SCORE, COL_MAIN_COVERID, COL_MAIN_TYPE, COL_MAIN_SERIES_ID, COL_MAIN_TAGS)
 					.build(d, statements);
 
 			updateSeasonTabStatement = SQLBuilder.createUpdate(TAB_SEASONS)
 					.addPreparedWhereCondition(COL_SEAS_SEASONID)
-					.addPreparedFields(COL_SEAS_SERIESID, COL_SEAS_NAME, COL_SEAS_YEAR, COL_SEAS_COVERNAME)
+					.addPreparedFields(COL_SEAS_SERIESID, COL_SEAS_NAME, COL_SEAS_YEAR, COL_SEAS_COVERID)
 					.build(d, statements);
 
 			updateEpisodeTabStatement = SQLBuilder.createUpdate(TAB_EPISODES)
@@ -186,12 +197,12 @@ public class Statements {
 					.addSelectFields(COL_MAIN_QUALITY, COL_MAIN_LANGUAGE, COL_MAIN_GENRE, COL_MAIN_LENGTH, COL_MAIN_ADDDATE, COL_MAIN_ONLINESCORE)
 					.addSelectFields(COL_MAIN_FSK, COL_MAIN_FORMAT, COL_MAIN_MOVIEYEAR, COL_MAIN_ONLINEREF, COL_MAIN_GROUPS, COL_MAIN_FILESIZE, COL_MAIN_TAGS)
 					.addSelectFields(COL_MAIN_PART_1, COL_MAIN_PART_2, COL_MAIN_PART_3, COL_MAIN_PART_4, COL_MAIN_PART_5, COL_MAIN_PART_6)
-					.addSelectFields(COL_MAIN_SCORE, COL_MAIN_COVER, COL_MAIN_TYPE, COL_MAIN_SERIES_ID)
+					.addSelectFields(COL_MAIN_SCORE, COL_MAIN_COVERID, COL_MAIN_TYPE, COL_MAIN_SERIES_ID)
 					.setOrder(COL_MAIN_LOCALID, SQLOrder.ASC)
 					.build(d, statements);
 
 			selectAllSeasonTabStatement = SQLBuilder.createSelect(TAB_SEASONS)
-					.addSelectFields(COL_SEAS_SERIESID, COL_SEAS_SEASONID, COL_SEAS_NAME, COL_SEAS_YEAR, COL_SEAS_COVERNAME)
+					.addSelectFields(COL_SEAS_SERIESID, COL_SEAS_SEASONID, COL_SEAS_NAME, COL_SEAS_YEAR, COL_SEAS_COVERID)
 					.setOrder(COL_SEAS_SERIESID, SQLOrder.ASC)
 					.build(d, statements);
 
@@ -203,7 +214,7 @@ public class Statements {
 					.build(d, statements);
 
 			selectSeasonTabStatement = SQLBuilder.createSelect(TAB_SEASONS)
-					.addSelectFields(COL_SEAS_SERIESID, COL_SEAS_SEASONID, COL_SEAS_NAME, COL_SEAS_YEAR, COL_SEAS_COVERNAME)
+					.addSelectFields(COL_SEAS_SERIESID, COL_SEAS_SEASONID, COL_SEAS_NAME, COL_SEAS_YEAR, COL_SEAS_COVERID)
 					.addPreparedWhereCondition(COL_SEAS_SERIESID)
 					.setOrder(COL_SEAS_SERIESID, SQLOrder.ASC)
 					.build(d, statements);
@@ -227,12 +238,12 @@ public class Statements {
 					.addSelectFields(COL_MAIN_QUALITY, COL_MAIN_LANGUAGE, COL_MAIN_GENRE, COL_MAIN_LENGTH, COL_MAIN_ADDDATE, COL_MAIN_ONLINESCORE)
 					.addSelectFields(COL_MAIN_FSK, COL_MAIN_FORMAT, COL_MAIN_MOVIEYEAR, COL_MAIN_ONLINEREF, COL_MAIN_GROUPS, COL_MAIN_FILESIZE, COL_MAIN_TAGS)
 					.addSelectFields(COL_MAIN_PART_1, COL_MAIN_PART_2, COL_MAIN_PART_3, COL_MAIN_PART_4, COL_MAIN_PART_5, COL_MAIN_PART_6)
-					.addSelectFields(COL_MAIN_SCORE, COL_MAIN_COVER, COL_MAIN_TYPE, COL_MAIN_SERIES_ID)
+					.addSelectFields(COL_MAIN_SCORE, COL_MAIN_COVERID, COL_MAIN_TYPE, COL_MAIN_SERIES_ID)
 					.addPreparedWhereCondition(COL_MAIN_LOCALID)
 					.build(d, statements);
 
 			selectSingleSeasonTabStatement = SQLBuilder.createSelect(TAB_SEASONS)
-					.addSelectFields(COL_SEAS_SERIESID, COL_SEAS_SEASONID, COL_SEAS_NAME, COL_SEAS_YEAR, COL_SEAS_COVERNAME)
+					.addSelectFields(COL_SEAS_SERIESID, COL_SEAS_SEASONID, COL_SEAS_NAME, COL_SEAS_YEAR, COL_SEAS_COVERID)
 					.addPreparedWhereCondition(COL_SEAS_SEASONID)
 					.build(d, statements);
 
@@ -273,6 +284,31 @@ public class Statements {
 			removeGroupStatement = SQLBuilder.createDelete(TAB_GROUPS).addPreparedWhereCondition(COL_GRPS_NAME).build(d, statements);
 
 			removeAllGroupsStatement = SQLBuilder.createDelete(TAB_GROUPS).build(d, statements);
+
+			selectCoversFullStatement = SQLBuilder.createSelect(TAB_COVERS)
+					.addSelectFields(COL_CVRS_ID, COL_CVRS_FILENAME, COL_CVRS_WIDTH, COL_CVRS_HEIGHT, COL_CVRS_HASH_FILE)
+					.addSelectFields(COL_CVRS_FILESIZE, COL_CVRS_PREVIEW, COL_CVRS_PREVIEWTYPE, COL_CVRS_CREATED)
+					.build(d, statements);
+
+			selectCoversFastStatement = SQLBuilder.createSelect(TAB_COVERS)
+					.addSelectFields(COL_CVRS_ID, COL_CVRS_FILENAME, COL_CVRS_WIDTH, COL_CVRS_HEIGHT, COL_CVRS_FILESIZE, COL_CVRS_PREVIEWTYPE)
+					.build(d, statements);
+
+			selectCoversSingleStatement = SQLBuilder.createSelect(TAB_COVERS)
+					.addSelectFields(COL_CVRS_ID, COL_CVRS_FILENAME, COL_CVRS_WIDTH, COL_CVRS_HEIGHT, COL_CVRS_HASH_FILE)
+					.addSelectFields(COL_CVRS_FILESIZE, COL_CVRS_PREVIEW, COL_CVRS_PREVIEWTYPE, COL_CVRS_CREATED)
+					.addPreparedWhereCondition(COL_CVRS_ID)
+					.build(d, statements);
+
+			insertCoversStatement = SQLBuilder.createInsert(TAB_COVERS)
+					.addSelectFields(COL_CVRS_ID, COL_CVRS_FILENAME, COL_CVRS_WIDTH, COL_CVRS_HEIGHT, COL_CVRS_HASH_FILE)
+					.addSelectFields(COL_CVRS_FILESIZE, COL_CVRS_PREVIEW, COL_CVRS_PREVIEWTYPE, COL_CVRS_CREATED)
+					.build(d, statements);
+
+			removeCoversStatement = SQLBuilder.createDelete(TAB_COVERS)
+					.addPreparedWhereCondition(COL_CVRS_ID)
+					.build(d, statements);
+
 
 			CCLog.addDebug(String.format("%d SQL Statements prepared", statements.size())); //$NON-NLS-1$
 

@@ -7,6 +7,7 @@ import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.helper.ApplicationHelper;
 import de.jClipCorn.util.helper.DialogHelper;
+import de.jClipCorn.util.sqlwrapper.StatementType;
 
 import javax.swing.*;
 import java.io.*;
@@ -18,6 +19,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class CCLogInternal {
 	private static List<CCLogElement> log = new Vector<>();
 	private static List<CCLogChangedListener> listener = new Vector<>();
+	private static List<CCSQLLogElement> sqlLog = new Vector<>();
 
 	private static boolean isUnitTest = false;
 
@@ -29,6 +31,7 @@ public class CCLogInternal {
 	private static final Object _dataLock = new Object();
 	private static final Object _fileLock = new Object();
 	private static final Object _obsLock  = new Object();
+	private static final Object _sqlLock  = new Object();
 
 	private static AtomicBoolean hasUnwatchedInformation = new AtomicBoolean(false);
 	private static AtomicBoolean hasUnwatchedWarnings    = new AtomicBoolean(false);
@@ -88,6 +91,14 @@ public class CCLogInternal {
 		if (cle.isType(CCLogType.LOG_ELEM_UNDEFINED)) hasUnwatchedUndefineds.set(true);
 
 		setChangedFlag();
+	}
+
+	public static void addSQL(String method, StatementType stype, String sql) {
+		CCSQLLogElement cle = new CCSQLLogElement(method, stype, sql);
+
+		synchronized (_sqlLock) {
+			sqlLog.add(cle);
+		}
 	}
 
 	private static CCLogElement lastLogElem() {
@@ -194,6 +205,12 @@ public class CCLogInternal {
 		}
 	}
 
+	public static int getSQLCount() {
+		synchronized (_sqlLock) {
+			return sqlLog.size();
+		}
+	}
+
 	public static CCLogElement getElement(CCLogType type, int position) {
 		synchronized (_dataLock) {
 			int count = 0;
@@ -204,6 +221,14 @@ public class CCLogInternal {
 				}
 			}
 			return null;
+		}
+	}
+
+	public static CCSQLLogElement getSQLElement(int idx) {
+		if (idx < 0) return null;
+		synchronized (_sqlLock) {
+			if (idx >= sqlLog.size()) return null;
+			return sqlLog.get(idx);
 		}
 	}
 

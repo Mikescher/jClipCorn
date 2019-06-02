@@ -23,7 +23,7 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 	private CCOnlineScore onlinescore;
 	private CCFSK fsk;
 	private CCUserScore score;
-	private String covername;
+	private int coverid;
 	private final int seriesID;
 	private CCOnlineReferenceList onlineReference;
 	private CCGroupList linkedGroups;
@@ -33,9 +33,9 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 	protected boolean isUpdating = false;
 
 	public CCDatabaseElement(CCMovieList ml, CCDBElementTyp typ, int id, int seriesID) {
-		this.typ = typ;
-		this.localID = id;
-		this.seriesID = seriesID;
+		this.typ       = typ;
+		this.localID   = id;
+		this.seriesID  = seriesID;
 		this.movielist = ml;
 		
 		onlineReference = CCOnlineReferenceList.EMPTY;
@@ -50,7 +50,7 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 		onlinescore     = CCOnlineScore.STARS_0_0;
 		fsk             = CCFSK.RATING_0;
 		score           = CCUserScore.RATING_NO;
-		covername       = ""; //$NON-NLS-1$
+		coverid         = -1;
 		onlineReference = CCOnlineReferenceList.EMPTY;
 		linkedGroups    = CCGroupList.EMPTY;
 		tags            = CCTagList.EMPTY;
@@ -180,43 +180,43 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 		updateDB();
 	}
 	
-	public void setCover(String name) {
-		this.covername = name;
+	public void setCover(int cid) {
+		this.coverid = cid;
 		
 		updateDB();
 	}
 	
-	public void setCover(BufferedImage name) {
-		if (name == null) {
+	public void setCover(BufferedImage cvr) {
+		if (cvr == null) {
 			return;
 		}
 
-		if (! covername.isEmpty() && name.equals(getCover())) {
+		if (coverid != -1 && cvr.equals(getCover())) {
 			return;
 		}
 		
-		if (! covername.isEmpty()) {
-			movielist.getCoverCache().deleteCover(this);
+		if (coverid != -1) {
+			movielist.getCoverCache().deleteCover(this.coverid);
 		}
 		
-		this.covername = movielist.getCoverCache().addCover(name);
+		this.coverid = movielist.getCoverCache().addCover(cvr);
 		
 		updateDB();
 	}
 	
 	@Override
-	public String getCoverName() {
-		return covername;
+	public int getCoverID() {
+		return coverid;
 	}
 
 	@Override
 	public BufferedImage getCover() {
-		return movielist.getCoverCache().getCover(covername);
+		return movielist.getCoverCache().getCover(coverid);
 	}
 
 	@Override
 	public Tuple<Integer, Integer> getCoverDimensions() {
-		return movielist.getCoverCache().getDimensions(covername);
+		return movielist.getCoverCache().getDimensions(coverid);
 	}
 	
 	@Override

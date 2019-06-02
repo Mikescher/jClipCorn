@@ -17,6 +17,7 @@ import de.jClipCorn.properties.property.CCEnumSetProperty.EnumSetValue;
 import de.jClipCorn.properties.property.CCPathProperty.CCPathPropertyMode;
 import de.jClipCorn.properties.types.PathSyntaxVar;
 import de.jClipCorn.util.Str;
+import de.jClipCorn.util.colorquantizer.ColorQuantizerMethod;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.datetime.CCDateTimeFormat;
 import de.jClipCorn.util.helper.ApplicationHelper;
@@ -178,6 +179,8 @@ public class CCProperties {
 	public CCStringProperty                                 PROP_PLAY_MEDIAINFO_PATH;
 	public CCBoolProperty                                   PROP_PREVIEWSERIES_SINGLETON;
 	public CCBoolProperty                                   PROP_PREVIEWMOVIE_SINGLETON;
+	public CCBoolProperty                                   PROP_DATABASE_LOAD_ALL_COVERDATA;
+	public CCEnumProperty<ColorQuantizerMethod>             PROP_DATABASE_COVER_QUANTIZER;
 
 	public boolean ARG_READONLY = false;
 	
@@ -260,6 +263,8 @@ public class CCProperties {
 		PROP_DATABASE_COVERCACHESIZE            = new CCPIntProperty(CAT_DATABASE,          this,   "PROP_DATABASE_COVERCACHESIZE",             128);
 		PROP_DATABASE_MAX_COVER_SIZE            = new CCEnumProperty<>(CAT_DATABASE,        this,   "PROP_DATABASE_MAX_COVER_SIZE",             CoverImageSize.BASE_SIZE,           CoverImageSize.getWrapper());
 		PROP_LOG_MAX_LINECOUNT                  = new CCPIntProperty(CAT_DATABASE,          this,   "PROP_LOG_MAX_LINECOUNT",                   1048576); // 2^20
+		PROP_DATABASE_LOAD_ALL_COVERDATA        = new CCBoolProperty(CAT_DATABASE,          this,   "PROP_DATABASE_LOAD_ALL_COVERDATA",         false);
+		PROP_DATABASE_COVER_QUANTIZER           = new CCEnumProperty<>(CAT_DATABASE,        this,   "PROP_DATABASE_COVER_QUANTIZER",            ColorQuantizerMethod.HSL_DISTINCT_SELECTION, ColorQuantizerMethod.getWrapper());
 
 		PROP_DATABASE_DEFAULTPARSERLANG         = new CCEnumProperty<>(CAT_PARSER,          this,   "PROP_DATABASE_DEFAULTPARSERLANG",          CCDBLanguage.GERMAN,                CCDBLanguage.getWrapper());
 		PROP_TMDB_LANGUAGE                      = new CCEnumProperty<>(CAT_PARSER,          this,   "PROP_TMDB_LANGUAGE",                       getDefBLanguage(),                  BrowserLanguage.getWrapper());

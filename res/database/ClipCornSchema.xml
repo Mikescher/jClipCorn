@@ -35,7 +35,7 @@
         <column name="PART5"          type="VARCHAR"  required="true" size="512"       />
         <column name="PART6"          type="VARCHAR"  required="true" size="512"       />
         <column name="SCORE"          type="TINYINT"  required="true"                  />    <!-- ALSO USED FOR SERIES -->
-        <column name="COVERNAME"      type="VARCHAR"  required="true" size="256"       />    <!-- ALSO USED FOR SERIES -->
+        <column name="COVERID"        type="INTEGER"  required="true" size="256"       />    <!-- ALSO USED FOR SERIES -->
         <column name="TYPE"           type="TINYINT"  required="true"                  />
         <column name="SERIESID"       type="INTEGER"  required="true"                  />
     </table>
@@ -46,7 +46,7 @@
         <column name="SERIESID"     type="INTEGER"  required="true"                  />
         <column name="NAME"         type="VARCHAR"  required="true" size="128"       />
         <column name="SEASONYEAR"   type="SMALLINT" required="true"                  />
-        <column name="COVERNAME"    type="VARCHAR"  required="true" size="256"       />
+        <column name="COVERID"      type="INTEGER"  required="true" size="256"       />
 
         <foreign-key foreignTable="ELEMENTS">
             <reference local="SERIESID" foreign="LOCALID"/>
@@ -77,13 +77,26 @@
 
     <table name="GROUPS">
         <column name="NAME"         type="VARCHAR"  required="true" size="256" primaryKey="true"/>
-        
+
         <column name="ORDERING"     type="INTEGER"  required="true"                             />
         <column name="COLOR"        type="INTEGER"  required="true"                             />
         <column name="SERIALIZE"    type="BIT"      required="true"                             />    <!-- WRITE GROUP TO FILENAME/FOLDERNAME -->
         <column name="VISIBLE"      type="BIT"      required="true"                             />
-        
+
         <column name="PARENTGROUP"  type="VARCHAR"  required="true" size="256" />
+    </table>
+
+    <table name="COVERS">
+        <column name="ID"           type="INTEGER"  required="true" primaryKey="true"/>
+
+        <column name="FILENAME"     type="VARCHAR"  required="true"                  />
+        <column name="WIDTH"        type="INTEGER"  required="true"                  />
+        <column name="HEIGHT"       type="INTEGER"  required="true"                  />
+        <column name="HASH_FILE"    type="VARCHAR"  required="true" size="64"        />
+        <column name="FILESIZE"     type="BIGINT"   required="true"                  />
+        <column name="PREVIEW_TYPE" type="INTEGER"  required="true"                  />
+        <column name="PREVIEW"      type="BLOB"     required="true"                  />
+        <column name="CREATED"      type="BIGINT"   required="true"                  />
     </table>
 
 </database>

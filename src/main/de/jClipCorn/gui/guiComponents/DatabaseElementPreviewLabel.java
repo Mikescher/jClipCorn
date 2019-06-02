@@ -210,7 +210,7 @@ public class DatabaseElementPreviewLabel extends CoverLabel {
 	public void setModeCover(CCDatabaseElement el) {
 		if (CCProperties.getInstance().PROP_MAINFRAME_ASYNC_COVER_LOADING.getValue()) {
 
-			if (el.getMovieList().getCoverCache().isCached(el.getCoverName()))
+			if (el.getMovieList().getCoverCache().isCached(el.getCoverID()))
 				setModeCoverSync(el);
 			else
 				setModeCoverAsync(el);

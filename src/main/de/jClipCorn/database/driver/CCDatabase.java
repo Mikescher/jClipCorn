@@ -2,7 +2,6 @@ package de.jClipCorn.database.driver;
 
 import java.awt.Color;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,6 +10,7 @@ import java.util.UUID;
 
 import de.jClipCorn.Main;
 import de.jClipCorn.database.CCMovieList;
+import de.jClipCorn.database.covertab.*;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.CCMovie;
@@ -18,16 +18,13 @@ import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.database.databaseElement.columnTypes.CCDBElementTyp;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGroup;
-import de.jClipCorn.database.util.Statements;
-import de.jClipCorn.database.util.covercache.CCCoverCache;
-import de.jClipCorn.database.util.covercache.CCFolderCoverCache;
-import de.jClipCorn.database.util.covercache.CCMemoryCoverCache;
-import de.jClipCorn.database.util.covercache.CCStubCoverCache;
+import de.jClipCorn.database.migration.DatabaseMigration;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.enumerations.CCDatabaseDriver;
 import de.jClipCorn.util.datetime.CCDate;
+import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.datetime.CCTime;
 import de.jClipCorn.util.exceptions.CCFormatException;
 import de.jClipCorn.util.helper.ApplicationHelper;
@@ -35,7 +32,7 @@ import de.jClipCorn.util.sqlwrapper.CCSQLResultSet;
 import de.jClipCorn.util.sqlwrapper.CCSQLStatement;
 import de.jClipCorn.util.sqlwrapper.SQLWrapperException;
 
-import static de.jClipCorn.database.util.Statements.*;
+import static de.jClipCorn.database.driver.Statements.*;
 
 public class CCDatabase {
 
@@ -52,9 +49,10 @@ public class CCDatabase {
 	
 	private final String databasePath;
 	private final GenericDatabase db;
-	private final CCCoverCache coverCache;
-		
+
 	public final DatabaseMigration upgrader;
+
+	private final ICoverCache coverCache;
 	
 	private CCDatabase(CCDatabaseDriver driver, String dbPath) {
 		super();
@@ -64,11 +62,11 @@ public class CCDatabase {
 		switch (driver) {
 		case DERBY:
 			db = new DerbyDatabase();
-			coverCache = new CCFolderCoverCache(databasePath);
+			coverCache = new CCDefaultCoverCache(this);
 			break;
 		case SQLITE:
 			db = new SQLiteDatabase();
-			coverCache = new CCFolderCoverCache(databasePath);
+			coverCache = new CCDefaultCoverCache(this);
 			break;
 		case STUB:
 			db = new StubDatabase();
@@ -80,8 +78,8 @@ public class CCDatabase {
 			break;
 		default:
 			CCLog.addDefaultSwitchError(this, driver);
-			db = null;
 			coverCache = null;
+			db = null;
 		}
 		
 		upgrader = new DatabaseMigration(db);
@@ -135,7 +133,9 @@ public class CCDatabase {
 			
 			upgrader.tryUpgrade();
 			
-			intialize(this);
+			Statements.intialize(this);
+
+			coverCache.init();
 
 			return true;
 		} catch (SQLException e) {
@@ -161,9 +161,7 @@ public class CCDatabase {
 			writeNewInformationToDB(INFOKEY_TIME, CCTime.getCurrentTime().toStringSQL());
 			writeNewInformationToDB(INFOKEY_USERNAME, ApplicationHelper.getCurrentUsername());
 		}
-		
-		coverCache.connect();
-		
+
 		return res;
 	}
 	
@@ -263,7 +261,7 @@ public class CCDatabase {
 	private void updateSeasonFromResultSet(CCSQLResultSet rs, CCSeason seas) throws SQLException, SQLWrapperException {
 		seas.setTitle(rs.getString(COL_SEAS_NAME));
 		seas.setYear(rs.getInt(COL_SEAS_YEAR));
-		seas.setCover(rs.getString(COL_SEAS_COVERNAME));
+		seas.setCover(rs.getInt(COL_SEAS_COVERID));
 	}
 
 	private void updateSeriesFromResultSet(CCSQLResultSet rs, CCSeries ser) throws SQLException, CCFormatException, SQLWrapperException {
@@ -272,7 +270,7 @@ public class CCDatabase {
 		ser.setOnlinescore(rs.getInt(COL_MAIN_ONLINESCORE));
 		ser.setFsk(rs.getInt(COL_MAIN_FSK));
 		ser.setScore(rs.getInt(COL_MAIN_SCORE));
-		ser.setCover(rs.getString(COL_MAIN_COVER));
+		ser.setCover(rs.getInt(COL_MAIN_COVERID));
 		ser.setOnlineReference(rs.getString(COL_MAIN_ONLINEREF));
 		ser.setGroups(rs.getString(COL_MAIN_GROUPS));
 		ser.setTags(rs.getShort(COL_MAIN_TAGS));
@@ -304,16 +302,7 @@ public class CCDatabase {
 		mov.setPart(4, rs.getString(COL_MAIN_PART_5));
 		mov.setPart(5, rs.getString(COL_MAIN_PART_6));
 		mov.setScore(rs.getInt(COL_MAIN_SCORE));
-		mov.setCover(rs.getString(COL_MAIN_COVER));
-	}
-
-	private int getIntFromSet(ResultSet rs) throws SQLException {
-		int result = 0;
-
-		rs.next();
-		result = rs.getInt(1);
-
-		return result;
+		mov.setCover(rs.getInt(COL_MAIN_COVERID));
 	}
 
 	private int getNewLocalID() {
@@ -384,7 +373,7 @@ public class CCDatabase {
 			stmt.setStr(COL_MAIN_PART_5,        "");
 			stmt.setStr(COL_MAIN_PART_6,        "");
 			stmt.setInt(COL_MAIN_SCORE,         0);
-			stmt.setStr(COL_MAIN_COVER,         "");
+			stmt.setInt(COL_MAIN_COVERID,       -1);
 			stmt.setInt(COL_MAIN_TYPE,          0);
 			stmt.setInt(COL_MAIN_SERIES_ID,     0);
 
@@ -408,7 +397,7 @@ public class CCDatabase {
 			stmt.setInt(COL_SEAS_SERIESID,  serid);
 			stmt.setStr(COL_SEAS_NAME,      "");
 			stmt.setInt(COL_SEAS_YEAR,      0);
-			stmt.setStr(COL_SEAS_COVERNAME, "");
+			stmt.setInt(COL_SEAS_COVERID,   -1);
 
 			stmt.executeUpdate();
 
@@ -553,7 +542,7 @@ public class CCDatabase {
 			stmt.setStr(COL_MAIN_PART_5,        mov.getPart(4));
 			stmt.setStr(COL_MAIN_PART_6,        mov.getPart(5));
 			stmt.setInt(COL_MAIN_SCORE,         mov.getScore().asInt());
-			stmt.setStr(COL_MAIN_COVER,         mov.getCoverName());
+			stmt.setInt(COL_MAIN_COVERID,       mov.getCoverID());
 			stmt.setInt(COL_MAIN_TYPE,          mov.getType().asInt());
 			stmt.setInt(COL_MAIN_SERIES_ID,     mov.getSeriesID());
 
@@ -579,7 +568,7 @@ public class CCDatabase {
 			stmt.setStr(COL_MAIN_ONLINEREF,   ser.getOnlineReference().toSerializationString());
 			stmt.setStr(COL_MAIN_GROUPS,      ser.getGroups().toSerializationString());
 			stmt.setInt(COL_MAIN_SCORE,       ser.getScore().asInt());
-			stmt.setStr(COL_MAIN_COVER,       ser.getCoverName());
+			stmt.setInt(COL_MAIN_COVERID,     ser.getCoverID());
 			stmt.setInt(COL_MAIN_TYPE,        ser.getType().asInt());
 			stmt.setInt(COL_MAIN_SERIES_ID,   ser.getSeriesID());
 			stmt.setSht(COL_MAIN_TAGS,        ser.getTags().asShort());
@@ -604,7 +593,7 @@ public class CCDatabase {
 			stmt.setInt(COL_SEAS_SERIESID,  ser.getSeries().getSeriesID());
 			stmt.setStr(COL_SEAS_NAME,      ser.getTitle());
 			stmt.setInt(COL_SEAS_YEAR,      ser.getYear());
-			stmt.setStr(COL_SEAS_COVERNAME, ser.getCoverName());
+			stmt.setInt(COL_SEAS_COVERID,   ser.getCoverID());
 
 			stmt.setInt(COL_SEAS_SEASONID,  ser.getSeasonID());
 
@@ -731,29 +720,6 @@ public class CCDatabase {
 	public void fillMovieList(CCMovieList ml) {
 		try
 		{
-			// GROUPS
-			{
-				CCSQLStatement stmt = Statements.selectGroupsStatement;
-				stmt.clearParameters();
-
-				CCSQLResultSet rs = stmt.executeQuery(this);
-
-				while (rs.next()) {
-
-					String gn = rs.getString(COL_GRPS_NAME);
-					int go = rs.getInt(COL_GRPS_ORDER);
-					int gc = rs.getInt(COL_GRPS_COLOR);
-					boolean gs = rs.getBoolean(COL_GRPS_SERIALIZE);
-					String gp = rs.getString(COL_GRPS_PARENT);
-					boolean gv = rs.getBoolean(COL_GRPS_VISIBLE);
-					if (gp == null) gp = ""; //$NON-NLS-1$
-
-					ml.addGroupInternal(CCGroup.create(gn, go, gc, gs, gp, gv));
-				}
-
-				rs.close();
-			}
-
 			if (CCProperties.getInstance().PROP_LOADING_LIVEUPDATE.getValue())
 			{
 				CCSQLStatement stmt = selectAllMainTabStatement;
@@ -871,7 +837,56 @@ public class CCDatabase {
 		}
 	}
 
-	public void fillSeries(CCSeries ser) {
+	public void fillCoverCache(CCMovieList ml) {
+		try
+		{
+			if (CCProperties.getInstance().PROP_DATABASE_LOAD_ALL_COVERDATA.getValue())
+			{
+				CCSQLStatement stmt = selectCoversFullStatement;
+				stmt.clearParameters();
+
+				CCSQLResultSet rs = stmt.executeQuery(this);
+
+				while (rs.next()) {
+					int id        = rs.getInt(COL_CVRS_ID);
+					String fn     = rs.getString(COL_CVRS_FILENAME);
+					int ww        = rs.getInt(COL_CVRS_WIDTH);
+					int hh        = rs.getInt(COL_CVRS_HEIGHT);
+					String cs     = rs.getString(COL_CVRS_HASH_FILE);
+					long fs       = rs.getLong(COL_CVRS_FILESIZE);
+					byte[] pv     = rs.getBlob(COL_CVRS_PREVIEW);
+					int pt        = rs.getInt(COL_CVRS_PREVIEWTYPE);
+					CCDateTime ts = rs.getDateTime(COL_CVRS_CREATED);
+
+					coverCache.addInternal(new CoverCacheElement(id, fn, ww, hh, cs, fs, pv, pt, ts));
+				}
+				rs.close();
+			}
+			else
+			{
+				CCSQLStatement stmt = selectCoversFastStatement;
+				stmt.clearParameters();
+
+				CCSQLResultSet rs = stmt.executeQuery(this);
+
+				while (rs.next()) {
+					int id        = rs.getInt(COL_CVRS_ID);
+					String fn     = rs.getString(COL_CVRS_FILENAME);
+					int ww        = rs.getInt(COL_CVRS_WIDTH);
+					int hh        = rs.getInt(COL_CVRS_HEIGHT);
+					long fs       = rs.getLong(COL_CVRS_FILESIZE);
+					int pt        = rs.getInt(COL_CVRS_PREVIEWTYPE);
+
+					coverCache.addInternal(new CoverCacheElement(id, fn, ww, hh, fs, pt));
+				}
+				rs.close();
+			}
+		} catch (SQLException | SQLWrapperException | CCFormatException e) {
+			CCLog.addError(e);
+		}
+	}
+
+	private void fillSeries(CCSeries ser) {
 		try {
 			CCSQLStatement stmt = selectSeasonTabStatement;
 			stmt.clearParameters();
@@ -896,7 +911,7 @@ public class CCDatabase {
 		}
 	}
 
-	public void fillSeason(CCSeason se) {
+	private void fillSeason(CCSeason se) {
 		try {
 			CCSQLStatement stmt = selectEpisodeTabStatement;
 			stmt.clearParameters();
@@ -1127,6 +1142,44 @@ public class CCDatabase {
 		}
 	}
 
+	public boolean insertCoverEntry(CoverCacheElement cce) {
+		try {
+			CCSQLStatement stmt = insertCoversStatement;
+			stmt.clearParameters();
+
+			stmt.setInt(COL_CVRS_ID,          cce.ID);
+			stmt.setStr(COL_CVRS_FILENAME,    cce.Filename);
+			stmt.setInt(COL_CVRS_WIDTH,       cce.Width);
+			stmt.setInt(COL_CVRS_HEIGHT,      cce.Height);
+			stmt.setStr(COL_CVRS_HASH_FILE,   cce.Checksum);
+			stmt.setLng(COL_CVRS_FILESIZE,    cce.Filesize);
+			stmt.setBlb(COL_CVRS_PREVIEW,     cce.Preview);
+			stmt.setInt(COL_CVRS_PREVIEWTYPE, cce.PreviewType.asInt());
+			stmt.setCDT(COL_CVRS_CREATED,     cce.Timestamp);
+
+			stmt.executeUpdate();
+
+			return true;
+		} catch (SQLException | SQLWrapperException e) {
+			CCLog.addError(e);
+
+			return false;
+		}
+	}
+
+	public void deleteCoverEntry(CoverCacheElement cce) {
+		try {
+			CCSQLStatement stmt = removeCoversStatement;
+			stmt.clearParameters();
+
+			stmt.setInt(COL_CVRS_ID,          cce.ID);
+
+			stmt.executeUpdate();
+		} catch (SQLException | SQLWrapperException e) {
+			CCLog.addError(e);
+		}
+	}
+
 	public void clearGroups() {
 		try {
 			Statements.removeAllGroupsStatement.execute();
@@ -1155,11 +1208,12 @@ public class CCDatabase {
 		return db.isInMemory();
 	}
 
-	public CCCoverCache getCoverCache() {
+	public ICoverCache getCoverCache() {
 		return coverCache;
 	}
 
 	public boolean supportsDateType() {
 		return db.supportsDateType();
 	}
+
 }

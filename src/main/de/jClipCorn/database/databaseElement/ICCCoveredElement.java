@@ -8,8 +8,8 @@ public interface ICCCoveredElement {
 	// Movie, Season, Series
 
 	String getTitle();
-	
-	String getCoverName();
+
+	int getCoverID();
 
 	BufferedImage getCover();
 	Tuple<Integer, Integer> getCoverDimensions();

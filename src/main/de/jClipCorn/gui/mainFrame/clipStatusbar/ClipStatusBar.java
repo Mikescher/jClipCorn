@@ -182,6 +182,11 @@ public class ClipStatusBar extends AbstractClipStatusbar implements CCDBUpdateLi
 			if (CCLog.hasUnwatched(CCLogType.LOG_ELEM_UNDEFINED))tooltip.append(" (!)");
 			tooltip.append("<br/>");
 
+			tooltip.append("<br/>");
+
+			tooltip.append(LocaleBundle.getString("CCLog.SQL")).append(": ").append(CCLog.getSQLCount());
+			tooltip.append("<br/>");
+
 			tooltip.append("</html>"); //$NON-NLS-1$
 			lblLog.setToolTipText(tooltip.toString());
 		}
@@ -245,7 +250,9 @@ public class ClipStatusBar extends AbstractClipStatusbar implements CCDBUpdateLi
 
 		condAppend(tooltip, Globals.TIMING_LOAD_INIT_BACKUPMANAGER);
 		condAppend(tooltip, Globals.TIMING_LOAD_DATABASE_CONNECT);
-		condAppend(tooltip, Globals.TIMING_LOAD_MOVIELIST_FILL);
+		condAppend(tooltip, Globals.TIMING_LOAD_MOVIELIST_FILL_GROUPS);
+		condAppend(tooltip, Globals.TIMING_LOAD_MOVIELIST_FILL_ELEMENTS);
+		condAppend(tooltip, Globals.TIMING_LOAD_MOVIELIST_FILL_COVERS);
 		condAppend(tooltip, Globals.TIMING_LOAD_CREATEBACKUP);
 		condAppend(tooltip, Globals.TIMING_LOAD_TOTAL);
 

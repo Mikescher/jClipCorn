@@ -21,6 +21,7 @@ import org.jdom2.Element;
 
 import de.jClipCorn.Globals;
 import de.jClipCorn.Main;
+import de.jClipCorn.database.covertab.ICoverCache;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.CCMovie;
@@ -37,7 +38,6 @@ import de.jClipCorn.database.driver.CCDatabase;
 import de.jClipCorn.database.driver.DatabaseConnectResult;
 import de.jClipCorn.database.util.CCDBUpdateListener;
 import de.jClipCorn.features.backupManager.BackupManager;
-import de.jClipCorn.database.util.covercache.CCCoverCache;
 import de.jClipCorn.database.util.iterators.DatedElementsIterator;
 import de.jClipCorn.database.util.iterators.EpisodesIterator;
 import de.jClipCorn.database.util.iterators.MoviesIterator;
@@ -67,17 +67,17 @@ public class CCMovieList {
 	private List<CCDBUpdateListener> listener;
 	
 	private CCDatabase database;
-	private List<CCGroup> databaseGroups = new ArrayList<>();
+	private List<CCGroup> databaseGroups;
 
 	private boolean blocked = false;
 
 	private CCMovieList(CCDatabase db) {
-		this.database = null;
-		this.list = new Vector<>();
+		this.list     = new Vector<>();
 		this.listener = new Vector<>();
 
-		database = db;
-		
+		this.databaseGroups = new ArrayList<>();
+		this.database = db;
+
 		instance = this;
 	}
 	
@@ -130,11 +130,25 @@ public class CCMovieList {
 
 				testDatabaseVersion();
 
-				Globals.TIMINGS.start(Globals.TIMING_LOAD_MOVIELIST_FILL);
+				Globals.TIMINGS.start(Globals.TIMING_LOAD_DATABASE);
 				{
-					database.fillMovieList(CCMovieList.this);
+					Globals.TIMINGS.start(Globals.TIMING_LOAD_MOVIELIST_FILL_GROUPS);
+					{
+						database.fillGroups(CCMovieList.this);
+					}
+					Globals.TIMINGS.stop(Globals.TIMING_LOAD_MOVIELIST_FILL_GROUPS);
+					Globals.TIMINGS.start(Globals.TIMING_LOAD_MOVIELIST_FILL_ELEMENTS);
+					{
+						database.fillMovieList(CCMovieList.this);
+					}
+					Globals.TIMINGS.stop(Globals.TIMING_LOAD_MOVIELIST_FILL_ELEMENTS);
+					Globals.TIMINGS.start(Globals.TIMING_LOAD_MOVIELIST_FILL_COVERS);
+					{
+						database.fillCoverCache(CCMovieList.this);
+					}
+					Globals.TIMINGS.stop(Globals.TIMING_LOAD_MOVIELIST_FILL_COVERS);
 				}
-				Globals.TIMINGS.stop(Globals.TIMING_LOAD_MOVIELIST_FILL);
+				Globals.TIMINGS.stop(Globals.TIMING_LOAD_DATABASE);
 
 				fireOnAfterLoad();
 
@@ -441,7 +455,7 @@ public class CCMovieList {
 		fireOnChangeDatabaseElement(sa.getSeries());
 	}
 
-	public CCCoverCache getCoverCache() {
+	public ICoverCache getCoverCache() {
 		return database.getCoverCache();
 	}
 	
@@ -478,12 +492,7 @@ public class CCMovieList {
 	public void remove(final CCDatabaseElement el) {
 		if (!EventQueue.isDispatchThread()) {
 			try {
-				SwingUtilities.invokeAndWait(new Runnable() {
-					@Override
-					public void run() {
-						remove(el);
-					}
-				});
+				SwingUtilities.invokeAndWait(() -> remove(el));
 			} catch (InvocationTargetException | InterruptedException e) {
 				CCLog.addError(e);
 			}
@@ -505,8 +514,8 @@ public class CCMovieList {
 		list.remove(m);
 		database.removeFromMain(m.getLocalID());
 		
-		if (! m.getCoverName().isEmpty()) {
-			getCoverCache().deleteCover(m);
+		if (m.getCoverID() != -1) {
+			getCoverCache().deleteCover(m.getCoverID());
 		}
 	}
 
@@ -517,8 +526,8 @@ public class CCMovieList {
 		}
 		database.removeFromMain(s.getLocalID());
 		
-		if (! s.getCoverName().isEmpty()) {
-			getCoverCache().deleteCover(s);
+		if (s.getCoverID() != -1) {
+			getCoverCache().deleteCover(s.getCoverID());
 		}
 		
 	}

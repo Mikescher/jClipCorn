@@ -273,7 +273,7 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
 		if (Main.DEBUG) {
-			setTitle("<LID:" + dispSeries.getLocalID() + "><SID:" + dispSeries.getSeriesID() + "> " + dispSeries.getTitle() + " (" + dispSeries.getCoverName() + ")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+			setTitle("<LID:" + dispSeries.getLocalID() + "><SID:" + dispSeries.getSeriesID() + "> " + dispSeries.getTitle() + " (" + dispSeries.getCoverID() + ")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 		} else {
 			setTitle(dispSeries.getTitle());
 		}
@@ -605,7 +605,7 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 			return;
 
 		if (Main.DEBUG) {
-			lblStaffel.setText(String.format("<%d> %s (%d) (%s)", s.getSeasonID(), s.getTitle(), s.getYear(), s.getCoverName())); //$NON-NLS-1$
+			lblStaffel.setText(String.format("<%d> %s (%d) (%s)", s.getSeasonID(), s.getTitle(), s.getYear(), s.getCoverID())); //$NON-NLS-1$
 		} else {
 			lblStaffel.setText(String.format("%s (%d)", s.getTitle(), s.getYear())); //$NON-NLS-1$
 		}

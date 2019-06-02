@@ -27,10 +27,10 @@ import de.jClipCorn.util.helper.LookAndFeelManager;
 //
 
 public class Main {
-	public final static String TITLE = "jClipCorn"; //$NON-NLS-1$
-	public final static String VERSION = /*<gradle_version_marker>*/"1.10.6.3"/*</gradle_version_marker>*/;	//$NON-NLS-1$
-	public final static String DBVERSION = "12"; 	//$NON-NLS-1$
-	public final static String JXMLVER = "2"; 	//$NON-NLS-1$
+	public final static String TITLE     = "jClipCorn"; //$NON-NLS-1$
+	public final static String VERSION   = /*<gradle_version_marker>*/"1.10.6.3"/*</gradle_version_marker>*/; //$NON-NLS-1$
+	public final static String DBVERSION = "13";    //$NON-NLS-1$
+	public final static String JXMLVER   = "2";     //$NON-NLS-1$
 
 	private final static String PROPERTIES_PATH = "jClipcorn.properties"; //$NON-NLS-1$
 	
@@ -217,3 +217,10 @@ public class Main {
 //TODO covercache as table [coverid, size, width, height, lowrescache(16x10, or smth), checksum]
 
 //TODO evtl update dependencies ( gradlew dependencyUpdates )
+
+//TODO option recreate previews
+
+//TODO check
+//       - cover checksum/size/dimensions
+//       - coverid's exist in covertable
+//       - covertable-ids are references somewhere (& only once)

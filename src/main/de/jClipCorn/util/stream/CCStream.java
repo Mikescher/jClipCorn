@@ -153,6 +153,58 @@ public abstract class CCStream<TType> implements Iterator<TType>, Iterable<TType
 			return current;
 	}
 
+	public <TAttrType> TType maxValueOrDefault(Func1to1<TType, TAttrType> selector, Comparator<? super TAttrType> comp, TType defValue) {
+		TType current = defValue;
+		TAttrType currentVal = selector.invoke(defValue);
+		boolean first = true;
+
+		for (TType m : this) {
+			TAttrType mattr = selector.invoke(m);
+			if (first) {
+				current = m;
+			} else {
+				if (comp.compare(mattr, currentVal) > 0) {current = m; currentVal = mattr; }
+			}
+			first = false;
+		}
+
+		if (first)
+			return defValue;
+		else
+			return current;
+	}
+
+	public <TAttrType> TType minValueOrDefault(Func1to1<TType, TAttrType> selector, Comparator<? super TAttrType> comp, TType defValue) {
+		TType current = defValue;
+		TAttrType currentVal = selector.invoke(defValue);
+		boolean first = true;
+
+		for (TType m : this) {
+			TAttrType mattr = selector.invoke(m);
+			if (first) {
+				current = m;
+			} else {
+				if (comp.compare(mattr, currentVal) < 0) {current = m; currentVal = mattr; }
+			}
+			first = false;
+		}
+
+		if (first)
+			return defValue;
+		else
+			return current;
+	}
+
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public <TAttrType> TType autoMaxValueOrDefault(Func1to1<TType, TAttrType> selector, TType defValue) {
+		return maxValueOrDefault(selector, (a,b) -> ObjectUtils.compare((Comparable)a, (Comparable)b), defValue);
+	}
+
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public <TAttrType> TType autoMinValueOrDefault(Func1to1<TType, TAttrType> selector, TType defValue) {
+		return minValueOrDefault(selector, (a,b) -> ObjectUtils.compare((Comparable)a, (Comparable)b), defValue);
+	}
+
 	public <TAttrType> TAttrType findMostCommon(Func1to1<TType, TAttrType> selector, TAttrType defValue) {
 		Map<TAttrType, Integer> cache = new HashMap<>();
 		
@@ -354,5 +406,13 @@ public abstract class CCStream<TType> implements Iterator<TType>, Iterable<TType
 			if (other == null ? t == null : other.equals(t)) return true;
 		}
 		return false;
+	}
+
+	public CCStream<TType> take(int count) {
+		return new LimitStream<>(this, count);
+	}
+
+	public CCStream<TType> skip(int count) {
+		return new SkipStream<>(this, count);
 	}
 }

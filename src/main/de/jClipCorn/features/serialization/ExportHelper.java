@@ -17,6 +17,8 @@ import java.util.zip.ZipOutputStream;
 
 import javax.imageio.ImageIO;
 
+import de.jClipCorn.database.covertab.CCDefaultCoverCache;
+import de.jClipCorn.database.covertab.ICoverCache;
 import de.jClipCorn.features.serialization.xmlexport.DatabaseXMLExporter;
 import de.jClipCorn.features.serialization.xmlexport.ExportOptions;
 import de.jClipCorn.features.serialization.xmlimport.DatabaseXMLImporter;
@@ -37,8 +39,7 @@ import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.database.databaseElement.columnTypes.CCDBElementTyp;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGroup;
-import de.jClipCorn.database.util.covercache.CCCoverCache;
-import de.jClipCorn.database.util.covercache.CCFolderCoverCache;
+import de.jClipCorn.database.migration.CCOldMigrationCoverCache;
 import de.jClipCorn.gui.frames.addMovieFrame.AddMovieFrame;
 import de.jClipCorn.gui.frames.importElementsFrame.ImportElementsFrame;
 import de.jClipCorn.gui.mainFrame.MainFrame;
@@ -195,11 +196,11 @@ public class ExportHelper {
 			outputXML(zos, movielist.getGroupsAsXML(), DB_XML_FILENAME_GROUPS);
 			outputXML(zos, movielist.getDBInfoAsXML(), DB_XML_FILENAME_INFO);
 			
-			CCCoverCache cc = movielist.getCoverCache();
+			ICoverCache cc = movielist.getCoverCache();
 			
-			if (cc instanceof CCFolderCoverCache) {
+			if (cc instanceof CCDefaultCoverCache) {
 				// fast track for already serialized images (~ 6 times faster)
-				zipDir(((CCFolderCoverCache)cc).getCoverDirectory().getParentFile(), ((CCFolderCoverCache)cc).getCoverDirectory(), zos, false);
+				zipDir(((CCDefaultCoverCache)cc).getCoverDirectory().getParentFile(), ((CCDefaultCoverCache)cc).getCoverDirectory(), zos, false);
 			} else {
 				for (Tuple<String, Func0to1WithIOException<BufferedImage>> cover : cc.listCoversNonCached()) {
 					ZipEntry coverEntry = new ZipEntry(PathFormatter.combine("cover", cover.Item1)); //$NON-NLS-1$

@@ -1,4 +1,4 @@
-package de.jClipCorn.database.driver;
+package de.jClipCorn.database.migration;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -9,7 +9,9 @@ import javax.swing.JFrame;
 import de.jClipCorn.Main;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguage;
-import de.jClipCorn.database.util.Statements;
+import de.jClipCorn.database.driver.CCDatabase;
+import de.jClipCorn.database.driver.GenericDatabase;
+import de.jClipCorn.database.driver.Statements;
 import de.jClipCorn.features.backupManager.BackupManager;
 import de.jClipCorn.gui.mainFrame.MainFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
@@ -105,6 +107,12 @@ public class DatabaseMigration {
 				upgrade_11_12();
 				setDBVersion("12");
 				version = "12";
+			}
+
+			if (version.equals("12")) {
+				upgrade_12_13();
+				setDBVersion("13");
+				version = "13";
 			}
 						
 			if (! getDBVersion().equals(Main.DBVERSION)) {
@@ -221,6 +229,18 @@ public class DatabaseMigration {
 		}
 
 		db.executeSQLThrow("UPDATE ELEMENTS SET LANGUAGE=0 WHERE TYPE=1");
+	}
+
+	@SuppressWarnings("nls")
+	private void upgrade_12_13() throws SQLException {
+		CCLog.addInformation("[UPGRADE v12 -> v13] Change 'covername' column to 'coverid' in main table");
+		CCLog.addInformation("[UPGRADE v12 -> v13] Change 'covername' column to 'coverid' in season table");
+		CCLog.addInformation("[UPGRADE v12 -> v13] Add 'covers' table");
+		CCLog.addInformation("[UPGRADE v12 -> v13] Fill 'covers' table with data");
+		CCLog.addInformation("[UPGRADE v12 -> v13] Calculate cover previews");
+		CCLog.addInformation("[UPGRADE v12 -> v13] Calculate cover checksums");
+
+		//TODO
 	}
 
 	public void onAfterConnect(CCMovieList ml, CCDatabase db) {

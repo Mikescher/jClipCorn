@@ -1,4 +1,4 @@
-package de.jClipCorn.database.util.covercache;
+package de.jClipCorn.database.migration;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -31,7 +31,7 @@ import de.jClipCorn.util.exceptions.XMLFormatException;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.lambda.Func0to1WithIOException;
 
-public class CCFolderCoverCache extends CCCoverCache {
+public class CCOldMigrationCoverCache {
 	private final static String COVER_DIRECTORY_NAME = "cover"; //$NON-NLS-1$
 	private final static String COVER_CACHEFILE_NAME = "covercache.xml"; //$NON-NLS-1$
 	private final static String COVER_DIRECTORY = PathFormatter.appendAndPrependSeparator(COVER_DIRECTORY_NAME);
@@ -44,14 +44,13 @@ public class CCFolderCoverCache extends CCCoverCache {
 	
 	private Vector<Integer> usedCoverIDs;
 	
-	public CCFolderCoverCache(String dbPath) {
+	public CCOldMigrationCoverCache(String dbPath) {
 		cache = new CachedHashMap<>(CCProperties.getInstance().PROP_DATABASE_COVERCACHESIZE.getValue());
 		
 		coverPath = PathFormatter.combine(PathFormatter.getRealSelfDirectory(), dbPath, COVER_DIRECTORY);
 		cacheFilepath = PathFormatter.combine(PathFormatter.getRealSelfDirectory(), dbPath, COVER_CACHEFILE_NAME);
 	}
 
-	@Override
 	public void connect() {
 		tryCreatePath();
 
@@ -68,7 +67,6 @@ public class CCFolderCoverCache extends CCCoverCache {
 		}
 	}
 	
-	@Override
 	@SuppressWarnings("nls")
 	public Tuple<Integer, Integer> getDimensions(String name) {
 		if (metacache.containsChild(name)) {
@@ -80,7 +78,6 @@ public class CCFolderCoverCache extends CCCoverCache {
 		return Tuple.Create(bi.getWidth(), bi.getHeight());
 	}
 	
-	@Override
 	public BufferedImage getCover(String name) {
 		if ((name == null) || name.isEmpty()) {
 			return Resources.IMG_COVER_NOTFOUND.get();
@@ -112,7 +109,6 @@ public class CCFolderCoverCache extends CCCoverCache {
 		return res;
 	}
 
-	@Override
 	public boolean isCached(String coverName) {
 		return cache.containsKey(coverName);
 	}
@@ -169,13 +165,11 @@ public class CCFolderCoverCache extends CCCoverCache {
 		}
 	}
 
-	@Override
 	public boolean coverExists(String name) {
 		return new File(PathFormatter.combine(coverPath, name)).exists();
 	}
 
-	@Override
-	public void preloadCover(String name) { //TODO intelligent Precaching
+	public void preloadCover(String name) {
 		BufferedImage res = cache.get(name);
 
 		if (res == null) {
@@ -213,7 +207,6 @@ public class CCFolderCoverCache extends CCCoverCache {
 		Collections.sort(usedCoverIDs);
 	}
 	
-	@Override
 	public int getNewCoverID() {
 		int i = 0;
 		while(usedCoverIDs.size() > i && usedCoverIDs.get(i).equals(i)) {
@@ -224,7 +217,6 @@ public class CCFolderCoverCache extends CCCoverCache {
 		return i;
 	}
 
-	@Override
 	public String addCover(BufferedImage newCover) {
 		String id = StringUtils.leftPad(Integer.toString(getNewCoverID()), 5, '0');
 		
@@ -250,7 +242,6 @@ public class CCFolderCoverCache extends CCCoverCache {
 		}
 	}
 	
-	@Override
 	public void deleteCover(String covername) {
 		cache.remove(covername);
 		
@@ -274,7 +265,6 @@ public class CCFolderCoverCache extends CCCoverCache {
 		return new File(getCoverPath());
 	}
 
-	@Override
 	public void addCover(String name, InputStream stream) throws Exception {
 		byte[] buffer = new byte[2048];
 		
@@ -293,7 +283,6 @@ public class CCFolderCoverCache extends CCCoverCache {
 		}
 	}
 
-	@Override
 	public List<Tuple<String, Func0to1WithIOException<BufferedImage>>> listCoversNonCached() {
 		final String prefix = CCProperties.getInstance().PROP_COVER_PREFIX.getValue();
 		final String suffix = "." + CCProperties.getInstance().PROP_COVER_TYPE.getValue();  //$NON-NLS-1$
@@ -309,7 +298,6 @@ public class CCFolderCoverCache extends CCCoverCache {
 		return result;
 	}
 	
-	@Override
 	public void getBackupExclusions(List<String> excludedFolders, List<String> excludedFiles) {
 		excludedFolders.add(COVER_DIRECTORY_NAME);
 	}

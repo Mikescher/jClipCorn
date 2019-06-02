@@ -33,30 +33,42 @@ public class LogFrame extends JFrame implements CCLogChangedListener{
 	private static final long serialVersionUID = -8838227410250810646L;
 		
 	private JTabbedPane tpnlMainPanel;
+	
 	private JPanel tabErrors;
 	private JPanel tabWarnings;
 	private JPanel tabInformations;
 	private JPanel tabUndefinied;
+	private JPanel tabSQL;
+	
 	private JList<String> lsErrors;
-	private JTextArea memoErrors;
-	private JScrollPane spnErrors;
 	private JList<String> lsWarnings;
 	private JList<String> lsInformations;
 	private JList<String> lsUndefinied;
+	private JList<String> lsSQL;
+	
+	private JTextArea memoErrors;
 	private JTextArea memoWarnings;
-	private JScrollPane spnWarnings;
 	private JTextArea memoInformations;
 	private JTextArea memoUndefinied;
+	private JTextArea memoSQL;
+	
+	private JScrollPane spnErrors;
+	private JScrollPane spnWarnings;
 	private JScrollPane spnInformations;
 	private JScrollPane spnUndefinied;
+	private JScrollPane spnSQL;
+	
 	private JScrollPane spnErrorList;
 	private JScrollPane spnWarningsList;
 	private JScrollPane spnInformationsList;
 	private JScrollPane spnUndefiniedList;
+	private JScrollPane spnSQLList;
+	
 	private JButton btnMoreErr;
 	private JButton btnMoreUndef;
 	private JButton btnMoreInfo;
 	private JButton btnMoreWarn;
+	private JButton btnMoreSQL;
 
 	public LogFrame(Component owner) {
 		super();
@@ -227,6 +239,42 @@ public class LogFrame extends JFrame implements CCLogChangedListener{
 			if (!memoUndefinied.getText().isEmpty()) GenericTextDialog.showText(LogFrame.this, LocaleBundle.getString("CCLogFrame.this.title"), memoUndefinied.getText(), false); //$NON-NLS-1$
 		});
 		tabUndefinied.add(btnMoreUndef, "3, 3, right, fill"); //$NON-NLS-1$
+		
+		tabSQL = new JPanel();
+		tpnlMainPanel.addTab(LocaleBundle.getString("CCLog.SQL") + " (" + CCLog.getSQLCount() + ")", null, tabSQL, null); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		tabSQL.setLayout(new FormLayout(new ColumnSpec[] {
+				ColumnSpec.decode("550px"), //$NON-NLS-1$
+				FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
+				ColumnSpec.decode("default:grow"),}, //$NON-NLS-1$
+			new RowSpec[] {
+				RowSpec.decode("default:grow"), //$NON-NLS-1$
+				FormSpecs.RELATED_GAP_ROWSPEC,
+				FormSpecs.DEFAULT_ROWSPEC,}));
+
+		spnSQLList = new JScrollPane();
+		tabSQL.add(spnSQLList, "1, 1, fill, fill"); //$NON-NLS-1$
+		
+		lsSQL = new JList<>();
+		spnSQLList.setViewportView(lsSQL);
+		lsSQL.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		lsSQL.setVisibleRowCount(16);
+		
+		spnSQL = new JScrollPane();
+		spnSQL.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		tabSQL.add(spnSQL, "3, 1, fill, fill"); //$NON-NLS-1$
+		
+		memoSQL = new JTextArea();
+		memoSQL.setFont(new Font("Lucida Console", Font.PLAIN, 13)); //$NON-NLS-1$
+		memoSQL.setBackground(Color.BLACK);
+		memoSQL.setForeground(Color.GREEN);
+		memoSQL.setEditable(false);
+		spnSQL.setViewportView(memoSQL);
+		
+		btnMoreSQL = new JButton("..."); //$NON-NLS-1$
+		btnMoreSQL.addActionListener(e -> {
+			if (!memoSQL.getText().isEmpty()) GenericTextDialog.showText(LogFrame.this, LocaleBundle.getString("CCLogFrame.this.title"), memoSQL.getText(), false); //$NON-NLS-1$
+		});
+		tabSQL.add(btnMoreSQL, "3, 3, right, fill"); //$NON-NLS-1$
 	}
 	
 	private void setModels() {
@@ -234,13 +282,15 @@ public class LogFrame extends JFrame implements CCLogChangedListener{
 		lsWarnings.setModel(new LogListModel(lsWarnings, CCLogType.LOG_ELEM_WARNING, memoWarnings));
 		lsInformations.setModel(new LogListModel(lsInformations, CCLogType.LOG_ELEM_INFORMATION, memoInformations));
 		lsUndefinied.setModel(new LogListModel(lsUndefinied, CCLogType.LOG_ELEM_UNDEFINED, memoUndefinied));
+		lsSQL.setModel(new LogSQLListModel(lsSQL, memoSQL));
 	}
 	
 	@Override
 	public void onChanged() {
-		tpnlMainPanel.setTitleAt(0, LocaleBundle.getString("CCLog.Error") + " (" + CCLog.getCount(CCLogType.LOG_ELEM_ERROR) + ")");   			//$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
-		tpnlMainPanel.setTitleAt(1, LocaleBundle.getString("CCLog.Warnings") + " (" + CCLog.getCount(CCLogType.LOG_ELEM_WARNING) + ")");   		//$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
-		tpnlMainPanel.setTitleAt(2, LocaleBundle.getString("CCLog.Informations") + " (" + CCLog.getCount(CCLogType.LOG_ELEM_INFORMATION) + ")");	//$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
-		tpnlMainPanel.setTitleAt(3, LocaleBundle.getString("CCLog.Undefinieds") + " (" + CCLog.getCount(CCLogType.LOG_ELEM_UNDEFINED) + ")");   	//$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
+		tpnlMainPanel.setTitleAt(0, LocaleBundle.getString("CCLog.Error") + " (" + CCLog.getCount(CCLogType.LOG_ELEM_ERROR) + ")");                //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
+		tpnlMainPanel.setTitleAt(1, LocaleBundle.getString("CCLog.Warnings") + " (" + CCLog.getCount(CCLogType.LOG_ELEM_WARNING) + ")");           //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
+		tpnlMainPanel.setTitleAt(2, LocaleBundle.getString("CCLog.Informations") + " (" + CCLog.getCount(CCLogType.LOG_ELEM_INFORMATION) + ")");   //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
+		tpnlMainPanel.setTitleAt(3, LocaleBundle.getString("CCLog.Undefinieds") + " (" + CCLog.getCount(CCLogType.LOG_ELEM_UNDEFINED) + ")");      //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
+		tpnlMainPanel.setTitleAt(4, LocaleBundle.getString("CCLog.SQL") + " (" + CCLog.getSQLCount() + ")");                                       //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
 	}
 }

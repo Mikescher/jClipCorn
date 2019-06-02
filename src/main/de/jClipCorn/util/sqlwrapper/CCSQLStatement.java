@@ -1,14 +1,17 @@
 package de.jClipCorn.util.sqlwrapper;
 
 import de.jClipCorn.database.driver.CCDatabase;
+import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.datatypes.Tuple3;
+import de.jClipCorn.util.datetime.CCDateTime;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 
+@SuppressWarnings("nls")
 public class CCSQLStatement {
 	public final String Source;
 	public final PreparedStatement Statement;
@@ -44,19 +47,25 @@ public class CCSQLStatement {
 		}
 	}
 
-	public int executeUpdate() throws SQLException {
-		return Statement.executeUpdate();
-	}
-
-	public CCSQLResultSet executeQuery(CCDatabase db) throws SQLException {
-		return new CCSQLResultSet(db, Statement.executeQuery(), this);
-	}
-
 	public void clearParameters() throws SQLException {
 		Statement.clearParameters();
 	}
 
+	public int executeUpdate() throws SQLException {
+		CCLog.addSQL("ExecuteUpdate", StatementType, Source); //$NON-NLS-1$
+
+		return Statement.executeUpdate();
+	}
+
+	public CCSQLResultSet executeQuery(CCDatabase db) throws SQLException {
+		CCLog.addSQL("ExecuteQuery", StatementType, Source); //$NON-NLS-1$
+
+		return new CCSQLResultSet(db, Statement.executeQuery(), this);
+	}
+
 	public boolean execute() throws SQLException {
+		CCLog.addSQL("Execute", StatementType, Source); //$NON-NLS-1$
+
 		return Statement.execute();
 	}
 
@@ -105,6 +114,24 @@ public class CCSQLStatement {
 		Statement.setShort(idx.Item2, value);
 	}
 
+	public void setBlb(CCSQLColDef col, byte[] value) throws SQLWrapperException, SQLException {
+		Tuple<CCSQLType, Integer> idx = MapPrepFields.get(col.Name);
+
+		if (idx == null) throw new SQLWrapperException("Field ["+col+"] not found in CCSQLStatement");
+		if (!idx.Item1.isCallableAsBlob()) throw new SQLWrapperException("Field ["+col+"] has wrong type");
+
+		Statement.setBytes(idx.Item2, value);
+	}
+
+	public void setCDT(CCSQLColDef col, CCDateTime value) throws SQLWrapperException, SQLException {
+		Tuple<CCSQLType, Integer> idx = MapPrepFields.get(col.Name);
+
+		if (idx == null) throw new SQLWrapperException("Field ["+col+"] not found in CCSQLStatement");
+		if (!idx.Item1.isCallableAsString()) throw new SQLWrapperException("Field ["+col+"] has wrong type");
+
+		Statement.setString(idx.Item2, value.getSQLStringRepresentation());
+	}
+
 	public void tryClose() throws SQLException {
 		if (Statement == null) return;
 		if (Statement.isClosed()) return;
@@ -118,10 +145,13 @@ public class CCSQLStatement {
 
 	private static int getIntFromSet(CCSQLResultSet rs) throws SQLException {
 		rs.next();
-		return rs.getIntDirect(1);
+		int r = rs.getIntDirect(1);
+		rs.close();
+		return r;
 	}
 
 	public Tuple<CCSQLType, Integer> getSelectFieldIndex(CCSQLColDef col) {
 		return MapSelectFields.get(col.Name);
 	}
+
 }

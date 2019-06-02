@@ -1,5 +1,7 @@
 package de.jClipCorn.features.log;
 
+import de.jClipCorn.util.sqlwrapper.StatementType;
+
 public class CCLog {
 
 	public static void initUnitTestMode() {
@@ -88,6 +90,10 @@ public class CCLog {
 		CCLogInternal.addDebug(msg);
 	}
 
+	public static void addSQL(String method, StatementType stype, String sql) {
+		CCLogInternal.addSQL(method, stype, sql);
+	}
+
 	public static void addChangeListener (CCLogChangedListener lst) {
 		CCLogInternal.addChangeListener(lst);
 	}
@@ -136,6 +142,10 @@ public class CCLog {
 		return CCLogInternal.getCount(lt);
 	}
 
+	public static int getSQLCount() {
+		return CCLogInternal.getSQLCount();
+	}
+
 	public static void save() {
 		CCLogInternal.save();
 	}
@@ -154,5 +164,9 @@ public class CCLog {
 
 	public static boolean hasUnwatched(CCLogType type) {
 		return CCLogInternal.hasUnwatched(type);
+	}
+
+	public static CCSQLLogElement getSQLElement(int idx) {
+		return CCLogInternal.getSQLElement(idx);
 	}
 }

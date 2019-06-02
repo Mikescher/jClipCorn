@@ -5,6 +5,10 @@ import java.io.File;
 import java.util.*;
 
 import de.jClipCorn.database.databaseElement.columnTypes.*;
+import de.jClipCorn.database.covertab.CCDefaultCoverCache;
+import de.jClipCorn.database.covertab.CoverCacheElement;
+import de.jClipCorn.database.covertab.ICoverCache;
+
 import org.apache.commons.lang.StringUtils;
 
 import de.jClipCorn.database.CCMovieList;
@@ -13,8 +17,6 @@ import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.database.databaseElement.CCSeries;
-import de.jClipCorn.database.util.covercache.CCCoverCache;
-import de.jClipCorn.database.util.covercache.CCFolderCoverCache;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.datetime.CCDate;
@@ -95,7 +97,7 @@ public class DatabaseValidator {
 		// cover not set
 		// ###############################################
 
-		if (series.getCoverName().isEmpty()) {
+		if (series.getCoverID() == -1) {
 			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_NOCOVERSET, series));
 		}
 
@@ -103,7 +105,7 @@ public class DatabaseValidator {
 		// cover not found
 		// ###############################################
 
-		if (! movielist.getCoverCache().coverExists(series.getCoverName())) {
+		if (! movielist.getCoverCache().coverExists(series.getCoverID())) {
 			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_COVER_NOT_FOUND, series));
 		}
 		
@@ -238,7 +240,7 @@ public class DatabaseValidator {
 		// cover not set
 		// ###############################################
 
-		if (mov.getCoverName().isEmpty()) {
+		if (mov.getCoverID() == -1) {
 			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_NOCOVERSET, mov));
 		}
 
@@ -246,7 +248,7 @@ public class DatabaseValidator {
 		// cover not found
 		// ###############################################
 
-		if (! movielist.getCoverCache().coverExists(mov.getCoverName())) {
+		if (! movielist.getCoverCache().coverExists(mov.getCoverID())) {
 			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_COVER_NOT_FOUND, mov));
 		}
 
@@ -515,7 +517,7 @@ public class DatabaseValidator {
 		// cover not found
 		// ###############################################
 
-		if (! movielist.getCoverCache().coverExists(season.getCoverName())) {
+		if (! movielist.getCoverCache().coverExists(season.getCoverID())) {
 			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_COVER_NOT_FOUND, season));
 		}
 		
@@ -732,11 +734,11 @@ public class DatabaseValidator {
 		List<DatabaseCoverElement> cvrList = new ArrayList<>();
 		
 		for (CCDatabaseElement el : movielist.iteratorElements()) {
-			cvrList.add(new DatabaseCoverElement(el.getCoverName(), el));
+			cvrList.add(new DatabaseCoverElement(el.getCoverID(), el));
 			
 			if (el.isSeries()) {
 				for (int j = 0; j < ((CCSeries)el).getSeasonCount(); j++) {
-					cvrList.add(new DatabaseCoverElement(((CCSeries)el).getSeasonByArrayIndex(j).getCoverName(), ((CCSeries)el).getSeasonByArrayIndex(j)));
+					cvrList.add(new DatabaseCoverElement(((CCSeries)el).getSeasonByArrayIndex(j).getCoverID(), ((CCSeries)el).getSeasonByArrayIndex(j)));
 				}
 			}
 			
@@ -757,19 +759,21 @@ public class DatabaseValidator {
 		// Too much Cover in Folder
 		// ###############################################
 
-		CCCoverCache cc = movielist.getCoverCache();
+		ICoverCache cc = movielist.getCoverCache();
 		
 		List<Tuple<String, Func0to1WithIOException<BufferedImage>>> files = cc.listCoversNonCached();
 
 		for (int i = 0; i < files.size(); i++) {
 			String cvrname = files.get(i).Item1;
 			boolean found = false;
-			for (int j = 0; j < cvrList.size(); j++) {
-				found |= cvrList.get(j).getCover().equalsIgnoreCase(cvrname); // All hayl the Shortcut evaluation
+			for (int j = 0; j < cvrList.size(); j++)
+			{
+				CoverCacheElement cce = cc.getInfo(cvrList.get(j).getCoverID());
+				found |= cce.Filename.equalsIgnoreCase(cvrname);
 			}
 			if (! found) {
-				if (cc instanceof CCFolderCoverCache) {
-					e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_NONLINKED_COVERFILE, new File(PathFormatter.combine(((CCFolderCoverCache)cc).getCoverPath(), cvrname))));
+				if (cc instanceof CCDefaultCoverCache) {
+					e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_NONLINKED_COVERFILE, new File(PathFormatter.combine(((CCDefaultCoverCache)cc).getCoverPath(), cvrname))));
 				} else {
 					e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_NONLINKED_COVERFILE, cvrname));
 				}

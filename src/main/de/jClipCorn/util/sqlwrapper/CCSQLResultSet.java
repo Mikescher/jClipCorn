@@ -1,14 +1,16 @@
 package de.jClipCorn.util.sqlwrapper;
 
 import de.jClipCorn.database.driver.CCDatabase;
-import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.datetime.CCDate;
+import de.jClipCorn.util.datetime.CCDateTime;
+import de.jClipCorn.util.exceptions.CCFormatException;
 import de.jClipCorn.util.exceptions.DateFormatException;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+@SuppressWarnings("nls")
 public class CCSQLResultSet {
 	private final ResultSet _data;
 	private final CCSQLStatement _statement;
@@ -88,6 +90,24 @@ public class CCSQLResultSet {
 		} else {
 			return CCDate.createFromSQL(_data.getString(idx.Item2));
 		}
+	}
+
+	public byte[] getBlob(CCSQLColDef col) throws SQLException, SQLWrapperException {
+		Tuple<CCSQLType, Integer> idx = _statement.getSelectFieldIndex(col);
+
+		if (idx == null) throw new SQLWrapperException("Field ["+col+"] not found in CCSQLStatement");
+		if (!idx.Item1.isCallableAsBlob()) throw new SQLWrapperException("Field ["+col+"] has wrong type");
+
+		return _data.getBytes(idx.Item2);
+	}
+
+	public CCDateTime getDateTime(CCSQLColDef col) throws SQLWrapperException, SQLException, CCFormatException {
+		Tuple<CCSQLType, Integer> idx = _statement.getSelectFieldIndex(col);
+
+		if (idx == null) throw new SQLWrapperException("Field ["+col+"] not found in CCSQLStatement");
+		if (!idx.Item1.isCallableAsString()) throw new SQLWrapperException("Field ["+col+"] has wrong type");
+
+		return CCDateTime.createFromSQL(_data.getString(idx.Item2));
 	}
 
 	public void close() throws SQLException {

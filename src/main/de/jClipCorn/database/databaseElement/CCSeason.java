@@ -32,7 +32,7 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 	private List<CCEpisode> episodes = new Vector<>();
 	private String title;
 	private int year;
-	private String covername;
+	private int coverid;
 	
 	private boolean isUpdating = false;
 	
@@ -45,7 +45,7 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 		episodes.clear();
 		title = ""; //$NON-NLS-1$
 		year = 0;
-		covername = ""; //$NON-NLS-1$
+		coverid = -1;
 		
 		if (updateDB) {
 			updateDB();
@@ -94,22 +94,22 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 		updateDB();
 	}
 
-	public void setCover(String cname) {
-		this.covername = cname;
+	public void setCover(int cid) {
+		this.coverid = cid;
 		
 		updateDB();
 	}
 	
-	public void setCover(BufferedImage name) {
-		if (! covername.isEmpty() && name.equals(getCover())) {
+	public void setCover(BufferedImage cvr) {
+		if (coverid != -1 && cvr.equals(getCover())) {
 			return;
 		}
 		
-		if (! covername.isEmpty()) {
-			getSeries().getMovieList().getCoverCache().deleteCover(this.covername);
+		if (coverid != -1) {
+			getSeries().getMovieList().getCoverCache().deleteCover(this.coverid);
 		}
 		
-		this.covername = getSeries().getMovieList().getCoverCache().addCover(name);
+		this.coverid = getSeries().getMovieList().getCoverCache().addCover(cvr);
 		
 		updateDB();
 	}
@@ -129,18 +129,18 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 	}
 
 	@Override
-	public String getCoverName() {
-		return covername;
+	public int getCoverID() {
+		return coverid;
 	}
 	
 	@Override
 	public BufferedImage getCover() {
-		return owner.getMovieList().getCoverCache().getCover(covername);
+		return owner.getMovieList().getCoverCache().getCover(coverid);
 	}
 
 	@Override
 	public Tuple<Integer, Integer> getCoverDimensions() {
-		return owner.getMovieList().getCoverCache().getDimensions(covername);
+		return owner.getMovieList().getCoverCache().getDimensions(coverid);
 	}
 	
 	public boolean isViewed() { // All parts viewed

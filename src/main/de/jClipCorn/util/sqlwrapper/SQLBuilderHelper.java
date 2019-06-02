@@ -3,8 +3,10 @@ package de.jClipCorn.util.sqlwrapper;
 import java.util.HashSet;
 import java.util.Set;
 
+@SuppressWarnings("nls")
 public class SQLBuilderHelper {
 	private static final Set<String> KEYWORD_MAP;
+
 	static {
 		KEYWORD_MAP = new HashSet<>();
 

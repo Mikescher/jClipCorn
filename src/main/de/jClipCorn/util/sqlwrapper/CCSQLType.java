@@ -12,103 +12,57 @@ public enum CCSQLType {
 
 	public boolean isCallableAsString() {
 		switch (this) {
-			case BIT:
-			case BIGINT:
-			case INTEGER:
-			case BLOB:
-			case TINYINT:
-			case SMALLINT:
-				return false;
-			case VARCHAR:
-			case DATE:
-				return true;
+			case BIT: case BIGINT: case INTEGER: case BLOB: case TINYINT: case SMALLINT: return false;
+			case VARCHAR: case DATE: return true;
 		}
-
 		return false;
 	}
 
 	public boolean isCallableAsInteger() {
 		switch (this) {
-			case BIT:
-			case BIGINT:
-			case INTEGER:
-			case TINYINT:
-			case SMALLINT:
-				return true;
-			case BLOB:
-			case VARCHAR:
-			case DATE:
-				return false;
+			case BIT: case BIGINT: case INTEGER: case TINYINT: case SMALLINT: return true;
+			case BLOB: case VARCHAR: case DATE: return false;
 		}
-
 		return false;
 	}
 
 	public boolean isCallableAsBoolean() {
 		switch (this) {
-			case BIT:
-				return true;
-			case BIGINT:
-			case INTEGER:
-			case TINYINT:
-			case SMALLINT:
-			case BLOB:
-			case VARCHAR:
-			case DATE:
-				return false;
+			case BIT: return true;
+			case BIGINT: case INTEGER: case TINYINT: case SMALLINT: case BLOB: case VARCHAR: case DATE: return false;
 		}
-
 		return false;
 	}
 
 	public boolean isCallableAsShort() {
 		switch (this) {
-			case BIT:
-			case TINYINT:
-			case SMALLINT:
-				return true;
-			case BIGINT:
-			case INTEGER:
-			case BLOB:
-			case VARCHAR:
-			case DATE:
-				return false;
+			case BIT: case TINYINT: case SMALLINT: return true;
+			case BIGINT: case INTEGER: case BLOB: case VARCHAR: case DATE: return false;
 		}
-
 		return false;
 	}
 
 	public boolean isCallableAsLong() {
 		switch (this) {
-			case BIT:
-			case BIGINT:
-			case INTEGER:
-			case TINYINT:
-			case SMALLINT:
-				return true;
-			case BLOB:
-			case VARCHAR:
-			case DATE:
-				return false;
+			case BIT: case BIGINT: case INTEGER: case TINYINT: case SMALLINT: return true;
+			case BLOB: case VARCHAR: case DATE: return false;
 		}
-
 		return false;
 	}
 
 	public boolean isCallableAsDate() {
 		switch (this) {
-			case BIT:
-			case BIGINT:
-			case INTEGER:
-			case TINYINT:
-			case SMALLINT:
-			case BLOB:
-			case VARCHAR:
-				return false;
-			case DATE:
-				return true;
+			case BIT: case BIGINT: case INTEGER: case TINYINT: case SMALLINT: case BLOB: case VARCHAR: return false;
+			case DATE: return true;
 		}
+		return false;
+	}
 
+	public boolean isCallableAsBlob() {
+		switch (this) {
+			case BIT: case BIGINT: case INTEGER: case TINYINT: case SMALLINT: case DATE: case VARCHAR: return false;
+			case BLOB: return true;
+		}
 		return false;
 	}
 }

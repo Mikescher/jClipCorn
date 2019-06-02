@@ -539,7 +539,6 @@ public class CompareDatabaseFrame extends JFrame {
 		}
 	}
 
-	@SuppressWarnings("nls")
 	private void generateCompareFile(String path) {
 
 		Document xml = DatabaseXMLExporter.export(

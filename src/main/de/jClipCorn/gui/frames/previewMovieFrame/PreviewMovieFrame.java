@@ -318,7 +318,7 @@ public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener 
 
 	private void updateFields() {
 		if (Main.DEBUG) {
-			setTitle("<" + movie.getLocalID() + "> " + movie.getCompleteTitle() + " (" + movie.getCoverName() + ")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+			setTitle("<" + movie.getLocalID() + "> " + movie.getCompleteTitle() + " (" + movie.getCoverID() + ")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 		} else {
 			setTitle(movie.getCompleteTitle());
 		}

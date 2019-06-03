@@ -301,7 +301,7 @@ public class CCActionElement {
 			childs.get(i).createProperty(props);
 		}
 		
-		CCLog.addDebug(String.format("%d Keystrokeproperties in ActionTree intialized", childs.size())); //$NON-NLS-1$
+		CCLog.addDebug(String.format("%d Keystroke properties in ActionTree intialized", childs.size())); //$NON-NLS-1$
 	}
 	
 	public String getRootToolbarConfig() {

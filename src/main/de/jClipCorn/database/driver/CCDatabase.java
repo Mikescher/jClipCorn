@@ -82,7 +82,7 @@ public class CCDatabase {
 			db = null;
 		}
 		
-		upgrader = new DatabaseMigration(db);
+		upgrader = new DatabaseMigration(db, databasePath);
 	}
 	
 	public static CCDatabase create(String dbPath) {
@@ -155,6 +155,8 @@ public class CCDatabase {
 		boolean res = db.createNewDatabasefromResourceXML('/' + XML_NAME, databasePath);
 		if (res) {
 			Statements.intialize(this);
+
+			coverCache.init();
 
 			writeNewInformationToDB(INFOKEY_DBVERSION, Main.DBVERSION);
 			writeNewInformationToDB(INFOKEY_DATE, CCDate.getCurrentDate().toStringSQL());
@@ -837,7 +839,7 @@ public class CCDatabase {
 		}
 	}
 
-	public void fillCoverCache(CCMovieList ml) {
+	public void fillCoverCache() {
 		try
 		{
 			if (CCProperties.getInstance().PROP_DATABASE_LOAD_ALL_COVERDATA.getValue())
@@ -876,13 +878,37 @@ public class CCDatabase {
 					int hh        = rs.getInt(COL_CVRS_HEIGHT);
 					long fs       = rs.getLong(COL_CVRS_FILESIZE);
 					int pt        = rs.getInt(COL_CVRS_PREVIEWTYPE);
+					CCDateTime ts = rs.getDateTime(COL_CVRS_CREATED);
+					String cs     = rs.getString(COL_CVRS_HASH_FILE);
 
-					coverCache.addInternal(new CoverCacheElement(id, fn, ww, hh, fs, pt));
+					coverCache.addInternal(new CoverCacheElement(id, fn, ww, hh, cs, fs, pt, ts));
 				}
 				rs.close();
 			}
 		} catch (SQLException | SQLWrapperException | CCFormatException e) {
 			CCLog.addError(e);
+		}
+	}
+
+	public byte[] getPreviewForCover(CoverCacheElement cce) {
+		try
+		{
+			CCSQLStatement stmt = selectCoversSingleStatement;
+			stmt.clearParameters();
+
+			stmt.setInt(COL_CVRS_ID, cce.ID);
+
+			CCSQLResultSet rs = stmt.executeQuery(this);
+
+			rs.next();
+			byte[] result = rs.getBlob(COL_CVRS_PREVIEW);
+
+			rs.close();
+
+			return result;
+		} catch (SQLException | SQLWrapperException e) {
+			CCLog.addError(e);
+			return null;
 		}
 	}
 
@@ -1153,7 +1179,7 @@ public class CCDatabase {
 			stmt.setInt(COL_CVRS_HEIGHT,      cce.Height);
 			stmt.setStr(COL_CVRS_HASH_FILE,   cce.Checksum);
 			stmt.setLng(COL_CVRS_FILESIZE,    cce.Filesize);
-			stmt.setBlb(COL_CVRS_PREVIEW,     cce.Preview);
+			stmt.setBlb(COL_CVRS_PREVIEW,     cce.getPreviewOrNull());
 			stmt.setInt(COL_CVRS_PREVIEWTYPE, cce.PreviewType.asInt());
 			stmt.setCDT(COL_CVRS_CREATED,     cce.Timestamp);
 

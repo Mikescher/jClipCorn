@@ -87,7 +87,7 @@ public class Statements {
 	public final static CCSQLColDef COL_CVRS_FILESIZE         = new CCSQLColDef("FILESIZE",       CCSQLType.BIGINT);     //$NON-NLS-1$
 	public final static CCSQLColDef COL_CVRS_PREVIEWTYPE      = new CCSQLColDef("PREVIEW_TYPE",   CCSQLType.INTEGER);    //$NON-NLS-1$
 	public final static CCSQLColDef COL_CVRS_PREVIEW          = new CCSQLColDef("PREVIEW",        CCSQLType.BLOB);       //$NON-NLS-1$
-	public final static CCSQLColDef COL_CVRS_CREATED          = new CCSQLColDef("CREATED",        CCSQLType.BIGINT);     //$NON-NLS-1$
+	public final static CCSQLColDef COL_CVRS_CREATED          = new CCSQLColDef("CREATED",        CCSQLType.VARCHAR);    //$NON-NLS-1$
 
 	//--------------------------------------------------------------------------------------------------
 
@@ -140,6 +140,8 @@ public class Statements {
 
 	public static void intialize(CCDatabase d) {
 		try {
+			statements = new ArrayList<>();
+
 			addEmptyMainTabStatement = SQLBuilder.createInsert(TAB_MAIN)
 					.addPreparedFields(COL_MAIN_LOCALID, COL_MAIN_NAME, COL_MAIN_VIEWED, COL_MAIN_VIEWEDHISTORY, COL_MAIN_ZYKLUS, COL_MAIN_ZYKLUSNUMBER)
 					.addPreparedFields(COL_MAIN_QUALITY, COL_MAIN_LANGUAGE, COL_MAIN_GENRE, COL_MAIN_LENGTH, COL_MAIN_ADDDATE, COL_MAIN_ONLINESCORE)
@@ -291,26 +293,25 @@ public class Statements {
 					.build(d, statements);
 
 			selectCoversFastStatement = SQLBuilder.createSelect(TAB_COVERS)
-					.addSelectFields(COL_CVRS_ID, COL_CVRS_FILENAME, COL_CVRS_WIDTH, COL_CVRS_HEIGHT, COL_CVRS_FILESIZE, COL_CVRS_PREVIEWTYPE)
+					.addSelectFields(COL_CVRS_ID, COL_CVRS_FILENAME, COL_CVRS_WIDTH, COL_CVRS_HEIGHT, COL_CVRS_FILESIZE)
+					.addSelectFields(COL_CVRS_HASH_FILE, COL_CVRS_CREATED, COL_CVRS_PREVIEWTYPE)
 					.build(d, statements);
 
 			selectCoversSingleStatement = SQLBuilder.createSelect(TAB_COVERS)
-					.addSelectFields(COL_CVRS_ID, COL_CVRS_FILENAME, COL_CVRS_WIDTH, COL_CVRS_HEIGHT, COL_CVRS_HASH_FILE)
-					.addSelectFields(COL_CVRS_FILESIZE, COL_CVRS_PREVIEW, COL_CVRS_PREVIEWTYPE, COL_CVRS_CREATED)
+					.addSelectFields(COL_CVRS_PREVIEWTYPE)
 					.addPreparedWhereCondition(COL_CVRS_ID)
 					.build(d, statements);
 
 			insertCoversStatement = SQLBuilder.createInsert(TAB_COVERS)
-					.addSelectFields(COL_CVRS_ID, COL_CVRS_FILENAME, COL_CVRS_WIDTH, COL_CVRS_HEIGHT, COL_CVRS_HASH_FILE)
-					.addSelectFields(COL_CVRS_FILESIZE, COL_CVRS_PREVIEW, COL_CVRS_PREVIEWTYPE, COL_CVRS_CREATED)
+					.addPreparedFields(COL_CVRS_ID, COL_CVRS_FILENAME, COL_CVRS_WIDTH, COL_CVRS_HEIGHT, COL_CVRS_HASH_FILE)
+					.addPreparedFields(COL_CVRS_FILESIZE, COL_CVRS_PREVIEW, COL_CVRS_PREVIEWTYPE, COL_CVRS_CREATED)
 					.build(d, statements);
 
 			removeCoversStatement = SQLBuilder.createDelete(TAB_COVERS)
 					.addPreparedWhereCondition(COL_CVRS_ID)
 					.build(d, statements);
 
-
-			CCLog.addDebug(String.format("%d SQL Statements prepared", statements.size())); //$NON-NLS-1$
+			if (!CCLog.isUnitTest()) CCLog.addDebug(String.format("%d SQL Statements prepared", statements.size())); //$NON-NLS-1$
 
 		} catch (SQLException | SQLWrapperException e) {
 			CCLog.addFatalError(LocaleBundle.getString("LogMessage.CouldNotCreatePreparedStatement"), e);

@@ -8,13 +8,16 @@ import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.exceptions.CCFormatException;
 import de.jClipCorn.util.helper.ByteUtilies;
 import de.jClipCorn.util.helper.ImageUtilities;
+import de.jClipCorn.util.lambda.Func1to1;
 import de.jClipCorn.util.xml.CCXMLElement;
 import de.jClipCorn.util.xml.CCXMLException;
+
+import java.awt.image.BufferedImage;
 
 @SuppressWarnings("nls")
 public class DatabaseXMLImportImpl_V2 implements IDatabaseXMLImporterImpl
 {
-	public void importDatabaseElement(CCDatabaseElement o, CCXMLElement e, ImportState s) throws CCFormatException, CCXMLException
+	public void importDatabaseElement(CCDatabaseElement o, CCXMLElement e, Func1to1<String, BufferedImage> imgf, ImportState s) throws CCFormatException, CCXMLException
 	{
 		e.execIfAttrExists("title", o::setTitle);
 		e.execIfAttrExists("genres", v -> o.setGenres(CCGenreList.deserialize(v)));
@@ -27,11 +30,15 @@ public class DatabaseXMLImportImpl_V2 implements IDatabaseXMLImporterImpl
 
 		if (s.ResetScore) o.setScore(CCUserScore.RATING_NO);
 
-		e.execIfAttrExists("covername", o::setCover);
-
 		if (!s.IgnoreCoverData && e.hasAttribute("coverdata")) {
-			o.setCover(""); //Damit er nicht probiert was zu löschen
+			o.setCover(-1); //Damit er nicht probiert was zu löschen
 			o.setCover(ImageUtilities.byteArrayToImage(ByteUtilies.hexStringToByteArray(e.getAttributeValueOrThrow("coverdata"))));
+		} else if (e.hasAttribute("covername")) {
+			BufferedImage img = imgf.invoke(e.getAttributeValueOrThrow("covername"));
+			if (img != null) {
+				o.setCover(-1); //Damit er nicht probiert was zu löschen
+				o.setCover(img);
+			}
 		}
 
 		e.execIfAttrExists("groups", o::setGroups);
@@ -39,11 +46,11 @@ public class DatabaseXMLImportImpl_V2 implements IDatabaseXMLImporterImpl
 	}
 
 	@Override
-	public void importMovie(CCMovie o, CCXMLElement e, ImportState s) throws CCFormatException, CCXMLException
+	public void importMovie(CCMovie o, CCXMLElement e, Func1to1<String, BufferedImage> imgf, ImportState s) throws CCFormatException, CCXMLException
 	{
 		o.beginUpdating();
 		{
-			importDatabaseElement(o, e, s);
+			importDatabaseElement(o, e, imgf, s);
 
 			e.execIfAttrExists("adddate", v -> o.setAddDate(CCDate.deserializeSQL(v)));
 
@@ -73,44 +80,49 @@ public class DatabaseXMLImportImpl_V2 implements IDatabaseXMLImporterImpl
 	}
 
 	@Override
-	public void importSeries(CCSeries o, CCXMLElement e, ImportState s) throws CCFormatException, CCXMLException
+	public void importSeries(CCSeries o, CCXMLElement e, Func1to1<String, BufferedImage> imgf, ImportState s) throws CCFormatException, CCXMLException
 	{
 		o.beginUpdating();
 		{
-			importDatabaseElement(o, e, s);
+			importDatabaseElement(o, e, imgf, s);
 
 			for (CCXMLElement xchild : e.getAllChildren("season"))
 			{
-				importSeason(o.createNewEmptySeason(), xchild, s);
+				importSeason(o.createNewEmptySeason(), xchild, imgf, s);
 			}
 		}
 		o.endUpdating();
 	}
 
 	@Override
-	public void importSeason(CCSeason o, CCXMLElement e, ImportState s) throws CCFormatException, CCXMLException
+	public void importSeason(CCSeason o, CCXMLElement e, Func1to1<String, BufferedImage> imgf, ImportState s) throws CCFormatException, CCXMLException
 	{
 		o.beginUpdating();
 		{
 			e.execIfAttrExists("title", o::setTitle);
 			e.execIfIntAttrExists("year", o::setYear);
-			e.execIfAttrExists("covername", o::setCover);
 
 			for (CCXMLElement xchild : e.getAllChildren("episode"))
 			{
-				importEpisode(o.createNewEmptyEpisode(), xchild, s);
+				importEpisode(o.createNewEmptyEpisode(), xchild, imgf, s);
 			}
 
 			if (!s.IgnoreCoverData && e.hasAttribute("coverdata")) {
-				o.setCover(""); //Damit er nicht probiert was zu löschen
+				o.setCover(-1); //Damit er nicht probiert was zu löschen
 				o.setCover(ImageUtilities.byteArrayToImage(ByteUtilies.hexStringToByteArray(e.getAttributeValueOrThrow("coverdata"))));
+			} else if (e.hasAttribute("covername")) {
+				BufferedImage img = imgf.invoke(e.getAttributeValueOrThrow("covername"));
+				if (img != null) {
+					o.setCover(-1); //Damit er nicht probiert was zu löschen
+					o.setCover(img);
+				}
 			}
 		}
 		o.endUpdating();
 	}
 
 	@Override
-	public void importEpisode(CCEpisode o, CCXMLElement e, ImportState s) throws CCFormatException, CCXMLException
+	public void importEpisode(CCEpisode o, CCXMLElement e, Func1to1<String, BufferedImage> imgf, ImportState s) throws CCFormatException, CCXMLException
 	{
 		o.beginUpdating();
 		{

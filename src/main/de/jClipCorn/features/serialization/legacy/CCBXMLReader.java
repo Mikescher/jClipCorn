@@ -124,8 +124,8 @@ public class CCBXMLReader {
 		newMov.setFilesize(e.getChild("größe").getAttribute("dec").getLongValue() * 1024);
 		newMov.setPart(0, e.getChildText("pathpart1"));
 		newMov.setPart(1, e.getChildText("pathpart2"));
-		String cvrval = e.getChildText("cover");
-		newMov.setCover(cvrval.substring(0, cvrval.length() - 3) + "png");
+		//String cvrval = e.getChildText("cover");
+		//newMov.setCover(cvrval.substring(0, cvrval.length() - 3) + "png");
 		
 		final CCMovie finmov = newMov;
 		try {
@@ -156,8 +156,8 @@ public class CCBXMLReader {
 		newSer.setGenre(translateGenre(e.getChild("info").getChild("genre").getChild("genre06").getAttribute("dec").getIntValue()), 6);
 		newSer.setOnlinescore(Integer.parseInt(e.getChild("info").getChildText("imdbscore")));
 		newSer.setFsk(e.getChild("info").getChild("usk").getAttribute("dec").getIntValue());
-		String cvrval = e.getChild("info").getChildText("cover");
-		newSer.setCover(cvrval.substring(0, cvrval.length() - 3) + "png");
+		//String cvrval = e.getChild("info").getChildText("cover");
+		//newSer.setCover(cvrval.substring(0, cvrval.length() - 3) + "png");
 		
 		for (Iterator<Element> itseries = e.getChildren().iterator(); itseries.hasNext();) {
 			Element eseries = itseries.next();
@@ -186,8 +186,8 @@ public class CCBXMLReader {
 		
 		newSeas.setTitle(owner.getChild("info").getChildText("staffeltitel"));
 		newSeas.setYear(Integer.parseInt(owner.getChild("info").getChildText("jahr")));
-		String cvrval = owner.getChild("info").getChildText("cover");
-		newSeas.setCover(cvrval.substring(0, cvrval.length() - 3) + "png");
+		//String cvrval = owner.getChild("info").getChildText("cover");
+		//newSeas.setCover(cvrval.substring(0, cvrval.length() - 3) + "png");
 		
 		for (Iterator<Element> itseason = owner.getChildren().iterator(); itseason.hasNext();) {
 			Element eseason = itseason.next();

@@ -3,6 +3,7 @@ package de.jClipCorn.database.covertab;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.colorquantizer.ColorQuantizerMethod;
 import de.jClipCorn.util.datatypes.Tuple;
+import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.helper.ImageUtilities;
 import de.jClipCorn.util.lambda.Func0to1WithIOException;
 
@@ -58,7 +59,7 @@ public class CCStubCoverCache implements ICoverCache {
 
 	@Override
 	public CoverCacheElement getInfo(int cid) {
-		return new CoverCacheElement(cid, "", ImageUtilities.BASE_COVER_WIDTH, ImageUtilities.BASE_COVER_HEIGHT, 1024, ColorQuantizerMethod.EMPTY); //$NON-NLS-1$
+		return new CoverCacheElement(cid, "", ImageUtilities.BASE_COVER_WIDTH, ImageUtilities.BASE_COVER_HEIGHT, "", 1024, ColorQuantizerMethod.EMPTY, CCDateTime.getCurrentDateTime()); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	@Override

@@ -34,7 +34,7 @@ public abstract class BaseColorQuantizer
 	{
 		// if there is no path provider, it attempts to create a default one; integrated in the quantizer
 		IPathProvider result = pathProvider;
-		if (pathProvider==null) pathProvider = OnCreateDefaultPathProvider();
+		if (result==null) result = OnCreateDefaultPathProvider();
 
 		// if the provider exists; or default one was created for these purposes.. use it
 		if (result == null)

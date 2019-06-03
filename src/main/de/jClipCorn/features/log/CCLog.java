@@ -169,4 +169,8 @@ public class CCLog {
 	public static CCSQLLogElement getSQLElement(int idx) {
 		return CCLogInternal.getSQLElement(idx);
 	}
+
+	public static boolean isUnitTest() {
+		return CCLogInternal.isUnitTest();
+	}
 }

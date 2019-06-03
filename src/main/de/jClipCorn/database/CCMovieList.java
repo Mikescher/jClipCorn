@@ -144,7 +144,7 @@ public class CCMovieList {
 					Globals.TIMINGS.stop(Globals.TIMING_LOAD_MOVIELIST_FILL_ELEMENTS);
 					Globals.TIMINGS.start(Globals.TIMING_LOAD_MOVIELIST_FILL_COVERS);
 					{
-						database.fillCoverCache(CCMovieList.this);
+						database.fillCoverCache();
 					}
 					Globals.TIMINGS.stop(Globals.TIMING_LOAD_MOVIELIST_FILL_COVERS);
 				}

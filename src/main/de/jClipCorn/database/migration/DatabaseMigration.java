@@ -1,13 +1,18 @@
 package de.jClipCorn.database.migration;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
+import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 
 import de.jClipCorn.Main;
 import de.jClipCorn.database.CCMovieList;
+import de.jClipCorn.database.covertab.CCDefaultCoverCache;
 import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguage;
 import de.jClipCorn.database.driver.CCDatabase;
 import de.jClipCorn.database.driver.GenericDatabase;
@@ -18,24 +23,39 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.enumerations.CCDatabaseDriver;
+import de.jClipCorn.util.colorquantizer.ColorQuantizer;
+import de.jClipCorn.util.colorquantizer.ColorQuantizerException;
+import de.jClipCorn.util.colorquantizer.ColorQuantizerMethod;
+import de.jClipCorn.util.colorquantizer.util.ColorQuantizerConverter;
 import de.jClipCorn.util.datetime.CCDate;
+import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.datetime.CCTime;
+import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.DialogHelper;
+import de.jClipCorn.util.sqlwrapper.CCSQLStatement;
+import de.jClipCorn.util.sqlwrapper.SQLBuilder;
+import de.jClipCorn.util.sqlwrapper.SQLWrapperException;
 import de.jClipCorn.util.stream.CCStreams;
+import org.apache.commons.codec.digest.DigestUtils;
+
+import static de.jClipCorn.database.driver.Statements.*;
+import static de.jClipCorn.database.driver.Statements.COL_CVRS_CREATED;
 
 public class DatabaseMigration {
 	private final GenericDatabase db;
-	
+	private final String databasepath;
+
 	public interface UpgradeAction {
 		public void onAfterConnect(CCMovieList ml, CCDatabase db);
 	}
 	
 	private final List<UpgradeAction> afterConnectActions = new ArrayList<>();
 	
-	public DatabaseMigration(GenericDatabase db) {
+	public DatabaseMigration(GenericDatabase db, String dbpath) {
 		super();
 		
 		this.db = db;
+		this.databasepath = dbpath;
 	}
 	
 	private String getDBVersion() throws SQLException {
@@ -232,7 +252,7 @@ public class DatabaseMigration {
 	}
 
 	@SuppressWarnings("nls")
-	private void upgrade_12_13() throws SQLException {
+	private void upgrade_12_13() throws SQLException, SQLWrapperException, IOException, ColorQuantizerException {
 		CCLog.addInformation("[UPGRADE v12 -> v13] Change 'covername' column to 'coverid' in main table");
 		CCLog.addInformation("[UPGRADE v12 -> v13] Change 'covername' column to 'coverid' in season table");
 		CCLog.addInformation("[UPGRADE v12 -> v13] Add 'covers' table");
@@ -240,7 +260,72 @@ public class DatabaseMigration {
 		CCLog.addInformation("[UPGRADE v12 -> v13] Calculate cover previews");
 		CCLog.addInformation("[UPGRADE v12 -> v13] Calculate cover checksums");
 
-		//TODO
+		db.executeSQLThrow("ALTER TABLE ELEMENTS ADD COLUMN COVERID INTEGER");
+		db.executeSQLThrow("ALTER TABLE SEASONS ADD COLUMN COVERID INTEGER");
+
+		db.executeSQLThrow("CREATE TABLE COVERS(ID INTEGER PRIMARY KEY,FILENAME VARCHAR NOT NULL,WIDTH INTEGER NOT NULL,HEIGHT INTEGER NOT NULL,HASH_FILE VARCHAR(64) NOT NULL,FILESIZE BIGINT NOT NULL,PREVIEW_TYPE INTEGER NOT NULL,PREVIEW BLOB NOT NULL,CREATED VARCHAR NOT NULL)");
+
+		File cvrdir = new File(PathFormatter.combine(PathFormatter.getRealSelfDirectory(), databasepath, CCDefaultCoverCache.COVER_DIRECTORY));
+
+		final String prefix = CCProperties.getInstance().PROP_COVER_PREFIX.getValue();
+		final String suffix = "." + CCProperties.getInstance().PROP_COVER_TYPE.getValue();  //$NON-NLS-1$
+
+		String[] files = cvrdir.list((path, name) -> name.startsWith(prefix) && name.endsWith(suffix));
+		for (String _f : files) {
+			String f = PathFormatter.combine(cvrdir.getAbsolutePath(), _f);
+			BufferedImage img = ImageIO.read(new File( f ));
+
+			int id = Integer.parseInt(PathFormatter.getFilename(f).substring(prefix.length()));
+			String fn = PathFormatter.getFilenameWithExt(f);
+
+			String checksum;
+			try (FileInputStream fis = new FileInputStream(f)) { checksum = DigestUtils.sha256Hex(fis).toUpperCase(); }
+
+			ColorQuantizerMethod ptype = CCProperties.getInstance().PROP_DATABASE_COVER_QUANTIZER.getValue();
+			ColorQuantizer quant = ptype.create();
+			quant.analyze(img, 16);
+			byte[] preview = ColorQuantizerConverter.quantizeTo4BitRaw(quant, ColorQuantizerConverter.shrink(img, 24));
+
+			CCSQLStatement stmt = SQLBuilder.createInsert(Statements.TAB_COVERS)
+					.addPreparedFields(Statements.COL_CVRS_ID, Statements.COL_CVRS_FILENAME, Statements.COL_CVRS_WIDTH)
+					.addPreparedFields(Statements.COL_CVRS_HEIGHT, Statements.COL_CVRS_HASH_FILE)
+					.addPreparedFields(Statements.COL_CVRS_FILESIZE, Statements.COL_CVRS_PREVIEW, Statements.COL_CVRS_PREVIEWTYPE, Statements.COL_CVRS_CREATED)
+					.build(db::createPreparedStatement, new ArrayList<>());
+
+			stmt.clearParameters();
+
+			stmt.setInt(COL_CVRS_ID,          id);
+			stmt.setStr(COL_CVRS_FILENAME,    fn);
+			stmt.setInt(COL_CVRS_WIDTH,       img.getWidth());
+			stmt.setInt(COL_CVRS_HEIGHT,      img.getHeight());
+			stmt.setStr(COL_CVRS_HASH_FILE,   checksum);
+			stmt.setLng(COL_CVRS_FILESIZE,    new File(f).length());
+			stmt.setBlb(COL_CVRS_PREVIEW,     preview);
+			stmt.setInt(COL_CVRS_PREVIEWTYPE, ptype.asInt());
+			stmt.setCDT(COL_CVRS_CREATED,     CCDateTime.createFromFileTimestamp(new File(f).lastModified(), TimeZone.getDefault()));
+
+			stmt.executeUpdate();
+
+			db.executeSQLThrow("UPDATE ELEMENTS SET COVERID = "+id+" WHERE COVERNAME = '"+fn+"'");
+			db.executeSQLThrow("UPDATE SEASONS  SET COVERID = "+id+" WHERE COVERNAME = '"+fn+"'");
+
+			CCLog.addDebug("Migrated file: " + fn);
+		}
+
+		db.executeSQLThrow("CREATE TABLE _ELEMENTS(LOCALID INTEGER PRIMARY KEY,NAME VARCHAR(128) NOT NULL,VIEWED BIT NOT NULL,VIEWED_HISTORY VARCHAR(4096) NOT NULL,ZYKLUS VARCHAR(128) NOT NULL,ZYKLUSNUMBER INTEGER NOT NULL,QUALITY TINYINT NOT NULL,LANGUAGE BIGINT NOT NULL,GENRE BIGINT NOT NULL,LENGTH INTEGER NOT NULL,ADDDATE DATE NOT NULL,ONLINESCORE TINYINT NOT NULL,FSK TINYINT NOT NULL,FORMAT TINYINT NOT NULL,MOVIEYEAR SMALLINT NOT NULL,ONLINEREF VARCHAR(128) NOT NULL,GROUPS VARCHAR(4096) NOT NULL,FILESIZE BIGINT NOT NULL,TAGS SMALLINT NOT NULL,PART1 VARCHAR(512) NOT NULL,PART2 VARCHAR(512) NOT NULL,PART3 VARCHAR(512) NOT NULL,PART4 VARCHAR(512) NOT NULL,PART5 VARCHAR(512) NOT NULL,PART6 VARCHAR(512) NOT NULL,SCORE TINYINT NOT NULL,COVERID INTEGER(256) NOT NULL,TYPE TINYINT NOT NULL,SERIESID INTEGER NOT NULL)");
+		db.executeSQLThrow("CREATE TABLE _SEASONS(SEASONID INTEGER PRIMARY KEY,SERIESID INTEGER NOT NULL,NAME VARCHAR(128) NOT NULL,SEASONYEAR SMALLINT NOT NULL,COVERID INTEGER(256) NOT NULL,FOREIGN KEY(SERIESID) REFERENCES ELEMENTS(LOCALID))");
+
+		db.executeSQLThrow("INSERT INTO _ELEMENTS SELECT LOCALID,NAME,VIEWED,VIEWED_HISTORY,ZYKLUS,ZYKLUSNUMBER,QUALITY,LANGUAGE,GENRE,LENGTH,ADDDATE,ONLINESCORE,FSK,FORMAT,MOVIEYEAR,ONLINEREF,GROUPS,FILESIZE,TAGS,PART1,PART2,PART3,PART4,PART5,PART6,SCORE,COVERID,TYPE,SERIESID FROM ELEMENTS");
+		db.executeSQLThrow("INSERT INTO _SEASONS SELECT SEASONID,SERIESID,NAME,SEASONYEAR,COVERID FROM SEASONS");
+
+		db.executeSQLThrow("DROP TABLE ELEMENTS");
+		db.executeSQLThrow("DROP TABLE SEASONS");
+
+		db.executeSQLThrow("ALTER TABLE _ELEMENTS RENAME TO ELEMENTS");
+		db.executeSQLThrow("ALTER TABLE _SEASONS RENAME TO SEASONS");
+
+		File cc = new File(PathFormatter.combine(cvrdir.getAbsolutePath(), "covercache.xml"));
+		if (cc.exists()) cc.delete();
 	}
 
 	public void onAfterConnect(CCMovieList ml, CCDatabase db) {

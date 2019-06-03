@@ -4,7 +4,9 @@ import de.jClipCorn.database.driver.CCDatabase;
 import de.jClipCorn.util.datatypes.DoubleString;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.datatypes.Tuple3;
+import de.jClipCorn.util.lambda.Func1to1WithGenericException;
 
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -108,24 +110,28 @@ public class SQLBuilder {
 	}
 
 	public CCSQLStatement build(CCDatabase db, ArrayList<CCSQLStatement> collector) throws SQLWrapperException, SQLException {
+		return build(db::createPreparedStatement, collector);
+	}
+
+	public CCSQLStatement build(Func1to1WithGenericException<String, PreparedStatement, SQLException> fn, ArrayList<CCSQLStatement> collector) throws SQLWrapperException, SQLException {
 		switch (_type) {
-			case SELECT: { CCSQLStatement r = buildSelect(db); collector.add(r); return r; }
-			case UPDATE: { CCSQLStatement r = buildUpdate(db); collector.add(r); return r; }
-			case DELETE: { CCSQLStatement r = buildDelete(db); collector.add(r); return r; }
-			case INSERT: { CCSQLStatement r = buildInsert(db); collector.add(r); return r; }
-			case CUSTOM: { CCSQLStatement r = buildCustom(db); collector.add(r); return r; }
+			case SELECT: { CCSQLStatement r = buildSelect(fn); collector.add(r); return r; }
+			case UPDATE: { CCSQLStatement r = buildUpdate(fn); collector.add(r); return r; }
+			case DELETE: { CCSQLStatement r = buildDelete(fn); collector.add(r); return r; }
+			case INSERT: { CCSQLStatement r = buildInsert(fn); collector.add(r); return r; }
+			case CUSTOM: { CCSQLStatement r = buildCustom(fn); collector.add(r); return r; }
 			default: throw new SQLWrapperException("Unknown CC:StatementType := " + _type);
 		}
 	}
 
-	private CCSQLStatement buildCustom(CCDatabase db) throws SQLWrapperException, SQLException {
+	private CCSQLStatement buildCustom(Func1to1WithGenericException<String, PreparedStatement, SQLException> fn) throws SQLWrapperException, SQLException {
 		if (_customSQL == null)	throw new SQLWrapperException("No SQL source set");
 
-		return new CCSQLStatement( StatementType.CUSTOM, _customSQL, db.createPreparedStatement(_customSQL), new ArrayList<>(), new ArrayList<>());
+		return new CCSQLStatement( StatementType.CUSTOM, _customSQL, fn.invoke(_customSQL), new ArrayList<>(), new ArrayList<>());
 	}
 
 	@SuppressWarnings("nls")
-	private CCSQLStatement buildInsert(CCDatabase db) throws SQLException, SQLWrapperException {
+	private CCSQLStatement buildInsert(Func1to1WithGenericException<String, PreparedStatement, SQLException> fn) throws SQLException, SQLWrapperException {
 		StringBuilder cnames = new StringBuilder();
 		StringBuilder cvals = new StringBuilder();
 
@@ -149,11 +155,11 @@ public class SQLBuilder {
 
 		String sql = String.format("INSERT INTO %s (%s) VALUES (%s)", SQLBuilderHelper.sqlEscape(_table), cnames.toString(), cvals.toString());
 
-		return new CCSQLStatement(_type, sql, db.createPreparedStatement(sql), fields, new ArrayList<>());
+		return new CCSQLStatement(_type, sql, fn.invoke(sql), fields, new ArrayList<>());
 	}
 
 	@SuppressWarnings("nls")
-	private CCSQLStatement buildUpdate(CCDatabase db) throws SQLException, SQLWrapperException {
+	private CCSQLStatement buildUpdate(Func1to1WithGenericException<String, PreparedStatement, SQLException> fn) throws SQLException, SQLWrapperException {
 		StringBuilder assigns = new StringBuilder();
 
 		for (int i = 0; i < _fields.size(); i++) {
@@ -198,11 +204,11 @@ public class SQLBuilder {
 			sql += wconds.toString();
 		}
 
-		return new CCSQLStatement(_type, sql, db.createPreparedStatement(sql), fields, new ArrayList<>());
+		return new CCSQLStatement(_type, sql, fn.invoke(sql), fields, new ArrayList<>());
 	}
 
 	@SuppressWarnings("nls")
-	private CCSQLStatement buildDelete(CCDatabase db) throws SQLException, SQLWrapperException {
+	private CCSQLStatement buildDelete(Func1to1WithGenericException<String, PreparedStatement, SQLException> fn) throws SQLException, SQLWrapperException {
 		String sql = String.format("DELETE FROM %s", _table);
 
 		int prepIdx = 1;
@@ -231,11 +237,11 @@ public class SQLBuilder {
 			sql += wconds.toString();
 		}
 
-		return new CCSQLStatement(_type, sql, db.createPreparedStatement(sql), fields, new ArrayList<>());
+		return new CCSQLStatement(_type, sql, fn.invoke(sql), fields, new ArrayList<>());
 	}
 
 	@SuppressWarnings("nls")
-	private CCSQLStatement buildSelect(CCDatabase db) throws SQLException, SQLWrapperException {
+	private CCSQLStatement buildSelect(Func1to1WithGenericException<String, PreparedStatement, SQLException> fn) throws SQLException, SQLWrapperException {
 		StringBuilder assigns = new StringBuilder();
 
 		List<Tuple3<Integer, String, CCSQLType>> selectFields = new ArrayList<>();
@@ -280,6 +286,6 @@ public class SQLBuilder {
 			sql += String.format(" ORDER BY %s %s", SQLBuilderHelper.sqlEscape(_orderField), _orderDirection == SQLOrder.ASC ? "ASC" : "DESC");
 		}
 
-		return new CCSQLStatement(_type, sql, db.createPreparedStatement(sql), fields, selectFields);
+		return new CCSQLStatement(_type, sql, fn.invoke(sql), fields, selectFields);
 	}
 }

@@ -9,6 +9,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.ZipEntry;
@@ -39,13 +40,11 @@ import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.database.databaseElement.columnTypes.CCDBElementTyp;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGroup;
-import de.jClipCorn.database.migration.CCOldMigrationCoverCache;
 import de.jClipCorn.gui.frames.addMovieFrame.AddMovieFrame;
 import de.jClipCorn.gui.frames.importElementsFrame.ImportElementsFrame;
 import de.jClipCorn.gui.mainFrame.MainFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.features.log.CCLog;
-import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.TimeKeeper;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.exceptions.CCFormatException;
@@ -224,25 +223,35 @@ public class ExportHelper {
 		xout.setFormat(Format.getPrettyFormat());
 		xout.output(xml, zos);
 	}
-	
-	private static void copyAllCoverFromBackup(File backup, CCMovieList movielist) throws Exception {
-		InputStream theFile = new FileInputStream(backup);
-		ZipInputStream stream = new ZipInputStream(theFile);
 
+	private static BufferedImage getCoverFromBackupByName(File backup, String name) {
+
+		InputStream theFile = null;
+		ZipInputStream stream = null;
 		try {
+			theFile = new FileInputStream(backup);
+			stream = new ZipInputStream(theFile);
+
 			ZipEntry entry;
 			while ((entry = stream.getNextEntry()) != null) {
-				if (! PathFormatter.getExtension(entry.getName()).equals(CCProperties.getInstance().PROP_COVER_TYPE.getValue())) {
-					continue;
-				}
-				
-				movielist.getCoverCache().addCover(PathFormatter.getFilenameWithExt(entry.getName()), stream);
+
+				if (! entry.getName().startsWith("cover/")) continue; //$NON-NLS-1$
+
+				if (PathFormatter.getFilenameWithExt(entry.getName()).equalsIgnoreCase(name)) return ImageIO.read(stream);
 			}
+
+			return null;
+		} catch (IOException e) {
+			return null;
 		} finally {
-			stream.close();
+			try {
+				if (stream != null) stream.close();
+			} catch (IOException e) {
+				//
+			}
 		}
 	}
-	
+
 	private static String getXMLContentFromBackup(File backup, String filename) throws Exception{
 		String content = null;
 
@@ -256,7 +265,7 @@ public class ExportHelper {
 					continue;
 				}
 				
-				BufferedReader reader = new BufferedReader(new InputStreamReader(stream, "UTF-8")); //$NON-NLS-1$
+				BufferedReader reader = new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8));
 				content = SimpleFileUtils.readTextFile(reader);
 				reader.close();
 				
@@ -267,14 +276,14 @@ public class ExportHelper {
 			theFile.close();
 		}
 		
-		return content;
+		return null;
 	}
 	
 	public static void restoreDatabaseFromBackup(File backup, CCMovieList movielist) {
 		try {
 			movielist.clear();
 
-			copyAllCoverFromBackup(backup, movielist);
+			Func1to1<String, BufferedImage> covers = (fn) -> getCoverFromBackupByName(backup, fn);
 			
 			{
 				String contentMain = getXMLContentFromBackup(backup, DB_XML_FILENAME_MAIN);
@@ -283,7 +292,7 @@ public class ExportHelper {
 					throw new Exception("File not found: " + DB_XML_FILENAME_MAIN); //$NON-NLS-1$
 				}
 
-				DatabaseXMLImporter.run(contentMain, movielist::createNewEmptyMovie, movielist::createNewEmptySeries, new ImportOptions(false, false, false, false, false));
+				DatabaseXMLImporter.run(contentMain, movielist::createNewEmptyMovie, movielist::createNewEmptySeries, covers, new ImportOptions(false, false, false, false, false));
 			}
 						
 			{
@@ -377,10 +386,10 @@ public class ExportHelper {
 		if (value != null) {
 			if (value.Item2.getName().equalsIgnoreCase("movie")) {  //$NON-NLS-1$
 				CCMovie mov = movielist.createNewEmptyMovie();
-				DatabaseXMLImporter.parseSingleMovie(mov, value.Item2, new ImportState(value.Item3, value.Item1, opt));
+				DatabaseXMLImporter.parseSingleMovie(mov, value.Item2, fn->null, new ImportState(value.Item3, value.Item1, opt));
 			} else if (value.Item2.getName().equalsIgnoreCase("series")) { //$NON-NLS-1$
 				CCSeries ser = movielist.createNewEmptySeries();
-				DatabaseXMLImporter.parseSingleSeries(ser, value.Item2, new ImportState(value.Item3, value.Item1, opt));
+				DatabaseXMLImporter.parseSingleSeries(ser, value.Item2, fn->null, new ImportState(value.Item3, value.Item1, opt));
 			}
 		}
 	}
@@ -429,7 +438,7 @@ public class ExportHelper {
 				{
 					CCMovie tmpMov = new CCMovie(CCMovieList.createStub(), -1);
 					tmpMov.setDefaultValues(false);
-					DatabaseXMLImporter.parseSingleMovie(tmpMov, value.Item2, new ImportState(value.Item3, value.Item1, new ImportOptions(resetDate, resetViewed, resetScore, false, true)));
+					DatabaseXMLImporter.parseSingleMovie(tmpMov, value.Item2, fn->null, new ImportState(value.Item3, value.Item1, new ImportOptions(resetDate, resetViewed, resetScore, false, true)));
 
 					AddMovieFrame amf = new AddMovieFrame(owner, movielist);
 					amf.parseFromTemp(tmpMov, resetDate, resetScore);

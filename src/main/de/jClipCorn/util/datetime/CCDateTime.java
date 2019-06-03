@@ -1,8 +1,6 @@
 package de.jClipCorn.util.datetime;
 
-import java.util.HashSet;
-import java.util.Hashtable;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
 
 import de.jClipCorn.gui.localization.LocaleBundle;
@@ -56,10 +54,25 @@ public class CCDateTime implements Comparable<CCDateTime>, StringSpecSupplier {
 		return new CCDateTime(d, t);
 	}
 
+	public static CCDateTime createFromFileTimestamp(long millis, TimeZone tzone) { // ts = time in UTC milliseconds from the epoch
+		Calendar c = Calendar.getInstance();
+		c.setTimeInMillis(millis);
+		c.setTimeZone(tzone);
+
+		int dy = c.get(Calendar.YEAR);
+		int dm = c.get(Calendar.MONTH);
+		int dd = c.get(Calendar.DAY_OF_MONTH);
+		int th = c.get(Calendar.HOUR);
+		int tm = c.get(Calendar.MINUTE);
+		int ts = c.get(Calendar.SECOND);
+
+		return create(dd, dm, dy, th, tm, ts);
+	}
+
 	public static CCDateTime getCurrentDateTime() {
 		return new CCDateTime(CCDate.getCurrentDate(), CCTime.getCurrentTime());
 	}
-	
+
 	public String getSQLStringRepresentation() {
 		if (isUnspecifiedDateTime()) 
 			return UNSPECIFIED_REPRESENTATION;

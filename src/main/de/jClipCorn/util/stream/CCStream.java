@@ -195,14 +195,14 @@ public abstract class CCStream<TType> implements Iterator<TType>, Iterable<TType
 			return current;
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@SuppressWarnings({ "unchecked", "rawtypes", "cast" })
 	public <TAttrType> TType autoMaxValueOrDefault(Func1to1<TType, TAttrType> selector, TType defValue) {
-		return maxValueOrDefault(selector, (a,b) -> ObjectUtils.compare((Comparable)a, (Comparable)b), defValue);
+		return (TType)maxValueOrDefault(selector, (a,b) -> ObjectUtils.compare((Comparable)a, (Comparable)b), defValue);
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@SuppressWarnings({ "unchecked", "rawtypes", "cast" })
 	public <TAttrType> TType autoMinValueOrDefault(Func1to1<TType, TAttrType> selector, TType defValue) {
-		return minValueOrDefault(selector, (a,b) -> ObjectUtils.compare((Comparable)a, (Comparable)b), defValue);
+		return (TType)minValueOrDefault(selector, (a,b) -> ObjectUtils.compare((Comparable)a, (Comparable)b), defValue);
 	}
 
 	public <TAttrType> TAttrType findMostCommon(Func1to1<TType, TAttrType> selector, TAttrType defValue) {

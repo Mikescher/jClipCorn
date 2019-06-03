@@ -8,6 +8,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import de.jClipCorn.database.CCMovieList;
+import de.jClipCorn.database.covertab.CoverCacheElement;
 import de.jClipCorn.database.databaseElement.columnTypes.CCDateTimeList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCFileFormat;
 import de.jClipCorn.database.databaseElement.columnTypes.CCFileSize;
@@ -17,7 +18,6 @@ import de.jClipCorn.database.util.ExtendedViewedState;
 import de.jClipCorn.database.util.ExtendedViewedStateType;
 import de.jClipCorn.features.actionTree.IActionSourceObject;
 import de.jClipCorn.properties.CCProperties;
-import de.jClipCorn.util.LargeMD5Calculator;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.datetime.CCDate;
@@ -141,6 +141,11 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 	@Override
 	public Tuple<Integer, Integer> getCoverDimensions() {
 		return owner.getMovieList().getCoverCache().getDimensions(coverid);
+	}
+
+	@Override
+	public CoverCacheElement getCoverInfo() {
+		return owner.getMovieList().getCoverCache().getInfo(coverid);
 	}
 	
 	public boolean isViewed() { // All parts viewed
@@ -438,11 +443,6 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 
 	public int findEpisode(CCEpisode ccEpisode) {
 		return episodes.indexOf(ccEpisode);
-	}
-
-	@Override
-	public String getCoverMD5() {
-		return LargeMD5Calculator.calcMD5(getCover());
 	}
 
 	@Override

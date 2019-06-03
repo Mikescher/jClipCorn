@@ -38,8 +38,10 @@ public class DatabaseXMLExporterImpl {
 		e.setAttribute("onlinreref",   o.getOnlineReference().toSerializationString());
 		e.setAttribute("tags",         o.getTags().serialize());
 
-		if (! s.CoverData) e.setAttribute("covername", o.getCoverName());
-		if (s.CoverHash) e.setAttribute("coverhash", o.getCoverMD5());
+		if (! s.CoverData) e.setAttribute("covername", o.getCoverInfo().Filename);
+		if (! s.CoverData) e.setAttribute("coverid", o.getCoverInfo().ID + "");
+		if (s.CoverHash) e.setAttribute("coverhash", o.getCoverInfo().Checksum);
+		
 		if (s.CoverData) e.setAttribute("coverdata", ByteUtilies.byteArrayToHexString(ImageUtilities.imageToByteArray(o.getCover())));
 	}
 
@@ -78,9 +80,10 @@ public class DatabaseXMLExporterImpl {
 		e.setAttribute("title", o.getTitle());
 		e.setAttribute("year", o.getYear() + "");
 
-		if (! s.CoverData) e.setAttribute("covername", o.getCoverName());
+		if (! s.CoverData) e.setAttribute("covername", o.getCoverInfo().Filename);
+		if (! s.CoverData) e.setAttribute("coverid", o.getCoverInfo().ID + "");
 
-		if (s.CoverHash) e.setAttribute("coverhash", o.getCoverMD5());
+		if (s.CoverHash) e.setAttribute("coverhash", o.getCoverInfo().Checksum);
 
 		if (s.CoverData) e.setAttribute("coverdata", ByteUtilies.byteArrayToHexString(ImageUtilities.imageToByteArray(o.getCover())));
 	}

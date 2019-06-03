@@ -30,8 +30,8 @@ import java.util.List;
 import java.util.Map;
 
 public class CCDefaultCoverCache implements ICoverCache {
-	protected final static String COVER_DIRECTORY_NAME = "cover"; //$NON-NLS-1$
-	protected final static String COVER_DIRECTORY = PathFormatter.appendAndPrependSeparator(COVER_DIRECTORY_NAME);
+	public final static String COVER_DIRECTORY_NAME = "cover"; //$NON-NLS-1$
+	public final static String COVER_DIRECTORY = PathFormatter.appendAndPrependSeparator(COVER_DIRECTORY_NAME);
 
 	protected final CCDatabase _db;
 
@@ -160,7 +160,7 @@ public class CCDefaultCoverCache implements ICoverCache {
 				ColorQuantizerMethod ptype = CCProperties.getInstance().PROP_DATABASE_COVER_QUANTIZER.getValue();
 				ColorQuantizer quant = ptype.create();
 				quant.analyze(newCover, 16);
-				byte[] preview = ColorQuantizerConverter.quantizeTo4BitRaw(quant, ColorQuantizerConverter.shrink(newCover, 4));
+				byte[] preview = ColorQuantizerConverter.quantizeTo4BitRaw(quant, ColorQuantizerConverter.shrink(newCover, 24));
 
 				CoverCacheElement cce = new CoverCacheElement(cid, fname, newCover.getWidth(), newCover.getHeight(), checksum, f.length(), preview, ptype, CCDateTime.getCurrentDateTime());
 

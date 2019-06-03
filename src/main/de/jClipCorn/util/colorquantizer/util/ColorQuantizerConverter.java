@@ -56,7 +56,7 @@ public class ColorQuantizerConverter {
 		return output;
 	}
 
-	public static BufferedImage quantizeFrom4BitRaw(ColorQuantizer quant, byte[] data) throws ColorQuantizerException {
+	public static BufferedImage quantizeFrom4BitRaw(byte[] data) throws ColorQuantizerException {
 		int w = data[0];
 		int h = data[1];
 

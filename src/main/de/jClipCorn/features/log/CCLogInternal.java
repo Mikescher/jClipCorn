@@ -350,4 +350,8 @@ public class CCLogInternal {
 		}
 		return false;
 	}
+
+	public static boolean isUnitTest() {
+		return isUnitTest;
+	}
 }

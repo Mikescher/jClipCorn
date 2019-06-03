@@ -15,16 +15,16 @@ import de.jClipCorn.util.xml.CCXMLException;
 import java.awt.image.BufferedImage;
 
 @SuppressWarnings("nls")
-public class DatabaseXMLImportImpl_V1 implements IDatabaseXMLImporterImpl {
-
+public class DatabaseXMLImportImpl_V3 implements IDatabaseXMLImporterImpl
+{
 	public void importDatabaseElement(CCDatabaseElement o, CCXMLElement e, Func1to1<String, BufferedImage> imgf, ImportState s) throws CCFormatException, CCXMLException
 	{
 		e.execIfAttrExists("title", o::setTitle);
-		e.execIfLongAttrExists("genres", o::setGenres);
+		e.execIfAttrExists("genres", v -> o.setGenres(CCGenreList.deserialize(v)));
 		e.execIfIntAttrExists("onlinescore", o::setOnlinescore);
 		e.execIfIntAttrExists("fsk", o::setFsk);
 		e.execIfIntAttrExists("score", o::setScore);
-		e.execIfShortAttrExists("tags", o::setTags);
+		e.execIfAttrExists("tags", v -> o.setTags(CCTagList.deserialize(v)));
 
 		if (s.ResetTags) o.setTags(CCTagList.EMPTY);
 
@@ -52,14 +52,13 @@ public class DatabaseXMLImportImpl_V1 implements IDatabaseXMLImporterImpl {
 		{
 			importDatabaseElement(o, e, imgf, s);
 
-			e.execIfAttrExists("adddate", v -> o.setAddDate(CCDate.deserialize(v)));
+			e.execIfAttrExists("adddate", v -> o.setAddDate(CCDate.deserializeSQL(v)));
 
 			if (s.ResetAddDate) o.setAddDate(CCDate.getCurrentDate());
 
 			e.execIfLongAttrExists("filesize", o::setFilesize);
 			e.execIfIntAttrExists("format", o::setFormat);
 			e.execIfIntAttrExists("length", o::setLength);
-			e.execIfIntAttrExists("language", v -> o.setLanguage(CCDBLanguageList.single(CCDBLanguage.getWrapper().findOrException(v)))); // backwards compatibility
 			e.execIfAttrExists("languages", v -> o.setLanguage(CCDBLanguageList.parseFromString(v)));
 
 			for (int i = 0; i < CCMovie.PARTCOUNT_MAX; i++) {
@@ -132,25 +131,20 @@ public class DatabaseXMLImportImpl_V1 implements IDatabaseXMLImporterImpl {
 
 			if (s.ResetViewed) o.setViewed(false);
 
-			e.execIfAttrExists("adddate", v -> o.setAddDate(CCDate.deserialize(v)));
+			e.execIfAttrExists("adddate", v -> o.setAddDate(CCDate.deserializeSQL(v)));
 
 			if (s.ResetAddDate) o.setAddDate(CCDate.getCurrentDate());
 
 			e.execIfIntAttrExists("episodenumber", o::setEpisodeNumber);
 			e.execIfLongAttrExists("filesize", o::setFilesize);
 			e.execIfIntAttrExists("format", o::setFormat);
-			e.execIfAttrExists("lastviewed", v ->  // backwards compatibility
-			{
-				CCDate d = CCDate.deserialize(v);
-				if (!d.isMinimum()) o.setViewedHistory(CCDateTimeList.create(d));
-			});
 
 			e.execIfAttrExists("history", v -> o.setViewedHistory(CCDateTimeList.parse(v)));
 
 			e.execIfIntAttrExists("length", o::setLength);
 			e.execIfAttrExists("part", o::setPart);
 			e.execIfIntAttrExists("quality", o::setQuality);
-			e.execIfShortAttrExists("tags", o::setTags);
+			e.execIfAttrExists("tags", v -> o.setTags(CCTagList.deserialize(v)));
 
 			if (s.ResetTags) o.setTags(CCTagList.EMPTY);
 

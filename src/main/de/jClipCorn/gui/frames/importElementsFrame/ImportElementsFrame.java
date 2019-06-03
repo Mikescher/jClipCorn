@@ -333,13 +333,13 @@ public class ImportElementsFrame extends JFrame {
 		
 	private void onAddMovie(CCXMLElement value, int index) throws CCFormatException, CCXMLException, SerializationException {
 		CCMovie mov = movielist.createNewEmptyMovie();
-		DatabaseXMLImporter.parseSingleMovie(mov, value, new ImportState(document, data_xmlver, new ImportOptions(chckbxResetDate.isSelected(), chcbxResetViewed.isSelected(), chcbxResetScore.isSelected(), chckbxResetTags.isSelected(), false)));
+		DatabaseXMLImporter.parseSingleMovie(mov, value, f->null, new ImportState(document, data_xmlver, new ImportOptions(chckbxResetDate.isSelected(), chcbxResetViewed.isSelected(), chcbxResetScore.isSelected(), chckbxResetTags.isSelected(), false)));
 		listModel.remove(index);
 	}
 	
 	private void onAddSeries(CCXMLElement value, int index) throws CCFormatException, CCXMLException, SerializationException {
 		CCSeries ser = movielist.createNewEmptySeries();
-		DatabaseXMLImporter.parseSingleSeries(ser, value, new ImportState(document, data_xmlver, new ImportOptions(chckbxResetDate.isSelected(), chcbxResetViewed.isSelected(), chcbxResetScore.isSelected(), chckbxResetTags.isSelected(), false)));
+		DatabaseXMLImporter.parseSingleSeries(ser, value, f->null, new ImportState(document, data_xmlver, new ImportOptions(chckbxResetDate.isSelected(), chcbxResetViewed.isSelected(), chcbxResetScore.isSelected(), chckbxResetTags.isSelected(), false)));
 		listModel.remove(index);
 	}
 	
@@ -359,7 +359,7 @@ public class ImportElementsFrame extends JFrame {
 		try {
 			CCMovie tmpMov = new CCMovie(CCMovieList.createStub(), -1);
 			tmpMov.setDefaultValues(false);
-			DatabaseXMLImporter.parseSingleMovie(tmpMov, value, new ImportState(document, data_xmlver, new ImportOptions(chckbxResetDate.isSelected(), chcbxResetViewed.isSelected(), chcbxResetScore.isSelected(), false, true)));
+			DatabaseXMLImporter.parseSingleMovie(tmpMov, value, f->null, new ImportState(document, data_xmlver, new ImportOptions(chckbxResetDate.isSelected(), chcbxResetViewed.isSelected(), chcbxResetScore.isSelected(), false, true)));
 		} catch (CCFormatException | SerializationException | CCXMLException e) {
 			CCLog.addError(e);
 			return;

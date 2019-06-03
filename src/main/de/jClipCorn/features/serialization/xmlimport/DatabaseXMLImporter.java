@@ -5,26 +5,28 @@ import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.features.serialization.xmlimport.impl.DatabaseXMLImportImpl_V1;
 import de.jClipCorn.features.serialization.xmlimport.impl.DatabaseXMLImportImpl_V2;
+import de.jClipCorn.features.serialization.xmlimport.impl.DatabaseXMLImportImpl_V3;
 import de.jClipCorn.util.exceptions.CCFormatException;
 import de.jClipCorn.util.exceptions.SerializationException;
 import de.jClipCorn.util.lambda.Func0to1;
+import de.jClipCorn.util.lambda.Func1to1;
 import de.jClipCorn.util.listener.ProgressCallbackListener;
 import de.jClipCorn.util.xml.CCXMLElement;
 import de.jClipCorn.util.xml.CCXMLException;
 import de.jClipCorn.util.xml.CCXMLParser;
-
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
 @SuppressWarnings("nls")
 public class DatabaseXMLImporter {
 
-	public static List<CCDatabaseElement> run(String xml, Func0to1<CCMovie> fm, Func0to1<CCSeries> fs, ImportOptions opt) throws CCXMLException, SerializationException, CCFormatException
+	public static List<CCDatabaseElement> run(String xml, Func0to1<CCMovie> fm, Func0to1<CCSeries> fs, Func1to1<String, BufferedImage> imgf, ImportOptions opt) throws CCXMLException, SerializationException, CCFormatException
 	{
-		return run(xml, fm, fs, opt, null);
+		return run(xml, fm, fs, imgf, opt, null);
 	}
 
-	public static List<CCDatabaseElement> run(String xml, Func0to1<CCMovie> fm, Func0to1<CCSeries> fs, ImportOptions opt, ProgressCallbackListener l) throws CCXMLException, SerializationException, CCFormatException
+	public static List<CCDatabaseElement> run(String xml, Func0to1<CCMovie> fm, Func0to1<CCSeries> fs, Func1to1<String, BufferedImage> imgf, ImportOptions opt, ProgressCallbackListener l) throws CCXMLException, SerializationException, CCFormatException
 	{
 		CCXMLParser doc = CCXMLParser.parse(xml);
 		CCXMLElement root = doc.getRoot("database");
@@ -44,11 +46,11 @@ public class DatabaseXMLImporter {
 			{
 				if (xchild.getName().equals("movie")) { //$NON-NLS-1$
 					CCMovie mov = fm.invoke();
-					impl.importMovie(mov, xchild, state);
+					impl.importMovie(mov, xchild, imgf, state);
 					result.add(mov);
 				} else if (xchild.getName().equals("series")) { //$NON-NLS-1$
 					CCSeries ser = fs.invoke();
-					impl.importSeries(ser, xchild, state);
+					impl.importSeries(ser, xchild, imgf, state);
 					result.add(ser);
 				}
 
@@ -65,25 +67,26 @@ public class DatabaseXMLImporter {
 	{
 		if (s.XMLVersion == 1) return new DatabaseXMLImportImpl_V1();
 		if (s.XMLVersion == 2) return new DatabaseXMLImportImpl_V2();
+		if (s.XMLVersion == 3) return new DatabaseXMLImportImpl_V3();
 
 		throw new SerializationException("Unknown XMLVersion: " + s.XMLVersion);
 	}
 
-	public static void parseSingleMovie(CCMovie mov, CCXMLElement xml, ImportState state) throws SerializationException, CCFormatException, CCXMLException
+	public static void parseSingleMovie(CCMovie mov, CCXMLElement xml, Func1to1<String, BufferedImage> imgf, ImportState state) throws SerializationException, CCFormatException, CCXMLException
 	{
 		try {
 			IDatabaseXMLImporterImpl impl = getImportImpl(state);
-			impl.importMovie(mov, xml, state);
+			impl.importMovie(mov, xml, imgf, state);
 		} catch (NumberFormatException e) {
 			throw new SerializationException(e.getMessage(), e);
 		}
 	}
 
-	public static void parseSingleSeries(CCSeries ser, CCXMLElement xml, ImportState state) throws SerializationException, CCFormatException, CCXMLException
+	public static void parseSingleSeries(CCSeries ser, CCXMLElement xml, Func1to1<String, BufferedImage> imgf, ImportState state) throws SerializationException, CCFormatException, CCXMLException
 	{
 		try {
 			IDatabaseXMLImporterImpl impl = getImportImpl(state);
-			impl.importSeries(ser, xml, state);
+			impl.importSeries(ser, xml, imgf, state);
 		} catch (NumberFormatException e) {
 			throw new SerializationException(e.getMessage(), e);
 		}

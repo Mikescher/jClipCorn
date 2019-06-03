@@ -29,7 +29,7 @@ public abstract class BaseColorCacheQuantizer extends BaseColorQuantizer
 	{
 		// if there is no cache, it attempts to create a default cache; integrated in the quantizer
 		IColorCache result = colorCache;
-		if (result == null) colorCache = OnCreateDefaultCache();
+		if (result == null) result = OnCreateDefaultCache();
 
 		// if the cache exists; or default one was created for these purposes.. use it
 		if (result == null)
@@ -59,7 +59,7 @@ public abstract class BaseColorCacheQuantizer extends BaseColorQuantizer
 	{
 		// use optimization, or calculate new palette if color count is lower than unique color count
 		List<RGBColor> palette = super.OnGetPalette(colorCount);
-		if(palette == null) OnGetPaletteToCache(colorCount);
+		if(palette == null) palette = OnGetPaletteToCache(colorCount);
 
 		GetColorCache().CachePalette(palette);
 		return palette;

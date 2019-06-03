@@ -8,4 +8,9 @@ public class CCSQLColDef {
 		Name = n;
 		Type = t;
 	}
+
+	@Override
+	public String toString() {
+		return Name+"("+Type+")"; //$NON-NLS-1$ //$NON-NLS-2$
+	}
 }

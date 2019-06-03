@@ -96,7 +96,7 @@
         <column name="FILESIZE"     type="BIGINT"   required="true"                  />
         <column name="PREVIEW_TYPE" type="INTEGER"  required="true"                  />
         <column name="PREVIEW"      type="BLOB"     required="true"                  />
-        <column name="CREATED"      type="BIGINT"   required="true"                  />
+        <column name="CREATED"      type="VARCHAR"  required="true"                  />
     </table>
 
 </database>

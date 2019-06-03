@@ -89,7 +89,7 @@ public class CCMemoryCoverCache implements ICoverCache {
 
 			String fname = CCProperties.getInstance().PROP_COVER_PREFIX.getValue() + StringUtils.leftPad(Integer.toString(cid), 5, '0') + '.' + CCProperties.getInstance().PROP_COVER_TYPE.getValue();
 
-			File f = new File(SimpleFileUtils.getTempFilename(".png")); //$NON-NLS-1$
+			File f = new File(SimpleFileUtils.getSystemTempFile(".png")); //$NON-NLS-1$
 			ImageIO.write(newCover, CCProperties.getInstance().PROP_COVER_TYPE.getValue(), f);
 
 			String checksum;
@@ -98,12 +98,14 @@ public class CCMemoryCoverCache implements ICoverCache {
 			ColorQuantizerMethod ptype = CCProperties.getInstance().PROP_DATABASE_COVER_QUANTIZER.getValue();
 			ColorQuantizer quant = ptype.create();
 			quant.analyze(newCover, 16);
-			byte[] preview = ColorQuantizerConverter.quantizeTo4BitRaw(quant, ColorQuantizerConverter.shrink(newCover, 4));
+			byte[] preview = ColorQuantizerConverter.quantizeTo4BitRaw(quant, ColorQuantizerConverter.shrink(newCover, 24));
 
 			CoverCacheElement cce = new CoverCacheElement(cid, fname, newCover.getWidth(), newCover.getHeight(), checksum, f.length(), preview, ptype, CCDateTime.getCurrentDateTime());
 
 			data.put(cid, newCover);
 			_elements.put(cid, cce);
+
+			f.delete();
 
 			return cid;
 		} catch (Exception e) {

@@ -6,10 +6,10 @@ import de.jClipCorn.database.databaseElement.columnTypes.*;
 import de.jClipCorn.features.actionTree.IActionSourceObject;
 import de.jClipCorn.util.exceptions.EnumFormatException;
 import de.jClipCorn.database.CCMovieList;
+import de.jClipCorn.database.covertab.CoverCacheElement;
 import de.jClipCorn.database.util.ExtendedViewedState;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.features.log.CCLog;
-import de.jClipCorn.util.LargeMD5Calculator;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.exceptions.GroupFormatException;
@@ -218,10 +218,10 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 	public Tuple<Integer, Integer> getCoverDimensions() {
 		return movielist.getCoverCache().getDimensions(coverid);
 	}
-	
+
 	@Override
-	public String getCoverMD5() {
-		return LargeMD5Calculator.calcMD5(getCover());
+	public CoverCacheElement getCoverInfo() {
+		return movielist.getCoverCache().getInfo(coverid);
 	}
 
 	public CCGenre getGenre(int idx) {

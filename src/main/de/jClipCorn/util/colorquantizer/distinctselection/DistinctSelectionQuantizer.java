@@ -81,7 +81,7 @@ public class DistinctSelectionQuantizer extends BaseColorCacheQuantizer {
 		palette.clear();
 
 		// lucky seed :)
-		FastRandom random = new FastRandom(13);
+		FastRandom random = new FastRandom(21);
 
 		List<DistinctColorInfo> colorInfoList = new ArrayList<>(colorMap.values());
 

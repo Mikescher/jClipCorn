@@ -73,7 +73,7 @@ public class OctreeQuantizer implements ColorQuantizer {
 
 		for (int x = 0; x < img.getWidth(); x++) {
 			for (int y = 0; y < img.getHeight(); y++) {
-				output.setRGB(x, y, getPaletteIndex(img.getRGB(x, y)));
+				output.setRGB(x, y, _palette.get(getPaletteIndex(img.getRGB(x, y))).getRGB());
 			}
 		}
 

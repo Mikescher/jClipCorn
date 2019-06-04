@@ -23,7 +23,7 @@ public class K8QuantizerWrapper implements ColorQuantizer
 	@Override
 	public void analyze(BufferedImage img, int colorcount) throws ColorQuantizerException {
 		quant.ChangeCacheProvider(new EuclideanDistanceColorCache());
-
+		
 		quant.OnPrepare(img);
 
 		for (XYCoord crd : quant.GetPointPath(img.getWidth(), img.getHeight())) quant.AddColor(RGBColor.FromRGB(img.getRGB(crd.X, crd.Y)), crd.X, crd.Y);

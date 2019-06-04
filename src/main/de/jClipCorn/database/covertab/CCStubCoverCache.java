@@ -63,7 +63,7 @@ public class CCStubCoverCache implements ICoverCache {
 	}
 
 	@Override
-	public boolean coverExists(int cid) {
+	public boolean coverFileExists(int cid) {
 		return true;
 	}
 

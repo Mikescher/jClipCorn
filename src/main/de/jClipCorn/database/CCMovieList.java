@@ -191,6 +191,20 @@ public class CCMovieList {
 		return c;
 	}
 
+	public int getTotalDatabaseElementCount() {
+		int c = 0;
+		for (CCDatabaseElement dbe : list) {
+			if (dbe.isMovie()) {
+				c++;
+			} else {
+				c++;
+				c += ((CCSeries) dbe).getSeasonCount();
+				c += ((CCSeries) dbe).getEpisodeCount();
+			}
+		}
+		return c;
+	}
+
 	public int getViewedCount() {
 		int v = 0;
 		for (CCDatabaseElement m : list) {
@@ -892,9 +906,13 @@ public class CCMovieList {
 		}
 		return false;
 	}
-	
+
 	public List<CCGroup> getGroupList() {
 		return new ArrayList<>(databaseGroups);
+	}
+
+	public int getGroupCount() {
+		return databaseGroups.size();
 	}
 	
 	public List<CCGroup> getSortedGroupList() {

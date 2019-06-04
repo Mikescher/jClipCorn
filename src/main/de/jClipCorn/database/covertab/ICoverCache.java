@@ -20,7 +20,7 @@ public interface ICoverCache {
 	void deleteCover(int cid);
 	CoverCacheElement getInfo(int cid);
 
-	boolean coverExists(int cid);
+	boolean coverFileExists(int cid);
 	Tuple<Integer, Integer> getDimensions(int cid);
 	boolean isCached(int cid);
 	void preloadCover(int cid);

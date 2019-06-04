@@ -31,6 +31,7 @@ import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.datatypes.CountAppendix;
 import de.jClipCorn.util.helper.DialogHelper;
+import de.jClipCorn.util.listener.DoubleProgressCallbackProgressBarHelper;
 import de.jClipCorn.util.listener.ProgressCallbackProgressBarHelper;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.ColumnSpec;
@@ -51,7 +52,7 @@ public class CheckDatabaseFrame extends JFrame {
 	private JList<DatabaseError> lsMain;
 	private JButton btnValidate;
 	private JLabel lblInfo;
-	private JProgressBar pBar;
+	private JProgressBar pbProgress1;
 	private JButton btnAutofix;
 	private JScrollPane scrlPnlLeft;
 	private JList<CountAppendix<DatabaseErrorType>> lsCategories;
@@ -65,6 +66,9 @@ public class CheckDatabaseFrame extends JFrame {
 	private JCheckBox cbValCoverFiles;
 	private JCheckBox cbValAdditional;
 	private JCheckBox cbValVideoFiles;
+	private JProgressBar pbProgress2;
+	private JLabel lblProgress1;
+	private JLabel lblProgress2;
 	
 	public CheckDatabaseFrame(CCMovieList ml, MainFrame owner) {
 		super();
@@ -76,8 +80,17 @@ public class CheckDatabaseFrame extends JFrame {
 		
 		lblInfo.setText(LocaleBundle.getFormattedString("CheckDatabaseDialog.lblInfo.text", ml.getElementCount())); //$NON-NLS-1$
 		
+		lblProgress1 = new JLabel(""); //$NON-NLS-1$
+		contentPanel.add(lblProgress1, "4, 4, fill, fill"); //$NON-NLS-1$
+		
+		pbProgress2 = new JProgressBar();
+		contentPanel.add(pbProgress2, "2, 6, fill, fill"); //$NON-NLS-1$
+		
+		lblProgress2 = new JLabel(""); //$NON-NLS-1$
+		contentPanel.add(lblProgress2, "4, 6, fill, fill"); //$NON-NLS-1$
+		
 		panel = new JPanel();
-		contentPanel.add(panel, "1, 5, fill, fill"); //$NON-NLS-1$
+		contentPanel.add(panel, "1, 8, 4, 1, fill, fill"); //$NON-NLS-1$
 		panel.setLayout(new FormLayout(new ColumnSpec[] {
 				FormSpecs.RELATED_GAP_COLSPEC,
 				ColumnSpec.decode("1dlu:grow"), //$NON-NLS-1$
@@ -130,26 +143,31 @@ public class CheckDatabaseFrame extends JFrame {
 		
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		contentPanel.setLayout(new FormLayout(new ColumnSpec[] {
-				ColumnSpec.decode("default:grow"),}, //$NON-NLS-1$
+				FormSpecs.RELATED_GAP_COLSPEC,
+				ColumnSpec.decode("default:grow"),
+				FormSpecs.RELATED_GAP_COLSPEC,
+				ColumnSpec.decode("225dlu"),},
 			new RowSpec[] {
 				FormSpecs.PREF_ROWSPEC,
-				RowSpec.decode("default:grow"), //$NON-NLS-1$
-				FormSpecs.PREF_ROWSPEC,
+				RowSpec.decode("default:grow"),
 				FormSpecs.RELATED_GAP_ROWSPEC,
 				FormSpecs.PREF_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,}));
+				FormSpecs.RELATED_GAP_ROWSPEC,
+				FormSpecs.DEFAULT_ROWSPEC,
+				FormSpecs.RELATED_GAP_ROWSPEC,
+				FormSpecs.PREF_ROWSPEC,}));
 		
 		pnlTop = new JPanel();
 		FlowLayout fl_pnlTop = (FlowLayout) pnlTop.getLayout();
 		fl_pnlTop.setAlignment(FlowLayout.LEFT);
-		contentPanel.add(pnlTop, "1, 1, fill, top"); //$NON-NLS-1$
+		contentPanel.add(pnlTop, "1, 1, 4, 1, fill, top"); //$NON-NLS-1$
 		
 		btnValidate = new JButton(LocaleBundle.getString("CheckDatabaseDialog.btnValidate.text")); //$NON-NLS-1$
 		btnValidate.addActionListener(arg0 -> startValidate());
 		pnlTop.add(btnValidate);
 		
-		pBar = new JProgressBar();
-		contentPanel.add(pBar, "1, 3, fill, top"); //$NON-NLS-1$
+		pbProgress1 = new JProgressBar();
+		contentPanel.add(pbProgress1, "2, 4, fill, fill"); //$NON-NLS-1$
 		
 		lblInfo = new JLabel();
 		pnlTop.add(lblInfo);
@@ -161,7 +179,7 @@ public class CheckDatabaseFrame extends JFrame {
 		
 		pnlCenter = new JSplitPane();
 		pnlCenter.setContinuousLayout(true);
-		contentPanel.add(pnlCenter, "1, 2, fill, fill"); //$NON-NLS-1$
+		contentPanel.add(pnlCenter, "1, 2, 4, 1, fill, fill"); //$NON-NLS-1$
 		
 		scrlPnlLeft = new JScrollPane();
 		pnlCenter.setLeftComponent(scrlPnlLeft);
@@ -234,7 +252,12 @@ public class CheckDatabaseFrame extends JFrame {
 		
 		new Thread(() ->
 		{
-			boolean succ = DatabaseAutofixer.fixErrors(errorList, new ProgressCallbackProgressBarHelper(pBar));
+			pbProgress1.setVisible(true);
+			lblProgress1.setVisible(false);
+			pbProgress2.setVisible(false);
+			lblProgress2.setVisible(false);
+			
+			boolean succ = DatabaseAutofixer.fixErrors(errorList, new ProgressCallbackProgressBarHelper(pbProgress1));
 			endFixThread(succ);
 		}, "THREAD_AUTOFIX_DB").start(); //$NON-NLS-1$
 	}
@@ -308,9 +331,14 @@ public class CheckDatabaseFrame extends JFrame {
 
 		new Thread(() ->
 		{
+			pbProgress1.setVisible(true);
+			lblProgress1.setVisible(true);
+			pbProgress2.setVisible(true);
+			lblProgress2.setVisible(true);
+			
 			List<DatabaseError> errors = new ArrayList<>();
-
-			DatabaseValidator.startValidate(errors, movielist, opts, new ProgressCallbackProgressBarHelper(pBar));
+			
+			DatabaseValidator.startValidate(errors, movielist, opts, new DoubleProgressCallbackProgressBarHelper(pbProgress1, lblProgress1, pbProgress2, lblProgress2));
 
 			errorList = errors;
 

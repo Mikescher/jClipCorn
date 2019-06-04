@@ -9,6 +9,7 @@ import de.jClipCorn.database.covertab.CCDefaultCoverCache;
 import de.jClipCorn.database.covertab.CoverCacheElement;
 import de.jClipCorn.database.covertab.ICoverCache;
 
+import de.jClipCorn.util.listener.DoubleProgressCallbackListener;
 import org.apache.commons.lang.StringUtils;
 
 import de.jClipCorn.database.CCMovieList;
@@ -25,42 +26,71 @@ import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.formatter.RomanNumberFormatter;
 import de.jClipCorn.util.helper.ImageUtilities;
 import de.jClipCorn.util.lambda.Func0to1WithIOException;
-import de.jClipCorn.util.listener.ProgressCallbackListener;
 
 public class DatabaseValidator {
 	private final static CCDate MIN_DATE = CCDate.getMinimumDate();
 	
-	public static void startValidate(List<DatabaseError> e, CCMovieList ml, DatabaseValidatorOptions opt, ProgressCallbackListener pcl) {
-		pcl.setMax(ml.getElementCount() * 7); // 1x Normal  +  4x ExtraMethods //TODO Max does not (even remotely) match real iterations....
-		pcl.reset();
-		
-		for (CCDatabaseElement el : ml.getRawList()) {
-			if (el.isMovie()) {
-				CCMovie mov = (CCMovie) el;
-				if (opt.ValidateMovies) validateMovie(e, ml, mov, opt);
-			} else { // is Series
-				CCSeries series = (CCSeries) el;
-				if (opt.ValidateSeries) validateSeries(e, ml, series);
+	public static void startValidate(List<DatabaseError> e, CCMovieList ml, DatabaseValidatorOptions opt, DoubleProgressCallbackListener pcl) {
 
-				for (int seasi = 0; seasi < series.getSeasonCount(); seasi++) {
-					CCSeason season = series.getSeasonByArrayIndex(seasi);
-					if (opt.ValidateSeasons) validateSeason(e, ml, season);
-					
-					for (int epi = 0; epi < season.getEpisodeCount(); epi++) {
-						CCEpisode episode = season.getEpisodeByArrayIndex(epi);
-						if (opt.ValidateEpisodes) validateEpisode(e, episode, opt);
+		boolean validateElements = opt.ValidateMovies || opt.ValidateSeries || opt.ValidateSeasons || opt.ValidateEpisodes;
+
+		int outerCount = 0;
+		if (validateElements) outerCount++;               // [1]
+		if (opt.ValidateCovers) outerCount++;             // [2]
+		if (opt.ValidateCoverFiles) outerCount++;         // [3]
+		if (opt.ValidateAdditional) outerCount++;         // [4]
+		if (opt.ValidateGroups) outerCount++;             // [5]
+		if (opt.ValidateOnlineReferences) outerCount++;   // [6]
+
+
+		pcl.setMaxAndResetValueBoth(outerCount+1, 1);
+
+		if (validateElements)
+		{
+			pcl.stepRootAndResetSub("Validate database elements", ml.getTotalDatabaseElementCount()); //$NON-NLS-1$
+
+			for (CCDatabaseElement el : ml.getRawList()) {
+
+				if (el.isMovie()) {
+					CCMovie mov = (CCMovie) el;
+					pcl.stepSub(mov.getFullDisplayTitle());
+
+					if (opt.ValidateMovies) validateMovie(e, ml, mov, opt);
+				}
+				else // is Series
+				{
+					CCSeries series = (CCSeries) el;
+					pcl.stepSub(series.getFullDisplayTitle());
+
+					if (opt.ValidateSeries) validateSeries(e, ml, series, opt);
+
+					for (int seasi = 0; seasi < series.getSeasonCount(); seasi++) {
+						CCSeason season = series.getSeasonByArrayIndex(seasi);
+						pcl.stepSub(series.getTitle() + " - S" + season.getSeasonNumber()); //$NON-NLS-1$
+
+						if (opt.ValidateSeasons) validateSeason(e, ml, season, opt);
+
+						for (int epi = 0; epi < season.getEpisodeCount(); epi++) {
+							CCEpisode episode = season.getEpisodeByArrayIndex(epi);
+							pcl.stepSub(series.getTitle() + " - S" + season.getSeasonNumber() + "E" + episode.getEpisodeNumber()); //$NON-NLS-1$ //$NON-NLS-2$
+
+							if (opt.ValidateEpisodes) validateEpisode(e, episode, opt);
+						}
 					}
 				}
+
 			}
-			
-			pcl.step();
 		}
 		
-		if (opt.ValidateCovers) findCoverErrors(e, ml, pcl);         // [2]
-		if (opt.ValidateCoverFiles) findCoverFileErrors(e, ml, pcl);     // [3]
-		if (opt.ValidateAdditional) findDuplicateFiles(e, ml, pcl);      // [4]
-		if (opt.ValidateGroups) findErrorInGroups(e, ml);            // [-]
-		if (opt.ValidateOnlineReferences) findDuplicateOnlineRef(e, ml, pcl);  // [5]
+		if (opt.ValidateCovers) findCoverErrors(e, ml, pcl);
+
+		if (opt.ValidateCoverFiles) findCoverFileErrors(e, ml, pcl);
+
+		if (opt.ValidateAdditional) findDuplicateFiles(e, ml, pcl);
+
+		if (opt.ValidateGroups) findErrorInGroups(e, ml, pcl);
+
+		if (opt.ValidateOnlineReferences) findDuplicateOnlineRef(e, ml, pcl);
 		
 		pcl.reset();
 	}
@@ -75,7 +105,7 @@ public class DatabaseValidator {
 		return diff / average;
 	}
 	
-	private static void validateSeries(List<DatabaseError> e, CCMovieList movielist, CCSeries series) {
+	private static void validateSeries(List<DatabaseError> e, CCMovieList movielist, CCSeries series, DatabaseValidatorOptions opt) {
 		// ###############################################
 		// no title set
 		// ###############################################
@@ -93,20 +123,23 @@ public class DatabaseValidator {
 				e.add(DatabaseError.createSingleAdditional(DatabaseErrorType.ERROR_WRONG_GENREID, series, i));
 			}
 		}
-		
-		// ###############################################
-		// cover not set
-		// ###############################################
 
-		if (series.getCoverID() == -1) {
-			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_NOCOVERSET, series));
+		if (opt.ValidateCoverFiles)
+		{
+			// ###############################################
+			// cover not set
+			// ###############################################
+
+			if (series.getCoverID() == -1) {
+				e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_NOCOVERSET, series));
+			}
 		}
 
 		// ###############################################
 		// cover not found
 		// ###############################################
 
-		if (! movielist.getCoverCache().coverExists(series.getCoverID())) {
+		if (! movielist.getCoverCache().coverFileExists(series.getCoverID())) {
 			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_COVER_NOT_FOUND, series));
 		}
 		
@@ -248,12 +281,15 @@ public class DatabaseValidator {
 			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_NOCOVERSET, mov));
 		}
 
-		// ###############################################
-		// cover not found
-		// ###############################################
+		if (opt.ValidateCoverFiles)
+		{
+			// ###############################################
+			// cover not found
+			// ###############################################
 
-		if (! movielist.getCoverCache().coverExists(mov.getCoverID())) {
-			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_COVER_NOT_FOUND, mov));
+			if (!movielist.getCoverCache().coverFileExists(mov.getCoverID())) {
+				e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_COVER_NOT_FOUND, mov));
+			}
 		}
 
 		// ###############################################
@@ -303,13 +339,16 @@ public class DatabaseValidator {
 			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_FORMAT_NOT_FOUND_IN_PARTS, mov));
 		}
 
-		// ###############################################
-		// Inexistent Paths
-		// ###############################################
+		if (opt.ValidateVideoFiles)
+		{
+			// ###############################################
+			// Inexistent Paths
+			// ###############################################
 
-		for (int i = 0; i < mov.getPartcount(); i++) {
-			if (! new File(mov.getAbsolutePart(i)).exists()) {
-				e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_PATH_NOT_FOUND, mov));
+			for (int i = 0; i < mov.getPartcount(); i++) {
+				if (! new File(mov.getAbsolutePart(i)).exists()) {
+					e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_PATH_NOT_FOUND, mov));
+				}
 			}
 		}
 		
@@ -508,7 +547,7 @@ public class DatabaseValidator {
 		}
 	}
 
-	private static void validateSeason(List<DatabaseError> e, CCMovieList movielist, CCSeason season) {
+	private static void validateSeason(List<DatabaseError> e, CCMovieList movielist, CCSeason season, DatabaseValidatorOptions opt) {
 		// ###############################################
 		// no title set
 		// ###############################################
@@ -516,13 +555,16 @@ public class DatabaseValidator {
 		if (season.getTitle().isEmpty()) {
 			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_TITLE_NOT_SET, season));
 		}
-		
-		// ###############################################
-		// cover not found
-		// ###############################################
 
-		if (! movielist.getCoverCache().coverExists(season.getCoverID())) {
-			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_COVER_NOT_FOUND, season));
+		if (opt.ValidateCoverFiles)
+		{
+			// ###############################################
+			// cover not found
+			// ###############################################
+
+			if (! movielist.getCoverCache().coverFileExists(season.getCoverID())) {
+				e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_COVER_NOT_FOUND, season));
+			}
 		}
 		
 		// ###############################################
@@ -583,12 +625,15 @@ public class DatabaseValidator {
 			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_FORMAT_NOT_FOUND_IN_PARTS, episode));
 		}
 
-		// ###############################################
-		// Inexistent Paths
-		// ###############################################
+		if (opt.ValidateVideoFiles)
+		{
+			// ###############################################
+			// Inexistent Paths
+			// ###############################################
 
-		if (! new File(episode.getAbsolutePart()).exists()) {
-			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_PATH_NOT_FOUND, episode));
+			if (! new File(episode.getAbsolutePart()).exists()) {
+				e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_PATH_NOT_FOUND, episode));
+			}
 		}
 
 		if (opt.ValidateVideoFiles)
@@ -733,7 +778,10 @@ public class DatabaseValidator {
 		}
 	}
 
-	private static void findCoverErrors(List<DatabaseError> e, CCMovieList movielist, ProgressCallbackListener pcl) {
+	private static void findCoverErrors(List<DatabaseError> e, CCMovieList movielist, DoubleProgressCallbackListener pcl)
+	{
+		pcl.stepRootAndResetSub("Find cover errors", movielist.getElementCount()); //$NON-NLS-1$
+
 		// ###############################################
 		// Duplicate Covers
 		// ###############################################
@@ -741,6 +789,8 @@ public class DatabaseValidator {
 		List<DatabaseCoverElement> cvrList = new ArrayList<>();
 		
 		for (CCDatabaseElement el : movielist.iteratorElements()) {
+			pcl.stepSub(el.getFullDisplayTitle());
+
 			cvrList.add(new DatabaseCoverElement(el.getCoverID(), el));
 			
 			if (el.isSeries()) {
@@ -748,8 +798,6 @@ public class DatabaseValidator {
 					cvrList.add(new DatabaseCoverElement(((CCSeries)el).getSeasonByArrayIndex(j).getCoverID(), ((CCSeries)el).getSeasonByArrayIndex(j)));
 				}
 			}
-			
-			pcl.step();
 		}
 		
 		Collections.sort(cvrList);
@@ -758,12 +806,13 @@ public class DatabaseValidator {
 			if (cvrList.get(i).equalsCover(cvrList.get(i-1))) {
 				e.add(DatabaseError.createDouble(DatabaseErrorType.ERROR_DUPLICATE_COVERLINK, cvrList.get(i-1).getElement(), cvrList.get(i).getElement()));
 			}
-			
-			pcl.step();
 		}
 	}
 
-	private static void findCoverFileErrors(List<DatabaseError> e, CCMovieList movielist, ProgressCallbackListener pcl) {
+	private static void findCoverFileErrors(List<DatabaseError> e, CCMovieList movielist, DoubleProgressCallbackListener pcl)
+	{
+		pcl.stepRootAndResetSub("Validate cover files", 1); //$NON-NLS-1$
+
 		// ###############################################
 		// Too much Cover in Folder
 		// ###############################################
@@ -784,8 +833,13 @@ public class DatabaseValidator {
 
 		List<Tuple<String, Func0to1WithIOException<BufferedImage>>> files = cc.listCoversNonCached();
 
-		for (int i = 0; i < files.size(); i++) {
+		pcl.setSubMax(files.size());
+
+		for (int i = 0; i < files.size(); i++)
+		{
 			String cvrname = files.get(i).Item1;
+			pcl.stepSub(cvrname);
+
 			boolean found = false;
 			for (int j = 0; j < cvrList.size(); j++)
 			{
@@ -799,13 +853,13 @@ public class DatabaseValidator {
 					e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_NONLINKED_COVERFILE, cvrname));
 				}
 			}
-
-
-			if (i < cvrList.size()) pcl.step();
 		}
 	}
 
-	private static void findDuplicateFiles(List<DatabaseError> e, CCMovieList movielist, ProgressCallbackListener pcl) {
+	private static void findDuplicateFiles(List<DatabaseError> e, CCMovieList movielist, DoubleProgressCallbackListener pcl)
+	{
+		pcl.stepRootAndResetSub("Find duplicate files", 2 * movielist.getTotalDatabaseCount()); //$NON-NLS-1$
+
 		boolean ignIFO = CCProperties.getInstance().PROP_VALIDATE_DUP_IGNORE_IFO.getValue();
 		
 		List<DatabaseFileElement> flList = new ArrayList<>();
@@ -833,7 +887,7 @@ public class DatabaseValidator {
 				}
 			}
 			
-			pcl.step();
+			pcl.stepSub(el.getFullDisplayTitle());
 		}
 		
 		Collections.sort(flList);
@@ -842,14 +896,19 @@ public class DatabaseValidator {
 			if (!flList.get(i).getPath().isEmpty() && flList.get(i).equalsPath(flList.get(i-1))) {
 				e.add(DatabaseError.createDouble(DatabaseErrorType.ERROR_DUPLICATE_FILELINK, flList.get(i-1).getElement(), flList.get(i).getElement()));
 			}
-			
-			pcl.step();
+
+			pcl.stepSub(PathFormatter.getFilenameWithExt(flList.get(i).getPath()));
 		}
 	}
 
-	private static void findErrorInGroups(List<DatabaseError> e, CCMovieList movielist) {
+	private static void findErrorInGroups(List<DatabaseError> e, CCMovieList movielist, DoubleProgressCallbackListener pcl)
+	{
+		pcl.stepRootAndResetSub("Validate groups", 4 * movielist.getGroupCount()); //$NON-NLS-1$
+
 		Set<String> groupSet = new HashSet<>();
 		for (CCGroup group : movielist.getGroupList()) {
+			pcl.stepSub(group.Name);
+
 			if (! groupSet.add(group.Name.toLowerCase().trim())) {
 				e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_INVALID_GROUP, group));
 				break;
@@ -867,6 +926,7 @@ public class DatabaseValidator {
 		}
 		
 		for (CCGroup group : movielist.getGroupList()) {
+			pcl.stepSub(group.Name);
 			
 			if (group.Parent.isEmpty()) continue;
 			
@@ -879,6 +939,7 @@ public class DatabaseValidator {
 		}
 
 		for (CCGroup group : movielist.getGroupList()) {
+			pcl.stepSub(group.Name);
 			
 			CCGroup g = group;
 			
@@ -905,6 +966,7 @@ public class DatabaseValidator {
 		}
 
 		for (CCGroup group : movielist.getGroupList()) {
+			pcl.stepSub(group.Name);
 			
 			if (movielist.getDatabaseElementsbyGroup(group).isEmpty() && movielist.getSubGroups(group).isEmpty()) {
 				e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_UNUSED_GROUP, group));
@@ -913,7 +975,10 @@ public class DatabaseValidator {
 		
 	}
 	
-	private static void findDuplicateOnlineRef(List<DatabaseError> e, CCMovieList movielist, ProgressCallbackListener pcl) {
+	private static void findDuplicateOnlineRef(List<DatabaseError> e, CCMovieList movielist, DoubleProgressCallbackListener pcl)
+	{
+		pcl.stepRootAndResetSub("Validate groups", movielist.getElementCount()); //$NON-NLS-1$
+
 		Set<String> refSet = new HashSet<>();
 
 		for (CCMovie el : movielist.iteratorMovies()) {
@@ -923,7 +988,7 @@ public class DatabaseValidator {
 				}
 			}
 
-			pcl.step();
+			pcl.stepSub(el.getFullDisplayTitle());
 		}
 
 		for (CCSeries el : movielist.iteratorSeries()) {
@@ -933,7 +998,7 @@ public class DatabaseValidator {
 				}
 			}
 
-			pcl.step();
+			pcl.stepSub(el.getFullDisplayTitle());
 		}
 	}
 }

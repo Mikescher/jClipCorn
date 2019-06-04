@@ -87,7 +87,7 @@ public class CCDefaultCoverCache implements ICoverCache {
 	}
 
 	@Override
-	public boolean coverExists(int cid) {
+	public boolean coverFileExists(int cid) {
 		CoverCacheElement cce = getFromCache(cid);
 		if (cce == null) return false;
 

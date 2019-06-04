@@ -1,11 +1,6 @@
 package de.jClipCorn.util.stream;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
 
 import org.apache.commons.lang3.ObjectUtils;
@@ -403,7 +398,7 @@ public abstract class CCStream<TType> implements Iterator<TType>, Iterable<TType
 
 	public boolean contains(TType other) {
 		for (TType t : this) {
-			if (other == null ? t == null : other.equals(t)) return true;
+			if (Objects.equals(other, t)) return true;
 		}
 		return false;
 	}

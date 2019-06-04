@@ -193,12 +193,22 @@ public class TestIterators extends ClipCornBaseTest {
 		assertEquals(ml.iteratorElements().count(), ml.iteratorElements().map(p -> p.getLocalID()).unique().count());
 		assertEquals(ml.iteratorEpisodes().count(), ml.iteratorEpisodes().map(p -> p.getLocalID()).unique().count());
 	}
-	
+
 	@Test
 	public void testFlattenIterator() throws Exception {
 		CCMovieList ml = createExampleDB();
 
 		assertEquals(ml.iteratorEpisodes().stringjoin(p -> p.getLocalID()+"", ";"), ml.iteratorSeries().flatten(p -> p.iteratorEpisodes()).stringjoin(p -> p.getLocalID()+"", ";"));
 		assertEquals(ml.iteratorMovies().stringjoin(p -> p.getLocalID()+"", ";"), ml.iteratorMovies().flatten(p -> new SingleStream<>(p)).stringjoin(p -> p.getLocalID()+"", ";"));
+	}
+
+	@Test
+	public void testSkipAndTakeIterators() throws Exception {
+		CCMovieList ml = createExampleDB();
+
+		assertEquals(13, ml.iteratorElements().skip(7).count());
+		assertEquals("Death Proof: Todsicher", ml.iteratorElements().skip(5).firstOrNull().getTitle());
+
+		assertEquals(7, ml.iteratorElements().take(7).count());
 	}
 }

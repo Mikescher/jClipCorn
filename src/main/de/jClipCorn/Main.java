@@ -224,9 +224,3 @@ public class Main {
 //       - cover checksum/size/dimensions
 //       - coverid's exist in covertable
 //       - covertable-ids are references somewhere (& only once)
-
-//TODO unit tests for:
-//   - CCStream:Take
-//   - CCStream:Skip
-//   - CCE: generate quantized previews
-//   - CCE: serialization + deserialization of quantization byte[]

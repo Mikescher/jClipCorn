@@ -1,5 +1,6 @@
 package de.jClipCorn.test;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
@@ -13,6 +14,7 @@ import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.helper.ApplicationHelper;
 import de.jClipCorn.util.helper.SimpleFileUtils;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
 @SuppressWarnings("nls")
@@ -48,5 +50,16 @@ public class ClipCornBaseTest {
 		filep.delete();
 		
 		return ml;
+	}
+
+	protected void assertImageEquals(BufferedImage a, BufferedImage b) {
+		assertEquals(a.getWidth(), b.getWidth());
+		assertEquals(a.getHeight(), b.getHeight());
+
+		for (int x = 0; x < a.getWidth(); x++) {
+			for (int y = 0; y < a.getHeight(); y++) {
+				assertEquals(a.getRGB(x, y), b.getRGB(x, y));
+			}
+		}
 	}
 }

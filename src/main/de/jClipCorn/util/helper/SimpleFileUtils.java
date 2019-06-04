@@ -82,6 +82,14 @@ public class SimpleFileUtils {
 		return content.toString();
 	}
 
+	public static void writeRawResource(File out, String resourcename, Class<?> c) throws IOException {
+
+		try (InputStream is = c.getResourceAsStream(resourcename)) {
+			if (is == null) throw new IOException();
+			Files.copy(is, out.toPath());
+		}
+	}
+
 	public static void writeTextResource(File out, String resourcename, Class<?> c) throws IOException {
 
 		try (InputStream is = c.getResourceAsStream(resourcename)) {

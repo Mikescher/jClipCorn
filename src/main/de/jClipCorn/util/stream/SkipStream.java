@@ -13,9 +13,11 @@ public class SkipStream<TType> extends CCSimpleStream<TType> {
 
 	@Override
 	public TType nextOrNothing(boolean first) {
-		for (int i = 0; i < count; i++) {
-			if (!source.hasNext()) return finishStream();
-			source.next();
+		if (first) {
+			for (int i = 0; i < count; i++) {
+				if (!source.hasNext()) return finishStream();
+				source.next();
+			}
 		}
 
 		if (source.hasNext()) return source.next();

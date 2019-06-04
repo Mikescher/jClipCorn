@@ -1,22 +1,14 @@
 package de.jClipCorn.test;
 
-import de.jClipCorn.database.CCMovieList;
-import de.jClipCorn.database.databaseElement.CCEpisode;
-import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.util.colorquantizer.ColorQuantizer;
 import de.jClipCorn.util.colorquantizer.ColorQuantizerMethod;
 import de.jClipCorn.util.colorquantizer.util.ColorQuantizerConverter;
-import de.jClipCorn.util.comparator.CCMovieComparator;
-import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.helper.SimpleFileUtils;
-import de.jClipCorn.util.stream.SingleStream;
 import org.junit.Test;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.nio.Buffer;
-
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 

@@ -24,10 +24,7 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingUtilities;
 
 import de.jClipCorn.database.CCMovieList;
-import de.jClipCorn.features.databaseErrors.DatabaseAutofixer;
-import de.jClipCorn.features.databaseErrors.DatabaseError;
-import de.jClipCorn.features.databaseErrors.DatabaseErrorType;
-import de.jClipCorn.features.databaseErrors.DatabaseValidator;
+import de.jClipCorn.features.databaseErrors.*;
 import de.jClipCorn.gui.mainFrame.MainFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.features.log.CCLog;
@@ -35,6 +32,11 @@ import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.datatypes.CountAppendix;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.listener.ProgressCallbackProgressBarHelper;
+import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.ColumnSpec;
+import com.jgoodies.forms.layout.RowSpec;
+import com.jgoodies.forms.layout.FormSpecs;
+import javax.swing.JCheckBox;
 
 public class CheckDatabaseFrame extends JFrame {
 	private static final long serialVersionUID = 8481907373850170115L;
@@ -55,6 +57,14 @@ public class CheckDatabaseFrame extends JFrame {
 	private JList<CountAppendix<DatabaseErrorType>> lsCategories;
 	private JSplitPane pnlCenter;
 	private JButton btnFixselected;
+	private JPanel panel;
+	private JCheckBox cbValMovies;
+	private JCheckBox cbValSeries;
+	private JCheckBox cbValSeasons;
+	private JCheckBox cbValEpisodes;
+	private JCheckBox cbValCoverFiles;
+	private JCheckBox cbValAdditional;
+	private JCheckBox cbValVideoFiles;
 	
 	public CheckDatabaseFrame(CCMovieList ml, MainFrame owner) {
 		super();
@@ -65,28 +75,81 @@ public class CheckDatabaseFrame extends JFrame {
 		setLocationRelativeTo(owner);
 		
 		lblInfo.setText(LocaleBundle.getFormattedString("CheckDatabaseDialog.lblInfo.text", ml.getElementCount())); //$NON-NLS-1$
+		
+		panel = new JPanel();
+		contentPanel.add(panel, "1, 5, fill, fill"); //$NON-NLS-1$
+		panel.setLayout(new FormLayout(new ColumnSpec[] {
+				FormSpecs.RELATED_GAP_COLSPEC,
+				ColumnSpec.decode("1dlu:grow"), //$NON-NLS-1$
+				ColumnSpec.decode("12dlu"), //$NON-NLS-1$
+				ColumnSpec.decode("1dlu:grow"), //$NON-NLS-1$
+				FormSpecs.RELATED_GAP_COLSPEC,},
+			new RowSpec[] {
+				FormSpecs.DEFAULT_ROWSPEC,
+				FormSpecs.RELATED_GAP_ROWSPEC,
+				FormSpecs.DEFAULT_ROWSPEC,
+				FormSpecs.RELATED_GAP_ROWSPEC,
+				FormSpecs.DEFAULT_ROWSPEC,
+				FormSpecs.RELATED_GAP_ROWSPEC,
+				FormSpecs.DEFAULT_ROWSPEC,}));
+		
+		cbValMovies = new JCheckBox(LocaleBundle.getString("CheckDatabaseDialog.checkbox.cbValMovies")); //$NON-NLS-1$
+		cbValMovies.setSelected(true);
+		panel.add(cbValMovies, "2, 1, fill, fill"); //$NON-NLS-1$
+		
+		cbValCoverFiles = new JCheckBox(LocaleBundle.getString("CheckDatabaseDialog.checkbox.cbValCoverFiles")); //$NON-NLS-1$
+		cbValCoverFiles.setSelected(true);
+		panel.add(cbValCoverFiles, "4, 1, fill, fill"); //$NON-NLS-1$
+		
+		cbValSeries = new JCheckBox(LocaleBundle.getString("CheckDatabaseDialog.checkbox.cbValSeries")); //$NON-NLS-1$
+		cbValSeries.setSelected(true);
+		panel.add(cbValSeries, "2, 3, fill, fill"); //$NON-NLS-1$
+		
+		cbValVideoFiles = new JCheckBox(LocaleBundle.getString("CheckDatabaseDialog.checkbox.cbValVideoFiles")); //$NON-NLS-1$
+		cbValVideoFiles.setSelected(true);
+		panel.add(cbValVideoFiles, "4, 3, fill, fill"); //$NON-NLS-1$
+		
+		cbValSeasons = new JCheckBox(LocaleBundle.getString("CheckDatabaseDialog.checkbox.cbValSeasons")); //$NON-NLS-1$
+		cbValSeasons.setSelected(true);
+		panel.add(cbValSeasons, "2, 5, fill, fill"); //$NON-NLS-1$
+		
+		cbValEpisodes = new JCheckBox(LocaleBundle.getString("CheckDatabaseDialog.checkbox.cbValEpisodes")); //$NON-NLS-1$
+		cbValEpisodes.setSelected(true);
+		panel.add(cbValEpisodes, "2, 7, fill, fill"); //$NON-NLS-1$
+		
+		cbValAdditional = new JCheckBox(LocaleBundle.getString("CheckDatabaseDialog.checkbox.cbValAdditional")); //$NON-NLS-1$
+		cbValAdditional.setSelected(true);
+		panel.add(cbValAdditional, "4, 7, fill, fill"); //$NON-NLS-1$
 	}
 	
 	private void initGUI() {
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		setIconImage(Resources.IMG_FRAME_ICON.get());
 		setTitle(LocaleBundle.getString("CheckDatabaseDialog.this.title")); //$NON-NLS-1$
-		setBounds(100, 100, 750, 400);
+		setBounds(100, 100, 750, 500);
 		
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
-		contentPanel.setLayout(new BorderLayout(0, 2));
+		contentPanel.setLayout(new FormLayout(new ColumnSpec[] {
+				ColumnSpec.decode("default:grow"),}, //$NON-NLS-1$
+			new RowSpec[] {
+				FormSpecs.PREF_ROWSPEC,
+				RowSpec.decode("default:grow"), //$NON-NLS-1$
+				FormSpecs.PREF_ROWSPEC,
+				FormSpecs.RELATED_GAP_ROWSPEC,
+				FormSpecs.PREF_ROWSPEC,
+				FormSpecs.RELATED_GAP_ROWSPEC,}));
 		
 		pnlTop = new JPanel();
 		FlowLayout fl_pnlTop = (FlowLayout) pnlTop.getLayout();
 		fl_pnlTop.setAlignment(FlowLayout.LEFT);
-		contentPanel.add(pnlTop, BorderLayout.NORTH);
+		contentPanel.add(pnlTop, "1, 1, fill, top"); //$NON-NLS-1$
 		
 		btnValidate = new JButton(LocaleBundle.getString("CheckDatabaseDialog.btnValidate.text")); //$NON-NLS-1$
 		btnValidate.addActionListener(arg0 -> startValidate());
 		pnlTop.add(btnValidate);
 		
 		pBar = new JProgressBar();
-		contentPanel.add(pBar, BorderLayout.SOUTH);
+		contentPanel.add(pBar, "1, 3, fill, top"); //$NON-NLS-1$
 		
 		lblInfo = new JLabel();
 		pnlTop.add(lblInfo);
@@ -98,7 +161,7 @@ public class CheckDatabaseFrame extends JFrame {
 		
 		pnlCenter = new JSplitPane();
 		pnlCenter.setContinuousLayout(true);
-		contentPanel.add(pnlCenter, BorderLayout.CENTER);
+		contentPanel.add(pnlCenter, "1, 2, fill, fill"); //$NON-NLS-1$
 		
 		scrlPnlLeft = new JScrollPane();
 		pnlCenter.setLeftComponent(scrlPnlLeft);
@@ -228,12 +291,26 @@ public class CheckDatabaseFrame extends JFrame {
 		btnFixselected.setEnabled(false);
 		btnValidate.setEnabled(false);
 		btnAutofix.setEnabled(false);
-		
+
+		DatabaseValidatorOptions opts = new DatabaseValidatorOptions
+		(
+			cbValMovies.isSelected(),
+			cbValSeries.isSelected(),
+			cbValSeasons.isSelected(),
+			cbValEpisodes.isSelected(),
+			cbValAdditional.isSelected(),
+			cbValCoverFiles.isSelected(),
+			cbValVideoFiles.isSelected(),
+			cbValAdditional.isSelected(),
+			cbValAdditional.isSelected(),
+			cbValAdditional.isSelected()
+		);
+
 		new Thread(() ->
 		{
 			List<DatabaseError> errors = new ArrayList<>();
 
-			DatabaseValidator.startValidate(errors, movielist, new ProgressCallbackProgressBarHelper(pBar));
+			DatabaseValidator.startValidate(errors, movielist, opts, new ProgressCallbackProgressBarHelper(pBar));
 
 			errorList = errors;
 
@@ -280,9 +357,9 @@ public class CheckDatabaseFrame extends JFrame {
 	@SuppressWarnings("nls")
 	private String typeToString(CountAppendix<DatabaseErrorType> v) {
 		if (v.getCount() == 0) {
-			return LocaleBundle.getString(String.format("CheckDatabaseDialog.Errornames.ERR_%02d", v.Value.getType()));
+			return LocaleBundle.getString(String.format("CheckDatabaseDialog.Errornames.ERR_%02d", v.Value.getType())); //$NON-NLS-1$
 		} else {
-			return LocaleBundle.getString(String.format("CheckDatabaseDialog.Errornames.ERR_%02d", v.Value.getType())) + " (" + v.getCount() + ")";
+			return LocaleBundle.getString(String.format("CheckDatabaseDialog.Errornames.ERR_%02d", v.Value.getType())) + " (" + v.getCount() + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		}
 	}
 

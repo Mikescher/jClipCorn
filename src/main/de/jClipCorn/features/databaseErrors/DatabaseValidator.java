@@ -846,7 +846,7 @@ public class DatabaseValidator {
 
 		for (CCSeries s : movielist.iteratorSeries())
 		{
-			pcl.stepSub(s.getTitle()); //$NON-NLS-1$
+			pcl.stepSub(s.getTitle());
 
 			if (s.getCoverID() == -1) continue;
 

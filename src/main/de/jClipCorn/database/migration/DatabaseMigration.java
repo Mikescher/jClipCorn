@@ -284,7 +284,7 @@ public class DatabaseMigration {
 			ColorQuantizerMethod ptype = CCProperties.getInstance().PROP_DATABASE_COVER_QUANTIZER.getValue();
 			ColorQuantizer quant = ptype.create();
 			quant.analyze(img, 16);
-			byte[] preview = ColorQuantizerConverter.quantizeTo4BitRaw(quant, ColorQuantizerConverter.shrink(img, 24));
+			byte[] preview = ColorQuantizerConverter.quantizeTo4BitRaw(quant, ColorQuantizerConverter.shrink(img, ColorQuantizerConverter.PREVIEW_WIDTH));
 
 			CCSQLStatement stmt = SQLBuilder.createInsert(Statements.TAB_COVERS)
 					.addPreparedFields(Statements.COL_CVRS_ID, Statements.COL_CVRS_FILENAME, Statements.COL_CVRS_WIDTH)

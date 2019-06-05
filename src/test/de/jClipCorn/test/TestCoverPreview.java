@@ -28,14 +28,14 @@ public class TestCoverPreview extends ClipCornBaseTest {
 
 			quant.analyze(imgOrig, 16);
 			BufferedImage imgNewBig = quant.quantize(imgOrig);
-			BufferedImage imgNewSmall1 = ColorQuantizerConverter.shrink(quant.quantize(imgOrig), 24);
-			BufferedImage imgNewSmall2 = quant.quantize(ColorQuantizerConverter.shrink(imgOrig, 24));
+			BufferedImage imgNewSmall1 = ColorQuantizerConverter.shrink(quant.quantize(imgOrig), ColorQuantizerConverter.PREVIEW_WIDTH);
+			BufferedImage imgNewSmall2 = quant.quantize(ColorQuantizerConverter.shrink(imgOrig, ColorQuantizerConverter.PREVIEW_WIDTH));
 
 			assertEquals(imgOrig.getWidth(),  imgNewBig.getWidth());
 			assertEquals(imgOrig.getHeight(), imgNewBig.getHeight());
 
-			assertEquals(24, imgNewSmall1.getWidth());
-			assertEquals(24, imgNewSmall2.getWidth());
+			assertEquals(ColorQuantizerConverter.PREVIEW_WIDTH, imgNewSmall1.getWidth());
+			assertEquals(ColorQuantizerConverter.PREVIEW_WIDTH, imgNewSmall2.getWidth());
 
 			assertEquals(imgNewSmall1.getWidth(),  imgNewSmall2.getWidth());
 			assertEquals(imgNewSmall1.getHeight(), imgNewSmall2.getHeight());
@@ -59,7 +59,7 @@ public class TestCoverPreview extends ClipCornBaseTest {
 
 			quant.analyze(imgOrig, 16);
 
-			BufferedImage imgNewSmall = quant.quantize(ColorQuantizerConverter.shrink(imgOrig, 24));
+			BufferedImage imgNewSmall = quant.quantize(ColorQuantizerConverter.shrink(imgOrig, ColorQuantizerConverter.PREVIEW_WIDTH));
 
 			byte[] b1 = ColorQuantizerConverter.quantizeTo4BitRaw(quant, imgNewSmall);
 			BufferedImage b2 = ColorQuantizerConverter.quantizeFrom4BitRaw(b1);
@@ -80,8 +80,8 @@ public class TestCoverPreview extends ClipCornBaseTest {
 			ColorQuantizer quant = m.create();
 
 			BufferedImage imgOrig = ImageIO.read(filep);
-			imgOrig = ColorQuantizerConverter.shrink(imgOrig, 24);
-			assertEquals(24, imgOrig.getWidth());
+			imgOrig = ColorQuantizerConverter.shrink(imgOrig, ColorQuantizerConverter.PREVIEW_WIDTH);
+			assertEquals(ColorQuantizerConverter.PREVIEW_WIDTH, imgOrig.getWidth());
 
 			filep.delete();
 

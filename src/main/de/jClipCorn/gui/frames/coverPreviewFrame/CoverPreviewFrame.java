@@ -5,25 +5,44 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
-import javax.swing.JDialog;
-import javax.swing.JFrame;
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import javax.swing.filechooser.FileFilter;
 
+import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.ICCCoveredElement;
+import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.gui.guiComponents.ScalablePane;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
+import de.jClipCorn.util.colorquantizer.ColorQuantizer;
+import de.jClipCorn.util.colorquantizer.ColorQuantizerException;
+import de.jClipCorn.util.colorquantizer.ColorQuantizerMethod;
+import de.jClipCorn.util.colorquantizer.util.ColorQuantizerConverter;
+import de.jClipCorn.util.formatter.PathFormatter;
+import de.jClipCorn.util.helper.FileChooserHelper;
 import de.jClipCorn.util.helper.ImageUtilities;
 
 public class CoverPreviewFrame extends JDialog {
 	private static final long serialVersionUID = -807033167837187549L;
-	
+
+	private final BufferedImage _image;
+	private final File _path;
+
 	private ScalablePane lblImg;
 	
 	public CoverPreviewFrame(Component owner, ICCCoveredElement elem) {
 		super();
-		
+
+		_image = elem.getCover();
+		_path = new File(CCMovieList.getInstance().getCoverCache().getFilepath(elem.getCoverInfo()));
+
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		initGUI(elem.getCover(), elem.getTitle());
 		setLocationRelativeTo(findWindow(owner));
@@ -35,6 +54,18 @@ public class CoverPreviewFrame extends JDialog {
 		    }
 		});
 
+		addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent e) {
+				onMouseEvent(e);
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				onMouseEvent(e);
+			}
+		});
+
 		fixModality(owner);
 	}
 	
@@ -43,6 +74,9 @@ public class CoverPreviewFrame extends JDialog {
 	 */
 	public CoverPreviewFrame(Component owner, BufferedImage img) {
 		super();
+
+		_image = img;
+		_path = null;
 		
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		initGUI(img, LocaleBundle.getString("CoverPreviewFrame.title")); //$NON-NLS-1$
@@ -53,6 +87,18 @@ public class CoverPreviewFrame extends JDialog {
 			public void keyPressed(KeyEvent e) {
 		    	if (e.getKeyCode() == KeyEvent.VK_ESCAPE) CoverPreviewFrame.this.dispose();
 		    }
+		});
+
+		addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent e) {
+				onMouseEvent(e);
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				onMouseEvent(e);
+			}
 		});
 
 		fixModality(owner);
@@ -109,5 +155,135 @@ public class CoverPreviewFrame extends JDialog {
 		int w = (int)Math.round(h * ratioImage);
 
 		return new Dimension(w, h);
+	}
+
+	private void onMouseEvent(MouseEvent e) {
+		if (e.isPopupTrigger())
+		{
+			JPopupMenu menu = new JPopupMenu();
+			{
+				if (_path != null)
+				{
+					JMenuItem item1 = new JMenuItem(LocaleBundle.getString("CoverPreviewFrame.openSourcePopup"), Resources.ICN_MENUBAR_FOLDER.get16x16()); //$NON-NLS-1$
+					item1.addActionListener(e2 -> openSourceAction());
+					menu.add(item1);
+				}
+
+				JMenuItem item2 = new JMenuItem(LocaleBundle.getString("MainFrame.saveCoverPopup"), Resources.ICN_MENUBAR_SAVE.get16x16()); //$NON-NLS-1$
+				item2.addActionListener(e2 -> saveAction());
+				menu.add(item2);
+
+				JMenu item3 = new JMenu(LocaleBundle.getString("MainFrame.quantizePopup")); //$NON-NLS-1$
+				{
+					for (ColorQuantizerMethod m : ColorQuantizerMethod.values())
+					{
+						final ColorQuantizerMethod cqm = m;
+						JMenuItem item31 = new JMenuItem(m.asString());
+						item31.addActionListener(e2 -> showQuantization(cqm));
+						item3.add(item31);
+					}
+				}
+				menu.add(item3);
+
+				JMenu item5 = new JMenu(LocaleBundle.getString("MainFrame.resizedQuantizePopup")); //$NON-NLS-1$
+				{
+					for (ColorQuantizerMethod m : ColorQuantizerMethod.values())
+					{
+						final ColorQuantizerMethod cqm = m;
+						JMenuItem item51 = new JMenuItem(m.asString());
+						item51.addActionListener(e2 -> showResizedQuantization(cqm));
+						item5.add(item51);
+					}
+				}
+				menu.add(item5);
+
+				JMenu item4 = new JMenu(LocaleBundle.getString("MainFrame.previewPopup")); //$NON-NLS-1$
+				{
+					for (ColorQuantizerMethod m : ColorQuantizerMethod.values())
+					{
+						final ColorQuantizerMethod cqm = m;
+						JMenuItem item41 = new JMenuItem(m.asString());
+						item41.addActionListener(e2 -> showPreview(cqm));
+						item4.add(item41);
+					}
+				}
+				menu.add(item4);
+
+			}
+			menu.show(this, e.getX(), e.getY());
+		}
+	}
+
+	private void showPreview(ColorQuantizerMethod m) {
+		try {
+			ColorQuantizer quant = m.create();
+			quant.analyze(_image, 16);
+			lblImg.setImage(quant.quantize(ColorQuantizerConverter.shrink(_image, 24)));
+		} catch (ColorQuantizerException e) {
+			CCLog.addError(e);
+		}
+	}
+
+	private void showResizedQuantization(ColorQuantizerMethod m) {
+		try {
+			ColorQuantizer quant = m.create();
+			quant.analyze(_image, 16);
+			lblImg.setImage(quant.quantize(ImageUtilities.resizeCoverImageForFullSizeUI(_image)));
+		} catch (ColorQuantizerException e) {
+			CCLog.addError(e);
+		}
+	}
+
+	private void showQuantization(ColorQuantizerMethod m) {
+		try {
+			ColorQuantizer quant = m.create();
+			quant.analyze(_image, 16);
+			lblImg.setImage(quant.quantize(_image));
+		} catch (ColorQuantizerException e) {
+			CCLog.addError(e);
+		}
+	}
+
+	private void openSourceAction() {
+		PathFormatter.showInExplorer(_path);
+	}
+
+	private void saveAction() {
+		JFileChooser fc = new JFileChooser();
+		fc.setAcceptAllFileFilterUsed(false);
+
+		FileFilter filterPng;
+		FileFilter filterJpg;
+		FileFilter filterBmp;
+
+		fc.setFileFilter(filterPng = FileChooserHelper.createFileFilter("PNG-Image (*.png)", "png")); //$NON-NLS-1$ //$NON-NLS-2$
+
+		fc.addChoosableFileFilter(filterJpg = FileChooserHelper.createFileFilter("JPEG-Image (*.jpg)", "jpg", "jpeg")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+
+		fc.addChoosableFileFilter(filterBmp = FileChooserHelper.createFileFilter("Bitmap-Image (*.bmp)", "bmp")); //$NON-NLS-1$ //$NON-NLS-2$
+
+		if (fc.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
+			FileFilter choosen = fc.getFileFilter();
+			String path = fc.getSelectedFile().getAbsolutePath();
+			String format = ""; //$NON-NLS-1$
+
+			if (choosen.equals(filterPng)) {
+				format = "png"; //$NON-NLS-1$
+
+			} else if (choosen.equals(filterJpg)) {
+				format = "jpg"; //$NON-NLS-1$
+
+			} else if (choosen.equals(filterBmp)) {
+				format = "bmp"; //$NON-NLS-1$
+			}
+
+			path = PathFormatter.forceExtension(path, format);
+
+			try {
+				ImageIO.write(_image, format, new File(path));
+			} catch (IOException e) {
+				CCLog.addError(e);
+			}
+		}
 	}
 }

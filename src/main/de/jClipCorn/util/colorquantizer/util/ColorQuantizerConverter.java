@@ -9,6 +9,8 @@ import java.util.List;
 
 public class ColorQuantizerConverter {
 
+	public static int PREVIEW_WIDTH = 24;
+
 	public static byte[] quantizeTo4BitRaw(ColorQuantizer quant, BufferedImage img) throws ColorQuantizerException {
 		int w = img.getWidth();
 		int h = img.getHeight();

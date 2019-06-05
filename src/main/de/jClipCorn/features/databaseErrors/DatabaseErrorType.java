@@ -53,7 +53,13 @@ public class DatabaseErrorType {
 	public final static DatabaseErrorType ERROR_NON_NORMALIZED_PATH                = new DatabaseErrorType(47, DatabaseAutofixer::fixError_NonNormalizedPath);
 	public final static DatabaseErrorType ERROR_NO_LANG                            = new DatabaseErrorType(48, null);
 	public final static DatabaseErrorType ERROR_LANG_MUTED_SUBSET                  = new DatabaseErrorType(49, null);
-
+	public final static DatabaseErrorType ERROR_COVER_CHECKSUM_MISMATCH            = new DatabaseErrorType(50, null);
+	public final static DatabaseErrorType ERROR_COVER_DIMENSIONS_MISMATCH          = new DatabaseErrorType(51, null);
+	public final static DatabaseErrorType ERROR_COVER_FILESIZE_MISMATCH            = new DatabaseErrorType(52, null);
+	public final static DatabaseErrorType ERROR_DUPLICATE_COVERID                  = new DatabaseErrorType(53, null);
+	public final static DatabaseErrorType ERROR_COVERID_NOT_FOUND                  = new DatabaseErrorType(54, null);
+	public final static DatabaseErrorType ERROR_UNUSED_COVER_ENTRY                 = new DatabaseErrorType(55, null);
+	public final static DatabaseErrorType ERROR_DUPLICATE_REFERENCES_COVER_FILE    = new DatabaseErrorType(56, null);
 
 	private final int type;
 

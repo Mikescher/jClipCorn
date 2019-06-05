@@ -49,14 +49,22 @@ public abstract class CCStream<TType> implements Iterator<TType>, Iterable<TType
 	
 	public List<TType> enumerate() {
 		List<TType> result = new ArrayList<>();
-		
 		for (TType v : this) result.add(v);
-		
 		return result;
+	}
+
+	public List<TType> toList() {
+		return enumerate();
 	}
 	
 	public TType[] toArray(TType[] a) {
 		return enumerate().toArray(a);
+	}
+
+	public HashSet<TType> toSet() {
+		HashSet<TType> result = new HashSet<>();
+		for (TType v : this) result.add(v);
+		return result;
 	}
 
 	// enumerate this iterator, the stream is dead after this operation (!)

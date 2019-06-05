@@ -8,7 +8,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import de.jClipCorn.database.CCMovieList;
-import de.jClipCorn.database.covertab.CoverCacheElement;
+import de.jClipCorn.database.covertab.CCCoverData;
 import de.jClipCorn.database.databaseElement.columnTypes.CCDateTimeList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCFileFormat;
 import de.jClipCorn.database.databaseElement.columnTypes.CCFileSize;
@@ -144,7 +144,7 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 	}
 
 	@Override
-	public CoverCacheElement getCoverInfo() {
+	public CCCoverData getCoverInfo() {
 		return owner.getMovieList().getCoverCache().getInfo(coverid);
 	}
 	

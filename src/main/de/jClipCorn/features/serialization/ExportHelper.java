@@ -19,6 +19,7 @@ import java.util.zip.ZipOutputStream;
 import javax.imageio.ImageIO;
 
 import de.jClipCorn.database.covertab.CCDefaultCoverCache;
+import de.jClipCorn.database.covertab.CCCoverData;
 import de.jClipCorn.database.covertab.ICoverCache;
 import de.jClipCorn.features.serialization.xmlexport.DatabaseXMLExporter;
 import de.jClipCorn.features.serialization.xmlexport.ExportOptions;
@@ -46,12 +47,10 @@ import de.jClipCorn.gui.mainFrame.MainFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.util.TimeKeeper;
-import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.exceptions.CCFormatException;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.helper.SimpleFileUtils;
-import de.jClipCorn.util.lambda.Func0to1WithIOException;
 import de.jClipCorn.util.lambda.Func1to1;
 import de.jClipCorn.util.listener.ProgressCallbackListener;
 
@@ -201,10 +200,10 @@ public class ExportHelper {
 				// fast track for already serialized images (~ 6 times faster)
 				zipDir(((CCDefaultCoverCache)cc).getCoverDirectory().getParentFile(), ((CCDefaultCoverCache)cc).getCoverDirectory(), zos, false);
 			} else {
-				for (Tuple<String, Func0to1WithIOException<BufferedImage>> cover : cc.listCoversNonCached()) {
-					ZipEntry coverEntry = new ZipEntry(PathFormatter.combine("cover", cover.Item1)); //$NON-NLS-1$
+				for (CCCoverData cce : cc.listCovers()) {
+					ZipEntry coverEntry = new ZipEntry(PathFormatter.combine("cover", cce.Filename)); //$NON-NLS-1$
 					zos.putNextEntry(coverEntry);
-					ImageIO.write(cover.Item2.invoke(), "PNG", zos); //$NON-NLS-1$
+					ImageIO.write(cc.getCover(cce), "PNG", zos); //$NON-NLS-1$
 				}
 			}
 			

@@ -217,8 +217,3 @@ public class Main {
 //TODO evtl update dependencies ( gradlew dependencyUpdates )
 
 //TODO option recreate previews
-
-//TODO check
-//       - cover checksum/size/dimensions
-//       - coverid's exist in covertable
-//       - covertable-ids are references somewhere (& only once)

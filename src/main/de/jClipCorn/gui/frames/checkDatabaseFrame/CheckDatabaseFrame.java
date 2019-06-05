@@ -144,12 +144,12 @@ public class CheckDatabaseFrame extends JFrame {
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		contentPanel.setLayout(new FormLayout(new ColumnSpec[] {
 				FormSpecs.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("default:grow"),
+				ColumnSpec.decode("default:grow"), //$NON-NLS-1$
 				FormSpecs.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("225dlu"),},
+				ColumnSpec.decode("225dlu"),}, //$NON-NLS-1$
 			new RowSpec[] {
 				FormSpecs.PREF_ROWSPEC,
-				RowSpec.decode("default:grow"),
+				RowSpec.decode("default:grow"), //$NON-NLS-1$
 				FormSpecs.RELATED_GAP_ROWSPEC,
 				FormSpecs.PREF_ROWSPEC,
 				FormSpecs.RELATED_GAP_ROWSPEC,

@@ -860,7 +860,7 @@ public class CCDatabase {
 					int pt        = rs.getInt(COL_CVRS_PREVIEWTYPE);
 					CCDateTime ts = rs.getDateTime(COL_CVRS_CREATED);
 
-					coverCache.addInternal(new CoverCacheElement(id, fn, ww, hh, cs, fs, pv, pt, ts));
+					coverCache.addInternal(new CCCoverData(id, fn, ww, hh, cs, fs, pv, pt, ts));
 				}
 				rs.close();
 			}
@@ -881,7 +881,7 @@ public class CCDatabase {
 					CCDateTime ts = rs.getDateTime(COL_CVRS_CREATED);
 					String cs     = rs.getString(COL_CVRS_HASH_FILE);
 
-					coverCache.addInternal(new CoverCacheElement(id, fn, ww, hh, cs, fs, pt, ts));
+					coverCache.addInternal(new CCCoverData(id, fn, ww, hh, cs, fs, pt, ts));
 				}
 				rs.close();
 			}
@@ -890,7 +890,7 @@ public class CCDatabase {
 		}
 	}
 
-	public byte[] getPreviewForCover(CoverCacheElement cce) {
+	public byte[] getPreviewForCover(CCCoverData cce) {
 		try
 		{
 			CCSQLStatement stmt = selectCoversSingleStatement;
@@ -1168,7 +1168,7 @@ public class CCDatabase {
 		}
 	}
 
-	public boolean insertCoverEntry(CoverCacheElement cce) {
+	public boolean insertCoverEntry(CCCoverData cce) {
 		try {
 			CCSQLStatement stmt = insertCoversStatement;
 			stmt.clearParameters();
@@ -1193,7 +1193,7 @@ public class CCDatabase {
 		}
 	}
 
-	public void deleteCoverEntry(CoverCacheElement cce) {
+	public void deleteCoverEntry(CCCoverData cce) {
 		try {
 			CCSQLStatement stmt = removeCoversStatement;
 			stmt.clearParameters();

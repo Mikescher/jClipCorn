@@ -5,7 +5,6 @@ import de.jClipCorn.util.colorquantizer.ColorQuantizerMethod;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.helper.ImageUtilities;
-import de.jClipCorn.util.lambda.Func0to1WithIOException;
 
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -23,12 +22,7 @@ public class CCStubCoverCache implements ICoverCache {
 	}
 
 	@Override
-	public List<Tuple<String, Func0to1WithIOException<BufferedImage>>> listCoversNonCached() {
-		return new ArrayList<>();
-	}
-
-	@Override
-	public void addInternal(CoverCacheElement elem) {
+	public void addInternal(CCCoverData elem) {
 		//
 	}
 
@@ -48,6 +42,11 @@ public class CCStubCoverCache implements ICoverCache {
 	}
 
 	@Override
+	public BufferedImage getCover(CCCoverData cce) {
+		return Resources.IMG_COVER_STANDARD.get();
+	}
+
+	@Override
 	public int addCover(BufferedImage newCover) {
 		return 0;
 	}
@@ -58,8 +57,8 @@ public class CCStubCoverCache implements ICoverCache {
 	}
 
 	@Override
-	public CoverCacheElement getInfo(int cid) {
-		return new CoverCacheElement(cid, "", ImageUtilities.BASE_COVER_WIDTH, ImageUtilities.BASE_COVER_HEIGHT, "", 1024, ColorQuantizerMethod.EMPTY, CCDateTime.getCurrentDateTime()); //$NON-NLS-1$ //$NON-NLS-2$
+	public CCCoverData getInfo(int cid) {
+		return new CCCoverData(cid, "", ImageUtilities.BASE_COVER_WIDTH, ImageUtilities.BASE_COVER_HEIGHT, "", 1024, ColorQuantizerMethod.EMPTY, CCDateTime.getCurrentDateTime()); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	@Override
@@ -80,5 +79,20 @@ public class CCStubCoverCache implements ICoverCache {
 	@Override
 	public void preloadCover(int cid) {
 		//
+	}
+
+	@Override
+	public int getCoverCount() {
+		return 0;
+	}
+
+	@Override
+	public List<CCCoverData> listCovers() {
+		return new ArrayList<>();
+	}
+
+	@Override
+	public String getFilepath(CCCoverData cce) {
+		return null;
 	}
 }

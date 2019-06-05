@@ -6,7 +6,7 @@ import de.jClipCorn.database.databaseElement.columnTypes.*;
 import de.jClipCorn.features.actionTree.IActionSourceObject;
 import de.jClipCorn.util.exceptions.EnumFormatException;
 import de.jClipCorn.database.CCMovieList;
-import de.jClipCorn.database.covertab.CoverCacheElement;
+import de.jClipCorn.database.covertab.CCCoverData;
 import de.jClipCorn.database.util.ExtendedViewedState;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.features.log.CCLog;
@@ -220,7 +220,7 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 	}
 
 	@Override
-	public CoverCacheElement getCoverInfo() {
+	public CCCoverData getCoverInfo() {
 		return movielist.getCoverCache().getInfo(coverid);
 	}
 

@@ -2,22 +2,22 @@ package de.jClipCorn.features.databaseErrors;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.*;
 
+import de.jClipCorn.database.databaseElement.*;
 import de.jClipCorn.database.databaseElement.columnTypes.*;
 import de.jClipCorn.database.covertab.CCDefaultCoverCache;
-import de.jClipCorn.database.covertab.CoverCacheElement;
+import de.jClipCorn.database.covertab.CCCoverData;
 import de.jClipCorn.database.covertab.ICoverCache;
 
 import de.jClipCorn.util.listener.DoubleProgressCallbackListener;
+import de.jClipCorn.util.stream.CCStreams;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang.StringUtils;
 
 import de.jClipCorn.database.CCMovieList;
-import de.jClipCorn.database.databaseElement.CCDatabaseElement;
-import de.jClipCorn.database.databaseElement.CCEpisode;
-import de.jClipCorn.database.databaseElement.CCMovie;
-import de.jClipCorn.database.databaseElement.CCSeason;
-import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.datetime.CCDate;
@@ -30,8 +30,8 @@ import de.jClipCorn.util.lambda.Func0to1WithIOException;
 public class DatabaseValidator {
 	private final static CCDate MIN_DATE = CCDate.getMinimumDate();
 	
-	public static void startValidate(List<DatabaseError> e, CCMovieList ml, DatabaseValidatorOptions opt, DoubleProgressCallbackListener pcl) {
-
+	public static void startValidate(List<DatabaseError> e, CCMovieList ml, DatabaseValidatorOptions opt, DoubleProgressCallbackListener pcl)
+	{
 		boolean validateElements = opt.ValidateMovies || opt.ValidateSeries || opt.ValidateSeasons || opt.ValidateEpisodes;
 
 		int outerCount = 0;
@@ -41,7 +41,6 @@ public class DatabaseValidator {
 		if (opt.ValidateAdditional) outerCount++;         // [4]
 		if (opt.ValidateGroups) outerCount++;             // [5]
 		if (opt.ValidateOnlineReferences) outerCount++;   // [6]
-
 
 		pcl.setMaxAndResetValueBoth(outerCount+1, 1);
 
@@ -99,13 +98,15 @@ public class DatabaseValidator {
 		return CCProperties.getInstance().PROP_VALIDATE_FILESIZEDRIFT.getValue() / 100d;
 	}
 	
-	private static double getRelativeDifference(long size1, long size2) {
+	private static double getRelativeDifference(long size1, long size2)
+	{
 		double diff = Math.abs(size1 - size2);
 		long average = (size1 + size2)/2;
 		return diff / average;
 	}
 	
-	private static void validateSeries(List<DatabaseError> e, CCMovieList movielist, CCSeries series, DatabaseValidatorOptions opt) {
+	private static void validateSeries(List<DatabaseError> e, CCMovieList movielist, CCSeries series, DatabaseValidatorOptions opt)
+	{
 		// ###############################################
 		// no title set
 		// ###############################################
@@ -230,7 +231,8 @@ public class DatabaseValidator {
 		}
 	}
 
-	private static void validateMovie(List<DatabaseError> e, CCMovieList movielist, CCMovie mov, DatabaseValidatorOptions opt) {
+	private static void validateMovie(List<DatabaseError> e, CCMovieList movielist, CCMovie mov, DatabaseValidatorOptions opt)
+	{
 		// ###############################################
 		// Hole in Genres
 		// ###############################################
@@ -547,7 +549,8 @@ public class DatabaseValidator {
 		}
 	}
 
-	private static void validateSeason(List<DatabaseError> e, CCMovieList movielist, CCSeason season, DatabaseValidatorOptions opt) {
+	private static void validateSeason(List<DatabaseError> e, CCMovieList movielist, CCSeason season, DatabaseValidatorOptions opt)
+	{
 		// ###############################################
 		// no title set
 		// ###############################################
@@ -608,7 +611,8 @@ public class DatabaseValidator {
 		}
 	}
 
-	private static void validateEpisode(List<DatabaseError> e, CCEpisode episode, DatabaseValidatorOptions opt) {
+	private static void validateEpisode(List<DatabaseError> e, CCEpisode episode, DatabaseValidatorOptions opt)
+	{
 		// ###############################################
 		// no title set
 		// ###############################################
@@ -780,7 +784,15 @@ public class DatabaseValidator {
 
 	private static void findCoverErrors(List<DatabaseError> e, CCMovieList movielist, DoubleProgressCallbackListener pcl)
 	{
-		pcl.stepRootAndResetSub("Find cover errors", movielist.getElementCount()); //$NON-NLS-1$
+		ICoverCache cc = movielist.getCoverCache();
+
+		pcl.stepRootAndResetSub("Find cover errors",  //$NON-NLS-1$
+				movielist.getElementCount() +         // Duplicate Covers
+				movielist.getMovieCount() +           // Duplicate/Invalid CoverIDs
+				movielist.getSeriesCount() +          // Duplicate/Invalid CoverIDs
+				movielist.getSeasonCount() +          // Duplicate/Invalid CoverIDs
+				cc.getCoverCount() +                  // Unused CoverIDs
+				cc.getCoverCount());                  // Reused cover filenames
 
 		// ###############################################
 		// Duplicate Covers
@@ -807,11 +819,100 @@ public class DatabaseValidator {
 				e.add(DatabaseError.createDouble(DatabaseErrorType.ERROR_DUPLICATE_COVERLINK, cvrList.get(i-1).getElement(), cvrList.get(i).getElement()));
 			}
 		}
+
+		// ###############################################
+		// Duplicate/Invalid CoverIDs
+		// ###############################################
+
+		HashSet<Integer> coverIDsTable = CCStreams.iterate(cc.listCovers()).map(p->p.ID).toSet();
+
+		HashMap<Integer, ICCCoveredElement> coversDatabase = new HashMap<>();
+
+		for (CCMovie m : movielist.iteratorMovies())
+		{
+			pcl.stepSub(m.getFullDisplayTitle());
+
+			if (m.getCoverID() == -1) continue;
+
+			if (coversDatabase.containsKey(m.getCoverID())) {
+				e.add(DatabaseError.createDouble(DatabaseErrorType.ERROR_DUPLICATE_COVERID, m, coversDatabase.get(m.getCoverID())));
+				continue;
+			}
+
+			coversDatabase.put(m.getCoverID(), m);
+
+			if (!coverIDsTable.contains(m.getCoverID())) e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_COVERID_NOT_FOUND, m));
+		}
+
+		for (CCSeries s : movielist.iteratorSeries())
+		{
+			pcl.stepSub(s.getTitle()); //$NON-NLS-1$
+
+			if (s.getCoverID() == -1) continue;
+
+			if (coversDatabase.containsKey(s.getCoverID())) {
+				e.add(DatabaseError.createDouble(DatabaseErrorType.ERROR_DUPLICATE_COVERID, s, coversDatabase.get(s.getCoverID())));
+				continue;
+			}
+
+			coversDatabase.put(s.getCoverID(), s);
+
+			if (!coverIDsTable.contains(s.getCoverID())) e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_COVERID_NOT_FOUND, s));
+		}
+
+		for (CCSeason s : movielist.iteratorSeasons())
+		{
+			pcl.stepSub(s.getSeries().getTitle() + " S" + s.getSeasonNumber()); //$NON-NLS-1$
+
+			if (s.getCoverID() == -1) continue;
+
+			if (coversDatabase.containsKey(s.getCoverID())) {
+				e.add(DatabaseError.createDouble(DatabaseErrorType.ERROR_DUPLICATE_COVERID, s, coversDatabase.get(s.getCoverID())));
+				continue;
+			}
+
+			coversDatabase.put(s.getCoverID(), s);
+
+			if (!coverIDsTable.contains(s.getCoverID())) e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_COVERID_NOT_FOUND, s));
+		}
+
+		// ###############################################
+		// Unused CoverIDs
+		// ###############################################
+
+		for (CCCoverData cce : cc.listCovers()) {
+			pcl.stepSub(cce.Filename);
+
+			if (!coversDatabase.containsKey(cce.ID)) {
+				e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_UNUSED_COVER_ENTRY, cce.Filename));
+			}
+		}
+
+		// ###############################################
+		// Reused cover filenames
+		// ###############################################
+
+		HashSet<String> coverFileMapping = new HashSet<>();
+		for (CCCoverData cce : cc.listCovers()) {
+			pcl.stepSub(cce.Filename);
+
+			if (coverFileMapping.contains(cce.Filename.toLowerCase())) {
+				e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_DUPLICATE_REFERENCES_COVER_FILE, cce.Filename));
+				continue;
+			}
+			coverFileMapping.add(cce.Filename.toLowerCase());
+		}
 	}
 
 	private static void findCoverFileErrors(List<DatabaseError> e, CCMovieList movielist, DoubleProgressCallbackListener pcl)
 	{
 		pcl.stepRootAndResetSub("Validate cover files", 1); //$NON-NLS-1$
+
+		ICoverCache cc = movielist.getCoverCache();
+		List<Tuple<String, Func0to1WithIOException<BufferedImage>>> files = new ArrayList<>();
+		if (cc instanceof CCDefaultCoverCache) files = ((CCDefaultCoverCache)cc).listCoversInFilesystem();
+
+		pcl.setSubMax(files.size() + cc.getCoverCount());
 
 		// ###############################################
 		// Too much Cover in Folder
@@ -829,12 +930,6 @@ public class DatabaseValidator {
 			}
 		}
 
-		ICoverCache cc = movielist.getCoverCache();
-
-		List<Tuple<String, Func0to1WithIOException<BufferedImage>>> files = cc.listCoversNonCached();
-
-		pcl.setSubMax(files.size());
-
 		for (int i = 0; i < files.size(); i++)
 		{
 			String cvrname = files.get(i).Item1;
@@ -843,7 +938,7 @@ public class DatabaseValidator {
 			boolean found = false;
 			for (int j = 0; j < cvrList.size(); j++)
 			{
-				CoverCacheElement cce = cc.getInfo(cvrList.get(j).getCoverID());
+				CCCoverData cce = cc.getInfo(cvrList.get(j).getCoverID());
 				found |= cce.Filename.equalsIgnoreCase(cvrname);
 			}
 			if (! found) {
@@ -853,6 +948,27 @@ public class DatabaseValidator {
 					e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_NONLINKED_COVERFILE, cvrname));
 				}
 			}
+		}
+
+		// ###############################################
+		// Cover metadata
+		// ###############################################
+
+		for (CCCoverData cce : cc.listCovers())
+		{
+			pcl.stepSub(cce.Filename);
+
+			String fp = cc.getFilepath(cce);
+			if (fp == null) continue;
+
+			String checksum = "ERR"; //$NON-NLS-1$
+			try (FileInputStream fis = new FileInputStream(new File(fp))) { checksum = DigestUtils.sha256Hex(fis).toUpperCase(); } catch (IOException ex) {/**/}
+			if (! checksum.equals(cce.Checksum)) e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_COVER_CHECKSUM_MISMATCH, cce.Filename));
+
+			BufferedImage img = cc.getCover(cce);
+			if (img.getWidth() != cce.Width || img.getHeight() != cce.Height)	 e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_COVER_DIMENSIONS_MISMATCH, cce.Filename));
+
+			if (new File(fp).length() != cce.Filesize) e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_COVER_FILESIZE_MISMATCH, cce.Filename));
 		}
 	}
 

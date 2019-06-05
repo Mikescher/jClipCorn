@@ -5,7 +5,7 @@ import de.jClipCorn.util.colorquantizer.ColorQuantizerMethod;
 import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.exceptions.EnumFormatException;
 
-public class CoverCacheElement {
+public class CCCoverData {
 
 	public final int ID;
 	public final String Filename;
@@ -18,7 +18,7 @@ public class CoverCacheElement {
 
 	private byte[] Preview; // can be null
 
-	public CoverCacheElement(int id, String fn, int ww, int hh, String cs, long fs, byte[] pv, ColorQuantizerMethod pt, CCDateTime ts) {
+	public CCCoverData(int id, String fn, int ww, int hh, String cs, long fs, byte[] pv, ColorQuantizerMethod pt, CCDateTime ts) {
 		this.ID          = id;
 		this.Filename    = fn;
 		this.Width       = ww;
@@ -31,7 +31,7 @@ public class CoverCacheElement {
 		this.Preview     = pv;
 	}
 
-	public CoverCacheElement(int id, String fn, int ww, int hh, String cs, long fs, byte[] pv, int pt, CCDateTime ts) throws EnumFormatException {
+	public CCCoverData(int id, String fn, int ww, int hh, String cs, long fs, byte[] pv, int pt, CCDateTime ts) throws EnumFormatException {
 		this.ID          = id;
 		this.Filename    = fn;
 		this.Width       = ww;
@@ -44,7 +44,7 @@ public class CoverCacheElement {
 		this.Preview     = pv;
 	}
 
-	public CoverCacheElement(int id, String fn, int ww, int hh, String cs, long fs, ColorQuantizerMethod pt, CCDateTime ts) {
+	public CCCoverData(int id, String fn, int ww, int hh, String cs, long fs, ColorQuantizerMethod pt, CCDateTime ts) {
 		this.ID          = id;
 		this.Filename    = fn;
 		this.Width       = ww;
@@ -57,7 +57,7 @@ public class CoverCacheElement {
 		this.Preview     = null;
 	}
 
-	public CoverCacheElement(int id, String fn, int ww, int hh, String cs, long fs, int pt, CCDateTime ts) throws EnumFormatException {
+	public CCCoverData(int id, String fn, int ww, int hh, String cs, long fs, int pt, CCDateTime ts) throws EnumFormatException {
 		this.ID          = id;
 		this.Filename    = fn;
 		this.Width       = ww;

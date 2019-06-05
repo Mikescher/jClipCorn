@@ -10,7 +10,6 @@ import de.jClipCorn.util.colorquantizer.util.ColorQuantizerConverter;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.helper.SimpleFileUtils;
-import de.jClipCorn.util.lambda.Func0to1WithIOException;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -18,13 +17,11 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class CCMemoryCoverCache implements ICoverCache {
 	private Map<Integer, BufferedImage> data;
-	private final HashMap<Integer, CoverCacheElement> _elements;
+	private final HashMap<Integer, CCCoverData> _elements;
 
 	public CCMemoryCoverCache() {
 		_elements = new HashMap<>();
@@ -36,12 +33,7 @@ public class CCMemoryCoverCache implements ICoverCache {
 	}
 
 	@Override
-	public List<Tuple<String, Func0to1WithIOException<BufferedImage>>> listCoversNonCached() {
-		return null;
-	}
-
-	@Override
-	public void addInternal(CoverCacheElement elem) {
+	public void addInternal(CCCoverData elem) {
 		_elements.put(elem.ID, elem);
 	}
 
@@ -57,8 +49,8 @@ public class CCMemoryCoverCache implements ICoverCache {
 		// do nothing
 	}
 
-	private CoverCacheElement getFromCache(int cid) {
-		CoverCacheElement cce = _elements.get(cid);
+	private CCCoverData getFromCache(int cid) {
+		CCCoverData cce = _elements.get(cid);
 
 		if (cce == null) CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CoverNotInCache", cid)); //$NON-NLS-1$
 
@@ -69,13 +61,18 @@ public class CCMemoryCoverCache implements ICoverCache {
 	public BufferedImage getCover(int cid) {
 		if (cid == -1) return Resources.IMG_COVER_NOTFOUND.get();
 
-		CoverCacheElement cce = getFromCache(cid);
+		CCCoverData cce = getFromCache(cid);
 		if (cce == null) return Resources.IMG_COVER_NOTFOUND.get();
 
+		return getCover(cce);
+	}
+
+	@Override
+	public BufferedImage getCover(CCCoverData cce) {
 		BufferedImage res = data.get(cce.ID);
 
 		if (res == null) {
-			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CoverFileBroken", cid)); //$NON-NLS-1$
+			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CoverFileBroken", cce.ID)); //$NON-NLS-1$
 			return Resources.IMG_COVER_NOTFOUND.get();
 		}
 
@@ -100,7 +97,7 @@ public class CCMemoryCoverCache implements ICoverCache {
 			quant.analyze(newCover, 16);
 			byte[] preview = ColorQuantizerConverter.quantizeTo4BitRaw(quant, ColorQuantizerConverter.shrink(newCover, 24));
 
-			CoverCacheElement cce = new CoverCacheElement(cid, fname, newCover.getWidth(), newCover.getHeight(), checksum, f.length(), preview, ptype, CCDateTime.getCurrentDateTime());
+			CCCoverData cce = new CCCoverData(cid, fname, newCover.getWidth(), newCover.getHeight(), checksum, f.length(), preview, ptype, CCDateTime.getCurrentDateTime());
 
 			data.put(cid, newCover);
 			_elements.put(cid, cce);
@@ -121,8 +118,8 @@ public class CCMemoryCoverCache implements ICoverCache {
 	}
 
 	@Override
-	public CoverCacheElement getInfo(int cid) {
-		CoverCacheElement cce = _elements.get(cid);
+	public CCCoverData getInfo(int cid) {
+		CCCoverData cce = _elements.get(cid);
 		if (cce == null) CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CoverNotInCache", cid)); //$NON-NLS-1$
 		return cce;
 	}
@@ -134,7 +131,7 @@ public class CCMemoryCoverCache implements ICoverCache {
 
 	@Override
 	public Tuple<Integer, Integer> getDimensions(int cid) {
-		CoverCacheElement cce = getFromCache(cid);
+		CCCoverData cce = getFromCache(cid);
 		if (cce == null) return Tuple.Create(0, 0);
 		return Tuple.Create(cce.Width, cce.Height);
 	}
@@ -147,5 +144,20 @@ public class CCMemoryCoverCache implements ICoverCache {
 	@Override
 	public void preloadCover(int cid) {
 		getCover(cid);
+	}
+
+	@Override
+	public int getCoverCount() {
+		return _elements.values().size();
+	}
+
+	@Override
+	public List<CCCoverData> listCovers() {
+		return Collections.unmodifiableList(new ArrayList<>(_elements.values()));
+	}
+
+	@Override
+	public String getFilepath(CCCoverData cce) {
+		return null;
 	}
 }

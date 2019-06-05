@@ -1,6 +1,5 @@
 package de.jClipCorn.util.colorquantizer;
 
-import de.jClipCorn.util.colorquantizer.octree.OctreeException;
 import de.jClipCorn.util.colorquantizer.util.RGBColor;
 
 import java.awt.image.BufferedImage;
@@ -12,5 +11,5 @@ public interface ColorQuantizer {
 	List<RGBColor> getPalette() throws ColorQuantizerException;
 	BufferedImage quantize(BufferedImage img) throws ColorQuantizerException;
 
-	int getPaletteIndex(RGBColor c, int x, int y) throws OctreeException;
+	int getPaletteIndex(RGBColor c, int x, int y) throws ColorQuantizerException;
 }

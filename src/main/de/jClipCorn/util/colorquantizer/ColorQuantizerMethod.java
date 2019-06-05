@@ -3,7 +3,9 @@ package de.jClipCorn.util.colorquantizer;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.colorquantizer.distinctselection.DistinctSelectionQuantizer;
 import de.jClipCorn.util.colorquantizer.empty.EmptyColorQuantizer;
+import de.jClipCorn.util.colorquantizer.mediancut.MedianCutQuantizer;
 import de.jClipCorn.util.colorquantizer.octree.OctreeQuantizer;
+import de.jClipCorn.util.colorquantizer.smartk8.K8QuantizerInterfaceWrapper;
 import de.jClipCorn.util.colorquantizer.smartk8.K8QuantizerWrapper;
 import de.jClipCorn.util.colorquantizer.wadcolors.WadColorPaletteQuantizer;
 import de.jClipCorn.util.enumextension.ContinoousEnum;
@@ -14,13 +16,15 @@ public enum ColorQuantizerMethod implements ContinoousEnum<ColorQuantizerMethod>
 	EMPTY(0, EmptyColorQuantizer::new),
 	SIMPLE_OCTREE(1, OctreeQuantizer::new),
 	HSL_DISTINCT_SELECTION(2, () -> new K8QuantizerWrapper(new DistinctSelectionQuantizer())),
-	OPTIMIZED_PALETTE(3, WadColorPaletteQuantizer::new);
+	OPTIMIZED_PALETTE(3, WadColorPaletteQuantizer::new),
+	MEDIAN_CUT(4, () -> new K8QuantizerInterfaceWrapper(new MedianCutQuantizer()));
 
 	private final static String[] NAMES = {
 			LocaleBundle.getString("ColorQuantizerMethod.EMPTY"),                   //$NON-NLS-1$
 			LocaleBundle.getString("ColorQuantizerMethod.SIMPLE_OCTREE"),           //$NON-NLS-1$
 			LocaleBundle.getString("ColorQuantizerMethod.HSL_DISTINCT_SELECTION"),  //$NON-NLS-1$
 			LocaleBundle.getString("ColorQuantizerMethod.OPTIMIZED_PALETTE"),       //$NON-NLS-1$
+			LocaleBundle.getString("ColorQuantizerMethod.MEDIAN_CUT"),              //$NON-NLS-1$
 	};
 
 	private final int id;

@@ -46,12 +46,12 @@ public class StatisticsYearChart extends StatisticsChart {
 		XYPlot plot = chart.getXYPlot();
 		
 		XYBarRenderer bar_renderer = (XYBarRenderer) plot.getRenderer();
-		bar_renderer.setBaseFillPaint(HISTOGRAMMCHART_COLOR);
+		bar_renderer.setDefaultFillPaint(HISTOGRAMMCHART_COLOR);
 		bar_renderer.setMargin( 0.2 );
 		bar_renderer.setBarAlignmentFactor( 0 );
 		bar_renderer.setSeriesPaint(0, HISTOGRAMMCHART_COLOR);
 		bar_renderer.setShadowVisible(true);
-		bar_renderer.setBaseToolTipGenerator(new StandardXYToolTipGenerator("{1}: {2}", new DecimalFormat("0"), new DecimalFormat("0"))); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		bar_renderer.setDefaultToolTipGenerator(new StandardXYToolTipGenerator("{1}: {2}", new DecimalFormat("0"), new DecimalFormat("0"))); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		bar_renderer.setBarPainter(new StandardXYBarPainter());
 		
 		plot.setBackgroundPaint(HISTOGRAMMACKGROUND_COLOR);

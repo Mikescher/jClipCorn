@@ -10,14 +10,13 @@ import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JTextField;
 
-import org.apache.commons.lang3.StringEscapeUtils;
-
 import de.jClipCorn.gui.frames.editStringListPropertyFrame.EditStringListPropertyFrame;
 import de.jClipCorn.gui.guiComponents.StringListConfigPanel;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.CCPropertyCategory;
+import org.apache.commons.text.StringEscapeUtils;
 
 @SuppressWarnings("rawtypes")
 public class CCStringListProperty extends CCProperty<ArrayList> {

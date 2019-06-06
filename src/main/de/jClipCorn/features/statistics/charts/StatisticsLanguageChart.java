@@ -6,9 +6,9 @@ import de.jClipCorn.features.statistics.StatisticsChart;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PiePlot3D;
+import org.jfree.chart.util.Rotation;
 import org.jfree.data.general.DefaultPieDataset;
 import org.jfree.data.general.PieDataset;
-import org.jfree.util.Rotation;
 
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguage;

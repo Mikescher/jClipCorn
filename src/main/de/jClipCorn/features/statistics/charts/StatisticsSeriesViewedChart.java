@@ -24,9 +24,9 @@ import org.jfree.chart.labels.StandardXYItemLabelGenerator;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.StandardXYItemRenderer;
 import org.jfree.chart.renderer.xy.XYAreaRenderer;
+import org.jfree.chart.ui.TextAnchor;
 import org.jfree.data.xy.DefaultXYDataset;
 import org.jfree.data.xy.XYDataset;
-import org.jfree.ui.TextAnchor;
 
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCEpisode;
@@ -107,10 +107,10 @@ public class StatisticsSeriesViewedChart extends StatisticsChart {
 	    	plot.setRenderer(3*idx + 2, new StandardXYItemRenderer(StandardXYItemRenderer.LINES, null, null));
 	    	plot.getRenderer(3*idx + 2).setSeriesPaint(0, cf);
 	    	plot.getRenderer(3*idx + 2).setSeriesVisibleInLegend(0, false);
-	    	plot.getRenderer(3*idx + 2).setBaseItemLabelGenerator(new StandardXYItemLabelGenerator("{0}")); //$NON-NLS-1$
-	    	plot.getRenderer(3*idx + 2).setBaseItemLabelPaint(cf);
-	    	plot.getRenderer(3*idx + 2).setBaseItemLabelsVisible(true);
-	    	plot.getRenderer(3*idx + 2).setBasePositiveItemLabelPosition(new ItemLabelPosition(ItemLabelAnchor.OUTSIDE12, TextAnchor.BOTTOM_LEFT, TextAnchor.BOTTOM_LEFT, -45));
+	    	plot.getRenderer(3*idx + 2).setDefaultItemLabelGenerator(new StandardXYItemLabelGenerator("{0}")); //$NON-NLS-1$
+	    	plot.getRenderer(3*idx + 2).setDefaultItemLabelPaint(cf);
+	    	plot.getRenderer(3*idx + 2).setDefaultItemLabelsVisible(true);
+	    	plot.getRenderer(3*idx + 2).setDefaultPositiveItemLabelPosition(new ItemLabelPosition(ItemLabelAnchor.OUTSIDE12, TextAnchor.BOTTOM_LEFT, TextAnchor.BOTTOM_LEFT, -45));
 	    	plot.getRenderer(3*idx + 2).setSeriesItemLabelsVisible(0, true);
 	    	
 	    	idx++;

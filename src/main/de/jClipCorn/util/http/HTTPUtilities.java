@@ -161,7 +161,7 @@ public class HTTPUtilities {
 		//Otherwise we will get flooded with log warnings -.-
 		java.util.logging.Logger.getLogger("com.gargoylesoftware").setLevel(java.util.logging.Level.OFF);
 
-		try (WebClient webClient = new WebClient(BrowserVersion.FIREFOX_38)) {
+		try (WebClient webClient = new WebClient(BrowserVersion.FIREFOX_52)) {
 			webClient.getOptions().setJavaScriptEnabled(true);
 			webClient.getOptions().setThrowExceptionOnFailingStatusCode(true);
 			webClient.getOptions().setThrowExceptionOnScriptError(false);

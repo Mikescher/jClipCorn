@@ -12,9 +12,9 @@ import de.jClipCorn.util.stream.CCStream;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PiePlot3D;
+import org.jfree.chart.util.Rotation;
 import org.jfree.data.general.DefaultPieDataset;
 import org.jfree.data.general.PieDataset;
-import org.jfree.util.Rotation;
 
 import java.util.HashMap;
 import java.util.Map;

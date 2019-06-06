@@ -60,9 +60,9 @@ public class CCDateTime implements Comparable<CCDateTime>, StringSpecSupplier {
 		c.setTimeZone(tzone);
 
 		int dy = c.get(Calendar.YEAR);
-		int dm = c.get(Calendar.MONTH);
+		int dm = c.get(Calendar.MONTH) + 1;
 		int dd = c.get(Calendar.DAY_OF_MONTH);
-		int th = c.get(Calendar.HOUR);
+		int th = c.get(Calendar.HOUR_OF_DAY);
 		int tm = c.get(Calendar.MINUTE);
 		int ts = c.get(Calendar.SECOND);
 

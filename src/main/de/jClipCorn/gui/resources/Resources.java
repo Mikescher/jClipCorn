@@ -400,6 +400,12 @@ public class Resources {
 
 	public final static MultiSizeIconRef ICN_REF_10			= registerMultisizeIcon("/icons/onlineReferences/ref10.png");
 	public final static IconRef ICN_REF_10_BUTTON			= registerOtherIcon("/icons/onlineReferences/ref10_large.png");
+
+	public final static MultiSizeIconRef ICN_REF_11			= registerMultisizeIcon("/icons/onlineReferences/ref11.png");
+	public final static IconRef ICN_REF_11_BUTTON			= registerOtherIcon("/icons/onlineReferences/ref11_large.png");
+
+	public final static MultiSizeIconRef ICN_REF_12			= registerMultisizeIcon("/icons/onlineReferences/ref12.png");
+	public final static IconRef ICN_REF_12_BUTTON			= registerOtherIcon("/icons/onlineReferences/ref12_large.png");
 	// ###############################################  </LOG>  ##############################################
 	
 	

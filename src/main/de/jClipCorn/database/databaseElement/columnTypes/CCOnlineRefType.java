@@ -28,7 +28,9 @@ public enum CCOnlineRefType implements ContinoousEnum<CCOnlineRefType> {
 	ANILIST    (7,  "anil", "CCOnlineRefType.ANILIST",     CCOnlineRefTypeHelper.REGEX_ANIL, CCOnlineRefTypeHelper.REGEX_PASTE_ANIL, Resources.ICN_REF_07, Resources.ICN_REF_07_BUTTON),
 	ANIMEPLANET(8,  "anpl", "CCOnlineRefType.ANIMEPLANET", CCOnlineRefTypeHelper.REGEX_ANPL, CCOnlineRefTypeHelper.REGEX_PASTE_ANPL, Resources.ICN_REF_08, Resources.ICN_REF_08_BUTTON),
 	KITSU      (9,  "kisu", "CCOnlineRefType.KITSU",       CCOnlineRefTypeHelper.REGEX_KISU, CCOnlineRefTypeHelper.REGEX_PASTE_KISU, Resources.ICN_REF_09, Resources.ICN_REF_09_BUTTON),
-	ANIDB      (10, "andb", "CCOnlineRefType.ANIDB",       CCOnlineRefTypeHelper.REGEX_ANDB, CCOnlineRefTypeHelper.REGEX_PASTE_ANDB, Resources.ICN_REF_10, Resources.ICN_REF_10_BUTTON);
+	ANIDB      (10, "andb", "CCOnlineRefType.ANIDB",       CCOnlineRefTypeHelper.REGEX_ANDB, CCOnlineRefTypeHelper.REGEX_PASTE_ANDB, Resources.ICN_REF_10, Resources.ICN_REF_10_BUTTON),
+	THETVDB    (11, "tvdb", "CCOnlineRefType.THETVDB",     CCOnlineRefTypeHelper.REGEX_TVDB, CCOnlineRefTypeHelper.REGEX_PASTE_TVDB, Resources.ICN_REF_11, Resources.ICN_REF_11_BUTTON),
+	TVMAZE     (12, "maze", "CCOnlineRefType.TVMAZE",      CCOnlineRefTypeHelper.REGEX_MAZE, CCOnlineRefTypeHelper.REGEX_PASTE_MAZE, Resources.ICN_REF_12, Resources.ICN_REF_12_BUTTON);
 
 	private final int id;
 	private final String identifier;

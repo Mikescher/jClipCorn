@@ -15,7 +15,11 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.util.helper.KeyStrokeUtil;
 import de.jClipCorn.util.listener.ActionCallbackListener;
+import de.jClipCorn.util.stream.CCStreams;
+
 import java.awt.*;
+import java.util.List;
+import java.util.Map;
 
 public abstract class ClipPopupMenu extends JPopupMenu {
 	private static final long serialVersionUID = -3924972933691119441L;
@@ -95,24 +99,40 @@ public abstract class ClipPopupMenu extends JPopupMenu {
 		JMenu menu = new JMenu(el0.getCaption());
 		add(menu);
 		menu.setIcon(el0.getSmallIcon());
-		
-		for (CCSingleOnlineReference soref : ref) {
 
-			JMenuItem subitem = menu.add(soref.hasDescription() ? soref.description : soref.type.asString());
-			subitem.setIcon(soref.type.getIcon16x16());
-			
-			if (soref == ref.Main && ! KeyStrokeUtil.isEmpty(el0.getKeyStroke())) {
-				subitem.setAccelerator(el0.getKeyStroke());
-			}
-			
-			subitem.addActionListener(arg0 -> soref.openInBrowser(src));
-			
+		if (ref.isMainSet()) {
+			JMenuItem subitem = menu.add(ref.Main.hasDescription() ? ref.Main.description : ref.Main.type.asString());
+			subitem.setIcon(ref.Main.type.getIcon16x16());
+			if (!KeyStrokeUtil.isEmpty(el0.getKeyStroke())) subitem.setAccelerator(el0.getKeyStroke());
+			subitem.addActionListener(arg0 -> ref.Main.openInBrowser(src));
 			menu.add(subitem);
-			
-			if (soref == ref.Main && ref.hasAdditional()) menu.addSeparator();
+
+			if (ref.hasAdditional()) menu.addSeparator();
 		}
-		
+
+		if (ref.hasAdditional()) {
+			for (CCSingleOnlineReference soref : CCStreams.iterate(ref.Additional).filter(r -> !r.hasDescription())) {
+				JMenuItem subitem = menu.add(soref.hasDescription() ? soref.description : soref.type.asString());
+				subitem.setIcon(soref.type.getIcon16x16());
+				subitem.addActionListener(arg0 -> soref.openInBrowser(src));
+				menu.add(subitem);
+			}
+
+			if (CCStreams.iterate(ref.Additional).any(r -> !r.hasDescription()) && CCStreams.iterate(ref.Additional).any(r -> r.hasDescription())) menu.addSeparator();
+
+			for (Map.Entry<String, List<CCSingleOnlineReference>> soreflist : CCStreams.iterate(ref.Additional).filter(CCSingleOnlineReference::hasDescription).groupBy(r -> r.description).autosortByProperty(p -> p.getKey())) {
+
+				JMenu submenu = new JMenu(soreflist.getKey());
+
+				for (CCSingleOnlineReference soref : soreflist.getValue()) {
+					JMenuItem subitem = menu.add(soref.type.asString());
+					subitem.setIcon(soref.type.getIcon16x16());
+					subitem.addActionListener(arg0 -> soref.openInBrowser(src));
+					submenu.add(subitem);
+				}
+
+				menu.add(submenu);
+			}
+		}
 	}
-
-
 }

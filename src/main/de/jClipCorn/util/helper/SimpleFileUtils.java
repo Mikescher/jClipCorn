@@ -6,13 +6,12 @@ import de.jClipCorn.util.lambda.Func2to0;
 
 import java.io.*;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.text.MessageFormat;
 import java.util.UUID;
 
 public class SimpleFileUtils {	
-	public final static Charset CHARSET_UTF8 = Charset.forName("UTF-8"); //$NON-NLS-1$
-	
 	public final static String LINE_END = System.getProperty("line.separator"); //$NON-NLS-1$
 
 	public static String readTextFile(InputStreamReader reader) throws IOException {
@@ -31,7 +30,7 @@ public class SimpleFileUtils {
 	}
 	
 	public static String readUTF8TextFile(FileInputStream file) throws IOException {
-		return readTextFile(new InputStreamReader(file, CHARSET_UTF8));
+		return readTextFile(new InputStreamReader(file, Str.UTF8));
 	}
 	
 	public static String readTextFile(BufferedReader reader) throws IOException {

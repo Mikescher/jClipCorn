@@ -190,8 +190,6 @@ public class Main {
 //        -> then in the ui we can restore old states and even view the database at a specific timestamp
 //        -> option to clean up state (only keep 1 per day for older than month && only keep one per week for older than year)
 
-//TODO send useragent or sth with image(cover) requests (a lot of requests fail but work in browser)
-
 //TODO use omdb instead of direct imdb query
 
 //TODO test stuff under linux:
@@ -205,15 +203,22 @@ public class Main {
 
 //TODO MainTable and SeriesTable as JCCSimpleTable
 
-//TODO localsync: also autosave to other dir (== nextcloud) (or directly sync with server??)
-//     php viewer: view synced data online with webpage(read-only) 
-
 //TODO (optional) add a season ref to an online ref to associate it with a specific season
 
 //TODO re-do PlainTextExporter
 
 //TODO remove viewed field from db (get from history)
 
-//TODO evtl update dependencies ( gradlew dependencyUpdates )
-
 //TODO option recreate previews (covers dialog to show content of covers table)
+
+//TODO get lang in addmovie dialog in background and set if successful
+
+//TODO Subgroups in sidebar are not sorted
+
+//TODO Series NextEpisode heuristic, when 3+ consecutive views from start than continue there instead of next-unwatched
+
+//TODO remotes: https://www.thetvdb.com    &&    https://www.tvmaze.com
+
+//TODO EditSeries+EditMovie warn on close with unsaved
+
+//TODO automatically check title checkbox in parseonlinedialog if title is the same as the one in the add-dialog (= would change nothing)

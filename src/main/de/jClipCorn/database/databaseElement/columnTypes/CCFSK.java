@@ -14,11 +14,14 @@ public enum CCFSK implements ContinoousEnum<CCFSK> {
 	RATING_III(3), // ab 16 Jahren
 	RATING_IV(4); // keine Jugendfreigabe
 
-	private final static String[] NAMES = { LocaleBundle.getString("CCMovieFSK.FSK0"), //$NON-NLS-1$
+	private final static String[] NAMES =
+	{
+			LocaleBundle.getString("CCMovieFSK.FSK0"), //$NON-NLS-1$
 			LocaleBundle.getString("CCMovieFSK.FSK1"), //$NON-NLS-1$
 			LocaleBundle.getString("CCMovieFSK.FSK2"), //$NON-NLS-1$
 			LocaleBundle.getString("CCMovieFSK.FSK3"), //$NON-NLS-1$
-			LocaleBundle.getString("CCMovieFSK.FSK4") }; //$NON-NLS-1$
+			LocaleBundle.getString("CCMovieFSK.FSK4")  //$NON-NLS-1$
+	};
 	private final static int[] AGES = {0, 6, 12, 16, 18};
 	private int id;
 	

@@ -213,8 +213,6 @@ public class Main {
 
 //TODO get lang in addmovie dialog in background and set if successful
 
-//TODO Subgroups in sidebar are not sorted
-
 //TODO Series NextEpisode heuristic, when 3+ consecutive views from start than continue there instead of next-unwatched
 
 //TODO EditSeries+EditMovie warn on close with unsaved

@@ -224,7 +224,7 @@ public class FilterTree extends AbstractFilterTree {
 	}
 	
 	private void initGroups(DefaultMutableTreeNode parent) {
-		List<CCGroup> groups_list = movielist.getGroupList();
+		List<CCGroup> groups_list = CCStreams.iterate(movielist.getGroupList()).autosortByProperty(p -> p.Order).enumerate();
 		Map<String, DefaultMutableTreeNode> groups_done = new HashMap<>();
 		groups_done.put("", parent); //$NON-NLS-1$
 		

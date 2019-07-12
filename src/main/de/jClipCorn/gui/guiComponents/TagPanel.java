@@ -2,8 +2,12 @@ package de.jClipCorn.gui.guiComponents;
 
 import java.awt.Component;
 import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -17,6 +21,8 @@ public class TagPanel extends JPanel {
 	private CCTagList value = CCTagList.EMPTY;
 	private boolean readOnly = false;
 
+	private List<ActionListener> _changeListener = new ArrayList<>();
+
 	public TagPanel() {
 		super();
 		init();
@@ -27,6 +33,10 @@ public class TagPanel extends JPanel {
 		setLayout(new FlowLayout(FlowLayout.LEFT, 5, 2));
 		setBackground(UIManager.getColor("TextField.background")); //$NON-NLS-1$
 		setBorder(UIManager.getBorder("TextField.border")); //$NON-NLS-1$
+	}
+
+	public void addChangeListener(ActionListener a) {
+		_changeListener.add(a);
 	}
 
 	private void update() {
@@ -89,6 +99,7 @@ public class TagPanel extends JPanel {
 	public void setValue(CCTagList v) {
 		value = v;
 		update();
+		for (ActionListener a : _changeListener) a.actionPerformed(new ActionEvent(v, -1, ""));
 	}
 
 	public void setReadOnly(boolean ro) {

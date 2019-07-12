@@ -272,7 +272,7 @@ public class AddSeriesFrame extends JFrame implements ParseResultHandler, UserDa
 	}
 
 	@Override
-	public String getTitle() {
+	public String getTitleForParser() {
 		return edTitle.getText();
 	}
 

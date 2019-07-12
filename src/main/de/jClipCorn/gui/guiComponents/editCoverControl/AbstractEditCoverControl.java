@@ -37,7 +37,7 @@ public class AbstractEditCoverControl extends JLayeredPane implements ParseResul
 	}
 
 	@Override
-	public String getTitle() {
+	public String getTitleForParser() {
 		// NOP
 		return ""; //$NON-NLS-1$
 	}

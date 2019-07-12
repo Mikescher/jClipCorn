@@ -5,6 +5,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -26,9 +28,8 @@ public class GroupListEditor extends JPanel {
 	private JTextField edEditor;
 	private JButton btnDropDown;
 
-	/**
-	 * Create the panel.
-	 */
+	private List<ActionListener> _changeListener = new ArrayList<>();
+
 	public GroupListEditor(CCMovieList movielist) {
 		super();
 		
@@ -63,7 +64,11 @@ public class GroupListEditor extends JPanel {
 		btnDropDown.setMargin(new java.awt.Insets(1, 2, 1, 2));
 		add(btnDropDown, BorderLayout.EAST);
 	}
-	
+
+	public void addChangeListener(ActionListener a) {
+		_changeListener.add(a);
+	}
+
 	@Override
 	public Dimension getPreferredSize() {
 		return new Dimension(80, 20);
@@ -83,6 +88,8 @@ public class GroupListEditor extends JPanel {
 		value = gl;
 		
 		updateEditor();
+
+		for (ActionListener ac : _changeListener) ac.actionPerformed(new ActionEvent(this, -1, ""));
 	}
 	
 	public CCGroupList getValue() {

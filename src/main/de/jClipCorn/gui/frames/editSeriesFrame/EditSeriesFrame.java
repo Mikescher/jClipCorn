@@ -957,7 +957,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 	}
 
 	@Override
-	public String getTitle() {
+	public String getTitleForParser() {
 		return edSeriesTitle.getText();
 	}
 

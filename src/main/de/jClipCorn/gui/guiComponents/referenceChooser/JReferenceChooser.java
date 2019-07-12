@@ -3,6 +3,8 @@ package de.jClipCorn.gui.guiComponents.referenceChooser;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +23,9 @@ public class JReferenceChooser extends JPanel {
 	private JSingleReferenceChooser mainChooser;
 
 	private List<CCSingleOnlineReference> _additional = new ArrayList<>();
-	
+
+	private List<ActionListener> _changeListener = new ArrayList<>();
+
 	public JReferenceChooser() {
 		initGUI();
 	}
@@ -47,7 +51,11 @@ public class JReferenceChooser extends JPanel {
 		mainChooser = new JSingleReferenceChooser();
 		add(mainChooser, BorderLayout.CENTER);
 	}
-	
+
+	public void addChangeListener(ActionListener a) {
+		_changeListener.add(a);
+	}
+
 	@Override
 	public Dimension getPreferredSize() {
 		return new Dimension(80, 20);
@@ -61,6 +69,8 @@ public class JReferenceChooser extends JPanel {
 		mainChooser.setValue(ref.Main);
 		_additional = new ArrayList<>(ref.Additional);
 		updateUIControls();
+
+		for (ActionListener a : _changeListener) a.actionPerformed(new ActionEvent(ref, -1, ""));
 	}
 	
 	@Override
@@ -79,6 +89,8 @@ public class JReferenceChooser extends JPanel {
 	public void setMain(CCSingleOnlineReference a) {
 		mainChooser.setValue(a);
 		updateUIControls();
+
+		for (ActionListener ac : _changeListener) ac.actionPerformed(new ActionEvent(a, -1, ""));
 	}
 	
 	public void setAdditional(List<CCSingleOnlineReference> a) {
@@ -88,5 +100,7 @@ public class JReferenceChooser extends JPanel {
 				.unique()
 				.enumerate();
 		updateUIControls();
+
+		for (ActionListener ac : _changeListener) ac.actionPerformed(new ActionEvent(a, -1, ""));
 	}
 }

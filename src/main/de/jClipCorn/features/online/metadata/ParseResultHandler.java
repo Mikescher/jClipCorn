@@ -6,7 +6,7 @@ import de.jClipCorn.database.databaseElement.columnTypes.*;
 
 public interface ParseResultHandler {
 	String getFullTitle();
-	String getTitle();
+	String getTitleForParser();
 	CCOnlineReferenceList getSearchReference();
 	
 	void setMovieFormat(CCFileFormat cmf);

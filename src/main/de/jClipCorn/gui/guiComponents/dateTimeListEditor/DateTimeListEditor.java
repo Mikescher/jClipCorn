@@ -6,6 +6,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -25,6 +26,8 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
 
+import de.jClipCorn.util.adapter.ChangeLambdaAdapter;
+import de.jClipCorn.util.adapter.ItemChangeLambdaAdapter;
 import org.gpl.JSplitButton.JSplitButton;
 import org.gpl.JSplitButton.action.SplitButtonActionListener;
 
@@ -64,7 +67,9 @@ public class DateTimeListEditor extends JPanel {
 	
 	private List<JPanel> listPanels = new ArrayList<>();
 	private final List<CCDateTime> data;
-	
+
+	private List<ActionListener> _changeListener = new ArrayList<>();
+
 	public DateTimeListEditor() {
 		initGUI();
 		
@@ -89,15 +94,15 @@ public class DateTimeListEditor extends JPanel {
 		splitPopup = new JPopupMenu();
 		{
 			JMenuItem miAdd = new JMenuItem(LocaleBundle.getString("CCDate.Editor.Add")); //$NON-NLS-1$
-			miAdd.addActionListener(e -> onAdd(e));
+			miAdd.addActionListener(this::onAdd);
 			splitPopup.add(miAdd);
 
 			JMenuItem miNow = new JMenuItem(LocaleBundle.getString("CCDate.Editor.Now")); //$NON-NLS-1$
-			miNow.addActionListener(e -> onSetNow(e));
+			miNow.addActionListener(this::onSetNow);
 			splitPopup.add(miNow);
 
 			JMenuItem miUnknown = new JMenuItem(LocaleBundle.getString("CCDate.Editor.Unspecified")); //$NON-NLS-1$
-			miUnknown.addActionListener(e -> onSetUnknown(e));
+			miUnknown.addActionListener(this::onSetUnknown);
 			splitPopup.add(miUnknown);
 		}
 		
@@ -122,6 +127,7 @@ public class DateTimeListEditor extends JPanel {
 		cbDate = new JCheckBox();
 		cbDate.setSelected(true);
 		cbDate.addItemListener(e -> updateEnabledStates());
+		cbDate.addItemListener(new ItemChangeLambdaAdapter(this::triggerOnChanged, -1));
 		cbDate.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) { focusPanel(null); }
@@ -146,12 +152,14 @@ public class DateTimeListEditor extends JPanel {
 		pnlInput.add(cbDate, "1, 2, right, top"); //$NON-NLS-1$
 		
 		spnrDate = new JCCDateSpinner();
+		spnrDate.addChangeListener(new ChangeLambdaAdapter(this::triggerOnChanged));
 		spnrDate.addChangeListener(e -> { focusPanel(null); });
 		pnlInput.add(spnrDate, "3, 2, left, top"); //$NON-NLS-1$
 		
 		cbTime = new JCheckBox();
 		cbTime.setSelected(true);
 		cbTime.addItemListener(e -> updateEnabledStates());
+		cbTime.addItemListener(new ItemChangeLambdaAdapter(this::triggerOnChanged, -1));
 		cbTime.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) { focusPanel(null); }
@@ -163,6 +171,7 @@ public class DateTimeListEditor extends JPanel {
 		pnlInput.add(cbTime, "1, 4, right, top"); //$NON-NLS-1$
 		
 		spnrTime = new JCCTimeSpinner();
+		spnrTime.addChangeListener(new ChangeLambdaAdapter(this::triggerOnChanged));
 		spnrTime.addChangeListener(e -> { focusPanel(null); });
 		pnlInput.add(spnrTime, "3, 4, fill, top"); //$NON-NLS-1$
 		
@@ -190,7 +199,15 @@ public class DateTimeListEditor extends JPanel {
 		scrollPane.setViewportView(pnlContent);
 		pnlContent.setLayout(new BoxLayout(pnlContent, BoxLayout.Y_AXIS));
 	}
-	
+
+	public void addChangeListener(ActionListener a) {
+		_changeListener.add(a);
+	}
+
+	private void triggerOnChanged() {
+		for (ActionListener ac : _changeListener) ac.actionPerformed(new ActionEvent(this, -1, ""));
+	}
+
 	private void resortList() {
 	    HashSet<CCDateTime> hash = new HashSet<>();
 	    for (int i = 0; i < data.size(); i++) {

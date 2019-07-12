@@ -168,7 +168,7 @@ public class AddSeasonFrame extends JFrame implements UserDataProblemHandler, Pa
 	}
 
 	@Override
-	public String getTitle() {
+	public String getTitleForParser() {
 		return edTitle.getText();
 	}
 

@@ -3,6 +3,9 @@ package de.jClipCorn.gui.frames.editMovieFrame;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.event.ItemEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -39,7 +42,7 @@ import de.jClipCorn.features.online.metadata.ParseResultHandler;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.Validator;
-import de.jClipCorn.util.adapter.UpdateCallbackAdapter;
+import de.jClipCorn.util.adapter.*;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.exceptions.CCFormatException;
 import de.jClipCorn.util.exceptions.EnumFormatException;
@@ -158,23 +161,27 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 	private JButton btnMediaInfoRaw;
 	private JButton btnMediaInfo2;
 
+	private boolean _initFinished = false;
+	private boolean _isDirty = false;
+
 	public EditMovieFrame(Component owner, CCMovie movie, UpdateCallbackListener ucl) {
 		super();
 		this.movie = movie;
 		this.videoFileChooser = new JFileChooser(PathFormatter.getAbsoluteSelfDirectory());
-		
+
 		if (ucl == null)
 			this.listener = new UpdateCallbackAdapter();
 		else
 			this.listener = ucl;
-		
+
 		setSize(new Dimension(740, 780));
 		
 		initGUI();
 		setDefaultValues();
 		initFileChooser();
 		initFields();
-		
+
+		_initFinished = true;
 		setLocationRelativeTo(owner);
 	}
 	
@@ -188,6 +195,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		edPart0 = new ReadableTextField();
 		edPart0.setColumns(10);
 		edPart0.setBounds(74, 12, 281, 22);
+		edPart0.getDocument().addDocumentListener(new DocumentLambdaAdapter(this::setDirty));
 		getContentPane().add(edPart0);
 		
 		btnChoose0 = new JButton(LocaleBundle.getString("AddMovieFrame.btnChoose.text")); //$NON-NLS-1$
@@ -198,6 +206,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		edPart1 = new ReadableTextField();
 		edPart1.setColumns(10);
 		edPart1.setBounds(74, 42, 191, 22);
+		edPart1.getDocument().addDocumentListener(new DocumentLambdaAdapter(this::setDirty));
 		getContentPane().add(edPart1);
 		
 		btnChoose1 = new JButton(LocaleBundle.getString("AddMovieFrame.btnChoose.text")); //$NON-NLS-1$
@@ -217,6 +226,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		edPart2 = new ReadableTextField();
 		edPart2.setColumns(10);
 		edPart2.setBounds(74, 72, 191, 22);
+		edPart2.getDocument().addDocumentListener(new DocumentLambdaAdapter(this::setDirty));
 		getContentPane().add(edPart2);
 		
 		btnChoose2 = new JButton(LocaleBundle.getString("AddMovieFrame.btnChoose.text")); //$NON-NLS-1$
@@ -232,6 +242,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		edPart3 = new ReadableTextField();
 		edPart3.setColumns(10);
 		edPart3.setBounds(74, 102, 191, 22);
+		edPart3.getDocument().addDocumentListener(new DocumentLambdaAdapter(this::setDirty));
 		getContentPane().add(edPart3);
 		
 		btnChoose3 = new JButton(LocaleBundle.getString("AddMovieFrame.btnChoose.text")); //$NON-NLS-1$
@@ -247,6 +258,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		edPart4 = new ReadableTextField();
 		edPart4.setColumns(10);
 		edPart4.setBounds(74, 132, 191, 22);
+		edPart4.getDocument().addDocumentListener(new DocumentLambdaAdapter(this::setDirty));
 		getContentPane().add(edPart4);
 		
 		btnChoose4 = new JButton(LocaleBundle.getString("AddMovieFrame.btnChoose.text")); //$NON-NLS-1$
@@ -262,6 +274,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		edPart5 = new ReadableTextField();
 		edPart5.setColumns(10);
 		edPart5.setBounds(74, 162, 191, 22);
+		edPart5.getDocument().addDocumentListener(new DocumentLambdaAdapter(this::setDirty));
 		getContentPane().add(edPart5);
 		
 		btnChoose5 = new JButton(LocaleBundle.getString("AddMovieFrame.btnChoose.text")); //$NON-NLS-1$
@@ -297,6 +310,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		edZyklus = new JTextField();
 		edZyklus.setColumns(10);
 		edZyklus.setBounds(93, 285, 148, 20);
+		edZyklus.getDocument().addDocumentListener(new DocumentLambdaAdapter(this::setDirty));
 		getContentPane().add(edZyklus);
 		
 		label_6 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblZyklus.text")); //$NON-NLS-1$
@@ -305,6 +319,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		
 		cbxGenre0 = new JComboBox<>();
 		cbxGenre0.setBounds(506, 11, 212, 22);
+		cbxGenre0.addItemListener(new ItemChangeLambdaAdapter(this::setDirty, ItemEvent.SELECTED));
 		getContentPane().add(cbxGenre0);
 		
 		label_7 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGenre.text")); //$NON-NLS-1$
@@ -313,6 +328,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		
 		cbxGenre1 = new JComboBox<>();
 		cbxGenre1.setBounds(506, 38, 212, 22);
+		cbxGenre1.addItemListener(new ItemChangeLambdaAdapter(this::setDirty, ItemEvent.SELECTED));
 		getContentPane().add(cbxGenre1);
 		
 		label_8 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGenre_1.text")); //$NON-NLS-1$
@@ -321,6 +337,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		
 		cbxGenre2 = new JComboBox<>();
 		cbxGenre2.setBounds(506, 65, 212, 22);
+		cbxGenre2.addItemListener(new ItemChangeLambdaAdapter(this::setDirty, ItemEvent.SELECTED));
 		getContentPane().add(cbxGenre2);
 		
 		label_9 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGenre_2.text")); //$NON-NLS-1$
@@ -329,6 +346,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		
 		cbxGenre3 = new JComboBox<>();
 		cbxGenre3.setBounds(506, 92, 212, 22);
+		cbxGenre3.addItemListener(new ItemChangeLambdaAdapter(this::setDirty, ItemEvent.SELECTED));
 		getContentPane().add(cbxGenre3);
 		
 		label_10 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGenre_3.text")); //$NON-NLS-1$
@@ -337,6 +355,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		
 		cbxGenre7 = new JComboBox<>();
 		cbxGenre7.setBounds(506, 200, 212, 22);
+		cbxGenre7.addItemListener(new ItemChangeLambdaAdapter(this::setDirty, ItemEvent.SELECTED));
 		getContentPane().add(cbxGenre7);
 		
 		label_11 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGenre_7.text")); //$NON-NLS-1$
@@ -357,14 +376,17 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		
 		cbxGenre4 = new JComboBox<>();
 		cbxGenre4.setBounds(506, 119, 212, 22);
+		cbxGenre4.addItemListener(new ItemChangeLambdaAdapter(this::setDirty, ItemEvent.SELECTED));
 		getContentPane().add(cbxGenre4);
 		
 		cbxGenre5 = new JComboBox<>();
 		cbxGenre5.setBounds(506, 146, 212, 22);
+		cbxGenre5.addItemListener(new ItemChangeLambdaAdapter(this::setDirty, ItemEvent.SELECTED));
 		getContentPane().add(cbxGenre5);
 		
 		cbxGenre6 = new JComboBox<>();
 		cbxGenre6.setBounds(506, 173, 212, 22);
+		cbxGenre6.addItemListener(new ItemChangeLambdaAdapter(this::setDirty, ItemEvent.SELECTED));
 		getContentPane().add(cbxGenre6);
 		
 		label_16 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGesehen.text")); //$NON-NLS-1$
@@ -381,19 +403,23 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		
 		cbViewed = new JCheckBox();
 		cbViewed.setBounds(93, 315, 212, 25);
+		cbViewed.addItemListener(new ItemChangeLambdaAdapter(this::setDirty, -1));
 		getContentPane().add(cbViewed);
 		
 		cbxQuality = new JComboBox<>();
 		cbxQuality.setBounds(93, 345, 212, 22);
+		cbxQuality.addItemListener(new ItemChangeLambdaAdapter(this::setDirty, ItemEvent.SELECTED));
 		getContentPane().add(cbxQuality);
 		
 		cbxLanguage = new LanguageChooser();
 		cbxLanguage.setBounds(93, 375, 212, 22);
+		cbxLanguage.addActionListener(new ActionLambdaAdapter(this::setDirty));
 		getContentPane().add(cbxLanguage);
 		
 		spnLength = new JSpinner();
 		spnLength.setModel(new SpinnerNumberModel(0, 0, null, 1));
 		spnLength.setBounds(93, 405, 163, 20);
+		spnLength.addChangeListener(new ChangeLambdaAdapter(this::setDirty));
 		getContentPane().add(spnLength);
 		
 		label_19 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblLength.text")); //$NON-NLS-1$
@@ -402,6 +428,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		
 		spnAddDate = new JCCDateSpinner(CCDate.getMinimumDate(), MIN_DATE, null);
 		spnAddDate.setBounds(93, 435, 212, 20);
+		spnAddDate.addChangeListener(new ChangeLambdaAdapter(this::setDirty));
 		getContentPane().add(spnAddDate);
 		
 		label_20 = new JLabel("min."); //$NON-NLS-1$
@@ -415,6 +442,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		spnOnlineScore = new JSpinner();
 		spnOnlineScore.setModel(new SpinnerNumberModel(0, 0, 10, 1));
 		spnOnlineScore.setBounds(93, 465, 212, 20);
+		spnOnlineScore.addChangeListener(new ChangeLambdaAdapter(this::setDirty));
 		getContentPane().add(spnOnlineScore);
 		
 		label_22 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblOnlinescore.text")); //$NON-NLS-1$
@@ -427,6 +455,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		
 		cbxFSK = new JComboBox<>();
 		cbxFSK.setBounds(93, 495, 212, 22);
+		cbxFSK.addItemListener(new ItemChangeLambdaAdapter(this::setDirty, ItemEvent.SELECTED));
 		getContentPane().add(cbxFSK);
 		
 		label_24 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblFsk.text")); //$NON-NLS-1$
@@ -435,6 +464,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		
 		cbxFormat = new JComboBox<>();
 		cbxFormat.setBounds(93, 525, 212, 22);
+		cbxFormat.addItemListener(new ItemChangeLambdaAdapter(this::setDirty, ItemEvent.SELECTED));
 		getContentPane().add(cbxFormat);
 		
 		label_25 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblFormat.text")); //$NON-NLS-1$
@@ -445,6 +475,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		spnYear.setModel(new SpinnerNumberModel(1900, 1900, null, 1));
 		spnYear.setEditor(new JSpinner.NumberEditor(spnYear, "0")); //$NON-NLS-1$
 		spnYear.setBounds(93, 555, 212, 20);
+		spnYear.addChangeListener(new ChangeLambdaAdapter(this::setDirty));
 		getContentPane().add(spnYear);
 		
 		label_26 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblYear.text")); //$NON-NLS-1$
@@ -455,6 +486,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		spnSize.addChangeListener(arg0 -> updateByteDisp());
 		spnSize.setModel(new SpinnerNumberModel(0L, 0L, null, 1L));
 		spnSize.setBounds(93, 585, 212, 20);
+		spnSize.addChangeListener(new ChangeLambdaAdapter(this::setDirty));
 		getContentPane().add(spnSize);
 		
 		label_27 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGre.text")); //$NON-NLS-1$
@@ -485,6 +517,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		edTitle = new JTextField();
 		edTitle.setColumns(10);
 		edTitle.setBounds(93, 225, 212, 20);
+		edTitle.getDocument().addDocumentListener(new DocumentLambdaAdapter(this::setDirty));
 		getContentPane().add(edTitle);
 		
 		label_29 = new JLabel(LocaleBundle.getString("AddMovieFrame.label_1.text")); //$NON-NLS-1$
@@ -494,6 +527,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		spnZyklus = new JSpinner();
 		spnZyklus.setModel(new SpinnerNumberModel(0, -1, null, 1));
 		spnZyklus.setBounds(253, 285, 52, 20);
+		spnZyklus.addChangeListener(new ChangeLambdaAdapter(this::setDirty));
 		getContentPane().add(spnZyklus);
 		
 		lblFileSizeDisp = new JLabel();
@@ -512,6 +546,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		
 		cbxScore = new JComboBox<>();
 		cbxScore.setBounds(93, 645, 212, 22);
+		cbxScore.addItemListener(new ItemChangeLambdaAdapter(this::setDirty, ItemEvent.SELECTED));
 		getContentPane().add(cbxScore);
 		
 		label_32 = new JLabel(LocaleBundle.getString("EditSeriesFrame.lblScore.text")); //$NON-NLS-1$
@@ -520,6 +555,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		
 		tagPnl = new TagPanel();
 		tagPnl.setBounds(93, 674, 212, 22);
+		tagPnl.addChangeListener(new ActionLambdaAdapter(this::setDirty));
 		getContentPane().add(tagPnl);
 		
 		label_33 = new JLabel(LocaleBundle.getString("EditSeriesFrame.lblTags.text")); //$NON-NLS-1$
@@ -543,6 +579,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		
 		edCvrControl = new EditCoverControl(this, this);
 		edCvrControl.setBounds(536, 422, EditCoverControl.CTRL_WIDTH, EditCoverControl.CTRL_HEIGHT);
+		edCvrControl.addChangeListener(new ActionLambdaAdapter(this::setDirty));
 		getContentPane().add(edCvrControl);
 		
 		label_15 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblOnlineID.text")); //$NON-NLS-1$
@@ -551,10 +588,12 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		
 		edReference = new JReferenceChooser();
 		edReference.setBounds(93, 255, 212, 20);
+		edReference.addChangeListener(new ActionLambdaAdapter(this::setDirty));
 		getContentPane().add(edReference);
 		
 		edViewedHistory = new DateTimeListEditor();
 		edViewedHistory.setBounds(506, 264, 212, 133);
+		edViewedHistory.addChangeListener(new ActionLambdaAdapter(this::setDirty));
 		getContentPane().add(edViewedHistory);
 		
 		label_30 = new JLabel(LocaleBundle.getString("EditSeriesFrame.lblHistory.text")); //$NON-NLS-1$
@@ -567,6 +606,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		
 		edGroups = new GroupListEditor(movie.getMovieList());
 		edGroups.setBounds(506, 230, 212, 22);
+		edGroups.addChangeListener(new ActionLambdaAdapter(this::setDirty));
 		getContentPane().add(edGroups);
 		
 		btnMediaInfo1 = new JButton(Resources.ICN_MENUBAR_UPDATECODECDATA.get16x16());
@@ -586,6 +626,20 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		btnMediaInfo2.addActionListener(e -> parseCodecMetadata_Len());
 		btnMediaInfo2.setToolTipText("MediaInfo"); //$NON-NLS-1$
 		getContentPane().add(btnMediaInfo2);
+
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				if (_isDirty) {
+					if (DialogHelper.showLocaleYesNo(EditMovieFrame.this, "Dialogs.CloseButDirty")) EditMovieFrame.this.dispose();
+				} else {
+					EditMovieFrame.this.dispose();
+				}
+
+				super.windowClosing(e);
+			}
+		});
 	}
 
 	private void setDefaultValues() {
@@ -786,7 +840,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 	}
 
 	@Override
-	public String getTitle() {
+	public String getTitleForParser() {
 		return edTitle.getText();
 	}
 
@@ -1189,5 +1243,11 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		} catch (IOException | MediaQueryException e) {
 			GenericTextDialog.showText(this, getTitle(), e.getMessage() + "\n\n" + ExceptionUtils.getMessage(e) + "\n\n" + ExceptionUtils.getStackTrace(e), false); //$NON-NLS-1$ //$NON-NLS-2$
 		}
+	}
+	
+	private void setDirty() {
+		if (!_initFinished) return;
+		setTitle(LocaleBundle.getFormattedString("EditMovieFrame.this.title", movie.getCompleteTitle()) + "*");
+		_isDirty = true;
 	}
 }

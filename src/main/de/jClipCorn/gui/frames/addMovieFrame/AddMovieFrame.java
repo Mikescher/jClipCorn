@@ -1018,7 +1018,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 	}
 
 	@Override
-	public String getTitle() {
+	public String getTitleForParser() {
 		return edTitle.getText();
 	}
 

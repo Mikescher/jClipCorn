@@ -5,10 +5,13 @@ import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.imageio.ImageIO;
 import javax.swing.JButton;
@@ -57,6 +60,8 @@ public class EditCoverControl extends AbstractEditCoverControl {
 	private JMenuItem mntmOpen;
 	private JMenuItem mntmPasteurl;
 	private JMenuItem mntmPasteImg;
+
+	private List<ActionListener> _changeListener = new ArrayList<>();
 
 	public EditCoverControl() { // For WindowBuilder
 		this(null, null);
@@ -151,7 +156,11 @@ public class EditCoverControl extends AbstractEditCoverControl {
 		setSize(CTRL_WIDTH, CTRL_HEIGHT);
 		setPreferredSize(new Dimension(CTRL_WIDTH, CTRL_HEIGHT));
 	}
-	
+
+	public void addChangeListener(ActionListener a) {
+		_changeListener.add(a);
+	}
+
 	@Override
 	public Dimension getPreferredSize() {
 		return new Dimension(CTRL_WIDTH, CTRL_HEIGHT);
@@ -246,8 +255,8 @@ public class EditCoverControl extends AbstractEditCoverControl {
 	}
 
 	@Override
-	public String getTitle() {
-		return owner.getTitle();
+	public String getTitleForParser() {
+		return owner.getTitleForParser();
 	}
 
 	@Override
@@ -277,6 +286,8 @@ public class EditCoverControl extends AbstractEditCoverControl {
 		}
 
 		btnCrop.setEnabled(isCoverSet() && isEnabled());
+
+		for (ActionListener a : _changeListener) a.actionPerformed(new ActionEvent(nci, -1, ""));
 	}
 
 	@Override

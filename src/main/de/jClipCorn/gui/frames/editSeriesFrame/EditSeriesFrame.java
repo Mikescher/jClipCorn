@@ -1481,7 +1481,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 	@Override
 	public void windowClosing(WindowEvent arg0) {
 		if (_isDirtyEpisode || _isDirtySeason || _isDirtySeries) {
-			if (DialogHelper.showLocaleYesNo(EditSeriesFrame.this, "Dialogs.CloseButDirty")) EditSeriesFrame.this.dispose();
+			if (DialogHelper.showLocaleYesNoDefaultNo(EditSeriesFrame.this, "Dialogs.CloseButDirty")) EditSeriesFrame.this.dispose();
 		} else {
 			EditSeriesFrame.this.dispose();
 		}

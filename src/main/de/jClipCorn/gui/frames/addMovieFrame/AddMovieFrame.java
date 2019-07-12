@@ -10,20 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
 
-import javax.swing.ButtonGroup;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JRadioButton;
-import javax.swing.JSpinner;
-import javax.swing.JTextField;
-import javax.swing.SpinnerNumberModel;
-import javax.swing.SwingConstants;
-import javax.swing.UIManager;
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
@@ -46,6 +33,7 @@ import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.features.online.metadata.ParseResultHandler;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.Str;
+import de.jClipCorn.util.adapter.ActionLambdaAdapter;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.exceptions.EnumFormatException;
 import de.jClipCorn.util.exceptions.MediaQueryException;
@@ -159,6 +147,9 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 	private JButton btnMediaInfo;
 	private JButton btnMediaInfo2;
 	private JLabel lblLenAuto;
+	private JProgressBar pbLanguageLoad;
+
+	private volatile boolean _isDirtyLanguage = false;
 
 	/**
 	 * @wbp.parser.constructor
@@ -196,6 +187,12 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		setLocationRelativeTo(owner);
 
 		btnChoose0.setEnabled(true);
+		
+		pbLanguageLoad = new JProgressBar();
+		pbLanguageLoad.setVisible(false);
+		pbLanguageLoad.setIndeterminate(true);
+		pbLanguageLoad.setBounds(379, 403, 41, 22);
+		contentPane.add(pbLanguageLoad);
 	}
 
 	private void initGUI() {
@@ -430,6 +427,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		
 		cbxLanguage = new LanguageChooser();
 		cbxLanguage.setBounds(95, 403, 212, 22);
+		cbxLanguage.addChangeListener(new ActionLambdaAdapter(() -> { _isDirtyLanguage = true; }));
 		contentPane.add(cbxLanguage);
 		
 		spnLength = new JSpinner();
@@ -781,7 +779,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		cbxGenre6.setEnabled(e);
 		edCvrControl.setEnabled(e);
 		cbxQuality.setEnabled(e);
-		cbxLanguage.setEnabled(e);
+		cbxLanguage.setReadOnly(!e);
 		spnLength.setEnabled(e);
 		spnAddDate.setEnabled(e);
 		spnOnlineScore.setEnabled(e);
@@ -796,6 +794,9 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		cbxScore.setEnabled(e);
 		btnCalcQuality.setEnabled(e);
 		edReference.setEnabled(e);
+		edGroups.setEnabled(e);
+		btnMediaInfo.setEnabled(e);
+		btnMediaInfo2.setEnabled(e);
 	}
 	
 	private void onBtnChooseClicked(int cNmbr) {
@@ -834,6 +835,8 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		if (r.AdditionalFiles != null) 
 			for (Entry<Integer, String> addFile : r.AdditionalFiles.entrySet())
 				setFilepath(addFile.getKey()-1, addFile.getValue());
+
+		runLangInBackground();
 	}
 	
 	private void onBtnClearClicked(int cNmbr) {
@@ -1205,5 +1208,59 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		} catch (IOException | MediaQueryException e) {
 			GenericTextDialog.showText(this, getTitle(), e.getMessage() + "\n\n" + ExceptionUtils.getMessage(e) + "\n\n" + ExceptionUtils.getStackTrace(e), false); //$NON-NLS-1$ //$NON-NLS-2$
 		}
+	}
+
+	private void runLangInBackground() {
+		String p0 = ed_Part0.getText();
+		String p1 = ed_Part1.getText();
+		String p2 = ed_Part2.getText();
+		String p3 = ed_Part3.getText();
+		String p4 = ed_Part4.getText();
+		String p5 = ed_Part5.getText();
+
+		_isDirtyLanguage = false;
+
+		new Thread(() -> {
+
+			try	{
+
+				SwingUtilities.invokeLater(() -> pbLanguageLoad.setVisible(true));
+
+				List<MediaQueryResult> dat = new ArrayList<>();
+
+				if (!Str.isNullOrWhitespace(p0)) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(p0)));
+				if (!Str.isNullOrWhitespace(p1)) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(p1)));
+				if (!Str.isNullOrWhitespace(p2)) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(p2)));
+				if (!Str.isNullOrWhitespace(p3)) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(p3)));
+				if (!Str.isNullOrWhitespace(p4)) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(p4)));
+				if (!Str.isNullOrWhitespace(p5)) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(p5)));
+
+				if (dat.isEmpty()) return;
+
+				int dur = (int) (CCStreams.iterate(dat).any(d -> d.Duration == -1) ? -1 : (CCStreams.iterate(dat).sumDouble(d -> d.Duration)/60));
+				if (dur != -1) SwingUtilities.invokeLater(() -> lblLenAuto.setText("("+dur+")")); //$NON-NLS-1$ //$NON-NLS-2$
+				if (dur == -1) SwingUtilities.invokeLater(() -> lblLenAuto.setText(Str.Empty));
+
+				if (CCStreams.iterate(dat).any(d -> d.AudioLanguages == null)) return;
+
+				CCDBLanguageList dbll = dat.get(0).AudioLanguages;
+				for (int i = 1; i < dat.size(); i++) dbll = CCDBLanguageList.intersection(dbll, dat.get(i).AudioLanguages);
+
+				final CCDBLanguageList dbll2 = dbll;
+				if (!dbll.isEmpty() && !_isDirtyLanguage) SwingUtilities.invokeLater(() -> setMovieLanguage(dbll2) );
+
+			} catch (Exception e) {
+
+				SwingUtilities.invokeLater(() ->
+				{
+					lblLenAuto.setText("<html><font color='red'>!!!</font></html>"); //$NON-NLS-1$
+				});
+
+			} finally {
+
+				SwingUtilities.invokeLater(() -> pbLanguageLoad.setVisible(false));
+
+			}
+		}, "LANG_QUERY").start();
 	}
 }

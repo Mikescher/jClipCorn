@@ -19,6 +19,7 @@ public class LanguageChooser extends JPanel {
 	private ActionListener action = null;
 
 	private JPanel pnlIcons;
+	private JButton btnEdit;
 
 	public LanguageChooser() {
 		super();
@@ -40,7 +41,7 @@ public class LanguageChooser extends JPanel {
 
 		add(pnlIcons = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 2)), BorderLayout.CENTER);
 		pnlIcons.setBackground(new Color(0, 0, 0, 0));
-		JButton btnEdit = new JButton("..."); //$NON-NLS-1$
+		btnEdit = new JButton("..."); //$NON-NLS-1$
 		btnEdit.setMargin(new Insets(2, 4, 2, 4));
 		add(btnEdit, BorderLayout.EAST);
 		btnEdit.addActionListener(e -> onClicked());
@@ -105,6 +106,7 @@ public class LanguageChooser extends JPanel {
 
 	public void setReadOnly(boolean ro) {
 		readOnly = ro;
+		btnEdit.setEnabled(!ro);
 	}
 
 	public void addChangeListener(ActionListener a) {

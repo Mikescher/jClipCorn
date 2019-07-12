@@ -8,14 +8,31 @@ import javax.swing.*;
 
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.features.log.CCLog;
+import jdk.nashorn.internal.scripts.JO;
 
 public class DialogHelper {
 	public static boolean showYesNoDlg(Component frame, String caption, String txt) {
 		return JOptionPane.showConfirmDialog(frame, txt, caption, JOptionPane.YES_NO_OPTION) == JOptionPane.OK_OPTION;
 	}
-	
+
+	public static boolean showYesNoDlgDefaultNo(Component frame, String caption, String txt) {
+		return JOptionPane.showOptionDialog(
+				frame,
+				txt,
+				caption,
+				JOptionPane.YES_NO_OPTION,
+				JOptionPane.WARNING_MESSAGE,
+				null,
+				new Object[]{UIManager.getString("OptionPane.yesButtonText"), UIManager.getString("OptionPane.noButtonText")},
+				UIManager.getString("OptionPane.noButtonText")) == JOptionPane.OK_OPTION;
+	}
+
 	public static boolean showLocaleYesNo(Component frame, String id) {
 		return showYesNoDlg(frame, LocaleBundle.getString(id + "_caption"), LocaleBundle.getString(id)); //$NON-NLS-1$
+	}
+
+	public static boolean showLocaleYesNoDefaultNo(Component frame, String id) {
+		return showYesNoDlgDefaultNo(frame, LocaleBundle.getString(id + "_caption"), LocaleBundle.getString(id)); //$NON-NLS-1$
 	}
 	
 	public static void showLocalError(Component frame, String id) {

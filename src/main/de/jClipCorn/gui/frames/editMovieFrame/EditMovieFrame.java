@@ -632,7 +632,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 			@Override
 			public void windowClosing(WindowEvent e) {
 				if (_isDirty) {
-					if (DialogHelper.showLocaleYesNo(EditMovieFrame.this, "Dialogs.CloseButDirty")) EditMovieFrame.this.dispose();
+					if (DialogHelper.showLocaleYesNoDefaultNo(EditMovieFrame.this, "Dialogs.CloseButDirty")) EditMovieFrame.this.dispose();
 				} else {
 					EditMovieFrame.this.dispose();
 				}

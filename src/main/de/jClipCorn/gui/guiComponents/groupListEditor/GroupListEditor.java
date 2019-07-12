@@ -65,6 +65,13 @@ public class GroupListEditor extends JPanel {
 		add(btnDropDown, BorderLayout.EAST);
 	}
 
+	@Override
+	public void setEnabled(boolean b) {
+		edEditor.setEnabled(b);
+		btnDropDown.setEnabled(b);
+		super.setEnabled(b);
+	}
+
 	public void addChangeListener(ActionListener a) {
 		_changeListener.add(a);
 	}

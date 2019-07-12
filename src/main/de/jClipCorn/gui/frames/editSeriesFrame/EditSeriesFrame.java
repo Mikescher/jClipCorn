@@ -957,6 +957,11 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 	}
 
 	@Override
+	public String getTitle() {
+		return edSeriesTitle.getText();
+	}
+
+	@Override
 	public CCOnlineReferenceList getSearchReference() {
 		return edSeriesReference.getValue();
 	}

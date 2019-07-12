@@ -213,8 +213,4 @@ public class Main {
 
 //TODO get lang in addmovie dialog in background and set if successful
 
-//TODO Series NextEpisode heuristic, when 3+ consecutive views from start than continue there instead of next-unwatched
-
 //TODO EditSeries+EditMovie warn on close with unsaved
-
-//TODO automatically check title checkbox in parseonlinedialog if title is the same as the one in the add-dialog (= would change nothing)

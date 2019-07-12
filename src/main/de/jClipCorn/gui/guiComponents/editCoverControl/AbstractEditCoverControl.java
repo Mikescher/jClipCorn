@@ -37,6 +37,12 @@ public class AbstractEditCoverControl extends JLayeredPane implements ParseResul
 	}
 
 	@Override
+	public String getTitle() {
+		// NOP
+		return ""; //$NON-NLS-1$
+	}
+
+	@Override
 	public void setMovieFormat(CCFileFormat cmf) {
 		// NOP
 	}

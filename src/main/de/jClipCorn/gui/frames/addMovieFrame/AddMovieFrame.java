@@ -1007,7 +1007,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 	private String getMovieZyklus() {
 		return edZyklus.getText();
 	}
-	
+
 	@Override
 	public String getFullTitle() {
 		if (getMovieZyklus().isEmpty()) {
@@ -1015,6 +1015,11 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		} else {
 			return edZyklus.getText() + " - " + getMovieTitle(); //$NON-NLS-1$
 		}
+	}
+
+	@Override
+	public String getTitle() {
+		return edTitle.getText();
 	}
 
 	@Override

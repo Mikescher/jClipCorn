@@ -168,6 +168,11 @@ public class AddSeasonFrame extends JFrame implements UserDataProblemHandler, Pa
 	}
 
 	@Override
+	public String getTitle() {
+		return edTitle.getText();
+	}
+
+	@Override
 	public CCOnlineReferenceList getSearchReference() {
 		return CCOnlineReferenceList.EMPTY;
 	}

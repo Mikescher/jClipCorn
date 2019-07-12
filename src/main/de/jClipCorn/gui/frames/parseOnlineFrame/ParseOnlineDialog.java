@@ -503,7 +503,7 @@ public class ParseOnlineDialog extends JDialog {
 		cbFSK.setSelected(cbxFSK.getSelectedIndex() >= 0);
 		cbLength.setSelected((int)spnLength.getValue() > 0);
 		cbScore.setSelected((int)spnScore.getValue() > 0);
-		cbTitle.setSelected(false);
+		cbTitle.setSelected(edTitle.getText().equalsIgnoreCase(owner.getTitle()));
 		cbYear.setSelected((int)spnYear.getValue() > 0);
 		
 		cbGenre0.setSelected(cbxGenre0.getSelectedIndex() > 0);

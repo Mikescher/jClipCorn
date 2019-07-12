@@ -246,6 +246,11 @@ public class EditCoverControl extends AbstractEditCoverControl {
 	}
 
 	@Override
+	public String getTitle() {
+		return owner.getTitle();
+	}
+
+	@Override
 	public void setCover(BufferedImage nci) {
 		if (nci != null) {
 			this.fullImage = nci;

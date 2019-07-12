@@ -786,6 +786,11 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 	}
 
 	@Override
+	public String getTitle() {
+		return edTitle.getText();
+	}
+
+	@Override
 	public CCOnlineReferenceList getSearchReference() {
 		return edReference.getValue();
 	}

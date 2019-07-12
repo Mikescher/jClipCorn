@@ -22,7 +22,7 @@ public class CustomFilterLanguageListConfig extends CustomFilterConfig {
 	public JComponent getComponent(Runnable onChange) {
 		LanguageChooser chsr = new LanguageChooser(valueGetter.invoke());
 
-		chsr.addActionListener(e -> { valueSetter.invoke(chsr.getValue()); onChange.run(); });
+		chsr.addChangeListener(e -> { valueSetter.invoke(chsr.getValue()); onChange.run(); });
 		
 		return chsr;
 	}

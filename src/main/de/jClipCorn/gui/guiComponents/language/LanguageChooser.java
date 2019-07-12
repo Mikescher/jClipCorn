@@ -107,7 +107,7 @@ public class LanguageChooser extends JPanel {
 		readOnly = ro;
 	}
 
-	public void addActionListener(ActionListener a) {
+	public void addChangeListener(ActionListener a) {
 		action = a;
 	}
 }

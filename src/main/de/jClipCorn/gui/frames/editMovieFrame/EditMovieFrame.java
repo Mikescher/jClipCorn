@@ -413,7 +413,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		
 		cbxLanguage = new LanguageChooser();
 		cbxLanguage.setBounds(93, 375, 212, 22);
-		cbxLanguage.addActionListener(new ActionLambdaAdapter(this::setDirty));
+		cbxLanguage.addChangeListener(new ActionLambdaAdapter(this::setDirty));
 		getContentPane().add(cbxLanguage);
 		
 		spnLength = new JSpinner();

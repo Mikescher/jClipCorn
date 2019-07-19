@@ -268,7 +268,7 @@ public class CCProperties {
 
 		PROP_DATABASE_DEFAULTPARSERLANG         = new CCEnumProperty<>(CAT_PARSER,          this,   "PROP_DATABASE_DEFAULTPARSERLANG",          CCDBLanguage.GERMAN,                CCDBLanguage.getWrapper());
 		PROP_TMDB_LANGUAGE                      = new CCEnumProperty<>(CAT_PARSER,          this,   "PROP_TMDB_LANGUAGE",                       getDefBLanguage(),                  BrowserLanguage.getWrapper());
-		PROP_IMAGESEARCH_IMPL                   = new CCEnumSetProperty<>(CAT_PARSER,       this,   "PROP_IMAGESEARCH_IMPL",                    EnumSetValue.ALL,                   ImageSearchImplementation.getWrapper());
+		PROP_IMAGESEARCH_IMPL                   = new CCEnumSetProperty<>(CAT_PARSER,       this,   "PROP_IMAGESEARCH_IMPL",                    getDefImagesearchImpl(),            ImageSearchImplementation.getWrapper());
 		PROP_METAPARSER_IMPL                    = new CCEnumSetProperty<>(CAT_PARSER,       this,   "PROP_METAPARSER_IMPL",                     EnumSetValue.ALL,                   MetadataParserImplementation.getWrapper());
 
 		PROP_ON_DBLCLICK_MOVE                   = new CCEnumProperty<>(CAT_MOVIES,          this,   "PROP_ON_DBLCLICK_MOVE",                    DoubleClickAction.PLAY,             DoubleClickAction.getWrapper());
@@ -537,5 +537,13 @@ public class CCProperties {
 		if (!Str.isNullOrWhitespace(v5.Key)) r.add(v5);
 
 		return r;
+	}
+
+	private Set<ImageSearchImplementation> getDefImagesearchImpl() {
+		HashSet<ImageSearchImplementation> hs = new HashSet<>();
+		hs.add(ImageSearchImplementation.TMDP_POSTER);
+		hs.add(ImageSearchImplementation.IMDB_COVER);
+		hs.add(ImageSearchImplementation.IMDB_SEC_COVER);
+		return hs;
 	}
 }

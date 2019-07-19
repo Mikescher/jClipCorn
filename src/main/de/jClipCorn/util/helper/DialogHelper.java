@@ -8,7 +8,6 @@ import javax.swing.*;
 
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.features.log.CCLog;
-import jdk.nashorn.internal.scripts.JO;
 
 public class DialogHelper {
 	public static boolean showYesNoDlg(Component frame, String caption, String txt) {
@@ -23,8 +22,8 @@ public class DialogHelper {
 				JOptionPane.YES_NO_OPTION,
 				JOptionPane.WARNING_MESSAGE,
 				null,
-				new Object[]{UIManager.getString("OptionPane.yesButtonText"), UIManager.getString("OptionPane.noButtonText")},
-				UIManager.getString("OptionPane.noButtonText")) == JOptionPane.OK_OPTION;
+				new Object[]{UIManager.getString("OptionPane.yesButtonText"), UIManager.getString("OptionPane.noButtonText")}, //$NON-NLS-1$ //$NON-NLS-2$
+				UIManager.getString("OptionPane.noButtonText")) == JOptionPane.OK_OPTION; //$NON-NLS-1$
 	}
 
 	public static boolean showLocaleYesNo(Component frame, String id) {

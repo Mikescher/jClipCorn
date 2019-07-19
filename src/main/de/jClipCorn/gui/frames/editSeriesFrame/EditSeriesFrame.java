@@ -42,6 +42,7 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCQuality;
 import de.jClipCorn.database.databaseElement.columnTypes.CCUserScore;
 import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReferenceList;
 import de.jClipCorn.gui.frames.addEpisodesFrame.AddEpisodesFrame;
+import de.jClipCorn.gui.frames.addMultiEpisodesFrame.AddMultiEpisodesFrame;
 import de.jClipCorn.gui.frames.addSeasonFrame.AddSeasonFrame;
 import de.jClipCorn.gui.frames.genericTextDialog.GenericTextDialog;
 import de.jClipCorn.gui.frames.inputErrorFrame.InputErrorDialog;
@@ -189,16 +190,21 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 	private JPanel pnlEditEpisodeOuter;
 	private JPanel panel_2;
 	private JPanel panel_3;
+	private JButton btnAddMultipleEpisodes_1;
 
 	private boolean _initFinished = false;
 	private boolean _isDirtySeries  = false;
 	private boolean _isDirtySeason  = false;
 	private boolean _isDirtyEpisode = false;
 
-	private boolean _ignoreSeriesDirty  = false;
-	private boolean _ignoreSeasonDirty  = false;
-	private boolean _ignoreEpisodeDirty = false;
+	private boolean _ignoreSeriesDirty    = false;
+	private boolean _ignoreSeasonDirty    = false;
+	private boolean _ignoreEpisodeDirty   = false;
+	private boolean _ignoreUIChangeEvents = false;
 
+	private CCSeason _currentSeasonMemory = null;
+	private CCEpisode _currentEpisodeMemory = null;
+	
 	/**
 	 * @wbp.parser.constructor
 	 */
@@ -503,7 +509,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 
 		lsSeasons = new JList<>();
 		lsSeasons.setCellRenderer(new HFixListCellRenderer());
-		lsSeasons.addListSelectionListener(arg0 -> updateSeasonPanel());
+		lsSeasons.addListSelectionListener(arg0 -> updateSeasonPanel(true));
 		scrollPane.setViewportView(lsSeasons);
 
 		btnAddEmptySeason = new JButton(LocaleBundle.getString("EditSeriesFrame.btnAddEmptySeason.text")); //$NON-NLS-1$
@@ -568,6 +574,8 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 				FormSpecs.RELATED_GAP_ROWSPEC,
 				FormSpecs.DEFAULT_ROWSPEC,
 				FormSpecs.RELATED_GAP_ROWSPEC,
+				FormSpecs.DEFAULT_ROWSPEC,
+				FormSpecs.RELATED_GAP_ROWSPEC,
 				RowSpec.decode("default:grow"), //$NON-NLS-1$
 				FormSpecs.RELATED_GAP_ROWSPEC,
 				FormSpecs.DEFAULT_ROWSPEC,}));
@@ -596,27 +604,31 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		spnSeasonYear.setEditor(new JSpinner.NumberEditor(spnSeasonYear, "0")); //$NON-NLS-1$
 
 		scrollPane_1 = new JScrollPane();
-		pnlEditSeasonInner.add(scrollPane_1, "1, 7, 3, 7, fill, fill"); //$NON-NLS-1$
+		pnlEditSeasonInner.add(scrollPane_1, "1, 7, 3, 9, fill, fill"); //$NON-NLS-1$
 
 		lsEpisodes = new JList<>();
 		lsEpisodes.setCellRenderer(new HFixListCellRenderer());
-		lsEpisodes.addListSelectionListener(e -> updateEpisodePanel());
+		lsEpisodes.addListSelectionListener(e -> updateEpisodePanel(true));
 		scrollPane_1.setViewportView(lsEpisodes);
 
 		btnAddEpisode = new JButton(LocaleBundle.getString("EditSeriesFrame.btnAddEmptyEpisode.text")); //$NON-NLS-1$
 		pnlEditSeasonInner.add(btnAddEpisode, "5, 7"); //$NON-NLS-1$
 		btnAddEpisode.addActionListener(e -> addEmptyEpisode());
+						
+		btnAddMultipleEpisodes_1 = new JButton(LocaleBundle.getString("EditSeriesFrame.btnAddMultipleEpisodes.text")); //$NON-NLS-1$
+		pnlEditSeasonInner.add(btnAddMultipleEpisodes_1, "5, 9"); //$NON-NLS-1$
+		btnAddMultipleEpisodes_1.addActionListener(e -> multiAddEpisodes());
 
-		btnAddMultipleEpisodes = new JButton(LocaleBundle.getString("EditSeriesFrame.btnAddMultipleEpisodes.text")); //$NON-NLS-1$
-		pnlEditSeasonInner.add(btnAddMultipleEpisodes, "5, 9"); //$NON-NLS-1$
-		btnAddMultipleEpisodes.addActionListener(e -> addMultipleEpisodes());
+		btnAddMultipleEpisodes = new JButton(LocaleBundle.getString("EditSeriesFrame.btnBatchEdit.text")); //$NON-NLS-1$
+		pnlEditSeasonInner.add(btnAddMultipleEpisodes, "5, 11"); //$NON-NLS-1$
+		btnAddMultipleEpisodes.addActionListener(e -> batchEditEpisodes());
 
 		btnRemoveEpisode = new JButton(LocaleBundle.getString("EditSeriesFrame.btnRemoveEpisode.text")); //$NON-NLS-1$
-		pnlEditSeasonInner.add(btnRemoveEpisode, "5, 11"); //$NON-NLS-1$
+		pnlEditSeasonInner.add(btnRemoveEpisode, "5, 13"); //$NON-NLS-1$
 		btnRemoveEpisode.addActionListener(e -> removeEpisode());
 
 		panel_1 = new JPanel();
-		pnlEditSeasonInner.add(panel_1, "1, 15, 5, 1, fill, fill"); //$NON-NLS-1$
+		pnlEditSeasonInner.add(panel_1, "1, 17, 5, 1, fill, fill"); //$NON-NLS-1$
 
 		btnSeasonOK = new JButton(LocaleBundle.getString("UIGeneric.btnOK.text")); //$NON-NLS-1$
 		btnSeasonOK.setPreferredSize(new Dimension(128, 26));
@@ -892,101 +904,164 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 	}
 	
 	private void updateSeriesPanel() {
+		if (_ignoreUIChangeEvents) return;
+		
 		_ignoreSeriesDirty = true;
-		edSeriesCvrControl.setCover(series.getCover());
-		
-		edSeriesTitle.setText(series.getTitle());
-		spnSeriesOnlineScore.setValue(series.getOnlinescore().asInt());
-		cbxSeriesFSK.setSelectedIndex(series.getFSK().asInt());
-		cbxSeriesScore.setSelectedIndex(series.getScore().asInt());
-		
-		cbxSeriesGenre_0.setSelectedIndex(series.getGenre(0).asInt());
-		cbxSeriesGenre_1.setSelectedIndex(series.getGenre(1).asInt());
-		cbxSeriesGenre_2.setSelectedIndex(series.getGenre(2).asInt());
-		cbxSeriesGenre_3.setSelectedIndex(series.getGenre(3).asInt());
-		cbxSeriesGenre_4.setSelectedIndex(series.getGenre(4).asInt());
-		cbxSeriesGenre_5.setSelectedIndex(series.getGenre(5).asInt());
-		cbxSeriesGenre_6.setSelectedIndex(series.getGenre(6).asInt());
-		cbxSeriesGenre_7.setSelectedIndex(series.getGenre(7).asInt());
-		
-		edSeriesGroups.setValue(series.getGroups());
-		
-		edSeriesReference.setValue(series.getOnlineReference());
-		
-		tagPanel.setValue(series.getTags());
-		
-		lsSeasons.setSelectedIndex(-1);
-		DefaultListModel<String> ml;
-		lsSeasons.setModel(ml = new DefaultListModel<>());
-		for (int i = 0; i < series.getSeasonCount(); i++) {
-			ml.addElement(series.getSeasonByArrayIndex(i).getTitle());
-		}
+		_ignoreUIChangeEvents = true;
+		{
+			edSeriesCvrControl.setCover(series.getCover());
+			
+			edSeriesTitle.setText(series.getTitle());
+			spnSeriesOnlineScore.setValue(series.getOnlinescore().asInt());
+			cbxSeriesFSK.setSelectedIndex(series.getFSK().asInt());
+			cbxSeriesScore.setSelectedIndex(series.getScore().asInt());
+			
+			cbxSeriesGenre_0.setSelectedIndex(series.getGenre(0).asInt());
+			cbxSeriesGenre_1.setSelectedIndex(series.getGenre(1).asInt());
+			cbxSeriesGenre_2.setSelectedIndex(series.getGenre(2).asInt());
+			cbxSeriesGenre_3.setSelectedIndex(series.getGenre(3).asInt());
+			cbxSeriesGenre_4.setSelectedIndex(series.getGenre(4).asInt());
+			cbxSeriesGenre_5.setSelectedIndex(series.getGenre(5).asInt());
+			cbxSeriesGenre_6.setSelectedIndex(series.getGenre(6).asInt());
+			cbxSeriesGenre_7.setSelectedIndex(series.getGenre(7).asInt());
+			
+			edSeriesGroups.setValue(series.getGroups());
+			
+			edSeriesReference.setValue(series.getOnlineReference());
+			
+			tagPanel.setValue(series.getTags());
+			
+			lsSeasons.setSelectedIndex(-1);
+			DefaultListModel<String> ml;
+			lsSeasons.setModel(ml = new DefaultListModel<>());
+			for (int i = 0; i < series.getSeasonCount(); i++) {
+				ml.addElement(series.getSeasonByArrayIndex(i).getTitle());
+			}
 
+		}
 		_ignoreSeriesDirty = false;
+		_ignoreUIChangeEvents = false;
 		_isDirtySeries = false;
+		
 		updateTitle();
 
-		updateSeasonPanel();
+		updateSeasonPanel(false);
 	}
 	
-	private void updateSeasonPanel() {
+	private void updateSeasonPanel(boolean check) {
+		if (_ignoreUIChangeEvents) return;
+		
+		if (check)
+		{
+			if (_currentSeasonMemory != null && _currentEpisodeMemory != null && _isDirtyEpisode)
+			{
+				if (!DialogHelper.showLocaleYesNoDefaultNo(EditSeriesFrame.this, "Dialogs.ChangeEpisodeButDirty")) //$NON-NLS-1$
+				{
+					_ignoreUIChangeEvents = true;
+					selectSeason(_currentSeasonMemory);
+					selectEpisode(_currentEpisodeMemory);
+					_ignoreUIChangeEvents = false;
+					return;
+				}
+			}
+
+			if (_currentSeasonMemory != null && _isDirtySeason)
+			{
+				if (!DialogHelper.showLocaleYesNoDefaultNo(EditSeriesFrame.this, "Dialogs.ChangeSeasonButDirty")) //$NON-NLS-1$
+				{
+					_ignoreUIChangeEvents = true;
+					selectSeason(_currentSeasonMemory);
+					selectEpisode(_currentEpisodeMemory);
+					_ignoreUIChangeEvents = false;
+					return;
+				}
+			}
+		}
+	
 		CCSeason season = getSelectedSeason();
 
 		_ignoreSeasonDirty = true;
-		if (season == null) {
-			pnlEditSeasonOuter.setVisible(false);
-		} else {
-			pnlEditSeasonOuter.setVisible(true);
+		_ignoreUIChangeEvents = true;
+		{
+			_currentSeasonMemory = season;
 			
-			edSeasonCvrControl.setCover(season.getCover());
-			edSeasonTitle.setText(season.getTitle());
-			spnSeasonYear.setValue(season.getYear());
-			
-			lsEpisodes.setSelectedIndex(-1);
-			DefaultListModel<String> ml;
-			lsEpisodes.setModel(ml = new DefaultListModel<>());
-			for (int i = 0; i < season.getEpisodeCount(); i++) {
-				ml.addElement(season.getEpisodeByArrayIndex(i).getTitle());
+			if (season == null) {
+				pnlEditSeasonOuter.setVisible(false);
+			} else {
+				pnlEditSeasonOuter.setVisible(true);
+				
+				edSeasonCvrControl.setCover(season.getCover());
+				edSeasonTitle.setText(season.getTitle());
+				spnSeasonYear.setValue(season.getYear());
+				
+				lsEpisodes.setSelectedIndex(-1);
+				DefaultListModel<String> ml;
+				lsEpisodes.setModel(ml = new DefaultListModel<>());
+				for (int i = 0; i < season.getEpisodeCount(); i++) {
+					ml.addElement(season.getEpisodeByArrayIndex(i).getTitle());
+				}
 			}
 		}
-
-		_ignoreSeasonDirty = true;
+		_ignoreUIChangeEvents = false;
+		_ignoreSeasonDirty = false;
 		_isDirtySeason = false;
+		
 		updateTitle();
 
-		updateEpisodePanel();
+		updateEpisodePanel(false);
 	}
 	
-	private void updateEpisodePanel() {
+	private void updateEpisodePanel(boolean check) {
+		if (_ignoreUIChangeEvents) return;
+
+		if (check)
+		{
+			if (_currentEpisodeMemory != null && _isDirtyEpisode)
+			{
+				if (!DialogHelper.showLocaleYesNoDefaultNo(EditSeriesFrame.this, "Dialogs.ChangeEpisodeButDirty")) //$NON-NLS-1$
+				{
+					_ignoreUIChangeEvents = true;
+					selectSeason(_currentSeasonMemory);
+					selectEpisode(_currentEpisodeMemory);
+					_ignoreUIChangeEvents = false;
+					return;
+				}
+			}
+
+		}
+		
 		CCEpisode episode = getSelectedEpisode();
 
 		_ignoreEpisodeDirty = true;
-
-		if (episode == null) {
-			pnlEditEpisodeOuter.setVisible(false);
-			return;
-		} else {
-			pnlEditEpisodeOuter.setVisible(true);
+		{
+			_currentEpisodeMemory = episode;
+			
+			if (episode == null) {
+				pnlEditEpisodeOuter.setVisible(false);
+				return;
+			} else {
+				pnlEditEpisodeOuter.setVisible(true);
+			}
+			
+			edEpisodeTitle.setText(episode.getTitle());
+			spnEpisodeEpisode.setValue(episode.getEpisodeNumber());
+			cbEpisodeViewed.setSelected(episode.isViewed());
+			cbxEpisodeFormat.setSelectedIndex(episode.getFormat().asInt());
+			cbxEpisodeQuality.setSelectedIndex(episode.getQuality().asInt());
+			spnEpisodeLength.setValue(episode.getLength());
+			spnEpisodeSize.setValue(episode.getFilesize().getBytes());
+			spnEpisodeAdded.setValue(episode.getAddDate());
+			cmpEpisodeViewedHistory.setValue(episode.getViewedHistory());
+			edEpisodePart.setText(episode.getPart());
+			tagPnl.setValue(episode.getTags());
+			ctrlLang.setValue(episode.getLanguage());
+			
+			updateEpisodesFilesizeDisplay();
+			testEpisodePart();
 		}
-		
-		edEpisodeTitle.setText(episode.getTitle());
-		spnEpisodeEpisode.setValue(episode.getEpisodeNumber());
-		cbEpisodeViewed.setSelected(episode.isViewed());
-		cbxEpisodeFormat.setSelectedIndex(episode.getFormat().asInt());
-		cbxEpisodeQuality.setSelectedIndex(episode.getQuality().asInt());
-		spnEpisodeLength.setValue(episode.getLength());
-		spnEpisodeSize.setValue(episode.getFilesize().getBytes());
-		spnEpisodeAdded.setValue(episode.getAddDate());
-		cmpEpisodeViewedHistory.setValue(episode.getViewedHistory());
-		edEpisodePart.setText(episode.getPart());
-		tagPnl.setValue(episode.getTags());
-		ctrlLang.setValue(episode.getLanguage());
-		
-		updateEpisodesFilesizeDisplay();
-		testEpisodePart();
-
 		_ignoreEpisodeDirty = false;
 		_isDirtyEpisode = false;
+		
 		updateTitle();
 	}
 	
@@ -1210,11 +1285,13 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 	}
 	
 	private void addEmptyEpisode() {
+		
 		CCSeason season = getSelectedSeason();
 		
-		if (season == null) {
-			return;
-		}
+		if (season == null) return;
+
+		if (_currentEpisodeMemory != null && _isDirtyEpisode) if (!DialogHelper.showLocaleYesNoDefaultNo(EditSeriesFrame.this, "Dialogs.ChangeEpisodeButDirty")) return; //$NON-NLS-1$
+		if (_isDirtySeason) if (!DialogHelper.showLocaleYesNoDefaultNo(EditSeriesFrame.this, "Dialogs.ChangeSeasonButDirty")) return; //$NON-NLS-1$
 		
 		CCEpisode newEp = season.createNewEmptyEpisode();
 		
@@ -1225,20 +1302,37 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		if (commonLen == null) commonLen = season.getConsensEpisodeLength();
 		if (commonLen != null) newEp.setLength(commonLen);
 		
-		updateSeasonPanel();
+		updateSeasonPanel(false);
 	}
 	
-	private void addMultipleEpisodes() {
+	private void batchEditEpisodes() {
 		CCSeason season = getSelectedSeason();
 		
-		if (season == null) {
-			return;
-		}
+		if (season == null) return;
+
+		if (_currentEpisodeMemory != null && _isDirtyEpisode) if (!DialogHelper.showLocaleYesNoDefaultNo(EditSeriesFrame.this, "Dialogs.ChangeEpisodeButDirty")) return; //$NON-NLS-1$
+		if (_isDirtySeason) if (!DialogHelper.showLocaleYesNoDefaultNo(EditSeriesFrame.this, "Dialogs.ChangeSeasonButDirty")) return; //$NON-NLS-1$
 		
 		(new AddEpisodesFrame(this, season, new UpdateCallbackListener() {
 			@Override
 			public void onUpdate(Object o) {
-				updateSeasonPanel();
+				updateSeasonPanel(false);
+			}
+		})).setVisible(true);
+	}
+	
+	private void multiAddEpisodes() {
+		CCSeason season = getSelectedSeason();
+		
+		if (season == null) return;
+
+		if (_currentEpisodeMemory != null && _isDirtyEpisode) if (!DialogHelper.showLocaleYesNoDefaultNo(EditSeriesFrame.this, "Dialogs.ChangeEpisodeButDirty")) return; //$NON-NLS-1$
+		if (_isDirtySeason) if (!DialogHelper.showLocaleYesNoDefaultNo(EditSeriesFrame.this, "Dialogs.ChangeSeasonButDirty")) return; //$NON-NLS-1$
+		
+		(new AddMultiEpisodesFrame(this, season, new UpdateCallbackListener() {
+			@Override
+			public void onUpdate(Object o) {
+				updateSeasonPanel(false);
 			}
 		})).setVisible(true);
 	}
@@ -1246,6 +1340,9 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 	private void removeEpisode() {
 		CCSeason season = getSelectedSeason();
 		if (season == null) return;
+
+		if (_currentEpisodeMemory != null && _isDirtyEpisode) if (!DialogHelper.showLocaleYesNoDefaultNo(EditSeriesFrame.this, "Dialogs.ChangeEpisodeButDirty")) return; //$NON-NLS-1$
+		if (_isDirtySeason) if (!DialogHelper.showLocaleYesNoDefaultNo(EditSeriesFrame.this, "Dialogs.ChangeSeasonButDirty")) return; //$NON-NLS-1$
 		
 		if (getSelectedEpisodes().size() <= 1) {
 			CCEpisode episode = getSelectedEpisode();
@@ -1267,15 +1364,15 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 			}
 		}
 		
-		updateSeasonPanel();
+		updateSeasonPanel(false);
 	}
 	
 	private void onOKSeason(boolean check) {
 		CCSeason season = getSelectedSeason();
 		
-		if (season == null) {
-			return;
-		}
+		if (season == null) return;
+
+		if (_currentEpisodeMemory != null && _isDirtyEpisode) if (!DialogHelper.showLocaleYesNoDefaultNo(EditSeriesFrame.this, "Dialogs.ChangeEpisodeButDirty")) return; //$NON-NLS-1$
 		
 		List<UserDataProblem> problems = new ArrayList<>();
 
@@ -1311,7 +1408,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		
 		season.endUpdating();
 		
-		updateSeasonPanel();
+		updateSeasonPanel(false);
 		
 		if (! prevTitle.equals(season.getTitle())) {
 			updateSeriesPanel();
@@ -1381,9 +1478,9 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 	private void onOKEpisode(boolean check) throws EnumFormatException {
 		CCEpisode episode = getSelectedEpisode();
 		
-		if (episode == null) {
-			return;
-		}
+		if (episode == null) return;
+		
+		if (_isDirtySeason) if (!DialogHelper.showLocaleYesNoDefaultNo(EditSeriesFrame.this, "Dialogs.ChangeSeasonButDirty")) return; //$NON-NLS-1$
 		
 		List<UserDataProblem> problems = new ArrayList<>();
 
@@ -1430,10 +1527,10 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		
 		episode.endUpdating();
 		
-		updateEpisodePanel();
+		updateEpisodePanel(false);
 		
 		if (! prevTitle.equals(episode.getTitle())) {
-			updateSeasonPanel();
+			updateSeasonPanel(false);
 			selectEpisode(episode);
 		}
 	}
@@ -1481,7 +1578,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 	@Override
 	public void windowClosing(WindowEvent arg0) {
 		if (_isDirtyEpisode || _isDirtySeason || _isDirtySeries) {
-			if (DialogHelper.showLocaleYesNoDefaultNo(EditSeriesFrame.this, "Dialogs.CloseButDirty")) EditSeriesFrame.this.dispose();
+			if (DialogHelper.showLocaleYesNoDefaultNo(EditSeriesFrame.this, "Dialogs.CloseButDirty")) EditSeriesFrame.this.dispose(); //$NON-NLS-1$
 		} else {
 			EditSeriesFrame.this.dispose();
 		}
@@ -1596,12 +1693,12 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 	}
 
 	private void updateTitle() {
-		String str = LocaleBundle.getFormattedString("EditSeriesFrame.this.title", series.getTitle());
-		str += " [";
-		str += _isDirtySeries  ? "*" : "_";
-		str += _isDirtySeason  ? "*" : "_";
-		str += _isDirtyEpisode ? "*" : "_";
-		str += "]";
-		setTitle(str); //$NON-NLS-1$
+		String str = LocaleBundle.getFormattedString("EditSeriesFrame.this.title", series.getTitle()); //$NON-NLS-1$
+		str += " ["; //$NON-NLS-1$
+		str += _isDirtySeries  ? "*" : "_";  //$NON-NLS-1$//$NON-NLS-2$
+		str += _isDirtySeason  ? "*" : "_";  //$NON-NLS-1$//$NON-NLS-2$
+		str += _isDirtyEpisode ? "*" : "_";  //$NON-NLS-1$//$NON-NLS-2$
+		str += "]"; //$NON-NLS-1$
+		setTitle(str);
 	}
 }

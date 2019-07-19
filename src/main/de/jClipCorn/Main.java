@@ -210,5 +210,3 @@ public class Main {
 //TODO remove viewed field from db (get from history)
 
 //TODO option recreate previews (covers dialog to show content of covers table)
-
-//TODO get lang in addmovie dialog in background and set if successful

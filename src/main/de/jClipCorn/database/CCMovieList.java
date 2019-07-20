@@ -15,6 +15,7 @@ import javax.swing.SwingUtilities;
 
 import de.jClipCorn.features.serialization.xmlexport.DatabaseXMLExporter;
 import de.jClipCorn.features.serialization.xmlexport.ExportOptions;
+import de.jClipCorn.util.Str;
 import de.jClipCorn.util.lambda.Func0to0;
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -686,16 +687,28 @@ public class CCMovieList {
 
 	public String getCommonSeriesPath() {
 		List<String> all = new ArrayList<>();
-		
+
 		for (CCSeries ser : iteratorSeries()) {
 			all.add(ser.getCommonPathStart(false));
 		}
-		
+
 		while (all.contains("")) all.remove(""); //$NON-NLS-1$ //$NON-NLS-2$
-		
+
 		String common = PathFormatter.getCommonFolderPath(all);
-		
+
 		return common;
+	}
+
+	public String guessSeriesRootPath() { // kinda slow :(
+
+		return iteratorSeries()
+			.map(CCSeries::guessSeriesRootPath)
+			.filter(p -> !Str.isNullOrWhitespace(p))
+			.groupBy(p -> p)
+			.autosortByProperty(p -> p.getValue().size())
+			.map(Map.Entry::getKey)
+			.lastOr(Str.Empty);
+
 	}
 
 	public String getCommonMoviesPath() {

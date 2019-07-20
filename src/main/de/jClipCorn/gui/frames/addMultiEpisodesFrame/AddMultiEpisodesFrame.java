@@ -51,15 +51,17 @@ public class AddMultiEpisodesFrame extends JFrame {
 	private JButton btnOkayCopy;
 	private JButton btnOkayMove;
 	private JProgressBar progressBar;
+	private JProgressBar progressBar2;
 
 	private final JFileChooser massVideoFileChooser;
 
+	private final String _globalSeriesRoot;
 	private final CCSeason target;
 	private final UpdateCallbackListener callback;
 	
 	private int _currentStep = 1; // activeStep
-	private JProgressBar progressBar2;
-	
+
+
 	public AddMultiEpisodesFrame(Component owner, CCSeason season, UpdateCallbackListener ucl) {		
 		super();
 		this.callback  = ucl;
@@ -70,6 +72,8 @@ public class AddMultiEpisodesFrame extends JFrame {
 		massVideoFileChooser.setMultiSelectionEnabled(true);
 		massVideoFileChooser.setFileFilter(FileChooserHelper.createLocalFileFilter("AddMovieFrame.videoFileChooser.filterDescription", CCFileFormat::isValidMovieFormat)); //$NON-NLS-1$
 		massVideoFileChooser.setDialogTitle(LocaleBundle.getString("AddMovieFrame.videoFileChooser.title")); //$NON-NLS-1$
+
+		_globalSeriesRoot = season.getMovieList().guessSeriesRootPath();
 
 		init(owner);
 	}
@@ -198,7 +202,7 @@ public class AddMultiEpisodesFrame extends JFrame {
 			vm.Language      = lang;
 			vm.Title         = PathFormatter.getFilename(f.getAbsolutePath());
 
-			vm.updateTarget(target);
+			vm.updateTarget(target, lang, _globalSeriesRoot);
 			vm.validate(target);
 
 			data.add(vm);
@@ -223,7 +227,7 @@ public class AddMultiEpisodesFrame extends JFrame {
 				List<NewEpisodeVM> data = lsData.getDataCopy();
 				for (int i = 0; i < data.size(); i++) {
 					data.get(i).Title = d.get(i);
-					data.get(i).updateTarget(target);
+					data.get(i).updateTarget(target, CCDBLanguageList.union(CCStreams.iterate(data).map(p -> p.Language)), _globalSeriesRoot);
 					data.get(i).validate(target);
 				}
 				lsData.forceDataChangedRedraw();
@@ -428,6 +432,7 @@ public class AddMultiEpisodesFrame extends JFrame {
 						}
 					}
 
+					for (int i = 0; i < data.size(); i++) data.get(i).updateTarget(target, CCDBLanguageList.union(CCStreams.iterate(data).map(p -> p.Language)), _globalSeriesRoot);
 					for (int i = 0; i < data.size(); i++) data.get(i).validate(target);
 
 					lsData.forceDataChangedRedraw();
@@ -457,16 +462,19 @@ public class AddMultiEpisodesFrame extends JFrame {
 		vc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 		vc.setAcceptAllFileFilterUsed(false);
 		String r = target.getSeries().guessSeriesRootPath();
+		if (Str.isNullOrWhitespace(r)) r = _globalSeriesRoot;
 		if (!Str.isNullOrWhitespace(r)) vc.setCurrentDirectory(new File(r));
 
 		if (vc.showOpenDialog(this) != JFileChooser.APPROVE_OPTION) return;
 
 		for (int i = 0; i < data.size(); i++) {
 			data.get(i).TargetRoot = vc.getSelectedFile().getAbsolutePath();
-			data.get(i).updateTarget(target);
+			data.get(i).updateTarget(target, CCDBLanguageList.union(CCStreams.iterate(data).map(p -> p.Language)), _globalSeriesRoot);
 			data.get(i).validate(target);
 		}
 		lsData.forceDataChangedRedraw();
+
+		updateButtons();
 	}
 
 	private void onOkay(ActionEvent evt, boolean move) {

@@ -75,6 +75,7 @@ public class CCSeries extends CCDatabaseElement {
 		int qs = 0;
 		int qc = 0;
 		for (CCSeason se: seasons) {
+			if (se.isEmpty()) continue;
 			qc++;
 			qs += se.getQuality().asInt();
 		}
@@ -483,7 +484,7 @@ public class CCSeries extends CCDatabaseElement {
 	}
 
 	@SuppressWarnings("nls")
-	public String getFolderNameForCreatedFolderStructure() {
+	public String getFolderNameForCreatedFolderStructure(CCDBLanguageList fallbackLanguage) {
 		StringBuilder seriesfoldername = new StringBuilder(getTitle());
 		
 		for (CCGroup group : getGroups()) {
@@ -491,6 +492,7 @@ public class CCSeries extends CCDatabaseElement {
 		}
 
 		CCDBLanguageList lang = getCommonLanguages();
+		if (getEpisodeCount() == 0 && fallbackLanguage != null) lang = fallbackLanguage;
 		if (!lang.isExact(CCDBLanguage.GERMAN) && !lang.isEmpty()) {
 			seriesfoldername.append(String.format(" [%s]", lang.serializeToFilenameString()));
 		}

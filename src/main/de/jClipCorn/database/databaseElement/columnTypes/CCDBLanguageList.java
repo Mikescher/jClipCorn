@@ -60,6 +60,7 @@ public class CCDBLanguageList implements Iterable<CCDBLanguage> {
 		return new CCDBLanguageList(langs);
 	}
 
+
 	public long serializeToLong() {
 		long v = 0x0;
 
@@ -236,6 +237,12 @@ public class CCDBLanguageList implements Iterable<CCDBLanguage> {
 	public static CCDBLanguageList union(CCDBLanguageList a, CCDBLanguageList b) {
 		HashSet<CCDBLanguage> v = new HashSet<>(a._languages);
 		v.addAll(b._languages);
+		return CCDBLanguageList.createDirect(v);
+	}
+
+	public static CCDBLanguageList union(CCStream<CCDBLanguageList> data) {
+		HashSet<CCDBLanguage> v = new HashSet<>();
+		for (CCDBLanguageList ls : data) v.addAll(ls._languages);
 		return CCDBLanguageList.createDirect(v);
 	}
 

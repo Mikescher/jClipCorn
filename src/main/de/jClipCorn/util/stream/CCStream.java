@@ -283,6 +283,12 @@ public abstract class CCStream<TType> implements Iterator<TType>, Iterable<TType
 		return null;
 	}
 
+	public TType firstOr(TType elseValue) {
+		CCStream<TType> it = cloneFresh();
+		if (it.hasNext()) return it.next();
+		return elseValue;
+	}
+
 	public TType firstOrNull(Func1to1<TType, Boolean> filter) {
 		return this.filter(filter).firstOrNull();
 	}
@@ -290,6 +296,13 @@ public abstract class CCStream<TType> implements Iterator<TType>, Iterable<TType
 	public TType lastOrNull() {
 		CCStream<TType> it = cloneFresh();
 		TType last = null;
+		while (it.hasNext()) last = it.next();
+		return last;
+	}
+
+	public TType lastOr(TType elseValue) {
+		CCStream<TType> it = cloneFresh();
+		TType last = elseValue;
 		while (it.hasNext()) last = it.next();
 		return last;
 	}

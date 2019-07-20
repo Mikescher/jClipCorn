@@ -9,11 +9,7 @@ import java.util.regex.Pattern;
 
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.covertab.CCCoverData;
-import de.jClipCorn.database.databaseElement.columnTypes.CCDateTimeList;
-import de.jClipCorn.database.databaseElement.columnTypes.CCFileFormat;
-import de.jClipCorn.database.databaseElement.columnTypes.CCFileSize;
-import de.jClipCorn.database.databaseElement.columnTypes.CCQuality;
-import de.jClipCorn.database.databaseElement.columnTypes.CCTagList;
+import de.jClipCorn.database.databaseElement.columnTypes.*;
 import de.jClipCorn.database.util.ExtendedViewedState;
 import de.jClipCorn.database.util.ExtendedViewedStateType;
 import de.jClipCorn.features.actionTree.IActionSourceObject;
@@ -547,23 +543,23 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 		return CCStreams.iterate(episodes);
 	}
 
-	public File getFileForCreatedFolderstructure(File parentfolder, String title, int episodeNumber, CCFileFormat format) {
+	public File getFileForCreatedFolderstructure(File parentfolder, String title, int episodeNumber, CCFileFormat format, CCDBLanguageList fallbackLanguage) {
 		if (! parentfolder.isDirectory()) {
 			return null; // meehp
 		}
 
 		String parent = PathFormatter.appendSeparator(parentfolder.getAbsolutePath());
 
-		String path = parent + getRelativeFileForCreatedFolderstructure(title, episodeNumber, format);
+		String path = parent + getRelativeFileForCreatedFolderstructure(title, episodeNumber, format, fallbackLanguage);
 
 		return new File(path);
 	}
 
 	@SuppressWarnings("nls")
-	public String getRelativeFileForCreatedFolderstructure(String title, int episodeNumber, CCFileFormat format) {
+	public String getRelativeFileForCreatedFolderstructure(String title, int episodeNumber, CCFileFormat format, CCDBLanguageList fallbackLanguage) {
 		DecimalFormat decFormattter = new DecimalFormat("00");
 
-		String seriesfoldername = getSeries().getFolderNameForCreatedFolderStructure();
+		String seriesfoldername = getSeries().getFolderNameForCreatedFolderStructure(fallbackLanguage);
 		String seasonfoldername = getFolderNameForCreatedFolderStructure();
 		int seasonIndex = getIndexForCreatedFolderStructure();
 

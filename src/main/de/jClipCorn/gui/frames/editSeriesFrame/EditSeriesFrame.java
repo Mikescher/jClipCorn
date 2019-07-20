@@ -289,11 +289,17 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 	}
 	
 	private void selectEpisode(CCEpisode e) {
-		lsEpisodes.setSelectedIndex(e.getEpisodeIndexInSeason()); // Calls the Listener
+		if (e == null)
+			lsEpisodes.setSelectedIndex(-1); // Calls the Listener
+		else
+			lsEpisodes.setSelectedIndex(e.getEpisodeIndexInSeason()); // Calls the Listener
 	}
 
 	private void selectSeason(CCSeason s) {
-		lsSeasons.setSelectedIndex(s.getSeasonNumber()); // Calls the Listener
+		if (s == null)
+			lsSeasons.setSelectedIndex(-1); // Calls the Listener
+		else
+			lsSeasons.setSelectedIndex(s.getSeasonNumber()); // Calls the Listener
 	}
 
 	private void initGUI() {

@@ -1,10 +1,7 @@
 package de.jClipCorn.gui.frames.addMultiEpisodesFrame;
 
 import de.jClipCorn.database.databaseElement.CCSeason;
-import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguageList;
-import de.jClipCorn.database.databaseElement.columnTypes.CCDateTimeList;
-import de.jClipCorn.database.databaseElement.columnTypes.CCFileFormat;
-import de.jClipCorn.database.databaseElement.columnTypes.CCQuality;
+import de.jClipCorn.database.databaseElement.columnTypes.*;
 import de.jClipCorn.features.userdataProblem.UserDataProblem;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datetime.CCDate;
@@ -43,15 +40,17 @@ public class NewEpisodeVM {
 
 	public CCQuality getQuality() { return CCQuality.calculateQuality(Filesize, Length, 1); }
 
-	public void updateTarget(CCSeason season)
+	public void updateTarget(CCSeason season, CCDBLanguageList commonLang, String globalSeriesRoot)
 	{
-		String root = (TargetRoot!=null) ? TargetRoot : season.getSeries().guessSeriesRootPath();
+		String root = TargetRoot;
+		if (Str.isNullOrWhitespace(root)) root = season.getSeries().guessSeriesRootPath();
+		if (Str.isNullOrWhitespace(root)) root = globalSeriesRoot;
+
 		if (Str.isNullOrWhitespace(root)) {
 			TargetPath = Str.Empty;
 			return;
 		}
-
-		File t = season.getFileForCreatedFolderstructure(new File(root), Title, EpisodeNumber, getFormat());
+		File t = season.getFileForCreatedFolderstructure(new File(root), Title, EpisodeNumber, getFormat(), commonLang);
 		if (t == null) {
 			TargetPath = Str.Empty;
 			return;

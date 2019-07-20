@@ -202,4 +202,9 @@ public class UpdateMetadataTable extends JCCSimpleTable<UpdateMetadataTableEleme
 		return true;
 	}
 
+	@Override
+	protected boolean isSortable(int col) {
+		return true;
+	}
+
 }

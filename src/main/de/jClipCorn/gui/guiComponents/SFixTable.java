@@ -15,6 +15,7 @@ import javax.swing.SortOrder;
 import javax.swing.ToolTipManager;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 
 public abstract class SFixTable extends JTable {
 	private static final long serialVersionUID = 1082882838948078289L;
@@ -98,8 +99,10 @@ public abstract class SFixTable extends JTable {
 			public void mouseClicked(MouseEvent e) {
 				int column = getTableHeader().columnAtPoint(e.getPoint());
 				RowSorter<?> sorter = getRowSorter();
-				if (sorter == null)
-					return;
+
+				if (sorter == null) return;
+				if (sorter instanceof TableRowSorter<?> && !((TableRowSorter<?>)sorter).isSortable(column)) return;
+
 				List<SortKey> sortKeys = new ArrayList<>();
 				switch (currentOrder) {
 				case UNSORTED:
@@ -139,7 +142,8 @@ public abstract class SFixTable extends JTable {
 
 			if (tip != null && tip.trim().isEmpty()) tip = null;
 			
-			if (tip != null && !tip.toLowerCase().startsWith("<html")) { //$NON-NLS-1$
+			if (tip != null && !tip.toLowerCase().startsWith("<html")) //$NON-NLS-1$
+			{
 				StringBuilder b = new StringBuilder();
 				b.append("<html>"); //$NON-NLS-1$
 				b.append(tip);
@@ -150,6 +154,14 @@ public abstract class SFixTable extends JTable {
 				b.append("</html>"); //$NON-NLS-1$
 				
 				tip = b.toString();
+			}
+			else if (tip != null && tip.toLowerCase().startsWith("<html")) //$NON-NLS-1$
+			{
+				StringBuilder b = new StringBuilder();
+				for (int i = 0; i < row; i++) b.append("<!--HACK-->"); //$NON-NLS-1$
+
+				int idx = tip.toLowerCase().indexOf("</html>"); //$NON-NLS-1$
+				if (idx >= 0) tip = tip.substring(0, idx) + b.toString() + tip.substring(idx);
 			}
 
 			jc.setToolTipText(tip);

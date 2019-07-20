@@ -42,4 +42,9 @@ public class CSFSTable extends JCCSimpleTable<CSFSElement> {
 	protected boolean isMultiselect() {
 		return false;
 	}
+
+	@Override
+	protected boolean isSortable(int col) {
+		return true;
+	}
 }

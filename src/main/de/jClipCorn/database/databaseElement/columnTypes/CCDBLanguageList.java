@@ -2,18 +2,24 @@ package de.jClipCorn.database.databaseElement.columnTypes;
 
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
+import de.jClipCorn.gui.resources.reftypes.IconRef;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.stream.CCStream;
 import de.jClipCorn.util.stream.CCStreams;
 
 import javax.swing.*;
+import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.util.*;
+import java.util.List;
 
 public class CCDBLanguageList implements Iterable<CCDBLanguage> {
 	public static final CCDBLanguageList GERMAN = new CCDBLanguageList(CCDBLanguage.GERMAN);
 	public static final CCDBLanguageList ENGLISH = new CCDBLanguageList(CCDBLanguage.ENGLISH);
 	public static final CCDBLanguageList JAPANESE = new CCDBLanguageList(CCDBLanguage.JAPANESE);
 	public static final CCDBLanguageList EMPTY = new CCDBLanguageList();
+
+	private static HashMap<String, ImageIcon> _fullIconCache = new HashMap<>();
 
 	private final Set<CCDBLanguage> _languages;
 
@@ -151,21 +157,50 @@ public class CCDBLanguageList implements Iterable<CCDBLanguage> {
 		return _languages.contains(ignored);
 	}
 
-	public ImageIcon getIcon() {
-		if (isEmpty()) return Resources.ICN_TABLE_LANGUAGE_NONE.get();
-		if (isSingle()) return _languages.iterator().next().getIcon();
+	public IconRef getIconRef() {
+		if (isEmpty()) return Resources.ICN_TABLE_LANGUAGE_NONE;
+		if (isSingle()) return _languages.iterator().next().getIconRef();
 
-		if (isExact(0, 1, 4)) return Resources.ICN_TABLE_LANGUAGE_SPECIAL_00_01_04.get();
-		if (isExact(0, 1, 6)) return Resources.ICN_TABLE_LANGUAGE_SPECIAL_00_01_06.get();
+		if (isExact(0, 1, 4)) return Resources.ICN_TABLE_LANGUAGE_SPECIAL_00_01_04;
+		if (isExact(0, 1, 6)) return Resources.ICN_TABLE_LANGUAGE_SPECIAL_00_01_06;
 
 		if (_languages.size() == 2)
 		{
 			List<CCDBLanguage> langs = CCStreams.iterate(_languages).enumerate();
 
-			return Resources.ICN_TABLE_LANGUAGE_COMBINED.get(Tuple.Create(langs.get(0).asInt(), langs.get(1).asInt())).get();
+			return Resources.ICN_TABLE_LANGUAGE_COMBINED.get(Tuple.Create(langs.get(0).asInt(), langs.get(1).asInt()));
 		}
 
-		return Resources.ICN_TABLE_LANGUAGE_MORE.get();
+		return Resources.ICN_TABLE_LANGUAGE_MORE;
+	}
+
+	public ImageIcon getIcon() {
+		return getIconRef().get();
+	}
+
+	public ImageIcon getFullIcon() {
+		if (isEmpty()) return Resources.ICN_TABLE_LANGUAGE_NONE.get();
+		if (isSingle()) return _languages.iterator().next().getIcon();
+
+		List<CCDBLanguage> langs = CCStreams.iterate(_languages).autosort().enumerate();
+
+		String key = CCStreams.iterate(langs).stringjoin(CCDBLanguage::getShortString, "|");
+
+		ImageIcon icn = _fullIconCache.get(key);
+		if (icn != null) return icn;
+
+		BufferedImage img = new BufferedImage(16 + (langs.size()-1) * (16+2), 16, BufferedImage.TYPE_4BYTE_ABGR);
+
+		Graphics g = img.getGraphics();
+		for (int i = 0; i < langs.size(); i++)
+		{
+			g.drawImage(langs.get(i).getIconRef().getImage(), i * (16 + 2), 0, null);
+		}
+
+		icn = new ImageIcon(img);
+
+		_fullIconCache.put(key, icn);
+		return icn;
 	}
 
 	public CCDBLanguageList getRemove(CCDBLanguage lang) {

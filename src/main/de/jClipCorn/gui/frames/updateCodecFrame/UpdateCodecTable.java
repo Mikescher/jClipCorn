@@ -88,4 +88,9 @@ public class UpdateCodecTable extends JCCSimpleTable<UpdateCodecTableElement> {
 		return true;
 	}
 
+	@Override
+	protected boolean isSortable(int col) {
+		return true;
+	}
+
 }

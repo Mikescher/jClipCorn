@@ -533,7 +533,7 @@ public class AddEpisodesFrame extends JFrame implements UserDataProblemHandler, 
 		
 		btnOmniparser = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnOmniParser.text")); //$NON-NLS-1$
 		btnOmniparser.addActionListener(arg0 -> {
-			OmniParserFrame oframe = new OmniParserFrame(AddEpisodesFrame.this, AddEpisodesFrame.this, getTitleList(), getCommonFolderPathStart());
+			OmniParserFrame oframe = new OmniParserFrame(AddEpisodesFrame.this, AddEpisodesFrame.this, getTitleList(), getCommonFolderPathStart(), Str.Empty, false);
 			oframe.setVisible(true);
 		});
 		btnOmniparser.setBounds(12, 661, 110, 23);

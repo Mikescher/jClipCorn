@@ -55,9 +55,11 @@ public abstract class JCCSimpleTable<TData> extends JScrollPane implements ListS
 
 		table.getSelectionModel().addListSelectionListener(this);
 		table.addMouseListener(this);
-		
+
 		table.setRowSorter(sorter);
-		
+
+		for (int i = 0; i < columns.size(); i++) sorter.setSortable(i, isSortable(i));
+
 		if (this.getVerticalScrollBar().getUI() instanceof WindowsScrollBarUI)
 			this.getVerticalScrollBar().setUI(new ClipVerticalScrollbarUI(32));
 	}
@@ -115,6 +117,10 @@ public abstract class JCCSimpleTable<TData> extends JScrollPane implements ListS
 
 	public List<TData> getDataCopy() {
 		return model.getDataCopy();
+	}
+
+	public List<TData> getDataDirect() {
+		return model.getDataDirect();
 	}
 	
 	public void setFilter(Func1to1<TData, Boolean> filter) {
@@ -190,4 +196,5 @@ public abstract class JCCSimpleTable<TData> extends JScrollPane implements ListS
 	protected abstract void OnSelectElement(TData element);
 	protected abstract int getColumnAdjusterMaxWidth();
 	protected abstract boolean isMultiselect();
+	protected abstract boolean isSortable(int col);
 }

@@ -19,18 +19,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JTextArea;
-import javax.swing.ScrollPaneConstants;
-import javax.swing.SwingConstants;
-import javax.swing.UIManager;
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.DocumentEvent;
@@ -50,7 +39,7 @@ import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.SimpleFileUtils;
 import de.jClipCorn.util.listener.OmniParserCallbackListener;
 
-public class OmniParserFrame extends JFrame {
+public class OmniParserFrame extends JDialog {
 	private static final long serialVersionUID = -4511912406011331076L;
 	
 	private final static String[] COLUMN_HEADERS = {LocaleBundle.getString("OmniParserFrame.Header.title_A"), LocaleBundle.getString("OmniParserFrame.Header.title_B")};  //$NON-NLS-1$//$NON-NLS-2$
@@ -92,7 +81,7 @@ public class OmniParserFrame extends JFrame {
 	private JLabel lblParsedText;
 	private JLabel lblCheck;
 
-	public OmniParserFrame(Component owner, OmniParserCallbackListener listener, List<String> oldtitles, String chooserdir) {
+	public OmniParserFrame(Component owner, OmniParserCallbackListener listener, List<String> oldtitles, String chooserdir, String initial, boolean modal) {
 		super();
 		
 		this.callbacklistener = listener;
@@ -103,8 +92,11 @@ public class OmniParserFrame extends JFrame {
 		(new VerticalScrollPaneSynchronizer(scrlPnlFormattedText, scrlPnlParsedText)).start();
 		
 		setLocationRelativeTo(owner);
+		setModal(modal);
 		
 		fullycreated = true;
+
+		memoPlaintext.setText(initial);
 	}
 
 	private void initGUI() {

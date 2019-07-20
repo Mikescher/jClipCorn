@@ -4,6 +4,7 @@ import javax.swing.ImageIcon;
 
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
+import de.jClipCorn.gui.resources.reftypes.IconRef;
 import de.jClipCorn.util.enumextension.ContinoousEnum;
 import de.jClipCorn.util.enumextension.EnumWrapper;
 
@@ -137,8 +138,12 @@ public enum CCDBLanguage implements ContinoousEnum<CCDBLanguage> {
 		return Integer.compare(o1.asInt(), o2.asInt());
 	}
 
+	public IconRef getIconRef() {
+		return Resources.ICN_TABLE_LANGUAGE[this.asInt()];
+	}
+
 	public ImageIcon getIcon() {
-		return Resources.ICN_TABLE_LANGUAGE[this.asInt()].get();
+		return getIconRef().get();
 	}
 
 	public String getShortString() {

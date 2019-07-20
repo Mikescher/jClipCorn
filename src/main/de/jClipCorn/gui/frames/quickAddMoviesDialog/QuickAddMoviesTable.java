@@ -40,4 +40,9 @@ public class QuickAddMoviesTable extends JCCSimpleTable<Tuple<String, String>> {
 		return false;
 	}
 
+	@Override
+	protected boolean isSortable(int col) {
+		return true;
+	}
+
 }

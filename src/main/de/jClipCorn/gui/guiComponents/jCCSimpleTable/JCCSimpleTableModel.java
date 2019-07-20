@@ -88,4 +88,8 @@ public class JCCSimpleTableModel<TData> extends AbstractTableModel implements Ta
 	public List<TData> getDataCopy() {
 		return new ArrayList<>(data);
 	}
+
+	public List<TData> getDataDirect() {
+		return data;
+	}
 }

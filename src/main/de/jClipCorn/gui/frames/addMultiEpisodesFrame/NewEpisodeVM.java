@@ -9,6 +9,7 @@ import de.jClipCorn.features.userdataProblem.UserDataProblem;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.formatter.PathFormatter;
+import de.jClipCorn.util.mediaquery.MediaQueryResult;
 import de.jClipCorn.util.stream.CCStreams;
 
 import java.io.File;
@@ -29,17 +30,22 @@ public class NewEpisodeVM {
 	public int EpisodeNumber;
 	public long Filesize;
 
-	private CCDate getAddDate() { return CCDate.getCurrentDate(); }
+	public MediaQueryResult MediaInfo = null;
+	public String TargetRoot = null;
 
-	private CCDateTimeList getViewedHistory() { return CCDateTimeList.createEmpty(); }
+	// -------- -------- -------- -------- -------- -------- -------- --------
 
-	private CCFileFormat getFormat() { return CCFileFormat.getMovieFormatOrDefault(PathFormatter.getExtension(SourcePath)); }
+	public CCDate getAddDate() { return CCDate.getCurrentDate(); }
 
-	private CCQuality getQuality() { return CCQuality.calculateQuality(Filesize, Length, 1); }
+	public CCDateTimeList getViewedHistory() { return CCDateTimeList.createEmpty(); }
+
+	public CCFileFormat getFormat() { return CCFileFormat.getMovieFormatOrDefault(PathFormatter.getExtension(SourcePath)); }
+
+	public CCQuality getQuality() { return CCQuality.calculateQuality(Filesize, Length, 1); }
 
 	public void updateTarget(CCSeason season)
 	{
-		String root = season.getSeries().guessSeriesRootPath();
+		String root = (TargetRoot!=null) ? TargetRoot : season.getSeries().guessSeriesRootPath();
 		if (Str.isNullOrWhitespace(root)) {
 			TargetPath = Str.Empty;
 			return;

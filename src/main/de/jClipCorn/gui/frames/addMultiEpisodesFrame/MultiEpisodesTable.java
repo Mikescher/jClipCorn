@@ -20,7 +20,7 @@ public class MultiEpisodesTable extends JCCSimpleTable<NewEpisodeVM> {
 				Str.Empty,
 				null,
 				e -> e.IsValid ? Resources.ICN_GENERIC_ORB_GREEN.get16x16() : Resources.ICN_GENERIC_ORB_RED.get16x16(),
-				e -> e.Problems));
+				e -> Str.isNullOrWhitespace(e.Problems) ? null : e.Problems));
 
 		r.add(new JCCSimpleColumnPrototype<>(
 				"MultiEpisodesTable.Source", //$NON-NLS-1$

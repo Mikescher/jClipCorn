@@ -27,6 +27,10 @@ public final class CCStreams {
 		return new ByteArrayStream(ls);
 	}
 
+	public static CCStream<Double> iterate(double[] ls) {
+		return new DoubleArrayStream(ls);
+	}
+
 	public static <T> CCStream<T> single(T ls) {
 		return new SingleStream<>(ls);
 	}

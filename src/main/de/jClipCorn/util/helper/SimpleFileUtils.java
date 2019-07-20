@@ -5,8 +5,6 @@ import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.lambda.Func2to0;
 
 import java.io.*;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.text.MessageFormat;
 import java.util.UUID;

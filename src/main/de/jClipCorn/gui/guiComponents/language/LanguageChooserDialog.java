@@ -24,7 +24,7 @@ public class LanguageChooserDialog extends JDialog {
 
 	private final Func1to0<CCDBLanguageList> _okListener;
 
-	public LanguageChooserDialog(LanguageChooser owner, Func1to0<CCDBLanguageList> onFinish, CCDBLanguageList value) {
+	public LanguageChooserDialog(Component owner, Func1to0<CCDBLanguageList> onFinish, CCDBLanguageList value) {
 		super();
 
 		_okListener = onFinish;

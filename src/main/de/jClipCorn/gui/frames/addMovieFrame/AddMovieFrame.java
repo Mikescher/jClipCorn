@@ -1261,6 +1261,6 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 				SwingUtilities.invokeLater(() -> pbLanguageLoad.setVisible(false));
 
 			}
-		}, "LANG_QUERY").start();
+		}, "LANG_QUERY").start(); //$NON-NLS-1$
 	}
 }

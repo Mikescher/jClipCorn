@@ -14,6 +14,7 @@ import javax.swing.JPanel;
 
 import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReferenceList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCSingleOnlineReference;
+import de.jClipCorn.util.Str;
 import de.jClipCorn.util.stream.CCStreams;
 
 public class JReferenceChooser extends JPanel {
@@ -70,7 +71,7 @@ public class JReferenceChooser extends JPanel {
 		_additional = new ArrayList<>(ref.Additional);
 		updateUIControls();
 
-		for (ActionListener a : _changeListener) a.actionPerformed(new ActionEvent(ref, -1, ""));
+		for (ActionListener a : _changeListener) a.actionPerformed(new ActionEvent(ref, -1, Str.Empty));
 	}
 	
 	@Override
@@ -90,7 +91,7 @@ public class JReferenceChooser extends JPanel {
 		mainChooser.setValue(a);
 		updateUIControls();
 
-		for (ActionListener ac : _changeListener) ac.actionPerformed(new ActionEvent(a, -1, ""));
+		for (ActionListener ac : _changeListener) ac.actionPerformed(new ActionEvent(a, -1, Str.Empty));
 	}
 	
 	public void setAdditional(List<CCSingleOnlineReference> a) {
@@ -101,6 +102,6 @@ public class JReferenceChooser extends JPanel {
 				.enumerate();
 		updateUIControls();
 
-		for (ActionListener ac : _changeListener) ac.actionPerformed(new ActionEvent(a, -1, ""));
+		for (ActionListener ac : _changeListener) ac.actionPerformed(new ActionEvent(a, -1, Str.Empty));
 	}
 }

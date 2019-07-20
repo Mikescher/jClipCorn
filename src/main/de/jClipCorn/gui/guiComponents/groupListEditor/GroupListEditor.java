@@ -16,6 +16,7 @@ import javax.swing.border.BevelBorder;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGroupList;
 import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.util.Str;
 import de.jClipCorn.util.helper.LookAndFeelManager;
 
 public class GroupListEditor extends JPanel {
@@ -96,7 +97,7 @@ public class GroupListEditor extends JPanel {
 		
 		updateEditor();
 
-		for (ActionListener ac : _changeListener) ac.actionPerformed(new ActionEvent(this, -1, ""));
+		for (ActionListener ac : _changeListener) ac.actionPerformed(new ActionEvent(this, -1, Str.Empty));
 	}
 	
 	public CCGroupList getValue() {

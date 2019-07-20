@@ -4,7 +4,6 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.sun.istack.internal.Nullable;
 import de.jClipCorn.database.databaseElement.columnTypes.*;
 import org.apache.commons.lang.StringUtils;
 
@@ -405,7 +404,7 @@ public class UserDataProblem {
 		}
 	}
 	
-	public static void testEpisodeData(List<UserDataProblem> ret, CCSeason season, @Nullable CCEpisode episode, String title, int len, int epNum, CCDate adddate, CCDateTimeList lvdates, long fsize, String csExtn, String csExta, String part, int quality, CCDBLanguageList language) {
+	public static void testEpisodeData(List<UserDataProblem> ret, CCSeason season, CCEpisode episode, String title, int len, int epNum, CCDate adddate, CCDateTimeList lvdates, long fsize, String csExtn, String csExta, String part, int quality, CCDBLanguageList language) {
 		if (title.isEmpty()) {
 			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_EMPTY_TITLE));
 		}

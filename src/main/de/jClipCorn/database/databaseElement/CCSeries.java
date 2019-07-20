@@ -611,6 +611,55 @@ public class CCSeries extends CCDatabaseElement {
 		return 0;
 	}
 
+	public int getAutoEpisodeLength() {
+		Integer i0 = getCommonEpisodeLength();
+		if (i0 != null) return i0;
+
+		Integer i1 = getConsensEpisodeLength();
+		if (i1 != null) return i1;
+
+		Integer i2 = getAverageEpisodeLength();
+		if (i2 != null) return i2;
+
+		return 0;
+	}
+
+	public Integer getCommonEpisodeLength() {
+		if (getEpisodeCount() == 0) return null;
+
+		int len = -1;
+		for (CCEpisode ep : iteratorEpisodes()) {
+
+			if (ep.getLength() > 0)
+				if (len > 0 && ep.getLength() != len) {
+					return null;
+				} else {
+					len = ep.getLength();
+				}
+		}
+
+		return len;
+	}
+
+	public Integer getAverageEpisodeLength() {
+		if (getEpisodeCount() == 0) return null;
+
+		return (int)Math.round((iteratorEpisodes().sumInt(CCEpisode::getLength)*1d) / getEpisodeCount());
+	}
+
+	public Integer getConsensEpisodeLength() {
+		if (getEpisodeCount() == 0) return null;
+
+		Map.Entry<Integer, List<CCEpisode>> mostCommon = iteratorEpisodes().groupBy(CCEpisode::getLength).autosortByProperty(e -> e.getValue().size()).lastOrNull();
+		if (mostCommon == null) return null;
+
+		if (mostCommon.getValue().size() * 3 >= getEpisodeCount() * 2) { // 66% of episodes have same length
+			return mostCommon.getKey();
+		}
+
+		return null;
+	}
+
 	public CCEpisode getLastAddedEpisode() {
 		return iteratorEpisodes().autosortByProperty(CCEpisode::getAddDate).lastOrNull();
 	}

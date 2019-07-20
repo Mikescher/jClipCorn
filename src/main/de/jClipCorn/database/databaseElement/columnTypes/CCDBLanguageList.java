@@ -184,7 +184,7 @@ public class CCDBLanguageList implements Iterable<CCDBLanguage> {
 
 		List<CCDBLanguage> langs = CCStreams.iterate(_languages).autosort().enumerate();
 
-		String key = CCStreams.iterate(langs).stringjoin(CCDBLanguage::getShortString, "|");
+		String key = CCStreams.iterate(langs).stringjoin(CCDBLanguage::getShortString, "|"); //$NON-NLS-1$
 
 		ImageIcon icn = _fullIconCache.get(key);
 		if (icn != null) return icn;

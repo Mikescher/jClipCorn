@@ -30,6 +30,10 @@ public class DialogHelper {
 		return showYesNoDlg(frame, LocaleBundle.getString(id + "_caption"), LocaleBundle.getString(id)); //$NON-NLS-1$
 	}
 
+	public static boolean showLocaleFormattedYesNo(Component frame, String id, Object... args) {
+		return showYesNoDlg(frame, LocaleBundle.getString(id + "_caption"), LocaleBundle.getFormattedString(id, args)); //$NON-NLS-1$
+	}
+
 	public static boolean showLocaleYesNoDefaultNo(Component frame, String id) {
 		return showYesNoDlgDefaultNo(frame, LocaleBundle.getString(id + "_caption"), LocaleBundle.getString(id)); //$NON-NLS-1$
 	}

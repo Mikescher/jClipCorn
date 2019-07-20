@@ -632,7 +632,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 			@Override
 			public void windowClosing(WindowEvent e) {
 				if (_isDirty) {
-					if (DialogHelper.showLocaleYesNoDefaultNo(EditMovieFrame.this, "Dialogs.CloseButDirty")) EditMovieFrame.this.dispose();
+					if (DialogHelper.showLocaleYesNoDefaultNo(EditMovieFrame.this, "Dialogs.CloseButDirty")) EditMovieFrame.this.dispose(); //$NON-NLS-1$
 				} else {
 					EditMovieFrame.this.dispose();
 				}
@@ -1247,7 +1247,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 	
 	private void setDirty() {
 		if (!_initFinished) return;
-		setTitle(LocaleBundle.getFormattedString("EditMovieFrame.this.title", movie.getCompleteTitle()) + "*");
+		setTitle(LocaleBundle.getFormattedString("EditMovieFrame.this.title", movie.getCompleteTitle()) + "*"); //$NON-NLS-1$ //$NON-NLS-2$
 		_isDirty = true;
 	}
 }

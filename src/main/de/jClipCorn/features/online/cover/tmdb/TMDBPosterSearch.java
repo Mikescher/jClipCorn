@@ -56,7 +56,7 @@ public class TMDBPosterSearch extends AbstractImageSearch {
 		List<String> covers = parser.findCovers(tmpdbRef);
 		
 		for (int i = 0; i < 8; i++) {
-			if (covers != null && covers.size() > i) {
+			if (covers.size() > i) {
 				BufferedImage biu = HTTPUtilities.getImage(covers.get(i));
 				if (biu != null) 
 					updateCallback.onUpdate(biu);

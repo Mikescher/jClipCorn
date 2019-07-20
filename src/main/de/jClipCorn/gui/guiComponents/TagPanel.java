@@ -14,6 +14,7 @@ import javax.swing.JPanel;
 import javax.swing.UIManager;
 
 import de.jClipCorn.database.databaseElement.columnTypes.CCTagList;
+import de.jClipCorn.util.Str;
 
 public class TagPanel extends JPanel {
 	private static final long serialVersionUID = -6093081428307402687L;
@@ -99,7 +100,7 @@ public class TagPanel extends JPanel {
 	public void setValue(CCTagList v) {
 		value = v;
 		update();
-		for (ActionListener a : _changeListener) a.actionPerformed(new ActionEvent(v, -1, ""));
+		for (ActionListener a : _changeListener) a.actionPerformed(new ActionEvent(v, -1, Str.Empty));
 	}
 
 	public void setReadOnly(boolean ro) {

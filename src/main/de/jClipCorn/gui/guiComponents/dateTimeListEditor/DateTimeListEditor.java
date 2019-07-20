@@ -26,6 +26,7 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
 
+import de.jClipCorn.util.Str;
 import de.jClipCorn.util.adapter.ChangeLambdaAdapter;
 import de.jClipCorn.util.adapter.ItemChangeLambdaAdapter;
 import org.gpl.JSplitButton.JSplitButton;
@@ -205,7 +206,7 @@ public class DateTimeListEditor extends JPanel {
 	}
 
 	private void triggerOnChanged() {
-		for (ActionListener ac : _changeListener) ac.actionPerformed(new ActionEvent(this, -1, ""));
+		for (ActionListener ac : _changeListener) ac.actionPerformed(new ActionEvent(this, -1, Str.Empty));
 	}
 
 	private void resortList() {

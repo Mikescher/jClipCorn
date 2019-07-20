@@ -4,8 +4,6 @@ import de.jClipCorn.util.lambda.Func0to0;
 
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class ChangeLambdaAdapter implements ChangeListener {
 

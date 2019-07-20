@@ -21,6 +21,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 
 import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReferenceList;
+import de.jClipCorn.util.Str;
 import org.gpl.JSplitButton.JSplitButton;
 import org.gpl.JSplitButton.action.SplitButtonActionListener;
 
@@ -287,7 +288,7 @@ public class EditCoverControl extends AbstractEditCoverControl {
 
 		btnCrop.setEnabled(isCoverSet() && isEnabled());
 
-		for (ActionListener a : _changeListener) a.actionPerformed(new ActionEvent(nci, -1, ""));
+		for (ActionListener a : _changeListener) a.actionPerformed(new ActionEvent(nci, -1, Str.Empty));
 	}
 
 	@Override

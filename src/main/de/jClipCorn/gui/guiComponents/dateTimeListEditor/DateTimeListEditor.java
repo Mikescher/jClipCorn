@@ -241,6 +241,8 @@ public class DateTimeListEditor extends JPanel {
 		data.add(getCurrentInputValue());
 		
 		updateContentList(v);
+		
+		triggerOnChanged();
 	}
 	
 	private CCDateTime getCurrentInputValue() {
@@ -263,6 +265,8 @@ public class DateTimeListEditor extends JPanel {
 		spnrTime.setValue(CCTime.getCurrentTime());
 
 		focusPanel(null);
+		
+		triggerOnChanged();
 	}
 	
 	private void onSetUnknown(ActionEvent e) {
@@ -275,6 +279,8 @@ public class DateTimeListEditor extends JPanel {
 		spnrTime.setValue(CCTime.getMidnight());
 
 		focusPanel(null);
+		
+		triggerOnChanged();
 	}
 
 	private void onRemove(CCDateTime element) {
@@ -285,6 +291,8 @@ public class DateTimeListEditor extends JPanel {
 				return;
 			}
 		}
+		
+		triggerOnChanged();
 	}
 
 	private void onDisplay(CCDateTime element) {

@@ -42,4 +42,19 @@ public class CCFileSize {
 	public static CCFileSize div(CCFileSize a, long divider) {
 		return new CCFileSize(a.bytes / divider);
 	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		CCFileSize that = (CCFileSize) o;
+
+		return bytes == that.bytes;
+	}
+
+	@Override
+	public int hashCode() {
+		return (int) (bytes ^ (bytes >>> 32));
+	}
 }

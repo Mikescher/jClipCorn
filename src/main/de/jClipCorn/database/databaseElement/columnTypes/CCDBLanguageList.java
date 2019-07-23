@@ -60,7 +60,6 @@ public class CCDBLanguageList implements Iterable<CCDBLanguage> {
 		return new CCDBLanguageList(langs);
 	}
 
-
 	public long serializeToLong() {
 		long v = 0x0;
 
@@ -127,8 +126,14 @@ public class CCDBLanguageList implements Iterable<CCDBLanguage> {
 		return Objects.equals(_languages, that._languages);
 	}
 
+	public boolean isEqual(CCDBLanguageList that) {
+		if (_languages.size() != that._languages.size()) return false;
+
+		return _languages.containsAll(that._languages);
+	}
+
 	public static boolean equals(CCDBLanguageList a, CCDBLanguageList b) {
-		if (a != null) return a.equals(b);
+		if (a != null) return a.isEqual(b);
 		return b == null;
 	}
 

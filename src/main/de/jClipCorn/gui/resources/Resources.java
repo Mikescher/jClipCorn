@@ -63,6 +63,7 @@ public class Resources {
 	public final static MultiSizeIconRef ICN_MENUBAR_ADD_MOV				= registerMultisizeIcon("/icons/toolbar/add.png");
 	public final static MultiSizeIconRef ICN_MENUBAR_ADD_SER				= registerMultisizeIcon("/icons/toolbar/addSer.png");
 	public final static MultiSizeIconRef ICN_MENUBAR_ADD_SEA				= registerMultisizeIcon("/icons/toolbar/addSea.png");
+	public final static MultiSizeIconRef ICN_MENUBAR_BATCHEDIT				= registerMultisizeIcon("/icons/toolbar/processor.png");
 	public final static MultiSizeIconRef ICN_MENUBAR_DBCHECK				= registerMultisizeIcon("/icons/toolbar/application_osx_terminal.png");
 	public final static MultiSizeIconRef ICN_MENUBAR_CLEARDB				= registerMultisizeIcon("/icons/toolbar/fire_damage.png");
 	public final static MultiSizeIconRef ICN_MENUBAR_SETTINGS				= registerMultisizeIcon("/icons/toolbar/gear_in.png");
@@ -105,7 +106,7 @@ public class Resources {
 	public final static MultiSizeIconRef ICN_MENUBAR_IMPORTSERIES			= registerMultisizeIcon("/icons/toolbar/script_bullet_add_ser.png");
 	public final static MultiSizeIconRef ICN_MENUBAR_EXPORTSERIES			= registerMultisizeIcon("/icons/toolbar/script_bullet_save_ser.png");
 	public final static MultiSizeIconRef ICN_MENUBAR_EPISODEGUIDE			= registerMultisizeIcon("/icons/toolbar/document_quote.png");
-	public final static MultiSizeIconRef ICN_MENUBAR_RANDOMMOVIE			= registerMultisizeIcon("/icons/toolbar/magic_wand_2.png");
+	public final static MultiSizeIconRef ICN_MENUBAR_RANDOM					= registerMultisizeIcon("/icons/toolbar/magic_wand_2.png");
 	public final static MultiSizeIconRef ICN_MENUBAR_TAGS					= registerMultisizeIcon("/icons/toolbar/tags_cloud.png");
 	public final static MultiSizeIconRef ICN_MENUBAR_TAG_0	 				= registerMultisizeIcon("/icons/tags/tag_0_on.png");
 	public final static MultiSizeIconRef ICN_MENUBAR_TAG_1	 				= registerMultisizeIcon("/icons/tags/tag_1_on.png");

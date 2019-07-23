@@ -161,16 +161,6 @@ public class AddMultiEpisodesFrame extends JFrame {
 		contentPane.add(progressBar2, "12, 8, 3, 1"); //$NON-NLS-1$
 	}
 
-	private void updateButtons() {
-		btnAddFiles.setEnabled(_currentStep >= 1);
-		btnInsertTitles.setEnabled(_currentStep >= 2);
-		btnGetLength.setEnabled(_currentStep >= 3);
-		btnGetLanguages.setEnabled(_currentStep >= 4);
-		btnSetDestination.setEnabled(_currentStep >= 5);
-		btnOkayCopy.setEnabled(_currentStep >= 6 && CCStreams.iterate(lsData.getDataDirect()).all(p -> p.IsValid));
-		btnOkayMove.setEnabled(_currentStep >= 6 && CCStreams.iterate(lsData.getDataDirect()).all(p -> p.IsValid));
-	}
-
 	private String getCommonFolderPathStart() {
 		List<String> paths = new ArrayList<>();
 
@@ -248,7 +238,7 @@ public class AddMultiEpisodesFrame extends JFrame {
 		List<NewEpisodeVM> data = lsData.getDataCopy();
 		if (data.size() == 0) return;
 
-		setEnabled(false);
+		setAllEnabled(false);
 		progressBar.setValue(0);
 		progressBar.setMaximum(data.size());
 
@@ -370,7 +360,7 @@ public class AddMultiEpisodesFrame extends JFrame {
 			{
 				SwingUtilities.invokeLater(() ->
 				{
-					setEnabled(true);
+					setAllEnabled(true);
 					progressBar.setValue(0);
 					progressBar.setMaximum(100);
 				});
@@ -383,7 +373,7 @@ public class AddMultiEpisodesFrame extends JFrame {
 		List<NewEpisodeVM> data = lsData.getDataCopy();
 		if (data.size() == 0) return;
 
-		setEnabled(false);
+		setAllEnabled(false);
 		progressBar.setValue(0);
 		progressBar.setMaximum(data.size());
 
@@ -445,7 +435,7 @@ public class AddMultiEpisodesFrame extends JFrame {
 			{
 				SwingUtilities.invokeLater(() ->
 				{
-					setEnabled(true);
+					setAllEnabled(true);
 					progressBar.setValue(0);
 					progressBar.setMaximum(100);
 				});
@@ -486,7 +476,7 @@ public class AddMultiEpisodesFrame extends JFrame {
 			if (!vm.IsValid) return;
 		}
 
-		setEnabled(false);
+		setAllEnabled(false);
 		progressBar.setValue(0);
 		progressBar.setMaximum(data.size());
 		progressBar2.setMaximum(100);
@@ -557,11 +547,29 @@ public class AddMultiEpisodesFrame extends JFrame {
 			{
 				SwingUtilities.invokeLater(() ->
 				{
-					setEnabled(true);
+					setAllEnabled(true);
 					progressBar.setValue(0);
 					progressBar.setMaximum(100);
 				});
 			}
 		}).start();
 	}
+
+	private void setAllEnabled(boolean b) {
+		setEnabled(b);
+		updateButtons();
+	}
+
+	private void updateButtons() {
+		boolean bb = isEnabled();
+
+		btnAddFiles.setEnabled(bb && _currentStep >= 1);
+		btnInsertTitles.setEnabled(bb && _currentStep >= 2);
+		btnGetLength.setEnabled(bb && _currentStep >= 3);
+		btnGetLanguages.setEnabled(bb && _currentStep >= 4);
+		btnSetDestination.setEnabled(bb && _currentStep >= 5);
+		btnOkayCopy.setEnabled(bb && _currentStep >= 6 && CCStreams.iterate(lsData.getDataDirect()).all(p -> p.IsValid));
+		btnOkayMove.setEnabled(bb && _currentStep >= 6 && CCStreams.iterate(lsData.getDataDirect()).all(p -> p.IsValid));
+	}
+
 }

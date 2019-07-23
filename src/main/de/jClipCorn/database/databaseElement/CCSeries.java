@@ -21,7 +21,7 @@ import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.formatter.TimeIntervallFormatter;
 import de.jClipCorn.util.stream.CCStream;
 
-public class CCSeries extends CCDatabaseElement {
+public class CCSeries extends CCDatabaseElement implements IEpisodeOwner {
 	private final static int GUIDE_W_BORDER = 2;
 	private final static int GUIDE_W_PADDING = 6;
 	
@@ -574,10 +574,16 @@ public class CCSeries extends CCDatabaseElement {
 		return getTitle();
 	}
 	
+	@Override
 	public CCStream<CCEpisode> iteratorEpisodes() {
 		return new DirectEpisodesIterator(this);
 	}
-	
+
+	@Override
+	public CCSeries getSeries() {
+		return this; // -.-
+	}
+
 	public CCStream<CCSeason> iteratorSeasons() {
 		return new DirectSeasonsIterator(this);
 	}
@@ -626,6 +632,7 @@ public class CCSeries extends CCDatabaseElement {
 		return 0;
 	}
 
+	@Override
 	public Integer getCommonEpisodeLength() {
 		if (getEpisodeCount() == 0) return null;
 
@@ -649,6 +656,7 @@ public class CCSeries extends CCDatabaseElement {
 		return (int)Math.round((iteratorEpisodes().sumInt(CCEpisode::getLength)*1d) / getEpisodeCount());
 	}
 
+	@Override
 	public Integer getConsensEpisodeLength() {
 		if (getEpisodeCount() == 0) return null;
 

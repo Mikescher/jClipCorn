@@ -9,6 +9,7 @@ import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.exceptions.CCFormatException;
 import de.jClipCorn.util.stream.CCStream;
 import de.jClipCorn.util.stream.IterableStream;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 @SuppressWarnings("nls")
 public class CCDateTimeList {
@@ -232,5 +233,31 @@ public class CCDateTimeList {
 		}
 		
 		return true;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+
+		if (o == null || getClass() != o.getClass()) return false;
+
+		return isEqual((CCDateTimeList) o);
+	}
+
+	public boolean isEqual(CCDateTimeList that) {
+		if (list.size() != that.list.size()) return false;
+
+		for (int i=0; i<list.size(); i++) {
+			if (!list.get(i).isEqual(that.list.get(i))) return false;
+		}
+		return true;
+	}
+
+	@Override
+	public int hashCode() {
+		HashCodeBuilder hcb = new HashCodeBuilder(17, 37);
+		hcb.append(list.size());
+		for (CCDateTime dtl : list) hcb.append(dtl);
+		return hcb.toHashCode();
 	}
 }

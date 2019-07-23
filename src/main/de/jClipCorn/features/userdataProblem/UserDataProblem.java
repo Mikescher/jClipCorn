@@ -4,15 +4,11 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.jClipCorn.database.databaseElement.*;
 import de.jClipCorn.database.databaseElement.columnTypes.*;
 import org.apache.commons.lang.StringUtils;
 
 import de.jClipCorn.database.CCMovieList;
-import de.jClipCorn.database.databaseElement.CCDatabaseElement;
-import de.jClipCorn.database.databaseElement.CCEpisode;
-import de.jClipCorn.database.databaseElement.CCMovie;
-import de.jClipCorn.database.databaseElement.CCSeason;
-import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.datetime.CCDateTime;
@@ -404,16 +400,18 @@ public class UserDataProblem {
 		}
 	}
 	
-	public static void testEpisodeData(List<UserDataProblem> ret, CCSeason season, CCEpisode episode, String title, int len, int epNum, CCDate adddate, CCDateTimeList lvdates, long fsize, String csExtn, String csExta, String part, int quality, CCDBLanguageList language) {
+	public static void testEpisodeData(List<UserDataProblem> ret, IEpisodeOwner owner, CCEpisode episode, String title, int len, int epNum, CCDate adddate, CCDateTimeList lvdates, long fsize, String csExtn, String csExta, String part, int quality, CCDBLanguageList language) {
 		if (title.isEmpty()) {
 			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_EMPTY_TITLE));
 		}
 		
 		//################################################################################################################
-		
-		CCEpisode eqEp = season.getEpisodeByNumber(epNum);
-		if (eqEp != null && (eqEp != episode)) {
-			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_EPISODENUMBER_ALREADY_EXISTS));
+
+		if (episode != null) {
+			CCEpisode eqEp = episode.getSeason().getEpisodeByNumber(epNum);
+			if (eqEp != null && (eqEp != episode)) {
+				ret.add(new UserDataProblem(UserDataProblem.PROBLEM_EPISODENUMBER_ALREADY_EXISTS));
+			}
 		}
 		
 		//################################################################################################################
@@ -462,7 +460,7 @@ public class UserDataProblem {
 		
 		//################################################################################################################
 		
-		for (CCDatabaseElement idel : season.getMovieList().iteratorElements()) {
+		for (CCDatabaseElement idel : owner.getMovieList().iteratorElements()) {
 			if (idel.isMovie()) {
 				if (isPathIncluded((CCMovie)idel, part)) {
 					ret.add(new UserDataProblem(PROBLEM_FILE_ALREADYEXISTS));

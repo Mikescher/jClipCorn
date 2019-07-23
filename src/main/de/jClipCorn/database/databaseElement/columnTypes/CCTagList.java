@@ -11,6 +11,7 @@ import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.exceptions.TagNotFoundException;
 import de.jClipCorn.util.stream.CCStream;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 public class CCTagList {
 	public static final CCTagList EMPTY = new CCTagList();
@@ -251,8 +252,7 @@ public class CCTagList {
 		return iterate().stringjoin(g -> String.valueOf(g.Index), ";"); //$NON-NLS-1$
 	}
 
-	public static CCTagList deserialize(String v) throws TagNotFoundException
-	{
+	public static CCTagList deserialize(String v) throws TagNotFoundException {
 		boolean[] n = new boolean[TAGCOUNT];
 		for (int i = 0; i < TAGCOUNT; i++) n[i] = false;
 
@@ -261,5 +261,28 @@ public class CCTagList {
 			if (!Str.isNullOrWhitespace(str)) n[CCSingleTag.find(Integer.parseInt(str)).Index] = true;
 		}
 		return new CCTagList(n);
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+
+		if (o == null || getClass() != o.getClass()) return false;
+
+		return isEqual((CCTagList) o);
+	}
+
+	public boolean isEqual(CCTagList that) {
+		for (int i = 0; i < TAGCOUNT; i++) {
+			if (tags[i] != that.tags[i]) return false;
+		}
+		return true;
+	}
+
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder(17, 37)
+				.append(tags)
+				.toHashCode();
 	}
 }

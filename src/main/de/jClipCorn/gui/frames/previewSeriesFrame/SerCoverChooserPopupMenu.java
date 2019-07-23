@@ -10,7 +10,8 @@ import javax.swing.JPopupMenu;
 import javax.swing.filechooser.FileFilter;
 
 import de.jClipCorn.database.databaseElement.CCSeason;
-import de.jClipCorn.gui.frames.addEpisodesFrame.AddEpisodesFrame;
+import de.jClipCorn.gui.frames.addMultiEpisodesFrame.AddMultiEpisodesFrame;
+import de.jClipCorn.gui.frames.batchEditFrame.BatchEditFrame;
 import de.jClipCorn.gui.frames.coverPreviewFrame.CoverPreviewFrame;
 import de.jClipCorn.gui.frames.editSeriesFrame.EditSeriesFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
@@ -32,8 +33,12 @@ public class SerCoverChooserPopupMenu extends JPopupMenu {
 		this.owner = frame;
 
 		JMenuItem addEpisodes = new JMenuItem(LocaleBundle.getString("PreviewSeriesFrame.PopupMenuCover.AddEpisodes"), Resources.ICN_MENUBAR_ADD_SEA.get16x16()); //$NON-NLS-1$
-		addEpisodes.addActionListener(arg0 -> new AddEpisodesFrame(owner, season, owner).setVisible(true));
+		addEpisodes.addActionListener(arg0 -> new AddMultiEpisodesFrame(owner, season, owner).setVisible(true));
 		add(addEpisodes);
+
+		JMenuItem batchEpisodes = new JMenuItem(LocaleBundle.getString("PreviewSeriesFrame.PopupMenuCover.BatchEdit"), Resources.ICN_MENUBAR_BATCHEDIT.get16x16()); //$NON-NLS-1$
+		batchEpisodes.addActionListener(arg0 -> new BatchEditFrame(owner, season, owner).setVisible(true));
+		add(batchEpisodes);
 		
 		JMenuItem editSeason = new JMenuItem(LocaleBundle.getString("PreviewSeriesFrame.PopupMenuCover.Edit"), Resources.ICN_MENUBAR_EDIT_SER.get16x16()); //$NON-NLS-1$
 		editSeason.addActionListener(arg0 -> new EditSeriesFrame(owner, season, owner).setVisible(true));

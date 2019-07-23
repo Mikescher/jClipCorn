@@ -21,7 +21,7 @@ import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.stream.CCStream;
 import de.jClipCorn.util.stream.CCStreams;
 
-public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, ICCCoveredElement, IActionSourceObject {
+public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, ICCCoveredElement, IActionSourceObject, IEpisodeOwner {
 	private final CCSeries owner;
 	private final int seasonID;
 	
@@ -110,6 +110,7 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 		updateDB();
 	}
 
+	@Override
 	public CCSeries getSeries() {
 		return owner;
 	}
@@ -316,6 +317,7 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 		getMovieList().fireOnChangeDatabaseElement(getSeries());
 	}
 	
+	@Override
 	public CCMovieList getMovieList() {
 		return getSeries().getMovieList();
 	}
@@ -340,6 +342,7 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 		}
 	}
 	
+	@Override
 	public Integer getCommonEpisodeLength() {
 		if (getEpisodeCount() == 0) return null;
 		
@@ -364,6 +367,7 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 		return (int)Math.round((iteratorEpisodes().sumInt(CCEpisode::getLength)*1d) / getEpisodeCount());
 	}
 
+	@Override
 	public Integer getConsensEpisodeLength() {
 		if (getEpisodeCount() == 0) return null;
 
@@ -539,6 +543,7 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 		return vc;
 	}
 
+	@Override
 	public CCStream<CCEpisode> iteratorEpisodes() {
 		return CCStreams.iterate(episodes);
 	}

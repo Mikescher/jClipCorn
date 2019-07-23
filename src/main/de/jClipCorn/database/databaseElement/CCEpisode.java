@@ -21,7 +21,7 @@ import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.exceptions.CCFormatException;
 import de.jClipCorn.util.formatter.PathFormatter;
 
-public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElement, IActionSourceObject, ICCTaggedElement {
+public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElement, IActionSourceObject, ICCTaggedElement, IEpisodeData {
 	private final CCSeason owner;
 	private final int localID;
 	
@@ -71,18 +71,21 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 		}
 	}
 
+	@Override
 	public void setEpisodeNumber(int en) {
 		this.episodeNumber = en;
 		
 		updateDB();
 	}
 
+	@Override
 	public void setTitle(String t) {
 		this.title = t;
 		
 		updateDB();
 	}
 
+	@Override
 	public void setViewed(boolean viewed) {
 		if (viewed ^ this.viewed) {
 			this.viewed = viewed;
@@ -126,6 +129,7 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 		updateDB();
 	}
 
+	@Override
 	public void setQuality(CCQuality quality) {
 		if (quality == null) {CCLog.addUndefinied("Prevented setting CCEpisode.Quality to NULL"); return; } //$NON-NLS-1$
 
@@ -158,6 +162,7 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 		updateDB();
 	}
 
+	@Override
 	public void setFormat(CCFileFormat format) {
 		if (format == null) {CCLog.addUndefinied("Prevented setting CCEpisode.Format to NULL"); return; } //$NON-NLS-1$
 
@@ -170,13 +175,22 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 		
 		updateDB();
 	}
+
+	@Override
+	public void setFilesize(CCFileSize fsz) {
+		this.filesize = fsz;
+
+		updateDB();
+	}
 	
+	@Override
 	public void setPart(String path) {
 		part = path;
 		
 		updateDB();
 	}
 	
+	@Override
 	public void setAddDate(CCDate date) {
 		if (date == null) {CCLog.addUndefinied("Prevented setting CCEpisode.AddDate to NULL"); return; } //$NON-NLS-1$
 
@@ -191,6 +205,7 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 		updateDB();
 	}
 
+	@Override
 	public void setViewedHistory(CCDateTimeList datelist) {
 		this.viewedHistory = datelist;
 		
@@ -306,10 +321,12 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 		return title;
 	}
 
+	@Override
 	public int getLocalID() {
 		return localID;
 	}
 
+	@Override
 	public int getEpisodeNumber() {
 		return episodeNumber;
 	}
@@ -353,6 +370,7 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 		return filesize;
 	}
 
+	@Override
 	public String getPart() {
 		return part;
 	}

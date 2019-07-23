@@ -17,7 +17,8 @@ import de.jClipCorn.features.serialization.ExportHelper;
 import de.jClipCorn.features.backupManager.BackupManager;
 import de.jClipCorn.features.serialization.legacy.CCBXMLReader;
 import de.jClipCorn.gui.frames.aboutFrame.AboutFrame;
-import de.jClipCorn.gui.frames.addEpisodesFrame.AddEpisodesFrame;
+import de.jClipCorn.gui.frames.addMultiEpisodesFrame.AddMultiEpisodesFrame;
+import de.jClipCorn.gui.frames.batchEditFrame.BatchEditFrame;
 import de.jClipCorn.gui.frames.addMovieFrame.AddMovieFrame;
 import de.jClipCorn.gui.frames.addSeasonFrame.AddSeasonFrame;
 import de.jClipCorn.gui.frames.addSeriesFrame.AddSeriesFrame;
@@ -150,7 +151,7 @@ public class CCActionTree extends UIActionTree{
 				add(extras, "ScanFolder",               KS_CTRL_O, "ClipMenuBar.Extras.ScanFolder",               Resources.ICN_MENUBAR_SCANFOLDER,           true,  this::onClickExtrasScanFolder);
 				add(extras, "CompareDBs",               null,      "ClipMenuBar.Extras.CompareDBs",               Resources.ICN_MENUBAR_COMPARE,              false, this::onClickExtrasCompareDBs);
 				add(extras, "ShowWatchHistory",         null,      "ClipMenuBar.Extras.WatchHistory",             Resources.ICN_MENUBAR_WATCHHISTORY,         false, this::onClickExtrasShowWatchHistory);
-				add(extras, "RandomMovie",              null,      "ClipMenuBar.Extras.RandomMovie",              Resources.ICN_MENUBAR_RANDOMMOVIE,          false, this::onClickExtrasRandomMovie);
+				add(extras, "RandomMovie",              null,      "ClipMenuBar.Extras.RandomMovie",              Resources.ICN_MENUBAR_RANDOM,               false, this::onClickExtrasRandomMovie);
 				add(extras, "BackupManager",            null,      "ClipMenuBar.Extras.BackupManager",            Resources.ICN_MENUBAR_BACKUPMANAGER,        false, this::onClickExtrasBackupManager);
 				add(extras, "ShowStatistics",           null,      "ClipMenuBar.Extras.Statistics",               Resources.ICN_MENUBAR_STATISTICS,           false, this::onClickExtrasShowStatistics);
 				add(extras, "ShuffleTable",             null,      "ClipMenuBar.Extras.ShuffleTable",             Resources.ICN_MENUBAR_SHUFFLE,              false, this::onClickExtrasShuffleTable);
@@ -215,10 +216,11 @@ public class CCActionTree extends UIActionTree{
 
 				CCActionElement season = add(other, "Season", null, "", null);
 				{
-					add(season, "AddEpisodes",      null, "ClipMenuBar.Other.Season.AddEpisodes",      null,                         true,  this::onClickOtherSeasonAddEpisodes);
-					add(season, "RemSeason",        null, "ClipMenuBar.Other.Season.RemSeason",        null,                         true,  this::onClickOtherSeasonDeleteSeason);
-					add(season, "EditSeason",       null, "ClipMenuBar.Other.Season.EditSeason",       null,                         true,  this::onClickOtherSeasonEditSeason);
-					add(season, "OpenSeasonFolder", null, "ClipMenuBar.Other.Season.OpenSeasonFolder", Resources.ICN_MENUBAR_FOLDER, false, this::onClickOtherSeasonOpenFolder);
+					add(season, "AddEpisodes",      null, "ClipMenuBar.Other.Season.AddEpisodes",        Resources.ICN_MENUBAR_ADD_SEA,   true,  this::onClickOtherSeasonAddEpisodes);
+					add(season, "BatchEditSeason",  null, "ClipMenuBar.Other.Season.BatchEditSeason",    Resources.ICN_MENUBAR_BATCHEDIT, true,  this::onClickOtherSeasonBatchEditEpisodes);
+					add(season, "RemSeason",        null, "ClipMenuBar.Other.Season.RemSeason",          Resources.ICN_MENUBAR_REMOVE,    true,  this::onClickOtherSeasonDeleteSeason);
+					add(season, "EditSeason",       null, "ClipMenuBar.Other.Season.EditSeason",         Resources.ICN_MENUBAR_EDIT_SER,  true,  this::onClickOtherSeasonEditSeason);
+					add(season, "OpenSeasonFolder", null, "ClipMenuBar.Other.Season.OpenSeasonFolder",   Resources.ICN_MENUBAR_FOLDER,    false, this::onClickOtherSeasonOpenFolder);
 				}
 
 				CCActionElement seriesExtra = add(other, "SeriesExtra", null, "", null);
@@ -244,12 +246,15 @@ public class CCActionTree extends UIActionTree{
 
 					add(seriesExtra, "ResumeSeries", null, "ClipMenuBar.Other.SeriesExtra.ResumeSeries", null, false, this::onClickOtherSeriesResumePlay);
 
-					CCActionElement rnd = add(seriesExtra, "PlayRandomEpisode", null, "ClipMenuBar.Other.SeriesExtra.PlayRandomEpisode", null, null);
+					CCActionElement rnd = add(seriesExtra, "PlayRandomEpisode", null, "ClipMenuBar.Other.SeriesExtra.PlayRandomEpisode", Resources.ICN_MENUBAR_RANDOM, null);
 					{
 						add(rnd, "PlayRandomEpisodeAll",       null, "ClipMenuBar.Other.SeriesExtra.PlayRandomEpisode.All",       null, false, this::onClickOtherSeriesPlayRandomAll);
 						add(rnd, "PlayRandomEpisodeViewed",    null, "ClipMenuBar.Other.SeriesExtra.PlayRandomEpisode.Viewed",    null, false, this::onClickOtherSeriesPlayRandomViewed);
 						add(rnd, "PlayRandomEpisodeNotViewed", null, "ClipMenuBar.Other.SeriesExtra.PlayRandomEpisode.NotViewed", null, false, this::onClickOtherSeriesPlayRandomNotViewed);
 					}
+
+					add(seriesExtra, "BatchEditSeries", null, "ClipMenuBar.Other.SeriesExtra.BatchEditSeries", Resources.ICN_MENUBAR_BATCHEDIT, true, this::onClickOtherSeriesBatchEditSeries);
+
 				}
 
 				CCActionElement episode = add(other, "Episode", null, "", null);
@@ -713,7 +718,15 @@ public class CCActionTree extends UIActionTree{
 	}
 
 	private void onClickOtherSeasonAddEpisodes(CCTreeActionEvent e) {
-		e.ifSeasonSource(s -> new AddEpisodesFrame(e.SwingOwner, s, ActionCallbackListener.toUpdateCallbackListener(e.SpecialListener)).setVisible(true));
+		e.ifSeasonSource(s -> new AddMultiEpisodesFrame(e.SwingOwner, s, ActionCallbackListener.toUpdateCallbackListener(e.SpecialListener)).setVisible(true));
+	}
+
+	private void onClickOtherSeasonBatchEditEpisodes(CCTreeActionEvent e) {
+		e.ifSeasonSource(s -> new BatchEditFrame(e.SwingOwner, s, ActionCallbackListener.toUpdateCallbackListener(e.SpecialListener)).setVisible(true));
+	}
+
+	private void onClickOtherSeriesBatchEditSeries(CCTreeActionEvent e) {
+		e.ifSeriesSource(s -> new BatchEditFrame(e.SwingOwner, s, ActionCallbackListener.toUpdateCallbackListener(e.SpecialListener)).setVisible(true));
 	}
 
 	private void onClickOtherSeasonDeleteSeason(CCTreeActionEvent e) {

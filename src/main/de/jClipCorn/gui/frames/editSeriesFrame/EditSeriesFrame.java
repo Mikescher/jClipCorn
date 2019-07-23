@@ -41,7 +41,7 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguageList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCQuality;
 import de.jClipCorn.database.databaseElement.columnTypes.CCUserScore;
 import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReferenceList;
-import de.jClipCorn.gui.frames.addEpisodesFrame.AddEpisodesFrame;
+import de.jClipCorn.gui.frames.batchEditFrame.BatchEditFrame;
 import de.jClipCorn.gui.frames.addMultiEpisodesFrame.AddMultiEpisodesFrame;
 import de.jClipCorn.gui.frames.addSeasonFrame.AddSeasonFrame;
 import de.jClipCorn.gui.frames.genericTextDialog.GenericTextDialog;
@@ -204,6 +204,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 
 	private CCSeason _currentSeasonMemory = null;
 	private CCEpisode _currentEpisodeMemory = null;
+	private JButton btnEditserinBatch;
 	
 	/**
 	 * @wbp.parser.constructor
@@ -508,10 +509,16 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 				FormSpecs.RELATED_GAP_ROWSPEC,
 				FormSpecs.DEFAULT_ROWSPEC,
 				FormSpecs.RELATED_GAP_ROWSPEC,
+				FormSpecs.DEFAULT_ROWSPEC,
+				FormSpecs.RELATED_GAP_ROWSPEC,
+				RowSpec.decode("max(14dlu;default)"), //$NON-NLS-1$
+				FormSpecs.RELATED_GAP_ROWSPEC,
+				FormSpecs.DEFAULT_ROWSPEC,
+				FormSpecs.RELATED_GAP_ROWSPEC,
 				RowSpec.decode("default:grow"),})); //$NON-NLS-1$
 
 		scrollPane = new JScrollPane();
-		panel_3.add(scrollPane, "2, 2, 1, 5"); //$NON-NLS-1$
+		panel_3.add(scrollPane, "2, 2, 1, 11"); //$NON-NLS-1$
 
 		lsSeasons = new JList<>();
 		lsSeasons.setCellRenderer(new HFixListCellRenderer());
@@ -523,9 +530,15 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 
 		btnAddSeason = new JButton(LocaleBundle.getString("EditSeriesFrame.btnAddSeason.text")); //$NON-NLS-1$
 		panel_3.add(btnAddSeason, "4, 4"); //$NON-NLS-1$
-
+		
+		btnEditserinBatch = new JButton(LocaleBundle.getString("EditSeriesFrame.btnBatchEdit.text")); //$NON-NLS-1$
+		panel_3.add(btnEditserinBatch, "4, 6"); //$NON-NLS-1$
+		btnEditserinBatch.addActionListener(e -> {
+			(new BatchEditFrame(this, series, o -> updateSeriesPanel())).setVisible(true);
+		});
+		
 		btnRemoveSeason = new JButton(LocaleBundle.getString("EditSeriesFrame.btnRemoveSeason.text")); //$NON-NLS-1$
-		panel_3.add(btnRemoveSeason, "4, 6, default, top"); //$NON-NLS-1$
+		panel_3.add(btnRemoveSeason, "4, 10, fill, fill"); //$NON-NLS-1$
 		btnRemoveSeason.addActionListener(e -> removeSeason());
 		btnAddSeason.addActionListener(e -> addSeason());
 		btnAddEmptySeason.addActionListener(e -> addEmptySeason());
@@ -582,6 +595,8 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 				FormSpecs.RELATED_GAP_ROWSPEC,
 				FormSpecs.DEFAULT_ROWSPEC,
 				FormSpecs.RELATED_GAP_ROWSPEC,
+				FormSpecs.DEFAULT_ROWSPEC,
+				FormSpecs.RELATED_GAP_ROWSPEC,
 				RowSpec.decode("default:grow"), //$NON-NLS-1$
 				FormSpecs.RELATED_GAP_ROWSPEC,
 				FormSpecs.DEFAULT_ROWSPEC,}));
@@ -610,7 +625,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		spnSeasonYear.setEditor(new JSpinner.NumberEditor(spnSeasonYear, "0")); //$NON-NLS-1$
 
 		scrollPane_1 = new JScrollPane();
-		pnlEditSeasonInner.add(scrollPane_1, "1, 7, 3, 9, fill, fill"); //$NON-NLS-1$
+		pnlEditSeasonInner.add(scrollPane_1, "1, 7, 3, 11, fill, fill"); //$NON-NLS-1$
 
 		lsEpisodes = new JList<>();
 		lsEpisodes.setCellRenderer(new HFixListCellRenderer());
@@ -628,13 +643,13 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		btnAddMultipleEpisodes = new JButton(LocaleBundle.getString("EditSeriesFrame.btnBatchEdit.text")); //$NON-NLS-1$
 		pnlEditSeasonInner.add(btnAddMultipleEpisodes, "5, 11"); //$NON-NLS-1$
 		btnAddMultipleEpisodes.addActionListener(e -> batchEditEpisodes());
-
-		btnRemoveEpisode = new JButton(LocaleBundle.getString("EditSeriesFrame.btnRemoveEpisode.text")); //$NON-NLS-1$
-		pnlEditSeasonInner.add(btnRemoveEpisode, "5, 13"); //$NON-NLS-1$
-		btnRemoveEpisode.addActionListener(e -> removeEpisode());
+		
+				btnRemoveEpisode = new JButton(LocaleBundle.getString("EditSeriesFrame.btnRemoveEpisode.text")); //$NON-NLS-1$
+				pnlEditSeasonInner.add(btnRemoveEpisode, "5, 15"); //$NON-NLS-1$
+				btnRemoveEpisode.addActionListener(e -> removeEpisode());
 
 		panel_1 = new JPanel();
-		pnlEditSeasonInner.add(panel_1, "1, 17, 5, 1, fill, fill"); //$NON-NLS-1$
+		pnlEditSeasonInner.add(panel_1, "1, 19, 5, 1, fill, fill"); //$NON-NLS-1$
 
 		btnSeasonOK = new JButton(LocaleBundle.getString("UIGeneric.btnOK.text")); //$NON-NLS-1$
 		btnSeasonOK.setPreferredSize(new Dimension(128, 26));
@@ -1319,12 +1334,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		if (_currentEpisodeMemory != null && _isDirtyEpisode) if (!DialogHelper.showLocaleYesNoDefaultNo(EditSeriesFrame.this, "Dialogs.ChangeEpisodeButDirty")) return; //$NON-NLS-1$
 		if (_isDirtySeason) if (!DialogHelper.showLocaleYesNoDefaultNo(EditSeriesFrame.this, "Dialogs.ChangeSeasonButDirty")) return; //$NON-NLS-1$
 		
-		(new AddEpisodesFrame(this, season, new UpdateCallbackListener() {
-			@Override
-			public void onUpdate(Object o) {
-				updateSeasonPanel(false);
-			}
-		})).setVisible(true);
+		(new BatchEditFrame(this, season, o -> updateSeasonPanel(false))).setVisible(true);
 	}
 	
 	private void multiAddEpisodes() {
@@ -1335,12 +1345,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		if (_currentEpisodeMemory != null && _isDirtyEpisode) if (!DialogHelper.showLocaleYesNoDefaultNo(EditSeriesFrame.this, "Dialogs.ChangeEpisodeButDirty")) return; //$NON-NLS-1$
 		if (_isDirtySeason) if (!DialogHelper.showLocaleYesNoDefaultNo(EditSeriesFrame.this, "Dialogs.ChangeSeasonButDirty")) return; //$NON-NLS-1$
 		
-		(new AddMultiEpisodesFrame(this, season, new UpdateCallbackListener() {
-			@Override
-			public void onUpdate(Object o) {
-				updateSeasonPanel(false);
-			}
-		})).setVisible(true);
+		(new AddMultiEpisodesFrame(this, season, o -> updateSeasonPanel(false))).setVisible(true);
 	}
 	
 	private void removeEpisode() {

@@ -127,10 +127,13 @@ public class SQLiteDatabase extends GenericDatabase {
 		connection = DriverManager.getConnection(PROTOCOL + dbFilePath);
 		
 		connection.setAutoCommit(true);
-		
+
+		// Set pragmas
+		executeSQLThrow("PRAGMA recursive_triggers = true"); // otherwise "REPLACE INTO x" doesn't work with the history trigger
+
 		// Test if newly created
 		executeSQLThrow("SELECT * FROM " + Statements.TAB_INFO + " LIMIT 1");
-		
+
 		// Test if writeable
 		executeSQLThrow("REPLACE INTO " + Statements.TAB_INFO + " (" + Statements.COL_INFO_KEY.Name + ", " + Statements.COL_INFO_VALUE.Name + ") VALUES ('" + CCDatabase.INFOKEY_RAND + "', '" + Math.random() + "')");
 	}

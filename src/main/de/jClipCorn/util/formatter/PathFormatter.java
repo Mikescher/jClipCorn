@@ -1,8 +1,12 @@
 package de.jClipCorn.util.formatter;
 
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.nio.charset.Charset;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -258,15 +262,22 @@ public class PathFormatter {
 	
 	public static void showInExplorer(String abspath) {
 		try {
-			// [JRE Bug] https://stackoverflow.com/questions/6686592/runtime-exec-on-argument-containing-multiple-spaces
+			if (ApplicationHelper.isWindows()) {
+				// [JRE Bug] https://stackoverflow.com/questions/6686592/runtime-exec-on-argument-containing-multiple-spaces
 
-			final File batch = File.createTempFile( "jClipCorn_exec_", ".bat" );
-			try( PrintStream ps = new PrintStream(batch)) {
-				ps.println( "explorer.exe /select,\"" + abspath + '"');
+				final File batch = File.createTempFile( "jClipCorn_exec_", ".bat" );
+				try( PrintStream ps = new PrintStream(batch, "IBM850")) {
+					ps.println( "explorer.exe /select,\"" + abspath + '"');
+				}
+				Runtime.getRuntime().exec( batch.getAbsolutePath());
+				batch.deleteOnExit();
+			} else if (ApplicationHelper.isUnix() || ApplicationHelper.isMac()) {
+				if (Desktop.isDesktopSupported()) {
+					Desktop desktop = Desktop.getDesktop();
+					desktop.browse(new URI("File://" + abspath)); // Throws
+				}
 			}
-			Runtime.getRuntime().exec( batch.getAbsolutePath());
-			batch.deleteOnExit();
-		} catch (IOException e) {
+		} catch (IOException | URISyntaxException e) {
 			CCLog.addError(e);
 		}
 	}

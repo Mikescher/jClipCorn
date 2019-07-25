@@ -50,6 +50,7 @@ public class AddMultiEpisodesFrame extends JFrame {
 	private JButton btnSetDestination;
 	private JButton btnOkayCopy;
 	private JButton btnOkayMove;
+	private JButton btnOkayRename;
 	private JProgressBar progressBar;
 	private JProgressBar progressBar2;
 
@@ -60,7 +61,6 @@ public class AddMultiEpisodesFrame extends JFrame {
 	private final UpdateCallbackListener callback;
 	
 	private int _currentStep = 1; // activeStep
-
 
 	public AddMultiEpisodesFrame(Component owner, CCSeason season, UpdateCallbackListener ucl) {		
 		super();
@@ -147,11 +147,15 @@ public class AddMultiEpisodesFrame extends JFrame {
 		contentPane.add(btnSetDestination, "10, 4"); //$NON-NLS-1$
 		
 		btnOkayCopy = new JButton(LocaleBundle.getString("AddMultiEpisodesFrame.Button_61")); //$NON-NLS-1$
-		btnOkayCopy.addActionListener(e -> onOkay(e, false));
+		btnOkayCopy.addActionListener(e -> onOkay(e, 0));
 		contentPane.add(btnOkayCopy, "14, 4"); //$NON-NLS-1$
 		
 		btnOkayMove = new JButton(LocaleBundle.getString("AddMultiEpisodesFrame.Button_62")); //$NON-NLS-1$
-		btnOkayMove.addActionListener(e -> onOkay(e, true));
+		btnOkayMove.addActionListener(e -> onOkay(e, 1));
+		
+		btnOkayRename = new JButton(LocaleBundle.getString("AddMultiEpisodesFrame.Button_63")); //$NON-NLS-1$
+		btnOkayRename.addActionListener(e -> onOkay(e, 2));
+		contentPane.add(btnOkayRename, "10, 6, 3, 1, right, default"); //$NON-NLS-1$
 		contentPane.add(btnOkayMove, "14, 6"); //$NON-NLS-1$
 		
 		progressBar = new JProgressBar();
@@ -467,7 +471,7 @@ public class AddMultiEpisodesFrame extends JFrame {
 		updateButtons();
 	}
 
-	private void onOkay(ActionEvent evt, boolean move) {
+	private void onOkay(ActionEvent evt, int mode) {
 		final List<NewEpisodeVM> data = lsData.getDataCopy();
 		if (data.size() == 0) return;
 
@@ -497,12 +501,27 @@ public class AddMultiEpisodesFrame extends JFrame {
 						if (srcFile.getAbsolutePath().equalsIgnoreCase(dstFile.getAbsolutePath())) continue;
 
 						FileUtils.forceMkdir(dstFile.getParentFile());
-						SimpleFileUtils.copyWithProgress(srcFile, dstFile, (val, max) ->
+						if (mode == 0)
 						{
-							int newvalue = (int)(((val * 100) / max));
-							SwingUtilities.invokeLater(() -> { progressBar2.setValue(newvalue); progressBar2.setMaximum(100); });
-						});
-						if (move) srcFile.delete();
+							SimpleFileUtils.copyWithProgress(srcFile, dstFile, (val, max) ->
+							{
+								int newvalue = (int)(((val * 100) / max));
+								SwingUtilities.invokeLater(() -> { progressBar2.setValue(newvalue); progressBar2.setMaximum(100); });
+							});
+						}
+						else if (mode == 1)
+						{
+							SimpleFileUtils.copyWithProgress(srcFile, dstFile, (val, max) ->
+							{
+								int newvalue = (int)(((val * 100) / max));
+								SwingUtilities.invokeLater(() -> { progressBar2.setValue(newvalue); progressBar2.setMaximum(100); });
+							});
+							if (!srcFile.delete()) throw new Exception("Delete of '"+srcFile.getAbsolutePath()+"' failed"); //$NON-NLS-1$ //$NON-NLS-2$
+						}
+						else if (mode == 2)
+						{
+							if (!srcFile.renameTo(dstFile)) throw new Exception("Rename of '"+srcFile.getAbsolutePath()+"' to '"+dstFile.getAbsolutePath()+"' failed"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+						}
 
 						SwingUtilities.invokeAndWait(() ->
 						{
@@ -570,6 +589,7 @@ public class AddMultiEpisodesFrame extends JFrame {
 		btnSetDestination.setEnabled(bb && _currentStep >= 5);
 		btnOkayCopy.setEnabled(bb && _currentStep >= 6 && CCStreams.iterate(lsData.getDataDirect()).all(p -> p.IsValid));
 		btnOkayMove.setEnabled(bb && _currentStep >= 6 && CCStreams.iterate(lsData.getDataDirect()).all(p -> p.IsValid));
+		btnOkayRename.setEnabled(bb && _currentStep >= 6 && CCStreams.iterate(lsData.getDataDirect()).all(p -> p.IsValid));
 	}
 
 }

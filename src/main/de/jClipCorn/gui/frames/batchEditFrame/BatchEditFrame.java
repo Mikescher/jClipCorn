@@ -249,9 +249,9 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 		pnlInfo.setLayout(new FormLayout(new ColumnSpec[] {
 				FormSpecs.RELATED_GAP_COLSPEC,
 				ColumnSpec.decode("5dlu"), //$NON-NLS-1$
-				ColumnSpec.decode("default:grow"), //$NON-NLS-1$
+				FormSpecs.DEFAULT_COLSPEC,
 				FormSpecs.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("default:grow"), //$NON-NLS-1$
+				ColumnSpec.decode("1dlu:grow"), //$NON-NLS-1$
 				FormSpecs.RELATED_GAP_COLSPEC,
 				ColumnSpec.decode("50px"), //$NON-NLS-1$
 				FormSpecs.RELATED_GAP_COLSPEC,

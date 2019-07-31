@@ -205,6 +205,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 	private CCSeason _currentSeasonMemory = null;
 	private CCEpisode _currentEpisodeMemory = null;
 	private JButton btnEditserinBatch;
+	private JButton btnBatchEditSelection;
 	
 	/**
 	 * @wbp.parser.constructor
@@ -597,6 +598,8 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 				FormSpecs.RELATED_GAP_ROWSPEC,
 				FormSpecs.DEFAULT_ROWSPEC,
 				FormSpecs.RELATED_GAP_ROWSPEC,
+				FormSpecs.DEFAULT_ROWSPEC,
+				FormSpecs.RELATED_GAP_ROWSPEC,
 				RowSpec.decode("default:grow"), //$NON-NLS-1$
 				FormSpecs.RELATED_GAP_ROWSPEC,
 				FormSpecs.DEFAULT_ROWSPEC,}));
@@ -625,7 +628,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		spnSeasonYear.setEditor(new JSpinner.NumberEditor(spnSeasonYear, "0")); //$NON-NLS-1$
 
 		scrollPane_1 = new JScrollPane();
-		pnlEditSeasonInner.add(scrollPane_1, "1, 7, 3, 11, fill, fill"); //$NON-NLS-1$
+		pnlEditSeasonInner.add(scrollPane_1, "1, 7, 3, 13, fill, fill"); //$NON-NLS-1$
 
 		lsEpisodes = new JList<>();
 		lsEpisodes.setCellRenderer(new HFixListCellRenderer());
@@ -644,12 +647,16 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		pnlEditSeasonInner.add(btnAddMultipleEpisodes, "5, 11"); //$NON-NLS-1$
 		btnAddMultipleEpisodes.addActionListener(e -> batchEditEpisodes());
 		
-				btnRemoveEpisode = new JButton(LocaleBundle.getString("EditSeriesFrame.btnRemoveEpisode.text")); //$NON-NLS-1$
-				pnlEditSeasonInner.add(btnRemoveEpisode, "5, 15"); //$NON-NLS-1$
-				btnRemoveEpisode.addActionListener(e -> removeEpisode());
+		btnBatchEditSelection = new JButton(LocaleBundle.getString("EditSeriesFrame.btnBatchEditSelection.text")); //$NON-NLS-1$
+		pnlEditSeasonInner.add(btnBatchEditSelection, "5, 13"); //$NON-NLS-1$
+		btnBatchEditSelection.addActionListener(e -> batchEditSelectedEpisodes());
+
+		btnRemoveEpisode = new JButton(LocaleBundle.getString("EditSeriesFrame.btnRemoveEpisode.text")); //$NON-NLS-1$
+		pnlEditSeasonInner.add(btnRemoveEpisode, "5, 17"); //$NON-NLS-1$
+		btnRemoveEpisode.addActionListener(e -> removeEpisode());
 
 		panel_1 = new JPanel();
-		pnlEditSeasonInner.add(panel_1, "1, 19, 5, 1, fill, fill"); //$NON-NLS-1$
+		pnlEditSeasonInner.add(panel_1, "1, 21, 5, 1, fill, fill"); //$NON-NLS-1$
 
 		btnSeasonOK = new JButton(LocaleBundle.getString("UIGeneric.btnOK.text")); //$NON-NLS-1$
 		btnSeasonOK.setPreferredSize(new Dimension(128, 26));
@@ -1335,6 +1342,20 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		if (_isDirtySeason) if (!DialogHelper.showLocaleYesNoDefaultNo(EditSeriesFrame.this, "Dialogs.ChangeSeasonButDirty")) return; //$NON-NLS-1$
 		
 		(new BatchEditFrame(this, season, o -> updateSeasonPanel(false))).setVisible(true);
+	}
+	
+	private void batchEditSelectedEpisodes() {
+		CCSeason season = getSelectedSeason();
+		
+		if (season == null) return;
+
+		if (_currentEpisodeMemory != null && _isDirtyEpisode) if (!DialogHelper.showLocaleYesNoDefaultNo(EditSeriesFrame.this, "Dialogs.ChangeEpisodeButDirty")) return; //$NON-NLS-1$
+		if (_isDirtySeason) if (!DialogHelper.showLocaleYesNoDefaultNo(EditSeriesFrame.this, "Dialogs.ChangeSeasonButDirty")) return; //$NON-NLS-1$
+		
+		List<CCEpisode> selection = getSelectedEpisodes();
+		if (selection.size() == 0) return;
+		
+		(new BatchEditFrame(this, season, selection, o -> updateSeasonPanel(false))).setVisible(true);
 	}
 	
 	private void multiAddEpisodes() {

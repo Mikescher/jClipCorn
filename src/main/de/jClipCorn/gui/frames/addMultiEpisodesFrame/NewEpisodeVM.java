@@ -26,6 +26,7 @@ public class NewEpisodeVM {
 	public int Length;
 	public int EpisodeNumber;
 	public long Filesize;
+	public boolean NoMove;
 
 	public MediaQueryResult MediaInfo = null;
 	public String TargetRoot = null;
@@ -42,6 +43,12 @@ public class NewEpisodeVM {
 
 	public void updateTarget(CCSeason season, CCDBLanguageList commonLang, String globalSeriesRoot)
 	{
+		if (NoMove)
+		{
+			TargetPath = PathFormatter.getCCPath(SourcePath);
+			return;
+		}
+
 		String root = TargetRoot;
 		if (Str.isNullOrWhitespace(root)) root = season.getSeries().guessSeriesRootPath();
 		if (Str.isNullOrWhitespace(root)) root = globalSeriesRoot;

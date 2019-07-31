@@ -30,8 +30,10 @@ import javax.swing.UIManager;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 
+import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.IEpisodeOwner;
 import de.jClipCorn.database.databaseElement.columnTypes.*;
+import de.jClipCorn.util.stream.CCStreams;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import de.jClipCorn.features.userdataProblem.UserDataProblem;
@@ -159,13 +161,15 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 
 	private final UpdateCallbackListener listener;
 
-	public BatchEditFrame(Component owner, IEpisodeOwner ss, UpdateCallbackListener ucl) {
+	public BatchEditFrame(Component owner, IEpisodeOwner ss, UpdateCallbackListener ucl) { this(owner, ss, null, ucl); }
+
+	public BatchEditFrame(Component owner, IEpisodeOwner ss, List<CCEpisode> eps, UpdateCallbackListener ucl) {
 		super();
 		setMinimumSize(new Dimension(1150, 750));
 		setSize(new Dimension(1200, 750));
 		this.target = ss;
 		this.listener = ucl;
-		this.data = ss.iteratorEpisodes().map(BatchEditEpisodeData::new).enumerate();
+		this.data = (eps!= null) ? CCStreams.iterate(eps).map(BatchEditEpisodeData::new).enumerate() : ss.iteratorEpisodes().map(BatchEditEpisodeData::new).enumerate();
 		
 		String cPathStart = ss.getSeries().getCommonPathStart(true);
 		

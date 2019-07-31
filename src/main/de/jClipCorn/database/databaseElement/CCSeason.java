@@ -382,7 +382,7 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 	}
 	
 	public int getNextEpisodeNumber() {
-		int ep = -1;
+		int ep = 0;
 		
 		for (CCEpisode ccEpisode : episodes) {
 			ep = Math.max(ep, ccEpisode.getEpisodeNumber());

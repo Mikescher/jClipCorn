@@ -110,6 +110,59 @@ public class CCSQLResultSet {
 		return CCDateTime.createFromSQL(_data.getString(idx.Item2));
 	}
 
+	public double getFloat(CCSQLColDef col) throws SQLWrapperException, SQLException, CCFormatException {
+		Tuple<CCSQLType, Integer> idx = _statement.getSelectFieldIndex(col);
+
+		if (idx == null) throw new SQLWrapperException("Field ["+col+"] not found in CCSQLStatement");
+		if (!idx.Item1.isCallableAsFloat()) throw new SQLWrapperException("Field ["+col+"] has wrong type");
+
+		return _data.getDouble(idx.Item2);
+	}
+
+	public Double getNullableFloat(CCSQLColDef col) throws SQLWrapperException, SQLException, CCFormatException {
+		Tuple<CCSQLType, Integer> idx = _statement.getSelectFieldIndex(col);
+
+		if (idx == null) throw new SQLWrapperException("Field ["+col+"] not found in CCSQLStatement");
+		if (!idx.Item1.isCallableAsFloat()) throw new SQLWrapperException("Field ["+col+"] has wrong type");
+
+		double v = _data.getDouble(idx.Item2);
+		if (_data.wasNull()) return null;
+		return v;
+	}
+
+	public Integer getNullableInt(CCSQLColDef col) throws SQLWrapperException, SQLException {
+		Tuple<CCSQLType, Integer> idx = _statement.getSelectFieldIndex(col);
+
+		if (idx == null) throw new SQLWrapperException("Field ["+col+"] not found in CCSQLStatement");
+		if (!idx.Item1.isCallableAsInteger()) throw new SQLWrapperException("Field ["+col+"] has wrong type");
+
+		int v = _data.getInt(idx.Item2);
+		if (_data.wasNull()) return null;
+		return v;
+	}
+
+	public Long getNullableLong(CCSQLColDef col) throws SQLWrapperException, SQLException {
+		Tuple<CCSQLType, Integer> idx = _statement.getSelectFieldIndex(col);
+
+		if (idx == null) throw new SQLWrapperException("Field ["+col+"] not found in CCSQLStatement");
+		if (!idx.Item1.isCallableAsLong()) throw new SQLWrapperException("Field ["+col+"] has wrong type");
+
+		long v = _data.getLong(idx.Item2);
+		if (_data.wasNull()) return null;
+		return v;
+	}
+
+	public String getNullableString(CCSQLColDef col) throws SQLWrapperException, SQLException {
+		Tuple<CCSQLType, Integer> idx = _statement.getSelectFieldIndex(col);
+
+		if (idx == null) throw new SQLWrapperException("Field ["+col+"] not found in CCSQLStatement");
+		if (!idx.Item1.isCallableAsLong()) throw new SQLWrapperException("Field ["+col+"] has wrong type");
+
+		String v = _data.getString(idx.Item2);
+		if (_data.wasNull()) return null;
+		return v;
+	}
+
 	public void close() throws SQLException {
 		_data.close();
 	}

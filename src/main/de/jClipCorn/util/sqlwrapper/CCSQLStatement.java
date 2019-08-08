@@ -132,6 +132,24 @@ public class CCSQLStatement {
 		Statement.setString(idx.Item2, value.getSQLStringRepresentation());
 	}
 
+	public void setFlt(CCSQLColDef col, double value) throws SQLWrapperException, SQLException {
+		Tuple<CCSQLType, Integer> idx = MapPrepFields.get(col.Name);
+
+		if (idx == null) throw new SQLWrapperException("Field ["+col+"] not found in CCSQLStatement");
+		if (!idx.Item1.isCallableAsFloat()) throw new SQLWrapperException("Field ["+col+"] has wrong type");
+
+		Statement.setDouble(idx.Item2, value);
+	}
+
+	public void setNull(CCSQLColDef col) throws SQLWrapperException, SQLException {
+		Tuple<CCSQLType, Integer> idx = MapPrepFields.get(col.Name);
+
+		if (idx == null) throw new SQLWrapperException("Field ["+col+"] not found in CCSQLStatement");
+		if (!idx.Item1.isCallableAsFloat()) throw new SQLWrapperException("Field ["+col+"] has wrong type");
+
+		Statement.setNull(idx.Item2, col.Type.getSQLType());
+	}
+
 	public void tryClose() throws SQLException {
 		if (Statement == null) return;
 		if (Statement.isClosed()) return;

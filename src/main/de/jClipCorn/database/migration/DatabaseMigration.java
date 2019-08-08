@@ -134,6 +134,12 @@ public class DatabaseMigration {
 				setDBVersion("13");
 				version = "13";
 			}
+
+			if (version.equals("13")) {
+				upgrade_13_14();
+				setDBVersion("14");
+				version = "14";
+			}
 						
 			if (! getDBVersion().equals(Main.DBVERSION)) {
 				throw new Exception("version mismatch after migration");
@@ -326,6 +332,22 @@ public class DatabaseMigration {
 
 		File cc = new File(PathFormatter.combine(cvrdir.getAbsolutePath(), "covercache.xml"));
 		if (cc.exists()) cc.delete();
+	}
+
+	@SuppressWarnings("nls")
+	private void upgrade_13_14() {
+		CCLog.addInformation("[UPGRADE v13 -> v14] Remove column 'quality' in main table");
+		CCLog.addInformation("[UPGRADE v13 -> v14] Remove column 'quality' in episodes table");
+		CCLog.addInformation("[UPGRADE v13 -> v14] Add 16 MediaInfo.* columns in main table (default=NULL)");
+		CCLog.addInformation("[UPGRADE v13 -> v14] Add 16 MediaInfo.* columns in episodes table (default=NULL)");
+		CCLog.addInformation("[UPGRADE v13 -> v14] Remove [rand] entry from info table");
+		CCLog.addInformation("[UPGRADE v13 -> v14] Create [temp] table");
+		CCLog.addInformation("[UPGRADE v13 -> v14] Add history=false to info table");
+		CCLog.addInformation("[UPGRADE v13 -> v14] Remove [RAND] entries from history table");
+		CCLog.addInformation("[UPGRADE v13 -> v14] Remove existing [LOGTRIGGER_*] trigger");
+		CCLog.addInformation("[UPGRADE v13 -> v14] Create history table (if not exists)");
+
+		//TODO
 	}
 
 	public void onAfterConnect(CCMovieList ml, CCDatabase db) {

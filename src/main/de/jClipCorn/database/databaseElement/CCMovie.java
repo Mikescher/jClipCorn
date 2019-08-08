@@ -27,7 +27,7 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 
 	private boolean viewed;
 	private CCMovieZyklus zyklus;
-	private CCQuality quality;
+	private CCMediaInfo mediainfo;
 	private int length; // in minutes
 	private CCDate addDate;
 	private CCFileFormat format;
@@ -53,7 +53,7 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 		super.setDefaultValues(false);
 		viewed = false;
 		zyklus.reset();
-		quality = CCQuality.STREAM;
+		mediainfo = CCMediaInfo.EMPTY;
 		length = 0;
 		addDate = CCDate.getMinimumDate();
 		format = CCFileFormat.MKV;
@@ -138,36 +138,6 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 	
 	public void setZyklusID(int zid) {
 		this.zyklus.setNumber(zid);
-		
-		updateDB();
-	}
-
-	@Override
-	public CCQuality getQuality() {
-		return quality;
-	}
-
-	public void setQualitySafe(int quality) {
-		this.quality = CCQuality.getWrapper().findOrNull(quality);
-
-		if (this.quality == null) {
-			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.ErroneousDatabaseValues", quality)); //$NON-NLS-1$
-			this.quality = CCQuality.STREAM;
-		}
-
-		updateDB();
-	}
-
-	public void setQuality(int quality) throws EnumFormatException {
-		this.quality = CCQuality.getWrapper().findOrException(quality);
-
-		updateDB();
-	}
-
-	public void setQuality(CCQuality quality) {
-		if (quality == null) {CCLog.addUndefinied("Prevented setting CCMovie.Quality to NULL"); return; } //$NON-NLS-1$
-
-		this.quality = quality;
 		
 		updateDB();
 	}
@@ -441,4 +411,18 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 
 		return new ExtendedViewedState(ExtendedViewedStateType.NOT_VIEWED, getViewedHistory(), null);
 	}
+
+	@Override
+	public CCMediaInfo getMediaInfo() {
+		return mediainfo;
+	}
+
+	public void setMediaInfo(CCMediaInfo minfo) {
+		if (minfo == null) {CCLog.addUndefinied("Prevented setting CCMovie.MediaInfo to NULL"); return; } //$NON-NLS-1$
+
+		this.mediainfo = minfo;
+
+		updateDB();
+	}
+
 }

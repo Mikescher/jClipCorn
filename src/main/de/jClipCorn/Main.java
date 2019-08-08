@@ -29,7 +29,7 @@ import de.jClipCorn.util.helper.LookAndFeelManager;
 public class Main {
 	public final static String TITLE     = "jClipCorn"; //$NON-NLS-1$
 	public final static String VERSION   = /*<gradle_version_marker>*/"1.10.6.13"/*</gradle_version_marker>*/; //$NON-NLS-1$
-	public final static String DBVERSION = "13";    //$NON-NLS-1$
+	public final static String DBVERSION = "14";    //$NON-NLS-1$
 	public final static String JXMLVER   = "3";     //$NON-NLS-1$
 
 	private final static String PROPERTIES_PATH = "jClipcorn.properties"; //$NON-NLS-1$
@@ -182,7 +182,7 @@ public class Main {
 
 //TODO Use http://www.iconarchive.com/show/series-season-folder-icons-by-aaron-sinuhe.html 
 
-//TODO Move Series into separate table
+//TODO Move Series into separate table (???)
 //TODO Option to mark season as extra (ordered last, special filename, not in carousal but on right side of it ...)
 
 //TODO full database transaction log 
@@ -211,4 +211,4 @@ public class Main {
 
 //TODO option recreate previews (covers dialog to show content of covers table)
 
-//TODO get lang in addmovie dialog in background and set if successful
+//TODO Show versions of entry dialog (group history stuff together to show specific versions in specific times)

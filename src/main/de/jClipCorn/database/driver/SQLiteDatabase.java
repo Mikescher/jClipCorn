@@ -132,10 +132,10 @@ public class SQLiteDatabase extends GenericDatabase {
 		executeSQLThrow("PRAGMA recursive_triggers = true"); // otherwise "REPLACE INTO x" doesn't work with the history trigger
 
 		// Test if newly created
-		executeSQLThrow("SELECT * FROM " + Statements.TAB_INFO + " LIMIT 1");
+		executeSQLThrow("SELECT * FROM " + Statements.TAB_TEMP + " LIMIT 1");
 
 		// Test if writeable
-		executeSQLThrow("REPLACE INTO " + Statements.TAB_INFO + " (" + Statements.COL_INFO_KEY.Name + ", " + Statements.COL_INFO_VALUE.Name + ") VALUES ('" + CCDatabase.INFOKEY_RAND + "', '" + Math.random() + "')");
+		executeSQLThrow("REPLACE INTO " + Statements.TAB_TEMP + " (" + Statements.COL_TEMP_KEY.Name + ", " + Statements.COL_TEMP_VALUE.Name + ") VALUES ('" + "RAND" + "', '" + Math.random() + "')");
 	}
 
 	@Override
@@ -149,5 +149,5 @@ public class SQLiteDatabase extends GenericDatabase {
 	}
 
 	@Override
-	public boolean isInMemory() {return false;}
+	public boolean isInMemory() { return false; }
 }

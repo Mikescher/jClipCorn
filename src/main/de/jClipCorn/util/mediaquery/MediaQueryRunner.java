@@ -11,6 +11,8 @@ import de.jClipCorn.util.xml.CCXMLParser;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.attribute.BasicFileAttributes;
 
 public class MediaQueryRunner {
 
@@ -22,7 +24,11 @@ public class MediaQueryRunner {
 	public static MediaQueryResult query(String filename) throws IOException, MediaQueryException {
 		String mqpath = CCProperties.getInstance().PROP_PLAY_MEDIAINFO_PATH.getValue();
 
-		if (! new File(mqpath).exists()) throw new MediaQueryException("MediaQuery not found");
+		File mqfile = new File(mqpath);
+
+		if (! mqfile.exists()) throw new MediaQueryException("MediaQuery not found");
+
+		BasicFileAttributes attr = Files.readAttributes(mqfile.toPath(), BasicFileAttributes.class);
 
 		Tuple3<Integer, String, String> proc = ProcessHelper.procExec(mqpath, filename, "--Output=XML");
 
@@ -40,7 +46,7 @@ public class MediaQueryRunner {
 			CCXMLElement media = root.getFirstChildOrThrow("media");
 			if (media == null) throw new InnerMediaQueryException("no media xml element");
 
-			return MediaQueryResult.parse(media);
+			return MediaQueryResult.parse(attr.creationTime().toMillis(), attr.lastModifiedTime().toMillis(), media);
 		} catch (InnerMediaQueryException e) {
 			throw new MediaQueryException(e.getMessage(), mqxml);
 		} catch (CCXMLException e) {

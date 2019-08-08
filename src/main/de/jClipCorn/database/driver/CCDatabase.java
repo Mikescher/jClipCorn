@@ -18,6 +18,7 @@ import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.database.databaseElement.columnTypes.CCDBElementTyp;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGroup;
+import de.jClipCorn.database.databaseElement.columnTypes.CCMediaInfo;
 import de.jClipCorn.database.migration.DatabaseMigration;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.features.log.CCLog;
@@ -43,7 +44,6 @@ public class CCDatabase {
 	public final static String INFOKEY_TIME			= "CREATION_TIME";         					//$NON-NLS-1$
 	public final static String INFOKEY_USERNAME		= "CREATION_USERNAME";     					//$NON-NLS-1$
 	public final static String INFOKEY_DUUID      	= "DATABASE_UNIVERSALLY_UNIQUE_IDENTIFIER";	//$NON-NLS-1$
-	public final static String INFOKEY_RAND      	= "RAND";									//$NON-NLS-1$
 
 	public final static String[] INFOKEYS = new String[]{ INFOKEY_DBVERSION, INFOKEY_DATE, INFOKEY_TIME, INFOKEY_USERNAME, INFOKEY_DUUID };
 	
@@ -250,7 +250,6 @@ public class CCDatabase {
 		ep.setTitle(rs.getString(COL_EPIS_NAME));
 		ep.setViewed(rs.getBoolean(COL_EPIS_VIEWED));
 		ep.setViewedHistory(rs.getString(COL_EPIS_VIEWEDHISTORY));
-		ep.setQuality(rs.getInt(COL_EPIS_QUALITY));
 		ep.setLength(rs.getInt(COL_EPIS_LENGTH));
 		ep.setFormat(rs.getInt(COL_EPIS_FORMAT));
 		ep.setFilesize(rs.getLong(COL_EPIS_FILESIZE));
@@ -258,6 +257,23 @@ public class CCDatabase {
 		ep.setAddDate(rs.getDate(COL_EPIS_ADDDATE));
 		ep.setTags(rs.getShort(COL_EPIS_TAGS));
 		ep.setLanguage(rs.getLong(COL_EPIS_LANGUAGE));
+		ep.setMediaInfo(CCMediaInfo.createFromDB(
+			rs.getNullableLong(COL_EPIS_MI_FILESIZE),
+			rs.getNullableLong(COL_EPIS_MI_CDATE),
+			rs.getNullableLong(COL_EPIS_MI_MDATE),
+			rs.getNullableString(COL_EPIS_MI_AFORMAT),
+			rs.getNullableString(COL_EPIS_MI_VFORMAT),
+			rs.getNullableInt(COL_EPIS_MI_WIDTH),
+			rs.getNullableInt(COL_EPIS_MI_HEIGHT),
+			rs.getNullableFloat(COL_EPIS_MI_FRAMERATE),
+			rs.getNullableFloat(COL_EPIS_MI_DURATION),
+			rs.getNullableInt(COL_EPIS_MI_BITDEPTH),
+			rs.getNullableInt(COL_EPIS_MI_BITRATE),
+			rs.getNullableInt(COL_EPIS_MI_FRAMECOUNT),
+			rs.getNullableInt(COL_EPIS_MI_ACHANNELS),
+			rs.getNullableString(COL_EPIS_MI_VCODEC),
+			rs.getNullableString(COL_EPIS_MI_ACODEC),
+			rs.getNullableInt(COL_EPIS_MI_SAMPLERATE)));
 	}
 
 	private void updateSeasonFromResultSet(CCSQLResultSet rs, CCSeason seas) throws SQLException, SQLWrapperException {
@@ -284,7 +300,6 @@ public class CCDatabase {
 		mov.setViewedHistory(rs.getString(COL_MAIN_VIEWEDHISTORY));
 		mov.setZyklusTitle(rs.getString(COL_MAIN_ZYKLUS));
 		mov.setZyklusID(rs.getInt(COL_MAIN_ZYKLUSNUMBER));
-		mov.setQuality(rs.getInt(COL_MAIN_QUALITY));
 		mov.setLanguage(rs.getLong(COL_MAIN_LANGUAGE));
 		mov.setGenres(rs.getLong(COL_MAIN_GENRE));
 		mov.setLength(rs.getInt(COL_MAIN_LENGTH));
@@ -305,6 +320,23 @@ public class CCDatabase {
 		mov.setPart(5, rs.getString(COL_MAIN_PART_6));
 		mov.setScore(rs.getInt(COL_MAIN_SCORE));
 		mov.setCover(rs.getInt(COL_MAIN_COVERID));
+		mov.setMediaInfo(CCMediaInfo.createFromDB(
+			rs.getNullableLong(COL_MAIN_MI_FILESIZE),
+			rs.getNullableLong(COL_MAIN_MI_CDATE),
+			rs.getNullableLong(COL_MAIN_MI_MDATE),
+			rs.getNullableString(COL_MAIN_MI_AFORMAT),
+			rs.getNullableString(COL_MAIN_MI_VFORMAT),
+			rs.getNullableInt(COL_MAIN_MI_WIDTH),
+			rs.getNullableInt(COL_MAIN_MI_HEIGHT),
+			rs.getNullableFloat(COL_MAIN_MI_FRAMERATE),
+			rs.getNullableFloat(COL_MAIN_MI_DURATION),
+			rs.getNullableInt(COL_MAIN_MI_BITDEPTH),
+			rs.getNullableInt(COL_MAIN_MI_BITRATE),
+			rs.getNullableInt(COL_MAIN_MI_FRAMECOUNT),
+			rs.getNullableInt(COL_MAIN_MI_ACHANNELS),
+			rs.getNullableString(COL_MAIN_MI_VCODEC),
+			rs.getNullableString(COL_MAIN_MI_ACODEC),
+			rs.getNullableInt(COL_MAIN_MI_SAMPLERATE)));
 	}
 
 	private int getNewLocalID() {
@@ -355,7 +387,6 @@ public class CCDatabase {
 			stmt.setStr(COL_MAIN_VIEWEDHISTORY, "");
 			stmt.setStr(COL_MAIN_ZYKLUS,        "");
 			stmt.setInt(COL_MAIN_ZYKLUSNUMBER,  0);
-			stmt.setInt(COL_MAIN_QUALITY,       0);
 			stmt.setInt(COL_MAIN_LANGUAGE,      0);
 			stmt.setInt(COL_MAIN_GENRE,         0);
 			stmt.setInt(COL_MAIN_LENGTH,        0);
@@ -423,7 +454,6 @@ public class CCDatabase {
 			stmt.setStr(COL_EPIS_NAME,          "");
 			stmt.setBoo(COL_EPIS_VIEWED,        false);
 			stmt.setStr(COL_EPIS_VIEWEDHISTORY, "");
-			stmt.setInt(COL_EPIS_QUALITY,       0);
 			stmt.setInt(COL_EPIS_LENGTH,        0);
 			stmt.setInt(COL_EPIS_FORMAT,        0);
 			stmt.setInt(COL_EPIS_FILESIZE,      0);
@@ -524,7 +554,6 @@ public class CCDatabase {
 			stmt.setStr(COL_MAIN_VIEWEDHISTORY, mov.getViewedHistory().toSerializationString());
 			stmt.setStr(COL_MAIN_ZYKLUS,        mov.getZyklus().getTitle());
 			stmt.setInt(COL_MAIN_ZYKLUSNUMBER,  mov.getZyklus().getNumber());
-			stmt.setInt(COL_MAIN_QUALITY,       mov.getQuality().asInt());
 			stmt.setLng(COL_MAIN_LANGUAGE,      mov.getLanguage().serializeToLong());
 			stmt.setLng(COL_MAIN_GENRE,         mov.getGenres().getAllGenres());
 			stmt.setInt(COL_MAIN_LENGTH,        mov.getLength());
@@ -547,6 +576,46 @@ public class CCDatabase {
 			stmt.setInt(COL_MAIN_COVERID,       mov.getCoverID());
 			stmt.setInt(COL_MAIN_TYPE,          mov.getType().asInt());
 			stmt.setInt(COL_MAIN_SERIES_ID,     mov.getSeriesID());
+
+			CCMediaInfo mi = mov.getMediaInfo();
+			if (mi.isSet())
+			{
+				stmt.setLng(COL_MAIN_MI_FILESIZE,   mi.getFilesize());
+				stmt.setLng(COL_MAIN_MI_CDATE,      mi.getCDate());
+				stmt.setLng(COL_MAIN_MI_MDATE,      mi.getMDate());
+				stmt.setStr(COL_MAIN_MI_AFORMAT,    mi.getAudioFormat());
+				stmt.setStr(COL_MAIN_MI_VFORMAT,    mi.getVideoFormat());
+				stmt.setInt(COL_MAIN_MI_WIDTH,      mi.getWidth());
+				stmt.setInt(COL_MAIN_MI_HEIGHT,     mi.getHeight());
+				stmt.setFlt(COL_MAIN_MI_FRAMERATE,  mi.getFramerate());
+				stmt.setFlt(COL_MAIN_MI_DURATION,   mi.getDuration());
+				stmt.setInt(COL_MAIN_MI_BITDEPTH,   mi.getBitdepth());
+				stmt.setInt(COL_MAIN_MI_BITRATE,    mi.getBitrate());
+				stmt.setInt(COL_MAIN_MI_FRAMECOUNT, mi.getFramecount());
+				stmt.setInt(COL_MAIN_MI_ACHANNELS,  mi.getAudioChannels());
+				stmt.setStr(COL_MAIN_MI_VCODEC,     mi.getVideoCodec());
+				stmt.setStr(COL_MAIN_MI_ACODEC,     mi.getAudioCodec());
+				stmt.setInt(COL_MAIN_MI_SAMPLERATE, mi.getAudioSamplerate());
+			}
+			else
+			{
+				stmt.setNull(COL_MAIN_MI_FILESIZE);
+				stmt.setNull(COL_MAIN_MI_CDATE);
+				stmt.setNull(COL_MAIN_MI_MDATE);
+				stmt.setNull(COL_MAIN_MI_AFORMAT);
+				stmt.setNull(COL_MAIN_MI_VFORMAT);
+				stmt.setNull(COL_MAIN_MI_WIDTH);
+				stmt.setNull(COL_MAIN_MI_HEIGHT);
+				stmt.setNull(COL_MAIN_MI_FRAMERATE);
+				stmt.setNull(COL_MAIN_MI_DURATION);
+				stmt.setNull(COL_MAIN_MI_BITDEPTH);
+				stmt.setNull(COL_MAIN_MI_BITRATE);
+				stmt.setNull(COL_MAIN_MI_FRAMECOUNT);
+				stmt.setNull(COL_MAIN_MI_ACHANNELS);
+				stmt.setNull(COL_MAIN_MI_VCODEC);
+				stmt.setNull(COL_MAIN_MI_ACODEC);
+				stmt.setNull(COL_MAIN_MI_SAMPLERATE);
+			}
 
 			stmt.execute();
 
@@ -619,7 +688,6 @@ public class CCDatabase {
 			stmt.setStr(COL_EPIS_NAME,          ep.getTitle());
 			stmt.setBoo(COL_EPIS_VIEWED,        ep.isViewed());
 			stmt.setStr(COL_EPIS_VIEWEDHISTORY, ep.getViewedHistory().toSerializationString());
-			stmt.setInt(COL_EPIS_QUALITY,       ep.getQuality().asInt());
 			stmt.setInt(COL_EPIS_LENGTH,        ep.getLength());
 			stmt.setInt(COL_EPIS_FORMAT,        ep.getFormat().asInt());
 			stmt.setLng(COL_EPIS_FILESIZE,      ep.getFilesize().getBytes());
@@ -627,6 +695,46 @@ public class CCDatabase {
 			stmt.setSht(COL_EPIS_TAGS,          ep.getTags().asShort());
 			stmt.setStr(COL_EPIS_ADDDATE,       ep.getAddDate().toStringSQL());
 			stmt.setLng(COL_EPIS_LANGUAGE,      ep.getLanguage().serializeToLong());
+
+			CCMediaInfo mi = ep.getMediaInfo();
+			if (mi.isSet())
+			{
+				stmt.setLng(COL_EPIS_MI_FILESIZE,   mi.getFilesize());
+				stmt.setLng(COL_EPIS_MI_CDATE,      mi.getCDate());
+				stmt.setLng(COL_EPIS_MI_MDATE,      mi.getMDate());
+				stmt.setStr(COL_EPIS_MI_AFORMAT,    mi.getAudioFormat());
+				stmt.setStr(COL_EPIS_MI_VFORMAT,    mi.getVideoFormat());
+				stmt.setInt(COL_EPIS_MI_WIDTH,      mi.getWidth());
+				stmt.setInt(COL_EPIS_MI_HEIGHT,     mi.getHeight());
+				stmt.setFlt(COL_EPIS_MI_FRAMERATE,  mi.getFramerate());
+				stmt.setFlt(COL_EPIS_MI_DURATION,   mi.getDuration());
+				stmt.setInt(COL_EPIS_MI_BITDEPTH,   mi.getBitdepth());
+				stmt.setInt(COL_EPIS_MI_BITRATE,    mi.getBitrate());
+				stmt.setInt(COL_EPIS_MI_FRAMECOUNT, mi.getFramecount());
+				stmt.setInt(COL_EPIS_MI_ACHANNELS,  mi.getAudioChannels());
+				stmt.setStr(COL_EPIS_MI_VCODEC,     mi.getVideoCodec());
+				stmt.setStr(COL_EPIS_MI_ACODEC,     mi.getAudioCodec());
+				stmt.setInt(COL_EPIS_MI_SAMPLERATE, mi.getAudioSamplerate());
+			}
+			else
+			{
+				stmt.setNull(COL_EPIS_MI_FILESIZE);
+				stmt.setNull(COL_EPIS_MI_CDATE);
+				stmt.setNull(COL_EPIS_MI_MDATE);
+				stmt.setNull(COL_EPIS_MI_AFORMAT);
+				stmt.setNull(COL_EPIS_MI_VFORMAT);
+				stmt.setNull(COL_EPIS_MI_WIDTH);
+				stmt.setNull(COL_EPIS_MI_HEIGHT);
+				stmt.setNull(COL_EPIS_MI_FRAMERATE);
+				stmt.setNull(COL_EPIS_MI_DURATION);
+				stmt.setNull(COL_EPIS_MI_BITDEPTH);
+				stmt.setNull(COL_EPIS_MI_BITRATE);
+				stmt.setNull(COL_EPIS_MI_FRAMECOUNT);
+				stmt.setNull(COL_EPIS_MI_ACHANNELS);
+				stmt.setNull(COL_EPIS_MI_VCODEC);
+				stmt.setNull(COL_EPIS_MI_ACODEC);
+				stmt.setNull(COL_EPIS_MI_SAMPLERATE);
+			}
 
 			stmt.setInt(COL_EPIS_LOCALID,       ep.getLocalID());
 

@@ -1,7 +1,5 @@
 package de.jClipCorn.features.table.renderer;
 
-import de.jClipCorn.database.databaseElement.columnTypes.CCQuality;
-
 public class TableQualityRenderer extends TableRenderer {
 	private static final long serialVersionUID = 5357005350195701739L;
 

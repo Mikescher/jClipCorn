@@ -15,9 +15,6 @@ public interface IEpisodeData {
 	void setViewed(boolean viewed);
 	boolean isViewed();
 
-	void setQuality(CCQuality quality);
-	CCQuality getQuality();
-
 	void setLength(int length);
 	int getLength();
 

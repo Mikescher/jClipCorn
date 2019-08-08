@@ -6,7 +6,6 @@ import javax.swing.JLayeredPane;
 
 import de.jClipCorn.database.databaseElement.columnTypes.CCFileFormat;
 import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReferenceList;
-import de.jClipCorn.database.databaseElement.columnTypes.CCQuality;
 import de.jClipCorn.features.online.metadata.ParseResultHandler;
 import de.jClipCorn.util.listener.ImageCropperResultListener;
 

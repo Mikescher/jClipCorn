@@ -137,7 +137,7 @@ public class DerbyDatabase extends GenericDatabase {
 	
 	/**
 	 * parses the structure from an XML-Resource
-	 * @param xmlPath Path to the descriptive XML-Resource
+	 * @param xmlResPath Path to the descriptive XML-Resource
 	 */
 	protected boolean parseXMLfromResource(String xmlResPath) {
 		InputStream is = this.getClass().getResourceAsStream(xmlResPath);

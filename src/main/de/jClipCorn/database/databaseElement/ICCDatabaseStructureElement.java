@@ -1,7 +1,6 @@
 package de.jClipCorn.database.databaseElement;
 
 import de.jClipCorn.database.databaseElement.columnTypes.CCFileFormat;
-import de.jClipCorn.database.databaseElement.columnTypes.CCQuality;
 import de.jClipCorn.database.databaseElement.columnTypes.CCTagList;
 import de.jClipCorn.database.util.ExtendedViewedState;
 import de.jClipCorn.util.datetime.CCDate;
@@ -12,7 +11,6 @@ public interface ICCDatabaseStructureElement {
 	String getTitle();
 	CCFileFormat getFormat();
 	CCDate getAddDate();
-	CCQuality getQuality();
 	CCTagList getTags();
 	ExtendedViewedState getExtendedViewedState();
 }

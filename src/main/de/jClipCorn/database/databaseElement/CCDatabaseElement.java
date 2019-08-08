@@ -408,9 +408,6 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 	
 	@Override
 	public abstract CCFileFormat getFormat();
-	
-	@Override
-	public abstract CCQuality getQuality();
 
 	@Override
 	public abstract ExtendedViewedState getExtendedViewedState();

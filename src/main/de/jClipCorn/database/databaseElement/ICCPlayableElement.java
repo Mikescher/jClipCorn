@@ -10,8 +10,8 @@ public interface ICCPlayableElement {
 
 	String getTitle();
 	boolean isViewed();
-	CCQuality getQuality();
 	int getLength();
+	CCMediaInfo getMediaInfo();
 	CCFileFormat getFormat();
 	CCFileSize getFilesize();
 	CCTagList getTags();
@@ -22,10 +22,8 @@ public interface ICCPlayableElement {
 	CCDBLanguageList getLanguage();
 	List<String> getParts();
 
-
 	void setLanguage(CCDBLanguageList lang);
 	void setLength(int len);
-
 
 	void play(boolean updateViewedAndHistory);
 }

@@ -28,7 +28,7 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 	private int episodeNumber;
 	private String title;
 	private boolean viewed;
-	private CCQuality quality;
+	private CCMediaInfo mediainfo;
 	private int length;
 	private CCTagList tags;
 	private CCFileFormat format;
@@ -49,6 +49,7 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 		addDate = CCDate.getMinimumDate();
 		viewedHistory = CCDateTimeList.createEmpty();
 		language = CCDBLanguageList.EMPTY;
+		mediainfo = CCMediaInfo.EMPTY;
 	}
 
 	public void beginUpdating() {
@@ -112,28 +113,10 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 		updateDB();
 	}
 
-	public void setQualitySafe(int quality) {
-		this.quality = CCQuality.getWrapper().findOrNull(quality);
+	public void setMediaInfo(CCMediaInfo minfo) {
+		if (minfo == null) { CCLog.addUndefinied("Prevented setting CCEpisode.MediaInfo to NULL"); return; } //$NON-NLS-1$
 
-		if (this.quality == null) {
-			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.ErroneousDatabaseValues", quality)); //$NON-NLS-1$
-			this.quality = CCQuality.STREAM;
-		}
-
-		updateDB();
-	}
-
-	public void setQuality(int quality) throws EnumFormatException {
-		this.quality = CCQuality.getWrapper().findOrException(quality);
-
-		updateDB();
-	}
-
-	@Override
-	public void setQuality(CCQuality quality) {
-		if (quality == null) {CCLog.addUndefinied("Prevented setting CCEpisode.Quality to NULL"); return; } //$NON-NLS-1$
-
-		this.quality = quality;
+		this.mediainfo = minfo;
 
 		updateDB();
 	}
@@ -164,7 +147,7 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 
 	@Override
 	public void setFormat(CCFileFormat format) {
-		if (format == null) {CCLog.addUndefinied("Prevented setting CCEpisode.Format to NULL"); return; } //$NON-NLS-1$
+		if (format == null) { CCLog.addUndefinied("Prevented setting CCEpisode.Format to NULL"); return; } //$NON-NLS-1$
 
 		this.format = format;
 		updateDB();
@@ -301,7 +284,7 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 		episodeNumber = 0;
 		title = ""; //$NON-NLS-1$
 		viewed = false;
-		quality = CCQuality.STREAM;
+		mediainfo = CCMediaInfo.EMPTY;
 		length = 0;
 		format = CCFileFormat.MKV;
 		filesize = CCFileSize.ZERO;
@@ -351,8 +334,8 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 	}
 
 	@Override
-	public CCQuality getQuality() {
-		return quality;
+	public CCMediaInfo getMediaInfo() {
+		return mediainfo;
 	}
 
 	@Override

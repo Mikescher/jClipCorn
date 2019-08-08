@@ -2,6 +2,7 @@ package de.jClipCorn.util.mediaquery;
 
 import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguage;
 import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguageList;
+import de.jClipCorn.database.databaseElement.columnTypes.CCMediaInfo;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.exceptions.InnerMediaQueryException;
 import de.jClipCorn.util.stream.CCStreams;
@@ -19,6 +20,9 @@ public class MediaQueryResult {
 
 	private static Pattern REX_LANGUAGE_REPEAT = Pattern.compile("^\\s*(\\w+)(\\s*/\\s*\\1)+\\s*$"); //$NON-NLS-1$
 
+	public final long CDate;             // from file attributes
+	public final long MDate;             // from file attributes
+
 	public final String Format;          // NULL if not set
 	public final String Format_Version;  // NULL if not set
 	public final long FileSize;
@@ -34,7 +38,9 @@ public class MediaQueryResult {
 
 	public final CCDBLanguageList AudioLanguages;   // NULL if only 1 Language without a specifier
 	
-	private MediaQueryResult(String format, String format_Version, long fileSize, double duration, int overallBitRate, double frameRate, MediaQueryResultVideoTrack video, List<MediaQueryResultVideoTrack> videoTracks, List<MediaQueryResultAudioTrack> audioTracks, List<MediaQueryResultSubtitleTrack> subtitleTracks, CCDBLanguageList language) {
+	private MediaQueryResult(long cdate, long mdate, String format, String format_Version, long fileSize, double duration, int overallBitRate, double frameRate, MediaQueryResultVideoTrack video, List<MediaQueryResultVideoTrack> videoTracks, List<MediaQueryResultAudioTrack> audioTracks, List<MediaQueryResultSubtitleTrack> subtitleTracks, CCDBLanguageList language) {
+		CDate = cdate;
+		MDate = mdate;
 		Format = format;
 		Format_Version = format_Version;
 		FileSize = fileSize;
@@ -49,7 +55,7 @@ public class MediaQueryResult {
 	}
 
 	@SuppressWarnings("nls")
-	public static MediaQueryResult parse(CCXMLElement xml) throws InnerMediaQueryException, CCXMLException {
+	public static MediaQueryResult parse(long cdate, long mdate, CCXMLElement xml) throws InnerMediaQueryException, CCXMLException {
 		boolean foundGeneral = false;
 		boolean foundVideo = false;
 
@@ -105,7 +111,7 @@ public class MediaQueryResult {
 
 		CCDBLanguageList alng = getLang(atracks);
 		
-		return new MediaQueryResult(format, format_Version, fileSize, duration, overallBitRate, frameRate, vtracks.get(0), vtracks, atracks, stracks, alng);
+		return new MediaQueryResult(cdate, mdate, format, format_Version, fileSize, duration, overallBitRate, frameRate, vtracks.get(0), vtracks, atracks, stracks, alng);
 	}
 
 	private static CCDBLanguageList getLang(List<MediaQueryResultAudioTrack> tcks) throws InnerMediaQueryException {
@@ -282,5 +288,58 @@ public class MediaQueryResult {
 		if (langval.equalsIgnoreCase("Unknown")) return true; //$NON-NLS-1$
 
 		return false;
+	}
+
+	public CCMediaInfo toMediaInfo() {
+		MediaQueryResultVideoTrack video = getDefaultVideoTrack();
+		if (video == null) return CCMediaInfo.EMPTY;
+
+		MediaQueryResultAudioTrack audio = getDefaultAudioTrack();
+		if (audio == null) return CCMediaInfo.EMPTY;
+
+		if (Duration         == -1)   return CCMediaInfo.EMPTY;
+		if (OverallBitRate   == -1)   return CCMediaInfo.EMPTY;
+
+		if (video.Format     == null) return CCMediaInfo.EMPTY;
+		if (video.FrameRate  == -1)   return CCMediaInfo.EMPTY;
+		if (video.BitDepth   == -1)   return CCMediaInfo.EMPTY;
+		if (video.FrameCount == -1)   return CCMediaInfo.EMPTY;
+		if (video.CodecID    == null) return CCMediaInfo.EMPTY;
+		if (video.BitRate    == -1)   return CCMediaInfo.EMPTY;
+
+		if (audio.Format     == null) return CCMediaInfo.EMPTY;
+		if (audio.Channels   == -1)   return CCMediaInfo.EMPTY;
+		if (audio.CodecID    == null) return CCMediaInfo.EMPTY;
+		if (audio.BitRate    == -1)   return CCMediaInfo.EMPTY;
+
+		return new CCMediaInfo(CDate, MDate, FileSize, Duration,
+				               video.BitRate + audio.BitRate,
+			                   video.Format, video.Width, video.Height, video.FrameRate, video.BitDepth, video.FrameCount, video.CodecID,
+			                   audio.Format, audio.Channels, audio.CodecID, audio.Samplingrate);
+	}
+
+	public int getTotalBitrate() {
+		MediaQueryResultVideoTrack video = getDefaultVideoTrack();
+		if (video == null) return -1;
+
+		MediaQueryResultAudioTrack audio = getDefaultAudioTrack();
+		if (audio == null) return -1;
+
+		if (video.BitRate    == -1)   return -1;
+		if (audio.BitRate    == -1)   return -1;
+
+		return video.BitRate + audio.BitRate;
+	}
+
+	public MediaQueryResultVideoTrack getDefaultVideoTrack() {
+		MediaQueryResultVideoTrack video = CCStreams.iterate(VideoTracks).firstOrNull(t -> t.Default);
+		if (video == null && !VideoTracks.isEmpty()) video = VideoTracks.get(0);
+		return video;
+	}
+
+	public MediaQueryResultAudioTrack getDefaultAudioTrack() {
+		MediaQueryResultAudioTrack audio = CCStreams.iterate(AudioTracks).firstOrNull(t -> t.Default);
+		if (audio == null && !AudioTracks.isEmpty()) audio = AudioTracks.get(0);
+		return audio;
 	}
 }

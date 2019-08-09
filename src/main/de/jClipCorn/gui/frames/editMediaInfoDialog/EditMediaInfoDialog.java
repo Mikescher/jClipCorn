@@ -554,7 +554,8 @@ public class EditMediaInfoDialog extends JDialog {
 		lblVideoHeight.setForeground(colOK);
 		lblVideoFramerate.setForeground(colOK);
 		lblVideoBitdepth.setForeground(colOK);
-		lblVideoFramerate.setForeground(colOK);
+		lblVideoCodec.setForeground(colOK);
+		lblAudioCodec.setForeground(colOK);
 		lblAudioChannels.setForeground(colOK);
 		lblAudioSamplerate.setForeground(colOK);
 
@@ -590,4 +591,56 @@ public class EditMediaInfoDialog extends JDialog {
 
 		dispose();
 	}
+
+	private void setValues(CCMediaInfo mi)
+	{
+		ctrlCDate.setValue(mi.getCDate());
+		ctrlMDate.setValue(mi.getMDate());
+		ctrlFilesize.setValue(mi.getFilesize());
+		ctrlDuration.setValue(mi.getDuration());
+		ctrlBitrate.setValue(mi.getBitrate());
+		ctrlVideoFormat.setText(mi.getVideoFormat());
+		ctrlAudioFormat.setText(mi.getAudioFormat());
+		ctrlVideoWidth.setValue(mi.getWidth());
+		ctrlVideoHeight.setValue(mi.getHeight());
+		ctrlVideoFramerate.setValue(mi.getFramerate());
+		ctrlVideoBitdepth.setValue(mi.getBitdepth());
+		lblVideoCodec.setText(mi.getVideoCodec());
+		lblAudioCodec.setText(mi.getAudioCodec());
+		ctrlAudioChannels.setValue(mi.getAudioChannels());
+		ctrlAudioSamplerate.setValue(mi.getAudioSamplerate());
+	}
+
+	private void setValues(MediaQueryResult data)
+	{
+		if (data == null) return;
+
+		if (data.CDate != -1) ctrlCDate.setValue(data.CDate);
+		if (data.MDate != -1) ctrlMDate.setValue(data.MDate);
+		if (data.FileSize != -1) ctrlFilesize.setValue(data.FileSize);
+		if (data.Duration != -1) ctrlDuration.setValue(data.Duration);
+		if (data.getTotalBitrate() != -1) ctrlBitrate.setValue(data.getTotalBitrate());
+
+		MediaQueryResultVideoTrack video = data.getDefaultVideoTrack();
+		if (video != null)
+		{
+			if (video.Format != null) ctrlVideoFormat.setText(video.Format);
+			if (video.Width != -1) ctrlVideoWidth.setValue(video.Width);
+			if (video.Height != -1) ctrlVideoHeight.setValue(video.Height);
+			if (video.FrameRate != -1) ctrlVideoFramerate.setValue(video.FrameRate);
+			if (video.BitDepth != -1) ctrlVideoBitdepth.setValue(video.BitDepth);
+			if (video.FrameCount != -1) ctrlVideoFramecount.setValue(video.FrameCount);
+			if (video.CodecID != null) ctrlVideoCodec.setText(video.CodecID);
+		}
+
+		MediaQueryResultAudioTrack audio = data.getDefaultAudioTrack();
+		if (audio != null)
+		{
+			if (audio.Format != null) ctrlAudioFormat.setText(audio.Format);
+			if (audio.Channels != -1) ctrlAudioChannels.setValue(audio.Channels);
+			if (audio.CodecID != null) ctrlAudioCodec.setText(audio.CodecID);
+			if (audio.Samplingrate != -1) ctrlAudioSamplerate.setValue(audio.Samplingrate);
+		}
+	}
+
 }

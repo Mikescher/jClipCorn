@@ -1,7 +1,12 @@
 package de.jClipCorn.database.databaseElement.columnTypes;
 
+import de.jClipCorn.database.util.CCQualityCategory;
+import de.jClipCorn.features.log.CCLog;
+import de.jClipCorn.gui.resources.Resources;
+import de.jClipCorn.gui.resources.reftypes.IconRef;
 import de.jClipCorn.util.Str;
 
+import java.text.MessageFormat;
 import java.util.Objects;
 
 public class CCMediaInfo {
@@ -216,5 +221,82 @@ public class CCMediaInfo {
 		result = 31 * result + (audiocodec != null ? audiocodec.hashCode() : 0);
 		result = 31 * result + audiosamplerate;
 		return result;
+	}
+
+	public CCQualityCategory getCategory() {
+
+		if (!isSet) return CCQualityCategory.UNSET;
+
+		CCQualityCategory.CategoryType ct = getCategoryType();
+		String cap = getCategoryCaption();
+		String tt = getCategoryTooltip();
+
+		return new CCQualityCategory(ct, cap, getCategoryIcon(ct), tt);
+	}
+
+	private IconRef getCategoryIcon(CCQualityCategory.CategoryType ct) {
+		switch (ct) {
+			case LOW_QUALITY:      return Resources.ICN_TABLE_QUALITY_1;
+			case OKAY:             return Resources.ICN_TABLE_QUALITY_2;
+			case GOOD:             return Resources.ICN_TABLE_QUALITY_3;
+			case VERY_GOOD:        return Resources.ICN_TABLE_QUALITY_4;
+			case HIGH_DEFINITION:  return Resources.ICN_TABLE_QUALITY_5;
+		}
+
+		CCLog.addDefaultSwitchError(this, ct);
+		return null;
+	}
+
+	@SuppressWarnings("nls")
+	private String getCategoryTooltip() {
+		return Str.format("{0}x{1} @ {2} FPS ({3} kb/s)", width, height, getNormalizedFPS(), getNormalizedBitrate());
+	}
+
+	private int getNormalizedFPS() {
+		return (int)Math.round(framerate);
+	}
+
+	private int getNormalizedBitrate() {
+		return (int)Math.round(bitrate / 1024.0);
+	}
+
+	private CCQualityCategory.CategoryType getCategoryType()
+	{
+		if (width <  330 || height <  210) return CCQualityCategory.CategoryType.LOW_QUALITY;
+		if (width <  630 || height <  470) return CCQualityCategory.CategoryType.OKAY;
+		if (width < 1260 || height <  700) return CCQualityCategory.CategoryType.GOOD;
+		if (width < 1900 || height < 1060) return CCQualityCategory.CategoryType.VERY_GOOD;
+
+		return CCQualityCategory.CategoryType.HIGH_DEFINITION;
+	}
+
+	@SuppressWarnings("nls")
+	private String getCategoryCaption()
+	{
+		if (width < 320 && height < 240) return "Low";
+
+		if (isApproxSize(4096, 3072, 0.05, 0.45)) return "4K";
+		if (isApproxSize(2560, 1440, 0.05, 0.45)) return "1440p";
+		if (isApproxSize(1920, 1080, 0.05, 0.45)) return "1080p";
+		if (isApproxSize(1280, 720, 0.10, 0.50)) return "720p";
+		if (isApproxSize(1024, 576, 0.10, 0.50)) return "576p";
+		if (isApproxSize(854, 480, 0.10, 0.50)) return "480p";
+		if (isApproxSize(320, 240, 0.15, 0.50)) return "240p";
+		if (isApproxSize(720, 304, 0.30, 0.65)) return "304p";
+
+		if (width < 320 || height < 240) return "Low";
+
+		return "Other";
+	}
+
+	private boolean isApproxSize(int w, int h, double near, double far)
+	{
+		double dw = Math.abs(width - w) / (Math.max(width, w) * 1d);
+		double dh = Math.abs(height - h) / (Math.max(height, h) * 1d);
+
+		if (dw <= near && dh < far) return true;
+		if (dw <= far && dh < near) return true;
+
+		return false;
 	}
 }

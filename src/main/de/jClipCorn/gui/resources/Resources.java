@@ -219,7 +219,8 @@ public class Resources {
 	public final static IconRef ICN_TABLE_QUALITY_2 		= register16x16Icon("/icons/table/quality/quality_2.png");
 	public final static IconRef ICN_TABLE_QUALITY_3 		= register16x16Icon("/icons/table/quality/quality_3.png");
 	public final static IconRef ICN_TABLE_QUALITY_4 		= register16x16Icon("/icons/table/quality/quality_4.png");
-	
+	public final static IconRef ICN_TABLE_QUALITY_5 		= register16x16Icon("/icons/table/quality/quality_5.png");
+
 	public final static IconRef ICN_TABLE_ONLINESCORE_0 	= register16x16Icon("/icons/table/stars/stars_0.png");
 	public final static IconRef ICN_TABLE_ONLINESCORE_1 	= register16x16Icon("/icons/table/stars/stars_1.png");
 	public final static IconRef ICN_TABLE_ONLINESCORE_2  	= register16x16Icon("/icons/table/stars/stars_2.png");

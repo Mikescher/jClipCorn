@@ -1,6 +1,8 @@
 package de.jClipCorn.database.driver;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import de.jClipCorn.properties.enumerations.CCDatabaseDriver;
 
@@ -43,4 +45,19 @@ public class StubDatabase extends GenericDatabase {
 
 	@Override
 	public boolean isInMemory() {return true;}
+
+	@Override
+	public List<String> listTables() throws SQLException {
+		return new ArrayList<>();
+	}
+
+	@Override
+	public List<String> listTrigger() throws SQLException {
+		return new ArrayList<>();
+	}
+
+	@Override
+	public List<String> listViews() throws SQLException {
+		return new ArrayList<>();
+	}
 }

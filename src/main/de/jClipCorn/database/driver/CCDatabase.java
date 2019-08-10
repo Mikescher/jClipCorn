@@ -39,13 +39,14 @@ public class CCDatabase {
 
 	private final static String XML_NAME = "database/ClipCornSchema.xml"; //$NON-NLS-1$
 
-	public final static String INFOKEY_DBVERSION	= "VERSION_DB";   							//$NON-NLS-1$
-	public final static String INFOKEY_DATE			= "CREATION_DATE";         					//$NON-NLS-1$
-	public final static String INFOKEY_TIME			= "CREATION_TIME";         					//$NON-NLS-1$
-	public final static String INFOKEY_USERNAME		= "CREATION_USERNAME";     					//$NON-NLS-1$
-	public final static String INFOKEY_DUUID      	= "DATABASE_UNIVERSALLY_UNIQUE_IDENTIFIER";	//$NON-NLS-1$
+	public final static String INFOKEY_DBVERSION    = "VERSION_DB";                             //$NON-NLS-1$
+	public final static String INFOKEY_DATE         = "CREATION_DATE";                          //$NON-NLS-1$
+	public final static String INFOKEY_TIME         = "CREATION_TIME";                          //$NON-NLS-1$
+	public final static String INFOKEY_USERNAME     = "CREATION_USERNAME";                      //$NON-NLS-1$
+	public final static String INFOKEY_DUUID        = "DATABASE_UNIVERSALLY_UNIQUE_IDENTIFIER"; //$NON-NLS-1$
+	public final static String INFOKEY_HISTORY      = "HISTORY_ENABLED";                        //$NON-NLS-1$
 
-	public final static String[] INFOKEYS = new String[]{ INFOKEY_DBVERSION, INFOKEY_DATE, INFOKEY_TIME, INFOKEY_USERNAME, INFOKEY_DUUID };
+	public final static String[] INFOKEYS = new String[]{ INFOKEY_DBVERSION, INFOKEY_DATE, INFOKEY_TIME, INFOKEY_USERNAME, INFOKEY_DUUID, INFOKEY_HISTORY };
 	
 	private final String databasePath;
 	private final GenericDatabase db;

@@ -54,7 +54,7 @@ public class TestDatabase extends ClipCornBaseTest {
 		movWrite.setScore(CCUserScore.RATING_III);
 		movWrite.setOnlineReference("tmdb:movie/207703");
 		movWrite.setMediaInfo(new CCMediaInfo(1565454159, 1565454169, 1570732032, 5903.904, 2128398, "MPEG-4 Visual", 720, 304, 23.976, (short)8, 141552, "XVID", "AC-3", (short)6, "2000", 48000));
-		movWrite.setPart(0, "C:\test.mov");
+		movWrite.setPart(0, "C:\\test.mov");
 		movWrite.endUpdating();
 		
 		assertEquals(1, ml.getElementCount());
@@ -76,7 +76,7 @@ public class TestDatabase extends ClipCornBaseTest {
 		assertEquals(CCFSK.RATING_III, movWrite.getFSK());
 		assertEquals(CCOnlineRefType.THEMOVIEDB, movWrite.getOnlineReference().Main.type);
 		assertEquals(CCOnlineScore.STARS_3_0, movWrite.getOnlinescore());
-		assertEquals("C:\test.mov", movWrite.getPart(0));
+		assertEquals("C:\\test.mov", movWrite.getPart(0));
 
 		assertEquals(1565454159, movWrite.getMediaInfo().getCDate());
 		assertEquals(1565454169, movWrite.getMediaInfo().getMDate());

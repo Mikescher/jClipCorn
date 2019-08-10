@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Properties;
 
 import org.apache.ddlutils.Platform;
@@ -174,4 +175,19 @@ public class DerbyDatabase extends GenericDatabase {
 
 	@Override
 	public boolean isInMemory() {return false;}
+
+	@Override
+	public List<String> listTables() throws SQLException {
+		return querySQL("select st.tablename from sys.systables st LEFT OUTER join sys.sysschemas ss on (st.schemaid = ss.schemaid) where (ss.schemaname = 'APP' OR ss.schemaname = 'DEFAULT') AND st.tabletype='T'", 1, a -> (String)a[0]);
+	}
+
+	@Override
+	public List<String> listTrigger() throws SQLException {
+		return querySQL("select triggername from sys.systriggers", 1, a -> (String)a[0]);
+	}
+
+	@Override
+	public List<String> listViews() throws SQLException {
+		return querySQL("select st.tablename from sys.systables st LEFT OUTER join sys.sysschemas ss on (st.schemaid = ss.schemaid) where (ss.schemaname = 'APP' OR ss.schemaname = 'DEFAULT') AND st.tabletype='V'", 1, a -> (String)a[0]);
+	}
 }

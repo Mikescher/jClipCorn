@@ -2,6 +2,7 @@ package de.jClipCorn.database.driver;
 
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.List;
 
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.properties.enumerations.CCDatabaseDriver;
@@ -87,4 +88,19 @@ public class MemoryDatabase extends GenericDatabase {
 
 	@Override
 	public boolean isInMemory() {return true;}
+
+	@Override
+	public List<String> listTables() throws SQLException {
+		return querySQL("SELECT name FROM sqlite_master WHERE type='table'", 1, a -> (String)a[0]);
+	}
+
+	@Override
+	public List<String> listTrigger() throws SQLException {
+		return querySQL("SELECT name FROM sqlite_master WHERE type='trigger'", 1, a -> (String)a[0]);
+	}
+
+	@Override
+	public List<String> listViews() throws SQLException {
+		return querySQL("SELECT name FROM sqlite_master WHERE type='view'", 1, a -> (String)a[0]);
+	}
 }

@@ -11,6 +11,7 @@ import java.util.List;
 
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.properties.enumerations.CCDatabaseDriver;
+import de.jClipCorn.util.lambda.Func1to1;
 
 /**
  * A little Wrapper for embedded JavaDB (derby) Databases
@@ -208,6 +209,22 @@ public abstract class GenericDatabase {
 			Object[] o = new Object[columnCount];
 			for (int i = 0; i < columnCount; i++) o[i] = rs.getObject(i+1);
 			result.add(o);
+		}
+		rs.close();
+		s.close();
+
+		return result;
+	}
+
+	public <T> List<T> querySQL(String sql, int columnCount, Func1to1<Object[], T> conv) throws SQLException {
+		Statement s = connection.createStatement();
+		ResultSet rs = s.executeQuery(sql);
+
+		List<T> result = new ArrayList<>();
+		while (rs.next()) {
+			Object[] o = new Object[columnCount];
+			for (int i = 0; i < columnCount; i++) o[i] = rs.getObject(i+1);
+			result.add(conv.invoke(o));
 		}
 		rs.close();
 		s.close();
@@ -413,5 +430,9 @@ public abstract class GenericDatabase {
 	public abstract CCDatabaseDriver getDBType();
 
 	public abstract boolean isInMemory();
+
+	public abstract List<String> listTables() throws SQLException;
+	public abstract List<String> listTrigger() throws SQLException;
+	public abstract List<String> listViews() throws SQLException;
 }
 

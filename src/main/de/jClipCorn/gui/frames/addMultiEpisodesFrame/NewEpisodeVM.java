@@ -39,8 +39,6 @@ public class NewEpisodeVM {
 
 	public CCFileFormat getFormat() { return CCFileFormat.getMovieFormatOrDefault(PathFormatter.getExtension(SourcePath)); }
 
-	public CCQuality getQuality() { return CCQuality.calculateQuality(Filesize, Length, 1); }
-
 	public void updateTarget(CCSeason season, CCDBLanguageList commonLang, String globalSeriesRoot)
 	{
 		if (NoMove)
@@ -69,11 +67,9 @@ public class NewEpisodeVM {
 	public void validate(CCSeason s)
 	{
 		List<UserDataProblem> probs = new ArrayList<>();
-		UserDataProblem.testEpisodeData(probs, s, null, Title, Length, EpisodeNumber, getAddDate(), getViewedHistory(), Filesize, getFormat().asString(), getFormat().asStringAlt(), TargetPath, getQuality().asInt(), Language);
+		UserDataProblem.testEpisodeData(probs, s, null, Title, Length, EpisodeNumber, getAddDate(), getViewedHistory(), Filesize, getFormat().asString(), getFormat().asStringAlt(), TargetPath, CCMediaInfo.EMPTY /*TODO*/, Language);
 
 		IsValid = probs.isEmpty();
 		Problems = "<html>" + CCStreams.iterate(probs).stringjoin(UserDataProblem::getText, "\n<br/>") + "</html>"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
-
-
 }

@@ -15,7 +15,7 @@ import de.jClipCorn.util.xml.CCXMLException;
 import java.awt.image.BufferedImage;
 
 @SuppressWarnings("nls")
-public class DatabaseXMLImportImpl_V2 implements IDatabaseXMLImporterImpl
+public class DatabaseXMLImportImpl_V4 implements IDatabaseXMLImporterImpl
 {
 	public void importDatabaseElement(CCDatabaseElement o, CCXMLElement e, Func1to1<String, BufferedImage> imgf, ImportState s) throws CCFormatException, CCXMLException
 	{
@@ -74,6 +74,7 @@ public class DatabaseXMLImportImpl_V2 implements IDatabaseXMLImporterImpl
 			e.execIfAttrExists("zyklus", o::setZyklusTitle);
 			e.execIfIntAttrExists("zyklusnumber", o::setZyklusID);
 			e.execIfAttrExists("history", o::setViewedHistory);
+			//TODO minfo
 		}
 		o.endUpdating();
 	}
@@ -147,6 +148,7 @@ public class DatabaseXMLImportImpl_V2 implements IDatabaseXMLImporterImpl
 			if (s.ResetTags) o.setTags(CCTagList.EMPTY);
 
 			e.execIfAttrExists("languages", v -> o.setLanguage(CCDBLanguageList.parseFromString(v)));
+			//TODO minfo
 		}
 		o.endUpdating();
 	}

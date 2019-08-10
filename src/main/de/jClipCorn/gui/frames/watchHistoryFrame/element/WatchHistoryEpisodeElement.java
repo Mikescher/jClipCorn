@@ -38,8 +38,8 @@ public class WatchHistoryEpisodeElement extends WatchHistoryElement {
 	}
 
 	@Override
-	public CCQuality getQuality() {
-		return Episode.getQuality();
+	public CCMediaInfo getMediaInfo() {
+		return Episode.getMediaInfo();
 	}
 
 	@Override

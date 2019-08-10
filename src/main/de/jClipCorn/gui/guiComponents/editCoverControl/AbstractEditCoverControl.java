@@ -72,11 +72,6 @@ public class AbstractEditCoverControl extends JLayeredPane implements ParseResul
 	}
 
 	@Override
-	public void setQuality(CCQuality q) {
-		// NOP
-	}
-
-	@Override
 	public void setYear(int y) {
 		// NOP
 	}

@@ -9,6 +9,7 @@ import de.jClipCorn.database.databaseElement.columnTypes.*;
 import org.apache.commons.lang.text.StrBuilder;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.util.NextEpisodeHelper;
+import de.jClipCorn.database.util.CCQualityCategory;
 import de.jClipCorn.database.util.ExtendedViewedState;
 import de.jClipCorn.database.util.ExtendedViewedStateType;
 import de.jClipCorn.database.util.iterators.DirectEpisodesIterator;
@@ -68,30 +69,6 @@ public class CCSeries extends CCDatabaseElement implements IEpisodeOwner {
 	
 	public boolean isPartialViewed() { // Some parts viewed - some not
 		return !(isViewed() || isUnviewed());
-	}
-	
-	@Override
-	public CCQuality getQuality() {
-		int qs = 0;
-		int qc = 0;
-		for (CCSeason se: seasons) {
-			if (se.isEmpty()) continue;
-			qc++;
-			qs += se.getQuality().asInt();
-		}
-		
-		if (qc > 0) {
-			int qual = (int) Math.round((qs*1d) / qc);
-			
-			qual = Math.max(0, qual);
-			qual = Math.min(qual, CCQuality.values().length - 1);
-			
-			CCQuality q = CCQuality.getWrapper().findOrNull(qual);
-			if (q != null) return q;
-			return getFirstEpisode().getQuality(); // shouldn't be possible
-		} else {
-			return CCQuality.STREAM;
-		}
 	}
 	
 	public int getSeasonCount() {
@@ -672,5 +649,9 @@ public class CCSeries extends CCDatabaseElement implements IEpisodeOwner {
 
 	public CCEpisode getLastAddedEpisode() {
 		return iteratorEpisodes().autosortByProperty(CCEpisode::getAddDate).lastOrNull();
+	}
+
+	public CCQualityCategory getMediaInfoCategory() {
+		return CCQualityCategory.UNSET; //TODO avg
 	}
 }

@@ -10,6 +10,7 @@ import java.util.regex.Pattern;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.covertab.CCCoverData;
 import de.jClipCorn.database.databaseElement.columnTypes.*;
+import de.jClipCorn.database.util.CCQualityCategory;
 import de.jClipCorn.database.util.ExtendedViewedState;
 import de.jClipCorn.database.util.ExtendedViewedStateType;
 import de.jClipCorn.features.actionTree.IActionSourceObject;
@@ -163,29 +164,6 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 	
 	public boolean isPartialViewed() { // Some parts viewed - some not
 		return !(isViewed() || isUnviewed());
-	}
-	
-	@Override
-	public CCQuality getQuality() {
-		int qs = 0;
-		int qc = 0;
-		for (CCEpisode ep : episodes) {
-			qc++;
-			qs += ep.getQuality().asInt();
-		}
-		
-		if (qc > 0) {
-			int qual = (int) Math.round((qs*1d) / qc);
-			
-			qual = Math.max(0, qual);
-			qual = Math.min(qual, CCQuality.values().length - 1);
-			
-			CCQuality q = CCQuality.getWrapper().findOrNull(qual);
-			if (q != null) return q;
-			return getFirstEpisode().getQuality(); // shouldn't be possible
-		} else {
-			return CCQuality.STREAM;
-		}
 	}
 	
 	@Override
@@ -571,5 +549,9 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 		String filename = PathFormatter.fixStringToFilesystemname(String.format("S%sE%s - %s.%s", decFormattter.format(seasonIndex), decFormattter.format(episodeNumber), Str.limit(title, 128), format.asString()));
 
 		return PathFormatter.combine(seriesfoldername, seasonfoldername, filename);
+	}
+
+	public CCQualityCategory getMediaInfoCategory() {
+		return CCQualityCategory.UNSET; //TODO avg
 	}
 }

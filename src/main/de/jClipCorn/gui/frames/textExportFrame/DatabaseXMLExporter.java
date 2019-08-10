@@ -49,7 +49,6 @@ public class DatabaseXMLExporter extends DatabaseTextExporter {
 				
 				if (addLanguage) jdom_elem.setAttribute(new Attribute("languages", mov.getLanguage().iterate().stringjoin(CCDBLanguage::getLongString, ";")));
 				if (addFormat) jdom_elem.setAttribute(new Attribute("format", mov.getFormat().asString()));
-				if (addQuality) jdom_elem.setAttribute(new Attribute("quality", mov.getQuality().asString()));
 				if (addYear) jdom_elem.setAttribute(new Attribute("year", mov.getYear() + ""));
 				if (addSize) jdom_elem.setAttribute(new Attribute("size", mov.getFilesize().getBytes() + " bytes"));
 				if (addViewed) jdom_elem.setAttribute(new Attribute("viewed", mov.isViewed() ? "true" : "false"));
@@ -80,7 +79,6 @@ public class DatabaseXMLExporter extends DatabaseTextExporter {
 						jdom_elem_epi.setAttribute(new Attribute("title", episode.getTitle()));
 						if (addLanguage) jdom_elem_epi.setAttribute(new Attribute("language", episode.getLanguage().iterate().stringjoin(CCDBLanguage::getLongString, ";")));
 						if (addFormat) jdom_elem_epi.setAttribute(new Attribute("format", episode.getFormat().asString()));
-						if (addQuality) jdom_elem_epi.setAttribute(new Attribute("quality", episode.getQuality().asString()));
 						if (addSize) jdom_elem_epi.setAttribute(new Attribute("size", episode.getFilesize().getBytes() + " bytes"));
 						if (addViewed) jdom_elem_epi.setAttribute(new Attribute("viewed", episode.isViewed() ? "true" : "false"));
 					}

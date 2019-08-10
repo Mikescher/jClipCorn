@@ -66,7 +66,6 @@ public class DatabaseXMLImportImpl_V3 implements IDatabaseXMLImporterImpl
 				e.execIfAttrExists("part_"+i, v -> o.setPart(fi, v));
 			}
 
-			e.execIfIntAttrExists("quality", o::setQuality);
 			e.execIfBoolAttrExists("viewed", o::setViewed);
 
 			if (s.ResetViewed) o.setViewed(false);
@@ -143,7 +142,6 @@ public class DatabaseXMLImportImpl_V3 implements IDatabaseXMLImporterImpl
 
 			e.execIfIntAttrExists("length", o::setLength);
 			e.execIfAttrExists("part", o::setPart);
-			e.execIfIntAttrExists("quality", o::setQuality);
 			e.execIfAttrExists("tags", v -> o.setTags(CCTagList.deserialize(v)));
 
 			if (s.ResetTags) o.setTags(CCTagList.EMPTY);

@@ -10,6 +10,7 @@ import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
 import de.jClipCorn.database.databaseElement.columnTypes.*;
+import de.jClipCorn.database.util.CCQualityCategory;
 import de.jClipCorn.database.util.ExtendedViewedState;
 import de.jClipCorn.gui.guiComponents.SFixTable;
 import de.jClipCorn.gui.localization.LocaleBundle;
@@ -24,7 +25,7 @@ import de.jClipCorn.features.table.renderer.TableLanguageRenderer;
 import de.jClipCorn.features.table.renderer.TableLengthRenderer;
 import de.jClipCorn.features.table.renderer.TableOnlinescoreRenderer;
 import de.jClipCorn.features.table.renderer.TablePartRenderer;
-import de.jClipCorn.features.table.renderer.TableQualityRenderer;
+import de.jClipCorn.features.table.renderer.TableMediaInfoCatRenderer;
 import de.jClipCorn.features.table.renderer.TableScoreRenderer;
 import de.jClipCorn.features.table.renderer.TableTagsRenderer;
 import de.jClipCorn.features.table.renderer.TableTitleRenderer;
@@ -40,7 +41,7 @@ import de.jClipCorn.features.table.sorter.TableLanguageComparator;
 import de.jClipCorn.features.table.sorter.TableLengthComparator;
 import de.jClipCorn.features.table.sorter.TableOnlineScoreComparator;
 import de.jClipCorn.features.table.sorter.TablePartComparator;
-import de.jClipCorn.features.table.sorter.TableQualityComparator;
+import de.jClipCorn.features.table.sorter.TableMediaInfoCatComparator;
 import de.jClipCorn.features.table.sorter.TableScoreComparator;
 import de.jClipCorn.features.table.sorter.TableSizeComparator;
 import de.jClipCorn.features.table.sorter.TableTagsComparator;
@@ -60,7 +61,7 @@ public class SFixClipTable extends SFixTable {
 	private TableViewedRenderer renderer_viewed;
 	private TableTitleRenderer renderer_title;
 	private TableZyklusRenderer renderer_zyklus;
-	private TableQualityRenderer renderer_quality;
+	private TableMediaInfoCatRenderer renderer_mediainfo;
 	private TableLanguageRenderer renderer_language;
 	private TableGenreRenderer renderer_genre;
 	private TablePartRenderer renderer_parts;
@@ -77,7 +78,7 @@ public class SFixClipTable extends SFixTable {
 	private TableTitleComparator sorter_title;
 	private TableViewedComparator sorter_viewed;
 	private TableZyklusComparator sorter_zyklus;
-	private TableQualityComparator sorter_quality;
+	private TableMediaInfoCatComparator sorter_mediainfo;
 	private TableLanguageComparator sorter_language;
 	private TableGenreComparator sorter_genre;
 	private TablePartComparator sorter_parts;
@@ -112,7 +113,7 @@ public class SFixClipTable extends SFixTable {
 		renderer_viewed = new TableViewedRenderer();
 		renderer_title = new TableTitleRenderer();
 		renderer_zyklus = new TableZyklusRenderer();
-		renderer_quality = new TableQualityRenderer();
+		renderer_mediainfo = new TableMediaInfoCatRenderer();
 		renderer_language = new TableLanguageRenderer();
 		renderer_genre = new TableGenreRenderer();
 		renderer_parts = new TablePartRenderer();
@@ -135,7 +136,7 @@ public class SFixClipTable extends SFixTable {
 		}
 		sorter_viewed = new TableViewedComparator();
 		sorter_zyklus = new TableZyklusComparator();
-		sorter_quality = new TableQualityComparator();
+		sorter_mediainfo = new TableMediaInfoCatComparator();
 		sorter_language = new TableLanguageComparator();
 		sorter_genre = new TableGenreComparator();
 		sorter_parts = new TablePartComparator();
@@ -157,7 +158,7 @@ public class SFixClipTable extends SFixTable {
 		sorter.setComparator(ClipTableModel.COLUMN_TITLE,  sorter_title);
 		sorter.setComparator(ClipTableModel.COLUMN_VIEWED,  sorter_viewed);
 		sorter.setComparator(ClipTableModel.COLUMN_ZYKLUS,  sorter_zyklus);
-		sorter.setComparator(ClipTableModel.COLUMN_QUALITY,  sorter_quality);
+		sorter.setComparator(ClipTableModel.COLUMN_MEDIAINFO,  sorter_mediainfo);
 		sorter.setComparator(ClipTableModel.COLUMN_LANGUAGE,  sorter_language);
 		sorter.setComparator(ClipTableModel.COLUMN_GENRE,  sorter_genre);
 		sorter.setComparator(ClipTableModel.COLUMN_PARTCOUNT,  sorter_parts);
@@ -184,8 +185,8 @@ public class SFixClipTable extends SFixTable {
 			return renderer_viewed;
 		case ClipTableModel.COLUMN_ZYKLUS:
 			return renderer_zyklus;
-		case ClipTableModel.COLUMN_QUALITY:
-			return renderer_quality;
+		case ClipTableModel.COLUMN_MEDIAINFO:
+			return renderer_mediainfo;
 		case ClipTableModel.COLUMN_LANGUAGE:
 			return renderer_language;
 		case ClipTableModel.COLUMN_GENRE:
@@ -238,8 +239,8 @@ public class SFixClipTable extends SFixTable {
 					return ((CCMovieZyklus)value).getDecimalFormatted();
 				else
 					return null;
-			case ClipTableModel.COLUMN_QUALITY:
-				return null;
+			case ClipTableModel.COLUMN_MEDIAINFO:
+				return ((CCQualityCategory)value).getTooltip();
 			case ClipTableModel.COLUMN_LANGUAGE:
 				return ((CCDBLanguageList)value).toOutputString();
 			case ClipTableModel.COLUMN_GENRE:

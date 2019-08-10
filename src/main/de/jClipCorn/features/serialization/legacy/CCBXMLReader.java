@@ -106,7 +106,6 @@ public class CCBXMLReader {
 		newMov.setZyklusTitle(getZyklusName(e.getChildText("zyklus")));
 		newMov.setZyklusID(getZyklusNumber(e.getChildText("zyklus")));
 		newMov.setViewed(! e.getChildText("gesehen").equals("0"));
-		newMov.setQuality(e.getChild("qualität").getAttribute("dec").getIntValue() + 1);
 		newMov.setLanguage(e.getChild("sprache").getAttribute("dec").getIntValue());
 		newMov.setGenre(translateGenre(e.getChild("genre").getChild("genre00").getAttribute("dec").getIntValue()), 0);
 		newMov.setGenre(translateGenre(e.getChild("genre").getChild("genre01").getAttribute("dec").getIntValue()), 1);
@@ -217,7 +216,6 @@ public class CCBXMLReader {
 		newEp.setEpisodeNumber(owner.getAttribute("number").getIntValue());
 		newEp.setTitle(owner.getChildText("filmtitel"));
 		newEp.setViewed(! owner.getChildText("gesehen").equals("0"));
-		newEp.setQuality(owner.getChild("qualität").getAttribute("dec").getIntValue() + 1);
 		newEp.setLength(Integer.parseInt(owner.getChildText("länge")));
 		newEp.setFormat(owner.getChild("format").getAttribute("dec").getIntValue());
 		newEp.setFilesize(owner.getChild("größe").getAttribute("dec").getLongValue() * 1024);

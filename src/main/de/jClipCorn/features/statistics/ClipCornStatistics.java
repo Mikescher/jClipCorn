@@ -19,7 +19,6 @@ public final class ClipCornStatistics {
 		STATISTICS.add(ml -> new StatisticsGroup(s -> new StatisticsAddDateChart(ml, s)));
 		STATISTICS.add(ml -> new StatisticsGroup(s -> new StatisticsLengthChart(ml, s)));
 		STATISTICS.add(ml -> new StatisticsGroup(s -> new StatisticsFormatChart(ml, s)));
-		STATISTICS.add(ml -> new StatisticsGroup(s -> new StatisticsQualityChart(ml, s)));
 		STATISTICS.add(ml -> new StatisticsGroup(s -> new StatisticsOnlinescoreChart(ml, s)));
 		STATISTICS.add(ml -> new StatisticsGroup(s -> new StatisticsScoreChart(ml, s)));
 		STATISTICS.add(ml -> new StatisticsGroup(s -> new StatisticsViewedChart(ml, s)));
@@ -44,7 +43,6 @@ public final class ClipCornStatistics {
 		STATISTICS.add(ml -> new StatisticsGroup(s -> new StatisticsViewedOverTimeChart(ml, s)));
 		STATISTICS.add(ml -> new StatisticsGroup(s -> new StatisticsSizeOverTimeChart(ml, s)));
 		STATISTICS.add(ml -> new StatisticsGroup(s -> new StatisticsFormatOverTimeChart(ml, s)));
-		STATISTICS.add(ml -> new StatisticsGroup(s -> new StatisticsQualityOverTimeChart(ml, s)));
 
 		// ======== SERIES-ONLY CHARTS =========
 

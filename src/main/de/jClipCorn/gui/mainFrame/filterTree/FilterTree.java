@@ -41,7 +41,6 @@ import de.jClipCorn.features.table.filter.customFilter.CustomGenreFilter;
 import de.jClipCorn.features.table.filter.customFilter.CustomGroupFilter;
 import de.jClipCorn.features.table.filter.customFilter.CustomLanguageFilter;
 import de.jClipCorn.features.table.filter.customFilter.CustomOnlinescoreFilter;
-import de.jClipCorn.features.table.filter.customFilter.CustomQualityFilter;
 import de.jClipCorn.features.table.filter.customFilter.CustomTagFilter;
 import de.jClipCorn.features.table.filter.customFilter.CustomTypFilter;
 import de.jClipCorn.features.table.filter.customFilter.CustomUserScoreFilter;
@@ -101,8 +100,9 @@ public class FilterTree extends AbstractFilterTree {
 		DefaultMutableTreeNode node_format = addNode(null, Resources.ICN_SIDEBAR_FORMAT, LocaleBundle.getString("FilterTree.Format"), this::expand); //$NON-NLS-1$
 		initFormat(node_format);
 		
-		DefaultMutableTreeNode node_quality = addNode(null, Resources.ICN_SIDEBAR_QUALITY, LocaleBundle.getString("FilterTree.Quality"), this::expand); //$NON-NLS-1$
-		initQuality(node_quality);
+		//TODO MediaInfo
+		//DefaultMutableTreeNode node_quality = addNode(null, Resources.ICN_SIDEBAR_QUALITY, LocaleBundle.getString("FilterTree.Quality"), this::expand); //$NON-NLS-1$
+		//initQuality(node_quality);
 		
 		DefaultMutableTreeNode node_tags = addNode(null, Resources.ICN_SIDEBAR_TAGS, LocaleBundle.getString("FilterTree.Tags"), this::expand); //$NON-NLS-1$
 		initTags(node_tags);
@@ -188,12 +188,6 @@ public class FilterTree extends AbstractFilterTree {
 	private void initFormat(DefaultMutableTreeNode parent) {
 		for (final CCFileFormat format : CCFileFormat.values()) {
 			addNodeF(parent, format.getIcon(), format.asString(), () -> CustomFormatFilter.create(format));
-		}
-	}
-	
-	private void initQuality(DefaultMutableTreeNode parent) {
-		for (final CCQuality quality : CCQuality.values()) {
-			addNodeF(parent, quality.getIcon(), quality.asString(), () -> CustomQualityFilter.create(quality));
 		}
 	}
 	

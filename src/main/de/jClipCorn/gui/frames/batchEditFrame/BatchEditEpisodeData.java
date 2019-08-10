@@ -18,9 +18,6 @@ public class BatchEditEpisodeData implements IEpisodeData
 	private boolean viewed;
 	public boolean viewedDirty = false;
 
-	private CCQuality quality;
-	public boolean qualityDirty = false;
-
 	private int length;
 	public boolean lengthDirty = false;
 
@@ -53,7 +50,6 @@ public class BatchEditEpisodeData implements IEpisodeData
 		episodeNumber = e.getEpisodeNumber();
 		title         = e.getTitle();
 		viewed        = e.isViewed();
-		quality       = e.getQuality();
 		length        = e.getLength();
 		tags          = e.getTags();
 		format        = e.getFormat();
@@ -103,18 +99,6 @@ public class BatchEditEpisodeData implements IEpisodeData
 	@Override
 	public boolean isViewed() {
 		return viewed;
-	}
-
-	@Override
-	public void setQuality(CCQuality q) {
-		if (quality == q) return;
-		quality = q;
-		qualityDirty = isDirty = true;
-	}
-
-	@Override
-	public CCQuality getQuality() {
-		return quality;
 	}
 
 	@Override
@@ -225,7 +209,6 @@ public class BatchEditEpisodeData implements IEpisodeData
 			if (episodeNumberDirty) _source.setEpisodeNumber(episodeNumber);
 			if (titleDirty)         _source.setTitle(title);
 			if (viewedDirty)        _source.setViewed(viewed);
-			if (qualityDirty)       _source.setQuality(quality);
 			if (lengthDirty)        _source.setLength(length);
 			if (tagsDirty)          _source.setTags(tags);
 			if (formatDirty)        _source.setFormat(format);

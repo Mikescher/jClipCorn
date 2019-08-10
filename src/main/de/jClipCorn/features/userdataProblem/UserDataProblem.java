@@ -70,7 +70,7 @@ public class UserDataProblem {
 									 String title, String zyklus, int zyklusID, int len, CCDate adddate,
 									 int oscore, int fskidx, int year, long fsize, String csExtn, String csExta,
 									 int gen0, int gen1, int gen2, int gen3, int gen4, int gen5, int gen6, int gen7,
-									 int quality, CCDBLanguageList language, CCOnlineReferenceList ref) {
+									 CCMediaInfo quality, CCDBLanguageList language, CCOnlineReferenceList ref) {
 		
 		int partcount = 0;
 		
@@ -240,9 +240,7 @@ public class UserDataProblem {
 		
 		//################################################################################################################
 		
-		if (CCQuality.calculateQuality(fsize, len, partcount).asInt() != quality) {
-			ret.add(new UserDataProblem(PROBLEM_WRONG_QUALITY));
-		}
+		// TODO test mediainfo
 		
 		//################################################################################################################
 		
@@ -400,7 +398,7 @@ public class UserDataProblem {
 		}
 	}
 	
-	public static void testEpisodeData(List<UserDataProblem> ret, IEpisodeOwner owner, CCEpisode episode, String title, int len, int epNum, CCDate adddate, CCDateTimeList lvdates, long fsize, String csExtn, String csExta, String part, int quality, CCDBLanguageList language) {
+	public static void testEpisodeData(List<UserDataProblem> ret, IEpisodeOwner owner, CCEpisode episode, String title, int len, int epNum, CCDate adddate, CCDateTimeList lvdates, long fsize, String csExtn, String csExta, String part, CCMediaInfo minfo, CCDBLanguageList language) {
 		if (title.isEmpty()) {
 			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_EMPTY_TITLE));
 		}
@@ -454,10 +452,8 @@ public class UserDataProblem {
 		
 		//################################################################################################################
 		
-		if (CCQuality.calculateQuality(fsize, len, 1).asInt() != quality) {
-			ret.add(new UserDataProblem(PROBLEM_WRONG_QUALITY));
-		}
-		
+		//TODO test mediainfo
+
 		//################################################################################################################
 		
 		for (CCDatabaseElement idel : owner.getMovieList().iteratorElements()) {

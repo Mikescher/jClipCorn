@@ -1,6 +1,7 @@
 package de.jClipCorn.database.databaseElement.columnTypes;
 
 import de.jClipCorn.database.util.CCQualityCategory;
+import de.jClipCorn.database.util.CategoryType;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.gui.resources.reftypes.IconRef;
@@ -227,14 +228,14 @@ public class CCMediaInfo {
 
 		if (!isSet) return CCQualityCategory.UNSET;
 
-		CCQualityCategory.CategoryType ct = getCategoryType();
+		CategoryType ct = getCategoryType();
 		String cap = getCategoryCaption();
 		String tt = getCategoryTooltip();
 
 		return new CCQualityCategory(ct, cap, getCategoryIcon(ct), tt);
 	}
 
-	private IconRef getCategoryIcon(CCQualityCategory.CategoryType ct) {
+	private IconRef getCategoryIcon(CategoryType ct) {
 		switch (ct) {
 			case LOW_QUALITY:      return Resources.ICN_TABLE_QUALITY_1;
 			case OKAY:             return Resources.ICN_TABLE_QUALITY_2;
@@ -260,14 +261,14 @@ public class CCMediaInfo {
 		return (int)Math.round(bitrate / 1024.0);
 	}
 
-	private CCQualityCategory.CategoryType getCategoryType()
+	private CategoryType getCategoryType()
 	{
-		if (width <  330 || height <  210) return CCQualityCategory.CategoryType.LOW_QUALITY;
-		if (width <  630 || height <  470) return CCQualityCategory.CategoryType.OKAY;
-		if (width < 1260 || height <  700) return CCQualityCategory.CategoryType.GOOD;
-		if (width < 1900 || height < 1060) return CCQualityCategory.CategoryType.VERY_GOOD;
+		if (width <  330 || height <  210) return CategoryType.LOW_QUALITY;
+		if (width <  630 || height <  470) return CategoryType.OKAY;
+		if (width < 1260 || height <  700) return CategoryType.GOOD;
+		if (width < 1900 || height < 1060) return CategoryType.VERY_GOOD;
 
-		return CCQualityCategory.CategoryType.HIGH_DEFINITION;
+		return CategoryType.HIGH_DEFINITION;
 	}
 
 	@SuppressWarnings("nls")

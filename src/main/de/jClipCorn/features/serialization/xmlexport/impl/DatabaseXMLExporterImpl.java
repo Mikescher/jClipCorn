@@ -59,12 +59,12 @@ public class DatabaseXMLExporterImpl {
 			if (!Str.isNullOrEmpty(p)) e.setAttribute("part_"+i, p);
 		}
 
-		e.setAttribute("quality",      o.getQuality().asInt() + "");
 		e.setAttribute("viewed",       o.isViewed() + "");
 		e.setAttribute("history",      o.getViewedHistory().toSerializationString());
 		e.setAttribute("year",         o.getYear() + "");
 		e.setAttribute("zyklus",       o.getZyklus().getTitle());
 		e.setAttribute("zyklusnumber", o.getZyklus().getNumber() + "");
+		//TODO
 
 		if (s.FileHash) e.setAttribute("filehash", o.getFastMD5());
 	}
@@ -99,9 +99,9 @@ public class DatabaseXMLExporterImpl {
 		e.setAttribute("history",       o.getViewedHistory().toSerializationString());
 		e.setAttribute("length",        o.getLength() + "");
 		e.setAttribute("part",          o.getPart());
-		e.setAttribute("quality",       o.getQuality().asInt() + "");
 		e.setAttribute("tags",          o.getTags().serialize());
 		e.setAttribute("languages",     o.getLanguage().serializeToString());
+		//TODO
 
 		if (s.FileHash) e.setAttribute("filehash", o.getFastMD5());
 	}

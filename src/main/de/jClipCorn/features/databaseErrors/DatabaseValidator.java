@@ -379,12 +379,10 @@ public class DatabaseValidator {
 		}
 		
 		// ###############################################
-		// Wrong Quality
+		// MediaInfo problems
 		// ###############################################
 		
-		if (CCQuality.calculateQuality(mov.getFilesize(), mov.getLength(), mov.getPartcount()) != mov.getQuality()) {
-			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_WRONG_QUALITY, mov));
-		}
+		//TODO
 		
 		// ###############################################
 		// Duplicate Name
@@ -684,14 +682,12 @@ public class DatabaseValidator {
 		if (PathFormatter.isUntrimmed(episode.getTitle())) {
 			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_NOT_TRIMMED, episode));
 		}
-		
+
 		// ###############################################
-		// Wrong Quality
+		// MediaInfo problems
 		// ###############################################
 		
-		if (CCQuality.calculateQuality(episode.getFilesize(), episode.getLength(), 1) != episode.getQuality()) {
-			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_WRONG_QUALITY, episode));
-		}
+		//TODO
 		
 		// ###############################################
 		// Watch never <> ViewedState

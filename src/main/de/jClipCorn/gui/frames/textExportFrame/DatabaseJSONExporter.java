@@ -51,7 +51,6 @@ public class DatabaseJSONExporter extends DatabaseTextExporter {
 				attributes.add("\t\t\"titel\": \"" + simpleEscape(mov.getTitle()) + "\"");
 				if (addLanguage) attributes.add("\t\t\"languages\": [" + mov.getLanguage().iterate().stringjoin(l -> "\""+l.getLongString()+"\"", ", ") + "]");
 				if (addFormat) attributes.add("\t\t\"format\": \"" + mov.getFormat().asString() + "\"");
-				if (addQuality) attributes.add("\t\t\"quality\": \"" + mov.getQuality().asString() + "\"");
 				if (addYear) attributes.add("\t\t\"year\": " + mov.getYear());
 				if (addSize) attributes.add("\t\t\"size\": " + mov.getFilesize().getBytes());
 				if (addViewed) attributes.add("\t\t\"viewed\": " + (mov.isViewed() ? "true" : "false"));
@@ -112,7 +111,6 @@ public class DatabaseJSONExporter extends DatabaseTextExporter {
 
 						if (addLanguage) attributes.add("\t\t\t\t\t\t\"languages\": [" + episode.getLanguage().iterate().stringjoin(l -> "\""+l.getLongString()+"\"", ", ") + "\"");
 						if (addFormat) attributes.add("\t\t\t\t\t\t\"format\": \"" + episode.getFormat().asString() + "\"");
-						if (addQuality) attributes.add("\t\t\t\t\t\t\"quality\": \"" + episode.getQuality().asString() + "\"");
 						if (addSize) attributes.add("\t\t\t\t\t\t\"size\": " + episode.getFilesize().getBytes());
 						if (addViewed) attributes.add("\t\t\t\t\t\t\"viewed\": " + (episode.isViewed() ? "true" : "false"));
 

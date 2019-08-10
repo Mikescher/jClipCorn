@@ -80,7 +80,6 @@ public class TestStatistics extends ClipCornBaseTest {
 		StatisticsHelper.getCountForAllFSKs(it2);
 		StatisticsHelper.getCountForAllGenres(it2);
 		StatisticsHelper.getCountForAllOnlinescores(it2);
-		StatisticsHelper.getCountForAllQualities(it1);
 		StatisticsHelper.getCountForAllTags(it1);
 		StatisticsHelper.getCountForAllScores(it2);
 		StatisticsHelper.getCountForAllYears(1900, 512, it3);

@@ -113,10 +113,8 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 	private JComboBox<String> cbxGenre5;
 	private JComboBox<String> cbxGenre6;
 	private JLabel label_16;
-	private JLabel label_17;
 	private JLabel label_18;
 	private JCheckBox cbViewed;
-	private JComboBox<String> cbxQuality;
 	private LanguageChooser cbxLanguage;
 	private JSpinner spnLength;
 	private JLabel label_19;
@@ -149,7 +147,6 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 	private JLabel label_33;
 	private JButton btnToday;
 	private JButton btnTestParts;
-	private JButton btnCalcQuality;
 	private EditCoverControl edCvrControl;
 	private JLabel label_15;
 	private JReferenceChooser edReference;
@@ -393,10 +390,6 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		label_16.setBounds(10, 316, 52, 16);
 		getContentPane().add(label_16);
 		
-		label_17 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblQuality.text")); //$NON-NLS-1$
-		label_17.setBounds(10, 346, 52, 16);
-		getContentPane().add(label_17);
-		
 		label_18 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblSprache.text")); //$NON-NLS-1$
 		label_18.setBounds(10, 376, 65, 16);
 		getContentPane().add(label_18);
@@ -405,11 +398,6 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		cbViewed.setBounds(93, 315, 212, 25);
 		cbViewed.addItemListener(new ItemChangeLambdaAdapter(this::setDirty, -1));
 		getContentPane().add(cbViewed);
-		
-		cbxQuality = new JComboBox<>();
-		cbxQuality.setBounds(93, 345, 212, 22);
-		cbxQuality.addItemListener(new ItemChangeLambdaAdapter(this::setDirty, ItemEvent.SELECTED));
-		getContentPane().add(cbxQuality);
 		
 		cbxLanguage = new LanguageChooser();
 		cbxLanguage.setBounds(93, 375, 212, 22);
@@ -572,11 +560,6 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		btnTestParts.setBounds(277, 191, 131, 23);
 		getContentPane().add(btnTestParts);
 		
-		btnCalcQuality = new JButton(LocaleBundle.getString("AddMovieFrame.btnCalcQuality.text")); //$NON-NLS-1$
-		btnCalcQuality.addActionListener(e -> recalcQuality());
-		btnCalcQuality.setBounds(313, 345, 95, 23);
-		getContentPane().add(btnCalcQuality);
-		
 		edCvrControl = new EditCoverControl(this, this);
 		edCvrControl.setBounds(536, 422, EditCoverControl.CTRL_WIDTH, EditCoverControl.CTRL_HEIGHT);
 		edCvrControl.addChangeListener(new ActionLambdaAdapter(this::setDirty));
@@ -643,8 +626,6 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 	}
 
 	private void setDefaultValues() {
-		cbxQuality.setModel(new DefaultComboBoxModel<>(CCQuality.getWrapper().getList()));
-
 		cbxFSK.setModel(new DefaultComboBoxModel<>(CCFSK.getWrapper().getList()));
 		
 		cbxFormat.setModel(new DefaultComboBoxModel<>(CCFileFormat.getWrapper().getList()));
@@ -771,7 +752,6 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		edZyklus.setText(movie.getZyklus().getTitle());
 		spnZyklus.setValue(movie.getZyklus().getNumber());
 		cbViewed.setSelected(movie.isViewed());
-		cbxQuality.setSelectedIndex(movie.getQuality().asInt());
 		cbxLanguage.setValue(movie.getLanguage());
 		spnLength.setValue(movie.getLength());
 		spnAddDate.setValue(movie.getAddDate());
@@ -898,8 +878,6 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		
 		CCFileFormat fmt = CCFileFormat.getMovieFormatFromPaths(edPart0.getText(), edPart1.getText(), edPart2.getText(), edPart3.getText(), edPart4.getText(), edPart5.getText());
 		if (fmt != null) cbxFormat.setSelectedIndex(fmt.asInt());
-		
-		recalcQuality();
 	}
 
 	@Override
@@ -922,11 +900,6 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		spnSize.setValue(size);
 	}
 
-	@Override
-	public void setQuality(CCQuality q) {
-		cbxQuality.setSelectedIndex(q.asInt());
-	}
-	
 	@Override
 	public void setYear(int y) {
 		spnYear.setValue(y);
@@ -980,10 +953,6 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 	@Override
 	public void onFinishInserting() {
 		// nothing
-	}
-	
-	private void recalcQuality() {
-		setQuality(CCQuality.calculateQuality((long)spnSize.getValue(), (int) spnLength.getValue(), getPartCount()));
 	}
 	
 	private int getPartCount() {
@@ -1049,7 +1018,6 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		
 		movie.setViewed(cbViewed.isSelected());
 		
-		movie.setQuality(cbxQuality.getSelectedIndex());
 		movie.setLanguage(cbxLanguage.getValue());
 		
 		movie.setLength((int) spnLength.getValue());
@@ -1115,7 +1083,6 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 			int fskidx = cbxFSK.getSelectedIndex();
 			int year = (int) spnYear.getValue();
 			long fsize = (long) spnSize.getValue();
-			int quality = cbxQuality.getSelectedIndex();
 			CCDBLanguageList lang = cbxLanguage.getValue();
 			String csExtn  = CCFileFormat.getWrapper().findOrException(cbxFormat.getSelectedIndex()).asString();
 			String csExta = CCFileFormat.getWrapper().findOrException(cbxFormat.getSelectedIndex()).asStringAlt();
@@ -1131,7 +1098,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 			
 			CCOnlineReferenceList ref = edReference.getValue();
 			
-			UserDataProblem.testMovieData(ret, movie, i, movie.getMovieList(), p0, p1, p2, p3, p4, p5, title, zyklus, zyklusID, len, adddate, oscore, fskidx, year, fsize, csExtn, csExta, g0, g1, g2, g3, g4, g5, g6, g7, quality, lang, ref);
+			UserDataProblem.testMovieData(ret, movie, i, movie.getMovieList(), p0, p1, p2, p3, p4, p5, title, zyklus, zyklusID, len, adddate, oscore, fskidx, year, fsize, csExtn, csExta, g0, g1, g2, g3, g4, g5, g6, g7, null/*TODO*/, lang, ref);
 			
 			return ret.isEmpty();
 		} catch (CCFormatException e) {

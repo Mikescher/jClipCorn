@@ -207,11 +207,6 @@ public class AddSeasonFrame extends JFrame implements UserDataProblemHandler, Pa
 	}
 
 	@Override
-	public void setQuality(CCQuality q) {
-		// NOP
-	}
-
-	@Override
 	public void setYear(int y) {
 		// NOP
 	}

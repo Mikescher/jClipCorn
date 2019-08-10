@@ -17,7 +17,7 @@ public class SerTableModel extends AbstractTableModel implements TableModelRowCo
 	public final static int COLUMN_NAME = 1;
 	public final static int COLUMN_VIEWED = 2;
 	public final static int COLUMN_LASTVIEWED = 3;
-	public final static int COLUMN_QUALITY = 4;
+	public final static int COLUMN_MEDIAINFO = 4;
 	public final static int COLUMN_LANGUAGE = 5;
 	public final static int COLUMN_LENGTH = 6;
 	public final static int COLUMN_TAGS = 7;
@@ -89,7 +89,7 @@ public class SerTableModel extends AbstractTableModel implements TableModelRowCo
 		case COLUMN_NAME:       return ep.getTitle();
 		case COLUMN_VIEWED:     return ep.getExtendedViewedState();
 		case COLUMN_LASTVIEWED: return ep.getViewedHistory();
-		case COLUMN_QUALITY:    return ep.getMediaInfo().getCategory();
+		case COLUMN_MEDIAINFO:  return ep.getMediaInfo().getCategory();
 		case COLUMN_LANGUAGE:   return ep.getLanguage();
 		case COLUMN_LENGTH:     return ep.getLength();
 		case COLUMN_TAGS:       return ep.getTags();

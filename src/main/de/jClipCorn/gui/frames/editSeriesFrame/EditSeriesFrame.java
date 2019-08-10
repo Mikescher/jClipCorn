@@ -133,7 +133,6 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 	private JLabel label_20;
 	private JComboBox<String> cbxEpisodeFormat;
 	private JLabel label_21;
-	private JComboBox<String> cbxEpisodeQuality;
 	private JLabel label_22;
 	private JSpinner spnEpisodeLength;
 	private JLabel label_23;
@@ -160,7 +159,6 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 	private JButton btnSeriesOk;
 	private JButton btnSeasonOK;
 	private JButton btnEpisodeOK;
-	private JButton btnEpisodeCalcQuality;
 	private EditCoverControl edSeriesCvrControl;
 	private EditCoverControl edSeasonCvrControl;
 	private JLabel lblHistory;
@@ -742,22 +740,6 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		cbxEpisodeFormat.addItemListener(new ItemChangeLambdaAdapter(this::setDirtyEpisode, ItemEvent.SELECTED));
 		pnlEditEpisodeInner.add(cbxEpisodeFormat, "3, 8, 7, 1"); //$NON-NLS-1$
 
-		label_21 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblQuality.text")); //$NON-NLS-1$
-		pnlEditEpisodeInner.add(label_21, "1, 10"); //$NON-NLS-1$
-
-		cbxEpisodeQuality = new JComboBox<>();
-		cbxEpisodeQuality.addItemListener(new ItemChangeLambdaAdapter(this::setDirtyEpisode, ItemEvent.SELECTED));
-		pnlEditEpisodeInner.add(cbxEpisodeQuality, "3, 10"); //$NON-NLS-1$
-
-		btnEpisodeCalcQuality = new JButton(LocaleBundle.getString("EditSeriesFrame.btnCalcQuality.text")); //$NON-NLS-1$
-		pnlEditEpisodeInner.add(btnEpisodeCalcQuality, "5, 10, 5, 1"); //$NON-NLS-1$
-		btnEpisodeCalcQuality.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				recalcEpisodeQuality();
-			}
-		});
-
 		lblLanguage = new JLabel(LocaleBundle.getString("AddMovieFrame.lblSprache.text")); //$NON-NLS-1$
 		pnlEditEpisodeInner.add(lblLanguage, "1, 12"); //$NON-NLS-1$
 
@@ -885,7 +867,6 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		//#########################   EPISODE   ###########################################################
 		
 		cbxEpisodeFormat.setModel(new DefaultComboBoxModel<>(CCFileFormat.getWrapper().getList()));
-		cbxEpisodeQuality.setModel(new DefaultComboBoxModel<>(CCQuality.getWrapper().getList()));
 	}
 	
 	private CCSeason getSelectedSeason() {
@@ -1074,7 +1055,6 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 			spnEpisodeEpisode.setValue(episode.getEpisodeNumber());
 			cbEpisodeViewed.setSelected(episode.isViewed());
 			cbxEpisodeFormat.setSelectedIndex(episode.getFormat().asInt());
-			cbxEpisodeQuality.setSelectedIndex(episode.getQuality().asInt());
 			spnEpisodeLength.setValue(episode.getLength());
 			spnEpisodeSize.setValue(episode.getFilesize().getBytes());
 			spnEpisodeAdded.setValue(episode.getAddDate());
@@ -1153,11 +1133,6 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 
 	@Override
 	public void setFilesize(long size) {
-		// NOP
-	}
-
-	@Override
-	public void setQuality(CCQuality q) {
 		// NOP
 	}
 
@@ -1479,10 +1454,6 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		
 		cbxEpisodeFormat.setSelectedIndex(fmt.asInt());
 	}
-
-	private void recalcEpisodeQuality() {
-		cbxEpisodeQuality.setSelectedIndex(CCQuality.calculateQuality((Long)spnEpisodeSize.getValue(), (Integer)spnEpisodeLength.getValue(), 1).asInt());
-	}
 	
 	private void openEpisodePart() {
 		int returnval = videoFileChooser.showOpenDialog(this);
@@ -1501,7 +1472,6 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		
 		recalcEpisodeFilesize();
 		recalcEpisodeFormat();
-		recalcEpisodeQuality();
 		
 		testEpisodePart();
 	}
@@ -1545,7 +1515,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		episode.setEpisodeNumber((int) spnEpisodeEpisode.getValue());
 		episode.setViewed(cbEpisodeViewed.isSelected());
 		episode.setFormat(cbxEpisodeFormat.getSelectedIndex());
-		episode.setQuality(cbxEpisodeQuality.getSelectedIndex());
+		//episode.setMediaInfo(asdf);//TODO
 		episode.setLength((int) spnEpisodeLength.getValue());
 		episode.setFilesize((long) spnEpisodeSize.getValue());
 		episode.setAddDate(spnEpisodeAdded.getValue());
@@ -1579,14 +1549,13 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 
 		try {
 			long fsize = (long) spnEpisodeSize.getValue();
-			int quality = cbxEpisodeQuality.getSelectedIndex();
 			String csExtn  = CCFileFormat.getWrapper().findOrException(cbxEpisodeFormat.getSelectedIndex()).asString();
 			String csExta = CCFileFormat.getWrapper().findOrException(cbxEpisodeFormat.getSelectedIndex()).asStringAlt();
 			CCDBLanguageList lng = ctrlLang.getValue();
 			
 			String part = edEpisodePart.getText();
 			
-			UserDataProblem.testEpisodeData(ret, season, episode, title, len, epNum, adddate, lvdate, fsize, csExtn, csExta, part, quality, lng);
+			UserDataProblem.testEpisodeData(ret, season, episode, title, len, epNum, adddate, lvdate, fsize, csExtn, csExta, part, null /*TODO*/, lng);
 			
 			return ret.isEmpty();
 		} catch (CCFormatException e) {

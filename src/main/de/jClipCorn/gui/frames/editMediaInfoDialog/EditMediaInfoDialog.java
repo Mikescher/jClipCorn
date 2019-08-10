@@ -25,6 +25,7 @@ import java.io.IOException;
 
 public class EditMediaInfoDialog extends JDialog {
 	private static final long serialVersionUID = -9200470525584039395L;
+	
 	private JTextField edFilepath;
 	private JPanel pnlGeneral;
 	private JPanel pnlVideo;
@@ -88,10 +89,10 @@ public class EditMediaInfoDialog extends JDialog {
 	private Color colOK;
 	private Color colErr;
 
-	/**
-	 * Create the dialog.		 
+	/**	 
 	 * @wbp.parser.constructor
 	 */
+	@SuppressWarnings("unused")
 	private EditMediaInfoDialog(Component owner) {
 		super();
 		
@@ -102,9 +103,6 @@ public class EditMediaInfoDialog extends JDialog {
 		updateHints();
 	}
 
-	/**
-	 * Create the dialog.
-	 */
 	public EditMediaInfoDialog(Component owner, MediaQueryResult r, MediaInfoResultHandler h) {
 		super();
 		_mqData = r;
@@ -118,9 +116,6 @@ public class EditMediaInfoDialog extends JDialog {
 		setValues(r);
 	}
 
-	/**
-	 * Create the dialog.
-	 */
 	public EditMediaInfoDialog(Component owner, CCMediaInfo r, MediaInfoResultHandler h) {
 		super();
 		_handler = h;
@@ -131,6 +126,17 @@ public class EditMediaInfoDialog extends JDialog {
 		
 		updateHints();
 		setValues(r);
+	}
+
+	public EditMediaInfoDialog(Component owner, MediaInfoResultHandler h) {
+		super();
+		_handler = h;
+		
+		initGUI();
+
+		setLocationRelativeTo(owner);
+		
+		updateHints();
 	}
 	
 	private void initGUI() {

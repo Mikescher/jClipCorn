@@ -14,6 +14,7 @@ import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.database.databaseElement.columnTypes.CCFSK;
 import de.jClipCorn.database.databaseElement.columnTypes.CCFileFormat;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGenre;
+import de.jClipCorn.database.databaseElement.columnTypes.CCMediaInfo;
 import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguageList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineScore;
 import de.jClipCorn.database.databaseElement.columnTypes.CCUserScore;
@@ -52,7 +53,7 @@ public class TestDatabase extends ClipCornBaseTest {
 		movWrite.setYear(2012);
 		movWrite.setScore(CCUserScore.RATING_III);
 		movWrite.setOnlineReference("tmdb:movie/207703");
-		movWrite.setQuality(CCQuality.BLURAY);
+		movWrite.setMediaInfo(new CCMediaInfo(1565454159, 1565454169, 1570732032, 5903.904, 2128398, "MPEG-4 Visual", 720, 304, 23.976, (short)8, 141552, "XVID", "AC-3", (short)6, "2000", 48000));
 		movWrite.setPart(0, "C:\test.mov");
 		movWrite.endUpdating();
 		
@@ -76,6 +77,28 @@ public class TestDatabase extends ClipCornBaseTest {
 		assertEquals(CCOnlineRefType.THEMOVIEDB, movWrite.getOnlineReference().Main.type);
 		assertEquals(CCOnlineScore.STARS_3_0, movWrite.getOnlinescore());
 		assertEquals("C:\test.mov", movWrite.getPart(0));
+
+		assertEquals(1565454159, movWrite.getMediaInfo().getCDate());
+		assertEquals(1565454169, movWrite.getMediaInfo().getMDate());
+		assertEquals(1570732032, movWrite.getMediaInfo().getFilesize());
+		assertEquals(5903.904, movWrite.getMediaInfo().getDuration(), 0.000001);
+		assertEquals(2128398, movWrite.getMediaInfo().getBitrate());
+		assertEquals("MPEG-4 Visual", movWrite.getMediaInfo().getVideoFormat());
+		assertEquals(720, movWrite.getMediaInfo().getWidth());
+		assertEquals(304, movWrite.getMediaInfo().getHeight());
+		assertEquals(23.976, movWrite.getMediaInfo().getFramerate(), 0.000001);
+		assertEquals(8, movWrite.getMediaInfo().getBitdepth());
+		assertEquals(141552, movWrite.getMediaInfo().getFramecount());
+		assertEquals("XVID", movWrite.getMediaInfo().getVideoCodec());
+		assertEquals("AC-3", movWrite.getMediaInfo().getAudioFormat());
+		assertEquals(6, movWrite.getMediaInfo().getAudioChannels());
+		assertEquals("2000", movWrite.getMediaInfo().getAudioCodec());
+		assertEquals(48000, movWrite.getMediaInfo().getAudioSamplerate());
+	}
+
+	@Test
+	public void testAddSeries() throws Exception {
+		//TODO (Ser + Seas + Epi)
 	}
 
 	@Test

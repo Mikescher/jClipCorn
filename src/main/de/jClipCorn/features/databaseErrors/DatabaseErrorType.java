@@ -22,7 +22,7 @@ public class DatabaseErrorType {
 	public final static DatabaseErrorType ERROR_NOT_TRIMMED                        = new DatabaseErrorType(16, DatabaseAutofixer::fixError_Not_Trimmed);
 	public final static DatabaseErrorType ERROR_DUPLICATE_COVERLINK                = new DatabaseErrorType(17, null);
 	public final static DatabaseErrorType ERROR_ZYKLUS_ENDS_WITH_ROMAN             = new DatabaseErrorType(18, null);
-	public final static DatabaseErrorType ERROR_WRONG_QUALITY                      = new DatabaseErrorType(19, DatabaseAutofixer::fixError_Wrong_Quality);
+	//public final static DatabaseErrorType ERROR_WRONG_QUALITY                      = new DatabaseErrorType(19, DatabaseAutofixer::fixError_Wrong_Quality);
 	public final static DatabaseErrorType ERROR_DUPLICATE_TITLE                    = new DatabaseErrorType(20, null);
 	public final static DatabaseErrorType ERROR_DUPLICATE_FILELINK                 = new DatabaseErrorType(21, null);
 	public final static DatabaseErrorType ERROR_WRONG_FILENAME                     = new DatabaseErrorType(22, DatabaseAutofixer::fixError_Wrong_Filename);

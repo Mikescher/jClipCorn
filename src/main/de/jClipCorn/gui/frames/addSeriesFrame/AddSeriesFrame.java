@@ -312,11 +312,6 @@ public class AddSeriesFrame extends JFrame implements ParseResultHandler, UserDa
 	}
 
 	@Override
-	public void setQuality(CCQuality q) {
-		// No such field
-	}
-
-	@Override
 	public void setYear(int y) {
 		// No such field
 	}

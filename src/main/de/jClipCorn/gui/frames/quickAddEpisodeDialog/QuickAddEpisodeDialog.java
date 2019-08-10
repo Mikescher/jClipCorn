@@ -10,6 +10,7 @@ import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguageList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCDateTimeList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCFileFormat;
+import de.jClipCorn.database.databaseElement.columnTypes.CCMediaInfo;
 import de.jClipCorn.database.databaseElement.columnTypes.CCTagList;
 import de.jClipCorn.gui.frames.genericTextDialog.GenericTextDialog;
 import de.jClipCorn.gui.frames.inputErrorFrame.InputErrorDialog;
@@ -342,11 +343,10 @@ public class QuickAddEpisodeDialog extends JDialog {
 		CCDateTimeList history = CCDateTimeList.createEmpty();
 		CCTagList tags = CCTagList.EMPTY;
 		long filesize = FileSizeFormatter.getFileSize(new File(src));
-		CCQuality quality = CCQuality.calculateQuality(filesize, length, 1);
 		CCFileFormat format = CCFileFormat.getMovieFormatFromPath(src);
 
 		List<UserDataProblem> problems = new ArrayList<>();
-		boolean probvalue = !check || checkUserDataEpisode(problems, title, length, episodenumber, adddate, history, filesize, quality.asInt(), format.asString(), format.asStringAlt(), src, dst, fullDst, lang);
+		boolean probvalue = !check || checkUserDataEpisode(problems, title, length, episodenumber, adddate, history, filesize, null /*TODO*/, format.asString(), format.asStringAlt(), src, dst, fullDst, lang);
 
 		// some problems are too fatal
 		if (probvalue && Str.isNullOrWhitespace(title)) {
@@ -396,7 +396,7 @@ public class QuickAddEpisodeDialog extends JDialog {
 					newEp.setEpisodeNumber(episodenumber);
 					newEp.setViewed(false);
 					newEp.setFormat(format);
-					newEp.setQuality(quality);
+					//newEp.setMediaInfo(minfo);//TODO
 					newEp.setLength(length);
 					newEp.setFilesize(filesize);
 					newEp.setAddDate(adddate);
@@ -422,9 +422,9 @@ public class QuickAddEpisodeDialog extends JDialog {
 		}).start();
 	}
 
-	private boolean checkUserDataEpisode(List<UserDataProblem> ret, String title, int len, int epNum, CCDate adddate, CCDateTimeList lvdate, long fsize, int quality, String csExtn, String csExta, String src, String dst, String fullDst, CCDBLanguageList lang) {
+	private boolean checkUserDataEpisode(List<UserDataProblem> ret, String title, int len, int epNum, CCDate adddate, CCDateTimeList lvdate, long fsize, CCMediaInfo minfo, String csExtn, String csExta, String src, String dst, String fullDst, CCDBLanguageList lang) {
 
-		UserDataProblem.testEpisodeData(ret, season, null, title, len, epNum, adddate, lvdate, fsize, csExtn, csExta, dst, quality, lang);
+		UserDataProblem.testEpisodeData(ret, season, null, title, len, epNum, adddate, lvdate, fsize, csExtn, csExta, dst, minfo, lang);
 
 		if (!PathFormatter.fileExists(src)) {
 			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_INPUT_FILE_NOT_FOUND));

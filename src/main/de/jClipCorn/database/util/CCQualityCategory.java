@@ -1,5 +1,6 @@
 package de.jClipCorn.database.util;
 
+import de.jClipCorn.database.databaseElement.columnTypes.CCFSK;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.gui.resources.reftypes.IconRef;
@@ -9,8 +10,6 @@ import javax.swing.*;
 
 public class CCQualityCategory {
 	public static final CCQualityCategory UNSET = new CCQualityCategory(CategoryType.UNKOWN, LocaleBundle.getString("CCQualityCategory.Unknown"), Resources.ICN_TABLE_QUALITY_0, Str.Empty); //$NON-NLS-1$
-
-	public enum CategoryType { UNKOWN, LOW_QUALITY, OKAY, GOOD, VERY_GOOD, HIGH_DEFINITION }
 
 	private final CategoryType _type;
 	private final String _caption;
@@ -34,5 +33,10 @@ public class CCQualityCategory {
 
 	public String getTooltip() {
 		return _tooltip;
+	}
+
+	public static int compare(CCQualityCategory o1, CCQualityCategory o2) {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 }

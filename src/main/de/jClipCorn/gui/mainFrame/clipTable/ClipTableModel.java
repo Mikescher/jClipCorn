@@ -27,7 +27,7 @@ public class ClipTableModel extends AbstractTableModel implements TableModelRowC
 	public final static int COLUMN_TITLE = 1;
 	public final static int COLUMN_VIEWED = 2;
 	public final static int COLUMN_ZYKLUS = 3;
-	public final static int COLUMN_QUALITY = 4;
+	public final static int COLUMN_MEDIAINFO = 4;
 	public final static int COLUMN_LANGUAGE = 5;
 	public final static int COLUMN_GENRE = 6;
 	public final static int COLUMN_PARTCOUNT = 7;
@@ -129,7 +129,7 @@ public class ClipTableModel extends AbstractTableModel implements TableModelRowC
 				return mov.getExtendedViewedState();
 			case COLUMN_ZYKLUS: // Zyklus
 				return mov.getZyklus();
-			case COLUMN_QUALITY: // Quality
+			case COLUMN_MEDIAINFO: // MediaInfo
 				return mov.getMediaInfo().getCategory();
 			case COLUMN_LANGUAGE: // Language
 				return mov.getLanguage();
@@ -167,7 +167,7 @@ public class ClipTableModel extends AbstractTableModel implements TableModelRowC
 				return ser.getExtendedViewedState();
 			case COLUMN_ZYKLUS: // Zyklus
 				return new CCMovieZyklus();
-			case COLUMN_QUALITY: // Quality
+			case COLUMN_MEDIAINFO: // Quality
 				return ser.getMediaInfoCategory();
 			case COLUMN_LANGUAGE: // Language
 				return ser.getCommonOrAllLanguages();

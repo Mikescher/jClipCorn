@@ -13,7 +13,7 @@ public abstract class WatchHistoryElement implements Comparable<WatchHistoryElem
 	public abstract CCDateTime getTimestamp();
 	public abstract String getName();
 	public abstract BufferedImage getCover();
-	public abstract CCQuality getQuality();
+	public abstract CCMediaInfo getMediaInfo();
 	public abstract CCDBLanguageList getLanguage();
 	public abstract int getLength();
 	public abstract CCTagList getTags();

@@ -8,6 +8,7 @@ import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGenreList;
+import de.jClipCorn.database.databaseElement.columnTypes.CCMediaInfo;
 import de.jClipCorn.database.databaseElement.columnTypes.CCSingleOnlineReference;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.features.table.filter.AbstractCustomDatabaseElementFilter;
@@ -35,10 +36,6 @@ public class CustomSearchFilter extends AbstractCustomDatabaseElementFilter {
 				return true;
 			}
 		}
-		
-		if (e.getQuality().asString().equalsIgnoreCase(searchTerm)) {
-			return true;
-		}
 
 		if (e.isMovie()) {
 			for (CCDBLanguage lang : ((CCMovie)e).getLanguage()) {
@@ -46,6 +43,16 @@ public class CustomSearchFilter extends AbstractCustomDatabaseElementFilter {
 					return true;
 				}
 			}
+
+			CCMediaInfo minfo = ((CCMovie)e).getMediaInfo();
+			if (minfo.isSet())
+			{
+				if (minfo.getVideoCodec().equalsIgnoreCase(searchTerm)) return true;
+				if (minfo.getVideoFormat().equalsIgnoreCase(searchTerm)) return true;
+				if (minfo.getAudioCodec().equalsIgnoreCase(searchTerm)) return true;
+				if (minfo.getAudioFormat().equalsIgnoreCase(searchTerm)) return true;
+			}
+
 		} else if (e.isSeries()) {
 			for (CCDBLanguage lang : ((CCSeries)e).getAllLanguages()) {
 				if (lang.asString().equalsIgnoreCase(searchTerm)) {

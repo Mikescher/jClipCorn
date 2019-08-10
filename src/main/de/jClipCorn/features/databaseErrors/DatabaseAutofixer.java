@@ -281,22 +281,6 @@ public class DatabaseAutofixer {
 		return false;
 	}
 	
-	public static boolean fixError_Wrong_Quality(DatabaseError err) {
-		if (err.getElement1() instanceof CCMovie) {
-			((CCMovie)err.getElement1()).setQuality(CCQuality.calculateQuality(((CCMovie)err.getElement1()).getFilesize(), ((CCMovie)err.getElement1()).getLength(), ((CCMovie)err.getElement1()).getPartcount()));
-			return true;
-		} else if (err.getElement1() instanceof CCSeries) {
-			return false;
-		} else if (err.getElement1() instanceof CCSeason) {
-			return false;
-		} else if (err.getElement1() instanceof CCEpisode) {
-			((CCEpisode)err.getElement1()).setQuality(CCQuality.calculateQuality(((CCEpisode)err.getElement1()).getFilesize(), ((CCEpisode)err.getElement1()).getLength(), 1));
-			return true;
-		}
-		
-		return false;
-	}
-	
 	public static boolean fixError_Wrong_Filename(DatabaseError err) {
 		if (err.getElement1() instanceof CCMovie) {
 			CCMovie mov = ((CCMovie)err.getElement1());

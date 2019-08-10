@@ -38,7 +38,7 @@ public abstract class AbstractCustomFilter {
 	public final static int CUSTOMFILTERID_GENRE            = 6;
 	public final static int CUSTOMFILTERID_LANGUAGE         = 7;
 	public final static int CUSTOMFILTERID_ONLINESCORE      = 8;
-	public final static int CUSTOMFILTERID_QUALITY          = 9;
+	public final static int CUSTOMFILTERID_QUALITY__XXX     = 9;  // deprecated
 	public final static int CUSTOMFILTERID_USERSCORE        = 10;
 	public final static int CUSTOMFILTERID_TAG              = 11;
 	public final static int CUSTOMFILTERID_TITLE            = 12;
@@ -177,7 +177,7 @@ public abstract class AbstractCustomFilter {
 			new CustomLanguageFilter(),
 			new CustomExactLanguageFilter(),
 			new CustomOnlinescoreFilter(),
-			new CustomQualityFilter(),
+			//TODO MediaInfoFilters
 			new CustomUserScoreFilter(),
 			new CustomMainReferenceFilter(),
 			new CustomAnyReferenceFilter(),

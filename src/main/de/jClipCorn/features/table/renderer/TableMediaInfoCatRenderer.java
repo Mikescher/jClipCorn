@@ -3,10 +3,10 @@ package de.jClipCorn.features.table.renderer;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMediaInfo;
 import de.jClipCorn.database.util.CCQualityCategory;
 
-public class TableQualityRenderer extends TableRenderer {
+public class TableMediaInfoCatRenderer extends TableRenderer {
 	private static final long serialVersionUID = 5357005350195701739L;
 
-	public TableQualityRenderer() {
+	public TableMediaInfoCatRenderer() {
 		super();
 	}
 

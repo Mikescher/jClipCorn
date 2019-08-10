@@ -15,7 +15,6 @@ public interface ParseResultHandler {
 	void setZyklus(String mZyklusTitle);
 	void setZyklusNumber(int iRoman);
 	void setFilesize(long size);
-	void setQuality(CCQuality q);
 	void setYear(int y);
 	void setGenre(int gid, int movGenre);
 	void setFSK(int fsk);

@@ -196,20 +196,6 @@ public class StatisticsHelper {
 		return result;
 	}
 	
-	public static int[] getCountForAllQualities(CCStream<ICCPlayableElement> it) {
-		int[] result = new int[CCQuality.values().length];
-		
-		for (int i = 0; i < CCQuality.values().length; i++) {
-			result[i] = 0;
-		}
-		
-		for (ICCPlayableElement m : it) {
-			result[m.getQuality().asInt()]++;
-		}
-		
-		return result;
-	}
-	
 	public static int[] getCountForAllOnlinescores(CCStream<CCDatabaseElement> it) {
 		int[] result = new int[CCOnlineScore.values().length];
 		
@@ -469,26 +455,6 @@ public class StatisticsHelper {
 		return ls;
 	}
 	
-	public static int[][] getCumulativeQualityCountForAllDates(CCDate startDate, int count, CCStream<ICCPlayableElement> it) {
-		List<CCQuality> qualities = Arrays.asList(CCQuality.values());
-		
-		int[][] ls = new int[count][qualities.size()];
-		
-		for (int i = 0; i < count; i++) {
-			for (int j = 0; j < qualities.size(); j++) {
-				ls[i][j] = 0;
-			}
-		}
-		
-		for (ICCPlayableElement m : it) {
-			int pos = startDate.getDayDifferenceTo(m.getAddDate());
-
-			ls[pos][qualities.indexOf(m.getQuality())] += 1;
-		}
-		
-		return ls;
-	}
-
 	public static List<CCDatespan> getDatespanFromSeries(CCSeries series, int gravity, OrderMode omode) {
 		List<CCDatespan> span = new ArrayList<>();
 		

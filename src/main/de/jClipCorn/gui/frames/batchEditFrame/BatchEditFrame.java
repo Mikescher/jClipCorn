@@ -120,17 +120,11 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 	private JButton btnToday;
 	private ReadableTextField edPart;
 	private JLabel lblNewLabel;
-	private JComboBox<String> cbxQuality;
-	private JLabel lblQuality;
-	private JComboBox<String> cbxSideQuality;
-	private JButton btnSide_14;
 	private JButton btnOpen;
-	private JButton btnSide_15;
 	private JButton btnOmniparser;
 	private JButton btnAutoMeta;
 	private JSpinner spnSide_05;
 	private JButton btnIncEpisodeNumbers;
-	private JButton btnCalcQuality;
 	private JLabel label_1;
 	private LanguageChooser ctrlLang;
 	private LanguageChooser ctrlMultiLang;
@@ -146,7 +140,6 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 	private JLabel lblDirtyTitle;
 	private JLabel lblDirtyEpisodeNumber;
 	private JLabel lblDirtyFormat;
-	private JLabel lblDirtyQuality;
 	private JLabel lblDirtyLanguage;
 	private JLabel lblDirtyLength;
 	private JLabel lblDirtySize;
@@ -326,18 +319,6 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 
 		cbxFormat = new JComboBox<>();
 		pnlInfo.add(cbxFormat, "5, 6"); //$NON-NLS-1$
-		
-		lblDirtyQuality = new JLabel("*"); //$NON-NLS-1$
-		pnlInfo.add(lblDirtyQuality, "2, 8"); //$NON-NLS-1$
-
-		lblQuality = new JLabel(LocaleBundle.getString("AddMovieFrame.lblQuality.text")); //$NON-NLS-1$
-		pnlInfo.add(lblQuality, "3, 8"); //$NON-NLS-1$
-
-		cbxQuality = new JComboBox<>();
-		pnlInfo.add(cbxQuality, "5, 8"); //$NON-NLS-1$
-
-		btnCalcQuality = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnCalcQuality.text")); //$NON-NLS-1$
-		pnlInfo.add(btnCalcQuality, "7, 8, 3, 1"); //$NON-NLS-1$
 		
 		lblDirtyLanguage = new JLabel("*"); //$NON-NLS-1$
 		pnlInfo.add(lblDirtyLanguage, "2, 10"); //$NON-NLS-1$
@@ -589,16 +570,6 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 		cbxSideFormat = new JComboBox<>();
 		pnlEdit.add(cbxSideFormat, "8, 28, 3, 1"); //$NON-NLS-1$
 
-		btnSide_14 = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnSetEpQuality.text")); //$NON-NLS-1$
-		pnlEdit.add(btnSide_14, "2, 30, 5, 1"); //$NON-NLS-1$
-
-		cbxSideQuality = new JComboBox<>();
-		pnlEdit.add(cbxSideQuality, "8, 30, 3, 1"); //$NON-NLS-1$
-
-		btnSide_15 = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnCalcEpQuality.text")); //$NON-NLS-1$
-		pnlEdit.add(btnSide_15, "2, 34, 9, 1"); //$NON-NLS-1$
-		btnSide_15.addActionListener(arg0 -> massCalcQuality());
-
 		btnSideAutoLang = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnMassSetLang.title")); //$NON-NLS-1$
 		pnlEdit.add(btnSideAutoLang, "2, 36, 9, 1"); //$NON-NLS-1$
 		btnSideAutoLang.addActionListener(e -> massMediaInfoLang());
@@ -607,7 +578,6 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 		pnlEdit.add(btnSideAutoLen, "2, 38, 9, 1"); //$NON-NLS-1$
 
 		btnSideAutoLen.addActionListener(e -> massMediaInfoLen());
-		btnSide_14.addActionListener(e -> massSetQuality());
 		btnSide_13.addActionListener(e -> massSetFormat());
 		btnSide_12.addActionListener(e -> massSetLength());
 		btnSide_11.addActionListener(e -> massSetViewed(false));
@@ -630,7 +600,6 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 		spnSize.addChangeListener(arg0 -> updateFilesizeDisplay());
 		btnMediaInfo1.addActionListener(e -> parseCodecMetadata_Lang());
 		btnMediaInfoRaw.addActionListener(e -> showCodecMetadata());
-		btnCalcQuality.addActionListener(e -> cbxQuality.setSelectedIndex(CCQuality.calculateQuality((long)spnSize.getValue(), (int) spnLength.getValue(), 1).asInt()));
 	}
 
 	private void initFileChooser() {
@@ -654,7 +623,7 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 			List<UserDataProblem> problems = new ArrayList<>();
 
 			for (BatchEditEpisodeData episode : data) {
-				UserDataProblem.testEpisodeData(problems, target, episode.getSource(), episode.getTitle(), episode.getLength(), episode.getEpisodeNumber(), episode.getAddDate(), episode.getViewedHistory(), episode.getFilesize().getBytes(), episode.getFormat().asString(), episode.getFormat().asStringAlt(), episode.getPart(), episode.getQuality().asInt(), episode.getLanguage());
+				UserDataProblem.testEpisodeData(problems, target, episode.getSource(), episode.getTitle(), episode.getLength(), episode.getEpisodeNumber(), episode.getAddDate(), episode.getViewedHistory(), episode.getFilesize().getBytes(), episode.getFormat().asString(), episode.getFormat().asStringAlt(), episode.getPart(), episode.getSource().getMediaInfo()/*TODO*/, episode.getLanguage());
 			}
 
 			if (problems.size() > 0) {
@@ -690,9 +659,6 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 	}
 
 	private void setDefaultValues() {
-		cbxQuality.setModel(new DefaultComboBoxModel<>(CCQuality.getWrapper().getList()));
-		cbxSideQuality.setModel(new DefaultComboBoxModel<>(CCQuality.getWrapper().getList()));
-
 		cbxFormat.setModel(new DefaultComboBoxModel<>(CCFileFormat.getWrapper().getList()));
 		cbxSideFormat.setModel(new DefaultComboBoxModel<>(CCFileFormat.getWrapper().getList()));
 	}
@@ -746,7 +712,6 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 			episode.setFilesize(new CCFileSize((long) spnSize.getValue()));
 			episode.setAddDate(spnAddDate.getValue());
 			episode.setPart(edPart.getText());
-			episode.setQuality(CCQuality.getWrapper().findOrException(cbxQuality.getSelectedIndex()));
 			episode.setLanguage(ctrlLang.getValue());
 		} catch (CCFormatException e) {
 			return false;
@@ -772,13 +737,12 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 			CCDBLanguageList lang = ctrlLang.getValue();
 	
 			long fsize = (long) spnSize.getValue();
-			int quality = cbxQuality.getSelectedIndex();
 			String csExtn = CCFileFormat.getWrapper().findOrException(cbxFormat.getSelectedIndex()).asString();
 			String csExta = CCFileFormat.getWrapper().findOrException(cbxFormat.getSelectedIndex()).asStringAlt();
 	
 			String part = edPart.getText();
 	
-			UserDataProblem.testEpisodeData(ret, target, sel.getSource(), title, len, epNum, adddate, lvdate, fsize, csExtn, csExta, part, quality, lang);
+			UserDataProblem.testEpisodeData(ret, target, sel.getSource(), title, len, epNum, adddate, lvdate, fsize, csExtn, csExta, part, sel.getSource().getMediaInfo()/*TODO*/, lang);
 	
 			return ret.isEmpty();
 		}
@@ -842,7 +806,6 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 			spnSize.setValue(episode.getFilesize().getBytes());
 			spnAddDate.setValue(episode.getAddDate());
 			edPart.setText(episode.getPart());
-			cbxQuality.setSelectedIndex(episode.getQuality().asInt());
 			ctrlLang.setValue(episode.getLanguage());
 
 			lblDirtyTitle.setVisible(episode.titleDirty);
@@ -852,7 +815,6 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 			lblDirtySize.setVisible(episode.filesizeDirty);
 			lblDirtyAddDate.setVisible(episode.addDateDirty);
 			lblDirtyPath.setVisible(episode.partDirty);
-			lblDirtyQuality.setVisible(episode.qualityDirty);
 			lblDirtyLanguage.setVisible(episode.languageDirty);
 
 			testPart();
@@ -1040,17 +1002,6 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 		updateList();
 	}
 
-	private void massSetQuality() {
-		CCQuality qq = CCQuality.getWrapper().findOrNull(cbxSideQuality.getSelectedIndex());
-		if (qq == null) return;
-		
-		lsEpisodes.setSelectedIndex(-1);
-
-		for (BatchEditEpisodeData ep : data) ep.setQuality(qq);
-
-		updateList();
-	}
-
 	private void massSetLanguage() {
 		lsEpisodes.setSelectedIndex(-1);
 
@@ -1059,14 +1010,6 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 		updateList();
 	}
 	
-	private void massCalcQuality() {
-		lsEpisodes.setSelectedIndex(-1);
-
-		for (BatchEditEpisodeData ep : data) ep.setQuality(CCQuality.calculateQuality(ep.getFilesize(), ep.getLength(), 1));
-
-		updateList();
-	}
-
 	@Override
 	public void updateTitles(ArrayList<String> newTitles) {
 		lsEpisodes.setSelectedIndex(-1);
@@ -1166,8 +1109,6 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 			ep.setLength(len);
 			
 			ep.setFormat(CCFileFormat.getMovieFormatOrDefault(PathFormatter.getExtension(PathFormatter.fromCCPath(ep.getPart()))));
-			
-			ep.setQuality(CCQuality.calculateQuality(ep.getFilesize(), ep.getLength(), 1));
 		}
 		
 		//####################################

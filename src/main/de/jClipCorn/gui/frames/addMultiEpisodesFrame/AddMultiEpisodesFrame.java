@@ -556,7 +556,7 @@ public class AddMultiEpisodesFrame extends JFrame {
 							newEp.setEpisodeNumber(vm.EpisodeNumber);
 							newEp.setViewed(false);
 							newEp.setFormat(vm.getFormat());
-							newEp.setQuality(vm.getQuality());
+							//newEp.setMediaInfo(vm.getMediaInfo());//TODO
 							newEp.setLength(vm.Length);
 							newEp.setFilesize(vm.Filesize);
 							newEp.setAddDate(vm.getAddDate());

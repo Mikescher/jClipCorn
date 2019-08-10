@@ -17,6 +17,7 @@ import javax.swing.SwingConstants;
 import de.jClipCorn.Main;
 import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGroup;
+import de.jClipCorn.database.util.CCQualityCategory;
 import de.jClipCorn.features.actionTree.menus.impl.PreviewMovieMenuBar;
 import de.jClipCorn.gui.guiComponents.CoverLabel;
 import de.jClipCorn.gui.guiComponents.OnlineRefButton;
@@ -328,8 +329,10 @@ public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener 
 		
 		lblViewed.setIcon(movie.isViewed()?Resources.ICN_TABLE_VIEWED_TRUE.get():null);
 		
-		lbl_Quality.setIcon(movie.getQuality().getIcon());
-		lbl_Quality.setText(movie.getQuality().asString());
+		CCQualityCategory qcat = movie.getMediaInfo().getCategory();
+		lbl_Quality.setIcon(qcat.getIcon());
+		lbl_Quality.setText(qcat.getCaption());
+		lbl_Quality.setToolTipText(qcat.getTooltip());
 		
 		lbl_Language.setValue(movie.getLanguage());
 		

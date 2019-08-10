@@ -218,9 +218,27 @@ public class SearchFrame extends JFrame {
 			}
 			if (movFound) continue;
 
-			if (mov.getQuality().asString().equalsIgnoreCase(searchString)) {
-				addToList(mov);
-				continue;
+			if (mov.getMediaInfo().isSet())
+			{
+				if (mov.getMediaInfo().getVideoCodec().equalsIgnoreCase(searchString)) {
+					addToList(mov);
+					continue;
+				}
+
+				if (mov.getMediaInfo().getVideoFormat().equalsIgnoreCase(searchString)) {
+					addToList(mov);
+					continue;
+				}
+
+				if (mov.getMediaInfo().getAudioCodec().equalsIgnoreCase(searchString)) {
+					addToList(mov);
+					continue;
+				}
+
+				if (mov.getMediaInfo().getAudioFormat().equalsIgnoreCase(searchString)) {
+					addToList(mov);
+					continue;
+				}
 			}
 
 		}
@@ -255,9 +273,27 @@ public class SearchFrame extends JFrame {
 					}
 					if (epiFound) continue;
 
-					if (epi.getQuality().asString().equalsIgnoreCase(searchString)) {
-						addToList(epi);
-						continue;
+					if (epi.getMediaInfo().isSet())
+					{
+						if (epi.getMediaInfo().getVideoCodec().equalsIgnoreCase(searchString)) {
+							addToList(epi);
+							continue;
+						}
+
+						if (epi.getMediaInfo().getVideoFormat().equalsIgnoreCase(searchString)) {
+							addToList(epi);
+							continue;
+						}
+
+						if (epi.getMediaInfo().getAudioCodec().equalsIgnoreCase(searchString)) {
+							addToList(epi);
+							continue;
+						}
+
+						if (epi.getMediaInfo().getAudioFormat().equalsIgnoreCase(searchString)) {
+							addToList(epi);
+							continue;
+						}
 					}
 				}
 				

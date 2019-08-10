@@ -250,7 +250,7 @@ public class CCMediaInfo {
 
 	@SuppressWarnings("nls")
 	private String getCategoryTooltip() {
-		return Str.format("{0}x{1} @ {2} FPS ({3} kb/s)", width, height, getNormalizedFPS(), getNormalizedBitrate());
+		return Str.format("{0,number,#}x{1,number,#} @ {2} FPS ({3,number,#} kb/s)", width, height, getNormalizedFPS(), getNormalizedBitrate());
 	}
 
 	private int getNormalizedFPS() {

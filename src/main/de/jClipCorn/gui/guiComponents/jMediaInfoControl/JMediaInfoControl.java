@@ -1,4 +1,4 @@
-package de.jClipCorn.gui.guiComponents;
+package de.jClipCorn.gui.guiComponents.jMediaInfoControl;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -14,8 +14,11 @@ import javax.swing.JPanel;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMediaInfo;
 import de.jClipCorn.gui.frames.editMediaInfoDialog.EditMediaInfoDialog;
 import de.jClipCorn.gui.frames.editMediaInfoDialog.MediaInfoResultHandler;
+import de.jClipCorn.gui.guiComponents.ReadableTextField;
+import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.Str;
+import de.jClipCorn.util.lambda.Func0to1;
 import de.jClipCorn.util.mediaquery.MediaQueryResult;
 
 public class JMediaInfoControl extends JPanel implements MediaInfoResultHandler {
@@ -30,7 +33,12 @@ public class JMediaInfoControl extends JPanel implements MediaInfoResultHandler 
 
 	private List<ActionListener> _changeListener = new ArrayList<>();
 
-	public JMediaInfoControl() {
+	private final Func0to1<String> _pathProvider;
+
+	public JMediaInfoControl(Func0to1<String> pathProvider) {
+		super();
+		_pathProvider = pathProvider;
+
 		initGUI();
 		updateUIControls();
 	}
@@ -42,21 +50,24 @@ public class JMediaInfoControl extends JPanel implements MediaInfoResultHandler 
 		add(btnEdit, BorderLayout.EAST);
 		btnEdit.addActionListener(e ->
 		{
-			if (value != null) new EditMediaInfoDialog(JMediaInfoControl.this, value, JMediaInfoControl.this);
-			else if (queryResult != null) new EditMediaInfoDialog(JMediaInfoControl.this, queryResult, JMediaInfoControl.this);
-			else new EditMediaInfoDialog(JMediaInfoControl.this, JMediaInfoControl.this);
+			if (value != null)
+				new EditMediaInfoDialog(JMediaInfoControl.this, _pathProvider.invoke(), value, JMediaInfoControl.this).setVisible(true);
+			else if (queryResult != null)
+				new EditMediaInfoDialog(JMediaInfoControl.this, _pathProvider.invoke(), queryResult, JMediaInfoControl.this).setVisible(true);
+			else
+				new EditMediaInfoDialog(JMediaInfoControl.this, _pathProvider.invoke(), JMediaInfoControl.this).setVisible(true);
 		});
 		btnEdit.setMargin(new Insets(2, 4, 2, 4));
 		btnEdit.setFocusable(false);
 		
 		edit = new ReadableTextField();
-		edit.setEditable(false);
 		add(edit, BorderLayout.CENTER);
 		
 		image = new JLabel();
-		image.setPreferredSize(new Dimension(16, 16));
-		image.setSize(new Dimension(16, 16));
-		image.setMinimumSize(new Dimension(16, 16));
+		image.setPreferredSize(new Dimension(18, 16));
+		image.setSize(new Dimension(18, 16));
+		image.setMinimumSize(new Dimension(18, 16));
+		image.setIconTextGap(2);
 		add(image, BorderLayout.WEST);
 	}
 
@@ -77,8 +88,8 @@ public class JMediaInfoControl extends JPanel implements MediaInfoResultHandler 
 	public void setValue(CCMediaInfo ref) {
 		if (!ref.isSet()) ref = null;
 		
-		for (ActionListener ac : _changeListener) ac.actionPerformed(new ActionEvent(ref, -1, Str.Empty));
-		
+		for (ActionListener ac : _changeListener) ac.actionPerformed(new ActionEvent(ref==null ? CCMediaInfo.EMPTY : ref, -1, Str.Empty));
+
 		value = ref;
 		queryResult = null;
 
@@ -86,12 +97,27 @@ public class JMediaInfoControl extends JPanel implements MediaInfoResultHandler 
 	}
 	
 	public void setValue(MediaQueryResult r) {
-		for (ActionListener ac : _changeListener) ac.actionPerformed(new ActionEvent(null, -1, Str.Empty));
-		
-		value = null;
-		queryResult = r;
+		CCMediaInfo cc = r.toMediaInfo();
+		if (cc.isSet())
+		{
+			for (ActionListener ac : _changeListener) ac.actionPerformed(new ActionEvent(cc, -1, Str.Empty));
 
-		updateUIControls();
+			value = cc;
+			queryResult = r;
+
+			updateUIControls();
+		}
+		else
+		{
+			for (ActionListener ac : _changeListener) ac.actionPerformed(new ActionEvent(CCMediaInfo.EMPTY, -1, Str.Empty));
+
+			value = null;
+			queryResult = r;
+
+			updateUIControls();
+		}
+
+
 	}
 	
 	@Override
@@ -103,10 +129,10 @@ public class JMediaInfoControl extends JPanel implements MediaInfoResultHandler 
 	
 	private void updateUIControls() {
 		if (value == null) {
-			edit.setText(Str.Empty);
+			if (queryResult == null) edit.setText(Str.Empty);
+			else edit.setText(LocaleBundle.getString("JMediaInfoControl.partial")); //$NON-NLS-1$
 			image.setIcon(Resources.ICN_TABLE_QUALITY_0.get());
-		}
-		else {
+		} else {
 			edit.setText(value.getCategory().getTooltip());
 			image.setIcon(value.getCategory().getIcon());
 		}

@@ -156,7 +156,7 @@ public class CCSQLResultSet {
 		Tuple<CCSQLType, Integer> idx = _statement.getSelectFieldIndex(col);
 
 		if (idx == null) throw new SQLWrapperException("Field ["+col+"] not found in CCSQLStatement");
-		if (!idx.Item1.isCallableAsLong()) throw new SQLWrapperException("Field ["+col+"] has wrong type");
+		if (!idx.Item1.isCallableAsString()) throw new SQLWrapperException("Field ["+col+"] has wrong type");
 
 		String v = _data.getString(idx.Item2);
 		if (_data.wasNull()) return null;

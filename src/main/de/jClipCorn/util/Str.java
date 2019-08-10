@@ -1,6 +1,7 @@
 package de.jClipCorn.util;
 
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
 
 import org.apache.commons.codec.binary.Base64;
@@ -9,7 +10,7 @@ import org.apache.commons.codec.binary.Base64;
 public final class Str {
 	public final static String Empty = "";
 
-	public static Charset UTF8 = Charset.forName("UTF-8");
+	public static Charset UTF8 = StandardCharsets.UTF_8;
 	
 	public static String format(String fmt, Object... data) {
 		return MessageFormat.format(fmt, data);

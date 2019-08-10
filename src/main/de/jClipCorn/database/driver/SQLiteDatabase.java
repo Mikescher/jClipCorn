@@ -15,6 +15,7 @@ import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.FileLockManager;
 import de.jClipCorn.util.helper.SimpleFileUtils;
 import de.jClipCorn.util.parser.TurbineParser;
+import org.sqlite.SQLiteException;
 
 @SuppressWarnings("nls")
 public class SQLiteDatabase extends GenericDatabase {
@@ -132,11 +133,23 @@ public class SQLiteDatabase extends GenericDatabase {
 		// Set pragmas
 		executeSQLThrow("PRAGMA recursive_triggers = true"); // otherwise "REPLACE INTO x" doesn't work with the history trigger
 
-		// Test if newly created
-		executeSQLThrow("SELECT * FROM " + Statements.TAB_TEMP + " LIMIT 1");
+		try
+		{
+			// Test if newly created
+			executeSQLThrow("SELECT * FROM " + Statements.TAB_TEMP + " LIMIT 1");
 
-		// Test if writeable
-		executeSQLThrow("REPLACE INTO " + Statements.TAB_TEMP + " (" + Statements.COL_TEMP_KEY.Name + ", " + Statements.COL_TEMP_VALUE.Name + ") VALUES ('" + "RAND" + "', '" + Math.random() + "')");
+			// Test if writeable
+			executeSQLThrow("REPLACE INTO " + Statements.TAB_TEMP + " (" + Statements.COL_TEMP_KEY.Name + ", " + Statements.COL_TEMP_VALUE.Name + ") VALUES ('" + "RAND" + "', '" + Math.random() + "')");
+		}
+		catch (SQLiteException e)
+		{
+			if (e.getMessage().contains("no such table: TEMP"))
+			{
+				if (Integer.parseInt(querySingleStringSQL("SELECT IVALUE FROM INFO WHERE IKEY='VERSION_DB'", 0)) < 14) return; // before there was a TEMP table - will be migrated
+			}
+
+			throw e;
+		}
 	}
 
 	@Override

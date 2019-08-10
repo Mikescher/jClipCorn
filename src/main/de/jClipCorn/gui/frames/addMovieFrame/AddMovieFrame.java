@@ -49,7 +49,7 @@ import de.jClipCorn.features.userdataProblem.UserDataProblem;
 import de.jClipCorn.features.userdataProblem.UserDataProblemHandler;
 import de.jClipCorn.util.stream.CCStreams;
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import de.jClipCorn.gui.guiComponents.JMediaInfoControl;
+import de.jClipCorn.gui.guiComponents.jMediaInfoControl.JMediaInfoControl;
 
 public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDataProblemHandler {
 	private static final long serialVersionUID = -5912378114066741528L;
@@ -147,9 +147,11 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 	private JButton btnMediaInfo2;
 	private JLabel lblLenAuto;
 	private JProgressBar pbLanguageLoad;
+	private JMediaInfoControl ctrlMediaInfo;
 
 	private volatile boolean _isDirtyLanguage = false;
-	private JMediaInfoControl ctrlMediaInfo;
+	private volatile boolean _isDirtyMediaInfo = false;
+	private JButton btnQueryMediaInfo;
 
 	/**
 	 * @wbp.parser.constructor
@@ -185,6 +187,8 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		setEnabledAll(false);
 
 		setLocationRelativeTo(owner);
+
+		btnChoose0.setEnabled(true);
 	}
 
 	private void initGUI() {
@@ -576,11 +580,19 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		pbLanguageLoad = new JProgressBar();
 		pbLanguageLoad.setVisible(false);
 		pbLanguageLoad.setIndeterminate(true);
-		pbLanguageLoad.setBounds(319, 434, 57, 20);
+		pbLanguageLoad.setBounds(344, 434, 32, 20);
 		contentPane.add(pbLanguageLoad);
 		
-		ctrlMediaInfo = new JMediaInfoControl();
+		btnQueryMediaInfo = new JButton(Resources.ICN_MENUBAR_UPDATECODECDATA.get16x16());
+		btnQueryMediaInfo.setToolTipText("MediaInfo"); //$NON-NLS-1$
+		btnMediaInfo2.addActionListener(e -> getMediaInfo());
+		btnQueryMediaInfo.setEnabled(false);
+		btnQueryMediaInfo.setBounds(319, 433, 22, 22);
+		contentPane.add(btnQueryMediaInfo);
+		
+		ctrlMediaInfo = new JMediaInfoControl(() -> Str.isNullOrWhitespace(ed_Part0.getText()) ? null : PathFormatter.fromCCPath(ed_Part0.getText()));
 		ctrlMediaInfo.setBounds(95, 434, 212, 20);
+		ctrlMediaInfo.addChangeListener(new ActionLambdaAdapter(() -> { _isDirtyMediaInfo = true; }));
 		contentPane.add(ctrlMediaInfo);
 	}
 	
@@ -787,6 +799,8 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		edGroups.setEnabled(e);
 		btnMediaInfo.setEnabled(e);
 		btnMediaInfo2.setEnabled(e);
+		ctrlMediaInfo.setEnabled(e);
+		btnQueryMediaInfo.setEnabled(e);
 	}
 	
 	private void onBtnChooseClicked(int cNmbr) {
@@ -803,9 +817,15 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 			parseFromFile(videoFileChooser.getSelectedFile().getAbsolutePath());
 			
 			firstChooseClick = false;
+
+			updateFilesize();
 		}
-		
-		updateFilesize();
+		else
+		{
+			updateFilesize();
+
+			runMediaInfoInBackground();
+		}
 	}
 	
 	private void parseFromFile(String fp) {
@@ -1172,6 +1192,36 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		}
 	}
 
+	private void getMediaInfo() {
+		String mqp = CCProperties.getInstance().PROP_PLAY_MEDIAINFO_PATH.getValue();
+		if (Str.isNullOrWhitespace(mqp) || !new File(mqp).exists() || !new File(mqp).isFile() || !new File(mqp).canExecute()) {
+			DialogHelper.showLocalError(this, "Dialogs.MediaInfoNotFound"); //$NON-NLS-1$
+			return;
+		}
+
+		try {
+			List<MediaQueryResult> dat = new ArrayList<>();
+
+			if (!Str.isNullOrWhitespace(ed_Part0.getText())) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(ed_Part0.getText())));
+			if (!Str.isNullOrWhitespace(ed_Part1.getText())) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(ed_Part1.getText())));
+			if (!Str.isNullOrWhitespace(ed_Part2.getText())) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(ed_Part2.getText())));
+			if (!Str.isNullOrWhitespace(ed_Part3.getText())) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(ed_Part3.getText())));
+			if (!Str.isNullOrWhitespace(ed_Part4.getText())) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(ed_Part4.getText())));
+			if (!Str.isNullOrWhitespace(ed_Part5.getText())) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(ed_Part5.getText())));
+
+			if (dat.isEmpty()) {
+				lblLenAuto.setText(Str.Empty);
+				DialogHelper.showLocalError(this, "Dialogs.MediaInfoEmpty"); //$NON-NLS-1$
+				return;
+			}
+
+			ctrlMediaInfo.setValue(dat.get(0));
+
+		} catch (IOException | MediaQueryException e) {
+			GenericTextDialog.showText(this, getTitle(), e.getMessage() + "\n\n" + ExceptionUtils.getMessage(e) + "\n\n" + ExceptionUtils.getStackTrace(e), false); //$NON-NLS-1$ //$NON-NLS-2$
+		}
+	}
+
 	private void showCodecMetadata() {
 		String mqp = CCProperties.getInstance().PROP_PLAY_MEDIAINFO_PATH.getValue();
 		if (Str.isNullOrWhitespace(mqp) || !new File(mqp).exists() || !new File(mqp).isFile() || !new File(mqp).canExecute()) {
@@ -1204,6 +1254,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		String p5 = ed_Part5.getText();
 
 		_isDirtyLanguage = false;
+		_isDirtyMediaInfo = false;
 
 		new Thread(() -> {
 
@@ -1222,7 +1273,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 
 				if (dat.isEmpty()) return;
 
-				SwingUtilities.invokeLater(() -> ctrlMediaInfo.setValue(dat.get(0)));//TODO wrong when multiple files
+				if (!_isDirtyMediaInfo) SwingUtilities.invokeLater(() -> ctrlMediaInfo.setValue(dat.get(0)));
 				
 				int dur = (int) (CCStreams.iterate(dat).any(d -> d.Duration == -1) ? -1 : (CCStreams.iterate(dat).sumDouble(d -> d.Duration)/60));
 				if (dur != -1) SwingUtilities.invokeLater(() -> lblLenAuto.setText("("+dur+")")); //$NON-NLS-1$ //$NON-NLS-2$

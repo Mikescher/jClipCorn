@@ -46,7 +46,7 @@ public class MediaQueryRunner {
 			CCXMLElement media = root.getFirstChildOrThrow("media");
 			if (media == null) throw new InnerMediaQueryException("no media xml element");
 
-			return MediaQueryResult.parse(attr.creationTime().toMillis(), attr.lastModifiedTime().toMillis(), media);
+			return MediaQueryResult.parse(mqxml, attr.creationTime().toMillis(), attr.lastModifiedTime().toMillis(), media);
 		} catch (InnerMediaQueryException e) {
 			throw new MediaQueryException(e.getMessage(), mqxml);
 		} catch (CCXMLException e) {

@@ -6,6 +6,7 @@ import javax.swing.*;
 
 import de.jClipCorn.database.databaseElement.columnTypes.CCMediaInfo;
 import de.jClipCorn.features.log.CCLog;
+import de.jClipCorn.gui.frames.genericTextDialog.GenericTextDialog;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.Str;
@@ -82,6 +83,7 @@ public class EditMediaInfoDialog extends JDialog {
 	private JLabel lblHintAudioCodec;
 	private JLabel lblHintAudioSamplerate;
 	private JButton btnApply;
+	private JButton btnShow;
 
 	private MediaQueryResult _mqData = null;
 	private MediaInfoResultHandler _handler = null;
@@ -103,12 +105,13 @@ public class EditMediaInfoDialog extends JDialog {
 		updateHints();
 	}
 
-	public EditMediaInfoDialog(Component owner, MediaQueryResult r, MediaInfoResultHandler h) {
+	public EditMediaInfoDialog(Component owner, String path, MediaQueryResult r, MediaInfoResultHandler h) {
 		super();
 		_mqData = r;
 		_handler = h;
 		
 		initGUI();
+		edFilepath.setText(path == null ? Str.Empty : path);
 
 		setLocationRelativeTo(owner);
 		
@@ -116,11 +119,12 @@ public class EditMediaInfoDialog extends JDialog {
 		setValues(r);
 	}
 
-	public EditMediaInfoDialog(Component owner, CCMediaInfo r, MediaInfoResultHandler h) {
+	public EditMediaInfoDialog(Component owner, String path, CCMediaInfo r, MediaInfoResultHandler h) {
 		super();
 		_handler = h;
 		
 		initGUI();
+		edFilepath.setText(path == null ? Str.Empty : path);
 
 		setLocationRelativeTo(owner);
 		
@@ -128,11 +132,12 @@ public class EditMediaInfoDialog extends JDialog {
 		setValues(r);
 	}
 
-	public EditMediaInfoDialog(Component owner, MediaInfoResultHandler h) {
+	public EditMediaInfoDialog(Component owner, String path, MediaInfoResultHandler h) {
 		super();
 		_handler = h;
 		
 		initGUI();
+		edFilepath.setText(path == null ? Str.Empty : path);
 
 		setLocationRelativeTo(owner);
 		
@@ -172,6 +177,8 @@ public class EditMediaInfoDialog extends JDialog {
 				FormSpecs.RELATED_GAP_COLSPEC,
 				ColumnSpec.decode("16dlu"),
 				FormSpecs.RELATED_GAP_COLSPEC,
+				FormSpecs.DEFAULT_COLSPEC,
+				FormSpecs.RELATED_GAP_COLSPEC,
 				FormSpecs.DEFAULT_COLSPEC,},
 			new RowSpec[] {
 				FormSpecs.PREF_ROWSPEC,}));
@@ -187,7 +194,12 @@ public class EditMediaInfoDialog extends JDialog {
 		btnApply = new JButton(LocaleBundle.getString("UIGeneric.btnApply.text"));
 		btnApply.setEnabled(false);
 		btnApply.addActionListener((e) -> applyHints());
-		panel_3.add(btnApply, "5, 1");
+		
+		btnShow = new JButton(LocaleBundle.getString("EditMediaInfoDialog.btnShow"));
+		btnShow.setEnabled(false);
+		btnShow.addActionListener((e) -> showMediaInfo());
+		panel_3.add(btnShow, "5, 1, fill, default");
+		panel_3.add(btnApply, "7, 1");
 		
 		pnlGeneral = new JPanel();
 		pnlGeneral.setBorder(new TitledBorder(null, LocaleBundle.getString("EditMediaInfoDialog.header1"), TitledBorder.LEADING, TitledBorder.TOP, null, null));
@@ -198,7 +210,7 @@ public class EditMediaInfoDialog extends JDialog {
 				FormSpecs.RELATED_GAP_COLSPEC,
 				ColumnSpec.decode("1dlu:grow"),
 				FormSpecs.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("40dlu"),
+				ColumnSpec.decode("55dlu"),
 				FormSpecs.RELATED_GAP_COLSPEC,},
 			new RowSpec[] {
 				FormSpecs.RELATED_GAP_ROWSPEC,
@@ -240,7 +252,7 @@ public class EditMediaInfoDialog extends JDialog {
 		pnlGeneral.add(ctrlFilesize, "4, 6");
 		
 		lblHintFilesize = new JLabel("");
-		pnlGeneral.add(lblHintFilesize, "6, 6, fill, default");
+		pnlGeneral.add(lblHintFilesize, "6, 6, fill, fill");
 		
 		lblGeneralDuration = new JLabel(LocaleBundle.getString("EditMediaInfoDialog.Duration"));
 		pnlGeneral.add(lblGeneralDuration, "2, 8, right, default");
@@ -250,7 +262,7 @@ public class EditMediaInfoDialog extends JDialog {
 		pnlGeneral.add(ctrlDuration, "4, 8");
 		
 		lblHintDuration = new JLabel("");
-		pnlGeneral.add(lblHintDuration, "6, 8, fill, default");
+		pnlGeneral.add(lblHintDuration, "6, 8, fill, fill");
 		
 		lblGeneralBitrate = new JLabel(LocaleBundle.getString("EditMediaInfoDialog.Bitrate"));
 		pnlGeneral.add(lblGeneralBitrate, "2, 10, right, default");
@@ -259,7 +271,7 @@ public class EditMediaInfoDialog extends JDialog {
 		pnlGeneral.add(ctrlBitrate, "4, 10");
 		
 		lblHintBitrate = new JLabel("");
-		pnlGeneral.add(lblHintBitrate, "6, 10");
+		pnlGeneral.add(lblHintBitrate, "6, 10, fill, fill");
 		
 		pnlVideo = new JPanel();
 		pnlVideo.setBorder(new TitledBorder(null, LocaleBundle.getString("EditMediaInfoDialog.header2"), TitledBorder.LEADING, TitledBorder.TOP, null, null));
@@ -270,7 +282,7 @@ public class EditMediaInfoDialog extends JDialog {
 				FormSpecs.RELATED_GAP_COLSPEC,
 				ColumnSpec.decode("1dlu:grow"),
 				FormSpecs.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("40dlu"),
+				ColumnSpec.decode("55dlu"),
 				FormSpecs.RELATED_GAP_COLSPEC,},
 			new RowSpec[] {
 				FormSpecs.RELATED_GAP_ROWSPEC,
@@ -296,7 +308,7 @@ public class EditMediaInfoDialog extends JDialog {
 		ctrlVideoFormat.setColumns(10);
 		
 		lblHintVideoFormat = new JLabel("");
-		pnlVideo.add(lblHintVideoFormat, "6, 2");
+		pnlVideo.add(lblHintVideoFormat, "6, 2, fill, fill");
 		
 		lblVideoWidth = new JLabel(LocaleBundle.getString("EditMediaInfoDialog.Width"));
 		pnlVideo.add(lblVideoWidth, "2, 4, right, default");
@@ -305,7 +317,7 @@ public class EditMediaInfoDialog extends JDialog {
 		pnlVideo.add(ctrlVideoWidth, "4, 4");
 		
 		lblHintVideoWidth = new JLabel("");
-		pnlVideo.add(lblHintVideoWidth, "6, 4");
+		pnlVideo.add(lblHintVideoWidth, "6, 4, fill, fill");
 		
 		lblVideoHeight = new JLabel(LocaleBundle.getString("EditMediaInfoDialog.Height"));
 		pnlVideo.add(lblVideoHeight, "2, 6, right, default");
@@ -314,7 +326,7 @@ public class EditMediaInfoDialog extends JDialog {
 		pnlVideo.add(ctrlVideoHeight, "4, 6");
 		
 		lblHintVideoHeight = new JLabel("");
-		pnlVideo.add(lblHintVideoHeight, "6, 6");
+		pnlVideo.add(lblHintVideoHeight, "6, 6, fill, fill");
 		
 		lblVideoFramerate = new JLabel(LocaleBundle.getString("EditMediaInfoDialog.Framerate"));
 		pnlVideo.add(lblVideoFramerate, "2, 8, right, default");
@@ -324,7 +336,7 @@ public class EditMediaInfoDialog extends JDialog {
 		pnlVideo.add(ctrlVideoFramerate, "4, 8");
 		
 		lblHintVideoFramerate = new JLabel("");
-		pnlVideo.add(lblHintVideoFramerate, "6, 8");
+		pnlVideo.add(lblHintVideoFramerate, "6, 8, fill, fill");
 		
 		lblVideoBitdepth = new JLabel(LocaleBundle.getString("EditMediaInfoDialog.Bitdepth"));
 		pnlVideo.add(lblVideoBitdepth, "2, 10, right, default");
@@ -334,7 +346,7 @@ public class EditMediaInfoDialog extends JDialog {
 		pnlVideo.add(ctrlVideoBitdepth, "4, 10");
 		
 		lblHintVideoBitdepth = new JLabel("");
-		pnlVideo.add(lblHintVideoBitdepth, "6, 10");
+		pnlVideo.add(lblHintVideoBitdepth, "6, 10, fill, fill");
 		
 		lblVideoFramecount = new JLabel(LocaleBundle.getString("EditMediaInfoDialog.Framecount"));
 		pnlVideo.add(lblVideoFramecount, "2, 12, right, default");
@@ -343,7 +355,7 @@ public class EditMediaInfoDialog extends JDialog {
 		pnlVideo.add(ctrlVideoFramecount, "4, 12");
 		
 		lblHintVideoFramecount = new JLabel("");
-		pnlVideo.add(lblHintVideoFramecount, "6, 12");
+		pnlVideo.add(lblHintVideoFramecount, "6, 12, fill, fill");
 		
 		lblVideoCodec = new JLabel(LocaleBundle.getString("EditMediaInfoDialog.Codec"));
 		pnlVideo.add(lblVideoCodec, "2, 14, right, default");
@@ -353,7 +365,7 @@ public class EditMediaInfoDialog extends JDialog {
 		ctrlVideoCodec.setColumns(10);
 		
 		lblHintVideoCodec = new JLabel("");
-		pnlVideo.add(lblHintVideoCodec, "6, 14");
+		pnlVideo.add(lblHintVideoCodec, "6, 14, fill, fill");
 		
 		pnlAudio = new JPanel();
 		pnlAudio.setBorder(new TitledBorder(null, LocaleBundle.getString("EditMediaInfoDialog.header3"), TitledBorder.LEADING, TitledBorder.TOP, null, null));
@@ -364,7 +376,7 @@ public class EditMediaInfoDialog extends JDialog {
 				FormSpecs.RELATED_GAP_COLSPEC,
 				ColumnSpec.decode("1dlu:grow"),
 				FormSpecs.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("40dlu"),
+				ColumnSpec.decode("55dlu"),
 				FormSpecs.RELATED_GAP_COLSPEC,},
 			new RowSpec[] {
 				FormSpecs.RELATED_GAP_ROWSPEC,
@@ -384,7 +396,7 @@ public class EditMediaInfoDialog extends JDialog {
 		ctrlAudioFormat.setColumns(10);
 		
 		lblHintAudioFormat = new JLabel("");
-		pnlAudio.add(lblHintAudioFormat, "6, 2, fill, default");
+		pnlAudio.add(lblHintAudioFormat, "6, 2, fill, fill");
 		
 		lblAudioChannels = new JLabel(LocaleBundle.getString("EditMediaInfoDialog.Channels"));
 		pnlAudio.add(lblAudioChannels, "2, 4, right, default");
@@ -394,7 +406,7 @@ public class EditMediaInfoDialog extends JDialog {
 		pnlAudio.add(ctrlAudioChannels, "4, 4");
 		
 		lblHintAudioChannels = new JLabel("");
-		pnlAudio.add(lblHintAudioChannels, "6, 4, fill, default");
+		pnlAudio.add(lblHintAudioChannels, "6, 4, fill, fill");
 		
 		lblAudioCodec = new JLabel(LocaleBundle.getString("EditMediaInfoDialog.Codec"));
 		pnlAudio.add(lblAudioCodec, "2, 6, right, default");
@@ -404,7 +416,7 @@ public class EditMediaInfoDialog extends JDialog {
 		ctrlAudioCodec.setColumns(10);
 		
 		lblHintAudioCodec = new JLabel("");
-		pnlAudio.add(lblHintAudioCodec, "6, 6, fill, default");
+		pnlAudio.add(lblHintAudioCodec, "6, 6, fill, fill");
 		
 		lblAudioSamplerate = new JLabel(LocaleBundle.getString("EditMediaInfoDialog.Samplerate"));
 		pnlAudio.add(lblAudioSamplerate, "2, 8, right, default");
@@ -413,7 +425,7 @@ public class EditMediaInfoDialog extends JDialog {
 		pnlAudio.add(ctrlAudioSamplerate, "4, 8");
 		
 		lblHintAudioSamplerate = new JLabel("");
-		pnlAudio.add(lblHintAudioSamplerate, "6, 8, fill, default");
+		pnlAudio.add(lblHintAudioSamplerate, "6, 8, fill, fill");
 		
 		btnOK = new JButton("OK");
 		btnOK.addActionListener(e -> onOK());
@@ -425,6 +437,7 @@ public class EditMediaInfoDialog extends JDialog {
 
 	private void updateHints() {
 		btnApply.setEnabled(_mqData != null);
+		btnShow.setEnabled(_mqData != null);
 
 		if (_mqData != null && _mqData.CDate != -1) lblHintCDate.setText("("+_mqData.CDate+")"); else lblHintCDate.setText(Str.Empty);
 		if (_mqData != null && _mqData.MDate != -1) lblHintMDate.setText("("+_mqData.MDate+")"); else lblHintMDate.setText(Str.Empty);
@@ -468,10 +481,16 @@ public class EditMediaInfoDialog extends JDialog {
 		lblHintAudioCodec.setToolTipText(lblHintAudioCodec.getText());
 		lblHintAudioSamplerate.setToolTipText(lblHintAudioSamplerate.getText());
 	}
+	
+	private void showMediaInfo() {
+		if (_mqData == null) return;
+		GenericTextDialog.showText(this, "MediaInfo", _mqData.Raw, true);
+	}
 
 	private void queryMediaInfo() {
 		btnMediaInfo.setEnabled(false);
 		btnApply.setEnabled(false);
+		btnShow.setEnabled(false);
 
 		final String filename = edFilepath.getText();
 		new Thread(() ->
@@ -494,6 +513,7 @@ public class EditMediaInfoDialog extends JDialog {
 				{
 					btnMediaInfo.setEnabled(true);
 					btnApply.setEnabled(_mqData != null);
+					btnShow.setEnabled(_mqData != null);
 				});
 			}
 		}, "MQUERY").start();
@@ -560,6 +580,7 @@ public class EditMediaInfoDialog extends JDialog {
 		lblVideoHeight.setForeground(colOK);
 		lblVideoFramerate.setForeground(colOK);
 		lblVideoBitdepth.setForeground(colOK);
+		lblVideoFramecount.setForeground(colOK);
 		lblVideoCodec.setForeground(colOK);
 		lblAudioCodec.setForeground(colOK);
 		lblAudioChannels.setForeground(colOK);
@@ -578,7 +599,7 @@ public class EditMediaInfoDialog extends JDialog {
 		if (height <= 0) { lblVideoHeight.setForeground(colErr); err = true; }
 		if (frate <= 0)  { lblVideoFramerate.setForeground(colErr); err = true; }
 		if (bdepth <= 0) { lblVideoBitdepth.setForeground(colErr); err = true; }
-		if (fcount <= 0) { lblVideoFramerate.setForeground(colErr); err = true; }
+		if (fcount <= 0) { lblVideoFramecount.setForeground(colErr); err = true; }
 		if (Str.isNullOrWhitespace(vcodec)) { lblVideoCodec.setForeground(colErr); err = true; }
 		if (Str.isNullOrWhitespace(acodec)) { lblAudioCodec.setForeground(colErr); err = true; }
 		if (achnls <= 0) { lblAudioChannels.setForeground(colErr); err = true; }
@@ -611,8 +632,9 @@ public class EditMediaInfoDialog extends JDialog {
 		ctrlVideoHeight.setValue(mi.getHeight());
 		ctrlVideoFramerate.setValue(mi.getFramerate());
 		ctrlVideoBitdepth.setValue(mi.getBitdepth());
-		lblVideoCodec.setText(mi.getVideoCodec());
-		lblAudioCodec.setText(mi.getAudioCodec());
+		ctrlVideoFramecount.setValue(mi.getFramecount());
+		ctrlVideoCodec.setText(mi.getVideoCodec());
+		ctrlAudioCodec.setText(mi.getAudioCodec());
 		ctrlAudioChannels.setValue(mi.getAudioChannels());
 		ctrlAudioSamplerate.setValue(mi.getAudioSamplerate());
 	}

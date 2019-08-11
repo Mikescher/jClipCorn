@@ -37,6 +37,7 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCDateTimeList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCFSK;
 import de.jClipCorn.database.databaseElement.columnTypes.CCFileFormat;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGenre;
+import de.jClipCorn.database.databaseElement.columnTypes.CCMediaInfo;
 import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguageList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCUserScore;
 import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReferenceList;
@@ -79,6 +80,7 @@ import com.jgoodies.forms.layout.RowSpec;
 import com.jgoodies.forms.layout.FormSpecs;
 import javax.swing.border.EmptyBorder;
 import java.awt.BorderLayout;
+import de.jClipCorn.gui.guiComponents.jMediaInfoControl.JMediaInfoControl;
 
 public class EditSeriesFrame extends JFrame implements ParseResultHandler, WindowListener {
 	private static final long serialVersionUID = -3694533463871522503L;
@@ -132,7 +134,6 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 	private JCheckBox cbEpisodeViewed;
 	private JLabel label_20;
 	private JComboBox<String> cbxEpisodeFormat;
-	private JLabel label_21;
 	private JLabel label_22;
 	private JSpinner spnEpisodeLength;
 	private JLabel label_23;
@@ -203,13 +204,31 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 	private CCEpisode _currentEpisodeMemory = null;
 	private JButton btnEditserinBatch;
 	private JButton btnBatchEditSelection;
-	
+	private JLabel lblMediainfo;
+	private JButton btnMediaInfo3;
+	private JMediaInfoControl mediaInfoControl;
+
+
 	/**
 	 * @wbp.parser.constructor
 	 */
+	@SuppressWarnings("unused")
+	private EditSeriesFrame() {
+		super();
+		this.series = null;
+		this.videoFileChooser = new JFileChooser();
+		this.listener = new UpdateCallbackAdapter();
+
+		initGUI();
+		setDefaultValues();
+		initFileChooser();
+
+		addWindowListener(this);
+		updateFocusTraversalPolicy();
+	}
+
 	public EditSeriesFrame(Component owner, CCSeries ser, UpdateCallbackListener ucl) {
 		super();
-		setMinimumSize(new Dimension(1163, 775));
 		this.series = ser;
 		this.videoFileChooser = new JFileChooser(PathFormatter.fromCCPath(ser.getCommonPathStart(true)));
 
@@ -221,10 +240,8 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		initGUI();
 		setDefaultValues();
 		initFileChooser();
-		
-		if (series != null) { //Sonst mag mich der WindowBuilder nicht mehr  :'(
-			updateSeriesPanel();
-		}
+
+		updateSeriesPanel();
 		
 		setLocationRelativeTo(owner);
 		
@@ -243,10 +260,8 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		initGUI();
 		setDefaultValues();
 		initFileChooser();
-		
-		if (series != null) { //Sonst mag mich der WindowBuilder nicht mehr  :'(
-			updateSeriesPanel();
-		}
+
+		updateSeriesPanel();
 		
 		setLocationRelativeTo(owner);
 		
@@ -267,10 +282,8 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		initGUI();
 		setDefaultValues();
 		initFileChooser();
-		
-		if (series != null) { //Sonst mag mich der WindowBuilder nicht mehr  :'(
-			updateSeriesPanel();
-		}
+
+		updateSeriesPanel();
 		
 		setLocationRelativeTo(owner);
 		
@@ -307,6 +320,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		setTitle(LocaleBundle.getFormattedString("EditSeriesFrame.this.title", series.getTitle())); //$NON-NLS-1$
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		getContentPane().setLayout(new BorderLayout(0, 0));
+		setMinimumSize(new Dimension(1150, 700));
 		
 		panel = new JPanel();
 		panel.setBorder(new EmptyBorder(4, 4, 4, 4));
@@ -688,7 +702,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 				FormSpecs.RELATED_GAP_ROWSPEC,
 				FormSpecs.DEFAULT_ROWSPEC,
 				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
+				RowSpec.decode("22px"), //$NON-NLS-1$
 				FormSpecs.RELATED_GAP_ROWSPEC,
 				RowSpec.decode("22px"), //$NON-NLS-1$
 				FormSpecs.RELATED_GAP_ROWSPEC,
@@ -739,6 +753,17 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		cbxEpisodeFormat = new JComboBox<>();
 		cbxEpisodeFormat.addItemListener(new ItemChangeLambdaAdapter(this::setDirtyEpisode, ItemEvent.SELECTED));
 		pnlEditEpisodeInner.add(cbxEpisodeFormat, "3, 8, 7, 1"); //$NON-NLS-1$
+		
+		lblMediainfo = new JLabel("MediaInfo"); //$NON-NLS-1$
+		pnlEditEpisodeInner.add(lblMediainfo, "1, 10"); //$NON-NLS-1$
+		
+		mediaInfoControl = new JMediaInfoControl(() -> Str.isNullOrWhitespace(edEpisodePart.getText()) ? null : PathFormatter.fromCCPath(edEpisodePart.getText()));
+		mediaInfoControl.addChangeListener(new ActionLambdaAdapter(this::setDirtyEpisode));
+		pnlEditEpisodeInner.add(mediaInfoControl, "3, 10, fill, fill"); //$NON-NLS-1$
+		
+		btnMediaInfo3 = new JButton(Resources.ICN_MENUBAR_UPDATECODECDATA.get16x16());
+		btnMediaInfo3.addActionListener(e -> parseCodecMetadata_MI());
+		pnlEditEpisodeInner.add(btnMediaInfo3, "7, 10"); //$NON-NLS-1$
 
 		lblLanguage = new JLabel(LocaleBundle.getString("AddMovieFrame.lblSprache.text")); //$NON-NLS-1$
 		pnlEditEpisodeInner.add(lblLanguage, "1, 12"); //$NON-NLS-1$
@@ -783,7 +808,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		spnEpisodeSize.setModel(new SpinnerNumberModel(0L, 0L, null, 1L));
 
 		label_24 = new JLabel("Byte = "); //$NON-NLS-1$
-		pnlEditEpisodeInner.add(label_24, "5, 16, 5, 1"); //$NON-NLS-1$
+		pnlEditEpisodeInner.add(label_24, "5, 16, 5, 1, fill, fill"); //$NON-NLS-1$
 
 		lblEpisodeFilesize = new JLabel();
 		pnlEditEpisodeInner.add(lblEpisodeFilesize, "3, 18, 7, 1"); //$NON-NLS-1$
@@ -1062,6 +1087,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 			edEpisodePart.setText(episode.getPart());
 			tagPnl.setValue(episode.getTags());
 			ctrlLang.setValue(episode.getLanguage());
+			mediaInfoControl.setValue(episode.getMediaInfo());
 			
 			updateEpisodesFilesizeDisplay();
 			testEpisodePart();
@@ -1515,7 +1541,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		episode.setEpisodeNumber((int) spnEpisodeEpisode.getValue());
 		episode.setViewed(cbEpisodeViewed.isSelected());
 		episode.setFormat(cbxEpisodeFormat.getSelectedIndex());
-		//episode.setMediaInfo(asdf);//TODO
+		episode.setMediaInfo(mediaInfoControl.getValue());
 		episode.setLength((int) spnEpisodeLength.getValue());
 		episode.setFilesize((long) spnEpisodeSize.getValue());
 		episode.setAddDate(spnEpisodeAdded.getValue());
@@ -1546,7 +1572,8 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		int epNum = (int) spnEpisodeEpisode.getValue();
 		CCDate adddate = spnEpisodeAdded.getValue();
 		CCDateTimeList lvdate = cmpEpisodeViewedHistory.getValue();
-
+		CCMediaInfo minfo = mediaInfoControl.getValue();
+		
 		try {
 			long fsize = (long) spnEpisodeSize.getValue();
 			String csExtn  = CCFileFormat.getWrapper().findOrException(cbxEpisodeFormat.getSelectedIndex()).asString();
@@ -1555,7 +1582,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 			
 			String part = edEpisodePart.getText();
 			
-			UserDataProblem.testEpisodeData(ret, season, episode, title, len, epNum, adddate, lvdate, fsize, csExtn, csExta, part, null /*TODO*/, lng);
+			UserDataProblem.testEpisodeData(ret, season, episode, title, len, epNum, adddate, lvdate, fsize, csExtn, csExta, part, minfo, lng);
 			
 			return ret.isEmpty();
 		} catch (CCFormatException e) {
@@ -1646,6 +1673,23 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 			int dur = (dat.Duration==-1)?(-1):(int)(dat.Duration/60);
 			if (dur == -1) throw new MediaQueryException("Duration == -1"); //$NON-NLS-1$
 			spnEpisodeLength.setValue(dur);
+
+		} catch (IOException | MediaQueryException e) {
+			GenericTextDialog.showText(this, getTitle(), e.getMessage() + "\n\n" + ExceptionUtils.getMessage(e) + "\n\n" + ExceptionUtils.getStackTrace(e), false); //$NON-NLS-1$ //$NON-NLS-2$
+		}
+	}
+
+	private void parseCodecMetadata_MI() {
+		String mqp = CCProperties.getInstance().PROP_PLAY_MEDIAINFO_PATH.getValue();
+		if (Str.isNullOrWhitespace(mqp) || !new File(mqp).exists() || !new File(mqp).isFile() || !new File(mqp).canExecute()) {
+			DialogHelper.showLocalError(this, "Dialogs.MediaInfoNotFound"); //$NON-NLS-1$
+			return;
+		}
+
+		try {
+			MediaQueryResult dat = MediaQueryRunner.query(PathFormatter.fromCCPath(edEpisodePart.getText()));
+
+			mediaInfoControl.setValue(dat);
 
 		} catch (IOException | MediaQueryException e) {
 			GenericTextDialog.showText(this, getTitle(), e.getMessage() + "\n\n" + ExceptionUtils.getMessage(e) + "\n\n" + ExceptionUtils.getStackTrace(e), false); //$NON-NLS-1$ //$NON-NLS-2$

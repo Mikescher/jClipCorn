@@ -300,4 +300,28 @@ public class CCMediaInfo {
 
 		return false;
 	}
+
+	@SuppressWarnings("nls")
+	public String validate()
+	{
+		if (cdate <= 0) return "CDate";
+		if (mdate <= 0) return "MDate";
+		if (filesize <= 0) return "Filesize";
+		if (duration <= 0) return "Duration";
+		if (bitrate <= 0) return "Bitrate";
+		if (Str.isNullOrWhitespace(videoformat)) return "VideoFormat";
+		if (Str.isNullOrWhitespace(videocodec))  return "VideoCodec";
+		if (width <= 0) return "Width";
+		if (height <= 0) return "Height";
+		if (framerate <= 0) return "Framerate";
+		if (bitdepth != 8 && bitdepth != 10) return "Bitdepth";
+		if (framecount <= 0) return "Framecount";
+
+		if (Str.isNullOrWhitespace(audioformat)) return "AudioFormat";
+		if (Str.isNullOrWhitespace(audiocodec))  return "AudioCodec";
+		if (audiochannels <= 0) return "AudioChannels";
+		if (audiosamplerate <= 0) return "AudioSamplerate";
+
+		return null;
+	}
 }

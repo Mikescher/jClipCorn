@@ -46,15 +46,20 @@ public class UserDataProblem {
 	public final static int PROBLEM_DESTINTAION_FILE_ALREADY_EXISTS = 28;
 	public final static int PROBLEM_NO_LANG = 29;
 	public final static int PROBLEM_LANG_MUTED_SUBSET = 30;
+	public final static int PROBLEM_MEDIAINFO_UNSET = 31;
+	public final static int PROBLEM_MEDIAINFO_WRONG_FILESIZE = 32;
+	public final static int PROBLEM_MEDIAINFO_WRONG_DATA = 33;
 
 	private final int pid; // Problem ID
-	
-	public UserDataProblem(int problemID) {
+	private final Object[] additional; // Problem ID
+
+	public UserDataProblem(int problemID, String... param) {
 		this.pid = problemID;
+		additional = param;
 	}
 	
 	public String getText() {
-		return LocaleBundle.getString(String.format("UserDataErrors.ERROR_%02d", getPID())); //$NON-NLS-1$
+		return LocaleBundle.getFormattedString(String.format("UserDataErrors.ERROR_%02d", getPID()), additional); //$NON-NLS-1$
 	}
 	
 	public int getPID() {
@@ -70,17 +75,8 @@ public class UserDataProblem {
 									 String title, String zyklus, int zyklusID, int len, CCDate adddate,
 									 int oscore, int fskidx, int year, long fsize, String csExtn, String csExta,
 									 int gen0, int gen1, int gen2, int gen3, int gen4, int gen5, int gen6, int gen7,
-									 CCMediaInfo quality, CCDBLanguageList language, CCOnlineReferenceList ref) {
-		
-		int partcount = 0;
-		
-		if (! p0.isEmpty()) partcount++;
-		if (! p1.isEmpty()) partcount++;
-		if (! p2.isEmpty()) partcount++;
-		if (! p3.isEmpty()) partcount++;
-		if (! p4.isEmpty()) partcount++;
-		if (! p5.isEmpty()) partcount++;
-		
+									 CCMediaInfo minfo, CCDBLanguageList language, CCOnlineReferenceList ref) {
+
 		//################################################################################################################
 		
 		if (p0.isEmpty() && p1.isEmpty() && p2.isEmpty() && p3.isEmpty() && p4.isEmpty() && p5.isEmpty()) {
@@ -239,9 +235,15 @@ public class UserDataProblem {
 		}
 		
 		//################################################################################################################
-		
-		// TODO test mediainfo
-		
+
+		if (!minfo.isSet()) {
+			ret.add(new UserDataProblem(PROBLEM_MEDIAINFO_UNSET));
+		} else {
+			if (minfo.getFilesize() != fsize) ret.add(new UserDataProblem(PROBLEM_MEDIAINFO_WRONG_FILESIZE));
+			String err = minfo.validate();
+			if (err != null) ret.add(new UserDataProblem(PROBLEM_MEDIAINFO_WRONG_DATA, err));
+		}
+
 		//################################################################################################################
 		
 		for (CCMovie imov : l.iteratorMovies()) {
@@ -451,8 +453,14 @@ public class UserDataProblem {
 		}
 		
 		//################################################################################################################
-		
-		//TODO test mediainfo
+
+		if (!minfo.isSet()) {
+			ret.add(new UserDataProblem(PROBLEM_MEDIAINFO_UNSET));
+		} else {
+			if (minfo.getFilesize() != fsize) ret.add(new UserDataProblem(PROBLEM_MEDIAINFO_WRONG_FILESIZE));
+			String err = minfo.validate();
+			if (err != null) ret.add(new UserDataProblem(PROBLEM_MEDIAINFO_WRONG_DATA, err));
+		}
 
 		//################################################################################################################
 		

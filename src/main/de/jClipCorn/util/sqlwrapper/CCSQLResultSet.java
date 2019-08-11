@@ -110,7 +110,7 @@ public class CCSQLResultSet {
 		return CCDateTime.createFromSQL(_data.getString(idx.Item2));
 	}
 
-	public double getFloat(CCSQLColDef col) throws SQLWrapperException, SQLException, CCFormatException {
+	public double getFloat(CCSQLColDef col) throws SQLWrapperException, SQLException {
 		Tuple<CCSQLType, Integer> idx = _statement.getSelectFieldIndex(col);
 
 		if (idx == null) throw new SQLWrapperException("Field ["+col+"] not found in CCSQLStatement");
@@ -119,7 +119,7 @@ public class CCSQLResultSet {
 		return _data.getDouble(idx.Item2);
 	}
 
-	public Double getNullableFloat(CCSQLColDef col) throws SQLWrapperException, SQLException, CCFormatException {
+	public Double getNullableFloat(CCSQLColDef col) throws SQLWrapperException, SQLException {
 		Tuple<CCSQLType, Integer> idx = _statement.getSelectFieldIndex(col);
 
 		if (idx == null) throw new SQLWrapperException("Field ["+col+"] not found in CCSQLStatement");

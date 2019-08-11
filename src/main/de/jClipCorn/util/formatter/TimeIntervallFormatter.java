@@ -125,9 +125,9 @@ public class TimeIntervallFormatter {
 
 		if (fullmins != 0 || render) {
 			if (fullmins != 1) {
-				res += fullmins + " " + STR_MINUTES + " "; //$NON-NLS-1$
+				res += fullmins + " " + STR_MINUTES + " "; //$NON-NLS-1$ //$NON-NLS-2$
 			} else {
-				res += fullmins + " " + STR_MINUTE + " "; //$NON-NLS-1$
+				res += fullmins + " " + STR_MINUTE + " "; //$NON-NLS-1$ //$NON-NLS-2$
 			}
 			render = true;
 		}

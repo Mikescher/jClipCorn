@@ -39,7 +39,7 @@ public class WatchHistoryTable extends JCCSimpleTable<WatchHistoryElement> {
 		
 		r.add(new JCCSimpleColumnPrototype<>(
 				"ClipTableModel.Quality",
-				e -> e.getMediaInfo().getCategory().getCaption(),
+				e -> e.getMediaInfo().getCategory().getShortText(),
 				e -> e.getMediaInfo().getCategory().getIcon(),  
 				e -> e.getMediaInfo().getCategory().getTooltip()));
 		

@@ -5,7 +5,6 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TimeZone;
@@ -28,7 +27,6 @@ import de.jClipCorn.gui.frames.genericTextDialog.GenericTextDialog;
 import de.jClipCorn.gui.guiComponents.CoverLabel;
 import de.jClipCorn.gui.guiComponents.OnlineRefButton;
 import de.jClipCorn.gui.guiComponents.ReadableTextField;
-import de.jClipCorn.gui.guiComponents.TagPanel;
 import de.jClipCorn.gui.guiComponents.language.LanguageDisplay;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
@@ -54,7 +52,6 @@ import de.jClipCorn.gui.guiComponents.TagDisplay;
 import org.apache.commons.lang.exception.ExceptionUtils;
 
 import javax.swing.border.TitledBorder;
-import javax.swing.JTextField;
 
 public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener {
 	private static final long serialVersionUID = 7483476533745432416L;
@@ -730,7 +727,7 @@ public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener 
 		
 		CCQualityCategory qcat = movie.getMediaInfo().getCategory();
 		lbl_Quality.setIcon(qcat.getIcon());
-		lbl_Quality.setText(qcat.getCaption());
+		lbl_Quality.setText(qcat.getShortText());
 		lbl_Quality.setToolTipText(qcat.getTooltip());
 		
 		lbl_Language.setValue(movie.getLanguage());

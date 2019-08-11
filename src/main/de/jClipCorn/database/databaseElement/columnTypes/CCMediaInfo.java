@@ -6,8 +6,8 @@ import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.gui.resources.reftypes.IconRef;
 import de.jClipCorn.util.Str;
+import de.jClipCorn.util.formatter.TimeIntervallFormatter;
 
-import java.text.MessageFormat;
 import java.util.Objects;
 
 public class CCMediaInfo {
@@ -35,6 +35,8 @@ public class CCMediaInfo {
 	private final short audiochannels; // Audio -> Channels
 	private final String audiocodec;   // Audio -> CodecID
 	private final int audiosamplerate; // Audio -> SamplingRate
+
+	private CCQualityCategory _cat = null;
 
 	public CCMediaInfo(long cdate, long mdate, long filesize, double duration, int bitrate, String videoformat, int width,
 					   int height, double framerate, short bitdepth, int framecount, String videocodec, String audioformat,
@@ -230,13 +232,16 @@ public class CCMediaInfo {
 
 	public CCQualityCategory getCategory() {
 
-		if (!isSet) return CCQualityCategory.UNSET;
+		if (_cat != null) return _cat;
+
+		if (!isSet) return _cat = CCQualityCategory.UNSET;
 
 		CategoryType ct = getCategoryType();
-		String cap = getCategoryCaption();
-		String tt = getCategoryTooltip();
+		String tx1 = getCategoryTextShort();
+		String tx2 = getCategoryTextLong();
+		String tx3 = getCategoryToolTip();
 
-		return new CCQualityCategory(ct, cap, getCategoryIcon(ct), tt);
+		return _cat = new CCQualityCategory(ct, getCategoryIcon(ct), tx1, tx2, tx3);
 	}
 
 	private IconRef getCategoryIcon(CategoryType ct) {
@@ -246,6 +251,8 @@ public class CCMediaInfo {
 			case GOOD:             return Resources.ICN_TABLE_QUALITY_3;
 			case VERY_GOOD:        return Resources.ICN_TABLE_QUALITY_4;
 			case HIGH_DEFINITION:  return Resources.ICN_TABLE_QUALITY_5;
+			
+			case UNKOWN:           return Resources.ICN_TABLE_QUALITY_0;
 		}
 
 		CCLog.addDefaultSwitchError(this, ct);
@@ -253,7 +260,19 @@ public class CCMediaInfo {
 	}
 
 	@SuppressWarnings("nls")
-	private String getCategoryTooltip() {
+	private String getCategoryToolTip() {
+		StringBuilder b = new StringBuilder();
+		b.append("<html>");
+		b.append("Resolution: ").append(width).append(" x ").append(height).append("<br/>");
+		b.append("Bitrate: ").append(Str.spacegroupformat((int) Math.round(bitrate / 1024.0))).append(" kB/s").append("<br/>");
+		b.append("Duation: ").append(TimeIntervallFormatter.formatSeconds(duration)).append("<br/>");
+		b.append("Framerate: ").append(Math.round(framerate)).append(" fps").append("<br/>");
+		b.append("</html>");
+		return b.toString();
+	}
+
+	@SuppressWarnings("nls")
+	private String getCategoryTextLong() {
 		return Str.format("{0,number,#}x{1,number,#} @ {2} FPS ({3,number,#} kb/s)", width, height, getNormalizedFPS(), getNormalizedBitrate());
 	}
 
@@ -276,7 +295,7 @@ public class CCMediaInfo {
 	}
 
 	@SuppressWarnings("nls")
-	private String getCategoryCaption()
+	private String getCategoryTextShort()
 	{
 		if (width < 320 && height < 240) return "Low";
 

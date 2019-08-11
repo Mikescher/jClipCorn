@@ -1,7 +1,5 @@
 package de.jClipCorn.gui.guiComponents;
 
-import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguage;
-import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguageList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCSingleTag;
 import de.jClipCorn.database.databaseElement.columnTypes.CCTagList;
 

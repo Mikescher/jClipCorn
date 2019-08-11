@@ -110,6 +110,10 @@ public class CCMediaInfo {
 		return isSet;
 	}
 
+	public boolean isUnset() {
+		return !isSet;
+	}
+
 	public long getCDate() {
 		return cdate;
 	}

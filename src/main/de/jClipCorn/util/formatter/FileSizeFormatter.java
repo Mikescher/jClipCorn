@@ -17,14 +17,22 @@ public class FileSizeFormatter {
 		"TB",  	//$NON-NLS-1$
 		"PB",  	//$NON-NLS-1$
 		"EB" 	//$NON-NLS-1$
-		}; 
-		
+		};
+
 	public static String format(long bytes) {
 		if (bytes <= 0) {
 			return "0"; //$NON-NLS-1$
 		}
 		int digitGroups = (int) (Math.log10(bytes) / Math.log10(1024));
 		return new DecimalFormat("#,##0.#").format(bytes / Math.pow(1024, digitGroups)) + " " + UNITS[digitGroups]; //$NON-NLS-1$ //$NON-NLS-2$
+	}
+
+	public static String formatPrecise(long bytes) {
+		if (bytes <= 0) {
+			return "0"; //$NON-NLS-1$
+		}
+		int digitGroups = (int) (Math.log10(bytes) / Math.log10(1024));
+		return new DecimalFormat("0.####").format(bytes / Math.pow(1024, digitGroups)) + " " + UNITS[digitGroups]; //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	public static String format(CCFileSize size) {

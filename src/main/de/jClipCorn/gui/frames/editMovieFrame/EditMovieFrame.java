@@ -249,7 +249,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 				FormSpecs.RELATED_GAP_ROWSPEC,
 				RowSpec.decode("14dlu"), //$NON-NLS-1$
 				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,})); //$NON-NLS-1$
+				FormSpecs.DEFAULT_ROWSPEC,}));
 		
 		label = new JLabel(LocaleBundle.getString("AddMovieFrame.lblPart.text")); //$NON-NLS-1$
 		pnlPaths.add(label, "2, 2"); //$NON-NLS-1$

@@ -114,14 +114,23 @@ public class CCDateTime implements Comparable<CCDateTime>, StringSpecSupplier {
 	public String getStringRepresentation(String fmt) {
 		return StringSpecParser.build(fmt, this);
 	}
-	
+
 	public String toStringUINormal() {
 		if (isUnspecifiedDateTime())
 			return LocaleBundle.getString("CCDate.STRINGREP_UNSPEC");
-		else if (time.isUnspecifiedTime()) 
+		else if (time.isUnspecifiedTime())
 			return InternationalDateTimeFormatHelper.fmtUIDateOnly(this);
 		else
 			return InternationalDateTimeFormatHelper.fmtUINormal(this);
+	}
+
+	public String toStringISO() {
+		if (isUnspecifiedDateTime())
+			return LocaleBundle.getString("CCDate.STRINGREP_UNSPEC");
+		else if (time.isUnspecifiedTime())
+			return date.getStringRepresentation("yyyy-MM-dd");
+		else
+			return getStringRepresentation("yyyy-MM-dd HH:mm:ss");
 	}
 	
 	public String toStringUIShort() {

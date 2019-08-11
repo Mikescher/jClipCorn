@@ -15,7 +15,7 @@ import java.util.List;
 public class PreviewMovieMenuBar extends ClipMenuBar {
 	private static final long serialVersionUID = 1164878970843040517L;
 	
-	private final CCMovie _movie;
+	private CCMovie _movie;
 	private final PreviewMovieFrame _frame;
 
 	public PreviewMovieMenuBar(PreviewMovieFrame f, CCMovie m, Func0to0 postAction)

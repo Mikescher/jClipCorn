@@ -65,4 +65,14 @@ public final class Str {
 		if (str.length()<=max)return str;
 		return str.substring(0, max-3)+"...";
 	}
+
+	public static String spacegroupformat(int v) {
+		String a = format("{0,number,#}",v);
+		StringBuilder b = new StringBuilder();
+		for (int i = 0; i < a.length(); i++) {
+			if (i%3==0 && i>0) b.insert(0, ' ');
+			b.insert(0, a.charAt(a.length() - i - 1));
+		}
+		return b.toString();
+	}
 }

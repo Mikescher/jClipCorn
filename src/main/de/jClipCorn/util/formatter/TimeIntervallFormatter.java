@@ -3,11 +3,13 @@ package de.jClipCorn.util.formatter;
 import de.jClipCorn.gui.localization.LocaleBundle;
 
 public class TimeIntervallFormatter {
+	private static String STR_SECOND 	= LocaleBundle.getString("TimeIntervallFormatter.Second"); //$NON-NLS-1$
 	private static String STR_MINUTE 	= LocaleBundle.getString("TimeIntervallFormatter.Minute"); //$NON-NLS-1$
 	private static String STR_HOUR 		= LocaleBundle.getString("TimeIntervallFormatter.Hour"); //$NON-NLS-1$
 	private static String STR_DAY 		= LocaleBundle.getString("TimeIntervallFormatter.Day"); //$NON-NLS-1$
 	private static String STR_YEAR 		= LocaleBundle.getString("TimeIntervallFormatter.Year"); //$NON-NLS-1$
-	
+
+	private static String STR_SECONDS 	= LocaleBundle.getString("TimeIntervallFormatter.Seconds"); //$NON-NLS-1$
 	private static String STR_MINUTES 	= LocaleBundle.getString("TimeIntervallFormatter.Minutes"); //$NON-NLS-1$
 	private static String STR_HOURS 	= LocaleBundle.getString("TimeIntervallFormatter.Hours"); //$NON-NLS-1$
 	private static String STR_DAYS 		= LocaleBundle.getString("TimeIntervallFormatter.Days"); //$NON-NLS-1$
@@ -71,6 +73,74 @@ public class TimeIntervallFormatter {
 			render = true;
 		}
 		
+		return res;
+	}
+
+	public static String formatSeconds(double fsecs) {
+		String res = ""; //$NON-NLS-1$
+
+		int secs = (int)fsecs;
+
+		int fullsecs = secs % 60;
+		secs -= fullsecs;
+		secs /= 60;
+		int fullmins = secs % 60;
+		secs -= fullmins;
+		secs /= 60;
+		int fullhours = secs % 24;
+		secs -= fullhours;
+		secs /= 24;
+		int fulldays = secs % 365;
+		secs -= fulldays;
+		secs /= 365;
+		int y = secs;
+
+		boolean render = false;
+		if (y != 0 || render) {
+			if (y != 1) {
+				res += y + " " + STR_YEARS + " "; //$NON-NLS-1$ //$NON-NLS-2$
+			} else {
+				res += y + " " + STR_YEAR + " "; //$NON-NLS-1$ //$NON-NLS-2$
+			}
+			render = true;
+		}
+
+		if (fulldays != 0 || render) {
+			if (fulldays != 1) {
+				res += fulldays + " " + STR_DAYS + " "; //$NON-NLS-1$ //$NON-NLS-2$
+			} else {
+				res += fulldays + " " + STR_DAY + " "; //$NON-NLS-1$ //$NON-NLS-2$
+			}
+			render = true;
+		}
+
+		if (fullhours != 0 || render) {
+			if (fullhours != 1) {
+				res += fullhours + " " + STR_HOURS + " "; //$NON-NLS-1$ //$NON-NLS-2$
+			} else {
+				res += fullhours + " " + STR_HOUR + " "; //$NON-NLS-1$ //$NON-NLS-2$
+			}
+			render = true;
+		}
+
+		if (fullmins != 0 || render) {
+			if (fullmins != 1) {
+				res += fullmins + " " + STR_MINUTES + " "; //$NON-NLS-1$
+			} else {
+				res += fullmins + " " + STR_MINUTE + " "; //$NON-NLS-1$
+			}
+			render = true;
+		}
+
+		if (fullsecs != 0 || render) {
+			if (fullsecs != 1) {
+				res += fullsecs + " " + STR_SECONDS; //$NON-NLS-1$
+			} else {
+				res += fullsecs + " " + STR_SECOND; //$NON-NLS-1$
+			}
+			render = true;
+		}
+
 		return res;
 	}
 	

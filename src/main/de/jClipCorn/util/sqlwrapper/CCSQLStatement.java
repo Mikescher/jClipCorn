@@ -145,7 +145,6 @@ public class CCSQLStatement {
 		Tuple<CCSQLType, Integer> idx = MapPrepFields.get(col.Name);
 
 		if (idx == null) throw new SQLWrapperException("Field ["+col+"] not found in CCSQLStatement");
-		if (!idx.Item1.isCallableAsFloat()) throw new SQLWrapperException("Field ["+col+"] has wrong type");
 
 		Statement.setNull(idx.Item2, col.Type.getSQLType());
 	}

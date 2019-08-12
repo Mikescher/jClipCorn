@@ -37,6 +37,8 @@ import de.jClipCorn.gui.frames.exportElementsFrame.ExportElementsFrame;
 import de.jClipCorn.gui.frames.filenameRulesFrame.FilenameRuleFrame;
 import de.jClipCorn.gui.frames.groupManageFrame.GroupManageFrame;
 import de.jClipCorn.gui.frames.logFrame.LogFrame;
+import de.jClipCorn.gui.frames.quickAddEpisodeDialog.QuickAddEpisodeDialog;
+import de.jClipCorn.gui.frames.quickAddMoviesDialog.QuickAddMoviesDialog;
 import de.jClipCorn.gui.frames.updateCodecFrame.UpdateCodecFrame;
 import de.jClipCorn.gui.mainFrame.MainFrame;
 import de.jClipCorn.gui.frames.moveSeriesFrame.MassMoveMoviesDialog;
@@ -58,6 +60,7 @@ import de.jClipCorn.gui.frames.watchHistoryFrame.WatchHistoryFrame;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.properties.CCProperties;
+import de.jClipCorn.util.Str;
 import de.jClipCorn.util.UpdateConnector;
 import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.formatter.PathFormatter;
@@ -216,11 +219,12 @@ public class CCActionTree extends UIActionTree{
 
 				CCActionElement season = add(other, "Season", null, "", null);
 				{
-					add(season, "AddEpisodes",      null, "ClipMenuBar.Other.Season.AddEpisodes",        Resources.ICN_MENUBAR_ADD_SEA,   true,  this::onClickOtherSeasonAddEpisodes);
-					add(season, "BatchEditSeason",  null, "ClipMenuBar.Other.Season.BatchEditSeason",    Resources.ICN_MENUBAR_BATCHEDIT, true,  this::onClickOtherSeasonBatchEditEpisodes);
-					add(season, "RemSeason",        null, "ClipMenuBar.Other.Season.RemSeason",          Resources.ICN_MENUBAR_REMOVE,    true,  this::onClickOtherSeasonDeleteSeason);
-					add(season, "EditSeason",       null, "ClipMenuBar.Other.Season.EditSeason",         Resources.ICN_MENUBAR_EDIT_SER,  true,  this::onClickOtherSeasonEditSeason);
-					add(season, "OpenSeasonFolder", null, "ClipMenuBar.Other.Season.OpenSeasonFolder",   Resources.ICN_MENUBAR_FOLDER,    false, this::onClickOtherSeasonOpenFolder);
+					add(season, "AddEpisodes",       null, "ClipMenuBar.Other.Season.AddEpisodes",        Resources.ICN_MENUBAR_ADD_SEA,   true,  this::onClickOtherSeasonAddEpisodes);
+					add(season, "AddSingleEpisodes", null, "ClipMenuBar.Other.Season.AddSingleEpisodes",  Resources.ICN_MENUBAR_ADD_SEA,   true,  this::onClickOtherSeasonQuickAddEpisodes);
+					add(season, "BatchEditSeason",   null, "ClipMenuBar.Other.Season.BatchEditSeason",    Resources.ICN_MENUBAR_BATCHEDIT, true,  this::onClickOtherSeasonBatchEditEpisodes);
+					add(season, "RemSeason",         null, "ClipMenuBar.Other.Season.RemSeason",          Resources.ICN_MENUBAR_REMOVE,    true,  this::onClickOtherSeasonDeleteSeason);
+					add(season, "EditSeason",        null, "ClipMenuBar.Other.Season.EditSeason",         Resources.ICN_MENUBAR_EDIT_SER,  true,  this::onClickOtherSeasonEditSeason);
+					add(season, "OpenSeasonFolder",  null, "ClipMenuBar.Other.Season.OpenSeasonFolder",   Resources.ICN_MENUBAR_FOLDER,    false, this::onClickOtherSeasonOpenFolder);
 				}
 
 				CCActionElement seriesExtra = add(other, "SeriesExtra", null, "", null);
@@ -719,6 +723,18 @@ public class CCActionTree extends UIActionTree{
 
 	private void onClickOtherSeasonAddEpisodes(CCTreeActionEvent e) {
 		e.ifSeasonSource(s -> new AddMultiEpisodesFrame(e.SwingOwner, s, ActionCallbackListener.toUpdateCallbackListener(e.SpecialListener)).setVisible(true));
+	}
+
+	private void onClickOtherSeasonQuickAddEpisodes(CCTreeActionEvent e) {
+		e.ifSeasonSource(s ->
+		{
+			final JFileChooser chooser = new JFileChooser();
+			String cps = PathFormatter.fromCCPath(s.getCommonPathStart());
+			if (!Str.isNullOrWhitespace(cps)) chooser.setCurrentDirectory(new File(cps));
+			if (chooser.showOpenDialog(e.SwingOwner) == JFileChooser.APPROVE_OPTION) {
+				QuickAddEpisodeDialog.show(e.SwingOwner, o->{}, s, chooser.getSelectedFile());
+			}
+		});
 	}
 
 	private void onClickOtherSeasonBatchEditEpisodes(CCTreeActionEvent e) {

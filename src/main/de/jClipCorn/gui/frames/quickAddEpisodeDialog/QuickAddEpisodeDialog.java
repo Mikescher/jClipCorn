@@ -47,6 +47,7 @@ import de.jClipCorn.gui.guiComponents.language.LanguageChooser;
 import de.jClipCorn.features.userdataProblem.UserDataProblem;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import de.jClipCorn.gui.guiComponents.jMediaInfoControl.JMediaInfoControl;
 
 public class QuickAddEpisodeDialog extends JDialog {
 	private static final long serialVersionUID = -184393538006518026L;
@@ -71,7 +72,7 @@ public class QuickAddEpisodeDialog extends JDialog {
 	/**
 	 * @wbp.parser.constructor
 	 */
-	private QuickAddEpisodeDialog(JFrame owner, UpdateCallbackListener listener, CCSeason s, File f) {
+	private QuickAddEpisodeDialog(Component owner, UpdateCallbackListener listener, CCSeason s, File f) {
 		super();
 		ucListener = listener;
 		season = s;
@@ -87,7 +88,7 @@ public class QuickAddEpisodeDialog extends JDialog {
 	private void initGUI() {
 		setTitle(LocaleBundle.getString("QuickAddEpisodeDialog.title")); //$NON-NLS-1$
 		setIconImage(Resources.IMG_FRAME_ICON.get());
-		setBounds(100, 100, 550, 350);
+		setBounds(100, 100, 550, 365);
 		setMinimumSize(new Dimension(300, 300));
 		setModal(true);
 
@@ -106,6 +107,8 @@ public class QuickAddEpisodeDialog extends JDialog {
 				FormSpecs.DEFAULT_COLSPEC,
 				FormSpecs.RELATED_GAP_COLSPEC,},
 			new RowSpec[] {
+				FormSpecs.DEFAULT_ROWSPEC,
+				FormSpecs.RELATED_GAP_ROWSPEC,
 				FormSpecs.DEFAULT_ROWSPEC,
 				FormSpecs.RELATED_GAP_ROWSPEC,
 				FormSpecs.DEFAULT_ROWSPEC,
@@ -174,12 +177,22 @@ public class QuickAddEpisodeDialog extends JDialog {
 		spnEpisode.setModel(new SpinnerNumberModel(0, 0, null, 1));
 		spnEpisode.addChangeListener((e) -> { if (cbRename.isSelected()) edTarget.setText(createTarget()); });
 		contentPanel.add(spnEpisode, "3, 11"); //$NON-NLS-1$
+		
+		JLabel lblQuality = new JLabel("MediaInfo"); //$NON-NLS-1$
+		contentPanel.add(lblQuality, "1, 13, right, default"); //$NON-NLS-1$
+		
+		edMediaInfo = new JMediaInfoControl(() -> edSource.getText());
+		contentPanel.add(edMediaInfo, "3, 13, fill, default"); //$NON-NLS-1$
+		
+		pbar = new JProgressBar();
+		pbar.setIndeterminate(true);
+		contentPanel.add(pbar, "5, 13, 5, 1, fill, fill"); //$NON-NLS-1$
 
 		JLabel lblTitle = new JLabel(LocaleBundle.getString("QuickAddEpisodeDialog.lblTitle")); //$NON-NLS-1$
 		lblTitle.setHorizontalAlignment(SwingConstants.TRAILING);
-		contentPanel.add(lblTitle, "1, 13, right, default"); //$NON-NLS-1$
+		contentPanel.add(lblTitle, "1, 15, right, default"); //$NON-NLS-1$
 		edTitle = new JTextField();
-		contentPanel.add(edTitle, "3, 13, fill, default"); //$NON-NLS-1$
+		contentPanel.add(edTitle, "3, 15, fill, default"); //$NON-NLS-1$
 		edTitle.setColumns(10);
 		edTitle.getDocument().addDocumentListener(new DocumentListener() {
 			@Override
@@ -203,39 +216,39 @@ public class QuickAddEpisodeDialog extends JDialog {
 		});
 		
 		JLabel lblNewLabel = new JLabel(LocaleBundle.getString("AddMovieFrame.lblSprache.text")); //$NON-NLS-1$
-		contentPanel.add(lblNewLabel, "1, 15"); //$NON-NLS-1$
+		contentPanel.add(lblNewLabel, "1, 17"); //$NON-NLS-1$
 		
 		ctrlLang = new LanguageChooser();
-		contentPanel.add(ctrlLang, "3, 15, fill, fill"); //$NON-NLS-1$
+		contentPanel.add(ctrlLang, "3, 17, fill, fill"); //$NON-NLS-1$
 		
 		JButton btnMediaInfo1 = new JButton(Resources.ICN_MENUBAR_UPDATECODECDATA.get16x16());
 		btnMediaInfo1.setPreferredSize(new Dimension(22, 22));
 		btnMediaInfo1.setToolTipText("MediaInfo"); //$NON-NLS-1$
 		btnMediaInfo1.addActionListener(e -> parseCodecMetadata_Lang());
-		contentPanel.add(btnMediaInfo1, "7, 15"); //$NON-NLS-1$
+		contentPanel.add(btnMediaInfo1, "7, 17"); //$NON-NLS-1$
 		
 		JButton btnMediaInfoRaw = new JButton("..."); //$NON-NLS-1$
 		btnMediaInfoRaw.setPreferredSize(new Dimension(43, 22));
 		btnMediaInfoRaw.setToolTipText("MediaInfo"); //$NON-NLS-1$
 		btnMediaInfoRaw.addActionListener(e -> showCodecMetadata());
-		contentPanel.add(btnMediaInfoRaw, "9, 15"); //$NON-NLS-1$
+		contentPanel.add(btnMediaInfoRaw, "9, 17"); //$NON-NLS-1$
 		
 		JLabel lblLength = new JLabel(LocaleBundle.getString("QuickAddEpisodeDialog.lblLength")); //$NON-NLS-1$
 		lblLength.setHorizontalAlignment(SwingConstants.TRAILING);
-		contentPanel.add(lblLength, "1, 17"); //$NON-NLS-1$
+		contentPanel.add(lblLength, "1, 19"); //$NON-NLS-1$
 		
-				spnLength = new JSpinner();
-				spnLength.setModel(new SpinnerNumberModel(0, 0, null, 1));
-				contentPanel.add(spnLength, "3, 17"); //$NON-NLS-1$
+		spnLength = new JSpinner();
+		spnLength.setModel(new SpinnerNumberModel(0, 0, null, 1));
+		contentPanel.add(spnLength, "3, 19"); //$NON-NLS-1$
 
 		JLabel lblMin = new JLabel("min."); //$NON-NLS-1$
-		contentPanel.add(lblMin, "5, 17"); //$NON-NLS-1$
+		contentPanel.add(lblMin, "5, 19"); //$NON-NLS-1$
 		
 		JButton btnMediaInfo2 = new JButton(Resources.ICN_MENUBAR_UPDATECODECDATA.get16x16());
 		btnMediaInfo2.setPreferredSize(new Dimension(22, 22));
 		btnMediaInfo2.setToolTipText("MediaInfo"); //$NON-NLS-1$
 		btnMediaInfo2.addActionListener(e -> parseCodecMetadata_Len());
-		contentPanel.add(btnMediaInfo2, "7, 17"); //$NON-NLS-1$
+		contentPanel.add(btnMediaInfo2, "7, 19"); //$NON-NLS-1$
 
 		JPanel buttonPane = new JPanel();
 		getContentPane().add(buttonPane, BorderLayout.SOUTH);
@@ -290,21 +303,39 @@ public class QuickAddEpisodeDialog extends JDialog {
 		if (last != null) lang = last.getLanguage();
 		ctrlLang.setValue(lang);
 
-		try {
-			MediaQueryResult dat = MediaQueryRunner.query(edSource.getText());
+		pbar.setVisible(true);
+		new Thread(() ->  {
 
-			if (dat.AudioLanguages != null) {
-				CCDBLanguageList dbll = dat.AudioLanguages;
+			try {
+				MediaQueryResult dat = MediaQueryRunner.query(edSource.getText());
 
-				if (!dbll.isEmpty()) ctrlLang.setValue(dbll);
+				SwingUtilities.invokeLater(() -> 
+				{
+					if (dat.AudioLanguages != null) {
+						CCDBLanguageList dbll = dat.AudioLanguages;
+
+						if (!dbll.isEmpty()) ctrlLang.setValue(dbll);
+					}
+
+					edMediaInfo.setValue(dat);
+				});
+				
+			} catch (IOException | MediaQueryException e) {
+				// ignore
+			} finally {
+				SwingUtilities.invokeLater(() -> pbar.setVisible(false));
 			}
-		} catch (IOException | MediaQueryException e) {
-			// ignore
-		}
+			
+		}, "QA_MINFO").start(); //$NON-NLS-1$
 	}
 
 	public static void show(PreviewSeriesFrame owner, CCSeason s, File f) {
 		QuickAddEpisodeDialog qaed = new QuickAddEpisodeDialog(owner, owner, s, f);
+		qaed.setVisible(true);
+	}
+
+	public static void show(Component owner, UpdateCallbackListener lst, CCSeason s, File f) {
+		QuickAddEpisodeDialog qaed = new QuickAddEpisodeDialog(owner, lst, s, f);
 		qaed.setVisible(true);
 	}
 
@@ -324,6 +355,8 @@ public class QuickAddEpisodeDialog extends JDialog {
 
 	private volatile int progressValueCache;
 	private LanguageChooser ctrlLang;
+	private JMediaInfoControl edMediaInfo;
+	private JProgressBar pbar;
 
 	private void tryAdd(boolean check) {
 
@@ -344,9 +377,10 @@ public class QuickAddEpisodeDialog extends JDialog {
 		CCTagList tags = CCTagList.EMPTY;
 		long filesize = FileSizeFormatter.getFileSize(new File(src));
 		CCFileFormat format = CCFileFormat.getMovieFormatFromPath(src);
+		CCMediaInfo minfo = edMediaInfo.getValue();
 
 		List<UserDataProblem> problems = new ArrayList<>();
-		boolean probvalue = !check || checkUserDataEpisode(problems, title, length, episodenumber, adddate, history, filesize, null /*TODO*/, format.asString(), format.asStringAlt(), src, dst, fullDst, lang);
+		boolean probvalue = !check || checkUserDataEpisode(problems, title, length, episodenumber, adddate, history, filesize, minfo, format.asString(), format.asStringAlt(), src, dst, fullDst, lang);
 
 		// some problems are too fatal
 		if (probvalue && Str.isNullOrWhitespace(title)) {
@@ -396,7 +430,7 @@ public class QuickAddEpisodeDialog extends JDialog {
 					newEp.setEpisodeNumber(episodenumber);
 					newEp.setViewed(false);
 					newEp.setFormat(format);
-					//newEp.setMediaInfo(minfo);//TODO
+					newEp.setMediaInfo(minfo);
 					newEp.setLength(length);
 					newEp.setFilesize(filesize);
 					newEp.setAddDate(adddate);

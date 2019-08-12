@@ -154,6 +154,9 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 
 	private final UpdateCallbackListener listener;
 
+	/**
+	 * @wbp.parser.constructor
+	 */
 	public BatchEditFrame(Component owner, IEpisodeOwner ss, UpdateCallbackListener ucl) { this(owner, ss, null, ucl); }
 
 	public BatchEditFrame(Component owner, IEpisodeOwner ss, List<CCEpisode> eps, UpdateCallbackListener ucl) {

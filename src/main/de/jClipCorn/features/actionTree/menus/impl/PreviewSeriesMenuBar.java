@@ -41,6 +41,7 @@ public class PreviewSeriesMenuBar extends ClipMenuBar {
 		addMaster("PreviewSeriesFrame.Menu.Season");
 		{
 			addActionNode("AddEpisodes");
+			addActionNode("AddSingleEpisodes");
 			addActionNode("BatchEditSeason");
 			addActionNode("RemSeason");
 			addActionNode("EditSeason");

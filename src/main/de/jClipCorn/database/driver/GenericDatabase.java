@@ -12,13 +12,8 @@ import java.util.List;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.properties.enumerations.CCDatabaseDriver;
 import de.jClipCorn.util.lambda.Func1to1;
+import de.jClipCorn.util.sqlwrapper.StatementType;
 
-/**
- * A little Wrapper for embedded JavaDB (derby) Databases
- * 
- * @author Mike Schwörer
- *
- */
 @SuppressWarnings("nls")
 public abstract class GenericDatabase {
 	public final static String TABLETYPE_TABLE = "TABLE";
@@ -177,13 +172,13 @@ public abstract class GenericDatabase {
 	}
 
 	public int getRowCount(String table){
-		int count = querySingleIntSQL("SELECT COUNT(*) FROM " + table, 0);
-		return count;
+		return querySingleIntSQL("SELECT COUNT(*) FROM " + table, 0);
 	}
 
 	public boolean executeSQL(String sql) {
 		try {
 			Statement s = connection.createStatement();
+			CCLog.addSQL("ExecuteSQL", StatementType.CUSTOM, sql);
 			s.execute(sql);
 			s.close();
 			return true;
@@ -196,12 +191,14 @@ public abstract class GenericDatabase {
 
 	public void executeSQLThrow(String sql) throws SQLException {
 		Statement s = connection.createStatement();
+		CCLog.addSQL("ExecuteSQLThrow", StatementType.CUSTOM, sql);
 		s.execute(sql);
 		s.close();
 	}
 
 	public List<Object[]> querySQL(String sql, int columnCount) throws SQLException {
 		Statement s = connection.createStatement();
+		CCLog.addSQL("QuerySQL", StatementType.CUSTOM, sql);
 		ResultSet rs = s.executeQuery(sql);
 
 		List<Object[]> result = new ArrayList<>();
@@ -218,6 +215,7 @@ public abstract class GenericDatabase {
 
 	public <T> List<T> querySQL(String sql, int columnCount, Func1to1<Object[], T> conv) throws SQLException {
 		Statement s = connection.createStatement();
+		CCLog.addSQL("QuerySQL", StatementType.CUSTOM, sql);
 		ResultSet rs = s.executeQuery(sql);
 
 		List<T> result = new ArrayList<>();
@@ -235,6 +233,7 @@ public abstract class GenericDatabase {
 	public Object querySingleSQL(String sql, int column) {
 		try {
 			Statement s = connection.createStatement();
+			CCLog.addSQL("QuerySingleSQL", StatementType.CUSTOM, sql);
 			ResultSet rs = s.executeQuery(sql);
 			
 			Object ret = null;
@@ -252,6 +251,7 @@ public abstract class GenericDatabase {
 
 	public Object querySingleSQLThrow(String sql, int column) throws SQLException {
 		Statement s = connection.createStatement();
+		CCLog.addSQL("QuerySingleSQLThrow", StatementType.CUSTOM, sql);
 		ResultSet rs = s.executeQuery(sql);
 		
 		Object ret = null;
@@ -283,6 +283,7 @@ public abstract class GenericDatabase {
 		
 		try {
 			Statement s = connection.createStatement();
+			CCLog.addSQL("GetSingleRow", StatementType.CUSTOM, sql);
 			ResultSet rs = s.executeQuery(sql);
 			
 			while(actRow < row) {

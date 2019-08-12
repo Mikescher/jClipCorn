@@ -732,7 +732,7 @@ public class CCActionTree extends UIActionTree{
 			String cps = PathFormatter.fromCCPath(s.getCommonPathStart());
 			if (!Str.isNullOrWhitespace(cps)) chooser.setCurrentDirectory(new File(cps));
 			if (chooser.showOpenDialog(e.SwingOwner) == JFileChooser.APPROVE_OPTION) {
-				QuickAddEpisodeDialog.show(e.SwingOwner, o->{}, s, chooser.getSelectedFile());
+				QuickAddEpisodeDialog.show(e.SwingOwner, o->{/**/}, s, chooser.getSelectedFile());
 			}
 		});
 	}

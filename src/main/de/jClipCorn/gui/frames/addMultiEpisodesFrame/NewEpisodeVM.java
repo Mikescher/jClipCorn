@@ -18,17 +18,18 @@ public class NewEpisodeVM {
 	public String SourcePath = Str.Empty;
 	public String TargetPath = Str.Empty;
 
-	public boolean IsValid;
-	public String Problems;
+	public boolean IsValid = false;
+	public String Problems = Str.Empty;
 
-	public String Title;
-	public CCDBLanguageList Language;
-	public int Length;
-	public int EpisodeNumber;
-	public long Filesize;
-	public boolean NoMove;
+	public String Title = Str.Empty;
+	public CCDBLanguageList Language = CCDBLanguageList.EMPTY;
+	public int Length = -1;
+	public int EpisodeNumber = -1;
+	public long Filesize = -1;
+	public CCMediaInfo MediaInfo = CCMediaInfo.EMPTY;
+	public boolean NoMove = false;
 
-	public MediaQueryResult MediaInfo = null;
+	public MediaQueryResult MediaQueryResult = null;
 	public String TargetRoot = null;
 
 	// -------- -------- -------- -------- -------- -------- -------- --------
@@ -67,7 +68,7 @@ public class NewEpisodeVM {
 	public void validate(CCSeason s)
 	{
 		List<UserDataProblem> probs = new ArrayList<>();
-		UserDataProblem.testEpisodeData(probs, s, null, Title, Length, EpisodeNumber, getAddDate(), getViewedHistory(), Filesize, getFormat().asString(), getFormat().asStringAlt(), TargetPath, CCMediaInfo.EMPTY /*TODO*/, Language);
+		UserDataProblem.testEpisodeData(probs, s, null, Title, Length, EpisodeNumber, getAddDate(), getViewedHistory(), Filesize, getFormat().asString(), getFormat().asStringAlt(), TargetPath, MediaInfo, Language);
 
 		IsValid = probs.isEmpty();
 		Problems = "<html>" + CCStreams.iterate(probs).stringjoin(UserDataProblem::getText, "\n<br/>") + "</html>"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$

@@ -58,6 +58,12 @@ public class MultiEpisodesTable extends JCCSimpleTable<NewEpisodeVM> {
 				e -> e.Language.getFullIcon(),
 				e -> e.Language.toOutputString()));
 
+		r.add(new JCCSimpleColumnPrototype<>(
+				"MultiEpisodesTable.Quality", //$NON-NLS-1$
+				e -> e.MediaInfo.getCategory().getLongText(),
+				e -> e.MediaInfo.getCategory().getIcon(),
+				e -> e.MediaInfo.getCategory().getTooltip()));
+
 		return r;
 	}
 

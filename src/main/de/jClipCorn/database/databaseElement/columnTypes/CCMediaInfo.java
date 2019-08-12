@@ -40,7 +40,8 @@ public class CCMediaInfo {
 
 	public CCMediaInfo(long cdate, long mdate, long filesize, double duration, int bitrate, String videoformat, int width,
 					   int height, double framerate, short bitdepth, int framecount, String videocodec, String audioformat,
-					   short audiochannels, String audiocodec, int audiosamplerate) {
+					   short audiochannels, String audiocodec, int audiosamplerate)
+	{
 		this.isSet = true;
 
 		this.cdate           = cdate;
@@ -220,17 +221,17 @@ public class CCMediaInfo {
 		result = 31 * result + height;
 		temp = Double.doubleToLongBits(framerate);
 		result = 31 * result + (int) (temp ^ (temp >>> 32));
-		result = 31 * result + (int) bitdepth;
+		result = 31 * result + bitdepth;
 		result = 31 * result + framecount;
 		result = 31 * result + (videocodec != null ? videocodec.hashCode() : 0);
 		result = 31 * result + (audioformat != null ? audioformat.hashCode() : 0);
-		result = 31 * result + (int) audiochannels;
+		result = 31 * result + audiochannels;
 		result = 31 * result + (audiocodec != null ? audiocodec.hashCode() : 0);
 		result = 31 * result + audiosamplerate;
 		return result;
 	}
 
-	public CCQualityCategory getCategory() {
+	public CCQualityCategory getCategory() { //TODO improve me, especially short-text
 
 		if (_cat != null) return _cat;
 

@@ -115,7 +115,7 @@ public class AddMultiEpisodesFrame extends JFrame {
 				FormSpecs.RELATED_GAP_COLSPEC,
 				FormSpecs.DEFAULT_COLSPEC,
 				FormSpecs.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("default:grow"),
+				ColumnSpec.decode("default:grow"), //$NON-NLS-1$
 				FormSpecs.RELATED_GAP_COLSPEC,
 				FormSpecs.DEFAULT_COLSPEC,
 				FormSpecs.RELATED_GAP_COLSPEC,
@@ -123,7 +123,7 @@ public class AddMultiEpisodesFrame extends JFrame {
 				FormSpecs.RELATED_GAP_COLSPEC,},
 			new RowSpec[] {
 				FormSpecs.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("default:grow"),
+				RowSpec.decode("default:grow"), //$NON-NLS-1$
 				FormSpecs.RELATED_GAP_ROWSPEC,
 				FormSpecs.DEFAULT_ROWSPEC,
 				FormSpecs.RELATED_GAP_ROWSPEC,
@@ -174,7 +174,7 @@ public class AddMultiEpisodesFrame extends JFrame {
 		
 		btnGetMediainfo = new JButton(LocaleBundle.getString("AddMultiEpisodesFrame.Button_33")); //$NON-NLS-1$
 		btnGetMediainfo.addActionListener(this::onGetMediaInfo);
-		contentPane.add(btnGetMediainfo, "6, 8");
+		contentPane.add(btnGetMediainfo, "6, 8"); //$NON-NLS-1$
 
 		progressBar = new JProgressBar();
 		contentPane.add(progressBar, "2, 10, 9, 1"); //$NON-NLS-1$

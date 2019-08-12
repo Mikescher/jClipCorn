@@ -133,6 +133,10 @@ public class CCMediaInfo {
 		return duration;
 	}
 
+	public int getDurationInMinutes() {
+		return (int)Math.round(duration / 60);
+	}
+
 	public int getBitrate() {
 		return bitrate;
 	}

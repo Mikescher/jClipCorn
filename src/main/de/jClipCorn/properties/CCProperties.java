@@ -181,6 +181,13 @@ public class CCProperties {
 	public CCBoolProperty                                   PROP_PREVIEWMOVIE_SINGLETON;
 	public CCBoolProperty                                   PROP_DATABASE_LOAD_ALL_COVERDATA;
 	public CCEnumProperty<ColorQuantizerMethod>             PROP_DATABASE_COVER_QUANTIZER;
+	public CCBoolProperty                                   PROP_CHECKDATABASE_OPT_MOVIES;
+	public CCBoolProperty                                   PROP_CHECKDATABASE_OPT_SEASONS;
+	public CCBoolProperty                                   PROP_CHECKDATABASE_OPT_SERIES;
+	public CCBoolProperty                                   PROP_CHECKDATABASE_OPT_EPISODES;
+	public CCBoolProperty                                   PROP_CHECKDATABASE_OPT_COVERS;
+	public CCBoolProperty                                   PROP_CHECKDATABASE_OPT_FILES;
+	public CCBoolProperty                                   PROP_CHECKDATABASE_OPT_EXTRA;
 
 	public boolean ARG_READONLY = false;
 	
@@ -316,7 +323,7 @@ public class CCProperties {
 
 		PROP_SCANFOLDER_INCLUDESERIES           = new CCBoolProperty(CAT_OTHERFRAMES,       this,   "PROP_SCANFOLDER_INCLUDESERIES",            false);
 		PROP_SCANFOLDER_EXCLUDEIFOS             = new CCBoolProperty(CAT_OTHERFRAMES,       this,   "PROP_SCANFOLDER_EXCLUDEIFOS",              false);
-		PROP_VALIDATE_FILESIZEDRIFT             = new CCRIntProperty(CAT_OTHERFRAMES,       this,   "PROP_VALIDATE_FILESIZEDRIFT",              5,                                  100);
+		PROP_VALIDATE_FILESIZEDRIFT             = new CCRIntProperty(CAT_OTHERFRAMES,       this,   "PROP_VALIDATE_FILESIZEDRIFT",              0,                                  100);
 		PROP_VALIDATE_DUP_IGNORE_IFO            = new CCBoolProperty(CAT_OTHERFRAMES,       this,   "PROP_VALIDATE_DUP_IGNORE_IFO",             true);
 		PROP_STATISTICS_TIMELINEGRAVITY         = new CCPIntProperty(CAT_OTHERFRAMES,       this,   "PROP_STATISTICS_TIMELINEGRAVITY",          7);
 
@@ -343,6 +350,13 @@ public class CCProperties {
 		PROP_DISABLE_SSL_VERIFY                 = new CCBoolProperty(NONVISIBLE,            this,   "PROP_DISABLE_SSL_VERIFY",                  false);
 		PROP_MIN_DRIVEMAP_RESCAN_TIME           = new CCPIntProperty(NONVISIBLE,            this,   "PROP_MIN_DRIVEMAP_RESCAN_TIME",            30*1000);
 		PROP_DRIVEMAP_REMOUNT_NETDRIVES         = new CCBoolProperty(NONVISIBLE,            this,   "PROP_DRIVEMAP_REMOUNT_NETDRIVES",          false);
+		PROP_CHECKDATABASE_OPT_MOVIES           = new CCBoolProperty(NONVISIBLE,            this,   "PROP_CHECKDATABASE_OPT_MOVIES",            true);
+		PROP_CHECKDATABASE_OPT_SEASONS          = new CCBoolProperty(NONVISIBLE,            this,   "PROP_CHECKDATABASE_OPT_SEASONS",           true);
+		PROP_CHECKDATABASE_OPT_SERIES           = new CCBoolProperty(NONVISIBLE,            this,   "PROP_CHECKDATABASE_OPT_SERIES",            true);
+		PROP_CHECKDATABASE_OPT_EPISODES         = new CCBoolProperty(NONVISIBLE,            this,   "PROP_CHECKDATABASE_OPT_EPISODES",          true);
+		PROP_CHECKDATABASE_OPT_COVERS           = new CCBoolProperty(NONVISIBLE,            this,   "PROP_CHECKDATABASE_OPT_COVERS",            true);
+		PROP_CHECKDATABASE_OPT_FILES            = new CCBoolProperty(NONVISIBLE,            this,   "PROP_CHECKDATABASE_OPT_FILES",             true);
+		PROP_CHECKDATABASE_OPT_EXTRA            = new CCBoolProperty(NONVISIBLE,            this,   "PROP_CHECKDATABASE_OPT_EXTRA",             true);
 
 		PROP_ADD_MOVIE_RELATIVE_AUTO            = new CCBoolProperty(CAT_PATHSYNTAX,        this,   "PROP_ADD_MOVIE_RELATIVE_AUTO",             true);
 		PROP_PATHSYNTAX_SELF                    = new CCBoolProperty(CAT_PATHSYNTAX,        this,   "PROP_PATHSYNTAX_SELF",                     true);

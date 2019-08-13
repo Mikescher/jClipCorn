@@ -11,14 +11,17 @@ import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.covertab.CCCoverData;
 import de.jClipCorn.database.databaseElement.columnTypes.*;
 import de.jClipCorn.database.util.CCQualityCategory;
+import de.jClipCorn.database.util.CategoryType;
 import de.jClipCorn.database.util.ExtendedViewedState;
 import de.jClipCorn.database.util.ExtendedViewedStateType;
 import de.jClipCorn.features.actionTree.IActionSourceObject;
+import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.formatter.PathFormatter;
+import de.jClipCorn.util.formatter.TimeIntervallFormatter;
 import de.jClipCorn.util.stream.CCStream;
 import de.jClipCorn.util.stream.CCStreams;
 
@@ -551,7 +554,45 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 		return PathFormatter.combine(seriesfoldername, seasonfoldername, filename);
 	}
 
+
+	@SuppressWarnings("nls")
 	public CCQualityCategory getMediaInfoCategory() {
-		return CCQualityCategory.UNSET; //TODO avg
+		if (getEpisodeCount() == 0) return CCQualityCategory.UNSET;
+
+		if (iteratorEpisodes().any(e -> e.getMediaInfo().isUnset())) return CCQualityCategory.UNSET;
+
+		double avg = iteratorEpisodes().map(e -> e.getMediaInfo().getCategory().getCategoryType()).avgValueOrDefault(e -> (double)e.asInt(), 0);
+
+		String shorttext = iteratorEpisodes().map(e -> e.getMediaInfo().getCategory().getShortText()).groupBy(e -> e).singleOrDefault(Map.Entry::getKey, null, null);
+		if (shorttext == null) shorttext = LocaleBundle.getString("CCQualityCategory.Multiple");
+
+		CategoryType ct = CategoryType.getWrapper().findOrNull((int)Math.round(avg));
+		if (ct == null) return CCQualityCategory.UNSET; // should never happen ??
+
+		String longtext = Str.format(LocaleBundle.getFormattedString("JMediaInfoControl.episodes", getEpisodeCount()));
+
+		int minBitrate = iteratorEpisodes().map(e -> (int) Math.round(e.getMediaInfo().getBitrate() / 1024.0)).autoMinValueOrDefault(e -> e, 0);
+		int maxBitrate = iteratorEpisodes().map(e -> (int) Math.round(e.getMediaInfo().getBitrate() / 1024.0)).autoMaxValueOrDefault(e -> e, 0);
+		int minDuration = iteratorEpisodes().map(e -> (int)e.getMediaInfo().getDuration()).autoMinValueOrDefault(e -> e, 0);
+		int maxDuration = iteratorEpisodes().map(e -> (int)e.getMediaInfo().getDuration()).autoMaxValueOrDefault(e -> e, 0);
+		int minFramerate = iteratorEpisodes().map(e -> (int)Math.round(e.getMediaInfo().getFramerate())).autoMinValueOrDefault(e -> e, 0);
+		int maxFramerate = iteratorEpisodes().map(e -> (int)Math.round(e.getMediaInfo().getFramerate())).autoMaxValueOrDefault(e -> e, 0);
+
+		StringBuilder b = new StringBuilder();
+		b.append("<html>");
+
+		b.append("Bitrate (min): ").append(Str.spacegroupformat(minBitrate)).append(" kB/s").append("<br/>");
+		b.append("Bitrate (max): ").append(Str.spacegroupformat(maxBitrate)).append(" kB/s").append("<br/>");
+
+		b.append("Duration (min): ").append(TimeIntervallFormatter.formatSeconds(minDuration)).append("<br/>");
+		b.append("Duration (max): ").append(TimeIntervallFormatter.formatSeconds(maxDuration)).append("<br/>");
+
+		b.append("Framerate (min): ").append(minFramerate).append(" fps").append("<br/>");
+		b.append("Framerate (max): ").append(maxFramerate).append(" fps").append("<br/>");
+
+		b.append("</html>");
+		String tooltip = b.toString();
+
+		return new CCQualityCategory(ct, shorttext, longtext, tooltip);
 	}
 }

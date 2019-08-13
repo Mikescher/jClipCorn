@@ -309,18 +309,18 @@ public class MediaQueryResult {
 		if (video.FrameRate  == -1)   return CCMediaInfo.EMPTY;
 		if (video.BitDepth   == -1)   return CCMediaInfo.EMPTY;
 		if (video.FrameCount == -1)   return CCMediaInfo.EMPTY;
-		if (video.CodecID    == null) return CCMediaInfo.EMPTY;
+		//if (video.CodecID    == null) return CCMediaInfo.EMPTY;
 
 		if (audio.Format     == null) return CCMediaInfo.EMPTY;
 		if (audio.Channels   == -1)   return CCMediaInfo.EMPTY;
-		if (audio.CodecID    == null) return CCMediaInfo.EMPTY;
+		//if (audio.CodecID    == null) return CCMediaInfo.EMPTY;
 
 		if (tbr              == -1)   return CCMediaInfo.EMPTY;
 
 		return new CCMediaInfo(CDate, MDate, FileSize, Duration,
 		                       tbr,
-			                   video.Format, video.Width, video.Height, video.FrameRate, video.BitDepth, video.FrameCount, video.CodecID,
-			                   audio.Format, audio.Channels, audio.CodecID, audio.Samplingrate);
+			                   video.Format, video.Width, video.Height, video.FrameRate, video.BitDepth, video.FrameCount, Str.coalesce(video.CodecID),
+			                   audio.Format, audio.Channels, Str.coalesce(audio.CodecID), audio.Samplingrate);
 	}
 
 	public int getTotalBitrate() {

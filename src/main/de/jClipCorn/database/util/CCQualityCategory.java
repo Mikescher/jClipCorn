@@ -10,22 +10,19 @@ import javax.swing.*;
 public class CCQualityCategory {
 	public static final CCQualityCategory UNSET = new CCQualityCategory(
 			CategoryType.UNKOWN,
-			Resources.ICN_TABLE_QUALITY_0,
 			LocaleBundle.getString("CCQualityCategory.Unknown"), //$NON-NLS-1$
 			LocaleBundle.getString("CCQualityCategory.Unknown"), //$NON-NLS-1$
 			Str.Empty);
 
 	private final CategoryType _type;
-	private final IconRef _icon;
 	private final String _tooltip;
 	private final String _short;
 	private final String _long;
 
-	public CCQualityCategory(CategoryType ct, IconRef icn, String txtShort, String txtLong, String txtTip) {
+	public CCQualityCategory(CategoryType ct, String txtShort, String txtLong, String txtTip) {
 		_type    = ct;
 		_short   = txtShort;
 		_long    = txtLong;
-		_icon    = icn;
 		_tooltip = txtTip;
 	}
 
@@ -38,11 +35,15 @@ public class CCQualityCategory {
 	}
 
 	public Icon getIcon() {
-		return _icon.get();
+		return _type.getIcon().get();
 	}
 
 	public String getTooltip() {
 		return _tooltip;
+	}
+
+	public CategoryType getCategoryType() {
+		return _type;
 	}
 
 	public static int compare(CCQualityCategory o1, CCQualityCategory o2) {

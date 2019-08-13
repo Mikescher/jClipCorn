@@ -253,22 +253,7 @@ public class CCMediaInfo {
 		String tx2 = getCategoryTextLong();
 		String tx3 = getCategoryToolTip();
 
-		return _cat = new CCQualityCategory(ct, getCategoryIcon(ct), tx1, tx2, tx3);
-	}
-
-	private IconRef getCategoryIcon(CategoryType ct) {
-		switch (ct) {
-			case LOW_QUALITY:      return Resources.ICN_TABLE_QUALITY_1;
-			case OKAY:             return Resources.ICN_TABLE_QUALITY_2;
-			case GOOD:             return Resources.ICN_TABLE_QUALITY_3;
-			case VERY_GOOD:        return Resources.ICN_TABLE_QUALITY_4;
-			case HIGH_DEFINITION:  return Resources.ICN_TABLE_QUALITY_5;
-			
-			case UNKOWN:           return Resources.ICN_TABLE_QUALITY_0;
-		}
-
-		CCLog.addDefaultSwitchError(this, ct);
-		return null;
+		return _cat = new CCQualityCategory(ct, tx1, tx2, tx3);
 	}
 
 	@SuppressWarnings("nls")
@@ -277,7 +262,7 @@ public class CCMediaInfo {
 		b.append("<html>");
 		b.append("Resolution: ").append(width).append(" x ").append(height).append("<br/>");
 		b.append("Bitrate: ").append(Str.spacegroupformat((int) Math.round(bitrate / 1024.0))).append(" kB/s").append("<br/>");
-		b.append("Duation: ").append(TimeIntervallFormatter.formatSeconds(duration)).append("<br/>");
+		b.append("Duration: ").append(TimeIntervallFormatter.formatSeconds(duration)).append("<br/>");
 		b.append("Framerate: ").append(Math.round(framerate)).append(" fps").append("<br/>");
 		b.append("</html>");
 		return b.toString();
@@ -325,8 +310,6 @@ public class CCMediaInfo {
 		return "Other";
 	}
 
-
-
 	private boolean isApproxSize(int w, int h, double near, double far)
 	{
 		double dw = Math.abs(width - w) / (Math.max(width, w) * 1d);
@@ -347,7 +330,7 @@ public class CCMediaInfo {
 		if (duration <= 0) return "Duration";
 		if (bitrate <= 0) return "Bitrate";
 		if (Str.isNullOrWhitespace(videoformat)) return "VideoFormat";
-		if (Str.isNullOrWhitespace(videocodec))  return "VideoCodec";
+		//if (Str.isNullOrWhitespace(videocodec))  return "VideoCodec";
 		if (width <= 0) return "Width";
 		if (height <= 0) return "Height";
 		if (framerate <= 0) return "Framerate";
@@ -355,7 +338,7 @@ public class CCMediaInfo {
 		if (framecount <= 0) return "Framecount";
 
 		if (Str.isNullOrWhitespace(audioformat)) return "AudioFormat";
-		if (Str.isNullOrWhitespace(audiocodec))  return "AudioCodec";
+		//if (Str.isNullOrWhitespace(audiocodec))  return "AudioCodec";
 		if (audiochannels <= 0) return "AudioChannels";
 		if (audiosamplerate <= 0) return "AudioSamplerate";
 

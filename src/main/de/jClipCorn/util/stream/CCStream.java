@@ -3,6 +3,7 @@ package de.jClipCorn.util.stream;
 import java.util.*;
 import java.util.Map.Entry;
 
+import jdk.nashorn.internal.runtime.arrays.TypedArrayData;
 import org.apache.commons.lang3.ObjectUtils;
 
 import de.jClipCorn.util.lambda.Func1to1;
@@ -206,6 +207,31 @@ public abstract class CCStream<TType> implements Iterator<TType>, Iterable<TType
 	@SuppressWarnings({ "unchecked", "rawtypes", "cast" })
 	public <TAttrType> TType autoMinValueOrDefault(Func1to1<TType, TAttrType> selector, TType defValue) {
 		return (TType)minValueOrDefault(selector, (a,b) -> ObjectUtils.compare((Comparable)a, (Comparable)b), defValue);
+	}
+
+	public double avgValueOrDefault(Func1to1<TType, Double> selector, double defValue) {
+		double sum = 0;
+		int count = 0;
+
+		for (TType m : this) {
+			sum += selector.invoke(m);
+			count++;
+		}
+
+		if (count == 0) return defValue;
+		return sum / count;
+	}
+
+	public <TAttrType> TAttrType singleOrDefault(Func1to1<TType, TAttrType> selector, TAttrType valueZero, TAttrType valueMoreThanOne) {
+		TType r = null;
+		boolean first = true;
+
+		for (TType m : this) {
+			if (first) r = m; else return valueMoreThanOne;
+			first = false;
+		}
+		if (first) return valueZero;
+		return selector.invoke(r);
 	}
 
 	public <TAttrType> TAttrType findMostCommon(Func1to1<TType, TAttrType> selector, TAttrType defValue) {

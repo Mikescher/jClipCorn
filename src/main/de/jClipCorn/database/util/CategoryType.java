@@ -1,7 +1,10 @@
 package de.jClipCorn.database.util;
 
 import de.jClipCorn.database.databaseElement.columnTypes.CCFSK;
+import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.gui.resources.Resources;
+import de.jClipCorn.gui.resources.reftypes.IconRef;
 import de.jClipCorn.util.enumextension.ContinoousEnum;
 import de.jClipCorn.util.enumextension.EnumWrapper;
 
@@ -23,7 +26,18 @@ public enum CategoryType implements ContinoousEnum<CategoryType>
 		LocaleBundle.getString("CategoryType.VERY_GOOD"),  //$NON-NLS-1$
 		LocaleBundle.getString("CategoryType.HIGH_DEFINITION"),  //$NON-NLS-1$
 	};
-	
+
+	private final static IconRef[] ICONS =
+	{
+		Resources.ICN_TABLE_QUALITY_0,
+
+		Resources.ICN_TABLE_QUALITY_1,
+		Resources.ICN_TABLE_QUALITY_2,
+		Resources.ICN_TABLE_QUALITY_3,
+		Resources.ICN_TABLE_QUALITY_4,
+		Resources.ICN_TABLE_QUALITY_5,
+	};
+
 	private int id;
 	
 	private static EnumWrapper<CategoryType> wrapper = new EnumWrapper<>(UNKOWN);
@@ -44,6 +58,10 @@ public enum CategoryType implements ContinoousEnum<CategoryType>
 	@Override
 	public String asString() {
 		return NAMES[asInt()];
+	}
+
+	public IconRef getIcon() {
+		return ICONS[asInt()];
 	}
 
 	@Override

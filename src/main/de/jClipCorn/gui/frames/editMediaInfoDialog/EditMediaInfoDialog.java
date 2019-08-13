@@ -210,7 +210,7 @@ public class EditMediaInfoDialog extends JDialog {
 				FormSpecs.RELATED_GAP_COLSPEC,
 				ColumnSpec.decode("1dlu:grow"), //$NON-NLS-1$
 				FormSpecs.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("55dlu"), //$NON-NLS-1$
+				ColumnSpec.decode("60dlu"), //$NON-NLS-1$
 				FormSpecs.RELATED_GAP_COLSPEC,},
 			new RowSpec[] {
 				FormSpecs.RELATED_GAP_ROWSPEC,
@@ -282,7 +282,7 @@ public class EditMediaInfoDialog extends JDialog {
 				FormSpecs.RELATED_GAP_COLSPEC,
 				ColumnSpec.decode("1dlu:grow"), //$NON-NLS-1$
 				FormSpecs.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("55dlu"), //$NON-NLS-1$
+				ColumnSpec.decode("60dlu"), //$NON-NLS-1$
 				FormSpecs.RELATED_GAP_COLSPEC,},
 			new RowSpec[] {
 				FormSpecs.RELATED_GAP_ROWSPEC,
@@ -376,7 +376,7 @@ public class EditMediaInfoDialog extends JDialog {
 				FormSpecs.RELATED_GAP_COLSPEC,
 				ColumnSpec.decode("1dlu:grow"), //$NON-NLS-1$
 				FormSpecs.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("55dlu"), //$NON-NLS-1$
+				ColumnSpec.decode("60dlu"), //$NON-NLS-1$
 				FormSpecs.RELATED_GAP_COLSPEC,},
 			new RowSpec[] {
 				FormSpecs.RELATED_GAP_ROWSPEC,

@@ -192,6 +192,12 @@ public class CCMediaInfo {
 
 		CCMediaInfo that = (CCMediaInfo) o;
 
+		return isEqual(that);
+	}
+
+	public boolean isEqual(CCMediaInfo that) {
+		if (that == null) return false;
+
 		if (cdate != that.cdate) return false;
 		if (mdate != that.mdate) return false;
 		if (filesize != that.filesize) return false;
@@ -207,7 +213,8 @@ public class CCMediaInfo {
 		if (!Objects.equals(audiocodec, that.audiocodec)) return false;
 		if (audiosamplerate != that.audiosamplerate) return false;
 		if (!Objects.equals(videoformat, that.videoformat)) return false;
-		return Objects.equals(audioformat, that.audioformat);
+		if (!Objects.equals(audioformat, that.audioformat)) return false;
+		return true;
 	}
 
 	@Override
@@ -317,6 +324,8 @@ public class CCMediaInfo {
 
 		return "Other";
 	}
+
+
 
 	private boolean isApproxSize(int w, int h, double near, double far)
 	{

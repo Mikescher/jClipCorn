@@ -64,6 +64,7 @@ import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.RowSpec;
 import com.jgoodies.forms.layout.FormSpecs;
+import de.jClipCorn.gui.guiComponents.jMediaInfoControl.JMediaInfoControl;
 
 public class BatchEditFrame extends JFrame implements UserDataProblemHandler, OmniParserCallbackListener {
 	private static final long serialVersionUID = 8825373383589912037L;
@@ -153,6 +154,11 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 	private final JFileChooser massVideoFileChooser;
 
 	private final UpdateCallbackListener listener;
+	private JLabel label_8;
+	private JMediaInfoControl ctrlMediaInfo;
+	private JLabel lblDirtyMediaInfo;
+	private JButton btnSiedAutoMediaInfo;
+	private JButton btnMediaInfo3;
 
 	/**
 	 * @wbp.parser.constructor
@@ -162,7 +168,7 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 	public BatchEditFrame(Component owner, IEpisodeOwner ss, List<CCEpisode> eps, UpdateCallbackListener ucl) {
 		super();
 		setMinimumSize(new Dimension(1150, 750));
-		setSize(new Dimension(1200, 750));
+		setSize(new Dimension(1250, 750));
 		this.target = ss;
 		this.listener = ucl;
 		this.data = (eps!= null) ? CCStreams.iterate(eps).map(BatchEditEpisodeData::new).enumerate() : ss.iteratorEpisodes().map(BatchEditEpisodeData::new).enumerate();
@@ -190,7 +196,7 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 				FormSpecs.UNRELATED_GAP_COLSPEC,
 				ColumnSpec.decode("200dlu"), //$NON-NLS-1$
 				FormSpecs.UNRELATED_GAP_COLSPEC,
-				ColumnSpec.decode("215dlu"), //$NON-NLS-1$
+				ColumnSpec.decode("250dlu"), //$NON-NLS-1$
 				FormSpecs.UNRELATED_GAP_COLSPEC,
 				ColumnSpec.decode("default:grow"), //$NON-NLS-1$
 				FormSpecs.UNRELATED_GAP_COLSPEC,},
@@ -322,6 +328,19 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 
 		cbxFormat = new JComboBox<>();
 		pnlInfo.add(cbxFormat, "5, 6"); //$NON-NLS-1$
+		
+		lblDirtyMediaInfo = new JLabel("*"); //$NON-NLS-1$
+		pnlInfo.add(lblDirtyMediaInfo, "2, 8"); //$NON-NLS-1$
+		
+		label_8 = new JLabel("MediaInfo"); //$NON-NLS-1$
+		pnlInfo.add(label_8, "3, 8"); //$NON-NLS-1$
+		
+		ctrlMediaInfo = new JMediaInfoControl(() -> PathFormatter.fromCCPath(edPart.getText()));
+		pnlInfo.add(ctrlMediaInfo, "5, 8, fill, fill"); //$NON-NLS-1$
+		
+		btnMediaInfo3 = new JButton(Resources.ICN_MENUBAR_UPDATECODECDATA.get16x16());
+		pnlInfo.add(btnMediaInfo3, "9, 8"); //$NON-NLS-1$
+		btnMediaInfo3.setToolTipText("MediaInfo"); //$NON-NLS-1$
 		
 		lblDirtyLanguage = new JLabel("*"); //$NON-NLS-1$
 		pnlInfo.add(lblDirtyLanguage, "2, 10"); //$NON-NLS-1$
@@ -477,6 +496,8 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 				FormSpecs.DEFAULT_ROWSPEC,
 				FormSpecs.RELATED_GAP_ROWSPEC,
 				FormSpecs.DEFAULT_ROWSPEC,
+				FormSpecs.RELATED_GAP_ROWSPEC,
+				FormSpecs.DEFAULT_ROWSPEC,
 				FormSpecs.RELATED_GAP_ROWSPEC,}));
 		
 		btnSide_01 = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnDeleteFirst.text")); //$NON-NLS-1$
@@ -579,7 +600,11 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 
 		btnSideAutoLen = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnMassSetLen.title")); //$NON-NLS-1$
 		pnlEdit.add(btnSideAutoLen, "2, 38, 9, 1"); //$NON-NLS-1$
+		
+		btnSiedAutoMediaInfo = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnMassSetMediaInfo.title")); //$NON-NLS-1$
+		pnlEdit.add(btnSiedAutoMediaInfo, "2, 40, 9, 1, fill, fill"); //$NON-NLS-1$
 
+		btnSiedAutoMediaInfo.addActionListener(e -> massMediaInfo());
 		btnSideAutoLen.addActionListener(e -> massMediaInfoLen());
 		btnSide_13.addActionListener(e -> massSetFormat());
 		btnSide_12.addActionListener(e -> massSetLength());
@@ -602,6 +627,7 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 		btnRecalcSize.addActionListener(e -> recalcFilesize());
 		spnSize.addChangeListener(arg0 -> updateFilesizeDisplay());
 		btnMediaInfo1.addActionListener(e -> parseCodecMetadata_Lang());
+		btnMediaInfo3.addActionListener(e -> parseCodecMetadata_MediaInfo());
 		btnMediaInfoRaw.addActionListener(e -> showCodecMetadata());
 	}
 
@@ -626,7 +652,7 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 			List<UserDataProblem> problems = new ArrayList<>();
 
 			for (BatchEditEpisodeData episode : data) {
-				UserDataProblem.testEpisodeData(problems, target, episode.getSource(), episode.getTitle(), episode.getLength(), episode.getEpisodeNumber(), episode.getAddDate(), episode.getViewedHistory(), episode.getFilesize().getBytes(), episode.getFormat().asString(), episode.getFormat().asStringAlt(), episode.getPart(), episode.getSource().getMediaInfo()/*TODO*/, episode.getLanguage());
+				UserDataProblem.testEpisodeData(problems, target, episode.getSource(), episode.getTitle(), episode.getLength(), episode.getEpisodeNumber(), episode.getAddDate(), episode.getViewedHistory(), episode.getFilesize().getBytes(), episode.getFormat().asString(), episode.getFormat().asStringAlt(), episode.getPart(), episode.getMediaInfo(), episode.getLanguage());
 			}
 
 			if (problems.size() > 0) {
@@ -716,6 +742,7 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 			episode.setAddDate(spnAddDate.getValue());
 			episode.setPart(edPart.getText());
 			episode.setLanguage(ctrlLang.getValue());
+			episode.setMediaInfo(ctrlMediaInfo.getValue());
 		} catch (CCFormatException e) {
 			return false;
 		}
@@ -743,9 +770,11 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 			String csExtn = CCFileFormat.getWrapper().findOrException(cbxFormat.getSelectedIndex()).asString();
 			String csExta = CCFileFormat.getWrapper().findOrException(cbxFormat.getSelectedIndex()).asStringAlt();
 	
+			CCMediaInfo minfo = ctrlMediaInfo.getValue();
+			
 			String part = edPart.getText();
 	
-			UserDataProblem.testEpisodeData(ret, target, sel.getSource(), title, len, epNum, adddate, lvdate, fsize, csExtn, csExta, part, sel.getSource().getMediaInfo()/*TODO*/, lang);
+			UserDataProblem.testEpisodeData(ret, target, sel.getSource(), title, len, epNum, adddate, lvdate, fsize, csExtn, csExta, part, minfo, lang);
 	
 			return ret.isEmpty();
 		}
@@ -810,6 +839,7 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 			spnAddDate.setValue(episode.getAddDate());
 			edPart.setText(episode.getPart());
 			ctrlLang.setValue(episode.getLanguage());
+			ctrlMediaInfo.setValue(episode.getMediaInfo());
 
 			lblDirtyTitle.setVisible(episode.titleDirty);
 			lblDirtyEpisodeNumber.setVisible(episode.episodeNumberDirty);
@@ -819,6 +849,7 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 			lblDirtyAddDate.setVisible(episode.addDateDirty);
 			lblDirtyPath.setVisible(episode.partDirty);
 			lblDirtyLanguage.setVisible(episode.languageDirty);
+			lblDirtyMediaInfo.setVisible(episode.mediaInfoDirty);
 
 			testPart();
 
@@ -1083,6 +1114,30 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 		}
 	}
 
+	private void massMediaInfo() {
+		lsEpisodes.setSelectedIndex(-1);
+
+		StringBuilder err = new StringBuilder();
+
+		for (BatchEditEpisodeData ep : data) {
+			try {
+				MediaQueryResult dat = MediaQueryRunner.query(PathFormatter.fromCCPath(ep.getPart()));
+				CCMediaInfo minfo = dat.toMediaInfo();
+				
+				if (minfo.isSet()) ep.setMediaInfo(minfo);
+
+			} catch (IOException | MediaQueryException e) {
+				err.append("[").append(ep.getEpisodeNumber()).append("] ").append(ep.getTitle()).append("\n").append(ExceptionUtils.getMessage(e)).append("\n\n"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+			}
+		}
+
+		updateList();
+		
+		if (!err.toString().isEmpty()) {
+			GenericTextDialog.showText(this, getTitle(), err.toString(), true);
+		}
+	}
+
 	private void autoMetaDataCalc() {
 		lsEpisodes.setSelectedIndex(-1);
 
@@ -1162,6 +1217,23 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 			if (dur == -1) throw new MediaQueryException("Duration == -1"); //$NON-NLS-1$
 			spnLength.setValue(dur);
 
+		} catch (IOException | MediaQueryException e) {
+			GenericTextDialog.showText(this, getTitle(), e.getMessage() + "\n\n" + ExceptionUtils.getMessage(e) + "\n\n" + ExceptionUtils.getStackTrace(e), false); //$NON-NLS-1$ //$NON-NLS-2$
+		}
+	}
+	
+	private void parseCodecMetadata_MediaInfo() {
+		String mqp = CCProperties.getInstance().PROP_PLAY_MEDIAINFO_PATH.getValue();
+		if (Str.isNullOrWhitespace(mqp) || !new File(mqp).exists() || !new File(mqp).isFile() || !new File(mqp).canExecute()) {
+			DialogHelper.showLocalError(this, "Dialogs.MediaInfoNotFound"); //$NON-NLS-1$
+			return;
+		}
+
+		try {
+			MediaQueryResult dat = MediaQueryRunner.query(PathFormatter.fromCCPath(edPart.getText()));
+			CCMediaInfo minfo = dat.toMediaInfo();
+
+			ctrlMediaInfo.setValue(minfo);
 		} catch (IOException | MediaQueryException e) {
 			GenericTextDialog.showText(this, getTitle(), e.getMessage() + "\n\n" + ExceptionUtils.getMessage(e) + "\n\n" + ExceptionUtils.getStackTrace(e), false); //$NON-NLS-1$ //$NON-NLS-2$
 		}

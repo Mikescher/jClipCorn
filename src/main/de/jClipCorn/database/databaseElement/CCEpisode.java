@@ -113,6 +113,7 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 		updateDB();
 	}
 
+	@Override
 	public void setMediaInfo(CCMediaInfo minfo) {
 		if (minfo == null) { CCLog.addUndefinied("Prevented setting CCEpisode.MediaInfo to NULL"); return; } //$NON-NLS-1$
 

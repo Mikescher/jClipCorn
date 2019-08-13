@@ -42,6 +42,9 @@ public class BatchEditEpisodeData implements IEpisodeData
 	private CCDBLanguageList language;
 	public boolean languageDirty = false;
 
+	private CCMediaInfo mediaInfo;
+	public boolean mediaInfoDirty = false;
+
 	public boolean isDirty = false;
 
 	public BatchEditEpisodeData(CCEpisode e) {
@@ -58,6 +61,7 @@ public class BatchEditEpisodeData implements IEpisodeData
 		addDate       = e.getAddDate();
 		viewedHistory = e.getViewedHistory();
 		language      = e.getLanguage();
+		mediaInfo     = e.getMediaInfo();
 	}
 
 	@Override
@@ -197,6 +201,18 @@ public class BatchEditEpisodeData implements IEpisodeData
 		return language;
 	}
 
+	@Override
+	public void setMediaInfo(CCMediaInfo minfo) {
+		if (mediaInfo.isEqual(minfo)) return;
+		mediaInfo = minfo;
+		mediaInfoDirty = isDirty = true;
+	}
+
+	@Override
+	public CCMediaInfo getMediaInfo() {
+		return mediaInfo;
+	}
+
 	public CCEpisode getSource() {
 		return _source;
 	}
@@ -217,6 +233,7 @@ public class BatchEditEpisodeData implements IEpisodeData
 			if (addDateDirty)       _source.setAddDate(addDate);
 			if (viewedHistoryDirty) _source.setViewedHistory(viewedHistory);
 			if (languageDirty)      _source.setLanguage(language);
+			if (mediaInfoDirty)     _source.setMediaInfo(mediaInfo);
 		}
 		_source.endUpdating();
 	}

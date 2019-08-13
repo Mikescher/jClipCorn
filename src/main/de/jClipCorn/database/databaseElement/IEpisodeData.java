@@ -38,4 +38,7 @@ public interface IEpisodeData {
 
 	void setLanguage(CCDBLanguageList language);
 	CCDBLanguageList getLanguage();
+
+	void setMediaInfo(CCMediaInfo minfo);
+	public CCMediaInfo getMediaInfo();
 }

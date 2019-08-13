@@ -427,6 +427,7 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 		updateDB();
 	}
 
+	@Override
 	public CCQualityCategory getMediaInfoCategory(){
 		return getMediaInfo().getCategory(getGenres());
 	}

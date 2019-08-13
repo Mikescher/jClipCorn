@@ -65,6 +65,9 @@ public abstract class AbstractCustomFilter {
 	public final static int CUSTOMFILTERID_SEASONCOUNTER    = 33;
 	public final static int CUSTOMFILTERID_RELATIVE_HISTORY = 34;
 	public final static int CUSTOMFILTERID_EXACTLANGUAGE    = 35;
+	public final static int CUSTOMFILTERID_QUALITYCAT       = 36;
+	public final static int CUSTOMFILTERID_MI_SET           = 36;
+	public final static int CUSTOMFILTERID_MI_VALUE         = 37;
 		
 	public abstract String getName();
 	public abstract String getPrecreateName();
@@ -177,7 +180,9 @@ public abstract class AbstractCustomFilter {
 			new CustomLanguageFilter(),
 			new CustomExactLanguageFilter(),
 			new CustomOnlinescoreFilter(),
-			//TODO MediaInfoFilters
+			new CustomQualityCategoryTypeFilter(),
+			new CustomMediaInfoSetFilter(),
+			new CustomMediaInfoValueFilter(),
 			new CustomUserScoreFilter(),
 			new CustomMainReferenceFilter(),
 			new CustomAnyReferenceFilter(),

@@ -650,6 +650,7 @@ public class CCSeries extends CCDatabaseElement implements IEpisodeOwner {
 		return iteratorEpisodes().autosortByProperty(CCEpisode::getAddDate).lastOrNull();
 	}
 
+	@Override
 	@SuppressWarnings("nls")
 	public CCQualityCategory getMediaInfoCategory() {
 		if (getEpisodeCount() == 0) return CCQualityCategory.UNSET;

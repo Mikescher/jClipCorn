@@ -3,7 +3,6 @@ package de.jClipCorn.util.stream;
 import java.util.*;
 import java.util.Map.Entry;
 
-import jdk.nashorn.internal.runtime.arrays.TypedArrayData;
 import org.apache.commons.lang3.ObjectUtils;
 
 import de.jClipCorn.util.lambda.Func1to1;

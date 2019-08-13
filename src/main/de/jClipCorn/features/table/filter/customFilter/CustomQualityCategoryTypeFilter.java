@@ -2,8 +2,6 @@ package de.jClipCorn.features.table.filter.customFilter;
 
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
-import de.jClipCorn.database.databaseElement.columnTypes.CCFSK;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMediaInfo;
 import de.jClipCorn.database.util.CCQualityCategoryType;
 import de.jClipCorn.features.table.filter.AbstractCustomDatabaseElementFilter;
 import de.jClipCorn.features.table.filter.AbstractCustomFilter;
@@ -22,17 +20,17 @@ public class CustomQualityCategoryTypeFilter extends AbstractCustomDatabaseEleme
 
 	@Override
 	public String getName() {
-		return LocaleBundle.getFormattedString("FilterTree.Custom.CustomFilterNames.Quality", value.asString()); //$NON-NLS-1$
+		return LocaleBundle.getFormattedString("FilterTree.Custom.CustomFilterNames.QualityCat", value.asString()); //$NON-NLS-1$
 	}
 
 	@Override
 	public String getPrecreateName() {
-		return LocaleBundle.getDeformattedString("FilterTree.Custom.CustomFilterNames.Quality").replace("()", "").trim(); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		return LocaleBundle.getDeformattedString("FilterTree.Custom.CustomFilterNames.QualityCat").replace("()", "").trim(); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
 
 	@Override
 	public int getID() {
-		return AbstractCustomFilter.CUSTOMFILTERID_FSK;
+		return AbstractCustomFilter.CUSTOMFILTERID_QUALITYCAT;
 	}
 	
 	@Override

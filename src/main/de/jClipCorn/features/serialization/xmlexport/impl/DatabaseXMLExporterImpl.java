@@ -2,6 +2,7 @@ package de.jClipCorn.features.serialization.xmlexport.impl;
 
 import de.jClipCorn.Main;
 import de.jClipCorn.database.databaseElement.*;
+import de.jClipCorn.database.databaseElement.columnTypes.CCMediaInfo;
 import de.jClipCorn.features.serialization.xmlexport.ExportOptions;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datetime.CCDate;
@@ -64,7 +65,43 @@ public class DatabaseXMLExporterImpl {
 		e.setAttribute("year",         o.getYear() + "");
 		e.setAttribute("zyklus",       o.getZyklus().getTitle());
 		e.setAttribute("zyklusnumber", o.getZyklus().getNumber() + "");
-		//TODO
+
+		CCMediaInfo minfo = o.getMediaInfo();
+		if (minfo.isSet()) {
+			e.setAttribute("mediainfo.filesize",        minfo.getFilesize()+"");
+			e.setAttribute("mediainfo.cdate",           minfo.getCDate()+"");
+			e.setAttribute("mediainfo.mdate",           minfo.getMDate()+"");
+			e.setAttribute("mediainfo.audioformat",     minfo.getAudioFormat());
+			e.setAttribute("mediainfo.videoformat",     minfo.getVideoFormat());
+			e.setAttribute("mediainfo.width",           minfo.getWidth()+"");
+			e.setAttribute("mediainfo.height",          minfo.getHeight()+"");
+			e.setAttribute("mediainfo.framerate",       Double.toString(minfo.getFramerate()));
+			e.setAttribute("mediainfo.duration",        Double.toString(minfo.getDuration()));
+			e.setAttribute("mediainfo.bitdepth",        minfo.getBitdepth()+"");
+			e.setAttribute("mediainfo.bitrate",         minfo.getBitrate()+"");
+			e.setAttribute("mediainfo.framecount",      minfo.getFramecount()+"");
+			e.setAttribute("mediainfo.audiochannels",   minfo.getAudioChannels()+"");
+			e.setAttribute("mediainfo.videocodec",      minfo.getVideoCodec());
+			e.setAttribute("mediainfo.audiocodec",      minfo.getAudioCodec());
+			e.setAttribute("mediainfo.audiosamplerate", minfo.getAudioSamplerate()+"");
+		} else {
+			e.setAttribute("mediainfo.filesize",        Str.Empty);
+			e.setAttribute("mediainfo.cdate",           Str.Empty);
+			e.setAttribute("mediainfo.mdate",           Str.Empty);
+			e.setAttribute("mediainfo.audioformat",     Str.Empty);
+			e.setAttribute("mediainfo.videoformat",     Str.Empty);
+			e.setAttribute("mediainfo.width",           Str.Empty);
+			e.setAttribute("mediainfo.height",          Str.Empty);
+			e.setAttribute("mediainfo.framerate",       Str.Empty);
+			e.setAttribute("mediainfo.duration",        Str.Empty);
+			e.setAttribute("mediainfo.bitdepth",        Str.Empty);
+			e.setAttribute("mediainfo.bitrate",         Str.Empty);
+			e.setAttribute("mediainfo.framecount",      Str.Empty);
+			e.setAttribute("mediainfo.audiochannels",   Str.Empty);
+			e.setAttribute("mediainfo.videocodec",      Str.Empty);
+			e.setAttribute("mediainfo.audiocodec",      Str.Empty);
+			e.setAttribute("mediainfo.audiosamplerate", Str.Empty);
+		}
 
 		if (s.FileHash) e.setAttribute("filehash", o.getFastMD5());
 	}
@@ -101,7 +138,26 @@ public class DatabaseXMLExporterImpl {
 		e.setAttribute("part",          o.getPart());
 		e.setAttribute("tags",          o.getTags().serialize());
 		e.setAttribute("languages",     o.getLanguage().serializeToString());
-		//TODO
+
+		CCMediaInfo minfo = o.getMediaInfo();
+		if (minfo.isSet()) {
+			e.setAttribute("mediainfo.filesize",        minfo.getFilesize()+"");
+			e.setAttribute("mediainfo.cdate",           minfo.getCDate()+"");
+			e.setAttribute("mediainfo.mdate",           minfo.getMDate()+"");
+			e.setAttribute("mediainfo.audioformat",     minfo.getAudioFormat());
+			e.setAttribute("mediainfo.videoformat",     minfo.getVideoFormat());
+			e.setAttribute("mediainfo.width",           minfo.getWidth()+"");
+			e.setAttribute("mediainfo.height",          minfo.getHeight()+"");
+			e.setAttribute("mediainfo.framerate",       Double.toString(minfo.getFramerate()));
+			e.setAttribute("mediainfo.duration",        Double.toString(minfo.getDuration()));
+			e.setAttribute("mediainfo.bitdepth",        minfo.getBitdepth()+"");
+			e.setAttribute("mediainfo.bitrate",         minfo.getBitrate()+"");
+			e.setAttribute("mediainfo.framecount",      minfo.getFramecount()+"");
+			e.setAttribute("mediainfo.audiochannels",   minfo.getAudioChannels()+"");
+			e.setAttribute("mediainfo.videocodec",      minfo.getVideoCodec());
+			e.setAttribute("mediainfo.audiocodec",      minfo.getAudioCodec());
+			e.setAttribute("mediainfo.audiosamplerate", minfo.getAudioSamplerate()+"");
+		}
 
 		if (s.FileHash) e.setAttribute("filehash", o.getFastMD5());
 	}

@@ -132,7 +132,7 @@ public class CCDefaultCoverCache implements ICoverCache {
 	}
 
 	@Override
-	public void preloadCover(int cid) { //TODO intelligent Precaching
+	public void preloadCover(int cid) {
 		BufferedImage res = _cache.get(cid);
 		if (res == null) return;
 

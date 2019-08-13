@@ -104,14 +104,41 @@ public class TestDatabase extends ClipCornBaseTest {
 	@Test
 	public void testParseJSCCImport() throws Exception {
 		CCMovieList ml = createEmptyDB();
-		
+
 		String data = SimpleFileUtils.readTextResource("/example_single_01.jsccexport", getClass());
-		
+
 		ExportHelper.importSingleElement(ml, data, new ImportOptions(true, true, true, true, false));
 
 		assertEquals(1, ml.getElementCount());
 		CCMovie mov = ml.iteratorMovies().next();
-		
+
+		assertEquals("Älter. Härter. Besser.", mov.getTitle());
+		assertEquals(CCDBElementTyp.MOVIE, mov.getType());
+		assertEquals(CCFileFormat.AVI, mov.getFormat());
+		assertEquals("R.E.D. I - Älter. Härter. Besser.", mov.getCompleteTitle());
+		assertEquals(714502144, mov.getFilesize().getBytes());
+		assertEquals(CCDBLanguageList.GERMAN, mov.getLanguage());
+		assertEquals(111, mov.getLength());
+		assertEquals(2010, mov.getYear());
+		assertEquals(CCUserScore.RATING_NO, mov.getScore());
+		assertEquals(CCFSK.RATING_III, mov.getFSK());
+		assertEquals(CCOnlineRefType.THEMOVIEDB, mov.getOnlineReference().Main.type);
+		assertEquals("movie/39514", mov.getOnlineReference().Main.id);
+		assertEquals(CCOnlineScore.STARS_3_5, mov.getOnlinescore());
+		assertEquals("<?self>R.E.D. I - Älter. Härter. Besser..avi", mov.getPart(0));
+	}
+
+	@Test
+	public void testParseJSCCImport2() throws Exception {
+		CCMovieList ml = createEmptyDB();
+
+		String data = SimpleFileUtils.readTextResource("/example_single_04.jsccexport", getClass());
+
+		ExportHelper.importSingleElement(ml, data, new ImportOptions(true, true, true, true, false));
+
+		assertEquals(1, ml.getElementCount());
+		CCMovie mov = ml.iteratorMovies().next();
+
 		assertEquals("Älter. Härter. Besser.", mov.getTitle());
 		assertEquals(CCDBElementTyp.MOVIE, mov.getType());
 		assertEquals(CCFileFormat.AVI, mov.getFormat());
@@ -131,16 +158,16 @@ public class TestDatabase extends ClipCornBaseTest {
 	@Test
 	public void testJSCCRoundtrip_Movie() throws Exception {
 		CCMovieList ml = createEmptyDB();
-		
+
 		String data = SimpleFileUtils.readTextResource("/example_single_01.jsccexport", getClass());
-		
+
 		ExportHelper.importSingleElement(ml, data, new ImportOptions(true, true, true, true, false));
 		CCMovie mov = ml.iteratorMovies().firstOrNull();
 		assertEquals(1, ml.getElementCount());
 
 		File filep = new File(SimpleFileUtils.getSystemTempFile("xml"));
 		ExportHelper.exportMovie(filep, ml, mov, true);
-		
+
 		ml.remove(mov);
 		assertEquals(0, ml.getElementCount());
 
@@ -150,23 +177,61 @@ public class TestDatabase extends ClipCornBaseTest {
 		assertEquals(1, ml.getElementCount());
 
 		ExportHelper.exportMovie(filep, ml, mov, true);
-		
+
 		ml.remove(ml.iteratorMovies().firstOrNull());
 		assertEquals(0, ml.getElementCount());
-		
+
 		String dataActual = SimpleFileUtils.readUTF8TextFile(filep);
 		ExportHelper.importSingleElement(ml, dataExpected, new ImportOptions(true, true, true, true, false));
 		mov = ml.iteratorMovies().firstOrNull();
 		assertEquals(1, ml.getElementCount());
-		
+
 		ml.remove(ml.iteratorMovies().firstOrNull());
 		assertEquals(0, ml.getElementCount());
 
 		assertEquals(dataExpected, dataActual);
-		
+
 		filep.delete();
 	}
 
+	@Test
+	public void testJSCCRoundtrip_Movie2() throws Exception {
+		CCMovieList ml = createEmptyDB();
+
+		String data = SimpleFileUtils.readTextResource("/example_single_03.jsccexport", getClass());
+
+		ExportHelper.importSingleElement(ml, data, new ImportOptions(true, true, true, true, false));
+		CCMovie mov = ml.iteratorMovies().firstOrNull();
+		assertEquals(1, ml.getElementCount());
+
+		File filep = new File(SimpleFileUtils.getSystemTempFile("xml"));
+		ExportHelper.exportMovie(filep, ml, mov, true);
+
+		ml.remove(mov);
+		assertEquals(0, ml.getElementCount());
+
+		String dataExpected = SimpleFileUtils.readUTF8TextFile(filep);
+		ExportHelper.importSingleElement(ml, dataExpected, new ImportOptions(true, true, true, true, false));
+		mov = ml.iteratorMovies().firstOrNull();
+		assertEquals(1, ml.getElementCount());
+
+		ExportHelper.exportMovie(filep, ml, mov, true);
+
+		ml.remove(ml.iteratorMovies().firstOrNull());
+		assertEquals(0, ml.getElementCount());
+
+		String dataActual = SimpleFileUtils.readUTF8TextFile(filep);
+		ExportHelper.importSingleElement(ml, dataExpected, new ImportOptions(true, true, true, true, false));
+		mov = ml.iteratorMovies().firstOrNull();
+		assertEquals(1, ml.getElementCount());
+
+		ml.remove(ml.iteratorMovies().firstOrNull());
+		assertEquals(0, ml.getElementCount());
+
+		assertEquals(dataExpected, dataActual);
+
+		filep.delete();
+	}
 
 	@Test
 	public void testJSCCRoundtrip_Series() throws Exception {
@@ -204,6 +269,45 @@ public class TestDatabase extends ClipCornBaseTest {
 
 		assertEquals(dataExpected, dataActual);
 		
+		filep.delete();
+	}
+
+	@Test
+	public void testJSCCRoundtrip_Series2() throws Exception {
+		CCMovieList ml = createEmptyDB();
+
+		String data = SimpleFileUtils.readTextResource("/example_single_04.jsccexport", getClass());
+
+		ExportHelper.importSingleElement(ml, data, new ImportOptions(true, true, true, true, false));
+		CCSeries ser = ml.iteratorSeries().firstOrNull();
+		assertEquals(1, ml.getElementCount());
+
+		File filep = new File(SimpleFileUtils.getSystemTempFile("xml"));
+		ExportHelper.exportSeries(filep, ml, ser, true);
+
+		ml.remove(ser);
+		assertEquals(0, ml.getElementCount());
+
+		String dataExpected = SimpleFileUtils.readUTF8TextFile(filep);
+		ExportHelper.importSingleElement(ml, dataExpected, new ImportOptions(true, true, true, true, false));
+		ser = ml.iteratorSeries().firstOrNull();
+		assertEquals(1, ml.getElementCount());
+
+		ExportHelper.exportSeries(filep, ml, ser, true);
+
+		ml.remove(ml.iteratorSeries().firstOrNull());
+		assertEquals(0, ml.getElementCount());
+
+		String dataActual = SimpleFileUtils.readUTF8TextFile(filep);
+		ExportHelper.importSingleElement(ml, dataExpected, new ImportOptions(true, true, true, true, false));
+		ser = ml.iteratorSeries().firstOrNull();
+		assertEquals(1, ml.getElementCount());
+
+		ml.remove(ml.iteratorSeries().firstOrNull());
+		assertEquals(0, ml.getElementCount());
+
+		assertEquals(dataExpected, dataActual);
+
 		filep.delete();
 	}
 

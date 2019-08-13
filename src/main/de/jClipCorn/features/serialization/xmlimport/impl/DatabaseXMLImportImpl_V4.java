@@ -74,7 +74,27 @@ public class DatabaseXMLImportImpl_V4 implements IDatabaseXMLImporterImpl
 			e.execIfAttrExists("zyklus", o::setZyklusTitle);
 			e.execIfIntAttrExists("zyklusnumber", o::setZyklusID);
 			e.execIfAttrExists("history", o::setViewedHistory);
-			//TODO minfo
+
+			if (e.hasAllAttributes("mediainfo.filesize", "mediainfo.cdate", "mediainfo.mdate", "mediainfo.audioformat", "mediainfo.videoformat", "mediainfo.width", "mediainfo.height", "mediainfo.framerate", "mediainfo.duration", "mediainfo.bitdepth", "mediainfo.bitrate", "mediainfo.framecount", "mediainfo.audiochannels", "mediainfo.videocodec", "mediainfo.audiocodec", "mediainfo.audiosamplerate"))
+			{
+				o.setMediaInfo(new CCMediaInfo(
+					e.getAttributeLongValueOrThrow("mediainfo.cdate"),
+					e.getAttributeLongValueOrThrow("mediainfo.mdate"),
+					e.getAttributeLongValueOrThrow("mediainfo.filesize"),
+					e.getAttributeDoubleValueOrThrow("mediainfo.duration"),
+					e.getAttributeIntValueOrThrow("mediainfo.bitrate"),
+					e.getAttributeValueOrThrow("mediainfo.videoformat"),
+					e.getAttributeIntValueOrThrow("mediainfo.width"),
+					e.getAttributeIntValueOrThrow("mediainfo.height"),
+					e.getAttributeDoubleValueOrThrow("mediainfo.framerate"),
+					e.getAttributeShortValueOrThrow("mediainfo.bitdepth"),
+					e.getAttributeIntValueOrThrow("mediainfo.framecount"),
+					e.getAttributeValueOrThrow("mediainfo.videocodec"),
+					e.getAttributeValueOrThrow("mediainfo.audioformat"),
+					e.getAttributeShortValueOrThrow("mediainfo.audiochannels"),
+					e.getAttributeValueOrThrow("mediainfo.audiocodec"),
+					e.getAttributeIntValueOrThrow("mediainfo.audiosamplerate")));
+			}
 		}
 		o.endUpdating();
 	}
@@ -148,7 +168,27 @@ public class DatabaseXMLImportImpl_V4 implements IDatabaseXMLImporterImpl
 			if (s.ResetTags) o.setTags(CCTagList.EMPTY);
 
 			e.execIfAttrExists("languages", v -> o.setLanguage(CCDBLanguageList.parseFromString(v)));
-			//TODO minfo
+
+			if (e.hasAllAttributes("mediainfo.filesize", "mediainfo.cdate", "mediainfo.mdate", "mediainfo.audioformat", "mediainfo.videoformat", "mediainfo.width", "mediainfo.height", "mediainfo.framerate", "mediainfo.duration", "mediainfo.bitdepth", "mediainfo.bitrate", "mediainfo.framecount", "mediainfo.audiochannels", "mediainfo.videocodec", "mediainfo.audiocodec", "mediainfo.audiosamplerate"))
+			{
+				o.setMediaInfo(new CCMediaInfo(
+					e.getAttributeLongValueOrThrow("mediainfo.cdate"),
+					e.getAttributeLongValueOrThrow("mediainfo.mdate"),
+					e.getAttributeLongValueOrThrow("mediainfo.filesize"),
+					e.getAttributeDoubleValueOrThrow("mediainfo.duration"),
+					e.getAttributeIntValueOrThrow("mediainfo.bitrate"),
+					e.getAttributeValueOrThrow("mediainfo.videoformat"),
+					e.getAttributeIntValueOrThrow("mediainfo.width"),
+					e.getAttributeIntValueOrThrow("mediainfo.height"),
+					e.getAttributeDoubleValueOrThrow("mediainfo.framerate"),
+					e.getAttributeShortValueOrThrow("mediainfo.bitdepth"),
+					e.getAttributeIntValueOrThrow("mediainfo.framecount"),
+					e.getAttributeValueOrThrow("mediainfo.videocodec"),
+					e.getAttributeValueOrThrow("mediainfo.audioformat"),
+					e.getAttributeShortValueOrThrow("mediainfo.audiochannels"),
+					e.getAttributeValueOrThrow("mediainfo.audiocodec"),
+					e.getAttributeIntValueOrThrow("mediainfo.audiosamplerate")));
+			}
 		}
 		o.endUpdating();
 	}

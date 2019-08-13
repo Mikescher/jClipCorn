@@ -42,6 +42,10 @@ public class CCXMLElement
 		return getAttributeValueOrDefault(attrName, null) != null;
 	}
 
+	public boolean hasAllAttributes(String s0, String... s) {
+		return hasAttribute(s0) && CCStreams.iterate(s).all(this::hasAttribute);
+	}
+
 	//####################################################################################
 
 	public CCXMLElement getFirstChildOrThrow(String name) throws CCXMLException {
@@ -104,6 +108,33 @@ public class CCXMLElement
 			return Integer.parseInt(v);
 		} catch (NumberFormatException e) {
 			throw new CCXMLException(Str.format("The value \"{0}\" in the attribute ''{1}'' in {2} is not an integer", v, attrName, _path), _owner.getXMLString());
+		}
+	}
+
+	public short getAttributeShortValueOrThrow(String attrName) throws CCXMLException {
+		String v = getAttributeValueOrThrow(attrName);
+		try {
+			return Short.parseShort(v);
+		} catch (NumberFormatException e) {
+			throw new CCXMLException(Str.format("The value \"{0}\" in the attribute ''{1}'' in {2} is not an integer", v, attrName, _path), _owner.getXMLString());
+		}
+	}
+
+	public long getAttributeLongValueOrThrow(String attrName) throws CCXMLException {
+		String v = getAttributeValueOrThrow(attrName);
+		try {
+			return Long.parseLong(v);
+		} catch (NumberFormatException e) {
+			throw new CCXMLException(Str.format("The value \"{0}\" in the attribute ''{1}'' in {2} is not a long", v, attrName, _path), _owner.getXMLString());
+		}
+	}
+
+	public double getAttributeDoubleValueOrThrow(String attrName) throws CCXMLException {
+		String v = getAttributeValueOrThrow(attrName);
+		try {
+			return Double.parseDouble(v);
+		} catch (NumberFormatException e) {
+			throw new CCXMLException(Str.format("The value \"{0}\" in the attribute ''{1}'' in {2} is not a double", v, attrName, _path), _owner.getXMLString());
 		}
 	}
 
@@ -277,5 +308,4 @@ public class CCXMLElement
 		if (v.equals(false+"")) return false;
 		throw new BooleanFormatException(v);
 	}
-
 }

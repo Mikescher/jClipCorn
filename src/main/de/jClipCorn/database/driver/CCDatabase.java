@@ -1232,7 +1232,7 @@ public class CCDatabase {
 			CCSQLStatement stmt = removeGroupStatement;
 			stmt.clearParameters();
 
-			stmt.setStr(COL_INFO_KEY, name);
+			stmt.setStr(COL_GRPS_NAME, name);
 
 			stmt.executeUpdate();
 		} catch (SQLException | SQLWrapperException e) {

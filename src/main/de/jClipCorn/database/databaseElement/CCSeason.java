@@ -10,10 +10,7 @@ import java.util.regex.Pattern;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.covertab.CCCoverData;
 import de.jClipCorn.database.databaseElement.columnTypes.*;
-import de.jClipCorn.database.util.CCQualityCategory;
-import de.jClipCorn.database.util.CategoryType;
-import de.jClipCorn.database.util.ExtendedViewedState;
-import de.jClipCorn.database.util.ExtendedViewedStateType;
+import de.jClipCorn.database.util.*;
 import de.jClipCorn.features.actionTree.IActionSourceObject;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.properties.CCProperties;
@@ -561,18 +558,18 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 
 		if (iteratorEpisodes().any(e -> e.getMediaInfo().isUnset())) return CCQualityCategory.UNSET;
 
-		double avg = iteratorEpisodes().map(e -> e.getMediaInfo().getCategory().getCategoryType()).avgValueOrDefault(e -> (double)e.asInt(), 0);
+		double avg = iteratorEpisodes().map(e -> e.getMediaInfo().getCategory(getSeries().getGenres()).getCategoryType()).avgValueOrDefault(e -> (double)e.asInt(), 0);
 
-		String shorttext = iteratorEpisodes().map(e -> e.getMediaInfo().getCategory().getShortText()).groupBy(e -> e).singleOrDefault(Map.Entry::getKey, null, null);
-		if (shorttext == null) shorttext = LocaleBundle.getString("CCQualityCategory.Multiple");
+		CCQualityResolutionType rtype = iteratorEpisodes().map(e -> e.getMediaInfo().getCategory(getSeries().getGenres()).getResolutionType()).groupBy(e -> e).singleOrDefault(Map.Entry::getKey, null, null);
+		if (rtype == null) rtype = CCQualityResolutionType.MULTIPLE;
 
-		CategoryType ct = CategoryType.getWrapper().findOrNull((int)Math.round(avg));
+		CCQualityCategoryType ct = CCQualityCategoryType.getWrapper().findOrNull((int)Math.round(avg));
 		if (ct == null) return CCQualityCategory.UNSET; // should never happen ??
 
 		String longtext = Str.format(LocaleBundle.getFormattedString("JMediaInfoControl.episodes", getEpisodeCount()));
 
-		int minBitrate = iteratorEpisodes().map(e -> (int) Math.round(e.getMediaInfo().getBitrate() / 1024.0)).autoMinValueOrDefault(e -> e, 0);
-		int maxBitrate = iteratorEpisodes().map(e -> (int) Math.round(e.getMediaInfo().getBitrate() / 1024.0)).autoMaxValueOrDefault(e -> e, 0);
+		int minBitrate = iteratorEpisodes().map(e -> e.getMediaInfo().getBitrate()).autoMinValueOrDefault(e -> e, 0);
+		int maxBitrate = iteratorEpisodes().map(e -> e.getMediaInfo().getBitrate()).autoMaxValueOrDefault(e -> e, 0);
 		int minDuration = iteratorEpisodes().map(e -> (int)e.getMediaInfo().getDuration()).autoMinValueOrDefault(e -> e, 0);
 		int maxDuration = iteratorEpisodes().map(e -> (int)e.getMediaInfo().getDuration()).autoMaxValueOrDefault(e -> e, 0);
 		int minFramerate = iteratorEpisodes().map(e -> (int)Math.round(e.getMediaInfo().getFramerate())).autoMinValueOrDefault(e -> e, 0);
@@ -581,8 +578,8 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 		StringBuilder b = new StringBuilder();
 		b.append("<html>");
 
-		b.append("Bitrate (min): ").append(Str.spacegroupformat(minBitrate)).append(" kB/s").append("<br/>");
-		b.append("Bitrate (max): ").append(Str.spacegroupformat(maxBitrate)).append(" kB/s").append("<br/>");
+		b.append("Bitrate (min): ").append(Str.spacegroupformat((int)Math.round(minBitrate / 1024.0))).append(" kbit/s").append("<br/>");
+		b.append("Bitrate (max): ").append(Str.spacegroupformat((int)Math.round(maxBitrate / 1024.0))).append(" kbit/s").append("<br/>");
 
 		b.append("Duration (min): ").append(TimeIntervallFormatter.formatSeconds(minDuration)).append("<br/>");
 		b.append("Duration (max): ").append(TimeIntervallFormatter.formatSeconds(maxDuration)).append("<br/>");
@@ -593,6 +590,6 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 		b.append("</html>");
 		String tooltip = b.toString();
 
-		return new CCQualityCategory(ct, shorttext, longtext, tooltip);
+		return new CCQualityCategory(ct, rtype, longtext, tooltip, (minBitrate + maxBitrate) / 2);
 	}
 }

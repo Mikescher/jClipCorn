@@ -330,12 +330,14 @@ public class MediaQueryResult {
 		MediaQueryResultAudioTrack audio = getDefaultAudioTrack();
 		if (audio == null) return -1;
 
-		if (video.BitRate == -1 || audio.BitRate == -1)
-		{
-			return OverallBitRate; // can also be -1
-		}
+		int br_vid = (video.BitRateNominal != -1) ? video.BitRateNominal : video.BitRate;
+		int br_aud = (audio.BitRateNominal != -1) ? audio.BitRateNominal : audio.BitRate;
 
-		return video.BitRate + audio.BitRate;
+		if (br_vid == -1 || br_aud == -1) return OverallBitRate; // can also be -1
+
+		if (OverallBitRate != -1 && OverallBitRate < (br_vid + br_aud)) return OverallBitRate;
+
+		return br_vid + br_aud;
 	}
 
 	public MediaQueryResultVideoTrack getDefaultVideoTrack() {

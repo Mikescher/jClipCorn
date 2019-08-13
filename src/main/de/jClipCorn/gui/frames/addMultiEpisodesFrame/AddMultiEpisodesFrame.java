@@ -133,7 +133,7 @@ public class AddMultiEpisodesFrame extends JFrame {
 				FormSpecs.RELATED_GAP_ROWSPEC,
 				FormSpecs.DEFAULT_ROWSPEC,}));
 		
-		lsData = new MultiEpisodesTable();
+		lsData = new MultiEpisodesTable(target.getSeries());
 		contentPane.add(lsData, "2, 2, 15, 1, fill, fill"); //$NON-NLS-1$
 		
 		btnAddFiles = new JButton(LocaleBundle.getString("AddMultiEpisodesFrame.Button_1")); //$NON-NLS-1$

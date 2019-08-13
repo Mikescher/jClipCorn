@@ -1,6 +1,7 @@
 package de.jClipCorn.database.databaseElement;
 
 import de.jClipCorn.database.databaseElement.columnTypes.*;
+import de.jClipCorn.database.util.CCQualityCategory;
 import de.jClipCorn.util.datetime.CCDate;
 
 import java.util.List;
@@ -12,6 +13,7 @@ public interface ICCPlayableElement {
 	boolean isViewed();
 	int getLength();
 	CCMediaInfo getMediaInfo();
+	CCQualityCategory getMediaInfoCategory();
 	CCFileFormat getFormat();
 	CCFileSize getFilesize();
 	CCTagList getTags();
@@ -27,4 +29,6 @@ public interface ICCPlayableElement {
 	void setMediaInfo(CCMediaInfo minfo);
 
 	void play(boolean updateViewedAndHistory);
+
+	CCGenreList getGenresFromSelfOrParent();
 }

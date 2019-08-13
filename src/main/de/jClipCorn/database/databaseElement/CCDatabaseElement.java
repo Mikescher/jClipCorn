@@ -3,6 +3,7 @@ package de.jClipCorn.database.databaseElement;
 import java.awt.image.BufferedImage;
 
 import de.jClipCorn.database.databaseElement.columnTypes.*;
+import de.jClipCorn.database.util.CCQualityCategory;
 import de.jClipCorn.features.actionTree.IActionSourceObject;
 import de.jClipCorn.util.exceptions.EnumFormatException;
 import de.jClipCorn.database.CCMovieList;
@@ -415,4 +416,6 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 	public abstract int getFirstYear();
 
 	public abstract String getFullDisplayTitle();
+
+	public abstract CCQualityCategory getMediaInfoCategory();
 }

@@ -6,6 +6,7 @@ import javax.swing.ImageIcon;
 
 import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.columnTypes.*;
+import de.jClipCorn.database.util.CCQualityCategory;
 import de.jClipCorn.gui.frames.previewMovieFrame.PreviewMovieFrame;
 import de.jClipCorn.gui.frames.watchHistoryFrame.WatchHistoryFrame;
 import de.jClipCorn.gui.resources.Resources;
@@ -36,8 +37,8 @@ public class WatchHistoryMovieElement extends WatchHistoryElement{
 	}
 
 	@Override
-	public CCMediaInfo getMediaInfo() {
-		return Movie.getMediaInfo();
+	public CCQualityCategory getMediaInfoCategory() {
+		return Movie.getMediaInfoCategory();
 	}
 
 	@Override

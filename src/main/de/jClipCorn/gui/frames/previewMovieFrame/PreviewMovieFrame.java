@@ -725,7 +725,7 @@ public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener 
 		
 		lblViewed.setIcon(movie.isViewed()?Resources.ICN_TABLE_VIEWED_TRUE.get():null);
 		
-		CCQualityCategory qcat = movie.getMediaInfo().getCategory();
+		CCQualityCategory qcat = movie.getMediaInfoCategory();
 		lbl_Quality.setIcon(qcat.getIcon());
 		lbl_Quality.setText(qcat.getShortText());
 		lbl_Quality.setToolTipText(qcat.getTooltip());
@@ -786,7 +786,7 @@ public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener 
 		edMI_MDate.setText(mi.isUnset() ? Str.Empty : CCDateTime.createFromFileTimestamp(mi.getMDate(), TimeZone.getDefault()).toStringISO());
 		edMI_Filesize.setText(mi.isUnset() ? Str.Empty : FileSizeFormatter.formatPrecise(mi.getFilesize()));
 		edMI_Duration.setText(mi.isUnset() ? Str.Empty : TimeIntervallFormatter.formatSeconds(mi.getDuration()));
-		edMI_Bitrate.setText(mi.isUnset() ? Str.Empty : Str.spacegroupformat((int)Math.round(mi.getBitrate() / 1024.0)) + " kB/s"); //$NON-NLS-1$
+		edMI_Bitrate.setText(mi.isUnset() ? Str.Empty : Str.spacegroupformat(mi.getNormalizedBitrate()) + " kbit/s"); //$NON-NLS-1$
 
 		edMI_VideoFormat.setText(mi.isUnset() ? Str.Empty : mi.getVideoFormat());
 		edMI_VideoResolution.setText(mi.isUnset() ? Str.Empty : Str.format("{0,number,#} x {1,number,#}", mi.getWidth(), mi.getHeight())); //$NON-NLS-1$

@@ -61,15 +61,15 @@ public class UpdateCodecTable extends JCCSimpleTable<UpdateCodecTableElement> {
 
 		r.add(new JCCSimpleColumnPrototype<>(
 				"UpdateCodecFrame.Table.ColumnQualityOld",
-				e -> e.getOldMediaInfo().getCategory().getLongText(),
-				e -> e.getOldMediaInfo().getCategory().getIcon(),
-				e -> e.getOldMediaInfo().getCategory().getTooltip()));
+				e -> e.getOldMediaInfo().getCategory(e.getSourceGenres()).getLongText(),
+				e -> e.getOldMediaInfo().getCategory(e.getSourceGenres()).getIcon(),
+				e -> e.getOldMediaInfo().getCategory(e.getSourceGenres()).getTooltip()));
 
 		r.add(new JCCSimpleColumnPrototype<>(
 				"UpdateCodecFrame.Table.ColumnQualityNew",
-				e -> e.getNewMediaInfo().getCategory().getLongText(),
-				e -> e.getNewMediaInfo().getCategory().getIcon(),
-				e -> e.getNewMediaInfo().getCategory().getTooltip()));
+				e -> e.getNewMediaInfo().getCategory(e.getSourceGenres()).getLongText(),
+				e -> e.getNewMediaInfo().getCategory(e.getSourceGenres()).getIcon(),
+				e -> e.getNewMediaInfo().getCategory(e.getSourceGenres()).getTooltip()));
 		
 		return r;
 	}

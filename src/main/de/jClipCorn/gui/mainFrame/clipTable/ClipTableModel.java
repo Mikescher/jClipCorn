@@ -130,7 +130,7 @@ public class ClipTableModel extends AbstractTableModel implements TableModelRowC
 			case COLUMN_ZYKLUS: // Zyklus
 				return mov.getZyklus();
 			case COLUMN_MEDIAINFO: // MediaInfo
-				return mov.getMediaInfo().getCategory();
+				return mov.getMediaInfoCategory();
 			case COLUMN_LANGUAGE: // Language
 				return mov.getLanguage();
 			case COLUMN_GENRE: // Genres

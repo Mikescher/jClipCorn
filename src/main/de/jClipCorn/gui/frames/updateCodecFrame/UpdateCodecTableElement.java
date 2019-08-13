@@ -5,8 +5,10 @@ import javax.swing.JFrame;
 
 import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.CCMovie;
+import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.database.databaseElement.ICCPlayableElement;
 import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguageList;
+import de.jClipCorn.database.databaseElement.columnTypes.CCGenreList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMediaInfo;
 import de.jClipCorn.gui.frames.previewMovieFrame.PreviewMovieFrame;
 import de.jClipCorn.gui.frames.previewSeriesFrame.PreviewSeriesFrame;
@@ -169,5 +171,9 @@ public class UpdateCodecTableElement {
 		if (MQResult == null) return CCMediaInfo.EMPTY;
 		if (MQResult.isEmpty()) return CCMediaInfo.EMPTY;
 		return MQResult.get(0).toMediaInfo();
+	}
+
+	public CCGenreList getSourceGenres() {
+		return Element.getGenresFromSelfOrParent();
 	}
 }

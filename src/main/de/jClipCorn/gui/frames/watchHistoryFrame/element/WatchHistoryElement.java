@@ -5,6 +5,7 @@ import java.awt.image.BufferedImage;
 import javax.swing.ImageIcon;
 
 import de.jClipCorn.database.databaseElement.columnTypes.*;
+import de.jClipCorn.database.util.CCQualityCategory;
 import de.jClipCorn.gui.frames.watchHistoryFrame.WatchHistoryFrame;
 import de.jClipCorn.util.datetime.CCDateTime;
 
@@ -13,7 +14,7 @@ public abstract class WatchHistoryElement implements Comparable<WatchHistoryElem
 	public abstract CCDateTime getTimestamp();
 	public abstract String getName();
 	public abstract BufferedImage getCover();
-	public abstract CCMediaInfo getMediaInfo();
+	public abstract CCQualityCategory getMediaInfoCategory();
 	public abstract CCDBLanguageList getLanguage();
 	public abstract int getLength();
 	public abstract CCTagList getTags();

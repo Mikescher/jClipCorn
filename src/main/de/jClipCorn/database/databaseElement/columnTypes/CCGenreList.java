@@ -353,4 +353,12 @@ public class CCGenreList {
 
 		return new CCGenreList(_g.get());
 	}
+
+	public boolean shouldIgnoreBitrateInMediaInfo() {
+		for (int i = 0; i < getGenreCount(); i++) {
+			if (getGenre(i).shouldIgnoreBitrateInMediaInfo()) return true;
+		}
+
+		return false;
+	}
 }

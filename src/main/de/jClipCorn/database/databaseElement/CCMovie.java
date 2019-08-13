@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.jClipCorn.database.databaseElement.columnTypes.*;
+import de.jClipCorn.database.util.CCQualityCategory;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.exceptions.EnumFormatException;
 
@@ -426,4 +427,12 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 		updateDB();
 	}
 
+	public CCQualityCategory getMediaInfoCategory(){
+		return getMediaInfo().getCategory(getGenres());
+	}
+
+	@Override
+	public CCGenreList getGenresFromSelfOrParent() {
+		return getGenres();
+	}
 }

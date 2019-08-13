@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import de.jClipCorn.database.databaseElement.columnTypes.*;
+import de.jClipCorn.database.util.CCQualityCategory;
 import de.jClipCorn.features.actionTree.IActionSourceObject;
 import de.jClipCorn.util.exceptions.EnumFormatException;
 
@@ -340,6 +341,11 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 	}
 
 	@Override
+	public CCQualityCategory getMediaInfoCategory() {
+		return mediainfo.getCategory(getSeries().getGenres());
+	}
+
+	@Override
 	public int getLength() {
 		return length;
 	}
@@ -422,7 +428,12 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 			addToViewedHistory(CCDateTime.getCurrentDateTime());
 		}
 	}
-	
+
+	@Override
+	public CCGenreList getGenresFromSelfOrParent() {
+		return getSeries().getGenres();
+	}
+
 	/**
 	 * @return the Number of the Episode (as it is in the Season-List) (NOT THE ID)
 	 */

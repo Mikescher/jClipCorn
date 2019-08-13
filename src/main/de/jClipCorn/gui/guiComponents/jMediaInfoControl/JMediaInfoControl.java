@@ -133,9 +133,9 @@ public class JMediaInfoControl extends JPanel implements MediaInfoResultHandler 
 			else edit.setText(LocaleBundle.getString("JMediaInfoControl.partial")); //$NON-NLS-1$
 			image.setIcon(Resources.ICN_TABLE_QUALITY_0.get());
 		} else {
-			edit.setText(value.getCategory().getLongText());
-			image.setIcon(value.getCategory().getIcon());
-			image.setToolTipText(value.getCategory().getTooltip());
+			edit.setText(value.getCategory(null).getLongText());
+			image.setIcon(value.getCategory(null).getIcon());
+			image.setToolTipText(value.getCategory(null).getTooltip());
 		}
 	}
 

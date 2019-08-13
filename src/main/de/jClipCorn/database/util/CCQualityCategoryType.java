@@ -1,14 +1,13 @@
 package de.jClipCorn.database.util;
 
 import de.jClipCorn.database.databaseElement.columnTypes.CCFSK;
-import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.gui.resources.reftypes.IconRef;
 import de.jClipCorn.util.enumextension.ContinoousEnum;
 import de.jClipCorn.util.enumextension.EnumWrapper;
 
-public enum CategoryType implements ContinoousEnum<CategoryType> 
+public enum CCQualityCategoryType implements ContinoousEnum<CCQualityCategoryType>
 { 
 	UNKOWN(0), 
 	LOW_QUALITY(1), 
@@ -40,14 +39,33 @@ public enum CategoryType implements ContinoousEnum<CategoryType>
 
 	private int id;
 	
-	private static EnumWrapper<CategoryType> wrapper = new EnumWrapper<>(UNKOWN);
+	private static EnumWrapper<CCQualityCategoryType> wrapper = new EnumWrapper<>(UNKOWN);
 
-	private CategoryType(int val) {
+	private CCQualityCategoryType(int val) {
 		id = val;
 	}
 
-	public static EnumWrapper<CategoryType> getWrapper() {
+	public static EnumWrapper<CCQualityCategoryType> getWrapper() {
 		return wrapper;
+	}
+
+	public static CCQualityCategoryType min(CCQualityCategoryType a, CCQualityCategoryType b) {
+		if (a == UNKOWN) return b;
+		if (b == UNKOWN) return a;
+
+		if (a.asInt() < b.asInt()) return a; else return b;
+	}
+
+	public static CCQualityCategoryType min(CCQualityCategoryType a, CCQualityCategoryType b, CCQualityCategoryType c) {
+		if (a == UNKOWN) return min(b,c);
+		if (b == UNKOWN) return min(a,c);
+		if (c == UNKOWN) return min(b,b);
+
+		if (a.asInt() < b.asInt()) {
+			if (a.asInt() < c.asInt()) return a; else return c;
+		} else {
+			if (c.asInt() < b.asInt()) return c; else return b;
+		}
 	}
 
 	@Override
@@ -74,8 +92,8 @@ public enum CategoryType implements ContinoousEnum<CategoryType>
 	}
 
 	@Override
-	public CategoryType[] evalues() {
-		return CategoryType.values();
+	public CCQualityCategoryType[] evalues() {
+		return CCQualityCategoryType.values();
 	}
 
 }

@@ -59,7 +59,7 @@ public class DatabasePlainTextExporter extends DatabaseTextExporter {
 
 					if (addLanguage) builder.append(" [").append(mov.getLanguage().toOutputString()).append("]");
 					if (addFormat) builder.append(" (").append(mov.getFormat().asString().toUpperCase()).append(")");
-					if (addQuality) builder.append(" (").append(mov.getMediaInfo().getCategory().getLongText()).append(")");
+					if (addQuality) builder.append(" (").append(mov.getMediaInfoCategory().getLongText()).append(")");
 					if (addYear) builder.append(" (").append(mov.getYear()).append(")");
 					if (addSize) builder.append(" (").append(mov.getFilesize().getFormatted()).append(")");
 
@@ -108,7 +108,7 @@ public class DatabasePlainTextExporter extends DatabaseTextExporter {
 							builder.append(String.format("%03d", episode.getEpisodeNumber())).append(" - ").append(episode.getTitle());
 
 						if (addFormat) builder.append(" (").append(episode.getFormat().asString().toUpperCase()).append(")");
-						if (addQuality) builder.append(" (").append(episode.getMediaInfo().getCategory().getLongText()).append(")");
+						if (addQuality) builder.append(" (").append(episode.getMediaInfoCategory().getLongText()).append(")");
 						if (addSize) builder.append(" (").append(episode.getFilesize().getFormatted()).append(")");
 
 						builder.append(System.lineSeparator());
@@ -149,7 +149,7 @@ public class DatabasePlainTextExporter extends DatabaseTextExporter {
 			
 			if (addLanguage) builder.append(" [").append(mov.getLanguage().toOutputString()).append("]");
 			if (addFormat) builder.append(" (").append(mov.getFormat().asString().toUpperCase()).append(")");
-			if (addQuality) builder.append(" (").append(mov.getMediaInfo().getCategory().getLongText()).append(")");
+			if (addQuality) builder.append(" (").append(mov.getMediaInfoCategory().getLongText()).append(")");
 			if (addYear) builder.append(" (").append(mov.getYear()).append(")");
 			if (addSize) builder.append(" (").append(mov.getFilesize().getFormatted()).append(")");
 

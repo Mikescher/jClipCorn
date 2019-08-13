@@ -13,37 +13,32 @@ public class MediaQueryResultAudioTrack {
 	public final short Channels;     // -1 if not set
 	public final int Samplingrate;   // -1 if not set
 	public final int BitRate;        // -1 if not set
+	public final int BitRateNominal; // -1 if not set
 	public final boolean Default;
 
-	private MediaQueryResultAudioTrack(String format, String language, String codecID, short channels, int samplerate, int bitrate, boolean aDefault) {
+	private MediaQueryResultAudioTrack(String format, String language, String codecID, short channels, int samplerate, int bitrate, int bitrateNominal, boolean aDefault) {
 		Format = format;
 		Language = MediaQueryResult.isNullLanguage(language) ? null : language;
 		CodecID = codecID;
 		Channels = channels;
 		Samplingrate = samplerate;
 		BitRate = bitrate;
+		BitRateNominal = bitrateNominal;
 		Default = aDefault;
 	}
 
 	@SuppressWarnings("nls")
 	public static MediaQueryResultAudioTrack parse(CCXMLElement xml) throws InnerMediaQueryException, CCXMLException {
-		String format;
-		String language;
-		String codecID;
-		short channels;
-		int srate;
-		int brate;
-		boolean adefault;
+		String  format   = xml.getFirstChildValueOrDefault("Format", null);
+		String  language = xml.getFirstChildValueOrDefault("Language", null);
+		String  codecID  = xml.getFirstChildValueOrDefault("CodecID", null);
+		short   channels = (short)xml.getFirstChildIntValueOrDefault("Channels", -1);
+		int     srate    = xml.getFirstChildIntValueOrDefault("SamplingRate", -1);
+		int     brate    = xml.getFirstChildIntValueOrDefault("BitRate", -1);
+		int     brateNom = xml.getFirstChildIntValueOrDefault("BitRate_Nominal", -1);
+		boolean adefault = MediaQueryResult.parseBool(xml.getFirstChildValueOrDefault("Default", "No"));
 
-		format   = xml.getFirstChildValueOrDefault("Format", null);
-		language = xml.getFirstChildValueOrDefault("Language", null);
-		codecID  = xml.getFirstChildValueOrDefault("CodecID", null);
-		channels = (short)xml.getFirstChildIntValueOrDefault("Channels", -1);
-		srate    = xml.getFirstChildIntValueOrDefault("SamplingRate", -1);
-		brate    = xml.getFirstChildIntValueOrDefault("BitRate", -1);
-		adefault = MediaQueryResult.parseBool(xml.getFirstChildValueOrDefault("Default", "No"));
-
-		return new MediaQueryResultAudioTrack(format, language, codecID, channels, srate, brate, adefault);
+		return new MediaQueryResultAudioTrack(format, language, codecID, channels, srate, brate, brateNom, adefault);
 	}
 
 	@SuppressWarnings("nls")

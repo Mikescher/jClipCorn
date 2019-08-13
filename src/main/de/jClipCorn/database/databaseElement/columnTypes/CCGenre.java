@@ -296,6 +296,16 @@ public enum CCGenre implements ContinoousEnum<CCGenre> {
 		return new CCGenre[]{};
 	}
 
+	public boolean shouldIgnoreBitrateInMediaInfo() {
+		if (this == GENRE_020) return true; // Trickfilm
+		if (this == GENRE_021) return true; // Zeichentrickfilm
+		if (this == GENRE_022) return true; // Anime
+		if (this == GENRE_023) return true; // Stop-Motion-Film
+		if (this == GENRE_024) return true; // Computeranimationsfilm
+
+		return false;
+	}
+
 	public boolean isEmpty() {
 		return asInt() == NO_GENRE;
 	}

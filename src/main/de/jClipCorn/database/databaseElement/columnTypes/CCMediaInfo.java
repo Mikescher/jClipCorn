@@ -1,10 +1,8 @@
 package de.jClipCorn.database.databaseElement.columnTypes;
 
 import de.jClipCorn.database.util.CCQualityCategory;
-import de.jClipCorn.database.util.CategoryType;
-import de.jClipCorn.features.log.CCLog;
-import de.jClipCorn.gui.resources.Resources;
-import de.jClipCorn.gui.resources.reftypes.IconRef;
+import de.jClipCorn.database.util.CCQualityCategoryType;
+import de.jClipCorn.database.util.CCQualityResolutionType;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.formatter.TimeIntervallFormatter;
 
@@ -242,18 +240,18 @@ public class CCMediaInfo {
 		return result;
 	}
 
-	public CCQualityCategory getCategory() { //TODO improve me, especially short-text
+	public CCQualityCategory getCategory(CCGenreList source) {
 
 		if (_cat != null) return _cat;
 
 		if (!isSet) return _cat = CCQualityCategory.UNSET;
 
-		CategoryType ct = getCategoryType();
-		String tx1 = getCategoryTextShort();
+		CCQualityCategoryType ct = getCategoryType(source != null && source.shouldIgnoreBitrateInMediaInfo());
+		CCQualityResolutionType rt = getCategoryResType();
 		String tx2 = getCategoryTextLong();
 		String tx3 = getCategoryToolTip();
 
-		return _cat = new CCQualityCategory(ct, tx1, tx2, tx3);
+		return _cat = new CCQualityCategory(ct, rt, tx2, tx3, bitrate);
 	}
 
 	@SuppressWarnings("nls")
@@ -261,7 +259,7 @@ public class CCMediaInfo {
 		StringBuilder b = new StringBuilder();
 		b.append("<html>");
 		b.append("Resolution: ").append(width).append(" x ").append(height).append("<br/>");
-		b.append("Bitrate: ").append(Str.spacegroupformat((int) Math.round(bitrate / 1024.0))).append(" kB/s").append("<br/>");
+		b.append("Bitrate: ").append(Str.spacegroupformat((int) Math.round(bitrate / 1000.0))).append(" kbit/s").append("<br/>");
 		b.append("Duration: ").append(TimeIntervallFormatter.formatSeconds(duration)).append("<br/>");
 		b.append("Framerate: ").append(Math.round(framerate)).append(" fps").append("<br/>");
 		b.append("</html>");
@@ -270,44 +268,72 @@ public class CCMediaInfo {
 
 	@SuppressWarnings("nls")
 	private String getCategoryTextLong() {
-		return Str.format("{0,number,#}x{1,number,#} @ {2} FPS ({3,number,#} kb/s)", width, height, getNormalizedFPS(), getNormalizedBitrate());
+		return Str.format("{0,number,#}x{1,number,#} @ {2} FPS ({3,number,#} kbit/s)", width, height, getNormalizedFPS(), getNormalizedBitrate());
 	}
 
-	private int getNormalizedFPS() {
+	public int getNormalizedFPS() {
 		return (int)Math.round(framerate);
 	}
 
-	private int getNormalizedBitrate() {
-		return (int)Math.round(bitrate / 1024.0);
+	public int getNormalizedBitrate() {
+		return (int)Math.round(bitrate / 1000.0);
 	}
 
-	private CategoryType getCategoryType()
-	{
-		if (width*height < 69300)   return CategoryType.LOW_QUALITY;
-		if (width*height < 296100)  return CategoryType.OKAY;
-		if (width*height < 882000)  return CategoryType.GOOD;
-		if (width*height < 2014000) return CategoryType.VERY_GOOD;
+	public int getNormalizedDuration() {
+		return (int)Math.round(duration);
+	}
 
-		return CategoryType.HIGH_DEFINITION;
+	private CCQualityCategoryType getCategoryType(boolean ignoreBitrate)
+	{
+		if (ignoreBitrate) return CCQualityCategoryType.min(getCategoryTypeByFramerate(), getCategoryTypeByResolution());
+		return CCQualityCategoryType.min(getCategoryTypeByFramerate(), getCategoryTypeByBitrate(), getCategoryTypeByResolution());
+	}
+
+	private CCQualityCategoryType getCategoryTypeByFramerate()
+	{
+		if (framerate <  20) return CCQualityCategoryType.LOW_QUALITY;
+		if (framerate <  23) return CCQualityCategoryType.VERY_GOOD;
+
+		return CCQualityCategoryType.HIGH_DEFINITION;
+	}
+
+	private CCQualityCategoryType getCategoryTypeByBitrate()
+	{
+		if (bitrate <  900 * 1000) return CCQualityCategoryType.LOW_QUALITY;
+		if (bitrate < 1400 * 1000) return CCQualityCategoryType.OKAY;
+		if (bitrate < 1900 * 1000) return CCQualityCategoryType.GOOD;
+		if (bitrate < 2500 * 1000) return CCQualityCategoryType.VERY_GOOD;
+
+		return CCQualityCategoryType.HIGH_DEFINITION;
+	}
+
+	private CCQualityCategoryType getCategoryTypeByResolution()
+	{
+		if (width*height <   70000) return CCQualityCategoryType.LOW_QUALITY;
+		if (width*height <  300000) return CCQualityCategoryType.OKAY;
+		if (width*height <  900000) return CCQualityCategoryType.GOOD;
+		if (width*height < 1536000) return CCQualityCategoryType.VERY_GOOD;
+
+		return CCQualityCategoryType.HIGH_DEFINITION;
 	}
 
 	@SuppressWarnings("nls")
-	private String getCategoryTextShort()
+	private CCQualityResolutionType getCategoryResType()
 	{
-		if (width < 320 && height < 240) return "Low";
+		if (width < 320 && height < 240) return CCQualityResolutionType.R_LOW;
 
-		if (isApproxSize(4096, 3072, 0.05, 0.45)) return "4K";
-		if (isApproxSize(2560, 1440, 0.05, 0.45)) return "1440p";
-		if (isApproxSize(1920, 1080, 0.05, 0.45)) return "1080p";
-		if (isApproxSize(1280, 720, 0.10, 0.50)) return "720p";
-		if (isApproxSize(1024, 576, 0.10, 0.50)) return "576p";
-		if (isApproxSize(854, 480, 0.10, 0.50)) return "480p";
-		if (isApproxSize(320, 240, 0.15, 0.50)) return "240p";
-		if (isApproxSize(720, 304, 0.30, 0.65)) return "304p";
+		if (isApproxSize(4096, 3072, 0.05, 0.45)) return CCQualityResolutionType.R_4K;
+		if (isApproxSize(2560, 1440, 0.05, 0.45)) return CCQualityResolutionType.R_1440;
+		if (isApproxSize(1920, 1080, 0.05, 0.45)) return CCQualityResolutionType.R_1080;
+		if (isApproxSize(1280, 720, 0.10, 0.50)) return CCQualityResolutionType.R_720;
+		if (isApproxSize(1024, 576, 0.10, 0.50)) return CCQualityResolutionType.R_576;
+		if (isApproxSize(854, 480, 0.10, 0.50)) return CCQualityResolutionType.R_480;
+		if (isApproxSize(320, 240, 0.15, 0.50)) return CCQualityResolutionType.R_240;
+		if (isApproxSize(720, 304, 0.30, 0.65)) return CCQualityResolutionType.R_304;
 
-		if (width < 320 || height < 240) return "Low";
+		if (width < 320 || height < 240) return CCQualityResolutionType.R_LOW;
 
-		return "Other";
+		return CCQualityResolutionType.OTHER;
 	}
 
 	private boolean isApproxSize(int w, int h, double near, double far)

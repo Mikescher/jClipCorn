@@ -417,6 +417,7 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 		return mediainfo;
 	}
 
+	@Override
 	public void setMediaInfo(CCMediaInfo minfo) {
 		if (minfo == null) {CCLog.addUndefinied("Prevented setting CCMovie.MediaInfo to NULL"); return; } //$NON-NLS-1$
 

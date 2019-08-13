@@ -60,10 +60,16 @@ public class UpdateCodecTable extends JCCSimpleTable<UpdateCodecTableElement> {
 				null));
 
 		r.add(new JCCSimpleColumnPrototype<>(
-				"UpdateCodecFrame.Table.ColumnResolution",
-				e -> e.getNewResolution(),
-				null,
-				null));
+				"UpdateCodecFrame.Table.ColumnQualityOld",
+				e -> e.getOldMediaInfo().getCategory().getLongText(),
+				e -> e.getOldMediaInfo().getCategory().getIcon(),
+				e -> e.getOldMediaInfo().getCategory().getTooltip()));
+
+		r.add(new JCCSimpleColumnPrototype<>(
+				"UpdateCodecFrame.Table.ColumnQualityNew",
+				e -> e.getNewMediaInfo().getCategory().getLongText(),
+				e -> e.getNewMediaInfo().getCategory().getIcon(),
+				e -> e.getNewMediaInfo().getCategory().getTooltip()));
 		
 		return r;
 	}

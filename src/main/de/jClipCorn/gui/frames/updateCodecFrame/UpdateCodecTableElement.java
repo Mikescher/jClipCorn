@@ -7,6 +7,7 @@ import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.ICCPlayableElement;
 import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguageList;
+import de.jClipCorn.database.databaseElement.columnTypes.CCMediaInfo;
 import de.jClipCorn.gui.frames.previewMovieFrame.PreviewMovieFrame;
 import de.jClipCorn.gui.frames.previewSeriesFrame.PreviewSeriesFrame;
 import de.jClipCorn.gui.resources.Resources;
@@ -57,6 +58,25 @@ public class UpdateCodecTableElement {
 
 		if (!CCDBLanguageList.equals(Element.getLanguage(), getNewLanguage())) return true;
 		if (maxLenDiff != -1 && hasLenDiff(maxLenDiff)) return true;
+		if (!Element.getMediaInfo().equals(getNewMediaInfo())) return true;
+
+		return false;
+	}
+
+	public boolean hasLangDiff() {
+		if (!Processed) return false;
+		if (MQResult == null) return false;
+
+		if (!CCDBLanguageList.equals(Element.getLanguage(), getNewLanguage())) return true;
+
+		return false;
+	}
+
+	public boolean hasMediaInfoDiff() {
+		if (!Processed) return false;
+		if (MQResult == null) return false;
+
+		if (!Element.getMediaInfo().equals(getNewMediaInfo())) return true;
 
 		return false;
 	}
@@ -138,5 +158,16 @@ public class UpdateCodecTableElement {
 		if (CCStreams.iterate(MQResult).any(r -> r.AudioLanguages == null) && !getOldLanguage().isSingle()) {
 			throw new MediaQueryException("Some parts have no language specified"); //$NON-NLS-1$
 		}
+	}
+
+	public CCMediaInfo getOldMediaInfo() {
+		return Element.getMediaInfo();
+	}
+
+	public CCMediaInfo getNewMediaInfo() {
+		if (!Processed) return CCMediaInfo.EMPTY;
+		if (MQResult == null) return CCMediaInfo.EMPTY;
+		if (MQResult.isEmpty()) return CCMediaInfo.EMPTY;
+		return MQResult.get(0).toMediaInfo();
 	}
 }

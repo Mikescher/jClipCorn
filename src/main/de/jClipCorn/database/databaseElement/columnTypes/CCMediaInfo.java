@@ -298,10 +298,10 @@ public class CCMediaInfo {
 
 	private CategoryType getCategoryType()
 	{
-		if (width <  330 || height <  210) return CategoryType.LOW_QUALITY;
-		if (width <  630 || height <  470) return CategoryType.OKAY;
-		if (width < 1260 || height <  700) return CategoryType.GOOD;
-		if (width < 1900 || height < 1060) return CategoryType.VERY_GOOD;
+		if (width*height < 69300)   return CategoryType.LOW_QUALITY;
+		if (width*height < 296100)  return CategoryType.OKAY;
+		if (width*height < 882000)  return CategoryType.GOOD;
+		if (width*height < 2014000) return CategoryType.VERY_GOOD;
 
 		return CategoryType.HIGH_DEFINITION;
 	}

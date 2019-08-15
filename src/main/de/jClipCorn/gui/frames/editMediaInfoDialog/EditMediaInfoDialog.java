@@ -10,7 +10,11 @@ import de.jClipCorn.gui.frames.genericTextDialog.GenericTextDialog;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.Str;
+import de.jClipCorn.util.adapter.ChangeLambdaAdapter;
+import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.exceptions.MediaQueryException;
+import de.jClipCorn.util.formatter.FileSizeFormatter;
+import de.jClipCorn.util.formatter.TimeIntervallFormatter;
 import de.jClipCorn.util.mediaquery.MediaQueryResult;
 
 import com.jgoodies.forms.layout.FormLayout;
@@ -23,6 +27,7 @@ import de.jClipCorn.util.mediaquery.MediaQueryRunner;
 
 import javax.swing.border.TitledBorder;
 import java.io.IOException;
+import java.util.TimeZone;
 
 public class EditMediaInfoDialog extends JDialog {
 	private static final long serialVersionUID = -9200470525584039395L;
@@ -84,6 +89,13 @@ public class EditMediaInfoDialog extends JDialog {
 	private JLabel lblHintAudioSamplerate;
 	private JButton btnApply;
 	private JButton btnShow;
+	private JLabel lblFullCDate;
+	private JLabel lblFullMDate;
+	private JLabel lblFullFilesize1;
+	private JLabel lblFullDuration1;
+	private JLabel lblFullDuration2;
+	private JLabel lblFullBitrate;
+	private JLabel lblFullFramecount;
 
 	private MediaQueryResult _mqData = null;
 	private MediaInfoResultHandler _handler = null;
@@ -146,7 +158,7 @@ public class EditMediaInfoDialog extends JDialog {
 	
 	private void initGUI() {
 		setModal(true);
-		setBounds(100, 100, 1000, 400);
+		setBounds(100, 100, 1000, 450);
 		setTitle(LocaleBundle.getString("EditMediaInfoDialog.title")); //$NON-NLS-1$
 		setMinimumSize(new Dimension(750, 350));
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
@@ -215,13 +227,25 @@ public class EditMediaInfoDialog extends JDialog {
 			new RowSpec[] {
 				FormSpecs.RELATED_GAP_ROWSPEC,
 				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,
+				FormSpecs.LABEL_COMPONENT_GAP_ROWSPEC,
 				FormSpecs.DEFAULT_ROWSPEC,
 				FormSpecs.RELATED_GAP_ROWSPEC,
 				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,
+				FormSpecs.LABEL_COMPONENT_GAP_ROWSPEC,
 				FormSpecs.DEFAULT_ROWSPEC,
 				FormSpecs.RELATED_GAP_ROWSPEC,
+				FormSpecs.DEFAULT_ROWSPEC,
+				FormSpecs.LABEL_COMPONENT_GAP_ROWSPEC,
+				FormSpecs.DEFAULT_ROWSPEC,
+				FormSpecs.RELATED_GAP_ROWSPEC,
+				FormSpecs.DEFAULT_ROWSPEC,
+				FormSpecs.LABEL_COMPONENT_GAP_ROWSPEC,
+				FormSpecs.DEFAULT_ROWSPEC,
+				FormSpecs.LABEL_COMPONENT_GAP_ROWSPEC,
+				FormSpecs.DEFAULT_ROWSPEC,
+				FormSpecs.RELATED_GAP_ROWSPEC,
+				FormSpecs.DEFAULT_ROWSPEC,
+				FormSpecs.LABEL_COMPONENT_GAP_ROWSPEC,
 				FormSpecs.DEFAULT_ROWSPEC,}));
 		
 		lblGeneralCDate = new JLabel(LocaleBundle.getString("EditMediaInfoDialog.CDate")); //$NON-NLS-1$
@@ -229,49 +253,84 @@ public class EditMediaInfoDialog extends JDialog {
 		
 		ctrlCDate = new JSpinner();
 		ctrlCDate.setModel(new SpinnerNumberModel(new Long(0), null, null, new Long(1)));
+		ctrlCDate.addChangeListener(new ChangeLambdaAdapter(() -> lblFullCDate.setText(CCDateTime.createFromFileTimestamp((long)ctrlCDate.getValue(), TimeZone.getDefault()).toStringISO())));
 		pnlGeneral.add(ctrlCDate, "4, 2, fill, default"); //$NON-NLS-1$
 		
 		lblHintCDate = new JLabel(""); //$NON-NLS-1$
 		pnlGeneral.add(lblHintCDate, "6, 2, fill, fill"); //$NON-NLS-1$
 		
+		lblFullCDate = new JLabel(""); //$NON-NLS-1$
+		lblFullCDate.setHorizontalAlignment(SwingConstants.RIGHT);
+		pnlGeneral.add(lblFullCDate, "4, 4, fill, fill"); //$NON-NLS-1$
+		
 		lblGeneralMDate = new JLabel(LocaleBundle.getString("EditMediaInfoDialog.MDate")); //$NON-NLS-1$
-		pnlGeneral.add(lblGeneralMDate, "2, 4, right, default"); //$NON-NLS-1$
+		pnlGeneral.add(lblGeneralMDate, "2, 6, right, default"); //$NON-NLS-1$
 		
 		ctrlMDate = new JSpinner();
 		ctrlMDate.setModel(new SpinnerNumberModel(new Long(0), null, null, new Long(1)));
-		pnlGeneral.add(ctrlMDate, "4, 4, fill, default"); //$NON-NLS-1$
+		ctrlMDate.addChangeListener(new ChangeLambdaAdapter(() -> lblFullMDate.setText(CCDateTime.createFromFileTimestamp((long)ctrlMDate.getValue(), TimeZone.getDefault()).toStringISO())));
+		pnlGeneral.add(ctrlMDate, "4, 6, fill, default"); //$NON-NLS-1$
 		
 		lblHintMDate = new JLabel(""); //$NON-NLS-1$
-		pnlGeneral.add(lblHintMDate, "6, 4, fill, fill"); //$NON-NLS-1$
+		pnlGeneral.add(lblHintMDate, "6, 6, fill, fill"); //$NON-NLS-1$
+		
+		lblFullMDate = new JLabel(""); //$NON-NLS-1$
+		lblFullMDate.setHorizontalAlignment(SwingConstants.RIGHT);
+		pnlGeneral.add(lblFullMDate, "4, 8, fill, fill"); //$NON-NLS-1$
 		
 		lblGeneralFilesize = new JLabel(LocaleBundle.getString("EditMediaInfoDialog.Filesize")); //$NON-NLS-1$
-		pnlGeneral.add(lblGeneralFilesize, "2, 6, right, default"); //$NON-NLS-1$
+		pnlGeneral.add(lblGeneralFilesize, "2, 10, right, default"); //$NON-NLS-1$
 		
 		ctrlFilesize = new JSpinner();
 		ctrlFilesize.setModel(new SpinnerNumberModel(new Long(0), null, null, new Long(1)));
-		pnlGeneral.add(ctrlFilesize, "4, 6"); //$NON-NLS-1$
+		ctrlFilesize.addChangeListener(new ChangeLambdaAdapter(() -> lblFullFilesize1.setText(FileSizeFormatter.formatPrecise((long)ctrlFilesize.getValue()))));
+		pnlGeneral.add(ctrlFilesize, "4, 10"); //$NON-NLS-1$
 		
 		lblHintFilesize = new JLabel(""); //$NON-NLS-1$
-		pnlGeneral.add(lblHintFilesize, "6, 6, fill, fill"); //$NON-NLS-1$
+		pnlGeneral.add(lblHintFilesize, "6, 10, fill, fill"); //$NON-NLS-1$
+		
+		lblFullFilesize1 = new JLabel(""); //$NON-NLS-1$
+		lblFullFilesize1.setHorizontalAlignment(SwingConstants.RIGHT);
+		pnlGeneral.add(lblFullFilesize1, "4, 12, fill, fill"); //$NON-NLS-1$
 		
 		lblGeneralDuration = new JLabel(LocaleBundle.getString("EditMediaInfoDialog.Duration")); //$NON-NLS-1$
-		pnlGeneral.add(lblGeneralDuration, "2, 8, right, default"); //$NON-NLS-1$
+		pnlGeneral.add(lblGeneralDuration, "2, 14, right, default"); //$NON-NLS-1$
 		
 		ctrlDuration = new JSpinner();
 		ctrlDuration.setModel(new SpinnerNumberModel(new Double(0), null, null, new Double(1)));
-		pnlGeneral.add(ctrlDuration, "4, 8"); //$NON-NLS-1$
+		ctrlDuration.addChangeListener(new ChangeLambdaAdapter(() ->
+		{
+			int m = (int)Math.round(((double)ctrlDuration.getValue())/60);
+			lblFullDuration1.setText(TimeIntervallFormatter.formatShort(m));
+			lblFullDuration2.setText(TimeIntervallFormatter.format(m));
+		}));
+		pnlGeneral.add(ctrlDuration, "4, 14"); //$NON-NLS-1$
 		
 		lblHintDuration = new JLabel(""); //$NON-NLS-1$
-		pnlGeneral.add(lblHintDuration, "6, 8, fill, fill"); //$NON-NLS-1$
+		pnlGeneral.add(lblHintDuration, "6, 14, fill, fill"); //$NON-NLS-1$
+		
+		lblFullDuration1 = new JLabel(""); //$NON-NLS-1$
+		lblFullDuration1.setHorizontalAlignment(SwingConstants.RIGHT);
+		pnlGeneral.add(lblFullDuration1, "4, 16, fill, fill"); //$NON-NLS-1$
+		
+		lblFullDuration2 = new JLabel(""); //$NON-NLS-1$
+		lblFullDuration2.setHorizontalAlignment(SwingConstants.RIGHT);
+		pnlGeneral.add(lblFullDuration2, "4, 18, fill, fill"); //$NON-NLS-1$
 		
 		lblGeneralBitrate = new JLabel(LocaleBundle.getString("EditMediaInfoDialog.Bitrate")); //$NON-NLS-1$
-		pnlGeneral.add(lblGeneralBitrate, "2, 10, right, default"); //$NON-NLS-1$
+		pnlGeneral.add(lblGeneralBitrate, "2, 20, right, default"); //$NON-NLS-1$
 		
 		ctrlBitrate = new JSpinner();
-		pnlGeneral.add(ctrlBitrate, "4, 10"); //$NON-NLS-1$
+		ctrlBitrate.setModel(new SpinnerNumberModel(new Integer(0), null, null, new Integer(1)));
+		ctrlBitrate.addChangeListener(new ChangeLambdaAdapter(() -> lblFullBitrate.setText(Str.spacegroupformat((int)Math.round(((int)ctrlBitrate.getValue())/1000.0)) + " kbit/s"))); //$NON-NLS-1$
+		pnlGeneral.add(ctrlBitrate, "4, 20"); //$NON-NLS-1$
 		
 		lblHintBitrate = new JLabel(""); //$NON-NLS-1$
-		pnlGeneral.add(lblHintBitrate, "6, 10, fill, fill"); //$NON-NLS-1$
+		pnlGeneral.add(lblHintBitrate, "6, 20, fill, fill"); //$NON-NLS-1$
+		
+		lblFullBitrate = new JLabel(""); //$NON-NLS-1$
+		lblFullBitrate.setHorizontalAlignment(SwingConstants.RIGHT);
+		pnlGeneral.add(lblFullBitrate, "4, 22, fill, fill"); //$NON-NLS-1$
 		
 		pnlVideo = new JPanel();
 		pnlVideo.setBorder(new TitledBorder(null, LocaleBundle.getString("EditMediaInfoDialog.header2"), TitledBorder.LEADING, TitledBorder.TOP, null, null)); //$NON-NLS-1$
@@ -296,6 +355,8 @@ public class EditMediaInfoDialog extends JDialog {
 				FormSpecs.RELATED_GAP_ROWSPEC,
 				FormSpecs.DEFAULT_ROWSPEC,
 				FormSpecs.RELATED_GAP_ROWSPEC,
+				FormSpecs.DEFAULT_ROWSPEC,
+				FormSpecs.LABEL_COMPONENT_GAP_ROWSPEC,
 				FormSpecs.DEFAULT_ROWSPEC,
 				FormSpecs.RELATED_GAP_ROWSPEC,
 				FormSpecs.DEFAULT_ROWSPEC,}));
@@ -352,20 +413,26 @@ public class EditMediaInfoDialog extends JDialog {
 		pnlVideo.add(lblVideoFramecount, "2, 12, right, default"); //$NON-NLS-1$
 		
 		ctrlVideoFramecount = new JSpinner();
+		ctrlVideoFramecount.setModel(new SpinnerNumberModel(new Integer(0), null, null, new Integer(1)));
+		ctrlVideoFramecount.addChangeListener(new ChangeLambdaAdapter(() -> lblFullFramecount.setText(Str.spacegroupformat((int)ctrlVideoFramecount.getValue()))));
 		pnlVideo.add(ctrlVideoFramecount, "4, 12"); //$NON-NLS-1$
 		
 		lblHintVideoFramecount = new JLabel(""); //$NON-NLS-1$
 		pnlVideo.add(lblHintVideoFramecount, "6, 12, fill, fill"); //$NON-NLS-1$
 		
+		lblFullFramecount = new JLabel(""); //$NON-NLS-1$
+		lblFullFramecount.setHorizontalAlignment(SwingConstants.RIGHT);
+		pnlVideo.add(lblFullFramecount, "4, 14, fill, fill"); //$NON-NLS-1$
+		
 		lblVideoCodec = new JLabel(LocaleBundle.getString("EditMediaInfoDialog.Codec")); //$NON-NLS-1$
-		pnlVideo.add(lblVideoCodec, "2, 14, right, default"); //$NON-NLS-1$
+		pnlVideo.add(lblVideoCodec, "2, 16, right, default"); //$NON-NLS-1$
 		
 		ctrlVideoCodec = new JTextField();
-		pnlVideo.add(ctrlVideoCodec, "4, 14, fill, default"); //$NON-NLS-1$
+		pnlVideo.add(ctrlVideoCodec, "4, 16, fill, default"); //$NON-NLS-1$
 		ctrlVideoCodec.setColumns(10);
 		
 		lblHintVideoCodec = new JLabel(""); //$NON-NLS-1$
-		pnlVideo.add(lblHintVideoCodec, "6, 14, fill, fill"); //$NON-NLS-1$
+		pnlVideo.add(lblHintVideoCodec, "6, 16, fill, fill"); //$NON-NLS-1$
 		
 		pnlAudio = new JPanel();
 		pnlAudio.setBorder(new TitledBorder(null, LocaleBundle.getString("EditMediaInfoDialog.header3"), TitledBorder.LEADING, TitledBorder.TOP, null, null)); //$NON-NLS-1$

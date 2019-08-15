@@ -117,11 +117,11 @@ public class CustomMediaInfoValueFilter extends AbstractCustomStructureElementFi
 	public CustomFilterConfig[] createConfig(CCMovieList ml) {
 		return new CustomFilterConfig[]
 		{
-			new CustomFilterEnumChooserConfig<>(() -> field, a -> field = a, CCMediaInfoField.getWrapper()), //$NON-NLS-1$
+			new CustomFilterEnumChooserConfig<>(() -> field, a -> field = a, CCMediaInfoField.getWrapper()), 
 			new CustomFilterEnumOptionConfig<>(() -> match, a -> match = a, AnyMatchType.getWrapper()),
-			new CustomFilterStringConfig(() -> value, a -> value = a), //$NON-NLS-1$
+			new CustomFilterStringConfig(() -> value, a -> value = a), 
 			new CustomFilterBoolConfig(() -> caseSensitive, p -> caseSensitive = p, LocaleBundle.getString("FilterTree.Custom.FilterFrames.CaseSensitive")), //$NON-NLS-1$
-			new CustomFilterPreviewListConfig(this::getPreview), //$NON-NLS-1$
+			new CustomFilterPreviewListConfig(this::getPreview), 
 		};
 	}
 

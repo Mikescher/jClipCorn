@@ -1,17 +1,8 @@
 package de.jClipCorn.features.table.filter.filterConfig;
 
 import de.jClipCorn.features.table.filter.AbstractCustomFilter;
-import de.jClipCorn.gui.frames.previewMovieFrame.PreviewMovieFrame;
-import de.jClipCorn.gui.frames.showIncompleteFilmSeriesFrame.ShowIncompleteFilmSeriesFrame;
 import de.jClipCorn.util.lambda.Func0to1;
-import de.jClipCorn.util.lambda.Func1to0;
-
 import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.util.List;
 import java.util.Random;
 
@@ -37,7 +28,7 @@ public class CustomFilterPreviewListConfig extends CustomFilterConfig {
 
 	@Override
 	public void setValueRandom(Random r) {
-
+		// has no intrinsic value
 	}
 
 	@Override
@@ -45,6 +36,8 @@ public class CustomFilterPreviewListConfig extends CustomFilterConfig {
 		return true;
 	}
 
+	@Override
+	@SuppressWarnings("unchecked")
 	public void onFilterDataChanged(JComponent comp, AbstractCustomFilter filter) {
 		DefaultListModel<String> m = new DefaultListModel<>();
 		for (String str : previewGetter.invoke()) m.addElement(str);

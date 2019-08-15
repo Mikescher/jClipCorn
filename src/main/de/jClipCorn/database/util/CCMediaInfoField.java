@@ -1,10 +1,7 @@
 package de.jClipCorn.database.util;
 
-import de.jClipCorn.database.databaseElement.columnTypes.CCFSK;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMediaInfo;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.gui.resources.Resources;
-import de.jClipCorn.gui.resources.reftypes.IconRef;
 import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.enumextension.ContinoousEnum;
 import de.jClipCorn.util.enumextension.EnumWrapper;

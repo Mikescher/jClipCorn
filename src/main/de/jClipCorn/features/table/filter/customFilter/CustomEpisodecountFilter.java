@@ -11,7 +11,7 @@ import de.jClipCorn.features.table.filter.AbstractCustomStructureElementFilter;
 import de.jClipCorn.features.table.filter.filterConfig.CustomFilterConfig;
 import de.jClipCorn.features.table.filter.filterConfig.CustomFilterIntAreaConfig;
 import de.jClipCorn.features.table.filter.filterSerialization.FilterSerializationConfig;
-import de.jClipCorn.util.DecimalSearchType;
+import de.jClipCorn.util.datatypes.DecimalSearchType;
 import de.jClipCorn.util.datatypes.CCIntArea;
 
 public class CustomEpisodecountFilter extends AbstractCustomStructureElementFilter {

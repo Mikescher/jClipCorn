@@ -75,4 +75,12 @@ public final class Str {
 		}
 		return b.toString();
 	}
+
+	public static boolean isInteger(String val) {
+		try	{ Integer.parseInt(val); return true; } catch (NumberFormatException e) { return false; }
+	}
+
+	public static boolean isDouble(String val) {
+		try	{ Double.parseDouble(val); return true; } catch (NumberFormatException e) { return false; }
+	}
 }

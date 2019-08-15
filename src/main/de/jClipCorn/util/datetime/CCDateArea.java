@@ -1,7 +1,7 @@
 package de.jClipCorn.util.datetime;
 
 import de.jClipCorn.features.log.CCLog;
-import de.jClipCorn.util.DecimalSearchType;
+import de.jClipCorn.util.datatypes.DecimalSearchType;
 
 public class CCDateArea {
 	public CCDate low;

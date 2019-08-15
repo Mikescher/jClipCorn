@@ -32,7 +32,7 @@ public class CustomTitleFilter extends AbstractCustomFilter {
 		case SM_STARTSWITH:
 			return title.startsWith(search);
 		case SM_INCLUDES:
-			return title.indexOf(search) != -1;
+			return title.contains(search);
 		case SM_ENDSWITH:
 			return title.endsWith(search);
 		case SM_EQUALS:

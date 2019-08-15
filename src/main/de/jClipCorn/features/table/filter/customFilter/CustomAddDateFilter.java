@@ -7,7 +7,7 @@ import de.jClipCorn.features.table.filter.AbstractCustomFilter;
 import de.jClipCorn.features.table.filter.filterConfig.CustomFilterConfig;
 import de.jClipCorn.features.table.filter.filterConfig.CustomFilterDateAreaConfig;
 import de.jClipCorn.features.table.filter.filterSerialization.FilterSerializationConfig;
-import de.jClipCorn.util.DecimalSearchType;
+import de.jClipCorn.util.datatypes.DecimalSearchType;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.datetime.CCDateArea;
 

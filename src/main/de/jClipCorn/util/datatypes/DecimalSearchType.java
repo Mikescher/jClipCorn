@@ -1,4 +1,4 @@
-package de.jClipCorn.util;
+package de.jClipCorn.util.datatypes;
 
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.enumextension.ContinoousEnum;

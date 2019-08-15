@@ -1,12 +1,10 @@
 package de.jClipCorn.gui.frames.customFilterEditDialog;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.FlowLayout;
-import java.awt.Font;
-import java.awt.GridLayout;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
@@ -20,6 +18,7 @@ import javax.swing.JTextField;
 import javax.swing.JTree;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.TreeSelectionEvent;
@@ -39,6 +38,7 @@ import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.features.table.filter.AbstractCustomFilter;
 import de.jClipCorn.features.table.filter.customFilter.operators.CustomOperator;
 import de.jClipCorn.features.table.filter.filterConfig.CustomFilterConfig;
+import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.listener.FinishListener;
 import de.jClipCorn.util.stream.CCStreams;
@@ -68,7 +68,10 @@ public class CustomFilterEditDialog extends JDialog {
 	private JButton btnClear;
 	private JPanel panel_1;
 	private JButton btnCancel;
-	
+
+	private List<Tuple<CustomFilterConfig, JComponent>> _currentConfigEntries = new ArrayList<>();
+	private AbstractCustomFilter _currentSelectedFilter = null;
+
 	public CustomFilterEditDialog(Component owner, CCMovieList ml,  CustomFilterObject filter, FinishListener fl) {
 		super();
 		
@@ -100,7 +103,7 @@ public class CustomFilterEditDialog extends JDialog {
 		pnlRightTop.add(lblCaption, "2, 1"); //$NON-NLS-1$
 		
 		pnlRight = new JPanel();
-		pnlRightTop.add(pnlRight, "2, 3, fill, top"); //$NON-NLS-1$
+		pnlRightTop.add(pnlRight, "2, 3, fill, fill"); //$NON-NLS-1$
 		pnlRight.setLayout(new BorderLayout(0, 0));
 		
 		panel = new JPanel();
@@ -284,58 +287,85 @@ public class CustomFilterEditDialog extends JDialog {
 	
 	private void updateEditPanel(AbstractCustomFilter f)
 	{
+		_currentSelectedFilter = f;
+
 		pnlRight.removeAll();
-		
-		JPanel pnl = new JPanel(new FormLayout(
-				new ColumnSpec[] 
+
+		if (f == null) {
+			_currentConfigEntries.clear();
+
+			lblCaption.setText(""); //$NON-NLS-1$
+
+			repaint();
+			
+		} else if (f instanceof CustomOperator) {
+			_currentConfigEntries.clear();
+
+			JPanel pnl = new JPanel(new FormLayout(
+				new ColumnSpec[]
 				{
 					ColumnSpec.decode("default:grow"), //$NON-NLS-1$
 				},
-				new RowSpec[] 
+				new RowSpec[]
 				{
-					FormSpecs.RELATED_GAP_ROWSPEC,
-					FormSpecs.DEFAULT_ROWSPEC,
-					FormSpecs.RELATED_GAP_ROWSPEC,
-					FormSpecs.DEFAULT_ROWSPEC,
-					FormSpecs.RELATED_GAP_ROWSPEC,
-					FormSpecs.DEFAULT_ROWSPEC,
-					FormSpecs.RELATED_GAP_ROWSPEC,
-					FormSpecs.DEFAULT_ROWSPEC,
-					FormSpecs.RELATED_GAP_ROWSPEC,
-					FormSpecs.DEFAULT_ROWSPEC,
-					FormSpecs.RELATED_GAP_ROWSPEC,
-					FormSpecs.DEFAULT_ROWSPEC,
-					FormSpecs.RELATED_GAP_ROWSPEC,
-					FormSpecs.DEFAULT_ROWSPEC,
-					FormSpecs.RELATED_GAP_ROWSPEC,
-					FormSpecs.DEFAULT_ROWSPEC,
-					RowSpec.decode("default:grow"), //$NON-NLS-1$
-					FormSpecs.DEFAULT_ROWSPEC,
-					FormSpecs.RELATED_GAP_ROWSPEC,
-				}));
-	
-		if (f == null) {
+					FormSpecs.RELATED_GAP_ROWSPEC, FormSpecs.DEFAULT_ROWSPEC,
+					FormSpecs.RELATED_GAP_ROWSPEC, FormSpecs.DEFAULT_ROWSPEC,
+					FormSpecs.RELATED_GAP_ROWSPEC, FormSpecs.DEFAULT_ROWSPEC,
+					FormSpecs.RELATED_GAP_ROWSPEC, FormSpecs.DEFAULT_ROWSPEC,
+					FormSpecs.RELATED_GAP_ROWSPEC, FormSpecs.DEFAULT_ROWSPEC,
+					FormSpecs.RELATED_GAP_ROWSPEC, FormSpecs.DEFAULT_ROWSPEC,
 
-			lblCaption.setText(""); //$NON-NLS-1$
-			
-		} else if (f instanceof CustomOperator) {
+					RowSpec.decode("default:grow"), //$NON-NLS-1$
+				}));
 			
 			CustomOperator filter = (CustomOperator)f;
 			createEditPanel_Operator(pnl, filter);
 			lblCaption.setText(filter.getPrecreateName());
+
+			pnlRight.add(pnl, BorderLayout.CENTER);
+			pnlRight.revalidate();
+			pnl.revalidate();
+			repaint();
 			
 		} else {
-			
-			AbstractCustomFilter filter = f;
-			createEditPanel_Simple(pnl, filter);
-			lblCaption.setText(filter.getPrecreateName());
-			
+			_currentConfigEntries.clear();
+
+			CustomFilterConfig[] cfgarr = f.createConfig(movielist);
+
+			boolean anyGrow = false;
+			List<RowSpec> rs = new ArrayList<>();
+			for (CustomFilterConfig cfg : cfgarr) {
+				rs.add(FormSpecs.RELATED_GAP_ROWSPEC);
+				rs.add(cfg.shouldGrow() ? RowSpec.decode("default:grow") : FormSpecs.DEFAULT_ROWSPEC); //$NON-NLS-1$
+				if (cfg.shouldGrow()) anyGrow = true;
+			}
+			if (!anyGrow) rs.add(RowSpec.decode("default:grow")); //$NON-NLS-1$
+
+			JPanel pnl = new JPanel(new FormLayout(new ColumnSpec[] { ColumnSpec.decode("default:grow") }, rs.toArray(new RowSpec[0]))); //$NON-NLS-1$
+
+			// createEditPanel_Simple
+			{
+				int row = 2;
+				for (CustomFilterConfig cfg : cfgarr) {
+					JComponent c = cfg.getComponent(this::updateSimple);
+
+					if (cfg.shouldGrow()) pnl.add(c, "1, " + row + ", fill, fill");    //$NON-NLS-1$ //$NON-NLS-2$
+					else                  pnl.add(c, "1, " + row + ", fill, default"); //$NON-NLS-1$ //$NON-NLS-2$
+					row += 2;
+
+					_currentConfigEntries.add(Tuple.Create(cfg, c));
+
+					cfg.onFilterDataChanged(c, f);
+				}
+			}
+
+			lblCaption.setText(f.getPrecreateName());
+
+			pnlRight.add(pnl, BorderLayout.CENTER);
+			pnlRight.revalidate();
+			pnl.revalidate();
+			repaint();
 		}
-		
-		pnlRight.add(pnl, BorderLayout.CENTER);
-		pnlRight.revalidate();
-		pnl.revalidate();
-		repaint();
 	}
 
 	private void createEditPanel_Operator(JPanel pnl, CustomOperator filter) {
@@ -347,13 +377,11 @@ public class CustomFilterEditDialog extends JDialog {
 			pnl.add(cbxFilter, "1, 2, fill, default"); //$NON-NLS-1$
 			
 			JButton btnAddFilter = new JButton(LocaleBundle.getString("FilterTree.Custom.CustomOperatorFilterDialog.btnAddFilter.text")); //$NON-NLS-1$
-			btnAddFilter.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					if (cbxFilter.getSelectedIndex() >= 0) {
-						filter.add(((AbstractCustomFilter)cbxFilter.getSelectedItem()).createNew());
-						updateTree();
-					}
+			btnAddFilter.addActionListener(e ->
+			{
+				if (cbxFilter.getSelectedIndex() >= 0) {
+					filter.add(((AbstractCustomFilter)cbxFilter.getSelectedItem()).createNew());
+					updateTree();
 				}
 			});
 			pnl.add(btnAddFilter, "1, 4"); //$NON-NLS-1$
@@ -367,13 +395,11 @@ public class CustomFilterEditDialog extends JDialog {
 			pnl.add(cbxOperator, "1, 6, fill, default"); //$NON-NLS-1$
 			
 			JButton btnAddOperator = new JButton(LocaleBundle.getString("FilterTree.Custom.CustomOperatorFilterDialog.btnAddOp.text")); //$NON-NLS-1$
-			btnAddOperator.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					if (cbxOperator.getSelectedIndex() >= 0) {
-						filter.add(((AbstractCustomFilter)cbxOperator.getSelectedItem()).createNew());
-						updateTree();
-					}
+			btnAddOperator.addActionListener(e ->
+			{
+				if (cbxOperator.getSelectedIndex() >= 0) {
+					filter.add(((AbstractCustomFilter)cbxOperator.getSelectedItem()).createNew());
+					updateTree();
 				}
 			});
 			pnl.add(btnAddOperator, "1, 8"); //$NON-NLS-1$
@@ -387,37 +413,33 @@ public class CustomFilterEditDialog extends JDialog {
 			pnl.add(cbxAggregator, "1, 10, fill, default"); //$NON-NLS-1$
 			
 			JButton btnAddAggregator = new JButton(LocaleBundle.getString("FilterTree.Custom.CustomOperatorFilterDialog.btnAddAgg.text")); //$NON-NLS-1$
-			btnAddAggregator.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					if (cbxAggregator.getSelectedIndex() >= 0) {
-						filter.add(((AbstractCustomFilter)cbxAggregator.getSelectedItem()).createNew());
-						updateTree();
-					}
+			btnAddAggregator.addActionListener(e ->
+			{
+				if (cbxAggregator.getSelectedIndex() >= 0) {
+					filter.add(((AbstractCustomFilter)cbxAggregator.getSelectedItem()).createNew());
+					updateTree();
 				}
 			});
 			pnl.add(btnAddAggregator, "1, 12"); //$NON-NLS-1$
 		}
 	}
 
-	private void createEditPanel_Simple(JPanel pnl, AbstractCustomFilter filter) {
-		
-		int row = 2;
-		for (CustomFilterConfig cfg : filter.createConfig(movielist)) {
-			JComponent c = cfg.getComponent(() -> updateTree());
-
-			pnl.add(c, "1, " + row + ", fill, default"); //$NON-NLS-1$ //$NON-NLS-2$
-			row += 2;
-		}
-		
-	}
-	
 	private void init() {
 		root = new CustomFilterEditTreeNode(filterObject.getFilter());
 		
 		updateTree();
 	}
-	
+
+	private void updateSimple() {
+		if (_currentSelectedFilter != null) {
+			for (Tuple<CustomFilterConfig, JComponent> entr : _currentConfigEntries) {
+				entr.Item1.onFilterDataChanged(entr.Item2, _currentSelectedFilter);
+			}
+		}
+
+		updateTree();
+	}
+
 	private void updateTree() {
 		
 		DefaultTreeModel model = (treeMain != null) ? ((DefaultTreeModel)treeMain.getModel()) : (null);

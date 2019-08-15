@@ -15,7 +15,7 @@ import com.jgoodies.forms.layout.FormSpecs;
 import com.jgoodies.forms.layout.RowSpec;
 
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.util.DecimalSearchType;
+import de.jClipCorn.util.datatypes.DecimalSearchType;
 import de.jClipCorn.util.datatypes.CCIntArea;
 import de.jClipCorn.util.lambda.Func0to1;
 import de.jClipCorn.util.lambda.Func1to0;

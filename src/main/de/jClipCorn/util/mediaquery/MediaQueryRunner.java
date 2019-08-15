@@ -28,11 +28,11 @@ public class MediaQueryRunner {
 
 		if (! mqfile.exists()) throw new MediaQueryException("MediaQuery not found");
 
-		BasicFileAttributes attr = Files.readAttributes(mqfile.toPath(), BasicFileAttributes.class);
-
 		Tuple3<Integer, String, String> proc = ProcessHelper.procExec(mqpath, filename, "--Output=XML");
 
 		if (proc.Item1 != 0) throw new MediaQueryException("MediaQuery returned " + proc.Item1, proc.Item2 + "\n\n\n\n" + proc.Item3);
+
+		BasicFileAttributes attr = Files.readAttributes(new File(filename).toPath(), BasicFileAttributes.class);
 
 		String mqxml = proc.Item2;
 

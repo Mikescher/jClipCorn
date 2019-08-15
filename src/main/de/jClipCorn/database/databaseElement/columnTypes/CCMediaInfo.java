@@ -360,7 +360,7 @@ public class CCMediaInfo {
 		if (width <= 0) return "Width";
 		if (height <= 0) return "Height";
 		if (framerate <= 0) return "Framerate";
-		if (bitdepth != 8 && bitdepth != 10) return "Bitdepth";
+		if (bitdepth != 8 && bitdepth != 10 && bitdepth != 12) return "Bitdepth";
 		if (framecount <= 0) return "Framecount";
 
 		if (Str.isNullOrWhitespace(audioformat)) return "AudioFormat";

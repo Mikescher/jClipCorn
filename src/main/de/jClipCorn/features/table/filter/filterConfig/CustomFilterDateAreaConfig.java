@@ -14,7 +14,7 @@ import com.jgoodies.forms.layout.RowSpec;
 
 import de.jClipCorn.gui.guiComponents.jCCDateSpinner.JCCDateSpinner;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.util.DecimalSearchType;
+import de.jClipCorn.util.datatypes.DecimalSearchType;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.datetime.CCDateArea;
 import de.jClipCorn.util.lambda.Func0to1;

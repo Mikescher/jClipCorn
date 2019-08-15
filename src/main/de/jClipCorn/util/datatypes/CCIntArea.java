@@ -1,7 +1,6 @@
 package de.jClipCorn.util.datatypes;
 
 import de.jClipCorn.features.log.CCLog;
-import de.jClipCorn.util.DecimalSearchType;
 import de.jClipCorn.util.datetime.YearRange;
 import de.jClipCorn.util.stream.CCStream;
 

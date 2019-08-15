@@ -4,28 +4,32 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.enumextension.ContinoousEnum;
 import de.jClipCorn.util.enumextension.EnumWrapper;
 
-public enum StringMatchType implements ContinoousEnum<StringMatchType> {
-	SM_STARTSWITH(0),
-	SM_INCLUDES(1),
-	SM_ENDSWITH(2),
-	SM_EQUALS(3);
+public enum AnyMatchType implements ContinoousEnum<AnyMatchType> {
+	LESSER(0),
+	GREATER(1),
+	EXACT(2),
+	SM_STARTSWITH(3),
+	SM_INCLUDES(4),
+	SM_ENDSWITH(5);
 
 	private final static String[] NAMES = {
+		LocaleBundle.getString("DecimalSearchType.LESSER"),    //$NON-NLS-1$
+		LocaleBundle.getString("DecimalSearchType.GREATER"),   //$NON-NLS-1$
+		LocaleBundle.getString("DecimalSearchType.EXACT"),     //$NON-NLS-1$
 		LocaleBundle.getString("StringMatchType.STARTSWITH"), //$NON-NLS-1$
 		LocaleBundle.getString("StringMatchType.INCLUDES"),   //$NON-NLS-1$
 		LocaleBundle.getString("StringMatchType.ENDSWITH"),    //$NON-NLS-1$
-		LocaleBundle.getString("StringMatchType.EQUALS"),    //$NON-NLS-1$
 	};
-	
-	private final int id;
-	
-	private static EnumWrapper<StringMatchType> wrapper = new EnumWrapper<>(SM_STARTSWITH);
 
-	private StringMatchType(int val) {
+	private final int id;
+
+	private static EnumWrapper<AnyMatchType> wrapper = new EnumWrapper<>(LESSER);
+
+	private AnyMatchType(int val) {
 		id = val;
 	}
 	
-	public static EnumWrapper<StringMatchType> getWrapper() {
+	public static EnumWrapper<AnyMatchType> getWrapper() {
 		return wrapper;
 	}
 	
@@ -45,7 +49,7 @@ public enum StringMatchType implements ContinoousEnum<StringMatchType> {
 	}
 
 	@Override
-	public StringMatchType[] evalues() {
-		return StringMatchType.values();
+	public AnyMatchType[] evalues() {
+		return AnyMatchType.values();
 	}
 }

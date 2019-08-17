@@ -137,19 +137,23 @@ public class Main {
 	}
 }
 
-//TODO Use OpenMovieDatabase (they have a ~real~ API)
-// http://www.omdbapi.com
-// -> it is IMDB Data
+//=====================================================================
+// ========================= PLANNED FEATURES =========================
+//=====================================================================
+
+// Use OpenMovieDatabase (they have a ~real~ API)
+//	http://www.omdbapi.com
+//	-> it is IMDB Data
 //		-> autom find series with new episodes
 //		-> autom update imdb score
 //		-> find trailer
 //		-> find plot summary / synopsis
 //		-> autom find age-restriction for different nations
 
-//TODO Auto parse Summary
-//TODO Search for Trailer
+// Auto parse Summary
+// Search for Trailer
 
-//TODO (2.0) ONLINE SYNCHRONISATION / Online Profiles / View Ratings + Viewed from others ... ...
+//(2.0) ONLINE SYNCHRONISATION / Online Profiles / View Ratings + Viewed from others ... ...
 	// - XML With MovieDATA is send to Server (no FileInfo / No COver )
 	// - YOu send a username and a 16-sign password (to differ the users)
 	// - Server keeps track of this xml and lastUpdated of the xml
@@ -162,53 +166,50 @@ public class Main {
 	// - you can right click a movie and click something like network view
 		// - You see if the othr one has the Movie / what he rates / if he has viewed ...
 
-//TODO Shortcuts für SerienWindow
-//TODO Compare Series in CompareDialog
-//TODO Option to move Database to Server
+// Shortcuts für SerienWindow
+// Compare Series in CompareDialog
+// Option to move Database to Server
 
-//TODO Integrated VLC ? : https://code.google.com/p/vlcj/
+// Integrated VLC ? : https://code.google.com/p/vlcj/
 
-//TODO autom find IMDb Score discrepancies (search Movie on imdb -> if found compare score) ~ not in CheckDB (too long) but own dialog
+// save original/alternative title (eng title) --> get from TMDB / IMDB
 
-//TODO save original/alternative title (eng title) --> get from TMDB / IMDB
+// find missing seasons online
+// Export and import reference mapping file (to get mappings to other dbs) ?
 
-//TODO
-//   - find missing seasons online
-//   - Export and import reference mapping file (to get mappings to other dbs) ?
+// get actors from online and save to db
+// add filter for actors.
+// don't show all actors, make it configurable which actors are "enabled" (?)
 
-//TODO get actors from online and save to db
-//      add filter for actors. 
-//      don't show all actors, make it configurable which actors are "enabled" (?)
+// Use http://www.iconarchive.com/show/series-season-folder-icons-by-aaron-sinuhe.html
 
-//TODO Use http://www.iconarchive.com/show/series-season-folder-icons-by-aaron-sinuhe.html 
+// Move Series into separate table (???)
+// Option to mark season as extra (ordered last, special filename, not in carousal but on right side of it ...)
 
-//TODO Move Series into separate table (???)
-//TODO Option to mark season as extra (ordered last, special filename, not in carousal but on right side of it ...)
+// full database transaction log
+//   -> everytime we change a mov/ep/sea/ser we copy its old state with a timestamp to the log_table
+//   -> then in the ui we can restore old states and even view the database at a specific timestamp
+//   -> option to clean up state (only keep 1 per day for older than month && only keep one per week for older than year)
 
-//TODO full database transaction log 
-//        -> everytime we change a mov/ep/sea/ser we copy its old state with a timestamp to the log_table
-//        -> then in the ui we can restore old states and even view the database at a specific timestamp
-//        -> option to clean up state (only keep 1 per day for older than month && only keep one per week for older than year)
+// use omdb instead of direct imdb query
 
-//TODO use omdb instead of direct imdb query
+// test stuff under linux:
+// Open in explorer
+// Not all windows work under metal (or is GNOME etc the problem): not enough space, eg CustomFilter windows
+// swing exceptions (in log)
 
-//TODO test stuff under linux:
-//     Open in explorer
-//     Not all windows work under metal (or is GNOME etc the problem): not enough space, eg CustomFilter windows
-//     swing exceptions (in log)
+// Dialog to copy movies to other folder
+// - only copy new ones, bzw otehr filters
+// - progress, async, abort
 
-//TODO Dialog to copy movies to other folder 
-//     - only copy new ones, bzw otehr filters
-//     - progress, async, abort
+// MainTable and SeriesTable as JCCSimpleTable
 
-//TODO MainTable and SeriesTable as JCCSimpleTable
+// (optional) add a season ref to an online ref to associate it with a specific season
 
-//TODO (optional) add a season ref to an online ref to associate it with a specific season
+// re-do PlainTextExporter
 
-//TODO re-do PlainTextExporter
+// remove viewed field from db (get from history)
 
-//TODO remove viewed field from db (get from history)
+// option recreate previews (covers dialog to show content of covers table)
 
-//TODO option recreate previews (covers dialog to show content of covers table)
-
-//TODO Show versions of entry dialog (group history stuff together to show specific versions in specific times)
+// Show versions of entry dialog (group history stuff together to show specific versions in specific times)

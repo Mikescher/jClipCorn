@@ -6,6 +6,10 @@ import java.lang.reflect.InvocationTargetException;
 import javax.swing.*;
 
 public class ThreadUtils {
+	public static void delay(int ms, Runnable r) {
+		new Thread(() -> { ThreadUtils.safeSleep(ms); SwingUtilities.invokeLater(r); }).start();
+	}
+
 	public static boolean invokeAndWaitSafe(Runnable r) {
 		try {
 			SwingUtilities.invokeAndWait(r);

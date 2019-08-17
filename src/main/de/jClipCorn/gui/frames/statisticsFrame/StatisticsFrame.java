@@ -42,7 +42,9 @@ public class StatisticsFrame extends JFrame {
 	private int minYear;
 	private int maxYear;
 	private StatisticsTypeFilter selectedType = StatisticsTypeFilter.BOTH;
-	
+
+	private boolean _supressChartUpdate = false;
+
 	private JPanel pnlTop;
 	private JPanel pnlLeft;
 	private JPanel pnlCenter;
@@ -62,6 +64,7 @@ public class StatisticsFrame extends JFrame {
 	private JToggleButton btnMovies;
 	private JToggleButton btnSeries;
 	private JToggleButton btnBoth;
+	private JList<StatisticsGroup> lsAltLeft;
 	
 	public StatisticsFrame(Component owner, CCMovieList mlist) {
 		super();
@@ -92,15 +95,19 @@ public class StatisticsFrame extends JFrame {
 	private void initGUI() {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setIconImage(Resources.IMG_FRAME_ICON.get());
-		
-		BorderLayout borderLayout = (BorderLayout) getContentPane().getLayout();
-		borderLayout.setVgap(5);
-		borderLayout.setHgap(5);
 		setTitle(LocaleBundle.getString("StatisticsFrame.this.title")); //$NON-NLS-1$
+		getContentPane().setLayout(new FormLayout(new ColumnSpec[] {
+				ColumnSpec.decode("175dlu"), //$NON-NLS-1$
+				FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
+				ColumnSpec.decode("16px:grow"),}, //$NON-NLS-1$
+			new RowSpec[] {
+				FormSpecs.PREF_ROWSPEC,
+				FormSpecs.LINE_GAP_ROWSPEC,
+				RowSpec.decode("16px:grow"),})); //$NON-NLS-1$
 		
 		pnlTop = new JPanel();
 		pnlTop.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
-		getContentPane().add(pnlTop, BorderLayout.NORTH);
+		getContentPane().add(pnlTop, "1, 1, 3, 1, fill, top"); //$NON-NLS-1$
 		pnlTop.setLayout(new FormLayout(new ColumnSpec[] {
 				ColumnSpec.decode("15dlu"), //$NON-NLS-1$
 				ColumnSpec.decode("250px"), //$NON-NLS-1$
@@ -121,17 +128,12 @@ public class StatisticsFrame extends JFrame {
 				FormSpecs.RELATED_GAP_ROWSPEC,}));
 		
 		cbxChooseChart = new JComboBox<>();
-		cbxChooseChart.addActionListener(arg0 ->
-		{
-			StatisticsGroup chart = cbxChooseChart.getItemAt(cbxChooseChart.getSelectedIndex());
-
-			pnlCheckSeries.setVisible((chart != null) && chart.usesFilterableSeries());
-			pnlYearRange.setVisible((chart != null) && chart.usesFilterableYearRange());
-
-			updateStatGroup(chart);
-		});
+		cbxChooseChart.addActionListener(e -> onSelectChart(cbxChooseChart.getItemAt(cbxChooseChart.getSelectedIndex())));
 		cbxChooseChart.setMaximumRowCount(32);
 		pnlTop.add(cbxChooseChart, "2, 2, fill, center"); //$NON-NLS-1$
+
+		lsAltLeft = new JList<>();
+		lsAltLeft.addListSelectionListener(e -> ThreadUtils.delay(100, () -> onSelectChart(lsAltLeft.getModel().getElementAt(lsAltLeft.getSelectedIndex()))));
 		
 		btnPrevChart = new JButton("<"); //$NON-NLS-1$
 		btnPrevChart.addActionListener(arg0 ->
@@ -153,7 +155,7 @@ public class StatisticsFrame extends JFrame {
 		pnlTop.add(btnNxtChart, "8, 2, left, top"); //$NON-NLS-1$
 		
 		pnlLeft = new JPanel();
-		getContentPane().add(pnlLeft, BorderLayout.WEST);
+		getContentPane().add(pnlLeft, "1, 3, fill, fill"); //$NON-NLS-1$
 		pnlLeft.setLayout(new BorderLayout(0, 0));
 		
 		sclPnlLeft = new JScrollPane();
@@ -229,7 +231,7 @@ public class StatisticsFrame extends JFrame {
 		
 		pnlCenter = new JPanel(new BorderLayout());
 		pnlCenter.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
-		getContentPane().add(pnlCenter, BorderLayout.CENTER);
+		getContentPane().add(pnlCenter, "3, 3, fill, fill"); //$NON-NLS-1$
 		
 		btnMovies = new JToggleButton(LocaleBundle.getString("StatisticsFrame.this.toggleMovies")); //$NON-NLS-1$
 		btnMovies.addActionListener(e -> setTypeFilter(StatisticsTypeFilter.MOVIES));
@@ -334,11 +336,31 @@ public class StatisticsFrame extends JFrame {
 	}
 	
 	private void initCharts() {
+		DefaultListModel<StatisticsGroup> dlm = new DefaultListModel<>();
 		for (Func1to1<CCMovieList, StatisticsGroup> supplier : ClipCornStatistics.STATISTICS) {
-			cbxChooseChart.addItem(supplier.invoke(movielist));
+			StatisticsGroup g = supplier.invoke(movielist);
+			cbxChooseChart.addItem(g);
+			dlm.addElement(g);
 		}
+		lsAltLeft.setModel(dlm);
 	}
-	
+
+	private void onSelectChart(StatisticsGroup chart) {
+		if (_supressChartUpdate) return;
+
+		_supressChartUpdate = true;
+		{
+			if (cbxChooseChart.getSelectedItem() != chart) cbxChooseChart.setSelectedItem(chart);
+			if (lsAltLeft.getSelectedValue() != chart) lsAltLeft.setSelectedValue(chart, true);
+		}
+		_supressChartUpdate = false;
+
+		pnlCheckSeries.setVisible((chart != null) && chart.usesFilterableSeries());
+		pnlYearRange.setVisible((chart != null) && chart.usesFilterableYearRange());
+
+		updateStatGroup(chart);
+	}
+
 	private void updateStatGroup(StatisticsGroup statchart) {
 		currentChart = statchart;
 		
@@ -361,6 +383,8 @@ public class StatisticsFrame extends JFrame {
 			currentChart.onChangeFilter(seriesList.getMap());
 			currentChart.onFilterYearRange(selectedYear);
 
+			if (sclPnlLeft.getViewport().getView() != lsAltLeft) sclPnlLeft.setViewportView(lsAltLeft);
+
 			pnlCenter.validate();
 
 			new Thread(() -> { ThreadUtils.safeSleep(1); SwingUtilities.invokeLater(() -> { if (currentChart!=null) currentChart.onShow(); }); }).start();
@@ -370,6 +394,8 @@ public class StatisticsFrame extends JFrame {
 			btnMovies.setEnabled(false);
 			btnSeries.setEnabled(false);
 			btnBoth.setEnabled(false);
+
+			sclPnlLeft.setViewportView(pnlSidebar);
 		}
 
 		pnlCenter.setVisible(true);

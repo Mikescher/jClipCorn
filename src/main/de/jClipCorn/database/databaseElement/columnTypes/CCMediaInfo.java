@@ -35,6 +35,7 @@ public class CCMediaInfo {
 	private final int audiosamplerate; // Audio -> SamplingRate
 
 	private CCQualityCategory _cat = null;
+	private CCGenreList _cat_source = null;
 
 	public CCMediaInfo(long cdate, long mdate, long filesize, double duration, int bitrate, String videoformat, int width,
 					   int height, double framerate, short bitdepth, int framecount, String videocodec, String audioformat,
@@ -242,15 +243,16 @@ public class CCMediaInfo {
 
 	public CCQualityCategory getCategory(CCGenreList source) {
 
-		if (_cat != null) return _cat;
+		if (_cat != null && _cat_source == source) return _cat;
 
-		if (!isSet) return _cat = CCQualityCategory.UNSET;
+		if (!isSet) { _cat_source=source; return _cat = CCQualityCategory.UNSET; }
 
 		CCQualityCategoryType ct = getCategoryType(source != null && source.shouldIgnoreBitrateInMediaInfo());
 		CCQualityResolutionType rt = getCategoryResType();
 		String tx2 = getCategoryTextLong();
 		String tx3 = getCategoryToolTip();
 
+		_cat_source=source;
 		return _cat = new CCQualityCategory(ct, rt, tx2, tx3, bitrate);
 	}
 

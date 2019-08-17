@@ -80,8 +80,7 @@ public class FilterTree extends AbstractFilterTree {
 		initYear(addNode(null, Resources.ICN_SIDEBAR_YEAR, LocaleBundle.getString("FilterTree.Year"), this::expand)); //$NON-NLS-1$
 		
 		initFormat(addNode(null, Resources.ICN_SIDEBAR_FORMAT, LocaleBundle.getString("FilterTree.Format"), this::expand)); //$NON-NLS-1$
-		
-		//TODO MediaInfo
+
 		initQuality(addNode(null, Resources.ICN_SIDEBAR_QUALITY, LocaleBundle.getString("FilterTree.Quality"), this::expand)); //$NON-NLS-1$
 		
 		initTags(addNode(null, Resources.ICN_SIDEBAR_TAGS, LocaleBundle.getString("FilterTree.Tags"), this::expand)); //$NON-NLS-1$

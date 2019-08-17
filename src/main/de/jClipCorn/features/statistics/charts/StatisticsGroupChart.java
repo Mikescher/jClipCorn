@@ -28,7 +28,7 @@ public class StatisticsGroupChart extends StatisticsChart {
 		super(ml, _source);
 	}
 
-	private class CustomBarRenderer extends BarRenderer {
+	private static class CustomBarRenderer extends BarRenderer {
 		private static final long serialVersionUID = 7129766928866125281L;
 		
 		public final CCGroup[] groups;

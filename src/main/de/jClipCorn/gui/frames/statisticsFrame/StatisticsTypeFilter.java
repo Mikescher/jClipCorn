@@ -6,6 +6,7 @@ import de.jClipCorn.database.databaseElement.ICCDatedElement;
 import de.jClipCorn.database.databaseElement.ICCPlayableElement;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.util.stream.CCStream;
+import de.jClipCorn.util.stream.CCStreams;
 
 public enum StatisticsTypeFilter {
 	MOVIES,
@@ -46,7 +47,7 @@ public enum StatisticsTypeFilter {
 				return movielist.iteratorPlayables().cast();
 			default:
 				CCLog.addDefaultSwitchError(this, this);
-				return null;
+				return CCStreams.empty();
 		}
 	}
 	
@@ -60,7 +61,7 @@ public enum StatisticsTypeFilter {
 				return movielist.iteratorElements().cast();
 			default:
 				CCLog.addDefaultSwitchError(this, this);
-				return null;
+				return CCStreams.empty();
 		}
 	}
 
@@ -74,7 +75,7 @@ public enum StatisticsTypeFilter {
 				return movielist.iteratorDatedElements().cast();
 			default:
 				CCLog.addDefaultSwitchError(this, this);
-				return null;
+				return CCStreams.empty();
 		}
 	}
 }

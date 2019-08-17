@@ -14,6 +14,7 @@ import de.jClipCorn.util.lambda.Func2to1;
  * ... and I really feel like reimplementing the java8 stream() api
  * 
  */
+@SuppressWarnings({"unused", "WeakerAccess"})
 public abstract class CCStream<TType> implements Iterator<TType>, Iterable<TType> {
 	@Override
 	public Iterator<TType> iterator() {
@@ -26,17 +27,16 @@ public abstract class CCStream<TType> implements Iterator<TType>, Iterable<TType
 		return new SortedStream<>(this, _comparator);
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public CCStream<TType> autosort() {
-		return new SortedStream<>(this, (a,b) -> ObjectUtils.compare((Comparable)a, (Comparable)b));
+		return new SortedStream<>(this, CCStream::autoCompare);
 	}
 
 	public <TAttrType extends Comparable<? super TAttrType>> CCStream<TType> autosortByProperty(Func1to1<TType, TAttrType> _selector) {
-		return new SortedStream<>(this, (a, b) -> ObjectUtils.compare(_selector.invoke(a), _selector.invoke(b)));
+		return new SortedStream<>(this, (a, b) -> autoCompare(_selector.invoke(a), _selector.invoke(b)));
 	}
 
 	public <TAttrType> CCStream<TType> sortByProperty(Func1to1<TType, TAttrType> _selector, Comparator<TAttrType> _comparator) {
-		return new SortedStream<>(this, (o1, o2) -> _comparator.compare(_selector.invoke(o1), _selector.invoke(o2)));
+		return new SortedStream<>(this, (o1, o2) -> autoCompare(_selector.invoke(o1), _selector.invoke(o2)));
 	}
 	
 	public <TCastType> CCStream<TCastType> cast() {
@@ -61,9 +61,15 @@ public abstract class CCStream<TType> implements Iterator<TType>, Iterable<TType
 		return enumerate().toArray(a);
 	}
 
-	public HashSet<TType> toSet() {
+	public Set<TType> toSet() {
 		HashSet<TType> result = new HashSet<>();
 		for (TType v : this) result.add(v);
+		return result;
+	}
+
+	public <TKey, TValue> Map<TKey, TValue> toMap(Func1to1<TType, TKey> keySelector, Func1to1<TType, TValue> valueSelector) {
+		HashMap<TKey, TValue> result = new HashMap<>();
+		for (TType v : this) result.put(keySelector.invoke(v), valueSelector.invoke(v));
 		return result;
 	}
 
@@ -115,7 +121,15 @@ public abstract class CCStream<TType> implements Iterator<TType>, Iterable<TType
 	public TType minOrDefault(Comparator<? super TType> comp, TType defValue) {
 		return minOrDefault(p -> p, comp, defValue);
 	}
-	
+
+	public TType autoMaxOrDefault(TType defValue) {
+		return maxOrDefault(p -> p, CCStream::autoCompare, defValue);
+	}
+
+	public TType autoMinOrDefault(TType defValue) {
+		return minOrDefault(p -> p, CCStream::autoCompare, defValue);
+	}
+
 	public <TAttrType> TAttrType maxOrDefault(Func1to1<TType, TAttrType> selector, Comparator<? super TAttrType> comp, TAttrType defValue) {
 		TAttrType current = defValue;
 		boolean first = true;
@@ -198,14 +212,12 @@ public abstract class CCStream<TType> implements Iterator<TType>, Iterable<TType
 			return current;
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes", "cast" })
 	public <TAttrType> TType autoMaxValueOrDefault(Func1to1<TType, TAttrType> selector, TType defValue) {
-		return (TType)maxValueOrDefault(selector, (a,b) -> ObjectUtils.compare((Comparable)a, (Comparable)b), defValue);
+		return maxValueOrDefault(selector, CCStream::autoCompare, defValue);
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes", "cast" })
 	public <TAttrType> TType autoMinValueOrDefault(Func1to1<TType, TAttrType> selector, TType defValue) {
-		return (TType)minValueOrDefault(selector, (a,b) -> ObjectUtils.compare((Comparable)a, (Comparable)b), defValue);
+		return minValueOrDefault(selector, CCStream::autoCompare, defValue);
 	}
 
 	public double avgValueOrDefault(Func1to1<TType, Double> selector, double defValue) {
@@ -455,5 +467,12 @@ public abstract class CCStream<TType> implements Iterator<TType>, Iterable<TType
 
 	public CCStream<TType> skip(int count) {
 		return new SkipStream<>(this, count);
+	}
+
+	@SuppressWarnings({"unchecked", "rawtypes"})
+	private static int autoCompare(Object a, Object b) {
+		if (a == null && b == null) return 0;
+		if (a instanceof Comparable && b instanceof Comparable) return ObjectUtils.compare((Comparable)a, (Comparable)b);
+		return Integer.compare(Objects.hashCode(a), Objects.hashCode(b));
 	}
 }

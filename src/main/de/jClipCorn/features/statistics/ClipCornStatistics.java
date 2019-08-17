@@ -51,6 +51,25 @@ public final class ClipCornStatistics {
 		STATISTICS.add(ml -> new StatisticsGroup(s -> new StatisticsSeriesTimeline(ml, s)));
 		STATISTICS.add(ml -> new StatisticsGroup(s -> new StatisticsSeriesTimelineCombined(ml, s)));
 
-		
+		// ======== MEDIAINFO =========
+
+		STATISTICS.add(ml -> new StatisticsGroup(s -> new StatisticsMediaInfoSetChart(ml, s)));
+		STATISTICS.add(ml -> new StatisticsGroup(s -> new StatisticsMediaInfoCDateChart(ml, s)));
+		STATISTICS.add(ml -> new StatisticsGroup(s -> new StatisticsMediaInfoMDateChart(ml, s)));
+		STATISTICS.add(ml -> new StatisticsGroup(s -> new StatisticsMediaInfoFilesizeChart(ml, s)));
+		STATISTICS.add(ml -> new StatisticsGroup(s -> new StatisticsMediaInfoDurationChart(ml, s)));
+		STATISTICS.add(ml -> new StatisticsGroup(s -> new StatisticsMediaInfoBitrateChart(ml, s)));
+		STATISTICS.add(ml -> new StatisticsGroup(s -> new StatisticsMediaInfoVideoFormatChart(ml, s)));
+		STATISTICS.add(ml -> new StatisticsGroup(s -> new StatisticsMediaInfoVideoCodecChart(ml, s)));
+		STATISTICS.add(ml -> new StatisticsGroup(s -> new StatisticsMediaInfoResolutionChart(ml, s)));
+		STATISTICS.add(ml -> new StatisticsGroup(s -> new StatisticsMediaInfoFramerateChart(ml, s)));
+		STATISTICS.add(ml -> new StatisticsGroup(s -> new StatisticsMediaInfoBitDepthChart(ml, s)));
+		STATISTICS.add(ml -> new StatisticsGroup(s -> new StatisticsMediaInfoFramecountChart(ml, s)));
+		STATISTICS.add(ml -> new StatisticsGroup(s -> new StatisticsMediaInfoAudioFormatChart(ml, s)));
+		STATISTICS.add(ml -> new StatisticsGroup(s -> new StatisticsMediaInfoAudioCodecChart(ml, s)));
+		STATISTICS.add(ml -> new StatisticsGroup(s -> new StatisticsMediaInfoAudioChannelsChart(ml, s)));
+		STATISTICS.add(ml -> new StatisticsGroup(s -> new StatisticsMediaInfoSamplerateChart(ml, s)));
+		STATISTICS.add(ml -> new StatisticsGroup(s -> new StatisticsMediaInfoQualityCategoryChart(ml, s)));
+		STATISTICS.add(ml -> new StatisticsGroup(s -> new StatisticsMediaInfoQualityResolutionTypeChart(ml, s)));
 	}
 }

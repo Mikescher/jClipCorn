@@ -794,7 +794,7 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator {
 		// Duplicate/Invalid CoverIDs
 		// ###############################################
 
-		HashSet<Integer> coverIDsTable = CCStreams.iterate(cc.listCovers()).map(p->p.ID).toSet();
+		Set<Integer> coverIDsTable = CCStreams.iterate(cc.listCovers()).map(p->p.ID).toSet();
 
 		HashMap<Integer, ICCCoveredElement> coversDatabase = new HashMap<>();
 

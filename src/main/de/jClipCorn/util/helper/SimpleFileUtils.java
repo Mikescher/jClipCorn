@@ -28,7 +28,9 @@ public class SimpleFileUtils {
 	}
 	
 	public static String readUTF8TextFile(FileInputStream file) throws IOException {
-		return readTextFile(new InputStreamReader(file, Str.UTF8));
+		String result = readTextFile(new InputStreamReader(file, Str.UTF8));
+		if (result.length()>0 && result.charAt(0) == 0xFEFF) result = result.substring(1); // remove BOM
+		return result;
 	}
 	
 	public static String readTextFile(BufferedReader reader) throws IOException {

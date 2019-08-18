@@ -234,9 +234,11 @@ public class ExportHelper {
 			ZipEntry entry;
 			while ((entry = stream.getNextEntry()) != null) {
 
-				if (! entry.getName().startsWith("cover/")) continue; //$NON-NLS-1$
+				String entryname = entry.getName().replace("\\", "/");
 
-				if (PathFormatter.getFilenameWithExt(entry.getName()).equalsIgnoreCase(name)) return ImageIO.read(stream);
+				if (! entryname.startsWith("cover/")) continue; //$NON-NLS-1$
+
+				if (PathFormatter.getFilenameWithExt(entryname).equalsIgnoreCase(name)) return ImageIO.read(stream);
 			}
 
 			return null;

@@ -167,6 +167,18 @@ public class CCMovieList {
 		database.tryconnect();
 		database.fillMovieList(CCMovieList.this);
 	}
+	public void forceReconnectAndReloadForTests() {
+		// do no call clear, we only want to remove RAM values
+
+		databaseGroups.clear();
+		list.clear();
+		database.resetForTestReload();
+
+		// refill
+		database.fillGroups(CCMovieList.this);
+		database.fillMovieList(CCMovieList.this);
+		database.fillCoverCache();
+	}
 
 	public CCDatabaseElement getDatabaseElementBySort(int row) { // WARNIG SORT <> MOVIEID || SORT IN DATABASE (SORTED BY MOVIEID)
 		return list.get(row);
@@ -784,7 +796,7 @@ public class CCMovieList {
 	}
 
 	public Document getElementsAsXML() {
-		return DatabaseXMLExporter.export(list, new ExportOptions(false, false, false));
+		return DatabaseXMLExporter.export(list, new ExportOptions(false, false, false, true));
 	}
 	
 	@SuppressWarnings("nls")

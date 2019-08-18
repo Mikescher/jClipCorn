@@ -38,7 +38,6 @@ import de.jClipCorn.gui.frames.filenameRulesFrame.FilenameRuleFrame;
 import de.jClipCorn.gui.frames.groupManageFrame.GroupManageFrame;
 import de.jClipCorn.gui.frames.logFrame.LogFrame;
 import de.jClipCorn.gui.frames.quickAddEpisodeDialog.QuickAddEpisodeDialog;
-import de.jClipCorn.gui.frames.quickAddMoviesDialog.QuickAddMoviesDialog;
 import de.jClipCorn.gui.frames.updateCodecFrame.UpdateCodecFrame;
 import de.jClipCorn.gui.mainFrame.MainFrame;
 import de.jClipCorn.gui.frames.moveSeriesFrame.MassMoveMoviesDialog;
@@ -460,7 +459,7 @@ public class CCActionTree extends UIActionTree{
 			{
 				MainFrame.getInstance().beginBlockingIntermediate();
 
-				ExportHelper.exportMovie(PathFormatter.forceExtension(chooser.getSelectedFile(), ExportHelper.EXTENSION_SINGLEEXPORT), movielist, m, includeCover);
+				ExportHelper.exportMovie(PathFormatter.forceExtension(chooser.getSelectedFile(), ExportHelper.EXTENSION_SINGLEEXPORT), m, includeCover, true);
 
 				MainFrame.getInstance().endBlockingIntermediate();
 			}, "THREAD_EXPORT_JSCCEXPORT_MOVIE").start(); //$NON-NLS-1$
@@ -584,7 +583,7 @@ public class CCActionTree extends UIActionTree{
 			{
 				MainFrame.getInstance().beginBlockingIntermediate();
 
-				ExportHelper.exportSeries(PathFormatter.forceExtension(chooser.getSelectedFile(), ExportHelper.EXTENSION_SINGLEEXPORT), movielist, s, includeCover);
+				ExportHelper.exportSeries(PathFormatter.forceExtension(chooser.getSelectedFile(), ExportHelper.EXTENSION_SINGLEEXPORT), s, includeCover, true);
 
 				MainFrame.getInstance().endBlockingIntermediate();
 			}, "THREAD_EXPORT_JSCCEXPORT_SERIES").start(); //$NON-NLS-1$

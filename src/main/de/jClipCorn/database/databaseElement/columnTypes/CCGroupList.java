@@ -40,6 +40,10 @@ public class CCGroupList implements Iterable<CCGroup> {
 	public static CCGroupList create(Collection<CCGroup> keySet) {
 		return new CCGroupList(new ArrayList<>(keySet));
 	}
+
+	public static CCGroupList create(CCGroup... g) {
+		return new CCGroupList(Arrays.asList(g));
+	}
 	
 	public boolean isEmpty() {
 		return list.isEmpty();

@@ -4,22 +4,18 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
+import java.util.TimeZone;
 
+import de.jClipCorn.database.databaseElement.CCEpisode;
+import de.jClipCorn.database.databaseElement.CCSeason;
+import de.jClipCorn.database.databaseElement.columnTypes.*;
 import de.jClipCorn.features.serialization.xmlimport.ImportOptions;
+import de.jClipCorn.util.datetime.CCDateTime;
 import org.junit.Test;
 
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.CCSeries;
-import de.jClipCorn.database.databaseElement.columnTypes.CCFSK;
-import de.jClipCorn.database.databaseElement.columnTypes.CCFileFormat;
-import de.jClipCorn.database.databaseElement.columnTypes.CCGenre;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMediaInfo;
-import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguageList;
-import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineScore;
-import de.jClipCorn.database.databaseElement.columnTypes.CCUserScore;
-import de.jClipCorn.database.databaseElement.columnTypes.CCDBElementTyp;
-import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineRefType;
 import de.jClipCorn.features.serialization.ExportHelper;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.helper.SimpleFileUtils;
@@ -59,256 +55,161 @@ public class TestDatabase extends ClipCornBaseTest {
 		
 		assertEquals(1, ml.getElementCount());
 
-		
-		CCMovie movRead = ml.iteratorMovies().next();
+		ml.forceReconnectAndReloadForTests();
 
-		assertEquals("Title", movWrite.getTitle());
-		assertEquals(CCDBElementTyp.MOVIE, movWrite.getType());
-		assertEquals(movRead.getAddDate(), movWrite.getAddDate());
-		assertEquals(CCFileFormat.MKV, movWrite.getFormat());
-		assertEquals("Zyklus IV", movWrite.getZyklus().getFormatted());
-		assertEquals("Zyklus IV - Title", movWrite.getCompleteTitle());
-		assertEquals(1024, movWrite.getFilesize().getBytes());
-		assertEquals(CCDBLanguageList.ENGLISH, movWrite.getLanguage());
-		assertEquals(120, movWrite.getLength());
-		assertEquals(2012, movWrite.getYear());
-		assertEquals(CCUserScore.RATING_III, movWrite.getScore());
-		assertEquals(CCFSK.RATING_III, movWrite.getFSK());
-		assertEquals(CCOnlineRefType.THEMOVIEDB, movWrite.getOnlineReference().Main.type);
-		assertEquals(CCOnlineScore.STARS_3_0, movWrite.getOnlinescore());
-		assertEquals("C:\\test.mov", movWrite.getPart(0));
+		assertEquals(1, ml.getElementCount());
 
-		assertEquals(1565454159, movWrite.getMediaInfo().getCDate());
-		assertEquals(1565454169, movWrite.getMediaInfo().getMDate());
-		assertEquals(1570732032, movWrite.getMediaInfo().getFilesize());
-		assertEquals(5903.904, movWrite.getMediaInfo().getDuration(), 0.000001);
-		assertEquals(2128398, movWrite.getMediaInfo().getBitrate());
-		assertEquals("MPEG-4 Visual", movWrite.getMediaInfo().getVideoFormat());
-		assertEquals(720, movWrite.getMediaInfo().getWidth());
-		assertEquals(304, movWrite.getMediaInfo().getHeight());
-		assertEquals(23.976, movWrite.getMediaInfo().getFramerate(), 0.000001);
-		assertEquals(8, movWrite.getMediaInfo().getBitdepth());
-		assertEquals(141552, movWrite.getMediaInfo().getFramecount());
-		assertEquals("XVID", movWrite.getMediaInfo().getVideoCodec());
-		assertEquals("AC-3", movWrite.getMediaInfo().getAudioFormat());
-		assertEquals(6, movWrite.getMediaInfo().getAudioChannels());
-		assertEquals("2000", movWrite.getMediaInfo().getAudioCodec());
-		assertEquals(48000, movWrite.getMediaInfo().getAudioSamplerate());
+		CCMovie movRead = ml.iteratorMovies().firstOrNull();
+
+		assertEquals("Title", movRead.getTitle());
+		assertEquals(CCDBElementTyp.MOVIE, movRead.getType());
+		assertEquals(movWrite.getAddDate(), movRead.getAddDate());
+		assertEquals(CCFileFormat.MKV, movRead.getFormat());
+		assertEquals("Zyklus IV", movRead.getZyklus().getFormatted());
+		assertEquals("Zyklus IV - Title", movRead.getCompleteTitle());
+		assertEquals(1024, movRead.getFilesize().getBytes());
+		assertEquals(CCDBLanguageList.ENGLISH, movRead.getLanguage());
+		assertEquals(120, movRead.getLength());
+		assertEquals(2012, movRead.getYear());
+		assertEquals(CCUserScore.RATING_III, movRead.getScore());
+		assertEquals(CCFSK.RATING_III, movRead.getFSK());
+		assertEquals(CCOnlineRefType.THEMOVIEDB, movRead.getOnlineReference().Main.type);
+		assertEquals(CCOnlineScore.STARS_3_0, movRead.getOnlinescore());
+		assertEquals("C:\\test.mov", movRead.getPart(0));
+
+		assertEquals(1565454159, movRead.getMediaInfo().getCDate());
+		assertEquals(1565454169, movRead.getMediaInfo().getMDate());
+		assertEquals(1570732032, movRead.getMediaInfo().getFilesize());
+		assertEquals(5903.904, movRead.getMediaInfo().getDuration(), 0.000001);
+		assertEquals(2128398, movRead.getMediaInfo().getBitrate());
+		assertEquals("MPEG-4 Visual", movRead.getMediaInfo().getVideoFormat());
+		assertEquals(720, movRead.getMediaInfo().getWidth());
+		assertEquals(304, movRead.getMediaInfo().getHeight());
+		assertEquals(23.976, movRead.getMediaInfo().getFramerate(), 0.000001);
+		assertEquals(8, movRead.getMediaInfo().getBitdepth());
+		assertEquals(141552, movRead.getMediaInfo().getFramecount());
+		assertEquals("XVID", movRead.getMediaInfo().getVideoCodec());
+		assertEquals("AC-3", movRead.getMediaInfo().getAudioFormat());
+		assertEquals(6, movRead.getMediaInfo().getAudioChannels());
+		assertEquals("2000", movRead.getMediaInfo().getAudioCodec());
+		assertEquals(48000, movRead.getMediaInfo().getAudioSamplerate());
 	}
 
 	@Test
 	public void testAddSeries() throws Exception {
-		//TODO (Ser + Seas + Epi)
-	}
-
-	@Test
-	public void testParseJSCCImport() throws Exception {
 		CCMovieList ml = createEmptyDB();
 
-		String data = SimpleFileUtils.readTextResource("/example_single_01.jsccexport", getClass());
-
-		ExportHelper.importSingleElement(ml, data, new ImportOptions(true, true, true, true, false));
-
-		assertEquals(1, ml.getElementCount());
-		CCMovie mov = ml.iteratorMovies().next();
-
-		assertEquals("Älter. Härter. Besser.", mov.getTitle());
-		assertEquals(CCDBElementTyp.MOVIE, mov.getType());
-		assertEquals(CCFileFormat.AVI, mov.getFormat());
-		assertEquals("R.E.D. I - Älter. Härter. Besser.", mov.getCompleteTitle());
-		assertEquals(714502144, mov.getFilesize().getBytes());
-		assertEquals(CCDBLanguageList.GERMAN, mov.getLanguage());
-		assertEquals(111, mov.getLength());
-		assertEquals(2010, mov.getYear());
-		assertEquals(CCUserScore.RATING_NO, mov.getScore());
-		assertEquals(CCFSK.RATING_III, mov.getFSK());
-		assertEquals(CCOnlineRefType.THEMOVIEDB, mov.getOnlineReference().Main.type);
-		assertEquals("movie/39514", mov.getOnlineReference().Main.id);
-		assertEquals(CCOnlineScore.STARS_3_5, mov.getOnlinescore());
-		assertEquals("<?self>R.E.D. I - Älter. Härter. Besser..avi", mov.getPart(0));
-	}
-
-	@Test
-	public void testParseJSCCImport2() throws Exception {
-		CCMovieList ml = createEmptyDB();
-
-		String data = SimpleFileUtils.readTextResource("/example_single_04.jsccexport", getClass());
-
-		ExportHelper.importSingleElement(ml, data, new ImportOptions(true, true, true, true, false));
-
-		assertEquals(1, ml.getElementCount());
-		CCMovie mov = ml.iteratorMovies().next();
-
-		assertEquals("Älter. Härter. Besser.", mov.getTitle());
-		assertEquals(CCDBElementTyp.MOVIE, mov.getType());
-		assertEquals(CCFileFormat.AVI, mov.getFormat());
-		assertEquals("R.E.D. I - Älter. Härter. Besser.", mov.getCompleteTitle());
-		assertEquals(714502144, mov.getFilesize().getBytes());
-		assertEquals(CCDBLanguageList.GERMAN, mov.getLanguage());
-		assertEquals(111, mov.getLength());
-		assertEquals(2010, mov.getYear());
-		assertEquals(CCUserScore.RATING_NO, mov.getScore());
-		assertEquals(CCFSK.RATING_III, mov.getFSK());
-		assertEquals(CCOnlineRefType.THEMOVIEDB, mov.getOnlineReference().Main.type);
-		assertEquals("movie/39514", mov.getOnlineReference().Main.id);
-		assertEquals(CCOnlineScore.STARS_3_5, mov.getOnlinescore());
-		assertEquals("<?self>R.E.D. I - Älter. Härter. Besser..avi", mov.getPart(0));
-	}
-
-	@Test
-	public void testJSCCRoundtrip_Movie() throws Exception {
-		CCMovieList ml = createEmptyDB();
-
-		String data = SimpleFileUtils.readTextResource("/example_single_01.jsccexport", getClass());
-
-		ExportHelper.importSingleElement(ml, data, new ImportOptions(true, true, true, true, false));
-		CCMovie mov = ml.iteratorMovies().firstOrNull();
-		assertEquals(1, ml.getElementCount());
-
-		File filep = new File(SimpleFileUtils.getSystemTempFile("xml"));
-		ExportHelper.exportMovie(filep, ml, mov, true);
-
-		ml.remove(mov);
 		assertEquals(0, ml.getElementCount());
 
-		String dataExpected = SimpleFileUtils.readUTF8TextFile(filep);
-		ExportHelper.importSingleElement(ml, dataExpected, new ImportOptions(true, true, true, true, false));
-		mov = ml.iteratorMovies().firstOrNull();
+		CCSeries serWrite = ml.createNewEmptySeries();
+		{
+			serWrite.setScore(CCUserScore.RATING_V);
+			serWrite.setGroups(CCGroupList.create(CCGroup.create("G0"), CCGroup.create("G1")));
+			serWrite.setTitle("MySeries");
+			serWrite.setGenres(CCGenreList.create(CCGenre.GENRE_006, CCGenre.GENRE_020, CCGenre.GENRE_006));
+			serWrite.setTags(CCTagList.create(CCTagList.TAG_WATCH_LATER, CCTagList.TAG_BAD_QUALITY));
+			serWrite.setOnlineReference(CCOnlineReferenceList.create(CCSingleOnlineReference.createIMDB("1234"), CCSingleOnlineReference.createMyAnimeList(999)));
+			serWrite.setFsk(CCFSK.RATING_I);
+			serWrite.setOnlinescore(CCOnlineScore.STARS_2_0);
+		}
+
+		CCSeason seaWrite = serWrite.createNewEmptySeason();
+		{
+			seaWrite.setTitle("MySeason ~~~");
+			seaWrite.setYear(2020);
+		}
+
+		CCEpisode epiWrite = seaWrite.createNewEmptyEpisode();
+		{
+			epiWrite.setEpisodeNumber(1);
+			epiWrite.setTitle("This is my title: fight me");
+			epiWrite.setViewed(true);
+			epiWrite.setMediaInfo(new CCMediaInfo(
+					CCDateTime.create(15, 4, 2019, 6,  0, 0).toFileTimestamp(TimeZone.getDefault()), // long cdate
+					CCDateTime.create(15, 4, 2019, 8, 30, 0).toFileTimestamp(TimeZone.getDefault()), // long mdate
+					3570481288L,                                                                     // long filesize
+					5932.933,                                                                        // double duration
+					4814457,                                                                         // int bitrate
+					"AVC",                                                                           // String videoformat
+					1920,                                                                            // int width
+					1080,                                                                            // int height
+					23.976,                                                                          // double framerate
+					(short)8,                                                                        // short bitdepth
+					142248,                                                                          // int framecount
+					"V_MPEG4/ISO/AVC",                                                               // String videocodec
+					"AC-3",                                                                          // String audioformat
+					(short)2,                                                                        // short audiochannels
+					"A_AC3",                                                                         // String audiocodec
+					48000));                                                                         // int audiosamplerate
+			epiWrite.setLength(98);
+			epiWrite.setTags(CCTagList.create(CCTagList.TAG_MISSING_TIME));
+			epiWrite.setFormat(CCFileFormat.MKV);
+			epiWrite.setFilesize(3570481288L);
+			epiWrite.setPart("/media/example.mkv");
+			epiWrite.setAddDate(CCDate.create(1, 1, 2000));
+			epiWrite.setViewedHistory(CCDateTimeList.create(CCDateTime.create(10, 1, 2000, 6, 0, 0), CCDateTime.create(12, 1, 2000, 12, 0, 0), CCDateTime.create(22, 1, 2000, 18, 0, 0)));
+			epiWrite.setLanguage(CCDBLanguageList.create(CCDBLanguage.GERMAN, CCDBLanguage.RUSSIAN, CCDBLanguage.SPANISH));
+		}
+
 		assertEquals(1, ml.getElementCount());
+		assertEquals(0, ml.iteratorMovies().count());
+		assertEquals(1, ml.iteratorSeries().count());
+		assertEquals(1, ml.iteratorSeasons().count());
+		assertEquals(1, ml.iteratorEpisodes().count());
 
-		ExportHelper.exportMovie(filep, ml, mov, true);
+		ml.forceReconnectAndReloadForTests();
 
-		ml.remove(ml.iteratorMovies().firstOrNull());
-		assertEquals(0, ml.getElementCount());
-
-		String dataActual = SimpleFileUtils.readUTF8TextFile(filep);
-		ExportHelper.importSingleElement(ml, dataExpected, new ImportOptions(true, true, true, true, false));
-		mov = ml.iteratorMovies().firstOrNull();
 		assertEquals(1, ml.getElementCount());
+		assertEquals(0, ml.iteratorMovies().count());
+		assertEquals(1, ml.iteratorSeries().count());
+		assertEquals(1, ml.iteratorSeasons().count());
+		assertEquals(1, ml.iteratorEpisodes().count());
 
-		ml.remove(ml.iteratorMovies().firstOrNull());
-		assertEquals(0, ml.getElementCount());
+		CCSeries serRead = ml.iteratorSeries().firstOrNull();
 
-		assertEquals(dataExpected, dataActual);
+		assertEquals(CCUserScore.RATING_V, serRead.getScore());
+		assertEquals(CCGroupList.create(CCGroup.create("G0"), CCGroup.create("G1")), serRead.getGroups());
+		assertEquals("MySeries", serRead.getTitle());
+		assertEquals(CCGenreList.create(CCGenre.GENRE_006, CCGenre.GENRE_020, CCGenre.GENRE_006), serRead.getGenres());
+		assertEquals(CCTagList.create(CCTagList.TAG_WATCH_LATER, CCTagList.TAG_BAD_QUALITY), serRead.getTags());
+		assertEquals(CCOnlineReferenceList.create(CCSingleOnlineReference.createIMDB("1234"), CCSingleOnlineReference.createMyAnimeList(999)), serRead.getOnlineReference());
+		assertEquals(CCFSK.RATING_I, serRead.getFSK());
+		assertEquals(CCOnlineScore.STARS_2_0, serRead.getOnlinescore());
 
-		filep.delete();
-	}
+		CCSeason seaRead = serRead.iteratorSeasons().firstOrNull();
 
-	@Test
-	public void testJSCCRoundtrip_Movie2() throws Exception {
-		CCMovieList ml = createEmptyDB();
+		assertEquals("MySeason ~~~", seaRead.getTitle());
+		assertEquals(2020, seaRead.getYear());
 
-		String data = SimpleFileUtils.readTextResource("/example_single_03.jsccexport", getClass());
+		CCEpisode epiRead = seaRead.iteratorEpisodes().firstOrNull();
 
-		ExportHelper.importSingleElement(ml, data, new ImportOptions(true, true, true, true, false));
-		CCMovie mov = ml.iteratorMovies().firstOrNull();
-		assertEquals(1, ml.getElementCount());
-
-		File filep = new File(SimpleFileUtils.getSystemTempFile("xml"));
-		ExportHelper.exportMovie(filep, ml, mov, true);
-
-		ml.remove(mov);
-		assertEquals(0, ml.getElementCount());
-
-		String dataExpected = SimpleFileUtils.readUTF8TextFile(filep);
-		ExportHelper.importSingleElement(ml, dataExpected, new ImportOptions(true, true, true, true, false));
-		mov = ml.iteratorMovies().firstOrNull();
-		assertEquals(1, ml.getElementCount());
-
-		ExportHelper.exportMovie(filep, ml, mov, true);
-
-		ml.remove(ml.iteratorMovies().firstOrNull());
-		assertEquals(0, ml.getElementCount());
-
-		String dataActual = SimpleFileUtils.readUTF8TextFile(filep);
-		ExportHelper.importSingleElement(ml, dataExpected, new ImportOptions(true, true, true, true, false));
-		mov = ml.iteratorMovies().firstOrNull();
-		assertEquals(1, ml.getElementCount());
-
-		ml.remove(ml.iteratorMovies().firstOrNull());
-		assertEquals(0, ml.getElementCount());
-
-		assertEquals(dataExpected, dataActual);
-
-		filep.delete();
-	}
-
-	@Test
-	public void testJSCCRoundtrip_Series() throws Exception {
-		CCMovieList ml = createEmptyDB();
-		
-		String data = SimpleFileUtils.readTextResource("/example_single_02.jsccexport", getClass());
-		
-		ExportHelper.importSingleElement(ml, data, new ImportOptions(true, true, true, true, false));
-		CCSeries ser = ml.iteratorSeries().firstOrNull();
-		assertEquals(1, ml.getElementCount());
-
-		File filep = new File(SimpleFileUtils.getSystemTempFile("xml"));
-		ExportHelper.exportSeries(filep, ml, ser, true);
-		
-		ml.remove(ser);
-		assertEquals(0, ml.getElementCount());
-
-		String dataExpected = SimpleFileUtils.readUTF8TextFile(filep);
-		ExportHelper.importSingleElement(ml, dataExpected, new ImportOptions(true, true, true, true, false));
-		ser = ml.iteratorSeries().firstOrNull();
-		assertEquals(1, ml.getElementCount());
-
-		ExportHelper.exportSeries(filep, ml, ser, true);
-		
-		ml.remove(ml.iteratorSeries().firstOrNull());
-		assertEquals(0, ml.getElementCount());
-		
-		String dataActual = SimpleFileUtils.readUTF8TextFile(filep);
-		ExportHelper.importSingleElement(ml, dataExpected, new ImportOptions(true, true, true, true, false));
-		ser = ml.iteratorSeries().firstOrNull();
-		assertEquals(1, ml.getElementCount());
-		
-		ml.remove(ml.iteratorSeries().firstOrNull());
-		assertEquals(0, ml.getElementCount());
-
-		assertEquals(dataExpected, dataActual);
-		
-		filep.delete();
-	}
-
-	@Test
-	public void testJSCCRoundtrip_Series2() throws Exception {
-		CCMovieList ml = createEmptyDB();
-
-		String data = SimpleFileUtils.readTextResource("/example_single_04.jsccexport", getClass());
-
-		ExportHelper.importSingleElement(ml, data, new ImportOptions(true, true, true, true, false));
-		CCSeries ser = ml.iteratorSeries().firstOrNull();
-		assertEquals(1, ml.getElementCount());
-
-		File filep = new File(SimpleFileUtils.getSystemTempFile("xml"));
-		ExportHelper.exportSeries(filep, ml, ser, true);
-
-		ml.remove(ser);
-		assertEquals(0, ml.getElementCount());
-
-		String dataExpected = SimpleFileUtils.readUTF8TextFile(filep);
-		ExportHelper.importSingleElement(ml, dataExpected, new ImportOptions(true, true, true, true, false));
-		ser = ml.iteratorSeries().firstOrNull();
-		assertEquals(1, ml.getElementCount());
-
-		ExportHelper.exportSeries(filep, ml, ser, true);
-
-		ml.remove(ml.iteratorSeries().firstOrNull());
-		assertEquals(0, ml.getElementCount());
-
-		String dataActual = SimpleFileUtils.readUTF8TextFile(filep);
-		ExportHelper.importSingleElement(ml, dataExpected, new ImportOptions(true, true, true, true, false));
-		ser = ml.iteratorSeries().firstOrNull();
-		assertEquals(1, ml.getElementCount());
-
-		ml.remove(ml.iteratorSeries().firstOrNull());
-		assertEquals(0, ml.getElementCount());
-
-		assertEquals(dataExpected, dataActual);
-
-		filep.delete();
+		assertEquals(1, epiRead.getEpisodeNumber());
+		assertEquals("This is my title: fight me", epiRead.getTitle());
+		assertTrue(epiRead.isViewed());
+		assertEquals(98, epiRead.getLength());
+		assertEquals(CCTagList.create(CCTagList.TAG_MISSING_TIME), epiRead.getTags());
+		assertEquals(CCFileFormat.MKV, epiRead.getFormat());
+		assertEquals(3570481288L, epiRead.getFilesize().getBytes());
+		assertEquals("/media/example.mkv", epiRead.getPart());
+		assertEquals(CCDate.create(1, 1, 2000), epiRead.getAddDate());
+		assertEquals(CCDateTimeList.create(CCDateTime.create(10, 1, 2000, 6, 0, 0), CCDateTime.create(12, 1, 2000, 12, 0, 0), CCDateTime.create(22, 1, 2000, 18, 0, 0)), epiRead.getViewedHistory());
+		assertEquals(CCDBLanguageList.create(CCDBLanguage.GERMAN, CCDBLanguage.RUSSIAN, CCDBLanguage.SPANISH), epiRead.getLanguage());
+		assertEquals(1555300800000L, epiRead.getMediaInfo().getCDate());
+		assertEquals(1555309800000L, epiRead.getMediaInfo().getMDate());
+		assertEquals(3570481288L, epiRead.getMediaInfo().getFilesize());
+		assertEquals(5932.933, epiRead.getMediaInfo().getDuration(), 0.000001);
+		assertEquals(4814457, epiRead.getMediaInfo().getBitrate());
+		assertEquals("AVC", epiRead.getMediaInfo().getVideoFormat());
+		assertEquals(1920, epiRead.getMediaInfo().getWidth());
+		assertEquals(1080, epiRead.getMediaInfo().getHeight());
+		assertEquals(23.976, epiRead.getMediaInfo().getFramerate(), 0.000001);
+		assertEquals(8, epiRead.getMediaInfo().getBitdepth());
+		assertEquals(142248, epiRead.getMediaInfo().getFramecount());
+		assertEquals("V_MPEG4/ISO/AVC", epiRead.getMediaInfo().getVideoCodec());
+		assertEquals("AC-3", epiRead.getMediaInfo().getAudioFormat());
+		assertEquals(2, epiRead.getMediaInfo().getAudioChannels());
+		assertEquals("A_AC3", epiRead.getMediaInfo().getAudioCodec());
+		assertEquals(48000, epiRead.getMediaInfo().getAudioSamplerate());
 	}
 
 	@Test

@@ -560,7 +560,12 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 
 		double avg = iteratorEpisodes().map(e -> e.getMediaInfo().getCategory(getSeries().getGenres()).getCategoryType()).avgValueOrDefault(e -> (double)e.asInt(), 0);
 
-		CCQualityResolutionType rtype = iteratorEpisodes().map(e -> e.getMediaInfo().getCategory(getSeries().getGenres()).getResolutionType()).groupBy(e -> e).singleOrDefault(Map.Entry::getKey, null, null);
+		CCQualityResolutionType rtype = iteratorEpisodes()
+				.map(e -> e.getMediaInfo().getCategory(getSeries().getGenres()).getResolutionType())
+				.groupBy(e -> e)
+				.map(Map.Entry::getKey)
+				.singleOrDefault(null, null);
+
 		if (rtype == null) rtype = CCQualityResolutionType.MULTIPLE;
 
 		CCQualityCategoryType ct = CCQualityCategoryType.getWrapper().findOrNull((int)Math.round(avg));

@@ -76,6 +76,14 @@ public class UserDataProblem {
 									 int oscore, int fskidx, int year, long fsize, String csExtn, String csExta,
 									 int gen0, int gen1, int gen2, int gen3, int gen4, int gen5, int gen6, int gen7,
 									 CCMediaInfo minfo, CCDBLanguageList language, CCOnlineReferenceList ref) {
+		int partcount = 0;
+
+		if (! p0.isEmpty()) partcount++;
+		if (! p1.isEmpty()) partcount++;
+		if (! p2.isEmpty()) partcount++;
+		if (! p3.isEmpty()) partcount++;
+		if (! p4.isEmpty()) partcount++;
+		if (! p5.isEmpty()) partcount++;
 
 		//################################################################################################################
 		
@@ -239,7 +247,7 @@ public class UserDataProblem {
 		if (!minfo.isSet()) {
 			ret.add(new UserDataProblem(PROBLEM_MEDIAINFO_UNSET));
 		} else {
-			if (minfo.getFilesize() != fsize) ret.add(new UserDataProblem(PROBLEM_MEDIAINFO_WRONG_FILESIZE));
+			if (minfo.getFilesize() != fsize && partcount == 1) ret.add(new UserDataProblem(PROBLEM_MEDIAINFO_WRONG_FILESIZE));
 			String err = minfo.validate();
 			if (err != null) ret.add(new UserDataProblem(PROBLEM_MEDIAINFO_WRONG_DATA, err));
 		}
@@ -463,23 +471,25 @@ public class UserDataProblem {
 		}
 
 		//################################################################################################################
-		
-		for (CCDatabaseElement idel : owner.getMovieList().iteratorElements()) {
-			if (idel.isMovie()) {
-				if (isPathIncluded((CCMovie)idel, part)) {
-					ret.add(new UserDataProblem(PROBLEM_FILE_ALREADYEXISTS));
-					break;
-				}
-			} else if (idel.isSeries()) {
-				CCSeries ss = (CCSeries) idel;
-				for (int i = 0; i < ss.getSeasonCount(); i++) {
-					CCSeason seas = ss.getSeasonByArrayIndex(i);
-					for (int j = 0; j < seas.getEpisodeCount(); j++) {
-						if (isPathIncluded(seas.getEpisodeByArrayIndex(j), part)) {
-							if (episode == null || episode != seas.getEpisodeByArrayIndex(j)) {
-								ret.add(new UserDataProblem(PROBLEM_FILE_ALREADYEXISTS));
+
+		if (owner != null) {
+			for (CCDatabaseElement idel : owner.getMovieList().iteratorElements()) {
+				if (idel.isMovie()) {
+					if (isPathIncluded((CCMovie) idel, part)) {
+						ret.add(new UserDataProblem(PROBLEM_FILE_ALREADYEXISTS));
+						break;
+					}
+				} else if (idel.isSeries()) {
+					CCSeries ss = (CCSeries) idel;
+					for (int i = 0; i < ss.getSeasonCount(); i++) {
+						CCSeason seas = ss.getSeasonByArrayIndex(i);
+						for (int j = 0; j < seas.getEpisodeCount(); j++) {
+							if (isPathIncluded(seas.getEpisodeByArrayIndex(j), part)) {
+								if (episode == null || episode != seas.getEpisodeByArrayIndex(j)) {
+									ret.add(new UserDataProblem(PROBLEM_FILE_ALREADYEXISTS));
+								}
+								break;
 							}
-							break;
 						}
 					}
 				}

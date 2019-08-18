@@ -71,6 +71,12 @@ public class CCTagList {
 		return new CCTagList(data);
 	}
 
+	public static CCTagList create(CCSingleTag... list) {
+		CCTagList e = new CCTagList();
+		for (CCSingleTag t : list) e = e.getSetTag(t, true);
+		return e;
+	}
+
 	public short asShort() {
 		short v = 0;
 

@@ -31,21 +31,21 @@ public class TestStatistics extends ClipCornBaseTest {
 		assertEquals((Integer)0, StatisticsHelper.getUnviewedCount(ml.iteratorEpisodes().cast()));
 		assertEquals((Integer)6, StatisticsHelper.getUnviewedCount(ml.iteratorPlayables().cast()));
 		
-		assertEquals((Integer)2165, StatisticsHelper.getMovieDuration(ml));
+		assertEquals((Integer)2314, StatisticsHelper.getMovieDuration(ml));
 		assertEquals((Integer)2003, StatisticsHelper.getSeriesDuration(ml));
-		assertEquals((Integer)4168, StatisticsHelper.getTotalDuration(ml));
+		assertEquals((Integer)4317, StatisticsHelper.getTotalDuration(ml));
 		
 
-		assertEquals(82481336554L, StatisticsHelper.getMovieSize(ml).getBytes());
+		assertEquals(82473488109L, StatisticsHelper.getMovieSize(ml).getBytes());
 		assertEquals(36278101444L, StatisticsHelper.getSeriesSize(ml).getBytes());
-		assertEquals(118759437998L, StatisticsHelper.getTotalSize(ml).getBytes());
-		assertEquals(959085308L, StatisticsHelper.getAvgMovieSize(ml).getBytes());
+		assertEquals(118751589553L, StatisticsHelper.getTotalSize(ml).getBytes());
+		assertEquals(958994047L, StatisticsHelper.getAvgMovieSize(ml).getBytes());
 		assertEquals(421838388L, StatisticsHelper.getAvgSeriesSize(ml).getBytes());
 		assertEquals(3.8, StatisticsHelper.getAvgImDbRating(ml), 0.1);
 		
-		assertEquals((Integer)1545, StatisticsHelper.getViewedMovieDuration(ml));
+		assertEquals((Integer)1713, StatisticsHelper.getViewedMovieDuration(ml));
 		assertEquals((Integer)2003, StatisticsHelper.getViewedSeriesDuration(ml));
-		assertEquals((Integer)3548, StatisticsHelper.getViewedTotalDuration(ml));
+		assertEquals((Integer)3716, StatisticsHelper.getViewedTotalDuration(ml));
 
 		assertEquals(CCDate.create(3, 8, 2010), StatisticsHelper.getFirstAddDate(ml.iteratorMovies().cast()));
 		assertEquals(CCDate.create(2, 7, 2016), StatisticsHelper.getLastAddDate(ml.iteratorMovies().cast()));
@@ -58,8 +58,8 @@ public class TestStatistics extends ClipCornBaseTest {
 		assertEquals((Integer)1980, StatisticsHelper.getMinimumYear(ml.iteratorMovies().cast()));
 		assertEquals((Integer)2012, StatisticsHelper.getMaximumYear(ml.iteratorMovies().cast()));
 		
-		assertEquals((Integer)90, StatisticsHelper.getMinimumLength(ml.iteratorMovies().cast()));
-		assertEquals((Integer)201, StatisticsHelper.getMaximumLength(ml.iteratorMovies().cast()));
+		assertEquals((Integer)80, StatisticsHelper.getMinimumLength(ml.iteratorMovies().cast()));
+		assertEquals((Integer)263, StatisticsHelper.getMaximumLength(ml.iteratorMovies().cast()));
 
 	}
 

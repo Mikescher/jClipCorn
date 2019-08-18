@@ -69,6 +69,22 @@ public class CCDateTime implements Comparable<CCDateTime>, StringSpecSupplier {
 		return create(dd, dm, dy, th, tm, ts);
 	}
 
+	public long toFileTimestamp(TimeZone tzone) { // = milliseconds since EPOCH
+		Calendar c = Calendar.getInstance();
+
+		c.set(Calendar.YEAR,         date.getYear());
+		c.set(Calendar.MONTH,        date.getMonth() - 1);
+		c.set(Calendar.DAY_OF_MONTH, date.getDay());
+		c.set(Calendar.HOUR_OF_DAY,  time.getHours());
+		c.set(Calendar.MINUTE,       time.getMinutes());
+		c.set(Calendar.SECOND,       time.getSeconds());
+		c.set(Calendar.MILLISECOND,  0);
+
+		c.setTimeZone(tzone);
+
+		return c.getTimeInMillis();
+	}
+
 	public static CCDateTime getCurrentDateTime() {
 		return new CCDateTime(CCDate.getCurrentDate(), CCTime.getCurrentTime());
 	}

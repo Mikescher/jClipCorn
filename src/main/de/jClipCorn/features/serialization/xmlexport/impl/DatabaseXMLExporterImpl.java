@@ -28,8 +28,8 @@ public class DatabaseXMLExporterImpl {
 	}
 
 	public static void exportDatabaseElement(Element e, CCDatabaseElement o, ExportOptions s) {
+		if (s.ExportLocalID) e.setAttribute("localid",      o.getLocalID() + "");
 
-		e.setAttribute("localid",      o.getLocalID() + "");
 		e.setAttribute("title",        o.getTitle());
 		e.setAttribute("genres",       o.getGenres().serialize());
 		e.setAttribute("onlinescore",  String.valueOf(o.getOnlinescore().asInt()));
@@ -84,23 +84,6 @@ public class DatabaseXMLExporterImpl {
 			e.setAttribute("mediainfo.videocodec",      minfo.getVideoCodec());
 			e.setAttribute("mediainfo.audiocodec",      minfo.getAudioCodec());
 			e.setAttribute("mediainfo.audiosamplerate", minfo.getAudioSamplerate()+"");
-		} else {
-			e.setAttribute("mediainfo.filesize",        Str.Empty);
-			e.setAttribute("mediainfo.cdate",           Str.Empty);
-			e.setAttribute("mediainfo.mdate",           Str.Empty);
-			e.setAttribute("mediainfo.audioformat",     Str.Empty);
-			e.setAttribute("mediainfo.videoformat",     Str.Empty);
-			e.setAttribute("mediainfo.width",           Str.Empty);
-			e.setAttribute("mediainfo.height",          Str.Empty);
-			e.setAttribute("mediainfo.framerate",       Str.Empty);
-			e.setAttribute("mediainfo.duration",        Str.Empty);
-			e.setAttribute("mediainfo.bitdepth",        Str.Empty);
-			e.setAttribute("mediainfo.bitrate",         Str.Empty);
-			e.setAttribute("mediainfo.framecount",      Str.Empty);
-			e.setAttribute("mediainfo.audiochannels",   Str.Empty);
-			e.setAttribute("mediainfo.videocodec",      Str.Empty);
-			e.setAttribute("mediainfo.audiocodec",      Str.Empty);
-			e.setAttribute("mediainfo.audiosamplerate", Str.Empty);
 		}
 
 		if (s.FileHash) e.setAttribute("filehash", o.getFastMD5());
@@ -113,7 +96,8 @@ public class DatabaseXMLExporterImpl {
 	}
 
 	public static void exportSeason(Element e, CCSeason o, ExportOptions s) {
-		e.setAttribute("seasonid", o.getSeasonID() + "");
+		if (s.ExportLocalID) e.setAttribute("seasonid", o.getSeasonID() + "");
+
 		e.setAttribute("title", o.getTitle());
 		e.setAttribute("year", o.getYear() + "");
 
@@ -126,7 +110,8 @@ public class DatabaseXMLExporterImpl {
 	}
 
 	public static void exportEpisode(Element e, CCEpisode o, ExportOptions s) {
-		e.setAttribute("localid",       o.getLocalID() + "");
+		if (s.ExportLocalID) e.setAttribute("localid",       o.getLocalID() + "");
+
 		e.setAttribute("title",         o.getTitle());
 		e.setAttribute("viewed",        o.isViewed() + "");
 		e.setAttribute("adddate",       o.getAddDate().toStringSQL());

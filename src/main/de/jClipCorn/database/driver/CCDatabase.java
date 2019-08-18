@@ -85,6 +85,11 @@ public class CCDatabase {
 		
 		upgrader = new DatabaseMigration(db, databasePath);
 	}
+
+	public void resetForTestReload() {
+		if (!(coverCache instanceof CCMemoryCoverCache)) throw new Error();
+		((CCMemoryCoverCache)coverCache).resetForTestReload();
+	}
 	
 	public static CCDatabase create(String dbPath) {
 		return new CCDatabase(CCProperties.getInstance().PROP_DATABASE_DRIVER.getValue(), dbPath);
@@ -1350,5 +1355,4 @@ public class CCDatabase {
 	public boolean supportsDateType() {
 		return db.supportsDateType();
 	}
-
 }

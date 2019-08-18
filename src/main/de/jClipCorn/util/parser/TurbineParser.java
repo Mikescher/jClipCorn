@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.jClipCorn.util.sqlwrapper.SQLBuilderHelper;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.JDOMException;
@@ -14,8 +15,7 @@ import org.jdom2.input.SAXBuilder;
 import de.jClipCorn.database.driver.GenericDatabase;
 import de.jClipCorn.util.exceptions.XMLFormatException;
 
-@SuppressWarnings("nls")
-/**
+/*
  * https://turbine.apache.org/
  * 
  * https://db.apache.org/ddlutils/schema/
@@ -23,8 +23,8 @@ import de.jClipCorn.util.exceptions.XMLFormatException;
  * https://db.apache.org/ddlutils/
  * 
  * @author Mikescher
- *
  */
+@SuppressWarnings("nls")
 public class TurbineParser {
 	
 	private final String source;
@@ -65,7 +65,7 @@ public class TurbineParser {
 			colSQL.addAll(getSQLCreateForeignKey(fkey));
 		}
 		
-		return "CREATE TABLE " + tableName + "(" + String.join(",", colSQL) + ")";
+		return "CREATE TABLE " + SQLBuilderHelper.sqlEscape(tableName) + "(" + String.join(",", colSQL) + ")";
 	}
 	
 	private String getSQLCreateColumn(Element col) throws XMLFormatException {
@@ -75,7 +75,7 @@ public class TurbineParser {
 		boolean columnPrimary = getXMLAttrBool(col, "primaryKey", false);
 		boolean columnRequired = getXMLAttrBool(col, "required", false);
 
-		String tabSQL = columnName + " " + getDatatypeString(columnType, columnSize);
+		String tabSQL = SQLBuilderHelper.sqlEscape(columnName) + " " + getDatatypeString(columnType, columnSize);
 		
 		if (columnPrimary) {
 			tabSQL += " PRIMARY KEY";
@@ -94,7 +94,7 @@ public class TurbineParser {
 			String colLocal = getXMLAttrStr(fref, "local");
 			String colForeign = getXMLAttrStr(fref, "foreign");
 			
-			String sql = "FOREIGN KEY(" + colLocal + ") REFERENCES " + foreignTableName + "(" + colForeign + ")";
+			String sql = "FOREIGN KEY(" + SQLBuilderHelper.sqlEscape(colLocal) + ") REFERENCES " + SQLBuilderHelper.sqlEscape(foreignTableName) + "(" + SQLBuilderHelper.sqlEscape(colForeign) + ")";
 			
 			result.add(sql);
 		}

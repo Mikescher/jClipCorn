@@ -160,4 +160,9 @@ public class CCMemoryCoverCache implements ICoverCache {
 	public String getFilepath(CCCoverData cce) {
 		return null;
 	}
+
+	public void resetForTestReload() {
+		_elements.clear();
+		data.clear();
+	}
 }

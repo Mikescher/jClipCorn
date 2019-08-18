@@ -363,7 +363,7 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator {
 			addMovieValidation(
 					DatabaseErrorType.ERROR_MEDIAINFO_SIZE_MISMATCH,
 					o -> o.ValidateMovies,
-					mov -> mov.getMediaInfo().isSet() && (mov.getMediaInfo().getFilesize() != mov.getFilesize().getBytes()),
+					mov -> mov.getMediaInfo().isSet() && (mov.getPartcount()==1 && mov.getMediaInfo().getFilesize() != mov.getFilesize().getBytes()),
 					mov -> DatabaseError.createSingle(DatabaseErrorType.ERROR_MEDIAINFO_SIZE_MISMATCH, mov));
 
 			// MediaInfo length does not match movie length

@@ -543,7 +543,7 @@ public class CompareDatabaseFrame extends JFrame {
 
 		Document xml = DatabaseXMLExporter.export(
 				movielist.getInternalListCopy(),
-				new ExportOptions(true, true, false),
+				new ExportOptions(true, true, false, true),
 				new ProgressCallbackProgressBarHelper(progressBar));
 
 		XMLOutputter xout = new XMLOutputter();

@@ -97,12 +97,9 @@ public class ExportElementsFrame extends JFrame {
 		if (returnval == JFileChooser.APPROVE_OPTION) {
 			final boolean includeCover = 0 == DialogHelper.showLocaleOptions(this, "ExportHelper.dialogs.exportCover"); //$NON-NLS-1$
 
-			new Thread(new Runnable() {
-				@Override
-				public void run() {
-					ExportHelper.exportDBElements(PathFormatter.forceExtension(chooser.getSelectedFile(), ExportHelper.EXTENSION_MULTIPLEEXPORT), movielist, list, includeCover);
-				}
-			}, "THREAD_EXPORT_JMCCEXPORT").start(); //$NON-NLS-1$
+			File f = PathFormatter.forceExtension(chooser.getSelectedFile(), ExportHelper.EXTENSION_MULTIPLEEXPORT);
+
+			new Thread(() -> ExportHelper.exportDBElements(f, list, includeCover, true), "THREAD_EXPORT_JMCCEXPORT").start(); //$NON-NLS-1$
 		}
 	}
 	

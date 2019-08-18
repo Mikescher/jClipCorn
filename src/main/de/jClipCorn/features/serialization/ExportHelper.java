@@ -28,10 +28,12 @@ import de.jClipCorn.features.serialization.xmlimport.ImportOptions;
 import de.jClipCorn.features.serialization.xmlimport.ImportState;
 import de.jClipCorn.util.datatypes.Tuple3;
 import de.jClipCorn.util.exceptions.SerializationException;
+import de.jClipCorn.util.stream.CCStreams;
 import de.jClipCorn.util.xml.CCXMLElement;
 import de.jClipCorn.util.xml.CCXMLException;
 import de.jClipCorn.util.xml.CCXMLParser;
 import org.jdom2.Document;
+import org.jdom2.Element;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
 
@@ -58,19 +60,19 @@ public class ExportHelper {
 	private final static String DB_XML_FILENAME_MAIN   = "database.xml"; 														//$NON-NLS-1$
 	private final static String DB_XML_FILENAME_GROUPS = "groups.xml";   														//$NON-NLS-1$
 	private final static String DB_XML_FILENAME_INFO   = "info.xml";     														//$NON-NLS-1$
-	
-	public final static String EXTENSION_BACKUP = "jccbkp"; 				// = jClipCornBackup   								//$NON-NLS-1$ 
-	public final static String EXTENSION_BACKUPPROPERTIES = "jccbkpinfo"; 	// = jClipCornBackupInfo		[DEPRECATED] 		//$NON-NLS-1$ 
-	public final static String EXTENSION_FULLEXPORT = "jxmlbkp"; 			// = jXMLBackup   									//$NON-NLS-1$ 
-	public final static String EXTENSION_SINGLEEXPORT = "jsccexport"; 		// = jSingleClipCornExport 							//$NON-NLS-1$
-	public final static String EXTENSION_MULTIPLEEXPORT = "jmccexport"; 	// = jMultipleClipCornExport 						//$NON-NLS-1$
-	public final static String EXTENSION_CCBACKUP = "xml"; 					// = OLD Clipcorn Backup   		[DEPRECATED]		//$NON-NLS-1$
-	public final static String EXTENSION_COMPAREFILE = "jcccf"; 			// = jClipCornCompareFile							//$NON-NLS-1$
-	public final static String EXTENSION_EPISODEGUIDE = "txt"; 				// = TextFile										//$NON-NLS-1$
-	public final static String EXTENSION_TEXTEXPORT_PLAIN = "txt"; 			// = TextFile										//$NON-NLS-1$
-	public final static String EXTENSION_TEXTEXPORT_XML = "xml"; 			// = XML-TextFile									//$NON-NLS-1$
-	public final static String EXTENSION_TEXTEXPORT_JSON = "json"; 			// = JSON-TextFile									//$NON-NLS-1$
-	public final static String EXTENSION_FILTERLIST = "flst"; 				// = FilterList										//$NON-NLS-1$
+
+	public final static String EXTENSION_BACKUP           = "jccbkp";       // = jClipCornBackup                            //$NON-NLS-1$
+	public final static String EXTENSION_BACKUPPROPERTIES = "jccbkpinfo";   // = jClipCornBackupInfo        [DEPRECATED]    //$NON-NLS-1$
+	public final static String EXTENSION_FULLEXPORT       = "jxmlbkp";      // = jXMLBackup                                 //$NON-NLS-1$
+	public final static String EXTENSION_SINGLEEXPORT     = "jsccexport";   // = jSingleClipCornExport                      //$NON-NLS-1$
+	public final static String EXTENSION_MULTIPLEEXPORT   = "jmccexport";   // = jMultipleClipCornExport                    //$NON-NLS-1$
+	public final static String EXTENSION_CCBACKUP         = "xml";          // = OLD Clipcorn Backup        [DEPRECATED]    //$NON-NLS-1$
+	public final static String EXTENSION_COMPAREFILE      = "jcccf";        // = jClipCornCompareFile                       //$NON-NLS-1$
+	public final static String EXTENSION_EPISODEGUIDE     = "txt";          // = TextFile                                   //$NON-NLS-1$
+	public final static String EXTENSION_TEXTEXPORT_PLAIN = "txt";          // = TextFile                                   //$NON-NLS-1$
+	public final static String EXTENSION_TEXTEXPORT_XML   = "xml";          // = XML-TextFile                               //$NON-NLS-1$
+	public final static String EXTENSION_TEXTEXPORT_JSON  = "json";         // = JSON-TextFile                              //$NON-NLS-1$
+	public final static String EXTENSION_FILTERLIST       = "flst";         // = FilterList                                 //$NON-NLS-1$
 
 	public final static String FILENAME_BACKUPINFO = "info.ini"; 			// = jClipCornBackupInfo 							//$NON-NLS-1$ 
 	
@@ -183,6 +185,8 @@ public class ExportHelper {
 		return true;
 	}
 
+	/// Export as *.jxmlbkp file
+	/// = zip file with database.xml, groups.xml, info.xml and covers directory
 	public static void exportDatabase(File file, CCMovieList movielist) {
 		try {
 			TimeKeeper.start();
@@ -279,7 +283,9 @@ public class ExportHelper {
 		
 		return null;
 	}
-	
+
+	/// Restore from *.jxmlbkp file
+	/// = zip file with database.xml, groups.xml, info.xml and covers directory
 	public static void restoreDatabaseFromBackup(File backup, CCMovieList movielist) {
 		try {
 			movielist.clear();
@@ -330,21 +336,28 @@ public class ExportHelper {
 			CCLog.addError(e);
 		}
 	}
-	
-	public static void exportMovie(File file, CCMovieList movielist, CCMovie mov, boolean includeCover) {
+
+	/// Export as *.jsccexport
+	/// [jsccexport] = single xml file, contains a single element
+	public static void exportMovie(File file, CCMovie mov, boolean includeCover, boolean includeLocalID) {
 		List<CCDatabaseElement> list = new ArrayList<>(1);
 		list.add(mov);
-		exportDBElements(file, movielist, list, includeCover);
+		exportDBElements(file, list, includeCover, includeLocalID);
 	}
-	
-	public static void exportSeries(File file, CCMovieList movielist, CCSeries ser, boolean includeCover) {
+
+	/// Export as *.jsccexport
+	/// [jsccexport] = single xml file, contains a single element
+	public static void exportSeries(File file, CCSeries ser, boolean includeCover, boolean includeLocalID) {
 		List<CCDatabaseElement> list = new ArrayList<>(1);
 		list.add(ser);
-		exportDBElements(file, movielist, list, includeCover);
+		exportDBElements(file, list, includeCover, includeLocalID);
 	}
-	
-	public static void exportDBElements(File file, CCMovieList movielist, List<CCDatabaseElement> elements, boolean includeCover) {
-		Document xml = DatabaseXMLExporter.export(elements, new ExportOptions(false, false, includeCover));
+
+	/// Export as *.jsccexport or *.jmccexport
+	/// [jsccexport] = single xml file, contains a single element
+	/// [jmccexport] = single xml file, contains a one or multiple elements
+	public static void exportDBElements(File file, List<CCDatabaseElement> elements, boolean includeCover, boolean includeLocalID) {
+		Document xml = DatabaseXMLExporter.export(elements, new ExportOptions(false, false, includeCover, includeLocalID));
 		
 		XMLOutputter xout = new XMLOutputter();
 		xout.setFormat(Format.getPrettyFormat());
@@ -366,25 +379,31 @@ public class ExportHelper {
 		}
 	}
 	
-	private static Tuple3<Integer, CCXMLElement, CCXMLParser> getFirstElementOfExport(String xmlcontent) throws CCXMLException {
+	private static List<Tuple3<Integer, CCXMLElement, CCXMLParser>> getAllElementsOfExport(String xmlcontent) throws CCXMLException {
 		CCXMLParser doc = CCXMLParser.parse(xmlcontent);
 		CCXMLElement root = doc.getRoot("database"); //$NON-NLS-1$
 
 		int xmlver = root.getAttributeIntValueOrDefault("xmlversion", 1); //$NON-NLS-1$
 		
 		List<CCXMLElement> elements = root.getAllChildren(new String[]{"movie", "series"}).enumerate(); //$NON-NLS-1$  //$NON-NLS-2$
-		
-		if (elements.size() > 0) {
-			return Tuple3.Create(xmlver, elements.get(0), doc);
-		}
-		
-		return null;
+
+		List<Tuple3<Integer, CCXMLElement, CCXMLParser>> r = new ArrayList<>();
+		for (CCXMLElement elm : elements) r.add(Tuple3.Create(xmlver, elm, doc));
+		return r;
 	}
-	
-	public static void importSingleElement(CCMovieList movielist, String xmlcontent, ImportOptions opt) throws CCFormatException, CCXMLException, SerializationException {
-		Tuple3<Integer, CCXMLElement, CCXMLParser> value = getFirstElementOfExport(xmlcontent);
-		
-		if (value != null) {
+
+	/// Import from *.jsccexport or *.jmccexport
+	/// [jsccexport] = single xml file, contains a single element
+	/// [jmccexport] = single xml file, contains a one or multiple elements
+	/// In case of *.jsccexport set maxCount==1 to enforce loading only a single element
+	/// otherwise set to "-1"
+	public static void importElements(CCMovieList movielist, String xmlcontent, ImportOptions opt, int maxCount) throws CCFormatException, CCXMLException, SerializationException {
+		if (maxCount < 0) maxCount = Integer.MAX_VALUE;
+
+		List<Tuple3<Integer, CCXMLElement, CCXMLParser>> allvalues = getAllElementsOfExport(xmlcontent);
+
+		for(Tuple3<Integer, CCXMLElement, CCXMLParser> value : CCStreams.iterate(allvalues).take(maxCount)) {
+
 			if (value.Item2.getName().equalsIgnoreCase("movie")) {  //$NON-NLS-1$
 				CCMovie mov = movielist.createNewEmptyMovie();
 				DatabaseXMLImporter.parseSingleMovie(mov, value.Item2, fn->null, new ImportState(value.Item3, value.Item1, opt));
@@ -392,11 +411,12 @@ public class ExportHelper {
 				CCSeries ser = movielist.createNewEmptySeries();
 				DatabaseXMLImporter.parseSingleSeries(ser, value.Item2, fn->null, new ImportState(value.Item3, value.Item1, opt));
 			}
+
 		}
 	}
 	
 	private static CCDBElementTyp getTypOfFirstElementOfExport(String xmlcontent) throws CCXMLException {
-		Tuple3<Integer, CCXMLElement, CCXMLParser> value = getFirstElementOfExport(xmlcontent);
+		Tuple3<Integer, CCXMLElement, CCXMLParser> value = CCStreams.iterate(getAllElementsOfExport(xmlcontent)).firstOrNull();
 		if (value == null) return null;
 
 		if (value.Item2.getName().equalsIgnoreCase("movie")) {  //$NON-NLS-1$
@@ -407,7 +427,10 @@ public class ExportHelper {
 		
 		return null;
 	}
-	
+
+	/// Import from *.jsccexport
+	/// [jsccexport] = single xml file, contains a single element
+	/// This method asks if you want to edit the element or directly add it
 	public static void openSingleElementFile(File f, MainFrame owner, CCMovieList movielist, CCDBElementTyp forceTyp) {
 		try {
 			String xml = SimpleFileUtils.readUTF8TextFile(f);
@@ -430,11 +453,11 @@ public class ExportHelper {
 			
 			if (methodval == 0)  // Direct
 			{
-				ExportHelper.importSingleElement(movielist, xml, new ImportOptions(resetDate, resetViewed, resetScore, resetTags, false));
+				ExportHelper.importElements(movielist, xml, new ImportOptions(resetDate, resetViewed, resetScore, resetTags, false), 1);
 			}
 			else if (methodval == 1) // Edit & Add
 			{
-				Tuple3<Integer, CCXMLElement, CCXMLParser> value = ExportHelper.getFirstElementOfExport(xml);
+				Tuple3<Integer, CCXMLElement, CCXMLParser> value = CCStreams.iterate(ExportHelper.getAllElementsOfExport(xml)).firstOrNull();
 				if (value != null)
 				{
 					CCMovie tmpMov = new CCMovie(CCMovieList.createStub(), -1);
@@ -450,7 +473,9 @@ public class ExportHelper {
 			CCLog.addError(LocaleBundle.getString("LogMessage.FormatErrorInExport"), e); //$NON-NLS-1$
 		}
 	}
-	
+
+	/// Restore from *.jxmlbkp file
+	/// = zip file with database.xml, groups.xml, info.xml and covers directory
 	public static void openFullBackupFile(final File f, final MainFrame owner, final CCMovieList movielist) {
 		if (DialogHelper.showLocaleYesNo(owner, "Dialogs.LoadBackup")) { //$NON-NLS-1$
 			new Thread(() ->
@@ -464,7 +489,10 @@ public class ExportHelper {
 			}, "THREAD_IMPORT_JXMLBKP").start(); //$NON-NLS-1$
 		}
 	}
-	
+
+	/// Import from *.jmccexport
+	/// [jmccexport] = single xml file, contains a one or multiple elements
+	/// This shows a dialog for the to-add-elements
 	public static void openMultipleElementFile(File f, MainFrame owner, CCMovieList movielist) {
 		try {
 			long maxmem = Runtime.getRuntime().maxMemory();

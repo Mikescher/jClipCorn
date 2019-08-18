@@ -233,7 +233,7 @@ public abstract class CCStream<TType> implements Iterator<TType>, Iterable<TType
 		return sum / count;
 	}
 
-	public <TAttrType> TAttrType singleOrDefault(Func1to1<TType, TAttrType> selector, TAttrType valueZero, TAttrType valueMoreThanOne) {
+	public TType singleOrDefault(TType valueZero, TType valueMoreThanOne) {
 		TType r = null;
 		boolean first = true;
 
@@ -242,7 +242,45 @@ public abstract class CCStream<TType> implements Iterator<TType>, Iterable<TType
 			first = false;
 		}
 		if (first) return valueZero;
-		return selector.invoke(r);
+		return r;
+	}
+
+	public TType singleOrDefault(Func1to1<TType, Boolean> selector, TType valueZero, TType valueMoreThanOne) {
+		TType r = null;
+		boolean first = true;
+
+		for (TType m : this) {
+			if (!selector.invoke(m)) continue;
+			if (first) r = m; else return valueMoreThanOne;
+			first = false;
+		}
+		if (first) return valueZero;
+		return r;
+	}
+
+	public TType singleOrNull() {
+		TType r = null;
+		boolean first = true;
+
+		for (TType m : this) {
+			if (first) r = m; else return null;
+			first = false;
+		}
+		if (first) return null;
+		return r;
+	}
+
+	public TType singleOrNull(Func1to1<TType, Boolean> selector) {
+		TType r = null;
+		boolean first = true;
+
+		for (TType m : this) {
+			if (!selector.invoke(m)) continue;
+			if (first) r = m; else return null;
+			first = false;
+		}
+		if (first) return null;
+		return r;
 	}
 
 	public <TAttrType> TAttrType findMostCommon(Func1to1<TType, TAttrType> selector, TAttrType defValue) {
@@ -462,6 +500,7 @@ public abstract class CCStream<TType> implements Iterator<TType>, Iterable<TType
 	}
 
 	public CCStream<TType> take(int count) {
+		if (count == Integer.MAX_VALUE) return this;
 		return new LimitStream<>(this, count);
 	}
 

@@ -40,8 +40,6 @@ public class StatisticsMediaInfoCDateChart extends StatisticsChart {
 
 	    NumberAxis valueAxis = new NumberAxis(""); //$NON-NLS-1$
 	    
-	    //StandardXYToolTipGenerator ttg = new StandardXYToolTipGenerator("{1}: {2}",new SimpleDateFormat("dd.MM.yyyy"), new DecimalFormat()); //$NON-NLS-1$ //$NON-NLS-2$
-
 	    StandardXYItemRenderer renderer = new StandardXYItemRenderer(StandardXYItemRenderer.LINES, null, null);
 	    
 	    XYPlot plot = new XYPlot(getDataSet(movielist, source), dateAxis, valueAxis, renderer);
@@ -73,6 +71,8 @@ public class StatisticsMediaInfoCDateChart extends StatisticsChart {
 		
 		CCDate mindate = CCStreams.iterate(dates).minOrDefault(CCDate::compare, CCDate.getUnspecified());
 		CCDate maxdate = CCStreams.iterate(dates).maxOrDefault(CCDate::compare, CCDate.getUnspecified());
+
+		if (mindate.isUnspecifiedDate() || maxdate.isUnspecifiedDate()) { DefaultXYDataset ds = new DefaultXYDataset(); ds.addSeries("Series0", new double[2][0]); return ds; } //$NON-NLS-1$
 
 		Map<CCDate, Integer> hdata = CCStreams.iterate(dates)
 				.groupBy(d->d)

@@ -193,6 +193,8 @@ public class PathFormatter {
 				String cc = String.format(WILDCARD_DRIVENAME, DriveMap.getDriveLabel(aPath.charAt(0))).concat(aPath.substring(3));
 				return insertCCPathVariables(cc);
 			}
+
+			return insertCCPathVariables(aPath);
 		}
 
 		return aPath;

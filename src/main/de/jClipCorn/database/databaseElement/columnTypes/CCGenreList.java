@@ -1,6 +1,7 @@
 package de.jClipCorn.database.databaseElement.columnTypes;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -117,6 +118,10 @@ public class CCGenreList {
 		for (CCGenre g : data) _g = calcAddGenreSafe(_g, g.asInt());
 
 		genres = _g;
+	}
+
+	public static CCGenreList create(CCGenre... list) {
+		return new CCGenreList(Arrays.asList(list));
 	}
 
 	private int getGenreInt(int idx) {

@@ -4,6 +4,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
+import de.jClipCorn.properties.types.PathSyntaxVar;
 import org.junit.After;
 import org.junit.Before;
 
@@ -48,7 +49,10 @@ public class ClipCornBaseTest {
 		SimpleFileUtils.writeTextResource(filep, "/example_data_full.jxmlbkp", ClipCornBaseTest.class);
 		ExportHelper.restoreDatabaseFromBackup(filep, ml);
 		filep.delete();
-		
+
+		CCProperties.getInstance().PROP_PATHSYNTAX_VAR1.setValue(new PathSyntaxVar("mov", "/tmpfs/jcc/mov/"));
+		CCProperties.getInstance().PROP_PATHSYNTAX_VAR2.setValue(new PathSyntaxVar("ser", "/tmpfs/jcc/ser/"));
+
 		return ml;
 	}
 

@@ -10,6 +10,8 @@ import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.exceptions.CCFormatException;
 
+import java.util.TimeZone;
+
 @SuppressWarnings("nls")
 public class TestCCDateTime extends ClipCornBaseTest {
 
@@ -95,5 +97,20 @@ public class TestCCDateTime extends ClipCornBaseTest {
 		assertFalse(CCDateTime.create(19,8,2020, 7,50,35).isExactEqual(CCDateTime.create(CCDate.create(19,8,2020))));
 		assertTrue(CCDateTime.create(CCDate.create(19,8,2020)).isExactEqual(CCDateTime.create(CCDate.create(19,8,2020))));
 		assertTrue(CCDateTime.create(19,8,2020, 7,50,35).isExactEqual(CCDateTime.create(19,8,2020, 7,50,35)));
+	}
+
+	@Test
+	public void testFiletime() {
+		long a       = 1406325816000L;
+		CCDateTime b = CCDateTime.createFromFileTimestamp(a, TimeZone.getTimeZone("GMT+2:00"));
+		long c       = b.toFileTimestamp(TimeZone.getTimeZone("GMT+2:00"));
+		CCDateTime d = CCDateTime.createFromFileTimestamp(c, TimeZone.getTimeZone("GMT+2:00"));
+
+		assertEquals(a, c);
+		assertTrue(b.isEqual(d));
+		assertTrue(d.isEqual(b));
+
+		long x = CCDateTime.create(18, 8, 2018, 19, 49, 30).toFileTimestamp(TimeZone.getTimeZone("GMT+2:00"));
+		assertEquals(1534614570000L, x);
 	}
 }

@@ -54,6 +54,10 @@ public class DatabaseError {
 	public String getElement1Name() {
 		return convertToString(el1);
 	}
+
+	public String getElement1RawName() {
+		return convertToRawString(el1);
+	}
 	
 	public String getElement2Name() {
 		return convertToString(el2);
@@ -86,15 +90,27 @@ public class DatabaseError {
 			return "[" + ((CCSeason)el).getSeries().getTitle() + " (" + ((CCSeason)el).getTitle() + ")]"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		} else if (el instanceof CCEpisode) {
 			return "[" + ((CCEpisode)el).getSeries().getTitle() + " (" + ((CCEpisode)el).getSeason().getTitle() + ")(" + ((CCEpisode)el).getTitle() + ")]"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-		} else if (el1 instanceof File) {
+		} else if (el instanceof File) {
 			return "[" + ((File)el).getName() + "]"; //$NON-NLS-1$ //$NON-NLS-2$
-		} else if (el1 instanceof CCGroup) {
+		} else if (el instanceof CCGroup) {
 			return "[" + ((CCGroup)el).Name + "]"; //$NON-NLS-1$ //$NON-NLS-2$
-		} else if (el1 instanceof String) {
+		} else if (el instanceof String) {
 			return "[" + ((String)el) + "]"; //$NON-NLS-1$ //$NON-NLS-2$
 		} else {
 			return "[?]"; //$NON-NLS-1$
 		}
+	}
+
+	private String convertToRawString(Object el) {
+		if (el instanceof CCMovie) return ((CCMovie)el).getCompleteTitle();;
+		if (el instanceof CCSeries) return ((CCSeries)el).getTitle();
+		if (el instanceof CCSeason) return ((CCSeason)el).getTitle();
+		if (el instanceof CCEpisode) return ((CCEpisode)el).getTitle();
+		if (el instanceof File) return ((File)el).getName();
+		 if (el instanceof CCGroup) return ((CCGroup)el).Name;
+		if (el instanceof String) return ((String)el);
+
+		return null;
 	}
 	
 	@Override

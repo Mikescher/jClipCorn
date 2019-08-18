@@ -19,7 +19,7 @@ public class TestGeneratedFilenames extends ClipCornBaseTest {
 		assertEquals("Kill Bill I - Volume I (Part 1).avi", ml.findDatabaseMovie(7).generateFilename(0));
 		assertEquals("Kill Bill I - Volume I (Part 2).avi", ml.findDatabaseMovie(7).generateFilename(1));
 		assertEquals("Buddy haut den Lukas [[SpencerHill]].avi", ml.findDatabaseMovie(12).generateFilename(1));
-		assertEquals("Der Herr der Ringe III - Die Rückkehr des Königs.mkv", ml.findDatabaseMovie(9).generateFilename(0));
+		assertEquals("Der Herr der Ringe III - Die Rückkehr des Königs [GER+ENG].mkv", ml.findDatabaseMovie(9).generateFilename(0));
 	}
 
 	@Test

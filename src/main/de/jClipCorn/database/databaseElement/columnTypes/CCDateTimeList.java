@@ -1,6 +1,7 @@
 package de.jClipCorn.database.databaseElement.columnTypes;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -71,6 +72,10 @@ public class CCDateTimeList {
 
 	public static CCDateTimeList create(List<CCDateTime> dtlist) {
 		return new CCDateTimeList(new ArrayList<>(dtlist));
+	}
+
+	public static CCDateTimeList create(CCDateTime... dtlist) {
+		return new CCDateTimeList(Arrays.asList(dtlist));
 	}
 
 	public CCDateTimeList add(CCDateTime value) {

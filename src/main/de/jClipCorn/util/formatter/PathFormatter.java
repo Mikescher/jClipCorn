@@ -219,6 +219,10 @@ public class PathFormatter {
 	public static String getExtension(String path) {
 		return path.substring(path.lastIndexOf('.') + 1); // ganz neat, returned den ganzen string wenn kein '.' gefunden ;)
 	}
+
+	public static String getExtension(File f) {
+		return getExtension(f.getAbsolutePath());
+	}
 	
 	public static String getFilenameWithExt(String path) {
 		path = path.substring(path.lastIndexOf(SERIALIZATION_SEPERATOR) + 1);

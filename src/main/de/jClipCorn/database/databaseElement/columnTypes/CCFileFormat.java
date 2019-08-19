@@ -7,6 +7,8 @@ import de.jClipCorn.util.enumextension.ContinoousEnum;
 import de.jClipCorn.util.enumextension.EnumWrapper;
 import de.jClipCorn.util.formatter.PathFormatter;
 
+import java.io.File;
+
 public enum CCFileFormat implements ContinoousEnum<CCFileFormat> {
 	MKV(0),
 	AVI(1),
@@ -32,7 +34,7 @@ public enum CCFileFormat implements ContinoousEnum<CCFileFormat> {
 	public static EnumWrapper<CCFileFormat> getWrapper() {
 		return wrapper;
 	}
-	
+
 	@Override
 	public int asInt() {
 		return id;
@@ -70,6 +72,10 @@ public enum CCFileFormat implements ContinoousEnum<CCFileFormat> {
 		}
 		
 		return false;
+	}
+
+	public static boolean isValidMovieFormat(File f) {
+		return isValidMovieFormat(PathFormatter.getExtension(f));
 	}
 	
 	public static CCFileFormat getMovieFormat(String ext) {

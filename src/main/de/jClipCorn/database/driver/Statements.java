@@ -137,8 +137,10 @@ public class Statements {
 	public static CCSQLStatement addEmptyMainTabStatement;
 	public static CCSQLStatement addEmptySeasonTabStatement;
 	public static CCSQLStatement addEmptyEpisodeTabStatement;
-	
-	public static CCSQLStatement newDatabaseIDStatement;
+
+	public static CCSQLStatement newDatabaseIDStatement1;
+	public static CCSQLStatement newDatabaseIDStatement2;
+	public static CCSQLStatement newDatabaseIDStatement3;
 
 	public static CCSQLStatement updateMainTabStatement;
 	public static CCSQLStatement updateSeriesTabStatement;
@@ -200,11 +202,19 @@ public class Statements {
 					.addPreparedFields(COL_EPIS_ADDDATE, COL_EPIS_LANGUAGE)
 					.build(d, statements);
 
-			newDatabaseIDStatement  = SQLBuilder
+			newDatabaseIDStatement1  = SQLBuilder
 					.createCustom(TAB_INFO)
-					.addSQL("INSERT OR IGNORE INTO [{TAB}] VALUES('{2}', 1)", COL_INFO_KEY.Name, COL_INFO_VALUE.Name, CCDatabase.INFOKEY_LASTID)
-					.addSQL("INSERT OR REPLACE INTO [{TAB}] SELECT '{2}', (CAST([{1}] AS INTEGER)+1) FROM [{TAB}] WHERE [{0}]='{2}'", COL_INFO_KEY.Name, COL_INFO_VALUE.Name, CCDatabase.INFOKEY_LASTID)
-					.addSQL("SELECT CAST([{1}] AS INTEGER) FROM [{TAB}] WHERE [{0}]='{2}';", COL_INFO_KEY.Name, COL_INFO_VALUE.Name, CCDatabase.INFOKEY_LASTID)
+					.setSQL("INSERT OR IGNORE INTO [{TAB}] VALUES('{2}', 1)", COL_INFO_KEY.Name, COL_INFO_VALUE.Name, CCDatabase.INFOKEY_LASTID)
+					.build(d, statements);
+
+			newDatabaseIDStatement2  = SQLBuilder
+					.createCustom(TAB_INFO)
+					.setSQL("INSERT OR REPLACE INTO [{TAB}] SELECT '{2}', (CAST([{1}] AS INTEGER)+1) FROM [{TAB}] WHERE [{0}]='{2}'", COL_INFO_KEY.Name, COL_INFO_VALUE.Name, CCDatabase.INFOKEY_LASTID)
+					.build(d, statements);
+
+			newDatabaseIDStatement3  = SQLBuilder
+					.createCustom(TAB_INFO)
+					.setSQL("SELECT CAST([{1}] AS INTEGER) FROM [{TAB}] WHERE [{0}]='{2}'", COL_INFO_KEY.Name, COL_INFO_VALUE.Name, CCDatabase.INFOKEY_LASTID)
 					.build(d, statements);
 
 			updateMainTabStatement = SQLBuilder.createUpdate(TAB_MAIN)

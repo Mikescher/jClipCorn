@@ -21,9 +21,12 @@ import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.CCSeries;
+import de.jClipCorn.database.databaseElement.columnTypes.CCFileFormat;
 import de.jClipCorn.database.util.CCDBUpdateListener;
 import de.jClipCorn.features.actionTree.ActionSource;
 import de.jClipCorn.features.actionTree.CCActionTree;
+import de.jClipCorn.features.serialization.ExportHelper;
+import de.jClipCorn.gui.frames.compareDatabaseFrame.DatabaseComparator;
 import de.jClipCorn.gui.mainFrame.clipCharSelector.AbstractClipCharSortSelector;
 import de.jClipCorn.gui.mainFrame.clipCharSelector.FullClipCharSortSelector;
 import de.jClipCorn.gui.mainFrame.clipCharSelector.SmallClipCharSortSelector;
@@ -46,8 +49,10 @@ import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.features.table.filter.customFilter.CustomSearchFilter;
 import de.jClipCorn.util.UpdateConnector;
+import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.helper.LookAndFeelManager;
+import de.jClipCorn.util.stream.CCStreams;
 
 public class MainFrame extends JFrame implements CCDBUpdateListener, FileDrop.Listener {
 	private static final long serialVersionUID = 1002435986107998058L;
@@ -415,7 +420,36 @@ public class MainFrame extends JFrame implements CCDBUpdateListener, FileDrop.Li
 	@Override
 	public void filesDropped(final File[] files) {
 		if (files.length>0) {
-			SwingUtilities.invokeLater(() -> new QuickAddMoviesDialog(this, getMovielist(), files).setVisible(true));
+
+			if (CCStreams.iterate(files).all(CCFileFormat::isValidMovieFormat)) {
+				SwingUtilities.invokeLater(() -> new QuickAddMoviesDialog(this, getMovielist(), files).setVisible(true));
+				return;
+			}
+
+			if (files.length == 1) {
+				String extension = PathFormatter.getExtension(files[0]);
+
+				if (extension.equalsIgnoreCase(ExportHelper.EXTENSION_FULLEXPORT)) {
+					ExportHelper.openFullBackupFile(files[0], MainFrame.getInstance(), movielist);
+					return;
+				}
+				if (extension.equalsIgnoreCase(ExportHelper.EXTENSION_SINGLEEXPORT)) {
+					ExportHelper.openSingleElementFile(files[0], MainFrame.getInstance(), movielist, null);
+					return;
+				}
+				if (extension.equalsIgnoreCase(ExportHelper.EXTENSION_MULTIPLEEXPORT)) {
+					ExportHelper.openMultipleElementFile(files[0], MainFrame.getInstance(), movielist);
+					return;
+				}
+				if (extension.equalsIgnoreCase(ExportHelper.EXTENSION_COMPAREFILE)) {
+					DatabaseComparator.openFile(files[0], MainFrame.getInstance(), movielist);
+					return;
+				}
+			}
+
+			// unknown file dropped
 		}
+
+		// nothing dropped
 	}
 }

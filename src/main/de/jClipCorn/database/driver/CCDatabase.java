@@ -51,11 +51,11 @@ public class CCDatabase {
 	
 	private final String databasePath;
 	private final GenericDatabase db;
-
-	public final DatabaseMigration upgrader;
-
+	public  final DatabaseMigration upgrader;
 	private final ICoverCache coverCache;
-	
+
+	private boolean _idEntryEnforced = false;
+
 	private CCDatabase(CCDatabaseDriver driver, String dbPath) {
 		super();
 		
@@ -348,7 +348,15 @@ public class CCDatabase {
 
 	private int getNewID() {
 		try {
-			return newDatabaseIDStatement.executeQueryInt(this);
+			// add entry if missing
+			if (!_idEntryEnforced) newDatabaseIDStatement1.execute();
+			_idEntryEnforced = true; // save [newDatabaseIDStatement1] calls because once is enough
+
+			// increment
+			newDatabaseIDStatement2.execute();
+
+			// read back
+			return newDatabaseIDStatement3.executeQueryInt(this);
 		} catch (SQLException e) {
 			CCLog.addError(LocaleBundle.getString("LogMessage.NoNewDatabaseID"), e); //$NON-NLS-1$
 			return -1;

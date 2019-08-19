@@ -15,10 +15,12 @@ import javax.swing.border.SoftBevelBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import de.jClipCorn.database.databaseElement.columnTypes.CCFileFormat;
 import de.jClipCorn.features.actionTree.ActionSource;
 import de.jClipCorn.features.actionTree.CCActionTree;
 import de.jClipCorn.features.actionTree.menus.impl.PreviewSeriesMenuBar;
 import de.jClipCorn.gui.frames.quickAddEpisodeDialog.QuickAddEpisodeDialog;
+import de.jClipCorn.gui.frames.quickAddMoviesDialog.QuickAddMoviesDialog;
 import de.jClipCorn.gui.guiComponents.FileDrop;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.listener.ActionCallbackListener;
@@ -675,6 +677,8 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 	@Override
 	public void filesDropped(File[] files) {
 		if (files.length != 1) return;
+
+		if (!CCFileFormat.isValidMovieFormat(files[0])) return;
 
 		final CCSeason s = tabSeason.getSeason();
 		if (s == null) return;

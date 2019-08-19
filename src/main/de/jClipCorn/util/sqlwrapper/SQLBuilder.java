@@ -83,20 +83,6 @@ public class SQLBuilder {
 		return this;
 	}
 
-	public SQLBuilder addSQL(String s, String... objList) throws SQLWrapperException {
-		if (_type != StatementType.CUSTOM) throw new SQLWrapperException("Cannot [setSQL] on type " + _type);
-
-		for (int i = 0; i < objList.length; i++) s = s.replace("{"+i+"}", objList[i]); //$NON-NLS-1$  //$NON-NLS-2$
-		s = s.replace("{TAB}", _table); //$NON-NLS-1$
-
-		if (Str.isNullOrWhitespace(_customSQL))
-			_customSQL = s;
-		else
-			_customSQL = _customSQL + " ; " + s;
-
-		return this;
-	}
-
 	public SQLBuilder addPreparedWhereCondition(CCSQLColDef field) throws SQLWrapperException {
 		if (_type != StatementType.UPDATE && _type != StatementType.SELECT && _type != StatementType.DELETE) throw new SQLWrapperException("Cannot [addPreparedWhereCondition] on type " + _type);
 

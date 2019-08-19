@@ -1,5 +1,6 @@
 package de.jClipCorn.database.covertab;
 
+import de.jClipCorn.database.driver.CCDatabase;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
@@ -22,8 +23,10 @@ import java.util.*;
 public class CCMemoryCoverCache implements ICoverCache {
 	private Map<Integer, BufferedImage> data;
 	private final HashMap<Integer, CCCoverData> _elements;
+	protected final CCDatabase _db;
 
-	public CCMemoryCoverCache() {
+	public CCMemoryCoverCache(CCDatabase database) {
+		_db = database;
 		_elements = new HashMap<>();
 	}
 
@@ -99,6 +102,8 @@ public class CCMemoryCoverCache implements ICoverCache {
 
 			CCCoverData cce = new CCCoverData(cid, fname, newCover.getWidth(), newCover.getHeight(), checksum, f.length(), preview, ptype, CCDateTime.getCurrentDateTime());
 
+			_db.insertCoverEntry(cce);
+
 			data.put(cid, newCover);
 			_elements.put(cid, cce);
 
@@ -111,10 +116,25 @@ public class CCMemoryCoverCache implements ICoverCache {
 		}
 	}
 
+	private CCCoverData getEntry(int cid) {
+		CCCoverData cce = _elements.get(cid);
+
+		if (cce == null) CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CoverNotInCache", cid)); //$NON-NLS-1$
+
+		return cce;
+	}
+
 	@Override
 	public void deleteCover(int cid) {
+
+		CCCoverData cce = getEntry(cid);
+		if (cce == null) return;
+
+		_db.deleteCoverEntry(cce);
+
 		data.remove(cid);
 		_elements.remove(cid);
+
 	}
 
 	@Override

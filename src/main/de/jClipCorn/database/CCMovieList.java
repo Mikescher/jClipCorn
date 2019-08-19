@@ -166,7 +166,10 @@ public class CCMovieList {
 	
 	public void connectForTests() {
 		database.tryconnect();
+
+		database.fillGroups(CCMovieList.this);
 		database.fillMovieList(CCMovieList.this);
+		database.fillCoverCache();
 	}
 	public void forceReconnectAndReloadForTests() {
 		// do no call clear, we only want to remove RAM values
@@ -247,7 +250,7 @@ public class CCMovieList {
 	public CCMovie findDatabaseMovie(int id) {
 		CCDatabaseElement e = findDatabaseElement(id);
 		
-		if (e != null && e instanceof CCMovie) return (CCMovie)e;
+		if (e instanceof CCMovie) return (CCMovie)e;
 		
 		return null;
 	}
@@ -255,7 +258,7 @@ public class CCMovieList {
 	public CCSeries findDatabaseSeries(int id) {
 		CCDatabaseElement e = findDatabaseElement(id);
 		
-		if (e != null && e instanceof CCSeries) return (CCSeries)e;
+		if (e instanceof CCSeries) return (CCSeries)e;
 		
 		return null;
 	}

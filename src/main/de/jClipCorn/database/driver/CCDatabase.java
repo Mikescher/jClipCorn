@@ -77,7 +77,7 @@ public class CCDatabase {
 			break;
 		case INMEMORY:
 			db = new MemoryDatabase();
-			coverCache = new CCMemoryCoverCache();
+			coverCache = new CCMemoryCoverCache(this);
 			break;
 		default:
 			CCLog.addDefaultSwitchError(this, driver);

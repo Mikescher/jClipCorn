@@ -121,22 +121,22 @@ public class TestDatabase extends ClipCornBaseTest {
 			epiWrite.setTitle("This is my title: fight me");
 			epiWrite.setViewed(true);
 			epiWrite.setMediaInfo(new CCMediaInfo(
-					CCDateTime.create(15, 4, 2019, 6,  0, 0).toFileTimestamp(TimeZone.getDefault()), // long cdate
-					CCDateTime.create(15, 4, 2019, 8, 30, 0).toFileTimestamp(TimeZone.getDefault()), // long mdate
-					3570481288L,                                                                     // long filesize
-					5932.933,                                                                        // double duration
-					4814457,                                                                         // int bitrate
-					"AVC",                                                                           // String videoformat
-					1920,                                                                            // int width
-					1080,                                                                            // int height
-					23.976,                                                                          // double framerate
-					(short)8,                                                                        // short bitdepth
-					142248,                                                                          // int framecount
-					"V_MPEG4/ISO/AVC",                                                               // String videocodec
-					"AC-3",                                                                          // String audioformat
-					(short)2,                                                                        // short audiochannels
-					"A_AC3",                                                                         // String audiocodec
-					48000));                                                                         // int audiosamplerate
+					CCDateTime.create(15, 4, 2019, 6,  0, 0).toFileTimestamp(GMT_2), // long cdate
+					CCDateTime.create(15, 4, 2019, 8, 30, 0).toFileTimestamp(GMT_2), // long mdate
+					3570481288L,                                                     // long filesize
+					5932.933,                                                        // double duration
+					4814457,                                                         // int bitrate
+					"AVC",                                                           // String videoformat
+					1920,                                                            // int width
+					1080,                                                            // int height
+					23.976,                                                          // double framerate
+					(short)8,                                                        // short bitdepth
+					142248,                                                          // int framecount
+					"V_MPEG4/ISO/AVC",                                               // String videocodec
+					"AC-3",                                                          // String audioformat
+					(short)2,                                                        // short audiochannels
+					"A_AC3",                                                         // String audiocodec
+					48000));                                                         // int audiosamplerate
 			epiWrite.setLength(98);
 			epiWrite.setTags(CCTagList.create(CCTagList.TAG_MISSING_TIME));
 			epiWrite.setFormat(CCFileFormat.MKV);

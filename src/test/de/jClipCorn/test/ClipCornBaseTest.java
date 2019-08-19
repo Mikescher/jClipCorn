@@ -3,6 +3,7 @@ package de.jClipCorn.test;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.TimeZone;
 
 import de.jClipCorn.properties.types.PathSyntaxVar;
 import org.junit.After;
@@ -20,7 +21,9 @@ import static org.junit.Assert.assertFalse;
 
 @SuppressWarnings("nls")
 public class ClipCornBaseTest {
-	
+
+	protected static TimeZone GMT_2 = TimeZone.getTimeZone("GMT+2:00");
+
 	@Before
 	public void Init() {
 		CCLog.initUnitTestMode();

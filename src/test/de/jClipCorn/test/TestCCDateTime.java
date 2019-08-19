@@ -102,15 +102,15 @@ public class TestCCDateTime extends ClipCornBaseTest {
 	@Test
 	public void testFiletime() {
 		long a       = 1406325816000L;
-		CCDateTime b = CCDateTime.createFromFileTimestamp(a, TimeZone.getTimeZone("GMT+2:00"));
-		long c       = b.toFileTimestamp(TimeZone.getTimeZone("GMT+2:00"));
-		CCDateTime d = CCDateTime.createFromFileTimestamp(c, TimeZone.getTimeZone("GMT+2:00"));
+		CCDateTime b = CCDateTime.createFromFileTimestamp(a, GMT_2);
+		long c       = b.toFileTimestamp(GMT_2);
+		CCDateTime d = CCDateTime.createFromFileTimestamp(c, GMT_2);
 
 		assertEquals(a, c);
 		assertTrue(b.isEqual(d));
 		assertTrue(d.isEqual(b));
 
-		long x = CCDateTime.create(18, 8, 2018, 19, 49, 30).toFileTimestamp(TimeZone.getTimeZone("GMT+2:00"));
+		long x = CCDateTime.create(18, 8, 2018, 19, 49, 30).toFileTimestamp(GMT_2);
 		assertEquals(1534614570000L, x);
 	}
 }

@@ -10,6 +10,7 @@ import java.util.List;
 
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.properties.enumerations.CCDatabaseDriver;
+import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.exceptions.FileLockedException;
 import de.jClipCorn.util.formatter.PathFormatter;
@@ -44,9 +45,9 @@ public class SQLiteDatabase extends GenericDatabase {
 			
 			establishDBConnection(dbPath);
 
-			TurbineParser turb = new TurbineParser(SimpleFileUtils.readUTF8TextFile(xmlPath), this);
+			TurbineParser turb = new TurbineParser(SimpleFileUtils.readUTF8TextFile(xmlPath));
 			turb.parse();
-			turb.create();
+			turb.create(this);
 		} catch (Exception e) {
 			lastError = e;
 			return false;
@@ -77,9 +78,9 @@ public class SQLiteDatabase extends GenericDatabase {
 			connection = DriverManager.getConnection(PROTOCOL + dbFilePath);
 			connection.setAutoCommit(true);
 
-			TurbineParser turb = new TurbineParser(SimpleFileUtils.readTextResource(xmlResPath, getClass()), this);
+			TurbineParser turb = new TurbineParser(SimpleFileUtils.readTextResource(xmlResPath, getClass()));
 			turb.parse();
-			turb.create();
+			turb.create(this);
 		} catch (Exception e) {
 			lastError = e;
 			return false;
@@ -137,7 +138,7 @@ public class SQLiteDatabase extends GenericDatabase {
 		try
 		{
 			// Test if newly created
-			executeSQLThrow("SELECT * FROM " + Statements.TAB_TEMP + " LIMIT 1");
+			executeSQLThrow("SELECT * FROM " + DatabaseStructure.TAB_TEMP.Name + " LIMIT 1");
 
 			// Test if writeable
 			executeSQLThrow("REPLACE INTO [TEMP] (IKEY,IVALUE) VALUES ('RAND','" + Double.toString(Math.random()).substring(2) + "'),('ACCESS','"+ CCDateTime.getCurrentDateTime().toStringISO() +"')");
@@ -179,5 +180,10 @@ public class SQLiteDatabase extends GenericDatabase {
 	@Override
 	public List<String> listViews() throws SQLException {
 		return querySQL("SELECT name FROM sqlite_master WHERE type='view'", 1, a -> (String)a[0]);
+	}
+
+	@Override
+	public List<Tuple<String, String>> listTriggerWithStatements() throws SQLException {
+		return querySQL("SELECT [name], [sql] FROM sqlite_master WHERE type='trigger'", 1, a -> Tuple.Create((String)a[0], (String)a[1]));
 	}
 }

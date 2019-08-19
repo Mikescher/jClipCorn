@@ -10,8 +10,6 @@ import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.exceptions.CCFormatException;
 
-import java.util.TimeZone;
-
 @SuppressWarnings("nls")
 public class TestCCDateTime extends ClipCornBaseTest {
 

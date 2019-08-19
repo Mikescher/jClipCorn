@@ -16,7 +16,6 @@ import de.jClipCorn.database.covertab.CCDefaultCoverCache;
 import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguage;
 import de.jClipCorn.database.driver.CCDatabase;
 import de.jClipCorn.database.driver.GenericDatabase;
-import de.jClipCorn.database.driver.Statements;
 import de.jClipCorn.features.backupManager.BackupManager;
 import de.jClipCorn.gui.mainFrame.MainFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
@@ -38,8 +37,7 @@ import de.jClipCorn.util.sqlwrapper.SQLWrapperException;
 import de.jClipCorn.util.stream.CCStreams;
 import org.apache.commons.codec.digest.DigestUtils;
 
-import static de.jClipCorn.database.driver.Statements.*;
-import static de.jClipCorn.database.driver.Statements.COL_CVRS_CREATED;
+import static de.jClipCorn.database.driver.DatabaseStructure.*;
 
 public class DatabaseMigration {
 	private final GenericDatabase db;
@@ -60,19 +58,19 @@ public class DatabaseMigration {
 	
 	private String getDBVersion() throws SQLException {
 		return db.querySingleStringSQLThrow(String.format("SELECT %s FROM %s WHERE %s = '%s'",  //$NON-NLS-1$
-				Statements.COL_INFO_VALUE.Name,
-				Statements.TAB_INFO,
-				Statements.COL_INFO_KEY.Name,
-				CCDatabase.INFOKEY_DBVERSION), 0);
+				COL_INFO_VALUE.Name,
+				TAB_INFO.Name,
+				COL_INFO_KEY.Name,
+				INFOKEY_DBVERSION), 0);
 	}
 
 	private void setDBVersion(String version) throws SQLException {
 		db.executeSQLThrow(String.format("UPDATE %s SET %s='%s' WHERE %s='%s'",  //$NON-NLS-1$
-				Statements.TAB_INFO,
-				Statements.COL_INFO_VALUE.Name,
+				TAB_INFO.Name,
+				COL_INFO_VALUE.Name,
 				version,
-				Statements.COL_INFO_KEY.Name,
-				CCDatabase.INFOKEY_DBVERSION));
+				COL_INFO_KEY.Name,
+				INFOKEY_DBVERSION));
 	}
 	
 	@SuppressWarnings("nls")
@@ -292,10 +290,10 @@ public class DatabaseMigration {
 			quant.analyze(img, 16);
 			byte[] preview = ColorQuantizerConverter.quantizeTo4BitRaw(quant, ColorQuantizerConverter.shrink(img, ColorQuantizerConverter.PREVIEW_WIDTH));
 
-			CCSQLStatement stmt = SQLBuilder.createInsert(Statements.TAB_COVERS)
-					.addPreparedFields(Statements.COL_CVRS_ID, Statements.COL_CVRS_FILENAME, Statements.COL_CVRS_WIDTH)
-					.addPreparedFields(Statements.COL_CVRS_HEIGHT, Statements.COL_CVRS_HASH_FILE)
-					.addPreparedFields(Statements.COL_CVRS_FILESIZE, Statements.COL_CVRS_PREVIEW, Statements.COL_CVRS_PREVIEWTYPE, Statements.COL_CVRS_CREATED)
+			CCSQLStatement stmt = SQLBuilder.createInsert(TAB_COVERS)
+					.addPreparedFields(COL_CVRS_ID, COL_CVRS_FILENAME, COL_CVRS_WIDTH)
+					.addPreparedFields(COL_CVRS_HEIGHT, COL_CVRS_HASH_FILE)
+					.addPreparedFields(COL_CVRS_FILESIZE, COL_CVRS_PREVIEW, COL_CVRS_PREVIEWTYPE, COL_CVRS_CREATED)
 					.build(db::createPreparedStatement, new ArrayList<>());
 
 			stmt.clearParameters();

@@ -10,6 +10,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Properties;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.apache.ddlutils.Platform;
 import org.apache.ddlutils.PlatformFactory;
 import org.apache.ddlutils.io.DatabaseIO;
@@ -17,6 +18,7 @@ import org.apache.ddlutils.model.Database;
 
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.properties.enumerations.CCDatabaseDriver;
+import de.jClipCorn.util.datatypes.Tuple;
 
 @SuppressWarnings("nls")
 public class DerbyDatabase extends GenericDatabase {
@@ -189,5 +191,10 @@ public class DerbyDatabase extends GenericDatabase {
 	@Override
 	public List<String> listViews() throws SQLException {
 		return querySQL("select st.tablename from sys.systables st LEFT OUTER join sys.sysschemas ss on (st.schemaid = ss.schemaid) where (ss.schemaname = 'APP' OR ss.schemaname = 'DEFAULT') AND st.tabletype='V'", 1, a -> (String)a[0]);
+	}
+
+	@Override
+	public List<Tuple<String, String>> listTriggerWithStatements() throws SQLException {
+		throw new NotImplementedException();
 	}
 }

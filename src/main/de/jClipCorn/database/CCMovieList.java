@@ -14,6 +14,7 @@ import java.util.Vector;
 import javax.swing.SwingUtilities;
 
 import de.jClipCorn.database.driver.PublicDatabaseInterface;
+import de.jClipCorn.database.history.CCDatabaseHistory;
 import de.jClipCorn.features.serialization.xmlexport.DatabaseXMLExporter;
 import de.jClipCorn.features.serialization.xmlexport.ExportOptions;
 import de.jClipCorn.util.Str;
@@ -38,6 +39,7 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCGroupList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieZyklus;
 import de.jClipCorn.database.driver.CCDatabase;
 import de.jClipCorn.database.driver.DatabaseConnectResult;
+import de.jClipCorn.database.driver.DatabaseStructure;
 import de.jClipCorn.database.util.CCDBUpdateListener;
 import de.jClipCorn.features.backupManager.BackupManager;
 import de.jClipCorn.database.util.iterators.DatedElementsIterator;
@@ -840,7 +842,7 @@ public class CCMovieList {
 		Element rdbi = new Element("info");
 		root.addContent(rdbi);
 		
-		for (String key : CCDatabase.INFOKEYS) {
+		for (String key : DatabaseStructure.INFOKEYS) {
 			Element e = new Element(key);
 			e.setText(database.getInformationFromDB(key));
 			rdbi.addContent(e);
@@ -1077,5 +1079,9 @@ public class CCMovieList {
 
 	public PublicDatabaseInterface getInternalDatabaseDirectly() {
 		return database.getInternalDatabaseAccess();
+	}
+
+	public CCDatabaseHistory getHistory() {
+		return database.getHistory();
 	}
 }

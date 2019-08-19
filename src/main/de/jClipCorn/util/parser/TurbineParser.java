@@ -6,6 +6,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.jClipCorn.util.sqlwrapper.CCSQLColDef;
+import de.jClipCorn.util.sqlwrapper.CCSQLTableDef;
+import de.jClipCorn.util.sqlwrapper.CCSQLType;
 import de.jClipCorn.util.sqlwrapper.SQLBuilderHelper;
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -29,26 +32,24 @@ public class TurbineParser {
 	
 	private final String source;
 	private Document doc;
-	private GenericDatabase db;
-	
-	public TurbineParser(String xmlSource, GenericDatabase database) {
+
+	public TurbineParser(String xmlSource) {
 		source = xmlSource;
-		db = database;
 	}
 	
 	public void parse() throws JDOMException, IOException {
 		doc = new SAXBuilder().build(new StringReader(source));
 	}
 	
-	public void create() throws SQLException, XMLFormatException {
-		Element db = doc.getRootElement();
+	public void create(GenericDatabase db) throws SQLException, XMLFormatException {
+		Element xdb = doc.getRootElement();
 
-		for (Element table : db.getChildren("table")) {
-			CreateTable(table);
+		for (Element table : xdb.getChildren("table")) {
+			CreateTable(table, db);
 		}
 	}
 	
-	private void CreateTable(Element tab) throws SQLException, XMLFormatException {
+	private void CreateTable(Element tab, GenericDatabase db) throws SQLException, XMLFormatException {
 		String tabSQL = getSQLCreateTable(tab);
 		
 		db.executeSQLThrow(tabSQL);
@@ -137,5 +138,52 @@ public class TurbineParser {
 		} else {
 			return type + "(" + size + ")";
 		}
+	}
+
+	public List<CCSQLTableDef> convertToTableDefinition() throws XMLFormatException {
+		List<CCSQLTableDef> r = new ArrayList<>();
+
+		Element xdb = doc.getRootElement();
+		for (Element xtab : xdb.getChildren("table")) {
+			String tableName = xtab.getAttributeValue("name");
+
+			List<CCSQLColDef> primary = new ArrayList<>();
+			List<CCSQLColDef> columns = new ArrayList<>();
+
+			for (Element xcol : xtab.getChildren("column")) {
+				String columnName      = getXMLAttrStr(xcol, "name");
+				String columnType      = getXMLAttrStr(xcol, "type");
+				//int columnSize       = getXMLAttrInt(xcol, "size", -1);
+				boolean columnPrimary  = getXMLAttrBool(xcol, "primaryKey", false);
+				boolean columnRequired = getXMLAttrBool(xcol, "required", false);
+
+				CCSQLColDef col = new CCSQLColDef(columnName, convertType(columnType), columnRequired);
+
+				if (columnPrimary) primary.add(col);
+				columns.add(col);
+			}
+
+			if (primary.size()>1) throw new XMLFormatException("Too many primary columns");
+			
+			r.add(new CCSQLTableDef(tableName, primary.size()==0 ? null : primary.get(0), columns));
+		}
+
+		return r;
+	}
+
+	private CCSQLType convertType(String turbineType) throws XMLFormatException {
+		turbineType = turbineType.toUpperCase();
+
+		if ("VARCHAR".equals(turbineType))  return CCSQLType.VARCHAR;
+		if ("BIT".equals(turbineType))      return CCSQLType.BIT;
+		if ("INTEGER".equals(turbineType))  return CCSQLType.INTEGER;
+		if ("BIGINT".equals(turbineType))   return CCSQLType.BIGINT;
+		if ("DATE".equals(turbineType))     return CCSQLType.DATE;
+		if ("TINYINT".equals(turbineType))  return CCSQLType.TINYINT;
+		if ("SMALLINT".equals(turbineType)) return CCSQLType.SMALLINT;
+		if ("REAL".equals(turbineType))     return CCSQLType.REAL;
+		if ("BLOB".equals(turbineType))     return CCSQLType.BLOB;
+
+		throw new XMLFormatException("Unknown type: " + turbineType);
 	}
 }

@@ -19,11 +19,13 @@ import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.database.databaseElement.columnTypes.CCDBElementTyp;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGroup;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMediaInfo;
+import de.jClipCorn.database.history.CCDatabaseHistory;
 import de.jClipCorn.database.migration.DatabaseMigration;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.enumerations.CCDatabaseDriver;
+import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.datetime.CCTime;
@@ -37,23 +39,13 @@ import static de.jClipCorn.database.driver.Statements.*;
 
 public class CCDatabase {
 
-	private final static String XML_NAME = "database/ClipCornSchema.xml"; //$NON-NLS-1$
+	public final static String XML_NAME = "database/ClipCornSchema.xml"; //$NON-NLS-1$
 
-	public final static String INFOKEY_DBVERSION    = "VERSION_DB";                             //$NON-NLS-1$
-	public final static String INFOKEY_DATE         = "CREATION_DATE";                          //$NON-NLS-1$
-	public final static String INFOKEY_TIME         = "CREATION_TIME";                          //$NON-NLS-1$
-	public final static String INFOKEY_USERNAME     = "CREATION_USERNAME";                      //$NON-NLS-1$
-	public final static String INFOKEY_DUUID        = "DATABASE_UNIVERSALLY_UNIQUE_IDENTIFIER"; //$NON-NLS-1$
-	public final static String INFOKEY_HISTORY      = "HISTORY_ENABLED";                        //$NON-NLS-1$
-	public final static String INFOKEY_LASTID       = "LAST_ID";                                //$NON-NLS-1$
-	public final static String INFOKEY_LASTCOVERID  = "LAST_COVERID";                           //$NON-NLS-1$
-
-	public final static String[] INFOKEYS = new String[]{ INFOKEY_DBVERSION, INFOKEY_DATE, INFOKEY_TIME, INFOKEY_USERNAME, INFOKEY_DUUID, INFOKEY_HISTORY, INFOKEY_LASTID, INFOKEY_LASTCOVERID };
-	
 	private final String databasePath;
 	private final GenericDatabase db;
 	public  final DatabaseMigration upgrader;
 	private final ICoverCache coverCache;
+	private final CCDatabaseHistory _history;
 
 	private boolean _idEntryEnforced = false;
 
@@ -84,6 +76,8 @@ public class CCDatabase {
 			coverCache = null;
 			db = null;
 		}
+		
+		_history = new CCDatabaseHistory(this);
 		
 		upgrader = new DatabaseMigration(db, databasePath);
 	}
@@ -166,10 +160,10 @@ public class CCDatabase {
 
 			coverCache.init();
 
-			writeNewInformationToDB(INFOKEY_DBVERSION, Main.DBVERSION);
-			writeNewInformationToDB(INFOKEY_DATE, CCDate.getCurrentDate().toStringSQL());
-			writeNewInformationToDB(INFOKEY_TIME, CCTime.getCurrentTime().toStringSQL());
-			writeNewInformationToDB(INFOKEY_USERNAME, ApplicationHelper.getCurrentUsername());
+			writeNewInformationToDB(DatabaseStructure.INFOKEY_DBVERSION, Main.DBVERSION);
+			writeNewInformationToDB(DatabaseStructure.INFOKEY_DATE, CCDate.getCurrentDate().toStringSQL());
+			writeNewInformationToDB(DatabaseStructure.INFOKEY_TIME, CCTime.getCurrentTime().toStringSQL());
+			writeNewInformationToDB(DatabaseStructure.INFOKEY_USERNAME, ApplicationHelper.getCurrentUsername());
 		}
 
 		return res;
@@ -196,12 +190,12 @@ public class CCDatabase {
 	 * @return the ammount of Movies and Series in the Database
 	 */
 	public int getDBElementCount() {
-		return db.getRowCount(TAB_MAIN);
+		return db.getRowCount(DatabaseStructure.TAB_MAIN.Name);
 	}
 
 	private CCDatabaseElement createDatabaseElementFromDatabase(CCSQLResultSet rs, CCMovieList ml, boolean fillSeries) throws SQLException, CCFormatException, SQLWrapperException {
-		if (rs.getInt(COL_MAIN_TYPE) == CCDBElementTyp.MOVIE.asInt()) {
-			CCMovie mov = new CCMovie(ml, rs.getInt(COL_MAIN_LOCALID));
+		if (rs.getInt(DatabaseStructure.COL_MAIN_TYPE) == CCDBElementTyp.MOVIE.asInt()) {
+			CCMovie mov = new CCMovie(ml, rs.getInt(DatabaseStructure.COL_MAIN_LOCALID));
 
 			mov.beginUpdating();
 
@@ -211,8 +205,8 @@ public class CCDatabase {
 
 			return mov;
 		} else {
-			int lid = rs.getInt(COL_MAIN_LOCALID);
-			int sid = rs.getInt(COL_MAIN_SERIES_ID);
+			int lid = rs.getInt(DatabaseStructure.COL_MAIN_LOCALID);
+			int sid = rs.getInt(DatabaseStructure.COL_MAIN_SERIES_ID);
 			CCSeries ser = new CCSeries(ml, lid, sid);
 
 			ser.beginUpdating();
@@ -228,7 +222,7 @@ public class CCDatabase {
 	}
 
 	private CCSeason createSeasonFromDatabase(CCSQLResultSet rs, CCSeries ser, boolean fillSeason) throws SQLException, SQLWrapperException {
-		CCSeason seas = new CCSeason(ser, rs.getInt(COL_SEAS_SEASONID));
+		CCSeason seas = new CCSeason(ser, rs.getInt(DatabaseStructure.COL_SEAS_SEASONID));
 
 		seas.beginUpdating();
 
@@ -242,7 +236,7 @@ public class CCDatabase {
 	}
 
 	private CCEpisode createEpisodeFromDatabase(CCSQLResultSet rs, CCSeason se) throws SQLException, CCFormatException, SQLWrapperException {
-		CCEpisode ep = new CCEpisode(se, rs.getInt(COL_EPIS_LOCALID));
+		CCEpisode ep = new CCEpisode(se, rs.getInt(DatabaseStructure.COL_EPIS_LOCALID));
 
 		ep.beginUpdating();
 
@@ -254,97 +248,97 @@ public class CCDatabase {
 	}
 
 	private void updateEpisodeFromResultSet(CCSQLResultSet rs, CCEpisode ep) throws SQLException, CCFormatException, SQLWrapperException {
-		ep.setEpisodeNumber(rs.getInt(COL_EPIS_EPISODE));
-		ep.setTitle(rs.getString(COL_EPIS_NAME));
-		ep.setViewed(rs.getBoolean(COL_EPIS_VIEWED));
-		ep.setViewedHistory(rs.getString(COL_EPIS_VIEWEDHISTORY));
-		ep.setLength(rs.getInt(COL_EPIS_LENGTH));
-		ep.setFormat(rs.getInt(COL_EPIS_FORMAT));
-		ep.setFilesize(rs.getLong(COL_EPIS_FILESIZE));
-		ep.setPart(rs.getString(COL_EPIS_PART_1));
-		ep.setAddDate(rs.getDate(COL_EPIS_ADDDATE));
-		ep.setTags(rs.getShort(COL_EPIS_TAGS));
-		ep.setLanguage(rs.getLong(COL_EPIS_LANGUAGE));
+		ep.setEpisodeNumber(rs.getInt(DatabaseStructure.COL_EPIS_EPISODE));
+		ep.setTitle(rs.getString(DatabaseStructure.COL_EPIS_NAME));
+		ep.setViewed(rs.getBoolean(DatabaseStructure.COL_EPIS_VIEWED));
+		ep.setViewedHistory(rs.getString(DatabaseStructure.COL_EPIS_VIEWEDHISTORY));
+		ep.setLength(rs.getInt(DatabaseStructure.COL_EPIS_LENGTH));
+		ep.setFormat(rs.getInt(DatabaseStructure.COL_EPIS_FORMAT));
+		ep.setFilesize(rs.getLong(DatabaseStructure.COL_EPIS_FILESIZE));
+		ep.setPart(rs.getString(DatabaseStructure.COL_EPIS_PART_1));
+		ep.setAddDate(rs.getDate(DatabaseStructure.COL_EPIS_ADDDATE));
+		ep.setTags(rs.getShort(DatabaseStructure.COL_EPIS_TAGS));
+		ep.setLanguage(rs.getLong(DatabaseStructure.COL_EPIS_LANGUAGE));
 		ep.setMediaInfo(CCMediaInfo.createFromDB(
-			rs.getNullableLong(COL_EPIS_MI_FILESIZE),
-			rs.getNullableLong(COL_EPIS_MI_CDATE),
-			rs.getNullableLong(COL_EPIS_MI_MDATE),
-			rs.getNullableString(COL_EPIS_MI_AFORMAT),
-			rs.getNullableString(COL_EPIS_MI_VFORMAT),
-			rs.getNullableInt(COL_EPIS_MI_WIDTH),
-			rs.getNullableInt(COL_EPIS_MI_HEIGHT),
-			rs.getNullableFloat(COL_EPIS_MI_FRAMERATE),
-			rs.getNullableFloat(COL_EPIS_MI_DURATION),
-			rs.getNullableInt(COL_EPIS_MI_BITDEPTH),
-			rs.getNullableInt(COL_EPIS_MI_BITRATE),
-			rs.getNullableInt(COL_EPIS_MI_FRAMECOUNT),
-			rs.getNullableInt(COL_EPIS_MI_ACHANNELS),
-			rs.getNullableString(COL_EPIS_MI_VCODEC),
-			rs.getNullableString(COL_EPIS_MI_ACODEC),
-			rs.getNullableInt(COL_EPIS_MI_SAMPLERATE)));
+			rs.getNullableLong(DatabaseStructure.COL_EPIS_MI_FILESIZE),
+			rs.getNullableLong(DatabaseStructure.COL_EPIS_MI_CDATE),
+			rs.getNullableLong(DatabaseStructure.COL_EPIS_MI_MDATE),
+			rs.getNullableString(DatabaseStructure.COL_EPIS_MI_AFORMAT),
+			rs.getNullableString(DatabaseStructure.COL_EPIS_MI_VFORMAT),
+			rs.getNullableInt(DatabaseStructure.COL_EPIS_MI_WIDTH),
+			rs.getNullableInt(DatabaseStructure.COL_EPIS_MI_HEIGHT),
+			rs.getNullableFloat(DatabaseStructure.COL_EPIS_MI_FRAMERATE),
+			rs.getNullableFloat(DatabaseStructure.COL_EPIS_MI_DURATION),
+			rs.getNullableInt(DatabaseStructure.COL_EPIS_MI_BITDEPTH),
+			rs.getNullableInt(DatabaseStructure.COL_EPIS_MI_BITRATE),
+			rs.getNullableInt(DatabaseStructure.COL_EPIS_MI_FRAMECOUNT),
+			rs.getNullableInt(DatabaseStructure.COL_EPIS_MI_ACHANNELS),
+			rs.getNullableString(DatabaseStructure.COL_EPIS_MI_VCODEC),
+			rs.getNullableString(DatabaseStructure.COL_EPIS_MI_ACODEC),
+			rs.getNullableInt(DatabaseStructure.COL_EPIS_MI_SAMPLERATE)));
 	}
 
 	private void updateSeasonFromResultSet(CCSQLResultSet rs, CCSeason seas) throws SQLException, SQLWrapperException {
-		seas.setTitle(rs.getString(COL_SEAS_NAME));
-		seas.setYear(rs.getInt(COL_SEAS_YEAR));
-		seas.setCover(rs.getInt(COL_SEAS_COVERID));
+		seas.setTitle(rs.getString(DatabaseStructure.COL_SEAS_NAME));
+		seas.setYear(rs.getInt(DatabaseStructure.COL_SEAS_YEAR));
+		seas.setCover(rs.getInt(DatabaseStructure.COL_SEAS_COVERID));
 	}
 
 	private void updateSeriesFromResultSet(CCSQLResultSet rs, CCSeries ser) throws SQLException, CCFormatException, SQLWrapperException {
-		ser.setTitle(rs.getString(COL_MAIN_NAME));
-		ser.setGenres(rs.getLong(COL_MAIN_GENRE));
-		ser.setOnlinescore(rs.getInt(COL_MAIN_ONLINESCORE));
-		ser.setFsk(rs.getInt(COL_MAIN_FSK));
-		ser.setScore(rs.getInt(COL_MAIN_SCORE));
-		ser.setCover(rs.getInt(COL_MAIN_COVERID));
-		ser.setOnlineReference(rs.getString(COL_MAIN_ONLINEREF));
-		ser.setGroups(rs.getString(COL_MAIN_GROUPS));
-		ser.setTags(rs.getShort(COL_MAIN_TAGS));
+		ser.setTitle(rs.getString(DatabaseStructure.COL_MAIN_NAME));
+		ser.setGenres(rs.getLong(DatabaseStructure.COL_MAIN_GENRE));
+		ser.setOnlinescore(rs.getInt(DatabaseStructure.COL_MAIN_ONLINESCORE));
+		ser.setFsk(rs.getInt(DatabaseStructure.COL_MAIN_FSK));
+		ser.setScore(rs.getInt(DatabaseStructure.COL_MAIN_SCORE));
+		ser.setCover(rs.getInt(DatabaseStructure.COL_MAIN_COVERID));
+		ser.setOnlineReference(rs.getString(DatabaseStructure.COL_MAIN_ONLINEREF));
+		ser.setGroups(rs.getString(DatabaseStructure.COL_MAIN_GROUPS));
+		ser.setTags(rs.getShort(DatabaseStructure.COL_MAIN_TAGS));
 	}
 
 	private void updateMovieFromResultSet(CCSQLResultSet rs, CCMovie mov) throws SQLException, CCFormatException, SQLWrapperException {
-		mov.setTitle(rs.getString(COL_MAIN_NAME));
-		mov.setViewed(rs.getBoolean(COL_MAIN_VIEWED));
-		mov.setViewedHistory(rs.getString(COL_MAIN_VIEWEDHISTORY));
-		mov.setZyklusTitle(rs.getString(COL_MAIN_ZYKLUS));
-		mov.setZyklusID(rs.getInt(COL_MAIN_ZYKLUSNUMBER));
-		mov.setLanguage(rs.getLong(COL_MAIN_LANGUAGE));
-		mov.setGenres(rs.getLong(COL_MAIN_GENRE));
-		mov.setLength(rs.getInt(COL_MAIN_LENGTH));
-		mov.setAddDate(rs.getDate(COL_MAIN_ADDDATE));
-		mov.setOnlinescore(rs.getInt(COL_MAIN_ONLINESCORE));
-		mov.setFsk(rs.getInt(COL_MAIN_FSK));
-		mov.setFormat(rs.getInt(COL_MAIN_FORMAT));
-		mov.setYear(rs.getInt(COL_MAIN_MOVIEYEAR));
-		mov.setOnlineReference(rs.getString(COL_MAIN_ONLINEREF));
-		mov.setGroups(rs.getString(COL_MAIN_GROUPS));
-		mov.setFilesize(rs.getLong(COL_MAIN_FILESIZE));
-		mov.setTags(rs.getShort(COL_MAIN_TAGS));
-		mov.setPart(0, rs.getString(COL_MAIN_PART_1));
-		mov.setPart(1, rs.getString(COL_MAIN_PART_2));
-		mov.setPart(2, rs.getString(COL_MAIN_PART_3));
-		mov.setPart(3, rs.getString(COL_MAIN_PART_4));
-		mov.setPart(4, rs.getString(COL_MAIN_PART_5));
-		mov.setPart(5, rs.getString(COL_MAIN_PART_6));
-		mov.setScore(rs.getInt(COL_MAIN_SCORE));
-		mov.setCover(rs.getInt(COL_MAIN_COVERID));
+		mov.setTitle(rs.getString(DatabaseStructure.COL_MAIN_NAME));
+		mov.setViewed(rs.getBoolean(DatabaseStructure.COL_MAIN_VIEWED));
+		mov.setViewedHistory(rs.getString(DatabaseStructure.COL_MAIN_VIEWEDHISTORY));
+		mov.setZyklusTitle(rs.getString(DatabaseStructure.COL_MAIN_ZYKLUS));
+		mov.setZyklusID(rs.getInt(DatabaseStructure.COL_MAIN_ZYKLUSNUMBER));
+		mov.setLanguage(rs.getLong(DatabaseStructure.COL_MAIN_LANGUAGE));
+		mov.setGenres(rs.getLong(DatabaseStructure.COL_MAIN_GENRE));
+		mov.setLength(rs.getInt(DatabaseStructure.COL_MAIN_LENGTH));
+		mov.setAddDate(rs.getDate(DatabaseStructure.COL_MAIN_ADDDATE));
+		mov.setOnlinescore(rs.getInt(DatabaseStructure.COL_MAIN_ONLINESCORE));
+		mov.setFsk(rs.getInt(DatabaseStructure.COL_MAIN_FSK));
+		mov.setFormat(rs.getInt(DatabaseStructure.COL_MAIN_FORMAT));
+		mov.setYear(rs.getInt(DatabaseStructure.COL_MAIN_MOVIEYEAR));
+		mov.setOnlineReference(rs.getString(DatabaseStructure.COL_MAIN_ONLINEREF));
+		mov.setGroups(rs.getString(DatabaseStructure.COL_MAIN_GROUPS));
+		mov.setFilesize(rs.getLong(DatabaseStructure.COL_MAIN_FILESIZE));
+		mov.setTags(rs.getShort(DatabaseStructure.COL_MAIN_TAGS));
+		mov.setPart(0, rs.getString(DatabaseStructure.COL_MAIN_PART_1));
+		mov.setPart(1, rs.getString(DatabaseStructure.COL_MAIN_PART_2));
+		mov.setPart(2, rs.getString(DatabaseStructure.COL_MAIN_PART_3));
+		mov.setPart(3, rs.getString(DatabaseStructure.COL_MAIN_PART_4));
+		mov.setPart(4, rs.getString(DatabaseStructure.COL_MAIN_PART_5));
+		mov.setPart(5, rs.getString(DatabaseStructure.COL_MAIN_PART_6));
+		mov.setScore(rs.getInt(DatabaseStructure.COL_MAIN_SCORE));
+		mov.setCover(rs.getInt(DatabaseStructure.COL_MAIN_COVERID));
 		mov.setMediaInfo(CCMediaInfo.createFromDB(
-			rs.getNullableLong(COL_MAIN_MI_FILESIZE),
-			rs.getNullableLong(COL_MAIN_MI_CDATE),
-			rs.getNullableLong(COL_MAIN_MI_MDATE),
-			rs.getNullableString(COL_MAIN_MI_AFORMAT),
-			rs.getNullableString(COL_MAIN_MI_VFORMAT),
-			rs.getNullableInt(COL_MAIN_MI_WIDTH),
-			rs.getNullableInt(COL_MAIN_MI_HEIGHT),
-			rs.getNullableFloat(COL_MAIN_MI_FRAMERATE),
-			rs.getNullableFloat(COL_MAIN_MI_DURATION),
-			rs.getNullableInt(COL_MAIN_MI_BITDEPTH),
-			rs.getNullableInt(COL_MAIN_MI_BITRATE),
-			rs.getNullableInt(COL_MAIN_MI_FRAMECOUNT),
-			rs.getNullableInt(COL_MAIN_MI_ACHANNELS),
-			rs.getNullableString(COL_MAIN_MI_VCODEC),
-			rs.getNullableString(COL_MAIN_MI_ACODEC),
-			rs.getNullableInt(COL_MAIN_MI_SAMPLERATE)));
+			rs.getNullableLong(DatabaseStructure.COL_MAIN_MI_FILESIZE),
+			rs.getNullableLong(DatabaseStructure.COL_MAIN_MI_CDATE),
+			rs.getNullableLong(DatabaseStructure.COL_MAIN_MI_MDATE),
+			rs.getNullableString(DatabaseStructure.COL_MAIN_MI_AFORMAT),
+			rs.getNullableString(DatabaseStructure.COL_MAIN_MI_VFORMAT),
+			rs.getNullableInt(DatabaseStructure.COL_MAIN_MI_WIDTH),
+			rs.getNullableInt(DatabaseStructure.COL_MAIN_MI_HEIGHT),
+			rs.getNullableFloat(DatabaseStructure.COL_MAIN_MI_FRAMERATE),
+			rs.getNullableFloat(DatabaseStructure.COL_MAIN_MI_DURATION),
+			rs.getNullableInt(DatabaseStructure.COL_MAIN_MI_BITDEPTH),
+			rs.getNullableInt(DatabaseStructure.COL_MAIN_MI_BITRATE),
+			rs.getNullableInt(DatabaseStructure.COL_MAIN_MI_FRAMECOUNT),
+			rs.getNullableInt(DatabaseStructure.COL_MAIN_MI_ACHANNELS),
+			rs.getNullableString(DatabaseStructure.COL_MAIN_MI_VCODEC),
+			rs.getNullableString(DatabaseStructure.COL_MAIN_MI_ACODEC),
+			rs.getNullableInt(DatabaseStructure.COL_MAIN_MI_SAMPLERATE)));
 	}
 
 	private int getNewID() {
@@ -370,34 +364,34 @@ public class CCDatabase {
 			CCSQLStatement stmt = addEmptyMainTabStatement;
 			stmt.clearParameters();
 
-			stmt.setInt(COL_MAIN_LOCALID,       id);
-			stmt.setStr(COL_MAIN_NAME,          "");
-			stmt.setInt(COL_MAIN_VIEWED,        0);
-			stmt.setStr(COL_MAIN_VIEWEDHISTORY, "");
-			stmt.setStr(COL_MAIN_ZYKLUS,        "");
-			stmt.setInt(COL_MAIN_ZYKLUSNUMBER,  0);
-			stmt.setInt(COL_MAIN_LANGUAGE,      0);
-			stmt.setInt(COL_MAIN_GENRE,         0);
-			stmt.setInt(COL_MAIN_LENGTH,        0);
-			stmt.setStr(COL_MAIN_ADDDATE,       CCDate.MIN_SQL);
-			stmt.setInt(COL_MAIN_ONLINESCORE,   0);
-			stmt.setInt(COL_MAIN_FSK,           0);
-			stmt.setInt(COL_MAIN_FORMAT,        0);
-			stmt.setInt(COL_MAIN_MOVIEYEAR,     0);
-			stmt.setStr(COL_MAIN_ONLINEREF,     "");
-			stmt.setStr(COL_MAIN_GROUPS,        "");
-			stmt.setInt(COL_MAIN_FILESIZE,      0);
-			stmt.setInt(COL_MAIN_TAGS,          0);
-			stmt.setStr(COL_MAIN_PART_1,        "");
-			stmt.setStr(COL_MAIN_PART_2,        "");
-			stmt.setStr(COL_MAIN_PART_3,        "");
-			stmt.setStr(COL_MAIN_PART_4,        "");
-			stmt.setStr(COL_MAIN_PART_5,        "");
-			stmt.setStr(COL_MAIN_PART_6,        "");
-			stmt.setInt(COL_MAIN_SCORE,         0);
-			stmt.setInt(COL_MAIN_COVERID,       -1);
-			stmt.setInt(COL_MAIN_TYPE,          0);
-			stmt.setInt(COL_MAIN_SERIES_ID,     0);
+			stmt.setInt(DatabaseStructure.COL_MAIN_LOCALID,       id);
+			stmt.setStr(DatabaseStructure.COL_MAIN_NAME,          "");
+			stmt.setInt(DatabaseStructure.COL_MAIN_VIEWED,        0);
+			stmt.setStr(DatabaseStructure.COL_MAIN_VIEWEDHISTORY, "");
+			stmt.setStr(DatabaseStructure.COL_MAIN_ZYKLUS,        "");
+			stmt.setInt(DatabaseStructure.COL_MAIN_ZYKLUSNUMBER,  0);
+			stmt.setInt(DatabaseStructure.COL_MAIN_LANGUAGE,      0);
+			stmt.setInt(DatabaseStructure.COL_MAIN_GENRE,         0);
+			stmt.setInt(DatabaseStructure.COL_MAIN_LENGTH,        0);
+			stmt.setStr(DatabaseStructure.COL_MAIN_ADDDATE,       CCDate.MIN_SQL);
+			stmt.setInt(DatabaseStructure.COL_MAIN_ONLINESCORE,   0);
+			stmt.setInt(DatabaseStructure.COL_MAIN_FSK,           0);
+			stmt.setInt(DatabaseStructure.COL_MAIN_FORMAT,        0);
+			stmt.setInt(DatabaseStructure.COL_MAIN_MOVIEYEAR,     0);
+			stmt.setStr(DatabaseStructure.COL_MAIN_ONLINEREF,     "");
+			stmt.setStr(DatabaseStructure.COL_MAIN_GROUPS,        "");
+			stmt.setInt(DatabaseStructure.COL_MAIN_FILESIZE,      0);
+			stmt.setInt(DatabaseStructure.COL_MAIN_TAGS,          0);
+			stmt.setStr(DatabaseStructure.COL_MAIN_PART_1,        "");
+			stmt.setStr(DatabaseStructure.COL_MAIN_PART_2,        "");
+			stmt.setStr(DatabaseStructure.COL_MAIN_PART_3,        "");
+			stmt.setStr(DatabaseStructure.COL_MAIN_PART_4,        "");
+			stmt.setStr(DatabaseStructure.COL_MAIN_PART_5,        "");
+			stmt.setStr(DatabaseStructure.COL_MAIN_PART_6,        "");
+			stmt.setInt(DatabaseStructure.COL_MAIN_SCORE,         0);
+			stmt.setInt(DatabaseStructure.COL_MAIN_COVERID,       -1);
+			stmt.setInt(DatabaseStructure.COL_MAIN_TYPE,          0);
+			stmt.setInt(DatabaseStructure.COL_MAIN_SERIES_ID,     0);
 
 			stmt.executeUpdate();
 
@@ -415,11 +409,11 @@ public class CCDatabase {
 			CCSQLStatement stmt = addEmptySeasonTabStatement;
 			stmt.clearParameters();
 
-			stmt.setInt(COL_SEAS_SEASONID,  seasid);
-			stmt.setInt(COL_SEAS_SERIESID,  serid);
-			stmt.setStr(COL_SEAS_NAME,      "");
-			stmt.setInt(COL_SEAS_YEAR,      0);
-			stmt.setInt(COL_SEAS_COVERID,   -1);
+			stmt.setInt(DatabaseStructure.COL_SEAS_SEASONID,  seasid);
+			stmt.setInt(DatabaseStructure.COL_SEAS_SERIESID,  serid);
+			stmt.setStr(DatabaseStructure.COL_SEAS_NAME,      "");
+			stmt.setInt(DatabaseStructure.COL_SEAS_YEAR,      0);
+			stmt.setInt(DatabaseStructure.COL_SEAS_COVERID,   -1);
 
 			stmt.executeUpdate();
 
@@ -437,19 +431,19 @@ public class CCDatabase {
 			CCSQLStatement stmt = addEmptyEpisodeTabStatement;
 			stmt.clearParameters();
 
-			stmt.setInt(COL_EPIS_LOCALID,       eid);
-			stmt.setInt(COL_EPIS_SEASONID,      sid);
-			stmt.setInt(COL_EPIS_EPISODE,       0);
-			stmt.setStr(COL_EPIS_NAME,          "");
-			stmt.setBoo(COL_EPIS_VIEWED,        false);
-			stmt.setStr(COL_EPIS_VIEWEDHISTORY, "");
-			stmt.setInt(COL_EPIS_LENGTH,        0);
-			stmt.setInt(COL_EPIS_FORMAT,        0);
-			stmt.setInt(COL_EPIS_FILESIZE,      0);
-			stmt.setStr(COL_EPIS_PART_1,        "");
-			stmt.setInt(COL_EPIS_TAGS,          0);
-			stmt.setStr(COL_EPIS_ADDDATE,       CCDate.MIN_SQL);
-			stmt.setInt(COL_EPIS_LANGUAGE,      0);
+			stmt.setInt(DatabaseStructure.COL_EPIS_LOCALID,       eid);
+			stmt.setInt(DatabaseStructure.COL_EPIS_SEASONID,      sid);
+			stmt.setInt(DatabaseStructure.COL_EPIS_EPISODE,       0);
+			stmt.setStr(DatabaseStructure.COL_EPIS_NAME,          "");
+			stmt.setBoo(DatabaseStructure.COL_EPIS_VIEWED,        false);
+			stmt.setStr(DatabaseStructure.COL_EPIS_VIEWEDHISTORY, "");
+			stmt.setInt(DatabaseStructure.COL_EPIS_LENGTH,        0);
+			stmt.setInt(DatabaseStructure.COL_EPIS_FORMAT,        0);
+			stmt.setInt(DatabaseStructure.COL_EPIS_FILESIZE,      0);
+			stmt.setStr(DatabaseStructure.COL_EPIS_PART_1,        "");
+			stmt.setInt(DatabaseStructure.COL_EPIS_TAGS,          0);
+			stmt.setStr(DatabaseStructure.COL_EPIS_ADDDATE,       CCDate.MIN_SQL);
+			stmt.setInt(DatabaseStructure.COL_EPIS_LANGUAGE,      0);
 
 			stmt.executeUpdate();
 
@@ -536,74 +530,74 @@ public class CCDatabase {
 			CCSQLStatement stmt = updateMainTabStatement;
 			stmt.clearParameters();
 
-			stmt.setInt(COL_MAIN_LOCALID,       mov.getLocalID());
+			stmt.setInt(DatabaseStructure.COL_MAIN_LOCALID,       mov.getLocalID());
 
-			stmt.setStr(COL_MAIN_NAME,          mov.getTitle());
-			stmt.setBoo(COL_MAIN_VIEWED,        mov.isViewed());
-			stmt.setStr(COL_MAIN_VIEWEDHISTORY, mov.getViewedHistory().toSerializationString());
-			stmt.setStr(COL_MAIN_ZYKLUS,        mov.getZyklus().getTitle());
-			stmt.setInt(COL_MAIN_ZYKLUSNUMBER,  mov.getZyklus().getNumber());
-			stmt.setLng(COL_MAIN_LANGUAGE,      mov.getLanguage().serializeToLong());
-			stmt.setLng(COL_MAIN_GENRE,         mov.getGenres().getAllGenres());
-			stmt.setInt(COL_MAIN_LENGTH,        mov.getLength());
-			stmt.setStr(COL_MAIN_ADDDATE,       mov.getAddDate().toStringSQL());
-			stmt.setInt(COL_MAIN_ONLINESCORE,   mov.getOnlinescore().asInt());
-			stmt.setInt(COL_MAIN_FSK,           mov.getFSK().asInt());
-			stmt.setInt(COL_MAIN_FORMAT,        mov.getFormat().asInt());
-			stmt.setInt(COL_MAIN_MOVIEYEAR,     mov.getYear());
-			stmt.setStr(COL_MAIN_ONLINEREF,     mov.getOnlineReference().toSerializationString());
-			stmt.setStr(COL_MAIN_GROUPS,        mov.getGroups().toSerializationString());
-			stmt.setLng(COL_MAIN_FILESIZE,      mov.getFilesize().getBytes());
-			stmt.setSht(COL_MAIN_TAGS,          mov.getTags().asShort());
-			stmt.setStr(COL_MAIN_PART_1,        mov.getPart(0));
-			stmt.setStr(COL_MAIN_PART_2,        mov.getPart(1));
-			stmt.setStr(COL_MAIN_PART_3,        mov.getPart(2));
-			stmt.setStr(COL_MAIN_PART_4,        mov.getPart(3));
-			stmt.setStr(COL_MAIN_PART_5,        mov.getPart(4));
-			stmt.setStr(COL_MAIN_PART_6,        mov.getPart(5));
-			stmt.setInt(COL_MAIN_SCORE,         mov.getScore().asInt());
-			stmt.setInt(COL_MAIN_COVERID,       mov.getCoverID());
-			stmt.setInt(COL_MAIN_TYPE,          mov.getType().asInt());
-			stmt.setInt(COL_MAIN_SERIES_ID,     mov.getSeriesID());
+			stmt.setStr(DatabaseStructure.COL_MAIN_NAME,          mov.getTitle());
+			stmt.setBoo(DatabaseStructure.COL_MAIN_VIEWED,        mov.isViewed());
+			stmt.setStr(DatabaseStructure.COL_MAIN_VIEWEDHISTORY, mov.getViewedHistory().toSerializationString());
+			stmt.setStr(DatabaseStructure.COL_MAIN_ZYKLUS,        mov.getZyklus().getTitle());
+			stmt.setInt(DatabaseStructure.COL_MAIN_ZYKLUSNUMBER,  mov.getZyklus().getNumber());
+			stmt.setLng(DatabaseStructure.COL_MAIN_LANGUAGE,      mov.getLanguage().serializeToLong());
+			stmt.setLng(DatabaseStructure.COL_MAIN_GENRE,         mov.getGenres().getAllGenres());
+			stmt.setInt(DatabaseStructure.COL_MAIN_LENGTH,        mov.getLength());
+			stmt.setStr(DatabaseStructure.COL_MAIN_ADDDATE,       mov.getAddDate().toStringSQL());
+			stmt.setInt(DatabaseStructure.COL_MAIN_ONLINESCORE,   mov.getOnlinescore().asInt());
+			stmt.setInt(DatabaseStructure.COL_MAIN_FSK,           mov.getFSK().asInt());
+			stmt.setInt(DatabaseStructure.COL_MAIN_FORMAT,        mov.getFormat().asInt());
+			stmt.setInt(DatabaseStructure.COL_MAIN_MOVIEYEAR,     mov.getYear());
+			stmt.setStr(DatabaseStructure.COL_MAIN_ONLINEREF,     mov.getOnlineReference().toSerializationString());
+			stmt.setStr(DatabaseStructure.COL_MAIN_GROUPS,        mov.getGroups().toSerializationString());
+			stmt.setLng(DatabaseStructure.COL_MAIN_FILESIZE,      mov.getFilesize().getBytes());
+			stmt.setSht(DatabaseStructure.COL_MAIN_TAGS,          mov.getTags().asShort());
+			stmt.setStr(DatabaseStructure.COL_MAIN_PART_1,        mov.getPart(0));
+			stmt.setStr(DatabaseStructure.COL_MAIN_PART_2,        mov.getPart(1));
+			stmt.setStr(DatabaseStructure.COL_MAIN_PART_3,        mov.getPart(2));
+			stmt.setStr(DatabaseStructure.COL_MAIN_PART_4,        mov.getPart(3));
+			stmt.setStr(DatabaseStructure.COL_MAIN_PART_5,        mov.getPart(4));
+			stmt.setStr(DatabaseStructure.COL_MAIN_PART_6,        mov.getPart(5));
+			stmt.setInt(DatabaseStructure.COL_MAIN_SCORE,         mov.getScore().asInt());
+			stmt.setInt(DatabaseStructure.COL_MAIN_COVERID,       mov.getCoverID());
+			stmt.setInt(DatabaseStructure.COL_MAIN_TYPE,          mov.getType().asInt());
+			stmt.setInt(DatabaseStructure.COL_MAIN_SERIES_ID,     mov.getSeriesID());
 
 			CCMediaInfo mi = mov.getMediaInfo();
 			if (mi.isSet())
 			{
-				stmt.setLng(COL_MAIN_MI_FILESIZE,   mi.getFilesize());
-				stmt.setLng(COL_MAIN_MI_CDATE,      mi.getCDate());
-				stmt.setLng(COL_MAIN_MI_MDATE,      mi.getMDate());
-				stmt.setStr(COL_MAIN_MI_AFORMAT,    mi.getAudioFormat());
-				stmt.setStr(COL_MAIN_MI_VFORMAT,    mi.getVideoFormat());
-				stmt.setInt(COL_MAIN_MI_WIDTH,      mi.getWidth());
-				stmt.setInt(COL_MAIN_MI_HEIGHT,     mi.getHeight());
-				stmt.setFlt(COL_MAIN_MI_FRAMERATE,  mi.getFramerate());
-				stmt.setFlt(COL_MAIN_MI_DURATION,   mi.getDuration());
-				stmt.setInt(COL_MAIN_MI_BITDEPTH,   mi.getBitdepth());
-				stmt.setInt(COL_MAIN_MI_BITRATE,    mi.getBitrate());
-				stmt.setInt(COL_MAIN_MI_FRAMECOUNT, mi.getFramecount());
-				stmt.setInt(COL_MAIN_MI_ACHANNELS,  mi.getAudioChannels());
-				stmt.setStr(COL_MAIN_MI_VCODEC,     mi.getVideoCodec());
-				stmt.setStr(COL_MAIN_MI_ACODEC,     mi.getAudioCodec());
-				stmt.setInt(COL_MAIN_MI_SAMPLERATE, mi.getAudioSamplerate());
+				stmt.setLng(DatabaseStructure.COL_MAIN_MI_FILESIZE,   mi.getFilesize());
+				stmt.setLng(DatabaseStructure.COL_MAIN_MI_CDATE,      mi.getCDate());
+				stmt.setLng(DatabaseStructure.COL_MAIN_MI_MDATE,      mi.getMDate());
+				stmt.setStr(DatabaseStructure.COL_MAIN_MI_AFORMAT,    mi.getAudioFormat());
+				stmt.setStr(DatabaseStructure.COL_MAIN_MI_VFORMAT,    mi.getVideoFormat());
+				stmt.setInt(DatabaseStructure.COL_MAIN_MI_WIDTH,      mi.getWidth());
+				stmt.setInt(DatabaseStructure.COL_MAIN_MI_HEIGHT,     mi.getHeight());
+				stmt.setFlt(DatabaseStructure.COL_MAIN_MI_FRAMERATE,  mi.getFramerate());
+				stmt.setFlt(DatabaseStructure.COL_MAIN_MI_DURATION,   mi.getDuration());
+				stmt.setInt(DatabaseStructure.COL_MAIN_MI_BITDEPTH,   mi.getBitdepth());
+				stmt.setInt(DatabaseStructure.COL_MAIN_MI_BITRATE,    mi.getBitrate());
+				stmt.setInt(DatabaseStructure.COL_MAIN_MI_FRAMECOUNT, mi.getFramecount());
+				stmt.setInt(DatabaseStructure.COL_MAIN_MI_ACHANNELS,  mi.getAudioChannels());
+				stmt.setStr(DatabaseStructure.COL_MAIN_MI_VCODEC,     mi.getVideoCodec());
+				stmt.setStr(DatabaseStructure.COL_MAIN_MI_ACODEC,     mi.getAudioCodec());
+				stmt.setInt(DatabaseStructure.COL_MAIN_MI_SAMPLERATE, mi.getAudioSamplerate());
 			}
 			else
 			{
-				stmt.setNull(COL_MAIN_MI_FILESIZE);
-				stmt.setNull(COL_MAIN_MI_CDATE);
-				stmt.setNull(COL_MAIN_MI_MDATE);
-				stmt.setNull(COL_MAIN_MI_AFORMAT);
-				stmt.setNull(COL_MAIN_MI_VFORMAT);
-				stmt.setNull(COL_MAIN_MI_WIDTH);
-				stmt.setNull(COL_MAIN_MI_HEIGHT);
-				stmt.setNull(COL_MAIN_MI_FRAMERATE);
-				stmt.setNull(COL_MAIN_MI_DURATION);
-				stmt.setNull(COL_MAIN_MI_BITDEPTH);
-				stmt.setNull(COL_MAIN_MI_BITRATE);
-				stmt.setNull(COL_MAIN_MI_FRAMECOUNT);
-				stmt.setNull(COL_MAIN_MI_ACHANNELS);
-				stmt.setNull(COL_MAIN_MI_VCODEC);
-				stmt.setNull(COL_MAIN_MI_ACODEC);
-				stmt.setNull(COL_MAIN_MI_SAMPLERATE);
+				stmt.setNull(DatabaseStructure.COL_MAIN_MI_FILESIZE);
+				stmt.setNull(DatabaseStructure.COL_MAIN_MI_CDATE);
+				stmt.setNull(DatabaseStructure.COL_MAIN_MI_MDATE);
+				stmt.setNull(DatabaseStructure.COL_MAIN_MI_AFORMAT);
+				stmt.setNull(DatabaseStructure.COL_MAIN_MI_VFORMAT);
+				stmt.setNull(DatabaseStructure.COL_MAIN_MI_WIDTH);
+				stmt.setNull(DatabaseStructure.COL_MAIN_MI_HEIGHT);
+				stmt.setNull(DatabaseStructure.COL_MAIN_MI_FRAMERATE);
+				stmt.setNull(DatabaseStructure.COL_MAIN_MI_DURATION);
+				stmt.setNull(DatabaseStructure.COL_MAIN_MI_BITDEPTH);
+				stmt.setNull(DatabaseStructure.COL_MAIN_MI_BITRATE);
+				stmt.setNull(DatabaseStructure.COL_MAIN_MI_FRAMECOUNT);
+				stmt.setNull(DatabaseStructure.COL_MAIN_MI_ACHANNELS);
+				stmt.setNull(DatabaseStructure.COL_MAIN_MI_VCODEC);
+				stmt.setNull(DatabaseStructure.COL_MAIN_MI_ACODEC);
+				stmt.setNull(DatabaseStructure.COL_MAIN_MI_SAMPLERATE);
 			}
 
 			stmt.execute();
@@ -621,19 +615,19 @@ public class CCDatabase {
 			CCSQLStatement stmt = updateSeriesTabStatement;
 			stmt.clearParameters();
 
-			stmt.setStr(COL_MAIN_NAME,        ser.getTitle());
-			stmt.setLng(COL_MAIN_GENRE,       ser.getGenres().getAllGenres());
-			stmt.setInt(COL_MAIN_ONLINESCORE, ser.getOnlinescore().asInt());
-			stmt.setInt(COL_MAIN_FSK,         ser.getFSK().asInt());
-			stmt.setStr(COL_MAIN_ONLINEREF,   ser.getOnlineReference().toSerializationString());
-			stmt.setStr(COL_MAIN_GROUPS,      ser.getGroups().toSerializationString());
-			stmt.setInt(COL_MAIN_SCORE,       ser.getScore().asInt());
-			stmt.setInt(COL_MAIN_COVERID,     ser.getCoverID());
-			stmt.setInt(COL_MAIN_TYPE,        ser.getType().asInt());
-			stmt.setInt(COL_MAIN_SERIES_ID,   ser.getSeriesID());
-			stmt.setSht(COL_MAIN_TAGS,        ser.getTags().asShort());
+			stmt.setStr(DatabaseStructure.COL_MAIN_NAME,        ser.getTitle());
+			stmt.setLng(DatabaseStructure.COL_MAIN_GENRE,       ser.getGenres().getAllGenres());
+			stmt.setInt(DatabaseStructure.COL_MAIN_ONLINESCORE, ser.getOnlinescore().asInt());
+			stmt.setInt(DatabaseStructure.COL_MAIN_FSK,         ser.getFSK().asInt());
+			stmt.setStr(DatabaseStructure.COL_MAIN_ONLINEREF,   ser.getOnlineReference().toSerializationString());
+			stmt.setStr(DatabaseStructure.COL_MAIN_GROUPS,      ser.getGroups().toSerializationString());
+			stmt.setInt(DatabaseStructure.COL_MAIN_SCORE,       ser.getScore().asInt());
+			stmt.setInt(DatabaseStructure.COL_MAIN_COVERID,     ser.getCoverID());
+			stmt.setInt(DatabaseStructure.COL_MAIN_TYPE,        ser.getType().asInt());
+			stmt.setInt(DatabaseStructure.COL_MAIN_SERIES_ID,   ser.getSeriesID());
+			stmt.setSht(DatabaseStructure.COL_MAIN_TAGS,        ser.getTags().asShort());
 
-			stmt.setInt(COL_MAIN_LOCALID,     ser.getLocalID());
+			stmt.setInt(DatabaseStructure.COL_MAIN_LOCALID,     ser.getLocalID());
 
 			stmt.executeUpdate();
 
@@ -650,12 +644,12 @@ public class CCDatabase {
 			CCSQLStatement stmt = updateSeasonTabStatement;
 			stmt.clearParameters();
 
-			stmt.setInt(COL_SEAS_SERIESID,  ser.getSeries().getSeriesID());
-			stmt.setStr(COL_SEAS_NAME,      ser.getTitle());
-			stmt.setInt(COL_SEAS_YEAR,      ser.getYear());
-			stmt.setInt(COL_SEAS_COVERID,   ser.getCoverID());
+			stmt.setInt(DatabaseStructure.COL_SEAS_SERIESID,  ser.getSeries().getSeriesID());
+			stmt.setStr(DatabaseStructure.COL_SEAS_NAME,      ser.getTitle());
+			stmt.setInt(DatabaseStructure.COL_SEAS_YEAR,      ser.getYear());
+			stmt.setInt(DatabaseStructure.COL_SEAS_COVERID,   ser.getCoverID());
 
-			stmt.setInt(COL_SEAS_SEASONID,  ser.getSeasonID());
+			stmt.setInt(DatabaseStructure.COL_SEAS_SEASONID,  ser.getSeasonID());
 
 			stmt.executeUpdate();
 
@@ -672,60 +666,60 @@ public class CCDatabase {
 			CCSQLStatement stmt = updateEpisodeTabStatement;
 			stmt.clearParameters();
 
-			stmt.setInt(COL_EPIS_SEASONID,      ep.getSeason().getSeasonID());
-			stmt.setInt(COL_EPIS_EPISODE,       ep.getEpisodeNumber());
-			stmt.setStr(COL_EPIS_NAME,          ep.getTitle());
-			stmt.setBoo(COL_EPIS_VIEWED,        ep.isViewed());
-			stmt.setStr(COL_EPIS_VIEWEDHISTORY, ep.getViewedHistory().toSerializationString());
-			stmt.setInt(COL_EPIS_LENGTH,        ep.getLength());
-			stmt.setInt(COL_EPIS_FORMAT,        ep.getFormat().asInt());
-			stmt.setLng(COL_EPIS_FILESIZE,      ep.getFilesize().getBytes());
-			stmt.setStr(COL_EPIS_PART_1,        ep.getPart());
-			stmt.setSht(COL_EPIS_TAGS,          ep.getTags().asShort());
-			stmt.setStr(COL_EPIS_ADDDATE,       ep.getAddDate().toStringSQL());
-			stmt.setLng(COL_EPIS_LANGUAGE,      ep.getLanguage().serializeToLong());
+			stmt.setInt(DatabaseStructure.COL_EPIS_SEASONID,      ep.getSeason().getSeasonID());
+			stmt.setInt(DatabaseStructure.COL_EPIS_EPISODE,       ep.getEpisodeNumber());
+			stmt.setStr(DatabaseStructure.COL_EPIS_NAME,          ep.getTitle());
+			stmt.setBoo(DatabaseStructure.COL_EPIS_VIEWED,        ep.isViewed());
+			stmt.setStr(DatabaseStructure.COL_EPIS_VIEWEDHISTORY, ep.getViewedHistory().toSerializationString());
+			stmt.setInt(DatabaseStructure.COL_EPIS_LENGTH,        ep.getLength());
+			stmt.setInt(DatabaseStructure.COL_EPIS_FORMAT,        ep.getFormat().asInt());
+			stmt.setLng(DatabaseStructure.COL_EPIS_FILESIZE,      ep.getFilesize().getBytes());
+			stmt.setStr(DatabaseStructure.COL_EPIS_PART_1,        ep.getPart());
+			stmt.setSht(DatabaseStructure.COL_EPIS_TAGS,          ep.getTags().asShort());
+			stmt.setStr(DatabaseStructure.COL_EPIS_ADDDATE,       ep.getAddDate().toStringSQL());
+			stmt.setLng(DatabaseStructure.COL_EPIS_LANGUAGE,      ep.getLanguage().serializeToLong());
 
 			CCMediaInfo mi = ep.getMediaInfo();
 			if (mi.isSet())
 			{
-				stmt.setLng(COL_EPIS_MI_FILESIZE,   mi.getFilesize());
-				stmt.setLng(COL_EPIS_MI_CDATE,      mi.getCDate());
-				stmt.setLng(COL_EPIS_MI_MDATE,      mi.getMDate());
-				stmt.setStr(COL_EPIS_MI_AFORMAT,    mi.getAudioFormat());
-				stmt.setStr(COL_EPIS_MI_VFORMAT,    mi.getVideoFormat());
-				stmt.setInt(COL_EPIS_MI_WIDTH,      mi.getWidth());
-				stmt.setInt(COL_EPIS_MI_HEIGHT,     mi.getHeight());
-				stmt.setFlt(COL_EPIS_MI_FRAMERATE,  mi.getFramerate());
-				stmt.setFlt(COL_EPIS_MI_DURATION,   mi.getDuration());
-				stmt.setInt(COL_EPIS_MI_BITDEPTH,   mi.getBitdepth());
-				stmt.setInt(COL_EPIS_MI_BITRATE,    mi.getBitrate());
-				stmt.setInt(COL_EPIS_MI_FRAMECOUNT, mi.getFramecount());
-				stmt.setInt(COL_EPIS_MI_ACHANNELS,  mi.getAudioChannels());
-				stmt.setStr(COL_EPIS_MI_VCODEC,     mi.getVideoCodec());
-				stmt.setStr(COL_EPIS_MI_ACODEC,     mi.getAudioCodec());
-				stmt.setInt(COL_EPIS_MI_SAMPLERATE, mi.getAudioSamplerate());
+				stmt.setLng(DatabaseStructure.COL_EPIS_MI_FILESIZE,   mi.getFilesize());
+				stmt.setLng(DatabaseStructure.COL_EPIS_MI_CDATE,      mi.getCDate());
+				stmt.setLng(DatabaseStructure.COL_EPIS_MI_MDATE,      mi.getMDate());
+				stmt.setStr(DatabaseStructure.COL_EPIS_MI_AFORMAT,    mi.getAudioFormat());
+				stmt.setStr(DatabaseStructure.COL_EPIS_MI_VFORMAT,    mi.getVideoFormat());
+				stmt.setInt(DatabaseStructure.COL_EPIS_MI_WIDTH,      mi.getWidth());
+				stmt.setInt(DatabaseStructure.COL_EPIS_MI_HEIGHT,     mi.getHeight());
+				stmt.setFlt(DatabaseStructure.COL_EPIS_MI_FRAMERATE,  mi.getFramerate());
+				stmt.setFlt(DatabaseStructure.COL_EPIS_MI_DURATION,   mi.getDuration());
+				stmt.setInt(DatabaseStructure.COL_EPIS_MI_BITDEPTH,   mi.getBitdepth());
+				stmt.setInt(DatabaseStructure.COL_EPIS_MI_BITRATE,    mi.getBitrate());
+				stmt.setInt(DatabaseStructure.COL_EPIS_MI_FRAMECOUNT, mi.getFramecount());
+				stmt.setInt(DatabaseStructure.COL_EPIS_MI_ACHANNELS,  mi.getAudioChannels());
+				stmt.setStr(DatabaseStructure.COL_EPIS_MI_VCODEC,     mi.getVideoCodec());
+				stmt.setStr(DatabaseStructure.COL_EPIS_MI_ACODEC,     mi.getAudioCodec());
+				stmt.setInt(DatabaseStructure.COL_EPIS_MI_SAMPLERATE, mi.getAudioSamplerate());
 			}
 			else
 			{
-				stmt.setNull(COL_EPIS_MI_FILESIZE);
-				stmt.setNull(COL_EPIS_MI_CDATE);
-				stmt.setNull(COL_EPIS_MI_MDATE);
-				stmt.setNull(COL_EPIS_MI_AFORMAT);
-				stmt.setNull(COL_EPIS_MI_VFORMAT);
-				stmt.setNull(COL_EPIS_MI_WIDTH);
-				stmt.setNull(COL_EPIS_MI_HEIGHT);
-				stmt.setNull(COL_EPIS_MI_FRAMERATE);
-				stmt.setNull(COL_EPIS_MI_DURATION);
-				stmt.setNull(COL_EPIS_MI_BITDEPTH);
-				stmt.setNull(COL_EPIS_MI_BITRATE);
-				stmt.setNull(COL_EPIS_MI_FRAMECOUNT);
-				stmt.setNull(COL_EPIS_MI_ACHANNELS);
-				stmt.setNull(COL_EPIS_MI_VCODEC);
-				stmt.setNull(COL_EPIS_MI_ACODEC);
-				stmt.setNull(COL_EPIS_MI_SAMPLERATE);
+				stmt.setNull(DatabaseStructure.COL_EPIS_MI_FILESIZE);
+				stmt.setNull(DatabaseStructure.COL_EPIS_MI_CDATE);
+				stmt.setNull(DatabaseStructure.COL_EPIS_MI_MDATE);
+				stmt.setNull(DatabaseStructure.COL_EPIS_MI_AFORMAT);
+				stmt.setNull(DatabaseStructure.COL_EPIS_MI_VFORMAT);
+				stmt.setNull(DatabaseStructure.COL_EPIS_MI_WIDTH);
+				stmt.setNull(DatabaseStructure.COL_EPIS_MI_HEIGHT);
+				stmt.setNull(DatabaseStructure.COL_EPIS_MI_FRAMERATE);
+				stmt.setNull(DatabaseStructure.COL_EPIS_MI_DURATION);
+				stmt.setNull(DatabaseStructure.COL_EPIS_MI_BITDEPTH);
+				stmt.setNull(DatabaseStructure.COL_EPIS_MI_BITRATE);
+				stmt.setNull(DatabaseStructure.COL_EPIS_MI_FRAMECOUNT);
+				stmt.setNull(DatabaseStructure.COL_EPIS_MI_ACHANNELS);
+				stmt.setNull(DatabaseStructure.COL_EPIS_MI_VCODEC);
+				stmt.setNull(DatabaseStructure.COL_EPIS_MI_ACODEC);
+				stmt.setNull(DatabaseStructure.COL_EPIS_MI_SAMPLERATE);
 			}
 
-			stmt.setInt(COL_EPIS_LOCALID,       ep.getLocalID());
+			stmt.setInt(DatabaseStructure.COL_EPIS_LOCALID,       ep.getLocalID());
 
 			stmt.execute();
 
@@ -741,7 +735,7 @@ public class CCDatabase {
 		try {
 			CCSQLStatement stmt = selectSingleMainTabStatement;
 			stmt.clearParameters();
-			stmt.setInt(COL_MAIN_LOCALID, mov.getLocalID());
+			stmt.setInt(DatabaseStructure.COL_MAIN_LOCALID, mov.getLocalID());
 			CCSQLResultSet rs = stmt.executeQuery(this);
 		
 			if (rs.next()) { 
@@ -761,7 +755,7 @@ public class CCDatabase {
 		try {
 			CCSQLStatement stmt = selectSingleMainTabStatement;
 			stmt.clearParameters();
-			stmt.setInt(COL_MAIN_LOCALID, ser.getLocalID());
+			stmt.setInt(DatabaseStructure.COL_MAIN_LOCALID, ser.getLocalID());
 			CCSQLResultSet rs = stmt.executeQuery(this);
 		
 			if (rs.next()) { 
@@ -781,7 +775,7 @@ public class CCDatabase {
 		try {
 			CCSQLStatement stmt = selectSingleSeasonTabStatement;
 			stmt.clearParameters();
-			stmt.setInt(COL_SEAS_SEASONID, sea.getSeasonID());
+			stmt.setInt(DatabaseStructure.COL_SEAS_SEASONID, sea.getSeasonID());
 			CCSQLResultSet rs = stmt.executeQuery(this);
 		
 			if (rs.next()) { 
@@ -801,7 +795,7 @@ public class CCDatabase {
 		try {
 			CCSQLStatement stmt = selectSingleEpisodeTabStatement;
 			stmt.clearParameters();
-			stmt.setInt(COL_EPIS_LOCALID, epi.getLocalID());
+			stmt.setInt(DatabaseStructure.COL_EPIS_LOCALID, epi.getLocalID());
 			CCSQLResultSet rs = stmt.executeQuery(this);
 		
 			if (rs.next()) { 
@@ -863,7 +857,7 @@ public class CCDatabase {
 
 					CCSQLResultSet rs = stmt.executeQuery(this);
 					while (rs.next()) {
-						int sid = rs.getInt(COL_SEAS_SERIESID);
+						int sid = rs.getInt(DatabaseStructure.COL_SEAS_SERIESID);
 						CCSeries ser = lastSeries;
 						if (ser == null || ser.getSeriesID() != sid) ser = seriesMap.get(sid);
 						lastSeries = ser;
@@ -886,7 +880,7 @@ public class CCDatabase {
 
 					CCSQLResultSet rs = stmt.executeQuery(this);
 					while (rs.next()) {
-						int sid = rs.getInt(COL_EPIS_SEASONID);
+						int sid = rs.getInt(DatabaseStructure.COL_EPIS_SEASONID);
 						CCSeason sea = lastSeason;
 						if (sea == null || sea.getSeasonID() != sid) sea = seasonMap.get(sid);
 						lastSeason = sea;
@@ -918,12 +912,12 @@ public class CCDatabase {
 
 			while (rs.next()) {
 
-				String gn  = rs.getString(COL_GRPS_NAME);
-				int go     = rs.getInt(COL_GRPS_ORDER);
-				int gc     = rs.getInt(COL_GRPS_COLOR);
-				boolean gs = rs.getBoolean(COL_GRPS_SERIALIZE);
-				String gp  = rs.getString(COL_GRPS_PARENT);
-				boolean gv = rs.getBoolean(COL_GRPS_VISIBLE);
+				String gn  = rs.getString(DatabaseStructure.COL_GRPS_NAME);
+				int go     = rs.getInt(DatabaseStructure.COL_GRPS_ORDER);
+				int gc     = rs.getInt(DatabaseStructure.COL_GRPS_COLOR);
+				boolean gs = rs.getBoolean(DatabaseStructure.COL_GRPS_SERIALIZE);
+				String gp  = rs.getString(DatabaseStructure.COL_GRPS_PARENT);
+				boolean gv = rs.getBoolean(DatabaseStructure.COL_GRPS_VISIBLE);
 				if (gp == null) gp = ""; //$NON-NLS-1$
 
 				ml.addGroupInternal(CCGroup.create(gn, go, gc, gs, gp, gv));
@@ -947,15 +941,15 @@ public class CCDatabase {
 				CCSQLResultSet rs = stmt.executeQuery(this);
 
 				while (rs.next()) {
-					int id        = rs.getInt(COL_CVRS_ID);
-					String fn     = rs.getString(COL_CVRS_FILENAME);
-					int ww        = rs.getInt(COL_CVRS_WIDTH);
-					int hh        = rs.getInt(COL_CVRS_HEIGHT);
-					String cs     = rs.getString(COL_CVRS_HASH_FILE);
-					long fs       = rs.getLong(COL_CVRS_FILESIZE);
-					byte[] pv     = rs.getBlob(COL_CVRS_PREVIEW);
-					int pt        = rs.getInt(COL_CVRS_PREVIEWTYPE);
-					CCDateTime ts = rs.getDateTime(COL_CVRS_CREATED);
+					int id        = rs.getInt(DatabaseStructure.COL_CVRS_ID);
+					String fn     = rs.getString(DatabaseStructure.COL_CVRS_FILENAME);
+					int ww        = rs.getInt(DatabaseStructure.COL_CVRS_WIDTH);
+					int hh        = rs.getInt(DatabaseStructure.COL_CVRS_HEIGHT);
+					String cs     = rs.getString(DatabaseStructure.COL_CVRS_HASH_FILE);
+					long fs       = rs.getLong(DatabaseStructure.COL_CVRS_FILESIZE);
+					byte[] pv     = rs.getBlob(DatabaseStructure.COL_CVRS_PREVIEW);
+					int pt        = rs.getInt(DatabaseStructure.COL_CVRS_PREVIEWTYPE);
+					CCDateTime ts = rs.getDateTime(DatabaseStructure.COL_CVRS_CREATED);
 
 					coverCache.addInternal(new CCCoverData(id, fn, ww, hh, cs, fs, pv, pt, ts));
 				}
@@ -969,14 +963,14 @@ public class CCDatabase {
 				CCSQLResultSet rs = stmt.executeQuery(this);
 
 				while (rs.next()) {
-					int id        = rs.getInt(COL_CVRS_ID);
-					String fn     = rs.getString(COL_CVRS_FILENAME);
-					int ww        = rs.getInt(COL_CVRS_WIDTH);
-					int hh        = rs.getInt(COL_CVRS_HEIGHT);
-					long fs       = rs.getLong(COL_CVRS_FILESIZE);
-					int pt        = rs.getInt(COL_CVRS_PREVIEWTYPE);
-					CCDateTime ts = rs.getDateTime(COL_CVRS_CREATED);
-					String cs     = rs.getString(COL_CVRS_HASH_FILE);
+					int id        = rs.getInt(DatabaseStructure.COL_CVRS_ID);
+					String fn     = rs.getString(DatabaseStructure.COL_CVRS_FILENAME);
+					int ww        = rs.getInt(DatabaseStructure.COL_CVRS_WIDTH);
+					int hh        = rs.getInt(DatabaseStructure.COL_CVRS_HEIGHT);
+					long fs       = rs.getLong(DatabaseStructure.COL_CVRS_FILESIZE);
+					int pt        = rs.getInt(DatabaseStructure.COL_CVRS_PREVIEWTYPE);
+					CCDateTime ts = rs.getDateTime(DatabaseStructure.COL_CVRS_CREATED);
+					String cs     = rs.getString(DatabaseStructure.COL_CVRS_HASH_FILE);
 
 					coverCache.addInternal(new CCCoverData(id, fn, ww, hh, cs, fs, pt, ts));
 				}
@@ -993,12 +987,12 @@ public class CCDatabase {
 			CCSQLStatement stmt = selectCoversSingleStatement;
 			stmt.clearParameters();
 
-			stmt.setInt(COL_CVRS_ID, cce.ID);
+			stmt.setInt(DatabaseStructure.COL_CVRS_ID, cce.ID);
 
 			CCSQLResultSet rs = stmt.executeQuery(this);
 
 			rs.next();
-			byte[] result = rs.getBlob(COL_CVRS_PREVIEW);
+			byte[] result = rs.getBlob(DatabaseStructure.COL_CVRS_PREVIEW);
 
 			rs.close();
 
@@ -1014,7 +1008,7 @@ public class CCDatabase {
 			CCSQLStatement stmt = selectSeasonTabStatement;
 			stmt.clearParameters();
 
-			stmt.setInt(COL_SEAS_SERIESID, ser.getSeriesID());
+			stmt.setInt(DatabaseStructure.COL_SEAS_SERIESID, ser.getSeriesID());
 			
 			CCSQLResultSet rs = stmt.executeQuery(this);
 
@@ -1039,7 +1033,7 @@ public class CCDatabase {
 			CCSQLStatement stmt = selectEpisodeTabStatement;
 			stmt.clearParameters();
 
-			stmt.setInt(COL_EPIS_SEASONID, se.getSeasonID());
+			stmt.setInt(DatabaseStructure.COL_EPIS_SEASONID, se.getSeasonID());
 			
 			CCSQLResultSet rs = stmt.executeQuery(this);
 
@@ -1068,7 +1062,7 @@ public class CCDatabase {
 			CCSQLStatement stmt = deleteMainTabStatement;
 			stmt.clearParameters();
 
-			stmt.setInt(COL_MAIN_LOCALID, localID);
+			stmt.setInt(DatabaseStructure.COL_MAIN_LOCALID, localID);
 
 			stmt.executeUpdate();
 		} catch (SQLException | SQLWrapperException e) {
@@ -1081,7 +1075,7 @@ public class CCDatabase {
 			CCSQLStatement stmt = deleteSeasonTabStatement;
 			stmt.clearParameters();
 
-			stmt.setInt(COL_SEAS_SEASONID, seasonID);
+			stmt.setInt(DatabaseStructure.COL_SEAS_SEASONID, seasonID);
 
 			stmt.executeUpdate();
 		} catch (SQLException | SQLWrapperException e) {
@@ -1094,7 +1088,7 @@ public class CCDatabase {
 			CCSQLStatement stmt = deleteEpisodeTabStatement;
 			stmt.clearParameters();
 
-			stmt.setInt(COL_EPIS_LOCALID, localID);
+			stmt.setInt(DatabaseStructure.COL_EPIS_LOCALID, localID);
 
 			stmt.executeUpdate();
 		} catch (SQLException | SQLWrapperException e) {
@@ -1103,12 +1097,12 @@ public class CCDatabase {
 	}
 	
 	public String getInformation_DBVersion() {
-		return getInformationFromDB(INFOKEY_DBVERSION);
+		return getInformationFromDB(DatabaseStructure.INFOKEY_DBVERSION);
 	}
 	
 	public CCDate getInformation_CreationDate() {
 		try {
-			return CCDate.createFromSQL(getInformationFromDB(INFOKEY_DATE));
+			return CCDate.createFromSQL(getInformationFromDB(DatabaseStructure.INFOKEY_DATE));
 		} catch (CCFormatException e) {
 			CCLog.addError(e);
 			return CCDate.getMinimumDate();
@@ -1117,7 +1111,7 @@ public class CCDatabase {
 	
 	public CCTime getInformation_CreationTime() {
 		try {
-			return CCTime.createFromSQL(getInformationFromDB(INFOKEY_TIME));
+			return CCTime.createFromSQL(getInformationFromDB(DatabaseStructure.INFOKEY_TIME));
 		} catch (CCFormatException e) {
 			CCLog.addError(e);
 			return CCTime.getMidnight();
@@ -1125,21 +1119,21 @@ public class CCDatabase {
 	}
 	
 	public String getInformation_CreationUsername() {
-		return getInformationFromDB(INFOKEY_USERNAME);
+		return getInformationFromDB(DatabaseStructure.INFOKEY_USERNAME);
 	}
 	
 	public String getInformation_DUUID() {
-		if (!hasInformationInDB(INFOKEY_DUUID)) {
+		if (!hasInformationInDB(DatabaseStructure.INFOKEY_DUUID)) {
 			CCLog.addInformation(LocaleBundle.getString("LogMessage.RegenerateDUUID")); //$NON-NLS-1$
 			
-			writeNewInformationToDB(INFOKEY_DUUID, UUID.randomUUID().toString());
+			writeNewInformationToDB(DatabaseStructure.INFOKEY_DUUID, UUID.randomUUID().toString());
 		}
 		
-		return getInformationFromDB(INFOKEY_DUUID);
+		return getInformationFromDB(DatabaseStructure.INFOKEY_DUUID);
 	}
 
 	public void resetInformation_DUUID() {
-		updateInformationInDB(INFOKEY_DUUID, UUID.randomUUID().toString());
+		updateInformationInDB(DatabaseStructure.INFOKEY_DUUID, UUID.randomUUID().toString());
 	}
 	
 	public String getInformationFromDB(String key) {
@@ -1148,7 +1142,7 @@ public class CCDatabase {
 			
 			CCSQLStatement stmt = selectInfoKeyStatement;
 			stmt.clearParameters();
-			stmt.setStr(COL_INFO_KEY, key);
+			stmt.setStr(DatabaseStructure.COL_INFO_KEY, key);
 			
 			CCSQLResultSet rs = stmt.executeQuery(this);
 			if (rs.next()) 
@@ -1172,7 +1166,7 @@ public class CCDatabase {
 
 			CCSQLStatement stmt = selectInfoKeyStatement;
 			stmt.clearParameters();
-			stmt.setStr(COL_INFO_KEY, key);
+			stmt.setStr(DatabaseStructure.COL_INFO_KEY, key);
 			
 			CCSQLResultSet rs = stmt.executeQuery(this);
 			value = rs.next();
@@ -1192,8 +1186,8 @@ public class CCDatabase {
 			CCSQLStatement stmt = addInfoKeyStatement;
 			stmt.clearParameters();
 
-			stmt.setStr(COL_INFO_KEY, key);
-			stmt.setStr(COL_INFO_VALUE, value);
+			stmt.setStr(DatabaseStructure.COL_INFO_KEY, key);
+			stmt.setStr(DatabaseStructure.COL_INFO_VALUE, value);
 
 			stmt.executeUpdate();
 		} catch (SQLException | SQLWrapperException e) {
@@ -1206,8 +1200,8 @@ public class CCDatabase {
 			CCSQLStatement stmt = replaceInfoKeyStatement;
 			stmt.clearParameters();
 
-			stmt.setStr(COL_INFO_KEY, value);
-			stmt.setStr(COL_INFO_VALUE, key);
+			stmt.setStr(DatabaseStructure.COL_INFO_KEY, value);
+			stmt.setStr(DatabaseStructure.COL_INFO_VALUE, key);
 
 			stmt.executeUpdate();
 		} catch (SQLException | SQLWrapperException e) {
@@ -1220,7 +1214,7 @@ public class CCDatabase {
 			CCSQLStatement stmt = removeGroupStatement;
 			stmt.clearParameters();
 
-			stmt.setStr(COL_GRPS_NAME, name);
+			stmt.setStr(DatabaseStructure.COL_GRPS_NAME, name);
 
 			stmt.executeUpdate();
 		} catch (SQLException | SQLWrapperException e) {
@@ -1233,12 +1227,12 @@ public class CCDatabase {
 			CCSQLStatement stmt = insertGroupStatement;
 			stmt.clearParameters();
 
-			stmt.setStr(COL_GRPS_NAME,      name);
-			stmt.setInt(COL_GRPS_ORDER,     order);
-			stmt.setInt(COL_GRPS_COLOR,     color.getRGB());
-			stmt.setBoo(COL_GRPS_SERIALIZE, doSerialize);
-			stmt.setStr(COL_GRPS_PARENT,    parent);
-			stmt.setBoo(COL_GRPS_VISIBLE,   visible);
+			stmt.setStr(DatabaseStructure.COL_GRPS_NAME,      name);
+			stmt.setInt(DatabaseStructure.COL_GRPS_ORDER,     order);
+			stmt.setInt(DatabaseStructure.COL_GRPS_COLOR,     color.getRGB());
+			stmt.setBoo(DatabaseStructure.COL_GRPS_SERIALIZE, doSerialize);
+			stmt.setStr(DatabaseStructure.COL_GRPS_PARENT,    parent);
+			stmt.setBoo(DatabaseStructure.COL_GRPS_VISIBLE,   visible);
 
 			stmt.executeUpdate();
 		} catch (SQLException | SQLWrapperException e) {
@@ -1251,13 +1245,13 @@ public class CCDatabase {
 			CCSQLStatement stmt = updateGroupStatement;
 			stmt.clearParameters();
 
-			stmt.setInt(COL_GRPS_ORDER,     order);
-			stmt.setInt(COL_GRPS_COLOR,     color.getRGB());
-			stmt.setBoo(COL_GRPS_SERIALIZE, doSerialize);
-			stmt.setStr(COL_GRPS_PARENT,    parent);
-			stmt.setBoo(COL_GRPS_VISIBLE,   visible);
+			stmt.setInt(DatabaseStructure.COL_GRPS_ORDER,     order);
+			stmt.setInt(DatabaseStructure.COL_GRPS_COLOR,     color.getRGB());
+			stmt.setBoo(DatabaseStructure.COL_GRPS_SERIALIZE, doSerialize);
+			stmt.setStr(DatabaseStructure.COL_GRPS_PARENT,    parent);
+			stmt.setBoo(DatabaseStructure.COL_GRPS_VISIBLE,   visible);
 
-			stmt.setStr(COL_GRPS_NAME,      name);
+			stmt.setStr(DatabaseStructure.COL_GRPS_NAME,      name);
 
 			stmt.executeUpdate();
 		} catch (SQLException | SQLWrapperException e) {
@@ -1271,15 +1265,15 @@ public class CCDatabase {
 				CCSQLStatement stmt = insertCoversStatement;
 				stmt.clearParameters();
 
-				stmt.setInt(COL_CVRS_ID,          cce.ID);
-				stmt.setStr(COL_CVRS_FILENAME,    cce.Filename);
-				stmt.setInt(COL_CVRS_WIDTH,       cce.Width);
-				stmt.setInt(COL_CVRS_HEIGHT,      cce.Height);
-				stmt.setStr(COL_CVRS_HASH_FILE,   cce.Checksum);
-				stmt.setLng(COL_CVRS_FILESIZE,    cce.Filesize);
-				stmt.setBlb(COL_CVRS_PREVIEW,     cce.getPreviewOrNull());
-				stmt.setInt(COL_CVRS_PREVIEWTYPE, cce.PreviewType.asInt());
-				stmt.setCDT(COL_CVRS_CREATED,     cce.Timestamp);
+				stmt.setInt(DatabaseStructure.COL_CVRS_ID,          cce.ID);
+				stmt.setStr(DatabaseStructure.COL_CVRS_FILENAME,    cce.Filename);
+				stmt.setInt(DatabaseStructure.COL_CVRS_WIDTH,       cce.Width);
+				stmt.setInt(DatabaseStructure.COL_CVRS_HEIGHT,      cce.Height);
+				stmt.setStr(DatabaseStructure.COL_CVRS_HASH_FILE,   cce.Checksum);
+				stmt.setLng(DatabaseStructure.COL_CVRS_FILESIZE,    cce.Filesize);
+				stmt.setBlb(DatabaseStructure.COL_CVRS_PREVIEW,     cce.getPreviewOrNull());
+				stmt.setInt(DatabaseStructure.COL_CVRS_PREVIEWTYPE, cce.PreviewType.asInt());
+				stmt.setCDT(DatabaseStructure.COL_CVRS_CREATED,     cce.Timestamp);
 
 				stmt.executeUpdate();
 			}
@@ -1288,8 +1282,8 @@ public class CCDatabase {
 				CCSQLStatement stmt = replaceInfoKeyStatement;
 				stmt.clearParameters();
 
-				stmt.setStr(COL_INFO_KEY, INFOKEY_LASTCOVERID);
-				stmt.setStr(COL_INFO_VALUE, Integer.toString(cce.ID));
+				stmt.setStr(DatabaseStructure.COL_INFO_KEY, DatabaseStructure.INFOKEY_LASTCOVERID);
+				stmt.setStr(DatabaseStructure.COL_INFO_VALUE, Integer.toString(cce.ID));
 
 				stmt.executeUpdate();
 			}
@@ -1307,7 +1301,7 @@ public class CCDatabase {
 			CCSQLStatement stmt = removeCoversStatement;
 			stmt.clearParameters();
 
-			stmt.setInt(COL_CVRS_ID,          cce.ID);
+			stmt.setInt(DatabaseStructure.COL_CVRS_ID,          cce.ID);
 
 			stmt.executeUpdate();
 		} catch (SQLException | SQLWrapperException e) {
@@ -1353,5 +1347,22 @@ public class CCDatabase {
 
 	public PublicDatabaseInterface getInternalDatabaseAccess() {
 		return db;
+	}
+
+	public CCDatabaseHistory getHistory() {
+		return _history;
+	}
+
+	public int getHistoryCount() {
+		try {
+			return countHistory.executeQueryInt(this);
+		} catch (SQLException e) {
+			CCLog.addError(e);
+			return 0;
+		}
+	}
+
+	public List<Tuple<String, String>> listTrigger() throws SQLException {
+		return db.listTriggerWithStatements();
 	}
 }

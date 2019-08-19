@@ -9,128 +9,10 @@ import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.util.sqlwrapper.SQLOrder;
 import de.jClipCorn.util.sqlwrapper.*;
 
+import static de.jClipCorn.database.driver.DatabaseStructure.*;
+
 @SuppressWarnings("nls")
 public class Statements {
-	public final static String TAB_MAIN                  = "ELEMENTS";  //$NON-NLS-1$
-	public final static String TAB_SEASONS               = "SEASONS";   //$NON-NLS-1$
-	public final static String TAB_EPISODES              = "EPISODES";  //$NON-NLS-1$
-	public final static String TAB_INFO                  = "INFO";      //$NON-NLS-1$
-	public final static String TAB_GROUPS                = "GROUPS";    //$NON-NLS-1$
-	public final static String TAB_COVERS                = "COVERS";    //$NON-NLS-1$
-	public final static String TAB_HISTORY               = "HISTORY";   //$NON-NLS-1$
-	public final static String TAB_TEMP                  = "TEMP";      //$NON-NLS-1$
-
-	public final static CCSQLColDef COL_TEMP_KEY             = new CCSQLColDef("IKEY",                  CCSQLType.VARCHAR);    //$NON-NLS-1$
-	public final static CCSQLColDef COL_TEMP_VALUE           = new CCSQLColDef("IVALUE",                CCSQLType.VARCHAR);    //$NON-NLS-1$
-
-	public final static CCSQLColDef COL_INFO_KEY             = new CCSQLColDef("IKEY",                  CCSQLType.VARCHAR);    //$NON-NLS-1$
-	public final static CCSQLColDef COL_INFO_VALUE           = new CCSQLColDef("IVALUE",                CCSQLType.VARCHAR);    //$NON-NLS-1$
-
-	public final static CCSQLColDef COL_HISTORY_TABLE         = new CCSQLColDef("TABLE",                CCSQLType.VARCHAR);    //$NON-NLS-1$
-	public final static CCSQLColDef COL_HISTORY_ID            = new CCSQLColDef("ID",                   CCSQLType.VARCHAR);    //$NON-NLS-1$
-	public final static CCSQLColDef COL_HISTORY_DATE          = new CCSQLColDef("DATE",                 CCSQLType.VARCHAR);    //$NON-NLS-1$
-	public final static CCSQLColDef COL_HISTORY_ACTION        = new CCSQLColDef("ACTION",               CCSQLType.VARCHAR);    //$NON-NLS-1$
-	public final static CCSQLColDef COL_HISTORY_FIELD         = new CCSQLColDef("FIELD",                CCSQLType.VARCHAR);    //$NON-NLS-1$
-	public final static CCSQLColDef COL_HISTORY_OLD           = new CCSQLColDef("OLD",                  CCSQLType.VARCHAR);    //$NON-NLS-1$
-	public final static CCSQLColDef COL_HISTORY_NEW           = new CCSQLColDef("NEW",                  CCSQLType.VARCHAR);    //$NON-NLS-1$
-
-	public final static CCSQLColDef COL_MAIN_LOCALID          = new CCSQLColDef("LOCALID",              CCSQLType.INTEGER);    //$NON-NLS-1$
-	public final static CCSQLColDef COL_MAIN_NAME             = new CCSQLColDef("NAME",                 CCSQLType.VARCHAR);    //$NON-NLS-1$
-	public final static CCSQLColDef COL_MAIN_VIEWED           = new CCSQLColDef("VIEWED",               CCSQLType.BIT);        //$NON-NLS-1$
-	public final static CCSQLColDef COL_MAIN_VIEWEDHISTORY    = new CCSQLColDef("VIEWED_HISTORY",       CCSQLType.VARCHAR);    //$NON-NLS-1$
-	public final static CCSQLColDef COL_MAIN_ZYKLUS           = new CCSQLColDef("ZYKLUS",               CCSQLType.VARCHAR);    //$NON-NLS-1$
-	public final static CCSQLColDef COL_MAIN_ZYKLUSNUMBER     = new CCSQLColDef("ZYKLUSNUMBER",         CCSQLType.INTEGER);    //$NON-NLS-1$
-	public final static CCSQLColDef COL_MAIN_LANGUAGE         = new CCSQLColDef("LANGUAGE",             CCSQLType.BIGINT);     //$NON-NLS-1$
-	public final static CCSQLColDef COL_MAIN_GENRE            = new CCSQLColDef("GENRE",                CCSQLType.BIGINT);     //$NON-NLS-1$
-	public final static CCSQLColDef COL_MAIN_LENGTH           = new CCSQLColDef("LENGTH",               CCSQLType.INTEGER);    //$NON-NLS-1$
-	public final static CCSQLColDef COL_MAIN_ADDDATE          = new CCSQLColDef("ADDDATE",              CCSQLType.DATE);       //$NON-NLS-1$
-	public final static CCSQLColDef COL_MAIN_ONLINESCORE      = new CCSQLColDef("ONLINESCORE",          CCSQLType.TINYINT);    //$NON-NLS-1$
-	public final static CCSQLColDef COL_MAIN_FSK              = new CCSQLColDef("FSK",                  CCSQLType.TINYINT);    //$NON-NLS-1$
-	public final static CCSQLColDef COL_MAIN_FORMAT           = new CCSQLColDef("FORMAT",               CCSQLType.TINYINT);    //$NON-NLS-1$
-	public final static CCSQLColDef COL_MAIN_MOVIEYEAR        = new CCSQLColDef("MOVIEYEAR",            CCSQLType.SMALLINT);   //$NON-NLS-1$
-	public final static CCSQLColDef COL_MAIN_ONLINEREF        = new CCSQLColDef("ONLINEREF",            CCSQLType.VARCHAR);    //$NON-NLS-1$
-	public final static CCSQLColDef COL_MAIN_GROUPS           = new CCSQLColDef("GROUPS",               CCSQLType.VARCHAR);    //$NON-NLS-1$
-	public final static CCSQLColDef COL_MAIN_FILESIZE         = new CCSQLColDef("FILESIZE",             CCSQLType.BIGINT);     //$NON-NLS-1$
-	public final static CCSQLColDef COL_MAIN_TAGS             = new CCSQLColDef("TAGS",                 CCSQLType.SMALLINT);   //$NON-NLS-1$
-	public final static CCSQLColDef COL_MAIN_PART_1           = new CCSQLColDef("PART1",                CCSQLType.VARCHAR);    //$NON-NLS-1$
-	public final static CCSQLColDef COL_MAIN_PART_2           = new CCSQLColDef("PART2",                CCSQLType.VARCHAR);    //$NON-NLS-1$
-	public final static CCSQLColDef COL_MAIN_PART_3           = new CCSQLColDef("PART3",                CCSQLType.VARCHAR);    //$NON-NLS-1$
-	public final static CCSQLColDef COL_MAIN_PART_4           = new CCSQLColDef("PART4",                CCSQLType.VARCHAR);    //$NON-NLS-1$
-	public final static CCSQLColDef COL_MAIN_PART_5           = new CCSQLColDef("PART5",                CCSQLType.VARCHAR);    //$NON-NLS-1$
-	public final static CCSQLColDef COL_MAIN_PART_6           = new CCSQLColDef("PART6",                CCSQLType.VARCHAR);    //$NON-NLS-1$
-	public final static CCSQLColDef COL_MAIN_SCORE            = new CCSQLColDef("SCORE",                CCSQLType.TINYINT);    //$NON-NLS-1$
-	public final static CCSQLColDef COL_MAIN_COVERID          = new CCSQLColDef("COVERID",              CCSQLType.INTEGER);    //$NON-NLS-1$
-	public final static CCSQLColDef COL_MAIN_TYPE             = new CCSQLColDef("TYPE",                 CCSQLType.TINYINT);    //$NON-NLS-1$
-	public final static CCSQLColDef COL_MAIN_SERIES_ID        = new CCSQLColDef("SERIESID",             CCSQLType.INTEGER);    //$NON-NLS-1$
-	public final static CCSQLColDef COL_MAIN_MI_FILESIZE      = new CCSQLColDef("MEDIAINFO.FILESIZE",   CCSQLType.BIGINT);     //$NON-NLS-1$
-	public final static CCSQLColDef COL_MAIN_MI_CDATE         = new CCSQLColDef("MEDIAINFO.CDATE",      CCSQLType.BIGINT);     //$NON-NLS-1$
-	public final static CCSQLColDef COL_MAIN_MI_MDATE         = new CCSQLColDef("MEDIAINFO.MDATE",      CCSQLType.BIGINT);     //$NON-NLS-1$
-	public final static CCSQLColDef COL_MAIN_MI_AFORMAT       = new CCSQLColDef("MEDIAINFO.AFORMAT",    CCSQLType.VARCHAR);    //$NON-NLS-1$
-	public final static CCSQLColDef COL_MAIN_MI_VFORMAT       = new CCSQLColDef("MEDIAINFO.VFORMAT",    CCSQLType.VARCHAR);    //$NON-NLS-1$
-	public final static CCSQLColDef COL_MAIN_MI_WIDTH         = new CCSQLColDef("MEDIAINFO.WIDTH",      CCSQLType.SMALLINT);   //$NON-NLS-1$
-	public final static CCSQLColDef COL_MAIN_MI_HEIGHT        = new CCSQLColDef("MEDIAINFO.HEIGHT",     CCSQLType.SMALLINT);   //$NON-NLS-1$
-	public final static CCSQLColDef COL_MAIN_MI_FRAMERATE     = new CCSQLColDef("MEDIAINFO.FRAMERATE",  CCSQLType.REAL);       //$NON-NLS-1$
-	public final static CCSQLColDef COL_MAIN_MI_DURATION      = new CCSQLColDef("MEDIAINFO.DURATION",   CCSQLType.REAL);       //$NON-NLS-1$
-	public final static CCSQLColDef COL_MAIN_MI_BITDEPTH      = new CCSQLColDef("MEDIAINFO.BITDEPTH",   CCSQLType.TINYINT);    //$NON-NLS-1$
-	public final static CCSQLColDef COL_MAIN_MI_BITRATE       = new CCSQLColDef("MEDIAINFO.BITRATE",    CCSQLType.INTEGER);    //$NON-NLS-1$
-	public final static CCSQLColDef COL_MAIN_MI_FRAMECOUNT    = new CCSQLColDef("MEDIAINFO.FRAMECOUNT", CCSQLType.INTEGER);    //$NON-NLS-1$
-	public final static CCSQLColDef COL_MAIN_MI_ACHANNELS     = new CCSQLColDef("MEDIAINFO.ACHANNELS",  CCSQLType.INTEGER);    //$NON-NLS-1$
-	public final static CCSQLColDef COL_MAIN_MI_VCODEC        = new CCSQLColDef("MEDIAINFO.VCODEC",     CCSQLType.VARCHAR);    //$NON-NLS-1$
-	public final static CCSQLColDef COL_MAIN_MI_ACODEC        = new CCSQLColDef("MEDIAINFO.ACODEC",     CCSQLType.VARCHAR);    //$NON-NLS-1$
-	public final static CCSQLColDef COL_MAIN_MI_SAMPLERATE    = new CCSQLColDef("MEDIAINFO.SAMPLERATE", CCSQLType.INTEGER);    //$NON-NLS-1$
-
-	public final static CCSQLColDef COL_SEAS_SEASONID         = new CCSQLColDef("SEASONID",             CCSQLType.INTEGER);    //$NON-NLS-1$
-	public final static CCSQLColDef COL_SEAS_SERIESID         = new CCSQLColDef("SERIESID",             CCSQLType.INTEGER);    //$NON-NLS-1$
-	public final static CCSQLColDef COL_SEAS_NAME             = new CCSQLColDef("NAME",                 CCSQLType.VARCHAR);    //$NON-NLS-1$
-	public final static CCSQLColDef COL_SEAS_YEAR             = new CCSQLColDef("SEASONYEAR",           CCSQLType.SMALLINT);   //$NON-NLS-1$
-	public final static CCSQLColDef COL_SEAS_COVERID          = new CCSQLColDef("COVERID",              CCSQLType.INTEGER);    //$NON-NLS-1$
-
-	public final static CCSQLColDef COL_EPIS_LOCALID          = new CCSQLColDef("LOCALID",              CCSQLType.INTEGER);    //$NON-NLS-1$
-	public final static CCSQLColDef COL_EPIS_SEASONID         = new CCSQLColDef("SEASONID",             CCSQLType.INTEGER);    //$NON-NLS-1$
-	public final static CCSQLColDef COL_EPIS_EPISODE          = new CCSQLColDef("EPISODE",              CCSQLType.SMALLINT);   //$NON-NLS-1$
-	public final static CCSQLColDef COL_EPIS_NAME             = new CCSQLColDef("NAME",                 CCSQLType.VARCHAR);    //$NON-NLS-1$
-	public final static CCSQLColDef COL_EPIS_VIEWED           = new CCSQLColDef("VIEWED",               CCSQLType.BIT);        //$NON-NLS-1$
-	public final static CCSQLColDef COL_EPIS_VIEWEDHISTORY    = new CCSQLColDef("VIEWED_HISTORY",       CCSQLType.VARCHAR);    //$NON-NLS-1$
-	public final static CCSQLColDef COL_EPIS_LENGTH           = new CCSQLColDef("LENGTH",               CCSQLType.INTEGER);    //$NON-NLS-1$
-	public final static CCSQLColDef COL_EPIS_FORMAT           = new CCSQLColDef("FORMAT",               CCSQLType.TINYINT);    //$NON-NLS-1$
-	public final static CCSQLColDef COL_EPIS_FILESIZE         = new CCSQLColDef("FILESIZE",             CCSQLType.BIGINT);     //$NON-NLS-1$
-	public final static CCSQLColDef COL_EPIS_PART_1           = new CCSQLColDef("PART1",                CCSQLType.VARCHAR);    //$NON-NLS-1$
-	public final static CCSQLColDef COL_EPIS_TAGS             = new CCSQLColDef("TAGS",                 CCSQLType.SMALLINT);   //$NON-NLS-1$
-	public final static CCSQLColDef COL_EPIS_ADDDATE          = new CCSQLColDef("ADDDATE",              CCSQLType.DATE);       //$NON-NLS-1$
-	public final static CCSQLColDef COL_EPIS_LANGUAGE         = new CCSQLColDef("LANGUAGE",             CCSQLType.BIGINT);     //$NON-NLS-1$
-	public final static CCSQLColDef COL_EPIS_MI_FILESIZE      = new CCSQLColDef("MEDIAINFO.FILESIZE",   CCSQLType.BIGINT);     //$NON-NLS-1$
-	public final static CCSQLColDef COL_EPIS_MI_CDATE         = new CCSQLColDef("MEDIAINFO.CDATE",      CCSQLType.BIGINT);     //$NON-NLS-1$
-	public final static CCSQLColDef COL_EPIS_MI_MDATE         = new CCSQLColDef("MEDIAINFO.MDATE",      CCSQLType.BIGINT);     //$NON-NLS-1$
-	public final static CCSQLColDef COL_EPIS_MI_AFORMAT       = new CCSQLColDef("MEDIAINFO.AFORMAT",    CCSQLType.VARCHAR);    //$NON-NLS-1$
-	public final static CCSQLColDef COL_EPIS_MI_VFORMAT       = new CCSQLColDef("MEDIAINFO.VFORMAT",    CCSQLType.VARCHAR);    //$NON-NLS-1$
-	public final static CCSQLColDef COL_EPIS_MI_WIDTH         = new CCSQLColDef("MEDIAINFO.WIDTH",      CCSQLType.SMALLINT);   //$NON-NLS-1$
-	public final static CCSQLColDef COL_EPIS_MI_HEIGHT        = new CCSQLColDef("MEDIAINFO.HEIGHT",     CCSQLType.SMALLINT);   //$NON-NLS-1$
-	public final static CCSQLColDef COL_EPIS_MI_FRAMERATE     = new CCSQLColDef("MEDIAINFO.FRAMERATE",  CCSQLType.REAL);       //$NON-NLS-1$
-	public final static CCSQLColDef COL_EPIS_MI_DURATION      = new CCSQLColDef("MEDIAINFO.DURATION",   CCSQLType.REAL);       //$NON-NLS-1$
-	public final static CCSQLColDef COL_EPIS_MI_BITDEPTH      = new CCSQLColDef("MEDIAINFO.BITDEPTH",   CCSQLType.TINYINT);    //$NON-NLS-1$
-	public final static CCSQLColDef COL_EPIS_MI_BITRATE       = new CCSQLColDef("MEDIAINFO.BITRATE",    CCSQLType.INTEGER);    //$NON-NLS-1$
-	public final static CCSQLColDef COL_EPIS_MI_FRAMECOUNT    = new CCSQLColDef("MEDIAINFO.FRAMECOUNT", CCSQLType.INTEGER);    //$NON-NLS-1$
-	public final static CCSQLColDef COL_EPIS_MI_ACHANNELS     = new CCSQLColDef("MEDIAINFO.ACHANNELS",  CCSQLType.INTEGER);    //$NON-NLS-1$
-	public final static CCSQLColDef COL_EPIS_MI_VCODEC        = new CCSQLColDef("MEDIAINFO.VCODEC",     CCSQLType.VARCHAR);    //$NON-NLS-1$
-	public final static CCSQLColDef COL_EPIS_MI_ACODEC        = new CCSQLColDef("MEDIAINFO.ACODEC",     CCSQLType.VARCHAR);    //$NON-NLS-1$
-	public final static CCSQLColDef COL_EPIS_MI_SAMPLERATE    = new CCSQLColDef("MEDIAINFO.SAMPLERATE", CCSQLType.INTEGER);    //$NON-NLS-1$
-
-	public final static CCSQLColDef COL_GRPS_NAME             = new CCSQLColDef("NAME",                 CCSQLType.VARCHAR);    //$NON-NLS-1$
-	public final static CCSQLColDef COL_GRPS_ORDER            = new CCSQLColDef("ORDERING",             CCSQLType.INTEGER);    //$NON-NLS-1$
-	public final static CCSQLColDef COL_GRPS_COLOR            = new CCSQLColDef("COLOR",                CCSQLType.INTEGER);    //$NON-NLS-1$
-	public final static CCSQLColDef COL_GRPS_SERIALIZE        = new CCSQLColDef("SERIALIZE",            CCSQLType.BIT);        //$NON-NLS-1$
-	public final static CCSQLColDef COL_GRPS_PARENT           = new CCSQLColDef("PARENTGROUP",          CCSQLType.VARCHAR);    //$NON-NLS-1$
-	public final static CCSQLColDef COL_GRPS_VISIBLE          = new CCSQLColDef("VISIBLE",              CCSQLType.BIT);        //$NON-NLS-1$
-
-	public final static CCSQLColDef COL_CVRS_ID               = new CCSQLColDef("ID",                   CCSQLType.INTEGER);    //$NON-NLS-1$
-	public final static CCSQLColDef COL_CVRS_FILENAME         = new CCSQLColDef("FILENAME",             CCSQLType.VARCHAR);    //$NON-NLS-1$
-	public final static CCSQLColDef COL_CVRS_WIDTH            = new CCSQLColDef("WIDTH",                CCSQLType.INTEGER);    //$NON-NLS-1$
-	public final static CCSQLColDef COL_CVRS_HEIGHT           = new CCSQLColDef("HEIGHT",               CCSQLType.INTEGER);    //$NON-NLS-1$
-	public final static CCSQLColDef COL_CVRS_HASH_FILE        = new CCSQLColDef("HASH_FILE",            CCSQLType.VARCHAR);    //$NON-NLS-1$
-	public final static CCSQLColDef COL_CVRS_FILESIZE         = new CCSQLColDef("FILESIZE",             CCSQLType.BIGINT);     //$NON-NLS-1$
-	public final static CCSQLColDef COL_CVRS_PREVIEWTYPE      = new CCSQLColDef("PREVIEW_TYPE",         CCSQLType.INTEGER);    //$NON-NLS-1$
-	public final static CCSQLColDef COL_CVRS_PREVIEW          = new CCSQLColDef("PREVIEW",              CCSQLType.BLOB);       //$NON-NLS-1$
-	public final static CCSQLColDef COL_CVRS_CREATED          = new CCSQLColDef("CREATED",              CCSQLType.VARCHAR);    //$NON-NLS-1$
 
 	//--------------------------------------------------------------------------------------------------
 
@@ -178,6 +60,8 @@ public class Statements {
 	public static CCSQLStatement insertCoversStatement;
 	public static CCSQLStatement removeCoversStatement;
 
+	public static CCSQLStatement countHistory;
+
 	private static ArrayList<CCSQLStatement> statements = new ArrayList<>();
 
 	public static void intialize(CCDatabase d) {
@@ -202,19 +86,19 @@ public class Statements {
 					.addPreparedFields(COL_EPIS_ADDDATE, COL_EPIS_LANGUAGE)
 					.build(d, statements);
 
-			newDatabaseIDStatement1  = SQLBuilder
+			newDatabaseIDStatement1 = SQLBuilder
 					.createCustom(TAB_INFO)
-					.setSQL("INSERT OR IGNORE INTO [{TAB}] VALUES('{2}', 1)", COL_INFO_KEY.Name, COL_INFO_VALUE.Name, CCDatabase.INFOKEY_LASTID)
+					.setSQL("INSERT OR IGNORE INTO [{TAB}] VALUES('{2}', 1)", COL_INFO_KEY.Name, COL_INFO_VALUE.Name, DatabaseStructure.INFOKEY_LASTID)
 					.build(d, statements);
 
-			newDatabaseIDStatement2  = SQLBuilder
+			newDatabaseIDStatement2 = SQLBuilder
 					.createCustom(TAB_INFO)
-					.setSQL("INSERT OR REPLACE INTO [{TAB}] SELECT '{2}', (CAST([{1}] AS INTEGER)+1) FROM [{TAB}] WHERE [{0}]='{2}'", COL_INFO_KEY.Name, COL_INFO_VALUE.Name, CCDatabase.INFOKEY_LASTID)
+					.setSQL("INSERT OR REPLACE INTO [{TAB}] SELECT '{2}', (CAST([{1}] AS INTEGER)+1) FROM [{TAB}] WHERE [{0}]='{2}'", COL_INFO_KEY.Name, COL_INFO_VALUE.Name, DatabaseStructure.INFOKEY_LASTID)
 					.build(d, statements);
 
-			newDatabaseIDStatement3  = SQLBuilder
+			newDatabaseIDStatement3 = SQLBuilder
 					.createCustom(TAB_INFO)
-					.setSQL("SELECT CAST([{1}] AS INTEGER) FROM [{TAB}] WHERE [{0}]='{2}'", COL_INFO_KEY.Name, COL_INFO_VALUE.Name, CCDatabase.INFOKEY_LASTID)
+					.setSQL("SELECT CAST([{1}] AS INTEGER) FROM [{TAB}] WHERE [{0}]='{2}'", COL_INFO_KEY.Name, COL_INFO_VALUE.Name, DatabaseStructure.INFOKEY_LASTID)
 					.build(d, statements);
 
 			updateMainTabStatement = SQLBuilder.createUpdate(TAB_MAIN)
@@ -379,6 +263,11 @@ public class Statements {
 
 			removeCoversStatement = SQLBuilder.createDelete(TAB_COVERS)
 					.addPreparedWhereCondition(COL_CVRS_ID)
+					.build(d, statements);
+
+			countHistory = SQLBuilder
+					.createCustom(TAB_HISTORY)
+					.setSQL("SELECT COUNT(*) FROM HISTORY")
 					.build(d, statements);
 
 			if (!CCLog.isUnitTest()) CCLog.addDebug(String.format("%d SQL Statements prepared", statements.size())); //$NON-NLS-1$

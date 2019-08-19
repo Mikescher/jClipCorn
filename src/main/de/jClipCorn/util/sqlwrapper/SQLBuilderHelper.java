@@ -587,4 +587,8 @@ public class SQLBuilderHelper {
 		return value;
 	}
 
+	public static String forceSQLEscape(String value) {
+		return "["+value+"]";
+	}
+
 }

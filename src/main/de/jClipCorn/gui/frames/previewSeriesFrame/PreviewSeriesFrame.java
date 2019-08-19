@@ -20,7 +20,6 @@ import de.jClipCorn.features.actionTree.ActionSource;
 import de.jClipCorn.features.actionTree.CCActionTree;
 import de.jClipCorn.features.actionTree.menus.impl.PreviewSeriesMenuBar;
 import de.jClipCorn.gui.frames.quickAddEpisodeDialog.QuickAddEpisodeDialog;
-import de.jClipCorn.gui.frames.quickAddMoviesDialog.QuickAddMoviesDialog;
 import de.jClipCorn.gui.guiComponents.FileDrop;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.listener.ActionCallbackListener;

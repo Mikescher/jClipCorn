@@ -1,7 +1,6 @@
 package de.jClipCorn.util.sqlwrapper;
 
 import de.jClipCorn.database.driver.CCDatabase;
-import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datatypes.DoubleString;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.datatypes.Tuple3;
@@ -29,39 +28,39 @@ public class SQLBuilder {
 		_type = st;
 	}
 
-	public static SQLBuilder createInsert(String tab) {
+	public static SQLBuilder createInsert(CCSQLTableDef tab) {
 		SQLBuilder b = new SQLBuilder(StatementType.INSERT);
-		b._table = tab;
+		b._table = tab.Name;
 		return b;
 	}
 
-	public static SQLBuilder createUpdate(String tab) {
+	public static SQLBuilder createUpdate(CCSQLTableDef tab) {
 		SQLBuilder b = new SQLBuilder(StatementType.UPDATE);
-		b._table = tab;
+		b._table = tab.Name;
 		return b;
 	}
 
-	public static SQLBuilder createInsertOrReplace(String tab) {
+	public static SQLBuilder createInsertOrReplace(CCSQLTableDef tab) {
 		SQLBuilder b = new SQLBuilder(StatementType.REPLACE);
-		b._table = tab;
+		b._table = tab.Name;
 		return b;
 	}
 
-	public static SQLBuilder createDelete(String tab) {
+	public static SQLBuilder createDelete(CCSQLTableDef tab) {
 		SQLBuilder b = new SQLBuilder(StatementType.DELETE);
-		b._table = tab;
+		b._table = tab.Name;
 		return b;
 	}
 
-	public static SQLBuilder createSelect(String tab) {
+	public static SQLBuilder createSelect(CCSQLTableDef tab) {
 		SQLBuilder b = new SQLBuilder(StatementType.SELECT);
-		b._table = tab;
+		b._table = tab.Name;
 		return b;
 	}
 
-	public static SQLBuilder createCustom(String tab) {
+	public static SQLBuilder createCustom(CCSQLTableDef tab) {
 		SQLBuilder b = new SQLBuilder(StatementType.CUSTOM);
-		b._table = tab;
+		b._table = tab.Name;
 		return b;
 	}
 

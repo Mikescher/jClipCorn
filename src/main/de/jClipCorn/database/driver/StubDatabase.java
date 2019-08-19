@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.jClipCorn.properties.enumerations.CCDatabaseDriver;
+import de.jClipCorn.util.datatypes.Tuple;
 
 public class StubDatabase extends GenericDatabase {
 
@@ -58,6 +59,11 @@ public class StubDatabase extends GenericDatabase {
 
 	@Override
 	public List<String> listViews() throws SQLException {
+		return new ArrayList<>();
+	}
+
+	@Override
+	public List<Tuple<String, String>> listTriggerWithStatements() throws SQLException {
 		return new ArrayList<>();
 	}
 }

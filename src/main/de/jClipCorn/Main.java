@@ -213,3 +213,7 @@ public class Main {
 // option recreate previews (covers dialog to show content of covers table)
 
 // Show versions of entry dialog (group history stuff together to show specific versions in specific times)
+
+//Compare speed of stream vs ccstream (just out of interest)
+
+//discontinue derby backend (and perhaps add a mysql-remote backend)

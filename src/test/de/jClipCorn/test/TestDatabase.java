@@ -1,20 +1,29 @@
 package de.jClipCorn.test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
-import java.util.TimeZone;
-
 import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.database.databaseElement.columnTypes.*;
+import de.jClipCorn.database.driver.CCDatabase;
+import de.jClipCorn.database.driver.DatabaseStructure;
 import de.jClipCorn.util.datetime.CCDateTime;
+import de.jClipCorn.util.exceptions.XMLFormatException;
+import de.jClipCorn.util.helper.SimpleFileUtils;
+import de.jClipCorn.util.parser.TurbineParser;
+import de.jClipCorn.util.sqlwrapper.CCSQLTableDef;
+import de.jClipCorn.util.stream.CCStreams;
 import org.junit.Test;
 
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.CCSeries;
+import de.jClipCorn.util.datatypes.RefParam;
 import de.jClipCorn.util.datetime.CCDate;
+
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+
+import static org.junit.Assert.*;
 
 @SuppressWarnings("nls")
 public class TestDatabase extends ClipCornBaseTest {
@@ -92,7 +101,7 @@ public class TestDatabase extends ClipCornBaseTest {
 	}
 
 	@Test
-	public void testAddSeries() throws Exception {
+	public void testAddSeries() {
 		CCMovieList ml = createEmptyDB();
 
 		assertEquals(0, ml.getElementCount());
@@ -219,5 +228,31 @@ public class TestDatabase extends ClipCornBaseTest {
 		assertEquals(2, ml.getGroupList().size());
 		assertEquals(17, ml.getMovieCount());
 		assertEquals(3, ml.getSeriesCount());
+	}
+
+	@Test
+	public void testTurbine() throws IOException, XMLFormatException {
+		List<CCSQLTableDef> code = Arrays.asList(DatabaseStructure.TABLES);
+		List<CCSQLTableDef> xml  = new TurbineParser(SimpleFileUtils.readUTF8TextFile("/" + CCDatabase.XML_NAME)).convertToTableDefinition();
+
+		assertEquals(code.size(), xml.size());
+
+		for (CCSQLTableDef d1 : xml) {
+			CCSQLTableDef other = CCStreams.iterate(code).singleOrNull(d2 -> d2.isEqual(d1));
+			assertNotNull(other);
+			code.remove(other);
+		}
+
+		assertEquals(0, code.size());
+	}
+
+	@Test
+	public void testTrigger() {
+		CCMovieList ml = createEmptyDB();
+
+		assertTrue(ml.getHistory().testTrigger(false, new RefParam<>()));
+
+		ml.getHistory().createTrigger();
+		assertTrue(ml.getHistory().testTrigger(true, new RefParam<>()));
 	}
 }

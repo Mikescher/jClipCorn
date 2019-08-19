@@ -6,6 +6,7 @@ import java.util.List;
 
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.properties.enumerations.CCDatabaseDriver;
+import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.helper.SimpleFileUtils;
 import de.jClipCorn.util.parser.TurbineParser;
 
@@ -27,9 +28,9 @@ public class MemoryDatabase extends GenericDatabase {
 			connection = DriverManager.getConnection(PROTOCOL);
 			connection.setAutoCommit(true);
 
-			TurbineParser turb = new TurbineParser(SimpleFileUtils.readUTF8TextFile(xmlPath), this);
+			TurbineParser turb = new TurbineParser(SimpleFileUtils.readUTF8TextFile(xmlPath));
 			turb.parse();
-			turb.create();
+			turb.create(this);
 		} catch (Exception e) {
 			lastError = e;
 			return false;
@@ -49,9 +50,9 @@ public class MemoryDatabase extends GenericDatabase {
 			connection = DriverManager.getConnection(PROTOCOL);
 			connection.setAutoCommit(true);
 
-			TurbineParser turb = new TurbineParser(SimpleFileUtils.readTextResource(xmlResPath, getClass()), this);
+			TurbineParser turb = new TurbineParser(SimpleFileUtils.readTextResource(xmlResPath, getClass()));
 			turb.parse();
-			turb.create();
+			turb.create(this);
 		} catch (Exception e) {
 			lastError = e;
 			return false;
@@ -102,5 +103,10 @@ public class MemoryDatabase extends GenericDatabase {
 	@Override
 	public List<String> listViews() throws SQLException {
 		return querySQL("SELECT name FROM sqlite_master WHERE type='view'", 1, a -> (String)a[0]);
+	}
+
+	@Override
+	public List<Tuple<String, String>> listTriggerWithStatements() throws SQLException {
+		return querySQL("SELECT [name], [sql] FROM sqlite_master WHERE type='trigger'", 1, a -> Tuple.Create((String)a[0], (String)a[1]));
 	}
 }

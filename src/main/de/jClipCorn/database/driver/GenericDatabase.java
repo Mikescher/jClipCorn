@@ -11,6 +11,7 @@ import java.util.List;
 
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.properties.enumerations.CCDatabaseDriver;
+import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.lambda.Func1to1;
 import de.jClipCorn.util.sqlwrapper.StatementType;
 
@@ -443,6 +444,7 @@ public abstract class GenericDatabase implements PublicDatabaseInterface {
 
 	public abstract List<String> listTables() throws SQLException;
 	public abstract List<String> listTrigger() throws SQLException;
+	public abstract List<Tuple<String, String>> listTriggerWithStatements() throws SQLException;
 	public abstract List<String> listViews() throws SQLException;
 }
 

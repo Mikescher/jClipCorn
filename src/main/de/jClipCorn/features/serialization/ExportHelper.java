@@ -33,7 +33,6 @@ import de.jClipCorn.util.xml.CCXMLElement;
 import de.jClipCorn.util.xml.CCXMLException;
 import de.jClipCorn.util.xml.CCXMLParser;
 import org.jdom2.Document;
-import org.jdom2.Element;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
 
@@ -238,7 +237,7 @@ public class ExportHelper {
 			ZipEntry entry;
 			while ((entry = stream.getNextEntry()) != null) {
 
-				String entryname = entry.getName().replace("\\", "/");
+				String entryname = entry.getName().replace("\\", "/"); //$NON-NLS-1$ //$NON-NLS-2$
 
 				if (! entryname.startsWith("cover/")) continue; //$NON-NLS-1$
 

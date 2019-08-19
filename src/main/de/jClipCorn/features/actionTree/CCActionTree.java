@@ -467,7 +467,7 @@ public class CCActionTree extends UIActionTree{
 	}
 	
 	private void onClickMoviesAddToExportList(CCTreeActionEvent e) {
-		e.ifMovieSource(m -> ExportElementsFrame.addElementToList(e.SwingOwner, movielist, m));
+		e.ifMovieSource(m -> ExportElementsFrame.addElementToList(e.SwingOwner, m));
 	}
 	
 	private void onClickMoviesImportSingle(CCTreeActionEvent e) {
@@ -591,7 +591,7 @@ public class CCActionTree extends UIActionTree{
 	}
 	
 	private void onClickSeriesAddToExportList(CCTreeActionEvent e) {
-		e.ifSeriesSource(s -> ExportElementsFrame.addElementToList(e.SwingOwner, movielist, s));
+		e.ifSeriesSource(s -> ExportElementsFrame.addElementToList(e.SwingOwner, s));
 	}
 	
 	private void onClickSeriesCreateTXTEpisodeguide(CCTreeActionEvent e) {

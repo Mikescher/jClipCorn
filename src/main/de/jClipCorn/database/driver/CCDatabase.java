@@ -45,6 +45,7 @@ public class CCDatabase {
 	public final static String INFOKEY_USERNAME     = "CREATION_USERNAME";                      //$NON-NLS-1$
 	public final static String INFOKEY_DUUID        = "DATABASE_UNIVERSALLY_UNIQUE_IDENTIFIER"; //$NON-NLS-1$
 	public final static String INFOKEY_HISTORY      = "HISTORY_ENABLED";                        //$NON-NLS-1$
+	public final static String INFOKEY_LASTID       = "LAST_ID";                                //$NON-NLS-1$
 
 	public final static String[] INFOKEYS = new String[]{ INFOKEY_DBVERSION, INFOKEY_DATE, INFOKEY_TIME, INFOKEY_USERNAME, INFOKEY_DUUID, INFOKEY_HISTORY };
 	
@@ -345,38 +346,11 @@ public class CCDatabase {
 			rs.getNullableInt(COL_MAIN_MI_SAMPLERATE)));
 	}
 
-	private int getNewLocalID() {
+	private int getNewID() {
 		try {
-			return newLocalIDStatement.executeQueryInt(this) + 1;
+			return newDatabaseIDStatement.executeQueryInt(this);
 		} catch (SQLException e) {
-			CCLog.addError(LocaleBundle.getString("LogMessage.NoNewMovieID"), e); //$NON-NLS-1$
-			return -1;
-		}
-	}
-
-	private int getNewSeriesID() {
-		try {
-			return newSeriesIDStatement.executeQueryInt(this) + 1;
-		} catch (SQLException e) {
-			CCLog.addError(LocaleBundle.getString("LogMessage.NoNewSeriesID"), e); //$NON-NLS-1$
-			return -1;
-		}
-	}
-
-	private int getNewSeasonID() {
-		try {
-			return newSeasonIDStatement.executeQueryInt(this) + 1;
-		} catch (SQLException e) {
-			CCLog.addError(LocaleBundle.getString("LogMessage.NoNewSeasonID"), e); //$NON-NLS-1$
-			return -1;
-		}
-	}
-	
-	private int getNewEpisodeID() {
-		try {
-			return newEpisodeIDStatement.executeQueryInt(this) + 1;
-		} catch (SQLException e) {
-			CCLog.addError(LocaleBundle.getString("LogMessage.NoNewEpisodeID"), e); //$NON-NLS-1$
+			CCLog.addError(LocaleBundle.getString("LogMessage.NoNewDatabaseID"), e); //$NON-NLS-1$
 			return -1;
 		}
 	}
@@ -479,7 +453,7 @@ public class CCDatabase {
 	}
 
 	public CCMovie createNewEmptyMovie(CCMovieList list) {
-		int nlid = getNewLocalID();
+		int nlid = getNewID();
 
 		if (nlid == -1) {
 			return null;
@@ -496,8 +470,8 @@ public class CCDatabase {
 	}
 
 	public CCSeries createNewEmptySeries(CCMovieList list) {
-		int nlid = getNewLocalID();
-		int sid = getNewSeriesID();
+		int nlid = getNewID();
+		int sid = getNewID();
 
 		if (nlid == -1) {
 			return null;
@@ -514,7 +488,7 @@ public class CCDatabase {
 	}
 
 	public CCSeason createNewEmptySeason(CCSeries s) {
-		int sid = getNewSeasonID();
+		int sid = getNewID();
 
 		if (sid == -1) {
 			return null;
@@ -531,7 +505,7 @@ public class CCDatabase {
 	}
 
 	public CCEpisode createNewEmptyEpisode(CCSeason s) {
-		int eid = getNewEpisodeID();
+		int eid = getNewID();
 
 		if (eid == -1) {
 			return null;

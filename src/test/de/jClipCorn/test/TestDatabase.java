@@ -3,22 +3,18 @@ package de.jClipCorn.test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import java.io.File;
 import java.util.TimeZone;
 
 import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.database.databaseElement.columnTypes.*;
-import de.jClipCorn.features.serialization.xmlimport.ImportOptions;
 import de.jClipCorn.util.datetime.CCDateTime;
 import org.junit.Test;
 
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.CCSeries;
-import de.jClipCorn.features.serialization.ExportHelper;
 import de.jClipCorn.util.datetime.CCDate;
-import de.jClipCorn.util.helper.SimpleFileUtils;
 
 @SuppressWarnings("nls")
 public class TestDatabase extends ClipCornBaseTest {

@@ -138,10 +138,7 @@ public class Statements {
 	public static CCSQLStatement addEmptySeasonTabStatement;
 	public static CCSQLStatement addEmptyEpisodeTabStatement;
 	
-	public static CCSQLStatement newLocalIDStatement;
-	public static CCSQLStatement newSeriesIDStatement;
-	public static CCSQLStatement newSeasonIDStatement;
-	public static CCSQLStatement newEpisodeIDStatement;
+	public static CCSQLStatement newDatabaseIDStatement;
 
 	public static CCSQLStatement updateMainTabStatement;
 	public static CCSQLStatement updateSeriesTabStatement;
@@ -191,7 +188,7 @@ public class Statements {
 					.addPreparedFields(COL_MAIN_FSK, COL_MAIN_FORMAT, COL_MAIN_MOVIEYEAR, COL_MAIN_ONLINEREF, COL_MAIN_GROUPS, COL_MAIN_FILESIZE, COL_MAIN_TAGS)
 					.addPreparedFields(COL_MAIN_PART_1, COL_MAIN_PART_2, COL_MAIN_PART_3, COL_MAIN_PART_4, COL_MAIN_PART_5, COL_MAIN_PART_6)
 					.addPreparedFields(COL_MAIN_SCORE, COL_MAIN_COVERID, COL_MAIN_TYPE, COL_MAIN_SERIES_ID)
-				.build(d, statements);
+					.build(d, statements);
 
 			addEmptySeasonTabStatement = SQLBuilder.createInsert(TAB_SEASONS)
 					.addPreparedFields(COL_SEAS_SEASONID, COL_SEAS_SERIESID, COL_SEAS_NAME, COL_SEAS_YEAR, COL_SEAS_COVERID)
@@ -203,13 +200,12 @@ public class Statements {
 					.addPreparedFields(COL_EPIS_ADDDATE, COL_EPIS_LANGUAGE)
 					.build(d, statements);
 
-			newLocalIDStatement  = SQLBuilder.createCustom(TAB_MAIN).setSQL("SELECT COALESCE(MAX(%s), -1) FROM {TAB}", COL_MAIN_LOCALID.Name).build(d, statements);
-
-			newSeriesIDStatement = SQLBuilder.createCustom(TAB_MAIN).setSQL("SELECT COALESCE(MAX(%s), -1) FROM {TAB}", COL_MAIN_SERIES_ID.Name).build(d, statements);
-
-			newSeasonIDStatement = SQLBuilder.createCustom(TAB_SEASONS) .setSQL("SELECT COALESCE(MAX(%s), -1) FROM {TAB}", COL_SEAS_SEASONID.Name).build(d, statements);
-
-			newEpisodeIDStatement = SQLBuilder.createCustom(TAB_EPISODES).setSQL("SELECT COALESCE(MAX(%s), -1) FROM {TAB}", COL_EPIS_LOCALID.Name).build(d, statements);
+			newDatabaseIDStatement  = SQLBuilder
+					.createCustom(TAB_INFO)
+					.addSQL("INSERT OR IGNORE INTO [{TAB}] VALUES('{2}', 1)", COL_INFO_KEY.Name, COL_INFO_VALUE.Name, CCDatabase.INFOKEY_LASTID)
+					.addSQL("INSERT OR REPLACE INTO [{TAB}] SELECT '{2}', (CAST([{1}] AS INTEGER)+1) FROM [{TAB}] WHERE [{0}]='{2}'", COL_INFO_KEY.Name, COL_INFO_VALUE.Name, CCDatabase.INFOKEY_LASTID)
+					.addSQL("SELECT CAST([{1}] AS INTEGER) FROM [{TAB}] WHERE [{0}]='{2}';", COL_INFO_KEY.Name, COL_INFO_VALUE.Name, CCDatabase.INFOKEY_LASTID)
+					.build(d, statements);
 
 			updateMainTabStatement = SQLBuilder.createUpdate(TAB_MAIN)
 					.addPreparedWhereCondition(COL_MAIN_LOCALID)

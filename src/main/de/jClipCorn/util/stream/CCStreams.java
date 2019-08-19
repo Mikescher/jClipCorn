@@ -31,6 +31,13 @@ public final class CCStreams {
 		return new DoubleArrayStream(ls);
 	}
 
+	@SafeVarargs
+	public static <T> CCStream<T> iterate(Iterable<T> first, Iterable<T>... rest) {
+		CCStream<T> s = iterate(first);
+		for (Iterable<T> i : rest) s = s.append(i);
+		return s;
+	}
+
 	public static <T> CCStream<T> single(T ls) {
 		return new SingleStream<>(ls);
 	}

@@ -654,7 +654,7 @@ public class CompareDatabaseFrame extends JFrame {
 			int id = lsMissDB2.getModel().getElementAt(i).getCSLIDDB1();
 			CCDatabaseElement d = movielist.findDatabaseElement(id);
 			if (d != null) {
-				ExportElementsFrame.addElementToList(this, movielist, d);
+				ExportElementsFrame.addElementToList(this, d);
 			}
 		}
 	}
@@ -666,7 +666,7 @@ public class CompareDatabaseFrame extends JFrame {
 			int id = lsMissDB1.getModel().getElementAt(i).getCSLIDDB2();
 			CCDatabaseElement d = movielist.findDatabaseElement(id);
 			if (d != null) {
-				ExportElementsFrame.addElementToList(this, movielist, d);
+				ExportElementsFrame.addElementToList(this, d);
 			}
 		}
 	}

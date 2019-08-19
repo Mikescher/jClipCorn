@@ -346,6 +346,8 @@ public class DatabaseMigration {
 		CCLog.addInformation("[UPGRADE v13 -> v14] Add history=false to info table");
 		CCLog.addInformation("[UPGRADE v13 -> v14] Remove [RAND] entries from history table");
 		CCLog.addInformation("[UPGRADE v13 -> v14] Create history table (if not exists)");
+		CCLog.addInformation("[UPGRADE v13 -> v14] Make ID's unique");
+		CCLog.addInformation("[UPGRADE v13 -> v14] Add [LAST_ID] column");
 
 		for (String trigger : CCStreams.iterate(db.listTrigger()).filter(t -> t.startsWith("LOGTRIGGER_")))
 		{
@@ -374,6 +376,49 @@ public class DatabaseMigration {
 		}
 
 		db.executeSQLThrow("DELETE FROM HISTORY WHERE [TABLE]='INFO' AND [ID]='RAND' AND [FIELD]='IVALUE'");
+
+		{
+			List<Integer> ids_elm = db.querySQL("SELECT LOCALID  FROM ELEMENTS ORDER BY LOCALID",               1, o -> (int)o[0]);
+			List<Integer> ids_ser = db.querySQL("SELECT SERIESID FROM ELEMENTS WHERE TYPE=1 ORDER BY SERIESID", 1, o -> (int)o[0]);
+			List<Integer> ids_sea = db.querySQL("SELECT SEASONID FROM SEASONS ORDER BY SEASONID",               1, o -> (int)o[0]);
+			List<Integer> ids_epi = db.querySQL("SELECT LOCALID  FROM EPISODES ORDER BY LOCALID",               1, o -> (int)o[0]);
+
+			int id = CCStreams.iterate(ids_elm, ids_ser, ids_sea, ids_epi).autoMaxOrDefault(1) + 1;
+
+			db.executeSQLThrow("BEGIN TRANSACTION");
+			for (int elmid : ids_elm) {
+				id++;
+				CCLog.addDebug("[MIGRATE] Convert Element ID ["+elmid+"] to ["+id+"]");
+				db.executeSQLThrow("UPDATE ELEMENTS SET LOCALID = "+id+" WHERE LOCALID = " + elmid);
+				db.executeSQLThrow("UPDATE HISTORY SET ID = '"+id+"' WHERE ID = '" + elmid + "' AND [TABLE]='ELEMENTS'");
+			}
+			for (int serid : ids_ser) {
+				id++;
+				CCLog.addDebug("[MIGRATE] Convert Series ID ["+serid+"] to ["+id+"]");
+				db.executeSQLThrow("UPDATE ELEMENTS SET SERIESID = "+id+" WHERE SERIESID = " + serid);
+				db.executeSQLThrow("UPDATE SEASONS SET SERIESID = "+id+" WHERE SERIESID = " + serid);
+				db.executeSQLThrow("UPDATE HISTORY SET [NEW] = '"+id+"' WHERE [NEW] = '" + serid + "' AND [FIELD]='SERIESID'");
+				db.executeSQLThrow("UPDATE HISTORY SET [OLD] = '"+id+"' WHERE [OLD] = '" + serid + "' AND [FIELD]='SERIESID'");
+			}
+			for (int seaid : ids_sea) {
+				id++;
+				CCLog.addDebug("[MIGRATE] Convert Season ID ["+seaid+"] to ["+id+"]");
+				db.executeSQLThrow("UPDATE SEASONS SET SEASONID = "+id+" WHERE SEASONID = " + seaid);
+				db.executeSQLThrow("UPDATE EPISODES SET SEASONID = "+id+" WHERE SEASONID = " + seaid);
+				db.executeSQLThrow("UPDATE HISTORY SET ID = '"+id+"' WHERE ID = '" + seaid + "' AND [TABLE]='SEASONS'");
+				db.executeSQLThrow("UPDATE HISTORY SET [NEW] = '"+id+"' WHERE [NEW] = '" + seaid+"' AND [FIELD]='SEASONID'");
+				db.executeSQLThrow("UPDATE HISTORY SET [OLD] = '"+id+"' WHERE [OLD] = '" + seaid+"' AND [FIELD]='SEASONID'");
+			}
+			for (int epiid : ids_epi) {
+				id++;
+				CCLog.addDebug("[MIGRATE] Convert Episode ID ["+epiid+"] to ["+id+"]");
+				db.executeSQLThrow("UPDATE EPISODES SET LOCALID = "+id+" WHERE LOCALID = " + epiid);
+				db.executeSQLThrow("UPDATE HISTORY SET ID = '"+id+"' WHERE ID = '" + epiid + "' AND [TABLE]='EPISODES'");
+			}
+			db.executeSQLThrow("COMMIT TRANSACTION");
+
+		}
+
 	}
 
 	public void onAfterConnect(CCMovieList ml, CCDatabase db) {

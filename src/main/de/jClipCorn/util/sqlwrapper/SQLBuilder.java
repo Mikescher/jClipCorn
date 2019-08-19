@@ -1,6 +1,7 @@
 package de.jClipCorn.util.sqlwrapper;
 
 import de.jClipCorn.database.driver.CCDatabase;
+import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datatypes.DoubleString;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.datatypes.Tuple3;
@@ -74,7 +75,24 @@ public class SQLBuilder {
 	public SQLBuilder setSQL(String s, String... objList) throws SQLWrapperException {
 		if (_type != StatementType.CUSTOM) throw new SQLWrapperException("Cannot [setSQL] on type " + _type);
 
-		_customSQL = String.format(s, (Object[]) objList).replace("{TAB}", _table); //$NON-NLS-1$
+		for (int i = 0; i < objList.length; i++) s = s.replace("{"+i+"}", objList[i]); //$NON-NLS-1$  //$NON-NLS-2$
+		s = s.replace("{TAB}", _table); //$NON-NLS-1$
+
+		_customSQL = s;
+
+		return this;
+	}
+
+	public SQLBuilder addSQL(String s, String... objList) throws SQLWrapperException {
+		if (_type != StatementType.CUSTOM) throw new SQLWrapperException("Cannot [setSQL] on type " + _type);
+
+		for (int i = 0; i < objList.length; i++) s = s.replace("{"+i+"}", objList[i]); //$NON-NLS-1$  //$NON-NLS-2$
+		s = s.replace("{TAB}", _table); //$NON-NLS-1$
+
+		if (Str.isNullOrWhitespace(_customSQL))
+			_customSQL = s;
+		else
+			_customSQL = _customSQL + " ; " + s;
 
 		return this;
 	}

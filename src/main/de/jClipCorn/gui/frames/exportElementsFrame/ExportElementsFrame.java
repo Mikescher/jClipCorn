@@ -39,11 +39,8 @@ public class ExportElementsFrame extends JFrame {
 	private JPanel pnlBottom;
 	private JButton btnExport;
 	
-	private CCMovieList movielist;
-
-	public ExportElementsFrame(Component owner, CCMovieList movielist) {
+	public ExportElementsFrame(Component owner) {
 		super();
-		this.movielist = movielist;
 		initGUI();
 		setLocationRelativeTo(owner);
 	}
@@ -107,16 +104,16 @@ public class ExportElementsFrame extends JFrame {
 		lsModel.addElement(el);
 	}
 	
-	public static ExportElementsFrame getVisibleInstance(Component owner, CCMovieList movielist) {
+	public static ExportElementsFrame getVisibleInstance(Component owner) {
 		if (instance == null) {
-			instance = new ExportElementsFrame(owner, movielist);
+			instance = new ExportElementsFrame(owner);
 			instance.setVisible(true);
 			return instance;
 		}
 		
 		if (! instance.isVisible()) {
 			instance.dispose();
-			instance = new ExportElementsFrame(owner, movielist);
+			instance = new ExportElementsFrame(owner);
 			instance.setVisible(true);
 			return instance;
 		}
@@ -124,8 +121,8 @@ public class ExportElementsFrame extends JFrame {
 		return instance;
 	}
 	
-	public static void addElementToList(Component owner, CCMovieList movielist, CCDatabaseElement el) {
-		getVisibleInstance(owner, movielist).addElement(el);
+	public static void addElementToList(Component owner, CCDatabaseElement el) {
+		getVisibleInstance(owner).addElement(el);
 	}
 	
 	public static void clearAndDispose() {

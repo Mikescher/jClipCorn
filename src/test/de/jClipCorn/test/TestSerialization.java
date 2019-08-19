@@ -9,11 +9,9 @@ import de.jClipCorn.util.helper.SimpleFileUtils;
 import org.junit.Test;
 
 import java.io.File;
-import java.util.Arrays;
 import java.util.Collections;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 @SuppressWarnings({"nls", "ResultOfMethodCallIgnored"})
 public class TestSerialization extends ClipCornBaseTest {

@@ -102,7 +102,7 @@ public class DatabaseError {
 	}
 
 	private String convertToRawString(Object el) {
-		if (el instanceof CCMovie) return ((CCMovie)el).getCompleteTitle();;
+		if (el instanceof CCMovie) return ((CCMovie)el).getCompleteTitle();
 		if (el instanceof CCSeries) return ((CCSeries)el).getTitle();
 		if (el instanceof CCSeason) return ((CCSeason)el).getTitle();
 		if (el instanceof CCEpisode) return ((CCEpisode)el).getTitle();

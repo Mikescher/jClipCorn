@@ -95,7 +95,11 @@ public class DatabaseError {
 		} else if (el instanceof CCGroup) {
 			return "[" + ((CCGroup)el).Name + "]"; //$NON-NLS-1$ //$NON-NLS-2$
 		} else if (el instanceof String) {
-			return "[" + ((String)el) + "]"; //$NON-NLS-1$ //$NON-NLS-2$
+			return "[" + el + "]"; //$NON-NLS-1$ //$NON-NLS-2$
+		} else if (el instanceof Integer) {
+			return "[" + el + "]"; //$NON-NLS-1$ //$NON-NLS-2$
+		} else if (el instanceof Exception) {
+			return "[" + ((Exception)el).getClass().getSimpleName() + "|" + ((Exception)el).getMessage() + "]"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		} else {
 			return "[?]"; //$NON-NLS-1$
 		}
@@ -107,8 +111,10 @@ public class DatabaseError {
 		if (el instanceof CCSeason) return ((CCSeason)el).getTitle();
 		if (el instanceof CCEpisode) return ((CCEpisode)el).getTitle();
 		if (el instanceof File) return ((File)el).getName();
-		 if (el instanceof CCGroup) return ((CCGroup)el).Name;
+		if (el instanceof CCGroup) return ((CCGroup)el).Name;
 		if (el instanceof String) return ((String)el);
+		if (el instanceof Integer) return Integer.toString(((Integer)el));
+		if (el instanceof Exception) return ((Exception)el).getClass().getSimpleName();
 
 		return null;
 	}

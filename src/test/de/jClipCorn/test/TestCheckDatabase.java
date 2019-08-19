@@ -37,6 +37,7 @@ public class TestCheckDatabase extends ClipCornBaseTest {
 				false, // video files
 				true,  // groups
 				true,  // online-refs
+				true,  // internal db
 				true); // Additional
 
 		CCDatabaseValidator.Inst().validate(errs, ml, opt, DoubleProgressCallbackListener.EMPTY);

@@ -13,6 +13,7 @@ import java.util.Vector;
 
 import javax.swing.SwingUtilities;
 
+import de.jClipCorn.database.driver.PublicDatabaseInterface;
 import de.jClipCorn.features.serialization.xmlexport.DatabaseXMLExporter;
 import de.jClipCorn.features.serialization.xmlexport.ExportOptions;
 import de.jClipCorn.util.Str;
@@ -1069,5 +1070,9 @@ public class CCMovieList {
 
 	public List<CCGroup> getSubGroups(CCGroup group) {
 		return CCStreams.iterate(databaseGroups).filter(g -> g.Parent.equals(group.Name)).enumerate();
+	}
+
+	public PublicDatabaseInterface getInternalDatabaseDirectly() {
+		return database.getInternalDatabaseAccess();
 	}
 }

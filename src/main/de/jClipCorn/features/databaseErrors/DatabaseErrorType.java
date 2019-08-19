@@ -65,6 +65,15 @@ public class DatabaseErrorType {
 	public final static DatabaseErrorType ERROR_MEDIAINFO_SIZE_MISMATCH            = new DatabaseErrorType(59, null);
 	public final static DatabaseErrorType ERROR_MEDIAINFO_LENGTH_MISMATCH          = new DatabaseErrorType(60, null);
 	public final static DatabaseErrorType ERROR_MEDIAINFO_FILE_CHANGED             = new DatabaseErrorType(61, null);
+	public final static DatabaseErrorType ERROR_DB_EXCEPTION                       = new DatabaseErrorType(62, null);
+	public final static DatabaseErrorType ERROR_DB_DUPLICATE_ID                    = new DatabaseErrorType(63, null);
+	public final static DatabaseErrorType ERROR_DB_TOO_LARGE_ID                    = new DatabaseErrorType(64, null);
+	public final static DatabaseErrorType ERROR_DB_TYPE_SID_MISMATCH               = new DatabaseErrorType(65, null);
+	public final static DatabaseErrorType ERROR_DB_MISSING_SERIES                  = new DatabaseErrorType(66, null);
+	public final static DatabaseErrorType ERROR_DB_MISSING_SEASON                  = new DatabaseErrorType(67, null);
+	public final static DatabaseErrorType ERROR_DB_MULTI_REF_COVER                 = new DatabaseErrorType(68, null);
+	public final static DatabaseErrorType ERROR_DB_UNUSED_COVERID                  = new DatabaseErrorType(69, null);
+	public final static DatabaseErrorType ERROR_DB_DANGLING_COVERID                = new DatabaseErrorType(70, null);
 
 	private final int type;
 

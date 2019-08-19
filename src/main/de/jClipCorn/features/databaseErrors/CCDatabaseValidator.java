@@ -6,6 +6,7 @@ import de.jClipCorn.database.covertab.CCDefaultCoverCache;
 import de.jClipCorn.database.covertab.ICoverCache;
 import de.jClipCorn.database.databaseElement.*;
 import de.jClipCorn.database.databaseElement.columnTypes.*;
+import de.jClipCorn.database.driver.PublicDatabaseInterface;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.datetime.CCDate;
@@ -25,6 +26,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.sql.SQLException;
 import java.util.*;
 
 public class CCDatabaseValidator extends AbstractDatabaseValidator {
@@ -1089,6 +1091,128 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator {
 			}
 
 			pcl.stepSub(el.getFullDisplayTitle());
+		}
+	}
+
+	@Override
+	@SuppressWarnings("nls")
+	protected void findInternalDatabaseErrors(List<DatabaseError> e, CCMovieList movielist, DoubleProgressCallbackListener pcl)
+	{
+		pcl.stepRootAndResetSub("Validate database layer", 6);
+
+		PublicDatabaseInterface db = movielist.getInternalDatabaseDirectly();
+
+		// ### 1 ###
+		try
+		{
+			pcl.stepSub("Global ID uniqueness");
+
+			List<Integer> ids_elm = db.querySQL("SELECT LOCALID  FROM ELEMENTS",              1, o -> (int)o[0]);
+			List<Integer> ids_ser = db.querySQL("SELECT SERIESID FROM ELEMENTS WHERE TYPE=1", 1, o -> (int)o[0]);
+			List<Integer> ids_sea = db.querySQL("SELECT SEASONID FROM SEASONS",               1, o -> (int)o[0]);
+			List<Integer> ids_epi = db.querySQL("SELECT LOCALID  FROM EPISODES",              1, o -> (int)o[0]);
+
+			List<Integer> duplicates = CCStreams
+					.iterate(ids_elm, ids_ser, ids_sea, ids_epi)
+					.groupBy(p->p)
+					.filter(p->p.getValue().size()>1)
+					.map(Map.Entry::getKey)
+					.enumerate();
+
+			for (int dup : duplicates) {
+				e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_DB_DUPLICATE_ID, dup));
+			}
+
+			int last_id = db.querySingleIntSQLThrow("SELECT CAST(IVALUE AS INTEGER) FROM INFO WHERE IKEY='LAST_ID'", 0);
+
+			for (int tlid : CCStreams.iterate(ids_elm, ids_ser, ids_sea, ids_epi).filter(p -> p > last_id)) {
+				e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_DB_TOO_LARGE_ID, tlid));
+			}
+		}
+		catch (Exception ex) {
+			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_DB_EXCEPTION, ex));
+		}
+
+
+		// ### 2 ###
+		try
+		{
+			pcl.stepSub("Mismatch [TYPE] <> [SERIESID]");
+
+			List<Integer> errs = db.querySQL("SELECT LOCALID FROM ELEMENTS WHERE (TYPE=0 AND SERIESID<>-1) OR (TYPE=1 AND SERIESID<0) OR (TYPE<>0 AND TYPE<>1)", 1, o -> (int)o[0]);
+
+			for (int errid : errs) {
+				e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_DB_TYPE_SID_MISMATCH, errid));
+			}
+		}
+		catch (Exception ex) {
+			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_DB_EXCEPTION, ex));
+		}
+
+
+		// ### 3 ###
+		try
+		{
+			pcl.stepSub("Missing series entry");
+
+			List<Integer> errs = db.querySQL("SELECT DISTINCT SEASONS.SERIESID FROM SEASONS LEFT JOIN ELEMENTS ON SEASONS.SERIESID=ELEMENTS.SERIESID WHERE ELEMENTS.LOCALID IS NULL", 1, o -> (int)o[0]);
+
+			for (int errid : errs) {
+				e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_DB_MISSING_SERIES, errid));
+			}
+		}
+		catch (Exception ex) {
+			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_DB_EXCEPTION, ex));
+		}
+
+
+		// ### 4 ###
+		try
+		{
+			pcl.stepSub("Missing seasons entry");
+
+			List<Integer> errs = db.querySQL("SELECT DISTINCT EPISODES.SEASONID FROM EPISODES LEFT JOIN SEASONS ON EPISODES.SEASONID=SEASONS.SEASONID WHERE SEASONS.SEASONID IS NULL", 1, o -> (int)o[0]);
+
+			for (int errid : errs) {
+				e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_DB_MISSING_SEASON, errid));
+			}
+		}
+		catch (Exception ex) {
+			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_DB_EXCEPTION, ex));
+		}
+
+
+		// ### 5 ###
+		try
+		{
+			pcl.stepSub("Validate CoverIDs");
+
+			List<Integer> cvr1 = db.querySQL("SELECT COVERID FROM ELEMENTS WHERE COVERID <> -1", 1, o -> (int)o[0]);
+			List<Integer> cvr2 = db.querySQL("SELECT COVERID FROM SEASONS WHERE COVERID <> -1",  1, o -> (int)o[0]);
+
+			List<Integer> cvrall = db.querySQL("SELECT ID FROM COVERS",  1, o -> (int)o[0]);
+
+			List<Integer> duplicates = CCStreams
+					.iterate(cvr1, cvr2)
+					.groupBy(p->p)
+					.filter(p->p.getValue().size()>1)
+					.map(Map.Entry::getKey)
+					.enumerate();
+
+			for (int dup : duplicates) {
+				e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_DB_MULTI_REF_COVER, dup));
+			}
+
+			for (int cvrid : CCStreams.iterate(cvrall).filter(p -> !cvr1.contains(p) && !cvr2.contains(p) )) {
+				e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_DB_UNUSED_COVERID, cvrid));
+			}
+
+			for (int cvrid : CCStreams.iterate(cvr1, cvr2).filter(p -> !cvrall.contains(p) )) {
+				e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_DB_DANGLING_COVERID, cvrid));
+			}
+		}
+		catch (Exception ex) {
+			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_DB_EXCEPTION, ex));
 		}
 	}
 }

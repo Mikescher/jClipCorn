@@ -347,7 +347,7 @@ public class DatabaseMigration {
 		CCLog.addInformation("[UPGRADE v13 -> v14] Remove [RAND] entries from history table");
 		CCLog.addInformation("[UPGRADE v13 -> v14] Create history table (if not exists)");
 		CCLog.addInformation("[UPGRADE v13 -> v14] Make ID's unique");
-		CCLog.addInformation("[UPGRADE v13 -> v14] Add [LAST_ID] column");
+		CCLog.addInformation("[UPGRADE v13 -> v14] Add [LAST_ID] entry");
 
 		for (String trigger : CCStreams.iterate(db.listTrigger()).filter(t -> t.startsWith("LOGTRIGGER_")))
 		{
@@ -415,6 +415,9 @@ public class DatabaseMigration {
 				db.executeSQLThrow("UPDATE EPISODES SET LOCALID = "+id+" WHERE LOCALID = " + epiid);
 				db.executeSQLThrow("UPDATE HISTORY SET ID = '"+id+"' WHERE ID = '" + epiid + "' AND [TABLE]='EPISODES'");
 			}
+
+			db.executeSQLThrow("INSERT INTO INFO VALUES ('LAST_ID', "+id+")");
+
 			db.executeSQLThrow("COMMIT TRANSACTION");
 
 		}

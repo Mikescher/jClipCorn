@@ -338,6 +338,7 @@ public class CheckDatabaseFrame extends JFrame {
 			cbValVideoFiles.isSelected(),
 			cbValAdditional.isSelected(),
 			cbValAdditional.isSelected(),
+			cbValAdditional.isSelected(),
 			cbValAdditional.isSelected()
 		);
 

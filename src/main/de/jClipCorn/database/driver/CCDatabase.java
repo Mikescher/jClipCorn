@@ -1329,4 +1329,8 @@ public class CCDatabase {
 	public boolean supportsDateType() {
 		return db.supportsDateType();
 	}
+
+	public PublicDatabaseInterface getInternalDatabaseAccess() {
+		return db;
+	}
 }

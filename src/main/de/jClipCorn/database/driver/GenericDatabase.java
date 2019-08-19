@@ -15,7 +15,7 @@ import de.jClipCorn.util.lambda.Func1to1;
 import de.jClipCorn.util.sqlwrapper.StatementType;
 
 @SuppressWarnings("nls")
-public abstract class GenericDatabase {
+public abstract class GenericDatabase implements PublicDatabaseInterface {
 	public final static String TABLETYPE_TABLE = "TABLE";
 	public final static String TABLETYPE_SYNONYM = "SYNONYM";
 	public final static String TABLETYPE_VIEW = "VIEW";
@@ -196,6 +196,7 @@ public abstract class GenericDatabase {
 		s.close();
 	}
 
+	@Override
 	public List<Object[]> querySQL(String sql, int columnCount) throws SQLException {
 		Statement s = connection.createStatement();
 		CCLog.addSQL("QuerySQL", StatementType.CUSTOM, sql);
@@ -213,6 +214,7 @@ public abstract class GenericDatabase {
 		return result;
 	}
 
+	@Override
 	public <T> List<T> querySQL(String sql, int columnCount, Func1to1<Object[], T> conv) throws SQLException {
 		Statement s = connection.createStatement();
 		CCLog.addSQL("QuerySQL", StatementType.CUSTOM, sql);
@@ -249,6 +251,7 @@ public abstract class GenericDatabase {
 		}
 	}
 
+	@Override
 	public Object querySingleSQLThrow(String sql, int column) throws SQLException {
 		Statement s = connection.createStatement();
 		CCLog.addSQL("QuerySingleSQLThrow", StatementType.CUSTOM, sql);
@@ -268,10 +271,16 @@ public abstract class GenericDatabase {
 		return (Integer) querySingleSQL(sql, column);
 	}
 
+	@Override
+	public int querySingleIntSQLThrow(String sql, int column) throws SQLException {
+		return (Integer) querySingleSQLThrow(sql, column);
+	}
+
 	public String querySingleStringSQL(String sql, int column) {
 		return (String) querySingleSQL(sql, column);
 	}
 
+	@Override
 	public String querySingleStringSQLThrow(String sql, int column) throws SQLException {
 		return (String) querySingleSQLThrow(sql, column);
 	}

@@ -42,12 +42,13 @@ public abstract class AbstractDatabaseValidator {
 		boolean validateElements = vmMovies.size() + vmSeries.size() + vmSeasons.size() + vmEpisode.size() > 0;
 
 		int outerCount = 0;
-		if (validateElements) outerCount++;               // [1]
-		if (opt.ValidateCovers) outerCount++;             // [2]
-		if (opt.ValidateCoverFiles) outerCount++;         // [3]
-		if (opt.ValidateAdditional) outerCount++;         // [4]
-		if (opt.ValidateGroups) outerCount++;             // [5]
-		if (opt.ValidateOnlineReferences) outerCount++;   // [6]
+		if (validateElements) outerCount++;                // [1]
+		if (opt.ValidateCovers) outerCount++;              // [2]
+		if (opt.ValidateCoverFiles) outerCount++;          // [3]
+		if (opt.ValidateAdditional) outerCount++;          // [4]
+		if (opt.ValidateGroups) outerCount++;              // [5]
+		if (opt.ValidateOnlineReferences) outerCount++;    // [6]
+		if (opt.ValidateDatabaseConsistence) outerCount++; // [6]
 
 		pcl.setMaxAndResetValueBoth(outerCount+1, 1);
 
@@ -63,6 +64,8 @@ public abstract class AbstractDatabaseValidator {
 
 		if (opt.ValidateOnlineReferences) findDuplicateOnlineRef(e, ml, pcl); // [6]
 
+		if (opt.ValidateDatabaseConsistence) findInternalDatabaseErrors(e, ml, pcl); // [6]
+
 		pcl.reset();
 	}
 
@@ -71,8 +74,7 @@ public abstract class AbstractDatabaseValidator {
 		return CCProperties.getInstance().PROP_VALIDATE_FILESIZEDRIFT.getValue() / 100d;
 	}
 
-	protected double getRelativeDifference(long size1, long size2)
-	{
+	protected double getRelativeDifference(long size1, long size2) {
 		double diff = Math.abs(size1 - size2);
 		long average = (size1 + size2)/2;
 		return diff / average;
@@ -193,4 +195,5 @@ public abstract class AbstractDatabaseValidator {
 	protected abstract void findDuplicateFiles(List<DatabaseError> e, CCMovieList movielist, DoubleProgressCallbackListener pcl);
 	protected abstract void findErrorInGroups(List<DatabaseError> e, CCMovieList movielist, DoubleProgressCallbackListener pcl);
 	protected abstract void findDuplicateOnlineRef(List<DatabaseError> e, CCMovieList movielist, DoubleProgressCallbackListener pcl);
+	protected abstract void findInternalDatabaseErrors(List<DatabaseError> e, CCMovieList movielist, DoubleProgressCallbackListener pcl);
 }

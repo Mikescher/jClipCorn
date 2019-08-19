@@ -164,7 +164,7 @@ public class Statements {
 
 	public static CCSQLStatement addInfoKeyStatement;
 	public static CCSQLStatement selectInfoKeyStatement;
-	public static CCSQLStatement updateInfoKeyStatement;
+	public static CCSQLStatement replaceInfoKeyStatement;
 
 	public static CCSQLStatement selectGroupsStatement;
 	public static CCSQLStatement insertGroupStatement;
@@ -335,8 +335,8 @@ public class Statements {
 					.addPreparedFields(COL_INFO_KEY, COL_INFO_VALUE)
 					.build(d, statements);
 
-			updateInfoKeyStatement = SQLBuilder.createUpdate(TAB_INFO)
-					.addPreparedWhereCondition(COL_INFO_KEY)
+			replaceInfoKeyStatement = SQLBuilder.createInsertOrReplace(TAB_INFO)
+					.addPreparedField(COL_INFO_KEY)
 					.addPreparedField(COL_INFO_VALUE)
 					.build(d, statements);
 

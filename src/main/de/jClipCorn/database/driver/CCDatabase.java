@@ -46,8 +46,9 @@ public class CCDatabase {
 	public final static String INFOKEY_DUUID        = "DATABASE_UNIVERSALLY_UNIQUE_IDENTIFIER"; //$NON-NLS-1$
 	public final static String INFOKEY_HISTORY      = "HISTORY_ENABLED";                        //$NON-NLS-1$
 	public final static String INFOKEY_LASTID       = "LAST_ID";                                //$NON-NLS-1$
+	public final static String INFOKEY_LASTCOVERID  = "LAST_COVERID";                           //$NON-NLS-1$
 
-	public final static String[] INFOKEYS = new String[]{ INFOKEY_DBVERSION, INFOKEY_DATE, INFOKEY_TIME, INFOKEY_USERNAME, INFOKEY_DUUID, INFOKEY_HISTORY };
+	public final static String[] INFOKEYS = new String[]{ INFOKEY_DBVERSION, INFOKEY_DATE, INFOKEY_TIME, INFOKEY_USERNAME, INFOKEY_DUUID, INFOKEY_HISTORY, INFOKEY_LASTID, INFOKEY_LASTCOVERID };
 	
 	private final String databasePath;
 	private final GenericDatabase db;
@@ -1202,7 +1203,7 @@ public class CCDatabase {
 	
 	private void updateInformationInDB(String key, String value) {
 		try {
-			CCSQLStatement stmt = updateInfoKeyStatement;
+			CCSQLStatement stmt = replaceInfoKeyStatement;
 			stmt.clearParameters();
 
 			stmt.setStr(COL_INFO_KEY, value);
@@ -1266,20 +1267,32 @@ public class CCDatabase {
 
 	public boolean insertCoverEntry(CCCoverData cce) {
 		try {
-			CCSQLStatement stmt = insertCoversStatement;
-			stmt.clearParameters();
+			{
+				CCSQLStatement stmt = insertCoversStatement;
+				stmt.clearParameters();
 
-			stmt.setInt(COL_CVRS_ID,          cce.ID);
-			stmt.setStr(COL_CVRS_FILENAME,    cce.Filename);
-			stmt.setInt(COL_CVRS_WIDTH,       cce.Width);
-			stmt.setInt(COL_CVRS_HEIGHT,      cce.Height);
-			stmt.setStr(COL_CVRS_HASH_FILE,   cce.Checksum);
-			stmt.setLng(COL_CVRS_FILESIZE,    cce.Filesize);
-			stmt.setBlb(COL_CVRS_PREVIEW,     cce.getPreviewOrNull());
-			stmt.setInt(COL_CVRS_PREVIEWTYPE, cce.PreviewType.asInt());
-			stmt.setCDT(COL_CVRS_CREATED,     cce.Timestamp);
+				stmt.setInt(COL_CVRS_ID,          cce.ID);
+				stmt.setStr(COL_CVRS_FILENAME,    cce.Filename);
+				stmt.setInt(COL_CVRS_WIDTH,       cce.Width);
+				stmt.setInt(COL_CVRS_HEIGHT,      cce.Height);
+				stmt.setStr(COL_CVRS_HASH_FILE,   cce.Checksum);
+				stmt.setLng(COL_CVRS_FILESIZE,    cce.Filesize);
+				stmt.setBlb(COL_CVRS_PREVIEW,     cce.getPreviewOrNull());
+				stmt.setInt(COL_CVRS_PREVIEWTYPE, cce.PreviewType.asInt());
+				stmt.setCDT(COL_CVRS_CREATED,     cce.Timestamp);
 
-			stmt.executeUpdate();
+				stmt.executeUpdate();
+			}
+
+			{
+				CCSQLStatement stmt = replaceInfoKeyStatement;
+				stmt.clearParameters();
+
+				stmt.setStr(COL_INFO_KEY, INFOKEY_LASTCOVERID);
+				stmt.setStr(COL_INFO_VALUE, Integer.toString(cce.ID));
+
+				stmt.executeUpdate();
+			}
 
 			return true;
 		} catch (SQLException | SQLWrapperException e) {

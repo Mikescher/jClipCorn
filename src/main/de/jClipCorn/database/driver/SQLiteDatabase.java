@@ -10,6 +10,7 @@ import java.util.List;
 
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.properties.enumerations.CCDatabaseDriver;
+import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.exceptions.FileLockedException;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.FileLockManager;
@@ -139,7 +140,7 @@ public class SQLiteDatabase extends GenericDatabase {
 			executeSQLThrow("SELECT * FROM " + Statements.TAB_TEMP + " LIMIT 1");
 
 			// Test if writeable
-			executeSQLThrow("REPLACE INTO " + Statements.TAB_TEMP + " (" + Statements.COL_TEMP_KEY.Name + ", " + Statements.COL_TEMP_VALUE.Name + ") VALUES ('" + "RAND" + "', '" + Math.random() + "')");
+			executeSQLThrow("REPLACE INTO [TEMP] (IKEY,IVALUE) VALUES ('RAND','" + Double.toString(Math.random()).substring(2) + "'),('ACCESS','"+ CCDateTime.getCurrentDateTime().toStringISO() +"')");
 		}
 		catch (SQLiteException e)
 		{

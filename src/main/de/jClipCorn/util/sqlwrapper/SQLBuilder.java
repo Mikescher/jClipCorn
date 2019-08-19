@@ -41,6 +41,12 @@ public class SQLBuilder {
 		return b;
 	}
 
+	public static SQLBuilder createInsertOrReplace(String tab) {
+		SQLBuilder b = new SQLBuilder(StatementType.REPLACE);
+		b._table = tab;
+		return b;
+	}
+
 	public static SQLBuilder createDelete(String tab) {
 		SQLBuilder b = new SQLBuilder(StatementType.DELETE);
 		b._table = tab;
@@ -60,7 +66,7 @@ public class SQLBuilder {
 	}
 
 	public SQLBuilder addPreparedField(CCSQLColDef field) throws SQLWrapperException {
-		if (_type != StatementType.INSERT && _type != StatementType.UPDATE) throw new SQLWrapperException("Cannot [addPreparedField] on type " + _type);
+		if (_type != StatementType.INSERT && _type != StatementType.UPDATE && _type != StatementType.REPLACE) throw new SQLWrapperException("Cannot [addPreparedField] on type " + _type);
 
 		_fields.add(Tuple.Create(new DoubleString(field.Name, "?"), field.Type));
 
@@ -119,11 +125,12 @@ public class SQLBuilder {
 
 	public CCSQLStatement build(Func1to1WithGenericException<String, PreparedStatement, SQLException> fn, ArrayList<CCSQLStatement> collector) throws SQLWrapperException, SQLException {
 		switch (_type) {
-			case SELECT: { CCSQLStatement r = buildSelect(fn); collector.add(r); return r; }
-			case UPDATE: { CCSQLStatement r = buildUpdate(fn); collector.add(r); return r; }
-			case DELETE: { CCSQLStatement r = buildDelete(fn); collector.add(r); return r; }
-			case INSERT: { CCSQLStatement r = buildInsert(fn); collector.add(r); return r; }
-			case CUSTOM: { CCSQLStatement r = buildCustom(fn); collector.add(r); return r; }
+			case SELECT:  { CCSQLStatement r = buildSelect(fn);          collector.add(r); return r; }
+			case UPDATE:  { CCSQLStatement r = buildUpdate(fn);          collector.add(r); return r; }
+			case REPLACE: { CCSQLStatement r = buildInsertOrReplace(fn); collector.add(r); return r; }
+			case DELETE:  { CCSQLStatement r = buildDelete(fn);          collector.add(r); return r; }
+			case INSERT:  { CCSQLStatement r = buildInsert(fn);          collector.add(r); return r; }
+			case CUSTOM:  { CCSQLStatement r = buildCustom(fn);          collector.add(r); return r; }
 			default: throw new SQLWrapperException("Unknown CC:StatementType := " + _type);
 		}
 	}
@@ -207,6 +214,35 @@ public class SQLBuilder {
 
 			sql += wconds.toString();
 		}
+
+		return new CCSQLStatement(_type, sql, fn.invoke(sql), fields, new ArrayList<>());
+	}
+
+	@SuppressWarnings("nls")
+	private CCSQLStatement buildInsertOrReplace(Func1to1WithGenericException<String, PreparedStatement, SQLException> fn) throws SQLException, SQLWrapperException {
+		StringBuilder assigns1 = new StringBuilder();
+		StringBuilder assigns2 = new StringBuilder();
+
+		for (int i = 0; i < _fields.size(); i++) {
+			if (i > 0) assigns1.append(", ");
+			assigns1.append(SQLBuilderHelper.sqlEscape(_fields.get(i).Item1.get1()));
+
+			if (i > 0) assigns2.append(", ");
+			assigns2.append(SQLBuilderHelper.sqlEscape(_fields.get(i).Item1.get2()));
+		}
+
+		int prepIdx = 1;
+		List<Tuple3<Integer, String, CCSQLType>> fields = new ArrayList<>();
+
+		for (Tuple<DoubleString, CCSQLType> field : _fields) {
+			if (!field.Item1.get2().equals("?")) continue; //$NON-NLS-1$
+			fields.add(Tuple3.Create(prepIdx, field.Item1.get1(), field.Item2));
+			prepIdx++;
+		}
+
+		String sql = String.format("INSERT OR REPLACE INTO %s (%s) VALUES (%s)", SQLBuilderHelper.sqlEscape(_table), assigns1.toString(), assigns2.toString());
+
+		if (!_whereClauses.isEmpty()) throw new SQLWrapperException("SQLStatementType.REPLACE does not allow WHERE clauses");
 
 		return new CCSQLStatement(_type, sql, fn.invoke(sql), fields, new ArrayList<>());
 	}

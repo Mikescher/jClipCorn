@@ -606,7 +606,7 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 			return;
 
 		if (Main.DEBUG) {
-			lblStaffel.setText(String.format("<%d> %s (%d) (%s)", s.getSeasonID(), s.getTitle(), s.getYear(), s.getCoverID())); //$NON-NLS-1$
+			lblStaffel.setText(String.format("<%d> %s (%d) (%s)", s.getLocalID(), s.getTitle(), s.getYear(), s.getCoverID())); //$NON-NLS-1$
 		} else {
 			lblStaffel.setText(String.format("%s (%d)", s.getTitle(), s.getYear())); //$NON-NLS-1$
 		}

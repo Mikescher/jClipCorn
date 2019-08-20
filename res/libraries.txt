@@ -13,3 +13,6 @@ HTMLUnit
 SQLite-JDBC
 jUnit
 Hamcrest-core
+FatCow Iconset
+Fugue Iconset
+FamFamFam's Silk Iconset

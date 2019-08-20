@@ -5,7 +5,9 @@ import java.util.List;
 import java.util.Random;
 
 import de.jClipCorn.features.log.CCLog;
+import de.jClipCorn.util.Str;
 import de.jClipCorn.util.exceptions.EnumFormatException;
+import de.jClipCorn.util.exceptions.EnumValueNotFoundException;
 
 public class EnumWrapper<T extends ContinoousEnum<T>> {
 
@@ -42,6 +44,11 @@ public class EnumWrapper<T extends ContinoousEnum<T>> {
 			return defValue.evalues()[val]; // Geht nur wenn alle Zahlen nach der Reihe da sind
 		}
 		return def;
+	}
+
+	public T findByTextOrException(String strval) throws EnumValueNotFoundException {
+		for (T val : defValue.evalues()) if (Str.equals(val.asString(), strval)) return val;
+		throw new EnumValueNotFoundException(strval, defValue.getClass());
 	}
 
 	public String[] getList() {

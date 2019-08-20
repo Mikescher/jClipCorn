@@ -64,7 +64,11 @@ public class CCTime implements Comparable<CCTime>, StringSpecSupplier {
 	public int getSeconds() {
 		return sec;
 	}
-	
+
+	public int getTotalSeconds() {
+		return hour*(60*60) + min*(60) + sec;
+	}
+
 	public CCTime getSetHour(int h) {
 		if (getHours() == h) return this;
 		
@@ -126,6 +130,25 @@ public class CCTime implements Comparable<CCTime>, StringSpecSupplier {
 		if (sqlRep.charAt(2) != ':') throw new TimeFormatException(sqlRep);
 		if (sqlRep.charAt(5) != ':') throw new TimeFormatException(sqlRep);
 		
+		return new CCTime(h, m, s);
+	}
+
+	public static CCTime createFromSQLWithMilliseconds(String sqlRep) throws TimeFormatException {
+		if (sqlRep.length() != 12) throw new TimeFormatException(sqlRep);
+
+		int h = (sqlRep.charAt(0)-'0') * 10 +   // h
+				(sqlRep.charAt(1)-'0') * 1;     // h
+		// :
+		int m = (sqlRep.charAt(3)-'0') * 10 +   // M
+				(sqlRep.charAt(4)-'0') * 1;     // M
+		// :
+		int s = (sqlRep.charAt(6)-'0') * 10 +   // s
+				(sqlRep.charAt(7)-'0') * 1;     // s
+
+		if (sqlRep.charAt(2) != ':') throw new TimeFormatException(sqlRep);
+		if (sqlRep.charAt(5) != ':') throw new TimeFormatException(sqlRep);
+		if (sqlRep.charAt(8) != '.') throw new TimeFormatException(sqlRep);
+
 		return new CCTime(h, m, s);
 	}
 	
@@ -438,5 +461,12 @@ public class CCTime implements Comparable<CCTime>, StringSpecSupplier {
 	@Override
 	public String toString() {
 		return "<CCTime>:" + toStringSQL(); //$NON-NLS-1$
+	}
+
+	// return seconds([other] - [this])
+	public int getSecondDifferenceTo(CCTime other) {
+		if (this.isUnspecifiedTime() || !this.isValidTime() || other.isUnspecifiedTime() || !other.isValidTime()) return 0;
+
+		return other.getTotalSeconds() - getTotalSeconds();
 	}
 }

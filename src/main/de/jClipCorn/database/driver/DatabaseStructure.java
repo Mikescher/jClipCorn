@@ -1,6 +1,7 @@
 package de.jClipCorn.database.driver;
 
 import de.jClipCorn.util.sqlwrapper.CCSQLColDef;
+import de.jClipCorn.util.sqlwrapper.CCSQLKVKey;
 import de.jClipCorn.util.sqlwrapper.CCSQLTableDef;
 import de.jClipCorn.util.sqlwrapper.CCSQLType;
 
@@ -180,19 +181,25 @@ public class DatabaseStructure
 
 	//--------------------------------------------------------------------------------------------------
 
-	public final static CCSQLTableDef[] TABLES = new CCSQLTableDef[]{ TAB_MAIN, TAB_SEASONS, TAB_EPISODES, TAB_INFO, TAB_GROUPS, TAB_COVERS, TAB_HISTORY, TAB_TEMP };
+	public final static CCSQLTableDef[] TABLES = new CCSQLTableDef[]
+	{
+		TAB_MAIN, TAB_SEASONS, TAB_EPISODES, TAB_INFO, TAB_GROUPS, TAB_COVERS, TAB_HISTORY, TAB_TEMP
+	};
 
 	//--------------------------------------------------------------------------------------------------
 
-	public final static String INFOKEY_DBVERSION    = "VERSION_DB";                             //$NON-NLS-1$
-	public final static String INFOKEY_DATE         = "CREATION_DATE";                          //$NON-NLS-1$
-	public final static String INFOKEY_TIME         = "CREATION_TIME";                          //$NON-NLS-1$
-	public final static String INFOKEY_USERNAME     = "CREATION_USERNAME";                      //$NON-NLS-1$
-	public final static String INFOKEY_DUUID        = "DATABASE_UNIVERSALLY_UNIQUE_IDENTIFIER"; //$NON-NLS-1$
-	public final static String INFOKEY_HISTORY      = "HISTORY_ENABLED";                        //$NON-NLS-1$
-	public final static String INFOKEY_LASTID       = "LAST_ID";                                //$NON-NLS-1$
-	public final static String INFOKEY_LASTCOVERID  = "LAST_COVERID";                           //$NON-NLS-1$
+	public final static CCSQLKVKey INFOKEY_DBVERSION    = new CCSQLKVKey("VERSION_DB");                             //$NON-NLS-1$
+	public final static CCSQLKVKey INFOKEY_DATE         = new CCSQLKVKey("CREATION_DATE");                          //$NON-NLS-1$
+	public final static CCSQLKVKey INFOKEY_TIME         = new CCSQLKVKey("CREATION_TIME");                          //$NON-NLS-1$
+	public final static CCSQLKVKey INFOKEY_USERNAME     = new CCSQLKVKey("CREATION_USERNAME");                      //$NON-NLS-1$
+	public final static CCSQLKVKey INFOKEY_DUUID        = new CCSQLKVKey("DATABASE_UNIVERSALLY_UNIQUE_IDENTIFIER"); //$NON-NLS-1$
+	public final static CCSQLKVKey INFOKEY_HISTORY      = new CCSQLKVKey("HISTORY_ENABLED");                        //$NON-NLS-1$
+	public final static CCSQLKVKey INFOKEY_LASTID       = new CCSQLKVKey("LAST_ID");                                //$NON-NLS-1$
+	public final static CCSQLKVKey INFOKEY_LASTCOVERID  = new CCSQLKVKey("LAST_COVERID");                           //$NON-NLS-1$
 
-	public final static String[] INFOKEYS = new String[]{ INFOKEY_DBVERSION, INFOKEY_DATE, INFOKEY_TIME, INFOKEY_USERNAME, INFOKEY_DUUID, INFOKEY_HISTORY, INFOKEY_LASTID, INFOKEY_LASTCOVERID };
+	public final static CCSQLKVKey[] INFOKEYS = new CCSQLKVKey[]
+	{
+		INFOKEY_DBVERSION, INFOKEY_DATE, INFOKEY_TIME, INFOKEY_USERNAME, INFOKEY_DUUID, INFOKEY_HISTORY, INFOKEY_LASTID, INFOKEY_LASTCOVERID
+	};
 
 }

@@ -115,6 +115,10 @@ public abstract class JCCSimpleTable<TData> extends JScrollPane implements ListS
 		model.setData(newdata);
 	}
 
+	public void clearData() {
+		model.setData(new ArrayList<>());
+	}
+
 	public List<TData> getDataCopy() {
 		return model.getDataCopy();
 	}

@@ -19,7 +19,7 @@ public class CCSQLTableDef {
 
 		Primary = p;
 
-		Columns = Arrays.asList(cols);
+		Columns = new ArrayList<>(Arrays.asList(cols));
 		Columns.add(0, p);
 	}
 

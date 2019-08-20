@@ -3,7 +3,6 @@ package de.jClipCorn.database.driver;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import de.jClipCorn.database.driver.CCDatabase;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.util.sqlwrapper.SQLOrder;
@@ -22,7 +21,6 @@ public class Statements {
 
 	public static CCSQLStatement newDatabaseIDStatement1;
 	public static CCSQLStatement newDatabaseIDStatement2;
-	public static CCSQLStatement newDatabaseIDStatement3;
 
 	public static CCSQLStatement updateMainTabStatement;
 	public static CCSQLStatement updateSeriesTabStatement;
@@ -44,9 +42,8 @@ public class Statements {
 	public static CCSQLStatement selectSingleSeasonTabStatement;
 	public static CCSQLStatement selectSingleEpisodeTabStatement;
 
-	public static CCSQLStatement addInfoKeyStatement;
-	public static CCSQLStatement selectInfoKeyStatement;
-	public static CCSQLStatement replaceInfoKeyStatement;
+	public static CCSQLStatement writeInfoKeyStatement;
+	public static CCSQLStatement readInfoKeyStatement;
 
 	public static CCSQLStatement selectGroupsStatement;
 	public static CCSQLStatement insertGroupStatement;
@@ -61,6 +58,7 @@ public class Statements {
 	public static CCSQLStatement removeCoversStatement;
 
 	public static CCSQLStatement countHistory;
+	public static CCSQLStatement queryHistoryStatement;
 
 	private static ArrayList<CCSQLStatement> statements = new ArrayList<>();
 
@@ -88,17 +86,12 @@ public class Statements {
 
 			newDatabaseIDStatement1 = SQLBuilder
 					.createCustom(TAB_INFO)
-					.setSQL("INSERT OR IGNORE INTO [{TAB}] VALUES('{2}', 1)", COL_INFO_KEY.Name, COL_INFO_VALUE.Name, DatabaseStructure.INFOKEY_LASTID)
+					.setSQL("REPLACE INTO [{TAB}] SELECT '{2}', (CAST([{1}] AS INTEGER)+1) FROM [{TAB}] WHERE [{0}]='{2}'", COL_INFO_KEY.Name, COL_INFO_VALUE.Name, INFOKEY_LASTID.Key)
 					.build(d, statements);
 
 			newDatabaseIDStatement2 = SQLBuilder
 					.createCustom(TAB_INFO)
-					.setSQL("INSERT OR REPLACE INTO [{TAB}] SELECT '{2}', (CAST([{1}] AS INTEGER)+1) FROM [{TAB}] WHERE [{0}]='{2}'", COL_INFO_KEY.Name, COL_INFO_VALUE.Name, DatabaseStructure.INFOKEY_LASTID)
-					.build(d, statements);
-
-			newDatabaseIDStatement3 = SQLBuilder
-					.createCustom(TAB_INFO)
-					.setSQL("SELECT CAST([{1}] AS INTEGER) FROM [{TAB}] WHERE [{0}]='{2}'", COL_INFO_KEY.Name, COL_INFO_VALUE.Name, DatabaseStructure.INFOKEY_LASTID)
+					.setSQL("SELECT CAST([{1}] AS INTEGER) FROM [{TAB}] WHERE [{0}]='{2}'", COL_INFO_KEY.Name, COL_INFO_VALUE.Name, INFOKEY_LASTID.Key)
 					.build(d, statements);
 
 			updateMainTabStatement = SQLBuilder.createUpdate(TAB_MAIN)
@@ -210,16 +203,12 @@ public class Statements {
 					.addPreparedWhereCondition(COL_EPIS_LOCALID)
 					.build(d, statements);
 
-			selectInfoKeyStatement = SQLBuilder.createSelect(TAB_INFO)
+			readInfoKeyStatement = SQLBuilder.createSelect(TAB_INFO)
 					.addSelectField(COL_INFO_VALUE)
 					.addPreparedWhereCondition(COL_INFO_KEY)
 					.build(d, statements);
 
-			addInfoKeyStatement = SQLBuilder.createInsert(TAB_INFO)
-					.addPreparedFields(COL_INFO_KEY, COL_INFO_VALUE)
-					.build(d, statements);
-
-			replaceInfoKeyStatement = SQLBuilder.createInsertOrReplace(TAB_INFO)
+			writeInfoKeyStatement = SQLBuilder.createInsertOrReplace(TAB_INFO)
 					.addPreparedField(COL_INFO_KEY)
 					.addPreparedField(COL_INFO_VALUE)
 					.build(d, statements);
@@ -268,6 +257,11 @@ public class Statements {
 			countHistory = SQLBuilder
 					.createCustom(TAB_HISTORY)
 					.setSQL("SELECT COUNT(*) FROM HISTORY")
+					.build(d, statements);
+
+			queryHistoryStatement = SQLBuilder.createSelect(TAB_HISTORY)
+					.addSelectFields(COL_HISTORY_TABLE, COL_HISTORY_ID, COL_HISTORY_DATE, COL_HISTORY_ACTION, COL_HISTORY_FIELD, COL_HISTORY_OLD, COL_HISTORY_NEW)
+					.setOrder(COL_HISTORY_DATE, SQLOrder.ASC)
 					.build(d, statements);
 
 			if (!CCLog.isUnitTest()) CCLog.addDebug(String.format("%d SQL Statements prepared", statements.size())); //$NON-NLS-1$

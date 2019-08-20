@@ -77,7 +77,8 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 		episodes.sort(Comparator.comparingInt(CCEpisode::getEpisodeNumber));
 	}
 
-	public int getSeasonID() {
+	@Override
+	public int getLocalID() {
 		return seasonID;
 	}
 
@@ -114,6 +115,11 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 	@Override
 	public CCSeries getSeries() {
 		return owner;
+	}
+
+	@Override
+	public String getQualifiedTitle() {
+		return Str.format("{0} - {1}", getSeries().getTitle(), getTitle()); //$NON-NLS-1$
 	}
 
 	@Override

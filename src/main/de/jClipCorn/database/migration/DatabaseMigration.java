@@ -61,7 +61,7 @@ public class DatabaseMigration {
 				COL_INFO_VALUE.Name,
 				TAB_INFO.Name,
 				COL_INFO_KEY.Name,
-				INFOKEY_DBVERSION), 0);
+				INFOKEY_DBVERSION.Key), 0);
 	}
 
 	private void setDBVersion(String version) throws SQLException {
@@ -70,7 +70,7 @@ public class DatabaseMigration {
 				COL_INFO_VALUE.Name,
 				version,
 				COL_INFO_KEY.Name,
-				INFOKEY_DBVERSION));
+				INFOKEY_DBVERSION.Key));
 	}
 	
 	@SuppressWarnings("nls")
@@ -366,7 +366,7 @@ public class DatabaseMigration {
 
 		db.executeSQLThrow("CREATE TABLE TEMP (IKEY TEXT NOT NULL, IVALUE TEXT NOT NULL, PRIMARY KEY(IKEY))");
 
-		db.executeSQLThrow("INSERT INTO INFO (IKEY, IVALUE) VALUES ('HISTORY', '0')");
+		db.executeSQLThrow("INSERT INTO INFO (IKEY, IVALUE) VALUES ('HISTORY_ENABLED', '0')");
 
 		if (!db.listTables().contains("HISTORY"))
 		{

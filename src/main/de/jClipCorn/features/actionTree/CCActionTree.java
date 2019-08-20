@@ -31,6 +31,7 @@ import de.jClipCorn.gui.frames.compareDatabaseFrame.CompareDatabaseFrame;
 import de.jClipCorn.gui.frames.compareDatabaseFrame.DatabaseComparator;
 import de.jClipCorn.gui.frames.coverPreviewFrame.CoverPreviewFrame;
 import de.jClipCorn.gui.frames.createSeriesFolderStructureFrame.CreateSeriesFolderStructureFrame;
+import de.jClipCorn.gui.frames.databaseHistoryFrame.DatabaseHistoryFrame;
 import de.jClipCorn.gui.frames.editMovieFrame.EditMovieFrame;
 import de.jClipCorn.gui.frames.editSeriesFrame.EditSeriesFrame;
 import de.jClipCorn.gui.frames.exportElementsFrame.ExportElementsFrame;
@@ -153,6 +154,7 @@ public class CCActionTree extends UIActionTree{
 				add(extras, "ScanFolder",               KS_CTRL_O, "ClipMenuBar.Extras.ScanFolder",               Resources.ICN_MENUBAR_SCANFOLDER,           true,  this::onClickExtrasScanFolder);
 				add(extras, "CompareDBs",               null,      "ClipMenuBar.Extras.CompareDBs",               Resources.ICN_MENUBAR_COMPARE,              false, this::onClickExtrasCompareDBs);
 				add(extras, "ShowWatchHistory",         null,      "ClipMenuBar.Extras.WatchHistory",             Resources.ICN_MENUBAR_WATCHHISTORY,         false, this::onClickExtrasShowWatchHistory);
+				add(extras, "ShowDatabaseHistory",      null,      "ClipMenuBar.Extras.DatabaseHistory",          Resources.ICN_MENUBAR_DATABASEHISTORY,      false, this::onClickExtrasShowDatabaseHistory);
 				add(extras, "RandomMovie",              null,      "ClipMenuBar.Extras.RandomMovie",              Resources.ICN_MENUBAR_RANDOM,               false, this::onClickExtrasRandomMovie);
 				add(extras, "BackupManager",            null,      "ClipMenuBar.Extras.BackupManager",            Resources.ICN_MENUBAR_BACKUPMANAGER,        false, this::onClickExtrasBackupManager);
 				add(extras, "ShowStatistics",           null,      "ClipMenuBar.Extras.Statistics",               Resources.ICN_MENUBAR_STATISTICS,           false, this::onClickExtrasShowStatistics);
@@ -361,6 +363,10 @@ public class CCActionTree extends UIActionTree{
 	
 	private void onClickExtrasShowWatchHistory(CCTreeActionEvent e) {
 		new WatchHistoryFrame(e.SwingOwner, movielist).setVisible(true);
+	}
+
+	private void onClickExtrasShowDatabaseHistory(CCTreeActionEvent e) {
+		new DatabaseHistoryFrame(e.SwingOwner, movielist).setVisible(true);
 	}
 	
 	private void onClickMaintenanceResetViewed(CCTreeActionEvent e) {

@@ -96,7 +96,7 @@ public class DatabaseXMLExporterImpl {
 	}
 
 	public static void exportSeason(Element e, CCSeason o, ExportOptions s) {
-		if (s.ExportLocalID) e.setAttribute("seasonid", o.getSeasonID() + "");
+		if (s.ExportLocalID) e.setAttribute("seasonid", o.getLocalID() + "");
 
 		e.setAttribute("title", o.getTitle());
 		e.setAttribute("year", o.getYear() + "");

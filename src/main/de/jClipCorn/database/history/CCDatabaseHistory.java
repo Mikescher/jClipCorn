@@ -6,6 +6,8 @@ import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datatypes.RefParam;
 import de.jClipCorn.util.datatypes.Tuple;
+import de.jClipCorn.util.datetime.CCDateTime;
+import de.jClipCorn.util.exceptions.CCFormatException;
 import de.jClipCorn.util.sqlwrapper.CCSQLColDef;
 import de.jClipCorn.util.sqlwrapper.CCSQLTableDef;
 import de.jClipCorn.util.stream.CCStreams;
@@ -13,19 +15,24 @@ import de.jClipCorn.util.stream.CCStreams;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import static de.jClipCorn.util.sqlwrapper.SQLBuilderHelper.forceSQLEscape;
 
 public class CCDatabaseHistory {
+	private final static int MERGE_DIFF_TIME  = 120; // sec
+	private final static int MERGE_MAX_TIME   = 300; // sec
+	private final static int MERGE_SHORT_TIME =   8; // sec
 
 	private final CCDatabase _db;
-	
+	private CCCombinedHistoryEntry base;
+
 	public CCDatabaseHistory(CCDatabase db) {
 		_db = db;
 	}
 
 	public boolean isHistoryActive() {
-		String str = _db.getInformationFromDB(DatabaseStructure.INFOKEY_HISTORY);
+		String str = _db.readInformationFromDB(DatabaseStructure.INFOKEY_HISTORY, "MISSING_ENTRY"); //$NON-NLS-1$
 		if ("0".equals(str)) return false; //$NON-NLS-1$
 		if ("1".equals(str)) return true;  //$NON-NLS-1$
 
@@ -33,7 +40,7 @@ public class CCDatabaseHistory {
 		return false;
 	}
 
-	public List<Tuple<String, String>> createTriggerStatements() {
+	private List<Tuple<String, String>> createTriggerStatements() {
 		List<Tuple<String, String>> result = new ArrayList<>();
 
 		for(CCSQLTableDef tab : DatabaseStructure.TABLES) {
@@ -141,7 +148,10 @@ public class CCDatabaseHistory {
 	}
 
 	@SuppressWarnings("nls")
-	public boolean testTrigger(boolean active, RefParam<String> error) {
+	public boolean testTrigger(boolean active, RefParam<String> referror) {
+
+		List<String> errors = new ArrayList<>();
+
 		try {
 			List<Tuple<String, String>> triggerDB = _db.listTrigger();
 			List<Tuple<String, String>> triggerOK = createTriggerStatements();
@@ -149,28 +159,165 @@ public class CCDatabaseHistory {
 			if (active) {
 				for (Tuple<String, String> t : triggerOK) {
 					Tuple<String, String> db = CCStreams.iterate(triggerDB).singleOrNull(p -> Str.equals(p.Item1, t.Item1));
-					if (db != null) { error.Value = Str.format("Trigger [{0}] exists", t.Item1); return false; } //$NON-NLS-1$
+					if (db == null)
+						errors.add(Str.format("Trigger [{0}] not found", t.Item1)); //$NON-NLS-1$
+					else if (!Str.equals(db.Item2.replace("\r", "").trim(), t.Item2.replace("\r", "").trim())) //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+						errors.add(Str.format("Trigger [{0}] has wrong code", t.Item1)); //$NON-NLS-1$
 				}
 			} else {
 				for (Tuple<String, String> t : triggerOK) {
 					Tuple<String, String> db = CCStreams.iterate(triggerDB).singleOrNull(p -> Str.equals(p.Item1, t.Item1));
-					if (db == null) { error.Value = Str.format("Trigger [{0}] not found", t.Item1); return false; } //$NON-NLS-1$
-					if (!Str.equals(db.Item2, t.Item2)) { error.Value = Str.format("Trigger [{0}] has wrong code", t.Item1); return false; } //$NON-NLS-1$
+					if (db != null) errors.add(Str.format("Trigger [{0}] exists", t.Item1)); //$NON-NLS-1$
 				}
 			}
 		} catch (SQLException e) {
-			error.Value = Str.format("Exception '{0}' thrown", e.getClass().getSimpleName()); //$NON-NLS-1$
-			return false;
+			errors.add(Str.format("Exception '{0}' thrown", e.getClass().getSimpleName())); //$NON-NLS-1$
 		}
 
-		return true;
+		if (errors.size()>0) {
+			referror.Value = CCStreams.iterate(errors).stringjoin(p->p, "\n"); //$NON-NLS-1$
+			return false;
+		} else {
+			referror.Value = Str.Empty;
+			return true;
+		}
 	}
 
 	public int getCount() {
 		return _db.getHistoryCount();
 	}
 
-	public void createTrigger() {
-		
+	public void enableTrigger() throws SQLException {
+		List<Tuple<String, String>> triggerDB = _db.listTrigger();
+
+		List<Tuple<String, String>> triggerStatements = createTriggerStatements();
+
+		for (Tuple<String, String> trigger : triggerStatements) {
+
+			Tuple<String, String> dbMatch = CCStreams.iterate(triggerDB).firstOrNull(p -> p.Item1.equalsIgnoreCase(trigger.Item1));
+			if (dbMatch != null) _db.deleteTrigger(dbMatch.Item1, false);
+
+			_db.createTrigger(trigger.Item2);
+		}
+
+		_db.writeInformationToDB(DatabaseStructure.INFOKEY_HISTORY, "1"); //$NON-NLS-1$
+	}
+
+	public void disableTrigger() throws SQLException {
+		List<Tuple<String, String>> triggerDB = _db.listTrigger();
+
+		List<Tuple<String, String>> triggerStatements = createTriggerStatements();
+
+		for (Tuple<String, String> trigger : triggerStatements) {
+			Tuple<String, String> dbMatch = CCStreams.iterate(triggerDB).firstOrNull(p -> p.Item1.equalsIgnoreCase(trigger.Item1));
+			if (dbMatch != null) _db.deleteTrigger(dbMatch.Item1, false);
+		}
+
+		_db.writeInformationToDB(DatabaseStructure.INFOKEY_HISTORY, "0"); //$NON-NLS-1$
+	}
+
+	public List<CCCombinedHistoryEntry> query(boolean excludeViewedOnly) throws CCFormatException {
+
+		List<CCCombinedHistoryEntry> result  = new ArrayList<>();
+		List<CCCombinedHistoryEntry> backlog = new ArrayList<>();
+
+		List<String[]> rawdata = _db.queryHistory();
+		for (String[] raw : rawdata) {
+			CCHistoryTable  table     = CCHistoryTable.getWrapper().findByTextOrException(raw[0]);
+			String          id        = raw[1];
+			CCDateTime      timestamp = CCDateTime.createFromSQL(raw[2]);
+			CCHistoryAction action    = CCHistoryAction.getWrapper().findByTextOrException(raw[3]);
+			String          field     = raw[4];
+			String          oldvalue  = raw[5];
+			String          newvalue  = raw[6];
+
+			if (table == CCHistoryTable.COVERS && Str.equals(field, "PREVIEW")) continue; //$NON-NLS-1$
+
+			CCCombinedHistoryEntry base = CCStreams.iterate(backlog).reverse().firstOrNull(p -> shouldCombine(p, table, id, field, action, timestamp));
+			if (base == null)
+			{
+				List<CCCombinedHistoryEntry> drop1 = CCStreams.iterate(backlog).filter(p -> p.Table == table && Str.equals(p.ID, id)).enumerate();
+				backlog.removeAll(drop1);
+				result.addAll(drop1);
+
+				CCCombinedHistoryEntry newentry = new CCCombinedHistoryEntry();
+				newentry.Table = table;
+				newentry.ID = id;
+				newentry.Timestamp1 = timestamp;
+				newentry.Timestamp2 = timestamp;
+				newentry.Action = action;
+				newentry.Changes.add(new CCHistorySingleChange(field, oldvalue, newvalue));
+
+				List<CCCombinedHistoryEntry> drop2 = CCStreams.iterate(backlog).filter(p -> CCDateTime.diffInSeconds(newentry.Timestamp1, p.Timestamp2)>MERGE_DIFF_TIME).enumerate();
+				backlog.removeAll(drop2);
+				result.addAll(drop2);
+
+				backlog.add(newentry);
+			}
+			else
+			{
+				base.Timestamp2 = timestamp;
+
+				CCHistorySingleChange basechange = CCStreams.iterate(base.Changes).firstOrNull(p -> Str.equals(p.Field, field));
+				if (basechange != null)
+				{
+					basechange.NewValue = newvalue;
+					if (base.Action == CCHistoryAction.REMOVE && action == CCHistoryAction.INSERT) base.Action = CCHistoryAction.UPDATE;
+				}
+				else
+				{
+					base.Changes.add(new CCHistorySingleChange(field, oldvalue, newvalue));
+				}
+			}
+		}
+
+		result.addAll(backlog);
+
+		for (CCCombinedHistoryEntry e : result) {
+			if (e.Action == CCHistoryAction.UPDATE) e.Changes.removeIf(p -> Str.equals(p.OldValue, p.NewValue));
+		}
+
+		result.removeIf(p -> p.Changes.size()==0);
+
+		if (excludeViewedOnly) result.removeIf(CCCombinedHistoryEntry::isTrivialViewedChangesOnly);
+
+		result.sort((o1, o2) -> o1.Timestamp1.compareTo(o2.Timestamp2));
+
+		for (CCCombinedHistoryEntry e : result) e.finishInit();
+
+		return result;
+	}
+
+	private boolean shouldCombine(CCCombinedHistoryEntry base, CCHistoryTable table, String id, String field, CCHistoryAction action, CCDateTime date)
+	{
+		if (base.Table != table) return false;
+		if (!Str.equals(base.ID, id)) return false;
+
+		boolean a_ii = base.Action == CCHistoryAction.INSERT && action == CCHistoryAction.INSERT;
+		boolean a_uu = base.Action == CCHistoryAction.UPDATE && action == CCHistoryAction.UPDATE;
+		boolean a_rr = base.Action == CCHistoryAction.REMOVE && action == CCHistoryAction.REMOVE;
+		boolean a_iu = base.Action == CCHistoryAction.INSERT && action == CCHistoryAction.UPDATE;
+		boolean a_ri = base.Action == CCHistoryAction.REMOVE && action == CCHistoryAction.INSERT;
+
+		if (a_ri)
+		{
+			if (table != CCHistoryTable.INFO || base.Changes.size() != 1 || !Str.equals(base.Changes.get(0).Field, field)) {
+				return false;
+			}
+		}
+		else
+		{
+			if (!(a_ii || a_uu || a_rr || a_iu)) return false;
+		}
+
+		int diff = CCDateTime.diffInSeconds(base.Timestamp2, date);
+
+		if (base.Action == CCHistoryAction.INSERT && Str.equals(field, "VIEWED") && diff > MERGE_SHORT_TIME) return false; //$NON-NLS-1$
+		if (base.Action == CCHistoryAction.INSERT && Str.equals(field, "VIEWED_HISTORY") && diff > MERGE_SHORT_TIME) return false; //$NON-NLS-1$
+
+		if (diff > MERGE_DIFF_TIME) return false;
+		if (CCDateTime.diffInSeconds(base.Timestamp1, date) > MERGE_MAX_TIME) return false;
+
+		return true;
 	}
 }

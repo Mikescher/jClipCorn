@@ -11,6 +11,7 @@ import de.jClipCorn.database.util.CCQualityCategory;
 import de.jClipCorn.gui.frames.previewSeriesFrame.PreviewSeriesFrame;
 import de.jClipCorn.gui.frames.watchHistoryFrame.WatchHistoryFrame;
 import de.jClipCorn.gui.resources.Resources;
+import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datetime.CCDateTime;
 
 public class WatchHistoryEpisodeElement extends WatchHistoryElement {
@@ -30,7 +31,7 @@ public class WatchHistoryEpisodeElement extends WatchHistoryElement {
 	@Override
 	@SuppressWarnings("nls")
 	public String getName() {
-		return MessageFormat.format("{0} E{1,number,###} - {2}", Episode.getSeries().getTitle(), Episode.getGlobalEpisodeNumber(), Episode.getTitle());
+		return Str.format("{0} E{1,number,###} - {2}", Episode.getSeries().getTitle(), Episode.getGlobalEpisodeNumber(), Episode.getTitle());
 	}
 
 	@Override

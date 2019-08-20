@@ -13,4 +13,6 @@ public interface ICCDatabaseStructureElement {
 	CCDate getAddDate();
 	CCTagList getTags();
 	ExtendedViewedState getExtendedViewedState();
+	String getQualifiedTitle();
+	int getLocalID();
 }

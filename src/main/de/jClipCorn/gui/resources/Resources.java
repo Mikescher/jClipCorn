@@ -128,12 +128,20 @@ public class Resources {
 	public final static MultiSizeIconRef ICN_MENUBAR_OPENLASTSERIES			= registerMultisizeIcon("/icons/toolbar/paper_airplane.png");
 	public final static MultiSizeIconRef ICN_MENUBAR_MANAGEGROUPS			= registerMultisizeIcon("/icons/toolbar/function_recently_used_edited.png");
 	public final static MultiSizeIconRef ICN_MENUBAR_WATCHHISTORY			= registerMultisizeIcon("/icons/toolbar/radiolocator.png");
+	public final static MultiSizeIconRef ICN_MENUBAR_DATABASEHISTORY		= registerMultisizeIcon("/icons/toolbar/drawer.png");
 	// #############################################  </MENUBAR>  ############################################
 	
 	
 	// #############################################  <TABLE>  ###############################################
 	public final static IconRef ICN_TABLE_SERIES 			= register16x16Icon("/icons/table/type/series.png");
 	public final static IconRef ICN_TABLE_MOVIE 			= register16x16Icon("/icons/table/type/movie.png");
+	public final static IconRef ICN_TABLE_INFO	 			= register16x16Icon("/icons/table/type/info.png");
+	public final static IconRef ICN_TABLE_GROUPS 			= register16x16Icon("/icons/sidebar/function_recently_used.png");
+	public final static IconRef ICN_TABLE_TEMP 				= register16x16Icon("/icons/table/type/temp.png");
+	public final static IconRef ICN_TABLE_HISTORY 			= register16x16Icon("/icons/table/type/history.png");
+	public final static IconRef ICN_TABLE_COVERS 			= register16x16Icon("/icons/table/type/cover.png");
+	public final static IconRef ICN_TABLE_SEASONS 			= register16x16Icon("/icons/table/type/season.png");
+	public final static IconRef ICN_TABLE_EPISODES 			= register16x16Icon("/icons/table/type/episode.png");
 
 	public final static IconRef ICN_TABLE_VIEWED_FALSE 		= registerOtherIcon("/icons/table/viewed/viewed_0.png");
 	public final static IconRef ICN_TABLE_VIEWED_TRUE  		= registerOtherIcon("/icons/table/viewed/viewed_1.png");

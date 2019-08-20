@@ -134,11 +134,11 @@ public final class InternationalDateTimeFormatHelper {
 	}
 
 	public static String fmtUINormal(CCTime t) {
-		return t.getStringRepresentation(FORMAT_TIME_SHORT.get(currentFormat));
+		return t.getStringRepresentation(FORMAT_TIME_NORMAL.get(currentFormat));
 	}
 
 	public static String fmtUIShort(CCTime t) {
-		return t.getStringRepresentation(FORMAT_TIME_NORMAL.get(currentFormat));
+		return t.getStringRepresentation(FORMAT_TIME_SHORT.get(currentFormat));
 	}
 
 	public static String fmtInput(CCTime t) {

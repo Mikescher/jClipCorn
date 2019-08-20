@@ -74,7 +74,8 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 	}
 	
 	protected abstract void updateDB();
-	
+
+	@Override
 	public int getLocalID() {
 		return localID;
 	}

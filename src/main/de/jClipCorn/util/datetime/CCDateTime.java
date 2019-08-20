@@ -31,9 +31,13 @@ public class CCDateTime implements Comparable<CCDateTime>, StringSpecSupplier {
 	}
 
 	public static CCDateTime createFromSQL(String str) throws CCFormatException {
-		if (str.length() == 19) {
+		if (str.length() == 23) {
 			String[] parts = str.split(" ");
+			if (parts.length != 2) throw new DateTimeFormatException(str);
 
+			return new CCDateTime(CCDate.createFromSQL(parts[0]), CCTime.createFromSQLWithMilliseconds(parts[1]));
+		} else if (str.length() == 19) {
+			String[] parts = str.split(" ");
 			if (parts.length != 2) throw new DateTimeFormatException(str);
 			
 			return new CCDateTime(CCDate.createFromSQL(parts[0]), CCTime.createFromSQL(parts[1]));
@@ -67,6 +71,22 @@ public class CCDateTime implements Comparable<CCDateTime>, StringSpecSupplier {
 		int ts = c.get(Calendar.SECOND);
 
 		return create(dd, dm, dy, th, tm, ts);
+	}
+
+	// return seconds([b] - [a])
+	public static int diffInSeconds(CCDateTime a, CCDateTime b) {
+
+		if (a.isUnspecifiedDateTime() || !a.isValidDateTime() || b.isUnspecifiedDateTime() || !b.isValidDateTime()) return 0;
+
+		int days = a.date.getDayDifferenceTo(b.date);
+		int secs = a.time.getSecondDifferenceTo(b.time);
+
+		return days * 86400 + secs;
+	}
+
+	// return seconds([other] - [this])
+	public int getSecondDifferenceTo(CCDateTime other) {
+		return diffInSeconds(this, other);
 	}
 
 	public long toFileTimestamp(TimeZone tzone) { // = milliseconds since EPOCH

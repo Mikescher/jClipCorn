@@ -9,6 +9,7 @@ import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.exceptions.XMLFormatException;
 import de.jClipCorn.util.helper.SimpleFileUtils;
 import de.jClipCorn.util.parser.TurbineParser;
+import de.jClipCorn.util.sqlwrapper.CCSQLKVKey;
 import de.jClipCorn.util.sqlwrapper.CCSQLTableDef;
 import de.jClipCorn.util.stream.CCStreams;
 import org.junit.Test;
@@ -20,6 +21,7 @@ import de.jClipCorn.util.datatypes.RefParam;
 import de.jClipCorn.util.datetime.CCDate;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -247,12 +249,32 @@ public class TestDatabase extends ClipCornBaseTest {
 	}
 
 	@Test
-	public void testTrigger() {
+	public void testTrigger() throws SQLException {
 		CCMovieList ml = createEmptyDB();
 
 		assertTrue(ml.getHistory().testTrigger(false, new RefParam<>()));
+		assertFalse(ml.getHistory().isHistoryActive());
+		assertEquals(0, ml.getHistory().getCount());
 
-		ml.getHistory().createTrigger();
+		ml.getHistory().enableTrigger();
+
 		assertTrue(ml.getHistory().testTrigger(true, new RefParam<>()));
+		assertTrue(ml.getHistory().isHistoryActive());
+		assertEquals(0, ml.getHistory().getCount());
+
+		ml.getHistory().disableTrigger();
+
+		assertTrue(ml.getHistory().testTrigger(false, new RefParam<>()));
+		assertFalse(ml.getHistory().isHistoryActive());
+		assertEquals(0, ml.getHistory().getCount());
+	}
+
+	@Test
+	public void testInfoKeys() {
+		CCMovieList ml = createEmptyDB();
+
+		for (CCSQLKVKey ik : DatabaseStructure.INFOKEYS) {
+			assertNotNull(ml.getDatabaseForUnitTests().readInformationFromDB(ik, null));
+		}
 	}
 }

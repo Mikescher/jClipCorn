@@ -19,6 +19,7 @@ import de.jClipCorn.features.serialization.xmlexport.DatabaseXMLExporter;
 import de.jClipCorn.features.serialization.xmlexport.ExportOptions;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.lambda.Func0to0;
+import de.jClipCorn.util.sqlwrapper.CCSQLKVKey;
 import org.jdom2.Document;
 import org.jdom2.Element;
 
@@ -304,31 +305,21 @@ public class CCMovieList {
 	// Only used by CCDatabase.fillMovieList
 	public void directlyInsert(final CCDatabaseElement m) {
 		try {
-			SwingUtilities.invokeAndWait(new Runnable() {
-				@Override
-				public void run() {
-					list.add(m);
-					fireOnAddDatabaseElement(m);
-				}
+			SwingUtilities.invokeAndWait(() -> {
+				list.add(m);
+				fireOnAddDatabaseElement(m);
 			});
 		} catch (InvocationTargetException | InterruptedException e) {
 			CCLog.addError(e);
-			return;
 		}
 	}
 
 	// Only used by CCDatabase.fillMovieList
 	public void directlyInsert(final List<CCDatabaseElement> m) {
 		try {
-			SwingUtilities.invokeAndWait(new Runnable() {
-				@Override
-				public void run() {
-					list.addAll(m);
-				}
-			});
+			SwingUtilities.invokeAndWait(() -> list.addAll(m));
 		} catch (InvocationTargetException | InterruptedException e) {
 			CCLog.addError(e);
-			return;
 		}
 	}
 
@@ -344,12 +335,7 @@ public class CCMovieList {
 
 	public void fireOnAddDatabaseElement(final CCDatabaseElement el) {
 		if (!EventQueue.isDispatchThread()) {
-			SwingUtilities.invokeLater(new Runnable() {
-				@Override
-				public void run() {
-					fireOnAddDatabaseElement(el);
-				}
-			});
+			SwingUtilities.invokeLater(() -> fireOnAddDatabaseElement(el));
 			return;
 		}
 
@@ -360,12 +346,7 @@ public class CCMovieList {
 
 	public void fireOnChangeDatabaseElement(final CCDatabaseElement el) {
 		if (!EventQueue.isDispatchThread()) {
-			SwingUtilities.invokeLater(new Runnable() {
-				@Override
-				public void run() {
-					fireOnChangeDatabaseElement(el);
-				}
-			});
+			SwingUtilities.invokeLater(() -> fireOnChangeDatabaseElement(el));
 			return;
 		}
 
@@ -376,12 +357,7 @@ public class CCMovieList {
 
 	public void fireOnRemDatabaseElement(final CCDatabaseElement el) {
 		if (!EventQueue.isDispatchThread()) {
-			SwingUtilities.invokeLater(new Runnable() {
-				@Override
-				public void run() {
-					fireOnRemDatabaseElement(el);
-				}
-			});
+			SwingUtilities.invokeLater(() -> fireOnRemDatabaseElement(el));
 			return;
 		}
 
@@ -392,12 +368,7 @@ public class CCMovieList {
 
 	private void fireOnAfterLoad() {
 		if (!EventQueue.isDispatchThread()) {
-			SwingUtilities.invokeLater(new Runnable() {
-				@Override
-				public void run() {
-					fireOnAfterLoad();
-				}
-			});
+			SwingUtilities.invokeLater(this::fireOnAfterLoad);
 			return;
 		}
 		
@@ -410,12 +381,7 @@ public class CCMovieList {
 	
 	public void fireOnRefresh() {
 		if (!EventQueue.isDispatchThread()) {
-			SwingUtilities.invokeLater(new Runnable() {
-				@Override
-				public void run() {
-					fireOnRefresh();
-				}
-			});
+			SwingUtilities.invokeLater(this::fireOnRefresh);
 			return;
 		}
 
@@ -497,7 +463,7 @@ public class CCMovieList {
 	}
 	
 	public void removeSeasonDatabase(CCSeason s) {
-		database.removeFromSeasons(s.getSeasonID());
+		database.removeFromSeasons(s.getLocalID());
 	}
 
 	public int getTotalLength(boolean includeMovies, boolean includeSeries) {
@@ -712,9 +678,7 @@ public class CCMovieList {
 
 		while (all.contains("")) all.remove(""); //$NON-NLS-1$ //$NON-NLS-2$
 
-		String common = PathFormatter.getCommonFolderPath(all);
-
-		return common;
+		return PathFormatter.getCommonFolderPath(all);
 	}
 
 	public String guessSeriesRootPath() { // kinda slow :(
@@ -739,10 +703,8 @@ public class CCMovieList {
 		}
 		
 		while (all.contains("")) all.remove(""); //$NON-NLS-1$ //$NON-NLS-2$
-		
-		String common = PathFormatter.getCommonFolderPath(all);
-		
-		return common;
+
+		return PathFormatter.getCommonFolderPath(all);
 	}
 	
 	public Map<String, List<CCMovie>> listAllZyklus() {
@@ -842,10 +804,13 @@ public class CCMovieList {
 		Element rdbi = new Element("info");
 		root.addContent(rdbi);
 		
-		for (String key : DatabaseStructure.INFOKEYS) {
-			Element e = new Element(key);
-			e.setText(database.getInformationFromDB(key));
-			rdbi.addContent(e);
+		for (CCSQLKVKey key : DatabaseStructure.INFOKEYS) {
+			String v = database.readInformationFromDB(key, null);
+			if (v != null) {
+				Element e = new Element(key.Key);
+				e.setText(v);
+				rdbi.addContent(e);
+			}
 		}
 		
 		return xml;
@@ -1079,6 +1044,10 @@ public class CCMovieList {
 
 	public PublicDatabaseInterface getInternalDatabaseDirectly() {
 		return database.getInternalDatabaseAccess();
+	}
+
+	public CCDatabase getDatabaseForUnitTests() {
+		return database;
 	}
 
 	public CCDatabaseHistory getHistory() {

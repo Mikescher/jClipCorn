@@ -8,6 +8,7 @@ import java.util.List;
 import de.jClipCorn.database.databaseElement.columnTypes.*;
 import de.jClipCorn.database.util.CCQualityCategory;
 import de.jClipCorn.features.actionTree.IActionSourceObject;
+import de.jClipCorn.util.Str;
 import de.jClipCorn.util.exceptions.EnumFormatException;
 
 import de.jClipCorn.database.util.ExtendedViewedState;
@@ -299,6 +300,11 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 		if (updateDB) {
 			updateDB();
 		}
+	}
+
+	@Override
+	public String getQualifiedTitle() {
+		return Str.format("{0} E{1,number,###} - {2}", getSeries().getTitle(), getGlobalEpisodeNumber(), getTitle()); //$NON-NLS-1$
 	}
 
 	@Override

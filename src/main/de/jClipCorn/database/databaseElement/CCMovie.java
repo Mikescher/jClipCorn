@@ -82,7 +82,12 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 	//------------------------------------------------------------------------\
 	//						   GETTER  /  SETTER					   		  |
 	//------------------------------------------------------------------------/
-	
+
+	@Override
+	public String getQualifiedTitle() {
+		return getCompleteTitle();
+	}
+
 	public String getCompleteTitle() {
 		if (zyklus.isSet()) {
 			return zyklus.getFormatted() + ' ' + '-' + ' ' + getTitle();

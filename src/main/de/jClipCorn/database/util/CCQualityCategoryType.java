@@ -41,7 +41,7 @@ public enum CCQualityCategoryType implements ContinoousEnum<CCQualityCategoryTyp
 	
 	private static EnumWrapper<CCQualityCategoryType> wrapper = new EnumWrapper<>(UNKOWN);
 
-	private CCQualityCategoryType(int val) {
+	CCQualityCategoryType(int val) {
 		id = val;
 	}
 

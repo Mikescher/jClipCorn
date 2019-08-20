@@ -305,7 +305,7 @@ public class CCSeries extends CCDatabaseElement implements IEpisodeOwner {
 
 	@Override
 	public String getQualifiedTitle() {
-		return getTitle(); //$NON-NLS-1$
+		return getTitle();
 	}
 
 	@Override

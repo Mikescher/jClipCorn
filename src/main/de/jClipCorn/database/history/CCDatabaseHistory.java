@@ -15,7 +15,6 @@ import de.jClipCorn.util.stream.CCStreams;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import static de.jClipCorn.util.sqlwrapper.SQLBuilderHelper.forceSQLEscape;
 
@@ -25,7 +24,6 @@ public class CCDatabaseHistory {
 	private final static int MERGE_SHORT_TIME =   8; // sec
 
 	private final CCDatabase _db;
-	private CCCombinedHistoryEntry base;
 
 	public CCDatabaseHistory(CCDatabase db) {
 		_db = db;

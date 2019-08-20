@@ -74,6 +74,8 @@ public class DatabaseErrorType {
 	public final static DatabaseErrorType ERROR_DB_MULTI_REF_COVER                 = new DatabaseErrorType(68, null);
 	public final static DatabaseErrorType ERROR_DB_UNUSED_COVERID                  = new DatabaseErrorType(69, null);
 	public final static DatabaseErrorType ERROR_DB_DANGLING_COVERID                = new DatabaseErrorType(70, null);
+	public final static DatabaseErrorType ERROR_HTRIGGER_ENABLED_ERR               = new DatabaseErrorType(71, null);
+	public final static DatabaseErrorType ERROR_HTRIGGER_DISABLED_ERR              = new DatabaseErrorType(72, null);
 
 	private final int type;
 

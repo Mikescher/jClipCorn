@@ -44,7 +44,7 @@ public class DatabaseMigration {
 	private final String databasepath;
 
 	public interface UpgradeAction {
-		public void onAfterConnect(CCMovieList ml, CCDatabase db);
+		void onAfterConnect(CCMovieList ml, CCDatabase db);
 	}
 	
 	private final List<UpgradeAction> afterConnectActions = new ArrayList<>();

@@ -28,7 +28,7 @@ import de.jClipCorn.util.helper.LookAndFeelManager;
 
 public class Main {
 	public final static String TITLE     = "jClipCorn"; //$NON-NLS-1$
-	public final static String VERSION   = /*<gradle_version_marker>*/"1.10.6.13"/*</gradle_version_marker>*/; //$NON-NLS-1$
+	public final static String VERSION   = /*<gradle_version_marker>*/"1.10.6.14"/*</gradle_version_marker>*/; //$NON-NLS-1$
 	public final static String DBVERSION = "14";    //$NON-NLS-1$
 	public final static String JXMLVER   = "4";     //$NON-NLS-1$
 
@@ -212,8 +212,4 @@ public class Main {
 
 // option recreate previews (covers dialog to show content of covers table)
 
-// Show versions of entry dialog (group history stuff together to show specific versions in specific times)
-
-//Compare speed of stream vs ccstream (just out of interest)
-
-//discontinue derby backend (and perhaps add a mysql-remote backend)
+// Compare speed of stream vs ccstream (just out of interest)

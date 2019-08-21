@@ -21,14 +21,23 @@ public enum CCDatabaseDriver implements ContinoousEnum<CCDatabaseDriver> {
 
 	private static EnumWrapper<CCDatabaseDriver> wrapper = new EnumWrapper<>(DERBY);
 
-	private CCDatabaseDriver(int val) {
+	CCDatabaseDriver(int val) {
 		id = val;
 	}
 	
 	public static EnumWrapper<CCDatabaseDriver> getWrapper() {
 		return wrapper;
 	}
-	
+
+	public static CCDatabaseDriver[] getSelectableValues() {
+		return new CCDatabaseDriver[]{ DERBY, SQLITE };
+	}
+
+	public boolean isDeprecated() {
+		if (this == DERBY) return true;
+		return false;
+	}
+
 	@Override
 	public int asInt() {
 		return id;

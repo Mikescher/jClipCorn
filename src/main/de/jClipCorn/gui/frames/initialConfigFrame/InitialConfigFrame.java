@@ -1,7 +1,5 @@
 package de.jClipCorn.gui.frames.initialConfigFrame;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.Vector;
 
 import javax.swing.DefaultComboBoxModel;
@@ -31,7 +29,7 @@ public class InitialConfigFrame extends JDialog {
 	
 	private JTextArea lblGreeting;
 	private JLabel lblDatenbanktyp;
-	private JComboBox<String> cbxDatabaseDriver;
+	private JComboBox<CCDatabaseDriver> cbxDatabaseDriver;
 	private JButton btnExit;
 	private JButton btnStart;
 	private JLabel lblSprache;
@@ -45,9 +43,6 @@ public class InitialConfigFrame extends JDialog {
 	private JLabel lblCreatePeriodicallyBackups;
 	private JCheckBox cbBackups;
 
-	/**
-	 * Create the frame.
-	 */
 	public InitialConfigFrame() {
 		super();
 		initGUI();
@@ -77,40 +72,19 @@ public class InitialConfigFrame extends JDialog {
 		lblDatenbanktyp = new JLabel(LocaleBundle.getString("InitialConfigFrame.lblDatabaseType")); //$NON-NLS-1$
 		lblDatenbanktyp.setBounds(12, 151, 243, 16);
 		getContentPane().add(lblDatenbanktyp);
-		
-		DefaultComboBoxModel<String> modelDatabaseDriver = new DefaultComboBoxModel<>();
-		modelDatabaseDriver.addElement(CCDatabaseDriver.DERBY.asString());
-		modelDatabaseDriver.addElement(CCDatabaseDriver.SQLITE.asString());
-		cbxDatabaseDriver = new JComboBox<>(modelDatabaseDriver);
-		switch (CCProperties.getInstance().PROP_DATABASE_DRIVER.getValue()) {
-		case DERBY:
-			cbxDatabaseDriver.setSelectedIndex(0);
-			break;
-		default:
-		case SQLITE:
-			cbxDatabaseDriver.setSelectedIndex(1);
-			break;
-		}
+
+		cbxDatabaseDriver = new JComboBox<>(new DefaultComboBoxModel<>(CCDatabaseDriver.getSelectableValues()));
+		cbxDatabaseDriver.setSelectedItem(CCProperties.getInstance().PROP_DATABASE_DRIVER.getValue());
 		cbxDatabaseDriver.setBounds(273, 147, 175, 25);
 		getContentPane().add(cbxDatabaseDriver);
 		
 		btnStart = new JButton(LocaleBundle.getString("InitialConfigFrame.btnStart")); //$NON-NLS-1$
-		btnStart.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onStart();
-			}
-		});
+		btnStart.addActionListener(e -> onStart());
 		btnStart.setBounds(385, 344, 98, 26);
 		getContentPane().add(btnStart);
 		
 		btnExit = new JButton(LocaleBundle.getString("InitialConfigFrame.btnExit")); //$NON-NLS-1$
-		btnExit.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onExit();
-			}
-		});
+		btnExit.addActionListener(e -> onExit());
 		btnExit.setBounds(12, 344, 98, 26);
 		getContentPane().add(btnExit);
 		
@@ -121,12 +95,7 @@ public class InitialConfigFrame extends JDialog {
 		cbxLanguage = new JComboBox<>();
 		cbxLanguage.setModel(new DefaultComboBoxModel<>(UILanguage.getWrapper().getList()));
 		cbxLanguage.setSelectedIndex(CCProperties.getInstance().PROP_UI_LANG.getValue().asInt());
-		cbxLanguage.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				updateLanguage();
-			}
-		});
+		cbxLanguage.addActionListener(e -> updateLanguage());
 		cbxLanguage.setBounds(273, 184, 175, 25);
 		getContentPane().add(cbxLanguage);
 		
@@ -146,12 +115,7 @@ public class InitialConfigFrame extends JDialog {
 		
 		cbxLooknFeel = new JComboBox<>(new DefaultComboBoxModel<>(new Vector<>(LookAndFeelManager.getLookAndFeelList())));
 		cbxLooknFeel.setSelectedIndex(CCProperties.getInstance().PROP_UI_LOOKANDFEEL.getValue());
-		cbxLooknFeel.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				updateLNF();
-			}
-		});
+		cbxLooknFeel.addActionListener(e -> updateLNF());
 		cbxLooknFeel.setBounds(273, 258, 175, 25);
 		getContentPane().add(cbxLooknFeel);
 		
@@ -197,44 +161,40 @@ public class InitialConfigFrame extends JDialog {
 	private void updateLNF() {
 		final int idx = cbxLooknFeel.getSelectedIndex();
 		
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				try { Thread.sleep(250); } catch (InterruptedException e) { /**/ }
-				
-				SwingUtilities.invokeLater(new Runnable() {
-					@Override
-					public void run() {
-						if (cbxLooknFeel.getSelectedIndex() != idx) return;
+		new Thread(() ->
+		{
+			try { Thread.sleep(250); } catch (InterruptedException e) { /**/ }
 
-						LookAndFeelManager.setLookAndFeel(cbxLooknFeel.getSelectedIndex());
-						
-						SwingUtilities.updateComponentTreeUI(InitialConfigFrame.this);
+			SwingUtilities.invokeLater(() ->
+			{
+				if (cbxLooknFeel.getSelectedIndex() != idx) return;
 
-						lblGreeting.setBackground(UIManager.getColor("Label.background")); //$NON-NLS-1$
-						lblGreeting.setFont(UIManager.getFont("Label.font")); //$NON-NLS-1$
-						lblGreeting.setBorder(UIManager.getBorder("Label.border")); //$NON-NLS-1$
-					}
-				});
-			}
+				LookAndFeelManager.setLookAndFeel(cbxLooknFeel.getSelectedIndex());
+
+				SwingUtilities.updateComponentTreeUI(InitialConfigFrame.this);
+
+				lblGreeting.setBackground(UIManager.getColor("Label.background")); //$NON-NLS-1$
+				lblGreeting.setFont(UIManager.getFont("Label.font")); //$NON-NLS-1$
+				lblGreeting.setBorder(UIManager.getBorder("Label.border")); //$NON-NLS-1$
+			});
 		}, "THREAD_DEFFERED_LNF").start(); //$NON-NLS-1$
 	}
 	
 	private void onStart() {
+		if (cbxDatabaseDriver.getSelectedItem() == null) return;
+
 		if (!PathFormatter.validateDatabaseName(edDatabasename.getText())) {
 			DialogHelper.showLocalError(this, "Dialogs.DatabasenameAssertion"); //$NON-NLS-1$
 			
 			return;
 		}
-		
-		switch (cbxDatabaseDriver.getSelectedIndex()) {
-		case 0:
-			CCProperties.getInstance().PROP_DATABASE_DRIVER.setValue(CCDatabaseDriver.DERBY);
-			break;
-		case 1:
-			CCProperties.getInstance().PROP_DATABASE_DRIVER.setValue(CCDatabaseDriver.SQLITE);
-			break;
+
+		if (((CCDatabaseDriver)cbxDatabaseDriver.getSelectedItem()).isDeprecated()) {
+			boolean b = DialogHelper.showLocaleYesNo(this, "Dialogs.DeprecatedDriver"); //$NON-NLS-1$
+			if (!b) return;
 		}
+
+		CCProperties.getInstance().PROP_DATABASE_DRIVER.setValue((CCDatabaseDriver) cbxDatabaseDriver.getSelectedItem());
 		
 		CCProperties.getInstance().PROP_COMMON_CHECKFORUPDATES.setValue(cbCheckForUpdates.isSelected());
 		

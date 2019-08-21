@@ -12,6 +12,7 @@ import de.jClipCorn.util.parser.TurbineParser;
 import de.jClipCorn.util.sqlwrapper.CCSQLKVKey;
 import de.jClipCorn.util.sqlwrapper.CCSQLTableDef;
 import de.jClipCorn.util.stream.CCStreams;
+import org.jdom2.JDOMException;
 import org.junit.Test;
 
 import de.jClipCorn.database.CCMovieList;
@@ -22,6 +23,7 @@ import de.jClipCorn.util.datetime.CCDate;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -233,9 +235,12 @@ public class TestDatabase extends ClipCornBaseTest {
 	}
 
 	@Test
-	public void testTurbine() throws IOException, XMLFormatException {
-		List<CCSQLTableDef> code = Arrays.asList(DatabaseStructure.TABLES);
-		List<CCSQLTableDef> xml  = new TurbineParser(SimpleFileUtils.readUTF8TextFile("/" + CCDatabase.XML_NAME)).convertToTableDefinition();
+	public void testTurbine() throws IOException, XMLFormatException, JDOMException {
+
+		TurbineParser tp = new TurbineParser(SimpleFileUtils.readTextResource("/" + CCDatabase.XML_NAME, getClass()));
+		tp.parse();
+		List<CCSQLTableDef> xml  = tp.convertToTableDefinition();
+		List<CCSQLTableDef> code = new ArrayList<>(Arrays.asList(DatabaseStructure.TABLES));
 
 		assertEquals(code.size(), xml.size());
 
@@ -260,13 +265,13 @@ public class TestDatabase extends ClipCornBaseTest {
 
 		assertTrue(ml.getHistory().testTrigger(true, new RefParam<>()));
 		assertTrue(ml.getHistory().isHistoryActive());
-		assertEquals(0, ml.getHistory().getCount());
+		assertEquals(1, ml.getHistory().getCount());
 
 		ml.getHistory().disableTrigger();
 
 		assertTrue(ml.getHistory().testTrigger(false, new RefParam<>()));
 		assertFalse(ml.getHistory().isHistoryActive());
-		assertEquals(0, ml.getHistory().getCount());
+		assertEquals(1, ml.getHistory().getCount());
 	}
 
 	@Test

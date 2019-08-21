@@ -20,7 +20,7 @@ public class CCSQLTableDef {
 		Primary = p;
 
 		Columns = new ArrayList<>(Arrays.asList(cols));
-		Columns.add(0, p);
+		if (p != null) Columns.add(0, p);
 	}
 
 	public CCSQLTableDef(String n, CCSQLColDef primary, List<CCSQLColDef> allColumns) {

@@ -66,11 +66,11 @@ public class TestIterators extends ClipCornBaseTest {
 	public void testSortedIterator() throws Exception {
 		CCMovieList ml = createExampleDB();
 
-		assertEquals(98,  ml.iteratorMovies().sort(new CCMovieComparator()).get(0).getLocalID());
-		assertEquals(7,   ml.iteratorMovies().sort(new CCMovieComparator()).get(1).getLocalID());
-		assertEquals(102, ml.iteratorMovies().sort(new CCMovieComparator()).get(2).getLocalID());
-		assertEquals(2,   ml.iteratorMovies().sort(new CCMovieComparator()).get(3).getLocalID());
-		assertEquals(11,  ml.iteratorMovies().sort(new CCMovieComparator()).get(4).getLocalID());
+		assertEquals(97,  ml.iteratorMovies().sort(new CCMovieComparator()).get(0).getLocalID());
+		assertEquals(6,   ml.iteratorMovies().sort(new CCMovieComparator()).get(1).getLocalID());
+		assertEquals(101, ml.iteratorMovies().sort(new CCMovieComparator()).get(2).getLocalID());
+		assertEquals(1,   ml.iteratorMovies().sort(new CCMovieComparator()).get(3).getLocalID());
+		assertEquals(10,  ml.iteratorMovies().sort(new CCMovieComparator()).get(4).getLocalID());
 	}
 
 	@Test
@@ -95,11 +95,11 @@ public class TestIterators extends ClipCornBaseTest {
 	public void testDirectEpisodesIterator() throws Exception {
 		CCMovieList ml = createExampleDB();
 
-		assertEquals("1;2;3;4;5;6;7;8;9;10", ml.findDatabaseSeries(105).iteratorEpisodes().stringjoin(p -> p.getEpisodeNumber()+"", ";"));
+		assertEquals("1;2;3;4;5;6;7;8;9;10", ml.findDatabaseSeries(104).iteratorEpisodes().stringjoin(p -> p.getEpisodeNumber()+"", ";"));
 		
-		assertEquals(25, ml.findDatabaseSeries(12).iteratorEpisodes().count());
-		assertEquals(51, ml.findDatabaseSeries(41).iteratorEpisodes().count());
-		assertEquals(10, ml.findDatabaseSeries(105).iteratorEpisodes().count());
+		assertEquals(25, ml.findDatabaseSeries(11).iteratorEpisodes().count());
+		assertEquals(51, ml.findDatabaseSeries(40).iteratorEpisodes().count());
+		assertEquals(10, ml.findDatabaseSeries(104).iteratorEpisodes().count());
 	}
 
 	@Test
@@ -166,14 +166,14 @@ public class TestIterators extends ClipCornBaseTest {
 				.unique()
 				.<Integer>cast().sum((a,b) -> a+b, 0);
 		
-		assertEquals(930, x1);
+		assertEquals(910, x1);
 
-		assertEquals(2, ml.iteratorMovies().map(p -> p.getLocalID()).sort(Integer::compare).firstOrNull().intValue());
-		assertEquals(2, (int)ml.iteratorMovies().map(p -> p.getLocalID()).autoMinOrDefault(-1));
-		assertEquals(104, ml.iteratorMovies().map(p -> p.getLocalID()).sort(Integer::compare).lastOrNull().intValue());
-		assertEquals(104, (int)ml.iteratorMovies().map(p -> p.getLocalID()).autoMaxOrDefault(-1));
-		assertEquals(105, ml.iteratorElements().map(p -> p.getLocalID()).sort(Integer::compare).lastOrNull().intValue());
-		assertEquals(105, (int)ml.iteratorElements().map(p -> p.getLocalID()).autoMaxOrDefault(-1));
+		assertEquals(1, ml.iteratorMovies().map(p -> p.getLocalID()).sort(Integer::compare).firstOrNull().intValue());
+		assertEquals(1, (int)ml.iteratorMovies().map(p -> p.getLocalID()).autoMinOrDefault(-1));
+		assertEquals(103, ml.iteratorMovies().map(p -> p.getLocalID()).sort(Integer::compare).lastOrNull().intValue());
+		assertEquals(103, (int)ml.iteratorMovies().map(p -> p.getLocalID()).autoMaxOrDefault(-1));
+		assertEquals(104, ml.iteratorElements().map(p -> p.getLocalID()).sort(Integer::compare).lastOrNull().intValue());
+		assertEquals(104, (int)ml.iteratorElements().map(p -> p.getLocalID()).autoMaxOrDefault(-1));
 	}
 
 	@Test

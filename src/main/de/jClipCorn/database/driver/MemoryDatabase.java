@@ -107,6 +107,6 @@ public class MemoryDatabase extends GenericDatabase {
 
 	@Override
 	public List<Tuple<String, String>> listTriggerWithStatements() throws SQLException {
-		return querySQL("SELECT [name], [sql] FROM sqlite_master WHERE type='trigger'", 1, a -> Tuple.Create((String)a[0], (String)a[1]));
+		return querySQL("SELECT [name], [sql] FROM sqlite_master WHERE type='trigger'", 2, a -> Tuple.Create((String)a[0], (String)a[1]));
 	}
 }

@@ -390,7 +390,7 @@ public class CCActionTree extends UIActionTree{
 	}
 	
 	private void onClickExtrasBackupManager(CCTreeActionEvent e) {
-		BackupManager.getInstanceDirect().runWhenInitializedWithProgress(e.SwingOwner, bm -> new BackupsManagerFrame(bm, e.SwingOwner).setVisible(true));
+		BackupManager.getInstanceDirect().runWhenInitializedWithProgress(e.SwingOwner, bm -> new BackupsManagerFrame(bm, e.SwingOwner, movielist).setVisible(true));
 	}
 	
 	private void onClickExtrasShowStatistics(CCTreeActionEvent e) {

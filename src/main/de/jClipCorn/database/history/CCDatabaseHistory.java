@@ -14,6 +14,7 @@ import de.jClipCorn.util.stream.CCStreams;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import static de.jClipCorn.util.sqlwrapper.SQLBuilderHelper.forceSQLEscape;
@@ -282,7 +283,7 @@ public class CCDatabaseHistory {
 
 		if (excludeViewedOnly) result.removeIf(CCCombinedHistoryEntry::isTrivialViewedChangesOnly);
 
-		result.sort((o1, o2) -> o1.Timestamp1.compareTo(o2.Timestamp2));
+		result.sort(Comparator.comparing(o -> o.Timestamp1));
 
 		for (CCCombinedHistoryEntry e : result) e.finishInit();
 

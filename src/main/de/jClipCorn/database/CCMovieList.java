@@ -816,18 +816,17 @@ public class CCMovieList {
 		return xml;
 	}
 	
-	public static boolean isBlocked() {
-		return getInstance().blocked;
+	public boolean isBlocked() {
+		return blocked;
 	}
 	
-	public static void beginBlocking() {
-		getInstance().blocked = true;
+	public void beginBlocking() {
+		blocked = true;
 	}
 	
-	public static void endBlocking() {
-		getInstance().blocked = false;
-		
-		getInstance().fireOnRefresh();
+	public void endBlocking() {
+		blocked = false;
+		fireOnRefresh();
 	}
 	
 	public void forceUpdateAll() {

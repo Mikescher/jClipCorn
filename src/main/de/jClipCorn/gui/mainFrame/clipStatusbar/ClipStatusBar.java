@@ -144,9 +144,7 @@ public class ClipStatusBar extends AbstractClipStatusbar implements CCDBUpdateLi
 	}
 	
 	private void updateLabels() {
-		if (CCMovieList.isBlocked()) {
-			return;
-		}
+		if (movielist.isBlocked()) return;
 		
 		updateLables_Movies();
 		updateLables_Viewed();

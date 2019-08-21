@@ -177,18 +177,11 @@ public abstract class CCStream<TType> implements Iterator<TType>, Iterable<TType
 
 		for (TType m : this) {
 			TAttrType mattr = selector.invoke(m);
-			if (first) {
-				current = m;
-			} else {
-				if (comp.compare(mattr, currentVal) > 0) {current = m; currentVal = mattr; }
-			}
+			if (first || comp.compare(mattr, currentVal) > 0) { current = m; currentVal = mattr; }
 			first = false;
 		}
 
-		if (first)
-			return defValue;
-		else
-			return current;
+		return current;
 	}
 
 	public <TAttrType> TType minValueOrDefault(Func1to1<TType, TAttrType> selector, Comparator<? super TAttrType> comp, TType defValue) {
@@ -198,18 +191,11 @@ public abstract class CCStream<TType> implements Iterator<TType>, Iterable<TType
 
 		for (TType m : this) {
 			TAttrType mattr = selector.invoke(m);
-			if (first) {
-				current = m;
-			} else {
-				if (comp.compare(mattr, currentVal) < 0) {current = m; currentVal = mattr; }
-			}
+			if (first || comp.compare(mattr, currentVal) < 0) { current = m; currentVal = mattr; }
 			first = false;
 		}
 
-		if (first)
-			return defValue;
-		else
-			return current;
+		return current;
 	}
 
 	public <TAttrType> TType autoMaxValueOrDefault(Func1to1<TType, TAttrType> selector, TType defValue) {

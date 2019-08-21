@@ -216,13 +216,13 @@ public class FilterTree extends AbstractFilterTree {
 	}
 	
 	private void initGenre(DefaultMutableTreeNode parent) {
-		if (CCMovieList.isBlocked()) {
+		if (movielist.isBlocked()) {
 			return;
 		}
 		
 		List<CCGenre> genres = movielist.getGenreList();
 		
-		Collections.sort(genres, CCGenre.getTextComparator());
+		genres.sort(CCGenre.getTextComparator());
 		
 		for (final CCGenre genre : genres) {
 			addNodeF(parent, (Icon)null, genre.asString(), () -> CustomGenreFilter.create(genre));

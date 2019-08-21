@@ -69,10 +69,10 @@ public class BackupsManagerFrame extends JFrame {
 	private JLabel lblInfoAutoDeletAfter;
 	private JLabel lblInfoLastBackup;
 
-	public BackupsManagerFrame(BackupManager bm, Component parent) {
+	public BackupsManagerFrame(BackupManager bm, Component parent, CCMovieList ml) {
 		super();
 		this.manager = bm;
-		this.movielist = CCMovieList.getInstance();
+		this.movielist = ml;
 		
 		initGUI();
 		updateList();

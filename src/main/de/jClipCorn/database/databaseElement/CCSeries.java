@@ -153,12 +153,12 @@ public class CCSeries extends CCDatabaseElement implements IEpisodeOwner {
 	
 	@Override
 	public CCFileFormat getFormat() {
-		return iteratorEpisodes().findMostCommon(e -> e.getFormat(), CCFileFormat.getWrapper().firstValue());
+		return iteratorEpisodes().findMostCommon(CCEpisode::getFormat, CCFileFormat.getWrapper().firstValue());
 	}
 	
 	@Override
 	public CCFileSize getFilesize() {
-		if (CCMovieList.isBlocked()) {
+		if (movielist.isBlocked()) {
 			return CCFileSize.ZERO;
 		}
 		
@@ -670,7 +670,8 @@ public class CCSeries extends CCDatabaseElement implements IEpisodeOwner {
 				.map(Map.Entry::getKey)
 				.singleOrDefault(null, null);
 
-		if (rtype == null) rtype = CCQualityResolutionType.MULTIPLE;
+		if (rtype == null)
+			rtype = CCQualityResolutionType.MULTIPLE;
 
 		CCQualityCategoryType ct = CCQualityCategoryType.getWrapper().findOrNull((int)Math.round(avg));
 		if (ct == null) return CCQualityCategory.UNSET; // should never happen ??

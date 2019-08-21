@@ -161,7 +161,7 @@ public class MainFrame extends JFrame implements CCDBUpdateListener, FileDrop.Li
 	}
 	
 	public void beginBlockingIntermediate() {
-		CCMovieList.beginBlocking();
+		movielist.beginBlocking();
 		
 		try {
 			SwingUtilities.invokeAndWait(() ->
@@ -176,7 +176,7 @@ public class MainFrame extends JFrame implements CCDBUpdateListener, FileDrop.Li
 	}
 	
 	public void endBlockingIntermediate() {
-		CCMovieList.endBlocking();
+		movielist.endBlocking();
 
 		Runnable runnner = () ->
 		{

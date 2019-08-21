@@ -751,7 +751,7 @@ public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener 
 
 	private void queryHistory(ActionEvent evt) {
 		try {
-			List<CCCombinedHistoryEntry> data = CCMovieList.getInstance().getHistory().query(false, Integer.toString(movie.getLocalID()));
+			List<CCCombinedHistoryEntry> data = movie.getMovieList().getHistory().query(false, Integer.toString(movie.getLocalID()));
 			tabHistoryEntries.setData(data);
 			tabHistoryChanges.clearData();
 			tabHistoryEntries.autoResize();

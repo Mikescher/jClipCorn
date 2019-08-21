@@ -242,7 +242,7 @@ public class CCActionElement {
 	}
 	
 	private void onKeyPressed(MainFrame f, KeyStroke stroke) {
-		if (CCMovieList.isBlocked()) {
+		if (CCMovieList.getInstance().isBlocked()) {
 			return;
 		}
 		

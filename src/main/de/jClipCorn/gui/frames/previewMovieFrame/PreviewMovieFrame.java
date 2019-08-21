@@ -1,6 +1,7 @@
 package de.jClipCorn.gui.frames.previewMovieFrame;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
@@ -18,11 +19,14 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
 
 import de.jClipCorn.Main;
+import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGroup;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMediaInfo;
+import de.jClipCorn.database.history.CCCombinedHistoryEntry;
 import de.jClipCorn.database.util.CCQualityCategory;
 import de.jClipCorn.features.actionTree.menus.impl.PreviewMovieMenuBar;
+import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.gui.frames.genericTextDialog.GenericTextDialog;
 import de.jClipCorn.gui.guiComponents.CoverLabel;
 import de.jClipCorn.gui.guiComponents.OnlineRefButton;
@@ -34,6 +38,7 @@ import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.datetime.CCDateTime;
+import de.jClipCorn.util.exceptions.CCFormatException;
 import de.jClipCorn.util.exceptions.MediaQueryException;
 import de.jClipCorn.util.formatter.FileSizeFormatter;
 import de.jClipCorn.util.formatter.PathFormatter;
@@ -157,6 +162,10 @@ public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener 
 	private JButton btnOpenDir3;
 	private JButton btnOpenDir2;
 	private JButton btnOpenDir1;
+	private JPanel pnlTabHistory;
+	private PMHistoryTableEntries tabHistoryEntries;
+	private PMHistoryTableChanges tabHistoryChanges;
+	private JButton btnQueryHistory;
 
 	/**
 	 * @wbp.parser.constructor
@@ -704,8 +713,54 @@ public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener 
 		btnOpenDir6 = new JButton(Resources.ICN_MENUBAR_FOLDER.get16x16());
 		btnOpenDir6.addActionListener((e) -> openDir(5));
 		pnlTabPaths.add(btnOpenDir6, "6, 12, fill, fill"); //$NON-NLS-1$
+		
+		pnlTabHistory = new JPanel();
+		tabbedPane.addTab(LocaleBundle.getString("PreviewMovieFrame.TabHistory"), null, pnlTabHistory, null); //$NON-NLS-1$
+		pnlTabHistory.setLayout(new FormLayout(new ColumnSpec[] {
+				FormSpecs.RELATED_GAP_COLSPEC,
+				ColumnSpec.decode("default:grow"), //$NON-NLS-1$
+				FormSpecs.RELATED_GAP_COLSPEC,},
+			new RowSpec[] {
+				FormSpecs.RELATED_GAP_ROWSPEC,
+				RowSpec.decode("1dlu:grow(1)"), //$NON-NLS-1$
+				FormSpecs.RELATED_GAP_ROWSPEC,
+				RowSpec.decode("1dlu:grow"), //$NON-NLS-1$
+				FormSpecs.RELATED_GAP_ROWSPEC,
+				FormSpecs.DEFAULT_ROWSPEC,
+				FormSpecs.RELATED_GAP_ROWSPEC,}));
+		
+		tabHistoryEntries = new PMHistoryTableEntries(elem -> {
+			if (elem == null) {
+				tabHistoryChanges.clearData();
+			} else {
+				tabHistoryChanges.setData(CCStreams.iterate(elem.Changes).autosortByProperty(p -> p.Field.toLowerCase()).enumerate());
+				tabHistoryChanges.autoResize();
+			}
+		});
+		pnlTabHistory.add(tabHistoryEntries, "2, 2, fill, fill"); //$NON-NLS-1$
+		tabHistoryEntries.autoResize();
+		
+		tabHistoryChanges = new PMHistoryTableChanges();
+		pnlTabHistory.add(tabHistoryChanges, "2, 4, fill, fill"); //$NON-NLS-1$
+		tabHistoryChanges.autoResize();
+		
+		btnQueryHistory = new JButton(LocaleBundle.getString("PreviewMovieFrame.btnQuery")); //$NON-NLS-1$
+		btnQueryHistory.addActionListener(this::queryHistory);
+		pnlTabHistory.add(btnQueryHistory, "2, 6, right, center"); //$NON-NLS-1$
 	}
-	
+
+	private void queryHistory(ActionEvent evt) {
+		try {
+			List<CCCombinedHistoryEntry> data = CCMovieList.getInstance().getHistory().query(false, Integer.toString(movie.getLocalID()));
+			tabHistoryEntries.setData(data);
+			tabHistoryChanges.clearData();
+			tabHistoryEntries.autoResize();
+		} catch (CCFormatException e) {
+			CCLog.addError(e);
+			DialogHelper.showLocalError(this, "Dialogs.GenericError"); //$NON-NLS-1$
+		}
+	}
+
 	private void playMovie() {
 		movie.play(true);
 	}

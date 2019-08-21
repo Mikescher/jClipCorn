@@ -215,11 +215,14 @@ public class CCDatabaseHistory {
 	}
 
 	public List<CCCombinedHistoryEntry> query(boolean excludeViewedOnly) throws CCFormatException {
+		return query(excludeViewedOnly, null);
+	}
 
+	public List<CCCombinedHistoryEntry> query(boolean excludeViewedOnly, String idfilter) throws CCFormatException {
 		List<CCCombinedHistoryEntry> result  = new ArrayList<>();
 		List<CCCombinedHistoryEntry> backlog = new ArrayList<>();
 
-		List<String[]> rawdata = _db.queryHistory();
+		List<String[]> rawdata = _db.queryHistory(idfilter);
 		for (String[] raw : rawdata) {
 			CCHistoryTable  table     = CCHistoryTable.getWrapper().findByTextOrException(raw[0]);
 			String          id        = raw[1];

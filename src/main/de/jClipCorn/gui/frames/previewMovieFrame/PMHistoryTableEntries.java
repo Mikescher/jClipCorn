@@ -1,26 +1,25 @@
-package de.jClipCorn.gui.frames.databaseHistoryFrame;
-
-import java.util.ArrayList;
-import java.util.List;
+package de.jClipCorn.gui.frames.previewMovieFrame;
 
 import de.jClipCorn.database.databaseElement.*;
 import de.jClipCorn.database.history.CCCombinedHistoryEntry;
 import de.jClipCorn.database.history.CCHistorySingleChange;
 import de.jClipCorn.database.history.CCHistoryTable;
-import de.jClipCorn.gui.frames.previewMovieFrame.PreviewMovieFrame;
-import de.jClipCorn.gui.frames.previewSeriesFrame.PreviewSeriesFrame;
 import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleColumnPrototype;
 import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleTable;
 import de.jClipCorn.util.Str;
+import de.jClipCorn.util.lambda.Func1to0;
 import de.jClipCorn.util.stream.CCStreams;
 
-public class DatabaseHistoryTable extends JCCSimpleTable<CCCombinedHistoryEntry> {
+import java.util.ArrayList;
+import java.util.List;
+
+public class PMHistoryTableEntries extends JCCSimpleTable<CCCombinedHistoryEntry> {
 	private static final long serialVersionUID = -7175124665697003916L;
 
-	private final DatabaseHistoryFrame _parent;
+	private final Func1to0<CCCombinedHistoryEntry> _handler;
 
-	public DatabaseHistoryTable(DatabaseHistoryFrame frame) {
-		_parent = frame;
+	public PMHistoryTableEntries(Func1to0<CCCombinedHistoryEntry> handler) {
+		_handler = handler;
 	}
 
 	@Override
@@ -37,12 +36,6 @@ public class DatabaseHistoryTable extends JCCSimpleTable<CCCombinedHistoryEntry>
 		r.add(new JCCSimpleColumnPrototype<>(
 				"DatabaseHistoryFrame.Table.ColumnAction",
 				e -> Str.toProperCase(e.Action.Name),
-				null,
-				null));
-
-		r.add(new JCCSimpleColumnPrototype<>(
-				"DatabaseHistoryFrame.Table.ColumnElement",
-				e -> format(e, e.getSourceElement()),
 				null,
 				null));
 
@@ -85,16 +78,12 @@ public class DatabaseHistoryTable extends JCCSimpleTable<CCCombinedHistoryEntry>
 
 	@Override
 	protected void OnDoubleClickElement(CCCombinedHistoryEntry element) {
-		ICCDatabaseStructureElement dse = element.getSourceElement();
-		if (dse instanceof CCMovie)   PreviewMovieFrame.show( _parent, (CCMovie)dse);
-		if (dse instanceof CCSeries)  PreviewSeriesFrame.show(_parent, (CCSeries)dse);
-		if (dse instanceof CCSeason)  PreviewSeriesFrame.show(_parent, (CCSeason)dse);
-		if (dse instanceof CCEpisode) PreviewSeriesFrame.show(_parent, (CCEpisode)dse);
+		//
 	}
 
 	@Override
 	protected void OnSelectElement(CCCombinedHistoryEntry element) {
-		_parent.showChanges(element);
+		_handler.invoke(element);
 	}
 
 	@Override

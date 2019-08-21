@@ -60,7 +60,7 @@ public class Main {
 
 			LookAndFeelManager.setLookAndFeel(CCProperties.getInstance().PROP_UI_LOOKANDFEEL.getValue());
 
-			final CCMovieList mList = CCMovieList.create();
+			final CCMovieList mList = CCMovieList.create(true);
 
 			init();
 

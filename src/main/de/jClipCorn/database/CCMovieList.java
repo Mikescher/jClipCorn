@@ -76,26 +76,26 @@ public class CCMovieList {
 
 	private boolean blocked = false;
 
-	private CCMovieList(CCDatabase db) {
+	private CCMovieList(CCDatabase db, boolean setInstance) {
 		this.list     = new Vector<>();
 		this.listener = new Vector<>();
 
 		this.databaseGroups = new ArrayList<>();
 		this.database = db;
 
-		instance = this;
+		if (setInstance) instance = this;
 	}
 	
-	public static CCMovieList create() {
-		return new CCMovieList(CCDatabase.create(CCProperties.getInstance().PROP_DATABASE_NAME.getValue()));
+	public static CCMovieList create(boolean setInstance) {
+		return new CCMovieList(CCDatabase.create(CCProperties.getInstance().PROP_DATABASE_NAME.getValue()), setInstance	);
 	}
 	
 	public static CCMovieList createInMemory() {
-		return new CCMovieList(CCDatabase.createInMemory());
+		return new CCMovieList(CCDatabase.createInMemory(), false);
 	}
 	
 	public static CCMovieList createStub() {
-		return new CCMovieList(CCDatabase.createStub());
+		return new CCMovieList(CCDatabase.createStub(), false);
 	}
 
 	public void showInitialWizard() {

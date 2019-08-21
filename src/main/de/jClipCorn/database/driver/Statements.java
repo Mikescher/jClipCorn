@@ -59,6 +59,7 @@ public class Statements {
 
 	public static CCSQLStatement countHistory;
 	public static CCSQLStatement queryHistoryStatement;
+	public static CCSQLStatement queryHistoryStatementFiltered;
 
 	private static ArrayList<CCSQLStatement> statements = new ArrayList<>();
 
@@ -261,6 +262,12 @@ public class Statements {
 
 			queryHistoryStatement = SQLBuilder.createSelect(TAB_HISTORY)
 					.addSelectFields(COL_HISTORY_TABLE, COL_HISTORY_ID, COL_HISTORY_DATE, COL_HISTORY_ACTION, COL_HISTORY_FIELD, COL_HISTORY_OLD, COL_HISTORY_NEW)
+					.setOrder(COL_HISTORY_DATE, SQLOrder.ASC)
+					.build(d, statements);
+
+			queryHistoryStatementFiltered = SQLBuilder.createSelect(TAB_HISTORY)
+					.addSelectFields(COL_HISTORY_TABLE, COL_HISTORY_ID, COL_HISTORY_DATE, COL_HISTORY_ACTION, COL_HISTORY_FIELD, COL_HISTORY_OLD, COL_HISTORY_NEW)
+					.addPreparedWhereCondition(COL_HISTORY_ID)
 					.setOrder(COL_HISTORY_DATE, SQLOrder.ASC)
 					.build(d, statements);
 

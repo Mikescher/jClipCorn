@@ -1312,14 +1312,24 @@ public class CCDatabase {
 		db.executeSQLThrow(sql);
 	}
 
-	public List<String[]> queryHistory() {
+	public List<String[]> queryHistory(String idfilter) {
 		try {
-			CCSQLStatement stmt = queryHistoryStatement;
-			stmt.clearParameters();
-
 			List<String[]> result = new ArrayList<>();
 
-			CCSQLResultSet rs = stmt.executeQuery(this);
+			CCSQLResultSet rs;
+			if (idfilter != null) {
+				CCSQLStatement stmt = queryHistoryStatementFiltered;
+				stmt.clearParameters();
+				stmt.setStr(COL_HISTORY_ID, idfilter);
+				rs = stmt.executeQuery(this);
+			} else {
+				CCSQLStatement stmt = queryHistoryStatement;
+				stmt.clearParameters();
+				rs = stmt.executeQuery(this);
+			}
+
+
+
 			while (rs.next()) {
 				String[] arr = new String[7];
 				arr[0] = rs.getString(COL_HISTORY_TABLE);

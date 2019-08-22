@@ -58,7 +58,7 @@ public class MediaQueryResult {
 	}
 
 	@SuppressWarnings("nls")
-	public static MediaQueryResult parse(String raw, long cdate, long mdate, CCXMLElement xml) throws InnerMediaQueryException, CCXMLException {
+	public static MediaQueryResult parse(String raw, long cdate, long mdate, CCXMLElement xml, boolean doNotValidateLangs) throws InnerMediaQueryException, CCXMLException {
 		boolean foundGeneral = false;
 		boolean foundVideo = false;
 
@@ -112,17 +112,18 @@ public class MediaQueryResult {
 
 		if (vtracks.size() == 1 && vtracks.get(0).Duration != -1) duration = vtracks.get(0).Duration;
 
-		CCDBLanguageList alng = getLang(atracks);
+		CCDBLanguageList alng = getLang(atracks, doNotValidateLangs);
 		
 		return new MediaQueryResult(raw, cdate, mdate, format, format_Version, fileSize, duration, overallBitRate, frameRate, vtracks.get(0), vtracks, atracks, stracks, alng);
 	}
 
-	private static CCDBLanguageList getLang(List<MediaQueryResultAudioTrack> tcks) throws InnerMediaQueryException {
+	private static CCDBLanguageList getLang(List<MediaQueryResultAudioTrack> tcks, boolean doNotValidateLangs) throws InnerMediaQueryException {
 
 		if (tcks.size() == 1 && tcks.get(0).Language == null) return null;
 
 		if (CCStreams.iterate(tcks).any(t -> t.Language == null))
 		{
+			if (doNotValidateLangs) return null;
 			String info = CCStreams.iterate(tcks).stringjoin(t -> t.Language==null ? "NULL": t.Language, ", "); //$NON-NLS-1$ //$NON-NLS-2$
 			throw new InnerMediaQueryException("No audio language set in tracks ("+info+")"); //$NON-NLS-1$ //$NON-NLS-2$
 		}

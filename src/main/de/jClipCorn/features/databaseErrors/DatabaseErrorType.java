@@ -62,7 +62,7 @@ public class DatabaseErrorType {
 	public final static DatabaseErrorType ERROR_DUPLICATE_REFERENCES_COVER_FILE    = new DatabaseErrorType(56, null);
 	public final static DatabaseErrorType ERROR_MEDIAINFO_UNSET                    = new DatabaseErrorType(57, null);
 	public final static DatabaseErrorType ERROR_MEDIAINFO_INVALID                  = new DatabaseErrorType(58, null);
-	public final static DatabaseErrorType ERROR_MEDIAINFO_SIZE_MISMATCH            = new DatabaseErrorType(59, null);
+	public final static DatabaseErrorType ERROR_MEDIAINFO_SIZE_MISMATCH            = new DatabaseErrorType(59, DatabaseAutofixer::fixError_MediaInfoFilesizeMismatch);
 	public final static DatabaseErrorType ERROR_MEDIAINFO_LENGTH_MISMATCH          = new DatabaseErrorType(60, null);
 	public final static DatabaseErrorType ERROR_MEDIAINFO_FILE_CHANGED             = new DatabaseErrorType(61, null);
 	public final static DatabaseErrorType ERROR_DB_EXCEPTION                       = new DatabaseErrorType(62, null);

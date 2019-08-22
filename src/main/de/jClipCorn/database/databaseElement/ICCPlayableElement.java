@@ -26,6 +26,7 @@ public interface ICCPlayableElement {
 
 	void setLanguage(CCDBLanguageList lang);
 	void setLength(int len);
+	void setFilesize(long fsize);
 	void setMediaInfo(CCMediaInfo minfo);
 
 	void play(boolean updateViewedAndHistory);

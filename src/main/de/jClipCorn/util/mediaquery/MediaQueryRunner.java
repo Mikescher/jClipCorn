@@ -21,7 +21,7 @@ public class MediaQueryRunner {
 	// https://mediaarea.net/mediainfo/mediainfo_2_0.xsd
 
 	@SuppressWarnings("nls")
-	public static MediaQueryResult query(String filename) throws IOException, MediaQueryException {
+	public static MediaQueryResult query(String filename, boolean doNotValidateLangs) throws IOException, MediaQueryException {
 		String mqpath = CCProperties.getInstance().PROP_PLAY_MEDIAINFO_PATH.getValue();
 
 		File mqfile = new File(mqpath);
@@ -46,7 +46,7 @@ public class MediaQueryRunner {
 			CCXMLElement media = root.getFirstChildOrThrow("media");
 			if (media == null) throw new InnerMediaQueryException("no media xml element");
 
-			return MediaQueryResult.parse(mqxml, attr.creationTime().toMillis(), attr.lastModifiedTime().toMillis(), media);
+			return MediaQueryResult.parse(mqxml, attr.creationTime().toMillis(), attr.lastModifiedTime().toMillis(), media, doNotValidateLangs);
 		} catch (InnerMediaQueryException e) {
 			throw new MediaQueryException(e.getMessage(), mqxml);
 		} catch (CCXMLException e) {

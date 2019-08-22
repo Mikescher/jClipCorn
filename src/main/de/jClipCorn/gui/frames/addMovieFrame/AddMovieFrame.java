@@ -1156,12 +1156,12 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		try {
 			List<MediaQueryResult> dat = new ArrayList<>();
 
-			if (!Str.isNullOrWhitespace(ed_Part0.getText())) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(ed_Part0.getText())));
-			if (!Str.isNullOrWhitespace(ed_Part1.getText())) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(ed_Part1.getText())));
-			if (!Str.isNullOrWhitespace(ed_Part2.getText())) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(ed_Part2.getText())));
-			if (!Str.isNullOrWhitespace(ed_Part3.getText())) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(ed_Part3.getText())));
-			if (!Str.isNullOrWhitespace(ed_Part4.getText())) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(ed_Part4.getText())));
-			if (!Str.isNullOrWhitespace(ed_Part5.getText())) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(ed_Part5.getText())));
+			if (!Str.isNullOrWhitespace(ed_Part0.getText())) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(ed_Part0.getText()), false));
+			if (!Str.isNullOrWhitespace(ed_Part1.getText())) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(ed_Part1.getText()), false));
+			if (!Str.isNullOrWhitespace(ed_Part2.getText())) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(ed_Part2.getText()), false));
+			if (!Str.isNullOrWhitespace(ed_Part3.getText())) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(ed_Part3.getText()), false));
+			if (!Str.isNullOrWhitespace(ed_Part4.getText())) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(ed_Part4.getText()), false));
+			if (!Str.isNullOrWhitespace(ed_Part5.getText())) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(ed_Part5.getText()), false));
 
 			if (dat.isEmpty()) {
 				lblLenAuto.setText(Str.Empty);
@@ -1203,12 +1203,12 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		try {
 			List<MediaQueryResult> dat = new ArrayList<>();
 
-			if (!Str.isNullOrWhitespace(ed_Part0.getText())) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(ed_Part0.getText())));
-			if (!Str.isNullOrWhitespace(ed_Part1.getText())) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(ed_Part1.getText())));
-			if (!Str.isNullOrWhitespace(ed_Part2.getText())) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(ed_Part2.getText())));
-			if (!Str.isNullOrWhitespace(ed_Part3.getText())) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(ed_Part3.getText())));
-			if (!Str.isNullOrWhitespace(ed_Part4.getText())) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(ed_Part4.getText())));
-			if (!Str.isNullOrWhitespace(ed_Part5.getText())) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(ed_Part5.getText())));
+			if (!Str.isNullOrWhitespace(ed_Part0.getText())) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(ed_Part0.getText()), true));
+			if (!Str.isNullOrWhitespace(ed_Part1.getText())) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(ed_Part1.getText()), true));
+			if (!Str.isNullOrWhitespace(ed_Part2.getText())) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(ed_Part2.getText()), true));
+			if (!Str.isNullOrWhitespace(ed_Part3.getText())) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(ed_Part3.getText()), true));
+			if (!Str.isNullOrWhitespace(ed_Part4.getText())) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(ed_Part4.getText()), true));
+			if (!Str.isNullOrWhitespace(ed_Part5.getText())) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(ed_Part5.getText()), true));
 
 			if (dat.isEmpty()) {
 				DialogHelper.showLocalError(this, "Dialogs.MediaInfoEmpty"); //$NON-NLS-1$
@@ -1262,19 +1262,23 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 
 				SwingUtilities.invokeLater(() -> pbLanguageLoad.setVisible(true));
 
+				MediaQueryResult dat0 = null;
+				if (!Str.isNullOrWhitespace(p0)) dat0 = MediaQueryRunner.query(PathFormatter.fromCCPath(p0), true);
+
+				final MediaQueryResult _fdat0 = dat0;
+				if (dat0 != null && !_isDirtyMediaInfo) SwingUtilities.invokeLater(() -> ctrlMediaInfo.setValue(_fdat0));
+
 				List<MediaQueryResult> dat = new ArrayList<>();
 
-				if (!Str.isNullOrWhitespace(p0)) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(p0)));
-				if (!Str.isNullOrWhitespace(p1)) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(p1)));
-				if (!Str.isNullOrWhitespace(p2)) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(p2)));
-				if (!Str.isNullOrWhitespace(p3)) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(p3)));
-				if (!Str.isNullOrWhitespace(p4)) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(p4)));
-				if (!Str.isNullOrWhitespace(p5)) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(p5)));
+				if (!Str.isNullOrWhitespace(p0)) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(p0), false));
+				if (!Str.isNullOrWhitespace(p1)) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(p1), false));
+				if (!Str.isNullOrWhitespace(p2)) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(p2), false));
+				if (!Str.isNullOrWhitespace(p3)) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(p3), false));
+				if (!Str.isNullOrWhitespace(p4)) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(p4), false));
+				if (!Str.isNullOrWhitespace(p5)) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(p5), false));
 
 				if (dat.isEmpty()) return;
 
-				if (!_isDirtyMediaInfo) SwingUtilities.invokeLater(() -> ctrlMediaInfo.setValue(dat.get(0)));
-				
 				int dur = (int) (CCStreams.iterate(dat).any(d -> d.Duration == -1) ? -1 : (CCStreams.iterate(dat).sumDouble(d -> d.Duration)/60));
 				if (dur != -1) SwingUtilities.invokeLater(() -> lblLenAuto.setText("("+dur+")")); //$NON-NLS-1$ //$NON-NLS-2$
 				if (dur == -1) SwingUtilities.invokeLater(() -> lblLenAuto.setText(Str.Empty));

@@ -307,7 +307,7 @@ public class QuickAddEpisodeDialog extends JDialog {
 		new Thread(() ->  {
 
 			try {
-				MediaQueryResult dat = MediaQueryRunner.query(edSource.getText());
+				MediaQueryResult dat = MediaQueryRunner.query(edSource.getText(), true);
 
 				SwingUtilities.invokeLater(() -> 
 				{
@@ -479,7 +479,7 @@ public class QuickAddEpisodeDialog extends JDialog {
 		}
 
 		try {
-			MediaQueryResult dat = MediaQueryRunner.query(edSource.getText());
+			MediaQueryResult dat = MediaQueryRunner.query(edSource.getText(), false);
 
 			if (dat.AudioLanguages == null) {
 				DialogHelper.showLocalError(this, "Dialogs.MediaInfoFailed"); //$NON-NLS-1$
@@ -508,7 +508,7 @@ public class QuickAddEpisodeDialog extends JDialog {
 		}
 
 		try {
-			MediaQueryResult dat = MediaQueryRunner.query(edSource.getText());
+			MediaQueryResult dat = MediaQueryRunner.query(edSource.getText(), true);
 
 			int dur = (dat.Duration==-1)?(-1):(int)(dat.Duration/60);
 			if (dur == -1) throw new MediaQueryException("Duration == -1"); //$NON-NLS-1$

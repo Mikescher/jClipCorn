@@ -110,10 +110,12 @@ public class DatabaseHistoryFrame extends JFrame {
 		
 		btnEnableTrigger = new JButton(LocaleBundle.getString("DatabaseHistoryFrame.btnAktivieren")); //$NON-NLS-1$
 		btnEnableTrigger.addActionListener(this::enableTrigger);
+		btnEnableTrigger.setFocusable(false);
 		contentPane.add(btnEnableTrigger, "6, 2"); //$NON-NLS-1$
 		
 		btnDisableTrigger = new JButton(LocaleBundle.getString("DatabaseHistoryFrame.btnDeaktivieren")); //$NON-NLS-1$
 		btnDisableTrigger.addActionListener(this::disableTrigger);
+		btnDisableTrigger.setFocusable(false);
 		contentPane.add(btnDisableTrigger, "8, 2"); //$NON-NLS-1$
 		
 		lblTrigger = new JLabel(LocaleBundle.getString("DatabaseHistoryFrame.lblTrigger")); //$NON-NLS-1$

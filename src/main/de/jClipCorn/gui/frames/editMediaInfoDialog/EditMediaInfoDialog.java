@@ -564,7 +564,7 @@ public class EditMediaInfoDialog extends JDialog {
 		{
 			try
 			{
-				MediaQueryResult mqr = MediaQueryRunner.query(filename);
+				MediaQueryResult mqr = MediaQueryRunner.query(filename, true);
 				SwingUtilities.invokeLater(() ->
 				{
 					_mqData = mqr;

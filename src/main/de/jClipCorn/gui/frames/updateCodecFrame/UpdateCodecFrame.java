@@ -354,7 +354,7 @@ public class UpdateCodecFrame extends JFrame {
 					List<MediaQueryResult> dat = new ArrayList<>();
 
 					for (int pi = 0; pi < parts.size(); pi++) {
-						dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(parts.get(pi))));
+						dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(parts.get(pi)), false));
 
 						if (cancelBackground) return;
 

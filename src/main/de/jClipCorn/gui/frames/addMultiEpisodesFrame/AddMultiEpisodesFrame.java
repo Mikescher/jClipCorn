@@ -281,7 +281,7 @@ public class AddMultiEpisodesFrame extends JFrame {
 					if (data.get(i).MediaQueryResult == null)
 					{
 						try {
-							data.get(i).MediaQueryResult = MediaQueryRunner.query(data.get(i).SourcePath);
+							data.get(i).MediaQueryResult = MediaQueryRunner.query(data.get(i).SourcePath, true);
 						} catch (IOException | MediaQueryException e) {
 							data.get(i).MediaQueryResult = null;
 						}
@@ -414,7 +414,7 @@ public class AddMultiEpisodesFrame extends JFrame {
 					if (data.get(i).MediaQueryResult == null)
 					{
 						try {
-							data.get(i).MediaQueryResult = MediaQueryRunner.query(data.get(i).SourcePath);
+							data.get(i).MediaQueryResult = MediaQueryRunner.query(data.get(i).SourcePath, true);
 						} catch (IOException | MediaQueryException e) {
 							data.get(i).MediaQueryResult = null;
 						}
@@ -489,7 +489,7 @@ public class AddMultiEpisodesFrame extends JFrame {
 					if (data.get(i).MediaQueryResult == null)
 					{
 						try {
-							data.get(i).MediaQueryResult = MediaQueryRunner.query(data.get(i).SourcePath);
+							data.get(i).MediaQueryResult = MediaQueryRunner.query(data.get(i).SourcePath, true);
 						} catch (IOException | MediaQueryException e) {
 							data.get(i).MediaQueryResult = null;
 						}

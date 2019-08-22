@@ -1639,7 +1639,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		}
 
 		try {
-			MediaQueryResult dat = MediaQueryRunner.query(PathFormatter.fromCCPath(edEpisodePart.getText()));
+			MediaQueryResult dat = MediaQueryRunner.query(PathFormatter.fromCCPath(edEpisodePart.getText()), false);
 
 			if (dat.AudioLanguages == null) {
 				DialogHelper.showLocalError(this, "Dialogs.MediaInfoFailed"); //$NON-NLS-1$
@@ -1668,7 +1668,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		}
 
 		try {
-			MediaQueryResult dat = MediaQueryRunner.query(PathFormatter.fromCCPath(edEpisodePart.getText()));
+			MediaQueryResult dat = MediaQueryRunner.query(PathFormatter.fromCCPath(edEpisodePart.getText()), true);
 
 			int dur = (dat.Duration==-1)?(-1):(int)(dat.Duration/60);
 			if (dur == -1) throw new MediaQueryException("Duration == -1"); //$NON-NLS-1$
@@ -1687,7 +1687,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		}
 
 		try {
-			MediaQueryResult dat = MediaQueryRunner.query(PathFormatter.fromCCPath(edEpisodePart.getText()));
+			MediaQueryResult dat = MediaQueryRunner.query(PathFormatter.fromCCPath(edEpisodePart.getText()), true);
 
 			mediaInfoControl.setValue(dat);
 

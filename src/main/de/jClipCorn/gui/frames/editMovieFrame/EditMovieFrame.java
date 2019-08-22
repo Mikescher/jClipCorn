@@ -1187,12 +1187,12 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		try {
 			List<MediaQueryResult> dat = new ArrayList<>();
 
-			if (!Str.isNullOrWhitespace(edPart0.getText())) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(edPart0.getText())));
-			if (!Str.isNullOrWhitespace(edPart1.getText())) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(edPart1.getText())));
-			if (!Str.isNullOrWhitespace(edPart2.getText())) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(edPart2.getText())));
-			if (!Str.isNullOrWhitespace(edPart3.getText())) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(edPart3.getText())));
-			if (!Str.isNullOrWhitespace(edPart4.getText())) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(edPart4.getText())));
-			if (!Str.isNullOrWhitespace(edPart5.getText())) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(edPart5.getText())));
+			if (!Str.isNullOrWhitespace(edPart0.getText())) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(edPart0.getText()), false));
+			if (!Str.isNullOrWhitespace(edPart1.getText())) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(edPart1.getText()), false));
+			if (!Str.isNullOrWhitespace(edPart2.getText())) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(edPart2.getText()), false));
+			if (!Str.isNullOrWhitespace(edPart3.getText())) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(edPart3.getText()), false));
+			if (!Str.isNullOrWhitespace(edPart4.getText())) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(edPart4.getText()), false));
+			if (!Str.isNullOrWhitespace(edPart5.getText())) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(edPart5.getText()), false));
 
 			if (dat.isEmpty()) {
 				DialogHelper.showLocalError(this, "Dialogs.MediaInfoEmpty"); //$NON-NLS-1$
@@ -1229,12 +1229,12 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		try {
 			List<MediaQueryResult> dat = new ArrayList<>();
 
-			if (!Str.isNullOrWhitespace(edPart0.getText())) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(edPart0.getText())));
-			if (!Str.isNullOrWhitespace(edPart1.getText())) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(edPart1.getText())));
-			if (!Str.isNullOrWhitespace(edPart2.getText())) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(edPart2.getText())));
-			if (!Str.isNullOrWhitespace(edPart3.getText())) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(edPart3.getText())));
-			if (!Str.isNullOrWhitespace(edPart4.getText())) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(edPart4.getText())));
-			if (!Str.isNullOrWhitespace(edPart5.getText())) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(edPart5.getText())));
+			if (!Str.isNullOrWhitespace(edPart0.getText())) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(edPart0.getText()), true));
+			if (!Str.isNullOrWhitespace(edPart1.getText())) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(edPart1.getText()), true));
+			if (!Str.isNullOrWhitespace(edPart2.getText())) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(edPart2.getText()), true));
+			if (!Str.isNullOrWhitespace(edPart3.getText())) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(edPart3.getText()), true));
+			if (!Str.isNullOrWhitespace(edPart4.getText())) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(edPart4.getText()), true));
+			if (!Str.isNullOrWhitespace(edPart5.getText())) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(edPart5.getText()), true));
 
 			if (dat.isEmpty()) {
 				DialogHelper.showLocalError(this, "Dialogs.MediaInfoEmpty"); //$NON-NLS-1$
@@ -1260,12 +1260,12 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		try {
 			List<MediaQueryResult> dat = new ArrayList<>();
 
-			if (!Str.isNullOrWhitespace(edPart0.getText())) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(edPart0.getText())));
-			if (!Str.isNullOrWhitespace(edPart1.getText())) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(edPart1.getText())));
-			if (!Str.isNullOrWhitespace(edPart2.getText())) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(edPart2.getText())));
-			if (!Str.isNullOrWhitespace(edPart3.getText())) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(edPart3.getText())));
-			if (!Str.isNullOrWhitespace(edPart4.getText())) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(edPart4.getText())));
-			if (!Str.isNullOrWhitespace(edPart5.getText())) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(edPart5.getText())));
+			if (!Str.isNullOrWhitespace(edPart0.getText())) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(edPart0.getText()), true));
+			if (!Str.isNullOrWhitespace(edPart1.getText())) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(edPart1.getText()), true));
+			if (!Str.isNullOrWhitespace(edPart2.getText())) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(edPart2.getText()), true));
+			if (!Str.isNullOrWhitespace(edPart3.getText())) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(edPart3.getText()), true));
+			if (!Str.isNullOrWhitespace(edPart4.getText())) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(edPart4.getText()), true));
+			if (!Str.isNullOrWhitespace(edPart5.getText())) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(edPart5.getText()), true));
 
 			if (dat.isEmpty()) {
 				DialogHelper.showLocalError(this, "Dialogs.MediaInfoEmpty"); //$NON-NLS-1$

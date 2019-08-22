@@ -1060,7 +1060,7 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 
 		for (BatchEditEpisodeData ep : data) {
 			try {
-				MediaQueryResult dat = MediaQueryRunner.query(PathFormatter.fromCCPath(ep.getPart()));
+				MediaQueryResult dat = MediaQueryRunner.query(PathFormatter.fromCCPath(ep.getPart()), false);
 
 				if (dat.AudioLanguages == null) {
 					err.append("[").append(ep.getEpisodeNumber()).append("] ").append(ep.getTitle()).append("\n").append("No language in file").append("\n\n"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
@@ -1096,7 +1096,7 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 
 		for (BatchEditEpisodeData ep : data) {
 			try {
-				MediaQueryResult dat = MediaQueryRunner.query(PathFormatter.fromCCPath(ep.getPart()));
+				MediaQueryResult dat = MediaQueryRunner.query(PathFormatter.fromCCPath(ep.getPart()), true);
 
 				int dur = (dat.Duration==-1)?(-1):(int)(dat.Duration/60);
 				if (dur == -1) throw new MediaQueryException("Duration == -1"); //$NON-NLS-1$
@@ -1121,7 +1121,7 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 
 		for (BatchEditEpisodeData ep : data) {
 			try {
-				MediaQueryResult dat = MediaQueryRunner.query(PathFormatter.fromCCPath(ep.getPart()));
+				MediaQueryResult dat = MediaQueryRunner.query(PathFormatter.fromCCPath(ep.getPart()), true);
 				CCMediaInfo minfo = dat.toMediaInfo();
 				
 				if (minfo.isSet()) ep.setMediaInfo(minfo);
@@ -1182,7 +1182,7 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 		}
 
 		try {
-			MediaQueryResult dat = MediaQueryRunner.query(PathFormatter.fromCCPath(edPart.getText()));
+			MediaQueryResult dat = MediaQueryRunner.query(PathFormatter.fromCCPath(edPart.getText()), false);
 
 			if (dat.AudioLanguages == null) {
 				DialogHelper.showLocalError(this, "Dialogs.MediaInfoFailed"); //$NON-NLS-1$
@@ -1211,7 +1211,7 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 		}
 
 		try {
-			MediaQueryResult dat = MediaQueryRunner.query(PathFormatter.fromCCPath(edPart.getText()));
+			MediaQueryResult dat = MediaQueryRunner.query(PathFormatter.fromCCPath(edPart.getText()), true);
 
 			int dur = (dat.Duration==-1)?(-1):(int)(dat.Duration/60);
 			if (dur == -1) throw new MediaQueryException("Duration == -1"); //$NON-NLS-1$
@@ -1230,7 +1230,7 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 		}
 
 		try {
-			MediaQueryResult dat = MediaQueryRunner.query(PathFormatter.fromCCPath(edPart.getText()));
+			MediaQueryResult dat = MediaQueryRunner.query(PathFormatter.fromCCPath(edPart.getText()), true);
 			CCMediaInfo minfo = dat.toMediaInfo();
 
 			ctrlMediaInfo.setValue(minfo);

@@ -648,7 +648,7 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator {
 			addEpisodeValidation(
 					DatabaseErrorType.ERROR_MEDIAINFO_LENGTH_MISMATCH,
 					o -> o.ValidateEpisodes,
-					episode -> episode.getMediaInfo().isSet() && (getRelativeDifference(episode.getMediaInfo().getDurationInMinutes(), episode.getLength())>=0.10),
+					episode -> episode.getMediaInfo().isSet() && (getRelativeDifference(episode.getMediaInfo().getDurationInMinutes(), episode.getLength())>=0.25),
 					episode -> DatabaseError.createSingle(DatabaseErrorType.ERROR_MEDIAINFO_LENGTH_MISMATCH, episode));
 
 			// Mediainfo does not match actual file
@@ -1098,7 +1098,7 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator {
 	@SuppressWarnings("nls")
 	protected void findInternalDatabaseErrors(List<DatabaseError> e, CCMovieList movielist, DoubleProgressCallbackListener pcl)
 	{
-		pcl.stepRootAndResetSub("Validate database layer", 8);
+		pcl.stepRootAndResetSub("Validate database layer", 7);
 
 		PublicDatabaseInterface db = movielist.getInternalDatabaseDirectly();
 
@@ -1220,113 +1220,7 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator {
 			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_DB_EXCEPTION, ex));
 		}
 
-
-		// ### 5 ###
-		try
-		{
-			pcl.stepSub("Validate CoverIDs");
-
-			List<Integer> cvr1 = db.querySQL("SELECT COVERID FROM ELEMENTS WHERE COVERID <> -1", 1, o -> (int)o[0]);
-			List<Integer> cvr2 = db.querySQL("SELECT COVERID FROM SEASONS WHERE COVERID <> -1",  1, o -> (int)o[0]);
-
-			List<Integer> cvrall = db.querySQL("SELECT ID FROM COVERS",  1, o -> (int)o[0]);
-
-			List<Integer> duplicates = CCStreams
-					.iterate(cvr1, cvr2)
-					.groupBy(p->p)
-					.filter(p->p.getValue().size()>1)
-					.map(Map.Entry::getKey)
-					.enumerate();
-
-			for (int dup : duplicates) {
-				e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_DB_MULTI_REF_COVER, dup));
-			}
-
-			for (int cvrid : CCStreams.iterate(cvrall).filter(p -> !cvr1.contains(p) && !cvr2.contains(p) )) {
-				e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_DB_UNUSED_COVERID, cvrid));
-			}
-
-			for (int cvrid : CCStreams.iterate(cvr1, cvr2).filter(p -> !cvrall.contains(p) )) {
-				e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_DB_DANGLING_COVERID, cvrid));
-			}
-		}
-		catch (Exception ex)
-		{
-			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_DB_EXCEPTION, ex));
-		}
-
-
-		// ### 5 ###
-		try
-		{
-			pcl.stepSub("Validate CoverIDs");
-
-			List<Integer> cvr1 = db.querySQL("SELECT COVERID FROM ELEMENTS WHERE COVERID <> -1", 1, o -> (int)o[0]);
-			List<Integer> cvr2 = db.querySQL("SELECT COVERID FROM SEASONS WHERE COVERID <> -1",  1, o -> (int)o[0]);
-
-			List<Integer> cvrall = db.querySQL("SELECT ID FROM COVERS",  1, o -> (int)o[0]);
-
-			List<Integer> duplicates = CCStreams
-					.iterate(cvr1, cvr2)
-					.groupBy(p->p)
-					.filter(p->p.getValue().size()>1)
-					.map(Map.Entry::getKey)
-					.enumerate();
-
-			for (int dup : duplicates) {
-				e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_DB_MULTI_REF_COVER, dup));
-			}
-
-			for (int cvrid : CCStreams.iterate(cvrall).filter(p -> !cvr1.contains(p) && !cvr2.contains(p) )) {
-				e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_DB_UNUSED_COVERID, cvrid));
-			}
-
-			for (int cvrid : CCStreams.iterate(cvr1, cvr2).filter(p -> !cvrall.contains(p) )) {
-				e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_DB_DANGLING_COVERID, cvrid));
-			}
-		}
-		catch (Exception ex)
-		{
-			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_DB_EXCEPTION, ex));
-		}
-
-
 		// ### 6 ###
-		try
-		{
-			pcl.stepSub("Validate CoverIDs");
-
-			List<Integer> cvr1 = db.querySQL("SELECT COVERID FROM ELEMENTS WHERE COVERID <> -1", 1, o -> (int)o[0]);
-			List<Integer> cvr2 = db.querySQL("SELECT COVERID FROM SEASONS WHERE COVERID <> -1",  1, o -> (int)o[0]);
-
-			List<Integer> cvrall = db.querySQL("SELECT ID FROM COVERS",  1, o -> (int)o[0]);
-
-			List<Integer> duplicates = CCStreams
-					.iterate(cvr1, cvr2)
-					.groupBy(p->p)
-					.filter(p->p.getValue().size()>1)
-					.map(Map.Entry::getKey)
-					.enumerate();
-
-			for (int dup : duplicates) {
-				e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_DB_MULTI_REF_COVER, dup));
-			}
-
-			for (int cvrid : CCStreams.iterate(cvrall).filter(p -> !cvr1.contains(p) && !cvr2.contains(p) )) {
-				e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_DB_UNUSED_COVERID, cvrid));
-			}
-
-			for (int cvrid : CCStreams.iterate(cvr1, cvr2).filter(p -> !cvrall.contains(p) )) {
-				e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_DB_DANGLING_COVERID, cvrid));
-			}
-		}
-		catch (Exception ex)
-		{
-			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_DB_EXCEPTION, ex));
-		}
-
-
-		// ### 7 ###
 		try
 		{
 			pcl.stepSub("Validate History trigger");

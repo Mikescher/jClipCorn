@@ -324,14 +324,14 @@ public class CCMediaInfo {
 	{
 		if (width < 320 && height < 240) return CCQualityResolutionType.R_LOW;
 
-		if (isApproxSize(4096, 3072, 0.05, 0.45)) return CCQualityResolutionType.R_4K;
+		if (isApproxSize(3840, 2160, 0.05, 0.45)) return CCQualityResolutionType.R_4K;
 		if (isApproxSize(2560, 1440, 0.05, 0.45)) return CCQualityResolutionType.R_1440;
 		if (isApproxSize(1920, 1080, 0.05, 0.45)) return CCQualityResolutionType.R_1080;
-		if (isApproxSize(1280, 720, 0.10, 0.50)) return CCQualityResolutionType.R_720;
-		if (isApproxSize(1024, 576, 0.10, 0.50)) return CCQualityResolutionType.R_576;
-		if (isApproxSize(854, 480, 0.10, 0.50)) return CCQualityResolutionType.R_480;
-		if (isApproxSize(320, 240, 0.15, 0.50)) return CCQualityResolutionType.R_240;
-		if (isApproxSize(720, 304, 0.30, 0.65)) return CCQualityResolutionType.R_304;
+		if (isApproxSize(1280,  720, 0.10, 0.50)) return CCQualityResolutionType.R_720;
+		if (isApproxSize(1024,  576, 0.10, 0.50)) return CCQualityResolutionType.R_576;
+		if (isApproxSize( 854,  480, 0.10, 0.50)) return CCQualityResolutionType.R_480;
+		if (isApproxSize( 320,  240, 0.15, 0.50)) return CCQualityResolutionType.R_240;
+		if (isApproxSize( 720,  304, 0.30, 0.65)) return CCQualityResolutionType.R_304;
 
 		if (width < 320 || height < 240) return CCQualityResolutionType.R_LOW;
 

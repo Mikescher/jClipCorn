@@ -2,21 +2,15 @@ package de.jClipCorn.features.databaseErrors;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.lang.reflect.Field;
+import java.nio.file.Files;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.List;
 
 import de.jClipCorn.database.CCMovieList;
-import de.jClipCorn.database.databaseElement.CCDatabaseElement;
-import de.jClipCorn.database.databaseElement.CCEpisode;
-import de.jClipCorn.database.databaseElement.CCMovie;
-import de.jClipCorn.database.databaseElement.CCSeason;
-import de.jClipCorn.database.databaseElement.CCSeries;
-import de.jClipCorn.database.databaseElement.columnTypes.CCFileFormat;
-import de.jClipCorn.database.databaseElement.columnTypes.CCFileSize;
-import de.jClipCorn.database.databaseElement.columnTypes.CCGenre;
-import de.jClipCorn.database.databaseElement.columnTypes.CCGenreList;
-import de.jClipCorn.database.databaseElement.columnTypes.CCGroup;
-import de.jClipCorn.database.databaseElement.columnTypes.CCTagList;
+import de.jClipCorn.database.databaseElement.*;
+import de.jClipCorn.database.databaseElement.columnTypes.*;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.util.DriveMap;
@@ -461,6 +455,28 @@ public class DatabaseAutofixer {
 			}
 
 			return false;
+		}
+
+		return false;
+	}
+
+	public static boolean fixError_MediaInfoFilesizeMismatch(DatabaseError err) {
+		if (err.getElement1() instanceof ICCPlayableElement) {
+			ICCPlayableElement elem = (ICCPlayableElement) err.getElement1();
+			CCMediaInfo mi = elem.getMediaInfo();
+			if (!mi.isSet()) return false;
+
+			long fsz = 0;
+			for (String p : elem.getParts()) {
+				File f = new File(PathFormatter.fromCCPath(p));
+				if (!f.exists()) return false;
+				fsz += f.length();
+			}
+
+			if (fsz != mi.getFilesize()) return false;
+
+			elem.setFilesize(fsz);
+			return true;
 		}
 
 		return false;

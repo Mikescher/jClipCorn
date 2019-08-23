@@ -27,12 +27,14 @@ import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.FormSpecs;
 import com.jgoodies.forms.layout.RowSpec;
 
+import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCFileFormat;
 import de.jClipCorn.gui.frames.addMovieFrame.AddMovieFrame;
 import de.jClipCorn.gui.mainFrame.MainFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.properties.CCProperties;
+import de.jClipCorn.util.Str;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.helper.ExtendedFocusTraversalOnArray;
@@ -61,9 +63,11 @@ public class ScanFolderFrame extends JFrame implements Runnable, MouseListener {
 	private boolean includeSeries;
 	private boolean excludeIfos;
 	
-	public ScanFolderFrame(MainFrame mf) {
+	public ScanFolderFrame(MainFrame mf, CCMovieList ml) {
 		super();
-		this.folderchooser = new JFileChooser(PathFormatter.getRealSelfDirectory());
+		String p = ml.getCommonMoviesPath();
+		if (!Str.isNullOrWhitespace(p)) p = PathFormatter.fromCCPath(p); else p = PathFormatter.getRealSelfDirectory();
+		this.folderchooser = new JFileChooser(p);
 		this.owner = mf;
 		
 		initGUI();

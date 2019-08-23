@@ -354,7 +354,7 @@ public class CCActionTree extends UIActionTree{
 	}
 	
 	private void onClickExtrasScanFolder(CCTreeActionEvent e) {
-		new ScanFolderFrame(MainFrame.getInstance()).setVisible(true);
+		new ScanFolderFrame(MainFrame.getInstance(), movielist).setVisible(true);
 	}
 
 	private void onClickExtrasCompareDBs(CCTreeActionEvent e) {

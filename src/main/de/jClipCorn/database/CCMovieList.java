@@ -669,6 +669,11 @@ public class CCMovieList {
 		return null;
 	}
 
+	public String getCommonPath() {
+		String p = getCommonMoviesPath();
+		if (Str.isNullOrWhitespace(p)) p = getCommonSeriesPath();
+		return p;
+	}
 	public String getCommonSeriesPath() {
 		List<String> all = new ArrayList<>();
 

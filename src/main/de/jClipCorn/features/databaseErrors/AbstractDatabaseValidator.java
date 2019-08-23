@@ -80,6 +80,13 @@ public abstract class AbstractDatabaseValidator {
 		return diff / average;
 	}
 
+	protected boolean isDiff(long a, long b, double percDiff, long absDiff) {
+		double rd = getRelativeDifference(a, b);
+		long   ad = Math.abs(a-b);
+
+		return (rd >= percDiff && ad >= absDiff);
+	}
+
 	protected void addMovieValidation(DatabaseErrorType type, Func1to1<DatabaseValidatorOptions, Boolean> precond, Func1to1<CCMovie, Boolean> check, Func1to1<CCMovie, DatabaseError> error) {
 		addMovieValidation(type, precond, (m,e) -> { if (check.invoke(m)) e.add(error.invoke(m)); });
 	}

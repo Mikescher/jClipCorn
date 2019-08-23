@@ -379,7 +379,7 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator {
 							!mov.getTag(CCTagList.TAG_WATCH_CAMRIP) &&
 							!mov.getTag(CCTagList.TAG_WATCH_MICDUBBED) &&
 							!mov.getTag(CCTagList.TAG_WRONG_LANGUAGE) &&
-							getRelativeDifference(mov.getMediaInfo().getDurationInMinutes(), mov.getLength())>=0.10,
+							isDiff(mov.getMediaInfo().getDurationInMinutes(), mov.getLength(), 0.10, 10),
 					mov -> DatabaseError.createSingle(DatabaseErrorType.ERROR_MEDIAINFO_LENGTH_MISMATCH, mov));
 
 			// Mediainfo does not match actual file
@@ -661,7 +661,7 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator {
 							!episode.getTag(CCTagList.TAG_WATCH_CAMRIP) &&
 							!episode.getTag(CCTagList.TAG_WATCH_MICDUBBED) &&
 							!episode.getTag(CCTagList.TAG_WRONG_LANGUAGE) &&
-							getRelativeDifference(episode.getMediaInfo().getDurationInMinutes(), episode.getLength())>=0.25,
+							isDiff(episode.getMediaInfo().getDurationInMinutes(), episode.getLength(), 0.33, 5),
 					episode -> DatabaseError.createSingle(DatabaseErrorType.ERROR_MEDIAINFO_LENGTH_MISMATCH, episode));
 
 			// Mediainfo does not match actual file

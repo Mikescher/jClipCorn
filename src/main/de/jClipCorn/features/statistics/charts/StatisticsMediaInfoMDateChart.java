@@ -68,10 +68,12 @@ public class StatisticsMediaInfoMDateChart extends StatisticsChart {
 	}
 	
 	private XYDataset getDataSet(CCMovieList movielist, StatisticsTypeFilter source) {
+		CCDate now = CCDate.getCurrentDate();
 		List<CCDate> dates = source
 				.iteratorMoviesOrEpisodes(movielist)
 				.filter(e -> e.getMediaInfo().isSet())
 				.map(e -> CCDateTime.createFromFileTimestamp(e.getMediaInfo().getMDate(), TimeZone.getDefault()).date.getSetDay(1))
+				.filter(d -> d.isLessEqualsThan(now))
 				.enumerate();
 		
 		CCDate mindate = CCStreams.iterate(dates).minOrDefault(CCDate::compare, CCDate.getUnspecified());

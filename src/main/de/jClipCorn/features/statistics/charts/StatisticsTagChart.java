@@ -5,10 +5,14 @@ import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.CategoryLabelPositions;
 import org.jfree.chart.axis.NumberAxis;
+import org.jfree.chart.labels.ItemLabelAnchor;
+import org.jfree.chart.labels.ItemLabelPosition;
+import org.jfree.chart.labels.StandardCategoryItemLabelGenerator;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.renderer.category.BarRenderer;
 import org.jfree.chart.renderer.category.StandardBarPainter;
+import org.jfree.chart.ui.TextAnchor;
 import org.jfree.data.category.DefaultCategoryDataset;
 
 import de.jClipCorn.database.CCMovieList;
@@ -42,6 +46,10 @@ public class StatisticsTagChart extends StatisticsChart {
 		CategoryPlot plot = chart.getCategoryPlot();
 		
 		BarRenderer renderer = new BarRenderer();
+		renderer.setSeriesItemLabelGenerator(0, new StandardCategoryItemLabelGenerator());
+		renderer.setSeriesItemLabelsVisible(0, true);
+		renderer.setSeriesPositiveItemLabelPosition(0, new ItemLabelPosition(ItemLabelAnchor.OUTSIDE12, TextAnchor.BOTTOM_CENTER));
+		renderer.setSeriesItemLabelPaint(0, BARCHART_ITEM_COLOR);
 		renderer.setSeriesPaint(0, BARCHART_COLOR);
 		renderer.setBarPainter(new StandardBarPainter());
 		plot.setRenderer(renderer);

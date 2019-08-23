@@ -25,8 +25,9 @@ public abstract class StatisticsChart extends StatisticsPanel {
 	
 	protected final static Color XYCHART_COLOR = Color.RED;
 	protected final static Color XYBACKGROUND_COLOR = Color.LIGHT_GRAY;
-	
+
 	protected final static Color BARCHART_COLOR = Color.BLUE;
+	protected final static Color BARCHART_ITEM_COLOR = Color.BLACK;
 	protected final static Color BARACKGROUND_COLOR = Color.LIGHT_GRAY;
 	
 	protected final static Color HISTOGRAMMCHART_COLOR = Color.BLUE;

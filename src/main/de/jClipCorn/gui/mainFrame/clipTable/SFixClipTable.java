@@ -6,6 +6,7 @@ import java.awt.event.KeyEvent;
 
 import javax.swing.KeyStroke;
 import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
@@ -49,6 +50,7 @@ import de.jClipCorn.features.table.sorter.TableTitleComparator;
 import de.jClipCorn.features.table.sorter.TableViewedComparator;
 import de.jClipCorn.features.table.sorter.TableYearComparator;
 import de.jClipCorn.features.table.sorter.TableZyklusComparator;
+import de.jClipCorn.properties.enumerations.MainFrameColumn;
 import de.jClipCorn.util.formatter.FileSizeFormatter;
 import de.jClipCorn.util.formatter.TimeIntervallFormatter;
 
@@ -267,5 +269,9 @@ public class SFixClipTable extends SFixTable {
 				CCLog.addDefaultSwitchError(this, column);
 				return null;
 		}
+	}
+
+	public TableColumn getColumn(MainFrameColumn c) {
+		return this.getColumnModel().getColumn(c.ColumnIndex);
 	}
 }

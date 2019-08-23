@@ -156,7 +156,9 @@ public class MainFrame extends JFrame implements CCDBUpdateListener, FileDrop.Li
 		pack();
 
 		setSize(CCProperties.getInstance().PROP_MAINFRAME_WIDTH.getValue(), CCProperties.getInstance().PROP_MAINFRAME_HEIGHT.getValue());
-		
+
+		clipTable.configureColumnVisibility(CCProperties.getInstance().PROP_MAINFRAME_VISIBLE_COLUMNS.getValue(), true);
+
 		new FileDrop(clipTable, true, this);
 	}
 	
@@ -451,5 +453,9 @@ public class MainFrame extends JFrame implements CCDBUpdateListener, FileDrop.Li
 		}
 
 		// nothing dropped
+	}
+
+	public void onSettingsChanged() {
+		clipTable.configureColumnVisibility(CCProperties.getInstance().PROP_MAINFRAME_VISIBLE_COLUMNS.getValue(), false);
 	}
 }

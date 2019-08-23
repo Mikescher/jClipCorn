@@ -188,6 +188,7 @@ public class CCProperties {
 	public CCBoolProperty                                   PROP_CHECKDATABASE_OPT_COVERS;
 	public CCBoolProperty                                   PROP_CHECKDATABASE_OPT_FILES;
 	public CCBoolProperty                                   PROP_CHECKDATABASE_OPT_EXTRA;
+	public CCEnumSetProperty<MainFrameColumn>               PROP_MAINFRAME_VISIBLE_COLUMNS;
 
 	public boolean ARG_READONLY = false;
 	
@@ -260,6 +261,7 @@ public class CCProperties {
 		PROP_MAINFRAME_SHOW_GROUP_ONLY_ON_HOVER = new CCBoolProperty(CAT_VIEW,              this,   "PROP_MAINFRAME_SHOW_GROUP_ONLY_ON_HOVER",  false);
 		PROP_MAINFRAME_ASYNC_COVER_LOADING      = new CCBoolProperty(CAT_VIEW,              this,   "PROP_MAINFRAME_ASYNC_COVER_LOADING",       false);
 		PROP_MAINFRAME_SHOW_VIEWCOUNT      		= new CCBoolProperty(CAT_VIEW,              this,   "PROP_MAINFRAME_SHOW_VIEWCOUNT",       		true);
+		PROP_MAINFRAME_VISIBLE_COLUMNS          = new CCEnumSetProperty<>(CAT_VIEW,         this,   "PROP_MAINFRAME_VISIBLE_COLUMNS",           EnumSetValue.ALL,                   MainFrameColumn.getWrapper());
 
 		PROP_DATABASE_NAME                      = new CCStringProperty(CAT_DATABASE,        this,   "PROP_DATABASE_NAME",                       "ClipCornDB");
 		PROP_LOG_PATH                           = new CCStringProperty(CAT_DATABASE,        this,   "PROP_LOG_PATH",                            "jClipcorn.log");
@@ -487,17 +489,7 @@ public class CCProperties {
 			prop.setDefault();
 		}
 	}
-	
-	public CCProperty<?> findProperty(String ident) {
-		for (CCProperty<?> prop : propertylist) {
-			if (prop.getIdentifier().equals(ident)) {
-				return prop;
-			}
-		}
-		
-		return null;
-	}
-	
+
 	public int getCountForCategory(CCPropertyCategory cat) {
 		int c = 0;
 		

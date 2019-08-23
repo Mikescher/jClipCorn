@@ -6,12 +6,7 @@ import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTabbedPane;
+import javax.swing.*;
 
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
@@ -112,6 +107,8 @@ public abstract class AutomaticSettingsFrame extends JFrame {
 			}
 
 			okValues();
+
+			SwingUtilities.invokeLater(() -> MainFrame.getInstance().onSettingsChanged());
 
 			dispose();
 		});

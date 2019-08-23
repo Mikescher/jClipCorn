@@ -9,6 +9,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
@@ -17,6 +18,7 @@ import javax.swing.RowSorter.SortKey;
 import javax.swing.SortOrder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.table.TableColumn;
 import javax.swing.table.TableRowSorter;
 
 import com.sun.java.swing.plaf.windows.WindowsScrollBarUI;
@@ -32,6 +34,7 @@ import de.jClipCorn.features.table.filter.AbstractCustomFilter;
 import de.jClipCorn.features.table.filter.TableCustomFilter;
 import de.jClipCorn.features.table.filter.customFilter.CustomUserScoreFilter;
 import de.jClipCorn.features.table.filter.customFilter.CustomZyklusFilter;
+import de.jClipCorn.properties.enumerations.MainFrameColumn;
 import de.jClipCorn.util.TableColumnAdjuster;
 
 public class ClipTable extends JScrollPane implements CCDBUpdateListener, ListSelectionListener, MouseListener, MouseMotionListener {
@@ -79,6 +82,24 @@ public class ClipTable extends JScrollPane implements CCDBUpdateListener, ListSe
 		
 		if (this.getVerticalScrollBar().getUI() instanceof WindowsScrollBarUI)
 			this.getVerticalScrollBar().setUI(new ClipVerticalScrollbarUI(32));
+	}
+
+	public void configureColumnVisibility(Set<MainFrameColumn> data, boolean initial) {
+		for (MainFrameColumn c : MainFrameColumn.values()) {
+			if (data.contains(c)) {
+				if (initial) continue;
+				TableColumn column = table.getColumn(c);
+				column.setMinWidth(0);
+				column.setMaxWidth(Integer.MAX_VALUE);
+				column.setPreferredWidth(128);
+				if (column.getWidth() == 0) column.setWidth(50);
+			} else {
+				TableColumn column = table.getColumn(c);
+				column.setMinWidth(0);
+				column.setMaxWidth(0);
+				column.setPreferredWidth(0);
+			}
+		}
 	}
 
 	public void autoResize() {

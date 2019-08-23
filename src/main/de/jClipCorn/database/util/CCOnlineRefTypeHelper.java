@@ -21,6 +21,9 @@ public final class CCOnlineRefTypeHelper {
 	public static final Pattern REGEX_ANDB = Pattern.compile("^[0-9]+$");                         //$NON-NLS-1$
 	public static final Pattern REGEX_TVDB = Pattern.compile("^[0-9A-Za-z\\-]+$");                //$NON-NLS-1$
 	public static final Pattern REGEX_MAZE = Pattern.compile("^[0-9]+$");                         //$NON-NLS-1$
+	public static final Pattern REGEX_WKDE = Pattern.compile("^[^;:/?#]+$");                      //$NON-NLS-1$
+	public static final Pattern REGEX_WKEN = Pattern.compile("^[^;:/?#]+$");                      //$NON-NLS-1$
+	public static final Pattern REGEX_OFDB = Pattern.compile("^[0-9]+$");                         //$NON-NLS-1$
 
 	public static final Pattern REGEX_PASTE_IMDB = Pattern.compile("^(https?://)?(www\\.)?imdb\\.(com|de)/title/(?<id>tt[0-9]+)(/.*)?(\\?.*)?(#.*)?$");                                             //$NON-NLS-1$
 	public static final Pattern REGEX_PASTE_MVPT = Pattern.compile("^(https?://)?(www\\.)?moviepilot\\.de/(?<id>(movies|serie)/[0-9A-Za-z\\-]+)(/.*)?(\\?.*)?(#.*)?$");                             //$NON-NLS-1$
@@ -33,6 +36,9 @@ public final class CCOnlineRefTypeHelper {
 	public static final Pattern REGEX_PASTE_ANDB = Pattern.compile("^(https?://)?(www\\.)?anidb\\.net/((anime/)|(a)|(perl-bin/animedb\\.pl\\?show=anime&aid=))(?<id>[0-9]+)(/.*)?(\\?.*)?(#.*)?$"); //$NON-NLS-1$
 	public static final Pattern REGEX_PASTE_TVDB = Pattern.compile("^(https?://)?(www\\.)?thetvdb\\.com/series/(?<id>[0-9A-Za-z\\-]+)(/.*)?(\\?.*)?(#.*)?$");                                       //$NON-NLS-1$
 	public static final Pattern REGEX_PASTE_MAZE = Pattern.compile("^(https?://)?(www\\.)?tvmaze\\.com/shows/(?<id>[0-9]+)(/.*)?(\\?.*)?(#.*)?$");                                                  //$NON-NLS-1$
+	public static final Pattern REGEX_PASTE_WKDE = Pattern.compile("^(https?://)?(www\\.)?de.wikipedia\\.org/wiki/(?<id>[^;:/?#]+)(#.*)?$");                                                        //$NON-NLS-1$
+	public static final Pattern REGEX_PASTE_WKEN = Pattern.compile("^(https?://)?(www\\.)?en.wikipedia\\.org/wiki/(?<id>[^;:/?#]+)(#.*)?$");                                                        //$NON-NLS-1$
+	public static final Pattern REGEX_PASTE_OFDB = Pattern.compile("^(https?://)?(www\\.)?(ssl\\.)?ofdb\\.de/film/(?<id>[0-9]+),.*(#.*)?$");                                                        //$NON-NLS-1$
 
 	@SuppressWarnings("nls")
 	public static String getURL(CCSingleOnlineReference ref) {
@@ -68,6 +74,12 @@ public final class CCOnlineRefTypeHelper {
 				return "https://www.thetvdb.com/series/" + ref.id;
 			case TVMAZE:
 				return "https://www.tvmaze.com/shows/" + ref.id;
+			case WIKIDE:
+				return "https://de.wikipedia.org/wiki/" + ref.id;
+			case WIKIEN:
+				return "https://en.wikipedia.org/wiki/" + ref.id;
+			case OFDB:
+				return "https://ssl.ofdb.de/film/"+ ref.id + ",";
 			default:
 				CCLog.addDefaultSwitchError(ref, ref.type);
 				return null;

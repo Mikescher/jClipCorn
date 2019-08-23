@@ -416,6 +416,15 @@ public class Resources {
 
 	public final static MultiSizeIconRef ICN_REF_12			= registerMultisizeIcon("/icons/onlineReferences/ref12.png");
 	public final static IconRef ICN_REF_12_BUTTON			= registerOtherIcon("/icons/onlineReferences/ref12_large.png");
+
+	public final static MultiSizeIconRef ICN_REF_13			= registerMultisizeIcon("/icons/onlineReferences/ref13.png");
+	public final static IconRef ICN_REF_13_BUTTON			= registerOtherIcon("/icons/onlineReferences/ref13_large.png");
+
+	public final static MultiSizeIconRef ICN_REF_14			= registerMultisizeIcon("/icons/onlineReferences/ref14.png");
+	public final static IconRef ICN_REF_14_BUTTON			= registerOtherIcon("/icons/onlineReferences/ref14_large.png");
+
+	public final static MultiSizeIconRef ICN_REF_15			= registerMultisizeIcon("/icons/onlineReferences/ref15.png");
+	public final static IconRef ICN_REF_15_BUTTON			= registerOtherIcon("/icons/onlineReferences/ref15_large.png");
 	// ###############################################  </LOG>  ##############################################
 	
 	

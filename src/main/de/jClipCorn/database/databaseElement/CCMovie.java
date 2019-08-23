@@ -239,6 +239,7 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 		return filesize;
 	}
 
+	@Override
 	public void setFilesize(long filesize) {
 		this.filesize = new CCFileSize(filesize);
 		

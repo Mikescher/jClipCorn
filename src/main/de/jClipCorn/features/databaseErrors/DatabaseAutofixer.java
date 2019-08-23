@@ -2,9 +2,6 @@ package de.jClipCorn.features.databaseErrors;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.lang.reflect.Field;
-import java.nio.file.Files;
-import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.List;
 

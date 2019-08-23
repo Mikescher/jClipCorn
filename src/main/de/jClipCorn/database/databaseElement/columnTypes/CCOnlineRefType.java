@@ -30,7 +30,10 @@ public enum CCOnlineRefType implements ContinoousEnum<CCOnlineRefType> {
 	KITSU      (9,  "kisu", "CCOnlineRefType.KITSU",       CCOnlineRefTypeHelper.REGEX_KISU, CCOnlineRefTypeHelper.REGEX_PASTE_KISU, Resources.ICN_REF_09, Resources.ICN_REF_09_BUTTON),
 	ANIDB      (10, "andb", "CCOnlineRefType.ANIDB",       CCOnlineRefTypeHelper.REGEX_ANDB, CCOnlineRefTypeHelper.REGEX_PASTE_ANDB, Resources.ICN_REF_10, Resources.ICN_REF_10_BUTTON),
 	THETVDB    (11, "tvdb", "CCOnlineRefType.THETVDB",     CCOnlineRefTypeHelper.REGEX_TVDB, CCOnlineRefTypeHelper.REGEX_PASTE_TVDB, Resources.ICN_REF_11, Resources.ICN_REF_11_BUTTON),
-	TVMAZE     (12, "maze", "CCOnlineRefType.TVMAZE",      CCOnlineRefTypeHelper.REGEX_MAZE, CCOnlineRefTypeHelper.REGEX_PASTE_MAZE, Resources.ICN_REF_12, Resources.ICN_REF_12_BUTTON);
+	TVMAZE     (12, "maze", "CCOnlineRefType.TVMAZE",      CCOnlineRefTypeHelper.REGEX_MAZE, CCOnlineRefTypeHelper.REGEX_PASTE_MAZE, Resources.ICN_REF_12, Resources.ICN_REF_12_BUTTON),
+	WIKIDE     (13, "wkde", "CCOnlineRefType.WIKIDE",      CCOnlineRefTypeHelper.REGEX_WKDE, CCOnlineRefTypeHelper.REGEX_PASTE_WKDE, Resources.ICN_REF_13, Resources.ICN_REF_13_BUTTON),
+	WIKIEN     (14, "wken", "CCOnlineRefType.WIKIEN",      CCOnlineRefTypeHelper.REGEX_WKEN, CCOnlineRefTypeHelper.REGEX_PASTE_WKEN, Resources.ICN_REF_14, Resources.ICN_REF_14_BUTTON),
+	OFDB       (15, "ofdb", "CCOnlineRefType.OFDB",        CCOnlineRefTypeHelper.REGEX_OFDB, CCOnlineRefTypeHelper.REGEX_PASTE_OFDB, Resources.ICN_REF_15, Resources.ICN_REF_15_BUTTON);
 
 	private final int id;
 	private final String identifier;
@@ -120,7 +123,7 @@ public enum CCOnlineRefType implements ContinoousEnum<CCOnlineRefType> {
 	}
 	
 	public static Tuple<CCOnlineRefType, String> extractType(String input) {
-		for (CCOnlineRefType val : CCStreams.iterate(wrapper.allValues()).filter(v -> v.regexPaste != null)) {
+		for (CCOnlineRefType val : CCStreams.iterate(wrapper.allValues()).filter(v -> v.regexPaste != null)) {	
 			Matcher matcher = val.regexPaste.matcher(input);
 			if (matcher.find()) return Tuple.Create(val, matcher.group("id"));
 		}

@@ -156,6 +156,7 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 		updateDB();
 	}
 
+	@Override
 	public void setFilesize(long filesize) {
 		this.filesize = new CCFileSize(filesize);
 		

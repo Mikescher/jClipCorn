@@ -3,7 +3,6 @@ package de.jClipCorn.features.statistics.charts;
 import de.jClipCorn.features.statistics.StatisticsChart;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
-import org.jfree.chart.labels.CategoryItemLabelGenerator;
 import org.jfree.chart.labels.ItemLabelAnchor;
 import org.jfree.chart.labels.ItemLabelPosition;
 import org.jfree.chart.labels.StandardCategoryItemLabelGenerator;
@@ -12,7 +11,6 @@ import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.renderer.category.BarRenderer;
 import org.jfree.chart.renderer.category.StandardBarPainter;
 import org.jfree.chart.ui.TextAnchor;
-import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.category.DefaultCategoryDataset;
 
 import de.jClipCorn.database.CCMovieList;
@@ -22,8 +20,6 @@ import de.jClipCorn.features.statistics.StatisticsHelper;
 import de.jClipCorn.gui.frames.statisticsFrame.StatisticsTypeFilter;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.stream.CCStream;
-
-import java.awt.*;
 
 public class StatisticsFormatChart extends StatisticsChart {
 	public StatisticsFormatChart(CCMovieList ml, StatisticsTypeFilter _source) {

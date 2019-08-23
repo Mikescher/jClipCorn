@@ -375,6 +375,7 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator {
 					mov -> mov.getMediaInfo().isSet() &&
 							mov.getPartcount()==1 &&
 							!mov.getTag(CCTagList.TAG_MISSING_TIME) &&
+							!mov.getTag(CCTagList.TAG_FILE_CORRUPTED) &&
 							!mov.getTag(CCTagList.TAG_WATCH_CAMRIP) &&
 							!mov.getTag(CCTagList.TAG_WATCH_MICDUBBED) &&
 							!mov.getTag(CCTagList.TAG_WRONG_LANGUAGE) &&
@@ -654,7 +655,13 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator {
 			addEpisodeValidation(
 					DatabaseErrorType.ERROR_MEDIAINFO_LENGTH_MISMATCH,
 					o -> o.ValidateEpisodes,
-					episode -> episode.getMediaInfo().isSet() && (getRelativeDifference(episode.getMediaInfo().getDurationInMinutes(), episode.getLength())>=0.25),
+					episode -> episode.getMediaInfo().isSet() &&
+							!episode.getTag(CCTagList.TAG_MISSING_TIME) &&
+							!episode.getTag(CCTagList.TAG_FILE_CORRUPTED) &&
+							!episode.getTag(CCTagList.TAG_WATCH_CAMRIP) &&
+							!episode.getTag(CCTagList.TAG_WATCH_MICDUBBED) &&
+							!episode.getTag(CCTagList.TAG_WRONG_LANGUAGE) &&
+							getRelativeDifference(episode.getMediaInfo().getDurationInMinutes(), episode.getLength())>=0.25,
 					episode -> DatabaseError.createSingle(DatabaseErrorType.ERROR_MEDIAINFO_LENGTH_MISMATCH, episode));
 
 			// Mediainfo does not match actual file

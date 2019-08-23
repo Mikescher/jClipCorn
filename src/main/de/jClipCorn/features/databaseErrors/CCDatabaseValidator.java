@@ -372,7 +372,13 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator {
 			addMovieValidation(
 					DatabaseErrorType.ERROR_MEDIAINFO_LENGTH_MISMATCH,
 					o -> o.ValidateMovies,
-					mov -> mov.getMediaInfo().isSet() && (mov.getPartcount()==1 && getRelativeDifference(mov.getMediaInfo().getDurationInMinutes(), mov.getLength())>=0.10),
+					mov -> mov.getMediaInfo().isSet() &&
+							mov.getPartcount()==1 &&
+							!mov.getTag(CCTagList.TAG_MISSING_TIME) &&
+							!mov.getTag(CCTagList.TAG_WATCH_CAMRIP) &&
+							!mov.getTag(CCTagList.TAG_WATCH_MICDUBBED) &&
+							!mov.getTag(CCTagList.TAG_WRONG_LANGUAGE) &&
+							getRelativeDifference(mov.getMediaInfo().getDurationInMinutes(), mov.getLength())>=0.10,
 					mov -> DatabaseError.createSingle(DatabaseErrorType.ERROR_MEDIAINFO_LENGTH_MISMATCH, mov));
 
 			// Mediainfo does not match actual file

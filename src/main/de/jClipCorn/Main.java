@@ -213,3 +213,7 @@ public class Main {
 // option recreate previews (covers dialog to show content of covers table)
 
 // Compare speed of stream vs ccstream (just out of interest)
+
+// todo update time-compare statistics with history data
+
+// todo when disabling history, set HISOTRY_ENABLED first so it gets logged in the history

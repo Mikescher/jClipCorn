@@ -7,6 +7,7 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.stream.CCStreams;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.axis.LogarithmicAxis;
 import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.StandardXYItemRenderer;
@@ -25,7 +26,7 @@ public class StatisticsMediaInfoBitrateChart extends StatisticsChart {
 
 	@Override
 	protected JFreeChart createChart(CCMovieList movielist, StatisticsTypeFilter source) {
-		NumberAxis xAxis = new NumberAxis(); 
+		NumberAxis xAxis = new LogarithmicAxis("kbit/s"); //$NON-NLS-1$
 
 	    NumberAxis yAxis = new NumberAxis(""); //$NON-NLS-1$
 
@@ -54,6 +55,8 @@ public class StatisticsMediaInfoBitrateChart extends StatisticsChart {
 				.iteratorMoviesOrEpisodes(movielist)
 				.filter(e -> e.getMediaInfo().isSet())
 				.map(e -> e.getMediaInfo().getBitrate() / 1000)
+				.map(e -> e / 10)
+				.filter(e -> e > 0)
 				.enumerate();
 
 		int min = CCStreams.iterate(values).autoMinOrDefault(-1);
@@ -75,7 +78,7 @@ public class StatisticsMediaInfoBitrateChart extends StatisticsChart {
 		double[][] series = new double[2][posdata.size()];
 		
 		for (int i = 0; i < posdata.size(); i++) {
-			series[0][i] = posdata.get(i).Item1 * 1000;
+			series[0][i] = posdata.get(i).Item1 * 10;
 			series[1][i] = posdata.get(i).Item2;
 		}
 		

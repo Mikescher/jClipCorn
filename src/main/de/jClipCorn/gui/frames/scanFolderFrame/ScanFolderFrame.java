@@ -65,9 +65,7 @@ public class ScanFolderFrame extends JFrame implements Runnable, MouseListener {
 	
 	public ScanFolderFrame(MainFrame mf, CCMovieList ml) {
 		super();
-		String p = ml.getCommonMoviesPath();
-		if (!Str.isNullOrWhitespace(p)) p = PathFormatter.fromCCPath(p); else p = PathFormatter.getRealSelfDirectory();
-		this.folderchooser = new JFileChooser(p);
+		this.folderchooser = new JFileChooser(ml.getCommonPathForMovieFileChooser());
 		this.owner = mf;
 		
 		initGUI();

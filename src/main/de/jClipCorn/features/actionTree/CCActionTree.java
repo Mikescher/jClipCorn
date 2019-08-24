@@ -733,7 +733,9 @@ public class CCActionTree extends UIActionTree{
 	private void onClickOtherSeasonQuickAddEpisodes(CCTreeActionEvent e) {
 		e.ifSeasonSource(s ->
 		{
-			final JFileChooser chooser = new JFileChooser();
+			String p = PathFormatter.fromCCPath(s.getCommonPathStart());
+			if (Str.isNullOrWhitespace(p)) p = PathFormatter.getRealSelfDirectory();
+			final JFileChooser chooser = new JFileChooser(p);
 			String cps = PathFormatter.fromCCPath(s.getCommonPathStart());
 			if (!Str.isNullOrWhitespace(cps)) chooser.setCurrentDirectory(new File(cps));
 			if (chooser.showOpenDialog(e.SwingOwner) == JFileChooser.APPROVE_OPTION) {

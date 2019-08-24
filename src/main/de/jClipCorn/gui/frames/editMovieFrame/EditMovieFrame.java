@@ -180,7 +180,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		super();
 		setMinimumSize(new Dimension(650, 830));
 		this.movie = movie;
-		this.videoFileChooser = new JFileChooser(PathFormatter.getAbsoluteSelfDirectory());
+		this.videoFileChooser = new JFileChooser(movie.getMovieList().getCommonPathForMovieFileChooser());
 
 		if (ucl == null)
 			this.listener = new UpdateCallbackAdapter();

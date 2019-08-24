@@ -345,6 +345,7 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 		return movielist.getSortByDatabaseElement(this);
 	}
 
+	@Override
 	public CCMovieList getMovieList() {
 		return movielist;
 	}

@@ -5,6 +5,7 @@ import java.sql.Date;
 import java.util.Arrays;
 import java.util.List;
 
+import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.columnTypes.*;
 import de.jClipCorn.database.util.CCQualityCategory;
 import de.jClipCorn.features.actionTree.IActionSourceObject;
@@ -496,5 +497,10 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 		}
 		
 		return getAbsolutePart().toLowerCase().endsWith(getRelativeFileForCreatedFolderstructure().toLowerCase());
+	}
+
+	@Override
+	public CCMovieList getMovieList() {
+		return getSeries().getMovieList();
 	}
 }

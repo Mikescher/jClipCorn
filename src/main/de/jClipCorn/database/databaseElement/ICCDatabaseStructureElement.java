@@ -1,5 +1,6 @@
 package de.jClipCorn.database.databaseElement;
 
+import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCFileFormat;
 import de.jClipCorn.database.databaseElement.columnTypes.CCTagList;
 import de.jClipCorn.database.util.ExtendedViewedState;
@@ -15,4 +16,5 @@ public interface ICCDatabaseStructureElement {
 	ExtendedViewedState getExtendedViewedState();
 	String getQualifiedTitle();
 	int getLocalID();
+	CCMovieList getMovieList();
 }

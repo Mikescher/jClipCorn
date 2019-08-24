@@ -161,7 +161,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 	public AddMovieFrame(Component owner, CCMovieList mlist) {		
 		super();
 		this.movieList = mlist;
-		this.videoFileChooser = new JFileChooser(PathFormatter.getAbsoluteSelfDirectory());
+		this.videoFileChooser = new JFileChooser(mlist.getCommonPathForMovieFileChooser());
 		
 		init(owner);
 	}
@@ -169,7 +169,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 	public AddMovieFrame(Component owner, CCMovieList mlist, String firstPath) {		
 		super();
 		this.movieList = mlist;
-		this.videoFileChooser = new JFileChooser(PathFormatter.getAbsoluteSelfDirectory());
+		this.videoFileChooser = new JFileChooser(mlist.getCommonPathForMovieFileChooser());
 		
 		init(owner);
 		

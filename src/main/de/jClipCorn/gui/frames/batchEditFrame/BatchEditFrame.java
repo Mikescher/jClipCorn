@@ -338,7 +338,7 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 		ctrlMediaInfo = new JMediaInfoControl(() -> PathFormatter.fromCCPath(edPart.getText()));
 		pnlInfo.add(ctrlMediaInfo, "5, 8, fill, fill"); //$NON-NLS-1$
 		
-		btnMediaInfo3 = new JButton(Resources.ICN_MENUBAR_UPDATECODECDATA.get16x16());
+		btnMediaInfo3 = new JButton(Resources.ICN_MENUBAR_MEDIAINFO.get16x16());
 		pnlInfo.add(btnMediaInfo3, "9, 8"); //$NON-NLS-1$
 		btnMediaInfo3.setToolTipText("MediaInfo"); //$NON-NLS-1$
 		
@@ -355,7 +355,7 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 		pnlInfo.add(btnMediaInfoRaw, "7, 10"); //$NON-NLS-1$
 		btnMediaInfoRaw.setToolTipText("MediaInfo"); //$NON-NLS-1$
 
-		btnMediaInfo1 = new JButton(Resources.ICN_MENUBAR_UPDATECODECDATA.get16x16());
+		btnMediaInfo1 = new JButton(Resources.ICN_MENUBAR_MEDIAINFO.get16x16());
 		pnlInfo.add(btnMediaInfo1, "9, 10"); //$NON-NLS-1$
 		btnMediaInfo1.setToolTipText("MediaInfo"); //$NON-NLS-1$
 		
@@ -371,7 +371,7 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 		label_3 = new JLabel("min."); //$NON-NLS-1$
 		pnlInfo.add(label_3, "7, 12"); //$NON-NLS-1$
 
-		btnMediaInfo2 = new JButton(Resources.ICN_MENUBAR_UPDATECODECDATA.get16x16());
+		btnMediaInfo2 = new JButton(Resources.ICN_MENUBAR_MEDIAINFO.get16x16());
 		pnlInfo.add(btnMediaInfo2, "9, 12"); //$NON-NLS-1$
 		btnMediaInfo2.setToolTipText("MediaInfo"); //$NON-NLS-1$
 		btnMediaInfo2.addActionListener(e -> parseCodecMetadata_Len());

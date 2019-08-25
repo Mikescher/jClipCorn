@@ -644,6 +644,13 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator {
 					episode -> PathFormatter.isUntrimmed(episode.getTitle()),
 					episode -> DatabaseError.createSingle(DatabaseErrorType.ERROR_NOT_TRIMMED, episode));
 
+			// MediaInfo not set
+			addEpisodeValidation(
+					DatabaseErrorType.ERROR_MEDIAINFO_UNSET,
+					o -> o.ValidateEpisodes,
+					episode -> episode.getMediaInfo().isUnset(),
+					episode -> DatabaseError.createSingle(DatabaseErrorType.ERROR_MEDIAINFO_UNSET, episode));
+
 			// MediaInfo size does not match movie filesize
 			addEpisodeValidation(
 					DatabaseErrorType.ERROR_MEDIAINFO_SIZE_MISMATCH,

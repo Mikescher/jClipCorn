@@ -761,7 +761,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		mediaInfoControl.addChangeListener(new ActionLambdaAdapter(this::setDirtyEpisode));
 		pnlEditEpisodeInner.add(mediaInfoControl, "3, 10, fill, fill"); //$NON-NLS-1$
 		
-		btnMediaInfo3 = new JButton(Resources.ICN_MENUBAR_UPDATECODECDATA.get16x16());
+		btnMediaInfo3 = new JButton(Resources.ICN_MENUBAR_MEDIAINFO.get16x16());
 		btnMediaInfo3.addActionListener(e -> parseCodecMetadata_MI());
 		pnlEditEpisodeInner.add(btnMediaInfo3, "7, 10"); //$NON-NLS-1$
 
@@ -772,7 +772,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		ctrlLang.addChangeListener(new ActionLambdaAdapter(this::setDirtyEpisode));
 		pnlEditEpisodeInner.add(ctrlLang, "3, 12"); //$NON-NLS-1$
 
-		btnMediaInfo1 = new JButton(Resources.ICN_MENUBAR_UPDATECODECDATA.get16x16());
+		btnMediaInfo1 = new JButton(Resources.ICN_MENUBAR_MEDIAINFO.get16x16());
 		pnlEditEpisodeInner.add(btnMediaInfo1, "7, 12"); //$NON-NLS-1$
 		btnMediaInfo1.addActionListener(e -> parseCodecMetadata_Lang());
 		btnMediaInfo1.setToolTipText("MediaInfo"); //$NON-NLS-1$
@@ -793,7 +793,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		label_23 = new JLabel("min."); //$NON-NLS-1$
 		pnlEditEpisodeInner.add(label_23, "5, 14"); //$NON-NLS-1$
 
-		btnMediaInfo2 = new JButton(Resources.ICN_MENUBAR_UPDATECODECDATA.get16x16());
+		btnMediaInfo2 = new JButton(Resources.ICN_MENUBAR_MEDIAINFO.get16x16());
 		pnlEditEpisodeInner.add(btnMediaInfo2, "7, 14"); //$NON-NLS-1$
 		btnMediaInfo2.addActionListener(e -> parseCodecMetadata_Len());
 		btnMediaInfo2.setToolTipText("MediaInfo"); //$NON-NLS-1$

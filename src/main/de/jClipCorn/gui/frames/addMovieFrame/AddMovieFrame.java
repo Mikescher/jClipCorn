@@ -432,7 +432,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		pnlData.add(cbxLanguage, "4, 12, 3, 1, fill, center"); //$NON-NLS-1$
 		cbxLanguage.addChangeListener(new ActionLambdaAdapter(() -> { _isDirtyLanguage = true; }));
 		
-		btnMediaInfo = new JButton(Resources.ICN_MENUBAR_UPDATECODECDATA.get16x16());
+		btnMediaInfo = new JButton(Resources.ICN_MENUBAR_MEDIAINFO.get16x16());
 		pnlData.add(btnMediaInfo, "8, 12, fill, default"); //$NON-NLS-1$
 		btnMediaInfo.addActionListener(e -> parseCodecMetadata());
 		btnMediaInfo.setToolTipText("MediaInfo"); //$NON-NLS-1$
@@ -450,7 +450,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		pnlData.add(ctrlMediaInfo, "4, 14, 3, 1"); //$NON-NLS-1$
 		ctrlMediaInfo.addChangeListener(new ActionLambdaAdapter(() -> { _isDirtyMediaInfo = true; }));
 		
-		btnQueryMediaInfo = new JButton(Resources.ICN_MENUBAR_UPDATECODECDATA.get16x16());
+		btnQueryMediaInfo = new JButton(Resources.ICN_MENUBAR_MEDIAINFO.get16x16());
 		pnlData.add(btnQueryMediaInfo, "8, 14, fill, fill"); //$NON-NLS-1$
 		btnQueryMediaInfo.setToolTipText("MediaInfo"); //$NON-NLS-1$
 		btnQueryMediaInfo.setEnabled(false);

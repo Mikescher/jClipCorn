@@ -177,6 +177,8 @@ public class CCProperties {
 	public CCBoolProperty                                   PROP_MAINFRAME_SHOW_VIEWCOUNT;
 	public CCBoolProperty                                   PROP_DRIVEMAP_REMOUNT_NETDRIVES;
 	public CCStringProperty                                 PROP_PLAY_MEDIAINFO_PATH;
+	public CCStringProperty                                 PROP_PLAY_FFMPEG_PATH;
+	public CCStringProperty                                 PROP_PLAY_FFPROBE_PATH;
 	public CCBoolProperty                                   PROP_PREVIEWSERIES_SINGLETON;
 	public CCBoolProperty                                   PROP_PREVIEWMOVIE_SINGLETON;
 	public CCBoolProperty                                   PROP_DATABASE_LOAD_ALL_COVERDATA;
@@ -300,6 +302,8 @@ public class CCProperties {
 
 		PROP_PLAY_VLC_PATH                      = new CCPathProperty(CAT_PLAY,              this,   "PROP_PLAY_VLC_PATH",                       "",                                 "vlc.exe",       CCPathPropertyMode.FILES);
 		PROP_PLAY_MEDIAINFO_PATH                = new CCPathProperty(CAT_PLAY,              this,   "PROP_PLAY_MEDIAINFO_PATH",                 "",                                 "mediainfo.exe", CCPathPropertyMode.FILES);
+		PROP_PLAY_FFMPEG_PATH                   = new CCPathProperty(CAT_PLAY,              this,   "PROP_PLAY_FFMPEG_PATH",                    "",                                 "ffmpeg.exe",    CCPathPropertyMode.FILES);
+		PROP_PLAY_FFPROBE_PATH                  = new CCPathProperty(CAT_PLAY,              this,   "PROP_PLAY_FFPROBE_PATH",                   "",                                 "ffprobe.exe",   CCPathPropertyMode.FILES);
 		PROP_PLAY_VLC_FULLSCREEN                = new CCBoolProperty(CAT_PLAY,              this,   "PROP_PLAY_VLC_FULLSCREEN",                 false);
 		PROP_PLAY_VLC_AUTOPLAY                  = new CCBoolProperty(CAT_PLAY,              this,   "PROP_PLAY_VLC_AUTOPLAY",                   true);
 		PROP_PLAY_USESTANDARDONMISSINGVLC       = new CCBoolProperty(CAT_PLAY,              this,   "PROP_PLAY_USESTANDARDONMISSINGVLC",        true);

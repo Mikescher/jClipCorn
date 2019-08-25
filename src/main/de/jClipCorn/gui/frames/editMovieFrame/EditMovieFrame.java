@@ -435,7 +435,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		ctrlMediaInfo = new JMediaInfoControl(() -> Str.isNullOrWhitespace(edPart0.getText()) ? null : PathFormatter.fromCCPath(edPart0.getText()));
 		pnlData.add(ctrlMediaInfo, "4, 10, 3, 1, fill, center"); //$NON-NLS-1$
 		
-		btnMediaInfo3 = new JButton(Resources.ICN_MENUBAR_UPDATECODECDATA.get16x16());
+		btnMediaInfo3 = new JButton(Resources.ICN_MENUBAR_MEDIAINFO.get16x16());
 		pnlData.add(btnMediaInfo3, "8, 10"); //$NON-NLS-1$
 		btnMediaInfo3.setToolTipText("MediaInfo"); //$NON-NLS-1$
 		btnMediaInfo3.addActionListener(e -> parseCodecMetadata_MI());
@@ -447,7 +447,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		pnlData.add(cbxLanguage, "4, 12, 3, 1, fill, center"); //$NON-NLS-1$
 		cbxLanguage.addChangeListener(new ActionLambdaAdapter(this::setDirty));
 		
-		btnMediaInfo1 = new JButton(Resources.ICN_MENUBAR_UPDATECODECDATA.get16x16());
+		btnMediaInfo1 = new JButton(Resources.ICN_MENUBAR_MEDIAINFO.get16x16());
 		pnlData.add(btnMediaInfo1, "8, 12"); //$NON-NLS-1$
 		btnMediaInfo1.addActionListener(e -> parseCodecMetadata_Lang());
 		btnMediaInfo1.setToolTipText("MediaInfo"); //$NON-NLS-1$
@@ -468,7 +468,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		label_20 = new JLabel("min."); //$NON-NLS-1$
 		pnlData.add(label_20, "6, 14, fill, fill"); //$NON-NLS-1$
 		
-		btnMediaInfo2 = new JButton(Resources.ICN_MENUBAR_UPDATECODECDATA.get16x16());
+		btnMediaInfo2 = new JButton(Resources.ICN_MENUBAR_MEDIAINFO.get16x16());
 		pnlData.add(btnMediaInfo2, "8, 14"); //$NON-NLS-1$
 		btnMediaInfo2.addActionListener(e -> parseCodecMetadata_Len());
 		btnMediaInfo2.setToolTipText("MediaInfo"); //$NON-NLS-1$

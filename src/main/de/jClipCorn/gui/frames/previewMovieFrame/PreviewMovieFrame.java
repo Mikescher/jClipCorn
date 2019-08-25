@@ -645,7 +645,7 @@ public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener 
 		pnlTabPaths.add(edPart0, "2, 2, fill, center"); //$NON-NLS-1$
 		edPart0.setColumns(10);
 
-		btnMediaInfo1 = new JButton(Resources.ICN_MENUBAR_UPDATECODECDATA.get16x16());
+		btnMediaInfo1 = new JButton(Resources.ICN_MENUBAR_MEDIAINFO.get16x16());
 		btnMediaInfo1.addActionListener((e) -> showMediaInfo(0));
 		pnlTabPaths.add(btnMediaInfo1, "4, 2, fill, fill"); //$NON-NLS-1$
 
@@ -657,7 +657,7 @@ public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener 
 		pnlTabPaths.add(edPart1, "2, 4, fill, center"); //$NON-NLS-1$
 		edPart1.setColumns(10);
 
-		btnMediaInfo2 = new JButton(Resources.ICN_MENUBAR_UPDATECODECDATA.get16x16());
+		btnMediaInfo2 = new JButton(Resources.ICN_MENUBAR_MEDIAINFO.get16x16());
 		btnMediaInfo2.addActionListener((e) -> showMediaInfo(1));
 		pnlTabPaths.add(btnMediaInfo2, "4, 4, fill, fill"); //$NON-NLS-1$
 
@@ -669,7 +669,7 @@ public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener 
 		pnlTabPaths.add(edPart2, "2, 6, fill, center"); //$NON-NLS-1$
 		edPart2.setColumns(10);
 
-		btnMediaInfo3 = new JButton(Resources.ICN_MENUBAR_UPDATECODECDATA.get16x16());
+		btnMediaInfo3 = new JButton(Resources.ICN_MENUBAR_MEDIAINFO.get16x16());
 		btnMediaInfo3.addActionListener((e) -> showMediaInfo(2));
 		pnlTabPaths.add(btnMediaInfo3, "4, 6, fill, fill"); //$NON-NLS-1$
 
@@ -681,7 +681,7 @@ public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener 
 		pnlTabPaths.add(edPart3, "2, 8, fill, center"); //$NON-NLS-1$
 		edPart3.setColumns(10);
 
-		btnMediaInfo4 = new JButton(Resources.ICN_MENUBAR_UPDATECODECDATA.get16x16());
+		btnMediaInfo4 = new JButton(Resources.ICN_MENUBAR_MEDIAINFO.get16x16());
 		btnMediaInfo4.addActionListener((e) -> showMediaInfo(3));
 		pnlTabPaths.add(btnMediaInfo4, "4, 8, fill, fill"); //$NON-NLS-1$
 
@@ -693,7 +693,7 @@ public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener 
 		pnlTabPaths.add(edPart4, "2, 10, fill, center"); //$NON-NLS-1$
 		edPart4.setColumns(10);
 
-		btnMediaInfo5 = new JButton(Resources.ICN_MENUBAR_UPDATECODECDATA.get16x16());
+		btnMediaInfo5 = new JButton(Resources.ICN_MENUBAR_MEDIAINFO.get16x16());
 		btnMediaInfo5.addActionListener((e) -> showMediaInfo(4));
 		pnlTabPaths.add(btnMediaInfo5, "4, 10, fill, fill"); //$NON-NLS-1$
 
@@ -705,7 +705,7 @@ public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener 
 		pnlTabPaths.add(edPart5, "2, 12, fill, center"); //$NON-NLS-1$
 		edPart5.setColumns(10);
 
-		btnMediaInfo6 = new JButton(Resources.ICN_MENUBAR_UPDATECODECDATA.get16x16());
+		btnMediaInfo6 = new JButton(Resources.ICN_MENUBAR_MEDIAINFO.get16x16());
 		btnMediaInfo6.addActionListener((e) -> showMediaInfo(5));
 		pnlTabPaths.add(btnMediaInfo6, "4, 12, fill, fill"); //$NON-NLS-1$
 

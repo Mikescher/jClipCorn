@@ -89,7 +89,8 @@ public class Resources {
 	public final static MultiSizeIconRef ICN_MENUBAR_MOVEALLMOVIES			= registerMultisizeIcon("/icons/toolbar/move_to_folder3.png");
 	public final static MultiSizeIconRef ICN_MENUBAR_FINDINCOMPLETEZYKLUS	= registerMultisizeIcon("/icons/toolbar/blackboard_steps.png");
 	public final static MultiSizeIconRef ICN_MENUBAR_UPDATEMETADATA			= registerMultisizeIcon("/icons/toolbar/update_contact_info.png");
-	public final static MultiSizeIconRef ICN_MENUBAR_UPDATECODECDATA		= registerMultisizeIcon("/icons/toolbar/video_mode.png");
+	public final static MultiSizeIconRef ICN_MENUBAR_MEDIAINFO              = registerMultisizeIcon("/icons/toolbar/video_mode.png");
+	public final static MultiSizeIconRef ICN_MENUBAR_FFMPEG                 = registerMultisizeIcon("/icons/toolbar/ffmpeg.png");
 	public final static MultiSizeIconRef ICN_MENUBAR_FILENAMERULES			= registerMultisizeIcon("/icons/toolbar/books.png");
 	public final static MultiSizeIconRef ICN_MENUBAR_CREATE_JXMLBKP			= registerMultisizeIcon("/icons/toolbar/source_code.png");
 	public final static MultiSizeIconRef ICN_MENUBAR_COMPARE				= registerMultisizeIcon("/icons/toolbar/balance_unbalance.png");

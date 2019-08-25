@@ -221,7 +221,7 @@ public class QuickAddEpisodeDialog extends JDialog {
 		ctrlLang = new LanguageChooser();
 		contentPanel.add(ctrlLang, "3, 17, fill, fill"); //$NON-NLS-1$
 		
-		JButton btnMediaInfo1 = new JButton(Resources.ICN_MENUBAR_UPDATECODECDATA.get16x16());
+		JButton btnMediaInfo1 = new JButton(Resources.ICN_MENUBAR_MEDIAINFO.get16x16());
 		btnMediaInfo1.setPreferredSize(new Dimension(22, 22));
 		btnMediaInfo1.setToolTipText("MediaInfo"); //$NON-NLS-1$
 		btnMediaInfo1.addActionListener(e -> parseCodecMetadata_Lang());
@@ -244,7 +244,7 @@ public class QuickAddEpisodeDialog extends JDialog {
 		JLabel lblMin = new JLabel("min."); //$NON-NLS-1$
 		contentPanel.add(lblMin, "5, 19"); //$NON-NLS-1$
 		
-		JButton btnMediaInfo2 = new JButton(Resources.ICN_MENUBAR_UPDATECODECDATA.get16x16());
+		JButton btnMediaInfo2 = new JButton(Resources.ICN_MENUBAR_MEDIAINFO.get16x16());
 		btnMediaInfo2.setPreferredSize(new Dimension(22, 22));
 		btnMediaInfo2.setToolTipText("MediaInfo"); //$NON-NLS-1$
 		btnMediaInfo2.addActionListener(e -> parseCodecMetadata_Len());

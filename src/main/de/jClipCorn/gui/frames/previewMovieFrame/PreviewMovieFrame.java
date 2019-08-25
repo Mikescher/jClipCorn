@@ -889,6 +889,7 @@ public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener 
 		try {
 			GenericTextDialog.showText(this, getTitle(), MediaQueryRunner.queryRaw(PathFormatter.fromCCPath(movie.getPart(index))), false);
 		} catch (IOException | MediaQueryException e) {
+			CCLog.addWarning(e);
 			GenericTextDialog.showText(this, getTitle(), e.getMessage() + "\n\n" + ExceptionUtils.getMessage(e) + "\n\n" + ExceptionUtils.getStackTrace(e), false); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}

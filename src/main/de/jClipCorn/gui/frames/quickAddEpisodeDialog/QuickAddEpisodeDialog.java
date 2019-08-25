@@ -322,6 +322,7 @@ public class QuickAddEpisodeDialog extends JDialog {
 				
 			} catch (IOException | MediaQueryException e) {
 				// ignore
+				CCLog.addWarning(e);
 			} finally {
 				SwingUtilities.invokeLater(() -> pbar.setVisible(false));
 			}
@@ -496,6 +497,7 @@ public class QuickAddEpisodeDialog extends JDialog {
 			}
 
 		} catch (IOException | MediaQueryException e) {
+			CCLog.addWarning(e);
 			GenericTextDialog.showText(this, getTitle(), e.getMessage() + "\n\n" + ExceptionUtils.getMessage(e) + "\n\n" + ExceptionUtils.getStackTrace(e), false); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
@@ -515,6 +517,7 @@ public class QuickAddEpisodeDialog extends JDialog {
 			spnLength.setValue(dur);
 
 		} catch (IOException | MediaQueryException e) {
+			CCLog.addWarning(e);
 			GenericTextDialog.showText(this, getTitle(), e.getMessage() + "\n\n" + ExceptionUtils.getMessage(e) + "\n\n" + ExceptionUtils.getStackTrace(e), false); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
@@ -531,6 +534,7 @@ public class QuickAddEpisodeDialog extends JDialog {
 
 			GenericTextDialog.showText(this, getTitle(), dat, false);
 		} catch (IOException | MediaQueryException e) {
+			CCLog.addWarning(e);
 			GenericTextDialog.showText(this, getTitle(), e.getMessage() + "\n\n" + ExceptionUtils.getMessage(e) + "\n\n" + ExceptionUtils.getStackTrace(e), false); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}

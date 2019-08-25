@@ -1189,6 +1189,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 			}
 
 		} catch (IOException | MediaQueryException e) {
+			CCLog.addWarning(e);
 			GenericTextDialog.showText(this, getTitle(), e.getMessage() + "\n\n" + ExceptionUtils.getMessage(e) + "\n\n" + ExceptionUtils.getStackTrace(e), false); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
@@ -1218,6 +1219,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 			ctrlMediaInfo.setValue(dat.get(0));
 
 		} catch (IOException | MediaQueryException e) {
+			CCLog.addWarning(e);
 			GenericTextDialog.showText(this, getTitle(), e.getMessage() + "\n\n" + ExceptionUtils.getMessage(e) + "\n\n" + ExceptionUtils.getStackTrace(e), false); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
@@ -1293,6 +1295,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 
 			} catch (Exception e) {
 
+				CCLog.addWarning(e);
 				SwingUtilities.invokeLater(() ->
 				{
 					lblLenAuto.setText("<html><font color='red'>!!!</font></html>"); //$NON-NLS-1$

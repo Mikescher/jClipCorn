@@ -29,6 +29,7 @@ import com.jgoodies.forms.layout.FormSpecs;
 import de.jClipCorn.util.mediaquery.MediaQueryResultAudioTrack;
 import de.jClipCorn.util.mediaquery.MediaQueryResultVideoTrack;
 import de.jClipCorn.util.mediaquery.MediaQueryRunner;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import javax.swing.border.TitledBorder;
 import java.io.File;
@@ -648,7 +649,10 @@ public class EditMediaInfoDialog extends JDialog {
 				});
 			}
 			catch (MediaQueryException | IOException e) {
-				CCLog.addError(e);
+				CCLog.addWarning(e);
+				SwingUtilities.invokeLater(() -> {
+					GenericTextDialog.showText(this, getTitle(), e.getMessage() + "\n\n" + ExceptionUtils.getMessage(e) + "\n\n" + ExceptionUtils.getStackTrace(e), false); //$NON-NLS-1$ //$NON-NLS-2$
+				});
 			}
 			finally
 			{
@@ -684,7 +688,10 @@ public class EditMediaInfoDialog extends JDialog {
 				});
 			}
 			catch (FFProbeQueryException | IOException e) {
-				CCLog.addError(e);
+				CCLog.addWarning(e);
+				SwingUtilities.invokeLater(() -> {
+					GenericTextDialog.showText(this, getTitle(), e.getMessage() + "\n\n" + ExceptionUtils.getMessage(e) + "\n\n" + ExceptionUtils.getStackTrace(e), false); //$NON-NLS-1$ //$NON-NLS-2$
+				});
 			}
 			finally
 			{

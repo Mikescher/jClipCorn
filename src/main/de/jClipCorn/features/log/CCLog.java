@@ -23,7 +23,11 @@ public class CCLog {
 	public static void addWarning(String e) {
 		CCLogInternal.add(e, CCLogType.LOG_ELEM_WARNING, new Throwable().getStackTrace());
 	}
-	
+
+	public static void addWarning(Throwable e) {
+		CCLogInternal.add(e.toString(), CCLogType.LOG_ELEM_WARNING, e.getStackTrace());
+	}
+
 	public static void addWarning(String s, Throwable e) {
 		CCLogInternal.add(s + '\n' + "\t caused by " + e.toString(), CCLogType.LOG_ELEM_WARNING, e.getStackTrace()); //$NON-NLS-1$
 	}

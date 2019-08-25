@@ -1656,6 +1656,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 			}
 
 		} catch (IOException | MediaQueryException e) {
+			CCLog.addWarning(e);
 			GenericTextDialog.showText(this, getTitle(), e.getMessage() + "\n\n" + ExceptionUtils.getMessage(e) + "\n\n" + ExceptionUtils.getStackTrace(e), false); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
@@ -1692,6 +1693,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 			mediaInfoControl.setValue(dat);
 
 		} catch (IOException | MediaQueryException e) {
+			CCLog.addWarning(e);
 			GenericTextDialog.showText(this, getTitle(), e.getMessage() + "\n\n" + ExceptionUtils.getMessage(e) + "\n\n" + ExceptionUtils.getStackTrace(e), false); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
@@ -1708,6 +1710,7 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 
 			GenericTextDialog.showText(this, getTitle(), dat, false);
 		} catch (IOException | MediaQueryException e) {
+			CCLog.addWarning(e);
 			GenericTextDialog.showText(this, getTitle(), e.getMessage() + "\n\n" + ExceptionUtils.getMessage(e) + "\n\n" + ExceptionUtils.getStackTrace(e), false); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}

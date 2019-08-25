@@ -174,6 +174,11 @@ public class HTTPUtilities {
 		} catch (FailingHttpStatusCodeException | IOException e) {
 			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CouldNotGetHTML", urlToRead), e);
 			return "";
+		} catch (Error e) {
+			if (e instanceof NoClassDefFoundError && e.getMessage().contains("com/gargoylesoftware/css/parser/CSSErrorHandler")) return ""; //ignore
+
+			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CouldNotGetHTML", urlToRead), e);
+			return "";
 		}
 	}
 

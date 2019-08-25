@@ -214,6 +214,8 @@ public class Main {
 
 // Compare speed of stream vs ccstream (just out of interest)
 
-// todo update time-compare statistics with history data
+// update time-compare statistics with history data
 
-// todo when disabling history, set HISOTRY_ENABLED first so it gets logged in the history
+// when disabling history, set HISOTRY_ENABLED first so it gets logged in the history
+
+// button to show (and evtl update) infos from online-ref in editmovie/editseries Frame

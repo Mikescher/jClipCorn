@@ -216,6 +216,4 @@ public class Main {
 
 // update time-compare statistics with history data
 
-// when disabling history, set HISOTRY_ENABLED first so it gets logged in the history
-
 // button to show (and evtl update) infos from online-ref in editmovie/editseries Frame

@@ -271,7 +271,7 @@ public class TestDatabase extends ClipCornBaseTest {
 
 		assertTrue(ml.getHistory().testTrigger(false, new RefParam<>()));
 		assertFalse(ml.getHistory().isHistoryActive());
-		assertEquals(1, ml.getHistory().getCount());
+		assertEquals(2, ml.getHistory().getCount());
 	}
 
 	@Test

@@ -44,12 +44,24 @@ public class TestCheckDatabase extends ClipCornBaseTest {
 
 		DatabaseError e1 = CCStreams.iterate(errs).singleOrNull(p -> p.isTypeOf(DatabaseErrorType.ERROR_MEDIAINFO_UNSET) && "Der Bomber".equals(p.getElement1RawName()));
 		DatabaseError e2 = CCStreams.iterate(errs).singleOrNull(p -> p.isTypeOf(DatabaseErrorType.ERROR_MEDIAINFO_UNSET) && "Forrest Gump".equals(p.getElement1RawName()));
+		DatabaseError e3 = CCStreams.iterate(errs).singleOrNull(p -> p.isTypeOf(DatabaseErrorType.ERROR_MEDIAINFO_UNSET) && "Explosion Magic for This Formidable Enemy".equals(p.getElement1RawName()));
+		DatabaseError e4 = CCStreams.iterate(errs).singleOrNull(p -> p.isTypeOf(DatabaseErrorType.ERROR_MEDIAINFO_UNSET) && "A Price for This Cursed Sword".equals(p.getElement1RawName()));
+		DatabaseError e5 = CCStreams.iterate(errs).singleOrNull(p -> p.isTypeOf(DatabaseErrorType.ERROR_MEDIAINFO_UNSET) && "A Loving Hand for Our Party When We Can't Make It Through Winter".equals(p.getElement1RawName()));
+		DatabaseError e6 = CCStreams.iterate(errs).singleOrNull(p -> p.isTypeOf(DatabaseErrorType.ERROR_MEDIAINFO_UNSET) && "God's Blessing on This Wonderful Shop".equals(p.getElement1RawName()));
 
 		assertNotNull(e1);
 		assertNotNull(e2);
+		assertNotNull(e3);
+		assertNotNull(e4);
+		assertNotNull(e5);
+		assertNotNull(e6);
 
 		errs.remove(e1);
 		errs.remove(e2);
+		errs.remove(e3);
+		errs.remove(e4);
+		errs.remove(e5);
+		errs.remove(e6);
 
 		assertArrayEquals(new Object[0], errs.toArray());
 	}

@@ -4,7 +4,6 @@ import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.datatypes.Tuple3;
 import de.jClipCorn.util.exceptions.FFProbeQueryException;
 import de.jClipCorn.util.helper.ProcessHelper;
-import de.jClipCorn.util.xml.CCXMLParser;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -55,7 +54,7 @@ public class FFProbeRunner {
 			int framecount       = getIntFromStr(obj, "nb_read_frames");
 			double framerate     = getDoubleFromStr(obj, "nb_read_frame");
 
-			return new FFProbeResult(ffjson, codecName, codecLongName, profile, width, height, bitdepth, framecount, framerate);
+			return new FFProbeResult(ffjson, codecName, codecLongName, profile, width, height, (short)bitdepth, framecount, framerate);
 
 		} catch (JSONException e) {
 			throw new FFProbeQueryException(e.getMessage(), ExceptionUtils.getStackTrace(e) + "\n\n\n--------------\n\n\n" + ffjson);

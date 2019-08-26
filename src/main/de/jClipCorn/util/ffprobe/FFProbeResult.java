@@ -10,11 +10,11 @@ public class FFProbeResult {
 	public final int Width;            // -1 if not set
 	public final int Height;           // -1 if not set
 
-	public final int BitDepth;         // -1 if not set
+	public final short BitDepth;         // -1 if not set
 	public final int FrameCount;       // -1 if not set
 	public final double FrameRate;     // -1 if not set
 
-	public FFProbeResult(String raw, String codecName, String codecLongName, String profile, int width, int height, int bitsPerRawSample, int frameCount, double frameRate) {
+	public FFProbeResult(String raw, String codecName, String codecLongName, String profile, int width, int height, short bitsPerRawSample, int frameCount, double frameRate) {
 		Raw = raw;
 		CodecName = codecName;
 		CodecLongName = codecLongName;

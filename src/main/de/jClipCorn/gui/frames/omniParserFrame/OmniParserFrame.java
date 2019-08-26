@@ -1,43 +1,33 @@
 package de.jClipCorn.gui.frames.omniParserFrame;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.FlowLayout;
-import java.awt.Toolkit;
-import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.DataFlavor;
-import java.awt.datatransfer.Transferable;
-import java.awt.datatransfer.UnsupportedFlavorException;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.io.File;
-import java.io.FilenameFilter;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import javax.swing.*;
-import javax.swing.border.EmptyBorder;
-import javax.swing.border.TitledBorder;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-import javax.swing.table.DefaultTableModel;
-
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.FormSpecs;
 import com.jgoodies.forms.layout.RowSpec;
-
 import de.jClipCorn.gui.guiComponents.DefaultReadOnlyTableModel;
 import de.jClipCorn.gui.guiComponents.VerticalScrollPaneSynchronizer;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
+import de.jClipCorn.util.Str;
+import de.jClipCorn.util.adapter.DocumentLambdaAdapter;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.SimpleFileUtils;
 import de.jClipCorn.util.listener.OmniParserCallbackListener;
+
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.TitledBorder;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
+import java.awt.datatransfer.UnsupportedFlavorException;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class OmniParserFrame extends JDialog {
 	private static final long serialVersionUID = -4511912406011331076L;
@@ -135,30 +125,15 @@ public class OmniParserFrame extends JDialog {
 		contentPane.add(pnlTop, "2, 2, 7, 1, fill, fill"); //$NON-NLS-1$
 		
 		btnLoadFromFiles = new JButton(LocaleBundle.getString("OmniParserFrame.btnLoadFromFiles.text")); //$NON-NLS-1$
-		btnLoadFromFiles.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onLoadFromFiles();
-			}
-		});
+		btnLoadFromFiles.addActionListener(e -> onLoadFromFiles());
 		pnlTop.add(btnLoadFromFiles);
 		
 		btnLoadFromFolder = new JButton(LocaleBundle.getString("OmniParserFrame.btnLoadFromFolder.text")); //$NON-NLS-1$
-		btnLoadFromFolder.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onLoadFromFolder();
-			}
-		});
+		btnLoadFromFolder.addActionListener(e -> onLoadFromFolder());
 		pnlTop.add(btnLoadFromFolder);
 		
 		btnLoadFromClipboard = new JButton(LocaleBundle.getString("OmniParserFrame.btnLoadFromClipboard.text")); //$NON-NLS-1$
-		btnLoadFromClipboard.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				loadFromClipBoard();
-			}
-		});
+		btnLoadFromClipboard.addActionListener(e -> loadFromClipBoard());
 		pnlTop.add(btnLoadFromClipboard);
 		
 		pnlPlainText = new JPanel();
@@ -170,22 +145,7 @@ public class OmniParserFrame extends JDialog {
 		
 		memoPlaintext = new JTextArea();
 		memoPlaintext.setLineWrap(true);
-		memoPlaintext.getDocument().addDocumentListener(new DocumentListener() {
-			@Override
-			public void removeUpdate(DocumentEvent e) {
-				onPlainTextChanged();
-			}
-			
-			@Override
-			public void insertUpdate(DocumentEvent e) {
-				onPlainTextChanged();
-			}
-			
-			@Override
-			public void changedUpdate(DocumentEvent e) {
-				onPlainTextChanged();
-			}
-		});
+		memoPlaintext.getDocument().addDocumentListener(new DocumentLambdaAdapter(this::onPlainTextChanged));
 		scrlPnlPlainText.setViewportView(memoPlaintext);
 		
 		lblPlaintext = new JLabel(LocaleBundle.getString("OmniParserFrame.labelStep1.text")); //$NON-NLS-1$
@@ -202,22 +162,7 @@ public class OmniParserFrame extends JDialog {
 		scrlPnlFormattedText.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		
 		memoFormattedText = new JTextArea();
-		memoFormattedText.getDocument().addDocumentListener(new DocumentListener() {
-			@Override
-			public void removeUpdate(DocumentEvent e) {
-				onFormattedTextChanged();
-			}
-			
-			@Override
-			public void insertUpdate(DocumentEvent e) {
-				onFormattedTextChanged();
-			}
-			
-			@Override
-			public void changedUpdate(DocumentEvent e) {
-				onFormattedTextChanged();
-			}
-		});
+		memoFormattedText.getDocument().addDocumentListener(new DocumentLambdaAdapter(this::onFormattedTextChanged));
 		scrlPnlFormattedText.setViewportView(memoFormattedText);
 		
 		pnlParsedText = new JPanel();
@@ -230,22 +175,7 @@ public class OmniParserFrame extends JDialog {
 		scrlPnlParsedText.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
 		
 		memoParsedText = new JTextArea();
-		memoParsedText.getDocument().addDocumentListener(new DocumentListener() {
-			@Override
-			public void removeUpdate(DocumentEvent e) {
-				onParsedTextChanged();
-			}
-			
-			@Override
-			public void insertUpdate(DocumentEvent e) {
-				onParsedTextChanged();
-			}
-			
-			@Override
-			public void changedUpdate(DocumentEvent e) {
-				onParsedTextChanged();
-			}
-		});
+		memoParsedText.getDocument().addDocumentListener(new DocumentLambdaAdapter(this::onParsedTextChanged));
 		scrlPnlParsedText.setViewportView(memoParsedText);
 		
 		pnlCheck = new JPanel();
@@ -284,73 +214,37 @@ public class OmniParserFrame extends JDialog {
 		
 		chckbxSplitLines = new JCheckBox(LocaleBundle.getString("OmniParserFrame.chkbxSplit.text")); //$NON-NLS-1$
 		chckbxSplitLines.setSelected(true);
-		chckbxSplitLines.addItemListener(new ItemListener() {
-			@Override
-			public void itemStateChanged(ItemEvent e) {
-				onPlainTextChanged();
-			}
-		});
+		chckbxSplitLines.addItemListener(e -> onPlainTextChanged());
 		pnlOptions.add(chckbxSplitLines, "2, 2"); //$NON-NLS-1$
 		
 		chckbxRepUmlauts = new JCheckBox(LocaleBundle.getString("OmniParserFrame.chkbxReplUmlauts.text")); //$NON-NLS-1$
-		chckbxRepUmlauts.addItemListener(new ItemListener() {
-			@Override
-			public void itemStateChanged(ItemEvent e) {
-				onFormattedTextChanged();
-			}
-		});
+		chckbxRepUmlauts.addItemListener(e -> onFormattedTextChanged());
 		pnlOptions.add(chckbxRepUmlauts, "2, 4"); //$NON-NLS-1$
 		
 		chckbxRemInforStrings = new JCheckBox(LocaleBundle.getString("OmniParserFrame.chkbxRemInfoStr.text")); //$NON-NLS-1$
-		chckbxRemInforStrings.addItemListener(new ItemListener() {
-			@Override
-			public void itemStateChanged(ItemEvent e) {
-				onFormattedTextChanged();
-			}
-		});
+		chckbxRemInforStrings.addItemListener(e -> onFormattedTextChanged());
 		chckbxRemInforStrings.setSelected(true);
 		pnlOptions.add(chckbxRemInforStrings, "2, 6"); //$NON-NLS-1$
 		
 		chckbxRecogSpaceChars = new JCheckBox(LocaleBundle.getString("OmniParserFrame.chkbxRecogSpace.text")); //$NON-NLS-1$
-		chckbxRecogSpaceChars.addItemListener(new ItemListener() {
-			@Override
-			public void itemStateChanged(ItemEvent e) {
-				onFormattedTextChanged();
-			}
-		});
+		chckbxRecogSpaceChars.addItemListener(e -> onFormattedTextChanged());
 		chckbxRecogSpaceChars.setSelected(true);
 		pnlOptions.add(chckbxRecogSpaceChars, "2, 8"); //$NON-NLS-1$
 		
 		chckbxRemRepStrings = new JCheckBox(LocaleBundle.getString("OmniParserFrame.chkbxRemRepPhrases.text")); //$NON-NLS-1$
 		chckbxRemRepStrings.setSelected(true);
-		chckbxRemRepStrings.addItemListener(new ItemListener() {
-			@Override
-			public void itemStateChanged(ItemEvent e) {
-				onFormattedTextChanged();
-			}
-		});
+		chckbxRemRepStrings.addItemListener(e -> onFormattedTextChanged());
 		pnlOptions.add(chckbxRemRepStrings, "2, 10"); //$NON-NLS-1$
 		
 		pnlBottom = new JPanel();
 		contentPane.add(pnlBottom, "2, 8, 7, 1, fill, fill"); //$NON-NLS-1$
 		
-		btnOK = new JButton("OK"); //$NON-NLS-1$
-		btnOK.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				callbacklistener.updateTitles(getTitleList());
-				dispose();
-			}
-		});
+		btnOK = new JButton(LocaleBundle.getString("UIGeneric.btnOK.text")); //$NON-NLS-1$
+		btnOK.addActionListener(e -> { callbacklistener.updateTitles(getTitleList()); dispose(); });
 		pnlBottom.add(btnOK);
 		
-		btnCancel = new JButton("Cancel"); //$NON-NLS-1$
-		btnCancel.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				dispose();
-			}
-		});
+		btnCancel = new JButton(LocaleBundle.getString("UIGeneric.btnCancel.text")); //$NON-NLS-1$
+		btnCancel.addActionListener(e -> dispose());
 		pnlBottom.add(btnCancel);
 		
 		lblParsedText = new JLabel(LocaleBundle.getString("OmniParserFrame.labelStep3.text")); //$NON-NLS-1$
@@ -374,13 +268,9 @@ public class OmniParserFrame extends JDialog {
 				f = f.getParentFile();
 			}
 			
-			String[] list = f.list(new FilenameFilter() {
-				@Override
-				public boolean accept(File dir, String name) {
-					return new File(dir, name).isDirectory();
-				}
-			});
-			
+			String[] list = f.list((dir, name) -> new File(dir, name).isDirectory());
+			if (list == null) list = new String[0];
+
 			StringBuilder result = new StringBuilder();
 			
 			for (int i = 0; i < list.length; i++) {
@@ -413,12 +303,8 @@ public class OmniParserFrame extends JDialog {
 				f = f.getParentFile();
 			}
 			
-			String[] list = f.list(new FilenameFilter() {
-				@Override
-				public boolean accept(File dir, String name) {
-					return new File(dir, name).isFile();
-				}
-			});
+			String[] list = f.list((dir, name) -> new File(dir, name).isFile());
+			if (list == null) list = new String[0];
 			
 			StringBuilder result = new StringBuilder();
 			
@@ -435,7 +321,7 @@ public class OmniParserFrame extends JDialog {
 		Clipboard sysClip = Toolkit.getDefaultToolkit().getSystemClipboard();
 		Transferable transfer = sysClip.getContents(null);
 		
-		String data = ""; //$NON-NLS-1$
+		String data;
 		try {
 			data = (String) transfer.getTransferData(DataFlavor.stringFlavor);
 		} catch (UnsupportedFlavorException | IOException e) {
@@ -478,9 +364,11 @@ public class OmniParserFrame extends JDialog {
 		tableCompare.setModel(model);
 	}
 	
-	private ArrayList<String> getTitleList() {
+	private List<String> getTitleList() {
 		String input = memoParsedText.getText();
 		
-		return new ArrayList<>(Arrays.asList(SimpleFileUtils.splitLines(input)));
+		List<String> r = new ArrayList<>(Arrays.asList(SimpleFileUtils.splitLines(input)));
+		while (r.size() < old_titles.size()) r.add(Str.Empty);
+		return r;
 	}
 }

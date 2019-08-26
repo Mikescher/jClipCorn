@@ -153,14 +153,14 @@ public class AddMultiEpisodesFrame extends JFrame {
 		contentPane.add(btnSetDestination, "10, 4"); //$NON-NLS-1$
 		
 		btnOkayMove = new JButton(LocaleBundle.getString("AddMultiEpisodesFrame.Button_62")); //$NON-NLS-1$
-		btnOkayMove.addActionListener(e -> onOkay(e, 1));
+		btnOkayMove.addActionListener(e -> onOkay(1));
 		
 		btnOkayRename = new JButton(LocaleBundle.getString("AddMultiEpisodesFrame.Button_63")); //$NON-NLS-1$
-		btnOkayRename.addActionListener(e -> onOkay(e, 2));
+		btnOkayRename.addActionListener(e -> onOkay(2));
 		contentPane.add(btnOkayRename, "14, 8, right, default"); //$NON-NLS-1$
 		
 		btnOkayCopy = new JButton(LocaleBundle.getString("AddMultiEpisodesFrame.Button_61")); //$NON-NLS-1$
-		btnOkayCopy.addActionListener(e -> onOkay(e, 0));
+		btnOkayCopy.addActionListener(e -> onOkay(0));
 		contentPane.add(btnOkayMove, "16, 8"); //$NON-NLS-1$
 		
 		btnGetLanguages = new JButton(LocaleBundle.getString("AddMultiEpisodesFrame.Button_32")); //$NON-NLS-1$
@@ -562,7 +562,7 @@ public class AddMultiEpisodesFrame extends JFrame {
 		updateButtons();
 	}
 
-	private void onOkay(ActionEvent evt, int mode) {
+	private void onOkay(int mode) {
 		final List<NewEpisodeVM> data = lsData.getDataCopy();
 		if (data.size() == 0) return;
 

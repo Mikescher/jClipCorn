@@ -65,8 +65,12 @@ public abstract class JCCSimpleTable<TData> extends JScrollPane implements ListS
 	}
 
 	public void autoResize() {
+		autoResize(true);
+	}
+
+	public void autoResize(boolean resizeLastColumnToFit) {
 		adjuster.adjustColumns();
-		adjuster.setResizeAdjuster(true);
+		adjuster.setResizeAdjuster(resizeLastColumnToFit);
 	}
 
 	public int getSelectedRow() {

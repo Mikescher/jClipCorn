@@ -1,9 +1,9 @@
 package de.jClipCorn.gui.frames.editMediaInfoDialog;
 
-import java.awt.*;
-
-import javax.swing.*;
-
+import com.jgoodies.forms.layout.ColumnSpec;
+import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.FormSpecs;
+import com.jgoodies.forms.layout.RowSpec;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMediaInfo;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.gui.frames.genericTextDialog.GenericTextDialog;
@@ -21,17 +21,14 @@ import de.jClipCorn.util.formatter.FileSizeFormatter;
 import de.jClipCorn.util.formatter.TimeIntervallFormatter;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.mediaquery.MediaQueryResult;
-
-import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.ColumnSpec;
-import com.jgoodies.forms.layout.RowSpec;
-import com.jgoodies.forms.layout.FormSpecs;
 import de.jClipCorn.util.mediaquery.MediaQueryResultAudioTrack;
 import de.jClipCorn.util.mediaquery.MediaQueryResultVideoTrack;
 import de.jClipCorn.util.mediaquery.MediaQueryRunner;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
+import javax.swing.*;
 import javax.swing.border.TitledBorder;
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.TimeZone;
@@ -529,7 +526,7 @@ public class EditMediaInfoDialog extends JDialog {
 		lblHintAudioSamplerate = new JLabel(""); //$NON-NLS-1$
 		pnlAudio.add(lblHintAudioSamplerate, "6, 8, fill, fill"); //$NON-NLS-1$
 		
-		btnOK = new JButton("OK"); //$NON-NLS-1$
+		btnOK = new JButton(LocaleBundle.getString("UIGeneric.btnOK.text")); //$NON-NLS-1$
 		btnOK.addActionListener(e -> onOK());
 		getContentPane().add(btnOK, "6, 6, right, default"); //$NON-NLS-1$
 

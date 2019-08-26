@@ -1045,7 +1045,7 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 	}
 	
 	@Override
-	public void updateTitles(ArrayList<String> newTitles) {
+	public void updateTitles(List<String> newTitles) {
 		lsEpisodes.setSelectedIndex(-1);
 
 		for (int i = 0; i < Math.min(data.size(), newTitles.size()); i++) data.get(i).setTitle(newTitles.get(i));

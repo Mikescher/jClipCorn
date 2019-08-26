@@ -1,7 +1,7 @@
 package de.jClipCorn.util.listener;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public interface OmniParserCallbackListener {
-	public void updateTitles(ArrayList<String> newTitles);
+	void updateTitles(List<String> newTitles);
 }

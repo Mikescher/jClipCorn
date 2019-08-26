@@ -205,7 +205,7 @@ public class CreateSeriesFolderStructureFrame extends JFrame {
 
 		lsTest.setData(elements);
 
-		lsTest.autoResize();
+		lsTest.autoResize(false);
 
 		btnOk.setEnabled(!CCStreams.iterate(elements).any(e -> e.State== CSFSElement.CSFSState.Error) && ! CCProperties.getInstance().ARG_READONLY);
 	}

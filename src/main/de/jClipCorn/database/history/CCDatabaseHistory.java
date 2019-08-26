@@ -20,9 +20,9 @@ import java.util.List;
 import static de.jClipCorn.util.sqlwrapper.SQLBuilderHelper.forceSQLEscape;
 
 public class CCDatabaseHistory {
-	private final static int MERGE_DIFF_TIME  = 120; // sec
-	private final static int MERGE_MAX_TIME   = 300; // sec
-	private final static int MERGE_SHORT_TIME =   8; // sec
+	private final static int MERGE_DIFF_TIME  =  5 * 60; // sec
+	private final static int MERGE_MAX_TIME   = 15 * 60; // sec
+	private final static int MERGE_SHORT_TIME = 8;       // sec
 
 	private final CCDatabase _db;
 

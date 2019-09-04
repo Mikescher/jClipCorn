@@ -1,15 +1,13 @@
 package de.jClipCorn;
 
-import javax.swing.SwingUtilities;
-
 import de.jClipCorn.database.CCMovieList;
+import de.jClipCorn.features.log.CCLog;
+import de.jClipCorn.features.log.ExceptionHandler;
 import de.jClipCorn.gui.frames.settingsFrame.SettingsFrame;
 import de.jClipCorn.gui.frames.statisticsFrame.StatisticsFrame;
 import de.jClipCorn.gui.frames.statisticsFrame.StatisticsPanel;
-import de.jClipCorn.gui.mainFrame.MainFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.features.log.CCLog;
-import de.jClipCorn.features.log.ExceptionHandler;
+import de.jClipCorn.gui.mainFrame.MainFrame;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.enumerations.ResourcePreloadMode;
@@ -17,6 +15,8 @@ import de.jClipCorn.util.DriveMap;
 import de.jClipCorn.util.SSLUtilities;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.LookAndFeelManager;
+
+import javax.swing.*;
 
 //
 // ========== GRADLE ==========
@@ -28,7 +28,7 @@ import de.jClipCorn.util.helper.LookAndFeelManager;
 
 public class Main {
 	public final static String TITLE     = "jClipCorn"; //$NON-NLS-1$
-	public final static String VERSION   = /*<gradle_version_marker>*/"1.10.6.18"/*</gradle_version_marker>*/; //$NON-NLS-1$
+	public final static String VERSION   = /*<gradle_version_marker>*/"1.10.6.19"/*</gradle_version_marker>*/; //$NON-NLS-1$
 	public final static String DBVERSION = "14";    //$NON-NLS-1$
 	public final static String JXMLVER   = "4";     //$NON-NLS-1$
 
@@ -221,6 +221,3 @@ public class Main {
 // add mp4box and ffmpeg aus minfo sources  -->  https://stackoverflow.com/a/28376817/1761622
 
 // put ffmpeg/ffprobe/mediainfo beside jcc jar and auto set path to self and use ccpathformatter on these paths
-
-// history frame: live-ish update (and progressbar to show progress)
-//                show table-entries (=raw entry count) in table

@@ -1,29 +1,21 @@
 package de.jClipCorn.features.actionTree;
 
-import java.awt.event.InputEvent;
-import java.awt.event.KeyEvent;
-import java.io.File;
-import java.io.IOException;
-
-import javax.swing.JFileChooser;
-import javax.swing.KeyStroke;
-import javax.swing.SwingUtilities;
-
 import de.jClipCorn.Main;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.columnTypes.*;
-import de.jClipCorn.features.serialization.ExportHelper;
 import de.jClipCorn.features.backupManager.BackupManager;
+import de.jClipCorn.features.log.CCLog;
+import de.jClipCorn.features.serialization.ExportHelper;
 import de.jClipCorn.features.serialization.legacy.CCBXMLReader;
 import de.jClipCorn.gui.frames.aboutFrame.AboutFrame;
-import de.jClipCorn.gui.frames.addMultiEpisodesFrame.AddMultiEpisodesFrame;
-import de.jClipCorn.gui.frames.batchEditFrame.BatchEditFrame;
 import de.jClipCorn.gui.frames.addMovieFrame.AddMovieFrame;
+import de.jClipCorn.gui.frames.addMultiEpisodesFrame.AddMultiEpisodesFrame;
 import de.jClipCorn.gui.frames.addSeasonFrame.AddSeasonFrame;
 import de.jClipCorn.gui.frames.addSeriesFrame.AddSeriesFrame;
 import de.jClipCorn.gui.frames.autofindRefrenceFrame.AutoFindReferenceFrame;
 import de.jClipCorn.gui.frames.backupManagerFrame.BackupsManagerFrame;
+import de.jClipCorn.gui.frames.batchEditFrame.BatchEditFrame;
 import de.jClipCorn.gui.frames.changeScoreFrame.ChangeScoreFrame;
 import de.jClipCorn.gui.frames.changeViewedFrame.ChangeViewedFrame;
 import de.jClipCorn.gui.frames.checkDatabaseFrame.CheckDatabaseFrame;
@@ -38,15 +30,13 @@ import de.jClipCorn.gui.frames.exportElementsFrame.ExportElementsFrame;
 import de.jClipCorn.gui.frames.filenameRulesFrame.FilenameRuleFrame;
 import de.jClipCorn.gui.frames.groupManageFrame.GroupManageFrame;
 import de.jClipCorn.gui.frames.logFrame.LogFrame;
-import de.jClipCorn.gui.frames.quickAddEpisodeDialog.QuickAddEpisodeDialog;
-import de.jClipCorn.gui.frames.updateCodecFrame.UpdateCodecFrame;
-import de.jClipCorn.gui.mainFrame.MainFrame;
 import de.jClipCorn.gui.frames.moveSeriesFrame.MassMoveMoviesDialog;
 import de.jClipCorn.gui.frames.moveSeriesFrame.MassMoveSeriesDialog;
 import de.jClipCorn.gui.frames.moveSeriesFrame.MoveSeriesDialog;
 import de.jClipCorn.gui.frames.parseWatchDataFrame.ParseWatchDataFrame;
 import de.jClipCorn.gui.frames.previewMovieFrame.PreviewMovieFrame;
 import de.jClipCorn.gui.frames.previewSeriesFrame.PreviewSeriesFrame;
+import de.jClipCorn.gui.frames.quickAddEpisodeDialog.QuickAddEpisodeDialog;
 import de.jClipCorn.gui.frames.randomMovieFrame.RandomMovieFrame;
 import de.jClipCorn.gui.frames.scanFolderFrame.ScanFolderFrame;
 import de.jClipCorn.gui.frames.searchFrame.SearchFrame;
@@ -55,9 +45,10 @@ import de.jClipCorn.gui.frames.showIncompleteFilmSeriesFrame.ShowIncompleteFilmS
 import de.jClipCorn.gui.frames.showUpdateFrame.ShowUpdateFrame;
 import de.jClipCorn.gui.frames.statisticsFrame.StatisticsFrame;
 import de.jClipCorn.gui.frames.textExportFrame.TextExportFrame;
+import de.jClipCorn.gui.frames.updateCodecFrame.UpdateCodecFrame;
 import de.jClipCorn.gui.frames.updateMetadataFrame.UpdateMetadataFrame;
 import de.jClipCorn.gui.frames.watchHistoryFrame.WatchHistoryFrame;
-import de.jClipCorn.features.log.CCLog;
+import de.jClipCorn.gui.mainFrame.MainFrame;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.Str;
@@ -69,6 +60,12 @@ import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.helper.FileChooserHelper;
 import de.jClipCorn.util.helper.SimpleFileUtils;
 import de.jClipCorn.util.listener.ActionCallbackListener;
+
+import javax.swing.*;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
+import java.io.File;
+import java.io.IOException;
 
 @SuppressWarnings("unused")
 public class CCActionTree extends UIActionTree{
@@ -162,7 +159,7 @@ public class CCActionTree extends UIActionTree{
 				add(extras, "ParseWatchData",           null,      "ClipMenuBar.Extras.ParseWatchData",           Resources.ICN_MENUBAR_WATCHDATA,            true,  this::onClickExtrasParseWatchData);
 				add(extras, "ShowIncompleteFilmSeries", null,      "ClipMenuBar.Extras.ShowIncompleteFilmSeries", Resources.ICN_MENUBAR_FINDINCOMPLETEZYKLUS, false, this::onClickExtrasShowIncompleteFilmSeries);
 				add(extras, "UpdateMetadata",           null,      "ClipMenuBar.Extras.UpdateMetadata",           Resources.ICN_MENUBAR_UPDATEMETADATA,       false, this::onClickExtrasUpdateMetadata);
-				add(extras, "UpdateCodecData",          null,      "ClipMenuBar.Extras.UpdateCodecData",          Resources.ICN_MENUBAR_MEDIAINFO,      false, this::onClickExtrasUpdateCodecData);
+				add(extras, "UpdateCodecData",          null,      "ClipMenuBar.Extras.UpdateCodecData",          Resources.ICN_MENUBAR_MEDIAINFO,            false, this::onClickExtrasUpdateCodecData);
 				add(extras, "ShowSettings",             null,      "ClipMenuBar.Extras.Settings",                 Resources.ICN_MENUBAR_SETTINGS,             false, this::onClickExtrasSettings);
 			}
 			

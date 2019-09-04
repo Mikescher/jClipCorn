@@ -20,6 +20,8 @@ public class SQLBuilder {
 	private List<Tuple<DoubleString, CCSQLType>> _fields = new ArrayList<>();
 	private List<Tuple<DoubleString, CCSQLType>> _whereClauses = new ArrayList<>();
 	private List<Tuple<String, CCSQLType>> _selectFields = new ArrayList<>();
+	private List<Tuple3<Integer, String, CCSQLType>> _customPrepFields = new ArrayList<>();
+	private List<Tuple3<Integer, String, CCSQLType>> _customSelFields = new ArrayList<>();
 	private String _customSQL = null;
 	private String _orderField = null;
 	private SQLOrder _orderDirection = null;
@@ -118,6 +120,16 @@ public class SQLBuilder {
 		return this;
 	}
 
+	public SQLBuilder setCustomSelectField(int pos, CCSQLColDef field) {
+		_customSelFields.add(Tuple3.Create(pos, field.Name, field.Type));
+		return this;
+	}
+
+	public SQLBuilder setCustomPrepared(int pos, CCSQLColDef field) {
+		_customPrepFields.add(Tuple3.Create(pos, field.Name, field.Type));
+		return this;
+	}
+
 	public CCSQLStatement build(CCDatabase db, ArrayList<CCSQLStatement> collector) throws SQLWrapperException, SQLException {
 		return build(db::createPreparedStatement, collector);
 	}
@@ -137,7 +149,7 @@ public class SQLBuilder {
 	private CCSQLStatement buildCustom(Func1to1WithGenericException<String, PreparedStatement, SQLException> fn) throws SQLWrapperException, SQLException {
 		if (_customSQL == null)	throw new SQLWrapperException("No SQL source set");
 
-		return new CCSQLStatement( StatementType.CUSTOM, _customSQL, fn.invoke(_customSQL), new ArrayList<>(), new ArrayList<>());
+		return new CCSQLStatement( StatementType.CUSTOM, _customSQL, fn.invoke(_customSQL), _customPrepFields, _customSelFields);
 	}
 
 	@SuppressWarnings("nls")

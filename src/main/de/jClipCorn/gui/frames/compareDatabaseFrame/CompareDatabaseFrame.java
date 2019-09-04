@@ -1,56 +1,37 @@
 package de.jClipCorn.gui.frames.compareDatabaseFrame;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Font;
-import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
-
-import javax.swing.DefaultListModel;
-import javax.swing.DefaultListSelectionModel;
-import javax.swing.JButton;
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.JProgressBar;
-import javax.swing.JScrollPane;
-import javax.swing.JTabbedPane;
-import javax.swing.ListSelectionModel;
-import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-
-import de.jClipCorn.features.serialization.xmlexport.DatabaseXMLExporter;
-import de.jClipCorn.features.serialization.xmlexport.ExportOptions;
-import org.jdom2.Document;
-import org.jdom2.output.Format;
-import org.jdom2.output.XMLOutputter;
-
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.FormSpecs;
 import com.jgoodies.forms.layout.RowSpec;
-
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
+import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.features.serialization.ExportHelper;
+import de.jClipCorn.features.serialization.xmlexport.DatabaseXMLExporter;
+import de.jClipCorn.features.serialization.xmlexport.ExportOptions;
 import de.jClipCorn.gui.frames.exportElementsFrame.ExportElementsFrame;
 import de.jClipCorn.gui.guiComponents.ReadableTextField;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.ExtendedFocusTraversalOnArray;
 import de.jClipCorn.util.helper.FileChooserHelper;
 import de.jClipCorn.util.helper.SimpleFileUtils;
 import de.jClipCorn.util.listener.ProgressCallbackProgressBarHelper;
+import org.jdom2.Document;
+import org.jdom2.output.Format;
+import org.jdom2.output.XMLOutputter;
+
+import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
 
 public class CompareDatabaseFrame extends JFrame {
 	private static final long serialVersionUID = 5114410004487986632L;
@@ -544,7 +525,7 @@ public class CompareDatabaseFrame extends JFrame {
 		Document xml = DatabaseXMLExporter.export(
 				movielist.getInternalListCopy(),
 				new ExportOptions(true, true, false, true),
-				new ProgressCallbackProgressBarHelper(progressBar));
+				new ProgressCallbackProgressBarHelper(progressBar, 500));
 
 		XMLOutputter xout = new XMLOutputter();
 		xout.setFormat(Format.getPrettyFormat());
@@ -560,7 +541,7 @@ public class CompareDatabaseFrame extends JFrame {
 	private void startCompare() {
 		new Thread(() ->
 		{
-			final List<CompareElement> fl = DatabaseComparator.compare(new File(edDB1.getText()), new File(edDB2.getText()), new ProgressCallbackProgressBarHelper(progressBar));
+			final List<CompareElement> fl = DatabaseComparator.compare(new File(edDB1.getText()), new File(edDB2.getText()), new ProgressCallbackProgressBarHelper(progressBar, 500));
 
 			SwingUtilities.invokeLater(() -> updateGUI(fl));
 		}, "THREAD_COMPARE_DATABASES").start(); //$NON-NLS-1$

@@ -1,33 +1,14 @@
 package de.jClipCorn.gui.frames.checkDatabaseFrame;
 
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.swing.DefaultListModel;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.JProgressBar;
-import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
-import javax.swing.ListModel;
-import javax.swing.ListSelectionModel;
-import javax.swing.ScrollPaneConstants;
-import javax.swing.SwingUtilities;
-
+import com.jgoodies.forms.layout.ColumnSpec;
+import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.FormSpecs;
+import com.jgoodies.forms.layout.RowSpec;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.features.databaseErrors.*;
-import de.jClipCorn.gui.mainFrame.MainFrame;
-import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.features.log.CCLog;
+import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.gui.mainFrame.MainFrame;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.adapter.ItemChangeLambdaAdapter;
@@ -35,11 +16,14 @@ import de.jClipCorn.util.datatypes.CountAppendix;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.listener.DoubleProgressCallbackProgressBarHelper;
 import de.jClipCorn.util.listener.ProgressCallbackProgressBarHelper;
-import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.ColumnSpec;
-import com.jgoodies.forms.layout.RowSpec;
-import com.jgoodies.forms.layout.FormSpecs;
-import javax.swing.JCheckBox;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CheckDatabaseFrame extends JFrame {
 	private static final long serialVersionUID = 8481907373850170115L;
@@ -269,7 +253,7 @@ public class CheckDatabaseFrame extends JFrame {
 			pbProgress2.setVisible(false);
 			lblProgress2.setVisible(false);
 			
-			boolean succ = DatabaseAutofixer.fixErrors(errorList, new ProgressCallbackProgressBarHelper(pbProgress1));
+			boolean succ = DatabaseAutofixer.fixErrors(errorList, new ProgressCallbackProgressBarHelper(pbProgress1, 500));
 			endFixThread(succ);
 		}, "THREAD_AUTOFIX_DB").start(); //$NON-NLS-1$
 	}

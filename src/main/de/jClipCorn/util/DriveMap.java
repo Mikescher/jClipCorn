@@ -271,7 +271,7 @@ public class DriveMap {
 		return drive;
 	}
 
-	@SuppressWarnings("deprecation")
+	@SuppressWarnings({ "deprecation", "restriction" })
 	private static String getDriveNetworkIdent(List<FileStore> fsl, File f, String name) {
 		try {
 			for (FileStore fs : fsl) {

@@ -198,9 +198,9 @@ public class EditMediaInfoDialog extends JDialog {
 		panel_3 = new JPanel();
 		getContentPane().add(panel_3, "2, 2, 5, 1, fill, fill"); //$NON-NLS-1$
 		panel_3.setLayout(new FormLayout(new ColumnSpec[] {
-				ColumnSpec.decode("1dlu:grow"),
+				ColumnSpec.decode("1dlu:grow"), //$NON-NLS-1$
 				FormSpecs.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("16dlu"),
+				ColumnSpec.decode("16dlu"), //$NON-NLS-1$
 				FormSpecs.RELATED_GAP_COLSPEC,
 				FormSpecs.DEFAULT_COLSPEC,
 				FormSpecs.RELATED_GAP_COLSPEC,
@@ -232,18 +232,18 @@ public class EditMediaInfoDialog extends JDialog {
 		btnFFProbe.addActionListener((e) -> queryFFProbe());
 		
 		progressBar = new JProgressBar();
-		panel_3.add(progressBar, "1, 3, fill, fill");
-		panel_3.add(btnFFProbe, "3, 3");
+		panel_3.add(progressBar, "1, 3, fill, fill"); //$NON-NLS-1$
+		panel_3.add(btnFFProbe, "3, 3"); //$NON-NLS-1$
 		
 		btnFFProbeShow = new JButton(LocaleBundle.getString("EditMediaInfoDialog.btnShow")); //$NON-NLS-1$
 		btnFFProbeShow.setEnabled(false);
 		btnFFProbeShow.addActionListener((e) -> showFFProbe());
-		panel_3.add(btnFFProbeShow, "5, 3");
+		panel_3.add(btnFFProbeShow, "5, 3"); //$NON-NLS-1$
 		
 		btnFFProbeApply = new JButton(LocaleBundle.getString("UIGeneric.btnApply.text")); //$NON-NLS-1$
 		btnFFProbeApply.setEnabled(false);
 		btnFFProbeApply.addActionListener((e) -> applyFFProbeHints());
-		panel_3.add(btnFFProbeApply, "7, 3");
+		panel_3.add(btnFFProbeApply, "7, 3"); //$NON-NLS-1$
 		
 		pnlGeneral = new JPanel();
 		pnlGeneral.setBorder(new TitledBorder(null, LocaleBundle.getString("EditMediaInfoDialog.header1"), TitledBorder.LEADING, TitledBorder.TOP, null, null)); //$NON-NLS-1$

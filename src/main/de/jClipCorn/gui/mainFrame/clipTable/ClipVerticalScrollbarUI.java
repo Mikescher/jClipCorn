@@ -5,6 +5,7 @@ import java.awt.Rectangle;
 
 import com.sun.java.swing.plaf.windows.WindowsScrollBarUI;
 
+@SuppressWarnings("restriction")
 public class ClipVerticalScrollbarUI extends WindowsScrollBarUI  {
 	
 	private final int height;

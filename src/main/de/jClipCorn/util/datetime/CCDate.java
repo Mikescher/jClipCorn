@@ -1,20 +1,12 @@
 package de.jClipCorn.util.datetime;
 
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.HashSet;
-import java.util.Hashtable;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.exceptions.CCFormatException;
 import de.jClipCorn.util.exceptions.DateFormatException;
 import de.jClipCorn.util.parser.StringSpecParser;
 import de.jClipCorn.util.parser.StringSpecSupplier;
+
+import java.util.*;
 
 public final class CCDate implements Comparable<CCDate>, StringSpecSupplier {
 	public static CCDate STATIC_SUPPLIER = new CCDate(6, 8, 1991);
@@ -135,6 +127,21 @@ public final class CCDate implements Comparable<CCDate>, StringSpecSupplier {
 
 	public static CCDate getUnspecified() {
 		return UNSPECIFIED;
+	}
+
+	public static CCDate getWeekStart() {
+		CCDate d = getCurrentDate();
+		return d.getSubDay(d.getWeekdayInt()-1);
+	}
+
+	public static CCDate getMonthStart() {
+		Calendar c = Calendar.getInstance();
+		return new CCDate(1, c.get(Calendar.MONTH)+1, c.get(Calendar.YEAR));
+	}
+
+	public static CCDate getYearStart() {
+		Calendar c = Calendar.getInstance();
+		return new CCDate(1, 1, c.get(Calendar.YEAR));
 	}
 
 	public String getMonthName() {

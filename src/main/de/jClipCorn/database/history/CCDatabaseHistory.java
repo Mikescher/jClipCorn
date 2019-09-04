@@ -1,5 +1,7 @@
 package de.jClipCorn.database.history;
 
+import de.jClipCorn.database.CCMovieList;
+import de.jClipCorn.database.databaseElement.*;
 import de.jClipCorn.database.driver.CCDatabase;
 import de.jClipCorn.database.driver.DatabaseStructure;
 import de.jClipCorn.features.log.CCLog;
@@ -8,20 +10,20 @@ import de.jClipCorn.util.datatypes.RefParam;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.exceptions.CCFormatException;
+import de.jClipCorn.util.listener.ProgressCallbackListener;
+import de.jClipCorn.util.listener.ProgressCallbackSink;
 import de.jClipCorn.util.sqlwrapper.CCSQLColDef;
 import de.jClipCorn.util.sqlwrapper.CCSQLTableDef;
 import de.jClipCorn.util.stream.CCStreams;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 import static de.jClipCorn.util.sqlwrapper.SQLBuilderHelper.forceSQLEscape;
 
 public class CCDatabaseHistory {
-	private final static int MERGE_DIFF_TIME  =  5 * 60; // sec
-	private final static int MERGE_MAX_TIME   = 15 * 60; // sec
+	private final static int MERGE_DIFF_TIME  = 15 * 60; // sec
+	private final static int MERGE_MAX_TIME   = 45 * 60; // sec
 	private final static int MERGE_SHORT_TIME = 8;       // sec
 
 	private final CCDatabase _db;
@@ -215,16 +217,21 @@ public class CCDatabaseHistory {
 		}
 	}
 
-	public List<CCCombinedHistoryEntry> query(boolean excludeViewedOnly) throws CCFormatException {
-		return query(excludeViewedOnly, null);
+	public List<CCCombinedHistoryEntry> query(boolean excludeViewedOnly, boolean excludeInfoIDChanges, boolean excludeOrderingChanges, CCDateTime start, ProgressCallbackListener lst) throws CCFormatException {
+		return query(excludeViewedOnly, excludeInfoIDChanges, excludeOrderingChanges, start, lst, null);
 	}
 
-	public List<CCCombinedHistoryEntry> query(boolean excludeViewedOnly, String idfilter) throws CCFormatException {
+	public List<CCCombinedHistoryEntry> query(boolean excludeViewedOnly, boolean excludeInfoIDChanges, boolean excludeOrderingChanges, CCDateTime start, ProgressCallbackListener lst, String idfilter) throws CCFormatException {
+		if (lst == null) lst = new ProgressCallbackSink();
+
 		List<CCCombinedHistoryEntry> result  = new ArrayList<>();
 		List<CCCombinedHistoryEntry> backlog = new ArrayList<>();
 
-		List<String[]> rawdata = _db.queryHistory(idfilter);
+		List<String[]> rawdata = _db.queryHistory(start, idfilter);
+		lst.setMax(rawdata.size());
 		for (String[] raw : rawdata) {
+			lst.step();
+
 			CCHistoryTable  table     = CCHistoryTable.getWrapper().findByTextOrException(raw[0]);
 			String          id        = raw[1];
 			CCDateTime      timestamp = CCDateTime.createFromSQL(raw[2]);
@@ -249,6 +256,7 @@ public class CCDatabaseHistory {
 				newentry.Timestamp2 = timestamp;
 				newentry.Action = action;
 				newentry.Changes.add(new CCHistorySingleChange(field, oldvalue, newvalue));
+				newentry.HistoryRowCount = 1;
 
 				List<CCCombinedHistoryEntry> drop2 = CCStreams.iterate(backlog).filter(p -> CCDateTime.diffInSeconds(newentry.Timestamp1, p.Timestamp2)>MERGE_DIFF_TIME).enumerate();
 				backlog.removeAll(drop2);
@@ -265,15 +273,52 @@ public class CCDatabaseHistory {
 				{
 					basechange.NewValue = newvalue;
 					if (base.Action == CCHistoryAction.REMOVE && action == CCHistoryAction.INSERT) base.Action = CCHistoryAction.UPDATE;
+					base.HistoryRowCount++;
 				}
 				else
 				{
 					base.Changes.add(new CCHistorySingleChange(field, oldvalue, newvalue));
+					base.HistoryRowCount++;
 				}
 			}
 		}
 
 		result.addAll(backlog);
+
+		result.sort(Comparator.comparing(o -> o.Timestamp1));
+
+		for (int i=1; i<result.size(); i++)
+		{
+			CCCombinedHistoryEntry e1 = result.get(i-1);
+			CCCombinedHistoryEntry e2 = result.get(i);
+
+ 			if (e1.Table == e2.Table &&
+				Str.equals(e1.ID, e2.ID) &&
+				e1.Action == CCHistoryAction.REMOVE &&
+				e2.Action == CCHistoryAction.INSERT &&
+				e1.Changes.size() == e2.Changes.size() &&
+				CCDateTime.diffInSeconds(e1.Timestamp1, e2.Timestamp2) < MERGE_SHORT_TIME)
+			{
+				CCCombinedHistoryEntry e3 = new CCCombinedHistoryEntry();
+				e3.Table           = e1.Table;
+				e3.ID              = e1.ID;
+				e3.Timestamp1      = e1.Timestamp1;
+				e3.Timestamp2      = e2.Timestamp2;
+				e3.Action          = CCHistoryAction.UPDATE;
+				e3.HistoryRowCount = e1.HistoryRowCount + e2.HistoryRowCount;
+				boolean nomerge = false;
+				for (CCHistorySingleChange c1 : e1.Changes) {
+					Optional<CCHistorySingleChange> c2 = e2.Changes.stream().filter(c -> Str.equals(c.Field, c1.Field)).findFirst();
+					if (!c2.isPresent()) { nomerge = true; break; }
+					e3.Changes.add(new CCHistorySingleChange(c1.Field, c1.OldValue, c2.get().NewValue));
+				}
+				if (nomerge) continue;
+
+				result.set(i-1, null);
+				result.set(i, e3);
+			}
+		}
+		result.removeIf(Objects::isNull);
 
 		for (CCCombinedHistoryEntry e : result) {
 			if (e.Action == CCHistoryAction.UPDATE) e.Changes.removeIf(p -> Str.equals(p.OldValue, p.NewValue));
@@ -281,11 +326,16 @@ public class CCDatabaseHistory {
 
 		result.removeIf(p -> p.Changes.size()==0);
 
-		if (excludeViewedOnly) result.removeIf(CCCombinedHistoryEntry::isTrivialViewedChangesOnly);
+		if (excludeViewedOnly)      result.removeIf(CCCombinedHistoryEntry::isTrivialViewedChangesOnly);
+		if (excludeInfoIDChanges)   result.removeIf(CCCombinedHistoryEntry::isIDChangeOnly);
+		if (excludeOrderingChanges) result.removeIf(CCCombinedHistoryEntry::isGroupOrderingChange);
 
-		result.sort(Comparator.comparing(o -> o.Timestamp1));
+		HashMap<Integer, ICCDatabaseStructureElement> elements = new HashMap<>();
+		for (CCDatabaseElement e : CCMovieList.getInstance().iteratorElements()) elements.put(e.getLocalID(), e);
+		for (CCSeason e : CCMovieList.getInstance().iteratorSeasons()) elements.put(e.getLocalID(), e);
+		for (CCEpisode e : CCMovieList.getInstance().iteratorEpisodes()) elements.put(e.getLocalID(), e);
 
-		for (CCCombinedHistoryEntry e : result) e.finishInit();
+		for (CCCombinedHistoryEntry e : result) e.setSourceLink(elements);
 
 		return result;
 	}
@@ -303,7 +353,9 @@ public class CCDatabaseHistory {
 
 		if (a_ri)
 		{
-			if (table != CCHistoryTable.INFO || base.Changes.size() != 1 || !Str.equals(base.Changes.get(0).Field, field)) {
+			if (table == CCHistoryTable.INFO && base.Changes.size() == 1 && Str.equals(base.Changes.get(0).Field, field)) {
+				// ok
+			} else {
 				return false;
 			}
 		}

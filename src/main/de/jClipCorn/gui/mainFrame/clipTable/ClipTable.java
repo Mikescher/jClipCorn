@@ -37,6 +37,7 @@ import de.jClipCorn.features.table.filter.customFilter.CustomZyklusFilter;
 import de.jClipCorn.properties.enumerations.MainFrameColumn;
 import de.jClipCorn.util.TableColumnAdjuster;
 
+@SuppressWarnings("restriction")
 public class ClipTable extends JScrollPane implements CCDBUpdateListener, ListSelectionListener, MouseListener, MouseMotionListener {
 	private static final long serialVersionUID = -1226727910191440220L;
 

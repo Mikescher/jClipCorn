@@ -1,31 +1,18 @@
 package de.jClipCorn.gui.frames.findCoverFrame;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.image.BufferedImage;
-
-import javax.swing.Box;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JPanel;
-import javax.swing.JProgressBar;
-import javax.swing.JScrollPane;
-import javax.swing.JTextField;
-import javax.swing.ScrollPaneConstants;
-import javax.swing.SwingUtilities;
-
 import de.jClipCorn.database.databaseElement.columnTypes.CCDBElementTyp;
+import de.jClipCorn.features.online.cover.CoverImageParser;
+import de.jClipCorn.features.online.metadata.ParseResultHandler;
 import de.jClipCorn.gui.guiComponents.ScalablePane;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
-import de.jClipCorn.features.online.cover.CoverImageParser;
-import de.jClipCorn.features.online.metadata.ParseResultHandler;
 import de.jClipCorn.util.helper.ExtendedFocusTraversalOnArray;
 import de.jClipCorn.util.listener.ProgressCallbackProgressBarHelper;
 import de.jClipCorn.util.listener.UpdateCallbackListener;
-import javax.swing.JSplitPane;
-import javax.swing.JLabel;
-import javax.swing.SwingConstants;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.image.BufferedImage;
 
 public class FindCoverDialog extends JDialog {
 	private static final long serialVersionUID = -5790203846014201695L;
@@ -176,7 +163,7 @@ public class FindCoverDialog extends JDialog {
 			btnStop.setEnabled(false);
 		});
 		
-		parser = new CoverImageParser(new ProgressCallbackProgressBarHelper(progressBar), pnlCover, finishlistener, typ, edSearchTerm.getText(), handler.getSearchReference());
+		parser = new CoverImageParser(new ProgressCallbackProgressBarHelper(progressBar, 100), pnlCover, finishlistener, typ, edSearchTerm.getText(), handler.getSearchReference());
 		parser.start();
 	}
 }

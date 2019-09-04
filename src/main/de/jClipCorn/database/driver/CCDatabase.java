@@ -1,28 +1,16 @@
 package de.jClipCorn.database.driver;
 
-import java.awt.Color;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
-
 import de.jClipCorn.Main;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.covertab.*;
-import de.jClipCorn.database.databaseElement.CCDatabaseElement;
-import de.jClipCorn.database.databaseElement.CCEpisode;
-import de.jClipCorn.database.databaseElement.CCMovie;
-import de.jClipCorn.database.databaseElement.CCSeason;
-import de.jClipCorn.database.databaseElement.CCSeries;
+import de.jClipCorn.database.databaseElement.*;
 import de.jClipCorn.database.databaseElement.columnTypes.CCDBElementTyp;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGroup;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMediaInfo;
 import de.jClipCorn.database.history.CCDatabaseHistory;
 import de.jClipCorn.database.migration.DatabaseMigration;
-import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.features.log.CCLog;
+import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.enumerations.CCDatabaseDriver;
 import de.jClipCorn.util.datatypes.Tuple;
@@ -32,6 +20,14 @@ import de.jClipCorn.util.datetime.CCTime;
 import de.jClipCorn.util.exceptions.CCFormatException;
 import de.jClipCorn.util.helper.ApplicationHelper;
 import de.jClipCorn.util.sqlwrapper.*;
+
+import java.awt.*;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.UUID;
 
 import static de.jClipCorn.database.driver.DatabaseStructure.*;
 import static de.jClipCorn.database.driver.Statements.*;
@@ -1312,23 +1308,36 @@ public class CCDatabase {
 		db.executeSQLThrow(sql);
 	}
 
-	public List<String[]> queryHistory(String idfilter) {
+	public List<String[]> queryHistory(CCDateTime start, String idfilter) {
 		try {
 			List<String[]> result = new ArrayList<>();
 
 			CCSQLResultSet rs;
 			if (idfilter != null) {
-				CCSQLStatement stmt = queryHistoryStatementFiltered;
-				stmt.clearParameters();
-				stmt.setStr(COL_HISTORY_ID, idfilter);
-				rs = stmt.executeQuery(this);
+				if (start != null) {
+					CCSQLStatement stmt = queryHistoryStatementFilteredLimited;
+					stmt.clearParameters();
+					stmt.setStr(COL_HISTORY_ID, idfilter);
+					stmt.setStr(COL_HISTORY_DATE, start.getSQLStringRepresentation());
+					rs = stmt.executeQuery(this);
+				} else {
+					CCSQLStatement stmt = queryHistoryStatementFiltered;
+					stmt.clearParameters();
+					stmt.setStr(COL_HISTORY_ID, idfilter);
+					rs = stmt.executeQuery(this);
+				}
 			} else {
-				CCSQLStatement stmt = queryHistoryStatement;
-				stmt.clearParameters();
-				rs = stmt.executeQuery(this);
+				if (start != null) {
+					CCSQLStatement stmt = queryHistoryStatementLimited;
+					stmt.clearParameters();
+					stmt.setStr(COL_HISTORY_DATE, start.getSQLStringRepresentation());
+					rs = stmt.executeQuery(this);
+				} else {
+					CCSQLStatement stmt = queryHistoryStatement;
+					stmt.clearParameters();
+					rs = stmt.executeQuery(this);
+				}
 			}
-
-
 
 			while (rs.next()) {
 				String[] arr = new String[7];

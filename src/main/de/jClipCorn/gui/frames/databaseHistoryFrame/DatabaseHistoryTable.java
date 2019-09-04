@@ -1,8 +1,5 @@
 package de.jClipCorn.gui.frames.databaseHistoryFrame;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import de.jClipCorn.database.databaseElement.*;
 import de.jClipCorn.database.history.CCCombinedHistoryEntry;
 import de.jClipCorn.database.history.CCHistorySingleChange;
@@ -13,6 +10,9 @@ import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleColumnPrototype;
 import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleTable;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.stream.CCStreams;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class DatabaseHistoryTable extends JCCSimpleTable<CCCombinedHistoryEntry> {
 	private static final long serialVersionUID = -7175124665697003916L;
@@ -44,7 +44,7 @@ public class DatabaseHistoryTable extends JCCSimpleTable<CCCombinedHistoryEntry>
 				"DatabaseHistoryFrame.Table.ColumnElement",
 				e -> format(e, e.getSourceElement()),
 				null,
-				null));
+				e -> e.ID));
 
 		r.add(new JCCSimpleColumnPrototype<>(
 				"DatabaseHistoryFrame.Table.ColumnTime",
@@ -56,7 +56,7 @@ public class DatabaseHistoryTable extends JCCSimpleTable<CCCombinedHistoryEntry>
 				"DatabaseHistoryFrame.Table.ColumnChangeCount",
 				e -> Integer.toString(e.Changes.size()),
 				null,
-				null));
+				e -> "Rows: " + e.HistoryRowCount));
 		
 		return r;
 	}
@@ -99,7 +99,7 @@ public class DatabaseHistoryTable extends JCCSimpleTable<CCCombinedHistoryEntry>
 
 	@Override
 	protected int getColumnAdjusterMaxWidth() {
-		return 800;
+		return 325;
 	}
 
 	@Override

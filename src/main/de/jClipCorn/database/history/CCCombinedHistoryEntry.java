@@ -1,14 +1,11 @@
 package de.jClipCorn.database.history;
 
-import de.jClipCorn.database.CCMovieList;
-import de.jClipCorn.database.databaseElement.CCDatabaseElement;
-import de.jClipCorn.database.databaseElement.CCEpisode;
-import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.database.databaseElement.ICCDatabaseStructureElement;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datetime.CCDateTime;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class CCCombinedHistoryEntry
@@ -22,6 +19,7 @@ public class CCCombinedHistoryEntry
 	public CCHistoryAction Action;
 
 	public List<CCHistorySingleChange> Changes = new ArrayList<>();
+	public int HistoryRowCount;
 
 	private ICCDatabaseStructureElement _sourceLink = null;
 
@@ -39,33 +37,6 @@ public class CCCombinedHistoryEntry
 		return _sourceLink;
 	}
 
-	private ICCDatabaseStructureElement findSourceElement() {
-		if (Table == CCHistoryTable.COVERS) return null;
-		if (Table == CCHistoryTable.INFO) return null;
-		if (Table == CCHistoryTable.GROUPS) return null;
-
-		int iid;
-		try	{
-			iid = Integer.parseInt(ID);
-		} catch (NumberFormatException e) {
-			return null;
-		}
-		CCDatabaseElement e1 = CCMovieList.getInstance().findDatabaseElement(iid);
-		if (e1 != null) return e1;
-
-		CCSeason e2 = CCMovieList.getInstance().iteratorSeasons().firstOrNull(p -> p.getLocalID() == iid);
-		if (e2 != null) return e2;
-
-		CCEpisode e3 = CCMovieList.getInstance().iteratorEpisodes().firstOrNull(p -> p.getLocalID() == iid);
-		if (e3 != null) return e3;
-
-		return null;
-	}
-
-	public void finishInit() {
-		_sourceLink = findSourceElement();
-	}
-
 	public boolean isTrivialViewedChangesOnly() {
 		if (Action != CCHistoryAction.UPDATE) return false;
 		if (Table != CCHistoryTable.ELEMENTS && Table != CCHistoryTable.EPISODES) return false;
@@ -75,5 +46,41 @@ public class CCCombinedHistoryEntry
 		}
 
 		return true;
+	}
+
+	public boolean isIDChangeOnly() {
+		if (Action != CCHistoryAction.UPDATE) return false;
+		if (Table != CCHistoryTable.INFO) return false;
+		if (Changes.size() != 1) return false;
+
+		if (Str.equals(ID, "LAST_ID")) return true; //$NON-NLS-1$
+		if (Str.equals(ID, "LAST_COVERID")) return true; //$NON-NLS-1$
+
+		return false;
+	}
+
+	public boolean isGroupOrderingChange() {
+		if (Action != CCHistoryAction.UPDATE) return false;
+		if (Table != CCHistoryTable.GROUPS) return false;
+		if (Changes.size() != 1) return false;
+
+		if (Str.equals(Changes.get(0).Field, "ORDERING")) return true; //$NON-NLS-1$
+
+		return false;
+	}
+
+	public void setSourceLink(HashMap<Integer, ICCDatabaseStructureElement> elements) {
+		if (Table == CCHistoryTable.COVERS) return;
+		if (Table == CCHistoryTable.INFO) return;
+		if (Table == CCHistoryTable.GROUPS) return;
+
+		int iid;
+		try	{
+			iid = Integer.parseInt(ID);
+		} catch (NumberFormatException e) {
+			_sourceLink = null;
+			return;
+		}
+		_sourceLink = elements.getOrDefault(iid, null);
 	}
 }

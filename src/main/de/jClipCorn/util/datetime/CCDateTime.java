@@ -1,13 +1,13 @@
 package de.jClipCorn.util.datetime;
 
-import java.util.*;
-import java.util.Map.Entry;
-
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.exceptions.CCFormatException;
 import de.jClipCorn.util.exceptions.DateTimeFormatException;
 import de.jClipCorn.util.parser.StringSpecParser;
 import de.jClipCorn.util.parser.StringSpecSupplier;
+
+import java.util.*;
+import java.util.Map.Entry;
 
 @SuppressWarnings("nls")
 public class CCDateTime implements Comparable<CCDateTime>, StringSpecSupplier {
@@ -82,6 +82,22 @@ public class CCDateTime implements Comparable<CCDateTime>, StringSpecSupplier {
 		int secs = a.time.getSecondDifferenceTo(b.time);
 
 		return days * 86400 + secs;
+	}
+
+	public static CCDateTime getTodayStart() {
+		return new CCDateTime(CCDate.getCurrentDate(), CCTime.getMidnight());
+	}
+
+	public static CCDateTime getWeekStart() {
+		return new CCDateTime(CCDate.getWeekStart(), CCTime.getMidnight());
+	}
+
+	public static CCDateTime getMonthStart() {
+		return new CCDateTime(CCDate.getMonthStart(), CCTime.getMidnight());
+	}
+
+	public static CCDateTime getYearStart() {
+		return new CCDateTime(CCDate.getYearStart(), CCTime.getMidnight());
 	}
 
 	// return seconds([other] - [this])

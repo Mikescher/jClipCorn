@@ -1,23 +1,9 @@
 package de.jClipCorn.gui.frames.previewMovieFrame;
 
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.TimeZone;
-import javax.swing.DefaultListModel;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JScrollPane;
-import javax.swing.ScrollPaneConstants;
-import javax.swing.SwingConstants;
-
+import com.jgoodies.forms.layout.ColumnSpec;
+import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.FormSpecs;
+import com.jgoodies.forms.layout.RowSpec;
 import de.jClipCorn.Main;
 import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGroup;
@@ -30,6 +16,7 @@ import de.jClipCorn.gui.frames.genericTextDialog.GenericTextDialog;
 import de.jClipCorn.gui.guiComponents.CoverLabel;
 import de.jClipCorn.gui.guiComponents.OnlineRefButton;
 import de.jClipCorn.gui.guiComponents.ReadableTextField;
+import de.jClipCorn.gui.guiComponents.TagDisplay;
 import de.jClipCorn.gui.guiComponents.language.LanguageDisplay;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
@@ -46,16 +33,19 @@ import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.listener.UpdateCallbackListener;
 import de.jClipCorn.util.mediaquery.MediaQueryRunner;
 import de.jClipCorn.util.stream.CCStreams;
-import javax.swing.JTabbedPane;
-import javax.swing.JPanel;
-import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.ColumnSpec;
-import com.jgoodies.forms.layout.RowSpec;
-import com.jgoodies.forms.layout.FormSpecs;
-import de.jClipCorn.gui.guiComponents.TagDisplay;
 import org.apache.commons.lang.exception.ExceptionUtils;
 
+import javax.swing.*;
 import javax.swing.border.TitledBorder;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.TimeZone;
 
 public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener {
 	private static final long serialVersionUID = 7483476533745432416L;
@@ -750,7 +740,7 @@ public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener 
 
 	private void queryHistory(ActionEvent evt) {
 		try {
-			List<CCCombinedHistoryEntry> data = movie.getMovieList().getHistory().query(false, Integer.toString(movie.getLocalID()));
+			List<CCCombinedHistoryEntry> data = movie.getMovieList().getHistory().query(false, false, false, null, null, Integer.toString(movie.getLocalID()));
 			tabHistoryEntries.setData(data);
 			tabHistoryChanges.clearData();
 			tabHistoryEntries.autoResize();

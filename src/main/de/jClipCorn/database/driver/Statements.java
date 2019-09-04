@@ -1,12 +1,11 @@
 package de.jClipCorn.database.driver;
 
+import de.jClipCorn.features.log.CCLog;
+import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.util.sqlwrapper.*;
+
 import java.sql.SQLException;
 import java.util.ArrayList;
-
-import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.features.log.CCLog;
-import de.jClipCorn.util.sqlwrapper.SQLOrder;
-import de.jClipCorn.util.sqlwrapper.*;
 
 import static de.jClipCorn.database.driver.DatabaseStructure.*;
 
@@ -60,6 +59,8 @@ public class Statements {
 	public static CCSQLStatement countHistory;
 	public static CCSQLStatement queryHistoryStatement;
 	public static CCSQLStatement queryHistoryStatementFiltered;
+	public static CCSQLStatement queryHistoryStatementLimited;
+	public static CCSQLStatement queryHistoryStatementFilteredLimited;
 
 	private static ArrayList<CCSQLStatement> statements = new ArrayList<>();
 
@@ -269,6 +270,30 @@ public class Statements {
 					.addSelectFields(COL_HISTORY_TABLE, COL_HISTORY_ID, COL_HISTORY_DATE, COL_HISTORY_ACTION, COL_HISTORY_FIELD, COL_HISTORY_OLD, COL_HISTORY_NEW)
 					.addPreparedWhereCondition(COL_HISTORY_ID)
 					.setOrder(COL_HISTORY_DATE, SQLOrder.ASC)
+					.build(d, statements);
+
+			queryHistoryStatementLimited = SQLBuilder.createCustom(TAB_HISTORY)
+					.setSQL("SELECT [TABLE], [ID], [DATE], [ACTION], [FIELD], [OLD], [NEW] FROM [HISTORY] WHERE [DATE] > ? ORDER BY [DATE] ASC")
+					.setCustomSelectField(1, COL_HISTORY_TABLE)
+					.setCustomSelectField(2, COL_HISTORY_ID)
+					.setCustomSelectField(3, COL_HISTORY_DATE)
+					.setCustomSelectField(4, COL_HISTORY_ACTION)
+					.setCustomSelectField(5, COL_HISTORY_FIELD)
+					.setCustomSelectField(6, COL_HISTORY_OLD)
+					.setCustomSelectField(7, COL_HISTORY_NEW)
+					.setCustomPrepared(1, COL_HISTORY_DATE)
+					.build(d, statements);
+			queryHistoryStatementFilteredLimited = SQLBuilder.createCustom(TAB_HISTORY)
+					.setSQL("SELECT [TABLE], [ID], [DATE], [ACTION], [FIELD], [OLD], [NEW] FROM [HISTORY] WHERE ([ID] = ?) AND ([DATE] > ?) ORDER BY [DATE] ASC")
+					.setCustomSelectField(1, COL_HISTORY_TABLE)
+					.setCustomSelectField(2, COL_HISTORY_ID)
+					.setCustomSelectField(3, COL_HISTORY_DATE)
+					.setCustomSelectField(4, COL_HISTORY_ACTION)
+					.setCustomSelectField(5, COL_HISTORY_FIELD)
+					.setCustomSelectField(6, COL_HISTORY_OLD)
+					.setCustomSelectField(7, COL_HISTORY_NEW)
+					.setCustomPrepared(1, COL_HISTORY_ID)
+					.setCustomPrepared(2, COL_HISTORY_DATE)
 					.build(d, statements);
 
 			if (!CCLog.isUnitTest()) CCLog.addDebug(String.format("%d SQL Statements prepared", statements.size())); //$NON-NLS-1$

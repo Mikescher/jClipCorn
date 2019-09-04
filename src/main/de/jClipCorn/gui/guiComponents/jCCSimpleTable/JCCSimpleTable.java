@@ -19,6 +19,7 @@ import de.jClipCorn.util.TableColumnAdjuster;
 import de.jClipCorn.util.lambda.Func1to1;
 import de.jClipCorn.util.stream.CCStreams;
 
+@SuppressWarnings("restriction")
 public abstract class JCCSimpleTable<TData> extends JScrollPane implements ListSelectionListener, MouseListener {
 	private static final long serialVersionUID = -87600498201225357L;
 	

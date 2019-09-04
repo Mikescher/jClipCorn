@@ -1,34 +1,34 @@
 package de.jClipCorn.gui.frames.databaseHistoryFrame;
 
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.sql.SQLException;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-
+import com.jgoodies.forms.layout.ColumnSpec;
+import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.FormSpecs;
+import com.jgoodies.forms.layout.RowSpec;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.history.CCCombinedHistoryEntry;
 import de.jClipCorn.database.history.CCDatabaseHistory;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.gui.frames.genericTextDialog.GenericTextDialog;
+import de.jClipCorn.gui.guiComponents.ReadableTextField;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
-import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.ColumnSpec;
-import com.jgoodies.forms.layout.RowSpec;
-import com.jgoodies.forms.layout.FormSpecs;
-import javax.swing.JLabel;
-import de.jClipCorn.gui.guiComponents.ReadableTextField;
+import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datatypes.RefParam;
+import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.exceptions.CCFormatException;
 import de.jClipCorn.util.helper.DialogHelper;
+import de.jClipCorn.util.listener.ProgressCallbackProgressBarHelper;
 import de.jClipCorn.util.stream.CCStreams;
+import org.gpl.JSplitButton.JSplitButton;
+import org.gpl.JSplitButton.action.SplitButtonActionListener;
 
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.lang.reflect.InvocationTargetException;
+import java.sql.SQLException;
 
 public class DatabaseHistoryFrame extends JFrame {
 	private static final long serialVersionUID = 2988337093531794844L;
@@ -42,15 +42,18 @@ public class DatabaseHistoryFrame extends JFrame {
 	private ReadableTextField edStatus;
 	private ReadableTextField edTrigger;
 	private ReadableTextField edTableSize;
-	private JButton btnGetHistory;
+	private JSplitButton btnGetHistory;
 	private DatabaseHistoryTable tableEntries;
 	private DatabaseHistoryChangesTable tableChanges;
 	private JButton btnEnableTrigger;
 	private JButton btnDisableTrigger;
 	private JButton btnTriggerMore;
 	private JCheckBox cbxIgnoreTrivial;
+	private JProgressBar progressBar;
+	private JCheckBox cbxIgnoreIDChanges;
 
 	private String _triggerError = Str.Empty;
+	private int _tcount;
 
 	public DatabaseHistoryFrame(Component owner, CCMovieList mlist) {
 		super();
@@ -68,7 +71,7 @@ public class DatabaseHistoryFrame extends JFrame {
 		setIconImage(Resources.IMG_FRAME_ICON.get());
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-		setMinimumSize(new Dimension(600, 415));
+		setMinimumSize(new Dimension(700, 415));
 		setBounds(100, 100, 769, 584);
 		
 		contentPane = new JPanel();
@@ -84,7 +87,9 @@ public class DatabaseHistoryFrame extends JFrame {
 				FormSpecs.RELATED_GAP_COLSPEC,
 				FormSpecs.DEFAULT_COLSPEC,
 				FormSpecs.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("default:grow"), //$NON-NLS-1$
+				ColumnSpec.decode("1dlu:grow"), //$NON-NLS-1$
+				FormSpecs.RELATED_GAP_COLSPEC,
+				ColumnSpec.decode("70dlu"), //$NON-NLS-1$
 				FormSpecs.RELATED_GAP_COLSPEC,},
 			new RowSpec[] {
 				FormSpecs.RELATED_GAP_ROWSPEC,
@@ -95,6 +100,10 @@ public class DatabaseHistoryFrame extends JFrame {
 				FormSpecs.DEFAULT_ROWSPEC,
 				FormSpecs.RELATED_GAP_ROWSPEC,
 				FormSpecs.DEFAULT_ROWSPEC,
+				FormSpecs.RELATED_GAP_ROWSPEC,
+				FormSpecs.DEFAULT_ROWSPEC,
+				FormSpecs.RELATED_GAP_ROWSPEC,
+				RowSpec.decode("15dlu"), //$NON-NLS-1$
 				FormSpecs.RELATED_GAP_ROWSPEC,
 				RowSpec.decode("1dlu:grow(2)"), //$NON-NLS-1$
 				FormSpecs.RELATED_GAP_ROWSPEC,
@@ -138,30 +147,87 @@ public class DatabaseHistoryFrame extends JFrame {
 		
 		cbxIgnoreTrivial = new JCheckBox(LocaleBundle.getString("DatabaseHistoryFrame.IgnoreTrivial")); //$NON-NLS-1$
 		cbxIgnoreTrivial.setSelected(true);
-		contentPane.add(cbxIgnoreTrivial, "4, 8, 3, 1"); //$NON-NLS-1$
+		contentPane.add(cbxIgnoreTrivial, "2, 8, 5, 1"); //$NON-NLS-1$
 		
-		btnGetHistory = new JButton(LocaleBundle.getString("DatabaseHistoryFrame.btnGetter")); //$NON-NLS-1$
-		btnGetHistory.addActionListener(this::queryHistory);
-		contentPane.add(btnGetHistory, "8, 6, 3, 3, right, fill"); //$NON-NLS-1$
+		btnGetHistory = new JSplitButton(LocaleBundle.getString("DatabaseHistoryFrame.btnGetter")); //$NON-NLS-1$
+		btnGetHistory.addSplitButtonActionListener(new SplitButtonActionListener() {
+			@Override public void splitButtonClicked(ActionEvent arg0) { /* */ }
+			@Override public void buttonClicked(ActionEvent evt) { queryHistory(null); }
+		});
+		btnGetHistory.setPopupMenu(getQueryPopupMenu());
+		contentPane.add(btnGetHistory, "12, 6, 1, 3, fill, fill"); //$NON-NLS-1$
+		
+		cbxIgnoreIDChanges = new JCheckBox(LocaleBundle.getString("DatabaseHistoryFrame.IgnoreTrivial2")); //$NON-NLS-1$
+		contentPane.add(cbxIgnoreIDChanges, "2, 10, 7, 1"); //$NON-NLS-1$
+		
+		progressBar = new JProgressBar();
+		contentPane.add(progressBar, "2, 12, 11, 1, fill, fill"); //$NON-NLS-1$
 		
 		tableEntries = new DatabaseHistoryTable(this);
-		contentPane.add(tableEntries, "2, 10, 10, 1, fill, fill"); //$NON-NLS-1$
+		contentPane.add(tableEntries, "2, 14, 12, 1, fill, fill"); //$NON-NLS-1$
 		tableEntries.autoResize();
 		
 		tableChanges = new DatabaseHistoryChangesTable();
-		contentPane.add(tableChanges, "2, 12, 9, 1, fill, fill"); //$NON-NLS-1$
+		contentPane.add(tableChanges, "2, 16, 11, 1, fill, fill"); //$NON-NLS-1$
 		tableChanges.autoResize();
 	}
 
-	private void queryHistory(ActionEvent evt) {
-		try {
-			tableEntries.setData(movielist.getHistory().query(cbxIgnoreTrivial.isSelected()));
-			tableEntries.autoResize();
-			updateUI();
-		} catch (CCFormatException e) {
-			CCLog.addError(e);
-			DialogHelper.showLocalError(this, "Dialogs.GenericError"); //$NON-NLS-1$
+	private JPopupMenu getQueryPopupMenu() {
+		JPopupMenu popupMenu = new JPopupMenu();
+		{
+			JMenuItem m1 = new JMenuItem(LocaleBundle.getString("DatabaseHistoryFrame.TimeToday")); //$NON-NLS-1$
+			m1.addActionListener(e -> queryHistory(CCDateTime.getTodayStart()));
+			popupMenu.add(m1);
+
+			JMenuItem m2 = new JMenuItem(LocaleBundle.getString("DatabaseHistoryFrame.TimeWeek")); //$NON-NLS-1$
+			m2.addActionListener(e -> queryHistory(CCDateTime.getWeekStart()));
+			popupMenu.add(m2);
+
+			JMenuItem m3 = new JMenuItem(LocaleBundle.getString("DatabaseHistoryFrame.TimeMonth")); //$NON-NLS-1$
+			m3.addActionListener(e -> queryHistory(CCDateTime.getMonthStart()));
+			popupMenu.add(m3);
+
+			JMenuItem m4 = new JMenuItem(LocaleBundle.getString("DatabaseHistoryFrame.TimeYear")); //$NON-NLS-1$
+			m4.addActionListener(e -> queryHistory(CCDateTime.getYearStart()));
+			popupMenu.add(m4);
 		}
+		return popupMenu;
+	}
+
+	private void queryHistory(CCDateTime dt) {
+
+		new Thread(() ->
+		{
+			try {
+				SwingUtilities.invokeAndWait(() -> 
+				{
+					setEnabled(false);
+					CCMovieList.getInstance().beginBlocking();
+					btnGetHistory.setEnabled(false);
+				});
+
+				tableEntries.setData(movielist.getHistory().query(
+						cbxIgnoreTrivial.isSelected(),
+						cbxIgnoreIDChanges.isSelected(),
+						cbxIgnoreTrivial.isSelected(),
+						dt,
+						new ProgressCallbackProgressBarHelper(progressBar, 100)));
+
+				SwingUtilities.invokeAndWait(() -> 
+				{
+					tableEntries.autoResize();
+					updateUI();
+					setEnabled(true);
+					CCMovieList.getInstance().endBlocking();
+					btnGetHistory.setEnabled(true);
+					edTableSize.setText(_tcount + " (" + tableEntries.getDataDirect().size()+")"); //$NON-NLS-1$ //$NON-NLS-2$
+				});
+			} catch (CCFormatException | InvocationTargetException | InterruptedException e) {
+				CCLog.addError(e);
+				DialogHelper.showLocalError(this, "Dialogs.GenericError"); //$NON-NLS-1$
+			}
+		}, "HISTORY_QUERY").start(); //$NON-NLS-1$
+		
 	}
 
 	private void enableTrigger(ActionEvent evt) {
@@ -185,7 +251,6 @@ public class DatabaseHistoryFrame extends JFrame {
 			DialogHelper.showLocalError(this, "Dialogs.GenericError"); //$NON-NLS-1$
 		}
 	}
-
 
 	private void updateUI() {
 		CCDatabaseHistory h = movielist.getHistory();
@@ -213,10 +278,10 @@ public class DatabaseHistoryFrame extends JFrame {
 			_triggerError = err.Value;
 		}
 
-		btnEnableTrigger.setEnabled(!active);
-		btnDisableTrigger.setEnabled(active);
+		btnEnableTrigger.setEnabled(!active && !CCProperties.getInstance().ARG_READONLY);
+		btnDisableTrigger.setEnabled(active && !CCProperties.getInstance().ARG_READONLY);
 
-		edTableSize.setText(Integer.toString(h.getCount()));
+		edTableSize.setText(Integer.toString(_tcount = h.getCount()));
 	}
 
 	public void showChanges(CCCombinedHistoryEntry elem) {

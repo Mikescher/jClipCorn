@@ -17,7 +17,7 @@ import javax.net.ssl.X509TrustManager;
  *
  * @author    Francis Labrie
  */
-@SuppressWarnings("deprecation")
+@SuppressWarnings({"deprecation", "restriction"})
 public final class SSLUtilities {
 
 	private static com.sun.net.ssl.HostnameVerifier __hostnameVerifier;

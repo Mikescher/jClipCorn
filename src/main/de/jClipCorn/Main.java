@@ -28,7 +28,7 @@ import javax.swing.*;
 
 public class Main {
 	public final static String TITLE     = "jClipCorn"; //$NON-NLS-1$
-	public final static String VERSION   = /*<gradle_version_marker>*/"1.10.6.19"/*</gradle_version_marker>*/; //$NON-NLS-1$
+	public final static String VERSION   = /*<gradle_version_marker>*/"1.10.6.20"/*</gradle_version_marker>*/; //$NON-NLS-1$
 	public final static String DBVERSION = "14";    //$NON-NLS-1$
 	public final static String JXMLVER   = "4";     //$NON-NLS-1$
 

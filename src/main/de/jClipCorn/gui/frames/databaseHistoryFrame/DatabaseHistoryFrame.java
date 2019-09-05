@@ -11,6 +11,7 @@ import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.gui.frames.genericTextDialog.GenericTextDialog;
 import de.jClipCorn.gui.guiComponents.ReadableTextField;
 import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.gui.mainFrame.MainFrame;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.Str;
@@ -202,7 +203,7 @@ public class DatabaseHistoryFrame extends JFrame {
 				SwingUtilities.invokeAndWait(() -> 
 				{
 					setEnabled(false);
-					CCMovieList.getInstance().beginBlocking();
+					MainFrame.getInstance().beginBlockingIntermediate();
 					btnGetHistory.setEnabled(false);
 				});
 
@@ -218,7 +219,7 @@ public class DatabaseHistoryFrame extends JFrame {
 					tableEntries.autoResize();
 					updateUI();
 					setEnabled(true);
-					CCMovieList.getInstance().endBlocking();
+					MainFrame.getInstance().endBlockingIntermediate();
 					btnGetHistory.setEnabled(true);
 					edTableSize.setText(_tcount + " (" + tableEntries.getDataDirect().size()+")"); //$NON-NLS-1$ //$NON-NLS-2$
 				});

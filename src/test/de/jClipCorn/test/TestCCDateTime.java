@@ -1,14 +1,11 @@
 package de.jClipCorn.test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
-import org.junit.Test;
-
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.exceptions.CCFormatException;
+import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 @SuppressWarnings("nls")
 public class TestCCDateTime extends ClipCornBaseTest {
@@ -71,7 +68,6 @@ public class TestCCDateTime extends ClipCornBaseTest {
 		assertEquals(+1, CCDateTime.create(30,8,2020, 7,50,35).compareTo(CCDateTime.createDateOnly(19,8,2020)));
 	}
 
-	
 	@Test
 	public void testUnspecified() {
 		assertEquals(+1, CCDateTime.create(19,8,2020, 7,50,35).compareTo(CCDateTime.getUnspecified()));
@@ -111,4 +107,135 @@ public class TestCCDateTime extends ClipCornBaseTest {
 		long x = CCDateTime.create(18, 8, 2018, 19, 49, 30).toFileTimestamp(GMT_2);
 		assertEquals(1534614570000L, x);
 	}
+
+	@Test
+	public void testAddSubTime() {
+		CCDateTime base = CCDateTime.create(3, 2, 2000, 13, 30, 15);
+
+		assertEquals(base.time, base.getAddHour(24).time);
+		assertEquals(base.time, base.getAddMinute(24*60).time);
+		assertEquals(base.time, base.getAddSecond(24*60*60).time);
+		assertNotEquals(base.date, base.getAddHour(24).date);
+		assertNotEquals(base.date, base.getAddMinute(24*60).date);
+		assertNotEquals(base.date, base.getAddSecond(24*60*60).date);
+
+		assertEquals(14, base.getAddHour(1).getHours());
+		assertEquals(30, base.getAddHour(1).getMinutes());
+		assertEquals(15, base.getAddHour(1).getSeconds());
+
+		assertEquals(12, base.getSubHour(1).getHours());
+		assertEquals(30, base.getSubHour(1).getMinutes());
+		assertEquals(15, base.getSubHour(1).getSeconds());
+
+		assertEquals(14, base.getAddMinute(40).getHours());
+		assertEquals(10, base.getAddMinute(40).getMinutes());
+		assertEquals(15, base.getAddMinute(40).getSeconds());
+
+		assertEquals(12, base.getSubMinute(40).getHours());
+		assertEquals(50, base.getSubMinute(40).getMinutes());
+		assertEquals(15, base.getSubMinute(40).getSeconds());
+
+		assertEquals(13, base.getAddSecond(55).getHours());
+		assertEquals(31, base.getAddSecond(55).getMinutes());
+		assertEquals(10, base.getAddSecond(55).getSeconds());
+
+		assertEquals(13, base.getSubSecond(55).getHours());
+		assertEquals(29, base.getSubSecond(55).getMinutes());
+		assertEquals(20, base.getSubSecond(55).getSeconds());
+
+		assertEquals(14, base.getAddSecond(60*60).getHours());
+		assertEquals(30, base.getAddSecond(60*60).getMinutes());
+		assertEquals(15, base.getAddSecond(60*60).getSeconds());
+
+		assertEquals(13,   base.getSubHour(24).getHours());
+		assertEquals(30,   base.getSubHour(24).getMinutes());
+		assertEquals(15,   base.getSubHour(24).getSeconds());
+		assertEquals(2,    base.getSubHour(24).getDay());
+		assertEquals(2,    base.getSubHour(24).getMonth());
+		assertEquals(2000, base.getSubHour(24).getYear());
+
+		assertEquals(13,   base.getAddHour(24).getHours());
+		assertEquals(30,   base.getAddHour(24).getMinutes());
+		assertEquals(15,   base.getAddHour(24).getSeconds());
+		assertEquals(4,    base.getAddHour(24).getDay());
+		assertEquals(2,    base.getAddHour(24).getMonth());
+		assertEquals(2000, base.getAddHour(24).getYear());
+	}
+
+	@Test
+	public void testAddCalcDate() {
+		CCDateTime tdate = CCDateTime.create(1, 1, 1900, 20, 15, 22);
+		assertTrue(tdate.getDay() == 1 && tdate.getMonth() == 1 && tdate.getYear() == 1900);
+
+		tdate = tdate.getAddDay(1);
+		assertTrue(tdate.getDay() == 2 && tdate.getMonth() == 1 && tdate.getYear() == 1900);
+
+		tdate = tdate.getSubDay(1);
+		assertTrue(tdate.getDay() == 1 && tdate.getMonth() == 1 && tdate.getYear() == 1900);
+
+		tdate = tdate.getAddMonth(1);
+		assertTrue(tdate.getDay() == 1 && tdate.getMonth() == 2 && tdate.getYear() == 1900);
+
+		tdate = tdate.getSubMonth(1);
+		assertTrue(tdate.getDay() == 1 && tdate.getMonth() == 1 && tdate.getYear() == 1900);
+
+		tdate = tdate.getAddYear(1);
+		assertTrue(tdate.getDay() == 1 && tdate.getMonth() == 1 && tdate.getYear() == 1901);
+
+		tdate = tdate.getSubYear(1);
+		assertTrue(tdate.getDay() == 1 && tdate.getMonth() == 1 && tdate.getYear() == 1900);
+
+		tdate = tdate.getAddDay(365);
+		assertTrue(tdate.getDay() == 1 && tdate.getMonth() == 1 && tdate.getYear() == 1901);
+
+		tdate = tdate.getAddDay(150);
+		assertTrue(tdate.getDay() == 31 && tdate.getMonth() == 5 && tdate.getYear() == 1901);
+		assertEquals(5, tdate.getWeekdayInt());
+
+		tdate = tdate.getAddDay(1096);
+		assertTrue(tdate.getDay() == 31 && tdate.getMonth() == 5 && tdate.getYear() == 1904);
+		assertTrue(tdate.isLeapYear());
+
+		tdate = tdate.getAdd(215, 12, 94, 0, 0, 0);
+		assertTrue(tdate.getDay() == 1 && tdate.getMonth() == 1 && tdate.getYear() == 2000);
+		tdate = tdate.getAdd(0, 0, 0, 1, 30, 0);
+		assertTrue(tdate.getDay() == 1 && tdate.getMonth() == 1 && tdate.getYear() == 2000);
+		assertTrue(tdate.getHours() == 21 && tdate.getMinutes() == 45 && tdate.getSeconds() == 22);
+
+		tdate = tdate.getSetDay(2);
+		assertTrue(tdate.getDay() == 2 && tdate.getMonth() == 1 && tdate.getYear() == 2000);
+		assertEquals(7, tdate.getWeekdayInt());
+
+		tdate = tdate.getAddDay(1);
+		assertTrue(tdate.getDay() == 3 && tdate.getMonth() == 1 && tdate.getYear() == 2000);
+		assertEquals(1, tdate.getWeekdayInt());
+		assertTrue(tdate.isLeapYear());
+
+		tdate = tdate.getAddMonth(12);
+		assertTrue(tdate.getDay() == 3 && tdate.getMonth() == 1 && tdate.getYear() == 2001);
+		assertFalse(tdate.isLeapYear());
+	}
+
+
+	@Test
+	public void testAddCalcDate2() {
+		CCDate tdate = CCDate.create(31, 12, 2018);
+		assertTrue(tdate.getDay() == 31 && tdate.getMonth() == 12 && tdate.getYear() == 2018);
+
+		tdate = tdate.getAddDay(1);
+		assertTrue(tdate.getDay() == 1 && tdate.getMonth() == 1 && tdate.getYear() == 2019);
+
+		tdate = tdate.getSubDay(1);
+		assertTrue(tdate.getDay() == 31 && tdate.getMonth() == 12 && tdate.getYear() == 2018);
+
+		tdate = tdate.getAddMonth(1);
+		assertTrue(tdate.getDay() == 31 && tdate.getMonth() == 1 && tdate.getYear() == 2019);
+
+		tdate = tdate.getAddDay(1);
+		assertTrue(tdate.getDay() == 1 && tdate.getMonth() == 2 && tdate.getYear() == 2019);
+
+		tdate = tdate.getSubMonth(2);
+		assertTrue(tdate.getDay() == 1 && tdate.getMonth() == 12 && tdate.getYear() == 2018);
+	}
+
 }

@@ -24,10 +24,8 @@ import de.jClipCorn.util.sqlwrapper.*;
 import java.awt.*;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
-import java.util.UUID;
 
 import static de.jClipCorn.database.driver.DatabaseStructure.*;
 import static de.jClipCorn.database.driver.Statements.*;
@@ -1318,7 +1316,7 @@ public class CCDatabase {
 					CCSQLStatement stmt = queryHistoryStatementFilteredLimited;
 					stmt.clearParameters();
 					stmt.setStr(COL_HISTORY_ID, idfilter);
-					stmt.setStr(COL_HISTORY_DATE, start.getSQLStringRepresentation());
+					stmt.setStr(COL_HISTORY_DATE, start.toUTC(TimeZone.getDefault()).getSQLStringRepresentation());
 					rs = stmt.executeQuery(this);
 				} else {
 					CCSQLStatement stmt = queryHistoryStatementFiltered;
@@ -1330,7 +1328,7 @@ public class CCDatabase {
 				if (start != null) {
 					CCSQLStatement stmt = queryHistoryStatementLimited;
 					stmt.clearParameters();
-					stmt.setStr(COL_HISTORY_DATE, start.getSQLStringRepresentation());
+					stmt.setStr(COL_HISTORY_DATE, start.toUTC(TimeZone.getDefault()).getSQLStringRepresentation());
 					rs = stmt.executeQuery(this);
 				} else {
 					CCSQLStatement stmt = queryHistoryStatement;

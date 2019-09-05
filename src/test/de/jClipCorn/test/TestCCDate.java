@@ -1,19 +1,16 @@
 package de.jClipCorn.test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
-import org.junit.Test;
-
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.exceptions.CCFormatException;
+import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 @SuppressWarnings("nls")
 public class TestCCDate extends ClipCornBaseTest {
 
 	@Test
-	public void testAddSubDate() {
+	public void testAddCalcDate() {
 		CCDate tdate = CCDate.getMinimumDate();
 		assertTrue(tdate.getDay() == 1 && tdate.getMonth() == 1 && tdate.getYear() == 1900);
 		
@@ -65,7 +62,7 @@ public class TestCCDate extends ClipCornBaseTest {
 
 
 	@Test
-	public void testAddSubDate2() {
+	public void testAddCalcDate2() {
 		CCDate tdate = CCDate.create(31, 12, 2018);
 		assertTrue(tdate.getDay() == 31 && tdate.getMonth() == 12 && tdate.getYear() == 2018);
 

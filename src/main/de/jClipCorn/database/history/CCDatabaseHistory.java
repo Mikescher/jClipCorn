@@ -234,7 +234,7 @@ public class CCDatabaseHistory {
 
 			CCHistoryTable  table     = CCHistoryTable.getWrapper().findByTextOrException(raw[0]);
 			String          id        = raw[1];
-			CCDateTime      timestamp = CCDateTime.createFromSQL(raw[2]);
+			CCDateTime      timestamp = CCDateTime.createFromUTCSQL(raw[2], TimeZone.getDefault());
 			CCHistoryAction action    = CCHistoryAction.getWrapper().findByTextOrException(raw[3]);
 			String          field     = raw[4];
 			String          oldvalue  = raw[5];

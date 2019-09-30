@@ -186,11 +186,6 @@ public class Main {
 // Move Series into separate table (???)
 // Option to mark season as extra (ordered last, special filename, not in carousal but on right side of it ...)
 
-// full database transaction log
-//   -> everytime we change a mov/ep/sea/ser we copy its old state with a timestamp to the log_table
-//   -> then in the ui we can restore old states and even view the database at a specific timestamp
-//   -> option to clean up state (only keep 1 per day for older than month && only keep one per week for older than year)
-
 // use omdb instead of direct imdb query
 
 // test stuff under linux:
@@ -214,10 +209,25 @@ public class Main {
 
 // Compare speed of stream vs ccstream (just out of interest)
 
-// update time-compare statistics with history data
-
 // button to show (and evtl update) infos from online-ref in editmovie/editseries Frame
 
-// add mp4box and ffmpeg aus minfo sources  -->  https://stackoverflow.com/a/28376817/1761622
+// ffmpeg framerate from avg_frame_rate(and more)
+
+// add mp4box and ffmpeg and ffprobe aus minfo sources  -->  https://stackoverflow.com/a/28376817/1761622
+//                                                           https://stackoverflow.com/a/56851594/1761622
+
+// add common interface and better ui for different minfo sources
+
+// add abort button to minfo-queries in minfo dialog (needed eg for ffmpeg)
 
 // put ffmpeg/ffprobe/mediainfo beside jcc jar and auto set path to self and use ccpathformatter on these paths
+
+// Auto check second checkbox in history frame
+
+// add history option to (not) do agressive merges (= option to do them but default-on)
+
+// statistics::mediainfo::framerate --> sort options
+
+//history: double click on cover to open viewer (if it still exists with same checksum)
+
+// episode quick add: trim title without question

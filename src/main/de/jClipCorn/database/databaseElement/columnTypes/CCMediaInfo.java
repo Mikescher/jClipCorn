@@ -3,7 +3,10 @@ package de.jClipCorn.database.databaseElement.columnTypes;
 import de.jClipCorn.database.util.CCQualityCategory;
 import de.jClipCorn.database.util.CCQualityCategoryType;
 import de.jClipCorn.database.util.CCQualityResolutionType;
+import de.jClipCorn.features.metadata.PartialMediaInfo;
 import de.jClipCorn.util.Str;
+import de.jClipCorn.util.datatypes.Opt;
+import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.formatter.TimeIntervallFormatter;
 
 import java.util.Objects;
@@ -16,8 +19,8 @@ public class CCMediaInfo {
 	private final long cdate;          // FileAttr
 	private final long mdate;          // FileAttr
 
-	private final long filesize;       // General -> FileSize
-	private final double duration;     // General -> Duration
+	private final long filesize;       // General -> FileSize             (bytes)
+	private final double duration;     // General -> Duration             (seconds)
 
 	private final int bitrate;         // (Video -> BitRate) + (Audio -> BitRate)
 
@@ -371,5 +374,28 @@ public class CCMediaInfo {
 		if (audiosamplerate <= 0) return "AudioSamplerate";
 
 		return null;
+	}
+
+	public PartialMediaInfo toPartial() {
+		PartialMediaInfo pmi = new PartialMediaInfo();
+		pmi.RawOutput = Opt.empty();
+
+		pmi.CreationDate     = (cdate <= 0) ? Opt.empty() : Opt.of(cdate);
+		pmi.ModificationDate = (mdate <= 0) ? Opt.empty() : Opt.of(mdate);
+		pmi.Filesize         = (filesize <= 0) ? Opt.empty() : Opt.of(new CCFileSize(filesize));
+		pmi.Duration         = (duration <= 0) ? Opt.empty() : Opt.of(duration);
+		pmi.Bitrate          = (bitrate <= 0) ? Opt.empty() : Opt.of(bitrate);
+		pmi.VideoFormat      = (Str.isNullOrWhitespace(videoformat)) ? Opt.empty() : Opt.of(videoformat);
+		pmi.PixelSize        = (width <= 0 || height <= 0) ? Opt.empty() : Opt.of(Tuple.Create(width, height));
+		pmi.Framerate        = (framerate <= 0) ? Opt.empty() : Opt.of(framerate);
+		pmi.Bitdepth         = (bitdepth <= 0) ? Opt.empty() : Opt.of(bitdepth);
+		pmi.FrameCount       = (framecount <= 0) ? Opt.empty() : Opt.of(framecount);
+		pmi.VideoCodec       = (Str.isNullOrWhitespace(videocodec)) ? Opt.empty() : Opt.of(videocodec);
+		pmi.AudioFormat      = (Str.isNullOrWhitespace(audioformat)) ? Opt.empty() : Opt.of(audioformat);
+		pmi.AudioChannels    = (audiochannels <= 0) ? Opt.empty() : Opt.of(audiochannels);
+		pmi.AudioCodec       = (Str.isNullOrWhitespace(audiocodec)) ? Opt.empty() : Opt.of(audiocodec);
+		pmi.AudioSamplerate  = (audiosamplerate <= 0) ? Opt.empty() : Opt.of(audiosamplerate);
+
+		return pmi;
 	}
 }

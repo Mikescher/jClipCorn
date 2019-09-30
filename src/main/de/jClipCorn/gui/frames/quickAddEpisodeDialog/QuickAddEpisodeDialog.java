@@ -21,14 +21,14 @@ import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datetime.CCDate;
-import de.jClipCorn.util.exceptions.MediaQueryException;
+import de.jClipCorn.features.metadata.exceptions.MediaQueryException;
 import de.jClipCorn.util.formatter.FileSizeFormatter;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.helper.SimpleFileUtils;
 import de.jClipCorn.util.listener.UpdateCallbackListener;
-import de.jClipCorn.util.mediaquery.MediaQueryResult;
-import de.jClipCorn.util.mediaquery.MediaQueryRunner;
+import de.jClipCorn.features.metadata.mediaquery.MediaQueryResult;
+import de.jClipCorn.features.metadata.mediaquery.MediaQueryRunner;
 import de.jClipCorn.util.parser.EpisodeFilenameParserResult;
 import de.jClipCorn.util.parser.FilenameParser;
 

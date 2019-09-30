@@ -25,13 +25,13 @@ import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.exceptions.CCFormatException;
-import de.jClipCorn.util.exceptions.MediaQueryException;
+import de.jClipCorn.features.metadata.exceptions.MediaQueryException;
 import de.jClipCorn.util.formatter.FileSizeFormatter;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.formatter.TimeIntervallFormatter;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.listener.UpdateCallbackListener;
-import de.jClipCorn.util.mediaquery.MediaQueryRunner;
+import de.jClipCorn.features.metadata.mediaquery.MediaQueryRunner;
 import de.jClipCorn.util.stream.CCStreams;
 import org.apache.commons.lang.exception.ExceptionUtils;
 

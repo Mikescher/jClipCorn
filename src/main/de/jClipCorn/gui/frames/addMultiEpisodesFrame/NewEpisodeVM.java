@@ -6,7 +6,7 @@ import de.jClipCorn.features.userdataProblem.UserDataProblem;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.formatter.PathFormatter;
-import de.jClipCorn.util.mediaquery.MediaQueryResult;
+import de.jClipCorn.features.metadata.mediaquery.MediaQueryResult;
 import de.jClipCorn.util.stream.CCStreams;
 
 import java.io.File;

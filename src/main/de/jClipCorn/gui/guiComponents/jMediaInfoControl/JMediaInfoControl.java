@@ -19,7 +19,7 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.lambda.Func0to1;
-import de.jClipCorn.util.mediaquery.MediaQueryResult;
+import de.jClipCorn.features.metadata.mediaquery.MediaQueryResult;
 
 public class JMediaInfoControl extends JPanel implements MediaInfoResultHandler {
 	private static final long serialVersionUID = 2696192041815168280L;

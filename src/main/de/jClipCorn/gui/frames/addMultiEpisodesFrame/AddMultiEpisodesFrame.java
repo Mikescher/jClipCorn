@@ -18,7 +18,7 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.Str;
-import de.jClipCorn.util.exceptions.MediaQueryException;
+import de.jClipCorn.features.metadata.exceptions.MediaQueryException;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.helper.FileChooserHelper;
@@ -29,7 +29,7 @@ import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.RowSpec;
 import com.jgoodies.forms.layout.FormSpecs;
-import de.jClipCorn.util.mediaquery.MediaQueryRunner;
+import de.jClipCorn.features.metadata.mediaquery.MediaQueryRunner;
 import de.jClipCorn.util.stream.CCStreams;
 import org.apache.commons.io.FileUtils;
 

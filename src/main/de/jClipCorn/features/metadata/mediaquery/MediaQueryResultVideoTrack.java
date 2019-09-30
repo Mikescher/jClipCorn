@@ -1,6 +1,6 @@
-package de.jClipCorn.util.mediaquery;
+package de.jClipCorn.features.metadata.mediaquery;
 
-import de.jClipCorn.util.exceptions.InnerMediaQueryException;
+import de.jClipCorn.features.metadata.exceptions.InnerMediaQueryException;
 import de.jClipCorn.util.xml.CCXMLElement;
 import de.jClipCorn.util.xml.CCXMLException;
 

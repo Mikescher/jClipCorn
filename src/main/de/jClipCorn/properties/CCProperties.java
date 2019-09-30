@@ -1,16 +1,11 @@
 package de.jClipCorn.properties;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.*;
-
 import de.jClipCorn.Main;
 import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguage;
-import de.jClipCorn.features.serialization.ExportHelper;
-import de.jClipCorn.gui.mainFrame.clipToolbar.ClipToolbar;
-import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.features.log.CCLog;
+import de.jClipCorn.features.serialization.ExportHelper;
+import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.gui.mainFrame.clipToolbar.ClipToolbar;
 import de.jClipCorn.properties.enumerations.*;
 import de.jClipCorn.properties.property.*;
 import de.jClipCorn.properties.property.CCEnumSetProperty.EnumSetValue;
@@ -22,6 +17,11 @@ import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.datetime.CCDateTimeFormat;
 import de.jClipCorn.util.helper.ApplicationHelper;
 import de.jClipCorn.util.helper.LookAndFeelManager;
+
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.*;
 
 public class CCProperties {
 	private final static String HEADER = "jClipCorn Configuration File"; //$NON-NLS-1$
@@ -179,6 +179,7 @@ public class CCProperties {
 	public CCStringProperty                                 PROP_PLAY_MEDIAINFO_PATH;
 	public CCStringProperty                                 PROP_PLAY_FFMPEG_PATH;
 	public CCStringProperty                                 PROP_PLAY_FFPROBE_PATH;
+	public CCStringProperty                                 PROP_PLAY_MP4BOX_PATH;
 	public CCBoolProperty                                   PROP_PREVIEWSERIES_SINGLETON;
 	public CCBoolProperty                                   PROP_PREVIEWMOVIE_SINGLETON;
 	public CCBoolProperty                                   PROP_DATABASE_LOAD_ALL_COVERDATA;
@@ -304,6 +305,7 @@ public class CCProperties {
 		PROP_PLAY_MEDIAINFO_PATH                = new CCPathProperty(CAT_PLAY,              this,   "PROP_PLAY_MEDIAINFO_PATH",                 "",                                 "mediainfo.exe", CCPathPropertyMode.FILES);
 		PROP_PLAY_FFMPEG_PATH                   = new CCPathProperty(CAT_PLAY,              this,   "PROP_PLAY_FFMPEG_PATH",                    "",                                 "ffmpeg.exe",    CCPathPropertyMode.FILES);
 		PROP_PLAY_FFPROBE_PATH                  = new CCPathProperty(CAT_PLAY,              this,   "PROP_PLAY_FFPROBE_PATH",                   "",                                 "ffprobe.exe",   CCPathPropertyMode.FILES);
+		PROP_PLAY_MP4BOX_PATH                   = new CCPathProperty(CAT_PLAY,              this,   "PROP_PLAY_MP4BOX_PATH",                    "",                                 "mp4box.exe",    CCPathPropertyMode.FILES);
 		PROP_PLAY_VLC_FULLSCREEN                = new CCBoolProperty(CAT_PLAY,              this,   "PROP_PLAY_VLC_FULLSCREEN",                 false);
 		PROP_PLAY_VLC_AUTOPLAY                  = new CCBoolProperty(CAT_PLAY,              this,   "PROP_PLAY_VLC_AUTOPLAY",                   true);
 		PROP_PLAY_USESTANDARDONMISSINGVLC       = new CCBoolProperty(CAT_PLAY,              this,   "PROP_PLAY_USESTANDARDONMISSINGVLC",        true);

@@ -1,20 +1,25 @@
-package de.jClipCorn.util.mediaquery;
+package de.jClipCorn.features.metadata.mediaquery;
 
+import de.jClipCorn.features.metadata.MetadataSource;
+import de.jClipCorn.features.metadata.PartialMediaInfo;
+import de.jClipCorn.features.metadata.exceptions.InnerMediaQueryException;
+import de.jClipCorn.features.metadata.exceptions.MediaQueryException;
+import de.jClipCorn.features.metadata.exceptions.MetadataQueryException;
 import de.jClipCorn.properties.CCProperties;
+import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datatypes.Tuple3;
-import de.jClipCorn.util.exceptions.InnerMediaQueryException;
-import de.jClipCorn.util.exceptions.MediaQueryException;
 import de.jClipCorn.util.helper.ProcessHelper;
 import de.jClipCorn.util.xml.CCXMLElement;
 import de.jClipCorn.util.xml.CCXMLException;
 import de.jClipCorn.util.xml.CCXMLParser;
 import org.apache.commons.lang3.exception.ExceptionUtils;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.attribute.BasicFileAttributes;
 
-public class MediaQueryRunner {
+public class MediaQueryRunner implements MetadataSource {
 
 	// https://mediaarea.net/mediainfo
 
@@ -67,5 +72,29 @@ public class MediaQueryRunner {
 		if (proc.Item1 != 0) throw new MediaQueryException("MediaQuery returned " + proc.Item1, proc.Item2 + "\n\n\n\n" + proc.Item3);
 
 		return proc.Item2;
+	}
+
+	@Override
+	public PartialMediaInfo run(String filename) throws IOException, MetadataQueryException {
+		return query(filename, true).toPartial();
+	}
+
+	@Override
+	public String getFullOutput(String filename, PartialMediaInfo result) throws IOException, MetadataQueryException {
+		return queryRaw(filename);
+	}
+
+	@Override
+	public boolean isConfiguredAndRunnable() {
+		String mqpath = CCProperties.getInstance().PROP_PLAY_MEDIAINFO_PATH.getValue();
+		if (Str.isNullOrWhitespace(mqpath)) return false;
+
+		File f = new File(mqpath);
+
+		if (!f.exists()) return false;
+		if (!f.isFile()) return false;
+		if (!f.canExecute()) return false;
+
+		return true;
 	}
 }

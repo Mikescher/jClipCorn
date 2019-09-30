@@ -1,12 +1,11 @@
 package de.jClipCorn.util.stream;
 
-import java.util.*;
-import java.util.Map.Entry;
-
-import org.apache.commons.lang3.ObjectUtils;
-
 import de.jClipCorn.util.lambda.Func1to1;
 import de.jClipCorn.util.lambda.Func2to1;
+import org.apache.commons.lang3.ObjectUtils;
+
+import java.util.*;
+import java.util.Map.Entry;
 
 /**
  * 
@@ -38,7 +37,11 @@ public abstract class CCStream<TType> implements Iterator<TType>, Iterable<TType
 	public <TAttrType> CCStream<TType> sortByProperty(Func1to1<TType, TAttrType> _selector, Comparator<TAttrType> _comparator) {
 		return new SortedStream<>(this, (o1, o2) -> autoCompare(_selector.invoke(o1), _selector.invoke(o2)));
 	}
-	
+
+	public <TCastType> CCStream<TCastType> ofType(Class<TCastType> type) {
+		return this.filter(p -> p == null || p.getClass().isAssignableFrom(type)).cast();
+	}
+
 	public <TCastType> CCStream<TCastType> cast() {
 		return new CastStream<>(this);
 	}

@@ -13,9 +13,9 @@ import de.jClipCorn.gui.frames.previewMovieFrame.PreviewMovieFrame;
 import de.jClipCorn.gui.frames.previewSeriesFrame.PreviewSeriesFrame;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.Str;
-import de.jClipCorn.util.exceptions.MediaQueryException;
+import de.jClipCorn.features.metadata.exceptions.MediaQueryException;
 import de.jClipCorn.util.formatter.TimeIntervallFormatter;
-import de.jClipCorn.util.mediaquery.MediaQueryResult;
+import de.jClipCorn.features.metadata.mediaquery.MediaQueryResult;
 import de.jClipCorn.util.stream.CCStreams;
 
 import java.util.List;

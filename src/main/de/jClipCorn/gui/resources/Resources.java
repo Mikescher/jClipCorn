@@ -1,8 +1,5 @@
 package de.jClipCorn.gui.resources;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
-
 import de.jClipCorn.Globals;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.gui.resources.reftypes.*;
@@ -13,6 +10,8 @@ import de.jClipCorn.util.helper.ThreadUtils;
 import de.jClipCorn.util.stream.CCStreams;
 
 import javax.swing.*;
+import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
 
 @SuppressWarnings("nls")
 public class Resources {
@@ -90,7 +89,9 @@ public class Resources {
 	public final static MultiSizeIconRef ICN_MENUBAR_FINDINCOMPLETEZYKLUS	= registerMultisizeIcon("/icons/toolbar/blackboard_steps.png");
 	public final static MultiSizeIconRef ICN_MENUBAR_UPDATEMETADATA			= registerMultisizeIcon("/icons/toolbar/update_contact_info.png");
 	public final static MultiSizeIconRef ICN_MENUBAR_MEDIAINFO              = registerMultisizeIcon("/icons/toolbar/video_mode.png");
-	public final static MultiSizeIconRef ICN_MENUBAR_FFMPEG                 = registerMultisizeIcon("/icons/toolbar/ffmpeg.png");
+	public final static MultiSizeIconRef ICN_MENUBAR_FFPROBE_FULL           = registerMultisizeIcon("/icons/toolbar/ffprobe.png");
+	public final static MultiSizeIconRef ICN_MENUBAR_FFPROBE_FAST           = registerMultisizeIcon("/icons/toolbar/ffprobe2.png");
+	public final static MultiSizeIconRef ICN_MENUBAR_MP4BOX                 = registerMultisizeIcon("/icons/toolbar/mp4box.png");
 	public final static MultiSizeIconRef ICN_MENUBAR_FILENAMERULES			= registerMultisizeIcon("/icons/toolbar/books.png");
 	public final static MultiSizeIconRef ICN_MENUBAR_CREATE_JXMLBKP			= registerMultisizeIcon("/icons/toolbar/source_code.png");
 	public final static MultiSizeIconRef ICN_MENUBAR_COMPARE				= registerMultisizeIcon("/icons/toolbar/balance_unbalance.png");

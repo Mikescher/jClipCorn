@@ -38,12 +38,12 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.Str;
-import de.jClipCorn.util.exceptions.MediaQueryException;
+import de.jClipCorn.features.metadata.exceptions.MediaQueryException;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.helper.ThreadUtils;
-import de.jClipCorn.util.mediaquery.MediaQueryResult;
-import de.jClipCorn.util.mediaquery.MediaQueryRunner;
+import de.jClipCorn.features.metadata.mediaquery.MediaQueryResult;
+import de.jClipCorn.features.metadata.mediaquery.MediaQueryRunner;
 
 public class UpdateCodecFrame extends JFrame {
 	private static final long serialVersionUID = -2163175118745491143L;

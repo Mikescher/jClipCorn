@@ -1,51 +1,25 @@
 package de.jClipCorn.gui.frames.editSeriesFrame;
 
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.event.*;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.DefaultListModel;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JSpinner;
-import javax.swing.JTextField;
-import javax.swing.SpinnerNumberModel;
-import javax.swing.UIManager;
-import javax.swing.border.LineBorder;
-
-import de.jClipCorn.util.adapter.*;
-import org.apache.commons.lang3.exception.ExceptionUtils;
-
+import com.jgoodies.forms.layout.ColumnSpec;
+import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.FormSpecs;
+import com.jgoodies.forms.layout.RowSpec;
 import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.database.databaseElement.CCSeries;
-import de.jClipCorn.database.databaseElement.columnTypes.CCDateTimeList;
-import de.jClipCorn.database.databaseElement.columnTypes.CCFSK;
-import de.jClipCorn.database.databaseElement.columnTypes.CCFileFormat;
-import de.jClipCorn.database.databaseElement.columnTypes.CCGenre;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMediaInfo;
-import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguageList;
-import de.jClipCorn.database.databaseElement.columnTypes.CCUserScore;
-import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReferenceList;
-import de.jClipCorn.gui.frames.batchEditFrame.BatchEditFrame;
+import de.jClipCorn.database.databaseElement.columnTypes.*;
+import de.jClipCorn.features.log.CCLog;
+import de.jClipCorn.features.metadata.exceptions.MediaQueryException;
+import de.jClipCorn.features.metadata.mediaquery.MediaQueryResult;
+import de.jClipCorn.features.metadata.mediaquery.MediaQueryRunner;
+import de.jClipCorn.features.online.metadata.ParseResultHandler;
+import de.jClipCorn.features.userdataProblem.UserDataProblem;
 import de.jClipCorn.gui.frames.addMultiEpisodesFrame.AddMultiEpisodesFrame;
 import de.jClipCorn.gui.frames.addSeasonFrame.AddSeasonFrame;
+import de.jClipCorn.gui.frames.batchEditFrame.BatchEditFrame;
 import de.jClipCorn.gui.frames.genericTextDialog.GenericTextDialog;
 import de.jClipCorn.gui.frames.inputErrorFrame.InputErrorDialog;
+import de.jClipCorn.gui.frames.parseOnlineFrame.ParseOnlineDialog;
 import de.jClipCorn.gui.guiComponents.HFixListCellRenderer;
 import de.jClipCorn.gui.guiComponents.ReadableTextField;
 import de.jClipCorn.gui.guiComponents.TagPanel;
@@ -53,36 +27,37 @@ import de.jClipCorn.gui.guiComponents.dateTimeListEditor.DateTimeListEditor;
 import de.jClipCorn.gui.guiComponents.editCoverControl.EditCoverControl;
 import de.jClipCorn.gui.guiComponents.groupListEditor.GroupListEditor;
 import de.jClipCorn.gui.guiComponents.jCCDateSpinner.JCCDateSpinner;
+import de.jClipCorn.gui.guiComponents.jMediaInfoControl.JMediaInfoControl;
 import de.jClipCorn.gui.guiComponents.language.LanguageChooser;
 import de.jClipCorn.gui.guiComponents.referenceChooser.JReferenceChooser;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
-import de.jClipCorn.features.log.CCLog;
-import de.jClipCorn.features.online.metadata.ParseResultHandler;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.Validator;
+import de.jClipCorn.util.adapter.*;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.exceptions.CCFormatException;
 import de.jClipCorn.util.exceptions.EnumFormatException;
-import de.jClipCorn.features.metadata.exceptions.MediaQueryException;
 import de.jClipCorn.util.formatter.FileSizeFormatter;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.helper.FileChooserHelper;
 import de.jClipCorn.util.listener.UpdateCallbackListener;
-import de.jClipCorn.features.metadata.mediaquery.MediaQueryResult;
-import de.jClipCorn.features.metadata.mediaquery.MediaQueryRunner;
-import de.jClipCorn.features.userdataProblem.UserDataProblem;
-import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.ColumnSpec;
-import com.jgoodies.forms.layout.RowSpec;
-import com.jgoodies.forms.layout.FormSpecs;
-import javax.swing.border.EmptyBorder;
-import java.awt.BorderLayout;
-import de.jClipCorn.gui.guiComponents.jMediaInfoControl.JMediaInfoControl;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 
-public class EditSeriesFrame extends JFrame implements ParseResultHandler, WindowListener {
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
+import java.awt.*;
+import java.awt.event.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+public class EditSeriesFrame extends JFrame implements WindowListener {
 	private static final long serialVersionUID = -3694533463871522503L;
 	
 	private static CCDate MIN_DATE = CCDate.getMinimumDate();
@@ -207,6 +182,8 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 	private JLabel lblMediainfo;
 	private JButton btnMediaInfo3;
 	private JMediaInfoControl mediaInfoControl;
+	private JPanel panel_5;
+	private JButton btnParseOnline;
 
 
 	/**
@@ -345,15 +322,15 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		pnlEditSeriesInner.setLayout(new FormLayout(new ColumnSpec[] {
 				FormSpecs.PREF_COLSPEC,
 				FormSpecs.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("120px"), //$NON-NLS-1$
+				ColumnSpec.decode("120px"),
 				FormSpecs.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("0dlu:grow"), //$NON-NLS-1$
+				ColumnSpec.decode("0dlu:grow"),
 				FormSpecs.RELATED_GAP_COLSPEC,
 				FormSpecs.DEFAULT_COLSPEC,},
 			new RowSpec[] {
 				FormSpecs.PREF_ROWSPEC,
 				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.PREF_ROWSPEC,
+				RowSpec.decode("14dlu"),
 				FormSpecs.RELATED_GAP_ROWSPEC,
 				FormSpecs.DEFAULT_ROWSPEC,
 				FormSpecs.RELATED_GAP_ROWSPEC,
@@ -367,11 +344,11 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 				FormSpecs.RELATED_GAP_ROWSPEC,
 				FormSpecs.DEFAULT_ROWSPEC,
 				FormSpecs.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("default:grow"), //$NON-NLS-1$
+				RowSpec.decode("default:grow"),
 				FormSpecs.RELATED_GAP_ROWSPEC,
 				FormSpecs.DEFAULT_ROWSPEC,}));
 		
-		edSeriesCvrControl = new EditCoverControl(this, this);
+		edSeriesCvrControl = new EditCoverControl(this, getSeriesCoverControlHandler());
 		edSeriesCvrControl.addChangeListener(new ActionLambdaAdapter(this::setDirtySeries));
 		pnlEditSeriesInner.add(edSeriesCvrControl, "1, 1, 3, 1, left, default"); //$NON-NLS-1$
 				
@@ -456,11 +433,24 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 
 		label_1 = new JLabel(LocaleBundle.getString("AddMovieFrame.label_1.text")); //$NON-NLS-1$
 		pnlEditSeriesInner.add(label_1, "1, 3"); //$NON-NLS-1$
-
-		edSeriesTitle = new JTextField();
-		edSeriesTitle.getDocument().addDocumentListener(new DocumentLambdaAdapter(this::setDirtySeries));
-		pnlEditSeriesInner.add(edSeriesTitle, "3, 3, 5, 1"); //$NON-NLS-1$
+		
+		panel_5 = new JPanel();
+		pnlEditSeriesInner.add(panel_5, "3, 3, 5, 1, fill, fill");
+		panel_5.setLayout(new FormLayout(new ColumnSpec[] {
+				ColumnSpec.decode("default:grow"),
+				FormSpecs.RELATED_GAP_COLSPEC,
+				FormSpecs.DEFAULT_COLSPEC,},
+			new RowSpec[] {
+				RowSpec.decode("14dlu"),}));
+		
+				edSeriesTitle = new JTextField();
+				panel_5.add(edSeriesTitle, "1, 1, fill, fill");
+				edSeriesTitle.getDocument().addDocumentListener(new DocumentLambdaAdapter(this::setDirtySeries));
 		edSeriesTitle.setColumns(10);
+		
+		btnParseOnline = new JButton(LocaleBundle.getString("EditSeriesFrame.btnOnline")); //$NON-NLS-1$
+		btnParseOnline.addActionListener(this::QueryFromOnline);
+		panel_5.add(btnParseOnline, "3, 1, fill, fill");
 				
 		label_11 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblOnlinescore.text")); //$NON-NLS-1$
 		pnlEditSeriesInner.add(label_11, "1, 5"); //$NON-NLS-1$
@@ -587,9 +577,9 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		pnlEditSeasonOuter.add(pnlEditSeasonInner);
 		pnlEditSeasonInner.setBorder(new EmptyBorder(4, 4, 4, 4));
 		pnlEditSeasonInner.setLayout(new FormLayout(new ColumnSpec[] {
-				ColumnSpec.decode("max(30dlu;default)"), //$NON-NLS-1$
+				ColumnSpec.decode("max(30dlu;default)"),
 				FormSpecs.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("100px:grow"), //$NON-NLS-1$
+				ColumnSpec.decode("100px:grow"),
 				FormSpecs.RELATED_GAP_COLSPEC,
 				FormSpecs.PREF_COLSPEC,},
 			new RowSpec[] {
@@ -611,11 +601,11 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 				FormSpecs.RELATED_GAP_ROWSPEC,
 				FormSpecs.DEFAULT_ROWSPEC,
 				FormSpecs.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("default:grow"), //$NON-NLS-1$
+				RowSpec.decode("default:grow"),
 				FormSpecs.RELATED_GAP_ROWSPEC,
 				FormSpecs.DEFAULT_ROWSPEC,}));
 
-		edSeasonCvrControl = new EditCoverControl(this, this);
+		edSeasonCvrControl = new EditCoverControl(this, getSeasonCoverControlHandler());
 		edSeasonCvrControl.addChangeListener(new ActionLambdaAdapter(this::setDirtySeason));
 		pnlEditSeasonInner.add(edSeasonCvrControl, "1, 1, 3, 1, left, default"); //$NON-NLS-1$
 
@@ -872,6 +862,286 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		button_2.addActionListener(e -> recalcEpisodeFilesize());
 	}
 
+	private ParseResultHandler getSeriesCoverControlHandler() {
+		return new ParseResultHandler() {
+
+			@Override
+			public String getFullTitle() {
+				return edSeriesTitle.getText();
+			}
+
+			@Override
+			public String getTitleForParser() {
+				return edSeriesTitle.getText();
+			}
+
+			@Override
+			public CCOnlineReferenceList getSearchReference() {
+				return edSeriesReference.getValue();
+			}
+
+			@Override
+			public void setMovieFormat(CCFileFormat cmf) {
+				// NOP
+			}
+
+			@Override
+			public void setFilepath(int p, String t) {
+				// NOP
+			}
+
+			@Override
+			public void setMovieName(String name) {
+				// NOP
+			}
+
+			@Override
+			public void setZyklus(String mZyklusTitle) {
+				// NOP
+			}
+
+			@Override
+			public void setZyklusNumber(int iRoman) {
+				// NOP
+			}
+
+			@Override
+			public void setFilesize(long size) {
+				// NOP
+			}
+
+			@Override
+			public void setYear(int y) {
+				// NOP
+			}
+
+			@Override
+			public void setGenre(int gid, int movGenre) {
+				// NOP
+			}
+
+			@Override
+			public void setFSK(int fsk) {
+				// NOP
+			}
+
+			@Override
+			public void setLength(int l) {
+				// NOP
+			}
+
+			@Override
+			public void setScore(int s) {
+				// NOP
+			}
+
+			@Override
+			public void setCover(BufferedImage nci) {
+				setSeriesCover(nci);
+			}
+
+			@Override
+			public void setOnlineReference(CCOnlineReferenceList ref) {
+				edSeriesReference.setValue(ref);
+			}
+
+			@Override
+			public void onFinishInserting() {
+				// nothing
+			}
+		};
+	}
+
+	private ParseResultHandler getSeasonCoverControlHandler() {
+		return new ParseResultHandler() {
+
+			@Override
+			public String getFullTitle() {
+				return edSeriesTitle.getText() + " - " + edSeasonTitle.getText();
+			}
+
+			@Override
+			public String getTitleForParser() {
+				return edSeriesTitle.getText() + " - " + edSeasonTitle.getText();
+			}
+
+			@Override
+			public CCOnlineReferenceList getSearchReference() {
+				return CCOnlineReferenceList.EMPTY;
+			}
+
+			@Override
+			public void setMovieFormat(CCFileFormat cmf) {
+				// NOP
+			}
+
+			@Override
+			public void setFilepath(int p, String t) {
+				// NOP
+			}
+
+			@Override
+			public void setMovieName(String name) {
+				// NOP
+			}
+
+			@Override
+			public void setZyklus(String mZyklusTitle) {
+				// NOP
+			}
+
+			@Override
+			public void setZyklusNumber(int iRoman) {
+				// NOP
+			}
+
+			@Override
+			public void setFilesize(long size) {
+				// NOP
+			}
+
+			@Override
+			public void setYear(int y) {
+				// NOP
+			}
+
+			@Override
+			public void setGenre(int gid, int movGenre) {
+				// NOP
+			}
+
+			@Override
+			public void setFSK(int fsk) {
+				// NOP
+			}
+
+			@Override
+			public void setLength(int l) {
+				// NOP
+			}
+
+			@Override
+			public void setScore(int s) {
+				// NOP
+			}
+
+			@Override
+			public void setCover(BufferedImage nci) {
+				edSeasonCvrControl.setCover(nci);
+			}
+
+			@Override
+			public void setOnlineReference(CCOnlineReferenceList ref) {
+				// nothing
+			}
+
+			@Override
+			public void onFinishInserting() {
+				// nothing
+			}
+		};
+	}
+
+	private void QueryFromOnline(ActionEvent evt) {
+		(new ParseOnlineDialog(this, new ParseResultHandler()
+		{
+			@Override
+			public String getFullTitle() {
+				return edSeriesTitle.getText();
+			}
+
+			@Override
+			public String getTitleForParser() {
+				return edSeriesTitle.getText();
+			}
+
+			@Override
+			public CCOnlineReferenceList getSearchReference() {
+				return edSeriesReference.getValue();
+			}
+
+			@Override
+			public void setMovieFormat(CCFileFormat cmf) {
+				// NOP
+			}
+
+			@Override
+			public void setFilepath(int p, String t) {
+				// NOP
+			}
+
+			@Override
+			public void setMovieName(String name) {
+				edSeriesTitle.setText(name);
+			}
+
+			@Override
+			public void setZyklus(String mZyklusTitle) {
+				// NOP
+			}
+
+			@Override
+			public void setZyklusNumber(int iRoman) {
+				// NOP
+			}
+
+			@Override
+			public void setFilesize(long size) {
+				// NOP
+			}
+
+			@Override
+			public void setYear(int y) {
+				// NOP
+			}
+
+			@Override
+			public void setGenre(int gid, int serGenre) {
+				switch (gid)
+				{
+					case 0: cbxSeriesGenre_0.setSelectedIndex(serGenre); break;
+					case 1: cbxSeriesGenre_1.setSelectedIndex(serGenre); break;
+					case 2: cbxSeriesGenre_2.setSelectedIndex(serGenre); break;
+					case 3: cbxSeriesGenre_3.setSelectedIndex(serGenre); break;
+					case 4: cbxSeriesGenre_4.setSelectedIndex(serGenre); break;
+					case 5: cbxSeriesGenre_5.setSelectedIndex(serGenre); break;
+					case 6: cbxSeriesGenre_6.setSelectedIndex(serGenre); break;
+					case 7: cbxSeriesGenre_7.setSelectedIndex(serGenre); break;
+				}
+			}
+
+			@Override
+			public void setFSK(int fsk) {
+				cbxSeriesFSK.setSelectedIndex(fsk);
+			}
+
+			@Override
+			public void setLength(int l) {
+				// NOP
+			}
+
+			@Override
+			public void setScore(int s) {
+				spnSeriesOnlineScore.setValue(s);
+			}
+
+			@Override
+			public void setCover(BufferedImage nci) {
+				setSeriesCover(nci);
+			}
+
+			@Override
+			public void setOnlineReference(CCOnlineReferenceList ref) {
+				edSeriesReference.setValue(ref);
+			}
+
+			@Override
+			public void onFinishInserting() {
+				// nothing
+			}
+		}, CCDBElementTyp.SERIES)).setVisible(true);
+	}
+
 	private void setDefaultValues() {
 		//#########################   SERIES   ###########################################################
 		
@@ -1117,91 +1387,6 @@ public class EditSeriesFrame extends JFrame implements ParseResultHandler, Windo
 		edSeriesCvrControl.setCover(nci);
 	}
 
-	@Override
-	public String getFullTitle() {
-		return edSeriesTitle.getText();
-	}
-
-	@Override
-	public String getTitleForParser() {
-		return edSeriesTitle.getText();
-	}
-
-	@Override
-	public CCOnlineReferenceList getSearchReference() {
-		return edSeriesReference.getValue();
-	}
-
-	@Override
-	public void setMovieFormat(CCFileFormat cmf) {
-		// NOP
-	}
-
-	@Override
-	public void setFilepath(int p, String t) {
-		// NOP
-	}
-
-	@Override
-	public void setMovieName(String name) {
-		// NOP
-	}
-
-	@Override
-	public void setZyklus(String mZyklusTitle) {
-		// NOP
-	}
-
-	@Override
-	public void setZyklusNumber(int iRoman) {
-		// NOP
-	}
-
-	@Override
-	public void setFilesize(long size) {
-		// NOP
-	}
-
-	@Override
-	public void setYear(int y) {
-		// NOP
-	}
-
-	@Override
-	public void setGenre(int gid, int movGenre) {
-		// NOP
-	}
-
-	@Override
-	public void setFSK(int fsk) {
-		// NOP
-	}
-
-	@Override
-	public void setLength(int l) {
-		// NOP
-	}
-
-	@Override
-	public void setScore(int s) {
-		// NOP
-	}
-
-	@Override
-	public void setCover(BufferedImage nci) {
-		setSeriesCover(nci);
-	}
-	
-	@Override
-	public void setOnlineReference(CCOnlineReferenceList ref) {
-		edSeriesReference.setValue(ref);
-	}
-	
-	@Override
-	public void onFinishInserting() {
-		// nothing
-	}
-	
 	private void addEmptySeason() {
 		series.createNewEmptySeason().setTitle("<untitled>"); //$NON-NLS-1$
 		

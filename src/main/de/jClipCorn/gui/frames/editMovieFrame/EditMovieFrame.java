@@ -1,8 +1,51 @@
 package de.jClipCorn.gui.frames.editMovieFrame;
 
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
+import com.jgoodies.forms.layout.ColumnSpec;
+import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.FormSpecs;
+import com.jgoodies.forms.layout.RowSpec;
+import de.jClipCorn.database.databaseElement.CCMovie;
+import de.jClipCorn.database.databaseElement.columnTypes.*;
+import de.jClipCorn.features.log.CCLog;
+import de.jClipCorn.features.metadata.exceptions.MediaQueryException;
+import de.jClipCorn.features.metadata.mediaquery.MediaQueryResult;
+import de.jClipCorn.features.metadata.mediaquery.MediaQueryRunner;
+import de.jClipCorn.features.online.metadata.ParseResultHandler;
+import de.jClipCorn.features.userdataProblem.UserDataProblem;
+import de.jClipCorn.features.userdataProblem.UserDataProblemHandler;
+import de.jClipCorn.gui.frames.genericTextDialog.GenericTextDialog;
+import de.jClipCorn.gui.frames.inputErrorFrame.InputErrorDialog;
+import de.jClipCorn.gui.frames.parseOnlineFrame.ParseOnlineDialog;
+import de.jClipCorn.gui.guiComponents.ReadableTextField;
+import de.jClipCorn.gui.guiComponents.TagPanel;
+import de.jClipCorn.gui.guiComponents.dateTimeListEditor.DateTimeListEditor;
+import de.jClipCorn.gui.guiComponents.editCoverControl.EditCoverControl;
+import de.jClipCorn.gui.guiComponents.groupListEditor.GroupListEditor;
+import de.jClipCorn.gui.guiComponents.jCCDateSpinner.JCCDateSpinner;
+import de.jClipCorn.gui.guiComponents.jMediaInfoControl.JMediaInfoControl;
+import de.jClipCorn.gui.guiComponents.language.LanguageChooser;
+import de.jClipCorn.gui.guiComponents.referenceChooser.JReferenceChooser;
+import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.gui.resources.Resources;
+import de.jClipCorn.properties.CCProperties;
+import de.jClipCorn.util.Str;
+import de.jClipCorn.util.Validator;
+import de.jClipCorn.util.adapter.*;
+import de.jClipCorn.util.datetime.CCDate;
+import de.jClipCorn.util.exceptions.CCFormatException;
+import de.jClipCorn.util.exceptions.EnumFormatException;
+import de.jClipCorn.util.formatter.FileSizeFormatter;
+import de.jClipCorn.util.formatter.PathFormatter;
+import de.jClipCorn.util.helper.DialogHelper;
+import de.jClipCorn.util.helper.FileChooserHelper;
+import de.jClipCorn.util.listener.ImageCropperResultListener;
+import de.jClipCorn.util.listener.UpdateCallbackListener;
+import de.jClipCorn.util.stream.CCStreams;
+import org.apache.commons.lang3.exception.ExceptionUtils;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -11,61 +54,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JSpinner;
-import javax.swing.JTextField;
-import javax.swing.SpinnerNumberModel;
-import javax.swing.UIManager;
-import de.jClipCorn.database.databaseElement.CCMovie;
-import de.jClipCorn.database.databaseElement.columnTypes.*;
-import de.jClipCorn.gui.frames.genericTextDialog.GenericTextDialog;
-import de.jClipCorn.gui.frames.inputErrorFrame.InputErrorDialog;
-import de.jClipCorn.gui.guiComponents.ReadableTextField;
-import de.jClipCorn.gui.guiComponents.TagPanel;
-import de.jClipCorn.gui.guiComponents.dateTimeListEditor.DateTimeListEditor;
-import de.jClipCorn.gui.guiComponents.editCoverControl.EditCoverControl;
-import de.jClipCorn.gui.guiComponents.groupListEditor.GroupListEditor;
-import de.jClipCorn.gui.guiComponents.jCCDateSpinner.JCCDateSpinner;
-import de.jClipCorn.gui.guiComponents.language.LanguageChooser;
-import de.jClipCorn.gui.guiComponents.referenceChooser.JReferenceChooser;
-import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.gui.resources.Resources;
-import de.jClipCorn.features.log.CCLog;
-import de.jClipCorn.features.online.metadata.ParseResultHandler;
-import de.jClipCorn.properties.CCProperties;
-import de.jClipCorn.util.Str;
-import de.jClipCorn.util.Validator;
-import de.jClipCorn.util.adapter.*;
-import de.jClipCorn.util.datetime.CCDate;
-import de.jClipCorn.util.exceptions.CCFormatException;
-import de.jClipCorn.util.exceptions.EnumFormatException;
-import de.jClipCorn.features.metadata.exceptions.MediaQueryException;
-import de.jClipCorn.util.formatter.FileSizeFormatter;
-import de.jClipCorn.util.formatter.PathFormatter;
-import de.jClipCorn.util.helper.DialogHelper;
-import de.jClipCorn.util.helper.FileChooserHelper;
-import de.jClipCorn.util.listener.ImageCropperResultListener;
-import de.jClipCorn.util.listener.UpdateCallbackListener;
-import de.jClipCorn.features.userdataProblem.UserDataProblem;
-import de.jClipCorn.features.userdataProblem.UserDataProblemHandler;
-import de.jClipCorn.features.metadata.mediaquery.MediaQueryResult;
-import de.jClipCorn.features.metadata.mediaquery.MediaQueryRunner;
-import de.jClipCorn.util.stream.CCStreams;
-import org.apache.commons.lang3.exception.ExceptionUtils;
-import de.jClipCorn.gui.guiComponents.jMediaInfoControl.JMediaInfoControl;
-import javax.swing.JPanel;
-import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.ColumnSpec;
-import com.jgoodies.forms.layout.RowSpec;
-import com.jgoodies.forms.layout.FormSpecs;
-import java.awt.BorderLayout;
 
 public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDataProblemHandler, ImageCropperResultListener {
 	private static final long serialVersionUID = 4392838185334567222L;
@@ -175,6 +163,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 	private JPanel pnlBot;
 	private JPanel pnlPaths;
 	private JPanel pnlData;
+	private JButton btnParseOnline;
 
 	public EditMovieFrame(Component owner, CCMovie movie, UpdateCallbackListener ucl) {
 		super();
@@ -558,7 +547,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 				FormSpecs.RELATED_GAP_COLSPEC,
 				FormSpecs.DEFAULT_COLSPEC,
 				FormSpecs.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("default:grow"), //$NON-NLS-1$
+				ColumnSpec.decode("default:grow"),
 				FormSpecs.RELATED_GAP_COLSPEC,},
 			new RowSpec[] {
 				FormSpecs.RELATED_GAP_ROWSPEC,
@@ -580,7 +569,9 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 				FormSpecs.RELATED_GAP_ROWSPEC,
 				FormSpecs.DEFAULT_ROWSPEC,
 				FormSpecs.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("90dlu:grow"), //$NON-NLS-1$
+				FormSpecs.DEFAULT_ROWSPEC,
+				FormSpecs.RELATED_GAP_ROWSPEC,
+				RowSpec.decode("70dlu:grow"),
 				FormSpecs.RELATED_GAP_ROWSPEC,
 				FormSpecs.DEFAULT_ROWSPEC,}));
 		
@@ -646,14 +637,18 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		pnlRight.add(edGroups, "4, 18"); //$NON-NLS-1$
 		edGroups.addChangeListener(new ActionLambdaAdapter(this::setDirty));
 		
+		btnParseOnline = new JButton(LocaleBundle.getString("AddMovieFrame.btnParseIMDB.text")); //$NON-NLS-1$
+		btnParseOnline.addActionListener(this::QueryFromOnline);
+		pnlRight.add(btnParseOnline, "4, 20");
+		
 		label_30 = new JLabel(LocaleBundle.getString("EditSeriesFrame.lblHistory.text")); //$NON-NLS-1$
-		pnlRight.add(label_30, "2, 20, default, top"); //$NON-NLS-1$
+		pnlRight.add(label_30, "2, 22, default, top"); //$NON-NLS-1$
 		
 		edViewedHistory = new DateTimeListEditor();
-		pnlRight.add(edViewedHistory, "4, 20, fill, fill"); //$NON-NLS-1$
+		pnlRight.add(edViewedHistory, "4, 22, fill, fill"); //$NON-NLS-1$
 		
 		edCvrControl = new EditCoverControl(this, this);
-		pnlRight.add(edCvrControl, "4, 22, right, top"); //$NON-NLS-1$
+		pnlRight.add(edCvrControl, "4, 24, right, top"); //$NON-NLS-1$
 		edCvrControl.addChangeListener(new ActionLambdaAdapter(this::setDirty));
 		edViewedHistory.addChangeListener(new ActionLambdaAdapter(this::setDirty));
 		cbxGenre0.addItemListener(new ItemChangeLambdaAdapter(this::setDirty, ItemEvent.SELECTED));
@@ -689,6 +684,10 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 				super.windowClosing(e);
 			}
 		});
+	}
+
+	private void QueryFromOnline(ActionEvent evt) {
+		(new ParseOnlineDialog(this, this, CCDBElementTyp.MOVIE)).setVisible(true);
 	}
 
 	private void setDefaultValues() {
@@ -975,31 +974,16 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 	
 	@Override
 	public void setGenre(int gid, int movGenre) {
-		switch (gid) {
-		case 0:
-			cbxGenre0.setSelectedIndex(movGenre);
-			break;
-		case 1:
-			cbxGenre1.setSelectedIndex(movGenre);
-			break;
-		case 2:
-			cbxGenre2.setSelectedIndex(movGenre);
-			break;
-		case 3:
-			cbxGenre3.setSelectedIndex(movGenre);
-			break;
-		case 4:
-			cbxGenre4.setSelectedIndex(movGenre);
-			break;
-		case 5:
-			cbxGenre5.setSelectedIndex(movGenre);
-			break;
-		case 6:
-			cbxGenre6.setSelectedIndex(movGenre);
-			break;
-		case 7:
-			cbxGenre7.setSelectedIndex(movGenre);
-			break;
+		switch (gid)
+		{
+			case 0: cbxGenre0.setSelectedIndex(movGenre); break;
+			case 1: cbxGenre1.setSelectedIndex(movGenre); break;
+			case 2: cbxGenre2.setSelectedIndex(movGenre); break;
+			case 3: cbxGenre3.setSelectedIndex(movGenre); break;
+			case 4: cbxGenre4.setSelectedIndex(movGenre); break;
+			case 5: cbxGenre5.setSelectedIndex(movGenre); break;
+			case 6: cbxGenre6.setSelectedIndex(movGenre); break;
+			case 7: cbxGenre7.setSelectedIndex(movGenre); break;
 		}
 	}
 	

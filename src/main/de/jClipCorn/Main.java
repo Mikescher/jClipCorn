@@ -208,5 +208,3 @@ public class Main {
 // option recreate previews (covers dialog to show content of covers table)
 
 // Compare speed of stream vs ccstream (just out of interest)
-
-// button to show (and evtl update) infos from online-ref in editmovie/editseries Frame

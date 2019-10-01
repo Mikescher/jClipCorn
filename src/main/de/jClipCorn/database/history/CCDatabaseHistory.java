@@ -217,11 +217,11 @@ public class CCDatabaseHistory {
 		}
 	}
 
-	public List<CCCombinedHistoryEntry> query(boolean excludeViewedOnly, boolean excludeInfoIDChanges, boolean excludeOrderingChanges, CCDateTime start, ProgressCallbackListener lst) throws CCFormatException {
-		return query(excludeViewedOnly, excludeInfoIDChanges, excludeOrderingChanges, start, lst, null);
+	public List<CCCombinedHistoryEntry> query(boolean excludeViewedOnly, boolean excludeInfoIDChanges, boolean excludeOrderingChanges, boolean mergeAggressive, CCDateTime start, ProgressCallbackListener lst) throws CCFormatException {
+		return query(excludeViewedOnly, excludeInfoIDChanges, excludeOrderingChanges, mergeAggressive, start, lst, null);
 	}
 
-	public List<CCCombinedHistoryEntry> query(boolean excludeViewedOnly, boolean excludeInfoIDChanges, boolean excludeOrderingChanges, CCDateTime start, ProgressCallbackListener lst, String idfilter) throws CCFormatException {
+	public List<CCCombinedHistoryEntry> query(boolean excludeViewedOnly, boolean excludeInfoIDChanges, boolean excludeOrderingChanges, boolean mergeAggressive, CCDateTime start, ProgressCallbackListener lst, String idfilter) throws CCFormatException {
 		if (lst == null) lst = new ProgressCallbackSink();
 
 		List<CCCombinedHistoryEntry> result  = new ArrayList<>();
@@ -269,17 +269,16 @@ public class CCDatabaseHistory {
 				base.Timestamp2 = timestamp;
 
 				CCHistorySingleChange basechange = CCStreams.iterate(base.Changes).firstOrNull(p -> Str.equals(p.Field, field));
-				if (basechange != null)
+				if (basechange != null && mergeAggressive)
 				{
 					basechange.NewValue = newvalue;
 					if (base.Action == CCHistoryAction.REMOVE && action == CCHistoryAction.INSERT) base.Action = CCHistoryAction.UPDATE;
-					base.HistoryRowCount++;
 				}
 				else
 				{
 					base.Changes.add(new CCHistorySingleChange(field, oldvalue, newvalue));
-					base.HistoryRowCount++;
 				}
+				base.HistoryRowCount++;
 			}
 		}
 
@@ -292,7 +291,8 @@ public class CCDatabaseHistory {
 			CCCombinedHistoryEntry e1 = result.get(i-1);
 			CCCombinedHistoryEntry e2 = result.get(i);
 
- 			if (e1.Table == e2.Table &&
+ 			if (mergeAggressive &&
+ 				e1.Table == e2.Table &&
 				Str.equals(e1.ID, e2.ID) &&
 				e1.Action == CCHistoryAction.REMOVE &&
 				e2.Action == CCHistoryAction.INSERT &&

@@ -86,9 +86,10 @@ public class CCCombinedHistoryEntry
 	}
 
 	public Opt<String> getNewValue(String key) {
+		Opt<String> r = Opt.empty();
 		for (CCHistorySingleChange change : Changes) {
-			if (change.Field.equalsIgnoreCase(key)) return Opt.of(change.NewValue);
+			if (change.Field.equalsIgnoreCase(key)) r = Opt.of(change.NewValue);
 		}
-		return Opt.empty();
+		return r;
 	}
 }

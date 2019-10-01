@@ -91,9 +91,9 @@ public class DatabaseHistoryTable extends JCCSimpleTable<CCCombinedHistoryEntry>
 	@Override
 	protected void OnDoubleClickElement(CCCombinedHistoryEntry element) {
 		ICCDatabaseStructureElement dse = element.getSourceElement();
-		if (dse instanceof CCMovie)   { PreviewMovieFrame.show( _parent, (CCMovie)dse); return; }
-		if (dse instanceof CCSeries)  { PreviewSeriesFrame.show(_parent, (CCSeries)dse); return; }
-		if (dse instanceof CCSeason)  { PreviewSeriesFrame.show(_parent, (CCSeason)dse); return; }
+		if (dse instanceof CCMovie)   { PreviewMovieFrame.show( _parent, (CCMovie)dse);   return; }
+		if (dse instanceof CCSeries)  { PreviewSeriesFrame.show(_parent, (CCSeries)dse);  return; }
+		if (dse instanceof CCSeason)  { PreviewSeriesFrame.show(_parent, (CCSeason)dse);  return; }
 		if (dse instanceof CCEpisode) { PreviewSeriesFrame.show(_parent, (CCEpisode)dse); return; }
 		
 		if (element.Table == CCHistoryTable.COVERS) {

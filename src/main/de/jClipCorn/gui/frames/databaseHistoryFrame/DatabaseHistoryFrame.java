@@ -55,6 +55,7 @@ public class DatabaseHistoryFrame extends JFrame {
 
 	private String _triggerError = Str.Empty;
 	private int _tcount;
+	private JCheckBox cbxDoAgressiveMerges;
 
 	public DatabaseHistoryFrame(Component owner, CCMovieList mlist) {
 		super();
@@ -82,15 +83,15 @@ public class DatabaseHistoryFrame extends JFrame {
 				FormSpecs.RELATED_GAP_COLSPEC,
 				FormSpecs.DEFAULT_COLSPEC,
 				FormSpecs.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("100dlu"), //$NON-NLS-1$
+				ColumnSpec.decode("100dlu"),
 				FormSpecs.RELATED_GAP_COLSPEC,
 				FormSpecs.DEFAULT_COLSPEC,
 				FormSpecs.RELATED_GAP_COLSPEC,
 				FormSpecs.DEFAULT_COLSPEC,
 				FormSpecs.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("1dlu:grow"), //$NON-NLS-1$
+				ColumnSpec.decode("1dlu:grow"),
 				FormSpecs.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("70dlu"), //$NON-NLS-1$
+				ColumnSpec.decode("70dlu"),
 				FormSpecs.RELATED_GAP_COLSPEC,},
 			new RowSpec[] {
 				FormSpecs.RELATED_GAP_ROWSPEC,
@@ -104,11 +105,13 @@ public class DatabaseHistoryFrame extends JFrame {
 				FormSpecs.RELATED_GAP_ROWSPEC,
 				FormSpecs.DEFAULT_ROWSPEC,
 				FormSpecs.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("15dlu"), //$NON-NLS-1$
+				FormSpecs.DEFAULT_ROWSPEC,
 				FormSpecs.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("1dlu:grow(2)"), //$NON-NLS-1$
+				RowSpec.decode("15dlu"),
 				FormSpecs.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("1dlu:grow"), //$NON-NLS-1$
+				RowSpec.decode("1dlu:grow(2)"),
+				FormSpecs.RELATED_GAP_ROWSPEC,
+				RowSpec.decode("1dlu:grow"),
 				FormSpecs.RELATED_GAP_ROWSPEC,}));
 		
 		lblStatus = new JLabel(LocaleBundle.getString("DatabaseHistoryFrame.lblStatus")); //$NON-NLS-1$
@@ -162,15 +165,19 @@ public class DatabaseHistoryFrame extends JFrame {
 		cbxIgnoreIDChanges.setSelected(true);
 		contentPane.add(cbxIgnoreIDChanges, "2, 10, 7, 1"); //$NON-NLS-1$
 		
+		cbxDoAgressiveMerges = new JCheckBox(LocaleBundle.getString("DatabaseHistoryFrame.MergeAggressive")); //$NON-NLS-1$
+		cbxDoAgressiveMerges.setSelected(true);
+		contentPane.add(cbxDoAgressiveMerges, "2, 12, 7, 1");
+		
 		progressBar = new JProgressBar();
-		contentPane.add(progressBar, "2, 12, 11, 1, fill, fill"); //$NON-NLS-1$
+		contentPane.add(progressBar, "2, 14, 11, 1, fill, fill"); //$NON-NLS-1$
 		
 		tableEntries = new DatabaseHistoryTable(this);
-		contentPane.add(tableEntries, "2, 14, 12, 1, fill, fill"); //$NON-NLS-1$
+		contentPane.add(tableEntries, "2, 16, 12, 1, fill, fill"); //$NON-NLS-1$
 		tableEntries.autoResize();
 		
 		tableChanges = new DatabaseHistoryChangesTable();
-		contentPane.add(tableChanges, "2, 16, 11, 1, fill, fill"); //$NON-NLS-1$
+		contentPane.add(tableChanges, "2, 18, 11, 1, fill, fill"); //$NON-NLS-1$
 		tableChanges.autoResize();
 	}
 
@@ -198,6 +205,10 @@ public class DatabaseHistoryFrame extends JFrame {
 
 	private void queryHistory(CCDateTime dt) {
 
+		boolean optTrivial1 = cbxIgnoreTrivial.isSelected();
+		boolean optTrivial2 = cbxIgnoreIDChanges.isSelected();
+		boolean optAggressive = cbxDoAgressiveMerges.isSelected();
+		
 		new Thread(() ->
 		{
 			try
@@ -210,9 +221,10 @@ public class DatabaseHistoryFrame extends JFrame {
 				});
 
 				List<CCCombinedHistoryEntry> data = movielist.getHistory().query(
-						cbxIgnoreTrivial.isSelected(),
-						cbxIgnoreIDChanges.isSelected(),
-						cbxIgnoreTrivial.isSelected(),
+						optTrivial1,
+						optTrivial2,
+						optTrivial1,
+						optAggressive,
 						dt,
 						new ProgressCallbackProgressBarHelper(progressBar, 100));
 

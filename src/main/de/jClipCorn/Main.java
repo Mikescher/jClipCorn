@@ -211,8 +211,6 @@ public class Main {
 
 // button to show (and evtl update) infos from online-ref in editmovie/editseries Frame
 
-// add history option to (not) do agressive merges (= option to do them but default-on)
-
 // statistics::mediainfo::framerate --> sort options
 
 // episode quick add: trim title without question

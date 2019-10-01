@@ -1,17 +1,7 @@
 package de.jClipCorn.gui.guiComponents.jMediaInfoControl;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMediaInfo;
+import de.jClipCorn.features.metadata.mediaquery.MediaQueryResult;
 import de.jClipCorn.gui.frames.editMediaInfoDialog.EditMediaInfoDialog;
 import de.jClipCorn.gui.frames.editMediaInfoDialog.MediaInfoResultHandler;
 import de.jClipCorn.gui.guiComponents.ReadableTextField;
@@ -19,7 +9,13 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.lambda.Func0to1;
-import de.jClipCorn.features.metadata.mediaquery.MediaQueryResult;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 
 public class JMediaInfoControl extends JPanel implements MediaInfoResultHandler {
 	private static final long serialVersionUID = 2696192041815168280L;

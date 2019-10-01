@@ -148,6 +148,7 @@ public class EditMediaInfoDialog extends JDialog {
 
 		MIDialogResultSet rs = CCStreams.iterate(_results).singleOrNull(p -> p.Type == MetadataSourceType.MEDIAINFO);
 		rs.updateData(r.toPartial());
+		doApply(r.toPartial());
 		doShowHints(Opt.of(r.toPartial()), MetadataSourceType.MEDIAINFO);
 	}
 
@@ -164,6 +165,7 @@ public class EditMediaInfoDialog extends JDialog {
 
 		MIDialogResultSet rs = CCStreams.iterate(_results).singleOrNull(p -> p.Type == MetadataSourceType.MEDIAINFO);
 		rs.updateData(r.toPartial());
+		doApply(r.toPartial());
 		doShowHints(Opt.of(r.toPartial()), MetadataSourceType.MEDIAINFO);
 	}
 

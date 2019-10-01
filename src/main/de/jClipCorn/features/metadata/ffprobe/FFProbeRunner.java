@@ -47,16 +47,21 @@ public abstract class FFProbeRunner implements MetadataSource {
 
 			JSONArray streams = root.getJSONArray("streams"); //$NON-NLS-1$
 			JSONObject vstream = CCStreams.iterate(streams).ofType(JSONObject.class).firstOrNull(p -> p.getString("codec_type").equalsIgnoreCase("video"));
+			JSONObject astream = CCStreams.iterate(streams).ofType(JSONObject.class).firstOrNull(p -> p.getString("codec_type").equalsIgnoreCase("audio"));
 			JSONObject formatobj = root.getJSONObject("format");
 
-			String codecName     = getStr(vstream, "codec_name"); //$NON-NLS-1$
-			String codecLongName = getStr(vstream, "codec_long_name"); //$NON-NLS-1$
-			String profile       = getStr(vstream, "profile"); //$NON-NLS-1$
-			int width            = getIntDirect(vstream, "width"); //$NON-NLS-1$
-			int height           = getIntDirect(vstream, "height"); //$NON-NLS-1$
-			int bitdepth         = getIntFromStr(vstream, "bits_per_raw_sample"); //$NON-NLS-1$
-			int framecount       = getIntFromStr(vstream, "nb_read_frames"); //$NON-NLS-1$
-			double framerate     = getExtDoubleFromStr(vstream, "nb_read_frame"); //$NON-NLS-1$
+			String vidCodecName    = getStr(vstream, "codec_name"); //$NON-NLS-1$
+			String vidCdecLongName = getStr(vstream, "codec_long_name"); //$NON-NLS-1$
+			String vidProfile      = getStr(vstream, "profile"); //$NON-NLS-1$
+			int width              = getIntDirect(vstream, "width"); //$NON-NLS-1$
+			int height             = getIntDirect(vstream, "height"); //$NON-NLS-1$
+			int bitdepth           = getIntFromStr(vstream, "bits_per_raw_sample"); //$NON-NLS-1$
+
+			int framecount = getIntFromStr(vstream, "nb_read_frames"); //$NON-NLS-1$
+			if (framecount == -1) framecount = getIntFromStr(vstream, "nb_frames"); //$NON-NLS-1$
+
+			double framerate = getExtDoubleFromStr(vstream, "avg_frame_rate"); //$NON-NLS-1$
+			if (framerate == -1)  framerate = getExtDoubleFromStr(vstream, "r_frame_rate"); //$NON-NLS-1$
 
 			double duration = getDoubleFromStr(formatobj, "duration");
 			long fsize      = getLngFromStr(formatobj, "size");
@@ -65,13 +70,20 @@ public abstract class FFProbeRunner implements MetadataSource {
 			long cdate = attr.creationTime().toMillis();
 			long mdate = attr.lastModifiedTime().toMillis();
 
+			String audCodecName     = getStr(astream, "codec_name"); //$NON-NLS-1$
+			String audCodecLongName = getStr(astream, "codec_long_name"); //$NON-NLS-1$
+			int audSampleRate       = getIntFromStr(astream, "sample_rate"); //$NON-NLS-1$
+			int audChannels         = getIntFromStr(astream, "channels"); //$NON-NLS-1$
+
+
 			return new FFProbeResult(
 					ffjson,
 					cdate, mdate, fsize,
-					codecName, codecLongName, profile,
+					vidCodecName, vidCdecLongName, vidProfile,
 					width, height,
 					(short)bitdepth, framecount, framerate,
-					duration, bitrate);
+					duration, bitrate,
+					audCodecName, audCodecLongName, audSampleRate, (short)audChannels);
 
 		} catch (JSONException e) {
 			throw new FFProbeQueryException(e.getMessage(), ExceptionUtils.getStackTrace(e) + "\n\n\n--------------\n\n\n" + ffjson); //$NON-NLS-1$
@@ -83,36 +95,42 @@ public abstract class FFProbeRunner implements MetadataSource {
 	protected abstract String[] getArgs(String filename);
 
 	private static String getStr(JSONObject obj, String key) {
+		if (obj == null) return Str.Empty;
 		if (!obj.has(key)) return null;
 		if (obj.isNull(key)) return null;
 		return obj.getString(key);
 	}
 
 	private static int getIntDirect(JSONObject obj, String key) {
+		if (obj == null) return -1;
 		if (!obj.has(key)) return -1;
 		if (obj.isNull(key)) return -1;
 		return obj.getInt(key);
 	}
 
 	private static int getIntFromStr(JSONObject obj, String key) {
+		if (obj == null) return -1;
 		if (!obj.has(key)) return -1;
 		if (obj.isNull(key)) return -1;
 		return Integer.parseInt(obj.getString(key));
 	}
 
 	private static long getLngFromStr(JSONObject obj, String key) {
+		if (obj == null) return -1;
 		if (!obj.has(key)) return -1;
 		if (obj.isNull(key)) return -1;
 		return Long.parseLong(obj.getString(key));
 	}
 
 	private static double getDoubleFromStr(JSONObject obj, String key) {
+		if (obj == null) return -1;
 		if (!obj.has(key)) return -1;
 		if (obj.isNull(key)) return -1;
 		return Double.parseDouble(obj.getString(key));
 	}
 
 	private static double getExtDoubleFromStr(JSONObject obj, String key) {
+		if (obj == null) return -1;
 		if (!obj.has(key)) return -1;
 		if (obj.isNull(key)) return -1;
 		return parseExtDouble(obj.getString(key));
@@ -123,6 +141,8 @@ public abstract class FFProbeRunner implements MetadataSource {
 			String[] split = str.split("/"); //$NON-NLS-1$
 			double a = Integer.parseInt(split[0]);
 			double b = Integer.parseInt(split[1]);
+
+			if (b == 0) return -1;
 
 			return a/b;
 		}

@@ -28,7 +28,7 @@ import javax.swing.*;
 
 public class Main {
 	public final static String TITLE     = "jClipCorn"; //$NON-NLS-1$
-	public final static String VERSION   = /*<gradle_version_marker>*/"1.10.6.20"/*</gradle_version_marker>*/; //$NON-NLS-1$
+	public final static String VERSION   = /*<gradle_version_marker>*/"1.10.6.21"/*</gradle_version_marker>*/; //$NON-NLS-1$
 	public final static String DBVERSION = "14";    //$NON-NLS-1$
 	public final static String JXMLVER   = "4";     //$NON-NLS-1$
 
@@ -211,16 +211,9 @@ public class Main {
 
 // button to show (and evtl update) infos from online-ref in editmovie/editseries Frame
 
-// ffmpeg framerate from avg_frame_rate(and more)
-
-// add mp4box and ffmpeg and ffprobe aus minfo sources  -->  https://stackoverflow.com/a/28376817/1761622
-//                                                           https://stackoverflow.com/a/56851594/1761622
-
 // add common interface and better ui for different minfo sources
 
 // add abort button to minfo-queries in minfo dialog (needed eg for ffmpeg)
-
-// put ffmpeg/ffprobe/mediainfo beside jcc jar and auto set path to self and use ccpathformatter on these paths
 
 // Auto check second checkbox in history frame
 
@@ -231,3 +224,4 @@ public class Main {
 //history: double click on cover to open viewer (if it still exists with same checksum)
 
 // episode quick add: trim title without question
+

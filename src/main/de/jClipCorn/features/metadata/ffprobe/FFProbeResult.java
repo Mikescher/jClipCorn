@@ -23,28 +23,39 @@ public class FFProbeResult {
 	public final int FrameCount;       // -1 if not set
 	public final double FrameRate;     // -1 if not set
 
-	public final double Duration;     // -1 if not set
-	public final int Bitrate;        // -1 if not set
+	public final double Duration;      // -1 if not set
+	public final int Bitrate;          // -1 if not set
+
+	public final String AudioCodecName;     // NULL if not set
+	public final String AudioCodecLongName; // NULL if not set
+	public final int AudioSampleRate;       // -1 if not set
+	public final short AudioChannels;       // -1 if not set
 
 	public FFProbeResult(String raw,
 						 long cdate, long mdate, long fsize,
 						 String codecName, String codecLongName, String profile, int width, int height,
 						 short bitsPerRawSample, int frameCount, double frameRate,
-						 double duration, int bitrate) {
-		Raw = raw;
-		CDate = cdate;
-		MDate = mdate;
-		FileSize = fsize;
-		CodecName = codecName;
-		CodecLongName = codecLongName;
-		Profile = profile;
-		Width = width;
-		Height = height;
-		BitDepth = bitsPerRawSample;
-		FrameCount = frameCount;
-		FrameRate = frameRate;
-		Duration = duration;
-		Bitrate = bitrate;
+						 double duration, int bitrate,
+						 String aCodecName, String aCodecLongName, int aSampleRate, short aChannels)
+	{
+		Raw                = raw;
+		CDate              = cdate;
+		MDate              = mdate;
+		FileSize           = fsize;
+		CodecName          = codecName;
+		CodecLongName      = codecLongName;
+		Profile            = profile;
+		Width              = width;
+		Height             = height;
+		BitDepth           = bitsPerRawSample;
+		FrameCount         = frameCount;
+		FrameRate          = frameRate;
+		Duration           = duration;
+		Bitrate            = bitrate;
+		AudioCodecName     = aCodecName;
+		AudioCodecLongName = aCodecLongName;
+		AudioSampleRate    = aSampleRate;
+		AudioChannels      = aChannels;
 	}
 
 	public PartialMediaInfo toPartial() {
@@ -63,9 +74,9 @@ public class FFProbeResult {
 		pmi.FrameCount       = (FrameCount == -1) ? Opt.empty() : Opt.of(FrameCount);
 		pmi.VideoCodec       = Opt.empty();
 		pmi.AudioFormat      = Opt.empty();
-		pmi.AudioChannels    = Opt.empty();
+		pmi.AudioChannels    = (AudioChannels == -1) ? Opt.empty() : Opt.of(AudioChannels);
 		pmi.AudioCodec       = Opt.empty();
-		pmi.AudioSamplerate  = Opt.empty();
+		pmi.AudioSamplerate  = (AudioSampleRate == -1) ? Opt.empty() : Opt.of(AudioSampleRate);
 
 		return pmi;
 	}

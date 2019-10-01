@@ -73,7 +73,7 @@ public abstract class FFProbeRunner implements MetadataSource {
 			String audCodecName     = getStr(astream, "codec_name"); //$NON-NLS-1$
 			String audCodecLongName = getStr(astream, "codec_long_name"); //$NON-NLS-1$
 			int audSampleRate       = getIntFromStr(astream, "sample_rate"); //$NON-NLS-1$
-			int audChannels         = getIntFromStr(astream, "channels"); //$NON-NLS-1$
+			int audChannels         = getIntDirect(astream, "channels"); //$NON-NLS-1$
 
 
 			return new FFProbeResult(

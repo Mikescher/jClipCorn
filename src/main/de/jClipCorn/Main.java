@@ -212,6 +212,3 @@ public class Main {
 // button to show (and evtl update) infos from online-ref in editmovie/editseries Frame
 
 // statistics::mediainfo::framerate --> sort options
-
-// episode quick add: trim title without question
-

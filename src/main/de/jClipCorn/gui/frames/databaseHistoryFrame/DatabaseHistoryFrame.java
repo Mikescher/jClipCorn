@@ -83,15 +83,15 @@ public class DatabaseHistoryFrame extends JFrame {
 				FormSpecs.RELATED_GAP_COLSPEC,
 				FormSpecs.DEFAULT_COLSPEC,
 				FormSpecs.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("100dlu"),
+				ColumnSpec.decode("100dlu"), //$NON-NLS-1$
 				FormSpecs.RELATED_GAP_COLSPEC,
 				FormSpecs.DEFAULT_COLSPEC,
 				FormSpecs.RELATED_GAP_COLSPEC,
 				FormSpecs.DEFAULT_COLSPEC,
 				FormSpecs.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("1dlu:grow"),
+				ColumnSpec.decode("1dlu:grow"), //$NON-NLS-1$
 				FormSpecs.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("70dlu"),
+				ColumnSpec.decode("70dlu"), //$NON-NLS-1$
 				FormSpecs.RELATED_GAP_COLSPEC,},
 			new RowSpec[] {
 				FormSpecs.RELATED_GAP_ROWSPEC,
@@ -107,11 +107,11 @@ public class DatabaseHistoryFrame extends JFrame {
 				FormSpecs.RELATED_GAP_ROWSPEC,
 				FormSpecs.DEFAULT_ROWSPEC,
 				FormSpecs.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("15dlu"),
+				RowSpec.decode("15dlu"), //$NON-NLS-1$
 				FormSpecs.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("1dlu:grow(2)"),
+				RowSpec.decode("1dlu:grow(2)"), //$NON-NLS-1$
 				FormSpecs.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("1dlu:grow"),
+				RowSpec.decode("1dlu:grow"), //$NON-NLS-1$
 				FormSpecs.RELATED_GAP_ROWSPEC,}));
 		
 		lblStatus = new JLabel(LocaleBundle.getString("DatabaseHistoryFrame.lblStatus")); //$NON-NLS-1$
@@ -167,7 +167,7 @@ public class DatabaseHistoryFrame extends JFrame {
 		
 		cbxDoAgressiveMerges = new JCheckBox(LocaleBundle.getString("DatabaseHistoryFrame.MergeAggressive")); //$NON-NLS-1$
 		cbxDoAgressiveMerges.setSelected(true);
-		contentPane.add(cbxDoAgressiveMerges, "2, 12, 7, 1");
+		contentPane.add(cbxDoAgressiveMerges, "2, 12, 7, 1"); //$NON-NLS-1$
 		
 		progressBar = new JProgressBar();
 		contentPane.add(progressBar, "2, 14, 11, 1, fill, fill"); //$NON-NLS-1$

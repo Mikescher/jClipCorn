@@ -5,6 +5,8 @@ import de.jClipCorn.features.statistics.StatisticsChart;
 import de.jClipCorn.gui.frames.statisticsFrame.StatisticsTypeFilter;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.Str;
+import de.jClipCorn.util.datatypes.Tuple;
+import de.jClipCorn.util.stream.CCStreams;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.labels.ItemLabelAnchor;
@@ -54,18 +56,18 @@ public class StatisticsMediaInfoFramerateChart extends StatisticsChart {
 	}
 	
 	private DefaultCategoryDataset getDataSet(CCMovieList movielist, StatisticsTypeFilter source) {
-		Map<String, Integer> values = source
+		Map<String, Tuple<Double, Integer>> values = source
 				.iteratorMoviesOrEpisodes(movielist)
 				.filter(e -> e.getMediaInfo().isSet())
 				.map(e -> e.getMediaInfo().getFramerate())
 				.autosort()
 				.groupBy(e -> e)
-				.toMap(e -> Str.format("{0,number,0.##}", e.getKey()), e -> e.getValue().size()); //$NON-NLS-1$
+				.toMap(e -> Str.format("{0,number,0.#}", e.getKey()), e -> Tuple.Create(e.getKey(), e.getValue().size())); //$NON-NLS-1$
 
 		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 
-		for (Map.Entry<String, Integer> elem : values.entrySet()) {
-			dataset.addValue(elem.getValue(), "Series0", elem.getKey()); //$NON-NLS-1$
+		for (Map.Entry<String, Tuple<Double, Integer>> elem : CCStreams.iterate(values.entrySet()).autosortByProperty(p -> p.getValue().Item1)) {
+			dataset.addValue(elem.getValue().Item2, "Series0", elem.getKey()); //$NON-NLS-1$
 		}
 
         return dataset;

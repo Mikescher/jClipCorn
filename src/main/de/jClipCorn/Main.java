@@ -210,5 +210,3 @@ public class Main {
 // Compare speed of stream vs ccstream (just out of interest)
 
 // button to show (and evtl update) infos from online-ref in editmovie/editseries Frame
-
-// statistics::mediainfo::framerate --> sort options

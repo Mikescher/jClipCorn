@@ -2,6 +2,7 @@ package de.jClipCorn.database.history;
 
 import de.jClipCorn.database.databaseElement.ICCDatabaseStructureElement;
 import de.jClipCorn.util.Str;
+import de.jClipCorn.util.datatypes.Opt;
 import de.jClipCorn.util.datetime.CCDateTime;
 
 import java.util.ArrayList;
@@ -82,5 +83,12 @@ public class CCCombinedHistoryEntry
 			return;
 		}
 		_sourceLink = elements.getOrDefault(iid, null);
+	}
+
+	public Opt<String> getNewValue(String key) {
+		for (CCHistorySingleChange change : Changes) {
+			if (change.Field.equalsIgnoreCase(key)) return Opt.of(change.NewValue);
+		}
+		return Opt.empty();
 	}
 }

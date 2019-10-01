@@ -265,7 +265,7 @@ public class CCDefaultCoverCache implements ICoverCache {
 	}
 
 	@Override
-	public CCCoverData getInfo(int cid) {
-		return getEntry(cid);
+	public CCCoverData getInfoOrNull(int cid) {
+		return _elements.get(cid);
 	}
 }

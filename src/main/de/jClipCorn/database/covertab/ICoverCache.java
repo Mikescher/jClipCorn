@@ -17,7 +17,7 @@ public interface ICoverCache {
 	BufferedImage getCover(CCCoverData cce);
 	int addCover(BufferedImage newCover);
 	void deleteCover(int cid);
-	CCCoverData getInfo(int cid);
+	CCCoverData getInfoOrNull(int cid);
 
 	boolean coverFileExists(int cid);
 	Tuple<Integer, Integer> getDimensions(int cid);

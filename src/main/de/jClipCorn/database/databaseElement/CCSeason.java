@@ -149,7 +149,7 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 
 	@Override
 	public CCCoverData getCoverInfo() {
-		return owner.getMovieList().getCoverCache().getInfo(coverid);
+		return owner.getMovieList().getCoverCache().getInfoOrNull(coverid);
 	}
 	
 	public boolean isViewed() { // All parts viewed

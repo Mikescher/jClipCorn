@@ -32,7 +32,7 @@ public class Opt<T> {
 	}
 
 	public T get() {
-		if (value == null) throw new NoSuchElementException("No value present"); //$NON-NLS-1$
+		if (!isSet) throw new NoSuchElementException("No value present"); //$NON-NLS-1$
 		return value;
 	}
 
@@ -45,7 +45,7 @@ public class Opt<T> {
 	}
 
 	public T orElse(T other) {
-		return value != null ? value : other;
+		return isSet ? value : other;
 	}
 
 	@SuppressWarnings("unchecked")

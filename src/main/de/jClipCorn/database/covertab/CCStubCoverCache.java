@@ -57,7 +57,7 @@ public class CCStubCoverCache implements ICoverCache {
 	}
 
 	@Override
-	public CCCoverData getInfo(int cid) {
+	public CCCoverData getInfoOrNull(int cid) {
 		return new CCCoverData(cid, "", ImageUtilities.BASE_COVER_WIDTH, ImageUtilities.BASE_COVER_HEIGHT, "", 1024, ColorQuantizerMethod.EMPTY, CCDateTime.getCurrentDateTime()); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 

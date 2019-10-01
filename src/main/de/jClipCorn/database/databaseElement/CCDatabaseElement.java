@@ -223,7 +223,7 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 
 	@Override
 	public CCCoverData getCoverInfo() {
-		return movielist.getCoverCache().getInfo(coverid);
+		return movielist.getCoverCache().getInfoOrNull(coverid);
 	}
 
 	public CCGenre getGenre(int idx) {

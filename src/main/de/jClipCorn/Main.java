@@ -211,17 +211,9 @@ public class Main {
 
 // button to show (and evtl update) infos from online-ref in editmovie/editseries Frame
 
-// add common interface and better ui for different minfo sources
-
-// add abort button to minfo-queries in minfo dialog (needed eg for ffmpeg)
-
-// Auto check second checkbox in history frame
-
 // add history option to (not) do agressive merges (= option to do them but default-on)
 
 // statistics::mediainfo::framerate --> sort options
-
-//history: double click on cover to open viewer (if it still exists with same checksum)
 
 // episode quick add: trim title without question
 

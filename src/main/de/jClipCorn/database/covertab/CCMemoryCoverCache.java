@@ -138,9 +138,8 @@ public class CCMemoryCoverCache implements ICoverCache {
 	}
 
 	@Override
-	public CCCoverData getInfo(int cid) {
+	public CCCoverData getInfoOrNull(int cid) {
 		CCCoverData cce = _elements.get(cid);
-		if (cce == null) CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CoverNotInCache", cid)); //$NON-NLS-1$
 		return cce;
 	}
 

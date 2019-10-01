@@ -931,7 +931,7 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator {
 			boolean found = false;
 			for (int j = 0; j < cvrList.size(); j++)
 			{
-				CCCoverData cce = cc.getInfo(cvrList.get(j).getCoverID());
+				CCCoverData cce = cc.getInfoOrNull(cvrList.get(j).getCoverID());
 				found |= cce.Filename.equalsIgnoreCase(cvrname);
 			}
 			if (! found) {

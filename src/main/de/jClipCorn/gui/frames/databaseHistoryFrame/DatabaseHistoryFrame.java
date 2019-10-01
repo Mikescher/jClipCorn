@@ -28,8 +28,8 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
+import java.util.List;
 
 public class DatabaseHistoryFrame extends JFrame {
 	private static final long serialVersionUID = 2988337093531794844L;
@@ -159,6 +159,7 @@ public class DatabaseHistoryFrame extends JFrame {
 		contentPane.add(btnGetHistory, "12, 6, 1, 3, fill, fill"); //$NON-NLS-1$
 		
 		cbxIgnoreIDChanges = new JCheckBox(LocaleBundle.getString("DatabaseHistoryFrame.IgnoreTrivial2")); //$NON-NLS-1$
+		cbxIgnoreIDChanges.setSelected(true);
 		contentPane.add(cbxIgnoreIDChanges, "2, 10, 7, 1"); //$NON-NLS-1$
 		
 		progressBar = new JProgressBar();
@@ -199,23 +200,26 @@ public class DatabaseHistoryFrame extends JFrame {
 
 		new Thread(() ->
 		{
-			try {
-				SwingUtilities.invokeAndWait(() -> 
+			try
+			{
+				SwingUtilities.invokeLater(() ->
 				{
 					setEnabled(false);
 					MainFrame.getInstance().beginBlockingIntermediate();
 					btnGetHistory.setEnabled(false);
 				});
 
-				tableEntries.setData(movielist.getHistory().query(
+				List<CCCombinedHistoryEntry> data = movielist.getHistory().query(
 						cbxIgnoreTrivial.isSelected(),
 						cbxIgnoreIDChanges.isSelected(),
 						cbxIgnoreTrivial.isSelected(),
 						dt,
-						new ProgressCallbackProgressBarHelper(progressBar, 100)));
+						new ProgressCallbackProgressBarHelper(progressBar, 100));
 
-				SwingUtilities.invokeAndWait(() -> 
+				SwingUtilities.invokeLater(() ->
 				{
+					tableEntries.setData(data);
+
 					tableEntries.autoResize();
 					updateUI();
 					setEnabled(true);
@@ -223,7 +227,8 @@ public class DatabaseHistoryFrame extends JFrame {
 					btnGetHistory.setEnabled(true);
 					edTableSize.setText(_tcount + " (" + tableEntries.getDataDirect().size()+")"); //$NON-NLS-1$ //$NON-NLS-2$
 				});
-			} catch (CCFormatException | InvocationTargetException | InterruptedException e) {
+
+			} catch (CCFormatException e) {
 				CCLog.addError(e);
 				DialogHelper.showLocalError(this, "Dialogs.GenericError"); //$NON-NLS-1$
 			}

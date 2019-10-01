@@ -1,21 +1,5 @@
 package de.jClipCorn.gui.mainFrame;
 
-import java.awt.BorderLayout;
-import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.event.MouseEvent;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
-import java.io.File;
-import java.lang.reflect.InvocationTargetException;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JProgressBar;
-import javax.swing.SwingUtilities;
-
 import de.jClipCorn.Main;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
@@ -25,8 +9,17 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCFileFormat;
 import de.jClipCorn.database.util.CCDBUpdateListener;
 import de.jClipCorn.features.actionTree.ActionSource;
 import de.jClipCorn.features.actionTree.CCActionTree;
+import de.jClipCorn.features.actionTree.menus.impl.ClipMoviePopup;
+import de.jClipCorn.features.actionTree.menus.impl.ClipSeriesPopup;
+import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.features.serialization.ExportHelper;
+import de.jClipCorn.features.table.filter.customFilter.CustomSearchFilter;
 import de.jClipCorn.gui.frames.compareDatabaseFrame.DatabaseComparator;
+import de.jClipCorn.gui.frames.quickAddMoviesDialog.QuickAddMoviesDialog;
+import de.jClipCorn.gui.frames.showUpdateFrame.ShowUpdateFrame;
+import de.jClipCorn.gui.guiComponents.DatabaseElementPreviewLabel;
+import de.jClipCorn.gui.guiComponents.FileDrop;
+import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.mainFrame.clipCharSelector.AbstractClipCharSortSelector;
 import de.jClipCorn.gui.mainFrame.clipCharSelector.FullClipCharSortSelector;
 import de.jClipCorn.gui.mainFrame.clipCharSelector.SmallClipCharSortSelector;
@@ -36,23 +29,22 @@ import de.jClipCorn.gui.mainFrame.clipTable.ClipTable;
 import de.jClipCorn.gui.mainFrame.clipTable.RowFilterSource;
 import de.jClipCorn.gui.mainFrame.clipToolbar.ClipToolbar;
 import de.jClipCorn.gui.mainFrame.filterTree.FilterTree;
-import de.jClipCorn.features.actionTree.menus.impl.ClipMoviePopup;
-import de.jClipCorn.features.actionTree.menus.impl.ClipSeriesPopup;
 import de.jClipCorn.gui.mainFrame.searchField.SearchField;
-import de.jClipCorn.gui.frames.quickAddMoviesDialog.QuickAddMoviesDialog;
-import de.jClipCorn.gui.frames.showUpdateFrame.ShowUpdateFrame;
-import de.jClipCorn.gui.guiComponents.DatabaseElementPreviewLabel;
-import de.jClipCorn.gui.guiComponents.FileDrop;
-import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.properties.CCProperties;
-import de.jClipCorn.features.table.filter.customFilter.CustomSearchFilter;
 import de.jClipCorn.util.UpdateConnector;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.helper.LookAndFeelManager;
 import de.jClipCorn.util.stream.CCStreams;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 
 public class MainFrame extends JFrame implements CCDBUpdateListener, FileDrop.Listener {
 	private static final long serialVersionUID = 1002435986107998058L;
@@ -164,16 +156,18 @@ public class MainFrame extends JFrame implements CCDBUpdateListener, FileDrop.Li
 	
 	public void beginBlockingIntermediate() {
 		movielist.beginBlocking();
-		
-		try {
-			SwingUtilities.invokeAndWait(() ->
-			{
-				getProgressBar().setValue(0);
-				getProgressBar().setIndeterminate(true);
-				setEnabled(false);
-			});
-		} catch (InvocationTargetException | InterruptedException e) {
-			CCLog.addError(e);
+
+		Runnable runnner = () ->
+		{
+			getProgressBar().setValue(0);
+			getProgressBar().setIndeterminate(true);
+			setEnabled(false);
+		};
+
+		if (SwingUtilities.isEventDispatchThread()) {
+			runnner.run();
+		} else {
+			try { SwingUtilities.invokeAndWait(runnner); } catch (InvocationTargetException | InterruptedException e) { CCLog.addError(e); }
 		}
 	}
 	

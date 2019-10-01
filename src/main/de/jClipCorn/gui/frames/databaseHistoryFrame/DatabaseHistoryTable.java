@@ -1,16 +1,21 @@
 package de.jClipCorn.gui.frames.databaseHistoryFrame;
 
+import de.jClipCorn.database.CCMovieList;
+import de.jClipCorn.database.covertab.CCCoverData;
 import de.jClipCorn.database.databaseElement.*;
 import de.jClipCorn.database.history.CCCombinedHistoryEntry;
 import de.jClipCorn.database.history.CCHistorySingleChange;
 import de.jClipCorn.database.history.CCHistoryTable;
+import de.jClipCorn.gui.frames.coverPreviewFrame.CoverPreviewFrame;
 import de.jClipCorn.gui.frames.previewMovieFrame.PreviewMovieFrame;
 import de.jClipCorn.gui.frames.previewSeriesFrame.PreviewSeriesFrame;
 import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleColumnPrototype;
 import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleTable;
 import de.jClipCorn.util.Str;
+import de.jClipCorn.util.datatypes.Opt;
 import de.jClipCorn.util.stream.CCStreams;
 
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -86,10 +91,28 @@ public class DatabaseHistoryTable extends JCCSimpleTable<CCCombinedHistoryEntry>
 	@Override
 	protected void OnDoubleClickElement(CCCombinedHistoryEntry element) {
 		ICCDatabaseStructureElement dse = element.getSourceElement();
-		if (dse instanceof CCMovie)   PreviewMovieFrame.show( _parent, (CCMovie)dse);
-		if (dse instanceof CCSeries)  PreviewSeriesFrame.show(_parent, (CCSeries)dse);
-		if (dse instanceof CCSeason)  PreviewSeriesFrame.show(_parent, (CCSeason)dse);
-		if (dse instanceof CCEpisode) PreviewSeriesFrame.show(_parent, (CCEpisode)dse);
+		if (dse instanceof CCMovie)   { PreviewMovieFrame.show( _parent, (CCMovie)dse); return; }
+		if (dse instanceof CCSeries)  { PreviewSeriesFrame.show(_parent, (CCSeries)dse); return; }
+		if (dse instanceof CCSeason)  { PreviewSeriesFrame.show(_parent, (CCSeason)dse); return; }
+		if (dse instanceof CCEpisode) { PreviewSeriesFrame.show(_parent, (CCEpisode)dse); return; }
+		
+		if (element.Table == CCHistoryTable.COVERS) {
+			if (!Str.isInteger(element.ID)) return;
+			int cid = Integer.parseInt(element.ID);
+
+			CCCoverData data = CCMovieList.getInstance().getCoverCache().getInfoOrNull(cid);
+			if (data == null) return;
+
+			Opt<String> hash = element.getNewValue("HASH_FILE"); //$NON-NLS-1$
+			if (!hash.isPresent()) return;
+			if (hash.get() == null) return;
+			if (!hash.get().equalsIgnoreCase(data.Checksum)) return;
+
+			BufferedImage bi = CCMovieList.getInstance().getCoverCache().getCover(data);
+			if (bi == null) return;
+
+			new CoverPreviewFrame(_parent, bi).setVisible(true);
+		}
 	}
 
 	@Override

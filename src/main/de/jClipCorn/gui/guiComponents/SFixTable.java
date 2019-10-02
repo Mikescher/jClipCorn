@@ -1,21 +1,16 @@
 package de.jClipCorn.gui.guiComponents;
 
-import java.awt.Component;
+import javax.swing.*;
+import javax.swing.RowSorter.SortKey;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
+import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
-
-import javax.swing.JComponent;
-import javax.swing.JTable;
-import javax.swing.RowSorter;
-import javax.swing.RowSorter.SortKey;
-import javax.swing.SortOrder;
-import javax.swing.ToolTipManager;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableModel;
-import javax.swing.table.TableRowSorter;
 
 public abstract class SFixTable extends JTable {
 	private static final long serialVersionUID = 1082882838948078289L;
@@ -98,6 +93,7 @@ public abstract class SFixTable extends JTable {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				int column = getTableHeader().columnAtPoint(e.getPoint());
+				if (column == -1) return;
 				RowSorter<?> sorter = getRowSorter();
 
 				if (sorter == null) return;

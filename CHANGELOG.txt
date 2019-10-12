@@ -1,6 +1,117 @@
 
 
 ########################################################################
+############ Sat Oct 12 20:58:11 2019 +0200  1.10.7 RELEASE ############
+########################################################################
+
+
+1.10.7 Bugfix: Fixed exception in SFixTable
+1.10.7 Bugfix: Fixed error in FFProbeRunner
+1.10.7 Feature: Query online data from Edit[Movie|Series]Frame
+1.10.7 Bugfix: Fixed non-sorted values in framerate statistic
+1.10.7 Task: Auto trim title in QuickAddEpisodeFrame
+1.10.7 Feature: (Optionally) disable aggressive merges in HistoryFrame
+1.10.7 Feature: Show ImageViewer on History doubleclick (if possible)
+1.10.7 Task: Get more metadata from ffmpeg
+1.10.7 Feature: More Metadata sources (ffprobe_fast & mp4box)
+1.10.7 Feature: Auto convert UTC timestamps in db history
+1.10.7 Feature: Added Progressbar to HistoryFrame
+1.10.7 Feature: Better compression in CCDatabaseHistory
+1.10.7 Feature: Added ID display to HistoryFrame
+1.10.7 Feature: Added option to ignore Group-order changes to HistoryFrame
+1.10.7 Feature: Added option to ignore LAST_ID/LAST_COVERID changes to HistoryFrame
+1.10.7 Feature: Added option to filter HistoryFrame by time
+1.10.7 Bugfix: Fixed possible NPE in OmniParserFrame
+1.10.7 Bugfix: Fixed disabling history not being logged in history
+1.10.7 Task: Moved some errors to warnings
+1.10.7 Feature: Query MediaInfo via FFProbe
+1.10.7 Task: Better initial directories in various FileChoosers
+1.10.7 Task: Validator improvements
+1.10.7 Task: Better initial directory heuristic in ScanFrame
+1.10.7 Feature: Setting to show/hide specific columns in MainWindow
+1.10.7 Feature: Added new OnlineRefTypes: OFDB + Wikipedia
+1.10.7 Task: Show actual numbers in statistic bar charts
+1.10.7 Task: Use logarithmic scale for bitrate statistic
+1.10.7 Task: Various fixes/changes to the MediaInfo feature
+1.10.7 Bugfix: Fixed maxValueOrDefault and minValueOrDefault
+1.10.7 Task: Deprecate ApacheDerby backend
+1.10.7 Feature: Show History in PreviewMovieFrame
+1.10.7 Task: Fixed unit tests
+1.10.7 Task: Added validations for history trigger
+1.10.7 Feature: Added DatabaseHistoryFrame
+1.10.7 Task: Fix unit tests (3)
+1.10.7 Task: Fix unit tests (2)
+1.10.7 Task: Save LAST_COVERID in [INFO] table
+1.10.7 Feature: Prevent dropping non-movie files into Mainframe/SeriesFrame
+1.10.7 Feature: Added validations for ID uniqueness and database consistency
+1.10.7 Task: Made all database ID's unique across all tables
+1.10.7 Task: Fix/Update/Add UnitTests
+1.10.7 Bugfix: Fixed Backup import (jxmlbkp) with covers
+1.10.7 Feature: Add MediaInfo data (22/22)
+  - Add MediaInfo columns to movies and episodes
+  - Remove old quality column/controls/etc
+  - Add controls in Add & Edit dialogs
+  - Add display in Preview windows
+  - Add handling in various advanced dialogs
+  - Update filter
+  - Update serialization
+  - Update statistic charts
+  - Update Validations
+  - Update MediaInfo query frame
+1.10.7 Task: Fix travis.yml
+1.10.7 Task: BatchEdit and MutiAdd Improvements
+1.10.7 Bugfix: Fixed layout in BatchEditFrame
+1.10.7 Task: Added [Okay+Rename] button to AddMultiEpisodeFrame
+1.10.7 Bugfix: Fixed OpenInExplorer for paths containing special characters
+1.10.7 Task: Set recursive_triggers=true pragma in sqlite (prep for history)
+1.10.7 Feature: Better BatchEditFrame (that now only does editing - no adding)
+1.10.7 Bugfix: Various fixes in AMEFrame
+1.10.7 Feature: AddMultiEpisodesFrame (FIN)
+1.10.7 Feature: AddMultiEpisodesFrame (WIP)
+1.10.7 Feature: Ask before loosing data in EditSeriesFrame
+1.10.7 Task: Change default value of PROP_IMAGESEARCH_IMPL
+1.10.7 Task: Dependency chaos
+1.10.7 Task: Update anidb.net regex
+1.10.7 Feature: Auto query language in AddMovieFrame
+1.10.7 Feature: Warn when closing EditSeriesFrame with pending data
+1.10.7 Feature: Warn when closing EditMovieFrame with pending data
+1.10.7 Task: Check title checkbox in parse dialog when title equals original
+1.10.7 Bugfix: Fixed subgroups in sidebar not being sorted
+1.10.7 Feature: New OnlineRefTypes: TheTVDB & TVMaze
+1.10.7 Feature: group online references in context menu
+1.10.7 Bugfix: Fixed unit tests
+1.10.7 Task: Update dependencies
+1.10.7 Bugfix: Fixed month component in CCDateTime.createFromFileTimestamp
+1.10.7 Feature: Added new quantization algorithm: MedianCut
+1.10.7 Feature: Show quantization result in CoverPreviewWindow
+1.10.7 Feature: Added more database validations
+1.10.7 Bugfix: Fixed progress display in CheckDatabaseFrame
+1.10.7 Feature: Added options to CheckDatabaseFrame
+1.10.7 Task: Added more unit tests
+1.10.7 Bugfix: Fixed OctreeQuantizer implementation
+1.10.7 Bugfix: Fixed SkipStream implementation
+1.10.7 Feature: Added in-database cover table (id, metadata, preview) [[FIN]]
+1.10.7 Feature: Added in-database cover table (id, metadata, preview) [[WIP]]
+1.10.7 Task: Rewrote SQL query builder from scratch
+1.10.7 Feature: Re-do EditSeriesFrame (resizable)
+1.10.7 Bugfix: Fixed scrollbox in CreateSeriesFolderStructureFrame
+1.10.7 Feature: Improved URL regexes for online references
+1.10.7 Bugfix: Fixed cover image search no longer running
+1.10.7 Feature: Custom language icons for [DE+EN+JP] and [DE+EN+ES]
+1.10.7 Feature: New Statistic [WatchTime]
+1.10.7 Feature: Allow max 1 open window per Series/Movie
+1.10.7 Bugfix: Fixed seasons being displayed unordered in PreviewSeriesFrame
+1.10.7 Feature: Colored view-counter numbers
+1.10.7 Bugfix: Fixed HistoryCountFilter not working for episodes
+1.10.7 Feature: Warning when opening (too) big file
+1.10.7 Bugfix: Fixed NPE when creating a new database (missing cover cache)
+1.10.7 Bugfix: Fixed Texts
+1.10.7 Bugfix: Fixed Series Export (always exporting E1)
+1.10.7 Bugfix: Fixed CoverPopout in ParseOnlineFrame (modality)
+1.10.7 Bugfix: Fixed OpenInFolder for paths with multiple consecutive spaces
+
+
+########################################################################
 ############ Mon Apr 15 13:30:29 2019 +0200  1.10.6 RELEASE ############
 ########################################################################
 

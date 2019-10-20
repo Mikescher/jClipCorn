@@ -547,7 +547,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 				FormSpecs.RELATED_GAP_COLSPEC,
 				FormSpecs.DEFAULT_COLSPEC,
 				FormSpecs.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("default:grow"),
+				ColumnSpec.decode("default:grow"), //$NON-NLS-1$
 				FormSpecs.RELATED_GAP_COLSPEC,},
 			new RowSpec[] {
 				FormSpecs.RELATED_GAP_ROWSPEC,
@@ -571,7 +571,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 				FormSpecs.RELATED_GAP_ROWSPEC,
 				FormSpecs.DEFAULT_ROWSPEC,
 				FormSpecs.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("70dlu:grow"),
+				RowSpec.decode("70dlu:grow"), //$NON-NLS-1$
 				FormSpecs.RELATED_GAP_ROWSPEC,
 				FormSpecs.DEFAULT_ROWSPEC,}));
 		
@@ -639,7 +639,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		
 		btnParseOnline = new JButton(LocaleBundle.getString("AddMovieFrame.btnParseIMDB.text")); //$NON-NLS-1$
 		btnParseOnline.addActionListener(this::QueryFromOnline);
-		pnlRight.add(btnParseOnline, "4, 20");
+		pnlRight.add(btnParseOnline, "4, 20"); //$NON-NLS-1$
 		
 		label_30 = new JLabel(LocaleBundle.getString("EditSeriesFrame.lblHistory.text")); //$NON-NLS-1$
 		pnlRight.add(label_30, "2, 22, default, top"); //$NON-NLS-1$

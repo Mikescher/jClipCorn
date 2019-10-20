@@ -322,15 +322,15 @@ public class EditSeriesFrame extends JFrame implements WindowListener {
 		pnlEditSeriesInner.setLayout(new FormLayout(new ColumnSpec[] {
 				FormSpecs.PREF_COLSPEC,
 				FormSpecs.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("120px"),
+				ColumnSpec.decode("120px"), //$NON-NLS-1$
 				FormSpecs.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("0dlu:grow"),
+				ColumnSpec.decode("0dlu:grow"), //$NON-NLS-1$
 				FormSpecs.RELATED_GAP_COLSPEC,
 				FormSpecs.DEFAULT_COLSPEC,},
 			new RowSpec[] {
 				FormSpecs.PREF_ROWSPEC,
 				FormSpecs.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("14dlu"),
+				RowSpec.decode("14dlu"), //$NON-NLS-1$
 				FormSpecs.RELATED_GAP_ROWSPEC,
 				FormSpecs.DEFAULT_ROWSPEC,
 				FormSpecs.RELATED_GAP_ROWSPEC,
@@ -344,7 +344,7 @@ public class EditSeriesFrame extends JFrame implements WindowListener {
 				FormSpecs.RELATED_GAP_ROWSPEC,
 				FormSpecs.DEFAULT_ROWSPEC,
 				FormSpecs.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("default:grow"),
+				RowSpec.decode("default:grow"), //$NON-NLS-1$
 				FormSpecs.RELATED_GAP_ROWSPEC,
 				FormSpecs.DEFAULT_ROWSPEC,}));
 		
@@ -435,22 +435,22 @@ public class EditSeriesFrame extends JFrame implements WindowListener {
 		pnlEditSeriesInner.add(label_1, "1, 3"); //$NON-NLS-1$
 		
 		panel_5 = new JPanel();
-		pnlEditSeriesInner.add(panel_5, "3, 3, 5, 1, fill, fill");
+		pnlEditSeriesInner.add(panel_5, "3, 3, 5, 1, fill, fill"); //$NON-NLS-1$
 		panel_5.setLayout(new FormLayout(new ColumnSpec[] {
-				ColumnSpec.decode("default:grow"),
+				ColumnSpec.decode("default:grow"), //$NON-NLS-1$
 				FormSpecs.RELATED_GAP_COLSPEC,
 				FormSpecs.DEFAULT_COLSPEC,},
 			new RowSpec[] {
-				RowSpec.decode("14dlu"),}));
+				RowSpec.decode("14dlu"),})); //$NON-NLS-1$
 		
 				edSeriesTitle = new JTextField();
-				panel_5.add(edSeriesTitle, "1, 1, fill, fill");
+				panel_5.add(edSeriesTitle, "1, 1, fill, fill"); //$NON-NLS-1$
 				edSeriesTitle.getDocument().addDocumentListener(new DocumentLambdaAdapter(this::setDirtySeries));
 		edSeriesTitle.setColumns(10);
 		
 		btnParseOnline = new JButton(LocaleBundle.getString("EditSeriesFrame.btnOnline")); //$NON-NLS-1$
 		btnParseOnline.addActionListener(this::QueryFromOnline);
-		panel_5.add(btnParseOnline, "3, 1, fill, fill");
+		panel_5.add(btnParseOnline, "3, 1, fill, fill"); //$NON-NLS-1$
 				
 		label_11 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblOnlinescore.text")); //$NON-NLS-1$
 		pnlEditSeriesInner.add(label_11, "1, 5"); //$NON-NLS-1$
@@ -577,9 +577,9 @@ public class EditSeriesFrame extends JFrame implements WindowListener {
 		pnlEditSeasonOuter.add(pnlEditSeasonInner);
 		pnlEditSeasonInner.setBorder(new EmptyBorder(4, 4, 4, 4));
 		pnlEditSeasonInner.setLayout(new FormLayout(new ColumnSpec[] {
-				ColumnSpec.decode("max(30dlu;default)"),
+				ColumnSpec.decode("max(30dlu;default)"), //$NON-NLS-1$
 				FormSpecs.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("100px:grow"),
+				ColumnSpec.decode("100px:grow"), //$NON-NLS-1$
 				FormSpecs.RELATED_GAP_COLSPEC,
 				FormSpecs.PREF_COLSPEC,},
 			new RowSpec[] {
@@ -601,7 +601,7 @@ public class EditSeriesFrame extends JFrame implements WindowListener {
 				FormSpecs.RELATED_GAP_ROWSPEC,
 				FormSpecs.DEFAULT_ROWSPEC,
 				FormSpecs.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("default:grow"),
+				RowSpec.decode("default:grow"), //$NON-NLS-1$
 				FormSpecs.RELATED_GAP_ROWSPEC,
 				FormSpecs.DEFAULT_ROWSPEC,}));
 
@@ -957,12 +957,12 @@ public class EditSeriesFrame extends JFrame implements WindowListener {
 
 			@Override
 			public String getFullTitle() {
-				return edSeriesTitle.getText() + " - " + edSeasonTitle.getText();
+				return edSeriesTitle.getText() + " - " + edSeasonTitle.getText(); //$NON-NLS-1$
 			}
 
 			@Override
 			public String getTitleForParser() {
-				return edSeriesTitle.getText() + " - " + edSeasonTitle.getText();
+				return edSeriesTitle.getText() + " - " + edSeasonTitle.getText(); //$NON-NLS-1$
 			}
 
 			@Override

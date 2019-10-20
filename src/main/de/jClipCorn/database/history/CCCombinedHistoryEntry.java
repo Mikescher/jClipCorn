@@ -4,6 +4,7 @@ import de.jClipCorn.database.databaseElement.ICCDatabaseStructureElement;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datatypes.Opt;
 import de.jClipCorn.util.datetime.CCDateTime;
+import de.jClipCorn.util.stream.CCStreams;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -50,9 +51,9 @@ public class CCCombinedHistoryEntry
 	}
 
 	public boolean isIDChangeOnly() {
-		if (Action != CCHistoryAction.UPDATE) return false;
+		//if (Action != CCHistoryAction.UPDATE) return false;
 		if (Table != CCHistoryTable.INFO) return false;
-		if (Changes.size() != 1) return false;
+		//if (Changes.size() != 1) return false;
 
 		if (Str.equals(ID, "LAST_ID")) return true; //$NON-NLS-1$
 		if (Str.equals(ID, "LAST_COVERID")) return true; //$NON-NLS-1$
@@ -64,10 +65,10 @@ public class CCCombinedHistoryEntry
 		if (Action != CCHistoryAction.UPDATE) return false;
 		if (Table != CCHistoryTable.GROUPS) return false;
 		if (Changes.size() != 1) return false;
-
-		if (Str.equals(Changes.get(0).Field, "ORDERING")) return true; //$NON-NLS-1$
-
-		return false;
+		
+		if (CCStreams.iterate(Changes).any(c -> !Str.equals(c.Field, "ORDERING"))) return false; //$NON-NLS-1$
+		
+		return true;
 	}
 
 	public void setSourceLink(HashMap<Integer, ICCDatabaseStructureElement> elements) {

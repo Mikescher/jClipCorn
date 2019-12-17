@@ -1,33 +1,33 @@
 package de.jClipCorn.features.online.metadata.tmdb;
 
-import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.HashMap;
-import java.util.List;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.json.JSONTokener;
-
 import de.jClipCorn.database.databaseElement.columnTypes.CCFSK;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGenre;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGenreList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCSingleOnlineReference;
-import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.features.online.OnlineSearchType;
 import de.jClipCorn.features.online.cover.imdb.AgeRatingParser;
 import de.jClipCorn.features.online.metadata.Metadataparser;
 import de.jClipCorn.features.online.metadata.OnlineMetadata;
+import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.enumerations.BrowserLanguage;
 import de.jClipCorn.properties.enumerations.MetadataParserImplementation;
+import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.http.HTTPUtilities;
 import de.jClipCorn.util.stream.CCStreams;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.JSONTokener;
+
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.Base64;
+import java.util.HashMap;
+import java.util.List;
 
 public class TMDBParser extends Metadataparser {
 	private final static String API_KEY = new String(Base64.getDecoder().decode("M2ZkYWMyNzcxYWY4ZjZlZjljNWY0ZDc4ZmEyOWRjZDUAAAA"), Charset.forName("UTF-8")).trim();  //$NON-NLS-1$//$NON-NLS-2$
@@ -237,7 +237,7 @@ public class TMDBParser extends Metadataparser {
 
 						JSONObject resObj = results.getJSONObject(i);
 						
-						String release_country = resObj.getString("iso_3166_1");
+						String release_country = resObj.isNull("iso_3166_1") ? Str.Empty : resObj.getString("iso_3166_1");
 						
 						JSONArray release_dates = resObj.getJSONArray("release_dates");
 						
@@ -245,7 +245,7 @@ public class TMDBParser extends Metadataparser {
 
 							JSONObject rdObj = release_dates.getJSONObject(0);
 							
-							String release_lang = rdObj.getString("iso_639_1");
+							String release_lang = rdObj.isNull("iso_639_1") ? Str.Empty : rdObj.getString("iso_639_1");
 							String release_cert = rdObj.getString("certification");
 							if (release_cert.isEmpty()) continue;
 							
@@ -265,11 +265,11 @@ public class TMDBParser extends Metadataparser {
 
 								JSONObject rdObj = release_dates.getJSONObject(j);
 								
-								String release_lang = rdObj.getString("iso_639_1");
+								String release_lang = rdObj.isNull("iso_639_1") ? Str.Empty : rdObj.getString("iso_639_1");
 								String release_cert = rdObj.getString("certification");
 								String release_note = hasString(rdObj, "note") ? rdObj.getString("note") : "";
 								if (release_cert.isEmpty()) continue;
-								
+
 								int release_age = AgeRatingParser.getMinimumAge(release_cert, url);
 								if (release_age < 0) continue;
 								

@@ -1,10 +1,9 @@
 package de.jClipCorn.gui.frames.addMultiEpisodesFrame;
 
-import java.awt.Component;
-import java.awt.Dimension;
-
-import javax.swing.*;
-
+import com.jgoodies.forms.layout.ColumnSpec;
+import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.FormSpecs;
+import com.jgoodies.forms.layout.RowSpec;
 import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguageList;
@@ -12,27 +11,24 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCFileFormat;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMediaInfo;
 import de.jClipCorn.database.databaseElement.columnTypes.CCTagList;
 import de.jClipCorn.features.log.CCLog;
+import de.jClipCorn.features.metadata.exceptions.MediaQueryException;
+import de.jClipCorn.features.metadata.mediaquery.MediaQueryRunner;
 import de.jClipCorn.gui.frames.omniParserFrame.OmniParserFrame;
 import de.jClipCorn.gui.guiComponents.language.LanguageChooserDialog;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.Str;
-import de.jClipCorn.features.metadata.exceptions.MediaQueryException;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.helper.FileChooserHelper;
 import de.jClipCorn.util.helper.SimpleFileUtils;
 import de.jClipCorn.util.listener.UpdateCallbackListener;
-
-import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.ColumnSpec;
-import com.jgoodies.forms.layout.RowSpec;
-import com.jgoodies.forms.layout.FormSpecs;
-import de.jClipCorn.features.metadata.mediaquery.MediaQueryRunner;
 import de.jClipCorn.util.stream.CCStreams;
 import org.apache.commons.io.FileUtils;
 
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
@@ -595,31 +591,32 @@ public class AddMultiEpisodesFrame extends JFrame {
 						File srcFile = new File(vm.SourcePath);
 						File dstFile = new File(PathFormatter.fromCCPath(vm.TargetPath));
 
-						if (srcFile.getAbsolutePath().equalsIgnoreCase(dstFile.getAbsolutePath())) continue;
+						if (!srcFile.getAbsolutePath().equalsIgnoreCase(dstFile.getAbsolutePath()) && !vm.NoMove)
+						{
+							FileUtils.forceMkdir(dstFile.getParentFile());
+							if (mode == 0)
+							{
+								SimpleFileUtils.copyWithProgress(srcFile, dstFile, (val, max) ->
+								{
+									int newvalue = (int)(((val * 100) / max));
+									SwingUtilities.invokeLater(() -> { progressBar2.setValue(newvalue); progressBar2.setMaximum(100); });
+								});
+							}
+							else if (mode == 1)
+							{
+								SimpleFileUtils.copyWithProgress(srcFile, dstFile, (val, max) ->
+								{
+									int newvalue = (int)(((val * 100) / max));
+									SwingUtilities.invokeLater(() -> { progressBar2.setValue(newvalue); progressBar2.setMaximum(100); });
+								});
+								if (!srcFile.delete()) throw new Exception("Delete of '"+srcFile.getAbsolutePath()+"' failed"); //$NON-NLS-1$ //$NON-NLS-2$
+							}
+							else if (mode == 2)
+							{
+								if (!srcFile.renameTo(dstFile)) throw new Exception("Rename of '"+srcFile.getAbsolutePath()+"' to '"+dstFile.getAbsolutePath()+"' failed"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+							}
 
-						if (vm.NoMove) continue;
-						
-						FileUtils.forceMkdir(dstFile.getParentFile());
-						if (mode == 0)
-						{
-							SimpleFileUtils.copyWithProgress(srcFile, dstFile, (val, max) ->
-							{
-								int newvalue = (int)(((val * 100) / max));
-								SwingUtilities.invokeLater(() -> { progressBar2.setValue(newvalue); progressBar2.setMaximum(100); });
-							});
-						}
-						else if (mode == 1)
-						{
-							SimpleFileUtils.copyWithProgress(srcFile, dstFile, (val, max) ->
-							{
-								int newvalue = (int)(((val * 100) / max));
-								SwingUtilities.invokeLater(() -> { progressBar2.setValue(newvalue); progressBar2.setMaximum(100); });
-							});
-							if (!srcFile.delete()) throw new Exception("Delete of '"+srcFile.getAbsolutePath()+"' failed"); //$NON-NLS-1$ //$NON-NLS-2$
-						}
-						else if (mode == 2)
-						{
-							if (!srcFile.renameTo(dstFile)) throw new Exception("Rename of '"+srcFile.getAbsolutePath()+"' to '"+dstFile.getAbsolutePath()+"' failed"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+
 						}
 
 						SwingUtilities.invokeAndWait(() ->

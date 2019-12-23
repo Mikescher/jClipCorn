@@ -30,14 +30,14 @@ import javax.swing.*;
 
 public class Main {
 	public final static String TITLE     = "jClipCorn"; //$NON-NLS-1$
-	public final static String VERSION   = /*<gradle_version_marker>*/"1.10.7"/*</gradle_version_marker>*/; //$NON-NLS-1$
+	public final static String VERSION   = /*<gradle_version_marker>*/"1.10.7.2"/*</gradle_version_marker>*/; //$NON-NLS-1$
 	public final static String DBVERSION = "14";    //$NON-NLS-1$
 	public final static String JXMLVER   = "4";     //$NON-NLS-1$
 
 	private final static String PROPERTIES_PATH = "jClipcorn.properties"; //$NON-NLS-1$
 	
 	public static boolean DEBUG = "true".equals(System.getProperty("ineclipse"));  //$NON-NLS-1$//$NON-NLS-2$
-	public static boolean BETA = false;
+	public static boolean BETA = true;
 		
 	public static void main(String[] arg) {
 		Globals.TIMINGS.start(Globals.TIMING_STARTUP_TOTAL);

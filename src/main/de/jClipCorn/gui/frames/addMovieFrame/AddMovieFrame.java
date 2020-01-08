@@ -35,6 +35,7 @@ import de.jClipCorn.util.formatter.FileSizeFormatter;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.helper.FileChooserHelper;
+import de.jClipCorn.util.helper.LookAndFeelManager;
 import de.jClipCorn.util.parser.FilenameParser;
 import de.jClipCorn.util.parser.FilenameParserResult;
 import de.jClipCorn.util.stream.CCStreams;
@@ -192,8 +193,8 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		setTitle(LocaleBundle.getString("AddMovieFrame.this.title")); //$NON-NLS-1$
 		setIconImage(Resources.IMG_FRAME_ICON.get());
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 750, 750);
-		setMinimumSize(new Dimension(650, 650));
+		setBounds(100, 100, 750, LookAndFeelManager.isWindows() ? 675 : 750);
+		setMinimumSize(new Dimension(650, 660));
 		setResizable(true);
 		contentPane = new JPanel();
 		contentPane.setFocusable(false);

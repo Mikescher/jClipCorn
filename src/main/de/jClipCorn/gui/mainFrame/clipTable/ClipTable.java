@@ -1,41 +1,32 @@
 package de.jClipCorn.gui.mainFrame.clipTable;
 
-import java.awt.Component;
-import java.awt.Cursor;
-import java.awt.Point;
-import java.awt.Rectangle;
+import de.jClipCorn.database.CCMovieList;
+import de.jClipCorn.database.databaseElement.CCDatabaseElement;
+import de.jClipCorn.database.databaseElement.columnTypes.CCMovieZyklus;
+import de.jClipCorn.database.databaseElement.columnTypes.CCUserScore;
+import de.jClipCorn.database.util.CCDBUpdateListener;
+import de.jClipCorn.features.table.filter.AbstractCustomFilter;
+import de.jClipCorn.features.table.filter.TableCustomFilter;
+import de.jClipCorn.features.table.filter.customFilter.CustomUserScoreFilter;
+import de.jClipCorn.features.table.filter.customFilter.CustomZyklusFilter;
+import de.jClipCorn.gui.mainFrame.MainFrame;
+import de.jClipCorn.properties.CCProperties;
+import de.jClipCorn.properties.enumerations.MainFrameColumn;
+import de.jClipCorn.util.TableColumnAdjuster;
+
+import javax.swing.*;
+import javax.swing.RowSorter.SortKey;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableRowSorter;
+import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-
-import javax.swing.JScrollPane;
-import javax.swing.ListSelectionModel;
-import javax.swing.RowSorter;
-import javax.swing.RowSorter.SortKey;
-import javax.swing.SortOrder;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.table.TableColumn;
-import javax.swing.table.TableRowSorter;
-
-import com.sun.java.swing.plaf.windows.WindowsScrollBarUI;
-
-import de.jClipCorn.database.CCMovieList;
-import de.jClipCorn.database.databaseElement.CCDatabaseElement;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieZyklus;
-import de.jClipCorn.database.databaseElement.columnTypes.CCUserScore;
-import de.jClipCorn.database.util.CCDBUpdateListener;
-import de.jClipCorn.gui.mainFrame.MainFrame;
-import de.jClipCorn.properties.CCProperties;
-import de.jClipCorn.features.table.filter.AbstractCustomFilter;
-import de.jClipCorn.features.table.filter.TableCustomFilter;
-import de.jClipCorn.features.table.filter.customFilter.CustomUserScoreFilter;
-import de.jClipCorn.features.table.filter.customFilter.CustomZyklusFilter;
-import de.jClipCorn.properties.enumerations.MainFrameColumn;
-import de.jClipCorn.util.TableColumnAdjuster;
 
 @SuppressWarnings("restriction")
 public class ClipTable extends JScrollPane implements CCDBUpdateListener, ListSelectionListener, MouseListener, MouseMotionListener {
@@ -80,9 +71,6 @@ public class ClipTable extends JScrollPane implements CCDBUpdateListener, ListSe
 		table.getSelectionModel().addListSelectionListener(this);
 		table.addMouseListener(this);
 		table.addMouseMotionListener(this);
-		
-		if (this.getVerticalScrollBar().getUI() instanceof WindowsScrollBarUI)
-			this.getVerticalScrollBar().setUI(new ClipVerticalScrollbarUI(32));
 	}
 
 	public void configureColumnVisibility(Set<MainFrameColumn> data, boolean initial) {

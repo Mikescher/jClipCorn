@@ -1,21 +1,15 @@
 package de.jClipCorn.util.helper;
 
-import java.awt.Color;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.Vector;
-
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
-
+import de.jClipCorn.features.log.CCLog;
+import de.jClipCorn.gui.localization.LocaleBundle;
 import org.pushingpixels.substance.api.SubstanceLookAndFeel;
 import org.pushingpixels.substance.api.skin.SkinInfo;
 
-import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.features.log.CCLog;
+import javax.swing.*;
+import java.awt.*;
+import java.util.List;
+import java.util.*;
+import java.util.Map.Entry;
 
 public class LookAndFeelManager {
 	public final static int ID_LNF_WINDOWS = 0;

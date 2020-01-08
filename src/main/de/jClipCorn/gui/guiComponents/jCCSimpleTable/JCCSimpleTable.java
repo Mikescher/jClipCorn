@@ -1,23 +1,18 @@
 package de.jClipCorn.gui.guiComponents.jCCSimpleTable;
 
-import java.awt.Rectangle;
+import de.jClipCorn.util.TableColumnAdjuster;
+import de.jClipCorn.util.lambda.Func1to1;
+import de.jClipCorn.util.stream.CCStreams;
+
+import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.table.TableRowSorter;
+import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.swing.JScrollPane;
-import javax.swing.ListSelectionModel;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.table.TableRowSorter;
-
-import com.sun.java.swing.plaf.windows.WindowsScrollBarUI;
-
-import de.jClipCorn.gui.mainFrame.clipTable.ClipVerticalScrollbarUI;
-import de.jClipCorn.util.TableColumnAdjuster;
-import de.jClipCorn.util.lambda.Func1to1;
-import de.jClipCorn.util.stream.CCStreams;
 
 @SuppressWarnings("restriction")
 public abstract class JCCSimpleTable<TData> extends JScrollPane implements ListSelectionListener, MouseListener {
@@ -60,9 +55,6 @@ public abstract class JCCSimpleTable<TData> extends JScrollPane implements ListS
 		table.setRowSorter(sorter);
 
 		for (int i = 0; i < columns.size(); i++) sorter.setSortable(i, isSortable(i));
-
-		if (this.getVerticalScrollBar().getUI() instanceof WindowsScrollBarUI)
-			this.getVerticalScrollBar().setUI(new ClipVerticalScrollbarUI(32));
 	}
 
 	public void autoResize() {

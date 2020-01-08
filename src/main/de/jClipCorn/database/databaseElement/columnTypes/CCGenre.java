@@ -1,12 +1,12 @@
 package de.jClipCorn.database.databaseElement.columnTypes;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-
-import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.features.log.CCLog;
+import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.enumextension.ContinoousEnum;
 import de.jClipCorn.util.enumextension.EnumWrapper;
+
+import java.util.ArrayList;
+import java.util.Comparator;
 
 public enum CCGenre implements ContinoousEnum<CCGenre> {
 	GENRE_000(0x00), GENRE_001(0x01), GENRE_002(0x02), GENRE_003(0x03), GENRE_004(0x04), GENRE_005(0x05), GENRE_006(0x06), GENRE_007(0x07),
@@ -226,49 +226,56 @@ public enum CCGenre implements ContinoousEnum<CCGenre> {
 
 	@SuppressWarnings("nls")
 	public static CCGenre[] parseFromMAL(String txt) {
-		if (txt.equalsIgnoreCase("Action"))        return new CCGenre[]{CCGenre.GENRE_019};
-		if (txt.equalsIgnoreCase("Adventure"))     return new CCGenre[]{CCGenre.GENRE_035};
-		if (txt.equalsIgnoreCase("Cars"))          return new CCGenre[]{};
-		if (txt.equalsIgnoreCase("Comedy"))        return new CCGenre[]{CCGenre.GENRE_010};
-		if (txt.equalsIgnoreCase("Dementia"))      return new CCGenre[]{};
-		if (txt.equalsIgnoreCase("Demons"))        return new CCGenre[]{CCGenre.GENRE_038};
-		if (txt.equalsIgnoreCase("Drama"))         return new CCGenre[]{CCGenre.GENRE_040};
-		if (txt.equalsIgnoreCase("Ecchi"))         return new CCGenre[]{};
-		if (txt.equalsIgnoreCase("Fantasy"))       return new CCGenre[]{CCGenre.GENRE_038};
-		if (txt.equalsIgnoreCase("Game"))          return new CCGenre[]{CCGenre.GENRE_043};
-		if (txt.equalsIgnoreCase("Harem"))         return new CCGenre[]{};
-		if (txt.equalsIgnoreCase("Hentai"))        return new CCGenre[]{};
-		if (txt.equalsIgnoreCase("Historical"))    return new CCGenre[]{CCGenre.GENRE_046};
-		if (txt.equalsIgnoreCase("Horror"))        return new CCGenre[]{CCGenre.GENRE_029};
-		if (txt.equalsIgnoreCase("Kids"))          return new CCGenre[]{CCGenre.GENRE_048};
-		if (txt.equalsIgnoreCase("Magic"))         return new CCGenre[]{CCGenre.GENRE_038};
-		if (txt.equalsIgnoreCase("Martial Arts"))  return new CCGenre[]{CCGenre.GENRE_027};
-		if (txt.equalsIgnoreCase("Mecha"))         return new CCGenre[]{CCGenre.GENRE_054};
-		if (txt.equalsIgnoreCase("Military"))      return new CCGenre[]{CCGenre.GENRE_015};
-		if (txt.equalsIgnoreCase("Music"))         return new CCGenre[]{CCGenre.GENRE_044};
-		if (txt.equalsIgnoreCase("Mystery"))       return new CCGenre[]{CCGenre.GENRE_037};
-		if (txt.equalsIgnoreCase("Parody"))        return new CCGenre[]{CCGenre.GENRE_055};
-		if (txt.equalsIgnoreCase("Police"))        return new CCGenre[]{};
-		if (txt.equalsIgnoreCase("Psychological")) return new CCGenre[]{CCGenre.GENRE_008};
-		if (txt.equalsIgnoreCase("Romance"))       return new CCGenre[]{CCGenre.GENRE_036};
-		if (txt.equalsIgnoreCase("Samurai"))       return new CCGenre[]{CCGenre.GENRE_027};
-		if (txt.equalsIgnoreCase("School"))        return new CCGenre[]{CCGenre.GENRE_053};
-		if (txt.equalsIgnoreCase("Sci-Fi"))        return new CCGenre[]{CCGenre.GENRE_009};
-		if (txt.equalsIgnoreCase("Shoujo"))        return new CCGenre[]{CCGenre.GENRE_052};
-		if (txt.equalsIgnoreCase("Shoujo Ai"))     return new CCGenre[]{CCGenre.GENRE_052};
-		if (txt.equalsIgnoreCase("Shounen"))       return new CCGenre[]{CCGenre.GENRE_051};
-		if (txt.equalsIgnoreCase("Shounen Ai"))    return new CCGenre[]{CCGenre.GENRE_051};
-		if (txt.equalsIgnoreCase("Slice of Life")) return new CCGenre[]{CCGenre.GENRE_050};
-		if (txt.equalsIgnoreCase("Space"))         return new CCGenre[]{CCGenre.GENRE_009};
-		if (txt.equalsIgnoreCase("Sports"))        return new CCGenre[]{CCGenre.GENRE_043};
-		if (txt.equalsIgnoreCase("Super Power"))   return new CCGenre[]{CCGenre.GENRE_038};
-		if (txt.equalsIgnoreCase("Supernatural"))  return new CCGenre[]{CCGenre.GENRE_038};
-		if (txt.equalsIgnoreCase("Thriller"))      return new CCGenre[]{CCGenre.GENRE_006};
-		if (txt.equalsIgnoreCase("Vampire"))       return new CCGenre[]{CCGenre.GENRE_038};
-		if (txt.equalsIgnoreCase("Yaoi"))          return new CCGenre[]{};
-		if (txt.equalsIgnoreCase("Yuri"))          return new CCGenre[]{};
+		if (malEquals(txt, "Action"))        return new CCGenre[]{CCGenre.GENRE_019};
+		if (malEquals(txt, "Adventure"))     return new CCGenre[]{CCGenre.GENRE_035};
+		if (malEquals(txt, "Cars"))          return new CCGenre[]{};
+		if (malEquals(txt, "Comedy"))        return new CCGenre[]{CCGenre.GENRE_010};
+		if (malEquals(txt, "Dementia"))      return new CCGenre[]{};
+		if (malEquals(txt, "Demons"))        return new CCGenre[]{CCGenre.GENRE_038};
+		if (malEquals(txt, "Drama"))         return new CCGenre[]{CCGenre.GENRE_040};
+		if (malEquals(txt, "Ecchi"))         return new CCGenre[]{};
+		if (malEquals(txt, "Fantasy"))       return new CCGenre[]{CCGenre.GENRE_038};
+		if (malEquals(txt, "Game"))          return new CCGenre[]{CCGenre.GENRE_043};
+		if (malEquals(txt, "Harem"))         return new CCGenre[]{};
+		if (malEquals(txt, "Hentai"))        return new CCGenre[]{};
+		if (malEquals(txt, "Historical"))    return new CCGenre[]{CCGenre.GENRE_046};
+		if (malEquals(txt, "Horror"))        return new CCGenre[]{CCGenre.GENRE_029};
+		if (malEquals(txt, "Kids"))          return new CCGenre[]{CCGenre.GENRE_048};
+		if (malEquals(txt, "Magic"))         return new CCGenre[]{CCGenre.GENRE_038};
+		if (malEquals(txt, "Martial Arts"))  return new CCGenre[]{CCGenre.GENRE_027};
+		if (malEquals(txt, "Mecha"))         return new CCGenre[]{CCGenre.GENRE_054};
+		if (malEquals(txt, "Military"))      return new CCGenre[]{CCGenre.GENRE_015};
+		if (malEquals(txt, "Music"))         return new CCGenre[]{CCGenre.GENRE_044};
+		if (malEquals(txt, "Mystery"))       return new CCGenre[]{CCGenre.GENRE_037};
+		if (malEquals(txt, "Parody"))        return new CCGenre[]{CCGenre.GENRE_055};
+		if (malEquals(txt, "Police"))        return new CCGenre[]{};
+		if (malEquals(txt, "Psychological")) return new CCGenre[]{CCGenre.GENRE_008};
+		if (malEquals(txt, "Romance"))       return new CCGenre[]{CCGenre.GENRE_036};
+		if (malEquals(txt, "Samurai"))       return new CCGenre[]{CCGenre.GENRE_027};
+		if (malEquals(txt, "School"))        return new CCGenre[]{CCGenre.GENRE_053};
+		if (malEquals(txt, "Sci-Fi"))        return new CCGenre[]{CCGenre.GENRE_009};
+		if (malEquals(txt, "Shoujo"))        return new CCGenre[]{CCGenre.GENRE_052};
+		if (malEquals(txt, "Shoujo Ai"))     return new CCGenre[]{CCGenre.GENRE_052};
+		if (malEquals(txt, "Shounen"))       return new CCGenre[]{CCGenre.GENRE_051};
+		if (malEquals(txt, "Shounen Ai"))    return new CCGenre[]{CCGenre.GENRE_051};
+		if (malEquals(txt, "Slice of Life")) return new CCGenre[]{CCGenre.GENRE_050};
+		if (malEquals(txt, "Space"))         return new CCGenre[]{CCGenre.GENRE_009};
+		if (malEquals(txt, "Sports"))        return new CCGenre[]{CCGenre.GENRE_043};
+		if (malEquals(txt, "Super Power"))   return new CCGenre[]{CCGenre.GENRE_038};
+		if (malEquals(txt, "Supernatural"))  return new CCGenre[]{CCGenre.GENRE_038};
+		if (malEquals(txt, "Thriller"))      return new CCGenre[]{CCGenre.GENRE_006};
+		if (malEquals(txt, "Vampire"))       return new CCGenre[]{CCGenre.GENRE_038};
+		if (malEquals(txt, "Yaoi"))          return new CCGenre[]{};
+		if (malEquals(txt, "Yuri"))          return new CCGenre[]{};
 
 		return new CCGenre[]{};
+	}
+
+	private static boolean malEquals(String mal, String gref)
+	{
+		if (gref.equalsIgnoreCase(mal)) return true;
+		if ((gref+gref).equalsIgnoreCase(mal)) return true;
+		return false;
 	}
 
 	@SuppressWarnings("nls")

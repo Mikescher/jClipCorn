@@ -1,14 +1,5 @@
 package de.jClipCorn.features.online.metadata.mal;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-
 import de.jClipCorn.database.databaseElement.columnTypes.CCGenre;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGenreList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCSingleOnlineReference;
@@ -17,10 +8,19 @@ import de.jClipCorn.features.online.cover.imdb.AgeRatingParser;
 import de.jClipCorn.features.online.metadata.Metadataparser;
 import de.jClipCorn.features.online.metadata.OnlineMetadata;
 import de.jClipCorn.properties.enumerations.MetadataParserImplementation;
+import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.helper.RegExHelper;
 import de.jClipCorn.util.http.HTTPUtilities;
 import de.jClipCorn.util.stream.CCStreams;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class MALParser extends Metadataparser {
 	private final static String SEARCH_URL = "https://myanimelist.net/search/all?q=%s"; //$NON-NLS-1$
@@ -121,7 +121,7 @@ public class MALParser extends Metadataparser {
 			}
 		}
 
-		if (downloadCover && result.CoverURL != null)result.Cover = HTTPUtilities.getImage(result.CoverURL);
+		if (downloadCover && !Str.isNullOrWhitespace(result.CoverURL)) result.Cover = HTTPUtilities.getImage(result.CoverURL);
 		
 		return result;
 	}

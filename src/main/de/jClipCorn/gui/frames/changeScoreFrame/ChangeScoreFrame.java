@@ -1,22 +1,5 @@
 package de.jClipCorn.gui.frames.changeScoreFrame;
 
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-
-import javax.swing.AbstractAction;
-import javax.swing.ActionMap;
-import javax.swing.InputMap;
-import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.KeyStroke;
-import javax.swing.SwingConstants;
-
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.databaseElement.CCMovie;
@@ -26,6 +9,11 @@ import de.jClipCorn.gui.guiComponents.PropertyCheckbox;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.properties.CCProperties;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 
 public class ChangeScoreFrame extends JFrame {
 	private static final long serialVersionUID = 9048482551231383355L;
@@ -53,6 +41,8 @@ public class ChangeScoreFrame extends JFrame {
 	private JLabel lblbackspace;
 	private PropertyCheckbox cbSkipRated;
 	private PropertyCheckbox cbOnlyViewed;
+	private JButton btnScoreM;
+	private JLabel label_4;
 
 	public ChangeScoreFrame(Component owner, CCMovieList list) {
 		super();
@@ -69,7 +59,7 @@ public class ChangeScoreFrame extends JFrame {
 	private void initGUI() {
 		setTitle(LocaleBundle.getString("ChangedScoreFrame.this.title")); //$NON-NLS-1$
 		setIconImage(Resources.IMG_FRAME_ICON.get());
-		setSize(new Dimension(430, 375));
+		setSize(new Dimension(430, 428));
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		getContentPane().setLayout(null);
@@ -80,7 +70,7 @@ public class ChangeScoreFrame extends JFrame {
 		
 		lblCurrent = new JLabel();
 		lblCurrent.setHorizontalAlignment(SwingConstants.CENTER);
-		lblCurrent.setBounds(202, 270, 120, 20);
+		lblCurrent.setBounds(202, 304, 120, 20);
 		getContentPane().add(lblCurrent);
 		
 		lblKeyViewed = new JLabel("(1)"); //$NON-NLS-1$
@@ -99,73 +89,43 @@ public class ChangeScoreFrame extends JFrame {
 		getContentPane().add(lblTitle);
 		
 		btnScore0 = new JButton(CCUserScore.RATING_0.asString());
-		btnScore0.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				actionNextMovie(CCUserScore.RATING_0);
-			}
-		});
+		btnScore0.addActionListener(arg0 -> actionNextMovie(CCUserScore.RATING_0));
 		btnScore0.setBounds(202, 36, 120, 23);
 		getContentPane().add(btnScore0);
 		
 		btnScore1 = new JButton(CCUserScore.RATING_I.asString());
-		btnScore1.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				actionNextMovie(CCUserScore.RATING_I);
-			}
-		});
+		btnScore1.addActionListener(arg0 -> actionNextMovie(CCUserScore.RATING_I));
 		btnScore1.setBounds(202, 70, 120, 23);
 		getContentPane().add(btnScore1);
 		
 		btnScore2 = new JButton(CCUserScore.RATING_II.asString());
-		btnScore2.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				actionNextMovie(CCUserScore.RATING_II);
-			}
-		});
+		btnScore2.addActionListener(arg0 -> actionNextMovie(CCUserScore.RATING_II));
 		btnScore2.setBounds(202, 104, 120, 23);
 		getContentPane().add(btnScore2);
 		
+		btnScoreM = new JButton(CCUserScore.RATING_MID.asString());
+		btnScoreM.addActionListener(arg0 -> actionNextMovie(CCUserScore.RATING_MID));
+		btnScoreM.setBounds(202, 137, 120, 23);
+		getContentPane().add(btnScoreM);
+		
 		btnScore3 = new JButton(CCUserScore.RATING_III.asString());
-		btnScore3.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				actionNextMovie(CCUserScore.RATING_III);
-			}
-		});
-		btnScore3.setBounds(202, 138, 120, 23);
+		btnScore3.addActionListener(arg0 -> actionNextMovie(CCUserScore.RATING_III));
+		btnScore3.setBounds(202, 172, 120, 23);
 		getContentPane().add(btnScore3);
 		
 		btnScore4 = new JButton(CCUserScore.RATING_IV.asString());
-		btnScore4.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				actionNextMovie(CCUserScore.RATING_IV);
-			}
-		});
-		btnScore4.setBounds(202, 172, 120, 23);
+		btnScore4.addActionListener(e -> actionNextMovie(CCUserScore.RATING_IV));
+		btnScore4.setBounds(202, 206, 120, 23);
 		getContentPane().add(btnScore4);
 		
 		btnScore5 = new JButton(CCUserScore.RATING_V.asString());
-		btnScore5.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				actionNextMovie(CCUserScore.RATING_V);
-			}
-		});
-		btnScore5.setBounds(202, 206, 120, 23);
+		btnScore5.addActionListener(e -> actionNextMovie(CCUserScore.RATING_V));
+		btnScore5.setBounds(202, 240, 120, 23);
 		getContentPane().add(btnScore5);
 		
 		btnScoreNo = new JButton(CCUserScore.RATING_NO.asString());
-		btnScoreNo.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				actionNextMovie(CCUserScore.RATING_NO);
-			}
-		});
-		btnScoreNo.setBounds(202, 240, 120, 23);
+		btnScoreNo.addActionListener(e -> actionNextMovie(CCUserScore.RATING_NO));
+		btnScoreNo.setBounds(202, 274, 120, 23);
 		getContentPane().add(btnScoreNo);
 		
 		label = new JLabel("(3)"); //$NON-NLS-1$
@@ -173,32 +133,37 @@ public class ChangeScoreFrame extends JFrame {
 		label.setBounds(332, 108, 80, 14);
 		getContentPane().add(label);
 		
-		label_1 = new JLabel("(4)"); //$NON-NLS-1$
+		label_4 = new JLabel("(4)"); //$NON-NLS-1$
+		label_4.setHorizontalAlignment(SwingConstants.CENTER);
+		label_4.setBounds(332, 142, 80, 14);
+		getContentPane().add(label_4);
+		
+		label_1 = new JLabel("(5)"); //$NON-NLS-1$
 		label_1.setHorizontalAlignment(SwingConstants.CENTER);
-		label_1.setBounds(332, 142, 80, 14);
+		label_1.setBounds(332, 176, 80, 14);
 		getContentPane().add(label_1);
 		
-		label_2 = new JLabel("(5)"); //$NON-NLS-1$
+		label_2 = new JLabel("(6)"); //$NON-NLS-1$
 		label_2.setHorizontalAlignment(SwingConstants.CENTER);
-		label_2.setBounds(332, 176, 80, 14);
+		label_2.setBounds(332, 210, 80, 14);
 		getContentPane().add(label_2);
 		
-		label_3 = new JLabel("(6)"); //$NON-NLS-1$
+		label_3 = new JLabel("(7)"); //$NON-NLS-1$
 		label_3.setHorizontalAlignment(SwingConstants.CENTER);
-		label_3.setBounds(332, 210, 80, 14);
+		label_3.setBounds(332, 244, 80, 14);
 		getContentPane().add(label_3);
 		
 		lblbackspace = new JLabel("(BACKSPACE)"); //$NON-NLS-1$
 		lblbackspace.setHorizontalAlignment(SwingConstants.CENTER);
-		lblbackspace.setBounds(332, 244, 80, 14);
+		lblbackspace.setBounds(332, 278, 80, 14);
 		getContentPane().add(lblbackspace);
 		
 		cbSkipRated = new PropertyCheckbox(CCProperties.getInstance().PROP_MASSCHANGESCORE_SKIPRATED);
-		cbSkipRated.setBounds(10, 297, 402, 23);
+		cbSkipRated.setBounds(10, 331, 402, 23);
 		getContentPane().add(cbSkipRated);
 		
 		cbOnlyViewed = new PropertyCheckbox(CCProperties.getInstance().PROP_MASSCHANGESCORE_ONLYVIEWED);
-		cbOnlyViewed.setBounds(10, 323, 402, 23);
+		cbOnlyViewed.setBounds(10, 357, 402, 23);
 		getContentPane().add(cbOnlyViewed);
 	}
 	
@@ -256,6 +221,7 @@ public class ChangeScoreFrame extends JFrame {
 			btnScore3.setEnabled(false);
 			btnScore4.setEnabled(false);
 			btnScore5.setEnabled(false);
+			btnScoreM.setEnabled(false);
 			btnScoreNo.setEnabled(false);
 			running = false;
 			return;
@@ -273,6 +239,7 @@ public class ChangeScoreFrame extends JFrame {
 		map.put(KeyStroke.getKeyStroke('4'), "KEYPRESSED_4");
 		map.put(KeyStroke.getKeyStroke('5'), "KEYPRESSED_5");
 		map.put(KeyStroke.getKeyStroke('6'), "KEYPRESSED_6");
+		map.put(KeyStroke.getKeyStroke('7'), "KEYPRESSED_7");
 		map.put(KeyStroke.getKeyStroke(KeyEvent.VK_BACK_SPACE, 0), "KEYPRESSED_B");
 		
 		act.put("KEYPRESSED_1", new AbstractAction() {
@@ -300,17 +267,24 @@ public class ChangeScoreFrame extends JFrame {
 			private static final long serialVersionUID = -4772892852387370715L;
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				actionNextMovie(CCUserScore.RATING_III);
+				actionNextMovie(CCUserScore.RATING_MID);
 			}
 		});
 		act.put("KEYPRESSED_5", new AbstractAction() {
 			private static final long serialVersionUID = -4772892852387370715L;
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				actionNextMovie(CCUserScore.RATING_IV);
+				actionNextMovie(CCUserScore.RATING_III);
 			}
 		});
 		act.put("KEYPRESSED_6", new AbstractAction() {
+			private static final long serialVersionUID = -4772892852387370715L;
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				actionNextMovie(CCUserScore.RATING_IV);
+			}
+		});
+		act.put("KEYPRESSED_7", new AbstractAction() {
 			private static final long serialVersionUID = -4772892852387370715L;
 			@Override
 			public void actionPerformed(ActionEvent arg0) {

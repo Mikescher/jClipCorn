@@ -1,12 +1,5 @@
 package de.jClipCorn.util.parser.watchdata;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import org.apache.commons.lang.StringUtils;
-
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.CCMovie;
@@ -15,6 +8,12 @@ import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.database.databaseElement.columnTypes.CCUserScore;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.datetime.CCDateTime;
+import org.apache.commons.lang.StringUtils;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class WatchDataParser {
 	// ([A-Za-z].*)[ ]+\[S([0-9]+)\]
@@ -318,7 +317,7 @@ public class WatchDataParser {
 			if (score.equals("+++")) rscore = CCUserScore.RATING_V;
 			if (score.equals("++")) rscore = CCUserScore.RATING_IV;
 			if (score.equals("+")) rscore = CCUserScore.RATING_III;
-			if (score.equals("0")) rscore = CCUserScore.RATING_NO;
+			if (score.equals("0")) rscore = CCUserScore.RATING_MID;
 			if (score.equals("-")) rscore = CCUserScore.RATING_II;
 			if (score.equals("--")) rscore = CCUserScore.RATING_I;
 			if (score.equals("---")) rscore = CCUserScore.RATING_0;

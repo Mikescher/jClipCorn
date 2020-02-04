@@ -292,6 +292,7 @@ public class Resources {
 	public final static MultiSizeIconRef ICN_TABLE_SCORE_3 	= registerMultisizeIcon("/icons/table/score/thumb_up.png");
 	public final static MultiSizeIconRef ICN_TABLE_SCORE_4 	= registerMultisizeIcon("/icons/table/score/heart.png");
 	public final static MultiSizeIconRef ICN_TABLE_SCORE_5 	= registerMultisizeIcon("/icons/table/score/award_star_gold_3.png");
+	public final static MultiSizeIconRef ICN_TABLE_SCORE_6 	= registerMultisizeIcon("/icons/table/score/bullet_purple.png");
 	
 	public final static IconRef ICN_TABLE_FORMAT_0 			= register16x16Icon("/icons/table/format/ext0.png");
 	public final static IconRef ICN_TABLE_FORMAT_1 			= register16x16Icon("/icons/table/format/ext1.png");

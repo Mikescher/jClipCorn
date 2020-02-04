@@ -1,15 +1,5 @@
 package de.jClipCorn.database.migration;
 
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.sql.SQLException;
-import java.util.*;
-
-import javax.imageio.ImageIO;
-import javax.swing.JFrame;
-
 import de.jClipCorn.Main;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.covertab.CCDefaultCoverCache;
@@ -17,9 +7,9 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguage;
 import de.jClipCorn.database.driver.CCDatabase;
 import de.jClipCorn.database.driver.GenericDatabase;
 import de.jClipCorn.features.backupManager.BackupManager;
-import de.jClipCorn.gui.mainFrame.MainFrame;
-import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.features.log.CCLog;
+import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.gui.mainFrame.MainFrame;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.enumerations.CCDatabaseDriver;
 import de.jClipCorn.util.colorquantizer.ColorQuantizer;
@@ -36,6 +26,17 @@ import de.jClipCorn.util.sqlwrapper.SQLBuilder;
 import de.jClipCorn.util.sqlwrapper.SQLWrapperException;
 import de.jClipCorn.util.stream.CCStreams;
 import org.apache.commons.codec.digest.DigestUtils;
+
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.TimeZone;
 
 import static de.jClipCorn.database.driver.DatabaseStructure.*;
 
@@ -137,6 +138,12 @@ public class DatabaseMigration {
 				upgrade_13_14();
 				setDBVersion("14");
 				version = "14";
+			}
+
+			if (version.equals("14")) {
+				upgrade_14_15();
+				setDBVersion("15");
+				version = "15";
 			}
 						
 			if (! getDBVersion().equals(Main.DBVERSION)) {
@@ -420,6 +427,10 @@ public class DatabaseMigration {
 
 		}
 
+	}
+
+	private void upgrade_14_15() {
+		// nothing to do
 	}
 
 	public void onAfterConnect(CCMovieList ml, CCDatabase db) {

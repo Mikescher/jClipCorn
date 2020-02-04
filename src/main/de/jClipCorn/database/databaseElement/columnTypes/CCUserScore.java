@@ -1,12 +1,12 @@
 package de.jClipCorn.database.databaseElement.columnTypes;
 
-import javax.swing.ImageIcon;
-
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.MultiSizeIconRef;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.enumextension.ContinoousEnum;
 import de.jClipCorn.util.enumextension.EnumWrapper;
+
+import javax.swing.*;
 
 public enum CCUserScore implements ContinoousEnum<CCUserScore> {
 	RATING_0(0),	// Fucking bullshit crap
@@ -15,8 +15,9 @@ public enum CCUserScore implements ContinoousEnum<CCUserScore> {
 	RATING_III(3),	// good enough to watch
 	RATING_IV(4),	// recommended - good movie
 	RATING_V(5),	// I f*** love this piece of movie-artwork
-	RATING_NO(6);	// Unrated
-	
+	RATING_NO(6),	// Unrated
+	RATING_MID(7);	// Average - meets expectations
+
 	private final static String[] NAMES = {
 		LocaleBundle.getString("CCMovieScore.R0"),   //$NON-NLS-1$
 		LocaleBundle.getString("CCMovieScore.R1"),   //$NON-NLS-1$
@@ -24,9 +25,10 @@ public enum CCUserScore implements ContinoousEnum<CCUserScore> {
 		LocaleBundle.getString("CCMovieScore.R3"),   //$NON-NLS-1$
 		LocaleBundle.getString("CCMovieScore.R4"),   //$NON-NLS-1$
 		LocaleBundle.getString("CCMovieScore.R5"),   //$NON-NLS-1$
-		LocaleBundle.getString("CCMovieScore.RNO")   //$NON-NLS-1$
+		LocaleBundle.getString("CCMovieScore.RNO"),   //$NON-NLS-1$
+		LocaleBundle.getString("CCMovieScore.RMID"),  //$NON-NLS-1$
 	};
-	
+
 	private int id;
 
 	private static EnumWrapper<CCUserScore> wrapper = new EnumWrapper<>(RATING_NO);
@@ -66,6 +68,8 @@ public enum CCUserScore implements ContinoousEnum<CCUserScore> {
 			return Resources.ICN_TABLE_SCORE_1.get16x16();
 		case RATING_II:
 			return Resources.ICN_TABLE_SCORE_2.get16x16();
+		case RATING_MID:
+			return Resources.ICN_TABLE_SCORE_6.get16x16();
 		case RATING_III:
 			return Resources.ICN_TABLE_SCORE_3.get16x16();
 		case RATING_IV:
@@ -86,6 +90,8 @@ public enum CCUserScore implements ContinoousEnum<CCUserScore> {
 			return Resources.ICN_TABLE_SCORE_1;
 		case RATING_II:
 			return Resources.ICN_TABLE_SCORE_2;
+		case RATING_MID:
+			return Resources.ICN_TABLE_SCORE_6;
 		case RATING_III:
 			return Resources.ICN_TABLE_SCORE_3;
 		case RATING_IV:

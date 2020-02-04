@@ -197,13 +197,14 @@ public class CCActionTree extends UIActionTree{
 
 					CCActionElement movRating = add(movieExtra, "SetMovieRating", null, "ClipMenuBar.Other.MovieExtra.SetMovieRating", Resources.ICN_SIDEBAR_SCORE);
 					{
-						add(movRating, "SetMovRatingNO", null, "CCMovieScore.RNO", CCUserScore.RATING_NO.getIconRef(),  true, (e) -> onClickOtherSetRating(e, CCUserScore.RATING_NO));
-						add(movRating, "SetMovRating0",  null, "CCMovieScore.R0",  CCUserScore.RATING_0.getIconRef(),   true, (e) -> onClickOtherSetRating(e, CCUserScore.RATING_0));
-						add(movRating, "SetMovRating1",  null, "CCMovieScore.R1",  CCUserScore.RATING_I.getIconRef(),   true, (e) -> onClickOtherSetRating(e, CCUserScore.RATING_I));
-						add(movRating, "SetMovRating2",  null, "CCMovieScore.R2",  CCUserScore.RATING_II.getIconRef(),  true, (e) -> onClickOtherSetRating(e, CCUserScore.RATING_II));
-						add(movRating, "SetMovRating3",  null, "CCMovieScore.R3",  CCUserScore.RATING_III.getIconRef(), true, (e) -> onClickOtherSetRating(e, CCUserScore.RATING_III));
-						add(movRating, "SetMovRating4",  null, "CCMovieScore.R4",  CCUserScore.RATING_IV.getIconRef(),  true, (e) -> onClickOtherSetRating(e, CCUserScore.RATING_IV));
-						add(movRating, "SetMovRating5",  null, "CCMovieScore.R5",  CCUserScore.RATING_V.getIconRef(),   true, (e) -> onClickOtherSetRating(e, CCUserScore.RATING_V));
+						add(movRating, "SetMovRatingNO",  null, "CCMovieScore.RNO",  CCUserScore.RATING_NO.getIconRef(),  true, (e) -> onClickOtherSetRating(e, CCUserScore.RATING_NO));
+						add(movRating, "SetMovRating0",   null, "CCMovieScore.R0",   CCUserScore.RATING_0.getIconRef(),   true, (e) -> onClickOtherSetRating(e, CCUserScore.RATING_0));
+						add(movRating, "SetMovRating1",   null, "CCMovieScore.R1",   CCUserScore.RATING_I.getIconRef(),   true, (e) -> onClickOtherSetRating(e, CCUserScore.RATING_I));
+						add(movRating, "SetMovRatingMID", null, "CCMovieScore.RMID", CCUserScore.RATING_MID.getIconRef(), true, (e) -> onClickOtherSetRating(e, CCUserScore.RATING_MID));
+						add(movRating, "SetMovRating2",   null, "CCMovieScore.R2",   CCUserScore.RATING_II.getIconRef(),  true, (e) -> onClickOtherSetRating(e, CCUserScore.RATING_II));
+						add(movRating, "SetMovRating3",   null, "CCMovieScore.R3",   CCUserScore.RATING_III.getIconRef(), true, (e) -> onClickOtherSetRating(e, CCUserScore.RATING_III));
+						add(movRating, "SetMovRating4",   null, "CCMovieScore.R4",   CCUserScore.RATING_IV.getIconRef(),  true, (e) -> onClickOtherSetRating(e, CCUserScore.RATING_IV));
+						add(movRating, "SetMovRating5",   null, "CCMovieScore.R5",   CCUserScore.RATING_V.getIconRef(),   true, (e) -> onClickOtherSetRating(e, CCUserScore.RATING_V));
 					}
 
 					CCActionElement elemTagsMov = add(movieExtra, "SetTags_Movies", null, "ClipMenuBar.Other.MovieExtra.SetTags", Resources.ICN_MENUBAR_TAGS);
@@ -229,13 +230,14 @@ public class CCActionTree extends UIActionTree{
 				{
 					CCActionElement serRating = add(seriesExtra, "SetSeriesRating", null, "ClipMenuBar.Other.SeriesExtra.SetSeriesRating", Resources.ICN_SIDEBAR_SCORE);
 					{
-						add(serRating, "SetSerRatingNO", null, "CCMovieScore.RNO", CCUserScore.RATING_NO.getIconRef(),  true, (e) -> onClickOtherSetRating(e, CCUserScore.RATING_NO));
-						add(serRating, "SetSerRating0",  null, "CCMovieScore.R0",  CCUserScore.RATING_0.getIconRef(),   true, (e) -> onClickOtherSetRating(e, CCUserScore.RATING_0));
-						add(serRating, "SetSerRating1",  null, "CCMovieScore.R1",  CCUserScore.RATING_I.getIconRef(),   true, (e) -> onClickOtherSetRating(e, CCUserScore.RATING_I));
-						add(serRating, "SetSerRating2",  null, "CCMovieScore.R2",  CCUserScore.RATING_II.getIconRef(),  true, (e) -> onClickOtherSetRating(e, CCUserScore.RATING_II));
-						add(serRating, "SetSerRating3",  null, "CCMovieScore.R3",  CCUserScore.RATING_III.getIconRef(), true, (e) -> onClickOtherSetRating(e, CCUserScore.RATING_III));
-						add(serRating, "SetSerRating4",  null, "CCMovieScore.R4",  CCUserScore.RATING_IV.getIconRef(),  true, (e) -> onClickOtherSetRating(e, CCUserScore.RATING_IV));
-						add(serRating, "SetSerRating5",  null, "CCMovieScore.R5",  CCUserScore.RATING_V.getIconRef(),   true, (e) -> onClickOtherSetRating(e, CCUserScore.RATING_V));
+						add(serRating, "SetSerRatingNO",  null, "CCMovieScore.RNO",  CCUserScore.RATING_NO.getIconRef(),  true, (e) -> onClickOtherSetRating(e, CCUserScore.RATING_NO));
+						add(serRating, "SetSerRating0",   null, "CCMovieScore.R0",   CCUserScore.RATING_0.getIconRef(),   true, (e) -> onClickOtherSetRating(e, CCUserScore.RATING_0));
+						add(serRating, "SetSerRating1",   null, "CCMovieScore.R1",   CCUserScore.RATING_I.getIconRef(),   true, (e) -> onClickOtherSetRating(e, CCUserScore.RATING_I));
+						add(serRating, "SetSerRating2",   null, "CCMovieScore.R2",   CCUserScore.RATING_II.getIconRef(),  true, (e) -> onClickOtherSetRating(e, CCUserScore.RATING_II));
+						add(serRating, "SetSerRatingMID", null, "CCMovieScore.RMID", CCUserScore.RATING_MID.getIconRef(), true, (e) -> onClickOtherSetRating(e, CCUserScore.RATING_MID));
+						add(serRating, "SetSerRating3",   null, "CCMovieScore.R3",   CCUserScore.RATING_III.getIconRef(), true, (e) -> onClickOtherSetRating(e, CCUserScore.RATING_III));
+						add(serRating, "SetSerRating4",   null, "CCMovieScore.R4",   CCUserScore.RATING_IV.getIconRef(),  true, (e) -> onClickOtherSetRating(e, CCUserScore.RATING_IV));
+						add(serRating, "SetSerRating5",   null, "CCMovieScore.R5",   CCUserScore.RATING_V.getIconRef(),   true, (e) -> onClickOtherSetRating(e, CCUserScore.RATING_V));
 					}
 
 					CCActionElement elemTagsSer = add(seriesExtra, "SetTags_Series", null, "ClipMenuBar.Other.SeriesExtra.SetTags", Resources.ICN_MENUBAR_TAGS);

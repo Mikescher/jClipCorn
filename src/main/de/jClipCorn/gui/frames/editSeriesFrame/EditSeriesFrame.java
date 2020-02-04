@@ -20,6 +20,7 @@ import de.jClipCorn.gui.frames.batchEditFrame.BatchEditFrame;
 import de.jClipCorn.gui.frames.genericTextDialog.GenericTextDialog;
 import de.jClipCorn.gui.frames.inputErrorFrame.InputErrorDialog;
 import de.jClipCorn.gui.frames.parseOnlineFrame.ParseOnlineDialog;
+import de.jClipCorn.gui.guiComponents.CCEnumComboBox;
 import de.jClipCorn.gui.guiComponents.HFixListCellRenderer;
 import de.jClipCorn.gui.guiComponents.ReadableTextField;
 import de.jClipCorn.gui.guiComponents.TagPanel;
@@ -71,7 +72,6 @@ public class EditSeriesFrame extends JFrame implements WindowListener {
 	private JList<String> lsSeasons;
 	private JLabel label_1;
 	private JTextField edSeriesTitle;
-	private JComboBox<String> cbxSeriesGenre_7;
 	private JLabel label_2;
 	private JLabel label_3;
 	private JLabel label_4;
@@ -80,20 +80,21 @@ public class EditSeriesFrame extends JFrame implements WindowListener {
 	private JLabel label_7;
 	private JLabel label_8;
 	private JLabel label_9;
-	private JComboBox<String> cbxSeriesGenre_0;
-	private JComboBox<String> cbxSeriesGenre_1;
-	private JComboBox<String> cbxSeriesGenre_2;
-	private JComboBox<String> cbxSeriesGenre_3;
-	private JComboBox<String> cbxSeriesGenre_4;
-	private JComboBox<String> cbxSeriesGenre_5;
-	private JComboBox<String> cbxSeriesGenre_6;
+	private CCEnumComboBox<CCGenre> cbxSeriesGenre_0;
+	private CCEnumComboBox<CCGenre> cbxSeriesGenre_1;
+	private CCEnumComboBox<CCGenre> cbxSeriesGenre_2;
+	private CCEnumComboBox<CCGenre> cbxSeriesGenre_3;
+	private CCEnumComboBox<CCGenre> cbxSeriesGenre_4;
+	private CCEnumComboBox<CCGenre> cbxSeriesGenre_5;
+	private CCEnumComboBox<CCGenre> cbxSeriesGenre_6;
+	private CCEnumComboBox<CCGenre> cbxSeriesGenre_7;
 	private JLabel label_11;
 	private JSpinner spnSeriesOnlineScore;
 	private JLabel label_12;
 	private JLabel label_13;
-	private JComboBox<String> cbxSeriesFSK;
+	private CCEnumComboBox<CCFSK> cbxSeriesFSK;
 	private JScrollPane scrollPane;
-	private JComboBox<String> cbxSeriesScore;
+	private CCEnumComboBox<CCUserScore> cbxSeriesScore;
 	private JLabel lblScore;
 	private JLabel label_15;
 	private JTextField edSeasonTitle;
@@ -108,7 +109,7 @@ public class EditSeriesFrame extends JFrame implements WindowListener {
 	private JLabel label_19;
 	private JCheckBox cbEpisodeViewed;
 	private JLabel label_20;
-	private JComboBox<String> cbxEpisodeFormat;
+	private CCEnumComboBox<CCFileFormat> cbxEpisodeFormat;
 	private JLabel label_22;
 	private JSpinner spnEpisodeLength;
 	private JLabel label_23;
@@ -378,56 +379,56 @@ public class EditSeriesFrame extends JFrame implements WindowListener {
 		label_9 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGenre.text")); //$NON-NLS-1$
 		panel_2.add(label_9, "1, 1"); //$NON-NLS-1$
 
-		cbxSeriesGenre_0 = new JComboBox<>();
+		cbxSeriesGenre_0 = new CCEnumComboBox<>(CCGenre.getWrapper());
 		cbxSeriesGenre_0.addItemListener(new ItemChangeLambdaAdapter(this::setDirtySeries, ItemEvent.SELECTED));
 		panel_2.add(cbxSeriesGenre_0, "3, 1"); //$NON-NLS-1$
 
 		label_8 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGenre_1.text")); //$NON-NLS-1$
 		panel_2.add(label_8, "1, 3"); //$NON-NLS-1$
 
-		cbxSeriesGenre_1 = new JComboBox<>();
+		cbxSeriesGenre_1 = new CCEnumComboBox<>(CCGenre.getWrapper());
 		cbxSeriesGenre_1.addItemListener(new ItemChangeLambdaAdapter(this::setDirtySeries, ItemEvent.SELECTED));
 		panel_2.add(cbxSeriesGenre_1, "3, 3"); //$NON-NLS-1$
 
 		label_7 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGenre_2.text")); //$NON-NLS-1$
 		panel_2.add(label_7, "1, 5"); //$NON-NLS-1$
 
-		cbxSeriesGenre_2 = new JComboBox<>();
+		cbxSeriesGenre_2 = new CCEnumComboBox<>(CCGenre.getWrapper());
 		cbxSeriesGenre_2.addItemListener(new ItemChangeLambdaAdapter(this::setDirtySeries, ItemEvent.SELECTED));
 		panel_2.add(cbxSeriesGenre_2, "3, 5"); //$NON-NLS-1$
 
 		label_6 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGenre_3.text")); //$NON-NLS-1$
 		panel_2.add(label_6, "1, 7"); //$NON-NLS-1$
 
-		cbxSeriesGenre_3 = new JComboBox<>();
+		cbxSeriesGenre_3 = new CCEnumComboBox<>(CCGenre.getWrapper());
 		cbxSeriesGenre_3.addItemListener(new ItemChangeLambdaAdapter(this::setDirtySeries, ItemEvent.SELECTED));
 		panel_2.add(cbxSeriesGenre_3, "3, 7"); //$NON-NLS-1$
 
 		label_5 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGenre_4.text")); //$NON-NLS-1$
 		panel_2.add(label_5, "1, 9"); //$NON-NLS-1$
 
-		cbxSeriesGenre_4 = new JComboBox<>();
+		cbxSeriesGenre_4 = new CCEnumComboBox<>(CCGenre.getWrapper());
 		cbxSeriesGenre_4.addItemListener(new ItemChangeLambdaAdapter(this::setDirtySeries, ItemEvent.SELECTED));
 		panel_2.add(cbxSeriesGenre_4, "3, 9"); //$NON-NLS-1$
 
 		label_4 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGenre_5.text")); //$NON-NLS-1$
 		panel_2.add(label_4, "1, 11"); //$NON-NLS-1$
 
-		cbxSeriesGenre_5 = new JComboBox<>();
+		cbxSeriesGenre_5 = new CCEnumComboBox<>(CCGenre.getWrapper());
 		cbxSeriesGenre_5.addItemListener(new ItemChangeLambdaAdapter(this::setDirtySeries, ItemEvent.SELECTED));
 		panel_2.add(cbxSeriesGenre_5, "3, 11"); //$NON-NLS-1$
 
 		label_3 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGenre_6.text")); //$NON-NLS-1$
 		panel_2.add(label_3, "1, 13"); //$NON-NLS-1$
 
-		cbxSeriesGenre_6 = new JComboBox<>();
+		cbxSeriesGenre_6 = new CCEnumComboBox<>(CCGenre.getWrapper());
 		cbxSeriesGenre_6.addItemListener(new ItemChangeLambdaAdapter(this::setDirtySeries, ItemEvent.SELECTED));
 		panel_2.add(cbxSeriesGenre_6, "3, 13"); //$NON-NLS-1$
 
 		label_2 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGenre_7.text")); //$NON-NLS-1$
 		panel_2.add(label_2, "1, 15"); //$NON-NLS-1$
 
-		cbxSeriesGenre_7 = new JComboBox<>();
+		cbxSeriesGenre_7 = new CCEnumComboBox<>(CCGenre.getWrapper());
 		cbxSeriesGenre_7.addItemListener(new ItemChangeLambdaAdapter(this::setDirtySeries, ItemEvent.SELECTED));
 		panel_2.add(cbxSeriesGenre_7, "3, 15"); //$NON-NLS-1$
 
@@ -466,14 +467,14 @@ public class EditSeriesFrame extends JFrame implements WindowListener {
 		label_13 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblFsk.text")); //$NON-NLS-1$
 		pnlEditSeriesInner.add(label_13, "1, 7"); //$NON-NLS-1$
 
-		cbxSeriesFSK = new JComboBox<>();
+		cbxSeriesFSK = new CCEnumComboBox<>(CCFSK.getWrapper());
 		cbxSeriesFSK.addItemListener(new ItemChangeLambdaAdapter(this::setDirtySeries, ItemEvent.SELECTED));
 		pnlEditSeriesInner.add(cbxSeriesFSK, "3, 7, 5, 1"); //$NON-NLS-1$
 
 		lblScore = new JLabel(LocaleBundle.getString("EditSeriesFrame.lblScore.text")); //$NON-NLS-1$
 		pnlEditSeriesInner.add(lblScore, "1, 9"); //$NON-NLS-1$
 
-		cbxSeriesScore = new JComboBox<>();
+		cbxSeriesScore = new CCEnumComboBox<>(CCUserScore.getWrapper());
 		cbxSeriesScore.addItemListener(new ItemChangeLambdaAdapter(this::setDirtySeries, ItemEvent.SELECTED));
 		pnlEditSeriesInner.add(cbxSeriesScore, "3, 9, 5, 1"); //$NON-NLS-1$
 
@@ -740,7 +741,7 @@ public class EditSeriesFrame extends JFrame implements WindowListener {
 		label_20 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblFormat.text")); //$NON-NLS-1$
 		pnlEditEpisodeInner.add(label_20, "1, 8"); //$NON-NLS-1$
 
-		cbxEpisodeFormat = new JComboBox<>();
+		cbxEpisodeFormat = new CCEnumComboBox<>(CCFileFormat.getWrapper());
 		cbxEpisodeFormat.addItemListener(new ItemChangeLambdaAdapter(this::setDirtyEpisode, ItemEvent.SELECTED));
 		pnlEditEpisodeInner.add(cbxEpisodeFormat, "3, 8, 7, 1"); //$NON-NLS-1$
 		
@@ -906,7 +907,7 @@ public class EditSeriesFrame extends JFrame implements WindowListener {
 			}
 
 			@Override
-			public void setFilesize(long size) {
+			public void setFilesize(CCFileSize size) {
 				// NOP
 			}
 
@@ -916,12 +917,12 @@ public class EditSeriesFrame extends JFrame implements WindowListener {
 			}
 
 			@Override
-			public void setGenre(int gid, int movGenre) {
+			public void setGenre(int gid, CCGenre movGenre) {
 				// NOP
 			}
 
 			@Override
-			public void setFSK(int fsk) {
+			public void setFSK(CCFSK fsk) {
 				// NOP
 			}
 
@@ -931,7 +932,7 @@ public class EditSeriesFrame extends JFrame implements WindowListener {
 			}
 
 			@Override
-			public void setScore(int s) {
+			public void setScore(CCOnlineScore s) {
 				// NOP
 			}
 
@@ -996,7 +997,7 @@ public class EditSeriesFrame extends JFrame implements WindowListener {
 			}
 
 			@Override
-			public void setFilesize(long size) {
+			public void setFilesize(CCFileSize size) {
 				// NOP
 			}
 
@@ -1006,12 +1007,12 @@ public class EditSeriesFrame extends JFrame implements WindowListener {
 			}
 
 			@Override
-			public void setGenre(int gid, int movGenre) {
+			public void setGenre(int gid, CCGenre movGenre) {
 				// NOP
 			}
 
 			@Override
-			public void setFSK(int fsk) {
+			public void setFSK(CCFSK fsk) {
 				// NOP
 			}
 
@@ -1021,7 +1022,7 @@ public class EditSeriesFrame extends JFrame implements WindowListener {
 			}
 
 			@Override
-			public void setScore(int s) {
+			public void setScore(CCOnlineScore s) {
 				// NOP
 			}
 
@@ -1086,7 +1087,7 @@ public class EditSeriesFrame extends JFrame implements WindowListener {
 			}
 
 			@Override
-			public void setFilesize(long size) {
+			public void setFilesize(CCFileSize size) {
 				// NOP
 			}
 
@@ -1096,23 +1097,23 @@ public class EditSeriesFrame extends JFrame implements WindowListener {
 			}
 
 			@Override
-			public void setGenre(int gid, int serGenre) {
+			public void setGenre(int gid, CCGenre serGenre) {
 				switch (gid)
 				{
-					case 0: cbxSeriesGenre_0.setSelectedIndex(serGenre); break;
-					case 1: cbxSeriesGenre_1.setSelectedIndex(serGenre); break;
-					case 2: cbxSeriesGenre_2.setSelectedIndex(serGenre); break;
-					case 3: cbxSeriesGenre_3.setSelectedIndex(serGenre); break;
-					case 4: cbxSeriesGenre_4.setSelectedIndex(serGenre); break;
-					case 5: cbxSeriesGenre_5.setSelectedIndex(serGenre); break;
-					case 6: cbxSeriesGenre_6.setSelectedIndex(serGenre); break;
-					case 7: cbxSeriesGenre_7.setSelectedIndex(serGenre); break;
+					case 0: cbxSeriesGenre_0.setSelectedEnum(serGenre); break;
+					case 1: cbxSeriesGenre_1.setSelectedEnum(serGenre); break;
+					case 2: cbxSeriesGenre_2.setSelectedEnum(serGenre); break;
+					case 3: cbxSeriesGenre_3.setSelectedEnum(serGenre); break;
+					case 4: cbxSeriesGenre_4.setSelectedEnum(serGenre); break;
+					case 5: cbxSeriesGenre_5.setSelectedEnum(serGenre); break;
+					case 6: cbxSeriesGenre_6.setSelectedEnum(serGenre); break;
+					case 7: cbxSeriesGenre_7.setSelectedEnum(serGenre); break;
 				}
 			}
 
 			@Override
-			public void setFSK(int fsk) {
-				cbxSeriesFSK.setSelectedIndex(fsk);
+			public void setFSK(CCFSK fsk) {
+				cbxSeriesFSK.setSelectedEnum(fsk);
 			}
 
 			@Override
@@ -1121,8 +1122,8 @@ public class EditSeriesFrame extends JFrame implements WindowListener {
 			}
 
 			@Override
-			public void setScore(int s) {
-				spnSeriesOnlineScore.setValue(s);
+			public void setScore(CCOnlineScore s) {
+				spnSeriesOnlineScore.setValue(s.asInt());
 			}
 
 			@Override
@@ -1143,25 +1144,7 @@ public class EditSeriesFrame extends JFrame implements WindowListener {
 	}
 
 	private void setDefaultValues() {
-		//#########################   SERIES   ###########################################################
-		
-		cbxSeriesGenre_0.setModel(new DefaultComboBoxModel<>(CCGenre.getTrimmedList()));
-		cbxSeriesGenre_1.setModel(new DefaultComboBoxModel<>(CCGenre.getTrimmedList()));
-		cbxSeriesGenre_2.setModel(new DefaultComboBoxModel<>(CCGenre.getTrimmedList()));
-		cbxSeriesGenre_3.setModel(new DefaultComboBoxModel<>(CCGenre.getTrimmedList()));
-		cbxSeriesGenre_4.setModel(new DefaultComboBoxModel<>(CCGenre.getTrimmedList()));
-		cbxSeriesGenre_5.setModel(new DefaultComboBoxModel<>(CCGenre.getTrimmedList()));
-		cbxSeriesGenre_6.setModel(new DefaultComboBoxModel<>(CCGenre.getTrimmedList()));
-		cbxSeriesGenre_7.setModel(new DefaultComboBoxModel<>(CCGenre.getTrimmedList()));
-	
-		cbxSeriesFSK.setModel(new DefaultComboBoxModel<>(CCFSK.getWrapper().getList()));
-		cbxSeriesScore.setModel(new DefaultComboBoxModel<>(CCUserScore.getWrapper().getList()));
-		
-		//#########################   SEASON   ############################################################
-		
-		//#########################   EPISODE   ###########################################################
-		
-		cbxEpisodeFormat.setModel(new DefaultComboBoxModel<>(CCFileFormat.getWrapper().getList()));
+		//
 	}
 	
 	private CCSeason getSelectedSeason() {
@@ -1216,17 +1199,17 @@ public class EditSeriesFrame extends JFrame implements WindowListener {
 			
 			edSeriesTitle.setText(series.getTitle());
 			spnSeriesOnlineScore.setValue(series.getOnlinescore().asInt());
-			cbxSeriesFSK.setSelectedIndex(series.getFSK().asInt());
-			cbxSeriesScore.setSelectedIndex(series.getScore().asInt());
+			cbxSeriesFSK.setSelectedEnum(series.getFSK());
+			cbxSeriesScore.setSelectedEnum(series.getScore());
 			
-			cbxSeriesGenre_0.setSelectedIndex(series.getGenre(0).asInt());
-			cbxSeriesGenre_1.setSelectedIndex(series.getGenre(1).asInt());
-			cbxSeriesGenre_2.setSelectedIndex(series.getGenre(2).asInt());
-			cbxSeriesGenre_3.setSelectedIndex(series.getGenre(3).asInt());
-			cbxSeriesGenre_4.setSelectedIndex(series.getGenre(4).asInt());
-			cbxSeriesGenre_5.setSelectedIndex(series.getGenre(5).asInt());
-			cbxSeriesGenre_6.setSelectedIndex(series.getGenre(6).asInt());
-			cbxSeriesGenre_7.setSelectedIndex(series.getGenre(7).asInt());
+			cbxSeriesGenre_0.setSelectedEnum(series.getGenre(0));
+			cbxSeriesGenre_1.setSelectedEnum(series.getGenre(1));
+			cbxSeriesGenre_2.setSelectedEnum(series.getGenre(2));
+			cbxSeriesGenre_3.setSelectedEnum(series.getGenre(3));
+			cbxSeriesGenre_4.setSelectedEnum(series.getGenre(4));
+			cbxSeriesGenre_5.setSelectedEnum(series.getGenre(5));
+			cbxSeriesGenre_6.setSelectedEnum(series.getGenre(6));
+			cbxSeriesGenre_7.setSelectedEnum(series.getGenre(7));
 			
 			edSeriesGroups.setValue(series.getGroups());
 			
@@ -1349,7 +1332,7 @@ public class EditSeriesFrame extends JFrame implements WindowListener {
 			edEpisodeTitle.setText(episode.getTitle());
 			spnEpisodeEpisode.setValue(episode.getEpisodeNumber());
 			cbEpisodeViewed.setSelected(episode.isViewed());
-			cbxEpisodeFormat.setSelectedIndex(episode.getFormat().asInt());
+			cbxEpisodeFormat.setSelectedEnum(episode.getFormat());
 			spnEpisodeLength.setValue(episode.getLength());
 			spnEpisodeSize.setValue(episode.getFilesize().getBytes());
 			spnEpisodeAdded.setValue(episode.getAddDate());
@@ -1448,17 +1431,17 @@ public class EditSeriesFrame extends JFrame implements WindowListener {
 		series.setCover(edSeriesCvrControl.getResizedImageForStorage());
 		series.setTitle(edSeriesTitle.getText());
 		series.setOnlinescore((int) spnSeriesOnlineScore.getValue());
-		series.setFsk(cbxSeriesFSK.getSelectedIndex());
-		series.setScore(cbxSeriesScore.getSelectedIndex());
+		series.setFsk(cbxSeriesFSK.getSelectedEnum());
+		series.setScore(cbxSeriesScore.getSelectedEnum());
 		
-		series.setGenre(CCGenre.getWrapper().findOrException(cbxSeriesGenre_0.getSelectedIndex()), 0);
-		series.setGenre(CCGenre.getWrapper().findOrException(cbxSeriesGenre_1.getSelectedIndex()), 1);
-		series.setGenre(CCGenre.getWrapper().findOrException(cbxSeriesGenre_2.getSelectedIndex()), 2);
-		series.setGenre(CCGenre.getWrapper().findOrException(cbxSeriesGenre_3.getSelectedIndex()), 3);
-		series.setGenre(CCGenre.getWrapper().findOrException(cbxSeriesGenre_4.getSelectedIndex()), 4);
-		series.setGenre(CCGenre.getWrapper().findOrException(cbxSeriesGenre_5.getSelectedIndex()), 5);
-		series.setGenre(CCGenre.getWrapper().findOrException(cbxSeriesGenre_6.getSelectedIndex()), 6);
-		series.setGenre(CCGenre.getWrapper().findOrException(cbxSeriesGenre_7.getSelectedIndex()), 7);
+		series.setGenre(cbxSeriesGenre_0.getSelectedEnum(), 0);
+		series.setGenre(cbxSeriesGenre_1.getSelectedEnum(), 1);
+		series.setGenre(cbxSeriesGenre_2.getSelectedEnum(), 2);
+		series.setGenre(cbxSeriesGenre_3.getSelectedEnum(), 3);
+		series.setGenre(cbxSeriesGenre_4.getSelectedEnum(), 4);
+		series.setGenre(cbxSeriesGenre_5.getSelectedEnum(), 5);
+		series.setGenre(cbxSeriesGenre_6.getSelectedEnum(), 6);
+		series.setGenre(cbxSeriesGenre_7.getSelectedEnum(), 7);
 		
 		series.setOnlineReference(edSeriesReference.getValue());
 		series.setGroups(edSeriesGroups.getValue());
@@ -1479,16 +1462,16 @@ public class EditSeriesFrame extends JFrame implements WindowListener {
 		
 		int oscore = (int) spnSeriesOnlineScore.getValue();
 		
-		int fskidx = cbxSeriesFSK.getSelectedIndex();
+		int fskidx = cbxSeriesFSK.getSelectedEnum().asInt();
 		
-		int gen0 = cbxSeriesGenre_0.getSelectedIndex();
-		int gen1 = cbxSeriesGenre_1.getSelectedIndex();
-		int gen2 = cbxSeriesGenre_2.getSelectedIndex();
-		int gen3 = cbxSeriesGenre_3.getSelectedIndex();
-		int gen4 = cbxSeriesGenre_4.getSelectedIndex();
-		int gen5 = cbxSeriesGenre_5.getSelectedIndex();
-		int gen6 = cbxSeriesGenre_6.getSelectedIndex();
-		int gen7 = cbxSeriesGenre_7.getSelectedIndex();
+		int gen0 = cbxSeriesGenre_0.getSelectedEnum().asInt();
+		int gen1 = cbxSeriesGenre_1.getSelectedEnum().asInt();
+		int gen2 = cbxSeriesGenre_2.getSelectedEnum().asInt();
+		int gen3 = cbxSeriesGenre_3.getSelectedEnum().asInt();
+		int gen4 = cbxSeriesGenre_4.getSelectedEnum().asInt();
+		int gen5 = cbxSeriesGenre_5.getSelectedEnum().asInt();
+		int gen6 = cbxSeriesGenre_6.getSelectedEnum().asInt();
+		int gen7 = cbxSeriesGenre_7.getSelectedEnum().asInt();
 		
 		CCOnlineReferenceList ref = edSeriesReference.getValue();
 		
@@ -1663,7 +1646,7 @@ public class EditSeriesFrame extends JFrame implements WindowListener {
 		
 		CCFileFormat fmt = CCFileFormat.getMovieFormatFromPath(path);
 		
-		cbxEpisodeFormat.setSelectedIndex(fmt.asInt());
+		cbxEpisodeFormat.setSelectedEnum(fmt);
 	}
 	
 	private void openEpisodePart() {
@@ -1725,7 +1708,7 @@ public class EditSeriesFrame extends JFrame implements WindowListener {
 		episode.setTitle(edEpisodeTitle.getText());
 		episode.setEpisodeNumber((int) spnEpisodeEpisode.getValue());
 		episode.setViewed(cbEpisodeViewed.isSelected());
-		episode.setFormat(cbxEpisodeFormat.getSelectedIndex());
+		episode.setFormat(cbxEpisodeFormat.getSelectedEnum());
 		episode.setMediaInfo(mediaInfoControl.getValue());
 		episode.setLength((int) spnEpisodeLength.getValue());
 		episode.setFilesize((long) spnEpisodeSize.getValue());
@@ -1758,21 +1741,17 @@ public class EditSeriesFrame extends JFrame implements WindowListener {
 		CCDate adddate = spnEpisodeAdded.getValue();
 		CCDateTimeList lvdate = cmpEpisodeViewedHistory.getValue();
 		CCMediaInfo minfo = mediaInfoControl.getValue();
-		
-		try {
-			long fsize = (long) spnEpisodeSize.getValue();
-			String csExtn  = CCFileFormat.getWrapper().findOrException(cbxEpisodeFormat.getSelectedIndex()).asString();
-			String csExta = CCFileFormat.getWrapper().findOrException(cbxEpisodeFormat.getSelectedIndex()).asStringAlt();
-			CCDBLanguageList lng = ctrlLang.getValue();
-			
-			String part = edEpisodePart.getText();
-			
-			UserDataProblem.testEpisodeData(ret, season, episode, title, len, epNum, adddate, lvdate, fsize, csExtn, csExta, part, minfo, lng);
-			
-			return ret.isEmpty();
-		} catch (CCFormatException e) {
-			return false;
-		}
+
+		long fsize = (long) spnEpisodeSize.getValue();
+		String csExtn = cbxEpisodeFormat.getSelectedEnum().asString();
+		String csExta = cbxEpisodeFormat.getSelectedEnum().asStringAlt();
+		CCDBLanguageList lng = ctrlLang.getValue();
+
+		String part = edEpisodePart.getText();
+
+		UserDataProblem.testEpisodeData(ret, season, episode, title, len, epNum, adddate, lvdate, fsize, csExtn, csExta, part, minfo, lng);
+
+		return ret.isEmpty();
 	}
 
 	@Override

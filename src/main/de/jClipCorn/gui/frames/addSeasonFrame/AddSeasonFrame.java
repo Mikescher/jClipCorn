@@ -1,31 +1,23 @@
 package de.jClipCorn.gui.frames.addSeasonFrame;
 
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JSpinner;
-import javax.swing.JTextField;
-import javax.swing.SpinnerNumberModel;
-
 import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.database.databaseElement.CCSeries;
-import de.jClipCorn.database.databaseElement.columnTypes.CCFileFormat;
-import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReferenceList;
+import de.jClipCorn.database.databaseElement.columnTypes.*;
+import de.jClipCorn.features.online.metadata.ParseResultHandler;
+import de.jClipCorn.features.userdataProblem.UserDataProblem;
+import de.jClipCorn.features.userdataProblem.UserDataProblemHandler;
 import de.jClipCorn.gui.frames.inputErrorFrame.InputErrorDialog;
 import de.jClipCorn.gui.guiComponents.editCoverControl.EditCoverControl;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
-import de.jClipCorn.features.online.metadata.ParseResultHandler;
 import de.jClipCorn.util.helper.ExtendedFocusTraversalOnArray;
 import de.jClipCorn.util.listener.UpdateCallbackListener;
-import de.jClipCorn.features.userdataProblem.UserDataProblem;
-import de.jClipCorn.features.userdataProblem.UserDataProblemHandler;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.List;
 
 public class AddSeasonFrame extends JFrame implements UserDataProblemHandler, ParseResultHandler {
 	private static final long serialVersionUID = -5479523926638394942L;
@@ -202,7 +194,7 @@ public class AddSeasonFrame extends JFrame implements UserDataProblemHandler, Pa
 	}
 
 	@Override
-	public void setFilesize(long size) {
+	public void setFilesize(CCFileSize size) {
 		// NOP
 	}
 
@@ -212,12 +204,12 @@ public class AddSeasonFrame extends JFrame implements UserDataProblemHandler, Pa
 	}
 
 	@Override
-	public void setGenre(int gid, int movGenre) {
+	public void setGenre(int gid, CCGenre movGenre) {
 		// NOP
 	}
 
 	@Override
-	public void setFSK(int fsk) {
+	public void setFSK(CCFSK fsk) {
 		// NOP
 	}
 
@@ -227,7 +219,7 @@ public class AddSeasonFrame extends JFrame implements UserDataProblemHandler, Pa
 	}
 
 	@Override
-	public void setScore(int s) {
+	public void setScore(CCOnlineScore s) {
 		// NOP
 	}
 	

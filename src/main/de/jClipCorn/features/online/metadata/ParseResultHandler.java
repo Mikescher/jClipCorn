@@ -1,8 +1,8 @@
 package de.jClipCorn.features.online.metadata;
 
-import java.awt.image.BufferedImage;
-
 import de.jClipCorn.database.databaseElement.columnTypes.*;
+
+import java.awt.image.BufferedImage;
 
 public interface ParseResultHandler {
 	String getFullTitle();
@@ -14,12 +14,12 @@ public interface ParseResultHandler {
 	void setMovieName(String name);
 	void setZyklus(String mZyklusTitle);
 	void setZyklusNumber(int iRoman);
-	void setFilesize(long size);
+	void setFilesize(CCFileSize size);
 	void setYear(int y);
-	void setGenre(int gid, int movGenre);
-	void setFSK(int fsk);
+	void setGenre(int gid, CCGenre movGenre);
+	void setFSK(CCFSK fsk);
 	void setLength(int l);
-	void setScore(int s);
+	void setScore(CCOnlineScore s);
 	void setCover(BufferedImage nci);
 	void setOnlineReference(CCOnlineReferenceList ref);
 	

@@ -1,8 +1,28 @@
 package de.jClipCorn.gui.frames.parseOnlineFrame;
 
-import java.awt.Component;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import de.jClipCorn.database.databaseElement.columnTypes.*;
+import de.jClipCorn.features.log.CCLog;
+import de.jClipCorn.features.online.OnlineSearchType;
+import de.jClipCorn.features.online.metadata.Metadataparser;
+import de.jClipCorn.features.online.metadata.OnlineMetadata;
+import de.jClipCorn.features.online.metadata.ParseResultHandler;
+import de.jClipCorn.gui.frames.allRatingsFrame.AllRatingsDialog;
+import de.jClipCorn.gui.guiComponents.CCReadableEnumComboBox;
+import de.jClipCorn.gui.guiComponents.CoverLabel;
+import de.jClipCorn.gui.guiComponents.ReadableSpinner;
+import de.jClipCorn.gui.guiComponents.ReadableTextField;
+import de.jClipCorn.gui.guiComponents.referenceChooser.JSingleReferenceChooser;
+import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.gui.resources.Resources;
+import de.jClipCorn.util.Str;
+import de.jClipCorn.util.datatypes.Tuple;
+import de.jClipCorn.util.helper.ExtendedFocusTraversalOnArray;
+import de.jClipCorn.util.http.HTTPUtilities;
+
+import javax.swing.*;
+import javax.swing.border.BevelBorder;
+import javax.swing.border.EtchedBorder;
+import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
@@ -11,48 +31,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.DefaultListModel;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.JProgressBar;
-import javax.swing.JScrollPane;
-import javax.swing.JSpinner;
-import javax.swing.JTextField;
-import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
-import javax.swing.border.BevelBorder;
-import javax.swing.border.EtchedBorder;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-
-import de.jClipCorn.database.databaseElement.columnTypes.CCDBElementTyp;
-import de.jClipCorn.database.databaseElement.columnTypes.CCFSK;
-import de.jClipCorn.database.databaseElement.columnTypes.CCGenre;
-import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReferenceList;
-import de.jClipCorn.database.databaseElement.columnTypes.CCSingleOnlineReference;
-import de.jClipCorn.gui.frames.allRatingsFrame.AllRatingsDialog;
-import de.jClipCorn.gui.guiComponents.CoverLabel;
-import de.jClipCorn.gui.guiComponents.ReadableCombobox;
-import de.jClipCorn.gui.guiComponents.ReadableSpinner;
-import de.jClipCorn.gui.guiComponents.ReadableTextField;
-import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.features.log.CCLog;
-import de.jClipCorn.gui.resources.Resources;
-import de.jClipCorn.features.online.OnlineSearchType;
-import de.jClipCorn.features.online.metadata.Metadataparser;
-import de.jClipCorn.features.online.metadata.OnlineMetadata;
-import de.jClipCorn.features.online.metadata.ParseResultHandler;
-import de.jClipCorn.util.Str;
-import de.jClipCorn.util.datatypes.Tuple;
-import de.jClipCorn.util.helper.ExtendedFocusTraversalOnArray;
-import de.jClipCorn.util.http.HTTPUtilities;
-import de.jClipCorn.gui.guiComponents.referenceChooser.JSingleReferenceChooser;
 
 public class ParseOnlineDialog extends JDialog {
 	private static final long serialVersionUID = 3777677368743220383L;
@@ -82,26 +60,26 @@ public class ParseOnlineDialog extends JDialog {
 	private JLabel lblScore;
 	private JLabel lblLength;
 	private JLabel lblFsk;
-	private ReadableCombobox<String> cbxFSK;
+	private CCReadableEnumComboBox<CCFSK> cbxFSK;
 	private ReadableSpinner spnLength;
 	private ReadableSpinner spnScore;
 	private ReadableSpinner spnYear;
 	private JCheckBox cbGenre0;
 	private JLabel lblGenre;
-	private ReadableCombobox<String> cbxGenre0;
-	private ReadableCombobox<String> cbxGenre2;
 	private JLabel lblGenre_2;
 	private JCheckBox cbGenre2;
-	private ReadableCombobox<String> cbxGenre3;
 	private JLabel lblGenre_3;
 	private JCheckBox cbGenre3;
-	private ReadableCombobox<String> cbxGenre1;
 	private JLabel lblGenre_1;
 	private JCheckBox cbGenre1;
-	private ReadableCombobox<String> cbxGenre4;
-	private ReadableCombobox<String> cbxGenre5;
-	private ReadableCombobox<String> cbxGenre6;
-	private ReadableCombobox<String> cbxGenre7;
+	private CCReadableEnumComboBox<CCGenre> cbxGenre0;
+	private CCReadableEnumComboBox<CCGenre> cbxGenre2;
+	private CCReadableEnumComboBox<CCGenre> cbxGenre3;
+	private CCReadableEnumComboBox<CCGenre> cbxGenre1;
+	private CCReadableEnumComboBox<CCGenre> cbxGenre4;
+	private CCReadableEnumComboBox<CCGenre> cbxGenre5;
+	private CCReadableEnumComboBox<CCGenre> cbxGenre6;
+	private CCReadableEnumComboBox<CCGenre> cbxGenre7;
 	private JLabel lblGenre_7;
 	private JCheckBox cbGenre7;
 	private JCheckBox cbGenre6;
@@ -129,7 +107,6 @@ public class ParseOnlineDialog extends JDialog {
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		initGUI();
 		setLocationRelativeTo(owner);
-		initComboboxes();
 		resetAll();
 		
 		edSearchName.setText(handler.getFullTitle());
@@ -149,13 +126,9 @@ public class ParseOnlineDialog extends JDialog {
 		getContentPane().add(scrollPane);
 		
 		lsDBList = new JList<>(mdlLsDBList = new DefaultListModel<>());
-		lsDBList.addListSelectionListener(new ListSelectionListener() {
-			@Override
-			public void valueChanged(ListSelectionEvent e) {
-				if (! e.getValueIsAdjusting()) {
-					updateMainPanel();
-				}
-			}
+		lsDBList.addListSelectionListener(e ->
+		{
+			if (! e.getValueIsAdjusting()) updateMainPanel();
 		});
 		lsDBList.setCellRenderer(new ParseOnlineDialogRenderer());
 		scrollPane.setViewportView(lsDBList);
@@ -180,12 +153,7 @@ public class ParseOnlineDialog extends JDialog {
 		edSearchName.setColumns(10);
 		
 		btnParse = new JButton(LocaleBundle.getString("parseImDBFrame.btnParse.text")); //$NON-NLS-1$
-		btnParse.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				runSearchAsync(false);
-			}
-		});
+		btnParse.addActionListener(e -> runSearchAsync(false));
 		btnParse.setBounds(547, 10, 89, 23);
 		panel.add(btnParse);
 		
@@ -240,7 +208,7 @@ public class ParseOnlineDialog extends JDialog {
 		lblFsk.setBounds(33, 130, 46, 14);
 		pnlMain.add(lblFsk);
 		
-		cbxFSK = new ReadableCombobox<>();
+		cbxFSK = new CCReadableEnumComboBox<>(CCFSK.getWrapper());
 		cbxFSK.setEnabled(false);
 		cbxFSK.setBounds(120, 130, 169, 20);
 		pnlMain.add(cbxFSK);
@@ -269,12 +237,12 @@ public class ParseOnlineDialog extends JDialog {
 		lblGenre.setBounds(322, 10, 46, 14);
 		pnlMain.add(lblGenre);
 		
-		cbxGenre0 = new ReadableCombobox<>();
+		cbxGenre0 = new CCReadableEnumComboBox<>(CCGenre.getWrapper());
 		cbxGenre0.setEnabled(false);
 		cbxGenre0.setBounds(377, 10, 169, 20);
 		pnlMain.add(cbxGenre0);
 		
-		cbxGenre2 = new ReadableCombobox<>();
+		cbxGenre2 = new CCReadableEnumComboBox<>(CCGenre.getWrapper());
 		cbxGenre2.setEnabled(false);
 		cbxGenre2.setBounds(377, 70, 169, 20);
 		pnlMain.add(cbxGenre2);
@@ -287,7 +255,7 @@ public class ParseOnlineDialog extends JDialog {
 		cbGenre2.setBounds(295, 67, 21, 23);
 		pnlMain.add(cbGenre2);
 		
-		cbxGenre3 = new ReadableCombobox<>();
+		cbxGenre3 = new CCReadableEnumComboBox<>(CCGenre.getWrapper());
 		cbxGenre3.setEnabled(false);
 		cbxGenre3.setBounds(377, 100, 169, 20);
 		pnlMain.add(cbxGenre3);
@@ -300,7 +268,7 @@ public class ParseOnlineDialog extends JDialog {
 		cbGenre3.setBounds(295, 97, 21, 23);
 		pnlMain.add(cbGenre3);
 		
-		cbxGenre1 = new ReadableCombobox<>();
+		cbxGenre1 = new CCReadableEnumComboBox<>(CCGenre.getWrapper());
 		cbxGenre1.setEnabled(false);
 		cbxGenre1.setBounds(377, 40, 169, 20);
 		pnlMain.add(cbxGenre1);
@@ -313,22 +281,22 @@ public class ParseOnlineDialog extends JDialog {
 		cbGenre1.setBounds(295, 37, 21, 23);
 		pnlMain.add(cbGenre1);
 		
-		cbxGenre4 = new ReadableCombobox<>();
+		cbxGenre4 = new CCReadableEnumComboBox<>(CCGenre.getWrapper());
 		cbxGenre4.setEnabled(false);
 		cbxGenre4.setBounds(377, 130, 169, 20);
 		pnlMain.add(cbxGenre4);
 		
-		cbxGenre5 = new ReadableCombobox<>();
+		cbxGenre5 = new CCReadableEnumComboBox<>(CCGenre.getWrapper());
 		cbxGenre5.setEnabled(false);
 		cbxGenre5.setBounds(377, 160, 169, 20);
 		pnlMain.add(cbxGenre5);
 		
-		cbxGenre6 = new ReadableCombobox<>();
+		cbxGenre6 = new CCReadableEnumComboBox<>(CCGenre.getWrapper());
 		cbxGenre6.setEnabled(false);
 		cbxGenre6.setBounds(377, 190, 169, 20);
 		pnlMain.add(cbxGenre6);
 		
-		cbxGenre7 = new ReadableCombobox<>();
+		cbxGenre7 = new CCReadableEnumComboBox<>(CCGenre.getWrapper());
 		cbxGenre7.setEnabled(false);
 		cbxGenre7.setBounds(377, 220, 169, 20);
 		pnlMain.add(cbxGenre7);
@@ -379,35 +347,26 @@ public class ParseOnlineDialog extends JDialog {
 		pnlMain.add(cbCover);
 		
 		btnRef = new JButton(Resources.ICN_REF_00_BUTTON.get());
-		btnRef.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				if (lsDBList.getSelectedIndex() >= 0) {
-					HTTPUtilities.openInBrowser(lsDBList.getSelectedValue().Reference.getURL());
-				}
+		btnRef.addActionListener(arg0 ->
+		{
+			if (lsDBList.getSelectedIndex() >= 0) {
+				HTTPUtilities.openInBrowser(lsDBList.getSelectedValue().Reference.getURL());
 			}
 		});
 		btnRef.setBounds(377, 287, 169, 23);
 		pnlMain.add(btnRef);
 		
 		btnOk = new JButton(LocaleBundle.getString("UIGeneric.btnOK.text")); //$NON-NLS-1$
-		btnOk.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				insertDataIntoFrame();
-				dispose();
-			}
+		btnOk.addActionListener(arg0 ->
+		{
+			insertDataIntoFrame();
+			dispose();
 		});
 		btnOk.setBounds(469, 414, 77, 23);
 		pnlMain.add(btnOk);
 		
 		btnFSKAll = new JButton(LocaleBundle.getString("parseImDBFrame.btnFSKAll.text")); //$NON-NLS-1$
-		btnFSKAll.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				showAllRatingsDialog();
-			}
-		});
+		btnFSKAll.addActionListener(arg0 -> showAllRatingsDialog());
 		btnFSKAll.setBounds(377, 354, 169, 23);
 		pnlMain.add(btnFSKAll);
 		
@@ -421,12 +380,7 @@ public class ParseOnlineDialog extends JDialog {
 		getContentPane().add(pbarSearch);
 		
 		btnExtendedParse = new JButton(LocaleBundle.getString("parseImDBFrame.btnParseExtended.text")); //$NON-NLS-1$
-		btnExtendedParse.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				runSearchAsync(true);
-			}
-		});
+		btnExtendedParse.addActionListener(e -> runSearchAsync(true));
 		btnExtendedParse.setBounds(648, 10, 145, 23);
 		panel.add(btnExtendedParse);
 	}
@@ -436,20 +390,7 @@ public class ParseOnlineDialog extends JDialog {
 			(new AllRatingsDialog(cbFSKlsAll, this)).setVisible(true);
 		}
 	}
-	
-	private void initComboboxes() {
-		cbxFSK.setModel(new DefaultComboBoxModel<>(CCFSK.getWrapper().getList()));
-		
-		cbxGenre0.setModel(new DefaultComboBoxModel<>(CCGenre.getTrimmedList()));
-		cbxGenre1.setModel(new DefaultComboBoxModel<>(CCGenre.getTrimmedList()));
-		cbxGenre2.setModel(new DefaultComboBoxModel<>(CCGenre.getTrimmedList()));
-		cbxGenre3.setModel(new DefaultComboBoxModel<>(CCGenre.getTrimmedList()));
-		cbxGenre4.setModel(new DefaultComboBoxModel<>(CCGenre.getTrimmedList()));
-		cbxGenre5.setModel(new DefaultComboBoxModel<>(CCGenre.getTrimmedList()));
-		cbxGenre6.setModel(new DefaultComboBoxModel<>(CCGenre.getTrimmedList()));
-		cbxGenre7.setModel(new DefaultComboBoxModel<>(CCGenre.getTrimmedList()));
-	}
-	
+
 	private void resetAll() {
 		resetFields();
 		resetCheckboxes();
@@ -465,17 +406,17 @@ public class ParseOnlineDialog extends JDialog {
 		spnLength.setValue(0);
 		spnScore.setValue(0);
 		spnYear.setValue(0);
-		cbxFSK.setSelectedIndex(-1);
+		cbxFSK.clearSelectedEnum();
 		imgCover.clearCover();
 		
-		cbxGenre0.setSelectedIndex(-1);
-		cbxGenre1.setSelectedIndex(-1);
-		cbxGenre2.setSelectedIndex(-1);
-		cbxGenre3.setSelectedIndex(-1);
-		cbxGenre4.setSelectedIndex(-1);
-		cbxGenre5.setSelectedIndex(-1);
-		cbxGenre6.setSelectedIndex(-1);
-		cbxGenre7.setSelectedIndex(-1);
+		cbxGenre0.clearSelectedEnum();
+		cbxGenre1.clearSelectedEnum();
+		cbxGenre2.clearSelectedEnum();
+		cbxGenre3.clearSelectedEnum();
+		cbxGenre4.clearSelectedEnum();
+		cbxGenre5.clearSelectedEnum();
+		cbxGenre6.clearSelectedEnum();
+		cbxGenre7.clearSelectedEnum();
 		
 		btnRef.setIcon(Resources.ICN_REF_00_BUTTON.get());
 	}
@@ -500,20 +441,20 @@ public class ParseOnlineDialog extends JDialog {
 	
 	private void updateCheckBoxes() {
 		cbCover.setSelected((imgCover.getIcon() != null) && (imgCoverBI != null));
-		cbFSK.setSelected(cbxFSK.getSelectedIndex() >= 0);
+		cbFSK.setSelected(cbxFSK.hasSelection());
 		cbLength.setSelected((int)spnLength.getValue() > 0);
 		cbScore.setSelected((int)spnScore.getValue() > 0);
 		cbTitle.setSelected(edTitle.getText().equalsIgnoreCase(owner.getTitleForParser()));
 		cbYear.setSelected((int)spnYear.getValue() > 0);
 		
-		cbGenre0.setSelected(cbxGenre0.getSelectedIndex() > 0);
-		cbGenre1.setSelected(cbxGenre1.getSelectedIndex() > 0);
-		cbGenre2.setSelected(cbxGenre2.getSelectedIndex() > 0);
-		cbGenre3.setSelected(cbxGenre3.getSelectedIndex() > 0);
-		cbGenre4.setSelected(cbxGenre4.getSelectedIndex() > 0);
-		cbGenre5.setSelected(cbxGenre5.getSelectedIndex() > 0);
-		cbGenre6.setSelected(cbxGenre6.getSelectedIndex() > 0);
-		cbGenre7.setSelected(cbxGenre7.getSelectedIndex() > 0);
+		cbGenre0.setSelected(cbxGenre0.hasSelection());
+		cbGenre1.setSelected(cbxGenre1.hasSelection());
+		cbGenre2.setSelected(cbxGenre2.hasSelection());
+		cbGenre3.setSelected(cbxGenre3.hasSelection());
+		cbGenre4.setSelected(cbxGenre4.hasSelection());
+		cbGenre5.setSelected(cbxGenre5.hasSelection());
+		cbGenre6.setSelected(cbxGenre6.hasSelection());
+		cbGenre7.setSelected(cbxGenre7.hasSelection());
 	}
 
 	private void runSearchAsync(boolean parseAll) {
@@ -530,28 +471,24 @@ public class ParseOnlineDialog extends JDialog {
 			t.start();
 		}
 		
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				try {
-					while (group.activeCount() > 0) {
-						Thread.sleep(8);
-					}
-				} catch (InterruptedException e) {
-					CCLog.addError(e);
+		new Thread(() ->
+		{
+			try {
+				while (group.activeCount() > 0) {
+					Thread.sleep(8);
 				}
-				
-				try {
-					SwingUtilities.invokeAndWait(new Runnable() {
-						@Override
-						public void run() {
-							pbarSearch.setIndeterminate(false);
-							btnParse.setEnabled(true);
-						}
-					});
-				} catch (InvocationTargetException | InterruptedException e) {
-					CCLog.addError(e);
-				}
+			} catch (InterruptedException e) {
+				CCLog.addError(e);
+			}
+
+			try {
+				SwingUtilities.invokeAndWait(() ->
+				{
+					pbarSearch.setIndeterminate(false);
+					btnParse.setEnabled(true);
+				});
+			} catch (InvocationTargetException | InterruptedException e) {
+				CCLog.addError(e);
 			}
 		}, "THREAD_SEARCH_ONLINE_JOIN").start(); //$NON-NLS-1$
 	}
@@ -572,16 +509,14 @@ public class ParseOnlineDialog extends JDialog {
 		if (links == null) return;
 		
 		try {
-			SwingUtilities.invokeAndWait(new Runnable() {
-				@Override
-				public void run() {
-					int ordering = 0;
-					for (Tuple<String, CCSingleOnlineReference> result : links) {
-						mdlLsDBList.addElement(new ParseOnlineDialogElement(result.Item1, ordering++, result.Item2));
-					}
-					
-					resortListModel(mdlLsDBList);
+			SwingUtilities.invokeAndWait(() ->
+			{
+				int ordering = 0;
+				for (Tuple<String, CCSingleOnlineReference> result : links) {
+					mdlLsDBList.addElement(new ParseOnlineDialogElement(result.Item1, ordering++, result.Item2));
 				}
+
+				resortListModel(mdlLsDBList);
 			});
 		} catch (InvocationTargetException | InterruptedException e) {
 			CCLog.addError(e);
@@ -609,12 +544,10 @@ public class ParseOnlineDialog extends JDialog {
 		if (parser == null) return;
 		
 		try {
-			SwingUtilities.invokeAndWait(new Runnable() {
-				@Override
-				public void run() {
-					resetAll();
-					pbarSearch.setIndeterminate(true);
-				}
+			SwingUtilities.invokeAndWait(() ->
+			{
+				resetAll();
+				pbarSearch.setIndeterminate(true);
 			});
 		} catch (InvocationTargetException | InterruptedException e) {
 			CCLog.addError(e);
@@ -624,35 +557,33 @@ public class ParseOnlineDialog extends JDialog {
 		final OnlineMetadata md = parser.getMetadata(ref, true);
 		
 		try {
-			SwingUtilities.invokeAndWait(new Runnable() {
-				@Override
-				public void run() {
-					if (md.Title != null) edTitle.setText(md.Title);
-					if (md.Year != null) spnYear.setValue(md.Year);
-					if (md.OnlineScore != null) spnScore.setValue(md.OnlineScore);
-					if (md.Length != null) spnLength.setValue(md.Length);
-					if (md.FSK != null) cbxFSK.setSelectedIndex(md.FSK.asInt());
-					if (md.Cover != null) { imgCover.setAndResizeCover(md.Cover); imgCoverBI = md.Cover; }
-					if (md.FSKList !=null) cbFSKlsAll =md.FSKList;
-					
-					if (md.Genres != null) cbxGenre0.setSelectedIndex(md.Genres.getGenre(0).asInt());
-					if (md.Genres != null) cbxGenre1.setSelectedIndex(md.Genres.getGenre(1).asInt());
-					if (md.Genres != null) cbxGenre2.setSelectedIndex(md.Genres.getGenre(2).asInt());
-					if (md.Genres != null) cbxGenre3.setSelectedIndex(md.Genres.getGenre(3).asInt());
-					if (md.Genres != null) cbxGenre4.setSelectedIndex(md.Genres.getGenre(4).asInt());
-					if (md.Genres != null) cbxGenre5.setSelectedIndex(md.Genres.getGenre(5).asInt());
-					if (md.Genres != null) cbxGenre6.setSelectedIndex(md.Genres.getGenre(6).asInt());
-					if (md.Genres != null) cbxGenre7.setSelectedIndex(md.Genres.getGenre(7).asInt());
-					
-					btnRef.setIcon(selectedReference.getIconButton());
-					if (md.AltRef != null) ctrlAltRef.setValue(md.AltRef); else ctrlAltRef.setValue(CCSingleOnlineReference.EMPTY);
-					
-					btnOk.setEnabled(true);
-					
-					updateCheckBoxes();
-					
-					pbarSearch.setIndeterminate(false);
-				}
+			SwingUtilities.invokeAndWait(() ->
+			{
+				if (md.Title != null) edTitle.setText(md.Title);
+				if (md.Year != null) spnYear.setValue(md.Year);
+				if (md.OnlineScore != null) spnScore.setValue(md.OnlineScore);
+				if (md.Length != null) spnLength.setValue(md.Length);
+				if (md.FSK != null) cbxFSK.setSelectedEnum(md.FSK);
+				if (md.Cover != null) { imgCover.setAndResizeCover(md.Cover); imgCoverBI = md.Cover; }
+				if (md.FSKList !=null) cbFSKlsAll =md.FSKList;
+
+				if (md.Genres != null) cbxGenre0.setSelectedEnum(md.Genres.getGenre(0));
+				if (md.Genres != null) cbxGenre1.setSelectedEnum(md.Genres.getGenre(1));
+				if (md.Genres != null) cbxGenre2.setSelectedEnum(md.Genres.getGenre(2));
+				if (md.Genres != null) cbxGenre3.setSelectedEnum(md.Genres.getGenre(3));
+				if (md.Genres != null) cbxGenre4.setSelectedEnum(md.Genres.getGenre(4));
+				if (md.Genres != null) cbxGenre5.setSelectedEnum(md.Genres.getGenre(5));
+				if (md.Genres != null) cbxGenre6.setSelectedEnum(md.Genres.getGenre(6));
+				if (md.Genres != null) cbxGenre7.setSelectedEnum(md.Genres.getGenre(7));
+
+				btnRef.setIcon(selectedReference.getIconButton());
+				if (md.AltRef != null) ctrlAltRef.setValue(md.AltRef); else ctrlAltRef.setValue(CCSingleOnlineReference.EMPTY);
+
+				btnOk.setEnabled(true);
+
+				updateCheckBoxes();
+
+				pbarSearch.setIndeterminate(false);
 			});
 		} catch (InvocationTargetException | InterruptedException e) {
 			CCLog.addError(e);
@@ -673,61 +604,26 @@ public class ParseOnlineDialog extends JDialog {
 	private void insertDataIntoFrame() {
 		owner.setOnlineReference(CCOnlineReferenceList.create(selectedReference, ctrlAltRef.getValue()));
 		
-		if (cbTitle.isSelected()) {
-			owner.setMovieName(edTitle.getText());
-		}
+		if (cbTitle.isSelected()) owner.setMovieName(edTitle.getText());
 		
-		if (cbYear.isSelected()) {
-			owner.setYear((int) spnYear.getValue());
-		}
+		if (cbYear.isSelected()) owner.setYear((int) spnYear.getValue());
 		
-		if (cbScore.isSelected()) {
-			owner.setScore((int) spnScore.getValue());
-		}
+		if (cbScore.isSelected()) owner.setScore(CCOnlineScore.getWrapper().findOrNull((int)spnScore.getValue()));
 		
-		if (cbLength.isSelected()) {
-			owner.setLength((int) spnLength.getValue());
-		}
+		if (cbLength.isSelected()) owner.setLength((int) spnLength.getValue());
 		
-		if (cbFSK.isSelected()) {
-			owner.setFSK(cbxFSK.getSelectedIndex());
-		}
+		if (cbFSK.isSelected()) owner.setFSK(cbxFSK.getSelectedEnum());
 		
-		if (cbCover.isSelected()) {
-			owner.setCover(imgCoverBI);
-		}
+		if (cbCover.isSelected()) owner.setCover(imgCoverBI);
 		
-		if (cbGenre0.isSelected()) {
-			owner.setGenre(0, cbxGenre0.getSelectedIndex());
-		}
-		
-		if (cbGenre1.isSelected()) {
-			owner.setGenre(1, cbxGenre1.getSelectedIndex());
-		}
-		
-		if (cbGenre2.isSelected()) {
-			owner.setGenre(2, cbxGenre2.getSelectedIndex());
-		}
-		
-		if (cbGenre3.isSelected()) {
-			owner.setGenre(3, cbxGenre3.getSelectedIndex());
-		}
-		
-		if (cbGenre4.isSelected()) {
-			owner.setGenre(4, cbxGenre4.getSelectedIndex());
-		}
-		
-		if (cbGenre5.isSelected()) {
-			owner.setGenre(5, cbxGenre5.getSelectedIndex());
-		}
-		
-		if (cbGenre6.isSelected()) {
-			owner.setGenre(6, cbxGenre6.getSelectedIndex());
-		}
-		
-		if (cbGenre7.isSelected()) {
-			owner.setGenre(7, cbxGenre7.getSelectedIndex());
-		}
+		if (cbGenre0.isSelected()) owner.setGenre(0, cbxGenre0.getSelectedEnum());
+		if (cbGenre1.isSelected()) owner.setGenre(1, cbxGenre1.getSelectedEnum());
+		if (cbGenre2.isSelected()) owner.setGenre(2, cbxGenre2.getSelectedEnum());
+		if (cbGenre3.isSelected()) owner.setGenre(3, cbxGenre3.getSelectedEnum());
+		if (cbGenre4.isSelected()) owner.setGenre(4, cbxGenre4.getSelectedEnum());
+		if (cbGenre5.isSelected()) owner.setGenre(5, cbxGenre5.getSelectedEnum());
+		if (cbGenre6.isSelected()) owner.setGenre(6, cbxGenre6.getSelectedEnum());
+		if (cbGenre7.isSelected()) owner.setGenre(7, cbxGenre7.getSelectedEnum());
 		
 		owner.onFinishInserting();
 	}

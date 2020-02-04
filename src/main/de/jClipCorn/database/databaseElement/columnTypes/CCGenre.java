@@ -63,9 +63,9 @@ public enum CCGenre implements ContinoousEnum<CCGenre> {
 		LocaleBundle.getString("CCMovieGenre.Genre056"),
 	};
 	
-	private int id;
+	private final int id;
 	
-	private static EnumWrapper<CCGenre> wrapper = new EnumWrapper<>(GENRE_000);
+	private final static EnumWrapper<CCGenre> wrapper = new EnumWrapper<>(GENRE_000, p -> ((p==GENRE_000) ? " " : p.asString()), CCGenre::shouldShowInComboBox, CCGenre::toComboBoxString);
 
 	CCGenre(int val) {
 		id = val;
@@ -105,6 +105,15 @@ public enum CCGenre implements ContinoousEnum<CCGenre> {
 			}
 		}
 		return res.toArray(new String[0]);
+	}
+
+	private boolean shouldShowInComboBox() {
+		return (id < NAMES.length);
+	}
+
+	private String toComboBoxString() {
+		if (this == GENRE_000) return (" "); //$NON-NLS-1$
+		return asString();
 	}
 
 	@SuppressWarnings("nls")

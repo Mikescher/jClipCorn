@@ -1,13 +1,11 @@
 package de.jClipCorn.gui.guiComponents.editCoverControl;
 
-import java.awt.image.BufferedImage;
-
-import javax.swing.JLayeredPane;
-
-import de.jClipCorn.database.databaseElement.columnTypes.CCFileFormat;
-import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReferenceList;
+import de.jClipCorn.database.databaseElement.columnTypes.*;
 import de.jClipCorn.features.online.metadata.ParseResultHandler;
 import de.jClipCorn.util.listener.ImageCropperResultListener;
+
+import javax.swing.*;
+import java.awt.image.BufferedImage;
 
 /**
  * Giant NOP Class to keep EditCoverControl.java clean
@@ -67,7 +65,7 @@ public class AbstractEditCoverControl extends JLayeredPane implements ParseResul
 	}
 
 	@Override
-	public void setFilesize(long size) {
+	public void setFilesize(CCFileSize size) {
 		// NOP
 	}
 
@@ -77,12 +75,12 @@ public class AbstractEditCoverControl extends JLayeredPane implements ParseResul
 	}
 
 	@Override
-	public void setGenre(int gid, int movGenre) {
+	public void setGenre(int gid, CCGenre movGenre) {
 		// NOP
 	}
 
 	@Override
-	public void setFSK(int fsk) {
+	public void setFSK(CCFSK fsk) {
 		// NOP
 	}
 
@@ -92,7 +90,7 @@ public class AbstractEditCoverControl extends JLayeredPane implements ParseResul
 	}
 
 	@Override
-	public void setScore(int s) {
+	public void setScore(CCOnlineScore s) {
 		// NOP
 	}
 

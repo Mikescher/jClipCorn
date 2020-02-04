@@ -1,16 +1,14 @@
 package de.jClipCorn.properties.property;
 
-import java.awt.Component;
-
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JComboBox;
-
-import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.features.log.CCLog;
+import de.jClipCorn.gui.guiComponents.CCEnumComboBox;
+import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.CCPropertyCategory;
 import de.jClipCorn.util.enumextension.ContinoousEnum;
 import de.jClipCorn.util.enumextension.EnumWrapper;
+
+import java.awt.*;
 
 public class CCEnumProperty<T extends ContinoousEnum<T>> extends CCProperty<T> {
 	private final EnumWrapper<T> source;
@@ -24,17 +22,19 @@ public class CCEnumProperty<T extends ContinoousEnum<T>> extends CCProperty<T> {
 
 	@Override
 	public Component getComponent() {
-		return new JComboBox<>(new DefaultComboBoxModel<>(source.getList()));
+		return new CCEnumComboBox<>(source);
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
 	public void setComponentValueToValue(Component c, T val) {
-		((JComboBox<?>)c).setSelectedIndex(val.asInt());
+		((CCEnumComboBox<T>)c).setSelectedEnum(val);
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
 	public T getComponentValue(Component c) {
-		return source.findOrNull(((JComboBox<?>)c).getSelectedIndex());
+		return ((CCEnumComboBox<T>)c).getSelectedEnum();
 	}
 
 	@Override

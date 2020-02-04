@@ -1,11 +1,11 @@
 package de.jClipCorn.database.databaseElement.columnTypes;
 
-import javax.swing.ImageIcon;
-
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.enumextension.ContinoousEnum;
 import de.jClipCorn.util.enumextension.EnumWrapper;
+
+import javax.swing.*;
 
 public enum CCFSK implements ContinoousEnum<CCFSK> {
 	RATING_0(0), // keine Alterschbeschräkung
@@ -16,11 +16,11 @@ public enum CCFSK implements ContinoousEnum<CCFSK> {
 
 	private final static String[] NAMES =
 	{
-			LocaleBundle.getString("CCMovieFSK.FSK0"), //$NON-NLS-1$
-			LocaleBundle.getString("CCMovieFSK.FSK1"), //$NON-NLS-1$
-			LocaleBundle.getString("CCMovieFSK.FSK2"), //$NON-NLS-1$
-			LocaleBundle.getString("CCMovieFSK.FSK3"), //$NON-NLS-1$
-			LocaleBundle.getString("CCMovieFSK.FSK4")  //$NON-NLS-1$
+		LocaleBundle.getString("CCMovieFSK.FSK0"), //$NON-NLS-1$
+		LocaleBundle.getString("CCMovieFSK.FSK1"), //$NON-NLS-1$
+		LocaleBundle.getString("CCMovieFSK.FSK2"), //$NON-NLS-1$
+		LocaleBundle.getString("CCMovieFSK.FSK3"), //$NON-NLS-1$
+		LocaleBundle.getString("CCMovieFSK.FSK4")  //$NON-NLS-1$
 	};
 	private final static int[] AGES = {0, 6, 12, 16, 18};
 	private int id;
@@ -90,5 +90,9 @@ public enum CCFSK implements ContinoousEnum<CCFSK> {
 	@Override
 	public CCFSK[] evalues() {
 		return CCFSK.values();
+	}
+
+	public CCOptionalFSK asOptionalFSK() {
+		return CCOptionalFSK.getWrapper().findOrFatalError(id);
 	}
 }

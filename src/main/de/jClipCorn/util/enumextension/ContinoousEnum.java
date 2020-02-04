@@ -1,10 +1,10 @@
 package de.jClipCorn.util.enumextension;
 
 public interface ContinoousEnum<T> {
-	public int asInt();
+	int asInt();
 	
-	public String asString();
+	String asString();
 	
-	public String[] getList();
-	public T[] evalues();
+	String[] getList();
+	T[] evalues();
 }

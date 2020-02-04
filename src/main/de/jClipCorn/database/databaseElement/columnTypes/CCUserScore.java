@@ -9,14 +9,14 @@ import de.jClipCorn.util.enumextension.EnumWrapper;
 import javax.swing.*;
 
 public enum CCUserScore implements ContinoousEnum<CCUserScore> {
-	RATING_0(0),	// Fucking bullshit crap
-	RATING_I(1),	// bad movie
-	RATING_II(2),	// not recommended
-	RATING_III(3),	// good enough to watch
-	RATING_IV(4),	// recommended - good movie
-	RATING_V(5),	// I f*** love this piece of movie-artwork
-	RATING_NO(6),	// Unrated
-	RATING_MID(7);	// Average - meets expectations
+	RATING_0  (0, 1),  // Fucking bullshit crap
+	RATING_I  (1, 2),  // bad movie
+	RATING_II (2, 3),  // not recommended
+	RATING_III(3, 5),  // good enough to watch
+	RATING_IV (4, 6),  // recommended - good movie
+	RATING_V  (5, 7),  // I f*** love this piece of movie-artwork
+	RATING_NO (6, 0),  // Unrated
+	RATING_MID(7, 4);  // Average - meets expectations
 
 	private final static String[] NAMES = {
 		LocaleBundle.getString("CCMovieScore.R0"),   //$NON-NLS-1$
@@ -29,12 +29,15 @@ public enum CCUserScore implements ContinoousEnum<CCUserScore> {
 		LocaleBundle.getString("CCMovieScore.RMID"),  //$NON-NLS-1$
 	};
 
-	private int id;
+	private final int id;
 
-	private static EnumWrapper<CCUserScore> wrapper = new EnumWrapper<>(RATING_NO);
+	private final int order;
 
-	private CCUserScore(int val) {
-		id = val;
+	private final static EnumWrapper<CCUserScore> wrapper = new EnumWrapper<>(RATING_NO, p -> p.order);
+
+	private CCUserScore(int val, int ord) {
+		id    = val;
+		order = ord;
 	}
 	
 	public static EnumWrapper<CCUserScore> getWrapper() {

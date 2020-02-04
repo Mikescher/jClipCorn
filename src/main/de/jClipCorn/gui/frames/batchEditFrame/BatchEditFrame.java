@@ -1,70 +1,50 @@
 package de.jClipCorn.gui.frames.batchEditFrame;
 
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.DefaultListModel;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JSpinner;
-import javax.swing.JTextField;
-import javax.swing.ListSelectionModel;
-import javax.swing.SpinnerNumberModel;
-import javax.swing.SwingConstants;
-import javax.swing.UIManager;
-import javax.swing.border.LineBorder;
-import javax.swing.border.TitledBorder;
-
+import com.jgoodies.forms.layout.ColumnSpec;
+import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.FormSpecs;
+import com.jgoodies.forms.layout.RowSpec;
 import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.IEpisodeOwner;
 import de.jClipCorn.database.databaseElement.columnTypes.*;
-import de.jClipCorn.util.stream.CCStreams;
-import org.apache.commons.lang3.exception.ExceptionUtils;
-
+import de.jClipCorn.features.metadata.exceptions.MediaQueryException;
+import de.jClipCorn.features.metadata.mediaquery.MediaQueryResult;
+import de.jClipCorn.features.metadata.mediaquery.MediaQueryRunner;
 import de.jClipCorn.features.userdataProblem.UserDataProblem;
 import de.jClipCorn.features.userdataProblem.UserDataProblemHandler;
 import de.jClipCorn.gui.frames.genericTextDialog.GenericTextDialog;
 import de.jClipCorn.gui.frames.inputErrorFrame.InputErrorDialog;
 import de.jClipCorn.gui.frames.omniParserFrame.OmniParserFrame;
+import de.jClipCorn.gui.guiComponents.CCEnumComboBox;
 import de.jClipCorn.gui.guiComponents.HFixListCellRenderer;
 import de.jClipCorn.gui.guiComponents.ReadableTextField;
 import de.jClipCorn.gui.guiComponents.jCCDateSpinner.JCCDateSpinner;
+import de.jClipCorn.gui.guiComponents.jMediaInfoControl.JMediaInfoControl;
 import de.jClipCorn.gui.guiComponents.language.LanguageChooser;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datetime.CCDate;
-import de.jClipCorn.util.exceptions.CCFormatException;
-import de.jClipCorn.features.metadata.exceptions.MediaQueryException;
 import de.jClipCorn.util.formatter.FileSizeFormatter;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.helper.FileChooserHelper;
 import de.jClipCorn.util.listener.OmniParserCallbackListener;
 import de.jClipCorn.util.listener.UpdateCallbackListener;
-import de.jClipCorn.features.metadata.mediaquery.MediaQueryResult;
-import de.jClipCorn.features.metadata.mediaquery.MediaQueryRunner;
-import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.ColumnSpec;
-import com.jgoodies.forms.layout.RowSpec;
-import com.jgoodies.forms.layout.FormSpecs;
-import de.jClipCorn.gui.guiComponents.jMediaInfoControl.JMediaInfoControl;
+import de.jClipCorn.util.stream.CCStreams;
+import org.apache.commons.lang3.exception.ExceptionUtils;
+
+import javax.swing.*;
+import javax.swing.border.LineBorder;
+import javax.swing.border.TitledBorder;
+import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class BatchEditFrame extends JFrame implements UserDataProblemHandler, OmniParserCallbackListener {
 	private static final long serialVersionUID = 8825373383589912037L;
@@ -79,7 +59,7 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 	private JLabel label_3;
 	private JLabel label_4;
 	private JLabel label_5;
-	private JComboBox<String> cbxFormat;
+	private CCEnumComboBox<CCFileFormat> cbxFormat;
 	private JLabel label_6;
 	private JSpinner spnSize;
 	private JLabel label_7;
@@ -114,7 +94,7 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 	private JButton btnSide_12;
 	private JSpinner spnSideLength;
 	private JButton btnSide_13;
-	private JComboBox<String> cbxSideFormat;
+	private CCEnumComboBox<CCFileFormat> cbxSideFormat;
 	private JButton btnSide_09;
 	private JButton btnRecalcSize;
 	private JLabel lblSeason;
@@ -184,8 +164,6 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 
 		updateList();
 		initFileChooser();
-
-		setDefaultValues();
 	}
 
 	private void initGUI() {
@@ -326,7 +304,7 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 		label_5 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblFormat.text")); //$NON-NLS-1$
 		pnlInfo.add(label_5, "3, 6"); //$NON-NLS-1$
 
-		cbxFormat = new JComboBox<>();
+		cbxFormat = new CCEnumComboBox<>(CCFileFormat.getWrapper());
 		pnlInfo.add(cbxFormat, "5, 6"); //$NON-NLS-1$
 		
 		lblDirtyMediaInfo = new JLabel("*"); //$NON-NLS-1$
@@ -591,7 +569,7 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 		btnSide_13 = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnSetEpFormat.text")); //$NON-NLS-1$
 		pnlEdit.add(btnSide_13, "2, 28, 5, 1"); //$NON-NLS-1$
 
-		cbxSideFormat = new JComboBox<>();
+		cbxSideFormat = new CCEnumComboBox<>(CCFileFormat.getWrapper());
 		pnlEdit.add(cbxSideFormat, "8, 28, 3, 1"); //$NON-NLS-1$
 
 		btnSideAutoLang = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnMassSetLang.title")); //$NON-NLS-1$
@@ -687,11 +665,6 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 		testPart();
 	}
 
-	private void setDefaultValues() {
-		cbxFormat.setModel(new DefaultComboBoxModel<>(CCFileFormat.getWrapper().getList()));
-		cbxSideFormat.setModel(new DefaultComboBoxModel<>(CCFileFormat.getWrapper().getList()));
-	}
-
 	private void onBtnNext() {
 		int curr = lsEpisodes.getSelectedIndex();
 		boolean retval = okInfoDisplay(true);
@@ -733,19 +706,15 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 			return false;
 		}
 
-		try {
-			episode.setTitle(edTitle.getText());
-			episode.setEpisodeNumber((int) spnEpisode.getValue());
-			episode.setFormat(CCFileFormat.getWrapper().findOrException(cbxFormat.getSelectedIndex()));
-			episode.setLength((int) spnLength.getValue());
-			episode.setFilesize(new CCFileSize((long) spnSize.getValue()));
-			episode.setAddDate(spnAddDate.getValue());
-			episode.setPart(edPart.getText());
-			episode.setLanguage(ctrlLang.getValue());
-			episode.setMediaInfo(ctrlMediaInfo.getValue());
-		} catch (CCFormatException e) {
-			return false;
-		}
+		episode.setTitle(edTitle.getText());
+		episode.setEpisodeNumber((int) spnEpisode.getValue());
+		episode.setFormat(cbxFormat.getSelectedEnum());
+		episode.setLength((int) spnLength.getValue());
+		episode.setFilesize(new CCFileSize((long) spnSize.getValue()));
+		episode.setAddDate(spnAddDate.getValue());
+		episode.setPart(edPart.getText());
+		episode.setLanguage(ctrlLang.getValue());
+		episode.setMediaInfo(ctrlMediaInfo.getValue());
 
 		lsEpisodes.setSelectedIndex(-1);
 		updateList();
@@ -754,33 +723,28 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 	}
 
 	private boolean checkUserData(List<UserDataProblem> ret) {
-		try {
-			BatchEditEpisodeData sel = getSelected();
-			if (sel == null) return false;
+		BatchEditEpisodeData sel = getSelected();
+		if (sel == null) return false;
 
-			String title = edTitle.getText();
-	
-			int len = (int) spnLength.getValue();
-			int epNum = (int) spnEpisode.getValue();
-			CCDate adddate = spnAddDate.getValue();
-			CCDateTimeList lvdate = CCDateTimeList.createEmpty();
-			CCDBLanguageList lang = ctrlLang.getValue();
-	
-			long fsize = (long) spnSize.getValue();
-			String csExtn = CCFileFormat.getWrapper().findOrException(cbxFormat.getSelectedIndex()).asString();
-			String csExta = CCFileFormat.getWrapper().findOrException(cbxFormat.getSelectedIndex()).asStringAlt();
-	
-			CCMediaInfo minfo = ctrlMediaInfo.getValue();
-			
-			String part = edPart.getText();
-	
-			UserDataProblem.testEpisodeData(ret, target, sel.getSource(), title, len, epNum, adddate, lvdate, fsize, csExtn, csExta, part, minfo, lang);
-	
-			return ret.isEmpty();
-		}
-		catch (CCFormatException e) {
-			return false;
-		}
+		String title = edTitle.getText();
+
+		int len = (int) spnLength.getValue();
+		int epNum = (int) spnEpisode.getValue();
+		CCDate adddate = spnAddDate.getValue();
+		CCDateTimeList lvdate = CCDateTimeList.createEmpty();
+		CCDBLanguageList lang = ctrlLang.getValue();
+
+		long fsize = (long) spnSize.getValue();
+		String csExtn = cbxFormat.getSelectedEnum().asString();
+		String csExta = cbxFormat.getSelectedEnum().asStringAlt();
+
+		CCMediaInfo minfo = ctrlMediaInfo.getValue();
+
+		String part = edPart.getText();
+
+		UserDataProblem.testEpisodeData(ret, target, sel.getSource(), title, len, epNum, adddate, lvdate, fsize, csExtn, csExta, part, minfo, lang);
+
+		return ret.isEmpty();
 	}
 
 	private void cancelInfoDisplay() {
@@ -833,7 +797,7 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 
 			edTitle.setText(episode.getTitle());
 			spnEpisode.setValue(episode.getEpisodeNumber());
-			cbxFormat.setSelectedIndex(episode.getFormat().asInt());
+			cbxFormat.setSelectedEnum(episode.getFormat());
 			spnLength.setValue(episode.getLength());
 			spnSize.setValue(episode.getFilesize().getBytes());
 			spnAddDate.setValue(episode.getAddDate());
@@ -1026,7 +990,7 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 	}
 
 	private void massSetFormat() {
-		CCFileFormat ff = CCFileFormat.getWrapper().findOrNull(cbxSideFormat.getSelectedIndex());
+		CCFileFormat ff = cbxSideFormat.getSelectedEnum();
 		if (ff == null) return;
 		
 		lsEpisodes.setSelectedIndex(-1);

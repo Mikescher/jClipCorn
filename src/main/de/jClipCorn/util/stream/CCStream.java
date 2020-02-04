@@ -59,6 +59,10 @@ public abstract class CCStream<TType> implements Iterator<TType>, Iterable<TType
 	public List<TType> toList() {
 		return enumerate();
 	}
+
+	public Vector<TType> toVector() {
+		return new Vector<>(enumerate());
+	}
 	
 	public TType[] toArray(TType[] a) {
 		return enumerate().toArray(a);

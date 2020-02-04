@@ -8,6 +8,7 @@ import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.columnTypes.*;
 import de.jClipCorn.features.log.CCLog;
+import de.jClipCorn.features.metadata.exceptions.MediaQueryException;
 import de.jClipCorn.features.metadata.mediaquery.MediaQueryResult;
 import de.jClipCorn.features.metadata.mediaquery.MediaQueryRunner;
 import de.jClipCorn.features.online.metadata.ParseResultHandler;
@@ -16,6 +17,7 @@ import de.jClipCorn.features.userdataProblem.UserDataProblemHandler;
 import de.jClipCorn.gui.frames.genericTextDialog.GenericTextDialog;
 import de.jClipCorn.gui.frames.inputErrorFrame.InputErrorDialog;
 import de.jClipCorn.gui.frames.parseOnlineFrame.ParseOnlineDialog;
+import de.jClipCorn.gui.guiComponents.CCEnumComboBox;
 import de.jClipCorn.gui.guiComponents.ReadableTextField;
 import de.jClipCorn.gui.guiComponents.editCoverControl.EditCoverControl;
 import de.jClipCorn.gui.guiComponents.groupListEditor.GroupListEditor;
@@ -30,7 +32,7 @@ import de.jClipCorn.util.Str;
 import de.jClipCorn.util.adapter.ActionLambdaAdapter;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.exceptions.EnumFormatException;
-import de.jClipCorn.features.metadata.exceptions.MediaQueryException;
+import de.jClipCorn.util.exceptions.EnumValueNotFoundException;
 import de.jClipCorn.util.formatter.FileSizeFormatter;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.DialogHelper;
@@ -81,20 +83,20 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 	private JButton btnChoose3;
 	private JButton btnChoose4;
 	private JButton btnChoose5;
-	private JComboBox<String> cbxGenre0;
-	private JComboBox<String> cbxGenre1;
-	private JComboBox<String> cbxGenre2;
-	private JComboBox<String> cbxGenre3;
-	private JComboBox<String> cbxGenre7;
-	private JComboBox<String> cbxGenre4;
-	private JComboBox<String> cbxGenre5;
-	private JComboBox<String> cbxGenre6;
+	private CCEnumComboBox<CCGenre> cbxGenre0;
+	private CCEnumComboBox<CCGenre> cbxGenre1;
+	private CCEnumComboBox<CCGenre> cbxGenre2;
+	private CCEnumComboBox<CCGenre> cbxGenre3;
+	private CCEnumComboBox<CCGenre> cbxGenre7;
+	private CCEnumComboBox<CCGenre> cbxGenre4;
+	private CCEnumComboBox<CCGenre> cbxGenre5;
+	private CCEnumComboBox<CCGenre> cbxGenre6;
 	private LanguageChooser cbxLanguage;
 	private JSpinner spnLength;
 	private JCCDateSpinner spnAddDate;
 	private JSpinner spnOnlineScore;
-	private JComboBox<String> cbxFSK;
-	private JComboBox<String> cbxFormat;
+	private CCEnumComboBox<CCOptionalFSK> cbxFSK;
+	private CCEnumComboBox<CCFileFormat> cbxFormat;
 	private JSpinner spnYear;
 	private JSpinner spnSize;
 	private JButton btnOK;
@@ -102,7 +104,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 	private JTextField edTitle;
 	private JSpinner spnZyklus;
 	private JButton btnParseIMDB;
-	private JComboBox<String> cbxScore;
+	private CCEnumComboBox<CCUserScore> cbxScore;
 	private JLabel lblScore;
 	private JLabel lblPart;
 	private JLabel lblPart_1;
@@ -477,13 +479,13 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		lblFsk = new JLabel(LocaleBundle.getString("AddMovieFrame.lblFsk.text")); //$NON-NLS-1$
 		pnlData.add(lblFsk, "2, 20"); //$NON-NLS-1$
 		
-		cbxFSK = new JComboBox<>();
+		cbxFSK = new CCEnumComboBox<>(CCOptionalFSK.getWrapper());
 		pnlData.add(cbxFSK, "4, 20, 3, 1, fill, center"); //$NON-NLS-1$
 		
 		lblFormat = new JLabel(LocaleBundle.getString("AddMovieFrame.lblFormat.text")); //$NON-NLS-1$
 		pnlData.add(lblFormat, "2, 22"); //$NON-NLS-1$
 		
-		cbxFormat = new JComboBox<>();
+		cbxFormat = new CCEnumComboBox<>(CCFileFormat.getWrapper());
 		pnlData.add(cbxFormat, "4, 22, 3, 1, fill, center"); //$NON-NLS-1$
 		
 		lblYear = new JLabel(LocaleBundle.getString("AddMovieFrame.lblYear.text")); //$NON-NLS-1$
@@ -508,7 +510,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		lblScore = new JLabel(LocaleBundle.getString("EditSeriesFrame.lblScore.text")); //$NON-NLS-1$
 		pnlData.add(lblScore, "2, 28"); //$NON-NLS-1$
 		
-		cbxScore = new JComboBox<>();
+		cbxScore = new CCEnumComboBox<>(CCUserScore.getWrapper());
 		pnlData.add(cbxScore, "4, 28, 3, 1, fill, center"); //$NON-NLS-1$
 		
 		pnlRight = new JPanel();
@@ -543,49 +545,49 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		lblGenre = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGenre.text")); //$NON-NLS-1$
 		pnlRight.add(lblGenre, "1, 2"); //$NON-NLS-1$
 		
-		cbxGenre0 = new JComboBox<>();
+		cbxGenre0 = new CCEnumComboBox<>(CCGenre.getWrapper());
 		pnlRight.add(cbxGenre0, "3, 2"); //$NON-NLS-1$
 		
 		lblGenre_1 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGenre_1.text")); //$NON-NLS-1$
 		pnlRight.add(lblGenre_1, "1, 4"); //$NON-NLS-1$
 		
-		cbxGenre1 = new JComboBox<>();
+		cbxGenre1 = new CCEnumComboBox<>(CCGenre.getWrapper());
 		pnlRight.add(cbxGenre1, "3, 4"); //$NON-NLS-1$
 		
 		lblGenre_2 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGenre_2.text")); //$NON-NLS-1$
 		pnlRight.add(lblGenre_2, "1, 6"); //$NON-NLS-1$
 		
-		cbxGenre2 = new JComboBox<>();
+		cbxGenre2 = new CCEnumComboBox<>(CCGenre.getWrapper());
 		pnlRight.add(cbxGenre2, "3, 6"); //$NON-NLS-1$
 		
 		lblGenre_3 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGenre_3.text")); //$NON-NLS-1$
 		pnlRight.add(lblGenre_3, "1, 8"); //$NON-NLS-1$
 		
-		cbxGenre3 = new JComboBox<>();
+		cbxGenre3 = new CCEnumComboBox<>(CCGenre.getWrapper());
 		pnlRight.add(cbxGenre3, "3, 8"); //$NON-NLS-1$
 		
 		lblGenre_4 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGenre_4.text")); //$NON-NLS-1$
 		pnlRight.add(lblGenre_4, "1, 10"); //$NON-NLS-1$
 		
-		cbxGenre4 = new JComboBox<>();
+		cbxGenre4 = new CCEnumComboBox<>(CCGenre.getWrapper());
 		pnlRight.add(cbxGenre4, "3, 10"); //$NON-NLS-1$
 		
 		lblGenre_5 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGenre_5.text")); //$NON-NLS-1$
 		pnlRight.add(lblGenre_5, "1, 12"); //$NON-NLS-1$
 		
-		cbxGenre5 = new JComboBox<>();
+		cbxGenre5 = new CCEnumComboBox<>(CCGenre.getWrapper());
 		pnlRight.add(cbxGenre5, "3, 12"); //$NON-NLS-1$
 		
 		lblGenre_6 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGenre_6.text")); //$NON-NLS-1$
 		pnlRight.add(lblGenre_6, "1, 14"); //$NON-NLS-1$
 		
-		cbxGenre6 = new JComboBox<>();
+		cbxGenre6 = new CCEnumComboBox<>(CCGenre.getWrapper());
 		pnlRight.add(cbxGenre6, "3, 14"); //$NON-NLS-1$
 		
 		lblGenre_7 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGenre_7.text")); //$NON-NLS-1$
 		pnlRight.add(lblGenre_7, "1, 16"); //$NON-NLS-1$
 		
-		cbxGenre7 = new JComboBox<>();
+		cbxGenre7 = new CCEnumComboBox<>(CCGenre.getWrapper());
 		pnlRight.add(cbxGenre7, "3, 16"); //$NON-NLS-1$
 		
 		btnParseIMDB = new JButton(LocaleBundle.getString("AddMovieFrame.btnParseIMDB.text")); //$NON-NLS-1$
@@ -607,7 +609,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		btnCancel.addActionListener(arg0 -> cancel());
 		btnOK.addActionListener(e -> {try {
 			onBtnOK(true);
-		} catch (EnumFormatException e1) {
+		} catch (EnumFormatException | EnumValueNotFoundException e1) {
 			CCLog.addError(e1);
 		}});
 	}
@@ -616,7 +618,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		if (!tmpMov.getAddDate().isMinimum() && !resetAddDate)
 			spnAddDate.setValue(tmpMov.getAddDate());
 		
-		setFilesize(tmpMov.getFilesize().getBytes());
+		setFilesize(tmpMov.getFilesize());
 		setMovieFormat(tmpMov.getFormat());
 		setMediaInfo(tmpMov.getMediaInfo());
 		setLength(tmpMov.getLength());
@@ -635,22 +637,21 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		setMovieName(tmpMov.getTitle());
 		setOnlineReference(tmpMov.getOnlineReference());
 		setGroups(tmpMov.getGroups());
-		setScore(tmpMov.getOnlinescore().asInt());
+		setScore(tmpMov.getOnlinescore());
 		setMovieLanguage(tmpMov.getLanguage());
-		setFSK(tmpMov.getFSK().asInt());
+		setFSK(tmpMov.getFSK());
 
-		if (! resetScore)
-			cbxScore.setSelectedIndex(tmpMov.getScore().asInt());
+		if (! resetScore) cbxScore.setSelectedEnum(tmpMov.getScore());
 		
 		for (int i = 0; i < CCGenreList.getMaxListSize(); i++) {
-			setGenre(i, tmpMov.getGenre(i).asInt());
+			setGenre(i, tmpMov.getGenre(i));
 		}
 		
 		setEnabledAll(true);
 		firstChooseClick = false;
 	}
 	
-	private void onBtnOK(boolean check) throws EnumFormatException {
+	private void onBtnOK(boolean check) throws EnumFormatException, EnumValueNotFoundException {
 		List<UserDataProblem> problems = new ArrayList<>();
 
 		boolean probvalue = !check || checkUserData(problems);
@@ -701,22 +702,22 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		
 		newM.setOnlinescore((int) spnOnlineScore.getValue());
 		
-		newM.setFsk(cbxFSK.getSelectedIndex());
-		newM.setFormat(cbxFormat.getSelectedIndex());
+		newM.setFsk(cbxFSK.getSelectedEnum().asFSK());
+		newM.setFormat(cbxFormat.getSelectedEnum());
 		
 		newM.setYear((int) spnYear.getValue());
 		newM.setFilesize((long) spnSize.getValue());
 		
-		newM.setGenre(CCGenre.getWrapper().findOrException(cbxGenre0.getSelectedIndex()), 0);
-		newM.setGenre(CCGenre.getWrapper().findOrException(cbxGenre1.getSelectedIndex()), 1);
-		newM.setGenre(CCGenre.getWrapper().findOrException(cbxGenre2.getSelectedIndex()), 2);
-		newM.setGenre(CCGenre.getWrapper().findOrException(cbxGenre3.getSelectedIndex()), 3);
-		newM.setGenre(CCGenre.getWrapper().findOrException(cbxGenre4.getSelectedIndex()), 4);
-		newM.setGenre(CCGenre.getWrapper().findOrException(cbxGenre5.getSelectedIndex()), 5);
-		newM.setGenre(CCGenre.getWrapper().findOrException(cbxGenre6.getSelectedIndex()), 6);
-		newM.setGenre(CCGenre.getWrapper().findOrException(cbxGenre7.getSelectedIndex()), 7);
+		newM.setGenre(cbxGenre0.getSelectedEnum(), 0);
+		newM.setGenre(cbxGenre1.getSelectedEnum(), 1);
+		newM.setGenre(cbxGenre2.getSelectedEnum(), 2);
+		newM.setGenre(cbxGenre3.getSelectedEnum(), 3);
+		newM.setGenre(cbxGenre4.getSelectedEnum(), 4);
+		newM.setGenre(cbxGenre5.getSelectedEnum(), 5);
+		newM.setGenre(cbxGenre6.getSelectedEnum(), 6);
+		newM.setGenre(cbxGenre7.getSelectedEnum(), 7);
 		
-		newM.setScore(cbxScore.getSelectedIndex());
+		newM.setScore(cbxScore.getSelectedEnum());
 		newM.setOnlineReference(edReference.getValue());
 		newM.setGroups(edGroups.getValue());
 
@@ -742,25 +743,10 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 	}
 
 	private void setDefaultValues() {
-		cbxScore.setModel(new DefaultComboBoxModel<>(CCUserScore.getWrapper().getList()));
-		cbxScore.setSelectedIndex(cbxScore.getModel().getSize() - 1);
+		cbxScore.setSelectedEnum(CCUserScore.RATING_NO);
 		
-		DefaultComboBoxModel<String> cbFSKdcbm;
-		cbxFSK.setModel(cbFSKdcbm = new DefaultComboBoxModel<>(CCFSK.getWrapper().getList()));
-		cbFSKdcbm.addElement(" "); //$NON-NLS-1$
-		cbxFSK.setSelectedIndex(cbFSKdcbm.getSize() - 1);
-		
-		cbxFormat.setModel(new DefaultComboBoxModel<>(CCFileFormat.getWrapper().getList()));
-		
-		cbxGenre0.setModel(new DefaultComboBoxModel<>(CCGenre.getTrimmedList()));
-		cbxGenre1.setModel(new DefaultComboBoxModel<>(CCGenre.getTrimmedList()));
-		cbxGenre2.setModel(new DefaultComboBoxModel<>(CCGenre.getTrimmedList()));
-		cbxGenre3.setModel(new DefaultComboBoxModel<>(CCGenre.getTrimmedList()));
-		cbxGenre4.setModel(new DefaultComboBoxModel<>(CCGenre.getTrimmedList()));
-		cbxGenre5.setModel(new DefaultComboBoxModel<>(CCGenre.getTrimmedList()));
-		cbxGenre6.setModel(new DefaultComboBoxModel<>(CCGenre.getTrimmedList()));
-		cbxGenre7.setModel(new DefaultComboBoxModel<>(CCGenre.getTrimmedList()));
-		
+		cbxFSK.setSelectedEnum(CCOptionalFSK.NULL);
+
 		spnAddDate.setValue(CCDate.getCurrentDate());
 		spnZyklus.setValue(-1);
 		
@@ -886,7 +872,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 	
 	@Override
 	public void setMovieFormat(CCFileFormat cmf) {
-		cbxFormat.setSelectedIndex(cmf.asInt());
+		cbxFormat.setSelectedEnum(cmf);
 	}
 
 	public void setGroupList(CCGroupList gl) {
@@ -947,8 +933,8 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 	}
 
 	@Override
-	public void setFilesize(long size) {
-		spnSize.setValue(size);
+	public void setFilesize(CCFileSize size) {
+		spnSize.setValue(size.getBytes());
 	}
 
 	public void setMovieLanguage(CCDBLanguageList lang) {
@@ -965,38 +951,22 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 	}
 	
 	@Override
-	public void setGenre(int gid, int movGenre) {
+	public void setGenre(int gid, CCGenre movGenre) {
 		switch (gid) {
-		case 0:
-			cbxGenre0.setSelectedIndex(movGenre);
-			break;
-		case 1:
-			cbxGenre1.setSelectedIndex(movGenre);
-			break;
-		case 2:
-			cbxGenre2.setSelectedIndex(movGenre);
-			break;
-		case 3:
-			cbxGenre3.setSelectedIndex(movGenre);
-			break;
-		case 4:
-			cbxGenre4.setSelectedIndex(movGenre);
-			break;
-		case 5:
-			cbxGenre5.setSelectedIndex(movGenre);
-			break;
-		case 6:
-			cbxGenre6.setSelectedIndex(movGenre);
-			break;
-		case 7:
-			cbxGenre7.setSelectedIndex(movGenre);
-			break;
+		case 0: cbxGenre0.setSelectedEnum(movGenre); break;
+		case 1: cbxGenre1.setSelectedEnum(movGenre); break;
+		case 2: cbxGenre2.setSelectedEnum(movGenre); break;
+		case 3: cbxGenre3.setSelectedEnum(movGenre); break;
+		case 4: cbxGenre4.setSelectedEnum(movGenre); break;
+		case 5: cbxGenre5.setSelectedEnum(movGenre); break;
+		case 6: cbxGenre6.setSelectedEnum(movGenre); break;
+		case 7: cbxGenre7.setSelectedEnum(movGenre); break;
 		}
 	}
 	
 	@Override
-	public void setFSK(int fsk) {
-		cbxFSK.setSelectedIndex(fsk);
+	public void setFSK(CCFSK fsk) {
+		cbxFSK.setSelectedEnum(fsk.asOptionalFSK());
 	}
 	
 	@Override
@@ -1005,8 +975,8 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 	}
 	
 	@Override
-	public void setScore(int s) {
-		spnOnlineScore.setValue(s);
+	public void setScore(CCOnlineScore s) {
+		spnOnlineScore.setValue(s.asInt());
 	}
 	
 	@Override
@@ -1072,7 +1042,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 			size = CCFileSize.addBytes(size, FileSizeFormatter.getFileSize(PathFormatter.fromCCPath(ed_Part5.getText())));
 		}
 		
-		setFilesize(size.getBytes());
+		setFilesize(size);
 	}
 	
 	@Override
@@ -1108,22 +1078,22 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		int oscore = (int) spnOnlineScore.getValue();
 		
 		try {
-			int fskidx = cbxFSK.getSelectedIndex();
+			int fskidx = cbxFSK.getSelectedEnum().asInt();
 			int year = (int) spnYear.getValue();
 			long fsize = (long) spnSize.getValue();
 			CCMediaInfo minfo = ctrlMediaInfo.getValue();
 			CCDBLanguageList lang = cbxLanguage.getValue();
-			String csExtn  = CCFileFormat.getWrapper().findOrException(cbxFormat.getSelectedIndex()).asString();
-			String csExta = CCFileFormat.getWrapper().findOrException(cbxFormat.getSelectedIndex()).asStringAlt();
+			String csExtn = cbxFormat.getSelectedEnum().asString();
+			String csExta = cbxFormat.getSelectedEnum().asStringAlt();
 			
-			int g0 = cbxGenre0.getSelectedIndex();
-			int g1 = cbxGenre1.getSelectedIndex();
-			int g2 = cbxGenre2.getSelectedIndex();
-			int g3 = cbxGenre3.getSelectedIndex();
-			int g4 = cbxGenre4.getSelectedIndex();
-			int g5 = cbxGenre5.getSelectedIndex();
-			int g6 = cbxGenre6.getSelectedIndex();
-			int g7 = cbxGenre7.getSelectedIndex();
+			int g0 = cbxGenre0.getSelectedEnum().asInt();
+			int g1 = cbxGenre1.getSelectedEnum().asInt();
+			int g2 = cbxGenre2.getSelectedEnum().asInt();
+			int g3 = cbxGenre3.getSelectedEnum().asInt();
+			int g4 = cbxGenre4.getSelectedEnum().asInt();
+			int g5 = cbxGenre5.getSelectedEnum().asInt();
+			int g6 = cbxGenre6.getSelectedEnum().asInt();
+			int g7 = cbxGenre7.getSelectedEnum().asInt();
 			
 			CCOnlineReferenceList ref = edReference.getValue();
 			
@@ -1139,7 +1109,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 	public void onAMIEDIgnoreClicked() {
 		try {
 			onBtnOK(false);
-		} catch (EnumFormatException e) {
+		} catch (EnumFormatException | EnumValueNotFoundException e) {
 			CCLog.addError(e);
 		}
 	}

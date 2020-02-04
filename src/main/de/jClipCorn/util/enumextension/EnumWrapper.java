@@ -1,20 +1,48 @@
 package de.jClipCorn.util.enumextension;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.exceptions.EnumFormatException;
 import de.jClipCorn.util.exceptions.EnumValueNotFoundException;
+import de.jClipCorn.util.lambda.Func1to1;
+import de.jClipCorn.util.stream.CCStreams;
+
+import javax.swing.*;
+import java.util.*;
 
 public class EnumWrapper<T extends ContinoousEnum<T>> {
 
 	private final T defValue;
-	
+	private final Func1to1<T, Object> displaySorter;
+	private final Func1to1<T, Boolean> displayFilter;
+	private final Func1to1<T, String> displayRenderer;
+
 	public EnumWrapper(T defaultValue) {
 		defValue = defaultValue;
+		displaySorter   = ContinoousEnum::asInt;
+		displayFilter   = (v->true);
+		displayRenderer = ContinoousEnum::asString;
+	}
+
+	public EnumWrapper(T defaultValue, Func1to1<T, Object> cbxSelector) {
+		defValue = defaultValue;
+		displaySorter   = cbxSelector;
+		displayFilter   = (v->true);
+		displayRenderer = ContinoousEnum::asString;
+	}
+
+	public EnumWrapper(T defaultValue, Func1to1<T, Object> cbxSelector, Func1to1<T, Boolean> cbxFilter) {
+		defValue = defaultValue;
+		displaySorter   = cbxSelector;
+		displayFilter   = cbxFilter;
+		displayRenderer = ContinoousEnum::asString;
+	}
+
+	public EnumWrapper(T defaultValue, Func1to1<T, Object> cbxSelector, Func1to1<T, Boolean> cbxFilter, Func1to1<T, String> cbxRenderer) {
+		defValue = defaultValue;
+		displaySorter   = cbxSelector;
+		displayFilter   = cbxFilter;
+		displayRenderer = cbxRenderer;
 	}
 	
 	public T findOrNull(int val) {
@@ -60,21 +88,39 @@ public class EnumWrapper<T extends ContinoousEnum<T>> {
 		return value.asString();
 	}
 
+	public String asDisplayString(T value) {
+		if (value == null) return ""; //$NON-NLS-1$
+		return displayRenderer.invoke(value);
+	}
+
 	public T firstValue() {
 		return defValue.evalues()[0];
 	}
 
 	public List<T> allValues() {
-		List<T> lst = new ArrayList<>();
-		
-		for (T val : defValue.evalues()) lst.add(val);
-		
-		return lst;
+		return new ArrayList<>(Arrays.asList(defValue.evalues()));
 	}
 
 	public T randomValue(Random r) {
 		T[] a = defValue.evalues();
 		if (a.length == 0) return null;
 		return a[r.nextInt(a.length)];
+	}
+
+	@SuppressWarnings({"unchecked", "rawtypes"})
+	public DefaultComboBoxModel<T> getComboBoxModel() {
+		T[] a = defValue.evalues();
+
+		Vector<T> b = CCStreams
+				.iterate(a)
+				.filter(displayFilter)
+				.autosortByProperty(x -> (Comparable)displaySorter.invoke(x))
+				.toVector();
+
+		return new DefaultComboBoxModel<>(b);
+	}
+
+	public DefaultListCellRenderer getComboBoxRenderer() {
+		return new ContinoousEnumComboBoxRenderer<>(this);
 	}
 }

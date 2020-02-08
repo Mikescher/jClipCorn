@@ -1,5 +1,14 @@
 package de.jClipCorn.features.online.cover.google;
 
+import de.jClipCorn.features.log.CCLog;
+import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.util.Str;
+import de.jClipCorn.util.http.HTTPUtilities;
+import de.jClipCorn.util.listener.ProgressCallbackListener;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
@@ -7,15 +16,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
-
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-
-import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.features.log.CCLog;
-import de.jClipCorn.util.http.HTTPUtilities;
-import de.jClipCorn.util.listener.ProgressCallbackListener;
 
 @SuppressWarnings("nls")
 public class GoogleSearchCommon {
@@ -30,7 +30,7 @@ public class GoogleSearchCommon {
 	private final static String JSOUP_SEARCHPAGE_IMAGE = "a[href*=imgurl]:has(img[src])"; // a[href*=imgurl]:has(img[src])
 	
 	public static String getSearchURL(String title, String appendix) {
-		return String.format(BASE_URL + SEARCH_URL, HTTPUtilities.escapeURL(title + " " + appendix));
+		return String.format(BASE_URL + SEARCH_URL, HTTPUtilities.escapeURL(title + Str.SingleSpace + appendix));
 	}
 	
 	public static List<String> extractImageLinks(String html, int max, CopyOnWriteArrayList<String> exclusions, ProgressCallbackListener progress) {

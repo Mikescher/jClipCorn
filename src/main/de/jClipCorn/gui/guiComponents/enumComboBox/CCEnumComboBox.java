@@ -6,6 +6,7 @@ import de.jClipCorn.util.enumextension.EnumWrapper;
 import javax.swing.*;
 
 public class CCEnumComboBox<T extends ContinoousEnum<T>> extends JComboBox<T> {
+	private static final long serialVersionUID = -3587427835677751149L;
 
 	public CCEnumComboBox(EnumWrapper<T> wrapper) {
 		super();

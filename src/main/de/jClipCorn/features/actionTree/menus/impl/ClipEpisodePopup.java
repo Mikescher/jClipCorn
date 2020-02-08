@@ -30,6 +30,12 @@ public class ClipEpisodePopup extends ClipPopupMenu {
 		addSeparator();
 		//#############
 
+		addAction("ShowEpisodeHistory");
+
+		//#############
+		addSeparator();
+		//#############
+
 		addAction("SetEpisodeViewed");
 		addAction("SetEpisodeUnviewed");
 		addAction("UndoEpisodeViewed");

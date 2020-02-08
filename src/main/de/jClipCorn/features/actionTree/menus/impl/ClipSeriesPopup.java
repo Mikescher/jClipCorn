@@ -23,6 +23,7 @@ public class ClipSeriesPopup extends ClipPopupMenu {
 	@Override
 	protected void init() {
 		addAction("PrevSeries");
+		addAction("ShowSeriesHistory");
 		
 		//#############
 		addSeparator();

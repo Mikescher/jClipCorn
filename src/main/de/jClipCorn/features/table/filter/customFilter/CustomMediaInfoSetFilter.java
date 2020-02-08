@@ -1,13 +1,17 @@
 package de.jClipCorn.features.table.filter.customFilter;
 
 import de.jClipCorn.database.CCMovieList;
-import de.jClipCorn.database.databaseElement.*;
-import de.jClipCorn.features.table.filter.AbstractCustomStructureElementFilter;
-import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.database.databaseElement.CCEpisode;
+import de.jClipCorn.database.databaseElement.CCMovie;
+import de.jClipCorn.database.databaseElement.CCSeason;
+import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.features.table.filter.AbstractCustomFilter;
+import de.jClipCorn.features.table.filter.AbstractCustomStructureElementFilter;
 import de.jClipCorn.features.table.filter.filterConfig.CustomFilterBoolConfig;
 import de.jClipCorn.features.table.filter.filterConfig.CustomFilterConfig;
 import de.jClipCorn.features.table.filter.filterSerialization.FilterSerializationConfig;
+import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.util.Str;
 
 public class CustomMediaInfoSetFilter extends AbstractCustomStructureElementFilter {
 	private boolean isset = false;
@@ -34,7 +38,7 @@ public class CustomMediaInfoSetFilter extends AbstractCustomStructureElementFilt
 
 	@Override
 	public String getName() {
-		return LocaleBundle.getFormattedString("FilterTree.Custom.CustomFilterNames.MediaInfoSet", isset ? "X" : " "); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		return LocaleBundle.getFormattedString("FilterTree.Custom.CustomFilterNames.MediaInfoSet", isset ? "X" : Str.SingleSpace); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	@Override

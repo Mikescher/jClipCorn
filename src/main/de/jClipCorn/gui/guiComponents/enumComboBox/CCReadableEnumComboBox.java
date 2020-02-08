@@ -6,10 +6,11 @@ import de.jClipCorn.util.enumextension.EnumWrapper;
 import javax.swing.*;
 
 public class CCReadableEnumComboBox<T extends ContinoousEnum<T>> extends CCEnumComboBox<T> {
+	private static final long serialVersionUID = 4045277019811993724L;
 
 	public CCReadableEnumComboBox(EnumWrapper<T> wrapper) {
 		super(wrapper);
-		setEditor(new CCReadableEnumComboBoxEditor(wrapper));
+		setEditor(new CCReadableEnumComboBoxEditor<>(wrapper));
 		setReadable();
 	}
 

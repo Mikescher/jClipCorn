@@ -25,6 +25,7 @@ public class ClipMoviePopup extends ClipPopupMenu {
 		addAction("PlayMovie");
 		addAction("PlayMovieAnonymous");
 		addAction("PrevMovie");
+		addAction("ShowMovieHistory");
 		
 		//#############
 		addSeparator();

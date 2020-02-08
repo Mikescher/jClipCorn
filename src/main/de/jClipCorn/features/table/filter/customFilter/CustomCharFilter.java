@@ -1,14 +1,14 @@
 package de.jClipCorn.features.table.filter.customFilter;
 
-import org.apache.commons.lang.StringUtils;
-
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.ICCDatabaseStructureElement;
-import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.features.table.filter.AbstractCustomFilter;
 import de.jClipCorn.features.table.filter.filterConfig.CustomFilterCharConfig;
 import de.jClipCorn.features.table.filter.filterConfig.CustomFilterConfig;
 import de.jClipCorn.features.table.filter.filterSerialization.FilterSerializationConfig;
+import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.util.Str;
+import org.apache.commons.lang.StringUtils;
 
 public class CustomCharFilter extends AbstractCustomFilter {
 	@SuppressWarnings("nls")
@@ -21,7 +21,7 @@ public class CustomCharFilter extends AbstractCustomFilter {
 		String first = e.getTitle();
 		
 		for (String s : EXCLUSIONS) {
-			if (first.startsWith(s + " ")) { //$NON-NLS-1$
+			if (first.startsWith(s + Str.SingleSpace)) {
 				first = first.substring(s.length() + 1);
 			}
 		}

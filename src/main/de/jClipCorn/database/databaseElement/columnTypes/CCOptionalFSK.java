@@ -3,7 +3,6 @@ package de.jClipCorn.database.databaseElement.columnTypes;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.enumextension.ContinoousEnum;
 import de.jClipCorn.util.enumextension.EnumWrapper;
-import de.jClipCorn.util.exceptions.EnumFormatException;
 import de.jClipCorn.util.exceptions.EnumValueNotFoundException;
 
 public enum CCOptionalFSK implements ContinoousEnum<CCOptionalFSK> {
@@ -58,8 +57,8 @@ public enum CCOptionalFSK implements ContinoousEnum<CCOptionalFSK> {
 		return CCOptionalFSK.values();
 	}
 
-	public CCFSK asFSK() throws EnumValueNotFoundException, EnumFormatException {
-		if (this == NULL) throw new EnumValueNotFoundException("NULL", CCFSK.class);
+	public CCFSK asFSK() throws EnumValueNotFoundException {
+		if (this == NULL) throw new EnumValueNotFoundException("NULL", CCFSK.class); //$NON-NLS-1$
 		return CCFSK.getWrapper().findOrFatalError(id);
 	}
 }

@@ -1,9 +1,5 @@
 package de.jClipCorn.features.actionTree.menus;
 
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
-import javax.swing.JPopupMenu;
-
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReferenceList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCSingleOnlineReference;
@@ -11,12 +7,15 @@ import de.jClipCorn.features.actionTree.ActionSource;
 import de.jClipCorn.features.actionTree.CCActionElement;
 import de.jClipCorn.features.actionTree.CCActionTree;
 import de.jClipCorn.features.actionTree.IActionSourceObject;
-import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.features.log.CCLog;
+import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.gui.resources.MultiSizeIconRef;
 import de.jClipCorn.util.helper.KeyStrokeUtil;
+import de.jClipCorn.util.lambda.Func0to0;
 import de.jClipCorn.util.listener.ActionCallbackListener;
 import de.jClipCorn.util.stream.CCStreams;
 
+import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 import java.util.Map;
@@ -81,6 +80,16 @@ public abstract class ClipPopupMenu extends JPopupMenu {
 		}
 		
 		return amw;
+	}
+
+	protected JMenuItem addCustomAction(String caption, MultiSizeIconRef icnref, Func0to0 action)
+	{
+		JMenuItem item = add(caption);
+		if (icnref != null) item.setIcon(icnref.get16x16());
+
+		item.addActionListener(arg0 -> action.invoke());
+
+		return item;
 	}
 
 	@SuppressWarnings("nls")

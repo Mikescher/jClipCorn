@@ -848,16 +848,7 @@ public class EditSeriesFrame extends JFrame implements WindowListener {
 		btnEpisodeOK = new JButton(LocaleBundle.getString("UIGeneric.btnOK.text")); //$NON-NLS-1$
 		btnEpisodeOK.setPreferredSize(new Dimension(100, 26));
 		panel_7.add(btnEpisodeOK);
-		btnEpisodeOK.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				try {
-					onOKEpisode(true);
-				} catch (EnumFormatException e1) {
-					CCLog.addError(e1);
-				}
-			}
-		});
+		btnEpisodeOK.addActionListener(e -> onOKEpisode(true));
 		btnEpisodeOpenPart.addActionListener(e -> openEpisodePart());
 		btnEpisodeToday.addActionListener(e -> spnEpisodeAdded.setValue(CCDate.getCurrentDate()));
 		button_2.addActionListener(e -> recalcEpisodeFilesize());
@@ -1670,7 +1661,7 @@ public class EditSeriesFrame extends JFrame implements WindowListener {
 		testEpisodePart();
 	}
 	
-	private void onOKEpisode(boolean check) throws EnumFormatException {
+	private void onOKEpisode(boolean check) {
 		CCEpisode episode = getSelectedEpisode();
 		
 		if (episode == null) return;
@@ -1688,13 +1679,7 @@ public class EditSeriesFrame extends JFrame implements WindowListener {
 		}
 		
 		if (! probvalue) {
-			InputErrorDialog amied = new InputErrorDialog(problems, () -> {
-				try {
-					onOKEpisode(false);
-				} catch (CCFormatException e) {
-					CCLog.addError(e);
-				}
-			}, this) ;
+			InputErrorDialog amied = new InputErrorDialog(problems, () -> onOKEpisode(false), this) ;
 			amied.setVisible(true);
 			return;
 		}

@@ -143,6 +143,7 @@ public class CCActionTree extends UIActionTree{
 				add(series, "SaveTXTEpisodeguide",      null,            "ClipMenuBar.Series.SaveTXTEpisodeguide",  Resources.ICN_MENUBAR_EPISODEGUIDE,          false, this::onClickSeriesCreateTXTEpisodeguide);
 				add(series, "MoveSeries",               null,            "ClipMenuBar.Series.MoveSeries",           Resources.ICN_MENUBAR_MOVESERIES,            true,  this::onClickSeriesMove);
 				add(series, "CreateFolderStructSeries", null,            "ClipMenuBar.Series.CreateFolderStruct",   Resources.ICN_MENUBAR_CREATEFOLDERSTRUCTURE, false, this::onClickSeriesCreateFolderStructure);
+				add(series, "ShowSeriesHistory",        null,            "ClipMenuBar.Series.ShowHistory",          Resources.ICN_MENUBAR_DATABASEHISTORY,       false, this::onClickOtherShowHistory);
 				add(series, "RemSeries",                KS_DEL,          "ClipMenuBar.Series.Remove",               Resources.ICN_MENUBAR_REMOVE,                true,  this::onClickSeriesRem);
 			}
 			
@@ -194,6 +195,7 @@ public class CCActionTree extends UIActionTree{
 					add(movieExtra, "OpenFolder",       null, "ClipMenuBar.Other.MovieExtra.OpenFolder",      Resources.ICN_MENUBAR_FOLDER,          this::onClickOtherOpenFolder);
 					add(movieExtra, "ShowInBrowser",    null, "ClipMenuBar.Other.MovieExtra.ShowInBrowser",   Resources.ICN_MENUBAR_ONLINEREFERENCE, this::onClickOtherShowInBrowser);
 					add(movieExtra, "ShowCover",        null, "ClipMenuBar.Other.MovieExtra.ShowCover",       Resources.ICN_MENUBAR_SHOWCOVER,       this::onClickOtherShowCover);
+					add(movieExtra, "ShowMovieHistory", null, "ClipMenuBar.Other.MovieExtra.ShowHistory",     Resources.ICN_MENUBAR_DATABASEHISTORY, this::onClickOtherShowHistory);
 
 					CCActionElement movRating = add(movieExtra, "SetMovieRating", null, "ClipMenuBar.Other.MovieExtra.SetMovieRating", Resources.ICN_SIDEBAR_SCORE);
 					{
@@ -218,12 +220,13 @@ public class CCActionTree extends UIActionTree{
 
 				CCActionElement season = add(other, "Season", null, "", null);
 				{
-					add(season, "AddEpisodes",       null, "ClipMenuBar.Other.Season.AddEpisodes",        Resources.ICN_MENUBAR_ADD_SEA,   true,  this::onClickOtherSeasonAddEpisodes);
-					add(season, "AddSingleEpisodes", null, "ClipMenuBar.Other.Season.AddSingleEpisodes",  Resources.ICN_MENUBAR_ADD_SEA,   true,  this::onClickOtherSeasonQuickAddEpisodes);
-					add(season, "BatchEditSeason",   null, "ClipMenuBar.Other.Season.BatchEditSeason",    Resources.ICN_MENUBAR_BATCHEDIT, true,  this::onClickOtherSeasonBatchEditEpisodes);
-					add(season, "RemSeason",         null, "ClipMenuBar.Other.Season.RemSeason",          Resources.ICN_MENUBAR_REMOVE,    true,  this::onClickOtherSeasonDeleteSeason);
-					add(season, "EditSeason",        null, "ClipMenuBar.Other.Season.EditSeason",         Resources.ICN_MENUBAR_EDIT_SER,  true,  this::onClickOtherSeasonEditSeason);
-					add(season, "OpenSeasonFolder",  null, "ClipMenuBar.Other.Season.OpenSeasonFolder",   Resources.ICN_MENUBAR_FOLDER,    false, this::onClickOtherSeasonOpenFolder);
+					add(season, "AddEpisodes",       null, "ClipMenuBar.Other.Season.AddEpisodes",        Resources.ICN_MENUBAR_ADD_SEA,         true,  this::onClickOtherSeasonAddEpisodes);
+					add(season, "AddSingleEpisodes", null, "ClipMenuBar.Other.Season.AddSingleEpisodes",  Resources.ICN_MENUBAR_ADD_SEA,         true,  this::onClickOtherSeasonQuickAddEpisodes);
+					add(season, "BatchEditSeason",   null, "ClipMenuBar.Other.Season.BatchEditSeason",    Resources.ICN_MENUBAR_BATCHEDIT,       true,  this::onClickOtherSeasonBatchEditEpisodes);
+					add(season, "ShowSeasonHistory", null, "ClipMenuBar.Season.ShowHistory",              Resources.ICN_MENUBAR_DATABASEHISTORY, false, this::onClickOtherShowHistory);
+					add(season, "RemSeason",         null, "ClipMenuBar.Other.Season.RemSeason",          Resources.ICN_MENUBAR_REMOVE,          true,  this::onClickOtherSeasonDeleteSeason);
+					add(season, "EditSeason",        null, "ClipMenuBar.Other.Season.EditSeason",         Resources.ICN_MENUBAR_EDIT_SER,        true,  this::onClickOtherSeasonEditSeason);
+					add(season, "OpenSeasonFolder",  null, "ClipMenuBar.Other.Season.OpenSeasonFolder",   Resources.ICN_MENUBAR_FOLDER,          false, this::onClickOtherSeasonOpenFolder);
 				}
 
 				CCActionElement seriesExtra = add(other, "SeriesExtra", null, "", null);
@@ -277,9 +280,10 @@ public class CCActionTree extends UIActionTree{
 						}
 					}
 
-					add(episode, "OpenEpisodeFolder", null, "ClipMenuBar.Other.Episode.OpenEpisodeFolder", Resources.ICN_MENUBAR_FOLDER,   false, this::onClickOtherEpisodeOpenFolder);
-					add(episode, "EditEpisode",       null, "ClipMenuBar.Other.Episode.EditEpisode",       Resources.ICN_MENUBAR_EDIT_MOV, true,  this::onClickOtherEpisodeEdit);
-					add(episode, "RemEpisode",        null, "ClipMenuBar.Other.Episode.RemEpisode",        Resources.ICN_MENUBAR_REMOVE,   true,  this::onClickOtherEpisodeDelete);
+					add(episode, "OpenEpisodeFolder",  null, "ClipMenuBar.Other.Episode.OpenEpisodeFolder", Resources.ICN_MENUBAR_FOLDER,          false, this::onClickOtherEpisodeOpenFolder);
+					add(episode, "ShowEpisodeHistory", null, "ClipMenuBar.Other.Episode.ShowHistory",       Resources.ICN_MENUBAR_DATABASEHISTORY, false, this::onClickOtherShowHistory);
+					add(episode, "EditEpisode",        null, "ClipMenuBar.Other.Episode.EditEpisode",       Resources.ICN_MENUBAR_EDIT_MOV,        true,  this::onClickOtherEpisodeEdit);
+					add(episode, "RemEpisode",         null, "ClipMenuBar.Other.Episode.RemEpisode",        Resources.ICN_MENUBAR_REMOVE,          true,  this::onClickOtherEpisodeDelete);
 				}
 			}
 		}
@@ -719,6 +723,10 @@ public class CCActionTree extends UIActionTree{
 	
 	private void onClickOtherShowCover(CCTreeActionEvent e) {
 		e.ifDatabaseElementSource(d -> new CoverPreviewFrame(e.SwingOwner, d).setVisible(true));
+	}
+
+	private void onClickOtherShowHistory(CCTreeActionEvent e) {
+		e.ifStructureElementSource(d -> new DatabaseHistoryFrame(e.SwingOwner, movielist, String.valueOf(d.getLocalID())).setVisible(true));
 	}
 	
 	private void onClickSwitchTag(CCTreeActionEvent e, CCSingleTag t) {

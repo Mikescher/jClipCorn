@@ -27,6 +27,7 @@ public class CCReadableEnumComboBoxEditor<T extends ContinoousEnum<T>> implement
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
 	public void setItem(Object anObject) {
 
 		if(anObject != null) {
@@ -58,7 +59,7 @@ public class CCReadableEnumComboBoxEditor<T extends ContinoousEnum<T>> implement
 
 	@Override
 	public void selectAll() {
-		throw new UnsupportedOperationException("Not supported yet. in select All");
+		throw new UnsupportedOperationException();
 	}
 
 	@Override

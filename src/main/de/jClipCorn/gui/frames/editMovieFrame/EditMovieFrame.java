@@ -1053,23 +1053,23 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		
 		movie.setOnlinescore((int) spnOnlineScore.getValue());
 		
-		movie.setFsk((CCFSK) cbxFSK.getSelectedEnum());
-		movie.setFormat((CCFileFormat) cbxFormat.getSelectedEnum());
+		movie.setFsk(cbxFSK.getSelectedEnum());
+		movie.setFormat(cbxFormat.getSelectedEnum());
 		
 		movie.setYear((int) spnYear.getValue());
 		movie.setFilesize((long) spnSize.getValue());
 		
-		movie.setGenre((CCGenre) cbxGenre0.getSelectedEnum(), 0);
-		movie.setGenre((CCGenre) cbxGenre1.getSelectedEnum(), 1);
-		movie.setGenre((CCGenre) cbxGenre2.getSelectedEnum(), 2);
-		movie.setGenre((CCGenre) cbxGenre3.getSelectedEnum(), 3);
-		movie.setGenre((CCGenre) cbxGenre4.getSelectedEnum(), 4);
-		movie.setGenre((CCGenre) cbxGenre5.getSelectedEnum(), 5);
-		movie.setGenre((CCGenre) cbxGenre6.getSelectedEnum(), 6);
-		movie.setGenre((CCGenre) cbxGenre7.getSelectedEnum(), 7);
+		movie.setGenre(cbxGenre0.getSelectedEnum(), 0);
+		movie.setGenre(cbxGenre1.getSelectedEnum(), 1);
+		movie.setGenre(cbxGenre2.getSelectedEnum(), 2);
+		movie.setGenre(cbxGenre3.getSelectedEnum(), 3);
+		movie.setGenre(cbxGenre4.getSelectedEnum(), 4);
+		movie.setGenre(cbxGenre5.getSelectedEnum(), 5);
+		movie.setGenre(cbxGenre6.getSelectedEnum(), 6);
+		movie.setGenre(cbxGenre7.getSelectedEnum(), 7);
 		
 		movie.setTags(tagPnl.getValue());
-		movie.setScore((CCUserScore) cbxScore.getSelectedEnum());
+		movie.setScore(cbxScore.getSelectedEnum());
 		
 		movie.setCover(edCvrControl.getResizedImageForStorage());
 

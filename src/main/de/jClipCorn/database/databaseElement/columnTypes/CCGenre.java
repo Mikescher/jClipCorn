@@ -2,6 +2,7 @@ package de.jClipCorn.database.databaseElement.columnTypes;
 
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.util.Str;
 import de.jClipCorn.util.enumextension.ContinoousEnum;
 import de.jClipCorn.util.enumextension.EnumWrapper;
 
@@ -65,7 +66,7 @@ public enum CCGenre implements ContinoousEnum<CCGenre> {
 	
 	private final int id;
 	
-	private final static EnumWrapper<CCGenre> wrapper = new EnumWrapper<>(GENRE_000, p -> ((p==GENRE_000) ? " " : p.asString()), CCGenre::shouldShowInComboBox, CCGenre::toComboBoxString);
+	private final static EnumWrapper<CCGenre> wrapper = new EnumWrapper<>(GENRE_000, p -> ((p==GENRE_000) ? Str.SingleSpace : p.asString()), CCGenre::shouldShowInComboBox, CCGenre::toComboBoxString);
 
 	CCGenre(int val) {
 		id = val;
@@ -99,7 +100,7 @@ public enum CCGenre implements ContinoousEnum<CCGenre> {
 		ArrayList<String> res = new ArrayList<>();
 		for (String s : getWrapper().getList()) {
 			if (s.equals(LocaleBundle.getString("CCMovieGenre.Genre000"))) { //$NON-NLS-1$
-				res.add(" "); //$NON-NLS-1$
+				res.add(Str.SingleSpace);
 			} else if (!s.isEmpty()) {
 				res.add(s);
 			}
@@ -112,7 +113,7 @@ public enum CCGenre implements ContinoousEnum<CCGenre> {
 	}
 
 	private String toComboBoxString() {
-		if (this == GENRE_000) return (" "); //$NON-NLS-1$
+		if (this == GENRE_000) return (Str.SingleSpace);
 		return asString();
 	}
 

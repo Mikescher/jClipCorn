@@ -9,6 +9,7 @@ import org.apache.commons.codec.binary.Base64;
 @SuppressWarnings("nls")
 public final class Str {
 	public final static String Empty = "";
+public final static String SingleSpace = " ";
 
 	public static Charset UTF8 = StandardCharsets.UTF_8;
 	

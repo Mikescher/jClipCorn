@@ -67,4 +67,10 @@ public class CCTreeActionEvent {
 			if (sobj instanceof CCSeries) { fn2.invoke((CCSeries)sobj); return; }
 		}
 	}
+
+	public void ifStructureElementSource(Func1to0<ICCDatabaseStructureElement> fn) {
+		for (IActionSourceObject sobj : SourceObject) {
+			if (sobj instanceof ICCDatabaseStructureElement) { fn.invoke((ICCDatabaseStructureElement)sobj); return; }
+		}
+	}
 }

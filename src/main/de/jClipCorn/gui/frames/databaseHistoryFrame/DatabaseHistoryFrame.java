@@ -57,6 +57,8 @@ public class DatabaseHistoryFrame extends JFrame {
 	private String _triggerError = Str.Empty;
 	private int _tcount;
 	private JCheckBox cbxDoAgressiveMerges;
+	private JLabel lblFilter;
+	private JTextField edFilter;
 
 	public DatabaseHistoryFrame(Component owner, CCMovieList mlist) {
 		super();
@@ -67,6 +69,25 @@ public class DatabaseHistoryFrame extends JFrame {
 		setLocationRelativeTo(owner);
 
 		updateUI();
+	}
+
+	public DatabaseHistoryFrame(Component owner, CCMovieList mlist, String idfilter) {
+		super();
+
+		movielist = mlist;
+
+		initGUI();
+		setLocationRelativeTo(owner);
+
+		updateUI();
+
+		cbxIgnoreTrivial.setSelected(false);
+		cbxIgnoreIDChanges.setSelected(false);
+
+		if (!Str.isNullOrWhitespace(idfilter)) {
+			edFilter.setText(idfilter);
+			queryHistory(null, true);
+		}
 	}
 	
 	private void initGUI() {
@@ -152,7 +173,7 @@ public class DatabaseHistoryFrame extends JFrame {
 		
 		cbxIgnoreTrivial = new JCheckBox(LocaleBundle.getString("DatabaseHistoryFrame.IgnoreTrivial")); //$NON-NLS-1$
 		cbxIgnoreTrivial.setSelected(true);
-		contentPane.add(cbxIgnoreTrivial, "2, 8, 5, 1"); //$NON-NLS-1$
+		contentPane.add(cbxIgnoreTrivial, "2, 8, 7, 1"); //$NON-NLS-1$
 		
 		btnGetHistory = new JSplitButton(LocaleBundle.getString("DatabaseHistoryFrame.btnGetter")); //$NON-NLS-1$
 		btnGetHistory.addSplitButtonActionListener(new SplitButtonActionListener() {
@@ -166,9 +187,17 @@ public class DatabaseHistoryFrame extends JFrame {
 		cbxIgnoreIDChanges.setSelected(true);
 		contentPane.add(cbxIgnoreIDChanges, "2, 10, 7, 1"); //$NON-NLS-1$
 		
+		lblFilter = new JLabel("Filter"); //$NON-NLS-1$
+		lblFilter.setHorizontalAlignment(SwingConstants.LEADING);
+		contentPane.add(lblFilter, "12, 10, default, bottom"); //$NON-NLS-1$
+		
 		cbxDoAgressiveMerges = new JCheckBox(LocaleBundle.getString("DatabaseHistoryFrame.MergeAggressive")); //$NON-NLS-1$
 		cbxDoAgressiveMerges.setSelected(true);
 		contentPane.add(cbxDoAgressiveMerges, "2, 12, 7, 1"); //$NON-NLS-1$
+		
+		edFilter = new JTextField();
+		contentPane.add(edFilter, "12, 12, fill, top"); //$NON-NLS-1$
+		edFilter.setColumns(10);
 		
 		progressBar = new JProgressBar();
 		contentPane.add(progressBar, "2, 14, 11, 1, fill, fill"); //$NON-NLS-1$
@@ -200,11 +229,37 @@ public class DatabaseHistoryFrame extends JFrame {
 			JMenuItem m4 = new JMenuItem(LocaleBundle.getString("DatabaseHistoryFrame.TimeYear")); //$NON-NLS-1$
 			m4.addActionListener(e -> queryHistory(CCDateTime.getYearStart()));
 			popupMenu.add(m4);
+
+			popupMenu.add(new JSeparator());
+
+			JMenuItem m5 = new JMenuItem(LocaleBundle.getString("DatabaseHistoryFrame.TimeSubDay")); //$NON-NLS-1$
+			m5.addActionListener(e -> queryHistory(CCDateTime.getCurrentDateTime().getSubDay(1)));
+			popupMenu.add(m5);
+
+			JMenuItem m6 = new JMenuItem(LocaleBundle.getString("DatabaseHistoryFrame.TimeSubWeek")); //$NON-NLS-1$
+			m6.addActionListener(e -> queryHistory(CCDateTime.getCurrentDateTime().getSubDay(7)));
+			popupMenu.add(m6);
+
+			JMenuItem m7 = new JMenuItem(LocaleBundle.getString("DatabaseHistoryFrame.TimeSubMonth")); //$NON-NLS-1$
+			m7.addActionListener(e -> queryHistory(CCDateTime.getCurrentDateTime().getSubDay(30)));
+			popupMenu.add(m7);
+
+			JMenuItem m8 = new JMenuItem(LocaleBundle.getString("DatabaseHistoryFrame.TimeSubYear")); //$NON-NLS-1$
+			m8.addActionListener(e -> queryHistory(CCDateTime.getCurrentDateTime().getSubDay(365)));
+			popupMenu.add(m8);
+
+			popupMenu.add(new JSeparator());
+
+			JMenuItem m9 = new JMenuItem(LocaleBundle.getString("DatabaseHistoryFrame.TimeAll")); //$NON-NLS-1$
+			m9.addActionListener(e -> queryHistory(null));
+			popupMenu.add(m9);
 		}
 		return popupMenu;
 	}
 
-	private void queryHistory(CCDateTime dt) {
+	private void queryHistory(CCDateTime dt) { queryHistory(dt, false); }
+
+	private void queryHistory(CCDateTime dt, boolean stayDisabled) {
 
 		boolean optTrivial1 = cbxIgnoreTrivial.isSelected();
 		boolean optTrivial2 = cbxIgnoreIDChanges.isSelected();
@@ -219,7 +274,11 @@ public class DatabaseHistoryFrame extends JFrame {
 					setEnabled(false);
 					MainFrame.getInstance().beginBlockingIntermediate();
 					btnGetHistory.setEnabled(false);
+					edFilter.setEnabled(false);
 				});
+
+				String filter = edFilter.getText();
+				if (Str.isNullOrWhitespace(filter)) filter = null;
 
 				List<CCCombinedHistoryEntry> data = movielist.getHistory().query(
 						optTrivial1,
@@ -227,7 +286,8 @@ public class DatabaseHistoryFrame extends JFrame {
 						optTrivial1,
 						optAggressive,
 						dt,
-						new ProgressCallbackProgressBarHelper(progressBar, 100));
+						new ProgressCallbackProgressBarHelper(progressBar, 100),
+						filter);
 
 				Collections.reverse(data);
 
@@ -239,7 +299,8 @@ public class DatabaseHistoryFrame extends JFrame {
 					updateUI();
 					setEnabled(true);
 					MainFrame.getInstance().endBlockingIntermediate();
-					btnGetHistory.setEnabled(true);
+					if (!stayDisabled) btnGetHistory.setEnabled(true);
+					if (!stayDisabled) edFilter.setEnabled(true);
 					edTableSize.setText(_tcount + " (" + tableEntries.getDataDirect().size()+")"); //$NON-NLS-1$ //$NON-NLS-2$
 				});
 

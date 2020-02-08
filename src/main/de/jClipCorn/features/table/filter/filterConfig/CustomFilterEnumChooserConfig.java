@@ -23,8 +23,12 @@ public class CustomFilterEnumChooserConfig<T extends ContinoousEnum<T>> extends 
 	
 	@Override
 	public JComponent getComponent(Runnable onChange) {
+		T initial = valueGetter.invoke();
+		
 		CCEnumComboBox<T> cbx = new CCEnumComboBox<>(enumWrapper);
 
+		if (initial != null) cbx.setSelectedEnum(initial);
+		
 		cbx.addActionListener(e ->
 		{
 			valueSetter.invoke(cbx.getSelectedEnum());

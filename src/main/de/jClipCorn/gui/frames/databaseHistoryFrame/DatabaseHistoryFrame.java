@@ -29,6 +29,7 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.sql.SQLException;
+import java.util.Collections;
 import java.util.List;
 
 public class DatabaseHistoryFrame extends JFrame {
@@ -227,6 +228,8 @@ public class DatabaseHistoryFrame extends JFrame {
 						optAggressive,
 						dt,
 						new ProgressCallbackProgressBarHelper(progressBar, 100));
+
+				Collections.reverse(data);
 
 				SwingUtilities.invokeLater(() ->
 				{

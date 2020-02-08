@@ -7,7 +7,7 @@ import de.jClipCorn.features.online.metadata.Metadataparser;
 import de.jClipCorn.features.online.metadata.OnlineMetadata;
 import de.jClipCorn.features.online.metadata.ParseResultHandler;
 import de.jClipCorn.gui.frames.allRatingsFrame.AllRatingsDialog;
-import de.jClipCorn.gui.guiComponents.CCReadableEnumComboBox;
+import de.jClipCorn.gui.guiComponents.enumComboBox.CCReadableEnumComboBox;
 import de.jClipCorn.gui.guiComponents.CoverLabel;
 import de.jClipCorn.gui.guiComponents.ReadableSpinner;
 import de.jClipCorn.gui.guiComponents.ReadableTextField;

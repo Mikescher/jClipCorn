@@ -1,4 +1,4 @@
-package de.jClipCorn.gui.guiComponents;
+package de.jClipCorn.gui.guiComponents.enumComboBox;
 
 import de.jClipCorn.util.enumextension.ContinoousEnum;
 import de.jClipCorn.util.enumextension.EnumWrapper;
@@ -9,6 +9,7 @@ public class CCReadableEnumComboBox<T extends ContinoousEnum<T>> extends CCEnumC
 
 	public CCReadableEnumComboBox(EnumWrapper<T> wrapper) {
 		super(wrapper);
+		setEditor(new CCReadableEnumComboBoxEditor(wrapper));
 		setReadable();
 	}
 

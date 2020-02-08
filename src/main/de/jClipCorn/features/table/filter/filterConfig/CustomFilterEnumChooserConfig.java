@@ -1,6 +1,6 @@
 package de.jClipCorn.features.table.filter.filterConfig;
 
-import de.jClipCorn.gui.guiComponents.CCEnumComboBox;
+import de.jClipCorn.gui.guiComponents.enumComboBox.CCEnumComboBox;
 import de.jClipCorn.util.enumextension.ContinoousEnum;
 import de.jClipCorn.util.enumextension.EnumWrapper;
 import de.jClipCorn.util.lambda.Func0to1;

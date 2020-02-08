@@ -283,6 +283,7 @@ public class Statements {
 					.setCustomSelectField(7, COL_HISTORY_NEW)
 					.setCustomPrepared(1, COL_HISTORY_DATE)
 					.build(d, statements);
+
 			queryHistoryStatementFilteredLimited = SQLBuilder.createCustom(TAB_HISTORY)
 					.setSQL("SELECT [TABLE], [ID], [DATE], [ACTION], [FIELD], [OLD], [NEW] FROM [HISTORY] WHERE ([ID] = ?) AND ([DATE] > ?) ORDER BY [DATE] ASC")
 					.setCustomSelectField(1, COL_HISTORY_TABLE)

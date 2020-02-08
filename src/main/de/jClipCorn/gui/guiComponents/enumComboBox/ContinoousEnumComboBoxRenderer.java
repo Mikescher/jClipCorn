@@ -1,4 +1,7 @@
-package de.jClipCorn.util.enumextension;
+package de.jClipCorn.gui.guiComponents.enumComboBox;
+
+import de.jClipCorn.util.enumextension.ContinoousEnum;
+import de.jClipCorn.util.enumextension.EnumWrapper;
 
 import javax.swing.*;
 import java.awt.*;

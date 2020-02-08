@@ -1,6 +1,7 @@
 package de.jClipCorn.util.enumextension;
 
 import de.jClipCorn.features.log.CCLog;
+import de.jClipCorn.gui.guiComponents.enumComboBox.ContinoousEnumComboBoxRenderer;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.exceptions.EnumFormatException;
 import de.jClipCorn.util.exceptions.EnumValueNotFoundException;

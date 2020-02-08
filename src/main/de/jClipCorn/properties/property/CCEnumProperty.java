@@ -1,7 +1,7 @@
 package de.jClipCorn.properties.property;
 
 import de.jClipCorn.features.log.CCLog;
-import de.jClipCorn.gui.guiComponents.CCEnumComboBox;
+import de.jClipCorn.gui.guiComponents.enumComboBox.CCEnumComboBox;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.CCPropertyCategory;

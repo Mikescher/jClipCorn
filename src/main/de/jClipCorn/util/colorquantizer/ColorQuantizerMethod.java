@@ -30,7 +30,7 @@ public enum ColorQuantizerMethod implements ContinoousEnum<ColorQuantizerMethod>
 	private final int id;
 	private final Func0to1<ColorQuantizer> funcCreate;
 
-	private static EnumWrapper<ColorQuantizerMethod> wrapper = new EnumWrapper<>(EMPTY);
+	private static final EnumWrapper<ColorQuantizerMethod> wrapper = new EnumWrapper<>(EMPTY);
 
 	ColorQuantizerMethod(int val, Func0to1<ColorQuantizer> fcreate) {
 		id = val;

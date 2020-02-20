@@ -20,7 +20,7 @@ public enum AddDateAlgorithm implements ContinoousEnum<AddDateAlgorithm> {
 	
 	private int id;
 
-	private static EnumWrapper<AddDateAlgorithm> wrapper = new EnumWrapper<>(OLDEST_DATE);
+	private static final EnumWrapper<AddDateAlgorithm> wrapper = new EnumWrapper<>(OLDEST_DATE);
 
 	private AddDateAlgorithm(int val) {
 		id = val;

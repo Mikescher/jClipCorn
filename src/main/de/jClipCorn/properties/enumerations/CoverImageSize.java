@@ -58,7 +58,7 @@ public enum CoverImageSize implements ContinoousEnum<CoverImageSize> {
 	
 	private int id;
 
-	private static EnumWrapper<CoverImageSize> wrapper = new EnumWrapper<>(BASE_SIZE);
+	private static final EnumWrapper<CoverImageSize> wrapper = new EnumWrapper<>(BASE_SIZE);
 
 	private CoverImageSize(int val) {
 		id = val;

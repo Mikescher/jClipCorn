@@ -19,7 +19,7 @@ public enum CCDatabaseDriver implements ContinoousEnum<CCDatabaseDriver> {
 	
 	private int id;
 
-	private static EnumWrapper<CCDatabaseDriver> wrapper = new EnumWrapper<>(DERBY);
+	private static final EnumWrapper<CCDatabaseDriver> wrapper = new EnumWrapper<>(DERBY);
 
 	CCDatabaseDriver(int val) {
 		id = val;

@@ -18,7 +18,7 @@ public enum DoubleClickAction implements ContinoousEnum<DoubleClickAction> {
 	
 	private int id;
 
-	private static EnumWrapper<DoubleClickAction> wrapper = new EnumWrapper<>(PLAY);
+	private static final EnumWrapper<DoubleClickAction> wrapper = new EnumWrapper<>(PLAY);
 
 	private DoubleClickAction(int val) {
 		id = val;

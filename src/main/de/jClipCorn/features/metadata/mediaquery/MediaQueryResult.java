@@ -285,6 +285,10 @@ public class MediaQueryResult {
 		if (langval.equalsIgnoreCase("\u6f22\u8a9e"))              return CCDBLanguage.CHINESE; //$NON-NLS-1$
 		if (langval.equalsIgnoreCase("Chinese"))                   return CCDBLanguage.CHINESE; //$NON-NLS-1$
 
+		if (langval.equalsIgnoreCase("ko"))                        return CCDBLanguage.KOREAN; //$NON-NLS-1$
+		if (langval.equalsIgnoreCase("kor"))                       return CCDBLanguage.KOREAN; //$NON-NLS-1$
+		if (langval.equalsIgnoreCase("korean"))                    return CCDBLanguage.KOREAN; //$NON-NLS-1$
+
 		throw new InnerMediaQueryException("Unknown audio language '" + langval + "'"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 

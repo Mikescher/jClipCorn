@@ -17,7 +17,7 @@ public enum CCDateTimeFormat implements ContinoousEnum<CCDateTimeFormat> {
 
 	private int id;
 	
-	private static EnumWrapper<CCDateTimeFormat> wrapper = new EnumWrapper<>(ISO_8601);
+	private static final EnumWrapper<CCDateTimeFormat> wrapper = new EnumWrapper<>(ISO_8601);
 
 	private CCDateTimeFormat(int val) {
 		id = val;

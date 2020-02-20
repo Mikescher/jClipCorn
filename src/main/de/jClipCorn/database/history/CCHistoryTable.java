@@ -26,7 +26,7 @@ public enum CCHistoryTable implements ContinoousEnum<CCHistoryTable>
 	public final IconRef Icon;
 	public final CCSQLTableDef Definition;
 
-	private static EnumWrapper<CCHistoryTable> wrapper = new EnumWrapper<>(COVERS);
+	private static final EnumWrapper<CCHistoryTable> wrapper = new EnumWrapper<>(COVERS);
 
 	CCHistoryTable(int id, String name, CCSQLTableDef def, IconRef icn) {
 		ID = id;

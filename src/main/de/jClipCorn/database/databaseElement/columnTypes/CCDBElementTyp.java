@@ -18,7 +18,7 @@ public enum CCDBElementTyp implements ContinoousEnum<CCDBElementTyp> {
 	
 	private int id;
 
-	private static EnumWrapper<CCDBElementTyp> wrapper = new EnumWrapper<>(MOVIE);
+	private static final EnumWrapper<CCDBElementTyp> wrapper = new EnumWrapper<>(MOVIE);
 
 	private CCDBElementTyp(int val) {
 		id = val;

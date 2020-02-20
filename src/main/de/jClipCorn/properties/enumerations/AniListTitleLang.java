@@ -18,7 +18,7 @@ public enum AniListTitleLang implements ContinoousEnum<AniListTitleLang> {
 
 	private int id;
 
-	private static EnumWrapper<AniListTitleLang> wrapper = new EnumWrapper<>(PREFERRED);
+	private static final EnumWrapper<AniListTitleLang> wrapper = new EnumWrapper<>(PREFERRED);
 
 	private AniListTitleLang(int val) {
 		id = val;

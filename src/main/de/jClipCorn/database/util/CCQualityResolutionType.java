@@ -27,7 +27,7 @@ public enum CCQualityResolutionType implements ContinoousEnum<CCQualityResolutio
 	public final int ID;
 	public final String Text;
 
-	private static EnumWrapper<CCQualityResolutionType> wrapper = new EnumWrapper<>(UNKNOWN);
+	private static final EnumWrapper<CCQualityResolutionType> wrapper = new EnumWrapper<>(UNKNOWN);
 
 	CCQualityResolutionType(int id, String txt) {
 		ID = id;

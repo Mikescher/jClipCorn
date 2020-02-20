@@ -18,7 +18,7 @@ public enum InitalSortingColumn implements ContinoousEnum<InitalSortingColumn> {
 	
 	private int id;
 
-	private static EnumWrapper<InitalSortingColumn> wrapper = new EnumWrapper<>(LOCALID);
+	private static final EnumWrapper<InitalSortingColumn> wrapper = new EnumWrapper<>(LOCALID);
 
 	private InitalSortingColumn(int val) {
 		id = val;

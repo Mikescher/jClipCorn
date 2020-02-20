@@ -15,7 +15,7 @@ public enum IMDBLanguage implements ContinoousEnum<IMDBLanguage> {
 
 	private int id;
 	
-	private static EnumWrapper<IMDBLanguage> wrapper = new EnumWrapper<>(GERMAN);
+	private static final EnumWrapper<IMDBLanguage> wrapper = new EnumWrapper<>(GERMAN);
 
 	private IMDBLanguage(int val) {
 		id = val;

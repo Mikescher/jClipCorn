@@ -47,7 +47,7 @@ public enum MainFrameColumn implements ContinoousEnum<MainFrameColumn> {
 
 	public final int ColumnIndex;
 
-	private static EnumWrapper<MainFrameColumn> wrapper = new EnumWrapper<>(TITLE);
+	private static final EnumWrapper<MainFrameColumn> wrapper = new EnumWrapper<>(TITLE);
 
 	MainFrameColumn(int val, int idx) {
 		id = val;

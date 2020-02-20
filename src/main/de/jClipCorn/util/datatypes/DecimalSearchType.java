@@ -19,7 +19,7 @@ public enum DecimalSearchType implements ContinoousEnum<DecimalSearchType> {
 	
 	private final int id;
 	
-	private static EnumWrapper<DecimalSearchType> wrapper = new EnumWrapper<>(LESSER);
+	private static final EnumWrapper<DecimalSearchType> wrapper = new EnumWrapper<>(LESSER);
 
 	private DecimalSearchType(int val) {
 		id = val;

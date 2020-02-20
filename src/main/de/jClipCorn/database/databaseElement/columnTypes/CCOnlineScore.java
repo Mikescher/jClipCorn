@@ -36,7 +36,7 @@ public enum CCOnlineScore implements ContinoousEnum<CCOnlineScore> {
 	
 	private int id;
 	
-	private static EnumWrapper<CCOnlineScore> wrapper = new EnumWrapper<>(STARS_0_0);
+	private static final EnumWrapper<CCOnlineScore> wrapper = new EnumWrapper<>(STARS_0_0);
 
 	private CCOnlineScore(int val) {
 		id = val;

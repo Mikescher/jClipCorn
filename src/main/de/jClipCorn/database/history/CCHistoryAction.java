@@ -15,7 +15,7 @@ public enum CCHistoryAction implements ContinoousEnum<CCHistoryAction>
 	public final int ID;
 	public final String Name;
 
-	private static EnumWrapper<CCHistoryAction> wrapper = new EnumWrapper<>(INSERT);
+	private static final EnumWrapper<CCHistoryAction> wrapper = new EnumWrapper<>(INSERT);
 
 	CCHistoryAction(int id, String name) {
 		ID = id;

@@ -20,7 +20,7 @@ public enum NextEpisodeHeuristic implements ContinoousEnum<NextEpisodeHeuristic>
 	
 	private int id;
 
-	private static EnumWrapper<NextEpisodeHeuristic> wrapper = new EnumWrapper<>(AUTOMATIC);
+	private static final EnumWrapper<NextEpisodeHeuristic> wrapper = new EnumWrapper<>(AUTOMATIC);
 
 	private NextEpisodeHeuristic(int val) {
 		id = val;

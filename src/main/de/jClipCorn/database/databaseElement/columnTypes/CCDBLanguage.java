@@ -28,10 +28,11 @@ public enum CCDBLanguage implements ContinoousEnum<CCDBLanguage> {
 	HUNGARIAN(16),
 	BULGARIAN(17),
 	RUSSIAN(18),
-	CHINESE(19);
+	CHINESE(19),
+	KOREAN(20);
 
 
-	private static EnumWrapper<CCDBLanguage> wrapper = new EnumWrapper<>(GERMAN);
+	private static final EnumWrapper<CCDBLanguage> wrapper = new EnumWrapper<>(GERMAN);
 
 	private final static String[] NAMES = {
 			LocaleBundle.getString("CCMovieLanguage.German"),     //$NON-NLS-1$
@@ -54,6 +55,7 @@ public enum CCDBLanguage implements ContinoousEnum<CCDBLanguage> {
 			LocaleBundle.getString("CCMovieLanguage.Bulgarian"),  //$NON-NLS-1$
 			LocaleBundle.getString("CCMovieLanguage.Russian"),    //$NON-NLS-1$
 			LocaleBundle.getString("CCMovieLanguage.Chinese"),    //$NON-NLS-1$
+			LocaleBundle.getString("CCMovieLanguage.Korean"),     //$NON-NLS-1$
 	};
 
 	private final static String[] SHORTNAMES = {
@@ -77,6 +79,7 @@ public enum CCDBLanguage implements ContinoousEnum<CCDBLanguage> {
 			"BUL",   //$NON-NLS-1$
 			"RUS",   //$NON-NLS-1$
 			"CHI",   //$NON-NLS-1$
+			"KOR",   //$NON-NLS-1$
 	};
 
 	private final static String[] LONGNAMES = {
@@ -100,6 +103,7 @@ public enum CCDBLanguage implements ContinoousEnum<CCDBLanguage> {
 			"Bulgarian",  //$NON-NLS-1$
 			"Russian",    //$NON-NLS-1$
 			"Chinese",    //$NON-NLS-1$
+			"Korean",     //$NON-NLS-1$
 	};
 
 	private final int id;

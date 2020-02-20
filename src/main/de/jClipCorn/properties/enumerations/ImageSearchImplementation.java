@@ -32,7 +32,7 @@ public enum ImageSearchImplementation implements ContinoousEnum<ImageSearchImple
 	
 	private int id;
 
-	private static EnumWrapper<ImageSearchImplementation> wrapper = new EnumWrapper<>(GOOGLE_COVER);
+	private static final EnumWrapper<ImageSearchImplementation> wrapper = new EnumWrapper<>(GOOGLE_COVER);
 
 	private ImageSearchImplementation(int val) {
 		id = val;

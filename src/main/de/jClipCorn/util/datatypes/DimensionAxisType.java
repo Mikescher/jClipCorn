@@ -15,7 +15,7 @@ public enum DimensionAxisType implements ContinoousEnum<DimensionAxisType> {
 	
 	private final int id;
 	
-	private static EnumWrapper<DimensionAxisType> wrapper = new EnumWrapper<>(WIDTH);
+	private static final EnumWrapper<DimensionAxisType> wrapper = new EnumWrapper<>(WIDTH);
 
 	private DimensionAxisType(int val) {
 		id = val;

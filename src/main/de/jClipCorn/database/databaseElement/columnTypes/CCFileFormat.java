@@ -24,7 +24,7 @@ public enum CCFileFormat implements ContinoousEnum<CCFileFormat> {
 	private final static String ALTNAMES[] = {"mkv", "avi", "mpg", "img", "ifo", "wmv", "mp4", "divx", "flv"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$
 	private int id;
 	
-	private static EnumWrapper<CCFileFormat> wrapper = new EnumWrapper<>(MKV);
+	private static final EnumWrapper<CCFileFormat> wrapper = new EnumWrapper<>(MKV);
 	
 	private CCFileFormat(int val) {
 		id = val;

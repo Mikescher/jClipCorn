@@ -18,7 +18,7 @@ public enum UITableBackground implements ContinoousEnum<UITableBackground> {
 	
 	private int id;
 
-	private static EnumWrapper<UITableBackground> wrapper = new EnumWrapper<>(WHITE);
+	private static final EnumWrapper<UITableBackground> wrapper = new EnumWrapper<>(WHITE);
 
 	private UITableBackground(int val) {
 		id = val;

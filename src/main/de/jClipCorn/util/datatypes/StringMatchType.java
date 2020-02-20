@@ -19,7 +19,7 @@ public enum StringMatchType implements ContinoousEnum<StringMatchType> {
 	
 	private final int id;
 	
-	private static EnumWrapper<StringMatchType> wrapper = new EnumWrapper<>(SM_STARTSWITH);
+	private static final EnumWrapper<StringMatchType> wrapper = new EnumWrapper<>(SM_STARTSWITH);
 
 	private StringMatchType(int val) {
 		id = val;

@@ -102,6 +102,11 @@ public class EnumWrapper<T extends ContinoousEnum<T>> {
 		return new ArrayList<>(Arrays.asList(defValue.evalues()));
 	}
 
+	@SuppressWarnings({"unchecked", "rawtypes"})
+	public List<T> allDisplayValuesSorted() {
+		return CCStreams.iterate(defValue.evalues()).filter(displayFilter).autosortByProperty(x -> (Comparable)displaySorter.invoke(x)).toList();
+	}
+
 	public T randomValue(Random r) {
 		T[] a = defValue.evalues();
 		if (a.length == 0) return null;

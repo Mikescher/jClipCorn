@@ -1,49 +1,40 @@
 package de.jClipCorn.gui.mainFrame.filterTree;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.swing.Icon;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.TreePath;
-
 import de.jClipCorn.database.CCMovieList;
-import de.jClipCorn.database.databaseElement.columnTypes.CCDBElementTyp;
-import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguage;
-import de.jClipCorn.database.databaseElement.columnTypes.CCFSK;
-import de.jClipCorn.database.databaseElement.columnTypes.CCFileFormat;
-import de.jClipCorn.database.databaseElement.columnTypes.CCGenre;
-import de.jClipCorn.database.databaseElement.columnTypes.CCGroup;
-import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineScore;
-import de.jClipCorn.database.databaseElement.columnTypes.CCTagList;
-import de.jClipCorn.database.databaseElement.columnTypes.CCUserScore;
+import de.jClipCorn.database.databaseElement.columnTypes.*;
 import de.jClipCorn.database.util.CCQualityCategoryType;
 import de.jClipCorn.database.util.ExtendedViewedStateType;
+import de.jClipCorn.features.table.filter.AbstractCustomFilter;
+import de.jClipCorn.features.table.filter.TableCustomFilter;
 import de.jClipCorn.features.table.filter.customFilter.*;
+import de.jClipCorn.features.table.filter.customFilter.operators.CustomAndOperator;
 import de.jClipCorn.gui.frames.customFilterEditDialog.CustomFilterEditDialog;
-import de.jClipCorn.gui.mainFrame.clipTable.ClipTable;
-import de.jClipCorn.gui.mainFrame.clipTable.RowFilterSource;
 import de.jClipCorn.gui.frames.organizeFilterFrame.OrganizeFilterDialog;
 import de.jClipCorn.gui.guiComponents.jSimpleTree.SimpleTreeObject;
 import de.jClipCorn.gui.guiComponents.jSimpleTree.SimpleTreeObject.SimpleTreeEvent;
 import de.jClipCorn.gui.guiComponents.jSimpleTree.SimpletreeActionMode;
 import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.gui.mainFrame.clipTable.ClipTable;
+import de.jClipCorn.gui.mainFrame.clipTable.RowFilterSource;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.gui.resources.reftypes.IconRef;
 import de.jClipCorn.properties.CCProperties;
-import de.jClipCorn.features.table.filter.AbstractCustomFilter;
-import de.jClipCorn.features.table.filter.TableCustomFilter;
-import de.jClipCorn.features.table.filter.customFilter.operators.CustomAndOperator;
 import de.jClipCorn.util.lambda.Func0to1;
 import de.jClipCorn.util.listener.FinishListener;
 import de.jClipCorn.util.stream.CCStreams;
 
+import javax.swing.*;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreePath;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 public class FilterTree extends AbstractFilterTree {
 	private static final long serialVersionUID = 592519777667038909L;
 
-	private CustomFilterList customFilterList = new CustomFilterList();
+	private final CustomFilterList customFilterList = new CustomFilterList();
 	
 	private final ClipTable table;
 	private final CCMovieList movielist;
@@ -141,31 +132,31 @@ public class FilterTree extends AbstractFilterTree {
 	}
 	
 	private void initFSK(DefaultMutableTreeNode parent) {
-		for (final CCFSK fsk : CCFSK.values()) {
+		for (final CCFSK fsk : CCFSK.getWrapper().allDisplayValuesSorted()) {
 			addNodeF(parent, fsk.getIcon(), fsk.asString(), () -> CustomFSKFilter.create(fsk));
 		}
 	}
 
 	private void initQuality(DefaultMutableTreeNode parent) {
-		for (final CCQualityCategoryType qual : CCQualityCategoryType.values()) {
+		for (final CCQualityCategoryType qual : CCQualityCategoryType.getWrapper().allDisplayValuesSorted()) {
 			addNodeF(parent, qual.getIcon(), qual.asString(), () -> CustomQualityCategoryTypeFilter.create(qual));
 		}
 	}
 
 	private void initScore(DefaultMutableTreeNode parent) {
-		for (final CCUserScore score : CCUserScore.values()) {
+		for (final CCUserScore score : CCUserScore.getWrapper().allDisplayValuesSorted()) {
 			addNodeF(parent, score.getIcon(), score.asString(), () -> CustomUserScoreFilter.create(score));
 		}
 	}
 	
 	private void initOnlineScore(DefaultMutableTreeNode parent) {
-		for (final CCOnlineScore oscore : CCOnlineScore.values()) {
+		for (final CCOnlineScore oscore : CCOnlineScore.getWrapper().allDisplayValuesSorted()) {
 			addNodeF(parent, oscore.getIcon(), oscore.asInt()/2.0+"", () -> CustomOnlinescoreFilter.create(oscore)); //$NON-NLS-1$
 		}
 	}
 	
 	private void initFormat(DefaultMutableTreeNode parent) {
-		for (final CCFileFormat format : CCFileFormat.values()) {
+		for (final CCFileFormat format : CCFileFormat.getWrapper().allDisplayValuesSorted()) {
 			addNodeF(parent, format.getIcon(), format.asString(), () -> CustomFormatFilter.create(format));
 		}
 	}
@@ -178,13 +169,13 @@ public class FilterTree extends AbstractFilterTree {
 	}
 	
 	private void initLanguage(DefaultMutableTreeNode parent) {
-		for (final CCDBLanguage language : CCDBLanguage.values()) {
+		for (final CCDBLanguage language : CCDBLanguage.getWrapper().allDisplayValuesSorted()) {
 			addNodeF(parent, language.getIcon(), language.asString(), () -> CustomLanguageFilter.create(language));
 		}
 	}
 	
 	private void initTyp(DefaultMutableTreeNode parent) {
-		for (final CCDBElementTyp typ : CCDBElementTyp.values()) {
+		for (final CCDBElementTyp typ : CCDBElementTyp.getWrapper().allDisplayValuesSorted()) {
 			addNodeF(parent, typ.getIcon(), typ.asString(), () -> CustomTypFilter.create(typ));
 		}
 	}

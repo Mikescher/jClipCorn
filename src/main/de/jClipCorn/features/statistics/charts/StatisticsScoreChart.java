@@ -71,11 +71,14 @@ public class StatisticsScoreChart extends StatisticsChart {
 		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 		
 		int[] values = StatisticsHelper.getCountForAllScores(it);
-		
-		for (int i = 0; i < values.length; i++) {
-			dataset.addValue(values[i], "Series0", CCUserScore.getWrapper().findOrNull(i).asString()); //$NON-NLS-1$
+
+		for (CCUserScore usc: CCUserScore.getWrapper().allDisplayValuesSorted())
+		{
+			if (usc == CCUserScore.RATING_NO) continue;
+
+			dataset.addValue(values[usc.asInt()], "Series0", usc.asString()); //$NON-NLS-1$
 		}
-		
+
         return dataset;
 	}
 

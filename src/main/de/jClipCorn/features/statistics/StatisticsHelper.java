@@ -1,14 +1,5 @@
 package de.jClipCorn.features.statistics;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.*;
 import de.jClipCorn.database.databaseElement.columnTypes.*;
@@ -18,6 +9,9 @@ import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.datetime.CCDatespan;
 import de.jClipCorn.util.stream.CCStream;
+
+import java.util.*;
+import java.util.Map.Entry;
 
 /*
  * We need to return an unboxed Integer in many methods due to an OpenJDK compiler bug
@@ -211,16 +205,14 @@ public class StatisticsHelper {
 	}
 	
 	public static int[] getCountForAllScores(CCStream<CCDatabaseElement> it) {
-		int[] result = new int[CCUserScore.values().length - 1];
+		int[] result = new int[CCUserScore.values().length];
 		
-		for (int i = 0; i < (CCUserScore.values().length - 1); i++) {
+		for (int i = 0; i < (CCUserScore.values().length); i++) {
 			result[i] = 0;
 		}
 		
 		for (CCDatabaseElement m : it) {
-			if (m.getScore() != CCUserScore.RATING_NO) {
-				result[m.getScore().asInt()]++;
-			}
+			result[m.getScore().asInt()]++;
 		}
 		
 		return result;

@@ -591,34 +591,56 @@ public class AddMultiEpisodesFrame extends JFrame {
 						File srcFile = new File(vm.SourcePath);
 						File dstFile = new File(PathFormatter.fromCCPath(vm.TargetPath));
 
+						String realTargetPath = PathFormatter.getCCPath(vm.SourcePath);
+
 						if (!srcFile.getAbsolutePath().equalsIgnoreCase(dstFile.getAbsolutePath()) && !vm.NoMove)
 						{
-							FileUtils.forceMkdir(dstFile.getParentFile());
-							if (mode == 0)
+							try
 							{
-								SimpleFileUtils.copyWithProgress(srcFile, dstFile, (val, max) ->
+								FileUtils.forceMkdir(dstFile.getParentFile());
+								if (mode == 0)
 								{
-									int newvalue = (int)(((val * 100) / max));
-									SwingUtilities.invokeLater(() -> { progressBar2.setValue(newvalue); progressBar2.setMaximum(100); });
-								});
-							}
-							else if (mode == 1)
-							{
-								SimpleFileUtils.copyWithProgress(srcFile, dstFile, (val, max) ->
+									SimpleFileUtils.copyWithProgress(srcFile, dstFile, (val, max) ->
+									{
+										int newvalue = (int)(((val * 100) / max));
+										SwingUtilities.invokeLater(() -> { progressBar2.setValue(newvalue); progressBar2.setMaximum(100); });
+									});
+								}
+								else if (mode == 1)
 								{
-									int newvalue = (int)(((val * 100) / max));
-									SwingUtilities.invokeLater(() -> { progressBar2.setValue(newvalue); progressBar2.setMaximum(100); });
-								});
-								if (!srcFile.delete()) throw new Exception("Delete of '"+srcFile.getAbsolutePath()+"' failed"); //$NON-NLS-1$ //$NON-NLS-2$
+									SimpleFileUtils.copyWithProgress(srcFile, dstFile, (val, max) ->
+									{
+										int newvalue = (int)(((val * 100) / max));
+										SwingUtilities.invokeLater(() -> { progressBar2.setValue(newvalue); progressBar2.setMaximum(100); });
+									});
+									if (!srcFile.delete()) throw new Exception("Delete of '"+srcFile.getAbsolutePath()+"' failed"); //$NON-NLS-1$ //$NON-NLS-2$
+								}
+								else if (mode == 2)
+								{
+									if (!srcFile.renameTo(dstFile)) throw new Exception("Rename of '"+srcFile.getAbsolutePath()+"' to '"+dstFile.getAbsolutePath()+"' failed"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+								}
+								else throw new Exception("Unknown copy mode = " + mode); //$NON-NLS-1$
+
+								realTargetPath = vm.TargetPath;
 							}
-							else if (mode == 2)
+							catch (Exception e)
 							{
-								if (!srcFile.renameTo(dstFile)) throw new Exception("Rename of '"+srcFile.getAbsolutePath()+"' to '"+dstFile.getAbsolutePath()+"' failed"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+								final int fi2 = i;
+
+								SwingUtilities.invokeLater(() ->
+								{
+									CCLog.addError(e);
+									DialogHelper.showDispatchError(
+											this,
+											LocaleBundle.getString("AddMultiEpisodesFrame.dialogs_error_caption"), //$NON-NLS-1$
+											LocaleBundle.getFormattedString("AddMultiEpisodesFrame.dialogs_error", data.get(fi2).Title, e.getMessage())); //$NON-NLS-1$
+								});
+
+								// continue - copy/move failed but we continue with old <realTargetPath>
 							}
-
-
 						}
 
+						final String final_realTargetPath = realTargetPath;
 						SwingUtilities.invokeAndWait(() ->
 						{
 							CCEpisode newEp = target.createNewEmptyEpisode();
@@ -632,7 +654,7 @@ public class AddMultiEpisodesFrame extends JFrame {
 							newEp.setFilesize(vm.Filesize);
 							newEp.setAddDate(vm.getAddDate());
 							newEp.setViewedHistory(vm.getViewedHistory());
-							newEp.setPart(vm.TargetPath);
+							newEp.setPart(final_realTargetPath);
 							newEp.setTags(CCTagList.EMPTY);
 							newEp.setLanguage(vm.Language);
 							newEp.endUpdating();

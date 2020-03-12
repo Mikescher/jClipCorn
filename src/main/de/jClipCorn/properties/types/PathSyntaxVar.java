@@ -12,4 +12,9 @@ public class PathSyntaxVar {
 		Key = key;
 		Value = value;
 	}
+
+	@Override
+	public String toString() {
+		return Key + " := " + Value;
+	}
 }

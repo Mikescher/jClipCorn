@@ -92,15 +92,15 @@ public class ExtendedSettingsFrame extends JFrame implements ListSelectionListen
 				FormSpecs.LINE_GAP_ROWSPEC,
 				RowSpec.decode("default:grow"), //$NON-NLS-1$
 				FormSpecs.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("15dlu"), //$NON-NLS-1$
+				FormSpecs.PREF_ROWSPEC,
 				FormSpecs.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("15dlu"), //$NON-NLS-1$
+				FormSpecs.PREF_ROWSPEC,
 				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
+				FormSpecs.PREF_ROWSPEC,
 				FormSpecs.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("default:grow"), //$NON-NLS-1$
+				FormSpecs.PREF_ROWSPEC,
 				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
+				FormSpecs.PREF_ROWSPEC,
 				FormSpecs.RELATED_GAP_ROWSPEC,}));
 
 		pnlScroll = new JScrollPane();

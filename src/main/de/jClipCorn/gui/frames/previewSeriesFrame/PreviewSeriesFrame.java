@@ -101,9 +101,15 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 	/**
 	 * @wbp.parser.constructor
 	 */
+	private PreviewSeriesFrame() {
+		initGUI(true);
+		setSize(new Dimension(1000, getInitFrameHeight()));
+		setMinimumSize(new Dimension(750, 680));
+	}
+	
 	private PreviewSeriesFrame(Component owner, CCSeries ser) {
 		this.dispSeries = ser;
-		initGUI();
+		initGUI(false);
 		setSize(new Dimension(1000, getInitFrameHeight()));
 		setMinimumSize(new Dimension(750, 680));
 
@@ -122,7 +128,7 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 
 	private PreviewSeriesFrame(Component owner, CCSeason sea) {
 		this.dispSeries = sea.getSeries();
-		initGUI();
+		initGUI(false);
 		setSize(new Dimension(1000, getInitFrameHeight()));
 		setMinimumSize(new Dimension(750, 680));
 
@@ -137,7 +143,7 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 
 	private PreviewSeriesFrame(Component owner, CCEpisode epi) {
 		this.dispSeries = epi.getSeries();
-		initGUI();
+		initGUI(false);
 		setSize(new Dimension(1000, getInitFrameHeight()));
 		setMinimumSize(new Dimension(750, 680));
 
@@ -268,7 +274,7 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 		});
 	}
 
-	private void initGUI() {
+	private void initGUI(boolean windowBuilder) {
 		setIconImage(Resources.IMG_FRAME_ICON.get());
 
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -344,7 +350,7 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 		tabSeason = new SerTable(null, this);
 		pnlMainIntern.add(tabSeason);
 
-		lblStaffel = new JLabel();
+		lblStaffel = new JLabel("<Season>"); //$NON-NLS-1$
 		lblStaffel.setFont(new Font("Tahoma", Font.PLAIN, 25)); //$NON-NLS-1$
 		lblStaffel.setHorizontalAlignment(SwingConstants.CENTER);
 		pnlMainIntern.add(lblStaffel, BorderLayout.NORTH);
@@ -362,7 +368,7 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 		pnlMain.add(vStrut_9, BorderLayout.NORTH);
 
 		menuBar = new PreviewSeriesMenuBar(this, this.dispSeries, () -> onUpdate(null));
-		setJMenuBar(menuBar);
+		if (!windowBuilder) setJMenuBar(menuBar);
 
 		pnlInfo2 = new JPanel();
 		getContentPane().add(pnlInfo2, BorderLayout.WEST);

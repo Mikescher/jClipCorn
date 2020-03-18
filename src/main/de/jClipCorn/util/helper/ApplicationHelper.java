@@ -1,21 +1,23 @@
 package de.jClipCorn.util.helper;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Pattern;
-
 import de.jClipCorn.Main;
-import de.jClipCorn.gui.mainFrame.MainFrame;
-import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.features.log.CCLog;
+import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.gui.mainFrame.MainFrame;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datatypes.Tuple3;
 import de.jClipCorn.util.datatypes.Tuple4;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.stream.CCStreams;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Pattern;
 
 public class ApplicationHelper {
 
@@ -194,5 +196,53 @@ public class ApplicationHelper {
 		}
 
 		return r;
+	}
+
+	@SuppressWarnings("nls")
+	public static boolean isProcessRunning(String name)
+	{
+		if (ApplicationHelper.isUnix() || ApplicationHelper.isMac()) {
+			try {
+				String line;
+				Process p = Runtime.getRuntime().exec("ps -e"); //$NON-NLS-1$
+				BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()));
+
+				while ((line = br.readLine()) != null) {
+					String[] split = line.split(" "); //$NON-NLS-1$
+					String pname = split[split.length-1];
+					if (pname.trim().toLowerCase().equals(name.trim().toLowerCase())) return true;
+				}
+
+				return false;
+			} catch (Exception e) {
+				CCLog.addError(e);
+				return false;
+			}
+		}
+
+		if (isWindows())
+		{
+			try {
+				String line;
+				StringBuilder pidInfo = new StringBuilder();
+
+				Process p =Runtime.getRuntime().exec(System.getenv("windir") +"\\system32\\"+"tasklist.exe");
+
+				BufferedReader input =  new BufferedReader(new InputStreamReader(p.getInputStream()));
+
+				while ((line = input.readLine()) != null) pidInfo.append(line);
+
+				input.close();
+
+				return (pidInfo.toString().toLowerCase().contains(name.toLowerCase()));
+			}
+			catch (Exception e)
+			{
+				CCLog.addWarning(e);
+				return false;
+			}
+		}
+
+		return false;
 	}
 }

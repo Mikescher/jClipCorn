@@ -29,6 +29,8 @@ import de.jClipCorn.gui.guiComponents.language.LanguageDisplay;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.properties.CCProperties;
+import de.jClipCorn.util.MoviePlayer;
+import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.formatter.FileSizeFormatter;
 import de.jClipCorn.util.formatter.TimeIntervallFormatter;
@@ -317,6 +319,7 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 
 		btnVLCRobot = new JButton(LocaleBundle.getString("PreviewSeriesFrame.btnPlayRobot.caption"), Resources.ICN_MENUBAR_VLCROBOT.get16x16()); //$NON-NLS-1$
 		btnVLCRobot.addActionListener(e -> autoPlay());
+		btnVLCRobot.setEnabled(CCProperties.getInstance().PROP_VLC_ROBOT_ENABLED.getValue() && !Str.isNullOrWhitespace(MoviePlayer.getVLCPath()));
 		pnlTopLeft.add(btnVLCRobot, "2, 4, fill, top"); //$NON-NLS-1$
 
 		lblTitle = new JLabel("<Title>"); //$NON-NLS-1$
@@ -521,7 +524,7 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 	}
 
 	private void autoPlay() {
-		(new VLCRobotFrame(this)).setVisible(true);
+		VLCRobotFrame.show(this);
 	}
 
 	private boolean containsKeyboardFocus() {

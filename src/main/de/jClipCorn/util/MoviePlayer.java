@@ -1,18 +1,18 @@
 package de.jClipCorn.util;
 
-import java.awt.Desktop;
+import de.jClipCorn.database.databaseElement.CCEpisode;
+import de.jClipCorn.database.databaseElement.CCMovie;
+import de.jClipCorn.features.log.CCLog;
+import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.properties.CCProperties;
+import de.jClipCorn.util.formatter.PathFormatter;
+import de.jClipCorn.util.helper.ApplicationHelper;
+
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import de.jClipCorn.database.databaseElement.CCEpisode;
-import de.jClipCorn.database.databaseElement.CCMovie;
-import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.features.log.CCLog;
-import de.jClipCorn.properties.CCProperties;
-import de.jClipCorn.util.formatter.PathFormatter;
-import de.jClipCorn.util.helper.ApplicationHelper;
 
 public class MoviePlayer {
 	@SuppressWarnings("nls")
@@ -53,14 +53,37 @@ public class MoviePlayer {
 		al.add(abspath);
 		play(al);
 	}
-	
+
+	@SuppressWarnings("nls")
+	public static List<String> getParameters(String vlc) {
+		List<String> parameters = new ArrayList<>();
+
+		parameters.add(vlc);
+
+		parameters.add("--no-random");
+		parameters.add("--no-loop");
+		parameters.add("--no-repeat");
+		parameters.add("--playlist-enqueue");
+
+		if (CCProperties.getInstance().PROP_PLAY_VLC_FULLSCREEN.getValue()) parameters.add("--fullscreen");
+		if (! CCProperties.getInstance().PROP_PLAY_VLC_AUTOPLAY.getValue()) parameters.add("--no-playlist-autostart");
+		if (CCProperties.getInstance().PROP_PLAY_VLCSINGLEINSTANCEMODE.getValue()) parameters.add("--one-instance");
+
+		if (CCProperties.getInstance().PROP_VLC_ROBOT_ENABLED.getValue())
+		{
+			parameters.add("--http-host=127.0.0.1");
+			parameters.add("--http-port=" + CCProperties.getInstance().PROP_VLC_ROBOT_PORT.getValue());
+			parameters.add("--http-password=" + CCProperties.getInstance().PROP_VLC_ROBOT_PASSWORD.getValue());
+		}
+
+		return parameters;
+	}
+
 	@SuppressWarnings("nls")
 	public static void play(List<String> abspaths) {
-		List<String> parameters = new ArrayList<>();
-		
 		String vlc = getVLCPath();
 		
-		if (vlc == null || vlc.isEmpty()) {
+		if (Str.isNullOrWhitespace(vlc)) {
 			CCLog.addWarning(LocaleBundle.getString("LogMessage.VLCNotFound"));
 			
 			if (CCProperties.getInstance().PROP_PLAY_USESTANDARDONMISSINGVLC.getValue()) {
@@ -68,27 +91,12 @@ public class MoviePlayer {
 					for (String s : abspaths) {
 						Desktop.getDesktop().open(new File(s));
 					}
-				} catch (IOException e) {
-					CCLog.addError(e);
-				} catch (IllegalArgumentException e) {
+				} catch (IOException | IllegalArgumentException e) {
 					CCLog.addError(e);
 				}
 			}
 		} else {
-			parameters.add(vlc);
-			parameters.add("--no-random");
-			parameters.add("--no-loop");
-			parameters.add("--no-repeat");
-			parameters.add("--playlist-enqueue");
-			if (CCProperties.getInstance().PROP_PLAY_VLC_FULLSCREEN.getValue()) {
-				parameters.add("--fullscreen");
-			}
-			if (! CCProperties.getInstance().PROP_PLAY_VLC_AUTOPLAY.getValue()) {
-				parameters.add("--no-playlist-autostart");
-			}
-			if (CCProperties.getInstance().PROP_PLAY_VLCSINGLEINSTANCEMODE.getValue()) {
-				parameters.add("--one-instance");
-			}
+			List<String> parameters = getParameters(vlc);
 			
 			for (String abspath : abspaths) {
 				if (ApplicationHelper.isWindows()) {
@@ -111,7 +119,7 @@ public class MoviePlayer {
 		}
 	}
 	
-	private static String getVLCPath() {
+	public static String getVLCPath() {
 		String vlcpath = CCProperties.getInstance().PROP_PLAY_VLC_PATH.getValue();
 		
 		if (lastVLCPath != null) {

@@ -26,7 +26,7 @@ public class CCXMLElement
 
 	//####################################################################################
 
-	private String getContent() {
+	public String getContent() {
 		return _element.getValue();
 	}
 
@@ -84,6 +84,13 @@ public class CCXMLElement
 					return false;
 				})
 				.map(c -> new CCXMLElement(_owner, _path+"/"+c.getName(), c));
+	}
+
+	public CCXMLElement getFirstChildOrThrow(String nodename, String attrname, String attrval) throws CCXMLException {
+		for (Element e : _element.getChildren()) {
+			if (e.getName().equals(nodename) && Str.equals(attrval, e.getAttributeValue(attrname)) ) return new CCXMLElement(_owner, _path + "/" + e.getName(), e);
+		}
+		throw new CCXMLException(Str.format("Could not find child <{0}[{1}={2}]> in {1}", nodename, attrname, attrval, _path), _owner.getXMLString());
 	}
 
 	//####################################################################################

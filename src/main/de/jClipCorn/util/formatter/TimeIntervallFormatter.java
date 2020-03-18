@@ -1,6 +1,7 @@
 package de.jClipCorn.util.formatter;
 
 import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.util.Str;
 
 public class TimeIntervallFormatter {
 	private static String STR_SECOND 	= LocaleBundle.getString("TimeIntervallFormatter.Second"); //$NON-NLS-1$
@@ -188,5 +189,10 @@ public class TimeIntervallFormatter {
 		}
 		
 		return res;
+	}
+
+	public static String formatLengthSeconds(int seconds)
+	{
+		return Str.format("{0,number,00}:{1,number,00}", seconds / 60, seconds % 60) ; //$NON-NLS-1$
 	}
 }

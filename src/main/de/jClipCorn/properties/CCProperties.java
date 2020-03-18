@@ -192,6 +192,9 @@ public class CCProperties {
 	public CCBoolProperty                                   PROP_CHECKDATABASE_OPT_FILES;
 	public CCBoolProperty                                   PROP_CHECKDATABASE_OPT_EXTRA;
 	public CCEnumSetProperty<MainFrameColumn>               PROP_MAINFRAME_VISIBLE_COLUMNS;
+	public CCBoolProperty                                   PROP_VLC_ROBOT_ENABLED;
+	public CCRIntProperty                                   PROP_VLC_ROBOT_PORT;
+	public CCStringProperty                                 PROP_VLC_ROBOT_PASSWORD;
 
 	public boolean ARG_READONLY = false;
 	
@@ -365,6 +368,9 @@ public class CCProperties {
 		PROP_CHECKDATABASE_OPT_COVERS           = new CCBoolProperty(NONVISIBLE,            this,   "PROP_CHECKDATABASE_OPT_COVERS",            true);
 		PROP_CHECKDATABASE_OPT_FILES            = new CCBoolProperty(NONVISIBLE,            this,   "PROP_CHECKDATABASE_OPT_FILES",             true);
 		PROP_CHECKDATABASE_OPT_EXTRA            = new CCBoolProperty(NONVISIBLE,            this,   "PROP_CHECKDATABASE_OPT_EXTRA",             true);
+		PROP_VLC_ROBOT_ENABLED                  = new CCBoolProperty(NONVISIBLE,            this,   "PROP_VLC_ROBOT_ENABLED",                   true);
+		PROP_VLC_ROBOT_PORT                     = new CCRIntProperty(NONVISIBLE,            this,   "PROP_VLC_ROBOT_PORT",                      18642,           1024,        65535);
+		PROP_VLC_ROBOT_PASSWORD                 = new CCStringProperty(NONVISIBLE,          this,   "PROP_VLC_ROBOT_PASSWORD",                  getRandPass(8));
 
 		PROP_ADD_MOVIE_RELATIVE_AUTO            = new CCBoolProperty(CAT_PATHSYNTAX,        this,   "PROP_ADD_MOVIE_RELATIVE_AUTO",             true);
 		PROP_PATHSYNTAX_SELF                    = new CCBoolProperty(CAT_PATHSYNTAX,        this,   "PROP_PATHSYNTAX_SELF",                     true);
@@ -376,6 +382,14 @@ public class CCProperties {
 		PROP_PATHSYNTAX_VAR3                    = new CCPathVarProperty(CAT_PATHSYNTAX,     this,   "PROP_PATHSYNTAX_VAR3",                     PathSyntaxVar.EMPTY);
 		PROP_PATHSYNTAX_VAR4                    = new CCPathVarProperty(CAT_PATHSYNTAX,     this,   "PROP_PATHSYNTAX_VAR4",                     PathSyntaxVar.EMPTY);
 		PROP_PATHSYNTAX_VAR5                    = new CCPathVarProperty(CAT_PATHSYNTAX,     this,   "PROP_PATHSYNTAX_VAR5",                     PathSyntaxVar.EMPTY);
+	}
+
+	private String getRandPass(int len)
+	{
+		final String CHARS = "ABCDEFGHKLMNPRSTUVWXYZ_0123456789"; //$NON-NLS-1$
+		StringBuilder b = new StringBuilder();
+		for (int i =0; i < len; i++) b.append(CHARS.charAt((int)(Math.random() * CHARS.length())));
+		return b.toString();
 	}
 
 	private String getDefFLPath() {

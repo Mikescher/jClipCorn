@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class VLCPlaylistTable extends JCCSimpleTable<VLCPlaylistEntry> {
+	private static final long serialVersionUID = 630505973662401189L;
 
 	@Override
 	protected List<JCCSimpleColumnPrototype<VLCPlaylistEntry>> configureColumns() {

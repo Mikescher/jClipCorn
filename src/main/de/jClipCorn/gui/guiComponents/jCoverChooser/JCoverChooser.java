@@ -1,10 +1,18 @@
 package de.jClipCorn.gui.guiComponents.jCoverChooser;
 
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Point;
-import java.awt.RenderingHints;
+import de.jClipCorn.database.databaseElement.ICCCoveredElement;
+import de.jClipCorn.features.log.CCLog;
+import de.jClipCorn.gui.frames.coverPreviewFrame.CoverPreviewFrame;
+import de.jClipCorn.gui.resources.Resources;
+import de.jClipCorn.properties.CCProperties;
+import de.jClipCorn.util.datatypes.Tuple;
+import de.jClipCorn.util.helper.ImageUtilities;
+import de.jClipCorn.util.lambda.Func0to0;
+
+import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
@@ -13,29 +21,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import javax.swing.JComponent;
-import javax.swing.SwingUtilities;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-
-import de.jClipCorn.database.databaseElement.ICCCoveredElement;
-import de.jClipCorn.gui.frames.coverPreviewFrame.CoverPreviewFrame;
-import de.jClipCorn.features.log.CCLog;
-import de.jClipCorn.gui.resources.Resources;
-import de.jClipCorn.properties.CCProperties;
-import de.jClipCorn.util.datatypes.Tuple;
-import de.jClipCorn.util.helper.ImageUtilities;
-import de.jClipCorn.util.lambda.Func0to0;
-
 public class JCoverChooser extends JComponent implements MouseListener {
 	private static final long serialVersionUID = 4981485357566897454L;
 
-	private final static int EXTRACOVERCOUNT = 4;
+	private final static int MAX_EXTRACOVERCOUNT = 4;
 
-	private HashMap<Integer, TransformRectangle> rectangles = new HashMap<>();
+	private final HashMap<Integer, TransformRectangle> rectangles = new HashMap<>();
 	
-	private List<ListSelectionListener> listener_selection = new ArrayList<>();
-	private List<JCoverChooserPopupEvent> listener_popup = new ArrayList<>();
+	private final List<ListSelectionListener> listener_selection = new ArrayList<>();
+	private final List<JCoverChooserPopupEvent> listener_popup = new ArrayList<>();
 
 	private int coverWidth = ImageUtilities.BASE_COVER_WIDTH;
 	private int coverHeight = ImageUtilities.BASE_COVER_HEIGHT;
@@ -44,9 +38,9 @@ public class JCoverChooser extends JComponent implements MouseListener {
 	
 	private boolean mode3d = CCProperties.getInstance().PROP_PREVSERIES_3DCOVER.getValue();
 
-	private List<BufferedImage> images_full  = new ArrayList<>();
-	private List<BufferedImage> images_scale = new ArrayList<>();
-	private List<Object> objects = new ArrayList<>();
+	private final List<BufferedImage> images_full  = new ArrayList<>();
+	private final List<BufferedImage> images_scale = new ArrayList<>();
+	private final List<Object> objects = new ArrayList<>();
 	private int currSelected = 0;
 
 	private int lastClickTarget = -1;
@@ -135,7 +129,7 @@ public class JCoverChooser extends JComponent implements MouseListener {
 		if (mode3d) {
 			return circleRadius * 2 + 16;
 		} else {
-			return (EXTRACOVERCOUNT*2 + 1) * (getCoverWidth() + coverGap);
+			return (MAX_EXTRACOVERCOUNT*2 + 1) * (getCoverWidth() + coverGap);
 		}
 	}
 
@@ -196,17 +190,15 @@ public class JCoverChooser extends JComponent implements MouseListener {
 	
 	private void swingInvoke(Func0to0 f) {
 		try	{
-			SwingUtilities.invokeAndWait(() -> f.invoke());
-		} catch (InterruptedException e) {
-			CCLog.addError(e);
-		} catch (InvocationTargetException e) {
+			SwingUtilities.invokeAndWait(f::invoke);
+		} catch (InterruptedException | InvocationTargetException e) {
 			CCLog.addError(e);
 		}
 	}
 
 	@Override
 	public void paintComponent(Graphics g) {
-		g.translate(getComponentWidth() / 2, getComponentHeight() / 2);
+		g.translate(getWidth() / 2, getHeight() / 2);
 
 		if (g instanceof Graphics2D) {
 			((Graphics2D)g).setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
@@ -228,8 +220,28 @@ public class JCoverChooser extends JComponent implements MouseListener {
 		return id >= 0 && id < images_full.size();
 	}
 
+	private int getExtraCoverCount()
+	{
+		int right = getWidth() / 2;
+
+		if (rectangles.size() == 0) return MAX_EXTRACOVERCOUNT;
+
+		for (int i=1; i<=MAX_EXTRACOVERCOUNT; i++)
+		{
+			if (!rectangles.containsKey(i)) return i-1;
+
+			TransformRectangle tr = rectangles.get(i);
+
+			if (tr.topRight.x > right) return i-1;
+			if (tr.bottomRight.x > right) return i-1;
+		}
+		return MAX_EXTRACOVERCOUNT;
+	}
+
 	private void paintCover(Graphics g) {
-		for (int i = -EXTRACOVERCOUNT; i <= EXTRACOVERCOUNT; i++) {
+		int ecc = getExtraCoverCount();
+
+		for (int i = -ecc; i <= ecc; i++) {
 			int imgid = currSelected + i;
 
 			TransformRectangle tr = rectangles.get(i);
@@ -239,7 +251,7 @@ public class JCoverChooser extends JComponent implements MouseListener {
 				if (i == 0) {
 					g.drawImage(images_scale.get(imgid), tr.topLeft.x, tr.topLeft.y, tr.bottomRight.x - tr.topLeft.x, tr.bottomRight.y - tr.topLeft.y, null);
 				} else {
-					tr.draw(g, images_scale.get(imgid), i == 0);
+					tr.draw(g, images_scale.get(imgid), false);
 				}
 				
 			}
@@ -257,7 +269,9 @@ public class JCoverChooser extends JComponent implements MouseListener {
 		int y1 = -ch / 2;
 		int y2 = ch / 2;
 
-		for (int i = -EXTRACOVERCOUNT; i <= EXTRACOVERCOUNT; i++) {
+		int ecc = getExtraCoverCount();
+
+		for (int i = -ecc; i <= ecc; i++) {
 			TransformRectangle tr;
 
 			if (mode3d) {
@@ -293,7 +307,7 @@ public class JCoverChooser extends JComponent implements MouseListener {
 						Object o = getSelectedObject();
 						BufferedImage i = getSelectedImage();
 						
-						if (o != null && o instanceof ICCCoveredElement) {
+						if (o instanceof ICCCoveredElement) {
 							new CoverPreviewFrame(this, (ICCCoveredElement)o).setVisible(true);
 						} else if (i != null) {
 							new CoverPreviewFrame(this, i).setVisible(true);
@@ -319,10 +333,12 @@ public class JCoverChooser extends JComponent implements MouseListener {
 	}
 	
 	private int getCoverForPoint(int px, int py) {
-		int x = px - getComponentWidth()/2;
-		int y = py - getComponentHeight()/2;
+		int x = px - getWidth()/2;
+		int y = py - getHeight()/2;
 
-		for (int i = -EXTRACOVERCOUNT; i <= EXTRACOVERCOUNT; i++) {
+		int ecc = getExtraCoverCount();
+
+		for (int i = -ecc; i <= ecc; i++) {
 			int imgid = currSelected + i;
 			if (coverIsSet(imgid)) {
 				TransformRectangle tr = rectangles.get(i);

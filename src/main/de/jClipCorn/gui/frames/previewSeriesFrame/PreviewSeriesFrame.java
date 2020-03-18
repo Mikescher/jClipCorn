@@ -1,46 +1,26 @@
 package de.jClipCorn.gui.frames.previewSeriesFrame;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import javax.swing.*;
-import javax.swing.GroupLayout.Alignment;
-import javax.swing.border.BevelBorder;
-import javax.swing.border.EmptyBorder;
-import javax.swing.border.SoftBevelBorder;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-
-import de.jClipCorn.database.databaseElement.columnTypes.CCFileFormat;
-import de.jClipCorn.features.actionTree.ActionSource;
-import de.jClipCorn.features.actionTree.CCActionTree;
-import de.jClipCorn.features.actionTree.menus.impl.PreviewSeriesMenuBar;
-import de.jClipCorn.gui.frames.quickAddEpisodeDialog.QuickAddEpisodeDialog;
-import de.jClipCorn.gui.guiComponents.FileDrop;
-import de.jClipCorn.util.datatypes.Tuple;
-import de.jClipCorn.util.listener.ActionCallbackListener;
-import de.jClipCorn.util.stream.CCStreams;
-import org.apache.commons.lang.StringUtils;
-
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.FormSpecs;
 import com.jgoodies.forms.layout.RowSpec;
-
 import de.jClipCorn.Main;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.database.databaseElement.CCSeries;
+import de.jClipCorn.database.databaseElement.columnTypes.CCFileFormat;
 import de.jClipCorn.database.databaseElement.columnTypes.CCUserScore;
 import de.jClipCorn.database.util.CCDBUpdateListener;
+import de.jClipCorn.features.actionTree.ActionSource;
+import de.jClipCorn.features.actionTree.CCActionTree;
+import de.jClipCorn.features.actionTree.menus.impl.PreviewSeriesMenuBar;
 import de.jClipCorn.gui.frames.displayGenresDialog.DisplayGenresDialog;
 import de.jClipCorn.gui.frames.previewSeriesFrame.serTable.SerTable;
+import de.jClipCorn.gui.frames.quickAddEpisodeDialog.QuickAddEpisodeDialog;
+import de.jClipCorn.gui.frames.vlcRobot.VLCRobotFrame;
 import de.jClipCorn.gui.guiComponents.DatabaseElementPreviewLabel;
+import de.jClipCorn.gui.guiComponents.FileDrop;
 import de.jClipCorn.gui.guiComponents.OnlineRefButton;
 import de.jClipCorn.gui.guiComponents.displaySearchResultsDialog.DisplaySearchResultsDialog;
 import de.jClipCorn.gui.guiComponents.jCoverChooser.JCoverChooser;
@@ -49,10 +29,31 @@ import de.jClipCorn.gui.guiComponents.language.LanguageDisplay;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.properties.CCProperties;
+import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.formatter.FileSizeFormatter;
 import de.jClipCorn.util.formatter.TimeIntervallFormatter;
 import de.jClipCorn.util.helper.ImageUtilities;
+import de.jClipCorn.util.listener.ActionCallbackListener;
 import de.jClipCorn.util.listener.UpdateCallbackListener;
+import de.jClipCorn.util.stream.CCStreams;
+import org.apache.commons.lang.StringUtils;
+
+import javax.swing.*;
+import javax.swing.GroupLayout.Alignment;
+import javax.swing.border.BevelBorder;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.SoftBevelBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class PreviewSeriesFrame extends JFrame implements ListSelectionListener, JCoverChooserPopupEvent, UpdateCallbackListener, FileDrop.Listener, ActionCallbackListener {
 	private static final long serialVersionUID = 5484205983855802992L;
@@ -72,8 +73,6 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 	private Component hStrut_3;
 	private Component vStrut_1;
 	private JLabel lblOnlineScore;
-	private JPanel pnlTopInfo;
-	private JPanel pnlCoverChooser;
 	private JLabel lblTitle;
 	private JTextField edSearch;
 	private JPanel pnlSearch;
@@ -97,6 +96,7 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 	private JPanel pnlInfo2;
 	private JPanel pnlLang;
 	private LanguageDisplay ctrlLang;
+	private JButton btnVLCRobot;
 
 	/**
 	 * @wbp.parser.constructor
@@ -287,28 +287,59 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 
 		pnlTop = new JPanel();
 		getContentPane().add(pnlTop, BorderLayout.NORTH);
-		pnlTop.setLayout(new BorderLayout(0, 0));
+		pnlTop.setLayout(new FormLayout(new ColumnSpec[] {
+				ColumnSpec.decode("max(110dlu;pref)"), //$NON-NLS-1$
+				FormSpecs.RELATED_GAP_COLSPEC,
+				ColumnSpec.decode("0dlu:grow"), //$NON-NLS-1$
+				FormSpecs.RELATED_GAP_COLSPEC,
+				ColumnSpec.decode("max(80dlu;pref)"), //$NON-NLS-1$
+				FormSpecs.RELATED_GAP_COLSPEC,
+				ColumnSpec.decode("max(110dlu;pref)"),}, //$NON-NLS-1$
+				new RowSpec[] {
+						FormSpecs.DEFAULT_ROWSPEC,
+						RowSpec.decode("max(50dlu;pref):grow"),})); //$NON-NLS-1$
 
-		pnlTopInfo = new JPanel();
-		pnlTop.add(pnlTopInfo, BorderLayout.NORTH);
-		pnlTopInfo.setLayout(new BorderLayout(0, 0));
+		pnlTopLeft = new JPanel();
+		pnlTop.add(pnlTopLeft, "1, 1, 1, 2, fill, fill"); //$NON-NLS-1$
 
-		lblTitle = new JLabel();
+		btnPlayNext = new JButton(LocaleBundle.getString("PreviewSeriesFrame.btnPlayNext.caption")); //$NON-NLS-1$
+		btnPlayNext.addActionListener(e -> CCActionTree.getInstance().find("ResumeSeries").execute(this, ActionSource.PREV_SER_FRAME, Collections.singletonList(dispSeries), this)); //$NON-NLS-1$
+		pnlTopLeft.setLayout(new FormLayout(new ColumnSpec[] {
+				FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
+				FormSpecs.PREF_COLSPEC,
+				FormSpecs.RELATED_GAP_COLSPEC,},
+				new RowSpec[] {
+						FormSpecs.LINE_GAP_ROWSPEC,
+						RowSpec.decode("26px"), //$NON-NLS-1$
+						FormSpecs.RELATED_GAP_ROWSPEC,
+						FormSpecs.DEFAULT_ROWSPEC,}));
+		pnlTopLeft.add(btnPlayNext, "2, 2, fill, top"); //$NON-NLS-1$
+
+		btnVLCRobot = new JButton(LocaleBundle.getString("PreviewSeriesFrame.btnPlayRobot.caption"), Resources.ICN_MENUBAR_VLCROBOT.get16x16()); //$NON-NLS-1$
+		btnVLCRobot.addActionListener(e -> autoPlay());
+		pnlTopLeft.add(btnVLCRobot, "2, 4, fill, top"); //$NON-NLS-1$
+
+		lblTitle = new JLabel("<Title>"); //$NON-NLS-1$
+		pnlTop.add(lblTitle, "3, 1, fill, fill"); //$NON-NLS-1$
 		lblTitle.setHorizontalAlignment(SwingConstants.CENTER);
 		lblTitle.setFont(new Font("Tahoma", Font.BOLD, 28)); //$NON-NLS-1$
-		pnlTopInfo.add(lblTitle, BorderLayout.CENTER);
 
 		pnlSearch = new JPanel();
+		pnlTop.add(pnlSearch, "5, 1, 3, 1, fill, fill"); //$NON-NLS-1$
 		pnlSearch.setBorder(null);
-		pnlTopInfo.add(pnlSearch, BorderLayout.EAST);
 
 		edSearch = new JTextField();
 		edSearch.addActionListener(e -> startSearch());
-		pnlSearch.setLayout(new FormLayout(new ColumnSpec[] { FormSpecs.LABEL_COMPONENT_GAP_COLSPEC, ColumnSpec.decode("268px"), //$NON-NLS-1$
-				FormSpecs.LABEL_COMPONENT_GAP_COLSPEC, ColumnSpec.decode("50px"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_COLSPEC, },
-				new RowSpec[] { FormSpecs.LINE_GAP_ROWSPEC, RowSpec.decode("26px"), //$NON-NLS-1$
-						FormSpecs.LINE_GAP_ROWSPEC, }));
+		pnlSearch.setLayout(new FormLayout(new ColumnSpec[] {
+				FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
+				ColumnSpec.decode("pref:grow"), //$NON-NLS-1$
+				FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
+				ColumnSpec.decode("50px"), //$NON-NLS-1$
+				FormSpecs.RELATED_GAP_COLSPEC,},
+				new RowSpec[] {
+						FormSpecs.LINE_GAP_ROWSPEC,
+						RowSpec.decode("26px"), //$NON-NLS-1$
+						FormSpecs.LINE_GAP_ROWSPEC,}));
 		pnlSearch.add(edSearch, "2, 2, fill, fill"); //$NON-NLS-1$
 		edSearch.setColumns(24);
 
@@ -317,19 +348,8 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 		btnSearch.setIcon(Resources.ICN_FRAMES_SEARCH.get16x16());
 		pnlSearch.add(btnSearch, "4, 2, left, top"); //$NON-NLS-1$
 
-		pnlTopLeft = new JPanel();
-		pnlTopInfo.add(pnlTopLeft, BorderLayout.WEST);
-		pnlTopLeft.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
-
-		btnPlayNext = new JButton(LocaleBundle.getString("PreviewSeriesFrame.btnPlayNext.caption")); //$NON-NLS-1$
-		btnPlayNext.addActionListener(e -> CCActionTree.getInstance().find("ResumeSeries").execute(this, ActionSource.PREV_SER_FRAME, Collections.singletonList(dispSeries), this)); //$NON-NLS-1$
-		pnlTopLeft.add(btnPlayNext);
-
-		pnlCoverChooser = new JPanel();
-		pnlTop.add(pnlCoverChooser, BorderLayout.CENTER);
-
 		cvrChooser = new JCoverChooser(false);
-		pnlCoverChooser.add(cvrChooser);
+		pnlTop.add(cvrChooser, "3, 2, 3, 1, fill, fill"); //$NON-NLS-1$
 		cvrChooser.setCurrSelected(0);
 		cvrChooser.setCoverGap(10);
 		cvrChooser.setCircleRadius(300);
@@ -498,6 +518,10 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 		});
 
 		new FileDrop(tabSeason, true, this);
+	}
+
+	private void autoPlay() {
+		(new VLCRobotFrame(this)).setVisible(true);
 	}
 
 	private boolean containsKeyboardFocus() {

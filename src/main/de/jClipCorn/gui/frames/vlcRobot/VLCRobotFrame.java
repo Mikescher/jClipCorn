@@ -42,6 +42,8 @@ public class VLCRobotFrame extends JFrame {
 		initGUI();
 
 		setLocationRelativeTo(owner);
+		
+		lsData.autoResize();
 	}
 	
 
@@ -92,11 +94,11 @@ public class VLCRobotFrame extends JFrame {
 			new RowSpec[] {
 				RowSpec.decode("26px"),}));
 		
-		btnStart = new JButton("Start");
+		btnStart = new JButton(LocaleBundle.getString("VLCRobotFrame.btnStart"));
 		btnStart.setHorizontalAlignment(SwingConstants.LEFT);
 		panel.add(btnStart, "1, 1, left, top");
 		
-		btnClose = new JButton("Close");
+		btnClose = new JButton(LocaleBundle.getString("VLCRobotFrame.btnClose"));
 		btnClose.setHorizontalAlignment(SwingConstants.RIGHT);
 		panel.add(btnClose, "3, 1, left, top");
 	}

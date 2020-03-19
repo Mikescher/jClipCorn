@@ -86,11 +86,18 @@ public class CCXMLElement
 				.map(c -> new CCXMLElement(_owner, _path+"/"+c.getName(), c));
 	}
 
-	public CCXMLElement getFirstChildOrThrow(String nodename, String attrname, String attrval) throws CCXMLException {
+	public CCXMLElement getFirstChildByAttrOrThrow(String nodename, String attrname, String attrval) throws CCXMLException {
 		for (Element e : _element.getChildren()) {
 			if (e.getName().equals(nodename) && Str.equals(attrval, e.getAttributeValue(attrname)) ) return new CCXMLElement(_owner, _path + "/" + e.getName(), e);
 		}
 		throw new CCXMLException(Str.format("Could not find child <{0}[{1}={2}]> in {1}", nodename, attrname, attrval, _path), _owner.getXMLString());
+	}
+
+	public CCXMLElement getFirstChildByAttrOrNull(String nodename, String attrname, String attrval) {
+		for (Element e : _element.getChildren()) {
+			if (e.getName().equals(nodename) && Str.equals(attrval, e.getAttributeValue(attrname)) ) return new CCXMLElement(_owner, _path + "/" + e.getName(), e);
+		}
+		return null;
 	}
 
 	//####################################################################################
@@ -239,6 +246,12 @@ public class CCXMLElement
 
 	public String getFirstChildValueOrDefault(String name, String defaultValue) {
 		CCXMLElement e = getFirstChildOrNull(name);
+		if (e == null) return defaultValue;
+		return e.getContent();
+	}
+
+	public String getFirstChildValueByAttrOrDefault(String nodename, String attrname, String attrval, String defaultValue) {
+		CCXMLElement e = getFirstChildByAttrOrNull(nodename, attrname, attrval);
 		if (e == null) return defaultValue;
 		return e.getContent();
 	}

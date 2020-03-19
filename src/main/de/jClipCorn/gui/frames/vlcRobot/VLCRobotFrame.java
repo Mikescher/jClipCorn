@@ -9,10 +9,10 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.MoviePlayer;
 import de.jClipCorn.util.Str;
-import de.jClipCorn.util.VLCConnection;
 import de.jClipCorn.util.formatter.TimeIntervallFormatter;
 import de.jClipCorn.util.helper.ApplicationHelper;
-import de.jClipCorn.util.xml.CCXMLParser;
+import de.jClipCorn.util.vlcquery.VLCConnection;
+import de.jClipCorn.util.vlcquery.VLCStatus;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -64,7 +64,7 @@ public class VLCRobotFrame extends JFrame {
 			}
 		});
 
-		_timer = new Timer(1000, this::onTimer);
+		_timer = new Timer(500, this::onTimer);
 		onTimer(null);
 		_timer.start();
 	}
@@ -161,63 +161,52 @@ public class VLCRobotFrame extends JFrame {
 
 	private void onBackgroundUpdate()
 	{
-		CCXMLParser xmlStatus   = VLCConnection.getXML("/requests/status.xml");   //$NON-NLS-1$
-		CCXMLParser xmlPlaylist = VLCConnection.getXML("/requests/playlist.xml"); //$NON-NLS-1$
+		final VLCStatus status = VLCConnection.getStatus();
 
-		if (xmlStatus != null && xmlPlaylist != null)
+		SwingUtilities.invokeLater(() ->
 		{
-			try
+			if (status.Status == VLCStatus.VLCPlayerStatus.PLAYING)
 			{
-				String state = xmlStatus.getRoot().getFirstChildValueOrThrow("state"); //$NON-NLS-1$
-
-				if ("playing".equalsIgnoreCase(state)) //$NON-NLS-1$
-				{
-					String title = xmlStatus
-							.getRoot()
-							.getFirstChildOrThrow("information")              //$NON-NLS-1$
-							.getFirstChildOrThrow("category", "name", "meta") //$NON-NLS-1$  //$NON-NLS-2$  //$NON-NLS-3$
-							.getFirstChildOrThrow("info", "name", "filename") //$NON-NLS-1$  //$NON-NLS-2$  //$NON-NLS-3$
-							.getContent();
-
-					int time   = xmlStatus.getRoot().getFirstChildIntValueOrThrow("time"); //$NON-NLS-1$
-					int length = xmlStatus.getRoot().getFirstChildIntValueOrThrow("length"); //$NON-NLS-1$
-
-					setTitle(LocaleBundle.getString("VLCRobotFrame.title") + " <"+ title +">"); //$NON-NLS-1$
-
-					progressBar.setMaximum(length);
-					progressBar.setValue(time);
-					btnStart.setEnabled(false);
-					lblStatus.setText("Playing");
-					lblTime.setText(TimeIntervallFormatter.formatLengthSeconds(time) + " / " + TimeIntervallFormatter.formatLengthSeconds(length));
-				}
-				else if ("stopped".equalsIgnoreCase(state)) //$NON-NLS-1$
-				{
-					progressBar.setValue(0);
-					btnStart.setEnabled(false);
-					lblStatus.setText("Stopped");
-					lblTime.setText("");
-				}
-
+				progressBar.setMaximum(status.CurrentLength);
+				progressBar.setValue(status.CurrentTime);
+				btnStart.setEnabled(false);
+				btnClose.setEnabled(true);
+				lblStatus.setText("Playing");
+				lblTime.setText(TimeIntervallFormatter.formatLengthSeconds(status.CurrentTime) + " / " + TimeIntervallFormatter.formatLengthSeconds(status.CurrentLength));
 			}
-			catch (Exception e)
+			else if (status.Status == VLCStatus.VLCPlayerStatus.STOPPED)
 			{
-				CCLog.addError(e);
-
+				progressBar.setValue(0);
+				btnStart.setEnabled(false);
+				btnClose.setEnabled(false);
+				lblStatus.setText("Stopped");
+				lblTime.setText("");
+			}
+			else if (status.Status == VLCStatus.VLCPlayerStatus.NOT_RUNNING)
+			{
 				progressBar.setValue(0);
 				btnStart.setEnabled(true);
+				btnClose.setEnabled(false);
+				lblStatus.setText("NOT RUNNING");
+				lblTime.setText("");
+			}
+			else if (status.Status == VLCStatus.VLCPlayerStatus.ERROR)
+			{
+				progressBar.setValue(0);
+				btnStart.setEnabled(false);
+				btnClose.setEnabled(false);
 				lblStatus.setText("ERROR");
 				lblTime.setText("");
 			}
-		}
-		else
-		{
-			setTitle(LocaleBundle.getString("VLCRobotFrame.title")); //$NON-NLS-1$
-
-			progressBar.setValue(0);
-			btnStart.setEnabled(true);
-			lblStatus.setText("ERROR");
-			lblTime.setText("");
-		}
+			else if (status.Status == VLCStatus.VLCPlayerStatus.DISABLED)
+			{
+				progressBar.setValue(0);
+				btnStart.setEnabled(false);
+				btnClose.setEnabled(false);
+				lblStatus.setText("DISABLED");
+				lblTime.setText("");
+			}
+		});
 	}
 
 	private void onStart(ActionEvent ae)

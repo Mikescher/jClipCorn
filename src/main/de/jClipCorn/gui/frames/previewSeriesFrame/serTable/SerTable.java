@@ -1,18 +1,16 @@
 package de.jClipCorn.gui.frames.previewSeriesFrame.serTable;
 
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-
-import javax.swing.JScrollPane;
-import javax.swing.ListSelectionModel;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-
 import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.features.actionTree.menus.impl.ClipEpisodePopup;
 import de.jClipCorn.gui.frames.previewSeriesFrame.PreviewSeriesFrame;
 import de.jClipCorn.util.TableColumnAdjuster;
+
+import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 public class SerTable extends JScrollPane implements ListSelectionListener, MouseListener {
 	private static final long serialVersionUID = 6640341234698681428L;
@@ -35,9 +33,8 @@ public class SerTable extends JScrollPane implements ListSelectionListener, Mous
 		
 		setViewportView(table);
 		
-		adjuster = new TableColumnAdjuster(table);
-		adjuster.setOnlyAdjustLarger(false);
-		
+		adjuster = new TableColumnAdjuster(this, table);
+
 		autoResize();
 	}
 
@@ -51,8 +48,7 @@ public class SerTable extends JScrollPane implements ListSelectionListener, Mous
 	}
 	
 	public void autoResize() {
-		adjuster.setResizeAdjuster(true);
-		adjuster.adjustColumns();
+		adjuster.adjustColumns("auto|*,min=auto|auto|auto|auto|auto|auto|auto|auto|auto|auto"); //$NON-NLS-1$
 	}
 	
 	public void changeSeason(CCSeason s) {

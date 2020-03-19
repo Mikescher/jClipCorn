@@ -13,6 +13,7 @@ import de.jClipCorn.util.formatter.TimeIntervallFormatter;
 import de.jClipCorn.util.helper.ApplicationHelper;
 import de.jClipCorn.util.vlcquery.VLCConnection;
 import de.jClipCorn.util.vlcquery.VLCStatus;
+import de.jClipCorn.util.vlcquery.VLCStatusPlaylistEntry;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -22,6 +23,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class VLCRobotFrame extends JFrame {
 
@@ -45,7 +47,7 @@ public class VLCRobotFrame extends JFrame {
 	/**
 	 * @wbp.parser.constructor
 	 */
-	private VLCRobotFrame(JFrame owner) {
+	private VLCRobotFrame(Component owner) {
 		super();
 
 		initGUI();
@@ -85,7 +87,7 @@ public class VLCRobotFrame extends JFrame {
 		}).start();
 	}
 
-	public static VLCRobotFrame show(JFrame owner)
+	public static VLCRobotFrame show(Component owner)
 	{
 		if (_instance == null || !_instance.isVisible())
 		{
@@ -163,6 +165,10 @@ public class VLCRobotFrame extends JFrame {
 	{
 		final VLCStatus status = VLCConnection.getStatus();
 
+		if (status.Status == VLCStatus.VLCPlayerStatus.PLAYING && status.Repeat) VLCConnection.toggleRepeat();
+		if (status.Status == VLCStatus.VLCPlayerStatus.PLAYING && status.Random) VLCConnection.toggleRandom();
+		if (status.Status == VLCStatus.VLCPlayerStatus.PLAYING && status.Loop)   VLCConnection.toggleLoop();
+
 		SwingUtilities.invokeLater(() ->
 		{
 			if (status.Status == VLCStatus.VLCPlayerStatus.PLAYING)
@@ -173,14 +179,18 @@ public class VLCRobotFrame extends JFrame {
 				btnClose.setEnabled(true);
 				lblStatus.setText("Playing");
 				lblTime.setText(TimeIntervallFormatter.formatLengthSeconds(status.CurrentTime) + " / " + TimeIntervallFormatter.formatLengthSeconds(status.CurrentLength));
+
+				updateList(status);
 			}
-			else if (status.Status == VLCStatus.VLCPlayerStatus.STOPPED)
+			else if (status.Status == VLCStatus.VLCPlayerStatus.PAUSED_STOPPED)
 			{
 				progressBar.setValue(0);
 				btnStart.setEnabled(false);
 				btnClose.setEnabled(false);
 				lblStatus.setText("Stopped");
 				lblTime.setText("");
+
+				updateList(status);
 			}
 			else if (status.Status == VLCStatus.VLCPlayerStatus.NOT_RUNNING)
 			{
@@ -207,6 +217,34 @@ public class VLCRobotFrame extends JFrame {
 				lblTime.setText("");
 			}
 		});
+	}
+
+	private void updateList(VLCStatus status)
+	{
+		lsData.clearData();
+
+		ArrayList<VLCPlaylistEntry> data = new ArrayList<>();
+
+		boolean old = true;
+		for (VLCStatusPlaylistEntry pe : status.Playlist)
+		{
+			if (pe == status.ActiveEntry)
+			{
+				old = false;
+				data.add(VLCPlaylistEntry.createVLCPlayList(VLCPlaylistEntry.VPEType.VLC_ACTIVE, pe));
+			}
+			else if (old)
+			{
+				data.add(VLCPlaylistEntry.createVLCPlayList(VLCPlaylistEntry.VPEType.VLC_OLD, pe));
+			}
+			else
+			{
+				data.add(VLCPlaylistEntry.createVLCPlayList(VLCPlaylistEntry.VPEType.VLC_QUEUE, pe));
+			}
+		}
+
+		lsData.setData(data);
+		lsData.autoResize();
 	}
 
 	private void onStart(ActionEvent ae)

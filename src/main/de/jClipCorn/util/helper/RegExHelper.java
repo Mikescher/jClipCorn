@@ -82,4 +82,8 @@ public class RegExHelper {
 		
 		return m.group(group);
 	}
+
+	public static boolean isMatch(String regex, String str) {
+		return Pattern.compile(regex).matcher(str).matches();
+	}
 }

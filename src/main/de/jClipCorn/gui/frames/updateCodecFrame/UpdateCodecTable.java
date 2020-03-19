@@ -24,59 +24,62 @@ public class UpdateCodecTable extends JCCSimpleTable<UpdateCodecTableElement> {
 		List<JCCSimpleColumnPrototype<UpdateCodecTableElement>> r = new ArrayList<>();
 		
 		r.add(new JCCSimpleColumnPrototype<>(
+				"auto",
 				"",
 				null,
 				e -> e.getStatusIcon(),
 				null));
 		
 		r.add(new JCCSimpleColumnPrototype<>(
+				"*,min=auto",
 				"UpdateCodecFrame.Table.ColumnTitle",
 				e -> e.getFullDisplayTitle(),
 				null,
 				null));
 
 		r.add(new JCCSimpleColumnPrototype<>(
+				"auto",
 				"UpdateCodecFrame.Table.ColumnLangOld",
 				e -> e.getOldLanguage().toShortOutputString(Str.Empty),
 				e -> e.getOldLanguage().getIcon(),
 				null));
 
 		r.add(new JCCSimpleColumnPrototype<>(
+				"auto",
 				"UpdateCodecFrame.Table.ColumnLangNew",
 				e -> e.getNewLanguage().toShortOutputString(Str.Empty),
 				e -> e.getNewLanguage().isEmpty() ? Resources.ICN_TRANSPARENT.get16x16() : e.getNewLanguage().getIcon(),
 				null));
 
 		r.add(new JCCSimpleColumnPrototype<>(
+				"auto",
 				"UpdateCodecFrame.Table.ColumnLengthOld",
 				e -> e.getOldLengthStr(),
 				null,
 				null));
 
 		r.add(new JCCSimpleColumnPrototype<>(
+				"auto",
 				"UpdateCodecFrame.Table.ColumnLengthNew",
 				e -> e.getNewLengthStr(),
 				null,
 				null));
 
 		r.add(new JCCSimpleColumnPrototype<>(
+				"auto",
 				"UpdateCodecFrame.Table.ColumnQualityOld",
 				e -> e.getOldMediaInfo().getCategory(e.getSourceGenres()).getLongText(),
 				e -> e.getOldMediaInfo().getCategory(e.getSourceGenres()).getIcon(),
 				e -> e.getOldMediaInfo().getCategory(e.getSourceGenres()).getTooltip()));
 
 		r.add(new JCCSimpleColumnPrototype<>(
+				"auto",
 				"UpdateCodecFrame.Table.ColumnQualityNew",
 				e -> e.getNewMediaInfo().getCategory(e.getSourceGenres()).getLongText(),
 				e -> e.getNewMediaInfo().getCategory(e.getSourceGenres()).getIcon(),
 				e -> e.getNewMediaInfo().getCategory(e.getSourceGenres()).getTooltip()));
 		
 		return r;
-	}
-
-	@Override
-	protected int getColumnAdjusterMaxWidth() {
-		return 300;
 	}
 
 	@Override

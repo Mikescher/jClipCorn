@@ -1,8 +1,5 @@
 package de.jClipCorn.gui.frames.updateMetadataFrame;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import de.jClipCorn.database.databaseElement.columnTypes.CCGenre;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGenreList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReferenceList;
@@ -10,6 +7,9 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCSingleOnlineReference
 import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleColumnPrototype;
 import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleTable;
 import de.jClipCorn.util.stream.CCStreams;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class UpdateMetadataTable extends JCCSimpleTable<UpdateMetadataTableElement> {
 	private static final long serialVersionUID = 3308858204018846266L;
@@ -30,66 +30,77 @@ public class UpdateMetadataTable extends JCCSimpleTable<UpdateMetadataTableEleme
 		List<JCCSimpleColumnPrototype<UpdateMetadataTableElement>> r = new ArrayList<>();
 		
 		r.add(new JCCSimpleColumnPrototype<>(
+				"auto",
 				"",
 				null,
 				e -> e.Element.getOnlineReference().Main.getIcon16x16(),
 				null));
 		
 		r.add(new JCCSimpleColumnPrototype<>(
+				"*,min=auto",
 				"UpdateMetadataFrame.Table.ColumnTitle",
 				e -> e.Element.getFullDisplayTitle(),
 				null,
 				null));
 
 		r.add(new JCCSimpleColumnPrototype<>(
+				"auto",
 				"UpdateMetadataFrame.Table.ColumnChangedScore",
 				this::getScoreChange,
 				null,
 				null));
 
 		r.add(new JCCSimpleColumnPrototype<>(
+				"auto",
 				"UpdateMetadataFrame.Table.ColumnChangedGenres",
 				this::getGenreChange,
 				null,
 				null));
 
 		r.add(new JCCSimpleColumnPrototype<>(
+				"auto",
 				"UpdateMetadataFrame.Table.ColumnChangedReferences",
 				this::getReferencesChange,
 				null,
 				null));
 		
 		r.add(new JCCSimpleColumnPrototype<>(
+				"auto",
 				"UpdateMetadataFrame.Table.ColumnLocalScore",
 				null,
 				e -> e.Element.getOnlinescore().getIcon(),
 				e -> e.Element.getOnlinescore().asInt() + "/10"));
 		
 		r.add(new JCCSimpleColumnPrototype<>(
+				"auto",
 				"UpdateMetadataFrame.Table.ColumnOnlineScore",
 				null,
 				e -> (e.OnlineMeta != null && e.OnlineMeta.getOnlineScore() != null) ? (e.OnlineMeta.getOnlineScore().getIcon()) : (null),
 				e -> (e.OnlineMeta != null && e.OnlineMeta.getOnlineScore() != null) ? (e.OnlineMeta.getOnlineScore().asInt() + "/10") : (null)));
 
 		r.add(new JCCSimpleColumnPrototype<>(
+				"auto",
 				"UpdateMetadataFrame.Table.ColumnLocalGenres",
 				e -> e.Element.getGenres().asSortedString(),
 				null,
 				null));
 		
 		r.add(new JCCSimpleColumnPrototype<>(
+				"auto",
 				"UpdateMetadataFrame.Table.ColumnOnlineGenres",
 				e -> (e.OnlineMeta != null && e.OnlineMeta.Genres != null) ? e.OnlineMeta.Genres.asSortedString() : (null),
 				null,
 				null));
 		
 		r.add(new JCCSimpleColumnPrototype<>(
+				"auto",
 				"UpdateMetadataFrame.Table.ColumnLocalReferences",
 				e -> e.Element.getOnlineReference().toSourceConcatString(),
 				null,
 				null));
 		
 		r.add(new JCCSimpleColumnPrototype<>(
+				"auto",
 				"UpdateMetadataFrame.Table.ColumnOnlineReferences",
 				e -> (e.OnlineMeta != null) ? e.OnlineMeta.getFullReference().toSourceConcatString() : (null),
 				null,
@@ -180,11 +191,6 @@ public class UpdateMetadataTable extends JCCSimpleTable<UpdateMetadataTableEleme
 			
 			return "+" + gnew;
 		}
-	}
-	
-	@Override
-	protected int getColumnAdjusterMaxWidth() {
-		return 400;
 	}
 
 	@Override

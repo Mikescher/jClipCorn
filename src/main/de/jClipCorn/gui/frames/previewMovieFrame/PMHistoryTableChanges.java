@@ -16,18 +16,21 @@ public class PMHistoryTableChanges extends JCCSimpleTable<CCHistorySingleChange>
 		List<JCCSimpleColumnPrototype<CCHistorySingleChange>> r = new ArrayList<>();
 
 		r.add(new JCCSimpleColumnPrototype<>(
+				"auto",
 				"DatabaseHistoryFrame.Table.ColumnField",
 				e -> e.Field,
 				null,
 				null));
 
 		r.add(new JCCSimpleColumnPrototype<>(
+				"*,expandonly",
 				"DatabaseHistoryFrame.Table.ColumnOld",
 				e -> e.OldValue==null ? "<NULL>" : limit(e.OldValue),
 				null,
 				null));
 
 		r.add(new JCCSimpleColumnPrototype<>(
+				"*,expandonly",
 				"DatabaseHistoryFrame.Table.ColumnNew",
 				e -> e.NewValue==null ? "<NULL>" : limit(e.NewValue),
 				null,
@@ -50,11 +53,6 @@ public class PMHistoryTableChanges extends JCCSimpleTable<CCHistorySingleChange>
 	@Override
 	protected void OnSelectElement(CCHistorySingleChange element) {
 		// 
-	}
-
-	@Override
-	protected int getColumnAdjusterMaxWidth() {
-		return 500;
 	}
 
 	@Override

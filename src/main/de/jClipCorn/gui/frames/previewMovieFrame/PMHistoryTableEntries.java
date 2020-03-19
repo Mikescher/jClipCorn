@@ -23,24 +23,28 @@ public class PMHistoryTableEntries extends JCCSimpleTable<CCCombinedHistoryEntry
 		List<JCCSimpleColumnPrototype<CCCombinedHistoryEntry>> r = new ArrayList<>();
 
 		r.add(new JCCSimpleColumnPrototype<>(
+				"auto",
 				Str.Empty,
 				null,
 				e -> e.Table.getIcon(),
 				e -> Str.toProperCase(e.Table.Name)));
 
 		r.add(new JCCSimpleColumnPrototype<>(
+				"auto",
 				"DatabaseHistoryFrame.Table.ColumnAction",
 				e -> Str.toProperCase(e.Action.Name),
 				null,
 				null));
 
 		r.add(new JCCSimpleColumnPrototype<>(
+				"auto",
 				"DatabaseHistoryFrame.Table.ColumnTime",
 				CCCombinedHistoryEntry::formatTime,
 				null,
 				null));
 
 		r.add(new JCCSimpleColumnPrototype<>(
+				"*,min=auto",
 				"DatabaseHistoryFrame.Table.ColumnChangeCount",
 				e -> Integer.toString(e.Changes.size()),
 				null,
@@ -57,11 +61,6 @@ public class PMHistoryTableEntries extends JCCSimpleTable<CCCombinedHistoryEntry
 	@Override
 	protected void OnSelectElement(CCCombinedHistoryEntry element) {
 		_handler.invoke(element);
-	}
-
-	@Override
-	protected int getColumnAdjusterMaxWidth() {
-		return 800;
 	}
 
 	@Override

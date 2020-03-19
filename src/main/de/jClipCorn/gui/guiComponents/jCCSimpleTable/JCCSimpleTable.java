@@ -23,6 +23,7 @@ public abstract class JCCSimpleTable<TData> extends JScrollPane implements ListS
 	private final JCCSimpleSFixTable<TData> table;
 	private final TableRowSorter<JCCSimpleTableModel<TData>> sorter;
 
+	private final String _autoResizeConfig;
 	private final TableColumnAdjuster adjuster;
 	
 	public JCCSimpleTable() {
@@ -38,9 +39,11 @@ public abstract class JCCSimpleTable<TData> extends JScrollPane implements ListS
 
 		this.setViewportView(table);
 
-		adjuster = new TableColumnAdjuster(table);
-		adjuster.setMaxAdjustWidth(getColumnAdjusterMaxWidth());
-		adjuster.setOnlyAdjustLarger(false);
+		_autoResizeConfig = CCStreams.iterate(columns).stringjoin(e -> e.AutoResizeConfig, "|");
+
+		adjuster = new TableColumnAdjuster(this, table);
+
+		autoResize();
 	}
 
 	private void configureTable() {
@@ -58,12 +61,7 @@ public abstract class JCCSimpleTable<TData> extends JScrollPane implements ListS
 	}
 
 	public void autoResize() {
-		autoResize(true);
-	}
-
-	public void autoResize(boolean resizeLastColumnToFit) {
-		adjuster.adjustColumns();
-		adjuster.setResizeAdjuster(resizeLastColumnToFit);
+		adjuster.adjustColumns(_autoResizeConfig);
 	}
 
 	public int getSelectedRow() {
@@ -97,7 +95,7 @@ public abstract class JCCSimpleTable<TData> extends JScrollPane implements ListS
 	}
 
 	public List<TData> getSelectedElements() {
-		return CCStreams.iterate(getSelectedRows()).map(r -> model.getElementAtRow(r)).enumerate();
+		return CCStreams.iterate(getSelectedRows()).map(model::getElementAtRow).enumerate();
 	}
 
 	public List<TData> getSelectedDataCopy() {
@@ -195,7 +193,6 @@ public abstract class JCCSimpleTable<TData> extends JScrollPane implements ListS
 	protected abstract List<JCCSimpleColumnPrototype<TData>> configureColumns();
 	protected abstract void OnDoubleClickElement(TData element);
 	protected abstract void OnSelectElement(TData element);
-	protected abstract int getColumnAdjusterMaxWidth();
 	protected abstract boolean isMultiselect();
 	protected abstract boolean isSortable(int col);
 }

@@ -1,24 +1,9 @@
 package de.jClipCorn.gui.frames.createSeriesFolderStructureFrame;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Font;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import javax.swing.JButton;
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.FormSpecs;
 import com.jgoodies.forms.layout.RowSpec;
-
 import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.database.databaseElement.CCSeries;
@@ -31,6 +16,13 @@ import de.jClipCorn.util.Str;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.stream.CCStreams;
+
+import javax.swing.*;
+import java.awt.*;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class CreateSeriesFolderStructureFrame extends JFrame {
 	private static final long serialVersionUID = 8494757660196292481L;
@@ -205,7 +197,7 @@ public class CreateSeriesFolderStructureFrame extends JFrame {
 
 		lsTest.setData(elements);
 
-		lsTest.autoResize(false);
+		lsTest.autoResize();
 
 		btnOk.setEnabled(!CCStreams.iterate(elements).any(e -> e.State== CSFSElement.CSFSState.Error) && ! CCProperties.getInstance().ARG_READONLY);
 	}

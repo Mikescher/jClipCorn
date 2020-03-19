@@ -5,25 +5,25 @@ import de.jClipCorn.gui.mainFrame.clipTable.ClipTableModel;
 import de.jClipCorn.util.enumextension.ContinoousEnum;
 import de.jClipCorn.util.enumextension.EnumWrapper;
 
+@SuppressWarnings("nls")
 public enum MainFrameColumn implements ContinoousEnum<MainFrameColumn> {
-	USERSCORE(0, ClipTableModel.COLUMN_SCORE),
-	TITLE(1, ClipTableModel.COLUMN_TITLE),
-	VIEWED(2, ClipTableModel.COLUMN_VIEWED),
-	ZYKLUS(3, ClipTableModel.COLUMN_ZYKLUS),
-	QUALITY(4, ClipTableModel.COLUMN_MEDIAINFO),
-	LANGUAGE(5, ClipTableModel.COLUMN_LANGUAGE),
-	GENRES(6, ClipTableModel.COLUMN_GENRE),
-	PARTS(7, ClipTableModel.COLUMN_PARTCOUNT),
-	LENGTH(8, ClipTableModel.COLUMN_LENGTH),
-	ADDDATE(9, ClipTableModel.COLUMN_DATE),
-	ONLINESCORE(10, ClipTableModel.COLUMN_ONLINESCORE),
-	TAGS(11, ClipTableModel.COLUMN_TAGS),
-	FSK(12, ClipTableModel.COLUMN_FSK),
-	FORMAT(13, ClipTableModel.COLUMN_FORMAT),
-	YEAR(14, ClipTableModel.COLUMN_YEAR),
-	FILESIZE(15, ClipTableModel.COLUMN_SIZE);
+	USERSCORE(   0, "auto",       ClipTableModel.COLUMN_SCORE),
+	TITLE(       1, "*,min=auto", ClipTableModel.COLUMN_TITLE),
+	VIEWED(      2, "auto",       ClipTableModel.COLUMN_VIEWED),
+	ZYKLUS(      3, "auto",       ClipTableModel.COLUMN_ZYKLUS),
+	QUALITY(     4, "auto",       ClipTableModel.COLUMN_MEDIAINFO),
+	LANGUAGE(    5, "auto",       ClipTableModel.COLUMN_LANGUAGE),
+	GENRES(      6, "auto",       ClipTableModel.COLUMN_GENRE),
+	PARTS(       7, "auto",       ClipTableModel.COLUMN_PARTCOUNT),
+	LENGTH(      8, "auto",       ClipTableModel.COLUMN_LENGTH),
+	ADDDATE(     9, "auto",       ClipTableModel.COLUMN_DATE),
+	ONLINESCORE(10, "auto",       ClipTableModel.COLUMN_ONLINESCORE),
+	TAGS(       11, "auto",       ClipTableModel.COLUMN_TAGS),
+	FSK(        12, "auto",       ClipTableModel.COLUMN_FSK),
+	FORMAT(     13, "auto",       ClipTableModel.COLUMN_FORMAT),
+	YEAR(       14, "auto",       ClipTableModel.COLUMN_YEAR),
+	FILESIZE(   15, "auto",       ClipTableModel.COLUMN_SIZE);
 
-	@SuppressWarnings("nls")
 	private final static String[] NAMES = {
 		LocaleBundle.getString("ClipTableModel.Score"),
 		LocaleBundle.getString("ClipTableModel.Title"),
@@ -43,15 +43,16 @@ public enum MainFrameColumn implements ContinoousEnum<MainFrameColumn> {
 		LocaleBundle.getString("ClipTableModel.Size"),
 	};
 
-	private int id;
-
-	public final int ColumnIndex;
+	private final int id;
+	public  final int ColumnIndex;
+	public  final String AdjusterConfig;
 
 	private static final EnumWrapper<MainFrameColumn> wrapper = new EnumWrapper<>(TITLE);
 
-	MainFrameColumn(int val, int idx) {
+	MainFrameColumn(int val, String adj, int idx) {
 		id = val;
 		ColumnIndex = idx;
+		AdjusterConfig = adj;
 	}
 	
 	public static EnumWrapper<MainFrameColumn> getWrapper() {

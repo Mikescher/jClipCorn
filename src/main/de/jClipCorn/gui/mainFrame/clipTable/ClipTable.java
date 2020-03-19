@@ -13,6 +13,7 @@ import de.jClipCorn.gui.mainFrame.MainFrame;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.enumerations.MainFrameColumn;
 import de.jClipCorn.util.TableColumnAdjuster;
+import de.jClipCorn.util.stream.CCStreams;
 
 import javax.swing.*;
 import javax.swing.RowSorter.SortKey;
@@ -25,6 +26,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -36,6 +38,7 @@ public class ClipTable extends JScrollPane implements CCDBUpdateListener, ListSe
 	private ClipTableModel model;
 	private MainFrame owner;
 
+	private String _adjusterConfig = "";
 	private TableColumnAdjuster adjuster;
 	
 	private TableCustomFilter currentFilter = null;
@@ -54,9 +57,7 @@ public class ClipTable extends JScrollPane implements CCDBUpdateListener, ListSe
 
 		this.setViewportView(table);
 
-		adjuster = new TableColumnAdjuster(table);
-		adjuster.setMaxAdjustWidth(550);
-		adjuster.setOnlyAdjustLarger(false);
+		adjuster = new TableColumnAdjuster(this, table);
 
 		if (ml != null) { // Sonst meckert der WindowsBuilder
 			ml.addChangeListener(this);
@@ -74,26 +75,35 @@ public class ClipTable extends JScrollPane implements CCDBUpdateListener, ListSe
 	}
 
 	public void configureColumnVisibility(Set<MainFrameColumn> data, boolean initial) {
+		String[] cfg = new String[MainFrameColumn.values().length];
+		Arrays.fill(cfg, "auto"); //$NON-NLS-1$
+
 		for (MainFrameColumn c : MainFrameColumn.values()) {
 			if (data.contains(c)) {
+				cfg[c.ColumnIndex] = c.AdjusterConfig;
+
 				if (initial) continue;
 				TableColumn column = table.getColumn(c);
 				column.setMinWidth(0);
 				column.setMaxWidth(Integer.MAX_VALUE);
 				column.setPreferredWidth(128);
 				if (column.getWidth() == 0) column.setWidth(50);
+
 			} else {
 				TableColumn column = table.getColumn(c);
 				column.setMinWidth(0);
 				column.setMaxWidth(0);
 				column.setPreferredWidth(0);
+
+				cfg[c.ColumnIndex] = "0";
 			}
 		}
+
+		_adjusterConfig = CCStreams.iterate(cfg).stringjoin(e->e, "|");
 	}
 
 	public void autoResize() {
-		adjuster.adjustColumns();
-		adjuster.setResizeAdjuster(true);
+		adjuster.adjustColumns(_adjusterConfig);
 	}
 
 	@Override

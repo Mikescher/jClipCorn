@@ -47,6 +47,7 @@ import de.jClipCorn.gui.frames.statisticsFrame.StatisticsFrame;
 import de.jClipCorn.gui.frames.textExportFrame.TextExportFrame;
 import de.jClipCorn.gui.frames.updateCodecFrame.UpdateCodecFrame;
 import de.jClipCorn.gui.frames.updateMetadataFrame.UpdateMetadataFrame;
+import de.jClipCorn.gui.frames.vlcRobot.VLCRobotFrame;
 import de.jClipCorn.gui.frames.watchHistoryFrame.WatchHistoryFrame;
 import de.jClipCorn.gui.mainFrame.MainFrame;
 import de.jClipCorn.gui.resources.Resources;
@@ -84,7 +85,7 @@ public class CCActionTree extends UIActionTree{
 	private final static KeyStroke KS_CTRL_O = KeyStroke.getKeyStroke(KeyEvent.VK_O, InputEvent.CTRL_DOWN_MASK);
 	private final static KeyStroke KS_F1 = KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0);
 	
-	private CCMovieList movielist;
+	private final CCMovieList movielist;
 
 	public CCActionTree(MainFrame mf) {
 		super();
@@ -161,6 +162,7 @@ public class CCActionTree extends UIActionTree{
 				add(extras, "ShowIncompleteFilmSeries", null,      "ClipMenuBar.Extras.ShowIncompleteFilmSeries", Resources.ICN_MENUBAR_FINDINCOMPLETEZYKLUS, false, this::onClickExtrasShowIncompleteFilmSeries);
 				add(extras, "UpdateMetadata",           null,      "ClipMenuBar.Extras.UpdateMetadata",           Resources.ICN_MENUBAR_UPDATEMETADATA,       false, this::onClickExtrasUpdateMetadata);
 				add(extras, "UpdateCodecData",          null,      "ClipMenuBar.Extras.UpdateCodecData",          Resources.ICN_MENUBAR_MEDIAINFO,            false, this::onClickExtrasUpdateCodecData);
+				add(extras, "ShowVLCRobot",             null,      "ClipMenuBar.Extras.ShowVLCRobot",             Resources.ICN_MENUBAR_VLCROBOT,             false, this::onClickExtrasShowVLCRobot);
 				add(extras, "ShowSettings",             null,      "ClipMenuBar.Extras.Settings",                 Resources.ICN_MENUBAR_SETTINGS,             false, this::onClickExtrasSettings);
 			}
 			
@@ -418,6 +420,10 @@ public class CCActionTree extends UIActionTree{
 
 	private void onClickExtrasUpdateCodecData(CCTreeActionEvent e) {
 		new UpdateCodecFrame(e.SwingOwner, movielist).setVisible(true);
+	}
+
+	private void onClickExtrasShowVLCRobot(CCTreeActionEvent e) {
+		VLCRobotFrame.show(e.SwingOwner);
 	}
 	
 	private void onClickMaintenanceMassChangeViewed(CCTreeActionEvent e) {

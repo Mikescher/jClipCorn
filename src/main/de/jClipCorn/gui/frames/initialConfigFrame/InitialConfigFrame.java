@@ -7,11 +7,14 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
+
+import org.apache.commons.lang.StringUtils;
 
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
@@ -20,6 +23,7 @@ import de.jClipCorn.properties.enumerations.CCDatabaseDriver;
 import de.jClipCorn.properties.enumerations.UILanguage;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.DialogHelper;
+import de.jClipCorn.util.helper.FileChooserHelper;
 import de.jClipCorn.util.helper.LookAndFeelManager;
 
 public class InitialConfigFrame extends JDialog {
@@ -42,6 +46,9 @@ public class InitialConfigFrame extends JDialog {
 	private JTextField edDatabasename;
 	private JLabel lblCreatePeriodicallyBackups;
 	private JCheckBox cbBackups;
+	private JLabel lblVlcPfad;
+	private JTextField edVLCPath;
+	private JButton btnVLCChooser;
 
 	public InitialConfigFrame() {
 		super();
@@ -54,7 +61,7 @@ public class InitialConfigFrame extends JDialog {
 		setIconImage(Resources.IMG_FRAME_ICON.get());
 		setModal(true);
 		setResizable(false);
-		setBounds(100, 100, 501, 410);
+		setBounds(100, 100, 501, 465);
 		setLocationRelativeTo(null);
 		getContentPane().setLayout(null);
 		
@@ -80,12 +87,12 @@ public class InitialConfigFrame extends JDialog {
 		
 		btnStart = new JButton(LocaleBundle.getString("InitialConfigFrame.btnStart")); //$NON-NLS-1$
 		btnStart.addActionListener(e -> onStart());
-		btnStart.setBounds(385, 344, 98, 26);
+		btnStart.setBounds(385, 399, 98, 26);
 		getContentPane().add(btnStart);
 		
 		btnExit = new JButton(LocaleBundle.getString("InitialConfigFrame.btnExit")); //$NON-NLS-1$
 		btnExit.addActionListener(e -> onExit());
-		btnExit.setBounds(12, 344, 98, 26);
+		btnExit.setBounds(12, 399, 98, 26);
 		getContentPane().add(btnExit);
 		
 		lblSprache = new JLabel(LocaleBundle.getString("InitialConfigFrame.lblLanguage")); //$NON-NLS-1$
@@ -137,6 +144,35 @@ public class InitialConfigFrame extends JDialog {
 		cbBackups.setSelected(CCProperties.getInstance().PROP_BACKUP_CREATEBACKUPS.getValue());
 		cbBackups.setBounds(269, 295, 175, 24);
 		getContentPane().add(cbBackups);
+		
+		lblVlcPfad = new JLabel(LocaleBundle.getString("Settingsframe.tabbedPnl.PROP_PLAY_VLC_PATH")); //$NON-NLS-1$
+		lblVlcPfad.setBounds(12, 336, 55, 16);
+		getContentPane().add(lblVlcPfad);
+		
+		edVLCPath = new JTextField();
+		edVLCPath.setEditable(false);
+		edVLCPath.setBounds(273, 334, 135, 20);
+		getContentPane().add(edVLCPath);
+		edVLCPath.setColumns(10);
+		
+		btnVLCChooser = new JButton("..."); //$NON-NLS-1$
+		btnVLCChooser.addActionListener(e -> 
+		{
+			final String end = "vlc.exe"; //$NON-NLS-1$
+			JFileChooser vc = new JFileChooser();
+
+			vc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+			
+			vc.setFileFilter(FileChooserHelper.createFullValidateFileFilter("Filter: " + end, val -> StringUtils.endsWithIgnoreCase(val, end))); //$NON-NLS-1$
+			
+			vc.setDialogTitle(LocaleBundle.getString("Settingsframe.dlg.title")); //$NON-NLS-1$
+
+			if (vc.showOpenDialog(InitialConfigFrame.this) == JFileChooser.APPROVE_OPTION) {
+				edVLCPath.setText(vc.getSelectedFile().getAbsolutePath());
+			}
+		});
+		btnVLCChooser.setBounds(412, 331, 36, 26);
+		getContentPane().add(btnVLCChooser);
 	}
 	
 	private void updateLanguage() {
@@ -212,6 +248,8 @@ public class InitialConfigFrame extends JDialog {
 			LookAndFeelManager.setLookAndFeel(cbxLooknFeel.getSelectedIndex());
 		}
 				
+		if (!edVLCPath.getText().trim().isEmpty()) CCProperties.getInstance().PROP_PLAY_VLC_PATH.setValue(edVLCPath.getText());
+		
 		result = true;
 
 		setVisible(false);

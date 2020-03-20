@@ -12,6 +12,7 @@ import de.jClipCorn.features.table.filter.customFilter.CustomZyklusFilter;
 import de.jClipCorn.gui.mainFrame.MainFrame;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.enumerations.MainFrameColumn;
+import de.jClipCorn.util.Str;
 import de.jClipCorn.util.TableColumnAdjuster;
 import de.jClipCorn.util.stream.CCStreams;
 
@@ -38,7 +39,7 @@ public class ClipTable extends JScrollPane implements CCDBUpdateListener, ListSe
 	private ClipTableModel model;
 	private MainFrame owner;
 
-	private String _adjusterConfig = "";
+	private String _adjusterConfig = Str.Empty;
 	private TableColumnAdjuster adjuster;
 	
 	private TableCustomFilter currentFilter = null;
@@ -58,6 +59,7 @@ public class ClipTable extends JScrollPane implements CCDBUpdateListener, ListSe
 		this.setViewportView(table);
 
 		adjuster = new TableColumnAdjuster(this, table);
+		adjuster.setConfig(CCStreams.iterate(MainFrameColumn.values()).stringjoin(e-> "10", "|"));
 
 		if (ml != null) { // Sonst meckert der WindowsBuilder
 			ml.addChangeListener(this);
@@ -95,11 +97,11 @@ public class ClipTable extends JScrollPane implements CCDBUpdateListener, ListSe
 				column.setMaxWidth(0);
 				column.setPreferredWidth(0);
 
-				cfg[c.ColumnIndex] = "0";
+				cfg[c.ColumnIndex] = "0"; //$NON-NLS-1$
 			}
 		}
 
-		_adjusterConfig = CCStreams.iterate(cfg).stringjoin(e->e, "|");
+		_adjusterConfig = CCStreams.iterate(cfg).stringjoin(e->e, "|"); //$NON-NLS-1$
 	}
 
 	public void autoResize() {

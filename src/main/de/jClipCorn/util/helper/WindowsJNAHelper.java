@@ -72,7 +72,7 @@ public class WindowsJNAHelper
 			if (ok)
 			{
 				var strFSName  = new String(fsName);
-				var strVolName = new String(volName);
+				//var strVolName = new String(volName);
 				return strFSName;
 			}
 			else return null;

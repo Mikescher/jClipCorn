@@ -379,7 +379,6 @@ public class CheckDatabaseFrame extends JFrame {
 		setCategoriesListModel(clm);
 	}
 
-	@SuppressWarnings("nls")
 	private String typeToString(CountAppendix<DatabaseErrorType> v) {
 		if (v.getCount() == 0) {
 			return LocaleBundle.getString(String.format("CheckDatabaseDialog.Errornames.ERR_%02d", v.Value.getType())); //$NON-NLS-1$

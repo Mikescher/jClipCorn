@@ -10,7 +10,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 
 public abstract class SFixTable extends JTable {
 	private static final long serialVersionUID = 1082882838948078289L;

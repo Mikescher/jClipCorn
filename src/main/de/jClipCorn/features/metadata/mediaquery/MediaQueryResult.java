@@ -22,7 +22,7 @@ import java.util.regex.Pattern;
 
 public class MediaQueryResult {
 
-	private static Pattern REX_LANGUAGE_REPEAT = Pattern.compile("^\\s*(\\w+)(\\s*/\\s*\\1)+\\s*$"); //$NON-NLS-1$
+	private static final Pattern REX_LANGUAGE_REPEAT = Pattern.compile("^\\s*(\\w+)(\\s*/\\s*\\1)+\\s*$"); //$NON-NLS-1$
 
 	public final String Raw;
 	
@@ -77,42 +77,42 @@ public class MediaQueryResult {
 		List<MediaQueryResultAudioTrack> atracks = new ArrayList<>();
 		List<MediaQueryResultSubtitleTrack> stracks = new ArrayList<>();
 
-		for (CCXMLElement track : xml.getAllChildren("track")) //$NON-NLS-1$
+		for (CCXMLElement track : xml.getAllChildren("track"))
 		{
-			String strtype = track.getAttributeValueOrThrow("type"); //$NON-NLS-1$
+			String strtype = track.getAttributeValueOrThrow("type");
 			switch (strtype) {
-				case "General": //$NON-NLS-1$
+				case "General":
 					foundGeneral = true;
 
-					format = track.getFirstChildValueOrDefault("Format", null); //$NON-NLS-1$
-					format_Version = track.getFirstChildValueOrDefault("Format_Version", null); //$NON-NLS-1$
-					fileSize = track.getFirstChildLongValueOrThrow("FileSize"); //$NON-NLS-1$
-					duration = track.getFirstChildDoubleValueOrDefault("Duration", -1); //$NON-NLS-1$
-					overallBitRate = track.getFirstChildIntValueOrDefault("OverallBitRate", -1); //$NON-NLS-1$
-					frameRate = track.getFirstChildDoubleValueOrDefault("FrameRate", -1); //$NON-NLS-1$
+					format = track.getFirstChildValueOrDefault("Format", null);
+					format_Version = track.getFirstChildValueOrDefault("Format_Version", null);
+					fileSize = track.getFirstChildLongValueOrThrow("FileSize");
+					duration = track.getFirstChildDoubleValueOrDefault("Duration", -1);
+					overallBitRate = track.getFirstChildIntValueOrDefault("OverallBitRate", -1);
+					frameRate = track.getFirstChildDoubleValueOrDefault("FrameRate", -1);
 
 					break;
-				case "Video": //$NON-NLS-1$
+				case "Video":
 					foundVideo = true;
 					vtracks.add(MediaQueryResultVideoTrack.parse(track));
 					break;
-				case "Audio": //$NON-NLS-1$
+				case "Audio":
 					atracks.add(MediaQueryResultAudioTrack.parse(track));
 					break;
-				case "Text": //$NON-NLS-1$
+				case "Text":
 					stracks.add(MediaQueryResultSubtitleTrack.parse(track));
 					break;
-				case "Menu": //$NON-NLS-1$
-				case "Other": //$NON-NLS-1$
+				case "Menu":
+				case "Other":
 					// Ignored
 					break;
 				default:
-					throw new InnerMediaQueryException("Unknown Track Type: " + strtype); //$NON-NLS-1$
+					throw new InnerMediaQueryException("Unknown Track Type: " + strtype);
 			}
 		}
 
-		if (!foundGeneral) throw new InnerMediaQueryException("No track 'General' found"); //$NON-NLS-1$
-		if (!foundVideo) throw new InnerMediaQueryException("No track 'Video' found"); //$NON-NLS-1$
+		if (!foundGeneral) throw new InnerMediaQueryException("No track 'General' found");
+		if (!foundVideo) throw new InnerMediaQueryException("No track 'Video' found");
 
 		if (vtracks.size() == 1 && vtracks.get(0).Duration != -1) duration = vtracks.get(0).Duration;
 
@@ -139,9 +139,9 @@ public class MediaQueryResult {
 
 	@SuppressWarnings("nls")
 	public static boolean parseBool(String value) throws InnerMediaQueryException {
-		if (value.equals("Yes")) return true; //$NON-NLS-1$
-		if (value.equals("No")) return false; //$NON-NLS-1$
-		throw new InnerMediaQueryException("Unknown boolean := '" + value + "'"); //$NON-NLS-1$ //$NON-NLS-2$
+		if (value.equals("Yes")) return true;
+		if (value.equals("No")) return false;
+		throw new InnerMediaQueryException("Unknown boolean := '" + value + "'");
 	}
 
 	@SuppressWarnings("nls")
@@ -155,141 +155,141 @@ public class MediaQueryResult {
 		Matcher m1 = REX_LANGUAGE_REPEAT.matcher(langval);
 		if (m1.matches()) langval = m1.group(1).trim();
 
-		if (langval.equalsIgnoreCase("de"))                        return CCDBLanguage.GERMAN; //$NON-NLS-1$
-		if (langval.equalsIgnoreCase("deu"))                       return CCDBLanguage.GERMAN; //$NON-NLS-1$
-		if (langval.equalsIgnoreCase("ger"))                       return CCDBLanguage.GERMAN; //$NON-NLS-1$
-		if (langval.equalsIgnoreCase("German"))                    return CCDBLanguage.GERMAN; //$NON-NLS-1$
-		if (langval.equalsIgnoreCase("Deutsch"))                   return CCDBLanguage.GERMAN; //$NON-NLS-1$
+		if (langval.equalsIgnoreCase("de"))                        return CCDBLanguage.GERMAN;
+		if (langval.equalsIgnoreCase("deu"))                       return CCDBLanguage.GERMAN;
+		if (langval.equalsIgnoreCase("ger"))                       return CCDBLanguage.GERMAN;
+		if (langval.equalsIgnoreCase("German"))                    return CCDBLanguage.GERMAN;
+		if (langval.equalsIgnoreCase("Deutsch"))                   return CCDBLanguage.GERMAN;
 
-		if (langval.equalsIgnoreCase("en"))                        return CCDBLanguage.ENGLISH; //$NON-NLS-1$
-		if (langval.equalsIgnoreCase("eng"))                       return CCDBLanguage.ENGLISH; //$NON-NLS-1$
-		if (langval.equalsIgnoreCase("English"))                   return CCDBLanguage.ENGLISH; //$NON-NLS-1$
+		if (langval.equalsIgnoreCase("en"))                        return CCDBLanguage.ENGLISH;
+		if (langval.equalsIgnoreCase("eng"))                       return CCDBLanguage.ENGLISH;
+		if (langval.equalsIgnoreCase("English"))                   return CCDBLanguage.ENGLISH;
 
-		if (langval.equalsIgnoreCase("it"))                        return CCDBLanguage.ITALIAN; //$NON-NLS-1$
-		if (langval.equalsIgnoreCase("ita"))                       return CCDBLanguage.ITALIAN; //$NON-NLS-1$
-		if (langval.equalsIgnoreCase("Italiano"))                  return CCDBLanguage.ITALIAN; //$NON-NLS-1$
-		if (langval.equalsIgnoreCase("Italian"))                   return CCDBLanguage.ITALIAN; //$NON-NLS-1$
+		if (langval.equalsIgnoreCase("it"))                        return CCDBLanguage.ITALIAN;
+		if (langval.equalsIgnoreCase("ita"))                       return CCDBLanguage.ITALIAN;
+		if (langval.equalsIgnoreCase("Italiano"))                  return CCDBLanguage.ITALIAN;
+		if (langval.equalsIgnoreCase("Italian"))                   return CCDBLanguage.ITALIAN;
 
-		if (langval.equalsIgnoreCase("ja"))                        return CCDBLanguage.JAPANESE; //$NON-NLS-1$
-		if (langval.equalsIgnoreCase("jpn"))                       return CCDBLanguage.JAPANESE; //$NON-NLS-1$
-		if (langval.equalsIgnoreCase("jap"))                       return CCDBLanguage.JAPANESE; //$NON-NLS-1$
-		if (langval.equalsIgnoreCase("\u65e5\u672c\u8a9e"))        return CCDBLanguage.JAPANESE; //$NON-NLS-1$
-		if (langval.equalsIgnoreCase("\u306b\u307b\u3093\u3054"))  return CCDBLanguage.JAPANESE; //$NON-NLS-1$
-		if (langval.equalsIgnoreCase("Japanese"))                  return CCDBLanguage.JAPANESE; //$NON-NLS-1$
+		if (langval.equalsIgnoreCase("ja"))                        return CCDBLanguage.JAPANESE;
+		if (langval.equalsIgnoreCase("jpn"))                       return CCDBLanguage.JAPANESE;
+		if (langval.equalsIgnoreCase("jap"))                       return CCDBLanguage.JAPANESE;
+		if (langval.equalsIgnoreCase("\u65e5\u672c\u8a9e"))        return CCDBLanguage.JAPANESE;
+		if (langval.equalsIgnoreCase("\u306b\u307b\u3093\u3054"))  return CCDBLanguage.JAPANESE;
+		if (langval.equalsIgnoreCase("Japanese"))                  return CCDBLanguage.JAPANESE;
 
-		if (langval.equalsIgnoreCase("fr"))                        return CCDBLanguage.FRENCH; //$NON-NLS-1$
-		if (langval.equalsIgnoreCase("fre"))                       return CCDBLanguage.FRENCH; //$NON-NLS-1$
-		if (langval.equalsIgnoreCase("fra"))                       return CCDBLanguage.FRENCH; //$NON-NLS-1$
-		if (langval.equalsIgnoreCase("Français"))                  return CCDBLanguage.FRENCH; //$NON-NLS-1$
-		if (langval.equalsIgnoreCase("Francais"))                  return CCDBLanguage.FRENCH; //$NON-NLS-1$
-		if (langval.equalsIgnoreCase("Française"))                 return CCDBLanguage.FRENCH; //$NON-NLS-1$
-		if (langval.equalsIgnoreCase("Francaise"))                 return CCDBLanguage.FRENCH; //$NON-NLS-1$
-		if (langval.equalsIgnoreCase("Langue Française"))          return CCDBLanguage.FRENCH; //$NON-NLS-1$
-		if (langval.equalsIgnoreCase("Langue Francaise"))          return CCDBLanguage.FRENCH; //$NON-NLS-1$
-		if (langval.equalsIgnoreCase("French"))                    return CCDBLanguage.FRENCH; //$NON-NLS-1$
+		if (langval.equalsIgnoreCase("fr"))                        return CCDBLanguage.FRENCH;
+		if (langval.equalsIgnoreCase("fre"))                       return CCDBLanguage.FRENCH;
+		if (langval.equalsIgnoreCase("fra"))                       return CCDBLanguage.FRENCH;
+		if (langval.equalsIgnoreCase("Français"))                  return CCDBLanguage.FRENCH;
+		if (langval.equalsIgnoreCase("Francais"))                  return CCDBLanguage.FRENCH;
+		if (langval.equalsIgnoreCase("Française"))                 return CCDBLanguage.FRENCH;
+		if (langval.equalsIgnoreCase("Francaise"))                 return CCDBLanguage.FRENCH;
+		if (langval.equalsIgnoreCase("Langue Française"))          return CCDBLanguage.FRENCH;
+		if (langval.equalsIgnoreCase("Langue Francaise"))          return CCDBLanguage.FRENCH;
+		if (langval.equalsIgnoreCase("French"))                    return CCDBLanguage.FRENCH;
 
-		if (langval.equalsIgnoreCase("es"))                        return CCDBLanguage.SPANISH; //$NON-NLS-1$
-		if (langval.equalsIgnoreCase("spa"))                       return CCDBLanguage.SPANISH; //$NON-NLS-1$
-		if (langval.equalsIgnoreCase("Castilian"))                 return CCDBLanguage.SPANISH; //$NON-NLS-1$
-		if (langval.equalsIgnoreCase("Español"))                   return CCDBLanguage.SPANISH; //$NON-NLS-1$
-		if (langval.equalsIgnoreCase("Espanol"))                   return CCDBLanguage.SPANISH; //$NON-NLS-1$
-		if (langval.equalsIgnoreCase("Spanish"))                   return CCDBLanguage.SPANISH; //$NON-NLS-1$
+		if (langval.equalsIgnoreCase("es"))                        return CCDBLanguage.SPANISH;
+		if (langval.equalsIgnoreCase("spa"))                       return CCDBLanguage.SPANISH;
+		if (langval.equalsIgnoreCase("Castilian"))                 return CCDBLanguage.SPANISH;
+		if (langval.equalsIgnoreCase("Español"))                   return CCDBLanguage.SPANISH;
+		if (langval.equalsIgnoreCase("Espanol"))                   return CCDBLanguage.SPANISH;
+		if (langval.equalsIgnoreCase("Spanish"))                   return CCDBLanguage.SPANISH;
 
-		if (langval.equalsIgnoreCase("pt"))                        return CCDBLanguage.PORTUGUESE; //$NON-NLS-1$
-		if (langval.equalsIgnoreCase("por"))                       return CCDBLanguage.PORTUGUESE; //$NON-NLS-1$
-		if (langval.equalsIgnoreCase("Português"))                 return CCDBLanguage.PORTUGUESE; //$NON-NLS-1$
-		if (langval.equalsIgnoreCase("Portugues"))                 return CCDBLanguage.PORTUGUESE; //$NON-NLS-1$
-		if (langval.equalsIgnoreCase("Portuguese"))                return CCDBLanguage.PORTUGUESE; //$NON-NLS-1$
+		if (langval.equalsIgnoreCase("pt"))                        return CCDBLanguage.PORTUGUESE;
+		if (langval.equalsIgnoreCase("por"))                       return CCDBLanguage.PORTUGUESE;
+		if (langval.equalsIgnoreCase("Português"))                 return CCDBLanguage.PORTUGUESE;
+		if (langval.equalsIgnoreCase("Portugues"))                 return CCDBLanguage.PORTUGUESE;
+		if (langval.equalsIgnoreCase("Portuguese"))                return CCDBLanguage.PORTUGUESE;
 
-		if (langval.equalsIgnoreCase("da"))                        return CCDBLanguage.DANISH; //$NON-NLS-1$
-		if (langval.equalsIgnoreCase("dan"))                       return CCDBLanguage.DANISH; //$NON-NLS-1$
-		if (langval.equalsIgnoreCase("Dansk"))                     return CCDBLanguage.DANISH; //$NON-NLS-1$
-		if (langval.equalsIgnoreCase("Danish"))                    return CCDBLanguage.DANISH; //$NON-NLS-1$
+		if (langval.equalsIgnoreCase("da"))                        return CCDBLanguage.DANISH;
+		if (langval.equalsIgnoreCase("dan"))                       return CCDBLanguage.DANISH;
+		if (langval.equalsIgnoreCase("Dansk"))                     return CCDBLanguage.DANISH;
+		if (langval.equalsIgnoreCase("Danish"))                    return CCDBLanguage.DANISH;
 
-		if (langval.equalsIgnoreCase("fi"))                        return CCDBLanguage.FINNISH; //$NON-NLS-1$
-		if (langval.equalsIgnoreCase("fin"))                       return CCDBLanguage.FINNISH; //$NON-NLS-1$
-		if (langval.equalsIgnoreCase("Suomi"))                     return CCDBLanguage.FINNISH; //$NON-NLS-1$
-		if (langval.equalsIgnoreCase("Suomen kieli"))              return CCDBLanguage.FINNISH; //$NON-NLS-1$
-		if (langval.equalsIgnoreCase("Finnish"))                   return CCDBLanguage.FINNISH; //$NON-NLS-1$
-		if (langval.equalsIgnoreCase("fi / fi"))                   return CCDBLanguage.FINNISH; //$NON-NLS-1$
+		if (langval.equalsIgnoreCase("fi"))                        return CCDBLanguage.FINNISH;
+		if (langval.equalsIgnoreCase("fin"))                       return CCDBLanguage.FINNISH;
+		if (langval.equalsIgnoreCase("Suomi"))                     return CCDBLanguage.FINNISH;
+		if (langval.equalsIgnoreCase("Suomen kieli"))              return CCDBLanguage.FINNISH;
+		if (langval.equalsIgnoreCase("Finnish"))                   return CCDBLanguage.FINNISH;
+		if (langval.equalsIgnoreCase("fi / fi"))                   return CCDBLanguage.FINNISH;
 
-		if (langval.equalsIgnoreCase("sv"))                        return CCDBLanguage.SWEDISH; //$NON-NLS-1$
-		if (langval.equalsIgnoreCase("swe"))                       return CCDBLanguage.SWEDISH; //$NON-NLS-1$
-		if (langval.equalsIgnoreCase("Svenska"))                   return CCDBLanguage.SWEDISH; //$NON-NLS-1$
-		if (langval.equalsIgnoreCase("Swedish"))                   return CCDBLanguage.SWEDISH; //$NON-NLS-1$
+		if (langval.equalsIgnoreCase("sv"))                        return CCDBLanguage.SWEDISH;
+		if (langval.equalsIgnoreCase("swe"))                       return CCDBLanguage.SWEDISH;
+		if (langval.equalsIgnoreCase("Svenska"))                   return CCDBLanguage.SWEDISH;
+		if (langval.equalsIgnoreCase("Swedish"))                   return CCDBLanguage.SWEDISH;
 
-		if (langval.equalsIgnoreCase("no"))                        return CCDBLanguage.NORWEGIAN; //$NON-NLS-1$
-		if (langval.equalsIgnoreCase("nor"))                       return CCDBLanguage.NORWEGIAN; //$NON-NLS-1$
-		if (langval.equalsIgnoreCase("nob"))                       return CCDBLanguage.NORWEGIAN; //$NON-NLS-1$
-		if (langval.equalsIgnoreCase("nno"))                       return CCDBLanguage.NORWEGIAN; //$NON-NLS-1$
-		if (langval.equalsIgnoreCase("Norsk"))                     return CCDBLanguage.NORWEGIAN; //$NON-NLS-1$
-		if (langval.equalsIgnoreCase("Norwegian"))                 return CCDBLanguage.NORWEGIAN; //$NON-NLS-1$
+		if (langval.equalsIgnoreCase("no"))                        return CCDBLanguage.NORWEGIAN;
+		if (langval.equalsIgnoreCase("nor"))                       return CCDBLanguage.NORWEGIAN;
+		if (langval.equalsIgnoreCase("nob"))                       return CCDBLanguage.NORWEGIAN;
+		if (langval.equalsIgnoreCase("nno"))                       return CCDBLanguage.NORWEGIAN;
+		if (langval.equalsIgnoreCase("Norsk"))                     return CCDBLanguage.NORWEGIAN;
+		if (langval.equalsIgnoreCase("Norwegian"))                 return CCDBLanguage.NORWEGIAN;
 
-		if (langval.equalsIgnoreCase("nl"))                        return CCDBLanguage.DUTCH; //$NON-NLS-1$
-		if (langval.equalsIgnoreCase("nld"))                       return CCDBLanguage.DUTCH; //$NON-NLS-1$
-		if (langval.equalsIgnoreCase("dut"))                       return CCDBLanguage.DUTCH; //$NON-NLS-1$
-		if (langval.equalsIgnoreCase("Nederlands"))                return CCDBLanguage.DUTCH; //$NON-NLS-1$
-		if (langval.equalsIgnoreCase("Vlaams"))                    return CCDBLanguage.DUTCH; //$NON-NLS-1$
-		if (langval.equalsIgnoreCase("Dutch"))                     return CCDBLanguage.DUTCH; //$NON-NLS-1$
-		if (langval.equalsIgnoreCase("Flemish"))                   return CCDBLanguage.DUTCH; //$NON-NLS-1$
+		if (langval.equalsIgnoreCase("nl"))                        return CCDBLanguage.DUTCH;
+		if (langval.equalsIgnoreCase("nld"))                       return CCDBLanguage.DUTCH;
+		if (langval.equalsIgnoreCase("dut"))                       return CCDBLanguage.DUTCH;
+		if (langval.equalsIgnoreCase("Nederlands"))                return CCDBLanguage.DUTCH;
+		if (langval.equalsIgnoreCase("Vlaams"))                    return CCDBLanguage.DUTCH;
+		if (langval.equalsIgnoreCase("Dutch"))                     return CCDBLanguage.DUTCH;
+		if (langval.equalsIgnoreCase("Flemish"))                   return CCDBLanguage.DUTCH;
 
-		if (langval.equalsIgnoreCase("cs"))                        return CCDBLanguage.CZECH; //$NON-NLS-1$
-		if (langval.equalsIgnoreCase("cz"))                        return CCDBLanguage.CZECH; //$NON-NLS-1$
-		if (langval.equalsIgnoreCase("ces"))                       return CCDBLanguage.CZECH; //$NON-NLS-1$
-		if (langval.equalsIgnoreCase("cze"))                       return CCDBLanguage.CZECH; //$NON-NLS-1$
-		if (langval.equalsIgnoreCase("čeština"))                   return CCDBLanguage.CZECH; //$NON-NLS-1$
-		if (langval.equalsIgnoreCase("cestina"))                   return CCDBLanguage.CZECH; //$NON-NLS-1$
-		if (langval.equalsIgnoreCase("český jazyk"))               return CCDBLanguage.CZECH; //$NON-NLS-1$
-		if (langval.equalsIgnoreCase("cesky jazyk"))               return CCDBLanguage.CZECH; //$NON-NLS-1$
-		if (langval.equalsIgnoreCase("Czech"))                     return CCDBLanguage.CZECH; //$NON-NLS-1$
-		if (langval.equalsIgnoreCase("cs / cz"))                   return CCDBLanguage.CZECH; //$NON-NLS-1$
+		if (langval.equalsIgnoreCase("cs"))                        return CCDBLanguage.CZECH;
+		if (langval.equalsIgnoreCase("cz"))                        return CCDBLanguage.CZECH;
+		if (langval.equalsIgnoreCase("ces"))                       return CCDBLanguage.CZECH;
+		if (langval.equalsIgnoreCase("cze"))                       return CCDBLanguage.CZECH;
+		if (langval.equalsIgnoreCase("čeština"))                   return CCDBLanguage.CZECH;
+		if (langval.equalsIgnoreCase("cestina"))                   return CCDBLanguage.CZECH;
+		if (langval.equalsIgnoreCase("český jazyk"))               return CCDBLanguage.CZECH;
+		if (langval.equalsIgnoreCase("cesky jazyk"))               return CCDBLanguage.CZECH;
+		if (langval.equalsIgnoreCase("Czech"))                     return CCDBLanguage.CZECH;
+		if (langval.equalsIgnoreCase("cs / cz"))                   return CCDBLanguage.CZECH;
 
-		if (langval.equalsIgnoreCase("pl"))                        return CCDBLanguage.POLISH; //$NON-NLS-1$
-		if (langval.equalsIgnoreCase("pol"))                       return CCDBLanguage.POLISH; //$NON-NLS-1$
-		if (langval.equalsIgnoreCase("język polski"))              return CCDBLanguage.POLISH; //$NON-NLS-1$
-		if (langval.equalsIgnoreCase("jezyk polski"))              return CCDBLanguage.POLISH; //$NON-NLS-1$
-		if (langval.equalsIgnoreCase("polszczyzna"))               return CCDBLanguage.POLISH; //$NON-NLS-1$
-		if (langval.equalsIgnoreCase("Polish"))                    return CCDBLanguage.POLISH; //$NON-NLS-1$
-		if (langval.equalsIgnoreCase("pl / pl"))                   return CCDBLanguage.POLISH; //$NON-NLS-1$
+		if (langval.equalsIgnoreCase("pl"))                        return CCDBLanguage.POLISH;
+		if (langval.equalsIgnoreCase("pol"))                       return CCDBLanguage.POLISH;
+		if (langval.equalsIgnoreCase("język polski"))              return CCDBLanguage.POLISH;
+		if (langval.equalsIgnoreCase("jezyk polski"))              return CCDBLanguage.POLISH;
+		if (langval.equalsIgnoreCase("polszczyzna"))               return CCDBLanguage.POLISH;
+		if (langval.equalsIgnoreCase("Polish"))                    return CCDBLanguage.POLISH;
+		if (langval.equalsIgnoreCase("pl / pl"))                   return CCDBLanguage.POLISH;
 
-		if (langval.equalsIgnoreCase("tr"))                        return CCDBLanguage.TURKISH; //$NON-NLS-1$
-		if (langval.equalsIgnoreCase("tur"))                       return CCDBLanguage.TURKISH; //$NON-NLS-1$
-		if (langval.equalsIgnoreCase("Türkçe"))                    return CCDBLanguage.TURKISH; //$NON-NLS-1$
-		if (langval.equalsIgnoreCase("Türkce"))                    return CCDBLanguage.TURKISH; //$NON-NLS-1$
-		if (langval.equalsIgnoreCase("Turkce"))                    return CCDBLanguage.TURKISH; //$NON-NLS-1$
-		if (langval.equalsIgnoreCase("Tuerkce"))                   return CCDBLanguage.TURKISH; //$NON-NLS-1$
-		if (langval.equalsIgnoreCase("Turkish"))                   return CCDBLanguage.TURKISH; //$NON-NLS-1$
+		if (langval.equalsIgnoreCase("tr"))                        return CCDBLanguage.TURKISH;
+		if (langval.equalsIgnoreCase("tur"))                       return CCDBLanguage.TURKISH;
+		if (langval.equalsIgnoreCase("Türkçe"))                    return CCDBLanguage.TURKISH;
+		if (langval.equalsIgnoreCase("Türkce"))                    return CCDBLanguage.TURKISH;
+		if (langval.equalsIgnoreCase("Turkce"))                    return CCDBLanguage.TURKISH;
+		if (langval.equalsIgnoreCase("Tuerkce"))                   return CCDBLanguage.TURKISH;
+		if (langval.equalsIgnoreCase("Turkish"))                   return CCDBLanguage.TURKISH;
 
-		if (langval.equalsIgnoreCase("hu"))                        return CCDBLanguage.HUNGARIAN; //$NON-NLS-1$
-		if (langval.equalsIgnoreCase("hun"))                       return CCDBLanguage.HUNGARIAN; //$NON-NLS-1$
-		if (langval.equalsIgnoreCase("Magyar"))                    return CCDBLanguage.HUNGARIAN; //$NON-NLS-1$
-		if (langval.equalsIgnoreCase("Hungarian"))                 return CCDBLanguage.HUNGARIAN; //$NON-NLS-1$
+		if (langval.equalsIgnoreCase("hu"))                        return CCDBLanguage.HUNGARIAN;
+		if (langval.equalsIgnoreCase("hun"))                       return CCDBLanguage.HUNGARIAN;
+		if (langval.equalsIgnoreCase("Magyar"))                    return CCDBLanguage.HUNGARIAN;
+		if (langval.equalsIgnoreCase("Hungarian"))                 return CCDBLanguage.HUNGARIAN;
 
-		if (langval.equalsIgnoreCase("bg"))                        return CCDBLanguage.BULGARIAN; //$NON-NLS-1$
-		if (langval.equalsIgnoreCase("bul"))                       return CCDBLanguage.BULGARIAN; //$NON-NLS-1$
-		if (langval.equalsIgnoreCase("български език"))            return CCDBLanguage.BULGARIAN; //$NON-NLS-1$
-		if (langval.equalsIgnoreCase("Bulgarian"))                 return CCDBLanguage.BULGARIAN; //$NON-NLS-1$
+		if (langval.equalsIgnoreCase("bg"))                        return CCDBLanguage.BULGARIAN;
+		if (langval.equalsIgnoreCase("bul"))                       return CCDBLanguage.BULGARIAN;
+		if (langval.equalsIgnoreCase("български език"))            return CCDBLanguage.BULGARIAN;
+		if (langval.equalsIgnoreCase("Bulgarian"))                 return CCDBLanguage.BULGARIAN;
 
-		if (langval.equalsIgnoreCase("ru"))                        return CCDBLanguage.RUSSIAN; //$NON-NLS-1$
-		if (langval.equalsIgnoreCase("rus"))                       return CCDBLanguage.RUSSIAN; //$NON-NLS-1$
-		if (langval.equalsIgnoreCase("русский"))                   return CCDBLanguage.RUSSIAN; //$NON-NLS-1$
-		if (langval.equalsIgnoreCase("Russian"))                   return CCDBLanguage.RUSSIAN; //$NON-NLS-1$
+		if (langval.equalsIgnoreCase("ru"))                        return CCDBLanguage.RUSSIAN;
+		if (langval.equalsIgnoreCase("rus"))                       return CCDBLanguage.RUSSIAN;
+		if (langval.equalsIgnoreCase("русский"))                   return CCDBLanguage.RUSSIAN;
+		if (langval.equalsIgnoreCase("Russian"))                   return CCDBLanguage.RUSSIAN;
 
-		if (langval.equalsIgnoreCase("zh"))                        return CCDBLanguage.CHINESE; //$NON-NLS-1$
-		if (langval.equalsIgnoreCase("zho"))                       return CCDBLanguage.CHINESE; //$NON-NLS-1$
-		if (langval.equalsIgnoreCase("chi"))                       return CCDBLanguage.CHINESE; //$NON-NLS-1$
-		if (langval.equalsIgnoreCase("\u4e2d\u6587"))              return CCDBLanguage.CHINESE; //$NON-NLS-1$
-		if (langval.equalsIgnoreCase("Zhōngwén"))                  return CCDBLanguage.CHINESE; //$NON-NLS-1$
-		if (langval.equalsIgnoreCase("Zhongwen"))                  return CCDBLanguage.CHINESE; //$NON-NLS-1$
-		if (langval.equalsIgnoreCase("\u6c49\u8bed"))              return CCDBLanguage.CHINESE; //$NON-NLS-1$
-		if (langval.equalsIgnoreCase("\u6f22\u8a9e"))              return CCDBLanguage.CHINESE; //$NON-NLS-1$
-		if (langval.equalsIgnoreCase("Chinese"))                   return CCDBLanguage.CHINESE; //$NON-NLS-1$
+		if (langval.equalsIgnoreCase("zh"))                        return CCDBLanguage.CHINESE;
+		if (langval.equalsIgnoreCase("zho"))                       return CCDBLanguage.CHINESE;
+		if (langval.equalsIgnoreCase("chi"))                       return CCDBLanguage.CHINESE;
+		if (langval.equalsIgnoreCase("\u4e2d\u6587"))              return CCDBLanguage.CHINESE;
+		if (langval.equalsIgnoreCase("Zhōngwén"))                  return CCDBLanguage.CHINESE;
+		if (langval.equalsIgnoreCase("Zhongwen"))                  return CCDBLanguage.CHINESE;
+		if (langval.equalsIgnoreCase("\u6c49\u8bed"))              return CCDBLanguage.CHINESE;
+		if (langval.equalsIgnoreCase("\u6f22\u8a9e"))              return CCDBLanguage.CHINESE;
+		if (langval.equalsIgnoreCase("Chinese"))                   return CCDBLanguage.CHINESE;
 
-		if (langval.equalsIgnoreCase("ko"))                        return CCDBLanguage.KOREAN; //$NON-NLS-1$
-		if (langval.equalsIgnoreCase("kor"))                       return CCDBLanguage.KOREAN; //$NON-NLS-1$
-		if (langval.equalsIgnoreCase("korean"))                    return CCDBLanguage.KOREAN; //$NON-NLS-1$
+		if (langval.equalsIgnoreCase("ko"))                        return CCDBLanguage.KOREAN;
+		if (langval.equalsIgnoreCase("kor"))                       return CCDBLanguage.KOREAN;
+		if (langval.equalsIgnoreCase("korean"))                    return CCDBLanguage.KOREAN;
 
-		throw new InnerMediaQueryException("Unknown audio language '" + langval + "'"); //$NON-NLS-1$ //$NON-NLS-2$
+		throw new InnerMediaQueryException("Unknown audio language '" + langval + "'");
 	}
 
 	public static boolean isNullLanguage(String langval) {

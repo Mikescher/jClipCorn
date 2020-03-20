@@ -89,14 +89,14 @@ public class VLCPlaylistEntry {
 				return Element.getTitle();
 
 			case JCC_QUEUE_AUTO:
-				return "[AUTO] " + AutoDisplayString + " [" + ElementQueue.size() + "]";
+				return "[AUTO] " + AutoDisplayString + " [" + ElementQueue.size() + "]"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		}
-		return "";
+		return ""; //$NON-NLS-1$
 	}
 
 	public String getLengthText() {
 		if (Type == VPEType.JCC_QUEUE_AUTO) return Str.Empty;
-		if (Length < 0) return "-";
+		if (Length < 0) return "-"; //$NON-NLS-1$
 		return TimeIntervallFormatter.formatLengthSeconds(Length);
 	}
 }

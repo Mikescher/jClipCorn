@@ -14,8 +14,8 @@ public class QuickAddMoviesTable extends JCCSimpleTable<Tuple<String, String>> {
 	protected List<JCCSimpleColumnPrototype<Tuple<String, String>>> configureColumns() {
 		List<JCCSimpleColumnPrototype<Tuple<String, String>>> r = new ArrayList<>();
 
-		r.add(new JCCSimpleColumnPrototype<>("auto", "QuickAddMoviesTable.colSource", p -> p.Item1, null, null)); //$NON-NLS-1$
-		r.add(new JCCSimpleColumnPrototype<>("star,min=auto", "QuickAddMoviesTable.colDestination", p -> p.Item2, null, null)); //$NON-NLS-1$
+		r.add(new JCCSimpleColumnPrototype<>("auto", "QuickAddMoviesTable.colSource", p -> p.Item1, null, null)); //$NON-NLS-1$ //$NON-NLS-2$
+		r.add(new JCCSimpleColumnPrototype<>("star,min=auto", "QuickAddMoviesTable.colDestination", p -> p.Item2, null, null)); //$NON-NLS-1$ //$NON-NLS-2$
 		
 		return r;
 	}

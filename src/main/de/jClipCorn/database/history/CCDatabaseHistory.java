@@ -62,21 +62,21 @@ public class CCDatabaseHistory {
 
 		StringBuilder triggerbuilder = new StringBuilder();
 
-		triggerbuilder.append("CREATE TRIGGER ").append(forceSQLEscape(triggerName)).append(" AFTER INSERT ON ").append(forceSQLEscape(tab.Name)).append("\n"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-		triggerbuilder.append("BEGIN").append("\n"); //$NON-NLS-1$ //$NON-NLS-2$
+		triggerbuilder.append("CREATE TRIGGER ").append(forceSQLEscape(triggerName)).append(" AFTER INSERT ON ").append(forceSQLEscape(tab.Name)).append("\n");
+		triggerbuilder.append("BEGIN").append("\n");
 		for (CCSQLColDef col : tab.getNonPrimaryColumns()) {
 			triggerbuilder
-					.append(" INSERT INTO HISTORY (").append("`TABLE`, `ID`, `DATE`, `ACTION`, `FIELD`, `OLD`, `NEW`").append(") VALUES (") //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-					.append("'").append(tab.Name).append("', ") //$NON-NLS-1$ //$NON-NLS-2$
-					.append("NEW.").append(forceSQLEscape(tab.Primary.Name)).append(", ") //$NON-NLS-1$ //$NON-NLS-2$
-					.append("STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW'), ") //$NON-NLS-1$
-					.append("'ADD', ") //$NON-NLS-1$
-					.append("'").append(col.Name).append("', ") //$NON-NLS-1$ //$NON-NLS-2$
-					.append("NULL, ") //$NON-NLS-1$
-					.append("NEW.").append(forceSQLEscape(col.Name)) //$NON-NLS-1$
-					.append(");\n"); //$NON-NLS-1$
+					.append(" INSERT INTO HISTORY (").append("`TABLE`, `ID`, `DATE`, `ACTION`, `FIELD`, `OLD`, `NEW`").append(") VALUES (")
+					.append("'").append(tab.Name).append("', ")
+					.append("NEW.").append(forceSQLEscape(tab.Primary.Name)).append(", ")
+					.append("STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW'), ")
+					.append("'ADD', ")
+					.append("'").append(col.Name).append("', ")
+					.append("NULL, ")
+					.append("NEW.").append(forceSQLEscape(col.Name))
+					.append(");\n");
 		}
-		triggerbuilder.append("END").append("\n"); //$NON-NLS-1$ //$NON-NLS-2$
+		triggerbuilder.append("END").append("\n");
 
 		return Tuple.Create(triggerName, triggerbuilder.toString());
 	}
@@ -88,62 +88,62 @@ public class CCDatabaseHistory {
 		StringBuilder triggerbuilder = new StringBuilder();
 
 		triggerbuilder
-				.append("CREATE TRIGGER ") //$NON-NLS-1$
+				.append("CREATE TRIGGER ")
 				.append(forceSQLEscape(triggerName))
-				.append(" AFTER UPDATE ON ") //$NON-NLS-1$
+				.append(" AFTER UPDATE ON ")
 				.append(forceSQLEscape(tab.Name))
-				.append(" "); //$NON-NLS-1$
+				.append(" ");
 		triggerbuilder
-				.append("WHEN NOT (COALESCE(OLD.") //$NON-NLS-1$
+				.append("WHEN NOT (COALESCE(OLD.")
 				.append(forceSQLEscape(col.Name))
-				.append(" = NEW.") //$NON-NLS-1$
+				.append(" = NEW.")
 				.append(forceSQLEscape(col.Name))
-				.append(", 1=0) OR (COALESCE(OLD.") //$NON-NLS-1$
+				.append(", 1=0) OR (COALESCE(OLD.")
 				.append(forceSQLEscape(col.Name))
-				.append(", NEW.") //$NON-NLS-1$
+				.append(", NEW.")
 				.append(forceSQLEscape(col.Name))
-				.append(") IS NULL))") //$NON-NLS-1$
-				.append("\n"); //$NON-NLS-1$
+				.append(") IS NULL))")
+				.append("\n");
 
-		triggerbuilder.append("BEGIN").append("\n"); //$NON-NLS-1$ //$NON-NLS-2$
+		triggerbuilder.append("BEGIN").append("\n");
 
 		triggerbuilder
-				.append(" INSERT INTO HISTORY (").append("`TABLE`, `ID`, `DATE`, `ACTION`, `FIELD`, `OLD`, `NEW`").append(") VALUES (") //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				.append("'").append(tab.Name).append("', ") //$NON-NLS-1$ //$NON-NLS-2$
-				.append("OLD.").append(forceSQLEscape(tab.Primary.Name)).append(", ") //$NON-NLS-1$ //$NON-NLS-2$
-				.append("STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW'), ") //$NON-NLS-1$
-				.append("'UPDATE', ") //$NON-NLS-1$
-				.append("'").append(col.Name).append("', ") //$NON-NLS-1$ //$NON-NLS-2$
-				.append("OLD.").append(forceSQLEscape(col.Name)).append(", ") //$NON-NLS-1$ //$NON-NLS-2$
-				.append("NEW.").append(forceSQLEscape(col.Name)) //$NON-NLS-1$
-				.append(");\n"); //$NON-NLS-1$
+				.append(" INSERT INTO HISTORY (").append("`TABLE`, `ID`, `DATE`, `ACTION`, `FIELD`, `OLD`, `NEW`").append(") VALUES (")
+				.append("'").append(tab.Name).append("', ")
+				.append("OLD.").append(forceSQLEscape(tab.Primary.Name)).append(", ")
+				.append("STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW'), ")
+				.append("'UPDATE', ")
+				.append("'").append(col.Name).append("', ")
+				.append("OLD.").append(forceSQLEscape(col.Name)).append(", ")
+				.append("NEW.").append(forceSQLEscape(col.Name))
+				.append(");\n");
 
-		triggerbuilder.append("END").append("\n"); //$NON-NLS-1$ //$NON-NLS-2$
+		triggerbuilder.append("END").append("\n");
 
 		return Tuple.Create(triggerName, triggerbuilder.toString());
 	}
 
 	@SuppressWarnings("nls")
 	private Tuple<String, String> createTriggerOnDelete(CCSQLTableDef tab) {
-		String triggerName = Str.format("JCCTRIGGER_AUTOHISTORY_REM_{0}", tab.Name.toUpperCase()); //$NON-NLS-1$
+		String triggerName = Str.format("JCCTRIGGER_AUTOHISTORY_REM_{0}", tab.Name.toUpperCase());
 
 		StringBuilder triggerbuilder = new StringBuilder();
 
-		triggerbuilder.append("CREATE TRIGGER ").append(forceSQLEscape(triggerName)).append(" BEFORE DELETE ON ").append(forceSQLEscape(tab.Name)).append("\n"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-		triggerbuilder.append("BEGIN").append("\n"); //$NON-NLS-1$ //$NON-NLS-2$
+		triggerbuilder.append("CREATE TRIGGER ").append(forceSQLEscape(triggerName)).append(" BEFORE DELETE ON ").append(forceSQLEscape(tab.Name)).append("\n");
+		triggerbuilder.append("BEGIN").append("\n");
 		for (CCSQLColDef col : tab.getNonPrimaryColumns()) {
 			triggerbuilder
-					.append(" INSERT INTO HISTORY (").append("`TABLE`, `ID`, `DATE`, `ACTION`, `FIELD`, `OLD`, `NEW`").append(") VALUES (") //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-					.append("'").append(tab.Name).append("', ") //$NON-NLS-1$ //$NON-NLS-2$
-					.append("OLD.").append(forceSQLEscape(tab.Primary.Name)).append(", ") //$NON-NLS-1$ //$NON-NLS-2$
-					.append("STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW'), ") //$NON-NLS-1$
-					.append("'DELETE', ") //$NON-NLS-1$
-					.append("'").append(col.Name).append("', ") //$NON-NLS-1$ //$NON-NLS-2$
-					.append("OLD.").append(forceSQLEscape(col.Name)).append(", ") //$NON-NLS-1$ //$NON-NLS-2$
-					.append("NULL") //$NON-NLS-1$
-					.append(");\n"); //$NON-NLS-1$
+					.append(" INSERT INTO HISTORY (").append("`TABLE`, `ID`, `DATE`, `ACTION`, `FIELD`, `OLD`, `NEW`").append(") VALUES (")
+					.append("'").append(tab.Name).append("', ")
+					.append("OLD.").append(forceSQLEscape(tab.Primary.Name)).append(", ")
+					.append("STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW'), ")
+					.append("'DELETE', ")
+					.append("'").append(col.Name).append("', ")
+					.append("OLD.").append(forceSQLEscape(col.Name)).append(", ")
+					.append("NULL")
+					.append(");\n");
 		}
-		triggerbuilder.append("END").append("\n"); //$NON-NLS-1$ //$NON-NLS-2$
+		triggerbuilder.append("END").append("\n");
 
 		return Tuple.Create(triggerName, triggerbuilder.toString());
 	}
@@ -161,22 +161,22 @@ public class CCDatabaseHistory {
 				for (Tuple<String, String> t : triggerOK) {
 					Tuple<String, String> db = CCStreams.iterate(triggerDB).singleOrNull(p -> Str.equals(p.Item1, t.Item1));
 					if (db == null)
-						errors.add(Str.format("Trigger [{0}] not found", t.Item1)); //$NON-NLS-1$
-					else if (!Str.equals(db.Item2.replace("\r", "").trim(), t.Item2.replace("\r", "").trim())) //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-						errors.add(Str.format("Trigger [{0}] has wrong code", t.Item1)); //$NON-NLS-1$
+						errors.add(Str.format("Trigger [{0}] not found", t.Item1));
+					else if (!Str.equals(db.Item2.replace("\r", "").trim(), t.Item2.replace("\r", "").trim()))
+						errors.add(Str.format("Trigger [{0}] has wrong code", t.Item1));
 				}
 			} else {
 				for (Tuple<String, String> t : triggerOK) {
 					Tuple<String, String> db = CCStreams.iterate(triggerDB).singleOrNull(p -> Str.equals(p.Item1, t.Item1));
-					if (db != null) errors.add(Str.format("Trigger [{0}] exists", t.Item1)); //$NON-NLS-1$
+					if (db != null) errors.add(Str.format("Trigger [{0}] exists", t.Item1));
 				}
 			}
 		} catch (SQLException e) {
-			errors.add(Str.format("Exception '{0}' thrown", e.getClass().getSimpleName())); //$NON-NLS-1$
+			errors.add(Str.format("Exception '{0}' thrown", e.getClass().getSimpleName()));
 		}
 
 		if (errors.size()>0) {
-			referror.Value = CCStreams.iterate(errors).stringjoin(p->p, "\n"); //$NON-NLS-1$
+			referror.Value = CCStreams.iterate(errors).stringjoin(p->p, "\n");
 			return false;
 		} else {
 			referror.Value = Str.Empty;

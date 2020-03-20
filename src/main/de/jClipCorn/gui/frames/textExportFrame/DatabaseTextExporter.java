@@ -57,7 +57,7 @@ public abstract class DatabaseTextExporter {
 		
 		switch (order) {
 		case TITLE:
-			cp = new Comparator<CCDatabaseElement>() {
+			cp = new Comparator<>() {
 				@Override
 				public int compare(CCDatabaseElement o1, CCDatabaseElement o2) {
 					return o1.getTitle().compareToIgnoreCase(o2.getTitle());
@@ -65,7 +65,7 @@ public abstract class DatabaseTextExporter {
 			};
 			break;
 		case TITLE_SMART:
-			cp = new Comparator<CCDatabaseElement>() {
+			cp = new Comparator<>() {
 				@Override
 				public int compare(CCDatabaseElement o1, CCDatabaseElement o2) {
 					String to1;
@@ -90,7 +90,7 @@ public abstract class DatabaseTextExporter {
 			};
 			break;
 		case ADD_DATE:
-			cp = new Comparator<CCDatabaseElement>() {
+			cp = new Comparator<>() {
 				@Override
 				public int compare(CCDatabaseElement o1, CCDatabaseElement o2) {
 					return o1.getAddDate().compareTo(o2.getAddDate());
@@ -98,7 +98,7 @@ public abstract class DatabaseTextExporter {
 			};
 			break;
 		case YEAR:
-			cp = new Comparator<CCDatabaseElement>() {
+			cp = new Comparator<>() {
 				@Override
 				public int compare(CCDatabaseElement o1, CCDatabaseElement o2) {
 					return Integer.compare(o1.getFirstYear(), o2.getFirstYear());

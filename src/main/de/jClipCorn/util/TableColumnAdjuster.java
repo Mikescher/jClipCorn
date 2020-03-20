@@ -71,7 +71,7 @@ public class TableColumnAdjuster implements PropertyChangeListener, TableModelLi
 
 		if (r.size() != tcm.getColumnCount())
 		{
-			CCLog.addWarning("TableColumnAdjuster config does nnot match: '" + _currentConfigStr + "'"); //$NON-NLS-1$ //$NON-NLS-2$
+			CCLog.addWarning("TableColumnAdjuster config does not match: '" + _currentConfigStr + "'"); //$NON-NLS-1$ //$NON-NLS-2$
 
 			while (r.size() < tcm.getColumnCount()) r.add(TCAConfig.KEEP);
 			while (r.size() > tcm.getColumnCount()) r.remove(r.size() - 1);
@@ -118,7 +118,7 @@ public class TableColumnAdjuster implements PropertyChangeListener, TableModelLi
 	}
 
 	@SuppressWarnings("nls")
-	private void setConfig(String dat)
+	public void setConfig(String dat)
 	{
 		if (dat.equals(_currentConfigStr)) return;
 

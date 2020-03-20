@@ -33,33 +33,33 @@ public class PreviewMovieMenuBar extends ClipMenuBar {
 	@SuppressWarnings("nls")
 	protected void init()
 	{
-		addMaster("PreviewMovieFrame.Menubar.Movie"); //$NON-NLS-1$
+		addMaster("PreviewMovieFrame.Menubar.Movie");
 		{
-			addActionNode("PlayMovie"); //$NON-NLS-1$
-			addActionNode("PlayMovieAnonymous"); //$NON-NLS-1$
+			addActionNode("PlayMovie");
+			addActionNode("PlayMovieAnonymous");
 			if (CCProperties.getInstance().PROP_VLC_ROBOT_ENABLED.getValue() && !Str.isNullOrWhitespace(MoviePlayer.getVLCPath()))
 			{
-				addActionNode("QueueMovieInRobot"); //$NON-NLS-1$
+				addActionNode("QueueMovieInRobot");
 			}
 			addSeparator();
-			addActionTreeNode("SetMovieRating"); //$NON-NLS-1$
-			addActionTreeNode("SetTags_Movies"); //$NON-NLS-1$
-			addActionNode("SetMovieViewed"); //$NON-NLS-1$
-			addActionNode("SetMovieUnviewed"); //$NON-NLS-1$
-			addActionNode("UndoMovieViewed"); //$NON-NLS-1$
+			addActionTreeNode("SetMovieRating");
+			addActionTreeNode("SetTags_Movies");
+			addActionNode("SetMovieViewed");
+			addActionNode("SetMovieUnviewed");
+			addActionNode("UndoMovieViewed");
 			addSeparator();
-			addActionNode("EditMovie"); //$NON-NLS-1$
-			addActionNode("RemMovie"); //$NON-NLS-1$
+			addActionNode("EditMovie");
+			addActionNode("RemMovie");
 		}
-		addMaster("PreviewMovieFrame.Menubar.Extras"); //$NON-NLS-1$
+		addMaster("PreviewMovieFrame.Menubar.Extras");
 		{
-			addActionNode("OpenFolder"); //$NON-NLS-1$
+			addActionNode("OpenFolder");
 			addOpenInBrowserActionNodes(_movie.getOnlineReference());
 		}
-		addMaster("PreviewMovieFrame.Menubar.Export"); //$NON-NLS-1$
+		addMaster("PreviewMovieFrame.Menubar.Export");
 		{
-			addActionNode("ExportSingleMovie"); //$NON-NLS-1$
-			addActionNode("AddMovieToExportList"); //$NON-NLS-1$
+			addActionNode("ExportSingleMovie");
+			addActionNode("AddMovieToExportList");
 		}
 	}
 

@@ -196,7 +196,7 @@ public class SQLBuilder {
 		List<Tuple3<Integer, String, CCSQLType>> fields = new ArrayList<>();
 
 		for (Tuple<DoubleString, CCSQLType> field : _fields) {
-			if (!field.Item1.get2().equals("?")) continue; //$NON-NLS-1$
+			if (!field.Item1.get2().equals("?")) continue;
 			fields.add(Tuple3.Create(prepIdx, field.Item1.get1(), field.Item2));
 			prepIdx++;
 		}
@@ -218,7 +218,7 @@ public class SQLBuilder {
 			}
 
 			for (Tuple<DoubleString, CCSQLType> clause : _whereClauses) {
-				if (!clause.Item1.get2().equals("?")) continue; //$NON-NLS-1$
+				if (!clause.Item1.get2().equals("?")) continue;
 				fields.add(Tuple3.Create(prepIdx, clause.Item1.get1(), clause.Item2));
 				prepIdx++;
 			}
@@ -246,7 +246,7 @@ public class SQLBuilder {
 		List<Tuple3<Integer, String, CCSQLType>> fields = new ArrayList<>();
 
 		for (Tuple<DoubleString, CCSQLType> field : _fields) {
-			if (!field.Item1.get2().equals("?")) continue; //$NON-NLS-1$
+			if (!field.Item1.get2().equals("?")) continue;
 			fields.add(Tuple3.Create(prepIdx, field.Item1.get1(), field.Item2));
 			prepIdx++;
 		}
@@ -280,7 +280,7 @@ public class SQLBuilder {
 			}
 
 			for (Tuple<DoubleString, CCSQLType> clause : _whereClauses) {
-				if (!clause.Item1.get2().equals("?")) continue; //$NON-NLS-1$
+				if (!clause.Item1.get2().equals("?")) continue;
 				fields.add(Tuple3.Create(prepIdx, clause.Item1.get1(), clause.Item2));
 				prepIdx++;
 			}
@@ -325,7 +325,7 @@ public class SQLBuilder {
 			}
 
 			for (Tuple<DoubleString, CCSQLType> clause : _whereClauses) {
-				if (!clause.Item1.get2().equals("?")) continue; //$NON-NLS-1$
+				if (!clause.Item1.get2().equals("?")) continue;
 				fields.add(Tuple3.Create(prepIdx, clause.Item1.get1(), clause.Item2));
 				prepIdx++;
 			}

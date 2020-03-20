@@ -41,7 +41,6 @@ public class MediaQueryResultAudioTrack {
 		return new MediaQueryResultAudioTrack(format, language, codecID, channels, srate, brate, brateNom, adefault);
 	}
 
-	@SuppressWarnings("nls")
 	public CCDBLanguage getLanguage() throws InnerMediaQueryException {
 		return MediaQueryResult.getLanguage(Language);
 	}

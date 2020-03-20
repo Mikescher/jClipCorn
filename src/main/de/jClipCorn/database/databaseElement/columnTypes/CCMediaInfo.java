@@ -322,7 +322,6 @@ public class CCMediaInfo {
 		return CCQualityCategoryType.HIGH_DEFINITION;
 	}
 
-	@SuppressWarnings("nls")
 	private CCQualityResolutionType getCategoryResType()
 	{
 		if (width < 320 && height < 240) return CCQualityResolutionType.R_LOW;

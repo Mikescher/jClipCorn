@@ -5,8 +5,6 @@ import java.util.List;
 
 public class VLCStatus
 {
-	public enum VLCPlayerStatus { PLAYING, PAUSED, STOPPED, DISABLED, NOT_RUNNING, ERROR }
-
 	public final VLCPlayerStatus Status;
 
 	public final int CurrentTime;

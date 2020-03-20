@@ -36,7 +36,6 @@ public class MediaQueryResultSubtitleTrack {
 		return new MediaQueryResultSubtitleTrack(format, title, codecID, language, adefault);
 	}
 
-	@SuppressWarnings("nls")
 	public CCDBLanguage getLanguage() throws InnerMediaQueryException {
 		return MediaQueryResult.getLanguage(Language);
 	}

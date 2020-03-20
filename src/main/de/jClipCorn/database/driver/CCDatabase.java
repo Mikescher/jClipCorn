@@ -13,6 +13,7 @@ import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.enumerations.CCDatabaseDriver;
+import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.datetime.CCDateTime;
@@ -358,10 +359,10 @@ public class CCDatabase {
 			stmt.clearParameters();
 
 			stmt.setInt(DatabaseStructure.COL_MAIN_LOCALID,       id);
-			stmt.setStr(DatabaseStructure.COL_MAIN_NAME,          ""); //$NON-NLS-1$
+			stmt.setStr(DatabaseStructure.COL_MAIN_NAME,          "");
 			stmt.setInt(DatabaseStructure.COL_MAIN_VIEWED,        0);
-			stmt.setStr(DatabaseStructure.COL_MAIN_VIEWEDHISTORY, ""); //$NON-NLS-1$
-			stmt.setStr(DatabaseStructure.COL_MAIN_ZYKLUS,        ""); //$NON-NLS-1$
+			stmt.setStr(DatabaseStructure.COL_MAIN_VIEWEDHISTORY, "");
+			stmt.setStr(DatabaseStructure.COL_MAIN_ZYKLUS,        "");
 			stmt.setInt(DatabaseStructure.COL_MAIN_ZYKLUSNUMBER,  0);
 			stmt.setInt(DatabaseStructure.COL_MAIN_LANGUAGE,      0);
 			stmt.setInt(DatabaseStructure.COL_MAIN_GENRE,         0);
@@ -371,16 +372,16 @@ public class CCDatabase {
 			stmt.setInt(DatabaseStructure.COL_MAIN_FSK,           0);
 			stmt.setInt(DatabaseStructure.COL_MAIN_FORMAT,        0);
 			stmt.setInt(DatabaseStructure.COL_MAIN_MOVIEYEAR,     0);
-			stmt.setStr(DatabaseStructure.COL_MAIN_ONLINEREF,     ""); //$NON-NLS-1$
-			stmt.setStr(DatabaseStructure.COL_MAIN_GROUPS,        ""); //$NON-NLS-1$
+			stmt.setStr(DatabaseStructure.COL_MAIN_ONLINEREF,     "");
+			stmt.setStr(DatabaseStructure.COL_MAIN_GROUPS,        "");
 			stmt.setInt(DatabaseStructure.COL_MAIN_FILESIZE,      0);
 			stmt.setInt(DatabaseStructure.COL_MAIN_TAGS,          0);
-			stmt.setStr(DatabaseStructure.COL_MAIN_PART_1,        ""); //$NON-NLS-1$
-			stmt.setStr(DatabaseStructure.COL_MAIN_PART_2,        ""); //$NON-NLS-1$
-			stmt.setStr(DatabaseStructure.COL_MAIN_PART_3,        ""); //$NON-NLS-1$
-			stmt.setStr(DatabaseStructure.COL_MAIN_PART_4,        ""); //$NON-NLS-1$
-			stmt.setStr(DatabaseStructure.COL_MAIN_PART_5,        ""); //$NON-NLS-1$
-			stmt.setStr(DatabaseStructure.COL_MAIN_PART_6,        ""); //$NON-NLS-1$
+			stmt.setStr(DatabaseStructure.COL_MAIN_PART_1,        "");
+			stmt.setStr(DatabaseStructure.COL_MAIN_PART_2,        "");
+			stmt.setStr(DatabaseStructure.COL_MAIN_PART_3,        "");
+			stmt.setStr(DatabaseStructure.COL_MAIN_PART_4,        "");
+			stmt.setStr(DatabaseStructure.COL_MAIN_PART_5,        "");
+			stmt.setStr(DatabaseStructure.COL_MAIN_PART_6,        "");
 			stmt.setInt(DatabaseStructure.COL_MAIN_SCORE,         0);
 			stmt.setInt(DatabaseStructure.COL_MAIN_COVERID,       -1);
 			stmt.setInt(DatabaseStructure.COL_MAIN_TYPE,          0);
@@ -391,7 +392,7 @@ public class CCDatabase {
 			return true;
 		} catch (SQLException | SQLWrapperException e) {
 			db.setLastError(e);
-			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.NoNewRow", id), e); //$NON-NLS-1$
+			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.NoNewRow", id), e);
 			return false;
 		}
 	}
@@ -404,7 +405,7 @@ public class CCDatabase {
 
 			stmt.setInt(DatabaseStructure.COL_SEAS_SEASONID,  seasid);
 			stmt.setInt(DatabaseStructure.COL_SEAS_SERIESID,  serid);
-			stmt.setStr(DatabaseStructure.COL_SEAS_NAME,      ""); //$NON-NLS-1$
+			stmt.setStr(DatabaseStructure.COL_SEAS_NAME,      "");
 			stmt.setInt(DatabaseStructure.COL_SEAS_YEAR,      0);
 			stmt.setInt(DatabaseStructure.COL_SEAS_COVERID,   -1);
 
@@ -413,7 +414,7 @@ public class CCDatabase {
 			return true;
 		} catch (SQLException | SQLWrapperException e) {
 			db.setLastError(e);
-			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.NoNewSeasonRow", seasid, serid), e); //$NON-NLS-1$
+			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.NoNewSeasonRow", seasid, serid), e);
 			return false;
 		}
 	}
@@ -427,13 +428,13 @@ public class CCDatabase {
 			stmt.setInt(DatabaseStructure.COL_EPIS_LOCALID,       eid);
 			stmt.setInt(DatabaseStructure.COL_EPIS_SEASONID,      sid);
 			stmt.setInt(DatabaseStructure.COL_EPIS_EPISODE,       0);
-			stmt.setStr(DatabaseStructure.COL_EPIS_NAME,          ""); //$NON-NLS-1$
+			stmt.setStr(DatabaseStructure.COL_EPIS_NAME,          "");
 			stmt.setBoo(DatabaseStructure.COL_EPIS_VIEWED,        false);
-			stmt.setStr(DatabaseStructure.COL_EPIS_VIEWEDHISTORY, ""); //$NON-NLS-1$
+			stmt.setStr(DatabaseStructure.COL_EPIS_VIEWEDHISTORY, "");
 			stmt.setInt(DatabaseStructure.COL_EPIS_LENGTH,        0);
 			stmt.setInt(DatabaseStructure.COL_EPIS_FORMAT,        0);
 			stmt.setInt(DatabaseStructure.COL_EPIS_FILESIZE,      0);
-			stmt.setStr(DatabaseStructure.COL_EPIS_PART_1,        ""); //$NON-NLS-1$
+			stmt.setStr(DatabaseStructure.COL_EPIS_PART_1,        "");
 			stmt.setInt(DatabaseStructure.COL_EPIS_TAGS,          0);
 			stmt.setStr(DatabaseStructure.COL_EPIS_ADDDATE,       CCDate.MIN_SQL);
 			stmt.setInt(DatabaseStructure.COL_EPIS_LANGUAGE,      0);
@@ -443,7 +444,7 @@ public class CCDatabase {
 			return true;
 		} catch (SQLException | SQLWrapperException e) {
 			db.setLastError(e);
-			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.NoNewEpisodeRow", eid, sid), e); //$NON-NLS-1$
+			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.NoNewEpisodeRow", eid, sid), e);
 			return false;
 		}
 	}
@@ -597,7 +598,7 @@ public class CCDatabase {
 
 			return true;
 		} catch (SQLException | SQLWrapperException e) {
-			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CouldNotUpdateMovie", mov.getTitle(), mov.getLocalID()), e); //$NON-NLS-1$
+			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CouldNotUpdateMovie", mov.getTitle(), mov.getLocalID()), e);
 			return false;
 		}
 	}
@@ -626,7 +627,7 @@ public class CCDatabase {
 
 			return true;
 		} catch (SQLException | SQLWrapperException e) {
-			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CouldNotUpdateSeries", ser.getTitle(), ser.getLocalID()), e); //$NON-NLS-1$
+			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CouldNotUpdateSeries", ser.getTitle(), ser.getLocalID()), e);
 			return false;
 		}
 	}
@@ -648,7 +649,7 @@ public class CCDatabase {
 
 			return true;
 		} catch (SQLException | SQLWrapperException e) {
-			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CouldNotUpdateSeason", ser.getTitle(), ser.getLocalID()), e); //$NON-NLS-1$
+			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CouldNotUpdateSeason", ser.getTitle(), ser.getLocalID()), e);
 			return false;
 		}
 	}
@@ -718,7 +719,7 @@ public class CCDatabase {
 
 			return true;
 		} catch (SQLException | SQLWrapperException e) {
-			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CouldNotUpdateEpisode", ep.getTitle(), ep.getLocalID()), e); //$NON-NLS-1$
+			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CouldNotUpdateEpisode", ep.getTitle(), ep.getLocalID()), e);
 			return false;
 		}
 	}
@@ -738,7 +739,7 @@ public class CCDatabase {
 			rs.close();
 			return true;
 		} catch (SQLException | CCFormatException | SQLWrapperException e) {
-			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CouldNotUpdateMovie", mov.getTitle(), mov.getLocalID()), e); //$NON-NLS-1$
+			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CouldNotUpdateMovie", mov.getTitle(), mov.getLocalID()), e);
 			return false;
 		}
 	}
@@ -758,7 +759,7 @@ public class CCDatabase {
 			rs.close();
 			return true;
 		} catch (SQLException | CCFormatException | SQLWrapperException e) {
-			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CouldNotUpdateSeries", ser.getTitle(), ser.getLocalID()), e); //$NON-NLS-1$
+			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CouldNotUpdateSeries", ser.getTitle(), ser.getLocalID()), e);
 			return false;
 		}
 	}
@@ -778,7 +779,7 @@ public class CCDatabase {
 			rs.close();
 			return true;
 		} catch (SQLException | SQLWrapperException e) {
-			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CouldNotUpdateSeason", sea.getTitle(), sea.getLocalID()), e); //$NON-NLS-1$
+			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CouldNotUpdateSeason", sea.getTitle(), sea.getLocalID()), e);
 			return false;
 		}
 	}
@@ -798,7 +799,7 @@ public class CCDatabase {
 			rs.close();
 			return true;
 		} catch (SQLException | CCFormatException | SQLWrapperException e) {
-			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CouldNotUpdateEpisode", epi.getTitle(), epi.getLocalID()), e); //$NON-NLS-1$
+			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CouldNotUpdateEpisode", epi.getTitle(), epi.getLocalID()), e);
 			return false;
 		}
 	}
@@ -911,7 +912,7 @@ public class CCDatabase {
 				boolean gs = rs.getBoolean(DatabaseStructure.COL_GRPS_SERIALIZE);
 				String gp  = rs.getString(DatabaseStructure.COL_GRPS_PARENT);
 				boolean gv = rs.getBoolean(DatabaseStructure.COL_GRPS_VISIBLE);
-				if (gp == null) gp = ""; //$NON-NLS-1$
+				if (gp == null) gp = Str.Empty;
 
 				ml.addGroupInternal(CCGroup.create(gn, go, gc, gs, gp, gv));
 			}
@@ -1297,9 +1298,9 @@ public class CCDatabase {
 	@SuppressWarnings("nls")
 	public void deleteTrigger(String name, boolean ifExists) throws SQLException {
 		if (ifExists)
-			db.executeSQLThrow("DROP TRIGGER IF EXISTS " + SQLBuilderHelper.forceSQLEscape(name)); //$NON-NLS-1$
+			db.executeSQLThrow("DROP TRIGGER IF EXISTS " + SQLBuilderHelper.forceSQLEscape(name));
 		else
-			db.executeSQLThrow("DROP TRIGGER " + SQLBuilderHelper.forceSQLEscape(name)); //$NON-NLS-1$
+			db.executeSQLThrow("DROP TRIGGER " + SQLBuilderHelper.forceSQLEscape(name));
 	}
 
 	public void createTrigger(String sql) throws SQLException {

@@ -102,10 +102,10 @@ public class CustomMediaInfoValueFilter extends AbstractCustomStructureElementFi
 	@Override
 	@SuppressWarnings("nls")
 	protected void initSerialization(FilterSerializationConfig cfg) {
-		cfg.addCCEnum("field", CCMediaInfoField.getWrapper(), (d) -> this.field = d,  () -> this.field); //$NON-NLS-1$
-		cfg.addString("value", (d) -> this.value = d,  () -> this.value); //$NON-NLS-1$
-		cfg.addCCEnum("match", AnyMatchType.getWrapper(), (d) -> this.match = d,  () -> this.match); //$NON-NLS-1$
-		cfg.addBool("casesensitive", (d) -> this.caseSensitive = d,  () -> this.caseSensitive); //$NON-NLS-1$
+		cfg.addCCEnum("field", CCMediaInfoField.getWrapper(), (d) -> this.field = d,  () -> this.field);
+		cfg.addString("value", (d) -> this.value = d,  () -> this.value);
+		cfg.addCCEnum("match", AnyMatchType.getWrapper(), (d) -> this.match = d,  () -> this.match);
+		cfg.addBool("casesensitive", (d) -> this.caseSensitive = d,  () -> this.caseSensitive);
 	}
 
 	@Override

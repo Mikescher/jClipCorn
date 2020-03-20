@@ -10,6 +10,7 @@ import java.util.ResourceBundle;
 
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.properties.CCProperties;
+import de.jClipCorn.util.Str;
 
 public class LocaleBundle {
 	private final static int DEFAULT = 1;
@@ -64,6 +65,10 @@ public class LocaleBundle {
 	
 	public static String getFormattedString(String ident, Object... args) {
 		return String.format(getString(ident), args);
+	}
+	
+	public static String getMFFormattedString(String ident, Object... args) {
+		return Str.format(getString(ident), args);
 	}
 	
 	public static String getDeformattedString(String ident) {

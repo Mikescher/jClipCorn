@@ -54,7 +54,7 @@ public class CustomMediaInfoSetFilter extends AbstractCustomStructureElementFilt
 	@Override
 	@SuppressWarnings("nls")
 	protected void initSerialization(FilterSerializationConfig cfg) {
-		cfg.addBool("isset", (d) -> this.isset = d,  () -> this.isset); //$NON-NLS-1$
+		cfg.addBool("isset", (d) -> this.isset = d,  () -> this.isset);
 	}
 
 	@Override

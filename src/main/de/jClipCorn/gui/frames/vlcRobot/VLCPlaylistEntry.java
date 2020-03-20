@@ -41,7 +41,7 @@ public class VLCPlaylistEntry {
 		VLCPlaylistEntry e = new VLCPlaylistEntry();
 		e.Type = VPEType.JCC_QUEUE_SINGLE;
 		e.Element = elem;
-		e.Length = elem.getLength();
+		e.Length = elem.getLength()*60;
 		return e;
 	}
 
@@ -49,7 +49,7 @@ public class VLCPlaylistEntry {
 		VLCPlaylistEntry e = new VLCPlaylistEntry();
 		e.Type = VPEType.JCC_QUEUE_SINGLE;
 		e.ElementQueue = elems;
-		e.Length = CCStreams.iterate(elems).sumInt(ICCPlayableElement::getLength);
+		e.Length = CCStreams.iterate(elems).sumInt(ipe -> ipe.getLength()*60);
 		return e;
 	}
 
@@ -67,7 +67,7 @@ public class VLCPlaylistEntry {
 
 			case JCC_QUEUE_SINGLE:
 				if (Element instanceof CCMovie)   return Resources.ICN_TABLE_MOVIE.get();
-				if (Element instanceof CCEpisode) return Resources.ICN_TABLE_MOVIE.get();
+				if (Element instanceof CCEpisode) return Resources.ICN_TABLE_EPISODES.get();
 
 			case JCC_QUEUE_AUTO:
 				return Resources.ICN_MENUBAR_VLCROBOT.get16x16();
@@ -95,6 +95,7 @@ public class VLCPlaylistEntry {
 
 	public String getLengthText() {
 		if (Type == VPEType.JCC_QUEUE_AUTO) return Str.Empty;
+		if (Length < 0) return "-";
 		return TimeIntervallFormatter.formatLengthSeconds(Length);
 	}
 }

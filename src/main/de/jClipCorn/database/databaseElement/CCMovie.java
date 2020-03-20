@@ -1,27 +1,26 @@
 package de.jClipCorn.database.databaseElement;
 
+import de.jClipCorn.database.CCMovieList;
+import de.jClipCorn.database.databaseElement.columnTypes.*;
+import de.jClipCorn.database.util.CCQualityCategory;
+import de.jClipCorn.database.util.ExtendedViewedState;
+import de.jClipCorn.database.util.ExtendedViewedStateType;
+import de.jClipCorn.features.log.CCLog;
+import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.properties.CCProperties;
+import de.jClipCorn.util.LargeMD5Calculator;
+import de.jClipCorn.util.MoviePlayer;
+import de.jClipCorn.util.Str;
+import de.jClipCorn.util.datetime.CCDate;
+import de.jClipCorn.util.datetime.CCDateTime;
+import de.jClipCorn.util.exceptions.CCFormatException;
+import de.jClipCorn.util.exceptions.EnumFormatException;
+import de.jClipCorn.util.formatter.PathFormatter;
+
 import java.io.File;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
-
-import de.jClipCorn.database.databaseElement.columnTypes.*;
-import de.jClipCorn.database.util.CCQualityCategory;
-import de.jClipCorn.util.Str;
-import de.jClipCorn.util.exceptions.EnumFormatException;
-
-import de.jClipCorn.database.CCMovieList;
-import de.jClipCorn.database.util.ExtendedViewedState;
-import de.jClipCorn.database.util.ExtendedViewedStateType;
-import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.features.log.CCLog;
-import de.jClipCorn.properties.CCProperties;
-import de.jClipCorn.util.LargeMD5Calculator;
-import de.jClipCorn.util.MoviePlayer;
-import de.jClipCorn.util.datetime.CCDate;
-import de.jClipCorn.util.datetime.CCDateTime;
-import de.jClipCorn.util.exceptions.CCFormatException;
-import de.jClipCorn.util.formatter.PathFormatter;
 
 public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, ICCDatedElement {
 	public final static int PARTCOUNT_MAX = 6; // 0 - 5
@@ -348,10 +347,13 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 	public void play(boolean updateViewedAndHistory) {
 		MoviePlayer.play(this);
 		
-		if (updateViewedAndHistory) {
-			setViewed(true);
-			addToViewedHistory(CCDateTime.getCurrentDateTime());
-		}
+		if (updateViewedAndHistory) updateViewedAndHistory();
+	}
+
+	@Override
+	public void updateViewedAndHistory() {
+		setViewed(true);
+		addToViewedHistory(CCDateTime.getCurrentDateTime());
 	}
 
 	public String getFastMD5() {

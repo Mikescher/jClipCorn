@@ -1,10 +1,11 @@
 package de.jClipCorn.util.vlcquery;
 
+import java.awt.*;
 import java.util.List;
 
 public class VLCStatus
 {
-	public enum VLCPlayerStatus { PLAYING, PAUSED_STOPPED, DISABLED, NOT_RUNNING, ERROR }
+	public enum VLCPlayerStatus { PLAYING, PAUSED, STOPPED, DISABLED, NOT_RUNNING, ERROR }
 
 	public final VLCPlayerStatus Status;
 
@@ -16,6 +17,7 @@ public class VLCStatus
 	public final boolean Loop;
 	public final boolean Repeat;
 	public final boolean Fullscreen;
+	public final Rectangle WindowRect;
 
 	public final String CurrentFilename;
 	public final String CurrentTitle;
@@ -25,7 +27,8 @@ public class VLCStatus
 
 	public VLCStatus(VLCPlayerStatus status, int currentTime, int currentLength, String currentFilename, String currentTitle,
 					 List<VLCStatusPlaylistEntry> playlist, VLCStatusPlaylistEntry activeEntry,
-					 boolean fullscreen, int volume, boolean random, boolean loop, boolean repeat)
+					 boolean fullscreen, int volume, boolean random, boolean loop, boolean repeat,
+					 Rectangle windowRect)
 	{
 		Status          = status;
 		CurrentTime     = currentTime;
@@ -39,5 +42,19 @@ public class VLCStatus
 		Random          = random;
 		Loop            = loop;
 		Repeat          = repeat;
+		WindowRect      = windowRect;
 	}
+
+	public boolean isPlayingLastPlaylistEntry() {
+		return ActiveEntry != null && Playlist.size() > 0 && Playlist.get(Playlist.size()-1) == ActiveEntry;
+	}
+
+	public boolean isEntryNearlyFinished(int delta) {
+		return CurrentTime >= (CurrentLength - delta);
+	}
+
+	public boolean isEntryJustStarted(int delta) {
+		return CurrentTime < delta;
+	}
+
 }

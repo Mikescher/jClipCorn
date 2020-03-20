@@ -195,6 +195,7 @@ public class CCProperties {
 	public CCBoolProperty                                   PROP_VLC_ROBOT_ENABLED;
 	public CCRIntProperty                                   PROP_VLC_ROBOT_PORT;
 	public CCStringProperty                                 PROP_VLC_ROBOT_PASSWORD;
+	public CCBoolProperty                                   PROP_VLC_ROBOT_KEEP_POSITION;
 
 	public boolean ARG_READONLY = false;
 	
@@ -371,6 +372,7 @@ public class CCProperties {
 		PROP_VLC_ROBOT_ENABLED                  = new CCBoolProperty(NONVISIBLE,            this,   "PROP_VLC_ROBOT_ENABLED",                   true);
 		PROP_VLC_ROBOT_PORT                     = new CCRIntProperty(NONVISIBLE,            this,   "PROP_VLC_ROBOT_PORT",                      18642,           1024,        65535);
 		PROP_VLC_ROBOT_PASSWORD                 = new CCStringProperty(NONVISIBLE,          this,   "PROP_VLC_ROBOT_PASSWORD",                  getRandPass(8));
+		PROP_VLC_ROBOT_KEEP_POSITION            = new CCBoolProperty(NONVISIBLE,            this,   "PROP_VLC_ROBOT_KEEP_POSITION",             false);
 
 		PROP_ADD_MOVIE_RELATIVE_AUTO            = new CCBoolProperty(CAT_PATHSYNTAX,        this,   "PROP_ADD_MOVIE_RELATIVE_AUTO",             true);
 		PROP_PATHSYNTAX_SELF                    = new CCBoolProperty(CAT_PATHSYNTAX,        this,   "PROP_PATHSYNTAX_SELF",                     true);

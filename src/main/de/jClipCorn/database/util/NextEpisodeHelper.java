@@ -1,40 +1,47 @@
 package de.jClipCorn.database.util;
 
-import java.util.List;
-
-import org.apache.commons.lang.mutable.MutableInt;
-
 import de.jClipCorn.database.databaseElement.CCEpisode;
+import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.enumerations.NextEpisodeHeuristic;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.datetime.CCDateTime;
+import de.jClipCorn.util.stream.CCStreams;
+import org.apache.commons.lang.mutable.MutableInt;
+
+import java.util.List;
 
 public class NextEpisodeHelper {
 	
 	public static CCEpisode findNextEpisode(CCSeries s) {
-		List<CCEpisode> el = s.getEpisodeList();
-		
+		return findNextEpisode(s.getEpisodeList());
+	}
+
+	public static CCEpisode findNextEpisode(CCSeason s) {
+		return findNextEpisode(s.getEpisodeList());
+	}
+
+	private static CCEpisode findNextEpisode(List<CCEpisode> el) {
 		if (el.size() == 0) return null;
 
 		NextEpisodeHeuristic heuristic = CCProperties.getInstance().PROP_SERIES_NEXT_EPISODE_HEURISTIC.getValue();
-		
+
 		switch (heuristic) {
-			case AUTOMATIC: return findNextEpisode_Automatic(s, el);
-			case FIRST_UNWATCHED: return findNextEpisode_FirstUnwatched(s, el);
-			case NEXT_EPISODE: return findNextEpisode_AfterLastViewed(s, el);
-			case CONTINUOUS: return findNextEpisode_Continuous(s, el, new MutableInt());
+			case AUTOMATIC:       return findNextEpisode_Automatic(el);
+			case FIRST_UNWATCHED: return findNextEpisode_FirstUnwatched(el);
+			case NEXT_EPISODE:    return findNextEpisode_AfterLastViewed(el);
+			case CONTINUOUS:      return findNextEpisode_Continuous(el, new MutableInt());
 		}
-		
+
 		CCLog.addDefaultSwitchError(NextEpisodeHelper.class, heuristic);
 		return null;
 	}
 
-	private static CCEpisode findNextEpisode_Automatic(CCSeries s, List<CCEpisode> el) {
+	private static CCEpisode findNextEpisode_Automatic(List<CCEpisode> el) {
 
-		if (s.isUnviewed()) {
+		if (CCStreams.iterate(el).all(e -> !e.isViewed())) {
 			
 			// [0] Nothing viewed - take first
 			
@@ -42,9 +49,9 @@ public class NextEpisodeHelper {
 		}
 		
 		MutableInt episode_continuous_count = new MutableInt(0);
-		CCEpisode episode_continuous = findNextEpisode_Continuous(s, el, episode_continuous_count);
+		CCEpisode episode_continuous = findNextEpisode_Continuous(el, episode_continuous_count);
 
-		CCEpisode episode_lastWatched_next = findNextEpisode_AfterLastViewed(s, el);
+		CCEpisode episode_lastWatched_next = findNextEpisode_AfterLastViewed(el);
 		
 		if (episode_continuous_count.intValue() > 2 && episode_lastWatched_next == episode_continuous) {
 			
@@ -55,9 +62,9 @@ public class NextEpisodeHelper {
 			return episode_continuous;
 		}
 		
-		CCEpisode next_unwatched_episode = findNextEpisode_FirstUnwatched(s, el);
+		CCEpisode next_unwatched_episode = findNextEpisode_FirstUnwatched(el);
 		
-		if (!s.isViewed() && isContinuousViewBlock(el)) {
+		if (!CCStreams.iterate(el).all(CCEpisode::isViewed) && isContinuousViewBlock(el)) {
 			
 			// [2] A bunch of viewed episodes and then a bunch of not-viewed ones
 			//     Return the first not-viewed
@@ -88,7 +95,7 @@ public class NextEpisodeHelper {
 		return true;
 	}
 
-	private static CCEpisode findNextEpisode_Continuous(CCSeries s, List<CCEpisode> el, MutableInt continoousCount) {
+	private static CCEpisode findNextEpisode_Continuous(List<CCEpisode> el, MutableInt continoousCount) {
 
 		CCDate d = CCDate.getMinimumDate();
 		
@@ -104,7 +111,7 @@ public class NextEpisodeHelper {
 		return el.get(0);
 	}
 
-	private static CCEpisode findNextEpisode_FirstUnwatched(CCSeries s, List<CCEpisode> el) {
+	private static CCEpisode findNextEpisode_FirstUnwatched(List<CCEpisode> el) {
 
 		for(int count = 0;count < 32; count++) {
 			for (CCEpisode epis : el) {
@@ -115,8 +122,8 @@ public class NextEpisodeHelper {
 		return null;
 	}
 
-	private static CCEpisode findNextEpisode_AfterLastViewed(CCSeries s, List<CCEpisode> el) {
-		if (s.isUnviewed()) return el.get(0);
+	private static CCEpisode findNextEpisode_AfterLastViewed(List<CCEpisode> el) {
+		if (CCStreams.iterate(el).all(e -> !e.isViewed())) return el.get(0);
 
 		int idx = -1;
 		CCDateTime t = CCDateTime.getUnspecified();

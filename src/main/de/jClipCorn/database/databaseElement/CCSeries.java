@@ -1,25 +1,25 @@
 package de.jClipCorn.database.databaseElement;
 
-import java.io.File;
-import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
+import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.columnTypes.*;
 import de.jClipCorn.database.util.*;
-import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.util.Str;
-import org.apache.commons.lang.text.StrBuilder;
-import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.util.iterators.DirectEpisodesIterator;
 import de.jClipCorn.database.util.iterators.DirectSeasonsIterator;
+import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.properties.CCProperties;
+import de.jClipCorn.util.Str;
 import de.jClipCorn.util.comparator.CCSeasonComparator;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.datetime.YearRange;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.formatter.TimeIntervallFormatter;
 import de.jClipCorn.util.stream.CCStream;
+import org.apache.commons.lang.text.StrBuilder;
+
+import java.io.File;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class CCSeries extends CCDatabaseElement implements IEpisodeOwner {
 	private final static int GUIDE_W_BORDER = 2;
@@ -258,6 +258,14 @@ public class CCSeries extends CCDatabaseElement implements IEpisodeOwner {
 			result.addAll(getSeasonByArrayIndex(i).getEpisodeList());
 		}
 		
+		return result;
+	}
+
+	public List<CCEpisode> getSortedEpisodeList() {
+		List<CCEpisode> result = new ArrayList<>();
+
+		for (var s : getSeasonsSorted()) result.addAll(s.getEpisodeList());
+
 		return result;
 	}
 	

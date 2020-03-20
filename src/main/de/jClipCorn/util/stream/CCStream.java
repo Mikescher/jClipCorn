@@ -497,8 +497,16 @@ public abstract class CCStream<TType> implements Iterator<TType>, Iterable<TType
 		return new LimitStream<>(this, count);
 	}
 
+	public CCStream<TType> takeWhile(Func1to1<TType, Boolean> pred) {
+		return new CondTakeStream<>(this, pred);
+	}
+
 	public CCStream<TType> skip(int count) {
 		return new SkipStream<>(this, count);
+	}
+
+	public CCStream<TType> skipWhile(Func1to1<TType, Boolean> pred) {
+		return new CondSkipStream<>(this, pred);
 	}
 
 	@SuppressWarnings({"unchecked", "rawtypes"})

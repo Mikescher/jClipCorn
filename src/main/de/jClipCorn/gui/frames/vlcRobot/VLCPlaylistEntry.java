@@ -45,11 +45,12 @@ public class VLCPlaylistEntry {
 		return e;
 	}
 
-	public static VLCPlaylistEntry createQueueAuto(List<ICCPlayableElement> elems) {
+	public static VLCPlaylistEntry createQueueAuto(String disp, List<ICCPlayableElement> elems) {
 		VLCPlaylistEntry e = new VLCPlaylistEntry();
-		e.Type = VPEType.JCC_QUEUE_SINGLE;
+		e.Type = VPEType.JCC_QUEUE_AUTO;
 		e.ElementQueue = elems;
 		e.Length = CCStreams.iterate(elems).sumInt(ipe -> ipe.getLength()*60);
+		e.AutoDisplayString = disp;
 		return e;
 	}
 
@@ -60,10 +61,10 @@ public class VLCPlaylistEntry {
 
 			case VLC_QUEUE:
 			case VLC_OLD:
-				return Resources.ICN_MENUBAR_HIDDENPLAY.get16x16();
+				return Resources.ICN_MENUBAR_PLAY.get16x16();
 
 			case VLC_ACTIVE:
-				return Resources.ICN_MENUBAR_PLAY.get16x16();
+				return Resources.ICN_MENUBAR_PLAY_ACTIVE.get16x16();
 
 			case JCC_QUEUE_SINGLE:
 				if (Element instanceof CCMovie)   return Resources.ICN_TABLE_MOVIE.get();
@@ -88,7 +89,7 @@ public class VLCPlaylistEntry {
 				return Element.getTitle();
 
 			case JCC_QUEUE_AUTO:
-				return AutoDisplayString;
+				return "[AUTO] " + AutoDisplayString + " [" + ElementQueue.size() + "]";
 		}
 		return "";
 	}

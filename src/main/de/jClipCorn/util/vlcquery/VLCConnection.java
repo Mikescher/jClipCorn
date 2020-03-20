@@ -161,7 +161,7 @@ public class VLCConnection {
 				int time   = xmlStatus.getRoot().getFirstChildIntValueOrThrow("time"); //$NON-NLS-1$
 				int length = xmlStatus.getRoot().getFirstChildIntValueOrThrow("length"); //$NON-NLS-1$
 
-				return new VLCStatus(VLCStatus.VLCPlayerStatus.PLAYING, time, length, filename, title, playlist, activeEntry, fullscreen, volume, random, loop, repeat, rect);
+				return new VLCStatus(VLCStatus.VLCPlayerStatus.PAUSED, time, length, filename, title, playlist, activeEntry, fullscreen, volume, random, loop, repeat, rect);
 			}
 			else if ("stopped".equalsIgnoreCase(state)) //$NON-NLS-1$
 			{

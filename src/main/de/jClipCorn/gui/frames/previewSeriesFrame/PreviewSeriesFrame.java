@@ -525,7 +525,7 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 	}
 
 	private void autoPlay() {
-		VLCRobotFrame.show(this);
+		VLCRobotFrame.show(this).enqueue(dispSeries);
 	}
 
 	private boolean containsKeyboardFocus() {

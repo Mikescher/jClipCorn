@@ -1,21 +1,16 @@
 package de.jClipCorn.gui.guiComponents.referenceChooser;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.InputEvent;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.swing.JButton;
-import javax.swing.JPanel;
-
 import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReferenceList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCSingleOnlineReference;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.stream.CCStreams;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 
 public class JReferenceChooser extends JPanel {
 	private static final long serialVersionUID = 2696192041815168280L;
@@ -25,7 +20,7 @@ public class JReferenceChooser extends JPanel {
 
 	private List<CCSingleOnlineReference> _additional = new ArrayList<>();
 
-	private List<ActionListener> _changeListener = new ArrayList<>();
+	private final List<ActionListener> _changeListener = new ArrayList<>();
 
 	public JReferenceChooser() {
 		initGUI();
@@ -38,7 +33,7 @@ public class JReferenceChooser extends JPanel {
 		add(btnAdditional, BorderLayout.EAST);
 		btnAdditional.addActionListener(e ->
 		{
-			if ((e.getModifiers() & InputEvent.CTRL_MASK) == InputEvent.CTRL_MASK) {
+			if ((e.getModifiers() & ActionEvent.CTRL_MASK) == ActionEvent.CTRL_MASK) {
 				ReferenceChooserDialog dialog = new ReferenceChooserDialog(mainChooser.getValue(), _additional, JReferenceChooser.this);
 				dialog.setVisible(true);
 			} else {

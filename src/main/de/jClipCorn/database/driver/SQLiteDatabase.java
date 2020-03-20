@@ -1,13 +1,5 @@
 package de.jClipCorn.database.driver;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.nio.file.FileAlreadyExistsException;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.util.List;
-
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.properties.enumerations.CCDatabaseDriver;
 import de.jClipCorn.util.datatypes.Tuple;
@@ -18,6 +10,14 @@ import de.jClipCorn.util.helper.FileLockManager;
 import de.jClipCorn.util.helper.SimpleFileUtils;
 import de.jClipCorn.util.parser.TurbineParser;
 import org.sqlite.SQLiteException;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.file.FileAlreadyExistsException;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.util.List;
 
 @SuppressWarnings("nls")
 public class SQLiteDatabase extends GenericDatabase {
@@ -56,6 +56,7 @@ public class SQLiteDatabase extends GenericDatabase {
 	}
 
 	@Override
+	@SuppressWarnings("deprecation")
 	public boolean createNewDatabasefromResourceXML(String xmlResPath, String dbPath) {
 		String dbFilePath = getDatabaseFilePath(dbPath);
 		
@@ -112,6 +113,7 @@ public class SQLiteDatabase extends GenericDatabase {
 	}
 	
 	@Override
+	@SuppressWarnings("deprecation")
 	public void establishDBConnection(String dbPath) throws Exception {
 		String dbFilePath = getDatabaseFilePath(dbPath);
 		

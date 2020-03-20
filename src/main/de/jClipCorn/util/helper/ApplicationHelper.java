@@ -125,6 +125,18 @@ public class ApplicationHelper {
 		return "";
 	}
 
+	public static List<Tuple4<String, String, String, String>> getNetUseSafe()
+	{
+		if (!ApplicationHelper.isWindows()) return new ArrayList<>();
+
+		try {
+			return getNetUse();
+		} catch (Exception e) {
+			CCLog.addError(e);
+			return new ArrayList<>();
+		}
+	}
+
 	@SuppressWarnings("nls")
 	public static List<Tuple4<String, String, String, String>> getNetUse() throws Exception
 	{

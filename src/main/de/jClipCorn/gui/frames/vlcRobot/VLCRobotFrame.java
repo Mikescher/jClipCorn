@@ -7,6 +7,7 @@ import com.jgoodies.forms.layout.RowSpec;
 import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.database.databaseElement.ICCPlayableElement;
+import de.jClipCorn.database.util.NextEpisodeHelper;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
@@ -552,6 +553,7 @@ public class VLCRobotFrame extends JFrame {
 
 	public void enqueue(CCSeries v)
 	{
+		var e = NextEpisodeHelper.findNextEpisode(v);
 		//TODO
 	}
 }

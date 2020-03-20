@@ -52,8 +52,8 @@ project.ext {
 }
 
 version = project.appversion
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+sourceCompatibility = 12
+targetCompatibility = 12
 mainClassName = project.appmain
 
 compileJava.options.encoding = 'UTF-8'
@@ -86,8 +86,8 @@ jar {
 				   'Main-Class':             project.appmain
 	}
 
-	baseName = project.appname
-	version = project.appversion
+	archiveBaseName = project.appname
+	archiveVersion  = project.appversion
 }
 
 tasks.register("anyReleaseJar", Jar) {
@@ -99,10 +99,10 @@ tasks.register("anyReleaseJar", Jar) {
 				   'Main-Class':             project.appmain
 	}
 
-	baseName       = project.appname
-	version        = extractProjectVersion()
-	destinationDir = file("$rootDir/mybuilds")
-	archiveName    = "${baseName} ${version}.${extension}"
+	archiveBaseName      = project.appname
+	archiveVersion       = extractProjectVersion()
+	destinationDirectory = file("$rootDir/mybuilds")
+	archiveFileName      = "${archiveBaseName} ${archiveVersion}.${archiveExtension}"
 
 	from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } } with jar
 
@@ -194,64 +194,64 @@ tasks.withType(JavaCompile) {
 //=====================================================================================================================
 
 dependencies {
-	compile 'commons-betwixt:commons-betwixt:0.8'
-	compile 'commons-collections:commons-collections:3.2.1'
-	compile 'commons-digester:commons-digester:2.1'
-	compile 'commons-lang:commons-lang:2.6'
-	compile 'org.apache.commons:commons-lang3:3.9'
-	compile 'org.apache.commons:commons-text:1.6'
-	compile 'commons-codec:commons-codec:1.10'
-	compile 'commons-io:commons-io:2.6'
-	compile 'commons-logging:commons-logging:1.2'
-	compile name: 'commons-beanutils-1.8.3-custombuild'
+	implementation 'commons-betwixt:commons-betwixt:0.8'
+	implementation 'commons-collections:commons-collections:3.2.1'
+	implementation 'commons-digester:commons-digester:2.1'
+	implementation 'commons-lang:commons-lang:2.6'
+	implementation 'org.apache.commons:commons-lang3:3.9'
+	implementation 'org.apache.commons:commons-text:1.6'
+	implementation 'commons-codec:commons-codec:1.10'
+	implementation 'commons-io:commons-io:2.6'
+	implementation 'commons-logging:commons-logging:1.2'
+	implementation name: 'commons-beanutils-1.8.3-custombuild'
 
-	compile 'org.xerial:sqlite-jdbc:3.27.2.1'
+	implementation 'org.xerial:sqlite-jdbc:3.27.2.1'
 
-	compile 'org.apache.derby:derby:10.15.1.3'
-	compile 'org.apache.ddlutils:ddlutils:1.0'
+	implementation 'org.apache.derby:derby:10.15.1.3'
+	implementation 'org.apache.ddlutils:ddlutils:1.0'
 
-	compile 'org.jdom:jdom2:2.0.6'
-	compile 'org.json:json:20180813'
-	compile 'org.jsoup:jsoup:1.12.1'
+	implementation 'org.jdom:jdom2:2.0.6'
+	implementation 'org.json:json:20180813'
+	implementation 'org.jsoup:jsoup:1.12.1'
 
-	compile 'com.github.insubstantial:substance:7.3'
-	compile 'com.github.insubstantial:laf-plugin:7.3'
-	compile 'com.github.insubstantial:laf-widget:7.3'
-	compile 'com.github.insubstantial:trident:7.3'
+	implementation 'com.github.insubstantial:substance:7.3'
+	implementation 'com.github.insubstantial:laf-plugin:7.3'
+	implementation 'com.github.insubstantial:laf-widget:7.3'
+	implementation 'com.github.insubstantial:trident:7.3'
 
-	compile 'org.jfree:jfreechart:1.5.0'
-	compile 'org.jfree:jcommon:1.0.24'
+	implementation 'org.jfree:jfreechart:1.5.0'
+	implementation 'org.jfree:jcommon:1.0.24'
 
-	compile 'com.jgoodies:jgoodies-forms:1.9.0'
-	compile 'com.jgoodies:jgoodies-common:1.8.1'
-	compile name: 'jsplitbutton-1.2'
+	implementation 'com.jgoodies:jgoodies-forms:1.9.0'
+	implementation 'com.jgoodies:jgoodies-common:1.8.1'
+	implementation name: 'jsplitbutton-1.2'
 
-	compile name: 'fast-md5'
+	implementation name: 'fast-md5'
 
-	compile 'net.sourceforge.htmlunit:htmlunit:2.35.0'
-	compile 'net.sourceforge.cssparser:cssparser:0.9.27'
-	compile 'net.sourceforge.htmlunit:htmlunit-core-js:2.35.0'
-	compile 'com.hynnet:httpclient:4.5.1'
-	compile 'org.apache.httpcomponents:httpmime:4.5.8'
-	compile 'net.sourceforge.nekohtml:nekohtml:1.9.22'
-	compile 'org.eclipse.jetty.websocket:websocket-client:9.4.18.v20190429'
-	compile 'xalan:xalan:2.7.2'
-	compile 'xerces:xercesImpl:2.12.0'
-	compile 'org.apache.httpcomponents:httpcore:4.4.11'
-	compile 'org.eclipse.jetty:jetty-util:9.4.18.v20190429'
-	compile 'org.eclipse.jetty:jetty-io:9.4.18.v20190429'
-	compile 'xalan:serializer:2.7.2'
-	compile 'org.eclipse.jetty.websocket:websocket-api:9.4.18.v20190429'
-	compile 'org.eclipse.jetty.websocket:websocket-common:9.4.18.v20190429'
-	compile 'xml-apis:xml-apis:1.4.01'
-	compile 'org.w3c.css:sac:1.3'
+	implementation 'net.sourceforge.htmlunit:htmlunit:2.35.0'
+	implementation 'net.sourceforge.cssparser:cssparser:0.9.27'
+	implementation 'net.sourceforge.htmlunit:htmlunit-core-js:2.35.0'
+	implementation 'com.hynnet:httpclient:4.5.1'
+	implementation 'org.apache.httpcomponents:httpmime:4.5.8'
+	implementation 'net.sourceforge.nekohtml:nekohtml:1.9.22'
+	implementation 'org.eclipse.jetty.websocket:websocket-client:9.4.18.v20190429'
+	implementation 'xalan:xalan:2.7.2'
+	implementation 'xerces:xercesImpl:2.12.0'
+	implementation 'org.apache.httpcomponents:httpcore:4.4.11'
+	implementation 'org.eclipse.jetty:jetty-util:9.4.18.v20190429'
+	implementation 'org.eclipse.jetty:jetty-io:9.4.18.v20190429'
+	implementation 'xalan:serializer:2.7.2'
+	implementation 'org.eclipse.jetty.websocket:websocket-api:9.4.18.v20190429'
+	implementation 'org.eclipse.jetty.websocket:websocket-common:9.4.18.v20190429'
+	implementation 'xml-apis:xml-apis:1.4.01'
+	implementation 'org.w3c.css:sac:1.3'
 
 
-	compile 'net.java.dev.jna:jna:5.5.0'
-	compile 'net.java.dev.jna:jna-platform:5.5.0'
+	implementation 'net.java.dev.jna:jna:5.5.0'
+	implementation 'net.java.dev.jna:jna-platform:5.5.0'
 
-	compile 'junit:junit:4.12'
-	compile 'org.hamcrest:hamcrest-core:1.3'
+	implementation 'junit:junit:4.12'
+	implementation 'org.hamcrest:hamcrest-core:1.3'
 }
 
 apply from: 'build_eclipse_config.gradle'

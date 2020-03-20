@@ -12,7 +12,6 @@ import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.enumerations.ResourcePreloadMode;
 import de.jClipCorn.util.DriveMap;
-import de.jClipCorn.util.SSLUtilities;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.LookAndFeelManager;
 
@@ -103,12 +102,6 @@ public class Main {
 		}
 		
 		CCLog.addDebug(LocaleBundle.getTranslationCount() + " Translations in Locale " + LocaleBundle.getCurrentLocale()); //$NON-NLS-1$
-
-		if (CCProperties.getInstance().PROP_DISABLE_SSL_VERIFY.getValue()) {
-			SSLUtilities.trustAllHostnames();
-			SSLUtilities.trustAllHttpsCertificates();
-			CCLog.addDebug("SSL Verification disabled"); //$NON-NLS-1$
-		}
 	}
 
 	@SuppressWarnings({"unchecked", "nls"})

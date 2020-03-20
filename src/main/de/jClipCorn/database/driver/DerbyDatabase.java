@@ -1,24 +1,18 @@
 package de.jClipCorn.database.driver;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.util.List;
-import java.util.Properties;
-
+import de.jClipCorn.features.log.CCLog;
+import de.jClipCorn.properties.enumerations.CCDatabaseDriver;
+import de.jClipCorn.util.datatypes.Tuple;
 import org.apache.commons.lang.NotImplementedException;
 import org.apache.ddlutils.Platform;
 import org.apache.ddlutils.PlatformFactory;
 import org.apache.ddlutils.io.DatabaseIO;
 import org.apache.ddlutils.model.Database;
 
-import de.jClipCorn.features.log.CCLog;
-import de.jClipCorn.properties.enumerations.CCDatabaseDriver;
-import de.jClipCorn.util.datatypes.Tuple;
+import java.io.*;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Properties;
 
 @SuppressWarnings("nls")
 public class DerbyDatabase extends GenericDatabase {
@@ -105,8 +99,9 @@ public class DerbyDatabase extends GenericDatabase {
 		
 		connection = null;
 	}
-	
+
 	@Override
+	@SuppressWarnings("deprecation")
 	public void establishDBConnection(String dbPath) throws SQLException {
 		try {
 			Class.forName(DRIVER).newInstance();

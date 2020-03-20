@@ -33,14 +33,6 @@ public abstract class SFixTable extends JTable {
 		initListener();
 	}
 
-	public SFixTable(Vector<?> rowData, Vector<?> columnNames) {
-		super(rowData, columnNames);
-
-		fixTableSort();
-
-		initListener();
-	}
-
 	private void initListener() {
 		addMouseListener(new MouseAdapter() {
 			final int defaultTimeout = ToolTipManager.sharedInstance().getInitialDelay();

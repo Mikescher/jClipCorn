@@ -1,21 +1,10 @@
 package de.jClipCorn.util;
 
-import java.io.File;
-import java.nio.file.FileStore;
-import java.nio.file.FileSystems;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.swing.*;
-import javax.swing.filechooser.FileSystemView;
-
 import de.jClipCorn.Globals;
+import de.jClipCorn.features.log.CCLog;
+import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.mainFrame.MainFrame;
 import de.jClipCorn.gui.mainFrame.clipStatusbar.ClipStatusBar;
-import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.datatypes.Tuple3;
@@ -23,7 +12,15 @@ import de.jClipCorn.util.datatypes.Tuple4;
 import de.jClipCorn.util.helper.ApplicationHelper;
 import de.jClipCorn.util.helper.ProcessHelper;
 import de.jClipCorn.util.helper.RegExHelper;
+import de.jClipCorn.util.helper.WindowsJNAHelper;
 import de.jClipCorn.util.stream.CCStreams;
+
+import javax.swing.*;
+import javax.swing.filechooser.FileSystemView;
+import java.io.File;
+import java.nio.file.FileStore;
+import java.nio.file.FileSystems;
+import java.util.*;
 
 public class DriveMap {
 	private final static String REGEX_DRIVENAME_ESCAPE = " \\([A-Z]:\\)$";             //$NON-NLS-1$      // \([A-Z]:\)$
@@ -132,10 +129,12 @@ public class DriveMap {
 			CCLog.addWarning(LocaleBundle.getFormattedString("LogMessage.CouldNotEnumerateFileStores", e)); //$NON-NLS-1$
 		}
 
+		var netuse = ApplicationHelper.getNetUseSafe();
+
 		for (File root : File.listRoots()) {
 			if(isFileSystem(root)) {
 				String drive = getDriveName(root);
-				String net = getDriveNetworkIdent(fstores, root, drive);
+				String net = getDriveNetworkIdents(fstores, netuse, root, drive);
 				Character letter = root.getAbsolutePath().charAt(0);
 
 				if (!ApplicationHelper.isWindows()) net = Str.Empty;
@@ -167,6 +166,25 @@ public class DriveMap {
 		Globals.TIMINGS.stop(Globals.TIMING_BACKGROUND_SCAN_DRIVES);
 	}
 
+	private static String getDriveNetworkIdents(List<FileStore> fstores, List<Tuple4<String, String, String, String>> netuse, File f, String name)
+	{
+		try {
+			for (var fs : fstores) {
+				if (fs.name().equals(name))
+				{
+					for (var nu : netuse)
+					{
+						if (Str.equals(nu.Item2, f.getAbsolutePath().substring(0, 2))) return nu.Item3;
+					}
+				}
+			}
+			return null;
+		} catch (Exception e) {
+			CCLog.addError(e);
+			return null;
+		}
+	}
+
 	private static void updateMap() {
 		try {
 			long startTime = lastScanStart = System.currentTimeMillis();
@@ -186,7 +204,7 @@ public class DriveMap {
 			for (File root : File.listRoots()) {
 				if(isFileSystem(root)) {
 					String drive = getDriveName(root);
-					String net = getDriveNetworkIdent(fstores, root, drive);
+					String net = WindowsJNAHelper.getDriveNetworkIdent(fstores, root, drive);
 					Character letter = root.getAbsolutePath().charAt(0);
 
 					if (!ApplicationHelper.isWindows()) net = Str.Empty;
@@ -271,20 +289,6 @@ public class DriveMap {
 		return drive;
 	}
 
-	@SuppressWarnings({ "deprecation", "restriction" })
-	private static String getDriveNetworkIdent(List<FileStore> fsl, File f, String name) {
-		try {
-			for (FileStore fs : fsl) {
-				if (fs.name().equals(name)) {
-					return (String) sun.awt.shell.ShellFolder.getShellFolder(f).getFolderColumnValue(6);
-				}
-			}
-			return null;
-		} catch (Exception e) {
-			return null;
-		}
-	}
-	
 	private static boolean isFileSystem(File f) {
 		return FileSystemView.getFileSystemView().isFileSystemRoot(f);
 	}

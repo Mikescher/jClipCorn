@@ -1,16 +1,15 @@
 package de.jClipCorn.gui.guiComponents.jSimpleTree;
 
-import java.awt.event.InputEvent;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
-
-import javax.swing.JTree;
+import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
+import java.awt.event.InputEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 
 public class JSimpleTree extends JTree implements TreeSelectionListener {
 	private static final long serialVersionUID = 6361624518488393639L;
@@ -46,12 +45,12 @@ public class JSimpleTree extends JTree implements TreeSelectionListener {
 			
 			@Override
 			public void mouseReleased(MouseEvent e) {
-				_lastModifier = e.getModifiers(); 
+				_lastModifier = e.getModifiersEx();
 			}
 			
 			@Override
 			public void mousePressed(MouseEvent e) {
-				_lastModifier = e.getModifiers(); 
+				_lastModifier = e.getModifiersEx();
 
 		        TreePath selPath = JSimpleTree.this.getPathForLocation(e.getX(), e.getY());
 		        if(selPath != null && e.getClickCount() == 1 && ActionMode == SimpletreeActionMode.OnClick) {
@@ -61,24 +60,24 @@ public class JSimpleTree extends JTree implements TreeSelectionListener {
 	    				
 	    				if (!JSimpleTree.this.isPathSelected(selPath)) return;
 	    				
-	    				((SimpleTreeObject) user).execute(selPath, (_lastModifier & InputEvent.CTRL_MASK) == InputEvent.CTRL_MASK);
+	    				((SimpleTreeObject) user).execute(selPath, (_lastModifier & InputEvent.CTRL_DOWN_MASK) == InputEvent.CTRL_DOWN_MASK);
 	    			}
 		        }
 			}
 			
 			@Override
 			public void mouseExited(MouseEvent e) {
-				_lastModifier = e.getModifiers(); 
+				_lastModifier = e.getModifiersEx();
 			}
 			
 			@Override
 			public void mouseEntered(MouseEvent e) {
-				_lastModifier = e.getModifiers(); 
+				_lastModifier = e.getModifiersEx();
 			}
 			
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				_lastModifier = e.getModifiers(); 
+				_lastModifier = e.getModifiersEx();
 			}
 		});
 		
@@ -86,12 +85,12 @@ public class JSimpleTree extends JTree implements TreeSelectionListener {
 			
 			@Override
 			public void mouseMoved(MouseEvent e) {
-				_lastModifier = e.getModifiers(); 
+				_lastModifier = e.getModifiersEx();
 			}
 			
 			@Override
 			public void mouseDragged(MouseEvent e) {
-				_lastModifier = e.getModifiers(); 
+				_lastModifier = e.getModifiersEx();
 			}
 		});
 	}
@@ -110,7 +109,7 @@ public class JSimpleTree extends JTree implements TreeSelectionListener {
 		Object user = node.getUserObject();
 		if (user == null) return;
 
-		((SimpleTreeObject) user).execute(p, (_lastModifier & InputEvent.CTRL_MASK) == InputEvent.CTRL_MASK);
+		((SimpleTreeObject) user).execute(p, (_lastModifier & InputEvent.CTRL_DOWN_MASK) == InputEvent.CTRL_DOWN_MASK);
 		
 		_lastExecBySelection = ((SimpleTreeObject) user);
 		_lastExecBySelectionTime = System.currentTimeMillis();

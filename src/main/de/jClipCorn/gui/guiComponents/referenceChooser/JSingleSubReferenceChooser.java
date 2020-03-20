@@ -1,32 +1,21 @@
 package de.jClipCorn.gui.guiComponents.referenceChooser;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.border.EmptyBorder;
-import javax.swing.border.EtchedBorder;
-import javax.swing.event.DocumentEvent;
-
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
-
 import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineRefType;
 import de.jClipCorn.database.databaseElement.columnTypes.CCSingleOnlineReference;
 import de.jClipCorn.gui.guiComponents.WideComboBox;
 import de.jClipCorn.util.adapter.DocumentAdapter;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.http.HTTPUtilities;
+
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.EtchedBorder;
+import javax.swing.event.DocumentEvent;
+import java.awt.*;
+import java.awt.event.*;
 
 public class JSingleSubReferenceChooser extends JPanel {
 	private static final long serialVersionUID = 2696192041815168280L;
@@ -69,7 +58,7 @@ public class JSingleSubReferenceChooser extends JPanel {
 		edID.addKeyListener(new KeyAdapter() {
             @Override
             public void keyReleased(KeyEvent e) {
-                if ((e.getKeyCode() == KeyEvent.VK_V) && ((e.getModifiers() & KeyEvent.CTRL_MASK) != 0)) {
+                if ((e.getKeyCode() == KeyEvent.VK_V) && ((e.getModifiersEx() & KeyEvent.CTRL_DOWN_MASK) != 0)) {
                     CCOnlineRefType guess = CCOnlineRefType.guessType(edID.getText());
                     if (guess != null && guess != cbxType.getSelectedItem()) {
                     	cbxType.setSelectedItem(guess);
@@ -86,12 +75,7 @@ public class JSingleSubReferenceChooser extends JPanel {
             }
         });
 
-		cbxType.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				updateUIControls();
-			}
-		});
+		cbxType.addActionListener(e -> updateUIControls());
 
 		edID.getDocument().addDocumentListener(new DocumentAdapter() {
 			@Override
@@ -110,12 +94,7 @@ public class JSingleSubReferenceChooser extends JPanel {
 			}
 		});
 		
-		edID.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				updateUIControls();
-			}
-		});
+		edID.addActionListener(e -> updateUIControls());
 
 		panel = new JPanel();
 		panel.setBackground(Color.WHITE);

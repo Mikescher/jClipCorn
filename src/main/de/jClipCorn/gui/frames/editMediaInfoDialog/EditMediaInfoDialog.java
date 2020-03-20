@@ -336,7 +336,7 @@ public class EditMediaInfoDialog extends JDialog {
 		pnlGeneral.add(lblGeneralCDate, "2, 2, right, default"); //$NON-NLS-1$
 		
 		ctrlCDate = new JSpinner();
-		ctrlCDate.setModel(new SpinnerNumberModel(new Long(0), null, null, new Long(1)));
+		ctrlCDate.setModel(new SpinnerNumberModel(0L, null, null, 1L));
 		ctrlCDate.addChangeListener(new ChangeLambdaAdapter(() -> lblFullCDate.setText(CCDateTime.createFromFileTimestamp((long)ctrlCDate.getValue(), TimeZone.getDefault()).toStringISO())));
 		pnlGeneral.add(ctrlCDate, "4, 2, fill, default"); //$NON-NLS-1$
 		
@@ -351,7 +351,7 @@ public class EditMediaInfoDialog extends JDialog {
 		pnlGeneral.add(lblGeneralMDate, "2, 6, right, default"); //$NON-NLS-1$
 		
 		ctrlMDate = new JSpinner();
-		ctrlMDate.setModel(new SpinnerNumberModel(new Long(0), null, null, new Long(1)));
+		ctrlMDate.setModel(new SpinnerNumberModel(0L, null, null, 1L));
 		ctrlMDate.addChangeListener(new ChangeLambdaAdapter(() -> lblFullMDate.setText(CCDateTime.createFromFileTimestamp((long)ctrlMDate.getValue(), TimeZone.getDefault()).toStringISO())));
 		pnlGeneral.add(ctrlMDate, "4, 6, fill, default"); //$NON-NLS-1$
 		
@@ -366,7 +366,7 @@ public class EditMediaInfoDialog extends JDialog {
 		pnlGeneral.add(lblGeneralFilesize, "2, 10, right, default"); //$NON-NLS-1$
 		
 		ctrlFilesize = new JSpinner();
-		ctrlFilesize.setModel(new SpinnerNumberModel(new Long(0), null, null, new Long(1)));
+		ctrlFilesize.setModel(new SpinnerNumberModel(0L, null, null, 1L));
 		ctrlFilesize.addChangeListener(new ChangeLambdaAdapter(() -> lblFullFilesize1.setText(FileSizeFormatter.formatPrecise((long)ctrlFilesize.getValue()))));
 		pnlGeneral.add(ctrlFilesize, "4, 10"); //$NON-NLS-1$
 		
@@ -381,7 +381,7 @@ public class EditMediaInfoDialog extends JDialog {
 		pnlGeneral.add(lblGeneralDuration, "2, 14, right, default"); //$NON-NLS-1$
 		
 		ctrlDuration = new JSpinner();
-		ctrlDuration.setModel(new SpinnerNumberModel(new Double(0), null, null, new Double(1)));
+		ctrlDuration.setModel(new SpinnerNumberModel((double) 0, null, null, 1d));
 		ctrlDuration.addChangeListener(new ChangeLambdaAdapter(() ->
 		{
 			int m = (int)Math.round(((double)ctrlDuration.getValue())/60);
@@ -405,7 +405,7 @@ public class EditMediaInfoDialog extends JDialog {
 		pnlGeneral.add(lblGeneralBitrate, "2, 20, right, default"); //$NON-NLS-1$
 		
 		ctrlBitrate = new JSpinner();
-		ctrlBitrate.setModel(new SpinnerNumberModel(new Integer(0), null, null, new Integer(1)));
+		ctrlBitrate.setModel(new SpinnerNumberModel(0, null, null, 1));
 		ctrlBitrate.addChangeListener(new ChangeLambdaAdapter(() -> lblFullBitrate.setText(Str.spacegroupformat((int)Math.round(((int)ctrlBitrate.getValue())/1000.0)) + " kbit/s"))); //$NON-NLS-1$
 		pnlGeneral.add(ctrlBitrate, "4, 20"); //$NON-NLS-1$
 		
@@ -477,7 +477,7 @@ public class EditMediaInfoDialog extends JDialog {
 		pnlVideo.add(lblVideoFramerate, "2, 8, right, default"); //$NON-NLS-1$
 		
 		ctrlVideoFramerate = new JSpinner();
-		ctrlVideoFramerate.setModel(new SpinnerNumberModel(new Double(0), null, null, new Double(1)));
+		ctrlVideoFramerate.setModel(new SpinnerNumberModel((double) 0, null, null, 1d));
 		pnlVideo.add(ctrlVideoFramerate, "4, 8"); //$NON-NLS-1$
 		
 		lblHintVideoFramerate = new JLabel(""); //$NON-NLS-1$
@@ -487,7 +487,7 @@ public class EditMediaInfoDialog extends JDialog {
 		pnlVideo.add(lblVideoBitdepth, "2, 10, right, default"); //$NON-NLS-1$
 		
 		ctrlVideoBitdepth = new JSpinner();
-		ctrlVideoBitdepth.setModel(new SpinnerNumberModel(new Short((short) 0), null, null, new Short((short) 1)));
+		ctrlVideoBitdepth.setModel(new SpinnerNumberModel((short) 0, null, null, (short) 1));
 		pnlVideo.add(ctrlVideoBitdepth, "4, 10"); //$NON-NLS-1$
 		
 		lblHintVideoBitdepth = new JLabel(""); //$NON-NLS-1$
@@ -497,7 +497,7 @@ public class EditMediaInfoDialog extends JDialog {
 		pnlVideo.add(lblVideoFramecount, "2, 12, right, default"); //$NON-NLS-1$
 		
 		ctrlVideoFramecount = new JSpinner();
-		ctrlVideoFramecount.setModel(new SpinnerNumberModel(new Integer(0), null, null, new Integer(1)));
+		ctrlVideoFramecount.setModel(new SpinnerNumberModel(0, null, null, 1));
 		ctrlVideoFramecount.addChangeListener(new ChangeLambdaAdapter(() -> lblFullFramecount.setText(Str.spacegroupformat((int)ctrlVideoFramecount.getValue()))));
 		pnlVideo.add(ctrlVideoFramecount, "4, 12"); //$NON-NLS-1$
 		
@@ -553,7 +553,7 @@ public class EditMediaInfoDialog extends JDialog {
 		pnlAudio.add(lblAudioChannels, "2, 4, right, default"); //$NON-NLS-1$
 		
 		ctrlAudioChannels = new JSpinner();
-		ctrlAudioChannels.setModel(new SpinnerNumberModel(new Short((short) 0), null, null, new Short((short) 1)));
+		ctrlAudioChannels.setModel(new SpinnerNumberModel((short) 0, null, null, (short) 1));
 		pnlAudio.add(ctrlAudioChannels, "4, 4"); //$NON-NLS-1$
 		
 		lblHintAudioChannels = new JLabel(""); //$NON-NLS-1$

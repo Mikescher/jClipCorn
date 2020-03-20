@@ -1,9 +1,9 @@
 package de.jClipCorn.util.helper;
 
+import javax.swing.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
-
-import javax.swing.KeyStroke;
 
 @SuppressWarnings("nls")
 public class KeyStrokeUtil {
@@ -21,25 +21,25 @@ public class KeyStrokeUtil {
 		StringBuilder s = new StringBuilder(50);
 		int modifier = key.getModifiers();
 
-		if ((modifier & (InputEvent.CTRL_DOWN_MASK | InputEvent.CTRL_MASK)) != 0) {
+		if ((modifier & (InputEvent.CTRL_DOWN_MASK | ActionEvent.CTRL_MASK)) != 0) {
 			s.append("Ctrl+");
 		}
-		if ((modifier & (InputEvent.META_DOWN_MASK | InputEvent.META_MASK)) != 0) {
+		if ((modifier & (InputEvent.META_DOWN_MASK | ActionEvent.META_MASK)) != 0) {
 			s.append("Meta+");
 		}
-		if ((modifier & (InputEvent.ALT_DOWN_MASK | InputEvent.ALT_MASK)) != 0) {
+		if ((modifier & (InputEvent.ALT_DOWN_MASK | ActionEvent.ALT_MASK)) != 0) {
 			s.append("Alt+");
 		}
-		if ((modifier & (InputEvent.SHIFT_DOWN_MASK | InputEvent.SHIFT_MASK)) != 0) {
+		if ((modifier & (InputEvent.SHIFT_DOWN_MASK | ActionEvent.SHIFT_MASK)) != 0) {
 			s.append("Shift+");
 		}
-		if ((modifier & (InputEvent.BUTTON1_DOWN_MASK | InputEvent.BUTTON1_MASK)) != 0) {
+		if ((modifier & (InputEvent.BUTTON1_DOWN_MASK)) != 0) {
 			s.append("Button1+");
 		}
-		if ((modifier & (InputEvent.BUTTON2_DOWN_MASK | InputEvent.BUTTON2_MASK)) != 0) {
+		if ((modifier & (InputEvent.BUTTON2_DOWN_MASK)) != 0) {
 			s.append("Button2+");
 		}
-		if ((modifier & (InputEvent.BUTTON3_DOWN_MASK | InputEvent.BUTTON3_MASK)) != 0) {
+		if ((modifier & (InputEvent.BUTTON3_DOWN_MASK)) != 0) {
 			s.append("Button3+");
 		}
 

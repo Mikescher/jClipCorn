@@ -1,14 +1,14 @@
 package de.jClipCorn.database.driver;
 
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.util.List;
-
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.properties.enumerations.CCDatabaseDriver;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.helper.SimpleFileUtils;
 import de.jClipCorn.util.parser.TurbineParser;
+
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.util.List;
 
 @SuppressWarnings("nls")
 public class MemoryDatabase extends GenericDatabase {
@@ -17,6 +17,7 @@ public class MemoryDatabase extends GenericDatabase {
 	private final static String PROTOCOL = "jdbc:sqlite::memory:";
 	
 	@Override
+	@SuppressWarnings("deprecation")
 	public boolean createNewDatabase(String xmlPath, String dbPath) {
 		try {
 			Class.forName(DRIVER).newInstance();
@@ -39,6 +40,7 @@ public class MemoryDatabase extends GenericDatabase {
 	}
 
 	@Override
+	@SuppressWarnings("deprecation")
 	public boolean createNewDatabasefromResourceXML(String xmlResPath, String dbPath) {
 		try {
 			Class.forName(DRIVER).newInstance();

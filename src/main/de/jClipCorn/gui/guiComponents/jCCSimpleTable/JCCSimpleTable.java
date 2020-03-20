@@ -39,7 +39,7 @@ public abstract class JCCSimpleTable<TData> extends JScrollPane implements ListS
 
 		this.setViewportView(table);
 
-		_autoResizeConfig = CCStreams.iterate(columns).stringjoin(e -> e.AutoResizeConfig, "|");
+		_autoResizeConfig = CCStreams.iterate(columns).stringjoin(e -> e.AutoResizeConfig, "|"); //$NON-NLS-1$
 
 		adjuster = new TableColumnAdjuster(this, table);
 

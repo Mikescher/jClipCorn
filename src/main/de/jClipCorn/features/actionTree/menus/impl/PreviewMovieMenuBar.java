@@ -6,6 +6,9 @@ import de.jClipCorn.features.actionTree.ActionSource;
 import de.jClipCorn.features.actionTree.IActionSourceObject;
 import de.jClipCorn.features.actionTree.menus.ClipMenuBar;
 import de.jClipCorn.gui.frames.previewMovieFrame.PreviewMovieFrame;
+import de.jClipCorn.properties.CCProperties;
+import de.jClipCorn.util.MoviePlayer;
+import de.jClipCorn.util.Str;
 import de.jClipCorn.util.lambda.Func0to0;
 import de.jClipCorn.util.listener.ActionCallbackListener;
 import java.awt.*;
@@ -34,6 +37,10 @@ public class PreviewMovieMenuBar extends ClipMenuBar {
 		{
 			addActionNode("PlayMovie"); //$NON-NLS-1$
 			addActionNode("PlayMovieAnonymous"); //$NON-NLS-1$
+			if (CCProperties.getInstance().PROP_VLC_ROBOT_ENABLED.getValue() && !Str.isNullOrWhitespace(MoviePlayer.getVLCPath()))
+			{
+				addActionNode("QueueMovieInRobot"); //$NON-NLS-1$
+			}
 			addSeparator();
 			addActionTreeNode("SetMovieRating"); //$NON-NLS-1$
 			addActionTreeNode("SetTags_Movies"); //$NON-NLS-1$

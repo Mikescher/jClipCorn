@@ -23,6 +23,8 @@ import java.util.List;
 @SuppressWarnings("nls")
 public class VLCConnection {
 
+	// https://wiki.videolan.org/VLC_HTTP_requests/
+
 	private static CCXMLParser getXML(String path) throws IOException, CCXMLException, HTTPErrorCodeException {
 		HttpURLConnection conn = null;
 		BufferedReader rd = null;
@@ -74,16 +76,16 @@ public class VLCConnection {
 
 	public static VLCStatus getStatus()
 	{
-		if (!CCProperties.getInstance().PROP_VLC_ROBOT_ENABLED.getValue()) return new VLCStatus(VLCStatus.VLCPlayerStatus.DISABLED, -1, -1, null, null, new ArrayList<>(), null);
+		if (!CCProperties.getInstance().PROP_VLC_ROBOT_ENABLED.getValue())
+			return new VLCStatus(VLCStatus.VLCPlayerStatus.DISABLED, -1, -1, null, null, new ArrayList<>(), null, false, 0, false, false, false);
 
 		try
 		{
-
 			CCXMLParser xmlStatus   = getXML("/requests/status.xml");   //$NON-NLS-1$
 			CCXMLParser xmlPlaylist = getXML("/requests/playlist.xml"); //$NON-NLS-1$
 
-			if (xmlStatus   == null) return new VLCStatus(VLCStatus.VLCPlayerStatus.NOT_RUNNING, -1, -1, null, null, new ArrayList<>(), null);
-			if (xmlPlaylist == null) return new VLCStatus(VLCStatus.VLCPlayerStatus.NOT_RUNNING, -1, -1, null, null, new ArrayList<>(), null);
+			if (xmlStatus   == null) return new VLCStatus(VLCStatus.VLCPlayerStatus.NOT_RUNNING, -1, -1, null, null, new ArrayList<>(), null, false, 0, false, false, false);
+			if (xmlPlaylist == null) return new VLCStatus(VLCStatus.VLCPlayerStatus.NOT_RUNNING, -1, -1, null, null, new ArrayList<>(), null, false, 0, false, false, false);
 
 			List<VLCStatusPlaylistEntry> playlist = new ArrayList<>();
 			VLCStatusPlaylistEntry activeEntry = null;
@@ -108,6 +110,12 @@ public class VLCConnection {
 
 			String state = xmlStatus.getRoot().getFirstChildValueOrThrow("state"); //$NON-NLS-1$
 
+			boolean fullscreen = xmlStatus.getRoot().getFirstChildValueOrThrow("fullscreen").equalsIgnoreCase("true");
+			int volume = xmlStatus.getRoot().getFirstChildIntValueOrThrow("volume");
+			boolean random = xmlStatus.getRoot().getFirstChildValueOrThrow("random").equalsIgnoreCase("true");
+			boolean loop = xmlStatus.getRoot().getFirstChildValueOrThrow("loop").equalsIgnoreCase("true");
+			boolean repeat = xmlStatus.getRoot().getFirstChildValueOrThrow("repeat").equalsIgnoreCase("true");
+
 			if ("playing".equalsIgnoreCase(state)) //$NON-NLS-1$
 			{
 				String filename = xmlStatus
@@ -126,20 +134,97 @@ public class VLCConnection {
 				int time   = xmlStatus.getRoot().getFirstChildIntValueOrThrow("time"); //$NON-NLS-1$
 				int length = xmlStatus.getRoot().getFirstChildIntValueOrThrow("length"); //$NON-NLS-1$
 
-				return new VLCStatus(VLCStatus.VLCPlayerStatus.PLAYING, time, length, filename, title, playlist, activeEntry);
+				return new VLCStatus(VLCStatus.VLCPlayerStatus.PLAYING, time, length, filename, title, playlist, activeEntry, fullscreen, volume, random, loop, repeat);
 			}
 			else if ("stopped".equalsIgnoreCase(state)) //$NON-NLS-1$
 			{
-				return new VLCStatus(VLCStatus.VLCPlayerStatus.STOPPED, -1, -1, null, null, playlist, activeEntry);
+				return new VLCStatus(VLCStatus.VLCPlayerStatus.PAUSED_STOPPED, -1, -1, null, null, playlist, activeEntry, fullscreen, volume, random, loop, repeat);
+			}
+			else if ("paused".equalsIgnoreCase(state)) //$NON-NLS-1$
+			{
+				return new VLCStatus(VLCStatus.VLCPlayerStatus.PAUSED_STOPPED, -1, -1, null, null, playlist, activeEntry, fullscreen, volume, random, loop, repeat);
 			}
 			else throw new Exception("Unknown Status: " + state);
 
 		} catch (ConnectException e) {
-			CCLog.addError(e);
-			return new VLCStatus(VLCStatus.VLCPlayerStatus.NOT_RUNNING, -1, -1, null, null, new ArrayList<>(), null);
+			CCLog.addDebug(e.toString());
+			return new VLCStatus(VLCStatus.VLCPlayerStatus.NOT_RUNNING, -1, -1, null, null, new ArrayList<>(), null, false, 0, false, false, false);
 		} catch (Exception e) {
 			CCLog.addError(e);
-			return new VLCStatus(VLCStatus.VLCPlayerStatus.ERROR, -1, -1, null, null, new ArrayList<>(), null);
+			return new VLCStatus(VLCStatus.VLCPlayerStatus.ERROR, -1, -1, null, null, new ArrayList<>(), null, false, 0, false, false, false);
+		}
+	}
+
+	public static boolean toggleRandom() {
+		try	{
+			getXML("/requests/status.xml?command=pl_random");
+			return true;
+		} catch (Exception e) {
+			CCLog.addError(e);
+			return false;
+		}
+	}
+
+	public static boolean toggleLoop() {
+		try	{
+			getXML("/requests/status.xml?command=pl_loop");
+			return true;
+		} catch (Exception e) {
+			CCLog.addError(e);
+			return false;
+		}
+	}
+
+	public static boolean toggleRepeat() {
+		try	{
+			getXML("/requests/status.xml?command=pl_repeat");
+			return true;
+		} catch (Exception e) {
+			CCLog.addError(e);
+			return false;
+		}
+	}
+
+	public static boolean play(int id) {
+		try	{
+			getXML("/requests/status.xml?command=pl_play&id="+id);
+			return true;
+		} catch (Exception e) {
+			CCLog.addError(e);
+			return false;
+		}
+	}
+
+	public static boolean pause() {
+		try	{
+			getXML("/requests/status.xml?command=pl_pause");
+			return true;
+		} catch (Exception e) {
+			CCLog.addError(e);
+			return false;
+		}
+	}
+
+	public static boolean stop() {
+		try	{
+			getXML("/requests/status.xml?command=pl_stop");
+			return true;
+		} catch (Exception e) {
+			CCLog.addError(e);
+			return false;
+		}
+	}
+
+	public static boolean enqueue(String filepath, boolean startPlayback) {
+		try	{
+			if (startPlayback)
+				getXML("/requests/status.xml?command=in_play&input=" + HTTPUtilities.escapeURL(filepath));
+			else
+				getXML("/requests/status.xml?command=in_enqueue&input=" + HTTPUtilities.escapeURL(filepath));
+			return true;
+		} catch (Exception e) {
+			CCLog.addError(e);
+			return false;
 		}
 	}
 }

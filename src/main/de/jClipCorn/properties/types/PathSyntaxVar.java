@@ -15,6 +15,6 @@ public class PathSyntaxVar {
 
 	@Override
 	public String toString() {
-		return Key + " := " + Value;
+		return Key + " := " + Value; //$NON-NLS-1$
 	}
 }

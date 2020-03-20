@@ -15,6 +15,7 @@ import de.jClipCorn.database.util.CCDBUpdateListener;
 import de.jClipCorn.features.actionTree.ActionSource;
 import de.jClipCorn.features.actionTree.CCActionTree;
 import de.jClipCorn.features.actionTree.menus.impl.PreviewSeriesMenuBar;
+import de.jClipCorn.features.actionTree.menus.impl.SerCoverChooserPopupMenu;
 import de.jClipCorn.gui.frames.displayGenresDialog.DisplayGenresDialog;
 import de.jClipCorn.gui.frames.previewSeriesFrame.serTable.SerTable;
 import de.jClipCorn.gui.frames.quickAddEpisodeDialog.QuickAddEpisodeDialog;

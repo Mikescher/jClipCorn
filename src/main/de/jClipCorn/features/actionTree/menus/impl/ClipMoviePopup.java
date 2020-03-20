@@ -3,6 +3,9 @@ package de.jClipCorn.features.actionTree.menus.impl;
 import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.features.actionTree.IActionSourceObject;
 import de.jClipCorn.features.actionTree.menus.ClipPopupMenu;
+import de.jClipCorn.properties.CCProperties;
+import de.jClipCorn.util.MoviePlayer;
+import de.jClipCorn.util.Str;
 import de.jClipCorn.util.listener.ActionCallbackListener;
 import java.awt.*;
 
@@ -24,6 +27,12 @@ public class ClipMoviePopup extends ClipPopupMenu {
 	protected void init() {
 		addAction("PlayMovie");
 		addAction("PlayMovieAnonymous");
+
+		if (CCProperties.getInstance().PROP_VLC_ROBOT_ENABLED.getValue() && !Str.isNullOrWhitespace(MoviePlayer.getVLCPath()))
+		{
+			addAction("QueueMovieInRobot");
+		}
+
 		addAction("PrevMovie");
 		addAction("ShowMovieHistory");
 		

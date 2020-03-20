@@ -27,7 +27,6 @@ public class TableColumnAdjuster implements PropertyChangeListener, TableModelLi
 	{
 		public static final int PLACEHOLDER_AUTO = -99999;
 		public static TCAConfig KEEP = new TCAConfig(TCACType.Keep, 0, 0, -1, -1, false);
-		public static TCAConfig AUTO = new TCAConfig(TCACType.Auto, 0, 0, -1, -1, false);
 		public final TCACType Type; public final int Length; public final int Weight;
 		public final int Min; public final int Max; public final boolean OnlyExpand;
 		public TCAConfig(TCACType t, int l, int w, int mi, int ma, boolean oe) { Type = t; Length = l; Weight = w; Max=ma; Min=mi; OnlyExpand=oe; }
@@ -72,7 +71,7 @@ public class TableColumnAdjuster implements PropertyChangeListener, TableModelLi
 
 		if (r.size() != tcm.getColumnCount())
 		{
-			CCLog.addWarning("TableColumnAdjuster config does nnot match: '" + _currentConfigStr + "'"); //$NON-NLS-1$
+			CCLog.addWarning("TableColumnAdjuster config does nnot match: '" + _currentConfigStr + "'"); //$NON-NLS-1$ //$NON-NLS-2$
 
 			while (r.size() < tcm.getColumnCount()) r.add(TCAConfig.KEEP);
 			while (r.size() > tcm.getColumnCount()) r.remove(r.size() - 1);

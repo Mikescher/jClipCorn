@@ -4,6 +4,10 @@ import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.FormSpecs;
 import com.jgoodies.forms.layout.RowSpec;
+import de.jClipCorn.database.databaseElement.CCEpisode;
+import de.jClipCorn.database.databaseElement.CCMovie;
+import de.jClipCorn.database.databaseElement.CCSeason;
+import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
@@ -267,5 +271,17 @@ public class VLCRobotFrame extends JFrame {
 		} catch (IOException e) {
 			CCLog.addError(e);
 		}
+	}
+
+	public void enqueue(CCMovie v) {
+	}
+
+	public void enqueue(CCSeason v) {
+	}
+
+	public void enqueue(CCSeries v) {
+	}
+
+	public void enqueue(CCEpisode v) {
 	}
 }

@@ -52,6 +52,7 @@ import de.jClipCorn.gui.frames.watchHistoryFrame.WatchHistoryFrame;
 import de.jClipCorn.gui.mainFrame.MainFrame;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.properties.CCProperties;
+import de.jClipCorn.util.MoviePlayer;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.UpdateConnector;
 import de.jClipCorn.util.datetime.CCDateTime;
@@ -120,15 +121,16 @@ public class CCActionTree extends UIActionTree{
 			
 			CCActionElement movies = addMaster("Movies", null, "ClipMenuBar.Movies", null);
 			{
-				add(movies, "PlayMovie",            null,      "ClipMenuBar.Movies.Play",           Resources.ICN_MENUBAR_PLAY,           false, this::onClickMoviesPlay);
-				add(movies, "PlayMovieAnonymous",   null,      "ClipMenuBar.Movies.PlayAnonymous",  Resources.ICN_MENUBAR_HIDDENPLAY,     false, this::onClickMoviesPlayAnonymous);
-				add(movies, "PrevMovie",            KS_ENTER,  "ClipMenuBar.Movies.Preview",        Resources.ICN_MENUBAR_PREVIEW_MOV,    false, this::onClickMoviesPrev);
-				add(movies, "AddMovie",             KS_CTRL_I, "ClipMenuBar.Movies.Add",            Resources.ICN_MENUBAR_ADD_MOV,        true,  this::onClickMoviesAdd);
-				add(movies, "ExportSingleMovie",    null,      "ClipMenuBar.Movies.ExportSingle",   Resources.ICN_MENUBAR_EXPORTMOVIE,    false, this::onClickMoviesExportSingle);
-				add(movies, "AddMovieToExportList", KS_CTRL_S, "ClipMenuBar.Movies.ExportMultiple", Resources.ICN_MENUBAR_EXPORTELEMENTS, false, this::onClickMoviesAddToExportList);
-				add(movies, "ImportSingleMovie",    null,      "ClipMenuBar.Movies.ImportSingle",   Resources.ICN_MENUBAR_IMPORTMOVIE,    true,  this::onClickMoviesImportSingle);
-				add(movies, "EditMovie",            KS_CTRL_E, "ClipMenuBar.Movies.Edit",           Resources.ICN_MENUBAR_EDIT_MOV,       true,  this::onClickMoviesEdit);
-				add(movies, "RemMovie",             KS_DEL,    "ClipMenuBar.Movies.Remove",         Resources.ICN_MENUBAR_REMOVE,         true,  this::onClickMoviesRem);
+				add(movies, "PlayMovie",            null,      "ClipMenuBar.Movies.Play",               Resources.ICN_MENUBAR_PLAY,           false, this::onClickMoviesPlay);
+				add(movies, "PlayMovieAnonymous",   null,      "ClipMenuBar.Movies.PlayAnonymous",      Resources.ICN_MENUBAR_HIDDENPLAY,     false, this::onClickMoviesPlayAnonymous);
+				add(movies, "QueueMovieInRobot",    null,      "ClipMenuBar.Movies.QueueSeriesInRobot", Resources.ICN_MENUBAR_VLCROBOT,       false, this::onClickMoviesPlayInRobot);
+				add(movies, "PrevMovie",            KS_ENTER,  "ClipMenuBar.Movies.Preview",            Resources.ICN_MENUBAR_PREVIEW_MOV,    false, this::onClickMoviesPrev);
+				add(movies, "AddMovie",             KS_CTRL_I, "ClipMenuBar.Movies.Add",                Resources.ICN_MENUBAR_ADD_MOV,        true,  this::onClickMoviesAdd);
+				add(movies, "ExportSingleMovie",    null,      "ClipMenuBar.Movies.ExportSingle",       Resources.ICN_MENUBAR_EXPORTMOVIE,    false, this::onClickMoviesExportSingle);
+				add(movies, "AddMovieToExportList", KS_CTRL_S, "ClipMenuBar.Movies.ExportMultiple",     Resources.ICN_MENUBAR_EXPORTELEMENTS, false, this::onClickMoviesAddToExportList);
+				add(movies, "ImportSingleMovie",    null,      "ClipMenuBar.Movies.ImportSingle",       Resources.ICN_MENUBAR_IMPORTMOVIE,    true,  this::onClickMoviesImportSingle);
+				add(movies, "EditMovie",            KS_CTRL_E, "ClipMenuBar.Movies.Edit",               Resources.ICN_MENUBAR_EDIT_MOV,       true,  this::onClickMoviesEdit);
+				add(movies, "RemMovie",             KS_DEL,    "ClipMenuBar.Movies.Remove",             Resources.ICN_MENUBAR_REMOVE,         true,  this::onClickMoviesRem);
 			}
 			
 			CCActionElement series = addMaster("Serien", null, "ClipMenuBar.Series", null);
@@ -222,13 +224,14 @@ public class CCActionTree extends UIActionTree{
 
 				CCActionElement season = add(other, "Season", null, "", null);
 				{
-					add(season, "AddEpisodes",       null, "ClipMenuBar.Other.Season.AddEpisodes",        Resources.ICN_MENUBAR_ADD_SEA,         true,  this::onClickOtherSeasonAddEpisodes);
-					add(season, "AddSingleEpisodes", null, "ClipMenuBar.Other.Season.AddSingleEpisodes",  Resources.ICN_MENUBAR_ADD_SEA,         true,  this::onClickOtherSeasonQuickAddEpisodes);
-					add(season, "BatchEditSeason",   null, "ClipMenuBar.Other.Season.BatchEditSeason",    Resources.ICN_MENUBAR_BATCHEDIT,       true,  this::onClickOtherSeasonBatchEditEpisodes);
-					add(season, "ShowSeasonHistory", null, "ClipMenuBar.Season.ShowHistory",              Resources.ICN_MENUBAR_DATABASEHISTORY, false, this::onClickOtherShowHistory);
-					add(season, "RemSeason",         null, "ClipMenuBar.Other.Season.RemSeason",          Resources.ICN_MENUBAR_REMOVE,          true,  this::onClickOtherSeasonDeleteSeason);
-					add(season, "EditSeason",        null, "ClipMenuBar.Other.Season.EditSeason",         Resources.ICN_MENUBAR_EDIT_SER,        true,  this::onClickOtherSeasonEditSeason);
-					add(season, "OpenSeasonFolder",  null, "ClipMenuBar.Other.Season.OpenSeasonFolder",   Resources.ICN_MENUBAR_FOLDER,          false, this::onClickOtherSeasonOpenFolder);
+					add(season, "QueueSeasonInRobot", null, "ClipMenuBar.Other.Season.QueueSeasonInRobot", Resources.ICN_MENUBAR_VLCROBOT,        false, this::onClickOtherSeasonPlayInRobot);
+					add(season, "AddEpisodes",        null, "ClipMenuBar.Other.Season.AddEpisodes",        Resources.ICN_MENUBAR_ADD_SEA,         true,  this::onClickOtherSeasonAddEpisodes);
+					add(season, "AddSingleEpisodes",  null, "ClipMenuBar.Other.Season.AddSingleEpisodes",  Resources.ICN_MENUBAR_ADD_SEA,         true,  this::onClickOtherSeasonQuickAddEpisodes);
+					add(season, "BatchEditSeason",    null, "ClipMenuBar.Other.Season.BatchEditSeason",    Resources.ICN_MENUBAR_BATCHEDIT,       true,  this::onClickOtherSeasonBatchEditEpisodes);
+					add(season, "ShowSeasonHistory",  null, "ClipMenuBar.Season.ShowHistory",              Resources.ICN_MENUBAR_DATABASEHISTORY, false, this::onClickOtherShowHistory);
+					add(season, "RemSeason",          null, "ClipMenuBar.Other.Season.RemSeason",          Resources.ICN_MENUBAR_REMOVE,          true,  this::onClickOtherSeasonDeleteSeason);
+					add(season, "EditSeason",         null, "ClipMenuBar.Other.Season.EditSeason",         Resources.ICN_MENUBAR_EDIT_SER,        true,  this::onClickOtherSeasonEditSeason);
+					add(season, "OpenSeasonFolder",   null, "ClipMenuBar.Other.Season.OpenSeasonFolder",   Resources.ICN_MENUBAR_FOLDER,          false, this::onClickOtherSeasonOpenFolder);
 				}
 
 				CCActionElement seriesExtra = add(other, "SeriesExtra", null, "", null);
@@ -253,7 +256,8 @@ public class CCActionTree extends UIActionTree{
 						}
 					}
 
-					add(seriesExtra, "ResumeSeries", null, "ClipMenuBar.Other.SeriesExtra.ResumeSeries", null, false, this::onClickOtherSeriesResumePlay);
+					add(seriesExtra, "ResumeSeries",        null, "ClipMenuBar.Other.SeriesExtra.ResumeSeries",       null,                           false, this::onClickOtherSeriesResumePlay);
+					add(seriesExtra, "QueueSeriesInRobot",  null, "ClipMenuBar.Other.SeriesExtra.QueueSeriesInRobot", Resources.ICN_MENUBAR_VLCROBOT, false, this::onClickOtherSeriesPlayInRobot);
 
 					CCActionElement rnd = add(seriesExtra, "PlayRandomEpisode", null, "ClipMenuBar.Other.SeriesExtra.PlayRandomEpisode", Resources.ICN_MENUBAR_RANDOM, null);
 					{
@@ -270,6 +274,7 @@ public class CCActionTree extends UIActionTree{
 				{
 					add(episode, "PlayEpisode",          null, "ClipMenuBar.Other.Episode.PlayEpisode",          Resources.ICN_MENUBAR_PLAY,         false, this::onClickOtherEpisodePlay);
 					add(episode, "PlayEpisodeAnonymous", null, "ClipMenuBar.Other.Episode.PlayEpisodeAnonymous", Resources.ICN_MENUBAR_HIDDENPLAY,   false, this::onClickOtherEpisodePlayAnonymous);
+					add(episode, "QueueEpisodeInRobot",  null, "ClipMenuBar.Other.Episode.QueueEpisodeInRobot",  Resources.ICN_MENUBAR_VLCROBOT,     false, this::onClickOtherEpisodePlayInRobot);
 					add(episode, "SetEpisodeViewed",     null, "ClipMenuBar.Other.Episode.SetEpisodeViewed",     Resources.ICN_MENUBAR_VIEWED,       true,  this::onClickOtherEpisodeSetViewed);
 					add(episode, "SetEpisodeUnviewed",   null, "ClipMenuBar.Other.Episode.SetEpisodeUnviewed",   Resources.ICN_MENUBAR_UNVIEWED,     true,  this::onClickOtherEpisodeUnviewed);
 					add(episode, "UndoEpisodeViewed",    null, "ClipMenuBar.Other.Episode.UndoEpisodeViewed",    Resources.ICN_MENUBAR_UNDOVIEWED,   true,  this::onClickOtherEpisodeUndoViewed);
@@ -875,5 +880,37 @@ public class CCActionTree extends UIActionTree{
 			if (!DialogHelper.showLocaleYesNo(e.SwingOwner, "Dialogs.DeleteEpisode")) return; //$NON-NLS-1$
 			p.delete();
 		});
+	}
+
+	private void onClickMoviesPlayInRobot(CCTreeActionEvent e) {
+
+		if (!CCProperties.getInstance().PROP_VLC_ROBOT_ENABLED.getValue()) return;
+		if (Str.isNullOrWhitespace(MoviePlayer.getVLCPath())) return;
+
+		e.ifMovieSource(p -> VLCRobotFrame.show(e.SwingOwner).enqueue(p));
+	}
+
+	private void onClickOtherSeasonPlayInRobot(CCTreeActionEvent e) {
+
+		if (!CCProperties.getInstance().PROP_VLC_ROBOT_ENABLED.getValue()) return;
+		if (Str.isNullOrWhitespace(MoviePlayer.getVLCPath())) return;
+
+		e.ifSeasonSource(p -> VLCRobotFrame.show(e.SwingOwner).enqueue(p));
+	}
+
+	private void onClickOtherSeriesPlayInRobot(CCTreeActionEvent e) {
+
+		if (!CCProperties.getInstance().PROP_VLC_ROBOT_ENABLED.getValue()) return;
+		if (Str.isNullOrWhitespace(MoviePlayer.getVLCPath())) return;
+
+		e.ifSeriesSource(p -> VLCRobotFrame.show(e.SwingOwner).enqueue(p));
+	}
+
+	private void onClickOtherEpisodePlayInRobot(CCTreeActionEvent e) {
+
+		if (!CCProperties.getInstance().PROP_VLC_ROBOT_ENABLED.getValue()) return;
+		if (Str.isNullOrWhitespace(MoviePlayer.getVLCPath())) return;
+
+		e.ifEpisodeSource(p -> VLCRobotFrame.show(e.SwingOwner).enqueue(p));
 	}
 }

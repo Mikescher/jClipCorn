@@ -1,4 +1,4 @@
-package de.jClipCorn.gui.frames.previewSeriesFrame;
+package de.jClipCorn.features.actionTree.menus.impl;
 
 import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.CCSeason;
@@ -6,6 +6,7 @@ import de.jClipCorn.features.actionTree.IActionSourceObject;
 import de.jClipCorn.features.actionTree.menus.ClipPopupMenu;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.gui.frames.coverPreviewFrame.CoverPreviewFrame;
+import de.jClipCorn.gui.frames.previewSeriesFrame.PreviewSeriesFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.formatter.PathFormatter;

@@ -1,10 +1,25 @@
 package de.jClipCorn.gui.guiComponents.dateTimeListEditor;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Font;
+import com.jgoodies.forms.layout.ColumnSpec;
+import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.FormSpecs;
+import com.jgoodies.forms.layout.RowSpec;
+import de.jClipCorn.database.databaseElement.columnTypes.CCDateTimeList;
+import de.jClipCorn.gui.guiComponents.jCCDateSpinner.JCCDateSpinner;
+import de.jClipCorn.gui.guiComponents.jCCTimeSpinner.JCCTimeSpinner;
+import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.gui.resources.Resources;
+import de.jClipCorn.util.Str;
+import de.jClipCorn.util.datetime.CCDate;
+import de.jClipCorn.util.datetime.CCDateTime;
+import de.jClipCorn.util.datetime.CCTime;
+import org.gpl.JSplitButton.JSplitButton;
+import org.gpl.JSplitButton.action.SplitButtonActionListener;
+
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.EtchedBorder;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -13,38 +28,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
-
-import javax.swing.BoxLayout;
-import javax.swing.JCheckBox;
-import javax.swing.JLabel;
-import javax.swing.JMenuItem;
-import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
-import javax.swing.JScrollPane;
-import javax.swing.ScrollPaneConstants;
-import javax.swing.SwingConstants;
-import javax.swing.border.EmptyBorder;
-import javax.swing.border.EtchedBorder;
-
-import de.jClipCorn.util.Str;
-import de.jClipCorn.util.adapter.ChangeLambdaAdapter;
-import de.jClipCorn.util.adapter.ItemChangeLambdaAdapter;
-import org.gpl.JSplitButton.JSplitButton;
-import org.gpl.JSplitButton.action.SplitButtonActionListener;
-
-import com.jgoodies.forms.layout.ColumnSpec;
-import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.FormSpecs;
-import com.jgoodies.forms.layout.RowSpec;
-
-import de.jClipCorn.database.databaseElement.columnTypes.CCDateTimeList;
-import de.jClipCorn.gui.guiComponents.jCCDateSpinner.JCCDateSpinner;
-import de.jClipCorn.gui.guiComponents.jCCTimeSpinner.JCCTimeSpinner;
-import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.gui.resources.Resources;
-import de.jClipCorn.util.datetime.CCDate;
-import de.jClipCorn.util.datetime.CCDateTime;
-import de.jClipCorn.util.datetime.CCTime;
 
 public class DateTimeListEditor extends JPanel {
 	private static final long serialVersionUID = -1991426029921952573L;
@@ -128,7 +111,7 @@ public class DateTimeListEditor extends JPanel {
 		cbDate = new JCheckBox();
 		cbDate.setSelected(true);
 		cbDate.addItemListener(e -> updateEnabledStates());
-		cbDate.addItemListener(new ItemChangeLambdaAdapter(this::triggerOnChanged, -1));
+		//cbDate.addItemListener(new ItemChangeLambdaAdapter(this::triggerOnChanged, -1));
 		cbDate.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) { focusPanel(null); }
@@ -153,14 +136,14 @@ public class DateTimeListEditor extends JPanel {
 		pnlInput.add(cbDate, "1, 2, right, top"); //$NON-NLS-1$
 		
 		spnrDate = new JCCDateSpinner();
-		spnrDate.addChangeListener(new ChangeLambdaAdapter(this::triggerOnChanged));
+		//spnrDate.addChangeListener(new ChangeLambdaAdapter(this::triggerOnChanged));
 		spnrDate.addChangeListener(e -> { focusPanel(null); });
 		pnlInput.add(spnrDate, "3, 2, left, top"); //$NON-NLS-1$
 		
 		cbTime = new JCheckBox();
 		cbTime.setSelected(true);
 		cbTime.addItemListener(e -> updateEnabledStates());
-		cbTime.addItemListener(new ItemChangeLambdaAdapter(this::triggerOnChanged, -1));
+		//cbTime.addItemListener(new ItemChangeLambdaAdapter(this::triggerOnChanged, -1));
 		cbTime.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) { focusPanel(null); }
@@ -172,7 +155,7 @@ public class DateTimeListEditor extends JPanel {
 		pnlInput.add(cbTime, "1, 4, right, top"); //$NON-NLS-1$
 		
 		spnrTime = new JCCTimeSpinner();
-		spnrTime.addChangeListener(new ChangeLambdaAdapter(this::triggerOnChanged));
+		//spnrTime.addChangeListener(new ChangeLambdaAdapter(this::triggerOnChanged));
 		spnrTime.addChangeListener(e -> { focusPanel(null); });
 		pnlInput.add(spnrTime, "3, 4, fill, top"); //$NON-NLS-1$
 		
@@ -225,10 +208,14 @@ public class DateTimeListEditor extends JPanel {
 	}
 	
 	public void setValue(CCDateTimeList dtlist) {
+		var diff = dtlist.isEqual(getValue());
+
 		data.clear();
 		data.addAll(dtlist.iterator().enumerate());
 		
 		updateContentList(null);
+
+		if (diff) triggerOnChanged();
 	}
 
 	public CCDateTimeList getValue() {
@@ -266,7 +253,7 @@ public class DateTimeListEditor extends JPanel {
 
 		focusPanel(null);
 		
-		triggerOnChanged();
+		//triggerOnChanged();
 	}
 	
 	private void onSetUnknown(ActionEvent e) {
@@ -280,7 +267,7 @@ public class DateTimeListEditor extends JPanel {
 
 		focusPanel(null);
 		
-		triggerOnChanged();
+		//triggerOnChanged();
 	}
 
 	private void onRemove(CCDateTime element) {
@@ -288,7 +275,7 @@ public class DateTimeListEditor extends JPanel {
 			if (element.isExactEqual(data.get(i))) {
 				data.remove(i);
 				updateContentList(null);
-				return;
+				break;
 			}
 		}
 		

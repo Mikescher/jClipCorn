@@ -473,6 +473,47 @@ public class CCSeries extends CCDatabaseElement implements IEpisodeOwner {
 		return com.isEmpty() ? getAllLanguages() : com;
 	}
 
+	public CCDBLanguageList getLangForFolderStructure() {
+		if (getEpisodeCount() == 0) return CCDBLanguageList.EMPTY;
+
+		var firstEpisode = getFirstEpisode();
+
+		HashSet<CCDBLanguage> langsCommon = new HashSet<>(firstEpisode.getLanguage().getInternalData());
+		CCDBLanguageList langsEqual  = firstEpisode.getLanguage();
+
+		HashMap<CCDBLanguageList, Integer> langsLength = new HashMap<>();
+		int totalLength = 0;
+
+		for (CCSeason s : seasons)
+		{
+			for (CCEpisode e : s.getEpisodeList())
+			{
+				langsCommon.retainAll(e.getLanguage().getInternalData());
+
+				if (langsEqual != null && !langsEqual.equals(e.getLanguage())) langsEqual = null;
+
+				int addlen = e.getLength();
+				if (langsLength.containsKey(e.getLanguage())) addlen += langsLength.get(e.getLanguage());
+				langsLength.put(e.getLanguage(), addlen);
+
+				totalLength+= e.getLength();
+			}
+		}
+
+		if (langsEqual != null) return langsEqual;
+
+		var maxPerc = CCProperties.getInstance().PROP_FOLDERLANG_IGNORE_PERC.getValue();
+
+		if (maxPerc == 0) return CCDBLanguageList.createDirect(langsCommon);
+
+		for (var lng : langsLength.entrySet())
+		{
+			if (((totalLength - lng.getValue()) * 100 / totalLength) < maxPerc) return lng.getKey();
+		}
+
+		return CCDBLanguageList.createDirect(langsCommon);
+	}
+
 	@SuppressWarnings("nls")
 	public String getFolderNameForCreatedFolderStructure(CCDBLanguageList fallbackLanguage) {
 		StringBuilder seriesfoldername = new StringBuilder(getTitle());
@@ -481,7 +522,7 @@ public class CCSeries extends CCDatabaseElement implements IEpisodeOwner {
 			if (group.DoSerialize) seriesfoldername.append(" [[").append(group.Name).append("]]");
 		}
 
-		CCDBLanguageList lang = getCommonLanguages();
+		CCDBLanguageList lang = getLangForFolderStructure();
 		if (getEpisodeCount() == 0 && fallbackLanguage != null) lang = fallbackLanguage;
 		if (!lang.isExact(CCDBLanguage.GERMAN) && !lang.isEmpty()) {
 			seriesfoldername.append(String.format(" [%s]", lang.serializeToFilenameString()));

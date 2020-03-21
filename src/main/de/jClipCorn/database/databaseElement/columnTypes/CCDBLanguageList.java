@@ -19,7 +19,7 @@ public class CCDBLanguageList implements Iterable<CCDBLanguage> {
 	public static final CCDBLanguageList JAPANESE = new CCDBLanguageList(CCDBLanguage.JAPANESE);
 	public static final CCDBLanguageList EMPTY = new CCDBLanguageList();
 
-	private static HashMap<String, ImageIcon> _fullIconCache = new HashMap<>();
+	private static final HashMap<String, ImageIcon> _fullIconCache = new HashMap<>();
 
 	private final Set<CCDBLanguage> _languages;
 

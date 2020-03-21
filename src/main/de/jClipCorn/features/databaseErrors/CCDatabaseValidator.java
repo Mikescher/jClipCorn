@@ -1105,7 +1105,7 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator {
 
 		for (CCSeries el : movielist.iteratorSeries()) {
 			for(CCSingleOnlineReference soref : el.getOnlineReference()) {
-				if (! refSet.add(el.getCommonLanguages().serializeToLong() + '_' + soref.toSerializationString())) {
+				if (! refSet.add(el.getLangForFolderStructure().serializeToLong() + '_' + soref.toSerializationString())) {
 					e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_DUPLICATE_REF, el));
 				}
 			}

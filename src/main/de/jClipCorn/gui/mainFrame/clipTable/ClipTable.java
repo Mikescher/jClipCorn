@@ -185,6 +185,8 @@ public class ClipTable extends JScrollPane implements CCDBUpdateListener, ListSe
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		if (e.getClickCount() == 2 && e.getButton() == MouseEvent.BUTTON1) {
+			int row = table.rowAtPoint(e.getPoint());
+			if (row < 0) return; // click on whitespace
 			owner.onClipTableExecute(getSelectedDatabaseElement());
 		}
 	}

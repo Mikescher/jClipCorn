@@ -63,6 +63,7 @@ configurations {
 
 	runtime.exclude group: 'commons-beanutils'
 	compile.exclude group: 'commons-beanutils'
+	implementation.exclude group: 'commons-beanutils'
 }
 
 //
@@ -99,12 +100,12 @@ tasks.register("anyReleaseJar", Jar) {
 				   'Main-Class':             project.appmain
 	}
 
-	archiveBaseName      = project.appname
+	archiveBaseName      = 'jClipCorn'
 	archiveVersion       = extractProjectVersion()
 	destinationDirectory = file("$rootDir/mybuilds")
-	archiveFileName      = "${archiveBaseName} ${archiveVersion}.${archiveExtension}"
+	archiveFileName      = "jClipCorn "+extractProjectVersion()+".jar"
 
-	from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } } with jar
+	from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } } with jar
 
 	doLast {
 		if (! isBetaRelease() /* && Os.isFamily(Os.FAMILY_WINDOWS) */)

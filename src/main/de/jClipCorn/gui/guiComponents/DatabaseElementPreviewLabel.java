@@ -1,24 +1,20 @@
 package de.jClipCorn.gui.guiComponents;
 
-import java.awt.event.MouseEvent;
-import java.awt.image.BufferedImage;
-import java.lang.reflect.InvocationTargetException;
-import java.util.Collections;
-import java.util.Timer;
-import java.util.TimerTask;
-
-import javax.swing.SwingUtilities;
-
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.features.actionTree.ActionSource;
 import de.jClipCorn.features.actionTree.CCActionTree;
 import de.jClipCorn.gui.frames.coverPreviewFrame.CoverPreviewFrame;
-import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.helper.ImageUtilities;
-import de.jClipCorn.util.lambda.Func0to0;
+import de.jClipCorn.util.helper.SwingUtils;
+
+import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
+import java.util.Collections;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class DatabaseElementPreviewLabel extends CoverLabel {
 	private static final long serialVersionUID = -2960790547511297760L;
@@ -58,7 +54,7 @@ public class DatabaseElementPreviewLabel extends CoverLabel {
 		timer.schedule(new TimerTask() {
 			@Override
 			public void run() {
-				swingInvoke(() -> onTimer());
+				SwingUtils.invokeAndWaitSafe(() -> onTimer());
 			}
 		}, 0, TIMER_DELAY);
 	}
@@ -153,15 +149,7 @@ public class DatabaseElementPreviewLabel extends CoverLabel {
 			break;
 		}
 	}
-	
-	private void swingInvoke(Func0to0 f) {
-		try	{
-			SwingUtilities.invokeAndWait(f::invoke);
-		} catch (InterruptedException | InvocationTargetException e) {
-			CCLog.addError(e);
-		}
-	}
-	
+
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		if (e.getButton() == MouseEvent.BUTTON1 && mode == DEPLMode.MODE_ERROR) {
@@ -307,8 +295,8 @@ public class DatabaseElementPreviewLabel extends CoverLabel {
 		v_image_hover    = i3;
 
 		threadLoadFinished = true;
-		
-		swingInvoke(() -> 
+
+		SwingUtils.invokeAndWaitSafe(() ->
 		{
 			if (element != el) return;
 

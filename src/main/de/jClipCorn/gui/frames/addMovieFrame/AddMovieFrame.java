@@ -38,6 +38,7 @@ import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.helper.FileChooserHelper;
 import de.jClipCorn.util.helper.LookAndFeelManager;
+import de.jClipCorn.util.helper.SwingUtils;
 import de.jClipCorn.util.parser.FilenameParser;
 import de.jClipCorn.util.parser.FilenameParserResult;
 import de.jClipCorn.util.stream.CCStreams;
@@ -1230,13 +1231,13 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 
 			try	{
 
-				SwingUtilities.invokeLater(() -> pbLanguageLoad.setVisible(true));
+				SwingUtils.invokeLater(() -> pbLanguageLoad.setVisible(true));
 
 				MediaQueryResult dat0 = null;
 				if (!Str.isNullOrWhitespace(p0)) dat0 = MediaQueryRunner.query(PathFormatter.fromCCPath(p0), true);
 
 				final MediaQueryResult _fdat0 = dat0;
-				if (dat0 != null && !_isDirtyMediaInfo) SwingUtilities.invokeLater(() -> ctrlMediaInfo.setValue(_fdat0));
+				if (dat0 != null && !_isDirtyMediaInfo) SwingUtils.invokeLater(() -> ctrlMediaInfo.setValue(_fdat0));
 
 				List<MediaQueryResult> dat = new ArrayList<>();
 
@@ -1250,8 +1251,8 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 				if (dat.isEmpty()) return;
 
 				int dur = (int) (CCStreams.iterate(dat).any(d -> d.Duration == -1) ? -1 : (CCStreams.iterate(dat).sumDouble(d -> d.Duration)/60));
-				if (dur != -1) SwingUtilities.invokeLater(() -> lblLenAuto.setText("("+dur+")")); //$NON-NLS-1$ //$NON-NLS-2$
-				if (dur == -1) SwingUtilities.invokeLater(() -> lblLenAuto.setText(Str.Empty));
+				if (dur != -1) SwingUtils.invokeLater(() -> lblLenAuto.setText("("+dur+")")); //$NON-NLS-1$ //$NON-NLS-2$
+				if (dur == -1) SwingUtils.invokeLater(() -> lblLenAuto.setText(Str.Empty));
 
 				if (CCStreams.iterate(dat).any(d -> d.AudioLanguages == null)) return;
 
@@ -1259,19 +1260,19 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 				for (int i = 1; i < dat.size(); i++) dbll = CCDBLanguageList.intersection(dbll, dat.get(i).AudioLanguages);
 
 				final CCDBLanguageList dbll2 = dbll;
-				if (!dbll.isEmpty() && !_isDirtyLanguage) SwingUtilities.invokeLater(() -> setMovieLanguage(dbll2) );
+				if (!dbll.isEmpty() && !_isDirtyLanguage) SwingUtils.invokeLater(() -> setMovieLanguage(dbll2) );
 
 			} catch (Exception e) {
 
 				CCLog.addWarning(e);
-				SwingUtilities.invokeLater(() ->
+				SwingUtils.invokeLater(() ->
 				{
 					lblLenAuto.setText("<html><font color='red'>!!!</font></html>"); //$NON-NLS-1$
 				});
 
 			} finally {
 
-				SwingUtilities.invokeLater(() -> pbLanguageLoad.setVisible(false));
+				SwingUtils.invokeLater(() -> pbLanguageLoad.setVisible(false));
 
 			}
 		}, "MINFO_QUERY").start(); //$NON-NLS-1$

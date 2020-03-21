@@ -24,7 +24,6 @@ import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
-import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -42,6 +41,7 @@ import de.jClipCorn.gui.guiComponents.CoverLabel;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.gui.resources.Resources;
+import de.jClipCorn.util.helper.SwingUtils;
 import de.jClipCorn.features.online.OnlineSearchType;
 import de.jClipCorn.features.online.metadata.OnlineMetadata;
 import de.jClipCorn.features.online.metadata.imdb.IMDBParserCommon;
@@ -415,7 +415,7 @@ public class AutoFindReferenceFrame extends JFrame {
 				try {
 					List<AutoFindRefElement> result = AutoFindReferenceFrame.this.run(elements);
 					if (result != null) {
-						SwingUtilities.invokeAndWait(new Runnable() {
+						SwingUtils.invokeAndWait(new Runnable() {
 							@Override
 							public void run() {
 								listModel.clear();
@@ -430,7 +430,7 @@ public class AutoFindReferenceFrame extends JFrame {
 					CCLog.addError(e);
 				} finally {
 					try {
-						SwingUtilities.invokeAndWait(new Runnable() {
+						SwingUtils.invokeAndWait(new Runnable() {
 							@Override
 							public void run() {
 								isThreadRunning = false;
@@ -466,7 +466,7 @@ public class AutoFindReferenceFrame extends JFrame {
 			
 			try {
 				final int fcount = count++;
-				SwingUtilities.invokeAndWait(new Runnable() {
+				SwingUtils.invokeAndWait(new Runnable() {
 					@Override
 					public void run() {
 						lblCurrentElement.setText(element.getTitle());

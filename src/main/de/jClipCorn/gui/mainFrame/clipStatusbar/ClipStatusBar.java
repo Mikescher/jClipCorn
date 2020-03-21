@@ -1,33 +1,31 @@
 package de.jClipCorn.gui.mainFrame.clipStatusbar;
 
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.util.Collections;
-import java.util.ConcurrentModificationException;
-import java.util.List;
-
-import javax.swing.JLabel;
-import javax.swing.JProgressBar;
-import javax.swing.SwingUtilities;
-
 import de.jClipCorn.Globals;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.util.CCDBUpdateListener;
 import de.jClipCorn.features.actionTree.ActionSource;
 import de.jClipCorn.features.actionTree.CCActionTree;
-import de.jClipCorn.gui.mainFrame.MainFrame;
-import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.features.log.CCLogChangedListener;
 import de.jClipCorn.features.log.CCLogType;
+import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.gui.mainFrame.MainFrame;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.DriveMap;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datatypes.Tuple3;
 import de.jClipCorn.util.formatter.FileSizeFormatter;
 import de.jClipCorn.util.formatter.TimeIntervallFormatter;
+import de.jClipCorn.util.helper.SwingUtils;
 import org.apache.commons.lang3.StringUtils;
+
+import javax.swing.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.util.Collections;
+import java.util.ConcurrentModificationException;
+import java.util.List;
 
 public class ClipStatusBar extends AbstractClipStatusbar implements CCDBUpdateListener, CCLogChangedListener {
 	private static final long serialVersionUID = -5283785610114988490L;
@@ -354,7 +352,7 @@ public class ClipStatusBar extends AbstractClipStatusbar implements CCDBUpdateLi
 
 	@Override
 	public void onAfterLoad() {
-		SwingUtilities.invokeLater(this::updateLabels);
+		SwingUtils.invokeLater(this::updateLabels);
 	}
 	
 	public JProgressBar getProgressbar() {

@@ -7,6 +7,8 @@ import javax.swing.border.EmptyBorder;
 
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
+import de.jClipCorn.util.helper.SwingUtils;
+
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.RowSpec;
@@ -63,7 +65,7 @@ public class GenericTextDialog extends JDialog {
 		textArea.setEditable(false);
 		textArea.setText(content);
 		scrollPane.getVerticalScrollBar().setValue(0);
-		SwingUtilities.invokeLater(() -> scrollPane.getVerticalScrollBar().setValue(0));
+		SwingUtils.invokeLater(() -> scrollPane.getVerticalScrollBar().setValue(0));
 		
 		panel = new JPanel();
 		FlowLayout flowLayout = (FlowLayout) panel.getLayout();

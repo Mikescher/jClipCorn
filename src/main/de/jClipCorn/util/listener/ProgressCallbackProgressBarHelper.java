@@ -1,9 +1,9 @@
 package de.jClipCorn.util.listener;
 
 import de.jClipCorn.features.log.CCLog;
+import de.jClipCorn.util.helper.SwingUtils;
 
-import javax.swing.JProgressBar;
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 import java.lang.reflect.InvocationTargetException;
 
 public class ProgressCallbackProgressBarHelper implements ProgressCallbackListener{
@@ -17,7 +17,7 @@ public class ProgressCallbackProgressBarHelper implements ProgressCallbackListen
 		this.progressBar = p;
 		this.resolution = Math.max(resolution, 1) * 2;
 		this.value = 0;
-		SwingUtilities.invokeLater(() -> progressBar.setValue(0));
+		SwingUtils.invokeLater(() -> progressBar.setValue(0));
 		this.max = 100;
 	}
 
@@ -26,13 +26,13 @@ public class ProgressCallbackProgressBarHelper implements ProgressCallbackListen
 		int pold = (int)((value*1.0*resolution) / (max));
 		value++;
 		int pnew = (int)((value*1.0*resolution) / (max));
-		if (pold != pnew) SwingUtilities.invokeLater(() -> progressBar.setValue(value));
+		if (pold != pnew) SwingUtils.invokeLater(() -> progressBar.setValue(value));
 	}
 
 	@Override
 	public void setMax(final int max) {
 		try {
-			SwingUtilities.invokeAndWait(() -> progressBar.setMaximum(max));
+			SwingUtils.invokeAndWait(() -> progressBar.setMaximum(max));
 			this.max = max;
 		} catch (InterruptedException | InvocationTargetException e) {
 			CCLog.addUndefinied(Thread.currentThread(), e);
@@ -42,7 +42,7 @@ public class ProgressCallbackProgressBarHelper implements ProgressCallbackListen
 	@Override
 	public void reset() {
 		try {
-			SwingUtilities.invokeAndWait(() -> progressBar.setValue(0));
+			SwingUtils.invokeAndWait(() -> progressBar.setValue(0));
 			this.value = 0;
 		} catch (InterruptedException | InvocationTargetException e) {
 			CCLog.addUndefinied(Thread.currentThread(), e);

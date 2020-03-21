@@ -1,49 +1,35 @@
 package de.jClipCorn.gui.frames.updateCodecFrame;
 
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JProgressBar;
-import javax.swing.JScrollPane;
-import javax.swing.JSpinner;
-import javax.swing.JTextArea;
-import javax.swing.JToggleButton;
-import javax.swing.SpinnerNumberModel;
-import javax.swing.SwingUtilities;
-
-import org.apache.commons.lang3.exception.ExceptionUtils;
-
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.FormSpecs;
 import com.jgoodies.forms.layout.RowSpec;
-
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguageList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCFileFormat;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMediaInfo;
 import de.jClipCorn.features.log.CCLog;
+import de.jClipCorn.features.metadata.exceptions.MediaQueryException;
+import de.jClipCorn.features.metadata.mediaquery.MediaQueryResult;
+import de.jClipCorn.features.metadata.mediaquery.MediaQueryRunner;
 import de.jClipCorn.gui.frames.genericTextDialog.GenericTextDialog;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.Str;
-import de.jClipCorn.features.metadata.exceptions.MediaQueryException;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.DialogHelper;
+import de.jClipCorn.util.helper.SwingUtils;
 import de.jClipCorn.util.helper.ThreadUtils;
-import de.jClipCorn.features.metadata.mediaquery.MediaQueryResult;
-import de.jClipCorn.features.metadata.mediaquery.MediaQueryRunner;
+import org.apache.commons.lang3.exception.ExceptionUtils;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class UpdateCodecFrame extends JFrame {
 	private static final long serialVersionUID = -2163175118745491143L;
@@ -248,7 +234,7 @@ public class UpdateCodecFrame extends JFrame {
 			else if (element.MQResultString != null) textArea.setText(element.MQResultString.trim());
 			else textArea.setText("Error ???"); //$NON-NLS-1$
 		}
-		SwingUtilities.invokeLater(() -> scrollPane.getVerticalScrollBar().setValue(0));
+		SwingUtils.invokeLater(() -> scrollPane.getVerticalScrollBar().setValue(0));
 	}
 
 	private void setFiltered(FilterState state, boolean triggerUpdate, boolean force) {
@@ -388,7 +374,7 @@ public class UpdateCodecFrame extends JFrame {
 					elem.Processed = true;
 				}
 
-				SwingUtilities.invokeLater(() -> {
+				SwingUtils.invokeLater(() -> {
 					tableMain.changeData(elem, elem);
 					if (cbAutoScroll.isSelected()) tableMain.scrollIntoView(elem);
 				});

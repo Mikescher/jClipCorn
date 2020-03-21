@@ -13,7 +13,7 @@ public class CCLog {
 	}
 
 	public static void addInformation(Throwable e) {
-		CCLogInternal.add(e.toString(), CCLogType.LOG_ELEM_INFORMATION, e.getStackTrace());
+		CCLogInternal.add(format(e), CCLogType.LOG_ELEM_INFORMATION, e.getStackTrace());
 	}
 	
 	public static void addInformation(String e) {
@@ -25,11 +25,11 @@ public class CCLog {
 	}
 
 	public static void addWarning(Throwable e) {
-		CCLogInternal.add(e.toString(), CCLogType.LOG_ELEM_WARNING, e.getStackTrace());
+		CCLogInternal.add(format(e), CCLogType.LOG_ELEM_WARNING, e.getStackTrace());
 	}
 
 	public static void addWarning(String s, Throwable e) {
-		CCLogInternal.add(s + '\n' + "\t caused by " + e.toString(), CCLogType.LOG_ELEM_WARNING, e.getStackTrace()); //$NON-NLS-1$
+		CCLogInternal.add(s + '\n' + "\t caused by " + format(e), CCLogType.LOG_ELEM_WARNING, e.getStackTrace()); //$NON-NLS-1$
 	}
 
 	public static void addError(String e) {
@@ -41,15 +41,15 @@ public class CCLog {
 	}
 
 	public static void addError(Throwable e) {
-		CCLogInternal.add(e.toString(), CCLogType.LOG_ELEM_ERROR, e.getStackTrace());
+		CCLogInternal.add(format(e), CCLogType.LOG_ELEM_ERROR, e.getStackTrace());
 	}
 
 	public static void addError(String s, Throwable e) {
-		CCLogInternal.add(s + '\n' + "\t caused by " + e.toString(), CCLogType.LOG_ELEM_ERROR, e.getStackTrace()); //$NON-NLS-1$
+		CCLogInternal.add(s + '\n' + "\t caused by " + format(e), CCLogType.LOG_ELEM_ERROR, e.getStackTrace()); //$NON-NLS-1$
 	}
 	
 	public static void addFatalError(Throwable e) {
-		CCLogInternal.add(e.toString(), CCLogType.LOG_ELEM_FATALERROR, e.getStackTrace());
+		CCLogInternal.add(format(e), CCLogType.LOG_ELEM_FATALERROR, e.getStackTrace());
 	}
 	
 	public static void addFatalError(String e) {
@@ -61,11 +61,11 @@ public class CCLog {
 	}
 	
 	public static void addFatalError(String s, Throwable e) {
-		CCLogInternal.add(s + '\n' + "\t caused by " + e.toString(), CCLogType.LOG_ELEM_FATALERROR, e.getStackTrace()); //$NON-NLS-1$
+		CCLogInternal.add(s + '\n' + "\t caused by " + format(e), CCLogType.LOG_ELEM_FATALERROR, e.getStackTrace()); //$NON-NLS-1$
 	}
 
-	public static void addUndefinied(Thread thread, Throwable throwable) {
-		CCLogInternal.add('[' + thread.toString() + ']' + ' ' + throwable.toString(), CCLogType.LOG_ELEM_UNDEFINED, throwable.getStackTrace());
+	public static void addUndefinied(Thread thread, Throwable e) {
+		CCLogInternal.add('[' + thread.toString() + ']' + ' ' + format(e), CCLogType.LOG_ELEM_UNDEFINED, e.getStackTrace());
 	}
 
 	public static void addUndefinied(String msg) {
@@ -176,5 +176,17 @@ public class CCLog {
 
 	public static boolean isUnitTest() {
 		return CCLogInternal.isUnitTest();
+	}
+
+	private static String format(Throwable e)
+	{
+		if (e == null) return "NULL"; //$NON-NLS-1$
+
+		StringBuilder str = new StringBuilder(e.toString());
+		var c = e.getCause();
+
+		while (c != null) { str.append("\n\n").append("-------[ CAUSED BY ]-------").append("\n\n").append(c.toString()); c = c.getCause(); } //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+
+		return str.toString();
 	}
 }

@@ -1,22 +1,18 @@
 package de.jClipCorn.gui.frames.randomMovieFrame;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
-
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCMovie;
+import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.gui.guiComponents.jCoverChooser.JCoverChooser;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.helper.ImageUtilities;
+import de.jClipCorn.util.helper.SwingUtils;
+
+import javax.swing.*;
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class RandomMovieFrame extends JFrame implements Runnable {
 	private static final long serialVersionUID = -8142348609793380058L;
@@ -96,7 +92,7 @@ public class RandomMovieFrame extends JFrame implements Runnable {
 	public void run() {
 		for (int i = 0; i < CVRCOUNT; i++) {
 			if (i > 4) {
-				SwingUtilities.invokeLater(new Runnable() {
+				SwingUtils.invokeLater(new Runnable() {
 					@Override
 					public void run() {
 						CCMovie mov = getNextRandMovie();
@@ -106,7 +102,7 @@ public class RandomMovieFrame extends JFrame implements Runnable {
 					}
 				});
 			} else {
-				SwingUtilities.invokeLater(new Runnable() {
+				SwingUtils.invokeLater(new Runnable() {
 					@Override
 					public void run() {
 						CCMovie mov = getNextRandMovie();
@@ -125,7 +121,7 @@ public class RandomMovieFrame extends JFrame implements Runnable {
 			}
 		}
 		
-		SwingUtilities.invokeLater(new Runnable() {
+		SwingUtils.invokeLater(new Runnable() {
 			@Override
 			public void run() {
 				isShuffled = true;

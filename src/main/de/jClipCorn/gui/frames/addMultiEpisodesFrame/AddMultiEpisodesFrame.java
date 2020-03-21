@@ -23,6 +23,7 @@ import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.helper.FileChooserHelper;
 import de.jClipCorn.util.helper.SimpleFileUtils;
+import de.jClipCorn.util.helper.SwingUtils;
 import de.jClipCorn.util.listener.UpdateCallbackListener;
 import de.jClipCorn.util.stream.CCStreams;
 import org.apache.commons.io.FileUtils;
@@ -273,7 +274,7 @@ public class AddMultiEpisodesFrame extends JFrame {
 				for (int i = 0; i < data.size(); i++)
 				{
 					final int fi = i;
-					SwingUtilities.invokeLater(() -> progressBar.setValue(fi) );
+					SwingUtils.invokeLater(() -> progressBar.setValue(fi) );
 					if (data.get(i).MediaQueryResult == null)
 					{
 						try {
@@ -297,7 +298,7 @@ public class AddMultiEpisodesFrame extends JFrame {
 				final double _successsum = successsum;
 				final int _successcount = successcount;
 
-				SwingUtilities.invokeLater(() ->
+				SwingUtils.invokeLater(() ->
 				{
 
 					int avg = (_successcount == 0) ? 0 : (int)Math.round(_successsum / _successcount);
@@ -379,7 +380,7 @@ public class AddMultiEpisodesFrame extends JFrame {
 			}
 			finally
 			{
-				SwingUtilities.invokeLater(() ->
+				SwingUtils.invokeLater(() ->
 				{
 					setAllEnabled(true);
 					progressBar.setValue(0);
@@ -406,7 +407,7 @@ public class AddMultiEpisodesFrame extends JFrame {
 				for (int i = 0; i < data.size(); i++)
 				{
 					final int fi = i;
-					SwingUtilities.invokeLater(() -> progressBar.setValue(fi) );
+					SwingUtils.invokeLater(() -> progressBar.setValue(fi) );
 					if (data.get(i).MediaQueryResult == null)
 					{
 						try {
@@ -425,7 +426,7 @@ public class AddMultiEpisodesFrame extends JFrame {
 
 				final String errorsList = CCStreams.iterate(errors).stringjoin(p -> p+"", ", "); //$NON-NLS-1$ //$NON-NLS-2$
 
-				SwingUtilities.invokeLater(() ->
+				SwingUtils.invokeLater(() ->
 				{
 					if (!errors.isEmpty()) {
 
@@ -454,7 +455,7 @@ public class AddMultiEpisodesFrame extends JFrame {
 			}
 			finally
 			{
-				SwingUtilities.invokeLater(() ->
+				SwingUtils.invokeLater(() ->
 				{
 					setAllEnabled(true);
 					progressBar.setValue(0);
@@ -481,7 +482,7 @@ public class AddMultiEpisodesFrame extends JFrame {
 				for (int i = 0; i < data.size(); i++)
 				{
 					final int fi = i;
-					SwingUtilities.invokeLater(() -> progressBar.setValue(fi) );
+					SwingUtils.invokeLater(() -> progressBar.setValue(fi) );
 					if (data.get(i).MediaQueryResult == null)
 					{
 						try {
@@ -498,7 +499,7 @@ public class AddMultiEpisodesFrame extends JFrame {
 
 				final boolean _err = err;
 
-				SwingUtilities.invokeLater(() ->
+				SwingUtils.invokeLater(() ->
 				{
 					lsData.forceDataChangedRedraw();
 					_hasMediaInfo = !_err;
@@ -508,7 +509,7 @@ public class AddMultiEpisodesFrame extends JFrame {
 			}
 			finally
 			{
-				SwingUtilities.invokeLater(() ->
+				SwingUtils.invokeLater(() ->
 				{
 					setAllEnabled(true);
 					progressBar.setValue(0);
@@ -585,7 +586,7 @@ public class AddMultiEpisodesFrame extends JFrame {
 				for (NewEpisodeVM vm : data) {
 					try {
 						final int fi = i;
-						SwingUtilities.invokeAndWait(() -> { progressBar.setValue(fi); });
+						SwingUtils.invokeAndWait(() -> { progressBar.setValue(fi); });
 						i++;
 
 						File srcFile = new File(vm.SourcePath);
@@ -603,7 +604,7 @@ public class AddMultiEpisodesFrame extends JFrame {
 									SimpleFileUtils.copyWithProgress(srcFile, dstFile, (val, max) ->
 									{
 										int newvalue = (int)(((val * 100) / max));
-										SwingUtilities.invokeLater(() -> { progressBar2.setValue(newvalue); progressBar2.setMaximum(100); });
+										SwingUtils.invokeLater(() -> { progressBar2.setValue(newvalue); progressBar2.setMaximum(100); });
 									});
 								}
 								else if (mode == 1)
@@ -611,7 +612,7 @@ public class AddMultiEpisodesFrame extends JFrame {
 									SimpleFileUtils.copyWithProgress(srcFile, dstFile, (val, max) ->
 									{
 										int newvalue = (int)(((val * 100) / max));
-										SwingUtilities.invokeLater(() -> { progressBar2.setValue(newvalue); progressBar2.setMaximum(100); });
+										SwingUtils.invokeLater(() -> { progressBar2.setValue(newvalue); progressBar2.setMaximum(100); });
 									});
 									if (!srcFile.delete()) throw new Exception("Delete of '"+srcFile.getAbsolutePath()+"' failed"); //$NON-NLS-1$ //$NON-NLS-2$
 								}
@@ -627,7 +628,7 @@ public class AddMultiEpisodesFrame extends JFrame {
 							{
 								final int fi2 = i;
 
-								SwingUtilities.invokeLater(() ->
+								SwingUtils.invokeLater(() ->
 								{
 									CCLog.addError(e);
 									DialogHelper.showDispatchError(
@@ -641,7 +642,7 @@ public class AddMultiEpisodesFrame extends JFrame {
 						}
 
 						final String final_realTargetPath = realTargetPath;
-						SwingUtilities.invokeAndWait(() ->
+						SwingUtils.invokeAndWait(() ->
 						{
 							CCEpisode newEp = target.createNewEmptyEpisode();
 							newEp.beginUpdating();
@@ -663,7 +664,7 @@ public class AddMultiEpisodesFrame extends JFrame {
 					} catch (Exception e) {
 						final int fi = i;
 
-						SwingUtilities.invokeLater(() ->
+						SwingUtils.invokeLater(() ->
 						{
 							CCLog.addError(e);
 							DialogHelper.showDispatchError(
@@ -674,7 +675,7 @@ public class AddMultiEpisodesFrame extends JFrame {
 					}
 				}
 
-				SwingUtilities.invokeLater(() ->
+				SwingUtils.invokeLater(() ->
 				{
 					if (callback != null) callback.onUpdate(target);
 					dispose();
@@ -682,7 +683,7 @@ public class AddMultiEpisodesFrame extends JFrame {
 			}
 			finally
 			{
-				SwingUtilities.invokeLater(() ->
+				SwingUtils.invokeLater(() ->
 				{
 					setAllEnabled(true);
 					progressBar.setValue(0);

@@ -36,6 +36,7 @@ import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.formatter.FileSizeFormatter;
 import de.jClipCorn.util.formatter.TimeIntervallFormatter;
 import de.jClipCorn.util.helper.ImageUtilities;
+import de.jClipCorn.util.helper.SwingUtils;
 import de.jClipCorn.util.listener.ActionCallbackListener;
 import de.jClipCorn.util.listener.UpdateCallbackListener;
 import de.jClipCorn.util.stream.CCStreams;
@@ -719,7 +720,7 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 		final File f = files[0];
 		if (f == null) return;
 
-		SwingUtilities.invokeLater(() -> QuickAddEpisodeDialog.show(this, s, f));
+		SwingUtils.invokeLater(() -> QuickAddEpisodeDialog.show(this, s, f));
 	}
 
 	public CCSeason getSelectedSeason() {

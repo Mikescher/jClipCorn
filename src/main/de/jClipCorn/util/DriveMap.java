@@ -9,18 +9,17 @@ import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.datatypes.Tuple3;
 import de.jClipCorn.util.datatypes.Tuple4;
-import de.jClipCorn.util.helper.ApplicationHelper;
-import de.jClipCorn.util.helper.ProcessHelper;
-import de.jClipCorn.util.helper.RegExHelper;
-import de.jClipCorn.util.helper.WindowsJNAHelper;
+import de.jClipCorn.util.helper.*;
 import de.jClipCorn.util.stream.CCStreams;
 
-import javax.swing.*;
 import javax.swing.filechooser.FileSystemView;
 import java.io.File;
 import java.nio.file.FileStore;
 import java.nio.file.FileSystems;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class DriveMap {
 	private final static String REGEX_DRIVENAME_ESCAPE = " \\([A-Z]:\\)$";             //$NON-NLS-1$      // \([A-Z]:\)$
@@ -366,7 +365,7 @@ public class DriveMap {
 	}
 
 	private static void triggerOnChanged() {
-		SwingUtilities.invokeLater(() ->
+		SwingUtils.invokeLater(() ->
 		{
 			MainFrame inst = MainFrame.getInstance();
 			if (inst != null) {

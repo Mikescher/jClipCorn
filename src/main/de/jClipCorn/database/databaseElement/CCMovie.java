@@ -144,7 +144,7 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 			}
 			catch (Throwable e1)
 			{
-				DialogHelper.showLocalError(MainFrame.getInstance(), "Dialogs.UpdateViewedFailed");
+				DialogHelper.showLocalError(MainFrame.getInstance(), "Dialogs.UpdateViewedFailed"); //$NON-NLS-1$
 				CCLog.addError(e1);
 			}
 		}
@@ -335,7 +335,7 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 		}
 		catch (Throwable e1)
 		{
-			DialogHelper.showLocalError(MainFrame.getInstance(), "Dialogs.UpdateViewedFailed");
+			DialogHelper.showLocalError(MainFrame.getInstance(), "Dialogs.UpdateViewedFailed"); //$NON-NLS-1$
 			CCLog.addError(e1);
 		}
 	}
@@ -364,7 +364,7 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 		}
 		catch (Throwable e1)
 		{
-			DialogHelper.showLocalError(MainFrame.getInstance(), "Dialogs.UpdateViewedFailed");
+			DialogHelper.showLocalError(MainFrame.getInstance(), "Dialogs.UpdateViewedFailed"); //$NON-NLS-1$
 			CCLog.addError(e1);
 		}
 	}

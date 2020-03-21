@@ -1,21 +1,19 @@
 package de.jClipCorn.gui.frames.compareDatabaseFrame;
 
-import java.awt.Component;
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.swing.SwingUtilities;
-
+import de.jClipCorn.database.CCMovieList;
+import de.jClipCorn.features.log.CCLog;
+import de.jClipCorn.util.helper.SwingUtils;
+import de.jClipCorn.util.listener.ProgressCallbackListener;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
 
-import de.jClipCorn.database.CCMovieList;
-import de.jClipCorn.features.log.CCLog;
-import de.jClipCorn.util.listener.ProgressCallbackListener;
+import java.awt.*;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DatabaseComparator {
 	@SuppressWarnings("nls")
@@ -74,7 +72,7 @@ public class DatabaseComparator {
 			pcl.step();
 		}
 		
-		SwingUtilities.invokeLater(pcl::reset);
+		SwingUtils.invokeLater(pcl::reset);
 		
 		return resultlist;
 	}

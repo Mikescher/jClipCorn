@@ -2,6 +2,7 @@ package de.jClipCorn.util.listener;
 
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.util.Str;
+import de.jClipCorn.util.helper.SwingUtils;
 
 import javax.swing.*;
 
@@ -120,7 +121,7 @@ public class DoubleProgressCallbackProgressBarHelper implements DoubleProgressCa
 	}
 
 	private void update() {
-		SwingUtilities.invokeLater(() ->
+		SwingUtils.invokeLater(() ->
 		{
 			pbRoot.setMaximum(maxRoot);
 			pbRoot.setValue(progressRoot);

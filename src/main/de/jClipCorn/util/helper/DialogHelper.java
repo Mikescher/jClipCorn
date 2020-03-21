@@ -95,7 +95,7 @@ public class DialogHelper {
 		monitor.setMillisToDecideToPopup(0);
 		monitor.setMillisToPopup(0);
 		
-		SwingUtilities.invokeLater(() ->
+		SwingUtils.invokeLater(() ->
 		{
 			try {
 				monitor.setProgress(indeterminate ? 50 : 0);

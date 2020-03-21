@@ -24,6 +24,7 @@ import de.jClipCorn.properties.property.CCProperty;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.helper.ExtendedFocusTraversalOnArray;
 import de.jClipCorn.util.helper.LookAndFeelManager;
+import de.jClipCorn.util.helper.SwingUtils;
 
 public abstract class AutomaticSettingsFrame extends JFrame {
 	private static final long serialVersionUID = 4681197289662529891L;
@@ -108,7 +109,7 @@ public abstract class AutomaticSettingsFrame extends JFrame {
 
 			okValues();
 
-			SwingUtilities.invokeLater(() -> MainFrame.getInstance().onSettingsChanged());
+			SwingUtils.invokeLater(() -> MainFrame.getInstance().onSettingsChanged());
 
 			dispose();
 		});

@@ -5,21 +5,14 @@ package de.jClipCorn.util.helper;
  *
  */
 
-import java.awt.Component;
-import java.awt.Container;
+import de.jClipCorn.features.log.CCLog;
+
+import javax.swing.*;
+import java.awt.*;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.swing.JComponent;
-import javax.swing.UIDefaults;
-import javax.swing.UIManager;
+import java.util.*;
 
 /**
  * A collection of utility methods for Swing.
@@ -339,7 +332,7 @@ public final class SwingUtils {
 	/**
 	 * Exclude methods that return values that are meaningless to the user
 	 */
-	static Set<String> setExclude = new HashSet<>();
+	private static Set<String> setExclude = new HashSet<>();
 	static {
 		setExclude.add("getFocusCycleRootAncestor"); //$NON-NLS-1$
 		setExclude.add("getAccessibleContext"); //$NON-NLS-1$
@@ -397,5 +390,40 @@ public final class SwingUtils {
 			clazz = clazz.getSuperclass();
 		}
 		return clazz;
+	}
+
+	public static void invokeLater(Runnable fn)
+	{
+		SwingUtilities.invokeLater(() ->
+		{
+			try	{
+				fn.run();
+			} catch (Exception e) {
+				CCLog.addWarning("Exception in [SwingUtils.invokeLater]", e); //$NON-NLS-1$
+				throw e;
+			}
+		});
+	}
+
+	public static void invokeAndWait(Runnable fn) throws InvocationTargetException, InterruptedException
+	{
+		SwingUtilities.invokeAndWait(() ->
+		{
+			try	{
+				fn.run();
+			} catch (Exception e) {
+				CCLog.addWarning("Exception in [SwingUtils.invokeLater]", e); //$NON-NLS-1$
+				throw e;
+			}
+		});
+	}
+
+	public static void invokeAndWaitSafe(Runnable fn)
+	{
+		try	{
+			invokeAndWait(fn);
+		} catch (InterruptedException | InvocationTargetException e) {
+			CCLog.addError(e);
+		}
 	}
 }

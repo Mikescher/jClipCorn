@@ -14,8 +14,7 @@ import de.jClipCorn.properties.enumerations.ResourcePreloadMode;
 import de.jClipCorn.util.DriveMap;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.LookAndFeelManager;
-
-import javax.swing.*;
+import de.jClipCorn.util.helper.SwingUtils;
 
 //
 // ========== GRADLE ==========
@@ -65,7 +64,7 @@ public class Main {
 
 			init();
 
-			SwingUtilities.invokeLater(() ->
+			SwingUtils.invokeLater(() ->
 			{
 				mList.showInitialWizard();
 

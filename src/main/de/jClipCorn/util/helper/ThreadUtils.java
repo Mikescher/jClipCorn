@@ -7,12 +7,12 @@ import javax.swing.*;
 
 public class ThreadUtils {
 	public static void delay(int ms, Runnable r) {
-		new Thread(() -> { ThreadUtils.safeSleep(ms); SwingUtilities.invokeLater(r); }).start();
+		new Thread(() -> { ThreadUtils.safeSleep(ms); SwingUtils.invokeLater(r); }).start();
 	}
 
 	public static boolean invokeAndWaitSafe(Runnable r) {
 		try {
-			SwingUtilities.invokeAndWait(r);
+			SwingUtils.invokeAndWait(r);
 			return true;
 		} catch (InvocationTargetException | InterruptedException e) {
 			return false;
@@ -22,7 +22,7 @@ public class ThreadUtils {
 	public static void invokeAndWaitConditional(Runnable r) {
 		if (! SwingUtilities.isEventDispatchThread()) {
 			try {
-				SwingUtilities.invokeAndWait(r);
+				SwingUtils.invokeAndWait(r);
 			} catch (InvocationTargetException | InterruptedException e) {
 				CCLog.addError(e);
 			}

@@ -17,6 +17,7 @@ import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.helper.ExtendedFocusTraversalOnArray;
+import de.jClipCorn.util.helper.SwingUtils;
 import de.jClipCorn.util.http.HTTPUtilities;
 
 import javax.swing.*;
@@ -482,7 +483,7 @@ public class ParseOnlineDialog extends JDialog {
 			}
 
 			try {
-				SwingUtilities.invokeAndWait(() ->
+				SwingUtils.invokeAndWait(() ->
 				{
 					pbarSearch.setIndeterminate(false);
 					btnParse.setEnabled(true);
@@ -509,7 +510,7 @@ public class ParseOnlineDialog extends JDialog {
 		if (links == null) return;
 		
 		try {
-			SwingUtilities.invokeAndWait(() ->
+			SwingUtils.invokeAndWait(() ->
 			{
 				int ordering = 0;
 				for (Tuple<String, CCSingleOnlineReference> result : links) {
@@ -544,7 +545,7 @@ public class ParseOnlineDialog extends JDialog {
 		if (parser == null) return;
 		
 		try {
-			SwingUtilities.invokeAndWait(() ->
+			SwingUtils.invokeAndWait(() ->
 			{
 				resetAll();
 				pbarSearch.setIndeterminate(true);
@@ -557,7 +558,7 @@ public class ParseOnlineDialog extends JDialog {
 		final OnlineMetadata md = parser.getMetadata(ref, true);
 		
 		try {
-			SwingUtilities.invokeAndWait(() ->
+			SwingUtils.invokeAndWait(() ->
 			{
 				if (md.Title != null) edTitle.setText(md.Title);
 				if (md.Year != null) spnYear.setValue(md.Year);

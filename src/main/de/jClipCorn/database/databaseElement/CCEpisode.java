@@ -119,7 +119,7 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 			}
 			catch (Throwable e1)
 			{
-				DialogHelper.showLocalError(MainFrame.getInstance(), "Dialogs.UpdateViewedFailed");
+				DialogHelper.showLocalError(MainFrame.getInstance(), "Dialogs.UpdateViewedFailed"); //$NON-NLS-1$
 				CCLog.addError(e1);
 			}
 		}
@@ -148,7 +148,7 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 		}
 		catch (Throwable e1)
 		{
-			DialogHelper.showLocalError(MainFrame.getInstance(), "Dialogs.UpdateViewedFailed");
+			DialogHelper.showLocalError(MainFrame.getInstance(), "Dialogs.UpdateViewedFailed"); //$NON-NLS-1$
 			CCLog.addError(e1);
 		}
 	}
@@ -251,7 +251,7 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 		}
 		catch (Throwable e1)
 		{
-			DialogHelper.showLocalError(MainFrame.getInstance(), "Dialogs.UpdateViewedFailed");
+			DialogHelper.showLocalError(MainFrame.getInstance(), "Dialogs.UpdateViewedFailed"); //$NON-NLS-1$
 			CCLog.addError(e1);
 		}
 	}

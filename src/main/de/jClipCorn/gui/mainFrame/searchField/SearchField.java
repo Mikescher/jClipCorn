@@ -1,17 +1,15 @@
 package de.jClipCorn.gui.mainFrame.searchField;
 
-import java.awt.Color;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
+import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.gui.mainFrame.MainFrame;
+import de.jClipCorn.util.helper.SwingUtils;
 
-import javax.swing.JTextField;
-import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
+import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-
-import de.jClipCorn.gui.mainFrame.MainFrame;
-import de.jClipCorn.gui.localization.LocaleBundle;
+import java.awt.*;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 
 public class SearchField extends JTextField implements FocusListener, DocumentListener {
 	private static final long serialVersionUID = -93240990085507647L;
@@ -69,7 +67,7 @@ public class SearchField extends JTextField implements FocusListener, DocumentLi
 	}
 
 	private void onChange() {
-		SwingUtilities.invokeLater(new Runnable() {
+		SwingUtils.invokeLater(new Runnable() {
 			@Override
 			public void run() {
 				if (!getText().equals(EMPTY_VAL)) {

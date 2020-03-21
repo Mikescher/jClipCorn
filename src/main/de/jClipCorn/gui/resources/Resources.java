@@ -6,10 +6,10 @@ import de.jClipCorn.gui.resources.reftypes.*;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.formatter.PathFormatter;
+import de.jClipCorn.util.helper.SwingUtils;
 import de.jClipCorn.util.helper.ThreadUtils;
 import de.jClipCorn.util.stream.CCStreams;
 
-import javax.swing.*;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 
@@ -552,7 +552,7 @@ public class Resources {
 			Globals.TIMINGS.start(Globals.TIMING_BACKGROUND_PRELOADRESOURCES);
 			for (ResourceRef s : resources.values()) {
 				try {
-					SwingUtilities.invokeAndWait(s::preloadRootElement);
+					SwingUtils.invokeAndWait(s::preloadRootElement);
 				} catch (InterruptedException | InvocationTargetException e) {
 					CCLog.addError(e);
 				}

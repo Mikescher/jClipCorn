@@ -7,6 +7,7 @@ import de.jClipCorn.gui.guiComponents.ScalablePane;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.helper.ExtendedFocusTraversalOnArray;
+import de.jClipCorn.util.helper.SwingUtils;
 import de.jClipCorn.util.listener.ProgressCallbackProgressBarHelper;
 import de.jClipCorn.util.listener.UpdateCallbackListener;
 
@@ -157,7 +158,7 @@ public class FindCoverDialog extends JDialog {
 		btnParse.setEnabled(false);
 		btnStop.setEnabled(true);
 		
-		UpdateCallbackListener finishlistener = o -> SwingUtilities.invokeLater(() ->
+		UpdateCallbackListener finishlistener = o -> SwingUtils.invokeLater(() ->
 		{
 			btnParse.setEnabled(true);
 			btnStop.setEnabled(false);

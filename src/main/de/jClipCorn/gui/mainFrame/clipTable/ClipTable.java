@@ -59,7 +59,7 @@ public class ClipTable extends JScrollPane implements CCDBUpdateListener, ListSe
 		this.setViewportView(table);
 
 		adjuster = new TableColumnAdjuster(this, table);
-		adjuster.setConfig(CCStreams.iterate(MainFrameColumn.values()).stringjoin(e-> "10", "|"));
+		adjuster.setConfig(CCStreams.iterate(MainFrameColumn.values()).stringjoin(e-> "10", "|")); //$NON-NLS-1$ //$NON-NLS-2$
 
 		if (ml != null) { // Sonst meckert der WindowsBuilder
 			ml.addChangeListener(this);

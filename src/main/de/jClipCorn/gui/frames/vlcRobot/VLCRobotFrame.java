@@ -16,6 +16,7 @@ import de.jClipCorn.util.Str;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.formatter.TimeIntervallFormatter;
 import de.jClipCorn.util.helper.ApplicationHelper;
+import de.jClipCorn.util.helper.SwingUtils;
 import de.jClipCorn.util.helper.ThreadUtils;
 import de.jClipCorn.util.stream.CCStreams;
 import de.jClipCorn.util.vlcquery.VLCConnection;
@@ -226,7 +227,7 @@ public class VLCRobotFrame extends JFrame {
 		if (status.Status == VLCPlayerStatus.PLAYING && status.Random) VLCConnection.toggleRandom();
 		if (status.Status == VLCPlayerStatus.PLAYING && status.Loop)   VLCConnection.toggleLoop();
 
-		SwingUtilities.invokeLater(() ->
+		SwingUtils.invokeLater(() ->
 		{
 			if (status.Status == VLCPlayerStatus.PLAYING)
 			{
@@ -432,12 +433,12 @@ public class VLCRobotFrame extends JFrame {
 					boolean ok = VLCConnection.enqueue(PathFormatter.fromCCPath(parts.get(i)), startPlayback && i==0);
 					if (!ok)
 					{
-						SwingUtilities.invokeLater(() -> _clientQueue.add(0, q));
+						SwingUtils.invokeLater(() -> _clientQueue.add(0, q));
 						return;
 					}
 				}
 
-				SwingUtilities.invokeLater(() -> q.Element.updateViewedAndHistoryFromUI());
+				SwingUtils.invokeLater(() -> q.Element.updateViewedAndHistoryFromUI());
 
 				if (startPlayback)
 				{
@@ -449,14 +450,14 @@ public class VLCRobotFrame extends JFrame {
 							boolean ok = VLCConnection.enqueue(PathFormatter.fromCCPath(parts.get(i)), i==0);
 							if (!ok)
 							{
-								SwingUtilities.invokeLater(() -> _clientQueue.add(0, q));
+								SwingUtils.invokeLater(() -> _clientQueue.add(0, q));
 								return;
 							}
 						}
 					}
 				}
 
-				if (fixPosition) SwingUtilities.invokeLater(() -> fixVLCPosition(lastPos));
+				if (fixPosition) SwingUtils.invokeLater(() -> fixVLCPosition(lastPos));
 
 			}).start();
 		}
@@ -476,12 +477,12 @@ public class VLCRobotFrame extends JFrame {
 					boolean ok = VLCConnection.enqueue(PathFormatter.fromCCPath(parts.get(i)), startPlayback && i==0);
 					if (!ok)
 					{
-						SwingUtilities.invokeLater(() -> q.ElementQueue.add(0, nextSub));
+						SwingUtils.invokeLater(() -> q.ElementQueue.add(0, nextSub));
 						return;
 					}
 				}
 
-				SwingUtilities.invokeLater(nextSub::updateViewedAndHistoryFromUI);
+				SwingUtils.invokeLater(nextSub::updateViewedAndHistoryFromUI);
 
 				if (startPlayback)
 				{
@@ -493,7 +494,7 @@ public class VLCRobotFrame extends JFrame {
 							boolean ok = VLCConnection.enqueue(PathFormatter.fromCCPath(parts.get(i)), i==0);
 							if (!ok)
 							{
-								SwingUtilities.invokeLater(() -> q.ElementQueue.add(0, nextSub));
+								SwingUtils.invokeLater(() -> q.ElementQueue.add(0, nextSub));
 								return;
 							}
 						}
@@ -502,7 +503,7 @@ public class VLCRobotFrame extends JFrame {
 
 				if (q.ElementQueue.size() == 0) _clientQueue.remove(q);
 
-				if (fixPosition) SwingUtilities.invokeLater(() -> fixVLCPosition(lastPos));
+				if (fixPosition) SwingUtils.invokeLater(() -> fixVLCPosition(lastPos));
 
 			}).start();
 		}

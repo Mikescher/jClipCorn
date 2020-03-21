@@ -1,21 +1,5 @@
 package de.jClipCorn.gui.frames.initialConfigFrame;
 
-import java.util.Vector;
-
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JDialog;
-import javax.swing.JFileChooser;
-import javax.swing.JLabel;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
-import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
-
-import org.apache.commons.lang.StringUtils;
-
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.properties.CCProperties;
@@ -25,6 +9,11 @@ import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.helper.FileChooserHelper;
 import de.jClipCorn.util.helper.LookAndFeelManager;
+import de.jClipCorn.util.helper.SwingUtils;
+import org.apache.commons.lang.StringUtils;
+
+import javax.swing.*;
+import java.util.Vector;
 
 public class InitialConfigFrame extends JDialog {
 	private static final long serialVersionUID = -2244186919409771706L;
@@ -201,7 +190,7 @@ public class InitialConfigFrame extends JDialog {
 		{
 			try { Thread.sleep(250); } catch (InterruptedException e) { /**/ }
 
-			SwingUtilities.invokeLater(() ->
+			SwingUtils.invokeLater(() ->
 			{
 				if (cbxLooknFeel.getSelectedIndex() != idx) return;
 

@@ -19,6 +19,7 @@ import de.jClipCorn.util.datatypes.RefParam;
 import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.exceptions.CCFormatException;
 import de.jClipCorn.util.helper.DialogHelper;
+import de.jClipCorn.util.helper.SwingUtils;
 import de.jClipCorn.util.listener.ProgressCallbackProgressBarHelper;
 import de.jClipCorn.util.stream.CCStreams;
 import org.gpl.JSplitButton.JSplitButton;
@@ -269,7 +270,7 @@ public class DatabaseHistoryFrame extends JFrame {
 		{
 			try
 			{
-				SwingUtilities.invokeLater(() ->
+				SwingUtils.invokeLater(() ->
 				{
 					setEnabled(false);
 					MainFrame.getInstance().beginBlockingIntermediate();
@@ -291,7 +292,7 @@ public class DatabaseHistoryFrame extends JFrame {
 
 				Collections.reverse(data);
 
-				SwingUtilities.invokeLater(() ->
+				SwingUtils.invokeLater(() ->
 				{
 					tableEntries.setData(data);
 

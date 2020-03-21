@@ -1,22 +1,18 @@
 package de.jClipCorn.gui.frames.findCoverFrame;
 
-import java.awt.Color;
+import de.jClipCorn.gui.guiComponents.WrapFlowLayout;
+import de.jClipCorn.util.helper.ImageUtilities;
+import de.jClipCorn.util.helper.SwingUtils;
+import de.jClipCorn.util.lambda.Func1to0;
+import de.jClipCorn.util.listener.UpdateCallbackListener;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.swing.ImageIcon;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.SwingUtilities;
-
-import de.jClipCorn.gui.guiComponents.WrapFlowLayout;
-import de.jClipCorn.util.helper.ImageUtilities;
-import de.jClipCorn.util.lambda.Func1to0;
-import de.jClipCorn.util.listener.UpdateCallbackListener;
 
 public class CoverPanel extends JPanel implements UpdateCallbackListener {
 	private static final long serialVersionUID = -1988259985804809637L;
@@ -91,7 +87,7 @@ public class CoverPanel extends JPanel implements UpdateCallbackListener {
 
 	@Override
 	public void onUpdate(final Object o) {
-		SwingUtilities.invokeLater(new Runnable() {
+		SwingUtils.invokeLater(new Runnable() {
 			@Override
 			public void run() {
 				addCover((BufferedImage) o);

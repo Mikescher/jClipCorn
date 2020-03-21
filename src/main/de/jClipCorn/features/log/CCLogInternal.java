@@ -7,6 +7,7 @@ import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.helper.ApplicationHelper;
 import de.jClipCorn.util.helper.DialogHelper;
+import de.jClipCorn.util.helper.SwingUtils;
 import de.jClipCorn.util.sqlwrapper.StatementType;
 
 import javax.swing.*;
@@ -252,7 +253,7 @@ public class CCLogInternal {
 		changed = true;
 
 		if (! SwingUtilities.isEventDispatchThread()) {
-			SwingUtilities.invokeLater(() ->
+			SwingUtils.invokeLater(() ->
 			{
 				synchronized (_obsLock) {
 					for(CCLogChangedListener ls : listener) {
@@ -307,7 +308,7 @@ public class CCLogInternal {
 	private static void updateMainFrameLabel() {
 		if (! SwingUtilities.isEventDispatchThread()) {
 			try {
-				SwingUtilities.invokeAndWait(() ->
+				SwingUtils.invokeAndWait(() ->
 				{
 					MainFrame mf =  MainFrame.getInstance();
 					if (mf != null) {

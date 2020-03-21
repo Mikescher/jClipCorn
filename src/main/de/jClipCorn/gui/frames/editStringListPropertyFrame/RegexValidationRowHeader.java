@@ -1,6 +1,7 @@
 package de.jClipCorn.gui.frames.editStringListPropertyFrame;
 
 import de.jClipCorn.properties.property.CCRegexListProperty;
+import de.jClipCorn.util.helper.SwingUtils;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -206,7 +207,7 @@ public class RegexValidationRowHeader extends JPanel implements CaretListener, D
 	 * A document change may affect the number of displayed lines of text. Therefore the lines numbers will also change.
 	 */
 	private void documentChanged() {
-		SwingUtilities.invokeLater(new Runnable() {
+		SwingUtils.invokeLater(new Runnable() {
 			@Override
 			public void run() {
 				repaint();

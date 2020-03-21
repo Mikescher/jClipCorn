@@ -28,6 +28,7 @@ import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.TimeKeeper;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.formatter.TimeIntervallFormatter;
+import de.jClipCorn.util.helper.SwingUtils;
 import de.jClipCorn.util.helper.ThreadUtils;
 import de.jClipCorn.util.lambda.Func1to1;
 
@@ -387,7 +388,7 @@ public class StatisticsFrame extends JFrame {
 
 			pnlCenter.validate();
 
-			new Thread(() -> { ThreadUtils.safeSleep(1); SwingUtilities.invokeLater(() -> { if (currentChart!=null) currentChart.onShow(); }); }).start();
+			new Thread(() -> { ThreadUtils.safeSleep(1); SwingUtils.invokeLater(() -> { if (currentChart!=null) currentChart.onShow(); }); }).start();
 		} else {
 			lblChartCaption.setText(""); //$NON-NLS-1$
 

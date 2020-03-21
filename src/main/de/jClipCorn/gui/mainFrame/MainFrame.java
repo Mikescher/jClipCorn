@@ -36,6 +36,7 @@ import de.jClipCorn.util.UpdateConnector;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.helper.LookAndFeelManager;
+import de.jClipCorn.util.helper.SwingUtils;
 import de.jClipCorn.util.stream.CCStreams;
 
 import javax.swing.*;
@@ -167,7 +168,7 @@ public class MainFrame extends JFrame implements CCDBUpdateListener, FileDrop.Li
 		if (SwingUtilities.isEventDispatchThread()) {
 			runnner.run();
 		} else {
-			try { SwingUtilities.invokeAndWait(runnner); } catch (InvocationTargetException | InterruptedException e) { CCLog.addError(e); }
+			try { SwingUtils.invokeAndWait(runnner); } catch (InvocationTargetException | InterruptedException e) { CCLog.addError(e); }
 		}
 	}
 	
@@ -183,7 +184,7 @@ public class MainFrame extends JFrame implements CCDBUpdateListener, FileDrop.Li
 		if (SwingUtilities.isEventDispatchThread()) {
 			runnner.run();
 		} else {
-			SwingUtilities.invokeLater(runnner);
+			SwingUtils.invokeLater(runnner);
 		}
 	}
 
@@ -363,7 +364,7 @@ public class MainFrame extends JFrame implements CCDBUpdateListener, FileDrop.Li
 	@Override
 	public void onAfterLoad() {
 		if (CCProperties.getInstance().PROP_COMMON_CHECKFORUPDATES.getValue() && ! Main.BETA) {
-			new UpdateConnector(Main.TITLE, Main.VERSION, (src, available, version) -> SwingUtilities.invokeLater(() -> 
+			new UpdateConnector(Main.TITLE, Main.VERSION, (src, available, version) -> SwingUtils.invokeLater(() ->
 			{
 				if (available) {
 					if (Main.DEBUG) {
@@ -418,7 +419,7 @@ public class MainFrame extends JFrame implements CCDBUpdateListener, FileDrop.Li
 		if (files.length>0) {
 
 			if (CCStreams.iterate(files).all(CCFileFormat::isValidMovieFormat)) {
-				SwingUtilities.invokeLater(() -> new QuickAddMoviesDialog(this, getMovielist(), files).setVisible(true));
+				SwingUtils.invokeLater(() -> new QuickAddMoviesDialog(this, getMovielist(), files).setVisible(true));
 				return;
 			}
 

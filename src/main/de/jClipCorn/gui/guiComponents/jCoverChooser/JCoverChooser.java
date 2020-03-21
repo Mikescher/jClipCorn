@@ -1,13 +1,12 @@
 package de.jClipCorn.gui.guiComponents.jCoverChooser;
 
 import de.jClipCorn.database.databaseElement.ICCCoveredElement;
-import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.gui.frames.coverPreviewFrame.CoverPreviewFrame;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.helper.ImageUtilities;
-import de.jClipCorn.util.lambda.Func0to0;
+import de.jClipCorn.util.helper.SwingUtils;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -16,7 +15,6 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -178,22 +176,14 @@ public class JCoverChooser extends JComponent implements MouseListener {
 		BufferedImage img_full = elem.getCover();
 		Tuple<Integer, Integer> sz = ImageUtilities.calcImageSizeToFit(img_full.getWidth(), img_full.getHeight(), coverWidth, coverHeight);
 		BufferedImage img_scale = ImageUtilities.getScaledInstance(img_full, sz.Item1, sz.Item2);
-		
-		swingInvoke(() -> 
+
+		SwingUtils.invokeAndWaitSafe(() ->
 		{
 			images_full.set(idx, img_full);
 			images_scale.set(idx, img_scale);
 			
 			update(true);
 		});
-	}
-	
-	private void swingInvoke(Func0to0 f) {
-		try	{
-			SwingUtilities.invokeAndWait(f::invoke);
-		} catch (InterruptedException | InvocationTargetException e) {
-			CCLog.addError(e);
-		}
 	}
 
 	@Override

@@ -27,6 +27,7 @@ import de.jClipCorn.util.formatter.FileSizeFormatter;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.helper.SimpleFileUtils;
+import de.jClipCorn.util.helper.SwingUtils;
 import de.jClipCorn.util.listener.UpdateCallbackListener;
 import de.jClipCorn.util.parser.EpisodeFilenameParserResult;
 import de.jClipCorn.util.parser.FilenameParser;
@@ -303,7 +304,7 @@ public class QuickAddEpisodeDialog extends JDialog {
 			try {
 				MediaQueryResult dat = MediaQueryRunner.query(edSource.getText(), true);
 
-				SwingUtilities.invokeLater(() -> 
+				SwingUtils.invokeLater(() ->
 				{
 					if (dat.AudioLanguages != null) {
 						CCDBLanguageList dbll = dat.AudioLanguages;
@@ -318,7 +319,7 @@ public class QuickAddEpisodeDialog extends JDialog {
 				// ignore
 				CCLog.addWarning(e);
 			} finally {
-				SwingUtilities.invokeLater(() -> pbar.setVisible(false));
+				SwingUtils.invokeLater(() -> pbar.setVisible(false));
 			}
 			
 		}, "QA_MINFO").start(); //$NON-NLS-1$
@@ -399,7 +400,7 @@ public class QuickAddEpisodeDialog extends JDialog {
 					FileUtils.forceMkdir(dstFile.getParentFile());
 
 					progressValueCache = 0;
-					SwingUtilities.invokeAndWait(() ->
+					SwingUtils.invokeAndWait(() ->
 					{
 						progressBar.setVisible(true);
 						progressBar.setMaximum(100);
@@ -412,12 +413,12 @@ public class QuickAddEpisodeDialog extends JDialog {
 						if (progressValueCache != newvalue)
 						{
 							progressValueCache = newvalue;
-							SwingUtilities.invokeLater(() -> { progressBar.setValue(newvalue); });
+							SwingUtils.invokeLater(() -> { progressBar.setValue(newvalue); });
 						}
 					});
 				}
 
-				SwingUtilities.invokeLater(() ->
+				SwingUtils.invokeLater(() ->
 				{
 					CCEpisode newEp = season.createNewEmptyEpisode();
 					newEp.beginUpdating();
@@ -440,13 +441,13 @@ public class QuickAddEpisodeDialog extends JDialog {
 				});
 
 			} catch (Exception e) {
-				SwingUtilities.invokeLater(() ->
+				SwingUtils.invokeLater(() ->
 				{
 					CCLog.addError(e);
 					DialogHelper.showDispatchError(this, LocaleBundle.getString("QuickAddEpisodeDialog.dialogs.error_caption"), LocaleBundle.getString("QuickAddEpisodeDialog.dialogs.error")); //$NON-NLS-1$ //$NON-NLS-2$
 				});
 			} finally {
-				SwingUtilities.invokeLater(() -> contentPanel.setEnabled(true) );
+				SwingUtils.invokeLater(() -> contentPanel.setEnabled(true) );
 			}
 		}).start();
 	}

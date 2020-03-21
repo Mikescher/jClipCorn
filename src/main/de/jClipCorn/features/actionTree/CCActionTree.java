@@ -61,6 +61,7 @@ import de.jClipCorn.util.helper.ApplicationHelper;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.helper.FileChooserHelper;
 import de.jClipCorn.util.helper.SimpleFileUtils;
+import de.jClipCorn.util.helper.SwingUtils;
 import de.jClipCorn.util.listener.ActionCallbackListener;
 
 import javax.swing.*;
@@ -678,7 +679,7 @@ public class CCActionTree extends UIActionTree{
 	}
 
 	private void onClickHelpCheckUpdates(CCTreeActionEvent e) {
-		new UpdateConnector(Main.TITLE, Main.VERSION, (src, available, version) -> SwingUtilities.invokeLater(() ->
+		new UpdateConnector(Main.TITLE, Main.VERSION, (src, available, version) -> SwingUtils.invokeLater(() ->
 		{
 			ShowUpdateFrame suf = new ShowUpdateFrame(MainFrame.getInstance(), src, available);
 			suf.setVisible(true);

@@ -5,8 +5,6 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Iterator;
 
-import javax.swing.SwingUtilities;
-
 import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguage;
 import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguageList;
 import org.jdom2.DataConversionException;
@@ -29,6 +27,7 @@ import de.jClipCorn.util.exceptions.CCFormatException;
 import de.jClipCorn.util.exceptions.EnumFormatException;
 import de.jClipCorn.util.formatter.RomanNumberFormatter;
 import de.jClipCorn.util.helper.DialogHelper;
+import de.jClipCorn.util.helper.SwingUtils;
 
 @SuppressWarnings("nls")
 /*
@@ -128,12 +127,7 @@ public class CCBXMLReader {
 		
 		final CCMovie finmov = newMov;
 		try {
-			SwingUtilities.invokeAndWait(new Runnable() {
-				@Override
-				public void run() {
-					finmov.endUpdating();
-				}
-			});
+			SwingUtils.invokeAndWait(() -> finmov.endUpdating());
 		} catch (InvocationTargetException | InterruptedException e1) {
 			CCLog.addError(e1);
 		}
@@ -167,12 +161,7 @@ public class CCBXMLReader {
 		
 		final CCSeries finser = newSer;
 		try {
-			SwingUtilities.invokeAndWait(new Runnable() {
-				@Override
-				public void run() {
-					finser.endUpdating();
-				}
-			});
+			SwingUtils.invokeAndWait(() -> finser.endUpdating());
 		} catch (InvocationTargetException | InterruptedException e1) {
 			CCLog.addError(e1);
 		}
@@ -197,12 +186,7 @@ public class CCBXMLReader {
 		
 		final CCSeason finseas = newSeas;
 		try {
-			SwingUtilities.invokeAndWait(new Runnable() {
-				@Override
-				public void run() {
-					finseas.endUpdating();
-				}
-			});
+			SwingUtils.invokeAndWait(() -> finseas.endUpdating());
 		} catch (InvocationTargetException | InterruptedException e) {
 			CCLog.addError(e);
 		}
@@ -225,15 +209,13 @@ public class CCBXMLReader {
 		
 		final CCEpisode finep = newEp;
 		try {
-			SwingUtilities.invokeAndWait(new Runnable() {
-				@Override
-				public void run() {
-					try {
-						finep.endUpdating();
-					} catch (Exception e) {
-						CCLog.addError(e);
-						throw e;
-					}
+			SwingUtils.invokeAndWait(() -> 
+			{
+				try {
+					finep.endUpdating();
+				} catch (Exception e) {
+					CCLog.addError(e);
+					throw e;
 				}
 			});
 		} catch (InvocationTargetException | InterruptedException e) {

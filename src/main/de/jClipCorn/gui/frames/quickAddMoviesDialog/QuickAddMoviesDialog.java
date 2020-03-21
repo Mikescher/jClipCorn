@@ -15,6 +15,8 @@ import javax.swing.event.DocumentListener;
 import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.helper.SimpleFileUtils;
+import de.jClipCorn.util.helper.SwingUtils;
+
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.FormSpecs;
@@ -170,7 +172,7 @@ public class QuickAddMoviesDialog extends JDialog {
 			{
 				progressValueCache = 0;
 				try {
-					SwingUtilities.invokeAndWait(() ->
+					SwingUtils.invokeAndWait(() ->
 					{
 						progressBar1.setVisible(true);
 						progressBar1.setMaximum(inputFiles.length + 1);
@@ -193,7 +195,7 @@ public class QuickAddMoviesDialog extends JDialog {
 					String dst = PathFormatter.fromCCPath(p.Item2);
 
 					final int iv = i;
-					SwingUtilities.invokeLater(() ->
+					SwingUtils.invokeLater(() ->
 					{
 						progressBar1.setValue(iv);
 						progressBar2.setValue(0);
@@ -209,7 +211,7 @@ public class QuickAddMoviesDialog extends JDialog {
 							if (progressValueCache != newvalue)
 							{
 								progressValueCache = newvalue;
-								SwingUtilities.invokeLater(() -> { progressBar2.setValue(newvalue); });
+								SwingUtils.invokeLater(() -> { progressBar2.setValue(newvalue); });
 							}
 						});
 					} catch (IOException e) {
@@ -220,13 +222,13 @@ public class QuickAddMoviesDialog extends JDialog {
 					destinations.add(dst);
 				}
 
-				SwingUtilities.invokeLater(() ->
+				SwingUtils.invokeLater(() ->
 				{
 					progressBar1.setValue(progressBar1.getMaximum());
 					progressBar2.setValue(progressBar2.getMaximum());
 				});
 
-				SwingUtilities.invokeLater(() ->
+				SwingUtils.invokeLater(() ->
 				{
 					for (String dst : destinations) {
 						AddMovieFrame amf = new AddMovieFrame(this, movielist, dst);
@@ -237,7 +239,7 @@ public class QuickAddMoviesDialog extends JDialog {
 				});
 
 			} finally {
-				SwingUtilities.invokeLater(() -> contentPanel.setEnabled(true) );
+				SwingUtils.invokeLater(() -> contentPanel.setEnabled(true) );
 			}
 		}).start();
 	}

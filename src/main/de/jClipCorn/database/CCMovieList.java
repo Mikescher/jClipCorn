@@ -27,6 +27,7 @@ import de.jClipCorn.util.comparator.CCSeriesComparator;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.ApplicationHelper;
+import de.jClipCorn.util.helper.SwingUtils;
 import de.jClipCorn.util.lambda.Func0to0;
 import de.jClipCorn.util.sqlwrapper.CCSQLKVKey;
 import de.jClipCorn.util.stream.CCStream;
@@ -35,7 +36,6 @@ import de.jClipCorn.util.stream.IterableStream;
 import org.jdom2.Document;
 import org.jdom2.Element;
 
-import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
@@ -135,7 +135,7 @@ public class CCMovieList {
 
 				fireOnAfterLoad();
 
-				if (postInit != null) SwingUtilities.invokeLater(postInit::invoke);
+				if (postInit != null) SwingUtils.invokeLater(postInit::invoke);
 			}
 			Globals.TIMINGS.stop(Globals.TIMING_LOAD_TOTAL);
 
@@ -283,7 +283,7 @@ public class CCMovieList {
 	// Only used by CCDatabase.fillMovieList
 	public void directlyInsert(final CCDatabaseElement m) {
 		try {
-			SwingUtilities.invokeAndWait(() -> {
+			SwingUtils.invokeAndWait(() -> {
 				list.add(m);
 				fireOnAddDatabaseElement(m);
 			});
@@ -295,7 +295,7 @@ public class CCMovieList {
 	// Only used by CCDatabase.fillMovieList
 	public void directlyInsert(final List<CCDatabaseElement> m) {
 		try {
-			SwingUtilities.invokeAndWait(() -> list.addAll(m));
+			SwingUtils.invokeAndWait(() -> list.addAll(m));
 		} catch (InvocationTargetException | InterruptedException e) {
 			CCLog.addError(e);
 		}
@@ -313,7 +313,7 @@ public class CCMovieList {
 
 	public void fireOnAddDatabaseElement(final CCDatabaseElement el) {
 		if (!EventQueue.isDispatchThread()) {
-			SwingUtilities.invokeLater(() -> fireOnAddDatabaseElement(el));
+			SwingUtils.invokeLater(() -> fireOnAddDatabaseElement(el));
 			return;
 		}
 
@@ -324,7 +324,7 @@ public class CCMovieList {
 
 	public void fireOnChangeDatabaseElement(final CCDatabaseElement el) {
 		if (!EventQueue.isDispatchThread()) {
-			SwingUtilities.invokeLater(() -> fireOnChangeDatabaseElement(el));
+			SwingUtils.invokeLater(() -> fireOnChangeDatabaseElement(el));
 			return;
 		}
 
@@ -335,7 +335,7 @@ public class CCMovieList {
 
 	public void fireOnRemDatabaseElement(final CCDatabaseElement el) {
 		if (!EventQueue.isDispatchThread()) {
-			SwingUtilities.invokeLater(() -> fireOnRemDatabaseElement(el));
+			SwingUtils.invokeLater(() -> fireOnRemDatabaseElement(el));
 			return;
 		}
 
@@ -346,7 +346,7 @@ public class CCMovieList {
 
 	private void fireOnAfterLoad() {
 		if (!EventQueue.isDispatchThread()) {
-			SwingUtilities.invokeLater(this::fireOnAfterLoad);
+			SwingUtils.invokeLater(this::fireOnAfterLoad);
 			return;
 		}
 		
@@ -359,7 +359,7 @@ public class CCMovieList {
 	
 	public void fireOnRefresh() {
 		if (!EventQueue.isDispatchThread()) {
-			SwingUtilities.invokeLater(this::fireOnRefresh);
+			SwingUtils.invokeLater(this::fireOnRefresh);
 			return;
 		}
 
@@ -477,7 +477,7 @@ public class CCMovieList {
 	public void remove(final CCDatabaseElement el) {
 		if (!EventQueue.isDispatchThread()) {
 			try {
-				SwingUtilities.invokeAndWait(() -> remove(el));
+				SwingUtils.invokeAndWait(() -> remove(el));
 			} catch (InvocationTargetException | InterruptedException e) {
 				CCLog.addError(e);
 			}

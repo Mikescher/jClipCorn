@@ -21,6 +21,7 @@ import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.formatter.FileSizeFormatter;
 import de.jClipCorn.util.formatter.TimeIntervallFormatter;
 import de.jClipCorn.util.helper.DialogHelper;
+import de.jClipCorn.util.helper.SwingUtils;
 import de.jClipCorn.util.stream.CCStreams;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
@@ -648,7 +649,7 @@ public class EditMediaInfoDialog extends JDialog {
 			{
 				PartialMediaInfo mqr = source.run(filename);
 				String raw = source.getFullOutput(filename, mqr);
-				SwingUtilities.invokeLater(() ->
+				SwingUtils.invokeLater(() ->
 				{
 					set.updateData(mqr, raw);
 					doShowHints(Opt.of(mqr), set.Type);
@@ -656,7 +657,7 @@ public class EditMediaInfoDialog extends JDialog {
 			}
 			catch (IOException e) {
 				CCLog.addWarning(e);
-				SwingUtilities.invokeLater(() -> {
+				SwingUtils.invokeLater(() -> {
 					GenericTextDialog.showText(
 							this,
 							getTitle(),
@@ -666,7 +667,7 @@ public class EditMediaInfoDialog extends JDialog {
 			}
 			catch (MetadataQueryException e) {
 				CCLog.addWarning(e);
-				SwingUtilities.invokeLater(() -> {
+				SwingUtils.invokeLater(() -> {
 					GenericTextDialog.showText(
 							this,
 							getTitle(),
@@ -676,7 +677,7 @@ public class EditMediaInfoDialog extends JDialog {
 			}
 			finally
 			{
-				SwingUtilities.invokeLater(() -> {
+				SwingUtils.invokeLater(() -> {
 					doUpdateEnabled(false);
 					progressBar.setIndeterminate(false);
 				});

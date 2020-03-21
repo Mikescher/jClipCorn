@@ -1,7 +1,8 @@
 package de.jClipCorn.util.listener;
 
-import javax.swing.ProgressMonitor;
-import javax.swing.SwingUtilities;
+import de.jClipCorn.util.helper.SwingUtils;
+
+import javax.swing.*;
 
 public class ProgressCallbackProgressMonitorHelper implements ProgressCallbackListener {
 	private final ProgressMonitor monitor;
@@ -46,7 +47,7 @@ public class ProgressCallbackProgressMonitorHelper implements ProgressCallbackLi
 	private void update() {
 		final String message = String.format("Completed %.1f%%.\n", getPercentage()); //$NON-NLS-1$
 
-		SwingUtilities.invokeLater(new Runnable() {
+		SwingUtils.invokeLater(new Runnable() {
 			@Override
 			public void run() {
 				monitor.setMaximum(max);

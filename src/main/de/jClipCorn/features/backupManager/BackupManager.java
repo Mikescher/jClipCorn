@@ -21,6 +21,7 @@ import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.DialogHelper;
+import de.jClipCorn.util.helper.SwingUtils;
 import de.jClipCorn.util.helper.ThreadUtils;
 import de.jClipCorn.util.lambda.Func0to0;
 import de.jClipCorn.util.lambda.Func0to0WithIOException;
@@ -342,7 +343,7 @@ public class BackupManager {
 			new Thread(() ->
 			{
 				waitForInitialized(Func0to0.NOOP);
-				SwingUtilities.invokeLater(() ->
+				SwingUtils.invokeLater(() ->
 				{
 					monitor.close();
 					action.invoke(this);

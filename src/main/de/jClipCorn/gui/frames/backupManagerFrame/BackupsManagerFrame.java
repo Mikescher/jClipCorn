@@ -15,7 +15,6 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.SwingUtilities;
 import javax.swing.border.EtchedBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -37,6 +36,7 @@ import de.jClipCorn.util.formatter.FileSizeFormatter;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.ApplicationHelper;
 import de.jClipCorn.util.helper.DialogHelper;
+import de.jClipCorn.util.helper.SwingUtils;
 
 public class BackupsManagerFrame extends JFrame {
 	private static final long serialVersionUID = 1277211351977537864L;
@@ -376,12 +376,7 @@ public class BackupsManagerFrame extends JFrame {
 					movielist.reconnectDatabase();
 				}
 				
-				SwingUtilities.invokeLater(new Runnable() {
-					@Override
-					public void run() {
-						updateList();
-					}
-				});
+				SwingUtils.invokeLater(() -> updateList());
 			}
 		}, "THREAD_BACKUPSMANAGERFRAME_CREATEBACKUP").start(); //$NON-NLS-1$
 	}
@@ -393,7 +388,7 @@ public class BackupsManagerFrame extends JFrame {
 				movielist.disconnectDatabase(true);
 				
 				if (manager.restoreBackupWithWait(BackupsManagerFrame.this, bkp)) {
-					SwingUtilities.invokeLater(new Runnable() {
+					SwingUtils.invokeLater(new Runnable() {
 						@Override
 						public void run() {
 							DialogHelper.showDispatchLocalInformation(BackupsManagerFrame.this, "BackupsManagerFrame.dialogs.ApplicationIsRestarting"); //$NON-NLS-1$

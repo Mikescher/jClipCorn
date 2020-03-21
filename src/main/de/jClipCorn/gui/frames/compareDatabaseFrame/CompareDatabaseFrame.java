@@ -18,6 +18,7 @@ import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.ExtendedFocusTraversalOnArray;
 import de.jClipCorn.util.helper.FileChooserHelper;
 import de.jClipCorn.util.helper.SimpleFileUtils;
+import de.jClipCorn.util.helper.SwingUtils;
 import de.jClipCorn.util.listener.ProgressCallbackProgressBarHelper;
 import org.jdom2.Document;
 import org.jdom2.output.Format;
@@ -508,7 +509,7 @@ public class CompareDatabaseFrame extends JFrame {
 				public void run() {
 					generateCompareFile(fpath);
 
-					SwingUtilities.invokeLater(new Runnable() {
+					SwingUtils.invokeLater(new Runnable() {
 						@Override
 						public void run() {
 							CompareDatabaseFrame.this.setEnabled(true);
@@ -543,7 +544,7 @@ public class CompareDatabaseFrame extends JFrame {
 		{
 			final List<CompareElement> fl = DatabaseComparator.compare(new File(edDB1.getText()), new File(edDB2.getText()), new ProgressCallbackProgressBarHelper(progressBar, 500));
 
-			SwingUtilities.invokeLater(() -> updateGUI(fl));
+			SwingUtils.invokeLater(() -> updateGUI(fl));
 		}, "THREAD_COMPARE_DATABASES").start(); //$NON-NLS-1$
 	}
 

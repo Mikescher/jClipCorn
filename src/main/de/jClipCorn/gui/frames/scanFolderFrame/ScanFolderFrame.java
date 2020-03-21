@@ -1,7 +1,23 @@
 package de.jClipCorn.gui.frames.scanFolderFrame;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
+import com.jgoodies.forms.layout.ColumnSpec;
+import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.FormSpecs;
+import com.jgoodies.forms.layout.RowSpec;
+import de.jClipCorn.database.CCMovieList;
+import de.jClipCorn.database.databaseElement.columnTypes.CCFileFormat;
+import de.jClipCorn.gui.frames.addMovieFrame.AddMovieFrame;
+import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.gui.mainFrame.MainFrame;
+import de.jClipCorn.gui.resources.Resources;
+import de.jClipCorn.properties.CCProperties;
+import de.jClipCorn.util.formatter.PathFormatter;
+import de.jClipCorn.util.helper.DialogHelper;
+import de.jClipCorn.util.helper.ExtendedFocusTraversalOnArray;
+import de.jClipCorn.util.helper.SwingUtils;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -10,33 +26,6 @@ import java.io.File;
 import java.io.FileFilter;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.swing.DefaultListModel;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.JProgressBar;
-import javax.swing.JScrollPane;
-import javax.swing.SwingUtilities;
-
-import com.jgoodies.forms.layout.ColumnSpec;
-import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.FormSpecs;
-import com.jgoodies.forms.layout.RowSpec;
-
-import de.jClipCorn.database.CCMovieList;
-import de.jClipCorn.database.databaseElement.columnTypes.CCFileFormat;
-import de.jClipCorn.gui.frames.addMovieFrame.AddMovieFrame;
-import de.jClipCorn.gui.mainFrame.MainFrame;
-import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.gui.resources.Resources;
-import de.jClipCorn.properties.CCProperties;
-import de.jClipCorn.util.formatter.PathFormatter;
-import de.jClipCorn.util.helper.DialogHelper;
-import de.jClipCorn.util.helper.ExtendedFocusTraversalOnArray;
 
 public class ScanFolderFrame extends JFrame implements Runnable, MouseListener {
 	private static final long serialVersionUID = 7341007586104986521L;
@@ -179,7 +168,7 @@ public class ScanFolderFrame extends JFrame implements Runnable, MouseListener {
 
 	@Override
 	public void run() {
-		SwingUtilities.invokeLater(new Runnable() {
+		SwingUtils.invokeLater(new Runnable() {
 			@Override
 			public void run() {
 				btnOpenFolder.setEnabled(false);
@@ -206,7 +195,7 @@ public class ScanFolderFrame extends JFrame implements Runnable, MouseListener {
 
 		}
 		
-		SwingUtilities.invokeLater(new Runnable() {
+		SwingUtils.invokeLater(new Runnable() {
 			@Override
 			public void run() {
 				btnRemoveAdditionalParts.setEnabled(true);
@@ -241,7 +230,7 @@ public class ScanFolderFrame extends JFrame implements Runnable, MouseListener {
 	}
 	
 	private void addToList(final File f) {
-		SwingUtilities.invokeLater(new Runnable() {
+		SwingUtils.invokeLater(new Runnable() {
 			@Override
 			public void run() {
 				lsModel.addElement(f.getAbsolutePath());

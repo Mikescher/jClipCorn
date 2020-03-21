@@ -14,6 +14,7 @@ import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.adapter.ItemChangeLambdaAdapter;
 import de.jClipCorn.util.datatypes.CountAppendix;
 import de.jClipCorn.util.helper.DialogHelper;
+import de.jClipCorn.util.helper.SwingUtils;
 import de.jClipCorn.util.listener.DoubleProgressCallbackProgressBarHelper;
 import de.jClipCorn.util.listener.ProgressCallbackProgressBarHelper;
 
@@ -259,7 +260,7 @@ public class CheckDatabaseFrame extends JFrame {
 	}
 	
 	private void endThread() {
-		SwingUtilities.invokeLater(() ->
+		SwingUtils.invokeLater(() ->
 		{
 			btnValidate.setEnabled(true);
 			btnFixselected.setEnabled(errorList.size() > 0);
@@ -269,7 +270,7 @@ public class CheckDatabaseFrame extends JFrame {
 	}
 	
 	private void endFixThread(final boolean success) {
-		SwingUtilities.invokeLater(() ->
+		SwingUtils.invokeLater(() ->
 		{
 			btnValidate.setEnabled(true);
 			btnAutofix.setEnabled(true);
@@ -287,7 +288,7 @@ public class CheckDatabaseFrame extends JFrame {
 			lsMain.setModel(lm);
 		} else {
 			try {
-				SwingUtilities.invokeAndWait(() -> lsMain.setModel(lm));
+				SwingUtils.invokeAndWait(() -> lsMain.setModel(lm));
 			} catch (InvocationTargetException | InterruptedException e) {
 				CCLog.addError(e);
 			}
@@ -299,7 +300,7 @@ public class CheckDatabaseFrame extends JFrame {
 			lsCategories.setModel(lm);
 		} else {
 			try {
-				SwingUtilities.invokeAndWait(() -> lsCategories.setModel(lm));
+				SwingUtils.invokeAndWait(() -> lsCategories.setModel(lm));
 			} catch (InvocationTargetException | InterruptedException e) {
 				CCLog.addError(e);
 			}

@@ -1,9 +1,7 @@
 language: java
 
-sudo: false
-
 jdk:
-  - openjdk8
+  - openjdk12
 
 before_install:
  - chmod +x gradlew

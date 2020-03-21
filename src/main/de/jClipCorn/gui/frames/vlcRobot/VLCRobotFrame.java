@@ -437,7 +437,7 @@ public class VLCRobotFrame extends JFrame {
 					}
 				}
 
-				SwingUtilities.invokeLater(() -> q.Element.updateViewedAndHistory());
+				SwingUtilities.invokeLater(() -> q.Element.updateViewedAndHistoryFromUI());
 
 				if (startPlayback)
 				{
@@ -481,7 +481,7 @@ public class VLCRobotFrame extends JFrame {
 					}
 				}
 
-				SwingUtilities.invokeLater(nextSub::updateViewedAndHistory);
+				SwingUtilities.invokeLater(nextSub::updateViewedAndHistoryFromUI);
 
 				if (startPlayback)
 				{

@@ -1,68 +1,46 @@
 package de.jClipCorn.database;
 
-import java.awt.EventQueue;
-import java.io.File;
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
-import java.util.Vector;
-
-import javax.swing.SwingUtilities;
-
-import de.jClipCorn.database.driver.PublicDatabaseInterface;
-import de.jClipCorn.database.history.CCDatabaseHistory;
-import de.jClipCorn.features.serialization.xmlexport.DatabaseXMLExporter;
-import de.jClipCorn.features.serialization.xmlexport.ExportOptions;
-import de.jClipCorn.util.Str;
-import de.jClipCorn.util.lambda.Func0to0;
-import de.jClipCorn.util.sqlwrapper.CCSQLKVKey;
-import org.jdom2.Document;
-import org.jdom2.Element;
-
 import de.jClipCorn.Globals;
 import de.jClipCorn.Main;
 import de.jClipCorn.database.covertab.ICoverCache;
-import de.jClipCorn.database.databaseElement.CCDatabaseElement;
-import de.jClipCorn.database.databaseElement.CCEpisode;
-import de.jClipCorn.database.databaseElement.CCMovie;
-import de.jClipCorn.database.databaseElement.CCSeason;
-import de.jClipCorn.database.databaseElement.CCSeries;
-import de.jClipCorn.database.databaseElement.ICCDatedElement;
-import de.jClipCorn.database.databaseElement.ICCPlayableElement;
-import de.jClipCorn.database.databaseElement.columnTypes.CCFileSize;
-import de.jClipCorn.database.databaseElement.columnTypes.CCGenre;
-import de.jClipCorn.database.databaseElement.columnTypes.CCGroup;
-import de.jClipCorn.database.databaseElement.columnTypes.CCGroupList;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieZyklus;
+import de.jClipCorn.database.databaseElement.*;
+import de.jClipCorn.database.databaseElement.columnTypes.*;
 import de.jClipCorn.database.driver.CCDatabase;
 import de.jClipCorn.database.driver.DatabaseConnectResult;
 import de.jClipCorn.database.driver.DatabaseStructure;
+import de.jClipCorn.database.driver.PublicDatabaseInterface;
+import de.jClipCorn.database.history.CCDatabaseHistory;
 import de.jClipCorn.database.util.CCDBUpdateListener;
+import de.jClipCorn.database.util.iterators.*;
 import de.jClipCorn.features.backupManager.BackupManager;
-import de.jClipCorn.database.util.iterators.DatedElementsIterator;
-import de.jClipCorn.database.util.iterators.EpisodesIterator;
-import de.jClipCorn.database.util.iterators.MoviesIterator;
-import de.jClipCorn.database.util.iterators.PlayablesIterator;
-import de.jClipCorn.database.util.iterators.SeasonsIterator;
-import de.jClipCorn.database.util.iterators.SeriesIterator;
-import de.jClipCorn.gui.frames.initialConfigFrame.InitialConfigFrame;
-import de.jClipCorn.gui.mainFrame.MainFrame;
-import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.features.log.CCLog;
+import de.jClipCorn.features.serialization.xmlexport.DatabaseXMLExporter;
+import de.jClipCorn.features.serialization.xmlexport.ExportOptions;
+import de.jClipCorn.gui.frames.initialConfigFrame.InitialConfigFrame;
+import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.gui.mainFrame.MainFrame;
 import de.jClipCorn.properties.CCProperties;
+import de.jClipCorn.util.Str;
 import de.jClipCorn.util.comparator.CCDatabaseElementComparator;
 import de.jClipCorn.util.comparator.CCMovieComparator;
 import de.jClipCorn.util.comparator.CCSeriesComparator;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.ApplicationHelper;
+import de.jClipCorn.util.lambda.Func0to0;
+import de.jClipCorn.util.sqlwrapper.CCSQLKVKey;
 import de.jClipCorn.util.stream.CCStream;
 import de.jClipCorn.util.stream.CCStreams;
 import de.jClipCorn.util.stream.IterableStream;
+import org.jdom2.Document;
+import org.jdom2.Element;
+
+import javax.swing.*;
+import java.awt.*;
+import java.io.File;
+import java.lang.reflect.InvocationTargetException;
+import java.util.List;
+import java.util.*;
 
 public class CCMovieList {
 	private static CCMovieList instance = null;
@@ -390,7 +368,7 @@ public class CCMovieList {
 		}
 	}
 
-	public void update(CCMovie el) {
+	public boolean update(CCMovie el) {
 		if (CCProperties.getInstance().ARG_READONLY) {
 			CCLog.addInformation(LocaleBundle.getString("LogMessage.OperationFailedDueToReadOnly")); //$NON-NLS-1$
 			
@@ -398,15 +376,17 @@ public class CCMovieList {
 			database.updateMovieFromDatabase(el);
 			el.abortUpdating();
 			
-			return;
+			return true;
 		}
-		
-		database.updateMovieInDatabase(el);
+
+		var ok = database.updateMovieInDatabase(el);
 
 		fireOnChangeDatabaseElement(el);
+
+		return ok;
 	}
 
-	public void update(CCEpisode ep) {
+	public boolean update(CCEpisode ep) {
 		if (CCProperties.getInstance().ARG_READONLY) {
 			CCLog.addInformation(LocaleBundle.getString("LogMessage.OperationFailedDueToReadOnly")); //$NON-NLS-1$
 						
@@ -414,15 +394,17 @@ public class CCMovieList {
 			database.updateEpisodeFromDatabase(ep);
 			ep.abortUpdating();
 			
-			return;
+			return true;
 		}
-		
-		database.updateEpisodeInDatabase(ep);
 
-		fireOnChangeDatabaseElement(ep.getSeries()); // Why on onAdd
+		var ok = database.updateEpisodeInDatabase(ep);
+
+		fireOnChangeDatabaseElement(ep.getSeries());
+
+		return ok;
 	}
 
-	public void update(CCSeries se) {
+	public boolean update(CCSeries se) {
 		if (CCProperties.getInstance().ARG_READONLY) {
 			CCLog.addInformation(LocaleBundle.getString("LogMessage.OperationFailedDueToReadOnly")); //$NON-NLS-1$
 			
@@ -430,15 +412,17 @@ public class CCMovieList {
 			database.updateSeriesFromDatabase(se);
 			se.abortUpdating();
 			
-			return;
+			return true;
 		}
 		
-		database.updateSeriesInDatabase(se);
+		var ok = database.updateSeriesInDatabase(se);
 
 		fireOnChangeDatabaseElement(se);
+
+		return ok;
 	}
 
-	public void update(CCSeason sa) {
+	public boolean update(CCSeason sa) {
 		if (CCProperties.getInstance().ARG_READONLY) {
 			CCLog.addInformation(LocaleBundle.getString("LogMessage.OperationFailedDueToReadOnly")); //$NON-NLS-1$
 			
@@ -446,12 +430,14 @@ public class CCMovieList {
 			database.updateSeasonFromDatabase(sa);
 			sa.abortUpdating();
 			
-			return;
+			return true;
 		}
-		
-		database.updateSeasonInDatabase(sa);
+
+		var ok = database.updateSeasonInDatabase(sa);
 
 		fireOnChangeDatabaseElement(sa.getSeries());
+
+		return ok;
 	}
 
 	public ICoverCache getCoverCache() {

@@ -697,11 +697,11 @@ public class CCActionTree extends UIActionTree{
 	}
 
 	private void onClickOtherSetUnviewed(CCTreeActionEvent e) {
-		e.ifMovieSource(m -> m.setViewed(false));
+		e.ifMovieSource(m -> m.setViewedFromUI(false));
 	}
 
 	private void onClickOtherSetViewed(CCTreeActionEvent e) {
-		e.ifMovieSource(m -> m.setViewed(true));
+		e.ifMovieSource(m -> m.setViewedFromUI(true));
 	}
 	
 	private void onClickOtherOtherUndoMovieViewed(CCTreeActionEvent e) {
@@ -711,9 +711,9 @@ public class CCActionTree extends UIActionTree{
 
 			CCDateTimeList history = m.getViewedHistory();
 			history = history.removeLast();
-			m.setViewedHistory(history);
+			m.setViewedHistoryFromUI(history);
 
-			if (history.isEmpty()) m.setViewed(false);
+			if (history.isEmpty()) m.setViewedFromUI(false);
 		});
 	}
 	
@@ -844,13 +844,13 @@ public class CCActionTree extends UIActionTree{
 	private void onClickOtherEpisodeSetViewed(CCTreeActionEvent e) {
 		e.ifEpisodeSource(p ->
 		{
-			p.setViewed(true);
-			p.addToViewedHistory(CCDateTime.getCurrentDateTime());
+			p.setViewedFromUI(true);
+			p.addToViewedHistoryFromUI(CCDateTime.getCurrentDateTime());
 		});
 	}
 
 	private void onClickOtherEpisodeUnviewed(CCTreeActionEvent e) {
-		e.ifEpisodeSource(p -> p.setViewed(false));
+		e.ifEpisodeSource(p -> p.setViewedFromUI(false));
 	}
 
 	private void onClickOtherEpisodeUndoViewed(CCTreeActionEvent e) {
@@ -860,9 +860,9 @@ public class CCActionTree extends UIActionTree{
 
 			CCDateTimeList history = p.getViewedHistory();
 			history = history.removeLast();
-			p.setViewedHistory(history);
+			p.setViewedHistoryFromUI(history);
 
-			if (history.isEmpty()) p.setViewed(false);
+			if (history.isEmpty()) p.setViewedFromUI(false);
 		});
 	}
 

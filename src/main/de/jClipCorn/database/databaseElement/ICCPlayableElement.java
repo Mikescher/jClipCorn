@@ -30,7 +30,7 @@ public interface ICCPlayableElement {
 	void setMediaInfo(CCMediaInfo minfo);
 
 	void play(boolean updateViewedAndHistory);
-	void updateViewedAndHistory();
+	void updateViewedAndHistoryFromUI();
 
 	CCGenreList getGenresFromSelfOrParent();
 }

@@ -680,7 +680,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		
 		if (forceViewed != null) newM.setViewed(forceViewed);
 		
-		if (forceViewedHistory != null) newM.setViewedHistory(forceViewedHistory);
+		if (forceViewedHistory != null) newM.setViewedHistoryFromUI(forceViewedHistory);
 		
 		newM.setPart(0, ed_Part0.getText());
 		newM.setPart(1, ed_Part1.getText());

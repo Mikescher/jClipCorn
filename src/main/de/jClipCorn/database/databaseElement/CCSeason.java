@@ -63,10 +63,11 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 		isUpdating = false;
 	}
 	
-	private void updateDB() {
+	private boolean updateDB() {
 		if (! isUpdating) {
-			owner.getMovieList().update(this);
+			return owner.getMovieList().update(this);
 		}
+		return true;
 	}
 	
 	public void directlyInsertEpisode(CCEpisode ep) { // ONLY CALLED FROM CCDATABASE

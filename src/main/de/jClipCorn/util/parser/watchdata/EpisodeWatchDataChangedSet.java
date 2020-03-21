@@ -41,10 +41,10 @@ public class EpisodeWatchDataChangedSet extends WatchDataChangeSet {
 	@Override
 	public void execute() {
 		if (eps.isViewed() ^ newState) {
-			eps.setViewed(newState);
-			eps.addToViewedHistory(date);
+			eps.setViewedFromUI(newState);
+			eps.addToViewedHistoryFromUI(date);
 		} else if (newState && ! eps.getViewedHistory().contains(date)) {
-			eps.addToViewedHistory(date);
+			eps.addToViewedHistoryFromUI(date);
 		}
 	}
 }

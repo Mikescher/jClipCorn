@@ -7,6 +7,7 @@ import de.jClipCorn.database.util.ExtendedViewedState;
 import de.jClipCorn.database.util.ExtendedViewedStateType;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.gui.mainFrame.MainFrame;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.LargeMD5Calculator;
 import de.jClipCorn.util.MoviePlayer;
@@ -14,8 +15,10 @@ import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.exceptions.CCFormatException;
+import de.jClipCorn.util.exceptions.DatabaseUpdateException;
 import de.jClipCorn.util.exceptions.EnumFormatException;
 import de.jClipCorn.util.formatter.PathFormatter;
+import de.jClipCorn.util.helper.DialogHelper;
 
 import java.io.File;
 import java.sql.Date;
@@ -70,12 +73,18 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 
 		if (updateDB) updateDB();
 	}
-	
+
 	@Override
-	protected void updateDB() {
+	protected boolean updateDB() {
 		if (! isUpdating) {
-			movielist.update(this);
+			return movielist.update(this);
 		}
+		return true;
+	}
+
+	private void updateDBWithException() throws DatabaseUpdateException {
+		var ok = updateDB();
+		if (!ok) throw new DatabaseUpdateException("updateDB() failed"); //$NON-NLS-1$
 	}
 	
 	//------------------------------------------------------------------------\
@@ -118,15 +127,25 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 			this.viewed = viewed;
 			
 			updateDB();
-			
-			if (!viewed) {
-				String.format("Clear ViewedHistory of %s ( %s )", getFullDisplayTitle(), viewedHistory.toSerializationString()); //$NON-NLS-1$
-				
-				fullResetViewedHistory();
+		}
+	}
+
+
+	public void setViewedFromUI(boolean viewed) {
+		if (viewed ^ this.viewed)
+		{
+			try
+			{
+				this.viewed = viewed;
+
+				if (! viewed) this.viewedHistory = CCDateTimeList.createEmpty();
+
+				updateDBWithException();
 			}
-			
-			if (viewed && getTag(CCTagList.TAG_WATCH_NEVER) && CCProperties.getInstance().PROP_MAINFRAME_AUTOMATICRESETWATCHNEVER.getValue()) {
-				setTag(CCTagList.TAG_WATCH_NEVER, false);
+			catch (Throwable e1)
+			{
+				DialogHelper.showLocalError(MainFrame.getInstance(), "Dialogs.UpdateViewedFailed");
+				CCLog.addError(e1);
 			}
 		}
 	}
@@ -295,17 +314,30 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 	}
 
 	public void setViewedHistory(String data) throws CCFormatException {
-		viewedHistory = CCDateTimeList.parse(data);
-		
-		updateDB();
+		setViewedHistory(CCDateTimeList.parse(data));
 	}
 
 	public void setViewedHistory(CCDateTimeList value) {
-		if (format == null) {CCLog.addUndefinied("Prevented setting CCMovie.ViewedHistory to NULL"); return; } //$NON-NLS-1$
+		if (value == null) { CCLog.addUndefinied("Prevented setting CCMovie.ViewedHistory to NULL"); return; } //$NON-NLS-1$
 
 		viewedHistory = value;
-		
+
 		updateDB();
+	}
+
+	public void setViewedHistoryFromUI(CCDateTimeList value) {
+		if (value == null) { CCLog.addUndefinied("Prevented setting CCMovie.ViewedHistory to NULL"); return; } //$NON-NLS-1$
+
+		try
+		{
+			viewedHistory = value;
+			updateDBWithException();
+		}
+		catch (Throwable e1)
+		{
+			DialogHelper.showLocalError(MainFrame.getInstance(), "Dialogs.UpdateViewedFailed");
+			CCLog.addError(e1);
+		}
 	}
 
 	@Override
@@ -315,18 +347,26 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 	
 	public void addToViewedHistory(CCDateTime datetime) {
 		this.viewedHistory = this.viewedHistory.add(datetime);
-		
-		if (getTag(CCTagList.TAG_WATCH_LATER) && CCProperties.getInstance().PROP_MAINFRAME_AUTOMATICRESETWATCHLATER.getValue()) {
-			setTag(CCTagList.TAG_WATCH_LATER, false);
-		}
-		
+
 		updateDB();
 	}
-	
-	public void fullResetViewedHistory() {
-		this.viewedHistory = CCDateTimeList.createEmpty();
-		
-		updateDB();
+
+	public void addToViewedHistoryFromUI(CCDateTime datetime) {
+		try
+		{
+			this.viewedHistory = this.viewedHistory.add(datetime);
+
+			if (getTag(CCTagList.TAG_WATCH_LATER) && CCProperties.getInstance().PROP_MAINFRAME_AUTOMATICRESETWATCHLATER.getValue()) {
+				setTag(CCTagList.TAG_WATCH_LATER, false);
+			}
+
+			updateDBWithException();
+		}
+		catch (Throwable e1)
+		{
+			DialogHelper.showLocalError(MainFrame.getInstance(), "Dialogs.UpdateViewedFailed");
+			CCLog.addError(e1);
+		}
 	}
 
 	public boolean hasHoleInParts() {
@@ -347,13 +387,13 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 	public void play(boolean updateViewedAndHistory) {
 		MoviePlayer.play(this);
 		
-		if (updateViewedAndHistory) updateViewedAndHistory();
+		if (updateViewedAndHistory) updateViewedAndHistoryFromUI();
 	}
 
 	@Override
-	public void updateViewedAndHistory() {
-		setViewed(true);
-		addToViewedHistory(CCDateTime.getCurrentDateTime());
+	public void updateViewedAndHistoryFromUI() {
+		setViewedFromUI(true);
+		addToViewedHistoryFromUI(CCDateTime.getCurrentDateTime());
 	}
 
 	public String getFastMD5() {

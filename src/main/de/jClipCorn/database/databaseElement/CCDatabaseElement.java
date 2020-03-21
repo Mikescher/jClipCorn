@@ -1,20 +1,20 @@
 package de.jClipCorn.database.databaseElement;
 
-import java.awt.image.BufferedImage;
-
-import de.jClipCorn.database.databaseElement.columnTypes.*;
-import de.jClipCorn.database.util.CCQualityCategory;
-import de.jClipCorn.features.actionTree.IActionSourceObject;
-import de.jClipCorn.util.exceptions.EnumFormatException;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.covertab.CCCoverData;
+import de.jClipCorn.database.databaseElement.columnTypes.*;
+import de.jClipCorn.database.util.CCQualityCategory;
 import de.jClipCorn.database.util.ExtendedViewedState;
-import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.features.actionTree.IActionSourceObject;
 import de.jClipCorn.features.log.CCLog;
+import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.datetime.CCDate;
+import de.jClipCorn.util.exceptions.EnumFormatException;
 import de.jClipCorn.util.exceptions.GroupFormatException;
 import de.jClipCorn.util.exceptions.OnlineRefFormatException;
+
+import java.awt.image.BufferedImage;
 
 public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, ICCCoveredElement, IActionSourceObject, ICCTaggedElement {
 	private final int localID;
@@ -73,7 +73,7 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 		isUpdating = false;
 	}
 	
-	protected abstract void updateDB();
+	protected abstract boolean updateDB();
 
 	@Override
 	public int getLocalID() {
@@ -365,7 +365,7 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 
 	@Override
 	public void setTags(CCTagList ptags) {
-		if (tags == null) {CCLog.addUndefinied("Prevented setting CCDBElem.Tags to NULL"); return; } //$NON-NLS-1$
+		if (ptags == null) {CCLog.addUndefinied("Prevented setting CCDBElem.Tags to NULL"); return; } //$NON-NLS-1$
 		this.tags = ptags;
 
 		updateDB();

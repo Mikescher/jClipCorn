@@ -1,21 +1,5 @@
 package de.jClipCorn.gui.frames.changeViewedFrame;
 
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-import javax.swing.AbstractAction;
-import javax.swing.ActionMap;
-import javax.swing.InputMap;
-import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.KeyStroke;
-import javax.swing.SwingConstants;
-
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.databaseElement.CCMovie;
@@ -24,6 +8,11 @@ import de.jClipCorn.gui.guiComponents.PropertyCheckbox;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.properties.CCProperties;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class ChangeViewedFrame extends JFrame {
 	private static final long serialVersionUID = 9048482551231383355L;
@@ -124,7 +113,7 @@ public class ChangeViewedFrame extends JFrame {
 		}
 		
 		CCMovie mov = (CCMovie) movielist.getDatabaseElementBySort(position);
-		mov.setViewed(viewed);
+		mov.setViewedFromUI(viewed);
 		
 		nextMovie();
 	}

@@ -32,10 +32,11 @@ public class CCSeries extends CCDatabaseElement implements IEpisodeOwner {
 	}
 	
 	@Override
-	protected void updateDB() {
+	protected boolean updateDB() {
 		if (! isUpdating) {
-			movielist.update(this);
+			return movielist.update(this);
 		}
+		return true;
 	}
 
 	public void directlyInsertSeason(CCSeason s) { // !! ONLY CALLED FROM CCDatabase

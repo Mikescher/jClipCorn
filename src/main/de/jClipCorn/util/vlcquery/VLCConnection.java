@@ -141,6 +141,8 @@ public class VLCConnection {
 				int time   = xmlStatus.getRoot().getFirstChildIntValueOrThrow("time"); //$NON-NLS-1$
 				int length = xmlStatus.getRoot().getFirstChildIntValueOrThrow("length"); //$NON-NLS-1$
 
+				if (length == -1 && activeEntry != null && activeEntry.Length != -1) length = activeEntry.Length;
+
 				return new VLCStatus(VLCPlayerStatus.PLAYING, time, length, filename, title, playlist, activeEntry, fullscreen, volume, random, loop, repeat, rect);
 			}
 			else if ("paused".equalsIgnoreCase(state)) //$NON-NLS-1$
@@ -160,6 +162,8 @@ public class VLCConnection {
 
 				int time   = xmlStatus.getRoot().getFirstChildIntValueOrThrow("time"); //$NON-NLS-1$
 				int length = xmlStatus.getRoot().getFirstChildIntValueOrThrow("length"); //$NON-NLS-1$
+
+				if (length == -1 && activeEntry != null && activeEntry.Length != -1) length = activeEntry.Length;
 
 				return new VLCStatus(VLCPlayerStatus.PAUSED, time, length, filename, title, playlist, activeEntry, fullscreen, volume, random, loop, repeat, rect);
 			}

@@ -12,6 +12,7 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @SuppressWarnings("restriction")
@@ -168,6 +169,14 @@ public abstract class JCCSimpleTable<TData> extends JScrollPane implements ListS
 
 	public void changeData(int idx, TData newData) {
 		model.changeData(idx, newData);
+	}
+
+	public void addData(TData newData) {
+		model.addData(Collections.singletonList(newData));
+	}
+
+	public void addData(List<TData> newData) {
+		model.addData(newData);
 	}
 
 	public void changeData(TData oldData, TData newData) {

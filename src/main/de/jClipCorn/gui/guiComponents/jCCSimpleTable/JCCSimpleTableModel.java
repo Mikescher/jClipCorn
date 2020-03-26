@@ -1,14 +1,13 @@
 package de.jClipCorn.gui.guiComponents.jCCSimpleTable;
 
-import java.awt.Color;
-import java.util.ArrayList;
-import java.util.List;
+import de.jClipCorn.features.table.renderer.TableModelRowColorInterface;
 
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.AbstractTableModel;
-
-import de.jClipCorn.features.table.renderer.TableModelRowColorInterface;
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class JCCSimpleTableModel<TData> extends AbstractTableModel implements TableModelRowColorInterface, TableModelListener {
 	private static final long serialVersionUID = 6149171502941225947L;
@@ -79,6 +78,13 @@ public class JCCSimpleTableModel<TData> extends AbstractTableModel implements Ta
 	public void changeData(TData oldData, TData newData) {
 		int idx = data.indexOf(oldData);
 		if (idx >= 0) changeData(idx, newData);
+	}
+
+	public void addData(List<TData> newData) {
+		int idx = data.size();
+		data.addAll(newData);
+
+		fireTableRowsInserted(idx, idx + newData.size() - 1);
 	}
 
 	public int getIndex(TData needle) {

@@ -4,12 +4,17 @@ import de.jClipCorn.util.enumextension.ContinoousEnum;
 import de.jClipCorn.util.enumextension.EnumWrapper;
 
 import javax.swing.*;
+import java.text.Normalizer;
 
 public class CCEnumComboBox<T extends ContinoousEnum<T>> extends JComboBox<T> {
 	private static final long serialVersionUID = -3587427835677751149L;
 
+	private final EnumWrapper<T> _wrapper;
+
 	public CCEnumComboBox(EnumWrapper<T> wrapper) {
 		super();
+
+		_wrapper = wrapper;
 
 		setModel(wrapper.getComboBoxModel());
 		setRenderer(wrapper.getComboBoxRenderer());
@@ -108,5 +113,22 @@ public class CCEnumComboBox<T extends ContinoousEnum<T>> extends JComboBox<T> {
 	@Deprecated
 	public void removeAllItems() {
 		super.removeAllItems();
+	}
+
+	@Override
+	public boolean selectWithKeyChar(char keyChar)
+	{
+		// only works for single key presses ... but good enough for now
+
+		for(int i = 0; i < getModel().getSize(); i++)
+		{
+			String normalize = Normalizer.normalize(_wrapper.asDisplayString(getModel().getElementAt(i)), Normalizer.Form.NFD);
+			normalize = normalize.replaceAll("\\p{M}", ""); //$NON-NLS-1$ //$NON-NLS-2$
+			normalize = normalize.toLowerCase();
+
+			if (normalize.startsWith(String.valueOf(keyChar).toLowerCase())) { setSelectedIndex(i); return true; }
+		}
+
+		return false;
 	}
 }

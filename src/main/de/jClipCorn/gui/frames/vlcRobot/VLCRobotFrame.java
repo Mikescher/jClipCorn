@@ -9,6 +9,7 @@ import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.database.databaseElement.ICCPlayableElement;
 import de.jClipCorn.database.util.NextEpisodeHelper;
 import de.jClipCorn.features.log.CCLog;
+import de.jClipCorn.gui.guiComponents.enumComboBox.CCEnumComboBox;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.properties.CCProperties;
@@ -65,18 +66,22 @@ public class VLCRobotFrame extends JFrame {
 	private JPanel panel_1;
 	private JTextArea edLogOld;
 	private JTextArea edLogNew;
+	private JScrollPane scrollPane;
+	private JScrollPane scrollPane_1;
+	private JLabel lblFrequency;
+	private CCEnumComboBox<VLCRobotFrequency> cbxFreq;
+	private JLabel lblTitle;
 
 	private volatile boolean _stopThread = false;
 	private final Object _threadLock = true;
-	private Thread _timerThread = null;
 
 	private VLCStatus _lastStatus = null;
 	private VLCStatus _lastPositionalStatus = null;
 	private final java.util.List<VLCPlaylistEntry> _clientQueue = new ArrayList<>();
+	private volatile VLCRobotFrequency updateFreq = VLCRobotFrequency.MS_0500;
 
 	private static VLCRobotFrame _instance = null;
-	private JScrollPane scrollPane;
-	private JScrollPane scrollPane_1;
+	private JLabel lblNewLabel;
 
 	/**
 	 * @wbp.parser.constructor
@@ -101,8 +106,8 @@ public class VLCRobotFrame extends JFrame {
 			}
 		});
 
-		_timerThread = new Thread(this::onThreadRun);
-		_timerThread.start();
+		Thread tthread = new Thread(this::onThreadRun);
+		tthread.start();
 	}
 
 	private void onClose(ActionEvent actionEvent) {
@@ -116,10 +121,37 @@ public class VLCRobotFrame extends JFrame {
 	{
 		if (_stopThread) return;
 
+		List<Long> timings = new ArrayList<>(8);
+
+		long last = System.currentTimeMillis();
+		long lastUpdate = 0;
+
 		for(int i= 1;;i++)
 		{
+			{
+				var now = System.currentTimeMillis();
+				var delta = now - last;
+				last = now;
+
+				while (timings.size() >= 8) timings.remove(0);
+				timings.add(delta);
+
+				if (now - lastUpdate > 750)
+				{
+					long sum = 0;
+					for (var v : timings) sum += v;
+					var htz = Str.format("{0,number,#.##} Hz", 1000.0 / (sum / timings.size())); //$NON-NLS-1$
+
+					SwingUtils.invokeLater(() -> lblFrequency.setText(htz));
+
+					lastUpdate = now;
+				}
+			}
+
 			synchronized (_threadLock)
 			{
+				if (_stopThread) return;
+
 				try
 				{
 					onBackgroundUpdate(i);
@@ -131,7 +163,16 @@ public class VLCRobotFrame extends JFrame {
 			}
 
 			if (_stopThread) return;
-			ThreadUtils.safeSleep(500);
+			switch (updateFreq)
+			{
+				case MAXIMUM: /* no sleep */ break;
+				case MS_0250: ThreadUtils.safeSleep(250);  break;
+				case MS_0500: ThreadUtils.safeSleep(500);  break;
+				case MS_1000: ThreadUtils.safeSleep(1000); break;
+				case MS_1500: ThreadUtils.safeSleep(1500); break;
+				case MS_2000: ThreadUtils.safeSleep(2000); break;
+				default: CCLog.addDefaultSwitchError(this, updateFreq); ThreadUtils.safeSleep(500); break;
+			}
 			if (_stopThread) return;
 		}
 	}
@@ -172,8 +213,12 @@ public class VLCRobotFrame extends JFrame {
 				FormSpecs.RELATED_GAP_COLSPEC,
 				ColumnSpec.decode("default:grow"), //$NON-NLS-1$
 				FormSpecs.RELATED_GAP_COLSPEC,
+				ColumnSpec.decode("default:grow"), //$NON-NLS-1$
+				FormSpecs.RELATED_GAP_COLSPEC,
 				ColumnSpec.decode("max(35dlu;default)"),}, //$NON-NLS-1$
 			new RowSpec[] {
+				FormSpecs.DEFAULT_ROWSPEC,
+				FormSpecs.RELATED_GAP_ROWSPEC,
 				RowSpec.decode("default:grow"), //$NON-NLS-1$
 				FormSpecs.RELATED_GAP_ROWSPEC,
 				FormSpecs.PREF_ROWSPEC,
@@ -182,26 +227,44 @@ public class VLCRobotFrame extends JFrame {
 				FormSpecs.RELATED_GAP_ROWSPEC,
 				FormSpecs.PREF_ROWSPEC,}));
 		
+		lblTitle = new JLabel("ROBOT"); //$NON-NLS-1$
+		pnlMain.add(lblTitle, "1, 1, center, center"); //$NON-NLS-1$
+		
+		cbxFreq = new CCEnumComboBox<>(VLCRobotFrequency.getWrapper());
+		cbxFreq.setSelectedEnum(this.updateFreq = CCProperties.getInstance().PROP_VLC_ROBOT_FREQUENCY.getValue());
+		cbxFreq.addActionListener(e ->
+		{
+			this.updateFreq = cbxFreq.getSelectedEnum();
+			CCProperties.getInstance().PROP_VLC_ROBOT_FREQUENCY.setValue(this.updateFreq);
+		});
+		
+		lblNewLabel = new JLabel(LocaleBundle.getString("VLCRobotFrame.lblFreq")); //$NON-NLS-1$
+		pnlMain.add(lblNewLabel, "3, 1, right, fill"); //$NON-NLS-1$
+		pnlMain.add(cbxFreq, "5, 1, fill, fill"); //$NON-NLS-1$
+		
+		lblFrequency = new JLabel("[FREQ]"); //$NON-NLS-1$
+		pnlMain.add(lblFrequency, "7, 1, fill, fill"); //$NON-NLS-1$
+		
 		lsData = new VLCPlaylistTable();
-		pnlMain.add(lsData, "1, 1, 5, 1, fill, fill"); //$NON-NLS-1$
+		pnlMain.add(lsData, "1, 3, 7, 1, fill, fill"); //$NON-NLS-1$
 		
 		lblStatus = new JLabel();
-		pnlMain.add(lblStatus, "1, 3, fill, fill"); //$NON-NLS-1$
+		pnlMain.add(lblStatus, "1, 5, fill, fill"); //$NON-NLS-1$
 		
 		progressBar = new JProgressBar();
-		pnlMain.add(progressBar, "3, 3, fill, fill"); //$NON-NLS-1$
+		pnlMain.add(progressBar, "3, 5, 3, 1, fill, fill"); //$NON-NLS-1$
 		
 		lblTime = new JLabel();
-		pnlMain.add(lblTime, "5, 3, fill, fill"); //$NON-NLS-1$
+		pnlMain.add(lblTime, "7, 5, fill, fill"); //$NON-NLS-1$
 		
 		cbxKeepPosition = new JCheckBox(LocaleBundle.getString("VLCRobotFrame.cbxKeepPosition")); //$NON-NLS-1$
 		cbxKeepPosition.setSelected(ApplicationHelper.isWindows() && CCProperties.getInstance().PROP_VLC_ROBOT_KEEP_POSITION.getValue());
 		cbxKeepPosition.addActionListener(e ->  CCProperties.getInstance().PROP_VLC_ROBOT_KEEP_POSITION.setValue(cbxKeepPosition.isSelected()));
 		cbxKeepPosition.setEnabled(ApplicationHelper.isWindows());
-		pnlMain.add(cbxKeepPosition, "1, 5, 5, 1"); //$NON-NLS-1$
+		pnlMain.add(cbxKeepPosition, "1, 7, 7, 1"); //$NON-NLS-1$
 		
 		panel = new JPanel();
-		pnlMain.add(panel, "1, 7, 5, 1, fill, fill"); //$NON-NLS-1$
+		pnlMain.add(panel, "1, 9, 7, 1, fill, fill"); //$NON-NLS-1$
 		panel.setLayout(new FormLayout(new ColumnSpec[] {
 				FormSpecs.PREF_COLSPEC,
 				FormSpecs.RELATED_GAP_COLSPEC,

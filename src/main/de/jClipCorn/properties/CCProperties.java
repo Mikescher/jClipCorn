@@ -4,6 +4,7 @@ import de.jClipCorn.Main;
 import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguage;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.features.serialization.ExportHelper;
+import de.jClipCorn.gui.frames.vlcRobot.VLCRobotFrequency;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.mainFrame.clipToolbar.ClipToolbar;
 import de.jClipCorn.properties.enumerations.*;
@@ -196,6 +197,7 @@ public class CCProperties {
 	public CCStringProperty                                 PROP_VLC_ROBOT_PASSWORD;
 	public CCBoolProperty                                   PROP_VLC_ROBOT_KEEP_POSITION;
 	public CCPIntProperty                                   PROP_FOLDERLANG_IGNORE_PERC;
+	public CCEnumProperty<VLCRobotFrequency>                PROP_VLC_ROBOT_FREQUENCY;
 
 	public boolean ARG_READONLY = false;
 	
@@ -372,6 +374,7 @@ public class CCProperties {
 		PROP_VLC_ROBOT_PORT                     = new CCRIntProperty(NONVISIBLE,            this,   "PROP_VLC_ROBOT_PORT",                      18642,           1024,        65535);
 		PROP_VLC_ROBOT_PASSWORD                 = new CCStringProperty(NONVISIBLE,          this,   "PROP_VLC_ROBOT_PASSWORD",                  getRandPass(8));
 		PROP_VLC_ROBOT_KEEP_POSITION            = new CCBoolProperty(NONVISIBLE,            this,   "PROP_VLC_ROBOT_KEEP_POSITION",             false);
+		PROP_VLC_ROBOT_FREQUENCY                = new CCEnumProperty<>(NONVISIBLE,          this,   "PROP_VLC_ROBOT_FREQUENCY",                 VLCRobotFrequency.MS_0500, VLCRobotFrequency.getWrapper());
 		PROP_FOLDERLANG_IGNORE_PERC             = new CCPIntProperty(NONVISIBLE,            this,   "PROP_FOLDERLANG_IGNORE_PERC",              2);
 
 		PROP_ADD_MOVIE_RELATIVE_AUTO            = new CCBoolProperty(CAT_PATHSYNTAX,        this,   "PROP_ADD_MOVIE_RELATIVE_AUTO",             true);

@@ -473,7 +473,7 @@ public class CCSeries extends CCDatabaseElement implements IEpisodeOwner {
 		return com.isEmpty() ? getAllLanguages() : com;
 	}
 
-	public CCDBLanguageList getLangForFolderStructure() {
+	public CCDBLanguageList getSemiCommonLanguages() {
 		if (getEpisodeCount() == 0) return CCDBLanguageList.EMPTY;
 
 		var firstEpisode = getFirstEpisode();
@@ -522,7 +522,7 @@ public class CCSeries extends CCDatabaseElement implements IEpisodeOwner {
 			if (group.DoSerialize) seriesfoldername.append(" [[").append(group.Name).append("]]");
 		}
 
-		CCDBLanguageList lang = getLangForFolderStructure();
+		CCDBLanguageList lang = getSemiCommonLanguages();
 		if (getEpisodeCount() == 0 && fallbackLanguage != null) lang = fallbackLanguage;
 		if (!lang.isExact(CCDBLanguage.GERMAN) && !lang.isEmpty()) {
 			seriesfoldername.append(String.format(" [%s]", lang.serializeToFilenameString()));

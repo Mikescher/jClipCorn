@@ -1,24 +1,23 @@
 package de.jClipCorn.gui.mainFrame.clipTable;
 
-import java.awt.Color;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import javax.swing.event.TableModelEvent;
-import javax.swing.event.TableModelListener;
-import javax.swing.table.AbstractTableModel;
-
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieZyklus;
+import de.jClipCorn.features.table.renderer.TableModelRowColorInterface;
 import de.jClipCorn.gui.guiComponents.SFixTable;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.properties.CCProperties;
-import de.jClipCorn.features.table.renderer.TableModelRowColorInterface;
 import de.jClipCorn.util.datetime.YearRange;
+
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
+import javax.swing.table.AbstractTableModel;
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class ClipTableModel extends AbstractTableModel implements TableModelRowColorInterface, TableModelListener {
 	private static final long serialVersionUID = -3060547018013428568L;
@@ -170,7 +169,7 @@ public class ClipTableModel extends AbstractTableModel implements TableModelRowC
 			case COLUMN_MEDIAINFO: // Quality
 				return ser.getMediaInfoCategory();
 			case COLUMN_LANGUAGE: // Language
-				return ser.getCommonOrAllLanguages();
+				return ser.getSemiCommonLanguages();
 			case COLUMN_GENRE: // Genres
 				return ser.getGenres();
 			case COLUMN_PARTCOUNT: // Partcount

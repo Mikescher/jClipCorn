@@ -91,7 +91,7 @@ public class VLCStatus
 
 		if (sold.Fullscreen != snew.Fullscreen) return true;
 
-		if (!rectEq(sold.WindowRect, snew.WindowRect)) return true;
+		if (sold.WindowRect != null && snew.WindowRect != null && !rectEq(sold.WindowRect, snew.WindowRect)) return true;
 
 		if (sold.Loop != snew.Loop) return true;
 		if (sold.Repeat != snew.Repeat) return true;
@@ -116,8 +116,8 @@ public class VLCStatus
 	{
 		if (sold.Status != snew.Status) return Str.format("[{0}] --> [{1}]", sold.Status, snew.Status);
 
-		if (!Str.equals(sold.CurrentFilename, snew.CurrentFilename)) return "CurrentFilename changed";
-		if (sold.CurrentLength != snew.CurrentLength) return "CurrentFilename.Length changed";
+		if (!Str.equals(sold.CurrentFilename, snew.CurrentFilename)) return "File changed (Filename)";
+		if (sold.CurrentLength != snew.CurrentLength) return "File changed (Length)";
 
 		if (sold.Position != snew.Position) return Str.format("[Pos.{0}] --> [Pos.{1}]", sold.Position, snew.Position);
 

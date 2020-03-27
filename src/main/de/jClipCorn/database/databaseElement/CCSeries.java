@@ -25,10 +25,10 @@ public class CCSeries extends CCDatabaseElement implements IEpisodeOwner {
 	private final static int GUIDE_W_BORDER = 2;
 	private final static int GUIDE_W_PADDING = 6;
 	
-	private List<CCSeason> seasons = new Vector<>();
+	private final List<CCSeason> seasons = new Vector<>();
 	
-	public CCSeries(CCMovieList ml, int id, int seriesID) {
-		super(ml, CCDBElementTyp.SERIES, id, seriesID);
+	public CCSeries(CCMovieList ml, int id) {
+		super(ml, CCDBElementTyp.SERIES, id);
 	}
 	
 	@Override

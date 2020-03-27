@@ -40,7 +40,7 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 	private CCDBLanguageList language;
 	
 	public CCMovie(CCMovieList ml, int id) {
-		super(ml, CCDBElementTyp.MOVIE, id, -1);
+		super(ml, CCDBElementTyp.MOVIE, id);
 		parts = new String[PARTCOUNT_MAX];
 
 		zyklus = new CCMovieZyklus();

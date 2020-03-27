@@ -204,8 +204,7 @@ public class CCDatabase {
 			return mov;
 		} else {
 			int lid = rs.getInt(DatabaseStructure.COL_MAIN_LOCALID);
-			int sid = rs.getInt(DatabaseStructure.COL_MAIN_SERIES_ID);
-			CCSeries ser = new CCSeries(ml, lid, sid);
+			CCSeries ser = new CCSeries(ml, lid);
 
 			ser.beginUpdating();
 
@@ -382,7 +381,6 @@ public class CCDatabase {
 			stmt.setInt(DatabaseStructure.COL_MAIN_SCORE,         0);
 			stmt.setInt(DatabaseStructure.COL_MAIN_COVERID,       -1);
 			stmt.setInt(DatabaseStructure.COL_MAIN_TYPE,          0);
-			stmt.setInt(DatabaseStructure.COL_MAIN_SERIES_ID,     0);
 
 			stmt.executeUpdate();
 
@@ -464,7 +462,6 @@ public class CCDatabase {
 
 	public CCSeries createNewEmptySeries(CCMovieList list) {
 		int nlid = getNewID();
-		int sid = getNewID();
 
 		if (nlid == -1) {
 			return null;
@@ -474,7 +471,7 @@ public class CCDatabase {
 			return null;
 		}
 
-		CCSeries result = new CCSeries(list, nlid, sid);
+		CCSeries result = new CCSeries(list, nlid);
 		result.setDefaultValues(false);
 
 		return result;
@@ -487,7 +484,7 @@ public class CCDatabase {
 			return null;
 		}
 
-		if (! addEmptySeasonsRow(sid, s.getSeriesID())) {
+		if (! addEmptySeasonsRow(sid, s.getLocalID())) {
 			return null;
 		}
 
@@ -547,7 +544,6 @@ public class CCDatabase {
 			stmt.setInt(DatabaseStructure.COL_MAIN_SCORE,         mov.getScore().asInt());
 			stmt.setInt(DatabaseStructure.COL_MAIN_COVERID,       mov.getCoverID());
 			stmt.setInt(DatabaseStructure.COL_MAIN_TYPE,          mov.getType().asInt());
-			stmt.setInt(DatabaseStructure.COL_MAIN_SERIES_ID,     mov.getSeriesID());
 
 			CCMediaInfo mi = mov.getMediaInfo();
 			if (mi.isSet())
@@ -613,7 +609,6 @@ public class CCDatabase {
 			stmt.setInt(DatabaseStructure.COL_MAIN_SCORE,       ser.getScore().asInt());
 			stmt.setInt(DatabaseStructure.COL_MAIN_COVERID,     ser.getCoverID());
 			stmt.setInt(DatabaseStructure.COL_MAIN_TYPE,        ser.getType().asInt());
-			stmt.setInt(DatabaseStructure.COL_MAIN_SERIES_ID,   ser.getSeriesID());
 			stmt.setSht(DatabaseStructure.COL_MAIN_TAGS,        ser.getTags().asShort());
 
 			stmt.setInt(DatabaseStructure.COL_MAIN_LOCALID,     ser.getLocalID());
@@ -633,7 +628,6 @@ public class CCDatabase {
 			CCSQLStatement stmt = updateSeasonTabStatement;
 			stmt.clearParameters();
 
-			stmt.setInt(DatabaseStructure.COL_SEAS_SERIESID,  ser.getSeries().getSeriesID());
 			stmt.setStr(DatabaseStructure.COL_SEAS_NAME,      ser.getTitle());
 			stmt.setInt(DatabaseStructure.COL_SEAS_YEAR,      ser.getYear());
 			stmt.setInt(DatabaseStructure.COL_SEAS_COVERID,   ser.getCoverID());
@@ -827,7 +821,7 @@ public class CCDatabase {
 					while (rs.next()) {
 						CCDatabaseElement de = createDatabaseElementFromDatabase(rs, ml, false);
 						temp.add(de);
-						if (de.getClass() == CCSeries.class) seriesMap.put(de.getSeriesID(), (CCSeries) de);
+						if (de.getClass() == CCSeries.class) seriesMap.put(de.getLocalID(), (CCSeries) de);
 					}
 					ml.directlyInsert(temp);
 
@@ -847,7 +841,7 @@ public class CCDatabase {
 					while (rs.next()) {
 						int sid = rs.getInt(DatabaseStructure.COL_SEAS_SERIESID);
 						CCSeries ser = lastSeries;
-						if (ser == null || ser.getSeriesID() != sid) ser = seriesMap.get(sid);
+						if (ser == null || ser.getLocalID() != sid) ser = seriesMap.get(sid);
 						lastSeries = ser;
 
 						ser.beginUpdating();
@@ -996,7 +990,7 @@ public class CCDatabase {
 			CCSQLStatement stmt = selectSeasonTabStatement;
 			stmt.clearParameters();
 
-			stmt.setInt(DatabaseStructure.COL_SEAS_SERIESID, ser.getSeriesID());
+			stmt.setInt(DatabaseStructure.COL_SEAS_SERIESID, ser.getLocalID());
 			
 			CCSQLResultSet rs = stmt.executeQuery(this);
 

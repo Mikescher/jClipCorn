@@ -30,7 +30,6 @@
         <column name="SCORE"                type="TINYINT"  required="true"                    />    <!-- ALSO USED FOR SERIES -->
         <column name="COVERID"              type="INTEGER"  required="true"  size="256"        />    <!-- ALSO USED FOR SERIES -->
         <column name="TYPE"                 type="TINYINT"  required="true"                    />
-        <column name="SERIESID"             type="INTEGER"  required="true"                    />
 
         <column name="MEDIAINFO.FILESIZE"   type="BIGINT"   required="false"                   />
         <column name="MEDIAINFO.CDATE"      type="BIGINT"   required="false"                   />
@@ -59,7 +58,7 @@
         <column name="COVERID"      type="INTEGER"  required="true" size="256"        />
 
         <foreign-key foreignTable="ELEMENTS">
-            <reference local="SERIESID" foreign="LOCALID" />
+            <reference local="SERIESID" foreign="SERIESID" />
         </foreign-key> 
     </table>
 

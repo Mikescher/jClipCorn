@@ -1118,7 +1118,7 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator {
 	@SuppressWarnings("nls")
 	protected void findInternalDatabaseErrors(List<DatabaseError> e, CCMovieList movielist, DoubleProgressCallbackListener pcl)
 	{
-		pcl.stepRootAndResetSub("Validate database layer", 7);
+		pcl.stepRootAndResetSub("Validate database layer", 8);
 
 		PublicDatabaseInterface db = movielist.getInternalDatabaseDirectly();
 
@@ -1128,12 +1128,11 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator {
 			pcl.stepSub("Global ID uniqueness");
 
 			List<Integer> ids_elm = db.querySQL("SELECT LOCALID  FROM ELEMENTS",              1, o -> (int)o[0]);
-			List<Integer> ids_ser = db.querySQL("SELECT SERIESID FROM ELEMENTS WHERE TYPE=1", 1, o -> (int)o[0]);
 			List<Integer> ids_sea = db.querySQL("SELECT SEASONID FROM SEASONS",               1, o -> (int)o[0]);
 			List<Integer> ids_epi = db.querySQL("SELECT LOCALID  FROM EPISODES",              1, o -> (int)o[0]);
 
 			List<Integer> duplicates = CCStreams
-					.iterate(ids_elm, ids_ser, ids_sea, ids_epi)
+					.iterate(ids_elm, ids_sea, ids_epi)
 					.groupBy(p->p)
 					.filter(p->p.getValue().size()>1)
 					.map(Map.Entry::getKey)
@@ -1145,7 +1144,7 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator {
 
 			int last_id = db.querySingleIntSQLThrow("SELECT CAST(IVALUE AS INTEGER) FROM INFO WHERE IKEY='LAST_ID'", 0);
 
-			for (int tlid : CCStreams.iterate(ids_elm, ids_ser, ids_sea, ids_epi).filter(p -> p > last_id)) {
+			for (int tlid : CCStreams.iterate(ids_elm, ids_sea, ids_epi).filter(p -> p > last_id)) {
 				e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_DB_TOO_LARGE_ID, tlid));
 			}
 		}
@@ -1158,9 +1157,9 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator {
 		// ### 2 ###
 		try
 		{
-			pcl.stepSub("Mismatch [TYPE] <> [SERIESID]");
+			pcl.stepSub("Mismatch [TYPE] <> [REAL]");
 
-			List<Integer> errs = db.querySQL("SELECT LOCALID FROM ELEMENTS WHERE (TYPE=0 AND SERIESID<>-1) OR (TYPE=1 AND SERIESID<0) OR (TYPE<>0 AND TYPE<>1)", 1, o -> (int)o[0]);
+			List<Integer> errs = db.querySQL("SELECT LOCALID FROM ELEMENTS AS E0 WHERE (TYPE=0 AND (SELECT COUNT(*) FROM SEASONS AS S0 WHERE S0.SERIESID = E0.LOCALID)>0) OR (TYPE=1 AND (SELECT COUNT(*) FROM SEASONS AS S0 WHERE S0.SERIESID = E0.LOCALID)=0) OR (TYPE<>0 AND TYPE<>1)", 1, o -> (int)o[0]);
 
 			for (int errid : errs) {
 				e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_DB_TYPE_SID_MISMATCH, errid));
@@ -1177,7 +1176,7 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator {
 		{
 			pcl.stepSub("Missing series entry");
 
-			List<Integer> errs = db.querySQL("SELECT DISTINCT SEASONS.SERIESID FROM SEASONS LEFT JOIN ELEMENTS ON SEASONS.SERIESID=ELEMENTS.SERIESID WHERE ELEMENTS.LOCALID IS NULL", 1, o -> (int)o[0]);
+			List<Integer> errs = db.querySQL("SELECT DISTINCT SEASONS.SERIESID FROM SEASONS LEFT JOIN ELEMENTS ON SEASONS.SERIESID=ELEMENTS.LOCALID WHERE ELEMENTS.LOCALID IS NULL", 1, o -> (int)o[0]);
 
 			for (int errid : errs) {
 				e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_DB_MISSING_SERIES, errid));
@@ -1253,6 +1252,36 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator {
 					e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_HTRIGGER_DISABLED_ERR, null));
 			}
 
+		}
+		catch (Exception ex)
+		{
+			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_DB_EXCEPTION, ex));
+		}
+
+		// ### 7 ###
+		try
+		{
+			pcl.stepSub("Check database foreign keys");
+
+			var r = db.querySQL("PRAGMA foreign_key_check;", 4);
+
+			if (r.size() > 0) throw new Exception("foreign_key_check returned " + r.size() + " errors");
+		}
+		catch (Exception ex)
+		{
+			e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_DB_EXCEPTION, ex));
+		}
+
+		// ### 8 ###
+		try
+		{
+			pcl.stepSub("Check database foreign keys");
+
+			var r1 = db.querySingleStringSQLThrow("PRAGMA integrity_check;", 0);
+			if (!r1.equalsIgnoreCase("ok")) throw new Exception("integrity_check == '" + r1 + "'");
+
+			var r2 = db.querySingleStringSQLThrow("PRAGMA quick_check;", 0);
+			if (!r2.equalsIgnoreCase("ok")) throw new Exception("integrity_check == '" + r2 + "'");
 		}
 		catch (Exception ex)
 		{

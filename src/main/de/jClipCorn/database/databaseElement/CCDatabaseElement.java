@@ -25,7 +25,6 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 	private CCFSK fsk;
 	private CCUserScore score;
 	private int coverid;
-	private final int seriesID;
 	private CCOnlineReferenceList onlineReference;
 	private CCGroupList linkedGroups;
 	private CCTagList tags;
@@ -33,10 +32,9 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 	protected final CCMovieList movielist;
 	protected boolean isUpdating = false;
 
-	public CCDatabaseElement(CCMovieList ml, CCDBElementTyp typ, int id, int seriesID) {
+	public CCDatabaseElement(CCMovieList ml, CCDBElementTyp typ, int id) {
 		this.typ       = typ;
 		this.localID   = id;
-		this.seriesID  = seriesID;
 		this.movielist = ml;
 		
 		onlineReference = CCOnlineReferenceList.EMPTY;
@@ -327,10 +325,6 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 				(genres.getGenre(4).isEmpty() && (!genres.getGenre(5).isEmpty())) ||
 				(genres.getGenre(5).isEmpty() && (!genres.getGenre(6).isEmpty())) ||
 				(genres.getGenre(6).isEmpty() && (!genres.getGenre(7).isEmpty()));
-	}
-
-	public int getSeriesID() {
-		return seriesID;
 	}
 
 	public boolean isMovie() {

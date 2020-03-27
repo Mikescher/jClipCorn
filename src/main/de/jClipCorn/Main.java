@@ -29,7 +29,7 @@ import de.jClipCorn.util.helper.SwingUtils;
 public class Main {
 	public final static String TITLE     = "jClipCorn"; //$NON-NLS-1$
 	public final static String VERSION   = /*<gradle_version_marker>*/"1.10.7.11"/*</gradle_version_marker>*/; //$NON-NLS-1$
-	public final static String DBVERSION = "16";    //$NON-NLS-1$
+	public final static String DBVERSION = "17";    //$NON-NLS-1$
 	public final static String JXMLVER   = "5";     //$NON-NLS-1$
 
 	private final static String PROPERTIES_PATH = "jClipcorn.properties"; //$NON-NLS-1$
@@ -199,5 +199,3 @@ public class Main {
 // option recreate previews (covers dialog to show content of covers table)
 
 // Compare speed of stream vs ccstream (just out of interest)
-
-//TODO ""PRAGMA foreign_key_check;""

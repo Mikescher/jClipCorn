@@ -160,7 +160,6 @@ public class Main {
 	// - you can right click a movie and click something like network view
 		// - You see if the othr one has the Movie / what he rates / if he has viewed ...
 
-// Shortcuts für SerienWindow
 // Compare Series in CompareDialog
 // Option to move Database to Server
 

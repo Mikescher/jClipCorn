@@ -7,6 +7,7 @@ import de.jClipCorn.features.actionTree.CCActionElement;
 import de.jClipCorn.features.actionTree.CCActionTree;
 import de.jClipCorn.features.actionTree.IActionSourceObject;
 import de.jClipCorn.features.log.CCLog;
+import de.jClipCorn.gui.frames.previewSeriesFrame.PreviewSeriesFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.MultiSizeIconRef;
 import de.jClipCorn.gui.resources.Resources;
@@ -16,6 +17,7 @@ import de.jClipCorn.util.lambda.Func0to0;
 import de.jClipCorn.util.listener.ActionCallbackListener;
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class ClipMenuBar extends JMenuBar {
@@ -23,6 +25,8 @@ public abstract class ClipMenuBar extends JMenuBar {
 	
 	private JMenu lastMaster;
 	private JMenu lastSubMaster;
+
+	private final List<CCActionElement> actions = new ArrayList<>();
 
 	protected final Func0to0 _postAction;
 
@@ -107,6 +111,8 @@ public abstract class ClipMenuBar extends JMenuBar {
 			return;
 		}
 
+		actions.add(el);
+
 		addNode(el.getCaptionIdent(), () -> el.execute(getSourceComponent(), getActionSource(), getActionSourceObject(), getSourceListener()), el.getIconRef(), el.isReadOnlyRestricted());
 	}
 
@@ -119,6 +125,8 @@ public abstract class ClipMenuBar extends JMenuBar {
 			return;
 		}
 
+		actions.add(el);
+
 		addSubNode(el.getCaptionIdent(), () -> el.execute(getSourceComponent(), getActionSource(), getActionSourceObject(), getSourceListener()), el.getIconRef(), el.isReadOnlyRestricted());
 	}
 
@@ -130,9 +138,15 @@ public abstract class ClipMenuBar extends JMenuBar {
 			return;
 		}
 
+		actions.add(el);
+
 		addSubMaster(el.getCaptionIdent(), el.getIconRef());
 
-		for (CCActionElement child : el.getAllChildren()) addActionSubNode(child.getName());
+		for (CCActionElement child : el.getAllChildren())
+		{
+			actions.add(child);
+			addActionSubNode(child.getName());
+		}
 	}
 
 	protected void addOpenInBrowserActionNodes(CCOnlineReferenceList ref) {
@@ -152,6 +166,11 @@ public abstract class ClipMenuBar extends JMenuBar {
 
 	private void openRef(CCSingleOnlineReference r) {
 		if (r.isSet() && r.isValid()) HTTPUtilities.openInBrowser(r.getURL());
+	}
+
+	public void implementDirectKeyListener(PreviewSeriesFrame frame, JPanel contentPane)
+	{
+		for (var act : actions) act.implementDirectKeyListener(frame, frame, contentPane);
 	}
 
 	protected abstract List<IActionSourceObject> getActionSourceObject();

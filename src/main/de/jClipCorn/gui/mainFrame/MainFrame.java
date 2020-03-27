@@ -9,6 +9,8 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCFileFormat;
 import de.jClipCorn.database.util.CCDBUpdateListener;
 import de.jClipCorn.features.actionTree.ActionSource;
 import de.jClipCorn.features.actionTree.CCActionTree;
+import de.jClipCorn.features.actionTree.IActionRootFrame;
+import de.jClipCorn.features.actionTree.IActionSourceObject;
 import de.jClipCorn.features.actionTree.menus.impl.ClipMoviePopup;
 import de.jClipCorn.features.actionTree.menus.impl.ClipSeriesPopup;
 import de.jClipCorn.features.log.CCLog;
@@ -47,7 +49,7 @@ import java.awt.event.WindowListener;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 
-public class MainFrame extends JFrame implements CCDBUpdateListener, FileDrop.Listener {
+public class MainFrame extends JFrame implements CCDBUpdateListener, FileDrop.Listener, IActionRootFrame {
 	private static final long serialVersionUID = 1002435986107998058L;
 
 	private final static int FRAME_WIDTH = 875;
@@ -323,6 +325,10 @@ public class MainFrame extends JFrame implements CCDBUpdateListener, FileDrop.Li
 	}
 
 	public CCDatabaseElement getSelectedElement() {
+		return clipTable.getSelectedDatabaseElement();
+	}
+
+	public IActionSourceObject getSelectedActionSource() {
 		return clipTable.getSelectedDatabaseElement();
 	}
 

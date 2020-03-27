@@ -1,30 +1,25 @@
 package de.jClipCorn.features.actionTree;
 
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.util.*;
-import java.util.List;
-
-import javax.swing.AbstractAction;
-import javax.swing.ActionMap;
-import javax.swing.ImageIcon;
-import javax.swing.InputMap;
-import javax.swing.JComponent;
-import javax.swing.KeyStroke;
-
-import de.jClipCorn.gui.mainFrame.MainFrame;
-import de.jClipCorn.util.listener.ActionCallbackListener;
-import org.apache.commons.lang.StringUtils;
-
 import de.jClipCorn.database.CCMovieList;
-import de.jClipCorn.gui.mainFrame.clipToolbar.ClipToolbar;
-import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.features.log.CCLog;
+import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.gui.mainFrame.MainFrame;
+import de.jClipCorn.gui.mainFrame.clipToolbar.ClipToolbar;
 import de.jClipCorn.gui.resources.MultiSizeIconRef;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.property.CCCaptionedKeyStrokeProperty;
 import de.jClipCorn.properties.property.CCKeyStrokeProperty;
 import de.jClipCorn.util.helper.KeyStrokeUtil;
+import de.jClipCorn.util.listener.ActionCallbackListener;
+import org.apache.commons.lang.StringUtils;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
 
 public class CCActionElement {
 	private final String name;
@@ -219,39 +214,79 @@ public class CCActionElement {
 		}
 		return keyStrokeProperty.getValue();
 	}
-	
-	private void implementKeyListener(MainFrame f, JComponent comp, final CCActionElement e) {
+
+	public void implementDirectKeyListener(JFrame frame, IActionRootFrame f, JComponent comp) {
 		final KeyStroke stroke = getKeyStroke();
-		
+
 		if (KeyStrokeUtil.isEmpty(stroke)) {
 			return;
 		}
+
+		InputMap map = comp.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+		ActionMap act = comp.getActionMap();
+
+		map.put(stroke, name);
+		act.put(name, new AbstractAction()
+		{
+			private static final long serialVersionUID = 19873468235L;
+
+			@Override
+			public void actionPerformed(ActionEvent arg0)
+			{
+				if (CCMovieList.getInstance().isBlocked()) return;
+
+				if (stroke.equals(CCActionElement.this.getKeyStroke())) {
+					var srcobj = f.getSelectedActionSource();
+					if (srcobj == null) return;
+					CCActionElement.this.execute(frame, ActionSource.SHORTCUT, Collections.singletonList(srcobj), null);
+				}
+			}
+		});
+	}
+	
+	private void implementKeyListener(MainFrame frame, JComponent comp, final CCActionElement root) {
+		final KeyStroke stroke = getKeyStroke();
+		
+		if (KeyStrokeUtil.isEmpty(stroke)) return;
 		
 		InputMap map = comp.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 		ActionMap act = comp.getActionMap();
 		
 		map.put(stroke, name);
-		act.put(name, new AbstractAction() {
+		act.put(name, new AbstractAction()
+		{
 			private static final long serialVersionUID = 19873468234L;
 
 			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				e.onKeyPressed(f, stroke);
+			public void actionPerformed(ActionEvent arg0)
+			{
+				if (CCMovieList.getInstance().isBlocked()) return;
+
+				List<CCActionElement> childs = root.getAllChildren();
+				childs.add(root);
+
+				for (CCActionElement child : childs) {
+					if (stroke.equals(child.getKeyStroke())) {
+						child.execute(frame, ActionSource.SHORTCUT, Collections.singletonList(frame.getSelectedElement()), null);
+					}
+				}
 			}
 		});
 	}
 	
-	private void onKeyPressed(MainFrame f, KeyStroke stroke) {
-		if (CCMovieList.getInstance().isBlocked()) {
-			return;
-		}
+	private void onKeyPressed(Component comp, IActionRootFrame f, KeyStroke stroke) {
+
+		// method is always called on [ROOT] node
+		// [ROOT] node has events for all shortcut of all it's children
+
+		if (CCMovieList.getInstance().isBlocked()) return;
 		
 		List<CCActionElement> childs = getAllChildren();
 		childs.add(this);
 		
 		for (int i = 0; i < childs.size(); i++) {
 			if (stroke.equals(childs.get(i).getKeyStroke())) {
-				childs.get(i).execute(f, ActionSource.SHORTCUT, Collections.singletonList(f.getSelectedElement()), null);
+				childs.get(i).execute(comp, ActionSource.SHORTCUT, Collections.singletonList(f.getSelectedActionSource()), null);
 			}
 		}
 	}

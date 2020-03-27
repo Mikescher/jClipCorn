@@ -273,12 +273,12 @@ public class CCActionTree extends UIActionTree{
 
 				CCActionElement episode = add(other, "Episode", null, "", null);
 				{
-					add(episode, "PlayEpisode",          null, "ClipMenuBar.Other.Episode.PlayEpisode",          Resources.ICN_MENUBAR_PLAY,         false, this::onClickOtherEpisodePlay);
-					add(episode, "PlayEpisodeAnonymous", null, "ClipMenuBar.Other.Episode.PlayEpisodeAnonymous", Resources.ICN_MENUBAR_HIDDENPLAY,   false, this::onClickOtherEpisodePlayAnonymous);
-					add(episode, "QueueEpisodeInRobot",  null, "ClipMenuBar.Other.Episode.QueueEpisodeInRobot",  Resources.ICN_MENUBAR_VLCROBOT,     false, this::onClickOtherEpisodePlayInRobot);
-					add(episode, "SetEpisodeViewed",     null, "ClipMenuBar.Other.Episode.SetEpisodeViewed",     Resources.ICN_MENUBAR_VIEWED,       true,  this::onClickOtherEpisodeSetViewed);
-					add(episode, "SetEpisodeUnviewed",   null, "ClipMenuBar.Other.Episode.SetEpisodeUnviewed",   Resources.ICN_MENUBAR_UNVIEWED,     true,  this::onClickOtherEpisodeUnviewed);
-					add(episode, "UndoEpisodeViewed",    null, "ClipMenuBar.Other.Episode.UndoEpisodeViewed",    Resources.ICN_MENUBAR_UNDOVIEWED,   true,  this::onClickOtherEpisodeUndoViewed);
+					add(episode, "PlayEpisode",          KS_ENTER, "ClipMenuBar.Other.Episode.PlayEpisode",          Resources.ICN_MENUBAR_PLAY,         false, this::onClickOtherEpisodePlay);
+					add(episode, "PlayEpisodeAnonymous", null,     "ClipMenuBar.Other.Episode.PlayEpisodeAnonymous", Resources.ICN_MENUBAR_HIDDENPLAY,   false, this::onClickOtherEpisodePlayAnonymous);
+					add(episode, "QueueEpisodeInRobot",  null,     "ClipMenuBar.Other.Episode.QueueEpisodeInRobot",  Resources.ICN_MENUBAR_VLCROBOT,     false, this::onClickOtherEpisodePlayInRobot);
+					add(episode, "SetEpisodeViewed",     null,     "ClipMenuBar.Other.Episode.SetEpisodeViewed",     Resources.ICN_MENUBAR_VIEWED,       true,  this::onClickOtherEpisodeSetViewed);
+					add(episode, "SetEpisodeUnviewed",   null,     "ClipMenuBar.Other.Episode.SetEpisodeUnviewed",   Resources.ICN_MENUBAR_UNVIEWED,     true,  this::onClickOtherEpisodeUnviewed);
+					add(episode, "UndoEpisodeViewed",    null,     "ClipMenuBar.Other.Episode.UndoEpisodeViewed",    Resources.ICN_MENUBAR_UNDOVIEWED,   true,  this::onClickOtherEpisodeUndoViewed);
 
 					CCActionElement elemTagsEpi = add(episode, "SetTags_Episode", null, "ClipMenuBar.Other.Episode.SetTags", Resources.ICN_MENUBAR_TAGS);
 					{
@@ -288,10 +288,10 @@ public class CCActionTree extends UIActionTree{
 						}
 					}
 
-					add(episode, "OpenEpisodeFolder",  null, "ClipMenuBar.Other.Episode.OpenEpisodeFolder", Resources.ICN_MENUBAR_FOLDER,          false, this::onClickOtherEpisodeOpenFolder);
-					add(episode, "ShowEpisodeHistory", null, "ClipMenuBar.Other.Episode.ShowHistory",       Resources.ICN_MENUBAR_DATABASEHISTORY, false, this::onClickOtherShowHistory);
-					add(episode, "EditEpisode",        null, "ClipMenuBar.Other.Episode.EditEpisode",       Resources.ICN_MENUBAR_EDIT_MOV,        true,  this::onClickOtherEpisodeEdit);
-					add(episode, "RemEpisode",         null, "ClipMenuBar.Other.Episode.RemEpisode",        Resources.ICN_MENUBAR_REMOVE,          true,  this::onClickOtherEpisodeDelete);
+					add(episode, "OpenEpisodeFolder",  null,      "ClipMenuBar.Other.Episode.OpenEpisodeFolder", Resources.ICN_MENUBAR_FOLDER,          false, this::onClickOtherEpisodeOpenFolder);
+					add(episode, "ShowEpisodeHistory", null,      "ClipMenuBar.Other.Episode.ShowHistory",       Resources.ICN_MENUBAR_DATABASEHISTORY, false, this::onClickOtherShowHistory);
+					add(episode, "EditEpisode",        KS_CTRL_E, "ClipMenuBar.Other.Episode.EditEpisode",       Resources.ICN_MENUBAR_EDIT_MOV,        true,  this::onClickOtherEpisodeEdit);
+					add(episode, "RemEpisode",         KS_DEL,    "ClipMenuBar.Other.Episode.RemEpisode",        Resources.ICN_MENUBAR_REMOVE,          true,  this::onClickOtherEpisodeDelete);
 				}
 			}
 		}

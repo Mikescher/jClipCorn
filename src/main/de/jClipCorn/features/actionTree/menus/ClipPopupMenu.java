@@ -8,6 +8,7 @@ import de.jClipCorn.features.actionTree.CCActionElement;
 import de.jClipCorn.features.actionTree.CCActionTree;
 import de.jClipCorn.features.actionTree.IActionSourceObject;
 import de.jClipCorn.features.log.CCLog;
+import de.jClipCorn.gui.frames.previewSeriesFrame.PreviewSeriesFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.MultiSizeIconRef;
 import de.jClipCorn.util.helper.KeyStrokeUtil;
@@ -17,11 +18,14 @@ import de.jClipCorn.util.stream.CCStreams;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 public abstract class ClipPopupMenu extends JPopupMenu {
 	private static final long serialVersionUID = -3924972933691119441L;
+
+	private final List<CCActionElement> actions = new ArrayList<>();
 
 	public ClipPopupMenu() {
 		super();
@@ -40,7 +44,9 @@ public abstract class ClipPopupMenu extends JPopupMenu {
 			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.ErrorActionNotFound", actionIdent)); //$NON-NLS-1$
 			return null;
 		}
-		
+
+		actions.add(el);
+
 		JMenuItem item = add(el.getCaption());
 		
 		item.setIcon(el.getSmallIcon());
@@ -61,6 +67,8 @@ public abstract class ClipPopupMenu extends JPopupMenu {
 			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.ErrorActionNotFound", actionIdent)); //$NON-NLS-1$
 			return null;
 		}
+
+		actions.add(el);
 		
 		JMenu item = new JMenu(el.getCaption());
 		add(item);
@@ -76,6 +84,7 @@ public abstract class ClipPopupMenu extends JPopupMenu {
 		ActionMenuWrapper amw = new ActionMenuWrapper(item);
 		
 		for (CCActionElement child : el.getAllChildren()) {
+			actions.add(child);
 			amw.add(getSourceFrame(), child, getSourceObject(), getSourceListener());
 		}
 		
@@ -143,5 +152,10 @@ public abstract class ClipPopupMenu extends JPopupMenu {
 				menu.add(submenu);
 			}
 		}
+	}
+
+	public void implementDirectKeyListener(PreviewSeriesFrame frame, JPanel contentPane)
+	{
+		for (var act : actions) act.implementDirectKeyListener(frame, frame, contentPane);
 	}
 }

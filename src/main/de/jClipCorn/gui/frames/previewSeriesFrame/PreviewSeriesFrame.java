@@ -14,6 +14,9 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCUserScore;
 import de.jClipCorn.database.util.CCDBUpdateListener;
 import de.jClipCorn.features.actionTree.ActionSource;
 import de.jClipCorn.features.actionTree.CCActionTree;
+import de.jClipCorn.features.actionTree.IActionRootFrame;
+import de.jClipCorn.features.actionTree.IActionSourceObject;
+import de.jClipCorn.features.actionTree.menus.impl.ClipEpisodePopup;
 import de.jClipCorn.features.actionTree.menus.impl.PreviewSeriesMenuBar;
 import de.jClipCorn.features.actionTree.menus.impl.SerCoverChooserPopupMenu;
 import de.jClipCorn.gui.frames.displayGenresDialog.DisplayGenresDialog;
@@ -59,7 +62,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class PreviewSeriesFrame extends JFrame implements ListSelectionListener, JCoverChooserPopupEvent, UpdateCallbackListener, FileDrop.Listener, ActionCallbackListener {
+public class PreviewSeriesFrame extends JFrame implements ListSelectionListener, JCoverChooserPopupEvent, UpdateCallbackListener, FileDrop.Listener, ActionCallbackListener, IActionRootFrame {
 	private static final long serialVersionUID = 5484205983855802992L;
 
 	private static List<Tuple<CCSeries, PreviewSeriesFrame>> _activeFrames = new ArrayList<>();
@@ -276,6 +279,12 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 				}
 			}
 		});
+
+		if (!ser.isEmpty())
+		{
+			var cep = new ClipEpisodePopup(this, ser.getFirstEpisode());
+			cep.implementDirectKeyListener(this, (JPanel) getContentPane());
+		}
 	}
 
 	private void initGUI(boolean windowBuilder) {
@@ -728,6 +737,14 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 	}
 
 	public CCEpisode getSelectedEpisode() {
+		return tabSeason.getSelectedEpisode();
+	}
+
+	@Override
+	public IActionSourceObject getSelectedActionSource() {
+		final CCSeason s = tabSeason.getSeason();
+		if (s == null) return null;
+
 		return tabSeason.getSelectedEpisode();
 	}
 }

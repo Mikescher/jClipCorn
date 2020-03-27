@@ -1,9 +1,11 @@
 package de.jClipCorn.util.parser.watchdata;
 
 import de.jClipCorn.database.databaseElement.CCMovie;
+import de.jClipCorn.database.databaseElement.columnTypes.CCDateTimeList;
+import de.jClipCorn.util.datetime.CCDateTime;
 
 public class MovieWatchDataChangedSet extends WatchDataChangeSet {
-	private CCMovie mov;
+	private final CCMovie mov;
 	
 	public MovieWatchDataChangedSet(CCMovie m, boolean newViewed) {
 		super(newViewed);
@@ -35,6 +37,7 @@ public class MovieWatchDataChangedSet extends WatchDataChangeSet {
 
 	@Override
 	public void execute() {
-		mov.setViewed(newState);
+		if (!newState) mov.setViewedHistory(CCDateTimeList.createEmpty());
+		if (newState && !mov.isViewed()) mov.addToViewedHistory(CCDateTime.getUnspecified());
 	}
 }

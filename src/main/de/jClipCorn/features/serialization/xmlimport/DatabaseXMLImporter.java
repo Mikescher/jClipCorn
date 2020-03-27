@@ -3,10 +3,7 @@ package de.jClipCorn.features.serialization.xmlimport;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.CCSeries;
-import de.jClipCorn.features.serialization.xmlimport.impl.DatabaseXMLImportImpl_V1;
-import de.jClipCorn.features.serialization.xmlimport.impl.DatabaseXMLImportImpl_V2;
-import de.jClipCorn.features.serialization.xmlimport.impl.DatabaseXMLImportImpl_V3;
-import de.jClipCorn.features.serialization.xmlimport.impl.DatabaseXMLImportImpl_V4;
+import de.jClipCorn.features.serialization.xmlimport.impl.*;
 import de.jClipCorn.util.exceptions.CCFormatException;
 import de.jClipCorn.util.exceptions.SerializationException;
 import de.jClipCorn.util.lambda.Func0to1;
@@ -15,6 +12,7 @@ import de.jClipCorn.util.listener.ProgressCallbackListener;
 import de.jClipCorn.util.xml.CCXMLElement;
 import de.jClipCorn.util.xml.CCXMLException;
 import de.jClipCorn.util.xml.CCXMLParser;
+
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
@@ -70,6 +68,7 @@ public class DatabaseXMLImporter {
 		if (s.XMLVersion == 2) return new DatabaseXMLImportImpl_V2();
 		if (s.XMLVersion == 3) return new DatabaseXMLImportImpl_V3();
 		if (s.XMLVersion == 4) return new DatabaseXMLImportImpl_V4();
+		if (s.XMLVersion == 5) return new DatabaseXMLImportImpl_V5();
 
 		throw new SerializationException("Unknown XMLVersion: " + s.XMLVersion);
 	}

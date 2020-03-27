@@ -639,10 +639,8 @@ public class CCMovieList {
 		return false;
 	}
 
-	public void resetAllMovieViewed(boolean to) {
-		for (CCMovie mov : iteratorMovies()) {
-			mov.setViewed(to);
-		}
+	public void resetAllMovieViewed() {
+		for (CCMovie mov : iteratorMovies()) mov.setViewedHistory(CCDateTimeList.createEmpty());
 	}
 	
 	public CCMovie findfirst(CCMovieZyklus zyklus) {

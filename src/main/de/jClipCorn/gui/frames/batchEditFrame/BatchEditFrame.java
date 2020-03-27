@@ -92,7 +92,6 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 	private JSpinner spnSide_03;
 	private JTextField edSide_05;
 	private JButton btnSide_08;
-	private JButton btnSide_10;
 	private JButton btnSide_11;
 	private JButton btnSide_12;
 	private JSpinner spnSideLength;
@@ -143,9 +142,6 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 	private JLabel lblNewLabel_2;
 	private JLabel lblDirtyHistory;
 	private DateTimeListEditor ctrlHistory;
-	private JLabel lblDirtyViewed;
-	private JLabel lblNewLabel_4;
-	private JCheckBox chkbxViewed;
 
 	private final IEpisodeOwner target;
 	private final List<BatchEditEpisodeData> data;
@@ -278,8 +274,6 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 				RowSpec.decode("20px"), //$NON-NLS-1$
 				FormSpecs.UNRELATED_GAP_ROWSPEC,
 				RowSpec.decode("20px"), //$NON-NLS-1$
-				FormSpecs.UNRELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
 				FormSpecs.UNRELATED_GAP_ROWSPEC,
 				RowSpec.decode("80dlu"), //$NON-NLS-1$
 				FormSpecs.RELATED_GAP_ROWSPEC,
@@ -416,26 +410,17 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 		btnOpen = new JButton(LocaleBundle.getString("AddMovieFrame.btnChoose.text")); //$NON-NLS-1$
 		pnlInfo.add(btnOpen, "7, 22, 3, 1"); //$NON-NLS-1$
 		
-		lblDirtyViewed = new JLabel("*"); //$NON-NLS-1$
-		pnlInfo.add(lblDirtyViewed, "2, 24"); //$NON-NLS-1$
-		
-		lblNewLabel_4 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGesehen.text")); //$NON-NLS-1$
-		pnlInfo.add(lblNewLabel_4, "3, 24"); //$NON-NLS-1$
-		
-		chkbxViewed = new JCheckBox(""); //$NON-NLS-1$
-		pnlInfo.add(chkbxViewed, "5, 24"); //$NON-NLS-1$
-		
 		lblDirtyHistory = new JLabel("*"); //$NON-NLS-1$
-		pnlInfo.add(lblDirtyHistory, "2, 26, default, top"); //$NON-NLS-1$
+		pnlInfo.add(lblDirtyHistory, "2, 24, default, top"); //$NON-NLS-1$
 		
 		lblNewLabel_2 = new JLabel(LocaleBundle.getString("EditSeriesFrame.lblHistory.text")); //$NON-NLS-1$
-		pnlInfo.add(lblNewLabel_2, "3, 26, default, top"); //$NON-NLS-1$
+		pnlInfo.add(lblNewLabel_2, "3, 24, default, top"); //$NON-NLS-1$
 		
 		ctrlHistory = new DateTimeListEditor();
-		pnlInfo.add(ctrlHistory, "5, 26, 5, 1, fill, fill"); //$NON-NLS-1$
+		pnlInfo.add(ctrlHistory, "5, 24, 5, 1, fill, fill"); //$NON-NLS-1$
 
 		panel_1 = new JPanel();
-		pnlInfo.add(panel_1, "3, 30, 7, 1, fill, fill"); //$NON-NLS-1$
+		pnlInfo.add(panel_1, "3, 28, 7, 1, fill, fill"); //$NON-NLS-1$
 		panel_1.setLayout(new FormLayout(new ColumnSpec[] {
 				ColumnSpec.decode("96px"), //$NON-NLS-1$
 				FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
@@ -593,11 +578,8 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 		pnlEdit.add(btnSpracheSetzen, "8, 22, 3, 1"); //$NON-NLS-1$
 		btnSpracheSetzen.addActionListener(arg0 -> massSetLanguage());
 
-		btnSide_10 = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnSetViewed.text")); //$NON-NLS-1$
-		pnlEdit.add(btnSide_10, "2, 24, 3, 1"); //$NON-NLS-1$
-
 		btnSide_11 = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnSetUnviewed.text")); //$NON-NLS-1$
-		pnlEdit.add(btnSide_11, "6, 24, 5, 1"); //$NON-NLS-1$
+		pnlEdit.add(btnSide_11, "2, 24, 7, 1"); //$NON-NLS-1$
 		
 		btnViewedNow = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnSetViewedNow.text")); //$NON-NLS-1$
 		pnlEdit.add(btnViewedNow, "2, 26, 7, 1"); //$NON-NLS-1$
@@ -641,8 +623,7 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 		btnSideAutoLen.addActionListener(e -> massMediaInfoLen());
 		btnSide_13.addActionListener(e -> massSetFormat());
 		btnSide_12.addActionListener(e -> massSetLength());
-		btnSide_11.addActionListener(e -> massSetViewed(false));
-		btnSide_10.addActionListener(e -> massSetViewed(true));
+		btnSide_11.addActionListener(e -> massSetNotViewed());
 		btnSide_09.addActionListener(e -> massRecalcSizes());
 		btnIncEpisodeNumbers.addActionListener(arg0 -> massIncNumber());
 		btnSide_08.addActionListener(e -> searchAndDeleteChars());
@@ -775,7 +756,6 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 		episode.setLanguage(ctrlLang.getValue());
 		episode.setMediaInfo(ctrlMediaInfo.getValue());
 		episode.setViewedHistory(ctrlHistory.getValue());
-		episode.setViewed(chkbxViewed.isSelected());
 
 		lsEpisodes.setSelectedIndex(-1);
 		updateList();
@@ -866,7 +846,6 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 			ctrlLang.setValue(episode.getLanguage());
 			ctrlMediaInfo.setValue(episode.getMediaInfo());
 			ctrlHistory.setValue(episode.getViewedHistory());
-			chkbxViewed.setSelected(episode.isViewed());
 
 			lblDirtyTitle.setVisible(episode.titleDirty);
 			lblDirtyEpisodeNumber.setVisible(episode.episodeNumberDirty);
@@ -878,7 +857,6 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 			lblDirtyLanguage.setVisible(episode.languageDirty);
 			lblDirtyMediaInfo.setVisible(episode.mediaInfoDirty);
 			lblDirtyHistory.setVisible(episode.viewedHistoryDirty);
-			lblDirtyViewed.setVisible(episode.viewedDirty);
 
 			testPart();
 
@@ -1038,10 +1016,10 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 		updateList();
 	}
 
-	private void massSetViewed(boolean viewed) {
+	private void massSetNotViewed() {
 		lsEpisodes.setSelectedIndex(-1);
 
-		for (BatchEditEpisodeData ep : data) ep.setViewed(viewed);
+		for (BatchEditEpisodeData ep : data) ep.setViewedHistory(CCDateTimeList.createEmpty());
 
 		updateList();
 	}

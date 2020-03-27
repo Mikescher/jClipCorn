@@ -41,7 +41,7 @@ public class CCDatabaseHistory {
 		return false;
 	}
 
-	private List<Tuple<String, String>> createTriggerStatements() {
+	public static List<Tuple<String, String>> createTriggerStatements() {
 		List<Tuple<String, String>> result = new ArrayList<>();
 
 		for(CCSQLTableDef tab : DatabaseStructure.TABLES) {
@@ -57,7 +57,7 @@ public class CCDatabaseHistory {
 	}
 
 	@SuppressWarnings("nls")
-	private Tuple<String, String> createTriggerOnAdd(CCSQLTableDef tab) {
+	private static Tuple<String, String> createTriggerOnAdd(CCSQLTableDef tab) {
 		String triggerName = Str.format("JCCTRIGGER_AUTOHISTORY_ADD_{0}", tab.Name.toUpperCase()); //$NON-NLS-1$
 
 		StringBuilder triggerbuilder = new StringBuilder();
@@ -82,7 +82,7 @@ public class CCDatabaseHistory {
 	}
 
 	@SuppressWarnings("nls")
-	private Tuple<String, String> createTriggerOnUpdate(CCSQLTableDef tab, CCSQLColDef col) {
+	private static Tuple<String, String> createTriggerOnUpdate(CCSQLTableDef tab, CCSQLColDef col) {
 		String triggerName = Str.format("JCCTRIGGER_AUTOHISTORY_UPD_{0}_{1}", tab.Name.toUpperCase(), col.Name.toUpperCase().replace('.', '-')); //$NON-NLS-1$
 
 		StringBuilder triggerbuilder = new StringBuilder();
@@ -124,7 +124,7 @@ public class CCDatabaseHistory {
 	}
 
 	@SuppressWarnings("nls")
-	private Tuple<String, String> createTriggerOnDelete(CCSQLTableDef tab) {
+	private static Tuple<String, String> createTriggerOnDelete(CCSQLTableDef tab) {
 		String triggerName = Str.format("JCCTRIGGER_AUTOHISTORY_REM_{0}", tab.Name.toUpperCase());
 
 		StringBuilder triggerbuilder = new StringBuilder();

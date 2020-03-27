@@ -62,7 +62,6 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 	
 	private CCMovieList movieList;
 	
-	private Boolean forceViewed = null;
 	private CCDateTimeList forceViewedHistory = null;
 	
 	private JPanel contentPane;
@@ -629,7 +628,6 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 				setDirectFilepath(i, tmpMov.getPart(i));
 		}
 		
-		forceViewed = tmpMov.isViewed();
 		forceViewedHistory = tmpMov.getViewedHistory();
 		
 		setYear(tmpMov.getYear());
@@ -678,8 +676,6 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		newM.beginUpdating();
 		
 		//#####################################################################################
-		
-		if (forceViewed != null) newM.setViewed(forceViewed);
 		
 		if (forceViewedHistory != null) newM.setViewedHistoryFromUI(forceViewedHistory);
 		

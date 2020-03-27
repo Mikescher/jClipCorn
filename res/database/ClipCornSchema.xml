@@ -6,7 +6,6 @@
         <column name="LOCALID"              type="INTEGER"  required="true"  primaryKey="true" />    <!-- ALSO USED FOR SERIES -->
 
         <column name="NAME"                 type="VARCHAR"  required="true"  size="128"        />    <!-- ALSO USED FOR SERIES -->
-        <column name="VIEWED"               type="BIT"      required="true"                    />
         <column name="VIEWED_HISTORY"       type="VARCHAR"  required="true"  size="4096"       />
         <column name="ZYKLUS"               type="VARCHAR"  required="true"  size="128"        />
         <column name="ZYKLUSNUMBER"         type="INTEGER"  required="true"                    />
@@ -70,7 +69,6 @@
         <column name="SEASONID"             type="INTEGER"  required="true"                    />
         <column name="EPISODE"              type="SMALLINT" required="true"                    />
         <column name="NAME"                 type="VARCHAR"  required="true"  size="128"        />
-        <column name="VIEWED"               type="BIT"      required="true"                    />
         <column name="VIEWED_HISTORY"       type="VARCHAR"  required="true"  size="4096"       />
         <column name="LANGUAGE"             type="BIGINT"   required="true"                    />
         <column name="LENGTH"               type="INTEGER"  required="true"                    />

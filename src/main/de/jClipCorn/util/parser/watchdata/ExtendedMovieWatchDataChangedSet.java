@@ -1,13 +1,14 @@
 package de.jClipCorn.util.parser.watchdata;
 
 import de.jClipCorn.database.databaseElement.CCMovie;
+import de.jClipCorn.database.databaseElement.columnTypes.CCDateTimeList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCUserScore;
 import de.jClipCorn.util.datetime.CCDateTime;
 
 public class ExtendedMovieWatchDataChangedSet extends WatchDataChangeSet {
-	private CCMovie mov;
-	private CCDateTime date;
-	private CCUserScore score;
+	private final CCMovie mov;
+	private final CCDateTime date;
+	private final CCUserScore score;
 	
 	public ExtendedMovieWatchDataChangedSet(CCDateTime d, CCUserScore s, CCMovie m, boolean newViewed) {
 		super(newViewed);
@@ -64,12 +65,12 @@ public class ExtendedMovieWatchDataChangedSet extends WatchDataChangeSet {
 
 	@Override
 	public void execute() {
-		mov.setViewed(newState);
-		
-		if (score != null) 
-			mov.setScore(score);
-		
-		if (date != null && !mov.getViewedHistory().contains(date))
-			mov.addToViewedHistory(date);
+		if (score != null) mov.setScore(score);
+
+		if (newState && date != null && !mov.getViewedHistory().contains(date)) mov.addToViewedHistory(date);
+
+		if (newState && date == null) mov.addToViewedHistory(CCDateTime.getUnspecified());
+
+		if (!newState) mov.setViewedHistory(CCDateTimeList.createEmpty());
 	} 
 }

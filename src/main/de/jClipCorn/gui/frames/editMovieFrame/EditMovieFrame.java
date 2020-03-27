@@ -107,9 +107,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 	private CCEnumComboBox<CCGenre> cbxGenre4;
 	private CCEnumComboBox<CCGenre> cbxGenre5;
 	private CCEnumComboBox<CCGenre> cbxGenre6;
-	private JLabel label_16;
 	private JLabel label_18;
-	private JCheckBox cbViewed;
 	private LanguageChooser cbxLanguage;
 	private JSpinner spnLength;
 	private JLabel label_19;
@@ -357,8 +355,6 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 				FormSpecs.RELATED_GAP_ROWSPEC,
 				RowSpec.decode("14dlu"), //$NON-NLS-1$
 				FormSpecs.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("14dlu"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_ROWSPEC,
 				RowSpec.decode("16dlu"), //$NON-NLS-1$
 				FormSpecs.RELATED_GAP_ROWSPEC,
 				RowSpec.decode("16dlu"), //$NON-NLS-1$
@@ -411,134 +407,127 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		spnZyklus.setModel(new SpinnerNumberModel(0, -1, null, 1));
 		spnZyklus.addChangeListener(new ChangeLambdaAdapter(this::setDirty));
 		
-		label_16 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGesehen.text")); //$NON-NLS-1$
-		pnlData.add(label_16, "2, 8"); //$NON-NLS-1$
-		
-		cbViewed = new JCheckBox();
-		pnlData.add(cbViewed, "4, 8, 3, 1, fill, center"); //$NON-NLS-1$
-		cbViewed.addItemListener(new ItemChangeLambdaAdapter(this::setDirty, -1));
-		
 		label_17 = new JLabel("MediaInfo"); //$NON-NLS-1$
-		pnlData.add(label_17, "2, 10"); //$NON-NLS-1$
+		pnlData.add(label_17, "2, 8"); //$NON-NLS-1$
 		
 		ctrlMediaInfo = new JMediaInfoControl(() -> Str.isNullOrWhitespace(edPart0.getText()) ? null : PathFormatter.fromCCPath(edPart0.getText()));
-		pnlData.add(ctrlMediaInfo, "4, 10, 3, 1, fill, center"); //$NON-NLS-1$
+		pnlData.add(ctrlMediaInfo, "4, 8, 3, 1, fill, center"); //$NON-NLS-1$
 		
 		btnMediaInfo3 = new JButton(Resources.ICN_MENUBAR_MEDIAINFO.get16x16());
-		pnlData.add(btnMediaInfo3, "8, 10"); //$NON-NLS-1$
+		pnlData.add(btnMediaInfo3, "8, 8"); //$NON-NLS-1$
 		btnMediaInfo3.setToolTipText("MediaInfo"); //$NON-NLS-1$
 		btnMediaInfo3.addActionListener(e -> parseCodecMetadata_MI());
 		
 		label_18 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblSprache.text")); //$NON-NLS-1$
-		pnlData.add(label_18, "2, 12"); //$NON-NLS-1$
+		pnlData.add(label_18, "2, 10"); //$NON-NLS-1$
 		
 		cbxLanguage = new LanguageChooser();
-		pnlData.add(cbxLanguage, "4, 12, 3, 1, fill, center"); //$NON-NLS-1$
+		pnlData.add(cbxLanguage, "4, 10, 3, 1, fill, center"); //$NON-NLS-1$
 		cbxLanguage.addChangeListener(new ActionLambdaAdapter(this::setDirty));
 		
 		btnMediaInfo1 = new JButton(Resources.ICN_MENUBAR_MEDIAINFO.get16x16());
-		pnlData.add(btnMediaInfo1, "8, 12"); //$NON-NLS-1$
+		pnlData.add(btnMediaInfo1, "8, 10"); //$NON-NLS-1$
 		btnMediaInfo1.addActionListener(e -> parseCodecMetadata_Lang());
 		btnMediaInfo1.setToolTipText("MediaInfo"); //$NON-NLS-1$
 		
 		btnMediaInfoRaw = new JButton("..."); //$NON-NLS-1$
-		pnlData.add(btnMediaInfoRaw, "10, 12, fill, fill"); //$NON-NLS-1$
+		pnlData.add(btnMediaInfoRaw, "10, 10, fill, fill"); //$NON-NLS-1$
 		btnMediaInfoRaw.addActionListener(e -> showCodecMetadata());
 		btnMediaInfoRaw.setToolTipText("MediaInfo"); //$NON-NLS-1$
 		
 		label_19 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblLength.text")); //$NON-NLS-1$
-		pnlData.add(label_19, "2, 14"); //$NON-NLS-1$
+		pnlData.add(label_19, "2, 12"); //$NON-NLS-1$
 		
 		spnLength = new JSpinner();
-		pnlData.add(spnLength, "4, 14, fill, center"); //$NON-NLS-1$
+		pnlData.add(spnLength, "4, 12, fill, center"); //$NON-NLS-1$
 		spnLength.setModel(new SpinnerNumberModel(0, 0, null, 1));
 		spnLength.addChangeListener(new ChangeLambdaAdapter(this::setDirty));
 		
 		label_20 = new JLabel("min."); //$NON-NLS-1$
-		pnlData.add(label_20, "6, 14, fill, fill"); //$NON-NLS-1$
+		pnlData.add(label_20, "6, 12, fill, fill"); //$NON-NLS-1$
 		
 		btnMediaInfo2 = new JButton(Resources.ICN_MENUBAR_MEDIAINFO.get16x16());
-		pnlData.add(btnMediaInfo2, "8, 14"); //$NON-NLS-1$
+		pnlData.add(btnMediaInfo2, "8, 12"); //$NON-NLS-1$
 		btnMediaInfo2.addActionListener(e -> parseCodecMetadata_Len());
 		btnMediaInfo2.setToolTipText("MediaInfo"); //$NON-NLS-1$
 		
 		label_21 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblEinfgDatum.text")); //$NON-NLS-1$
-		pnlData.add(label_21, "2, 16"); //$NON-NLS-1$
+		pnlData.add(label_21, "2, 14"); //$NON-NLS-1$
 		
 		spnAddDate = new JCCDateSpinner(CCDate.getMinimumDate(), MIN_DATE, null);
-		pnlData.add(spnAddDate, "4, 16, 3, 1, fill, center"); //$NON-NLS-1$
+		pnlData.add(spnAddDate, "4, 14, 3, 1, fill, center"); //$NON-NLS-1$
 		spnAddDate.addChangeListener(new ChangeLambdaAdapter(this::setDirty));
 		
 		btnToday = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnToday.text")); //$NON-NLS-1$
-		pnlData.add(btnToday, "8, 16, 3, 1"); //$NON-NLS-1$
+		pnlData.add(btnToday, "8, 14, 3, 1"); //$NON-NLS-1$
 		btnToday.addActionListener(arg0 -> spnAddDate.setValue(CCDate.getCurrentDate()));
 		
 		label_22 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblOnlinescore.text")); //$NON-NLS-1$
-		pnlData.add(label_22, "2, 18"); //$NON-NLS-1$
+		pnlData.add(label_22, "2, 16"); //$NON-NLS-1$
 		
 		spnOnlineScore = new JSpinner();
-		pnlData.add(spnOnlineScore, "4, 18, fill, center"); //$NON-NLS-1$
+		pnlData.add(spnOnlineScore, "4, 16, fill, center"); //$NON-NLS-1$
 		spnOnlineScore.setModel(new SpinnerNumberModel(0, 0, 10, 1));
 		spnOnlineScore.addChangeListener(new ChangeLambdaAdapter(this::setDirty));
 		
 		label_23 = new JLabel("/ 10"); //$NON-NLS-1$
-		pnlData.add(label_23, "6, 18, fill, fill"); //$NON-NLS-1$
+		pnlData.add(label_23, "6, 16, fill, fill"); //$NON-NLS-1$
 		
 		label_24 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblFsk.text")); //$NON-NLS-1$
-		pnlData.add(label_24, "2, 20"); //$NON-NLS-1$
+		pnlData.add(label_24, "2, 18"); //$NON-NLS-1$
 		
 		cbxFSK = new CCEnumComboBox<>(CCFSK.getWrapper());
-		pnlData.add(cbxFSK, "4, 20, 3, 1, fill, center"); //$NON-NLS-1$
+		pnlData.add(cbxFSK, "4, 18, 3, 1, fill, center"); //$NON-NLS-1$
 		cbxFSK.addItemListener(new ItemChangeLambdaAdapter(this::setDirty, ItemEvent.SELECTED));
 		
 		label_25 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblFormat.text")); //$NON-NLS-1$
-		pnlData.add(label_25, "2, 22"); //$NON-NLS-1$
+		pnlData.add(label_25, "2, 20"); //$NON-NLS-1$
 		
 		cbxFormat = new CCEnumComboBox<>(CCFileFormat.getWrapper());
-		pnlData.add(cbxFormat, "4, 22, 3, 1, fill, center"); //$NON-NLS-1$
+		pnlData.add(cbxFormat, "4, 20, 3, 1, fill, center"); //$NON-NLS-1$
 		cbxFormat.addItemListener(new ItemChangeLambdaAdapter(this::setDirty, ItemEvent.SELECTED));
 		
 		label_26 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblYear.text")); //$NON-NLS-1$
-		pnlData.add(label_26, "2, 24"); //$NON-NLS-1$
+		pnlData.add(label_26, "2, 22"); //$NON-NLS-1$
 		
 		spnYear = new JSpinner();
-		pnlData.add(spnYear, "4, 24, 3, 1, fill, center"); //$NON-NLS-1$
+		pnlData.add(spnYear, "4, 22, 3, 1, fill, center"); //$NON-NLS-1$
 		spnYear.setModel(new SpinnerNumberModel(1900, 1900, null, 1));
 		spnYear.setEditor(new JSpinner.NumberEditor(spnYear, "0")); //$NON-NLS-1$
 		spnYear.addChangeListener(new ChangeLambdaAdapter(this::setDirty));
 		
 		label_27 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGre.text")); //$NON-NLS-1$
-		pnlData.add(label_27, "2, 26"); //$NON-NLS-1$
+		pnlData.add(label_27, "2, 24"); //$NON-NLS-1$
 		
 		spnSize = new JSpinner();
-		pnlData.add(spnSize, "4, 26, fill, center"); //$NON-NLS-1$
+		pnlData.add(spnSize, "4, 24, fill, center"); //$NON-NLS-1$
 		spnSize.addChangeListener(arg0 -> updateByteDisp());
 		spnSize.setModel(new SpinnerNumberModel(0L, 0L, null, 1L));
 		spnSize.addChangeListener(new ChangeLambdaAdapter(this::setDirty));
 		
 		label_28 = new JLabel("Byte = "); //$NON-NLS-1$
-		pnlData.add(label_28, "6, 26"); //$NON-NLS-1$
+		pnlData.add(label_28, "6, 24"); //$NON-NLS-1$
 		
 		lblFileSizeDisp = new JLabel();
-		pnlData.add(lblFileSizeDisp, "8, 26, 3, 1, fill, fill"); //$NON-NLS-1$
+		pnlData.add(lblFileSizeDisp, "8, 24, 3, 1, fill, fill"); //$NON-NLS-1$
 		
 		btnRecalculateSize = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnRecalcSizes.text")); //$NON-NLS-1$
-		pnlData.add(btnRecalculateSize, "4, 28, 3, 1, fill, fill"); //$NON-NLS-1$
+		pnlData.add(btnRecalculateSize, "4, 26, 3, 1, fill, fill"); //$NON-NLS-1$
 		btnRecalculateSize.setToolTipText(LocaleBundle.getString("AddEpisodeFrame.btnRecalcSizes.text")); //$NON-NLS-1$
 		btnRecalculateSize.addActionListener(e -> updateFilesize());
 		
 		label_32 = new JLabel(LocaleBundle.getString("EditSeriesFrame.lblScore.text")); //$NON-NLS-1$
-		pnlData.add(label_32, "2, 30"); //$NON-NLS-1$
+		pnlData.add(label_32, "2, 28"); //$NON-NLS-1$
 		
 		cbxScore = new CCEnumComboBox<>(CCUserScore.getWrapper());
-		pnlData.add(cbxScore, "4, 30, 3, 1, fill, center"); //$NON-NLS-1$
+		pnlData.add(cbxScore, "4, 28, 3, 1, fill, center"); //$NON-NLS-1$
 		cbxScore.addItemListener(new ItemChangeLambdaAdapter(this::setDirty, ItemEvent.SELECTED));
 		
 		label_33 = new JLabel(LocaleBundle.getString("EditSeriesFrame.lblTags.text")); //$NON-NLS-1$
-		pnlData.add(label_33, "2, 32"); //$NON-NLS-1$
+		pnlData.add(label_33, "2, 30"); //$NON-NLS-1$
 		
 		tagPnl = new TagPanel();
-		pnlData.add(tagPnl, "4, 32, 3, 1, fill, center"); //$NON-NLS-1$
+		pnlData.add(tagPnl, "4, 30, 3, 1, fill, fill"); //$NON-NLS-1$
 		tagPnl.addChangeListener(new ActionLambdaAdapter(this::setDirty));
 		
 		pnlRight = new JPanel();
@@ -802,7 +791,6 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		edTitle.setText(movie.getTitle());
 		edZyklus.setText(movie.getZyklus().getTitle());
 		spnZyklus.setValue(movie.getZyklus().getNumber());
-		cbViewed.setSelected(movie.isViewed());
 		cbxLanguage.setValue(movie.getLanguage());
 		spnLength.setValue(movie.getLength());
 		spnAddDate.setValue(movie.getAddDate());
@@ -1042,8 +1030,6 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		movie.setTitle(edTitle.getText());
 		movie.setZyklusTitle(edZyklus.getText());
 		movie.setZyklusID((int) spnZyklus.getValue());
-		
-		movie.setViewed(cbViewed.isSelected());
 		
 		movie.setLanguage(cbxLanguage.getValue());
 		

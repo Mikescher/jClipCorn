@@ -424,7 +424,6 @@ public class QuickAddEpisodeDialog extends JDialog {
 					newEp.beginUpdating();
 					newEp.setTitle(title);
 					newEp.setEpisodeNumber(episodenumber);
-					newEp.setViewed(false);
 					newEp.setFormat(format);
 					newEp.setMediaInfo(minfo);
 					newEp.setLength(length);

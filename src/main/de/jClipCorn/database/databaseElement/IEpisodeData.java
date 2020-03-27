@@ -12,7 +12,6 @@ public interface IEpisodeData {
 	void setTitle(String t);
 	String getTitle();
 
-	void setViewed(boolean viewed);
 	boolean isViewed();
 
 	void setLength(int length);

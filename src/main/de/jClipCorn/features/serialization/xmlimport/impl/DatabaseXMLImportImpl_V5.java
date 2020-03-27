@@ -5,7 +5,6 @@ import de.jClipCorn.database.databaseElement.columnTypes.*;
 import de.jClipCorn.features.serialization.xmlimport.IDatabaseXMLImporterImpl;
 import de.jClipCorn.features.serialization.xmlimport.ImportState;
 import de.jClipCorn.util.datetime.CCDate;
-import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.exceptions.CCFormatException;
 import de.jClipCorn.util.helper.ByteUtilies;
 import de.jClipCorn.util.helper.ImageUtilities;
@@ -16,7 +15,7 @@ import de.jClipCorn.util.xml.CCXMLException;
 import java.awt.image.BufferedImage;
 
 @SuppressWarnings("nls")
-public class DatabaseXMLImportImpl_V2 implements IDatabaseXMLImporterImpl
+public class DatabaseXMLImportImpl_V5 implements IDatabaseXMLImporterImpl
 {
 	public void importDatabaseElement(CCDatabaseElement o, CCXMLElement e, Func1to1<String, BufferedImage> imgf, ImportState s) throws CCFormatException, CCXMLException
 	{
@@ -72,8 +71,28 @@ public class DatabaseXMLImportImpl_V2 implements IDatabaseXMLImporterImpl
 			e.execIfIntAttrExists("zyklusnumber", o::setZyklusID);
 			e.execIfAttrExists("history", o::setViewedHistory);
 
-			if (!o.isViewed() && e.hasAttribute("viewed") && e.getAttributeBoolValueOrThrow("viewed")) o.addToViewedHistory(CCDateTime.getUnspecified());
 			if (s.ResetViewed) o.setViewedHistory(CCDateTimeList.createEmpty());
+
+			if (e.hasAllAttributes("mediainfo.filesize", "mediainfo.cdate", "mediainfo.mdate", "mediainfo.audioformat", "mediainfo.videoformat", "mediainfo.width", "mediainfo.height", "mediainfo.framerate", "mediainfo.duration", "mediainfo.bitdepth", "mediainfo.bitrate", "mediainfo.framecount", "mediainfo.audiochannels", "mediainfo.videocodec", "mediainfo.audiocodec", "mediainfo.audiosamplerate"))
+			{
+				o.setMediaInfo(new CCMediaInfo(
+					e.getAttributeLongValueOrThrow("mediainfo.cdate"),
+					e.getAttributeLongValueOrThrow("mediainfo.mdate"),
+					e.getAttributeLongValueOrThrow("mediainfo.filesize"),
+					e.getAttributeDoubleValueOrThrow("mediainfo.duration"),
+					e.getAttributeIntValueOrThrow("mediainfo.bitrate"),
+					e.getAttributeValueOrThrow("mediainfo.videoformat"),
+					e.getAttributeIntValueOrThrow("mediainfo.width"),
+					e.getAttributeIntValueOrThrow("mediainfo.height"),
+					e.getAttributeDoubleValueOrThrow("mediainfo.framerate"),
+					e.getAttributeShortValueOrThrow("mediainfo.bitdepth"),
+					e.getAttributeIntValueOrThrow("mediainfo.framecount"),
+					e.getAttributeValueOrThrow("mediainfo.videocodec"),
+					e.getAttributeValueOrThrow("mediainfo.audioformat"),
+					e.getAttributeShortValueOrThrow("mediainfo.audiochannels"),
+					e.getAttributeValueOrThrow("mediainfo.audiocodec"),
+					e.getAttributeIntValueOrThrow("mediainfo.audiosamplerate")));
+			}
 		}
 		o.endUpdating();
 	}
@@ -145,8 +164,28 @@ public class DatabaseXMLImportImpl_V2 implements IDatabaseXMLImporterImpl
 
 			e.execIfAttrExists("languages", v -> o.setLanguage(CCDBLanguageList.parseFromString(v)));
 
-			if (!o.isViewed() && e.hasAttribute("viewed") && e.getAttributeBoolValueOrThrow("viewed")) o.addToViewedHistory(CCDateTime.getUnspecified());
 			if (s.ResetViewed) o.setViewedHistory(CCDateTimeList.createEmpty());
+
+			if (e.hasAllAttributes("mediainfo.filesize", "mediainfo.cdate", "mediainfo.mdate", "mediainfo.audioformat", "mediainfo.videoformat", "mediainfo.width", "mediainfo.height", "mediainfo.framerate", "mediainfo.duration", "mediainfo.bitdepth", "mediainfo.bitrate", "mediainfo.framecount", "mediainfo.audiochannels", "mediainfo.videocodec", "mediainfo.audiocodec", "mediainfo.audiosamplerate"))
+			{
+				o.setMediaInfo(new CCMediaInfo(
+					e.getAttributeLongValueOrThrow("mediainfo.cdate"),
+					e.getAttributeLongValueOrThrow("mediainfo.mdate"),
+					e.getAttributeLongValueOrThrow("mediainfo.filesize"),
+					e.getAttributeDoubleValueOrThrow("mediainfo.duration"),
+					e.getAttributeIntValueOrThrow("mediainfo.bitrate"),
+					e.getAttributeValueOrThrow("mediainfo.videoformat"),
+					e.getAttributeIntValueOrThrow("mediainfo.width"),
+					e.getAttributeIntValueOrThrow("mediainfo.height"),
+					e.getAttributeDoubleValueOrThrow("mediainfo.framerate"),
+					e.getAttributeShortValueOrThrow("mediainfo.bitdepth"),
+					e.getAttributeIntValueOrThrow("mediainfo.framecount"),
+					e.getAttributeValueOrThrow("mediainfo.videocodec"),
+					e.getAttributeValueOrThrow("mediainfo.audioformat"),
+					e.getAttributeShortValueOrThrow("mediainfo.audiochannels"),
+					e.getAttributeValueOrThrow("mediainfo.audiocodec"),
+					e.getAttributeIntValueOrThrow("mediainfo.audiosamplerate")));
+			}
 		}
 		o.endUpdating();
 	}

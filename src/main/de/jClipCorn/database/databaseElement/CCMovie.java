@@ -28,7 +28,6 @@ import java.util.List;
 public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, ICCDatedElement {
 	public final static int PARTCOUNT_MAX = 6; // 0 - 5
 
-	private boolean viewed;
 	private CCMovieZyklus zyklus;
 	private CCMediaInfo mediainfo;
 	private int length; // in minutes
@@ -54,7 +53,6 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 	@Override
 	public void setDefaultValues(boolean updateDB) {
 		super.setDefaultValues(false);
-		viewed = false;
 		zyklus.reset();
 		mediainfo = CCMediaInfo.EMPTY;
 		length = 0;
@@ -119,35 +117,7 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 
 	@Override
 	public boolean isViewed() {
-		return viewed;
-	}
-
-	public void setViewed(boolean viewed) {
-		if (viewed ^ this.viewed) {
-			this.viewed = viewed;
-			
-			updateDB();
-		}
-	}
-
-
-	public void setViewedFromUI(boolean viewed) {
-		if (viewed ^ this.viewed)
-		{
-			try
-			{
-				this.viewed = viewed;
-
-				if (! viewed) this.viewedHistory = CCDateTimeList.createEmpty();
-
-				updateDBWithException();
-			}
-			catch (Throwable e1)
-			{
-				DialogHelper.showLocalError(MainFrame.getInstance(), "Dialogs.UpdateViewedFailed"); //$NON-NLS-1$
-				CCLog.addError(e1);
-			}
-		}
+		return viewedHistory.any();
 	}
 
 	public CCMovieZyklus getZyklus() {
@@ -392,7 +362,6 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 
 	@Override
 	public void updateViewedAndHistoryFromUI() {
-		setViewedFromUI(true);
 		addToViewedHistoryFromUI(CCDateTime.getCurrentDateTime());
 	}
 
@@ -446,10 +415,10 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 	
 	@Override
 	public ExtendedViewedState getExtendedViewedState() {
-		if (!viewed && getTag(CCTagList.TAG_WATCH_LATER))
+		if (!isViewed() && getTag(CCTagList.TAG_WATCH_LATER))
 			return new ExtendedViewedState(ExtendedViewedStateType.MARKED_FOR_LATER, getViewedHistory(), null);
 
-		if (viewed && getTag(CCTagList.TAG_WATCH_LATER))
+		if (isViewed() && getTag(CCTagList.TAG_WATCH_LATER))
 			return new ExtendedViewedState(ExtendedViewedStateType.MARKED_FOR_AGAIN, getViewedHistory(), null);
 
 		if (isViewed())

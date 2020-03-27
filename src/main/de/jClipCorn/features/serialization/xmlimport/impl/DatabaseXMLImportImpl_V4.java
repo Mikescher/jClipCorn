@@ -5,6 +5,7 @@ import de.jClipCorn.database.databaseElement.columnTypes.*;
 import de.jClipCorn.features.serialization.xmlimport.IDatabaseXMLImporterImpl;
 import de.jClipCorn.features.serialization.xmlimport.ImportState;
 import de.jClipCorn.util.datetime.CCDate;
+import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.exceptions.CCFormatException;
 import de.jClipCorn.util.helper.ByteUtilies;
 import de.jClipCorn.util.helper.ImageUtilities;
@@ -66,14 +67,13 @@ public class DatabaseXMLImportImpl_V4 implements IDatabaseXMLImporterImpl
 				e.execIfAttrExists("part_"+i, v -> o.setPart(fi, v));
 			}
 
-			e.execIfBoolAttrExists("viewed", o::setViewed);
-
-			if (s.ResetViewed) o.setViewed(false);
-
 			e.execIfIntAttrExists("year", o::setYear);
 			e.execIfAttrExists("zyklus", o::setZyklusTitle);
 			e.execIfIntAttrExists("zyklusnumber", o::setZyklusID);
 			e.execIfAttrExists("history", o::setViewedHistory);
+
+			if (!o.isViewed() && e.hasAttribute("viewed") && e.getAttributeBoolValueOrThrow("viewed")) o.addToViewedHistory(CCDateTime.getUnspecified());
+			if (s.ResetViewed) o.setViewedHistory(CCDateTimeList.createEmpty());
 
 			if (e.hasAllAttributes("mediainfo.filesize", "mediainfo.cdate", "mediainfo.mdate", "mediainfo.audioformat", "mediainfo.videoformat", "mediainfo.width", "mediainfo.height", "mediainfo.framerate", "mediainfo.duration", "mediainfo.bitdepth", "mediainfo.bitrate", "mediainfo.framecount", "mediainfo.audiochannels", "mediainfo.videocodec", "mediainfo.audiocodec", "mediainfo.audiosamplerate"))
 			{
@@ -147,9 +147,6 @@ public class DatabaseXMLImportImpl_V4 implements IDatabaseXMLImporterImpl
 		o.beginUpdating();
 		{
 			e.execIfAttrExists("title", o::setTitle);
-			e.execIfBoolAttrExists("viewed", o::setViewed);
-
-			if (s.ResetViewed) o.setViewed(false);
 
 			e.execIfAttrExists("adddate", v -> o.setAddDate(CCDate.deserializeSQL(v)));
 
@@ -168,6 +165,9 @@ public class DatabaseXMLImportImpl_V4 implements IDatabaseXMLImporterImpl
 			if (s.ResetTags) o.setTags(CCTagList.EMPTY);
 
 			e.execIfAttrExists("languages", v -> o.setLanguage(CCDBLanguageList.parseFromString(v)));
+
+			if (!o.isViewed() && e.hasAttribute("viewed") && e.getAttributeBoolValueOrThrow("viewed")) o.addToViewedHistory(CCDateTime.getUnspecified());
+			if (s.ResetViewed) o.setViewedHistory(CCDateTimeList.createEmpty());
 
 			if (e.hasAllAttributes("mediainfo.filesize", "mediainfo.cdate", "mediainfo.mdate", "mediainfo.audioformat", "mediainfo.videoformat", "mediainfo.width", "mediainfo.height", "mediainfo.framerate", "mediainfo.duration", "mediainfo.bitdepth", "mediainfo.bitrate", "mediainfo.framecount", "mediainfo.audiochannels", "mediainfo.videocodec", "mediainfo.audiocodec", "mediainfo.audiosamplerate"))
 			{

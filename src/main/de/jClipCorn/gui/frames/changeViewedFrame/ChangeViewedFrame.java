@@ -3,11 +3,13 @@ package de.jClipCorn.gui.frames.changeViewedFrame;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.databaseElement.CCMovie;
+import de.jClipCorn.database.databaseElement.columnTypes.CCDateTimeList;
 import de.jClipCorn.gui.guiComponents.CoverLabel;
 import de.jClipCorn.gui.guiComponents.PropertyCheckbox;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.properties.CCProperties;
+import de.jClipCorn.util.datetime.CCDateTime;
 
 import javax.swing.*;
 import java.awt.*;
@@ -108,12 +110,11 @@ public class ChangeViewedFrame extends JFrame {
 	}
 	
 	private void actionNextMovie(boolean viewed) {
-		if (! running) {
-			return;
-		}
+		if (! running) return;
 		
 		CCMovie mov = (CCMovie) movielist.getDatabaseElementBySort(position);
-		mov.setViewedFromUI(viewed);
+		if (viewed && !mov.isViewed()) mov.addToViewedHistory(CCDateTime.getUnspecified());
+		if (!viewed) mov.setViewedHistory(CCDateTimeList.createEmpty());
 		
 		nextMovie();
 	}

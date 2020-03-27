@@ -248,7 +248,6 @@ public class CCDatabase {
 	private void updateEpisodeFromResultSet(CCSQLResultSet rs, CCEpisode ep) throws SQLException, CCFormatException, SQLWrapperException {
 		ep.setEpisodeNumber(rs.getInt(DatabaseStructure.COL_EPIS_EPISODE));
 		ep.setTitle(rs.getString(DatabaseStructure.COL_EPIS_NAME));
-		ep.setViewed(rs.getBoolean(DatabaseStructure.COL_EPIS_VIEWED));
 		ep.setViewedHistory(rs.getString(DatabaseStructure.COL_EPIS_VIEWEDHISTORY));
 		ep.setLength(rs.getInt(DatabaseStructure.COL_EPIS_LENGTH));
 		ep.setFormat(rs.getInt(DatabaseStructure.COL_EPIS_FORMAT));
@@ -296,7 +295,6 @@ public class CCDatabase {
 
 	private void updateMovieFromResultSet(CCSQLResultSet rs, CCMovie mov) throws SQLException, CCFormatException, SQLWrapperException {
 		mov.setTitle(rs.getString(DatabaseStructure.COL_MAIN_NAME));
-		mov.setViewed(rs.getBoolean(DatabaseStructure.COL_MAIN_VIEWED));
 		mov.setViewedHistory(rs.getString(DatabaseStructure.COL_MAIN_VIEWEDHISTORY));
 		mov.setZyklusTitle(rs.getString(DatabaseStructure.COL_MAIN_ZYKLUS));
 		mov.setZyklusID(rs.getInt(DatabaseStructure.COL_MAIN_ZYKLUSNUMBER));
@@ -360,7 +358,6 @@ public class CCDatabase {
 
 			stmt.setInt(DatabaseStructure.COL_MAIN_LOCALID,       id);
 			stmt.setStr(DatabaseStructure.COL_MAIN_NAME,          "");
-			stmt.setInt(DatabaseStructure.COL_MAIN_VIEWED,        0);
 			stmt.setStr(DatabaseStructure.COL_MAIN_VIEWEDHISTORY, "");
 			stmt.setStr(DatabaseStructure.COL_MAIN_ZYKLUS,        "");
 			stmt.setInt(DatabaseStructure.COL_MAIN_ZYKLUSNUMBER,  0);
@@ -429,7 +426,6 @@ public class CCDatabase {
 			stmt.setInt(DatabaseStructure.COL_EPIS_SEASONID,      sid);
 			stmt.setInt(DatabaseStructure.COL_EPIS_EPISODE,       0);
 			stmt.setStr(DatabaseStructure.COL_EPIS_NAME,          "");
-			stmt.setBoo(DatabaseStructure.COL_EPIS_VIEWED,        false);
 			stmt.setStr(DatabaseStructure.COL_EPIS_VIEWEDHISTORY, "");
 			stmt.setInt(DatabaseStructure.COL_EPIS_LENGTH,        0);
 			stmt.setInt(DatabaseStructure.COL_EPIS_FORMAT,        0);
@@ -527,7 +523,6 @@ public class CCDatabase {
 			stmt.setInt(DatabaseStructure.COL_MAIN_LOCALID,       mov.getLocalID());
 
 			stmt.setStr(DatabaseStructure.COL_MAIN_NAME,          mov.getTitle());
-			stmt.setBoo(DatabaseStructure.COL_MAIN_VIEWED,        mov.isViewed());
 			stmt.setStr(DatabaseStructure.COL_MAIN_VIEWEDHISTORY, mov.getViewedHistory().toSerializationString());
 			stmt.setStr(DatabaseStructure.COL_MAIN_ZYKLUS,        mov.getZyklus().getTitle());
 			stmt.setInt(DatabaseStructure.COL_MAIN_ZYKLUSNUMBER,  mov.getZyklus().getNumber());
@@ -663,7 +658,6 @@ public class CCDatabase {
 			stmt.setInt(DatabaseStructure.COL_EPIS_SEASONID,      ep.getSeason().getLocalID());
 			stmt.setInt(DatabaseStructure.COL_EPIS_EPISODE,       ep.getEpisodeNumber());
 			stmt.setStr(DatabaseStructure.COL_EPIS_NAME,          ep.getTitle());
-			stmt.setBoo(DatabaseStructure.COL_EPIS_VIEWED,        ep.isViewed());
 			stmt.setStr(DatabaseStructure.COL_EPIS_VIEWEDHISTORY, ep.getViewedHistory().toSerializationString());
 			stmt.setInt(DatabaseStructure.COL_EPIS_LENGTH,        ep.getLength());
 			stmt.setInt(DatabaseStructure.COL_EPIS_FORMAT,        ep.getFormat().asInt());

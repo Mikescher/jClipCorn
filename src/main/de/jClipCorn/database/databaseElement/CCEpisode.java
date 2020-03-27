@@ -32,7 +32,6 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 	
 	private int episodeNumber;
 	private String title;
-	private boolean viewed;
 	private CCMediaInfo mediainfo;
 	private int length;
 	private CCTagList tags;
@@ -95,34 +94,6 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 		this.title = t;
 		
 		updateDB();
-	}
-
-	@Override
-	public void setViewed(boolean viewed) {
-		if (viewed ^ this.viewed) {
-			this.viewed = viewed;
-
-			updateDB();
-		}
-	}
-
-	public void setViewedFromUI(boolean viewed) {
-		if (viewed ^ this.viewed)
-		{
-			try
-			{
-				this.viewed = viewed;
-
-				if (! viewed) this.viewedHistory = CCDateTimeList.createEmpty();
-
-				updateDBWithException();
-			}
-			catch (Throwable e1)
-			{
-				DialogHelper.showLocalError(MainFrame.getInstance(), "Dialogs.UpdateViewedFailed"); //$NON-NLS-1$
-				CCLog.addError(e1);
-			}
-		}
 	}
 
 	public void addToViewedHistory(CCDateTime datetime) {
@@ -338,7 +309,6 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 	public void setDefaultValues(boolean updateDB) {
 		episodeNumber = 0;
 		title = ""; //$NON-NLS-1$
-		viewed = false;
 		mediainfo = CCMediaInfo.EMPTY;
 		length = 0;
 		format = CCFileFormat.MKV;
@@ -390,7 +360,7 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 
 	@Override
 	public boolean isViewed() {
-		return viewed;
+		return viewedHistory.any();
 	}
 
 	@Override
@@ -486,7 +456,6 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 	@Override
 	public void updateViewedAndHistoryFromUI()
 	{
-		setViewedFromUI(true);
 		addToViewedHistoryFromUI(CCDateTime.getCurrentDateTime());
 	}
 
@@ -532,9 +501,9 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 
 	@Override
 	public ExtendedViewedState getExtendedViewedState() {
-		if (!viewed && tags.getTag(CCTagList.TAG_WATCH_LATER))
+		if (!isViewed() && tags.getTag(CCTagList.TAG_WATCH_LATER))
 			return new ExtendedViewedState(ExtendedViewedStateType.MARKED_FOR_LATER, getViewedHistory(), null);
-		else if (viewed && tags.getTag(CCTagList.TAG_WATCH_LATER))
+		else if (isViewed() && tags.getTag(CCTagList.TAG_WATCH_LATER))
 			return new ExtendedViewedState(ExtendedViewedStateType.MARKED_FOR_AGAIN, getViewedHistory(), null);
 		else if (isViewed())
 			return new ExtendedViewedState(ExtendedViewedStateType.VIEWED, getViewedHistory(), null);

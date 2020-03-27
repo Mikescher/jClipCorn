@@ -60,7 +60,6 @@ public class DatabaseXMLExporterImpl {
 			if (!Str.isNullOrEmpty(p)) e.setAttribute("part_"+i, p);
 		}
 
-		e.setAttribute("viewed",       o.isViewed() + "");
 		e.setAttribute("history",      o.getViewedHistory().toSerializationString());
 		e.setAttribute("year",         o.getYear() + "");
 		e.setAttribute("zyklus",       o.getZyklus().getTitle());
@@ -113,7 +112,6 @@ public class DatabaseXMLExporterImpl {
 		if (s.ExportLocalID) e.setAttribute("localid",       o.getLocalID() + "");
 
 		e.setAttribute("title",         o.getTitle());
-		e.setAttribute("viewed",        o.isViewed() + "");
 		e.setAttribute("adddate",       o.getAddDate().toStringSQL());
 		e.setAttribute("episodenumber", o.getEpisodeNumber() + "");
 		e.setAttribute("filesize",      o.getFilesize().getBytes() + "");

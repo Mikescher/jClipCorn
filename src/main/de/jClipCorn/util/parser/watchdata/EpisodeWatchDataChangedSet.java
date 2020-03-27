@@ -1,11 +1,12 @@
 package de.jClipCorn.util.parser.watchdata;
 
 import de.jClipCorn.database.databaseElement.CCEpisode;
+import de.jClipCorn.database.databaseElement.columnTypes.CCDateTimeList;
 import de.jClipCorn.util.datetime.CCDateTime;
 
 public class EpisodeWatchDataChangedSet extends WatchDataChangeSet {
-	private CCEpisode eps;
-	private CCDateTime date;
+	private final CCEpisode eps;
+	private final CCDateTime date;
 	
 	public EpisodeWatchDataChangedSet(CCDateTime d, CCEpisode e, boolean newViewed) {
 		super(newViewed);
@@ -40,11 +41,13 @@ public class EpisodeWatchDataChangedSet extends WatchDataChangeSet {
 
 	@Override
 	public void execute() {
-		if (eps.isViewed() ^ newState) {
-			eps.setViewedFromUI(newState);
+		if (newState && !eps.getViewedHistory().contains(date))
+		{
 			eps.addToViewedHistoryFromUI(date);
-		} else if (newState && ! eps.getViewedHistory().contains(date)) {
-			eps.addToViewedHistoryFromUI(date);
+		}
+		else if (!newState)
+		{
+			eps.setViewedHistory(CCDateTimeList.createEmpty());
 		}
 	}
 }

@@ -1,33 +1,33 @@
 package de.jClipCorn.features.serialization.legacy;
 
-import java.io.File;
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.util.Iterator;
-
+import de.jClipCorn.database.CCMovieList;
+import de.jClipCorn.database.databaseElement.CCEpisode;
+import de.jClipCorn.database.databaseElement.CCMovie;
+import de.jClipCorn.database.databaseElement.CCSeason;
+import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguage;
 import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguageList;
+import de.jClipCorn.database.databaseElement.columnTypes.CCGenre;
+import de.jClipCorn.features.log.CCLog;
+import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.gui.mainFrame.MainFrame;
+import de.jClipCorn.util.datetime.CCDate;
+import de.jClipCorn.util.datetime.CCDateTime;
+import de.jClipCorn.util.exceptions.CCFormatException;
+import de.jClipCorn.util.exceptions.EnumFormatException;
+import de.jClipCorn.util.formatter.RomanNumberFormatter;
+import de.jClipCorn.util.helper.DialogHelper;
+import de.jClipCorn.util.helper.SwingUtils;
 import org.jdom2.DataConversionException;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
 
-import de.jClipCorn.database.CCMovieList;
-import de.jClipCorn.database.databaseElement.CCEpisode;
-import de.jClipCorn.database.databaseElement.CCMovie;
-import de.jClipCorn.database.databaseElement.CCSeason;
-import de.jClipCorn.database.databaseElement.CCSeries;
-import de.jClipCorn.database.databaseElement.columnTypes.CCGenre;
-import de.jClipCorn.gui.mainFrame.MainFrame;
-import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.features.log.CCLog;
-import de.jClipCorn.util.datetime.CCDate;
-import de.jClipCorn.util.exceptions.CCFormatException;
-import de.jClipCorn.util.exceptions.EnumFormatException;
-import de.jClipCorn.util.formatter.RomanNumberFormatter;
-import de.jClipCorn.util.helper.DialogHelper;
-import de.jClipCorn.util.helper.SwingUtils;
+import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.util.Iterator;
 
 @SuppressWarnings("nls")
 /*
@@ -104,7 +104,7 @@ public class CCBXMLReader {
 		newMov.setTitle(e.getChildText("filmtitel"));
 		newMov.setZyklusTitle(getZyklusName(e.getChildText("zyklus")));
 		newMov.setZyklusID(getZyklusNumber(e.getChildText("zyklus")));
-		newMov.setViewed(! e.getChildText("gesehen").equals("0"));
+		if (e.getChildText("gesehen").equals("1")) newMov.addToViewedHistory(CCDateTime.getUnspecified());
 		newMov.setLanguage(e.getChild("sprache").getAttribute("dec").getIntValue());
 		newMov.setGenre(translateGenre(e.getChild("genre").getChild("genre00").getAttribute("dec").getIntValue()), 0);
 		newMov.setGenre(translateGenre(e.getChild("genre").getChild("genre01").getAttribute("dec").getIntValue()), 1);
@@ -186,7 +186,7 @@ public class CCBXMLReader {
 		
 		final CCSeason finseas = newSeas;
 		try {
-			SwingUtils.invokeAndWait(() -> finseas.endUpdating());
+			SwingUtils.invokeAndWait(finseas::endUpdating);
 		} catch (InvocationTargetException | InterruptedException e) {
 			CCLog.addError(e);
 		}
@@ -199,7 +199,7 @@ public class CCBXMLReader {
 		
 		newEp.setEpisodeNumber(owner.getAttribute("number").getIntValue());
 		newEp.setTitle(owner.getChildText("filmtitel"));
-		newEp.setViewed(! owner.getChildText("gesehen").equals("0"));
+		if (owner.getChildText("gesehen").equals("1")) newEp.addToViewedHistory(CCDateTime.getUnspecified());
 		newEp.setLength(Integer.parseInt(owner.getChildText("länge")));
 		newEp.setFormat(owner.getChild("format").getAttribute("dec").getIntValue());
 		newEp.setFilesize(owner.getChild("größe").getAttribute("dec").getLongValue() * 1024);

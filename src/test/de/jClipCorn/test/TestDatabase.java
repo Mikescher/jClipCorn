@@ -54,7 +54,6 @@ public class TestDatabase extends ClipCornBaseTest {
 		movWrite.setLanguage(CCDBLanguageList.ENGLISH);
 		movWrite.setLength(120);
 		movWrite.setOnlinescore(CCOnlineScore.STARS_3_0);
-		movWrite.setViewed(true);
 		movWrite.setYear(2012);
 		movWrite.setScore(CCUserScore.RATING_III);
 		movWrite.setOnlineReference("tmdb:movie/207703");
@@ -132,7 +131,6 @@ public class TestDatabase extends ClipCornBaseTest {
 		{
 			epiWrite.setEpisodeNumber(1);
 			epiWrite.setTitle("This is my title: fight me");
-			epiWrite.setViewed(true);
 			epiWrite.setMediaInfo(new CCMediaInfo(
 					CCDateTime.create(15, 4, 2019, 6,  0, 0).toFileTimestamp(GMT_2), // long cdate
 					CCDateTime.create(15, 4, 2019, 8, 30, 0).toFileTimestamp(GMT_2), // long mdate

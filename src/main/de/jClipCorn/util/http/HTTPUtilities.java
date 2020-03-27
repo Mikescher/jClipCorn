@@ -1,31 +1,26 @@
 package de.jClipCorn.util.http;
 
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.commons.lang.StringEscapeUtils;
-import org.json.JSONObject;
-import org.json.JSONTokener;
-
 import com.gargoylesoftware.htmlunit.BrowserVersion;
 import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
-
-import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.features.log.CCLog;
+import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.exceptions.HTTPErrorCodeException;
+import de.jClipCorn.util.helper.ApplicationHelper;
+import org.apache.commons.lang.StringEscapeUtils;
+import org.json.JSONObject;
+import org.json.JSONTokener;
+
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.*;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 @SuppressWarnings("nls")
 public class HTTPUtilities {
@@ -244,5 +239,66 @@ public class HTTPUtilities {
 			return null;
 		}
 		return null;
+	}
+
+	public static String getURLEncodedFilePath(String filepath)
+	{
+		var iswin = ApplicationHelper.isWindows();
+
+		var sb = new StringBuilder();
+
+		for (var chr : filepath.toCharArray())
+		{
+			switch (chr)
+			{
+				case 'Ä': sb.append("%C3%84"); break;
+				case 'Ö': sb.append("%C3%96"); break;
+				case 'Ü': sb.append("%C3%9C"); break;
+				case 'ä': sb.append("%C3%A4"); break;
+				case 'ö': sb.append("%C3%B6"); break;
+				case 'ü': sb.append("%C3%BC"); break;
+				case 'ß': sb.append("%C3%9F"); break;
+
+				case '\\': sb.append(iswin ? "/" : "%5C"); break;
+
+				case ' ': sb.append("%20"); break;
+
+				case '%': sb.append("%25"); break;
+
+				case '?': sb.append("%3F"); break;
+				case '=': sb.append("%3D"); break;
+				case '&': sb.append("%26"); break;
+				case '#': sb.append("%23"); break;
+				case '+': sb.append("%2B"); break;
+
+				case ':': sb.append("%3A"); break;
+				case ';': sb.append("%3B"); break;
+				case '"': sb.append("%22"); break;
+				case '(': sb.append("%28"); break;
+				case ')': sb.append("%29"); break;
+				case '[': sb.append("%5B"); break;
+				case ']': sb.append("%5D"); break;
+				case '{': sb.append("%7B"); break;
+				case '}': sb.append("%7D"); break;
+				case '!': sb.append("%21"); break;
+				case '$': sb.append("%24"); break;
+				case '^': sb.append("%5E"); break;
+				case ',': sb.append("%2C"); break;
+
+				case '§': sb.append("%C2%A7"); break;
+				case '°': sb.append("%C2%B0"); break;
+
+				case '\'': sb.append("%27"); break;
+				case '\t': sb.append("%09"); break;
+
+				default: sb.append(chr); break;
+			}
+		}
+
+		var uri = sb.toString();
+
+		if (iswin) uri = "/" + uri;
+
+		return "file://" + uri;
 	}
 }

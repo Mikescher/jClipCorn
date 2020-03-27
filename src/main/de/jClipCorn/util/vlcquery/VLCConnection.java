@@ -262,18 +262,17 @@ public class VLCConnection {
 		}
 	}
 
-	public static boolean enqueue(String filepath, boolean startPlayback) {
-		try	{
-			String uri = "";
-			if (ApplicationHelper.isWindows()) uri = "file:///" + filepath.replace(" ", "%20").replace("\\", "/");
-			if (ApplicationHelper.isUnix())    uri = "file://" + filepath.replace(" ", "%20");
+	public static boolean enqueue(String filepath, boolean startPlayback)
+	{
+		try
+		{
+			if (startPlayback) getXML("/requests/status.xml?command=in_play&input="    + HTTPUtilities.getURLEncodedFilePath(filepath));
+			else               getXML("/requests/status.xml?command=in_enqueue&input=" + HTTPUtilities.getURLEncodedFilePath(filepath));
 
-			if (startPlayback)
-				getXML("/requests/status.xml?command=in_play&input=" + uri);
-			else
-				getXML("/requests/status.xml?command=in_enqueue&input=" + uri);
 			return true;
-		} catch (Exception e) {
+		}
+		catch (Exception e)
+		{
 			CCLog.addError(e);
 			return false;
 		}

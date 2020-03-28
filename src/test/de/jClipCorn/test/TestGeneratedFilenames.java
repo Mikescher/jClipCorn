@@ -1,11 +1,10 @@
 package de.jClipCorn.test;
 
-import static org.junit.Assert.assertEquals;
-
-import org.junit.Test;
-
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.util.formatter.PathFormatter;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 @SuppressWarnings("nls")
 public class TestGeneratedFilenames extends ClipCornBaseTest {
@@ -15,10 +14,10 @@ public class TestGeneratedFilenames extends ClipCornBaseTest {
 		CCMovieList ml = createExampleDB();
 		
 		assertEquals("Super 8.avi", ml.findDatabaseMovie(5).generateFilename(0));
-		assertEquals("Forrest Gump [ENG].mpeg", ml.findDatabaseMovie(103).generateFilename(0));
+		assertEquals("Forrest Gump [ENG].mpeg", ml.findDatabaseMovie(101).generateFilename(0));
 		assertEquals("Kill Bill I - Volume I (Part 1).avi", ml.findDatabaseMovie(8).generateFilename(0));
 		assertEquals("Kill Bill I - Volume I (Part 2).avi", ml.findDatabaseMovie(8).generateFilename(1));
-		assertEquals("Buddy haut den Lukas [[SpencerHill]].avi", ml.findDatabaseMovie(97).generateFilename(1));
+		assertEquals("Buddy haut den Lukas [[SpencerHill]].avi", ml.findDatabaseMovie(95).generateFilename(1));
 		assertEquals("Der Herr der Ringe III - Die Rückkehr des Königs [GER+ENG].mkv", ml.findDatabaseMovie(10).generateFilename(0));
 	}
 
@@ -31,9 +30,9 @@ public class TestGeneratedFilenames extends ClipCornBaseTest {
 		assertEquals("Steins;Gate/02 - OVA/S02E25 - Egoistic Poriomania.mkv", ml.findDatabaseSeries(11).getSeasonByArrayIndex(1).getEpisodeByArrayIndex(0).getRelativeFileForCreatedFolderstructure());
 		assertEquals("Steins;Gate/02 - OVA/S02E25 - Egoistic Poriomania.mkv", ml.findDatabaseSeries(11).getSeasonByArrayIndex(1).getEpisodeByArrayIndex(0).getRelativeFileForCreatedFolderstructure());
 	
-		assertEquals("KonoSuba [JAP]/Kono Subarashii Sekai ni Shukufuku wo!/S01E01 - This Self-Proclaimed Goddess and Reincarnation in Another World.mp4", ml.findDatabaseSeries(104).getSeasonByArrayIndex(0).getEpisodeByArrayIndex(0).getRelativeFileForCreatedFolderstructure());
-		assertEquals("KonoSuba [JAP]/Kono Subarashii Sekai ni Shukufuku wo!/S01E09 - God's Blessing on This Wonderful Shop.mp4", ml.findDatabaseSeries(104).getSeasonByArrayIndex(0).getEpisodeByArrayIndex(8).getRelativeFileForCreatedFolderstructure());
-		assertEquals("KonoSuba [JAP]/Kono Subarashii Sekai ni Shukufuku wo!/S01E10 - Final Flame for This Over-the-Top Fortress.mp4", ml.findDatabaseSeries(104).getSeasonByArrayIndex(0).getEpisodeByArrayIndex(9).getRelativeFileForCreatedFolderstructure());
+		assertEquals("KonoSuba [JAP]/Kono Subarashii Sekai ni Shukufuku wo!/S01E01 - This Self-Proclaimed Goddess and Reincarnation in Another World.mp4", ml.findDatabaseSeries(102).getSeasonByArrayIndex(0).getEpisodeByArrayIndex(0).getRelativeFileForCreatedFolderstructure());
+		assertEquals("KonoSuba [JAP]/Kono Subarashii Sekai ni Shukufuku wo!/S01E09 - God's Blessing on This Wonderful Shop.mp4", ml.findDatabaseSeries(102).getSeasonByArrayIndex(0).getEpisodeByArrayIndex(8).getRelativeFileForCreatedFolderstructure());
+		assertEquals("KonoSuba [JAP]/Kono Subarashii Sekai ni Shukufuku wo!/S01E10 - Final Flame for This Over-the-Top Fortress.mp4", ml.findDatabaseSeries(102).getSeasonByArrayIndex(0).getEpisodeByArrayIndex(9).getRelativeFileForCreatedFolderstructure());
 	}
 
 	@Test

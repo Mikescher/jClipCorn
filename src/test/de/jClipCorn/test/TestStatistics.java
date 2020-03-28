@@ -1,12 +1,5 @@
 package de.jClipCorn.test;
 
-import static org.junit.Assert.assertEquals;
-
-import java.util.HashMap;
-import java.util.List;
-
-import org.junit.Test;
-
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.databaseElement.CCSeries;
@@ -16,6 +9,12 @@ import de.jClipCorn.features.statistics.StatisticsHelper;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.datetime.CCDatespan;
 import de.jClipCorn.util.stream.CCStream;
+import org.junit.Test;
+
+import java.util.HashMap;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
 
 public class TestStatistics extends ClipCornBaseTest {
 
@@ -145,15 +144,15 @@ public class TestStatistics extends ClipCornBaseTest {
 		assertEquals(3, StatisticsHelper.getDatespanFromSeries(ml.findDatabaseSeries(11), 7, StatisticsHelper.OrderMode.ENFORCED).size());
 		assertEquals(2, StatisticsHelper.getDatespanFromSeries(ml.findDatabaseSeries(11), 56, StatisticsHelper.OrderMode.ENFORCED).size());
 
-		assertEquals(8, StatisticsHelper.getDatespanFromSeries(ml.findDatabaseSeries(40), 0, StatisticsHelper.OrderMode.ENFORCED).size());
-		assertEquals(8, StatisticsHelper.getDatespanFromSeries(ml.findDatabaseSeries(40), 0, StatisticsHelper.OrderMode.IGNORED).size());
-		assertEquals(1, StatisticsHelper.getDatespanFromSeries(ml.findDatabaseSeries(40), 7, StatisticsHelper.OrderMode.ENFORCED).size());
-		assertEquals(1, StatisticsHelper.getDatespanFromSeries(ml.findDatabaseSeries(40), 56, StatisticsHelper.OrderMode.ENFORCED).size());
+		assertEquals(8, StatisticsHelper.getDatespanFromSeries(ml.findDatabaseSeries(39), 0, StatisticsHelper.OrderMode.ENFORCED).size());
+		assertEquals(8, StatisticsHelper.getDatespanFromSeries(ml.findDatabaseSeries(39), 0, StatisticsHelper.OrderMode.IGNORED).size());
+		assertEquals(1, StatisticsHelper.getDatespanFromSeries(ml.findDatabaseSeries(39), 7, StatisticsHelper.OrderMode.ENFORCED).size());
+		assertEquals(1, StatisticsHelper.getDatespanFromSeries(ml.findDatabaseSeries(39), 56, StatisticsHelper.OrderMode.ENFORCED).size());
 
-		assertEquals(1, StatisticsHelper.getDatespanFromSeries(ml.findDatabaseSeries(104), 0, StatisticsHelper.OrderMode.ENFORCED).size());
-		assertEquals(1, StatisticsHelper.getDatespanFromSeries(ml.findDatabaseSeries(104), 0, StatisticsHelper.OrderMode.IGNORED).size());
-		assertEquals(1, StatisticsHelper.getDatespanFromSeries(ml.findDatabaseSeries(104), 7, StatisticsHelper.OrderMode.ENFORCED).size());
-		assertEquals(1, StatisticsHelper.getDatespanFromSeries(ml.findDatabaseSeries(104), 56, StatisticsHelper.OrderMode.ENFORCED).size());
+		assertEquals(1, StatisticsHelper.getDatespanFromSeries(ml.findDatabaseSeries(102), 0, StatisticsHelper.OrderMode.ENFORCED).size());
+		assertEquals(1, StatisticsHelper.getDatespanFromSeries(ml.findDatabaseSeries(102), 0, StatisticsHelper.OrderMode.IGNORED).size());
+		assertEquals(1, StatisticsHelper.getDatespanFromSeries(ml.findDatabaseSeries(102), 7, StatisticsHelper.OrderMode.ENFORCED).size());
+		assertEquals(1, StatisticsHelper.getDatespanFromSeries(ml.findDatabaseSeries(102), 56, StatisticsHelper.OrderMode.ENFORCED).size());
 	}
 
 	@Test
@@ -173,16 +172,16 @@ public class TestStatistics extends ClipCornBaseTest {
 		assertEquals(CCDate.create(4, 10, 2016), StatisticsHelper.getSeriesTimespansEnd(map_2));
 
 		assertEquals(8, map_0.get(ml.findDatabaseSeries( 11)).size());
-		assertEquals(8, map_0.get(ml.findDatabaseSeries( 40)).size());
-		assertEquals(1, map_0.get(ml.findDatabaseSeries(104)).size());
+		assertEquals(8, map_0.get(ml.findDatabaseSeries( 39)).size());
+		assertEquals(1, map_0.get(ml.findDatabaseSeries(102)).size());
 
 		assertEquals(3, map_1.get(ml.findDatabaseSeries( 11)).size());
-		assertEquals(1, map_1.get(ml.findDatabaseSeries( 40)).size());
-		assertEquals(1, map_1.get(ml.findDatabaseSeries(104)).size());
+		assertEquals(1, map_1.get(ml.findDatabaseSeries( 39)).size());
+		assertEquals(1, map_1.get(ml.findDatabaseSeries(102)).size());
 
 		assertEquals(2, map_2.get(ml.findDatabaseSeries( 11)).size());
-		assertEquals(1, map_2.get(ml.findDatabaseSeries( 40)).size());
-		assertEquals(1, map_2.get(ml.findDatabaseSeries(104)).size());
+		assertEquals(1, map_2.get(ml.findDatabaseSeries( 39)).size());
+		assertEquals(1, map_2.get(ml.findDatabaseSeries(102)).size());
 	}
 
 	@Test
@@ -190,7 +189,7 @@ public class TestStatistics extends ClipCornBaseTest {
 		CCMovieList ml = createExampleDB();
 
 		assertEquals(25, StatisticsHelper.getEpisodesWithExplicitLastViewedDate(ml.findDatabaseSeries( 11)).size());
-		assertEquals(51, StatisticsHelper.getEpisodesWithExplicitLastViewedDate(ml.findDatabaseSeries( 40)).size());
-		assertEquals(10, StatisticsHelper.getEpisodesWithExplicitLastViewedDate(ml.findDatabaseSeries(104)).size());
+		assertEquals(51, StatisticsHelper.getEpisodesWithExplicitLastViewedDate(ml.findDatabaseSeries( 39)).size());
+		assertEquals(10, StatisticsHelper.getEpisodesWithExplicitLastViewedDate(ml.findDatabaseSeries(102)).size());
 	}
 }

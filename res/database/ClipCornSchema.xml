@@ -58,7 +58,7 @@
         <column name="COVERID"      type="INTEGER"  required="true" size="256"        />
 
         <foreign-key foreignTable="ELEMENTS">
-            <reference local="SERIESID" foreign="SERIESID" />
+            <reference local="SERIESID" foreign="LOCALID" />
         </foreign-key> 
     </table>
 

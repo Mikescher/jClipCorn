@@ -628,6 +628,7 @@ public class CCDatabase {
 			CCSQLStatement stmt = updateSeasonTabStatement;
 			stmt.clearParameters();
 
+			stmt.setInt(DatabaseStructure.COL_SEAS_SERIESID,  ser.getSeries().getLocalID());
 			stmt.setStr(DatabaseStructure.COL_SEAS_NAME,      ser.getTitle());
 			stmt.setInt(DatabaseStructure.COL_SEAS_YEAR,      ser.getYear());
 			stmt.setInt(DatabaseStructure.COL_SEAS_COVERID,   ser.getCoverID());

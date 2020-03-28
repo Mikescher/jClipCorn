@@ -54,12 +54,12 @@ public class DatabaseHistoryFrame extends JFrame {
 	private JCheckBox cbxIgnoreTrivial;
 	private JProgressBar progressBar;
 	private JCheckBox cbxIgnoreIDChanges;
-
-	private String _triggerError = Str.Empty;
-	private int _tcount;
 	private JCheckBox cbxDoAgressiveMerges;
 	private JLabel lblFilter;
 	private JTextField edFilter;
+
+	private String _triggerError = Str.Empty;
+	private int _tcount;
 
 	public DatabaseHistoryFrame(Component owner, CCMovieList mlist) {
 		super();
@@ -275,6 +275,9 @@ public class DatabaseHistoryFrame extends JFrame {
 					setEnabled(false);
 					MainFrame.getInstance().beginBlockingIntermediate();
 					btnGetHistory.setEnabled(false);
+					btnTriggerMore.setEnabled(false);
+					btnEnableTrigger.setEnabled(false);
+					btnDisableTrigger.setEnabled(false);
 					edFilter.setEnabled(false);
 				});
 
@@ -338,33 +341,54 @@ public class DatabaseHistoryFrame extends JFrame {
 	private void updateUI() {
 		CCDatabaseHistory h = movielist.getHistory();
 
-		boolean active = h.isHistoryActive();
-		if (active) {
-			edStatus.setText(LocaleBundle.getString("DatabaseHistoryFrame.Active")); //$NON-NLS-1$
-		} else {
-			edStatus.setText(LocaleBundle.getString("DatabaseHistoryFrame.Inactive")); //$NON-NLS-1$
-		}
+		btnTriggerMore.setEnabled(false);
+		btnEnableTrigger.setEnabled(false);
+		btnDisableTrigger.setEnabled(false);
+		btnGetHistory.setEnabled(false);
 
-		RefParam<String> err = new RefParam<>();
-		boolean ok = h.testTrigger(active, err);
-		if (ok) {
-			edTrigger.setText(LocaleBundle.getString("DatabaseHistoryFrame.Okay")); //$NON-NLS-1$
-			edTrigger.setBackground(Color.GREEN);
-			edTrigger.setForeground(Color.BLACK);
-			btnTriggerMore.setEnabled(false);
-			_triggerError = Str.Empty;
-		} else {
-			edTrigger.setText(LocaleBundle.getString("DatabaseHistoryFrame.Error")); //$NON-NLS-1$
-			edTrigger.setBackground(Color.RED);
-			edTrigger.setForeground(Color.BLACK);
-			btnTriggerMore.setEnabled(true);
-			_triggerError = err.Value;
-		}
+		edStatus.setText("..."); //$NON-NLS-1$
+		edTableSize.setText("..."); //$NON-NLS-1$
+		edTrigger.setText("..."); //$NON-NLS-1$
+		edTrigger.setBackground(Color.WHITE);
+		edTrigger.setForeground(Color.BLACK);
 
-		btnEnableTrigger.setEnabled(!active && !CCProperties.getInstance().ARG_READONLY);
-		btnDisableTrigger.setEnabled(active && !CCProperties.getInstance().ARG_READONLY);
+		new Thread(() ->
+		{
+			var hcount  = h.getCount();
+			var hactive = h.isHistoryActive();
 
-		edTableSize.setText(Integer.toString(_tcount = h.getCount()));
+			SwingUtils.invokeAndWaitSafe(() ->
+			{
+				if (hactive) {
+					edStatus.setText(LocaleBundle.getString("DatabaseHistoryFrame.Active")); //$NON-NLS-1$
+				} else {
+					edStatus.setText(LocaleBundle.getString("DatabaseHistoryFrame.Inactive")); //$NON-NLS-1$
+				}
+
+				RefParam<String> err = new RefParam<>();
+				boolean ok = h.testTrigger(hactive, err);
+				if (ok) {
+					edTrigger.setText(LocaleBundle.getString("DatabaseHistoryFrame.Okay")); //$NON-NLS-1$
+					edTrigger.setBackground(Color.GREEN);
+					edTrigger.setForeground(Color.BLACK);
+					btnTriggerMore.setEnabled(false);
+					_triggerError = Str.Empty;
+				} else {
+					edTrigger.setText(LocaleBundle.getString("DatabaseHistoryFrame.Error")); //$NON-NLS-1$
+					edTrigger.setBackground(Color.RED);
+					edTrigger.setForeground(Color.BLACK);
+					btnTriggerMore.setEnabled(true);
+					_triggerError = err.Value;
+				}
+
+				btnEnableTrigger.setEnabled(!hactive && !CCProperties.getInstance().ARG_READONLY);
+				btnDisableTrigger.setEnabled(hactive && !CCProperties.getInstance().ARG_READONLY);
+				btnGetHistory.setEnabled(true);
+
+				edTableSize.setText(Integer.toString(_tcount = hcount));
+			});
+		}).start();
+
 	}
 
 	public void showChanges(CCCombinedHistoryEntry elem) {

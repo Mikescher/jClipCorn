@@ -76,6 +76,7 @@ public class DatabaseErrorType {
 	public final static DatabaseErrorType ERROR_DB_DANGLING_COVERID                = new DatabaseErrorType(70, null);
 	public final static DatabaseErrorType ERROR_HTRIGGER_ENABLED_ERR               = new DatabaseErrorType(71, null);
 	public final static DatabaseErrorType ERROR_HTRIGGER_DISABLED_ERR              = new DatabaseErrorType(72, null);
+	public final static DatabaseErrorType ERROR_INVALID_CHARACTERS                 = new DatabaseErrorType(73, DatabaseAutofixer::fixError_InvalidCharacters);
 
 	private final int type;
 

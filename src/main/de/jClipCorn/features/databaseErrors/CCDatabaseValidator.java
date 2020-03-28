@@ -400,6 +400,13 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator {
 							}
 						}
 					});
+
+			// Title / Zyklus contains invalid characters
+			addMovieValidation(
+					DatabaseErrorType.ERROR_INVALID_CHARACTERS,
+					o -> o.ValidateMovies,
+					mov -> DatabaseStringNormalization.hasInvalidCharacters(mov.getTitle()) || DatabaseStringNormalization.hasInvalidCharacters(mov.getZyklus().getTitle()),
+					mov -> DatabaseError.createSingle(DatabaseErrorType.ERROR_INVALID_CHARACTERS, mov));
 		}
 
 		// ###############################################
@@ -521,6 +528,13 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator {
 							if (!t.IsSeriesTag) e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_TAG_NOT_VALID_ON_SERIES, series));
 						}
 					});
+
+			// Title contains invalid characters
+			addSeriesValidation(
+					DatabaseErrorType.ERROR_INVALID_CHARACTERS,
+					o -> o.ValidateSeries,
+					series -> DatabaseStringNormalization.hasInvalidCharacters(series.getTitle()),
+					series -> DatabaseError.createSingle(DatabaseErrorType.ERROR_INVALID_CHARACTERS, series));
 		}
 
 		// ###############################################
@@ -582,6 +596,13 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator {
 					o -> o.ValidateSeasons,
 					season -> season.getCoverDimensions().Item1 > ImageUtilities.getCoverWidth() && season.getCoverDimensions().Item2 < ImageUtilities.getCoverHeight(),
 					season -> DatabaseError.createSingle(DatabaseErrorType.ERROR_COVER_TOO_BIG, season));
+
+			// Title contains invalid characters
+			addSeriesValidation(
+					DatabaseErrorType.ERROR_INVALID_CHARACTERS,
+					o -> o.ValidateSeasons,
+					season -> DatabaseStringNormalization.hasInvalidCharacters(season.getTitle()),
+					season -> DatabaseError.createSingle(DatabaseErrorType.ERROR_INVALID_CHARACTERS, season));
 		}
 
 		// ###############################################
@@ -770,6 +791,13 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator {
 					o -> o.ValidateEpisodes,
 					episode -> episode.getLanguage().contains(CCDBLanguage.MUTED) && !episode.getLanguage().isSingle(),
 					episode -> DatabaseError.createSingle(DatabaseErrorType.ERROR_LANG_MUTED_SUBSET, episode));
+
+			// Title contains invalid characters
+			addEpisodeValidation(
+					DatabaseErrorType.ERROR_INVALID_CHARACTERS,
+					o -> o.ValidateEpisodes,
+					episode -> DatabaseStringNormalization.hasInvalidCharacters(episode.getTitle()),
+					episode -> DatabaseError.createSingle(DatabaseErrorType.ERROR_INVALID_CHARACTERS, episode));
 		}
 	}
 

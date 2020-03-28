@@ -1,21 +1,21 @@
 package de.jClipCorn.features.databaseErrors;
 
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.*;
 import de.jClipCorn.database.databaseElement.columnTypes.*;
-import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.features.log.CCLog;
+import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.DriveMap;
 import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.formatter.FileSizeFormatter;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.ImageUtilities;
 import de.jClipCorn.util.listener.ProgressCallbackListener;
+
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DatabaseAutofixer {
 	public static boolean fixErrors(List<DatabaseError> list, ProgressCallbackListener pcl) {
@@ -474,6 +474,42 @@ public class DatabaseAutofixer {
 
 			elem.setFilesize(fsz);
 			return true;
+		}
+
+		return false;
+	}
+
+	public static boolean fixError_InvalidCharacters(DatabaseError err) {
+		if (err.getElement1() instanceof CCMovie)
+		{
+			var elem = (CCMovie) err.getElement1();
+
+			var newtitle  = DatabaseStringNormalization.fixInvalidCharacters(elem.getTitle());
+			if (!newtitle.equals(elem.getTitle())) { elem.setTitle(newtitle); return true; }
+
+			var newzyklus = DatabaseStringNormalization.fixInvalidCharacters(elem.getZyklus().getTitle());
+			if (!newzyklus.equals(elem.getZyklus().getTitle())) { elem.setZyklusTitle(newzyklus); return true; }
+		}
+		else if (err.getElement1() instanceof CCSeries)
+		{
+			var elem = (CCSeries) err.getElement1();
+
+			var newtitle  = DatabaseStringNormalization.fixInvalidCharacters(elem.getTitle());
+			if (!newtitle.equals(elem.getTitle())) { elem.setTitle(newtitle); return true; }
+		}
+		else if (err.getElement1() instanceof CCSeason)
+		{
+			var elem = (CCSeason) err.getElement1();
+
+			var newtitle  = DatabaseStringNormalization.fixInvalidCharacters(elem.getTitle());
+			if (!newtitle.equals(elem.getTitle())) { elem.setTitle(newtitle); return true; }
+		}
+		else if (err.getElement1() instanceof CCEpisode)
+		{
+			var elem = (CCEpisode) err.getElement1();
+
+			var newtitle  = DatabaseStringNormalization.fixInvalidCharacters(elem.getTitle());
+			if (!newtitle.equals(elem.getTitle())) { elem.setTitle(newtitle); return true; }
 		}
 
 		return false;

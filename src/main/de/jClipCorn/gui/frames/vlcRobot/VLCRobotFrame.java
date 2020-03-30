@@ -82,6 +82,8 @@ public class VLCRobotFrame extends JFrame {
 
 	private static VLCRobotFrame _instance = null;
 	private JLabel lblNewLabel;
+	private JPanel pnlInfo;
+	private JTextArea lblText;
 
 	/**
 	 * @wbp.parser.constructor
@@ -326,6 +328,16 @@ public class VLCRobotFrame extends JFrame {
 		edLogNew.setEditable(false);
 
 		tabbedPane.setSelectedIndex(0);
+		
+		pnlInfo = new JPanel();
+		tabbedPane.addTab(LocaleBundle.getString("VLCRobotFrame.tabInfo"), null, pnlInfo, null); //$NON-NLS-1$
+		pnlInfo.setLayout(new BorderLayout(0, 0));
+		
+		lblText = new JTextArea(LocaleBundle.getString("VLCRobotFrame.helpText")); //$NON-NLS-1$
+		lblText.setEditable(false);
+		lblText.setLineWrap(true);
+		lblText.setBorder(new EmptyBorder(4, 4, 4, 4));
+		pnlInfo.add(lblText);
 	}
 
 	private void onBackgroundUpdate(int idx)

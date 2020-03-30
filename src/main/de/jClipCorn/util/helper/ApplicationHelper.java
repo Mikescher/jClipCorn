@@ -146,7 +146,14 @@ public class ApplicationHelper {
 		String[] lines = out.Item2.split("\\r\\n");
 
 		int start = CCStreams.iterate(lines).findIndex(l -> Pattern.matches("^-----+$", l.trim()));
-		if (start == -1 || start == 0) throw new Exception("Parser Error: Table start not found");
+		if (start == -1 || start == 0)
+		{
+			if (CCStreams.iterate(lines).any(p -> p.toLowerCase().contains("error"))) throw new Exception("Parser Error: Table start not found (+error)");
+
+			if (CCStreams.iterate(lines).count(p -> !Str.isNullOrWhitespace(p)) <= 2) return new ArrayList<>(); // No entries in list
+			
+			throw new Exception("Parser Error: Table start not found");
+		}
 
 		String header = lines[start - 1];
 

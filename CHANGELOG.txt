@@ -1,6 +1,67 @@
 
 
 ########################################################################
+############ Mon Mar 30 18:22:44 2020 +0200  1.10.8 RELEASE ############
+########################################################################
+
+
+1.10.8 Bugfix: Fixed net use parser for empty result
+1.10.8 Bugfix: Fixed vlc connection with other localizations
+1.10.8 Feature: Added help text to vlc robot
+1.10.8 Bugfix: Fixed updateSeasonInDatabase and UniTests
+1.10.8 Feature: Add new DatabaseError: ERROR_INVALID_CHARACTERS
+1.10.8 Feature: Load History data async
+1.10.8 Task: Remove redundant [SERIESID] <> [LOCALID] columns
+1.10.8 Feature: Remove (now-redundant) viewed field from database and models
+1.10.8 Feature: Allow shortcuts in series frame
+1.10.8 Bugfix: Fix vlc autoPlay with files containing special characters
+1.10.8 Bugfix: Fix selection-by-key in EnumComboBox
+1.10.8 Task: autoResize AddMultipleEpisodes Table on change
+1.10.8 Task: Use [getSemiCommonLanguages] also for MainTable
+1.10.8 Feature: Show and Change update frequency in VLCRobotFrame
+1.10.8 Feature: Logtab for VLCRobotFrame
+1.10.8 Bugfix: Fixed clicking on whitespace in MainTable triggering event
+1.10.8 Task: Ignore very short (percentual) parts of series in folder lang
+1.10.8 Task: Log errors from SingUtilities.[invokeLater|invokeAndWait]
+1.10.8 Bugfix: Fix over-sensitive change detection in DateTimeListEditor
+1.10.8 Feature: Show Dialog if SetViewed fails
+1.10.8 Feature: Edit Episode ViewedHistory in BatchEditFrame
+1.10.8 Task: (TravisCI) update CI to JDK-12
+1.10.8 Feature: VLCRobot [FIN]
+1.10.8 Feature: VLCRobot [WIP]
+1.10.8 Task: Upgrade to JDK-14
+  - update gradle
+  - update gradle wrapper
+  - remove PROP_DISABLE_SSL setting
+  - remove deprecated ShellFolder UNC path query method
+  - remove other deprecated methods
+1.10.8 Feature: VLCRobot [WIP]
+1.10.8 Feature: VLCRobot [WIP]
+1.10.8 Task: Set VLC Path from InitialConfigFrame
+1.10.8 Task: New (and improved) TableColumnAdjuster
+1.10.8 Feature: VLCRobot [WIP]
+1.10.8 Feature: VLCRobot [WIP]
+1.10.8 Feature: VLCRobot [WIP]
+1.10.8 Feature: VLCRobot [WIP]
+1.10.8 Bugfix: Fix layout of Extended Settings Frame
+1.10.8 Task: Make copy-error in AddMultiEpisodesFrame non-fatal
+1.10.8 Bugfix: Fix exception in Statistics[UserScore]
+1.10.8 Feature: Sort elements in FilterTree
+1.10.8 Feature: Add language 20:Korean
+1.10.8 Feature: Show DB history of Series/Seasons/Episodes
+1.10.8 Bugfix: Fixed display of genres in ParseOnlineDialog
+1.10.8 Task: Made EnumComboBoxes typesafe and allowed ordering+filtering in them
+1.10.8 Feature: New UserScore value: [RMID]
+1.10.8 Bugfix: Fixed Genre parser for MAL remote
+1.10.8 Task: Smaller default height for AddMovieFrame in Win design
+1.10.8 Bugfix: Fixed Genre parser for MAL remote
+1.10.8 Bugfix: Fixed AddEpisode with unchanged path
+1.10.8 Bugfix: Fixed NPE in TMDB parser
+1.10.8 Task: Remove Eclipse localization warnings
+1.10.8 Bugfix: Fixed LAST_ID filter not woking without aggressive history merge
+
+
+########################################################################
 ############ Sat Oct 12 20:58:11 2019 +0200  1.10.7 RELEASE ############
 ########################################################################
 

@@ -151,7 +151,7 @@ public class ApplicationHelper {
 			if (CCStreams.iterate(lines).any(p -> p.toLowerCase().contains("error"))) throw new Exception("Parser Error: Table start not found (+error)");
 
 			if (CCStreams.iterate(lines).count(p -> !Str.isNullOrWhitespace(p)) <= 2) return new ArrayList<>(); // No entries in list
-			
+
 			throw new Exception("Parser Error: Table start not found");
 		}
 

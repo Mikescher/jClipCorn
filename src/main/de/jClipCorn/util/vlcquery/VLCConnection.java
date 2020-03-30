@@ -100,7 +100,7 @@ public class VLCConnection {
 
 			CCStream<CCXMLElement> nodes = xmlPlaylist
 					.getRoot()
-					.getFirstChildByAttrOrThrow("node", "name", "Playlist")
+					.getFirstChildOrThrow("node") // name="playlist"   or   name="Wiedergabeliste"
 					.getAllChildren("leaf");
 
 			for (CCXMLElement node : nodes)

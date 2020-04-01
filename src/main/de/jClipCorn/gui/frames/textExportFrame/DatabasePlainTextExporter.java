@@ -1,20 +1,15 @@
 package de.jClipCorn.gui.frames.textExportFrame;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.commons.lang.StringUtils;
-
-import de.jClipCorn.database.databaseElement.CCDatabaseElement;
-import de.jClipCorn.database.databaseElement.CCEpisode;
-import de.jClipCorn.database.databaseElement.CCMovie;
-import de.jClipCorn.database.databaseElement.CCSeason;
-import de.jClipCorn.database.databaseElement.CCSeries;
+import de.jClipCorn.database.databaseElement.*;
 import de.jClipCorn.database.databaseElement.columnTypes.CCFileSize;
-import de.jClipCorn.features.serialization.ExportHelper;
 import de.jClipCorn.features.log.CCLog;
+import de.jClipCorn.features.serialization.ExportHelper;
 import de.jClipCorn.util.formatter.FileSizeFormatter;
 import de.jClipCorn.util.helper.SimpleFileUtils;
+import org.apache.commons.lang.StringUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class DatabasePlainTextExporter extends DatabaseTextExporter {
 
@@ -79,7 +74,7 @@ public class DatabasePlainTextExporter extends DatabaseTextExporter {
 				if (addViewed) builder.append(ser.isViewed() ? "[X] " : "[ ] ");
 				builder.append(ser.getTitle());
 
-				if (addLanguage) builder.append(" [").append(ser.getCommonOrAllLanguages().toOutputString()).append("]");
+				if (addLanguage) builder.append(" [").append(ser.getSemiCommonOrAllLanguages().toOutputString()).append("]");
 				if (addFormat) builder.append(" (").append(ser.getFormat().asString().toUpperCase()).append(")");
 				if (addQuality) builder.append(" (").append(ser.getMediaInfoCategory().getLongText()).append(")");
 				if (addYear) builder.append(" (").append(ser.getYearRange().asString()).append(")");

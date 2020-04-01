@@ -169,7 +169,7 @@ public class ClipTableModel extends AbstractTableModel implements TableModelRowC
 			case COLUMN_MEDIAINFO: // Quality
 				return ser.getMediaInfoCategory();
 			case COLUMN_LANGUAGE: // Language
-				return ser.getSemiCommonLanguages();
+				return ser.getSemiCommonOrAllLanguages();
 			case COLUMN_GENRE: // Genres
 				return ser.getGenres();
 			case COLUMN_PARTCOUNT: // Partcount

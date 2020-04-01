@@ -468,8 +468,8 @@ public class CCSeries extends CCDatabaseElement implements IEpisodeOwner {
 		return CCDBLanguageList.createDirect(langs);
 	}
 
-	public CCDBLanguageList getCommonOrAllLanguages() {
-		CCDBLanguageList com = getCommonLanguages();
+	public CCDBLanguageList getSemiCommonOrAllLanguages() {
+		CCDBLanguageList com = getSemiCommonLanguages();
 		return com.isEmpty() ? getAllLanguages() : com;
 	}
 

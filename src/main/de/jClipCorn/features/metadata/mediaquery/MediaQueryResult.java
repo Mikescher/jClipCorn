@@ -12,6 +12,7 @@ import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.stream.CCStreams;
 import de.jClipCorn.util.xml.CCXMLElement;
 import de.jClipCorn.util.xml.CCXMLException;
+import de.jClipCorn.util.xml.CCXMLParser;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -45,18 +46,18 @@ public class MediaQueryResult {
 	public final CCDBLanguageList AudioLanguages;   // NULL if only 1 Language without a specifier
 	
 	private MediaQueryResult(String raw, long cdate, long mdate, String format, String format_Version, long fileSize, double duration, int overallBitRate, double frameRate, MediaQueryResultVideoTrack video, List<MediaQueryResultVideoTrack> videoTracks, List<MediaQueryResultAudioTrack> audioTracks, List<MediaQueryResultSubtitleTrack> subtitleTracks, CCDBLanguageList language) {
-		Raw = raw;
-		CDate = cdate;
-		MDate = mdate;
-		Format = format;
+		Raw            = raw;
+		CDate          = cdate;
+		MDate          = mdate;
+		Format         = format;
 		Format_Version = format_Version;
-		FileSize = fileSize;
-		Duration = duration;
+		FileSize       = fileSize;
+		Duration       = duration;
 		OverallBitRate = overallBitRate;
-		FrameRate = frameRate;
-		Video = video;
-		VideoTracks = Collections.unmodifiableList(videoTracks);
-		AudioTracks = Collections.unmodifiableList(audioTracks);
+		FrameRate      = frameRate;
+		Video          = video;
+		VideoTracks    = Collections.unmodifiableList(videoTracks);
+		AudioTracks    = Collections.unmodifiableList(audioTracks);
 		SubtitleTracks = Collections.unmodifiableList(subtitleTracks);
 		AudioLanguages = language;
 	}
@@ -66,15 +67,15 @@ public class MediaQueryResult {
 		boolean foundGeneral = false;
 		boolean foundVideo = false;
 
-		String format = Str.Empty;
+		String format         = Str.Empty;
 		String format_Version = Str.Empty;
-		long fileSize = 0;
-		double duration = 0.0;
-		int overallBitRate = 0;
-		double frameRate = 0.0;
+		long   fileSize       = 0;
+		double duration       = 0.0;
+		int    overallBitRate = 0;
+		double frameRate      = 0.0;
 
-		List<MediaQueryResultVideoTrack> vtracks = new ArrayList<>();
-		List<MediaQueryResultAudioTrack> atracks = new ArrayList<>();
+		List<MediaQueryResultVideoTrack>    vtracks = new ArrayList<>();
+		List<MediaQueryResultAudioTrack>    atracks = new ArrayList<>();
 		List<MediaQueryResultSubtitleTrack> stracks = new ArrayList<>();
 
 		for (CCXMLElement track : xml.getAllChildren("track"))
@@ -84,12 +85,12 @@ public class MediaQueryResult {
 				case "General":
 					foundGeneral = true;
 
-					format = track.getFirstChildValueOrDefault("Format", null);
+					format         = track.getFirstChildValueOrDefault("Format", null);
 					format_Version = track.getFirstChildValueOrDefault("Format_Version", null);
-					fileSize = track.getFirstChildLongValueOrThrow("FileSize");
-					duration = track.getFirstChildDoubleValueOrDefault("Duration", -1);
+					fileSize       = track.getFirstChildLongValueOrThrow("FileSize");
+					duration       = track.getFirstChildDoubleValueOrDefault("Duration", -1);
 					overallBitRate = track.getFirstChildIntValueOrDefault("OverallBitRate", -1);
-					frameRate = track.getFirstChildDoubleValueOrDefault("FrameRate", -1);
+					frameRate      = track.getFirstChildDoubleValueOrDefault("FrameRate", -1);
 
 					break;
 				case "Video":
@@ -300,6 +301,31 @@ public class MediaQueryResult {
 		if (langval.equalsIgnoreCase("Unknown")) return true; //$NON-NLS-1$
 
 		return false;
+	}
+
+	public static int parsePseudoPercInt(CCXMLParser owner, String val, int def) throws CCXMLException {
+		if (val == null) return def;
+		if (!val.contains("/"))
+		{
+			try {
+				return Integer.parseInt(val);
+			} catch (NumberFormatException e) {
+				throw new CCXMLException(Str.format("The value \"{0}\" is not an pseudo-integer", val), owner.getXMLString()); //$NON-NLS-1$
+			}
+		}
+		else
+		{
+			var split = val.split("/");
+			try {
+				var sa = Integer.parseInt(split[0].trim());
+				var sb = Integer.parseInt(split[1].trim());
+
+				return (int)Math.round((sa*1.0) / (sb*1.0));
+
+			} catch (NumberFormatException e) {
+				throw new CCXMLException(Str.format("The value \"{0}\" is not an pseudo-integer", val), owner.getXMLString()); //$NON-NLS-1$
+			}
+		}
 	}
 
 	public CCMediaInfo toMediaInfo() {

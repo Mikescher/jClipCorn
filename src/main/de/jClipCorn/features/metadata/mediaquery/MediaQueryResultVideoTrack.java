@@ -19,18 +19,18 @@ public class MediaQueryResultVideoTrack {
 	public final boolean Default;
 
 	private MediaQueryResultVideoTrack(String format, String format_Profile, String codecID, int bitRate, int bitRateNominal, int width, int height, double frameRate, int frameCount, short bitDepth, double duration, boolean vdefault) {
-		Format = format;
+		Format         = format;
 		Format_Profile = format_Profile;
-		CodecID = codecID;
-		BitRate = bitRate;
+		CodecID        = codecID;
+		BitRate        = bitRate;
 		BitRateNominal = bitRateNominal;
-		Width = width;
-		Height = height;
-		FrameRate = frameRate;
-		FrameCount = frameCount;
-		BitDepth = bitDepth;
-		Duration = duration;
-		Default = vdefault;
+		Width          = width;
+		Height         = height;
+		FrameRate      = frameRate;
+		FrameCount     = frameCount;
+		BitDepth       = bitDepth;
+		Duration       = duration;
+		Default        = vdefault;
 	}
 
 	@SuppressWarnings("nls")
@@ -39,7 +39,7 @@ public class MediaQueryResultVideoTrack {
 		String  format_Profile = xml.getFirstChildValueOrDefault("Format_Profile", null);
 		String  codecID        = xml.getFirstChildValueOrDefault("CodecID", null);
 		int     bitRate        = xml.getFirstChildIntValueOrDefault("BitRate", -1);
-		int     bitRateNominal = xml.getFirstChildIntValueOrDefault("BitRate_Nominal", -1);
+		int     bitRateNominal = xml.getFirstChildValueOrDefault("BitRate_Nominal", "").contains("/") ? -1 : xml.getFirstChildIntValueOrDefault("BitRate_Nominal", -1);
 		int     width          = xml.getFirstChildIntValueOrThrow("Width");
 		int     height         = xml.getFirstChildIntValueOrThrow("Height");
 		double  frameRate      = xml.getFirstChildDoubleValueOrDefault("FrameRate", -1);

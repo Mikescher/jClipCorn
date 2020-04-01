@@ -46,6 +46,10 @@ public class CCXMLElement
 		return hasAttribute(s0) && CCStreams.iterate(s).all(this::hasAttribute);
 	}
 
+	public CCXMLParser getOwner() {
+		return _owner;
+	}
+
 	//####################################################################################
 
 	public CCXMLElement getFirstChildOrThrow(String name) throws CCXMLException {

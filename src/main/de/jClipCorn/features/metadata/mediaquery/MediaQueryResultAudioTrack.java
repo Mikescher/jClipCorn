@@ -17,14 +17,14 @@ public class MediaQueryResultAudioTrack {
 	public final boolean Default;
 
 	private MediaQueryResultAudioTrack(String format, String language, String codecID, short channels, int samplerate, int bitrate, int bitrateNominal, boolean aDefault) {
-		Format = format;
-		Language = MediaQueryResult.isNullLanguage(language) ? null : language;
-		CodecID = codecID;
-		Channels = channels;
-		Samplingrate = samplerate;
-		BitRate = bitrate;
+		Format         = format;
+		Language       = MediaQueryResult.isNullLanguage(language) ? null : language;
+		CodecID        = codecID;
+		Channels       = channels;
+		Samplingrate   = samplerate;
+		BitRate        = bitrate;
 		BitRateNominal = bitrateNominal;
-		Default = aDefault;
+		Default        = aDefault;
 	}
 
 	@SuppressWarnings("nls")
@@ -35,7 +35,7 @@ public class MediaQueryResultAudioTrack {
 		short   channels = (short)xml.getFirstChildIntValueOrDefault("Channels", -1);
 		int     srate    = xml.getFirstChildIntValueOrDefault("SamplingRate", -1);
 		int     brate    = xml.getFirstChildIntValueOrDefault("BitRate", -1);
-		int     brateNom = xml.getFirstChildIntValueOrDefault("BitRate_Nominal", -1);
+		int     brateNom = xml.getFirstChildValueOrDefault("BitRate_Nominal", "").contains("/") ? -1 : xml.getFirstChildIntValueOrDefault("BitRate_Nominal", -1);
 		boolean adefault = MediaQueryResult.parseBool(xml.getFirstChildValueOrDefault("Default", "No"));
 
 		return new MediaQueryResultAudioTrack(format, language, codecID, channels, srate, brate, brateNom, adefault);

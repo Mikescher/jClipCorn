@@ -35,7 +35,7 @@ public class Main {
 	private final static String PROPERTIES_PATH = "jClipcorn.properties"; //$NON-NLS-1$
 	
 	public static boolean DEBUG = "true".equals(System.getProperty("ineclipse"));  //$NON-NLS-1$//$NON-NLS-2$
-	public static boolean BETA = false;
+	public static boolean BETA = true;
 		
 	public static void main(String[] arg) {
 		Globals.TIMINGS.start(Globals.TIMING_STARTUP_TOTAL);

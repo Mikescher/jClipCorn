@@ -12,11 +12,11 @@ public class MediaQueryResultSubtitleTrack {
 	public final boolean Default;
 
 	private MediaQueryResultSubtitleTrack(String format, String title, String codecID, String language, boolean aDefault) {
-		Format = format;
-		Title = title;
+		Format   = format;
+		Title    = title;
 		Language = MediaQueryResult.isNullLanguage(language) ? null : language;
-		CodecID = codecID;
-		Default = aDefault;
+		CodecID  = codecID;
+		Default  = aDefault;
 	}
 
 	@SuppressWarnings("nls")

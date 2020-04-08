@@ -1,5 +1,17 @@
 package de.jClipCorn.util.formatter;
 
+import de.jClipCorn.features.log.CCLog;
+import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.properties.CCProperties;
+import de.jClipCorn.properties.types.PathSyntaxVar;
+import de.jClipCorn.util.DriveMap;
+import de.jClipCorn.util.Str;
+import de.jClipCorn.util.datetime.CCDate;
+import de.jClipCorn.util.helper.ApplicationHelper;
+import de.jClipCorn.util.helper.RegExHelper;
+import de.jClipCorn.util.listener.ProgressCallbackListener;
+import org.apache.commons.lang3.StringUtils;
+
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
@@ -7,24 +19,8 @@ import java.io.PrintStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-import de.jClipCorn.properties.types.PathSyntaxVar;
-import de.jClipCorn.util.Str;
-import org.apache.commons.lang3.StringUtils;
-
-import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.features.log.CCLog;
-import de.jClipCorn.properties.CCProperties;
-import de.jClipCorn.util.DriveMap;
-import de.jClipCorn.util.datetime.CCDate;
-import de.jClipCorn.util.helper.ApplicationHelper;
-import de.jClipCorn.util.helper.RegExHelper;
-import de.jClipCorn.util.listener.ProgressCallbackListener;
+import java.util.*;
 
 @SuppressWarnings("nls")
 public class PathFormatter {
@@ -201,8 +197,17 @@ public class PathFormatter {
 	}
 
 	private static String insertCCPathVariables(String path) {
-		for (PathSyntaxVar psv : CCProperties.getInstance().getActivePathVariables()) {
-		    if (path.startsWith(psv.Value)) return String.format(WILDCARD_VARIABLE, psv.Key) + path.substring(psv.Value.length());
+		if (ApplicationHelper.isWindows())
+		{
+			for (PathSyntaxVar psv : CCProperties.getInstance().getActivePathVariables()) {
+				if (path.toLowerCase().startsWith(psv.Value.toLowerCase())) return String.format(WILDCARD_VARIABLE, psv.Key) + path.substring(psv.Value.length());
+			}
+		}
+		else
+		{
+			for (PathSyntaxVar psv : CCProperties.getInstance().getActivePathVariables()) {
+				if (path.startsWith(psv.Value)) return String.format(WILDCARD_VARIABLE, psv.Key) + path.substring(psv.Value.length());
+			}
 		}
 		return path;
 	}

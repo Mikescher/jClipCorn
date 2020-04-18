@@ -21,6 +21,8 @@ public class VLCRobotLogEntry {
 	public final Rectangle WindowRectNew;
 	public final Rectangle WindowRectOld;
 
+	public final int SkipCount;
+
 	public final String Reason;
 
 	public VLCRobotLogEntry(int idx, CCDateTime ts, VLCStatus sold, VLCStatus snew)
@@ -32,6 +34,7 @@ public class VLCRobotLogEntry {
 		NewEntry      = null;
 		WindowRectNew = null;
 		WindowRectOld = null;
+		SkipCount     = -1;
 		Reason        = "StateChange"; //$NON-NLS-1$
 	}
 
@@ -44,6 +47,7 @@ public class VLCRobotLogEntry {
 		NewEntry      = e;
 		WindowRectNew = null;
 		WindowRectOld = null;
+		SkipCount     = -1;
 		Reason        = reason;
 	}
 
@@ -56,12 +60,28 @@ public class VLCRobotLogEntry {
 		NewEntry      = null;
 		WindowRectOld = rold;
 		WindowRectNew = rnew;
+		SkipCount     = -1;
 		Reason        = reason;
+	}
+
+	public VLCRobotLogEntry(int idx, CCDateTime ts, VLCStatus sold, VLCStatus snew, int skipCount)
+	{
+		Index         = idx;
+		Timestamp     = ts;
+		StatusOld     = sold;
+		StatusNew     = snew;
+		NewEntry      = null;
+		WindowRectOld = null;
+		WindowRectNew = null;
+		SkipCount     = skipCount;
+		Reason        = "TickSkipped"; //$NON-NLS-1$
 	}
 
 	@SuppressWarnings("nls")
 	public String format()
 	{
+		if ("TickSkipped".equalsIgnoreCase(Reason)) return "Skipped a single refresh cycle (" + SkipCount + ")";
+
 		if (StatusOld != null && StatusNew != null) return VLCStatus.formatShortDiff(StatusOld, StatusNew);
 		if (NewEntry != null) return Str.format("''{0}'' [{1}]", NewEntry.getTitle(), Reason);
 		if (WindowRectOld != null && WindowRectNew != null) return Str.format("UpdateWindowPos [{0}]", Reason);
@@ -71,6 +91,8 @@ public class VLCRobotLogEntry {
 
 	@SuppressWarnings("nls")
 	public String getEventType() {
+		if ("TickSkipped".equalsIgnoreCase(Reason)) return "SkipUpdateCycle";
+
 		if (StatusOld != null && StatusNew != null) return "VLCStatus";
 		if (NewEntry != null) return "Play";
 		if (WindowRectOld != null && WindowRectNew != null) return "UpdateWindowPos";

@@ -111,6 +111,22 @@ public class VLCStatus
 		return a.equals(b);
 	}
 
+	public int getActiveEntryPlaylistPosition() {
+		return Playlist.indexOf(ActiveEntry);
+	}
+
+	public boolean isActiveEntryFirstOfPlaylist() {
+		return ActiveEntry != null && Playlist.size()>0 && Playlist.get(0) == ActiveEntry;
+	}
+
+	public boolean isActiveEntryLastOfPlaylist() {
+		return ActiveEntry != null && Playlist.size()>0 && Playlist.get(Playlist.size()-1) == ActiveEntry;
+	}
+
+	public boolean doSkipStatusInStateMachine() {
+		return (Status == VLCPlayerStatus.PLAYING && ActiveEntry != null && !Str.isNullOrWhitespace(CurrentFilename) && !Str.equals(CurrentFilename, ActiveEntry.Name));
+	}
+
 	@SuppressWarnings("nls")
 	public static String formatShortDiff(VLCStatus sold, VLCStatus snew)
 	{
@@ -139,19 +155,24 @@ public class VLCStatus
 	{
 		StringBuilder b = new StringBuilder();
 
-		b.append("Status          := ").append(Status).append("\n");
-		b.append("CurrentFilename := ").append(CurrentFilename).append("\n");
-		b.append("Position        := ").append(CurrentTime).append(" / ").append(CurrentLength).append(" (").append(Position).append(")").append("\n");
+		b.append("Status           := ").append(Status).append("\n");
+		b.append("Skip             := ").append(doSkipStatusInStateMachine()).append("\n");
+		b.append("CurrentFilename  := ").append(CurrentFilename).append("\n");
+		b.append("Position         := ").append(CurrentTime).append(" / ").append(CurrentLength).append(" (").append(Position).append(")").append("\n");
 		b.append("\n");
-		b.append("Fullscreen      := ").append(Fullscreen).append("\n");
+		b.append("Playlist         := [..").append(Playlist.size()).append("..]").append("\n");
+		b.append("ActiveEntry.Uri  := ").append((ActiveEntry == null) ? "NULL" : ActiveEntry.Uri).append("\n");
+		b.append("ActiveEntry.Name := ").append("'").append((ActiveEntry == null) ? "NULL" : ActiveEntry.Name).append("'").append("\n");
+		b.append("ActiveEntry.Len  := ").append((ActiveEntry == null) ? "NULL" : ActiveEntry.Length).append("\n");
+		b.append("PlaylistPosition := ").append(getActiveEntryPlaylistPosition()).append(" (first = ").append(isActiveEntryFirstOfPlaylist()).append(") (last = ").append(isActiveEntryLastOfPlaylist()).append(")").append("\n");
 		b.append("\n");
-		b.append("Window          := ").append((WindowRect==null) ? "NULL" : Str.format("[{0,number,#};{1,number,#}]:[{2,number,#}x{3,number,#}]", WindowRect.x, WindowRect.y, WindowRect.width, WindowRect.height)).append("\n");
+		b.append("Fullscreen       := ").append(Fullscreen).append("\n");
+		b.append("Window           := ").append((WindowRect==null) ? "NULL" : Str.format("[{0,number,#};{1,number,#}]:[{2,number,#}x{3,number,#}]", WindowRect.x, WindowRect.y, WindowRect.width, WindowRect.height)).append("\n");
 		b.append("\n");
-		b.append("Loop            := ").append(Loop).append("\n");
-		b.append("Repeat          := ").append(Repeat).append("\n");
-		b.append("Random          := ").append(Random).append("\n");
-		b.append("\n");
-		b.append("Volume          := ").append(Volume).append("\n");
+		b.append("Loop             := ").append(Loop).append("\n");
+		b.append("Repeat           := ").append(Repeat).append("\n");
+		b.append("Random           := ").append(Random).append("\n");
+		b.append("Volume           := ").append(Volume).append("\n");
 
 		return b.toString();
 	}

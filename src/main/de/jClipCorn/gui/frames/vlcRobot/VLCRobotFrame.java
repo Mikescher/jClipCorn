@@ -47,6 +47,9 @@ public class VLCRobotFrame extends JFrame {
 	private static final int DELAY_SET_VLC_POSITION_RUN_2   = 1500;
 	private static final int DELAY_SET_VLC_POSITION_RUN_3   = 2500;
 
+
+	private static final int DELAY_SLEEP_AFTER_SKIPPED_TICK =  75;
+
 	// ===========================================================================
 
 	private VLCPlaylistTable lsData;
@@ -76,6 +79,7 @@ public class VLCRobotFrame extends JFrame {
 	private final Object _threadLock = true;
 
 	private VLCStatus _lastStatus = null;
+	private int _skipCount = 0;
 	private VLCStatus _lastPositionalStatus = null;
 	private final java.util.List<VLCPlaylistEntry> _clientQueue = new ArrayList<>();
 	private volatile VLCRobotFrequency updateFreq = VLCRobotFrequency.MS_0500;
@@ -344,6 +348,17 @@ public class VLCRobotFrame extends JFrame {
 	{
 		final VLCStatus status = VLCConnection.getStatus();
 
+		if (status.doSkipStatusInStateMachine())
+		{
+			_skipCount++;
+			var le = new VLCRobotLogEntry(idx, CCDateTime.getCurrentDateTime(), _lastStatus, status, _skipCount);
+			SwingUtils.invokeLater(() -> addLog(le));
+			ThreadUtils.safeSleep(DELAY_SLEEP_AFTER_SKIPPED_TICK);
+			return;
+		}
+
+		_skipCount = 0;
+
 		if (status.Status == VLCPlayerStatus.PLAYING && status.Repeat) VLCConnection.toggleRepeat();
 		if (status.Status == VLCPlayerStatus.PLAYING && status.Random) VLCConnection.toggleRandom();
 		if (status.Status == VLCPlayerStatus.PLAYING && status.Loop)   VLCConnection.toggleLoop();
@@ -506,7 +521,7 @@ public class VLCRobotFrame extends JFrame {
 		if (_clientQueue.size() > 0 &&
 			sold.Status == VLCPlayerStatus.PLAYING && snew.Status == VLCPlayerStatus.PLAYING &&
 			sold.ActiveEntry != null && snew.ActiveEntry != null && !Str.equals(sold.ActiveEntry.Uri, snew.ActiveEntry.Uri) &&
-			sold.ActiveEntry == sold.Playlist.get(sold.Playlist.size()-1) && snew.ActiveEntry == snew.Playlist.get(0) &&
+			sold.isActiveEntryLastOfPlaylist() && snew.isActiveEntryFirstOfPlaylist() &&
 			sold.Position != PositionArea.FINISHED && snew.Position == PositionArea.STARTING)
 		{
 			CCLog.addDebug("VLCRobot StatusTrigger (PLAYING[last] --skip--> PLAYING[first])"); //$NON-NLS-1$

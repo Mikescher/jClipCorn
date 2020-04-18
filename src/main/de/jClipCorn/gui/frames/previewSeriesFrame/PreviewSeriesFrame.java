@@ -12,6 +12,7 @@ import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.database.databaseElement.columnTypes.CCFileFormat;
 import de.jClipCorn.database.databaseElement.columnTypes.CCUserScore;
 import de.jClipCorn.database.util.CCDBUpdateListener;
+import de.jClipCorn.database.util.NextEpisodeHelper;
 import de.jClipCorn.features.actionTree.ActionSource;
 import de.jClipCorn.features.actionTree.CCActionTree;
 import de.jClipCorn.features.actionTree.IActionRootFrame;
@@ -535,7 +536,12 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 	}
 
 	private void autoPlay() {
+		var next = NextEpisodeHelper.findNextEpisode(dispSeries);
 		VLCRobotFrame.show(this).enqueue(dispSeries);
+		if (next != null) {
+			changeSeason(next.getSeason());
+			tabSeason.select(next);
+		}
 	}
 
 	private boolean containsKeyboardFocus() {

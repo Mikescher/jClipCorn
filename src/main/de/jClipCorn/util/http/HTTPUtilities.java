@@ -6,6 +6,7 @@ import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.exceptions.HTTPErrorCodeException;
 import de.jClipCorn.util.helper.ApplicationHelper;
@@ -300,5 +301,55 @@ public class HTTPUtilities {
 		if (iswin) uri = "/" + uri;
 
 		return "file://" + uri;
+	}
+
+	public static String getFileNameFromURLEncode(String uri)
+	{
+		var idx = uri.lastIndexOf('/');
+		if (idx == -1) return Str.Empty;
+
+		var fn = uri.substring(idx+1);
+
+		fn = fn.replace("%C3%84", "Ä");
+		fn = fn.replace("%C3%96", "Ö");
+		fn = fn.replace("%C3%9C", "Ü");
+		fn = fn.replace("%C3%A4", "ä");
+		fn = fn.replace("%C3%B6", "ö");
+		fn = fn.replace("%C3%BC", "ü");
+		fn = fn.replace("%C3%9F", "ß");
+
+		fn = fn.replace("%5C", "\\");
+
+		fn = fn.replace("%20", " ");
+
+		fn = fn.replace("%25", "%");
+
+		fn = fn.replace("%3F", "?");
+		fn = fn.replace("%3D", "=");
+		fn = fn.replace("%26", "&");
+		fn = fn.replace("%23", "#");
+		fn = fn.replace("%2B", "+");
+
+		fn = fn.replace("%3A", ":");
+		fn = fn.replace("%3B", ";");
+		fn = fn.replace("%22", "\"");
+		fn = fn.replace("%28", "(");
+		fn = fn.replace("%29", ")");
+		fn = fn.replace("%5B", "[");
+		fn = fn.replace("%5D", "]");
+		fn = fn.replace("%7B", "{");
+		fn = fn.replace("%7D", "}");
+		fn = fn.replace("%21", "!");
+		fn = fn.replace("%24", "$");
+		fn = fn.replace("%5E", "^");
+		fn = fn.replace("%2C", ",");
+
+		fn = fn.replace("%C2%A7", "§");
+		fn = fn.replace("%C2%B0", "°");
+
+		fn = fn.replace("%27", "'");
+		fn = fn.replace("%09", "\t");
+
+		return fn;
 	}
 }

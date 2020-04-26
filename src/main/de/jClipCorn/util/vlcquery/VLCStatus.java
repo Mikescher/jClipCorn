@@ -1,6 +1,7 @@
 package de.jClipCorn.util.vlcquery;
 
 import de.jClipCorn.util.Str;
+import de.jClipCorn.util.http.HTTPUtilities;
 
 import java.awt.*;
 import java.util.List;
@@ -124,7 +125,16 @@ public class VLCStatus
 	}
 
 	public boolean doSkipStatusInStateMachine() {
-		return (Status == VLCPlayerStatus.PLAYING && ActiveEntry != null && !Str.isNullOrWhitespace(CurrentFilename) && !Str.equals(CurrentFilename, ActiveEntry.Name));
+
+		if (Status != VLCPlayerStatus.PLAYING) return false;
+		if (ActiveEntry == null) return false;
+		if (Str.isNullOrWhitespace(CurrentFilename)) return false;
+
+		if (Str.equals(CurrentTitle.toLowerCase(), ActiveEntry.Name.toLowerCase())) return false;
+		if (Str.equals(CurrentFilename.toLowerCase(), HTTPUtilities.getFileNameFromURLEncode(ActiveEntry.Uri).toLowerCase())) return false;
+
+		return true;
+
 	}
 
 	@SuppressWarnings("nls")
@@ -157,6 +167,7 @@ public class VLCStatus
 
 		b.append("Status           := ").append(Status).append("\n");
 		b.append("Skip             := ").append(doSkipStatusInStateMachine()).append("\n");
+		b.append("CurrentTitle     := ").append("'").append(CurrentTitle).append("'").append("\n");
 		b.append("CurrentFilename  := ").append(CurrentFilename).append("\n");
 		b.append("Position         := ").append(CurrentTime).append(" / ").append(CurrentLength).append(" (").append(Position).append(")").append("\n");
 		b.append("\n");

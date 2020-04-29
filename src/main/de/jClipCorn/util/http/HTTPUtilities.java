@@ -18,6 +18,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.*;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -310,46 +311,18 @@ public class HTTPUtilities {
 
 		var fn = uri.substring(idx+1);
 
-		fn = fn.replace("%C3%84", "Ä");
-		fn = fn.replace("%C3%96", "Ö");
-		fn = fn.replace("%C3%9C", "Ü");
-		fn = fn.replace("%C3%A4", "ä");
-		fn = fn.replace("%C3%B6", "ö");
-		fn = fn.replace("%C3%BC", "ü");
-		fn = fn.replace("%C3%9F", "ß");
+		return safeURLDecode(fn);
+	}
 
-		fn = fn.replace("%5C", "\\");
-
-		fn = fn.replace("%20", " ");
-
-		fn = fn.replace("%25", "%");
-
-		fn = fn.replace("%3F", "?");
-		fn = fn.replace("%3D", "=");
-		fn = fn.replace("%26", "&");
-		fn = fn.replace("%23", "#");
-		fn = fn.replace("%2B", "+");
-
-		fn = fn.replace("%3A", ":");
-		fn = fn.replace("%3B", ";");
-		fn = fn.replace("%22", "\"");
-		fn = fn.replace("%28", "(");
-		fn = fn.replace("%29", ")");
-		fn = fn.replace("%5B", "[");
-		fn = fn.replace("%5D", "]");
-		fn = fn.replace("%7B", "{");
-		fn = fn.replace("%7D", "}");
-		fn = fn.replace("%21", "!");
-		fn = fn.replace("%24", "$");
-		fn = fn.replace("%5E", "^");
-		fn = fn.replace("%2C", ",");
-
-		fn = fn.replace("%C2%A7", "§");
-		fn = fn.replace("%C2%B0", "°");
-
-		fn = fn.replace("%27", "'");
-		fn = fn.replace("%09", "\t");
-
-		return fn;
+	public static String safeURLDecode(String uri)
+	{
+		try
+		{
+			return URLDecoder.decode(uri, StandardCharsets.UTF_8.name());
+		}
+		catch (UnsupportedEncodingException e)
+		{
+			return uri;
+		}
 	}
 }

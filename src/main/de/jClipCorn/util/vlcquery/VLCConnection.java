@@ -13,6 +13,7 @@ import de.jClipCorn.util.stream.CCStream;
 import de.jClipCorn.util.xml.CCXMLElement;
 import de.jClipCorn.util.xml.CCXMLException;
 import de.jClipCorn.util.xml.CCXMLParser;
+import org.apache.commons.text.StringEscapeUtils;
 
 import java.awt.*;
 import java.io.BufferedReader;
@@ -132,6 +133,8 @@ public class VLCConnection {
 						.getFirstChildByAttrOrThrow("info", "name", "filename") //$NON-NLS-1$  //$NON-NLS-2$  //$NON-NLS-3$
 						.getContent();
 
+				if (filename.contains("&#")) filename = StringEscapeUtils.unescapeHtml4(filename);
+
 				String title = xmlStatus
 						.getRoot()
 						.getFirstChildOrThrow("information")                             //$NON-NLS-1$
@@ -153,6 +156,8 @@ public class VLCConnection {
 						.getFirstChildByAttrOrThrow("category", "name", "meta") //$NON-NLS-1$  //$NON-NLS-2$  //$NON-NLS-3$
 						.getFirstChildByAttrOrThrow("info", "name", "filename") //$NON-NLS-1$  //$NON-NLS-2$  //$NON-NLS-3$
 						.getContent();
+
+				if (filename.contains("&#")) filename = StringEscapeUtils.unescapeHtml4(filename);
 
 				String title = xmlStatus
 						.getRoot()

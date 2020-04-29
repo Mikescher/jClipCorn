@@ -168,7 +168,7 @@ public class VLCStatus
 		b.append("Status           := ").append(Status).append("\n");
 		b.append("Skip             := ").append(doSkipStatusInStateMachine()).append("\n");
 		b.append("CurrentTitle     := ").append("'").append(CurrentTitle).append("'").append("\n");
-		b.append("CurrentFilename  := ").append(CurrentFilename).append("\n");
+		b.append("CurrentFilename  := ").append("'").append(CurrentFilename).append("'").append("\n");
 		b.append("Position         := ").append(CurrentTime).append(" / ").append(CurrentLength).append(" (").append(Position).append(")").append("\n");
 		b.append("\n");
 		b.append("Playlist         := [..").append(Playlist.size()).append("..]").append("\n");

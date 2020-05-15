@@ -14,6 +14,9 @@ import de.jClipCorn.util.listener.ProgressCallbackListener;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -510,6 +513,35 @@ public class DatabaseAutofixer {
 
 			var newtitle  = DatabaseStringNormalization.fixInvalidCharacters(elem.getTitle());
 			if (!newtitle.equals(elem.getTitle())) { elem.setTitle(newtitle); return true; }
+		}
+
+		return false;
+	}
+
+	public static boolean fixError_MediaInfoFileAttributes(DatabaseError err) {
+		if (err.getElement1() instanceof ICCPlayableElement) {
+			ICCPlayableElement elem = (ICCPlayableElement) err.getElement1();
+			CCMediaInfo mi = elem.getMediaInfo();
+			if (!mi.isSet()) return false;
+
+			try {
+				BasicFileAttributes attr = Files.readAttributes(new File(PathFormatter.fromCCPath(elem.getParts().get(0))).toPath(), BasicFileAttributes.class);
+
+				var cdate = attr.creationTime().toMillis();
+				var mdate = attr.lastModifiedTime().toMillis();
+
+				var mi2 = new CCMediaInfo(cdate, mdate,
+						mi.getFilesize(), mi.getDuration(), mi.getBitrate(), mi.getVideoFormat(),
+						mi.getWidth(), mi.getHeight(), mi.getFramerate(),
+						mi.getBitdepth(), mi.getFramecount(), mi.getVideoCodec(),
+						mi.getAudioFormat(), mi.getAudioChannels(), mi.getAudioCodec(), mi.getAudioSamplerate());
+
+				elem.setMediaInfo(mi2);
+				return true;
+
+			} catch (IOException ex) {
+				return false;
+			}
 		}
 
 		return false;

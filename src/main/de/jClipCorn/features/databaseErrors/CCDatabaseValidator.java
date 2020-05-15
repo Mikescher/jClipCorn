@@ -382,6 +382,24 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator {
 							isDiff(mov.getMediaInfo().getDurationInMinutes(), mov.getLength(), 0.10, 10),
 					mov -> DatabaseError.createSingle(DatabaseErrorType.ERROR_MEDIAINFO_LENGTH_MISMATCH, mov));
 
+			// Mediainfo attributes not match actual file
+			addMovieValidation(
+					DatabaseErrorType.ERROR_MEDIAINFO_FILE_ATTR_CHANGED,
+					o -> o.ValidateVideoFiles,
+					(mov, e) ->
+					{
+						if (mov.getMediaInfo().isSet()) {
+							try {
+								BasicFileAttributes attr = Files.readAttributes(new File(mov.getAbsolutePart(0)).toPath(), BasicFileAttributes.class);
+								boolean b = attr.creationTime().toMillis() != mov.getMediaInfo().getCDate();
+								boolean c = attr.lastModifiedTime().toMillis() != mov.getMediaInfo().getMDate();
+								if (b||c) e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_MEDIAINFO_FILE_ATTR_CHANGED, mov));
+							} catch (IOException ex) {
+								/**/
+							}
+						}
+					});
+
 			// Mediainfo does not match actual file
 			addMovieValidation(
 					DatabaseErrorType.ERROR_MEDIAINFO_FILE_CHANGED,
@@ -389,15 +407,8 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator {
 					(mov, e) ->
 					{
 						if (mov.getMediaInfo().isSet()) {
-							try {
-								BasicFileAttributes attr = Files.readAttributes(new File(mov.getAbsolutePart(0)).toPath(), BasicFileAttributes.class);
-								boolean a = new File(mov.getAbsolutePart(0)).length() != mov.getMediaInfo().getFilesize();
-								boolean b = attr.creationTime().toMillis() != mov.getMediaInfo().getCDate();
-								boolean c = attr.lastModifiedTime().toMillis() != mov.getMediaInfo().getMDate();
-								if (a||b||c) e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_MEDIAINFO_FILE_CHANGED, mov));
-							} catch (IOException ex) {
-								/**/
-							}
+							if (new File(mov.getAbsolutePart(0)).length() != mov.getMediaInfo().getFilesize())
+								e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_MEDIAINFO_FILE_CHANGED, mov));
 						}
 					});
 
@@ -692,6 +703,24 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator {
 							isDiff(episode.getMediaInfo().getDurationInMinutes(), episode.getLength(), 0.33, 5),
 					episode -> DatabaseError.createSingle(DatabaseErrorType.ERROR_MEDIAINFO_LENGTH_MISMATCH, episode));
 
+			// Mediainfo attributes not match actual file
+			addEpisodeValidation(
+					DatabaseErrorType.ERROR_MEDIAINFO_FILE_ATTR_CHANGED,
+					o -> o.ValidateVideoFiles,
+					(episode, e) ->
+					{
+						if (episode.getMediaInfo().isSet()) {
+							try {
+								BasicFileAttributes attr = Files.readAttributes(new File(episode.getAbsolutePart()).toPath(), BasicFileAttributes.class);
+								boolean b = attr.creationTime().toMillis() != episode.getMediaInfo().getCDate();
+								boolean c = attr.lastModifiedTime().toMillis() != episode.getMediaInfo().getMDate();
+								if (b||c) e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_MEDIAINFO_FILE_ATTR_CHANGED, episode));
+							} catch (IOException ex) {
+								/**/
+							}
+						}
+					});
+
 			// Mediainfo does not match actual file
 			addEpisodeValidation(
 					DatabaseErrorType.ERROR_MEDIAINFO_FILE_CHANGED,
@@ -699,15 +728,8 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator {
 					(episode, e) ->
 					{
 						if (episode.getMediaInfo().isSet()) {
-							try {
-								BasicFileAttributes attr = Files.readAttributes(new File(episode.getAbsolutePart()).toPath(), BasicFileAttributes.class);
-								boolean a = new File(episode.getAbsolutePart()).length() != episode.getMediaInfo().getFilesize();
-								boolean b = attr.creationTime().toMillis() != episode.getMediaInfo().getCDate();
-								boolean c = attr.lastModifiedTime().toMillis() != episode.getMediaInfo().getMDate();
-								if (a||b||c) e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_MEDIAINFO_FILE_CHANGED, episode));
-							} catch (IOException ex) {
-								/**/
-							}
+							if (new File(episode.getAbsolutePart()).length() != episode.getMediaInfo().getFilesize())
+								e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_MEDIAINFO_FILE_CHANGED, episode));
 						}
 					});
 
@@ -762,7 +784,7 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator {
 
 			// Invalid Tag for episode
 			addEpisodeValidation(
-					DatabaseErrorType.ERROR_MEDIAINFO_FILE_CHANGED,
+					DatabaseErrorType.ERROR_TAG_NOT_VALID_ON_EPISODE,
 					o -> o.ValidateEpisodes,
 					(episode, e) ->
 					{

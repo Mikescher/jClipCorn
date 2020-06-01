@@ -1,33 +1,24 @@
 package de.jClipCorn.gui.frames.searchFrame;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-
-import javax.swing.Box;
-import javax.swing.DefaultListModel;
-import javax.swing.JFrame;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextField;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-
-import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguage;
-import org.apache.commons.lang.StringUtils;
-
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.database.databaseElement.CCSeries;
+import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguage;
 import de.jClipCorn.database.databaseElement.columnTypes.CCSingleOnlineReference;
 import de.jClipCorn.gui.frames.previewMovieFrame.PreviewMovieFrame;
 import de.jClipCorn.gui.frames.previewSeriesFrame.PreviewSeriesFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
+import org.apache.commons.lang.StringUtils;
+
+import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 public class SearchFrame extends JFrame {
 	private static final long serialVersionUID = 8249406636361562910L;
@@ -79,6 +70,7 @@ public class SearchFrame extends JFrame {
 				onUpdate();
 			}
 		});
+		edSearch.addActionListener((e) -> { onEnter(); });
 		pnTop.add(edSearch, BorderLayout.CENTER);
 		edSearch.setColumns(40);
 		
@@ -331,7 +323,7 @@ public class SearchFrame extends JFrame {
 			}
 		}
 	}
-	
+
 	private void onDblClick() {
 		if (lsMain.getSelectedIndex() >= 0)
 		{
@@ -340,6 +332,17 @@ public class SearchFrame extends JFrame {
 			if (v instanceof CCSeries)  PreviewSeriesFrame.show(this, (CCSeries)  v);
 			if (v instanceof CCSeason)  PreviewSeriesFrame.show(this, (CCSeason)  v);
 			if (v instanceof CCEpisode) PreviewSeriesFrame.show(this, (CCEpisode) v);
+		}
+	}
+
+	private void onEnter() {
+		if (lsMain.getModel().getSize() > 0)
+		{
+			Object v = lsMain.getModel().getElementAt(0);
+			if (v instanceof CCMovie)   { PreviewMovieFrame.show(this,  (CCMovie)   v); this.dispose(); }
+			if (v instanceof CCSeries)  { PreviewSeriesFrame.show(this, (CCSeries)  v); this.dispose(); }
+			if (v instanceof CCSeason)  { PreviewSeriesFrame.show(this, (CCSeason)  v); this.dispose(); }
+			if (v instanceof CCEpisode) { PreviewSeriesFrame.show(this, (CCEpisode) v); this.dispose(); }
 		}
 	}
 	

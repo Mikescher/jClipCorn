@@ -17,8 +17,7 @@ import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.event.*;
 
 public class SearchFrame extends JFrame {
 	private static final long serialVersionUID = 8249406636361562910L;
@@ -70,7 +69,13 @@ public class SearchFrame extends JFrame {
 				onUpdate();
 			}
 		});
-		edSearch.addActionListener((e) -> { onEnter(); });
+		edSearch.addActionListener((e) -> { onSearchFieldEnter(); });
+		edSearch.addKeyListener(new KeyAdapter() { @Override public void keyPressed(KeyEvent e)
+		{
+			super.keyPressed(e);
+			if (e.getKeyCode() == KeyEvent.VK_DOWN) onSearchFieldDown();
+			if (e.getKeyCode() == KeyEvent.VK_ESCAPE) dispose();
+		} });
 		pnTop.add(edSearch, BorderLayout.CENTER);
 		edSearch.setColumns(40);
 		
@@ -129,9 +134,25 @@ public class SearchFrame extends JFrame {
 				// nothing
 			}
 		});
+		lsMain.addKeyListener(new KeyAdapter() { @Override public void keyPressed(KeyEvent e)
+		{
+			if (e.getKeyCode() == KeyEvent.VK_UP && lsMain.getModel().getSize() > 1 && lsMain.getSelectedIndex() == 0)
+				onListUp();
+			else if (e.getKeyCode() == KeyEvent.VK_ENTER && lsMain.getSelectedIndex() != -1)
+				onListEnter();
+			else if (e.getKeyCode() == KeyEvent.VK_ESCAPE)
+				dispose();
+			else
+				super.keyPressed(e);
+		} });
 		scrollPane.setViewportView(lsMain);
 		
 		pack();
+
+		this.addWindowFocusListener(new WindowFocusListener() {
+			@Override public void windowGainedFocus(WindowEvent e) { }
+			@Override public void windowLostFocus(WindowEvent e)   { dispose(); }
+		});
 	}
 	
 	private void onUpdate() {
@@ -335,8 +356,8 @@ public class SearchFrame extends JFrame {
 		}
 	}
 
-	private void onEnter() {
-		if (lsMain.getModel().getSize() > 0)
+	private void onSearchFieldEnter() {
+		if (lsMain.getModel().getSize() == 1)
 		{
 			Object v = lsMain.getModel().getElementAt(0);
 			if (v instanceof CCMovie)   { PreviewMovieFrame.show(this,  (CCMovie)   v); this.dispose(); }
@@ -344,6 +365,37 @@ public class SearchFrame extends JFrame {
 			if (v instanceof CCSeason)  { PreviewSeriesFrame.show(this, (CCSeason)  v); this.dispose(); }
 			if (v instanceof CCEpisode) { PreviewSeriesFrame.show(this, (CCEpisode) v); this.dispose(); }
 		}
+		else if (lsMain.getModel().getSize() > 1)
+		{
+			lsMain.setSelectedIndex(0);
+			lsMain.requestFocus();
+		}
+	}
+
+	private void onSearchFieldDown()
+	{
+		if (lsMain.getModel().getSize() > 0)
+		{
+			lsMain.setSelectedIndex(0);
+			lsMain.requestFocus();
+		}
+	}
+
+	private void onListUp()
+	{
+		edSearch.requestFocus();
+		edSearch.select(edSearch.getText().length(), edSearch.getText().length());
+		lsMain.setSelectedIndex(-1);
+		lsMain.clearSelection();
+	}
+
+	private void onListEnter()
+	{
+		Object v = lsMain.getSelectedValue();
+		if (v instanceof CCMovie)   { PreviewMovieFrame.show(this,  (CCMovie)   v); this.dispose(); }
+		if (v instanceof CCSeries)  { PreviewSeriesFrame.show(this, (CCSeries)  v); this.dispose(); }
+		if (v instanceof CCSeason)  { PreviewSeriesFrame.show(this, (CCSeason)  v); this.dispose(); }
+		if (v instanceof CCEpisode) { PreviewSeriesFrame.show(this, (CCEpisode) v); this.dispose(); }
 	}
 	
 	private void addToList(CCMovie m) {

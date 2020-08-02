@@ -19,7 +19,7 @@ public enum CCHistoryTable implements ContinoousEnum<CCHistoryTable>
 	INFO(4,     "INFO",     DatabaseStructure.TAB_INFO,     Resources.ICN_TABLE_INFO),     //$NON-NLS-1$
 	SEASONS(5,  "SEASONS",  DatabaseStructure.TAB_SEASONS,  Resources.ICN_TABLE_SEASONS);  //$NON-NLS-1$
 
-	private static String[] _list = CCStreams.iterate(values()).map(CCHistoryTable::asString).toArray(new String[0]);
+	private static final String[] _list = CCStreams.iterate(values()).map(CCHistoryTable::asString).toArray(new String[0]);
 
 	public final int ID;
 	public final String Name;

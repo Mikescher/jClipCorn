@@ -60,7 +60,15 @@ public class DatabaseHistoryFrame extends JFrame {
 
 	private String _triggerError = Str.Empty;
 	private int _tcount;
+	private JSplitPane splitPane;
+	private ReadableTextField tfOldValue;
+	private ReadableTextField tfNewValue;
+	private JLabel lblNewLabel;
+	private JLabel lblNewLabel_1;
 
+	/**
+	 * @wbp.parser.constructor
+	 */
 	public DatabaseHistoryFrame(Component owner, CCMovieList mlist) {
 		super();
 		
@@ -106,7 +114,7 @@ public class DatabaseHistoryFrame extends JFrame {
 				FormSpecs.RELATED_GAP_COLSPEC,
 				FormSpecs.DEFAULT_COLSPEC,
 				FormSpecs.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("100dlu"), //$NON-NLS-1$
+				ColumnSpec.decode("100dlu:grow"), //$NON-NLS-1$
 				FormSpecs.RELATED_GAP_COLSPEC,
 				FormSpecs.DEFAULT_COLSPEC,
 				FormSpecs.RELATED_GAP_COLSPEC,
@@ -135,6 +143,10 @@ public class DatabaseHistoryFrame extends JFrame {
 				RowSpec.decode("1dlu:grow(2)"), //$NON-NLS-1$
 				FormSpecs.RELATED_GAP_ROWSPEC,
 				RowSpec.decode("1dlu:grow"), //$NON-NLS-1$
+				FormSpecs.RELATED_GAP_ROWSPEC,
+				FormSpecs.DEFAULT_ROWSPEC,
+				FormSpecs.RELATED_GAP_ROWSPEC,
+				FormSpecs.DEFAULT_ROWSPEC,
 				FormSpecs.RELATED_GAP_ROWSPEC,}));
 		
 		lblStatus = new JLabel(LocaleBundle.getString("DatabaseHistoryFrame.lblStatus")); //$NON-NLS-1$
@@ -203,13 +215,35 @@ public class DatabaseHistoryFrame extends JFrame {
 		progressBar = new JProgressBar();
 		contentPane.add(progressBar, "2, 14, 11, 1, fill, fill"); //$NON-NLS-1$
 		
-		tableEntries = new DatabaseHistoryTable(this);
-		contentPane.add(tableEntries, "2, 16, 12, 1, fill, fill"); //$NON-NLS-1$
-		tableEntries.autoResize();
+		splitPane = new JSplitPane();
+		splitPane.setContinuousLayout(true);
+		splitPane.setResizeWeight(0.5);
+		splitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
+		contentPane.add(splitPane, "2, 16, 11, 3, fill, fill"); //$NON-NLS-1$
 		
-		tableChanges = new DatabaseHistoryChangesTable();
-		contentPane.add(tableChanges, "2, 18, 11, 1, fill, fill"); //$NON-NLS-1$
+		lblNewLabel = new JLabel(LocaleBundle.getString("DatabaseHistoryFrame.Table.ColumnOld")); //$NON-NLS-1$
+		contentPane.add(lblNewLabel, "2, 20, right, fill"); //$NON-NLS-1$
+		
+		tfOldValue = new ReadableTextField();
+		contentPane.add(tfOldValue, "4, 20, 9, 1, fill, fill"); //$NON-NLS-1$
+		tfOldValue.setColumns(10);
+		
+		lblNewLabel_1 = new JLabel(LocaleBundle.getString("DatabaseHistoryFrame.Table.ColumnNew")); //$NON-NLS-1$
+		contentPane.add(lblNewLabel_1, "2, 22, right, fill"); //$NON-NLS-1$
+		
+		tfNewValue = new ReadableTextField();
+		contentPane.add(tfNewValue, "4, 22, 9, 1, fill, fill"); //$NON-NLS-1$
+		tfNewValue.setColumns(10);
+
+		tableChanges = new DatabaseHistoryChangesTable(tfOldValue, tfNewValue);
+		splitPane.setRightComponent(tableChanges);
+		
+		tableEntries = new DatabaseHistoryTable(this);
+		splitPane.setLeftComponent(tableEntries);
+
+		tableEntries.autoResize();
 		tableChanges.autoResize();
+		
 	}
 
 	private JPopupMenu getQueryPopupMenu() {

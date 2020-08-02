@@ -4,11 +4,21 @@ import de.jClipCorn.database.history.CCHistorySingleChange;
 import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleColumnPrototype;
 import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleTable;
 
+import javax.swing.text.JTextComponent;
 import java.util.ArrayList;
 import java.util.List;
 
 public class DatabaseHistoryChangesTable extends JCCSimpleTable<CCHistorySingleChange> {
 	private static final long serialVersionUID = -7175124665697003916L;
+
+	private final JTextComponent edValueOld;
+	private final JTextComponent edValueNew;
+	
+	public DatabaseHistoryChangesTable(JTextComponent tfOldValue, JTextComponent tfNewValue)
+	{
+		edValueOld = tfOldValue;
+		edValueNew = tfNewValue;
+	}
 
 	@Override
 	@SuppressWarnings("nls")
@@ -52,12 +62,16 @@ public class DatabaseHistoryChangesTable extends JCCSimpleTable<CCHistorySingleC
 
 	@Override
 	protected void OnSelectElement(CCHistorySingleChange element) {
-		// 
+		edValueOld.setVisible(element.OldValue != null);
+		edValueOld.setText((element.OldValue == null) ? "" : element.OldValue);
+
+		edValueNew.setVisible(element.NewValue != null);
+		edValueNew.setText((element.NewValue == null) ? "" : element.NewValue);
 	}
 
 	@Override
 	protected boolean isMultiselect() {
-		return true;
+		return false;
 	}
 
 	@Override

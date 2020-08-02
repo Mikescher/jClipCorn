@@ -33,7 +33,7 @@ public class ReadableTextField extends JTextField {
 	}
 	
 	private void setReadable() {
-		super.setEnabled(false);
+		super.setEnabled(true); super.setEditable(false);
 		setBackground(UIManager.getColor("TextField.background")); //$NON-NLS-1$;
 		setDisabledTextColor(UIManager.getColor("TextField.foreground")); //$NON-NLS-1$
 	}

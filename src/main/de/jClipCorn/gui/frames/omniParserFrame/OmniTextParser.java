@@ -1,11 +1,12 @@
 package de.jClipCorn.gui.frames.omniParserFrame;
 
+import de.jClipCorn.util.Str;
+import de.jClipCorn.util.helper.SimpleFileUtils;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
-
-import de.jClipCorn.util.helper.SimpleFileUtils;
 
 public class OmniTextParser {
 
@@ -217,17 +218,24 @@ public class OmniTextParser {
 				}
 			}
 			boolean succ = true;
-			try {
-				int value = Integer.parseInt(counter);
-				
-				if (value > prev) {
-					succ = true;
-					prev = value;
-				} else {
+			if (Str.isNullOrWhitespace(counter))
+			{
+				succ = false;
+			}
+			else
+			{
+				try {
+					int value = Integer.parseInt(counter);
+
+					if (value > prev) {
+						succ = true;
+						prev = value;
+					} else {
+						succ = false;
+					}
+				} catch (NumberFormatException e) {
 					succ = false;
 				}
-			} catch (NumberFormatException e) {
-				succ = false;
 			}
 			
 			if (! succ) {

@@ -139,10 +139,17 @@ public class SimpleFileUtils {
 
 	public static void copyWithProgress(File src, File dst, Func2to0<Long, Long> feedback) throws IOException
 	{
+		long fullsize = src.length();
+
+		if (PathFormatter.pathEqualsOSAware(src, dst))
+		{
+			feedback.invoke(0L, fullsize);
+			feedback.invoke(fullsize, fullsize);
+			return;
+		}
+
 		FileInputStream fis  = new FileInputStream(src);
 		FileOutputStream fos = new FileOutputStream(dst);
-
-		long fullsize = src.length();
 
 		byte[] buf = new byte[1024*1024*32];
 		int size = 0;

@@ -664,4 +664,18 @@ public class PathFormatter {
 	    }
 	    return true;
 	}
+
+	public static boolean pathEqualsOSAware(File a, File b)
+	{
+		try
+		{
+			if (ApplicationHelper.isWindows()) return a.getCanonicalPath().equalsIgnoreCase(b.getCanonicalPath());
+			return a.getCanonicalPath().equals(b.getCanonicalPath());
+		}
+		catch (IOException e)
+		{
+			if (ApplicationHelper.isWindows()) return a.getAbsolutePath().equalsIgnoreCase(b.getAbsolutePath());
+			return a.getAbsolutePath().equals(b.getAbsolutePath());
+		}
+	}
 }

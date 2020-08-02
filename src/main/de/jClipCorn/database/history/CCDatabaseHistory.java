@@ -242,7 +242,7 @@ public class CCDatabaseHistory {
 
 			if (table == CCHistoryTable.COVERS && Str.equals(field, "PREVIEW")) continue; //$NON-NLS-1$
 
-			CCCombinedHistoryEntry base = CCStreams.iterate(backlog).reverse().firstOrNull(p -> shouldCombine(p, table, id, field, action, timestamp));
+			CCCombinedHistoryEntry base = CCStreams.iterate(backlog).reverse().firstOrNull(p -> shouldCombine(p, table, id, field, action, timestamp, oldvalue));
 			if (base == null)
 			{
 				List<CCCombinedHistoryEntry> drop1 = CCStreams.iterate(backlog).filter(p -> p.Table == table && Str.equals(p.ID, id)).enumerate();
@@ -340,24 +340,20 @@ public class CCDatabaseHistory {
 		return result;
 	}
 
-	private boolean shouldCombine(CCCombinedHistoryEntry base, CCHistoryTable table, String id, String field, CCHistoryAction action, CCDateTime date)
+	private boolean shouldCombine(CCCombinedHistoryEntry base, CCHistoryTable table, String id, String field, CCHistoryAction action, CCDateTime date, String oldValue)
 	{
 		if (base.Table != table) return false;
 		if (!Str.equals(base.ID, id)) return false;
 
-		boolean a_ii = base.Action == CCHistoryAction.INSERT && action == CCHistoryAction.INSERT;
-		boolean a_uu = base.Action == CCHistoryAction.UPDATE && action == CCHistoryAction.UPDATE;
-		boolean a_rr = base.Action == CCHistoryAction.REMOVE && action == CCHistoryAction.REMOVE;
-		boolean a_iu = base.Action == CCHistoryAction.INSERT && action == CCHistoryAction.UPDATE;
-		boolean a_ri = base.Action == CCHistoryAction.REMOVE && action == CCHistoryAction.INSERT;
+		boolean a_ii = (base.Action == CCHistoryAction.INSERT && action == CCHistoryAction.INSERT);
+		boolean a_uu = (base.Action == CCHistoryAction.UPDATE && action == CCHistoryAction.UPDATE);
+		boolean a_rr = (base.Action == CCHistoryAction.REMOVE && action == CCHistoryAction.REMOVE);
+		boolean a_iu = (base.Action == CCHistoryAction.INSERT && action == CCHistoryAction.UPDATE);
+		boolean a_ri = (base.Action == CCHistoryAction.REMOVE && action == CCHistoryAction.INSERT);
 
 		if (a_ri)
 		{
-			if (table == CCHistoryTable.INFO && base.Changes.size() == 1 && Str.equals(base.Changes.get(0).Field, field)) {
-				// ok
-			} else {
-				return false;
-			}
+			if (! (table == CCHistoryTable.INFO && base.Changes.size() == 1 && Str.equals(base.Changes.get(0).Field, field))) return false;
 		}
 		else
 		{
@@ -366,11 +362,16 @@ public class CCDatabaseHistory {
 
 		int diff = CCDateTime.diffInSeconds(base.Timestamp2, date);
 
-		if (base.Action == CCHistoryAction.INSERT && Str.equals(field, "VIEWED") && diff > MERGE_SHORT_TIME) return false; //$NON-NLS-1$
+		if (base.Action == CCHistoryAction.INSERT && Str.equals(field, "VIEWED")         && diff > MERGE_SHORT_TIME) return false; //$NON-NLS-1$
 		if (base.Action == CCHistoryAction.INSERT && Str.equals(field, "VIEWED_HISTORY") && diff > MERGE_SHORT_TIME) return false; //$NON-NLS-1$
 
 		if (diff > MERGE_DIFF_TIME) return false;
 		if (CCDateTime.diffInSeconds(base.Timestamp1, date) > MERGE_MAX_TIME) return false;
+
+		if (a_iu)
+		{
+			if (!(Str.isNullOrEmpty(oldValue) || oldValue.equals("0") || oldValue.equals("-1") || oldValue.equals("1900-01-01"))) return false;
+		}
 
 		return true;
 	}

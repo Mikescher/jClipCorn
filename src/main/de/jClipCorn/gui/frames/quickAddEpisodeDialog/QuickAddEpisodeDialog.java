@@ -368,6 +368,8 @@ public class QuickAddEpisodeDialog extends JDialog {
 		File srcFile = new File(src);
 		File dstFile = new File(fullDst);
 
+		String imd = PathFormatter.getCCPath(PathFormatter.combine(dstFile.getParent(), srcFile.getName()));
+
 		CCDate adddate = CCDate.getCurrentDate();
 		CCDateTimeList history = CCDateTimeList.createEmpty();
 		CCTagList tags = CCTagList.EMPTY;
@@ -430,9 +432,13 @@ public class QuickAddEpisodeDialog extends JDialog {
 					newEp.setFilesize(filesize);
 					newEp.setAddDate(adddate);
 					newEp.setViewedHistory(history);
-					newEp.setPart(dst);
+					newEp.setPart(imd);
 					newEp.setTags(tags);
 					newEp.setLanguage(lang);
+					newEp.endUpdating();
+
+					newEp.beginUpdating();
+					newEp.setPart(dst);
 					newEp.endUpdating();
 
 					if (ucListener != null) ucListener.onUpdate(newEp);

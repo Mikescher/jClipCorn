@@ -26,8 +26,8 @@ public class ClipEpisodePopup extends ClipPopupMenu {
 	@SuppressWarnings("nls")
 	@Override
 	protected void init() {
-		addAction("PlayEpisode");
-		addAction("PlayEpisodeAnonymous");
+		addPlayAction(_episode, false);
+		addPlayAction(_episode, true);
 
 		if (CCProperties.getInstance().PROP_VLC_ROBOT_ENABLED.getValue() && !Str.isNullOrWhitespace(MoviePlayer.getVLCPath()))
 			addAction("QueueEpisodeInRobot");

@@ -129,13 +129,10 @@ public class CCActionElement {
 	}
 	
 	public List<CCActionElement> getAllChildren() {
-		List<CCActionElement> childs = new ArrayList<>();
-		
-		childs.addAll(children);
-		
-		for (int i = 0; i < children.size(); i++) {
-			childs.addAll(children.get(i).getAllChildren());
-		}
+
+		List<CCActionElement> childs = new ArrayList<>(children);
+
+		for (CCActionElement child : children) childs.addAll(child.getAllChildren());
 		
 		return childs;
 	}

@@ -11,6 +11,7 @@ import de.jClipCorn.properties.enumerations.*;
 import de.jClipCorn.properties.property.*;
 import de.jClipCorn.properties.property.CCEnumSetProperty.EnumSetValue;
 import de.jClipCorn.properties.property.CCPathProperty.CCPathPropertyMode;
+import de.jClipCorn.properties.types.NamedPathVar;
 import de.jClipCorn.properties.types.PathSyntaxVar;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.colorquantizer.ColorQuantizerMethod;
@@ -198,6 +199,11 @@ public class CCProperties {
 	public CCBoolProperty                                   PROP_VLC_ROBOT_KEEP_POSITION;
 	public CCPIntProperty                                   PROP_FOLDERLANG_IGNORE_PERC;
 	public CCEnumProperty<VLCRobotFrequency>                PROP_VLC_ROBOT_FREQUENCY;
+	public CCNamedPathProperty                              PROP_PLAY_ALT_PROG_1;
+	public CCNamedPathProperty                              PROP_PLAY_ALT_PROG_2;
+	public CCNamedPathProperty                              PROP_PLAY_ALT_PROG_3;
+	public CCNamedPathProperty                              PROP_PLAY_ALT_PROG_4;
+	public CCNamedPathProperty                              PROP_PLAY_ALT_PROG_5;
 
 	public boolean ARG_READONLY = false;
 	
@@ -308,14 +314,20 @@ public class CCProperties {
 		PROP_PREVIEWSERIES_SINGLETON            = new CCBoolProperty(CAT_SERIES,            this,   "PROP_PREVIEWSERIES_SINGLETON",             true);
 
 		PROP_PLAY_VLC_PATH                      = new CCPathProperty(CAT_PLAY,              this,   "PROP_PLAY_VLC_PATH",                       "",                                 "vlc.exe",       CCPathPropertyMode.FILES);
-		PROP_PLAY_MEDIAINFO_PATH                = new CCPathProperty(CAT_PLAY,              this,   "PROP_PLAY_MEDIAINFO_PATH",                 "",                                 "mediainfo.exe", CCPathPropertyMode.FILES);
-		PROP_PLAY_FFMPEG_PATH                   = new CCPathProperty(CAT_PLAY,              this,   "PROP_PLAY_FFMPEG_PATH",                    "",                                 "ffmpeg.exe",    CCPathPropertyMode.FILES);
-		PROP_PLAY_FFPROBE_PATH                  = new CCPathProperty(CAT_PLAY,              this,   "PROP_PLAY_FFPROBE_PATH",                   "",                                 "ffprobe.exe",   CCPathPropertyMode.FILES);
-		PROP_PLAY_MP4BOX_PATH                   = new CCPathProperty(CAT_PLAY,              this,   "PROP_PLAY_MP4BOX_PATH",                    "",                                 "mp4box.exe",    CCPathPropertyMode.FILES);
 		PROP_PLAY_VLC_FULLSCREEN                = new CCBoolProperty(CAT_PLAY,              this,   "PROP_PLAY_VLC_FULLSCREEN",                 false);
 		PROP_PLAY_VLC_AUTOPLAY                  = new CCBoolProperty(CAT_PLAY,              this,   "PROP_PLAY_VLC_AUTOPLAY",                   true);
 		PROP_PLAY_USESTANDARDONMISSINGVLC       = new CCBoolProperty(CAT_PLAY,              this,   "PROP_PLAY_USESTANDARDONMISSINGVLC",        true);
 		PROP_PLAY_VLCSINGLEINSTANCEMODE         = new CCBoolProperty(CAT_PLAY,              this,   "PROP_PLAY_VLCSINGLEINSTANCEMODE",          true);
+		PROP_PLAY_ALT_PROG_1                    = new CCNamedPathProperty(CAT_PLAY,         this,   "PROP_PLAY_ALT_PROG_1",                     NamedPathVar.EMPTY,                 ".exe",          CCPathPropertyMode.FILES);
+		PROP_PLAY_ALT_PROG_2                    = new CCNamedPathProperty(CAT_PLAY,         this,   "PROP_PLAY_ALT_PROG_2",                     NamedPathVar.EMPTY,                 ".exe",          CCPathPropertyMode.FILES);
+		PROP_PLAY_ALT_PROG_3                    = new CCNamedPathProperty(CAT_PLAY,         this,   "PROP_PLAY_ALT_PROG_3",                     NamedPathVar.EMPTY,                 ".exe",          CCPathPropertyMode.FILES);
+		PROP_PLAY_ALT_PROG_4                    = new CCNamedPathProperty(CAT_PLAY,         this,   "PROP_PLAY_ALT_PROG_4",                     NamedPathVar.EMPTY,                 ".exe",          CCPathPropertyMode.FILES);
+		PROP_PLAY_ALT_PROG_5                    = new CCNamedPathProperty(CAT_PLAY,         this,   "PROP_PLAY_ALT_PROG_5",                     NamedPathVar.EMPTY,                 ".exe",          CCPathPropertyMode.FILES);
+
+		PROP_PLAY_MEDIAINFO_PATH                = new CCPathProperty(CAT_PLAY,              this,   "PROP_PLAY_MEDIAINFO_PATH",                 "",                                 "mediainfo.exe", CCPathPropertyMode.FILES);
+		PROP_PLAY_FFMPEG_PATH                   = new CCPathProperty(CAT_PLAY,              this,   "PROP_PLAY_FFMPEG_PATH",                    "",                                 "ffmpeg.exe",    CCPathPropertyMode.FILES);
+		PROP_PLAY_FFPROBE_PATH                  = new CCPathProperty(CAT_PLAY,              this,   "PROP_PLAY_FFPROBE_PATH",                   "",                                 "ffprobe.exe",   CCPathPropertyMode.FILES);
+		PROP_PLAY_MP4BOX_PATH                   = new CCPathProperty(CAT_PLAY,              this,   "PROP_PLAY_MP4BOX_PATH",                    "",                                 "mp4box.exe",    CCPathPropertyMode.FILES);
 
 		PROP_BACKUP_CREATEBACKUPS               = new CCBoolProperty(CAT_BACKUP,            this,   "PROP_BACKUP_CREATEBACKUPS",                false);
 		PROP_BACKUP_FOLDERNAME                  = new CCStringProperty(CAT_BACKUP,          this,   "PROP_BACKUP_FOLDERNAME",                   "jClipCorn_backup");
@@ -576,5 +588,15 @@ public class CCProperties {
 		hs.add(ImageSearchImplementation.IMDB_COVER);
 		hs.add(ImageSearchImplementation.IMDB_SEC_COVER);
 		return hs;
+	}
+
+	public List<NamedPathVar> getAlternativeMediaPlayers() {
+		var r = new ArrayList<NamedPathVar>();
+		if (!PROP_PLAY_ALT_PROG_1.getValue().isEmpty()) r.add(PROP_PLAY_ALT_PROG_1.getValue());
+		if (!PROP_PLAY_ALT_PROG_2.getValue().isEmpty()) r.add(PROP_PLAY_ALT_PROG_2.getValue());
+		if (!PROP_PLAY_ALT_PROG_3.getValue().isEmpty()) r.add(PROP_PLAY_ALT_PROG_3.getValue());
+		if (!PROP_PLAY_ALT_PROG_4.getValue().isEmpty()) r.add(PROP_PLAY_ALT_PROG_4.getValue());
+		if (!PROP_PLAY_ALT_PROG_5.getValue().isEmpty()) r.add(PROP_PLAY_ALT_PROG_5.getValue());
+		return r;
 	}
 }

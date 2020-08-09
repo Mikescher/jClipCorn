@@ -10,6 +10,7 @@ import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.mainFrame.MainFrame;
 import de.jClipCorn.properties.CCProperties;
+import de.jClipCorn.properties.types.NamedPathVar;
 import de.jClipCorn.util.LargeMD5Calculator;
 import de.jClipCorn.util.MoviePlayer;
 import de.jClipCorn.util.Str;
@@ -448,8 +449,15 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 
 	@Override
 	public void play(boolean updateViewedAndHistory) {
-		MoviePlayer.play(this);
-		
+		MoviePlayer.play(this, null);
+
+		if (updateViewedAndHistory) updateViewedAndHistoryFromUI();
+	}
+
+	@Override
+	public void play(boolean updateViewedAndHistory, NamedPathVar player) {
+		MoviePlayer.play(this, player);
+
 		if (updateViewedAndHistory) updateViewedAndHistoryFromUI();
 	}
 

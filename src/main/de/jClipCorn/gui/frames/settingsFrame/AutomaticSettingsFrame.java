@@ -1,22 +1,13 @@
 package de.jClipCorn.gui.frames.settingsFrame;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.swing.*;
-
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.FormSpecs;
 import com.jgoodies.forms.layout.RowSpec;
-
 import de.jClipCorn.Main;
 import de.jClipCorn.gui.frames.extendedSettingsFrame.ExtendedSettingsFrame;
-import de.jClipCorn.gui.mainFrame.MainFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.gui.mainFrame.MainFrame;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.CCPropertyCategory;
@@ -25,6 +16,11 @@ import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.helper.ExtendedFocusTraversalOnArray;
 import de.jClipCorn.util.helper.LookAndFeelManager;
 import de.jClipCorn.util.helper.SwingUtils;
+
+import javax.swing.*;
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class AutomaticSettingsFrame extends JFrame {
 	private static final long serialVersionUID = 4681197289662529891L;
@@ -166,16 +162,16 @@ public abstract class AutomaticSettingsFrame extends JFrame {
 		for (final CCProperty<Object> p : properties.getPropertyList()) {
 			if (p.getCategory().equals(category)) {
 				JLabel info = new JLabel(p.getDescription());
-				pnlTab.add(info, "2, " + c*2 + ", right, default"); //$NON-NLS-1$ //$NON-NLS-2$
+				pnlTab.add(info, "2, " + c*2 + ", right, " + p.getLabelRowAlign()); //$NON-NLS-1$ //$NON-NLS-2$
 
 				final Component comp1 = p.getComponent();
-				pnlTab.add(comp1, "4, " + c*2 + ", fill, default"); //$NON-NLS-1$ //$NON-NLS-2$
+				pnlTab.add(comp1, "4, " + c*2 + ", fill, " + p.getComponent1RowAlign()); //$NON-NLS-1$ //$NON-NLS-2$
 				tabOrder.add(comp1);
 				
 				Component comp2 = p.getSecondaryComponent(comp1);
 				
 				if (comp2 != null) {
-					pnlTab.add(comp2, "6, " + c*2 + ", left, default"); //$NON-NLS-1$ //$NON-NLS-2$
+					pnlTab.add(comp2, "6, " + c*2 + ", left, " + p.getComponent2RowAlign()); //$NON-NLS-1$ //$NON-NLS-2$
 					tabOrder.add(comp2);
 				}
 

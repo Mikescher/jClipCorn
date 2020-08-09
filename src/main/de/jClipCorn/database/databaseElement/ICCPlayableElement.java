@@ -2,6 +2,7 @@ package de.jClipCorn.database.databaseElement;
 
 import de.jClipCorn.database.databaseElement.columnTypes.*;
 import de.jClipCorn.database.util.CCQualityCategory;
+import de.jClipCorn.properties.types.NamedPathVar;
 import de.jClipCorn.util.datetime.CCDate;
 
 import java.util.List;
@@ -30,6 +31,7 @@ public interface ICCPlayableElement {
 	void setMediaInfo(CCMediaInfo minfo);
 
 	void play(boolean updateViewedAndHistory);
+	void play(boolean updateViewedAndHistory, NamedPathVar player);
 	void updateViewedAndHistoryFromUI();
 
 	CCGenreList getGenresFromSelfOrParent();

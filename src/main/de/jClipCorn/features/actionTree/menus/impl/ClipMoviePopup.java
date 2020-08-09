@@ -25,8 +25,8 @@ public class ClipMoviePopup extends ClipPopupMenu {
 	@SuppressWarnings("nls")
 	@Override
 	protected void init() {
-		addAction("PlayMovie");
-		addAction("PlayMovieAnonymous");
+		addPlayAction(_movie, false);
+		addPlayAction(_movie, true);
 
 		if (CCProperties.getInstance().PROP_VLC_ROBOT_ENABLED.getValue() && !Str.isNullOrWhitespace(MoviePlayer.getVLCPath()))
 		{

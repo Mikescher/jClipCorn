@@ -1,10 +1,10 @@
 package de.jClipCorn.properties.property;
 
-import java.awt.Component;
-
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.CCPropertyCategory;
+
+import java.awt.*;
 
 public abstract class CCProperty<T extends Object> {
 	protected final CCProperties properties;
@@ -79,4 +79,8 @@ public abstract class CCProperty<T extends Object> {
 	public abstract Component getComponent();
 	public abstract void setComponentValueToValue(Component c, T val);
 	public abstract T getComponentValue(Component c);
+
+	public String getLabelRowAlign()      { return "default"; } //$NON-NLS-1$
+	public String getComponent1RowAlign() { return "default"; } //$NON-NLS-1$
+	public String getComponent2RowAlign() { return "default"; } //$NON-NLS-1$
 }

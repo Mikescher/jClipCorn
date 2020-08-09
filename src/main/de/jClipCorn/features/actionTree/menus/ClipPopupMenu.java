@@ -1,6 +1,8 @@
 package de.jClipCorn.features.actionTree.menus;
 
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
+import de.jClipCorn.database.databaseElement.CCMovie;
+import de.jClipCorn.database.databaseElement.ICCPlayableElement;
 import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReferenceList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCSingleOnlineReference;
 import de.jClipCorn.features.actionTree.ActionSource;
@@ -11,6 +13,7 @@ import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.gui.frames.previewSeriesFrame.PreviewSeriesFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.MultiSizeIconRef;
+import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.helper.KeyStrokeUtil;
 import de.jClipCorn.util.lambda.Func0to0;
 import de.jClipCorn.util.listener.ActionCallbackListener;
@@ -150,6 +153,44 @@ public abstract class ClipPopupMenu extends JPopupMenu {
 				}
 
 				menu.add(submenu);
+			}
+		}
+	}
+
+	@SuppressWarnings("nls")
+	protected void addPlayAction(ICCPlayableElement src, boolean anonymous)
+	{
+		var alts = CCProperties.getInstance().getAlternativeMediaPlayers();
+
+		var actname = (src instanceof CCMovie)
+				? (anonymous ? "PlayMovieAnonymous"   : "PlayMovie"  )
+				: (anonymous ? "PlayEpisodeAnonymous" : "PlayEpisode");
+
+		if (alts.size() == 0)
+		{
+			addAction(actname);
+		}
+		else
+		{
+			var act = CCActionTree.getInstance().find(actname);
+
+			JMenu menu = new JMenu(act.getCaption());
+			add(menu);
+			menu.setIcon(act.getSmallIcon());
+			{
+				JMenuItem subitem = menu.add("VLC Media Player");
+				subitem.addActionListener(e -> act.execute(getSourceFrame(), ActionSource.POPUP_MENU, getSourceObject(), getSourceListener()));
+				subitem.setIcon(act.getSmallIcon());
+				menu.add(subitem);
+			}
+
+			menu.addSeparator();
+
+			for (var ref : alts)
+			{
+				JMenuItem subitem = menu.add(ref.getCaption());
+				subitem.addActionListener(arg0 -> src.play(!anonymous, ref));
+				menu.add(subitem);
 			}
 		}
 	}

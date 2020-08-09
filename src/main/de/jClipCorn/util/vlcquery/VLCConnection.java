@@ -293,7 +293,7 @@ public class VLCConnection {
 		}
 
 		try {
-			List<String> parameters = MoviePlayer.getParameters(vlc);
+			List<String> parameters = MoviePlayer.getParameters(vlc, null);
 
 			ProcessBuilder pb = new ProcessBuilder(parameters);
 			pb.redirectOutput(new File(ApplicationHelper.getNullFile()));

@@ -23,14 +23,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 
 public class TMDBParser extends Metadataparser {
-	private final static String API_KEY = new String(Base64.getDecoder().decode("M2ZkYWMyNzcxYWY4ZjZlZjljNWY0ZDc4ZmEyOWRjZDUAAAA"), Charset.forName("UTF-8")).trim();  //$NON-NLS-1$//$NON-NLS-2$
+	private final static String API_KEY = new String(Base64.getDecoder().decode("M2ZkYWMyNzcxYWY4ZjZlZjljNWY0ZDc4ZmEyOWRjZDUAAAA"), StandardCharsets.UTF_8).trim();  //$NON-NLS-1$//$NON-NLS-2$
 	private final static String URL_BASE = "http://api.themoviedb.org/3/"; //$NON-NLS-1$
 
 	private final static String URL_IMAGE_BASE = "http://image.tmdb.org/t/p/original"; //$NON-NLS-1$

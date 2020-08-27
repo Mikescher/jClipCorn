@@ -45,6 +45,7 @@ import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.helper.FileChooserHelper;
 import de.jClipCorn.util.listener.UpdateCallbackListener;
+import de.jClipCorn.util.stream.CCStreams;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import javax.swing.*;
@@ -183,6 +184,7 @@ public class EditSeriesFrame extends JFrame implements WindowListener {
 	private JMediaInfoControl mediaInfoControl;
 	private JPanel panel_5;
 	private JButton btnParseOnline;
+	private JButton btnEditSelSerInBatch;
 
 
 	/**
@@ -501,7 +503,7 @@ public class EditSeriesFrame extends JFrame implements WindowListener {
 		pnlEditSeriesInner.add(panel_3, "1, 17, 7, 1, fill, fill"); //$NON-NLS-1$
 		panel_3.setLayout(new FormLayout(new ColumnSpec[] {
 				FormSpecs.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("default:grow"), //$NON-NLS-1$
+				ColumnSpec.decode("default:grow"),
 				FormSpecs.RELATED_GAP_COLSPEC,
 				FormSpecs.DEFAULT_COLSPEC,},
 			new RowSpec[] {
@@ -512,14 +514,16 @@ public class EditSeriesFrame extends JFrame implements WindowListener {
 				FormSpecs.RELATED_GAP_ROWSPEC,
 				FormSpecs.DEFAULT_ROWSPEC,
 				FormSpecs.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("max(14dlu;default)"), //$NON-NLS-1$
+				RowSpec.decode("max(14dlu;default)"),
+				FormSpecs.RELATED_GAP_ROWSPEC,
+				FormSpecs.DEFAULT_ROWSPEC,
 				FormSpecs.RELATED_GAP_ROWSPEC,
 				FormSpecs.DEFAULT_ROWSPEC,
 				FormSpecs.RELATED_GAP_ROWSPEC,
 				RowSpec.decode("default:grow"),})); //$NON-NLS-1$
 
 		scrollPane = new JScrollPane();
-		panel_3.add(scrollPane, "2, 2, 1, 11"); //$NON-NLS-1$
+		panel_3.add(scrollPane, "2, 2, 1, 13"); //$NON-NLS-1$
 
 		lsSeasons = new JList<>();
 		lsSeasons.setCellRenderer(new HFixListCellRenderer());
@@ -538,8 +542,12 @@ public class EditSeriesFrame extends JFrame implements WindowListener {
 			(new BatchEditFrame(this, series, o -> updateSeriesPanel())).setVisible(true);
 		});
 		
+		btnEditSelSerInBatch = new JButton(LocaleBundle.getString("EditSeriesFrame.btnBatchEditSelection.text")); //$NON-NLS-1$
+		panel_3.add(btnEditSelSerInBatch, "4, 8"); //$NON-NLS-1$
+		btnEditSelSerInBatch.addActionListener(e -> batchEditSelectedSeasons());
+		
 		btnRemoveSeason = new JButton(LocaleBundle.getString("EditSeriesFrame.btnRemoveSeason.text")); //$NON-NLS-1$
-		panel_3.add(btnRemoveSeason, "4, 10, fill, fill"); //$NON-NLS-1$
+		panel_3.add(btnRemoveSeason, "4, 12, fill, fill"); //$NON-NLS-1$
 		btnRemoveSeason.addActionListener(e -> removeSeason());
 		btnAddSeason.addActionListener(e -> addSeason());
 		btnAddEmptySeason.addActionListener(e -> addEmptySeason());
@@ -1136,6 +1144,17 @@ public class EditSeriesFrame extends JFrame implements WindowListener {
 			return series.getSeasonByArrayIndex(sel);
 		}
 	}
+
+	private List<CCSeason> getSelectedSeasons() {
+		List<CCSeason> result = new ArrayList<>();
+
+		for (int idx : lsSeasons.getSelectedIndices()) {
+			result.add(series.getSeasonByArrayIndex(idx));
+
+		}
+
+		return result;
+	}
 	
 	private CCEpisode getSelectedEpisode() {
 		CCSeason season = getSelectedSeason();
@@ -1503,6 +1522,18 @@ public class EditSeriesFrame extends JFrame implements WindowListener {
 		if (selection.size() == 0) return;
 		
 		(new BatchEditFrame(this, season, selection, o -> updateSeasonPanel(false))).setVisible(true);
+	}
+	
+	private void batchEditSelectedSeasons() {
+		var season = getSelectedSeasons();
+		
+		if (_currentEpisodeMemory != null && _isDirtyEpisode) if (!DialogHelper.showLocaleYesNoDefaultNo(EditSeriesFrame.this, "Dialogs.ChangeEpisodeButDirty")) return; //$NON-NLS-1$
+		if (_isDirtySeason) if (!DialogHelper.showLocaleYesNoDefaultNo(EditSeriesFrame.this, "Dialogs.ChangeSeasonButDirty")) return; //$NON-NLS-1$
+		
+		List<CCEpisode> selection = CCStreams.iterate(season).map(CCSeason::getEpisodeList).flatten(CCStreams::iterate).toList();
+		if (selection.size() == 0) return;
+		
+		(new BatchEditFrame(this, series, selection, o -> updateSeasonPanel(false))).setVisible(true);
 	}
 	
 	private void multiAddEpisodes() {

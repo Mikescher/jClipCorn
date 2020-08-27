@@ -40,7 +40,6 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
-import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -118,7 +117,7 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 	private JButton btnSideAutoLang;
 	private JButton btnSideAutoLen;
 	private JPanel pnlInfo;
-	private JPanel pnlEdit;
+	private JPanel pnlTitleEdit;
 	private JPanel panel_1;
 	private JLabel lblDirtyTitle;
 	private JLabel lblDirtyEpisodeNumber;
@@ -142,13 +141,46 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 	private JLabel lblNewLabel_2;
 	private JLabel lblDirtyHistory;
 	private DateTimeListEditor ctrlHistory;
+	private JButton btnSidePart_01;
+	private JSpinner spnSidePart_01;
+	private JButton btnSidePart_02;
+	private JSpinner spnSidePart_02;
+	private JTextField edSidePart_01;
+	private JButton btnSidePart_03;
+	private JTextField edSidePart_02;
+	private JTextField edSidePart_R1;
+	private JButton btnRegexReplacePart;
+	private JTextField edSidePart_R2;
+	private JButton btnSidePart_04;
+	private JTextField edSidePart_03;
+	private JButton btnSidePart_05;
+	private JTextField edSidePart_04;
+	private JButton btnSidePart_06;
+	private JButton btnSidePart_07;
+	private JSpinner spnSidePart_03;
+	private JSpinner spnSidePart_04;
+	private JTextField edSidePart_05;
+	private JButton btnSidePart_08;
+	private final UpdateCallbackListener listener;
+	private JTabbedPane tabbedPane;
+	private JPanel pnlPartEdit;
+	private JPanel pnlMiscEdit;
+	private JTextField edSide_R1;
+	private JTextField edSide_R2;
+	private JButton btnRegexReplace;
+	private JButton btnPathConvert;
+	private JButton btnPathConvertBack;
+	private JButton btnNewButton;
+	private JButton btnNewButton_1;
+	private JButton btnNewButton_2;
+	private JButton btnNewButton_3;
+
 
 	private final IEpisodeOwner target;
 	private final List<BatchEditEpisodeData> data;
 	private final JFileChooser videoFileChooser;
 	private final JFileChooser massVideoFileChooser;
 
-	private final UpdateCallbackListener listener;
 
 	/**
 	 * @wbp.parser.constructor
@@ -162,9 +194,9 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 		this.target = ss;
 		this.listener = ucl;
 		this.data = (eps!= null) ? CCStreams.iterate(eps).map(BatchEditEpisodeData::new).enumerate() : ss.iteratorEpisodes().map(BatchEditEpisodeData::new).enumerate();
-		
+
 		String cPathStart = ss.getSeries().getCommonPathStart(true);
-		
+
 		this.videoFileChooser     = new JFileChooser(PathFormatter.fromCCPath(cPathStart));
 		this.massVideoFileChooser = new JFileChooser(PathFormatter.fromCCPath(cPathStart));
 
@@ -184,20 +216,20 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 				FormSpecs.UNRELATED_GAP_COLSPEC,
 				ColumnSpec.decode("200dlu"), //$NON-NLS-1$
 				FormSpecs.UNRELATED_GAP_COLSPEC,
-				ColumnSpec.decode("250dlu"), //$NON-NLS-1$
+				ColumnSpec.decode("250dlu:grow"), //$NON-NLS-1$
 				FormSpecs.UNRELATED_GAP_COLSPEC,
-				ColumnSpec.decode("default:grow"), //$NON-NLS-1$
+				ColumnSpec.decode("300dlu"), //$NON-NLS-1$
 				FormSpecs.UNRELATED_GAP_COLSPEC,},
-			new RowSpec[] {
-				FormSpecs.PARAGRAPH_GAP_ROWSPEC,
-				RowSpec.decode("23px"), //$NON-NLS-1$
-				FormSpecs.UNRELATED_GAP_ROWSPEC,
-				RowSpec.decode("default:grow"), //$NON-NLS-1$
-				FormSpecs.UNRELATED_GAP_ROWSPEC,
-				RowSpec.decode("23px"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,}));
+				new RowSpec[] {
+						FormSpecs.PARAGRAPH_GAP_ROWSPEC,
+						RowSpec.decode("23px"), //$NON-NLS-1$
+						FormSpecs.UNRELATED_GAP_ROWSPEC,
+						RowSpec.decode("default:grow"), //$NON-NLS-1$
+						FormSpecs.UNRELATED_GAP_ROWSPEC,
+						RowSpec.decode("23px"), //$NON-NLS-1$
+						FormSpecs.RELATED_GAP_ROWSPEC,
+						FormSpecs.DEFAULT_ROWSPEC,
+						FormSpecs.RELATED_GAP_ROWSPEC,}));
 
 		scrollPane = new JScrollPane();
 		getContentPane().add(scrollPane, "2, 4, fill, fill"); //$NON-NLS-1$
@@ -210,19 +242,19 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 
 		btnOK = new JButton(LocaleBundle.getString("UIGeneric.btnOK.text")); //$NON-NLS-1$
 		btnOK.addActionListener(e -> onOKClicked(true));
-		
+
 		panel = new JPanel();
 		getContentPane().add(panel, "2, 6, fill, fill"); //$NON-NLS-1$
 		panel.setLayout(new FormLayout(new ColumnSpec[] {
 				ColumnSpec.decode("default:grow"), //$NON-NLS-1$
 				FormSpecs.UNRELATED_GAP_COLSPEC,
 				ColumnSpec.decode("default:grow"),}, //$NON-NLS-1$
-			new RowSpec[] {
-				RowSpec.decode("23px"),})); //$NON-NLS-1$
-		
+				new RowSpec[] {
+						RowSpec.decode("23px"),})); //$NON-NLS-1$
+
 		btnOmniparser = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnOmniParser.text")); //$NON-NLS-1$
 		panel.add(btnOmniparser, "1, 1, fill, fill"); //$NON-NLS-1$
-		
+
 		btnAutoMeta = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnAutoMeta.text")); //$NON-NLS-1$
 		panel.add(btnAutoMeta, "3, 1, fill, fill"); //$NON-NLS-1$
 		btnAutoMeta.addActionListener(arg0 -> autoMetaDataCalc());
@@ -230,13 +262,446 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 			OmniParserFrame oframe = new OmniParserFrame(BatchEditFrame.this, BatchEditFrame.this, getTitleList(), getCommonFolderPathStart(), Str.Empty, false);
 			oframe.setVisible(true);
 		});
+
+		tabbedPane = new JTabbedPane(JTabbedPane.BOTTOM);
+		getContentPane().add(tabbedPane, "6, 2, 1, 7, fill, fill"); //$NON-NLS-1$
+
+		pnlTitleEdit = new JPanel();
+		pnlTitleEdit.setBorder(null);
+		tabbedPane.addTab(LocaleBundle.getString("BatchEditFrame.TabTitle"), null, pnlTitleEdit, null); //$NON-NLS-1$
+		pnlTitleEdit.setLayout(new FormLayout(new ColumnSpec[] {
+				FormSpecs.RELATED_GAP_COLSPEC,
+				ColumnSpec.decode("10dlu:grow(2)"), //$NON-NLS-1$
+				FormSpecs.RELATED_GAP_COLSPEC,
+				ColumnSpec.decode("10dlu:grow"), //$NON-NLS-1$
+				FormSpecs.RELATED_GAP_COLSPEC,
+				ColumnSpec.decode("10dlu:grow"), //$NON-NLS-1$
+				FormSpecs.RELATED_GAP_COLSPEC,
+				ColumnSpec.decode("10dlu:grow"), //$NON-NLS-1$
+				FormSpecs.RELATED_GAP_COLSPEC,
+				ColumnSpec.decode("10dlu:grow"), //$NON-NLS-1$
+				FormSpecs.RELATED_GAP_COLSPEC,},
+				new RowSpec[] {
+						FormSpecs.RELATED_GAP_ROWSPEC,
+						RowSpec.decode("22px"), //$NON-NLS-1$
+						FormSpecs.RELATED_GAP_ROWSPEC,
+						RowSpec.decode("22px"), //$NON-NLS-1$
+						FormSpecs.RELATED_GAP_ROWSPEC,
+						RowSpec.decode("11px"), //$NON-NLS-1$
+						FormSpecs.RELATED_GAP_ROWSPEC,
+						RowSpec.decode("22px"), //$NON-NLS-1$
+						FormSpecs.RELATED_GAP_ROWSPEC,
+						FormSpecs.DEFAULT_ROWSPEC,
+						FormSpecs.RELATED_GAP_ROWSPEC,
+						RowSpec.decode("11px"), //$NON-NLS-1$
+						FormSpecs.RELATED_GAP_ROWSPEC,
+						RowSpec.decode("22px"), //$NON-NLS-1$
+						FormSpecs.RELATED_GAP_ROWSPEC,
+						RowSpec.decode("22px"), //$NON-NLS-1$
+						FormSpecs.RELATED_GAP_ROWSPEC,
+						RowSpec.decode("22px"), //$NON-NLS-1$
+						FormSpecs.RELATED_GAP_ROWSPEC,
+						RowSpec.decode("11px"), //$NON-NLS-1$
+						FormSpecs.RELATED_GAP_ROWSPEC,
+						RowSpec.decode("22px"), //$NON-NLS-1$
+						FormSpecs.RELATED_GAP_ROWSPEC,
+						RowSpec.decode("11px"), //$NON-NLS-1$
+						FormSpecs.RELATED_GAP_ROWSPEC,
+						RowSpec.decode("22px"), //$NON-NLS-1$
+						FormSpecs.RELATED_GAP_ROWSPEC,
+						RowSpec.decode("22px"), //$NON-NLS-1$
+						FormSpecs.RELATED_GAP_ROWSPEC,
+						RowSpec.decode("22px"), //$NON-NLS-1$
+						FormSpecs.RELATED_GAP_ROWSPEC,
+						RowSpec.decode("22px"), //$NON-NLS-1$
+						FormSpecs.RELATED_GAP_ROWSPEC,
+						RowSpec.decode("22px"), //$NON-NLS-1$
+						FormSpecs.RELATED_GAP_ROWSPEC,
+						RowSpec.decode("22px"), //$NON-NLS-1$
+						FormSpecs.RELATED_GAP_ROWSPEC,
+						RowSpec.decode("22px"), //$NON-NLS-1$
+						FormSpecs.RELATED_GAP_ROWSPEC,
+						RowSpec.decode("pref:grow"), //$NON-NLS-1$
+						FormSpecs.RELATED_GAP_ROWSPEC,
+						RowSpec.decode("22px"), //$NON-NLS-1$
+						FormSpecs.RELATED_GAP_ROWSPEC,
+						RowSpec.decode("22px"), //$NON-NLS-1$
+						FormSpecs.RELATED_GAP_ROWSPEC,
+						RowSpec.decode("22px"), //$NON-NLS-1$
+						FormSpecs.RELATED_GAP_ROWSPEC,}));
+
+		pnlPartEdit = new JPanel();
+		pnlPartEdit.setBorder(null);
+		tabbedPane.addTab(LocaleBundle.getString("BatchEditFrame.TabPath"), null, pnlPartEdit, null); //$NON-NLS-1$
+		pnlPartEdit.setLayout(new FormLayout(new ColumnSpec[] {
+				FormSpecs.RELATED_GAP_COLSPEC,
+				ColumnSpec.decode("10dlu:grow(2)"), //$NON-NLS-1$
+				FormSpecs.RELATED_GAP_COLSPEC,
+				ColumnSpec.decode("10dlu:grow"), //$NON-NLS-1$
+				FormSpecs.RELATED_GAP_COLSPEC,
+				ColumnSpec.decode("10dlu:grow"), //$NON-NLS-1$
+				FormSpecs.RELATED_GAP_COLSPEC,
+				ColumnSpec.decode("10dlu:grow"), //$NON-NLS-1$
+				FormSpecs.RELATED_GAP_COLSPEC,
+				ColumnSpec.decode("10dlu:grow"), //$NON-NLS-1$
+				FormSpecs.RELATED_GAP_COLSPEC,},
+				new RowSpec[] {
+						FormSpecs.RELATED_GAP_ROWSPEC,
+						FormSpecs.DEFAULT_ROWSPEC,
+						FormSpecs.RELATED_GAP_ROWSPEC,
+						RowSpec.decode("11px"), //$NON-NLS-1$
+						FormSpecs.RELATED_GAP_ROWSPEC,
+						FormSpecs.DEFAULT_ROWSPEC,
+						FormSpecs.RELATED_GAP_ROWSPEC,
+						FormSpecs.DEFAULT_ROWSPEC,
+						FormSpecs.RELATED_GAP_ROWSPEC,
+						FormSpecs.DEFAULT_ROWSPEC,
+						FormSpecs.RELATED_GAP_ROWSPEC,
+						FormSpecs.DEFAULT_ROWSPEC,
+						FormSpecs.RELATED_GAP_ROWSPEC,
+						RowSpec.decode("11px"), //$NON-NLS-1$
+						FormSpecs.RELATED_GAP_ROWSPEC,
+						RowSpec.decode("22px"), //$NON-NLS-1$
+						FormSpecs.RELATED_GAP_ROWSPEC,
+						RowSpec.decode("22px"), //$NON-NLS-1$
+						FormSpecs.RELATED_GAP_ROWSPEC,
+						RowSpec.decode("11px"), //$NON-NLS-1$
+						FormSpecs.RELATED_GAP_ROWSPEC,
+						RowSpec.decode("22px"), //$NON-NLS-1$
+						FormSpecs.RELATED_GAP_ROWSPEC,
+						FormSpecs.DEFAULT_ROWSPEC,
+						FormSpecs.RELATED_GAP_ROWSPEC,
+						RowSpec.decode("11px"), //$NON-NLS-1$
+						FormSpecs.RELATED_GAP_ROWSPEC,
+						RowSpec.decode("22px"), //$NON-NLS-1$
+						FormSpecs.RELATED_GAP_ROWSPEC,
+						RowSpec.decode("22px"), //$NON-NLS-1$
+						FormSpecs.RELATED_GAP_ROWSPEC,
+						RowSpec.decode("22px"), //$NON-NLS-1$
+						FormSpecs.RELATED_GAP_ROWSPEC,
+						RowSpec.decode("11px"), //$NON-NLS-1$
+						FormSpecs.RELATED_GAP_ROWSPEC,
+						RowSpec.decode("22px"), //$NON-NLS-1$
+						FormSpecs.RELATED_GAP_ROWSPEC,
+						RowSpec.decode("11px"), //$NON-NLS-1$
+						FormSpecs.RELATED_GAP_ROWSPEC,
+						RowSpec.decode("22px"), //$NON-NLS-1$
+						FormSpecs.RELATED_GAP_ROWSPEC,}));
+
+		btnPathConvert = new JButton(LocaleBundle.getString("BatchEditFrame.ConverToCC")); //$NON-NLS-1$
+		pnlPartEdit.add(btnPathConvert, "2, 2, 3, 1"); //$NON-NLS-1$
+		btnPathConvert.addActionListener(e -> convertPathToCCPath());
+
+		btnPathConvertBack = new JButton(LocaleBundle.getString("BatchEditFrame.ConvertFromCC")); //$NON-NLS-1$
+		pnlPartEdit.add(btnPathConvertBack, "6, 2, 5, 1"); //$NON-NLS-1$
+		btnPathConvertBack.addActionListener(e -> convertPathFromCCPath());
+
+		btnNewButton = new JButton(LocaleBundle.getString("BatchEditFrame.DeleteFilename")); //$NON-NLS-1$
+		pnlPartEdit.add(btnNewButton, "2, 6, 5, 1"); //$NON-NLS-1$
+		btnNewButton.addActionListener(e -> deleteFilenameWithExtension());
+
+		btnNewButton_1 = new JButton(LocaleBundle.getString("BatchEditFrame.DeleteFileNameWithoutExt")); //$NON-NLS-1$
+		pnlPartEdit.add(btnNewButton_1, "2, 8, 5, 1"); //$NON-NLS-1$
+		btnNewButton_1.addActionListener(e -> deleteFilenameWithoutExtension());
+
+		btnNewButton_2 = new JButton(LocaleBundle.getString("BatchEditFrame.DeletePath")); //$NON-NLS-1$
+		pnlPartEdit.add(btnNewButton_2, "2, 10, 5, 1"); //$NON-NLS-1$
+		btnNewButton_2.addActionListener(e -> deleteFilepath());
+
+		btnNewButton_3 = new JButton(LocaleBundle.getString("BatchEditFrame.DeleteExt")); //$NON-NLS-1$
+		pnlPartEdit.add(btnNewButton_3, "2, 12, 5, 1"); //$NON-NLS-1$
+		btnNewButton_3.addActionListener(e -> deleteExtension());
+
+		btnSidePart_01 = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnDeleteFirst.text")); //$NON-NLS-1$
+		pnlPartEdit.add(btnSidePart_01, "2, 16, 5, 1"); //$NON-NLS-1$
+		btnSidePart_01.addActionListener(e -> delFirstPartChars());
+
+		spnSidePart_01 = new JSpinner();
+		pnlPartEdit.add(spnSidePart_01, "8, 16, 3, 1"); //$NON-NLS-1$
+		spnSidePart_01.setModel(new SpinnerNumberModel(1, 0, null, 1));
+
+		btnSidePart_02 = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnDeleteLast.text")); //$NON-NLS-1$
+		pnlPartEdit.add(btnSidePart_02, "2, 18, 5, 1"); //$NON-NLS-1$
+		btnSidePart_02.addActionListener(e -> delLastPartChars());
+
+		spnSidePart_02 = new JSpinner();
+		pnlPartEdit.add(spnSidePart_02, "8, 18, 3, 1"); //$NON-NLS-1$
+		spnSidePart_02.setModel(new SpinnerNumberModel(1, null, null, 1));
+
+		edSidePart_01 = new JTextField();
+		pnlPartEdit.add(edSidePart_01, "2, 22"); //$NON-NLS-1$
+		edSidePart_01.setColumns(10);
+
+		btnSidePart_03 = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnReplace.text")); //$NON-NLS-1$
+		pnlPartEdit.add(btnSidePart_03, "4, 22, 3, 1"); //$NON-NLS-1$
+		btnSidePart_03.addActionListener(e -> replacePartChars());
+
+		edSidePart_02 = new JTextField();
+		pnlPartEdit.add(edSidePart_02, "8, 22, 3, 1"); //$NON-NLS-1$
+		edSidePart_02.setColumns(10);
+
+		edSidePart_R1 = new JTextField();
+		pnlPartEdit.add(edSidePart_R1, "2, 24, fill, default"); //$NON-NLS-1$
+		edSidePart_R1.setColumns(10);
+
+		btnRegexReplacePart = new JButton(LocaleBundle.getString("BatchEditFrame.ReplaceRegex")); //$NON-NLS-1$
+		pnlPartEdit.add(btnRegexReplacePart, "4, 24, 3, 1"); //$NON-NLS-1$
+		btnRegexReplacePart.addActionListener(e -> replacePartCharsRegex());
+
+		edSidePart_R2 = new JTextField();
+		pnlPartEdit.add(edSidePart_R2, "8, 24, 3, 1, fill, default"); //$NON-NLS-1$
+		edSidePart_R2.setColumns(10);
+
+		btnSidePart_04 = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnTrim.text")); //$NON-NLS-1$
+		pnlPartEdit.add(btnSidePart_04, "2, 28, 9, 1"); //$NON-NLS-1$
+		btnSidePart_04.addActionListener(e -> trimPartChars());
+
+		edSidePart_03 = new JTextField();
+		pnlPartEdit.add(edSidePart_03, "2, 30"); //$NON-NLS-1$
+		edSidePart_03.setColumns(10);
+
+		btnSidePart_05 = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnConcatStart.text")); //$NON-NLS-1$
+		pnlPartEdit.add(btnSidePart_05, "4, 30, 7, 1"); //$NON-NLS-1$
+		btnSidePart_05.addActionListener(e -> concatStartPartChars());
+
+		edSidePart_04 = new JTextField();
+		pnlPartEdit.add(edSidePart_04, "2, 32"); //$NON-NLS-1$
+		edSidePart_04.setColumns(10);
+
+		btnSidePart_06 = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnConcatEnd.text")); //$NON-NLS-1$
+		pnlPartEdit.add(btnSidePart_06, "4, 32, 7, 1"); //$NON-NLS-1$
+		btnSidePart_06.addActionListener(e -> concatEndPartChars());
+
+		btnSidePart_07 = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnDelete.text")); //$NON-NLS-1$
+		pnlPartEdit.add(btnSidePart_07, "2, 36, 5, 1"); //$NON-NLS-1$
+		btnSidePart_07.addActionListener(e -> deletePartChars());
+
+		spnSidePart_03 = new JSpinner();
+		pnlPartEdit.add(spnSidePart_03, "8, 36"); //$NON-NLS-1$
+
+		spnSidePart_04 = new JSpinner();
+		pnlPartEdit.add(spnSidePart_04, "10, 36"); //$NON-NLS-1$
+
+		edSidePart_05 = new JTextField();
+		pnlPartEdit.add(edSidePart_05, "2, 40"); //$NON-NLS-1$
+		edSidePart_05.setColumns(10);
+
+		btnSidePart_08 = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnSearchAndDel.text")); //$NON-NLS-1$
+		pnlPartEdit.add(btnSidePart_08, "4, 40, 7, 1"); //$NON-NLS-1$
+		btnSidePart_08.addActionListener(e -> searchAndDeletePartChars());
+
+
+		pnlMiscEdit = new JPanel();
+		pnlMiscEdit.setBorder(null);
+		tabbedPane.addTab(LocaleBundle.getString("BatchEditFrame.TabMisc"), null, pnlMiscEdit, null); //$NON-NLS-1$
+		pnlMiscEdit.setLayout(null);
+
+		pnlMiscEdit.setLayout(new FormLayout(new ColumnSpec[] {
+				FormSpecs.RELATED_GAP_COLSPEC,
+				ColumnSpec.decode("10dlu:grow(2)"), //$NON-NLS-1$
+				FormSpecs.RELATED_GAP_COLSPEC,
+				ColumnSpec.decode("10dlu:grow"), //$NON-NLS-1$
+				FormSpecs.RELATED_GAP_COLSPEC,
+				ColumnSpec.decode("10dlu:grow"), //$NON-NLS-1$
+				FormSpecs.RELATED_GAP_COLSPEC,
+				ColumnSpec.decode("10dlu:grow"), //$NON-NLS-1$
+				FormSpecs.RELATED_GAP_COLSPEC,
+				ColumnSpec.decode("10dlu:grow"), //$NON-NLS-1$
+				FormSpecs.RELATED_GAP_COLSPEC,},
+				new RowSpec[] {
+						FormSpecs.RELATED_GAP_ROWSPEC,
+						RowSpec.decode("22px"), //$NON-NLS-1$
+						FormSpecs.RELATED_GAP_ROWSPEC,
+						RowSpec.decode("22px"), //$NON-NLS-1$
+						FormSpecs.RELATED_GAP_ROWSPEC,
+						RowSpec.decode("22px"), //$NON-NLS-1$
+						FormSpecs.RELATED_GAP_ROWSPEC,
+						RowSpec.decode("22px"), //$NON-NLS-1$
+						FormSpecs.RELATED_GAP_ROWSPEC,
+						RowSpec.decode("22px"), //$NON-NLS-1$
+						FormSpecs.RELATED_GAP_ROWSPEC,
+						RowSpec.decode("22px"), //$NON-NLS-1$
+						FormSpecs.RELATED_GAP_ROWSPEC,
+						RowSpec.decode("22px"), //$NON-NLS-1$
+						FormSpecs.RELATED_GAP_ROWSPEC,
+						FormSpecs.DEFAULT_ROWSPEC,
+						FormSpecs.RELATED_GAP_ROWSPEC,
+						RowSpec.decode("22px"), //$NON-NLS-1$
+						FormSpecs.RELATED_GAP_ROWSPEC,
+						FormSpecs.DEFAULT_ROWSPEC,
+						FormSpecs.RELATED_GAP_ROWSPEC,
+						RowSpec.decode("22px"), //$NON-NLS-1$
+						FormSpecs.RELATED_GAP_ROWSPEC,
+						FormSpecs.DEFAULT_ROWSPEC,
+						FormSpecs.RELATED_GAP_ROWSPEC,
+						RowSpec.decode("22px"), //$NON-NLS-1$
+						FormSpecs.RELATED_GAP_ROWSPEC,
+						RowSpec.decode("22px"), //$NON-NLS-1$
+						FormSpecs.RELATED_GAP_ROWSPEC,
+						RowSpec.decode("22px:grow"), //$NON-NLS-1$
+						FormSpecs.RELATED_GAP_ROWSPEC,
+						RowSpec.decode("22px"), //$NON-NLS-1$
+						FormSpecs.RELATED_GAP_ROWSPEC,
+						RowSpec.decode("22px"), //$NON-NLS-1$
+						FormSpecs.RELATED_GAP_ROWSPEC,
+						RowSpec.decode("22px"), //$NON-NLS-1$
+						FormSpecs.RELATED_GAP_ROWSPEC,}));
+
+		btnSide_01 = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnDeleteFirst.text")); //$NON-NLS-1$
+		pnlTitleEdit.add(btnSide_01, "2, 2, 5, 1"); //$NON-NLS-1$
+
+		spnSide_01 = new JSpinner();
+		pnlTitleEdit.add(spnSide_01, "8, 2, 3, 1"); //$NON-NLS-1$
+		spnSide_01.setModel(new SpinnerNumberModel(1, 0, null, 1));
+
+		btnSide_02 = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnDeleteLast.text")); //$NON-NLS-1$
+		pnlTitleEdit.add(btnSide_02, "2, 4, 5, 1"); //$NON-NLS-1$
+
+		spnSide_02 = new JSpinner();
+		pnlTitleEdit.add(spnSide_02, "8, 4, 3, 1"); //$NON-NLS-1$
+		spnSide_02.setModel(new SpinnerNumberModel(1, null, null, 1));
+
+		edSide_01 = new JTextField();
+		pnlTitleEdit.add(edSide_01, "2, 8"); //$NON-NLS-1$
+		edSide_01.setColumns(10);
+
+		btnSide_03 = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnReplace.text")); //$NON-NLS-1$
+		pnlTitleEdit.add(btnSide_03, "4, 8, 3, 1"); //$NON-NLS-1$
+		btnSide_03.addActionListener(e -> replaceChars());
+
+		edSide_02 = new JTextField();
+		pnlTitleEdit.add(edSide_02, "8, 8, 3, 1"); //$NON-NLS-1$
+		edSide_02.setColumns(10);
+
+		edSide_R1 = new JTextField();
+		pnlTitleEdit.add(edSide_R1, "2, 10, fill, default"); //$NON-NLS-1$
+		edSide_R1.setColumns(10);
+
+		btnRegexReplace = new JButton(LocaleBundle.getString("BatchEditFrame.ReplaceRegex")); //$NON-NLS-1$
+		pnlTitleEdit.add(btnRegexReplace, "4, 10, 3, 1"); //$NON-NLS-1$
+		btnRegexReplace.addActionListener(e -> replaceCharsRegex());
+
+		edSide_R2 = new JTextField();
+		pnlTitleEdit.add(edSide_R2, "8, 10, 3, 1, fill, default"); //$NON-NLS-1$
+		edSide_R2.setColumns(10);
+
+		btnSide_04 = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnTrim.text")); //$NON-NLS-1$
+		pnlTitleEdit.add(btnSide_04, "2, 14, 9, 1"); //$NON-NLS-1$
+		btnSide_04.addActionListener(e -> trimChars());
+
+		edSide_03 = new JTextField();
+		pnlTitleEdit.add(edSide_03, "2, 16"); //$NON-NLS-1$
+		edSide_03.setColumns(10);
+
+		btnSide_05 = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnConcatStart.text")); //$NON-NLS-1$
+		pnlTitleEdit.add(btnSide_05, "4, 16, 7, 1"); //$NON-NLS-1$
+		btnSide_05.addActionListener(e -> concatStartChars());
+
+		edSide_04 = new JTextField();
+		pnlTitleEdit.add(edSide_04, "2, 18"); //$NON-NLS-1$
+		edSide_04.setColumns(10);
+
+		btnSide_06 = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnConcatEnd.text")); //$NON-NLS-1$
+		pnlTitleEdit.add(btnSide_06, "4, 18, 7, 1"); //$NON-NLS-1$
+		btnSide_06.addActionListener(e -> concatEndChars());
+
+		btnSide_07 = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnDelete.text")); //$NON-NLS-1$
+		pnlTitleEdit.add(btnSide_07, "2, 22, 5, 1"); //$NON-NLS-1$
+		btnSide_07.addActionListener(e -> deleteChars());
+
+		spnSide_03 = new JSpinner();
+		pnlTitleEdit.add(spnSide_03, "8, 22"); //$NON-NLS-1$
+
+		spnSide_04 = new JSpinner();
+		pnlTitleEdit.add(spnSide_04, "10, 22"); //$NON-NLS-1$
+
+		edSide_05 = new JTextField();
+		pnlTitleEdit.add(edSide_05, "2, 26"); //$NON-NLS-1$
+		edSide_05.setColumns(10);
+
+		btnSide_08 = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnSearchAndDel.text")); //$NON-NLS-1$
+		pnlTitleEdit.add(btnSide_08, "4, 26, 7, 1"); //$NON-NLS-1$
+		btnSide_08.addActionListener(e -> searchAndDeleteChars());
+
+		spnSide_05 = new JSpinner();
+		pnlMiscEdit.add(spnSide_05, "2, 2"); //$NON-NLS-1$
+		spnSide_05.setModel(new SpinnerNumberModel(1, null, null, 1));
+
+		btnIncEpisodeNumbers = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnIncEpisodeNumbers.text")); //$NON-NLS-1$
+		pnlMiscEdit.add(btnIncEpisodeNumbers, "4, 2, 7, 1"); //$NON-NLS-1$
+		btnIncEpisodeNumbers.addActionListener(arg0 -> massIncNumber());
+
+		ctrlMultiLang = new LanguageChooser();
+		pnlMiscEdit.add(ctrlMultiLang, "2, 4, 5, 1"); //$NON-NLS-1$
+
+		btnSpracheSetzen = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnSetLang.text")); //$NON-NLS-1$
+		pnlMiscEdit.add(btnSpracheSetzen, "8, 4, 3, 1"); //$NON-NLS-1$
+		btnSpracheSetzen.addActionListener(arg0 -> massSetLanguage());
+
+		btnSide_09 = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnSetEpSize.text")); //$NON-NLS-1$
+		pnlMiscEdit.add(btnSide_09, "2, 6, 9, 1"); //$NON-NLS-1$
+		btnSide_09.addActionListener(e -> massRecalcSizes());
+
+		btnSide_11 = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnSetUnviewed.text")); //$NON-NLS-1$
+		pnlMiscEdit.add(btnSide_11, "2, 10, 9, 1"); //$NON-NLS-1$
+		btnSide_11.addActionListener(e -> massSetNotViewed());
+
+		btnViewedNow = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnSetViewedNow.text")); //$NON-NLS-1$
+		pnlMiscEdit.add(btnViewedNow, "2, 12, 9, 1"); //$NON-NLS-1$
+		btnViewedNow.addActionListener(e -> massAddToHistory(CCDateTime.getCurrentDateTime()));
+
+		btnViewedUnknown = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnSetViewedUndef.text")); //$NON-NLS-1$
+		pnlMiscEdit.add(btnViewedUnknown, "2, 14, 9, 1"); //$NON-NLS-1$
+		btnViewedUnknown.addActionListener(e -> massAddToHistory(CCDateTime.getUnspecified()));
+
+		btnSide_12 = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnSetEpLength.text")); //$NON-NLS-1$
+		pnlMiscEdit.add(btnSide_12, "2, 18, 5, 1"); //$NON-NLS-1$
+		btnSide_12.addActionListener(e -> massSetLength());
+
+		spnSideLength = new JSpinner();
+		pnlMiscEdit.add(spnSideLength, "8, 18, 3, 1"); //$NON-NLS-1$
+		spnSideLength.setModel(new SpinnerNumberModel(0, 0, null, 1));
+
+		btnSide_13 = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnSetEpFormat.text")); //$NON-NLS-1$
+		pnlMiscEdit.add(btnSide_13, "2, 22, 5, 1"); //$NON-NLS-1$
+		btnSide_13.addActionListener(e -> massSetFormat());
+
+		cbxSideFormat = new CCEnumComboBox<>(CCFileFormat.getWrapper());
+		pnlMiscEdit.add(cbxSideFormat, "8, 22, 3, 1"); //$NON-NLS-1$
+
+		ctrlSideHistoryVal = new JCCDateTimeSpinner();
+		pnlMiscEdit.add(ctrlSideHistoryVal, "2, 26, 3, 1"); //$NON-NLS-1$
+
+		btnAddToHistory = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnAddToHistory.text")); //$NON-NLS-1$
+		pnlMiscEdit.add(btnAddToHistory, "6, 26, 5, 1"); //$NON-NLS-1$
+		btnAddToHistory.addActionListener(e -> massAddToHistory(ctrlSideHistoryVal.getValue()));
+
+		btnClearHistory = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnClearHistory.text")); //$NON-NLS-1$
+		pnlMiscEdit.add(btnClearHistory, "6, 28, 5, 1"); //$NON-NLS-1$
+		btnClearHistory.addActionListener(e -> massClearHistory());
+
+		btnSideAutoLang = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnMassSetLang.title")); //$NON-NLS-1$
+		pnlMiscEdit.add(btnSideAutoLang, "2, 32, 9, 1"); //$NON-NLS-1$
+		btnSideAutoLang.addActionListener(e -> massMediaInfoLang());
+
+		btnSideAutoLen = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnMassSetLen.title")); //$NON-NLS-1$
+		pnlMiscEdit.add(btnSideAutoLen, "2, 34, 9, 1"); //$NON-NLS-1$
+		btnSideAutoLen.addActionListener(e -> massMediaInfoLen());
+
+		btnSiedAutoMediaInfo = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnMassSetMediaInfo.title")); //$NON-NLS-1$
+		pnlMiscEdit.add(btnSiedAutoMediaInfo, "2, 36, 9, 1, fill, fill"); //$NON-NLS-1$
+
+		btnSiedAutoMediaInfo.addActionListener(e -> massMediaInfo());
+
+		btnSide_02.addActionListener(e -> delLastChars());
+		btnSide_01.addActionListener(e -> delFirstChars());
 		getContentPane().add(btnOK, "4, 8, center, top"); //$NON-NLS-1$
 
 		lblSeason = new JLabel(target.getTitle());
 		lblSeason.setFont(new Font("Tahoma", Font.PLAIN, 16)); //$NON-NLS-1$
 		lblSeason.setHorizontalAlignment(SwingConstants.CENTER);
 		getContentPane().add(lblSeason, "2, 2, fill, fill"); //$NON-NLS-1$
-		
+
 		pnlInfo = new JPanel();
 		getContentPane().add(pnlInfo, "4, 2, 1, 5, fill, fill"); //$NON-NLS-1$
 		pnlInfo.setBorder(new LineBorder(new Color(0, 0, 0)));
@@ -251,40 +716,40 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 				FormSpecs.RELATED_GAP_COLSPEC,
 				ColumnSpec.decode("22px"), //$NON-NLS-1$
 				FormSpecs.RELATED_GAP_COLSPEC,},
-			new RowSpec[] {
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("20px"), //$NON-NLS-1$
-				FormSpecs.UNRELATED_GAP_ROWSPEC,
-				RowSpec.decode("20px"), //$NON-NLS-1$
-				FormSpecs.UNRELATED_GAP_ROWSPEC,
-				RowSpec.decode("22px"), //$NON-NLS-1$
-				FormSpecs.UNRELATED_GAP_ROWSPEC,
-				RowSpec.decode("22px"), //$NON-NLS-1$
-				FormSpecs.UNRELATED_GAP_ROWSPEC,
-				RowSpec.decode("22px"), //$NON-NLS-1$
-				FormSpecs.UNRELATED_GAP_ROWSPEC,
-				RowSpec.decode("22px"), //$NON-NLS-1$
-				FormSpecs.UNRELATED_GAP_ROWSPEC,
-				RowSpec.decode("22px"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.UNRELATED_GAP_ROWSPEC,
-				RowSpec.decode("20px"), //$NON-NLS-1$
-				FormSpecs.UNRELATED_GAP_ROWSPEC,
-				RowSpec.decode("20px"), //$NON-NLS-1$
-				FormSpecs.UNRELATED_GAP_ROWSPEC,
-				RowSpec.decode("80dlu"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("default:grow"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,}));
-		
+				new RowSpec[] {
+						FormSpecs.RELATED_GAP_ROWSPEC,
+						RowSpec.decode("20px"), //$NON-NLS-1$
+						FormSpecs.UNRELATED_GAP_ROWSPEC,
+						RowSpec.decode("20px"), //$NON-NLS-1$
+						FormSpecs.UNRELATED_GAP_ROWSPEC,
+						RowSpec.decode("22px"), //$NON-NLS-1$
+						FormSpecs.UNRELATED_GAP_ROWSPEC,
+						RowSpec.decode("22px"), //$NON-NLS-1$
+						FormSpecs.UNRELATED_GAP_ROWSPEC,
+						RowSpec.decode("22px"), //$NON-NLS-1$
+						FormSpecs.UNRELATED_GAP_ROWSPEC,
+						RowSpec.decode("22px"), //$NON-NLS-1$
+						FormSpecs.UNRELATED_GAP_ROWSPEC,
+						RowSpec.decode("22px"), //$NON-NLS-1$
+						FormSpecs.RELATED_GAP_ROWSPEC,
+						FormSpecs.DEFAULT_ROWSPEC,
+						FormSpecs.RELATED_GAP_ROWSPEC,
+						FormSpecs.DEFAULT_ROWSPEC,
+						FormSpecs.UNRELATED_GAP_ROWSPEC,
+						RowSpec.decode("20px"), //$NON-NLS-1$
+						FormSpecs.UNRELATED_GAP_ROWSPEC,
+						RowSpec.decode("20px"), //$NON-NLS-1$
+						FormSpecs.UNRELATED_GAP_ROWSPEC,
+						RowSpec.decode("80dlu"), //$NON-NLS-1$
+						FormSpecs.RELATED_GAP_ROWSPEC,
+						RowSpec.decode("default:grow"), //$NON-NLS-1$
+						FormSpecs.RELATED_GAP_ROWSPEC,
+						FormSpecs.DEFAULT_ROWSPEC,
+						FormSpecs.RELATED_GAP_ROWSPEC,}));
+
 		lblDirtyTitle = new JLabel("*"); //$NON-NLS-1$
 		pnlInfo.add(lblDirtyTitle, "2, 2"); //$NON-NLS-1$
-		
+
 		label = new JLabel(LocaleBundle.getString("AddMovieFrame.label_1.text")); //$NON-NLS-1$
 		pnlInfo.add(label, "3, 2"); //$NON-NLS-1$
 
@@ -299,7 +764,7 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 			}
 		});
 		edTitle.setColumns(10);
-		
+
 		lblDirtyEpisodeNumber = new JLabel("*"); //$NON-NLS-1$
 		pnlInfo.add(lblDirtyEpisodeNumber, "2, 4"); //$NON-NLS-1$
 
@@ -309,7 +774,7 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 		spnEpisode = new JSpinner();
 		pnlInfo.add(spnEpisode, "5, 4"); //$NON-NLS-1$
 		spnEpisode.setModel(new SpinnerNumberModel(0, 0, null, 1));
-		
+
 		lblDirtyFormat = new JLabel("*"); //$NON-NLS-1$
 		pnlInfo.add(lblDirtyFormat, "2, 6"); //$NON-NLS-1$
 
@@ -318,20 +783,20 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 
 		cbxFormat = new CCEnumComboBox<>(CCFileFormat.getWrapper());
 		pnlInfo.add(cbxFormat, "5, 6"); //$NON-NLS-1$
-		
+
 		lblDirtyMediaInfo = new JLabel("*"); //$NON-NLS-1$
 		pnlInfo.add(lblDirtyMediaInfo, "2, 8"); //$NON-NLS-1$
-		
+
 		label_8 = new JLabel("MediaInfo"); //$NON-NLS-1$
 		pnlInfo.add(label_8, "3, 8"); //$NON-NLS-1$
-		
+
 		ctrlMediaInfo = new JMediaInfoControl(() -> PathFormatter.fromCCPath(edPart.getText()));
 		pnlInfo.add(ctrlMediaInfo, "5, 8, fill, fill"); //$NON-NLS-1$
-		
+
 		btnMediaInfo3 = new JButton(Resources.ICN_MENUBAR_MEDIAINFO.get16x16());
 		pnlInfo.add(btnMediaInfo3, "9, 8"); //$NON-NLS-1$
 		btnMediaInfo3.setToolTipText("MediaInfo"); //$NON-NLS-1$
-		
+
 		lblDirtyLanguage = new JLabel("*"); //$NON-NLS-1$
 		pnlInfo.add(lblDirtyLanguage, "2, 10"); //$NON-NLS-1$
 
@@ -348,7 +813,7 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 		btnMediaInfo1 = new JButton(Resources.ICN_MENUBAR_MEDIAINFO.get16x16());
 		pnlInfo.add(btnMediaInfo1, "9, 10"); //$NON-NLS-1$
 		btnMediaInfo1.setToolTipText("MediaInfo"); //$NON-NLS-1$
-		
+
 		lblDirtyLength = new JLabel("*"); //$NON-NLS-1$
 		pnlInfo.add(lblDirtyLength, "2, 12"); //$NON-NLS-1$
 
@@ -365,7 +830,7 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 		pnlInfo.add(btnMediaInfo2, "9, 12"); //$NON-NLS-1$
 		btnMediaInfo2.setToolTipText("MediaInfo"); //$NON-NLS-1$
 		btnMediaInfo2.addActionListener(e -> parseCodecMetadata_Len());
-		
+
 		lblDirtySize = new JLabel("*"); //$NON-NLS-1$
 		pnlInfo.add(lblDirtySize, "2, 14"); //$NON-NLS-1$
 
@@ -384,7 +849,7 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 
 		lblFileSize = new JLabel();
 		pnlInfo.add(lblFileSize, "5, 18, fill, fill"); //$NON-NLS-1$
-		
+
 		lblDirtyAddDate = new JLabel("*"); //$NON-NLS-1$
 		pnlInfo.add(lblDirtyAddDate, "2, 20"); //$NON-NLS-1$
 
@@ -396,7 +861,7 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 
 		btnToday = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnToday.text")); //$NON-NLS-1$
 		pnlInfo.add(btnToday, "7, 20, 3, 1"); //$NON-NLS-1$
-		
+
 		lblDirtyPath = new JLabel("*"); //$NON-NLS-1$
 		pnlInfo.add(lblDirtyPath, "2, 22"); //$NON-NLS-1$
 
@@ -409,13 +874,13 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 
 		btnOpen = new JButton(LocaleBundle.getString("AddMovieFrame.btnChoose.text")); //$NON-NLS-1$
 		pnlInfo.add(btnOpen, "7, 22, 3, 1"); //$NON-NLS-1$
-		
+
 		lblDirtyHistory = new JLabel("*"); //$NON-NLS-1$
 		pnlInfo.add(lblDirtyHistory, "2, 24, default, top"); //$NON-NLS-1$
-		
+
 		lblNewLabel_2 = new JLabel(LocaleBundle.getString("EditSeriesFrame.lblHistory.text")); //$NON-NLS-1$
 		pnlInfo.add(lblNewLabel_2, "3, 24, default, top"); //$NON-NLS-1$
-		
+
 		ctrlHistory = new DateTimeListEditor();
 		pnlInfo.add(ctrlHistory, "5, 24, 5, 1, fill, fill"); //$NON-NLS-1$
 
@@ -427,8 +892,8 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 				ColumnSpec.decode("51px"), //$NON-NLS-1$
 				ColumnSpec.decode("default:grow"), //$NON-NLS-1$
 				ColumnSpec.decode("60px"),}, //$NON-NLS-1$
-			new RowSpec[] {
-				RowSpec.decode("26px"),})); //$NON-NLS-1$
+				new RowSpec[] {
+						RowSpec.decode("26px"),})); //$NON-NLS-1$
 
 		btnEpCancel = new JButton(LocaleBundle.getString("UIGeneric.btnCancel.text")); //$NON-NLS-1$
 		panel_1.add(btnEpCancel, "1, 1, left, top"); //$NON-NLS-1$
@@ -440,200 +905,6 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 		btnNext = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnNext.text")); //$NON-NLS-1$
 		panel_1.add(btnNext, "5, 1, left, top"); //$NON-NLS-1$
 		btnNext.setFont(new Font("Dialog", Font.BOLD | Font.ITALIC, 12)); //$NON-NLS-1$
-		
-		pnlEdit = new JPanel();
-		pnlEdit.setBorder(new TitledBorder(new LineBorder(new Color(0, 0, 0)), LocaleBundle.getString("AddEpisodeFrame.pnlEdit.caption"), TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0))); //$NON-NLS-1$
-		getContentPane().add(pnlEdit, "6, 2, 1, 5, fill, fill"); //$NON-NLS-1$
-		pnlEdit.setLayout(new FormLayout(new ColumnSpec[] {
-				FormSpecs.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("10dlu:grow(2)"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("10dlu:grow"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("10dlu:grow"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("10dlu:grow"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("10dlu:grow"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_COLSPEC,},
-			new RowSpec[] {
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("22px"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("22px"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("22px"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("22px"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("22px"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("22px"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("22px"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("22px"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("22px"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("22px"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("22px"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("22px"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("22px"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("22px"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("22px"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("22px"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("22px"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("22px"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("pref:grow"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("22px"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("22px"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("22px"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_ROWSPEC,}));
-		
-		btnSide_01 = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnDeleteFirst.text")); //$NON-NLS-1$
-		pnlEdit.add(btnSide_01, "2, 2, 5, 1"); //$NON-NLS-1$
-
-		spnSide_01 = new JSpinner();
-		pnlEdit.add(spnSide_01, "8, 2, 3, 1"); //$NON-NLS-1$
-		spnSide_01.setModel(new SpinnerNumberModel(1, 0, null, 1));
-
-		btnSide_02 = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnDeleteLast.text")); //$NON-NLS-1$
-		pnlEdit.add(btnSide_02, "2, 4, 5, 1"); //$NON-NLS-1$
-
-		spnSide_02 = new JSpinner();
-		pnlEdit.add(spnSide_02, "8, 4, 3, 1"); //$NON-NLS-1$
-		spnSide_02.setModel(new SpinnerNumberModel(1, null, null, 1));
-
-		edSide_01 = new JTextField();
-		pnlEdit.add(edSide_01, "2, 6"); //$NON-NLS-1$
-		edSide_01.setColumns(10);
-
-		btnSide_03 = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnReplace.text")); //$NON-NLS-1$
-		pnlEdit.add(btnSide_03, "4, 6, 3, 1"); //$NON-NLS-1$
-
-		edSide_02 = new JTextField();
-		pnlEdit.add(edSide_02, "8, 6, 3, 1"); //$NON-NLS-1$
-		edSide_02.setColumns(10);
-
-		btnSide_04 = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnTrim.text")); //$NON-NLS-1$
-		pnlEdit.add(btnSide_04, "2, 8, 9, 1"); //$NON-NLS-1$
-
-		edSide_03 = new JTextField();
-		pnlEdit.add(edSide_03, "2, 10"); //$NON-NLS-1$
-		edSide_03.setColumns(10);
-
-		btnSide_05 = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnConcatStart.text")); //$NON-NLS-1$
-		pnlEdit.add(btnSide_05, "4, 10, 7, 1"); //$NON-NLS-1$
-
-		edSide_04 = new JTextField();
-		pnlEdit.add(edSide_04, "2, 12"); //$NON-NLS-1$
-		edSide_04.setColumns(10);
-
-		btnSide_06 = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnConcatEnd.text")); //$NON-NLS-1$
-		pnlEdit.add(btnSide_06, "4, 12, 7, 1"); //$NON-NLS-1$
-
-		btnSide_07 = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnDelete.text")); //$NON-NLS-1$
-		pnlEdit.add(btnSide_07, "2, 14, 5, 1"); //$NON-NLS-1$
-
-		spnSide_03 = new JSpinner();
-		pnlEdit.add(spnSide_03, "8, 14"); //$NON-NLS-1$
-
-		spnSide_04 = new JSpinner();
-		pnlEdit.add(spnSide_04, "10, 14"); //$NON-NLS-1$
-
-		edSide_05 = new JTextField();
-		pnlEdit.add(edSide_05, "2, 16"); //$NON-NLS-1$
-		edSide_05.setColumns(10);
-
-		btnSide_08 = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnSearchAndDel.text")); //$NON-NLS-1$
-		pnlEdit.add(btnSide_08, "4, 16, 7, 1"); //$NON-NLS-1$
-
-		spnSide_05 = new JSpinner();
-		pnlEdit.add(spnSide_05, "2, 18"); //$NON-NLS-1$
-		spnSide_05.setModel(new SpinnerNumberModel(1, null, null, 1));
-
-		btnIncEpisodeNumbers = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnIncEpisodeNumbers.text")); //$NON-NLS-1$
-		pnlEdit.add(btnIncEpisodeNumbers, "4, 18, 7, 1"); //$NON-NLS-1$
-
-		btnSide_09 = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnSetEpSize.text")); //$NON-NLS-1$
-		pnlEdit.add(btnSide_09, "2, 20, 9, 1"); //$NON-NLS-1$
-
-		ctrlMultiLang = new LanguageChooser();
-		pnlEdit.add(ctrlMultiLang, "2, 22, 5, 1"); //$NON-NLS-1$
-
-		btnSpracheSetzen = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnSetLang.text")); //$NON-NLS-1$
-		pnlEdit.add(btnSpracheSetzen, "8, 22, 3, 1"); //$NON-NLS-1$
-		btnSpracheSetzen.addActionListener(arg0 -> massSetLanguage());
-
-		btnSide_11 = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnSetUnviewed.text")); //$NON-NLS-1$
-		pnlEdit.add(btnSide_11, "2, 24, 7, 1"); //$NON-NLS-1$
-		
-		btnViewedNow = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnSetViewedNow.text")); //$NON-NLS-1$
-		pnlEdit.add(btnViewedNow, "2, 26, 7, 1"); //$NON-NLS-1$
-		
-		btnViewedUnknown = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnSetViewedUndef.text")); //$NON-NLS-1$
-		pnlEdit.add(btnViewedUnknown, "2, 28, 7, 1"); //$NON-NLS-1$
-
-		btnSide_12 = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnSetEpLength.text")); //$NON-NLS-1$
-		pnlEdit.add(btnSide_12, "2, 30, 5, 1"); //$NON-NLS-1$
-
-		spnSideLength = new JSpinner();
-		pnlEdit.add(spnSideLength, "8, 30, 3, 1"); //$NON-NLS-1$
-		spnSideLength.setModel(new SpinnerNumberModel(0, 0, null, 1));
-
-		btnSide_13 = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnSetEpFormat.text")); //$NON-NLS-1$
-		pnlEdit.add(btnSide_13, "2, 32, 5, 1"); //$NON-NLS-1$
-
-		cbxSideFormat = new CCEnumComboBox<>(CCFileFormat.getWrapper());
-		pnlEdit.add(cbxSideFormat, "8, 32, 3, 1"); //$NON-NLS-1$
-		
-		ctrlSideHistoryVal = new JCCDateTimeSpinner();
-		pnlEdit.add(ctrlSideHistoryVal, "2, 34, 3, 1"); //$NON-NLS-1$
-		
-		btnAddToHistory = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnAddToHistory.text")); //$NON-NLS-1$
-		pnlEdit.add(btnAddToHistory, "6, 34, 5, 1"); //$NON-NLS-1$
-		
-		btnClearHistory = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnClearHistory.text")); //$NON-NLS-1$
-		pnlEdit.add(btnClearHistory, "6, 36, 5, 1"); //$NON-NLS-1$
-
-		btnSideAutoLang = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnMassSetLang.title")); //$NON-NLS-1$
-		pnlEdit.add(btnSideAutoLang, "2, 40, 9, 1"); //$NON-NLS-1$
-		btnSideAutoLang.addActionListener(e -> massMediaInfoLang());
-
-		btnSideAutoLen = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnMassSetLen.title")); //$NON-NLS-1$
-		pnlEdit.add(btnSideAutoLen, "2, 42, 9, 1"); //$NON-NLS-1$
-		
-		btnSiedAutoMediaInfo = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnMassSetMediaInfo.title")); //$NON-NLS-1$
-		pnlEdit.add(btnSiedAutoMediaInfo, "2, 44, 9, 1, fill, fill"); //$NON-NLS-1$
-
-		btnSiedAutoMediaInfo.addActionListener(e -> massMediaInfo());
-		btnSideAutoLen.addActionListener(e -> massMediaInfoLen());
-		btnSide_13.addActionListener(e -> massSetFormat());
-		btnSide_12.addActionListener(e -> massSetLength());
-		btnSide_11.addActionListener(e -> massSetNotViewed());
-		btnSide_09.addActionListener(e -> massRecalcSizes());
-		btnIncEpisodeNumbers.addActionListener(arg0 -> massIncNumber());
-		btnSide_08.addActionListener(e -> searchAndDeleteChars());
-		btnSide_07.addActionListener(e -> deleteChars());
-		btnSide_06.addActionListener(e -> concatEndChars());
-		btnSide_05.addActionListener(e -> concatStartChars());
-		btnSide_04.addActionListener(e -> trimChars());
-		btnSide_03.addActionListener(e -> replaceChars());
-		btnSide_02.addActionListener(e -> delLastChars());
-		btnSide_01.addActionListener(e -> delFirstChars());
 		btnNext.addActionListener(e -> onBtnNext());
 		btnEpOk.addActionListener(e -> okInfoDisplay(true));
 		btnOpen.addActionListener(e -> openPart());
@@ -643,10 +914,6 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 		btnMediaInfo1.addActionListener(e -> parseCodecMetadata_Lang());
 		btnMediaInfo3.addActionListener(e -> parseCodecMetadata_MediaInfo());
 		btnMediaInfoRaw.addActionListener(e -> showCodecMetadata());
-		btnViewedNow.addActionListener(e -> massAddToHistory(CCDateTime.getCurrentDateTime()));
-		btnViewedUnknown.addActionListener(e -> massAddToHistory(CCDateTime.getUnspecified()));
-		btnAddToHistory.addActionListener(e -> massAddToHistory(ctrlSideHistoryVal.getValue()));
-		btnClearHistory.addActionListener(e -> massClearHistory());
 	}
 
 	private void initFileChooser() {
@@ -716,7 +983,7 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 				lsEpisodes.setSelectedIndex(curr);
 
 				edTitle.requestFocus();
-				
+
 				edTitle.selectAll();
 			}
 		}
@@ -807,24 +1074,24 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 
 		updateDisplayPanel();
 	}
-	
+
 	private List<String> getTitleList() {
 		List<String> result = new ArrayList<>();
 
 		for (int i = 0; i < data.size(); i++) {
 			result.add(i, data.get(i).getTitle());
 		}
-		
+
 		return result;
 	}
-	
+
 	private String getCommonFolderPathStart() {
 		List<String> paths = new ArrayList<>();
 
 		for (int i = 0; i < data.size(); i++) {
 			paths.add(i, data.get(i).getPart());
 		}
-		
+
 		return PathFormatter.fromCCPath(PathFormatter.getCommonFolderPath(paths));
 	}
 
@@ -941,6 +1208,27 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 		updateList();
 	}
 
+	private void replaceCharsRegex() {
+		lsEpisodes.setSelectedIndex(-1);
+
+		StringBuilder err = new StringBuilder();
+		for (BatchEditEpisodeData ep : data)
+		{
+			try
+			{
+				ep.setTitle(ep.getTitle().replaceAll(edSide_R1.getText(), edSide_R2.getText()));
+			}
+			catch (Exception e) {
+				err.append("[").append(ep.getEpisodeNumber()).append("] ").append(ep.getTitle()).append("\n").append(ExceptionUtils.getMessage(e)).append("\n\n"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+			}
+
+		}
+
+		updateList();
+
+		if (!err.toString().isEmpty()) GenericTextDialog.showText(this, getTitle(), err.toString(), true);
+	}
+
 	private void trimChars() {
 		lsEpisodes.setSelectedIndex(-1);
 
@@ -978,6 +1266,116 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 				title = title.substring(0, start).concat(title.substring(end));
 
 				ep.setTitle(title);
+			} catch (IndexOutOfBoundsException e) {
+				// doesnt mind...
+			}
+		}
+
+		updateList();
+	}
+
+	private void searchAndDeletePartChars() {
+		lsEpisodes.setSelectedIndex(-1);
+
+		for (BatchEditEpisodeData ep : data) ep.setPart(ep.getPart().replace(edSidePart_05.getText(), "")); //$NON-NLS-1$
+
+		updateList();
+	}
+
+	private void delFirstPartChars() {
+		lsEpisodes.setSelectedIndex(-1);
+
+		for (BatchEditEpisodeData ep : data) {
+			try {
+				ep.setPart(ep.getPart().substring((int) spnSidePart_01.getValue()));
+			} catch (IndexOutOfBoundsException e) {
+				// doesnt mind...
+			}
+		}
+
+		updateList();
+	}
+
+	private void delLastPartChars() {
+		lsEpisodes.setSelectedIndex(-1);
+
+		for (BatchEditEpisodeData ep : data) {
+			try {
+				ep.setPart(ep.getPart().substring(0, ep.getPart().length() - (int) spnSidePart_02.getValue()));
+			} catch (IndexOutOfBoundsException e) {
+				// doesnt mind...
+			}
+		}
+
+		updateList();
+	}
+
+	private void replacePartChars() {
+		lsEpisodes.setSelectedIndex(-1);
+
+		for (BatchEditEpisodeData ep : data) ep.setPart(ep.getPart().replace(edSidePart_01.getText(), edSidePart_02.getText()));
+
+		updateList();
+	}
+
+	private void replacePartCharsRegex() {
+		lsEpisodes.setSelectedIndex(-1);
+
+		StringBuilder err = new StringBuilder();
+		for (BatchEditEpisodeData ep : data)
+		{
+			try
+			{
+				ep.setPart(ep.getPart().replaceAll(edSidePart_R1.getText(), edSidePart_R2.getText()));
+			}
+			catch (Exception e) {
+				err.append("[").append(ep.getEpisodeNumber()).append("] ").append(ep.getTitle()).append("\n").append(ExceptionUtils.getMessage(e)).append("\n\n"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+			}
+
+		}
+
+		updateList();
+
+		if (!err.toString().isEmpty()) GenericTextDialog.showText(this, getTitle(), err.toString(), true);
+	}
+
+	private void trimPartChars() {
+		lsEpisodes.setSelectedIndex(-1);
+
+		for (BatchEditEpisodeData ep : data) ep.setPart(ep.getPart().trim());
+
+		updateList();
+	}
+
+	private void concatStartPartChars() {
+		lsEpisodes.setSelectedIndex(-1);
+
+		for (BatchEditEpisodeData ep : data) ep.setPart(edSidePart_03.getText().concat(ep.getPart()));
+
+		updateList();
+	}
+
+	private void concatEndPartChars() {
+		lsEpisodes.setSelectedIndex(-1);
+
+		for (BatchEditEpisodeData ep : data) ep.setPart(ep.getPart().concat(edSidePart_04.getText()));
+
+		updateList();
+	}
+
+	private void deletePartChars() {
+		int start = (int) spnSidePart_03.getValue();
+		int end = (int) spnSidePart_04.getValue();
+
+		lsEpisodes.setSelectedIndex(-1);
+
+		for (BatchEditEpisodeData ep : data) {
+
+			try {
+				String title = ep.getPart();
+				title = title.substring(0, start).concat(title.substring(end));
+
+				ep.setPart(title);
 			} catch (IndexOutOfBoundsException e) {
 				// doesnt mind...
 			}
@@ -1035,7 +1433,7 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 	private void massSetFormat() {
 		CCFileFormat ff = cbxSideFormat.getSelectedEnum();
 		if (ff == null) return;
-		
+
 		lsEpisodes.setSelectedIndex(-1);
 
 		for (BatchEditEpisodeData ep : data) ep.setFormat(ff);
@@ -1050,13 +1448,13 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 
 		updateList();
 	}
-	
+
 	@Override
 	public void updateTitles(List<String> newTitles) {
 		lsEpisodes.setSelectedIndex(-1);
 
 		for (int i = 0; i < Math.min(data.size(), newTitles.size()); i++) data.get(i).setTitle(newTitles.get(i));
-		
+
 		updateList();
 	}
 
@@ -1090,10 +1488,8 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 		}
 
 		updateList();
-		
-		if (!err.toString().isEmpty()) {
-			GenericTextDialog.showText(this, getTitle(), err.toString(), true);
-		}
+
+		if (!err.toString().isEmpty()) GenericTextDialog.showText(this, getTitle(), err.toString(), true);
 	}
 
 	private void massMediaInfoLen() {
@@ -1115,10 +1511,8 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 		}
 
 		updateList();
-		
-		if (!err.toString().isEmpty()) {
-			GenericTextDialog.showText(this, getTitle(), err.toString(), true);
-		}
+
+		if (!err.toString().isEmpty()) GenericTextDialog.showText(this, getTitle(), err.toString(), true);
 	}
 
 	private void massMediaInfo() {
@@ -1130,7 +1524,7 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 			try {
 				MediaQueryResult dat = MediaQueryRunner.query(PathFormatter.fromCCPath(ep.getPart()), true);
 				CCMediaInfo minfo = dat.toMediaInfo();
-				
+
 				if (minfo.isSet()) ep.setMediaInfo(minfo);
 
 			} catch (IOException | MediaQueryException e) {
@@ -1139,10 +1533,8 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 		}
 
 		updateList();
-		
-		if (!err.toString().isEmpty()) {
-			GenericTextDialog.showText(this, getTitle(), err.toString(), true);
-		}
+
+		if (!err.toString().isEmpty()) GenericTextDialog.showText(this, getTitle(), err.toString(), true);
 	}
 
 	private void autoMetaDataCalc() {
@@ -1154,15 +1546,15 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 		while (len == null || len <= 0) {
 			try {
 				String dialogresult = DialogHelper.showLocalInputDialog(this, "AddEpisodeFrame.inputMetaTextLenDialog.text", "0"); //$NON-NLS-1$ //$NON-NLS-2$
-				
+
 				if (dialogresult == null) return; // abort
-				
+
 				len = Integer.parseInt(dialogresult);
 			} catch (NumberFormatException nfe) {
 				len = -1;
 			}
 		}
-		
+
 		//####################################
 
 		for (BatchEditEpisodeData ep : data) {
@@ -1172,15 +1564,15 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 			}
 
 			ep.setLength(len);
-			
+
 			ep.setFormat(CCFileFormat.getMovieFormatOrDefault(PathFormatter.getExtension(PathFormatter.fromCCPath(ep.getPart()))));
 		}
-		
+
 		//####################################
 
 		updateList();
 	}
-	
+
 	private void parseCodecMetadata_Lang() {
 		String mqp = CCProperties.getInstance().PROP_PLAY_MEDIAINFO_PATH.getValue();
 		if (Str.isNullOrWhitespace(mqp) || !new File(mqp).exists() || !new File(mqp).isFile() || !new File(mqp).canExecute()) {
@@ -1228,7 +1620,7 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 			GenericTextDialog.showText(this, getTitle(), e.getMessage() + "\n\n" + ExceptionUtils.getMessage(e) + "\n\n" + ExceptionUtils.getStackTrace(e), false); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
-	
+
 	private void parseCodecMetadata_MediaInfo() {
 		String mqp = CCProperties.getInstance().PROP_PLAY_MEDIAINFO_PATH.getValue();
 		if (Str.isNullOrWhitespace(mqp) || !new File(mqp).exists() || !new File(mqp).isFile() || !new File(mqp).canExecute()) {
@@ -1279,4 +1671,53 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 
 		updateList();
 	}
+
+	private void convertPathToCCPath() {
+		lsEpisodes.setSelectedIndex(-1);
+
+		for (BatchEditEpisodeData ep : data) ep.setPart(PathFormatter.getCCPath(ep.getPart()));
+
+		updateList();
+	}
+
+	private void convertPathFromCCPath() {
+		lsEpisodes.setSelectedIndex(-1);
+
+		for (BatchEditEpisodeData ep : data) ep.setPart(PathFormatter.fromCCPath(ep.getPart()));
+
+		updateList();
+	}
+
+	private void deleteExtension() {
+		lsEpisodes.setSelectedIndex(-1);
+
+		for (BatchEditEpisodeData ep : data) ep.setPart(PathFormatter.getWithoutExtension(ep.getPart()));
+
+		updateList();
+	}
+
+	private void deleteFilenameWithExtension() {
+		lsEpisodes.setSelectedIndex(-1);
+
+		for (BatchEditEpisodeData ep : data) ep.setPart(PathFormatter.getDirectory(ep.getPart()));
+
+		updateList();
+	}
+
+	private void deleteFilenameWithoutExtension() {
+		lsEpisodes.setSelectedIndex(-1);
+
+		for (BatchEditEpisodeData ep : data) ep.setPart(PathFormatter.getDirectory(ep.getPart()).concat(PathFormatter.getExtension(ep.getPart())));
+
+		updateList();
+	}
+
+	private void deleteFilepath() {
+		lsEpisodes.setSelectedIndex(-1);
+
+		for (BatchEditEpisodeData ep : data) ep.setPart(PathFormatter.getFilenameWithExt(ep.getPart()));
+
+		updateList();
+	}
+
 }

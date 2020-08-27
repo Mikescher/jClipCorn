@@ -235,6 +235,13 @@ public class PathFormatter {
 		
 		return path;
 	}
+
+	public static String getDirectory(String path) {
+		path = path.substring(0, path.lastIndexOf(SERIALIZATION_SEPERATOR) + 1);
+		path = path.substring(0, path.lastIndexOf(ALTERNATIVE_SEPERATOR) + 1);
+
+		return path;
+	}
 	
 	public static String getFilename(String path) {
 		int liop = path.lastIndexOf('.');

@@ -163,6 +163,7 @@ public class MediaQueryResult {
 		if (langval.equalsIgnoreCase("Deutsch"))                   return CCDBLanguage.GERMAN;
 
 		if (langval.equalsIgnoreCase("en"))                        return CCDBLanguage.ENGLISH;
+		if (langval.equalsIgnoreCase("uk"))                        return CCDBLanguage.ENGLISH;
 		if (langval.equalsIgnoreCase("eng"))                       return CCDBLanguage.ENGLISH;
 		if (langval.equalsIgnoreCase("English"))                   return CCDBLanguage.ENGLISH;
 

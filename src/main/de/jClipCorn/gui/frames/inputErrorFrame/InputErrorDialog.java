@@ -1,29 +1,19 @@
 package de.jClipCorn.gui.frames.inputErrorFrame;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.FlowLayout;
-import java.awt.Font;
+import de.jClipCorn.features.userdataProblem.UserDataProblem;
+import de.jClipCorn.features.userdataProblem.UserDataProblemHandler;
+import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.gui.resources.Resources;
+import de.jClipCorn.util.Str;
+import de.jClipCorn.util.datatypes.Tuple;
+import de.jClipCorn.util.stream.CCStreams;
+
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
-
-import javax.swing.DefaultListModel;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.ScrollPaneConstants;
-import javax.swing.SwingConstants;
-import javax.swing.border.EmptyBorder;
-
-import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.gui.resources.Resources;
-import de.jClipCorn.features.userdataProblem.UserDataProblem;
-import de.jClipCorn.features.userdataProblem.UserDataProblemHandler;
 
 public class InputErrorDialog extends JDialog {
 	private static final long serialVersionUID = 2988199599783528024L;
@@ -36,14 +26,21 @@ public class InputErrorDialog extends JDialog {
 	private JButton cancelButton;
 	private JList<String> lsErrors;
 	private DefaultListModel<String> lsErrorModel;
-	
-	private UserDataProblemHandler owner;
-	
+
+	private final UserDataProblemHandler owner;
+
 	public InputErrorDialog(List<UserDataProblem> problems, UserDataProblemHandler owner, Component parent) {
 		super();
 		this.owner = owner;
 		initGUI(parent);
-		fillMemo(problems);
+		fillMemo(CCStreams.iterate(problems).map(p -> Tuple.Create(Str.Empty, p)).toList(), false);
+	}
+
+	public InputErrorDialog(List<Tuple<String, UserDataProblem>> problems, UserDataProblemHandler owner, Component parent, boolean showsource) {
+		super();
+		this.owner = owner;
+		initGUI(parent);
+		fillMemo(problems, showsource);
 	}
 
 	private void initGUI(Component parent) {
@@ -97,7 +94,7 @@ public class InputErrorDialog extends JDialog {
 		buttonPane.add(cancelButton);
 	}
 	
-	private void fillMemo(List<UserDataProblem> problems) {
+	private void fillMemo(List<Tuple<String, UserDataProblem>> problems, boolean showsource) {
 		if (problems == null) {
 			return;
 		}
@@ -106,8 +103,11 @@ public class InputErrorDialog extends JDialog {
 		
 		lsErrorModel.clear();
 		
-		for (UserDataProblem udp : problems) {
-			lsErrorModel.addElement(udp.getText());
+		for (Tuple<String, UserDataProblem> udp : problems) {
+			if (showsource)
+				lsErrorModel.addElement("[" + udp.Item1 + "] " + udp.Item2.getText());
+			else
+				lsErrorModel.addElement(udp.Item2.getText());
 		}
 	}
 	

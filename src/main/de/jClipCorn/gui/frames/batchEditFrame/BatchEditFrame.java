@@ -27,6 +27,7 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.Str;
+import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.formatter.FileSizeFormatter;
@@ -934,14 +935,16 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 
 	private void onOKClicked(boolean check) {
 		if (check) {
-			List<UserDataProblem> problems = new ArrayList<>();
+			var allproblems = new ArrayList<Tuple<String, UserDataProblem>>();
 
 			for (BatchEditEpisodeData episode : data) {
+				List<UserDataProblem> problems = new ArrayList<>();
 				UserDataProblem.testEpisodeData(problems, target, episode.getSource(), episode.getTitle(), episode.getLength(), episode.getEpisodeNumber(), episode.getAddDate(), episode.getViewedHistory(), episode.getFilesize().getBytes(), episode.getFormat().asString(), episode.getFormat().asStringAlt(), episode.getPart(), episode.getMediaInfo(), episode.getLanguage());
+				allproblems.addAll(CCStreams.iterate(problems).map(p -> Tuple.Create((String.format("[%d] %s", episode.getEpisodeNumber(), episode.getTitle())), p)).toList());//$NON-NLS-1$
 			}
 
-			if (problems.size() > 0) {
-				InputErrorDialog amied = new InputErrorDialog(problems, () -> onOKClicked(false), this);
+			if (allproblems.size() > 0) {
+				InputErrorDialog amied = new InputErrorDialog(allproblems, () -> onOKClicked(false), this, true);
 				amied.setVisible(true);
 				return;
 			}
@@ -1221,7 +1224,6 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 			catch (Exception e) {
 				err.append("[").append(ep.getEpisodeNumber()).append("] ").append(ep.getTitle()).append("\n").append(ExceptionUtils.getMessage(e)).append("\n\n"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 			}
-
 		}
 
 		updateList();

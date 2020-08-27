@@ -4,6 +4,7 @@ import de.jClipCorn.database.databaseElement.*;
 import de.jClipCorn.database.databaseElement.columnTypes.*;
 import de.jClipCorn.features.serialization.xmlimport.IDatabaseXMLImporterImpl;
 import de.jClipCorn.features.serialization.xmlimport.ImportState;
+import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.exceptions.CCFormatException;
 import de.jClipCorn.util.helper.ByteUtilies;
@@ -91,7 +92,8 @@ public class DatabaseXMLImportImpl_V5 implements IDatabaseXMLImporterImpl
 					e.getAttributeValueOrThrow("mediainfo.audioformat"),
 					e.getAttributeShortValueOrThrow("mediainfo.audiochannels"),
 					e.getAttributeValueOrThrow("mediainfo.audiocodec"),
-					e.getAttributeIntValueOrThrow("mediainfo.audiosamplerate")));
+					e.getAttributeIntValueOrThrow("mediainfo.audiosamplerate"),
+					Str.Empty));
 			}
 		}
 		o.endUpdating();
@@ -184,7 +186,8 @@ public class DatabaseXMLImportImpl_V5 implements IDatabaseXMLImporterImpl
 					e.getAttributeValueOrThrow("mediainfo.audioformat"),
 					e.getAttributeShortValueOrThrow("mediainfo.audiochannels"),
 					e.getAttributeValueOrThrow("mediainfo.audiocodec"),
-					e.getAttributeIntValueOrThrow("mediainfo.audiosamplerate")));
+					e.getAttributeIntValueOrThrow("mediainfo.audiosamplerate"),
+					Str.Empty));
 			}
 		}
 		o.endUpdating();

@@ -11,6 +11,7 @@ public class PartialMediaInfo {
 	public Opt<Long>       CreationDate     = Opt.empty();
 	public Opt<Long>       ModificationDate = Opt.empty();
 	public Opt<CCFileSize> Filesize         = Opt.empty();
+	public Opt<String>     Checksum         = Opt.empty();
 
 	public Opt<Double>  Duration = Opt.empty(); // seconds
 	public Opt<Integer> Bitrate  = Opt.empty();

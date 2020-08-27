@@ -7,6 +7,7 @@ import de.jClipCorn.features.metadata.exceptions.MetadataQueryException;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datatypes.Tuple3;
+import de.jClipCorn.util.helper.ChecksumHelper;
 import de.jClipCorn.util.helper.ProcessHelper;
 import de.jClipCorn.util.stream.CCStreams;
 import org.apache.commons.lang.exception.ExceptionUtils;
@@ -42,7 +43,8 @@ public abstract class FFProbeRunner implements MetadataSource {
 
 		String ffjson = proc.Item2;
 
-		try	{
+		try
+		{
 			JSONObject root = new JSONObject(new JSONTokener(ffjson));
 
 			JSONArray streams = root.getJSONArray("streams"); //$NON-NLS-1$
@@ -75,6 +77,7 @@ public abstract class FFProbeRunner implements MetadataSource {
 			int audSampleRate       = getIntFromStr(astream, "sample_rate"); //$NON-NLS-1$
 			int audChannels         = getIntDirect(astream, "channels"); //$NON-NLS-1$
 
+			var hash = ChecksumHelper.fastVideoHash(new File(filename));
 
 			return new FFProbeResult(
 					ffjson,
@@ -83,7 +86,8 @@ public abstract class FFProbeRunner implements MetadataSource {
 					width, height,
 					(short)bitdepth, framecount, framerate,
 					duration, bitrate,
-					audCodecName, audCodecLongName, audSampleRate, (short)audChannels);
+					audCodecName, audCodecLongName, audSampleRate, (short)audChannels,
+					hash);
 
 		} catch (JSONException e) {
 			throw new FFProbeQueryException(e.getMessage(), ExceptionUtils.getStackTrace(e) + "\n\n\n--------------\n\n\n" + ffjson); //$NON-NLS-1$

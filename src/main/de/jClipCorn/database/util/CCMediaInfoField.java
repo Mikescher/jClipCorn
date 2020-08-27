@@ -36,7 +36,8 @@ public enum CCMediaInfoField implements ContinoousEnum<CCMediaInfoField>
 	AUDIOFORMAT(20,     LocaleBundle.getString("Mediainfofield.audioformat"),     e -> e.getAudioFormat()),
 	AUDIOCHANNELS(21,   LocaleBundle.getString("Mediainfofield.audiochannels"),   e -> String.valueOf(e.getAudioChannels())),
 	AUDIOCODEC(22,      LocaleBundle.getString("Mediainfofield.audiocodec"),      e -> e.getAudioCodec()),
-	AUDIOSAMPLERATE(23, LocaleBundle.getString("Mediainfofield.audiosamplerate"), e -> String.valueOf(e.getAudioSamplerate()));
+	AUDIOSAMPLERATE(23, LocaleBundle.getString("Mediainfofield.audiosamplerate"), e -> String.valueOf(e.getAudioSamplerate())),
+	FASTVIDEOHASH(24,   LocaleBundle.getString("Mediainfofield.checksum"),        e -> e.getChecksum());
 
 	private final int id;
 	private final String desc;

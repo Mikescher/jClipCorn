@@ -16,33 +16,36 @@ public class CCMediaInfo {
 
 	private final boolean isSet;
 
-	private final long cdate;          // FileAttr
-	private final long mdate;          // FileAttr
+	private final long cdate;           // FileAttr
+	private final long mdate;           // FileAttr
 
-	private final long filesize;       // General -> FileSize             (bytes)
-	private final double duration;     // General -> Duration             (seconds)
+	private final String checksum;      // CCFVH
 
-	private final int bitrate;         // (Video -> BitRate) + (Audio -> BitRate)
+	private final long filesize;        // General -> FileSize             (bytes)
+	private final double duration;      // General -> Duration             (seconds)
 
-	private final String videoformat;  // Video -> Format
-	private final int width;           // Video -> Width
-	private final int height;          // Video -> Height
-	private final double framerate;    // Video -> Framerate
-	private final short bitdepth;      // Video -> BitDepth
-	private final int framecount;      // Video -> FrameCount
-	private final String videocodec;   // Video -> CodecID
 
-	private final String audioformat;  // Audio -> Format
-	private final short audiochannels; // Audio -> Channels
-	private final String audiocodec;   // Audio -> CodecID
-	private final int audiosamplerate; // Audio -> SamplingRate
+	private final int bitrate;          // (Video -> BitRate) + (Audio -> BitRate)
+
+	private final String videoformat;   // Video -> Format
+	private final int width;            // Video -> Width
+	private final int height;           // Video -> Height
+	private final double framerate;     // Video -> Framerate
+	private final short bitdepth;       // Video -> BitDepth
+	private final int framecount;       // Video -> FrameCount
+	private final String videocodec;    // Video -> CodecID
+
+	private final String audioformat;   // Audio -> Format
+	private final short audiochannels;  // Audio -> Channels
+	private final String audiocodec;    // Audio -> CodecID
+	private final int audiosamplerate;  // Audio -> SamplingRate
 
 	private CCQualityCategory _cat = null;
 	private CCGenreList _cat_source = null;
 
 	public CCMediaInfo(long cdate, long mdate, long filesize, double duration, int bitrate, String videoformat, int width,
 					   int height, double framerate, short bitdepth, int framecount, String videocodec, String audioformat,
-					   short audiochannels, String audiocodec, int audiosamplerate)
+					   short audiochannels, String audiocodec, int audiosamplerate, String checksum)
 	{
 		this.isSet = true;
 
@@ -62,6 +65,7 @@ public class CCMediaInfo {
 		this.audiochannels   = audiochannels;
 		this.audiocodec      = audiocodec;
 		this.audiosamplerate = audiosamplerate;
+		this.checksum        = checksum;
 	}
 
 	private CCMediaInfo() {
@@ -83,11 +87,12 @@ public class CCMediaInfo {
 		this.audiochannels   = -1;
 		this.audiocodec      = Str.Empty;
 		this.audiosamplerate = -1;
+		this.checksum        = Str.Empty;
 	}
 
 	public static CCMediaInfo createFromDB(Long filesize, Long cdate, Long mdate, String aformat, String vformat, Integer width, Integer height,
 										   Double framerate, Double duration, Integer bitdepth, Integer bitrate, Integer framecount, Integer achannels,
-										   String vcodec, String acodec, Integer samplerate)
+										   String vcodec, String acodec, Integer samplerate, String ccfvh)
 	{
 		if (filesize   == null) return CCMediaInfo.EMPTY;
 		if (cdate      == null) return CCMediaInfo.EMPTY;
@@ -108,7 +113,7 @@ public class CCMediaInfo {
 
 		return new CCMediaInfo(cdate, mdate, filesize, duration, bitrate, vformat, width, height,
 				               framerate, (short)(int)bitdepth, framecount, vcodec, aformat,
-				               (short)(int)achannels, acodec, samplerate);
+				               (short)(int)achannels, acodec, samplerate, ccfvh);
 	}
 
 	public boolean isSet() {
@@ -187,6 +192,10 @@ public class CCMediaInfo {
 		return audiosamplerate;
 	}
 
+	public String getChecksum() {
+		return checksum;
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
@@ -216,6 +225,7 @@ public class CCMediaInfo {
 		if (audiosamplerate != that.audiosamplerate) return false;
 		if (!Objects.equals(videoformat, that.videoformat)) return false;
 		if (!Objects.equals(audioformat, that.audioformat)) return false;
+		if (!Objects.equals(checksum, that.checksum)) return false;
 		return true;
 	}
 
@@ -241,6 +251,7 @@ public class CCMediaInfo {
 		result = 31 * result + audiochannels;
 		result = 31 * result + (audiocodec != null ? audiocodec.hashCode() : 0);
 		result = 31 * result + audiosamplerate;
+		result = 31 * result + (checksum != null ? checksum.hashCode() : 0);
 		return result;
 	}
 
@@ -371,6 +382,7 @@ public class CCMediaInfo {
 		//if (Str.isNullOrWhitespace(audiocodec))  return "AudioCodec";
 		if (audiochannels <= 0) return "AudioChannels";
 		if (audiosamplerate <= 0) return "AudioSamplerate";
+		if (Str.isNullOrWhitespace(checksum)) return "Hash";
 
 		return null;
 	}
@@ -379,21 +391,22 @@ public class CCMediaInfo {
 		PartialMediaInfo pmi = new PartialMediaInfo();
 		pmi.RawOutput = Opt.empty();
 
-		pmi.CreationDate     = (cdate <= 0) ? Opt.empty() : Opt.of(cdate);
-		pmi.ModificationDate = (mdate <= 0) ? Opt.empty() : Opt.of(mdate);
-		pmi.Filesize         = (filesize <= 0) ? Opt.empty() : Opt.of(new CCFileSize(filesize));
-		pmi.Duration         = (duration <= 0) ? Opt.empty() : Opt.of(duration);
-		pmi.Bitrate          = (bitrate <= 0) ? Opt.empty() : Opt.of(bitrate);
+		pmi.CreationDate     = (cdate <= 0)                          ? Opt.empty() : Opt.of(cdate);
+		pmi.ModificationDate = (mdate <= 0)                          ? Opt.empty() : Opt.of(mdate);
+		pmi.Filesize         = (filesize <= 0)                       ? Opt.empty() : Opt.of(new CCFileSize(filesize));
+		pmi.Duration         = (duration <= 0)                       ? Opt.empty() : Opt.of(duration);
+		pmi.Bitrate          = (bitrate <= 0)                        ? Opt.empty() : Opt.of(bitrate);
 		pmi.VideoFormat      = (Str.isNullOrWhitespace(videoformat)) ? Opt.empty() : Opt.of(videoformat);
-		pmi.PixelSize        = (width <= 0 || height <= 0) ? Opt.empty() : Opt.of(Tuple.Create(width, height));
-		pmi.Framerate        = (framerate <= 0) ? Opt.empty() : Opt.of(framerate);
-		pmi.Bitdepth         = (bitdepth <= 0) ? Opt.empty() : Opt.of(bitdepth);
-		pmi.FrameCount       = (framecount <= 0) ? Opt.empty() : Opt.of(framecount);
-		pmi.VideoCodec       = (Str.isNullOrWhitespace(videocodec)) ? Opt.empty() : Opt.of(videocodec);
+		pmi.PixelSize        = (width <= 0 || height <= 0)           ? Opt.empty() : Opt.of(Tuple.Create(width, height));
+		pmi.Framerate        = (framerate <= 0)                      ? Opt.empty() : Opt.of(framerate);
+		pmi.Bitdepth         = (bitdepth <= 0)                       ? Opt.empty() : Opt.of(bitdepth);
+		pmi.FrameCount       = (framecount <= 0)                     ? Opt.empty() : Opt.of(framecount);
+		pmi.VideoCodec       = (Str.isNullOrWhitespace(videocodec))  ? Opt.empty() : Opt.of(videocodec);
 		pmi.AudioFormat      = (Str.isNullOrWhitespace(audioformat)) ? Opt.empty() : Opt.of(audioformat);
-		pmi.AudioChannels    = (audiochannels <= 0) ? Opt.empty() : Opt.of(audiochannels);
-		pmi.AudioCodec       = (Str.isNullOrWhitespace(audiocodec)) ? Opt.empty() : Opt.of(audiocodec);
-		pmi.AudioSamplerate  = (audiosamplerate <= 0) ? Opt.empty() : Opt.of(audiosamplerate);
+		pmi.AudioChannels    = (audiochannels <= 0)                  ? Opt.empty() : Opt.of(audiochannels);
+		pmi.AudioCodec       = (Str.isNullOrWhitespace(audiocodec))  ? Opt.empty() : Opt.of(audiocodec);
+		pmi.AudioSamplerate  = (audiosamplerate <= 0)                ? Opt.empty() : Opt.of(audiosamplerate);
+		pmi.Checksum         = (Str.isNullOrWhitespace(checksum))    ? Opt.empty() : Opt.of(checksum);
 
 		return pmi;
 	}

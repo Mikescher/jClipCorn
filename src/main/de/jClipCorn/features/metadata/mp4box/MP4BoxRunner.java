@@ -9,6 +9,7 @@ import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datatypes.Opt;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.datatypes.Tuple3;
+import de.jClipCorn.util.helper.ChecksumHelper;
 import de.jClipCorn.util.helper.ProcessHelper;
 import de.jClipCorn.util.helper.SimpleFileUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
@@ -45,10 +46,13 @@ public class MP4BoxRunner implements MetadataSource {
 		String ffoutput = proc.Item3;
 
 		try	{
+			var hash = ChecksumHelper.fastVideoHash(new File(filename));
+
 			PartialMediaInfo mi = new PartialMediaInfo();
 			mi.RawOutput = Opt.of(ffoutput);
 			mi.CreationDate = Opt.of(attr.creationTime().toMillis());
 			mi.ModificationDate = Opt.of(attr.lastModifiedTime().toMillis());
+			mi.Checksum = Opt.of(hash);
 
 			for (String line : SimpleFileUtils.splitLines(ffoutput))
 			{

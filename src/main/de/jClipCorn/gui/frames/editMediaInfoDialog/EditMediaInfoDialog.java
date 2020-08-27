@@ -112,6 +112,9 @@ public class EditMediaInfoDialog extends JDialog {
 	private JButton btnShowMP4Box;
 	private JButton btnHintsMP4Box;
 	private JButton btnApplyMP4Box;
+	private JTextField ctrlChecksum;
+	private JLabel lblChecksum;
+	private JLabel lblHintChecksum;
 
 	private MIDialogResultSet[] _results = new MIDialogResultSet[0];
 	private MediaInfoResultHandler _handler = null;
@@ -198,7 +201,7 @@ public class EditMediaInfoDialog extends JDialog {
 	
 	private void initGUI() {
 		setModal(true);
-		setBounds(100, 100, 1000, 537);
+		setBounds(100, 100, 1000, 550);
 		setTitle(LocaleBundle.getString("EditMediaInfoDialog.title")); //$NON-NLS-1$
 		setMinimumSize(new Dimension(750, 350));
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
@@ -331,6 +334,10 @@ public class EditMediaInfoDialog extends JDialog {
 				FormSpecs.RELATED_GAP_ROWSPEC,
 				FormSpecs.DEFAULT_ROWSPEC,
 				FormSpecs.LABEL_COMPONENT_GAP_ROWSPEC,
+				FormSpecs.DEFAULT_ROWSPEC,
+				FormSpecs.RELATED_GAP_ROWSPEC,
+				FormSpecs.DEFAULT_ROWSPEC,
+				FormSpecs.RELATED_GAP_ROWSPEC,
 				FormSpecs.DEFAULT_ROWSPEC,}));
 		
 		lblGeneralCDate = new JLabel(LocaleBundle.getString("EditMediaInfoDialog.CDate")); //$NON-NLS-1$
@@ -416,6 +423,16 @@ public class EditMediaInfoDialog extends JDialog {
 		lblFullBitrate = new JLabel(""); //$NON-NLS-1$
 		lblFullBitrate.setHorizontalAlignment(SwingConstants.RIGHT);
 		pnlGeneral.add(lblFullBitrate, "4, 22, fill, fill"); //$NON-NLS-1$
+		
+		lblChecksum = new JLabel(LocaleBundle.getString("EditMediaInfoDialog.Checksum")); //$NON-NLS-1$
+		pnlGeneral.add(lblChecksum, "2, 24, right, default"); //$NON-NLS-1$
+		
+		lblHintChecksum = new JLabel(""); //$NON-NLS-1$
+		pnlGeneral.add(lblHintChecksum, "4, 24, 3, 1, fill, fill"); //$NON-NLS-1$
+		
+		ctrlChecksum = new JTextField();
+		pnlGeneral.add(ctrlChecksum, "2, 26, 5, 1, fill, default"); //$NON-NLS-1$
+		ctrlChecksum.setColumns(10);
 		
 		pnlVideo = new JPanel();
 		pnlVideo.setBorder(new TitledBorder(null, LocaleBundle.getString("EditMediaInfoDialog.header2"), TitledBorder.LEADING, TitledBorder.TOP, null, null)); //$NON-NLS-1$
@@ -611,7 +628,9 @@ public class EditMediaInfoDialog extends JDialog {
 		lblHintVideoCodec.setText(mi.flatten(p -> p.VideoCodec).mapOrElse(p -> "("+p+")", Str.Empty)); //$NON-NLS-1$ //$NON-NLS-2$
 		lblHintAudioFormat.setText(mi.flatten(p -> p.AudioFormat).mapOrElse(p -> "("+p+")", Str.Empty)); //$NON-NLS-1$ //$NON-NLS-2$
 		lblHintAudioChannels.setText(mi.flatten(p -> p.AudioChannels).mapOrElse(p -> "("+p+")", Str.Empty)); //$NON-NLS-1$ //$NON-NLS-2$
-		lblHintAudioSamplerate.setText(mi.flatten(p -> p.AudioCodec).mapOrElse(p -> "("+p+")", Str.Empty)); //$NON-NLS-1$ //$NON-NLS-2$
+		lblHintAudioCodec.setText(mi.flatten(p -> p.AudioCodec).mapOrElse(p -> "("+p+")", Str.Empty)); //$NON-NLS-1$ //$NON-NLS-2$
+		lblHintAudioSamplerate.setText(mi.flatten(p -> p.AudioSamplerate).mapOrElse(p -> "("+p+")", Str.Empty)); //$NON-NLS-1$ //$NON-NLS-2$
+		lblHintChecksum.setText(mi.flatten(p -> p.Checksum).mapOrElse(p -> p, Str.Empty));
 
 		// -----------------------------------------------------------
 
@@ -631,6 +650,7 @@ public class EditMediaInfoDialog extends JDialog {
 		lblHintAudioChannels.setToolTipText(lblHintAudioChannels.getText());
 		lblHintAudioCodec.setToolTipText(lblHintAudioCodec.getText());
 		lblHintAudioSamplerate.setToolTipText(lblHintAudioSamplerate.getText());
+		lblHintChecksum.setToolTipText(lblHintChecksum.getText());
 	}
 
 	public void doQuery(MetadataSource source, MIDialogResultSet set) {
@@ -692,6 +712,7 @@ public class EditMediaInfoDialog extends JDialog {
 	public void doApply(PartialMediaInfo mi) {
 		mi.CreationDate.ifPresent(v -> ctrlCDate.setValue(v));
 		mi.ModificationDate.ifPresent(v -> ctrlMDate.setValue(v));
+		mi.Checksum.ifPresent(v -> ctrlChecksum.setText(v));
 		mi.Filesize.ifPresent(v -> ctrlFilesize.setValue(v.getBytes()));
 		mi.Duration.ifPresent(v -> ctrlDuration.setValue(v));
 		mi.Bitrate.ifPresent(v -> ctrlBitrate.setValue(v));
@@ -718,6 +739,7 @@ public class EditMediaInfoDialog extends JDialog {
 	{
 		long cdate    = (long)ctrlCDate.getValue();
 		long mdate    = (long)ctrlMDate.getValue();
+		String chksum = ctrlChecksum.getText();
 		long fsize    = (long)ctrlFilesize.getValue();
 		double durat  = (double)ctrlDuration.getValue();
 		int brate     = (int)ctrlBitrate.getValue();
@@ -749,29 +771,31 @@ public class EditMediaInfoDialog extends JDialog {
 		lblAudioCodec.setForeground(colOK);
 		lblAudioChannels.setForeground(colOK);
 		lblAudioSamplerate.setForeground(colOK);
+		lblChecksum.setForeground(colOK);
 
 		boolean err = false;
 
-		if (cdate <= 0) { lblGeneralCDate.setForeground(colErr); err = true; }
-		if (mdate <= 0) { lblGeneralMDate.setForeground(colErr); err = true; }
-		if (fsize <= 0) { lblGeneralFilesize.setForeground(colErr); err = true; }
-		if (durat <= 0) { lblGeneralDuration.setForeground(colErr); err = true; }
-		if (brate <= 0) { lblGeneralBitrate.setForeground(colErr); err = true; }
-		if (Str.isNullOrWhitespace(vfmt)) { lblVideoFormat.setForeground(colErr); err = true; }
-		if (Str.isNullOrWhitespace(afmt)) { lblAudioFormat.setForeground(colErr); err = true; }
-		if (width <= 0)  { lblVideoWidth.setForeground(colErr); err = true; }
-		if (height <= 0) { lblVideoHeight.setForeground(colErr); err = true; }
-		if (frate <= 0)  { lblVideoFramerate.setForeground(colErr); err = true; }
-		if (bdepth <= 0) { lblVideoBitdepth.setForeground(colErr); err = true; }
-		if (fcount <= 0) { lblVideoFramecount.setForeground(colErr); err = true; }
-		if (Str.isNullOrWhitespace(vcodec)) { lblVideoCodec.setForeground(colErr); err = true; }
-		if (Str.isNullOrWhitespace(acodec)) { lblAudioCodec.setForeground(colErr); err = true; }
-		if (achnls <= 0) { lblAudioChannels.setForeground(colErr); err = true; }
-		if (srate <= 0)  { lblAudioSamplerate.setForeground(colErr); err = true; }
+		if (cdate <= 0)                     { lblGeneralCDate.setForeground(colErr);    err = true; }
+		if (mdate <= 0)                     { lblGeneralMDate.setForeground(colErr);    err = true; }
+		if (fsize <= 0)                     { lblGeneralFilesize.setForeground(colErr); err = true; }
+		if (durat <= 0)                     { lblGeneralDuration.setForeground(colErr); err = true; }
+		if (brate <= 0)                     { lblGeneralBitrate.setForeground(colErr);  err = true; }
+		if (Str.isNullOrWhitespace(vfmt))   { lblVideoFormat.setForeground(colErr);     err = true; }
+		if (Str.isNullOrWhitespace(afmt))   { lblAudioFormat.setForeground(colErr);     err = true; }
+		if (width  <= 0)                    { lblVideoWidth.setForeground(colErr);      err = true; }
+		if (height <= 0)                    { lblVideoHeight.setForeground(colErr);     err = true; }
+		if (frate  <= 0)                    { lblVideoFramerate.setForeground(colErr);  err = true; }
+		if (bdepth <= 0)                    { lblVideoBitdepth.setForeground(colErr);   err = true; }
+		if (fcount <= 0)                    { lblVideoFramecount.setForeground(colErr); err = true; }
+		if (Str.isNullOrWhitespace(vcodec)) { lblVideoCodec.setForeground(colErr);      err = true; }
+		if (Str.isNullOrWhitespace(acodec)) { lblAudioCodec.setForeground(colErr);      err = true; }
+		if (achnls <= 0)                    { lblAudioChannels.setForeground(colErr);   err = true; }
+		if (srate  <= 0)                    { lblAudioSamplerate.setForeground(colErr); err = true; }
+		if (Str.isNullOrWhitespace(chksum)) { lblChecksum.setForeground(colErr);        err = true; }
 
 		if (err) return null;
 
-		return new CCMediaInfo(cdate, mdate, fsize, durat, brate, vfmt, width, height, frate, bdepth, fcount, vcodec, afmt, achnls, acodec, srate);
+		return new CCMediaInfo(cdate, mdate, fsize, durat, brate, vfmt, width, height, frate, bdepth, fcount, vcodec, afmt, achnls, acodec, srate, chksum);
 	}
 
 	private void onOK() {

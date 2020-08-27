@@ -30,6 +30,8 @@ public class MediaQueryResult {
 	public final long CDate;             // from file attributes
 	public final long MDate;             // from file attributes
 
+	public final String Checksum;
+
 	public final String Format;          // NULL if not set
 	public final String Format_Version;  // NULL if not set
 	public final long FileSize;
@@ -45,8 +47,9 @@ public class MediaQueryResult {
 
 	public final CCDBLanguageList AudioLanguages;   // NULL if only 1 Language without a specifier
 	
-	private MediaQueryResult(String raw, long cdate, long mdate, String format, String format_Version, long fileSize, double duration, int overallBitRate, double frameRate, MediaQueryResultVideoTrack video, List<MediaQueryResultVideoTrack> videoTracks, List<MediaQueryResultAudioTrack> audioTracks, List<MediaQueryResultSubtitleTrack> subtitleTracks, CCDBLanguageList language) {
+	private MediaQueryResult(String raw, String hash, long cdate, long mdate, String format, String format_Version, long fileSize, double duration, int overallBitRate, double frameRate, MediaQueryResultVideoTrack video, List<MediaQueryResultVideoTrack> videoTracks, List<MediaQueryResultAudioTrack> audioTracks, List<MediaQueryResultSubtitleTrack> subtitleTracks, CCDBLanguageList language) {
 		Raw            = raw;
+		Checksum       = hash;
 		CDate          = cdate;
 		MDate          = mdate;
 		Format         = format;
@@ -63,7 +66,7 @@ public class MediaQueryResult {
 	}
 
 	@SuppressWarnings("nls")
-	public static MediaQueryResult parse(String raw, long cdate, long mdate, CCXMLElement xml, boolean doNotValidateLangs) throws InnerMediaQueryException, CCXMLException {
+	public static MediaQueryResult parse(String raw, long cdate, long mdate, String hash, CCXMLElement xml, boolean doNotValidateLangs) throws InnerMediaQueryException, CCXMLException {
 		boolean foundGeneral = false;
 		boolean foundVideo = false;
 
@@ -119,7 +122,7 @@ public class MediaQueryResult {
 
 		CCDBLanguageList alng = getLang(atracks, doNotValidateLangs);
 		
-		return new MediaQueryResult(raw, cdate, mdate, format, format_Version, fileSize, duration, overallBitRate, frameRate, vtracks.get(0), vtracks, atracks, stracks, alng);
+		return new MediaQueryResult(raw, hash, cdate, mdate, format, format_Version, fileSize, duration, overallBitRate, frameRate, vtracks.get(0), vtracks, atracks, stracks, alng);
 	}
 
 	private static CCDBLanguageList getLang(List<MediaQueryResultAudioTrack> tcks, boolean doNotValidateLangs) throws InnerMediaQueryException {
@@ -356,7 +359,8 @@ public class MediaQueryResult {
 		return new CCMediaInfo(CDate, MDate, FileSize, Duration,
 		                       tbr,
 			                   video.Format, video.Width, video.Height, video.FrameRate, video.BitDepth, video.FrameCount, Str.coalesce(video.CodecID),
-			                   audio.Format, audio.Channels, Str.coalesce(audio.CodecID), audio.Samplingrate);
+			                   audio.Format, audio.Channels, Str.coalesce(audio.CodecID), audio.Samplingrate,
+			                   Checksum);
 	}
 
 	public int getTotalBitrate() {
@@ -412,6 +416,7 @@ public class MediaQueryResult {
 		pmi.AudioChannels    = (audio == null || audio.Channels == -1) ? Opt.empty() : Opt.of(audio.Channels);
 		pmi.AudioCodec       = (audio == null || Str.isNullOrWhitespace(audio.CodecID)) ? Opt.empty() : Opt.of(audio.CodecID);
 		pmi.AudioSamplerate  = (audio == null || audio.Samplingrate == -1) ? Opt.empty() : Opt.of(audio.Samplingrate);
+		pmi.Checksum         = Str.isNullOrWhitespace(Checksum) ? Opt.empty() : Opt.of(Checksum);
 
 		return pmi;
 	}

@@ -83,6 +83,7 @@ public class DatabaseXMLExporterImpl {
 			e.setAttribute("mediainfo.videocodec",      minfo.getVideoCodec());
 			e.setAttribute("mediainfo.audiocodec",      minfo.getAudioCodec());
 			e.setAttribute("mediainfo.audiosamplerate", minfo.getAudioSamplerate()+"");
+			e.setAttribute("mediainfo.checksum",        minfo.getChecksum());
 		}
 
 		if (s.FileHash) e.setAttribute("filehash", o.getFastMD5());
@@ -140,6 +141,7 @@ public class DatabaseXMLExporterImpl {
 			e.setAttribute("mediainfo.videocodec",      minfo.getVideoCodec());
 			e.setAttribute("mediainfo.audiocodec",      minfo.getAudioCodec());
 			e.setAttribute("mediainfo.audiosamplerate", minfo.getAudioSamplerate()+"");
+			e.setAttribute("mediainfo.checksum",        minfo.getChecksum());
 		}
 
 		if (s.FileHash) e.setAttribute("filehash", o.getFastMD5());

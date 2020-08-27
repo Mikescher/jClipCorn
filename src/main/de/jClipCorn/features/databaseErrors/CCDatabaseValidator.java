@@ -1100,7 +1100,9 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator {
 		for (ICCPlayableElement el : movielist.iteratorPlayables())
 		{
 			if (el.getMediaInfo().isUnset()) continue;
-			var key = Str.format("{0} ; {1} ; {2}x{3}", el.getMediaInfo().getFilesize(), el.getMediaInfo().getFramecount(), el.getMediaInfo().getWidth(), el.getMediaInfo().getHeight()); //$NON-NLS-1$
+			if (Str.isNullOrWhitespace(el.getMediaInfo().getChecksum())) continue;
+
+			var key = el.getMediaInfo().getChecksum();
 
 			if (!xmap.containsKey(key))
 			{

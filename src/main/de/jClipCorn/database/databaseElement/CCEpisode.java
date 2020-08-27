@@ -11,7 +11,6 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.mainFrame.MainFrame;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.types.NamedPathVar;
-import de.jClipCorn.util.LargeMD5Calculator;
 import de.jClipCorn.util.MoviePlayer;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datetime.CCDate;
@@ -20,6 +19,7 @@ import de.jClipCorn.util.exceptions.CCFormatException;
 import de.jClipCorn.util.exceptions.DatabaseUpdateException;
 import de.jClipCorn.util.exceptions.EnumFormatException;
 import de.jClipCorn.util.formatter.PathFormatter;
+import de.jClipCorn.util.helper.ChecksumHelper;
 import de.jClipCorn.util.helper.DialogHelper;
 
 import java.io.File;
@@ -496,7 +496,7 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 		File[] f = new File[1];
 		f[0] = new File(getAbsolutePart());
 		
-		return LargeMD5Calculator.getMD5(f);
+		return ChecksumHelper.calculateFastMD5(f);
 	}
 	
 	public File getFileForCreatedFolderstructure(File parentfolder) {

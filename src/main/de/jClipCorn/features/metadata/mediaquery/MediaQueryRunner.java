@@ -8,6 +8,7 @@ import de.jClipCorn.features.metadata.exceptions.MetadataQueryException;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datatypes.Tuple3;
+import de.jClipCorn.util.helper.ChecksumHelper;
 import de.jClipCorn.util.helper.ProcessHelper;
 import de.jClipCorn.util.xml.CCXMLElement;
 import de.jClipCorn.util.xml.CCXMLException;
@@ -51,7 +52,9 @@ public class MediaQueryRunner implements MetadataSource {
 			CCXMLElement media = root.getFirstChildOrThrow("media");
 			if (media == null) throw new InnerMediaQueryException("no media xml element");
 
-			return MediaQueryResult.parse(mqxml, attr.creationTime().toMillis(), attr.lastModifiedTime().toMillis(), media, doNotValidateLangs);
+			var hash = ChecksumHelper.fastVideoHash(new File(filename));
+
+			return MediaQueryResult.parse(mqxml, attr.creationTime().toMillis(), attr.lastModifiedTime().toMillis(), hash, media, doNotValidateLangs);
 		} catch (InnerMediaQueryException e) {
 			throw new MediaQueryException(e.getMessage(), mqxml);
 		} catch (CCXMLException e) {

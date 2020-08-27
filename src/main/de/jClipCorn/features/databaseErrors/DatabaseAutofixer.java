@@ -533,7 +533,8 @@ public class DatabaseAutofixer {
 						mi.getFilesize(), mi.getDuration(), mi.getBitrate(), mi.getVideoFormat(),
 						mi.getWidth(), mi.getHeight(), mi.getFramerate(),
 						mi.getBitdepth(), mi.getFramecount(), mi.getVideoCodec(),
-						mi.getAudioFormat(), mi.getAudioChannels(), mi.getAudioCodec(), mi.getAudioSamplerate());
+						mi.getAudioFormat(), mi.getAudioChannels(), mi.getAudioCodec(), mi.getAudioSamplerate(),
+						mi.getChecksum());
 
 				elem.setMediaInfo(mi2);
 				return true;
@@ -561,7 +562,8 @@ public class DatabaseAutofixer {
 						mi.getFilesize(), mi.getDuration(), mi.getBitrate(), mi.getVideoFormat(),
 						mi.getWidth(), mi.getHeight(), mi.getFramerate(),
 						mi.getBitdepth(), mi.getFramecount(), mi.getVideoCodec(),
-						mi.getAudioFormat(), mi.getAudioChannels(), mi.getAudioCodec(), mi.getAudioSamplerate());
+						mi.getAudioFormat(), mi.getAudioChannels(), mi.getAudioCodec(), mi.getAudioSamplerate(),
+						mi.getChecksum());
 
 				elem.setMediaInfo(mi2);
 				return true;

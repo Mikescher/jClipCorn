@@ -271,7 +271,8 @@ public class CCDatabase {
 			rs.getNullableInt(DatabaseStructure.COL_EPIS_MI_ACHANNELS),
 			rs.getNullableString(DatabaseStructure.COL_EPIS_MI_VCODEC),
 			rs.getNullableString(DatabaseStructure.COL_EPIS_MI_ACODEC),
-			rs.getNullableInt(DatabaseStructure.COL_EPIS_MI_SAMPLERATE)));
+			rs.getNullableInt(DatabaseStructure.COL_EPIS_MI_SAMPLERATE),
+			rs.getNullableString(DatabaseStructure.COL_EPIS_MI_CHECKSUM)));
 	}
 
 	private void updateSeasonFromResultSet(CCSQLResultSet rs, CCSeason seas) throws SQLException, SQLWrapperException {
@@ -333,7 +334,8 @@ public class CCDatabase {
 			rs.getNullableInt(DatabaseStructure.COL_MAIN_MI_ACHANNELS),
 			rs.getNullableString(DatabaseStructure.COL_MAIN_MI_VCODEC),
 			rs.getNullableString(DatabaseStructure.COL_MAIN_MI_ACODEC),
-			rs.getNullableInt(DatabaseStructure.COL_MAIN_MI_SAMPLERATE)));
+			rs.getNullableInt(DatabaseStructure.COL_MAIN_MI_SAMPLERATE),
+			rs.getNullableString(DatabaseStructure.COL_MAIN_MI_CHECKSUM)));
 	}
 
 	private int getNewID() {
@@ -564,6 +566,7 @@ public class CCDatabase {
 				stmt.setStr(DatabaseStructure.COL_MAIN_MI_VCODEC,     mi.getVideoCodec());
 				stmt.setStr(DatabaseStructure.COL_MAIN_MI_ACODEC,     mi.getAudioCodec());
 				stmt.setInt(DatabaseStructure.COL_MAIN_MI_SAMPLERATE, mi.getAudioSamplerate());
+				stmt.setStr(DatabaseStructure.COL_MAIN_MI_CHECKSUM,   mi.getChecksum());
 			}
 			else
 			{
@@ -583,6 +586,7 @@ public class CCDatabase {
 				stmt.setNull(DatabaseStructure.COL_MAIN_MI_VCODEC);
 				stmt.setNull(DatabaseStructure.COL_MAIN_MI_ACODEC);
 				stmt.setNull(DatabaseStructure.COL_MAIN_MI_SAMPLERATE);
+				stmt.setNull(DatabaseStructure.COL_MAIN_MI_CHECKSUM);
 			}
 
 			stmt.execute();
@@ -681,6 +685,7 @@ public class CCDatabase {
 				stmt.setStr(DatabaseStructure.COL_EPIS_MI_VCODEC,     mi.getVideoCodec());
 				stmt.setStr(DatabaseStructure.COL_EPIS_MI_ACODEC,     mi.getAudioCodec());
 				stmt.setInt(DatabaseStructure.COL_EPIS_MI_SAMPLERATE, mi.getAudioSamplerate());
+				stmt.setStr(DatabaseStructure.COL_EPIS_MI_CHECKSUM,   mi.getChecksum());
 			}
 			else
 			{
@@ -700,6 +705,7 @@ public class CCDatabase {
 				stmt.setNull(DatabaseStructure.COL_EPIS_MI_VCODEC);
 				stmt.setNull(DatabaseStructure.COL_EPIS_MI_ACODEC);
 				stmt.setNull(DatabaseStructure.COL_EPIS_MI_SAMPLERATE);
+				stmt.setNull(DatabaseStructure.COL_EPIS_MI_CHECKSUM);
 			}
 
 			stmt.setInt(DatabaseStructure.COL_EPIS_LOCALID,       ep.getLocalID());

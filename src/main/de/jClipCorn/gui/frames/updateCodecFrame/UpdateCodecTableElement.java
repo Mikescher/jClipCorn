@@ -1,23 +1,22 @@
 package de.jClipCorn.gui.frames.updateCodecFrame;
 
-import javax.swing.ImageIcon;
-import javax.swing.JFrame;
-
 import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.ICCPlayableElement;
 import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguageList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGenreList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMediaInfo;
+import de.jClipCorn.database.util.CCMediaInfoField;
+import de.jClipCorn.features.metadata.exceptions.MediaQueryException;
+import de.jClipCorn.features.metadata.mediaquery.MediaQueryResult;
 import de.jClipCorn.gui.frames.previewMovieFrame.PreviewMovieFrame;
 import de.jClipCorn.gui.frames.previewSeriesFrame.PreviewSeriesFrame;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.Str;
-import de.jClipCorn.features.metadata.exceptions.MediaQueryException;
 import de.jClipCorn.util.formatter.TimeIntervallFormatter;
-import de.jClipCorn.features.metadata.mediaquery.MediaQueryResult;
 import de.jClipCorn.util.stream.CCStreams;
 
+import javax.swing.*;
 import java.util.List;
 
 public class UpdateCodecTableElement {
@@ -53,6 +52,15 @@ public class UpdateCodecTableElement {
 
 	}
 
+	public String getStatusText() {
+		if (!Processed) return Str.Empty;
+		if (MQError != null) return MQError;
+
+		var err = getDiff(-1);
+		if (Str.isNullOrWhitespace(err)) return Str.Empty;
+		return err;
+	}
+
 	public boolean hasDiff(double maxLenDiff) {
 		if (!Processed) return false;
 		if (MQResult == null) return false;
@@ -62,6 +70,30 @@ public class UpdateCodecTableElement {
 		if (!Element.getMediaInfo().equals(getNewMediaInfo())) return true;
 
 		return false;
+	}
+
+	@SuppressWarnings("nls")
+	public String getDiff(double maxLenDiff) {
+		if (!Processed) return null;
+		if (MQResult == null) return null;
+
+		if (!CCDBLanguageList.equals(Element.getLanguage(), getNewLanguage())) return "Language";
+		if (maxLenDiff != -1 && hasLenDiff(maxLenDiff)) return "Length";
+		if (!Element.getMediaInfo().equals(getNewMediaInfo())) return "MediaInfo.[" + midiff(Element.getMediaInfo(), getNewMediaInfo()) + "]";
+
+		return null;
+	}
+
+	private String midiff(CCMediaInfo a, CCMediaInfo b) {
+		for (CCMediaInfoField f : CCMediaInfoField.getWrapper().allValues())
+		{
+			var va = f.get(a);
+			var vb = f.get(b);
+
+			if (!Str.equals(va, vb)) return f.asString();
+		}
+
+		return null;
 	}
 
 	public boolean hasLangDiff() {

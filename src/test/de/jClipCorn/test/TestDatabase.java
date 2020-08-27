@@ -5,6 +5,7 @@ import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.database.databaseElement.columnTypes.*;
 import de.jClipCorn.database.driver.CCDatabase;
 import de.jClipCorn.database.driver.DatabaseStructure;
+import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.exceptions.XMLFormatException;
 import de.jClipCorn.util.helper.SimpleFileUtils;
@@ -57,7 +58,7 @@ public class TestDatabase extends ClipCornBaseTest {
 		movWrite.setYear(2012);
 		movWrite.setScore(CCUserScore.RATING_III);
 		movWrite.setOnlineReference("tmdb:movie/207703");
-		movWrite.setMediaInfo(new CCMediaInfo(1565454159, 1565454169, 1570732032, 5903.904, 2128398, "MPEG-4 Visual", 720, 304, 23.976, (short)8, 141552, "XVID", "AC-3", (short)6, "2000", 48000));
+		movWrite.setMediaInfo(new CCMediaInfo(1565454159, 1565454169, 1570732032, 5903.904, 2128398, "MPEG-4 Visual", 720, 304, 23.976, (short)8, 141552, "XVID", "AC-3", (short)6, "2000", 48000, Str.Empty));
 		movWrite.setPart(0, "C:\\test.mov");
 		movWrite.endUpdating();
 		
@@ -147,7 +148,8 @@ public class TestDatabase extends ClipCornBaseTest {
 					"AC-3",                                                          // String audioformat
 					(short)2,                                                        // short audiochannels
 					"A_AC3",                                                         // String audiocodec
-					48000));                                                         // int audiosamplerate
+					48000,                                                           // int audiosamplerate
+					""));                                                            // String checksum
 			epiWrite.setLength(98);
 			epiWrite.setTags(CCTagList.create(CCTagList.TAG_MISSING_TIME));
 			epiWrite.setFormat(CCFileFormat.MKV);

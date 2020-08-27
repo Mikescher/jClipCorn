@@ -2,6 +2,7 @@ package de.jClipCorn.features.metadata.ffprobe;
 
 import de.jClipCorn.database.databaseElement.columnTypes.CCFileSize;
 import de.jClipCorn.features.metadata.PartialMediaInfo;
+import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datatypes.Opt;
 import de.jClipCorn.util.datatypes.Tuple;
 
@@ -11,6 +12,8 @@ public class FFProbeResult {
 	public final long CDate;
 	public final long MDate;
 	public final long FileSize;        // -1 if not set
+
+	public final String Checksum;      // NULL if not set
 
 	public final String CodecName;     // NULL if not set
 	public final String CodecLongName; // NULL if not set
@@ -36,7 +39,8 @@ public class FFProbeResult {
 						 String codecName, String codecLongName, String profile, int width, int height,
 						 short bitsPerRawSample, int frameCount, double frameRate,
 						 double duration, int bitrate,
-						 String aCodecName, String aCodecLongName, int aSampleRate, short aChannels)
+						 String aCodecName, String aCodecLongName, int aSampleRate, short aChannels,
+						 String checksum)
 	{
 		Raw                = raw;
 		CDate              = cdate;
@@ -56,6 +60,7 @@ public class FFProbeResult {
 		AudioCodecLongName = aCodecLongName;
 		AudioSampleRate    = aSampleRate;
 		AudioChannels      = aChannels;
+		Checksum           = checksum;
 	}
 
 	public PartialMediaInfo toPartial() {
@@ -77,6 +82,7 @@ public class FFProbeResult {
 		pmi.AudioChannels    = (AudioChannels == -1) ? Opt.empty() : Opt.of(AudioChannels);
 		pmi.AudioCodec       = Opt.empty();
 		pmi.AudioSamplerate  = (AudioSampleRate == -1) ? Opt.empty() : Opt.of(AudioSampleRate);
+		pmi.Checksum         = Str.isNullOrWhitespace(Checksum) ? Opt.empty() : Opt.of(Checksum);
 
 		return pmi;
 	}

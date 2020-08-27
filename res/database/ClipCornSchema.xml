@@ -47,6 +47,7 @@
         <column name="MEDIAINFO.VCODEC"     type="VARCHAR"  required="false" size="128"        />
         <column name="MEDIAINFO.ACODEC"     type="VARCHAR"  required="false" size="128"        />
         <column name="MEDIAINFO.SAMPLERATE" type="INTEGER"  required="false"                   />
+        <column name="MEDIAINFO.CHECKSUM"   type="VARCHAR"  required="false" size="1024"       />
     </table>
 
     <table name="SEASONS">
@@ -93,6 +94,7 @@
         <column name="MEDIAINFO.VCODEC"     type="VARCHAR"  required="false" size="128"        />
         <column name="MEDIAINFO.ACODEC"     type="VARCHAR"  required="false" size="128"        />
         <column name="MEDIAINFO.SAMPLERATE" type="INTEGER"  required="false"                   />
+        <column name="MEDIAINFO.CHECKSUM"   type="VARCHAR"  required="false" size="1024"       />
 
         <foreign-key foreignTable="SEASONS">
             <reference local="SEASONID" foreign="SEASONID" />

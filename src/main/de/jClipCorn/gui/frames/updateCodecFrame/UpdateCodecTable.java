@@ -1,12 +1,12 @@
 package de.jClipCorn.gui.frames.updateCodecFrame;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleColumnPrototype;
 import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleTable;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.Str;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class UpdateCodecTable extends JCCSimpleTable<UpdateCodecTableElement> {
 	private static final long serialVersionUID = 3308858204018846266L;
@@ -28,7 +28,7 @@ public class UpdateCodecTable extends JCCSimpleTable<UpdateCodecTableElement> {
 				"",
 				null,
 				e -> e.getStatusIcon(),
-				null));
+				e -> e.getStatusText()));
 		
 		r.add(new JCCSimpleColumnPrototype<>(
 				"*,min=auto",

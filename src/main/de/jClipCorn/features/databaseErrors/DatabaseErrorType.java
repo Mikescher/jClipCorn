@@ -77,7 +77,9 @@ public class DatabaseErrorType {
 	public final static DatabaseErrorType ERROR_HTRIGGER_ENABLED_ERR               = new DatabaseErrorType(71, null);
 	public final static DatabaseErrorType ERROR_HTRIGGER_DISABLED_ERR              = new DatabaseErrorType(72, null);
 	public final static DatabaseErrorType ERROR_INVALID_CHARACTERS                 = new DatabaseErrorType(73, DatabaseAutofixer::fixError_InvalidCharacters);
-	public final static DatabaseErrorType ERROR_MEDIAINFO_FILE_ATTR_CHANGED        = new DatabaseErrorType(74 , DatabaseAutofixer::fixError_MediaInfoFileAttributes);
+	public final static DatabaseErrorType ERROR_MEDIAINFO_FILE_ATTR_CHANGED        = new DatabaseErrorType(74, null);
+	public final static DatabaseErrorType ERROR_MEDIAINFO_CDATE_CHANGED            = new DatabaseErrorType(75, DatabaseAutofixer::fixError_MediaInfoCDate);
+	public final static DatabaseErrorType ERROR_MEDIAINFO_MDATE_CHANGED            = new DatabaseErrorType(76, DatabaseAutofixer::fixError_MediaInfoMDate);
 
 	private final int type;
 

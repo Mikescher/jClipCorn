@@ -384,16 +384,30 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator {
 
 			// Mediainfo attributes not match actual file
 			addMovieValidation(
-					DatabaseErrorType.ERROR_MEDIAINFO_FILE_ATTR_CHANGED,
+					DatabaseErrorType.ERROR_MEDIAINFO_CDATE_CHANGED,
 					o -> o.ValidateVideoFiles,
 					(mov, e) ->
 					{
 						if (mov.getMediaInfo().isSet()) {
 							try {
 								BasicFileAttributes attr = Files.readAttributes(new File(mov.getAbsolutePart(0)).toPath(), BasicFileAttributes.class);
-								boolean b = attr.creationTime().toMillis() != mov.getMediaInfo().getCDate();
-								boolean c = attr.lastModifiedTime().toMillis() != mov.getMediaInfo().getMDate();
-								if (b||c) e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_MEDIAINFO_FILE_ATTR_CHANGED, mov));
+								if (attr.creationTime().toMillis() != mov.getMediaInfo().getCDate())
+									e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_MEDIAINFO_CDATE_CHANGED, mov));
+							} catch (IOException ex) {
+								/**/
+							}
+						}
+					});
+			addMovieValidation(
+					DatabaseErrorType.ERROR_MEDIAINFO_MDATE_CHANGED,
+					o -> o.ValidateVideoFiles,
+					(mov, e) ->
+					{
+						if (mov.getMediaInfo().isSet()) {
+							try {
+								BasicFileAttributes attr = Files.readAttributes(new File(mov.getAbsolutePart(0)).toPath(), BasicFileAttributes.class);
+								if (attr.lastModifiedTime().toMillis() != mov.getMediaInfo().getMDate())
+									e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_MEDIAINFO_MDATE_CHANGED, mov));
 							} catch (IOException ex) {
 								/**/
 							}
@@ -705,16 +719,30 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator {
 
 			// Mediainfo attributes not match actual file
 			addEpisodeValidation(
-					DatabaseErrorType.ERROR_MEDIAINFO_FILE_ATTR_CHANGED,
+					DatabaseErrorType.ERROR_MEDIAINFO_MDATE_CHANGED,
 					o -> o.ValidateVideoFiles,
 					(episode, e) ->
 					{
 						if (episode.getMediaInfo().isSet()) {
 							try {
 								BasicFileAttributes attr = Files.readAttributes(new File(episode.getAbsolutePart()).toPath(), BasicFileAttributes.class);
-								boolean b = attr.creationTime().toMillis() != episode.getMediaInfo().getCDate();
-								boolean c = attr.lastModifiedTime().toMillis() != episode.getMediaInfo().getMDate();
-								if (b||c) e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_MEDIAINFO_FILE_ATTR_CHANGED, episode));
+								if (attr.lastModifiedTime().toMillis() != episode.getMediaInfo().getMDate())
+									e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_MEDIAINFO_MDATE_CHANGED, episode));
+							} catch (IOException ex) {
+								/**/
+							}
+						}
+					});
+			addEpisodeValidation(
+					DatabaseErrorType.ERROR_MEDIAINFO_CDATE_CHANGED,
+					o -> o.ValidateVideoFiles,
+					(episode, e) ->
+					{
+						if (episode.getMediaInfo().isSet()) {
+							try {
+								BasicFileAttributes attr = Files.readAttributes(new File(episode.getAbsolutePart()).toPath(), BasicFileAttributes.class);
+								if (attr.creationTime().toMillis() != episode.getMediaInfo().getCDate())
+									e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_MEDIAINFO_CDATE_CHANGED, episode));
 							} catch (IOException ex) {
 								/**/
 							}

@@ -8,6 +8,7 @@ import de.jClipCorn.database.databaseElement.*;
 import de.jClipCorn.database.databaseElement.columnTypes.*;
 import de.jClipCorn.database.driver.PublicDatabaseInterface;
 import de.jClipCorn.properties.CCProperties;
+import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datatypes.RefParam;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.datetime.CCDate;
@@ -1044,9 +1045,9 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator {
 	}
 
 	@Override
-	protected void findDuplicateFiles(List<DatabaseError> e, CCMovieList movielist, DoubleProgressCallbackListener pcl)
+	protected void findDuplicateFilesByPath(List<DatabaseError> e, CCMovieList movielist, DoubleProgressCallbackListener pcl)
 	{
-		pcl.stepRootAndResetSub("Find duplicate files", 2 * movielist.getTotalDatabaseCount()); //$NON-NLS-1$
+		pcl.stepRootAndResetSub("Find duplicate files (path)", 2 * movielist.getTotalDatabaseCount()); //$NON-NLS-1$
 
 		boolean ignIFO = CCProperties.getInstance().PROP_VALIDATE_DUP_IGNORE_IFO.getValue();
 
@@ -1086,6 +1087,31 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator {
 			}
 
 			pcl.stepSub(PathFormatter.getFilenameWithExt(flList.get(i).getPath()));
+		}
+	}
+
+	@Override
+	protected void findDuplicateFilesByMediaInfo(List<DatabaseError> e, CCMovieList movielist, DoubleProgressCallbackListener pcl)
+	{
+		pcl.stepRootAndResetSub("Find duplicate files (mediainfo)", movielist.getMovieCount() + movielist.getEpisodeCount()); //$NON-NLS-1$
+
+		HashMap<String, ICCPlayableElement> xmap = new HashMap<>();
+
+		for (ICCPlayableElement el : movielist.iteratorPlayables())
+		{
+			if (el.getMediaInfo().isUnset()) continue;
+			var key = Str.format("{0} ; {1} ; {2}x{3}", el.getMediaInfo().getFilesize(), el.getMediaInfo().getFramecount(), el.getMediaInfo().getWidth(), el.getMediaInfo().getHeight()); //$NON-NLS-1$
+
+			if (!xmap.containsKey(key))
+			{
+				xmap.put(key, el);
+			}
+			else
+			{
+				e.add(DatabaseError.createDouble(DatabaseErrorType.ERROR_DUPLICATE_FILE, el, xmap.get(key)));
+			}
+
+			pcl.stepSub(el.getTitle());
 		}
 	}
 
@@ -1167,25 +1193,33 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator {
 	@Override
 	protected void findDuplicateOnlineRef(List<DatabaseError> e, CCMovieList movielist, DoubleProgressCallbackListener pcl)
 	{
-		pcl.stepRootAndResetSub("Validate groups", movielist.getElementCount()); //$NON-NLS-1$
+		pcl.stepRootAndResetSub("Validate online references", movielist.getElementCount()); //$NON-NLS-1$
 
-		Set<String> refSet = new HashSet<>();
+		var refSet = new HashMap<String, CCDatabaseElement>();
 
-		for (CCMovie el : movielist.iteratorMovies()) {
-			for(CCSingleOnlineReference soref : el.getOnlineReference()) {
-				if (! refSet.add(el.getLanguage().serializeToLong() + '_' + soref.toSerializationString())) {
-					e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_DUPLICATE_REF, el));
-				}
+		for (CCMovie el : movielist.iteratorMovies())
+		{
+			for(CCSingleOnlineReference soref : el.getOnlineReference())
+			{
+				var key = el.getLanguage().serializeToLong() + '_' + soref.toSerializationString();
+				if (!refSet.containsKey(key))
+					refSet.put(key, el);
+				else
+					e.add(DatabaseError.createDouble(DatabaseErrorType.ERROR_DUPLICATE_REF, el, refSet.get(key)));
 			}
 
 			pcl.stepSub(el.getFullDisplayTitle());
 		}
 
-		for (CCSeries el : movielist.iteratorSeries()) {
-			for(CCSingleOnlineReference soref : el.getOnlineReference()) {
-				if (! refSet.add(el.getSemiCommonLanguages().serializeToLong() + '_' + soref.toSerializationString())) {
-					e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_DUPLICATE_REF, el));
-				}
+		for (CCSeries el : movielist.iteratorSeries())
+		{
+			for(CCSingleOnlineReference soref : el.getOnlineReference())
+			{
+				var key = el.getSemiCommonLanguages().serializeToLong() + '_' + soref.toSerializationString();
+				if (!refSet.containsKey(key))
+					refSet.put(key, el);
+				else
+					e.add(DatabaseError.createDouble(DatabaseErrorType.ERROR_DUPLICATE_REF, el, refSet.get(key)));
 			}
 
 			pcl.stepSub(el.getFullDisplayTitle());

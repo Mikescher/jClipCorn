@@ -1,8 +1,5 @@
 package de.jClipCorn.features.databaseErrors;
 
-import java.awt.Component;
-import java.io.File;
-
 import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.CCSeason;
@@ -12,6 +9,9 @@ import de.jClipCorn.gui.frames.editMovieFrame.EditMovieFrame;
 import de.jClipCorn.gui.frames.editSeriesFrame.EditSeriesFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.formatter.PathFormatter;
+
+import java.awt.*;
+import java.io.File;
 
 public class DatabaseError {	
 	private final DatabaseErrorType errortype;
@@ -140,6 +140,26 @@ public class DatabaseError {
 		} else if (el1 instanceof File) {
 			PathFormatter.showInExplorer((File) el1);
 		}
+
+		if (el2 != null)
+		{
+			if (el2 instanceof CCMovie) {
+				EditMovieFrame emf = new EditMovieFrame(owner, (CCMovie) el2, null);
+				emf.setVisible(true);
+			} else if (el2 instanceof CCSeries) {
+				EditSeriesFrame esf = new EditSeriesFrame(owner, (CCSeries) el2, null);
+				esf.setVisible(true);
+			} else if (el2 instanceof CCSeason) {
+				EditSeriesFrame esf = new EditSeriesFrame(owner, (CCSeason) el2, null);
+				esf.setVisible(true);
+			} else if (el2 instanceof CCEpisode) {
+				EditSeriesFrame esf = new EditSeriesFrame(owner, (CCEpisode) el2, null);
+				esf.setVisible(true);
+			} else if (el2 instanceof File) {
+				PathFormatter.showInExplorer((File) el2);
+			}
+		}
+
 	}
 	
 	public Object getElement1() {

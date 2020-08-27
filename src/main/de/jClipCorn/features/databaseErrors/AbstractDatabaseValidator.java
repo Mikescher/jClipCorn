@@ -46,9 +46,10 @@ public abstract class AbstractDatabaseValidator {
 		if (opt.ValidateCovers) outerCount++;              // [2]
 		if (opt.ValidateCoverFiles) outerCount++;          // [3]
 		if (opt.ValidateAdditional) outerCount++;          // [4]
-		if (opt.ValidateGroups) outerCount++;              // [5]
-		if (opt.ValidateOnlineReferences) outerCount++;    // [6]
-		if (opt.ValidateDatabaseConsistence) outerCount++; // [6]
+		if (opt.ValidateAdditional) outerCount++;          // [5]
+		if (opt.ValidateGroups) outerCount++;              // [6]
+		if (opt.ValidateOnlineReferences) outerCount++;    // [7]
+		if (opt.ValidateDatabaseConsistence) outerCount++; // [8]
 
 		pcl.setMaxAndResetValueBoth(outerCount+1, 1);
 
@@ -58,13 +59,14 @@ public abstract class AbstractDatabaseValidator {
 
 		if (opt.ValidateCoverFiles) findCoverFileErrors(e, ml, pcl); // [3]
 
-		if (opt.ValidateAdditional) findDuplicateFiles(e, ml, pcl); // [4]
+		if (opt.ValidateAdditional) findDuplicateFilesByPath(e, ml, pcl);      // [4]
+		if (opt.ValidateAdditional) findDuplicateFilesByMediaInfo(e, ml, pcl); // [5]
 
-		if (opt.ValidateGroups) findErrorInGroups(e, ml, pcl); // [5]
+		if (opt.ValidateGroups) findErrorInGroups(e, ml, pcl); // [6]
 
-		if (opt.ValidateOnlineReferences) findDuplicateOnlineRef(e, ml, pcl); // [6]
+		if (opt.ValidateOnlineReferences) findDuplicateOnlineRef(e, ml, pcl); // [7]
 
-		if (opt.ValidateDatabaseConsistence) findInternalDatabaseErrors(e, ml, pcl); // [6]
+		if (opt.ValidateDatabaseConsistence) findInternalDatabaseErrors(e, ml, pcl); // [8]
 
 		pcl.reset();
 	}
@@ -199,7 +201,8 @@ public abstract class AbstractDatabaseValidator {
 
 	protected abstract void findCoverErrors(List<DatabaseError> e, CCMovieList movielist, DoubleProgressCallbackListener pcl);
 	protected abstract void findCoverFileErrors(List<DatabaseError> e, CCMovieList movielist, DoubleProgressCallbackListener pcl);
-	protected abstract void findDuplicateFiles(List<DatabaseError> e, CCMovieList movielist, DoubleProgressCallbackListener pcl);
+	protected abstract void findDuplicateFilesByPath(List<DatabaseError> e, CCMovieList movielist, DoubleProgressCallbackListener pcl);
+	protected abstract void findDuplicateFilesByMediaInfo(List<DatabaseError> e, CCMovieList movielist, DoubleProgressCallbackListener pcl);
 	protected abstract void findErrorInGroups(List<DatabaseError> e, CCMovieList movielist, DoubleProgressCallbackListener pcl);
 	protected abstract void findDuplicateOnlineRef(List<DatabaseError> e, CCMovieList movielist, DoubleProgressCallbackListener pcl);
 	protected abstract void findInternalDatabaseErrors(List<DatabaseError> e, CCMovieList movielist, DoubleProgressCallbackListener pcl);

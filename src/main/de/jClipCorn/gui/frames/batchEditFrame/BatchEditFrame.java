@@ -27,11 +27,13 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.Str;
+import de.jClipCorn.util.datatypes.Opt;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.formatter.FileSizeFormatter;
 import de.jClipCorn.util.formatter.PathFormatter;
+import de.jClipCorn.util.helper.ChecksumHelper;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.helper.FileChooserHelper;
 import de.jClipCorn.util.listener.OmniParserCallbackListener;
@@ -181,6 +183,7 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 	private final List<BatchEditEpisodeData> data;
 	private final JFileChooser videoFileChooser;
 	private final JFileChooser massVideoFileChooser;
+	private JButton btnCalcHash;
 
 
 	/**
@@ -690,7 +693,11 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 		btnSideAutoLen.addActionListener(e -> massMediaInfoLen());
 
 		btnSiedAutoMediaInfo = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnMassSetMediaInfo.title")); //$NON-NLS-1$
-		pnlMiscEdit.add(btnSiedAutoMediaInfo, "2, 36, 9, 1, fill, fill"); //$NON-NLS-1$
+		pnlMiscEdit.add(btnSiedAutoMediaInfo, "2, 36, 5, 1, fill, fill"); //$NON-NLS-1$
+		
+		btnCalcHash = new JButton(LocaleBundle.getString("BatchEditFrame.HashCalc")); //$NON-NLS-1$
+		pnlMiscEdit.add(btnCalcHash, "8, 36, 3, 1"); //$NON-NLS-1$
+		btnCalcHash.addActionListener(e -> massCalcHash());
 
 		btnSiedAutoMediaInfo.addActionListener(e -> massMediaInfo());
 
@@ -1694,6 +1701,24 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 		lsEpisodes.setSelectedIndex(-1);
 
 		for (BatchEditEpisodeData ep : data) ep.setPart(PathFormatter.getWithoutExtension(ep.getPart()));
+
+		updateList();
+	}
+
+	private void massCalcHash() {
+		lsEpisodes.setSelectedIndex(-1);
+
+		try 
+		{
+			for (BatchEditEpisodeData ep : data) 
+			{
+				var p = ep.getMediaInfo().toPartial();
+				p.Checksum = Opt.of(ChecksumHelper.fastVideoHash(new File(PathFormatter.fromCCPath(ep.getPart()))));
+				ep.setMediaInfo(p.toMediaInfo());
+			}
+		} catch (IOException e) {
+			GenericTextDialog.showText(this, getTitle(), e.getMessage() + "\n\n" + ExceptionUtils.getMessage(e) + "\n\n" + ExceptionUtils.getStackTrace(e), false); //$NON-NLS-1$ //$NON-NLS-2$
+		}
 
 		updateList();
 	}

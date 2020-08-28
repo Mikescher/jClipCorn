@@ -1,6 +1,8 @@
 package de.jClipCorn.features.metadata;
 
 import de.jClipCorn.database.databaseElement.columnTypes.CCFileSize;
+import de.jClipCorn.database.databaseElement.columnTypes.CCMediaInfo;
+import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datatypes.Opt;
 import de.jClipCorn.util.datatypes.Tuple;
 
@@ -28,4 +30,27 @@ public class PartialMediaInfo {
 	public Opt<String>  AudioCodec      = Opt.empty();
 	public Opt<Integer> AudioSamplerate = Opt.empty();
 
+	public CCMediaInfo toMediaInfo()
+	{
+		return new CCMediaInfo
+		(
+				CreationDate.orElse(-1L),
+				ModificationDate.orElse(-1L),
+				Filesize.map(CCFileSize::getBytes).orElse(-1L),
+				Duration.orElse(-1.0),
+				Bitrate.orElse(-1),
+				VideoFormat.orElse(Str.Empty),
+				PixelSize.map(p -> p.Item1).orElse(-1),
+				PixelSize.map(p -> p.Item2).orElse(-1),
+				Framerate.orElse(-1.0),
+				Bitdepth.orElse((short)-1),
+				FrameCount.orElse(-1),
+				VideoCodec.orElse(Str.Empty),
+				AudioFormat.orElse(Str.Empty),
+				AudioChannels.orElse((short)-1),
+				AudioCodec.orElse(Str.Empty),
+				AudioSamplerate.orElse(-1),
+				Checksum.orElse(Str.Empty)
+		);
+	}
 }

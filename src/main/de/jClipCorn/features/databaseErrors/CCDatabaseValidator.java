@@ -849,6 +849,13 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator {
 					o -> o.ValidateEpisodes,
 					episode -> DatabaseStringNormalization.hasInvalidCharacters(episode.getTitle()),
 					episode -> DatabaseError.createSingle(DatabaseErrorType.ERROR_INVALID_CHARACTERS, episode));
+
+			// invalid MediaInfo
+			addEpisodeValidation(
+					DatabaseErrorType.ERROR_MEDIAINFO_INVALID,
+					o -> o.ValidateEpisodes,
+					episode -> episode.getMediaInfo().isSet() && (episode.getMediaInfo().validate()!=null),
+					episode -> DatabaseError.createSingleAdditional(DatabaseErrorType.ERROR_MEDIAINFO_INVALID, episode, episode.getMediaInfo().validate()));
 		}
 	}
 
@@ -1205,9 +1212,17 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator {
 			{
 				var key = el.getLanguage().serializeToLong() + '_' + soref.toSerializationString();
 				if (!refSet.containsKey(key))
+				{
 					refSet.put(key, el);
+				}
 				else
-					e.add(DatabaseError.createDouble(DatabaseErrorType.ERROR_DUPLICATE_REF, el, refSet.get(key)));
+				{
+					var el2 = refSet.get(key);
+					if (el == el2)
+						e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_DUPLICATE_REF, el));
+					else
+						e.add(DatabaseError.createDouble(DatabaseErrorType.ERROR_DUPLICATE_REF, el, el2));
+				}
 			}
 
 			pcl.stepSub(el.getFullDisplayTitle());
@@ -1219,9 +1234,17 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator {
 			{
 				var key = el.getSemiCommonLanguages().serializeToLong() + '_' + soref.toSerializationString();
 				if (!refSet.containsKey(key))
+				{
 					refSet.put(key, el);
+				}
 				else
-					e.add(DatabaseError.createDouble(DatabaseErrorType.ERROR_DUPLICATE_REF, el, refSet.get(key)));
+				{
+					var el2 = refSet.get(key);
+					if (el == el2)
+						e.add(DatabaseError.createSingle(DatabaseErrorType.ERROR_DUPLICATE_REF, el));
+					else
+						e.add(DatabaseError.createDouble(DatabaseErrorType.ERROR_DUPLICATE_REF, el, el2));
+				}
 			}
 
 			pcl.stepSub(el.getFullDisplayTitle());

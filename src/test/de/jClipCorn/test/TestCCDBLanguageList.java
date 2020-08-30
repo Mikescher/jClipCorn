@@ -17,11 +17,11 @@ public class TestCCDBLanguageList extends ClipCornBaseTest {
 
 	@Test
 	public void testSubset() {
-		assertEquals(CCDBLanguageList.EMPTY.allSubsets().size(), 1);
-		assertEquals(CCDBLanguageList.GERMAN.allSubsets().size(), 2);
-		assertEquals(CCDBLanguageList.ENGLISH.allSubsets().size(), 2);
-		assertEquals(CCDBLanguageList.create(CCDBLanguage.GERMAN, CCDBLanguage.ENGLISH).size(), 4);
-		assertEquals(CCDBLanguageList.create(CCDBLanguage.GERMAN, CCDBLanguage.ENGLISH, CCDBLanguage.SPANISH).size(), 8);
+		assertEquals(1, CCDBLanguageList.EMPTY.allSubsets().size());
+		assertEquals(2, CCDBLanguageList.GERMAN.allSubsets().size());
+		assertEquals(2, CCDBLanguageList.ENGLISH.allSubsets().size());
+		assertEquals(4, CCDBLanguageList.create(CCDBLanguage.GERMAN, CCDBLanguage.ENGLISH).allSubsets().size());
+		assertEquals(8, CCDBLanguageList.create(CCDBLanguage.GERMAN, CCDBLanguage.ENGLISH, CCDBLanguage.SPANISH).allSubsets().size());
 
 		assertTrue(CCDBLanguageList.EMPTY.allSubsets().contains(CCDBLanguageList.EMPTY));
 

@@ -1,5 +1,6 @@
 package de.jClipCorn.util.stream;
 
+import de.jClipCorn.util.datatypes.IndexEntry;
 import de.jClipCorn.util.lambda.Func1to1;
 import de.jClipCorn.util.lambda.Func2to1;
 import org.apache.commons.lang3.ObjectUtils;
@@ -343,6 +344,10 @@ public abstract class CCStream<TType> implements Iterator<TType>, Iterable<TType
 
 	public <TAttrType> CCStream<TAttrType> map(Func1to1<TType, TAttrType> selector) {
 		return new MapStream<>(this, selector);
+	}
+
+	public CCStream<IndexEntry<TType>> index() {
+		return new IndexStream<TType>(this);
 	}
 
 	public TType firstOrNull() {

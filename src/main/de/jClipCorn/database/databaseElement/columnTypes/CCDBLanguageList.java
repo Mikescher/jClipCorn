@@ -10,8 +10,8 @@ import de.jClipCorn.util.stream.CCStreams;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 public class CCDBLanguageList implements Iterable<CCDBLanguage> {
 	public static final CCDBLanguageList GERMAN = new CCDBLanguageList(CCDBLanguage.GERMAN);
@@ -58,6 +58,10 @@ public class CCDBLanguageList implements Iterable<CCDBLanguage> {
 
 	public static CCDBLanguageList create(CCDBLanguage... langs) {
 		return new CCDBLanguageList(langs);
+	}
+
+	public static CCDBLanguageList create(Collection<CCDBLanguage> allLanguages) {
+		return new CCDBLanguageList(new HashSet<>(allLanguages));
 	}
 
 	public long serializeToLong() {
@@ -220,6 +224,31 @@ public class CCDBLanguageList implements Iterable<CCDBLanguage> {
 			if (!other.contains(lang)) return false;
 		}
 		return true;
+	}
+
+	public List<CCDBLanguageList> allSubsets()
+	{
+		if (isEmpty()) return Collections.singletonList(CCDBLanguageList.EMPTY);
+		var count = Math.pow(2, _languages.size());
+
+		var result = new ArrayList<CCDBLanguageList>();
+		for (int i=0; i<count; i++)
+		{
+			final int mask = i;
+			var iter = this
+					.iterate()
+					.index()
+					.filter(p -> ((1 << p.Index) & mask) != 0)
+					.map(p -> p.Value)
+					.toList();
+
+			result.add(CCDBLanguageList.create(iter));
+		}
+		return result;
+	}
+
+	public int size() {
+		return _languages.size();
 	}
 
 	public static CCDBLanguageList randomValue(Random r)

@@ -14,6 +14,7 @@ import de.jClipCorn.util.datetime.YearRange;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.formatter.TimeIntervallFormatter;
 import de.jClipCorn.util.stream.CCStream;
+import de.jClipCorn.util.stream.CCStreams;
 import org.apache.commons.lang.text.StrBuilder;
 
 import java.io.File;
@@ -478,6 +479,8 @@ public class CCSeries extends CCDatabaseElement implements IEpisodeOwner {
 
 		var firstEpisode = getFirstEpisode();
 
+		HashSet<CCDBLanguage> allLanguages = new HashSet<>();
+
 		HashSet<CCDBLanguage> langsCommon = new HashSet<>(firstEpisode.getLanguage().getInternalData());
 		CCDBLanguageList langsEqual  = firstEpisode.getLanguage();
 
@@ -488,6 +491,8 @@ public class CCSeries extends CCDatabaseElement implements IEpisodeOwner {
 		{
 			for (CCEpisode e : s.getEpisodeList())
 			{
+				allLanguages.addAll(e.getLanguage().getInternalData());
+
 				langsCommon.retainAll(e.getLanguage().getInternalData());
 
 				if (langsEqual != null && !langsEqual.equals(e.getLanguage())) langsEqual = null;
@@ -504,11 +509,32 @@ public class CCSeries extends CCDatabaseElement implements IEpisodeOwner {
 
 		var maxPerc = CCProperties.getInstance().PROP_FOLDERLANG_IGNORE_PERC.getValue();
 
-		if (maxPerc == 0) return CCDBLanguageList.createDirect(langsCommon);
-
-		for (var lng : langsLength.entrySet())
+		if (maxPerc > 0) // if maxPerc is set we can use a Language set that satisifies at least (100-maxPerc)% of the total length
 		{
-			if (((totalLength - lng.getValue()) * 100 / totalLength) < maxPerc) return lng.getKey();
+			CCDBLanguageList percentageMatch_Lang  = null;
+			double           percentageMatch_Score = Integer.MIN_VALUE;
+			for (var langset : CCDBLanguageList.create(allLanguages).allSubsets())
+			{
+				if (langset.isEmpty()) continue;
+
+				var subsetlength = CCStreams
+						.iterate(langsLength.entrySet())
+						.filter(p -> langset.isSubsetOf(p.getKey()))
+						.map(Map.Entry::getValue)
+						.sum(Integer::sum, 0);
+
+				var percentage_of_notmatching_lang = ((totalLength - subsetlength) * 100 / totalLength);
+				if (percentage_of_notmatching_lang >= maxPerc) continue;
+
+				var score = langset.size() * 10_000 + (100-percentage_of_notmatching_lang);
+
+				if (score > percentageMatch_Score)
+				{
+					percentageMatch_Lang  = langset;
+					percentageMatch_Score = score;
+				}
+			}
+			if (percentageMatch_Lang != null) return percentageMatch_Lang;
 		}
 
 		return CCDBLanguageList.createDirect(langsCommon);

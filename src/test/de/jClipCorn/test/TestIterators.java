@@ -213,4 +213,12 @@ public class TestIterators extends ClipCornBaseTest {
 
 		assertEquals(7, ml.iteratorElements().take(7).count());
 	}
+
+	@Test
+	public void testIndexIterator() throws Exception {
+		CCMovieList ml = createExampleDB();
+
+		assertEquals(ml.iteratorEpisodes().index().firstOrNull().Index, 0);
+		assertEquals(ml.iteratorEpisodes().index().lastOrNull().Index, ml.getEpisodeCount()-1);
+	}
 }

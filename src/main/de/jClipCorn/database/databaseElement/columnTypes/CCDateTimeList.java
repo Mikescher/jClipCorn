@@ -1,16 +1,16 @@
 package de.jClipCorn.database.databaseElement.columnTypes;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.exceptions.CCFormatException;
 import de.jClipCorn.util.stream.CCStream;
 import de.jClipCorn.util.stream.IterableStream;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 @SuppressWarnings("nls")
 public class CCDateTimeList {
@@ -253,7 +253,7 @@ public class CCDateTimeList {
 		if (list.size() != that.list.size()) return false;
 
 		for (int i=0; i<list.size(); i++) {
-			if (!list.get(i).isEqual(that.list.get(i))) return false;
+			if (!list.get(i).isExactEqual(that.list.get(i))) return false;
 		}
 		return true;
 	}

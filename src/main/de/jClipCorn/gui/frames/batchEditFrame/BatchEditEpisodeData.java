@@ -1,48 +1,24 @@
 package de.jClipCorn.gui.frames.batchEditFrame;
 
 import de.jClipCorn.database.databaseElement.CCEpisode;
-import de.jClipCorn.database.databaseElement.IEpisodeData;
 import de.jClipCorn.database.databaseElement.columnTypes.*;
 import de.jClipCorn.util.datetime.CCDate;
 
-public class BatchEditEpisodeData implements IEpisodeData
+public class BatchEditEpisodeData
 {
 	private final CCEpisode _source;
 
-	private int episodeNumber;
-	public boolean episodeNumberDirty = false;
-
-	private String title;
-	public boolean titleDirty = false;
-
-	private int length;
-	public boolean lengthDirty = false;
-
-	private CCTagList tags;
-	public boolean tagsDirty = false;
-
-	private CCFileFormat format;
-	public boolean formatDirty = false;
-
-	private CCFileSize filesize;
-	public boolean filesizeDirty = false;
-
-	private String part;
-	public boolean partDirty = false;
-
-	private CCDate addDate;
-	public boolean addDateDirty = false;
-
-	private CCDateTimeList viewedHistory;
-	public boolean viewedHistoryDirty = false;
-
-	private CCDBLanguageList language;
-	public boolean languageDirty = false;
-
-	private CCMediaInfo mediaInfo;
-	public boolean mediaInfoDirty = false;
-
-	public boolean isDirty = false;
+	public int              episodeNumber;
+	public String           title;
+	public int              length;
+	public CCTagList        tags;
+	public CCFileFormat     format;
+	public CCFileSize       filesize;
+	public String           part;
+	public CCDate           addDate;
+	public CCDateTimeList   viewedHistory;
+	public CCDBLanguageList language;
+	public CCMediaInfo      mediaInfo;
 
 	public BatchEditEpisodeData(CCEpisode e) {
 		_source = e;
@@ -60,168 +36,55 @@ public class BatchEditEpisodeData implements IEpisodeData
 		mediaInfo     = e.getMediaInfo();
 	}
 
-	@Override
-	public int getLocalID() {
-		return _source.getLocalID();
-	}
-
-	@Override
-	public void setEpisodeNumber(int en) {
-		if (episodeNumber == en) return;
-		episodeNumber = en;
-		episodeNumberDirty = isDirty = true;
-	}
-
-	@Override
-	public int getEpisodeNumber() {
-		return episodeNumber;
-	}
-
-	@Override
-	public void setTitle(String t) {
-		if (title.equals(t)) return;
-		title = t;
-		titleDirty = isDirty = true;
-	}
-
-	@Override
-	public String getTitle() {
-		return title;
-	}
-
-	@Override
-	public boolean isViewed() {
-		return viewedHistory.any();
-	}
-
-	@Override
-	public void setLength(int len) {
-		if (length == len) return;
-		length = len;
-		lengthDirty = isDirty = true;
-	}
-
-	@Override
-	public int getLength() {
-		return length;
-	}
-
-	@Override
-	public void setFormat(CCFileFormat fmt) {
-		if (format == fmt) return;
-		format = fmt;
-		formatDirty = isDirty = true;
-	}
-
-	@Override
-	public CCFileFormat getFormat() {
-		return format;
-	}
-
-	@Override
-	public void setFilesize(CCFileSize fsz) {
-		if (filesize.equals(fsz)) return;
-		filesize = fsz;
-		filesizeDirty = isDirty = true;
-	}
-
-	@Override
-	public CCFileSize getFilesize() {
-		return filesize;
-	}
-
-	@Override
-	public void setPart(String p) {
-		if (part.equals(p)) return;
-		part = p;
-		partDirty = isDirty = true;
-	}
-
-	@Override
-	public String getPart() {
-		return part;
-	}
-
-	@Override
-	public void setAddDate(CCDate d) {
-		if (addDate.isEqual(d)) return;
-		addDate = d;
-		addDateDirty = isDirty = true;
-	}
-
-	@Override
-	public CCDate getAddDate() {
-		return addDate;
-	}
-
-	@Override
-	public void setViewedHistory(CCDateTimeList dlst) {
-		if (viewedHistory.isEqual(dlst)) return;
-		viewedHistory = dlst;
-		viewedHistoryDirty = isDirty = true;
-	}
-
-	@Override
-	public CCDateTimeList getViewedHistory() {
-		return viewedHistory;
-	}
-
-	@Override
-	public void setTags(CCTagList tgs) {
-		if (tags.isEqual(tgs)) return;
-		tags = tgs;
-		tagsDirty = isDirty = true;
-	}
-
-	@Override
-	public CCTagList getTags() {
-		return tags;
-	}
-
-	@Override
-	public void setLanguage(CCDBLanguageList lng) {
-		if (language.isEqual(lng)) return;
-		language = lng;
-		languageDirty = isDirty = true;
-	}
-
-	@Override
-	public CCDBLanguageList getLanguage() {
-		return language;
-	}
-
-	@Override
-	public void setMediaInfo(CCMediaInfo minfo) {
-		if (mediaInfo.isEqual(minfo)) return;
-		mediaInfo = minfo;
-		mediaInfoDirty = isDirty = true;
-	}
-
-	@Override
-	public CCMediaInfo getMediaInfo() {
-		return mediaInfo;
-	}
-
 	public CCEpisode getSource() {
 		return _source;
 	}
 
+	public boolean isDirty_EpisodeNumber() { return !(_source.getEpisodeNumber() == episodeNumber); }
+	public boolean isDirty_Title()         { return !_source.getTitle().equals(title); }
+	public boolean isDirty_Length()        { return !(_source.getLength() == length); }
+	public boolean isDirty_Tags()          { return !_source.getTags().isEqual(tags); }
+	public boolean isDirty_Format()        { return !(_source.getFormat() == format); }
+	public boolean isDirty_Filesize()      { return !(_source.getFilesize().getBytes() == filesize.getBytes()); }
+	public boolean isDirty_Part()          { return !_source.getPart().equals(part); }
+	public boolean isDirty_AddDate()       { return !_source.getAddDate().isEqual(addDate); }
+	public boolean isDirty_ViewedHistory() { return !_source.getViewedHistory().isEqual(viewedHistory); }
+	public boolean isDirty_Language()      { return !_source.getLanguage().isEqual(language); }
+	public boolean isDirty_MediaInfo()     { return !_source.getMediaInfo().isEqual(mediaInfo); }
+
+	public boolean isDirty()
+	{
+		if (isDirty_EpisodeNumber()) return true;
+		if (isDirty_Title()) return true;
+		if (isDirty_Length()) return true;
+		if (isDirty_Tags()) return true;
+		if (isDirty_Format()) return true;
+		if (isDirty_Filesize()) return true;
+		if (isDirty_Part()) return true;
+		if (isDirty_AddDate()) return true;
+		if (isDirty_ViewedHistory()) return true;
+		if (isDirty_Language()) return true;
+		if (isDirty_MediaInfo()) return true;
+
+		return false;
+	}
+
 	public void apply() {
-		if (!isDirty) return;
+		if (!isDirty()) return;
 
 		_source.beginUpdating();
 		{
-			if (episodeNumberDirty) _source.setEpisodeNumber(episodeNumber);
-			if (titleDirty)         _source.setTitle(title);
-			if (lengthDirty)        _source.setLength(length);
-			if (tagsDirty)          _source.setTags(tags);
-			if (formatDirty)        _source.setFormat(format);
-			if (filesizeDirty)      _source.setFilesize(filesize);
-			if (partDirty)          _source.setPart(part);
-			if (addDateDirty)       _source.setAddDate(addDate);
-			if (viewedHistoryDirty) _source.setViewedHistory(viewedHistory);
-			if (languageDirty)      _source.setLanguage(language);
-			if (mediaInfoDirty)     _source.setMediaInfo(mediaInfo);
+			if (isDirty_EpisodeNumber()) _source.setEpisodeNumber(episodeNumber);
+			if (isDirty_Title())         _source.setTitle(title);
+			if (isDirty_Length())        _source.setLength(length);
+			if (isDirty_Tags())          _source.setTags(tags);
+			if (isDirty_Format())        _source.setFormat(format);
+			if (isDirty_Filesize())      _source.setFilesize(filesize);
+			if (isDirty_Part())          _source.setPart(part);
+			if (isDirty_AddDate())       _source.setAddDate(addDate);
+			if (isDirty_ViewedHistory()) _source.setViewedHistory(viewedHistory);
+			if (isDirty_Language())      _source.setLanguage(language);
+			if (isDirty_MediaInfo())     _source.setMediaInfo(mediaInfo);
 		}
 		_source.endUpdating();
 	}

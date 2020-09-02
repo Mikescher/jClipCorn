@@ -24,7 +24,7 @@ public class BatchEditMethod<TParam>
 			{
 				_handler.invoke(epdata, param);
 			} catch (Exception e) {
-				err.append("[").append(epdata.getEpisodeNumber()).append("] ").append(epdata.getTitle()).append("\n"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				err.append("[").append(epdata.episodeNumber).append("] ").append(epdata.title).append("\n"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				err.append(ExceptionUtils.getMessage(e)); //$NON-NLS-1$
 				err.append("\n\n"); //$NON-NLS-1$
 			}

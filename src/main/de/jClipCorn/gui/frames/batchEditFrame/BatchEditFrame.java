@@ -201,6 +201,7 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 	private final JFileChooser videoFileChooser;
 	private final JFileChooser massVideoFileChooser;
 	private boolean amied_isButtonNext = false;
+	private JCheckBox chckbxIgnoreUserDataErrors;
 
 
 	/**
@@ -237,26 +238,26 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 		pnlRoot = new JPanel();
 		pnlRoot.setLayout(new FormLayout(new ColumnSpec[] {
 				FormSpecs.UNRELATED_GAP_COLSPEC,
-				ColumnSpec.decode("200dlu"),
+				ColumnSpec.decode("200dlu"), //$NON-NLS-1$
 				FormSpecs.UNRELATED_GAP_COLSPEC,
-				ColumnSpec.decode("250dlu:grow"),
+				ColumnSpec.decode("250dlu:grow"), //$NON-NLS-1$
 				FormSpecs.UNRELATED_GAP_COLSPEC,
-				ColumnSpec.decode("300dlu"),
+				ColumnSpec.decode("300dlu"), //$NON-NLS-1$
 				FormSpecs.UNRELATED_GAP_COLSPEC,},
 			new RowSpec[] {
 				FormSpecs.PARAGRAPH_GAP_ROWSPEC,
-				RowSpec.decode("23px"),
+				RowSpec.decode("23px"), //$NON-NLS-1$
 				FormSpecs.UNRELATED_GAP_ROWSPEC,
-				RowSpec.decode("default:grow"),
+				RowSpec.decode("default:grow"), //$NON-NLS-1$
 				FormSpecs.UNRELATED_GAP_ROWSPEC,
-				RowSpec.decode("23px"),
+				RowSpec.decode("23px"), //$NON-NLS-1$
 				FormSpecs.RELATED_GAP_ROWSPEC,
 				FormSpecs.DEFAULT_ROWSPEC,
 				FormSpecs.RELATED_GAP_ROWSPEC,}));
 		getContentPane().add(pnlRoot);
 
 		batchProgress = new JProgressBar();
-		pnlRoot.add(batchProgress, "6, 2, fill, fill");
+		pnlRoot.add(batchProgress, "6, 2, fill, fill"); //$NON-NLS-1$
 		
 		scrollPane = new JScrollPane();
 		pnlRoot.add(scrollPane, "2, 4, fill, fill"); //$NON-NLS-1$
@@ -727,7 +728,7 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 		pnlMiscEdit.add(btnNewButton_17, "2, 36, 7, 1"); //$NON-NLS-1$
 		
 		spnPathOpenOffset = new JSpinner();
-		spnPathOpenOffset.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(1)));
+		spnPathOpenOffset.setModel(new SpinnerNumberModel(0, 0, null, 1));
 		pnlMiscEdit.add(spnPathOpenOffset, "10, 36"); //$NON-NLS-1$
 		
 		btnNewButton_15 = new JButton(LocaleBundle.getString("BatchEditFrame.ClearMediaInfo")); //$NON-NLS-1$
@@ -1021,21 +1022,24 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 				ColumnSpec.decode("51px"), //$NON-NLS-1$
 				ColumnSpec.decode("default:grow"), //$NON-NLS-1$
 				ColumnSpec.decode("60px"),}, //$NON-NLS-1$
-				new RowSpec[] {
-						RowSpec.decode("26px"),})); //$NON-NLS-1$
+			new RowSpec[] {
+				RowSpec.decode("26px"),})); //$NON-NLS-1$
 
 		btnEpCancel = new JButton(LocaleBundle.getString("UIGeneric.btnCancel.text")); //$NON-NLS-1$
-		panel_1.add(btnEpCancel, "1, 1, left, top"); //$NON-NLS-1$
+		panel_1.add(btnEpCancel, "1, 1, fill, fill"); //$NON-NLS-1$
 		btnEpCancel.addActionListener(e -> cancelInfoDisplay());
 
 		btnEpOk = new JButton(LocaleBundle.getString("UIGeneric.btnOK.text")); //$NON-NLS-1$
-		panel_1.add(btnEpOk, "3, 1, left, top"); //$NON-NLS-1$
+		panel_1.add(btnEpOk, "3, 1, fill, fill"); //$NON-NLS-1$
+		
+		chckbxIgnoreUserDataErrors = new JCheckBox(LocaleBundle.getString("BatchEditFrame.CbxIgnoreUserDataErrors")); //$NON-NLS-1$
+		panel_1.add(chckbxIgnoreUserDataErrors, "4, 1, fill, fill"); //$NON-NLS-1$
 
 		btnNext = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnNext.text")); //$NON-NLS-1$
-		panel_1.add(btnNext, "5, 1, left, top"); //$NON-NLS-1$
+		panel_1.add(btnNext, "5, 1, fill, fill"); //$NON-NLS-1$
 		btnNext.setFont(new Font("Dialog", Font.BOLD | Font.ITALIC, 12)); //$NON-NLS-1$
 		btnNext.addActionListener(e -> onBtnNext());
-		btnEpOk.addActionListener(e -> okInfoDisplay(true, false));
+		btnEpOk.addActionListener(e -> okInfoDisplay(!chckbxIgnoreUserDataErrors.isSelected(), false));
 		btnOpen.addActionListener(e -> openPart());
 		btnToday.addActionListener(arg0 -> spnAddDate.setValue(CCDate.getCurrentDate()));
 		btnRecalcSize.addActionListener(e -> recalcFilesize());
@@ -1105,7 +1109,7 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 
 	private void onBtnNext() {
 		int curr = lsEpisodes.getSelectedIndex();
-		boolean retval = okInfoDisplay(true, true);
+		boolean retval = okInfoDisplay(!chckbxIgnoreUserDataErrors.isSelected(), true);
 
 		if (retval) {
 			curr++;

@@ -27,19 +27,17 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.Str;
-import de.jClipCorn.util.datatypes.Opt;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.formatter.FileSizeFormatter;
 import de.jClipCorn.util.formatter.PathFormatter;
-import de.jClipCorn.util.helper.ChecksumHelper;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.helper.FileChooserHelper;
 import de.jClipCorn.util.listener.OmniParserCallbackListener;
 import de.jClipCorn.util.listener.UpdateCallbackListener;
 import de.jClipCorn.util.stream.CCStreams;
-import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.apache.commons.lang.exception.ExceptionUtils;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
@@ -56,7 +54,7 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 
 	private static CCDate MIN_DATE = CCDate.getMinimumDate();
 
-	private JList<String> lsEpisodes;
+	protected JList<String> lsEpisodes;
 	private JLabel label;
 	private JTextField edTitle;
 	private JLabel label_2;
@@ -107,7 +105,6 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 	private JLabel lblNewLabel;
 	private JButton btnOpen;
 	private JButton btnOmniparser;
-	private JButton btnAutoMeta;
 	private JSpinner spnSide_05;
 	private JButton btnIncEpisodeNumbers;
 	private JLabel label_1;
@@ -180,7 +177,7 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 
 
 	private final IEpisodeOwner target;
-	private final List<BatchEditEpisodeData> data;
+	protected final List<BatchEditEpisodeData> data;
 	private final JFileChooser videoFileChooser;
 	private final JFileChooser massVideoFileChooser;
 	private JButton btnCalcHash;
@@ -250,18 +247,13 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 		panel = new JPanel();
 		getContentPane().add(panel, "2, 6, fill, fill"); //$NON-NLS-1$
 		panel.setLayout(new FormLayout(new ColumnSpec[] {
-				ColumnSpec.decode("default:grow"), //$NON-NLS-1$
-				FormSpecs.UNRELATED_GAP_COLSPEC,
-				ColumnSpec.decode("default:grow"),}, //$NON-NLS-1$
-				new RowSpec[] {
-						RowSpec.decode("23px"),})); //$NON-NLS-1$
+				ColumnSpec.decode("default:grow"),},
+			new RowSpec[] {
+				RowSpec.decode("23px"),})); //$NON-NLS-1$
 
 		btnOmniparser = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnOmniParser.text")); //$NON-NLS-1$
 		panel.add(btnOmniparser, "1, 1, fill, fill"); //$NON-NLS-1$
 
-		btnAutoMeta = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnAutoMeta.text")); //$NON-NLS-1$
-		panel.add(btnAutoMeta, "3, 1, fill, fill"); //$NON-NLS-1$
-		btnAutoMeta.addActionListener(arg0 -> autoMetaDataCalc());
 		btnOmniparser.addActionListener(arg0 -> {
 			OmniParserFrame oframe = new OmniParserFrame(BatchEditFrame.this, BatchEditFrame.this, getTitleList(), getCommonFolderPathStart(), Str.Empty, false);
 			oframe.setVisible(true);
@@ -394,31 +386,31 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 
 		btnPathConvert = new JButton(LocaleBundle.getString("BatchEditFrame.ConverToCC")); //$NON-NLS-1$
 		pnlPartEdit.add(btnPathConvert, "2, 2, 3, 1"); //$NON-NLS-1$
-		btnPathConvert.addActionListener(e -> convertPathToCCPath());
+		btnPathConvert.addActionListener(e -> BatchEditMethods.PATH_TO_CCPATH.run(this, null));
 
 		btnPathConvertBack = new JButton(LocaleBundle.getString("BatchEditFrame.ConvertFromCC")); //$NON-NLS-1$
 		pnlPartEdit.add(btnPathConvertBack, "6, 2, 5, 1"); //$NON-NLS-1$
-		btnPathConvertBack.addActionListener(e -> convertPathFromCCPath());
+		btnPathConvertBack.addActionListener(e -> BatchEditMethods.PATH_FROM_CCPATH.run(this, null));
 
 		btnNewButton = new JButton(LocaleBundle.getString("BatchEditFrame.DeleteFilename")); //$NON-NLS-1$
 		pnlPartEdit.add(btnNewButton, "2, 6, 5, 1"); //$NON-NLS-1$
-		btnNewButton.addActionListener(e -> deleteFilenameWithExtension());
+		btnNewButton.addActionListener(e -> BatchEditMethods.PATH_DELETE_FILENAME_WITH_EXT.run(this, null));
 
 		btnNewButton_1 = new JButton(LocaleBundle.getString("BatchEditFrame.DeleteFileNameWithoutExt")); //$NON-NLS-1$
 		pnlPartEdit.add(btnNewButton_1, "2, 8, 5, 1"); //$NON-NLS-1$
-		btnNewButton_1.addActionListener(e -> deleteFilenameWithoutExtension());
+		btnNewButton_1.addActionListener(e -> BatchEditMethods.PATH_DELETE_FILENAME_WITHOUT_EXT.run(this, null));
 
 		btnNewButton_2 = new JButton(LocaleBundle.getString("BatchEditFrame.DeletePath")); //$NON-NLS-1$
 		pnlPartEdit.add(btnNewButton_2, "2, 10, 5, 1"); //$NON-NLS-1$
-		btnNewButton_2.addActionListener(e -> deleteFilepath());
+		btnNewButton_2.addActionListener(e -> BatchEditMethods.PATH_DELETE_FILEPATH.run(this, null));
 
 		btnNewButton_3 = new JButton(LocaleBundle.getString("BatchEditFrame.DeleteExt")); //$NON-NLS-1$
 		pnlPartEdit.add(btnNewButton_3, "2, 12, 5, 1"); //$NON-NLS-1$
-		btnNewButton_3.addActionListener(e -> deleteExtension());
+		btnNewButton_3.addActionListener(e -> BatchEditMethods.PATH_DELETE_EXTENSION.run(this, null));
 
 		btnSidePart_01 = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnDeleteFirst.text")); //$NON-NLS-1$
 		pnlPartEdit.add(btnSidePart_01, "2, 16, 5, 1"); //$NON-NLS-1$
-		btnSidePart_01.addActionListener(e -> delFirstPartChars());
+		btnSidePart_01.addActionListener(e -> BatchEditMethods.PATH_DELETE_FIRST_CHARS.run(this, (int) spnSidePart_01.getValue()));
 
 		spnSidePart_01 = new JSpinner();
 		pnlPartEdit.add(spnSidePart_01, "8, 16, 3, 1"); //$NON-NLS-1$
@@ -426,7 +418,7 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 
 		btnSidePart_02 = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnDeleteLast.text")); //$NON-NLS-1$
 		pnlPartEdit.add(btnSidePart_02, "2, 18, 5, 1"); //$NON-NLS-1$
-		btnSidePart_02.addActionListener(e -> delLastPartChars());
+		btnSidePart_02.addActionListener(e -> BatchEditMethods.PATH_DELETE_LAST_CHARS.run(this, (int) spnSidePart_02.getValue()));
 
 		spnSidePart_02 = new JSpinner();
 		pnlPartEdit.add(spnSidePart_02, "8, 18, 3, 1"); //$NON-NLS-1$
@@ -438,7 +430,7 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 
 		btnSidePart_03 = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnReplace.text")); //$NON-NLS-1$
 		pnlPartEdit.add(btnSidePart_03, "4, 22, 3, 1"); //$NON-NLS-1$
-		btnSidePart_03.addActionListener(e -> replacePartChars());
+		btnSidePart_03.addActionListener(e -> BatchEditMethods.PATH_STRING_REPLACE.run(this, Tuple.Create(edSidePart_01.getText(), edSidePart_02.getText())));
 
 		edSidePart_02 = new JTextField();
 		pnlPartEdit.add(edSidePart_02, "8, 22, 3, 1"); //$NON-NLS-1$
@@ -450,7 +442,7 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 
 		btnRegexReplacePart = new JButton(LocaleBundle.getString("BatchEditFrame.ReplaceRegex")); //$NON-NLS-1$
 		pnlPartEdit.add(btnRegexReplacePart, "4, 24, 3, 1"); //$NON-NLS-1$
-		btnRegexReplacePart.addActionListener(e -> replacePartCharsRegex());
+		btnRegexReplacePart.addActionListener(e -> BatchEditMethods.PATH_STRING_REPLACE.run(this, Tuple.Create(edSidePart_R1.getText(), edSidePart_R2.getText())));
 
 		edSidePart_R2 = new JTextField();
 		pnlPartEdit.add(edSidePart_R2, "8, 24, 3, 1, fill, default"); //$NON-NLS-1$
@@ -458,7 +450,7 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 
 		btnSidePart_04 = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnTrim.text")); //$NON-NLS-1$
 		pnlPartEdit.add(btnSidePart_04, "2, 28, 9, 1"); //$NON-NLS-1$
-		btnSidePart_04.addActionListener(e -> trimPartChars());
+		btnSidePart_04.addActionListener(e -> BatchEditMethods.PATH_TRIM.run(this, null));
 
 		edSidePart_03 = new JTextField();
 		pnlPartEdit.add(edSidePart_03, "2, 30"); //$NON-NLS-1$
@@ -466,7 +458,7 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 
 		btnSidePart_05 = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnConcatStart.text")); //$NON-NLS-1$
 		pnlPartEdit.add(btnSidePart_05, "4, 30, 7, 1"); //$NON-NLS-1$
-		btnSidePart_05.addActionListener(e -> concatStartPartChars());
+		btnSidePart_05.addActionListener(e -> BatchEditMethods.PATH_PREPEND.run(this, edSidePart_03.getText()));
 
 		edSidePart_04 = new JTextField();
 		pnlPartEdit.add(edSidePart_04, "2, 32"); //$NON-NLS-1$
@@ -474,11 +466,11 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 
 		btnSidePart_06 = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnConcatEnd.text")); //$NON-NLS-1$
 		pnlPartEdit.add(btnSidePart_06, "4, 32, 7, 1"); //$NON-NLS-1$
-		btnSidePart_06.addActionListener(e -> concatEndPartChars());
+		btnSidePart_06.addActionListener(e -> BatchEditMethods.PATH_APPEND.run(this, edSidePart_04.getText()));
 
 		btnSidePart_07 = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnDelete.text")); //$NON-NLS-1$
 		pnlPartEdit.add(btnSidePart_07, "2, 36, 5, 1"); //$NON-NLS-1$
-		btnSidePart_07.addActionListener(e -> deletePartChars());
+		btnSidePart_07.addActionListener(e -> BatchEditMethods.PATH_SUBSTRING_DELETE.run(this, Tuple.Create((int) spnSidePart_03.getValue(), (int) spnSidePart_04.getValue())));
 
 		spnSidePart_03 = new JSpinner();
 		pnlPartEdit.add(spnSidePart_03, "8, 36"); //$NON-NLS-1$
@@ -492,7 +484,7 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 
 		btnSidePart_08 = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnSearchAndDel.text")); //$NON-NLS-1$
 		pnlPartEdit.add(btnSidePart_08, "4, 40, 7, 1"); //$NON-NLS-1$
-		btnSidePart_08.addActionListener(e -> searchAndDeletePartChars());
+		btnSidePart_08.addActionListener(e -> BatchEditMethods.PATH_SEARCH_AND_DELETE.run(this, edSidePart_05.getText()));
 
 
 		pnlMiscEdit = new JPanel();
@@ -552,6 +544,7 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 						FormSpecs.RELATED_GAP_ROWSPEC,}));
 
 		btnSide_01 = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnDeleteFirst.text")); //$NON-NLS-1$
+		btnSide_01.addActionListener(e -> BatchEditMethods.TITLE_DELETE_FIRST_CHARS.run(this, (int) spnSide_01.getValue()));
 		pnlTitleEdit.add(btnSide_01, "2, 2, 5, 1"); //$NON-NLS-1$
 
 		spnSide_01 = new JSpinner();
@@ -559,6 +552,7 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 		spnSide_01.setModel(new SpinnerNumberModel(1, 0, null, 1));
 
 		btnSide_02 = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnDeleteLast.text")); //$NON-NLS-1$
+		btnSide_02.addActionListener(e -> BatchEditMethods.TITLE_DELETE_LAST_CHARS.run(this, (int) spnSide_02.getValue()));
 		pnlTitleEdit.add(btnSide_02, "2, 4, 5, 1"); //$NON-NLS-1$
 
 		spnSide_02 = new JSpinner();
@@ -571,7 +565,7 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 
 		btnSide_03 = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnReplace.text")); //$NON-NLS-1$
 		pnlTitleEdit.add(btnSide_03, "4, 8, 3, 1"); //$NON-NLS-1$
-		btnSide_03.addActionListener(e -> replaceChars());
+		btnSide_03.addActionListener(e -> BatchEditMethods.TITLE_STRING_REPLACE.run(this, Tuple.Create(edSide_01.getText(), edSide_02.getText())));
 
 		edSide_02 = new JTextField();
 		pnlTitleEdit.add(edSide_02, "8, 8, 3, 1"); //$NON-NLS-1$
@@ -583,7 +577,7 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 
 		btnRegexReplace = new JButton(LocaleBundle.getString("BatchEditFrame.ReplaceRegex")); //$NON-NLS-1$
 		pnlTitleEdit.add(btnRegexReplace, "4, 10, 3, 1"); //$NON-NLS-1$
-		btnRegexReplace.addActionListener(e -> replaceCharsRegex());
+		btnRegexReplace.addActionListener(e -> BatchEditMethods.TITLE_REGEX_REPLACE.run(this, Tuple.Create(edSide_R1.getText(), edSide_R2.getText())));
 
 		edSide_R2 = new JTextField();
 		pnlTitleEdit.add(edSide_R2, "8, 10, 3, 1, fill, default"); //$NON-NLS-1$
@@ -591,7 +585,7 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 
 		btnSide_04 = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnTrim.text")); //$NON-NLS-1$
 		pnlTitleEdit.add(btnSide_04, "2, 14, 9, 1"); //$NON-NLS-1$
-		btnSide_04.addActionListener(e -> trimChars());
+		btnSide_04.addActionListener(e -> BatchEditMethods.TITLE_TRIM.run(this, null));
 
 		edSide_03 = new JTextField();
 		pnlTitleEdit.add(edSide_03, "2, 16"); //$NON-NLS-1$
@@ -599,7 +593,7 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 
 		btnSide_05 = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnConcatStart.text")); //$NON-NLS-1$
 		pnlTitleEdit.add(btnSide_05, "4, 16, 7, 1"); //$NON-NLS-1$
-		btnSide_05.addActionListener(e -> concatStartChars());
+		btnSide_05.addActionListener(e -> BatchEditMethods.TITLE_PREPEND.run(this, edSide_03.getText()));
 
 		edSide_04 = new JTextField();
 		pnlTitleEdit.add(edSide_04, "2, 18"); //$NON-NLS-1$
@@ -607,11 +601,11 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 
 		btnSide_06 = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnConcatEnd.text")); //$NON-NLS-1$
 		pnlTitleEdit.add(btnSide_06, "4, 18, 7, 1"); //$NON-NLS-1$
-		btnSide_06.addActionListener(e -> concatEndChars());
+		btnSide_06.addActionListener(e -> BatchEditMethods.TITLE_APPEND.run(this, edSide_04.getText()));
 
 		btnSide_07 = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnDelete.text")); //$NON-NLS-1$
 		pnlTitleEdit.add(btnSide_07, "2, 22, 5, 1"); //$NON-NLS-1$
-		btnSide_07.addActionListener(e -> deleteChars());
+		btnSide_07.addActionListener(e -> BatchEditMethods.TITLE_SUBSTRING_DELETE.run(this, Tuple.Create((int) spnSide_03.getValue(), (int) spnSide_04.getValue())));
 
 		spnSide_03 = new JSpinner();
 		pnlTitleEdit.add(spnSide_03, "8, 22"); //$NON-NLS-1$
@@ -625,7 +619,7 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 
 		btnSide_08 = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnSearchAndDel.text")); //$NON-NLS-1$
 		pnlTitleEdit.add(btnSide_08, "4, 26, 7, 1"); //$NON-NLS-1$
-		btnSide_08.addActionListener(e -> searchAndDeleteChars());
+		btnSide_08.addActionListener(e -> BatchEditMethods.TITLE_SEARCH_AND_DELETE.run(this, edSide_05.getText()));
 
 		spnSide_05 = new JSpinner();
 		pnlMiscEdit.add(spnSide_05, "2, 2"); //$NON-NLS-1$
@@ -633,34 +627,34 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 
 		btnIncEpisodeNumbers = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnIncEpisodeNumbers.text")); //$NON-NLS-1$
 		pnlMiscEdit.add(btnIncEpisodeNumbers, "4, 2, 7, 1"); //$NON-NLS-1$
-		btnIncEpisodeNumbers.addActionListener(arg0 -> massIncNumber());
+		btnIncEpisodeNumbers.addActionListener(arg0 -> BatchEditMethods.EPISODEINDEX_ADD.run(this, (int) spnSide_05.getValue()));
 
 		ctrlMultiLang = new LanguageChooser();
 		pnlMiscEdit.add(ctrlMultiLang, "2, 4, 5, 1"); //$NON-NLS-1$
 
 		btnSpracheSetzen = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnSetLang.text")); //$NON-NLS-1$
 		pnlMiscEdit.add(btnSpracheSetzen, "8, 4, 3, 1"); //$NON-NLS-1$
-		btnSpracheSetzen.addActionListener(arg0 -> massSetLanguage());
+		btnSpracheSetzen.addActionListener(arg0 -> BatchEditMethods.LANGUAGE_SET.run(this, ctrlMultiLang.getValue()));
 
 		btnSide_09 = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnSetEpSize.text")); //$NON-NLS-1$
 		pnlMiscEdit.add(btnSide_09, "2, 6, 9, 1"); //$NON-NLS-1$
-		btnSide_09.addActionListener(e -> massRecalcSizes());
+		btnSide_09.addActionListener(e -> BatchEditMethods.FILESIZE_FROM_FILE.run(this, null));
 
 		btnSide_11 = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnSetUnviewed.text")); //$NON-NLS-1$
 		pnlMiscEdit.add(btnSide_11, "2, 10, 9, 1"); //$NON-NLS-1$
-		btnSide_11.addActionListener(e -> massSetNotViewed());
+		btnSide_11.addActionListener(e -> BatchEditMethods.VIEWED_CLEAR.run(this, null));
 
 		btnViewedNow = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnSetViewedNow.text")); //$NON-NLS-1$
 		pnlMiscEdit.add(btnViewedNow, "2, 12, 9, 1"); //$NON-NLS-1$
-		btnViewedNow.addActionListener(e -> massAddToHistory(CCDateTime.getCurrentDateTime()));
+		btnViewedNow.addActionListener(e -> BatchEditMethods.VIEWED_ADD.run(this, CCDateTime.getCurrentDateTime()));
 
 		btnViewedUnknown = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnSetViewedUndef.text")); //$NON-NLS-1$
 		pnlMiscEdit.add(btnViewedUnknown, "2, 14, 9, 1"); //$NON-NLS-1$
-		btnViewedUnknown.addActionListener(e -> massAddToHistory(CCDateTime.getUnspecified()));
+		btnViewedUnknown.addActionListener(e -> BatchEditMethods.VIEWED_ADD.run(this, CCDateTime.getUnspecified()));
 
 		btnSide_12 = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnSetEpLength.text")); //$NON-NLS-1$
 		pnlMiscEdit.add(btnSide_12, "2, 18, 5, 1"); //$NON-NLS-1$
-		btnSide_12.addActionListener(e -> massSetLength());
+		btnSide_12.addActionListener(e -> BatchEditMethods.LENGTH_SET.run(this, (int) spnSideLength.getValue()));
 
 		spnSideLength = new JSpinner();
 		pnlMiscEdit.add(spnSideLength, "8, 18, 3, 1"); //$NON-NLS-1$
@@ -668,7 +662,7 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 
 		btnSide_13 = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnSetEpFormat.text")); //$NON-NLS-1$
 		pnlMiscEdit.add(btnSide_13, "2, 22, 5, 1"); //$NON-NLS-1$
-		btnSide_13.addActionListener(e -> massSetFormat());
+		btnSide_13.addActionListener(e -> BatchEditMethods.FORMAT_SET.run(this, cbxSideFormat.getSelectedEnum()));
 
 		cbxSideFormat = new CCEnumComboBox<>(CCFileFormat.getWrapper());
 		pnlMiscEdit.add(cbxSideFormat, "8, 22, 3, 1"); //$NON-NLS-1$
@@ -678,31 +672,29 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 
 		btnAddToHistory = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnAddToHistory.text")); //$NON-NLS-1$
 		pnlMiscEdit.add(btnAddToHistory, "6, 26, 5, 1"); //$NON-NLS-1$
-		btnAddToHistory.addActionListener(e -> massAddToHistory(ctrlSideHistoryVal.getValue()));
+		btnAddToHistory.addActionListener(e -> BatchEditMethods.VIEWED_ADD.run(this, ctrlSideHistoryVal.getValue()));
 
 		btnClearHistory = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnClearHistory.text")); //$NON-NLS-1$
 		pnlMiscEdit.add(btnClearHistory, "6, 28, 5, 1"); //$NON-NLS-1$
-		btnClearHistory.addActionListener(e -> massClearHistory());
+		btnClearHistory.addActionListener(e -> BatchEditMethods.VIEWED_CLEAR.run(this, null));
 
 		btnSideAutoLang = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnMassSetLang.title")); //$NON-NLS-1$
 		pnlMiscEdit.add(btnSideAutoLang, "2, 32, 9, 1"); //$NON-NLS-1$
-		btnSideAutoLang.addActionListener(e -> massMediaInfoLang());
+		btnSideAutoLang.addActionListener(e -> BatchEditMethods.LANGUAGE_FROM_FILE_MEDIAINFO.run(this, null));
 
 		btnSideAutoLen = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnMassSetLen.title")); //$NON-NLS-1$
 		pnlMiscEdit.add(btnSideAutoLen, "2, 34, 9, 1"); //$NON-NLS-1$
-		btnSideAutoLen.addActionListener(e -> massMediaInfoLen());
+		btnSideAutoLen.addActionListener(e -> BatchEditMethods.LENGTH_FROM_FILE_MEDIAINFO.run(this, null));
 
 		btnSiedAutoMediaInfo = new JButton(LocaleBundle.getString("AddEpisodeFrame.btnMassSetMediaInfo.title")); //$NON-NLS-1$
+		btnSiedAutoMediaInfo.addActionListener(e -> BatchEditMethods.MEDIAINFO_FROM_FILE.run(this, null));
 		pnlMiscEdit.add(btnSiedAutoMediaInfo, "2, 36, 5, 1, fill, fill"); //$NON-NLS-1$
 		
 		btnCalcHash = new JButton(LocaleBundle.getString("BatchEditFrame.HashCalc")); //$NON-NLS-1$
 		pnlMiscEdit.add(btnCalcHash, "8, 36, 3, 1"); //$NON-NLS-1$
-		btnCalcHash.addActionListener(e -> massCalcHash());
+		btnCalcHash.addActionListener(e -> BatchEditMethods.MEDIAINFO_CALC_HASH.run(this, null));
 
-		btnSiedAutoMediaInfo.addActionListener(e -> massMediaInfo());
 
-		btnSide_02.addActionListener(e -> delLastChars());
-		btnSide_01.addActionListener(e -> delFirstChars());
 		getContentPane().add(btnOK, "4, 8, center, top"); //$NON-NLS-1$
 
 		lblSeason = new JLabel(target.getTitle());
@@ -1070,7 +1062,7 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 		updateDisplayPanel();
 	}
 
-	private void updateList() {
+	public void updateList() {
 		DefaultListModel<String> model = new DefaultListModel<>();
 		lsEpisodes.setModel(model);
 
@@ -1182,406 +1174,6 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 		}
 	}
 
-	private void delFirstChars() {
-		lsEpisodes.setSelectedIndex(-1);
-
-		for (BatchEditEpisodeData ep : data) {
-			try {
-				ep.setTitle(ep.getTitle().substring((int) spnSide_01.getValue()));
-			} catch (IndexOutOfBoundsException e) {
-				// doesnt mind...
-			}
-		}
-
-		updateList();
-	}
-
-	private void delLastChars() {
-		lsEpisodes.setSelectedIndex(-1);
-
-		for (BatchEditEpisodeData ep : data) {
-			try {
-				ep.setTitle(ep.getTitle().substring(0, ep.getTitle().length() - (int) spnSide_02.getValue()));
-			} catch (IndexOutOfBoundsException e) {
-				// doesnt mind...
-			}
-		}
-
-		updateList();
-	}
-
-	private void replaceChars() {
-		lsEpisodes.setSelectedIndex(-1);
-
-		for (BatchEditEpisodeData ep : data) ep.setTitle(ep.getTitle().replace(edSide_01.getText(), edSide_02.getText()));
-
-		updateList();
-	}
-
-	private void replaceCharsRegex() {
-		lsEpisodes.setSelectedIndex(-1);
-
-		StringBuilder err = new StringBuilder();
-		for (BatchEditEpisodeData ep : data)
-		{
-			try
-			{
-				ep.setTitle(ep.getTitle().replaceAll(edSide_R1.getText(), edSide_R2.getText()));
-			}
-			catch (Exception e) {
-				err.append("[").append(ep.getEpisodeNumber()).append("] ").append(ep.getTitle()).append("\n").append(ExceptionUtils.getMessage(e)).append("\n\n"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-			}
-		}
-
-		updateList();
-
-		if (!err.toString().isEmpty()) GenericTextDialog.showText(this, getTitle(), err.toString(), true);
-	}
-
-	private void trimChars() {
-		lsEpisodes.setSelectedIndex(-1);
-
-		for (BatchEditEpisodeData ep : data) ep.setTitle(ep.getTitle().trim());
-
-		updateList();
-	}
-
-	private void concatStartChars() {
-		lsEpisodes.setSelectedIndex(-1);
-
-		for (BatchEditEpisodeData ep : data) ep.setTitle(edSide_03.getText().concat(ep.getTitle()));
-
-		updateList();
-	}
-
-	private void concatEndChars() {
-		lsEpisodes.setSelectedIndex(-1);
-
-		for (BatchEditEpisodeData ep : data) ep.setTitle(ep.getTitle().concat(edSide_04.getText()));
-
-		updateList();
-	}
-
-	private void deleteChars() {
-		int start = (int) spnSide_03.getValue();
-		int end = (int) spnSide_04.getValue();
-
-		lsEpisodes.setSelectedIndex(-1);
-
-		for (BatchEditEpisodeData ep : data) {
-
-			try {
-				String title = ep.getTitle();
-				title = title.substring(0, start).concat(title.substring(end));
-
-				ep.setTitle(title);
-			} catch (IndexOutOfBoundsException e) {
-				// doesnt mind...
-			}
-		}
-
-		updateList();
-	}
-
-	private void searchAndDeletePartChars() {
-		lsEpisodes.setSelectedIndex(-1);
-
-		for (BatchEditEpisodeData ep : data) ep.setPart(ep.getPart().replace(edSidePart_05.getText(), "")); //$NON-NLS-1$
-
-		updateList();
-	}
-
-	private void delFirstPartChars() {
-		lsEpisodes.setSelectedIndex(-1);
-
-		for (BatchEditEpisodeData ep : data) {
-			try {
-				ep.setPart(ep.getPart().substring((int) spnSidePart_01.getValue()));
-			} catch (IndexOutOfBoundsException e) {
-				// doesnt mind...
-			}
-		}
-
-		updateList();
-	}
-
-	private void delLastPartChars() {
-		lsEpisodes.setSelectedIndex(-1);
-
-		for (BatchEditEpisodeData ep : data) {
-			try {
-				ep.setPart(ep.getPart().substring(0, ep.getPart().length() - (int) spnSidePart_02.getValue()));
-			} catch (IndexOutOfBoundsException e) {
-				// doesnt mind...
-			}
-		}
-
-		updateList();
-	}
-
-	private void replacePartChars() {
-		lsEpisodes.setSelectedIndex(-1);
-
-		for (BatchEditEpisodeData ep : data) ep.setPart(ep.getPart().replace(edSidePart_01.getText(), edSidePart_02.getText()));
-
-		updateList();
-	}
-
-	private void replacePartCharsRegex() {
-		lsEpisodes.setSelectedIndex(-1);
-
-		StringBuilder err = new StringBuilder();
-		for (BatchEditEpisodeData ep : data)
-		{
-			try
-			{
-				ep.setPart(ep.getPart().replaceAll(edSidePart_R1.getText(), edSidePart_R2.getText()));
-			}
-			catch (Exception e) {
-				err.append("[").append(ep.getEpisodeNumber()).append("] ").append(ep.getTitle()).append("\n").append(ExceptionUtils.getMessage(e)).append("\n\n"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-			}
-
-		}
-
-		updateList();
-
-		if (!err.toString().isEmpty()) GenericTextDialog.showText(this, getTitle(), err.toString(), true);
-	}
-
-	private void trimPartChars() {
-		lsEpisodes.setSelectedIndex(-1);
-
-		for (BatchEditEpisodeData ep : data) ep.setPart(ep.getPart().trim());
-
-		updateList();
-	}
-
-	private void concatStartPartChars() {
-		lsEpisodes.setSelectedIndex(-1);
-
-		for (BatchEditEpisodeData ep : data) ep.setPart(edSidePart_03.getText().concat(ep.getPart()));
-
-		updateList();
-	}
-
-	private void concatEndPartChars() {
-		lsEpisodes.setSelectedIndex(-1);
-
-		for (BatchEditEpisodeData ep : data) ep.setPart(ep.getPart().concat(edSidePart_04.getText()));
-
-		updateList();
-	}
-
-	private void deletePartChars() {
-		int start = (int) spnSidePart_03.getValue();
-		int end = (int) spnSidePart_04.getValue();
-
-		lsEpisodes.setSelectedIndex(-1);
-
-		for (BatchEditEpisodeData ep : data) {
-
-			try {
-				String title = ep.getPart();
-				title = title.substring(0, start).concat(title.substring(end));
-
-				ep.setPart(title);
-			} catch (IndexOutOfBoundsException e) {
-				// doesnt mind...
-			}
-		}
-
-		updateList();
-	}
-
-	private void massIncNumber() {
-		int delta = (int) spnSide_05.getValue();
-
-		lsEpisodes.setSelectedIndex(-1);
-
-		for (BatchEditEpisodeData ep : data) ep.setEpisodeNumber(ep.getEpisodeNumber() + delta);
-
-		updateList();
-	}
-
-	private void searchAndDeleteChars() {
-		lsEpisodes.setSelectedIndex(-1);
-
-		for (BatchEditEpisodeData ep : data) ep.setTitle(ep.getTitle().replace(edSide_05.getText(), "")); //$NON-NLS-1$
-
-		updateList();
-	}
-
-	private void massRecalcSizes() {
-		lsEpisodes.setSelectedIndex(-1);
-
-		for (BatchEditEpisodeData ep : data) {
-
-			File f = new File(PathFormatter.fromCCPath(ep.getPart()));
-			if (f.exists()) ep.setFilesize(new CCFileSize(f.length()));
-		}
-
-		updateList();
-	}
-
-	private void massSetNotViewed() {
-		lsEpisodes.setSelectedIndex(-1);
-
-		for (BatchEditEpisodeData ep : data) ep.setViewedHistory(CCDateTimeList.createEmpty());
-
-		updateList();
-	}
-
-	private void massSetLength() {
-		lsEpisodes.setSelectedIndex(-1);
-
-		for (BatchEditEpisodeData ep : data) ep.setLength((int) spnSideLength.getValue());
-
-		updateList();
-	}
-
-	private void massSetFormat() {
-		CCFileFormat ff = cbxSideFormat.getSelectedEnum();
-		if (ff == null) return;
-
-		lsEpisodes.setSelectedIndex(-1);
-
-		for (BatchEditEpisodeData ep : data) ep.setFormat(ff);
-
-		updateList();
-	}
-
-	private void massSetLanguage() {
-		lsEpisodes.setSelectedIndex(-1);
-
-		for (BatchEditEpisodeData ep : data) ep.setLanguage(ctrlMultiLang.getValue());
-
-		updateList();
-	}
-
-	@Override
-	public void updateTitles(List<String> newTitles) {
-		lsEpisodes.setSelectedIndex(-1);
-
-		for (int i = 0; i < Math.min(data.size(), newTitles.size()); i++) data.get(i).setTitle(newTitles.get(i));
-
-		updateList();
-	}
-
-	private void massMediaInfoLang() {
-		lsEpisodes.setSelectedIndex(-1);
-
-		StringBuilder err = new StringBuilder();
-
-		for (BatchEditEpisodeData ep : data) {
-			try {
-				MediaQueryResult dat = MediaQueryRunner.query(PathFormatter.fromCCPath(ep.getPart()), false);
-
-				if (dat.AudioLanguages == null) {
-					err.append("[").append(ep.getEpisodeNumber()).append("] ").append(ep.getTitle()).append("\n").append("No language in file").append("\n\n"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
-					continue;
-				}
-
-				CCDBLanguageList dbll = dat.AudioLanguages;
-
-				if (dbll.isEmpty()) {
-					err.append("[").append(ep.getEpisodeNumber()).append("] ").append(ep.getTitle()).append("\n").append("Language is empty").append("\n\n"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
-					DialogHelper.showLocalError(this, "Dialogs.MediaInfoEmpty"); //$NON-NLS-1$
-					continue;
-				} else {
-					ep.setLanguage(dbll);
-				}
-
-			} catch (IOException | MediaQueryException e) {
-				err.append("[").append(ep.getEpisodeNumber()).append("] ").append(ep.getTitle()).append("\n").append(ExceptionUtils.getMessage(e)).append("\n\n"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-			}
-		}
-
-		updateList();
-
-		if (!err.toString().isEmpty()) GenericTextDialog.showText(this, getTitle(), err.toString(), true);
-	}
-
-	private void massMediaInfoLen() {
-		lsEpisodes.setSelectedIndex(-1);
-
-		StringBuilder err = new StringBuilder();
-
-		for (BatchEditEpisodeData ep : data) {
-			try {
-				MediaQueryResult dat = MediaQueryRunner.query(PathFormatter.fromCCPath(ep.getPart()), true);
-
-				int dur = (dat.Duration==-1)?(-1):(int)(dat.Duration/60);
-				if (dur == -1) throw new MediaQueryException("Duration == -1"); //$NON-NLS-1$
-				ep.setLength(dur);
-
-			} catch (IOException | MediaQueryException e) {
-				err.append("[").append(ep.getEpisodeNumber()).append("] ").append(ep.getTitle()).append("\n").append(ExceptionUtils.getMessage(e)).append("\n\n"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-			}
-		}
-
-		updateList();
-
-		if (!err.toString().isEmpty()) GenericTextDialog.showText(this, getTitle(), err.toString(), true);
-	}
-
-	private void massMediaInfo() {
-		lsEpisodes.setSelectedIndex(-1);
-
-		StringBuilder err = new StringBuilder();
-
-		for (BatchEditEpisodeData ep : data) {
-			try {
-				MediaQueryResult dat = MediaQueryRunner.query(PathFormatter.fromCCPath(ep.getPart()), true);
-				CCMediaInfo minfo = dat.toMediaInfo();
-
-				if (minfo.isSet()) ep.setMediaInfo(minfo);
-
-			} catch (IOException | MediaQueryException e) {
-				err.append("[").append(ep.getEpisodeNumber()).append("] ").append(ep.getTitle()).append("\n").append(ExceptionUtils.getMessage(e)).append("\n\n"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-			}
-		}
-
-		updateList();
-
-		if (!err.toString().isEmpty()) GenericTextDialog.showText(this, getTitle(), err.toString(), true);
-	}
-
-	private void autoMetaDataCalc() {
-		lsEpisodes.setSelectedIndex(-1);
-
-		Integer len = target.getCommonEpisodeLength();
-		if (len == 0) len = target.getConsensEpisodeLength();
-
-		while (len == null || len <= 0) {
-			try {
-				String dialogresult = DialogHelper.showLocalInputDialog(this, "AddEpisodeFrame.inputMetaTextLenDialog.text", "0"); //$NON-NLS-1$ //$NON-NLS-2$
-
-				if (dialogresult == null) return; // abort
-
-				len = Integer.parseInt(dialogresult);
-			} catch (NumberFormatException nfe) {
-				len = -1;
-			}
-		}
-
-		//####################################
-
-		for (BatchEditEpisodeData ep : data) {
-			File f = new File(PathFormatter.fromCCPath(ep.getPart()));
-			if (f.exists()) {
-				ep.setFilesize(new CCFileSize(f.length()));
-			}
-
-			ep.setLength(len);
-
-			ep.setFormat(CCFileFormat.getMovieFormatOrDefault(PathFormatter.getExtension(PathFormatter.fromCCPath(ep.getPart()))));
-		}
-
-		//####################################
-
-		updateList();
-	}
-
 	private void parseCodecMetadata_Lang() {
 		String mqp = CCProperties.getInstance().PROP_PLAY_MEDIAINFO_PATH.getValue();
 		if (Str.isNullOrWhitespace(mqp) || !new File(mqp).exists() || !new File(mqp).isFile() || !new File(mqp).canExecute()) {
@@ -1663,86 +1255,11 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 		}
 	}
 
-	private void massAddToHistory(CCDateTime t) {
-		if (t == null) return;
-
+	@Override
+	public void updateTitles(List<String> newTitles) {
 		lsEpisodes.setSelectedIndex(-1);
 
-		for (BatchEditEpisodeData ep : data) ep.setViewedHistory(ep.getViewedHistory().add(t));
-
-		updateList();
-	}
-
-	private void massClearHistory() {
-		lsEpisodes.setSelectedIndex(-1);
-
-		for (BatchEditEpisodeData ep : data) ep.setViewedHistory(CCDateTimeList.createEmpty());
-
-		updateList();
-	}
-
-	private void convertPathToCCPath() {
-		lsEpisodes.setSelectedIndex(-1);
-
-		for (BatchEditEpisodeData ep : data) ep.setPart(PathFormatter.getCCPath(ep.getPart()));
-
-		updateList();
-	}
-
-	private void convertPathFromCCPath() {
-		lsEpisodes.setSelectedIndex(-1);
-
-		for (BatchEditEpisodeData ep : data) ep.setPart(PathFormatter.fromCCPath(ep.getPart()));
-
-		updateList();
-	}
-
-	private void deleteExtension() {
-		lsEpisodes.setSelectedIndex(-1);
-
-		for (BatchEditEpisodeData ep : data) ep.setPart(PathFormatter.getWithoutExtension(ep.getPart()));
-
-		updateList();
-	}
-
-	private void massCalcHash() {
-		lsEpisodes.setSelectedIndex(-1);
-
-		try 
-		{
-			for (BatchEditEpisodeData ep : data) 
-			{
-				var p = ep.getMediaInfo().toPartial();
-				p.Checksum = Opt.of(ChecksumHelper.fastVideoHash(new File(PathFormatter.fromCCPath(ep.getPart()))));
-				ep.setMediaInfo(p.toMediaInfo());
-			}
-		} catch (IOException e) {
-			GenericTextDialog.showText(this, getTitle(), e.getMessage() + "\n\n" + ExceptionUtils.getMessage(e) + "\n\n" + ExceptionUtils.getStackTrace(e), false); //$NON-NLS-1$ //$NON-NLS-2$
-		}
-
-		updateList();
-	}
-
-	private void deleteFilenameWithExtension() {
-		lsEpisodes.setSelectedIndex(-1);
-
-		for (BatchEditEpisodeData ep : data) ep.setPart(PathFormatter.getDirectory(ep.getPart()));
-
-		updateList();
-	}
-
-	private void deleteFilenameWithoutExtension() {
-		lsEpisodes.setSelectedIndex(-1);
-
-		for (BatchEditEpisodeData ep : data) ep.setPart(PathFormatter.getDirectory(ep.getPart()).concat(PathFormatter.getExtension(ep.getPart())));
-
-		updateList();
-	}
-
-	private void deleteFilepath() {
-		lsEpisodes.setSelectedIndex(-1);
-
-		for (BatchEditEpisodeData ep : data) ep.setPart(PathFormatter.getFilenameWithExt(ep.getPart()));
+		for (int i = 0; i < Math.min(data.size(), newTitles.size()); i++) data.get(i).setTitle(newTitles.get(i));
 
 		updateList();
 	}

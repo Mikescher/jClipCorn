@@ -200,6 +200,7 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 	protected final List<BatchEditEpisodeData> data;
 	private final JFileChooser videoFileChooser;
 	private final JFileChooser massVideoFileChooser;
+	private boolean amied_isButtonNext = false;
 
 
 	/**
@@ -1034,7 +1035,7 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 		panel_1.add(btnNext, "5, 1, left, top"); //$NON-NLS-1$
 		btnNext.setFont(new Font("Dialog", Font.BOLD | Font.ITALIC, 12)); //$NON-NLS-1$
 		btnNext.addActionListener(e -> onBtnNext());
-		btnEpOk.addActionListener(e -> okInfoDisplay(true));
+		btnEpOk.addActionListener(e -> okInfoDisplay(true, false));
 		btnOpen.addActionListener(e -> openPart());
 		btnToday.addActionListener(arg0 -> spnAddDate.setValue(CCDate.getCurrentDate()));
 		btnRecalcSize.addActionListener(e -> recalcFilesize());
@@ -1104,7 +1105,7 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 
 	private void onBtnNext() {
 		int curr = lsEpisodes.getSelectedIndex();
-		boolean retval = okInfoDisplay(true);
+		boolean retval = okInfoDisplay(true, true);
 
 		if (retval) {
 			curr++;
@@ -1129,7 +1130,7 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 		}
 	}
 
-	private boolean okInfoDisplay(boolean check) {
+	private boolean okInfoDisplay(boolean check, boolean next) {
 		BatchEditEpisodeData episode = getSelected();
 
 		if (episode == null) return false;
@@ -1137,25 +1138,44 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 		List<UserDataProblem> problems = new ArrayList<>();
 		boolean probvalue = (!check) || checkUserData(problems);
 
-		if (!probvalue) {
+		if (!probvalue)
+		{
+			amied_isButtonNext = next;
 			InputErrorDialog amied = new InputErrorDialog(problems, this, this);
 			amied.setVisible(true);
 			return false;
 		}
 
-		episode.title = (edTitle.getText());
+		episode.title         = (edTitle.getText());
 		episode.episodeNumber = ((int) spnEpisode.getValue());
-		episode.format = (cbxFormat.getSelectedEnum());
-		episode.length = ((int) spnLength.getValue());
-		episode.filesize = (new CCFileSize((long) spnSize.getValue()));
-		episode.addDate = (spnAddDate.getValue());
-		episode.part = (edPart.getText());
-		episode.language = (ctrlLang.getValue());
-		episode.mediaInfo = (ctrlMediaInfo.getValue());
+		episode.format        = (cbxFormat.getSelectedEnum());
+		episode.length        = ((int) spnLength.getValue());
+		episode.filesize      = (new CCFileSize((long) spnSize.getValue()));
+		episode.addDate       = (spnAddDate.getValue());
+		episode.part          = (edPart.getText());
+		episode.language      = (ctrlLang.getValue());
+		episode.mediaInfo     = (ctrlMediaInfo.getValue());
 		episode.viewedHistory = (ctrlHistory.getValue());
 
+		var idx = lsEpisodes.getSelectedIndex();
 		lsEpisodes.setSelectedIndex(-1);
 		updateList();
+
+		if (next)
+		{
+			idx++;
+
+			if (idx < lsEpisodes.getModel().getSize())
+			{
+				lsEpisodes.setSelectedIndex(idx);
+				edTitle.requestFocus();
+				edTitle.selectAll();
+			}
+		}
+		else
+		{
+			lsEpisodes.setSelectedIndex(idx);
+		}
 
 		return true;
 	}
@@ -1267,7 +1287,7 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 
 	@Override
 	public void onAMIEDIgnoreClicked() {
-		okInfoDisplay(false);
+		okInfoDisplay(false, amied_isButtonNext);
 	}
 
 	private void setFilepath(String t) {

@@ -175,12 +175,6 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 	private JButton btnNewButton_1;
 	private JButton btnNewButton_2;
 	private JButton btnNewButton_3;
-
-
-	private final IEpisodeOwner target;
-	protected final List<BatchEditEpisodeData> data;
-	private final JFileChooser videoFileChooser;
-	private final JFileChooser massVideoFileChooser;
 	private JButton btnCalcHash;
 	private JPanel pnlReset;
 	private JButton btnNewButton_4;
@@ -198,6 +192,14 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 	private JButton btnNewButton_16;
 	private JButton btnNewButton_17;
 	private JSpinner spnPathOpenOffset;
+	protected JProgressBar batchProgress;
+	protected JPanel pnlRoot;
+
+
+	private final IEpisodeOwner target;
+	protected final List<BatchEditEpisodeData> data;
+	private final JFileChooser videoFileChooser;
+	private final JFileChooser massVideoFileChooser;
 
 
 	/**
@@ -230,27 +232,33 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 		setTitle(LocaleBundle.getFormattedString("AddEpisodeFrame.this.title", target.getSeries().getTitle())); //$NON-NLS-1$
 		setIconImage(Resources.IMG_FRAME_ICON.get());
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		getContentPane().setLayout(new FormLayout(new ColumnSpec[] {
+		
+		pnlRoot = new JPanel();
+		pnlRoot.setLayout(new FormLayout(new ColumnSpec[] {
 				FormSpecs.UNRELATED_GAP_COLSPEC,
-				ColumnSpec.decode("200dlu"), //$NON-NLS-1$
+				ColumnSpec.decode("200dlu"),
 				FormSpecs.UNRELATED_GAP_COLSPEC,
-				ColumnSpec.decode("250dlu:grow"), //$NON-NLS-1$
+				ColumnSpec.decode("250dlu:grow"),
 				FormSpecs.UNRELATED_GAP_COLSPEC,
-				ColumnSpec.decode("300dlu"), //$NON-NLS-1$
+				ColumnSpec.decode("300dlu"),
 				FormSpecs.UNRELATED_GAP_COLSPEC,},
-				new RowSpec[] {
-						FormSpecs.PARAGRAPH_GAP_ROWSPEC,
-						RowSpec.decode("23px"), //$NON-NLS-1$
-						FormSpecs.UNRELATED_GAP_ROWSPEC,
-						RowSpec.decode("default:grow"), //$NON-NLS-1$
-						FormSpecs.UNRELATED_GAP_ROWSPEC,
-						RowSpec.decode("23px"), //$NON-NLS-1$
-						FormSpecs.RELATED_GAP_ROWSPEC,
-						FormSpecs.DEFAULT_ROWSPEC,
-						FormSpecs.RELATED_GAP_ROWSPEC,}));
+			new RowSpec[] {
+				FormSpecs.PARAGRAPH_GAP_ROWSPEC,
+				RowSpec.decode("23px"),
+				FormSpecs.UNRELATED_GAP_ROWSPEC,
+				RowSpec.decode("default:grow"),
+				FormSpecs.UNRELATED_GAP_ROWSPEC,
+				RowSpec.decode("23px"),
+				FormSpecs.RELATED_GAP_ROWSPEC,
+				FormSpecs.DEFAULT_ROWSPEC,
+				FormSpecs.RELATED_GAP_ROWSPEC,}));
+		getContentPane().add(pnlRoot);
 
+		batchProgress = new JProgressBar();
+		pnlRoot.add(batchProgress, "6, 2, fill, fill");
+		
 		scrollPane = new JScrollPane();
-		getContentPane().add(scrollPane, "2, 4, fill, fill"); //$NON-NLS-1$
+		pnlRoot.add(scrollPane, "2, 4, fill, fill"); //$NON-NLS-1$
 
 		lsEpisodes = new JList<>();
 		lsEpisodes.setCellRenderer(new HFixListCellRenderer());
@@ -262,7 +270,7 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 		btnOK.addActionListener(e -> onOKClicked(true));
 
 		panel = new JPanel();
-		getContentPane().add(panel, "2, 6, fill, fill"); //$NON-NLS-1$
+		pnlRoot.add(panel, "2, 6, fill, fill"); //$NON-NLS-1$
 		panel.setLayout(new FormLayout(new ColumnSpec[] {
 				ColumnSpec.decode("default:grow"),}, //$NON-NLS-1$
 			new RowSpec[] {
@@ -277,7 +285,7 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 		});
 
 		tabbedPane = new JTabbedPane(JTabbedPane.BOTTOM);
-		getContentPane().add(tabbedPane, "6, 2, 1, 7, fill, fill"); //$NON-NLS-1$
+		pnlRoot.add(tabbedPane, "6, 4, 1, 5, fill, fill"); //$NON-NLS-1$
 
 		pnlTitleEdit = new JPanel();
 		pnlTitleEdit.setBorder(null);
@@ -815,15 +823,15 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 		btnNewButton_13.addActionListener(e -> BatchEditMethods.VIEWED_RESET.run(this, null));
 		pnlReset.add(btnNewButton_13, "2, 22"); //$NON-NLS-1$
 
-		getContentPane().add(btnOK, "4, 8, center, top"); //$NON-NLS-1$
+		pnlRoot.add(btnOK, "4, 8, center, top"); //$NON-NLS-1$
 
 		lblSeason = new JLabel(target.getTitle());
 		lblSeason.setFont(new Font("Tahoma", Font.PLAIN, 16)); //$NON-NLS-1$
 		lblSeason.setHorizontalAlignment(SwingConstants.CENTER);
-		getContentPane().add(lblSeason, "2, 2, fill, fill"); //$NON-NLS-1$
+		pnlRoot.add(lblSeason, "2, 2, fill, fill"); //$NON-NLS-1$
 
 		pnlInfo = new JPanel();
-		getContentPane().add(pnlInfo, "4, 2, 1, 5, fill, fill"); //$NON-NLS-1$
+		pnlRoot.add(pnlInfo, "4, 2, 1, 5, fill, fill"); //$NON-NLS-1$
 		pnlInfo.setBorder(new LineBorder(new Color(0, 0, 0)));
 		pnlInfo.setLayout(new FormLayout(new ColumnSpec[] {
 				FormSpecs.RELATED_GAP_COLSPEC,
@@ -1392,5 +1400,17 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 		if (returnval != JFileChooser.APPROVE_OPTION) return null;
 
 		return dlg.getSelectedFiles();
+	}
+
+	public void setPanelEnabled(Container panel, Boolean isEnabled) {
+		panel.setEnabled(isEnabled);
+
+		Component[] components = panel.getComponents();
+
+		for (Component component : components)
+		{
+			if (component instanceof Container) setPanelEnabled((Container) component, isEnabled);
+			component.setEnabled(isEnabled);
+		}
 	}
 }

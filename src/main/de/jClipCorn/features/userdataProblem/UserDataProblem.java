@@ -1,19 +1,18 @@
 package de.jClipCorn.features.userdataProblem;
 
-import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.List;
-
+import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.*;
 import de.jClipCorn.database.databaseElement.columnTypes.*;
-import org.apache.commons.lang.StringUtils;
-
-import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.formatter.RomanNumberFormatter;
+import org.apache.commons.lang.StringUtils;
+
+import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.List;
 
 public class UserDataProblem {
 	public final static int PROBLEM_NO_PATH = 1;
@@ -153,30 +152,30 @@ public class UserDataProblem {
 		List<String> extensions = new ArrayList<>();
 		
 		if (! p0.isEmpty()) {
-			extensions.add(PathFormatter.getExtension(p0));
+			extensions.add(PathFormatter.getExtension(p0).toLowerCase());
 		}
 		
 		if (! p1.isEmpty()) {
-			extensions.add(PathFormatter.getExtension(p1));
+			extensions.add(PathFormatter.getExtension(p1).toLowerCase());
 		}
 		
 		if (! p2.isEmpty()) {
-			extensions.add(PathFormatter.getExtension(p2));
+			extensions.add(PathFormatter.getExtension(p2).toLowerCase());
 		}
 		
 		if (! p3.isEmpty()) {
-			extensions.add(PathFormatter.getExtension(p3));
+			extensions.add(PathFormatter.getExtension(p3).toLowerCase());
 		}
 		
 		if (! p4.isEmpty()) {
-			extensions.add(PathFormatter.getExtension(p4));
+			extensions.add(PathFormatter.getExtension(p4).toLowerCase());
 		}
 		
 		if (! p5.isEmpty()) {
-			extensions.add(PathFormatter.getExtension(p5));
+			extensions.add(PathFormatter.getExtension(p5).toLowerCase());
 		}
 		
-		if (! (extensions.contains(csExtn) || extensions.contains(csExta))) {
+		if (! (extensions.contains(csExtn.toLowerCase()) || extensions.contains(csExta.toLowerCase()))) {
 			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_EXTENSION_UNEQUALS_FILENAME));
 		}
 		

@@ -48,13 +48,13 @@ public class CCNamedPathProperty extends CCProperty<NamedPathVar> {
 			new ColumnSpec[]
 			{
 				FormSpecs.UNRELATED_GAP_COLSPEC,
-				ColumnSpec.decode("default"),
+				ColumnSpec.decode("default"), //$NON-NLS-1$
 				FormSpecs.UNRELATED_GAP_COLSPEC,
-				ColumnSpec.decode("80px"),
+				ColumnSpec.decode("80px"), //$NON-NLS-1$
 				FormSpecs.UNRELATED_GAP_COLSPEC,
-				ColumnSpec.decode("default"),
+				ColumnSpec.decode("default"), //$NON-NLS-1$
 				FormSpecs.UNRELATED_GAP_COLSPEC,
-				ColumnSpec.decode("default:grow"),
+				ColumnSpec.decode("default:grow"), //$NON-NLS-1$
 			},
 			new RowSpec[]
 			{
@@ -63,13 +63,13 @@ public class CCNamedPathProperty extends CCProperty<NamedPathVar> {
 				FormSpecs.PREF_ROWSPEC,
 			}));
 
-		pnl.add(new JLabel(LocaleBundle.getString("CCNamedPathProperty.Name")), "2, 1, fill, default"); //$NON-NLS-1$
+		pnl.add(new JLabel(LocaleBundle.getString("CCNamedPathProperty.Name")), "2, 1, fill, default"); //$NON-NLS-1$ //$NON-NLS-2$
 		pnl.add(pnl.Field1 = new JTextField(), "4, 1, fill, default"); //$NON-NLS-1$
 
-		pnl.add(new JLabel(LocaleBundle.getString("CCNamedPathProperty.Path")), "6, 1, fill, default"); //$NON-NLS-1$
+		pnl.add(new JLabel(LocaleBundle.getString("CCNamedPathProperty.Path")), "6, 1, fill, default"); //$NON-NLS-1$ //$NON-NLS-2$
 		pnl.add(pnl.Field2 = new JTextField(), "8, 1, fill, default"); //$NON-NLS-1$
 
-		pnl.add(new JLabel(LocaleBundle.getString("CCNamedPathProperty.Args")), "2, 3, fill, default"); //$NON-NLS-1$
+		pnl.add(new JLabel(LocaleBundle.getString("CCNamedPathProperty.Args")), "2, 3, fill, default"); //$NON-NLS-1$ //$NON-NLS-2$
 		pnl.add(pnl.Field3 = new JTextField(), "4, 3, 5, 1, fill, default"); //$NON-NLS-1$
 
 		return pnl;
@@ -146,7 +146,7 @@ public class CCNamedPathProperty extends CCProperty<NamedPathVar> {
 
 	@Override
 	public NamedPathVar setValue(NamedPathVar val) {
-		properties.setProperty(identifier, Str.toBase64(" " + val.Name + " ") + ";" + Str.toBase64(" " + val.Path + " ") + ";" + Str.toBase64(" " + val.Arguments + " ")); //$NON-NLS-1$
+		properties.setProperty(identifier, Str.toBase64(" " + val.Name + " ") + ";" + Str.toBase64(" " + val.Path + " ") + ";" + Str.toBase64(" " + val.Arguments + " ")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$
 
 		return getValue();
 	}

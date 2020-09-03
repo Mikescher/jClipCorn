@@ -294,7 +294,7 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
 		if (Main.DEBUG) {
-			setTitle("<LID:" + dispSeries.getLocalID() + "> " + dispSeries.getTitle() + " (" + dispSeries.getCoverID() + ")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+			setTitle("<LID:" + dispSeries.getLocalID() + "> " + dispSeries.getTitle() + " (" + dispSeries.getCoverID() + ")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 		} else {
 			setTitle(dispSeries.getTitle());
 		}

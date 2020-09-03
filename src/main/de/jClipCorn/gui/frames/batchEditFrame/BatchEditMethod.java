@@ -44,7 +44,7 @@ public class BatchEditMethod<TParam>
 				}
 				catch (Exception e) {
 					err.append("[").append(epdata.episodeNumber).append("] ").append(epdata.title).append("\n"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-					err.append(ExceptionUtils.getMessage(e)); //$NON-NLS-1$
+					err.append(ExceptionUtils.getMessage(e));
 					err.append("\n\n"); //$NON-NLS-1$
 				}
 			}
@@ -62,6 +62,6 @@ public class BatchEditMethod<TParam>
 				f.setPanelEnabled(f.pnlRoot, true);
 			});
 
-		}, "BATCHEDIT_ACTION").start();
+		}, "BATCHEDIT_ACTION").start(); //$NON-NLS-1$
 	}
 }

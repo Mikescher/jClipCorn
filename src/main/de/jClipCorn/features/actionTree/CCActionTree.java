@@ -710,6 +710,24 @@ public class CCActionTree extends UIActionTree{
 		{
 			if (!m.isViewed()) return;
 
+			if (m.getViewedHistory().getLastOrInvalid().isUnspecifiedOrMinimum())
+			{
+				var ok = DialogHelper.showLocaleYesNoDefaultNo(e.SwingOwner, "Dialogs.UndoLastViewedWarning1");
+				if (!ok) return;
+			}
+			else
+			{
+				var hours = m.getViewedHistory().getLastOrInvalid().getSecondDifferenceTo(CCDateTime.getCurrentDateTime()) / (60.0 * 60.0);
+
+				var max = CCProperties.getInstance().PROP_MAX_UNDOLASTWATCH_HOUR_DIFF.getValue();
+
+				if (hours > max)
+				{
+					var ok = DialogHelper.showLocaleYesNoDefaultNo(e.SwingOwner, "Dialogs.UndoLastViewedWarning2");
+					if (!ok) return;
+				}
+			}
+
 			CCDateTimeList history = m.getViewedHistory();
 			history = history.removeLast();
 			m.setViewedHistoryFromUI(history);
@@ -852,6 +870,24 @@ public class CCActionTree extends UIActionTree{
 		e.ifEpisodeSource(p ->
 		{
 			if (!p.isViewed()) return;
+
+			if (p.getViewedHistory().getLastOrInvalid().isUnspecifiedOrMinimum())
+			{
+				var ok = DialogHelper.showLocaleYesNoDefaultNo(e.SwingOwner, "Dialogs.UndoLastViewedWarning1");
+				if (!ok) return;
+			}
+			else
+			{
+				var hours = p.getViewedHistory().getLastOrInvalid().getSecondDifferenceTo(CCDateTime.getCurrentDateTime()) / (60.0 * 60.0);
+
+				var max = CCProperties.getInstance().PROP_MAX_UNDOLASTWATCH_HOUR_DIFF.getValue();
+
+				if (hours > max)
+				{
+					var ok = DialogHelper.showLocaleYesNoDefaultNo(e.SwingOwner, "Dialogs.UndoLastViewedWarning2");
+					if (!ok) return;
+				}
+			}
 
 			CCDateTimeList history = p.getViewedHistory();
 			history = history.removeLast();

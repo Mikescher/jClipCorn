@@ -503,7 +503,7 @@ public class EditSeriesFrame extends JFrame implements WindowListener {
 		pnlEditSeriesInner.add(panel_3, "1, 17, 7, 1, fill, fill"); //$NON-NLS-1$
 		panel_3.setLayout(new FormLayout(new ColumnSpec[] {
 				FormSpecs.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("default:grow"),
+				ColumnSpec.decode("default:grow"), //$NON-NLS-1$
 				FormSpecs.RELATED_GAP_COLSPEC,
 				FormSpecs.DEFAULT_COLSPEC,},
 			new RowSpec[] {
@@ -514,7 +514,7 @@ public class EditSeriesFrame extends JFrame implements WindowListener {
 				FormSpecs.RELATED_GAP_ROWSPEC,
 				FormSpecs.DEFAULT_ROWSPEC,
 				FormSpecs.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("max(14dlu;default)"),
+				RowSpec.decode("max(14dlu;default)"), //$NON-NLS-1$
 				FormSpecs.RELATED_GAP_ROWSPEC,
 				FormSpecs.DEFAULT_ROWSPEC,
 				FormSpecs.RELATED_GAP_ROWSPEC,

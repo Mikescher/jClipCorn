@@ -204,6 +204,7 @@ public class CCProperties {
 	public CCNamedPathProperty                              PROP_PLAY_ALT_PROG_3;
 	public CCNamedPathProperty                              PROP_PLAY_ALT_PROG_4;
 	public CCNamedPathProperty                              PROP_PLAY_ALT_PROG_5;
+	public CCPIntProperty                                   PROP_MAX_UNDOLASTWATCH_HOUR_DIFF;
 
 	public boolean ARG_READONLY = false;
 	
@@ -388,6 +389,7 @@ public class CCProperties {
 		PROP_VLC_ROBOT_KEEP_POSITION            = new CCBoolProperty(NONVISIBLE,            this,   "PROP_VLC_ROBOT_KEEP_POSITION",             false);
 		PROP_VLC_ROBOT_FREQUENCY                = new CCEnumProperty<>(NONVISIBLE,          this,   "PROP_VLC_ROBOT_FREQUENCY",                 VLCRobotFrequency.MS_0500, VLCRobotFrequency.getWrapper());
 		PROP_FOLDERLANG_IGNORE_PERC             = new CCPIntProperty(NONVISIBLE,            this,   "PROP_FOLDERLANG_IGNORE_PERC",              2);
+		PROP_MAX_UNDOLASTWATCH_HOUR_DIFF        = new CCPIntProperty(NONVISIBLE,            this,   "PROP_MAX_UNDOLASTWATCH_HOUR_DIFF",         3);
 
 		PROP_ADD_MOVIE_RELATIVE_AUTO            = new CCBoolProperty(CAT_PATHSYNTAX,        this,   "PROP_ADD_MOVIE_RELATIVE_AUTO",             true);
 		PROP_PATHSYNTAX_SELF                    = new CCBoolProperty(CAT_PATHSYNTAX,        this,   "PROP_PATHSYNTAX_SELF",                     true);

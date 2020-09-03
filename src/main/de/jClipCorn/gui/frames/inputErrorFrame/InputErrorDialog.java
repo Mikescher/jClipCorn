@@ -105,7 +105,7 @@ public class InputErrorDialog extends JDialog {
 		
 		for (Tuple<String, UserDataProblem> udp : problems) {
 			if (showsource)
-				lsErrorModel.addElement("[" + udp.Item1 + "] " + udp.Item2.getText());
+				lsErrorModel.addElement("[" + udp.Item1 + "] " + udp.Item2.getText()); //$NON-NLS-1$ //$NON-NLS-2$
 			else
 				lsErrorModel.addElement(udp.Item2.getText());
 		}

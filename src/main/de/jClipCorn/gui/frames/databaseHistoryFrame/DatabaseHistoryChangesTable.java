@@ -3,6 +3,7 @@ package de.jClipCorn.gui.frames.databaseHistoryFrame;
 import de.jClipCorn.database.history.CCHistorySingleChange;
 import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleColumnPrototype;
 import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleTable;
+import de.jClipCorn.util.Str;
 
 import javax.swing.text.JTextComponent;
 import java.util.ArrayList;
@@ -63,10 +64,10 @@ public class DatabaseHistoryChangesTable extends JCCSimpleTable<CCHistorySingleC
 	@Override
 	protected void OnSelectElement(CCHistorySingleChange element) {
 		edValueOld.setVisible(element.OldValue != null);
-		edValueOld.setText((element.OldValue == null) ? "" : element.OldValue);
+		edValueOld.setText((element.OldValue == null) ? Str.Empty : element.OldValue);
 
 		edValueNew.setVisible(element.NewValue != null);
-		edValueNew.setText((element.NewValue == null) ? "" : element.NewValue);
+		edValueNew.setText((element.NewValue == null) ? Str.Empty : element.NewValue);
 	}
 
 	@Override

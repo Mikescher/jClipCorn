@@ -157,11 +157,11 @@ public class BatchEditMethods
 	{
 		MediaQueryResult dat = MediaQueryRunner.query(PathFormatter.fromCCPath(ep.part), false);
 
-		if (dat.AudioLanguages == null) throw new MediaQueryException("No language in file");
+		if (dat.AudioLanguages == null) throw new MediaQueryException("No language in file"); //$NON-NLS-1$
 
 		CCDBLanguageList dbll = dat.AudioLanguages;
 
-		if (dbll.isEmpty()) throw new MediaQueryException("Language is empty");
+		if (dbll.isEmpty()) throw new MediaQueryException("Language is empty"); //$NON-NLS-1$
 		ep.language = dbll;
 	});
 
@@ -284,7 +284,7 @@ public class BatchEditMethods
 		if (param.Item1 == null) return;
 		if (param.Item3)
 		{
-			if (opt.Item2.size() != (param.Item1.length+param.Item2)) throw new Exception("Not enough / too much files ("+(opt.Item2.size() - param.Item2)+" <> "+param.Item1.length+")");
+			if (opt.Item2.size() != (param.Item1.length+param.Item2)) throw new Exception("Not enough / too much files ("+(opt.Item2.size() - param.Item2)+" <> "+param.Item1.length+")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			if ((opt.Item1-param.Item2) < 0) return;
 		}
 		else

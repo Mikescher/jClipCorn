@@ -199,3 +199,67 @@ public class Main {
 // option recreate previews (covers dialog to show content of covers table)
 
 // Compare speed of stream vs ccstream (just out of interest)
+
+
+// ---------------------------------------------------------------------------- //
+/*
+
+ ## jGoodies FormDesigner Migration ##
+
+ - [ ] AboutFrame
+ - [ ] AddMovieFrame
+ - [ ] AddMultiEpisodesFrame
+ - [ ] AddSeasonFrame
+ - [ ] AddSeriesFrame
+ - [ ] AllRatingsFrame
+ - [ ] AutofindRefrenceFrame
+ - [ ] BackupManagerFrame
+ - [ ] BatchEditFrame
+ - [ ] ChangeScoreFrame
+ - [ ] ChangeViewedFrame
+ - [ ] CheckDatabaseFrame
+ - [ ] CompareDatabaseFrame
+ - [ ] CoverCropFrame
+ - [ ] CoverPreviewFrame
+ - [ ] CreateSeriesFolderStructureFrame
+ - [ ] CustomFilterEditDialog
+ - [ ] DatabaseHistoryFrame
+ - [ ] DisplayGenresDialog
+ - [ ] EditMediaInfoDialog
+ - [ ] EditMovieFrame
+ - [ ] EditSeriesFrame
+ - [ ] EditStringListPropertyFrame
+ - [ ] EditToolbarFrame
+ - [ ] ExportElementsFrame
+ - [X] ExtendedSettingsFrame
+ - [ ] FilenameRulesFrame
+ - [ ] FindCoverFrame
+ - [ ] GenericTextDialog
+ - [ ] GroupManageFrame
+ - [ ] ImportElementsFrame
+ - [ ] InitialConfigFrame
+ - [ ] InputErrorFrame
+ - [ ] LogFrame
+ - [ ] MoveSeriesFrame
+ - [ ] OmniParserFrame
+ - [ ] OrganizeFilterFrame
+ - [ ] ParseOnlineFrame
+ - [ ] ParseWatchDataFrame
+ - [ ] PreviewMovieFrame
+ - [ ] PreviewSeriesFrame
+ - [ ] QuickAddEpisodeDialog
+ - [ ] QuickAddMoviesDialog
+ - [ ] RandomMovieFrame
+ - [ ] ScanFolderFrame
+ - [ ] SearchFrame
+ - [ ] SettingsFrame
+ - [ ] ShowIncompleteFilmSeriesFrame
+ - [ ] ShowUpdateFrame
+ - [ ] StatisticsFrame
+ - [ ] TextExportFrame
+ - [ ] UpdateCodecFrame
+ - [ ] UpdateMetadataFrame
+ - [ ] VlcRobot
+ - [ ] WatchHistoryFrame
+
+*/

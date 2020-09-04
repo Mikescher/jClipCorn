@@ -1,33 +1,7 @@
 package de.jClipCorn.gui.frames.extendedSettingsFrame;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JTextField;
-import javax.swing.ListSelectionModel;
-import javax.swing.RowSorter;
-import javax.swing.RowSorter.SortKey;
-import javax.swing.SortOrder;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.table.TableRowSorter;
-
-import com.jgoodies.forms.layout.ColumnSpec;
+import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.FormSpecs;
-import com.jgoodies.forms.layout.RowSpec;
-
 import de.jClipCorn.gui.frames.extendedSettingsFrame.settingsTable.SettingsTableEditor;
 import de.jClipCorn.gui.frames.extendedSettingsFrame.settingsTable.SettingsTableModel;
 import de.jClipCorn.gui.localization.LocaleBundle;
@@ -38,146 +12,35 @@ import de.jClipCorn.util.Str;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.helper.LookAndFeelManager;
 
-public class ExtendedSettingsFrame extends JFrame implements ListSelectionListener {
-	private static final long serialVersionUID = 6757118153580402337L;
+import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.table.TableRowSorter;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
+public class ExtendedSettingsFrame extends JFrame
+{
 	private final CCProperties properties;
-	private JPanel pnlContent;
-	private JButton btnOK;
-	private JButton btnReset;
-	private JScrollPane pnlScroll;
-	private JTable tabSettings;
 	private SettingsTableModel lsModel = null;
-	private TableRowSorter<SettingsTableModel> rowsorter;
-	private	SettingsTableEditor lsEditor;
-	private JTextField edName;
-	private JTextField edTyp;
-	private JButton btnResetAll;
-	private JLabel lblDescription;
-	private JButton btnValueSet;
-	private JPanel pnlEditComponent;
-	private JButton btnValueReset;
-	private JLabel lblCategory;
+	private SettingsTableEditor lsEditor;
 
-	public ExtendedSettingsFrame(Component owner, CCProperties properties) {
+	public ExtendedSettingsFrame(Component owner, CCProperties properties)
+	{
 		super();
 		this.properties = properties;
-		initGUI();
-		finalizeGUI();
+
+		initComponents();
+		postInit();
 
 		setLocationRelativeTo(owner);
 	}
 
-	private void initGUI() {
-		setTitle(LocaleBundle.getString("extendedSettingsFrame.title")); //$NON-NLS-1$
+	private void postInit()
+	{
 		setIconImage(Resources.IMG_FRAME_ICON.get());
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		getContentPane().setLayout(new BorderLayout(0, 0));
 
-		pnlContent = new JPanel();
-		getContentPane().add(pnlContent, BorderLayout.CENTER);
-		pnlContent.setLayout(new FormLayout(new ColumnSpec[] {
-				FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
-				ColumnSpec.decode("default:grow(2)"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("default:grow(2)"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("default:grow"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_COLSPEC,
-				FormSpecs.DEFAULT_COLSPEC,
-				FormSpecs.RELATED_GAP_COLSPEC,
-				FormSpecs.DEFAULT_COLSPEC,
-				FormSpecs.RELATED_GAP_COLSPEC,},
-			new RowSpec[] {
-				FormSpecs.LINE_GAP_ROWSPEC,
-				RowSpec.decode("default:grow"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.PREF_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.PREF_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.PREF_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.PREF_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.PREF_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,}));
-
-		pnlScroll = new JScrollPane();
-		pnlContent.add(pnlScroll, "2, 2, 9, 1, fill, fill"); //$NON-NLS-1$
-
-		tabSettings = new JTable();
-		tabSettings.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		tabSettings.setFillsViewportHeight(true);
-		pnlScroll.setViewportView(tabSettings);
-		
-		lblCategory = new JLabel(""); //$NON-NLS-1$
-		pnlContent.add(lblCategory, "2, 4, 3, 1, fill, center"); //$NON-NLS-1$
-
-		lblDescription = new JLabel(""); //$NON-NLS-1$
-		pnlContent.add(lblDescription, "2, 6, 7, 1, left, center"); //$NON-NLS-1$
-
-		edName = new JTextField();
-		pnlContent.add(edName, "2, 8, 3, 1, fill, center"); //$NON-NLS-1$
-		edName.setEditable(false);
-		edName.setColumns(10);
-		
-				edTyp = new JTextField();
-				pnlContent.add(edTyp, "6, 8, 3, 1, fill, center"); //$NON-NLS-1$
-				edTyp.setEditable(false);
-				edTyp.setColumns(10);
-
-		btnReset = new JButton(LocaleBundle.getString("extendedSettingsFrame.btnReset.title")); //$NON-NLS-1$
-		pnlContent.add(btnReset, "10, 8, left, center"); //$NON-NLS-1$
-		btnReset.addActionListener(arg0 ->
-		{
-			int sel = tabSettings.convertRowIndexToModel(tabSettings.getSelectedRow());
-
-			lsEditor.stopCellEditing();
-
-			if (sel >= 0) {
-				CCProperty<?> prop = properties.getPropertyList().get(sel);
-				prop.setDefault();
-				refresh();
-			}
-		});
-
-		pnlEditComponent = new JPanel();
-		pnlContent.add(pnlEditComponent, "2, 10, 5, 1, fill, fill"); //$NON-NLS-1$
-		pnlEditComponent.setLayout(new BorderLayout(0, 0));
-
-		btnValueSet = new JButton(LocaleBundle.getString("extendedSettingsFrame.btnValueSet.title")); //$NON-NLS-1$
-		pnlContent.add(btnValueSet, "8, 10"); //$NON-NLS-1$
-
-		btnValueReset = new JButton(LocaleBundle.getString("extendedSettingsFrame.btnValueReset.title")); //$NON-NLS-1$
-		pnlContent.add(btnValueReset, "10, 10"); //$NON-NLS-1$
-
-		btnOK = new JButton(LocaleBundle.getString("UIGeneric.btnOK.text")); //$NON-NLS-1$
-		pnlContent.add(btnOK, "4, 12, right, center"); //$NON-NLS-1$
-		btnOK.addActionListener(arg0 ->
-		{
-			lsEditor.stopCellEditing();
-			dispose();
-		});
-		btnOK.setEnabled(!CCProperties.getInstance().ARG_READONLY);
-
-		btnResetAll = new JButton(LocaleBundle.getString("extendedSettingsFrame.btnResetAll.title")); //$NON-NLS-1$
-		pnlContent.add(btnResetAll, "6, 12, left, center"); //$NON-NLS-1$
-		btnResetAll.addActionListener(arg0 ->
-		{
-			if (DialogHelper.showLocaleYesNo(ExtendedSettingsFrame.this, "extendedSettingsFrame.dlgResetAll.dlg")) { //$NON-NLS-1$
-				properties.resetAll();
-
-				refresh();
-			}
-		});
-
-		pack();
-
-		setMinimumSize(new Dimension(368, 520));
-	}
-
-	private void finalizeGUI() {
 		if (! LookAndFeelManager.isSubstance()) {
 			edName.setBackground(Color.WHITE);
 		}
@@ -186,9 +49,10 @@ public class ExtendedSettingsFrame extends JFrame implements ListSelectionListen
 		}
 
 		lsModel = new SettingsTableModel(properties); // $hide$
-		rowsorter = new TableRowSorter<>();
+
+		TableRowSorter<SettingsTableModel> rowsorter = new TableRowSorter<>();
 		rowsorter.setModel(lsModel);
-		List<SortKey> sk = new ArrayList<>();
+		ArrayList<RowSorter.SortKey> sk = new ArrayList<>();
 		sk.add( new RowSorter.SortKey(0, SortOrder.ASCENDING) );
 		rowsorter.setSortKeys(sk);
 		rowsorter.sort();
@@ -199,12 +63,44 @@ public class ExtendedSettingsFrame extends JFrame implements ListSelectionListen
 		tabSettings.getColumnModel().getColumn(0).setPreferredWidth(getWidth()*2/3);
 		tabSettings.getColumnModel().getColumn(1).setPreferredWidth(getWidth()*1/3);
 
-		tabSettings.getSelectionModel().addListSelectionListener(this);
+		tabSettings.getSelectionModel().addListSelectionListener(this::onSelectionValueChanged);
 		tabSettings.getColumnModel().getColumn(1).setCellEditor(lsEditor = new SettingsTableEditor(properties));
 	}
 
-	@Override
-	public void valueChanged(ListSelectionEvent e) {
+	private void onReset(ActionEvent e) {
+		int sel = tabSettings.convertRowIndexToModel(tabSettings.getSelectedRow());
+
+		lsEditor.stopCellEditing();
+
+		if (sel >= 0) {
+			CCProperty<?> prop = properties.getPropertyList().get(sel);
+			prop.setDefault();
+			refresh();
+		}
+	}
+
+	private void onSetValue(ActionEvent e) {
+		// TODO add your code here
+	}
+
+	private void onResetValue(ActionEvent e) {
+		// TODO add your code here
+	}
+
+	private void onOK(ActionEvent e) {
+		lsEditor.stopCellEditing();
+		dispose();
+	}
+
+	private void onResetAll(ActionEvent e) {
+		if (DialogHelper.showLocaleYesNo(ExtendedSettingsFrame.this, "extendedSettingsFrame.dlgResetAll.dlg")) { //$NON-NLS-1$
+			properties.resetAll();
+
+			refresh();
+		}
+	}
+
+	public void onSelectionValueChanged(ListSelectionEvent e) {
 		int sel;
 		if (tabSettings.getSelectedRow() >= 0 && !e.getValueIsAdjusting() && (sel = tabSettings.convertRowIndexToModel(tabSettings.getSelectedRow())) >= 0) {
 			final CCProperty<Object> prop = properties.getPropertyList().get(sel);
@@ -214,13 +110,13 @@ public class ExtendedSettingsFrame extends JFrame implements ListSelectionListen
 
 			for (ActionListener l : btnValueSet.getActionListeners()) btnValueSet.removeActionListener(l);
 			for (ActionListener l : btnValueReset.getActionListeners()) btnValueReset.removeActionListener(l);
-			
+
 			btnValueSet.addActionListener(arg0 ->
 			{
 				prop.setValue(prop.getComponentValue(comp1));
 				refresh();
 			});
-			
+
 			btnValueReset.addActionListener(arg0 ->
 			{
 				prop.setValue(prop.getDefault());
@@ -229,12 +125,12 @@ public class ExtendedSettingsFrame extends JFrame implements ListSelectionListen
 			});
 
 			prop.setComponentValueToValue(comp1, prop.getValue());
-			
+
 			pnlEditComponent.removeAll();
 			pnlEditComponent.add(comp1, BorderLayout.CENTER);
 			if (comp2 != null) pnlEditComponent.add(comp2, BorderLayout.EAST);
 			pnlEditComponent.validate();
-			
+
 			edName.setText(prop.getIdentifier());
 			edTyp.setText(prop.getTypeName());
 			lblDescription.setText(prop.getDescriptionOrEmpty());
@@ -247,7 +143,7 @@ public class ExtendedSettingsFrame extends JFrame implements ListSelectionListen
 
 			for (ActionListener l : btnValueSet.getActionListeners()) btnValueSet.removeActionListener(l);
 			for (ActionListener l : btnValueReset.getActionListeners()) btnValueReset.removeActionListener(l);
-			
+
 			pnlEditComponent.removeAll();
 		}
 	}
@@ -259,4 +155,94 @@ public class ExtendedSettingsFrame extends JFrame implements ListSelectionListen
 
 		tabSettings.getSelectionModel().setSelectionInterval(row, row);
 	}
+
+	private void initComponents() {
+		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
+		pnlScroll = new JScrollPane();
+		tabSettings = new JTable();
+		lblCategory = new JLabel();
+		lblDescription = new JLabel();
+		edName = new JTextField();
+		edTyp = new JTextField();
+		btnReset = new JButton();
+		pnlEditComponent = new JPanel();
+		btnValueSet = new JButton();
+		btnValueReset = new JButton();
+		btnOK = new JButton();
+		button2 = new JButton();
+
+		//======== this ========
+		setTitle(LocaleBundle.getString("extendedSettingsFrame.title")); //$NON-NLS-1$
+		setMinimumSize(new Dimension(368, 520));
+		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+		var contentPane = getContentPane();
+		contentPane.setLayout(new FormLayout(
+			"$rgap, 3*(0dlu:grow, $lcgap), 0dlu:grow(0.5), $lcgap, default, $lcgap", //$NON-NLS-1$
+			"$rgap, default:grow, 2*($lgap, 12dlu), 3*($lgap, default), $lgap")); //$NON-NLS-1$
+
+		//======== pnlScroll ========
+		{
+
+			//---- tabSettings ----
+			tabSettings.setFillsViewportHeight(true);
+			tabSettings.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+			pnlScroll.setViewportView(tabSettings);
+		}
+		contentPane.add(pnlScroll, CC.xywh(2, 2, 9, 1, CC.FILL, CC.FILL));
+		contentPane.add(lblCategory, CC.xywh(2, 4, 4, 1));
+		contentPane.add(lblDescription, CC.xywh(2, 6, 7, 1));
+
+		//---- edName ----
+		edName.setEditable(false);
+		edName.setColumns(10);
+		contentPane.add(edName, CC.xywh(2, 8, 3, 1));
+		contentPane.add(edTyp, CC.xywh(6, 8, 3, 1));
+
+		//---- btnReset ----
+		btnReset.setText(LocaleBundle.getString("extendedSettingsFrame.btnReset.title")); //$NON-NLS-1$
+		btnReset.addActionListener(e -> onReset(e));
+		contentPane.add(btnReset, CC.xy(10, 8));
+
+		//======== pnlEditComponent ========
+		{
+			pnlEditComponent.setLayout(new BorderLayout());
+		}
+		contentPane.add(pnlEditComponent, CC.xywh(2, 10, 5, 1, CC.FILL, CC.FILL));
+
+		//---- btnValueSet ----
+		btnValueSet.setText(LocaleBundle.getString("extendedSettingsFrame.btnValueSet.title")); //$NON-NLS-1$
+		contentPane.add(btnValueSet, CC.xy(8, 10));
+
+		//---- btnValueReset ----
+		btnValueReset.setText(LocaleBundle.getString("extendedSettingsFrame.btnReset.title")); //$NON-NLS-1$
+		contentPane.add(btnValueReset, CC.xy(10, 10));
+
+		//---- btnOK ----
+		btnOK.setText(LocaleBundle.getString("UIGeneric.btnOK.text")); //$NON-NLS-1$
+		btnOK.addActionListener(e -> onOK(e));
+		contentPane.add(btnOK, CC.xy(4, 12, CC.RIGHT, CC.DEFAULT));
+
+		//---- button2 ----
+		button2.setText(LocaleBundle.getString("extendedSettingsFrame.btnResetAll.title")); //$NON-NLS-1$
+		button2.addActionListener(e -> onResetAll(e));
+		contentPane.add(button2, CC.xy(6, 12, CC.LEFT, CC.DEFAULT));
+		setSize(500, 540);
+		setLocationRelativeTo(getOwner());
+		// JFormDesigner - End of component initialization  //GEN-END:initComponents
+	}
+
+	// JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
+	private JScrollPane pnlScroll;
+	private JTable tabSettings;
+	private JLabel lblCategory;
+	private JLabel lblDescription;
+	private JTextField edName;
+	private JTextField edTyp;
+	private JButton btnReset;
+	private JPanel pnlEditComponent;
+	private JButton btnValueSet;
+	private JButton btnValueReset;
+	private JButton btnOK;
+	private JButton button2;
+	// JFormDesigner - End of variables declaration  //GEN-END:variables
 }

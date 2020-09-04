@@ -1,0 +1,115 @@
+JFDML JFormDesigner: "7.0.2.4.305" Java: "11.0.8" encoding: "UTF-8"
+
+new FormModel {
+	"i18n.bundlePackage": "de.jClipCorn.gui.localization"
+	"i18n.bundleName": "locale"
+	contentType: "form/swing"
+	root: new FormRoot {
+		add( new FormWindow( "javax.swing.JFrame", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+			"$columnSpecs": "relgap, 0dlu:grow, labelcompgap, 0dlu:grow, labelcompgap, 0dlu:grow, labelcompgap, 0dlu:grow(0.5), labelcompgap, default, labelcompgap"
+			"$rowSpecs": "relgap, default:grow, linegap, 12dlu, linegap, 12dlu, linegap, default, linegap, default, linegap, default, linegap"
+		} ) {
+			name: "this"
+			"title": new FormMessage( null, "extendedSettingsFrame.title" )
+			"minimumSize": new java.awt.Dimension( 368, 520 )
+			"defaultCloseOperation": 2
+			"$sizePolicy": 1
+			add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+				name: "pnlScroll"
+				add( new FormComponent( "javax.swing.JTable" ) {
+					name: "tabSettings"
+					"fillsViewportHeight": true
+					"selectionMode": 0
+				} )
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 2
+				"gridY": 2
+				"gridWidth": 9
+				"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "lblCategory"
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridY": 4
+				"gridWidth": 4
+				"gridX": 2
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "lblDescription"
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 2
+				"gridY": 6
+				"gridWidth": 7
+			} )
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "edName"
+				"editable": false
+				"columns": 10
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridY": 8
+				"gridWidth": 3
+				"gridX": 2
+			} )
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "edTyp"
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 6
+				"gridY": 8
+				"gridWidth": 3
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "btnReset"
+				"text": new FormMessage( null, "extendedSettingsFrame.btnReset.title" )
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "onReset", true ) )
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 10
+				"gridY": 8
+			} )
+			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.BorderLayout ) ) {
+				name: "pnlEditComponent"
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 2
+				"gridY": 10
+				"gridWidth": 5
+				"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "btnValueSet"
+				"text": new FormMessage( null, "extendedSettingsFrame.btnValueSet.title" )
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 8
+				"gridY": 10
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "btnValueReset"
+				"text": new FormMessage( null, "extendedSettingsFrame.btnReset.title" )
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 10
+				"gridY": 10
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "btnOK"
+				"text": new FormMessage( null, "UIGeneric.btnOK.text" )
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "onOK", true ) )
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 4
+				"gridY": 12
+				"hAlign": sfield com.jgoodies.forms.layout.CellConstraints RIGHT
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "button2"
+				"text": new FormMessage( null, "extendedSettingsFrame.btnResetAll.title" )
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "onResetAll", true ) )
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 6
+				"gridY": 12
+				"hAlign": sfield com.jgoodies.forms.layout.CellConstraints LEFT
+			} )
+		}, new FormLayoutConstraints( null ) {
+			"location": new java.awt.Point( 0, 0 )
+			"size": new java.awt.Dimension( 500, 540 )
+		} )
+	}
+}

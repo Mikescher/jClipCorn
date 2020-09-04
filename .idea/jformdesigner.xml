@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="JFormDesignerProjectSettings">
+    <node name="designer">
+      <entry key="_i18nJavaSettingsEnabled" value="true" />
+      <entry key="i18n.javagetbundleformat" value="LocaleBundle" />
+      <entry key="i18n.javagetstringformat" value="LocaleBundle.getString(${key})" />
+    </node>
+    <node name="javacodegenerator">
+      <entry key="_generalSettingsEnabled" value="true" />
+      <entry key="nonnlstags" value="true" />
+      <entry key="_templatesSettingsEnabled" value="true" />
+      <node name="templates">
+        <entry key="_header.template" value="${package_declaration}" />
+      </node>
+    </node>
+  </component>
+</project>

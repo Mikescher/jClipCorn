@@ -26,9 +26,13 @@ public abstract class CCProperty<T extends Object> {
 
 	public abstract T getValue();
 	public abstract T setValue(T val);
-	
+
 	public String getValueAsString() {
 		return getValue().toString();
+	}
+
+	public String getDefaultAsString() {
+		return getDefault().toString();
 	}
 	
 	public T setDefault() {
@@ -45,7 +49,6 @@ public abstract class CCProperty<T extends Object> {
 	
 	public String getTypeName() {
 		return getValue().getClass().getSimpleName();
-	
 	}
 	
 	public CCPropertyCategory getCategory() {

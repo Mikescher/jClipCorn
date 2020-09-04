@@ -1,15 +1,14 @@
 package de.jClipCorn.properties.property;
 
-import java.awt.Component;
-
-import javax.swing.KeyStroke;
-
+import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.gui.guiComponents.KeyStrokeTextfield;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.CCPropertyCategory;
 import de.jClipCorn.util.helper.KeyStrokeUtil;
+
+import javax.swing.*;
+import java.awt.*;
 
 public class CCKeyStrokeProperty  extends CCProperty<KeyStroke>{
 	public CCKeyStrokeProperty(CCPropertyCategory cat, CCProperties prop, String ident, KeyStroke std) {
@@ -68,9 +67,14 @@ public class CCKeyStrokeProperty  extends CCProperty<KeyStroke>{
 		
 		return getValue();
 	}
-	
+
 	@Override
 	public String getValueAsString() {
 		return KeyStrokeUtil.keyStrokeToString(getValue());
+	}
+
+	@Override
+	public String getDefaultAsString() {
+		return KeyStrokeUtil.keyStrokeToString(getDefault());
 	}
 }

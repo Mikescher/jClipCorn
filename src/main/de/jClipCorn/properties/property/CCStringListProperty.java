@@ -1,22 +1,20 @@
 package de.jClipCorn.properties.property;
 
-import java.awt.Component;
+import de.jClipCorn.features.log.CCLog;
+import de.jClipCorn.gui.frames.editStringListPropertyFrame.EditStringListPropertyFrame;
+import de.jClipCorn.gui.guiComponents.StringListConfigPanel;
+import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.properties.CCProperties;
+import de.jClipCorn.properties.CCPropertyCategory;
+import org.apache.commons.text.StringEscapeUtils;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import javax.swing.JButton;
-import javax.swing.JTextField;
-
-import de.jClipCorn.gui.frames.editStringListPropertyFrame.EditStringListPropertyFrame;
-import de.jClipCorn.gui.guiComponents.StringListConfigPanel;
-import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.features.log.CCLog;
-import de.jClipCorn.properties.CCProperties;
-import de.jClipCorn.properties.CCPropertyCategory;
-import org.apache.commons.text.StringEscapeUtils;
 
 @SuppressWarnings("rawtypes")
 public class CCStringListProperty extends CCProperty<ArrayList> {
@@ -90,10 +88,20 @@ public class CCStringListProperty extends CCProperty<ArrayList> {
 		
 		return deserializeList(val);
 	}
+	@Override
+	@SuppressWarnings("unchecked")
+	public ArrayList<String> getDefault() {
+		return super.getDefault();
+	}
 
 	@Override
 	public String getValueAsString() {
 		return serializeList(getValue());
+	}
+
+	@Override
+	public String getDefaultAsString() {
+		return serializeList(getDefault());
 	}
 	
 	public List<String> getNonEmptyValues() {

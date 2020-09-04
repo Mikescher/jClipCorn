@@ -1,25 +1,21 @@
 package de.jClipCorn.gui.guiComponents.groupListEditor;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.swing.JButton;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.border.BevelBorder;
-
+import com.jformdesigner.annotations.DesignCreate;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGroupList;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.helper.LookAndFeelManager;
 
-public class GroupListEditor extends JPanel {
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
+
+public class GroupListEditor extends JPanel
+{
 	private static final long serialVersionUID = -2532456454735632414L;
 
 	private final CCMovieList db;
@@ -29,9 +25,16 @@ public class GroupListEditor extends JPanel {
 	private JTextField edEditor;
 	private JButton btnDropDown;
 
-	private List<ActionListener> _changeListener = new ArrayList<>();
+	private final List<ActionListener> _changeListener = new ArrayList<>();
 
-	public GroupListEditor(CCMovieList movielist) {
+	@DesignCreate
+	private static GroupListEditor designCreate()
+	{
+		return new GroupListEditor(null);
+	}
+
+	public GroupListEditor(CCMovieList movielist)
+	{
 		super();
 		
 		db = movielist;
@@ -41,8 +44,9 @@ public class GroupListEditor extends JPanel {
 		updateEditor();
 	}
 		
-	private void initGUI() {
-		setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
+	private void initGUI()
+	{
+		//setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
 		setLayout(new BorderLayout(0, 0));
 		
 		edEditor = new JTextField();
@@ -52,12 +56,10 @@ public class GroupListEditor extends JPanel {
 		if (LookAndFeelManager.isWindows()) edEditor.setBackground(Color.WHITE);
 		
 		btnDropDown = new JButton("V"); //$NON-NLS-1$
-		btnDropDown.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				GroupListPopup popup = new GroupListPopup(db, value, GroupListEditor.this);
-				popup.setVisible(true);
-			}
+		btnDropDown.addActionListener(e ->
+		{
+			GroupListPopup popup = new GroupListPopup(db, value, GroupListEditor.this);
+			popup.setVisible(true);
 		});
 		btnDropDown.setFocusable(false);
 		btnDropDown.setFocusTraversalKeysEnabled(false);
@@ -67,7 +69,8 @@ public class GroupListEditor extends JPanel {
 	}
 
 	@Override
-	public void setEnabled(boolean b) {
+	public void setEnabled(boolean b)
+	{
 		edEditor.setEnabled(b);
 		btnDropDown.setEnabled(b);
 		super.setEnabled(b);
@@ -82,7 +85,8 @@ public class GroupListEditor extends JPanel {
 		return new Dimension(80, 20);
 	}
 
-	private void updateEditor() {
+	private void updateEditor()
+	{
 		if (value.isEmpty()) {
 			edEditor.setText(LocaleBundle.getString("GroupListEditor.summary_none")); //$NON-NLS-1$
 		} else if (value.count() == 1) {
@@ -92,7 +96,8 @@ public class GroupListEditor extends JPanel {
 		}
 	}
 	
-	public void setValue(CCGroupList gl) {
+	public void setValue(CCGroupList gl)
+	{
 		value = gl;
 		
 		updateEditor();

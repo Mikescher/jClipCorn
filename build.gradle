@@ -225,6 +225,7 @@ dependencies {
 
 	implementation 'com.jgoodies:jgoodies-forms:1.9.0'
 	implementation 'com.jgoodies:jgoodies-common:1.8.1'
+	implementation name: 'jfd-annotations'
 	implementation name: 'jsplitbutton-1.2'
 
 	implementation name: 'fast-md5'

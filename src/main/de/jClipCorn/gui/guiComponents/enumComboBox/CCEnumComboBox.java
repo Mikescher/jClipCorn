@@ -1,5 +1,7 @@
 package de.jClipCorn.gui.guiComponents.enumComboBox;
 
+import com.jformdesigner.annotations.DesignCreate;
+import de.jClipCorn.database.databaseElement.columnTypes.CCOptionalFSK;
 import de.jClipCorn.util.enumextension.ContinoousEnum;
 import de.jClipCorn.util.enumextension.EnumWrapper;
 
@@ -10,6 +12,13 @@ public class CCEnumComboBox<T extends ContinoousEnum<T>> extends JComboBox<T> {
 	private static final long serialVersionUID = -3587427835677751149L;
 
 	private final EnumWrapper<T> _wrapper;
+
+	@DesignCreate
+	@SuppressWarnings("rawtypes")
+	private static CCEnumComboBox designCreate()
+	{
+		return new CCEnumComboBox<>(CCOptionalFSK.getWrapper());
+	}
 
 	public CCEnumComboBox(EnumWrapper<T> wrapper) {
 		super();

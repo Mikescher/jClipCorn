@@ -57,11 +57,7 @@ import de.jClipCorn.util.Str;
 import de.jClipCorn.util.UpdateConnector;
 import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.formatter.PathFormatter;
-import de.jClipCorn.util.helper.ApplicationHelper;
-import de.jClipCorn.util.helper.DialogHelper;
-import de.jClipCorn.util.helper.FileChooserHelper;
-import de.jClipCorn.util.helper.SimpleFileUtils;
-import de.jClipCorn.util.helper.SwingUtils;
+import de.jClipCorn.util.helper.*;
 import de.jClipCorn.util.listener.ActionCallbackListener;
 
 import javax.swing.*;

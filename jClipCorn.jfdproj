@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+  <entry key="classpath1" value="out/production/classes" />
+  <entry key="classpath2" value="lib-jformdesigner/commons-lang3-3.9.jar" />
+  <entry key="classpath3" value="lib-jformdesigner/jsplitbutton-1.2.jar" />
+  <entry key="sourcefolders1" value="res" />
+  <entry key="sourcefolders2" value="src/main" />
+</project>
+

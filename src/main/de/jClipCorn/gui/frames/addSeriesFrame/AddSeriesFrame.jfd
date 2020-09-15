@@ -273,7 +273,7 @@ new FormModel {
 				"gridWidth": 11
 			} )
 		}, new FormLayoutConstraints( null ) {
-			"location": new java.awt.Point( 0, 30 )
+			"location": new java.awt.Point( 0, 0 )
 			"size": new java.awt.Dimension( 600, 550 )
 		} )
 	}

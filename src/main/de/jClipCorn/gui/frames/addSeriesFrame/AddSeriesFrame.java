@@ -40,6 +40,7 @@ public class AddSeriesFrame extends JFrame implements ParseResultHandler, UserDa
 		postInit();
 
 		setLocationRelativeTo(owner);
+		setMinimumSize(getSize());
 	}
 
 	private void postInit()
@@ -293,11 +294,11 @@ public class AddSeriesFrame extends JFrame implements ParseResultHandler, UserDa
 		//======== this ========
 		setTitle(LocaleBundle.getString("AddSeriesFrame.this.title")); //$NON-NLS-1$
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-		setMinimumSize(new Dimension(500, 525));
+		setMinimumSize(null);
 		var contentPane = getContentPane();
 		contentPane.setLayout(new FormLayout(
 			"$rgap, default, $ugap, default:grow, $lcgap, pref, 13dlu, 2*(default, $lcgap), default:grow, $lcgap", //$NON-NLS-1$
-			"2*($rgap, default), $lgap, default, 30dlu, $ugap, 8*(default, $lgap), pref, $lgap, pref:grow, $lgap, default, $lgap")); //$NON-NLS-1$
+			"2*($rgap, default), $lgap, default, 30dlu, $ugap, 8*(default, $lgap), pref, $lgap, pref:grow, default, $lgap")); //$NON-NLS-1$
 
 		//---- label1 ----
 		label1.setText(LocaleBundle.getString("AddMovieFrame.label_1.text")); //$NON-NLS-1$
@@ -341,7 +342,7 @@ public class AddSeriesFrame extends JFrame implements ParseResultHandler, UserDa
 		button3.setFont(button3.getFont().deriveFont(button3.getFont().getStyle() | Font.BOLD, button3.getFont().getSize() + 3f));
 		button3.addActionListener(e -> onParseOnline(e));
 		contentPane.add(button3, CC.xywh(10, 7, 3, 1, CC.DEFAULT, CC.FILL));
-		contentPane.add(edCvrControl, CC.xywh(12, 9, 1, 17, CC.RIGHT, CC.TOP));
+		contentPane.add(edCvrControl, CC.xywh(12, 9, 1, 19, CC.RIGHT, CC.TOP));
 
 		//---- label5 ----
 		label5.setText(LocaleBundle.getString("AddMovieFrame.lblGenre_1.text")); //$NON-NLS-1$
@@ -392,9 +393,8 @@ public class AddSeriesFrame extends JFrame implements ParseResultHandler, UserDa
 			button2.addActionListener(e -> onCancel(e));
 			panel1.add(button2);
 		}
-		contentPane.add(panel1, CC.xywh(2, 29, 11, 1));
-		setSize(600, 550);
-		setLocationRelativeTo(getOwner());
+		contentPane.add(panel1, CC.xywh(2, 28, 11, 1));
+		pack();
 		// JFormDesigner - End of component initialization  //GEN-END:initComponents
 	}
 

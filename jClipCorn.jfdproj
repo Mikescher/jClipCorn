@@ -5,5 +5,10 @@
   <entry key="classpath3" value="lib-jformdesigner/jsplitbutton-1.2.jar" />
   <entry key="sourcefolders1" value="res" />
   <entry key="sourcefolders2" value="src/main" />
+  <node name="designer">
+    <entry key="_i18nJavaSettingsEnabled" value="true" />
+    <entry key="i18n.javagetbundleformat" value="LocaleBundle" />
+    <entry key="i18n.javagetstringformat" value="LocaleBundle.getString(${key})" />
+  </node>
 </project>
 

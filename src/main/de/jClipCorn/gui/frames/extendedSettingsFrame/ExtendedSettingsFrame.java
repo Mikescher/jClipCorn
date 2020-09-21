@@ -37,6 +37,7 @@ public class ExtendedSettingsFrame extends JFrame
 		postInit();
 
 		setLocationRelativeTo(owner);
+		setMinimumSize(getSize());
 	}
 
 	private void postInit()
@@ -212,7 +213,7 @@ public class ExtendedSettingsFrame extends JFrame
 
 		//======== this ========
 		setTitle(LocaleBundle.getString("extendedSettingsFrame.title")); //$NON-NLS-1$
-		setMinimumSize(new Dimension(368, 520));
+		setMinimumSize(null);
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		var contentPane = getContentPane();
 		contentPane.setLayout(new FormLayout(
@@ -304,8 +305,7 @@ public class ExtendedSettingsFrame extends JFrame
 		button2.setText(LocaleBundle.getString("extendedSettingsFrame.btnResetAll.title")); //$NON-NLS-1$
 		button2.addActionListener(e -> onResetAll(e));
 		contentPane.add(button2, CC.xy(6, 20, CC.LEFT, CC.DEFAULT));
-		setSize(500, 600);
-		setLocationRelativeTo(getOwner());
+		pack();
 		// JFormDesigner - End of component initialization  //GEN-END:initComponents
 	}
 

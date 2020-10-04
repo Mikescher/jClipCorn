@@ -49,10 +49,10 @@ public class DateTimeListEditor extends JPanel {
 
 	private Color defaultPanelBackground = COLOR_TRANSPARENT;
 	
-	private List<JPanel> listPanels = new ArrayList<>();
+	private final List<JPanel> listPanels = new ArrayList<>();
 	private final List<CCDateTime> data;
 
-	private List<ActionListener> _changeListener = new ArrayList<>();
+	private final List<ActionListener> _changeListener = new ArrayList<>();
 
 	public DateTimeListEditor() {
 		initGUI();

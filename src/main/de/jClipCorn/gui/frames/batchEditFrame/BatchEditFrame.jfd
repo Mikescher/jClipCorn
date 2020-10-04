@@ -1,0 +1,1236 @@
+JFDML JFormDesigner: "7.0.2.6.321" Java: "11.0.8" encoding: "UTF-8"
+
+new FormModel {
+	"i18n.bundlePackage": "de.jClipCorn.gui.localization"
+	"i18n.bundleName": "locale"
+	"i18n.keyPrefix": "BatchEditFrame"
+	contentType: "form/swing"
+	root: new FormRoot {
+		add( new FormWindow( "javax.swing.JFrame", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+			"$columnSpecs": "unrelgap, 225px, unrelgap, 0dlu:grow, unrelgap, 500px, unrelgap"
+			"$rowSpecs": "pargap, pref, unrelgap, default:grow, linegap, default, linegap, default, linegap"
+		} ) {
+			name: "this"
+			"$sizePolicy": 1
+			"title": "<dynamic>"
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "lblSeason"
+				"text": "<dynamic>"
+				"font": new com.jformdesigner.model.SwingDerivedFont( null, 65536, 5, false )
+				"horizontalAlignment": 0
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 2
+				"gridY": 2
+			} )
+			add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+				name: "scrlEpisodes"
+				add( new FormComponent( "javax.swing.JList" ) {
+					name: "lsEpisodes"
+					"selectionMode": 0
+					auxiliary() {
+						"JavaCodeGenerator.variableModifiers": 0
+						"JavaCodeGenerator.typeParameters": "String"
+						"JavaCodeGenerator.postInitCode": "${field}.setCellRenderer(new HFixListCellRenderer());"
+					}
+					addEvent( new FormEvent( "javax.swing.event.ListSelectionListener", "valueChanged", "updateDisplayPanel", false ) )
+				} )
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 2
+				"gridY": 4
+				"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+			} )
+			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+				"$columnSpecs": "relgap, 5dlu, default, relgap, 1dlu:grow, relgap, 50px, relgap, 22px, relgap"
+				"$rowSpecs": "relgap, default, unrelgap, default, unrelgap, default, unrelgap, default, unrelgap, default, unrelgap, default, unrelgap, default, relgap, default, relgap, default, unrelgap, default, unrelgap, default, unrelgap, 90dlu, linegap, 0dlu:grow, linegap, default, linegap"
+			} ) {
+				name: "pnlInfo"
+				"border": new javax.swing.border.LineBorder( sfield java.awt.Color black, 1, false )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "lblDirtyTitle"
+					"text": "*"
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 2
+					"gridY": 2
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "label2"
+					"text": new FormMessage( null, "AddMovieFrame.label_1.text" )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 3
+					"gridY": 2
+				} )
+				add( new FormComponent( "javax.swing.JTextField" ) {
+					name: "edTitle"
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 5
+					"gridY": 2
+					"gridWidth": 5
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "lblDirtyEpisodeNumber"
+					"text": "*"
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 2
+					"gridY": 4
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "label3"
+					"text": new FormMessage( null, "AddEpisodeFrame.lblEpisode.text" )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 3
+					"gridY": 4
+				} )
+				add( new FormComponent( "javax.swing.JSpinner" ) {
+					name: "spnEpisode"
+					"model": new javax.swing.SpinnerNumberModel {
+						minimum: 0
+					}
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 5
+					"gridY": 4
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "lblDirtyFormat"
+					"text": "*"
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 2
+					"gridY": 6
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "label1"
+					"text": new FormMessage( null, "AddMovieFrame.lblFormat.text" )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 3
+					"gridY": 6
+				} )
+				add( new FormComponent( "de.jClipCorn.gui.guiComponents.enumComboBox.CCEnumComboBox" ) {
+					name: "cbxFormat"
+					auxiliary() {
+						"JavaCodeGenerator.typeParameters": "CCFileFormat"
+						"JavaCodeGenerator.customCreateCode": "new CCEnumComboBox<>(CCFileFormat.getWrapper());"
+					}
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 5
+					"gridY": 6
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "lblDirtyMediaInfo"
+					"text": "*"
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 2
+					"gridY": 8
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "label4"
+					"text": new FormMessage( null, "PreviewMovieFrame.TabMediaInfo" )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 3
+					"gridY": 8
+				} )
+				add( new FormComponent( "de.jClipCorn.gui.guiComponents.jMediaInfoControl.JMediaInfoControl" ) {
+					name: "ctrlMediaInfo"
+					auxiliary() {
+						"JavaCodeGenerator.customCreateCode": "new JMediaInfoControl(() -> PathFormatter.fromCCPath(edPart.getText()));"
+					}
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 5
+					"gridY": 8
+				} )
+				add( new FormComponent( "de.jClipCorn.gui.guiComponents.JMediaInfoButton" ) {
+					name: "btnMediaInfo3"
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 9
+					"gridY": 8
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "lblDirtyLanguage"
+					"text": "*"
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 2
+					"gridY": 10
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "label5"
+					"text": new FormMessage( null, "AddMovieFrame.lblSprache.text" )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 3
+					"gridY": 10
+				} )
+				add( new FormComponent( "de.jClipCorn.gui.guiComponents.language.LanguageChooser" ) {
+					name: "ctrlLang"
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 5
+					"gridY": 10
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "btnMediaInfoRaw"
+					"text": "..."
+					"toolTipText": new FormMessage( null, "PreviewMovieFrame.TabMediaInfo" )
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "showCodecMetadata", false ) )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 7
+					"gridY": 10
+				} )
+				add( new FormComponent( "de.jClipCorn.gui.guiComponents.JMediaInfoButton" ) {
+					name: "btnMediaInfo1"
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "parseCodecMetadata_Lang", false ) )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 9
+					"gridY": 10
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "lblDirtyLength"
+					"text": "*"
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 2
+					"gridY": 12
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "label6"
+					"text": new FormMessage( null, "AddMovieFrame.lblLength.text" )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 3
+					"gridY": 12
+				} )
+				add( new FormComponent( "javax.swing.JSpinner" ) {
+					name: "spnLength"
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 5
+					"gridY": 12
+				} )
+				add( new FormComponent( "de.jClipCorn.gui.guiComponents.JMediaInfoButton" ) {
+					name: "btnMediaInfo2"
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "parseCodecMetadata_Len", false ) )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 9
+					"gridY": 12
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "lblDirtySize"
+					"text": "*"
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 2
+					"gridY": 14
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "label7"
+					"text": new FormMessage( null, "AddMovieFrame.lblGre.text" )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 3
+					"gridY": 14
+				} )
+				add( new FormComponent( "javax.swing.JSpinner" ) {
+					name: "spnSize"
+					"model": new javax.swing.SpinnerNumberModel {
+						minimum: 0l
+						stepSize: 1l
+						value: 0l
+					}
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 5
+					"gridY": 14
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "label8"
+					"text": "Byte = "
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 7
+					"gridY": 14
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "btnRecalcSize"
+					"text": new FormMessage( null, "AddEpisodeFrame.btnRecalcSizes.text" )
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "recalcFilesize", false ) )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 5
+					"gridY": 16
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "lblFileSize"
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 5
+					"gridY": 18
+					"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+					"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "lblDirtyAddDate"
+					"text": "*"
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 2
+					"gridY": 20
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "label9"
+					"text": new FormMessage( null, "AddMovieFrame.lblEinfgDatum.text" )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 3
+					"gridY": 20
+				} )
+				add( new FormComponent( "de.jClipCorn.gui.guiComponents.jCCDateSpinner.JCCDateSpinner" ) {
+					name: "spnAddDate"
+					auxiliary() {
+						"JavaCodeGenerator.customCreateCode": "new JCCDateSpinner(CCDate.getMinimumDate(), MIN_DATE, null);"
+					}
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 5
+					"gridY": 20
+					"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "btnToday"
+					"text": new FormMessage( null, "AddEpisodeFrame.btnToday.text" )
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "setToday", false ) )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 7
+					"gridY": 20
+					"gridWidth": 3
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "lblDirtyPath"
+					"text": "*"
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 2
+					"gridY": 22
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "label10"
+					"text": new FormMessage( null, "AddEpisodeFrame.lblPart.text" )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 3
+					"gridY": 22
+				} )
+				add( new FormComponent( "de.jClipCorn.gui.guiComponents.ReadableTextField" ) {
+					name: "edPart"
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 5
+					"gridY": 22
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "btnOpen"
+					"text": "..."
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "openPart", false ) )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 7
+					"gridY": 22
+					"gridWidth": 3
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "lblDirtyHistory"
+					"text": "*"
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 2
+					"gridY": 24
+					"vAlign": sfield com.jgoodies.forms.layout.CellConstraints TOP
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "label11"
+					"text": new FormMessage( null, "EditSeriesFrame.lblHistory.text" )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 3
+					"gridY": 24
+					"vAlign": sfield com.jgoodies.forms.layout.CellConstraints TOP
+				} )
+				add( new FormComponent( "de.jClipCorn.gui.guiComponents.dateTimeListEditor.DateTimeListEditor" ) {
+					name: "ctrlHistory"
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 5
+					"gridY": 24
+					"gridWidth": 5
+					"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				} )
+				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+					"$columnSpecs": "default, labelcompgap, default, 1dlu:grow, default"
+					"$rowSpecs": "default"
+				} ) {
+					name: "panel1"
+					add( new FormComponent( "javax.swing.JButton" ) {
+						name: "btnEpCancel"
+						"text": new FormMessage( null, "UIGeneric.btnCancel.text" )
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "cancelInfoDisplay", false ) )
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) )
+					add( new FormComponent( "javax.swing.JButton" ) {
+						name: "btnEpOk"
+						"text": new FormMessage( null, "UIGeneric.btnOK.text" )
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "okayInfoDisplay", false ) )
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 3
+						"gridY": 1
+					} )
+					add( new FormComponent( "javax.swing.JCheckBox" ) {
+						name: "chckbxIgnoreUserDataErrors"
+						"text": new FormMessage( null, "BatchEditFrame.CbxIgnoreUserDataErrors" )
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 4
+						"gridY": 1
+					} )
+					add( new FormComponent( "javax.swing.JButton" ) {
+						name: "btnEpNext"
+						"text": new FormMessage( null, "AddEpisodeFrame.btnNext.text" )
+						"font": new com.jformdesigner.model.SwingDerivedFont( null, 3, 0, false )
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "onBtnNext", false ) )
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 5
+						"gridY": 1
+					} )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 2
+					"gridY": 28
+					"gridWidth": 8
+					"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				} )
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 4
+				"gridY": 2
+				"gridHeight": 5
+			} )
+			add( new FormComponent( "javax.swing.JProgressBar" ) {
+				name: "batchProgress"
+				auxiliary() {
+					"JavaCodeGenerator.variableModifiers": 1
+				}
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 6
+				"gridY": 2
+				"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+			} )
+			add( new FormContainer( "javax.swing.JTabbedPane", new FormLayoutManager( class javax.swing.JTabbedPane ) ) {
+				name: "tabbedPane1"
+				"tabPlacement": 3
+				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+					"$columnSpecs": "labelcompgap, 0dlu:grow, labelcompgap, 0dlu:grow(0.5), labelcompgap, 0dlu:grow(0.5), labelcompgap, 0dlu:grow(0.5), labelcompgap, 0dlu:grow(0.5), labelcompgap"
+					"$rowSpecs": "relgap, default, linegap, default, linegap, 7dlu, linegap, default, linegap, default, linegap, 7dlu, linegap, default, linegap, default, linegap, default, linegap, 7dlu, linegap, default, linegap, 7dlu, linegap, default, linegap, default:grow"
+				} ) {
+					name: "pnlTitleEdit"
+					add( new FormComponent( "javax.swing.JButton" ) {
+						name: "button5"
+						"text": new FormMessage( null, "AddEpisodeFrame.btnDeleteFirst.text" )
+						auxiliary() {
+							"JavaCodeGenerator.postCreateCode": "${field}.addActionListener(e -> BatchEditMethods.TITLE_DELETE_FIRST_CHARS.run(this, (int) spnSide_01.getValue()));"
+						}
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 2
+						"gridY": 2
+						"gridWidth": 5
+					} )
+					add( new FormComponent( "javax.swing.JSpinner" ) {
+						name: "spnSide_01"
+						"model": new javax.swing.SpinnerNumberModel {
+							minimum: 0
+							value: 1
+						}
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 8
+						"gridY": 2
+						"gridWidth": 3
+					} )
+					add( new FormComponent( "javax.swing.JButton" ) {
+						name: "button1"
+						"text": new FormMessage( null, "AddEpisodeFrame.btnDeleteLast.text" )
+						auxiliary() {
+							"JavaCodeGenerator.postCreateCode": "${field}.addActionListener(e -> BatchEditMethods.TITLE_DELETE_LAST_CHARS.run(this, (int) spnSide_02.getValue()));"
+						}
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 2
+						"gridY": 4
+						"gridWidth": 5
+					} )
+					add( new FormComponent( "javax.swing.JSpinner" ) {
+						name: "spnSide_02"
+						"model": new javax.swing.SpinnerNumberModel {
+							minimum: 0
+							value: 1
+						}
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 8
+						"gridY": 4
+						"gridWidth": 3
+					} )
+					add( new FormComponent( "javax.swing.JTextField" ) {
+						name: "edSide_01"
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 2
+						"gridY": 8
+					} )
+					add( new FormComponent( "javax.swing.JButton" ) {
+						name: "button2"
+						"text": new FormMessage( null, "AddEpisodeFrame.btnReplace.text" )
+						auxiliary() {
+							"JavaCodeGenerator.postCreateCode": "${field}.addActionListener(e -> BatchEditMethods.TITLE_STRING_REPLACE.run(this, Tuple.Create(edSide_01.getText(), edSide_02.getText())));"
+						}
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 4
+						"gridY": 8
+						"gridWidth": 3
+					} )
+					add( new FormComponent( "javax.swing.JTextField" ) {
+						name: "edSide_02"
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 8
+						"gridY": 8
+						"gridWidth": 3
+					} )
+					add( new FormComponent( "javax.swing.JTextField" ) {
+						name: "edSide_R1"
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 2
+						"gridY": 10
+					} )
+					add( new FormComponent( "javax.swing.JButton" ) {
+						name: "button3"
+						"text": new FormMessage( null, "BatchEditFrame.ReplaceRegex" )
+						auxiliary() {
+							"JavaCodeGenerator.postCreateCode": "${field}.addActionListener(e -> BatchEditMethods.TITLE_REGEX_REPLACE.run(this, Tuple.Create(edSide_R1.getText(), edSide_R2.getText())));"
+						}
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 4
+						"gridY": 10
+						"gridWidth": 3
+					} )
+					add( new FormComponent( "javax.swing.JTextField" ) {
+						name: "edSide_R2"
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 8
+						"gridY": 10
+						"gridWidth": 3
+					} )
+					add( new FormComponent( "javax.swing.JButton" ) {
+						name: "button4"
+						"text": new FormMessage( null, "AddEpisodeFrame.btnTrim.text" )
+						auxiliary() {
+							"JavaCodeGenerator.postCreateCode": "${field}.addActionListener(e -> BatchEditMethods.TITLE_TRIM.run(this, null));"
+						}
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 2
+						"gridY": 14
+						"gridWidth": 9
+					} )
+					add( new FormComponent( "javax.swing.JTextField" ) {
+						name: "edSide_03"
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 2
+						"gridY": 16
+					} )
+					add( new FormComponent( "javax.swing.JButton" ) {
+						name: "button6"
+						"text": new FormMessage( null, "AddEpisodeFrame.btnConcatStart.text" )
+						auxiliary() {
+							"JavaCodeGenerator.postCreateCode": "${field}.addActionListener(e -> BatchEditMethods.TITLE_PREPEND.run(this, edSide_03.getText()));"
+						}
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 4
+						"gridY": 16
+						"gridWidth": 7
+					} )
+					add( new FormComponent( "javax.swing.JTextField" ) {
+						name: "edSide_04"
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 2
+						"gridY": 18
+					} )
+					add( new FormComponent( "javax.swing.JButton" ) {
+						name: "button7"
+						"text": new FormMessage( null, "AddEpisodeFrame.btnConcatEnd.text" )
+						auxiliary() {
+							"JavaCodeGenerator.postCreateCode": "${field}.addActionListener(e -> BatchEditMethods.TITLE_APPEND.run(this, edSide_04.getText()));"
+						}
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 4
+						"gridY": 18
+						"gridWidth": 7
+					} )
+					add( new FormComponent( "javax.swing.JButton" ) {
+						name: "button8"
+						"text": new FormMessage( null, "AddEpisodeFrame.btnDelete.text" )
+						auxiliary() {
+							"JavaCodeGenerator.postCreateCode": "${field}.addActionListener(e -> BatchEditMethods.TITLE_SUBSTRING_DELETE.run(this, Tuple.Create((int) spnSide_03.getValue(), (int) spnSide_04.getValue())));"
+						}
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 2
+						"gridY": 22
+						"gridWidth": 5
+					} )
+					add( new FormComponent( "javax.swing.JSpinner" ) {
+						name: "spnSide_03"
+						"model": new javax.swing.SpinnerNumberModel {
+							minimum: 0
+						}
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 8
+						"gridY": 22
+					} )
+					add( new FormComponent( "javax.swing.JSpinner" ) {
+						name: "spnSide_04"
+						"model": new javax.swing.SpinnerNumberModel {
+							minimum: 0
+						}
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 10
+						"gridY": 22
+					} )
+					add( new FormComponent( "javax.swing.JTextField" ) {
+						name: "edSide_05"
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 2
+						"gridY": 26
+					} )
+					add( new FormComponent( "javax.swing.JButton" ) {
+						name: "button9"
+						"text": new FormMessage( null, "AddEpisodeFrame.btnSearchAndDel.text" )
+						auxiliary() {
+							"JavaCodeGenerator.postCreateCode": "${field}.addActionListener(e -> BatchEditMethods.TITLE_SEARCH_AND_DELETE.run(this, edSide_05.getText()));"
+						}
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 4
+						"gridY": 26
+						"gridWidth": 7
+					} )
+				}, new FormLayoutConstraints( null ) {
+					"title": new FormMessage( null, "BatchEditFrame.TabTitle" )
+				} )
+				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+					"$columnSpecs": "labelcompgap, 0dlu:grow, labelcompgap, 0dlu:grow(0.5), labelcompgap, 0dlu:grow(0.5), labelcompgap, 0dlu:grow(0.5), labelcompgap, 0dlu:grow(0.5), labelcompgap"
+					"$rowSpecs": "linegap, default, linegap, 7dlu, linegap, default, linegap, default, linegap, default, linegap, default, linegap, 7dlu, linegap, default, linegap, default, linegap, 7dlu, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, 7dlu, linegap, default, linegap, 7dlu, linegap, default, linegap, default:grow"
+				} ) {
+					name: "pnlPartEdit"
+					add( new FormComponent( "javax.swing.JButton" ) {
+						name: "button10"
+						"text": new FormMessage( null, "BatchEditFrame.ConverToCC" )
+						auxiliary() {
+							"JavaCodeGenerator.postCreateCode": "${field}.addActionListener(e -> BatchEditMethods.PATH_TO_CCPATH.run(this, null));"
+						}
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 2
+						"gridY": 2
+						"gridWidth": 3
+					} )
+					add( new FormComponent( "javax.swing.JButton" ) {
+						name: "button11"
+						"text": new FormMessage( null, "BatchEditFrame.ConvertFromCC" )
+						auxiliary() {
+							"JavaCodeGenerator.postCreateCode": "${field}.addActionListener(e -> BatchEditMethods.PATH_FROM_CCPATH.run(this, null));"
+						}
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 6
+						"gridY": 2
+						"gridWidth": 5
+					} )
+					add( new FormComponent( "javax.swing.JButton" ) {
+						name: "button12"
+						"text": new FormMessage( null, "BatchEditFrame.DeleteFilename" )
+						auxiliary() {
+							"JavaCodeGenerator.postCreateCode": "${field}.addActionListener(e -> BatchEditMethods.PATH_DELETE_FILENAME_WITH_EXT.run(this, null));"
+						}
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 2
+						"gridY": 6
+						"gridWidth": 5
+					} )
+					add( new FormComponent( "javax.swing.JButton" ) {
+						name: "button13"
+						"text": new FormMessage( null, "BatchEditFrame.DeleteFileNameWithoutExt" )
+						auxiliary() {
+							"JavaCodeGenerator.postCreateCode": "${field}.addActionListener(e -> BatchEditMethods.PATH_DELETE_FILENAME_WITHOUT_EXT.run(this, null));"
+						}
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 2
+						"gridY": 8
+						"gridWidth": 5
+					} )
+					add( new FormComponent( "javax.swing.JButton" ) {
+						name: "button14"
+						"text": new FormMessage( null, "BatchEditFrame.DeletePath" )
+						auxiliary() {
+							"JavaCodeGenerator.postCreateCode": "${field}.addActionListener(e -> BatchEditMethods.PATH_DELETE_FILEPATH.run(this, null));"
+						}
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 2
+						"gridY": 10
+						"gridWidth": 5
+					} )
+					add( new FormComponent( "javax.swing.JButton" ) {
+						name: "button15"
+						"text": new FormMessage( null, "BatchEditFrame.DeleteExt" )
+						auxiliary() {
+							"JavaCodeGenerator.postCreateCode": "${field}.addActionListener(e -> BatchEditMethods.PATH_DELETE_EXTENSION.run(this, null));"
+						}
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 2
+						"gridY": 12
+						"gridWidth": 5
+					} )
+					add( new FormComponent( "javax.swing.JButton" ) {
+						name: "button16"
+						"text": new FormMessage( null, "AddEpisodeFrame.btnDeleteFirst.text" )
+						auxiliary() {
+							"JavaCodeGenerator.postCreateCode": "${field}.addActionListener(e -> BatchEditMethods.PATH_DELETE_FIRST_CHARS.run(this, (int) spnSidePart_01.getValue()));"
+						}
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 2
+						"gridY": 16
+						"gridWidth": 5
+					} )
+					add( new FormComponent( "javax.swing.JSpinner" ) {
+						name: "spnSidePart_01"
+						"model": new javax.swing.SpinnerNumberModel {
+							minimum: 0
+						}
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 8
+						"gridY": 16
+						"gridWidth": 3
+					} )
+					add( new FormComponent( "javax.swing.JButton" ) {
+						name: "button17"
+						"text": new FormMessage( null, "AddEpisodeFrame.btnDeleteLast.text" )
+						auxiliary() {
+							"JavaCodeGenerator.postCreateCode": "${field}.addActionListener(e -> BatchEditMethods.PATH_DELETE_LAST_CHARS.run(this, (int) spnSidePart_02.getValue()));"
+						}
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 2
+						"gridY": 18
+						"gridWidth": 5
+					} )
+					add( new FormComponent( "javax.swing.JSpinner" ) {
+						name: "spnSidePart_02"
+						"model": new javax.swing.SpinnerNumberModel {
+							minimum: 0
+						}
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 8
+						"gridY": 18
+						"gridWidth": 3
+					} )
+					add( new FormComponent( "javax.swing.JTextField" ) {
+						name: "edSidePart_01"
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 2
+						"gridY": 22
+					} )
+					add( new FormComponent( "javax.swing.JButton" ) {
+						name: "button18"
+						"text": new FormMessage( null, "AddEpisodeFrame.btnReplace.text" )
+						auxiliary() {
+							"JavaCodeGenerator.postCreateCode": "${field}.addActionListener(e -> BatchEditMethods.PATH_STRING_REPLACE.run(this, Tuple.Create(edSidePart_01.getText(), edSidePart_02.getText())));"
+						}
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 4
+						"gridY": 22
+						"gridWidth": 3
+					} )
+					add( new FormComponent( "javax.swing.JTextField" ) {
+						name: "edSidePart_02"
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 8
+						"gridY": 22
+						"gridWidth": 3
+					} )
+					add( new FormComponent( "javax.swing.JTextField" ) {
+						name: "edSidePart_R1"
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 2
+						"gridY": 24
+					} )
+					add( new FormComponent( "javax.swing.JButton" ) {
+						name: "button19"
+						"text": new FormMessage( null, "BatchEditFrame.ReplaceRegex" )
+						auxiliary() {
+							"JavaCodeGenerator.postCreateCode": "${field}.addActionListener(e -> BatchEditMethods.PATH_REGEX_REPLACE.run(this, Tuple.Create(edSidePart_R1.getText(), edSidePart_R2.getText())));"
+						}
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 4
+						"gridY": 24
+						"gridWidth": 3
+					} )
+					add( new FormComponent( "javax.swing.JTextField" ) {
+						name: "edSidePart_R2"
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 8
+						"gridY": 24
+						"gridWidth": 3
+					} )
+					add( new FormComponent( "javax.swing.JButton" ) {
+						name: "button20"
+						"text": new FormMessage( null, "AddEpisodeFrame.btnTrim.text" )
+						auxiliary() {
+							"JavaCodeGenerator.postCreateCode": "${field}.addActionListener(e -> BatchEditMethods.PATH_TRIM.run(this, null));"
+						}
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 2
+						"gridY": 28
+						"gridWidth": 9
+					} )
+					add( new FormComponent( "javax.swing.JTextField" ) {
+						name: "edSidePart_03"
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 2
+						"gridY": 30
+					} )
+					add( new FormComponent( "javax.swing.JButton" ) {
+						name: "button21"
+						"text": new FormMessage( null, "AddEpisodeFrame.btnConcatStart.text" )
+						auxiliary() {
+							"JavaCodeGenerator.postCreateCode": "${field}.addActionListener(e -> BatchEditMethods.PATH_PREPEND.run(this, edSidePart_03.getText()));"
+						}
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 4
+						"gridY": 30
+						"gridWidth": 7
+					} )
+					add( new FormComponent( "javax.swing.JTextField" ) {
+						name: "edSidePart_04"
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 2
+						"gridY": 32
+					} )
+					add( new FormComponent( "javax.swing.JButton" ) {
+						name: "button22"
+						"text": new FormMessage( null, "AddEpisodeFrame.btnConcatEnd.text" )
+						auxiliary() {
+							"JavaCodeGenerator.postCreateCode": "${field}.addActionListener(e -> BatchEditMethods.PATH_APPEND.run(this, edSidePart_04.getText()));"
+						}
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 4
+						"gridY": 32
+						"gridWidth": 7
+					} )
+					add( new FormComponent( "javax.swing.JButton" ) {
+						name: "button23"
+						"text": new FormMessage( null, "AddEpisodeFrame.btnDelete.text" )
+						auxiliary() {
+							"JavaCodeGenerator.postCreateCode": "${field}.addActionListener(e -> BatchEditMethods.PATH_SUBSTRING_DELETE.run(this, Tuple.Create((int) spnSidePart_03.getValue(), (int) spnSidePart_04.getValue())));"
+						}
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 2
+						"gridY": 36
+						"gridWidth": 5
+					} )
+					add( new FormComponent( "javax.swing.JSpinner" ) {
+						name: "spnSidePart_03"
+						"model": new javax.swing.SpinnerNumberModel {
+							minimum: 0
+						}
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 8
+						"gridY": 36
+					} )
+					add( new FormComponent( "javax.swing.JSpinner" ) {
+						name: "spnSidePart_04"
+						"model": new javax.swing.SpinnerNumberModel {
+							minimum: 0
+						}
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 10
+						"gridY": 36
+					} )
+					add( new FormComponent( "javax.swing.JTextField" ) {
+						name: "edSidePart_05"
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 2
+						"gridY": 40
+					} )
+					add( new FormComponent( "javax.swing.JButton" ) {
+						name: "button24"
+						"text": new FormMessage( null, "AddEpisodeFrame.btnSearchAndDel.text" )
+						auxiliary() {
+							"JavaCodeGenerator.postCreateCode": "${field}.addActionListener(e -> BatchEditMethods.PATH_SEARCH_AND_DELETE.run(this, edSidePart_05.getText()));"
+						}
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 4
+						"gridY": 40
+						"gridWidth": 7
+					} )
+				}, new FormLayoutConstraints( null ) {
+					"title": new FormMessage( null, "BatchEditFrame.TabPath" )
+				} )
+				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+					"$columnSpecs": "relgap, 0dlu:grow, labelcompgap, 0dlu:grow(0.5), labelcompgap, 0dlu:grow(0.5), labelcompgap, 0dlu:grow(0.5), labelcompgap, 0dlu:grow(0.5), labelcompgap"
+					"$rowSpecs": "linegap, default, linegap, default, linegap, default, linegap, 7dlu, linegap, default, linegap, default, linegap, default, linegap, 7dlu, linegap, default, linegap, default, linegap, 7dlu, linegap, default, linegap, default, linegap, 7dlu, linegap, default, linegap, 7dlu, linegap, default, linegap, default, linegap, 0dlu:grow, linegap, default, linegap, default, linegap, default, linegap, default, linegap"
+				} ) {
+					name: "pnlMiscEdit"
+					add( new FormComponent( "javax.swing.JSpinner" ) {
+						name: "spnSide_05"
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 2
+						"gridY": 2
+					} )
+					add( new FormComponent( "javax.swing.JButton" ) {
+						name: "button25"
+						"text": new FormMessage( null, "AddEpisodeFrame.btnIncEpisodeNumbers.text" )
+						auxiliary() {
+							"JavaCodeGenerator.postCreateCode": "${field}.addActionListener(arg0 -> BatchEditMethods.EPISODEINDEX_ADD.run(this, (int) spnSide_05.getValue()));"
+						}
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 4
+						"gridY": 2
+						"gridWidth": 7
+					} )
+					add( new FormComponent( "de.jClipCorn.gui.guiComponents.language.LanguageChooser" ) {
+						name: "ctrlMultiLang"
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 2
+						"gridY": 4
+						"gridWidth": 5
+					} )
+					add( new FormComponent( "javax.swing.JButton" ) {
+						name: "button26"
+						"text": new FormMessage( null, "AddEpisodeFrame.btnSetLang.text" )
+						auxiliary() {
+							"JavaCodeGenerator.postCreateCode": "${field}.addActionListener(arg0 -> BatchEditMethods.LANGUAGE_SET.run(this, ctrlMultiLang.getValue()));"
+						}
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 8
+						"gridY": 4
+						"gridWidth": 3
+					} )
+					add( new FormComponent( "javax.swing.JButton" ) {
+						name: "button27"
+						"text": new FormMessage( null, "AddEpisodeFrame.btnSetEpSize.text" )
+						auxiliary() {
+							"JavaCodeGenerator.postCreateCode": "${field}.addActionListener(e -> BatchEditMethods.FILESIZE_FROM_FILE.run(this, null));"
+						}
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 2
+						"gridY": 6
+						"gridWidth": 9
+					} )
+					add( new FormComponent( "javax.swing.JButton" ) {
+						name: "button28"
+						"text": new FormMessage( null, "AddEpisodeFrame.btnSetUnviewed.text" )
+						auxiliary() {
+							"JavaCodeGenerator.postCreateCode": "${field}.addActionListener(e -> BatchEditMethods.VIEWED_CLEAR.run(this, null));"
+						}
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 2
+						"gridY": 10
+						"gridWidth": 9
+					} )
+					add( new FormComponent( "javax.swing.JButton" ) {
+						name: "button29"
+						"text": new FormMessage( null, "AddEpisodeFrame.btnSetViewedNow.text" )
+						auxiliary() {
+							"JavaCodeGenerator.postCreateCode": "${field}.addActionListener(e -> BatchEditMethods.VIEWED_ADD.run(this, CCDateTime.getCurrentDateTime()));"
+						}
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 2
+						"gridY": 12
+						"gridWidth": 9
+					} )
+					add( new FormComponent( "javax.swing.JButton" ) {
+						name: "button30"
+						"text": new FormMessage( null, "AddEpisodeFrame.btnSetViewedUndef.text" )
+						auxiliary() {
+							"JavaCodeGenerator.postCreateCode": "${field}.addActionListener(e -> BatchEditMethods.VIEWED_ADD.run(this, CCDateTime.getUnspecified()));"
+						}
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 2
+						"gridY": 14
+						"gridWidth": 9
+					} )
+					add( new FormComponent( "javax.swing.JButton" ) {
+						name: "button31"
+						"text": new FormMessage( null, "AddEpisodeFrame.btnSetEpLength.text" )
+						auxiliary() {
+							"JavaCodeGenerator.postCreateCode": "${field}.addActionListener(e -> BatchEditMethods.LENGTH_SET.run(this, (int) spnSideLength.getValue()));"
+						}
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 2
+						"gridY": 18
+						"gridWidth": 5
+					} )
+					add( new FormComponent( "javax.swing.JSpinner" ) {
+						name: "spnSideLength"
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 8
+						"gridY": 18
+						"gridWidth": 3
+					} )
+					add( new FormComponent( "javax.swing.JButton" ) {
+						name: "button32"
+						"text": new FormMessage( null, "AddEpisodeFrame.btnSetEpFormat.text" )
+						auxiliary() {
+							"JavaCodeGenerator.postCreateCode": "${field}.addActionListener(e -> BatchEditMethods.FORMAT_SET.run(this, cbxSideFormat.getSelectedEnum()));"
+						}
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 2
+						"gridY": 20
+						"gridWidth": 5
+					} )
+					add( new FormComponent( "de.jClipCorn.gui.guiComponents.enumComboBox.CCEnumComboBox" ) {
+						name: "cbxSideFormat"
+						auxiliary() {
+							"JavaCodeGenerator.typeParameters": "CCFileFormat"
+							"JavaCodeGenerator.customCreateCode": "new CCEnumComboBox<>(CCFileFormat.getWrapper());"
+						}
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 8
+						"gridY": 20
+						"gridWidth": 3
+					} )
+					add( new FormComponent( "de.jClipCorn.gui.guiComponents.jCCDateTimeSpinner.JCCDateTimeSpinner" ) {
+						name: "ctrlSideHistoryVal"
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 2
+						"gridY": 24
+						"gridWidth": 3
+					} )
+					add( new FormComponent( "javax.swing.JButton" ) {
+						name: "button33"
+						"text": new FormMessage( null, "AddEpisodeFrame.btnAddToHistory.text" )
+						auxiliary() {
+							"JavaCodeGenerator.postCreateCode": "${field}.addActionListener(e -> BatchEditMethods.VIEWED_ADD.run(this, ctrlSideHistoryVal.getValue()));"
+						}
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 6
+						"gridY": 24
+						"gridWidth": 5
+					} )
+					add( new FormComponent( "javax.swing.JButton" ) {
+						name: "button34"
+						"text": new FormMessage( null, "AddEpisodeFrame.btnClearHistory.text" )
+						auxiliary() {
+							"JavaCodeGenerator.postCreateCode": "${field}.addActionListener(e -> BatchEditMethods.VIEWED_CLEAR.run(this, null));"
+						}
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 6
+						"gridY": 26
+						"gridWidth": 5
+					} )
+					add( new FormComponent( "javax.swing.JButton" ) {
+						name: "button35"
+						"text": new FormMessage( null, "BatchEditFrame.ClearMediaInfo" )
+						auxiliary() {
+							"JavaCodeGenerator.postCreateCode": "${field}.addActionListener(e -> BatchEditMethods.MEDIAINFO_CLEAR.run(this, null));"
+						}
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 2
+						"gridY": 30
+						"gridWidth": 9
+					} )
+					add( new FormComponent( "javax.swing.JButton" ) {
+						name: "button36"
+						"text": new FormMessage( null, "BatchEditFrame.ReadPathFromDialogFull" )
+						auxiliary() {
+							"JavaCodeGenerator.postCreateCode": "${field}.addActionListener(e -> BatchEditMethods.PATH_FROM_DIALOG.run(this, Tuple3.Create(ShowPathFromDialogChooser(), 0, true)));"
+						}
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 2
+						"gridY": 34
+						"gridWidth": 7
+					} )
+					add( new FormComponent( "javax.swing.JButton" ) {
+						name: "button37"
+						"text": new FormMessage( null, "BatchEditFrame.ReadPathFromDialogPartial" )
+						auxiliary() {
+							"JavaCodeGenerator.postCreateCode": "${field}.addActionListener(e -> BatchEditMethods.PATH_FROM_DIALOG.run(this, Tuple3.Create(ShowPathFromDialogChooser(), (int) spnPathOpenOffset.getValue(), false)));"
+						}
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 2
+						"gridY": 36
+						"gridWidth": 7
+					} )
+					add( new FormComponent( "javax.swing.JSpinner" ) {
+						name: "spnPathOpenOffset"
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 10
+						"gridY": 36
+					} )
+					add( new FormComponent( "javax.swing.JButton" ) {
+						name: "button38"
+						"text": new FormMessage( null, "BatchEditFrame.btnFormatFromPath" )
+						auxiliary() {
+							"JavaCodeGenerator.postCreateCode": "${field}.addActionListener(e -> BatchEditMethods.FORMAT_FROM_FILE.run(this, null));"
+						}
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 2
+						"gridY": 40
+						"gridWidth": 9
+					} )
+					add( new FormComponent( "javax.swing.JButton" ) {
+						name: "button39"
+						"text": new FormMessage( null, "AddEpisodeFrame.btnMassSetLang.title" )
+						auxiliary() {
+							"JavaCodeGenerator.postCreateCode": "${field}.addActionListener(e -> BatchEditMethods.LANGUAGE_FROM_FILE_MEDIAINFO.run(this, null));"
+						}
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 2
+						"gridY": 42
+						"gridWidth": 9
+					} )
+					add( new FormComponent( "javax.swing.JButton" ) {
+						name: "button40"
+						"text": new FormMessage( null, "AddEpisodeFrame.btnMassSetLen.title" )
+						auxiliary() {
+							"JavaCodeGenerator.postCreateCode": "${field}.addActionListener(e -> BatchEditMethods.LENGTH_FROM_FILE_MEDIAINFO.run(this, null));"
+						}
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 2
+						"gridY": 44
+						"gridWidth": 9
+					} )
+					add( new FormComponent( "javax.swing.JButton" ) {
+						name: "button41"
+						"text": new FormMessage( null, "AddEpisodeFrame.btnMassSetMediaInfo.title" )
+						auxiliary() {
+							"JavaCodeGenerator.postCreateCode": "${field}.addActionListener(e -> BatchEditMethods.MEDIAINFO_FROM_FILE.run(this, null));"
+						}
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 2
+						"gridY": 46
+						"gridWidth": 5
+					} )
+					add( new FormComponent( "javax.swing.JButton" ) {
+						name: "button42"
+						"text": new FormMessage( null, "BatchEditFrame.HashCalc" )
+						auxiliary() {
+							"JavaCodeGenerator.postCreateCode": "${field}.addActionListener(e -> BatchEditMethods.MEDIAINFO_CALC_HASH.run(this, null));"
+						}
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 8
+						"gridY": 46
+						"gridWidth": 3
+					} )
+				}, new FormLayoutConstraints( null ) {
+					"title": new FormMessage( null, "BatchEditFrame.TabMisc" )
+				} )
+				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+					"$columnSpecs": "relgap, 0dlu:grow, relgap"
+					"$rowSpecs": "labelcompgap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, 7dlu, linegap, default, linegap, default, linegap, default, linegap, default:grow"
+				} ) {
+					name: "pnlReset"
+					add( new FormComponent( "javax.swing.JButton" ) {
+						name: "button43"
+						"text": new FormMessage( null, "BatchEditFrame.ResetTitle" )
+						auxiliary() {
+							"JavaCodeGenerator.postCreateCode": "${field}.addActionListener(e -> BatchEditMethods.TITLE_RESET.run(this, null));"
+						}
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 2
+						"gridY": 2
+					} )
+					add( new FormComponent( "javax.swing.JButton" ) {
+						name: "button44"
+						"text": new FormMessage( null, "BatchEditFrame.ResetEpisodenumber" )
+						auxiliary() {
+							"JavaCodeGenerator.postCreateCode": "${field}.addActionListener(e -> BatchEditMethods.EPISODEINDEX_RESET.run(this, null));"
+						}
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 2
+						"gridY": 4
+					} )
+					add( new FormComponent( "javax.swing.JButton" ) {
+						name: "button45"
+						"text": new FormMessage( null, "BatchEditFrame.ResetFormat" )
+						auxiliary() {
+							"JavaCodeGenerator.postCreateCode": "${field}.addActionListener(e -> BatchEditMethods.FORMAT_RESET.run(this, null));"
+						}
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 2
+						"gridY": 6
+					} )
+					add( new FormComponent( "javax.swing.JButton" ) {
+						name: "button46"
+						"text": new FormMessage( null, "BatchEditFrame.ResetMediaInfo" )
+						auxiliary() {
+							"JavaCodeGenerator.postCreateCode": "${field}.addActionListener(e -> BatchEditMethods.MEDIAINFO_RESET.run(this, null));"
+						}
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 2
+						"gridY": 8
+					} )
+					add( new FormComponent( "javax.swing.JButton" ) {
+						name: "button47"
+						"text": new FormMessage( null, "BatchEditFrame.ResetLanguage" )
+						auxiliary() {
+							"JavaCodeGenerator.postCreateCode": "${field}.addActionListener(e -> BatchEditMethods.LANGUAGE_RESET.run(this, null));"
+						}
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 2
+						"gridY": 10
+					} )
+					add( new FormComponent( "javax.swing.JButton" ) {
+						name: "button48"
+						"text": new FormMessage( null, "BatchEditFrame.ResetLength" )
+						auxiliary() {
+							"JavaCodeGenerator.postCreateCode": "${field}.addActionListener(e -> BatchEditMethods.LENGTH_RESET.run(this, null));"
+						}
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 2
+						"gridY": 12
+					} )
+					add( new FormComponent( "javax.swing.JButton" ) {
+						name: "button49"
+						"text": new FormMessage( null, "BatchEditFrame.ResetFilesize" )
+						auxiliary() {
+							"JavaCodeGenerator.postCreateCode": "${field}.addActionListener(e -> BatchEditMethods.FILESIZE_RESET.run(this, null));"
+						}
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 2
+						"gridY": 14
+					} )
+					add( new FormComponent( "javax.swing.JButton" ) {
+						name: "button50"
+						"text": new FormMessage( null, "BatchEditFrame.ResetAddDate" )
+						auxiliary() {
+							"JavaCodeGenerator.postCreateCode": "${field}.addActionListener(e -> BatchEditMethods.ADDDATE_RESET.run(this, null));"
+						}
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 2
+						"gridY": 18
+					} )
+					add( new FormComponent( "javax.swing.JButton" ) {
+						name: "button51"
+						"text": new FormMessage( null, "BatchEditFrame.ResetPart" )
+						auxiliary() {
+							"JavaCodeGenerator.postCreateCode": "${field}.addActionListener(e -> BatchEditMethods.PATH_RESET.run(this, null));"
+						}
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 2
+						"gridY": 20
+					} )
+					add( new FormComponent( "javax.swing.JButton" ) {
+						name: "button52"
+						"text": new FormMessage( null, "BatchEditFrame.ResetViewedHistory" )
+						auxiliary() {
+							"JavaCodeGenerator.postCreateCode": "${field}.addActionListener(e -> BatchEditMethods.VIEWED_RESET.run(this, null));"
+						}
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 2
+						"gridY": 22
+					} )
+				}, new FormLayoutConstraints( null ) {
+					"title": new FormMessage( null, "BatchEditFrame.TabReset" )
+				} )
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 6
+				"gridY": 4
+				"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				"gridHeight": 5
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "btnOmniparser"
+				"text": new FormMessage( null, "AddEpisodeFrame.btnOmniParser.text" )
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "showOmniParser", false ) )
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 2
+				"gridY": 6
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "btnOK"
+				"text": new FormMessage( null, "UIGeneric.btnOK.text" )
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "onOKClicked", false ) )
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 4
+				"gridY": 8
+				"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				"hAlign": sfield com.jgoodies.forms.layout.CellConstraints CENTER
+			} )
+		}, new FormLayoutConstraints( null ) {
+			"location": new java.awt.Point( 0, 0 )
+			"size": new java.awt.Dimension( 1200, 750 )
+		} )
+	}
+}

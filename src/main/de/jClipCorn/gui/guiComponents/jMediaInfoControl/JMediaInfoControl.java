@@ -1,5 +1,6 @@
 package de.jClipCorn.gui.guiComponents.jMediaInfoControl;
 
+import com.jformdesigner.annotations.DesignCreate;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMediaInfo;
 import de.jClipCorn.features.metadata.mediaquery.MediaQueryResult;
 import de.jClipCorn.gui.frames.editMediaInfoDialog.EditMediaInfoDialog;
@@ -17,7 +18,8 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class JMediaInfoControl extends JPanel implements MediaInfoResultHandler {
+public class JMediaInfoControl extends JPanel implements MediaInfoResultHandler
+{
 	private static final long serialVersionUID = 2696192041815168280L;
 
 	private JLabel image;
@@ -27,9 +29,15 @@ public class JMediaInfoControl extends JPanel implements MediaInfoResultHandler 
 	private CCMediaInfo value = null;
 	private MediaQueryResult queryResult = null;
 
-	private List<ActionListener> _changeListener = new ArrayList<>();
+	private final List<ActionListener> _changeListener = new ArrayList<>();
 
 	private final Func0to1<String> _pathProvider;
+
+	@DesignCreate
+	private static JMediaInfoControl designCreate()
+	{
+		return new JMediaInfoControl(() -> null);
+	}
 
 	public JMediaInfoControl(Func0to1<String> pathProvider) {
 		super();

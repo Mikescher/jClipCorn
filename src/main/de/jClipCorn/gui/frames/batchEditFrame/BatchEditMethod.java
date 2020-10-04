@@ -26,7 +26,7 @@ public class BatchEditMethod<TParam>
 		f.lsEpisodes.setSelectedIndex(-1);
 		f.batchProgress.setValue(0);
 		f.batchProgress.setMaximum(alldata.size()+1);
-		f.setPanelEnabled(f.pnlRoot, false);
+		f.setPanelEnabled(f, false);
 
 		new Thread(()->
 		{
@@ -59,7 +59,7 @@ public class BatchEditMethod<TParam>
 
 				f.batchProgress.setValue(0);
 				f.batchProgress.setMaximum(1);
-				f.setPanelEnabled(f.pnlRoot, true);
+				f.setPanelEnabled(f, true);
 			});
 
 		}, "BATCHEDIT_ACTION").start(); //$NON-NLS-1$

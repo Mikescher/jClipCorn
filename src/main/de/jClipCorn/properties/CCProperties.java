@@ -469,7 +469,9 @@ public class CCProperties {
 	}
 
 	public static CCProperties getInstance() {
-		if (Main.DEBUG && mainInstance == null) { //ONLY FOR WindowBuilder
+		if (mainInstance == null) //ONLY FOR WindowBuilder & jCoodiesFormDesigner
+		{
+			CCLog.addUndefinied("Properties accessed but not initialized"); //$NON-NLS-1$
 			return new CCProperties();
 		}
 		return mainInstance;

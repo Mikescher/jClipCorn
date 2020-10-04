@@ -279,6 +279,11 @@ public class BatchEditMethods
 		ep.viewedHistory = ep.getSource().getViewedHistory();
 	});
 
+	public static BatchEditMethod<Void> TAGS_RESET = new BatchEditMethod<>((ep, param, opt) ->
+	{
+		ep.tags = ep.getSource().getTags();
+	});
+
 	public static BatchEditMethod<Tuple3<File[], Integer, Boolean>> PATH_FROM_DIALOG = new BatchEditMethod<>((ep, param, opt) ->
 	{
 		if (param.Item1 == null) return;
@@ -296,5 +301,17 @@ public class BatchEditMethods
 		var file = param.Item1[opt.Item1-param.Item2];
 
 		ep.part = PathFormatter.getCCPath(file.getAbsolutePath());
+	});
+
+	public static BatchEditMethod<CCSingleTag> TAG_ADD = new BatchEditMethod<>((ep, param, opt) ->
+	{
+		if (param == null) return;
+		ep.tags = ep.tags.getSetTag(param, true);
+	});
+
+	public static BatchEditMethod<CCSingleTag> TAG_REM = new BatchEditMethod<>((ep, param, opt) ->
+	{
+		if (param == null) return;
+		ep.tags = ep.tags.getSetTag(param, false);
 	});
 }

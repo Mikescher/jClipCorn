@@ -214,7 +214,7 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator {
 			addMovieValidation(
 					DatabaseErrorType.ERROR_IMPOSSIBLE_WATCH_NEVER,
 					o -> o.ValidateMovies,
-					mov -> mov.isViewed() && mov.getTag(CCTagList.TAG_WATCH_NEVER),
+					mov -> mov.isViewed() && mov.getTag(CCSingleTag.TAG_WATCH_NEVER),
 					mov -> DatabaseError.createSingle(DatabaseErrorType.ERROR_IMPOSSIBLE_WATCH_NEVER, mov));
 
 			// Duplicate Genre
@@ -375,11 +375,11 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator {
 					o -> o.ValidateMovies,
 					mov -> mov.getMediaInfo().isSet() &&
 							mov.getPartcount()==1 &&
-							!mov.getTag(CCTagList.TAG_MISSING_TIME) &&
-							!mov.getTag(CCTagList.TAG_FILE_CORRUPTED) &&
-							!mov.getTag(CCTagList.TAG_WATCH_CAMRIP) &&
-							!mov.getTag(CCTagList.TAG_WATCH_MICDUBBED) &&
-							!mov.getTag(CCTagList.TAG_WRONG_LANGUAGE) &&
+							!mov.getTag(CCSingleTag.TAG_MISSING_TIME) &&
+							!mov.getTag(CCSingleTag.TAG_FILE_CORRUPTED) &&
+							!mov.getTag(CCSingleTag.TAG_WATCH_CAMRIP) &&
+							!mov.getTag(CCSingleTag.TAG_WATCH_MICDUBBED) &&
+							!mov.getTag(CCSingleTag.TAG_WRONG_LANGUAGE) &&
 							isDiff(mov.getMediaInfo().getDurationInMinutes(), mov.getLength(), 0.10, 10),
 					mov -> DatabaseError.createSingle(DatabaseErrorType.ERROR_MEDIAINFO_LENGTH_MISMATCH, mov));
 
@@ -710,11 +710,11 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator {
 					DatabaseErrorType.ERROR_MEDIAINFO_LENGTH_MISMATCH,
 					o -> o.ValidateEpisodes,
 					episode -> episode.getMediaInfo().isSet() &&
-							!episode.getTag(CCTagList.TAG_MISSING_TIME) &&
-							!episode.getTag(CCTagList.TAG_FILE_CORRUPTED) &&
-							!episode.getTag(CCTagList.TAG_WATCH_CAMRIP) &&
-							!episode.getTag(CCTagList.TAG_WATCH_MICDUBBED) &&
-							!episode.getTag(CCTagList.TAG_WRONG_LANGUAGE) &&
+							!episode.getTag(CCSingleTag.TAG_MISSING_TIME) &&
+							!episode.getTag(CCSingleTag.TAG_FILE_CORRUPTED) &&
+							!episode.getTag(CCSingleTag.TAG_WATCH_CAMRIP) &&
+							!episode.getTag(CCSingleTag.TAG_WATCH_MICDUBBED) &&
+							!episode.getTag(CCSingleTag.TAG_WRONG_LANGUAGE) &&
 							isDiff(episode.getMediaInfo().getDurationInMinutes(), episode.getLength(), 0.33, 5),
 					episode -> DatabaseError.createSingle(DatabaseErrorType.ERROR_MEDIAINFO_LENGTH_MISMATCH, episode));
 
@@ -766,7 +766,7 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator {
 			addEpisodeValidation(
 					DatabaseErrorType.ERROR_IMPOSSIBLE_WATCH_NEVER,
 					o -> o.ValidateEpisodes,
-					episode -> episode.isViewed() && episode.getTag(CCTagList.TAG_WATCH_NEVER),
+					episode -> episode.isViewed() && episode.getTag(CCSingleTag.TAG_WATCH_NEVER),
 					episode -> DatabaseError.createSingle(DatabaseErrorType.ERROR_IMPOSSIBLE_WATCH_NEVER, episode));
 
 			// LastViewed too small

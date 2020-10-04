@@ -312,7 +312,7 @@ public class DatabaseAutofixer {
 		if (err.getElement1() instanceof CCMovie) {
 			CCMovie mov = ((CCMovie)err.getElement1());
 			
-			mov.setTag(CCTagList.TAG_WATCH_NEVER, false);
+			mov.setTag(CCSingleTag.TAG_WATCH_NEVER, false);
 
 			return true;
 		} else if (err.getElement1() instanceof CCSeries) {
@@ -322,7 +322,7 @@ public class DatabaseAutofixer {
 		} else if (err.getElement1() instanceof CCEpisode) {
 			CCEpisode epi = ((CCEpisode)err.getElement1());
 			
-			epi.setTag(CCTagList.TAG_WATCH_NEVER, false);
+			epi.setTag(CCSingleTag.TAG_WATCH_NEVER, false);
 
 			return true;
 		}

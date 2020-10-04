@@ -42,7 +42,7 @@ new FormModel {
 			} )
 			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
 				"$columnSpecs": "relgap, 5dlu, default, relgap, 1dlu:grow, relgap, 50px, relgap, 22px, relgap"
-				"$rowSpecs": "relgap, default, unrelgap, default, unrelgap, default, unrelgap, default, unrelgap, default, unrelgap, default, unrelgap, default, relgap, default, relgap, default, unrelgap, default, unrelgap, default, unrelgap, 90dlu, linegap, 0dlu:grow, linegap, default, linegap"
+				"$rowSpecs": "relgap, default, unrelgap, default, unrelgap, default, unrelgap, default, unrelgap, default, unrelgap, default, unrelgap, default, relgap, default, relgap, default, linegap, default, unrelgap, default, unrelgap, default, unrelgap, 90dlu, linegap, 0dlu:grow, linegap, default, linegap"
 			} ) {
 				name: "pnlInfo"
 				"border": new javax.swing.border.LineBorder( sfield java.awt.Color black, 1, false )
@@ -255,27 +255,47 @@ new FormModel {
 					"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
 				} )
 				add( new FormComponent( "javax.swing.JLabel" ) {
-					name: "lblDirtyAddDate"
+					name: "lblDirtyTags"
 					"text": "*"
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 					"gridX": 2
 					"gridY": 20
 				} )
 				add( new FormComponent( "javax.swing.JLabel" ) {
-					name: "label9"
-					"text": new FormMessage( null, "AddMovieFrame.lblEinfgDatum.text" )
+					name: "label12"
+					"text": new FormMessage( null, "EditSeriesFrame.lblTags.text" )
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 					"gridX": 3
 					"gridY": 20
 				} )
-				add( new FormComponent( "de.jClipCorn.gui.guiComponents.jCCDateSpinner.JCCDateSpinner" ) {
-					name: "spnAddDate"
-					auxiliary() {
-						"JavaCodeGenerator.customCreateCode": "new JCCDateSpinner(CCDate.getMinimumDate(), MIN_DATE, null);"
-					}
+				add( new FormComponent( "de.jClipCorn.gui.guiComponents.TagPanel" ) {
+					name: "ctrlTags"
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 					"gridX": 5
 					"gridY": 20
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "lblDirtyAddDate"
+					"text": "*"
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 2
+					"gridY": 22
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "label9"
+					"text": new FormMessage( null, "AddMovieFrame.lblEinfgDatum.text" )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 3
+					"gridY": 22
+				} )
+				add( new FormComponent( "de.jClipCorn.gui.guiComponents.jCCDateSpinner.JCCDateSpinner" ) {
+					name: "spnAddDate"
+					auxiliary() {
+						"JavaCodeGenerator.customCreateCode": "new JCCDateSpinner(CCDate.getMinimumDate(), CCDate.getMinimumDate(), null);"
+					}
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 5
+					"gridY": 22
 					"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
 				} )
 				add( new FormComponent( "javax.swing.JButton" ) {
@@ -284,7 +304,7 @@ new FormModel {
 					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "setToday", false ) )
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 					"gridX": 7
-					"gridY": 20
+					"gridY": 22
 					"gridWidth": 3
 				} )
 				add( new FormComponent( "javax.swing.JLabel" ) {
@@ -292,20 +312,20 @@ new FormModel {
 					"text": "*"
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 					"gridX": 2
-					"gridY": 22
+					"gridY": 24
 				} )
 				add( new FormComponent( "javax.swing.JLabel" ) {
 					name: "label10"
 					"text": new FormMessage( null, "AddEpisodeFrame.lblPart.text" )
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 					"gridX": 3
-					"gridY": 22
+					"gridY": 24
 				} )
 				add( new FormComponent( "de.jClipCorn.gui.guiComponents.ReadableTextField" ) {
 					name: "edPart"
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 					"gridX": 5
-					"gridY": 22
+					"gridY": 24
 				} )
 				add( new FormComponent( "javax.swing.JButton" ) {
 					name: "btnOpen"
@@ -313,7 +333,7 @@ new FormModel {
 					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "openPart", false ) )
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 					"gridX": 7
-					"gridY": 22
+					"gridY": 24
 					"gridWidth": 3
 				} )
 				add( new FormComponent( "javax.swing.JLabel" ) {
@@ -321,7 +341,7 @@ new FormModel {
 					"text": "*"
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 					"gridX": 2
-					"gridY": 24
+					"gridY": 26
 					"vAlign": sfield com.jgoodies.forms.layout.CellConstraints TOP
 				} )
 				add( new FormComponent( "javax.swing.JLabel" ) {
@@ -329,14 +349,14 @@ new FormModel {
 					"text": new FormMessage( null, "EditSeriesFrame.lblHistory.text" )
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 					"gridX": 3
-					"gridY": 24
+					"gridY": 26
 					"vAlign": sfield com.jgoodies.forms.layout.CellConstraints TOP
 				} )
 				add( new FormComponent( "de.jClipCorn.gui.guiComponents.dateTimeListEditor.DateTimeListEditor" ) {
 					name: "ctrlHistory"
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 					"gridX": 5
-					"gridY": 24
+					"gridY": 26
 					"gridWidth": 5
 					"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
 				} )
@@ -376,7 +396,7 @@ new FormModel {
 					} )
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 					"gridX": 2
-					"gridY": 28
+					"gridY": 30
 					"gridWidth": 8
 					"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
 				} )
@@ -401,7 +421,7 @@ new FormModel {
 				"tabPlacement": 3
 				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
 					"$columnSpecs": "labelcompgap, 0dlu:grow, labelcompgap, 0dlu:grow(0.5), labelcompgap, 0dlu:grow(0.5), labelcompgap, 0dlu:grow(0.5), labelcompgap, 0dlu:grow(0.5), labelcompgap"
-					"$rowSpecs": "relgap, default, linegap, default, linegap, 7dlu, linegap, default, linegap, default, linegap, 7dlu, linegap, default, linegap, default, linegap, default, linegap, 7dlu, linegap, default, linegap, 7dlu, linegap, default, linegap, default:grow"
+					"$rowSpecs": "linegap, default, linegap, default, linegap, 7dlu, linegap, default, linegap, default, linegap, 7dlu, linegap, default, linegap, default, linegap, default, linegap, 7dlu, linegap, default, linegap, 7dlu, linegap, default, linegap, default:grow"
 				} ) {
 					name: "pnlTitleEdit"
 					add( new FormComponent( "javax.swing.JButton" ) {
@@ -847,7 +867,7 @@ new FormModel {
 				} )
 				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
 					"$columnSpecs": "relgap, 0dlu:grow, labelcompgap, 0dlu:grow(0.5), labelcompgap, 0dlu:grow(0.5), labelcompgap, 0dlu:grow(0.5), labelcompgap, 0dlu:grow(0.5), labelcompgap"
-					"$rowSpecs": "linegap, default, linegap, default, linegap, default, linegap, 7dlu, linegap, default, linegap, default, linegap, default, linegap, 7dlu, linegap, default, linegap, default, linegap, 7dlu, linegap, default, linegap, default, linegap, 7dlu, linegap, default, linegap, 7dlu, linegap, default, linegap, default, linegap, 0dlu:grow, linegap, default, linegap, default, linegap, default, linegap, default, linegap"
+					"$rowSpecs": "linegap, default, linegap, default, linegap, 7dlu, linegap, default, linegap, default, linegap, default, linegap, 7dlu, linegap, default, linegap, default, linegap, 7dlu, linegap, default, linegap, default, linegap, 7dlu, linegap, default, linegap, default, linegap, 7dlu, linegap, default, linegap, default, linegap, 0dlu:grow"
 				} ) {
 					name: "pnlMiscEdit"
 					add( new FormComponent( "javax.swing.JSpinner" ) {
@@ -886,17 +906,6 @@ new FormModel {
 						"gridWidth": 3
 					} )
 					add( new FormComponent( "javax.swing.JButton" ) {
-						name: "button27"
-						"text": new FormMessage( null, "AddEpisodeFrame.btnSetEpSize.text" )
-						auxiliary() {
-							"JavaCodeGenerator.postCreateCode": "${field}.addActionListener(e -> BatchEditMethods.FILESIZE_FROM_FILE.run(this, null));"
-						}
-					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-						"gridX": 2
-						"gridY": 6
-						"gridWidth": 9
-					} )
-					add( new FormComponent( "javax.swing.JButton" ) {
 						name: "button28"
 						"text": new FormMessage( null, "AddEpisodeFrame.btnSetUnviewed.text" )
 						auxiliary() {
@@ -904,7 +913,7 @@ new FormModel {
 						}
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridX": 2
-						"gridY": 10
+						"gridY": 8
 						"gridWidth": 9
 					} )
 					add( new FormComponent( "javax.swing.JButton" ) {
@@ -915,7 +924,7 @@ new FormModel {
 						}
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridX": 2
-						"gridY": 12
+						"gridY": 10
 						"gridWidth": 9
 					} )
 					add( new FormComponent( "javax.swing.JButton" ) {
@@ -926,7 +935,7 @@ new FormModel {
 						}
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridX": 2
-						"gridY": 14
+						"gridY": 12
 						"gridWidth": 9
 					} )
 					add( new FormComponent( "javax.swing.JButton" ) {
@@ -937,14 +946,14 @@ new FormModel {
 						}
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridX": 2
-						"gridY": 18
+						"gridY": 16
 						"gridWidth": 5
 					} )
 					add( new FormComponent( "javax.swing.JSpinner" ) {
 						name: "spnSideLength"
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridX": 8
-						"gridY": 18
+						"gridY": 16
 						"gridWidth": 3
 					} )
 					add( new FormComponent( "javax.swing.JButton" ) {
@@ -955,7 +964,7 @@ new FormModel {
 						}
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridX": 2
-						"gridY": 20
+						"gridY": 18
 						"gridWidth": 5
 					} )
 					add( new FormComponent( "de.jClipCorn.gui.guiComponents.enumComboBox.CCEnumComboBox" ) {
@@ -966,14 +975,14 @@ new FormModel {
 						}
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridX": 8
-						"gridY": 20
+						"gridY": 18
 						"gridWidth": 3
 					} )
 					add( new FormComponent( "de.jClipCorn.gui.guiComponents.jCCDateTimeSpinner.JCCDateTimeSpinner" ) {
 						name: "ctrlSideHistoryVal"
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridX": 2
-						"gridY": 24
+						"gridY": 22
 						"gridWidth": 3
 					} )
 					add( new FormComponent( "javax.swing.JButton" ) {
@@ -984,7 +993,7 @@ new FormModel {
 						}
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridX": 6
-						"gridY": 24
+						"gridY": 22
 						"gridWidth": 5
 					} )
 					add( new FormComponent( "javax.swing.JButton" ) {
@@ -995,19 +1004,8 @@ new FormModel {
 						}
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridX": 6
-						"gridY": 26
+						"gridY": 24
 						"gridWidth": 5
-					} )
-					add( new FormComponent( "javax.swing.JButton" ) {
-						name: "button35"
-						"text": new FormMessage( null, "BatchEditFrame.ClearMediaInfo" )
-						auxiliary() {
-							"JavaCodeGenerator.postCreateCode": "${field}.addActionListener(e -> BatchEditMethods.MEDIAINFO_CLEAR.run(this, null));"
-						}
-					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-						"gridX": 2
-						"gridY": 30
-						"gridWidth": 9
 					} )
 					add( new FormComponent( "javax.swing.JButton" ) {
 						name: "button36"
@@ -1017,7 +1015,7 @@ new FormModel {
 						}
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridX": 2
-						"gridY": 34
+						"gridY": 28
 						"gridWidth": 7
 					} )
 					add( new FormComponent( "javax.swing.JButton" ) {
@@ -1028,14 +1026,88 @@ new FormModel {
 						}
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridX": 2
-						"gridY": 36
+						"gridY": 30
 						"gridWidth": 7
 					} )
 					add( new FormComponent( "javax.swing.JSpinner" ) {
 						name: "spnPathOpenOffset"
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridX": 10
+						"gridY": 30
+					} )
+					add( new FormComponent( "de.jClipCorn.gui.guiComponents.enumComboBox.CCEnumComboBox" ) {
+						name: "cbxSideTag1"
+						auxiliary() {
+							"JavaCodeGenerator.typeParameters": "CCSingleTag"
+							"JavaCodeGenerator.customCreateCode": "new CCEnumComboBox<>(CCSingleTag.getWrapper());"
+						}
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 2
+						"gridY": 34
+						"gridWidth": 3
+					} )
+					add( new FormComponent( "javax.swing.JButton" ) {
+						name: "button54"
+						"text": new FormMessage( null, "BatchEditFrame.AddTag" )
+						auxiliary() {
+							"JavaCodeGenerator.postCreateCode": "${field}.addActionListener(e -> BatchEditMethods.TAG_ADD.run(this, cbxSideTag1.getSelectedEnum()));"
+						}
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 6
+						"gridY": 34
+						"gridWidth": 5
+					} )
+					add( new FormComponent( "de.jClipCorn.gui.guiComponents.enumComboBox.CCEnumComboBox" ) {
+						name: "cbxSideTag2"
+						auxiliary() {
+							"JavaCodeGenerator.typeParameters": "CCSingleTag"
+							"JavaCodeGenerator.customCreateCode": "new CCEnumComboBox<>(CCSingleTag.getWrapper());"
+						}
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 2
 						"gridY": 36
+						"gridWidth": 3
+					} )
+					add( new FormComponent( "javax.swing.JButton" ) {
+						name: "button55"
+						"text": new FormMessage( null, "BatchEditFrame.DelTag" )
+						auxiliary() {
+							"JavaCodeGenerator.postCreateCode": "${field}.addActionListener(e -> BatchEditMethods.TAG_REM.run(this, cbxSideTag2.getSelectedEnum()));"
+						}
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 6
+						"gridY": 36
+						"gridWidth": 5
+					} )
+				}, new FormLayoutConstraints( null ) {
+					"title": new FormMessage( null, "BatchEditFrame.TabMisc" )
+				} )
+				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+					"$columnSpecs": "relgap, 0dlu:grow, labelcompgap, 0dlu:grow(0.75), relgap"
+					"$rowSpecs": "linegap, default, linegap, 7dlu, linegap, default, linegap, 7dlu, linegap, default, linegap, default, linegap, default, linegap, 7dlu, linegap, default"
+				} ) {
+					name: "pnlMetadata"
+					add( new FormComponent( "javax.swing.JButton" ) {
+						name: "button27"
+						"text": new FormMessage( null, "AddEpisodeFrame.btnSetEpSize.text" )
+						auxiliary() {
+							"JavaCodeGenerator.postCreateCode": "${field}.addActionListener(e -> BatchEditMethods.FILESIZE_FROM_FILE.run(this, null));"
+						}
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridWidth": 3
+						"gridX": 2
+						"gridY": 2
+					} )
+					add( new FormComponent( "javax.swing.JButton" ) {
+						name: "button35"
+						"text": new FormMessage( null, "BatchEditFrame.ClearMediaInfo" )
+						auxiliary() {
+							"JavaCodeGenerator.postCreateCode": "${field}.addActionListener(e -> BatchEditMethods.MEDIAINFO_CLEAR.run(this, null));"
+						}
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridY": 6
+						"gridWidth": 3
+						"gridX": 2
 					} )
 					add( new FormComponent( "javax.swing.JButton" ) {
 						name: "button38"
@@ -1044,9 +1116,9 @@ new FormModel {
 							"JavaCodeGenerator.postCreateCode": "${field}.addActionListener(e -> BatchEditMethods.FORMAT_FROM_FILE.run(this, null));"
 						}
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridY": 10
+						"gridWidth": 3
 						"gridX": 2
-						"gridY": 40
-						"gridWidth": 9
 					} )
 					add( new FormComponent( "javax.swing.JButton" ) {
 						name: "button39"
@@ -1055,9 +1127,9 @@ new FormModel {
 							"JavaCodeGenerator.postCreateCode": "${field}.addActionListener(e -> BatchEditMethods.LANGUAGE_FROM_FILE_MEDIAINFO.run(this, null));"
 						}
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridY": 12
+						"gridWidth": 3
 						"gridX": 2
-						"gridY": 42
-						"gridWidth": 9
 					} )
 					add( new FormComponent( "javax.swing.JButton" ) {
 						name: "button40"
@@ -1066,9 +1138,9 @@ new FormModel {
 							"JavaCodeGenerator.postCreateCode": "${field}.addActionListener(e -> BatchEditMethods.LENGTH_FROM_FILE_MEDIAINFO.run(this, null));"
 						}
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridY": 14
+						"gridWidth": 3
 						"gridX": 2
-						"gridY": 44
-						"gridWidth": 9
 					} )
 					add( new FormComponent( "javax.swing.JButton" ) {
 						name: "button41"
@@ -1077,9 +1149,8 @@ new FormModel {
 							"JavaCodeGenerator.postCreateCode": "${field}.addActionListener(e -> BatchEditMethods.MEDIAINFO_FROM_FILE.run(this, null));"
 						}
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridY": 18
 						"gridX": 2
-						"gridY": 46
-						"gridWidth": 5
 					} )
 					add( new FormComponent( "javax.swing.JButton" ) {
 						name: "button42"
@@ -1088,16 +1159,15 @@ new FormModel {
 							"JavaCodeGenerator.postCreateCode": "${field}.addActionListener(e -> BatchEditMethods.MEDIAINFO_CALC_HASH.run(this, null));"
 						}
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-						"gridX": 8
-						"gridY": 46
-						"gridWidth": 3
+						"gridX": 4
+						"gridY": 18
 					} )
 				}, new FormLayoutConstraints( null ) {
-					"title": new FormMessage( null, "BatchEditFrame.TabMisc" )
+					"title": new FormMessage( null, "BatchEditFrame.TabMetadata" )
 				} )
 				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
 					"$columnSpecs": "relgap, 0dlu:grow, relgap"
-					"$rowSpecs": "labelcompgap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, 7dlu, linegap, default, linegap, default, linegap, default, linegap, default:grow"
+					"$rowSpecs": "linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, 7dlu, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default:grow"
 				} ) {
 					name: "pnlReset"
 					add( new FormComponent( "javax.swing.JButton" ) {
@@ -1171,6 +1241,16 @@ new FormModel {
 						"gridY": 14
 					} )
 					add( new FormComponent( "javax.swing.JButton" ) {
+						name: "button53"
+						"text": new FormMessage( null, "BatchEditFrame.ResetTags" )
+						auxiliary() {
+							"JavaCodeGenerator.postCreateCode": "${field}.addActionListener(e -> BatchEditMethods.TAGS_RESET.run(this, null));"
+						}
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 2
+						"gridY": 18
+					} )
+					add( new FormComponent( "javax.swing.JButton" ) {
 						name: "button50"
 						"text": new FormMessage( null, "BatchEditFrame.ResetAddDate" )
 						auxiliary() {
@@ -1178,7 +1258,7 @@ new FormModel {
 						}
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridX": 2
-						"gridY": 18
+						"gridY": 20
 					} )
 					add( new FormComponent( "javax.swing.JButton" ) {
 						name: "button51"
@@ -1188,7 +1268,7 @@ new FormModel {
 						}
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridX": 2
-						"gridY": 20
+						"gridY": 22
 					} )
 					add( new FormComponent( "javax.swing.JButton" ) {
 						name: "button52"
@@ -1198,7 +1278,7 @@ new FormModel {
 						}
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridX": 2
-						"gridY": 22
+						"gridY": 24
 					} )
 				}, new FormLayoutConstraints( null ) {
 					"title": new FormMessage( null, "BatchEditFrame.TabReset" )

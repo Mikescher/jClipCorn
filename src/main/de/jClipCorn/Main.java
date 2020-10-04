@@ -214,7 +214,7 @@ public class Main {
  - [ ] AllRatingsFrame
  - [ ] AutofindRefrenceFrame
  - [ ] BackupManagerFrame
- - [ ] BatchEditFrame
+ - [X] BatchEditFrame
  - [ ] ChangeScoreFrame
  - [ ] ChangeViewedFrame
  - [ ] CheckDatabaseFrame

@@ -421,7 +421,7 @@ public class CCSeries extends CCDatabaseElement implements IEpisodeOwner {
 		if (isViewed())
 			return new ExtendedViewedState(ExtendedViewedStateType.VIEWED, CCDateTimeList.createEmpty(), getFullViewCount());
 
-		if (getTag(CCTagList.TAG_WATCH_NEVER))
+		if (getTag(CCSingleTag.TAG_WATCH_NEVER))
 			return new ExtendedViewedState(ExtendedViewedStateType.MARKED_FOR_NEVER, CCDateTimeList.createEmpty(), getFullViewCount());
 
 		if (CCProperties.getInstance().PROP_SHOW_PARTIAL_VIEWED_STATE.getValue() && isPartialViewed())

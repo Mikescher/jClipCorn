@@ -116,7 +116,7 @@ public class TestDatabase extends ClipCornBaseTest {
 			serWrite.setGroups(CCGroupList.create(CCGroup.create("G0"), CCGroup.create("G1")));
 			serWrite.setTitle("MySeries");
 			serWrite.setGenres(CCGenreList.create(CCGenre.GENRE_006, CCGenre.GENRE_020, CCGenre.GENRE_006));
-			serWrite.setTags(CCTagList.create(CCTagList.TAG_WATCH_LATER, CCTagList.TAG_BAD_QUALITY));
+			serWrite.setTags(CCTagList.create(CCSingleTag.TAG_WATCH_LATER, CCSingleTag.TAG_BAD_QUALITY));
 			serWrite.setOnlineReference(CCOnlineReferenceList.create(CCSingleOnlineReference.createIMDB("1234"), CCSingleOnlineReference.createMyAnimeList(999)));
 			serWrite.setFsk(CCFSK.RATING_I);
 			serWrite.setOnlinescore(CCOnlineScore.STARS_2_0);
@@ -151,7 +151,7 @@ public class TestDatabase extends ClipCornBaseTest {
 					48000,                                                           // int audiosamplerate
 					""));                                                            // String checksum
 			epiWrite.setLength(98);
-			epiWrite.setTags(CCTagList.create(CCTagList.TAG_MISSING_TIME));
+			epiWrite.setTags(CCTagList.create(CCSingleTag.TAG_MISSING_TIME));
 			epiWrite.setFormat(CCFileFormat.MKV);
 			epiWrite.setFilesize(3570481288L);
 			epiWrite.setPart("/media/example.mkv");
@@ -180,7 +180,7 @@ public class TestDatabase extends ClipCornBaseTest {
 		assertEquals(CCGroupList.create(CCGroup.create("G0"), CCGroup.create("G1")), serRead.getGroups());
 		assertEquals("MySeries", serRead.getTitle());
 		assertEquals(CCGenreList.create(CCGenre.GENRE_006, CCGenre.GENRE_020, CCGenre.GENRE_006), serRead.getGenres());
-		assertEquals(CCTagList.create(CCTagList.TAG_WATCH_LATER, CCTagList.TAG_BAD_QUALITY), serRead.getTags());
+		assertEquals(CCTagList.create(CCSingleTag.TAG_WATCH_LATER, CCSingleTag.TAG_BAD_QUALITY), serRead.getTags());
 		assertEquals(CCOnlineReferenceList.create(CCSingleOnlineReference.createIMDB("1234"), CCSingleOnlineReference.createMyAnimeList(999)), serRead.getOnlineReference());
 		assertEquals(CCFSK.RATING_I, serRead.getFSK());
 		assertEquals(CCOnlineScore.STARS_2_0, serRead.getOnlinescore());
@@ -196,7 +196,7 @@ public class TestDatabase extends ClipCornBaseTest {
 		assertEquals("This is my title: fight me", epiRead.getTitle());
 		assertTrue(epiRead.isViewed());
 		assertEquals(98, epiRead.getLength());
-		assertEquals(CCTagList.create(CCTagList.TAG_MISSING_TIME), epiRead.getTags());
+		assertEquals(CCTagList.create(CCSingleTag.TAG_MISSING_TIME), epiRead.getTags());
 		assertEquals(CCFileFormat.MKV, epiRead.getFormat());
 		assertEquals(3570481288L, epiRead.getFilesize().getBytes());
 		assertEquals("/media/example.mkv", epiRead.getPart());

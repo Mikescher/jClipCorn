@@ -100,8 +100,8 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 	public void addToViewedHistory(CCDateTime datetime) {
 		this.viewedHistory = this.viewedHistory.add(datetime);
 
-		if (getTag(CCTagList.TAG_WATCH_LATER) && CCProperties.getInstance().PROP_MAINFRAME_AUTOMATICRESETWATCHLATER.getValue()) {
-			setTag(CCTagList.TAG_WATCH_LATER, false);
+		if (getTag(CCSingleTag.TAG_WATCH_LATER) && CCProperties.getInstance().PROP_MAINFRAME_AUTOMATICRESETWATCHLATER.getValue()) {
+			setTag(CCSingleTag.TAG_WATCH_LATER, false);
 		}
 
 		updateDB();
@@ -112,8 +112,8 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 		{
 			this.viewedHistory = this.viewedHistory.add(datetime);
 
-			if (getTag(CCTagList.TAG_WATCH_LATER) && CCProperties.getInstance().PROP_MAINFRAME_AUTOMATICRESETWATCHLATER.getValue()) {
-				setTag(CCTagList.TAG_WATCH_LATER, false);
+			if (getTag(CCSingleTag.TAG_WATCH_LATER) && CCProperties.getInstance().PROP_MAINFRAME_AUTOMATICRESETWATCHLATER.getValue()) {
+				setTag(CCSingleTag.TAG_WATCH_LATER, false);
 			}
 
 			updateDBWithException();
@@ -509,13 +509,13 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 
 	@Override
 	public ExtendedViewedState getExtendedViewedState() {
-		if (!isViewed() && tags.getTag(CCTagList.TAG_WATCH_LATER))
+		if (!isViewed() && tags.getTag(CCSingleTag.TAG_WATCH_LATER))
 			return new ExtendedViewedState(ExtendedViewedStateType.MARKED_FOR_LATER, getViewedHistory(), null);
-		else if (isViewed() && tags.getTag(CCTagList.TAG_WATCH_LATER))
+		else if (isViewed() && tags.getTag(CCSingleTag.TAG_WATCH_LATER))
 			return new ExtendedViewedState(ExtendedViewedStateType.MARKED_FOR_AGAIN, getViewedHistory(), null);
 		else if (isViewed())
 			return new ExtendedViewedState(ExtendedViewedStateType.VIEWED, getViewedHistory(), null);
-		else if (tags.getTag(CCTagList.TAG_WATCH_NEVER))
+		else if (tags.getTag(CCSingleTag.TAG_WATCH_NEVER))
 			return new ExtendedViewedState(ExtendedViewedStateType.MARKED_FOR_NEVER, getViewedHistory(), null);
 		else
 			return new ExtendedViewedState(ExtendedViewedStateType.NOT_VIEWED, getViewedHistory(), null);

@@ -327,8 +327,8 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 		{
 			this.viewedHistory = this.viewedHistory.add(datetime);
 
-			if (getTag(CCTagList.TAG_WATCH_LATER) && CCProperties.getInstance().PROP_MAINFRAME_AUTOMATICRESETWATCHLATER.getValue()) {
-				setTag(CCTagList.TAG_WATCH_LATER, false);
+			if (getTag(CCSingleTag.TAG_WATCH_LATER) && CCProperties.getInstance().PROP_MAINFRAME_AUTOMATICRESETWATCHLATER.getValue()) {
+				setTag(CCSingleTag.TAG_WATCH_LATER, false);
 			}
 
 			updateDBWithException();
@@ -423,16 +423,16 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 	
 	@Override
 	public ExtendedViewedState getExtendedViewedState() {
-		if (!isViewed() && getTag(CCTagList.TAG_WATCH_LATER))
+		if (!isViewed() && getTag(CCSingleTag.TAG_WATCH_LATER))
 			return new ExtendedViewedState(ExtendedViewedStateType.MARKED_FOR_LATER, getViewedHistory(), null);
 
-		if (isViewed() && getTag(CCTagList.TAG_WATCH_LATER))
+		if (isViewed() && getTag(CCSingleTag.TAG_WATCH_LATER))
 			return new ExtendedViewedState(ExtendedViewedStateType.MARKED_FOR_AGAIN, getViewedHistory(), null);
 
 		if (isViewed())
 			return new ExtendedViewedState(ExtendedViewedStateType.VIEWED, getViewedHistory(), null);
 
-		if (getTag(CCTagList.TAG_WATCH_NEVER))
+		if (getTag(CCSingleTag.TAG_WATCH_NEVER))
 			return new ExtendedViewedState(ExtendedViewedStateType.MARKED_FOR_NEVER, getViewedHistory(), null);
 
 		return new ExtendedViewedState(ExtendedViewedStateType.NOT_VIEWED, getViewedHistory(), null);

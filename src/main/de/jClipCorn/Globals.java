@@ -1,15 +1,19 @@
 package de.jClipCorn;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import de.jClipCorn.gui.mainFrame.MainFrame;
 import de.jClipCorn.gui.mainFrame.clipStatusbar.ClipStatusBar;
 import de.jClipCorn.util.MapStopWatch;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @SuppressWarnings("nls")
 public final class Globals {
 	private Globals () { throw new InstantiationError(); }
+
+	public static long MILLIS_MAIN;
+
+	//-------------------------------------------------------------
 
 	public static int ASYNC_TIME_OFFSET_RESOURCES         = 1000;
 	public static int ASYNC_TIME_OFFSET_BACKUPMANAGER     = 5000;

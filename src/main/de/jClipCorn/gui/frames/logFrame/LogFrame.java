@@ -2,20 +2,27 @@ package de.jClipCorn.gui.frames.logFrame;
 
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
+import de.jClipCorn.Globals;
+import de.jClipCorn.database.databaseElement.caches.CalculationCache;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.features.log.CCLogChangedListener;
 import de.jClipCorn.features.log.CCLogType;
 import de.jClipCorn.gui.frames.genericTextDialog.GenericTextDialog;
 import de.jClipCorn.gui.guiComponents.DatabaseElementPreviewLabel;
+import de.jClipCorn.gui.guiComponents.ReadableTextField;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.mainFrame.MainFrame;
 import de.jClipCorn.gui.resources.Resources;
+import de.jClipCorn.util.http.WebConnectionLayer;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 
 public class LogFrame extends JFrame implements CCLogChangedListener
 {
+	private Timer liveDisplayTimer;
+
 	public LogFrame(Component owner)
 	{
 		super();
@@ -49,6 +56,29 @@ public class LogFrame extends JFrame implements CCLogChangedListener
 		CCLog.addChangeListener(this);
 
 		CCLog.setAllWatched();
+
+		liveDisplayTimer = new Timer(300, this::onTimer);
+		liveDisplayTimer.setInitialDelay(1000);
+		liveDisplayTimer.start();
+	}
+
+	private void onTimer(ActionEvent actionEvent)
+	{
+		if (tpnlMain.getSelectedIndex() != 5) return;
+
+		displErrorCount.setText(String.valueOf(CCLog.getCount(CCLogType.LOG_ELEM_ERROR)));
+		displWarningsCount.setText(String.valueOf(CCLog.getCount(CCLogType.LOG_ELEM_WARNING)));
+		displUndefiniedCount.setText(String.valueOf(CCLog.getCount(CCLogType.LOG_ELEM_UNDEFINED)));
+
+		displQueryCount.setText(String.valueOf(CCLog.getSQLCount()));
+		displRequestCount.setText(String.valueOf(WebConnectionLayer.getTotalRequestCount()));
+
+		displUptime.setText(String.valueOf(System.currentTimeMillis() - Globals.MILLIS_MAIN));
+
+		displCacheHits.setText(CalculationCache.formatCacheHits());
+		displCacheMisses.setText(CalculationCache.formatCacheMisses());
+		displCacheInvalidations.setText(String.valueOf(CalculationCache.CacheInvalidations));
+		displCacheTotalCount.setText(String.valueOf(CalculationCache.CacheSizeTotal));
 	}
 
 	@Override
@@ -114,6 +144,26 @@ public class LogFrame extends JFrame implements CCLogChangedListener
 		memoSQL = new JTextArea();
 		button5 = new JButton();
 		tabLiveDisplay = new JPanel();
+		label8 = new JLabel();
+		displUptime = new ReadableTextField();
+		label10 = new JLabel();
+		displCacheTotalCount = new ReadableTextField();
+		label1 = new JLabel();
+		displCacheHits = new ReadableTextField();
+		label2 = new JLabel();
+		displCacheMisses = new ReadableTextField();
+		label9 = new JLabel();
+		displCacheInvalidations = new ReadableTextField();
+		label3 = new JLabel();
+		displWarningsCount = new ReadableTextField();
+		label4 = new JLabel();
+		displErrorCount = new ReadableTextField();
+		label5 = new JLabel();
+		displUndefiniedCount = new ReadableTextField();
+		label6 = new JLabel();
+		displQueryCount = new ReadableTextField();
+		label7 = new JLabel();
+		displRequestCount = new ReadableTextField();
 
 		//======== this ========
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
@@ -294,8 +344,58 @@ public class LogFrame extends JFrame implements CCLogChangedListener
 			//======== tabLiveDisplay ========
 			{
 				tabLiveDisplay.setLayout(new FormLayout(
-					"", //$NON-NLS-1$
-					"")); //$NON-NLS-1$
+					"$ugap, default, $lcgap, 100dlu", //$NON-NLS-1$
+					"$ugap, default, $pgap, 3*(default, $lgap), default, $pgap, 2*(default, $lgap), default, $pgap, default, $lgap, default")); //$NON-NLS-1$
+
+				//---- label8 ----
+				label8.setText(LocaleBundle.getString("LogFrame.Uptime")); //$NON-NLS-1$
+				tabLiveDisplay.add(label8, CC.xy(2, 2));
+				tabLiveDisplay.add(displUptime, CC.xy(4, 2));
+
+				//---- label10 ----
+				label10.setText(LocaleBundle.getString("LogFrame.CacheSize")); //$NON-NLS-1$
+				tabLiveDisplay.add(label10, CC.xy(2, 4));
+				tabLiveDisplay.add(displCacheTotalCount, CC.xy(4, 4));
+
+				//---- label1 ----
+				label1.setText(LocaleBundle.getString("LogFrame.CacheHits")); //$NON-NLS-1$
+				tabLiveDisplay.add(label1, CC.xy(2, 6));
+				tabLiveDisplay.add(displCacheHits, CC.xy(4, 6));
+
+				//---- label2 ----
+				label2.setText(LocaleBundle.getString("LogFrame.CacheMisses")); //$NON-NLS-1$
+				tabLiveDisplay.add(label2, CC.xy(2, 8));
+				tabLiveDisplay.add(displCacheMisses, CC.xy(4, 8));
+
+				//---- label9 ----
+				label9.setText(LocaleBundle.getString("LogFrame.CacheInvalidations")); //$NON-NLS-1$
+				tabLiveDisplay.add(label9, CC.xy(2, 10));
+				tabLiveDisplay.add(displCacheInvalidations, CC.xy(4, 10));
+
+				//---- label3 ----
+				label3.setText(LocaleBundle.getString("CCLog.Warnings")); //$NON-NLS-1$
+				tabLiveDisplay.add(label3, CC.xy(2, 12));
+				tabLiveDisplay.add(displWarningsCount, CC.xy(4, 12));
+
+				//---- label4 ----
+				label4.setText(LocaleBundle.getString("CCLog.Errors")); //$NON-NLS-1$
+				tabLiveDisplay.add(label4, CC.xy(2, 14));
+				tabLiveDisplay.add(displErrorCount, CC.xy(4, 14));
+
+				//---- label5 ----
+				label5.setText(LocaleBundle.getString("CCLog.Undefinieds")); //$NON-NLS-1$
+				tabLiveDisplay.add(label5, CC.xy(2, 16));
+				tabLiveDisplay.add(displUndefiniedCount, CC.xy(4, 16));
+
+				//---- label6 ----
+				label6.setText(LocaleBundle.getString("LogFrame.DBQueries")); //$NON-NLS-1$
+				tabLiveDisplay.add(label6, CC.xy(2, 18));
+				tabLiveDisplay.add(displQueryCount, CC.xy(4, 18));
+
+				//---- label7 ----
+				label7.setText(LocaleBundle.getString("LogFrame.WebRequests")); //$NON-NLS-1$
+				tabLiveDisplay.add(label7, CC.xy(2, 20));
+				tabLiveDisplay.add(displRequestCount, CC.xy(4, 20));
 			}
 			tpnlMain.addTab(LocaleBundle.getString("LogFrame.TabLiveDisplay"), tabLiveDisplay); //$NON-NLS-1$
 		}
@@ -338,5 +438,25 @@ public class LogFrame extends JFrame implements CCLogChangedListener
 	private JTextArea memoSQL;
 	private JButton button5;
 	private JPanel tabLiveDisplay;
+	private JLabel label8;
+	private ReadableTextField displUptime;
+	private JLabel label10;
+	private ReadableTextField displCacheTotalCount;
+	private JLabel label1;
+	private ReadableTextField displCacheHits;
+	private JLabel label2;
+	private ReadableTextField displCacheMisses;
+	private JLabel label9;
+	private ReadableTextField displCacheInvalidations;
+	private JLabel label3;
+	private ReadableTextField displWarningsCount;
+	private JLabel label4;
+	private ReadableTextField displErrorCount;
+	private JLabel label5;
+	private ReadableTextField displUndefiniedCount;
+	private JLabel label6;
+	private ReadableTextField displQueryCount;
+	private JLabel label7;
+	private ReadableTextField displRequestCount;
 	// JFormDesigner - End of variables declaration  //GEN-END:variables
 }

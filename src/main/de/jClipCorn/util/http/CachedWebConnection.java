@@ -1,15 +1,5 @@
 package de.jClipCorn.util.http;
 
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
-
-import javax.imageio.ImageIO;
-
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.SimpleSerializableData;
@@ -20,6 +10,15 @@ import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.SimpleFileUtils;
 import de.jClipCorn.util.stream.CCStreams;
 import org.apache.commons.codec.digest.DigestUtils;
+
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.List;
+import java.util.UUID;
 
 @SuppressWarnings({"nls", "Duplicates"})
 public class CachedWebConnection extends WebConnectionLayer {
@@ -90,7 +89,9 @@ public class CachedWebConnection extends WebConnectionLayer {
 	public String getUncaughtHTML(URL url, boolean stripLineBreaks) throws IOException, HTTPErrorCodeException {
 		try {
 			String id = "getUncaughtHTML|" + url.toExternalForm() + "|" + stripLineBreaks;
-			
+
+			WebConnectionLayer.RequestCountGet.incrementAndGet();
+
 			if (db.containsChild(id)) {
 				CCLog.addDebug("[HTTP-CACHE] load from Cache: " + id);
 				
@@ -147,6 +148,8 @@ public class CachedWebConnection extends WebConnectionLayer {
 		try {
 			String id1 = "getUncaughtPostContent<1>|" + url.toExternalForm() + "|" + DigestUtils.md5Hex(body);
 			String id2 = "getUncaughtPostContent<2>|" + url.toExternalForm() + "|" + DigestUtils.md5Hex(body);
+
+			WebConnectionLayer.RequestCountPost.incrementAndGet();
 
 			if (db.containsChild(id1) && db.containsChild(id2)) {
 				CCLog.addDebug("[HTTP-CACHE] load from Cache: " + id1);
@@ -224,7 +227,9 @@ public class CachedWebConnection extends WebConnectionLayer {
 	public BufferedImage getImage(String url) {
 		try {
 			String id = "getImage|" + url;
-	
+
+			WebConnectionLayer.RequestCountImage.incrementAndGet();
+
 			if (db.containsChild(id)) {
 				CCLog.addDebug("[HTTP-CACHE] load from Cache: " + id);
 				

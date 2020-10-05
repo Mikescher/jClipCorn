@@ -38,6 +38,8 @@ public class Main {
 	public static boolean BETA = true;
 		
 	public static void main(String[] arg) {
+		Globals.MILLIS_MAIN = System.currentTimeMillis();
+
 		Globals.TIMINGS.start(Globals.TIMING_STARTUP_TOTAL);
 
 		Globals.TIMINGS.start(Globals.TIMING_INIT_TOTAL);

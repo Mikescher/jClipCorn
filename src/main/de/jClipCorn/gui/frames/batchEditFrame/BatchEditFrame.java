@@ -704,6 +704,7 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 
 		//======== this ========
 		setTitle("<dynamic>"); //$NON-NLS-1$
+		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		var contentPane = getContentPane();
 		contentPane.setLayout(new FormLayout(
 			"$ugap, 225px, $ugap, 0dlu:grow, $ugap, 500px, $ugap", //$NON-NLS-1$

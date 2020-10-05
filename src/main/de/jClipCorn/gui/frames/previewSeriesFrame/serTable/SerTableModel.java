@@ -1,14 +1,13 @@
 package de.jClipCorn.gui.frames.previewSeriesFrame.serTable;
 
-import java.awt.Color;
-
-import javax.swing.table.AbstractTableModel;
-
 import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.CCSeason;
+import de.jClipCorn.features.table.renderer.TableModelRowColorInterface;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.properties.CCProperties;
-import de.jClipCorn.features.table.renderer.TableModelRowColorInterface;
+
+import javax.swing.table.AbstractTableModel;
+import java.awt.*;
 
 public class SerTableModel extends AbstractTableModel implements TableModelRowColorInterface{
 	private static final long serialVersionUID = -2056843389761330885L;

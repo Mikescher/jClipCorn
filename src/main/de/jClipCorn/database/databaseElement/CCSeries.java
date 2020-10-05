@@ -68,9 +68,13 @@ public class CCSeries extends CCDatabaseElement implements IEpisodeOwner, ISerie
 		}
 		return v;
 	}
-	
+
 	public boolean isPartialViewed() { // Some parts viewed - some not
 		return !(isViewed() || isUnviewed());
+	}
+
+	public boolean isViewedOrPartialViewed() {
+		return !isUnviewed();
 	}
 	
 	public int getSeasonCount() {

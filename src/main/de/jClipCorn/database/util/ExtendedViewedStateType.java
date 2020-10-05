@@ -1,12 +1,12 @@
 package de.jClipCorn.database.util;
 
-import javax.swing.ImageIcon;
-
-import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.features.log.CCLog;
+import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.enumextension.ContinoousEnum;
 import de.jClipCorn.util.enumextension.EnumWrapper;
+
+import javax.swing.*;
 
 public enum ExtendedViewedStateType implements ContinoousEnum<ExtendedViewedStateType>  {
 	VIEWED(0), 
@@ -17,15 +17,16 @@ public enum ExtendedViewedStateType implements ContinoousEnum<ExtendedViewedStat
 	MARKED_FOR_AGAIN(5);
 	
 	private final static String[] NAMES =
-		{ 
-			LocaleBundle.getString("FilterTree.Viewed.Viewed"), 	//$NON-NLS-1$
-			LocaleBundle.getString("FilterTree.Viewed.Unviewed"), 	//$NON-NLS-1$
-			LocaleBundle.getString("FilterTree.Viewed.Later"), 		//$NON-NLS-1$
-			LocaleBundle.getString("FilterTree.Viewed.Never"), 		//$NON-NLS-1$
-			LocaleBundle.getString("FilterTree.Viewed.Partial"),	//$NON-NLS-1$
-			LocaleBundle.getString("FilterTree.Viewed.Again"),		//$NON-NLS-1$
-		};
-	private int id;
+	{
+		LocaleBundle.getString("FilterTree.Viewed.Viewed"), 	//$NON-NLS-1$
+		LocaleBundle.getString("FilterTree.Viewed.Unviewed"), 	//$NON-NLS-1$
+		LocaleBundle.getString("FilterTree.Viewed.Later"), 		//$NON-NLS-1$
+		LocaleBundle.getString("FilterTree.Viewed.Never"), 		//$NON-NLS-1$
+		LocaleBundle.getString("FilterTree.Viewed.Partial"),	//$NON-NLS-1$
+		LocaleBundle.getString("FilterTree.Viewed.Again"),		//$NON-NLS-1$
+	};
+
+	private final int id;
 	
 	private static final EnumWrapper<ExtendedViewedStateType> wrapper = new EnumWrapper<>(VIEWED);
 
@@ -42,6 +43,18 @@ public enum ExtendedViewedStateType implements ContinoousEnum<ExtendedViewedStat
 		return id;
 	}
 
+	public int getTriStateInt() {
+		switch (this) {
+			case VIEWED:           return 2;
+			case NOT_VIEWED:       return 0;
+			case MARKED_FOR_LATER: return 0;
+			case MARKED_FOR_NEVER: return 0;
+			case PARTIAL_VIEWED:   return 1;
+			case MARKED_FOR_AGAIN: return 2;
+		}
+
+		return -1;
+	}
 	@Override
 	public String asString() {
 		return NAMES[asInt()];

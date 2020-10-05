@@ -13,6 +13,7 @@ new FormModel {
 			name: "this"
 			"$sizePolicy": 1
 			"title": "<dynamic>"
+			"defaultCloseOperation": 2
 			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "lblSeason"
 				"text": "<dynamic>"

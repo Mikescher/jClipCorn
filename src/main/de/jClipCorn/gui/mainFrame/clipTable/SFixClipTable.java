@@ -29,7 +29,7 @@ public class SFixClipTable extends SFixTable {
 
 	private TableScoreRenderer renderer_score;
 	private TableViewedRenderer renderer_viewed;
-	private TableTitleRenderer renderer_title;
+	private ClipTableTitleRenderer renderer_title;
 	private TableZyklusRenderer renderer_zyklus;
 	private TableMediaInfoCatRenderer renderer_mediainfo;
 	private TableLanguageRenderer renderer_language;
@@ -37,7 +37,7 @@ public class SFixClipTable extends SFixTable {
 	private TablePartRenderer renderer_parts;
 	private TableLengthRenderer renderer_length;
 	private TableTagsRenderer renderer_tags;
-	private TableDateRenderer renderer_adddate;
+	private ClipTableDateRenderer renderer_adddate;
 	private TableOnlinescoreRenderer renderer_onlinescore;
 	private TableFSKRenderer renderer_fsk;
 	private TableFormatRenderer renderer_format;
@@ -81,7 +81,7 @@ public class SFixClipTable extends SFixTable {
 	private void createCellRenderer() {
 		renderer_score       = new TableScoreRenderer();
 		renderer_viewed      = new TableViewedRenderer();
-		renderer_title       = new TableTitleRenderer();
+		renderer_title       = new ClipTableTitleRenderer();
 		renderer_zyklus      = new TableZyklusRenderer();
 		renderer_mediainfo   = new TableMediaInfoCatRenderer();
 		renderer_language    = new TableLanguageRenderer();
@@ -89,7 +89,7 @@ public class SFixClipTable extends SFixTable {
 		renderer_parts       = new TablePartRenderer();
 		renderer_length      = new TableLengthRenderer();
 		renderer_tags        = new TableTagsRenderer();
-		renderer_adddate     = new TableDateRenderer();
+		renderer_adddate     = new ClipTableDateRenderer();
 		renderer_onlinescore = new TableOnlinescoreRenderer();
 		renderer_fsk         = new TableFSKRenderer();
 		renderer_format      = new TableFormatRenderer();

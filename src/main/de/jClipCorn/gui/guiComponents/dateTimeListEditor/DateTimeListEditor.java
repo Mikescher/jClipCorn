@@ -13,8 +13,8 @@ import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.datetime.CCTime;
-import org.gpl.JSplitButton.JSplitButton;
-import org.gpl.JSplitButton.action.SplitButtonActionListener;
+import de.jClipCorn.gui.guiComponents.jSplitButton.JSplitButton;
+import de.jClipCorn.gui.guiComponents.jSplitButton.action.SplitButtonActionListener;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;

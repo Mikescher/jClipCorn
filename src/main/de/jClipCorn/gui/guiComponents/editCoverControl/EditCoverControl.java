@@ -1,9 +1,26 @@
 package de.jClipCorn.gui.guiComponents.editCoverControl;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Point;
-import java.awt.Window;
+import de.jClipCorn.database.databaseElement.columnTypes.CCDBElementTyp;
+import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReferenceList;
+import de.jClipCorn.features.log.CCLog;
+import de.jClipCorn.features.online.metadata.ParseResultHandler;
+import de.jClipCorn.gui.frames.coverCropFrame.CoverCropDialog;
+import de.jClipCorn.gui.frames.findCoverFrame.FindCoverDialog;
+import de.jClipCorn.gui.guiComponents.CoverLabel;
+import de.jClipCorn.gui.guiComponents.jSplitButton.JSplitButton;
+import de.jClipCorn.gui.guiComponents.jSplitButton.action.SplitButtonActionListener;
+import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.gui.resources.Resources;
+import de.jClipCorn.util.Str;
+import de.jClipCorn.util.formatter.PathFormatter;
+import de.jClipCorn.util.helper.ClipboardUtilities;
+import de.jClipCorn.util.helper.FileChooserHelper;
+import de.jClipCorn.util.helper.ImageUtilities;
+import de.jClipCorn.util.http.HTTPUtilities;
+
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -12,32 +29,6 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.imageio.ImageIO;
-import javax.swing.JButton;
-import javax.swing.JFileChooser;
-import javax.swing.JLabel;
-import javax.swing.JMenuItem;
-import javax.swing.JPopupMenu;
-
-import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReferenceList;
-import de.jClipCorn.util.Str;
-import org.gpl.JSplitButton.JSplitButton;
-import org.gpl.JSplitButton.action.SplitButtonActionListener;
-
-import de.jClipCorn.database.databaseElement.columnTypes.CCDBElementTyp;
-import de.jClipCorn.gui.frames.coverCropFrame.CoverCropDialog;
-import de.jClipCorn.gui.frames.findCoverFrame.FindCoverDialog;
-import de.jClipCorn.gui.guiComponents.CoverLabel;
-import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.features.log.CCLog;
-import de.jClipCorn.gui.resources.Resources;
-import de.jClipCorn.features.online.metadata.ParseResultHandler;
-import de.jClipCorn.util.formatter.PathFormatter;
-import de.jClipCorn.util.helper.ClipboardUtilities;
-import de.jClipCorn.util.helper.FileChooserHelper;
-import de.jClipCorn.util.helper.ImageUtilities;
-import de.jClipCorn.util.http.HTTPUtilities;
 
 public class EditCoverControl extends AbstractEditCoverControl {
 	private static final long serialVersionUID = -4086336311809789696L;

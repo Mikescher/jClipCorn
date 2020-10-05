@@ -1,6 +1,6 @@
 package de.jClipCorn.util.datatypes;
 
-public class Tuple<X, Y> {
+public class Tuple<X, Y> implements ITuple {
 	public final X Item1;
 	public final Y Item2;
 

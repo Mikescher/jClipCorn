@@ -4,6 +4,8 @@ import de.jClipCorn.Globals;
 import de.jClipCorn.Main;
 import de.jClipCorn.database.covertab.ICoverCache;
 import de.jClipCorn.database.databaseElement.*;
+import de.jClipCorn.database.databaseElement.caches.ICalculationCache;
+import de.jClipCorn.database.databaseElement.caches.MovieListCache;
 import de.jClipCorn.database.databaseElement.columnTypes.*;
 import de.jClipCorn.database.driver.CCDatabase;
 import de.jClipCorn.database.driver.DatabaseConnectResult;
@@ -24,6 +26,8 @@ import de.jClipCorn.util.Str;
 import de.jClipCorn.util.comparator.CCDatabaseElementComparator;
 import de.jClipCorn.util.comparator.CCMovieComparator;
 import de.jClipCorn.util.comparator.CCSeriesComparator;
+import de.jClipCorn.util.datatypes.Tuple;
+import de.jClipCorn.util.datatypes.Tuple1;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.ApplicationHelper;
@@ -45,12 +49,14 @@ import java.util.*;
 public class CCMovieList {
 	private static CCMovieList instance = null;
 	
-	private List<CCDatabaseElement> list;
+	private final List<CCDatabaseElement> list;
 	
-	private List<CCDBUpdateListener> listener;
+	private final List<CCDBUpdateListener> listener;
 	
 	private CCDatabase database;
 	private List<CCGroup> databaseGroups;
+
+	private final MovieListCache _cache;
 
 	private boolean blocked = false;
 
@@ -60,6 +66,8 @@ public class CCMovieList {
 
 		this.databaseGroups = new ArrayList<>();
 		this.database = db;
+
+		_cache = new MovieListCache(this);
 
 		if (setInstance) instance = this;
 	}
@@ -152,6 +160,7 @@ public class CCMovieList {
 		database.fillMovieList(CCMovieList.this);
 		database.fillCoverCache();
 	}
+
 	public void forceReconnectAndReloadForTests() {
 		// do no call clear, we only want to remove RAM values
 
@@ -178,45 +187,54 @@ public class CCMovieList {
 	}
 
 	public int getTotalDatabaseCount() {
-		int c = 0;
-		for (CCDatabaseElement dbe : list) {
-			if (dbe.isMovie()) {
-				c++;
-			} else {
-				c += ((CCSeries) dbe).getEpisodeCount();
+		return _cache.getInt(MovieListCache.TOTAL_DATABASE_COUNT, null, ml->
+		{
+			int c = 0;
+			for (CCDatabaseElement dbe : list) {
+				if (dbe.isMovie()) {
+					c++;
+				} else {
+					c += ((CCSeries) dbe).getEpisodeCount();
+				}
 			}
-		}
-		return c;
+			return c;
+		});
 	}
 
 	public int getTotalDatabaseElementCount() {
-		int c = 0;
-		for (CCDatabaseElement dbe : list) {
-			if (dbe.isMovie()) {
-				c++;
-			} else {
-				c++;
-				c += ((CCSeries) dbe).getSeasonCount();
-				c += ((CCSeries) dbe).getEpisodeCount();
+		return _cache.getInt(MovieListCache.TOTAL_DATABASE_ELEMENT_COUNT, null, ml->
+		{
+			int c = 0;
+			for (CCDatabaseElement dbe : list) {
+				if (dbe.isMovie()) {
+					c++;
+				} else {
+					c++;
+					c += ((CCSeries) dbe).getSeasonCount();
+					c += ((CCSeries) dbe).getEpisodeCount();
+				}
 			}
-		}
-		return c;
+			return c;
+		});
 	}
 
 	public int getViewedCount() {
-		int v = 0;
-		for (CCDatabaseElement m : list) {
-			if (m.isMovie()) {
-				if (((CCMovie) m).isViewed()) {
-					v++;
-				}
-			} else if (CCProperties.getInstance().PROP_INCLUDE_SERIES_IN_VIEWEDCOUNT.getValue()) {
-				if (((CCSeries) m).isViewed()) {
-					v++;
+		return _cache.get(MovieListCache.VIEWED_COUNT, Tuple1.Create(CCProperties.getInstance().PROP_INCLUDE_SERIES_IN_VIEWEDCOUNT.getValue()), ml->
+		{
+			int v = 0;
+			for (CCDatabaseElement m : list) {
+				if (m.isMovie()) {
+					if (((CCMovie) m).isViewed()) {
+						v++;
+					}
+				} else if (CCProperties.getInstance().PROP_INCLUDE_SERIES_IN_VIEWEDCOUNT.getValue()) {
+					if (((CCSeries) m).isViewed()) {
+						v++;
+					}
 				}
 			}
-		}
-		return v;
+			return v;
+		});
 	}
 
 	public CCDatabaseElement findDatabaseElement(int id) {
@@ -247,6 +265,7 @@ public class CCMovieList {
 	public CCMovie createNewEmptyMovie() { // Does this make getMovieBySort fail (id changes etc ??)
 		CCMovie mov = database.createNewEmptyMovie(this);
 		list.add(mov);
+		_cache.bust();
 
 		fireOnAddDatabaseElement(mov);
 
@@ -256,6 +275,7 @@ public class CCMovieList {
 	public CCSeries createNewEmptySeries() { // Does this make getMovieBySort fail (id changes etc ??)
 		CCSeries s = database.createNewEmptySeries(this);
 		list.add(s);
+		_cache.bust();
 
 		fireOnAddDatabaseElement(s);
 
@@ -285,6 +305,7 @@ public class CCMovieList {
 		try {
 			SwingUtils.invokeAndWait(() -> {
 				list.add(m);
+				_cache.bust();
 				fireOnAddDatabaseElement(m);
 			});
 		} catch (InvocationTargetException | InterruptedException e) {
@@ -295,7 +316,11 @@ public class CCMovieList {
 	// Only used by CCDatabase.fillMovieList
 	public void directlyInsert(final List<CCDatabaseElement> m) {
 		try {
-			SwingUtils.invokeAndWait(() -> list.addAll(m));
+			SwingUtils.invokeAndWait(() ->
+			{
+				list.addAll(m);
+				_cache.bust();
+			});
 		} catch (InvocationTargetException | InterruptedException e) {
 			CCLog.addError(e);
 		}
@@ -305,6 +330,7 @@ public class CCMovieList {
 		while (!list.isEmpty()) {
 			remove(list.get(0));
 		}
+		_cache.bust();
 	}
 
 	public void addChangeListener(CCDBUpdateListener l) {
@@ -453,21 +479,27 @@ public class CCMovieList {
 	}
 
 	public int getTotalLength(boolean includeMovies, boolean includeSeries) {
-		int v = 0;
-		for (CCDatabaseElement m : list) {
-			if (includeMovies && m.isMovie())  v += ((CCMovie) m).getLength();
-			if (includeSeries && m.isSeries()) v += ((CCSeries) m).getLength();
-		}
-		return v;
+		return _cache.getInt(MovieListCache.TOTAL_LENGTH, Tuple.Create(includeMovies, includeSeries), ml->
+		{
+			int v = 0;
+			for (CCDatabaseElement m : list) {
+				if (includeMovies && m.isMovie())  v += ((CCMovie) m).getLength();
+				if (includeSeries && m.isSeries()) v += ((CCSeries) m).getLength();
+			}
+			return v;
+		});
 	}
 
 	public CCFileSize getTotalSize(boolean includeMovies, boolean includeSeries) {
-		long bytes = 0;
-		for (CCDatabaseElement m : list) {
-			if (includeMovies && m.isMovie())  bytes += m.getFilesize().getBytes();
-			if (includeSeries && m.isSeries()) bytes += m.getFilesize().getBytes();
-		}
-		return new CCFileSize(bytes);
+		return _cache.get(MovieListCache.TOTAL_SIZE, Tuple.Create(includeMovies, includeSeries), ml->
+		{
+			long bytes = 0;
+			for (CCDatabaseElement m : list) {
+				if (includeMovies && m.isMovie())  bytes += m.getFilesize().getBytes();
+				if (includeSeries && m.isSeries()) bytes += m.getFilesize().getBytes();
+			}
+			return new CCFileSize(bytes);
+		});
 	}
 
 	public boolean contains(CCDatabaseElement m) {
@@ -491,6 +523,8 @@ public class CCMovieList {
 				removeSeries((CCSeries) el);
 			}
 
+			_cache.bust();
+
 			fireOnRemDatabaseElement(el);
 		}
 	}
@@ -498,10 +532,12 @@ public class CCMovieList {
 	private void removeMovie(CCMovie m) {
 		list.remove(m);
 		database.removeFromMain(m.getLocalID());
-		
+
 		if (m.getCoverID() != -1) {
 			getCoverCache().deleteCover(m.getCoverID());
 		}
+
+		_cache.bust();
 	}
 
 	private void removeSeries(CCSeries s) {
@@ -514,7 +550,8 @@ public class CCMovieList {
 		if (s.getCoverID() != -1) {
 			getCoverCache().deleteCover(s.getCoverID());
 		}
-		
+
+		_cache.bust();
 	}
 
 	public List<CCDatabaseElement> getRawList() {
@@ -522,73 +559,86 @@ public class CCMovieList {
 	}
 
 	public int getMovieCount() {
-		return iteratorMovies().count();
+		return _cache.getInt(MovieListCache.MOVIE_COUNT, null, ml->
+		{
+			return iteratorMovies().count();
+		});
 	}
 	
 	public int getSeriesCount() {
-		return iteratorSeries().count();
-	}
-
-	public boolean containsMovies() {
-		return iteratorMovies().any();
-	}
-	
-	public boolean containsSeries() {
-		return iteratorSeries().any();
+		return _cache.getInt(MovieListCache.SERIES_COUNT, null, ml->
+		{
+			return iteratorSeries().count();
+		});
 	}
 
 	public int getEpisodeCount() {
-		return iteratorEpisodes().count();
+		return _cache.getInt(MovieListCache.EPISODE_COUNT, null, ml->
+		{
+			return iteratorEpisodes().count();
+		});
 	}
 
 	public int getSeasonCount() {
-		return iteratorSeasons().count();
+		return _cache.getInt(MovieListCache.SEASON_COUNT, null, ml->
+		{
+			return iteratorSeasons().count();
+		});
 	}
 
 	public List<String> getZyklusList() {
-		List<String> result = new ArrayList<>();
+		return _cache.get(MovieListCache.ZYKLUS_LIST, null, ml->
+		{
+			List<String> result = new ArrayList<>();
 
-		for (CCMovie mov : iteratorMovies()) {
-			String zyklus = mov.getZyklus().getTitle();
-			if (!result.contains(zyklus) && !zyklus.isEmpty()) {
-				result.add(zyklus);
+			for (CCMovie mov : iteratorMovies()) {
+				String zyklus = mov.getZyklus().getTitle();
+				if (!result.contains(zyklus) && !zyklus.isEmpty()) {
+					result.add(zyklus);
+				}
 			}
-		}
-		
-		Collections.sort(result);
 
-		return result;
+			Collections.sort(result);
+
+			return result;
+		});
 	}
 
 	public List<Integer> getYearList() {
-		List<Integer> result = new ArrayList<>();
+		return _cache.get(MovieListCache.YEAR_LIST, null, ml->
+		{
+			List<Integer> result = new ArrayList<>();
 
-		for (CCMovie mov : iteratorMovies()) {
-			Integer year = mov.getYear();
-			if (!result.contains(year)) {
-				result.add(year);
+			for (CCMovie mov : iteratorMovies()) {
+				Integer year = mov.getYear();
+				if (!result.contains(year)) {
+					result.add(year);
+				}
 			}
-		}
 
-		Collections.sort(result);
+			Collections.sort(result);
 
-		return result;
+			return result;
+		});
 	}
 
 	public List<CCGenre> getGenreList() {
-		List<CCGenre> result = new ArrayList<>();
-		
-		for (CCDatabaseElement el : list) {
-			for (int j = 0; j < el.getGenreCount(); j++) {
-				if (!result.contains(el.getGenre(j))) {
-					result.add(el.getGenre(j));
+		return _cache.get(MovieListCache.GENRE_LIST, null, ml->
+		{
+			List<CCGenre> result = new ArrayList<>();
+
+			for (CCDatabaseElement el : list) {
+				for (int j = 0; j < el.getGenreCount(); j++) {
+					if (!result.contains(el.getGenre(j))) {
+						result.add(el.getGenre(j));
+					}
 				}
 			}
-		}
 
-		Collections.sort(result);
+			Collections.sort(result);
 
-		return result;
+			return result;
+		});
 	}
 
 	public void shutdown() {
@@ -670,41 +720,48 @@ public class CCMovieList {
 	}
 
 	public String getCommonSeriesPath() {
-		List<String> all = new ArrayList<>();
+		return _cache.get(MovieListCache.COMMON_SERIES_PATH, null, ml->
+		{
+			List<String> all = new ArrayList<>();
 
-		for (CCSeries ser : iteratorSeries()) {
-			all.add(ser.getCommonPathStart(false));
-		}
+			for (CCSeries ser : iteratorSeries()) {
+				all.add(ser.getCommonPathStart(false));
+			}
 
-		while (all.contains("")) all.remove(""); //$NON-NLS-1$ //$NON-NLS-2$
+			while (all.contains("")) all.remove(""); //$NON-NLS-1$ //$NON-NLS-2$
 
-		return PathFormatter.getCommonFolderPath(all);
+			return PathFormatter.getCommonFolderPath(all);
+		});
 	}
 
-	public String guessSeriesRootPath() { // kinda slow :(
-
-		return iteratorSeries()
-			.map(CCSeries::guessSeriesRootPath)
-			.filter(p -> !Str.isNullOrWhitespace(p))
-			.groupBy(p -> p)
-			.autosortByProperty(p -> p.getValue().size())
-			.map(Map.Entry::getKey)
-			.lastOr(Str.Empty);
-
+	public String guessSeriesRootPath() {
+		return _cache.get(MovieListCache.GUESS_SERIES_ROOT_PATH, null, ml->
+		{
+			return iteratorSeries()
+					.map(CCSeries::guessSeriesRootPath)
+					.filter(p -> !Str.isNullOrWhitespace(p))
+					.groupBy(p -> p)
+					.autosortByProperty(p -> p.getValue().size())
+					.map(Map.Entry::getKey)
+					.lastOr(Str.Empty);
+		});
 	}
 
 	public String getCommonMoviesPath() {
-		List<String> all = new ArrayList<>();
-		
-		for (CCMovie curr : iteratorMovies()) {
-			for (int i = 0; i < curr.getPartcount(); i++) {
-				all.add(curr.getPart(i));
-			}
-		}
-		
-		while (all.contains("")) all.remove(""); //$NON-NLS-1$ //$NON-NLS-2$
+		return _cache.get(MovieListCache.COMMON_MOVIES_PATH, null, ml->
+		{
+			List<String> all = new ArrayList<>();
 
-		return PathFormatter.getCommonFolderPath(all);
+			for (CCMovie curr : iteratorMovies()) {
+				for (int i = 0; i < curr.getPartcount(); i++) {
+					all.add(curr.getPart(i));
+				}
+			}
+
+			while (all.contains("")) all.remove(""); //$NON-NLS-1$ //$NON-NLS-2$
+
+			return PathFormatter.getCommonFolderPath(all);
+		});
 	}
 	
 	public Map<String, List<CCMovie>> listAllZyklus() {
@@ -867,11 +924,17 @@ public class CCMovieList {
 	}
 
 	public boolean hasMovies() {
-		return iteratorMovies().any();
+		return _cache.getBool(MovieListCache.HAS_MOVIES, null, ml->
+		{
+			return iteratorMovies().any();
+		});
 	}
 
 	public boolean hasSeries() {
-		return iteratorSeries().any();
+		return _cache.getBool(MovieListCache.HAS_SERIES, null, ml->
+		{
+			return iteratorSeries().any();
+		});
 	}
 
 	public boolean hasElements() {
@@ -893,6 +956,7 @@ public class CCMovieList {
 
 	public void resetLocalDUUID() {
 		database.resetInformation_DUUID();
+		_cache.bust();
 	}
 	
 	public boolean groupExists(String name) {
@@ -924,7 +988,8 @@ public class CCMovieList {
 		}
 		
 		CCGroup g = CCGroup.create(name);
-		
+
+		_cache.bust();
 		addGroup(g);
 		
 		return g;
@@ -934,7 +999,8 @@ public class CCMovieList {
 		for (CCGroup g : databaseGroups) {
 			if (g.Name.equals(template.Name)) return g;
 		}
-		
+
+		_cache.bust();
 		addGroup(template);
 		return template;
 	}
@@ -968,12 +1034,14 @@ public class CCMovieList {
 
 	public void addGroup(CCGroup g) {
 		databaseGroups.add(g);
+		_cache.bust();
 		
 		database.addGroup(g.Name, g.Order, g.Color, g.DoSerialize, g.Parent, g.Visible);
 	}
 
 	public void addGroupInternal(CCGroup g) {
 		databaseGroups.add(g);
+		_cache.bust();
 	}
 
 	public CCGroupList addMissingGroups(CCGroupList grouplist) {
@@ -1002,7 +1070,8 @@ public class CCMovieList {
 			database.removeGroup(gOld.Name);
 			database.addGroup(gNew.Name, gNew.Order, gNew.Color, gNew.DoSerialize, gNew.Parent, gNew.Visible);
 		}
-		
+
+		_cache.bust();
 	}
 
 	public void removeGroup(CCGroup gOld) {
@@ -1014,7 +1083,8 @@ public class CCMovieList {
 		}
 		
 		database.removeGroup(gOld.Name);
-		
+
+		_cache.bust();
 	}
 	
 	public boolean isInMemory() {
@@ -1051,5 +1121,9 @@ public class CCMovieList {
 
 	public CCDatabaseHistory getHistory() {
 		return database.getHistory();
+	}
+
+	public ICalculationCache getCache() {
+		return _cache;
 	}
 }

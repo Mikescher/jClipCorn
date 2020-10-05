@@ -1,6 +1,8 @@
 package de.jClipCorn.database.databaseElement;
 
 import de.jClipCorn.database.CCMovieList;
+import de.jClipCorn.database.databaseElement.caches.ICalculationCache;
+import de.jClipCorn.database.databaseElement.caches.SeriesCache;
 import de.jClipCorn.database.databaseElement.columnTypes.*;
 import de.jClipCorn.database.databaseElement.datapacks.ISeriesData;
 import de.jClipCorn.database.util.*;
@@ -10,6 +12,7 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.comparator.CCSeasonComparator;
+import de.jClipCorn.util.datatypes.Tuple1;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.datetime.YearRange;
 import de.jClipCorn.util.formatter.PathFormatter;
@@ -28,9 +31,12 @@ public class CCSeries extends CCDatabaseElement implements IEpisodeOwner, ISerie
 	private final static int GUIDE_W_PADDING = 6;
 	
 	private final List<CCSeason> seasons = new Vector<>();
-	
+
+	private final SeriesCache _cache;
+
 	public CCSeries(CCMovieList ml, int id) {
 		super(ml, CCDBElementTyp.SERIES, id);
+		_cache = new SeriesCache(this);
 	}
 	
 	@Override
@@ -41,12 +47,14 @@ public class CCSeries extends CCDatabaseElement implements IEpisodeOwner, ISerie
 		return true;
 	}
 
-	public void directlyInsertSeason(CCSeason s) { // !! ONLY CALLED FROM CCDatabase
+	public void directlyInsertSeason(CCSeason s) {
 		seasons.add(s);
+		_cache.bust();
 	}
 
 	public void enforceOrder() {
 		seasons.sort(Comparator.comparingInt(CCSeason::getSortedSeasonNumber));
+		_cache.bust();
 	}
 
 	public CCSeason createNewEmptySeason() {
@@ -54,19 +62,25 @@ public class CCSeries extends CCDatabaseElement implements IEpisodeOwner, ISerie
 	}
 	
 	public boolean isViewed() { // All parts viewed
-		boolean v = true;
-		for (CCSeason se: seasons) {
-			v &= se.isViewed();
-		}
-		return v;
+		return _cache.getBool(SeriesCache.IS_VIEWED, null, ser->
+		{
+			boolean v = true;
+			for (CCSeason se: seasons) {
+				v &= se.isViewed();
+			}
+			return v;
+		});
 	}
 	
 	public boolean isUnviewed() { // All parts not viewed
-		boolean v = true;
-		for (CCSeason se: seasons) {
-			v &= se.isUnviewed();
-		}
-		return v;
+		return _cache.getBool(SeriesCache.IS_UNVIEWED, null, ser->
+		{
+			boolean v = true;
+			for (CCSeason se: seasons) {
+				v &= se.isUnviewed();
+			}
+			return v;
+		});
 	}
 
 	public boolean isPartialViewed() { // Some parts viewed - some not
@@ -82,19 +96,25 @@ public class CCSeries extends CCDatabaseElement implements IEpisodeOwner, ISerie
 	}
 	
 	public int getEpisodeCount() {
-		int c = 0;
-		for (CCSeason se : seasons) {
-			c += se.getEpisodeCount();
-		}
-		return c;
+		return _cache.getInt(SeriesCache.EPISODE_COUNT, null, ser->
+		{
+			int c = 0;
+			for (CCSeason se : seasons) {
+				c += se.getEpisodeCount();
+			}
+			return c;
+		});
 	}
 	
 	public int getLength() {
-		int l = 0;
-		for (CCSeason se: seasons) {
-			l += se.getLength();
-		}
-		return l;
+		return _cache.getInt(SeriesCache.LENGTH, null, ser->
+		{
+			int l = 0;
+			for (CCSeason se: seasons) {
+				l += se.getLength();
+			}
+			return l;
+		});
 	}
 	
 	@Override
@@ -114,80 +134,99 @@ public class CCSeries extends CCDatabaseElement implements IEpisodeOwner, ISerie
 	}
 
 	public CCDate calcMaximumAddDateBySeason() {
-		CCDate cd = CCDate.getMinimumDate();
-		for (CCSeason se: seasons) {
-			if (se.getEpisodeCount()==0) continue;
-			CCDate scd = se.calcMinimumAddDate();
-			if (scd.isGreaterThan(cd)) cd = scd;
-		}
-		return cd;
+		return _cache.get(SeriesCache.MAXIMUM_ADDDATE_BY_SEASON, null, ser->
+		{
+			CCDate cd = CCDate.getMinimumDate();
+			for (CCSeason se: seasons) {
+				if (se.getEpisodeCount()==0) continue;
+				CCDate scd = se.calcMinimumAddDate();
+				if (scd.isGreaterThan(cd)) cd = scd;
+			}
+			return cd;
+		});
 	}
 	
 	public CCDate calcMaximumAddDate() {
-		CCDate cd = CCDate.getMinimumDate();
-		for (CCSeason se: seasons) {
-			if (se.getEpisodeCount()==0) continue;
+		return _cache.get(SeriesCache.MAXIMUM_ADDDATE, null, ser->
+		{
+			CCDate cd = CCDate.getMinimumDate();
+			for (CCSeason se: seasons) {
+				if (se.getEpisodeCount()==0) continue;
 
-			CCDate scd = se.calcMaximumAddDate();
-			if (scd.isGreaterThan(cd)) cd = scd;
-		}
-		return cd;
+				CCDate scd = se.calcMaximumAddDate();
+				if (scd.isGreaterThan(cd)) cd = scd;
+			}
+			return cd;
+		});
 	}
 	
 	public CCDate calcMinimumAddDate() {
-		if (seasons.size() == 0) return CCDate.getMinimumDate();
-		CCDate cd = CCDate.getMaximumDate();
-		for (CCSeason se: seasons) {
-			if (se.getEpisodeCount()==0) continue;
+		return _cache.get(SeriesCache.MINIMUM_ADDDATE, null, ser->
+		{
+			if (seasons.size() == 0) return CCDate.getMinimumDate();
+			CCDate cd = CCDate.getMaximumDate();
+			for (CCSeason se: seasons) {
+				if (se.getEpisodeCount()==0) continue;
 
-			CCDate scd = se.calcMinimumAddDate();
-			if (scd.isLessThan(cd)) cd = scd;
-		}
-		return cd;
+				CCDate scd = se.calcMinimumAddDate();
+				if (scd.isLessThan(cd)) cd = scd;
+			}
+			return cd;
+		});
 	}
 	
 	public CCDate calcAverageAddDate() {
-		List<CCDate> dlist = new ArrayList<>();
-		for (CCSeason se: seasons) {
-			if (se.getEpisodeCount()==0) continue;
+		return _cache.get(SeriesCache.AVERAGE_ADDDATE, null, ser->
+		{
+			List<CCDate> dlist = new ArrayList<>();
+			for (CCSeason se: seasons) {
+				if (se.getEpisodeCount()==0) continue;
 
-			dlist.add(se.calcAverageAddDate());
-		}
-		
-		if (dlist.isEmpty()) return CCDate.getMinimumDate();
-		
-		return CCDate.getAverageDate(dlist);
+				dlist.add(se.calcAverageAddDate());
+			}
+
+			if (dlist.isEmpty()) return CCDate.getMinimumDate();
+
+			return CCDate.getAverageDate(dlist);
+		});
 	}
 	
 	@Override
 	public CCFileFormat getFormat() {
-		return iteratorEpisodes().findMostCommon(CCEpisode::getFormat, CCFileFormat.getWrapper().firstValue());
+		return _cache.get(SeriesCache.FORMAT, null, ser->
+		{
+			return iteratorEpisodes().findMostCommon(CCEpisode::getFormat, CCFileFormat.getWrapper().firstValue());
+		});
 	}
 	
 	@Override
 	public CCFileSize getFilesize() {
-		if (movielist.isBlocked()) {
-			return CCFileSize.ZERO;
-		}
-		
-		long sz = 0;
-		
-		for (CCSeason se: seasons) {
-			sz += se.getFilesize().getBytes();
-		}
-		
-		return new CCFileSize(sz);
+		if (movielist.isBlocked()) return CCFileSize.ZERO; // why ??
+
+		return _cache.get(SeriesCache.FILESIZE, null, ser->
+		{
+			long sz = 0;
+
+			for (CCSeason se: seasons) {
+				sz += se.getFilesize().getBytes();
+			}
+
+			return new CCFileSize(sz);
+		});
 	}
 	
 	public YearRange getYearRange() {
-		int miny = Integer.MAX_VALUE;
-		int maxy = Integer.MIN_VALUE;
-		
-		for (CCSeason se: seasons) {
-			miny = Math.min(miny, se.getYear());
-			maxy = Math.max(maxy, se.getYear());
-		}
-		return new YearRange(miny, maxy);
+		return _cache.get(SeriesCache.YEAR_RANGE, null, ser->
+		{
+			int miny = Integer.MAX_VALUE;
+			int maxy = Integer.MIN_VALUE;
+
+			for (CCSeason se: seasons) {
+				miny = Math.min(miny, se.getYear());
+				maxy = Math.max(maxy, se.getYear());
+			}
+			return new YearRange(miny, maxy);
+		});
 	}
 	
 	@Override
@@ -216,14 +255,19 @@ public class CCSeries extends CCDatabaseElement implements IEpisodeOwner, ISerie
 		}
 		
 		getMovieList().fireOnChangeDatabaseElement(this);
+
+		_cache.bust();
 	}
 
 	public int getViewedCount() {
-		int v = 0;
-		for (CCSeason se : seasons) {
-			v += se.getViewedCount();
-		}
-		return v;
+		return _cache.getInt(SeriesCache.VIEWED_COUNT, null, ser->
+		{
+			int v = 0;
+			for (CCSeason se : seasons) {
+				v += se.getViewedCount();
+			}
+			return v;
+		});
 	}
 
 	public void delete() {
@@ -240,11 +284,11 @@ public class CCSeries extends CCDatabaseElement implements IEpisodeOwner, ISerie
 	
 	public List<File> getAbsolutePathList() {
 		List<File> result = new ArrayList<>();
-		
+
 		for (int i = 0; i < seasons.size(); i++) {
 			result.addAll(getSeasonByArrayIndex(i).getAbsolutePathList());
 		}
-		
+
 		return result;
 	}
 	
@@ -325,6 +369,11 @@ public class CCSeries extends CCDatabaseElement implements IEpisodeOwner, ISerie
 	}
 
 	@Override
+	public ICalculationCache getCache() {
+		return _cache;
+	}
+
+	@Override
 	public String toString() {
 		return getTitle();
 	}
@@ -379,47 +428,54 @@ public class CCSeries extends CCDatabaseElement implements IEpisodeOwner, ISerie
 	}
 	
 	public String getCommonPathStart(boolean extendedSearch) {
-		List<String> all = new ArrayList<>();
-		
-		for (int seasi = 0; seasi < getSeasonCount(); seasi++) {
-			CCSeason season = getSeasonByArrayIndex(seasi);
-			all.add(season.getCommonPathStart());
-		}
-		
-		while (all.contains("")) all.remove(""); //$NON-NLS-1$ //$NON-NLS-2$
-		
-		String common = PathFormatter.getCommonFolderPath(all);
-		
-		if (extendedSearch && common.isEmpty()) {
-			common = movielist.getCommonSeriesPath();
-		}
-		
-		return common;
+
+		return _cache.get(SeriesCache.COMMON_PATH_START, Tuple1.Create(extendedSearch), ser->
+		{
+			List<String> all = new ArrayList<>();
+
+			for (int seasi = 0; seasi < getSeasonCount(); seasi++) {
+				CCSeason season = getSeasonByArrayIndex(seasi);
+				all.add(season.getCommonPathStart());
+			}
+
+			while (all.contains("")) all.remove(""); //$NON-NLS-1$ //$NON-NLS-2$
+
+			String common = PathFormatter.getCommonFolderPath(all);
+
+			if (extendedSearch && common.isEmpty()) {
+				common = movielist.getCommonSeriesPath();
+			}
+
+			return common;
+		});
 	}
 	
 	public String guessSeriesRootPath() {
-		Map<String, Integer> result = new HashMap<>();
-		
-		String pathMax = ""; //$NON-NLS-1$
-		int countMax = 0;
-		
-		for (int seasi = 0; seasi < getSeasonCount(); seasi++) {
-			CCSeason season = getSeasonByArrayIndex(seasi);
-			for (int epsi = 0; epsi < season.getEpisodeCount(); epsi++) {
-				CCEpisode episode = season.getEpisodeByArrayIndex(epsi);
-				
-				String path = PathFormatter.getParentPath(episode.getAbsolutePart(), 3); // season-folder -> series-folder -> root-folder 
-				
-				result.put(path, result.getOrDefault(path, 0) + 1);
-				
-				if (result.getOrDefault(path, 0) > countMax) {
-					countMax = result.getOrDefault(path, 0);
-					pathMax = path;
+		return _cache.get(SeriesCache.SERIES_ROOT_PATH, null, ser->
+		{
+			Map<String, Integer> result = new HashMap<>();
+
+			String pathMax = ""; //$NON-NLS-1$
+			int countMax = 0;
+
+			for (int seasi = 0; seasi < getSeasonCount(); seasi++) {
+				CCSeason season = getSeasonByArrayIndex(seasi);
+				for (int epsi = 0; epsi < season.getEpisodeCount(); epsi++) {
+					CCEpisode episode = season.getEpisodeByArrayIndex(epsi);
+
+					String path = PathFormatter.getParentPath(episode.getAbsolutePart(), 3); // season-folder -> series-folder -> root-folder
+
+					result.put(path, result.getOrDefault(path, 0) + 1);
+
+					if (result.getOrDefault(path, 0) > countMax) {
+						countMax = result.getOrDefault(path, 0);
+						pathMax = path;
+					}
 				}
 			}
-		}
 
-		return pathMax;
+			return pathMax;
+		});
 	}
 
 	@Override
@@ -437,42 +493,51 @@ public class CCSeries extends CCDatabaseElement implements IEpisodeOwner, ISerie
 	}
 
 	private int getFullViewCount() {
-		int vc = Integer.MAX_VALUE;
-		for (CCSeason s : seasons) {
-			for (CCEpisode e : s.getEpisodeList()) {
-				vc = Math.min(e.getViewedHistory().count(), vc);
+		return _cache.getInt(SeriesCache.FULL_VIEW_COUNT, null, ser->
+		{
+			int vc = Integer.MAX_VALUE;
+			for (CCSeason sea : seasons) {
+				for (CCEpisode e : sea.getEpisodeList()) {
+					vc = Math.min(e.getViewedHistory().count(), vc);
+				}
 			}
-		}
-		if (vc == Integer.MAX_VALUE) return 0;
-		return vc;
+			if (vc == Integer.MAX_VALUE) return 0;
+			return vc;
+		});
 	}
 
 	public CCDBLanguageList getAllLanguages() {
-		HashSet<CCDBLanguage> langs = new HashSet<>();
-		for (CCSeason s : seasons)
+		return _cache.get(SeriesCache.ALL_LANGUAGES, null, ser->
 		{
-			for (CCEpisode e : s.getEpisodeList())
+			HashSet<CCDBLanguage> langs = new HashSet<>();
+			for (CCSeason s : seasons)
 			{
-				langs.addAll(e.getLanguage().getInternalData());
+				for (CCEpisode e : s.getEpisodeList())
+				{
+					langs.addAll(e.getLanguage().getInternalData());
+				}
 			}
-		}
 
-		return CCDBLanguageList.createDirect(langs);
+			return CCDBLanguageList.createDirect(langs);
+		});
 	}
 
 	public CCDBLanguageList getCommonLanguages() {
-		HashSet<CCDBLanguage> langs = null;
-		for (CCSeason s : seasons)
+		return _cache.get(SeriesCache.COMMON_LANGUAGES, null, ser->
 		{
-			for (CCEpisode e : s.getEpisodeList())
+			HashSet<CCDBLanguage> langs = null;
+			for (CCSeason s : seasons)
 			{
-				if (langs == null) { langs = new HashSet<>(e.getLanguage().getInternalData()); continue; }
-				langs.retainAll(e.getLanguage().getInternalData());
-				if (langs.size()==0) return CCDBLanguageList.EMPTY;
+				for (CCEpisode e : s.getEpisodeList())
+				{
+					if (langs == null) { langs = new HashSet<>(e.getLanguage().getInternalData()); continue; }
+					langs.retainAll(e.getLanguage().getInternalData());
+					if (langs.size()==0) return CCDBLanguageList.EMPTY;
+				}
 			}
-		}
-		if (langs == null) return CCDBLanguageList.EMPTY;
-		return CCDBLanguageList.createDirect(langs);
+			if (langs == null) return CCDBLanguageList.EMPTY;
+			return CCDBLanguageList.createDirect(langs);
+		});
 	}
 
 	public CCDBLanguageList getSemiCommonOrAllLanguages() {
@@ -481,88 +546,94 @@ public class CCSeries extends CCDatabaseElement implements IEpisodeOwner, ISerie
 	}
 
 	public CCDBLanguageList getSemiCommonLanguages() {
-		if (getEpisodeCount() == 0) return CCDBLanguageList.EMPTY;
-
-		var firstEpisode = getFirstEpisode();
-
-		HashSet<CCDBLanguage> allLanguages = new HashSet<>();
-
-		HashSet<CCDBLanguage> langsCommon = new HashSet<>(firstEpisode.getLanguage().getInternalData());
-		CCDBLanguageList langsEqual  = firstEpisode.getLanguage();
-
-		HashMap<CCDBLanguageList, Integer> langsLength = new HashMap<>();
-		int totalLength = 0;
-
-		for (CCSeason s : seasons)
+		return _cache.get(SeriesCache.SEMI_COMMON_LANGUAGES, Tuple1.Create(CCProperties.getInstance().PROP_FOLDERLANG_IGNORE_PERC.getValue()), ser->
 		{
-			for (CCEpisode e : s.getEpisodeList())
+			if (getEpisodeCount() == 0) return CCDBLanguageList.EMPTY;
+
+			var firstEpisode = getFirstEpisode();
+
+			HashSet<CCDBLanguage> allLanguages = new HashSet<>();
+
+			HashSet<CCDBLanguage> langsCommon = new HashSet<>(firstEpisode.getLanguage().getInternalData());
+			CCDBLanguageList langsEqual  = firstEpisode.getLanguage();
+
+			HashMap<CCDBLanguageList, Integer> langsLength = new HashMap<>();
+			int totalLength = 0;
+
+			for (CCSeason s : seasons)
 			{
-				allLanguages.addAll(e.getLanguage().getInternalData());
-
-				langsCommon.retainAll(e.getLanguage().getInternalData());
-
-				if (langsEqual != null && !langsEqual.equals(e.getLanguage())) langsEqual = null;
-
-				int addlen = e.getLength();
-				if (langsLength.containsKey(e.getLanguage())) addlen += langsLength.get(e.getLanguage());
-				langsLength.put(e.getLanguage(), addlen);
-
-				totalLength+= e.getLength();
-			}
-		}
-
-		if (langsEqual != null) return langsEqual;
-
-		var maxPerc = CCProperties.getInstance().PROP_FOLDERLANG_IGNORE_PERC.getValue();
-
-		if (maxPerc > 0) // if maxPerc is set we can use a Language set that satisifies at least (100-maxPerc)% of the total length
-		{
-			CCDBLanguageList percentageMatch_Lang  = null;
-			double           percentageMatch_Score = Integer.MIN_VALUE;
-			for (var langset : CCDBLanguageList.create(allLanguages).allSubsets())
-			{
-				if (langset.isEmpty()) continue;
-
-				var subsetlength = CCStreams
-						.iterate(langsLength.entrySet())
-						.filter(p -> langset.isSubsetOf(p.getKey()))
-						.map(Map.Entry::getValue)
-						.sum(Integer::sum, 0);
-
-				var percentage_of_notmatching_lang = ((totalLength - subsetlength) * 100 / totalLength);
-				if (percentage_of_notmatching_lang >= maxPerc) continue;
-
-				var score = langset.size() * 10_000 + (100-percentage_of_notmatching_lang);
-
-				if (score > percentageMatch_Score)
+				for (CCEpisode e : s.getEpisodeList())
 				{
-					percentageMatch_Lang  = langset;
-					percentageMatch_Score = score;
+					allLanguages.addAll(e.getLanguage().getInternalData());
+
+					langsCommon.retainAll(e.getLanguage().getInternalData());
+
+					if (langsEqual != null && !langsEqual.equals(e.getLanguage())) langsEqual = null;
+
+					int addlen = e.getLength();
+					if (langsLength.containsKey(e.getLanguage())) addlen += langsLength.get(e.getLanguage());
+					langsLength.put(e.getLanguage(), addlen);
+
+					totalLength+= e.getLength();
 				}
 			}
-			if (percentageMatch_Lang != null) return percentageMatch_Lang;
-		}
 
-		return CCDBLanguageList.createDirect(langsCommon);
+			if (langsEqual != null) return langsEqual;
+
+			var maxPerc = CCProperties.getInstance().PROP_FOLDERLANG_IGNORE_PERC.getValue();
+
+			if (maxPerc > 0) // if maxPerc is set we can use a Language set that satisifies at least (100-maxPerc)% of the total length
+			{
+				CCDBLanguageList percentageMatch_Lang  = null;
+				double           percentageMatch_Score = Integer.MIN_VALUE;
+				for (var langset : CCDBLanguageList.create(allLanguages).allSubsets())
+				{
+					if (langset.isEmpty()) continue;
+
+					var subsetlength = CCStreams
+							.iterate(langsLength.entrySet())
+							.filter(p -> langset.isSubsetOf(p.getKey()))
+							.map(Map.Entry::getValue)
+							.sum(Integer::sum, 0);
+
+					var percentage_of_notmatching_lang = ((totalLength - subsetlength) * 100 / totalLength);
+					if (percentage_of_notmatching_lang >= maxPerc) continue;
+
+					var score = langset.size() * 10_000 + (100-percentage_of_notmatching_lang);
+
+					if (score > percentageMatch_Score)
+					{
+						percentageMatch_Lang  = langset;
+						percentageMatch_Score = score;
+					}
+				}
+				if (percentageMatch_Lang != null) return percentageMatch_Lang;
+			}
+
+			return CCDBLanguageList.createDirect(langsCommon);
+		});
 	}
 
 	@SuppressWarnings("nls")
 	public String getFolderNameForCreatedFolderStructure(CCDBLanguageList fallbackLanguage) {
-		StringBuilder seriesfoldername = new StringBuilder(getTitle());
-		
-		for (CCGroup group : getGroups()) {
-			if (group.DoSerialize) seriesfoldername.append(" [[").append(group.Name).append("]]");
-		}
+		return _cache.get(SeriesCache.FOLDER_NAME_FOR_CREATED_FOLDER_STRUCTURE, Tuple1.Create(fallbackLanguage), ser->
+		{
+			StringBuilder seriesfoldername = new StringBuilder(getTitle());
 
-		CCDBLanguageList lang = getSemiCommonLanguages();
-		if (getEpisodeCount() == 0 && fallbackLanguage != null) lang = fallbackLanguage;
-		if (!lang.isExact(CCDBLanguage.GERMAN) && !lang.isEmpty()) {
-			seriesfoldername.append(String.format(" [%s]", lang.serializeToFilenameString()));
-		}
-		
-		seriesfoldername = new StringBuilder(PathFormatter.fixStringToFilesystemname(seriesfoldername.toString()));
-		
-		return seriesfoldername.toString();
+			for (CCGroup group : getGroups()) {
+				if (group.DoSerialize) seriesfoldername.append(" [[").append(group.Name).append("]]");
+			}
+
+			CCDBLanguageList lang = getSemiCommonLanguages();
+			if (getEpisodeCount() == 0 && fallbackLanguage != null) lang = fallbackLanguage;
+			if (!lang.isExact(CCDBLanguage.GERMAN) && !lang.isEmpty()) {
+				seriesfoldername.append(String.format(" [%s]", lang.serializeToFilenameString()));
+			}
+
+			seriesfoldername = new StringBuilder(PathFormatter.fixStringToFilesystemname(seriesfoldername.toString()));
+
+			return seriesfoldername.toString();
+		});
 	}
 
 	@SuppressWarnings("nls")
@@ -662,10 +733,10 @@ public class CCSeries extends CCDatabaseElement implements IEpisodeOwner, ISerie
 
 		Integer i1 = season.getConsensEpisodeLength();
 		if (i1 != null) return i1;
-		
+
 		Integer i2 = season.getAverageEpisodeLength();
 		if (i2 != null) return i2;
-		
+
 		for (CCSeason s : iteratorSeasons().reverse()) {
 			if (s.isSpecialSeason()) continue;
 
@@ -678,59 +749,71 @@ public class CCSeries extends CCDatabaseElement implements IEpisodeOwner, ISerie
 			Integer i5 = season.getAverageEpisodeLength();
 			if (i5 != null) return i5;
 		}
-		
+
 		return 0;
 	}
 
 	public int getAutoEpisodeLength() {
-		Integer i0 = getCommonEpisodeLength();
-		if (i0 != null) return i0;
+		return _cache.getInt(SeriesCache.AUTO_EPISODE_LENGTH, null, ser->
+		{
+			Integer i0 = getCommonEpisodeLength();
+			if (i0 != null) return i0;
 
-		Integer i1 = getConsensEpisodeLength();
-		if (i1 != null) return i1;
+			Integer i1 = getConsensEpisodeLength();
+			if (i1 != null) return i1;
 
-		Integer i2 = getAverageEpisodeLength();
-		if (i2 != null) return i2;
+			Integer i2 = getAverageEpisodeLength();
+			if (i2 != null) return i2;
 
-		return 0;
+			return 0;
+		});
 	}
 
 	@Override
 	public Integer getCommonEpisodeLength() {
-		if (getEpisodeCount() == 0) return null;
+		return _cache.get(SeriesCache.COMMON_EPISODE_LENGTH, null, ser->
+		{
+			if (getEpisodeCount() == 0) return null;
 
-		int len = -1;
-		for (CCEpisode ep : iteratorEpisodes()) {
+			int len = -1;
+			for (CCEpisode ep : iteratorEpisodes()) {
 
-			if (ep.getLength() > 0)
-				if (len > 0 && ep.getLength() != len) {
-					return null;
-				} else {
-					len = ep.getLength();
-				}
-		}
+				if (ep.getLength() > 0)
+					if (len > 0 && ep.getLength() != len) {
+						return null;
+					} else {
+						len = ep.getLength();
+					}
+			}
 
-		return len;
+			return len;
+		});
 	}
 
 	public Integer getAverageEpisodeLength() {
-		if (getEpisodeCount() == 0) return null;
+		return _cache.get(SeriesCache.AVERAGE_EPISODE_LENGTH, null, ser->
+		{
+			if (getEpisodeCount() == 0) return null;
 
-		return (int)Math.round((iteratorEpisodes().sumInt(CCEpisode::getLength)*1d) / getEpisodeCount());
+			return (int)Math.round((iteratorEpisodes().sumInt(CCEpisode::getLength)*1d) / getEpisodeCount());
+		});
 	}
 
 	@Override
 	public Integer getConsensEpisodeLength() {
-		if (getEpisodeCount() == 0) return null;
+		return _cache.get(SeriesCache.CONSENS_EPISODE_LENGTH, null, ser->
+		{
+			if (getEpisodeCount() == 0) return null;
 
-		Map.Entry<Integer, List<CCEpisode>> mostCommon = iteratorEpisodes().groupBy(CCEpisode::getLength).autosortByProperty(e -> e.getValue().size()).lastOrNull();
-		if (mostCommon == null) return null;
+			Map.Entry<Integer, List<CCEpisode>> mostCommon = iteratorEpisodes().groupBy(CCEpisode::getLength).autosortByProperty(e -> e.getValue().size()).lastOrNull();
+			if (mostCommon == null) return null;
 
-		if (mostCommon.getValue().size() * 3 >= getEpisodeCount() * 2) { // 66% of episodes have same length
-			return mostCommon.getKey();
-		}
+			if (mostCommon.getValue().size() * 3 >= getEpisodeCount() * 2) { // 66% of episodes have same length
+				return mostCommon.getKey();
+			}
 
-		return null;
+			return null;
+		});
 	}
 
 	public CCEpisode getLastAddedEpisode() {
@@ -740,48 +823,51 @@ public class CCSeries extends CCDatabaseElement implements IEpisodeOwner, ISerie
 	@Override
 	@SuppressWarnings("nls")
 	public CCQualityCategory getMediaInfoCategory() {
-		if (getEpisodeCount() == 0) return CCQualityCategory.UNSET;
+		return _cache.get(SeriesCache.MEDIAINFO_CATEGORY, null, ser->
+		{
+			if (getEpisodeCount() == 0) return CCQualityCategory.UNSET;
 
-		if (iteratorEpisodes().any(e -> e.getMediaInfo().isUnset())) return CCQualityCategory.UNSET;
+			if (iteratorEpisodes().any(e -> e.getMediaInfo().isUnset())) return CCQualityCategory.UNSET;
 
-		double avg = iteratorEpisodes().map(e -> e.getMediaInfo().getCategory(getSeries().getGenres()).getCategoryType()).avgValueOrDefault(e -> (double)e.asInt(), 0);
+			double avg = iteratorEpisodes().map(e -> e.getMediaInfo().getCategory(getSeries().getGenres()).getCategoryType()).avgValueOrDefault(e -> (double)e.asInt(), 0);
 
-		CCQualityResolutionType rtype = iteratorEpisodes()
-				.map(e -> e.getMediaInfo().getCategory(getSeries().getGenres()).getResolutionType())
-				.groupBy(e -> e)
-				.map(Map.Entry::getKey)
-				.singleOrDefault(null, null);
+			CCQualityResolutionType rtype = iteratorEpisodes()
+					.map(e -> e.getMediaInfo().getCategory(getSeries().getGenres()).getResolutionType())
+					.groupBy(e -> e)
+					.map(Map.Entry::getKey)
+					.singleOrDefault(null, null);
 
-		if (rtype == null)
-			rtype = CCQualityResolutionType.MULTIPLE;
+			if (rtype == null)
+				rtype = CCQualityResolutionType.MULTIPLE;
 
-		CCQualityCategoryType ct = CCQualityCategoryType.getWrapper().findOrNull((int)Math.round(avg));
-		if (ct == null) return CCQualityCategory.UNSET; // should never happen ??
+			CCQualityCategoryType ct = CCQualityCategoryType.getWrapper().findOrNull((int)Math.round(avg));
+			if (ct == null) return CCQualityCategory.UNSET; // should never happen ??
 
-		String longtext = Str.format(LocaleBundle.getFormattedString("JMediaInfoControl.episodes", getEpisodeCount()));
+			String longtext = Str.format(LocaleBundle.getFormattedString("JMediaInfoControl.episodes", getEpisodeCount()));
 
-		int minBitrate = iteratorEpisodes().map(e -> e.getMediaInfo().getBitrate()).autoMinValueOrDefault(e -> e, 0);
-		int maxBitrate = iteratorEpisodes().map(e -> e.getMediaInfo().getBitrate()).autoMaxValueOrDefault(e -> e, 0);
-		int minDuration = iteratorEpisodes().map(e -> (int)e.getMediaInfo().getDuration()).autoMinValueOrDefault(e -> e, 0);
-		int maxDuration = iteratorEpisodes().map(e -> (int)e.getMediaInfo().getDuration()).autoMaxValueOrDefault(e -> e, 0);
-		int minFramerate = iteratorEpisodes().map(e -> (int)Math.round(e.getMediaInfo().getFramerate())).autoMinValueOrDefault(e -> e, 0);
-		int maxFramerate = iteratorEpisodes().map(e -> (int)Math.round(e.getMediaInfo().getFramerate())).autoMaxValueOrDefault(e -> e, 0);
+			int minBitrate = iteratorEpisodes().map(e -> e.getMediaInfo().getBitrate()).autoMinValueOrDefault(e -> e, 0);
+			int maxBitrate = iteratorEpisodes().map(e -> e.getMediaInfo().getBitrate()).autoMaxValueOrDefault(e -> e, 0);
+			int minDuration = iteratorEpisodes().map(e -> (int)e.getMediaInfo().getDuration()).autoMinValueOrDefault(e -> e, 0);
+			int maxDuration = iteratorEpisodes().map(e -> (int)e.getMediaInfo().getDuration()).autoMaxValueOrDefault(e -> e, 0);
+			int minFramerate = iteratorEpisodes().map(e -> (int)Math.round(e.getMediaInfo().getFramerate())).autoMinValueOrDefault(e -> e, 0);
+			int maxFramerate = iteratorEpisodes().map(e -> (int)Math.round(e.getMediaInfo().getFramerate())).autoMaxValueOrDefault(e -> e, 0);
 
-		StringBuilder b = new StringBuilder();
-		b.append("<html>");
+			StringBuilder b = new StringBuilder();
+			b.append("<html>");
 
-		b.append("Bitrate (min): ").append(Str.spacegroupformat((int)Math.round(minBitrate / 1024.0))).append(" kbit/s").append("<br/>");
-		b.append("Bitrate (max): ").append(Str.spacegroupformat((int)Math.round(maxBitrate / 1024.0))).append(" kbit/s").append("<br/>");
+			b.append("Bitrate (min): ").append(Str.spacegroupformat((int)Math.round(minBitrate / 1024.0))).append(" kbit/s").append("<br/>");
+			b.append("Bitrate (max): ").append(Str.spacegroupformat((int)Math.round(maxBitrate / 1024.0))).append(" kbit/s").append("<br/>");
 
-		b.append("Duration (min): ").append(TimeIntervallFormatter.formatSeconds(minDuration)).append("<br/>");
-		b.append("Duration (max): ").append(TimeIntervallFormatter.formatSeconds(maxDuration)).append("<br/>");
+			b.append("Duration (min): ").append(TimeIntervallFormatter.formatSeconds(minDuration)).append("<br/>");
+			b.append("Duration (max): ").append(TimeIntervallFormatter.formatSeconds(maxDuration)).append("<br/>");
 
-		b.append("Framerate (min): ").append(minFramerate).append(" fps").append("<br/>");
-		b.append("Framerate (max): ").append(maxFramerate).append(" fps").append("<br/>");
+			b.append("Framerate (min): ").append(minFramerate).append(" fps").append("<br/>");
+			b.append("Framerate (max): ").append(maxFramerate).append(" fps").append("<br/>");
 
-		b.append("</html>");
-		String tooltip = b.toString();
+			b.append("</html>");
+			String tooltip = b.toString();
 
-		return new CCQualityCategory(ct, rtype, longtext, tooltip, (minBitrate + maxBitrate) / 2);
+			return new CCQualityCategory(ct, rtype, longtext, tooltip, (minBitrate + maxBitrate) / 2);
+		});
 	}
 }

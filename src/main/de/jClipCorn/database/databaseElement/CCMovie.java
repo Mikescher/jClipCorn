@@ -1,6 +1,8 @@
 package de.jClipCorn.database.databaseElement;
 
 import de.jClipCorn.database.CCMovieList;
+import de.jClipCorn.database.databaseElement.caches.ICalculationCache;
+import de.jClipCorn.database.databaseElement.caches.MovieCache;
 import de.jClipCorn.database.databaseElement.columnTypes.*;
 import de.jClipCorn.database.databaseElement.datapacks.IMovieData;
 import de.jClipCorn.database.util.CCQualityCategory;
@@ -28,7 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, ICCDatedElement, IMovieData {
-	public final static int PARTCOUNT_MAX = 6; // 0 - 5
+	public final static int PARTCOUNT_MAX = 6; // 0 .. 5
 
 	private CCMovieZyklus zyklus;
 	private CCMediaInfo mediainfo;
@@ -40,16 +42,20 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 	private String[] parts;
 	private CCDateTimeList viewedHistory;
 	private CCDBLanguageList language;
+
+	private final MovieCache _cache;
 	
 	public CCMovie(CCMovieList ml, int id) {
 		super(ml, CCDBElementTyp.MOVIE, id);
 		parts = new String[PARTCOUNT_MAX];
 
-		zyklus = new CCMovieZyklus();
-		filesize = CCFileSize.ZERO;
-		addDate = CCDate.getMinimumDate();
+		zyklus        = new CCMovieZyklus();
+		filesize      = CCFileSize.ZERO;
+		addDate       = CCDate.getMinimumDate();
 		viewedHistory = CCDateTimeList.createEmpty();
-		language = CCDBLanguageList.EMPTY;
+		language      = CCDBLanguageList.EMPTY;
+
+		_cache = new MovieCache(this);
 	}
 	
 	@Override
@@ -71,6 +77,7 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 		viewedHistory = CCDateTimeList.createEmpty();
 		language      = CCDBLanguageList.EMPTY;
 
+		_cache.bust();
 		if (updateDB) updateDB();
 	}
 
@@ -94,6 +101,11 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 	@Override
 	public String getQualifiedTitle() {
 		return getCompleteTitle();
+	}
+
+	@Override
+	public ICalculationCache getCache() {
+		return _cache;
 	}
 
 	public String getCompleteTitle() {
@@ -129,24 +141,28 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 	public void setZyklus(String title, int id) {
 		this.zyklus = new CCMovieZyklus(title, id);
 
+		_cache.bust();
 		updateDB();
 	}
 
 	public void setZyklus(CCMovieZyklus zykl) {
 		this.zyklus = zykl;
 
+		_cache.bust();
 		updateDB();
 	}
 
 	public void setZyklusTitle(String zyklus) {
 		this.zyklus = this.zyklus.getWithTitle(zyklus);
 
+		_cache.bust();
 		updateDB();
 	}
 	
 	public void setZyklusID(int zid) {
 		this.zyklus = this.zyklus.getWithNumber(zid);
-		
+
+		_cache.bust();
 		updateDB();
 	}
 
@@ -168,7 +184,8 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 	@Override
 	public void setLength(int length) {
 		this.length = length;
-		
+
+		_cache.bust();
 		updateDB();
 	}
 
@@ -181,13 +198,15 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 		if (date == null) {CCLog.addUndefinied("Prevented setting CCMovie.AddDate to NULL"); return; } //$NON-NLS-1$
 
 		this.addDate = date;
-		
+
+		_cache.bust();
 		updateDB();
 	}
 	
 	public void setAddDate(Date sqldate) {
 		this.addDate = CCDate.create(sqldate);
-		
+
+		_cache.bust();
 		updateDB();
 	}
 
@@ -204,12 +223,14 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 			this.format = CCFileFormat.MKV;
 		}
 
+		_cache.bust();
 		updateDB();
 	}
 
 	public void setFormat(int format) throws EnumFormatException {
 		this.format = CCFileFormat.getWrapper().findOrException(format);
 
+		_cache.bust();
 		updateDB();
 	}
 	
@@ -217,6 +238,8 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 		if (format == null) {CCLog.addUndefinied("Prevented setting CCMovie.Format to NULL"); return; } //$NON-NLS-1$
 
 		this.format = format;
+
+		_cache.bust();
 		updateDB();
 	}
 
@@ -232,7 +255,8 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 
 	public void setYear(int year) {
 		this.year = year;
-		
+
+		_cache.bust();
 		updateDB();
 	}
 	
@@ -244,7 +268,8 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 	@Override
 	public void setFilesize(long filesize) {
 		this.filesize = new CCFileSize(filesize);
-		
+
+		_cache.bust();
 		updateDB();
 	}
 	
@@ -263,12 +288,14 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 
 		this.language = language;
 
+		_cache.bust();
 		updateDB();
 	}
 
 	public void setLanguage(long dbdata) {
 		this.language = CCDBLanguageList.fromBitmask(dbdata);
 
+		_cache.bust();
 		updateDB();
 	}
 
@@ -289,7 +316,8 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 	
 	public void setPart(int idx, String path) {
 		parts[idx] = path;
-		
+
+		_cache.bust();
 		updateDB();
 	}
 	
@@ -306,6 +334,7 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 
 		viewedHistory = value;
 
+		_cache.bust();
 		updateDB();
 	}
 
@@ -315,6 +344,8 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 		try
 		{
 			viewedHistory = value;
+
+			_cache.bust();
 			updateDBWithException();
 		}
 		catch (Throwable e1)
@@ -332,6 +363,7 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 	public void addToViewedHistory(CCDateTime datetime) {
 		this.viewedHistory = this.viewedHistory.add(datetime);
 
+		_cache.bust();
 		updateDB();
 	}
 
@@ -344,6 +376,7 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 				setTag(CCSingleTag.TAG_WATCH_LATER, false);
 			}
 
+			_cache.bust();
 			updateDBWithException();
 		}
 		catch (Throwable e1)
@@ -462,6 +495,7 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 
 		this.mediainfo = minfo;
 
+		_cache.bust();
 		updateDB();
 	}
 

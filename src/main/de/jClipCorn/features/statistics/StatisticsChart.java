@@ -1,20 +1,17 @@
 package de.jClipCorn.features.statistics;
 
-import java.awt.Color;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
-
-import javax.swing.JComponent;
-import javax.swing.UIManager;
-
-import org.jfree.chart.ChartPanel;
-import org.jfree.chart.JFreeChart;
-import org.jfree.chart.plot.XYPlot;
-
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.gui.frames.statisticsFrame.StatisticsPanel;
 import de.jClipCorn.gui.frames.statisticsFrame.StatisticsTypeFilter;
 import de.jClipCorn.properties.CCProperties;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.XYPlot;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 
 public abstract class StatisticsChart extends StatisticsPanel {
 	protected final static boolean ROTATE_PIE = false;
@@ -80,9 +77,9 @@ public abstract class StatisticsChart extends StatisticsPanel {
 		chartPanel.setChart(chart);
 		
 		
-		if (source == StatisticsTypeFilter.MOVIES && ! movielist.containsMovies()) 
+		if (source == StatisticsTypeFilter.MOVIES && ! movielist.hasMovies())
 			chartPanel.setVisible(false);
-		else if (source == StatisticsTypeFilter.SERIES && ! movielist.containsMovies()) 
+		else if (source == StatisticsTypeFilter.SERIES && ! movielist.hasSeries())
 			chartPanel.setVisible(false);
 		else if (source == StatisticsTypeFilter.BOTH && movielist.getElementCount() == 0)
 			chartPanel.setVisible(false);

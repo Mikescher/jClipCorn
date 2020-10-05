@@ -2,7 +2,7 @@ package de.jClipCorn.util.datatypes;
 
 import java.util.Objects;
 
-public class Tuple1<T1> {
+public class Tuple1<T1> implements ITuple {
 	public final T1 Item1;
 
 	public Tuple1(T1 i1) {

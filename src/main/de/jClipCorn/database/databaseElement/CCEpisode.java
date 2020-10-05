@@ -1,6 +1,8 @@
 package de.jClipCorn.database.databaseElement;
 
 import de.jClipCorn.database.CCMovieList;
+import de.jClipCorn.database.databaseElement.caches.EpisodeCache;
+import de.jClipCorn.database.databaseElement.caches.ICalculationCache;
 import de.jClipCorn.database.databaseElement.columnTypes.*;
 import de.jClipCorn.database.databaseElement.datapacks.IEpisodeData;
 import de.jClipCorn.database.util.CCQualityCategory;
@@ -43,6 +45,8 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 	private CCDate addDate;
 	private CCDateTimeList viewedHistory;
 	private CCDBLanguageList language;
+
+	private final EpisodeCache _cache;
 	
 	private boolean isUpdating = false;
 	
@@ -50,12 +54,31 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 		this.owner = owner;
 		this.localID = localID;
 		
-		filesize = CCFileSize.ZERO;
-		tags = CCTagList.EMPTY;
-		addDate = CCDate.getMinimumDate();
+		filesize      = CCFileSize.ZERO;
+		tags          = CCTagList.EMPTY;
+		addDate       = CCDate.getMinimumDate();
 		viewedHistory = CCDateTimeList.createEmpty();
-		language = CCDBLanguageList.EMPTY;
-		mediainfo = CCMediaInfo.EMPTY;
+		language      = CCDBLanguageList.EMPTY;
+		mediainfo     = CCMediaInfo.EMPTY;
+
+		_cache = new EpisodeCache(this);
+	}
+
+	public void setDefaultValues(boolean updateDB) {
+		episodeNumber = 0;
+		title         = ""; //$NON-NLS-1$
+		mediainfo     = CCMediaInfo.EMPTY;
+		length        = 0;
+		format        = CCFileFormat.MKV;
+		filesize      = CCFileSize.ZERO;
+		tags          = CCTagList.EMPTY;
+		part          = ""; //$NON-NLS-1$
+		addDate       = CCDate.getMinimumDate();
+		viewedHistory = CCDateTimeList.createEmpty();
+		language      = CCDBLanguageList.EMPTY;
+
+		_cache.bust();
+		if (updateDB) updateDB();
 	}
 
 	public void beginUpdating() {
@@ -86,13 +109,15 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 
 	public void setEpisodeNumber(int en) {
 		this.episodeNumber = en;
-		
+
+		_cache.bust();
 		updateDB();
 	}
 
 	public void setTitle(String t) {
 		this.title = t;
 		
+		_cache.bust();
 		updateDB();
 	}
 
@@ -103,6 +128,7 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 			setTag(CCSingleTag.TAG_WATCH_LATER, false);
 		}
 
+		_cache.bust();
 		updateDB();
 	}
 
@@ -115,6 +141,7 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 				setTag(CCSingleTag.TAG_WATCH_LATER, false);
 			}
 
+			_cache.bust();
 			updateDBWithException();
 		}
 		catch (Throwable e1)
@@ -130,13 +157,15 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 
 		this.mediainfo = minfo;
 
+		_cache.bust();
 		updateDB();
 	}
 
 	@Override
 	public void setLength(int length) {
 		this.length = length;
-		
+
+		_cache.bust();
 		updateDB();
 	}
 
@@ -148,12 +177,14 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 			this.format = CCFileFormat.MKV;
 		}
 
+		_cache.bust();
 		updateDB();
 	}
 
 	public void setFormat(int format) throws EnumFormatException {
 		this.format = CCFileFormat.getWrapper().findOrException(format);
 
+		_cache.bust();
 		updateDB();
 	}
 
@@ -161,25 +192,30 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 		if (format == null) { CCLog.addUndefinied("Prevented setting CCEpisode.Format to NULL"); return; } //$NON-NLS-1$
 
 		this.format = format;
+
+		_cache.bust();
 		updateDB();
 	}
 
 	@Override
 	public void setFilesize(long filesize) {
 		this.filesize = new CCFileSize(filesize);
-		
+
+		_cache.bust();
 		updateDB();
 	}
 
 	public void setFilesize(CCFileSize fsz) {
 		this.filesize = fsz;
 
+		_cache.bust();
 		updateDB();
 	}
 	
 	public void setPart(String path) {
 		part = path;
-		
+
+		_cache.bust();
 		updateDB();
 	}
 	
@@ -187,13 +223,15 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 		if (date == null) {CCLog.addUndefinied("Prevented setting CCEpisode.AddDate to NULL"); return; } //$NON-NLS-1$
 
 		this.addDate = date;
-		
+
+		_cache.bust();
 		updateDB();
 	}
 	
 	public void setAddDate(Date sqldate) {
 		this.addDate = CCDate.create(sqldate);
-		
+
+		_cache.bust();
 		updateDB();
 	}
 
@@ -203,7 +241,8 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 
 	public void setViewedHistory(CCDateTimeList datelist) {
 		this.viewedHistory = datelist;
-		
+
+		_cache.bust();
 		updateDB();
 	}
 
@@ -213,6 +252,8 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 		try
 		{
 			viewedHistory = value;
+
+			_cache.bust();
 			updateDBWithException();
 		}
 		catch (Throwable e1)
@@ -225,13 +266,15 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 	@Override
 	public void setTags(CCTagList stat) {
 		tags = stat;
-		
+
+		_cache.bust();
 		updateDB();
 	}
 	
 	public void setTags(short stat) {
 		tags = CCTagList.fromShort(stat);
-		
+
+		_cache.bust();
 		updateDB();
 	}
 
@@ -239,24 +282,28 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 	public void switchTag(CCSingleTag t) {
 		tags = tags.getSwitchTag(t);
 
+		_cache.bust();
 		updateDB();
 	}
 	
 	public void switchTag(int c) {
 		tags = tags.getSwitchTag(c);
-		
+
+		_cache.bust();
 		updateDB();
 	}
 
 	public void setTag(CCSingleTag t, boolean v) {
 		tags = tags.getSetTag(t, v);
 
+		_cache.bust();
 		updateDB();
 	}
 	
 	public void setTag(int c, boolean v) {
 		tags = tags.getSetTag(c, v);
-		
+
+		_cache.bust();
 		updateDB();
 	}
 
@@ -284,12 +331,14 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 			this.language = CCDBLanguageList.EMPTY;
 		}
 
+		_cache.bust();
 		updateDB();
 	}
 
 	public void setLanguage(long dbdata) {
 		this.language = CCDBLanguageList.fromBitmask(dbdata);
 
+		_cache.bust();
 		updateDB();
 	}
 	
@@ -299,24 +348,6 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 	
 	public CCSeries getSeries() {
 		return owner.getSeries();
-	}
-
-	public void setDefaultValues(boolean updateDB) {
-		episodeNumber = 0;
-		title = ""; //$NON-NLS-1$
-		mediainfo = CCMediaInfo.EMPTY;
-		length = 0;
-		format = CCFileFormat.MKV;
-		filesize = CCFileSize.ZERO;
-		tags = CCTagList.EMPTY;
-		part = ""; //$NON-NLS-1$
-		addDate = CCDate.getMinimumDate();
-		viewedHistory = CCDateTimeList.createEmpty();
-		language = CCDBLanguageList.EMPTY;
-		
-		if (updateDB) {
-			updateDB();
-		}
 	}
 
 	@Override
@@ -526,5 +557,10 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 	@Override
 	public CCMovieList getMovieList() {
 		return getSeries().getMovieList();
+	}
+
+	@Override
+	public ICalculationCache getCache() {
+		return _cache;
 	}
 }

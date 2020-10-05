@@ -56,6 +56,7 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 		tags            = CCTagList.EMPTY;
 		
 		if (updateDB) updateDB();
+		getCache().bust();
 	}
 	
 	public void beginUpdating() {
@@ -88,6 +89,7 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 		this.title = title;
 		
 		updateDB();
+		getCache().bust();
 	}
 	
 	public CCOnlineScore getOnlinescore() {
@@ -103,12 +105,14 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 		}
 
 		updateDB();
+		getCache().bust();
 	}
 
 	public void setOnlinescore(int onlinescore) throws EnumFormatException {
 		this.onlinescore = CCOnlineScore.getWrapper().findOrException(onlinescore);
 		
 		updateDB();
+		getCache().bust();
 	}
 
 	public void setOnlinescore(CCOnlineScore onlinescore) {
@@ -117,6 +121,7 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 		this.onlinescore = onlinescore;
 		
 		updateDB();
+		getCache().bust();
 	}
 
 	public CCFSK getFSK() {
@@ -132,12 +137,14 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 		}
 
 		updateDB();
+		getCache().bust();
 	}
 
 	public void setFsk(int fsk) throws EnumFormatException {
 		this.fsk = CCFSK.getWrapper().findOrException(fsk);
 		
 		updateDB();
+		getCache().bust();
 	}
 
 	public void setFsk(CCFSK fsk) {
@@ -146,6 +153,7 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 		this.fsk = fsk;
 		
 		updateDB();
+		getCache().bust();
 	}
 	
 	public CCDBElementTyp getType() {
@@ -165,12 +173,14 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 		}
 
 		updateDB();
+		getCache().bust();
 	}
 
 	public void setScore(int score) throws EnumFormatException {
 		this.score = CCUserScore.getWrapper().findOrException(score);
 		
 		updateDB();
+		getCache().bust();
 	}
 	
 	public void setScore(CCUserScore score) {
@@ -179,12 +189,14 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 		this.score = score;
 		
 		updateDB();
+		getCache().bust();
 	}
 	
 	public void setCover(int cid) {
 		this.coverid = cid;
 		
 		updateDB();
+		getCache().bust();
 	}
 	
 	public void setCover(BufferedImage cvr) {
@@ -203,6 +215,7 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 		this.coverid = movielist.getCoverCache().addCover(cvr);
 		
 		updateDB();
+		getCache().bust();
 	}
 	
 	@Override
@@ -237,6 +250,7 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 		onlineReference = CCOnlineReferenceList.parse(data);
 		
 		updateDB();
+		getCache().bust();
 	}
 
 	public CCOnlineReferenceList getOnlineReference() {
@@ -249,6 +263,7 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 		onlineReference = value;
 		
 		updateDB();
+		getCache().bust();
 	}
 
 	public void setGroups(String data) throws GroupFormatException {
@@ -256,7 +271,7 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 	}
 
 	public void setGroups(CCGroupList value) {
-		if (value == null) {CCLog.addUndefinied("Prevented setting CCDBElem.Groups to NULL"); return; } //$NON-NLS-1$
+		if (value == null) { CCLog.addUndefinied("Prevented setting CCDBElem.Groups to NULL"); return; } //$NON-NLS-1$
 
 		if (linkedGroups.equals(value)) return;
 		
@@ -265,10 +280,12 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 		setGroupsInternal(value);
 		
 		updateDB();
+		getCache().bust();
 	}
 
 	public void setGroupsInternal(CCGroupList value) {
 		linkedGroups = value;
+		getCache().bust();
 	}
 
 	public CCGroupList getGroups() {
@@ -290,12 +307,14 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 		genres = glnew;
 		
 		updateDB();
+		getCache().bust();
 	}
 	
 	public void setGenres(long grs) {
 		genres =  new CCGenreList(grs);
 		
 		updateDB();
+		getCache().bust();
 	}
 	
 	public void setGenres(CCGenreList grs) {
@@ -304,6 +323,7 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 		genres = grs;
 		
 		updateDB();
+		getCache().bust();
 	}
 	
 	public CCGenreList getGenres() {
@@ -347,6 +367,7 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 
 	public void forceUpdate() {
 		updateDB();
+		getCache().bust();
 	}
 
 	@Override
@@ -355,15 +376,19 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 	}
 
 	public void setTags(short ptags) {
-		tags = CCTagList.fromShort(ptags);
+		this.tags = CCTagList.fromShort(ptags);
+
+		updateDB();
+		getCache().bust();
 	}
 
 	@Override
 	public void setTags(CCTagList ptags) {
-		if (ptags == null) {CCLog.addUndefinied("Prevented setting CCDBElem.Tags to NULL"); return; } //$NON-NLS-1$
+		if (ptags == null) { CCLog.addUndefinied("Prevented setting CCDBElem.Tags to NULL"); return; } //$NON-NLS-1$
 		this.tags = ptags;
 
 		updateDB();
+		getCache().bust();
 	}
 
 	@Override
@@ -371,24 +396,28 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 		tags = tags.getSwitchTag(t);
 
 		updateDB();
+		getCache().bust();
 	}
 
 	public void switchTag(int c) {
 		tags = tags.getSwitchTag(c);
 
 		updateDB();
+		getCache().bust();
 	}
 
 	public void setTag(CCSingleTag t, boolean v) {
 		tags = tags.getSetTag(t, v);
 
 		updateDB();
+		getCache().bust();
 	}
 
 	public void setTag(int c, boolean v) {
 		tags = tags.getSetTag(c, v);
 
 		updateDB();
+		getCache().bust();
 	}
 
 	public boolean getTag(CCSingleTag t) {

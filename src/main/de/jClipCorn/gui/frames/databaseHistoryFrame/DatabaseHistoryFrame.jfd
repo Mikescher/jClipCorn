@@ -1,0 +1,207 @@
+JFDML JFormDesigner: "7.0.2.6.321" Java: "11.0.8" encoding: "UTF-8"
+
+new FormModel {
+	"i18n.bundlePackage": "de.jClipCorn.gui.localization"
+	"i18n.bundleName": "locale"
+	"i18n.keyPrefix": "DatabaseHistoryFrame"
+	contentType: "form/swing"
+	root: new FormRoot {
+		add( new FormWindow( "javax.swing.JFrame", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+			"$columnSpecs": "relgap, default, labelcompgap, 100dlu:grow, labelcompgap, default, labelcompgap, default, labelcompgap, default, labelcompgap, max(default;70dlu), relgap"
+			"$rowSpecs": "relgap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, 15dlu, linegap, default:grow, linegap, default, linegap, default, relgap"
+		} ) {
+			name: "this"
+			"defaultCloseOperation": 2
+			"title": new FormMessage( null, "DatabaseHistoryFrame.title" )
+			"$sizePolicy": 1
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label1"
+				"text": new FormMessage( null, "DatabaseHistoryFrame.lblStatus" )
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 2
+				"gridY": 2
+			} )
+			add( new FormComponent( "de.jClipCorn.gui.guiComponents.ReadableTextField" ) {
+				name: "edStatus"
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 4
+				"gridY": 2
+				"vAlign": sfield com.jgoodies.forms.layout.CellConstraints CENTER
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "btnEnableTrigger"
+				"text": new FormMessage( null, "DatabaseHistoryFrame.btnAktivieren" )
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "enableTrigger", false ) )
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 6
+				"gridY": 2
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "btnDisableTrigger"
+				"text": new FormMessage( null, "DatabaseHistoryFrame.btnDeaktivieren" )
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "disableTrigger", false ) )
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 8
+				"gridY": 2
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label2"
+				"text": new FormMessage( null, "DatabaseHistoryFrame.lblTrigger" )
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 2
+				"gridY": 4
+			} )
+			add( new FormComponent( "de.jClipCorn.gui.guiComponents.ReadableTextField" ) {
+				name: "edTrigger"
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 4
+				"gridY": 4
+				"vAlign": sfield com.jgoodies.forms.layout.CellConstraints CENTER
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "btnTriggerMore"
+				"text": "..."
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "showTrigger", false ) )
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 6
+				"gridY": 4
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label3"
+				"text": new FormMessage( null, "DatabaseHistoryFrame.lblTablesize" )
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 2
+				"gridY": 6
+			} )
+			add( new FormComponent( "de.jClipCorn.gui.guiComponents.ReadableTextField" ) {
+				name: "edTableSize"
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 4
+				"gridY": 6
+				"vAlign": sfield com.jgoodies.forms.layout.CellConstraints CENTER
+			} )
+			add( new FormComponent( "de.jClipCorn.gui.guiComponents.jSplitButton.JSplitButton" ) {
+				name: "btnGetHistory"
+				"text": new FormMessage( null, "DatabaseHistoryFrame.btnGetter" )
+				auxiliary() {
+					"JavaCodeGenerator.postInitCode": "${field}.setPopupMenu(getQueryPopupMenu());"
+				}
+				addEvent( new FormEvent( "de.jClipCorn.gui.guiComponents.jSplitButton.action.ButtonClickedActionListener", "actionPerformed", "queryHistory", false ) )
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 12
+				"gridY": 6
+				"gridHeight": 3
+			} )
+			add( new FormComponent( "javax.swing.JCheckBox" ) {
+				name: "cbxIgnoreTrivial"
+				"text": new FormMessage( null, "DatabaseHistoryFrame.IgnoreTrivial" )
+				"selected": true
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 2
+				"gridY": 8
+				"gridWidth": 7
+			} )
+			add( new FormComponent( "javax.swing.JCheckBox" ) {
+				name: "cbxIgnoreIDChanges"
+				"text": new FormMessage( null, "DatabaseHistoryFrame.IgnoreTrivial2" )
+				"selected": true
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 2
+				"gridY": 10
+				"gridWidth": 7
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label4"
+				"text": new FormMessage( null, "DatabaseHistoryFrame.Filter" )
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 12
+				"gridY": 10
+			} )
+			add( new FormComponent( "javax.swing.JCheckBox" ) {
+				name: "cbxDoAgressiveMerges"
+				"text": new FormMessage( null, "DatabaseHistoryFrame.MergeAggressive" )
+				"selected": true
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 2
+				"gridY": 12
+				"gridWidth": 7
+			} )
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "edFilter"
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 12
+				"gridY": 12
+			} )
+			add( new FormComponent( "javax.swing.JProgressBar" ) {
+				name: "progressBar"
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 2
+				"gridY": 14
+				"gridWidth": 11
+				"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+			} )
+			add( new FormContainer( "javax.swing.JSplitPane", new FormLayoutManager( class javax.swing.JSplitPane ) ) {
+				name: "splitPane1"
+				"orientation": 0
+				"resizeWeight": 0.75
+				"continuousLayout": true
+				add( new FormContainer( "de.jClipCorn.gui.frames.databaseHistoryFrame.DatabaseHistoryTable", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+					name: "tableEntries"
+					auxiliary() {
+						"JavaCodeGenerator.customCreateCode": "new ${field_type}(this);"
+						"JavaCodeGenerator.postInitCode": "${field}.autoResize();"
+					}
+				}, new FormLayoutConstraints( class java.lang.String ) {
+					"value": "left"
+				} )
+				add( new FormContainer( "de.jClipCorn.gui.frames.databaseHistoryFrame.DatabaseHistoryChangesTable", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+					name: "tableChanges"
+					auxiliary() {
+						"JavaCodeGenerator.customCreateCode": "new ${field_type}(tfOldValue, tfNewValue);"
+						"JavaCodeGenerator.postInitCode": "${field}.autoResize();"
+					}
+				}, new FormLayoutConstraints( class java.lang.String ) {
+					"value": "right"
+				} )
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 2
+				"gridY": 16
+				"gridWidth": 11
+				"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label5"
+				"text": new FormMessage( null, "DatabaseHistoryFrame.Table.ColumnOld" )
+				"horizontalAlignment": 11
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 2
+				"gridY": 18
+			} )
+			add( new FormComponent( "de.jClipCorn.gui.guiComponents.ReadableTextField" ) {
+				name: "tfOldValue"
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 4
+				"gridY": 18
+				"gridWidth": 9
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label6"
+				"text": new FormMessage( null, "DatabaseHistoryFrame.Table.ColumnNew" )
+				"horizontalAlignment": 11
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 2
+				"gridY": 20
+			} )
+			add( new FormComponent( "de.jClipCorn.gui.guiComponents.ReadableTextField" ) {
+				name: "tfNewValue"
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 4
+				"gridY": 20
+				"gridWidth": 9
+			} )
+		}, new FormLayoutConstraints( null ) {
+			"location": new java.awt.Point( 0, 0 )
+			"size": new java.awt.Dimension( 600, 600 )
+		} )
+	}
+}

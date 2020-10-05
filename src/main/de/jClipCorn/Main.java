@@ -225,7 +225,7 @@ public class Main {
  - [ ] CoverPreviewFrame
  - [ ] CreateSeriesFolderStructureFrame
  - [ ] CustomFilterEditDialog
- - [ ] DatabaseHistoryFrame
+ - [X] DatabaseHistoryFrame
  - [ ] DisplayGenresDialog
  - [ ] EditMediaInfoDialog
  - [ ] EditMovieFrame

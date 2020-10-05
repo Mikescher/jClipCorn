@@ -23,7 +23,9 @@ package de.jClipCorn.gui.guiComponents.jSplitButton.action;
 
 import de.jClipCorn.gui.guiComponents.jSplitButton.JSplitButton;
 
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.EventListener;
 
 /**
  * The listener interface for receiving the button clicked
@@ -37,6 +39,6 @@ import java.awt.event.ActionListener;
  *
  * @author Randall Wood
  */
-public interface ButtonClickedActionListener extends ActionListener {
-
+public interface ButtonClickedActionListener extends EventListener {
+	public void actionPerformed(ActionEvent e);
 }

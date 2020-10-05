@@ -1,5 +1,6 @@
 package de.jClipCorn.gui.frames.databaseHistoryFrame;
 
+import com.jformdesigner.annotations.DesignCreate;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.covertab.CCCoverData;
 import de.jClipCorn.database.databaseElement.*;
@@ -23,6 +24,9 @@ public class DatabaseHistoryTable extends JCCSimpleTable<CCCombinedHistoryEntry>
 	private static final long serialVersionUID = -7175124665697003916L;
 
 	private final DatabaseHistoryFrame _parent;
+
+	@DesignCreate
+	private static DatabaseHistoryTable designCreate() { return new DatabaseHistoryTable(null); }
 
 	public DatabaseHistoryTable(DatabaseHistoryFrame frame) {
 		_parent = frame;

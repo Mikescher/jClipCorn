@@ -1,6 +1,5 @@
 package de.jClipCorn.properties;
 
-import de.jClipCorn.Main;
 import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguage;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.features.serialization.ExportHelper;
@@ -469,7 +468,7 @@ public class CCProperties {
 	}
 
 	public static CCProperties getInstance() {
-		if (mainInstance == null) //ONLY FOR WindowBuilder & jCoodiesFormDesigner
+		if (mainInstance == null && java.beans.Beans.isDesignTime()) //ONLY FOR WindowBuilder & jCoodiesFormDesigner
 		{
 			CCLog.addUndefinied("Properties accessed but not initialized"); //$NON-NLS-1$
 			return new CCProperties();

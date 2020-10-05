@@ -131,6 +131,7 @@ public class CCSeries extends CCDatabaseElement implements IEpisodeOwner, ISerie
 	}
 	
 	public CCDate calcMinimumAddDate() {
+		if (seasons.size() == 0) return CCDate.getMinimumDate();
 		CCDate cd = CCDate.getMaximumDate();
 		for (CCSeason se: seasons) {
 			if (se.getEpisodeCount()==0) continue;

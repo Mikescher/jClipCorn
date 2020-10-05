@@ -35,9 +35,9 @@ import java.util.Set;
 public class ClipTable extends JScrollPane implements CCDBUpdateListener, ListSelectionListener, MouseListener, MouseMotionListener {
 	private static final long serialVersionUID = -1226727910191440220L;
 
-	private SFixClipTable table;
-	private ClipTableModel model;
-	private MainFrame owner;
+	private final SFixClipTable table;
+	private final ClipTableModel model;
+	private final MainFrame owner;
 
 	private String _adjusterConfig = Str.Empty;
 	private TableColumnAdjuster adjuster;

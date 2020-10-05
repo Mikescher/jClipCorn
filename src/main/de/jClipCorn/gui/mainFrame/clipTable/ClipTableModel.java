@@ -139,7 +139,7 @@ public class ClipTableModel extends AbstractTableModel implements TableModelRowC
 			case COLUMN_LENGTH: // Length
 				return mov.getLength();
 			case COLUMN_DATE: // Date
-				return mov.getAddDate();
+				return mov;
 			case COLUMN_ONLINESCORE: // OnlineScore
 				return mov.getOnlinescore();
 			case COLUMN_TAGS: // Tags
@@ -177,7 +177,7 @@ public class ClipTableModel extends AbstractTableModel implements TableModelRowC
 			case COLUMN_LENGTH: // Length
 				return ser.getLength();
 			case COLUMN_DATE: // Date
-				return ser.getAddDate();
+				return ser;
 			case COLUMN_ONLINESCORE: // OnlineScore
 				return ser.getOnlinescore();
 			case COLUMN_TAGS: // Tags

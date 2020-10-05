@@ -1,18 +1,18 @@
 package de.jClipCorn.gui.frames.previewSeriesFrame.serTable;
 
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableModel;
-
 import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguageList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCDateTimeList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCFileSize;
 import de.jClipCorn.database.databaseElement.columnTypes.CCTagList;
 import de.jClipCorn.database.util.CCQualityCategory;
+import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.features.table.renderer.*;
 import de.jClipCorn.gui.guiComponents.SFixTable;
-import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.util.formatter.FileSizeFormatter;
 import de.jClipCorn.util.formatter.TimeIntervallFormatter;
+
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableModel;
 
 public class SFixSerTable extends SFixTable {
 	private static final long serialVersionUID = 6982359339154624097L;
@@ -44,17 +44,17 @@ public class SFixSerTable extends SFixTable {
 	}
 	
 	private void createCellRenderer() {
-		renderer_episode = new TableEpisodeRenderer();
-		renderer_viewed = new TableViewedRenderer();
-		renderer_title = new TableStringTitleRenderer();
+		renderer_episode   = new TableEpisodeRenderer();
+		renderer_viewed    = new TableViewedRenderer();
+		renderer_title     = new TableStringTitleRenderer();
 		renderer_mediainfo = new TableMediaInfoCatRenderer();
-		renderer_language = new TableLanguageRenderer();
-		renderer_length = new TableLengthRenderer();
-		renderer_tags = new TableTagsRenderer();
-		renderer_date = new TableDateRenderer();
-		renderer_datelist = new TableDateListRenderer();
-		renderer_format = new TableFormatRenderer();
-		renderer_filesize = new TableFilesizeRenderer();
+		renderer_language  = new TableLanguageRenderer();
+		renderer_length    = new TableLengthRenderer();
+		renderer_tags      = new TableTagsRenderer();
+		renderer_date      = new TableDateRenderer();
+		renderer_datelist  = new TableDateListRenderer();
+		renderer_format    = new TableFormatRenderer();
+		renderer_filesize  = new TableFilesizeRenderer();
 	}
 	
 	@Override

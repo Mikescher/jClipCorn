@@ -1,58 +1,26 @@
 package de.jClipCorn.gui.mainFrame.clipTable;
 
-import java.awt.Rectangle;
-import java.awt.event.InputEvent;
-import java.awt.event.KeyEvent;
+import de.jClipCorn.database.databaseElement.columnTypes.*;
+import de.jClipCorn.database.util.CCQualityCategory;
+import de.jClipCorn.database.util.ExtendedViewedState;
+import de.jClipCorn.features.log.CCLog;
+import de.jClipCorn.features.table.renderer.*;
+import de.jClipCorn.features.table.sorter.*;
+import de.jClipCorn.gui.guiComponents.SFixTable;
+import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.properties.CCProperties;
+import de.jClipCorn.properties.enumerations.MainFrameColumn;
+import de.jClipCorn.util.formatter.FileSizeFormatter;
+import de.jClipCorn.util.formatter.TimeIntervallFormatter;
 
-import javax.swing.KeyStroke;
+import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
-
-import de.jClipCorn.database.databaseElement.columnTypes.*;
-import de.jClipCorn.database.util.CCQualityCategory;
-import de.jClipCorn.database.util.ExtendedViewedState;
-import de.jClipCorn.gui.guiComponents.SFixTable;
-import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.features.log.CCLog;
-import de.jClipCorn.properties.CCProperties;
-import de.jClipCorn.features.table.renderer.TableDateRenderer;
-import de.jClipCorn.features.table.renderer.TableFSKRenderer;
-import de.jClipCorn.features.table.renderer.TableFilesizeRenderer;
-import de.jClipCorn.features.table.renderer.TableFormatRenderer;
-import de.jClipCorn.features.table.renderer.TableGenreRenderer;
-import de.jClipCorn.features.table.renderer.TableLanguageRenderer;
-import de.jClipCorn.features.table.renderer.TableLengthRenderer;
-import de.jClipCorn.features.table.renderer.TableOnlinescoreRenderer;
-import de.jClipCorn.features.table.renderer.TablePartRenderer;
-import de.jClipCorn.features.table.renderer.TableMediaInfoCatRenderer;
-import de.jClipCorn.features.table.renderer.TableScoreRenderer;
-import de.jClipCorn.features.table.renderer.TableTagsRenderer;
-import de.jClipCorn.features.table.renderer.TableTitleRenderer;
-import de.jClipCorn.features.table.renderer.TableViewedRenderer;
-import de.jClipCorn.features.table.renderer.TableYearRenderer;
-import de.jClipCorn.features.table.renderer.TableZyklusRenderer;
-import de.jClipCorn.features.table.sorter.TableDateComparator;
-import de.jClipCorn.features.table.sorter.TableFSKComparator;
-import de.jClipCorn.features.table.sorter.TableFormatComparator;
-import de.jClipCorn.features.table.sorter.TableGenreComparator;
-import de.jClipCorn.features.table.sorter.TableIntelliTitleComparator;
-import de.jClipCorn.features.table.sorter.TableLanguageComparator;
-import de.jClipCorn.features.table.sorter.TableLengthComparator;
-import de.jClipCorn.features.table.sorter.TableOnlineScoreComparator;
-import de.jClipCorn.features.table.sorter.TablePartComparator;
-import de.jClipCorn.features.table.sorter.TableMediaInfoCatComparator;
-import de.jClipCorn.features.table.sorter.TableScoreComparator;
-import de.jClipCorn.features.table.sorter.TableSizeComparator;
-import de.jClipCorn.features.table.sorter.TableTagsComparator;
-import de.jClipCorn.features.table.sorter.TableTitleComparator;
-import de.jClipCorn.features.table.sorter.TableViewedComparator;
-import de.jClipCorn.features.table.sorter.TableYearComparator;
-import de.jClipCorn.features.table.sorter.TableZyklusComparator;
-import de.jClipCorn.properties.enumerations.MainFrameColumn;
-import de.jClipCorn.util.formatter.FileSizeFormatter;
-import de.jClipCorn.util.formatter.TimeIntervallFormatter;
+import java.awt.*;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
 
 public class SFixClipTable extends SFixTable {
 	private static final long serialVersionUID = 5729868556740947063L;
@@ -111,67 +79,63 @@ public class SFixClipTable extends SFixTable {
 	}
 	
 	private void createCellRenderer() {
-		renderer_score = new TableScoreRenderer();
-		renderer_viewed = new TableViewedRenderer();
-		renderer_title = new TableTitleRenderer();
-		renderer_zyklus = new TableZyklusRenderer();
-		renderer_mediainfo = new TableMediaInfoCatRenderer();
-		renderer_language = new TableLanguageRenderer();
-		renderer_genre = new TableGenreRenderer();
-		renderer_parts = new TablePartRenderer();
-		renderer_length = new TableLengthRenderer();
-		renderer_tags = new TableTagsRenderer();
-		renderer_adddate = new TableDateRenderer();
+		renderer_score       = new TableScoreRenderer();
+		renderer_viewed      = new TableViewedRenderer();
+		renderer_title       = new TableTitleRenderer();
+		renderer_zyklus      = new TableZyklusRenderer();
+		renderer_mediainfo   = new TableMediaInfoCatRenderer();
+		renderer_language    = new TableLanguageRenderer();
+		renderer_genre       = new TableGenreRenderer();
+		renderer_parts       = new TablePartRenderer();
+		renderer_length      = new TableLengthRenderer();
+		renderer_tags        = new TableTagsRenderer();
+		renderer_adddate     = new TableDateRenderer();
 		renderer_onlinescore = new TableOnlinescoreRenderer();
-		renderer_fsk = new TableFSKRenderer();
-		renderer_format = new TableFormatRenderer();
-		renderer_year = new TableYearRenderer();
-		renderer_filesize = new TableFilesizeRenderer();
+		renderer_fsk         = new TableFSKRenderer();
+		renderer_format      = new TableFormatRenderer();
+		renderer_year        = new TableYearRenderer();
+		renderer_filesize    = new TableFilesizeRenderer();
 	}
 	
 	private void createRowSorter() {
-		sorter_score = new TableScoreComparator();
-		if (CCProperties.getInstance().PROP_USE_INTELLISORT.getValue()) {
-			sorter_title = new TableIntelliTitleComparator();
-		} else {
-			sorter_title = new TableTitleComparator();
-		}
-		sorter_viewed = new TableViewedComparator();
-		sorter_zyklus = new TableZyklusComparator();
-		sorter_mediainfo = new TableMediaInfoCatComparator();
-		sorter_language = new TableLanguageComparator();
-		sorter_genre = new TableGenreComparator();
-		sorter_parts = new TablePartComparator();
-		sorter_length = new TableLengthComparator();
-		sorter_tags = new TableTagsComparator();
-		sorter_date = new TableDateComparator();
+		sorter_score       = new TableScoreComparator();
+		sorter_title       = CCProperties.getInstance().PROP_USE_INTELLISORT.getValue() ? new TableIntelliTitleComparator() : new TableTitleComparator();
+		sorter_viewed      = new TableViewedComparator();
+		sorter_zyklus      = new TableZyklusComparator();
+		sorter_mediainfo   = new TableMediaInfoCatComparator();
+		sorter_language    = new TableLanguageComparator();
+		sorter_genre       = new TableGenreComparator();
+		sorter_parts       = new TablePartComparator();
+		sorter_length      = new TableLengthComparator();
+		sorter_tags        = new TableTagsComparator();
+		sorter_date        = new TableDateComparator();
 		sorter_onlinescore = new TableOnlineScoreComparator();
-		sorter_fsk = new TableFSKComparator();
-		sorter_format = new TableFormatComparator();
-		sorter_year = new TableYearComparator();
-		sorter_size = new TableSizeComparator();
+		sorter_fsk         = new TableFSKComparator();
+		sorter_format      = new TableFormatComparator();
+		sorter_year        = new TableYearComparator();
+		sorter_size        = new TableSizeComparator();
 	}
 	
 	private void setRowSorter() {
 		sorter = new TableRowSorter<>((ClipTableModel) getModel());
 		setRowSorter(sorter);
 		
-		sorter.setComparator(ClipTableModel.COLUMN_SCORE,  sorter_score);
-		sorter.setComparator(ClipTableModel.COLUMN_TITLE,  sorter_title);
-		sorter.setComparator(ClipTableModel.COLUMN_VIEWED,  sorter_viewed);
-		sorter.setComparator(ClipTableModel.COLUMN_ZYKLUS,  sorter_zyklus);
-		sorter.setComparator(ClipTableModel.COLUMN_MEDIAINFO,  sorter_mediainfo);
-		sorter.setComparator(ClipTableModel.COLUMN_LANGUAGE,  sorter_language);
-		sorter.setComparator(ClipTableModel.COLUMN_GENRE,  sorter_genre);
-		sorter.setComparator(ClipTableModel.COLUMN_PARTCOUNT,  sorter_parts);
-		sorter.setComparator(ClipTableModel.COLUMN_LENGTH,  sorter_length);
-		sorter.setComparator(ClipTableModel.COLUMN_TAGS, sorter_tags);
-		sorter.setComparator(ClipTableModel.COLUMN_DATE,  sorter_date);
+		sorter.setComparator(ClipTableModel.COLUMN_SCORE,       sorter_score);
+		sorter.setComparator(ClipTableModel.COLUMN_TITLE,       sorter_title);
+		sorter.setComparator(ClipTableModel.COLUMN_VIEWED,      sorter_viewed);
+		sorter.setComparator(ClipTableModel.COLUMN_ZYKLUS,      sorter_zyklus);
+		sorter.setComparator(ClipTableModel.COLUMN_MEDIAINFO,   sorter_mediainfo);
+		sorter.setComparator(ClipTableModel.COLUMN_LANGUAGE,    sorter_language);
+		sorter.setComparator(ClipTableModel.COLUMN_GENRE,       sorter_genre);
+		sorter.setComparator(ClipTableModel.COLUMN_PARTCOUNT,   sorter_parts);
+		sorter.setComparator(ClipTableModel.COLUMN_LENGTH,      sorter_length);
+		sorter.setComparator(ClipTableModel.COLUMN_TAGS,        sorter_tags);
+		sorter.setComparator(ClipTableModel.COLUMN_DATE,        sorter_date);
 		sorter.setComparator(ClipTableModel.COLUMN_ONLINESCORE, sorter_onlinescore);
-		sorter.setComparator(ClipTableModel.COLUMN_FSK, sorter_fsk);
-		sorter.setComparator(ClipTableModel.COLUMN_FORMAT, sorter_format);
-		sorter.setComparator(ClipTableModel.COLUMN_YEAR, sorter_year);
-		sorter.setComparator(ClipTableModel.COLUMN_SIZE, sorter_size);
+		sorter.setComparator(ClipTableModel.COLUMN_FSK,         sorter_fsk);
+		sorter.setComparator(ClipTableModel.COLUMN_FORMAT,      sorter_format);
+		sorter.setComparator(ClipTableModel.COLUMN_YEAR,        sorter_year);
+		sorter.setComparator(ClipTableModel.COLUMN_SIZE,        sorter_size);
 	}
 
 	@Override

@@ -8,9 +8,8 @@ import de.jClipCorn.database.history.CCDatabaseHistory;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.gui.frames.genericTextDialog.GenericTextDialog;
 import de.jClipCorn.gui.guiComponents.ReadableTextField;
-import de.jClipCorn.gui.guiComponents.jSplitButton.*;
+import de.jClipCorn.gui.guiComponents.jSplitButton.JSplitButton;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.gui.mainFrame.MainFrame;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.Str;
@@ -121,6 +120,9 @@ public class DatabaseHistoryFrame extends JFrame
 				btnEnableTrigger.setEnabled(!hactive && !CCProperties.getInstance().ARG_READONLY);
 				btnDisableTrigger.setEnabled(hactive && !CCProperties.getInstance().ARG_READONLY);
 				btnGetHistory.setEnabled(true);
+				cbxDoAgressiveMerges.setEnabled(true);
+				cbxIgnoreIDChanges.setEnabled(true);
+				cbxIgnoreTrivial.setEnabled(true);
 
 				edTableSize.setText(Integer.toString(_tcount = hcount));
 			});
@@ -143,12 +145,13 @@ public class DatabaseHistoryFrame extends JFrame
 			{
 				SwingUtils.invokeLater(() ->
 				{
-					setEnabled(false);
-					MainFrame.getInstance().beginBlockingIntermediate();
 					btnGetHistory.setEnabled(false);
 					btnTriggerMore.setEnabled(false);
 					btnEnableTrigger.setEnabled(false);
 					btnDisableTrigger.setEnabled(false);
+					cbxDoAgressiveMerges.setEnabled(false);
+					cbxIgnoreIDChanges.setEnabled(false);
+					cbxIgnoreTrivial.setEnabled(false);
 					edFilter.setEnabled(false);
 				});
 
@@ -172,10 +175,11 @@ public class DatabaseHistoryFrame extends JFrame
 
 					tableEntries.autoResize();
 					updateUI();
-					setEnabled(true);
-					MainFrame.getInstance().endBlockingIntermediate();
-					if (!stayDisabled) btnGetHistory.setEnabled(true);
-					if (!stayDisabled) edFilter.setEnabled(true);
+					if (!stayDisabled)
+					{
+						btnGetHistory.setEnabled(true);
+						edFilter.setEnabled(true);
+					}
 					edTableSize.setText(_tcount + " (" + tableEntries.getDataDirect().size()+")"); //$NON-NLS-1$ //$NON-NLS-2$
 				});
 

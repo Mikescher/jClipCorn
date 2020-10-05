@@ -87,7 +87,6 @@ public class QuickAddEpisodeDialog extends JDialog {
 		setIconImage(Resources.IMG_FRAME_ICON.get());
 		setBounds(100, 100, 550, 365);
 		setMinimumSize(new Dimension(300, 300));
-		setModal(true);
 
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));

@@ -1,0 +1,51 @@
+JFDML JFormDesigner: "7.0.2.6.321" Java: "11.0.8" encoding: "UTF-8"
+
+new FormModel {
+	"i18n.bundlePackage": "de.jClipCorn.gui.localization"
+	"i18n.bundleName": "locale"
+	"i18n.keyPrefix": "SearchFrame"
+	contentType: "form/swing"
+	root: new FormRoot {
+		add( new FormWindow( "javax.swing.JFrame", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+			"$columnSpecs": "unrelgap, default:grow, unrelgap"
+			"$rowSpecs": "unrelgap, default, pargap, 0dlu:grow, unrelgap"
+		} ) {
+			name: "this"
+			"title": new FormMessage( null, "SearchFrame.this.title" )
+			"$sizePolicy": 1
+			"defaultCloseOperation": 2
+			addEvent( new FormEvent( "java.awt.event.FocusListener", "focusLost", "onFocusLost", false ) )
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "edSearch"
+				auxiliary() {
+					"JavaCodeGenerator.postInitCode": "${field}.getDocument().addDocumentListener(new DocumentListener() {\n\t@Override public void removeUpdate(DocumentEvent arg0)  { onUpdate(); }\n\t@Override public void insertUpdate(DocumentEvent arg0)  { onUpdate(); }\n\t@Override public void changedUpdate(DocumentEvent arg0) { onUpdate(); }\n});"
+				}
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "onSearchFieldEnter", false ) )
+				addEvent( new FormEvent( "java.awt.event.KeyListener", "keyPressed", "onSearchFieldKeyPressed", true ) )
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridY": 2
+				"gridX": 2
+			} )
+			add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+				name: "scrollPane1"
+				add( new FormComponent( "javax.swing.JList" ) {
+					name: "lsMain"
+					"selectionMode": 0
+					auxiliary() {
+						"JavaCodeGenerator.typeParameters": "ICCDatabaseStructureElement"
+					}
+					addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseClicked", "onListMouseClicked", true ) )
+					addEvent( new FormEvent( "java.awt.event.KeyListener", "keyPressed", "onListKeyPressed", true ) )
+				} )
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 2
+				"gridY": 4
+				"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+			} )
+		}, new FormLayoutConstraints( null ) {
+			"location": new java.awt.Point( 0, 0 )
+			"size": new java.awt.Dimension( 600, 400 )
+		} )
+	}
+}

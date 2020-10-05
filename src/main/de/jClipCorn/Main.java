@@ -210,7 +210,7 @@ public class Main {
  - [ ] AddMovieFrame
  - [ ] AddMultiEpisodesFrame
  - [ ] AddSeasonFrame
- - [ ] AddSeriesFrame
+ - [X] AddSeriesFrame
  - [ ] AllRatingsFrame
  - [ ] AutofindRefrenceFrame
  - [ ] BackupManagerFrame
@@ -251,7 +251,7 @@ public class Main {
  - [ ] QuickAddMoviesDialog
  - [ ] RandomMovieFrame
  - [ ] ScanFolderFrame
- - [ ] SearchFrame
+ - [X] SearchFrame
  - [ ] SettingsFrame
  - [ ] ShowIncompleteFilmSeriesFrame
  - [ ] ShowUpdateFrame

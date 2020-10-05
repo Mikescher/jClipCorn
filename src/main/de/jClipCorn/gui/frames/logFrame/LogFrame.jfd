@@ -247,7 +247,7 @@ new FormModel {
 					"title": new FormMessage( null, "CCLog.SQL" )
 				} )
 				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
-					"$columnSpecs": "unrelgap, default, labelcompgap, 100dlu"
+					"$columnSpecs": "unrelgap, default, labelcompgap, 100dlu, labelcompgap, default"
 					"$rowSpecs": "unrelgap, default, pargap, default, linegap, default, linegap, default, linegap, default, pargap, default, linegap, default, linegap, default, pargap, default, linegap, default"
 				} ) {
 					name: "tabLiveDisplay"
@@ -275,6 +275,15 @@ new FormModel {
 						name: "displCacheTotalCount"
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridX": 4
+						"gridY": 4
+						"vAlign": sfield com.jgoodies.forms.layout.CellConstraints CENTER
+					} )
+					add( new FormComponent( "javax.swing.JButton" ) {
+						name: "button6"
+						"text": "..."
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "showCacheDistribution", false ) )
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 6
 						"gridY": 4
 					} )
 					add( new FormComponent( "javax.swing.JLabel" ) {

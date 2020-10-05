@@ -433,7 +433,7 @@ public abstract class CCStream<TType> implements Iterator<TType>, Iterable<TType
 		
 		return buildr.toString();
 	}
-	
+
 	public String stringjoin(Func1to1<TType, String> selector, String seperator) {
 		StringBuilder buildr = new StringBuilder();
 
@@ -443,7 +443,7 @@ public abstract class CCStream<TType> implements Iterator<TType>, Iterable<TType
 			buildr.append(selector.invoke(t));
 			first = false;
 		}
-		
+
 		return buildr.toString();
 	}
 	

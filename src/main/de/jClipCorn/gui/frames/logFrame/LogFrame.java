@@ -3,7 +3,9 @@ package de.jClipCorn.gui.frames.logFrame;
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 import de.jClipCorn.Globals;
+import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.caches.CalculationCache;
+import de.jClipCorn.database.databaseElement.caches.ICalculationCache;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.features.log.CCLogChangedListener;
 import de.jClipCorn.features.log.CCLogType;
@@ -14,10 +16,14 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.mainFrame.MainFrame;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.http.WebConnectionLayer;
+import de.jClipCorn.util.stream.CCStreams;
+import org.apache.commons.lang.StringUtils;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class LogFrame extends JFrame implements CCLogChangedListener
 {
@@ -110,6 +116,29 @@ public class LogFrame extends JFrame implements CCLogChangedListener
 		if (!memoSQL.getText().isEmpty()) GenericTextDialog.showText(LogFrame.this, LocaleBundle.getString("CCLogFrame.this.title"), memoSQL.getText(), false); //$NON-NLS-1$
 	}
 
+	private void showCacheDistribution() {
+		var ml = CCMovieList.getInstance();
+
+		var caches = new ArrayList<ICalculationCache>();
+		caches.add(ml.getCache());
+		for (var v: ml.iteratorElements()) caches.add(v.getCache());
+		for (var v: ml.iteratorSeasons())  caches.add(v.getCache());
+		for (var v: ml.iteratorEpisodes()) caches.add(v.getCache());
+
+		var counter = new HashMap<String, Integer>();
+
+		for (var c: caches) for (var ck: c.listCachedKeys()) counter.compute(ck, (k,v) -> v==null ? 1 : v+1);
+
+		var displ = CCStreams
+				.iterate(counter)
+				.autosortByProperty(p -> -p.getValue())
+				.map(p -> StringUtils.leftPad(String.valueOf(p.getValue()), 6) + "  " + p.getKey())
+				.stringjoin(p->p, "\n");
+
+		GenericTextDialog.showText(LogFrame.this, "CalculationCache", displ, false); //$NON-NLS-1$
+
+	}
+
 	private void initComponents() {
 		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
 		tpnlMain = new JTabbedPane();
@@ -148,6 +177,7 @@ public class LogFrame extends JFrame implements CCLogChangedListener
 		displUptime = new ReadableTextField();
 		label10 = new JLabel();
 		displCacheTotalCount = new ReadableTextField();
+		button6 = new JButton();
 		label1 = new JLabel();
 		displCacheHits = new ReadableTextField();
 		label2 = new JLabel();
@@ -344,7 +374,7 @@ public class LogFrame extends JFrame implements CCLogChangedListener
 			//======== tabLiveDisplay ========
 			{
 				tabLiveDisplay.setLayout(new FormLayout(
-					"$ugap, default, $lcgap, 100dlu", //$NON-NLS-1$
+					"$ugap, default, $lcgap, 100dlu, $lcgap, default", //$NON-NLS-1$
 					"$ugap, default, $pgap, 3*(default, $lgap), default, $pgap, 2*(default, $lgap), default, $pgap, default, $lgap, default")); //$NON-NLS-1$
 
 				//---- label8 ----
@@ -355,7 +385,12 @@ public class LogFrame extends JFrame implements CCLogChangedListener
 				//---- label10 ----
 				label10.setText(LocaleBundle.getString("LogFrame.CacheSize")); //$NON-NLS-1$
 				tabLiveDisplay.add(label10, CC.xy(2, 4));
-				tabLiveDisplay.add(displCacheTotalCount, CC.xy(4, 4));
+				tabLiveDisplay.add(displCacheTotalCount, CC.xy(4, 4, CC.DEFAULT, CC.CENTER));
+
+				//---- button6 ----
+				button6.setText("..."); //$NON-NLS-1$
+				button6.addActionListener(e -> showCacheDistribution());
+				tabLiveDisplay.add(button6, CC.xy(6, 4));
 
 				//---- label1 ----
 				label1.setText(LocaleBundle.getString("LogFrame.CacheHits")); //$NON-NLS-1$
@@ -442,6 +477,7 @@ public class LogFrame extends JFrame implements CCLogChangedListener
 	private ReadableTextField displUptime;
 	private JLabel label10;
 	private ReadableTextField displCacheTotalCount;
+	private JButton button6;
 	private JLabel label1;
 	private ReadableTextField displCacheHits;
 	private JLabel label2;

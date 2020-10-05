@@ -3,6 +3,8 @@ package de.jClipCorn.database.databaseElement.caches;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.util.datatypes.ITuple;
 import de.jClipCorn.util.lambda.Func1to1;
+import de.jClipCorn.util.stream.CCStream;
+import de.jClipCorn.util.stream.CCStreams;
 
 import java.util.HashMap;
 
@@ -58,6 +60,12 @@ public abstract class CalculationCache<TOwner> implements ICalculationCache
 	public boolean getBool  (String key, ITuple params, Func1to1<TOwner, Boolean> o) { return get(key, o); }
 	public int     getInt   (String key, ITuple params, Func1to1<TOwner, Integer> o) { return get(key, o); }
 	public double  getDouble(String key, ITuple params, Func1to1<TOwner, Double>  o) { return get(key, o); }
+
+	public CCStream<String> listCachedKeys()
+	{
+		var sn = this.getClass().getSimpleName();
+		return CCStreams.iterate(map.keySet()).map(p -> sn+"."+p);
+	}
 
 	public static String formatCacheMisses()
 	{

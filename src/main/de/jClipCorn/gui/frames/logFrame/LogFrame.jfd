@@ -1,0 +1,268 @@
+JFDML JFormDesigner: "7.0.2.6.321" Java: "11.0.8" encoding: "UTF-8"
+
+new FormModel {
+	"i18n.bundlePackage": "de.jClipCorn.gui.localization"
+	"i18n.bundleName": "locale"
+	"i18n.keyPrefix": "LogFrame"
+	contentType: "form/swing"
+	root: new FormRoot {
+		add( new FormWindow( "javax.swing.JFrame", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+			"$columnSpecs": "relgap, default:grow, relgap"
+			"$rowSpecs": "relgap, default:grow, relgap"
+		} ) {
+			name: "this"
+			"$sizePolicy": 1
+			"defaultCloseOperation": 2
+			"title": new FormMessage( null, "CCLogFrame.this.title" )
+			add( new FormContainer( "javax.swing.JTabbedPane", new FormLayoutManager( class javax.swing.JTabbedPane ) ) {
+				name: "tpnlMain"
+				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+					"$columnSpecs": "relgap, 275dlu, labelcompgap, 0dlu:grow, relgap"
+					"$rowSpecs": "relgap, default:grow, linegap, default, relgap"
+				} ) {
+					name: "tabErrors"
+					add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+						name: "scrollPane1"
+						add( new FormComponent( "javax.swing.JList" ) {
+							name: "lsErrors"
+							"selectionMode": 0
+							auxiliary() {
+								"JavaCodeGenerator.typeParameters": "String"
+							}
+						} )
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 2
+						"gridY": 2
+						"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+						"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+					} )
+					add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+						name: "scrollPane2"
+						add( new FormComponent( "javax.swing.JTextArea" ) {
+							name: "memoErrors"
+							"foreground": &Color0 new java.awt.Color( 0, 224, 0, 255 )
+							"background": &Color1 new java.awt.Color( 32, 32, 32, 255 )
+							"editable": false
+						} )
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 4
+						"gridY": 2
+						"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+						"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+					} )
+					add( new FormComponent( "javax.swing.JButton" ) {
+						name: "button1"
+						"text": "..."
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "showMoreErrors", false ) )
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 4
+						"gridY": 4
+						"hAlign": sfield com.jgoodies.forms.layout.CellConstraints RIGHT
+					} )
+				}, new FormLayoutConstraints( null ) {
+					"title": new FormMessage( null, "CCLog.Errors" )
+				} )
+				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+					"$columnSpecs": "relgap, 275dlu, labelcompgap, 0dlu:grow, relgap"
+					"$rowSpecs": "relgap, default:grow, linegap, default, relgap"
+				} ) {
+					name: "tabWarnings"
+					add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+						name: "scrollPane3"
+						add( new FormComponent( "javax.swing.JList" ) {
+							name: "lsWarnings"
+							"selectionMode": 0
+							auxiliary() {
+								"JavaCodeGenerator.typeParameters": "String"
+							}
+						} )
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+						"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+						"gridX": 2
+						"gridY": 2
+					} )
+					add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+						name: "scrollPane7"
+						add( new FormComponent( "javax.swing.JTextArea" ) {
+							name: "memoWarnings"
+							"foreground": #Color0
+							"background": #Color1
+							"editable": false
+						} )
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridY": 2
+						"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+						"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+						"gridX": 4
+					} )
+					add( new FormComponent( "javax.swing.JButton" ) {
+						name: "button2"
+						"text": "..."
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "showMoreWarnings", false ) )
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridY": 4
+						"hAlign": sfield com.jgoodies.forms.layout.CellConstraints RIGHT
+						"gridX": 4
+					} )
+				}, new FormLayoutConstraints( null ) {
+					"title": new FormMessage( null, "CCLog.Warnings" )
+				} )
+				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+					"$columnSpecs": "relgap, 275dlu, labelcompgap, 0dlu:grow, relgap"
+					"$rowSpecs": "relgap, default:grow, linegap, default, relgap"
+				} ) {
+					name: "tabInformations"
+					add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+						name: "scrollPane4"
+						add( new FormComponent( "javax.swing.JList" ) {
+							name: "lsInformations"
+							"selectionMode": 0
+							auxiliary() {
+								"JavaCodeGenerator.typeParameters": "String"
+							}
+						} )
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+						"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+						"gridX": 2
+						"gridY": 2
+					} )
+					add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+						name: "scrollPane8"
+						add( new FormComponent( "javax.swing.JTextArea" ) {
+							name: "memoInformations"
+							"foreground": #Color0
+							"background": #Color1
+							"editable": false
+						} )
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridY": 2
+						"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+						"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+						"gridX": 4
+					} )
+					add( new FormComponent( "javax.swing.JButton" ) {
+						name: "button3"
+						"text": "..."
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "showMoreInformations", false ) )
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridY": 4
+						"hAlign": sfield com.jgoodies.forms.layout.CellConstraints RIGHT
+						"gridX": 4
+					} )
+				}, new FormLayoutConstraints( null ) {
+					"title": new FormMessage( null, "CCLog.Informations" )
+				} )
+				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+					"$columnSpecs": "relgap, 275dlu, labelcompgap, 0dlu:grow, relgap"
+					"$rowSpecs": "relgap, default:grow, linegap, default, relgap"
+				} ) {
+					name: "tabUndefinied"
+					add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+						name: "scrollPane5"
+						add( new FormComponent( "javax.swing.JList" ) {
+							name: "lsUndefinied"
+							"selectionMode": 0
+							auxiliary() {
+								"JavaCodeGenerator.typeParameters": "String"
+							}
+						} )
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+						"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+						"gridX": 2
+						"gridY": 2
+					} )
+					add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+						name: "scrollPane9"
+						add( new FormComponent( "javax.swing.JTextArea" ) {
+							name: "memoUndefinied"
+							"foreground": #Color0
+							"background": #Color1
+							"editable": false
+						} )
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridY": 2
+						"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+						"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+						"gridX": 4
+					} )
+					add( new FormComponent( "javax.swing.JButton" ) {
+						name: "button4"
+						"text": "..."
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "showMoreUndefinieds", false ) )
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridY": 4
+						"hAlign": sfield com.jgoodies.forms.layout.CellConstraints RIGHT
+						"gridX": 4
+					} )
+				}, new FormLayoutConstraints( null ) {
+					"title": new FormMessage( null, "CCLog.Undefinieds" )
+				} )
+				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+					"$columnSpecs": "relgap, 275dlu, labelcompgap, 0dlu:grow, relgap"
+					"$rowSpecs": "relgap, default:grow, linegap, default, relgap"
+				} ) {
+					name: "tabSQL"
+					add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+						name: "scrollPane6"
+						add( new FormComponent( "javax.swing.JList" ) {
+							name: "lsSQL"
+							"selectionMode": 0
+							auxiliary() {
+								"JavaCodeGenerator.typeParameters": "String"
+							}
+						} )
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+						"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+						"gridX": 2
+						"gridY": 2
+					} )
+					add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+						name: "scrollPane10"
+						add( new FormComponent( "javax.swing.JTextArea" ) {
+							name: "memoSQL"
+							"foreground": #Color0
+							"background": #Color1
+							"editable": false
+						} )
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridY": 2
+						"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+						"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+						"gridX": 4
+					} )
+					add( new FormComponent( "javax.swing.JButton" ) {
+						name: "button5"
+						"text": "..."
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "showMoreSQL", false ) )
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridY": 4
+						"hAlign": sfield com.jgoodies.forms.layout.CellConstraints RIGHT
+						"gridX": 4
+					} )
+				}, new FormLayoutConstraints( null ) {
+					"title": new FormMessage( null, "CCLog.SQL" )
+				} )
+				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+					"$columnSpecs": ""
+					"$rowSpecs": ""
+				} ) {
+					name: "tabLiveDisplay"
+				}, new FormLayoutConstraints( null ) {
+					"title": new FormMessage( null, "LogFrame.TabLiveDisplay" )
+				} )
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 2
+				"gridY": 2
+				"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+			} )
+		}, new FormLayoutConstraints( null ) {
+			"location": new java.awt.Point( 0, 0 )
+			"size": new java.awt.Dimension( 1010, 365 )
+		} )
+	}
+}

@@ -239,7 +239,7 @@ public class Main {
  - [ ] ImportElementsFrame
  - [ ] InitialConfigFrame
  - [ ] InputErrorFrame
- - [ ] LogFrame
+ - [X] LogFrame
  - [ ] MoveSeriesFrame
  - [ ] OmniParserFrame
  - [ ] OrganizeFilterFrame

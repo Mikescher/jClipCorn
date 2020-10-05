@@ -1,296 +1,342 @@
 package de.jClipCorn.gui.frames.logFrame;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Font;
-
-import javax.swing.JFrame;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTabbedPane;
-import javax.swing.JTextArea;
-import javax.swing.ListSelectionModel;
-import javax.swing.ScrollPaneConstants;
-
-import de.jClipCorn.gui.mainFrame.MainFrame;
-import de.jClipCorn.gui.frames.genericTextDialog.GenericTextDialog;
-import de.jClipCorn.gui.guiComponents.DatabaseElementPreviewLabel;
-import de.jClipCorn.gui.localization.LocaleBundle;
+import com.jgoodies.forms.factories.CC;
+import com.jgoodies.forms.layout.FormLayout;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.features.log.CCLogChangedListener;
 import de.jClipCorn.features.log.CCLogType;
+import de.jClipCorn.gui.frames.genericTextDialog.GenericTextDialog;
+import de.jClipCorn.gui.guiComponents.DatabaseElementPreviewLabel;
+import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.gui.mainFrame.MainFrame;
 import de.jClipCorn.gui.resources.Resources;
-import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.ColumnSpec;
-import com.jgoodies.forms.layout.FormSpecs;
-import com.jgoodies.forms.layout.RowSpec;
-import javax.swing.JButton;
 
-public class LogFrame extends JFrame implements CCLogChangedListener{ 
-	private static final long serialVersionUID = -8838227410250810646L;
-		
-	private JTabbedPane tpnlMainPanel;
-	
-	private JPanel tabErrors;
-	private JPanel tabWarnings;
-	private JPanel tabInformations;
-	private JPanel tabUndefinied;
-	private JPanel tabSQL;
-	
-	private JList<String> lsErrors;
-	private JList<String> lsWarnings;
-	private JList<String> lsInformations;
-	private JList<String> lsUndefinied;
-	private JList<String> lsSQL;
-	
-	private JTextArea memoErrors;
-	private JTextArea memoWarnings;
-	private JTextArea memoInformations;
-	private JTextArea memoUndefinied;
-	private JTextArea memoSQL;
-	
-	private JScrollPane spnErrors;
-	private JScrollPane spnWarnings;
-	private JScrollPane spnInformations;
-	private JScrollPane spnUndefinied;
-	private JScrollPane spnSQL;
-	
-	private JScrollPane spnErrorList;
-	private JScrollPane spnWarningsList;
-	private JScrollPane spnInformationsList;
-	private JScrollPane spnUndefiniedList;
-	private JScrollPane spnSQLList;
-	
-	private JButton btnMoreErr;
-	private JButton btnMoreUndef;
-	private JButton btnMoreInfo;
-	private JButton btnMoreWarn;
-	private JButton btnMoreSQL;
+import javax.swing.*;
+import java.awt.*;
 
-	public LogFrame(Component owner) {
+public class LogFrame extends JFrame implements CCLogChangedListener
+{
+	public LogFrame(Component owner)
+	{
 		super();
-		
-		initGUI();
+
+		initComponents();
+		postInit();
+
 		setLocationRelativeTo(owner);
-		setModels();
-		
-		DatabaseElementPreviewLabel cl = MainFrame.getInstance().getCoverLabel();
-		if (cl.isErrorMode()) cl.setModeDefault();
-		
-		CCLog.addChangeListener(this);
-
-		CCLog.setAllWatched();
+		setMinimumSize(getSize());
 	}
-	
-	private void initGUI() {
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+	private void postInit()
+	{
 		setIconImage(Resources.IMG_FRAME_ICON.get());
-		setTitle(LocaleBundle.getString("CCLogFrame.this.title")); //$NON-NLS-1$
-		getContentPane().setLayout(new BorderLayout(0, 0));
-		
-		setMinimumSize(new Dimension(1000, 350));
-		
-		tpnlMainPanel = new JTabbedPane(JTabbedPane.TOP);
-		getContentPane().add(tpnlMainPanel);
-		
-		tabErrors = new JPanel();
-		tpnlMainPanel.addTab(LocaleBundle.getString("CCLog.Errors") + " (" + CCLog.getCount(CCLogType.LOG_ELEM_ERROR) + ")", null, tabErrors, null); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-		tabErrors.setLayout(new FormLayout(new ColumnSpec[] {
-				ColumnSpec.decode("550px"), //$NON-NLS-1$
-				FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
-				ColumnSpec.decode("default:grow"),}, //$NON-NLS-1$
-			new RowSpec[] {
-				RowSpec.decode("default:grow"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,}));
-		
-		spnErrorList = new JScrollPane();
-		tabErrors.add(spnErrorList, "1, 1, fill, fill"); //$NON-NLS-1$
-		
-		lsErrors = new JList<>();
-		spnErrorList.setViewportView(lsErrors);
-		lsErrors.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		lsErrors.setVisibleRowCount(16);
-		
-		spnErrors = new JScrollPane();
-		spnErrors.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		tabErrors.add(spnErrors, "3, 1, fill, fill"); //$NON-NLS-1$
-		
-		memoErrors = new JTextArea();
-		memoErrors.setFont(new Font("Lucida Console", Font.PLAIN, 13)); //$NON-NLS-1$
-		memoErrors.setBackground(Color.BLACK);
-		memoErrors.setForeground(Color.GREEN);
-		memoErrors.setEditable(false);
-		spnErrors.setViewportView(memoErrors);
-		
-		btnMoreErr = new JButton("..."); //$NON-NLS-1$
-		btnMoreErr.addActionListener(e -> {
-			if (!memoErrors.getText().isEmpty()) GenericTextDialog.showText(LogFrame.this, LocaleBundle.getString("CCLogFrame.this.title"), memoErrors.getText(), false); //$NON-NLS-1$
-		});
-		tabErrors.add(btnMoreErr, "3, 3, right, fill"); //$NON-NLS-1$
-		
-		tabWarnings = new JPanel();
-		tpnlMainPanel.addTab(LocaleBundle.getString("CCLog.Warnings") + " (" + CCLog.getCount(CCLogType.LOG_ELEM_WARNING) + ")", null, tabWarnings, null); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-		tabWarnings.setLayout(new FormLayout(new ColumnSpec[] {
-				ColumnSpec.decode("550px"), //$NON-NLS-1$
-				FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
-				ColumnSpec.decode("default:grow"),}, //$NON-NLS-1$
-			new RowSpec[] {
-				RowSpec.decode("default:grow"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,}));
-		
-		spnWarningsList = new JScrollPane();
-		tabWarnings.add(spnWarningsList, "1, 1, fill, fill"); //$NON-NLS-1$
-		
-		lsWarnings = new JList<>();
-		spnWarningsList.setViewportView(lsWarnings);
-		lsWarnings.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		lsWarnings.setVisibleRowCount(16);
-		
-		spnWarnings = new JScrollPane();
-		spnWarnings.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		tabWarnings.add(spnWarnings, "3, 1, fill, fill"); //$NON-NLS-1$
-		
-		memoWarnings = new JTextArea();
-		memoWarnings.setFont(new Font("Lucida Console", Font.PLAIN, 13)); //$NON-NLS-1$
-		memoWarnings.setBackground(Color.BLACK);
-		memoWarnings.setForeground(Color.GREEN);
-		memoWarnings.setEditable(false);
-		spnWarnings.setViewportView(memoWarnings);
-		
-		btnMoreWarn = new JButton("..."); //$NON-NLS-1$
-		btnMoreWarn.addActionListener(e -> {
-			if (!memoWarnings.getText().isEmpty()) GenericTextDialog.showText(LogFrame.this, LocaleBundle.getString("CCLogFrame.this.title"), memoWarnings.getText(), false); //$NON-NLS-1$
-		});
-		tabWarnings.add(btnMoreWarn, "3, 3, right, fill"); //$NON-NLS-1$
-		
-		tabInformations = new JPanel();
-		tpnlMainPanel.addTab(LocaleBundle.getString("CCLog.Informations") + " (" + CCLog.getCount(CCLogType.LOG_ELEM_INFORMATION) + ")", null, tabInformations, null); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-		tabInformations.setLayout(new FormLayout(new ColumnSpec[] {
-				ColumnSpec.decode("550px"), //$NON-NLS-1$
-				FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
-				ColumnSpec.decode("default:grow"),}, //$NON-NLS-1$
-			new RowSpec[] {
-				RowSpec.decode("default:grow"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,}));
-		
-		spnInformationsList = new JScrollPane();
-		tabInformations.add(spnInformationsList, "1, 1, fill, fill"); //$NON-NLS-1$
-		
-		lsInformations = new JList<>();
-		spnInformationsList.setViewportView(lsInformations);
-		lsInformations.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		lsInformations.setVisibleRowCount(16);
-		
-		spnInformations = new JScrollPane();
-		spnInformations.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		tabInformations.add(spnInformations, "3, 1, fill, fill"); //$NON-NLS-1$
-		
-		memoInformations = new JTextArea();
-		memoInformations.setFont(new Font("Lucida Console", Font.PLAIN, 13)); //$NON-NLS-1$
-		memoInformations.setBackground(Color.BLACK);
-		memoInformations.setForeground(Color.GREEN);
-		memoInformations.setEditable(false);
-		spnInformations.setViewportView(memoInformations);
-		
-		btnMoreInfo = new JButton("..."); //$NON-NLS-1$
-		btnMoreInfo.addActionListener(e -> {
-			if (!memoInformations.getText().isEmpty()) GenericTextDialog.showText(LogFrame.this, LocaleBundle.getString("CCLogFrame.this.title"), memoInformations.getText(), false); //$NON-NLS-1$
-		});
-		tabInformations.add(btnMoreInfo, "3, 3, right, fill"); //$NON-NLS-1$
-		
-		tabUndefinied = new JPanel();
-		tpnlMainPanel.addTab(LocaleBundle.getString("CCLog.Undefinieds") + " (" + CCLog.getCount(CCLogType.LOG_ELEM_UNDEFINED) + ")", null, tabUndefinied, null); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-		tabUndefinied.setLayout(new FormLayout(new ColumnSpec[] {
-				ColumnSpec.decode("550px"), //$NON-NLS-1$
-				FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
-				ColumnSpec.decode("default:grow"),}, //$NON-NLS-1$
-			new RowSpec[] {
-				RowSpec.decode("default:grow"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,}));
-		
-		spnUndefiniedList = new JScrollPane();
-		tabUndefinied.add(spnUndefiniedList, "1, 1, fill, fill"); //$NON-NLS-1$
-		
-		lsUndefinied = new JList<>();
-		spnUndefiniedList.setViewportView(lsUndefinied);
-		lsUndefinied.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		lsUndefinied.setVisibleRowCount(16);
-		
-		spnUndefinied = new JScrollPane();
-		spnUndefinied.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		tabUndefinied.add(spnUndefinied, "3, 1, fill, fill"); //$NON-NLS-1$
-		
-		memoUndefinied = new JTextArea();
-		memoUndefinied.setFont(new Font("Lucida Console", Font.PLAIN, 13)); //$NON-NLS-1$
-		memoUndefinied.setBackground(Color.BLACK);
-		memoUndefinied.setForeground(Color.GREEN);
-		memoUndefinied.setEditable(false);
-		spnUndefinied.setViewportView(memoUndefinied);
-		
-		btnMoreUndef = new JButton("..."); //$NON-NLS-1$
-		btnMoreUndef.addActionListener(e -> {
-			if (!memoUndefinied.getText().isEmpty()) GenericTextDialog.showText(LogFrame.this, LocaleBundle.getString("CCLogFrame.this.title"), memoUndefinied.getText(), false); //$NON-NLS-1$
-		});
-		tabUndefinied.add(btnMoreUndef, "3, 3, right, fill"); //$NON-NLS-1$
-		
-		tabSQL = new JPanel();
-		tpnlMainPanel.addTab(LocaleBundle.getString("CCLog.SQL") + " (" + CCLog.getSQLCount() + ")", null, tabSQL, null); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-		tabSQL.setLayout(new FormLayout(new ColumnSpec[] {
-				ColumnSpec.decode("550px"), //$NON-NLS-1$
-				FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
-				ColumnSpec.decode("default:grow"),}, //$NON-NLS-1$
-			new RowSpec[] {
-				RowSpec.decode("default:grow"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,}));
 
-		spnSQLList = new JScrollPane();
-		tabSQL.add(spnSQLList, "1, 1, fill, fill"); //$NON-NLS-1$
-		
-		lsSQL = new JList<>();
-		spnSQLList.setViewportView(lsSQL);
-		lsSQL.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		lsSQL.setVisibleRowCount(16);
-		
-		spnSQL = new JScrollPane();
-		spnSQL.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		tabSQL.add(spnSQL, "3, 1, fill, fill"); //$NON-NLS-1$
-		
-		memoSQL = new JTextArea();
-		memoSQL.setFont(new Font("Lucida Console", Font.PLAIN, 13)); //$NON-NLS-1$
-		memoSQL.setBackground(Color.BLACK);
-		memoSQL.setForeground(Color.GREEN);
-		memoSQL.setEditable(false);
-		spnSQL.setViewportView(memoSQL);
-		
-		btnMoreSQL = new JButton("..."); //$NON-NLS-1$
-		btnMoreSQL.addActionListener(e -> {
-			if (!memoSQL.getText().isEmpty()) GenericTextDialog.showText(LogFrame.this, LocaleBundle.getString("CCLogFrame.this.title"), memoSQL.getText(), false); //$NON-NLS-1$
-		});
-		tabSQL.add(btnMoreSQL, "3, 3, right, fill"); //$NON-NLS-1$
-	}
-	
-	private void setModels() {
+		tpnlMain.setTitleAt(0, LocaleBundle.getString("CCLog.Errors")       + " (" + CCLog.getCount(CCLogType.LOG_ELEM_ERROR)       + ")");
+		tpnlMain.setTitleAt(0, LocaleBundle.getString("CCLog.Warnings")     + " (" + CCLog.getCount(CCLogType.LOG_ELEM_WARNING)     + ")");
+		tpnlMain.setTitleAt(0, LocaleBundle.getString("CCLog.Informations") + " (" + CCLog.getCount(CCLogType.LOG_ELEM_INFORMATION) + ")");
+		tpnlMain.setTitleAt(0, LocaleBundle.getString("CCLog.Undefinieds")  + " (" + CCLog.getCount(CCLogType.LOG_ELEM_UNDEFINED)   + ")");
+		tpnlMain.setTitleAt(0, LocaleBundle.getString("CCLog.SQL")          + " (" + CCLog.getSQLCount()                            + ")");
+
 		lsErrors.setModel(new LogListModel(lsErrors, CCLogType.LOG_ELEM_ERROR, memoErrors));
 		lsWarnings.setModel(new LogListModel(lsWarnings, CCLogType.LOG_ELEM_WARNING, memoWarnings));
 		lsInformations.setModel(new LogListModel(lsInformations, CCLogType.LOG_ELEM_INFORMATION, memoInformations));
 		lsUndefinied.setModel(new LogListModel(lsUndefinied, CCLogType.LOG_ELEM_UNDEFINED, memoUndefinied));
 		lsSQL.setModel(new LogSQLListModel(lsSQL, memoSQL));
+
+		DatabaseElementPreviewLabel cl = MainFrame.getInstance().getCoverLabel();
+		if (cl.isErrorMode()) cl.setModeDefault();
+
+		CCLog.addChangeListener(this);
+
+		CCLog.setAllWatched();
 	}
-	
+
 	@Override
 	public void onChanged() {
-		tpnlMainPanel.setTitleAt(0, LocaleBundle.getString("CCLog.Error") + " (" + CCLog.getCount(CCLogType.LOG_ELEM_ERROR) + ")");                //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
-		tpnlMainPanel.setTitleAt(1, LocaleBundle.getString("CCLog.Warnings") + " (" + CCLog.getCount(CCLogType.LOG_ELEM_WARNING) + ")");           //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
-		tpnlMainPanel.setTitleAt(2, LocaleBundle.getString("CCLog.Informations") + " (" + CCLog.getCount(CCLogType.LOG_ELEM_INFORMATION) + ")");   //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
-		tpnlMainPanel.setTitleAt(3, LocaleBundle.getString("CCLog.Undefinieds") + " (" + CCLog.getCount(CCLogType.LOG_ELEM_UNDEFINED) + ")");      //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
-		tpnlMainPanel.setTitleAt(4, LocaleBundle.getString("CCLog.SQL") + " (" + CCLog.getSQLCount() + ")");                                       //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
+		tpnlMain.setTitleAt(0, LocaleBundle.getString("CCLog.Error")        + " (" + CCLog.getCount(CCLogType.LOG_ELEM_ERROR)       + ")"); //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
+		tpnlMain.setTitleAt(1, LocaleBundle.getString("CCLog.Warnings")     + " (" + CCLog.getCount(CCLogType.LOG_ELEM_WARNING)     + ")"); //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
+		tpnlMain.setTitleAt(2, LocaleBundle.getString("CCLog.Informations") + " (" + CCLog.getCount(CCLogType.LOG_ELEM_INFORMATION) + ")"); //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
+		tpnlMain.setTitleAt(3, LocaleBundle.getString("CCLog.Undefinieds")  + " (" + CCLog.getCount(CCLogType.LOG_ELEM_UNDEFINED)   + ")"); //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
+		tpnlMain.setTitleAt(4, LocaleBundle.getString("CCLog.SQL")          + " (" + CCLog.getSQLCount()                            + ")"); //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
 	}
+
+	private void showMoreErrors() {
+		if (!memoErrors.getText().isEmpty()) GenericTextDialog.showText(LogFrame.this, LocaleBundle.getString("CCLogFrame.this.title"), memoErrors.getText(), false); //$NON-NLS-1$
+	}
+
+	private void showMoreWarnings() {
+		if (!memoWarnings.getText().isEmpty()) GenericTextDialog.showText(LogFrame.this, LocaleBundle.getString("CCLogFrame.this.title"), memoWarnings.getText(), false); //$NON-NLS-1$
+	}
+
+	private void showMoreInformations() {
+		if (!memoInformations.getText().isEmpty()) GenericTextDialog.showText(LogFrame.this, LocaleBundle.getString("CCLogFrame.this.title"), memoInformations.getText(), false); //$NON-NLS-1$
+	}
+
+	private void showMoreUndefinieds() {
+		if (!memoUndefinied.getText().isEmpty()) GenericTextDialog.showText(LogFrame.this, LocaleBundle.getString("CCLogFrame.this.title"), memoUndefinied.getText(), false); //$NON-NLS-1$
+	}
+
+	private void showMoreSQL() {
+		if (!memoSQL.getText().isEmpty()) GenericTextDialog.showText(LogFrame.this, LocaleBundle.getString("CCLogFrame.this.title"), memoSQL.getText(), false); //$NON-NLS-1$
+	}
+
+	private void initComponents() {
+		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
+		tpnlMain = new JTabbedPane();
+		tabErrors = new JPanel();
+		scrollPane1 = new JScrollPane();
+		lsErrors = new JList<>();
+		scrollPane2 = new JScrollPane();
+		memoErrors = new JTextArea();
+		button1 = new JButton();
+		tabWarnings = new JPanel();
+		scrollPane3 = new JScrollPane();
+		lsWarnings = new JList<>();
+		scrollPane7 = new JScrollPane();
+		memoWarnings = new JTextArea();
+		button2 = new JButton();
+		tabInformations = new JPanel();
+		scrollPane4 = new JScrollPane();
+		lsInformations = new JList<>();
+		scrollPane8 = new JScrollPane();
+		memoInformations = new JTextArea();
+		button3 = new JButton();
+		tabUndefinied = new JPanel();
+		scrollPane5 = new JScrollPane();
+		lsUndefinied = new JList<>();
+		scrollPane9 = new JScrollPane();
+		memoUndefinied = new JTextArea();
+		button4 = new JButton();
+		tabSQL = new JPanel();
+		scrollPane6 = new JScrollPane();
+		lsSQL = new JList<>();
+		scrollPane10 = new JScrollPane();
+		memoSQL = new JTextArea();
+		button5 = new JButton();
+		tabLiveDisplay = new JPanel();
+
+		//======== this ========
+		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+		setTitle(LocaleBundle.getString("CCLogFrame.this.title")); //$NON-NLS-1$
+		var contentPane = getContentPane();
+		contentPane.setLayout(new FormLayout(
+			"$rgap, default:grow, $rgap", //$NON-NLS-1$
+			"$rgap, default:grow, $rgap")); //$NON-NLS-1$
+
+		//======== tpnlMain ========
+		{
+
+			//======== tabErrors ========
+			{
+				tabErrors.setLayout(new FormLayout(
+					"$rgap, 275dlu, $lcgap, 0dlu:grow, $rgap", //$NON-NLS-1$
+					"$rgap, default:grow, $lgap, default, $rgap")); //$NON-NLS-1$
+
+				//======== scrollPane1 ========
+				{
+
+					//---- lsErrors ----
+					lsErrors.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+					scrollPane1.setViewportView(lsErrors);
+				}
+				tabErrors.add(scrollPane1, CC.xy(2, 2, CC.FILL, CC.FILL));
+
+				//======== scrollPane2 ========
+				{
+
+					//---- memoErrors ----
+					memoErrors.setForeground(new Color(0, 224, 0));
+					memoErrors.setBackground(new Color(32, 32, 32));
+					memoErrors.setEditable(false);
+					scrollPane2.setViewportView(memoErrors);
+				}
+				tabErrors.add(scrollPane2, CC.xy(4, 2, CC.FILL, CC.FILL));
+
+				//---- button1 ----
+				button1.setText("..."); //$NON-NLS-1$
+				button1.addActionListener(e -> showMoreErrors());
+				tabErrors.add(button1, CC.xy(4, 4, CC.RIGHT, CC.DEFAULT));
+			}
+			tpnlMain.addTab(LocaleBundle.getString("CCLog.Errors"), tabErrors); //$NON-NLS-1$
+
+			//======== tabWarnings ========
+			{
+				tabWarnings.setLayout(new FormLayout(
+					"$rgap, 275dlu, $lcgap, 0dlu:grow, $rgap", //$NON-NLS-1$
+					"$rgap, default:grow, $lgap, default, $rgap")); //$NON-NLS-1$
+
+				//======== scrollPane3 ========
+				{
+
+					//---- lsWarnings ----
+					lsWarnings.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+					scrollPane3.setViewportView(lsWarnings);
+				}
+				tabWarnings.add(scrollPane3, CC.xy(2, 2, CC.FILL, CC.FILL));
+
+				//======== scrollPane7 ========
+				{
+
+					//---- memoWarnings ----
+					memoWarnings.setForeground(new Color(0, 224, 0));
+					memoWarnings.setBackground(new Color(32, 32, 32));
+					memoWarnings.setEditable(false);
+					scrollPane7.setViewportView(memoWarnings);
+				}
+				tabWarnings.add(scrollPane7, CC.xy(4, 2, CC.FILL, CC.FILL));
+
+				//---- button2 ----
+				button2.setText("..."); //$NON-NLS-1$
+				button2.addActionListener(e -> showMoreWarnings());
+				tabWarnings.add(button2, CC.xy(4, 4, CC.RIGHT, CC.DEFAULT));
+			}
+			tpnlMain.addTab(LocaleBundle.getString("CCLog.Warnings"), tabWarnings); //$NON-NLS-1$
+
+			//======== tabInformations ========
+			{
+				tabInformations.setLayout(new FormLayout(
+					"$rgap, 275dlu, $lcgap, 0dlu:grow, $rgap", //$NON-NLS-1$
+					"$rgap, default:grow, $lgap, default, $rgap")); //$NON-NLS-1$
+
+				//======== scrollPane4 ========
+				{
+
+					//---- lsInformations ----
+					lsInformations.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+					scrollPane4.setViewportView(lsInformations);
+				}
+				tabInformations.add(scrollPane4, CC.xy(2, 2, CC.FILL, CC.FILL));
+
+				//======== scrollPane8 ========
+				{
+
+					//---- memoInformations ----
+					memoInformations.setForeground(new Color(0, 224, 0));
+					memoInformations.setBackground(new Color(32, 32, 32));
+					memoInformations.setEditable(false);
+					scrollPane8.setViewportView(memoInformations);
+				}
+				tabInformations.add(scrollPane8, CC.xy(4, 2, CC.FILL, CC.FILL));
+
+				//---- button3 ----
+				button3.setText("..."); //$NON-NLS-1$
+				button3.addActionListener(e -> showMoreInformations());
+				tabInformations.add(button3, CC.xy(4, 4, CC.RIGHT, CC.DEFAULT));
+			}
+			tpnlMain.addTab(LocaleBundle.getString("CCLog.Informations"), tabInformations); //$NON-NLS-1$
+
+			//======== tabUndefinied ========
+			{
+				tabUndefinied.setLayout(new FormLayout(
+					"$rgap, 275dlu, $lcgap, 0dlu:grow, $rgap", //$NON-NLS-1$
+					"$rgap, default:grow, $lgap, default, $rgap")); //$NON-NLS-1$
+
+				//======== scrollPane5 ========
+				{
+
+					//---- lsUndefinied ----
+					lsUndefinied.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+					scrollPane5.setViewportView(lsUndefinied);
+				}
+				tabUndefinied.add(scrollPane5, CC.xy(2, 2, CC.FILL, CC.FILL));
+
+				//======== scrollPane9 ========
+				{
+
+					//---- memoUndefinied ----
+					memoUndefinied.setForeground(new Color(0, 224, 0));
+					memoUndefinied.setBackground(new Color(32, 32, 32));
+					memoUndefinied.setEditable(false);
+					scrollPane9.setViewportView(memoUndefinied);
+				}
+				tabUndefinied.add(scrollPane9, CC.xy(4, 2, CC.FILL, CC.FILL));
+
+				//---- button4 ----
+				button4.setText("..."); //$NON-NLS-1$
+				button4.addActionListener(e -> showMoreUndefinieds());
+				tabUndefinied.add(button4, CC.xy(4, 4, CC.RIGHT, CC.DEFAULT));
+			}
+			tpnlMain.addTab(LocaleBundle.getString("CCLog.Undefinieds"), tabUndefinied); //$NON-NLS-1$
+
+			//======== tabSQL ========
+			{
+				tabSQL.setLayout(new FormLayout(
+					"$rgap, 275dlu, $lcgap, 0dlu:grow, $rgap", //$NON-NLS-1$
+					"$rgap, default:grow, $lgap, default, $rgap")); //$NON-NLS-1$
+
+				//======== scrollPane6 ========
+				{
+
+					//---- lsSQL ----
+					lsSQL.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+					scrollPane6.setViewportView(lsSQL);
+				}
+				tabSQL.add(scrollPane6, CC.xy(2, 2, CC.FILL, CC.FILL));
+
+				//======== scrollPane10 ========
+				{
+
+					//---- memoSQL ----
+					memoSQL.setForeground(new Color(0, 224, 0));
+					memoSQL.setBackground(new Color(32, 32, 32));
+					memoSQL.setEditable(false);
+					scrollPane10.setViewportView(memoSQL);
+				}
+				tabSQL.add(scrollPane10, CC.xy(4, 2, CC.FILL, CC.FILL));
+
+				//---- button5 ----
+				button5.setText("..."); //$NON-NLS-1$
+				button5.addActionListener(e -> showMoreSQL());
+				tabSQL.add(button5, CC.xy(4, 4, CC.RIGHT, CC.DEFAULT));
+			}
+			tpnlMain.addTab(LocaleBundle.getString("CCLog.SQL"), tabSQL); //$NON-NLS-1$
+
+			//======== tabLiveDisplay ========
+			{
+				tabLiveDisplay.setLayout(new FormLayout(
+					"", //$NON-NLS-1$
+					"")); //$NON-NLS-1$
+			}
+			tpnlMain.addTab(LocaleBundle.getString("LogFrame.TabLiveDisplay"), tabLiveDisplay); //$NON-NLS-1$
+		}
+		contentPane.add(tpnlMain, CC.xy(2, 2, CC.FILL, CC.FILL));
+		setSize(1010, 365);
+		setLocationRelativeTo(getOwner());
+		// JFormDesigner - End of component initialization  //GEN-END:initComponents
+	}
+
+	// JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
+	private JTabbedPane tpnlMain;
+	private JPanel tabErrors;
+	private JScrollPane scrollPane1;
+	private JList<String> lsErrors;
+	private JScrollPane scrollPane2;
+	private JTextArea memoErrors;
+	private JButton button1;
+	private JPanel tabWarnings;
+	private JScrollPane scrollPane3;
+	private JList<String> lsWarnings;
+	private JScrollPane scrollPane7;
+	private JTextArea memoWarnings;
+	private JButton button2;
+	private JPanel tabInformations;
+	private JScrollPane scrollPane4;
+	private JList<String> lsInformations;
+	private JScrollPane scrollPane8;
+	private JTextArea memoInformations;
+	private JButton button3;
+	private JPanel tabUndefinied;
+	private JScrollPane scrollPane5;
+	private JList<String> lsUndefinied;
+	private JScrollPane scrollPane9;
+	private JTextArea memoUndefinied;
+	private JButton button4;
+	private JPanel tabSQL;
+	private JScrollPane scrollPane6;
+	private JList<String> lsSQL;
+	private JScrollPane scrollPane10;
+	private JTextArea memoSQL;
+	private JButton button5;
+	private JPanel tabLiveDisplay;
+	// JFormDesigner - End of variables declaration  //GEN-END:variables
 }

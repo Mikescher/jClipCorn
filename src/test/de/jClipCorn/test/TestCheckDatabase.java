@@ -132,10 +132,10 @@ public class TestCheckDatabase extends ClipCornBaseTest {
 
 			List<UserDataProblem> udp = new ArrayList<>();
 
-			UserDataProblem.testSeasonData(udp, null, s);
+			UserDataProblem.testSeasonData(udp, ml, null, s);
 			assertArrayEquals(s.getTitle(), new Object[0], udp.toArray());
 
-			UserDataProblem.testSeasonData(udp, s, s);
+			UserDataProblem.testSeasonData(udp, ml, s, s);
 			assertArrayEquals(s.getTitle(), new Object[0], udp.toArray());
 		}
 	}
@@ -147,7 +147,7 @@ public class TestCheckDatabase extends ClipCornBaseTest {
 		for (CCEpisode e : ml.iteratorEpisodes()) {
 
 			List<UserDataProblem> udp = new ArrayList<>();
-			UserDataProblem.testEpisodeData(udp, null, null, e);
+			UserDataProblem.testEpisodeData(udp, ml, null, null, e);
 
 			if ("Explosion Magic for This Formidable Enemy".equals(e.getTitle())) {
 				assertEquals(1, udp.size());

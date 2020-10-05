@@ -1,8 +1,10 @@
 package de.jClipCorn.util.helper;
 
 import com.twmacinta.util.MD5;
+import de.jClipCorn.database.databaseElement.columnTypes.CCMediaInfo;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datatypes.Tuple;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -12,11 +14,14 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
+import java.util.regex.Pattern;
 
 public class ChecksumHelper
 {
 	private final static String FASTMD5_ERROR_RESULT = "0"; //$NON-NLS-1$
 	private final static int    FASTMD5_BLOCKSIZE = 1 * 1024 * 1024; // 1MB
+
+	private static final Pattern REX_FVH_PART3 = Pattern.compile("^(?:[0-9A-F]{2}:){7}[0-9A-F]{2}$"); //$NON-NLS-1$
 
 	private static final int FASTVIDEOHASH_VERSION              = 1;
 	private static final int FASTVIDEOHASH_READ_BLOCKSIZE       = 32*1024;
@@ -156,5 +161,53 @@ public class ChecksumHelper
 		}
 
 		return Tuple.Create(hexlen, blocks);
+	}
+
+	public static boolean isValidVideoHash(String ccfvh)
+	{
+		if (ccfvh == null || ccfvh.length() < 3) return false;
+
+		if (ccfvh.charAt(0) != '[') return false;
+		if (ccfvh.charAt(ccfvh.length()-1) != ']') return false;
+
+		var split = ccfvh.substring(1, ccfvh.length()-1).split("-");
+		if (split.length == 0) return false;
+
+		var version = Str.tryParseInt(split[0]);
+		if (!version.isPresent()) return false;
+
+		if (version.get() == 1)
+		{
+			if (!Str.equals(split[0], "01")) return false;
+			if (split.length != 3) return false;
+
+			if (split[2].length() != 23) return false;
+			if (!RegExHelper.isPatternMatch(REX_FVH_PART3, split[2])) return false;
+
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	public static boolean isPossibleVideoHash(String ccfvh, CCMediaInfo mediainfo)
+	{
+		var split = ccfvh.substring(1, ccfvh.length()-2).split("-");
+
+		var version = Str.tryParseInt(split[0]);
+
+		if (version.get() == 1)
+		{
+			// filesize should match
+			if (!Str.equals(split[1], StringUtils.leftPad(Long.toHexString(mediainfo.getFilesize()).toUpperCase(), 10, "0"))) return false;
+
+			return true;
+		}
+		else
+		{
+			throw new Error("Unknown CCFVH version: " + version.get());
+		}
 	}
 }

@@ -86,7 +86,7 @@ public class NewEpisodeVM implements IEpisodeData {
 	{
 		List<UserDataProblem> probs = new ArrayList<>();
 
-		UserDataProblem.testEpisodeData(probs, s, null, this);
+		UserDataProblem.testEpisodeData(probs, s.getMovieList(), s, null, this);
 
 		IsValid = probs.isEmpty();
 		Problems = "<html>" + CCStreams.iterate(probs).stringjoin(UserDataProblem::getText, "\n<br/>") + "</html>"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$

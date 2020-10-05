@@ -149,7 +149,7 @@ public class AddSeasonFrame extends JFrame implements UserDataProblemHandler, Pa
 			edCvrControl.getResizedImageForStorage()
 		);
 
-		UserDataProblem.testSeasonData(ret, null, spack);
+		UserDataProblem.testSeasonData(ret, parent.getMovieList(), null, spack);
 		
 		return ret.isEmpty();
 	}

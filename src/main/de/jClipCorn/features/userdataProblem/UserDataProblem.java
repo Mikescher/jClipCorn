@@ -300,7 +300,7 @@ public class UserDataProblem {
 		if (newdata.getLanguage().isEmpty()) {
 			ret.add(new UserDataProblem(PROBLEM_NO_LANG));
 		}
-		
+
 		if (newdata.getLanguage().contains(CCDBLanguage.MUTED) && !newdata.getLanguage().isSingle()) {
 			ret.add(new UserDataProblem(PROBLEM_LANG_MUTED_SUBSET));
 		}
@@ -386,7 +386,7 @@ public class UserDataProblem {
 		}
 	}
 	
-	public static void testSeasonData(List<UserDataProblem> ret, CCSeason seasonSource, ISeasonData newdata) {
+	public static void testSeasonData(List<UserDataProblem> ret, CCMovieList ml, CCSeason seasonSource, ISeasonData newdata) {
 		if (newdata.getTitle().isEmpty()) {
 			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_EMPTY_TITLE));
 		}
@@ -410,7 +410,7 @@ public class UserDataProblem {
 		}
 	}
 	
-	public static void testEpisodeData(List<UserDataProblem> ret, IEpisodeOwner owner, CCEpisode episodeSource, IEpisodeData newdata) {
+	public static void testEpisodeData(List<UserDataProblem> ret, CCMovieList ml, IEpisodeOwner owner, CCEpisode episodeSource, IEpisodeData newdata) {
 		if (newdata.getTitle().isEmpty()) {
 			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_EMPTY_TITLE));
 		}

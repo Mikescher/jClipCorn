@@ -463,7 +463,7 @@ public class QuickAddEpisodeDialog extends JDialog {
 
 	private boolean checkUserDataEpisode(List<UserDataProblem> ret, IEpisodeData newdata, String src, String fullDst) {
 
-		UserDataProblem.testEpisodeData(ret, season, null, newdata);
+		UserDataProblem.testEpisodeData(ret, season.getMovieList(), season, null, newdata);
 
 		if (!PathFormatter.fileExists(src)) {
 			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_INPUT_FILE_NOT_FOUND));

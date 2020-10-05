@@ -1635,7 +1635,7 @@ public class EditSeriesFrame extends JFrame implements WindowListener {
 			edSeasonCvrControl.getResizedImageForStorage()
 		);
 
-		UserDataProblem.testSeasonData(ret, getSelectedSeason(), spack);
+		UserDataProblem.testSeasonData(ret, series.getMovieList(), getSelectedSeason(), spack);
 		
 		return ret.isEmpty();
 	}
@@ -1757,7 +1757,7 @@ public class EditSeriesFrame extends JFrame implements WindowListener {
 			mediaInfoControl.getValue()
 		);
 
-		UserDataProblem.testEpisodeData(ret, season, episode, epack);
+		UserDataProblem.testEpisodeData(ret, series.getMovieList(), season, episode, epack);
 
 		return ret.isEmpty();
 	}

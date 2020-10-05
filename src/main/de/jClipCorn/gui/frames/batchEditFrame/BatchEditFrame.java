@@ -344,7 +344,7 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 			ctrlMediaInfo.getValue()
 		);
 
-		UserDataProblem.testEpisodeData(ret, target, sel.getSource(), epack);
+		UserDataProblem.testEpisodeData(ret, target.getMovieList(), target, sel.getSource(), epack);
 
 		return ret.isEmpty();
 	}
@@ -376,7 +376,7 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 
 			for (BatchEditEpisodeData episode : data) {
 				List<UserDataProblem> problems = new ArrayList<>();
-				UserDataProblem.testEpisodeData(problems, target, episode.getSource(), episode);
+				UserDataProblem.testEpisodeData(problems, target.getMovieList(), target, episode.getSource(), episode);
 				allproblems.addAll(CCStreams.iterate(problems).map(p -> Tuple.Create((String.format("[%d] %s", episode.episodeNumber, episode.title)), p)).toList());//$NON-NLS-1$
 			}
 

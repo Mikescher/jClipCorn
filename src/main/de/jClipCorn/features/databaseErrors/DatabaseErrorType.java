@@ -81,6 +81,8 @@ public class DatabaseErrorType {
 	public final static DatabaseErrorType ERROR_MEDIAINFO_CDATE_CHANGED            = new DatabaseErrorType(75, DatabaseAutofixer::fixError_MediaInfoCDate);
 	public final static DatabaseErrorType ERROR_MEDIAINFO_MDATE_CHANGED            = new DatabaseErrorType(76, DatabaseAutofixer::fixError_MediaInfoMDate);
 	public final static DatabaseErrorType ERROR_DUPLICATE_FILE                     = new DatabaseErrorType(77, null);
+	public final static DatabaseErrorType ERROR_INVALID_HASH                       = new DatabaseErrorType(78, null);
+	public final static DatabaseErrorType ERROR_IMPOSSIBLE_HASH                    = new DatabaseErrorType(79, null);
 
 	private final int type;
 

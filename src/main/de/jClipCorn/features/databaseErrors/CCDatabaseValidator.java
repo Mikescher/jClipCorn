@@ -15,6 +15,7 @@ import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.formatter.FileSizeFormatter;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.formatter.RomanNumberFormatter;
+import de.jClipCorn.util.helper.ChecksumHelper;
 import de.jClipCorn.util.helper.ImageUtilities;
 import de.jClipCorn.util.lambda.Func0to1WithIOException;
 import de.jClipCorn.util.listener.DoubleProgressCallbackListener;
@@ -432,6 +433,22 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator {
 					DatabaseErrorType.ERROR_INVALID_CHARACTERS,
 					o -> o.ValidateMovies,
 					mov -> DatabaseStringNormalization.hasInvalidCharacters(mov.getTitle()) || DatabaseStringNormalization.hasInvalidCharacters(mov.getZyklus().getTitle()),
+					mov -> DatabaseError.createSingle(DatabaseErrorType.ERROR_INVALID_CHARACTERS, mov));
+
+			// Hash is invalid
+			addMovieValidation(
+					DatabaseErrorType.ERROR_INVALID_HASH,
+					o -> o.ValidateMovies,
+					mov -> mov.getMediaInfo().isSet() && !ChecksumHelper.isValidVideoHash(mov.getMediaInfo().getChecksum()),
+					mov -> DatabaseError.createSingle(DatabaseErrorType.ERROR_INVALID_CHARACTERS, mov));
+
+			// Hash is impossible (length/fislesize mismatch)
+			addMovieValidation(
+					DatabaseErrorType.ERROR_IMPOSSIBLE_HASH,
+					o -> o.ValidateMovies,
+					mov -> mov.getMediaInfo().isSet() &&
+						   ChecksumHelper.isValidVideoHash(mov.getMediaInfo().getChecksum()) &&
+						   !ChecksumHelper.isPossibleVideoHash(mov.getMediaInfo().getChecksum(), mov.getMediaInfo()),
 					mov -> DatabaseError.createSingle(DatabaseErrorType.ERROR_INVALID_CHARACTERS, mov));
 		}
 
@@ -856,6 +873,22 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator {
 					o -> o.ValidateEpisodes,
 					episode -> episode.getMediaInfo().isSet() && (episode.getMediaInfo().validate()!=null),
 					episode -> DatabaseError.createSingleAdditional(DatabaseErrorType.ERROR_MEDIAINFO_INVALID, episode, episode.getMediaInfo().validate()));
+
+			// Hash is invalid
+			addEpisodeValidation(
+					DatabaseErrorType.ERROR_INVALID_HASH,
+					o -> o.ValidateEpisodes,
+					episode -> episode.getMediaInfo().isSet() && !ChecksumHelper.isValidVideoHash(episode.getMediaInfo().getChecksum()),
+					episode -> DatabaseError.createSingle(DatabaseErrorType.ERROR_INVALID_HASH, episode));
+
+			// Hash is impossible (length/fislesize mismatch)
+			addEpisodeValidation(
+					DatabaseErrorType.ERROR_IMPOSSIBLE_HASH,
+					o -> o.ValidateEpisodes,
+					episode -> episode.getMediaInfo().isSet() &&
+							ChecksumHelper.isValidVideoHash(episode.getMediaInfo().getChecksum()) &&
+							!ChecksumHelper.isPossibleVideoHash(episode.getMediaInfo().getChecksum(), episode.getMediaInfo()),
+					episode -> DatabaseError.createSingle(DatabaseErrorType.ERROR_IMPOSSIBLE_HASH, episode));
 		}
 	}
 

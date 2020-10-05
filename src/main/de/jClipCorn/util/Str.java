@@ -1,10 +1,11 @@
 package de.jClipCorn.util;
 
+import de.jClipCorn.util.datatypes.Opt;
+import org.apache.commons.codec.binary.Base64;
+
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
-
-import org.apache.commons.codec.binary.Base64;
 
 @SuppressWarnings("nls")
 public final class Str {
@@ -83,6 +84,16 @@ public final static String SingleSpace = " ";
 
 	public static boolean isDouble(String val) {
 		try	{ Double.parseDouble(val); return true; } catch (NumberFormatException e) { return false; }
+	}
+
+	public static Opt<Integer> tryParseInt(String val)
+	{
+		try	{ return Opt.of(Integer.parseInt(val)); } catch (NumberFormatException e) { return Opt.empty(); }
+	}
+
+	public static Opt<Double> tryParseDouble(String val)
+	{
+		try	{ return Opt.of(Double.parseDouble(val)); } catch (NumberFormatException e) { return Opt.empty(); }
 	}
 
 	public static String toProperCase(String str) {

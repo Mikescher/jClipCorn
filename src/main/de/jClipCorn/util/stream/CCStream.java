@@ -490,6 +490,17 @@ public abstract class CCStream<TType> implements Iterator<TType>, Iterable<TType
 		return -1;
 	}
 
+	public int findLastIndex(Func1to1<TType, Boolean> filter) {
+		int i = 0;
+
+		int found = -1;
+		for (TType t : this) {
+			if (filter.invoke(t)) found = i;
+			i++;
+		}
+		return found;
+	}
+
 	public boolean contains(TType other) {
 		for (TType t : this) {
 			if (Objects.equals(other, t)) return true;

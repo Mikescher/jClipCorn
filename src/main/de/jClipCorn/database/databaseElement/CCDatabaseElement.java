@@ -3,6 +3,7 @@ package de.jClipCorn.database.databaseElement;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.covertab.CCCoverData;
 import de.jClipCorn.database.databaseElement.columnTypes.*;
+import de.jClipCorn.database.databaseElement.datapacks.IDatabaseElementData;
 import de.jClipCorn.database.util.CCQualityCategory;
 import de.jClipCorn.database.util.ExtendedViewedState;
 import de.jClipCorn.features.actionTree.IActionSourceObject;
@@ -16,7 +17,7 @@ import de.jClipCorn.util.exceptions.OnlineRefFormatException;
 
 import java.awt.image.BufferedImage;
 
-public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, ICCCoveredElement, IActionSourceObject, ICCTaggedElement {
+public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, ICCCoveredElement, IActionSourceObject, ICCTaggedElement, IDatabaseElementData {
 	private final int localID;
 	private final CCDBElementTyp typ;
 	private String title;

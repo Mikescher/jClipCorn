@@ -7,6 +7,7 @@ import com.jgoodies.forms.layout.RowSpec;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.columnTypes.*;
+import de.jClipCorn.database.databaseElement.datapacks.MovieDataPack;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.features.metadata.exceptions.MediaQueryException;
 import de.jClipCorn.features.metadata.mediaquery.MediaQueryResult;
@@ -50,6 +51,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map.Entry;
 
@@ -60,7 +62,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 	
 	private final JFileChooser videoFileChooser;
 	
-	private CCMovieList movieList;
+	private final CCMovieList movieList;
 	
 	private CCDateTimeList forceViewedHistory = null;
 	
@@ -1056,54 +1058,45 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		edGroups.setValue(gl);
 	}
 	
-	public boolean checkUserData(List<UserDataProblem> ret) { 
-		BufferedImage i = edCvrControl.getResizedImageForStorage();
-		
-		String p0 = ed_Part0.getText();
-		String p1 = ed_Part1.getText();
-		String p2 = ed_Part2.getText();
-		String p3 = ed_Part3.getText();
-		String p4 = ed_Part4.getText();
-		String p5 = ed_Part5.getText();
-		
-		String title = edTitle.getText();
-		String zyklus = edZyklus.getText();
-		int zyklusID = (int) spnZyklus.getValue();
-		
-		int len = (int) spnLength.getValue();
-		CCDate adddate = spnAddDate.getValue();
-		int oscore = (int) spnOnlineScore.getValue();
-		
-		try {
-			int fskidx = cbxFSK.getSelectedEnum().asInt();
-			int year = (int) spnYear.getValue();
-			long fsize = (long) spnSize.getValue();
-			CCMediaInfo minfo = ctrlMediaInfo.getValue();
-			CCDBLanguageList lang = cbxLanguage.getValue();
-			String csExtn = cbxFormat.getSelectedEnum().asString();
-			String csExta = cbxFormat.getSelectedEnum().asStringAlt();
-			
-			int g0 = cbxGenre0.getSelectedEnum().asInt();
-			int g1 = cbxGenre1.getSelectedEnum().asInt();
-			int g2 = cbxGenre2.getSelectedEnum().asInt();
-			int g3 = cbxGenre3.getSelectedEnum().asInt();
-			int g4 = cbxGenre4.getSelectedEnum().asInt();
-			int g5 = cbxGenre5.getSelectedEnum().asInt();
-			int g6 = cbxGenre6.getSelectedEnum().asInt();
-			int g7 = cbxGenre7.getSelectedEnum().asInt();
-			
-			CCOnlineReferenceList ref = edReference.getValue();
-			
-			UserDataProblem.testMovieData(ret, null, i, movieList, p0, p1, p2, p3, p4, p5, title, zyklus, zyklusID, len, adddate, oscore, fskidx, year, fsize, csExtn, csExta, g0, g1, g2, g3, g4, g5, g6, g7, minfo, lang, ref);
+	private boolean checkUserData(List<UserDataProblem> ret) {
+		try
+		{
+			var mpack = new MovieDataPack
+			(
+				new CCMovieZyklus(edZyklus.getText(), (int) spnZyklus.getValue()),
+				ctrlMediaInfo.getValue(),
+				(int) spnLength.getValue(),
+				spnAddDate.getValue(),
+				cbxFormat.getSelectedEnum(),
+				(int) spnYear.getValue(),
+				new CCFileSize((long) spnSize.getValue()),
+				Arrays.asList(ed_Part0.getText(), ed_Part1.getText(), ed_Part2.getText(), ed_Part3.getText(), ed_Part4.getText(), ed_Part5.getText()),
+				CCDateTimeList.createEmpty(),
+				cbxLanguage.getValue(),
+				edTitle.getText(),
+				CCGenreList.create(cbxGenre0.getSelectedEnum(), cbxGenre1.getSelectedEnum(), cbxGenre2.getSelectedEnum(), cbxGenre3.getSelectedEnum(), cbxGenre4.getSelectedEnum(), cbxGenre5.getSelectedEnum(), cbxGenre6.getSelectedEnum(), cbxGenre7.getSelectedEnum()),
+				CCOnlineScore.getWrapper().findOrNull((int) spnOnlineScore.getValue()),
+				cbxFSK.getSelectedEnum().asFSKOrNull(),
+				cbxScore.getSelectedEnum(),
+				edReference.getValue(),
+				edGroups.getValue(),
+				CCTagList.EMPTY,
+				edCvrControl.getResizedImageForStorage()
+			);
+
+			UserDataProblem.testMovieData(ret, movieList, null, mpack);
 		
 			return ret.isEmpty();
-		} catch (Exception e) {
+		}
+		catch (Exception e)
+		{
 			return false;
 		}
 	}
 	
 	@Override
-	public void onAMIEDIgnoreClicked() {
+	public void onAMIEDIgnoreClicked()
+	{
 		try {
 			onBtnOK(false);
 		} catch (EnumFormatException | EnumValueNotFoundException e) {

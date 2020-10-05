@@ -2,6 +2,7 @@ package de.jClipCorn.database.databaseElement;
 
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.columnTypes.*;
+import de.jClipCorn.database.databaseElement.datapacks.IMovieData;
 import de.jClipCorn.database.util.CCQualityCategory;
 import de.jClipCorn.database.util.ExtendedViewedState;
 import de.jClipCorn.database.util.ExtendedViewedStateType;
@@ -26,7 +27,7 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, ICCDatedElement {
+public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, ICCDatedElement, IMovieData {
 	public final static int PARTCOUNT_MAX = 6; // 0 - 5
 
 	private CCMovieZyklus zyklus;
@@ -54,21 +55,21 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 	@Override
 	public void setDefaultValues(boolean updateDB) {
 		super.setDefaultValues(false);
-		zyklus.reset();
-		mediainfo = CCMediaInfo.EMPTY;
-		length = 0;
-		addDate = CCDate.getMinimumDate();
-		format = CCFileFormat.MKV;
-		year = 1900;
-		filesize = CCFileSize.ZERO;
-		parts[0] = ""; //$NON-NLS-1$
-		parts[1] = ""; //$NON-NLS-1$
-		parts[2] = ""; //$NON-NLS-1$
-		parts[3] = ""; //$NON-NLS-1$
-		parts[4] = ""; //$NON-NLS-1$
-		parts[5] = ""; //$NON-NLS-1$
+		zyklus        = CCMovieZyklus.EMPTY;
+		mediainfo     = CCMediaInfo.EMPTY;
+		length        = 0;
+		addDate       = CCDate.getMinimumDate();
+		format        = CCFileFormat.MKV;
+		year          = 1900;
+		filesize      = CCFileSize.ZERO;
+		parts[0]      = ""; //$NON-NLS-1$
+		parts[1]      = ""; //$NON-NLS-1$
+		parts[2]      = ""; //$NON-NLS-1$
+		parts[3]      = ""; //$NON-NLS-1$
+		parts[4]      = ""; //$NON-NLS-1$
+		parts[5]      = ""; //$NON-NLS-1$
 		viewedHistory = CCDateTimeList.createEmpty();
-		language = CCDBLanguageList.EMPTY;
+		language      = CCDBLanguageList.EMPTY;
 
 		if (updateDB) updateDB();
 	}
@@ -125,14 +126,26 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 		return zyklus;
 	}
 
+	public void setZyklus(String title, int id) {
+		this.zyklus = new CCMovieZyklus(title, id);
+
+		updateDB();
+	}
+
+	public void setZyklus(CCMovieZyklus zykl) {
+		this.zyklus = zykl;
+
+		updateDB();
+	}
+
 	public void setZyklusTitle(String zyklus) {
-		this.zyklus.setTitle(zyklus);
-		
+		this.zyklus = this.zyklus.getWithTitle(zyklus);
+
 		updateDB();
 	}
 	
 	public void setZyklusID(int zid) {
-		this.zyklus.setNumber(zid);
+		this.zyklus = this.zyklus.getWithNumber(zid);
 		
 		updateDB();
 	}

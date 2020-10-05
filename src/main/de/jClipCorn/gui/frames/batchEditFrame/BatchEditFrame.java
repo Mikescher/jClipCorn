@@ -5,6 +5,7 @@ import com.jgoodies.forms.layout.FormLayout;
 import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.IEpisodeOwner;
 import de.jClipCorn.database.databaseElement.columnTypes.*;
+import de.jClipCorn.database.databaseElement.datapacks.EpisodeDataPack;
 import de.jClipCorn.features.metadata.exceptions.MediaQueryException;
 import de.jClipCorn.features.metadata.mediaquery.MediaQueryResult;
 import de.jClipCorn.features.metadata.mediaquery.MediaQueryRunner;
@@ -328,23 +329,22 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 		BatchEditEpisodeData sel = getSelected();
 		if (sel == null) return false;
 
-		String title = edTitle.getText();
+		var epack = new EpisodeDataPack
+		(
+			(int) spnEpisode.getValue(),
+			edTitle.getText(),
+			(int) spnEpisode.getValue(),
+			cbxFormat.getSelectedEnum(),
+			new CCFileSize((long) spnSize.getValue()),
+			edPart.getText(),
+			spnAddDate.getValue(),
+			CCDateTimeList.createEmpty(),
+			ctrlTags.getValue(),
+			ctrlLang.getValue(),
+			ctrlMediaInfo.getValue()
+		);
 
-		int len = (int) spnLength.getValue();
-		int epNum = (int) spnEpisode.getValue();
-		CCDate adddate = spnAddDate.getValue();
-		CCDateTimeList lvdate = CCDateTimeList.createEmpty();
-		CCDBLanguageList lang = ctrlLang.getValue();
-
-		long fsize = (long) spnSize.getValue();
-		String csExtn = cbxFormat.getSelectedEnum().asString();
-		String csExta = cbxFormat.getSelectedEnum().asStringAlt();
-
-		CCMediaInfo minfo = ctrlMediaInfo.getValue();
-
-		String part = edPart.getText();
-
-		UserDataProblem.testEpisodeData(ret, target, sel.getSource(), title, len, epNum, adddate, lvdate, fsize, csExtn, csExta, part, minfo, lang);
+		UserDataProblem.testEpisodeData(ret, target, sel.getSource(), epack);
 
 		return ret.isEmpty();
 	}
@@ -376,7 +376,7 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 
 			for (BatchEditEpisodeData episode : data) {
 				List<UserDataProblem> problems = new ArrayList<>();
-				UserDataProblem.testEpisodeData(problems, target, episode.getSource(), episode.title, episode.length, episode.episodeNumber, episode.addDate, episode.viewedHistory, episode.filesize.getBytes(), episode.format.asString(), episode.format.asStringAlt(), episode.part, episode.mediaInfo, episode.language);
+				UserDataProblem.testEpisodeData(problems, target, episode.getSource(), episode);
 				allproblems.addAll(CCStreams.iterate(problems).map(p -> Tuple.Create((String.format("[%d] %s", episode.episodeNumber, episode.title)), p)).toList());//$NON-NLS-1$
 			}
 

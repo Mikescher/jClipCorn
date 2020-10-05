@@ -1,15 +1,9 @@
 package de.jClipCorn.database.databaseElement;
 
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.text.DecimalFormat;
-import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.covertab.CCCoverData;
 import de.jClipCorn.database.databaseElement.columnTypes.*;
+import de.jClipCorn.database.databaseElement.datapacks.ISeasonData;
 import de.jClipCorn.database.util.*;
 import de.jClipCorn.features.actionTree.IActionSourceObject;
 import de.jClipCorn.gui.localization.LocaleBundle;
@@ -22,7 +16,14 @@ import de.jClipCorn.util.formatter.TimeIntervallFormatter;
 import de.jClipCorn.util.stream.CCStream;
 import de.jClipCorn.util.stream.CCStreams;
 
-public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, ICCCoveredElement, IActionSourceObject, IEpisodeOwner {
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.text.DecimalFormat;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, ICCCoveredElement, IActionSourceObject, IEpisodeOwner, ISeasonData {
 	private final CCSeries owner;
 	private final int seasonID;
 	

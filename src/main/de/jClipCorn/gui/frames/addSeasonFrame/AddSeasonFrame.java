@@ -3,6 +3,7 @@ package de.jClipCorn.gui.frames.addSeasonFrame;
 import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.database.databaseElement.columnTypes.*;
+import de.jClipCorn.database.databaseElement.datapacks.SeasonDataPack;
 import de.jClipCorn.features.online.metadata.ParseResultHandler;
 import de.jClipCorn.features.userdataProblem.UserDataProblem;
 import de.jClipCorn.features.userdataProblem.UserDataProblemHandler;
@@ -139,11 +140,16 @@ public class AddSeasonFrame extends JFrame implements UserDataProblemHandler, Pa
 		dispose();
 	}
 	
-	public boolean checkUserData(List<UserDataProblem> ret) {
-		String title = edTitle.getText();
-		int year = (int) spnYear.getValue();
+	public boolean checkUserData(List<UserDataProblem> ret)
+	{
+		var spack = new SeasonDataPack
+		(
+			edTitle.getText(),
+			(int) spnYear.getValue(),
+			edCvrControl.getResizedImageForStorage()
+		);
 
-		UserDataProblem.testSeasonData(ret, edCvrControl.getResizedImageForStorage(), title, year);
+		UserDataProblem.testSeasonData(ret, null, spack);
 		
 		return ret.isEmpty();
 	}

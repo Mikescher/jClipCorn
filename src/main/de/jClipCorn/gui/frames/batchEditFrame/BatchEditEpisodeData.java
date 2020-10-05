@@ -2,9 +2,10 @@ package de.jClipCorn.gui.frames.batchEditFrame;
 
 import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.columnTypes.*;
+import de.jClipCorn.database.databaseElement.datapacks.IEpisodeData;
 import de.jClipCorn.util.datetime.CCDate;
 
-public class BatchEditEpisodeData
+public class BatchEditEpisodeData implements IEpisodeData
 {
 	private final CCEpisode _source;
 
@@ -68,6 +69,18 @@ public class BatchEditEpisodeData
 
 		return false;
 	}
+
+	@Override public CCDate getAddDate() { return CCDate.getCurrentDate(); }
+	@Override public CCDateTimeList getViewedHistory() { return CCDateTimeList.createEmpty(); }
+	@Override public CCTagList getTags() { return CCTagList.EMPTY; }
+	@Override public CCDBLanguageList getLanguage() { return language; }
+	@Override public CCMediaInfo getMediaInfo() { return mediaInfo; }
+	@Override public int getEpisodeNumber() { return episodeNumber; }
+	@Override public String getTitle() { return title; }
+	@Override public int getLength() { return length; }
+	@Override public CCFileFormat getFormat() { return format; }
+	@Override public CCFileSize getFilesize() { return filesize; }
+	@Override public String getPart() { return part; }
 
 	public void apply() {
 		if (!isDirty()) return;

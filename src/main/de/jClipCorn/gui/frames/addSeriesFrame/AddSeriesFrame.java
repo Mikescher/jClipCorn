@@ -5,6 +5,7 @@ import com.jgoodies.forms.layout.FormLayout;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.database.databaseElement.columnTypes.*;
+import de.jClipCorn.database.databaseElement.datapacks.SeriesDataPack;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.features.online.metadata.ParseResultHandler;
 import de.jClipCorn.features.userdataProblem.UserDataProblem;
@@ -130,25 +131,22 @@ public class AddSeriesFrame extends JFrame implements ParseResultHandler, UserDa
 		dispose();
 	}
 
-	public boolean checkUserData(java.util.List<UserDataProblem> ret) {
-		String title = edTitle.getText();
+	private boolean checkUserData(java.util.List<UserDataProblem> ret)
+	{
+		var spack = new SeriesDataPack
+		(
+			edTitle.getText(),
+			CCGenreList.create(cbxGenre0.getSelectedEnum(), cbxGenre1.getSelectedEnum(), cbxGenre2.getSelectedEnum(), cbxGenre3.getSelectedEnum(), cbxGenre4.getSelectedEnum(), cbxGenre5.getSelectedEnum(), cbxGenre6.getSelectedEnum(), cbxGenre7.getSelectedEnum()),
+			CCOnlineScore.getWrapper().findOrNull((int) spnOnlinescore.getValue()),
+			cbxFSK.getSelectedEnum().asFSKOrNull(),
+			CCUserScore.RATING_NO,
+			edReference.getValue(),
+			edGroups.getValue(),
+			CCTagList.EMPTY,
+			edCvrControl.getResizedImageForStorage()
+		);
 
-		int oscore = (int) spnOnlinescore.getValue();
-
-		int fskidx = cbxFSK.getSelectedEnum().asInt();
-
-		int gen0 = cbxGenre0.getSelectedEnum().asInt();
-		int gen1 = cbxGenre1.getSelectedEnum().asInt();
-		int gen2 = cbxGenre2.getSelectedEnum().asInt();
-		int gen3 = cbxGenre3.getSelectedEnum().asInt();
-		int gen4 = cbxGenre4.getSelectedEnum().asInt();
-		int gen5 = cbxGenre5.getSelectedEnum().asInt();
-		int gen6 = cbxGenre6.getSelectedEnum().asInt();
-		int gen7 = cbxGenre7.getSelectedEnum().asInt();
-
-		CCOnlineReferenceList ref = edReference.getValue();
-
-		UserDataProblem.testSeriesData(ret, edCvrControl.getResizedImageForStorage(), title, oscore, gen0, gen1, gen2, gen3, gen4, gen5, gen6, gen7, fskidx, ref);
+		UserDataProblem.testSeriesData(ret, movieList, null, spack);
 
 		return ret.isEmpty();
 	}

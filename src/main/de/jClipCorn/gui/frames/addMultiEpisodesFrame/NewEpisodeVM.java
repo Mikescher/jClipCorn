@@ -2,18 +2,19 @@ package de.jClipCorn.gui.frames.addMultiEpisodesFrame;
 
 import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.database.databaseElement.columnTypes.*;
+import de.jClipCorn.database.databaseElement.datapacks.IEpisodeData;
+import de.jClipCorn.features.metadata.mediaquery.MediaQueryResult;
 import de.jClipCorn.features.userdataProblem.UserDataProblem;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.formatter.PathFormatter;
-import de.jClipCorn.features.metadata.mediaquery.MediaQueryResult;
 import de.jClipCorn.util.stream.CCStreams;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NewEpisodeVM {
+public class NewEpisodeVM implements IEpisodeData {
 
 	public String SourcePath = Str.Empty;
 	public String TargetPath = Str.Empty;
@@ -34,11 +35,27 @@ public class NewEpisodeVM {
 
 	// -------- -------- -------- -------- -------- -------- -------- --------
 
-	public CCDate getAddDate() { return CCDate.getCurrentDate(); }
+	@Override public CCDate getAddDate() { return CCDate.getCurrentDate(); }
 
-	public CCDateTimeList getViewedHistory() { return CCDateTimeList.createEmpty(); }
+	@Override public CCDateTimeList getViewedHistory() { return CCDateTimeList.createEmpty(); }
 
-	public CCFileFormat getFormat() { return CCFileFormat.getMovieFormatOrDefault(PathFormatter.getExtension(SourcePath)); }
+	@Override public CCTagList getTags() { return CCTagList.EMPTY; }
+
+	@Override public CCDBLanguageList getLanguage() { return Language; }
+
+	@Override public CCMediaInfo getMediaInfo() { return MediaInfo; }
+
+	@Override public int getEpisodeNumber() { return EpisodeNumber; }
+
+	@Override public String getTitle() { return Title; }
+
+	@Override public int getLength() { return Length; }
+
+	@Override public CCFileFormat getFormat() { return CCFileFormat.getMovieFormatOrDefault(PathFormatter.getExtension(SourcePath)); }
+
+	@Override public CCFileSize getFilesize() { return new CCFileSize(Filesize); }
+
+	@Override public String getPart() { return TargetPath; }
 
 	public void updateTarget(CCSeason season, CCDBLanguageList commonLang, String globalSeriesRoot)
 	{
@@ -68,7 +85,8 @@ public class NewEpisodeVM {
 	public void validate(CCSeason s)
 	{
 		List<UserDataProblem> probs = new ArrayList<>();
-		UserDataProblem.testEpisodeData(probs, s, null, Title, Length, EpisodeNumber, getAddDate(), getViewedHistory(), Filesize, getFormat().asString(), getFormat().asStringAlt(), TargetPath, MediaInfo, Language);
+
+		UserDataProblem.testEpisodeData(probs, s, null, this);
 
 		IsValid = probs.isEmpty();
 		Problems = "<html>" + CCStreams.iterate(probs).stringjoin(UserDataProblem::getText, "\n<br/>") + "</html>"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$

@@ -2,6 +2,7 @@ package de.jClipCorn.database.databaseElement;
 
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.columnTypes.*;
+import de.jClipCorn.database.databaseElement.datapacks.IEpisodeData;
 import de.jClipCorn.database.util.CCQualityCategory;
 import de.jClipCorn.database.util.ExtendedViewedState;
 import de.jClipCorn.database.util.ExtendedViewedStateType;
@@ -83,14 +84,12 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 		if (!ok) throw new DatabaseUpdateException("updateDB() failed"); //$NON-NLS-1$
 	}
 
-	@Override
 	public void setEpisodeNumber(int en) {
 		this.episodeNumber = en;
 		
 		updateDB();
 	}
 
-	@Override
 	public void setTitle(String t) {
 		this.title = t;
 		
@@ -158,7 +157,6 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 		updateDB();
 	}
 
-	@Override
 	public void setFormat(CCFileFormat format) {
 		if (format == null) { CCLog.addUndefinied("Prevented setting CCEpisode.Format to NULL"); return; } //$NON-NLS-1$
 
@@ -173,21 +171,18 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 		updateDB();
 	}
 
-	@Override
 	public void setFilesize(CCFileSize fsz) {
 		this.filesize = fsz;
 
 		updateDB();
 	}
 	
-	@Override
 	public void setPart(String path) {
 		part = path;
 		
 		updateDB();
 	}
 	
-	@Override
 	public void setAddDate(CCDate date) {
 		if (date == null) {CCLog.addUndefinied("Prevented setting CCEpisode.AddDate to NULL"); return; } //$NON-NLS-1$
 
@@ -206,7 +201,6 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 		setViewedHistory(CCDateTimeList.parse(data));
 	}
 
-	@Override
 	public void setViewedHistory(CCDateTimeList datelist) {
 		this.viewedHistory = datelist;
 		

@@ -25,8 +25,8 @@ import de.jClipCorn.util.sqlwrapper.*;
 import java.awt.*;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 import static de.jClipCorn.database.driver.DatabaseStructure.*;
 import static de.jClipCorn.database.driver.Statements.*;
@@ -296,8 +296,7 @@ public class CCDatabase {
 	private void updateMovieFromResultSet(CCSQLResultSet rs, CCMovie mov) throws SQLException, CCFormatException, SQLWrapperException {
 		mov.setTitle(rs.getString(DatabaseStructure.COL_MAIN_NAME));
 		mov.setViewedHistory(rs.getString(DatabaseStructure.COL_MAIN_VIEWEDHISTORY));
-		mov.setZyklusTitle(rs.getString(DatabaseStructure.COL_MAIN_ZYKLUS));
-		mov.setZyklusID(rs.getInt(DatabaseStructure.COL_MAIN_ZYKLUSNUMBER));
+		mov.setZyklus(rs.getString(DatabaseStructure.COL_MAIN_ZYKLUS), rs.getInt(DatabaseStructure.COL_MAIN_ZYKLUSNUMBER));
 		mov.setLanguage(rs.getLong(DatabaseStructure.COL_MAIN_LANGUAGE));
 		mov.setGenres(rs.getLong(DatabaseStructure.COL_MAIN_GENRE));
 		mov.setLength(rs.getInt(DatabaseStructure.COL_MAIN_LENGTH));

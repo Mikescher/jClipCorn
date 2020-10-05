@@ -61,4 +61,8 @@ public enum CCOptionalFSK implements ContinoousEnum<CCOptionalFSK> {
 		if (this == NULL) throw new EnumValueNotFoundException("NULL", CCFSK.class); //$NON-NLS-1$
 		return CCFSK.getWrapper().findOrFatalError(id);
 	}
+
+	public CCFSK asFSKOrNull() {
+		if (this == NULL) return null; else return CCFSK.getWrapper().findOrFatalError(id);
+	}
 }

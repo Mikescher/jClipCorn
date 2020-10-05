@@ -8,6 +8,9 @@ import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.database.databaseElement.columnTypes.*;
+import de.jClipCorn.database.databaseElement.datapacks.EpisodeDataPack;
+import de.jClipCorn.database.databaseElement.datapacks.SeasonDataPack;
+import de.jClipCorn.database.databaseElement.datapacks.SeriesDataPack;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.features.metadata.exceptions.MediaQueryException;
 import de.jClipCorn.features.metadata.mediaquery.MediaQueryResult;
@@ -1455,25 +1458,22 @@ public class EditSeriesFrame extends JFrame implements WindowListener {
 		return true;
 	}
 	
-	public boolean checkUserDataSeries(List<UserDataProblem> ret) {
-		String title = edSeriesTitle.getText();
-		
-		int oscore = (int) spnSeriesOnlineScore.getValue();
-		
-		int fskidx = cbxSeriesFSK.getSelectedEnum().asInt();
-		
-		int gen0 = cbxSeriesGenre_0.getSelectedEnum().asInt();
-		int gen1 = cbxSeriesGenre_1.getSelectedEnum().asInt();
-		int gen2 = cbxSeriesGenre_2.getSelectedEnum().asInt();
-		int gen3 = cbxSeriesGenre_3.getSelectedEnum().asInt();
-		int gen4 = cbxSeriesGenre_4.getSelectedEnum().asInt();
-		int gen5 = cbxSeriesGenre_5.getSelectedEnum().asInt();
-		int gen6 = cbxSeriesGenre_6.getSelectedEnum().asInt();
-		int gen7 = cbxSeriesGenre_7.getSelectedEnum().asInt();
-		
-		CCOnlineReferenceList ref = edSeriesReference.getValue();
-		
-		UserDataProblem.testSeriesData(ret, edSeriesCvrControl.getResizedImageForStorage(), title, oscore, gen0, gen1, gen2, gen3, gen4, gen5, gen6, gen7, fskidx, ref);
+	public boolean checkUserDataSeries(List<UserDataProblem> ret)
+	{
+		var spack = new SeriesDataPack
+		(
+			edSeriesTitle.getText(),
+			CCGenreList.create(cbxSeriesGenre_0.getSelectedEnum(), cbxSeriesGenre_1.getSelectedEnum(), cbxSeriesGenre_2.getSelectedEnum(), cbxSeriesGenre_3.getSelectedEnum(), cbxSeriesGenre_4.getSelectedEnum(), cbxSeriesGenre_5.getSelectedEnum(), cbxSeriesGenre_6.getSelectedEnum(), cbxSeriesGenre_7.getSelectedEnum()),
+			CCOnlineScore.getWrapper().findOrNull((int) spnSeriesOnlineScore.getValue()),
+			cbxSeriesFSK.getSelectedEnum(),
+			cbxSeriesScore.getSelectedEnum(),
+			edSeriesReference.getValue(),
+			edSeriesGroups.getValue(),
+			tagPanel.getValue(),
+			edSeriesCvrControl.getResizedImageForStorage()
+		);
+
+		UserDataProblem.testSeriesData(ret, series.getMovieList(), series, spack);
 		
 		return ret.isEmpty();
 	}
@@ -1626,11 +1626,16 @@ public class EditSeriesFrame extends JFrame implements WindowListener {
 		}
 	}
 	
-	public boolean checkUserDataSeason(List<UserDataProblem> ret) {
-		String title = edSeasonTitle.getText();
-		int year = (int) spnSeasonYear.getValue();
+	public boolean checkUserDataSeason(List<UserDataProblem> ret)
+	{
+		var spack = new SeasonDataPack
+		(
+			edSeasonTitle.getText(),
+			(int) spnSeasonYear.getValue(),
+			edSeasonCvrControl.getResizedImageForStorage()
+		);
 
-		UserDataProblem.testSeasonData(ret, edSeasonCvrControl.getResizedImageForStorage(), title, year);
+		UserDataProblem.testSeasonData(ret, getSelectedSeason(), spack);
 		
 		return ret.isEmpty();
 	}
@@ -1736,23 +1741,23 @@ public class EditSeriesFrame extends JFrame implements WindowListener {
 	public boolean checkUserDataEpisode(List<UserDataProblem> ret) {
 		CCSeason season = getSelectedSeason();
 		CCEpisode episode = getSelectedEpisode();
-		
-		String title = edEpisodeTitle.getText();
-		
-		int len = (int) spnEpisodeLength.getValue();
-		int epNum = (int) spnEpisodeEpisode.getValue();
-		CCDate adddate = spnEpisodeAdded.getValue();
-		CCDateTimeList lvdate = cmpEpisodeViewedHistory.getValue();
-		CCMediaInfo minfo = mediaInfoControl.getValue();
 
-		long fsize = (long) spnEpisodeSize.getValue();
-		String csExtn = cbxEpisodeFormat.getSelectedEnum().asString();
-		String csExta = cbxEpisodeFormat.getSelectedEnum().asStringAlt();
-		CCDBLanguageList lng = ctrlLang.getValue();
+		var epack = new EpisodeDataPack
+		(
+			(int) spnEpisodeEpisode.getValue(),
+			edEpisodeTitle.getText(),
+			(int) spnEpisodeLength.getValue(),
+			cbxEpisodeFormat.getSelectedEnum(),
+			new CCFileSize((long) spnEpisodeSize.getValue()),
+			edEpisodePart.getText(),
+			spnEpisodeAdded.getValue(),
+			cmpEpisodeViewedHistory.getValue(),
+			tagPnl.getValue(),
+			ctrlLang.getValue(),
+			mediaInfoControl.getValue()
+		);
 
-		String part = edEpisodePart.getText();
-
-		UserDataProblem.testEpisodeData(ret, season, episode, title, len, epNum, adddate, lvdate, fsize, csExtn, csExta, part, minfo, lng);
+		UserDataProblem.testEpisodeData(ret, season, episode, epack);
 
 		return ret.isEmpty();
 	}

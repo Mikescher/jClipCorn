@@ -7,6 +7,8 @@ import com.jgoodies.forms.layout.RowSpec;
 import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.database.databaseElement.columnTypes.*;
+import de.jClipCorn.database.databaseElement.datapacks.EpisodeDataPack;
+import de.jClipCorn.database.databaseElement.datapacks.IEpisodeData;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.features.metadata.exceptions.MediaQueryException;
 import de.jClipCorn.features.metadata.mediaquery.MediaQueryResult;
@@ -377,8 +379,10 @@ public class QuickAddEpisodeDialog extends JDialog {
 		CCFileFormat format = CCFileFormat.getMovieFormatFromPath(src);
 		CCMediaInfo minfo = edMediaInfo.getValue();
 
+		var epack = new EpisodeDataPack(episodenumber, title, length, format, new CCFileSize(filesize), dst, adddate, history, tags, lang, minfo);
+
 		List<UserDataProblem> problems = new ArrayList<>();
-		boolean probvalue = !check || checkUserDataEpisode(problems, title, length, episodenumber, adddate, history, filesize, minfo, format.asString(), format.asStringAlt(), src, dst, fullDst, lang);
+		boolean probvalue = !check || checkUserDataEpisode(problems, epack, src, fullDst);
 
 		// some problems are too fatal
 		if (probvalue && Str.isNullOrWhitespace(title)) {
@@ -457,9 +461,9 @@ public class QuickAddEpisodeDialog extends JDialog {
 		}).start();
 	}
 
-	private boolean checkUserDataEpisode(List<UserDataProblem> ret, String title, int len, int epNum, CCDate adddate, CCDateTimeList lvdate, long fsize, CCMediaInfo minfo, String csExtn, String csExta, String src, String dst, String fullDst, CCDBLanguageList lang) {
+	private boolean checkUserDataEpisode(List<UserDataProblem> ret, IEpisodeData newdata, String src, String fullDst) {
 
-		UserDataProblem.testEpisodeData(ret, season, null, title, len, epNum, adddate, lvdate, fsize, csExtn, csExta, dst, minfo, lang);
+		UserDataProblem.testEpisodeData(ret, season, null, newdata);
 
 		if (!PathFormatter.fileExists(src)) {
 			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_INPUT_FILE_NOT_FOUND));

@@ -2,15 +2,20 @@ package de.jClipCorn.features.userdataProblem;
 
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.*;
-import de.jClipCorn.database.databaseElement.columnTypes.*;
+import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguage;
+import de.jClipCorn.database.databaseElement.datapacks.IEpisodeData;
+import de.jClipCorn.database.databaseElement.datapacks.IMovieData;
+import de.jClipCorn.database.databaseElement.datapacks.ISeasonData;
+import de.jClipCorn.database.databaseElement.datapacks.ISeriesData;
 import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.formatter.RomanNumberFormatter;
+import de.jClipCorn.util.stream.CCStreams;
 import org.apache.commons.lang.StringUtils;
 
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -69,125 +74,109 @@ public class UserDataProblem {
 	//####################################################################################################################################################
 	//####################################################################################################################################################
 	
-	public static void testMovieData(List<UserDataProblem> ret, CCMovie mov, BufferedImage cvr, CCMovieList l,
-									 String p0, String p1, String p2, String p3, String p4, String p5,
-									 String title, String zyklus, int zyklusID, int len, CCDate adddate,
-									 int oscore, int fskidx, int year, long fsize, String csExtn, String csExta,
-									 int gen0, int gen1, int gen2, int gen3, int gen4, int gen5, int gen6, int gen7,
-									 CCMediaInfo minfo, CCDBLanguageList language, CCOnlineReferenceList ref) {
-		int partcount = 0;
+	public static void testMovieData(List<UserDataProblem> ret, CCMovieList ml, CCMovie movieSource, IMovieData newdata)
+	{
+		int partcount_nonempty = CCStreams.iterate(newdata.getParts()).count(p -> !Str.isNullOrWhitespace(p));
 
-		if (! p0.isEmpty()) partcount++;
-		if (! p1.isEmpty()) partcount++;
-		if (! p2.isEmpty()) partcount++;
-		if (! p3.isEmpty()) partcount++;
-		if (! p4.isEmpty()) partcount++;
-		if (! p5.isEmpty()) partcount++;
+		var gen0 = newdata.getGenres().getGenre(0).asInt();
+		var gen1 = newdata.getGenres().getGenre(1).asInt();
+		var gen2 = newdata.getGenres().getGenre(2).asInt();
+		var gen3 = newdata.getGenres().getGenre(3).asInt();
+		var gen4 = newdata.getGenres().getGenre(4).asInt();
+		var gen5 = newdata.getGenres().getGenre(5).asInt();
+		var gen6 = newdata.getGenres().getGenre(6).asInt();
+		var gen7 = newdata.getGenres().getGenre(7).asInt();
+
+		var p0 = newdata.getParts().size() <= 0 ? Str.Empty : newdata.getParts().get(0);
+		var p1 = newdata.getParts().size() <= 1 ? Str.Empty : newdata.getParts().get(1);
+		var p2 = newdata.getParts().size() <= 2 ? Str.Empty : newdata.getParts().get(2);
+		var p3 = newdata.getParts().size() <= 3 ? Str.Empty : newdata.getParts().get(3);
+		var p4 = newdata.getParts().size() <= 4 ? Str.Empty : newdata.getParts().get(4);
+		var p5 = newdata.getParts().size() <= 5 ? Str.Empty : newdata.getParts().get(5);
 
 		//################################################################################################################
 		
-		if (p0.isEmpty() && p1.isEmpty() && p2.isEmpty() && p3.isEmpty() && p4.isEmpty() && p5.isEmpty()) {
+		if (partcount_nonempty == 0) {
 			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_NO_PATH));
 		}
 		
 		//################################################################################################################
 		
-		if ((p0.isEmpty() && ! p1.isEmpty()) || (p1.isEmpty() && ! p2.isEmpty()) || (p2.isEmpty() && ! p3.isEmpty()) || (p3.isEmpty() && ! p4.isEmpty()) || (p4.isEmpty() && ! p5.isEmpty())) {
+		if (CCStreams.iterate(newdata.getParts()).any(p -> !Str.isNullOrWhitespace(p)) &&
+			CCStreams.iterate(newdata.getParts()).findIndex(Str::isNullOrWhitespace) < CCStreams.iterate(newdata.getParts()).findLastIndex(p -> !Str.isNullOrWhitespace(p))) {
 			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_HOLE_IN_PATH));
 		}
 		
 		//################################################################################################################
 		
-		if (title.isEmpty()) {
+		if (newdata.getTitle().isEmpty()) {
 			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_EMPTY_TITLE));
 		}
 		
 		//################################################################################################################
 		
-		if (zyklus.isEmpty() && zyklusID != -1) {
+		if (newdata.getZyklus().getTitle().isEmpty() && newdata.getZyklus().getNumber() != -1) {
 			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_ZYKLUSID_IS_SET));
 		}
 		
 		//################################################################################################################
 		
-		if (! zyklus.isEmpty() && zyklusID == -1) {
+		if (! newdata.getZyklus().getTitle().isEmpty() && newdata.getZyklus().getNumber() == -1) {
 			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_ZYKLUSID_IS_NEGONE));
 		}
 		
 		//################################################################################################################
 		
 		CCMovie foundM;
-		if (! zyklus.isEmpty() && (foundM = l.findfirst(new CCMovieZyklus(zyklus, zyklusID))) != null) {
-			if (mov == null || mov.getLocalID() != foundM.getLocalID()) {
+		if (! newdata.getZyklus().getTitle().isEmpty() && (foundM = ml.findfirst(newdata.getZyklus())) != null) {
+			if (movieSource == null || movieSource.getLocalID() != foundM.getLocalID()) {
 				ret.add(new UserDataProblem(UserDataProblem.PROBLEM_ZYKLUS_ALREADY_EXISTS));
 			}
 		}
 		
 		//################################################################################################################
 		
-		if (len <= 0) {
+		if (newdata.getLength() <= 0) {
 			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_INVALID_LENGTH));
 		}
 		
 		//################################################################################################################
 
-		if (adddate.isLessEqualsThan(CCDate.getMinimumDate())) {
+		if (newdata.getAddDate().isLessEqualsThan(CCDate.getMinimumDate())) {
 			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_DATE_TOO_LESS));
 		}
 		
 		//################################################################################################################
 		
-		if (oscore <= 0 || oscore > 10) {
+		if (newdata.getOnlinescore() == null || newdata.getOnlinescore().asInt() <= 0 || newdata.getOnlinescore().asInt() > 10) {
 			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_INVALID_ONLINESCORE));
 		}
 		
 		//################################################################################################################
 		
-		if (fskidx == (CCFSK.values().length)) {
+		if (newdata.getFSK() == null) {
 			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_FSK_NOT_SET));
 		}
 		
 		//################################################################################################################
-		
+
 		List<String> extensions = new ArrayList<>();
-		
-		if (! p0.isEmpty()) {
-			extensions.add(PathFormatter.getExtension(p0).toLowerCase());
-		}
-		
-		if (! p1.isEmpty()) {
-			extensions.add(PathFormatter.getExtension(p1).toLowerCase());
-		}
-		
-		if (! p2.isEmpty()) {
-			extensions.add(PathFormatter.getExtension(p2).toLowerCase());
-		}
-		
-		if (! p3.isEmpty()) {
-			extensions.add(PathFormatter.getExtension(p3).toLowerCase());
-		}
-		
-		if (! p4.isEmpty()) {
-			extensions.add(PathFormatter.getExtension(p4).toLowerCase());
-		}
-		
-		if (! p5.isEmpty()) {
-			extensions.add(PathFormatter.getExtension(p5).toLowerCase());
-		}
-		
-		if (! (extensions.contains(csExtn.toLowerCase()) || extensions.contains(csExta.toLowerCase()))) {
+
+		for (var p : newdata.getParts()) extensions.add(PathFormatter.getExtension(p).toLowerCase());
+
+		if (! (extensions.contains(newdata.getFormat().asString().toLowerCase()) || extensions.contains(newdata.getFormat().asStringAlt().toLowerCase()))) {
 			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_EXTENSION_UNEQUALS_FILENAME));
 		}
 		
 		//################################################################################################################
 		
-		if (year <= CCDate.YEAR_MIN) {
+		if (newdata.getYear() <= CCDate.YEAR_MIN) {
 			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_INVALID_YEAR));
 		}
 		
 		//################################################################################################################
 		
-		if (fsize <= 0) {
+		if (newdata.getFilesize().getBytes() <= 0) {
 			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_INVALID_FILESIZE));
 		}
 		
@@ -225,37 +214,39 @@ public class UserDataProblem {
 		
 		//################################################################################################################
 		
-		if (cvr == null) {
+		if (newdata.getCover() == null) {
 			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_NO_COVER_SET));
 		}
 		
 		//################################################################################################################
 		
-		if (PathFormatter.isUntrimmed(title) || PathFormatter.isUntrimmed(zyklus)) {
+		if (PathFormatter.isUntrimmed(newdata.getTitle()) || PathFormatter.isUntrimmed(newdata.getTitle())) {
 			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_ZYKLUSORTITLE_HAS_LEADINGORTRAILING_SPACES));
 		}
 		
 		//################################################################################################################
 		
-		if (RomanNumberFormatter.endsWithRoman(zyklus)) {
+		if (RomanNumberFormatter.endsWithRoman(newdata.getZyklus().getTitle())) {
 			ret.add(new UserDataProblem(PROBLEM_ZYKLUS_ENDS_WITH_ROMAN));
 		}
 		
 		//################################################################################################################
 
-		if (!minfo.isSet()) {
+		if (!newdata.getMediaInfo().isSet()) {
 			ret.add(new UserDataProblem(PROBLEM_MEDIAINFO_UNSET));
 		} else {
-			if (minfo.getFilesize() != fsize && partcount == 1) ret.add(new UserDataProblem(PROBLEM_MEDIAINFO_WRONG_FILESIZE));
-			String err = minfo.validate();
+			if (newdata.getMediaInfo().getFilesize() != newdata.getFilesize().getBytes() && partcount_nonempty == 1) ret.add(new UserDataProblem(PROBLEM_MEDIAINFO_WRONG_FILESIZE));
+			String err = newdata.getMediaInfo().validate();
 			if (err != null) ret.add(new UserDataProblem(PROBLEM_MEDIAINFO_WRONG_DATA, err));
 		}
 
 		//################################################################################################################
 		
-		for (CCMovie imov : l.iteratorMovies()) {
-			if (StringUtils.equalsIgnoreCase(imov.getTitle(), title) && StringUtils.equalsIgnoreCase(imov.getZyklus().getTitle(), zyklus)  && imov.getLanguage() == language) {
-				if (mov == null || mov.getLocalID() != imov.getLocalID()) {
+		for (CCMovie imov : ml.iteratorMovies()) {
+			if (StringUtils.equalsIgnoreCase(imov.getTitle(), newdata.getTitle())
+			&& 	StringUtils.equalsIgnoreCase(imov.getZyklus().getTitle(), newdata.getZyklus().getTitle())
+			&&  imov.getLanguage() == newdata.getLanguage()) {
+				if (movieSource == null || movieSource.getLocalID() != imov.getLocalID()) {
 					ret.add(new UserDataProblem(PROBLEM_TITLE_ALREADYEXISTS));
 				}
 				break;
@@ -264,10 +255,10 @@ public class UserDataProblem {
 		
 		//################################################################################################################
 		
-		for (CCDatabaseElement idel : l.iteratorElements()) {
+		for (CCDatabaseElement idel : ml.iteratorElements()) {
 			if (idel.isMovie()) {
 				if (isPathIncluded((CCMovie)idel, p0, p1, p2, p3, p4, p5)) {
-					if (mov == null || mov.getLocalID() != idel.getLocalID()) {
+					if (movieSource == null || movieSource.getLocalID() != idel.getLocalID()) {
 						ret.add(new UserDataProblem(PROBLEM_FILE_ALREADYEXISTS));
 					}
 					break;
@@ -300,35 +291,47 @@ public class UserDataProblem {
 		
 		//################################################################################################################
 		
-		if (!ref.isValid()) {
+		if (!newdata.getOnlineReference().isValid()) {
 			ret.add(new UserDataProblem(PROBLEM_INVALID_REFERENCE));
 		}
 
 		//################################################################################################################
 		
-		if (language.isEmpty()) {
+		if (newdata.getLanguage().isEmpty()) {
 			ret.add(new UserDataProblem(PROBLEM_NO_LANG));
 		}
 		
-		if (language.contains(CCDBLanguage.MUTED) && !language.isSingle()) {
+		if (newdata.getLanguage().contains(CCDBLanguage.MUTED) && !newdata.getLanguage().isSingle()) {
 			ret.add(new UserDataProblem(PROBLEM_LANG_MUTED_SUBSET));
 		}
 	}
 	
-	public static void testSeriesData(List<UserDataProblem> ret, BufferedImage cvr, String title, int oscore, int gen0, int gen1, int gen2, int gen3, int gen4, int gen5, int gen6, int gen7, int fskidx, CCOnlineReferenceList ref) {
-		if (title.isEmpty()) {
+	public static void testSeriesData(List<UserDataProblem> ret, CCMovieList ml, CCSeries seriesSource, ISeriesData newdata) {
+
+		var gen0 = newdata.getGenres().getGenre(0).asInt();
+		var gen1 = newdata.getGenres().getGenre(1).asInt();
+		var gen2 = newdata.getGenres().getGenre(2).asInt();
+		var gen3 = newdata.getGenres().getGenre(3).asInt();
+		var gen4 = newdata.getGenres().getGenre(4).asInt();
+		var gen5 = newdata.getGenres().getGenre(5).asInt();
+		var gen6 = newdata.getGenres().getGenre(6).asInt();
+		var gen7 = newdata.getGenres().getGenre(7).asInt();
+
+		//################################################################################################################
+
+		if (newdata.getTitle().isEmpty()) {
 			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_EMPTY_TITLE));
 		}
 		
 		//################################################################################################################
 		
-		if (oscore <= 0 || oscore > 10) {
+		if (newdata.getOnlinescore() == null || newdata.getOnlinescore().asInt() <= 0 || newdata.getOnlinescore().asInt() > 10) {
 			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_INVALID_ONLINESCORE));
 		}
 		
 		//################################################################################################################
 		
-		if (fskidx == (CCFSK.values().length)) {
+		if (newdata.getFSK() == null) {
 			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_FSK_NOT_SET));
 		}
 		
@@ -366,76 +369,76 @@ public class UserDataProblem {
 		
 		//################################################################################################################
 		
-		if (cvr == null) {
+		if (newdata.getCover() == null) {
 			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_NO_COVER_SET));
 		}
 		
 		//################################################################################################################
 		
-		if (PathFormatter.isUntrimmed(title)) {
+		if (PathFormatter.isUntrimmed(newdata.getTitle())) {
 			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_ZYKLUSORTITLE_HAS_LEADINGORTRAILING_SPACES));
 		}
 		
 		//################################################################################################################
 
-		if (!ref.isValid()) {
+		if (!newdata.getOnlineReference().isValid()) {
 			ret.add(new UserDataProblem(PROBLEM_INVALID_REFERENCE));
 		}
 	}
 	
-	public static void testSeasonData(List<UserDataProblem> ret, BufferedImage cvr, String title, int year) {
-		if (title.isEmpty()) {
+	public static void testSeasonData(List<UserDataProblem> ret, CCSeason seasonSource, ISeasonData newdata) {
+		if (newdata.getTitle().isEmpty()) {
 			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_EMPTY_TITLE));
 		}
 		
 		//################################################################################################################
 		
-		if (year <= CCDate.YEAR_MIN) {
+		if (newdata.getYear() <= CCDate.YEAR_MIN) {
 			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_INVALID_YEAR));
 		}
 		
 		//################################################################################################################
 		
-		if (cvr == null) {
+		if (newdata.getCover() == null) {
 			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_NO_COVER_SET));
 		}
 		
 		//################################################################################################################
 		
-		if (PathFormatter.isUntrimmed(title)) {
+		if (PathFormatter.isUntrimmed(newdata.getTitle())) {
 			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_ZYKLUSORTITLE_HAS_LEADINGORTRAILING_SPACES));
 		}
 	}
 	
-	public static void testEpisodeData(List<UserDataProblem> ret, IEpisodeOwner owner, CCEpisode episode, String title, int len, int epNum, CCDate adddate, CCDateTimeList lvdates, long fsize, String csExtn, String csExta, String part, CCMediaInfo minfo, CCDBLanguageList language) {
-		if (title.isEmpty()) {
+	public static void testEpisodeData(List<UserDataProblem> ret, IEpisodeOwner owner, CCEpisode episodeSource, IEpisodeData newdata) {
+		if (newdata.getTitle().isEmpty()) {
 			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_EMPTY_TITLE));
 		}
 		
 		//################################################################################################################
 
-		if (episode != null) {
-			CCEpisode eqEp = episode.getSeason().getEpisodeByNumber(epNum);
-			if (eqEp != null && (eqEp != episode)) {
+		if (episodeSource != null) {
+			CCEpisode eqEp = episodeSource.getSeason().getEpisodeByNumber(newdata.getEpisodeNumber());
+			if (eqEp != null && (eqEp != episodeSource)) {
 				ret.add(new UserDataProblem(UserDataProblem.PROBLEM_EPISODENUMBER_ALREADY_EXISTS));
 			}
 		}
 		
 		//################################################################################################################
 		
-		if (len <= 0) {
+		if (newdata.getLength() <= 0) {
 			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_INVALID_LENGTH));
 		}
 		
 		//################################################################################################################
 
-		if (adddate.isLessEqualsThan(CCDate.getMinimumDate())) {
+		if (newdata.getAddDate().isLessEqualsThan(CCDate.getMinimumDate())) {
 			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_DATE_TOO_LESS));
 		}
 		
 		//################################################################################################################
 
-		for (CCDateTime lvdate : lvdates.iterator().filter(d -> !d.isUnspecifiedDateTime())) {
+		for (CCDateTime lvdate : newdata.getViewedHistory().iterator().filter(d -> !d.isUnspecifiedDateTime())) {
 			if (lvdate.isLessThan(CCDate.getMinimumDate())) {
 				ret.add(new UserDataProblem(UserDataProblem.PROBLEM_DATE_TOO_LESS));
 			}
@@ -443,29 +446,29 @@ public class UserDataProblem {
 
 		//################################################################################################################
 
-		if (! (PathFormatter.getExtension(part).equals(csExtn) || PathFormatter.getExtension(part).equals(csExta))) {
+		if (! (PathFormatter.getExtension(newdata.getPart()).equals(newdata.getFormat().asString()) || PathFormatter.getExtension(newdata.getPart()).equals(newdata.getFormat().asStringAlt()))) {
 			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_EXTENSION_UNEQUALS_FILENAME));
 		}
 		
 		//################################################################################################################
 		
-		if (fsize <= 0) {
+		if (newdata.getFilesize().getBytes() <= 0) {
 			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_INVALID_FILESIZE));
 		}
 		
 		//################################################################################################################
 		
-		if (part.isEmpty()) {
+		if (newdata.getPart().isEmpty()) {
 			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_NO_PATH));
 		}
 		
 		//################################################################################################################
 
-		if (!minfo.isSet()) {
+		if (!newdata.getMediaInfo().isSet()) {
 			ret.add(new UserDataProblem(PROBLEM_MEDIAINFO_UNSET));
 		} else {
-			if (minfo.getFilesize() != fsize) ret.add(new UserDataProblem(PROBLEM_MEDIAINFO_WRONG_FILESIZE));
-			String err = minfo.validate();
+			if (newdata.getMediaInfo().getFilesize() != newdata.getFilesize().getBytes()) ret.add(new UserDataProblem(PROBLEM_MEDIAINFO_WRONG_FILESIZE));
+			String err = newdata.getMediaInfo().validate();
 			if (err != null) ret.add(new UserDataProblem(PROBLEM_MEDIAINFO_WRONG_DATA, err));
 		}
 
@@ -474,7 +477,7 @@ public class UserDataProblem {
 		if (owner != null) {
 			for (CCDatabaseElement idel : owner.getMovieList().iteratorElements()) {
 				if (idel.isMovie()) {
-					if (isPathIncluded((CCMovie) idel, part)) {
+					if (isPathIncluded((CCMovie) idel, newdata.getPart())) {
 						ret.add(new UserDataProblem(PROBLEM_FILE_ALREADYEXISTS));
 						break;
 					}
@@ -483,8 +486,8 @@ public class UserDataProblem {
 					for (int i = 0; i < ss.getSeasonCount(); i++) {
 						CCSeason seas = ss.getSeasonByArrayIndex(i);
 						for (int j = 0; j < seas.getEpisodeCount(); j++) {
-							if (isPathIncluded(seas.getEpisodeByArrayIndex(j), part)) {
-								if (episode == null || episode != seas.getEpisodeByArrayIndex(j)) {
+							if (isPathIncluded(seas.getEpisodeByArrayIndex(j), newdata.getPart())) {
+								if (episodeSource == null || episodeSource != seas.getEpisodeByArrayIndex(j)) {
 									ret.add(new UserDataProblem(PROBLEM_FILE_ALREADYEXISTS));
 								}
 								break;
@@ -497,23 +500,23 @@ public class UserDataProblem {
 		
 		//################################################################################################################
 		
-		if (PathFormatter.isUntrimmed(title)) {
+		if (PathFormatter.isUntrimmed(newdata.getTitle())) {
 			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_ZYKLUSORTITLE_HAS_LEADINGORTRAILING_SPACES));
 		}
 
 		//################################################################################################################
 		
-		if (PathFormatter.containsIllegalPathSymbolsInSerializedFormat(part)) {
+		if (PathFormatter.containsIllegalPathSymbolsInSerializedFormat(newdata.getPart())) {
 			ret.add(new UserDataProblem(PROBLEM_INVALID_PATH_CHARACTERS));
 		}
 
 		//################################################################################################################
 		
-		if (language.isEmpty()) {
+		if (newdata.getLanguage().isEmpty()) {
 			ret.add(new UserDataProblem(PROBLEM_NO_LANG));
 		}
 		
-		if (language.contains(CCDBLanguage.MUTED) && !language.isSingle()) {
+		if (newdata.getLanguage().contains(CCDBLanguage.MUTED) && !newdata.getLanguage().isSingle()) {
 			ret.add(new UserDataProblem(PROBLEM_LANG_MUTED_SUBSET));
 		}
 	}

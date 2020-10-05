@@ -71,29 +71,28 @@ public class TestCheckDatabase extends ClipCornBaseTest {
 		CCMovieList mle = createEmptyDB();
 		CCMovieList ml = createExampleDB();
 
-		for (CCMovie m : ml.iteratorMovies()) {
-
+		for (CCMovie m : ml.iteratorMovies())
+		{
 			List<UserDataProblem> udp = new ArrayList<>();
-			UserDataProblem.testMovieData(udp, null,
-					m.getCover(),
-					mle,
-					m.getPart(0), m.getPart(1), m.getPart(2), m.getPart(3), m.getPart(4), m.getPart(5),
-					m.getTitle(),
-					m.getZyklus().getTitle(),
-					m.getZyklus().getNumber(),
-					m.getLength(),
-					m.getAddDate(),
-					m.getOnlinescore().asInt(),
-					m.getFSK().asInt(),
-					m.getYear(),
-					m.getFilesize().getBytes(),
-					m.getFormat().asString(),
-					m.getFormat().asStringAlt(),
-					m.getGenre(0).asInt(), m.getGenre(1).asInt(), m.getGenre(2).asInt(), m.getGenre(3).asInt(),
-					m.getGenre(4).asInt(), m.getGenre(5).asInt(), m.getGenre(6).asInt(), m.getGenre(7).asInt(),
-					m.getMediaInfo(),
-					m.getLanguage(),
-					m.getOnlineReference());
+			UserDataProblem.testMovieData(udp, mle, null, m);
+
+			if ("Der Bomber".equals(m.getTitle())) {
+				assertEquals(1, udp.size());
+				assertEquals(UserDataProblem.PROBLEM_MEDIAINFO_UNSET, udp.get(0).getPID());
+				udp.remove(0);
+			} else if ("Forrest Gump".equals(m.getTitle())) {
+				assertEquals(1, udp.size());
+				assertEquals(UserDataProblem.PROBLEM_MEDIAINFO_UNSET, udp.get(0).getPID());
+				udp.remove(0);
+			}
+
+			assertArrayEquals(m.getTitle(), new Object[0], udp.toArray());
+		}
+
+		for (CCMovie m : ml.iteratorMovies())
+		{
+			List<UserDataProblem> udp = new ArrayList<>();
+			UserDataProblem.testMovieData(udp, mle, m, m);
 
 			if ("Der Bomber".equals(m.getTitle())) {
 				assertEquals(1, udp.size());
@@ -116,15 +115,11 @@ public class TestCheckDatabase extends ClipCornBaseTest {
 		for (CCSeries s : ml.iteratorSeries()) {
 
 			List<UserDataProblem> udp = new ArrayList<>();
-			UserDataProblem.testSeriesData(udp,
-					s.getCover(),
-					s.getTitle(),
-					s.getOnlinescore().asInt(),
-					s.getGenre(0).asInt(), s.getGenre(1).asInt(), s.getGenre(2).asInt(), s.getGenre(3).asInt(),
-					s.getGenre(4).asInt(), s.getGenre(5).asInt(), s.getGenre(6).asInt(), s.getGenre(7).asInt(),
-					s.getFSK().asInt(),
-					s.getOnlineReference());
 
+			UserDataProblem.testSeriesData(udp, ml, null, s);
+			assertArrayEquals(s.getTitle(), new Object[0], udp.toArray());
+
+			UserDataProblem.testSeriesData(udp, ml, s, s);
 			assertArrayEquals(s.getTitle(), new Object[0], udp.toArray());
 		}
 	}
@@ -136,11 +131,11 @@ public class TestCheckDatabase extends ClipCornBaseTest {
 		for (CCSeason s : ml.iteratorSeasons()) {
 
 			List<UserDataProblem> udp = new ArrayList<>();
-			UserDataProblem.testSeasonData(udp,
-					s.getCover(),
-					s.getTitle(),
-					s.getYear());
 
+			UserDataProblem.testSeasonData(udp, null, s);
+			assertArrayEquals(s.getTitle(), new Object[0], udp.toArray());
+
+			UserDataProblem.testSeasonData(udp, s, s);
 			assertArrayEquals(s.getTitle(), new Object[0], udp.toArray());
 		}
 	}
@@ -152,19 +147,7 @@ public class TestCheckDatabase extends ClipCornBaseTest {
 		for (CCEpisode e : ml.iteratorEpisodes()) {
 
 			List<UserDataProblem> udp = new ArrayList<>();
-			UserDataProblem.testEpisodeData(udp, null,
-					null,
-					e.getTitle(),
-					e.getLength(),
-					e.getEpisodeNumber(),
-					e.getAddDate(),
-					e.getViewedHistory(),
-					e.getFilesize().getBytes(),
-					e.getFormat().asString(),
-					e.getFormat().asStringAlt(),
-					e.getPart(),
-					e.getMediaInfo(),
-					e.getLanguage());
+			UserDataProblem.testEpisodeData(udp, null, null, e);
 
 			if ("Explosion Magic for This Formidable Enemy".equals(e.getTitle())) {
 				assertEquals(1, udp.size());

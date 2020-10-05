@@ -1,27 +1,33 @@
 package de.jClipCorn.database.databaseElement.columnTypes;
 
+import de.jClipCorn.util.Str;
 import de.jClipCorn.util.formatter.RomanNumberFormatter;
 
-public class CCMovieZyklus {
-	private String title;
-	private int zyklusNmbr;
+public class CCMovieZyklus
+{
+	public static final CCMovieZyklus EMPTY = new CCMovieZyklus();
+
+	private final String title;
+	private final int zyklusNmbr;
 	
-	public CCMovieZyklus() {
-		this.title = ""; //$NON-NLS-1$
+	public CCMovieZyklus()
+	{
+		this.title = Str.Empty;
 		this.zyklusNmbr = -1;
 	}
 	
-	public CCMovieZyklus(String zyklus, int id) {
+	public CCMovieZyklus(String zyklus, int id)
+	{
 		this.title = zyklus;
 		this.zyklusNmbr = id;
 	}
 
-	public void setTitle(String nwzyklus) { // ONLY CALL FROM CCMOVIELIST !!!
-		this.title = nwzyklus;
+	public CCMovieZyklus getWithTitle(String zname) {
+		return new CCMovieZyklus(zname, zyklusNmbr);
 	}
 
-	public void setNumber(int zid) { // ONLY CALL FROM CCMOVIELIST !!!
-		this.zyklusNmbr = zid;
+	public CCMovieZyklus getWithNumber(int zid) {
+		return new CCMovieZyklus(title, zid);
 	}
 
 	public boolean isSet() {
@@ -114,11 +120,6 @@ public class CCMovieZyklus {
 		return rv;
 	}
 
-	public void reset() {
-		setNumber(-1);
-		setTitle(""); //$NON-NLS-1$
-	}
-	
 	@Override
 	public boolean equals(Object z) {
 		if (z instanceof CCMovieZyklus) {

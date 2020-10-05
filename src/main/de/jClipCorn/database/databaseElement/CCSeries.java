@@ -2,6 +2,7 @@ package de.jClipCorn.database.databaseElement;
 
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.columnTypes.*;
+import de.jClipCorn.database.databaseElement.datapacks.ISeriesData;
 import de.jClipCorn.database.util.*;
 import de.jClipCorn.database.util.iterators.DirectEpisodesIterator;
 import de.jClipCorn.database.util.iterators.DirectSeasonsIterator;
@@ -22,7 +23,7 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class CCSeries extends CCDatabaseElement implements IEpisodeOwner {
+public class CCSeries extends CCDatabaseElement implements IEpisodeOwner, ISeriesData {
 	private final static int GUIDE_W_BORDER = 2;
 	private final static int GUIDE_W_PADDING = 6;
 	

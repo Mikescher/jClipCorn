@@ -456,8 +456,14 @@ public class MainFrame extends JFrame implements CCDBUpdateListener, FileDrop.Li
 		// nothing dropped
 	}
 
-	public void onSettingsChanged() {
+	public void onSettingsChanged()
+	{
 		clipTable.configureColumnVisibility(CCProperties.getInstance().PROP_MAINFRAME_VISIBLE_COLUMNS.getValue(), false);
 		clipTable.autoResize();
+
+		//if (CCProperties.getInstance().PROP_UI_APPTHEME.getValue() != LookAndFeelManager.getCurrentTheme())
+		//{
+		//	LookAndFeelManager.setLookAndFeel(CCProperties.getInstance().PROP_UI_APPTHEME.getValue(), true);
+		//}
 	}
 }

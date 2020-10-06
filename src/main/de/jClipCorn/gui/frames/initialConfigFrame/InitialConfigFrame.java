@@ -195,7 +195,7 @@ public class InitialConfigFrame extends JDialog {
 			{
 				if (cbxLooknFeel.getSelectedEnum() != theme) return;
 
-				LookAndFeelManager.setLookAndFeel(cbxLooknFeel.getSelectedEnum());
+				LookAndFeelManager.setLookAndFeel(cbxLooknFeel.getSelectedEnum(), false);
 
 				SwingUtilities.updateComponentTreeUI(InitialConfigFrame.this);
 
@@ -235,7 +235,7 @@ public class InitialConfigFrame extends JDialog {
 
 		if (CCProperties.getInstance().PROP_UI_APPTHEME.getValue() != cbxLooknFeel.getSelectedEnum()) {
 			CCProperties.getInstance().PROP_UI_APPTHEME.setValue(cbxLooknFeel.getSelectedEnum());
-			LookAndFeelManager.setLookAndFeel(cbxLooknFeel.getSelectedEnum());
+			LookAndFeelManager.setLookAndFeel(cbxLooknFeel.getSelectedEnum(), false);
 		}
 				
 		if (!edVLCPath.getText().trim().isEmpty()) CCProperties.getInstance().PROP_PLAY_VLC_PATH.setValue(edVLCPath.getText());

@@ -7,6 +7,7 @@ import de.jClipCorn.util.stream.CCStreams;
 import org.pushingpixels.substance.api.SubstanceLookAndFeel;
 
 import javax.swing.*;
+import java.awt.*;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -43,7 +44,7 @@ public class LookAndFeelManager {
 				.toList();
 	}
 
-	public static void setLookAndFeel(AppTheme at) {
+	public static void setLookAndFeel(AppTheme at, boolean updateWindows) {
 		try
 		{
 			if (!listInstalledLookAndFeels().contains(at)) at = AppTheme.METAL;
@@ -68,6 +69,15 @@ public class LookAndFeelManager {
 			{
 				CCLog.addDefaultSwitchError(LookAndFeelManager.class, atpack);
 			}
+
+			if (updateWindows)
+			{
+				for (var window: Window.getWindows())
+				{
+					if (!window.getClass().getCanonicalName().contains("de.jClipCorn")) continue; //$NON-NLS-1$
+					SwingUtilities.updateComponentTreeUI(window);
+				}
+			}
 		}
 		catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e)
 		{
@@ -85,5 +95,9 @@ public class LookAndFeelManager {
 
 	public static boolean isMetal() {
 		return currentAppTheme == AppTheme.METAL;
+	}
+
+	public static AppTheme getCurrentTheme() {
+		return currentAppTheme;
 	}
 }

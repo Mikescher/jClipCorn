@@ -25,6 +25,7 @@ public class CCDatabaseHistory {
 	private final static int MERGE_DIFF_TIME  = 15 * 60; // sec
 	private final static int MERGE_MAX_TIME   = 45 * 60; // sec
 	private final static int MERGE_SHORT_TIME = 8;       // sec
+	private final static int MERGE_LOOKAHEAD  = 10;
 
 	private final CCDatabase _db;
 
@@ -228,7 +229,7 @@ public class CCDatabaseHistory {
 		List<CCCombinedHistoryEntry> backlog = new ArrayList<>();
 
 		List<String[]> rawdata = _db.queryHistory(start, idfilter);
-		lst.setMax(rawdata.size());
+		lst.setMax( rawdata.size() + (mergeAggressive?rawdata.size():0) );
 		for (String[] raw : rawdata) {
 			lst.step();
 
@@ -286,38 +287,56 @@ public class CCDatabaseHistory {
 
 		result.sort(Comparator.comparing(o -> o.Timestamp1));
 
-		for (int i=1; i<result.size(); i++)
+		if (mergeAggressive)
 		{
-			CCCombinedHistoryEntry e1 = result.get(i-1);
-			CCCombinedHistoryEntry e2 = result.get(i);
-
- 			if (mergeAggressive &&
- 				e1.Table == e2.Table &&
-				Str.equals(e1.ID, e2.ID) &&
-				e1.Action == CCHistoryAction.REMOVE &&
-				e2.Action == CCHistoryAction.INSERT &&
-				e1.Changes.size() == e2.Changes.size() &&
-				CCDateTime.diffInSeconds(e1.Timestamp1, e2.Timestamp2) < MERGE_SHORT_TIME)
+			// Merge [REM]+[INS]
+			for (int bi=0; bi<result.size()-1; bi++)
 			{
-				CCCombinedHistoryEntry e3 = new CCCombinedHistoryEntry();
-				e3.Table           = e1.Table;
-				e3.ID              = e1.ID;
-				e3.Timestamp1      = e1.Timestamp1;
-				e3.Timestamp2      = e2.Timestamp2;
-				e3.Action          = CCHistoryAction.UPDATE;
-				e3.HistoryRowCount = e1.HistoryRowCount + e2.HistoryRowCount;
-				boolean nomerge = false;
-				for (CCHistorySingleChange c1 : e1.Changes) {
-					Optional<CCHistorySingleChange> c2 = e2.Changes.stream().filter(c -> Str.equals(c.Field, c1.Field)).findFirst();
-					if (!c2.isPresent()) { nomerge = true; break; }
-					e3.Changes.add(new CCHistorySingleChange(c1.Field, c1.OldValue, c2.get().NewValue));
-				}
-				if (nomerge) continue;
+				CCCombinedHistoryEntry e1 = result.get(bi);
+				if (e1 == null) continue;
 
-				result.set(i-1, null);
-				result.set(i, e3);
+				lst.step(e1.HistoryRowCount);
+
+				if (e1.Action != CCHistoryAction.REMOVE) continue;
+
+				for (int la=1; la <= MERGE_LOOKAHEAD; la++)
+				{
+					if (bi+la >= result.size()) continue;
+
+					CCCombinedHistoryEntry e2 = result.get(bi+la);
+					if (e2 == null) continue;
+
+					if (e1.Table == e2.Table &&
+						e1.Action == CCHistoryAction.REMOVE &&
+						e2.Action == CCHistoryAction.INSERT &&
+						Str.equals(e1.ID, e2.ID) &&
+						e1.Changes.size() == e2.Changes.size() &&
+						CCDateTime.diffInSeconds(e1.Timestamp1, e2.Timestamp2) < MERGE_SHORT_TIME)
+					{
+						CCCombinedHistoryEntry e3 = new CCCombinedHistoryEntry();
+						e3.Table           = e1.Table;
+						e3.ID              = e1.ID;
+						e3.Timestamp1      = e1.Timestamp1;
+						e3.Timestamp2      = e2.Timestamp2;
+						e3.Action          = CCHistoryAction.UPDATE;
+						e3.HistoryRowCount = e1.HistoryRowCount + e2.HistoryRowCount;
+						boolean nomerge = false;
+						for (CCHistorySingleChange c1 : e1.Changes) {
+							Optional<CCHistorySingleChange> c2 = e2.Changes.stream().filter(c -> Str.equals(c.Field, c1.Field)).findFirst();
+							if (c2.isEmpty()) { nomerge = true; break; }
+							e3.Changes.add(new CCHistorySingleChange(c1.Field, c1.OldValue, c2.get().NewValue));
+						}
+						if (!nomerge)
+						{
+							result.set(bi, e3);
+							result.set(bi+la, null);
+							break;
+						}
+					}
+				}
 			}
 		}
+
 		result.removeIf(Objects::isNull);
 
 		for (CCCombinedHistoryEntry e : result) {
@@ -337,6 +356,9 @@ public class CCDatabaseHistory {
 
 		for (CCCombinedHistoryEntry e : result) e.setSourceLink(elements);
 
+		lst.stepToMax();
+
+
 		return result;
 	}
 
@@ -354,25 +376,30 @@ public class CCDatabaseHistory {
 		if (a_ri)
 		{
 			if (! (table == CCHistoryTable.INFO && base.Changes.size() == 1 && Str.equals(base.Changes.get(0).Field, field))) return false;
+
+			return true;
+		}
+		else if (a_ii || a_uu || a_rr || a_iu)
+		{
+			int diff = CCDateTime.diffInSeconds(base.Timestamp2, date);
+
+			if (base.Action == CCHistoryAction.INSERT && Str.equals(field, "VIEWED")         && diff > MERGE_SHORT_TIME) return false; //$NON-NLS-1$
+			if (base.Action == CCHistoryAction.INSERT && Str.equals(field, "VIEWED_HISTORY") && diff > MERGE_SHORT_TIME) return false; //$NON-NLS-1$
+
+			if (diff > MERGE_DIFF_TIME) return false;
+			if (CCDateTime.diffInSeconds(base.Timestamp1, date) > MERGE_MAX_TIME) return false;
+
+			if (a_iu)
+			{
+				if (!(Str.isNullOrEmpty(oldValue) || oldValue.equals("0") || oldValue.equals("-1") || oldValue.equals("1900-01-01"))) return false; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			}
+
+			return true;
 		}
 		else
 		{
-			if (!(a_ii || a_uu || a_rr || a_iu)) return false;
+			return false;
 		}
 
-		int diff = CCDateTime.diffInSeconds(base.Timestamp2, date);
-
-		if (base.Action == CCHistoryAction.INSERT && Str.equals(field, "VIEWED")         && diff > MERGE_SHORT_TIME) return false; //$NON-NLS-1$
-		if (base.Action == CCHistoryAction.INSERT && Str.equals(field, "VIEWED_HISTORY") && diff > MERGE_SHORT_TIME) return false; //$NON-NLS-1$
-
-		if (diff > MERGE_DIFF_TIME) return false;
-		if (CCDateTime.diffInSeconds(base.Timestamp1, date) > MERGE_MAX_TIME) return false;
-
-		if (a_iu)
-		{
-			if (!(Str.isNullOrEmpty(oldValue) || oldValue.equals("0") || oldValue.equals("-1") || oldValue.equals("1900-01-01"))) return false; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-		}
-
-		return true;
 	}
 }

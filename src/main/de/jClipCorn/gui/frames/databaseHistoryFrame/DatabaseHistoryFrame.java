@@ -15,7 +15,6 @@ import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datatypes.RefParam;
 import de.jClipCorn.util.datetime.CCDateTime;
-import de.jClipCorn.util.exceptions.CCFormatException;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.helper.SwingUtils;
 import de.jClipCorn.util.listener.ProgressCallbackProgressBarHelper;
@@ -183,7 +182,7 @@ public class DatabaseHistoryFrame extends JFrame
 					edTableSize.setText(_tcount + " (" + tableEntries.getDataDirect().size()+")"); //$NON-NLS-1$ //$NON-NLS-2$
 				});
 
-			} catch (CCFormatException e) {
+			} catch (Throwable e) {
 				CCLog.addError(e);
 				DialogHelper.showLocalError(this, "Dialogs.GenericError"); //$NON-NLS-1$
 			}

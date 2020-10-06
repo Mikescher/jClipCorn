@@ -16,9 +16,20 @@ public class ProgressCallbackProgressMonitorHelper implements ProgressCallbackLi
 	}
 
 	@Override
+	public void stepToMax() {
+		progress = max;
+
+		update();}
+
+	@Override
 	public void step() {
-		progress++; 
-		
+		step(1);
+	}
+
+	@Override
+	public void step(final int inc) {
+		progress += inc;
+
 		update();
 	}
 

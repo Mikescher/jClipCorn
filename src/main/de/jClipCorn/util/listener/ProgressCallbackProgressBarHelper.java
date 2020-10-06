@@ -1,10 +1,9 @@
 package de.jClipCorn.util.listener;
 
-import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.util.helper.SwingUtils;
+import de.jClipCorn.util.helper.ThreadUtils;
 
 import javax.swing.*;
-import java.lang.reflect.InvocationTargetException;
 
 public class ProgressCallbackProgressBarHelper implements ProgressCallbackListener{
 	private final JProgressBar progressBar;
@@ -23,29 +22,34 @@ public class ProgressCallbackProgressBarHelper implements ProgressCallbackListen
 
 	@Override
 	public void step() {
+		step(1);
+	}
+
+	@Override
+	public void step(final int inc) {
 		int pold = (int)((value*1.0*resolution) / (max));
-		value++;
+		value += inc;
+		int pnew = (int)((value*1.0*resolution) / (max));
+		if (pold != pnew) SwingUtils.invokeLater(() -> progressBar.setValue(value));
+	}
+
+	@Override
+	public void stepToMax() {
+		int pold = (int)((value*1.0*resolution) / (max));
+		value = max;
 		int pnew = (int)((value*1.0*resolution) / (max));
 		if (pold != pnew) SwingUtils.invokeLater(() -> progressBar.setValue(value));
 	}
 
 	@Override
 	public void setMax(final int max) {
-		try {
-			SwingUtils.invokeAndWait(() -> progressBar.setMaximum(max));
-			this.max = max;
-		} catch (InterruptedException | InvocationTargetException e) {
-			CCLog.addUndefinied(Thread.currentThread(), e);
-		}
+		ThreadUtils.invokeAndWaitConditional(() -> progressBar.setMaximum(max));
+		this.max = max;
 	}
 
 	@Override
 	public void reset() {
-		try {
-			SwingUtils.invokeAndWait(() -> progressBar.setValue(0));
-			this.value = 0;
-		} catch (InterruptedException | InvocationTargetException e) {
-			CCLog.addUndefinied(Thread.currentThread(), e);
-		}
+		ThreadUtils.invokeAndWaitConditional(() -> progressBar.setValue(0));
+		this.value = 0;
 	}
 }

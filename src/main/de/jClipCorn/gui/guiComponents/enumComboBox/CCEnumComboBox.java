@@ -1,7 +1,8 @@
 package de.jClipCorn.gui.guiComponents.enumComboBox;
 
 import com.jformdesigner.annotations.DesignCreate;
-import de.jClipCorn.database.databaseElement.columnTypes.CCOptionalFSK;
+import de.jClipCorn.util.Str;
+import de.jClipCorn.util.datetime.CCWeekday;
 import de.jClipCorn.util.enumextension.ContinoousEnum;
 import de.jClipCorn.util.enumextension.EnumWrapper;
 
@@ -13,11 +14,14 @@ public class CCEnumComboBox<T extends ContinoousEnum<T>> extends JComboBox<T> {
 
 	private final EnumWrapper<T> _wrapper;
 
+	private String currentKCSelection = "";
+	private long timestampLastKCSelection = 0;
+
 	@DesignCreate
 	@SuppressWarnings("rawtypes")
 	private static CCEnumComboBox designCreate()
 	{
-		return new CCEnumComboBox<>(CCOptionalFSK.getWrapper());
+		return new CCEnumComboBox<>(CCWeekday.getWrapper());
 	}
 
 	public CCEnumComboBox(EnumWrapper<T> wrapper) {
@@ -127,7 +131,10 @@ public class CCEnumComboBox<T extends ContinoousEnum<T>> extends JComboBox<T> {
 	@Override
 	public boolean selectWithKeyChar(char keyChar)
 	{
-		// only works for single key presses ... but good enough for now
+		if (System.currentTimeMillis() - timestampLastKCSelection > 1000) currentKCSelection = Str.Empty;
+
+		timestampLastKCSelection = System.currentTimeMillis();
+		currentKCSelection += keyChar;
 
 		for(int i = 0; i < getModel().getSize(); i++)
 		{
@@ -135,7 +142,7 @@ public class CCEnumComboBox<T extends ContinoousEnum<T>> extends JComboBox<T> {
 			normalize = normalize.replaceAll("\\p{M}", ""); //$NON-NLS-1$ //$NON-NLS-2$
 			normalize = normalize.toLowerCase();
 
-			if (normalize.startsWith(String.valueOf(keyChar).toLowerCase())) { setSelectedIndex(i); return true; }
+			if (normalize.startsWith(currentKCSelection.toLowerCase())) { setSelectedIndex(i); return true; }
 		}
 
 		return false;

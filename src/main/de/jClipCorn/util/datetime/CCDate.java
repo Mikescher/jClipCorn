@@ -16,9 +16,9 @@ public final class CCDate implements Comparable<CCDate>, StringSpecSupplier {
 	public static final int YEAR_MIN = 1900; 
 	public static final int YEAR_MAX = 9999; 
 
-	public static final int YEAR_UNSPECIFIED = 99;
+	public static final int YEAR_UNSPECIFIED  = 99;
 	public static final int MONTH_UNSPECIFIED = 99;
-	public static final int DAY_UNSPECIFIED = 99;
+	public static final int DAY_UNSPECIFIED   = 99;
 	
 	private static final CCDate DATE_MIN = new CCDate(1, 1, YEAR_MIN);
 	private static final CCDate DATE_MAX = new CCDate(31, 12, YEAR_MAX);
@@ -57,14 +57,14 @@ public final class CCDate implements Comparable<CCDate>, StringSpecSupplier {
 	private static final int[][] MONTHLIMITS = {{0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31}, {0, 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31}};
 	private static final int[] MONTHVALUES = {0, 3, 2, 5, 0, 3, 5, 1, 4, 6, 2, 4};
 	
-	private final int day;
-	private final int month;
-	private final int year;
+	private final int day;   // 1..31
+	private final int month; // 1..12
+	private final int year;  // 1900..9999
 	
 	private CCDate(int d, int m, int y) {
-		day = d;
+		day   = d;
 		month = m;
-		year = y;
+		year  = y;
 	}
 	
 	public static CCDate getCurrentDate() {
@@ -111,7 +111,11 @@ public final class CCDate implements Comparable<CCDate>, StringSpecSupplier {
 	}
 
 	public static CCDate createRandom(Random r) {
-		int y = r.nextInt(YEAR_MAX-YEAR_MIN)+YEAR_MIN;
+		return createRandom(r, YEAR_MIN, YEAR_MAX);
+	}
+
+	public static CCDate createRandom(Random r, int minyear, int maxyear) {
+		int y = r.nextInt(maxyear-minyear)+minyear;
 		int m = r.nextInt(12)+1;
 		int d = r.nextInt(getDaysOfMonth(m, y)) + 1;
 		return create(d, m, y);
@@ -151,7 +155,11 @@ public final class CCDate implements Comparable<CCDate>, StringSpecSupplier {
 	public static int getDaysOfMonth(int m, int y) {
 		return MONTHLIMITS[ (isLeapYear(y)) ? (1) : (0) ][ m ];
 	}
-	
+
+	public static int getDaysOfYear(int y) {
+		return isLeapYear(y) ? 366 : 365;
+	}
+
 	public int getDaysOfMonth() {
 		return getDaysOfMonth(month, year);
 	}
@@ -455,26 +463,45 @@ public final class CCDate implements Comparable<CCDate>, StringSpecSupplier {
 
 	// return days([other] - [this])
 	public int getDayDifferenceTo(CCDate other) {
-		if (isEqual(other)) {
-			return 0;
-		}
+		if (isEqual(other)) return 0;
 		
 		if (this.isUnspecifiedDate() || !this.isValidDate() || other.isUnspecifiedDate() || !other.isValidDate()) return 0;
-		
-		CCDate temp = create(this);
-		int c = 0;
-		
-		while (temp.isLessThan(other)) {
-			temp = temp.getAddDay(1);
-			c++;
+
+		int yy = this.year;
+		int mm = this.month;
+		int dd = this.day;
+
+		var totaldays = 0;
+
+		// [0] Force day = 1
+
+		totaldays = -(dd-1);
+		dd = 1;
+
+		// [1] months
+
+		while (mm != other.month)
+		{
+			var sign = Integer.signum(other.month - mm);
+			totaldays += sign * getDaysOfMonth(Math.min(mm, mm+sign), yy);
+			mm += sign;
 		}
-		
-		while (temp.isGreaterThan(other)) {
-			temp = temp.getSubDay(1);
-			c--;
+
+		// [2] years
+
+		while (yy != other.year)
+		{
+			var sign = Integer.signum(other.year - yy);
+			totaldays += sign * getDaysOfYear(((mm <= 2) ^ (sign<0)) ? yy : yy+sign);
+			yy += sign;
 		}
-		
-		return c;
+
+		// [3] days
+
+		totaldays += (other.day - dd);
+		dd = other.day;
+
+		return totaldays;
 	}
 	
 	@Override

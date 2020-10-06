@@ -10,7 +10,7 @@ import java.text.MessageFormat;
 @SuppressWarnings("nls")
 public final class Str {
 	public final static String Empty = "";
-public final static String SingleSpace = " ";
+	public final static String SingleSpace = " ";
 
 	public static Charset UTF8 = StandardCharsets.UTF_8;
 	

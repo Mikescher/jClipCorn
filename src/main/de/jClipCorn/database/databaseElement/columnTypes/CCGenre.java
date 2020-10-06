@@ -109,6 +109,10 @@ public enum CCGenre implements ContinoousEnum<CCGenre> {
 	}
 
 	private boolean shouldShowInComboBox() {
+		if (this == CCGenre.GENRE_016) return false; // porno
+		if (this == CCGenre.GENRE_017) return false; // softporno
+		if (this == CCGenre.GENRE_018) return false; // hardcore-porno
+
 		return (id < NAMES.length);
 	}
 

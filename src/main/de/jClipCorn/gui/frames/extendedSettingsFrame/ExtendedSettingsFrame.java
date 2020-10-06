@@ -11,7 +11,7 @@ import de.jClipCorn.properties.property.CCProperty;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.adapter.DocumentLambdaAdapter;
 import de.jClipCorn.util.helper.DialogHelper;
-import de.jClipCorn.util.helper.LookAndFeelManager;
+import de.jClipCorn.gui.LookAndFeelManager;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;

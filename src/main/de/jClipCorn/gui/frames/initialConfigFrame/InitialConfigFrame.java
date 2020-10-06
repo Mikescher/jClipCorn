@@ -1,19 +1,20 @@
 package de.jClipCorn.gui.frames.initialConfigFrame;
 
+import de.jClipCorn.gui.LookAndFeelManager;
+import de.jClipCorn.gui.guiComponents.enumComboBox.CCEnumComboBox;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.properties.CCProperties;
+import de.jClipCorn.properties.enumerations.AppTheme;
 import de.jClipCorn.properties.enumerations.CCDatabaseDriver;
 import de.jClipCorn.properties.enumerations.UILanguage;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.helper.FileChooserHelper;
-import de.jClipCorn.util.helper.LookAndFeelManager;
 import de.jClipCorn.util.helper.SwingUtils;
 import org.apache.commons.lang.StringUtils;
 
 import javax.swing.*;
-import java.util.Vector;
 
 public class InitialConfigFrame extends JDialog {
 	private static final long serialVersionUID = -2244186919409771706L;
@@ -30,7 +31,7 @@ public class InitialConfigFrame extends JDialog {
 	private JCheckBox cbCheckForUpdates;
 	private JLabel lblCheckForUpdates;
 	private JLabel lblLooknfeel;
-	private JComboBox<String> cbxLooknFeel;
+	private CCEnumComboBox<AppTheme> cbxLooknFeel;
 	private JLabel lblDatenbankname;
 	private JTextField edDatabasename;
 	private JLabel lblCreatePeriodicallyBackups;
@@ -109,8 +110,8 @@ public class InitialConfigFrame extends JDialog {
 		lblLooknfeel.setBounds(12, 262, 243, 16);
 		getContentPane().add(lblLooknfeel);
 		
-		cbxLooknFeel = new JComboBox<>(new DefaultComboBoxModel<>(new Vector<>(LookAndFeelManager.getLookAndFeelList())));
-		cbxLooknFeel.setSelectedIndex(CCProperties.getInstance().PROP_UI_LOOKANDFEEL.getValue());
+		cbxLooknFeel = new CCEnumComboBox<>(AppTheme.getWrapper());
+		cbxLooknFeel.setSelectedEnum(CCProperties.getInstance().PROP_UI_APPTHEME.getValue());
 		cbxLooknFeel.addActionListener(e -> updateLNF());
 		cbxLooknFeel.setBounds(273, 258, 175, 25);
 		getContentPane().add(cbxLooknFeel);
@@ -184,7 +185,7 @@ public class InitialConfigFrame extends JDialog {
 	}
 	
 	private void updateLNF() {
-		final int idx = cbxLooknFeel.getSelectedIndex();
+		final var theme = cbxLooknFeel.getSelectedEnum();
 		
 		new Thread(() ->
 		{
@@ -192,9 +193,9 @@ public class InitialConfigFrame extends JDialog {
 
 			SwingUtils.invokeLater(() ->
 			{
-				if (cbxLooknFeel.getSelectedIndex() != idx) return;
+				if (cbxLooknFeel.getSelectedEnum() != theme) return;
 
-				LookAndFeelManager.setLookAndFeel(cbxLooknFeel.getSelectedIndex());
+				LookAndFeelManager.setLookAndFeel(cbxLooknFeel.getSelectedEnum());
 
 				SwingUtilities.updateComponentTreeUI(InitialConfigFrame.this);
 
@@ -232,9 +233,9 @@ public class InitialConfigFrame extends JDialog {
 			LocaleBundle.updateLang();
 		}
 
-		if (CCProperties.getInstance().PROP_UI_LOOKANDFEEL.getValue() != cbxLooknFeel.getSelectedIndex()) {
-			CCProperties.getInstance().PROP_UI_LOOKANDFEEL.setValue(cbxLooknFeel.getSelectedIndex());
-			LookAndFeelManager.setLookAndFeel(cbxLooknFeel.getSelectedIndex());
+		if (CCProperties.getInstance().PROP_UI_APPTHEME.getValue() != cbxLooknFeel.getSelectedEnum()) {
+			CCProperties.getInstance().PROP_UI_APPTHEME.setValue(cbxLooknFeel.getSelectedEnum());
+			LookAndFeelManager.setLookAndFeel(cbxLooknFeel.getSelectedEnum());
 		}
 				
 		if (!edVLCPath.getText().trim().isEmpty()) CCProperties.getInstance().PROP_PLAY_VLC_PATH.setValue(edVLCPath.getText());

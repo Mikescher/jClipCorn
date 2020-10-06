@@ -17,7 +17,6 @@ import de.jClipCorn.util.colorquantizer.ColorQuantizerMethod;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.datetime.CCDateTimeFormat;
 import de.jClipCorn.util.helper.ApplicationHelper;
-import de.jClipCorn.util.helper.LookAndFeelManager;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -74,7 +73,7 @@ public class CCProperties {
 	public CCBoolProperty                                   PROP_LOADING_LIVEUPDATE;
 	public CCBoolProperty                                   PROP_STATUSBAR_CALC_SERIES_IN_LENGTH;
 	public CCBoolProperty                                   PROP_STATUSBAR_CALC_SERIES_IN_SIZE;
-	public CCVIntProperty                                   PROP_UI_LOOKANDFEEL;
+	public CCEnumProperty<AppTheme>                         PROP_UI_APPTHEME;
 	public CCStringProperty                                 PROP_PLAY_VLC_PATH;
 	public CCBoolProperty                                   PROP_PLAY_VLC_FULLSCREEN;
 	public CCBoolProperty                                   PROP_PLAY_VLC_AUTOPLAY;
@@ -259,7 +258,7 @@ public class CCProperties {
 		PROP_DATABASE_CLEANSHUTDOWN             = new CCBoolProperty(CAT_COMMON,            this,   "PROP_DATABASE_CLEANSHUTDOWN",              false);
 		PROP_MAINFRAME_FILTERLISTPATH           = new CCStringProperty(CAT_COMMON,          this,   "PROP_MAINFRAME_FILTERLISTPATH",            getDefFLPath());
 
-		PROP_UI_LOOKANDFEEL                     = new CCVIntProperty(CAT_VIEW,              this,   "PROP_UI_LOOKANDFEEL",                      getDefStyle(),                      LookAndFeelManager.getLookAndFeelVector());
+		PROP_UI_APPTHEME                        = new CCEnumProperty<>(CAT_VIEW,            this,   "PROP_UI_APPTHEME",                         getDefTheme(),                      AppTheme.getWrapper());
 		PROP_MAINFRAME_TABLEBACKGROUND          = new CCEnumProperty<>(CAT_VIEW,            this,   "PROP_MAINFRAME_TABLEBACKGROUND",           UITableBackground.WHITE,            UITableBackground.getWrapper());
 		PROP_LOADING_LIVEUPDATE                 = new CCBoolProperty(CAT_VIEW,              this,   "PROP_LOADING_LIVEUPDATE",                  false);
 		PROP_MAINFRAME_SCROLLSPEED              = new CCPIntProperty(CAT_VIEW,              this,   "PROP_MAINFRAME_SCROLLSPEED",               3);
@@ -448,23 +447,20 @@ public class CCProperties {
 		return BrowserLanguage.ENGLISH;
 	}
 	
-	private int getDefStyle() {
-		if (ApplicationHelper.isWindows()) return LookAndFeelManager.ID_LNF_WINDOWS;
-		if (ApplicationHelper.isMac())     return LookAndFeelManager.ID_LNF_METAL;
-		if (ApplicationHelper.isUnix())    return LookAndFeelManager.ID_LNF_METAL;
+	private AppTheme getDefTheme() {
+		if (ApplicationHelper.isWindows()) return AppTheme.WINDOWS;
+		if (ApplicationHelper.isMac())     return AppTheme.METAL;
+		if (ApplicationHelper.isUnix())    return AppTheme.METAL;
 		
-		return LookAndFeelManager.ID_LNF_METAL;
+		return AppTheme.METAL;
 	}
 	
 	private boolean getDefStatbarLength() {
-		return getDefStyle() != LookAndFeelManager.ID_LNF_WINDOWS;
+		return getDefTheme() != AppTheme.WINDOWS;
 	}
 	
 	private int getDefMFHeight() {
-		if (LookAndFeelManager.isMetal())
-			return 670;
-		else
-			return 660;
+			return (getDefTheme() == AppTheme.METAL) ? 670 : 660;
 	}
 
 	public static CCProperties getInstance() {

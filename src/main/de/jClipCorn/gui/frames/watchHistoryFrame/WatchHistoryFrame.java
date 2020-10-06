@@ -40,7 +40,7 @@ import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.adapter.TreeExpansionAdapter;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.datetime.CCDateTime;
-import de.jClipCorn.util.helper.LookAndFeelManager;
+import de.jClipCorn.gui.LookAndFeelManager;
 import de.jClipCorn.util.stream.CCStreams;
 
 public class WatchHistoryFrame extends JFrame {

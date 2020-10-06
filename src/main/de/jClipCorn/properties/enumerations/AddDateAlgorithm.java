@@ -18,7 +18,7 @@ public enum AddDateAlgorithm implements ContinoousEnum<AddDateAlgorithm> {
 		LocaleBundle.getString("AddDateAlgorithm.Opt3"),
 	};
 	
-	private int id;
+	private final int id;
 
 	private static final EnumWrapper<AddDateAlgorithm> wrapper = new EnumWrapper<>(OLDEST_DATE);
 

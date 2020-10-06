@@ -14,7 +14,7 @@ import de.jClipCorn.properties.CCPropertyCategory;
 import de.jClipCorn.properties.property.CCProperty;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.helper.ExtendedFocusTraversalOnArray;
-import de.jClipCorn.util.helper.LookAndFeelManager;
+import de.jClipCorn.gui.LookAndFeelManager;
 import de.jClipCorn.util.helper.SwingUtils;
 
 import javax.swing.*;

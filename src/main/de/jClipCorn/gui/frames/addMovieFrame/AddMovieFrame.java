@@ -38,7 +38,7 @@ import de.jClipCorn.util.formatter.FileSizeFormatter;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.helper.FileChooserHelper;
-import de.jClipCorn.util.helper.LookAndFeelManager;
+import de.jClipCorn.gui.LookAndFeelManager;
 import de.jClipCorn.util.helper.SwingUtils;
 import de.jClipCorn.util.parser.FilenameParser;
 import de.jClipCorn.util.parser.FilenameParserResult;

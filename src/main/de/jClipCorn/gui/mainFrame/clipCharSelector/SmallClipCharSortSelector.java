@@ -10,7 +10,7 @@ import javax.swing.JButton;
 import javax.swing.LayoutStyle;
 
 import de.jClipCorn.gui.mainFrame.MainFrame;
-import de.jClipCorn.util.helper.LookAndFeelManager;
+import de.jClipCorn.gui.LookAndFeelManager;
 
 /**
  * For Substance Themes

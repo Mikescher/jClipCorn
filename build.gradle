@@ -253,6 +253,8 @@ dependencies {
 
 	implementation 'junit:junit:4.12'
 	implementation 'org.hamcrest:hamcrest-core:1.3'
+
+	implementation 'com.formdev:flatlaf:0.43'
 }
 
 apply from: 'build_eclipse_config.gradle'

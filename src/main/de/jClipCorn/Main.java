@@ -3,6 +3,7 @@ package de.jClipCorn;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.features.log.ExceptionHandler;
+import de.jClipCorn.gui.LookAndFeelManager;
 import de.jClipCorn.gui.frames.settingsFrame.SettingsFrame;
 import de.jClipCorn.gui.frames.statisticsFrame.StatisticsFrame;
 import de.jClipCorn.gui.frames.statisticsFrame.StatisticsPanel;
@@ -13,7 +14,6 @@ import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.enumerations.ResourcePreloadMode;
 import de.jClipCorn.util.DriveMap;
 import de.jClipCorn.util.formatter.PathFormatter;
-import de.jClipCorn.util.helper.LookAndFeelManager;
 import de.jClipCorn.util.helper.SwingUtils;
 
 //
@@ -60,7 +60,7 @@ public class Main {
 			}
 			Globals.TIMINGS.stop(Globals.TIMING_INIT_TESTREADONLY);
 
-			LookAndFeelManager.setLookAndFeel(CCProperties.getInstance().PROP_UI_LOOKANDFEEL.getValue());
+			LookAndFeelManager.setLookAndFeel(CCProperties.getInstance().PROP_UI_APPTHEME.getValue());
 
 			final CCMovieList mList = CCMovieList.create(true);
 

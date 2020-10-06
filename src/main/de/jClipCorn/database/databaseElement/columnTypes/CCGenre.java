@@ -170,7 +170,7 @@ public enum CCGenre implements ContinoousEnum<CCGenre> {
 		if (ng.equals("documentary"))            return new CCGenre[]{CCGenre.GENRE_034};
 		if (ng.equals("abenteuer"))              return new CCGenre[]{CCGenre.GENRE_035};
 		if (ng.equals("adventure"))              return new CCGenre[]{CCGenre.GENRE_035};
-		if (ng.equals("action & adventure"))     return new CCGenre[]{CCGenre.GENRE_035};
+		if (ng.equals("action & adventure"))     return new CCGenre[]{CCGenre.GENRE_019, CCGenre.GENRE_035};
 		if (ng.equals("romanze"))                return new CCGenre[]{CCGenre.GENRE_036};
 		if (ng.equals("romance"))                return new CCGenre[]{CCGenre.GENRE_036};
 		if (ng.equals("mystery"))                return new CCGenre[]{CCGenre.GENRE_037};
@@ -221,12 +221,12 @@ public enum CCGenre implements ContinoousEnum<CCGenre> {
 			case 53:    return new CCGenre[]{CCGenre.GENRE_006};                      // Thriller
 			case 10752: return new CCGenre[]{CCGenre.GENRE_015};                      // War
 			case 37:    return new CCGenre[]{CCGenre.GENRE_037};                      // Western
-			case 10759: return new CCGenre[]{CCGenre.GENRE_035, CCGenre.GENRE_035};   // Action & Adventure
+			case 10759: return new CCGenre[]{CCGenre.GENRE_019, CCGenre.GENRE_035};   // Action & Adventure
 			case 10762: return new CCGenre[]{CCGenre.GENRE_048};                      // Kids
 			case 10763: return new CCGenre[]{};                                       // News
 			case 10764: return new CCGenre[]{};                                       // Reality
-			//case 10765: return new CCGenre[]{CCGenre.GENRE_009, CCGenre.GENRE_038}; // Sci-Fi & Fantasy
-			case 10765: return new CCGenre[]{};                                       // Sci-Fi & Fantasy
+			case 10765: return new CCGenre[]{CCGenre.GENRE_009, CCGenre.GENRE_038};   // Sci-Fi & Fantasy
+			//case 10765: return new CCGenre[]{};                                     // Sci-Fi & Fantasy
 			case 10766: return new CCGenre[]{CCGenre.GENRE_049};                      // Soap
 			case 10767: return new CCGenre[]{};                                       // Talk
 			case 10768: return new CCGenre[]{CCGenre.GENRE_015};                      // War & Politics

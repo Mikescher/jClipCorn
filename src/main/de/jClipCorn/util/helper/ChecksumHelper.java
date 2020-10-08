@@ -13,7 +13,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.RandomAccessFile;
-import java.util.ArrayList;
 import java.util.regex.Pattern;
 
 public class ChecksumHelper
@@ -68,36 +67,36 @@ public class ChecksumHelper
 		return true;
 	}
 
-	public static String fastVideoHash(File[] files) throws IOException
-	{
-		var raws = new ArrayList<Tuple<String, String[]>>();
-		for (File f : files) raws.add(fastVideoHashRaw(f));
-
-		StringBuilder result = new StringBuilder();
-		result.append('[');
-		result.append(StringUtils.leftPad(Integer.toString(FASTVIDEOHASH_VERSION), 2, '0'));
-		result.append('-');
-
-		for (int i = 0; i < raws.size(); i++)
-		{
-			if (i>0) result.append('|');
-			result.append(raws.get(i).Item1);
-		}
-
-		result.append('-');
-
-		for (int i = 0; i < FASTVIDEOHASH_BLOCKCOUNT; i++)
-		{
-			if (i>0) result.append(':');
-			for (int j = 0; j < raws.size(); j++)
-			{
-				if (j>0) result.append('|');
-				result.append(raws.get(j).Item2[i]);
-			}
-		}
-
-		return result.toString();
-	}
+	//public static String fastVideoHash(File[] files) throws IOException
+	//{
+	//	var raws = new ArrayList<Tuple<String, String[]>>();
+	//	for (File f : files) raws.add(fastVideoHashRaw(f));
+	//
+	//	StringBuilder result = new StringBuilder();
+	//	result.append('[');
+	//	result.append(StringUtils.leftPad(Integer.toString(FASTVIDEOHASH_VERSION), 2, '0'));
+	//	result.append('-');
+	//
+	//	for (int i = 0; i < raws.size(); i++)
+	//	{
+	//		if (i>0) result.append('|');
+	//		result.append(raws.get(i).Item1);
+	//	}
+	//
+	//	result.append('-');
+	//
+	//	for (int i = 0; i < FASTVIDEOHASH_BLOCKCOUNT; i++)
+	//	{
+	//		if (i>0) result.append(':');
+	//		for (int j = 0; j < raws.size(); j++)
+	//		{
+	//			if (j>0) result.append('|');
+	//			result.append(raws.get(j).Item2[i]);
+	//		}
+	//	}
+	//
+	//	return result.toString();
+	//}
 
 	public static String fastVideoHash(File f) throws IOException
 	{

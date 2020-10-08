@@ -1,6 +1,7 @@
 package de.jClipCorn.test;
 
 import de.jClipCorn.database.CCMovieList;
+import de.jClipCorn.database.databaseElement.columnTypes.CCFileSize;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.features.serialization.ExportHelper;
 import de.jClipCorn.properties.CCProperties;
@@ -57,12 +58,11 @@ public class ClipCornBaseTest {
 		// create some dummy values for the file checksums
 
 		{
-			int i = 100;
 			for (var p : ml.iteratorPlayables())
 			{
 				if (p.getMediaInfo().isUnset()) continue;
 				var mi = p.getMediaInfo().toPartial();
-				mi.Checksum = Opt.of("[01-" + StringUtils.leftPad(Integer.toHexString(++i).toUpperCase(), 10, '0') + "-00:00:00:00:00:00:00:00]");
+				mi.Checksum = Opt.of("[01-" + StringUtils.leftPad(Long.toHexString(mi.Filesize.orElse(CCFileSize.ZERO).getBytes()).toUpperCase(), 10, '0') + "-00:00:00:00:00:00:00:00]");
 				p.setMediaInfo(mi.toMediaInfo());
 			}
 		}

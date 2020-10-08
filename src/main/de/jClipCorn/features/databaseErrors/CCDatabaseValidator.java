@@ -440,7 +440,7 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator {
 					DatabaseErrorType.ERROR_INVALID_HASH,
 					o -> o.ValidateMovies,
 					mov -> mov.getMediaInfo().isSet() && !ChecksumHelper.isValidVideoHash(mov.getMediaInfo().getChecksum()),
-					mov -> DatabaseError.createSingle(DatabaseErrorType.ERROR_INVALID_CHARACTERS, mov));
+					mov -> DatabaseError.createSingle(DatabaseErrorType.ERROR_INVALID_HASH, mov));
 
 			// Hash is impossible (length/fislesize mismatch)
 			addMovieValidation(
@@ -449,7 +449,7 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator {
 					mov -> mov.getMediaInfo().isSet() &&
 						   ChecksumHelper.isValidVideoHash(mov.getMediaInfo().getChecksum()) &&
 						   !ChecksumHelper.isPossibleVideoHash(mov.getMediaInfo().getChecksum(), mov.getMediaInfo()),
-					mov -> DatabaseError.createSingle(DatabaseErrorType.ERROR_INVALID_CHARACTERS, mov));
+					mov -> DatabaseError.createSingle(DatabaseErrorType.ERROR_IMPOSSIBLE_HASH, mov));
 		}
 
 		// ###############################################

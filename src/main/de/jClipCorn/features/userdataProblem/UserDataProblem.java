@@ -103,6 +103,7 @@ public class UserDataProblem {
 		//################################################################################################################
 		
 		if (CCStreams.iterate(newdata.getParts()).any(p -> !Str.isNullOrWhitespace(p)) &&
+			CCStreams.iterate(newdata.getParts()).any(Str::isNullOrWhitespace) &&
 			CCStreams.iterate(newdata.getParts()).findIndex(Str::isNullOrWhitespace) < CCStreams.iterate(newdata.getParts()).findLastIndex(p -> !Str.isNullOrWhitespace(p))) {
 			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_HOLE_IN_PATH));
 		}

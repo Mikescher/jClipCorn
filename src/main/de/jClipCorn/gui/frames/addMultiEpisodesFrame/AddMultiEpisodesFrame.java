@@ -75,6 +75,8 @@ public class AddMultiEpisodesFrame extends JFrame
 
 		setTitle(LocaleBundle.getFormattedString("AddMultiEpisodesFrame.title", target.getSeries().getTitle())); //$NON-NLS-1$
 
+		spnFirstEpNumber.setValue(target.getNextEpisodeNumber());
+
 		updateButtons();
 	}
 
@@ -88,6 +90,8 @@ public class AddMultiEpisodesFrame extends JFrame
 
 		btnAddFiles.setEnabled(       bb);
 		btnInsertTitles.setEnabled(   bb && _hasFiles);
+		spnFirstEpNumber.setEnabled(  bb && _hasFiles);
+		lblFirstEpNumber.setEnabled(  bb && _hasFiles);
 		btnGetLength.setEnabled(      bb && _hasFiles && _hasTitles);
 		btnGetLanguages.setEnabled(   bb && _hasFiles && _hasTitles);
 		btnGetMediainfo.setEnabled(   bb && _hasFiles && _hasTitles);
@@ -126,7 +130,7 @@ public class AddMultiEpisodesFrame extends JFrame
 
 		List<NewEpisodeVM> data = new ArrayList<>();
 
-		int epid = target.getNextEpisodeNumber();
+		int epid = (int)spnFirstEpNumber.getValue();;
 		for (File f : files) {
 			NewEpisodeVM vm  = new NewEpisodeVM();
 			vm.SourcePath    = f.getAbsolutePath();
@@ -167,7 +171,7 @@ public class AddMultiEpisodesFrame extends JFrame
 
 		List<NewEpisodeVM> data = new ArrayList<>(lsData.getDataCopy());
 
-		int epid = target.getNextEpisodeNumber() + data.size();
+		int epid = (int)spnFirstEpNumber.getValue() + data.size();
 		for (File f : files) {
 			NewEpisodeVM vm  = new NewEpisodeVM();
 			vm.SourcePath    = f.getAbsolutePath();
@@ -534,6 +538,23 @@ public class AddMultiEpisodesFrame extends JFrame
 		updateButtons();
 	}
 
+	private void onFirstEpNumberChanged() {
+		List<NewEpisodeVM> data = lsData.getDataCopy();
+		if (data.size() == 0) return;
+
+		int num_offset = (int)spnFirstEpNumber.getValue();
+
+		for (int i = 0; i < data.size(); i++) {
+			data.get(i).TargetRoot = ""; //$NON-NLS-1$
+			data.get(i).EpisodeNumber = i+num_offset;
+			data.get(i).updateTarget(target, CCDBLanguageList.union(CCStreams.iterate(data).map(p -> p.Language)), _globalSeriesRoot);
+			data.get(i).validate(target);
+		}
+		lsData.forceDataChangedRedraw();
+
+		updateButtons();
+	}
+
 	private void onOkayKeep() { onOkay(CopyMode.KeepFile); }
 
 	private void onOkayRename() { onOkay(CopyMode.Rename); }
@@ -714,6 +735,8 @@ public class AddMultiEpisodesFrame extends JFrame
 		cbxIgnoreProblems = new JCheckBox();
 		btnOkayRename = new JButton();
 		btnOkayMove = new JButton();
+		lblFirstEpNumber = new JLabel();
+		spnFirstEpNumber = new JSpinner();
 		panel2 = new JPanel();
 		progressBar = new JProgressBar();
 		progressBar2 = new JProgressBar();
@@ -731,8 +754,8 @@ public class AddMultiEpisodesFrame extends JFrame
 		//======== panel1 ========
 		{
 			panel1.setLayout(new FormLayout(
-				"6*(default, $lcgap), default:grow, 2*($lcgap, default)", //$NON-NLS-1$
-				"2*(default, $lgap), default")); //$NON-NLS-1$
+				"6*(default, $lcgap), [50dlu,default], $lcgap, 0dlu:grow, 2*($lcgap, default)", //$NON-NLS-1$
+				"3*(default, $lgap), default")); //$NON-NLS-1$
 
 			//---- btnAddFiles ----
 			btnAddFiles.setText(LocaleBundle.getString("AddMultiEpisodesFrame.Button_11")); //$NON-NLS-1$
@@ -772,12 +795,12 @@ public class AddMultiEpisodesFrame extends JFrame
 			//---- btnOkayKeep ----
 			btnOkayKeep.setText(LocaleBundle.getString("AddMultiEpisodesFrame.Button_64")); //$NON-NLS-1$
 			btnOkayKeep.addActionListener(e -> onOkayKeep());
-			panel1.add(btnOkayKeep, CC.xy(15, 3));
+			panel1.add(btnOkayKeep, CC.xy(17, 3));
 
 			//---- btnOkayCopy ----
 			btnOkayCopy.setText(LocaleBundle.getString("AddMultiEpisodesFrame.Button_61")); //$NON-NLS-1$
 			btnOkayCopy.addActionListener(e -> onOkayCopy());
-			panel1.add(btnOkayCopy, CC.xy(17, 3));
+			panel1.add(btnOkayCopy, CC.xy(19, 3));
 
 			//---- btnGetMediainfo ----
 			btnGetMediainfo.setText(LocaleBundle.getString("AddMultiEpisodesFrame.Button_33")); //$NON-NLS-1$
@@ -786,17 +809,26 @@ public class AddMultiEpisodesFrame extends JFrame
 
 			//---- cbxIgnoreProblems ----
 			cbxIgnoreProblems.setText(LocaleBundle.getString("AddMultiEpisodesFrame.ChkbxIgnoreProblems")); //$NON-NLS-1$
-			panel1.add(cbxIgnoreProblems, CC.xy(11, 5));
+			panel1.add(cbxIgnoreProblems, CC.xywh(11, 5, 3, 1));
 
 			//---- btnOkayRename ----
 			btnOkayRename.setText(LocaleBundle.getString("AddMultiEpisodesFrame.Button_63")); //$NON-NLS-1$
 			btnOkayRename.addActionListener(e -> onOkayRename());
-			panel1.add(btnOkayRename, CC.xy(15, 5));
+			panel1.add(btnOkayRename, CC.xy(17, 5));
 
 			//---- btnOkayMove ----
 			btnOkayMove.setText(LocaleBundle.getString("AddMultiEpisodesFrame.Button_62")); //$NON-NLS-1$
 			btnOkayMove.addActionListener(e -> onOkayMove());
-			panel1.add(btnOkayMove, CC.xy(17, 5));
+			panel1.add(btnOkayMove, CC.xy(19, 5));
+
+			//---- lblFirstEpNumber ----
+			lblFirstEpNumber.setText(LocaleBundle.getString("AddMultiEpisodesFrame.NumberSpinnerLabel")); //$NON-NLS-1$
+			panel1.add(lblFirstEpNumber, CC.xy(11, 7));
+
+			//---- spnFirstEpNumber ----
+			spnFirstEpNumber.setModel(new SpinnerNumberModel(1, 0, null, 1));
+			spnFirstEpNumber.addChangeListener(e -> onFirstEpNumberChanged());
+			panel1.add(spnFirstEpNumber, CC.xy(13, 7));
 		}
 		contentPane.add(panel1, CC.xy(2, 4));
 
@@ -830,6 +862,8 @@ public class AddMultiEpisodesFrame extends JFrame
 	private JCheckBox cbxIgnoreProblems;
 	private JButton btnOkayRename;
 	private JButton btnOkayMove;
+	private JLabel lblFirstEpNumber;
+	private JSpinner spnFirstEpNumber;
 	private JPanel panel2;
 	private JProgressBar progressBar;
 	private JProgressBar progressBar2;

@@ -1,5 +1,6 @@
 package de.jClipCorn.gui.frames.addMultiEpisodesFrame;
 
+import com.jformdesigner.annotations.DesignCreate;
 import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleColumnPrototype;
 import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleTable;
@@ -14,6 +15,9 @@ public class MultiEpisodesTable extends JCCSimpleTable<NewEpisodeVM> {
 	private static final long serialVersionUID = 6919528266265643678L;
 
 	private final CCSeries _src;
+
+	@DesignCreate
+	private static MultiEpisodesTable designCreate() { return new MultiEpisodesTable(null); }
 
 	public MultiEpisodesTable(CCSeries src) {
 		_src = src;

@@ -210,7 +210,7 @@ public class Main {
 
  - [ ] AboutFrame
  - [ ] AddMovieFrame
- - [ ] AddMultiEpisodesFrame
+ - [X] AddMultiEpisodesFrame
  - [ ] AddSeasonFrame
  - [X] AddSeriesFrame
  - [ ] AllRatingsFrame

@@ -1,9 +1,7 @@
 package de.jClipCorn.gui.frames.addMultiEpisodesFrame;
 
-import com.jgoodies.forms.layout.ColumnSpec;
+import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.FormSpecs;
-import com.jgoodies.forms.layout.RowSpec;
 import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguageList;
@@ -30,172 +28,77 @@ import org.apache.commons.io.FileUtils;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AddMultiEpisodesFrame extends JFrame {
-	private static final long serialVersionUID = -400962568375180620L;
-
+public class AddMultiEpisodesFrame extends JFrame
+{
 	private enum CopyMode { KeepFile, Rename, Move, Copy }
-
-	private JPanel contentPane;
-	private MultiEpisodesTable lsData;
-	private JButton btnAddFiles;
-	private JButton btnInsertTitles;
-	private JButton btnGetLength;
-	private JButton btnGetLanguages;
-	private JButton btnSetDestination;
-	private JButton btnOkayCopy;
-	private JButton btnOkayMove;
-	private JButton btnOkayRename;
-	private JButton btnOkayKeep;
-	private JProgressBar progressBar;
-	private JProgressBar progressBar2;
-	private JButton btnKeepDestination;
-	private JButton btnGetMediainfo;
-
-	private final JFileChooser massVideoFileChooser;
 
 	private final String _globalSeriesRoot;
 	private final CCSeason target;
 	private final UpdateCallbackListener callback;
+
+	private JFileChooser massVideoFileChooser;
 
 	private boolean _hasFiles       = false;
 	private boolean _hasTitles      = false;
 	private boolean _hasLength      = false;
 	private boolean _hasLanguage    = false;
 	private boolean _hasMediaInfo   = false;
-	private JButton btnAddMoreFiles;
-	private JCheckBox cbxIgnoreProblems;
 
-	public AddMultiEpisodesFrame(Component owner, CCSeason season, UpdateCallbackListener ucl) {		
+	public AddMultiEpisodesFrame(Component owner, CCSeason season, UpdateCallbackListener ucl)
+	{
 		super();
 		this.callback  = ucl;
 		this.target    = season;
 
-		String cPathStart = season.getSeries().getCommonPathStart(true);
+		_globalSeriesRoot = season.getMovieList().guessSeriesRootPath();
+
+		initComponents();
+		postInit();
+
+		setLocationRelativeTo(owner);
+	}
+
+	private void postInit()
+	{
+		setIconImage(Resources.IMG_FRAME_ICON.get());
+
+		String cPathStart = target.getSeries().getCommonPathStart(true);
 		massVideoFileChooser = new JFileChooser(PathFormatter.fromCCPath(cPathStart));
 		massVideoFileChooser.setMultiSelectionEnabled(true);
 		massVideoFileChooser.setFileFilter(FileChooserHelper.createLocalFileFilter("AddMovieFrame.videoFileChooser.filterDescription", CCFileFormat::isValidMovieFormat)); //$NON-NLS-1$
 		massVideoFileChooser.setDialogTitle(LocaleBundle.getString("AddMovieFrame.videoFileChooser.title")); //$NON-NLS-1$
 
-		_globalSeriesRoot = season.getMovieList().guessSeriesRootPath();
+		setTitle(LocaleBundle.getFormattedString("AddMultiEpisodesFrame.title", target.getSeries().getTitle())); //$NON-NLS-1$
 
-		init(owner);
-	}
-
-	private void init(Component owner) {
-		initGUI();
-
-		setLocationRelativeTo(owner);
-		
 		updateButtons();
 	}
 
-	private void initGUI() {
-		setTitle(LocaleBundle.getFormattedString("AddMultiEpisodesFrame.title", target.getSeries().getTitle())); //$NON-NLS-1$
-		setIconImage(Resources.IMG_FRAME_ICON.get());
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setSize(new Dimension(1350, 600));
-		setMinimumSize(new Dimension(800, 300));
-		contentPane = new JPanel();
-		contentPane.setFocusable(false);
-		contentPane.setBorder(null);
-		setContentPane(contentPane);
-		contentPane.setLayout(new FormLayout(new ColumnSpec[] {
-				FormSpecs.RELATED_GAP_COLSPEC,
-				FormSpecs.DEFAULT_COLSPEC,
-				FormSpecs.RELATED_GAP_COLSPEC,
-				FormSpecs.DEFAULT_COLSPEC,
-				FormSpecs.RELATED_GAP_COLSPEC,
-				FormSpecs.DEFAULT_COLSPEC,
-				FormSpecs.RELATED_GAP_COLSPEC,
-				FormSpecs.DEFAULT_COLSPEC,
-				FormSpecs.RELATED_GAP_COLSPEC,
-				FormSpecs.DEFAULT_COLSPEC,
-				FormSpecs.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("default:grow"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_COLSPEC,
-				FormSpecs.DEFAULT_COLSPEC,
-				FormSpecs.RELATED_GAP_COLSPEC,
-				FormSpecs.DEFAULT_COLSPEC,
-				FormSpecs.RELATED_GAP_COLSPEC,},
-			new RowSpec[] {
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("default:grow"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,}));
-		
-		lsData = new MultiEpisodesTable(target.getSeries());
-		contentPane.add(lsData, "2, 2, 15, 1, fill, fill"); //$NON-NLS-1$
-		
-		btnAddFiles = new JButton(LocaleBundle.getString("AddMultiEpisodesFrame.Button_11")); //$NON-NLS-1$
-		btnAddFiles.addActionListener(this::onAddFiles);
-		contentPane.add(btnAddFiles, "2, 4"); //$NON-NLS-1$
-		
-		btnInsertTitles = new JButton(LocaleBundle.getString("AddMultiEpisodesFrame.Button_2")); //$NON-NLS-1$
-		btnInsertTitles.addActionListener(this::onInsertTitles);
-		contentPane.add(btnInsertTitles, "4, 4"); //$NON-NLS-1$
-		
-		btnGetLength = new JButton(LocaleBundle.getString("AddMultiEpisodesFrame.Button_31")); //$NON-NLS-1$
-		btnGetLength.addActionListener(this::onGetLength);
-		contentPane.add(btnGetLength, "6, 4"); //$NON-NLS-1$
-		
-		btnSetDestination = new JButton(LocaleBundle.getString("AddMultiEpisodesFrame.Button_51")); //$NON-NLS-1$
-		btnSetDestination.addActionListener(this::onSetDestination);
-		contentPane.add(btnSetDestination, "10, 4"); //$NON-NLS-1$
-		
-		btnOkayMove = new JButton(LocaleBundle.getString("AddMultiEpisodesFrame.Button_62")); //$NON-NLS-1$
-		btnOkayMove.addActionListener(e -> onOkay(CopyMode.Move));
-		
-		btnOkayRename = new JButton(LocaleBundle.getString("AddMultiEpisodesFrame.Button_63")); //$NON-NLS-1$
-		btnOkayRename.addActionListener(e -> onOkay(CopyMode.Rename));
+	private void updateButtons() {
+		boolean iskeep   = CCStreams.iterate(lsData.getDataDirect()).any(d -> d.NoMove);
+		boolean allvalid = cbxIgnoreProblems.isSelected() || CCStreams.iterate(lsData.getDataDirect()).all(p -> p.IsValid);
 
-		btnOkayKeep = new JButton(LocaleBundle.getString("AddMultiEpisodesFrame.Button_64")); //$NON-NLS-1$
-		btnOkayKeep.addActionListener(e -> onOkay(CopyMode.KeepFile));
-		contentPane.add(btnOkayKeep, "14, 6, fill, default"); //$NON-NLS-1$
-		
-		cbxIgnoreProblems = new JCheckBox(LocaleBundle.getString("AddMultiEpisodesFrame.ChkbxIgnoreProblems")); //$NON-NLS-1$
-		cbxIgnoreProblems.setEnabled(false);
-		cbxIgnoreProblems.addActionListener((e) -> updateButtons());
-		contentPane.add(cbxIgnoreProblems, "12, 8"); //$NON-NLS-1$
-		contentPane.add(btnOkayRename, "14, 8, fill, default"); //$NON-NLS-1$
-		
-		btnAddMoreFiles = new JButton(LocaleBundle.getString("AddMultiEpisodesFrame.Button_12")); //$NON-NLS-1$
-		btnAddMoreFiles.addActionListener(this::onAddMoreFiles);
-		contentPane.add(btnAddMoreFiles, "2, 6, fill, fill"); //$NON-NLS-1$
-		
-		btnOkayCopy = new JButton(LocaleBundle.getString("AddMultiEpisodesFrame.Button_61")); //$NON-NLS-1$
-		btnOkayCopy.addActionListener(e -> onOkay(CopyMode.Copy));
-		contentPane.add(btnOkayMove, "16, 8, fill, default"); //$NON-NLS-1$
-		
-		btnGetLanguages = new JButton(LocaleBundle.getString("AddMultiEpisodesFrame.Button_32")); //$NON-NLS-1$
-		btnGetLanguages.addActionListener(this::onGetLanguages);
-		contentPane.add(btnGetLanguages, "6, 6"); //$NON-NLS-1$
-		
-		btnKeepDestination = new JButton(LocaleBundle.getString("AddMultiEpisodesFrame.Button_52")); //$NON-NLS-1$
-		btnKeepDestination.addActionListener(this::onKeepDestination);
-		contentPane.add(btnKeepDestination, "10, 6"); //$NON-NLS-1$
-		contentPane.add(btnOkayCopy, "16, 6, fill, default"); //$NON-NLS-1$
-		
-		btnGetMediainfo = new JButton(LocaleBundle.getString("AddMultiEpisodesFrame.Button_33")); //$NON-NLS-1$
-		btnGetMediainfo.addActionListener(this::onGetMediaInfo);
-		contentPane.add(btnGetMediainfo, "6, 8"); //$NON-NLS-1$
+		boolean hasMI = cbxIgnoreProblems.isSelected() || _hasMediaInfo;
 
-		progressBar = new JProgressBar();
-		contentPane.add(progressBar, "2, 10, 9, 1"); //$NON-NLS-1$
-		
-		progressBar2 = new JProgressBar();
-		contentPane.add(progressBar2, "12, 10, 5, 1"); //$NON-NLS-1$
+		boolean bb = isEnabled();
+
+		btnAddFiles.setEnabled(       bb);
+		btnInsertTitles.setEnabled(   bb && _hasFiles);
+		btnGetLength.setEnabled(      bb && _hasFiles && _hasTitles);
+		btnGetLanguages.setEnabled(   bb && _hasFiles && _hasTitles);
+		btnGetMediainfo.setEnabled(   bb && _hasFiles && _hasTitles);
+		cbxIgnoreProblems.setEnabled( bb && _hasFiles && _hasTitles);
+		btnSetDestination.setEnabled( bb && _hasFiles && _hasTitles && _hasLanguage && _hasLength && hasMI);
+		btnKeepDestination.setEnabled(bb && _hasFiles && _hasTitles && _hasLanguage && _hasLength && hasMI);
+		btnOkayCopy.setEnabled(       bb && _hasFiles && _hasTitles && _hasLanguage && _hasLength && hasMI && !iskeep && allvalid);
+		btnOkayMove.setEnabled(       bb && _hasFiles && _hasTitles && _hasLanguage && _hasLength && hasMI && !iskeep && allvalid);
+		btnOkayRename.setEnabled(     bb && _hasFiles && _hasTitles && _hasLanguage && _hasLength && hasMI && !iskeep && allvalid);
+		btnOkayKeep.setEnabled(       bb && _hasFiles && _hasTitles && _hasLanguage && _hasLength && hasMI &&  iskeep && allvalid);
+		btnAddMoreFiles.setEnabled(   bb && lsData.getDataCopy().size()>0);
 	}
 
 	private String getCommonFolderPathStart() {
@@ -206,7 +109,12 @@ public class AddMultiEpisodesFrame extends JFrame {
 		return PathFormatter.fromCCPath(PathFormatter.getCommonFolderPath(paths));
 	}
 
-	private void onAddFiles(ActionEvent evt) {
+	private void setAllEnabled(boolean b) {
+		setEnabled(b);
+		updateButtons();
+	}
+
+	private void onAddFiles() {
 		int returnval = massVideoFileChooser.showOpenDialog(this);
 		if (returnval != JFileChooser.APPROVE_OPTION) return;
 
@@ -247,7 +155,7 @@ public class AddMultiEpisodesFrame extends JFrame {
 		updateButtons();
 	}
 
-	private void onAddMoreFiles(ActionEvent evt) {
+	private void onAddMoreFiles() {
 		int returnval = massVideoFileChooser.showOpenDialog(this);
 		if (returnval != JFileChooser.APPROVE_OPTION) return;
 
@@ -288,35 +196,35 @@ public class AddMultiEpisodesFrame extends JFrame {
 		updateButtons();
 	}
 
-	private void onInsertTitles(ActionEvent evt) {
+	private void onInsertTitles() {
 		if (lsData.getDataCopy().size() == 0) return;
 
 		OmniParserFrame oframe = new OmniParserFrame(
-			this,
-			(d) ->
-			{
-				List<NewEpisodeVM> data = lsData.getDataCopy();
-				for (int i = 0; i < data.size(); i++) {
-					data.get(i).Title = d.get(i);
-					data.get(i).updateTarget(target, CCDBLanguageList.union(CCStreams.iterate(data).map(p -> p.Language)), _globalSeriesRoot);
-					data.get(i).validate(target);
-				}
-				lsData.forceDataChangedRedraw();
-				lsData.autoResize();
+				this,
+				(d) ->
+				{
+					List<NewEpisodeVM> data = lsData.getDataCopy();
+					for (int i = 0; i < data.size(); i++) {
+						data.get(i).Title = d.get(i);
+						data.get(i).updateTarget(target, CCDBLanguageList.union(CCStreams.iterate(data).map(p -> p.Language)), _globalSeriesRoot);
+						data.get(i).validate(target);
+					}
+					lsData.forceDataChangedRedraw();
+					lsData.autoResize();
 
-				_hasTitles = true;
-				updateButtons();
+					_hasTitles = true;
+					updateButtons();
 
-			},
-			CCStreams.iterate(lsData.getDataDirect()).map(p -> p.Title).enumerate(),
-			getCommonFolderPathStart(),
-			CCStreams.iterate(lsData.getDataDirect()).stringjoin(p -> p.Title, "\n"), //$NON-NLS-1$
-			true);
+				},
+				CCStreams.iterate(lsData.getDataDirect()).map(p -> p.Title).enumerate(),
+				getCommonFolderPathStart(),
+				CCStreams.iterate(lsData.getDataDirect()).stringjoin(p -> p.Title, "\n"), //$NON-NLS-1$
+				true);
 
 		oframe.setVisible(true);
 	}
 
-	private void onGetLength(ActionEvent evt) {
+	private void onGetLength() {
 		List<NewEpisodeVM> data = lsData.getDataCopy();
 		if (data.size() == 0) return;
 
@@ -365,13 +273,13 @@ public class AddMultiEpisodesFrame extends JFrame {
 					int serdef = target.getSeries().getAutoEpisodeLength();
 
 					String[] options = new String[]
-					{
-						LocaleBundle.getString("AddMultiEpisodesFrame.OptionLength_1"), //$NON-NLS-1$
-						LocaleBundle.getString("AddMultiEpisodesFrame.OptionLength_2"), //$NON-NLS-1$
-						LocaleBundle.getString("AddMultiEpisodesFrame.OptionLength_3"), //$NON-NLS-1$
-						LocaleBundle.getString("AddMultiEpisodesFrame.OptionLength_4"), //$NON-NLS-1$
-						LocaleBundle.getString("AddMultiEpisodesFrame.OptionLength_5"), //$NON-NLS-1$
-					};
+							{
+									LocaleBundle.getString("AddMultiEpisodesFrame.OptionLength_1"), //$NON-NLS-1$
+									LocaleBundle.getString("AddMultiEpisodesFrame.OptionLength_2"), //$NON-NLS-1$
+									LocaleBundle.getString("AddMultiEpisodesFrame.OptionLength_3"), //$NON-NLS-1$
+									LocaleBundle.getString("AddMultiEpisodesFrame.OptionLength_4"), //$NON-NLS-1$
+									LocaleBundle.getString("AddMultiEpisodesFrame.OptionLength_5"), //$NON-NLS-1$
+							};
 
 					String values = CCStreams.iterate(lens).stringjoin(p -> (p==-1) ? "ERROR" : Math.round(p)+ " min.", "\n"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
@@ -455,7 +363,7 @@ public class AddMultiEpisodesFrame extends JFrame {
 		}).start();
 	}
 
-	private void onGetLanguages(ActionEvent evt) {
+	private void onGetLanguages() {
 		List<NewEpisodeVM> data = lsData.getDataCopy();
 		if (data.size() == 0) return;
 
@@ -531,7 +439,7 @@ public class AddMultiEpisodesFrame extends JFrame {
 		}).start();
 	}
 
-	private void onGetMediaInfo(ActionEvent evt) {
+	private void onGetMediaInfo() {
 		List<NewEpisodeVM> data = lsData.getDataCopy();
 		if (data.size() == 0) return;
 
@@ -586,7 +494,7 @@ public class AddMultiEpisodesFrame extends JFrame {
 		}).start();
 	}
 
-	private void onSetDestination(ActionEvent evt) {
+	private void onSetDestination() {
 		List<NewEpisodeVM> data = lsData.getDataCopy();
 		if (data.size() == 0) return;
 
@@ -611,7 +519,7 @@ public class AddMultiEpisodesFrame extends JFrame {
 		updateButtons();
 	}
 
-	private void onKeepDestination(ActionEvent evt) {
+	private void onKeepDestination() {
 		List<NewEpisodeVM> data = lsData.getDataCopy();
 		if (data.size() == 0) return;
 
@@ -625,6 +533,14 @@ public class AddMultiEpisodesFrame extends JFrame {
 
 		updateButtons();
 	}
+
+	private void onOkayKeep() { onOkay(CopyMode.KeepFile); }
+
+	private void onOkayRename() { onOkay(CopyMode.Rename); }
+
+	private void onOkayCopy() { onOkay(CopyMode.Copy); }
+
+	private void onOkayMove() { onOkay(CopyMode.Move); }
 
 	private void onOkay(CopyMode mode) {
 		final List<NewEpisodeVM> data = lsData.getDataCopy();
@@ -659,7 +575,7 @@ public class AddMultiEpisodesFrame extends JFrame {
 					try
 					{
 						final int fi = i;
-						SwingUtils.invokeAndWait(() -> { progressBar.setValue(fi); });
+						SwingUtils.invokeAndWait(() -> progressBar.setValue(fi));
 						i++;
 
 						File srcFile = new File(vm.SourcePath);
@@ -756,9 +672,9 @@ public class AddMultiEpisodesFrame extends JFrame {
 						{
 							CCLog.addError(e);
 							DialogHelper.showDispatchError(
-								this,
-								LocaleBundle.getString("AddMultiEpisodesFrame.dialogs_error_caption"), //$NON-NLS-1$
-								LocaleBundle.getFormattedString("AddMultiEpisodesFrame.dialogs_error", data.get(fi).Title, e.getMessage())); //$NON-NLS-1$
+									this,
+									LocaleBundle.getString("AddMultiEpisodesFrame.dialogs_error_caption"), //$NON-NLS-1$
+									LocaleBundle.getFormattedString("AddMultiEpisodesFrame.dialogs_error", data.get(fi).Title, e.getMessage())); //$NON-NLS-1$
 						});
 					}
 				}
@@ -781,32 +697,141 @@ public class AddMultiEpisodesFrame extends JFrame {
 		}).start();
 	}
 
-	private void setAllEnabled(boolean b) {
-		setEnabled(b);
-		updateButtons();
+	private void initComponents() {
+		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
+		lsData = new MultiEpisodesTable(target.getSeries());
+		panel1 = new JPanel();
+		btnAddFiles = new JButton();
+		btnInsertTitles = new JButton();
+		btnGetLength = new JButton();
+		btnSetDestination = new JButton();
+		btnAddMoreFiles = new JButton();
+		btnGetLanguages = new JButton();
+		btnKeepDestination = new JButton();
+		btnOkayKeep = new JButton();
+		btnOkayCopy = new JButton();
+		btnGetMediainfo = new JButton();
+		cbxIgnoreProblems = new JCheckBox();
+		btnOkayRename = new JButton();
+		btnOkayMove = new JButton();
+		panel2 = new JPanel();
+		progressBar = new JProgressBar();
+		progressBar2 = new JProgressBar();
+
+		//======== this ========
+		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+		setTitle(LocaleBundle.getString("AddMultiEpisodesFrame.title")); //$NON-NLS-1$
+		setMinimumSize(new Dimension(1000, 500));
+		var contentPane = getContentPane();
+		contentPane.setLayout(new FormLayout(
+			"$rgap, default:grow, $rgap", //$NON-NLS-1$
+			"$rgap, default:grow, $lgap, 2*(default, $rgap)")); //$NON-NLS-1$
+		contentPane.add(lsData, CC.xy(2, 2, CC.DEFAULT, CC.FILL));
+
+		//======== panel1 ========
+		{
+			panel1.setLayout(new FormLayout(
+				"6*(default, $lcgap), default:grow, 2*($lcgap, default)", //$NON-NLS-1$
+				"2*(default, $lgap), default")); //$NON-NLS-1$
+
+			//---- btnAddFiles ----
+			btnAddFiles.setText(LocaleBundle.getString("AddMultiEpisodesFrame.Button_11")); //$NON-NLS-1$
+			btnAddFiles.addActionListener(e -> onAddFiles());
+			panel1.add(btnAddFiles, CC.xy(1, 1));
+
+			//---- btnInsertTitles ----
+			btnInsertTitles.setText(LocaleBundle.getString("AddMultiEpisodesFrame.Button_2")); //$NON-NLS-1$
+			btnInsertTitles.addActionListener(e -> onInsertTitles());
+			panel1.add(btnInsertTitles, CC.xy(3, 1));
+
+			//---- btnGetLength ----
+			btnGetLength.setText(LocaleBundle.getString("AddMultiEpisodesFrame.Button_31")); //$NON-NLS-1$
+			btnGetLength.addActionListener(e -> onGetLength());
+			panel1.add(btnGetLength, CC.xy(5, 1));
+
+			//---- btnSetDestination ----
+			btnSetDestination.setText(LocaleBundle.getString("AddMultiEpisodesFrame.Button_51")); //$NON-NLS-1$
+			btnSetDestination.addActionListener(e -> onSetDestination());
+			panel1.add(btnSetDestination, CC.xy(9, 1));
+
+			//---- btnAddMoreFiles ----
+			btnAddMoreFiles.setText(LocaleBundle.getString("AddMultiEpisodesFrame.Button_12")); //$NON-NLS-1$
+			btnAddMoreFiles.addActionListener(e -> onAddMoreFiles());
+			panel1.add(btnAddMoreFiles, CC.xy(1, 3));
+
+			//---- btnGetLanguages ----
+			btnGetLanguages.setText(LocaleBundle.getString("AddMultiEpisodesFrame.Button_32")); //$NON-NLS-1$
+			btnGetLanguages.addActionListener(e -> onGetLanguages());
+			panel1.add(btnGetLanguages, CC.xy(5, 3));
+
+			//---- btnKeepDestination ----
+			btnKeepDestination.setText(LocaleBundle.getString("AddMultiEpisodesFrame.Button_52")); //$NON-NLS-1$
+			btnKeepDestination.addActionListener(e -> onKeepDestination());
+			panel1.add(btnKeepDestination, CC.xy(9, 3));
+
+			//---- btnOkayKeep ----
+			btnOkayKeep.setText(LocaleBundle.getString("AddMultiEpisodesFrame.Button_64")); //$NON-NLS-1$
+			btnOkayKeep.addActionListener(e -> onOkayKeep());
+			panel1.add(btnOkayKeep, CC.xy(15, 3));
+
+			//---- btnOkayCopy ----
+			btnOkayCopy.setText(LocaleBundle.getString("AddMultiEpisodesFrame.Button_61")); //$NON-NLS-1$
+			btnOkayCopy.addActionListener(e -> onOkayCopy());
+			panel1.add(btnOkayCopy, CC.xy(17, 3));
+
+			//---- btnGetMediainfo ----
+			btnGetMediainfo.setText(LocaleBundle.getString("AddMultiEpisodesFrame.Button_33")); //$NON-NLS-1$
+			btnGetMediainfo.addActionListener(e -> onGetMediaInfo());
+			panel1.add(btnGetMediainfo, CC.xy(5, 5));
+
+			//---- cbxIgnoreProblems ----
+			cbxIgnoreProblems.setText(LocaleBundle.getString("AddMultiEpisodesFrame.ChkbxIgnoreProblems")); //$NON-NLS-1$
+			panel1.add(cbxIgnoreProblems, CC.xy(11, 5));
+
+			//---- btnOkayRename ----
+			btnOkayRename.setText(LocaleBundle.getString("AddMultiEpisodesFrame.Button_63")); //$NON-NLS-1$
+			btnOkayRename.addActionListener(e -> onOkayRename());
+			panel1.add(btnOkayRename, CC.xy(15, 5));
+
+			//---- btnOkayMove ----
+			btnOkayMove.setText(LocaleBundle.getString("AddMultiEpisodesFrame.Button_62")); //$NON-NLS-1$
+			btnOkayMove.addActionListener(e -> onOkayMove());
+			panel1.add(btnOkayMove, CC.xy(17, 5));
+		}
+		contentPane.add(panel1, CC.xy(2, 4));
+
+		//======== panel2 ========
+		{
+			panel2.setLayout(new FormLayout(
+				"default:grow, $lcgap, default:grow", //$NON-NLS-1$
+				"default")); //$NON-NLS-1$
+			panel2.add(progressBar, CC.xy(1, 1));
+			panel2.add(progressBar2, CC.xy(3, 1));
+		}
+		contentPane.add(panel2, CC.xy(2, 6));
+		setSize(1000, 500);
+		setLocationRelativeTo(getOwner());
+		// JFormDesigner - End of component initialization  //GEN-END:initComponents
 	}
 
-	private void updateButtons() {
-		boolean iskeep   = CCStreams.iterate(lsData.getDataDirect()).any(d -> d.NoMove);
-		boolean allvalid = cbxIgnoreProblems.isSelected() || CCStreams.iterate(lsData.getDataDirect()).all(p -> p.IsValid);
-
-		boolean hasMI = cbxIgnoreProblems.isSelected() || _hasMediaInfo;
-		
-		boolean bb = isEnabled();
-
-		btnAddFiles.setEnabled(       bb);
-		btnInsertTitles.setEnabled(   bb && _hasFiles);
-		btnGetLength.setEnabled(      bb && _hasFiles && _hasTitles);
-		btnGetLanguages.setEnabled(   bb && _hasFiles && _hasTitles);
-		btnGetMediainfo.setEnabled(   bb && _hasFiles && _hasTitles);
-		cbxIgnoreProblems.setEnabled( bb && _hasFiles && _hasTitles);
-		btnSetDestination.setEnabled( bb && _hasFiles && _hasTitles && _hasLanguage && _hasLength && hasMI);
-		btnKeepDestination.setEnabled(bb && _hasFiles && _hasTitles && _hasLanguage && _hasLength && hasMI);
-		btnOkayCopy.setEnabled(       bb && _hasFiles && _hasTitles && _hasLanguage && _hasLength && hasMI && !iskeep && allvalid);
-		btnOkayMove.setEnabled(       bb && _hasFiles && _hasTitles && _hasLanguage && _hasLength && hasMI && !iskeep && allvalid);
-		btnOkayRename.setEnabled(     bb && _hasFiles && _hasTitles && _hasLanguage && _hasLength && hasMI && !iskeep && allvalid);
-		btnOkayKeep.setEnabled(       bb && _hasFiles && _hasTitles && _hasLanguage && _hasLength && hasMI &&  iskeep && allvalid);
-		btnAddMoreFiles.setEnabled(   bb && lsData.getDataCopy().size()>0);
-	}
-
+	// JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
+	private MultiEpisodesTable lsData;
+	private JPanel panel1;
+	private JButton btnAddFiles;
+	private JButton btnInsertTitles;
+	private JButton btnGetLength;
+	private JButton btnSetDestination;
+	private JButton btnAddMoreFiles;
+	private JButton btnGetLanguages;
+	private JButton btnKeepDestination;
+	private JButton btnOkayKeep;
+	private JButton btnOkayCopy;
+	private JButton btnGetMediainfo;
+	private JCheckBox cbxIgnoreProblems;
+	private JButton btnOkayRename;
+	private JButton btnOkayMove;
+	private JPanel panel2;
+	private JProgressBar progressBar;
+	private JProgressBar progressBar2;
+	// JFormDesigner - End of variables declaration  //GEN-END:variables
 }

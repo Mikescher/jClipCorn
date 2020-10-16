@@ -1,0 +1,163 @@
+JFDML JFormDesigner: "7.0.2.6.321" Java: "11.0.8" encoding: "UTF-8"
+
+new FormModel {
+	"i18n.bundlePackage": "de.jClipCorn.gui.localization"
+	"i18n.bundleName": "locale"
+	"i18n.keyPrefix": "AddMultiEpisodesFrame"
+	contentType: "form/swing"
+	root: new FormRoot {
+		add( new FormWindow( "javax.swing.JFrame", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+			"$columnSpecs": "relgap, default:grow, relgap"
+			"$rowSpecs": "relgap, default:grow, linegap, default, relgap, default, relgap"
+		} ) {
+			name: "this"
+			"defaultCloseOperation": 2
+			"title": new FormMessage( null, "AddMultiEpisodesFrame.title" )
+			"$sizePolicy": 1
+			"minimumSize": new java.awt.Dimension( 1000, 500 )
+			add( new FormContainer( "de.jClipCorn.gui.frames.addMultiEpisodesFrame.MultiEpisodesTable", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+				name: "lsData"
+				auxiliary() {
+					"JavaCodeGenerator.customCreateCode": "new ${field_type}(target.getSeries());"
+				}
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 2
+				"gridY": 2
+				"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+			} )
+			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+				"$columnSpecs": "default, labelcompgap, default, labelcompgap, default, labelcompgap, default, labelcompgap, default, labelcompgap, default, labelcompgap, default:grow, labelcompgap, default, labelcompgap, default"
+				"$rowSpecs": "default, linegap, default, linegap, default"
+			} ) {
+				name: "panel1"
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "btnAddFiles"
+					"text": new FormMessage( null, "AddMultiEpisodesFrame.Button_11" )
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "onAddFiles", false ) )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "btnInsertTitles"
+					"text": new FormMessage( null, "AddMultiEpisodesFrame.Button_2" )
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "onInsertTitles", false ) )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 3
+					"gridY": 1
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "btnGetLength"
+					"text": new FormMessage( null, "AddMultiEpisodesFrame.Button_31" )
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "onGetLength", false ) )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 5
+					"gridY": 1
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "btnSetDestination"
+					"text": new FormMessage( null, "AddMultiEpisodesFrame.Button_51" )
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "onSetDestination", false ) )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 9
+					"gridY": 1
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "btnAddMoreFiles"
+					"text": new FormMessage( null, "AddMultiEpisodesFrame.Button_12" )
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "onAddMoreFiles", false ) )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 1
+					"gridY": 3
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "btnGetLanguages"
+					"text": new FormMessage( null, "AddMultiEpisodesFrame.Button_32" )
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "onGetLanguages", false ) )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 5
+					"gridY": 3
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "btnKeepDestination"
+					"text": new FormMessage( null, "AddMultiEpisodesFrame.Button_52" )
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "onKeepDestination", false ) )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 9
+					"gridY": 3
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "btnOkayKeep"
+					"text": new FormMessage( null, "AddMultiEpisodesFrame.Button_64" )
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "onOkayKeep", false ) )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 15
+					"gridY": 3
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "btnOkayCopy"
+					"text": new FormMessage( null, "AddMultiEpisodesFrame.Button_61" )
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "onOkayCopy", false ) )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 17
+					"gridY": 3
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "btnGetMediainfo"
+					"text": new FormMessage( null, "AddMultiEpisodesFrame.Button_33" )
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "onGetMediaInfo", false ) )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 5
+					"gridY": 5
+				} )
+				add( new FormComponent( "javax.swing.JCheckBox" ) {
+					name: "cbxIgnoreProblems"
+					"text": new FormMessage( null, "AddMultiEpisodesFrame.ChkbxIgnoreProblems" )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 11
+					"gridY": 5
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "btnOkayRename"
+					"text": new FormMessage( null, "AddMultiEpisodesFrame.Button_63" )
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "onOkayRename", false ) )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 15
+					"gridY": 5
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "btnOkayMove"
+					"text": new FormMessage( null, "AddMultiEpisodesFrame.Button_62" )
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "onOkayMove", false ) )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 17
+					"gridY": 5
+				} )
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 2
+				"gridY": 4
+			} )
+			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+				"$columnSpecs": "default:grow, labelcompgap, default:grow"
+				"$rowSpecs": "default"
+			} ) {
+				name: "panel2"
+				add( new FormComponent( "javax.swing.JProgressBar" ) {
+					name: "progressBar"
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 1
+					"gridY": 1
+				} )
+				add( new FormComponent( "javax.swing.JProgressBar" ) {
+					name: "progressBar2"
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 3
+					"gridY": 1
+				} )
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 2
+				"gridY": 6
+			} )
+		}, new FormLayoutConstraints( null ) {
+			"location": new java.awt.Point( 0, 0 )
+			"size": new java.awt.Dimension( 1000, 500 )
+		} )
+	}
+}

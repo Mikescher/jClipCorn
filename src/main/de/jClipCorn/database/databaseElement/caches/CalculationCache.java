@@ -14,6 +14,7 @@ public abstract class CalculationCache<TOwner> implements ICalculationCache
 
 	public static int CacheHits          = 0;
 	public static int CacheMisses        = 0;
+	public static int PreInitRequests    = 0;
 	public static int CacheInvalidations = 0;
 	public static int CacheSizeTotal     = 0;
 
@@ -21,7 +22,7 @@ public abstract class CalculationCache<TOwner> implements ICalculationCache
 
 	public void bust()
 	{
-		if (CCMovieList.hasNoInstanceOrIsLoading()) return; // no busting while loading (otherwise we get *a lot* of cache invalidations)
+		if (CCMovieList.hasNoInstanceOrIsInitializingOrIsLoading()) return; // no busting while loading (otherwise we get *a lot* of cache invalidations)
 
 		CacheInvalidations++;
 		CacheSizeTotal -= map.size();
@@ -38,6 +39,8 @@ public abstract class CalculationCache<TOwner> implements ICalculationCache
 	@SuppressWarnings("unchecked")
 	private <TValue> TValue get(String fullkey, Func1to1<TOwner, TValue> o)
 	{
+		if (CCMovieList.hasNoInstanceOrIsInitializingOrIsLoading()) { PreInitRequests++; return o.invoke(getSource()); }
+
 		var v_map = map.getOrDefault(fullkey, NOTFOUND);
 		if (v_map != NOTFOUND) { CacheHits++; return (TValue)v_map; }
 

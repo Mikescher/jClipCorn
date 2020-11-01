@@ -60,6 +60,7 @@ public class CCMovieList {
 
 	private boolean blocked   = false;
 	private boolean isLoading = false;
+	private boolean isLoaded  = false;
 
 	private CCMovieList(CCDatabase db, boolean setInstance) {
 		this.list     = new Vector<>();
@@ -103,6 +104,7 @@ public class CCMovieList {
 			Globals.TIMINGS.start(Globals.TIMING_LOAD_TOTAL);
 			{
 				isLoading = true;
+				isLoaded  = false;
 
 				BackupManager bm = new BackupManager(CCMovieList.this);
 				bm.init();
@@ -149,6 +151,7 @@ public class CCMovieList {
 				if (postInit != null) SwingUtils.invokeLater(postInit::invoke);
 
 				isLoading = false;
+				isLoaded  = true;
 			}
 			Globals.TIMINGS.stop(Globals.TIMING_LOAD_TOTAL);
 
@@ -161,6 +164,7 @@ public class CCMovieList {
 	public void connectForTests()
 	{
 		isLoading = true;
+		isLoaded  = false;
 		{
 			database.tryconnect();
 
@@ -169,6 +173,7 @@ public class CCMovieList {
 			database.fillCoverCache();
 		}
 		isLoading = false;
+		isLoaded  = true;
 	}
 
 	public void forceReconnectAndReloadForTests() {
@@ -184,8 +189,8 @@ public class CCMovieList {
 		database.fillCoverCache();
 	}
 
-	public static boolean hasNoInstanceOrIsLoading() {
-		return instance == null || instance.isLoading;
+	public static boolean hasNoInstanceOrIsInitializingOrIsLoading() {
+		return instance == null || instance.isLoading || !instance.isLoaded;
 	}
 
 	public CCDatabaseElement getDatabaseElementBySort(int row) { // WARNIG SORT <> MOVIEID || SORT IN DATABASE (SORTED BY MOVIEID)

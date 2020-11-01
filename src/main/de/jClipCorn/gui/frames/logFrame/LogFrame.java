@@ -85,6 +85,7 @@ public class LogFrame extends JFrame implements CCLogChangedListener
 		displCacheMisses.setText(CalculationCache.formatCacheMisses());
 		displCacheInvalidations.setText(String.valueOf(CalculationCache.CacheInvalidations));
 		displCacheTotalCount.setText(String.valueOf(CalculationCache.CacheSizeTotal));
+		displPreInitCacheQueries.setText(String.valueOf(CalculationCache.PreInitRequests));
 	}
 
 	@Override
@@ -178,6 +179,8 @@ public class LogFrame extends JFrame implements CCLogChangedListener
 		label10 = new JLabel();
 		displCacheTotalCount = new ReadableTextField();
 		button6 = new JButton();
+		label11 = new JLabel();
+		displPreInitCacheQueries = new ReadableTextField();
 		label1 = new JLabel();
 		displCacheHits = new ReadableTextField();
 		label2 = new JLabel();
@@ -375,7 +378,7 @@ public class LogFrame extends JFrame implements CCLogChangedListener
 			{
 				tabLiveDisplay.setLayout(new FormLayout(
 					"$ugap, default, $lcgap, 100dlu, $lcgap, default", //$NON-NLS-1$
-					"$ugap, default, $pgap, 3*(default, $lgap), default, $pgap, 2*(default, $lgap), default, $pgap, default, $lgap, default")); //$NON-NLS-1$
+					"$ugap, default, $pgap, 4*(default, $lgap), default, $pgap, 2*(default, $lgap), default, $pgap, 2*(default, $lgap), default")); //$NON-NLS-1$
 
 				//---- label8 ----
 				label8.setText(LocaleBundle.getString("LogFrame.Uptime")); //$NON-NLS-1$
@@ -392,50 +395,55 @@ public class LogFrame extends JFrame implements CCLogChangedListener
 				button6.addActionListener(e -> showCacheDistribution());
 				tabLiveDisplay.add(button6, CC.xy(6, 4));
 
+				//---- label11 ----
+				label11.setText(LocaleBundle.getString("LogFrame.lblPreInitCacheHits")); //$NON-NLS-1$
+				tabLiveDisplay.add(label11, CC.xy(2, 6));
+				tabLiveDisplay.add(displPreInitCacheQueries, CC.xy(4, 6));
+
 				//---- label1 ----
 				label1.setText(LocaleBundle.getString("LogFrame.CacheHits")); //$NON-NLS-1$
-				tabLiveDisplay.add(label1, CC.xy(2, 6));
-				tabLiveDisplay.add(displCacheHits, CC.xy(4, 6));
+				tabLiveDisplay.add(label1, CC.xy(2, 8));
+				tabLiveDisplay.add(displCacheHits, CC.xy(4, 8));
 
 				//---- label2 ----
 				label2.setText(LocaleBundle.getString("LogFrame.CacheMisses")); //$NON-NLS-1$
-				tabLiveDisplay.add(label2, CC.xy(2, 8));
-				tabLiveDisplay.add(displCacheMisses, CC.xy(4, 8));
+				tabLiveDisplay.add(label2, CC.xy(2, 10));
+				tabLiveDisplay.add(displCacheMisses, CC.xy(4, 10));
 
 				//---- label9 ----
 				label9.setText(LocaleBundle.getString("LogFrame.CacheInvalidations")); //$NON-NLS-1$
-				tabLiveDisplay.add(label9, CC.xy(2, 10));
-				tabLiveDisplay.add(displCacheInvalidations, CC.xy(4, 10));
+				tabLiveDisplay.add(label9, CC.xy(2, 12));
+				tabLiveDisplay.add(displCacheInvalidations, CC.xy(4, 12));
 
 				//---- label3 ----
 				label3.setText(LocaleBundle.getString("CCLog.Warnings")); //$NON-NLS-1$
-				tabLiveDisplay.add(label3, CC.xy(2, 12));
-				tabLiveDisplay.add(displWarningsCount, CC.xy(4, 12));
+				tabLiveDisplay.add(label3, CC.xy(2, 14));
+				tabLiveDisplay.add(displWarningsCount, CC.xy(4, 14));
 
 				//---- label4 ----
 				label4.setText(LocaleBundle.getString("CCLog.Errors")); //$NON-NLS-1$
-				tabLiveDisplay.add(label4, CC.xy(2, 14));
-				tabLiveDisplay.add(displErrorCount, CC.xy(4, 14));
+				tabLiveDisplay.add(label4, CC.xy(2, 16));
+				tabLiveDisplay.add(displErrorCount, CC.xy(4, 16));
 
 				//---- label5 ----
 				label5.setText(LocaleBundle.getString("CCLog.Undefinieds")); //$NON-NLS-1$
-				tabLiveDisplay.add(label5, CC.xy(2, 16));
-				tabLiveDisplay.add(displUndefiniedCount, CC.xy(4, 16));
+				tabLiveDisplay.add(label5, CC.xy(2, 18));
+				tabLiveDisplay.add(displUndefiniedCount, CC.xy(4, 18));
 
 				//---- label6 ----
 				label6.setText(LocaleBundle.getString("LogFrame.DBQueries")); //$NON-NLS-1$
-				tabLiveDisplay.add(label6, CC.xy(2, 18));
-				tabLiveDisplay.add(displQueryCount, CC.xy(4, 18));
+				tabLiveDisplay.add(label6, CC.xy(2, 20));
+				tabLiveDisplay.add(displQueryCount, CC.xy(4, 20));
 
 				//---- label7 ----
 				label7.setText(LocaleBundle.getString("LogFrame.WebRequests")); //$NON-NLS-1$
-				tabLiveDisplay.add(label7, CC.xy(2, 20));
-				tabLiveDisplay.add(displRequestCount, CC.xy(4, 20));
+				tabLiveDisplay.add(label7, CC.xy(2, 22));
+				tabLiveDisplay.add(displRequestCount, CC.xy(4, 22));
 			}
 			tpnlMain.addTab(LocaleBundle.getString("LogFrame.TabLiveDisplay"), tabLiveDisplay); //$NON-NLS-1$
 		}
 		contentPane.add(tpnlMain, CC.xy(2, 2, CC.FILL, CC.FILL));
-		setSize(1010, 365);
+		setSize(1010, 385);
 		setLocationRelativeTo(getOwner());
 		// JFormDesigner - End of component initialization  //GEN-END:initComponents
 	}
@@ -478,6 +486,8 @@ public class LogFrame extends JFrame implements CCLogChangedListener
 	private JLabel label10;
 	private ReadableTextField displCacheTotalCount;
 	private JButton button6;
+	private JLabel label11;
+	private ReadableTextField displPreInitCacheQueries;
 	private JLabel label1;
 	private ReadableTextField displCacheHits;
 	private JLabel label2;

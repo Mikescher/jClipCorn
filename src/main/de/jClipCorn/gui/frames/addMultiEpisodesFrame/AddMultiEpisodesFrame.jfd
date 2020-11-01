@@ -110,6 +110,7 @@ new FormModel {
 				add( new FormComponent( "javax.swing.JCheckBox" ) {
 					name: "cbxIgnoreProblems"
 					"text": new FormMessage( null, "AddMultiEpisodesFrame.ChkbxIgnoreProblems" )
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "onIgnoreProblemsChanged", false ) )
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 					"gridX": 11
 					"gridY": 5

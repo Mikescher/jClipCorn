@@ -555,6 +555,10 @@ public class AddMultiEpisodesFrame extends JFrame
 		updateButtons();
 	}
 
+	private void onIgnoreProblemsChanged() {
+		updateButtons();
+	}
+
 	private void onOkayKeep() { onOkay(CopyMode.KeepFile); }
 
 	private void onOkayRename() { onOkay(CopyMode.Rename); }
@@ -809,6 +813,7 @@ public class AddMultiEpisodesFrame extends JFrame
 
 			//---- cbxIgnoreProblems ----
 			cbxIgnoreProblems.setText(LocaleBundle.getString("AddMultiEpisodesFrame.ChkbxIgnoreProblems")); //$NON-NLS-1$
+			cbxIgnoreProblems.addActionListener(e -> onIgnoreProblemsChanged());
 			panel1.add(cbxIgnoreProblems, CC.xywh(11, 5, 3, 1));
 
 			//---- btnOkayRename ----

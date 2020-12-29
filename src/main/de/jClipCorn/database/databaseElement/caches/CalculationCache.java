@@ -60,9 +60,9 @@ public abstract class CalculationCache<TOwner> implements ICalculationCache
 			return get(key + "[" + params.toString() + "]", o);
 	}
 
-	public boolean getBool  (String key, ITuple params, Func1to1<TOwner, Boolean> o) { return get(key, o); }
-	public int     getInt   (String key, ITuple params, Func1to1<TOwner, Integer> o) { return get(key, o); }
-	public double  getDouble(String key, ITuple params, Func1to1<TOwner, Double>  o) { return get(key, o); }
+	public boolean getBool  (String key, ITuple params, Func1to1<TOwner, Boolean> o) { return get(key, params, o); }
+	public int     getInt   (String key, ITuple params, Func1to1<TOwner, Integer> o) { return get(key, params, o); }
+	public double  getDouble(String key, ITuple params, Func1to1<TOwner, Double>  o) { return get(key, params, o); }
 
 	public CCStream<String> listCachedKeys()
 	{

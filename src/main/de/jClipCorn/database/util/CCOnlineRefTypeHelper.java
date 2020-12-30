@@ -29,7 +29,7 @@ public final class CCOnlineRefTypeHelper {
 	public static final Pattern REGEX_PASTE_MVPT = Pattern.compile("^(https?://)?(www\\.)?moviepilot\\.de/(?<id>(movies|serie)/[0-9A-Za-z\\-]+)(/.*)?(\\?.*)?(#.*)?$");                             //$NON-NLS-1$
 	public static final Pattern REGEX_PASTE_TMDB = Pattern.compile("^(https?://)?(www\\.)?themoviedb\\.org/(?<id>(movie|tv)/[0-9]+)(-.*)?(/.*)?(\\?.*)?(#.*)?$");                                   //$NON-NLS-1$
 	public static final Pattern REGEX_PASTE_MYAL = Pattern.compile("^(https?://)?(www\\.)?myanimelist\\.net/anime/(?<id>[0-9]+)(/.*)?(\\?.*)?(#.*)?$");                                             //$NON-NLS-1$
-	public static final Pattern REGEX_PASTE_PROX = Pattern.compile("^(https?://)?(www\\.)?proxer\\.me/info/(?<id>[0-9]+)(/.*)?(\\?.*)?(#.*)?$");                                                    //$NON-NLS-1$
+	public static final Pattern REGEX_PASTE_PROX = Pattern.compile("^(https?://)?(www\\.)?proxer\\.(me|net)/info/(?<id>[0-9]+)(/.*)?(\\?.*)?(#.*)?$");                                                    //$NON-NLS-1$
 	public static final Pattern REGEX_PASTE_ANIL = Pattern.compile("^(https?://)?(www\\.)?anilist\\.co/anime/(?<id>[0-9]+)(/.*)?(\\?.*)?(#.*)?$");                                                  //$NON-NLS-1$
 	public static final Pattern REGEX_PASTE_ANPL = Pattern.compile("^(https?://)?(www\\.)?anime-planet\\.com/anime/(?<id>[0-9A-Za-z\\-]+)(/.*)?(\\?.*)?(#.*)?$");                                   //$NON-NLS-1$
 	public static final Pattern REGEX_PASTE_KISU = Pattern.compile("^(https?://)?(www\\.)?kitsu\\.io/anime/(?<id>[0-9A-Za-z\\-]+)(/.*)?(\\?.*)?(#.*)?$");                                           //$NON-NLS-1$
@@ -59,7 +59,7 @@ public final class CCOnlineRefTypeHelper {
 				else
 					return "https://www.themoviedb.org/" + ref.id + "?language=" + lang.asDinIsoID();
 			case PROXERME:
-				return "https://proxer.me/info/" + ref.id;
+				return "https://proxer.net/info/" + ref.id;
 			case MYANIMELIST:
 				return "https://myanimelist.net/anime/" + ref.id + "/";
 			case ANILIST:

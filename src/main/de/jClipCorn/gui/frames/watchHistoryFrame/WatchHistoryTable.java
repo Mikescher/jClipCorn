@@ -1,5 +1,7 @@
 package de.jClipCorn.gui.frames.watchHistoryFrame;
 
+import com.jformdesigner.annotations.DesignCreate;
+import de.jClipCorn.gui.frames.databaseHistoryFrame.DatabaseHistoryTable;
 import de.jClipCorn.gui.frames.watchHistoryFrame.element.WatchHistoryElement;
 import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleColumnPrototype;
 import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleTable;
@@ -14,6 +16,9 @@ public class WatchHistoryTable extends JCCSimpleTable<WatchHistoryElement> {
 	private static final long serialVersionUID = 3308858204018846266L;
 	
 	private final WatchHistoryFrame owner;
+
+	@DesignCreate
+	private static WatchHistoryTable designCreate() { return new WatchHistoryTable(null); }
 
 	public WatchHistoryTable(WatchHistoryFrame owner) {
 		super();

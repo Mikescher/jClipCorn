@@ -1,0 +1,121 @@
+JFDML JFormDesigner: "7.0.3.0.337" Java: "11.0.9.1" encoding: "UTF-8"
+
+new FormModel {
+	"i18n.bundlePackage": "de.jClipCorn.gui.localization"
+	"i18n.bundleName": "locale"
+	"i18n.keyPrefix": "SearchFrame"
+	contentType: "form/swing"
+	root: new FormRoot {
+		add( new FormWindow( "javax.swing.JFrame", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+			"$columnSpecs": "relgap, default, relgap, default:grow, relgap"
+			"$rowSpecs": "relgap, default:grow, relgap, default, relgap"
+		} ) {
+			name: "this"
+			"title": new FormMessage( null, "WatchHistoryFrame.title" )
+			"$sizePolicy": 1
+			"defaultCloseOperation": 2
+			"minimumSize": new java.awt.Dimension( 600, 415 )
+			add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+				name: "scrollPane2"
+				add( new FormComponent( "de.jClipCorn.gui.guiComponents.jSimpleTree.JSimpleTree" ) {
+					name: "treeTimespan"
+					"rootVisible": false
+					"toggleClickCount": 1
+					addEvent( new FormEvent( "javax.swing.event.TreeExpansionListener", "treeExpanded", "onTreeExpanded", true ) )
+				} )
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 2
+				"gridY": 2
+				"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+			} )
+			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+				"$columnSpecs": "default:grow"
+				"$rowSpecs": "default:grow, linegap, default"
+			} ) {
+				name: "pnlRight"
+				add( new FormContainer( "de.jClipCorn.gui.frames.watchHistoryFrame.WatchHistoryTable", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+					name: "tableMain"
+					auxiliary() {
+						"JavaCodeGenerator.customCreateCode": "new WatchHistoryTable(this);"
+					}
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 1
+					"gridY": 1
+					"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+					"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				} )
+				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+					"$columnSpecs": "default, unrelgap, default:grow, relgap, default:grow, relgap, default:grow"
+					"$rowSpecs": "default, linegap, default"
+				} ) {
+					name: "panel1"
+					add( new FormComponent( "javax.swing.JLabel" ) {
+						name: "label1"
+						"text": new FormMessage( null, "WatchHistoryFrame.lblName" )
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 1
+						"gridY": 1
+						"hAlign": sfield com.jgoodies.forms.layout.CellConstraints RIGHT
+					} )
+					add( new FormComponent( "de.jClipCorn.gui.guiComponents.ReadableTextField" ) {
+						name: "edName1"
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 3
+						"gridY": 1
+					} )
+					add( new FormComponent( "de.jClipCorn.gui.guiComponents.ReadableTextField" ) {
+						name: "edName2"
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 5
+						"gridY": 1
+					} )
+					add( new FormComponent( "de.jClipCorn.gui.guiComponents.ReadableTextField" ) {
+						name: "edName3"
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 7
+						"gridY": 1
+					} )
+					add( new FormComponent( "javax.swing.JLabel" ) {
+						name: "label2"
+						"text": new FormMessage( null, "WatchHistoryFrame.title" )
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 1
+						"gridY": 3
+						"vAlign": sfield com.jgoodies.forms.layout.CellConstraints TOP
+						"hAlign": sfield com.jgoodies.forms.layout.CellConstraints RIGHT
+					} )
+					add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+						name: "scrollPane1"
+						add( new FormComponent( "javax.swing.JList" ) {
+							name: "listHistory"
+							"visibleRowCount": 4
+							auxiliary() {
+								"JavaCodeGenerator.typeParameters": "CCDateTime"
+							}
+						} )
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 3
+						"gridY": 3
+						"gridWidth": 5
+					} )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 1
+					"gridY": 3
+				} )
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 4
+				"gridY": 2
+				"gridHeight": 3
+			} )
+			add( new FormComponent( "de.jClipCorn.gui.guiComponents.CoverLabelFullsize" ) {
+				name: "lblCover"
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 2
+				"gridY": 4
+			} )
+		}, new FormLayoutConstraints( null ) {
+			"location": new java.awt.Point( 0, 0 )
+			"size": new java.awt.Dimension( 875, 660 )
+		} )
+	}
+}

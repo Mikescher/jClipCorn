@@ -1,27 +1,22 @@
 package de.jClipCorn.gui.guiComponents;
 
+import de.jClipCorn.features.log.CCLog;
+import de.jClipCorn.gui.frames.coverPreviewFrame.CoverPreviewFrame;
+import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.gui.resources.Resources;
+import de.jClipCorn.util.Str;
+import de.jClipCorn.util.formatter.PathFormatter;
+import de.jClipCorn.util.helper.FileChooserHelper;
+import de.jClipCorn.util.helper.ImageUtilities;
+
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import javax.swing.filechooser.FileFilter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-
-import javax.imageio.ImageIO;
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
-import javax.swing.JFileChooser;
-import javax.swing.JLabel;
-import javax.swing.JMenuItem;
-import javax.swing.JPopupMenu;
-import javax.swing.filechooser.FileFilter;
-
-import de.jClipCorn.gui.frames.coverPreviewFrame.CoverPreviewFrame;
-import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.features.log.CCLog;
-import de.jClipCorn.gui.resources.Resources;
-import de.jClipCorn.util.formatter.PathFormatter;
-import de.jClipCorn.util.helper.FileChooserHelper;
-import de.jClipCorn.util.helper.ImageUtilities;
 
 public class CoverLabel extends JLabel implements MouseListener {
 	private static final long serialVersionUID = -1565590903873295610L;
@@ -63,6 +58,18 @@ public class CoverLabel extends JLabel implements MouseListener {
 	}
 
 	@Override
+	@Deprecated
+	public void setText(String text) {
+		super.setText(Str.Empty);
+	}
+
+	@Override
+	@Deprecated
+	public void setIcon(Icon icon) {
+		super.setIcon(null);
+	}
+
+	@Override
 	public void setBounds(int x, int y, int width, int height) {
 	    super.setBounds(
 	    		x,
@@ -82,28 +89,28 @@ public class CoverLabel extends JLabel implements MouseListener {
 	public void setCoverDirect(BufferedImage cover, BufferedImage orig) {
 		original = orig;
 
-		if (cover == null) { setIcon(null); return; }
+		if (cover == null) { super.setIcon(null); return; }
 
 		if (isHalfSize)
-			setIcon(new ImageIcon(ImageUtilities.resizeCoverImageForHalfSizeUI(cover)));
+			super.setIcon(new ImageIcon(ImageUtilities.resizeCoverImageForHalfSizeUI(cover)));
 		else
-			setIcon(new ImageIcon(ImageUtilities.resizeCoverImageForFullSizeUI(cover)));
+			super.setIcon(new ImageIcon(ImageUtilities.resizeCoverImageForFullSizeUI(cover)));
 	}
 
 	public void setAndResizeCover(BufferedImage cover) {
 		original = cover;
 
-		if (cover == null) { setIcon(null); return; }
+		if (cover == null) { super.setIcon(null); return; }
 
 		if (isHalfSize)
-			setIcon(new ImageIcon(ImageUtilities.resizeCoverImageForHalfSizeUI(cover)));
+			super.setIcon(new ImageIcon(ImageUtilities.resizeCoverImageForHalfSizeUI(cover)));
 		else
-			setIcon(new ImageIcon(ImageUtilities.resizeCoverImageForFullSizeUI(cover)));
+			super.setIcon(new ImageIcon(ImageUtilities.resizeCoverImageForFullSizeUI(cover)));
 	}
 
 	public void clearCover() {
 		original = null;
-		setIcon(null);
+		super.setIcon(null);
 	}
 
 	@Override

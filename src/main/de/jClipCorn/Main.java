@@ -262,6 +262,6 @@ public class Main {
  - [ ] UpdateCodecFrame
  - [ ] UpdateMetadataFrame
  - [ ] VlcRobot
- - [ ] WatchHistoryFrame
+ - [X] WatchHistoryFrame
 
 */

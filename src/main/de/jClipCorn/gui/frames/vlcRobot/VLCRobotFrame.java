@@ -1,9 +1,7 @@
 package de.jClipCorn.gui.frames.vlcRobot;
 
-import com.jgoodies.forms.layout.ColumnSpec;
+import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.FormSpecs;
-import com.jgoodies.forms.layout.RowSpec;
 import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.database.databaseElement.ICCPlayableElement;
@@ -30,16 +28,12 @@ import de.jClipCorn.util.vlcquery.VLCStatusPlaylistEntry;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.List;
 
 public class VLCRobotFrame extends JFrame {
-
-	private static final long serialVersionUID = -9210243063139292492L;
-
 	// Wait {x} ms before attempting to manually set the VLC position
 	// and then wait {y} ms more before doing the second run
 	// and then wait {z} ms more before doing the third run
@@ -49,31 +43,6 @@ public class VLCRobotFrame extends JFrame {
 
 
 	private static final int DELAY_SLEEP_AFTER_SKIPPED_TICK =  75;
-
-	// ===========================================================================
-
-	private VLCPlaylistTable lsData;
-	private JLabel lblStatus;
-	private JLabel lblTime;
-	private JProgressBar progressBar;
-	private JPanel panel;
-	private JButton btnClose;
-	private JButton btnStart;
-	private JCheckBox cbxKeepPosition;
-	private JButton btnPlayPause;
-	private JPanel pnlMain;
-	private JTabbedPane tabbedPane;
-	private JPanel pnlLog;
-	private VLCRobotLogTable logTable;
-	private JSplitPane splitPane;
-	private JPanel panel_1;
-	private JTextArea edLogOld;
-	private JTextArea edLogNew;
-	private JScrollPane scrollPane;
-	private JScrollPane scrollPane_1;
-	private JLabel lblFrequency;
-	private CCEnumComboBox<VLCRobotFrequency> cbxFreq;
-	private JLabel lblTitle;
 
 	private volatile boolean _stopThread = false;
 	private final Object _threadLock = true;
@@ -85,42 +54,47 @@ public class VLCRobotFrame extends JFrame {
 	private volatile VLCRobotFrequency updateFreq = VLCRobotFrequency.MS_0500;
 
 	private static VLCRobotFrame _instance = null;
-	private JLabel lblNewLabel;
-	private JPanel pnlInfo;
-	private JTextArea lblText;
 
-	/**
-	 * @wbp.parser.constructor
-	 */
 	private VLCRobotFrame(Component owner) {
 		super();
 
-		initGUI();
+		initComponents();
+		postInit();
 
 		setLocationRelativeTo(owner);
+	}
+
+	private void postInit() {
+		setIconImage(Resources.IMG_FRAME_ICON.get());
+
+		cbxFreq.setSelectedEnum(this.updateFreq = CCProperties.getInstance().PROP_VLC_ROBOT_FREQUENCY.getValue());
 
 		lsData.autoResize();
 
-		addWindowListener(new WindowAdapter() {
-			@Override
-			public void windowClosing(WindowEvent e) {
-				_instance = null;
-				_stopThread = true;
-				synchronized (_threadLock) { _stopThread = true; }
-				VLCRobotFrame.this.dispose();
-				super.windowClosing(e);
-			}
-		});
+		cbxKeepPosition.setSelected(ApplicationHelper.isWindows() && CCProperties.getInstance().PROP_VLC_ROBOT_KEEP_POSITION.getValue());
+		cbxKeepPosition.setEnabled(ApplicationHelper.isWindows());
+
+		tabbedPane.setSelectedIndex(0);
 
 		Thread tthread = new Thread(this::onThreadRun);
 		tthread.start();
 	}
 
-	private void onClose(ActionEvent actionEvent) {
-		_instance = null;
-		_stopThread = true;
-		synchronized (_threadLock) { _stopThread = true; }
-		dispose();
+	public static VLCRobotFrame show(Component owner)
+	{
+		if (_instance == null || !_instance.isVisible())
+		{
+			_instance = new VLCRobotFrame(owner);
+			_instance.setVisible(true);
+		}
+		else
+		{
+			_instance.toFront();
+			_instance.repaint();
+			//_instance.setLocationRelativeTo(owner);
+		}
+
+		return _instance;
 	}
 
 	private void onThreadRun()
@@ -181,167 +155,6 @@ public class VLCRobotFrame extends JFrame {
 			}
 			if (_stopThread) return;
 		}
-	}
-
-	public static VLCRobotFrame show(Component owner)
-	{
-		if (_instance == null || !_instance.isVisible())
-		{
-			_instance = new VLCRobotFrame(owner);
-			_instance.setVisible(true);
-		}
-		else
-		{
-			_instance.toFront();
-			_instance.repaint();
-			//_instance.setLocationRelativeTo(owner);
-		}
-
-		return _instance;
-	}
-
-	private void initGUI() {
-		setTitle(LocaleBundle.getString("VLCRobotFrame.title")); //$NON-NLS-1$
-		setIconImage(Resources.IMG_FRAME_ICON.get());
-		setBounds(100, 100, 500, 300);
-		setMinimumSize(new Dimension(300, 300));
-		getContentPane().setLayout(new BorderLayout(0, 0));
-		
-		tabbedPane = new JTabbedPane(JTabbedPane.BOTTOM);
-		tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
-		getContentPane().add(tabbedPane, BorderLayout.CENTER);
-		
-		pnlMain = new JPanel();
-		tabbedPane.addTab(LocaleBundle.getString("VLCRobotFrame.tabMain"), null, pnlMain, null); //$NON-NLS-1$
-		pnlMain.setBorder(new EmptyBorder(5, 5, 5, 5));
-		pnlMain.setLayout(new FormLayout(new ColumnSpec[] {
-				ColumnSpec.decode("max(35dlu;default)"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("default:grow"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("default:grow"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("max(35dlu;default)"),}, //$NON-NLS-1$
-			new RowSpec[] {
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("default:grow"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.PREF_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.PREF_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.PREF_ROWSPEC,}));
-		
-		lblTitle = new JLabel("ROBOT"); //$NON-NLS-1$
-		pnlMain.add(lblTitle, "1, 1, center, center"); //$NON-NLS-1$
-		
-		cbxFreq = new CCEnumComboBox<>(VLCRobotFrequency.getWrapper());
-		cbxFreq.setSelectedEnum(this.updateFreq = CCProperties.getInstance().PROP_VLC_ROBOT_FREQUENCY.getValue());
-		cbxFreq.addActionListener(e ->
-		{
-			this.updateFreq = cbxFreq.getSelectedEnum();
-			CCProperties.getInstance().PROP_VLC_ROBOT_FREQUENCY.setValue(this.updateFreq);
-		});
-		
-		lblNewLabel = new JLabel(LocaleBundle.getString("VLCRobotFrame.lblFreq")); //$NON-NLS-1$
-		pnlMain.add(lblNewLabel, "3, 1, right, fill"); //$NON-NLS-1$
-		pnlMain.add(cbxFreq, "5, 1, fill, fill"); //$NON-NLS-1$
-		
-		lblFrequency = new JLabel("[FREQ]"); //$NON-NLS-1$
-		pnlMain.add(lblFrequency, "7, 1, fill, fill"); //$NON-NLS-1$
-		
-		lsData = new VLCPlaylistTable();
-		pnlMain.add(lsData, "1, 3, 7, 1, fill, fill"); //$NON-NLS-1$
-		
-		lblStatus = new JLabel();
-		pnlMain.add(lblStatus, "1, 5, fill, fill"); //$NON-NLS-1$
-		
-		progressBar = new JProgressBar();
-		pnlMain.add(progressBar, "3, 5, 3, 1, fill, fill"); //$NON-NLS-1$
-		
-		lblTime = new JLabel();
-		pnlMain.add(lblTime, "7, 5, fill, fill"); //$NON-NLS-1$
-		
-		cbxKeepPosition = new JCheckBox(LocaleBundle.getString("VLCRobotFrame.cbxKeepPosition")); //$NON-NLS-1$
-		cbxKeepPosition.setSelected(ApplicationHelper.isWindows() && CCProperties.getInstance().PROP_VLC_ROBOT_KEEP_POSITION.getValue());
-		cbxKeepPosition.addActionListener(e ->  CCProperties.getInstance().PROP_VLC_ROBOT_KEEP_POSITION.setValue(cbxKeepPosition.isSelected()));
-		cbxKeepPosition.setEnabled(ApplicationHelper.isWindows());
-		pnlMain.add(cbxKeepPosition, "1, 7, 7, 1"); //$NON-NLS-1$
-		
-		panel = new JPanel();
-		pnlMain.add(panel, "1, 9, 7, 1, fill, fill"); //$NON-NLS-1$
-		panel.setLayout(new FormLayout(new ColumnSpec[] {
-				FormSpecs.PREF_COLSPEC,
-				FormSpecs.RELATED_GAP_COLSPEC,
-				FormSpecs.PREF_COLSPEC,
-				FormSpecs.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("0dlu:grow"), //$NON-NLS-1$
-				FormSpecs.PREF_COLSPEC,},
-			new RowSpec[] {
-				RowSpec.decode("26px"),})); //$NON-NLS-1$
-		
-		btnStart = new JButton(LocaleBundle.getString("VLCRobotFrame.btnStart")); //$NON-NLS-1$
-		btnStart.setHorizontalAlignment(SwingConstants.LEFT);
-		btnStart.addActionListener(this::onStart);
-		panel.add(btnStart, "1, 1, fill, fill"); //$NON-NLS-1$
-		
-		btnPlayPause = new JButton(LocaleBundle.getString("VLCRobotFrame.btnPlay")); //$NON-NLS-1$
-		btnPlayPause.addActionListener(this::onPlayPause);
-		panel.add(btnPlayPause, "3, 1, fill, fill"); //$NON-NLS-1$
-		
-		btnClose = new JButton(LocaleBundle.getString("VLCRobotFrame.btnClose")); //$NON-NLS-1$
-		btnClose.setHorizontalAlignment(SwingConstants.RIGHT);
-		btnClose.addActionListener(this::onClose);
-		panel.add(btnClose, "6, 1, fill, fill"); //$NON-NLS-1$
-		
-		pnlLog = new JPanel();
-		tabbedPane.addTab(LocaleBundle.getString("VLCRobotFrame.tabLog"), null, pnlLog, null); //$NON-NLS-1$
-		pnlLog.setLayout(new BorderLayout(0, 0));
-		
-		splitPane = new JSplitPane();
-		splitPane.setResizeWeight(0.5);
-		splitPane.setContinuousLayout(true);
-		splitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
-		pnlLog.add(splitPane, BorderLayout.CENTER);
-		
-		logTable = new VLCRobotLogTable(this);
-		splitPane.setLeftComponent(logTable);
-		
-		panel_1 = new JPanel();
-		splitPane.setRightComponent(panel_1);
-		panel_1.setLayout(new FormLayout(new ColumnSpec[] {
-				ColumnSpec.decode("50dlu:grow"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("50dlu:grow"),}, //$NON-NLS-1$
-			new RowSpec[] {
-				RowSpec.decode("80px:grow"),})); //$NON-NLS-1$
-		
-		scrollPane = new JScrollPane();
-		panel_1.add(scrollPane, "1, 1, fill, fill"); //$NON-NLS-1$
-		
-		edLogOld = new JTextArea();
-		scrollPane.setViewportView(edLogOld);
-		edLogOld.setEditable(false);
-		
-		scrollPane_1 = new JScrollPane();
-		panel_1.add(scrollPane_1, "3, 1, fill, fill"); //$NON-NLS-1$
-		
-		edLogNew = new JTextArea();
-		scrollPane_1.setViewportView(edLogNew);
-		edLogNew.setEditable(false);
-
-		tabbedPane.setSelectedIndex(0);
-		
-		pnlInfo = new JPanel();
-		tabbedPane.addTab(LocaleBundle.getString("VLCRobotFrame.tabInfo"), null, pnlInfo, null); //$NON-NLS-1$
-		pnlInfo.setLayout(new BorderLayout(0, 0));
-		
-		lblText = new JTextArea(LocaleBundle.getString("VLCRobotFrame.helpText")); //$NON-NLS-1$
-		lblText.setEditable(false);
-		lblText.setLineWrap(true);
-		lblText.setBorder(new EmptyBorder(4, 4, 4, 4));
-		pnlInfo.add(lblText);
 	}
 
 	private void onBackgroundUpdate(int idx)
@@ -511,7 +324,7 @@ public class VLCRobotFrame extends JFrame {
 		//}
 
 		if (sold.Status == VLCPlayerStatus.PLAYING && snew.Status == VLCPlayerStatus.PLAYING &&
-			sold.isPlayingLastPlaylistEntry() && sold.Position == PositionArea.MIDDLE && snew.Position == PositionArea.NEARLY_FINISHED)
+				sold.isPlayingLastPlaylistEntry() && sold.Position == PositionArea.MIDDLE && snew.Position == PositionArea.NEARLY_FINISHED)
 		{
 			CCLog.addDebug("VLCRobot StatusTrigger (PLAYING --> PLAYING[nearly_finished])"); //$NON-NLS-1$
 			postNextQueueEntry(idx, false, false, "PositionEnd"); //$NON-NLS-1$
@@ -519,10 +332,10 @@ public class VLCRobotFrame extends JFrame {
 		}
 
 		if (_clientQueue.size() > 0 &&
-			sold.Status == VLCPlayerStatus.PLAYING && snew.Status == VLCPlayerStatus.PLAYING &&
-			sold.ActiveEntry != null && snew.ActiveEntry != null && !Str.equals(sold.ActiveEntry.Uri, snew.ActiveEntry.Uri) &&
-			sold.isActiveEntryLastOfPlaylist() && snew.isActiveEntryFirstOfPlaylist() &&
-			sold.Position != PositionArea.FINISHED && snew.Position == PositionArea.STARTING)
+				sold.Status == VLCPlayerStatus.PLAYING && snew.Status == VLCPlayerStatus.PLAYING &&
+				sold.ActiveEntry != null && snew.ActiveEntry != null && !Str.equals(sold.ActiveEntry.Uri, snew.ActiveEntry.Uri) &&
+				sold.isActiveEntryLastOfPlaylist() && snew.isActiveEntryFirstOfPlaylist() &&
+				sold.Position != PositionArea.FINISHED && snew.Position == PositionArea.STARTING)
 		{
 			CCLog.addDebug("VLCRobot StatusTrigger (PLAYING[last] --skip--> PLAYING[first])"); //$NON-NLS-1$
 			postNextQueueEntry(idx, true, true, "ManualSkipLast"); //$NON-NLS-1$
@@ -530,11 +343,11 @@ public class VLCRobotFrame extends JFrame {
 		}
 
 		if (_clientQueue.size() > 0 &&
-			sold.Status == VLCPlayerStatus.PLAYING && snew.Status == VLCPlayerStatus.PLAYING &&
-			sold.ActiveEntry != null && snew.ActiveEntry != null && Str.equals(sold.ActiveEntry.Uri, snew.ActiveEntry.Uri) &&
-			sold.CurrentTime > snew.CurrentTime &&
-			sold.Playlist.size() == 1 &&
-			sold.Position != PositionArea.FINISHED && snew.Position == PositionArea.STARTING)
+				sold.Status == VLCPlayerStatus.PLAYING && snew.Status == VLCPlayerStatus.PLAYING &&
+				sold.ActiveEntry != null && snew.ActiveEntry != null && Str.equals(sold.ActiveEntry.Uri, snew.ActiveEntry.Uri) &&
+				sold.CurrentTime > snew.CurrentTime &&
+				sold.Playlist.size() == 1 &&
+				sold.Position != PositionArea.FINISHED && snew.Position == PositionArea.STARTING)
 		{
 			CCLog.addDebug("VLCRobot StatusTrigger (PLAYING[only] --skip--> PLAYING[only])"); //$NON-NLS-1$
 			postNextQueueEntry(idx, true, true, "ManualSkipSingleton"); //$NON-NLS-1$
@@ -542,12 +355,58 @@ public class VLCRobotFrame extends JFrame {
 		}
 
 		if (sold.Status == VLCPlayerStatus.PLAYING && snew.Status == VLCPlayerStatus.PLAYING &&
-			sold.ActiveEntry != null && snew.ActiveEntry != null &&
-			!Str.equals(sold.ActiveEntry.Uri, snew.ActiveEntry.Uri))
+				sold.ActiveEntry != null && snew.ActiveEntry != null &&
+				!Str.equals(sold.ActiveEntry.Uri, snew.ActiveEntry.Uri))
 		{
 			CCLog.addDebug("VLCRobot StatusTrigger (PLAYING[a] --> PLAYING[b])"); //$NON-NLS-1$
 			fixVLCPosition(idx, null, "PlayNext"); //$NON-NLS-1$
 			return;
+		}
+	}
+
+	public void enqueue(ICCPlayableElement v)
+	{
+		enqueue(VLCPlaylistEntry.createQueueSingle(v));
+	}
+
+	public void enqueue(CCSeason v)
+	{
+		var next = NextEpisodeHelper.findNextEpisode(v);
+		if (next == null) return;
+		var episodeList = CCStreams.iterate(v.getEpisodeList()).skipWhile(e -> e != next).<ICCPlayableElement>cast().toList();
+		enqueue(VLCPlaylistEntry.createQueueAuto( v.getSeries().getTitle() + " - " + v.getTitle(), episodeList)); //$NON-NLS-1$
+	}
+
+	public void enqueue(CCSeries v)
+	{
+		var next = NextEpisodeHelper.findNextEpisode(v);
+		if (next == null) return;
+		var episodeList = CCStreams.iterate(v.getSortedEpisodeList()).skipWhile(e -> e != next).<ICCPlayableElement>cast().toList();
+		enqueue(VLCPlaylistEntry.createQueueAuto(v.getTitle(), episodeList));
+	}
+
+	private void enqueue(VLCPlaylistEntry e)
+	{
+		if (_lastStatus == null)
+		{
+			_clientQueue.add(e);
+		}
+		else if (_lastStatus.Status == VLCPlayerStatus.STOPPED)
+		{
+			_clientQueue.add(e);
+			updateList(_lastStatus);
+			postNextQueueEntry(-1, false, true, "Startup"); //$NON-NLS-1$
+		}
+		else if (_lastStatus.Status == VLCPlayerStatus.NOT_RUNNING)
+		{
+			_clientQueue.add(e);
+			updateList(_lastStatus);
+			VLCConnection.startPlayer();
+		}
+		else
+		{
+			_clientQueue.add(e);
+			updateList(_lastStatus);
 		}
 	}
 
@@ -652,8 +511,6 @@ public class VLCRobotFrame extends JFrame {
 			}).start();
 		}
 		else throw new Error("Invalid Queue Type: " + q.Type); //$NON-NLS-1$
-
-
 	}
 
 	private void fixVLCPosition(int index, VLCStatus _lps, String reason)
@@ -729,72 +586,11 @@ public class VLCRobotFrame extends JFrame {
 		lsData.autoResize();
 	}
 
-	private void onStart(ActionEvent ae)
-	{
-		VLCConnection.startPlayer();
+	private void onFrequencyChanged() {
+		this.updateFreq = cbxFreq.getSelectedEnum();
+		CCProperties.getInstance().PROP_VLC_ROBOT_FREQUENCY.setValue(this.updateFreq);
 	}
 
-	private void onPlayPause(ActionEvent ae)
-	{
-		if (_lastStatus == null) return;
-
-		if (_lastStatus.Status == VLCPlayerStatus.PLAYING)
-		{
-			new Thread(VLCConnection::pause).start();
-		}
-		else if (_lastStatus.Status == VLCPlayerStatus.PAUSED)
-		{
-			new Thread(VLCConnection::play).start();
-		}
-	}
-
-	public void enqueue(ICCPlayableElement v)
-	{
-		enqueue(VLCPlaylistEntry.createQueueSingle(v));
-	}
-
-	public void enqueue(CCSeason v)
-	{
-		var next = NextEpisodeHelper.findNextEpisode(v);
-		if (next == null) return;
-		var episodeList = CCStreams.iterate(v.getEpisodeList()).skipWhile(e -> e != next).<ICCPlayableElement>cast().toList();
-		enqueue(VLCPlaylistEntry.createQueueAuto( v.getSeries().getTitle() + " - " + v.getTitle(), episodeList)); //$NON-NLS-1$
-	}
-
-	public void enqueue(CCSeries v)
-	{
-		var next = NextEpisodeHelper.findNextEpisode(v);
-		if (next == null) return;
-		var episodeList = CCStreams.iterate(v.getSortedEpisodeList()).skipWhile(e -> e != next).<ICCPlayableElement>cast().toList();
-		enqueue(VLCPlaylistEntry.createQueueAuto(v.getTitle(), episodeList));
-	}
-
-	private void enqueue(VLCPlaylistEntry e)
-	{
-		if (_lastStatus == null)
-		{
-			_clientQueue.add(e);
-		}
-		else if (_lastStatus.Status == VLCPlayerStatus.STOPPED)
-		{
-			_clientQueue.add(e);
-			updateList(_lastStatus);
-			postNextQueueEntry(-1, false, true, "Startup"); //$NON-NLS-1$
-		}
-		else if (_lastStatus.Status == VLCPlayerStatus.NOT_RUNNING)
-		{
-			_clientQueue.add(e);
-			updateList(_lastStatus);
-			VLCConnection.startPlayer();
-		}
-		else
-		{
-			_clientQueue.add(e);
-			updateList(_lastStatus);
-		}
-	}
-
-	@SuppressWarnings("nls")
 	public void showLogEntry(VLCRobotLogEntry element) {
 		if (element == null)
 		{
@@ -825,4 +621,234 @@ public class VLCRobotFrame extends JFrame {
 		logTable.addData(le);
 		logTable.autoResize();
 	}
+
+	private void onWindowClosing() {
+		_instance = null;
+		_stopThread = true;
+		synchronized (_threadLock) { _stopThread = true; }
+		VLCRobotFrame.this.dispose();
+	}
+
+	private void onKeepPositionChanged() {
+		CCProperties.getInstance().PROP_VLC_ROBOT_KEEP_POSITION.setValue(cbxKeepPosition.isSelected());
+	}
+
+	private void onStart() {
+		VLCConnection.startPlayer();
+	}
+
+	private void onPlayPause() {
+		if (_lastStatus == null) return;
+
+		if (_lastStatus.Status == VLCPlayerStatus.PLAYING)
+		{
+			new Thread(VLCConnection::pause).start();
+		}
+		else if (_lastStatus.Status == VLCPlayerStatus.PAUSED)
+		{
+			new Thread(VLCConnection::play).start();
+		}
+	}
+
+	private void onClose() {
+		_instance = null;
+		_stopThread = true;
+		synchronized (_threadLock) { _stopThread = true; }
+		dispose();
+	}
+
+	private void initComponents() {
+		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
+		tabbedPane = new JTabbedPane();
+		pnlMain = new JPanel();
+		lblTitle = new JLabel();
+		label2 = new JLabel();
+		cbxFreq = new CCEnumComboBox<>(VLCRobotFrequency.getWrapper());
+		lblFrequency = new JLabel();
+		lsData = new VLCPlaylistTable();
+		lblStatus = new JLabel();
+		progressBar = new JProgressBar();
+		lblTime = new JLabel();
+		cbxKeepPosition = new JCheckBox();
+		btnStart = new JButton();
+		btnPlayPause = new JButton();
+		btnClose = new JButton();
+		pnlLog = new JPanel();
+		splitPane1 = new JSplitPane();
+		logTable = new VLCRobotLogTable(this);
+		panel1 = new JPanel();
+		scrollPane2 = new JScrollPane();
+		edLogOld = new JTextArea();
+		scrollPane3 = new JScrollPane();
+		edLogNew = new JTextArea();
+		pnlInfo = new JPanel();
+		scrollPane1 = new JScrollPane();
+		lblText = new JTextArea();
+
+		//======== this ========
+		setTitle(LocaleBundle.getString("VLCRobotFrame.title")); //$NON-NLS-1$
+		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+		setMinimumSize(new Dimension(300, 300));
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				onWindowClosing();
+			}
+		});
+		var contentPane = getContentPane();
+		contentPane.setLayout(new BorderLayout());
+
+		//======== tabbedPane ========
+		{
+			tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
+			tabbedPane.setTabPlacement(SwingConstants.BOTTOM);
+
+			//======== pnlMain ========
+			{
+				pnlMain.setLayout(new FormLayout(
+					"$rgap, default, 2*($lcgap, default:grow), $lcgap, default, $rgap", //$NON-NLS-1$
+					"$rgap, default, $lgap, default:grow, 3*($lgap, default), $rgap")); //$NON-NLS-1$
+
+				//---- lblTitle ----
+				lblTitle.setText("ROBOT"); //$NON-NLS-1$
+				pnlMain.add(lblTitle, CC.xy(2, 2));
+
+				//---- label2 ----
+				label2.setText(LocaleBundle.getString("VLCRobotFrame.lblFreq")); //$NON-NLS-1$
+				pnlMain.add(label2, CC.xy(4, 2, CC.RIGHT, CC.DEFAULT));
+
+				//---- cbxFreq ----
+				cbxFreq.addActionListener(e -> onFrequencyChanged());
+				pnlMain.add(cbxFreq, CC.xy(6, 2));
+
+				//---- lblFrequency ----
+				lblFrequency.setText("[FREQ]"); //$NON-NLS-1$
+				pnlMain.add(lblFrequency, CC.xy(8, 2));
+				pnlMain.add(lsData, CC.xywh(2, 4, 7, 1, CC.FILL, CC.FILL));
+
+				//---- lblStatus ----
+				lblStatus.setText("[STATUS]"); //$NON-NLS-1$
+				pnlMain.add(lblStatus, CC.xy(2, 6, CC.FILL, CC.FILL));
+				pnlMain.add(progressBar, CC.xywh(4, 6, 3, 1, CC.DEFAULT, CC.FILL));
+
+				//---- lblTime ----
+				lblTime.setText("[TIME]"); //$NON-NLS-1$
+				pnlMain.add(lblTime, CC.xy(8, 6, CC.FILL, CC.FILL));
+
+				//---- cbxKeepPosition ----
+				cbxKeepPosition.setText(LocaleBundle.getString("VLCRobotFrame.cbxKeepPosition")); //$NON-NLS-1$
+				cbxKeepPosition.addActionListener(e -> onKeepPositionChanged());
+				pnlMain.add(cbxKeepPosition, CC.xywh(2, 8, 7, 1));
+
+				//---- btnStart ----
+				btnStart.setText(LocaleBundle.getString("VLCRobotFrame.btnStart")); //$NON-NLS-1$
+				btnStart.addActionListener(e -> onStart());
+				pnlMain.add(btnStart, CC.xy(2, 10));
+
+				//---- btnPlayPause ----
+				btnPlayPause.setText(LocaleBundle.getString("VLCRobotFrame.btnPlay")); //$NON-NLS-1$
+				btnPlayPause.addActionListener(e -> onPlayPause());
+				pnlMain.add(btnPlayPause, CC.xy(4, 10, CC.LEFT, CC.DEFAULT));
+
+				//---- btnClose ----
+				btnClose.setText(LocaleBundle.getString("VLCRobotFrame.btnClose")); //$NON-NLS-1$
+				btnClose.addActionListener(e -> onClose());
+				pnlMain.add(btnClose, CC.xy(8, 10));
+			}
+			tabbedPane.addTab(LocaleBundle.getString("VLCRobotFrame.tabMain"), pnlMain); //$NON-NLS-1$
+
+			//======== pnlLog ========
+			{
+				pnlLog.setLayout(new BorderLayout());
+
+				//======== splitPane1 ========
+				{
+					splitPane1.setOrientation(JSplitPane.VERTICAL_SPLIT);
+					splitPane1.setContinuousLayout(true);
+					splitPane1.setResizeWeight(0.5);
+					splitPane1.setTopComponent(logTable);
+
+					//======== panel1 ========
+					{
+						panel1.setLayout(new FormLayout(
+							"default:grow, $rgap, default:grow", //$NON-NLS-1$
+							"default:grow")); //$NON-NLS-1$
+
+						//======== scrollPane2 ========
+						{
+
+							//---- edLogOld ----
+							edLogOld.setEditable(false);
+							scrollPane2.setViewportView(edLogOld);
+						}
+						panel1.add(scrollPane2, CC.xy(1, 1, CC.FILL, CC.FILL));
+
+						//======== scrollPane3 ========
+						{
+
+							//---- edLogNew ----
+							edLogNew.setEditable(false);
+							scrollPane3.setViewportView(edLogNew);
+						}
+						panel1.add(scrollPane3, CC.xy(3, 1, CC.FILL, CC.FILL));
+					}
+					splitPane1.setBottomComponent(panel1);
+				}
+				pnlLog.add(splitPane1, BorderLayout.CENTER);
+			}
+			tabbedPane.addTab(LocaleBundle.getString("VLCRobotFrame.tabLog"), pnlLog); //$NON-NLS-1$
+
+			//======== pnlInfo ========
+			{
+				pnlInfo.setLayout(new BorderLayout());
+
+				//======== scrollPane1 ========
+				{
+
+					//---- lblText ----
+					lblText.setText(LocaleBundle.getString("VLCRobotFrame.helpText")); //$NON-NLS-1$
+					lblText.setEditable(false);
+					lblText.setLineWrap(true);
+					lblText.setBorder(new EmptyBorder(4, 4, 4, 4));
+					scrollPane1.setViewportView(lblText);
+				}
+				pnlInfo.add(scrollPane1, BorderLayout.CENTER);
+			}
+			tabbedPane.addTab(LocaleBundle.getString("VLCRobotFrame.tabInfo"), pnlInfo); //$NON-NLS-1$
+
+			tabbedPane.setSelectedIndex(0);
+		}
+		contentPane.add(tabbedPane, BorderLayout.CENTER);
+		setSize(500, 300);
+		setLocationRelativeTo(getOwner());
+		// JFormDesigner - End of component initialization  //GEN-END:initComponents
+	}
+
+	// JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
+	private JTabbedPane tabbedPane;
+	private JPanel pnlMain;
+	private JLabel lblTitle;
+	private JLabel label2;
+	private CCEnumComboBox<VLCRobotFrequency> cbxFreq;
+	private JLabel lblFrequency;
+	private VLCPlaylistTable lsData;
+	private JLabel lblStatus;
+	private JProgressBar progressBar;
+	private JLabel lblTime;
+	private JCheckBox cbxKeepPosition;
+	private JButton btnStart;
+	private JButton btnPlayPause;
+	private JButton btnClose;
+	private JPanel pnlLog;
+	private JSplitPane splitPane1;
+	private VLCRobotLogTable logTable;
+	private JPanel panel1;
+	private JScrollPane scrollPane2;
+	private JTextArea edLogOld;
+	private JScrollPane scrollPane3;
+	private JTextArea edLogNew;
+	private JPanel pnlInfo;
+	private JScrollPane scrollPane1;
+	private JTextArea lblText;
+	// JFormDesigner - End of variables declaration  //GEN-END:variables
 }

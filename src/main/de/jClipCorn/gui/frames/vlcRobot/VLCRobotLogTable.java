@@ -1,5 +1,7 @@
 package de.jClipCorn.gui.frames.vlcRobot;
 
+import com.jformdesigner.annotations.DesignCreate;
+import de.jClipCorn.gui.frames.watchHistoryFrame.WatchHistoryTable;
 import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleColumnPrototype;
 import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleTable;
 
@@ -10,7 +12,10 @@ public class VLCRobotLogTable extends JCCSimpleTable<VLCRobotLogEntry> {
 	private static final long serialVersionUID = 630505973662401189L;
 
 	private final VLCRobotFrame owner;
-	
+
+	@DesignCreate
+	private static WatchHistoryTable designCreate() { return new WatchHistoryTable(null); }
+
 	public VLCRobotLogTable(VLCRobotFrame frame) {
 		owner = frame;
 	}

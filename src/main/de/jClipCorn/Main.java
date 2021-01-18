@@ -261,7 +261,7 @@ public class Main {
  - [ ] TextExportFrame
  - [ ] UpdateCodecFrame
  - [ ] UpdateMetadataFrame
- - [ ] VlcRobot
+ - [X] VLCRobotFrame
  - [X] WatchHistoryFrame
 
 */

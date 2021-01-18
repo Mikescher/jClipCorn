@@ -1,0 +1,209 @@
+JFDML JFormDesigner: "7.0.3.0.337" Java: "11.0.9.1" encoding: "UTF-8"
+
+new FormModel {
+	"i18n.bundlePackage": "de.jClipCorn.gui.localization"
+	"i18n.bundleName": "locale"
+	"i18n.keyPrefix": "SearchFrame"
+	contentType: "form/swing"
+	root: new FormRoot {
+		add( new FormWindow( "javax.swing.JFrame", new FormLayoutManager( class java.awt.BorderLayout ) ) {
+			name: "this"
+			"title": new FormMessage( null, "VLCRobotFrame.title" )
+			"$sizePolicy": 1
+			"defaultCloseOperation": 2
+			"minimumSize": new java.awt.Dimension( 300, 300 )
+			addEvent( new FormEvent( "java.awt.event.WindowListener", "windowClosing", "onWindowClosing", false ) )
+			add( new FormContainer( "javax.swing.JTabbedPane", new FormLayoutManager( class javax.swing.JTabbedPane ) ) {
+				name: "tabbedPane"
+				"tabLayoutPolicy": 1
+				"tabPlacement": 3
+				"selectedIndex": 0
+				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+					"$columnSpecs": "relgap, default, labelcompgap, default:grow, labelcompgap, default:grow, labelcompgap, default, relgap"
+					"$rowSpecs": "relgap, default, linegap, default:grow, linegap, default, linegap, default, linegap, default, relgap"
+				} ) {
+					name: "pnlMain"
+					add( new FormComponent( "javax.swing.JLabel" ) {
+						name: "lblTitle"
+						"text": "ROBOT"
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 2
+						"gridY": 2
+					} )
+					add( new FormComponent( "javax.swing.JLabel" ) {
+						name: "label2"
+						"text": new FormMessage( null, "VLCRobotFrame.lblFreq" )
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 4
+						"gridY": 2
+						"hAlign": sfield com.jgoodies.forms.layout.CellConstraints RIGHT
+					} )
+					add( new FormComponent( "de.jClipCorn.gui.guiComponents.enumComboBox.CCEnumComboBox" ) {
+						name: "cbxFreq"
+						auxiliary() {
+							"JavaCodeGenerator.typeParameters": "VLCRobotFrequency"
+							"JavaCodeGenerator.customCreateCode": "new CCEnumComboBox<>(VLCRobotFrequency.getWrapper());"
+						}
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "onFrequencyChanged", false ) )
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 6
+						"gridY": 2
+					} )
+					add( new FormComponent( "javax.swing.JLabel" ) {
+						name: "lblFrequency"
+						"text": "[FREQ]"
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 8
+						"gridY": 2
+					} )
+					add( new FormContainer( "de.jClipCorn.gui.frames.vlcRobot.VLCPlaylistTable", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+						name: "lsData"
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 2
+						"gridY": 4
+						"gridWidth": 7
+						"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+						"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+					} )
+					add( new FormComponent( "javax.swing.JLabel" ) {
+						name: "lblStatus"
+						"text": "[STATUS]"
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 2
+						"gridY": 6
+						"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+						"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+					} )
+					add( new FormComponent( "javax.swing.JProgressBar" ) {
+						name: "progressBar"
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 4
+						"gridY": 6
+						"gridWidth": 3
+						"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+					} )
+					add( new FormComponent( "javax.swing.JLabel" ) {
+						name: "lblTime"
+						"text": "[TIME]"
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 8
+						"gridY": 6
+						"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+						"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+					} )
+					add( new FormComponent( "javax.swing.JCheckBox" ) {
+						name: "cbxKeepPosition"
+						"text": new FormMessage( null, "VLCRobotFrame.cbxKeepPosition" )
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "onKeepPositionChanged", false ) )
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 2
+						"gridY": 8
+						"gridWidth": 7
+					} )
+					add( new FormComponent( "javax.swing.JButton" ) {
+						name: "btnStart"
+						"text": new FormMessage( null, "VLCRobotFrame.btnStart" )
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "onStart", false ) )
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 2
+						"gridY": 10
+					} )
+					add( new FormComponent( "javax.swing.JButton" ) {
+						name: "btnPlayPause"
+						"text": new FormMessage( null, "VLCRobotFrame.btnPlay" )
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "onPlayPause", false ) )
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 4
+						"gridY": 10
+						"hAlign": sfield com.jgoodies.forms.layout.CellConstraints LEFT
+					} )
+					add( new FormComponent( "javax.swing.JButton" ) {
+						name: "btnClose"
+						"text": new FormMessage( null, "VLCRobotFrame.btnClose" )
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "onClose", false ) )
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 8
+						"gridY": 10
+					} )
+				}, new FormLayoutConstraints( null ) {
+					"title": new FormMessage( null, "VLCRobotFrame.tabMain" )
+				} )
+				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.BorderLayout ) ) {
+					name: "pnlLog"
+					add( new FormContainer( "javax.swing.JSplitPane", new FormLayoutManager( class javax.swing.JSplitPane ) ) {
+						name: "splitPane1"
+						"orientation": 0
+						"continuousLayout": true
+						"resizeWeight": 0.5
+						add( new FormContainer( "de.jClipCorn.gui.frames.vlcRobot.VLCRobotLogTable", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+							name: "logTable"
+							auxiliary() {
+								"JavaCodeGenerator.customCreateCode": "new VLCRobotLogTable(this);"
+							}
+						}, new FormLayoutConstraints( class java.lang.String ) {
+							"value": "left"
+						} )
+						add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+							"$columnSpecs": "default:grow, relgap, default:grow"
+							"$rowSpecs": "default:grow"
+						} ) {
+							name: "panel1"
+							add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+								name: "scrollPane2"
+								add( new FormComponent( "javax.swing.JTextArea" ) {
+									name: "edLogOld"
+									"editable": false
+								} )
+							}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+								"gridX": 1
+								"gridY": 1
+								"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+								"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+							} )
+							add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+								name: "scrollPane3"
+								add( new FormComponent( "javax.swing.JTextArea" ) {
+									name: "edLogNew"
+									"editable": false
+								} )
+							}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+								"gridX": 3
+								"gridY": 1
+								"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+								"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+							} )
+						}, new FormLayoutConstraints( class java.lang.String ) {
+							"value": "right"
+						} )
+					}, new FormLayoutConstraints( class java.lang.String ) {
+						"value": "Center"
+					} )
+				}, new FormLayoutConstraints( null ) {
+					"title": new FormMessage( null, "VLCRobotFrame.tabLog" )
+				} )
+				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.BorderLayout ) ) {
+					name: "pnlInfo"
+					add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+						name: "scrollPane1"
+						add( new FormComponent( "javax.swing.JTextArea" ) {
+							name: "lblText"
+							"text": new FormMessage( null, "VLCRobotFrame.helpText" )
+							"editable": false
+							"lineWrap": true
+							"border": new javax.swing.border.EmptyBorder( 4, 4, 4, 4 )
+						} )
+					}, new FormLayoutConstraints( class java.lang.String ) {
+						"value": "Center"
+					} )
+				}, new FormLayoutConstraints( null ) {
+					"title": new FormMessage( null, "VLCRobotFrame.tabInfo" )
+				} )
+			}, new FormLayoutConstraints( class java.lang.String ) {
+				"value": "Center"
+			} )
+		}, new FormLayoutConstraints( null ) {
+			"location": new java.awt.Point( 0, 0 )
+			"size": new java.awt.Dimension( 500, 300 )
+		} )
+	}
+}

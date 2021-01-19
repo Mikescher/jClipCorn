@@ -40,7 +40,7 @@ public class ClipTable extends JScrollPane implements CCDBUpdateListener, ListSe
 	private final MainFrame owner;
 
 	private String _adjusterConfig = Str.Empty;
-	private TableColumnAdjuster adjuster;
+	private final TableColumnAdjuster adjuster;
 	
 	private TableCustomFilter currentFilter = null;
 

@@ -15,6 +15,7 @@ import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.types.NamedPathVar;
 import de.jClipCorn.util.MoviePlayer;
 import de.jClipCorn.util.Str;
+import de.jClipCorn.util.datatypes.Opt;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.exceptions.CCFormatException;
@@ -507,5 +508,10 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 	@Override
 	public CCGenreList getGenresFromSelfOrParent() {
 		return getGenres();
+	}
+
+	@Override
+	public Opt<CCDateTime> getLastViewed() {
+		return viewedHistory.isEmpty() ? Opt.empty() : Opt.of(viewedHistory.getLastOrInvalid());
 	}
 }

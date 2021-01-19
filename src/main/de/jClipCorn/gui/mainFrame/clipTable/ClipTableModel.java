@@ -21,44 +21,46 @@ import java.util.List;
 
 public class ClipTableModel extends AbstractTableModel implements TableModelRowColorInterface, TableModelListener {
 	private static final long serialVersionUID = -3060547018013428568L;
-	
-	public final static int COLUMN_SCORE = 0;
-	public final static int COLUMN_TITLE = 1;
-	public final static int COLUMN_VIEWED = 2;
-	public final static int COLUMN_ZYKLUS = 3;
-	public final static int COLUMN_MEDIAINFO = 4;
-	public final static int COLUMN_LANGUAGE = 5;
-	public final static int COLUMN_GENRE = 6;
-	public final static int COLUMN_PARTCOUNT = 7;
-	public final static int COLUMN_LENGTH = 8;
-	public final static int COLUMN_DATE = 9;
-	public final static int COLUMN_ONLINESCORE = 10;
-	public final static int COLUMN_TAGS = 11;
-	public final static int COLUMN_FSK = 12;
-	public final static int COLUMN_FORMAT = 13;
-	public final static int COLUMN_YEAR = 14;
-	public final static int COLUMN_SIZE = 15;
-	
+
+	public final static int COLUMN_SCORE       = 0;
+	public final static int COLUMN_TITLE       = 1;
+	public final static int COLUMN_VIEWED      = 2;
+	public final static int COLUMN_LASTVIEWED  = 3;
+	public final static int COLUMN_ZYKLUS      = 4;
+	public final static int COLUMN_MEDIAINFO   = 5;
+	public final static int COLUMN_LANGUAGE    = 6;
+	public final static int COLUMN_GENRE       = 7;
+	public final static int COLUMN_PARTCOUNT   = 8;
+	public final static int COLUMN_LENGTH      = 9;
+	public final static int COLUMN_DATE        = 10;
+	public final static int COLUMN_ONLINESCORE = 11;
+	public final static int COLUMN_TAGS        = 12;
+	public final static int COLUMN_FSK         = 13;
+	public final static int COLUMN_FORMAT      = 14;
+	public final static int COLUMN_YEAR        = 15;
+	public final static int COLUMN_SIZE        = 16;
+
 	private List<Integer> mapping = null;
 	private boolean lockShuffleMapping = false;
 	
 	private static final String[] COLUMN_NAMES = {
-			"", 			 									//$NON-NLS-1$
-			LocaleBundle.getString("ClipTableModel.Title"), 	//$NON-NLS-1$
-			"", 												//$NON-NLS-1$
-			LocaleBundle.getString("ClipTableModel.Zyklus"),  	//$NON-NLS-1$
-			LocaleBundle.getString("ClipTableModel.Quality"),  	//$NON-NLS-1$
-			"",                                                 //$NON-NLS-1$
-			LocaleBundle.getString("ClipTableModel.Genre"),  	//$NON-NLS-1$
-			LocaleBundle.getString("ClipTableModel.Parts"), 	//$NON-NLS-1$
-			LocaleBundle.getString("ClipTableModel.Length"),  	//$NON-NLS-1$
-			LocaleBundle.getString("ClipTableModel.Added"),  	//$NON-NLS-1$
-			LocaleBundle.getString("ClipTableModel.Score"),  	//$NON-NLS-1$
-			LocaleBundle.getString("ClipTableModel.Tags"),  	//$NON-NLS-1$
-			LocaleBundle.getString("ClipTableModel.FSK"),  		//$NON-NLS-1$
-			LocaleBundle.getString("ClipTableModel.Format"), 	//$NON-NLS-1$
-			LocaleBundle.getString("ClipTableModel.Year"),  	//$NON-NLS-1$
-			LocaleBundle.getString("ClipTableModel.Size")  		//$NON-NLS-1$
+			"", 			 									 //$NON-NLS-1$
+			LocaleBundle.getString("ClipTableModel.Title"), 	 //$NON-NLS-1$
+			"", 												 //$NON-NLS-1$
+			LocaleBundle.getString("ClipTableModel.LastViewed"), //$NON-NLS-1$
+			LocaleBundle.getString("ClipTableModel.Zyklus"),  	 //$NON-NLS-1$
+			LocaleBundle.getString("ClipTableModel.Quality"),  	 //$NON-NLS-1$
+			"",                                                  //$NON-NLS-1$
+			LocaleBundle.getString("ClipTableModel.Genre"),  	 //$NON-NLS-1$
+			LocaleBundle.getString("ClipTableModel.Parts"), 	 //$NON-NLS-1$
+			LocaleBundle.getString("ClipTableModel.Length"),  	 //$NON-NLS-1$
+			LocaleBundle.getString("ClipTableModel.Added"),  	 //$NON-NLS-1$
+			LocaleBundle.getString("ClipTableModel.Score"),  	 //$NON-NLS-1$
+			LocaleBundle.getString("ClipTableModel.Tags"),  	 //$NON-NLS-1$
+			LocaleBundle.getString("ClipTableModel.FSK"),  		 //$NON-NLS-1$
+			LocaleBundle.getString("ClipTableModel.Format"), 	 //$NON-NLS-1$
+			LocaleBundle.getString("ClipTableModel.Year"),  	 //$NON-NLS-1$
+			LocaleBundle.getString("ClipTableModel.Size"), 		 //$NON-NLS-1$
 	};
 	
 	private final static Color COLOR_BACKGROUNDGRAY = new Color(240, 240, 240); // F0F0F0 (clBtnFace)
@@ -93,7 +95,7 @@ public class ClipTableModel extends AbstractTableModel implements TableModelRowC
 
 	@Override
 	public String getColumnName(int col) {
-		return COLUMN_NAMES[col].toString();
+		return COLUMN_NAMES[col];
 	}
 
 	@Override
@@ -152,6 +154,8 @@ public class ClipTableModel extends AbstractTableModel implements TableModelRowC
 				return new YearRange(mov.getYear());
 			case COLUMN_SIZE: // Filesize
 				return mov.getFilesize();
+			case COLUMN_LASTVIEWED: // Zuletzt angesehen
+				return mov.getLastViewed();
 			default:
 				return null; 
 			}
@@ -190,6 +194,8 @@ public class ClipTableModel extends AbstractTableModel implements TableModelRowC
 				return ser.getYearRange();
 			case COLUMN_SIZE: // Filesize
 				return ser.getFilesize();
+			case COLUMN_LASTVIEWED: // Zuletzt angesehen
+				return ser.getLastViewed();
 			default:
 				return null; 
 			}

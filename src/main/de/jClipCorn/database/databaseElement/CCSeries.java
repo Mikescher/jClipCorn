@@ -12,8 +12,10 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.comparator.CCSeasonComparator;
+import de.jClipCorn.util.datatypes.Opt;
 import de.jClipCorn.util.datatypes.Tuple1;
 import de.jClipCorn.util.datetime.CCDate;
+import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.datetime.YearRange;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.formatter.TimeIntervallFormatter;
@@ -868,6 +870,24 @@ public class CCSeries extends CCDatabaseElement implements IEpisodeOwner, ISerie
 			String tooltip = b.toString();
 
 			return new CCQualityCategory(ct, rtype, longtext, tooltip, (minBitrate + maxBitrate) / 2);
+		});
+	}
+
+	@Override
+	public Opt<CCDateTime> getLastViewed() {
+		return _cache.get(SeriesCache.LAST_VIEWED, null, ser->
+		{
+			if (getEpisodeCount() == 0) return Opt.empty();
+
+			var dt = iteratorEpisodes()
+					.filter(CCEpisode::isViewed)
+					.map(CCEpisode::getViewedHistoryLastDateTime)
+					.sort(CCDateTime::compare)
+					.lastOrNull();
+
+			if (dt == null) return Opt.empty();
+
+			return Opt.of(dt);
 		});
 	}
 }

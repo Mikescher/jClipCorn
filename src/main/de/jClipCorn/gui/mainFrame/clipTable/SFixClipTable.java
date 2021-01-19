@@ -43,6 +43,7 @@ public class SFixClipTable extends SFixTable {
 	private TableFormatRenderer renderer_format;
 	private TableYearRenderer renderer_year;
 	private TableFilesizeRenderer renderer_filesize;
+	private TableLastViewedRenderer renderer_lastviewed;
 	
 	private TableScoreComparator sorter_score;
 	private TableTitleComparator sorter_title;
@@ -60,6 +61,7 @@ public class SFixClipTable extends SFixTable {
 	private TableFormatComparator sorter_format;
 	private TableYearComparator sorter_year;
 	private TableSizeComparator sorter_size;
+	private TableLastViewedComparator sorter_lastviewed;
 
 	public SFixClipTable(TableModel dm) {
 		super(dm);
@@ -95,6 +97,7 @@ public class SFixClipTable extends SFixTable {
 		renderer_format      = new TableFormatRenderer();
 		renderer_year        = new TableYearRenderer();
 		renderer_filesize    = new TableFilesizeRenderer();
+		renderer_lastviewed  = new TableLastViewedRenderer();
 	}
 	
 	private void createRowSorter() {
@@ -114,6 +117,7 @@ public class SFixClipTable extends SFixTable {
 		sorter_format      = new TableFormatComparator();
 		sorter_year        = new TableYearComparator();
 		sorter_size        = new TableSizeComparator();
+		sorter_lastviewed  = new TableLastViewedComparator();
 	}
 	
 	private void setRowSorter() {
@@ -136,6 +140,7 @@ public class SFixClipTable extends SFixTable {
 		sorter.setComparator(ClipTableModel.COLUMN_FORMAT,      sorter_format);
 		sorter.setComparator(ClipTableModel.COLUMN_YEAR,        sorter_year);
 		sorter.setComparator(ClipTableModel.COLUMN_SIZE,        sorter_size);
+		sorter.setComparator(ClipTableModel.COLUMN_LASTVIEWED,  sorter_lastviewed);
 	}
 
 	@Override
@@ -175,6 +180,8 @@ public class SFixClipTable extends SFixTable {
 			return renderer_year;
 		case ClipTableModel.COLUMN_SIZE:
 			return renderer_filesize;
+		case ClipTableModel.COLUMN_LASTVIEWED:
+			return renderer_lastviewed;
 		default:
 			CCLog.addDefaultSwitchError(this, column);
 			return super.getCellRenderer(row, column);//renderer_default;
@@ -229,6 +236,8 @@ public class SFixClipTable extends SFixTable {
 				return null;
 			case ClipTableModel.COLUMN_SIZE:
 				return FileSizeFormatter.formatBytes((CCFileSize)value);
+			case ClipTableModel.COLUMN_LASTVIEWED:
+				return null;
 			default:
 				CCLog.addDefaultSwitchError(this, column);
 				return null;

@@ -159,6 +159,16 @@ public class CCDateTime implements Comparable<CCDateTime>, StringSpecSupplier {
 		return time.compareTo(o.time);
 	}
 
+	public static int compare(CCDateTime o1, CCDateTime o2) {
+		if (o1.equals(o2)) {
+			return 0;
+		} else if (o1.isGreaterThan(o2)) {
+			return 1;
+		} else {
+			return -1;
+		}
+	}
+
 	public static CCDateTime create(int dd, int dm, int dy, int th, int tm, int ts) {
 		return new CCDateTime(CCDate.create(dd, dm, dy), CCTime.create(th, tm, ts));
 	}

@@ -29,6 +29,7 @@ public class SeriesCache extends CalculationCache<CCSeries>
 	public static final String AVERAGE_EPISODE_LENGTH                   = "AVERAGE_EPISODE_LENGTH";
 	public static final String CONSENS_EPISODE_LENGTH                   = "CONSENS_EPISODE_LENGTH";
 	public static final String MEDIAINFO_CATEGORY                       = "MEDIAINFO_CATEGORY";
+	public static final String LAST_VIEWED                              = "LAST_VIEWED";
 
 	private final CCSeries source;
 

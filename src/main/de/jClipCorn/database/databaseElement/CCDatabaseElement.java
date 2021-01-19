@@ -9,8 +9,10 @@ import de.jClipCorn.database.util.ExtendedViewedState;
 import de.jClipCorn.features.actionTree.IActionSourceObject;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.util.datatypes.Opt;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.datetime.CCDate;
+import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.exceptions.EnumFormatException;
 import de.jClipCorn.util.exceptions.GroupFormatException;
 import de.jClipCorn.util.exceptions.OnlineRefFormatException;
@@ -444,4 +446,6 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 	public abstract String getFullDisplayTitle();
 
 	public abstract CCQualityCategory getMediaInfoCategory();
+
+	public abstract Opt<CCDateTime> getLastViewed();
 }

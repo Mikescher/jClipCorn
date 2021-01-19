@@ -276,7 +276,7 @@ public class CCProperties {
 		PROP_MAINFRAME_SHOW_GROUP_ONLY_ON_HOVER = new CCBoolProperty(CAT_VIEW,              this,   "PROP_MAINFRAME_SHOW_GROUP_ONLY_ON_HOVER",  false);
 		PROP_MAINFRAME_ASYNC_COVER_LOADING      = new CCBoolProperty(CAT_VIEW,              this,   "PROP_MAINFRAME_ASYNC_COVER_LOADING",       false);
 		PROP_MAINFRAME_SHOW_VIEWCOUNT      		= new CCBoolProperty(CAT_VIEW,              this,   "PROP_MAINFRAME_SHOW_VIEWCOUNT",       		true);
-		PROP_MAINFRAME_VISIBLE_COLUMNS          = new CCEnumSetProperty<>(CAT_VIEW,         this,   "PROP_MAINFRAME_VISIBLE_COLUMNS",           EnumSetValue.ALL,                   MainFrameColumn.getWrapper());
+		PROP_MAINFRAME_VISIBLE_COLUMNS          = new CCEnumSetProperty<>(CAT_VIEW,         this,   "PROP_MAINFRAME_VISIBLE_COLUMNS",           getDefColumns(),                   MainFrameColumn.getWrapper());
 
 		PROP_DATABASE_NAME                      = new CCStringProperty(CAT_DATABASE,        this,   "PROP_DATABASE_NAME",                       "ClipCornDB");
 		PROP_LOG_PATH                           = new CCStringProperty(CAT_DATABASE,        this,   "PROP_LOG_PATH",                            "jClipcorn.log");
@@ -409,6 +409,15 @@ public class CCProperties {
 		StringBuilder b = new StringBuilder();
 		for (int i =0; i < len; i++) b.append(CHARS.charAt((int)(Math.random() * CHARS.length())));
 		return b.toString();
+	}
+
+	private Set<MainFrameColumn> getDefColumns() {
+		var set = new HashSet<>(Arrays.asList(MainFrameColumn.values()));
+
+		set.remove(MainFrameColumn.GENRES);
+		set.remove(MainFrameColumn.LASTVIEWED);
+
+		return set;
 	}
 
 	private String getDefFLPath() {

@@ -1,12 +1,10 @@
 package de.jClipCorn.features.table.renderer;
 
-import java.awt.Component;
-
-import javax.swing.JTable;
-
-import org.pushingpixels.substance.api.renderers.SubstanceDefaultTableCellRenderer;
-
 import de.jClipCorn.gui.LookAndFeelManager;
+import org.pushingpixels.substance.api.renderer.SubstanceDefaultTableCellRenderer;
+
+import javax.swing.*;
+import java.awt.*;
 
 public class TableRenderer extends SubstanceDefaultTableCellRenderer implements ResizableColumnRenderer {
 	private static final long serialVersionUID = -5742763325569140076L;
@@ -19,7 +17,7 @@ public class TableRenderer extends SubstanceDefaultTableCellRenderer implements 
 	public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
 		final Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 
-		if ((! isSelected) && (! LookAndFeelManager.isSubstance())) {
+		if ((! isSelected) && (! LookAndFeelManager.isExternal())) {
 			c.setBackground(((TableModelRowColorInterface) table.getModel()).getRowColor(row));
 		}
 

@@ -4,7 +4,7 @@ import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.properties.enumerations.AppTheme;
 import de.jClipCorn.properties.enumerations.AppThemePackage;
 import de.jClipCorn.util.stream.CCStreams;
-import org.pushingpixels.substance.api.SubstanceLookAndFeel;
+import org.pushingpixels.substance.api.SubstanceCortex;
 
 import javax.swing.*;
 import java.awt.*;
@@ -25,8 +25,8 @@ public class LookAndFeelManager {
 		_installedLookAndFeels = CCStreams
 			.iterate(UIManager.getInstalledLookAndFeels())
 			.map(UIManager.LookAndFeelInfo::getClassName)
-			.append(CCStreams.iterate(SubstanceLookAndFeel.getAllSkins()).map(p -> p.getValue().getClassName()))
 			.append(listInstalledFlatlafLookAndFeels())
+			.append(listInstalledRadianceLookAndFeels())
 			.map(p -> CCStreams.iterate(AppTheme.getWrapper().allValues()).firstOrNull(q -> q.getClassName().equals(p)))
 			.filter(Objects::nonNull)
 			.toSet();
@@ -39,6 +39,16 @@ public class LookAndFeelManager {
 		return CCStreams
 				.iterate(AppTheme.values())
 				.filter(p -> p.getThemePackage() == AppThemePackage.FLATLAF)
+				.filter(p -> { try { Class.forName(p.getClassName()); return true; } catch( ClassNotFoundException e ) { return false; } })
+				.map(AppTheme::getClassName)
+				.toList();
+	}
+
+	private static List<String> listInstalledRadianceLookAndFeels()
+	{
+		return CCStreams
+				.iterate(AppTheme.values())
+				.filter(p -> p.getThemePackage() == AppThemePackage.RADIANCE)
 				.filter(p -> { try { Class.forName(p.getClassName()); return true; } catch( ClassNotFoundException e ) { return false; } })
 				.map(AppTheme::getClassName)
 				.toList();
@@ -57,9 +67,10 @@ public class LookAndFeelManager {
 			{
 				UIManager.setLookAndFeel(at.getClassName());
 			}
-			else if (atpack == AppThemePackage.SUBSTANCE)
+			else if (atpack == AppThemePackage.RADIANCE)
 			{
-				SubstanceLookAndFeel.setSkin(at.getClassName());
+				JFrame.setDefaultLookAndFeelDecorated(true);
+				SubstanceCortex.GlobalScope.setSkin(at.getClassName());
 			}
 			else if (atpack == AppThemePackage.FLATLAF)
 			{
@@ -85,8 +96,16 @@ public class LookAndFeelManager {
 		}
 	}
 
-	public static boolean isSubstance() {
-		return currentAppTheme.getThemePackage() == AppThemePackage.SUBSTANCE;
+	public static boolean isRadiance() {
+		return currentAppTheme.getThemePackage() == AppThemePackage.RADIANCE;
+	}
+
+	public static boolean isFlatLaf() {
+		return currentAppTheme.getThemePackage() == AppThemePackage.FLATLAF;
+	}
+
+	public static boolean isExternal() {
+		return currentAppTheme.getThemePackage() == AppThemePackage.RADIANCE || currentAppTheme.getThemePackage() == AppThemePackage.FLATLAF;
 	}
 
 	public static boolean isWindows() {

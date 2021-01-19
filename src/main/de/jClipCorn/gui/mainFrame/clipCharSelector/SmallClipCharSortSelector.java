@@ -1,16 +1,11 @@
 package de.jClipCorn.gui.mainFrame.clipCharSelector;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import de.jClipCorn.gui.LookAndFeelManager;
+import de.jClipCorn.gui.mainFrame.MainFrame;
 
-import javax.swing.GroupLayout;
+import javax.swing.*;
 import javax.swing.GroupLayout.ParallelGroup;
 import javax.swing.GroupLayout.SequentialGroup;
-import javax.swing.JButton;
-import javax.swing.LayoutStyle;
-
-import de.jClipCorn.gui.mainFrame.MainFrame;
-import de.jClipCorn.gui.LookAndFeelManager;
 
 /**
  * For Substance Themes
@@ -50,13 +45,18 @@ public class SmallClipCharSortSelector extends AbstractClipCharSortSelector {
 		
 		SequentialGroup hGroup = layout.createSequentialGroup();
 		ParallelGroup pGroup = layout.createParallelGroup(GroupLayout.Alignment.BASELINE);
-		
-		boolean isSubst = LookAndFeelManager.isSubstance();
-		
+
+		boolean isExtLnF = LookAndFeelManager.isExternal();
+		boolean isRad = LookAndFeelManager.isRadiance();
+		boolean isFlaf = LookAndFeelManager.isFlatLaf();
+
 		for(int i = 0; i < BUTTONCOUNT; i++) {
-			if (isSubst) {
+			if (isRad) {
 				hGroup.addComponent(buttons[i], sizes[i], buttons[i].getPreferredSize().width, Short.MAX_VALUE);
 				pGroup.addComponent(buttons[i], 0, buttons[i].getPreferredSize().height, Short.MAX_VALUE);
+			} else if (isFlaf) {
+				hGroup.addComponent(buttons[i]);
+				pGroup.addComponent(buttons[i]);
 			} else {
 				hGroup.addComponent(buttons[i]);
 				pGroup.addComponent(buttons[i]);
@@ -64,15 +64,10 @@ public class SmallClipCharSortSelector extends AbstractClipCharSortSelector {
 			
 			hGroup.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 0, Short.MAX_VALUE);
 			final int fi = i;
-			buttons[i].addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent arg0) {
-					onClick(fi);
-				}
-			});
+			buttons[i].addActionListener(arg0 -> onClick(fi));
 		}
 		
-		if (isSubst) {
+		if (isExtLnF) {
 			hGroup.addGap(4);
 		}
 		

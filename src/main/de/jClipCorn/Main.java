@@ -28,7 +28,7 @@ import de.jClipCorn.util.helper.SwingUtils;
 
 public class Main {
 	public final static String TITLE     = "jClipCorn"; //$NON-NLS-1$
-	public final static String VERSION   = /*<gradle_version_marker>*/"1.10.8.20"/*</gradle_version_marker>*/; //$NON-NLS-1$
+	public final static String VERSION   = /*<gradle_version_marker>*/"1.10.8.21"/*</gradle_version_marker>*/; //$NON-NLS-1$
 	public final static String DBVERSION = "18";    //$NON-NLS-1$
 	public final static String JXMLVER   = "6";     //$NON-NLS-1$
 
@@ -60,14 +60,14 @@ public class Main {
 			}
 			Globals.TIMINGS.stop(Globals.TIMING_INIT_TESTREADONLY);
 
-			LookAndFeelManager.setLookAndFeel(CCProperties.getInstance().PROP_UI_APPTHEME.getValue(), false);
-
 			final CCMovieList mList = CCMovieList.create(true);
 
 			init();
 
 			SwingUtils.invokeLater(() ->
 			{
+				LookAndFeelManager.setLookAndFeel(CCProperties.getInstance().PROP_UI_APPTHEME.getValue(), false);
+
 				mList.showInitialWizard();
 
 				final MainFrame myFrame = new MainFrame(mList);

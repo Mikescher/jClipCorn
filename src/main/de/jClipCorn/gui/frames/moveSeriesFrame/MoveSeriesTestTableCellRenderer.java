@@ -1,11 +1,9 @@
 package de.jClipCorn.gui.frames.moveSeriesFrame;
 
-import java.awt.Color;
-import java.awt.Component;
+import org.pushingpixels.substance.api.renderer.SubstanceDefaultTableCellRenderer;
 
-import javax.swing.JTable;
-
-import org.pushingpixels.substance.api.renderers.SubstanceDefaultTableCellRenderer;
+import javax.swing.*;
+import java.awt.*;
 
 public class MoveSeriesTestTableCellRenderer extends SubstanceDefaultTableCellRenderer {
 	private static final long serialVersionUID = -7348556832478706217L;

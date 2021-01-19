@@ -44,7 +44,7 @@ public class ExtendedSettingsFrame extends JFrame
 	{
 		setIconImage(Resources.IMG_FRAME_ICON.get());
 
-		if (! LookAndFeelManager.isSubstance())
+		if (! LookAndFeelManager.isExternal())
 		{
 			edKey.setBackground(Color.WHITE);
 			edTyp.setBackground(Color.WHITE);

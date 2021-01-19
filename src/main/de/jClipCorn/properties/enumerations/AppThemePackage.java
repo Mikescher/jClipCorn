@@ -5,13 +5,13 @@ import de.jClipCorn.util.enumextension.EnumWrapper;
 
 public enum AppThemePackage implements ContinoousEnum<AppThemePackage> {
 	DEFAULT(0),
-	SUBSTANCE(1),
+	RADIANCE(1),
 	FLATLAF(2);
 
 	@SuppressWarnings("nls")
 	private final static String[] NAMES = {
 		"Default",
-		"Substance",
+		"Radiance",
 		"FlatLaf",
 	};
 
@@ -19,7 +19,7 @@ public enum AppThemePackage implements ContinoousEnum<AppThemePackage> {
 
 	private static final EnumWrapper<AppThemePackage> wrapper = new EnumWrapper<>(DEFAULT);
 
-	private AppThemePackage(int val) {
+	AppThemePackage(int val) {
 		id = val;
 	}
 	

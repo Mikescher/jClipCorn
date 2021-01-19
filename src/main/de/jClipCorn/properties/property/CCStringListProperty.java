@@ -6,6 +6,7 @@ import de.jClipCorn.gui.guiComponents.StringListConfigPanel;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.CCPropertyCategory;
+import de.jClipCorn.util.Str;
 import org.apache.commons.text.StringEscapeUtils;
 
 import javax.swing.*;
@@ -125,6 +126,13 @@ public class CCStringListProperty extends CCProperty<ArrayList> {
 
 	public ArrayList<String> setValue(String[] value) {
 		return setValue(new ArrayList<>(Arrays.asList(value)));
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public boolean isValue(ArrayList val) {
+		if (val == null) return false;
+		return Str.equals(serializeList(val), serializeList(getValue()));
 	}
 	
 	@SuppressWarnings("nls")

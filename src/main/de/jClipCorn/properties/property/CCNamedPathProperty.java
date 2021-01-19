@@ -146,9 +146,15 @@ public class CCNamedPathProperty extends CCProperty<NamedPathVar> {
 
 	@Override
 	public NamedPathVar setValue(NamedPathVar val) {
-		properties.setProperty(identifier, Str.toBase64(" " + val.Name + " ") + ";" + Str.toBase64(" " + val.Path + " ") + ";" + Str.toBase64(" " + val.Arguments + " ")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$
+		properties.setProperty(identifier, val.serialize());
 
 		return getValue();
+	}
+
+	@Override
+	public boolean isValue(NamedPathVar val) {
+		if (val == null) return false;
+		return Str.equals(val.serialize(), getValue().serialize());
 	}
 
 	public String getLabelRowAlign()      { return "default"; } //$NON-NLS-1$

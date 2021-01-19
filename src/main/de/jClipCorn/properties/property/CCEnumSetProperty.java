@@ -1,19 +1,19 @@
 package de.jClipCorn.properties.property;
 
-import java.awt.Component;
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.swing.JTextField;
-
+import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.gui.guiComponents.StringDisplayConverter;
 import de.jClipCorn.gui.guiComponents.jCheckBoxList.JCheckBoxList;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.CCPropertyCategory;
+import de.jClipCorn.util.Str;
 import de.jClipCorn.util.enumextension.ContinoousEnum;
 import de.jClipCorn.util.enumextension.EnumWrapper;
+
+import javax.swing.*;
+import java.awt.*;
+import java.util.HashSet;
+import java.util.Set;
 
 public class CCEnumSetProperty<T extends ContinoousEnum<T>> extends CCProperty<Set<T>> {
 	public enum EnumSetValue { NONE, ALL, FIRST }
@@ -168,17 +168,26 @@ public class CCEnumSetProperty<T extends ContinoousEnum<T>> extends CCProperty<S
 	@Override
 	public Set<T> setValue(Set<T> val) {
 		if (val != null) {
-			StringBuilder builder = new StringBuilder();
-			boolean first = true;
-			for (T single : val) {
-				if (!first)builder.append(';');
-				builder.append(single.asInt());
-				first = false;
-			}
-			
-			properties.setProperty(identifier, builder.toString());
+			properties.setProperty(identifier, setToString(val));
 		}
 		
 		return getValue();
+	}
+
+	private static <T extends ContinoousEnum<T>> String setToString(Set<T> val) {
+		StringBuilder builder = new StringBuilder();
+		boolean first = true;
+		for (T single : val) {
+			if (!first)builder.append(';');
+			builder.append(single.asInt());
+			first = false;
+		}
+		return builder.toString();
+	}
+
+	@Override
+	public boolean isValue(Set<T> val) {
+		if (val == null) return false;
+		return Str.equals(setToString(val), setToString(getValue()));
 	}
 }

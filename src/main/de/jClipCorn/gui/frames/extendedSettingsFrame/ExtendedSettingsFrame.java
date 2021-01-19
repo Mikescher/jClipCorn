@@ -93,7 +93,7 @@ public class ExtendedSettingsFrame extends JFrame
 					var val = properties.getPropertyList().get(entry.getIdentifier()).getValueAsString();
 					var des = properties.getPropertyList().get(entry.getIdentifier()).getDescriptionOrEmpty();
 
-					if (cat.toLowerCase().contains(search)) return true;
+					if (cat != null && cat.toLowerCase().contains(search)) return true;
 					if (key.toLowerCase().contains(search)) return true;
 					if (val.toLowerCase().contains(search)) return true;
 					if (des.toLowerCase().contains(search)) return true;

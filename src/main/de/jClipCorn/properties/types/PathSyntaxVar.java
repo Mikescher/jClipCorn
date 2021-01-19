@@ -17,4 +17,8 @@ public class PathSyntaxVar {
 	public String toString() {
 		return Key + " := " + Value; //$NON-NLS-1$
 	}
+
+	public String serialize() {
+		return Str.toBase64(this.Key) + ";" + Str.toBase64(this.Value);
+	}
 }

@@ -5,6 +5,7 @@ import de.jClipCorn.gui.guiComponents.KeyStrokeTextfield;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.CCPropertyCategory;
+import de.jClipCorn.util.Str;
 import de.jClipCorn.util.helper.KeyStrokeUtil;
 
 import javax.swing.*;
@@ -76,5 +77,10 @@ public class CCKeyStrokeProperty  extends CCProperty<KeyStroke>{
 	@Override
 	public String getDefaultAsString() {
 		return KeyStrokeUtil.keyStrokeToString(getDefault());
+	}
+
+	@Override
+	public boolean isValue(KeyStroke val) {
+		return Str.equals(KeyStrokeUtil.keyStrokeToString(val), KeyStrokeUtil.keyStrokeToString(getValue()));
 	}
 }

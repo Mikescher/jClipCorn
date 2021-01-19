@@ -59,7 +59,12 @@ public class ClipTable extends JScrollPane implements CCDBUpdateListener, ListSe
 		this.setViewportView(table);
 
 		adjuster = new TableColumnAdjuster(this, table);
-		adjuster.setConfig(CCStreams.iterate(MainFrameColumn.values()).stringjoin(e-> "10", "|")); //$NON-NLS-1$ //$NON-NLS-2$
+
+		var icfg = CCProperties.getInstance().PROP_MAINFRAME_COLUMN_SIZE_CACHE.getValue();
+		if (Str.isNullOrWhitespace(icfg)) icfg = CCStreams.iterate(MainFrameColumn.values()).stringjoin(e-> "keep", "|"); //$NON-NLS-1$ //$NON-NLS-2$
+		if (!adjuster.isValidConfig(icfg)) icfg = CCStreams.iterate(MainFrameColumn.values()).stringjoin(e-> "10", "|"); //$NON-NLS-1$ //$NON-NLS-2$
+
+		adjuster.adjustColumns(icfg);
 
 		if (ml != null) { // Sonst meckert der WindowsBuilder
 			ml.addChangeListener(this);
@@ -136,6 +141,9 @@ public class ClipTable extends JScrollPane implements CCDBUpdateListener, ListSe
 		model.fireTableDataChanged();
 		initialSort();
 		autoResize();
+
+		var columnconfig = adjuster.getCurrentStateAsConfig();
+		CCProperties.getInstance().PROP_MAINFRAME_COLUMN_SIZE_CACHE.setValueIfDiff(columnconfig);
 	}
 	
 	private void initialSort() {

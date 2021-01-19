@@ -74,4 +74,9 @@ public class CCEnumProperty<T extends ContinoousEnum<T>> extends CCProperty<T> {
 		
 		return getValue();
 	}
+
+	@Override
+	public boolean isValue(T val) {
+		return val == getValue();
+	}
 }

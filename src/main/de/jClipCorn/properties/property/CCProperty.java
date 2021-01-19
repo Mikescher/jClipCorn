@@ -3,6 +3,7 @@ package de.jClipCorn.properties.property;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.CCPropertyCategory;
+import de.jClipCorn.util.datatypes.Opt;
 
 import java.awt.*;
 
@@ -26,6 +27,12 @@ public abstract class CCProperty<T extends Object> {
 
 	public abstract T getValue();
 	public abstract T setValue(T val);
+	public abstract boolean isValue(T val);
+
+	public Opt<T> setValueIfDiff(T val) {
+		if (isValue(val)) return Opt.empty();
+		return Opt.of(setValue(val));
+	}
 
 	public String getValueAsString() {
 		return getValue().toString();

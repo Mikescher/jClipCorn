@@ -1,14 +1,13 @@
 package de.jClipCorn.properties.property;
 
-import java.awt.Component;
-
-import javax.swing.JSpinner;
-import javax.swing.SpinnerNumberModel;
-
-import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.features.log.CCLog;
+import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.CCPropertyCategory;
+
+import javax.swing.*;
+import java.awt.*;
+import java.util.Objects;
 
 public class CCDoubleProperty extends CCProperty<Double> {
 	CCDoubleProperty(CCPropertyCategory cat, CCProperties prop, String ident, Double standard) {
@@ -55,5 +54,10 @@ public class CCDoubleProperty extends CCProperty<Double> {
 		properties.setProperty(identifier, "" + val); //$NON-NLS-1$
 		
 		return getValue();
+	}
+
+	@Override
+	public boolean isValue(Double val) {
+		return Objects.equals(val, getValue());
 	}
 }

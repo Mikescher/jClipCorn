@@ -4,8 +4,8 @@ import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.FormSpecs;
 import com.jgoodies.forms.layout.RowSpec;
-import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.features.log.CCLog;
+import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.CCPropertyCategory;
 import de.jClipCorn.properties.types.PathSyntaxVar;
@@ -16,7 +16,7 @@ import java.awt.*;
 
 public class CCPathVarProperty extends CCProperty<PathSyntaxVar> {
 
-	private class CCPathVarPropertyPanel extends JPanel {
+	private static class CCPathVarPropertyPanel extends JPanel {
 		private static final long serialVersionUID = -9214196751986446909L;
 		JTextField Field1; 
 		JTextField Field2;
@@ -90,8 +90,14 @@ public class CCPathVarProperty extends CCProperty<PathSyntaxVar> {
 
 	@Override
 	public PathSyntaxVar setValue(PathSyntaxVar val) {
-		properties.setProperty(identifier, Str.toBase64(val.Key) + ";" + Str.toBase64(val.Value)); //$NON-NLS-1$
+		properties.setProperty(identifier, val.serialize()); //$NON-NLS-1$
 
 		return getValue();
+	}
+
+	@Override
+	public boolean isValue(PathSyntaxVar val) {
+		if (val == null) return false;
+		return Str.equals(val.serialize(), getValue().serialize());
 	}
 }

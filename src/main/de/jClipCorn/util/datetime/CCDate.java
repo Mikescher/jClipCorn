@@ -523,7 +523,12 @@ public final class CCDate implements Comparable<CCDate>, StringSpecSupplier {
 				getMonth() == other.getMonth() &&
 				getYear() == other.getYear();
 	}
-	
+
+	public static boolean equals(CCDate a, CCDate b) {
+		if (a != null) return a.isEqual(b);
+		return b == null;
+	}
+
 	@Override
 	public int hashCode() {
 		return (((year << 4) + month) << 5) + day; // Yep - thats right

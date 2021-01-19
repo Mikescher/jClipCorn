@@ -79,7 +79,23 @@ public class TableColumnAdjuster implements PropertyChangeListener, TableModelLi
 
 		return r;
 	}
-	
+
+	public String getCurrentStateAsConfig() {
+		var tcm = table.getColumnModel();
+
+		boolean first = true;
+		StringBuilder result = new StringBuilder(Str.Empty);
+		for (int i = 0; i < tcm.getColumnCount(); i++) {
+			if (!first) result.append("|");
+
+			result.append(tcm.getColumn(i).getWidth());
+
+			first = false;
+		}
+
+		return result.toString();
+	}
+
 	private void installResizeAdjuster() {
 		table.getParent().addComponentListener(new ComponentListener() {
 			@Override
@@ -118,9 +134,15 @@ public class TableColumnAdjuster implements PropertyChangeListener, TableModelLi
 	}
 
 	@SuppressWarnings("nls")
-	public void setConfig(String dat)
+	private void setConfig(String dat)
 	{
 		if (dat.equals(_currentConfigStr)) return;
+
+		_config = parseConfig(dat);
+		_currentConfigStr = dat;
+	}
+
+	private List<TCAConfig> parseConfig(String dat) {
 
 		List<TCAConfig> cfg = new ArrayList<>();
 
@@ -200,14 +222,18 @@ public class TableColumnAdjuster implements PropertyChangeListener, TableModelLi
 			}
 		}
 
-		_currentConfigStr = dat;
-		_config = cfg;
+		return cfg;
 	}
 
 	public void adjustColumns(String config) {
 		_autoCache = null;
 		setConfig(config);
 		_adjustColumns(table.getColumnModel());
+	}
+
+	public boolean isValidConfig(String config) {
+		var cfg = parseConfig(config);
+		return cfg.size() == table.getColumnModel().getColumnCount();
 	}
 
 	private void _adjustColumns(TableColumnModel tcm) {
@@ -255,7 +281,7 @@ public class TableColumnAdjuster implements PropertyChangeListener, TableModelLi
 		// [3] Process [FIXED] configured columns
 		for (int i = 0; i < tcm.getColumnCount(); i++)
 		{
-			if (Float.isNaN(columns[i]) && cfg.get(i).Type == TCACType.Keep)
+			if (Float.isNaN(columns[i]) && cfg.get(i).Type == TCACType.Fixed)
 			{
 				int w = cfg.get(i).Length;
 				if (w<0) w=0;

@@ -28,4 +28,8 @@ public class NamedPathVar {
 	public String getCaption() {
 		if (Str.isNullOrWhitespace(Name)) return PathFormatter.getFilenameWithExt(Path); else return Name;
 	}
+
+	public String serialize() {
+		return Str.toBase64(" " + this.Name + " ") + ";" + Str.toBase64(" " + this.Path + " ") + ";" + Str.toBase64(" " + this.Arguments + " ");
+	}
 }

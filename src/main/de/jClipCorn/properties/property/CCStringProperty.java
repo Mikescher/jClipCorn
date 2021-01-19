@@ -1,13 +1,13 @@
 package de.jClipCorn.properties.property;
 
-import java.awt.Component;
-
-import javax.swing.JTextField;
-
-import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.features.log.CCLog;
+import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.CCPropertyCategory;
+import de.jClipCorn.util.Str;
+
+import javax.swing.*;
+import java.awt.*;
 
 public class CCStringProperty extends CCProperty<String> {
 	public CCStringProperty(CCPropertyCategory cat, CCProperties prop, String ident, String standard) {
@@ -45,8 +45,13 @@ public class CCStringProperty extends CCProperty<String> {
 	@Override
 	public String setValue(String val) {
 		properties.setProperty(identifier, transformToStorage(val));
-		
+
 		return getValue();
+	}
+
+	@Override
+	public boolean isValue(String val) {
+		return Str.equals(val, getValue());
 	}
 	
 	protected String transformToStorage(String value) {

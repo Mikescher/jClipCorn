@@ -59,7 +59,7 @@ public final class CCOnlineRefTypeHelper {
 				else
 					return "https://www.themoviedb.org/" + ref.id + "?language=" + lang.asDinIsoID();
 			case PROXERME:
-				return "https://proxer.net/info/" + ref.id;
+				return "https://proxer.me/info/" + ref.id;
 			case MYANIMELIST:
 				return "https://myanimelist.net/anime/" + ref.id + "/";
 			case ANILIST:

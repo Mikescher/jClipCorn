@@ -20,7 +20,7 @@ new FormModel {
 				"selectedIndex": 0
 				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
 					"$columnSpecs": "relgap, default, labelcompgap, default:grow, labelcompgap, default:grow, labelcompgap, default, relgap"
-					"$rowSpecs": "relgap, default, linegap, default:grow, linegap, default, linegap, default, linegap, default, relgap"
+					"$rowSpecs": "relgap, default, linegap, default:grow, linegap, default, linegap, default, linegap, default, linegap, default, relgap"
 				} ) {
 					name: "pnlMain"
 					add( new FormComponent( "javax.swing.JLabel" ) {
@@ -100,13 +100,22 @@ new FormModel {
 						"gridY": 8
 						"gridWidth": 7
 					} )
+					add( new FormComponent( "javax.swing.JCheckBox" ) {
+						name: "cbxQueuePreemptive"
+						"text": new FormMessage( null, "VLCRobotFrame.cbxQueuePreemptive" )
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "onQueuePreemptiveChanged", false ) )
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 2
+						"gridY": 10
+						"gridWidth": 7
+					} )
 					add( new FormComponent( "javax.swing.JButton" ) {
 						name: "btnStart"
 						"text": new FormMessage( null, "VLCRobotFrame.btnStart" )
 						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "onStart", false ) )
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridX": 2
-						"gridY": 10
+						"gridY": 12
 					} )
 					add( new FormComponent( "javax.swing.JButton" ) {
 						name: "btnPlayPause"
@@ -114,7 +123,7 @@ new FormModel {
 						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "onPlayPause", false ) )
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridX": 4
-						"gridY": 10
+						"gridY": 12
 						"hAlign": sfield com.jgoodies.forms.layout.CellConstraints LEFT
 					} )
 					add( new FormComponent( "javax.swing.JButton" ) {
@@ -123,7 +132,7 @@ new FormModel {
 						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "onClose", false ) )
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridX": 8
-						"gridY": 10
+						"gridY": 12
 					} )
 				}, new FormLayoutConstraints( null ) {
 					"title": new FormMessage( null, "VLCRobotFrame.tabMain" )
@@ -203,7 +212,7 @@ new FormModel {
 			} )
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 0, 0 )
-			"size": new java.awt.Dimension( 500, 300 )
+			"size": new java.awt.Dimension( 500, 380 )
 		} )
 	}
 }

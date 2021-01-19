@@ -60,6 +60,7 @@ public class Resources {
 	public final static MultiSizeIconRef ICN_MENUBAR_PLAY					= registerMultisizeIcon("/icons/toolbar/control_play.png");
 	public final static MultiSizeIconRef ICN_MENUBAR_HIDDENPLAY				= registerMultisizeIcon("/icons/toolbar/control_hiddenplay.png");
 	public final static MultiSizeIconRef ICN_MENUBAR_PLAY_ACTIVE			= registerMultisizeIcon("/icons/toolbar/control_play_active.png");
+	public final static MultiSizeIconRef ICN_MENUBAR_PLAY_QUEUED			= registerMultisizeIcon("/icons/toolbar/control_play_queued.png");
 	public final static MultiSizeIconRef ICN_MENUBAR_ADD_MOV				= registerMultisizeIcon("/icons/toolbar/add.png");
 	public final static MultiSizeIconRef ICN_MENUBAR_ADD_SER				= registerMultisizeIcon("/icons/toolbar/addSer.png");
 	public final static MultiSizeIconRef ICN_MENUBAR_ADD_SEA				= registerMultisizeIcon("/icons/toolbar/addSea.png");

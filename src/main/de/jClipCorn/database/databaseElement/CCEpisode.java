@@ -350,6 +350,10 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 		return owner.getSeries();
 	}
 
+	public String getShortQualifiedTitle() {
+		return Str.format("{0} - {1}", getStringIdentifier(), getTitle()); //$NON-NLS-1$
+	}
+
 	@Override
 	public String getQualifiedTitle() {
 		return Str.format("{0} E{1,number,###} - {2}", getSeries().getTitle(), getGlobalEpisodeNumber(), getTitle()); //$NON-NLS-1$

@@ -311,6 +311,8 @@ public class HTTPUtilities {
 
 		var fn = uri.substring(idx+1);
 
+		fn = fn.replaceAll("\\+", "%2b");
+
 		return safeURLDecode(fn);
 	}
 

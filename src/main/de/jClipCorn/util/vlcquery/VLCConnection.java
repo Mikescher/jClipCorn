@@ -5,11 +5,13 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.MoviePlayer;
 import de.jClipCorn.util.Str;
+import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.exceptions.HTTPErrorCodeException;
 import de.jClipCorn.util.helper.ApplicationHelper;
 import de.jClipCorn.util.helper.WindowsJNAHelper;
 import de.jClipCorn.util.http.HTTPUtilities;
 import de.jClipCorn.util.stream.CCStream;
+import de.jClipCorn.util.stream.CCStreams;
 import de.jClipCorn.util.xml.CCXMLElement;
 import de.jClipCorn.util.xml.CCXMLException;
 import de.jClipCorn.util.xml.CCXMLParser;
@@ -95,26 +97,9 @@ public class VLCConnection {
 
 			Rectangle rect = WindowsJNAHelper.getSingleWindowPositionOrNull("vlc.exe");
 
-			List<VLCStatusPlaylistEntry> playlist = new ArrayList<>();
-			VLCStatusPlaylistEntry activeEntry = null;
-
-
-			CCStream<CCXMLElement> nodes = xmlPlaylist
-					.getRoot()
-					.getFirstChildOrThrow("node") // name="playlist"   or   name="Wiedergabeliste"
-					.getAllChildren("leaf");
-
-			for (CCXMLElement node : nodes)
-			{
-				VLCStatusPlaylistEntry entry = new VLCStatusPlaylistEntry(
-						node.getAttributeValueOrThrow("uri"),
-						node.getAttributeValueOrThrow("name"),
-						node.getAttributeIntValueOrThrow("duration"));
-
-				playlist.add(entry);
-
-				if (node.getAttributeValueOrDefault("current", "").equalsIgnoreCase("current")) activeEntry = entry;
-			}
+			var playlistTuple = parsePlaylist(xmlPlaylist);
+			List<VLCStatusPlaylistEntry> playlist = playlistTuple.Item2;
+			VLCStatusPlaylistEntry activeEntry = playlistTuple.Item1;
 
 			String state = xmlStatus.getRoot().getFirstChildValueOrThrow("state"); //$NON-NLS-1$
 
@@ -185,6 +170,29 @@ public class VLCConnection {
 			CCLog.addError(e);
 			return new VLCStatus(VLCPlayerStatus.ERROR, -1, -1, null, null, new ArrayList<>(), null, false, 0, false, false, false, null);
 		}
+	}
+
+	private static Tuple<VLCStatusPlaylistEntry, List<VLCStatusPlaylistEntry>> parsePlaylist(CCXMLParser xmlPlaylist) throws CCXMLException {
+		List<VLCStatusPlaylistEntry> playlist = new ArrayList<>();
+		VLCStatusPlaylistEntry activeEntry = null;
+
+		CCStream<CCXMLElement> nodes = xmlPlaylist
+				.getRoot()
+				.getFirstChildOrThrow("node") // name="playlist"   or   name="Wiedergabeliste"
+				.getAllChildren("leaf");
+
+		for (CCXMLElement node : nodes)
+		{
+			VLCStatusPlaylistEntry entry = new VLCStatusPlaylistEntry(
+					node.getAttributeValueOrThrow("uri"),
+					node.getAttributeValueOrThrow("name"),
+					node.getAttributeIntValueOrThrow("duration"));
+
+			playlist.add(entry);
+
+			if (node.getAttributeValueOrDefault("current", "").equalsIgnoreCase("current")) activeEntry = entry;
+		}
+		return Tuple.Create(activeEntry, playlist);
 	}
 
 	public static boolean toggleRandom() {
@@ -267,19 +275,31 @@ public class VLCConnection {
 		}
 	}
 
-	public static boolean enqueue(String filepath, boolean startPlayback)
+	public static String enqueue(String filepath, boolean startPlayback)
 	{
 		try
 		{
-			if (startPlayback) getXML("/requests/status.xml?command=in_play&input="    + HTTPUtilities.getURLEncodedFilePath(filepath));
-			else               getXML("/requests/status.xml?command=in_enqueue&input=" + HTTPUtilities.getURLEncodedFilePath(filepath));
+			var uri = HTTPUtilities.getURLEncodedFilePath(filepath);
 
-			return true;
+			if (startPlayback)
+			{
+				getXML("/requests/status.xml?command=in_play&input=" + uri);
+			}
+			else
+			{
+				getXML("/requests/status.xml?command=in_enqueue&input=" + uri);
+			}
+
+			CCXMLParser xmlPlaylist = getXML("/requests/playlist.xml"); //$NON-NLS-1$
+			if (xmlPlaylist == null) return null;
+
+			var playlist = parsePlaylist(xmlPlaylist);
+			return CCStreams.iterate(playlist.Item2).lastOrNull().Uri;
 		}
 		catch (Exception e)
 		{
 			CCLog.addError(e);
-			return false;
+			return null;
 		}
 	}
 

@@ -6,23 +6,17 @@ import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.database.databaseElement.ICCPlayableElement;
 import de.jClipCorn.database.util.NextEpisodeHelper;
-import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.gui.guiComponents.enumComboBox.CCEnumComboBox;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.Str;
-import de.jClipCorn.util.datetime.CCDateTime;
-import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.formatter.TimeIntervallFormatter;
 import de.jClipCorn.util.helper.ApplicationHelper;
-import de.jClipCorn.util.helper.SwingUtils;
-import de.jClipCorn.util.helper.ThreadUtils;
 import de.jClipCorn.util.stream.CCStreams;
 import de.jClipCorn.util.vlcquery.VLCConnection;
 import de.jClipCorn.util.vlcquery.VLCPlayerStatus;
 import de.jClipCorn.util.vlcquery.VLCStatus;
-import de.jClipCorn.util.vlcquery.VLCStatus.PositionArea;
 import de.jClipCorn.util.vlcquery.VLCStatusPlaylistEntry;
 
 import javax.swing.*;
@@ -34,50 +28,215 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class VLCRobotFrame extends JFrame {
-	// Wait {x} ms before attempting to manually set the VLC position
-	// and then wait {y} ms more before doing the second run
-	// and then wait {z} ms more before doing the third run
-	private static final int DELAY_SET_VLC_POSITION_INITIAL =  500;
-	private static final int DELAY_SET_VLC_POSITION_RUN_2   = 1500;
-	private static final int DELAY_SET_VLC_POSITION_RUN_3   = 2500;
-
-
-	private static final int DELAY_SLEEP_AFTER_SKIPPED_TICK =  75;
-
-	private volatile boolean _stopThread = false;
-	private final Object _threadLock = true;
-
-	private VLCStatus _lastStatus = null;
-	private int _skipCount = 0;
-	private VLCStatus _lastPositionalStatus = null;
-	private final java.util.List<VLCPlaylistEntry> _clientQueue = new ArrayList<>();
-	private volatile VLCRobotFrequency updateFreq = VLCRobotFrequency.MS_0500;
 
 	private static VLCRobotFrame _instance = null;
+	private final VLCRobot _robot;
 
 	private VLCRobotFrame(Component owner) {
 		super();
+
+		var freq = CCProperties.getInstance().PROP_VLC_ROBOT_FREQUENCY.getValue();
+		var fixvlc = ApplicationHelper.isWindows() && CCProperties.getInstance().PROP_VLC_ROBOT_KEEP_POSITION.getValue();
+		var qpreempt = CCProperties.getInstance().PROP_VLC_ROBOT_QUEUE_PREEMPTIVE.getValue();
+		_robot = new VLCRobot(freq, fixvlc, qpreempt, createRobotListener());
 
 		initComponents();
 		postInit();
 
 		setLocationRelativeTo(owner);
+
+		_robot.start();
 	}
 
 	private void postInit() {
 		setIconImage(Resources.IMG_FRAME_ICON.get());
 
-		cbxFreq.setSelectedEnum(this.updateFreq = CCProperties.getInstance().PROP_VLC_ROBOT_FREQUENCY.getValue());
-
 		lsData.autoResize();
 
-		cbxKeepPosition.setSelected(ApplicationHelper.isWindows() && CCProperties.getInstance().PROP_VLC_ROBOT_KEEP_POSITION.getValue());
 		cbxKeepPosition.setEnabled(ApplicationHelper.isWindows());
 
 		tabbedPane.setSelectedIndex(0);
+	}
 
-		Thread tthread = new Thread(this::onThreadRun);
-		tthread.start();
+	private VLCRobot.VLCRobotEventListener createRobotListener() {
+		return new VLCRobot.VLCRobotEventListener() {
+			@Override
+			public void onFrequency(double hertz) {
+				var htz = Str.format("{0,number,#.##} Hz", hertz); //$NON-NLS-1$
+				lblFrequency.setText(htz);
+			}
+
+			@Override
+			public void addLog(VLCRobotLogEntry entry) {
+				logTable.addData(entry);
+				logTable.autoResize();
+			}
+
+			@Override
+			public void updateUI(VLCStatus lastStatus, VLCStatus status) {
+				updateUIFromRobot(lastStatus, status);
+			}
+
+			@Override
+			public void updateList(VLCStatus lastStatus) {
+				updateQueueList(lastStatus);
+			}
+		};
+	}
+
+	private void updateUIFromRobot(VLCStatus lastStatus, VLCStatus status) {
+		cbxFreq.setSelectedEnum(_robot.UpdateFrequency);
+		cbxKeepPosition.setSelected(_robot.FixVLCPosition);
+		cbxQueuePreemptive.setSelected(_robot.QueuePreemptive);
+
+		if (status.Status == VLCPlayerStatus.PLAYING)
+		{
+			progressBar.setMaximum(status.CurrentLength);
+			progressBar.setValue(status.CurrentTime);
+			btnStart.setEnabled(false);
+			btnClose.setEnabled(true);
+			btnPlayPause.setEnabled(true);
+			btnPlayPause.setText(LocaleBundle.getString("VLCRobotFrame.btnPause")); //$NON-NLS-1$
+			lblStatus.setText(status.Status.asString());
+			lblStatus.setForeground(Color.BLACK);
+			lblTime.setText(TimeIntervallFormatter.formatLengthSeconds(status.CurrentTime) + " / " + TimeIntervallFormatter.formatLengthSeconds(status.CurrentLength)); //$NON-NLS-1$
+
+			updateQueueList(status);
+		}
+		else if (status.Status == VLCPlayerStatus.PAUSED)
+		{
+			progressBar.setMaximum(status.CurrentLength);
+			progressBar.setValue(status.CurrentTime);
+			btnStart.setEnabled(false);
+			btnClose.setEnabled(true);
+			btnPlayPause.setEnabled(true);
+			btnPlayPause.setText(LocaleBundle.getString("VLCRobotFrame.btnPlay")); //$NON-NLS-1$
+			lblStatus.setText(status.Status.asString());
+			lblStatus.setForeground(Color.BLACK);
+			lblTime.setText(TimeIntervallFormatter.formatLengthSeconds(status.CurrentTime) + " / " + TimeIntervallFormatter.formatLengthSeconds(status.CurrentLength)); //$NON-NLS-1$
+
+			updateQueueList(status);
+		}
+		else if (status.Status == VLCPlayerStatus.STOPPED)
+		{
+			progressBar.setValue(0);
+			btnStart.setEnabled(false);
+			btnClose.setEnabled(true);
+			btnPlayPause.setEnabled(false);
+			btnPlayPause.setText(LocaleBundle.getString("VLCRobotFrame.btnPlay")); //$NON-NLS-1$
+			lblStatus.setText(status.Status.asString());
+			lblStatus.setForeground(Color.BLACK);
+			lblTime.setText(Str.Empty);
+
+			updateQueueList(status);
+		}
+		else if (status.Status == VLCPlayerStatus.NOT_RUNNING)
+		{
+			progressBar.setValue(0);
+			btnStart.setEnabled(true);
+			btnClose.setEnabled(true);
+			btnPlayPause.setEnabled(false);
+			btnPlayPause.setText(LocaleBundle.getString("VLCRobotFrame.btnPlay")); //$NON-NLS-1$
+			lblStatus.setText(status.Status.asString());
+			lblStatus.setForeground(Color.BLACK);
+			lblTime.setText(Str.Empty);
+
+			updateQueueList(status);
+		}
+		else if (status.Status == VLCPlayerStatus.ERROR)
+		{
+			progressBar.setValue(0);
+			btnStart.setEnabled(false);
+			btnClose.setEnabled(false);
+			btnPlayPause.setEnabled(false);
+			btnPlayPause.setText(LocaleBundle.getString("VLCRobotFrame.btnPlay")); //$NON-NLS-1$
+			lblStatus.setText(status.Status.asString());
+			lblStatus.setForeground(Color.RED);
+			lblTime.setText(Str.Empty);
+		}
+		else if (status.Status == VLCPlayerStatus.DISABLED)
+		{
+			progressBar.setValue(0);
+			btnStart.setEnabled(false);
+			btnClose.setEnabled(false);
+			btnPlayPause.setEnabled(false);
+			btnPlayPause.setText(LocaleBundle.getString("VLCRobotFrame.btnPlay")); //$NON-NLS-1$
+			lblStatus.setText(status.Status.asString());
+			lblStatus.setForeground(Color.BLACK);
+			lblTime.setText(Str.Empty);
+		}
+
+		if (!cbxKeepPosition.isSelected())
+			cbxKeepPosition.setText(LocaleBundle.getString("VLCRobotFrame.cbxKeepPosition")); //$NON-NLS-1$
+		else if (lastStatus != null && lastStatus.Fullscreen)
+			cbxKeepPosition.setText(LocaleBundle.getString("VLCRobotFrame.cbxKeepPosition_fullscreen")); //$NON-NLS-1$
+		else if (lastStatus != null && lastStatus.WindowRect != null)
+			cbxKeepPosition.setText(LocaleBundle.getMFFormattedString("VLCRobotFrame.cbxKeepPosition_value", lastStatus.WindowRect.x, lastStatus.WindowRect.y, lastStatus.WindowRect.width, lastStatus.WindowRect.height)); //$NON-NLS-1$
+		else
+			cbxKeepPosition.setText(LocaleBundle.getString("VLCRobotFrame.cbxKeepPosition")); //$NON-NLS-1$
+	}
+
+	private void updateQueueList(VLCStatus status)
+	{
+		ArrayList<VLCPlaylistEntry> data = new ArrayList<>();
+
+		var clientQueue = _robot.getClientQueue();
+
+		
+
+		boolean old = true;
+		for (VLCStatusPlaylistEntry pe : status.Playlist)
+		{
+			if (pe == status.ActiveEntry)
+			{
+				old = false;
+				data.add(VLCPlaylistEntry.createVLCPlayList(VLCPlaylistEntry.VPEType.VLC_ACTIVE, pe));
+			}
+			else if (old)
+			{
+				var inqueue = CCStreams
+						.iterate(clientQueue)
+						.firstOrNull(p -> p.IsPreemptiveAndEquals(pe.Uri));
+
+				if (inqueue != null) {
+					data.add(VLCPlaylistEntry.createVLCQueuePreemptive(pe, inqueue.Element, inqueue.Length));
+					clientQueue.remove(inqueue);
+				} else {
+					data.add(VLCPlaylistEntry.createVLCPlayList(VLCPlaylistEntry.VPEType.VLC_OLD, pe));
+				}
+			}
+			else
+			{
+				var inqueue = CCStreams
+						.iterate(clientQueue)
+						.firstOrNull(p -> p.IsPreemptiveAndEquals(pe.Uri));
+
+				if (inqueue != null) {
+					data.add(VLCPlaylistEntry.createVLCQueuePreemptive(pe, inqueue.Element, inqueue.Length));
+					clientQueue.remove(inqueue);
+				} else {
+					data.add(VLCPlaylistEntry.createVLCPlayList(VLCPlaylistEntry.VPEType.VLC_QUEUE, pe));
+				}
+			}
+		}
+
+		data.addAll(clientQueue);
+
+		if (queuediff(lsData.getDataCopy(), data)) {
+			lsData.clearData();
+			lsData.setData(data);
+			lsData.autoResize();
+		}
+	}
+
+	private boolean queuediff(List<VLCPlaylistEntry> d1, ArrayList<VLCPlaylistEntry> d2) {
+		if (d1.size() != d2.size()) return true;
+
+		for (int i=0; i < d1.size(); i++) {
+			if (!d1.get(i).isEqual(d2.get(i))) return true;
+		}
+
+		return false;
 	}
 
 	public static VLCRobotFrame show(Component owner)
@@ -97,276 +256,9 @@ public class VLCRobotFrame extends JFrame {
 		return _instance;
 	}
 
-	private void onThreadRun()
-	{
-		if (_stopThread) return;
-
-		List<Long> timings = new ArrayList<>(8);
-
-		long last = System.currentTimeMillis();
-		long lastUpdate = 0;
-
-		for(int i= 1;;i++)
-		{
-			{
-				var now = System.currentTimeMillis();
-				var delta = now - last;
-				last = now;
-
-				while (timings.size() >= 8) timings.remove(0);
-				timings.add(delta);
-
-				if (now - lastUpdate > 750)
-				{
-					long sum = 0;
-					for (var v : timings) sum += v;
-					var htz = Str.format("{0,number,#.##} Hz", 1000.0 / (sum / timings.size())); //$NON-NLS-1$
-
-					SwingUtils.invokeLater(() -> lblFrequency.setText(htz));
-
-					lastUpdate = now;
-				}
-			}
-
-			synchronized (_threadLock)
-			{
-				if (_stopThread) return;
-
-				try
-				{
-					onBackgroundUpdate(i);
-				}
-				catch (Throwable e)
-				{
-					CCLog.addError(e);
-				}
-			}
-
-			if (_stopThread) return;
-			switch (updateFreq)
-			{
-				case MAXIMUM: /* no sleep */ break;
-				case MS_0250: ThreadUtils.safeSleep(250);  break;
-				case MS_0500: ThreadUtils.safeSleep(500);  break;
-				case MS_1000: ThreadUtils.safeSleep(1000); break;
-				case MS_1500: ThreadUtils.safeSleep(1500); break;
-				case MS_2000: ThreadUtils.safeSleep(2000); break;
-				default: CCLog.addDefaultSwitchError(this, updateFreq); ThreadUtils.safeSleep(500); break;
-			}
-			if (_stopThread) return;
-		}
-	}
-
-	private void onBackgroundUpdate(int idx)
-	{
-		final VLCStatus status = VLCConnection.getStatus();
-
-		if (status.doSkipStatusInStateMachine())
-		{
-			_skipCount++;
-			var le = new VLCRobotLogEntry(idx, CCDateTime.getCurrentDateTime(), _lastStatus, status, _skipCount);
-			SwingUtils.invokeLater(() -> addLog(le));
-			ThreadUtils.safeSleep(DELAY_SLEEP_AFTER_SKIPPED_TICK);
-			return;
-		}
-
-		_skipCount = 0;
-
-		if (status.Status == VLCPlayerStatus.PLAYING && status.Repeat) VLCConnection.toggleRepeat();
-		if (status.Status == VLCPlayerStatus.PLAYING && status.Random) VLCConnection.toggleRandom();
-		if (status.Status == VLCPlayerStatus.PLAYING && status.Loop)   VLCConnection.toggleLoop();
-
-		SwingUtils.invokeLater(() ->
-		{
-			if (status.Status == VLCPlayerStatus.PLAYING)
-			{
-				progressBar.setMaximum(status.CurrentLength);
-				progressBar.setValue(status.CurrentTime);
-				btnStart.setEnabled(false);
-				btnClose.setEnabled(true);
-				btnPlayPause.setEnabled(true);
-				btnPlayPause.setText(LocaleBundle.getString("VLCRobotFrame.btnPause")); //$NON-NLS-1$
-				lblStatus.setText(status.Status.asString());
-				lblStatus.setForeground(Color.BLACK);
-				lblTime.setText(TimeIntervallFormatter.formatLengthSeconds(status.CurrentTime) + " / " + TimeIntervallFormatter.formatLengthSeconds(status.CurrentLength)); //$NON-NLS-1$
-
-				updateList(status);
-
-				if (status.Position == VLCStatus.PositionArea.MIDDLE || status.Position == VLCStatus.PositionArea.NEARLY_FINISHED) _lastPositionalStatus = status;
-			}
-			else if (status.Status == VLCPlayerStatus.PAUSED)
-			{
-				progressBar.setMaximum(status.CurrentLength);
-				progressBar.setValue(status.CurrentTime);
-				btnStart.setEnabled(false);
-				btnClose.setEnabled(true);
-				btnPlayPause.setEnabled(true);
-				btnPlayPause.setText(LocaleBundle.getString("VLCRobotFrame.btnPlay")); //$NON-NLS-1$
-				lblStatus.setText(status.Status.asString());
-				lblStatus.setForeground(Color.BLACK);
-				lblTime.setText(TimeIntervallFormatter.formatLengthSeconds(status.CurrentTime) + " / " + TimeIntervallFormatter.formatLengthSeconds(status.CurrentLength)); //$NON-NLS-1$
-
-				updateList(status);
-			}
-			else if (status.Status == VLCPlayerStatus.STOPPED)
-			{
-				progressBar.setValue(0);
-				btnStart.setEnabled(false);
-				btnClose.setEnabled(true);
-				btnPlayPause.setEnabled(false);
-				btnPlayPause.setText(LocaleBundle.getString("VLCRobotFrame.btnPlay")); //$NON-NLS-1$
-				lblStatus.setText(status.Status.asString());
-				lblStatus.setForeground(Color.BLACK);
-				lblTime.setText(Str.Empty);
-
-				updateList(status);
-			}
-			else if (status.Status == VLCPlayerStatus.NOT_RUNNING)
-			{
-				progressBar.setValue(0);
-				btnStart.setEnabled(true);
-				btnClose.setEnabled(true);
-				btnPlayPause.setEnabled(false);
-				btnPlayPause.setText(LocaleBundle.getString("VLCRobotFrame.btnPlay")); //$NON-NLS-1$
-				lblStatus.setText(status.Status.asString());
-				lblStatus.setForeground(Color.BLACK);
-				lblTime.setText(Str.Empty);
-				_lastPositionalStatus = null;
-
-				updateList(status);
-			}
-			else if (status.Status == VLCPlayerStatus.ERROR)
-			{
-				progressBar.setValue(0);
-				btnStart.setEnabled(false);
-				btnClose.setEnabled(false);
-				btnPlayPause.setEnabled(false);
-				btnPlayPause.setText(LocaleBundle.getString("VLCRobotFrame.btnPlay")); //$NON-NLS-1$
-				lblStatus.setText(status.Status.asString());
-				lblStatus.setForeground(Color.RED);
-				lblTime.setText(Str.Empty);
-				_lastPositionalStatus = null;
-			}
-			else if (status.Status == VLCPlayerStatus.DISABLED)
-			{
-				progressBar.setValue(0);
-				btnStart.setEnabled(false);
-				btnClose.setEnabled(false);
-				btnPlayPause.setEnabled(false);
-				btnPlayPause.setText(LocaleBundle.getString("VLCRobotFrame.btnPlay")); //$NON-NLS-1$
-				lblStatus.setText(status.Status.asString());
-				lblStatus.setForeground(Color.BLACK);
-				lblTime.setText(Str.Empty);
-				_lastPositionalStatus = null;
-			}
-
-			if (!cbxKeepPosition.isSelected())
-				cbxKeepPosition.setText(LocaleBundle.getString("VLCRobotFrame.cbxKeepPosition")); //$NON-NLS-1$
-			else if (_lastStatus != null && _lastStatus.Fullscreen)
-				cbxKeepPosition.setText(LocaleBundle.getString("VLCRobotFrame.cbxKeepPosition_fullscreen")); //$NON-NLS-1$
-			else if (_lastStatus != null && _lastStatus.WindowRect != null)
-				cbxKeepPosition.setText(LocaleBundle.getMFFormattedString("VLCRobotFrame.cbxKeepPosition_value", _lastStatus.WindowRect.x, _lastStatus.WindowRect.y, _lastStatus.WindowRect.width, _lastStatus.WindowRect.height)); //$NON-NLS-1$
-			else
-				cbxKeepPosition.setText(LocaleBundle.getString("VLCRobotFrame.cbxKeepPosition")); //$NON-NLS-1$
-
-			onStatusChanged(_lastStatus, status, idx);
-
-			_lastStatus = status;
-		});
-	}
-
-	private void onStatusChanged(VLCStatus sold, VLCStatus snew, int idx)
-	{
-		if (sold == null && snew.Status == VLCPlayerStatus.STOPPED && _clientQueue.size()>0)
-		{
-			CCLog.addDebug("VLCRobot Status changed (NULL --> STOPPED)"); //$NON-NLS-1$
-			postNextQueueEntry(idx, false, true, "LateErrorStartup"); //$NON-NLS-1$
-			return;
-		}
-
-		if (sold == null && snew.Status == VLCPlayerStatus.NOT_RUNNING && _clientQueue.size()>0)
-		{
-			CCLog.addDebug("VLCRobot Status changed (NULL --> NOT_RUNNING)"); //$NON-NLS-1$
-			VLCConnection.startPlayer();
-			return;
-		}
-
-		if (sold == null) return;
-		if (snew == null) return;
-
-		if (VLCStatus.isDiff(sold, snew))
-		{
-			CCLog.addDebug("VLCRobot Status changed (" + VLCStatus.formatShortDiff(sold, snew) + ")"); //$NON-NLS-1$ //$NON-NLS-2$
-			addLog(new VLCRobotLogEntry(idx, CCDateTime.getCurrentDateTime(), sold, snew));
-		}
-
-		if (sold.Status == VLCPlayerStatus.NOT_RUNNING && snew.Status == VLCPlayerStatus.STOPPED && _clientQueue.size()>0)
-		{
-			CCLog.addDebug("VLCRobot Status changed (NOT_RUNNING --> STOPPED)"); //$NON-NLS-1$
-			postNextQueueEntry(idx, false, true, "LateStartup"); //$NON-NLS-1$
-			return;
-		}
-
-		if (sold.Status == VLCPlayerStatus.NOT_RUNNING) return;
-		if (snew.Status == VLCPlayerStatus.NOT_RUNNING) return;
-
-		if (sold.Status == VLCPlayerStatus.DISABLED) return;
-		if (snew.Status == VLCPlayerStatus.DISABLED) return;
-
-		if (sold.Status == VLCPlayerStatus.ERROR) return;
-		if (snew.Status == VLCPlayerStatus.ERROR) return;
-
-		//if (sold.Status == VLCPlayerStatus.PLAYING && snew.Status == VLCPlayerStatus.STOPPED && sold.isPlayingLastPlaylistEntry())
-		//{
-		//	CCLog.addDebug("VLCRobot StatusTrigger (PLAYING --> STOPPED)"); //$NON-NLS-1$
-		//	postNextQueueEntry(idx, true, true, "Stopped"); //$NON-NLS-1$
-		//	return;
-		//}
-
-		if (sold.Status == VLCPlayerStatus.PLAYING && snew.Status == VLCPlayerStatus.PLAYING &&
-				sold.isPlayingLastPlaylistEntry() && sold.Position == PositionArea.MIDDLE && snew.Position == PositionArea.NEARLY_FINISHED)
-		{
-			CCLog.addDebug("VLCRobot StatusTrigger (PLAYING --> PLAYING[nearly_finished])"); //$NON-NLS-1$
-			postNextQueueEntry(idx, false, false, "PositionEnd"); //$NON-NLS-1$
-			return;
-		}
-
-		if (_clientQueue.size() > 0 &&
-				sold.Status == VLCPlayerStatus.PLAYING && snew.Status == VLCPlayerStatus.PLAYING &&
-				sold.ActiveEntry != null && snew.ActiveEntry != null && !Str.equals(sold.ActiveEntry.Uri, snew.ActiveEntry.Uri) &&
-				sold.isActiveEntryLastOfPlaylist() && snew.isActiveEntryFirstOfPlaylist() &&
-				sold.Position != PositionArea.FINISHED && snew.Position == PositionArea.STARTING)
-		{
-			CCLog.addDebug("VLCRobot StatusTrigger (PLAYING[last] --skip--> PLAYING[first])"); //$NON-NLS-1$
-			postNextQueueEntry(idx, true, true, "ManualSkipLast"); //$NON-NLS-1$
-			return;
-		}
-
-		if (_clientQueue.size() > 0 &&
-				sold.Status == VLCPlayerStatus.PLAYING && snew.Status == VLCPlayerStatus.PLAYING &&
-				sold.ActiveEntry != null && snew.ActiveEntry != null && Str.equals(sold.ActiveEntry.Uri, snew.ActiveEntry.Uri) &&
-				sold.CurrentTime > snew.CurrentTime &&
-				sold.Playlist.size() == 1 &&
-				sold.Position != PositionArea.FINISHED && snew.Position == PositionArea.STARTING)
-		{
-			CCLog.addDebug("VLCRobot StatusTrigger (PLAYING[only] --skip--> PLAYING[only])"); //$NON-NLS-1$
-			postNextQueueEntry(idx, true, true, "ManualSkipSingleton"); //$NON-NLS-1$
-			return;
-		}
-
-		if (sold.Status == VLCPlayerStatus.PLAYING && snew.Status == VLCPlayerStatus.PLAYING &&
-				sold.ActiveEntry != null && snew.ActiveEntry != null &&
-				!Str.equals(sold.ActiveEntry.Uri, snew.ActiveEntry.Uri))
-		{
-			CCLog.addDebug("VLCRobot StatusTrigger (PLAYING[a] --> PLAYING[b])"); //$NON-NLS-1$
-			fixVLCPosition(idx, null, "PlayNext"); //$NON-NLS-1$
-			return;
-		}
-	}
-
 	public void enqueue(ICCPlayableElement v)
 	{
-		enqueue(VLCPlaylistEntry.createQueueSingle(v));
+		_robot.enqueue(VLCPlaylistEntry.createQueueSingle(v));
 	}
 
 	public void enqueue(CCSeason v)
@@ -374,7 +266,7 @@ public class VLCRobotFrame extends JFrame {
 		var next = NextEpisodeHelper.findNextEpisode(v);
 		if (next == null) return;
 		var episodeList = CCStreams.iterate(v.getEpisodeList()).skipWhile(e -> e != next).<ICCPlayableElement>cast().toList();
-		enqueue(VLCPlaylistEntry.createQueueAuto( v.getSeries().getTitle() + " - " + v.getTitle(), episodeList)); //$NON-NLS-1$
+		_robot.enqueue(VLCPlaylistEntry.createQueueAuto( v.getSeries().getTitle() + " - " + v.getTitle(), episodeList)); //$NON-NLS-1$
 	}
 
 	public void enqueue(CCSeries v)
@@ -382,213 +274,22 @@ public class VLCRobotFrame extends JFrame {
 		var next = NextEpisodeHelper.findNextEpisode(v);
 		if (next == null) return;
 		var episodeList = CCStreams.iterate(v.getSortedEpisodeList()).skipWhile(e -> e != next).<ICCPlayableElement>cast().toList();
-		enqueue(VLCPlaylistEntry.createQueueAuto(v.getTitle(), episodeList));
-	}
-
-	private void enqueue(VLCPlaylistEntry e)
-	{
-		if (_lastStatus == null)
-		{
-			_clientQueue.add(e);
-		}
-		else if (_lastStatus.Status == VLCPlayerStatus.STOPPED)
-		{
-			_clientQueue.add(e);
-			updateList(_lastStatus);
-			postNextQueueEntry(-1, false, true, "Startup"); //$NON-NLS-1$
-		}
-		else if (_lastStatus.Status == VLCPlayerStatus.NOT_RUNNING)
-		{
-			_clientQueue.add(e);
-			updateList(_lastStatus);
-			VLCConnection.startPlayer();
-		}
-		else
-		{
-			_clientQueue.add(e);
-			updateList(_lastStatus);
-		}
-	}
-
-	private void postNextQueueEntry(int index, boolean fixPosition, boolean startPlayback, String reason)
-	{
-		var lastPos = _lastPositionalStatus;
-
-		if (_clientQueue.size() == 0) return;
-
-		VLCPlaylistEntry q = _clientQueue.get(0);
-
-		if (q.Type == VLCPlaylistEntry.VPEType.JCC_QUEUE_SINGLE)
-		{
-			_clientQueue.remove(0);
-
-			CCLog.addDebug("PostNextVLCEntry[SINGLE]: [" + q.getText() + "]"); //$NON-NLS-1$ //$NON-NLS-2$
-
-			addLog(new VLCRobotLogEntry(index, CCDateTime.getCurrentDateTime(), q.Element, reason));
-
-			new Thread(() ->
-			{
-				List<String> parts = q.Element.getParts();
-				for (int i=0; i<parts.size(); i++)
-				{
-					boolean ok = VLCConnection.enqueue(PathFormatter.fromCCPath(parts.get(i)), startPlayback && i==0);
-					if (!ok)
-					{
-						SwingUtils.invokeLater(() -> _clientQueue.add(0, q));
-						return;
-					}
-				}
-
-				SwingUtils.invokeLater(() -> q.Element.updateViewedAndHistoryFromUI());
-
-				if (startPlayback)
-				{
-					VLCStatus s = VLCConnection.getStatus();
-					if (s.Status == VLCPlayerStatus.STOPPED)
-					{
-						for (int i=0; i<parts.size(); i++)
-						{
-							boolean ok = VLCConnection.enqueue(PathFormatter.fromCCPath(parts.get(i)), i==0);
-							if (!ok)
-							{
-								SwingUtils.invokeLater(() -> _clientQueue.add(0, q));
-								return;
-							}
-						}
-					}
-				}
-
-				if (fixPosition) SwingUtils.invokeLater(() -> fixVLCPosition(index, lastPos, "PostPlay")); //$NON-NLS-1$
-
-			}).start();
-		}
-		else if (q.Type == VLCPlaylistEntry.VPEType.JCC_QUEUE_AUTO)
-		{
-			CCLog.addDebug("PostNextVLCEntry[AUTO]: [" + q.getText() + "]"); //$NON-NLS-1$ //$NON-NLS-2$
-
-			if (q.ElementQueue.size() == 0) { _clientQueue.remove(0); return; } // should never happen
-
-			addLog(new VLCRobotLogEntry(index, CCDateTime.getCurrentDateTime(), q.ElementQueue.get(0), reason));
-
-			var nextSub = q.ElementQueue.remove(0);
-
-			new Thread(() ->
-			{
-				List<String> parts = nextSub.getParts();
-				for (int i=0; i<parts.size(); i++)
-				{
-					boolean ok = VLCConnection.enqueue(PathFormatter.fromCCPath(parts.get(i)), startPlayback && i==0);
-					if (!ok)
-					{
-						SwingUtils.invokeLater(() -> q.ElementQueue.add(0, nextSub));
-						return;
-					}
-				}
-
-				SwingUtils.invokeLater(nextSub::updateViewedAndHistoryFromUI);
-
-				if (startPlayback)
-				{
-					VLCStatus s = VLCConnection.getStatus();
-					if (s.Status == VLCPlayerStatus.STOPPED)
-					{
-						for (int i=0; i<parts.size(); i++)
-						{
-							boolean ok = VLCConnection.enqueue(PathFormatter.fromCCPath(parts.get(i)), i==0);
-							if (!ok)
-							{
-								SwingUtils.invokeLater(() -> q.ElementQueue.add(0, nextSub));
-								return;
-							}
-						}
-					}
-				}
-
-				if (q.ElementQueue.size() == 0) _clientQueue.remove(q);
-
-				if (fixPosition) SwingUtils.invokeLater(() -> fixVLCPosition(index, lastPos, "PostPlay")); //$NON-NLS-1$
-
-			}).start();
-		}
-		else throw new Error("Invalid Queue Type: " + q.Type); //$NON-NLS-1$
-	}
-
-	private void fixVLCPosition(int index, VLCStatus _lps, String reason)
-	{
-		if (_lps == null) _lps = _lastPositionalStatus;
-
-		if (_lps == null) return;
-		if (!cbxKeepPosition.isSelected()) return;
-
-		Rectangle rect = _lps.WindowRect;
-
-		final var lps = _lps;
-
-		new Thread(() ->
-		{
-			ThreadUtils.safeSleep(DELAY_SET_VLC_POSITION_INITIAL);
-
-			VLCStatus current = _lastStatus;
-			if (current == null) return;
-
-			if (lps.Fullscreen)
-			{
-				//if (current.Fullscreen) return;
-				//
-				//VLCConnection.toggleFullscreen();
-				return;
-			}
-
-			if (lps.WindowRect == null) return;
-			if (current.WindowRect == null) return;
-			if (current.WindowRect.equals(lps.WindowRect)) return;
-
-			CCLog.addDebug("Manually adjust VLC Position: " + rect); //$NON-NLS-1$
-
-			SwingUtils.invokeLater(() -> addLog(new VLCRobotLogEntry(index, CCDateTime.getCurrentDateTime(), current.WindowRect, lps.WindowRect, reason)));
-
-			VLCConnection.setWindowPosition(rect);
-			ThreadUtils.safeSleep(DELAY_SET_VLC_POSITION_RUN_2);
-			VLCConnection.setWindowPosition(rect);
-			ThreadUtils.safeSleep(DELAY_SET_VLC_POSITION_RUN_3);
-			VLCConnection.setWindowPosition(rect);
-
-		}).start();
-	}
-
-	private void updateList(VLCStatus status)
-	{
-		lsData.clearData();
-
-		ArrayList<VLCPlaylistEntry> data = new ArrayList<>();
-
-		boolean old = true;
-		for (VLCStatusPlaylistEntry pe : status.Playlist)
-		{
-			if (pe == status.ActiveEntry)
-			{
-				old = false;
-				data.add(VLCPlaylistEntry.createVLCPlayList(VLCPlaylistEntry.VPEType.VLC_ACTIVE, pe));
-			}
-			else if (old)
-			{
-				data.add(VLCPlaylistEntry.createVLCPlayList(VLCPlaylistEntry.VPEType.VLC_OLD, pe));
-			}
-			else
-			{
-				data.add(VLCPlaylistEntry.createVLCPlayList(VLCPlaylistEntry.VPEType.VLC_QUEUE, pe));
-			}
-		}
-
-		data.addAll(_clientQueue);
-
-		lsData.setData(data);
-		lsData.autoResize();
+		_robot.enqueue(VLCPlaylistEntry.createQueueAuto(v.getTitle(), episodeList));
 	}
 
 	private void onFrequencyChanged() {
-		this.updateFreq = cbxFreq.getSelectedEnum();
-		CCProperties.getInstance().PROP_VLC_ROBOT_FREQUENCY.setValue(this.updateFreq);
+		_robot.UpdateFrequency = cbxFreq.getSelectedEnum();
+		CCProperties.getInstance().PROP_VLC_ROBOT_FREQUENCY.setValue(_robot.UpdateFrequency);
+	}
+
+	private void onKeepPositionChanged() {
+		_robot.FixVLCPosition = cbxKeepPosition.isSelected();
+		CCProperties.getInstance().PROP_VLC_ROBOT_KEEP_POSITION.setValue(_robot.FixVLCPosition);
+	}
+
+	private void onQueuePreemptiveChanged() {
+		_robot.QueuePreemptive = cbxQueuePreemptive.isSelected();
+		CCProperties.getInstance().PROP_VLC_ROBOT_QUEUE_PREEMPTIVE.setValue(_robot.QueuePreemptive);
 	}
 
 	public void showLogEntry(VLCRobotLogEntry element) {
@@ -617,20 +318,10 @@ public class VLCRobotFrame extends JFrame {
 		}
 	}
 
-	private void addLog(VLCRobotLogEntry le) {
-		logTable.addData(le);
-		logTable.autoResize();
-	}
-
 	private void onWindowClosing() {
 		_instance = null;
-		_stopThread = true;
-		synchronized (_threadLock) { _stopThread = true; }
-		VLCRobotFrame.this.dispose();
-	}
-
-	private void onKeepPositionChanged() {
-		CCProperties.getInstance().PROP_VLC_ROBOT_KEEP_POSITION.setValue(cbxKeepPosition.isSelected());
+		_robot.stop();
+		dispose();
 	}
 
 	private void onStart() {
@@ -638,22 +329,12 @@ public class VLCRobotFrame extends JFrame {
 	}
 
 	private void onPlayPause() {
-		if (_lastStatus == null) return;
-
-		if (_lastStatus.Status == VLCPlayerStatus.PLAYING)
-		{
-			new Thread(VLCConnection::pause).start();
-		}
-		else if (_lastStatus.Status == VLCPlayerStatus.PAUSED)
-		{
-			new Thread(VLCConnection::play).start();
-		}
+		_robot.playpause();
 	}
 
 	private void onClose() {
 		_instance = null;
-		_stopThread = true;
-		synchronized (_threadLock) { _stopThread = true; }
+		_robot.stop();
 		dispose();
 	}
 
@@ -670,6 +351,7 @@ public class VLCRobotFrame extends JFrame {
 		progressBar = new JProgressBar();
 		lblTime = new JLabel();
 		cbxKeepPosition = new JCheckBox();
+		cbxQueuePreemptive = new JCheckBox();
 		btnStart = new JButton();
 		btnPlayPause = new JButton();
 		btnClose = new JButton();
@@ -707,7 +389,7 @@ public class VLCRobotFrame extends JFrame {
 			{
 				pnlMain.setLayout(new FormLayout(
 					"$rgap, default, 2*($lcgap, default:grow), $lcgap, default, $rgap", //$NON-NLS-1$
-					"$rgap, default, $lgap, default:grow, 3*($lgap, default), $rgap")); //$NON-NLS-1$
+					"$rgap, default, $lgap, default:grow, 4*($lgap, default), $rgap")); //$NON-NLS-1$
 
 				//---- lblTitle ----
 				lblTitle.setText("ROBOT"); //$NON-NLS-1$
@@ -740,20 +422,25 @@ public class VLCRobotFrame extends JFrame {
 				cbxKeepPosition.addActionListener(e -> onKeepPositionChanged());
 				pnlMain.add(cbxKeepPosition, CC.xywh(2, 8, 7, 1));
 
+				//---- cbxQueuePreemptive ----
+				cbxQueuePreemptive.setText(LocaleBundle.getString("VLCRobotFrame.cbxQueuePreemptive")); //$NON-NLS-1$
+				cbxQueuePreemptive.addActionListener(e -> onQueuePreemptiveChanged());
+				pnlMain.add(cbxQueuePreemptive, CC.xywh(2, 10, 7, 1));
+
 				//---- btnStart ----
 				btnStart.setText(LocaleBundle.getString("VLCRobotFrame.btnStart")); //$NON-NLS-1$
 				btnStart.addActionListener(e -> onStart());
-				pnlMain.add(btnStart, CC.xy(2, 10));
+				pnlMain.add(btnStart, CC.xy(2, 12));
 
 				//---- btnPlayPause ----
 				btnPlayPause.setText(LocaleBundle.getString("VLCRobotFrame.btnPlay")); //$NON-NLS-1$
 				btnPlayPause.addActionListener(e -> onPlayPause());
-				pnlMain.add(btnPlayPause, CC.xy(4, 10, CC.LEFT, CC.DEFAULT));
+				pnlMain.add(btnPlayPause, CC.xy(4, 12, CC.LEFT, CC.DEFAULT));
 
 				//---- btnClose ----
 				btnClose.setText(LocaleBundle.getString("VLCRobotFrame.btnClose")); //$NON-NLS-1$
 				btnClose.addActionListener(e -> onClose());
-				pnlMain.add(btnClose, CC.xy(8, 10));
+				pnlMain.add(btnClose, CC.xy(8, 12));
 			}
 			tabbedPane.addTab(LocaleBundle.getString("VLCRobotFrame.tabMain"), pnlMain); //$NON-NLS-1$
 
@@ -819,7 +506,7 @@ public class VLCRobotFrame extends JFrame {
 			tabbedPane.setSelectedIndex(0);
 		}
 		contentPane.add(tabbedPane, BorderLayout.CENTER);
-		setSize(500, 300);
+		setSize(500, 380);
 		setLocationRelativeTo(getOwner());
 		// JFormDesigner - End of component initialization  //GEN-END:initComponents
 	}
@@ -836,6 +523,7 @@ public class VLCRobotFrame extends JFrame {
 	private JProgressBar progressBar;
 	private JLabel lblTime;
 	private JCheckBox cbxKeepPosition;
+	private JCheckBox cbxQueuePreemptive;
 	private JButton btnStart;
 	private JButton btnPlayPause;
 	private JButton btnClose;

@@ -1,13 +1,19 @@
 package de.jClipCorn.util.vlcquery;
 
+import de.jClipCorn.gui.frames.vlcRobot.VLCPlaylistEntry;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.http.HTTPUtilities;
+import de.jClipCorn.util.stream.CCStreams;
 
 import java.awt.*;
 import java.util.List;
 
 public class VLCStatus
 {
+	// only if current entry position is greater {TIME_STARTING} seconds we will
+	// (preemptively) queue the next entry - this short timespan ensures that we don't do too many actiona simulatneously
+	private static final int TIME_START_SAFEDELAY = 2;
+
 	// only if current entry position is greater {TIME_STARTING} seconds we will
 	// remember the current window position for later reference
 	private static final int TIME_STARTING = 10;
@@ -77,8 +83,23 @@ public class VLCStatus
 		return PositionArea.MIDDLE;
 	}
 
+	public boolean isInStartSafeArea() {
+		return CurrentTime <= TIME_START_SAFEDELAY;
+	}
+
 	public boolean isPlayingLastPlaylistEntry() {
 		return ActiveEntry != null && Playlist.size() > 0 && Playlist.get(Playlist.size()-1) == ActiveEntry;
+	}
+
+	public boolean isPlayingPreemptive(List<VLCPlaylistEntry> queue)
+	{
+		if (ActiveEntry == null) return false;
+
+		var inqueue = CCStreams
+				.iterate(queue)
+				.firstOrNull(p -> p.IsPreemptiveAndEquals(ActiveEntry.Uri));
+
+		return inqueue != null;
 	}
 
 	public static boolean isDiff(VLCStatus sold, VLCStatus snew)

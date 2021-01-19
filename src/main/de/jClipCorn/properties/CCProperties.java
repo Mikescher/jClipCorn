@@ -203,13 +203,14 @@ public class CCProperties {
 	public CCNamedPathProperty                              PROP_PLAY_ALT_PROG_4;
 	public CCNamedPathProperty                              PROP_PLAY_ALT_PROG_5;
 	public CCPIntProperty                                   PROP_MAX_UNDOLASTWATCH_HOUR_DIFF;
+	public CCBoolProperty                                   PROP_VLC_ROBOT_QUEUE_PREEMPTIVE;
 
 	public boolean ARG_READONLY = false;
 	
 	public boolean firstLaunch = false;
 	
-	private Properties properties;
-	private String path;
+	private final Properties properties;
+	private final String path;
 	
 	private CCProperties() {
 		properties = new Properties();
@@ -386,6 +387,7 @@ public class CCProperties {
 		PROP_VLC_ROBOT_PASSWORD                 = new CCStringProperty(NONVISIBLE,          this,   "PROP_VLC_ROBOT_PASSWORD",                  getRandPass(8));
 		PROP_VLC_ROBOT_KEEP_POSITION            = new CCBoolProperty(NONVISIBLE,            this,   "PROP_VLC_ROBOT_KEEP_POSITION",             false);
 		PROP_VLC_ROBOT_FREQUENCY                = new CCEnumProperty<>(NONVISIBLE,          this,   "PROP_VLC_ROBOT_FREQUENCY",                 VLCRobotFrequency.MS_0500, VLCRobotFrequency.getWrapper());
+		PROP_VLC_ROBOT_QUEUE_PREEMPTIVE         = new CCBoolProperty(NONVISIBLE,            this,   "PROP_VLC_ROBOT_QUEUE_PREEMPTIVE",          true);
 		PROP_FOLDERLANG_IGNORE_PERC             = new CCPIntProperty(NONVISIBLE,            this,   "PROP_FOLDERLANG_IGNORE_PERC",              2);
 		PROP_MAX_UNDOLASTWATCH_HOUR_DIFF        = new CCPIntProperty(NONVISIBLE,            this,   "PROP_MAX_UNDOLASTWATCH_HOUR_DIFF",         3);
 

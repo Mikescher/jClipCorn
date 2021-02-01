@@ -129,7 +129,7 @@ public class CCSQLStatement {
 		if (idx == null) throw new SQLWrapperException("Field ["+col+"] not found in CCSQLStatement");
 		if (!idx.Item1.isCallableAsString()) throw new SQLWrapperException("Field ["+col+"] has wrong type");
 
-		Statement.setString(idx.Item2, value.getSQLStringRepresentation());
+		Statement.setString(idx.Item2, value.toStringSQL());
 	}
 
 	public void setFlt(CCSQLColDef col, double value) throws SQLWrapperException, SQLException {

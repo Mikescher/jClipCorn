@@ -1311,7 +1311,7 @@ public class CCDatabase {
 					CCSQLStatement stmt = queryHistoryStatementFilteredLimited;
 					stmt.clearParameters();
 					stmt.setStr(COL_HISTORY_ID, idfilter);
-					stmt.setStr(COL_HISTORY_DATE, start.toUTC(TimeZone.getDefault()).getSQLStringRepresentation());
+					stmt.setStr(COL_HISTORY_DATE, start.toUTC(TimeZone.getDefault()).toStringSQL());
 					rs = stmt.executeQuery(this);
 				} else {
 					CCSQLStatement stmt = queryHistoryStatementFiltered;
@@ -1323,7 +1323,7 @@ public class CCDatabase {
 				if (start != null) {
 					CCSQLStatement stmt = queryHistoryStatementLimited;
 					stmt.clearParameters();
-					stmt.setStr(COL_HISTORY_DATE, start.toUTC(TimeZone.getDefault()).getSQLStringRepresentation());
+					stmt.setStr(COL_HISTORY_DATE, start.toUTC(TimeZone.getDefault()).toStringSQL());
 					rs = stmt.executeQuery(this);
 				} else {
 					CCSQLStatement stmt = queryHistoryStatement;

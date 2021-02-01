@@ -206,6 +206,10 @@ public class CCDateTime implements Comparable<CCDateTime>, StringSpecSupplier {
 		else
 			return getStringRepresentation("yyyy-MM-dd HH:mm:ss");
 	}
+
+	public String toStringSQL() {
+		return getSQLStringRepresentation();
+	}
 	
 	public String toStringUIShort() {
 		if (isUnspecifiedDateTime())

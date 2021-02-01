@@ -12,7 +12,7 @@ public class TestCCDateTime extends ClipCornBaseTest {
 
 	private static void assertCCDateTimeEquals(CCDateTime expected, CCDateTime actual)
 	{
-		assertEquals(expected.getSQLStringRepresentation(), actual.getSQLStringRepresentation());
+		assertEquals(expected.toStringSQL(), actual.toStringSQL());
 	}
 
 	@Test
@@ -281,7 +281,6 @@ public class TestCCDateTime extends ClipCornBaseTest {
 		assertTrue(tdate.getDay() == 3 && tdate.getMonth() == 1 && tdate.getYear() == 2001);
 		assertFalse(tdate.isLeapYear());
 	}
-
 
 	@Test
 	public void testAddCalcDate2() {

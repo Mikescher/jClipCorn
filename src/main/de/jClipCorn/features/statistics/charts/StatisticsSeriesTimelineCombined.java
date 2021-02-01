@@ -10,6 +10,7 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.datatypes.Tuple3;
+import de.jClipCorn.util.datetime.CCChronos;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.datetime.CCDatespan;
 import de.jClipCorn.util.stream.CCStreams;
@@ -171,7 +172,7 @@ public class StatisticsSeriesTimelineCombined extends StatisticsPanel {
 		String header = (cdd.getMonthName() + " " + cdd.getYear()); //$NON-NLS-1$
 		int headersize = (int)Math.round(header.length() / 2d);
 
-		int dom = CCDate.getDaysOfMonth(cdd.getMonth(), cdd.getYear());
+		int dom = CCChronos.getDaysOfMonth(cdd.getMonth(), cdd.getYear());
 		int ww = grid_sidelen * daycount + outer_line_width;
 		int hh = grid_sidelen * height   + outer_line_width;
 

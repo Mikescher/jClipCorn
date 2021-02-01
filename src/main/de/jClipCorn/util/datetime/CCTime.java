@@ -1,15 +1,11 @@
 package de.jClipCorn.util.datetime;
 
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.HashSet;
-import java.util.Hashtable;
-import java.util.Map;
-
 import de.jClipCorn.util.exceptions.CCFormatException;
 import de.jClipCorn.util.exceptions.TimeFormatException;
 import de.jClipCorn.util.parser.StringSpecParser;
 import de.jClipCorn.util.parser.StringSpecSupplier;
+
+import java.util.*;
 
 public class CCTime implements Comparable<CCTime>, StringSpecSupplier {
 	public static CCTime STATIC_SUPPLIER = new CCTime(12, 0, 0);
@@ -256,124 +252,39 @@ public class CCTime implements Comparable<CCTime>, StringSpecSupplier {
 	}
 	
 	public CCTime getAdd(int h, int m, int s) {
-		if (h < 0 || m < 0 || s < 0) {
-			return null;
-		}
-		
-		int newhours = getHours();
-		int newminutes = getMinutes();
-		int newseconds = getSeconds();
-		
-		newhours += h;
-		newhours %= 24;
-		
-		newminutes += m;
-		
-		while (newminutes >= 60) {
-			newminutes -= 60;
-			newhours++;
-			newhours %= 24;
-		}
+		if (isUnspecifiedTime()) return this;
 
-		newseconds += s;
-		
-		while (newseconds >= 60) {
-			newseconds -= 60;
-			newminutes++;
-			
-			while (newminutes >= 60) {
-				newminutes -= 60;
-				newhours++;
-				newhours %= 24;
-			}
-		}	
-		
-		return create(newhours, newminutes, newseconds);
+		var r = CCChronos.addLowerHalf(this.hour, this.min, this.sec, h, m, s);
+
+		return create(r.Hour, r.Minute, r.Second);
 	}
 	
 	public CCTime getSub(int h, int m, int s) {
-		if (h < 0 || m < 0 || s < 0) {
-			return null;
-		}
-		
-		int newhours = getHours();
-		int newminutes = getMinutes();
-		int newseconds = getSeconds();
-		
-		newhours -= h;
-		
-		while (newhours < 0) newhours += 24;
-		
-		newminutes -= m;
-		
-		while (newminutes < 0) {
-			newminutes += 60;
-			newhours--;
-			while (newhours < 0) newhours += 24;
-		}
-		
-		newseconds -= s;
-		
-		while (newseconds < 0) {
-			newminutes--;
-			newseconds += 60;
-			
-			while (newminutes <= 0) {
-				newminutes += 60;
-				newhours--;
-				while (newhours < 0) newhours += 24;
-			}
-		}
-
-		return create(newhours, newminutes, newseconds);
+		return getAdd(-h, -m, -s);
 	}
 	
 	public CCTime getAddHour(int h) {
-		if (h < 0) {
-			return getSubHour(-h);
-		}
-		
 		return getAdd(h, 0, 0);
 	}
 	
 	public CCTime getSubHour(int h) {
-		if (h < 0) {
-			return getAddHour(-h);
-		}
-		
-		return getSub(h, 0, 0);
+		return getAdd(-h, 0, 0);
 	}
 	
 	public CCTime getAddMinute(int m) {
-		if (m < 0) {
-			return getSubMinute(-m);
-		}
-		
 		return getAdd(0, m, 0);
 	}
 	
 	public CCTime getSubMinute(int m) {
-		if (m < 0) {
-			return getAddMinute(-m);
-		}
-		
-		return getSub(0, m, 0);
+		return getAdd(0, -m, 0);
 	}
 	
 	public CCTime getAddSecond(int s) {
-		if (s < 0) {
-			return getSubSecond(-s);
-		}
-		
 		return getAdd(0, 0, s);
 	}
 	
 	public CCTime getSubSecond(int s) {
-		if (s < 0) {
-			return getAddSecond(-s);
-		}
-		
-		return getSub(0, 0, s);
+		return getAdd(0, 0, -s);
 	}
 
 	public int getMinuteOfDay() {

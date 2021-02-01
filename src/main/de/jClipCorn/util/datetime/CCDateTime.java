@@ -300,66 +300,16 @@ public class CCDateTime implements Comparable<CCDateTime>, StringSpecSupplier {
 	}
 
 	public CCDateTime getAdd(int dd, int dm, int dy, int th, int tm, int ts) {
-		int newyear    = dy + date.getYear();
-		int newmonth   = dm + date.getMonth() - 1;
-		int newday     = dd + date.getDay() - 1;
-		int newhours   = th + time.getHours();
-		int newminutes = tm + time.getMinutes();
-		int newseconds = ts + time.getSeconds();
 
-		if (newseconds >= 60) {
-			newminutes += (newseconds - newseconds % 60)/60;
-			newseconds = newseconds % 60;
-		} else if (newseconds < 0) {
-			newminutes -= ((-newseconds) + (60 - (-newseconds) % 60)) / 60;
-			newseconds = 60 - (-newseconds) % 60;
-		}
+		if (isUnspecifiedDateTime()) return this;
 
-		if (newminutes >= 60) {
-			newhours += (newminutes - newminutes % 60)/60;
-			newminutes = newminutes % 60;
-		} else if (newminutes < 0) {
-			newhours -= ((-newminutes) + (60 - (-newminutes) % 60)) / 60;
-			newminutes = 60 - (-newminutes) % 60;
-		}
+		var r = CCChronos.addFull(
+				this.date.getYear(), this.date.getMonth(), this.date.getDay(),
+				this.time.getHours(), this.time.getMinutes(), this.time.getSeconds(),
+				dy, dm, dd,
+				th, tm, ts);
 
-		if (newhours >= 24) {
-			newday += (newhours - newhours % 24)/24;
-			newhours = newhours % 24;
-		} else if (newhours < 0) {
-			newday -= ((-newhours) + (24 - (-newhours) % 24)) / 24;
-			newhours = 24 - (-newhours) % 24;
-		}
-
-		if (newmonth >= 12) {
-			newyear += (newmonth - newmonth % 12)/12;
-			newmonth = newmonth % 12;
-		} else if (newmonth < 0) {
-			newyear -= ((-newmonth) + (12 - (-newmonth) % 12)) / 12;
-			newmonth = 12 - (-newmonth) % 12;
-		}
-
-		while (newday >= CCDate.getDaysOfMonth(newmonth+1, newyear)) {
-			newday -= CCDate.getDaysOfMonth(newmonth+1, newyear);
-			newmonth++;
-
-			while (newmonth >= 12) {
-				newmonth -= 12;
-				newyear++;
-			}
-		}
-		while (newday < 0) {
-			newmonth--;
-
-			while (newmonth < 0) {
-				newmonth += 12;
-				newyear--;
-			}
-
-			newday += CCDate.getDaysOfMonth(newmonth, newyear);
-		}
-
-		return create(newday+1, newmonth+1, newyear, newhours, newminutes, newseconds);
+		return create(r.Day, r.Month, r.Year, r.Hour, r.Minute, r.Second);
 	}
 
 	@Override

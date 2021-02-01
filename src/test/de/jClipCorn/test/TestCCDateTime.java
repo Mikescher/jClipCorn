@@ -10,6 +10,11 @@ import static org.junit.Assert.*;
 @SuppressWarnings("nls")
 public class TestCCDateTime extends ClipCornBaseTest {
 
+	private static void assertCCDateTimeEquals(CCDateTime expected, CCDateTime actual)
+	{
+		assertEquals(expected.getSQLStringRepresentation(), actual.getSQLStringRepresentation());
+	}
+
 	@Test
 	public void testFormat() {
 		CCDateTime base = CCDateTime.create(26, 1, 2001, 19, 45, 1);
@@ -160,6 +165,67 @@ public class TestCCDateTime extends ClipCornBaseTest {
 		assertEquals(4,    base.getAddHour(24).getDay());
 		assertEquals(2,    base.getAddHour(24).getMonth());
 		assertEquals(2000, base.getAddHour(24).getYear());
+	}
+
+	@Test
+	public void testAddSubTime2() {
+		assertCCDateTimeEquals(CCDateTime.create(31, 1, 2021, 23, 59, 0), CCDateTime.create(1, 2, 2021, 0,  0, 0).getAdd(0, 0, 0, 0,  0, -60));
+		assertCCDateTimeEquals(CCDateTime.create(31, 1, 2021, 23, 59, 0), CCDateTime.create(1, 2, 2021, 0,  0, 0).getAdd(0, 0, 0, 0, -1,   0));
+
+		assertCCDateTimeEquals(CCDateTime.create(31, 1, 2021, 23, 0, 0), CCDateTime.create(1, 2, 2021, 0, 0, 0).getAdd(0, 0, 0,  0, -60, 0));
+		assertCCDateTimeEquals(CCDateTime.create(31, 1, 2021, 23, 0, 0), CCDateTime.create(1, 2, 2021, 0, 0, 0).getAdd(0, 0, 0, -1,   0, 0));
+
+		assertCCDateTimeEquals(CCDateTime.create(31, 1, 2021, 0, 0, 0), CCDateTime.create(1, 2, 2021, 0, 0, 0).getAdd(0, 0,  0, -24, 0, 0));
+		assertCCDateTimeEquals(CCDateTime.create(31, 1, 2021, 0, 0, 0), CCDateTime.create(1, 2, 2021, 0, 0, 0).getAdd(-1, 0, 0,   0, 0, 0));
+
+		assertCCDateTimeEquals(CCDateTime.create(1, 1, 2021, 0, 0, 0), CCDateTime.create(1, 2, 2021, 0, 0, 0).getAdd(-31, 0,  0, 0, 0, 0));
+		assertCCDateTimeEquals(CCDateTime.create(1, 1, 2021, 0, 0, 0), CCDateTime.create(1, 2, 2021, 0, 0, 0).getAdd(0,  -1,  0, 0, 0, 0));
+
+
+		assertCCDateTimeEquals(CCDateTime.create(31, 12, 2020, 23, 59, 0), CCDateTime.create(1, 1, 2021, 0,  0, 0).getAdd(0, 0, 0, 0,  0, -60));
+		assertCCDateTimeEquals(CCDateTime.create(31, 12, 2020, 23, 59, 0), CCDateTime.create(1, 1, 2021, 0,  0, 0).getAdd(0, 0, 0, 0, -1,   0));
+
+		assertCCDateTimeEquals(CCDateTime.create(31, 12, 2020, 23, 0, 0), CCDateTime.create(1, 1, 2021, 0, 0, 0).getAdd(0, 0, 0,  0, -60, 0));
+		assertCCDateTimeEquals(CCDateTime.create(31, 12, 2020, 23, 0, 0), CCDateTime.create(1, 1, 2021, 0, 0, 0).getAdd(0, 0, 0, -1,   0, 0));
+
+		assertCCDateTimeEquals(CCDateTime.create(31, 12, 2020, 0, 0, 0), CCDateTime.create(1, 1, 2021, 0, 0, 0).getAdd(0, 0,  0, -24, 0, 0));
+		assertCCDateTimeEquals(CCDateTime.create(31, 12, 2020, 0, 0, 0), CCDateTime.create(1, 1, 2021, 0, 0, 0).getAdd(-1, 0, 0,   0, 0, 0));
+
+		assertCCDateTimeEquals(CCDateTime.create(1, 12, 2020, 0, 0, 0), CCDateTime.create(1, 1, 2021, 0, 0, 0).getAdd(-31, 0,  0, 0, 0, 0));
+		assertCCDateTimeEquals(CCDateTime.create(1, 12, 2020, 0, 0, 0), CCDateTime.create(1, 1, 2021, 0, 0, 0).getAdd(0,  -1,  0, 0, 0, 0));
+
+		assertCCDateTimeEquals(CCDateTime.create(1, 1, 2020, 0, 0, 0), CCDateTime.create(1, 1, 2021, 0, 0, 0).getAdd(0, -12,  0, 0, 0, 0));
+		assertCCDateTimeEquals(CCDateTime.create(1, 1, 2020, 0, 0, 0), CCDateTime.create(1, 1, 2021, 0, 0, 0).getAdd(0,   0, -1, 0, 0, 0));
+
+
+
+		assertCCDateTimeEquals(CCDateTime.create(1, 2, 2021, 0,  0, 0), CCDateTime.create(31, 1, 2021, 23, 59, 0).getAdd(0, 0, 0, 0,  0, +60));
+		assertCCDateTimeEquals(CCDateTime.create(1, 2, 2021, 0,  0, 0), CCDateTime.create(31, 1, 2021, 23, 59, 0).getAdd(0, 0, 0, 0, +1,   0));
+
+		assertCCDateTimeEquals(CCDateTime.create(1, 2, 2021, 0, 0, 0), CCDateTime.create(31, 1, 2021, 23, 0, 0).getAdd(0, 0, 0,  0, +60, 0));
+		assertCCDateTimeEquals(CCDateTime.create(1, 2, 2021, 0, 0, 0), CCDateTime.create(31, 1, 2021, 23, 0, 0).getAdd(0, 0, 0, +1,   0, 0));
+
+		assertCCDateTimeEquals(CCDateTime.create(1, 2, 2021, 0, 0, 0), CCDateTime.create(31, 1, 2021, 0, 0, 0).getAdd(0, 0,  0, +24, 0, 0));
+		assertCCDateTimeEquals(CCDateTime.create(1, 2, 2021, 0, 0, 0), CCDateTime.create(31, 1, 2021, 0, 0, 0).getAdd(+1, 0, 0,   0, 0, 0));
+
+		assertCCDateTimeEquals(CCDateTime.create(1, 2, 2021, 0, 0, 0), CCDateTime.create(1, 1, 2021, 0, 0, 0).getAdd(+31, 0,  0, 0, 0, 0));
+		assertCCDateTimeEquals(CCDateTime.create(1, 2, 2021, 0, 0, 0), CCDateTime.create(1, 1, 2021, 0, 0, 0).getAdd(0,  +1,  0, 0, 0, 0));
+
+
+		assertCCDateTimeEquals(CCDateTime.create(1, 1, 2021, 0,  0, 0), CCDateTime.create(31, 12, 2020, 23, 59, 0).getAdd(0, 0, 0, 0,  0, +60));
+		assertCCDateTimeEquals(CCDateTime.create(1, 1, 2021, 0,  0, 0), CCDateTime.create(31, 12, 2020, 23, 59, 0).getAdd(0, 0, 0, 0, +1,   0));
+
+		assertCCDateTimeEquals(CCDateTime.create(1, 1, 2021, 0, 0, 0), CCDateTime.create(31, 12, 2020, 23, 0, 0).getAdd(0, 0, 0,  0, +60, 0));
+		assertCCDateTimeEquals(CCDateTime.create(1, 1, 2021, 0, 0, 0), CCDateTime.create(31, 12, 2020, 23, 0, 0).getAdd(0, 0, 0, +1,   0, 0));
+
+		assertCCDateTimeEquals(CCDateTime.create(1, 1, 2021, 0, 0, 0), CCDateTime.create(31, 12, 2020, 0, 0, 0).getAdd(0, 0,  0, +24, 0, 0));
+		assertCCDateTimeEquals(CCDateTime.create(1, 1, 2021, 0, 0, 0), CCDateTime.create(31, 12, 2020, 0, 0, 0).getAdd(+1, 0, 0,   0, 0, 0));
+
+		assertCCDateTimeEquals(CCDateTime.create(1, 1, 2021, 0, 0, 0), CCDateTime.create(1, 12, 2020, 0, 0, 0).getAdd(+31, 0,  0, 0, 0, 0));
+		assertCCDateTimeEquals(CCDateTime.create(1, 1, 2021, 0, 0, 0), CCDateTime.create(1, 12, 2020, 0, 0, 0).getAdd(0,  +1,  0, 0, 0, 0));
+
+		assertCCDateTimeEquals(CCDateTime.create(1, 1, 2021, 0, 0, 0), CCDateTime.create(1, 1, 2020, 0, 0, 0).getAdd(0, +12,  0, 0, 0, 0));
+		assertCCDateTimeEquals(CCDateTime.create(1, 1, 2021, 0, 0, 0), CCDateTime.create(1, 1, 2020, 0, 0, 0).getAdd(0,   0, +1, 0, 0, 0));
 	}
 
 	@Test

@@ -26,37 +26,20 @@ public final class CCDate implements Comparable<CCDate>, StringSpecSupplier {
 	private static final CCDate UNSPECIFIED = new CCDate(DAY_UNSPECIFIED, MONTH_UNSPECIFIED, YEAR_UNSPECIFIED);
 	
 	private static HashSet<Character> stringSpecifier = null; // { 'y', 'M', 'd' }
-	
-	private static final String[] MONTHNAMES = {
-		LocaleBundle.getString("CCDate.Month0"), //$NON-NLS-1$
-		LocaleBundle.getString("CCDate.Month1"), //$NON-NLS-1$
-		LocaleBundle.getString("CCDate.Month2"), //$NON-NLS-1$
-		LocaleBundle.getString("CCDate.Month3"), //$NON-NLS-1$
-		LocaleBundle.getString("CCDate.Month4"), //$NON-NLS-1$
-		LocaleBundle.getString("CCDate.Month5"), //$NON-NLS-1$
-		LocaleBundle.getString("CCDate.Month6"), //$NON-NLS-1$
-		LocaleBundle.getString("CCDate.Month7"), //$NON-NLS-1$
-		LocaleBundle.getString("CCDate.Month8"), //$NON-NLS-1$
-		LocaleBundle.getString("CCDate.Month9"), //$NON-NLS-1$
-		LocaleBundle.getString("CCDate.Month10"), //$NON-NLS-1$
-		LocaleBundle.getString("CCDate.Month11"), //$NON-NLS-1$
-		LocaleBundle.getString("CCDate.Month12") //$NON-NLS-1$
-	};
-	
-	private static final String[] WEEKDAYS = {		
-		LocaleBundle.getString("CCDate.Month0"), //$NON-NLS-1$
-		LocaleBundle.getString("CCDate.Day1"), //$NON-NLS-1$
-		LocaleBundle.getString("CCDate.Day2"), //$NON-NLS-1$
-		LocaleBundle.getString("CCDate.Day3"), //$NON-NLS-1$
-		LocaleBundle.getString("CCDate.Day4"), //$NON-NLS-1$
-		LocaleBundle.getString("CCDate.Day5"), //$NON-NLS-1$
-		LocaleBundle.getString("CCDate.Day6"), //$NON-NLS-1$
-		LocaleBundle.getString("CCDate.Day7") //$NON-NLS-1$
+
+	private static final int[] MONTHVALUES = {0, 3, 2, 5, 0, 3, 5, 1, 4, 6, 2, 4};
+
+	private static final String[] WEEKDAYS = {
+			LocaleBundle.getString("CCDate.Month0"), //$NON-NLS-1$
+			LocaleBundle.getString("CCDate.Day1"), //$NON-NLS-1$
+			LocaleBundle.getString("CCDate.Day2"), //$NON-NLS-1$
+			LocaleBundle.getString("CCDate.Day3"), //$NON-NLS-1$
+			LocaleBundle.getString("CCDate.Day4"), //$NON-NLS-1$
+			LocaleBundle.getString("CCDate.Day5"), //$NON-NLS-1$
+			LocaleBundle.getString("CCDate.Day6"), //$NON-NLS-1$
+			LocaleBundle.getString("CCDate.Day7") //$NON-NLS-1$
 	};
 
-	private static final int[][] MONTHLIMITS = {{0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31}, {0, 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31}};
-	private static final int[] MONTHVALUES = {0, 3, 2, 5, 0, 3, 5, 1, 4, 6, 2, 4};
-	
 	private final int day;   // 1..31
 	private final int month; // 1..12
 	private final int year;  // 1900..9999
@@ -117,7 +100,7 @@ public final class CCDate implements Comparable<CCDate>, StringSpecSupplier {
 	public static CCDate createRandom(Random r, int minyear, int maxyear) {
 		int y = r.nextInt(maxyear-minyear)+minyear;
 		int m = r.nextInt(12)+1;
-		int d = r.nextInt(getDaysOfMonth(m, y)) + 1;
+		int d = r.nextInt(CCChronos.getDaysOfMonth(m, y)) + 1;
 		return create(d, m, y);
 	}
 	
@@ -149,27 +132,15 @@ public final class CCDate implements Comparable<CCDate>, StringSpecSupplier {
 	}
 
 	public String getMonthName() {
-		return MONTHNAMES[month];
-	}
-	
-	public static int getDaysOfMonth(int m, int y) {
-		return MONTHLIMITS[ (isLeapYear(y)) ? (1) : (0) ][ m ];
-	}
-
-	public static int getDaysOfYear(int y) {
-		return isLeapYear(y) ? 366 : 365;
+		return CCChronos.getMonthName(month);
 	}
 
 	public int getDaysOfMonth() {
-		return getDaysOfMonth(month, year);
+		return CCChronos.getDaysOfMonth(month, year);
 	}
-	
-	public static boolean isLeapYear(int y) {
-		return ((y % 4 == 0 && y % 100 != 0) || y % 400 == 0);
-	}
-	
+
 	public boolean isLeapYear() {
-		return isLeapYear(year);
+		return CCChronos.isLeapYear(year);
 	}
 	
 	public int getWeekdayInt() {
@@ -331,102 +302,31 @@ public final class CCDate implements Comparable<CCDate>, StringSpecSupplier {
 	}
 	
 	public CCDate getAdd(int d, int m, int y) {
-		if (d < 0 || m < 0 || y < 0) {
-			return null;
-		}
+		if (isUnspecifiedDate()) return this;
 		
-		int newday = getDay();
-		int newmonth = getMonth();
-		int newyear = getYear();
-		
-		newyear += y;
-		
-		newmonth += m;
-		
-		while (newmonth > 12) {
-			newmonth -= 12;
-			newyear++;
-		}
-		
-		newday += d;
-		
-		while (newday > getDaysOfMonth(newmonth, newyear)) {
-			newday -= getDaysOfMonth(newmonth, newyear);
-			newmonth++;
-			
-			while (newmonth > 12) {
-				newmonth -= 12;
-				newyear++;
-			}
-		}	
-		
-		return create(newday, newmonth, newyear);
+		var r = CCChronos.addUpperHalf(this.year, this.month, this.day, y, m, d);
+
+		return create(r.Day, r.Month, r.Year);
 	}
 	
 	public CCDate getSub(int d, int m, int y) {
-		if (d < 0 || m < 0 || y < 0) {
-			return null;
-		}
-		
-		int newday = getDay();
-		int newmonth = getMonth();
-		int newyear = getYear();
-		
-		newyear -= y;
-		
-		newmonth -= m;
-		
-		while (newmonth <= 0) {
-			newmonth += 12;
-			newyear--;
-		}
-		
-		newday -= d;
-		
-		while (newday <= 0) {
-			newmonth--;
-
-			while (newmonth <= 0) {
-				newmonth += 12;
-				newyear--;
-			}
-
-			newday += getDaysOfMonth(newmonth, newyear);
-		}
-		
-		return create(newday, newmonth, newyear);
+		return getAdd(-d, -m, -y);
 	}
 	
 	public CCDate getAddDay(int d) {
-		if (d < 0) {
-			return getSubDay(-d);
-		}
-		
 		return getAdd(d, 0, 0);
 	}
 	
 	public CCDate getSubDay(int d) {
-		if (d < 0) {
-			return getAddDay(-d);
-		}
-		
-		return getSub(d, 0, 0);
+		return getAdd(-d, 0, 0);
 	}
 	
 	public CCDate getAddMonth(int m) {
-		if (m < 0) {
-			return getSubMonth(-m);
-		}
-		
 		return getAdd(0, m, 0);
 	}
 	
 	public CCDate getSubMonth(int m) {
-		if (m < 0) {
-			return getAddMonth(-m);
-		}
-		
-		return getSub(0, m, 0);
+		return getAdd(0, -m, 0);
 	}
 	
 	public CCDate getAddYear(int y) {
@@ -464,46 +364,12 @@ public final class CCDate implements Comparable<CCDate>, StringSpecSupplier {
 	// return days([other] - [this])
 	public int getDayDifferenceTo(CCDate other) {
 		if (isEqual(other)) return 0;
-		
+
 		if (this.isUnspecifiedDate() || !this.isValidDate() || other.isUnspecifiedDate() || !other.isValidDate()) return 0;
 
-		int yy = this.year;
-		int mm = this.month;
-		int dd = this.day;
-
-		var totaldays = 0;
-
-		// [0] Force day = 1
-
-		totaldays = -(dd-1);
-		dd = 1;
-
-		// [1] months
-
-		while (mm != other.month)
-		{
-			var sign = Integer.signum(other.month - mm);
-			totaldays += sign * getDaysOfMonth(Math.min(mm, mm+sign), yy);
-			mm += sign;
-		}
-
-		// [2] years
-
-		while (yy != other.year)
-		{
-			var sign = Integer.signum(other.year - yy);
-			totaldays += sign * getDaysOfYear(((mm <= 2) ^ (sign<0)) ? yy : yy+sign);
-			yy += sign;
-		}
-
-		// [3] days
-
-		totaldays += (other.day - dd);
-		dd = other.day;
-
-		return totaldays;
+		return CCChronos.subtractUpperHalf(other.year, other.month, other.day, this.year, this.month, this.day);
 	}
-	
+
 	@Override
 	public String toString() {
 		return "<CCDate>:" + toStringSQL(); //$NON-NLS-1$

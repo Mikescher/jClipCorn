@@ -17,6 +17,8 @@ public class TableLastViewedRenderer extends TableRenderer {
 		var ts = (Opt<CCDateTime>)value;
 		if (!ts.isPresent()) {
 			setText(Str.Empty);
+		} else if (ts.get().isMinimum()) {
+			setText("-");
 		} else {
 			setText(ts.get().toStringUIDateOnly());
 		}

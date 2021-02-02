@@ -141,6 +141,10 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 				setTag(CCSingleTag.TAG_WATCH_LATER, false);
 			}
 
+			if (getSeries().getTag(CCSingleTag.TAG_WATCH_LATER) && CCProperties.getInstance().PROP_MAINFRAME_AUTOMATICRESETWATCHLATER.getValue()) {
+				getSeries().setTag(CCSingleTag.TAG_WATCH_LATER, false);
+			}
+
 			_cache.bust();
 			updateDBWithException();
 		}

@@ -482,6 +482,10 @@ public class CCSeries extends CCDatabaseElement implements IEpisodeOwner, ISerie
 
 	@Override
 	public ExtendedViewedState getExtendedViewedState() {
+
+		if (isEmpty())
+			return new ExtendedViewedState(ExtendedViewedStateType.NOT_VIEWED, CCDateTimeList.createEmpty(), 0);
+
 		if (isViewed())
 			return new ExtendedViewedState(ExtendedViewedStateType.VIEWED, CCDateTimeList.createEmpty(), getFullViewCount());
 

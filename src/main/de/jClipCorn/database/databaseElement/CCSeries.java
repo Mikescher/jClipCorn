@@ -725,8 +725,11 @@ public class CCSeries extends CCDatabaseElement implements IEpisodeOwner, ISerie
 	}
 
 	public boolean isEmpty() {
-		for (CCSeason se : seasons) if (!se.isEmpty()) return false;
-		return true;
+		return _cache.getBool(SeriesCache.IS_EMPTY, null, ser->
+		{
+			for (CCSeason se : seasons) if (!se.isEmpty()) return false;
+			return true;
+		});
 	}
 
 	public int getAutoEpisodeLength(CCSeason season) {

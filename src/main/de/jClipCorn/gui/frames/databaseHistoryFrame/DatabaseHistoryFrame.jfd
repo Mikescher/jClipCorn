@@ -1,4 +1,4 @@
-JFDML JFormDesigner: "7.0.2.6.321" Java: "11.0.8" encoding: "UTF-8"
+JFDML JFormDesigner: "7.0.3.0.337" Java: "11.0.9.1" encoding: "UTF-8"
 
 new FormModel {
 	"i18n.bundlePackage": "de.jClipCorn.gui.localization"
@@ -157,8 +157,7 @@ new FormModel {
 				add( new FormContainer( "de.jClipCorn.gui.frames.databaseHistoryFrame.DatabaseHistoryChangesTable", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
 					name: "tableChanges"
 					auxiliary() {
-						"JavaCodeGenerator.customCreateCode": "new ${field_type}(tfOldValue, tfNewValue);"
-						"JavaCodeGenerator.postInitCode": "${field}.autoResize();"
+						"JavaCodeGenerator.postInitCode": "${field}.autoResize();\n${field}.initRefs(tfOldValue, tfNewValue);"
 					}
 				}, new FormLayoutConstraints( class java.lang.String ) {
 					"value": "right"

@@ -291,7 +291,7 @@ public class DatabaseHistoryFrame extends JFrame
 		progressBar = new JProgressBar();
 		splitPane1 = new JSplitPane();
 		tableEntries = new DatabaseHistoryTable(this);
-		tableChanges = new DatabaseHistoryChangesTable(tfOldValue, tfNewValue);
+		tableChanges = new DatabaseHistoryChangesTable();
 		label5 = new JLabel();
 		tfOldValue = new ReadableTextField();
 		label6 = new JLabel();
@@ -377,6 +377,7 @@ public class DatabaseHistoryFrame extends JFrame
 			//======== tableChanges ========
 			{
 				tableChanges.autoResize();
+				tableChanges.initRefs(tfOldValue, tfNewValue);
 			}
 			splitPane1.setBottomComponent(tableChanges);
 		}

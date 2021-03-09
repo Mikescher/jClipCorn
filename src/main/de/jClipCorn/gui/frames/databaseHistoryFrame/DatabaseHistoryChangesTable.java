@@ -1,6 +1,5 @@
 package de.jClipCorn.gui.frames.databaseHistoryFrame;
 
-import com.jformdesigner.annotations.DesignCreate;
 import de.jClipCorn.database.history.CCHistorySingleChange;
 import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleColumnPrototype;
 import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleTable;
@@ -13,13 +12,14 @@ import java.util.List;
 public class DatabaseHistoryChangesTable extends JCCSimpleTable<CCHistorySingleChange> {
 	private static final long serialVersionUID = -7175124665697003916L;
 
-	private final JTextComponent edValueOld;
-	private final JTextComponent edValueNew;
+	private JTextComponent edValueOld;
+	private JTextComponent edValueNew;
 
-	@DesignCreate
-	private static DatabaseHistoryChangesTable designCreate() { return new DatabaseHistoryChangesTable(null, null); }
+	public DatabaseHistoryChangesTable()
+	{
+	}
 
-	public DatabaseHistoryChangesTable(JTextComponent tfOldValue, JTextComponent tfNewValue)
+	public void initRefs(JTextComponent tfOldValue, JTextComponent tfNewValue)
 	{
 		edValueOld = tfOldValue;
 		edValueNew = tfNewValue;
@@ -67,11 +67,17 @@ public class DatabaseHistoryChangesTable extends JCCSimpleTable<CCHistorySingleC
 
 	@Override
 	protected void OnSelectElement(CCHistorySingleChange element) {
-		edValueOld.setVisible(element.OldValue != null);
-		edValueOld.setText((element.OldValue == null) ? Str.Empty : element.OldValue);
+		if (edValueOld != null)
+		{
+			edValueOld.setVisible(element.OldValue != null);
+			edValueOld.setText((element.OldValue == null) ? Str.Empty : element.OldValue);
+		}
 
-		edValueNew.setVisible(element.NewValue != null);
-		edValueNew.setText((element.NewValue == null) ? Str.Empty : element.NewValue);
+		if (edValueNew != null)
+		{
+			edValueNew.setVisible(element.NewValue != null);
+			edValueNew.setText((element.NewValue == null) ? Str.Empty : element.NewValue);
+		}
 	}
 
 	@Override

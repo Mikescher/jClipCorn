@@ -1,16 +1,5 @@
 package de.jClipCorn.gui.mainFrame.filterTree;
 
-import java.util.Collections;
-
-import javax.swing.Icon;
-import javax.swing.JScrollPane;
-import javax.swing.event.TreeExpansionEvent;
-import javax.swing.event.TreeExpansionListener;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.TreePath;
-import javax.swing.tree.TreeSelectionModel;
-
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.util.CCDBUpdateListener;
@@ -21,6 +10,15 @@ import de.jClipCorn.gui.guiComponents.jSimpleTree.SimpleTreeRenderer;
 import de.jClipCorn.gui.resources.MultiSizeIconRef;
 import de.jClipCorn.gui.resources.reftypes.IconRef;
 import de.jClipCorn.util.lambda.Func1to0;
+
+import javax.swing.*;
+import javax.swing.event.TreeExpansionEvent;
+import javax.swing.event.TreeExpansionListener;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreePath;
+import javax.swing.tree.TreeSelectionModel;
+import java.util.Collections;
 
 public abstract class AbstractFilterTree extends JScrollPane implements CCDBUpdateListener, TreeExpansionListener {
 	private static final long serialVersionUID = -1226727910191440220L;
@@ -145,7 +143,7 @@ public abstract class AbstractFilterTree extends JScrollPane implements CCDBUpda
 	
 	@Override
 	public void treeCollapsed(TreeExpansionEvent e) {
-		// nothing
+		tree.collapsePath(e.getPath());
 	}
 
 	@Override

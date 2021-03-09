@@ -205,6 +205,7 @@ public class CCProperties {
 	public CCPIntProperty                                   PROP_MAX_UNDOLASTWATCH_HOUR_DIFF;
 	public CCBoolProperty                                   PROP_VLC_ROBOT_QUEUE_PREEMPTIVE;
 	public CCStringProperty                                 PROP_MAINFRAME_COLUMN_SIZE_CACHE;
+	public CCBoolProperty                                   PROP_MAINFRAME_FILTERTREE_RECOLLAPSE;
 
 	public boolean ARG_READONLY = false;
 	
@@ -392,6 +393,7 @@ public class CCProperties {
 		PROP_FOLDERLANG_IGNORE_PERC             = new CCPIntProperty(NONVISIBLE,            this,   "PROP_FOLDERLANG_IGNORE_PERC",              2);
 		PROP_MAX_UNDOLASTWATCH_HOUR_DIFF        = new CCPIntProperty(NONVISIBLE,            this,   "PROP_MAX_UNDOLASTWATCH_HOUR_DIFF",         3);
 		PROP_MAINFRAME_COLUMN_SIZE_CACHE        = new CCStringProperty(NONVISIBLE,          this,   "PROP_MAINFRAME_COLUMN_SIZE_CACHE",         Str.Empty);
+		PROP_MAINFRAME_FILTERTREE_RECOLLAPSE    = new CCBoolProperty(NONVISIBLE,            this,   "PROP_MAINFRAME_FILTERTREE_RECOLLAPSE",     false);
 
 		PROP_ADD_MOVIE_RELATIVE_AUTO            = new CCBoolProperty(CAT_PATHSYNTAX,        this,   "PROP_ADD_MOVIE_RELATIVE_AUTO",             true);
 		PROP_PATHSYNTAX_SELF                    = new CCBoolProperty(CAT_PATHSYNTAX,        this,   "PROP_PATHSYNTAX_SELF",                     true);

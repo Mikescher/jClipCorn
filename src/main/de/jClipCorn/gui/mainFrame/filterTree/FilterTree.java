@@ -53,37 +53,50 @@ public class FilterTree extends AbstractFilterTree {
 	protected void addFields() {
 		initAll(addNodeI(null, null, null, null));
 		
-		initZyklus(addNode(null, Resources.ICN_SIDEBAR_ZYKLUS, LocaleBundle.getString("FilterTree.Zyklus"), this::expand)); //$NON-NLS-1$
+		initZyklus(addNode(null, Resources.ICN_SIDEBAR_ZYKLUS, LocaleBundle.getString("FilterTree.Zyklus"), this::parentClicked)); //$NON-NLS-1$
 		
 		if (movielist.getGroupList().size() > 0) {
-			initGroups(addNode(null, Resources.ICN_SIDEBAR_GROUPS, LocaleBundle.getString("FilterTree.Groups"), this::expand)); //$NON-NLS-1$
+			initGroups(addNode(null, Resources.ICN_SIDEBAR_GROUPS, LocaleBundle.getString("FilterTree.Groups"), this::parentClicked)); //$NON-NLS-1$
 		}
 		
-		initGenre(addNode(null, Resources.ICN_SIDEBAR_GENRE, LocaleBundle.getString("FilterTree.Genre"), this::expand)); //$NON-NLS-1$
+		initGenre(addNode(null, Resources.ICN_SIDEBAR_GENRE, LocaleBundle.getString("FilterTree.Genre"), this::parentClicked)); //$NON-NLS-1$
 		
-		initOnlineScore(addNode(null, Resources.ICN_SIDEBAR_ONLINESCORE, LocaleBundle.getString("FilterTree.IMDB"), this::expand)); //$NON-NLS-1$
+		initOnlineScore(addNode(null, Resources.ICN_SIDEBAR_ONLINESCORE, LocaleBundle.getString("FilterTree.IMDB"), this::parentClicked)); //$NON-NLS-1$
 		
-		initScore(addNode(null, Resources.ICN_SIDEBAR_SCORE, LocaleBundle.getString("FilterTree.Score"), this::expand)); //$NON-NLS-1$
+		initScore(addNode(null, Resources.ICN_SIDEBAR_SCORE, LocaleBundle.getString("FilterTree.Score"), this::parentClicked)); //$NON-NLS-1$
 		
-		initFSK(addNode(null, Resources.ICN_TABLE_FSK_2, LocaleBundle.getString("FilterTree.FSK"), this::expand)); //$NON-NLS-1$
+		initFSK(addNode(null, Resources.ICN_TABLE_FSK_2, LocaleBundle.getString("FilterTree.FSK"), this::parentClicked)); //$NON-NLS-1$
 		
-		initYear(addNode(null, Resources.ICN_SIDEBAR_YEAR, LocaleBundle.getString("FilterTree.Year"), this::expand)); //$NON-NLS-1$
+		initYear(addNode(null, Resources.ICN_SIDEBAR_YEAR, LocaleBundle.getString("FilterTree.Year"), this::parentClicked)); //$NON-NLS-1$
 		
-		initFormat(addNode(null, Resources.ICN_SIDEBAR_FORMAT, LocaleBundle.getString("FilterTree.Format"), this::expand)); //$NON-NLS-1$
+		initFormat(addNode(null, Resources.ICN_SIDEBAR_FORMAT, LocaleBundle.getString("FilterTree.Format"), this::parentClicked)); //$NON-NLS-1$
 
-		initQuality(addNode(null, Resources.ICN_SIDEBAR_QUALITY, LocaleBundle.getString("FilterTree.Quality"), this::expand)); //$NON-NLS-1$
+		initQuality(addNode(null, Resources.ICN_SIDEBAR_QUALITY, LocaleBundle.getString("FilterTree.Quality"), this::parentClicked)); //$NON-NLS-1$
 		
-		initTags(addNode(null, Resources.ICN_SIDEBAR_TAGS, LocaleBundle.getString("FilterTree.Tags"), this::expand)); //$NON-NLS-1$
+		initTags(addNode(null, Resources.ICN_SIDEBAR_TAGS, LocaleBundle.getString("FilterTree.Tags"), this::parentClicked)); //$NON-NLS-1$
 		
-		initLanguage(addNode(null, Resources.ICN_SIDEBAR_LANGUAGE, LocaleBundle.getString("FilterTree.Language"), this::expand)); //$NON-NLS-1$
+		initLanguage(addNode(null, Resources.ICN_SIDEBAR_LANGUAGE, LocaleBundle.getString("FilterTree.Language"), this::parentClicked)); //$NON-NLS-1$
 		
-		initTyp(addNode(null, Resources.ICN_SIDEBAR_TYP, LocaleBundle.getString("FilterTree.Type"), this::expand)); //$NON-NLS-1$
+		initTyp(addNode(null, Resources.ICN_SIDEBAR_TYP, LocaleBundle.getString("FilterTree.Type"), this::parentClicked)); //$NON-NLS-1$
 		
-		initViewed(addNode(null, Resources.ICN_SIDEBAR_VIEWED, LocaleBundle.getString("FilterTree.Viewed"), this::expand)); //$NON-NLS-1$
+		initViewed(addNode(null, Resources.ICN_SIDEBAR_VIEWED, LocaleBundle.getString("FilterTree.Viewed"), this::parentClicked)); //$NON-NLS-1$
 
-		initCustom(addNode(null, Resources.ICN_SIDEBAR_CUSTOM, LocaleBundle.getString("FilterTree.Custom"), this::expand)); //$NON-NLS-1$
+		initCustom(addNode(null, Resources.ICN_SIDEBAR_CUSTOM, LocaleBundle.getString("FilterTree.Custom"), this::parentClicked)); //$NON-NLS-1$
 	}
-	
+
+	private void parentClicked(SimpleTreeEvent evt) {
+
+		if (CCProperties.getInstance().PROP_MAINFRAME_FILTERTREE_RECOLLAPSE.getValue())
+		{
+			if (tree.isExpanded(evt.path)) tree.collapsePath(evt.path);
+			else expand(evt);
+		}
+		else
+		{
+			expand(evt);
+		}
+	}
+
 	@SuppressWarnings("unchecked")
 	private void expand(SimpleTreeEvent evt) {
 		tree.expandPath(evt.path);

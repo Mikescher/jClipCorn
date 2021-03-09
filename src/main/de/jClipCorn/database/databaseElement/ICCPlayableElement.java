@@ -5,6 +5,7 @@ import de.jClipCorn.database.util.CCQualityCategory;
 import de.jClipCorn.properties.types.NamedPathVar;
 import de.jClipCorn.util.datetime.CCDate;
 
+import java.awt.*;
 import java.util.List;
 
 public interface ICCPlayableElement {
@@ -30,8 +31,8 @@ public interface ICCPlayableElement {
 	void setFilesize(long fsize);
 	void setMediaInfo(CCMediaInfo minfo);
 
-	void play(boolean updateViewedAndHistory);
-	void play(boolean updateViewedAndHistory, NamedPathVar player);
+	void play(Component swingOwner, boolean updateViewedAndHistory);
+	void play(Component swingOwner, boolean updateViewedAndHistory, NamedPathVar player);
 	void updateViewedAndHistoryFromUI();
 
 	CCGenreList getGenresFromSelfOrParent();

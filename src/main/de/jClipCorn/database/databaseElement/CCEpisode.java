@@ -25,6 +25,7 @@ import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.ChecksumHelper;
 import de.jClipCorn.util.helper.DialogHelper;
 
+import java.awt.*;
 import java.io.File;
 import java.sql.Date;
 import java.util.Arrays;
@@ -481,14 +482,24 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 	}
 
 	@Override
-	public void play(boolean updateViewedAndHistory) {
-		MoviePlayer.play(this, null);
-
-		if (updateViewedAndHistory) updateViewedAndHistoryFromUI();
+	public void play(Component swingOwner, boolean updateViewedAndHistory) {
+		play(swingOwner, updateViewedAndHistory, null);
 	}
 
 	@Override
-	public void play(boolean updateViewedAndHistory, NamedPathVar player) {
+	public void play(Component swingOwner, boolean updateViewedAndHistory, NamedPathVar player) {
+		if (updateViewedAndHistory && !viewedHistory.getLastOrInvalid().isUnspecifiedOrMinimum())
+		{
+			var hours = viewedHistory.getLastOrInvalid().getSecondDifferenceTo(CCDateTime.getCurrentDateTime()) / (60.0 * 60.0);
+			var max = CCProperties.getInstance().PROP_MAX_FASTREWATCH_HOUR_DIFF.getValue();
+
+			if (hours < max)
+			{
+				var ok = DialogHelper.showLocaleYesNoDefaultNo(swingOwner, "Dialogs.PlayTooFastWarning");
+				if (!ok) return;
+			}
+		}
+
 		MoviePlayer.play(this, player);
 
 		if (updateViewedAndHistory) updateViewedAndHistoryFromUI();

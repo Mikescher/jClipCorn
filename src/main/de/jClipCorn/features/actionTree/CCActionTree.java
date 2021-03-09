@@ -445,11 +445,11 @@ public class CCActionTree extends UIActionTree{
 	}
 	
 	private void onClickMoviesPlay(CCTreeActionEvent e) {
-		e.ifMovieSource(m -> m.play(true));
+		e.ifMovieSource(m -> m.play(e.SwingOwner, true));
 	}
 	
 	private void onClickMoviesPlayAnonymous(CCTreeActionEvent e) {
-		e.ifMovieSource(m -> m.play(false));
+		e.ifMovieSource(m -> m.play(e.SwingOwner, false));
 	}
 
 	private void onClickMoviesPrev(CCTreeActionEvent e) {
@@ -804,7 +804,7 @@ public class CCActionTree extends UIActionTree{
 			CCEpisode eps = s.getNextEpisode();
 
 			if (eps != null) {
-				eps.play(true);
+				eps.play(e.SwingOwner, true);
 				if (e.SpecialListener != null) e.SpecialListener.onCallbackPlayed(eps);
 			}
 		});
@@ -816,7 +816,7 @@ public class CCActionTree extends UIActionTree{
 			CCEpisode eps = s.getRandomEpisode();
 
 			if (eps != null) {
-				eps.play(true);
+				eps.play(e.SwingOwner, true);
 				if (e.SpecialListener != null) e.SpecialListener.onCallbackPlayed(eps);
 			}
 		});
@@ -828,7 +828,7 @@ public class CCActionTree extends UIActionTree{
 			CCEpisode eps = s.getRandomEpisodeWithViewState(true);
 
 			if (eps != null) {
-				eps.play(true);
+				eps.play(e.SwingOwner, true);
 				if (e.SpecialListener != null) e.SpecialListener.onCallbackPlayed(eps);
 			}
 		});
@@ -840,18 +840,18 @@ public class CCActionTree extends UIActionTree{
 			CCEpisode eps = s.getRandomEpisodeWithViewState(false);
 
 			if (eps != null) {
-				eps.play(true);
+				eps.play(e.SwingOwner, true);
 				if (e.SpecialListener != null) e.SpecialListener.onCallbackPlayed(eps);
 			}
 		});
 	}
 
 	private void onClickOtherEpisodePlay(CCTreeActionEvent e) {
-		e.ifEpisodeSource(p -> p.play(true));
+		e.ifEpisodeSource(p -> p.play(e.SwingOwner, true));
 	}
 
 	private void onClickOtherEpisodePlayAnonymous(CCTreeActionEvent e) {
-		e.ifEpisodeSource(p -> p.play(false));
+		e.ifEpisodeSource(p -> p.play(e.SwingOwner, false));
 	}
 
 	private void onClickOtherEpisodeSetViewed(CCTreeActionEvent e) {

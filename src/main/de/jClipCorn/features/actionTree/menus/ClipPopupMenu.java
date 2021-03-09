@@ -189,7 +189,7 @@ public abstract class ClipPopupMenu extends JPopupMenu {
 			for (var ref : alts)
 			{
 				JMenuItem subitem = menu.add(ref.getCaption());
-				subitem.addActionListener(arg0 -> src.play(!anonymous, ref));
+				subitem.addActionListener(arg0 -> src.play(getSourceFrame(), !anonymous, ref));
 				menu.add(subitem);
 			}
 		}

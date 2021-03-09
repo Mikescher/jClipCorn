@@ -751,7 +751,7 @@ public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener 
 	}
 
 	private void playMovie() {
-		movie.play(true);
+		movie.play(PreviewMovieFrame.this, true);
 	}
 
 	private void updateFields() {

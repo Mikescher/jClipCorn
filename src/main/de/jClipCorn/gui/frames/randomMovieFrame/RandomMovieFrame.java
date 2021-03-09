@@ -61,7 +61,7 @@ public class RandomMovieFrame extends JFrame implements Runnable {
 			new Thread(RandomMovieFrame.this).start();
 			} else {
 				CCMovie m = (CCMovie) chooser.getSelectedObject();
-				m.play(true);
+				m.play(RandomMovieFrame.this, true);
 				dispose();
 			}
 		});

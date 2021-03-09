@@ -696,7 +696,7 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 
 	public void onEpisodeDblClick(CCEpisode ep) {
 		if (ep != null) {
-			ep.play(true);
+			ep.play(PreviewSeriesFrame.this, true);
 		}
 	}
 

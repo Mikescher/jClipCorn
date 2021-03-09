@@ -1,5 +1,103 @@
 
 
+#######################################################################
+############ Tue Mar 9 14:31:57 2021 +0100  1.10.9 RELEASE ############
+#######################################################################
+
+
+1.10.9 Task: Update to FlatLaf 1.0 (and a few LnF fixes for FlatLaf)
+1.10.9 Feature: Prevent playing an episode/movie too fast again
+1.10.9 Bugfix: Fix exception in DatabaseHistoryFrame
+1.10.9 Feature: Option to re-collapse filter tree categories by clicking them again
+1.10.9 Feature: Show [Watch Later] on Series in MainTable
+1.10.9 Task: Display empty series as NOT_VIEWED
+1.10.9 Task: Cache CCSeries.isEmpty()
+1.10.9 Bugfix: Fixed unspecified last-viewed being shown as 1900-01-01 in table column
+1.10.9 Task: More tests for datetime functions
+1.10.9 Bugfix: Fixed bug in CCDateTime.add method (and generalize timestamp math into its own class)
+1.10.9 Task: Update anime_planet icon and proxer.me URL
+1.10.9 Bugfix: Fixed Substance themes no longer working (Replace dep with radiance)
+1.10.9 Feature: Remember MainTable initial column sizes for next startup
+1.10.9 Feature: Show [Last viewed] in MainTable
+1.10.9 Feature: Preemptively add files to vlc playlist from VLCRobot
+1.10.9 Task: [FORMDEV_MIG] Migrate VLCRobotFrame to FormDev
+1.10.9 Task: [FORMDEV_MIG] Migrate WatchHistoryFrame to FormDev
+1.10.9 Task: Support new Proxer.me (Proxer.net) domain
+1.10.9 Bugfix: Fix cache get[Bool|Int|Double] ignoring extra params
+1.10.9 Bugfix: Fix Statusbar not being updated on startup (cache-invalidation)
+1.10.9 Bugfix: Fix Buttons in AddMutipleEpisodesFrame not being updated when clicking [Ignore problems]
+1.10.9 Feature: Set the starting episode number in AddMultipleEpisodesFrame
+1.10.9 Task: [FORMDEV_MIG] Migrate AddMultiEpisodeFrame to FormDev
+1.10.9 Bugfix: Fixed failing testcase (2)
+1.10.9 Bugfix: Fixed failing testcase
+1.10.9 Feature: Directly apply themes from SettingsFrame (only hacky preview)
+1.10.9 Feature: FlatLaf Themes and better Theme/Look'n'Feel handling
+1.10.9 Feature: Allow searching for complete char strings in EnumComboBox
+1.10.9 Feature: Better handling for combined Genres
+1.10.9 Task: Do not show weird IMDB Genres in ComboBox
+1.10.9 Task: Delete TestForm.jfd from project
+1.10.9 Bugfix: Fixed missing merges in DatabaseHistoryFrame
+1.10.9 Task: *Drastically* improve performance of CCDate.getDayDifferenceTo algorithm
+1.10.9 Task: QuickAddEpisodeDialog is no longer modal
+1.10.9 Task: DatabaseHistoryFrame no longer disables whole program while loading
+1.10.9 Task: [FORMDEV_MIG] Migrate DatabaseHistoryFrame to FormDev
+1.10.9 Task: Properly check for designmode in CCProperties FormDev hack
+1.10.9 Task: Copy JSplitButton directly into wokingtree ( downloaded from github.com/rhwood/jsplitbutton )
+1.10.9 Task: Show cache distribution in LogFrame
+1.10.9 Feature: Show cache statistics in LogFrame
+1.10.9 Task: [FORMDEV_MIG] Migrate LogFrame to FormDev
+1.10.9 Feature: Added caches to MovieList/Series/Seasons to improve UI performance
+1.10.9 Feature: Better sorting behaviour in SearchFrame
+1.10.9 Task: [FORMDEV_MIG] Migrate SearchFrame to FormDev
+1.10.9 Task: Empty series are sorted to the top when sorting by AddDate
+1.10.9 Feature: Add new DatabaseErrors: ERROR_INVALID_HASH & ERROR_IMPOSSIBLE_HASH
+1.10.9 Task: Refactor UserDataProblems
+1.10.9 Feature: Edit Episode Tags in BatchEditFrame
+1.10.9 Task: [FORMDEV_MIG] Migrate BatchEditFrame to FormDev
+1.10.9 Task: [FORMDEV_MIG] Pack works in AddSeriesFrame & ExtendedSettingsFrame
+1.10.9 Task: [FORMDEV_MIG] Standalone JFormDesigner project
+1.10.9 Task: [FORMDEV_MIG] Migrate AddSeriesFrame to FormDev
+1.10.9 Feature: Added Filter to ExtendedSettingsFrame (+ more show more infos)
+1.10.9 Task: [FORMDEV_MIG] Migrate ExtendedSettingsFrame to jGoodies FormDesigner
+1.10.9 Feature: Warn if UndoLastViewed of entry > 3hours
+1.10.9 Bugfix: Ignore Extension Case in UserDataProblem_13
+1.10.9 Feature: Option to disable immediate display of Errors in BatchEditFrame
+1.10.9 Bugfix: Fixed [Next] Button in BatchEditFrame not working if UserDataErrors occure
+1.10.9 Feature: Progressbar in BatchEditFrame
+1.10.9 Feature: More actions in BatchEditFrame:
+  - FORMAT_FROM_PATH
+  - PATHS_FROM_DIALOG
+  - CLEAR_MEDIAINFO
+1.10.9 Feature: Added actions to reset fields in BatchEditFrame to their original values
+1.10.9 Task: Refactoring methods in BatchEditFrame
+1.10.9 Task: Fix UnitTests
+1.10.9 Bugfix: Fixed Series Language (Table+Folder) not always being calculated correctly
+1.10.9 Feature: Action to recalc hash in BatchEditFrame
+1.10.9 Bugfix: Fixed missing ERROR_MEDIAINFO_INVALID error for episodes
+1.10.9 Feature: <fastvideohash> function for mediainfo & improve ERROR_DUPLICATE_FILE
+1.10.9 Feature: Add new DatabaseError: ERROR_DUPLICATE_FILE
+1.10.9 Task: Show problem source in BatchEditFrame final check
+1.10.9 Feature: BatchEdit multiple seasons (by selection)
+1.10.9 Task: Split mdate and cdate errors into two different categories
+1.10.9 Bugfix: Fixed wrong language handling in TMDB Parser/Linkgenerator
+1.10.9 Feature: Edit series path in BatchEditFrame
+1.10.9 Feature: Support for alternative Mediaplayers
+1.10.9 Feature: Improved QuickSearch (Ctrl+F) Dialog
+1.10.9 Feature: Better DatabaseHistoryFrame Layout
+1.10.9 Task: Improved History merge for newly added episode (show original filename in [Insert])
+1.10.9 Task: Better History handling in QuickAddEpisodeFrame (remember original filename)
+1.10.9 Task: Better History handling in AddMultipleEpisodeFrame (remember original filename)
+1.10.9 Feature: Option to ignore MediaInfo-Problems in AddMultipleEpisodesFrame
+1.10.9 Feature: Fast search with Ctrl+F (open search + close window with ENTER)
+1.10.9 Task: Auo fix wrong cdate/mdate in mediainfo (CCDatabaseValidator)
+1.10.9 Task: Improved AutoPlay skip heuristic (HTML entities)
+1.10.9 Task: Improved AutoPlay skip heuristic
+1.10.9 Task: Better ManualSkip detection in VLCRobot (also better logging)
+1.10.9 Bugfix: Fixed paths-variable replacement in ccpaths under windows not being case-insensitive
+1.10.9 Task: Use [getSemiCommonOrAllLanguages] algo for langage display in table
+1.10.9 Bugfix: Fixed MediaQuery parser for strange 'BitRate_Nominal' values
+
+
 ########################################################################
 ############ Mon Mar 30 18:22:44 2020 +0200  1.10.8 RELEASE ############
 ########################################################################

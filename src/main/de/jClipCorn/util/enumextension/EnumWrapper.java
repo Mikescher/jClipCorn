@@ -14,9 +14,9 @@ import java.util.*;
 public class EnumWrapper<T extends ContinoousEnum<T>> {
 
 	private final T defValue;
-	private final Func1to1<T, Object> displaySorter;
+	private final Func1to1<T, Object>  displaySorter;
 	private final Func1to1<T, Boolean> displayFilter;
-	private final Func1to1<T, String> displayRenderer;
+	private final Func1to1<T, String>  displayRenderer;
 
 	public EnumWrapper(T defaultValue) {
 		defValue        = defaultValue;

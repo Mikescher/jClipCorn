@@ -5,6 +5,7 @@ import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.features.table.renderer.TableModelRowColorInterface;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.properties.CCProperties;
+import de.jClipCorn.util.datatypes.Opt;
 
 import javax.swing.table.AbstractTableModel;
 import java.awt.*;
@@ -109,7 +110,7 @@ public class SerTableModel extends AbstractTableModel implements TableModelRowCo
 	}
 
 	@Override
-	public Color getRowColor(int row) {
-		return Color.WHITE;
+	public Opt<Color> getRowColor(int row) {
+		return Opt.empty();
 	}
 }

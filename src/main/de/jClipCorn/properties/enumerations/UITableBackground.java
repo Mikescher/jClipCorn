@@ -5,23 +5,27 @@ import de.jClipCorn.util.enumextension.ContinoousEnum;
 import de.jClipCorn.util.enumextension.EnumWrapper;
 
 public enum UITableBackground implements ContinoousEnum<UITableBackground> {
-	WHITE(0), 
-	STRIPED(1), 
-	SCORE(2);
+	WHITE(0, 1),
+	STRIPED(1, 2),
+	SCORE(2, 3),
+	DEFAULT(3, 0);
 	
 	@SuppressWarnings("nls")
 	private final static String[] NAMES = {
 		LocaleBundle.getString("UITableBackground.Opt0"),
 		LocaleBundle.getString("UITableBackground.Opt1"),
 		LocaleBundle.getString("UITableBackground.Opt2"),
+		LocaleBundle.getString("UITableBackground.Opt3"),
 	};
-	
-	private int id;
 
-	private static final EnumWrapper<UITableBackground> wrapper = new EnumWrapper<>(WHITE);
+	private final int id;
+	private final int order;
 
-	private UITableBackground(int val) {
-		id = val;
+	private static final EnumWrapper<UITableBackground> wrapper = new EnumWrapper<>(WHITE, p -> p.order);
+
+	private UITableBackground(int val, int ord) {
+		id    = val;
+		order = ord;
 	}
 	
 	public static EnumWrapper<UITableBackground> getWrapper() {

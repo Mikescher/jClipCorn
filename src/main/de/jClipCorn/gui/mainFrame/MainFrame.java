@@ -123,7 +123,7 @@ public class MainFrame extends JFrame implements CCDBUpdateListener, FileDrop.Li
 		clipTable = new ClipTable(movielist, this);
 		filterTree = new FilterTree(movielist, clipTable);
 		AbstractClipCharSortSelector charSelector;
-		if (LookAndFeelManager.isExternal())
+		if (LookAndFeelManager.isRadiance())
 			charSelector = new SmallClipCharSortSelector(this);
 		else
 			charSelector = new FullClipCharSortSelector(this);

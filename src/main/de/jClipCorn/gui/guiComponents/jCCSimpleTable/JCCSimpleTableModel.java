@@ -1,6 +1,7 @@
 package de.jClipCorn.gui.guiComponents.jCCSimpleTable;
 
 import de.jClipCorn.features.table.renderer.TableModelRowColorInterface;
+import de.jClipCorn.util.datatypes.Opt;
 
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
@@ -57,8 +58,8 @@ public class JCCSimpleTableModel<TData> extends AbstractTableModel implements Ta
 	}
 
 	@Override
-	public Color getRowColor(int row) {
-		return Color.WHITE;
+	public Opt<Color> getRowColor(int row) {
+		return Opt.empty();
 	}
 
 	public void setData(List<TData> newdata) {

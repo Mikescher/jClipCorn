@@ -19,31 +19,31 @@ public class EnumWrapper<T extends ContinoousEnum<T>> {
 	private final Func1to1<T, String> displayRenderer;
 
 	public EnumWrapper(T defaultValue) {
-		defValue = defaultValue;
+		defValue        = defaultValue;
 		displaySorter   = ContinoousEnum::asInt;
 		displayFilter   = (v->true);
 		displayRenderer = ContinoousEnum::asString;
 	}
 
-	public EnumWrapper(T defaultValue, Func1to1<T, Object> cbxSelector) {
-		defValue = defaultValue;
-		displaySorter   = cbxSelector;
+	public EnumWrapper(T defaultValue, Func1to1<T, Object> sorter) {
+		defValue        = defaultValue;
+		displaySorter   = sorter;
 		displayFilter   = (v->true);
 		displayRenderer = ContinoousEnum::asString;
 	}
 
-	public EnumWrapper(T defaultValue, Func1to1<T, Object> cbxSelector, Func1to1<T, Boolean> cbxFilter) {
-		defValue = defaultValue;
-		displaySorter   = cbxSelector;
-		displayFilter   = cbxFilter;
+	public EnumWrapper(T defaultValue, Func1to1<T, Object> sorter, Func1to1<T, Boolean> filter) {
+		defValue        = defaultValue;
+		displaySorter   = sorter;
+		displayFilter   = filter;
 		displayRenderer = ContinoousEnum::asString;
 	}
 
-	public EnumWrapper(T defaultValue, Func1to1<T, Object> cbxSelector, Func1to1<T, Boolean> cbxFilter, Func1to1<T, String> cbxRenderer) {
-		defValue = defaultValue;
-		displaySorter   = cbxSelector;
-		displayFilter   = cbxFilter;
-		displayRenderer = cbxRenderer;
+	public EnumWrapper(T defaultValue, Func1to1<T, Object> sorter, Func1to1<T, Boolean> filter, Func1to1<T, String> renderer) {
+		defValue        = defaultValue;
+		displaySorter   = sorter;
+		displayFilter   = filter;
+		displayRenderer = renderer;
 	}
 	
 	public T findOrNull(int val) {

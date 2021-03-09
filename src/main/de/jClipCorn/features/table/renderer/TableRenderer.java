@@ -17,8 +17,9 @@ public class TableRenderer extends SubstanceDefaultTableCellRenderer implements 
 	public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
 		final Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 
-		if ((! isSelected) && (! LookAndFeelManager.isExternal())) {
-			c.setBackground(((TableModelRowColorInterface) table.getModel()).getRowColor(row));
+		if (!isSelected && !LookAndFeelManager.isRadiance()) {
+			var col = ((TableModelRowColorInterface) table.getModel()).getRowColor(row);
+			if (col.isPresent()) c.setBackground(col.get());
 		}
 
 		return c;

@@ -6,9 +6,11 @@ import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieZyklus;
 import de.jClipCorn.features.table.renderer.TableModelRowColorInterface;
+import de.jClipCorn.gui.LookAndFeelManager;
 import de.jClipCorn.gui.guiComponents.SFixTable;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.properties.CCProperties;
+import de.jClipCorn.util.datatypes.Opt;
 import de.jClipCorn.util.datetime.YearRange;
 
 import javax.swing.event.TableModelEvent;
@@ -62,9 +64,10 @@ public class ClipTableModel extends AbstractTableModel implements TableModelRowC
 			LocaleBundle.getString("ClipTableModel.Year"),  	 //$NON-NLS-1$
 			LocaleBundle.getString("ClipTableModel.Size"), 		 //$NON-NLS-1$
 	};
-	
-	private final static Color COLOR_BACKGROUNDGRAY = new Color(240, 240, 240); // F0F0F0 (clBtnFace)
-	
+
+	private final static Color COLOR_BACKGROUNDGRAY     = new Color(240, 240, 240); // F0F0F0 (clBtnFace)
+	private final static Color COLOR_BACKGROUNDDARKGRAY = new Color(16,   16,  16); // 1 - COLOR_BACKGROUNDGRAY
+
 	private final static Color[] COLOR_ONLINESCORE = {
 		new Color(0xFF4900),
 		new Color(0xFF7400),
@@ -214,16 +217,18 @@ public class ClipTableModel extends AbstractTableModel implements TableModelRowC
 	}
 
 	@Override
-	public Color getRowColor(int row) {
+	public Opt<Color> getRowColor(int row) {
 		switch (CCProperties.getInstance().PROP_MAINFRAME_TABLEBACKGROUND.getValue()) {
+		case DEFAULT:
+			return Opt.empty();
 		case WHITE:
-			return Color.WHITE;
+			return Opt.of(Color.WHITE);
 		case STRIPED:
-			return (row%2==0) ? (Color.WHITE) : (COLOR_BACKGROUNDGRAY);
+			return (row%2==0) ? Opt.of(owner.getBackground()) : Opt.of(LookAndFeelManager.isDark() ? COLOR_BACKGROUNDDARKGRAY : COLOR_BACKGROUNDGRAY);
 		case SCORE:
-			return COLOR_ONLINESCORE[getDatabaseElementByRow(owner.convertRowIndexToModel(row)).getOnlinescore().asInt()];
+			return Opt.of(COLOR_ONLINESCORE[getDatabaseElementByRow(owner.convertRowIndexToModel(row)).getOnlinescore().asInt()]);
 		default:
-			return Color.MAGENTA;
+			return Opt.of(Color.MAGENTA);
 		}
 	}
 	

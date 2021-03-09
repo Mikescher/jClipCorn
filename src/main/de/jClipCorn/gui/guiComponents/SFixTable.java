@@ -1,5 +1,7 @@
 package de.jClipCorn.gui.guiComponents;
 
+import de.jClipCorn.gui.LookAndFeelManager;
+
 import javax.swing.*;
 import javax.swing.RowSorter.SortKey;
 import javax.swing.table.TableCellRenderer;
@@ -22,6 +24,8 @@ public abstract class SFixTable extends JTable {
 		fixTableSort();
 
 		initListener();
+
+		initLnF();
 	}
 
 	public SFixTable() {
@@ -46,6 +50,14 @@ public abstract class SFixTable extends JTable {
 				ToolTipManager.sharedInstance().setInitialDelay(0);
 			}
 		});
+	}
+
+	private void initLnF() {
+		if (LookAndFeelManager.isFlatLaf())
+		{
+			setShowHorizontalLines(true);
+			setShowVerticalLines(true);
+		}
 	}
 
 	@Override

@@ -119,4 +119,8 @@ public class LookAndFeelManager {
 	public static AppTheme getCurrentTheme() {
 		return currentAppTheme;
 	}
+
+	public static boolean isDark() {
+		return currentAppTheme.isDark();
+	}
 }

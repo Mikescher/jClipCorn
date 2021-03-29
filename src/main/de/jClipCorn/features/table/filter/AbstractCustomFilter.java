@@ -1,32 +1,22 @@
 package de.jClipCorn.features.table.filter;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.ICCDatabaseStructureElement;
-import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.features.log.CCLog;
-import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.features.table.filter.customFilter.*;
-import de.jClipCorn.features.table.filter.customFilter.aggregators.CustomAggregator;
-import de.jClipCorn.features.table.filter.customFilter.aggregators.CustomAllEpisodeAggregator;
-import de.jClipCorn.features.table.filter.customFilter.aggregators.CustomAllSeasonAggregator;
-import de.jClipCorn.features.table.filter.customFilter.aggregators.CustomAnyEpisodeAggregator;
-import de.jClipCorn.features.table.filter.customFilter.aggregators.CustomAnySeasonAggregator;
-import de.jClipCorn.features.table.filter.customFilter.aggregators.CustomEpisodeCountAggregator;
-import de.jClipCorn.features.table.filter.customFilter.aggregators.CustomSeasonCountAggregator;
-import de.jClipCorn.features.table.filter.customFilter.operators.CustomAndOperator;
-import de.jClipCorn.features.table.filter.customFilter.operators.CustomNandOperator;
-import de.jClipCorn.features.table.filter.customFilter.operators.CustomNorOperator;
-import de.jClipCorn.features.table.filter.customFilter.operators.CustomOperator;
-import de.jClipCorn.features.table.filter.customFilter.operators.CustomOrOperator;
+import de.jClipCorn.features.table.filter.customFilter.aggregators.*;
+import de.jClipCorn.features.table.filter.customFilter.operators.*;
 import de.jClipCorn.features.table.filter.filterConfig.CustomFilterConfig;
 import de.jClipCorn.features.table.filter.filterSerialization.FilterSerializationConfig;
+import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.gui.resources.reftypes.IconRef;
 import de.jClipCorn.util.comparator.StringComparator;
 import de.jClipCorn.util.stream.CCStream;
 import de.jClipCorn.util.stream.CCStreams;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class AbstractCustomFilter {
 	public final static int CUSTOMFILTERID_AND              = 0;
@@ -255,5 +245,10 @@ public abstract class AbstractCustomFilter {
 	
 	public IconRef getListIcon() {
 		return Resources.ICN_FILTER_METHOD;
+	}
+
+	@Override
+	public String toString() {
+		return getPrecreateName();
 	}
 }

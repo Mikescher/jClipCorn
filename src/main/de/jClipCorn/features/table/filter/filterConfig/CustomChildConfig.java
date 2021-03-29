@@ -1,25 +1,19 @@
 package de.jClipCorn.features.table.filter.filterConfig;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
-
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
-import javax.swing.JPanel;
-
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.FormSpecs;
 import com.jgoodies.forms.layout.RowSpec;
-
-import de.jClipCorn.gui.frames.customFilterEditDialog.CustomFilterEditFilterComboboxRenderer;
 import de.jClipCorn.features.table.filter.AbstractCustomFilter;
+import de.jClipCorn.gui.frames.customFilterEditDialog.CustomFilterEditFilterComboboxRenderer;
 import de.jClipCorn.util.lambda.Func0to1;
 import de.jClipCorn.util.lambda.Func1to0;
+
+import javax.swing.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Random;
 
 public class CustomChildConfig extends CustomFilterConfig {
 
@@ -58,7 +52,7 @@ public class CustomChildConfig extends CustomFilterConfig {
 		acffilter.addAll(Arrays.asList(AbstractCustomFilter.getAllSimpleFilter()));
 		
 		JComboBox<AbstractCustomFilter> cbxFilter = new JComboBox<>();
-		AbstractCustomFilter[] arr = acffilter.toArray(new AbstractCustomFilter[acffilter.size()]);
+		AbstractCustomFilter[] arr = acffilter.toArray(new AbstractCustomFilter[0]);
 		cbxFilter.setModel(new DefaultComboBoxModel<>(arr));
 		cbxFilter.setRenderer(new CustomFilterEditFilterComboboxRenderer());
 		cbxFilter.setSelectedIndex(getIndex(arr, valueGetter.invoke(), 0));

@@ -1,5 +1,6 @@
-package de.jClipCorn.gui.mainFrame.clipStatusbar;
+package de.jClipCorn.gui.mainFrame.statusbar;
 
+import com.jformdesigner.annotations.DesignCreate;
 import de.jClipCorn.Globals;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
@@ -43,16 +44,31 @@ public class ClipStatusBar extends AbstractClipStatusbar implements CCDBUpdateLi
 	private JLabel lblDriveScan;
 	private JLabel lblLog;
 
+	@DesignCreate
+	private static ClipStatusBar designCreate() { return new ClipStatusBar(null, null); }
+
 	public ClipStatusBar(MainFrame owner, CCMovieList ml) {
 		super();
 		this.owner = owner;
 		this.movielist = ml;
 		
-		if (ml != null) {	// Sonst meckert der WindowsBuilder
+		if (ml != null) {
 			ml.addChangeListener(this);
 			CCLog.addChangeListener(this);
 			intializeGUI();
 			intializeListener();
+		} else {
+			startInitColumns();
+			addLabel("(designCreate)", true); //$NON-NLS-1$
+			addSeparator(true);
+			addLabel("(designCreate)", true); //$NON-NLS-1$
+			addSeparator(true);
+			addLabel("(designCreate)", true); //$NON-NLS-1$
+			addSeparator(true);
+			addLabel("(designCreate)", true); //$NON-NLS-1$
+			addSeparator(true);
+			addLabel("(designCreate)", true); //$NON-NLS-1$
+			endInitColumns();
 		}
 	}
 	

@@ -1,15 +1,14 @@
-package de.jClipCorn.gui.mainFrame.clipToolbar;
-
-import javax.swing.JButton;
-import javax.swing.JToolBar;
+package de.jClipCorn.gui.mainFrame.toolbar;
 
 import de.jClipCorn.features.actionTree.ActionSource;
 import de.jClipCorn.features.actionTree.CCActionElement;
 import de.jClipCorn.features.actionTree.CCActionTree;
-import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.features.log.CCLog;
+import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.mainFrame.MainFrame;
 import de.jClipCorn.util.helper.KeyStrokeUtil;
+
+import javax.swing.*;
 
 public class AbstractClipToolbar extends JToolBar {
 	private static final long serialVersionUID = -8713389540339519009L;

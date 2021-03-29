@@ -12,7 +12,7 @@ import javax.swing.UIManager;
 
 import de.jClipCorn.features.actionTree.CCActionElement;
 import de.jClipCorn.features.actionTree.CCActionTree;
-import de.jClipCorn.gui.mainFrame.clipToolbar.ClipToolbar;
+import de.jClipCorn.gui.mainFrame.toolbar.ClipToolbar;
 import de.jClipCorn.properties.property.CCToolbarProperty;
 
 public class ToolbarConfigPanel extends JPanel {

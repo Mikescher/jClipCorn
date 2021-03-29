@@ -4,7 +4,7 @@ import de.jClipCorn.Globals;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.mainFrame.MainFrame;
-import de.jClipCorn.gui.mainFrame.clipStatusbar.ClipStatusBar;
+import de.jClipCorn.gui.mainFrame.statusbar.ClipStatusBar;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.datatypes.Tuple3;

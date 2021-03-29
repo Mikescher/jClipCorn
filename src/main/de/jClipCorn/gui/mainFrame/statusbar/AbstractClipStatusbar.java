@@ -1,21 +1,12 @@
-package de.jClipCorn.gui.mainFrame.clipStatusbar;
-
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JProgressBar;
-import javax.swing.JSeparator;
-import javax.swing.SwingConstants;
-import javax.swing.border.EtchedBorder;
+package de.jClipCorn.gui.mainFrame.statusbar;
 
 import de.jClipCorn.gui.guiComponents.JTooltipLabel;
+
+import javax.swing.*;
+import javax.swing.border.EtchedBorder;
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class AbstractClipStatusbar extends JPanel {
 	private static final long serialVersionUID = -7508283304287773899L;

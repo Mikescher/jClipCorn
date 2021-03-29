@@ -1,7 +1,7 @@
 package de.jClipCorn.properties.enumerations;
 
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.gui.mainFrame.clipTable.ClipTableModel;
+import de.jClipCorn.gui.mainFrame.table.ClipTableModel;
 import de.jClipCorn.util.enumextension.ContinoousEnum;
 import de.jClipCorn.util.enumextension.EnumWrapper;
 

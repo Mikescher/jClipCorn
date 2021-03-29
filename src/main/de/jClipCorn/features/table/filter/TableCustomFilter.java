@@ -3,7 +3,7 @@ package de.jClipCorn.features.table.filter;
 import javax.swing.RowFilter;
 
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
-import de.jClipCorn.gui.mainFrame.clipTable.ClipTableModel;
+import de.jClipCorn.gui.mainFrame.table.ClipTableModel;
 
 public class TableCustomFilter extends RowFilter<ClipTableModel, Object> {
 	private AbstractCustomFilter filter;

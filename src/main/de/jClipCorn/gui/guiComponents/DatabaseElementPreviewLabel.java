@@ -1,5 +1,6 @@
 package de.jClipCorn.gui.guiComponents;
 
+import com.jformdesigner.annotations.DesignCreate;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.features.actionTree.ActionSource;
@@ -43,8 +44,10 @@ public class DatabaseElementPreviewLabel extends CoverLabel {
 	private BufferedImage image_hover;
 	private BufferedImage image_original;
 	private CCDatabaseElement element;
-	
-	
+
+	@DesignCreate
+	private static DatabaseElementPreviewLabel designCreate() { return new DatabaseElementPreviewLabel(true); }
+
 	public DatabaseElementPreviewLabel(boolean noOverlayRender) {
 		super(false);
 		

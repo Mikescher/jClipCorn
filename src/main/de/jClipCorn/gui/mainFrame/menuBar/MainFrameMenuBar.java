@@ -1,19 +1,19 @@
-package de.jClipCorn.gui.mainFrame.clipMenuBar;
+package de.jClipCorn.gui.mainFrame.menuBar;
 
-import java.util.Iterator;
-
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-
-import de.jClipCorn.features.actionTree.*;
+import de.jClipCorn.features.actionTree.ActionSource;
+import de.jClipCorn.features.actionTree.CCActionElement;
+import de.jClipCorn.features.actionTree.CCActionTree;
+import de.jClipCorn.features.actionTree.UIActionTree;
 import de.jClipCorn.gui.mainFrame.MainFrame;
 import de.jClipCorn.util.helper.KeyStrokeUtil;
 
-public class ClipMenuBar extends JMenuBar {
+import javax.swing.*;
+import java.util.Iterator;
+
+public class MainFrameMenuBar extends JMenuBar {
 	private static final long serialVersionUID = -2517053613105253375L;
 
-	public ClipMenuBar() {
+	public MainFrameMenuBar() {
 		super();
 
 		createMenuBar();

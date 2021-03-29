@@ -1,4 +1,4 @@
-package de.jClipCorn.gui.mainFrame.clipTable;
+package de.jClipCorn.gui.mainFrame.table;
 
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;

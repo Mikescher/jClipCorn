@@ -4,7 +4,7 @@ import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.mainFrame.MainFrame;
-import de.jClipCorn.gui.mainFrame.clipToolbar.ClipToolbar;
+import de.jClipCorn.gui.mainFrame.toolbar.ClipToolbar;
 import de.jClipCorn.gui.resources.MultiSizeIconRef;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.property.CCCaptionedKeyStrokeProperty;

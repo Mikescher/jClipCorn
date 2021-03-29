@@ -208,6 +208,7 @@ public class Main {
 
  ## jGoodies FormDesigner Migration ##
 
+ - [X] MainFrame
  - [ ] AboutFrame
  - [ ] AddMovieFrame
  - [X] AddMultiEpisodesFrame

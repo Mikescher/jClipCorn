@@ -1,5 +1,6 @@
 package de.jClipCorn.gui.mainFrame.filterTree;
 
+import com.jformdesigner.annotations.DesignCreate;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.columnTypes.*;
 import de.jClipCorn.database.util.CCQualityCategoryType;
@@ -14,8 +15,8 @@ import de.jClipCorn.gui.guiComponents.jSimpleTree.SimpleTreeObject;
 import de.jClipCorn.gui.guiComponents.jSimpleTree.SimpleTreeObject.SimpleTreeEvent;
 import de.jClipCorn.gui.guiComponents.jSimpleTree.SimpletreeActionMode;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.gui.mainFrame.clipTable.ClipTable;
-import de.jClipCorn.gui.mainFrame.clipTable.RowFilterSource;
+import de.jClipCorn.gui.mainFrame.table.ClipTable;
+import de.jClipCorn.gui.mainFrame.table.RowFilterSource;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.gui.resources.reftypes.IconRef;
 import de.jClipCorn.properties.CCProperties;
@@ -36,17 +37,23 @@ public class FilterTree extends AbstractFilterTree {
 
 	private final CustomFilterList customFilterList = new CustomFilterList();
 	
-	private final ClipTable table;
+	private ClipTable table;
 	private final CCMovieList movielist;
+
+	@DesignCreate
+	private static FilterTree designCreate() { return new FilterTree(null); }
 	
-	public FilterTree(CCMovieList list, ClipTable table) {
+	public FilterTree(CCMovieList list) {
 		super(list);
-		this.table = table;
 		this.movielist = list;
 		
 		this.tree.ActionMode = SimpletreeActionMode.OnClick;
 		
 		customFilterList.load();
+	}
+
+	public void init(ClipTable table) {
+		this.table = table;
 	}
 
 	@Override

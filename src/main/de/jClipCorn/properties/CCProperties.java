@@ -5,7 +5,7 @@ import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.features.serialization.ExportHelper;
 import de.jClipCorn.gui.frames.vlcRobot.VLCRobotFrequency;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.gui.mainFrame.clipToolbar.ClipToolbar;
+import de.jClipCorn.gui.mainFrame.toolbar.ClipToolbar;
 import de.jClipCorn.properties.enumerations.*;
 import de.jClipCorn.properties.property.*;
 import de.jClipCorn.properties.property.CCEnumSetProperty.EnumSetValue;

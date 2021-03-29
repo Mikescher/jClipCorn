@@ -1,5 +1,6 @@
-package de.jClipCorn.gui.mainFrame.clipTable;
+package de.jClipCorn.gui.mainFrame.table;
 
+import com.jformdesigner.annotations.DesignCreate;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieZyklus;
@@ -45,6 +46,9 @@ public class ClipTable extends JScrollPane implements CCDBUpdateListener, ListSe
 	private TableCustomFilter currentFilter = null;
 
 	private boolean suppressRowFilterResetEvents = false;
+
+	@DesignCreate
+	private static ClipTable designCreate() { return new ClipTable(null, null); }
 
 	public ClipTable(CCMovieList ml, MainFrame owner) {
 		super();

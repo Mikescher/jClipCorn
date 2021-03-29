@@ -15,7 +15,7 @@ import javax.swing.border.EmptyBorder;
 
 import de.jClipCorn.features.actionTree.CCActionElement;
 import de.jClipCorn.features.actionTree.CCActionTree;
-import de.jClipCorn.gui.mainFrame.clipToolbar.ClipToolbar;
+import de.jClipCorn.gui.mainFrame.toolbar.ClipToolbar;
 
 public class ToolbarElementsCellRenderer extends JLabel implements ListCellRenderer<String> {
 	private static final long serialVersionUID = -4383588005689445693L;

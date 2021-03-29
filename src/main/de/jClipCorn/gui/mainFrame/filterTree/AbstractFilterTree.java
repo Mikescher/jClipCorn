@@ -32,7 +32,7 @@ public abstract class AbstractFilterTree extends JScrollPane implements CCDBUpda
 	public AbstractFilterTree(CCMovieList list) {
 		super();
 		
-		list.addChangeListener(this);
+		if (list != null) list.addChangeListener(this);
 		
 		root = new DefaultMutableTreeNode(null);
 		model = new DefaultTreeModel(root);

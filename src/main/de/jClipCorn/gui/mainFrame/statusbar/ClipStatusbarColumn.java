@@ -1,4 +1,4 @@
-package de.jClipCorn.gui.mainFrame.clipStatusbar;
+package de.jClipCorn.gui.mainFrame.statusbar;
 
 import java.awt.Component;
 import java.awt.GridBagConstraints;

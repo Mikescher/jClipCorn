@@ -1,5 +1,7 @@
 package de.jClipCorn.gui.mainFrame;
 
+import com.jgoodies.forms.factories.CC;
+import com.jgoodies.forms.layout.FormLayout;
 import de.jClipCorn.Main;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
@@ -22,14 +24,12 @@ import de.jClipCorn.gui.frames.showUpdateFrame.ShowUpdateFrame;
 import de.jClipCorn.gui.guiComponents.DatabaseElementPreviewLabel;
 import de.jClipCorn.gui.guiComponents.FileDrop;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.gui.mainFrame.clipCharSelector.AbstractClipCharSortSelector;
-import de.jClipCorn.gui.mainFrame.clipCharSelector.FullClipCharSortSelector;
-import de.jClipCorn.gui.mainFrame.clipCharSelector.SmallClipCharSortSelector;
-import de.jClipCorn.gui.mainFrame.clipMenuBar.ClipMenuBar;
-import de.jClipCorn.gui.mainFrame.clipStatusbar.ClipStatusBar;
-import de.jClipCorn.gui.mainFrame.clipTable.ClipTable;
-import de.jClipCorn.gui.mainFrame.clipTable.RowFilterSource;
-import de.jClipCorn.gui.mainFrame.clipToolbar.ClipToolbar;
+import de.jClipCorn.gui.mainFrame.charSelector.ClipCharSortSelector;
+import de.jClipCorn.gui.mainFrame.menuBar.MainFrameMenuBar;
+import de.jClipCorn.gui.mainFrame.statusbar.ClipStatusBar;
+import de.jClipCorn.gui.mainFrame.table.ClipTable;
+import de.jClipCorn.gui.mainFrame.table.RowFilterSource;
+import de.jClipCorn.gui.mainFrame.toolbar.ClipToolbar;
 import de.jClipCorn.gui.mainFrame.filterTree.FilterTree;
 import de.jClipCorn.gui.mainFrame.searchField.SearchField;
 import de.jClipCorn.gui.resources.Resources;
@@ -37,126 +37,92 @@ import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.UpdateConnector;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.DialogHelper;
-import de.jClipCorn.gui.LookAndFeelManager;
 import de.jClipCorn.util.helper.SwingUtils;
 import de.jClipCorn.util.stream.CCStreams;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 
-public class MainFrame extends JFrame implements CCDBUpdateListener, FileDrop.Listener, IActionRootFrame {
-	private static final long serialVersionUID = 1002435986107998058L;
-
-	private final static int FRAME_WIDTH = 875;
-	private final static int FRAME_HEIGHT = 625;
-	
+public class MainFrame extends JFrame implements CCDBUpdateListener, FileDrop.Listener, IActionRootFrame
+{
 	private static MainFrame instance = null;
 
-	private JPanel leftPanel;
-	private FilterTree filterTree;
-	private DatabaseElementPreviewLabel coverImage;
-	private JPanel middlePanel;
-	private ClipTable clipTable;
-	private CCMovieList movielist;
-	private ClipStatusBar statusbar;
-	private JPanel toprightPanel;
-	private SearchField edSearch;
+	private final CCMovieList movielist;
 
 	public MainFrame(CCMovieList movielist) {
 		super();
 		this.movielist = movielist;
-		
+
 		movielist.addChangeListener(this);
 		CCActionTree actionTree = new CCActionTree(this);
 
-		initGUI();
+		initComponents();
+		postInit();
 
 		createWindowListener();
 		actionTree.implementKeyListener(this, (JPanel) getContentPane());
-		
+
 		instance = this;
-		
+
 		if (CCProperties.getInstance().firstLaunch) {
-			JOptionPane.showMessageDialog(this, 
+			JOptionPane.showMessageDialog(this,
 					LocaleBundle.getString("MainFrame.disclaimer.text"),  //$NON-NLS-1$
 					LocaleBundle.getString("MainFrame.disclaimer.caption"),  //$NON-NLS-1$
 					JOptionPane.INFORMATION_MESSAGE);
 		}
 	}
 
-	private void initGUI() {
+	private void postInit() {
 		setTitle(createTitle());
 		setIconImage(Resources.IMG_FRAME_ICON.get());
+		setJMenuBar(new MainFrameMenuBar());
 
-		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		setMinimumSize(new Dimension(FRAME_WIDTH, FRAME_HEIGHT));
-		setLocationRelativeTo(null);
-
-		Container content = getContentPane();
-
-		getContentPane().setLayout(new BorderLayout(3, 5));
-
-		createLayout();
-		
-		edSearch = new SearchField(this);
-		toprightPanel.add(edSearch);
-		edSearch.setColumns(16);
-
-		JButton btnSearch = new JButton();
-		btnSearch.setMinimumSize(new Dimension(20, 20));
-		btnSearch.setMaximumSize(new Dimension(20, 20));
-		btnSearch.setPreferredSize(new Dimension(20, 20));
-		btnSearch.setContentAreaFilled(false);
-		btnSearch.setBorderPainted(false);
-		btnSearch.setFocusPainted(false);
-		btnSearch.addActionListener(e -> startSearch());
 		btnSearch.setIcon(Resources.ICN_FRAMES_SEARCH.get16x16());
-		toprightPanel.add(btnSearch);
-		content.add(leftPanel, BorderLayout.WEST);
-		content.add(middlePanel, BorderLayout.CENTER);
+		filterTree.init(clipTable);
 
-		clipTable = new ClipTable(movielist, this);
-		filterTree = new FilterTree(movielist, clipTable);
-		AbstractClipCharSortSelector charSelector;
-		if (LookAndFeelManager.isRadiance())
-			charSelector = new SmallClipCharSortSelector(this);
-		else
-			charSelector = new FullClipCharSortSelector(this);
-
-		middlePanel.add(clipTable, BorderLayout.CENTER);
-		middlePanel.add(charSelector, BorderLayout.SOUTH);
-
-		leftPanel.add(filterTree, BorderLayout.CENTER);
-
-		JPanel coverPanel = new JPanel();
-		leftPanel.add(coverPanel, BorderLayout.SOUTH);
-		coverPanel.setLayout(new BorderLayout(0, 5));
-
-		JPanel gapPanel = new JPanel();
-		coverPanel.add(gapPanel, BorderLayout.NORTH);
-		gapPanel.setLayout(null);
-
-		coverImage = new DatabaseElementPreviewLabel(false);
-		coverPanel.add(coverImage);
 		if (CCLog.hasErrors()) coverImage.setModeError();
-
-		statusbar = new ClipStatusBar(this, movielist);
-		getContentPane().add(statusbar, BorderLayout.SOUTH);
-
-		pack();
 
 		setSize(CCProperties.getInstance().PROP_MAINFRAME_WIDTH.getValue(), CCProperties.getInstance().PROP_MAINFRAME_HEIGHT.getValue());
 
 		clipTable.configureColumnVisibility(CCProperties.getInstance().PROP_MAINFRAME_VISIBLE_COLUMNS.getValue(), true);
 
 		new FileDrop(clipTable, true, this);
+
+		setLocationRelativeTo(null);
 	}
-	
+
+	@SuppressWarnings("nls")
+	public String createTitle() {
+		StringBuilder builder = new StringBuilder();
+
+		builder.append(Main.TITLE);
+		builder.append(" v");
+		builder.append(Main.VERSION);
+
+		if (Main.BETA) {
+			builder.append(" [BETA]");
+		}
+
+		if (Main.DEBUG) {
+			builder.append(" [DEBUG]");
+		}
+
+		if (CCProperties.getInstance().ARG_READONLY) {
+			builder.append(" [READONLY]");
+		}
+
+		return builder.toString();
+	}
+
+	public static MainFrame getInstance() {
+		return instance;
+	}
+
 	public void beginBlockingIntermediate() {
 		movielist.beginBlocking();
 
@@ -173,7 +139,7 @@ public class MainFrame extends JFrame implements CCDBUpdateListener, FileDrop.Li
 			try { SwingUtils.invokeAndWait(runnner); } catch (InvocationTargetException | InterruptedException e) { CCLog.addError(e); }
 		}
 	}
-	
+
 	public void endBlockingIntermediate() {
 		movielist.endBlocking();
 
@@ -182,7 +148,7 @@ public class MainFrame extends JFrame implements CCDBUpdateListener, FileDrop.Li
 			getProgressBar().setIndeterminate(false);
 			setEnabled(true);
 		};
-		
+
 		if (SwingUtilities.isEventDispatchThread()) {
 			runnner.run();
 		} else {
@@ -205,27 +171,6 @@ public class MainFrame extends JFrame implements CCDBUpdateListener, FileDrop.Li
 		movielist.shutdown();
 	}
 
-	private void createLayout() {
-		ClipMenuBar mainMenu = new ClipMenuBar();
-		leftPanel = new JPanel(new BorderLayout());
-
-		middlePanel = new JPanel(new BorderLayout());
-		setJMenuBar(mainMenu); // $hide$
-
-		JPanel topPanel = new JPanel();
-		getContentPane().add(topPanel, BorderLayout.NORTH);
-		topPanel.setLayout(new BorderLayout(0, 0));
-		ClipToolbar toolbar = new ClipToolbar();
-		topPanel.add(toolbar);
-		
-		toprightPanel = new JPanel();
-		FlowLayout fly = new FlowLayout();
-		fly.setAlignment(FlowLayout.RIGHT);
-		toprightPanel.setLayout(fly);
-		toprightPanel.setOpaque(false);
-		toolbar.add(toprightPanel, BorderLayout.EAST);
-	}
-	
 	public void startSearch() {
 		String search = edSearch.getRealText().trim();
 		if (search.isEmpty()) {
@@ -238,37 +183,37 @@ public class MainFrame extends JFrame implements CCDBUpdateListener, FileDrop.Li
 	public void start() {
 		setVisible(true);
 	}
-	
+
 	private JProgressBar getProgressBar() {
 		return statusbar.getProgressbar();
 	}
-	
+
 	public void onClipTableSelectionChanged(CCDatabaseElement ccDatabaseElement) {
 		coverImage.setModeCover(ccDatabaseElement);
 	}
-	
+
 	public void onClipTableExecute(CCDatabaseElement cde) {
 		if (cde == null) {
 			return;
 		}
-		
+
 		if (cde.isMovie()) {
 			switch (CCProperties.getInstance().PROP_ON_DBLCLICK_MOVE.getValue()) {
-			case PLAY:
-				CCActionTree.getInstance().find(CCActionTree.EVENT_ON_MOVIE_EXECUTED_0).execute(this, ActionSource.DIRECT_CLICK, cde, null);
-				break;
-			case PREVIEW:
-				CCActionTree.getInstance().find(CCActionTree.EVENT_ON_MOVIE_EXECUTED_1).execute(this, ActionSource.DIRECT_CLICK, cde, null);
-				break;
-			case EDIT:
-				CCActionTree.getInstance().find(CCActionTree.EVENT_ON_MOVIE_EXECUTED_2).execute(this, ActionSource.DIRECT_CLICK, cde, null);
-				break;
+				case PLAY:
+					CCActionTree.getInstance().find(CCActionTree.EVENT_ON_MOVIE_EXECUTED_0).execute(this, ActionSource.DIRECT_CLICK, cde, null);
+					break;
+				case PREVIEW:
+					CCActionTree.getInstance().find(CCActionTree.EVENT_ON_MOVIE_EXECUTED_1).execute(this, ActionSource.DIRECT_CLICK, cde, null);
+					break;
+				case EDIT:
+					CCActionTree.getInstance().find(CCActionTree.EVENT_ON_MOVIE_EXECUTED_2).execute(this, ActionSource.DIRECT_CLICK, cde, null);
+					break;
 			}
 		} else {
 			CCActionTree.getInstance().find(CCActionTree.EVENT_ON_SERIES_EXECUTED).execute(this, ActionSource.DIRECT_CLICK, cde, null);
 		}
 	}
-	
+
 	public void onClipTableSecondaryExecute(CCDatabaseElement element, MouseEvent e) {
 		if (element.isMovie()) {
 			(new ClipMoviePopup(this, (CCMovie)element)).show(e.getComponent(), e.getX(), e.getY());
@@ -280,29 +225,9 @@ public class MainFrame extends JFrame implements CCDBUpdateListener, FileDrop.Li
 	public CCMovieList getMovielist() {
 		return movielist;
 	}
-	
+
 	private void createWindowListener() {
-		addWindowListener(new WindowListener() {
-			@Override
-			public void windowOpened(WindowEvent e) {
-				//unused
-			}
-
-			@Override
-			public void windowIconified(WindowEvent e) {
-				//unused
-			}
-
-			@Override
-			public void windowDeiconified(WindowEvent e) {
-				//unused
-			}
-
-			@Override
-			public void windowDeactivated(WindowEvent e) {
-				//unused
-			}
-
+		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
 				if (tryTerminate()) {
@@ -310,16 +235,6 @@ public class MainFrame extends JFrame implements CCDBUpdateListener, FileDrop.Li
 					terminate();
 					System.exit(0);
 				}
-			}
-
-			@Override
-			public void windowClosed(WindowEvent e) {
-				//unused
-			}
-
-			@Override
-			public void windowActivated(WindowEvent e) {
-				//unused
 			}
 		});
 	}
@@ -335,19 +250,19 @@ public class MainFrame extends JFrame implements CCDBUpdateListener, FileDrop.Li
 	public ClipStatusBar getStatusBar() {
 		return statusbar;
 	}
-	
+
 	public ClipTable getClipTable() {
 		return clipTable;
 	}
-	
+
 	public void resetCharSelector() {
 		//--
 	}
-	
+
 	public void resetSidebar() {
 		filterTree.reset();
 	}
-	
+
 	public void resetSearchField(boolean force) {
 		edSearch.reset(force);
 	}
@@ -387,33 +302,6 @@ public class MainFrame extends JFrame implements CCDBUpdateListener, FileDrop.Li
 	@Override
 	public void onRefresh() {
 		// -
-	}
-	
-	@SuppressWarnings("nls")
-	public String createTitle() {
-		StringBuilder builder = new StringBuilder();
-		
-		builder.append(Main.TITLE);
-		builder.append(" v");
-		builder.append(Main.VERSION);
-		
-		if (Main.BETA) {
-			builder.append(" [BETA]");
-		}
-		
-		if (Main.DEBUG) {
-			builder.append(" [DEBUG]");
-		}
-		
-		if (CCProperties.getInstance().ARG_READONLY) {
-			builder.append(" [READONLY]");
-		}
-		
-		return builder.toString();
-	}
-	
-	public static MainFrame getInstance() {
-		return instance;
 	}
 
 	public DatabaseElementPreviewLabel getCoverLabel() {
@@ -466,4 +354,79 @@ public class MainFrame extends JFrame implements CCDBUpdateListener, FileDrop.Li
 		//	LookAndFeelManager.setLookAndFeel(CCProperties.getInstance().PROP_UI_APPTHEME.getValue(), true);
 		//}
 	}
+
+	private void initComponents() {
+		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
+		panelTop = new JPanel();
+		toolbar = new ClipToolbar();
+		edSearch = new SearchField(this);
+		btnSearch = new JButton();
+		panelLeft = new JPanel();
+		filterTree = new FilterTree(movielist);
+		coverImage = new DatabaseElementPreviewLabel(false);
+		clipTable = new ClipTable(movielist, this);
+		clipCharSelector = new ClipCharSortSelector(this);
+		statusbar = new ClipStatusBar(this, movielist);
+
+		//======== this ========
+		setMinimumSize(new Dimension(875, 625));
+		setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+		var contentPane = getContentPane();
+		contentPane.setLayout(new FormLayout(
+			"$lcgap, 182px, $lcgap, 0dlu:grow, $lcgap", //$NON-NLS-1$
+			"default, $lgap, default:grow, 2*($lgap, default)")); //$NON-NLS-1$
+
+		//======== panelTop ========
+		{
+			panelTop.setLayout(new FormLayout(
+				"default:grow, 2*($lcgap, default), $lcgap", //$NON-NLS-1$
+				"default")); //$NON-NLS-1$
+			panelTop.add(toolbar, CC.xy(1, 1));
+
+			//---- edSearch ----
+			edSearch.setColumns(16);
+			panelTop.add(edSearch, CC.xy(3, 1));
+
+			//---- btnSearch ----
+			btnSearch.setMinimumSize(new Dimension(20, 20));
+			btnSearch.setMaximumSize(new Dimension(20, 20));
+			btnSearch.setPreferredSize(new Dimension(20, 20));
+			btnSearch.setContentAreaFilled(false);
+			btnSearch.setBorderPainted(false);
+			btnSearch.setFocusPainted(false);
+			btnSearch.setIcon(UIManager.getIcon("FileView.computerIcon")); //$NON-NLS-1$
+			btnSearch.addActionListener(e -> startSearch());
+			panelTop.add(btnSearch, CC.xy(5, 1));
+		}
+		contentPane.add(panelTop, CC.xywh(1, 1, 5, 1, CC.FILL, CC.FILL));
+
+		//======== panelLeft ========
+		{
+			panelLeft.setLayout(new FormLayout(
+				"default", //$NON-NLS-1$
+				"default:grow, $lgap, default")); //$NON-NLS-1$
+			panelLeft.add(filterTree, CC.xy(1, 1, CC.FILL, CC.FILL));
+			panelLeft.add(coverImage, CC.xy(1, 3));
+		}
+		contentPane.add(panelLeft, CC.xywh(2, 3, 1, 3, CC.FILL, CC.FILL));
+		contentPane.add(clipTable, CC.xy(4, 3, CC.FILL, CC.FILL));
+		contentPane.add(clipCharSelector, CC.xywh(4, 5, 2, 1, CC.FILL, CC.FILL));
+		contentPane.add(statusbar, CC.xywh(1, 7, 5, 1));
+		pack();
+		setLocationRelativeTo(getOwner());
+		// JFormDesigner - End of component initialization  //GEN-END:initComponents
+	}
+
+	// JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
+	private JPanel panelTop;
+	private ClipToolbar toolbar;
+	private SearchField edSearch;
+	private JButton btnSearch;
+	private JPanel panelLeft;
+	private FilterTree filterTree;
+	private DatabaseElementPreviewLabel coverImage;
+	private ClipTable clipTable;
+	private ClipCharSortSelector clipCharSelector;
+	private ClipStatusBar statusbar;
+	// JFormDesigner - End of variables declaration  //GEN-END:variables
 }

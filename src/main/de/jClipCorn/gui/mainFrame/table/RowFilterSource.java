@@ -1,4 +1,4 @@
-package de.jClipCorn.gui.mainFrame.clipTable;
+package de.jClipCorn.gui.mainFrame.table;
 
 public enum RowFilterSource {
 SIDEBAR,

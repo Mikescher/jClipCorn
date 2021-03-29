@@ -1,7 +1,7 @@
 package de.jClipCorn;
 
 import de.jClipCorn.gui.mainFrame.MainFrame;
-import de.jClipCorn.gui.mainFrame.clipStatusbar.ClipStatusBar;
+import de.jClipCorn.gui.mainFrame.statusbar.ClipStatusBar;
 import de.jClipCorn.util.MapStopWatch;
 
 import java.util.HashMap;

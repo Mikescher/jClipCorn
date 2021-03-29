@@ -1,9 +1,9 @@
-package de.jClipCorn.gui.mainFrame.clipCharSelector;
+package de.jClipCorn.gui.mainFrame.charSelector;
 
 import javax.swing.JToolBar;
 
 import de.jClipCorn.gui.mainFrame.MainFrame;
-import de.jClipCorn.gui.mainFrame.clipTable.RowFilterSource;
+import de.jClipCorn.gui.mainFrame.table.RowFilterSource;
 import de.jClipCorn.features.table.filter.customFilter.CustomCharFilter;
 
 public class AbstractClipCharSortSelector extends JToolBar {

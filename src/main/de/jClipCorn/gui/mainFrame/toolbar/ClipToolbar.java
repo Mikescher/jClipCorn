@@ -1,7 +1,6 @@
-package de.jClipCorn.gui.mainFrame.clipToolbar;
+package de.jClipCorn.gui.mainFrame.toolbar;
 
-import java.util.List;
-
+import com.jformdesigner.annotations.DesignCreate;
 import de.jClipCorn.properties.CCProperties;
 
 
@@ -11,20 +10,23 @@ public class ClipToolbar extends AbstractClipToolbar {
 	public final static String IDENT_SEPERATOR = "#"; //$NON-NLS-1$
 	public final static String STANDARD_CONFIG = "Open|#|PlayMovie|#|AddMovie|AddSeries|#|EditMovie|RemMovie|#|ScanFolder|ShowSettings|#|CheckDatabase|ShowStatistics"; //$NON-NLS-1$
 
-	public ClipToolbar() {
-		super();
-		
-		setFloatable(false);
-		
-		create();
-	}
-	
-	private void create() {
-		List<String> config = CCProperties.getInstance().PROP_TOOLBAR_ELEMENTS.getValueAsArray();
+	@DesignCreate
+	private static ClipToolbar designCreate() { return new ClipToolbar(true); }
 
-		for (int i = 0; i < config.size(); i++) {
-			String elem = config.get(i);
-			
+	public ClipToolbar() {
+		this(false);
+	}
+
+	public ClipToolbar(boolean dummy) {
+		super();
+
+		setFloatable(false);
+
+		if (!dummy) create();
+	}
+
+	private void create() {
+		for (String elem : CCProperties.getInstance().PROP_TOOLBAR_ELEMENTS.getValueAsArray()) {
 			if (elem.equals(IDENT_SEPERATOR)) {
 				addSeparator();
 			} else {

@@ -1,34 +1,24 @@
 package de.jClipCorn.gui.frames.organizeFilterFrame;
 
-import java.awt.Component;
-import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-import javax.swing.DefaultListModel;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.ScrollPaneConstants;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.FormSpecs;
 import com.jgoodies.forms.layout.RowSpec;
-
 import de.jClipCorn.database.CCMovieList;
+import de.jClipCorn.features.table.filter.customFilter.operators.CustomAndOperator;
 import de.jClipCorn.gui.frames.customFilterEditDialog.CustomFilterEditDialog;
+import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.mainFrame.filterTree.CustomFilterList;
 import de.jClipCorn.gui.mainFrame.filterTree.CustomFilterObject;
-import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
-import de.jClipCorn.features.table.filter.customFilter.operators.CustomAndOperator;
 import de.jClipCorn.util.listener.FinishListener;
+
+import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
@@ -207,12 +197,10 @@ public class OrganizeFilterDialog extends JDialog {
 		
 		final CustomFilterObject cfo = filterlist.get(sel).copy();
 		
-		new CustomFilterEditDialog(this, movielist, cfo, new FinishListener() {
-			@Override
-			public void finish() {
-				filterlist.get(sel).apply(cfo);
-				updateList();
-			}
+		new CustomFilterEditDialog(this, movielist, cfo, () ->
+		{
+			filterlist.get(sel).apply(cfo);
+			updateList();
 		}).setVisible(true);
 	}
 	
@@ -229,12 +217,10 @@ public class OrganizeFilterDialog extends JDialog {
 	private void onActionAdd() {
 		final CustomFilterObject cfo = new CustomFilterObject("New filter", new CustomAndOperator()); //$NON-NLS-1$
 		
-		new CustomFilterEditDialog(this, movielist, cfo, new FinishListener() {
-			@Override
-			public void finish() {
-				filterlist.add(cfo);
-				updateList();
-			}
+		new CustomFilterEditDialog(this, movielist, cfo, () ->
+		{
+			filterlist.add(cfo);
+			updateList();
 		}).setVisible(true);
 	}
 	

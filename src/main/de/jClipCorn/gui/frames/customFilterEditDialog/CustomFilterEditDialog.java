@@ -1,249 +1,117 @@
 package de.jClipCorn.gui.frames.customFilterEditDialog;
 
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextField;
-import javax.swing.JTree;
-import javax.swing.SwingConstants;
-import javax.swing.border.EmptyBorder;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.TreePath;
-import javax.swing.tree.TreeSelectionModel;
-
+import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.FormSpecs;
 import com.jgoodies.forms.layout.RowSpec;
-
 import de.jClipCorn.database.CCMovieList;
-import de.jClipCorn.gui.mainFrame.filterTree.CustomFilterObject;
-import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.features.table.filter.AbstractCustomFilter;
 import de.jClipCorn.features.table.filter.customFilter.operators.CustomOperator;
 import de.jClipCorn.features.table.filter.filterConfig.CustomFilterConfig;
+import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.gui.mainFrame.filterTree.CustomFilterObject;
+import de.jClipCorn.gui.resources.Resources;
+import de.jClipCorn.util.adapter.DocumentLambdaAdapter;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.listener.FinishListener;
 import de.jClipCorn.util.stream.CCStreams;
 
-public class CustomFilterEditDialog extends JDialog {
-	private static final long serialVersionUID = -3117017940124236602L;
+import javax.swing.*;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreePath;
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
+public class CustomFilterEditDialog extends JDialog {
 	private final CustomFilterObject filterObject;
 	private CustomFilterEditTreeNode root;
 	private final CCMovieList movielist;
 	private final FinishListener finListener;
-	
-	private JPanel contentPane;
-	private JPanel pnlBottom;
-	private JButton btnOK;
-	private JButton btnExport;
-	private JButton btnImport;
-	private JTextField edName;
-	private JScrollPane pnlLeft;
-	private JTree treeMain;
-	private JPanel pnlRightTop;
-	private JPanel pnlRight;
-	private JPanel panel;
-	private JButton btnRemove;
-	private JLabel lblCaption;
-	private JPanel pnlCenter;
-	private JButton btnClear;
-	private JPanel panel_1;
-	private JButton btnCancel;
 
-	private List<Tuple<CustomFilterConfig, JComponent>> _currentConfigEntries = new ArrayList<>();
+	private final List<Tuple<CustomFilterConfig, JComponent>> _currentConfigEntries = new ArrayList<>();
 	private AbstractCustomFilter _currentSelectedFilter = null;
 
-	public CustomFilterEditDialog(Component owner, CCMovieList ml,  CustomFilterObject filter, FinishListener fl) {
+	public CustomFilterEditDialog(Component owner, CCMovieList ml, CustomFilterObject filter, FinishListener fl) {
 		super();
-		
+
 		filterObject = filter;
 		movielist = ml;
 		finListener = fl;
-		
-		init();
-		
-		initGUI();
-		
-		expandAllNodes(treeMain, 0, treeMain.getRowCount());
-		
-		pnlRightTop = new JPanel();
-		pnlCenter.add(pnlRightTop);
-		pnlRightTop.setLayout(new FormLayout(new ColumnSpec[] {
-				FormSpecs.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("162px:grow"),}, //$NON-NLS-1$
-			new RowSpec[] {
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("fill:10px:grow"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,}));
-		
-		lblCaption = new JLabel(""); //$NON-NLS-1$
-		lblCaption.setHorizontalAlignment(SwingConstants.CENTER);
-		lblCaption.setFont(new Font("Dialog", Font.BOLD, 16)); //$NON-NLS-1$
-		pnlRightTop.add(lblCaption, "2, 1"); //$NON-NLS-1$
-		
-		pnlRight = new JPanel();
-		pnlRightTop.add(pnlRight, "2, 3, fill, fill"); //$NON-NLS-1$
-		pnlRight.setLayout(new BorderLayout(0, 0));
-		
-		panel = new JPanel();
-		FlowLayout flowLayout = (FlowLayout) panel.getLayout();
-		flowLayout.setAlignment(FlowLayout.RIGHT);
-		pnlRightTop.add(panel, "2, 5, fill, fill"); //$NON-NLS-1$
-		
-		btnRemove = new JButton(LocaleBundle.getString("CustomFilterEditDialog.Remove")); //$NON-NLS-1$
-		btnRemove.addActionListener(e -> RemoveSelectedFilter());
-		panel.add(btnRemove);
-		
+
+		initComponents();
+		postInit();
+
 		setLocationRelativeTo(owner);
 	}
-	
-	private void initGUI() {
-		setModal(true);
-		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-		setTitle("Edit custom filter"); //$NON-NLS-1$
+
+	private void postInit()
+	{
 		setIconImage(Resources.IMG_FRAME_ICON.get());
-		
-		contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		setContentPane(contentPane);
-		contentPane.setLayout(new FormLayout(new ColumnSpec[] {
-				FormSpecs.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("default:grow"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_COLSPEC,},
-			new RowSpec[] {
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("default:grow"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,}));
-		
-		edName = new JTextField(filterObject.getName());
-		edName.getDocument().addDocumentListener(new DocumentListener() {
-			@Override
-			public void removeUpdate(DocumentEvent e) { filterObject.setName(edName.getText()); }
-			
-			@Override
-			public void insertUpdate(DocumentEvent e) { filterObject.setName(edName.getText()); }
-			
-			@Override
-			public void changedUpdate(DocumentEvent e) { filterObject.setName(edName.getText()); }
-		});
-		contentPane.add(edName, "2, 2, fill, default"); //$NON-NLS-1$
-		edName.setColumns(10);
-		
-		pnlCenter = new JPanel();
-		contentPane.add(pnlCenter, "2, 4, fill, fill"); //$NON-NLS-1$
-		pnlCenter.setLayout(new GridLayout(1, 2, 0, 0));
-		
-		pnlLeft = new JScrollPane();
-		pnlLeft.setViewportBorder(new EmptyBorder(2, 2, 2, 2));
-		pnlCenter.add(pnlLeft);
-		
-		treeMain = new JTree(root);
-		treeMain.setRootVisible(false);
-		treeMain.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
-		treeMain.getSelectionModel().addTreeSelectionListener(e -> OnSelectionChanged(e));
+
+		root = new CustomFilterEditTreeNode(filterObject.getFilter());
+		treeMain.setModel(new DefaultTreeModel(root));
 		treeMain.setCellRenderer(new CustomFilterEditTreeRenderer());
-		pnlLeft.setViewportView(treeMain);
-		
-		pnlBottom = new JPanel();
-		contentPane.add(pnlBottom, "2, 6, fill, fill"); //$NON-NLS-1$
-		pnlBottom.setLayout(new FormLayout(new ColumnSpec[] {
-				FormSpecs.DEFAULT_COLSPEC,
-				ColumnSpec.decode("default:grow"), //$NON-NLS-1$
-				FormSpecs.DEFAULT_COLSPEC,
-				FormSpecs.RELATED_GAP_COLSPEC,
-				FormSpecs.DEFAULT_COLSPEC,},
-			new RowSpec[] {
-				RowSpec.decode("default:grow"),})); //$NON-NLS-1$
-		
-		btnClear = new JButton(LocaleBundle.getString("UIGeneric.btnClear.text")); //$NON-NLS-1$
-		btnClear.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				filterObject.getFilter().removeAll();
-				updateTree();
-			}
-		});
-		pnlBottom.add(btnClear, "1, 1"); //$NON-NLS-1$
-		
-		btnExport = new JButton(LocaleBundle.getString("FilterTree.Custom.CustomOperatorFilterDialog.btnExport.text")); //$NON-NLS-1$
-		btnExport.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				DialogHelper.showPlainInputDialog(CustomFilterEditDialog.this, filterObject.getFilter().exportToString());
-			}
-		});
-		
-		panel_1 = new JPanel();
-		FlowLayout flowLayout = (FlowLayout) panel_1.getLayout();
-		flowLayout.setVgap(0);
-		pnlBottom.add(panel_1, "2, 1, fill, fill"); //$NON-NLS-1$
-		
-		btnCancel = new JButton(LocaleBundle.getString("UIGeneric.btnCancel.text")); //$NON-NLS-1$
-		btnCancel.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				dispose();
-			}
-		});
-		panel_1.add(btnCancel);
-		
-		btnOK = new JButton(LocaleBundle.getString("UIGeneric.btnOK.text")); //$NON-NLS-1$
-		panel_1.add(btnOK);
-		btnOK.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-								
-				if (finListener != null) finListener.finish();
 
-				dispose();
-			}
-		});
-		pnlBottom.add(btnExport, "3, 1"); //$NON-NLS-1$
-		
-		btnImport = new JButton(LocaleBundle.getString("FilterTree.Custom.CustomOperatorFilterDialog.btnImport.text")); //$NON-NLS-1$
-		btnImport.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				String imp = DialogHelper.showPlainInputDialog(CustomFilterEditDialog.this);
-				
-				AbstractCustomFilter copy = filterObject.getFilter().createCopy();
-				
-				if (imp != null && (copy == null || !copy.importFromString(imp))) {
-					DialogHelper.showLocalError(CustomFilterEditDialog.this, "Dialogs.CustomFilterImportFailed"); //$NON-NLS-1$
-					return;
-				} 
-				
-				filterObject.setFilter((CustomOperator)copy);
-				
-				updateTree();
-			}
-		});
-		pnlBottom.add(btnImport, "5, 1"); //$NON-NLS-1$
+		edName.setText(filterObject.getName());
+		edName.getDocument().addDocumentListener(new DocumentLambdaAdapter(() -> filterObject.setName(edName.getText())));
 
-		setSize(800, 500);
+		updateTree();
+
+		expandAllNodes(treeMain, 0, treeMain.getRowCount());
+	}
+
+	private void onClear() {
+		filterObject.getFilter().removeAll();
+		updateTree();
+	}
+
+	private void onExport() {
+		DialogHelper.showPlainInputDialog(CustomFilterEditDialog.this, filterObject.getFilter().exportToString());
+	}
+
+	private void onCancel() {
+		dispose();
+	}
+
+	private void onOkay() {
+		if (finListener != null) finListener.finish();
+
+		dispose();
+	}
+
+	private void onImport() {
+		String imp = DialogHelper.showPlainInputDialog(CustomFilterEditDialog.this);
+
+		AbstractCustomFilter copy = filterObject.getFilter().createCopy();
+
+		if (imp != null && (copy == null || !copy.importFromString(imp))) {
+			DialogHelper.showLocalError(CustomFilterEditDialog.this, "Dialogs.CustomFilterImportFailed"); //$NON-NLS-1$
+			return;
+		}
+
+		filterObject.setFilter((CustomOperator)copy);
+
+		updateTree();
+	}
+
+	private void OnSelectionChanged(TreeSelectionEvent e) {
+		TreePath p = e.getNewLeadSelectionPath();
+
+		if (p == null) {
+			updateEditPanel(null);
+			return;
+		}
+
+		Object node = p.getLastPathComponent();
+		if (node instanceof CustomFilterEditTreeNode) {
+			updateEditPanel(((CustomFilterEditTreeNode)node).filter);
+		} else {
+			updateEditPanel(null);
+		}
 	}
 
 	private void RemoveSelectedFilter() {
@@ -252,9 +120,9 @@ public class CustomFilterEditDialog extends JDialog {
 
 		Object node = p.getLastPathComponent();
 		if (!(node instanceof CustomFilterEditTreeNode)) return;
-		
+
 		AbstractCustomFilter filter = ((CustomFilterEditTreeNode)node).filter;
-		
+
 		if (filter == filterObject.getFilter()) return;
 
 		Object parentNode = p.getPathComponent(p.getPathCount()-2);
@@ -262,28 +130,12 @@ public class CustomFilterEditDialog extends JDialog {
 		if (!(((CustomFilterEditTreeNode)parentNode).filter instanceof CustomOperator)) return;
 
 		CustomOperator parentFilter = (CustomOperator)((CustomFilterEditTreeNode)parentNode).filter;
-		
+
 		parentFilter.remove(filter);
-		
+
 		updateTree();
 	}
 
-	private void OnSelectionChanged(TreeSelectionEvent e) {
-		TreePath p = e.getNewLeadSelectionPath();
-		
-		if (p == null) {
-			updateEditPanel(null);
-			return;
-		}
-		
-		Object node = p.getLastPathComponent();
-		if (node instanceof CustomFilterEditTreeNode) {
-			updateEditPanel(((CustomFilterEditTreeNode)node).filter);
-		} else {
-			updateEditPanel(null);
-		}
-	}
-	
 	private void updateEditPanel(AbstractCustomFilter f)
 	{
 		_currentSelectedFilter = f;
@@ -296,27 +148,27 @@ public class CustomFilterEditDialog extends JDialog {
 			lblCaption.setText(""); //$NON-NLS-1$
 
 			repaint();
-			
+
 		} else if (f instanceof CustomOperator) {
 			_currentConfigEntries.clear();
 
 			JPanel pnl = new JPanel(new FormLayout(
 				new ColumnSpec[]
 				{
-					ColumnSpec.decode("default:grow"), //$NON-NLS-1$
+						ColumnSpec.decode("default:grow"), //$NON-NLS-1$
 				},
 				new RowSpec[]
 				{
-					FormSpecs.RELATED_GAP_ROWSPEC, FormSpecs.DEFAULT_ROWSPEC,
-					FormSpecs.RELATED_GAP_ROWSPEC, FormSpecs.DEFAULT_ROWSPEC,
-					FormSpecs.RELATED_GAP_ROWSPEC, FormSpecs.DEFAULT_ROWSPEC,
-					FormSpecs.RELATED_GAP_ROWSPEC, FormSpecs.DEFAULT_ROWSPEC,
-					FormSpecs.RELATED_GAP_ROWSPEC, FormSpecs.DEFAULT_ROWSPEC,
-					FormSpecs.RELATED_GAP_ROWSPEC, FormSpecs.DEFAULT_ROWSPEC,
+						FormSpecs.RELATED_GAP_ROWSPEC, FormSpecs.DEFAULT_ROWSPEC,
+						FormSpecs.RELATED_GAP_ROWSPEC, FormSpecs.DEFAULT_ROWSPEC,
+						FormSpecs.RELATED_GAP_ROWSPEC, FormSpecs.DEFAULT_ROWSPEC,
+						FormSpecs.RELATED_GAP_ROWSPEC, FormSpecs.DEFAULT_ROWSPEC,
+						FormSpecs.RELATED_GAP_ROWSPEC, FormSpecs.DEFAULT_ROWSPEC,
+						FormSpecs.RELATED_GAP_ROWSPEC, FormSpecs.DEFAULT_ROWSPEC,
 
-					RowSpec.decode("default:grow"), //$NON-NLS-1$
+						RowSpec.decode("default:grow"), //$NON-NLS-1$
 				}));
-			
+
 			CustomOperator filter = (CustomOperator)f;
 			createEditPanel_Operator(pnl, filter);
 			lblCaption.setText(filter.getPrecreateName());
@@ -325,7 +177,7 @@ public class CustomFilterEditDialog extends JDialog {
 			pnlRight.revalidate();
 			pnl.revalidate();
 			repaint();
-			
+
 		} else {
 			_currentConfigEntries.clear();
 
@@ -374,7 +226,7 @@ public class CustomFilterEditDialog extends JDialog {
 			cbxFilter.setRenderer(new CustomFilterEditFilterComboboxRenderer());
 			cbxFilter.setMaximumRowCount(32);
 			pnl.add(cbxFilter, "1, 2, fill, default"); //$NON-NLS-1$
-			
+
 			JButton btnAddFilter = new JButton(LocaleBundle.getString("FilterTree.Custom.CustomOperatorFilterDialog.btnAddFilter.text")); //$NON-NLS-1$
 			btnAddFilter.addActionListener(e ->
 			{
@@ -385,14 +237,14 @@ public class CustomFilterEditDialog extends JDialog {
 			});
 			pnl.add(btnAddFilter, "1, 4"); //$NON-NLS-1$
 		}
-		
+
 		{
 			JComboBox<AbstractCustomFilter> cbxOperator = new JComboBox<>();
 			cbxOperator.setModel(new DefaultComboBoxModel<>(AbstractCustomFilter.getAllOperatorFilter()));
 			cbxOperator.setRenderer(new CustomFilterEditFilterComboboxRenderer());
 			cbxOperator.setMaximumRowCount(32);
 			pnl.add(cbxOperator, "1, 6, fill, default"); //$NON-NLS-1$
-			
+
 			JButton btnAddOperator = new JButton(LocaleBundle.getString("FilterTree.Custom.CustomOperatorFilterDialog.btnAddOp.text")); //$NON-NLS-1$
 			btnAddOperator.addActionListener(e ->
 			{
@@ -403,14 +255,14 @@ public class CustomFilterEditDialog extends JDialog {
 			});
 			pnl.add(btnAddOperator, "1, 8"); //$NON-NLS-1$
 		}
-		
+
 		{
 			JComboBox<AbstractCustomFilter> cbxAggregator = new JComboBox<>();
 			cbxAggregator.setModel(new DefaultComboBoxModel<>(AbstractCustomFilter.getAllAggregatorFilter()));
 			cbxAggregator.setRenderer(new CustomFilterEditFilterComboboxRenderer());
 			cbxAggregator.setMaximumRowCount(32);
 			pnl.add(cbxAggregator, "1, 10, fill, default"); //$NON-NLS-1$
-			
+
 			JButton btnAddAggregator = new JButton(LocaleBundle.getString("FilterTree.Custom.CustomOperatorFilterDialog.btnAddAgg.text")); //$NON-NLS-1$
 			btnAddAggregator.addActionListener(e ->
 			{
@@ -421,12 +273,6 @@ public class CustomFilterEditDialog extends JDialog {
 			});
 			pnl.add(btnAddAggregator, "1, 12"); //$NON-NLS-1$
 		}
-	}
-
-	private void init() {
-		root = new CustomFilterEditTreeNode(filterObject.getFilter());
-		
-		updateTree();
 	}
 
 	private void updateSimple() {
@@ -440,28 +286,29 @@ public class CustomFilterEditDialog extends JDialog {
 	}
 
 	private void updateTree() {
-		
+
 		DefaultTreeModel model = (treeMain != null) ? ((DefaultTreeModel)treeMain.getModel()) : (null);
-		
+
 		TreePath sel = null;
 		if (treeMain != null) sel = treeMain.getSelectionPath();
-		
-		if (root.getChildCount() == 0) root.add(new CustomFilterEditTreeNode(filterObject.getFilter()));
-		
+
+		var addXRoot = (root.getChildCount() == 0);
+		if (addXRoot) root.add(new CustomFilterEditTreeNode(filterObject.getFilter()));
+
 		boolean changed = updateTree(model, filterObject.getFilter(), (CustomFilterEditTreeNode)root.getFirstChild(), root);
-		
-		if (changed && model != null && treeMain != null) {
+
+		if ((addXRoot || changed) && model != null && treeMain != null) {
 			model.reload();
-			
+
 			treeMain.invalidate();
 			treeMain.repaint();
 
 			expandAllNodes(treeMain, 0, treeMain.getRowCount());
-			
+
 			if (sel != null) {
 
 				treeMain.setSelectionPath(sel);
-				
+
 				if (treeMain.getRowForPath(sel) < 0) {
 					updateEditPanel(null);
 				}
@@ -472,11 +319,11 @@ public class CustomFilterEditDialog extends JDialog {
 	@SuppressWarnings("unchecked")
 	private boolean updateTree(DefaultTreeModel model, AbstractCustomFilter filter, CustomFilterEditTreeNode node, CustomFilterEditTreeNode parent) {
 		boolean changed = false;
-		
+
 		if (node == null) {
 			node = new CustomFilterEditTreeNode(filter);
 			parent.add(node);
-			
+
 			changed = true;
 		} else if (node.filter != filter) {
 			int idx = parent.getIndex(node);
@@ -484,48 +331,174 @@ public class CustomFilterEditDialog extends JDialog {
 			node = new CustomFilterEditTreeNode(filter);
 			parent.insert(node, idx);
 		}
-		
-		if (!node.textCache.equals(node.filter.getName())) { 
-			node.textCache = node.filter.getName(); 
-			if (model != null && !changed) model.nodeChanged(node); 
+
+		if (!node.textCache.equals(node.filter.getName())) {
+			node.textCache = node.filter.getName();
+			if (model != null && !changed) model.nodeChanged(node);
 		}
 
 		for (AbstractCustomFilter f : filter.getList()) {
-			
+
 			CustomFilterEditTreeNode n = null;
 			for (Object mtn : CCStreams.iterate(node.children())) {
 				if (!(mtn instanceof CustomFilterEditTreeNode)) continue;
 				if (((CustomFilterEditTreeNode)mtn).filter == f) n = (CustomFilterEditTreeNode)mtn;
 			}
-			
+
 			boolean sub = updateTree(model, f, n, node);
-			
+
 			changed |= sub;
 		}
-		
+
 		for (Object mtn : CCStreams.iterate(node.children()).enumerate()) {
 			if (!(mtn instanceof CustomFilterEditTreeNode)) continue;
-			
+
 			AbstractCustomFilter mtnFilter = ((CustomFilterEditTreeNode)mtn).filter;
-			
+
 			boolean found = CCStreams.iterate(filter.getList()).any(f -> f == mtnFilter);
-			
-			if (!found) { 
-				node.remove((CustomFilterEditTreeNode)mtn); 
-				changed = true; 
+
+			if (!found) {
+				node.remove((CustomFilterEditTreeNode)mtn);
+				changed = true;
 			}
 		}
-		
+
 		return changed;
 	}
-	
-	private void expandAllNodes(JTree tree, int startingIndex, int rowCount){
-	    for(int i=startingIndex;i<rowCount;++i){
-	        tree.expandRow(i);
-	    }
 
-	    if(tree.getRowCount()!=rowCount){
-	        expandAllNodes(tree, rowCount, tree.getRowCount());
-	    }
+	private void expandAllNodes(JTree tree, int startingIndex, int rowCount){
+		for(int i=startingIndex;i<rowCount;++i){
+			tree.expandRow(i);
+		}
+
+		if(tree.getRowCount()!=rowCount){
+			expandAllNodes(tree, rowCount, tree.getRowCount());
+		}
 	}
+	private void initComponents() {
+		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
+		edName = new JTextField();
+		splitPane1 = new JSplitPane();
+		scrollPane1 = new JScrollPane();
+		treeMain = new JTree();
+		panel2 = new JPanel();
+		lblCaption = new JLabel();
+		pnlRight = new JPanel();
+		btnRemove = new JButton();
+		panel1 = new JPanel();
+		btnClear = new JButton();
+		btnCancel = new JButton();
+		btnOK = new JButton();
+		btnExport = new JButton();
+		btnImport = new JButton();
+
+		//======== this ========
+		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+		setTitle(LocaleBundle.getString("CustomFilterEditDialog.Title")); //$NON-NLS-1$
+		setModal(true);
+		setMinimumSize(new Dimension(600, 400));
+		var contentPane = getContentPane();
+		contentPane.setLayout(new FormLayout(
+			"$lcgap, default:grow, $lcgap", //$NON-NLS-1$
+			"$lgap, default, $lgap, default:grow, $lgap, default, $lgap")); //$NON-NLS-1$
+
+		//---- edName ----
+		edName.setText("{name}"); //$NON-NLS-1$
+		contentPane.add(edName, CC.xy(2, 2));
+
+		//======== splitPane1 ========
+		{
+			splitPane1.setResizeWeight(0.5);
+
+			//======== scrollPane1 ========
+			{
+
+				//---- treeMain ----
+				treeMain.setRootVisible(false);
+				treeMain.setEditable(true);
+				treeMain.addTreeSelectionListener(e -> OnSelectionChanged(e));
+				scrollPane1.setViewportView(treeMain);
+			}
+			splitPane1.setLeftComponent(scrollPane1);
+
+			//======== panel2 ========
+			{
+				panel2.setLayout(new FormLayout(
+					"$lcgap, default:grow, $lcgap", //$NON-NLS-1$
+					"$lgap, default, $lgap, default:grow, $lgap, default, $lgap")); //$NON-NLS-1$
+
+				//---- lblCaption ----
+				lblCaption.setText("{TITLE}"); //$NON-NLS-1$
+				lblCaption.setFont(lblCaption.getFont().deriveFont(lblCaption.getFont().getStyle() | Font.BOLD, lblCaption.getFont().getSize() + 4f));
+				lblCaption.setHorizontalAlignment(SwingConstants.CENTER);
+				panel2.add(lblCaption, CC.xy(2, 2));
+
+				//======== pnlRight ========
+				{
+					pnlRight.setLayout(new BorderLayout());
+				}
+				panel2.add(pnlRight, CC.xy(2, 4, CC.FILL, CC.FILL));
+
+				//---- btnRemove ----
+				btnRemove.setText(LocaleBundle.getString("CustomFilterEditDialog.Remove")); //$NON-NLS-1$
+				btnRemove.addActionListener(e -> RemoveSelectedFilter());
+				panel2.add(btnRemove, CC.xy(2, 6, CC.RIGHT, CC.DEFAULT));
+			}
+			splitPane1.setRightComponent(panel2);
+		}
+		contentPane.add(splitPane1, CC.xy(2, 4, CC.FILL, CC.FILL));
+
+		//======== panel1 ========
+		{
+			panel1.setLayout(new FormLayout(
+				"default, $lcgap, default:grow, 2*($lcgap, default), $lcgap, default:grow, 2*($lcgap, default)", //$NON-NLS-1$
+				"default")); //$NON-NLS-1$
+
+			//---- btnClear ----
+			btnClear.setText(LocaleBundle.getString("UIGeneric.btnClear.text")); //$NON-NLS-1$
+			btnClear.addActionListener(e -> onClear());
+			panel1.add(btnClear, CC.xy(1, 1));
+
+			//---- btnCancel ----
+			btnCancel.setText(LocaleBundle.getString("UIGeneric.btnCancel.text")); //$NON-NLS-1$
+			btnCancel.addActionListener(e -> onCancel());
+			panel1.add(btnCancel, CC.xy(5, 1));
+
+			//---- btnOK ----
+			btnOK.setText(LocaleBundle.getString("UIGeneric.btnOK.text")); //$NON-NLS-1$
+			btnOK.addActionListener(e -> onOkay());
+			panel1.add(btnOK, CC.xy(7, 1));
+
+			//---- btnExport ----
+			btnExport.setText(LocaleBundle.getString("FilterTree.Custom.CustomOperatorFilterDialog.btnExport.text")); //$NON-NLS-1$
+			btnExport.addActionListener(e -> onExport());
+			panel1.add(btnExport, CC.xy(11, 1));
+
+			//---- btnImport ----
+			btnImport.setText(LocaleBundle.getString("FilterTree.Custom.CustomOperatorFilterDialog.btnImport.text")); //$NON-NLS-1$
+			btnImport.addActionListener(e -> onImport());
+			panel1.add(btnImport, CC.xy(13, 1));
+		}
+		contentPane.add(panel1, CC.xy(2, 6));
+		setSize(800, 500);
+		setLocationRelativeTo(getOwner());
+		// JFormDesigner - End of component initialization  //GEN-END:initComponents
+	}
+
+	// JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
+	private JTextField edName;
+	private JSplitPane splitPane1;
+	private JScrollPane scrollPane1;
+	private JTree treeMain;
+	private JPanel panel2;
+	private JLabel lblCaption;
+	private JPanel pnlRight;
+	private JButton btnRemove;
+	private JPanel panel1;
+	private JButton btnClear;
+	private JButton btnCancel;
+	private JButton btnOK;
+	private JButton btnExport;
+	private JButton btnImport;
+	// JFormDesigner - End of variables declaration  //GEN-END:variables
 }

@@ -285,16 +285,14 @@ public class FilterTree extends AbstractFilterTree {
 		
 		final CustomFilterObject fcfilter = cfo;
 		
-		new CustomFilterEditDialog(table.getMainFrame(), movielist, fcfilter, new FinishListener() {
-			@Override
-			public void finish() {
-				table.setRowFilter(fcfilter.getFilter(), RowFilterSource.SIDEBAR);
-				
-				if (! fcfilter.getName().equals(CustomFilterList.NAME_TEMPORARY) && !customFilterList.contains(fcfilter)) {
-					customFilterList.add(fcfilter);
-					updateTree();
-					customFilterList.save();
-				}
+		new CustomFilterEditDialog(table.getMainFrame(), movielist, fcfilter, () ->
+		{
+			table.setRowFilter(fcfilter.getFilter(), RowFilterSource.SIDEBAR);
+
+			if (! fcfilter.getName().equals(CustomFilterList.NAME_TEMPORARY) && !customFilterList.contains(fcfilter)) {
+				customFilterList.add(fcfilter);
+				updateTree();
+				customFilterList.save();
 			}
 		}).setVisible(true);
 	}

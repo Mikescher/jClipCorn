@@ -4,6 +4,7 @@ public enum ResourceRefType {
 	IMAGE,
 
 	IMAGE_COMBINED,
+	IMAGE_RECOLORED,
 
 	ICON_16,
 	ICON_32,
@@ -13,7 +14,7 @@ public enum ResourceRefType {
 	ICON_OTHER_COMBINED;
 
 	public boolean isImage() {
-		return this == ResourceRefType.IMAGE || this == ResourceRefType.IMAGE_COMBINED;
+		return this == ResourceRefType.IMAGE || this == ResourceRefType.IMAGE_COMBINED || this == ResourceRefType.IMAGE_RECOLORED;
 	}
 
 	public boolean isIcon() {

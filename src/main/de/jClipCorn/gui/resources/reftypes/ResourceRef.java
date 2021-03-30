@@ -10,7 +10,7 @@ public abstract class ResourceRef {
 	public final UUID id;
 	public final ResourceRefType type;
 
-	public boolean doPreload;
+	public boolean doPreload; // preload resource (if the global preload setting is `on` or `async`)
 
 	protected ResourceRef(String _ident, ResourceRefType t, boolean preload) {
 		ident = _ident;

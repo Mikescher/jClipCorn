@@ -26,7 +26,7 @@ public class GroupManageTable extends JCCSimpleTable<Tuple<CCGroup, Integer>> {
 				e -> e.Item1.getHexColor()));
 
 		r.add(new JCCSimpleColumnPrototype<>(
-				"*,min=auto",
+				"2*,min=auto",
 				"GroupManagerFrame.colName",
 				e -> e.Item1.Name,
 				null,
@@ -51,7 +51,7 @@ public class GroupManageTable extends JCCSimpleTable<Tuple<CCGroup, Integer>> {
 				null));
 
 		r.add(new JCCSimpleColumnPrototype<>(
-				"auto",
+				"1*,min=auto",
 				"GroupManagerFrame.colParent",
 				e -> e.Item1.Parent,
 				null,

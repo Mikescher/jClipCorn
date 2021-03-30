@@ -204,8 +204,14 @@ public abstract class JCCSimpleTable<TData> extends JScrollPane implements ListS
 		model.fireTableDataChanged();
 	}
 
-	public void setSelectedRow(int idx) {
+	public void setSelectedRow(int idx, boolean scrollTo) {
 		table.getSelectionModel().setSelectionInterval(idx, idx);
+		if (scrollTo) scrollToRow(idx);
+	}
+
+	public void scrollToRow(int idx) {
+		table.getSelectionModel().setSelectionInterval(idx, idx);
+		table.scrollRectToVisible(new Rectangle(table.getCellRect(idx, 0, true)));
 	}
 
 	protected abstract List<JCCSimpleColumnPrototype<TData>> configureColumns();

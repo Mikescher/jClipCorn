@@ -206,7 +206,7 @@ public class TableColumnAdjuster implements PropertyChangeListener, TableModelLi
 			}
 			else if (RegExHelper.isMatch("^[0-9]+\\*$", components[0]))
 			{
-				cfg.add(new TCAConfig(TCACType.Fill, 0, Integer.parseInt(d.substring(0, d.length()-1)), min, max, expandOnly));
+				cfg.add(new TCAConfig(TCACType.Fill, 0, Integer.parseInt(components[0].substring(0, components[0].length()-1)), min, max, expandOnly));
 			}
 			else if ("#".equals(components[0]))
 			{

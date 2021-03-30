@@ -134,21 +134,7 @@ public class GroupManageFrame extends JFrame {
 
 		reinitData();
 
-		tabGroups.setSelectedRow(newindex);
-	}
-
-	private void onUpdate() {
-		CCGroup group = getSelectedGroup();
-		if (group == null) return;
-		if (!DialogHelper.showLocaleYesNo(this, "Dialogs.UpdateGroup")) return; //$NON-NLS-1$
-
-		for (CCDatabaseElement elem : movielist.getInternalListCopy()) {
-			if (listElements.getChecked(elem)) {
-				elem.setGroups(elem.getGroups().getAdd(group));
-			} else {
-				elem.setGroups(elem.getGroups().getRemove(group));
-			}
-		}
+		tabGroups.setSelectedRow(newindex, true);
 	}
 
 	private void onUpdateData() {
@@ -233,6 +219,10 @@ public class GroupManageFrame extends JFrame {
 			for (CCDatabaseElement elem : movielist.getInternalListCopy()) {
 				listElements.setCheckedFast(elem, elem.getGroups().contains(g));
 			}
+
+			listElements.setFilter(e -> true);
+			onFilter();
+
 			listElements.repaint();
 
 			edDataName.setText(g.Name);
@@ -298,6 +288,9 @@ public class GroupManageFrame extends JFrame {
 
 		reinitData();
 
+		listElements.clear();
+		listElements.addAll(movielist.getInternalListCopy());
+
 		onFilter();
 
 		updateElementList();
@@ -306,10 +299,15 @@ public class GroupManageFrame extends JFrame {
 	private void reinitData() {
 		tabGroups.setData(CCStreams.iterate(movielist.getSortedGroupList()).map(g -> Tuple.Create(g, movielist.getDatabaseElementsbyGroup(g).size())).toList());
 
-		//-----------------------------------------------------------------------------
+		CCGroup g = getSelectedGroup();
+		for (CCDatabaseElement elem : movielist.getInternalListCopy()) {
+			listElements.setCheckedFast(elem, g != null && elem.getGroups().contains(g));
+		}
 
-		listElements.clear();
-		listElements.addAll(movielist.getInternalListCopy());
+		listElements.setFilter(e -> true);
+		onFilter();
+
+		listElements.repaint();
 	}
 
 	private void onElementsListChecked(CheckBoxChangedActionListener.CheckBoxChangedEvent<CCDatabaseElement> e) {
@@ -357,7 +355,7 @@ public class GroupManageFrame extends JFrame {
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		var contentPane = getContentPane();
 		contentPane.setLayout(new FormLayout(
-			"$lcgap, default, $lcgap, 325dlu, $lcgap, default, $lcgap, default:grow, $lcgap", //$NON-NLS-1$
+			"$lcgap, default, $lcgap, 0dlu:grow, $lcgap, default, $lcgap, 0dlu:grow(0.6), $lcgap", //$NON-NLS-1$
 			"$lgap, default, $lgap, default:grow, $lgap, default, $lgap")); //$NON-NLS-1$
 
 		//======== panel2 ========

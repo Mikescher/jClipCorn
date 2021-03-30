@@ -12,6 +12,7 @@ import de.jClipCorn.features.table.filter.filterConfig.CustomFilterConfig;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.mainFrame.filterTree.CustomFilterObject;
 import de.jClipCorn.gui.resources.Resources;
+import de.jClipCorn.util.Str;
 import de.jClipCorn.util.adapter.DocumentLambdaAdapter;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.helper.DialogHelper;
@@ -59,9 +60,13 @@ public class CustomFilterEditDialog extends JDialog {
 		edName.setText(filterObject.getName());
 		edName.getDocument().addDocumentListener(new DocumentLambdaAdapter(() -> filterObject.setName(edName.getText())));
 
+		lblCaption.setText(Str.Empty);
+
 		updateTree();
 
 		expandAllNodes(treeMain, 0, treeMain.getRowCount());
+
+		treeMain.setSelectionRow(0);
 	}
 
 	private void onClear() {

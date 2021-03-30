@@ -992,7 +992,7 @@ public class CCMovieList {
 	public int getGroupCount() {
 		return databaseGroups.size();
 	}
-	
+
 	public List<CCGroup> getSortedGroupList() {
 		ArrayList<CCGroup> gl =  new ArrayList<>(databaseGroups);
 		
@@ -1079,13 +1079,20 @@ public class CCMovieList {
 		databaseGroups.remove(gOld);
 		databaseGroups.add(gNew);
 		
-		for (CCDatabaseElement el : new ArrayList<>(getDatabaseElementsbyGroup(gOld))) {
-			el.setGroupsInternal(el.getGroups().getRemove(gOld).getAdd(gNew));
-		}
-		
 		if (gOld.Name.equals(gNew.Name)) {
+
+			for (CCDatabaseElement el : new ArrayList<>(getDatabaseElementsbyGroup(gOld))) {
+				// Only setGroupsInternal, no actual DB Update, we only want to update the CCGroup objects
+				el.setGroupsInternal(el.getGroups().getRemove(gOld).getAdd(gNew));
+			}
+
 			database.updateGroup(gNew.Name, gNew.Order, gNew.Color, gNew.DoSerialize, gNew.Parent, gNew.Visible);
 		} else {
+
+			for (CCDatabaseElement el : new ArrayList<>(getDatabaseElementsbyGroup(gOld))) {
+				el.setGroupsInternalWithUpdate(el.getGroups().getRemove(gOld).getAdd(gNew));
+			}
+
 			database.removeGroup(gOld.Name);
 			database.addGroup(gNew.Name, gNew.Order, gNew.Color, gNew.DoSerialize, gNew.Parent, gNew.Visible);
 		}

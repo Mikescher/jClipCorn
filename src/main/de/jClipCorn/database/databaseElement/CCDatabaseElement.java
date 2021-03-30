@@ -285,7 +285,19 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 		getCache().bust();
 	}
 
+	public void setGroupsInternalWithUpdate(CCGroupList value) {
+		if (value == null) { CCLog.addUndefinied("Prevented setting CCDBElem.Groups to NULL"); return; } //$NON-NLS-1$
+
+		if (linkedGroups.equals(value)) return;
+
+		linkedGroups = value;
+		updateDB();
+		getCache().bust();
+	}
+
 	public void setGroupsInternal(CCGroupList value) {
+		if (value == null) { CCLog.addUndefinied("Prevented setting CCDBElem.Groups to NULL"); return; } //$NON-NLS-1$
+
 		linkedGroups = value;
 		getCache().bust();
 	}

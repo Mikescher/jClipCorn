@@ -61,6 +61,11 @@ public abstract class JCCSimpleTable<TData> extends JScrollPane implements ListS
 		for (int i = 0; i < columns.size(); i++) sorter.setSortable(i, isSortable(i));
 	}
 
+	public void addListSelectionListener(ListSelectionListener listener)
+	{
+		table.getSelectionModel().addListSelectionListener(listener);
+	}
+
 	public void autoResize() {
 		adjuster.adjustColumns(_autoResizeConfig);
 	}
@@ -197,6 +202,10 @@ public abstract class JCCSimpleTable<TData> extends JScrollPane implements ListS
 	
 	public void forceDataChangedRedraw() {
 		model.fireTableDataChanged();
+	}
+
+	public void setSelectedRow(int idx) {
+		table.getSelectionModel().setSelectionInterval(idx, idx);
 	}
 
 	protected abstract List<JCCSimpleColumnPrototype<TData>> configureColumns();

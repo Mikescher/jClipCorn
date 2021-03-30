@@ -238,7 +238,7 @@ public class Main {
  - [ ] FilenameRulesFrame
  - [ ] FindCoverFrame
  - [ ] GenericTextDialog
- - [ ] GroupManageFrame
+ - [X] GroupManageFrame
  - [ ] ImportElementsFrame
  - [ ] InitialConfigFrame
  - [ ] InputErrorFrame

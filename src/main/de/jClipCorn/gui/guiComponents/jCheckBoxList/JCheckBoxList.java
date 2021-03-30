@@ -1,20 +1,16 @@
 package de.jClipCorn.gui.guiComponents.jCheckBoxList;
 
+import de.jClipCorn.gui.guiComponents.StringDisplayConverter;
+import de.jClipCorn.gui.guiComponents.jCheckBoxList.CBListModel.CBFilter;
+import de.jClipCorn.util.datatypes.Tuple;
+
+import javax.swing.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Set;
-
-import javax.swing.DefaultListModel;
-import javax.swing.JCheckBox;
-import javax.swing.JList;
-import javax.swing.ListSelectionModel;
-
-import de.jClipCorn.gui.guiComponents.StringDisplayConverter;
-import de.jClipCorn.gui.guiComponents.jCheckBoxList.CBListModel.CBFilter;
-import de.jClipCorn.util.datatypes.Tuple;
 
 public class JCheckBoxList<T> extends JList<JCheckBox> {
 	private static final long serialVersionUID = -449508648731560934L;
@@ -24,7 +20,7 @@ public class JCheckBoxList<T> extends JList<JCheckBox> {
 	
 	private final StringDisplayConverter<T> converter;
 	private final List<Tuple<T, JCheckBox>> map = new ArrayList<>();
-	
+
 	public JCheckBoxList(StringDisplayConverter<T> conv, List<T> values) {
 		super();
 		
@@ -45,6 +41,13 @@ public class JCheckBoxList<T> extends JList<JCheckBox> {
 		init();
 	}
 
+	public void addCheckBoxChangedActionListener(final CheckBoxChangedActionListener<T> l) {
+		listenerList.add(CheckBoxChangedActionListener.class, l);
+	}
+	public void removeCheckBoxChangedActionListener(final CheckBoxChangedActionListener<T> l) {
+		listenerList.remove(CheckBoxChangedActionListener.class, l);
+	}
+
 	private void init() {
 		setCellRenderer(new CBCellRenderer());
 		setModel(outermodel);
@@ -56,13 +59,26 @@ public class JCheckBoxList<T> extends JList<JCheckBox> {
 
 				if (index != -1) {
 					JCheckBox checkbox = getModel().getElementAt(index);
-					checkbox.setSelected(!checkbox.isSelected());
-					repaint();
+					if (e.getX() < 16) {
+						checkbox.setSelected(!checkbox.isSelected());
+						repaint();
+						raiseCheckBoxChangedEvent(checkbox, findValue(checkbox), index, checkbox.isSelected());
+					}
 				}
 			}
 		});
 
 		setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+	}
+
+	@SuppressWarnings("unchecked")
+	private void raiseCheckBoxChangedEvent(JCheckBox cb, T data, int idx, boolean newVal) {
+		var l = listenerList.getListeners(CheckBoxChangedActionListener.class);
+		if (l.length == 0) return;
+
+		var evt = new CheckBoxChangedActionListener.CheckBoxChangedEvent<>(this, newVal ? 101 : 102, String.valueOf(idx), data, cb, newVal);
+
+		for (var lst : l) ((CheckBoxChangedActionListener<T>)lst).actionPerformed(evt);
 	}
 
 	public void clear() {

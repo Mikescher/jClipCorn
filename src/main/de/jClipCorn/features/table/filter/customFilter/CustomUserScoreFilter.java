@@ -15,7 +15,7 @@ public class CustomUserScoreFilter extends AbstractCustomDatabaseElementFilter {
 	
 	@Override
 	public boolean includes(CCDatabaseElement e) {
-		return e.getScore() == score;
+		return e.Score.get() == score;
 	}
 
 	@Override

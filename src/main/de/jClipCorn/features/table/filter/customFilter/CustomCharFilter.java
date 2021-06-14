@@ -18,7 +18,7 @@ public class CustomCharFilter extends AbstractCustomFilter {
 	
 	@Override
 	public boolean includes(ICCDatabaseStructureElement e) {
-		String first = e.getTitle();
+		String first = e.title().get();
 		
 		for (String s : EXCLUSIONS) {
 			if (first.startsWith(s + Str.SingleSpace)) {

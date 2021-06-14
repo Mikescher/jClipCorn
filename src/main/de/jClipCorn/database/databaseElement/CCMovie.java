@@ -5,11 +5,11 @@ import de.jClipCorn.database.databaseElement.caches.ICalculationCache;
 import de.jClipCorn.database.databaseElement.caches.MovieCache;
 import de.jClipCorn.database.databaseElement.columnTypes.*;
 import de.jClipCorn.database.databaseElement.datapacks.IMovieData;
+import de.jClipCorn.database.elementValues.*;
 import de.jClipCorn.database.util.CCQualityCategory;
 import de.jClipCorn.database.util.ExtendedViewedState;
 import de.jClipCorn.database.util.ExtendedViewedStateType;
 import de.jClipCorn.features.log.CCLog;
-import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.mainFrame.MainFrame;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.types.NamedPathVar;
@@ -18,80 +18,78 @@ import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datatypes.Opt;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.datetime.CCDateTime;
-import de.jClipCorn.util.exceptions.CCFormatException;
 import de.jClipCorn.util.exceptions.DatabaseUpdateException;
-import de.jClipCorn.util.exceptions.EnumFormatException;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.ChecksumHelper;
 import de.jClipCorn.util.helper.DialogHelper;
+import de.jClipCorn.util.stream.CCStreams;
 
 import java.awt.*;
 import java.io.File;
-import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
 public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, ICCDatedElement, IMovieData {
 	public final static int PARTCOUNT_MAX = 6; // 0 .. 5
 
-	private CCMovieZyklus zyklus;
-	private CCMediaInfo mediainfo;
-	private int length; // in minutes
-	private CCDate addDate;
-	private CCFileFormat format;
-	private	int year;
-	private CCFileSize filesize;
-	private String[] parts;
-	private CCDateTimeList viewedHistory;
-	private CCDBLanguageList language;
+	private final MovieCache _cache = new MovieCache(this);
 
-	private final MovieCache _cache;
+	public final EZyklusProp             Zyklus        = new EZyklusProp(      "Zyklus",        CCMovieZyklus.EMPTY,          this, EPropertyType.OBJECTIVE_METADATA);
+	public final EMediaInfoProp          MediaInfo     = new EMediaInfoProp(   "MediaInfo",     CCMediaInfo.EMPTY,            this, EPropertyType.OBJECTIVE_METADATA);
+	public final EIntProp                Length        = new EIntProp(         "Length",        0,                            this, EPropertyType.OBJECTIVE_METADATA);
+	public final EDateProp               AddDate       = new EDateProp(        "AddDate",       CCDate.getMinimumDate(),      this, EPropertyType.USER_METADATA);
+	public final EEnumProp<CCFileFormat> Format        = new EEnumProp<>(      "Format",        CCFileFormat.MKV,             this, EPropertyType.OBJECTIVE_METADATA);
+	public final EIntProp                Year          = new EIntProp(         "Year",          1900,                         this, EPropertyType.OBJECTIVE_METADATA);
+	public final EFileSizeProp           FileSize      = new EFileSizeProp(    "FileSize",      CCFileSize.ZERO,              this, EPropertyType.OBJECTIVE_METADATA);
+	public final EPartArrayProp          Parts         = new EPartArrayProp(   "Parts",         new String[PARTCOUNT_MAX],    this, EPropertyType.LOCAL_FILE_REF);
+	public final EDateTimeListProp       ViewedHistory = new EDateTimeListProp("ViewedHistory", CCDateTimeList.createEmpty(), this, EPropertyType.USER_METADATA);
+	public final ELanguageListProp       Language      = new ELanguageListProp("Language",      CCDBLanguageList.EMPTY,       this, EPropertyType.OBJECTIVE_METADATA);
 	
 	public CCMovie(CCMovieList ml, int id) {
 		super(ml, CCDBElementTyp.MOVIE, id);
-		parts = new String[PARTCOUNT_MAX];
-
-		zyklus        = new CCMovieZyklus();
-		filesize      = CCFileSize.ZERO;
-		addDate       = CCDate.getMinimumDate();
-		viewedHistory = CCDateTimeList.createEmpty();
-		language      = CCDBLanguageList.EMPTY;
-
-		_cache = new MovieCache(this);
-	}
-	
-	@Override
-	public void setDefaultValues(boolean updateDB) {
-		super.setDefaultValues(false);
-		zyklus        = CCMovieZyklus.EMPTY;
-		mediainfo     = CCMediaInfo.EMPTY;
-		length        = 0;
-		addDate       = CCDate.getMinimumDate();
-		format        = CCFileFormat.MKV;
-		year          = 1900;
-		filesize      = CCFileSize.ZERO;
-		parts[0]      = ""; //$NON-NLS-1$
-		parts[1]      = ""; //$NON-NLS-1$
-		parts[2]      = ""; //$NON-NLS-1$
-		parts[3]      = ""; //$NON-NLS-1$
-		parts[4]      = ""; //$NON-NLS-1$
-		parts[5]      = ""; //$NON-NLS-1$
-		viewedHistory = CCDateTimeList.createEmpty();
-		language      = CCDBLanguageList.EMPTY;
-
-		_cache.bust();
-		if (updateDB) updateDB();
 	}
 
 	@Override
-	protected boolean updateDB() {
+	protected IEProperty[] ListProperties()
+	{
+		return CCStreams
+				.iterate(super.ListProperties())
+				.append(new IEProperty[]
+				{
+					Zyklus,
+					MediaInfo,
+					Length,
+					AddDate,
+					Format,
+					Year,
+					FileSize,
+					Parts,
+					ViewedHistory,
+					Language,
+				})
+				.toArray(new IEProperty[0]);
+	}
+
+	public EZyklusProp             zyklus()        { return  Zyklus;        }
+	public EMediaInfoProp          mediaInfo()     { return  MediaInfo;     }
+	public EIntProp                length()        { return  Length;        }
+	public EDateProp               addDate()       { return  AddDate;       }
+	public EEnumProp<CCFileFormat> format()        { return  Format;        }
+	public EIntProp                year()          { return  Year;          }
+	public EFileSizeProp           fileSize()      { return  FileSize;      }
+	public EPartArrayProp          parts()         { return  Parts;         }
+	public EDateTimeListProp       viewedHistory() { return  ViewedHistory; }
+	public ELanguageListProp       language()      { return  Language;      }
+
+	@Override
+	public boolean updateDB() {
 		if (! isUpdating) {
 			return movielist.update(this);
 		}
 		return true;
 	}
 
-	private void updateDBWithException() throws DatabaseUpdateException {
+	public void updateDBWithException() throws DatabaseUpdateException {
 		var ok = updateDB();
 		if (!ok) throw new DatabaseUpdateException("updateDB() failed"); //$NON-NLS-1$
 	}
@@ -111,18 +109,18 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 	}
 
 	public String getCompleteTitle() {
-		if (zyklus.isSet()) {
-			return zyklus.getFormatted() + ' ' + '-' + ' ' + getTitle();
+		if (Zyklus.get().isSet()) {
+			return Zyklus.get().getFormatted() + ' ' + '-' + ' ' + Title.get();
 		} else {
-			return getTitle();
+			return Title.get();
 		}
 	}
 	
 	public String getOrderableTitle() {
-		if (zyklus.isSet()) {
-			return zyklus.getOrderableFormatted() + ' ' + '-' + ' ' + getTitle();
+		if (Zyklus.get().isSet()) {
+			return Zyklus.get().getOrderableFormatted() + ' ' + '-' + ' ' + Title.get();
 		} else {
-			return getTitle();
+			return Title.get();
 		}
 	}
 
@@ -133,211 +131,43 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 
 	@Override
 	public boolean isViewed() {
-		return viewedHistory.any();
-	}
-
-	public CCMovieZyklus getZyklus() {
-		return zyklus;
-	}
-
-	public void setZyklus(String title, int id) {
-		this.zyklus = new CCMovieZyklus(title, id);
-
-		_cache.bust();
-		updateDB();
-	}
-
-	public void setZyklus(CCMovieZyklus zykl) {
-		this.zyklus = zykl;
-
-		_cache.bust();
-		updateDB();
-	}
-
-	public void setZyklusTitle(String zyklus) {
-		this.zyklus = this.zyklus.getWithTitle(zyklus);
-
-		_cache.bust();
-		updateDB();
-	}
-	
-	public void setZyklusID(int zid) {
-		this.zyklus = this.zyklus.getWithNumber(zid);
-
-		_cache.bust();
-		updateDB();
+		return ViewedHistory.get().any();
 	}
 
 	public int getPartcount() {
 		int pc = 0;
 		
 		for (int i = 0; i < PARTCOUNT_MAX; i++) {
-			pc += parts[i].isEmpty()?0:1; // nett
+			pc += Parts.get(i).isEmpty()?0:1; // nett
 		}
 		
 		return pc;
 	}
 
 	@Override
-	public int getLength() {
-		return length;
-	}
-
-	@Override
-	public void setLength(int length) {
-		this.length = length;
-
-		_cache.bust();
-		updateDB();
-	}
-
-	@Override
-	public CCDate getAddDate() {
-		return addDate;
-	}
-
-	public void setAddDate(CCDate date) {
-		if (date == null) {CCLog.addUndefinied("Prevented setting CCMovie.AddDate to NULL"); return; } //$NON-NLS-1$
-
-		this.addDate = date;
-
-		_cache.bust();
-		updateDB();
-	}
-	
-	public void setAddDate(Date sqldate) {
-		this.addDate = CCDate.create(sqldate);
-
-		_cache.bust();
-		updateDB();
-	}
-
-	@Override
-	public CCFileFormat getFormat() {
-		return format;
-	}
-
-	public void setFormatSafe(int format) {
-		this.format = CCFileFormat.getWrapper().findOrNull(format);
-
-		if (this.format == null) {
-			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.ErroneousDatabaseValues", format)); //$NON-NLS-1$
-			this.format = CCFileFormat.MKV;
-		}
-
-		_cache.bust();
-		updateDB();
-	}
-
-	public void setFormat(int format) throws EnumFormatException {
-		this.format = CCFileFormat.getWrapper().findOrException(format);
-
-		_cache.bust();
-		updateDB();
-	}
-	
-	public void setFormat(CCFileFormat format) {
-		if (format == null) {CCLog.addUndefinied("Prevented setting CCMovie.Format to NULL"); return; } //$NON-NLS-1$
-
-		this.format = format;
-
-		_cache.bust();
-		updateDB();
-	}
-
-	@Override
-	public int getYear() {
-		return year;
-	}
-	
-	@Override
 	public int getFirstYear() {
-		return getYear();
-	}
-
-	public void setYear(int year) {
-		this.year = year;
-
-		_cache.bust();
-		updateDB();
-	}
-	
-	@Override
-	public CCFileSize getFilesize() {
-		return filesize;
-	}
-
-	@Override
-	public void setFilesize(long filesize) {
-		this.filesize = new CCFileSize(filesize);
-
-		_cache.bust();
-		updateDB();
-	}
-	
-	public void setFilesize(CCFileSize filesize) {
-		setFilesize(filesize.getBytes());
-	}
-
-	@Override
-	public CCDBLanguageList getLanguage() {
-		return language;
-	}
-
-	@Override
-	public void setLanguage(CCDBLanguageList language) {
-		if (language == null) {CCLog.addUndefinied("Prevented setting CCMovie.Language to NULL"); return; } //$NON-NLS-1$
-
-		this.language = language;
-
-		_cache.bust();
-		updateDB();
-	}
-
-	public void setLanguage(long dbdata) {
-		this.language = CCDBLanguageList.fromBitmask(dbdata);
-
-		_cache.bust();
-		updateDB();
-	}
-
-	public String getPart(int idx) {
-		return parts[idx];
+		return Year.get();
 	}
 
 	@Override
 	public List<String> getParts() {
 		List<String> r = new ArrayList<>();
-		for (int i = 0; i < PARTCOUNT_MAX; i++) if (!parts[i].isEmpty()) r.add(parts[i]);
+		for (int i = 0; i < PARTCOUNT_MAX; i++) if (!Parts.get(i).isEmpty()) r.add(Parts.get(i));
 		return r;
 	}
-	
+
+	@Override
+	public CCDateTimeList getViewedHistory() {
+		return ViewedHistory.get();
+	}
+
+	@Override
+	public CCDBLanguageList getLanguage() {
+		return Language.get();
+	}
+
 	public String getAbsolutePart(int idx) {
-		return PathFormatter.fromCCPath(getPart(idx));
-	}
-	
-	public void setPart(int idx, String path) {
-		parts[idx] = path;
-
-		_cache.bust();
-		updateDB();
-	}
-	
-	public void resetPart(int idx) {
-		setPart(idx, ""); //$NON-NLS-1$
-	}
-
-	public void setViewedHistory(String data) throws CCFormatException {
-		setViewedHistory(CCDateTimeList.parse(data));
-	}
-
-	public void setViewedHistory(CCDateTimeList value) {
-		if (value == null) { CCLog.addUndefinied("Prevented setting CCMovie.ViewedHistory to NULL"); return; } //$NON-NLS-1$
-
-		viewedHistory = value;
-
-		_cache.bust();
-		updateDB();
+		return PathFormatter.fromCCPath(Parts.get(idx));
 	}
 
 	public void setViewedHistoryFromUI(CCDateTimeList value) {
@@ -345,10 +175,7 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 
 		try
 		{
-			viewedHistory = value;
-
-			_cache.bust();
-			updateDBWithException();
+			ViewedHistory.setWithException(value);
 		}
 		catch (Throwable e1)
 		{
@@ -357,25 +184,13 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 		}
 	}
 
-	@Override
-	public CCDateTimeList getViewedHistory() {
-		return viewedHistory;
-	}
-	
-	public void addToViewedHistory(CCDateTime datetime) {
-		this.viewedHistory = this.viewedHistory.add(datetime);
-
-		_cache.bust();
-		updateDB();
-	}
-
 	public void addToViewedHistoryFromUI(CCDateTime datetime) {
 		try
 		{
-			this.viewedHistory = this.viewedHistory.add(datetime);
+			ViewedHistory.setWithException(ViewedHistory.get().add(datetime));
 
-			if (getTag(CCSingleTag.TAG_WATCH_LATER) && CCProperties.getInstance().PROP_MAINFRAME_AUTOMATICRESETWATCHLATER.getValue()) {
-				setTag(CCSingleTag.TAG_WATCH_LATER, false);
+			if (Tags.get(CCSingleTag.TAG_WATCH_LATER) && CCProperties.getInstance().PROP_MAINFRAME_AUTOMATICRESETWATCHLATER.getValue()) {
+				Tags.setWithException(CCSingleTag.TAG_WATCH_LATER, false);
 			}
 
 			_cache.bust();
@@ -392,7 +207,7 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 		boolean ret = false;
 		
 		for (int i = 1; i < PARTCOUNT_MAX; i++) {
-			ret |= parts[i-1].isEmpty() && ! parts[i].isEmpty();
+			ret |= Parts.get(i-1).isEmpty() && ! Parts.get(i).isEmpty();
 		}
 		
 		return ret;
@@ -409,9 +224,9 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 
 	@Override
 	public void play(Component swingOwner, boolean updateViewedAndHistory, NamedPathVar player) {
-		if (updateViewedAndHistory && !viewedHistory.getLastOrInvalid().isUnspecifiedOrMinimum())
+		if (updateViewedAndHistory && !ViewedHistory.get().getLastOrInvalid().isUnspecifiedOrMinimum())
 		{
-			var hours = viewedHistory.getLastOrInvalid().getSecondDifferenceTo(CCDateTime.getCurrentDateTime()) / (60.0 * 60.0);
+			var hours = ViewedHistory.get().getLastOrInvalid().getSecondDifferenceTo(CCDateTime.getCurrentDateTime()) / (60.0 * 60.0);
 			var max = CCProperties.getInstance().PROP_MAX_FASTREWATCH_HOUR_DIFF.getValue();
 
 			if (hours < max)
@@ -448,27 +263,27 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 	public String generateFilename(int part) { //Test if database has no errors
 		StringBuilder filename = new StringBuilder();
 		
-		if (getZyklus().isSet()) {
-			filename.append(getZyklus().getFormatted()).append(" - ");
+		if (Zyklus.get().isSet()) {
+			filename.append(Zyklus.get().getFormatted()).append(" - ");
 			
-			filename.append(Str.limit(getTitle().replace(": ", " - "), 128));
+			filename.append(Str.limit(Title.get().replace(": ", " - "), 128));
 		} else {
-			filename.append(getTitle().replace(": ", " - "));
+			filename.append(Title.get().replace(": ", " - "));
 		}
 		
 		for (CCGroup group : getGroups()) {
 			if (group.DoSerialize) filename.append(" [[").append(group.Name).append("]]");
 		}
 				
-		if (!getLanguage().isExact(CCProperties.getInstance().PROP_DATABASE_DEFAULTPARSERLANG.getValue())) {
-			filename.append(" [").append(getLanguage().serializeToFilenameString()).append("]");
+		if (!Language.get().isExact(CCProperties.getInstance().PROP_DATABASE_DEFAULTPARSERLANG.getValue())) {
+			filename.append(" [").append(Language.get().serializeToFilenameString()).append("]");
 		}
 		
 		if (getPartcount() > 1) {
 			filename.append(" (Part ").append(part + 1).append(")");
 		}
 		
-		filename.append(".").append(getFormat().asString());
+		filename.append(".").append(Format.get().asString());
 		
 		filename = new StringBuilder(PathFormatter.fixStringToFilesystemname(filename.toString()));
 		
@@ -476,53 +291,78 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 	}
 
 	public boolean hasZyklus() {
-		return getZyklus().isSet();
+		return Zyklus.get().isSet();
 	}
-	
+
 	@Override
-	public ExtendedViewedState getExtendedViewedState() {
-		if (!isViewed() && getTag(CCSingleTag.TAG_WATCH_LATER))
-			return new ExtendedViewedState(ExtendedViewedStateType.MARKED_FOR_LATER, getViewedHistory(), null);
+	public CCTagList getTags() {
+		return Tags.get();
+	}
 
-		if (isViewed() && getTag(CCSingleTag.TAG_WATCH_LATER))
-			return new ExtendedViewedState(ExtendedViewedStateType.MARKED_FOR_AGAIN, getViewedHistory(), null);
+	@Override
+	public CCFileFormat getFormat() {
+		return Format.get();
+	}
 
-		if (isViewed())
-			return new ExtendedViewedState(ExtendedViewedStateType.VIEWED, getViewedHistory(), null);
+	@Override
+	public int getYear() {
+		return 0;
+	}
 
-		if (getTag(CCSingleTag.TAG_WATCH_NEVER))
-			return new ExtendedViewedState(ExtendedViewedStateType.MARKED_FOR_NEVER, getViewedHistory(), null);
+	@Override
+	public CCFileSize getFilesize() {
+		return FileSize.get();
+	}
 
-		return new ExtendedViewedState(ExtendedViewedStateType.NOT_VIEWED, getViewedHistory(), null);
+	@Override
+	public CCMovieZyklus getZyklus() {
+		return Zyklus.get();
 	}
 
 	@Override
 	public CCMediaInfo getMediaInfo() {
-		return mediainfo;
+		return MediaInfo.get();
 	}
 
 	@Override
-	public void setMediaInfo(CCMediaInfo minfo) {
-		if (minfo == null) {CCLog.addUndefinied("Prevented setting CCMovie.MediaInfo to NULL"); return; } //$NON-NLS-1$
+	public int getLength() {
+		return Length.get();
+	}
 
-		this.mediainfo = minfo;
+	@Override
+	public CCDate getAddDate() {
+		return AddDate.get();
+	}
 
-		_cache.bust();
-		updateDB();
+	@Override
+	public ExtendedViewedState getExtendedViewedState() {
+		if (!isViewed() && Tags.get(CCSingleTag.TAG_WATCH_LATER))
+			return new ExtendedViewedState(ExtendedViewedStateType.MARKED_FOR_LATER, ViewedHistory.get(), null);
+
+		if (isViewed() && Tags.get(CCSingleTag.TAG_WATCH_LATER))
+			return new ExtendedViewedState(ExtendedViewedStateType.MARKED_FOR_AGAIN, ViewedHistory.get(), null);
+
+		if (isViewed())
+			return new ExtendedViewedState(ExtendedViewedStateType.VIEWED, ViewedHistory.get(), null);
+
+		if (Tags.get(CCSingleTag.TAG_WATCH_NEVER))
+			return new ExtendedViewedState(ExtendedViewedStateType.MARKED_FOR_NEVER, ViewedHistory.get(), null);
+
+		return new ExtendedViewedState(ExtendedViewedStateType.NOT_VIEWED, ViewedHistory.get(), null);
 	}
 
 	@Override
 	public CCQualityCategory getMediaInfoCategory(){
-		return getMediaInfo().getCategory(getGenres());
+		return MediaInfo.get().getCategory(Genres.get());
 	}
 
 	@Override
 	public CCGenreList getGenresFromSelfOrParent() {
-		return getGenres();
+		return Genres.get();
 	}
 
 	@Override
 	public Opt<CCDateTime> getLastViewed() {
-		return viewedHistory.isEmpty() ? Opt.empty() : Opt.of(viewedHistory.getLastOrInvalid());
+		return ViewedHistory.get().isEmpty() ? Opt.empty() : Opt.of(ViewedHistory.get().getLastOrInvalid());
 	}
 }

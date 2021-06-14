@@ -5,6 +5,7 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.enumextension.ContinoousEnum;
 import de.jClipCorn.util.enumextension.EnumWrapper;
+import de.jClipCorn.util.enumextension.IEnumWrapper;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -74,6 +75,11 @@ public enum CCGenre implements ContinoousEnum<CCGenre> {
 	
 	public static EnumWrapper<CCGenre> getWrapper() {
 		return wrapper;
+	}
+
+	@Override
+	public IEnumWrapper wrapper() {
+		return getWrapper();
 	}
 
 	@Override

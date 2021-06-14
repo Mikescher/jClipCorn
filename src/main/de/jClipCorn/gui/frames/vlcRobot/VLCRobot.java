@@ -462,7 +462,7 @@ public class VLCRobot {
 
 				if (q.ElementQueue.size() == 0) SwingUtils.invokeLater(() -> _clientQueue.remove(q));
 
-				SwingUtils.invokeLater(() -> _clientQueue.add(0, VLCPlaylistEntry.createClientQueuePreemptive(uris, nextSub, nextSub.getLength()*60)));
+				SwingUtils.invokeLater(() -> _clientQueue.add(0, VLCPlaylistEntry.createClientQueuePreemptive(uris, nextSub, nextSub.length().get()*60)));
 
 
 			}).start();

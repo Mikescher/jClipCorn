@@ -66,8 +66,8 @@ public class StatisticsMediaInfoCDateChart extends StatisticsChart {
 		CCDate now = CCDate.getCurrentDate();
 		List<CCDate> dates = source
 				.iteratorMoviesOrEpisodes(movielist)
-				.filter(e -> e.getMediaInfo().isSet())
-				.map(e -> CCDateTime.createFromFileTimestamp(e.getMediaInfo().getCDate(), TimeZone.getDefault()).date.getSetDay(1))
+				.filter(e -> e.mediaInfo().get().isSet())
+				.map(e -> CCDateTime.createFromFileTimestamp(e.mediaInfo().get().getCDate(), TimeZone.getDefault()).date.getSetDay(1))
 				.filter(d -> d.isLessEqualsThan(now))
 				.enumerate();
 		

@@ -5,6 +5,7 @@ import de.jClipCorn.gui.resources.MultiSizeIconRef;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.enumextension.ContinoousEnum;
 import de.jClipCorn.util.enumextension.EnumWrapper;
+import de.jClipCorn.util.enumextension.IEnumWrapper;
 
 import javax.swing.*;
 
@@ -42,6 +43,11 @@ public enum CCUserScore implements ContinoousEnum<CCUserScore> {
 	
 	public static EnumWrapper<CCUserScore> getWrapper() {
 		return wrapper;
+	}
+
+	@Override
+	public IEnumWrapper wrapper() {
+		return getWrapper();
 	}
 	
 	@Override

@@ -13,6 +13,7 @@ import de.jClipCorn.gui.resources.reftypes.IconRef;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.enumextension.ContinoousEnum;
 import de.jClipCorn.util.enumextension.EnumWrapper;
+import de.jClipCorn.util.enumextension.IEnumWrapper;
 import de.jClipCorn.util.exceptions.OnlineRefFormatException;
 import de.jClipCorn.util.stream.CCStreams;
 
@@ -57,6 +58,11 @@ public enum CCOnlineRefType implements ContinoousEnum<CCOnlineRefType> {
 	
 	public static EnumWrapper<CCOnlineRefType> getWrapper() {
 		return wrapper;
+	}
+
+	@Override
+	public IEnumWrapper wrapper() {
+		return getWrapper();
 	}
 	
 	@Override

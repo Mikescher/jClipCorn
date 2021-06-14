@@ -1,20 +1,5 @@
 package de.jClipCorn.gui.frames.coverPreviewFrame;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-
-import javax.imageio.ImageIO;
-import javax.swing.*;
-import javax.swing.filechooser.FileFilter;
-
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.ICCCoveredElement;
 import de.jClipCorn.features.log.CCLog;
@@ -28,6 +13,18 @@ import de.jClipCorn.util.colorquantizer.util.ColorQuantizerConverter;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.FileChooserHelper;
 import de.jClipCorn.util.helper.ImageUtilities;
+
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import javax.swing.filechooser.FileFilter;
+import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
 public class CoverPreviewFrame extends JDialog {
 	private static final long serialVersionUID = -807033167837187549L;
@@ -44,7 +41,7 @@ public class CoverPreviewFrame extends JDialog {
 		_path = new File(CCMovieList.getInstance().getCoverCache().getFilepath(elem.getCoverInfo()));
 
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		initGUI(elem.getCover(), elem.getTitle());
+		initGUI(elem.getCover(), elem.title().get());
 		setLocationRelativeTo(findWindow(owner));
 		
 		addKeyListener(new KeyAdapter() {

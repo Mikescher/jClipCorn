@@ -94,13 +94,13 @@ public class DatabaseAutofixer {
 			CCMovie mov = (CCMovie) err.getElement1();
 			
 			for (int i = 0; i < CCMovie.PARTCOUNT_MAX; i++) {
-				if (! mov.getPart(i).isEmpty()) {
-					String old = mov.getPart(i);
+				if (! mov.Parts.get(i).isEmpty()) {
+					String old = mov.Parts.get(i);
 					String abs = mov.getAbsolutePart(i);
 					String rel = PathFormatter.getCCPath(abs.replace("\\", PathFormatter.SERIALIZATION_SEPERATOR)); //$NON-NLS-1$
 				
 					if (old.length() == rel.length() && rel.length() > 3) {
-						mov.setPart(i, rel);
+						mov.Parts.set(i, rel);
 					} else {
 						return false;
 					}
@@ -117,7 +117,7 @@ public class DatabaseAutofixer {
 				String rel = PathFormatter.getCCPath(abs.replace("\\", PathFormatter.SERIALIZATION_SEPERATOR)); //$NON-NLS-1$
 			
 				if (old.length() == rel.length() && rel.length() > 3) {
-					episode.setPart(rel);
+					episode.Part.set(rel);
 				} else {
 					return false;
 				}
@@ -136,7 +136,7 @@ public class DatabaseAutofixer {
 			
 			boolean[] already_used = new boolean[256];
 			for (int i = 0; i < CCGenreList.getMaxListSize(); i++) {
-				CCGenre g = elem.getGenre(i);
+				CCGenre g = elem.Genres.get().getGenre(i);
 				
 				if (! (g.isEmpty() || already_used[g.asInt()])) {
 					ls = ls.getTryAddGenre(g);
@@ -145,7 +145,7 @@ public class DatabaseAutofixer {
 				}
 			}
 			
-			elem.setGenres(ls);
+			elem.Genres.set(ls);
 			
 			return true;
 		}
@@ -159,12 +159,12 @@ public class DatabaseAutofixer {
 			CCGenreList ls = CCGenreList.EMPTY;
 			
 			for (int i = 0; i < CCGenreList.getMaxListSize(); i++) {
-				if (! elem.getGenre(i).isEmpty()) {
-					ls = ls.getTryAddGenre(elem.getGenre(i));
+				if (! elem.Genres.get().getGenre(i).isEmpty()) {
+					ls = ls.getTryAddGenre(elem.Genres.get().getGenre(i));
 				}
 			}
 			
-			elem.setGenres(ls);
+			elem.Genres.set(ls);
 			
 			return true;
 		}
@@ -183,7 +183,7 @@ public class DatabaseAutofixer {
 				return false;
 			}
 			
-			((CCMovie) err.getElement1()).setFilesize(size);
+			((CCMovie) err.getElement1()).FileSize.set(size);
 			
 			return true;
 		} else if (err.getElement1() instanceof CCSeries) {
@@ -197,7 +197,7 @@ public class DatabaseAutofixer {
 				return false;
 			}
 			
-			((CCEpisode)err.getElement1()).setFilesize(size);
+			((CCEpisode)err.getElement1()).FileSize.set(size);
 			
 			return true;
 		}
@@ -210,17 +210,17 @@ public class DatabaseAutofixer {
 			List<String> parts = new ArrayList<>();
 			
 			for (int i = 0; i < ((CCMovie)err.getElement1()).getPartcount(); i++) {
-				if (! ((CCMovie)err.getElement1()).getPart(i).isEmpty()) {
-					parts.add(((CCMovie)err.getElement1()).getPart(i));
+				if (! ((CCMovie)err.getElement1()).Parts.get(i).isEmpty()) {
+					parts.add(((CCMovie)err.getElement1()).Parts.get(i));
 				}
 			}
 			
 			for (int i = 0; i < CCMovie.PARTCOUNT_MAX; i++) {
-				((CCMovie)err.getElement1()).resetPart(i);
+				((CCMovie)err.getElement1()).Parts.reset(i);
 			}
 			
 			for (int i = 0; i < parts.size(); i++) {
-				((CCMovie)err.getElement1()).setPart(i, parts.get(i));
+				((CCMovie)err.getElement1()).Parts.set(i, parts.get(i));
 			}
 			
 			return true;
@@ -239,7 +239,7 @@ public class DatabaseAutofixer {
 		if (err.getElement1() instanceof CCMovie) {
 			CCFileFormat fmt = CCFileFormat.getMovieFormat(PathFormatter.getExtension(((CCMovie)err.getElement1()).getAbsolutePart(0)));
 			if (fmt != null) {
-				((CCMovie)err.getElement1()).setFormat(fmt);
+				((CCMovie)err.getElement1()).Format.set(fmt);
 				return true;
 			} else {
 				return false;
@@ -249,7 +249,7 @@ public class DatabaseAutofixer {
 		} else if (err.getElement1() instanceof CCSeason) {
 			return false;
 		} else if (err.getElement1() instanceof CCEpisode) {
-			((CCEpisode)err.getElement1()).setFormat(CCFileFormat.getMovieFormat(PathFormatter.getExtension(((CCEpisode)err.getElement1()).getAbsolutePart())));
+			((CCEpisode)err.getElement1()).Format.set(CCFileFormat.getMovieFormat(PathFormatter.getExtension(((CCEpisode)err.getElement1()).getAbsolutePart())));
 			return true;
 		}
 		
@@ -258,17 +258,17 @@ public class DatabaseAutofixer {
 	
 	public static boolean fixError_Not_Trimmed(DatabaseError err) {
 		if (err.getElement1() instanceof CCMovie) {
-			((CCMovie)err.getElement1()).setTitle(((CCMovie)err.getElement1()).getTitle().trim());
-			((CCMovie)err.getElement1()).setZyklusTitle(((CCMovie)err.getElement1()).getZyklus().getTitle().trim());
+			((CCMovie)err.getElement1()).Title.set(((CCMovie)err.getElement1()).getTitle().trim());
+			((CCMovie)err.getElement1()).Zyklus.setTitle(((CCMovie)err.getElement1()).getZyklus().getTitle().trim());
 			return true;
 		} else if (err.getElement1() instanceof CCSeries) {
-			((CCSeries)err.getElement1()).setTitle(((CCSeries)err.getElement1()).getTitle().trim());
+			((CCSeries)err.getElement1()).Title.set(((CCSeries)err.getElement1()).getTitle().trim());
 			return true;
 		} else if (err.getElement1() instanceof CCSeason) {
-			((CCSeason)err.getElement1()).setTitle(((CCSeason)err.getElement1()).getTitle().trim());
+			((CCSeason)err.getElement1()).Title.set(((CCSeason)err.getElement1()).getTitle().trim());
 			return true;
 		} else if (err.getElement1() instanceof CCEpisode) {
-			((CCEpisode)err.getElement1()).setTitle(((CCEpisode)err.getElement1()).getTitle().trim());
+			((CCEpisode)err.getElement1()).Title.set(((CCEpisode)err.getElement1()).getTitle().trim());
 			return true;
 		}
 		
@@ -289,7 +289,7 @@ public class DatabaseAutofixer {
 				File fnew = new File(npath);
 				
 				boolean succ = fold.renameTo(fnew);
-				mov.setPart(i, PathFormatter.getCCPath(npath));
+				mov.Parts.set(i, PathFormatter.getCCPath(npath));
 				
 				if (! succ) {
 					return false;
@@ -312,7 +312,7 @@ public class DatabaseAutofixer {
 		if (err.getElement1() instanceof CCMovie) {
 			CCMovie mov = ((CCMovie)err.getElement1());
 			
-			mov.setTag(CCSingleTag.TAG_WATCH_NEVER, false);
+			mov.Tags.set(CCSingleTag.TAG_WATCH_NEVER, false);
 
 			return true;
 		} else if (err.getElement1() instanceof CCSeries) {
@@ -322,7 +322,7 @@ public class DatabaseAutofixer {
 		} else if (err.getElement1() instanceof CCEpisode) {
 			CCEpisode epi = ((CCEpisode)err.getElement1());
 			
-			epi.setTag(CCSingleTag.TAG_WATCH_NEVER, false);
+			epi.Tags.set(CCSingleTag.TAG_WATCH_NEVER, false);
 
 			return true;
 		}
@@ -335,9 +335,9 @@ public class DatabaseAutofixer {
 			CCMovie mov = ((CCMovie)err.getElement1());
 			
 			if (! mov.isViewed()) return false;
-			if (mov.getViewedHistory().any()) return false;
+			if (mov.ViewedHistory.get().any()) return false;
 			
-			mov.addToViewedHistory(CCDateTime.getUnspecified());
+			mov.ViewedHistory.add(CCDateTime.getUnspecified());
 
 			return true;
 		} else if (err.getElement1() instanceof CCSeries) {
@@ -348,7 +348,7 @@ public class DatabaseAutofixer {
 			CCEpisode epi = ((CCEpisode)err.getElement1());
 			
 			if (! epi.isViewed()) return false;
-			if (epi.getViewedHistory().any()) return false;
+			if (epi.ViewedHistory.get().any()) return false;
 			
 			epi.addToViewedHistory(CCDateTime.getUnspecified());
 
@@ -440,17 +440,17 @@ public class DatabaseAutofixer {
 
 			if (pold.equals(pnew)) return false;
 
-			((CCEpisode)err.getElement1()).setPart(pnew);
+			((CCEpisode)err.getElement1()).Part.set(pnew);
 
 			return true;
 		} else if (err.getElement1() instanceof CCMovie) {
 			for (int i = 0; i < ((CCMovie)err.getElement1()).getPartcount(); i++) {
-				String pold = ((CCMovie)err.getElement1()).getPart(i);
+				String pold = ((CCMovie)err.getElement1()).Parts.get(i);
 				String pnew = PathFormatter.getCCPath(((CCMovie)err.getElement1()).getAbsolutePart(i));
 
 				if (pold.equals(pnew)) continue;
 
-				((CCMovie)err.getElement1()).setPart(i, pnew);
+				((CCMovie)err.getElement1()).Parts.set(i, pnew);
 				return true;
 			}
 
@@ -463,7 +463,7 @@ public class DatabaseAutofixer {
 	public static boolean fixError_MediaInfoFilesizeMismatch(DatabaseError err) {
 		if (err.getElement1() instanceof ICCPlayableElement) {
 			ICCPlayableElement elem = (ICCPlayableElement) err.getElement1();
-			CCMediaInfo mi = elem.getMediaInfo();
+			CCMediaInfo mi = elem.mediaInfo().get();
 			if (!mi.isSet()) return false;
 
 			long fsz = 0;
@@ -475,7 +475,7 @@ public class DatabaseAutofixer {
 
 			if (fsz != mi.getFilesize()) return false;
 
-			elem.setFilesize(fsz);
+			elem.fileSize().set(fsz);
 			return true;
 		}
 
@@ -488,31 +488,31 @@ public class DatabaseAutofixer {
 			var elem = (CCMovie) err.getElement1();
 
 			var newtitle  = DatabaseStringNormalization.fixInvalidCharacters(elem.getTitle());
-			if (!newtitle.equals(elem.getTitle())) { elem.setTitle(newtitle); return true; }
+			if (!newtitle.equals(elem.getTitle())) { elem.Title.set(newtitle); return true; }
 
 			var newzyklus = DatabaseStringNormalization.fixInvalidCharacters(elem.getZyklus().getTitle());
-			if (!newzyklus.equals(elem.getZyklus().getTitle())) { elem.setZyklusTitle(newzyklus); return true; }
+			if (!newzyklus.equals(elem.getZyklus().getTitle())) { elem.Zyklus.setTitle(newzyklus); return true; }
 		}
 		else if (err.getElement1() instanceof CCSeries)
 		{
 			var elem = (CCSeries) err.getElement1();
 
 			var newtitle  = DatabaseStringNormalization.fixInvalidCharacters(elem.getTitle());
-			if (!newtitle.equals(elem.getTitle())) { elem.setTitle(newtitle); return true; }
+			if (!newtitle.equals(elem.getTitle())) { elem.Title.set(newtitle); return true; }
 		}
 		else if (err.getElement1() instanceof CCSeason)
 		{
 			var elem = (CCSeason) err.getElement1();
 
 			var newtitle  = DatabaseStringNormalization.fixInvalidCharacters(elem.getTitle());
-			if (!newtitle.equals(elem.getTitle())) { elem.setTitle(newtitle); return true; }
+			if (!newtitle.equals(elem.getTitle())) { elem.Title.set(newtitle); return true; }
 		}
 		else if (err.getElement1() instanceof CCEpisode)
 		{
 			var elem = (CCEpisode) err.getElement1();
 
 			var newtitle  = DatabaseStringNormalization.fixInvalidCharacters(elem.getTitle());
-			if (!newtitle.equals(elem.getTitle())) { elem.setTitle(newtitle); return true; }
+			if (!newtitle.equals(elem.getTitle())) { elem.Title.set(newtitle); return true; }
 		}
 
 		return false;
@@ -521,7 +521,7 @@ public class DatabaseAutofixer {
 	public static boolean fixError_MediaInfoCDate(DatabaseError err) {
 		if (err.getElement1() instanceof ICCPlayableElement) {
 			ICCPlayableElement elem = (ICCPlayableElement) err.getElement1();
-			CCMediaInfo mi = elem.getMediaInfo();
+			CCMediaInfo mi = elem.mediaInfo().get();
 			if (!mi.isSet()) return false;
 
 			try {
@@ -536,7 +536,7 @@ public class DatabaseAutofixer {
 						mi.getAudioFormat(), mi.getAudioChannels(), mi.getAudioCodec(), mi.getAudioSamplerate(),
 						mi.getChecksum());
 
-				elem.setMediaInfo(mi2);
+				elem.mediaInfo().set(mi2);
 				return true;
 
 			} catch (IOException ex) {
@@ -550,7 +550,7 @@ public class DatabaseAutofixer {
 	public static boolean fixError_MediaInfoMDate(DatabaseError err) {
 		if (err.getElement1() instanceof ICCPlayableElement) {
 			ICCPlayableElement elem = (ICCPlayableElement) err.getElement1();
-			CCMediaInfo mi = elem.getMediaInfo();
+			CCMediaInfo mi = elem.mediaInfo().get();
 			if (!mi.isSet()) return false;
 
 			try {
@@ -565,7 +565,7 @@ public class DatabaseAutofixer {
 						mi.getAudioFormat(), mi.getAudioChannels(), mi.getAudioCodec(), mi.getAudioSamplerate(),
 						mi.getChecksum());
 
-				elem.setMediaInfo(mi2);
+				elem.mediaInfo().set(mi2);
 				return true;
 
 			} catch (IOException ex) {

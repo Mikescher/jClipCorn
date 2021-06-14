@@ -3,6 +3,7 @@ package de.jClipCorn.properties.enumerations;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.enumextension.ContinoousEnum;
 import de.jClipCorn.util.enumextension.EnumWrapper;
+import de.jClipCorn.util.enumextension.IEnumWrapper;
 
 public enum CCDatabaseDriver implements ContinoousEnum<CCDatabaseDriver> {
 	DERBY(0),
@@ -27,6 +28,11 @@ public enum CCDatabaseDriver implements ContinoousEnum<CCDatabaseDriver> {
 	
 	public static EnumWrapper<CCDatabaseDriver> getWrapper() {
 		return wrapper;
+	}
+
+	@Override
+	public IEnumWrapper wrapper() {
+		return getWrapper();
 	}
 
 	public static CCDatabaseDriver[] getSelectableValues() {

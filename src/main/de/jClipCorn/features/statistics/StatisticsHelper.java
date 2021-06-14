@@ -43,7 +43,7 @@ public class StatisticsHelper {
 	}
 
 	public static Integer getTotalDuration(CCMovieList ml) {
-		return ml.iteratorPlayables().sum(ICCPlayableElement::getLength, Integer::sum, 0);
+		return ml.iteratorPlayables().sum(e -> e.length().get(), Integer::sum, 0);
 	}
 
 	public static CCFileSize getMovieSize(CCMovieList ml) {
@@ -95,15 +95,15 @@ public class StatisticsHelper {
 	}
 
 	public static Integer getViewedTotalDuration(CCMovieList ml) {
-		return ml.iteratorPlayables().filter(ICCPlayableElement::isViewed).sum(ICCPlayableElement::getLength, Integer::sum, 0);
+		return ml.iteratorPlayables().filter(ICCPlayableElement::isViewed).sum(e -> e.length().get(), Integer::sum, 0);
 	}
 	
 	public static CCDate getFirstAddDate(CCStream<ICCPlayableElement> it) {
-		return it.minOrDefault(ICCPlayableElement::getAddDate, CCDate::compare, CCDate.getUnspecified());
+		return it.minOrDefault(e -> e.addDate().get(), CCDate::compare, CCDate.getUnspecified());
 	}
 	
 	public static CCDate getLastAddDate(CCStream<ICCPlayableElement> it) {
-		return it.maxOrDefault(ICCPlayableElement::getAddDate, CCDate::compare, CCDate.getUnspecified());
+		return it.maxOrDefault(e -> e.addDate().get(), CCDate::compare, CCDate.getUnspecified());
 	}
 	
 	public static List<Integer> getCountForAllDates(CCDate startDate, int count, CCStream<ICCPlayableElement> source) {
@@ -114,7 +114,7 @@ public class StatisticsHelper {
 		}
 		
 		for (ICCPlayableElement m : source) {
-			int pos = startDate.getDayDifferenceTo(m.getAddDate());
+			int pos = startDate.getDayDifferenceTo(m.addDate().get());
 			
 			if (pos >= 0 && pos < count) {
 				int prev = ls.get(pos) + 1;
@@ -126,11 +126,11 @@ public class StatisticsHelper {
 	}
 	
 	public static Integer getMinimumLength(CCStream<ICCPlayableElement> it) {
-		return it.minOrDefault(ICCPlayableElement::getLength, Integer::compare, -1);
+		return it.minOrDefault(e -> e.length().get(), Integer::compare, -1);
 	}
 	
 	public static Integer getMaximumLength(CCStream<ICCPlayableElement> it) {
-		return it.maxOrDefault(ICCPlayableElement::getLength, Integer::compare, -1);
+		return it.maxOrDefault(e -> e.length().get(), Integer::compare, -1);
 	}
 	
 	public static double[][] getCountForAllLengths(int minLength, int count, CCStream<ICCPlayableElement> it) {
@@ -142,7 +142,7 @@ public class StatisticsHelper {
 		}
 		
 		for (ICCPlayableElement m : it) {
-			result[1][m.getLength() - minLength + 1] += 1;
+			result[1][m.length().get() - minLength + 1] += 1;
 		}
 		
 		return result;
@@ -156,7 +156,7 @@ public class StatisticsHelper {
 		}
 		
 		for (ICCPlayableElement m : it) {
-			result[m.getFormat().asInt()]++;
+			result[m.format().get().asInt()]++;
 		}
 		
 		return result;
@@ -212,18 +212,18 @@ public class StatisticsHelper {
 		}
 		
 		for (CCDatabaseElement m : it) {
-			result[m.getScore().asInt()]++;
+			result[m.Score.get().asInt()]++;
 		}
 		
 		return result;
 	}
 	
 	public static Integer getMinimumYear(CCStream<ICCDatedElement> it) {
-		return it.minOrDefault(ICCDatedElement::getYear, Integer::compare, 0);
+		return it.minOrDefault(e -> e.year().get(), Integer::compare, 0);
 	}
 	
 	public static Integer getMaximumYear(CCStream<ICCDatedElement> it) {
-		return it.maxOrDefault(ICCDatedElement::getYear, Integer::compare, 0);
+		return it.maxOrDefault(e -> e.year().get(), Integer::compare, 0);
 	}
 	
 	public static int[] getCountForAllYears(int minYear, int count, CCStream<ICCDatedElement> it) {
@@ -234,7 +234,7 @@ public class StatisticsHelper {
 		}
 		
 		for (ICCDatedElement m : it) {
-			result[m.getYear() - minYear]++;
+			result[m.year().get() - minYear]++;
 		}
 		
 		return result;
@@ -248,8 +248,8 @@ public class StatisticsHelper {
 		}
 		
 		for (CCDatabaseElement m : it) {
-			for (int gi = 0; gi < m.getGenreCount(); gi++) {
-				result[m.getGenre(gi).asInt()]++;
+			for (int gi = 0; gi < m.Genres.get().getGenreCount(); gi++) {
+				result[m.Genres.get(gi).asInt()]++;
 			}
 		}
 		
@@ -276,7 +276,7 @@ public class StatisticsHelper {
 		for (int i = 0; i < CCDBLanguage.values().length; i++) result[i] = 0;
 
 		for (ICCPlayableElement m : it) {
-			for(CCDBLanguage lng: m.getLanguage()) result[lng.asInt()]++;
+			for(CCDBLanguage lng: m.language().get()) result[lng.asInt()]++;
 		}
 
 		return result;
@@ -287,9 +287,9 @@ public class StatisticsHelper {
 
 		for (ICCPlayableElement m : it)
 		{
-			Integer vn = result.getOrDefault(m.getLanguage(), null);
-			if (vn == null) result.put(m.getLanguage(), 1);
-			else result.put(m.getLanguage(), vn + 1);
+			Integer vn = result.getOrDefault(m.language().get(), null);
+			if (vn == null) result.put(m.language().get(), 1);
+			else result.put(m.language().get(), vn + 1);
 		}
 
 		return result;
@@ -300,7 +300,7 @@ public class StatisticsHelper {
 		
 		for (int i = 0; i < CCTagList.ACTIVETAGS; i++) {
 			final int tag = i;
-			result[tag] = it.filter(p -> p.getTag(tag)).count();
+			result[tag] = it.filter(p -> p.tags().get(tag)).count();
 		}
 		
 		return result;
@@ -314,9 +314,9 @@ public class StatisticsHelper {
 		}
 		
 		for (ICCPlayableElement m : it) {
-			int pos = startDate.getDayDifferenceTo(m.getAddDate());
+			int pos = startDate.getDayDifferenceTo(m.addDate().get());
 			
-			ls[pos] += m.getLength();
+			ls[pos] += m.length().get();
 		}
 		
 		return ls;
@@ -330,9 +330,9 @@ public class StatisticsHelper {
 		}
 
 		for (ICCPlayableElement m : it) {
-			int pos = startDate.getDayDifferenceTo(m.getAddDate());
+			int pos = startDate.getDayDifferenceTo(m.addDate().get());
 			
-			ls[pos] += m.getFilesize().getBytes();
+			ls[pos] += m.fileSize().get().getBytes();
 		}
 		
 		return ls;
@@ -367,11 +367,11 @@ public class StatisticsHelper {
 	}
 	
 	public static CCDate getFirstWatchedDate(CCStream<ICCPlayableElement> it) {
-		return it.map(m -> m.getViewedHistory().getLastDateOrInvalid()).filter(p -> !p.isMinimum()).minOrDefault(CCDate::compare, CCDate.getUnspecified());
+		return it.map(m -> m.viewedHistory().get().getLastDateOrInvalid()).filter(p -> !p.isMinimum()).minOrDefault(CCDate::compare, CCDate.getUnspecified());
 	}
 	
 	public static CCDate getLastWatchedDate(CCStream<ICCPlayableElement> it) {
-		return it.map(m -> m.getViewedHistory().getLastDateOrInvalid()).filter(p -> !p.isMinimum()).maxOrDefault(CCDate::compare, CCDate.getUnspecified());
+		return it.map(m -> m.viewedHistory().get().getLastDateOrInvalid()).filter(p -> !p.isMinimum()).maxOrDefault(CCDate::compare, CCDate.getUnspecified());
 	}
 	
 	public static List<Integer> getViewedForAllDates(CCDate startDate, int count, CCStream<ICCPlayableElement> it) {
@@ -385,10 +385,10 @@ public class StatisticsHelper {
 		}
 		
 		for (ICCPlayableElement elem : it.filter(ICCPlayableElement::isViewed)) {
-			if (elem.getViewedHistory().getLastDateOrInvalid().isMinimum()) {
+			if (elem.viewedHistory().get().getLastDateOrInvalid().isMinimum()) {
 				initialcount++;
 			} else {
-				int pos = startDate.getDayDifferenceTo(elem.getViewedHistory().getLastDateOrInvalid());
+				int pos = startDate.getDayDifferenceTo(elem.viewedHistory().get().getLastDateOrInvalid());
 				
 				int prev = ls.get(pos) + 1;
 				ls.set(pos, prev);
@@ -439,9 +439,9 @@ public class StatisticsHelper {
 		}
 		
 		for (ICCPlayableElement m : it) {
-			int pos = startDate.getDayDifferenceTo(m.getAddDate());
+			int pos = startDate.getDayDifferenceTo(m.addDate().get());
 
-			ls[pos][formats.indexOf(m.getFormat())] += 1;
+			ls[pos][formats.indexOf(m.format().get())] += 1;
 		}
 		
 		return ls;
@@ -452,7 +452,7 @@ public class StatisticsHelper {
 		
 		List<SortableTuple<CCDate, Integer>> dates = series
 				.iteratorEpisodes()
-				.flatten(e -> e.getViewedHistory().iterator().map(h -> Tuple.Create(e, h)))
+				.flatten(e -> e.ViewedHistory.get().iterator().map(h -> Tuple.Create(e, h)))
 				.filter(t -> !t.Item2.isUnspecifiedDateTime())
 				.map(t -> new SortableTuple<>(t.Item2.date, t.Item1.getGlobalEpisodeNumber()))
 				.enumerate();
@@ -563,7 +563,7 @@ public class StatisticsHelper {
 		int max_vc = 0;
 		
 		for (ICCPlayableElement m : it) {
-			int vc = m.getViewedHistory().count();
+			int vc = m.viewedHistory().get().count();
 			
 			Integer sum = map.get(vc);
 			if (sum == null) sum = 0;
@@ -586,14 +586,14 @@ public class StatisticsHelper {
 
 		for (ICCPlayableElement e : it)
 		{
-			for (CCDateTime v : e.getViewedHistory().iterator())
+			for (CCDateTime v : e.viewedHistory().get().iterator())
 			{
 				if (v.time.isUnspecifiedTime()) continue;
 				if (!v.isValidDateTime()) continue;
 				if (v.isUnspecifiedOrMinimum()) continue;
 
 				int t = v.time.getMinuteOfDay();
-				for (int i=0; i < e.getLength(); i++) result[(t+i)%(60*24)]++;
+				for (int i=0; i < e.length().get(); i++) result[(t+i)%(60*24)]++;
 			}
 		}
 

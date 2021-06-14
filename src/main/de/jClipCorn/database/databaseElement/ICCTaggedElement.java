@@ -1,14 +1,9 @@
 package de.jClipCorn.database.databaseElement;
 
-import de.jClipCorn.database.databaseElement.columnTypes.CCSingleTag;
-import de.jClipCorn.database.databaseElement.columnTypes.CCTagList;
+import de.jClipCorn.database.elementValues.ETagListProp;
 
 public interface ICCTaggedElement {
 	// Movies, Series, Episodes
 
-	CCTagList getTags();
-
-	void setTags(CCTagList t);
-
-	void switchTag(CCSingleTag t);
+	ETagListProp tags();
 }

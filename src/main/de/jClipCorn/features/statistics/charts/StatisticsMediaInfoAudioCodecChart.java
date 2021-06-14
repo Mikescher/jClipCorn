@@ -57,8 +57,8 @@ public class StatisticsMediaInfoAudioCodecChart extends StatisticsChart {
 	private DefaultCategoryDataset getDataSet(CCMovieList movielist, StatisticsTypeFilter source) {
 		Map<String, Integer> values = source
 				.iteratorMoviesOrEpisodes(movielist)
-				.filter(e -> e.getMediaInfo().isSet())
-				.map(e -> e.getMediaInfo().getAudioCodec())
+				.filter(e -> e.mediaInfo().get().isSet())
+				.map(e -> e.mediaInfo().get().getAudioCodec())
 				.groupBy(e -> e)
 				.toMap(Map.Entry::getKey, e -> e.getValue().size()); 
 

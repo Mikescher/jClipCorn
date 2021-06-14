@@ -1,14 +1,15 @@
 package de.jClipCorn.database.databaseElement;
 
-import java.awt.image.BufferedImage;
-
 import de.jClipCorn.database.covertab.CCCoverData;
+import de.jClipCorn.database.elementValues.EStringProp;
 import de.jClipCorn.util.datatypes.Tuple;
+
+import java.awt.image.BufferedImage;
 
 public interface ICCCoveredElement {
 	// Movie, Season, Series
 
-	String getTitle();
+	EStringProp title();
 
 	int getCoverID();
 	CCCoverData getCoverInfo();

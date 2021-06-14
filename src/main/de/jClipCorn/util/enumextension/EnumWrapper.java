@@ -11,7 +11,7 @@ import de.jClipCorn.util.stream.CCStreams;
 import javax.swing.*;
 import java.util.*;
 
-public class EnumWrapper<T extends ContinoousEnum<T>> {
+public class EnumWrapper<T extends ContinoousEnum<T>> implements IEnumWrapper {
 
 	private final T defValue;
 	private final Func1to1<T, Object>  displaySorter;

@@ -3,6 +3,7 @@ package de.jClipCorn.properties.enumerations;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.enumextension.ContinoousEnum;
 import de.jClipCorn.util.enumextension.EnumWrapper;
+import de.jClipCorn.util.enumextension.IEnumWrapper;
 
 public enum DisplayDateAlgorithm implements ContinoousEnum<DisplayDateAlgorithm> {
 	LAST_VIEWED(0), 
@@ -26,6 +27,11 @@ public enum DisplayDateAlgorithm implements ContinoousEnum<DisplayDateAlgorithm>
 	
 	public static EnumWrapper<DisplayDateAlgorithm> getWrapper() {
 		return wrapper;
+	}
+
+	@Override
+	public IEnumWrapper wrapper() {
+		return getWrapper();
 	}
 	
 	@Override

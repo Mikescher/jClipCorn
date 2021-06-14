@@ -5,6 +5,7 @@ import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.gui.resources.reftypes.IconRef;
 import de.jClipCorn.util.enumextension.ContinoousEnum;
 import de.jClipCorn.util.enumextension.EnumWrapper;
+import de.jClipCorn.util.enumextension.IEnumWrapper;
 
 import javax.swing.*;
 
@@ -114,6 +115,11 @@ public enum CCDBLanguage implements ContinoousEnum<CCDBLanguage> {
 	
 	public static EnumWrapper<CCDBLanguage> getWrapper() {
 		return wrapper;
+	}
+
+	@Override
+	public IEnumWrapper wrapper() {
+		return getWrapper();
 	}
 
 	public static CCDBLanguage findByLongString(String s) {

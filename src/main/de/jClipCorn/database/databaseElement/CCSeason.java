@@ -6,6 +6,7 @@ import de.jClipCorn.database.databaseElement.caches.ICalculationCache;
 import de.jClipCorn.database.databaseElement.caches.SeasonCache;
 import de.jClipCorn.database.databaseElement.columnTypes.*;
 import de.jClipCorn.database.databaseElement.datapacks.ISeasonData;
+import de.jClipCorn.database.elementValues.*;
 import de.jClipCorn.database.util.*;
 import de.jClipCorn.features.actionTree.IActionSourceObject;
 import de.jClipCorn.gui.localization.LocaleBundle;
@@ -13,6 +14,7 @@ import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.datetime.CCDate;
+import de.jClipCorn.util.exceptions.DatabaseUpdateException;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.formatter.TimeIntervallFormatter;
 import de.jClipCorn.util.stream.CCStream;
@@ -25,33 +27,53 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, ICCCoveredElement, IActionSourceObject, IEpisodeOwner, ISeasonData {
+public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, ICCCoveredElement, IActionSourceObject, IEpisodeOwner, ISeasonData, IPropertyParent {
 	private final CCSeries owner;
 	private final int seasonID;
-	
-	private final List<CCEpisode> episodes = new Vector<>();
-	private String title;
-	private int year;
+
 	private int coverid;
 
-	private final SeasonCache _cache;
+	private final SeasonCache _cache = new SeasonCache(this);
+
+	public final EStringProp Title = new EStringProp("Title", Str.Empty, this, EPropertyType.OBJECTIVE_METADATA);
+	public final EIntProp    Year  = new EIntProp(   "Year",  1900,      this, EPropertyType.OBJECTIVE_METADATA);
+
+	private IEProperty[] _properties = null;
+
+	private final List<CCEpisode> episodes = new Vector<>();
 
 	private boolean isUpdating = false;
 	
 	public CCSeason(CCSeries owner, int seasonID) {
-		this.owner = owner;
+		this.owner    = owner;
 		this.seasonID = seasonID;
-		_cache = new SeasonCache(this);
 	}
-	
-	public void setDefaultValues(boolean updateDB) {
-		episodes.clear();
-		title = ""; //$NON-NLS-1$
-		year = 0;
-		coverid = -1;
 
-		_cache.bust();
-		if (updateDB) updateDB();
+	public IEProperty[] GetProperties()
+	{
+		if (_properties == null) _properties = ListProperties();
+		return _properties;
+	}
+
+	protected IEProperty[] ListProperties()
+	{
+		return new IEProperty[]
+		{
+			Title,
+			Year,
+		};
+	}
+
+	public EIntProp    year()  { return  Year;  }
+	public EStringProp title() { return  Title; }
+
+	public void setDefaultValues(boolean updateDB) {
+		beginUpdating();
+
+		coverid = -1;
+		for (IEProperty prop : GetProperties()) prop.resetToDefault();
+
+		if (updateDB) endUpdating(); else abortUpdating();
 	}
 
 	public void beginUpdating() {
@@ -68,11 +90,16 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 		isUpdating = false;
 	}
 	
-	private boolean updateDB() {
+	public boolean updateDB() {
 		if (! isUpdating) {
 			return owner.getMovieList().update(this);
 		}
 		return true;
+	}
+
+	public void updateDBWithException() throws DatabaseUpdateException {
+		var ok = updateDB();
+		if (!ok) throw new DatabaseUpdateException("updateDB() failed"); //$NON-NLS-1$
 	}
 	
 	public void directlyInsertEpisode(CCEpisode ep) {
@@ -81,27 +108,13 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 	}
 
 	public void enforceOrder() {
-		episodes.sort(Comparator.comparingInt(CCEpisode::getEpisodeNumber));
+		episodes.sort(Comparator.comparingInt(e -> e.EpisodeNumber.get()));
 		_cache.bust();
 	}
 
 	@Override
 	public int getLocalID() {
 		return seasonID;
-	}
-
-	public void setTitle(String t) {
-		this.title = t;
-
-		_cache.bust();
-		updateDB();
-	}
-
-	public void setYear(int y) {
-		this.year = y;
-
-		_cache.bust();
-		updateDB();
 	}
 
 	public void setCover(int cid) {
@@ -133,24 +146,24 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 
 	@Override
 	public String getQualifiedTitle() {
-		return Str.format("{0} - {1}", getSeries().getTitle(), getTitle()); //$NON-NLS-1$
-	}
-
-	@Override
-	public String getTitle() {
-		return title;
-	}
-
-	@Override
-	public int getYear() {
-		return year;
+		return Str.format("{0} - {1}", getSeries().Title.get(), Title.get()); //$NON-NLS-1$
 	}
 
 	@Override
 	public int getCoverID() {
 		return coverid;
 	}
-	
+
+	@Override
+	public String getTitle() {
+		return Title.get();
+	}
+
+	@Override
+	public int getYear() {
+		return Year.get();
+	}
+
 	@Override
 	public BufferedImage getCover() {
 		return owner.getMovieList().getCoverCache().getCover(coverid);
@@ -191,7 +204,7 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 	public boolean isPartialViewed() { // Some parts viewed - some not
 		return !(isViewed() || isUnviewed());
 	}
-	
+
 	@Override
 	public CCTagList getTags() {
 		return _cache.get(SeasonCache.TAGS, null, sea->
@@ -199,7 +212,7 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 			CCTagList i = CCTagList.EMPTY;
 
 			for (int j = 0; j < getEpisodeCount(); j++) {
-				i = i.getUnion(getEpisodeByArrayIndex(j).getTags());
+				i = i.getUnion(getEpisodeByArrayIndex(j).Tags.get());
 			}
 			return i;
 		});
@@ -218,7 +231,7 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 		{
 			int l = 0;
 			for (CCEpisode ep : episodes) {
-				l += ep.getLength();
+				l += ep.Length.get();
 			}
 			return l;
 		});
@@ -311,7 +324,7 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 			long sz = 0;
 
 			for (CCEpisode ep : episodes) {
-				sz += ep.getFilesize().getBytes();
+				sz += ep.FileSize.get().getBytes();
 			}
 
 			return new CCFileSize(sz);
@@ -327,7 +340,7 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 	
 	public CCEpisode getEpisodeByNumber(int en) {
 		for (int i = 0; i < episodes.size(); i++) {
-			if (episodes.get(i).getEpisodeNumber() == en) {
+			if (episodes.get(i).EpisodeNumber.get() == en) {
 				return episodes.get(i);
 			}
 		}
@@ -387,11 +400,11 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 			for (int i = 0; i < getEpisodeCount(); i++) {
 				CCEpisode ep = getEpisodeByArrayIndex(i);
 
-				if (ep.getLength() > 0)
-					if (len > 0 && ep.getLength() != len) {
+				if (ep.Length.get() > 0)
+					if (len > 0 && ep.Length.get() != len) {
 						return null;
 					} else {
-						len = ep.getLength();
+						len = ep.Length.get();
 					}
 			}
 
@@ -404,7 +417,7 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 		{
 			if (getEpisodeCount() == 0) return null;
 
-			return (int)Math.round((iteratorEpisodes().sumInt(CCEpisode::getLength)*1d) / getEpisodeCount());
+			return (int)Math.round((iteratorEpisodes().sumInt(e -> e.Length.get())*1d) / getEpisodeCount());
 		});
 	}
 
@@ -414,7 +427,7 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 		{
 			if (getEpisodeCount() == 0) return null;
 
-			Map.Entry<Integer, List<CCEpisode>> mostCommon = iteratorEpisodes().groupBy(CCEpisode::getLength).autosortByProperty(e -> e.getValue().size()).lastOrNull();
+			Map.Entry<Integer, List<CCEpisode>> mostCommon = iteratorEpisodes().groupBy(e -> e.Length.get()).autosortByProperty(e -> e.getValue().size()).lastOrNull();
 			if (mostCommon == null) return null;
 
 			if (mostCommon.getValue().size() * 3 >= getEpisodeCount() * 2) { // 66% of episodes have same length
@@ -431,7 +444,7 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 			int ep = 0;
 
 			for (CCEpisode ccEpisode : episodes) {
-				ep = Math.max(ep, ccEpisode.getEpisodeNumber());
+				ep = Math.max(ep, ccEpisode.EpisodeNumber.get());
 			}
 
 			return ep + 1;
@@ -494,7 +507,7 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 
 	@Override
 	public String toString() {
-		return getTitle();
+		return Title.get();
 	}
 
 	public String getCommonPathStart() {
@@ -504,7 +517,7 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 
 			for (int seasi = 0; seasi < getEpisodeCount(); seasi++) {
 				CCEpisode episode = getEpisodeByArrayIndex(seasi);
-				all.add(episode.getPart());
+				all.add(episode.Part.get());
 			}
 
 			while (all.contains("")) all.remove(""); //$NON-NLS-1$ //$NON-NLS-2$
@@ -514,14 +527,14 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 	}
 	
 	public String getFolderNameForCreatedFolderStructure() {
-		return PathFormatter.fixStringToFilesystemname(getTitle());
+		return PathFormatter.fixStringToFilesystemname(Title.get());
 	}
 
 	public int getIndexForCreatedFolderStructure() {
 		Pattern regex = owner.getValidSeasonIndexRegex();
 		
 		if (regex != null) {
-			Matcher m = regex.matcher(getTitle());
+			Matcher m = regex.matcher(Title.get());
 			m.matches();
 			return Integer.parseInt(m.group("index")); //$NON-NLS-1$
 		}
@@ -538,10 +551,10 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 		{
 			if (getEpisodeCount() == 0) return -1;
 
-			int n = episodes.get(0).getEpisodeNumber();
+			int n = episodes.get(0).EpisodeNumber.get();
 
 			for (int i = 0; i < episodes.size(); i++) {
-				n = Math.min(n, episodes.get(i).getEpisodeNumber());
+				n = Math.min(n, episodes.get(i).EpisodeNumber.get());
 			}
 
 			return n;
@@ -553,10 +566,10 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 		{
 			if (getEpisodeCount() == 0) return -1;
 
-			int n = episodes.get(0).getEpisodeNumber();
+			int n = episodes.get(0).EpisodeNumber.get();
 
 			for (int i = 0; i < episodes.size(); i++) {
-				n = Math.max(n, episodes.get(i).getEpisodeNumber());
+				n = Math.max(n, episodes.get(i).EpisodeNumber.get());
 			}
 
 			return n;
@@ -598,7 +611,7 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 		{
 			int vc = Integer.MAX_VALUE;
 			for (CCEpisode e : episodes) {
-				vc = Math.min(e.getViewedHistory().count(), vc);
+				vc = Math.min(e.ViewedHistory.get().count(), vc);
 			}
 			if (vc == Integer.MAX_VALUE) return 0;
 			return vc;
@@ -642,12 +655,12 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 		{
 			if (getEpisodeCount() == 0) return CCQualityCategory.UNSET;
 
-			if (iteratorEpisodes().any(e -> e.getMediaInfo().isUnset())) return CCQualityCategory.UNSET;
+			if (iteratorEpisodes().any(e -> e.MediaInfo.get().isUnset())) return CCQualityCategory.UNSET;
 
-			double avg = iteratorEpisodes().map(e -> e.getMediaInfo().getCategory(getSeries().getGenres()).getCategoryType()).avgValueOrDefault(e -> (double)e.asInt(), 0);
+			double avg = iteratorEpisodes().map(e -> e.MediaInfo.get().getCategory(getSeries().Genres.get()).getCategoryType()).avgValueOrDefault(e -> (double)e.asInt(), 0);
 
 			CCQualityResolutionType rtype = iteratorEpisodes()
-					.map(e -> e.getMediaInfo().getCategory(getSeries().getGenres()).getResolutionType())
+					.map(e -> e.MediaInfo.get().getCategory(getSeries().Genres.get()).getResolutionType())
 					.groupBy(e -> e)
 					.map(Map.Entry::getKey)
 					.singleOrDefault(null, null);
@@ -659,12 +672,12 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 
 			String longtext = Str.format(LocaleBundle.getFormattedString("JMediaInfoControl.episodes", getEpisodeCount()));
 
-			int minBitrate = iteratorEpisodes().map(e -> e.getMediaInfo().getBitrate()).autoMinValueOrDefault(e -> e, 0);
-			int maxBitrate = iteratorEpisodes().map(e -> e.getMediaInfo().getBitrate()).autoMaxValueOrDefault(e -> e, 0);
-			int minDuration = iteratorEpisodes().map(e -> (int)e.getMediaInfo().getDuration()).autoMinValueOrDefault(e -> e, 0);
-			int maxDuration = iteratorEpisodes().map(e -> (int)e.getMediaInfo().getDuration()).autoMaxValueOrDefault(e -> e, 0);
-			int minFramerate = iteratorEpisodes().map(e -> (int)Math.round(e.getMediaInfo().getFramerate())).autoMinValueOrDefault(e -> e, 0);
-			int maxFramerate = iteratorEpisodes().map(e -> (int)Math.round(e.getMediaInfo().getFramerate())).autoMaxValueOrDefault(e -> e, 0);
+			int minBitrate = iteratorEpisodes().map(e -> e.MediaInfo.get().getBitrate()).autoMinValueOrDefault(e -> e, 0);
+			int maxBitrate = iteratorEpisodes().map(e -> e.MediaInfo.get().getBitrate()).autoMaxValueOrDefault(e -> e, 0);
+			int minDuration = iteratorEpisodes().map(e -> (int)e.MediaInfo.get().getDuration()).autoMinValueOrDefault(e -> e, 0);
+			int maxDuration = iteratorEpisodes().map(e -> (int)e.MediaInfo.get().getDuration()).autoMaxValueOrDefault(e -> e, 0);
+			int minFramerate = iteratorEpisodes().map(e -> (int)Math.round(e.MediaInfo.get().getFramerate())).autoMinValueOrDefault(e -> e, 0);
+			int maxFramerate = iteratorEpisodes().map(e -> (int)Math.round(e.MediaInfo.get().getFramerate())).autoMaxValueOrDefault(e -> e, 0);
 
 			StringBuilder b = new StringBuilder();
 			b.append("<html>");

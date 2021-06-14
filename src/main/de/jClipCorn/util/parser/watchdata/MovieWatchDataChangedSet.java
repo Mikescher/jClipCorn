@@ -37,7 +37,7 @@ public class MovieWatchDataChangedSet extends WatchDataChangeSet {
 
 	@Override
 	public void execute() {
-		if (!newState) mov.setViewedHistory(CCDateTimeList.createEmpty());
-		if (newState && !mov.isViewed()) mov.addToViewedHistory(CCDateTime.getUnspecified());
+		if (!newState) mov.ViewedHistory.set(CCDateTimeList.createEmpty());
+		if (newState && !mov.isViewed()) mov.ViewedHistory.add(CCDateTime.getUnspecified());
 	}
 }

@@ -43,13 +43,13 @@ public class ExtendedMovieWatchDataChangedSet extends WatchDataChangeSet {
 		if (mov.isViewed() ^ newState)
 			b.append(String.format("%d -> %d", mov.isViewed()?1:0, newState?1:0));
 		
-		if (date != null && ! mov.getViewedHistory().contains(date)) {
+		if (date != null && ! mov.ViewedHistory.get().contains(date)) {
 			if (b.length()>0)b.append(" & ");
 			
 			b.append(String.format("history += %s", date.toStringUINormal()));
 		}
 
-		if (score != null && mov.getScore() != score) {
+		if (score != null && mov.Score.get() != score) {
 			if (b.length()>0)b.append(" & ");
 			
 			if (score == CCUserScore.RATING_NO) 
@@ -65,12 +65,12 @@ public class ExtendedMovieWatchDataChangedSet extends WatchDataChangeSet {
 
 	@Override
 	public void execute() {
-		if (score != null) mov.setScore(score);
+		if (score != null) mov.Score.set(score);
 
-		if (newState && date != null && !mov.getViewedHistory().contains(date)) mov.addToViewedHistory(date);
+		if (newState && date != null && !mov.ViewedHistory.get().contains(date)) mov.ViewedHistory.add(date);
 
-		if (newState && date == null) mov.addToViewedHistory(CCDateTime.getUnspecified());
+		if (newState && date == null) mov.ViewedHistory.add(CCDateTime.getUnspecified());
 
-		if (!newState) mov.setViewedHistory(CCDateTimeList.createEmpty());
+		if (!newState) mov.ViewedHistory.set(CCDateTimeList.createEmpty());
 	} 
 }

@@ -3,6 +3,7 @@ package de.jClipCorn.database.databaseElement.columnTypes;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.enumextension.ContinoousEnum;
 import de.jClipCorn.util.enumextension.EnumWrapper;
+import de.jClipCorn.util.enumextension.IEnumWrapper;
 import de.jClipCorn.util.formatter.PathFormatter;
 
 import javax.swing.*;
@@ -32,6 +33,11 @@ public enum CCFileFormat implements ContinoousEnum<CCFileFormat> {
 	
 	public static EnumWrapper<CCFileFormat> getWrapper() {
 		return wrapper;
+	}
+
+	@Override
+	public IEnumWrapper wrapper() {
+		return getWrapper();
 	}
 
 	@Override

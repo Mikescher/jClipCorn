@@ -4,6 +4,7 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.mainFrame.table.ClipTableModel;
 import de.jClipCorn.util.enumextension.ContinoousEnum;
 import de.jClipCorn.util.enumextension.EnumWrapper;
+import de.jClipCorn.util.enumextension.IEnumWrapper;
 
 @SuppressWarnings("nls")
 public enum MainFrameColumn implements ContinoousEnum<MainFrameColumn> {
@@ -59,6 +60,11 @@ public enum MainFrameColumn implements ContinoousEnum<MainFrameColumn> {
 	
 	public static EnumWrapper<MainFrameColumn> getWrapper() {
 		return wrapper;
+	}
+
+	@Override
+	public IEnumWrapper wrapper() {
+		return getWrapper();
 	}
 	
 	@Override

@@ -52,8 +52,8 @@ public class StatisticsMediaInfoFramecountChart extends StatisticsChart {
 	private XYDataset getDataSet(CCMovieList movielist, StatisticsTypeFilter source) {
 		List<Integer> values = source
 				.iteratorMoviesOrEpisodes(movielist)
-				.filter(e -> e.getMediaInfo().isSet())
-				.map(e -> e.getMediaInfo().getFramecount()/1000)
+				.filter(e -> e.mediaInfo().get().isSet())
+				.map(e -> e.mediaInfo().get().getFramecount()/1000)
 				.enumerate();
 
 		int min = CCStreams.iterate(values).autoMinOrDefault(-1);

@@ -3,6 +3,7 @@ package de.jClipCorn.database.util;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.enumextension.ContinoousEnum;
 import de.jClipCorn.util.enumextension.EnumWrapper;
+import de.jClipCorn.util.enumextension.IEnumWrapper;
 import de.jClipCorn.util.stream.CCStreams;
 
 @SuppressWarnings("nls")
@@ -36,6 +37,11 @@ public enum CCQualityResolutionType implements ContinoousEnum<CCQualityResolutio
 
 	public static EnumWrapper<CCQualityResolutionType> getWrapper() {
 		return wrapper;
+	}
+
+	@Override
+	public IEnumWrapper wrapper() {
+		return getWrapper();
 	}
 
 	@Override

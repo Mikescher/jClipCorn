@@ -245,17 +245,17 @@ public class CCDatabase {
 	}
 
 	private void updateEpisodeFromResultSet(CCSQLResultSet rs, CCEpisode ep) throws SQLException, CCFormatException, SQLWrapperException {
-		ep.setEpisodeNumber(rs.getInt(DatabaseStructure.COL_EPIS_EPISODE));
-		ep.setTitle(rs.getString(DatabaseStructure.COL_EPIS_NAME));
-		ep.setViewedHistory(rs.getString(DatabaseStructure.COL_EPIS_VIEWEDHISTORY));
-		ep.setLength(rs.getInt(DatabaseStructure.COL_EPIS_LENGTH));
-		ep.setFormat(rs.getInt(DatabaseStructure.COL_EPIS_FORMAT));
-		ep.setFilesize(rs.getLong(DatabaseStructure.COL_EPIS_FILESIZE));
-		ep.setPart(rs.getString(DatabaseStructure.COL_EPIS_PART_1));
-		ep.setAddDate(rs.getDate(DatabaseStructure.COL_EPIS_ADDDATE));
-		ep.setTags(rs.getShort(DatabaseStructure.COL_EPIS_TAGS));
-		ep.setLanguage(rs.getLong(DatabaseStructure.COL_EPIS_LANGUAGE));
-		ep.setMediaInfo(CCMediaInfo.createFromDB(
+		ep.EpisodeNumber.set(rs.getInt(DatabaseStructure.COL_EPIS_EPISODE));
+		ep.Title.set(rs.getString(DatabaseStructure.COL_EPIS_NAME));
+		ep.ViewedHistory.set(rs.getString(DatabaseStructure.COL_EPIS_VIEWEDHISTORY));
+		ep.Length.set(rs.getInt(DatabaseStructure.COL_EPIS_LENGTH));
+		ep.Format.set(rs.getInt(DatabaseStructure.COL_EPIS_FORMAT));
+		ep.FileSize.set(rs.getLong(DatabaseStructure.COL_EPIS_FILESIZE));
+		ep.Part.set(rs.getString(DatabaseStructure.COL_EPIS_PART_1));
+		ep.AddDate.set(rs.getDate(DatabaseStructure.COL_EPIS_ADDDATE));
+		ep.Tags.set(rs.getShort(DatabaseStructure.COL_EPIS_TAGS));
+		ep.Language.set(rs.getLong(DatabaseStructure.COL_EPIS_LANGUAGE));
+		ep.MediaInfo.set(CCMediaInfo.createFromDB(
 			rs.getNullableLong(DatabaseStructure.COL_EPIS_MI_FILESIZE),
 			rs.getNullableLong(DatabaseStructure.COL_EPIS_MI_CDATE),
 			rs.getNullableLong(DatabaseStructure.COL_EPIS_MI_MDATE),
@@ -276,48 +276,48 @@ public class CCDatabase {
 	}
 
 	private void updateSeasonFromResultSet(CCSQLResultSet rs, CCSeason seas) throws SQLException, SQLWrapperException {
-		seas.setTitle(rs.getString(DatabaseStructure.COL_SEAS_NAME));
-		seas.setYear(rs.getInt(DatabaseStructure.COL_SEAS_YEAR));
+		seas.Title.set(rs.getString(DatabaseStructure.COL_SEAS_NAME));
+		seas.Year.set(rs.getInt(DatabaseStructure.COL_SEAS_YEAR));
+
 		seas.setCover(rs.getInt(DatabaseStructure.COL_SEAS_COVERID));
 	}
 
 	private void updateSeriesFromResultSet(CCSQLResultSet rs, CCSeries ser) throws SQLException, CCFormatException, SQLWrapperException {
-		ser.setTitle(rs.getString(DatabaseStructure.COL_MAIN_NAME));
-		ser.setGenres(rs.getLong(DatabaseStructure.COL_MAIN_GENRE));
-		ser.setOnlinescore(rs.getInt(DatabaseStructure.COL_MAIN_ONLINESCORE));
-		ser.setFsk(rs.getInt(DatabaseStructure.COL_MAIN_FSK));
-		ser.setScore(rs.getInt(DatabaseStructure.COL_MAIN_SCORE));
+		ser.Title.set(rs.getString(DatabaseStructure.COL_MAIN_NAME));
+		ser.Genres.set(rs.getLong(DatabaseStructure.COL_MAIN_GENRE));
+		ser.OnlineScore.set(rs.getInt(DatabaseStructure.COL_MAIN_ONLINESCORE));
+		ser.FSK.set(rs.getInt(DatabaseStructure.COL_MAIN_FSK));
+		ser.Score.set(rs.getInt(DatabaseStructure.COL_MAIN_SCORE));
+		ser.OnlineReference.set(rs.getString(DatabaseStructure.COL_MAIN_ONLINEREF));
+		ser.Tags.set(rs.getShort(DatabaseStructure.COL_MAIN_TAGS));
+
 		ser.setCover(rs.getInt(DatabaseStructure.COL_MAIN_COVERID));
-		ser.setOnlineReference(rs.getString(DatabaseStructure.COL_MAIN_ONLINEREF));
 		ser.setGroups(rs.getString(DatabaseStructure.COL_MAIN_GROUPS));
-		ser.setTags(rs.getShort(DatabaseStructure.COL_MAIN_TAGS));
 	}
 
 	private void updateMovieFromResultSet(CCSQLResultSet rs, CCMovie mov) throws SQLException, CCFormatException, SQLWrapperException {
-		mov.setTitle(rs.getString(DatabaseStructure.COL_MAIN_NAME));
-		mov.setViewedHistory(rs.getString(DatabaseStructure.COL_MAIN_VIEWEDHISTORY));
-		mov.setZyklus(rs.getString(DatabaseStructure.COL_MAIN_ZYKLUS), rs.getInt(DatabaseStructure.COL_MAIN_ZYKLUSNUMBER));
-		mov.setLanguage(rs.getLong(DatabaseStructure.COL_MAIN_LANGUAGE));
-		mov.setGenres(rs.getLong(DatabaseStructure.COL_MAIN_GENRE));
-		mov.setLength(rs.getInt(DatabaseStructure.COL_MAIN_LENGTH));
-		mov.setAddDate(rs.getDate(DatabaseStructure.COL_MAIN_ADDDATE));
-		mov.setOnlinescore(rs.getInt(DatabaseStructure.COL_MAIN_ONLINESCORE));
-		mov.setFsk(rs.getInt(DatabaseStructure.COL_MAIN_FSK));
-		mov.setFormat(rs.getInt(DatabaseStructure.COL_MAIN_FORMAT));
-		mov.setYear(rs.getInt(DatabaseStructure.COL_MAIN_MOVIEYEAR));
-		mov.setOnlineReference(rs.getString(DatabaseStructure.COL_MAIN_ONLINEREF));
-		mov.setGroups(rs.getString(DatabaseStructure.COL_MAIN_GROUPS));
-		mov.setFilesize(rs.getLong(DatabaseStructure.COL_MAIN_FILESIZE));
-		mov.setTags(rs.getShort(DatabaseStructure.COL_MAIN_TAGS));
-		mov.setPart(0, rs.getString(DatabaseStructure.COL_MAIN_PART_1));
-		mov.setPart(1, rs.getString(DatabaseStructure.COL_MAIN_PART_2));
-		mov.setPart(2, rs.getString(DatabaseStructure.COL_MAIN_PART_3));
-		mov.setPart(3, rs.getString(DatabaseStructure.COL_MAIN_PART_4));
-		mov.setPart(4, rs.getString(DatabaseStructure.COL_MAIN_PART_5));
-		mov.setPart(5, rs.getString(DatabaseStructure.COL_MAIN_PART_6));
-		mov.setScore(rs.getInt(DatabaseStructure.COL_MAIN_SCORE));
-		mov.setCover(rs.getInt(DatabaseStructure.COL_MAIN_COVERID));
-		mov.setMediaInfo(CCMediaInfo.createFromDB(
+		mov.Title.set(rs.getString(DatabaseStructure.COL_MAIN_NAME));
+		mov.ViewedHistory.set(rs.getString(DatabaseStructure.COL_MAIN_VIEWEDHISTORY));
+		mov.Zyklus.set(rs.getString(DatabaseStructure.COL_MAIN_ZYKLUS), rs.getInt(DatabaseStructure.COL_MAIN_ZYKLUSNUMBER));
+		mov.Language.set(rs.getLong(DatabaseStructure.COL_MAIN_LANGUAGE));
+		mov.Genres.set(rs.getLong(DatabaseStructure.COL_MAIN_GENRE));
+		mov.Length.set(rs.getInt(DatabaseStructure.COL_MAIN_LENGTH));
+		mov.AddDate.set(rs.getDate(DatabaseStructure.COL_MAIN_ADDDATE));
+		mov.OnlineScore.set(rs.getInt(DatabaseStructure.COL_MAIN_ONLINESCORE));
+		mov.FSK.set(rs.getInt(DatabaseStructure.COL_MAIN_FSK));
+		mov.Format.set(rs.getInt(DatabaseStructure.COL_MAIN_FORMAT));
+		mov.Year.set(rs.getInt(DatabaseStructure.COL_MAIN_MOVIEYEAR));
+		mov.OnlineReference.set(rs.getString(DatabaseStructure.COL_MAIN_ONLINEREF));
+		mov.FileSize.set(rs.getLong(DatabaseStructure.COL_MAIN_FILESIZE));
+		mov.Tags.set(rs.getShort(DatabaseStructure.COL_MAIN_TAGS));
+		mov.Parts.set(0, rs.getString(DatabaseStructure.COL_MAIN_PART_1));
+		mov.Parts.set(1, rs.getString(DatabaseStructure.COL_MAIN_PART_2));
+		mov.Parts.set(2, rs.getString(DatabaseStructure.COL_MAIN_PART_3));
+		mov.Parts.set(3, rs.getString(DatabaseStructure.COL_MAIN_PART_4));
+		mov.Parts.set(4, rs.getString(DatabaseStructure.COL_MAIN_PART_5));
+		mov.Parts.set(5, rs.getString(DatabaseStructure.COL_MAIN_PART_6));
+		mov.Score.set(rs.getInt(DatabaseStructure.COL_MAIN_SCORE));
+		mov.MediaInfo.set(CCMediaInfo.createFromDB(
 			rs.getNullableLong(DatabaseStructure.COL_MAIN_MI_FILESIZE),
 			rs.getNullableLong(DatabaseStructure.COL_MAIN_MI_CDATE),
 			rs.getNullableLong(DatabaseStructure.COL_MAIN_MI_MDATE),
@@ -335,6 +335,9 @@ public class CCDatabase {
 			rs.getNullableString(DatabaseStructure.COL_MAIN_MI_ACODEC),
 			rs.getNullableInt(DatabaseStructure.COL_MAIN_MI_SAMPLERATE),
 			rs.getNullableString(DatabaseStructure.COL_MAIN_MI_CHECKSUM)));
+
+		mov.setCover(rs.getInt(DatabaseStructure.COL_MAIN_COVERID));
+		mov.setGroups(rs.getString(DatabaseStructure.COL_MAIN_GROUPS));
 	}
 
 	private int getNewID() {
@@ -520,33 +523,34 @@ public class CCDatabase {
 
 			stmt.setInt(DatabaseStructure.COL_MAIN_LOCALID,       mov.getLocalID());
 
-			stmt.setStr(DatabaseStructure.COL_MAIN_NAME,          mov.getTitle());
-			stmt.setStr(DatabaseStructure.COL_MAIN_VIEWEDHISTORY, mov.getViewedHistory().toSerializationString());
-			stmt.setStr(DatabaseStructure.COL_MAIN_ZYKLUS,        mov.getZyklus().getTitle());
-			stmt.setInt(DatabaseStructure.COL_MAIN_ZYKLUSNUMBER,  mov.getZyklus().getNumber());
-			stmt.setLng(DatabaseStructure.COL_MAIN_LANGUAGE,      mov.getLanguage().serializeToLong());
-			stmt.setLng(DatabaseStructure.COL_MAIN_GENRE,         mov.getGenres().getAllGenres());
-			stmt.setInt(DatabaseStructure.COL_MAIN_LENGTH,        mov.getLength());
-			stmt.setStr(DatabaseStructure.COL_MAIN_ADDDATE,       mov.getAddDate().toStringSQL());
-			stmt.setInt(DatabaseStructure.COL_MAIN_ONLINESCORE,   mov.getOnlinescore().asInt());
-			stmt.setInt(DatabaseStructure.COL_MAIN_FSK,           mov.getFSK().asInt());
-			stmt.setInt(DatabaseStructure.COL_MAIN_FORMAT,        mov.getFormat().asInt());
-			stmt.setInt(DatabaseStructure.COL_MAIN_MOVIEYEAR,     mov.getYear());
-			stmt.setStr(DatabaseStructure.COL_MAIN_ONLINEREF,     mov.getOnlineReference().toSerializationString());
+			stmt.setStr(DatabaseStructure.COL_MAIN_NAME,          mov.Title.get());
+			stmt.setStr(DatabaseStructure.COL_MAIN_VIEWEDHISTORY, mov.ViewedHistory.get().toSerializationString());
+			stmt.setStr(DatabaseStructure.COL_MAIN_ZYKLUS,        mov.Zyklus.get().getTitle());
+			stmt.setInt(DatabaseStructure.COL_MAIN_ZYKLUSNUMBER,  mov.Zyklus.get().getNumber());
+			stmt.setLng(DatabaseStructure.COL_MAIN_LANGUAGE,      mov.Language.get().serializeToLong());
+			stmt.setLng(DatabaseStructure.COL_MAIN_GENRE,         mov.Genres.get().getAllGenres());
+			stmt.setInt(DatabaseStructure.COL_MAIN_LENGTH,        mov.Length.get());
+			stmt.setStr(DatabaseStructure.COL_MAIN_ADDDATE,       mov.AddDate.get().toStringSQL());
+			stmt.setInt(DatabaseStructure.COL_MAIN_ONLINESCORE,   mov.OnlineScore.get().asInt());
+			stmt.setInt(DatabaseStructure.COL_MAIN_FSK,           mov.FSK.get().asInt());
+			stmt.setInt(DatabaseStructure.COL_MAIN_FORMAT,        mov.Format.get().asInt());
+			stmt.setInt(DatabaseStructure.COL_MAIN_MOVIEYEAR,     mov.Year.get());
+			stmt.setStr(DatabaseStructure.COL_MAIN_ONLINEREF,     mov.OnlineReference.get().toSerializationString());
+			stmt.setLng(DatabaseStructure.COL_MAIN_FILESIZE,      mov.FileSize.get().getBytes());
+			stmt.setSht(DatabaseStructure.COL_MAIN_TAGS,          mov.Tags.get().asShort());
+			stmt.setStr(DatabaseStructure.COL_MAIN_PART_1,        mov.Parts.get(0));
+			stmt.setStr(DatabaseStructure.COL_MAIN_PART_2,        mov.Parts.get(1));
+			stmt.setStr(DatabaseStructure.COL_MAIN_PART_3,        mov.Parts.get(2));
+			stmt.setStr(DatabaseStructure.COL_MAIN_PART_4,        mov.Parts.get(3));
+			stmt.setStr(DatabaseStructure.COL_MAIN_PART_5,        mov.Parts.get(4));
+			stmt.setStr(DatabaseStructure.COL_MAIN_PART_6,        mov.Parts.get(5));
+			stmt.setInt(DatabaseStructure.COL_MAIN_SCORE,         mov.Score.get().asInt());
+
 			stmt.setStr(DatabaseStructure.COL_MAIN_GROUPS,        mov.getGroups().toSerializationString());
-			stmt.setLng(DatabaseStructure.COL_MAIN_FILESIZE,      mov.getFilesize().getBytes());
-			stmt.setSht(DatabaseStructure.COL_MAIN_TAGS,          mov.getTags().asShort());
-			stmt.setStr(DatabaseStructure.COL_MAIN_PART_1,        mov.getPart(0));
-			stmt.setStr(DatabaseStructure.COL_MAIN_PART_2,        mov.getPart(1));
-			stmt.setStr(DatabaseStructure.COL_MAIN_PART_3,        mov.getPart(2));
-			stmt.setStr(DatabaseStructure.COL_MAIN_PART_4,        mov.getPart(3));
-			stmt.setStr(DatabaseStructure.COL_MAIN_PART_5,        mov.getPart(4));
-			stmt.setStr(DatabaseStructure.COL_MAIN_PART_6,        mov.getPart(5));
-			stmt.setInt(DatabaseStructure.COL_MAIN_SCORE,         mov.getScore().asInt());
 			stmt.setInt(DatabaseStructure.COL_MAIN_COVERID,       mov.getCoverID());
 			stmt.setInt(DatabaseStructure.COL_MAIN_TYPE,          mov.getType().asInt());
 
-			CCMediaInfo mi = mov.getMediaInfo();
+			CCMediaInfo mi = mov.MediaInfo.get();
 			if (mi.isSet())
 			{
 				stmt.setLng(DatabaseStructure.COL_MAIN_MI_FILESIZE,   mi.getFilesize());
@@ -592,7 +596,7 @@ public class CCDatabase {
 
 			return true;
 		} catch (SQLException | SQLWrapperException e) {
-			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CouldNotUpdateMovie", mov.getTitle(), mov.getLocalID()), e);
+			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CouldNotUpdateMovie", mov.Title.get(), mov.getLocalID()), e);
 			return false;
 		}
 	}
@@ -603,16 +607,17 @@ public class CCDatabase {
 			CCSQLStatement stmt = updateSeriesTabStatement;
 			stmt.clearParameters();
 
-			stmt.setStr(DatabaseStructure.COL_MAIN_NAME,        ser.getTitle());
-			stmt.setLng(DatabaseStructure.COL_MAIN_GENRE,       ser.getGenres().getAllGenres());
-			stmt.setInt(DatabaseStructure.COL_MAIN_ONLINESCORE, ser.getOnlinescore().asInt());
-			stmt.setInt(DatabaseStructure.COL_MAIN_FSK,         ser.getFSK().asInt());
-			stmt.setStr(DatabaseStructure.COL_MAIN_ONLINEREF,   ser.getOnlineReference().toSerializationString());
-			stmt.setStr(DatabaseStructure.COL_MAIN_GROUPS,      ser.getGroups().toSerializationString());
-			stmt.setInt(DatabaseStructure.COL_MAIN_SCORE,       ser.getScore().asInt());
-			stmt.setInt(DatabaseStructure.COL_MAIN_COVERID,     ser.getCoverID());
+			stmt.setStr(DatabaseStructure.COL_MAIN_NAME,        ser.Title.get());
+			stmt.setLng(DatabaseStructure.COL_MAIN_GENRE,       ser.Genres.get().getAllGenres());
+			stmt.setInt(DatabaseStructure.COL_MAIN_ONLINESCORE, ser.OnlineScore.get().asInt());
+			stmt.setInt(DatabaseStructure.COL_MAIN_FSK,         ser.FSK.get().asInt());
+			stmt.setStr(DatabaseStructure.COL_MAIN_ONLINEREF,   ser.OnlineReference.get().toSerializationString());
+			stmt.setInt(DatabaseStructure.COL_MAIN_SCORE,       ser.Score.get().asInt());
+			stmt.setSht(DatabaseStructure.COL_MAIN_TAGS,        ser.Tags.get().asShort());
+
 			stmt.setInt(DatabaseStructure.COL_MAIN_TYPE,        ser.getType().asInt());
-			stmt.setSht(DatabaseStructure.COL_MAIN_TAGS,        ser.getTags().asShort());
+			stmt.setInt(DatabaseStructure.COL_MAIN_COVERID,     ser.getCoverID());
+			stmt.setStr(DatabaseStructure.COL_MAIN_GROUPS,      ser.getGroups().toSerializationString());
 
 			stmt.setInt(DatabaseStructure.COL_MAIN_LOCALID,     ser.getLocalID());
 
@@ -620,7 +625,7 @@ public class CCDatabase {
 
 			return true;
 		} catch (SQLException | SQLWrapperException e) {
-			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CouldNotUpdateSeries", ser.getTitle(), ser.getLocalID()), e);
+			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CouldNotUpdateSeries", ser.Title.get(), ser.getLocalID()), e);
 			return false;
 		}
 	}
@@ -632,8 +637,10 @@ public class CCDatabase {
 			stmt.clearParameters();
 
 			stmt.setInt(DatabaseStructure.COL_SEAS_SERIESID,  ser.getSeries().getLocalID());
-			stmt.setStr(DatabaseStructure.COL_SEAS_NAME,      ser.getTitle());
-			stmt.setInt(DatabaseStructure.COL_SEAS_YEAR,      ser.getYear());
+
+			stmt.setStr(DatabaseStructure.COL_SEAS_NAME,      ser.Title.get());
+			stmt.setInt(DatabaseStructure.COL_SEAS_YEAR,      ser.Year.get());
+
 			stmt.setInt(DatabaseStructure.COL_SEAS_COVERID,   ser.getCoverID());
 
 			stmt.setInt(DatabaseStructure.COL_SEAS_SEASONID,  ser.getLocalID());
@@ -642,7 +649,7 @@ public class CCDatabase {
 
 			return true;
 		} catch (SQLException | SQLWrapperException e) {
-			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CouldNotUpdateSeason", ser.getTitle(), ser.getLocalID()), e);
+			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CouldNotUpdateSeason", ser.Title.get(), ser.getLocalID()), e);
 			return false;
 		}
 	}
@@ -654,18 +661,19 @@ public class CCDatabase {
 			stmt.clearParameters();
 
 			stmt.setInt(DatabaseStructure.COL_EPIS_SEASONID,      ep.getSeason().getLocalID());
-			stmt.setInt(DatabaseStructure.COL_EPIS_EPISODE,       ep.getEpisodeNumber());
-			stmt.setStr(DatabaseStructure.COL_EPIS_NAME,          ep.getTitle());
-			stmt.setStr(DatabaseStructure.COL_EPIS_VIEWEDHISTORY, ep.getViewedHistory().toSerializationString());
-			stmt.setInt(DatabaseStructure.COL_EPIS_LENGTH,        ep.getLength());
-			stmt.setInt(DatabaseStructure.COL_EPIS_FORMAT,        ep.getFormat().asInt());
-			stmt.setLng(DatabaseStructure.COL_EPIS_FILESIZE,      ep.getFilesize().getBytes());
-			stmt.setStr(DatabaseStructure.COL_EPIS_PART_1,        ep.getPart());
-			stmt.setSht(DatabaseStructure.COL_EPIS_TAGS,          ep.getTags().asShort());
-			stmt.setStr(DatabaseStructure.COL_EPIS_ADDDATE,       ep.getAddDate().toStringSQL());
-			stmt.setLng(DatabaseStructure.COL_EPIS_LANGUAGE,      ep.getLanguage().serializeToLong());
 
-			CCMediaInfo mi = ep.getMediaInfo();
+			stmt.setInt(DatabaseStructure.COL_EPIS_EPISODE,       ep.EpisodeNumber.get());
+			stmt.setStr(DatabaseStructure.COL_EPIS_NAME,          ep.Title.get());
+			stmt.setStr(DatabaseStructure.COL_EPIS_VIEWEDHISTORY, ep.ViewedHistory.get().toSerializationString());
+			stmt.setInt(DatabaseStructure.COL_EPIS_LENGTH,        ep.Length.get());
+			stmt.setInt(DatabaseStructure.COL_EPIS_FORMAT,        ep.Format.get().asInt());
+			stmt.setLng(DatabaseStructure.COL_EPIS_FILESIZE,      ep.FileSize.get().getBytes());
+			stmt.setStr(DatabaseStructure.COL_EPIS_PART_1,        ep.Part.get());
+			stmt.setSht(DatabaseStructure.COL_EPIS_TAGS,          ep.Tags.get().asShort());
+			stmt.setStr(DatabaseStructure.COL_EPIS_ADDDATE,       ep.AddDate.get().toStringSQL());
+			stmt.setLng(DatabaseStructure.COL_EPIS_LANGUAGE,      ep.Language.get().serializeToLong());
+
+			CCMediaInfo mi = ep.MediaInfo.get();
 			if (mi.isSet())
 			{
 				stmt.setLng(DatabaseStructure.COL_EPIS_MI_FILESIZE,   mi.getFilesize());
@@ -713,7 +721,7 @@ public class CCDatabase {
 
 			return true;
 		} catch (SQLException | SQLWrapperException e) {
-			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CouldNotUpdateEpisode", ep.getTitle(), ep.getLocalID()), e);
+			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CouldNotUpdateEpisode", ep.Title.get(), ep.getLocalID()), e);
 			return false;
 		}
 	}
@@ -733,7 +741,7 @@ public class CCDatabase {
 			rs.close();
 			return true;
 		} catch (SQLException | CCFormatException | SQLWrapperException e) {
-			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CouldNotUpdateMovie", mov.getTitle(), mov.getLocalID()), e);
+			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CouldNotUpdateMovie", mov.Title.get(), mov.getLocalID()), e);
 			return false;
 		}
 	}
@@ -753,7 +761,7 @@ public class CCDatabase {
 			rs.close();
 			return true;
 		} catch (SQLException | CCFormatException | SQLWrapperException e) {
-			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CouldNotUpdateSeries", ser.getTitle(), ser.getLocalID()), e);
+			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CouldNotUpdateSeries", ser.Title.get(), ser.getLocalID()), e);
 			return false;
 		}
 	}
@@ -773,7 +781,7 @@ public class CCDatabase {
 			rs.close();
 			return true;
 		} catch (SQLException | SQLWrapperException e) {
-			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CouldNotUpdateSeason", sea.getTitle(), sea.getLocalID()), e);
+			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CouldNotUpdateSeason", sea.Title.get(), sea.getLocalID()), e);
 			return false;
 		}
 	}
@@ -793,7 +801,7 @@ public class CCDatabase {
 			rs.close();
 			return true;
 		} catch (SQLException | CCFormatException | SQLWrapperException e) {
-			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CouldNotUpdateEpisode", epi.getTitle(), epi.getLocalID()), e);
+			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CouldNotUpdateEpisode", epi.Title.get(), epi.getLocalID()), e);
 			return false;
 		}
 	}

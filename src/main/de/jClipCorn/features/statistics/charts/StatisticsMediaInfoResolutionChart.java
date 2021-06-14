@@ -58,11 +58,11 @@ public class StatisticsMediaInfoResolutionChart extends StatisticsChart {
 	private DefaultCategoryDataset getDataSet(CCMovieList movielist, StatisticsTypeFilter source) {
 		Map<CCMediaInfo, Integer> values = source
 				.iteratorMoviesOrEpisodes(movielist)
-				.filter(e -> e.getMediaInfo().isSet())
-				.groupBy(e -> e.getMediaInfo().getWidth()+"x"+e.getMediaInfo().getHeight()) //$NON-NLS-1$
+				.filter(e -> e.mediaInfo().get().isSet())
+				.groupBy(e -> e.mediaInfo().get().getWidth()+"x"+e.mediaInfo().get().getHeight()) //$NON-NLS-1$
 				.autosortByProperty(e -> -e.getValue().size())
 				.take(64)
-				.toMap(e -> e.getValue().get(0).getMediaInfo(), e -> e.getValue().size());
+				.toMap(e -> e.getValue().get(0).mediaInfo().get(), e -> e.getValue().size());
 
 		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 

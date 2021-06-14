@@ -7,4 +7,6 @@ public interface ContinoousEnum<T> {
 	
 	String[] getList();
 	T[] evalues();
+
+	IEnumWrapper wrapper();
 }

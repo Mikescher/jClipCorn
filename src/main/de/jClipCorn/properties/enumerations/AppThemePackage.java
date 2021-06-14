@@ -2,6 +2,7 @@ package de.jClipCorn.properties.enumerations;
 
 import de.jClipCorn.util.enumextension.ContinoousEnum;
 import de.jClipCorn.util.enumextension.EnumWrapper;
+import de.jClipCorn.util.enumextension.IEnumWrapper;
 
 public enum AppThemePackage implements ContinoousEnum<AppThemePackage> {
 	DEFAULT(0),
@@ -25,6 +26,11 @@ public enum AppThemePackage implements ContinoousEnum<AppThemePackage> {
 	
 	public static EnumWrapper<AppThemePackage> getWrapper() {
 		return wrapper;
+	}
+
+	@Override
+	public IEnumWrapper wrapper() {
+		return getWrapper();
 	}
 	
 	@Override

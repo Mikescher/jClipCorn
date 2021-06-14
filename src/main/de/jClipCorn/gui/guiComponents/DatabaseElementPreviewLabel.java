@@ -2,7 +2,6 @@ package de.jClipCorn.gui.guiComponents;
 
 import com.jformdesigner.annotations.DesignCreate;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
-import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.features.actionTree.ActionSource;
 import de.jClipCorn.features.actionTree.CCActionTree;
 import de.jClipCorn.gui.frames.coverPreviewFrame.CoverPreviewFrame;
@@ -83,7 +82,7 @@ public class DatabaseElementPreviewLabel extends CoverLabel {
 		if (noOverlay) return getImageWithoutOverlay(el);
 		
 		boolean drawSCorner = CCProperties.getInstance().PROP_MAINFRAME_SHOWCOVERCORNER.getValue()  && el.isSeries();
-		boolean drawTag = CCProperties.getInstance().PROP_MAINFRAME_SHOWTAGS.getValue() && el.isMovie() && ((CCMovie)el).getTags().hasTags();
+		boolean drawTag = CCProperties.getInstance().PROP_MAINFRAME_SHOWTAGS.getValue() && el.isMovie() && el.Tags.get().hasTags();
 		boolean drawGroups = CCProperties.getInstance().PROP_MAINFRAME_SHOWGROUPS.getValue() && el.hasGroups();
 		
 		if (drawSCorner || drawTag || drawGroups) {

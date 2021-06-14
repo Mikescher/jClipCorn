@@ -104,13 +104,13 @@ public class WatchHistoryFrame extends JFrame {
 		data.clear();
 
 		for (CCMovie mov : movielist.iteratorMovies()) {
-			for (CCDateTime timestamp : mov.getViewedHistory().iterator().filter(d -> !d.isUnspecifiedDateTime())) {
+			for (CCDateTime timestamp : mov.ViewedHistory.get().iterator().filter(d -> !d.isUnspecifiedDateTime())) {
 				data.add(new WatchHistoryMovieElement(timestamp, mov));
 			}
 		}
 
 		for (CCEpisode episode : movielist.iteratorEpisodes()) {
-			for (CCDateTime timestamp : episode.getViewedHistory().iterator().filter(d -> !d.isUnspecifiedDateTime())) {
+			for (CCDateTime timestamp : episode.ViewedHistory.get().iterator().filter(d -> !d.isUnspecifiedDateTime())) {
 				data.add(new WatchHistoryEpisodeElement(timestamp, episode));
 			}
 		}

@@ -4,34 +4,36 @@ import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.covertab.CCCoverData;
 import de.jClipCorn.database.databaseElement.columnTypes.*;
 import de.jClipCorn.database.databaseElement.datapacks.IDatabaseElementData;
+import de.jClipCorn.database.elementValues.*;
 import de.jClipCorn.database.util.CCQualityCategory;
 import de.jClipCorn.database.util.ExtendedViewedState;
 import de.jClipCorn.features.actionTree.IActionSourceObject;
 import de.jClipCorn.features.log.CCLog;
-import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datatypes.Opt;
 import de.jClipCorn.util.datatypes.Tuple;
-import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.datetime.CCDateTime;
-import de.jClipCorn.util.exceptions.EnumFormatException;
 import de.jClipCorn.util.exceptions.GroupFormatException;
-import de.jClipCorn.util.exceptions.OnlineRefFormatException;
 
 import java.awt.image.BufferedImage;
 
-public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, ICCCoveredElement, IActionSourceObject, ICCTaggedElement, IDatabaseElementData {
+public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, ICCCoveredElement, IActionSourceObject, ICCTaggedElement, IDatabaseElementData, IPropertyParent {
 	private final int localID;
 	private final CCDBElementTyp typ;
-	private String title;
-	private CCGenreList genres;
-	private CCOnlineScore onlinescore;
-	private CCFSK fsk;
-	private CCUserScore score;
-	private int coverid;
-	private CCOnlineReferenceList onlineReference;
-	private CCGroupList linkedGroups;
-	private CCTagList tags;
-	
+
+	private int coverid = -1;
+	private CCGroupList linkedGroups = CCGroupList.EMPTY;
+
+	public final EStringProp                 Title           = new EStringProp(       "Title",           Str.Empty,                   this, EPropertyType.OBJECTIVE_METADATA);
+	public final EGenreListProp              Genres          = new EGenreListProp(    "Genres",          CCGenreList.EMPTY,           this, EPropertyType.OBJECTIVE_METADATA);
+	public final EEnumProp<CCOnlineScore>    OnlineScore     = new EEnumProp<>(       "OnlineScore",     CCOnlineScore.STARS_0_0,     this, EPropertyType.OBJECTIVE_METADATA);
+	public final EEnumProp<CCFSK>            FSK             = new EEnumProp<>(       "FSK",             CCFSK.RATING_0,              this, EPropertyType.OBJECTIVE_METADATA);
+	public final EEnumProp<CCUserScore>      Score           = new EEnumProp<>(       "Score",           CCUserScore.RATING_NO,       this, EPropertyType.USER_METADATA);
+	public final EOnlineRefListProp          OnlineReference = new EOnlineRefListProp("OnlineReference", CCOnlineReferenceList.EMPTY, this, EPropertyType.OBJECTIVE_METADATA);
+	public final ETagListProp                Tags            = new ETagListProp(      "Tags",            CCTagList.EMPTY,             this, EPropertyType.USER_METADATA);
+
+	private IEProperty[] _properties = null;
+
 	protected final CCMovieList movielist;
 	protected boolean isUpdating = false;
 
@@ -39,26 +41,44 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 		this.typ       = typ;
 		this.localID   = id;
 		this.movielist = ml;
-		
-		onlineReference = CCOnlineReferenceList.EMPTY;
-		linkedGroups    = CCGroupList.EMPTY;
-		genres          = CCGenreList.EMPTY;
-		tags            = CCTagList.EMPTY;
 	}
-	
+
+	public IEProperty[] GetProperties()
+	{
+		if (_properties == null) _properties = ListProperties();
+		return _properties;
+	}
+
+	protected IEProperty[] ListProperties()
+	{
+		return new IEProperty[]
+		{
+			Title,
+			Genres,
+			OnlineScore,
+			FSK,
+			Score,
+			OnlineReference,
+			Tags,
+		};
+	}
+
+	public EStringProp              title()           { return Title;           }
+	public EGenreListProp           genres()          { return Genres;          }
+	public EEnumProp<CCOnlineScore> onlineScore()     { return OnlineScore;     }
+	public EEnumProp<CCFSK>         fsk()             { return FSK;             }
+	public EEnumProp<CCUserScore>   score()           { return Score;           }
+	public EOnlineRefListProp       onlineReference() { return OnlineReference; }
+	public ETagListProp             tags()            { return Tags;            }
+
 	public void setDefaultValues(boolean updateDB) {
-		title           = ""; //$NON-NLS-1$
-		genres          = CCGenreList.EMPTY;
-		onlinescore     = CCOnlineScore.STARS_0_0;
-		fsk             = CCFSK.RATING_0;
-		score           = CCUserScore.RATING_NO;
-		coverid         = -1;
-		onlineReference = CCOnlineReferenceList.EMPTY;
-		linkedGroups    = CCGroupList.EMPTY;
-		tags            = CCTagList.EMPTY;
-		
-		if (updateDB) updateDB();
-		getCache().bust();
+		beginUpdating();
+
+		coverid = -1;
+		linkedGroups = CCGroupList.EMPTY;
+		for (IEProperty prop : GetProperties()) prop.resetToDefault();
+
+		if (updateDB) endUpdating(); else abortUpdating();
 	}
 	
 	public void beginUpdating() {
@@ -74,126 +94,18 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 	public void abortUpdating() {
 		isUpdating = false;
 	}
-	
-	protected abstract boolean updateDB();
+
+	public abstract boolean updateDB();
 
 	@Override
 	public int getLocalID() {
 		return localID;
 	}
 
-	@Override
-	public String getTitle() {
-		return title;
-	}
-	
-	public void setTitle(String title) {
-		this.title = title;
-		
-		updateDB();
-		getCache().bust();
-	}
-	
-	public CCOnlineScore getOnlinescore() {
-		return onlinescore;
-	}
-
-	public void setOnlinescoreSafe(int onlinescore) {
-		this.onlinescore = CCOnlineScore.getWrapper().findOrNull(onlinescore);
-
-		if (this.onlinescore == null) {
-			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.ErroneousDatabaseValues", score)); //$NON-NLS-1$
-			this.onlinescore = CCOnlineScore.STARS_0_0;
-		}
-
-		updateDB();
-		getCache().bust();
-	}
-
-	public void setOnlinescore(int onlinescore) throws EnumFormatException {
-		this.onlinescore = CCOnlineScore.getWrapper().findOrException(onlinescore);
-		
-		updateDB();
-		getCache().bust();
-	}
-
-	public void setOnlinescore(CCOnlineScore onlinescore) {
-		if (onlinescore == null) {CCLog.addUndefinied("Prevented setting CCDBElem.Onlinescore to NULL"); return; } //$NON-NLS-1$
-
-		this.onlinescore = onlinescore;
-		
-		updateDB();
-		getCache().bust();
-	}
-
-	public CCFSK getFSK() {
-		return fsk;
-	}
-
-	public void setFskSafe(int fsk) {
-		this.fsk = CCFSK.getWrapper().findOrNull(fsk);
-
-		if (this.fsk == null) {
-			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.ErroneousDatabaseValues", fsk)); //$NON-NLS-1$
-			this.fsk = CCFSK.RATING_0;
-		}
-
-		updateDB();
-		getCache().bust();
-	}
-
-	public void setFsk(int fsk) throws EnumFormatException {
-		this.fsk = CCFSK.getWrapper().findOrException(fsk);
-		
-		updateDB();
-		getCache().bust();
-	}
-
-	public void setFsk(CCFSK fsk) {
-		if (fsk == null) {CCLog.addUndefinied("Prevented setting CCDBElem.FSK to NULL"); return; } //$NON-NLS-1$
-
-		this.fsk = fsk;
-		
-		updateDB();
-		getCache().bust();
-	}
-	
 	public CCDBElementTyp getType() {
 		return typ;
 	}
-	
-	public CCUserScore getScore() {
-		return score;
-	}
 
-	public void setScoreSafe(int score) {
-		this.score = CCUserScore.getWrapper().findOrNull(score);
-
-		if (this.score == null) {
-			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.ErroneousDatabaseValues", score)); //$NON-NLS-1$
-			this.score = CCUserScore.RATING_NO;
-		}
-
-		updateDB();
-		getCache().bust();
-	}
-
-	public void setScore(int score) throws EnumFormatException {
-		this.score = CCUserScore.getWrapper().findOrException(score);
-		
-		updateDB();
-		getCache().bust();
-	}
-	
-	public void setScore(CCUserScore score) {
-		if (score == null) {CCLog.addUndefinied("Prevented setting CCDBElem.Score to NULL"); return; } //$NON-NLS-1$
-
-		this.score = score;
-		
-		updateDB();
-		getCache().bust();
-	}
-	
 	public void setCover(int cid) {
 		this.coverid = cid;
 		
@@ -240,34 +152,6 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 		return movielist.getCoverCache().getInfoOrNull(coverid);
 	}
 
-	public CCGenre getGenre(int idx) {
-		return genres.getGenre(idx);
-	}
-	
-	public int getGenreCount() {
-		return genres.getGenreCount();
-	}
-
-	public void setOnlineReference(String data) throws OnlineRefFormatException {
-		onlineReference = CCOnlineReferenceList.parse(data);
-		
-		updateDB();
-		getCache().bust();
-	}
-
-	public CCOnlineReferenceList getOnlineReference() {
-		return onlineReference;
-	}
-
-	public void setOnlineReference(CCOnlineReferenceList value) {
-		if (value == null) {CCLog.addUndefinied("Prevented setting CCDBElem.OnlineReference to NULL"); return; } //$NON-NLS-1$
-
-		onlineReference = value;
-		
-		updateDB();
-		getCache().bust();
-	}
-
 	public void setGroups(String data) throws GroupFormatException {
 		setGroups(CCGroupList.parseWithoutAddingNewGroups(movielist, data));
 	}
@@ -302,6 +186,36 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 		getCache().bust();
 	}
 
+	@Override
+	public String getTitle() {
+		return Title.get();
+	}
+
+	@Override
+	public CCGenreList getGenres() {
+		return Genres.get();
+	}
+
+	@Override
+	public CCOnlineScore getOnlinescore() {
+		return OnlineScore.get();
+	}
+
+	@Override
+	public CCFSK getFSK() {
+		return FSK.get();
+	}
+
+	@Override
+	public CCUserScore getScore() {
+		return Score.get();
+	}
+
+	@Override
+	public CCOnlineReferenceList getOnlineReference() {
+		return OnlineReference.get();
+	}
+
 	public CCGroupList getGroups() {
 		return linkedGroups;
 	}
@@ -310,56 +224,14 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 		return ! linkedGroups.isEmpty();
 	}
 
-	public void setGenre(CCGenre genre, int idx) {
-		CCGenreList glnew = genres.getSetGenre(idx, genre);
-		
-		if (glnew == null) {
-			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.ErroneousDatabaseValues", idx)); //$NON-NLS-1$
-			return;
-		}
-		
-		genres = glnew;
-		
-		updateDB();
-		getCache().bust();
-	}
-	
-	public void setGenres(long grs) {
-		genres =  new CCGenreList(grs);
-		
-		updateDB();
-		getCache().bust();
-	}
-	
-	public void setGenres(CCGenreList grs) {
-		if (grs == null) { CCLog.addUndefinied("Prevented setting CCDBElem.Genres to NULL"); return; } //$NON-NLS-1$
-
-		genres = grs;
-		
-		updateDB();
-		getCache().bust();
-	}
-	
-	public CCGenreList getGenres() {
-		return genres;
-	}
-	
-	public boolean tryAddGenre(CCGenre g) {
-		CCGenreList l = genres.getAddGenre(g);
-		if (l == null) return false;
-		
-		setGenres(l);
-		return true;
-	}
-	
 	public boolean hasHoleInGenres() {
-		return  (genres.getGenre(0).isEmpty() && (!genres.getGenre(1).isEmpty())) ||
-				(genres.getGenre(1).isEmpty() && (!genres.getGenre(2).isEmpty())) ||
-				(genres.getGenre(2).isEmpty() && (!genres.getGenre(3).isEmpty())) ||
-				(genres.getGenre(3).isEmpty() && (!genres.getGenre(4).isEmpty())) ||
-				(genres.getGenre(4).isEmpty() && (!genres.getGenre(5).isEmpty())) ||
-				(genres.getGenre(5).isEmpty() && (!genres.getGenre(6).isEmpty())) ||
-				(genres.getGenre(6).isEmpty() && (!genres.getGenre(7).isEmpty()));
+		return  (Genres.get().getGenre(0).isEmpty() && (!Genres.get().getGenre(1).isEmpty())) ||
+				(Genres.get().getGenre(1).isEmpty() && (!Genres.get().getGenre(2).isEmpty())) ||
+				(Genres.get().getGenre(2).isEmpty() && (!Genres.get().getGenre(3).isEmpty())) ||
+				(Genres.get().getGenre(3).isEmpty() && (!Genres.get().getGenre(4).isEmpty())) ||
+				(Genres.get().getGenre(4).isEmpty() && (!Genres.get().getGenre(5).isEmpty())) ||
+				(Genres.get().getGenre(5).isEmpty() && (!Genres.get().getGenre(6).isEmpty())) ||
+				(Genres.get().getGenre(6).isEmpty() && (!Genres.get().getGenre(7).isEmpty()));
 	}
 
 	public boolean isMovie() {
@@ -385,72 +257,6 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 	}
 
 	@Override
-	public CCTagList getTags() {
-		return tags;
-	}
-
-	public void setTags(short ptags) {
-		this.tags = CCTagList.fromShort(ptags);
-
-		updateDB();
-		getCache().bust();
-	}
-
-	@Override
-	public void setTags(CCTagList ptags) {
-		if (ptags == null) { CCLog.addUndefinied("Prevented setting CCDBElem.Tags to NULL"); return; } //$NON-NLS-1$
-		this.tags = ptags;
-
-		updateDB();
-		getCache().bust();
-	}
-
-	@Override
-	public void switchTag(CCSingleTag t) {
-		tags = tags.getSwitchTag(t);
-
-		updateDB();
-		getCache().bust();
-	}
-
-	public void switchTag(int c) {
-		tags = tags.getSwitchTag(c);
-
-		updateDB();
-		getCache().bust();
-	}
-
-	public void setTag(CCSingleTag t, boolean v) {
-		tags = tags.getSetTag(t, v);
-
-		updateDB();
-		getCache().bust();
-	}
-
-	public void setTag(int c, boolean v) {
-		tags = tags.getSetTag(c, v);
-
-		updateDB();
-		getCache().bust();
-	}
-
-	public boolean getTag(CCSingleTag t) {
-		return tags.getTag(t);
-	}
-
-	public boolean getTag(int c) {
-		return tags.getTag(c);
-	}
-
-	public abstract CCFileSize getFilesize();
-	
-	@Override
-	public abstract CCDate getAddDate();
-	
-	@Override
-	public abstract CCFileFormat getFormat();
-
-	@Override
 	public abstract ExtendedViewedState getExtendedViewedState();
 	
 	public abstract int getFirstYear();
@@ -460,4 +266,6 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 	public abstract CCQualityCategory getMediaInfoCategory();
 
 	public abstract Opt<CCDateTime> getLastViewed();
+
+	public abstract CCFileSize getFilesize();
 }

@@ -1,35 +1,31 @@
 package de.jClipCorn.database.databaseElement;
 
-import de.jClipCorn.database.databaseElement.columnTypes.*;
+import de.jClipCorn.database.databaseElement.columnTypes.CCFileFormat;
+import de.jClipCorn.database.databaseElement.columnTypes.CCGenreList;
+import de.jClipCorn.database.elementValues.*;
 import de.jClipCorn.database.util.CCQualityCategory;
 import de.jClipCorn.properties.types.NamedPathVar;
-import de.jClipCorn.util.datetime.CCDate;
 
 import java.awt.*;
 import java.util.List;
 
+
 public interface ICCPlayableElement {
 	// Episode, Movie
 
-	String getTitle();
-	boolean isViewed();
-	int getLength();
-	CCMediaInfo getMediaInfo();
-	CCQualityCategory getMediaInfoCategory();
-	CCFileFormat getFormat();
-	CCFileSize getFilesize();
-	CCTagList getTags();
-	boolean getTag(CCSingleTag t);
-	boolean getTag(int c);
-	CCDateTimeList getViewedHistory();
-	CCDate getAddDate();
-	CCDBLanguageList getLanguage();
-	List<String> getParts();
+	EStringProp             title();
+	EMediaInfoProp          mediaInfo();
+	EIntProp                length();
+	ETagListProp            tags();
+	EEnumProp<CCFileFormat> format();
+	EFileSizeProp           fileSize();
+	EDateProp               addDate();
+	EDateTimeListProp       viewedHistory();
+	ELanguageListProp       language();
 
-	void setLanguage(CCDBLanguageList lang);
-	void setLength(int len);
-	void setFilesize(long fsize);
-	void setMediaInfo(CCMediaInfo minfo);
+	boolean isViewed();
+	CCQualityCategory getMediaInfoCategory();
+	List<String> getParts();
 
 	void play(Component swingOwner, boolean updateViewedAndHistory);
 	void play(Component swingOwner, boolean updateViewedAndHistory, NamedPathVar player);

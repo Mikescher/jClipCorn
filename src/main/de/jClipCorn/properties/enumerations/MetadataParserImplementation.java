@@ -9,6 +9,7 @@ import de.jClipCorn.features.online.metadata.mal.MALParser;
 import de.jClipCorn.features.online.metadata.tmdb.TMDBParser;
 import de.jClipCorn.util.enumextension.ContinoousEnum;
 import de.jClipCorn.util.enumextension.EnumWrapper;
+import de.jClipCorn.util.enumextension.IEnumWrapper;
 
 public enum MetadataParserImplementation implements ContinoousEnum<MetadataParserImplementation> {
 	IMDB(0), 
@@ -34,6 +35,11 @@ public enum MetadataParserImplementation implements ContinoousEnum<MetadataParse
 	
 	public static EnumWrapper<MetadataParserImplementation> getWrapper() {
 		return wrapper;
+	}
+
+	@Override
+	public IEnumWrapper wrapper() {
+		return getWrapper();
 	}
 	
 	@Override

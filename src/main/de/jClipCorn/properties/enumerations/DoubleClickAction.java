@@ -3,6 +3,7 @@ package de.jClipCorn.properties.enumerations;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.enumextension.ContinoousEnum;
 import de.jClipCorn.util.enumextension.EnumWrapper;
+import de.jClipCorn.util.enumextension.IEnumWrapper;
 
 public enum DoubleClickAction implements ContinoousEnum<DoubleClickAction> {
 	PLAY(0), 
@@ -26,6 +27,11 @@ public enum DoubleClickAction implements ContinoousEnum<DoubleClickAction> {
 	
 	public static EnumWrapper<DoubleClickAction> getWrapper() {
 		return wrapper;
+	}
+
+	@Override
+	public IEnumWrapper wrapper() {
+		return getWrapper();
 	}
 	
 	@Override

@@ -2,6 +2,7 @@ package de.jClipCorn.properties.enumerations;
 
 import de.jClipCorn.util.enumextension.ContinoousEnum;
 import de.jClipCorn.util.enumextension.EnumWrapper;
+import de.jClipCorn.util.enumextension.IEnumWrapper;
 import de.jClipCorn.util.helper.ImageUtilities;
 
 public enum CoverImageSize implements ContinoousEnum<CoverImageSize> {
@@ -66,6 +67,11 @@ public enum CoverImageSize implements ContinoousEnum<CoverImageSize> {
 	
 	public static EnumWrapper<CoverImageSize> getWrapper() {
 		return wrapper;
+	}
+
+	@Override
+	public IEnumWrapper wrapper() {
+		return getWrapper();
 	}
 	
 	@Override

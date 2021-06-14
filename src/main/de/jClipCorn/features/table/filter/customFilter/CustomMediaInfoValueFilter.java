@@ -23,22 +23,22 @@ public class CustomMediaInfoValueFilter extends AbstractCustomStructureElementFi
 
 	@Override
 	public boolean includes(CCMovie mov) {
-		return matches(mov.getMediaInfo());
+		return matches(mov.mediaInfo().get());
 	}
 
 	@Override
 	public boolean includes(CCSeries ser) {
-		return ser.iteratorEpisodes().all(e -> matches(e.getMediaInfo()));
+		return ser.iteratorEpisodes().all(e -> matches(e.mediaInfo().get()));
 	}
 
 	@Override
 	public boolean includes(CCSeason sea) {
-		return sea.iteratorEpisodes().all(e -> matches(e.getMediaInfo()));
+		return sea.iteratorEpisodes().all(e -> matches(e.mediaInfo().get()));
 	}
 
 	@Override
 	public boolean includes(CCEpisode epi) {
-		return matches(epi.getMediaInfo());
+		return matches(epi.mediaInfo().get());
 	}
 
 	private boolean matches(CCMediaInfo mi)
@@ -129,7 +129,7 @@ public class CustomMediaInfoValueFilter extends AbstractCustomStructureElementFi
 		return CCMovieList
 				.getInstance()
 				.iteratorPlayables()
-				.map(ICCPlayableElement::getMediaInfo)
+				.map(e -> e.mediaInfo().get())
 				.filter(p -> field == CCMediaInfoField.IS_SET || p.isSet())
 				.map(p -> field.get(p))
 				.unique()

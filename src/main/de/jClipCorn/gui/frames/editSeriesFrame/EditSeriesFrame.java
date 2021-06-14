@@ -1202,16 +1202,16 @@ public class EditSeriesFrame extends JFrame implements WindowListener {
 			edSeriesTitle.setText(series.getTitle());
 			spnSeriesOnlineScore.setValue(series.getOnlinescore().asInt());
 			cbxSeriesFSK.setSelectedEnum(series.getFSK());
-			cbxSeriesScore.setSelectedEnum(series.getScore());
+			cbxSeriesScore.setSelectedEnum(series.Score.get());
 			
-			cbxSeriesGenre_0.setSelectedEnum(series.getGenre(0));
-			cbxSeriesGenre_1.setSelectedEnum(series.getGenre(1));
-			cbxSeriesGenre_2.setSelectedEnum(series.getGenre(2));
-			cbxSeriesGenre_3.setSelectedEnum(series.getGenre(3));
-			cbxSeriesGenre_4.setSelectedEnum(series.getGenre(4));
-			cbxSeriesGenre_5.setSelectedEnum(series.getGenre(5));
-			cbxSeriesGenre_6.setSelectedEnum(series.getGenre(6));
-			cbxSeriesGenre_7.setSelectedEnum(series.getGenre(7));
+			cbxSeriesGenre_0.setSelectedEnum(series.Genres.get().getGenre(0));
+			cbxSeriesGenre_1.setSelectedEnum(series.Genres.get().getGenre(1));
+			cbxSeriesGenre_2.setSelectedEnum(series.Genres.get().getGenre(2));
+			cbxSeriesGenre_3.setSelectedEnum(series.Genres.get().getGenre(3));
+			cbxSeriesGenre_4.setSelectedEnum(series.Genres.get().getGenre(4));
+			cbxSeriesGenre_5.setSelectedEnum(series.Genres.get().getGenre(5));
+			cbxSeriesGenre_6.setSelectedEnum(series.Genres.get().getGenre(6));
+			cbxSeriesGenre_7.setSelectedEnum(series.Genres.get().getGenre(7));
 			
 			edSeriesGroups.setValue(series.getGroups());
 			
@@ -1337,11 +1337,11 @@ public class EditSeriesFrame extends JFrame implements WindowListener {
 			spnEpisodeLength.setValue(episode.getLength());
 			spnEpisodeSize.setValue(episode.getFilesize().getBytes());
 			spnEpisodeAdded.setValue(episode.getAddDate());
-			cmpEpisodeViewedHistory.setValue(episode.getViewedHistory());
+			cmpEpisodeViewedHistory.setValue(episode.ViewedHistory.get());
 			edEpisodePart.setText(episode.getPart());
 			tagPnl.setValue(episode.getTags());
 			ctrlLang.setValue(episode.getLanguage());
-			mediaInfoControl.setValue(episode.getMediaInfo());
+			mediaInfoControl.setValue(episode.mediaInfo().get());
 			
 			updateEpisodesFilesizeDisplay();
 			testEpisodePart();
@@ -1372,7 +1372,7 @@ public class EditSeriesFrame extends JFrame implements WindowListener {
 	}
 
 	private void addEmptySeason() {
-		series.createNewEmptySeason().setTitle("<untitled>"); //$NON-NLS-1$
+		series.createNewEmptySeason().Title.set("<untitled>"); //$NON-NLS-1$
 		
 		updateSeriesPanel();
 	}
@@ -1430,24 +1430,24 @@ public class EditSeriesFrame extends JFrame implements WindowListener {
 		//#####################################################################################
 		
 		series.setCover(edSeriesCvrControl.getResizedImageForStorage());
-		series.setTitle(edSeriesTitle.getText());
-		series.setOnlinescore((int) spnSeriesOnlineScore.getValue());
-		series.setFsk(cbxSeriesFSK.getSelectedEnum());
-		series.setScore(cbxSeriesScore.getSelectedEnum());
+		series.Title.set(edSeriesTitle.getText());
+		series.OnlineScore.set((int) spnSeriesOnlineScore.getValue());
+		series.FSK.set(cbxSeriesFSK.getSelectedEnum());
+		series.Score.set(cbxSeriesScore.getSelectedEnum());
 		
-		series.setGenre(cbxSeriesGenre_0.getSelectedEnum(), 0);
-		series.setGenre(cbxSeriesGenre_1.getSelectedEnum(), 1);
-		series.setGenre(cbxSeriesGenre_2.getSelectedEnum(), 2);
-		series.setGenre(cbxSeriesGenre_3.getSelectedEnum(), 3);
-		series.setGenre(cbxSeriesGenre_4.getSelectedEnum(), 4);
-		series.setGenre(cbxSeriesGenre_5.getSelectedEnum(), 5);
-		series.setGenre(cbxSeriesGenre_6.getSelectedEnum(), 6);
-		series.setGenre(cbxSeriesGenre_7.getSelectedEnum(), 7);
+		series.Genres.set(cbxSeriesGenre_0.getSelectedEnum(), 0);
+		series.Genres.set(cbxSeriesGenre_1.getSelectedEnum(), 1);
+		series.Genres.set(cbxSeriesGenre_2.getSelectedEnum(), 2);
+		series.Genres.set(cbxSeriesGenre_3.getSelectedEnum(), 3);
+		series.Genres.set(cbxSeriesGenre_4.getSelectedEnum(), 4);
+		series.Genres.set(cbxSeriesGenre_5.getSelectedEnum(), 5);
+		series.Genres.set(cbxSeriesGenre_6.getSelectedEnum(), 6);
+		series.Genres.set(cbxSeriesGenre_7.getSelectedEnum(), 7);
 		
-		series.setOnlineReference(edSeriesReference.getValue());
+		series.OnlineReference.set(edSeriesReference.getValue());
 		series.setGroups(edSeriesGroups.getValue());
 		
-		series.setTags(tagPanel.getValue());
+		series.Tags.set(tagPanel.getValue());
 		
 		//#####################################################################################
 		
@@ -1489,12 +1489,12 @@ public class EditSeriesFrame extends JFrame implements WindowListener {
 		
 		CCEpisode newEp = season.createNewEmptyEpisode();
 		
-		newEp.setTitle("<untitled>"); //$NON-NLS-1$
-		newEp.setAddDate(CCDate.getCurrentDate());
-		newEp.setEpisodeNumber(season.getNextEpisodeNumber());
+		newEp.Title.set("<untitled>"); //$NON-NLS-1$
+		newEp.AddDate.set(CCDate.getCurrentDate());
+		newEp.EpisodeNumber.set(season.getNextEpisodeNumber());
 		Integer commonLen = season.getCommonEpisodeLength();
 		if (commonLen == null) commonLen = season.getConsensEpisodeLength();
-		if (commonLen != null) newEp.setLength(commonLen);
+		if (commonLen != null) newEp.Length.set(commonLen);
 		
 		updateSeasonPanel(false);
 	}
@@ -1611,8 +1611,8 @@ public class EditSeriesFrame extends JFrame implements WindowListener {
 		//#####################################################################################
 		
 		season.setCover(edSeasonCvrControl.getResizedImageForStorage());
-		season.setTitle(edSeasonTitle.getText());
-		season.setYear((int) spnSeasonYear.getValue());
+		season.Title.set(edSeasonTitle.getText());
+		season.Year.set((int) spnSeasonYear.getValue());
 		
 		//#####################################################################################
 		
@@ -1714,17 +1714,17 @@ public class EditSeriesFrame extends JFrame implements WindowListener {
 		
 		//#####################################################################################
 
-		episode.setTitle(edEpisodeTitle.getText());
-		episode.setEpisodeNumber((int) spnEpisodeEpisode.getValue());
-		episode.setFormat(cbxEpisodeFormat.getSelectedEnum());
-		episode.setMediaInfo(mediaInfoControl.getValue());
-		episode.setLength((int) spnEpisodeLength.getValue());
-		episode.setFilesize((long) spnEpisodeSize.getValue());
-		episode.setAddDate(spnEpisodeAdded.getValue());
-		episode.setViewedHistory(cmpEpisodeViewedHistory.getValue());
-		episode.setPart(edEpisodePart.getText());
-		episode.setTags(tagPnl.getValue());
-		episode.setLanguage(ctrlLang.getValue());
+		episode.Title.set(edEpisodeTitle.getText());
+		episode.EpisodeNumber.set((int) spnEpisodeEpisode.getValue());
+		episode.Format.set(cbxEpisodeFormat.getSelectedEnum());
+		episode.MediaInfo.set(mediaInfoControl.getValue());
+		episode.Length.set((int) spnEpisodeLength.getValue());
+		episode.FileSize.set((long) spnEpisodeSize.getValue());
+		episode.AddDate.set(spnEpisodeAdded.getValue());
+		episode.ViewedHistory.set(cmpEpisodeViewedHistory.getValue());
+		episode.Part.set(edEpisodePart.getText());
+		episode.Tags.set(tagPnl.getValue());
+		episode.Language.set(ctrlLang.getValue());
 		
 		//#####################################################################################
 		

@@ -34,7 +34,7 @@ public class DatabaseXMLExporterImpl {
 		e.setAttribute("genres",       o.getGenres().serialize());
 		e.setAttribute("onlinescore",  String.valueOf(o.getOnlinescore().asInt()));
 		e.setAttribute("fsk",          String.valueOf(o.getFSK().asInt()));
-		e.setAttribute("score",        String.valueOf(o.getScore().asInt()));
+		e.setAttribute("score",        String.valueOf(o.Score.get().asInt()));
 		e.setAttribute("groups",       o.getGroups().toSerializationString());
 		e.setAttribute("onlinreref",   o.getOnlineReference().toSerializationString());
 		e.setAttribute("tags",         o.getTags().serialize());
@@ -56,16 +56,16 @@ public class DatabaseXMLExporterImpl {
 		e.setAttribute("languages",    o.getLanguage().serializeToString());
 
 		for (int i = 0; i < CCMovie.PARTCOUNT_MAX; i++) {
-			String p = o.getPart(i);
+			String p = o.Parts.get(i);
 			if (!Str.isNullOrEmpty(p)) e.setAttribute("part_"+i, p);
 		}
 
-		e.setAttribute("history",      o.getViewedHistory().toSerializationString());
+		e.setAttribute("history",      o.ViewedHistory.get().toSerializationString());
 		e.setAttribute("year",         o.getYear() + "");
 		e.setAttribute("zyklus",       o.getZyklus().getTitle());
 		e.setAttribute("zyklusnumber", o.getZyklus().getNumber() + "");
 
-		CCMediaInfo minfo = o.getMediaInfo();
+		CCMediaInfo minfo = o.mediaInfo().get();
 		if (minfo.isSet()) {
 			e.setAttribute("mediainfo.filesize",        minfo.getFilesize()+"");
 			e.setAttribute("mediainfo.cdate",           minfo.getCDate()+"");
@@ -117,13 +117,13 @@ public class DatabaseXMLExporterImpl {
 		e.setAttribute("episodenumber", o.getEpisodeNumber() + "");
 		e.setAttribute("filesize",      o.getFilesize().getBytes() + "");
 		e.setAttribute("format",        o.getFormat().asInt() + "");
-		e.setAttribute("history",       o.getViewedHistory().toSerializationString());
+		e.setAttribute("history",       o.ViewedHistory.get().toSerializationString());
 		e.setAttribute("length",        o.getLength() + "");
 		e.setAttribute("part",          o.getPart());
 		e.setAttribute("tags",          o.getTags().serialize());
 		e.setAttribute("languages",     o.getLanguage().serializeToString());
 
-		CCMediaInfo minfo = o.getMediaInfo();
+		CCMediaInfo minfo = o.mediaInfo().get();
 		if (minfo.isSet()) {
 			e.setAttribute("mediainfo.filesize",        minfo.getFilesize()+"");
 			e.setAttribute("mediainfo.cdate",           minfo.getCDate()+"");

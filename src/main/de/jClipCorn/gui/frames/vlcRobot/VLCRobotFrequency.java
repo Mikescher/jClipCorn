@@ -2,6 +2,7 @@ package de.jClipCorn.gui.frames.vlcRobot;
 
 import de.jClipCorn.util.enumextension.ContinoousEnum;
 import de.jClipCorn.util.enumextension.EnumWrapper;
+import de.jClipCorn.util.enumextension.IEnumWrapper;
 
 public enum VLCRobotFrequency implements ContinoousEnum<VLCRobotFrequency> {
 	MAXIMUM(0),
@@ -31,6 +32,11 @@ public enum VLCRobotFrequency implements ContinoousEnum<VLCRobotFrequency> {
 
 	public static EnumWrapper<VLCRobotFrequency> getWrapper() {
 		return wrapper;
+	}
+
+	@Override
+	public IEnumWrapper wrapper() {
+		return getWrapper();
 	}
 
 	@Override

@@ -115,7 +115,7 @@ public class NextEpisodeHelper {
 
 		for(int count = 0;count < 32; count++) {
 			for (CCEpisode epis : el) {
-				if (epis.getViewedHistory().count() == count) return epis;
+				if (epis.ViewedHistory.get().count() == count) return epis;
 			}
 		}
 		

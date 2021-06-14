@@ -788,8 +788,8 @@ public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener 
 		
 		lbl_Year.setText(movie.getYear() + ""); //$NON-NLS-1$
 		
-		lbl_Score.setIcon(movie.getScore().getIcon());
-		lbl_Score.setToolTipText(movie.getScore().asString());
+		lbl_Score.setIcon(movie.Score.get().getIcon());
+		lbl_Score.setToolTipText(movie.Score.get().asString());
 		
 		lbl_Size.setText(FileSizeFormatter.format(movie.getFilesize()));
 		
@@ -799,8 +799,8 @@ public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener 
 		
 		DefaultListModel<String> dlsmGenre;
 		lsGenres.setModel(dlsmGenre = new DefaultListModel<>());
-		for (int i = 0; i < movie.getGenreCount(); i++) {
-			dlsmGenre.addElement(movie.getGenre(i).asString());
+		for (int i = 0; i < movie.Genres.get().getGenreCount(); i++) {
+			dlsmGenre.addElement(movie.Genres.get().getGenre(i).asString());
 		}
 
 		DefaultListModel<String> dlsmGroups;
@@ -809,22 +809,22 @@ public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener 
 			dlsmGroups.addElement(group.Name);
 		}
 				
-		edPart0.setText(movie.getPart(0));
-		edPart1.setText(movie.getPart(1));
-		edPart2.setText(movie.getPart(2));
-		edPart3.setText(movie.getPart(3));
-		edPart4.setText(movie.getPart(4));
-		edPart5.setText(movie.getPart(5));
+		edPart0.setText(movie.Parts.get(0));
+		edPart1.setText(movie.Parts.get(1));
+		edPart2.setText(movie.Parts.get(2));
+		edPart3.setText(movie.Parts.get(3));
+		edPart4.setText(movie.Parts.get(4));
+		edPart5.setText(movie.Parts.get(5));
 		
 		DefaultListModel<String> dlsmViewed;
 		lsHistory.setModel(dlsmViewed = new DefaultListModel<>());
-		for (CCDateTime dt : movie.getViewedHistory().iterator()) {
+		for (CCDateTime dt : movie.ViewedHistory.get().iterator()) {
 			dlsmViewed.addElement(dt.toStringUINormal());
 		}
 		
 		btnOnlineRef.setValue(movie.getOnlineReference());
 		
-		CCMediaInfo mi = movie.getMediaInfo();
+		CCMediaInfo mi = movie.mediaInfo().get();
 
 		edMI_CDate.setText(mi.isUnset() ? Str.Empty : CCDateTime.createFromFileTimestamp(mi.getCDate(), TimeZone.getDefault()).toStringISO());
 		edMI_MDate.setText(mi.isUnset() ? Str.Empty : CCDateTime.createFromFileTimestamp(mi.getMDate(), TimeZone.getDefault()).toStringISO());
@@ -844,23 +844,23 @@ public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener 
 		edMI_AudioCodec.setText(mi.isUnset() ? Str.Empty : mi.getAudioCodec());
 		edMI_AudioSamplerate.setText(mi.isUnset() ? Str.Empty : Str.spacegroupformat(mi.getAudioSamplerate()));
 
-		btnMediaInfo1.setEnabled(!Str.isNullOrWhitespace(movie.getPart(0)));
-		btnOpenDir1.setEnabled(!Str.isNullOrWhitespace(movie.getPart(0)));
+		btnMediaInfo1.setEnabled(!Str.isNullOrWhitespace(movie.Parts.get(0)));
+		btnOpenDir1.setEnabled(!Str.isNullOrWhitespace(movie.Parts.get(0)));
 
-		btnMediaInfo2.setEnabled(!Str.isNullOrWhitespace(movie.getPart(1)));
-		btnOpenDir2.setEnabled(!Str.isNullOrWhitespace(movie.getPart(1)));
+		btnMediaInfo2.setEnabled(!Str.isNullOrWhitespace(movie.Parts.get(1)));
+		btnOpenDir2.setEnabled(!Str.isNullOrWhitespace(movie.Parts.get(1)));
 
-		btnMediaInfo3.setEnabled(!Str.isNullOrWhitespace(movie.getPart(2)));
-		btnOpenDir3.setEnabled(!Str.isNullOrWhitespace(movie.getPart(2)));
+		btnMediaInfo3.setEnabled(!Str.isNullOrWhitespace(movie.Parts.get(2)));
+		btnOpenDir3.setEnabled(!Str.isNullOrWhitespace(movie.Parts.get(2)));
 
-		btnMediaInfo4.setEnabled(!Str.isNullOrWhitespace(movie.getPart(3)));
-		btnOpenDir4.setEnabled(!Str.isNullOrWhitespace(movie.getPart(3)));
+		btnMediaInfo4.setEnabled(!Str.isNullOrWhitespace(movie.Parts.get(3)));
+		btnOpenDir4.setEnabled(!Str.isNullOrWhitespace(movie.Parts.get(3)));
 
-		btnMediaInfo5.setEnabled(!Str.isNullOrWhitespace(movie.getPart(4)));
-		btnOpenDir5.setEnabled(!Str.isNullOrWhitespace(movie.getPart(4)));
+		btnMediaInfo5.setEnabled(!Str.isNullOrWhitespace(movie.Parts.get(4)));
+		btnOpenDir5.setEnabled(!Str.isNullOrWhitespace(movie.Parts.get(4)));
 
-		btnMediaInfo6.setEnabled(!Str.isNullOrWhitespace(movie.getPart(5)));
-		btnOpenDir6.setEnabled(!Str.isNullOrWhitespace(movie.getPart(5)));
+		btnMediaInfo6.setEnabled(!Str.isNullOrWhitespace(movie.Parts.get(5)));
+		btnOpenDir6.setEnabled(!Str.isNullOrWhitespace(movie.Parts.get(5)));
 
 	}
 
@@ -877,7 +877,7 @@ public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener 
 		}
 
 		try {
-			GenericTextDialog.showText(this, getTitle(), MediaQueryRunner.queryRaw(PathFormatter.fromCCPath(movie.getPart(index))), false);
+			GenericTextDialog.showText(this, getTitle(), MediaQueryRunner.queryRaw(PathFormatter.fromCCPath(movie.Parts.get(index))), false);
 		} catch (IOException | MediaQueryException e) {
 			CCLog.addWarning(e);
 			GenericTextDialog.showText(this, getTitle(), e.getMessage() + "\n\n" + ExceptionUtils.getMessage(e) + "\n\n" + ExceptionUtils.getStackTrace(e), false); //$NON-NLS-1$ //$NON-NLS-2$
@@ -885,6 +885,6 @@ public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener 
 	}
 
 	private void openDir(int index) {
-		PathFormatter.showInExplorer(PathFormatter.fromCCPath(movie.getPart(index)));
+		PathFormatter.showInExplorer(PathFormatter.fromCCPath(movie.Parts.get(index)));
 	}
 }

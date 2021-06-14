@@ -19,7 +19,7 @@ public class CustomViewcountFilter extends AbstractCustomStructureElementFilter 
 	
 	@Override
 	public boolean includes(CCMovie m) {
-		return area.contains(m.getViewedHistory().count());
+		return area.contains(m.ViewedHistory.get().count());
 	}
 
 	@Override
@@ -28,7 +28,7 @@ public class CustomViewcountFilter extends AbstractCustomStructureElementFilter 
 		int sm = 0;
 		for (CCEpisode ep : s.iteratorEpisodes()) {
 			ct++;
-			sm += ep.getViewedHistory().count();
+			sm += ep.ViewedHistory.get().count();
 		}
 		
 		double c = (ct == 0) ? 0 : ((sm * 1.0 )/ ct);
@@ -42,7 +42,7 @@ public class CustomViewcountFilter extends AbstractCustomStructureElementFilter 
 		int sm = 0;
 		for (CCEpisode ep : s.iteratorEpisodes()) {
 			ct++;
-			sm += ep.getViewedHistory().count();
+			sm += ep.ViewedHistory.get().count();
 		}
 		
 		double c = (ct == 0) ? 0 : ((sm * 1.0 )/ ct);
@@ -52,7 +52,7 @@ public class CustomViewcountFilter extends AbstractCustomStructureElementFilter 
 
 	@Override
 	public boolean includes(CCEpisode e) {
-		return area.contains(e.getViewedHistory().count());
+		return area.contains(e.ViewedHistory.get().count());
 	}
 
 	@Override

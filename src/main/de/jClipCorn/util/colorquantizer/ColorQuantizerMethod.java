@@ -10,6 +10,7 @@ import de.jClipCorn.util.colorquantizer.smartk8.K8QuantizerWrapper;
 import de.jClipCorn.util.colorquantizer.wadcolors.WadColorPaletteQuantizer;
 import de.jClipCorn.util.enumextension.ContinoousEnum;
 import de.jClipCorn.util.enumextension.EnumWrapper;
+import de.jClipCorn.util.enumextension.IEnumWrapper;
 import de.jClipCorn.util.lambda.Func0to1;
 
 public enum ColorQuantizerMethod implements ContinoousEnum<ColorQuantizerMethod> {
@@ -39,6 +40,11 @@ public enum ColorQuantizerMethod implements ContinoousEnum<ColorQuantizerMethod>
 
 	public static EnumWrapper<ColorQuantizerMethod> getWrapper() {
 		return wrapper;
+	}
+
+	@Override
+	public IEnumWrapper wrapper() {
+		return getWrapper();
 	}
 
 	@Override

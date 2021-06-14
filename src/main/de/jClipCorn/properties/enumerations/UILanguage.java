@@ -3,6 +3,7 @@ package de.jClipCorn.properties.enumerations;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.enumextension.ContinoousEnum;
 import de.jClipCorn.util.enumextension.EnumWrapper;
+import de.jClipCorn.util.enumextension.IEnumWrapper;
 
 public enum UILanguage implements ContinoousEnum<UILanguage> {
 	DEFAULT(0), 
@@ -28,6 +29,11 @@ public enum UILanguage implements ContinoousEnum<UILanguage> {
 	
 	public static EnumWrapper<UILanguage> getWrapper() {
 		return wrapper;
+	}
+
+	@Override
+	public IEnumWrapper wrapper() {
+		return getWrapper();
 	}
 	
 	@Override

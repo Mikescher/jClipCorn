@@ -44,7 +44,7 @@ public class CustomSearchFilter extends AbstractCustomDatabaseElementFilter {
 				}
 			}
 
-			CCMediaInfo minfo = ((CCMovie)e).getMediaInfo();
+			CCMediaInfo minfo = ((CCMovie)e).mediaInfo().get();
 			if (minfo.isSet())
 			{
 				if (minfo.getVideoCodec().equalsIgnoreCase(searchTerm)) return true;

@@ -3,6 +3,7 @@ package de.jClipCorn.util.vlcquery;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.enumextension.ContinoousEnum;
 import de.jClipCorn.util.enumextension.EnumWrapper;
+import de.jClipCorn.util.enumextension.IEnumWrapper;
 
 public enum VLCPlayerStatus implements ContinoousEnum<VLCPlayerStatus> {
 	PLAYING(0),
@@ -32,6 +33,11 @@ public enum VLCPlayerStatus implements ContinoousEnum<VLCPlayerStatus> {
 
 	public static EnumWrapper<VLCPlayerStatus> getWrapper() {
 		return wrapper;
+	}
+
+	@Override
+	public IEnumWrapper wrapper() {
+		return getWrapper();
 	}
 
 	@Override

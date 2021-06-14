@@ -42,24 +42,24 @@ public class TestDatabase extends ClipCornBaseTest {
 		CCMovie movWrite = ml.createNewEmptyMovie();
 
 		movWrite.beginUpdating();
-		movWrite.setTitle("Title");
-		movWrite.setAddDate(CCDate.getCurrentDate());
-		movWrite.setFormat(CCFileFormat.MKV);
-		movWrite.setZyklusID(4);
-		movWrite.setZyklusTitle("Zyklus");
-		movWrite.setFilesize(1024);
-		movWrite.setFsk(CCFSK.RATING_III);
-		movWrite.setGenre(CCGenre.GENRE_002, 0);
-		movWrite.setGenre(CCGenre.GENRE_004, 1);
-		movWrite.setGenre(CCGenre.GENRE_006, 2);
-		movWrite.setLanguage(CCDBLanguageList.ENGLISH);
-		movWrite.setLength(120);
-		movWrite.setOnlinescore(CCOnlineScore.STARS_3_0);
-		movWrite.setYear(2012);
-		movWrite.setScore(CCUserScore.RATING_III);
-		movWrite.setOnlineReference("tmdb:movie/207703");
-		movWrite.setMediaInfo(new CCMediaInfo(1565454159, 1565454169, 1570732032, 5903.904, 2128398, "MPEG-4 Visual", 720, 304, 23.976, (short)8, 141552, "XVID", "AC-3", (short)6, "2000", 48000, Str.Empty));
-		movWrite.setPart(0, "C:\\test.mov");
+		movWrite.Title.set("Title");
+		movWrite.AddDate.set(CCDate.getCurrentDate());
+		movWrite.Format.set(CCFileFormat.MKV);
+		movWrite.Zyklus.setNumber(4);
+		movWrite.Zyklus.setTitle("Zyklus");
+		movWrite.FileSize.set(1024);
+		movWrite.FSK.set(CCFSK.RATING_III);
+		movWrite.Genres.set(CCGenre.GENRE_002, 0);
+		movWrite.Genres.set(CCGenre.GENRE_004, 1);
+		movWrite.Genres.set(CCGenre.GENRE_006, 2);
+		movWrite.Language.set(CCDBLanguageList.ENGLISH);
+		movWrite.Length.set(120);
+		movWrite.OnlineScore.set(CCOnlineScore.STARS_3_0);
+		movWrite.Year.set(2012);
+		movWrite.Score.set(CCUserScore.RATING_III);
+		movWrite.OnlineReference.set("tmdb:movie/207703");
+		movWrite.MediaInfo.set(new CCMediaInfo(1565454159, 1565454169, 1570732032, 5903.904, 2128398, "MPEG-4 Visual", 720, 304, 23.976, (short)8, 141552, "XVID", "AC-3", (short)6, "2000", 48000, Str.Empty));
+		movWrite.Parts.set(0, "C:\\test.mov");
 		movWrite.endUpdating();
 		
 		assertEquals(1, ml.getElementCount());
@@ -80,28 +80,28 @@ public class TestDatabase extends ClipCornBaseTest {
 		assertEquals(CCDBLanguageList.ENGLISH, movRead.getLanguage());
 		assertEquals(120, movRead.getLength());
 		assertEquals(2012, movRead.getYear());
-		assertEquals(CCUserScore.RATING_III, movRead.getScore());
+		assertEquals(CCUserScore.RATING_III, movRead.Score.get());
 		assertEquals(CCFSK.RATING_III, movRead.getFSK());
 		assertEquals(CCOnlineRefType.THEMOVIEDB, movRead.getOnlineReference().Main.type);
 		assertEquals(CCOnlineScore.STARS_3_0, movRead.getOnlinescore());
-		assertEquals("C:\\test.mov", movRead.getPart(0));
+		assertEquals("C:\\test.mov", movRead.Parts.get(0));
 
-		assertEquals(1565454159, movRead.getMediaInfo().getCDate());
-		assertEquals(1565454169, movRead.getMediaInfo().getMDate());
-		assertEquals(1570732032, movRead.getMediaInfo().getFilesize());
-		assertEquals(5903.904, movRead.getMediaInfo().getDuration(), 0.000001);
-		assertEquals(2128398, movRead.getMediaInfo().getBitrate());
-		assertEquals("MPEG-4 Visual", movRead.getMediaInfo().getVideoFormat());
-		assertEquals(720, movRead.getMediaInfo().getWidth());
-		assertEquals(304, movRead.getMediaInfo().getHeight());
-		assertEquals(23.976, movRead.getMediaInfo().getFramerate(), 0.000001);
-		assertEquals(8, movRead.getMediaInfo().getBitdepth());
-		assertEquals(141552, movRead.getMediaInfo().getFramecount());
-		assertEquals("XVID", movRead.getMediaInfo().getVideoCodec());
-		assertEquals("AC-3", movRead.getMediaInfo().getAudioFormat());
-		assertEquals(6, movRead.getMediaInfo().getAudioChannels());
-		assertEquals("2000", movRead.getMediaInfo().getAudioCodec());
-		assertEquals(48000, movRead.getMediaInfo().getAudioSamplerate());
+		assertEquals(1565454159, movRead.mediaInfo().get().getCDate());
+		assertEquals(1565454169, movRead.mediaInfo().get().getMDate());
+		assertEquals(1570732032, movRead.mediaInfo().get().getFilesize());
+		assertEquals(5903.904, movRead.mediaInfo().get().getDuration(), 0.000001);
+		assertEquals(2128398, movRead.mediaInfo().get().getBitrate());
+		assertEquals("MPEG-4 Visual", movRead.mediaInfo().get().getVideoFormat());
+		assertEquals(720, movRead.mediaInfo().get().getWidth());
+		assertEquals(304, movRead.mediaInfo().get().getHeight());
+		assertEquals(23.976, movRead.mediaInfo().get().getFramerate(), 0.000001);
+		assertEquals(8, movRead.mediaInfo().get().getBitdepth());
+		assertEquals(141552, movRead.mediaInfo().get().getFramecount());
+		assertEquals("XVID", movRead.mediaInfo().get().getVideoCodec());
+		assertEquals("AC-3", movRead.mediaInfo().get().getAudioFormat());
+		assertEquals(6, movRead.mediaInfo().get().getAudioChannels());
+		assertEquals("2000", movRead.mediaInfo().get().getAudioCodec());
+		assertEquals(48000, movRead.mediaInfo().get().getAudioSamplerate());
 	}
 
 	@Test
@@ -112,27 +112,27 @@ public class TestDatabase extends ClipCornBaseTest {
 
 		CCSeries serWrite = ml.createNewEmptySeries();
 		{
-			serWrite.setScore(CCUserScore.RATING_V);
+			serWrite.Score.set(CCUserScore.RATING_V);
 			serWrite.setGroups(CCGroupList.create(CCGroup.create("G0"), CCGroup.create("G1")));
-			serWrite.setTitle("MySeries");
-			serWrite.setGenres(CCGenreList.create(CCGenre.GENRE_006, CCGenre.GENRE_020, CCGenre.GENRE_006));
-			serWrite.setTags(CCTagList.create(CCSingleTag.TAG_WATCH_LATER, CCSingleTag.TAG_BAD_QUALITY));
-			serWrite.setOnlineReference(CCOnlineReferenceList.create(CCSingleOnlineReference.createIMDB("1234"), CCSingleOnlineReference.createMyAnimeList(999)));
-			serWrite.setFsk(CCFSK.RATING_I);
-			serWrite.setOnlinescore(CCOnlineScore.STARS_2_0);
+			serWrite.Title.set("MySeries");
+			serWrite.Genres.set(CCGenreList.create(CCGenre.GENRE_006, CCGenre.GENRE_020, CCGenre.GENRE_006));
+			serWrite.Tags.set(CCTagList.create(CCSingleTag.TAG_WATCH_LATER, CCSingleTag.TAG_BAD_QUALITY));
+			serWrite.OnlineReference.set(CCOnlineReferenceList.create(CCSingleOnlineReference.createIMDB("1234"), CCSingleOnlineReference.createMyAnimeList(999)));
+			serWrite.FSK.set(CCFSK.RATING_I);
+			serWrite.OnlineScore.set(CCOnlineScore.STARS_2_0);
 		}
 
 		CCSeason seaWrite = serWrite.createNewEmptySeason();
 		{
-			seaWrite.setTitle("MySeason ~~~");
-			seaWrite.setYear(2020);
+			seaWrite.Title.set("MySeason ~~~");
+			seaWrite.Year.set(2020);
 		}
 
 		CCEpisode epiWrite = seaWrite.createNewEmptyEpisode();
 		{
-			epiWrite.setEpisodeNumber(1);
-			epiWrite.setTitle("This is my title: fight me");
-			epiWrite.setMediaInfo(new CCMediaInfo(
+			epiWrite.EpisodeNumber.set(1);
+			epiWrite.Title.set("This is my title: fight me");
+			epiWrite.MediaInfo.set(new CCMediaInfo(
 					CCDateTime.create(15, 4, 2019, 6,  0, 0).toFileTimestamp(GMT_2), // long cdate
 					CCDateTime.create(15, 4, 2019, 8, 30, 0).toFileTimestamp(GMT_2), // long mdate
 					3570481288L,                                                     // long filesize
@@ -150,14 +150,14 @@ public class TestDatabase extends ClipCornBaseTest {
 					"A_AC3",                                                         // String audiocodec
 					48000,                                                           // int audiosamplerate
 					""));                                                            // String checksum
-			epiWrite.setLength(98);
-			epiWrite.setTags(CCTagList.create(CCSingleTag.TAG_MISSING_TIME));
-			epiWrite.setFormat(CCFileFormat.MKV);
-			epiWrite.setFilesize(3570481288L);
-			epiWrite.setPart("/media/example.mkv");
-			epiWrite.setAddDate(CCDate.create(1, 1, 2000));
-			epiWrite.setViewedHistory(CCDateTimeList.create(CCDateTime.create(10, 1, 2000, 6, 0, 0), CCDateTime.create(12, 1, 2000, 12, 0, 0), CCDateTime.create(22, 1, 2000, 18, 0, 0)));
-			epiWrite.setLanguage(CCDBLanguageList.create(CCDBLanguage.GERMAN, CCDBLanguage.RUSSIAN, CCDBLanguage.SPANISH));
+			epiWrite.Length.set(98);
+			epiWrite.Tags.set(CCTagList.create(CCSingleTag.TAG_MISSING_TIME));
+			epiWrite.Format.set(CCFileFormat.MKV);
+			epiWrite.FileSize.set(3570481288L);
+			epiWrite.Part.set("/media/example.mkv");
+			epiWrite.AddDate.set(CCDate.create(1, 1, 2000));
+			epiWrite.ViewedHistory.set(CCDateTimeList.create(CCDateTime.create(10, 1, 2000, 6, 0, 0), CCDateTime.create(12, 1, 2000, 12, 0, 0), CCDateTime.create(22, 1, 2000, 18, 0, 0)));
+			epiWrite.Language.set(CCDBLanguageList.create(CCDBLanguage.GERMAN, CCDBLanguage.RUSSIAN, CCDBLanguage.SPANISH));
 		}
 
 		assertEquals(1, ml.getElementCount());
@@ -176,7 +176,7 @@ public class TestDatabase extends ClipCornBaseTest {
 
 		CCSeries serRead = ml.iteratorSeries().firstOrNull();
 
-		assertEquals(CCUserScore.RATING_V, serRead.getScore());
+		assertEquals(CCUserScore.RATING_V, serRead.Score.get());
 		assertEquals(CCGroupList.create(CCGroup.create("G0"), CCGroup.create("G1")), serRead.getGroups());
 		assertEquals("MySeries", serRead.getTitle());
 		assertEquals(CCGenreList.create(CCGenre.GENRE_006, CCGenre.GENRE_020, CCGenre.GENRE_006), serRead.getGenres());
@@ -201,24 +201,24 @@ public class TestDatabase extends ClipCornBaseTest {
 		assertEquals(3570481288L, epiRead.getFilesize().getBytes());
 		assertEquals("/media/example.mkv", epiRead.getPart());
 		assertEquals(CCDate.create(1, 1, 2000), epiRead.getAddDate());
-		assertEquals(CCDateTimeList.create(CCDateTime.create(10, 1, 2000, 6, 0, 0), CCDateTime.create(12, 1, 2000, 12, 0, 0), CCDateTime.create(22, 1, 2000, 18, 0, 0)), epiRead.getViewedHistory());
+		assertEquals(CCDateTimeList.create(CCDateTime.create(10, 1, 2000, 6, 0, 0), CCDateTime.create(12, 1, 2000, 12, 0, 0), CCDateTime.create(22, 1, 2000, 18, 0, 0)), epiRead.ViewedHistory.get());
 		assertEquals(CCDBLanguageList.create(CCDBLanguage.GERMAN, CCDBLanguage.RUSSIAN, CCDBLanguage.SPANISH), epiRead.getLanguage());
-		assertEquals(1555300800000L, epiRead.getMediaInfo().getCDate());
-		assertEquals(1555309800000L, epiRead.getMediaInfo().getMDate());
-		assertEquals(3570481288L, epiRead.getMediaInfo().getFilesize());
-		assertEquals(5932.933, epiRead.getMediaInfo().getDuration(), 0.000001);
-		assertEquals(4814457, epiRead.getMediaInfo().getBitrate());
-		assertEquals("AVC", epiRead.getMediaInfo().getVideoFormat());
-		assertEquals(1920, epiRead.getMediaInfo().getWidth());
-		assertEquals(1080, epiRead.getMediaInfo().getHeight());
-		assertEquals(23.976, epiRead.getMediaInfo().getFramerate(), 0.000001);
-		assertEquals(8, epiRead.getMediaInfo().getBitdepth());
-		assertEquals(142248, epiRead.getMediaInfo().getFramecount());
-		assertEquals("V_MPEG4/ISO/AVC", epiRead.getMediaInfo().getVideoCodec());
-		assertEquals("AC-3", epiRead.getMediaInfo().getAudioFormat());
-		assertEquals(2, epiRead.getMediaInfo().getAudioChannels());
-		assertEquals("A_AC3", epiRead.getMediaInfo().getAudioCodec());
-		assertEquals(48000, epiRead.getMediaInfo().getAudioSamplerate());
+		assertEquals(1555300800000L, epiRead.mediaInfo().get().getCDate());
+		assertEquals(1555309800000L, epiRead.mediaInfo().get().getMDate());
+		assertEquals(3570481288L, epiRead.mediaInfo().get().getFilesize());
+		assertEquals(5932.933, epiRead.mediaInfo().get().getDuration(), 0.000001);
+		assertEquals(4814457, epiRead.mediaInfo().get().getBitrate());
+		assertEquals("AVC", epiRead.mediaInfo().get().getVideoFormat());
+		assertEquals(1920, epiRead.mediaInfo().get().getWidth());
+		assertEquals(1080, epiRead.mediaInfo().get().getHeight());
+		assertEquals(23.976, epiRead.mediaInfo().get().getFramerate(), 0.000001);
+		assertEquals(8, epiRead.mediaInfo().get().getBitdepth());
+		assertEquals(142248, epiRead.mediaInfo().get().getFramecount());
+		assertEquals("V_MPEG4/ISO/AVC", epiRead.mediaInfo().get().getVideoCodec());
+		assertEquals("AC-3", epiRead.mediaInfo().get().getAudioFormat());
+		assertEquals(2, epiRead.mediaInfo().get().getAudioChannels());
+		assertEquals("A_AC3", epiRead.mediaInfo().get().getAudioCodec());
+		assertEquals(48000, epiRead.mediaInfo().get().getAudioSamplerate());
 	}
 
 	@Test

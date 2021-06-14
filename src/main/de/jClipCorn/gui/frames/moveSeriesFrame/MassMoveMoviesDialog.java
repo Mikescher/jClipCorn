@@ -1,30 +1,9 @@
 package de.jClipCorn.gui.frames.moveSeriesFrame;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.File;
-import java.util.List;
-import java.util.Vector;
-
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JTextField;
-import javax.swing.ListSelectionModel;
-import javax.swing.table.DefaultTableModel;
-
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.FormSpecs;
 import com.jgoodies.forms.layout.RowSpec;
-
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.gui.guiComponents.DefaultReadOnlyTableModel;
@@ -32,6 +11,15 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.DialogHelper;
+
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.util.List;
+import java.util.Vector;
 
 public class MassMoveMoviesDialog extends JDialog {
 	private static final long serialVersionUID = 8795232362998343872L;
@@ -152,7 +140,7 @@ public class MassMoveMoviesDialog extends JDialog {
 		
 		for (CCMovie mov : movies) {
 			for (int i = 0; i < mov.getPartcount(); i++) {
-				mov.setPart(i, mov.getPart(i).replace(edSearch.getText(), edReplace.getText()));
+				mov.Parts.set(i, mov.Parts.get(i).replace(edSearch.getText(), edReplace.getText()));
 			}
 		}
 		
@@ -164,8 +152,8 @@ public class MassMoveMoviesDialog extends JDialog {
 
 		for (CCMovie mov : movies) {
 			for (int i = 0; i < mov.getPartcount(); i++) {
-				String oldp = mov.getPart(i);
-				String newp = mov.getPart(i).replace(edSearch.getText(), edReplace.getText());
+				String oldp = mov.Parts.get(i);
+				String newp = mov.Parts.get(i).replace(edSearch.getText(), edReplace.getText());
 	
 				String identOld = new File(PathFormatter.fromCCPath(oldp)).exists() ? "1" : "0"; //$NON-NLS-1$ //$NON-NLS-2$
 				String identNew = new File(PathFormatter.fromCCPath(newp)).exists() ? "1" : "0"; //$NON-NLS-1$ //$NON-NLS-2$

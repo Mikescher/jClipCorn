@@ -53,8 +53,8 @@ public class StatisticsMediaInfoBitrateChart extends StatisticsChart {
 	private XYDataset getDataSet(CCMovieList movielist, StatisticsTypeFilter source) {
 		List<Integer> values = source
 				.iteratorMoviesOrEpisodes(movielist)
-				.filter(e -> e.getMediaInfo().isSet())
-				.map(e -> e.getMediaInfo().getBitrate() / 1000)
+				.filter(e -> e.mediaInfo().get().isSet())
+				.map(e -> e.mediaInfo().get().getBitrate() / 1000)
 				.map(e -> e / 10)
 				.filter(e -> e > 0)
 				.enumerate();

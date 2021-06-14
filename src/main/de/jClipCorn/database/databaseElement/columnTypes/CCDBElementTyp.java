@@ -1,11 +1,12 @@
 package de.jClipCorn.database.databaseElement.columnTypes;
 
-import javax.swing.ImageIcon;
-
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.enumextension.ContinoousEnum;
 import de.jClipCorn.util.enumextension.EnumWrapper;
+import de.jClipCorn.util.enumextension.IEnumWrapper;
+
+import javax.swing.*;
 
 public enum CCDBElementTyp implements ContinoousEnum<CCDBElementTyp> {
 	MOVIE(0),
@@ -26,6 +27,11 @@ public enum CCDBElementTyp implements ContinoousEnum<CCDBElementTyp> {
 	
 	public static EnumWrapper<CCDBElementTyp> getWrapper() {
 		return wrapper;
+	}
+
+	@Override
+	public IEnumWrapper wrapper() {
+		return getWrapper();
 	}
 	
 	@Override

@@ -52,17 +52,17 @@ public class SearchFrame extends JFrame
 				return ((CCMovie)v).getCompleteTitle();
 
 			if (v instanceof CCSeries)
-				return v.getTitle();
+				return v.title().get();
 
 			if (v instanceof CCSeason)
-				return Str.format("{0} - {1}", ((CCSeason)v).getSeries().getTitle(), v.getTitle());
+				return Str.format("{0} - {1}", ((CCSeason)v).getSeries().getTitle(), v.title().get());
 
 			if (v instanceof CCEpisode)
 				return Str.format("{0} - {1} - E{2,number,00} {3}",
 						((CCEpisode)v).getSeries().getTitle(),
 						((CCEpisode)v).getSeason().getTitle(),
 						((CCEpisode)v).getEpisodeNumber(),
-						v.getTitle());
+						v.title().get());
 
 			CCLog.addDefaultSwitchError(SearchFrame.this, v);
 			return v.toString();
@@ -168,15 +168,15 @@ public class SearchFrame extends JFrame
 			}
 			if (movFound) continue;
 
-			if (mov.getMediaInfo().isSet())
+			if (mov.mediaInfo().get().isSet())
 			{
-				if (mov.getMediaInfo().getVideoCodec().equalsIgnoreCase(searchString)) { result.add(mov); continue; }
+				if (mov.mediaInfo().get().getVideoCodec().equalsIgnoreCase(searchString)) { result.add(mov); continue; }
 
-				if (mov.getMediaInfo().getVideoFormat().equalsIgnoreCase(searchString)) { result.add(mov); continue; }
+				if (mov.mediaInfo().get().getVideoFormat().equalsIgnoreCase(searchString)) { result.add(mov); continue; }
 
-				if (mov.getMediaInfo().getAudioCodec().equalsIgnoreCase(searchString)) { result.add(mov); continue; }
+				if (mov.mediaInfo().get().getAudioCodec().equalsIgnoreCase(searchString)) { result.add(mov); continue; }
 
-				if (mov.getMediaInfo().getAudioFormat().equalsIgnoreCase(searchString)) { result.add(mov); continue; }
+				if (mov.mediaInfo().get().getAudioFormat().equalsIgnoreCase(searchString)) { result.add(mov); continue; }
 			}
 
 		}
@@ -204,15 +204,15 @@ public class SearchFrame extends JFrame
 					}
 					if (epiFound) continue;
 
-					if (epi.getMediaInfo().isSet())
+					if (epi.mediaInfo().get().isSet())
 					{
-						if (epi.getMediaInfo().getVideoCodec().equalsIgnoreCase(searchString)) { result.add(epi); continue; }
+						if (epi.mediaInfo().get().getVideoCodec().equalsIgnoreCase(searchString)) { result.add(epi); continue; }
 
-						if (epi.getMediaInfo().getVideoFormat().equalsIgnoreCase(searchString)) { result.add(epi); continue; }
+						if (epi.mediaInfo().get().getVideoFormat().equalsIgnoreCase(searchString)) { result.add(epi); continue; }
 
-						if (epi.getMediaInfo().getAudioCodec().equalsIgnoreCase(searchString)) { result.add(epi); continue; }
+						if (epi.mediaInfo().get().getAudioCodec().equalsIgnoreCase(searchString)) { result.add(epi); continue; }
 
-						if (epi.getMediaInfo().getAudioFormat().equalsIgnoreCase(searchString)) { result.add(epi); continue; }
+						if (epi.mediaInfo().get().getAudioFormat().equalsIgnoreCase(searchString)) { result.add(epi); continue; }
 					}
 				}
 
@@ -282,12 +282,12 @@ public class SearchFrame extends JFrame
 
 			if (v1_tl_ismov && v2_tl_ismov)
 			{
-				var v1_mov_vcount = (int)poly_mov(v1, m -> m.getViewedHistory().count());
-				var v2_mov_vcount = (int)poly_mov(v2, m -> m.getViewedHistory().count());
+				var v1_mov_vcount = (int)poly_mov(v1, m -> m.ViewedHistory.get().count());
+				var v2_mov_vcount = (int)poly_mov(v2, m -> m.ViewedHistory.get().count());
 				if (v1_mov_vcount != v2_mov_vcount) return -1 * cmp(v1_mov_vcount, v2_mov_vcount);
 
-				var v1_mov_uscore = (int)poly_mov(v1, m -> m.getScore().getOrder());
-				var v2_mov_uscore = (int)poly_mov(v2, m -> m.getScore().getOrder());
+				var v1_mov_uscore = (int)poly_mov(v1, m -> m.Score.get().getOrder());
+				var v2_mov_uscore = (int)poly_mov(v2, m -> m.Score.get().getOrder());
 				if (v1_mov_uscore != v2_mov_uscore) return -1 * cmp(v1_mov_uscore, v2_mov_uscore);
 
 				var v1_mov_zyklus = poly_mov(v1, m -> m.getZyklus().getTitle());
@@ -315,8 +315,8 @@ public class SearchFrame extends JFrame
 				var v2_ser_viewed = (int)poly_tl_ser(v2, s -> s.getExtendedViewedState().getType().getTriStateInt());
 				if (v1_ser_viewed != v2_ser_viewed) return -1 * cmp(v1_ser_viewed, v2_ser_viewed);
 
-				var v1_ser_uscore = (int)poly_tl_ser(v1, m -> m.getScore().getOrder());
-				var v2_ser_uscore = (int)poly_tl_ser(v2, m -> m.getScore().getOrder());
+				var v1_ser_uscore = (int)poly_tl_ser(v1, m -> m.Score.get().getOrder());
+				var v2_ser_uscore = (int)poly_tl_ser(v2, m -> m.Score.get().getOrder());
 				if (v1_ser_uscore != v2_ser_uscore) return -1 * cmp(v1_ser_uscore, v2_ser_uscore);
 
 				var v1_ser_title = poly_tl_ser(v1, CCSeries::getTitle);
@@ -337,8 +337,8 @@ public class SearchFrame extends JFrame
 
 			if (v1_type == 3 && v2_type == 3) // both episode
 			{
-				var v1_epi_vcount = (int)poly_epi(v1, m -> m.getViewedHistory().count());
-				var v2_epi_vcount = (int)poly_epi(v2, m -> m.getViewedHistory().count());
+				var v1_epi_vcount = (int)poly_epi(v1, m -> m.ViewedHistory.get().count());
+				var v2_epi_vcount = (int)poly_epi(v2, m -> m.ViewedHistory.get().count());
 				if (v1_epi_vcount != v2_epi_vcount) return -1 * cmp(v1_epi_vcount, v2_epi_vcount);
 
 				var v1_epi_title = (int)poly_epi(v1, CCEpisode::getEpisodeNumber);

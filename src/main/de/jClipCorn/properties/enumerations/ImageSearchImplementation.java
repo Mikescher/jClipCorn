@@ -10,6 +10,7 @@ import de.jClipCorn.features.online.cover.imdb.IMDBSecondaryCoverSearch;
 import de.jClipCorn.features.online.cover.tmdb.TMDBPosterSearch;
 import de.jClipCorn.util.enumextension.ContinoousEnum;
 import de.jClipCorn.util.enumextension.EnumWrapper;
+import de.jClipCorn.util.enumextension.IEnumWrapper;
 import de.jClipCorn.util.listener.FinishListener;
 import de.jClipCorn.util.listener.ProgressCallbackListener;
 import de.jClipCorn.util.listener.UpdateCallbackListener;
@@ -40,6 +41,11 @@ public enum ImageSearchImplementation implements ContinoousEnum<ImageSearchImple
 	
 	public static EnumWrapper<ImageSearchImplementation> getWrapper() {
 		return wrapper;
+	}
+
+	@Override
+	public IEnumWrapper wrapper() {
+		return getWrapper();
 	}
 	
 	@Override

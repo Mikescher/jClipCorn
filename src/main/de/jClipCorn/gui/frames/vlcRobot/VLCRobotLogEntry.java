@@ -125,8 +125,8 @@ public class VLCRobotLogEntry {
 			case VLCStatus:       return VLCStatus.formatShortDiff(StatusOld, StatusNew);
 			case SkipUpdateCycle: return "Skipped a single refresh cycle (" + SkipCount + ")";
 			case UpdateWindowPos: return Str.format("UpdateWindowPos [{0}]", Reason);
-			case Play:            return Str.format("''{0}'' [{1}]", NewEntry.getTitle(), Reason);
-			case QueuePreemptive: return Str.format("''{0}'' [{1}] (queued)", NewEntry.getTitle(), Reason);
+			case Play:            return Str.format("''{0}'' [{1}]", NewEntry.title().get(), Reason);
+			case QueuePreemptive: return Str.format("''{0}'' [{1}] (queued)", NewEntry.title().get(), Reason);
 		}
 
 		return "???";

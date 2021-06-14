@@ -3,6 +3,7 @@ package de.jClipCorn.properties.enumerations;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.enumextension.ContinoousEnum;
 import de.jClipCorn.util.enumextension.EnumWrapper;
+import de.jClipCorn.util.enumextension.IEnumWrapper;
 
 public enum ResourcePreloadMode implements ContinoousEnum<ResourcePreloadMode> {
 	NO_PRELOAD(0),
@@ -26,6 +27,11 @@ public enum ResourcePreloadMode implements ContinoousEnum<ResourcePreloadMode> {
 	
 	public static EnumWrapper<ResourcePreloadMode> getWrapper() {
 		return wrapper;
+	}
+
+	@Override
+	public IEnumWrapper wrapper() {
+		return getWrapper();
 	}
 	
 	@Override

@@ -42,7 +42,7 @@ public class VLCPlaylistEntry {
 		VLCPlaylistEntry e = new VLCPlaylistEntry();
 		e.Type = VPEType.JCC_QUEUE_SINGLE;
 		e.Element = elem;
-		e.Length = elem.getLength()*60;
+		e.Length = elem.length().get()*60;
 		return e;
 	}
 
@@ -68,7 +68,7 @@ public class VLCPlaylistEntry {
 		VLCPlaylistEntry e = new VLCPlaylistEntry();
 		e.Type = VPEType.JCC_QUEUE_AUTO;
 		e.ElementQueue = elems;
-		e.Length = CCStreams.iterate(elems).sumInt(ipe -> ipe.getLength()*60);
+		e.Length = CCStreams.iterate(elems).sumInt(ipe -> ipe.length().get()*60);
 		e.AutoDisplayString = disp;
 		return e;
 	}
@@ -122,7 +122,7 @@ public class VLCPlaylistEntry {
 			case JCC_QUEUE_PREEMPTIVE:
 			case VLC_QUEUE_PREEMPTIVE:
 				if (Element instanceof CCEpisode) return ((CCEpisode)Element).getShortQualifiedTitle();
-				return Element.getTitle();
+				return Element.title().get();
 
 			case JCC_QUEUE_AUTO:
 				return "[AUTO] " + AutoDisplayString + " [" + ElementQueue.size() + "]"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$

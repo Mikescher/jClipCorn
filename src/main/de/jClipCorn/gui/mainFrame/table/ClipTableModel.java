@@ -126,37 +126,37 @@ public class ClipTableModel extends AbstractTableModel implements TableModelRowC
 			CCMovie mov = (CCMovie) el;
 			switch (col) {
 			case COLUMN_SCORE: // Score
-				return mov.getScore();
+				return mov.Score.get();
 			case COLUMN_TITLE: // Name
 				return mov;
 			case COLUMN_VIEWED: // Viewed
 				return mov.getExtendedViewedState();
 			case COLUMN_ZYKLUS: // Zyklus
-				return mov.getZyklus();
+				return mov.Zyklus.get();
 			case COLUMN_MEDIAINFO: // MediaInfo
 				return mov.getMediaInfoCategory();
 			case COLUMN_LANGUAGE: // Language
-				return mov.getLanguage();
+				return mov.Language.get();
 			case COLUMN_GENRE: // Genres
-				return mov.getGenres();
+				return mov.Genres.get();
 			case COLUMN_PARTCOUNT: // Partcount
 				return mov.getPartcount();
 			case COLUMN_LENGTH: // Length
-				return mov.getLength();
+				return mov.Length.get();
 			case COLUMN_DATE: // Date
 				return mov;
 			case COLUMN_ONLINESCORE: // OnlineScore
-				return mov.getOnlinescore();
+				return mov.OnlineScore.get();
 			case COLUMN_TAGS: // Tags
 				return mov.getTags();
 			case COLUMN_FSK: // FSK
-				return mov.getFSK();
+				return mov.FSK.get();
 			case COLUMN_FORMAT: // Format
 				return mov.getFormat();
 			case COLUMN_YEAR: // Year
-				return new YearRange(mov.getYear());
+				return new YearRange(mov.Year.get());
 			case COLUMN_SIZE: // Filesize
-				return mov.getFilesize();
+				return mov.FileSize.get();
 			case COLUMN_LASTVIEWED: // Zuletzt angesehen
 				return mov.getLastViewed();
 			default:
@@ -166,7 +166,7 @@ public class ClipTableModel extends AbstractTableModel implements TableModelRowC
 			CCSeries ser = (CCSeries) el;
 			switch (col) {
 			case COLUMN_SCORE: // Score
-				return ser.getScore();
+				return ser.Score.get();
 			case COLUMN_TITLE: // Name
 				return ser;
 			case COLUMN_VIEWED: // Viewed
@@ -178,7 +178,7 @@ public class ClipTableModel extends AbstractTableModel implements TableModelRowC
 			case COLUMN_LANGUAGE: // Language
 				return ser.getSemiCommonOrAllLanguages();
 			case COLUMN_GENRE: // Genres
-				return ser.getGenres();
+				return ser.Genres.get();
 			case COLUMN_PARTCOUNT: // Partcount
 				return ser.getEpisodeCount();
 			case COLUMN_LENGTH: // Length
@@ -186,11 +186,11 @@ public class ClipTableModel extends AbstractTableModel implements TableModelRowC
 			case COLUMN_DATE: // Date
 				return ser;
 			case COLUMN_ONLINESCORE: // OnlineScore
-				return ser.getOnlinescore();
+				return ser.OnlineScore.get();
 			case COLUMN_TAGS: // Tags
 				return ser.getTags();
 			case COLUMN_FSK: // FSK
-				return ser.getFSK();
+				return ser.FSK.get();
 			case COLUMN_FORMAT: // Format
 				return ser.getFormat();
 			case COLUMN_YEAR: // Year
@@ -226,7 +226,7 @@ public class ClipTableModel extends AbstractTableModel implements TableModelRowC
 		case STRIPED:
 			return (row%2==0) ? Opt.of(owner.getBackground()) : Opt.of(LookAndFeelManager.isDark() ? COLOR_BACKGROUNDDARKGRAY : COLOR_BACKGROUNDGRAY);
 		case SCORE:
-			return Opt.of(COLOR_ONLINESCORE[getDatabaseElementByRow(owner.convertRowIndexToModel(row)).getOnlinescore().asInt()]);
+			return Opt.of(COLOR_ONLINESCORE[getDatabaseElementByRow(owner.convertRowIndexToModel(row)).OnlineScore.get().asInt()]);
 		default:
 			return Opt.of(Color.MAGENTA);
 		}

@@ -180,7 +180,7 @@ public class ChangeScoreFrame extends JFrame {
 		}
 		
 		CCMovie mov = (CCMovie) movielist.getDatabaseElementBySort(position);
-		mov.setScore(score);
+		mov.Score.set(score);
 		
 		nextMovie();
 	}
@@ -194,7 +194,7 @@ public class ChangeScoreFrame extends JFrame {
 				CCMovie mov = (CCMovie) del;
 				
 				if (cbSkipRated.isSelected()) {
-					if (mov.getScore() != CCUserScore.RATING_NO) {
+					if (mov.Score.get() != CCUserScore.RATING_NO) {
 						nextMovie();
 						return;
 					}
@@ -208,7 +208,7 @@ public class ChangeScoreFrame extends JFrame {
 				}
 				
 				lblCover.setAndResizeCover(mov.getCover());
-				lblCurrent.setIcon(mov.getScore().getIcon());
+				lblCurrent.setIcon(mov.Score.get().getIcon());
 				lblTitle.setText(mov.getCompleteTitle());
 			} else {
 				nextMovie();

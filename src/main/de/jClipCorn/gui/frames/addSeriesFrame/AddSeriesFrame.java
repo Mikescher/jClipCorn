@@ -100,22 +100,22 @@ public class AddSeriesFrame extends JFrame implements ParseResultHandler, UserDa
 
 		//#####################################################################################
 
-		newS.setTitle(edTitle.getText());
+		newS.Title.set(edTitle.getText());
 
-		newS.setOnlinescore((int) spnOnlinescore.getValue());
+		newS.OnlineScore.set((int) spnOnlinescore.getValue());
 
-		newS.setFsk(cbxFSK.getSelectedEnum().asFSK());
+		newS.FSK.set(cbxFSK.getSelectedEnum().asFSK());
 
-		newS.setOnlineReference(edReference.getValue());
+		newS.OnlineReference.set(edReference.getValue());
 
-		newS.setGenre(cbxGenre0.getSelectedEnum(), 0);
-		newS.setGenre(cbxGenre1.getSelectedEnum(), 1);
-		newS.setGenre(cbxGenre2.getSelectedEnum(), 2);
-		newS.setGenre(cbxGenre3.getSelectedEnum(), 3);
-		newS.setGenre(cbxGenre4.getSelectedEnum(), 4);
-		newS.setGenre(cbxGenre5.getSelectedEnum(), 5);
-		newS.setGenre(cbxGenre6.getSelectedEnum(), 6);
-		newS.setGenre(cbxGenre7.getSelectedEnum(), 7);
+		newS.Genres.set(cbxGenre0.getSelectedEnum(), 0);
+		newS.Genres.set(cbxGenre1.getSelectedEnum(), 1);
+		newS.Genres.set(cbxGenre2.getSelectedEnum(), 2);
+		newS.Genres.set(cbxGenre3.getSelectedEnum(), 3);
+		newS.Genres.set(cbxGenre4.getSelectedEnum(), 4);
+		newS.Genres.set(cbxGenre5.getSelectedEnum(), 5);
+		newS.Genres.set(cbxGenre6.getSelectedEnum(), 6);
+		newS.Genres.set(cbxGenre7.getSelectedEnum(), 7);
 
 		newS.setGroups(edGroups.getValue());
 

@@ -3,6 +3,7 @@ package de.jClipCorn.util.datatypes;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.enumextension.ContinoousEnum;
 import de.jClipCorn.util.enumextension.EnumWrapper;
+import de.jClipCorn.util.enumextension.IEnumWrapper;
 
 public enum AnyMatchType implements ContinoousEnum<AnyMatchType> {
 	LESSER(0),
@@ -31,6 +32,11 @@ public enum AnyMatchType implements ContinoousEnum<AnyMatchType> {
 	
 	public static EnumWrapper<AnyMatchType> getWrapper() {
 		return wrapper;
+	}
+
+	@Override
+	public IEnumWrapper wrapper() {
+		return getWrapper();
 	}
 	
 	@Override

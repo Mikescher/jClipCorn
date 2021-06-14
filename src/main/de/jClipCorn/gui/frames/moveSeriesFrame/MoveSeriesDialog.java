@@ -1,30 +1,9 @@
 package de.jClipCorn.gui.frames.moveSeriesFrame;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.File;
-import java.util.Vector;
-
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JTextField;
-import javax.swing.ListSelectionModel;
-import javax.swing.table.DefaultTableModel;
-
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.FormSpecs;
 import com.jgoodies.forms.layout.RowSpec;
-
 import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.database.databaseElement.CCSeries;
@@ -34,6 +13,14 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.DialogHelper;
+
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.util.Vector;
 
 public class MoveSeriesDialog extends JDialog {
 	private static final long serialVersionUID = 8795232362998343872L;
@@ -170,7 +157,7 @@ public class MoveSeriesDialog extends JDialog {
 			for (int epi = 0; epi < season.getEpisodeCount(); epi++) {
 				CCEpisode ep = season.getEpisodeByArrayIndex(epi);
 				
-				ep.setPart(ep.getPart().replace(edSearch.getText(), edReplace.getText()));
+				ep.Part.set(ep.getPart().replace(edSearch.getText(), edReplace.getText()));
 			}
 		}
 		

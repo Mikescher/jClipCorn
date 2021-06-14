@@ -5,6 +5,7 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.enumextension.ContinoousEnum;
 import de.jClipCorn.util.enumextension.EnumWrapper;
+import de.jClipCorn.util.enumextension.IEnumWrapper;
 import de.jClipCorn.util.lambda.Func1to1;
 import de.jClipCorn.util.stream.CCStreams;
 
@@ -53,6 +54,11 @@ public enum CCMediaInfoField implements ContinoousEnum<CCMediaInfoField>
 
 	public static EnumWrapper<CCMediaInfoField> getWrapper() {
 		return wrapper;
+	}
+
+	@Override
+	public IEnumWrapper wrapper() {
+		return getWrapper();
 	}
 
 	@Override

@@ -3,6 +3,7 @@ package de.jClipCorn.properties.enumerations;
 import de.jClipCorn.gui.LookAndFeelManager;
 import de.jClipCorn.util.enumextension.ContinoousEnum;
 import de.jClipCorn.util.enumextension.EnumWrapper;
+import de.jClipCorn.util.enumextension.IEnumWrapper;
 import de.jClipCorn.util.stream.CCStreams;
 
 @SuppressWarnings("HardCodedStringLiteral")
@@ -76,6 +77,11 @@ public enum AppTheme implements ContinoousEnum<AppTheme>
 	
 	public static EnumWrapper<AppTheme> getWrapper() {
 		return wrapper;
+	}
+
+	@Override
+	public IEnumWrapper wrapper() {
+		return getWrapper();
 	}
 	
 	@Override

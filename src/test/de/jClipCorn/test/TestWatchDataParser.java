@@ -32,10 +32,10 @@ public class TestWatchDataParser extends ClipCornBaseTest {
 		for (WatchDataChangeSet wdcs : r) wdcs.execute();
 		
 		assertEquals(true, ml.getSeries("Steins;Gate").getSeasonByArrayIndex(0).getEpisodeByNumber(1).isViewed());
-		assertTrue(ml.getSeries("Steins;Gate").getSeasonByArrayIndex(0).getEpisodeByNumber(1).getViewedHistory().contains(CCDateTime.parse("1.1.12", "d.M.y")));
+		assertTrue(ml.getSeries("Steins;Gate").getSeasonByArrayIndex(0).getEpisodeByNumber(1).ViewedHistory.get().contains(CCDateTime.parse("1.1.12", "d.M.y")));
 
 		assertEquals(true, ml.getSeries("Steins;Gate").getSeasonByArrayIndex(0).getEpisodeByNumber(2).isViewed());
-		assertTrue(ml.getSeries("Steins;Gate").getSeasonByArrayIndex(0).getEpisodeByNumber(2).getViewedHistory().contains(CCDateTime.parse("2.12", "d.M")));
+		assertTrue(ml.getSeries("Steins;Gate").getSeasonByArrayIndex(0).getEpisodeByNumber(2).ViewedHistory.get().contains(CCDateTime.parse("2.12", "d.M")));
 
 		assertEquals(true, ml.getSeries("Soul Eater").getSeasonByArrayIndex(0).getEpisodeByNumber(6).isViewed());
 		assertEquals(false, ml.getSeries("Soul Eater").getSeasonByArrayIndex(0).getEpisodeByNumber(7).isViewed());
@@ -44,13 +44,13 @@ public class TestWatchDataParser extends ClipCornBaseTest {
 		assertEquals(true, ml.getMovie("Hypercube").isViewed());
 
 		assertEquals(true, ml.getMovie("Super 8").isViewed());
-		assertTrue(ml.getMovie("Super 8").getViewedHistory().contains(CCDateTime.create(11, 12, 2012, 19, 4, 0)));
+		assertTrue(ml.getMovie("Super 8").ViewedHistory.get().contains(CCDateTime.create(11, 12, 2012, 19, 4, 0)));
 
 		assertEquals(true, ml.getMovie("Death Proof: Todsicher").isViewed());
-		assertTrue(ml.getMovie("Death Proof: Todsicher").getViewedHistory().contains(CCDateTime.create(11, 12, 2012, 19, 4, 0)));
-		assertEquals(CCUserScore.RATING_IV, ml.getMovie("Death Proof: Todsicher").getScore());
+		assertTrue(ml.getMovie("Death Proof: Todsicher").ViewedHistory.get().contains(CCDateTime.create(11, 12, 2012, 19, 4, 0)));
+		assertEquals(CCUserScore.RATING_IV, ml.getMovie("Death Proof: Todsicher").Score.get());
 
 		assertEquals(true, ml.getMovie("Der Bomber").isViewed());
-		assertEquals(CCUserScore.RATING_V, ml.getMovie("Der Bomber").getScore());
+		assertEquals(CCUserScore.RATING_V, ml.getMovie("Der Bomber").Score.get());
 	}
 }

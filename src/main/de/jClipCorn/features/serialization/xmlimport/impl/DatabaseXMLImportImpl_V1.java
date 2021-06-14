@@ -20,16 +20,16 @@ public class DatabaseXMLImportImpl_V1 implements IDatabaseXMLImporterImpl {
 
 	public void importDatabaseElement(CCDatabaseElement o, CCXMLElement e, Func1to1<String, BufferedImage> imgf, ImportState s) throws CCFormatException, CCXMLException
 	{
-		e.execIfAttrExists("title", o::setTitle);
-		e.execIfLongAttrExists("genres", o::setGenres);
-		e.execIfIntAttrExists("onlinescore", o::setOnlinescore);
-		e.execIfIntAttrExists("fsk", o::setFsk);
-		e.execIfIntAttrExists("score", o::setScore);
-		e.execIfShortAttrExists("tags", o::setTags);
+		e.execIfAttrExists("title", o.Title::set);
+		e.execIfLongAttrExists("genres", o.Genres::set);
+		e.execIfIntAttrExists("onlinescore", o.OnlineScore::set);
+		e.execIfIntAttrExists("fsk", o.FSK::set);
+		e.execIfIntAttrExists("score", o.Score::set);
+		e.execIfShortAttrExists("tags", o.Tags::set);
 
-		if (s.ResetTags) o.setTags(CCTagList.EMPTY);
+		if (s.ResetTags) o.Tags.set(CCTagList.EMPTY);
 
-		if (s.ResetScore) o.setScore(CCUserScore.RATING_NO);
+		if (s.ResetScore) o.Score.set(CCUserScore.RATING_NO);
 
 		if (!s.IgnoreCoverData && e.hasAttribute("coverdata")) {
 			o.setCover(-1); //Damit er nicht probiert was zu löschen
@@ -43,7 +43,7 @@ public class DatabaseXMLImportImpl_V1 implements IDatabaseXMLImporterImpl {
 		}
 
 		e.execIfAttrExists("groups", o::setGroups);
-		e.execIfAttrExists("onlinreref", o::setOnlineReference);
+		e.execIfAttrExists("onlinreref", v -> o.onlineReference().set(v));
 	}
 
 	@Override
@@ -53,28 +53,28 @@ public class DatabaseXMLImportImpl_V1 implements IDatabaseXMLImporterImpl {
 		{
 			importDatabaseElement(o, e, imgf, s);
 
-			e.execIfAttrExists("adddate", v -> o.setAddDate(CCDate.deserialize(v)));
+			e.execIfAttrExists("adddate", v -> o.AddDate.set(CCDate.deserialize(v)));
 
-			if (s.ResetAddDate) o.setAddDate(CCDate.getCurrentDate());
+			if (s.ResetAddDate) o.AddDate.set(CCDate.getCurrentDate());
 
-			e.execIfLongAttrExists("filesize", o::setFilesize);
-			e.execIfIntAttrExists("format", o::setFormat);
-			e.execIfIntAttrExists("length", o::setLength);
-			e.execIfIntAttrExists("language", v -> o.setLanguage(CCDBLanguageList.single(CCDBLanguage.getWrapper().findOrException(v)))); // backwards compatibility
-			e.execIfAttrExists("languages", v -> o.setLanguage(CCDBLanguageList.parseFromString(v)));
+			e.execIfLongAttrExists("filesize", v -> o.fileSize().set(v));
+			e.execIfIntAttrExists("format", v -> o.format().set(v));
+			e.execIfIntAttrExists("length", v -> o.length().set(v));
+			e.execIfIntAttrExists("language", v -> o.Language.set(CCDBLanguageList.single(CCDBLanguage.getWrapper().findOrException(v)))); // backwards compatibility
+			e.execIfAttrExists("languages", v -> o.Language.set(CCDBLanguageList.parseFromString(v)));
 
 			for (int i = 0; i < CCMovie.PARTCOUNT_MAX; i++) {
 				int fi = i;
-				e.execIfAttrExists("part_"+i, v -> o.setPart(fi, v));
+				e.execIfAttrExists("part_"+i, v -> o.Parts.set(fi, v));
 			}
 
-			e.execIfIntAttrExists("year", o::setYear);
-			e.execIfAttrExists("zyklus", o::setZyklusTitle);
-			e.execIfIntAttrExists("zyklusnumber", o::setZyklusID);
-			e.execIfAttrExists("history", o::setViewedHistory);
+			e.execIfIntAttrExists("year", v -> o.year().set(v));
+			e.execIfAttrExists("zyklus", v -> o.zyklus().setTitle(v));
+			e.execIfIntAttrExists("zyklusnumber", v -> o.zyklus().setNumber(v));
+			e.execIfAttrExists("history", v -> o.viewedHistory().set(v));
 
-			if (!o.isViewed() && e.hasAttribute("viewed") && e.getAttributeBoolValueOrThrow("viewed")) o.addToViewedHistory(CCDateTime.getUnspecified());
-			if (s.ResetViewed) o.setViewedHistory(CCDateTimeList.createEmpty());
+			if (!o.isViewed() && e.hasAttribute("viewed") && e.getAttributeBoolValueOrThrow("viewed")) o.ViewedHistory.add(CCDateTime.getUnspecified());
+			if (s.ResetViewed) o.ViewedHistory.set(CCDateTimeList.createEmpty());
 		}
 		o.endUpdating();
 	}
@@ -99,8 +99,8 @@ public class DatabaseXMLImportImpl_V1 implements IDatabaseXMLImporterImpl {
 	{
 		o.beginUpdating();
 		{
-			e.execIfAttrExists("title", o::setTitle);
-			e.execIfIntAttrExists("year", o::setYear);
+			e.execIfAttrExists("title", o.Title::set);
+			e.execIfIntAttrExists("year", o.Year::set);
 
 			for (CCXMLElement xchild : e.getAllChildren("episode"))
 			{
@@ -126,33 +126,33 @@ public class DatabaseXMLImportImpl_V1 implements IDatabaseXMLImporterImpl {
 	{
 		o.beginUpdating();
 		{
-			e.execIfAttrExists("title", o::setTitle);
+			e.execIfAttrExists("title", o.Title::set);
 
-			e.execIfAttrExists("adddate", v -> o.setAddDate(CCDate.deserialize(v)));
+			e.execIfAttrExists("adddate", v -> o.AddDate.set(CCDate.deserialize(v)));
 
-			if (s.ResetAddDate) o.setAddDate(CCDate.getCurrentDate());
+			if (s.ResetAddDate) o.AddDate.set(CCDate.getCurrentDate());
 
-			e.execIfIntAttrExists("episodenumber", o::setEpisodeNumber);
-			e.execIfLongAttrExists("filesize", o::setFilesize);
-			e.execIfIntAttrExists("format", o::setFormat);
+			e.execIfIntAttrExists("episodenumber", o.EpisodeNumber::set);
+			e.execIfLongAttrExists("filesize", o.FileSize::set);
+			e.execIfIntAttrExists("format", o.Format::set);
 			e.execIfAttrExists("lastviewed", v ->  // backwards compatibility
 			{
 				CCDate d = CCDate.deserialize(v);
-				if (!d.isMinimum()) o.setViewedHistory(CCDateTimeList.create(d));
+				if (!d.isMinimum()) o.ViewedHistory.set(CCDateTimeList.create(d));
 			});
 
-			e.execIfAttrExists("history", v -> o.setViewedHistory(CCDateTimeList.parse(v)));
+			e.execIfAttrExists("history", v -> o.ViewedHistory.set(CCDateTimeList.parse(v)));
 
-			e.execIfIntAttrExists("length", o::setLength);
-			e.execIfAttrExists("part", o::setPart);
-			e.execIfShortAttrExists("tags", o::setTags);
+			e.execIfIntAttrExists("length", o.Length::set);
+			e.execIfAttrExists("part", o.Part::set);
+			e.execIfShortAttrExists("tags", o.Tags::set);
 
-			if (s.ResetTags) o.setTags(CCTagList.EMPTY);
+			if (s.ResetTags) o.Tags.set(CCTagList.EMPTY);
 
-			e.execIfAttrExists("languages", v -> o.setLanguage(CCDBLanguageList.parseFromString(v)));
+			e.execIfAttrExists("languages", v -> o.Language.set(CCDBLanguageList.parseFromString(v)));
 
 			if (!o.isViewed() && e.hasAttribute("viewed") && e.getAttributeBoolValueOrThrow("viewed")) o.addToViewedHistory(CCDateTime.getUnspecified());
-			if (s.ResetViewed) o.setViewedHistory(CCDateTimeList.createEmpty());
+			if (s.ResetViewed) o.ViewedHistory.set(CCDateTimeList.createEmpty());
 		}
 		o.endUpdating();
 	}

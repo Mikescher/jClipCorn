@@ -2,6 +2,7 @@ package de.jClipCorn.database.history;
 
 import de.jClipCorn.util.enumextension.ContinoousEnum;
 import de.jClipCorn.util.enumextension.EnumWrapper;
+import de.jClipCorn.util.enumextension.IEnumWrapper;
 import de.jClipCorn.util.stream.CCStreams;
 
 public enum CCHistoryAction implements ContinoousEnum<CCHistoryAction>
@@ -24,6 +25,11 @@ public enum CCHistoryAction implements ContinoousEnum<CCHistoryAction>
 
 	public static EnumWrapper<CCHistoryAction> getWrapper() {
 		return wrapper;
+	}
+
+	@Override
+	public IEnumWrapper wrapper() {
+		return getWrapper();
 	}
 
 	@Override

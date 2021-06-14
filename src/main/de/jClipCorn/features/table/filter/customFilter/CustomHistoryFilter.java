@@ -26,7 +26,7 @@ public class CustomHistoryFilter extends AbstractCustomStructureElementFilter {
 	
 	@Override
 	public boolean includes(CCMovie mov) {
-		return Search.includes(mov.getViewedHistory());
+		return Search.includes(mov.ViewedHistory.get());
 	}
 
 	@Override
@@ -34,7 +34,7 @@ public class CustomHistoryFilter extends AbstractCustomStructureElementFilter {
 		if (!Recursive) return false;
 		
 		List<CCDateTime> l = new ArrayList<>();
-		for (CCEpisode epi : ser.iteratorEpisodes()) l.addAll(epi.getViewedHistory().iterator().enumerate());
+		for (CCEpisode epi : ser.iteratorEpisodes()) l.addAll(epi.ViewedHistory.get().iterator().enumerate());
 
 		return Search.includes(CCDateTimeList.create(l));
 	}
@@ -44,14 +44,14 @@ public class CustomHistoryFilter extends AbstractCustomStructureElementFilter {
 		if (!Recursive) return false;
 		
 		List<CCDateTime> l = new ArrayList<>();
-		for (CCEpisode epi : sea.iteratorEpisodes()) l.addAll(epi.getViewedHistory().iterator().enumerate());
+		for (CCEpisode epi : sea.iteratorEpisodes()) l.addAll(epi.ViewedHistory.get().iterator().enumerate());
 
 		return Search.includes(CCDateTimeList.create(l));
 	}
 	
 	@Override
 	public boolean includes(CCEpisode epi) {
-		return Search.includes(epi.getViewedHistory());
+		return Search.includes(epi.ViewedHistory.get());
 	}
 
 	@Override

@@ -5,12 +5,12 @@ import de.jClipCorn.database.databaseElement.caches.EpisodeCache;
 import de.jClipCorn.database.databaseElement.caches.ICalculationCache;
 import de.jClipCorn.database.databaseElement.columnTypes.*;
 import de.jClipCorn.database.databaseElement.datapacks.IEpisodeData;
+import de.jClipCorn.database.elementValues.*;
 import de.jClipCorn.database.util.CCQualityCategory;
 import de.jClipCorn.database.util.ExtendedViewedState;
 import de.jClipCorn.database.util.ExtendedViewedStateType;
 import de.jClipCorn.features.actionTree.IActionSourceObject;
 import de.jClipCorn.features.log.CCLog;
-import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.mainFrame.MainFrame;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.types.NamedPathVar;
@@ -18,68 +18,142 @@ import de.jClipCorn.util.MoviePlayer;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.datetime.CCDateTime;
-import de.jClipCorn.util.exceptions.CCFormatException;
 import de.jClipCorn.util.exceptions.DatabaseUpdateException;
-import de.jClipCorn.util.exceptions.EnumFormatException;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.ChecksumHelper;
 import de.jClipCorn.util.helper.DialogHelper;
 
 import java.awt.*;
 import java.io.File;
-import java.sql.Date;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
-public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElement, IActionSourceObject, ICCTaggedElement, IEpisodeData {
+public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElement, IActionSourceObject, ICCTaggedElement, IEpisodeData, IPropertyParent {
 	private final CCSeason owner;
 	private final int localID;
-	
-	private int episodeNumber;
-	private String title;
-	private CCMediaInfo mediainfo;
-	private int length;
-	private CCTagList tags;
-	private CCFileFormat format;
-	private CCFileSize filesize;
-	private String part;
-	private CCDate addDate;
-	private CCDateTimeList viewedHistory;
-	private CCDBLanguageList language;
 
-	private final EpisodeCache _cache;
-	
+	private final EpisodeCache _cache = new EpisodeCache(this);
+
+	public final EIntProp                    EpisodeNumber = new EIntProp(         "EpisodeNumber", 0,                            this, EPropertyType.OBJECTIVE_METADATA);
+	public final EStringProp                 Title         = new EStringProp(      "Title",         Str.Empty,                    this, EPropertyType.OBJECTIVE_METADATA);
+	public final EMediaInfoProp              MediaInfo     = new EMediaInfoProp(   "MediaInfo",     CCMediaInfo.EMPTY,            this, EPropertyType.OBJECTIVE_METADATA);
+	public final EIntProp                    Length        = new EIntProp(         "Length",        0,                            this, EPropertyType.OBJECTIVE_METADATA);
+	public final ETagListProp                Tags          = new ETagListProp(     "Tags",          CCTagList.EMPTY,              this, EPropertyType.USER_METADATA);
+	public final EEnumProp<CCFileFormat>     Format        = new EEnumProp<>(      "Format",        CCFileFormat.MKV,             this, EPropertyType.OBJECTIVE_METADATA);
+	public final EFileSizeProp               FileSize      = new EFileSizeProp(    "FileSize",      CCFileSize.ZERO,              this, EPropertyType.OBJECTIVE_METADATA);
+	public final EStringProp                 Part          = new EStringProp(      "Part",          Str.Empty,                    this, EPropertyType.LOCAL_FILE_REF);
+	public final EDateProp                   AddDate       = new EDateProp(        "AddDate",       CCDate.getMinimumDate(),      this, EPropertyType.USER_METADATA);
+	public final EDateTimeListProp           ViewedHistory = new EDateTimeListProp("ViewedHistory", CCDateTimeList.createEmpty(), this, EPropertyType.USER_METADATA);
+	public final ELanguageListProp           Language      = new ELanguageListProp("Language",      CCDBLanguageList.EMPTY,       this, EPropertyType.OBJECTIVE_METADATA);
+
+	private IEProperty[] _properties = null;
+
 	private boolean isUpdating = false;
 	
 	public CCEpisode(CCSeason owner, int localID) {
-		this.owner = owner;
+		this.owner   = owner;
 		this.localID = localID;
-		
-		filesize      = CCFileSize.ZERO;
-		tags          = CCTagList.EMPTY;
-		addDate       = CCDate.getMinimumDate();
-		viewedHistory = CCDateTimeList.createEmpty();
-		language      = CCDBLanguageList.EMPTY;
-		mediainfo     = CCMediaInfo.EMPTY;
-
-		_cache = new EpisodeCache(this);
 	}
 
-	public void setDefaultValues(boolean updateDB) {
-		episodeNumber = 0;
-		title         = ""; //$NON-NLS-1$
-		mediainfo     = CCMediaInfo.EMPTY;
-		length        = 0;
-		format        = CCFileFormat.MKV;
-		filesize      = CCFileSize.ZERO;
-		tags          = CCTagList.EMPTY;
-		part          = ""; //$NON-NLS-1$
-		addDate       = CCDate.getMinimumDate();
-		viewedHistory = CCDateTimeList.createEmpty();
-		language      = CCDBLanguageList.EMPTY;
+	public IEProperty[] GetProperties()
+	{
+		if (_properties == null) _properties = ListProperties();
+		return _properties;
+	}
 
-		_cache.bust();
-		if (updateDB) updateDB();
+	protected IEProperty[] ListProperties()
+	{
+		return new IEProperty[]
+		{
+			EpisodeNumber,
+			Title,
+			MediaInfo,
+			Length,
+			Tags,
+			Format,
+			FileSize,
+			Part,
+			AddDate,
+			ViewedHistory,
+			Language,
+		};
+	}
+
+	public EIntProp                episodeNumber() { return EpisodeNumber; }
+	public EStringProp             title()         { return Title;         }
+
+	@Override
+	public CCTagList getTags() {
+		return Tags.get();
+	}
+
+	@Override
+	public CCDBLanguageList getLanguage() {
+		return Language.get();
+	}
+
+	@Override
+	public CCMediaInfo getMediaInfo() {
+		return MediaInfo.get();
+	}
+
+	public EMediaInfoProp          mediaInfo()     { return MediaInfo;     }
+	public EIntProp                length()        { return Length;        }
+	public ETagListProp            tags()          { return Tags;          }
+
+	@Override
+	public int getEpisodeNumber() {
+		return EpisodeNumber.get();
+	}
+
+	@Override
+	public String getTitle() {
+		return Title.get();
+	}
+
+	@Override
+	public int getLength() {
+		return Length.get();
+	}
+
+	@Override
+	public CCFileFormat getFormat() {
+		return Format.get();
+	}
+
+	@Override
+	public CCFileSize getFilesize() {
+		return FileSize.get();
+	}
+
+	@Override
+	public String getPart() {
+		return Part.get();
+	}
+
+	@Override
+	public CCDate getAddDate() {
+		return AddDate.get();
+	}
+
+	@Override
+	public CCDateTimeList getViewedHistory() {
+		return ViewedHistory.get();
+	}
+
+	public EEnumProp<CCFileFormat> format()        { return Format;        }
+	public EFileSizeProp           fileSize()      { return FileSize;      }
+	public EStringProp             part()          { return Part;          }
+	public EDateProp               addDate()       { return AddDate;       }
+	public EDateTimeListProp       viewedHistory() { return ViewedHistory; }
+	public ELanguageListProp       language()      { return Language;      }
+
+	public void setDefaultValues(boolean updateDB) {
+		beginUpdating();
+
+		for (IEProperty prop : GetProperties()) prop.resetToDefault();
+
+		if (updateDB) endUpdating(); else abortUpdating();
 	}
 
 	public void beginUpdating() {
@@ -95,160 +169,45 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 	public void abortUpdating() {
 		isUpdating = false;
 	}
-	
-	private boolean updateDB() {
+
+	public boolean updateDB() {
 		if (! isUpdating) {
 			return getSeries().getMovieList().update(this);
 		}
 		return true;
 	}
 
-	private void updateDBWithException() throws DatabaseUpdateException {
+	public void updateDBWithException() throws DatabaseUpdateException {
 		var ok = updateDB();
 		if (!ok) throw new DatabaseUpdateException("updateDB() failed"); //$NON-NLS-1$
 	}
 
-	public void setEpisodeNumber(int en) {
-		this.episodeNumber = en;
-
-		_cache.bust();
-		updateDB();
-	}
-
-	public void setTitle(String t) {
-		this.title = t;
-		
-		_cache.bust();
-		updateDB();
-	}
-
 	public void addToViewedHistory(CCDateTime datetime) {
-		this.viewedHistory = this.viewedHistory.add(datetime);
+		ViewedHistory.set(ViewedHistory.get().add(datetime));
 
-		if (getTag(CCSingleTag.TAG_WATCH_LATER) && CCProperties.getInstance().PROP_MAINFRAME_AUTOMATICRESETWATCHLATER.getValue()) {
-			setTag(CCSingleTag.TAG_WATCH_LATER, false);
+		if (Tags.get(CCSingleTag.TAG_WATCH_LATER) && CCProperties.getInstance().PROP_MAINFRAME_AUTOMATICRESETWATCHLATER.getValue()) {
+			Tags.set(CCSingleTag.TAG_WATCH_LATER, false);
 		}
-
-		_cache.bust();
-		updateDB();
 	}
 
 	public void addToViewedHistoryFromUI(CCDateTime datetime) {
 		try
 		{
-			this.viewedHistory = this.viewedHistory.add(datetime);
+			ViewedHistory.setWithException(ViewedHistory.get().add(datetime));
 
-			if (getTag(CCSingleTag.TAG_WATCH_LATER) && CCProperties.getInstance().PROP_MAINFRAME_AUTOMATICRESETWATCHLATER.getValue()) {
-				setTag(CCSingleTag.TAG_WATCH_LATER, false);
+			if (Tags.get(CCSingleTag.TAG_WATCH_LATER) && CCProperties.getInstance().PROP_MAINFRAME_AUTOMATICRESETWATCHLATER.getValue()) {
+				Tags.setWithException(CCSingleTag.TAG_WATCH_LATER, false);
 			}
 
-			if (getSeries().getTag(CCSingleTag.TAG_WATCH_LATER) && CCProperties.getInstance().PROP_MAINFRAME_AUTOMATICRESETWATCHLATER.getValue()) {
-				getSeries().setTag(CCSingleTag.TAG_WATCH_LATER, false);
+			if (getSeries().Tags.get(CCSingleTag.TAG_WATCH_LATER) && CCProperties.getInstance().PROP_MAINFRAME_AUTOMATICRESETWATCHLATER.getValue()) {
+				getSeries().Tags.setWithException(CCSingleTag.TAG_WATCH_LATER, false);
 			}
-
-			_cache.bust();
-			updateDBWithException();
 		}
 		catch (Throwable e1)
 		{
 			DialogHelper.showLocalError(MainFrame.getInstance(), "Dialogs.UpdateViewedFailed"); //$NON-NLS-1$
 			CCLog.addError(e1);
 		}
-	}
-
-	@Override
-	public void setMediaInfo(CCMediaInfo minfo) {
-		if (minfo == null) { CCLog.addUndefinied("Prevented setting CCEpisode.MediaInfo to NULL"); return; } //$NON-NLS-1$
-
-		this.mediainfo = minfo;
-
-		_cache.bust();
-		updateDB();
-	}
-
-	@Override
-	public void setLength(int length) {
-		this.length = length;
-
-		_cache.bust();
-		updateDB();
-	}
-
-	public void setFormatSafe(int format) {
-		this.format = CCFileFormat.getWrapper().findOrNull(format);
-
-		if (this.format == null) {
-			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.ErroneousDatabaseValues", format)); //$NON-NLS-1$
-			this.format = CCFileFormat.MKV;
-		}
-
-		_cache.bust();
-		updateDB();
-	}
-
-	public void setFormat(int format) throws EnumFormatException {
-		this.format = CCFileFormat.getWrapper().findOrException(format);
-
-		_cache.bust();
-		updateDB();
-	}
-
-	public void setFormat(CCFileFormat format) {
-		if (format == null) { CCLog.addUndefinied("Prevented setting CCEpisode.Format to NULL"); return; } //$NON-NLS-1$
-
-		this.format = format;
-
-		_cache.bust();
-		updateDB();
-	}
-
-	@Override
-	public void setFilesize(long filesize) {
-		this.filesize = new CCFileSize(filesize);
-
-		_cache.bust();
-		updateDB();
-	}
-
-	public void setFilesize(CCFileSize fsz) {
-		this.filesize = fsz;
-
-		_cache.bust();
-		updateDB();
-	}
-	
-	public void setPart(String path) {
-		part = path;
-
-		_cache.bust();
-		updateDB();
-	}
-	
-	public void setAddDate(CCDate date) {
-		if (date == null) {CCLog.addUndefinied("Prevented setting CCEpisode.AddDate to NULL"); return; } //$NON-NLS-1$
-
-		this.addDate = date;
-
-		_cache.bust();
-		updateDB();
-	}
-	
-	public void setAddDate(Date sqldate) {
-		this.addDate = CCDate.create(sqldate);
-
-		_cache.bust();
-		updateDB();
-	}
-
-	public void setViewedHistory(String data) throws CCFormatException {
-		setViewedHistory(CCDateTimeList.parse(data));
-	}
-
-	public void setViewedHistory(CCDateTimeList datelist) {
-		this.viewedHistory = datelist;
-
-		_cache.bust();
-		updateDB();
 	}
 
 	public void setViewedHistoryFromUI(CCDateTimeList value) {
@@ -256,10 +215,7 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 
 		try
 		{
-			viewedHistory = value;
-
-			_cache.bust();
-			updateDBWithException();
+			ViewedHistory.setWithException(value);
 		}
 		catch (Throwable e1)
 		{
@@ -268,85 +224,6 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 		}
 	}
 
-	@Override
-	public void setTags(CCTagList stat) {
-		tags = stat;
-
-		_cache.bust();
-		updateDB();
-	}
-	
-	public void setTags(short stat) {
-		tags = CCTagList.fromShort(stat);
-
-		_cache.bust();
-		updateDB();
-	}
-
-	@Override
-	public void switchTag(CCSingleTag t) {
-		tags = tags.getSwitchTag(t);
-
-		_cache.bust();
-		updateDB();
-	}
-	
-	public void switchTag(int c) {
-		tags = tags.getSwitchTag(c);
-
-		_cache.bust();
-		updateDB();
-	}
-
-	public void setTag(CCSingleTag t, boolean v) {
-		tags = tags.getSetTag(t, v);
-
-		_cache.bust();
-		updateDB();
-	}
-	
-	public void setTag(int c, boolean v) {
-		tags = tags.getSetTag(c, v);
-
-		_cache.bust();
-		updateDB();
-	}
-
-	@Override
-	public boolean getTag(CCSingleTag t) {
-		return tags.getTag(t);
-	}
-
-	@Override
-	public boolean getTag(int c) {
-		return tags.getTag(c);
-	}
-
-	@Override
-	public CCDBLanguageList getLanguage() {
-		return language;
-	}
-
-	@Override
-	public void setLanguage(CCDBLanguageList language) {
-		this.language = language;
-
-		if (this.language == null) {
-			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.ErroneousDatabaseValues", language)); //$NON-NLS-1$
-			this.language = CCDBLanguageList.EMPTY;
-		}
-
-		_cache.bust();
-		updateDB();
-	}
-
-	public void setLanguage(long dbdata) {
-		this.language = CCDBLanguageList.fromBitmask(dbdata);
-
-		_cache.bust();
-		updateDB();
-	}
-	
 	public CCSeason getSeason() {
 		return owner;
 	}
@@ -356,27 +233,17 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 	}
 
 	public String getShortQualifiedTitle() {
-		return Str.format("{0} - {1}", getStringIdentifier(), getTitle()); //$NON-NLS-1$
+		return Str.format("{0} - {1}", getStringIdentifier(), Title.get()); //$NON-NLS-1$
 	}
 
 	@Override
 	public String getQualifiedTitle() {
-		return Str.format("{0} E{1,number,###} - {2}", getSeries().getTitle(), getGlobalEpisodeNumber(), getTitle()); //$NON-NLS-1$
-	}
-
-	@Override
-	public String getTitle() {
-		return title;
+		return Str.format("{0} E{1,number,###} - {2}", getSeries().Title.get(), getGlobalEpisodeNumber(), Title.get()); //$NON-NLS-1$
 	}
 
 	@Override
 	public int getLocalID() {
 		return localID;
-	}
-
-	@Override
-	public int getEpisodeNumber() {
-		return episodeNumber;
 	}
 
 	public int getGlobalEpisodeNumber() {
@@ -395,72 +262,37 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 
 	@Override
 	public boolean isViewed() {
-		return viewedHistory.any();
-	}
-
-	@Override
-	public CCMediaInfo getMediaInfo() {
-		return mediainfo;
+		return ViewedHistory.get().any();
 	}
 
 	@Override
 	public CCQualityCategory getMediaInfoCategory() {
-		return mediainfo.getCategory(getSeries().getGenres());
+		return MediaInfo.get().getCategory(getSeries().Genres.get());
 	}
 
-	@Override
-	public int getLength() {
-		return length;
-	}
-
-	@Override
-	public CCFileFormat getFormat() {
-		return format;
-	}
-
-	@Override
-	public CCFileSize getFilesize() {
-		return filesize;
-	}
-
-	@Override
-	public String getPart() {
-		return part;
-	}
-	
 	public String getAbsolutePart() {
-		return PathFormatter.fromCCPath(getPart());
+		return PathFormatter.fromCCPath(Part.get());
 	}
 
 	@Override
 	public List<String> getParts() {
-		return Arrays.asList(part);
-	}
-
-	@Override
-	public CCTagList getTags() {
-		return tags;
-	}
-
-	@Override
-	public CCDateTimeList getViewedHistory() {
-		return viewedHistory;
+		return Collections.singletonList(Part.get());
 	}
 
 	public CCDateTime getViewedHistoryLastDateTime() {
-		return viewedHistory.getLastOrInvalid();
+		return ViewedHistory.get().getLastOrInvalid();
 	}
 
 	public CCDate getViewedHistoryLast() {
-		return viewedHistory.getLastDateOrInvalid();
+		return ViewedHistory.get().getLastDateOrInvalid();
 	}
 
 	public CCDate getViewedHistoryFirst() {
-		return viewedHistory.getFirstDateOrInvalid();
+		return ViewedHistory.get().getFirstDateOrInvalid();
 	}
 
 	public CCDate getViewedHistoryAverage() {
-		return viewedHistory.getAverageDateOrInvalid();
+		return ViewedHistory.get().getAverageDateOrInvalid();
 	}
 	
 	public CCDate getDisplayDate() {
@@ -477,20 +309,15 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 	}
 
 	@Override
-	public CCDate getAddDate() {
-		return addDate;
-	}
-
-	@Override
 	public void play(Component swingOwner, boolean updateViewedAndHistory) {
 		play(swingOwner, updateViewedAndHistory, null);
 	}
 
 	@Override
 	public void play(Component swingOwner, boolean updateViewedAndHistory, NamedPathVar player) {
-		if (updateViewedAndHistory && !viewedHistory.getLastOrInvalid().isUnspecifiedOrMinimum())
+		if (updateViewedAndHistory && !ViewedHistory.get().getLastOrInvalid().isUnspecifiedOrMinimum())
 		{
-			var hours = viewedHistory.getLastOrInvalid().getSecondDifferenceTo(CCDateTime.getCurrentDateTime()) / (60.0 * 60.0);
+			var hours = ViewedHistory.get().getLastOrInvalid().getSecondDifferenceTo(CCDateTime.getCurrentDateTime()) / (60.0 * 60.0);
 			var max = CCProperties.getInstance().PROP_MAX_FASTREWATCH_HOUR_DIFF.getValue();
 
 			if (hours < max)
@@ -513,7 +340,7 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 
 	@Override
 	public CCGenreList getGenresFromSelfOrParent() {
-		return getSeries().getGenres();
+		return getSeries().Genres.get();
 	}
 
 	/**
@@ -524,7 +351,7 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 	}
 	
 	public String getStringIdentifier() {
-		return String.format("S%02dE%02d", getSeason().getSortedSeasonNumber() + 1, getEpisodeNumber()); //$NON-NLS-1$
+		return String.format("S%02dE%02d", getSeason().getSortedSeasonNumber() + 1, EpisodeNumber.get()); //$NON-NLS-1$
 	}
 	
 	public void delete() {
@@ -533,7 +360,7 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 	
 	@Override
 	public String toString() {
-		return getTitle();
+		return Title.get();
 	}
 
 	public String getFastMD5() {
@@ -544,25 +371,25 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 	}
 	
 	public File getFileForCreatedFolderstructure(File parentfolder) {
-		return getSeason().getFileForCreatedFolderstructure(parentfolder, getTitle(), getEpisodeNumber(), getFormat(), null);
+		return getSeason().getFileForCreatedFolderstructure(parentfolder, Title.get(), EpisodeNumber.get(), Format.get(), null);
 	}
 	
 	public String getRelativeFileForCreatedFolderstructure() {
-		return getSeason().getRelativeFileForCreatedFolderstructure(getTitle(), getEpisodeNumber(), getFormat(), null);
+		return getSeason().getRelativeFileForCreatedFolderstructure(Title.get(), EpisodeNumber.get(), Format.get(), null);
 	}
 
 	@Override
 	public ExtendedViewedState getExtendedViewedState() {
-		if (!isViewed() && tags.getTag(CCSingleTag.TAG_WATCH_LATER))
-			return new ExtendedViewedState(ExtendedViewedStateType.MARKED_FOR_LATER, getViewedHistory(), null);
-		else if (isViewed() && tags.getTag(CCSingleTag.TAG_WATCH_LATER))
-			return new ExtendedViewedState(ExtendedViewedStateType.MARKED_FOR_AGAIN, getViewedHistory(), null);
+		if (!isViewed() && Tags.get(CCSingleTag.TAG_WATCH_LATER))
+			return new ExtendedViewedState(ExtendedViewedStateType.MARKED_FOR_LATER, ViewedHistory.get(), null);
+		else if (isViewed() && Tags.get(CCSingleTag.TAG_WATCH_LATER))
+			return new ExtendedViewedState(ExtendedViewedStateType.MARKED_FOR_AGAIN, ViewedHistory.get(), null);
 		else if (isViewed())
-			return new ExtendedViewedState(ExtendedViewedStateType.VIEWED, getViewedHistory(), null);
-		else if (tags.getTag(CCSingleTag.TAG_WATCH_NEVER))
-			return new ExtendedViewedState(ExtendedViewedStateType.MARKED_FOR_NEVER, getViewedHistory(), null);
+			return new ExtendedViewedState(ExtendedViewedStateType.VIEWED, ViewedHistory.get(), null);
+		else if (Tags.get(CCSingleTag.TAG_WATCH_NEVER))
+			return new ExtendedViewedState(ExtendedViewedStateType.MARKED_FOR_NEVER, ViewedHistory.get(), null);
 		else
-			return new ExtendedViewedState(ExtendedViewedStateType.NOT_VIEWED, getViewedHistory(), null);
+			return new ExtendedViewedState(ExtendedViewedStateType.NOT_VIEWED, ViewedHistory.get(), null);
 	}
 
 	public boolean checkFolderStructure() {

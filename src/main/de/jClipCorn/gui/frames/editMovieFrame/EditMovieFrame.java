@@ -783,12 +783,12 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 	}
 	
 	private void initFields() {
-		edPart0.setText(movie.getPart(0));
-		edPart1.setText(movie.getPart(1));
-		edPart2.setText(movie.getPart(2));
-		edPart3.setText(movie.getPart(3));
-		edPart4.setText(movie.getPart(4));
-		edPart5.setText(movie.getPart(5));
+		edPart0.setText(movie.Parts.get(0));
+		edPart1.setText(movie.Parts.get(1));
+		edPart2.setText(movie.Parts.get(2));
+		edPart3.setText(movie.Parts.get(3));
+		edPart4.setText(movie.Parts.get(4));
+		edPart5.setText(movie.Parts.get(5));
 		
 		edTitle.setText(movie.getTitle());
 		edZyklus.setText(movie.getZyklus().getTitle());
@@ -802,25 +802,25 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		spnYear.setValue(movie.getYear());
 		spnSize.setValue(movie.getFilesize().getBytes());
 		
-		cbxGenre0.setSelectedEnum(movie.getGenre(0));
-		cbxGenre1.setSelectedEnum(movie.getGenre(1));
-		cbxGenre2.setSelectedEnum(movie.getGenre(2));
-		cbxGenre3.setSelectedEnum(movie.getGenre(3));
-		cbxGenre4.setSelectedEnum(movie.getGenre(4));
-		cbxGenre5.setSelectedEnum(movie.getGenre(5));
-		cbxGenre6.setSelectedEnum(movie.getGenre(6));
-		cbxGenre7.setSelectedEnum(movie.getGenre(7));
+		cbxGenre0.setSelectedEnum(movie.Genres.get().getGenre(0));
+		cbxGenre1.setSelectedEnum(movie.Genres.get().getGenre(1));
+		cbxGenre2.setSelectedEnum(movie.Genres.get().getGenre(2));
+		cbxGenre3.setSelectedEnum(movie.Genres.get().getGenre(3));
+		cbxGenre4.setSelectedEnum(movie.Genres.get().getGenre(4));
+		cbxGenre5.setSelectedEnum(movie.Genres.get().getGenre(5));
+		cbxGenre6.setSelectedEnum(movie.Genres.get().getGenre(6));
+		cbxGenre7.setSelectedEnum(movie.Genres.get().getGenre(7));
 		
-		cbxScore.setSelectedEnum(movie.getScore());
+		cbxScore.setSelectedEnum(movie.Score.get());
 		tagPnl.setValue(movie.getTags());
 		
 		edCvrControl.setCover(movie.getCover());
 
-		edViewedHistory.setValue(movie.getViewedHistory());
+		edViewedHistory.setValue(movie.ViewedHistory.get());
 		edReference.setValue(movie.getOnlineReference());
 		edGroups.setValue(movie.getGroups());
 
-		ctrlMediaInfo.setValue(movie.getMediaInfo());
+		ctrlMediaInfo.setValue(movie.mediaInfo().get());
 
 		updateByteDisp();
 		testPaths();
@@ -1022,50 +1022,50 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		
 		//#####################################################################################
 		
-		movie.setPart(0, edPart0.getText());
-		movie.setPart(1, edPart1.getText());
-		movie.setPart(2, edPart2.getText());
-		movie.setPart(3, edPart3.getText());
-		movie.setPart(4, edPart4.getText());
-		movie.setPart(5, edPart5.getText());
+		movie.Parts.set(0, edPart0.getText());
+		movie.Parts.set(1, edPart1.getText());
+		movie.Parts.set(2, edPart2.getText());
+		movie.Parts.set(3, edPart3.getText());
+		movie.Parts.set(4, edPart4.getText());
+		movie.Parts.set(5, edPart5.getText());
 		
-		movie.setTitle(edTitle.getText());
-		movie.setZyklusTitle(edZyklus.getText());
-		movie.setZyklusID((int) spnZyklus.getValue());
+		movie.Title.set(edTitle.getText());
+		movie.Zyklus.setTitle(edZyklus.getText());
+		movie.Zyklus.setNumber((int) spnZyklus.getValue());
 		
-		movie.setLanguage(cbxLanguage.getValue());
+		movie.Language.set(cbxLanguage.getValue());
 		
-		movie.setLength((int) spnLength.getValue());
+		movie.Length.set((int) spnLength.getValue());
 		
-		movie.setAddDate(spnAddDate.getValue());
+		movie.AddDate.set(spnAddDate.getValue());
 		
-		movie.setOnlinescore((int) spnOnlineScore.getValue());
+		movie.OnlineScore.set((int) spnOnlineScore.getValue());
 		
-		movie.setFsk(cbxFSK.getSelectedEnum());
-		movie.setFormat(cbxFormat.getSelectedEnum());
+		movie.FSK.set(cbxFSK.getSelectedEnum());
+		movie.Format.set(cbxFormat.getSelectedEnum());
 		
-		movie.setYear((int) spnYear.getValue());
-		movie.setFilesize((long) spnSize.getValue());
+		movie.Year.set((int) spnYear.getValue());
+		movie.FileSize.set((long) spnSize.getValue());
 		
-		movie.setGenre(cbxGenre0.getSelectedEnum(), 0);
-		movie.setGenre(cbxGenre1.getSelectedEnum(), 1);
-		movie.setGenre(cbxGenre2.getSelectedEnum(), 2);
-		movie.setGenre(cbxGenre3.getSelectedEnum(), 3);
-		movie.setGenre(cbxGenre4.getSelectedEnum(), 4);
-		movie.setGenre(cbxGenre5.getSelectedEnum(), 5);
-		movie.setGenre(cbxGenre6.getSelectedEnum(), 6);
-		movie.setGenre(cbxGenre7.getSelectedEnum(), 7);
+		movie.Genres.set(cbxGenre0.getSelectedEnum(), 0);
+		movie.Genres.set(cbxGenre1.getSelectedEnum(), 1);
+		movie.Genres.set(cbxGenre2.getSelectedEnum(), 2);
+		movie.Genres.set(cbxGenre3.getSelectedEnum(), 3);
+		movie.Genres.set(cbxGenre4.getSelectedEnum(), 4);
+		movie.Genres.set(cbxGenre5.getSelectedEnum(), 5);
+		movie.Genres.set(cbxGenre6.getSelectedEnum(), 6);
+		movie.Genres.set(cbxGenre7.getSelectedEnum(), 7);
 		
-		movie.setTags(tagPnl.getValue());
-		movie.setScore(cbxScore.getSelectedEnum());
+		movie.Tags.set(tagPnl.getValue());
+		movie.Score.set(cbxScore.getSelectedEnum());
 		
 		movie.setCover(edCvrControl.getResizedImageForStorage());
 
-		movie.setViewedHistory(edViewedHistory.getValue());
-		movie.setOnlineReference(edReference.getValue());
+		movie.ViewedHistory.set(edViewedHistory.getValue());
+		movie.OnlineReference.set(edReference.getValue());
 		movie.setGroups(edGroups.getValue());
 		
-		movie.setMediaInfo(ctrlMediaInfo.getValue());
+		movie.MediaInfo.set(ctrlMediaInfo.getValue());
 		
 		//#####################################################################################
 		

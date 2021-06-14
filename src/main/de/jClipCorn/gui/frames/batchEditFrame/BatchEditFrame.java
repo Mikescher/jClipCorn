@@ -87,7 +87,7 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 	{
 		setIconImage(Resources.IMG_FRAME_ICON.get());
 		setTitle(LocaleBundle.getFormattedString("AddEpisodeFrame.this.title", target.getSeries().getTitle())); //$NON-NLS-1$
-		lblSeason.setText(target.getTitle());
+		lblSeason.setText(target.title().get());
 	}
 
 	private void initFileChooser() {

@@ -19,7 +19,7 @@ public class CustomTitleFilter extends AbstractCustomFilter {
 	
 	@Override
 	public boolean includes(ICCDatabaseStructureElement e) {
-		String title = e.getTitle();
+		String title = e.title().get();
 		
 		String search = searchString;
 		

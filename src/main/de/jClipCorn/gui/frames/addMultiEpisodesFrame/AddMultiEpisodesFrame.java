@@ -671,21 +671,21 @@ public class AddMultiEpisodesFrame extends JFrame
 						{
 							CCEpisode newEp = target.createNewEmptyEpisode();
 							newEp.beginUpdating();
-							newEp.setTitle(vm.Title);
-							newEp.setEpisodeNumber(vm.EpisodeNumber);
-							newEp.setFormat(vm.getFormat());
-							newEp.setMediaInfo(vm.MediaInfo);
-							newEp.setLength(vm.Length);
-							newEp.setFilesize(vm.Filesize);
-							newEp.setAddDate(vm.getAddDate());
-							newEp.setViewedHistory(vm.getViewedHistory());
-							newEp.setPart(final_realImmediatePath);
-							newEp.setTags(CCTagList.EMPTY);
-							newEp.setLanguage(vm.Language);
+							newEp.Title.set(vm.Title);
+							newEp.EpisodeNumber.set(vm.EpisodeNumber);
+							newEp.Format.set(vm.getFormat());
+							newEp.MediaInfo.set(vm.MediaInfo);
+							newEp.Length.set(vm.Length);
+							newEp.FileSize.set(vm.Filesize);
+							newEp.AddDate.set(vm.getAddDate());
+							newEp.ViewedHistory.set(vm.getViewedHistory());
+							newEp.Part.set(final_realImmediatePath);
+							newEp.Tags.set(CCTagList.EMPTY);
+							newEp.Language.set(vm.Language);
 							newEp.endUpdating();
 
 							newEp.beginUpdating();
-							newEp.setPart(final_realTargetPath);
+							newEp.Part.set(final_realTargetPath);
 							newEp.endUpdating();
 						});
 					}

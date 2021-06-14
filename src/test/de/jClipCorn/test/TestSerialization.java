@@ -35,12 +35,12 @@ public class TestSerialization extends ClipCornBaseTest {
 		assertEquals(CCDBLanguageList.GERMAN, mov.getLanguage());
 		assertEquals(111, mov.getLength());
 		assertEquals(2010, mov.getYear());
-		assertEquals(CCUserScore.RATING_NO, mov.getScore());
+		assertEquals(CCUserScore.RATING_NO, mov.Score.get());
 		assertEquals(CCFSK.RATING_III, mov.getFSK());
 		assertEquals(CCOnlineRefType.THEMOVIEDB, mov.getOnlineReference().Main.type);
 		assertEquals("movie/39514", mov.getOnlineReference().Main.id);
 		assertEquals(CCOnlineScore.STARS_3_5, mov.getOnlinescore());
-		assertEquals("<?self>R.E.D. I - Älter. Härter. Besser..avi", mov.getPart(0));
+		assertEquals("<?self>R.E.D. I - Älter. Härter. Besser..avi", mov.parts().get(0));
 	}
 
 	@Test
@@ -62,12 +62,12 @@ public class TestSerialization extends ClipCornBaseTest {
 		assertEquals(CCDBLanguageList.GERMAN, mov.getLanguage());
 		assertEquals(111, mov.getLength());
 		assertEquals(2010, mov.getYear());
-		assertEquals(CCUserScore.RATING_NO, mov.getScore());
+		assertEquals(CCUserScore.RATING_NO, mov.Score.get());
 		assertEquals(CCFSK.RATING_III, mov.getFSK());
 		assertEquals(CCOnlineRefType.THEMOVIEDB, mov.getOnlineReference().Main.type);
 		assertEquals("movie/39514", mov.getOnlineReference().Main.id);
 		assertEquals(CCOnlineScore.STARS_3_5, mov.getOnlinescore());
-		assertEquals("<?self>R.E.D. I - Älter. Härter. Besser..avi", mov.getPart(0));
+		assertEquals("<?self>R.E.D. I - Älter. Härter. Besser..avi", mov.parts().get(0));
 	}
 
 	@Test

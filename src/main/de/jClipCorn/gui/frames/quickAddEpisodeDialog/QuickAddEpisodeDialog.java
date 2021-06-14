@@ -427,21 +427,21 @@ public class QuickAddEpisodeDialog extends JDialog {
 				{
 					CCEpisode newEp = season.createNewEmptyEpisode();
 					newEp.beginUpdating();
-					newEp.setTitle(title);
-					newEp.setEpisodeNumber(episodenumber);
-					newEp.setFormat(format);
-					newEp.setMediaInfo(minfo);
-					newEp.setLength(length);
-					newEp.setFilesize(filesize);
-					newEp.setAddDate(adddate);
-					newEp.setViewedHistory(history);
-					newEp.setPart(imd);
-					newEp.setTags(tags);
-					newEp.setLanguage(lang);
+					newEp.Title.set(title);
+					newEp.EpisodeNumber.set(episodenumber);
+					newEp.Format.set(format);
+					newEp.MediaInfo.set(minfo);
+					newEp.Length.set(length);
+					newEp.FileSize.set(filesize);
+					newEp.AddDate.set(adddate);
+					newEp.ViewedHistory.set(history);
+					newEp.Part.set(imd);
+					newEp.Tags.set(tags);
+					newEp.Language.set(lang);
 					newEp.endUpdating();
 
 					newEp.beginUpdating();
-					newEp.setPart(dst);
+					newEp.Part.set(dst);
 					newEp.endUpdating();
 
 					if (ucListener != null) ucListener.onUpdate(newEp);

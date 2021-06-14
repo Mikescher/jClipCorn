@@ -524,7 +524,7 @@ public class UserDataProblem {
 	
 	private static boolean isPathIncluded(CCMovie m, String p0) {
 		for (int i = 0; i < m.getPartcount(); i++) {
-			if (StringUtils.equalsIgnoreCase(m.getPart(i), p0)) {
+			if (StringUtils.equalsIgnoreCase(m.Parts.get(i), p0)) {
 				return true;
 			}
 		}
@@ -538,22 +538,22 @@ public class UserDataProblem {
 
 	private static boolean isPathIncluded(CCMovie m, String p0, String p1, String p2, String p3, String p4, String p5) {
 		for (int i = 0; i < m.getPartcount(); i++) {
-			if (StringUtils.equalsIgnoreCase(m.getPart(i), p0)) {
+			if (StringUtils.equalsIgnoreCase(m.Parts.get(i), p0)) {
 				return true;
 			}
-			if (StringUtils.equalsIgnoreCase(m.getPart(i), p1)) {
+			if (StringUtils.equalsIgnoreCase(m.Parts.get(i), p1)) {
 				return true;
 			}
-			if (StringUtils.equalsIgnoreCase(m.getPart(i), p2)) {
+			if (StringUtils.equalsIgnoreCase(m.Parts.get(i), p2)) {
 				return true;
 			}
-			if (StringUtils.equalsIgnoreCase(m.getPart(i), p3)) {
+			if (StringUtils.equalsIgnoreCase(m.Parts.get(i), p3)) {
 				return true;
 			}
-			if (StringUtils.equalsIgnoreCase(m.getPart(i), p4)) {
+			if (StringUtils.equalsIgnoreCase(m.Parts.get(i), p4)) {
 				return true;
 			}
-			if (StringUtils.equalsIgnoreCase(m.getPart(i), p5)) {
+			if (StringUtils.equalsIgnoreCase(m.Parts.get(i), p5)) {
 				return true;
 			}
 		}

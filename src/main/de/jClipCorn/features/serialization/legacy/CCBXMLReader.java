@@ -101,27 +101,27 @@ public class CCBXMLReader {
 		CCMovie newMov = movielist.createNewEmptyMovie();
 		newMov.beginUpdating();
 		
-		newMov.setTitle(e.getChildText("filmtitel"));
-		newMov.setZyklusTitle(getZyklusName(e.getChildText("zyklus")));
-		newMov.setZyklusID(getZyklusNumber(e.getChildText("zyklus")));
-		if (e.getChildText("gesehen").equals("1")) newMov.addToViewedHistory(CCDateTime.getUnspecified());
-		newMov.setLanguage(e.getChild("sprache").getAttribute("dec").getIntValue());
-		newMov.setGenre(translateGenre(e.getChild("genre").getChild("genre00").getAttribute("dec").getIntValue()), 0);
-		newMov.setGenre(translateGenre(e.getChild("genre").getChild("genre01").getAttribute("dec").getIntValue()), 1);
-		newMov.setGenre(translateGenre(e.getChild("genre").getChild("genre02").getAttribute("dec").getIntValue()), 2);
-		newMov.setGenre(translateGenre(e.getChild("genre").getChild("genre03").getAttribute("dec").getIntValue()), 3);
-		newMov.setGenre(translateGenre(e.getChild("genre").getChild("genre04").getAttribute("dec").getIntValue()), 4);
-		newMov.setGenre(translateGenre(e.getChild("genre").getChild("genre05").getAttribute("dec").getIntValue()), 5);
-		newMov.setGenre(translateGenre(e.getChild("genre").getChild("genre06").getAttribute("dec").getIntValue()), 6);
-		newMov.setLength(Integer.parseInt(e.getChildText("länge")));
-		newMov.setAddDate(CCDate.deserialize(e.getChildText("adddate")));
-		newMov.setOnlinescore(Integer.parseInt(e.getChildText("imdbscore")));
-		newMov.setFsk(e.getChild("usk").getAttribute("dec").getIntValue());
-		newMov.setFormat(e.getChild("format").getAttribute("dec").getIntValue());
-		newMov.setYear(Integer.parseInt(e.getChildText("jahr")));
-		newMov.setFilesize(e.getChild("größe").getAttribute("dec").getLongValue() * 1024);
-		newMov.setPart(0, e.getChildText("pathpart1"));
-		newMov.setPart(1, e.getChildText("pathpart2"));
+		newMov.Title.set(e.getChildText("filmtitel"));
+		newMov.Zyklus.setTitle(getZyklusName(e.getChildText("zyklus")));
+		newMov.Zyklus.setNumber(getZyklusNumber(e.getChildText("zyklus")));
+		if (e.getChildText("gesehen").equals("1")) newMov.ViewedHistory.add(CCDateTime.getUnspecified());
+		newMov.Language.set(e.getChild("sprache").getAttribute("dec").getIntValue());
+		newMov.Genres.set(translateGenre(e.getChild("genre").getChild("genre00").getAttribute("dec").getIntValue()), 0);
+		newMov.Genres.set(translateGenre(e.getChild("genre").getChild("genre01").getAttribute("dec").getIntValue()), 1);
+		newMov.Genres.set(translateGenre(e.getChild("genre").getChild("genre02").getAttribute("dec").getIntValue()), 2);
+		newMov.Genres.set(translateGenre(e.getChild("genre").getChild("genre03").getAttribute("dec").getIntValue()), 3);
+		newMov.Genres.set(translateGenre(e.getChild("genre").getChild("genre04").getAttribute("dec").getIntValue()), 4);
+		newMov.Genres.set(translateGenre(e.getChild("genre").getChild("genre05").getAttribute("dec").getIntValue()), 5);
+		newMov.Genres.set(translateGenre(e.getChild("genre").getChild("genre06").getAttribute("dec").getIntValue()), 6);
+		newMov.Length.set(Integer.parseInt(e.getChildText("länge")));
+		newMov.AddDate.set(CCDate.deserialize(e.getChildText("adddate")));
+		newMov.OnlineScore.set(Integer.parseInt(e.getChildText("imdbscore")));
+		newMov.FSK.set(e.getChild("usk").getAttribute("dec").getIntValue());
+		newMov.Format.set(e.getChild("format").getAttribute("dec").getIntValue());
+		newMov.Year.set(Integer.parseInt(e.getChildText("jahr")));
+		newMov.FileSize.set(e.getChild("größe").getAttribute("dec").getLongValue() * 1024);
+		newMov.Parts.set(0, e.getChildText("pathpart1"));
+		newMov.Parts.set(1, e.getChildText("pathpart2"));
 		//String cvrval = e.getChildText("cover");
 		//newMov.setCover(cvrval.substring(0, cvrval.length() - 3) + "png");
 		
@@ -139,16 +139,16 @@ public class CCBXMLReader {
 
 		CCDBLanguage lang = CCDBLanguage.getWrapper().findOrException(e.getChild("info").getChild("sprache").getAttribute("dec").getIntValue());
 
-		newSer.setTitle(e.getChild("info").getChildText("serientitel"));
-		newSer.setGenre(translateGenre(e.getChild("info").getChild("genre").getChild("genre00").getAttribute("dec").getIntValue()), 0);
-		newSer.setGenre(translateGenre(e.getChild("info").getChild("genre").getChild("genre01").getAttribute("dec").getIntValue()), 1);
-		newSer.setGenre(translateGenre(e.getChild("info").getChild("genre").getChild("genre02").getAttribute("dec").getIntValue()), 2);
-		newSer.setGenre(translateGenre(e.getChild("info").getChild("genre").getChild("genre03").getAttribute("dec").getIntValue()), 3);
-		newSer.setGenre(translateGenre(e.getChild("info").getChild("genre").getChild("genre04").getAttribute("dec").getIntValue()), 4);
-		newSer.setGenre(translateGenre(e.getChild("info").getChild("genre").getChild("genre05").getAttribute("dec").getIntValue()), 5);
-		newSer.setGenre(translateGenre(e.getChild("info").getChild("genre").getChild("genre06").getAttribute("dec").getIntValue()), 6);
-		newSer.setOnlinescore(Integer.parseInt(e.getChild("info").getChildText("imdbscore")));
-		newSer.setFsk(e.getChild("info").getChild("usk").getAttribute("dec").getIntValue());
+		newSer.Title.set(e.getChild("info").getChildText("serientitel"));
+		newSer.Genres.set(translateGenre(e.getChild("info").getChild("genre").getChild("genre00").getAttribute("dec").getIntValue()), 0);
+		newSer.Genres.set(translateGenre(e.getChild("info").getChild("genre").getChild("genre01").getAttribute("dec").getIntValue()), 1);
+		newSer.Genres.set(translateGenre(e.getChild("info").getChild("genre").getChild("genre02").getAttribute("dec").getIntValue()), 2);
+		newSer.Genres.set(translateGenre(e.getChild("info").getChild("genre").getChild("genre03").getAttribute("dec").getIntValue()), 3);
+		newSer.Genres.set(translateGenre(e.getChild("info").getChild("genre").getChild("genre04").getAttribute("dec").getIntValue()), 4);
+		newSer.Genres.set(translateGenre(e.getChild("info").getChild("genre").getChild("genre05").getAttribute("dec").getIntValue()), 5);
+		newSer.Genres.set(translateGenre(e.getChild("info").getChild("genre").getChild("genre06").getAttribute("dec").getIntValue()), 6);
+		newSer.OnlineScore.set(Integer.parseInt(e.getChild("info").getChildText("imdbscore")));
+		newSer.FSK.set(e.getChild("info").getChild("usk").getAttribute("dec").getIntValue());
 		//String cvrval = e.getChild("info").getChildText("cover");
 		//newSer.setCover(cvrval.substring(0, cvrval.length() - 3) + "png");
 		
@@ -172,8 +172,8 @@ public class CCBXMLReader {
 		
 		newSeas.beginUpdating();
 		
-		newSeas.setTitle(owner.getChild("info").getChildText("staffeltitel"));
-		newSeas.setYear(Integer.parseInt(owner.getChild("info").getChildText("jahr")));
+		newSeas.Title.set(owner.getChild("info").getChildText("staffeltitel"));
+		newSeas.Year.set(Integer.parseInt(owner.getChild("info").getChildText("jahr")));
 		//String cvrval = owner.getChild("info").getChildText("cover");
 		//newSeas.setCover(cvrval.substring(0, cvrval.length() - 3) + "png");
 		
@@ -197,15 +197,15 @@ public class CCBXMLReader {
 		
 		newEp.beginUpdating();
 		
-		newEp.setEpisodeNumber(owner.getAttribute("number").getIntValue());
-		newEp.setTitle(owner.getChildText("filmtitel"));
+		newEp.EpisodeNumber.set(owner.getAttribute("number").getIntValue());
+		newEp.Title.set(owner.getChildText("filmtitel"));
 		if (owner.getChildText("gesehen").equals("1")) newEp.addToViewedHistory(CCDateTime.getUnspecified());
-		newEp.setLength(Integer.parseInt(owner.getChildText("länge")));
-		newEp.setFormat(owner.getChild("format").getAttribute("dec").getIntValue());
-		newEp.setFilesize(owner.getChild("größe").getAttribute("dec").getLongValue() * 1024);
-		newEp.setPart(owner.getChildText("pathpart1"));
-		newEp.setAddDate(CCDate.deserialize(owner.getChildText("adddate")));
-		newEp.setLanguage(CCDBLanguageList.single(lang));
+		newEp.Length.set(Integer.parseInt(owner.getChildText("länge")));
+		newEp.Format.set(owner.getChild("format").getAttribute("dec").getIntValue());
+		newEp.FileSize.set(owner.getChild("größe").getAttribute("dec").getLongValue() * 1024);
+		newEp.Part.set(owner.getChildText("pathpart1"));
+		newEp.AddDate.set(CCDate.deserialize(owner.getChildText("adddate")));
+		newEp.Language.set(CCDBLanguageList.single(lang));
 		
 		final CCEpisode finep = newEp;
 		try {

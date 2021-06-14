@@ -502,7 +502,7 @@ public class CCMovieList {
 		{
 			int v = 0;
 			for (CCDatabaseElement m : list) {
-				if (includeMovies && m.isMovie())  v += ((CCMovie) m).getLength();
+				if (includeMovies && m.isMovie())  v += ((CCMovie) m).Length.get();
 				if (includeSeries && m.isSeries()) v += ((CCSeries) m).getLength();
 			}
 			return v;
@@ -514,8 +514,8 @@ public class CCMovieList {
 		{
 			long bytes = 0;
 			for (CCDatabaseElement m : list) {
-				if (includeMovies && m.isMovie())  bytes += m.getFilesize().getBytes();
-				if (includeSeries && m.isSeries()) bytes += m.getFilesize().getBytes();
+				if (includeMovies && m.isMovie())  bytes += ((CCMovie) m).FileSize.get().getBytes();
+				if (includeSeries && m.isSeries()) bytes += ((CCSeries) m).getFilesize().getBytes();
 			}
 			return new CCFileSize(bytes);
 		});
@@ -578,31 +578,19 @@ public class CCMovieList {
 	}
 
 	public int getMovieCount() {
-		return _cache.getInt(MovieListCache.MOVIE_COUNT, null, ml->
-		{
-			return iteratorMovies().count();
-		});
+		return _cache.getInt(MovieListCache.MOVIE_COUNT, null, ml -> iteratorMovies().count());
 	}
 	
 	public int getSeriesCount() {
-		return _cache.getInt(MovieListCache.SERIES_COUNT, null, ml->
-		{
-			return iteratorSeries().count();
-		});
+		return _cache.getInt(MovieListCache.SERIES_COUNT, null, ml -> iteratorSeries().count());
 	}
 
 	public int getEpisodeCount() {
-		return _cache.getInt(MovieListCache.EPISODE_COUNT, null, ml->
-		{
-			return iteratorEpisodes().count();
-		});
+		return _cache.getInt(MovieListCache.EPISODE_COUNT, null, ml -> iteratorEpisodes().count());
 	}
 
 	public int getSeasonCount() {
-		return _cache.getInt(MovieListCache.SEASON_COUNT, null, ml->
-		{
-			return iteratorSeasons().count();
-		});
+		return _cache.getInt(MovieListCache.SEASON_COUNT, null, ml -> iteratorSeasons().count());
 	}
 
 	public List<String> getZyklusList() {
@@ -611,7 +599,7 @@ public class CCMovieList {
 			List<String> result = new ArrayList<>();
 
 			for (CCMovie mov : iteratorMovies()) {
-				String zyklus = mov.getZyklus().getTitle();
+				String zyklus = mov.Zyklus.get().getTitle();
 				if (!result.contains(zyklus) && !zyklus.isEmpty()) {
 					result.add(zyklus);
 				}
@@ -629,7 +617,7 @@ public class CCMovieList {
 			List<Integer> result = new ArrayList<>();
 
 			for (CCMovie mov : iteratorMovies()) {
-				Integer year = mov.getYear();
+				Integer year = mov.Year.get();
 				if (!result.contains(year)) {
 					result.add(year);
 				}
@@ -647,9 +635,9 @@ public class CCMovieList {
 			List<CCGenre> result = new ArrayList<>();
 
 			for (CCDatabaseElement el : list) {
-				for (int j = 0; j < el.getGenreCount(); j++) {
-					if (!result.contains(el.getGenre(j))) {
-						result.add(el.getGenre(j));
+				for (int j = 0; j < el.Genres.get().getGenreCount(); j++) {
+					if (!result.contains(el.Genres.get().getGenre(j))) {
+						result.add(el.Genres.get().getGenre(j));
 					}
 				}
 			}
@@ -709,12 +697,12 @@ public class CCMovieList {
 	}
 
 	public void resetAllMovieViewed() {
-		for (CCMovie mov : iteratorMovies()) mov.setViewedHistory(CCDateTimeList.createEmpty());
+		for (CCMovie mov : iteratorMovies()) mov.ViewedHistory.set(CCDateTimeList.createEmpty());
 	}
 	
 	public CCMovie findfirst(CCMovieZyklus zyklus) {
 		for (CCMovie mov : iteratorMovies()) {
-			if (mov.getZyklus().equals(zyklus)) {
+			if (mov.Zyklus.get().equals(zyklus)) {
 				return mov;
 			}
 		}
@@ -773,7 +761,7 @@ public class CCMovieList {
 
 			for (CCMovie curr : iteratorMovies()) {
 				for (int i = 0; i < curr.getPartcount(); i++) {
-					all.add(curr.getPart(i));
+					all.add(curr.Parts.get(i));
 				}
 			}
 
@@ -789,8 +777,8 @@ public class CCMovieList {
 		for (CCMovie curr : iteratorMovies()) {
 			if (! curr.hasZyklus()) continue;
 			
-			String zyklus = curr.getZyklus().getTitle();
-			if (! map.containsKey(curr.getZyklus().getTitle())) {
+			String zyklus = curr.Zyklus.get().getTitle();
+			if (! map.containsKey(curr.Zyklus.get().getTitle())) {
 				map.put(zyklus, new ArrayList<>());
 			}
 			map.get(zyklus).add(curr);
@@ -1119,7 +1107,7 @@ public class CCMovieList {
 
 	public CCSeries getSeries(String title) {
 		for (CCSeries ser : iteratorSeries()) {
-			if (ser.getTitle().equals(title)) return ser;
+			if (ser.Title.get().equals(title)) return ser;
 		}
 		
 		return null;
@@ -1127,7 +1115,7 @@ public class CCMovieList {
 
 	public CCMovie getMovie(String title) {
 		for (CCMovie mov : iteratorMovies()) {
-			if (mov.getTitle().equals(title)) return mov;
+			if (mov.Title.get().equals(title)) return mov;
 		}
 		
 		return null;

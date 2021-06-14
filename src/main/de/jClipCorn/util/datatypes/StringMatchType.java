@@ -3,6 +3,7 @@ package de.jClipCorn.util.datatypes;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.enumextension.ContinoousEnum;
 import de.jClipCorn.util.enumextension.EnumWrapper;
+import de.jClipCorn.util.enumextension.IEnumWrapper;
 
 public enum StringMatchType implements ContinoousEnum<StringMatchType> {
 	SM_STARTSWITH(0),
@@ -27,6 +28,11 @@ public enum StringMatchType implements ContinoousEnum<StringMatchType> {
 	
 	public static EnumWrapper<StringMatchType> getWrapper() {
 		return wrapper;
+	}
+
+	@Override
+	public IEnumWrapper wrapper() {
+		return getWrapper();
 	}
 	
 	@Override

@@ -18,22 +18,22 @@ public class CustomMediaInfoSetFilter extends AbstractCustomStructureElementFilt
 
 	@Override
 	public boolean includes(CCMovie mov) {
-		return isset == mov.getMediaInfo().isSet();
+		return isset == mov.mediaInfo().get().isSet();
 	}
 
 	@Override
 	public boolean includes(CCSeries ser) {
-		return isset == ser.iteratorEpisodes().all(e -> e.getMediaInfo().isSet());
+		return isset == ser.iteratorEpisodes().all(e -> e.mediaInfo().get().isSet());
 	}
 
 	@Override
 	public boolean includes(CCSeason sea) {
-		return isset == sea.iteratorEpisodes().all(e -> e.getMediaInfo().isSet());
+		return isset == sea.iteratorEpisodes().all(e -> e.mediaInfo().get().isSet());
 	}
 
 	@Override
 	public boolean includes(CCEpisode epi) {
-		return isset == epi.getMediaInfo().isSet();
+		return isset == epi.mediaInfo().get().isSet();
 	}
 
 	@Override

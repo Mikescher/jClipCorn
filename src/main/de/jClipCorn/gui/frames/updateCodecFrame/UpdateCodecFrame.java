@@ -284,8 +284,8 @@ public class UpdateCodecFrame extends JFrame {
 	private void initTable() {
 		tableMain.setData(movielist
 				.iteratorPlayables()
-				.filter(p -> p.getFormat() != CCFileFormat.IFO)
-				.filter(p -> p.getFormat() != CCFileFormat.IMG)
+				.filter(p -> p.format().get() != CCFileFormat.IFO)
+				.filter(p -> p.format().get() != CCFileFormat.IMG)
 				.map(UpdateCodecTableElement::new)
 				.enumerate());
 
@@ -410,7 +410,7 @@ public class UpdateCodecFrame extends JFrame {
 			CCDBLanguageList v = elem.getNewLanguage();
 			if (v.isEmpty()) continue;
 
-			if (!CCDBLanguageList.equals(v, elem.Element.getLanguage())) {elem.Element.setLanguage(v); count++; }
+			if (!CCDBLanguageList.equals(v, elem.Element.language().get())) {elem.Element.language().set(v); count++; }
 		}
 
 		DialogHelper.showDispatchInformation(this, LocaleBundle.getString("Dialogs.CodecUpdateSuccess_caption"), LocaleBundle.getFormattedString("Dialogs.CodecUpdateSuccess", count)); //$NON-NLS-1$ //$NON-NLS-2$
@@ -432,7 +432,7 @@ public class UpdateCodecFrame extends JFrame {
 			int v = elem.getNewDuration();
 			if (v == -1) continue;
 
-			if (v != elem.Element.getLength()) { elem.Element.setLength(v); count++; }
+			if (v != elem.Element.length().get()) { elem.Element.length().set(v); count++; }
 		}
 
 		DialogHelper.showDispatchInformation(this, LocaleBundle.getString("Dialogs.CodecUpdateSuccess_caption"), LocaleBundle.getFormattedString("Dialogs.CodecUpdateSuccess", count)); //$NON-NLS-1$ //$NON-NLS-2$
@@ -454,7 +454,7 @@ public class UpdateCodecFrame extends JFrame {
 			CCMediaInfo v = elem.getNewMediaInfo();
 			if (v.isUnset()) continue;
 
-			if (!elem.Element.getMediaInfo().equals(v)) { elem.Element.setMediaInfo(v); count++; }
+			if (!elem.Element.mediaInfo().get().equals(v)) { elem.Element.mediaInfo().set(v); count++; }
 		}
 
 		DialogHelper.showDispatchInformation(this, LocaleBundle.getString("Dialogs.CodecUpdateSuccess_caption"), LocaleBundle.getFormattedString("Dialogs.CodecUpdateSuccess", count)); //$NON-NLS-1$ //$NON-NLS-2$

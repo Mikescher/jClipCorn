@@ -619,13 +619,13 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 		lblViewed.setIcon(ImageUtilities.sliceImage(Resources.ICN_TABLE_VIEWED_TRUE.get(), 0d, (dispSeries.getViewedCount() * 1d) / dispSeries.getEpisodeCount()));
 		// }
 
-		if (dispSeries.getScore() == CCUserScore.RATING_NO) {
+		if (dispSeries.Score.get() == CCUserScore.RATING_NO) {
 			lblScore.setText(LocaleBundle.getString("PreviewSeriesFrame.lblScore.text") + " - "); //$NON-NLS-1$ //$NON-NLS-2$
 		} else {
-			lblScore.setText(LocaleBundle.getString("PreviewSeriesFrame.lblScore.text") + " " + dispSeries.getScore().asString()); //$NON-NLS-1$ //$NON-NLS-2$
+			lblScore.setText(LocaleBundle.getString("PreviewSeriesFrame.lblScore.text") + " " + dispSeries.Score.get().asString()); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 
-		lblScore.setIcon(dispSeries.getScore().getIcon());
+		lblScore.setIcon(dispSeries.Score.get().getIcon());
 
 		ctrlLang.setValue(dispSeries.getAllLanguages());
 

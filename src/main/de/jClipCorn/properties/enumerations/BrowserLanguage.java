@@ -2,6 +2,7 @@ package de.jClipCorn.properties.enumerations;
 
 import de.jClipCorn.util.enumextension.ContinoousEnum;
 import de.jClipCorn.util.enumextension.EnumWrapper;
+import de.jClipCorn.util.enumextension.IEnumWrapper;
 
 public enum BrowserLanguage implements ContinoousEnum<BrowserLanguage> {
 	ENGLISH(0), 
@@ -63,6 +64,11 @@ public enum BrowserLanguage implements ContinoousEnum<BrowserLanguage> {
 	
 	public static EnumWrapper<BrowserLanguage> getWrapper() {
 		return wrapper;
+	}
+
+	@Override
+	public IEnumWrapper wrapper() {
+		return getWrapper();
 	}
 	
 	@Override

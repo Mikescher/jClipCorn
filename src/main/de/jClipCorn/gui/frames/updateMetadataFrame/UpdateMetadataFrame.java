@@ -1,39 +1,27 @@
 package de.jClipCorn.gui.frames.updateMetadataFrame;
 
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.util.List;
-
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JProgressBar;
-import javax.swing.JToggleButton;
-
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.FormSpecs;
 import com.jgoodies.forms.layout.RowSpec;
-
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
-import de.jClipCorn.database.databaseElement.columnTypes.CCGenre;
-import de.jClipCorn.database.databaseElement.columnTypes.CCGenreList;
-import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReferenceList;
-import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineScore;
-import de.jClipCorn.database.databaseElement.columnTypes.CCSingleOnlineReference;
-import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.database.databaseElement.columnTypes.*;
 import de.jClipCorn.features.log.CCLog;
-import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.features.online.metadata.Metadataparser;
 import de.jClipCorn.features.online.metadata.OnlineMetadata;
+import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.exceptions.EnumFormatException;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.helper.ThreadUtils;
 import de.jClipCorn.util.stream.CCStreams;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.util.List;
 
 public class UpdateMetadataFrame extends JFrame {
 	private static final long serialVersionUID = -2163175118745491143L;
@@ -317,9 +305,9 @@ public class UpdateMetadataFrame extends JFrame {
 		
 		for (UpdateMetadataTableElement elem : data) {
 			if (elem.OnlineMeta != null && elem.OnlineMeta.OnlineScore != null) {
-				if (elem.Element.getOnlinescore().asInt() != elem.OnlineMeta.OnlineScore.intValue()) {
+				if (elem.Element.getOnlinescore().asInt() != elem.OnlineMeta.OnlineScore) {
 					try {
-						elem.Element.setOnlinescore(elem.OnlineMeta.OnlineScore);
+						elem.Element.onlineScore().set(CCOnlineScore.getWrapper().findOrException(elem.OnlineMeta.OnlineScore));
 					} catch (EnumFormatException e1) {
 						CCLog.addError(e1);
 					}
@@ -344,14 +332,14 @@ public class UpdateMetadataFrame extends JFrame {
 			if (elem.OnlineMeta != null && elem.OnlineMeta.Genres != null) {
 				if (tableMain.DeleteLocalGenres) {
 					if (!elem.Element.getGenres().equals(elem.OnlineMeta.Genres)) {
-						elem.Element.setGenres(elem.OnlineMeta.Genres);
+						elem.Element.Genres.set(elem.OnlineMeta.Genres);
 						count++;
 					}
 				} else {
 					boolean diff = false;
 					for (CCGenre genre : elem.OnlineMeta.Genres.iterate()) {
 						if (!elem.Element.getGenres().includes(genre) && !elem.Element.getGenres().isFull()) {
-							elem.Element.tryAddGenre(genre);
+							elem.Element.Genres.tryAddGenre(genre);
 							diff = true;
 						}
 					}
@@ -381,7 +369,7 @@ public class UpdateMetadataFrame extends JFrame {
 
 					if (tableMain.DeleteLocalReferences) {
 						if (!localref.equalsIgnoreAdditionalOrder(onlineref)) {
-							elem.Element.setOnlineReference(onlineref);
+							elem.Element.OnlineReference.set(onlineref);
 							count++;
 						}
 					} else {
@@ -392,7 +380,7 @@ public class UpdateMetadataFrame extends JFrame {
 								diff = true;
 							}
 						}
-						if (diff) { count++; elem.Element.setOnlineReference(localref); }
+						if (diff) { count++; elem.Element.OnlineReference.set(localref); }
 					}
 				}
 			}

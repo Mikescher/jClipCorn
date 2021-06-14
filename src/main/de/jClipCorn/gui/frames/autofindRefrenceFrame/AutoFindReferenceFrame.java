@@ -1,33 +1,5 @@
 package de.jClipCorn.gui.frames.autofindRefrenceFrame;
 
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.KeyEventDispatcher;
-import java.awt.KeyboardFocusManager;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.swing.DefaultListModel;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.JProgressBar;
-import javax.swing.JScrollPane;
-import javax.swing.JTextField;
-import javax.swing.KeyStroke;
-import javax.swing.border.EmptyBorder;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.databaseElement.CCMovie;
@@ -35,17 +7,27 @@ import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineRefType;
 import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReferenceList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCSingleOnlineReference;
-import de.jClipCorn.gui.frames.editMovieFrame.EditMovieFrame;
-import de.jClipCorn.gui.frames.editSeriesFrame.EditSeriesFrame;
-import de.jClipCorn.gui.guiComponents.CoverLabel;
-import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.features.log.CCLog;
-import de.jClipCorn.gui.resources.Resources;
-import de.jClipCorn.util.helper.SwingUtils;
 import de.jClipCorn.features.online.OnlineSearchType;
 import de.jClipCorn.features.online.metadata.OnlineMetadata;
 import de.jClipCorn.features.online.metadata.imdb.IMDBParserCommon;
 import de.jClipCorn.features.online.metadata.tmdb.TMDBParser;
+import de.jClipCorn.gui.frames.editMovieFrame.EditMovieFrame;
+import de.jClipCorn.gui.frames.editSeriesFrame.EditSeriesFrame;
+import de.jClipCorn.gui.guiComponents.CoverLabel;
+import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.gui.resources.Resources;
+import de.jClipCorn.util.helper.SwingUtils;
+
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import java.awt.*;
+import java.awt.event.*;
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class AutoFindReferenceFrame extends JFrame {
 	private static final long serialVersionUID = 4658458278263596774L;
@@ -544,7 +526,7 @@ public class AutoFindReferenceFrame extends JFrame {
 			return;
 		}
 		
-		value.local.setOnlineReference(CCOnlineReferenceList.create(value.tmdbMeta.Source, value.tmdbMeta.AltRef));
+		value.local.onlineReference().set(CCOnlineReferenceList.create(value.tmdbMeta.Source, value.tmdbMeta.AltRef));
 		
 		if (listResults.getSelectedIndex() + 1 >= listModel.size()) {
 			listResults.setSelectedIndex(-1);
@@ -567,7 +549,7 @@ public class AutoFindReferenceFrame extends JFrame {
 			return;
 		}
 		
-		value.local.setOnlineReference(CCOnlineReferenceList.create(value.imdbMeta.Source, value.imdbMeta.AltRef));
+		value.local.onlineReference().set(CCOnlineReferenceList.create(value.imdbMeta.Source, value.imdbMeta.AltRef));
 		
 		if (listResults.getSelectedIndex() + 1 >= listModel.size()) {
 			listResults.setSelectedIndex(-1);

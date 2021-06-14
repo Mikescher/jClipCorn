@@ -21,7 +21,7 @@ public class EpisodeWatchDataChangedSet extends WatchDataChangeSet {
 
 	@Override
 	public String getName() {
-		return eps.getSeries().getTitle();
+		return eps.getSeries().Title.get();
 	}
 
 	@Override
@@ -33,7 +33,7 @@ public class EpisodeWatchDataChangedSet extends WatchDataChangeSet {
 	public String getChange() {
 		if (eps.isViewed() ^ newState)
 			return String.format("%d -> %d", eps.isViewed()?1:0, newState?1:0); //$NON-NLS-1$
-		else if (newState && ! eps.getViewedHistory().contains(date))
+		else if (newState && ! eps.ViewedHistory.get().contains(date))
 			return String.format("history += %s", date.toStringUINormal()); //$NON-NLS-1$
 		else
 			return "#"; //$NON-NLS-1$
@@ -41,13 +41,13 @@ public class EpisodeWatchDataChangedSet extends WatchDataChangeSet {
 
 	@Override
 	public void execute() {
-		if (newState && !eps.getViewedHistory().contains(date))
+		if (newState && !eps.ViewedHistory.get().contains(date))
 		{
 			eps.addToViewedHistoryFromUI(date);
 		}
 		else if (!newState)
 		{
-			eps.setViewedHistory(CCDateTimeList.createEmpty());
+			eps.ViewedHistory.set(CCDateTimeList.createEmpty());
 		}
 	}
 }

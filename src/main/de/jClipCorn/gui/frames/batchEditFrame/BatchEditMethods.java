@@ -246,7 +246,7 @@ public class BatchEditMethods
 
 	public static BatchEditMethod<Void> MEDIAINFO_RESET = new BatchEditMethod<>((ep, param, opt) ->
 	{
-		ep.mediaInfo = ep.getSource().getMediaInfo();
+		ep.mediaInfo = ep.getSource().mediaInfo().get();
 	});
 
 	public static BatchEditMethod<Void> LANGUAGE_RESET = new BatchEditMethod<>((ep, param, opt) ->
@@ -276,7 +276,7 @@ public class BatchEditMethods
 
 	public static BatchEditMethod<Void> VIEWED_RESET = new BatchEditMethod<>((ep, param, opt) ->
 	{
-		ep.viewedHistory = ep.getSource().getViewedHistory();
+		ep.viewedHistory = ep.getSource().ViewedHistory.get();
 	});
 
 	public static BatchEditMethod<Void> TAGS_RESET = new BatchEditMethod<>((ep, param, opt) ->

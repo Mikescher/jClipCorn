@@ -125,8 +125,8 @@ public class AddSeasonFrame extends JFrame implements UserDataProblemHandler, Pa
 		
 		//#####################################################################################
 
-		newS.setTitle(edTitle.getText());
-		newS.setYear((int) spnYear.getValue());
+		newS.Title.set(edTitle.getText());
+		newS.Year.set((int) spnYear.getValue());
 		newS.setCover(edCvrControl.getResizedImageForStorage());
 		
 		//#####################################################################################

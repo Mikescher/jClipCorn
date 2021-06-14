@@ -313,7 +313,7 @@ public class VLCRobotFrame extends JFrame {
 			else if (element.NewEntry != null)
 			{
 				edLogOld.setText(Str.Empty);
-				edLogNew.setText(element.NewEntry.getTitle());
+				edLogNew.setText(element.NewEntry.title().get());
 			}
 		}
 	}

@@ -6,6 +6,7 @@ import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.gui.resources.reftypes.IconRef;
 import de.jClipCorn.util.enumextension.ContinoousEnum;
 import de.jClipCorn.util.enumextension.EnumWrapper;
+import de.jClipCorn.util.enumextension.IEnumWrapper;
 
 public enum CCQualityCategoryType implements ContinoousEnum<CCQualityCategoryType>
 { 
@@ -47,6 +48,11 @@ public enum CCQualityCategoryType implements ContinoousEnum<CCQualityCategoryTyp
 
 	public static EnumWrapper<CCQualityCategoryType> getWrapper() {
 		return wrapper;
+	}
+
+	@Override
+	public IEnumWrapper wrapper() {
+		return getWrapper();
 	}
 
 	public static CCQualityCategoryType min(CCQualityCategoryType a, CCQualityCategoryType b) {

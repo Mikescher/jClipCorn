@@ -58,8 +58,8 @@ public class StatisticsMediaInfoFramerateChart extends StatisticsChart {
 	private DefaultCategoryDataset getDataSet(CCMovieList movielist, StatisticsTypeFilter source) {
 		Map<String, Tuple<Double, Integer>> values = source
 				.iteratorMoviesOrEpisodes(movielist)
-				.filter(e -> e.getMediaInfo().isSet())
-				.map(e -> e.getMediaInfo().getFramerate())
+				.filter(e -> e.mediaInfo().get().isSet())
+				.map(e -> e.mediaInfo().get().getFramerate())
 				.autosort()
 				.groupBy(e -> e)
 				.toMap(e -> Str.format("{0,number,0.#}", e.getKey()), e -> Tuple.Create(e.getKey(), e.getValue().size())); //$NON-NLS-1$

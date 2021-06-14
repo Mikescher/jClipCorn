@@ -142,14 +142,14 @@ public class TestIterators extends ClipCornBaseTest {
 		assertEquals(CCDate.create(3, 8, 2010), ml.iteratorMovies().map(p -> p.getAddDate()).sort(CCDate::compare).firstOrNull());
 		assertEquals(CCDate.create(2, 7, 2016), ml.iteratorMovies().map(p -> p.getAddDate()).sort(CCDate::compare).lastOrNull());
 
-		assertEquals(CCDate.create(3, 8, 2010), ml.iteratorPlayables().map(p -> p.getAddDate()).sort(CCDate::compare).firstOrNull());
-		assertEquals(CCDate.create(3, 10, 2016), ml.iteratorPlayables().map(p -> p.getAddDate()).sort(CCDate::compare).lastOrNull());
+		assertEquals(CCDate.create(3, 8, 2010), ml.iteratorPlayables().map(p -> p.addDate().get()).sort(CCDate::compare).firstOrNull());
+		assertEquals(CCDate.create(3, 10, 2016), ml.iteratorPlayables().map(p -> p.addDate().get()).sort(CCDate::compare).lastOrNull());
 
 		assertEquals(ml.iteratorElements().minOrDefault(p -> p.getAddDate(), CCDate::compare, null), ml.iteratorElements().map(p -> p.getAddDate()).sort(CCDate::compare).firstOrNull());
 		assertEquals(ml.iteratorElements().maxOrDefault(p -> p.getAddDate(), CCDate::compare, null), ml.iteratorElements().map(p -> p.getAddDate()).sort(CCDate::compare).lastOrNull());
 
-		assertEquals(ml.iteratorPlayables().minOrDefault(p -> p.getAddDate(), CCDate::compare, null), ml.iteratorPlayables().map(p -> p.getAddDate()).sort(CCDate::compare).firstOrNull());
-		assertEquals(ml.iteratorPlayables().maxOrDefault(p -> p.getAddDate(), CCDate::compare, null), ml.iteratorPlayables().map(p -> p.getAddDate()).sort(CCDate::compare).lastOrNull());
+		assertEquals(ml.iteratorPlayables().minOrDefault(p -> p.addDate().get(), CCDate::compare, null), ml.iteratorPlayables().map(p -> p.addDate().get()).sort(CCDate::compare).firstOrNull());
+		assertEquals(ml.iteratorPlayables().maxOrDefault(p -> p.addDate().get(), CCDate::compare, null), ml.iteratorPlayables().map(p -> p.addDate().get()).sort(CCDate::compare).lastOrNull());
 	}
 
 	@Test
@@ -181,7 +181,7 @@ public class TestIterators extends ClipCornBaseTest {
 
 		assertEquals(ml.iteratorMovies().stringjoin(p -> p.getTitle(), "|"), ml.iteratorMovies().unique().stringjoin(p -> p.getTitle(), "|"));
 		assertEquals(ml.iteratorElements().stringjoin(p -> p.getTitle(), "|"), ml.iteratorElements().unique().stringjoin(p -> p.getTitle(), "|"));
-		assertEquals(ml.iteratorPlayables().stringjoin(p -> p.getTitle(), "|"), ml.iteratorPlayables().unique().stringjoin(p -> p.getTitle(), "|"));
+		assertEquals(ml.iteratorPlayables().stringjoin(p -> p.title().get(), "|"), ml.iteratorPlayables().unique().stringjoin(p -> p.title().get(), "|"));
 
 		assertEquals(ml.iteratorMovies().map(p -> p.getLocalID()).stringjoin(p -> ""+p, "|"), ml.iteratorMovies().map(p -> p.getLocalID()).unique().stringjoin(p -> ""+p, "|"));
 		assertEquals(ml.iteratorElements().map(p -> p.getLocalID()).stringjoin(p -> ""+p, "|"), ml.iteratorElements().map(p -> p.getLocalID()).unique().stringjoin(p -> ""+p, "|"));

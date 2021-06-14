@@ -113,8 +113,8 @@ public class ChangeViewedFrame extends JFrame {
 		if (! running) return;
 		
 		CCMovie mov = (CCMovie) movielist.getDatabaseElementBySort(position);
-		if (viewed && !mov.isViewed()) mov.addToViewedHistory(CCDateTime.getUnspecified());
-		if (!viewed) mov.setViewedHistory(CCDateTimeList.createEmpty());
+		if (viewed && !mov.isViewed()) mov.ViewedHistory.add(CCDateTime.getUnspecified());
+		if (!viewed) mov.ViewedHistory.set(CCDateTimeList.createEmpty());
 		
 		nextMovie();
 	}

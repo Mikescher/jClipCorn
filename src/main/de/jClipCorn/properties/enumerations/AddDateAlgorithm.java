@@ -3,6 +3,7 @@ package de.jClipCorn.properties.enumerations;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.enumextension.ContinoousEnum;
 import de.jClipCorn.util.enumextension.EnumWrapper;
+import de.jClipCorn.util.enumextension.IEnumWrapper;
 
 public enum AddDateAlgorithm implements ContinoousEnum<AddDateAlgorithm> {
 	OLDEST_DATE(0), 
@@ -28,6 +29,11 @@ public enum AddDateAlgorithm implements ContinoousEnum<AddDateAlgorithm> {
 	
 	public static EnumWrapper<AddDateAlgorithm> getWrapper() {
 		return wrapper;
+	}
+
+	@Override
+	public IEnumWrapper wrapper() {
+		return getWrapper();
 	}
 	
 	@Override

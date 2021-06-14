@@ -102,7 +102,7 @@ public class WatchHistoryEpisodeElement extends WatchHistoryElement {
 
 	@Override
 	public CCDateTimeList getHistory() {
-		return Episode.getViewedHistory();
+		return Episode.ViewedHistory.get();
 	}
 
 	@Override

@@ -248,7 +248,7 @@ public class CreateSeriesFolderStructureFrame extends JFrame {
 						return false;
 					}
 					
-					episode.setPart(PathFormatter.getCCPath(newfile.getAbsolutePath()));
+					episode.Part.set(PathFormatter.getCCPath(newfile.getAbsolutePath()));
 				}
 			}
 		}

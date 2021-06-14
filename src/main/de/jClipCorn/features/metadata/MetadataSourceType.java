@@ -4,6 +4,7 @@ import de.jClipCorn.gui.resources.MultiSizeIconRef;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.enumextension.ContinoousEnum;
 import de.jClipCorn.util.enumextension.EnumWrapper;
+import de.jClipCorn.util.enumextension.IEnumWrapper;
 import de.jClipCorn.util.lambda.Func0to1;
 import de.jClipCorn.util.stream.CCStreams;
 
@@ -30,6 +31,11 @@ public enum MetadataSourceType implements ContinoousEnum<MetadataSourceType> {
 	
 	public static EnumWrapper<MetadataSourceType> getWrapper() {
 		return wrapper;
+	}
+
+	@Override
+	public IEnumWrapper wrapper() {
+		return getWrapper();
 	}
 
 	public MetadataSource getMetadataSource() {

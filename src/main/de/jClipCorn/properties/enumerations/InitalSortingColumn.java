@@ -3,6 +3,7 @@ package de.jClipCorn.properties.enumerations;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.enumextension.ContinoousEnum;
 import de.jClipCorn.util.enumextension.EnumWrapper;
+import de.jClipCorn.util.enumextension.IEnumWrapper;
 
 public enum InitalSortingColumn implements ContinoousEnum<InitalSortingColumn> {
 	LOCALID(0), 
@@ -26,6 +27,11 @@ public enum InitalSortingColumn implements ContinoousEnum<InitalSortingColumn> {
 	
 	public static EnumWrapper<InitalSortingColumn> getWrapper() {
 		return wrapper;
+	}
+
+	@Override
+	public IEnumWrapper wrapper() {
+		return getWrapper();
 	}
 	
 	@Override

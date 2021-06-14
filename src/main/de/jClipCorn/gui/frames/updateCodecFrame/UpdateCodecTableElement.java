@@ -65,9 +65,9 @@ public class UpdateCodecTableElement {
 		if (!Processed) return false;
 		if (MQResult == null) return false;
 
-		if (!CCDBLanguageList.equals(Element.getLanguage(), getNewLanguage())) return true;
+		if (!CCDBLanguageList.equals(Element.language().get(), getNewLanguage())) return true;
 		if (maxLenDiff != -1 && hasLenDiff(maxLenDiff)) return true;
-		if (!Element.getMediaInfo().equals(getNewMediaInfo())) return true;
+		if (!Element.mediaInfo().get().equals(getNewMediaInfo())) return true;
 
 		return false;
 	}
@@ -77,9 +77,9 @@ public class UpdateCodecTableElement {
 		if (!Processed) return null;
 		if (MQResult == null) return null;
 
-		if (!CCDBLanguageList.equals(Element.getLanguage(), getNewLanguage())) return "Language";
+		if (!CCDBLanguageList.equals(Element.language().get(), getNewLanguage())) return "Language";
 		if (maxLenDiff != -1 && hasLenDiff(maxLenDiff)) return "Length";
-		if (!Element.getMediaInfo().equals(getNewMediaInfo())) return "MediaInfo.[" + midiff(Element.getMediaInfo(), getNewMediaInfo()) + "]";
+		if (!Element.mediaInfo().get().equals(getNewMediaInfo())) return "MediaInfo.[" + midiff(Element.mediaInfo().get(), getNewMediaInfo()) + "]";
 
 		return null;
 	}
@@ -100,7 +100,7 @@ public class UpdateCodecTableElement {
 		if (!Processed) return false;
 		if (MQResult == null) return false;
 
-		if (!CCDBLanguageList.equals(Element.getLanguage(), getNewLanguage())) return true;
+		if (!CCDBLanguageList.equals(Element.language().get(), getNewLanguage())) return true;
 
 		return false;
 	}
@@ -109,7 +109,7 @@ public class UpdateCodecTableElement {
 		if (!Processed) return false;
 		if (MQResult == null) return false;
 
-		if (!Element.getMediaInfo().equals(getNewMediaInfo())) return true;
+		if (!Element.mediaInfo().get().equals(getNewMediaInfo())) return true;
 
 		return false;
 	}
@@ -118,20 +118,20 @@ public class UpdateCodecTableElement {
 		if (!Processed) return false;
 		if (MQResult == null) return false;
 
-		if (getNewDuration() != -1 && Math.abs(Element.getLength() - getNewDuration()) > Element.getLength()*maxLenDiff) return true;
+		if (getNewDuration() != -1 && Math.abs(Element.length().get() - getNewDuration()) > Element.length().get()*maxLenDiff) return true;
 
 		return false;
 	}
 
 	public String getFullDisplayTitle() {
 		if (Element instanceof CCMovie) return ((CCMovie)Element).getFullDisplayTitle();
-		if (Element instanceof CCEpisode) return Str.format("[{0}] {1} - {2}", ((CCEpisode)Element).getSeries().getTitle(), ((CCEpisode)Element).getStringIdentifier(), Element.getTitle()); //$NON-NLS-1$
+		if (Element instanceof CCEpisode) return Str.format("[{0}] {1} - {2}", ((CCEpisode)Element).getSeries().getTitle(), ((CCEpisode)Element).getStringIdentifier(), Element.title().get()); //$NON-NLS-1$
 		
 		return "{{??}}"; //$NON-NLS-1$
 	}
 
 	public CCDBLanguageList getOldLanguage() {
-		return Element.getLanguage();
+		return Element.language().get();
 	}
 
 	public CCDBLanguageList getNewLanguage() {
@@ -160,7 +160,7 @@ public class UpdateCodecTableElement {
 	}
 
 	public int getOldDuration() {
-		return Element.getLength();
+		return Element.length().get();
 	}
 
 	public int getNewDuration() {
@@ -194,7 +194,7 @@ public class UpdateCodecTableElement {
 	}
 
 	public CCMediaInfo getOldMediaInfo() {
-		return Element.getMediaInfo();
+		return Element.mediaInfo().get();
 	}
 
 	public CCMediaInfo getNewMediaInfo() {

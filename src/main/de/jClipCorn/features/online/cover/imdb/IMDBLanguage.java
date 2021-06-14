@@ -3,6 +3,7 @@ package de.jClipCorn.features.online.cover.imdb;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.enumextension.ContinoousEnum;
 import de.jClipCorn.util.enumextension.EnumWrapper;
+import de.jClipCorn.util.enumextension.IEnumWrapper;
 
 public enum IMDBLanguage implements ContinoousEnum<IMDBLanguage> {
 	GERMAN(0), 
@@ -23,6 +24,11 @@ public enum IMDBLanguage implements ContinoousEnum<IMDBLanguage> {
 	
 	public static EnumWrapper<IMDBLanguage> getWrapper() {
 		return wrapper;
+	}
+
+	@Override
+	public IEnumWrapper wrapper() {
+		return getWrapper();
 	}
 	
 	@Override

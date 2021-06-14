@@ -3,6 +3,7 @@ package de.jClipCorn.util.datetime;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.enumextension.ContinoousEnum;
 import de.jClipCorn.util.enumextension.EnumWrapper;
+import de.jClipCorn.util.enumextension.IEnumWrapper;
 
 public enum CCWeekday implements ContinoousEnum<CCWeekday> {
 	UNKNOWN(0),
@@ -35,6 +36,11 @@ public enum CCWeekday implements ContinoousEnum<CCWeekday> {
 	
 	public static EnumWrapper<CCWeekday> getWrapper() {
 		return wrapper;
+	}
+
+	@Override
+	public IEnumWrapper wrapper() {
+		return getWrapper();
 	}
 
 	@Override

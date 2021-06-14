@@ -4,6 +4,7 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCDateTimeList;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.util.enumextension.ContinoousEnum;
 import de.jClipCorn.util.enumextension.EnumWrapper;
+import de.jClipCorn.util.enumextension.IEnumWrapper;
 
 public class CCDateSearchParameter {
 
@@ -22,7 +23,14 @@ public class CCDateSearchParameter {
 
 		private DateSearchType(int val) { id = val; }
 		
-		public static EnumWrapper<DateSearchType> getWrapper() { return wrapper; }
+		public static EnumWrapper<DateSearchType> getWrapper() {
+			return wrapper;
+		}
+
+		@Override
+		public IEnumWrapper wrapper() {
+			return getWrapper();
+		}
 		
 		@Override
 		public int asInt() { return id; }

@@ -1,7 +1,5 @@
 package de.jClipCorn.database.databaseElement.columnTypes;
 
-import javax.swing.Icon;
-
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.CCSeries;
@@ -16,6 +14,8 @@ import de.jClipCorn.gui.resources.MultiSizeIconRef;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.exceptions.OnlineRefFormatException;
 import de.jClipCorn.util.http.HTTPUtilities;
+
+import javax.swing.*;
 
 public class CCSingleOnlineReference {
 	public final static CCSingleOnlineReference EMPTY = new CCSingleOnlineReference(CCOnlineRefType.NONE, Str.Empty, Str.Empty);
@@ -183,7 +183,7 @@ public class CCSingleOnlineReference {
 			if (src.isMovie()) {
 				HTTPUtilities.searchInBrowser(((CCMovie)src).getCompleteTitle());
 			} else if (src.isSeries()) {
-				HTTPUtilities.searchInBrowser(((CCSeries)src).getTitle());
+				HTTPUtilities.searchInBrowser(((CCSeries)src).Title.get());
 			}
 		} else {
 			HTTPUtilities.openInBrowser(getURL());

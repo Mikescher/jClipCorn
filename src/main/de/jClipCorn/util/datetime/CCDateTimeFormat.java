@@ -3,6 +3,7 @@ package de.jClipCorn.util.datetime;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.enumextension.ContinoousEnum;
 import de.jClipCorn.util.enumextension.EnumWrapper;
+import de.jClipCorn.util.enumextension.IEnumWrapper;
 
 public enum CCDateTimeFormat implements ContinoousEnum<CCDateTimeFormat> {
 	ISO_8601(0),
@@ -25,6 +26,11 @@ public enum CCDateTimeFormat implements ContinoousEnum<CCDateTimeFormat> {
 	
 	public static EnumWrapper<CCDateTimeFormat> getWrapper() {
 		return wrapper;
+	}
+
+	@Override
+	public IEnumWrapper wrapper() {
+		return getWrapper();
 	}
 
 	@Override

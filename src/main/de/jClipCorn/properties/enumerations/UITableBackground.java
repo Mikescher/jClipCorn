@@ -3,6 +3,7 @@ package de.jClipCorn.properties.enumerations;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.enumextension.ContinoousEnum;
 import de.jClipCorn.util.enumextension.EnumWrapper;
+import de.jClipCorn.util.enumextension.IEnumWrapper;
 
 public enum UITableBackground implements ContinoousEnum<UITableBackground> {
 	WHITE(0, 1),
@@ -30,6 +31,11 @@ public enum UITableBackground implements ContinoousEnum<UITableBackground> {
 	
 	public static EnumWrapper<UITableBackground> getWrapper() {
 		return wrapper;
+	}
+
+	@Override
+	public IEnumWrapper wrapper() {
+		return getWrapper();
 	}
 	
 	@Override

@@ -57,8 +57,8 @@ public class StatisticsMediaInfoBitDepthChart extends StatisticsChart {
 	private DefaultCategoryDataset getDataSet(CCMovieList movielist, StatisticsTypeFilter source) {
 		Map<Integer, Integer> values = source
 				.iteratorMoviesOrEpisodes(movielist)
-				.filter(e -> e.getMediaInfo().isSet())
-				.map(e -> e.getMediaInfo().getBitdepth())
+				.filter(e -> e.mediaInfo().get().isSet())
+				.map(e -> e.mediaInfo().get().getBitdepth())
 				.groupBy(e -> e)
 				.toMap(e -> (int)e.getKey(), e -> e.getValue().size()); 
 

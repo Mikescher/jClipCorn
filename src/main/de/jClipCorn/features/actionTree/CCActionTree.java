@@ -694,11 +694,11 @@ public class CCActionTree extends UIActionTree{
 	}
 
 	private void onClickOtherSetUnviewed(CCTreeActionEvent e) {
-		e.ifMovieSource(m -> m.setViewedHistory(CCDateTimeList.createEmpty()));
+		e.ifMovieSource(m -> m.ViewedHistory.set(CCDateTimeList.createEmpty()));
 	}
 
 	private void onClickOtherSetViewed(CCTreeActionEvent e) {
-		e.ifMovieSource(m -> m.addToViewedHistory(CCDateTime.getCurrentDateTime()));
+		e.ifMovieSource(m -> m.ViewedHistory.add(CCDateTime.getCurrentDateTime()));
 	}
 	
 	private void onClickOtherOtherUndoMovieViewed(CCTreeActionEvent e) {
@@ -706,14 +706,14 @@ public class CCActionTree extends UIActionTree{
 		{
 			if (!m.isViewed()) return;
 
-			if (m.getViewedHistory().getLastOrInvalid().isUnspecifiedOrMinimum())
+			if (m.ViewedHistory.get().getLastOrInvalid().isUnspecifiedOrMinimum())
 			{
 				var ok = DialogHelper.showLocaleYesNoDefaultNo(e.SwingOwner, "Dialogs.UndoLastViewedWarning1");
 				if (!ok) return;
 			}
 			else
 			{
-				var hours = m.getViewedHistory().getLastOrInvalid().getSecondDifferenceTo(CCDateTime.getCurrentDateTime()) / (60.0 * 60.0);
+				var hours = m.ViewedHistory.get().getLastOrInvalid().getSecondDifferenceTo(CCDateTime.getCurrentDateTime()) / (60.0 * 60.0);
 
 				var max = CCProperties.getInstance().PROP_MAX_UNDOLASTWATCH_HOUR_DIFF.getValue();
 
@@ -724,7 +724,7 @@ public class CCActionTree extends UIActionTree{
 				}
 			}
 
-			CCDateTimeList history = m.getViewedHistory();
+			CCDateTimeList history = m.ViewedHistory.get();
 			history = history.removeLast();
 			m.setViewedHistoryFromUI(history);
 		});
@@ -733,16 +733,16 @@ public class CCActionTree extends UIActionTree{
 	private void onClickOtherSetRating(CCTreeActionEvent e, CCUserScore rating) {
 		e.ifDatabaseElementSource(d ->
 		{
-			if (e.SourceType == ActionSource.SHORTCUT && d.getScore() == rating && rating != CCUserScore.RATING_NO) {
-				d.setScore(CCUserScore.RATING_NO);
+			if (e.SourceType == ActionSource.SHORTCUT && d.Score.get() == rating && rating != CCUserScore.RATING_NO) {
+				d.Score.set(CCUserScore.RATING_NO);
 				return;
 			}
-			d.setScore(rating);
+			d.Score.set(rating);
 		});
 	}
 	
 	private void onClickOtherShowInBrowser(CCTreeActionEvent e) {
-		e.ifDatabaseElementSource(d -> d.getOnlineReference().Main.openInBrowser(d));
+		e.ifDatabaseElementSource(d -> d.OnlineReference.get().Main.openInBrowser(d));
 	}
 	
 	private void onClickOtherShowCover(CCTreeActionEvent e) {
@@ -754,7 +754,7 @@ public class CCActionTree extends UIActionTree{
 	}
 	
 	private void onClickSwitchTag(CCTreeActionEvent e, CCSingleTag t) {
-		e.ifTaggedElementSource(d -> d.switchTag(t));
+		e.ifTaggedElementSource(d -> d.tags().switchTag(t));
 	}
 
 	private void onClickOtherSeasonAddEpisodes(CCTreeActionEvent e) {
@@ -859,7 +859,7 @@ public class CCActionTree extends UIActionTree{
 	}
 
 	private void onClickOtherEpisodeUnviewed(CCTreeActionEvent e) {
-		e.ifEpisodeSource(p -> p.setViewedHistory(CCDateTimeList.createEmpty()));
+		e.ifEpisodeSource(p -> p.ViewedHistory.set(CCDateTimeList.createEmpty()));
 	}
 
 	private void onClickOtherEpisodeUndoViewed(CCTreeActionEvent e) {
@@ -867,14 +867,14 @@ public class CCActionTree extends UIActionTree{
 		{
 			if (!p.isViewed()) return;
 
-			if (p.getViewedHistory().getLastOrInvalid().isUnspecifiedOrMinimum())
+			if (p.ViewedHistory.get().getLastOrInvalid().isUnspecifiedOrMinimum())
 			{
 				var ok = DialogHelper.showLocaleYesNoDefaultNo(e.SwingOwner, "Dialogs.UndoLastViewedWarning1");
 				if (!ok) return;
 			}
 			else
 			{
-				var hours = p.getViewedHistory().getLastOrInvalid().getSecondDifferenceTo(CCDateTime.getCurrentDateTime()) / (60.0 * 60.0);
+				var hours = p.ViewedHistory.get().getLastOrInvalid().getSecondDifferenceTo(CCDateTime.getCurrentDateTime()) / (60.0 * 60.0);
 
 				var max = CCProperties.getInstance().PROP_MAX_UNDOLASTWATCH_HOUR_DIFF.getValue();
 
@@ -885,7 +885,7 @@ public class CCActionTree extends UIActionTree{
 				}
 			}
 
-			CCDateTimeList history = p.getViewedHistory();
+			CCDateTimeList history = p.ViewedHistory.get();
 			history = history.removeLast();
 			p.setViewedHistoryFromUI(history);
 		});

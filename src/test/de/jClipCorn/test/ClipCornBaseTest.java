@@ -60,10 +60,10 @@ public class ClipCornBaseTest {
 		{
 			for (var p : ml.iteratorPlayables())
 			{
-				if (p.getMediaInfo().isUnset()) continue;
-				var mi = p.getMediaInfo().toPartial();
+				if (p.mediaInfo().get().isUnset()) continue;
+				var mi = p.mediaInfo().get().toPartial();
 				mi.Checksum = Opt.of("[01-" + StringUtils.leftPad(Long.toHexString(mi.Filesize.orElse(CCFileSize.ZERO).getBytes()).toUpperCase(), 10, '0') + "-00:00:00:00:00:00:00:00]");
-				p.setMediaInfo(mi.toMediaInfo());
+				p.mediaInfo().set(mi.toMediaInfo());
 			}
 		}
 

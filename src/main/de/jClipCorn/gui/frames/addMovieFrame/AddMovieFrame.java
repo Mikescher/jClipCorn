@@ -622,15 +622,15 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		
 		setFilesize(tmpMov.getFilesize());
 		setMovieFormat(tmpMov.getFormat());
-		setMediaInfo(tmpMov.getMediaInfo());
+		setMediaInfo(tmpMov.mediaInfo().get());
 		setLength(tmpMov.getLength());
 
 		for (int i = 0; i < CCMovie.PARTCOUNT_MAX; i++) {
-			if (!tmpMov.getPart(i).isEmpty())
-				setDirectFilepath(i, tmpMov.getPart(i));
+			if (!tmpMov.Parts.get(i).isEmpty())
+				setDirectFilepath(i, tmpMov.Parts.get(i));
 		}
 		
-		forceViewedHistory = tmpMov.getViewedHistory();
+		forceViewedHistory = tmpMov.ViewedHistory.get();
 		
 		setYear(tmpMov.getYear());
 		setZyklus(tmpMov.getZyklus().getTitle());
@@ -642,10 +642,10 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		setMovieLanguage(tmpMov.getLanguage());
 		setFSK(tmpMov.getFSK());
 
-		if (! resetScore) cbxScore.setSelectedEnum(tmpMov.getScore());
+		if (! resetScore) cbxScore.setSelectedEnum(tmpMov.Score.get());
 		
 		for (int i = 0; i < CCGenreList.getMaxListSize(); i++) {
-			setGenre(i, tmpMov.getGenre(i));
+			setGenre(i, tmpMov.Genres.get(i));
 		}
 		
 		setEnabledAll(true);
@@ -681,43 +681,43 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		
 		if (forceViewedHistory != null) newM.setViewedHistoryFromUI(forceViewedHistory);
 		
-		newM.setPart(0, ed_Part0.getText());
-		newM.setPart(1, ed_Part1.getText());
-		newM.setPart(2, ed_Part2.getText());
-		newM.setPart(3, ed_Part3.getText());
-		newM.setPart(4, ed_Part4.getText());
-		newM.setPart(5, ed_Part5.getText());
+		newM.Parts.set(0, ed_Part0.getText());
+		newM.Parts.set(1, ed_Part1.getText());
+		newM.Parts.set(2, ed_Part2.getText());
+		newM.Parts.set(3, ed_Part3.getText());
+		newM.Parts.set(4, ed_Part4.getText());
+		newM.Parts.set(5, ed_Part5.getText());
 		
-		newM.setTitle(edTitle.getText());
-		newM.setZyklusTitle(edZyklus.getText());
-		newM.setZyklusID((int) spnZyklus.getValue());
+		newM.Title.set(edTitle.getText());
+		newM.Zyklus.setTitle(edZyklus.getText());
+		newM.Zyklus.setNumber((int) spnZyklus.getValue());
 		
-		newM.setMediaInfo(ctrlMediaInfo.getValue());
-		newM.setLanguage(cbxLanguage.getValue());
+		newM.MediaInfo.set(ctrlMediaInfo.getValue());
+		newM.Language.set(cbxLanguage.getValue());
 		
-		newM.setLength((int) spnLength.getValue());
+		newM.Length.set((int) spnLength.getValue());
 		
-		newM.setAddDate(spnAddDate.getValue());
+		newM.AddDate.set(spnAddDate.getValue());
 		
-		newM.setOnlinescore((int) spnOnlineScore.getValue());
+		newM.OnlineScore.set((int) spnOnlineScore.getValue());
 		
-		newM.setFsk(cbxFSK.getSelectedEnum().asFSK());
-		newM.setFormat(cbxFormat.getSelectedEnum());
+		newM.FSK.set(cbxFSK.getSelectedEnum().asFSK());
+		newM.Format.set(cbxFormat.getSelectedEnum());
 		
-		newM.setYear((int) spnYear.getValue());
-		newM.setFilesize((long) spnSize.getValue());
+		newM.Year.set((int) spnYear.getValue());
+		newM.FileSize.set((long) spnSize.getValue());
 		
-		newM.setGenre(cbxGenre0.getSelectedEnum(), 0);
-		newM.setGenre(cbxGenre1.getSelectedEnum(), 1);
-		newM.setGenre(cbxGenre2.getSelectedEnum(), 2);
-		newM.setGenre(cbxGenre3.getSelectedEnum(), 3);
-		newM.setGenre(cbxGenre4.getSelectedEnum(), 4);
-		newM.setGenre(cbxGenre5.getSelectedEnum(), 5);
-		newM.setGenre(cbxGenre6.getSelectedEnum(), 6);
-		newM.setGenre(cbxGenre7.getSelectedEnum(), 7);
+		newM.Genres.set(cbxGenre0.getSelectedEnum(), 0);
+		newM.Genres.set(cbxGenre1.getSelectedEnum(), 1);
+		newM.Genres.set(cbxGenre2.getSelectedEnum(), 2);
+		newM.Genres.set(cbxGenre3.getSelectedEnum(), 3);
+		newM.Genres.set(cbxGenre4.getSelectedEnum(), 4);
+		newM.Genres.set(cbxGenre5.getSelectedEnum(), 5);
+		newM.Genres.set(cbxGenre6.getSelectedEnum(), 6);
+		newM.Genres.set(cbxGenre7.getSelectedEnum(), 7);
 		
-		newM.setScore(cbxScore.getSelectedEnum());
-		newM.setOnlineReference(edReference.getValue());
+		newM.Score.set(cbxScore.getSelectedEnum());
+		newM.OnlineReference.set(edReference.getValue());
 		newM.setGroups(edGroups.getValue());
 
 		newM.setCover(edCvrControl.getResizedImageForStorage());

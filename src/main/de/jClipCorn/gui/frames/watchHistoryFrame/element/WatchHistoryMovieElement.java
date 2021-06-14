@@ -98,7 +98,7 @@ public class WatchHistoryMovieElement extends WatchHistoryElement{
 
 	@Override
 	public CCDateTimeList getHistory() {
-		return Movie.getViewedHistory();
+		return Movie.ViewedHistory.get();
 	}
 
 	@Override

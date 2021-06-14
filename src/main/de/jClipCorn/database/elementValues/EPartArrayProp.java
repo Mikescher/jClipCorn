@@ -10,9 +10,15 @@ public class EPartArrayProp extends EProperty<String[]> {
 
 	private final int _size;
 
-	public EPartArrayProp(String name, String[] defValue, IPropertyParent p, EPropertyType t) {
-		super(name, defValue, p, t);
-		_size = defValue.length;
+	public EPartArrayProp(String name, int len, IPropertyParent p, EPropertyType t) {
+		super(name, arr(len), p, t);
+		_size = len;
+	}
+
+	private static String[] arr(int len) {
+		var a = new String[len];
+		for (int i = 0; i < len; i++) a[i] = Str.Empty;
+		return a;
 	}
 
 	public String get(int idx) {

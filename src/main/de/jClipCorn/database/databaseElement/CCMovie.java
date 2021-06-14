@@ -41,7 +41,7 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 	public final EEnumProp<CCFileFormat> Format        = new EEnumProp<>(      "Format",        CCFileFormat.MKV,             this, EPropertyType.OBJECTIVE_METADATA);
 	public final EIntProp                Year          = new EIntProp(         "Year",          1900,                         this, EPropertyType.OBJECTIVE_METADATA);
 	public final EFileSizeProp           FileSize      = new EFileSizeProp(    "FileSize",      CCFileSize.ZERO,              this, EPropertyType.OBJECTIVE_METADATA);
-	public final EPartArrayProp          Parts         = new EPartArrayProp(   "Parts",         new String[PARTCOUNT_MAX],    this, EPropertyType.LOCAL_FILE_REF);
+	public final EPartArrayProp          Parts         = new EPartArrayProp(   "Parts",         PARTCOUNT_MAX,                this, EPropertyType.LOCAL_FILE_REF);
 	public final EDateTimeListProp       ViewedHistory = new EDateTimeListProp("ViewedHistory", CCDateTimeList.createEmpty(), this, EPropertyType.USER_METADATA);
 	public final ELanguageListProp       Language      = new ELanguageListProp("Language",      CCDBLanguageList.EMPTY,       this, EPropertyType.OBJECTIVE_METADATA);
 	
@@ -306,7 +306,7 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 
 	@Override
 	public int getYear() {
-		return 0;
+		return Year.get();
 	}
 
 	@Override

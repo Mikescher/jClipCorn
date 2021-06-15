@@ -1,33 +1,33 @@
 package de.jClipCorn.features.serialization;
 
-import java.awt.Color;
-import java.awt.image.BufferedImage;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
-import java.util.zip.ZipOutputStream;
-
-import javax.imageio.ImageIO;
-
-import de.jClipCorn.database.covertab.CCDefaultCoverCache;
+import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.covertab.CCCoverData;
+import de.jClipCorn.database.covertab.CCDefaultCoverCache;
 import de.jClipCorn.database.covertab.ICoverCache;
+import de.jClipCorn.database.databaseElement.CCDatabaseElement;
+import de.jClipCorn.database.databaseElement.CCMovie;
+import de.jClipCorn.database.databaseElement.CCSeries;
+import de.jClipCorn.database.databaseElement.columnTypes.CCDBElementTyp;
+import de.jClipCorn.database.databaseElement.columnTypes.CCGroup;
+import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.features.serialization.xmlexport.DatabaseXMLExporter;
 import de.jClipCorn.features.serialization.xmlexport.ExportOptions;
 import de.jClipCorn.features.serialization.xmlimport.DatabaseXMLImporter;
 import de.jClipCorn.features.serialization.xmlimport.ImportOptions;
 import de.jClipCorn.features.serialization.xmlimport.ImportState;
+import de.jClipCorn.gui.frames.addMovieFrame.AddMovieFrame;
+import de.jClipCorn.gui.frames.importElementsFrame.ImportElementsFrame;
+import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.gui.mainFrame.MainFrame;
+import de.jClipCorn.util.TimeKeeper;
 import de.jClipCorn.util.datatypes.Tuple3;
+import de.jClipCorn.util.exceptions.CCFormatException;
 import de.jClipCorn.util.exceptions.SerializationException;
+import de.jClipCorn.util.formatter.PathFormatter;
+import de.jClipCorn.util.helper.DialogHelper;
+import de.jClipCorn.util.helper.SimpleFileUtils;
+import de.jClipCorn.util.lambda.Func1to1;
+import de.jClipCorn.util.listener.ProgressCallbackListener;
 import de.jClipCorn.util.stream.CCStreams;
 import de.jClipCorn.util.xml.CCXMLElement;
 import de.jClipCorn.util.xml.CCXMLException;
@@ -36,24 +36,16 @@ import org.jdom2.Document;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
 
-import de.jClipCorn.database.CCMovieList;
-import de.jClipCorn.database.databaseElement.CCDatabaseElement;
-import de.jClipCorn.database.databaseElement.CCMovie;
-import de.jClipCorn.database.databaseElement.CCSeries;
-import de.jClipCorn.database.databaseElement.columnTypes.CCDBElementTyp;
-import de.jClipCorn.database.databaseElement.columnTypes.CCGroup;
-import de.jClipCorn.gui.frames.addMovieFrame.AddMovieFrame;
-import de.jClipCorn.gui.frames.importElementsFrame.ImportElementsFrame;
-import de.jClipCorn.gui.mainFrame.MainFrame;
-import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.features.log.CCLog;
-import de.jClipCorn.util.TimeKeeper;
-import de.jClipCorn.util.exceptions.CCFormatException;
-import de.jClipCorn.util.formatter.PathFormatter;
-import de.jClipCorn.util.helper.DialogHelper;
-import de.jClipCorn.util.helper.SimpleFileUtils;
-import de.jClipCorn.util.lambda.Func1to1;
-import de.jClipCorn.util.listener.ProgressCallbackListener;
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
+import java.util.zip.ZipOutputStream;
 
 public class ExportHelper {
 	private final static String DB_XML_FILENAME_MAIN   = "database.xml"; 														//$NON-NLS-1$
@@ -66,7 +58,7 @@ public class ExportHelper {
 	public final static String EXTENSION_SINGLEEXPORT     = "jsccexport";   // = jSingleClipCornExport                      //$NON-NLS-1$
 	public final static String EXTENSION_MULTIPLEEXPORT   = "jmccexport";   // = jMultipleClipCornExport                    //$NON-NLS-1$
 	public final static String EXTENSION_CCBACKUP         = "xml";          // = OLD Clipcorn Backup        [DEPRECATED]    //$NON-NLS-1$
-	public final static String EXTENSION_COMPAREFILE      = "jcccf";        // = jClipCornCompareFile                       //$NON-NLS-1$
+	public final static String EXTENSION_COMPAREFILE      = "jcccf";        // = jClipCornCompareFile       [DEPRECATED]    //$NON-NLS-1$
 	public final static String EXTENSION_EPISODEGUIDE     = "txt";          // = TextFile                                   //$NON-NLS-1$
 	public final static String EXTENSION_TEXTEXPORT_PLAIN = "txt";          // = TextFile                                   //$NON-NLS-1$
 	public final static String EXTENSION_TEXTEXPORT_XML   = "xml";          // = XML-TextFile                               //$NON-NLS-1$

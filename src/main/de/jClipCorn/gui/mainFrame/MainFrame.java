@@ -16,26 +16,23 @@ import de.jClipCorn.features.actionTree.IActionSourceObject;
 import de.jClipCorn.features.actionTree.menus.impl.ClipMoviePopup;
 import de.jClipCorn.features.actionTree.menus.impl.ClipSeriesPopup;
 import de.jClipCorn.features.log.CCLog;
-import de.jClipCorn.features.serialization.ExportHelper;
 import de.jClipCorn.features.table.filter.customFilter.CustomSearchFilter;
-import de.jClipCorn.gui.frames.compareDatabaseFrame.DatabaseComparator;
 import de.jClipCorn.gui.frames.quickAddMoviesDialog.QuickAddMoviesDialog;
 import de.jClipCorn.gui.frames.showUpdateFrame.ShowUpdateFrame;
 import de.jClipCorn.gui.guiComponents.DatabaseElementPreviewLabel;
 import de.jClipCorn.gui.guiComponents.FileDrop;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.mainFrame.charSelector.ClipCharSortSelector;
+import de.jClipCorn.gui.mainFrame.filterTree.FilterTree;
 import de.jClipCorn.gui.mainFrame.menuBar.MainFrameMenuBar;
+import de.jClipCorn.gui.mainFrame.searchField.SearchField;
 import de.jClipCorn.gui.mainFrame.statusbar.ClipStatusBar;
 import de.jClipCorn.gui.mainFrame.table.ClipTable;
 import de.jClipCorn.gui.mainFrame.table.RowFilterSource;
 import de.jClipCorn.gui.mainFrame.toolbar.ClipToolbar;
-import de.jClipCorn.gui.mainFrame.filterTree.FilterTree;
-import de.jClipCorn.gui.mainFrame.searchField.SearchField;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.UpdateConnector;
-import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.helper.SwingUtils;
 import de.jClipCorn.util.stream.CCStreams;
@@ -310,35 +307,14 @@ public class MainFrame extends JFrame implements CCDBUpdateListener, FileDrop.Li
 
 	@Override
 	public void filesDropped(final File[] files) {
-		if (files.length>0) {
+		if (files.length > 0) {
 
 			if (CCStreams.iterate(files).all(CCFileFormat::isValidMovieFormat)) {
 				SwingUtils.invokeLater(() -> new QuickAddMoviesDialog(this, getMovielist(), files).setVisible(true));
 				return;
 			}
 
-			if (files.length == 1) {
-				String extension = PathFormatter.getExtension(files[0]);
-
-				if (extension.equalsIgnoreCase(ExportHelper.EXTENSION_FULLEXPORT)) {
-					ExportHelper.openFullBackupFile(files[0], MainFrame.getInstance(), movielist);
-					return;
-				}
-				if (extension.equalsIgnoreCase(ExportHelper.EXTENSION_SINGLEEXPORT)) {
-					ExportHelper.openSingleElementFile(files[0], MainFrame.getInstance(), movielist, null);
-					return;
-				}
-				if (extension.equalsIgnoreCase(ExportHelper.EXTENSION_MULTIPLEEXPORT)) {
-					ExportHelper.openMultipleElementFile(files[0], MainFrame.getInstance(), movielist);
-					return;
-				}
-				if (extension.equalsIgnoreCase(ExportHelper.EXTENSION_COMPAREFILE)) {
-					DatabaseComparator.openFile(files[0], MainFrame.getInstance(), movielist);
-					return;
-				}
-			}
-
-			// unknown file dropped
+			if (files.length == 1) ((CCActionTree)CCActionTree.getInstance()).openFile(files[0]);
 		}
 
 		// nothing dropped

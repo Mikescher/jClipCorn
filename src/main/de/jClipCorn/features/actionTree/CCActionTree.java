@@ -20,7 +20,6 @@ import de.jClipCorn.gui.frames.changeScoreFrame.ChangeScoreFrame;
 import de.jClipCorn.gui.frames.changeViewedFrame.ChangeViewedFrame;
 import de.jClipCorn.gui.frames.checkDatabaseFrame.CheckDatabaseFrame;
 import de.jClipCorn.gui.frames.compareDatabaseFrame.CompareDatabaseFrame;
-import de.jClipCorn.gui.frames.compareDatabaseFrame.DatabaseComparator;
 import de.jClipCorn.gui.frames.coverPreviewFrame.CoverPreviewFrame;
 import de.jClipCorn.gui.frames.createSeriesFolderStructureFrame.CreateSeriesFolderStructureFrame;
 import de.jClipCorn.gui.frames.databaseHistoryFrame.DatabaseHistoryFrame;
@@ -299,6 +298,31 @@ public class CCActionTree extends UIActionTree{
 		}
 	}
 
+	public void openFile(File file) {
+		String extension = PathFormatter.getExtension(file.getAbsolutePath());
+
+		if (extension.equalsIgnoreCase(ExportHelper.EXTENSION_FULLEXPORT))
+		{
+			ExportHelper.openFullBackupFile(file, MainFrame.getInstance(), movielist);
+		}
+		else if (extension.equalsIgnoreCase(ExportHelper.EXTENSION_SINGLEEXPORT))
+		{
+			ExportHelper.openSingleElementFile(file, MainFrame.getInstance(), movielist, null);
+		}
+		else if (extension.equalsIgnoreCase(ExportHelper.EXTENSION_MULTIPLEEXPORT))
+		{
+			ExportHelper.openMultipleElementFile(file, MainFrame.getInstance(), movielist);
+		}
+		else if (extension.equalsIgnoreCase(ExportHelper.EXTENSION_CCBACKUP))
+		{
+			CCBXMLReader.openFile(file, MainFrame.getInstance());
+		}
+		else if (extension.equalsIgnoreCase(ExportHelper.EXTENSION_COMPAREFILE))
+		{
+			DialogHelper.showLocalError(MainFrame.getInstance(), "Dialogs.FileTypeDeprecated");
+		}
+	}
+
 	// #######################################################################################################
 	// ############################################### EVENTS ################################################
 	// #######################################################################################################
@@ -318,22 +342,7 @@ public class CCActionTree extends UIActionTree{
 		
 		int returnval = chooser.showOpenDialog(e.SwingOwner);
 		
-		if (returnval == JFileChooser.APPROVE_OPTION) {
-			File file = chooser.getSelectedFile();
-			String extension = PathFormatter.getExtension(file.getAbsolutePath());
-			
-			if (extension.equalsIgnoreCase(ExportHelper.EXTENSION_FULLEXPORT)) {
-				ExportHelper.openFullBackupFile(chooser.getSelectedFile(), MainFrame.getInstance(), movielist);
-			} else if (extension.equalsIgnoreCase(ExportHelper.EXTENSION_SINGLEEXPORT)) {
-				ExportHelper.openSingleElementFile(chooser.getSelectedFile(), MainFrame.getInstance(), movielist, null);
-			} else if (extension.equalsIgnoreCase(ExportHelper.EXTENSION_MULTIPLEEXPORT)) {
-				ExportHelper.openMultipleElementFile(chooser.getSelectedFile(), MainFrame.getInstance(), movielist);
-			} else if (extension.equalsIgnoreCase(ExportHelper.EXTENSION_CCBACKUP)) {
-				CCBXMLReader.openFile(chooser.getSelectedFile(), MainFrame.getInstance());
-			} else if (extension.equalsIgnoreCase(ExportHelper.EXTENSION_COMPAREFILE)) {
-				DatabaseComparator.openFile(chooser.getSelectedFile(), MainFrame.getInstance(), movielist);
-			}
-		}
+		if (returnval == JFileChooser.APPROVE_OPTION) openFile(chooser.getSelectedFile());
 	}
 
 	private void onClickFileRestart(CCTreeActionEvent e) {

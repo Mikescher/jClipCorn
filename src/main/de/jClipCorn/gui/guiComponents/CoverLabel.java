@@ -69,6 +69,10 @@ public class CoverLabel extends JLabel implements MouseListener {
 		super.setIcon(null);
 	}
 
+	protected void setInternalIntermediateIconDirect(Icon icon) {
+		super.setIcon(icon);
+	}
+
 	@Override
 	public void setBounds(int x, int y, int width, int height) {
 	    super.setBounds(

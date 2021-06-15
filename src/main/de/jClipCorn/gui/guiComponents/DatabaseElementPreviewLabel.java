@@ -9,6 +9,7 @@ import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.helper.ImageUtilities;
 import de.jClipCorn.util.helper.SwingUtils;
+import de.jClipCorn.util.helper.ThreadUtils;
 
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
@@ -133,21 +134,21 @@ public class DatabaseElementPreviewLabel extends CoverLabel {
 			boolean bNew = (tcNew/4)%2 == 0;
 			if (bOld != bNew) {
 				if (bNew)
-					setIcon(Resources.ICN_COVER_ERROR_ON.get());
+					setInternalIntermediateIconDirect(Resources.ICN_COVER_ERROR_ON.get());
 				else
-					setIcon(Resources.ICN_COVER_ERROR_OFF.get());
+					setInternalIntermediateIconDirect(Resources.ICN_COVER_ERROR_OFF.get());
 			}
 			break;
 			
 		case MODE_LOADING:
-			if (tcNew % 16 ==  0) setIcon(Resources.ICN_COVER_LOADING_P7.get());
-			if (tcNew % 16 ==  2) setIcon(Resources.ICN_COVER_LOADING_P0.get());
-			if (tcNew % 16 ==  4) setIcon(Resources.ICN_COVER_LOADING_P1.get());
-			if (tcNew % 16 ==  6) setIcon(Resources.ICN_COVER_LOADING_P2.get());
-			if (tcNew % 16 ==  8) setIcon(Resources.ICN_COVER_LOADING_P3.get());
-			if (tcNew % 16 == 10) setIcon(Resources.ICN_COVER_LOADING_P4.get());
-			if (tcNew % 16 == 12) setIcon(Resources.ICN_COVER_LOADING_P5.get());
-			if (tcNew % 16 == 14) setIcon(Resources.ICN_COVER_LOADING_P6.get());
+			if (tcNew % 16 ==  0) setInternalIntermediateIconDirect(Resources.ICN_COVER_LOADING_P7.get());
+			if (tcNew % 16 ==  2) setInternalIntermediateIconDirect(Resources.ICN_COVER_LOADING_P0.get());
+			if (tcNew % 16 ==  4) setInternalIntermediateIconDirect(Resources.ICN_COVER_LOADING_P1.get());
+			if (tcNew % 16 ==  6) setInternalIntermediateIconDirect(Resources.ICN_COVER_LOADING_P2.get());
+			if (tcNew % 16 ==  8) setInternalIntermediateIconDirect(Resources.ICN_COVER_LOADING_P3.get());
+			if (tcNew % 16 == 10) setInternalIntermediateIconDirect(Resources.ICN_COVER_LOADING_P4.get());
+			if (tcNew % 16 == 12) setInternalIntermediateIconDirect(Resources.ICN_COVER_LOADING_P5.get());
+			if (tcNew % 16 == 14) setInternalIntermediateIconDirect(Resources.ICN_COVER_LOADING_P6.get());
 			break;
 		}
 	}
@@ -265,8 +266,8 @@ public class DatabaseElementPreviewLabel extends CoverLabel {
 					super.setCoverDirect(v_image_normal, v_image_original);
 					return; 
 				} // fast loading
-				
-				try { Thread.sleep(0); } catch (InterruptedException e) { /**/ }
+
+				ThreadUtils.safeSleep(0);
 			}
 
 			timerCounter = 0;
@@ -289,7 +290,7 @@ public class DatabaseElementPreviewLabel extends CoverLabel {
 			i2 = getImageWithOverlay(el, true);
 			i3 = i2;
 		}
-		
+
 		if (element != el) return;
 		
 		v_image_original = i1;

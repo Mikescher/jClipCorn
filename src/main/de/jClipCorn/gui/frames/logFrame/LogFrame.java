@@ -27,11 +27,15 @@ import java.util.HashMap;
 
 public class LogFrame extends JFrame implements CCLogChangedListener
 {
+	private final CCMovieList _movielist;
+
 	private Timer liveDisplayTimer;
 
-	public LogFrame(Component owner)
+	public LogFrame(Component owner, CCMovieList movielist)
 	{
 		super();
+
+		this._movielist = movielist;
 
 		initComponents();
 		postInit();
@@ -118,13 +122,11 @@ public class LogFrame extends JFrame implements CCLogChangedListener
 	}
 
 	private void showCacheDistribution() {
-		var ml = CCMovieList.getInstance();
-
 		var caches = new ArrayList<ICalculationCache>();
-		caches.add(ml.getCache());
-		for (var v: ml.iteratorElements()) caches.add(v.getCache());
-		for (var v: ml.iteratorSeasons())  caches.add(v.getCache());
-		for (var v: ml.iteratorEpisodes()) caches.add(v.getCache());
+		caches.add(_movielist.getCache());
+		for (var v: _movielist.iteratorElements()) caches.add(v.getCache());
+		for (var v: _movielist.iteratorSeasons())  caches.add(v.getCache());
+		for (var v: _movielist.iteratorEpisodes()) caches.add(v.getCache());
 
 		var counter = new HashMap<String, Integer>();
 

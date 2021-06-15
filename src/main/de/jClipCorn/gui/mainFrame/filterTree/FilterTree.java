@@ -35,7 +35,7 @@ import java.util.Map;
 public class FilterTree extends AbstractFilterTree {
 	private static final long serialVersionUID = 592519777667038909L;
 
-	private final CustomFilterList customFilterList = new CustomFilterList();
+	private final CustomFilterList customFilterList;
 	
 	private ClipTable table;
 	private final CCMovieList movielist;
@@ -45,6 +45,7 @@ public class FilterTree extends AbstractFilterTree {
 	
 	public FilterTree(CCMovieList list) {
 		super(list);
+		this.customFilterList = new CustomFilterList(list);
 		this.movielist = list;
 		
 		this.tree.ActionMode = SimpletreeActionMode.OnClick;
@@ -137,72 +138,72 @@ public class FilterTree extends AbstractFilterTree {
 	}
 	
 	private void initViewed(DefaultMutableTreeNode parent) {
-		addNodeF(parent, Resources.ICN_SIDEBAR_VIEWED, LocaleBundle.getString("FilterTree.Viewed.Viewed"), () -> CustomExtendedViewedFilter.create(ExtendedViewedStateType.VIEWED)); //$NON-NLS-1$
+		addNodeF(parent, Resources.ICN_SIDEBAR_VIEWED, LocaleBundle.getString("FilterTree.Viewed.Viewed"), () -> CustomExtendedViewedFilter.create(movielist, ExtendedViewedStateType.VIEWED)); //$NON-NLS-1$
 
 		if (CCProperties.getInstance().PROP_SHOW_PARTIAL_VIEWED_STATE.getValue()) 
-			addNodeF(parent, Resources.ICN_SIDEBAR_PARTIALLY, LocaleBundle.getString("FilterTree.Viewed.Partial"), () -> CustomExtendedViewedFilter.create(ExtendedViewedStateType.PARTIAL_VIEWED)); //$NON-NLS-1$
+			addNodeF(parent, Resources.ICN_SIDEBAR_PARTIALLY, LocaleBundle.getString("FilterTree.Viewed.Partial"), () -> CustomExtendedViewedFilter.create(movielist, ExtendedViewedStateType.PARTIAL_VIEWED)); //$NON-NLS-1$
 		
-		addNodeF(parent, Resources.ICN_SIDEBAR_UNVIEWED, LocaleBundle.getString("FilterTree.Viewed.Unviewed"), () -> CustomExtendedViewedFilter.create(ExtendedViewedStateType.NOT_VIEWED)); //$NON-NLS-1$
+		addNodeF(parent, Resources.ICN_SIDEBAR_UNVIEWED, LocaleBundle.getString("FilterTree.Viewed.Unviewed"), () -> CustomExtendedViewedFilter.create(movielist, ExtendedViewedStateType.NOT_VIEWED)); //$NON-NLS-1$
 
-		addNodeF(parent, Resources.ICN_SIDEBAR_LATER, LocaleBundle.getString("FilterTree.Viewed.Later"), () -> CustomExtendedViewedFilter.create(ExtendedViewedStateType.MARKED_FOR_LATER)); //$NON-NLS-1$
+		addNodeF(parent, Resources.ICN_SIDEBAR_LATER, LocaleBundle.getString("FilterTree.Viewed.Later"), () -> CustomExtendedViewedFilter.create(movielist, ExtendedViewedStateType.MARKED_FOR_LATER)); //$NON-NLS-1$
 
-		addNodeF(parent, Resources.ICN_SIDEBAR_AGAIN, LocaleBundle.getString("FilterTree.Viewed.Again"), () -> CustomExtendedViewedFilter.create(ExtendedViewedStateType.MARKED_FOR_AGAIN)); //$NON-NLS-1$
+		addNodeF(parent, Resources.ICN_SIDEBAR_AGAIN, LocaleBundle.getString("FilterTree.Viewed.Again"), () -> CustomExtendedViewedFilter.create(movielist, ExtendedViewedStateType.MARKED_FOR_AGAIN)); //$NON-NLS-1$
 
-		addNodeF(parent, Resources.ICN_SIDEBAR_NEVER, LocaleBundle.getString("FilterTree.Viewed.Never"), () -> CustomExtendedViewedFilter.create(ExtendedViewedStateType.MARKED_FOR_NEVER)); //$NON-NLS-1$
+		addNodeF(parent, Resources.ICN_SIDEBAR_NEVER, LocaleBundle.getString("FilterTree.Viewed.Never"), () -> CustomExtendedViewedFilter.create(movielist, ExtendedViewedStateType.MARKED_FOR_NEVER)); //$NON-NLS-1$
 	}
 	
 	private void initFSK(DefaultMutableTreeNode parent) {
 		for (final CCFSK fsk : CCFSK.getWrapper().allDisplayValuesSorted()) {
-			addNodeF(parent, fsk.getIcon(), fsk.asString(), () -> CustomFSKFilter.create(fsk));
+			addNodeF(parent, fsk.getIcon(), fsk.asString(), () -> CustomFSKFilter.create(movielist, fsk));
 		}
 	}
 
 	private void initQuality(DefaultMutableTreeNode parent) {
 		for (final CCQualityCategoryType qual : CCQualityCategoryType.getWrapper().allDisplayValuesSorted()) {
-			addNodeF(parent, qual.getIcon(), qual.asString(), () -> CustomQualityCategoryTypeFilter.create(qual));
+			addNodeF(parent, qual.getIcon(), qual.asString(), () -> CustomQualityCategoryTypeFilter.create(movielist, qual));
 		}
 	}
 
 	private void initScore(DefaultMutableTreeNode parent) {
 		for (final CCUserScore score : CCUserScore.getWrapper().allDisplayValuesSorted()) {
-			addNodeF(parent, score.getIcon(), score.asString(), () -> CustomUserScoreFilter.create(score));
+			addNodeF(parent, score.getIcon(), score.asString(), () -> CustomUserScoreFilter.create(movielist, score));
 		}
 	}
 	
 	private void initOnlineScore(DefaultMutableTreeNode parent) {
 		for (final CCOnlineScore oscore : CCOnlineScore.getWrapper().allDisplayValuesSorted()) {
-			addNodeF(parent, oscore.getIcon(), oscore.asInt()/2.0+"", () -> CustomOnlinescoreFilter.create(oscore)); //$NON-NLS-1$
+			addNodeF(parent, oscore.getIcon(), oscore.asInt()/2.0+"", () -> CustomOnlinescoreFilter.create(movielist, oscore)); //$NON-NLS-1$
 		}
 	}
 	
 	private void initFormat(DefaultMutableTreeNode parent) {
 		for (final CCFileFormat format : CCFileFormat.getWrapper().allDisplayValuesSorted()) {
-			addNodeF(parent, format.getIcon(), format.asString(), () -> CustomFormatFilter.create(format));
+			addNodeF(parent, format.getIcon(), format.asString(), () -> CustomFormatFilter.create(movielist, format));
 		}
 	}
 	
 	private void initTags(DefaultMutableTreeNode parent) {
 		for (int i = 0; i < CCTagList.ACTIVETAGS; i++) {
 			final int curr = i;
-			addNodeF(parent, CCTagList.getOnIcon(i), CCTagList.getName(i), () -> CustomTagFilter.create(curr));
+			addNodeF(parent, CCTagList.getOnIcon(i), CCTagList.getName(i), () -> CustomTagFilter.create(movielist, curr));
 		}
 	}
 	
 	private void initLanguage(DefaultMutableTreeNode parent) {
 		for (final CCDBLanguage language : CCDBLanguage.getWrapper().allDisplayValuesSorted()) {
-			addNodeF(parent, language.getIcon(), language.asString(), () -> CustomLanguageFilter.create(language));
+			addNodeF(parent, language.getIcon(), language.asString(), () -> CustomLanguageFilter.create(movielist, language));
 		}
 	}
 	
 	private void initTyp(DefaultMutableTreeNode parent) {
 		for (final CCDBElementTyp typ : CCDBElementTyp.getWrapper().allDisplayValuesSorted()) {
-			addNodeF(parent, typ.getIcon(), typ.asString(), () -> CustomTypFilter.create(typ));
+			addNodeF(parent, typ.getIcon(), typ.asString(), () -> CustomTypFilter.create(movielist, typ));
 		}
 	}
 	
 	private void initZyklus(DefaultMutableTreeNode parent) {
 		for (final String zyklus : movielist.getZyklusList()) {
-			addNodeF(parent, (Icon)null, zyklus, () -> CustomZyklusFilter.create(zyklus));
+			addNodeF(parent, (Icon)null, zyklus, () -> CustomZyklusFilter.create(movielist, zyklus));
 		}
 	}
 	
@@ -218,7 +219,7 @@ public class FilterTree extends AbstractFilterTree {
 				if (pp == null) continue;
 				
 				groups_list.remove(group);
-				DefaultMutableTreeNode n = addNodeF(pp, (Icon)null, group.Name, () -> CustomGroupFilter.create(group, true));
+				DefaultMutableTreeNode n = addNodeF(pp, (Icon)null, group.Name, () -> CustomGroupFilter.create(movielist, group, true));
 				groups_done.put(group.Name, n);
 			}
 			
@@ -235,20 +236,20 @@ public class FilterTree extends AbstractFilterTree {
 		genres.sort(CCGenre.getTextComparator());
 		
 		for (final CCGenre genre : genres) {
-			addNodeF(parent, (Icon)null, genre.asString(), () -> CustomGenreFilter.create(genre));
+			addNodeF(parent, (Icon)null, genre.asString(), () -> CustomGenreFilter.create(movielist, genre));
 		}
 	}
 	
 	private void initYear(DefaultMutableTreeNode parent) {
 		for (final Integer year : movielist.getYearList()) {
-			addNodeF(parent, (Icon)null, year+"", () -> CustomYearFilter.create(year)); //$NON-NLS-1$
+			addNodeF(parent, (Icon)null, year+"", () -> CustomYearFilter.create(movielist, year)); //$NON-NLS-1$
 		}
 	}
 	
 	private void initCustom(DefaultMutableTreeNode parent) {
 		for (int i = 0; i < customFilterList.size(); i++) {
 			final CustomFilterObject fo = customFilterList.get(i);
-			addNodeF(parent, Resources.ICN_SIDEBAR_CUSTOM, fo.getName(), () -> fo.getFilter());
+			addNodeF(parent, Resources.ICN_SIDEBAR_CUSTOM, fo.getName(), fo::getFilter);
 		}
 		
 		addNode(parent, Resources.ICN_SIDEBAR_CUSTOM, LocaleBundle.getString("FilterTree.Custom.OrganizeFilter"), e -> onOrganizeCustomFilterClicked()); //$NON-NLS-1$
@@ -268,7 +269,7 @@ public class FilterTree extends AbstractFilterTree {
 	}
 	
 	private void onNewCustomFilterClicked() {
-		CustomFilterObject cfo = new CustomFilterObject(CustomFilterList.NAME_TEMPORARY, new CustomAndOperator());
+		CustomFilterObject cfo = new CustomFilterObject(CustomFilterList.NAME_TEMPORARY, new CustomAndOperator(movielist));
 		
 		TableCustomFilter tcf = table.getRowFilter();
 		if (tcf != null) {
@@ -276,9 +277,9 @@ public class FilterTree extends AbstractFilterTree {
 			AbstractCustomFilter acf = tcf.getFilter();
 			
 			if (acf instanceof CustomAndOperator) {
-				cfo = new CustomFilterObject(CustomFilterList.NAME_TEMPORARY, ((CustomAndOperator)tcf.getFilter().createCopy()));
+				cfo = new CustomFilterObject(CustomFilterList.NAME_TEMPORARY, ((CustomAndOperator)tcf.getFilter().createCopy(movielist)));
 			} else {
-				cfo = new CustomFilterObject(CustomFilterList.NAME_TEMPORARY, new CustomAndOperator(tcf.getFilter().createCopy()));
+				cfo = new CustomFilterObject(CustomFilterList.NAME_TEMPORARY, new CustomAndOperator(movielist, tcf.getFilter().createCopy(movielist)));
 			}
 			
 		}
@@ -308,7 +309,7 @@ public class FilterTree extends AbstractFilterTree {
 		{
 			if (e.ctrlDown) {
 				
-				CustomAndOperator op = new CustomAndOperator();
+				CustomAndOperator op = new CustomAndOperator(movielist);
 				
 				TableCustomFilter tcf = table.getRowFilter();
 				if (tcf != null) {
@@ -316,9 +317,9 @@ public class FilterTree extends AbstractFilterTree {
 					AbstractCustomFilter acf = tcf.getFilter();
 					
 					if (acf instanceof CustomAndOperator) {
-						op = ((CustomAndOperator)tcf.getFilter().createCopy());
+						op = ((CustomAndOperator)tcf.getFilter().createCopy(movielist));
 					} else {
-						op = new CustomAndOperator(tcf.getFilter().createCopy());
+						op = new CustomAndOperator(movielist, tcf.getFilter().createCopy(movielist));
 					}
 					
 				}

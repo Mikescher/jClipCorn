@@ -16,7 +16,11 @@ public class CustomTitleFilter extends AbstractCustomFilter {
 	
 	private StringMatchType stringMatch = StringMatchType.SM_INCLUDES;
 	private boolean caseSensitive = true;
-	
+
+	public CustomTitleFilter(CCMovieList ml) {
+		super(ml);
+	}
+
 	@Override
 	public boolean includes(ICCDatabaseStructureElement e) {
 		String title = e.title().get();
@@ -83,17 +87,17 @@ public class CustomTitleFilter extends AbstractCustomFilter {
 	}
 	
 	@Override
-	public AbstractCustomFilter createNew() {
-		return new CustomTitleFilter();
+	public AbstractCustomFilter createNew(CCMovieList ml) {
+		return new CustomTitleFilter(ml);
 	}
 
 	@Override
 	public CustomFilterConfig[] createConfig(CCMovieList ml) {
 		return new CustomFilterConfig[]
 		{
-			new CustomFilterEnumOptionConfig<>(() -> stringMatch, p -> stringMatch = p, StringMatchType.getWrapper()),
-			new CustomFilterStringConfig(() -> searchString, p -> searchString = p),
-			new CustomFilterBoolConfig(() -> caseSensitive, p -> caseSensitive = p, LocaleBundle.getString("FilterTree.Custom.FilterFrames.CaseSensitive")), //$NON-NLS-1$
+			new CustomFilterEnumOptionConfig<>(ml, () -> stringMatch, p -> stringMatch = p, StringMatchType.getWrapper()),
+			new CustomFilterStringConfig(ml, () -> searchString, p -> searchString = p),
+			new CustomFilterBoolConfig(ml, () -> caseSensitive, p -> caseSensitive = p, LocaleBundle.getString("FilterTree.Custom.FilterFrames.CaseSensitive")), //$NON-NLS-1$
 		};
 	}
 }

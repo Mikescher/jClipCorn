@@ -1,5 +1,6 @@
 package de.jClipCorn.gui.mainFrame.filterTree;
 
+import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.features.table.filter.customFilter.operators.CustomOperator;
 
 public class CustomFilterObject {
@@ -36,8 +37,8 @@ public class CustomFilterObject {
 		return name;
 	}
 
-	public CustomFilterObject copy() {
-		return new CustomFilterObject(name, (CustomOperator)filter.createCopy());
+	public CustomFilterObject copy(CCMovieList ml) {
+		return new CustomFilterObject(name, (CustomOperator)filter.createCopy(ml));
 	}
 
 	public void apply(CustomFilterObject cfo) {

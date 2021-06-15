@@ -1,17 +1,18 @@
 package de.jClipCorn.features.table.filter.customFilter.operators;
 
+import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.ICCDatabaseStructureElement;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.features.table.filter.AbstractCustomFilter;
 
 public class CustomOrOperator extends CustomOperator {
 
-	public CustomOrOperator() {
-		super();
+	public CustomOrOperator(CCMovieList ml) {
+		super(ml);
 	}
 	
-	public CustomOrOperator(AbstractCustomFilter c1, AbstractCustomFilter c2) {
-		super();
+	public CustomOrOperator(CCMovieList ml, AbstractCustomFilter c1, AbstractCustomFilter c2) {
+		super(ml);
 		add(c1);
 		add(c2);
 	}
@@ -43,7 +44,7 @@ public class CustomOrOperator extends CustomOperator {
 	}
 
 	@Override
-	public AbstractCustomFilter createNew() {
-		return new CustomOrOperator();
+	public AbstractCustomFilter createNew(CCMovieList ml) {
+		return new CustomOrOperator(ml);
 	}
 }

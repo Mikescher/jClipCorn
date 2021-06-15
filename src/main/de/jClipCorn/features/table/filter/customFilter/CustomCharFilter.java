@@ -15,7 +15,11 @@ public class CustomCharFilter extends AbstractCustomFilter {
 	private final static String[] EXCLUSIONS = {"Der", "Die", "Das", "The", "Den", "Le"};
 	
 	private String charset = ""; //$NON-NLS-1$
-	
+
+	public CustomCharFilter(CCMovieList ml) {
+		super(ml);
+	}
+
 	@Override
 	public boolean includes(ICCDatabaseStructureElement e) {
 		String first = e.title().get();
@@ -60,12 +64,12 @@ public class CustomCharFilter extends AbstractCustomFilter {
 	}
 
 	@Override
-	public AbstractCustomFilter createNew() {
-		return new CustomCharFilter();
+	public AbstractCustomFilter createNew(CCMovieList ml) {
+		return new CustomCharFilter(ml);
 	}
 
-	public static CustomCharFilter create(String data) {
-		CustomCharFilter f = new CustomCharFilter();
+	public static CustomCharFilter create(CCMovieList ml, String data) {
+		CustomCharFilter f = new CustomCharFilter(ml);
 		f.charset = data;
 		return f;
 	}
@@ -74,7 +78,7 @@ public class CustomCharFilter extends AbstractCustomFilter {
 	public CustomFilterConfig[] createConfig(CCMovieList ml) {
 		return new CustomFilterConfig[]
 		{
-			new CustomFilterCharConfig(() -> charset, a -> charset = a),
+			new CustomFilterCharConfig(ml, () -> charset, a -> charset = a),
 		};
 	}
 }

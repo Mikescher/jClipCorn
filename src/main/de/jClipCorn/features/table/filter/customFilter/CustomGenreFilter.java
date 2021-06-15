@@ -12,7 +12,11 @@ import de.jClipCorn.features.table.filter.filterSerialization.FilterSerializatio
 
 public class CustomGenreFilter extends AbstractCustomDatabaseElementFilter {
 	private CCGenre genre = CCGenre.GENRE_000;
-	
+
+	public CustomGenreFilter(CCMovieList ml) {
+		super(ml);
+	}
+
 	@Override
 	public boolean includes(CCDatabaseElement e) {
 		return e.getGenres().includes(genre);
@@ -40,12 +44,12 @@ public class CustomGenreFilter extends AbstractCustomDatabaseElementFilter {
 	}
 	
 	@Override
-	public AbstractCustomFilter createNew() {
-		return new CustomGenreFilter();
+	public AbstractCustomFilter createNew(CCMovieList ml) {
+		return new CustomGenreFilter(ml);
 	}
 
-	public static CustomGenreFilter create(CCGenre data) {
-		CustomGenreFilter f = new CustomGenreFilter();
+	public static CustomGenreFilter create(CCMovieList ml, CCGenre data) {
+		CustomGenreFilter f = new CustomGenreFilter(ml);
 		f.genre = data;
 		return f;
 	}
@@ -54,7 +58,7 @@ public class CustomGenreFilter extends AbstractCustomDatabaseElementFilter {
 	public CustomFilterConfig[] createConfig(CCMovieList ml) {
 		return new CustomFilterConfig[]
 		{
-			new CustomFilterEnumChooserConfig<>(() -> genre, p -> genre = p, CCGenre.getWrapper()),
+			new CustomFilterEnumChooserConfig<>(ml, () -> genre, p -> genre = p, CCGenre.getWrapper()),
 		};
 	}
 }

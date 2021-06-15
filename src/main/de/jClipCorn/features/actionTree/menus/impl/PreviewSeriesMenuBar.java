@@ -23,7 +23,7 @@ public class PreviewSeriesMenuBar extends ClipMenuBar {
 
 	public PreviewSeriesMenuBar(PreviewSeriesFrame f, CCSeries s, Func0to0 postAction)
 	{
-		super(postAction);
+		super(s.getMovieList(), postAction);
 		_frame = f;
 		_series = s;
 		init();

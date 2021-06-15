@@ -1,21 +1,22 @@
 package de.jClipCorn.features.table.filter.filterConfig;
 
-import java.util.Random;
-
-import javax.swing.JComponent;
-import javax.swing.JTextField;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-
+import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.util.lambda.Func0to1;
 import de.jClipCorn.util.lambda.Func1to0;
+
+import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import java.util.Random;
 
 public class CustomFilterStringConfig extends CustomFilterConfig {
 
 	private final Func0to1<String> valueGetter;
 	private final Func1to0<String> valueSetter;
 	
-	public CustomFilterStringConfig(Func0to1<String> get, Func1to0<String> set) {
+	public CustomFilterStringConfig(CCMovieList ml, Func0to1<String> get, Func1to0<String> set) {
+		super(ml);
+
 		valueGetter = get;
 		valueSetter = set;
 	}

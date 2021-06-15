@@ -97,7 +97,7 @@ public abstract class AutomaticSettingsFrame extends JFrame {
 		btnOk.addActionListener(arg0 ->
 		{
 			if (! validateValues()) return;
-			if (CCProperties.getInstance().ARG_READONLY) return;
+			if (owner.getMovielist().isReadonly()) return;
 
 			if (! Main.DEBUG) {
 				DialogHelper.showDispatchInformation(AutomaticSettingsFrame.this, LocaleBundle.getString("Settingsframe.informationDlg.caption"), LocaleBundle.getString("Settingsframe.informationDlg.text")); //$NON-NLS-1$ //$NON-NLS-2$
@@ -110,7 +110,7 @@ public abstract class AutomaticSettingsFrame extends JFrame {
 			dispose();
 		});
 		pnlBottom.add(btnOk, "4, 2, fill, top"); //$NON-NLS-1$
-		btnOk.setEnabled(!CCProperties.getInstance().ARG_READONLY);
+		btnOk.setEnabled(!owner.getMovielist().isReadonly());
 		tabOrder.add(btnOk);
 		
 		btnCancel = new JButton(LocaleBundle.getString("UIGeneric.btnCancel.text")); //$NON-NLS-1$

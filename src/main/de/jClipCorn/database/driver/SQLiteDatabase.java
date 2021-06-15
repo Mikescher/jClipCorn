@@ -25,6 +25,12 @@ public class SQLiteDatabase extends GenericDatabase {
 	private final static String DRIVER = "org.sqlite.JDBC";
 	private final static String PROTOCOL = "jdbc:sqlite:";
 
+	private final boolean _readonly;
+
+	public SQLiteDatabase(boolean ro) {
+		_readonly = ro;
+	}
+
 	public String getDatabaseFilePath(String dbPath) {
 		return PathFormatter.combine(dbPath, dbPath + ".db");
 	}
@@ -77,7 +83,9 @@ public class SQLiteDatabase extends GenericDatabase {
 			}
 			
 			connection = DriverManager.getConnection(PROTOCOL + dbFilePath);
+
 			connection.setAutoCommit(true);
+			connection.setReadOnly(_readonly);
 
 			TurbineParser turb = new TurbineParser(SimpleFileUtils.readTextResource(xmlResPath, getClass()));
 			turb.parse();
@@ -133,6 +141,7 @@ public class SQLiteDatabase extends GenericDatabase {
 		connection = DriverManager.getConnection(PROTOCOL + dbFilePath);
 		
 		connection.setAutoCommit(true);
+		connection.setReadOnly(_readonly);
 
 		// Set pragmas
 		executeSQLThrow("PRAGMA recursive_triggers = true"); // otherwise "REPLACE INTO x" doesn't work with the history trigger

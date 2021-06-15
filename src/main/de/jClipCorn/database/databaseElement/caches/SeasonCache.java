@@ -1,5 +1,6 @@
 package de.jClipCorn.database.databaseElement.caches;
 
+import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCSeason;
 
 @SuppressWarnings("HardCodedStringLiteral")
@@ -37,6 +38,11 @@ public class SeasonCache extends CalculationCache<CCSeason>
 	protected CCSeason getSource()
 	{
 		return source;
+	}
+
+	@Override
+	protected CCMovieList getMovieList() {
+		return source.getMovieList();
 	}
 
 	@Override

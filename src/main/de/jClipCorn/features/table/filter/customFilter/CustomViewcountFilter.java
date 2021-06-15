@@ -16,7 +16,11 @@ import de.jClipCorn.util.datatypes.CCIntArea;
 
 public class CustomViewcountFilter extends AbstractCustomStructureElementFilter {
 	private CCIntArea area = new CCIntArea(1, 1, DecimalSearchType.EXACT);
-	
+
+	public CustomViewcountFilter(CCMovieList ml) {
+		super(ml);
+	}
+
 	@Override
 	public boolean includes(CCMovie m) {
 		return area.contains(m.ViewedHistory.get().count());
@@ -94,12 +98,12 @@ public class CustomViewcountFilter extends AbstractCustomStructureElementFilter 
 	}
 
 	@Override
-	public AbstractCustomFilter createNew() {
-		return new CustomViewcountFilter();
+	public AbstractCustomFilter createNew(CCMovieList ml) {
+		return new CustomViewcountFilter(ml);
 	}
 
-	public static CustomViewcountFilter create(Integer data) {
-		CustomViewcountFilter f = new CustomViewcountFilter();
+	public static CustomViewcountFilter create(CCMovieList ml, Integer data) {
+		CustomViewcountFilter f = new CustomViewcountFilter(ml);
 		f.area.setExact(data);
 		return f;
 	}
@@ -108,7 +112,7 @@ public class CustomViewcountFilter extends AbstractCustomStructureElementFilter 
 	public CustomFilterConfig[] createConfig(CCMovieList ml) {
 		return new CustomFilterConfig[]
 		{
-			new CustomFilterIntAreaConfig(() -> area, a -> area = a, 0, null),
+			new CustomFilterIntAreaConfig(ml, () -> area, a -> area = a, 0, null),
 		};
 	}
 }

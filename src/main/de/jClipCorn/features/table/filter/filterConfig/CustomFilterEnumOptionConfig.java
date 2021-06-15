@@ -1,23 +1,19 @@
 package de.jClipCorn.features.table.filter.filterConfig;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.Random;
-
-import javax.swing.ButtonGroup;
-import javax.swing.JComponent;
-import javax.swing.JPanel;
-import javax.swing.JRadioButton;
-
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.FormSpecs;
 import com.jgoodies.forms.layout.RowSpec;
-
+import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.util.enumextension.ContinoousEnum;
 import de.jClipCorn.util.enumextension.EnumWrapper;
 import de.jClipCorn.util.lambda.Func0to1;
 import de.jClipCorn.util.lambda.Func1to0;
+
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Random;
 
 public class CustomFilterEnumOptionConfig<T extends ContinoousEnum<T>> extends CustomFilterConfig {
 
@@ -25,7 +21,9 @@ public class CustomFilterEnumOptionConfig<T extends ContinoousEnum<T>> extends C
 	private final Func1to0<T> valueSetter;
 	private final EnumWrapper<T> enumWrapper;
 	
-	public CustomFilterEnumOptionConfig(Func0to1<T> get, Func1to0<T> set, EnumWrapper<T> wrap) {
+	public CustomFilterEnumOptionConfig(CCMovieList ml, Func0to1<T> get, Func1to0<T> set, EnumWrapper<T> wrap) {
+		super(ml);
+
 		valueGetter = get;
 		valueSetter = set;
 		enumWrapper = wrap;

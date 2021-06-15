@@ -1,10 +1,15 @@
 package de.jClipCorn.features.table.filter.customFilter.operators;
 
+import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.ICCDatabaseStructureElement;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.features.table.filter.AbstractCustomFilter;
 
 public class CustomNorOperator extends CustomOperator {
+	public CustomNorOperator(CCMovieList ml) {
+		super(ml);
+	}
+
 	@Override
 	public boolean includes(ICCDatabaseStructureElement e) {
 		boolean result = false;
@@ -32,7 +37,7 @@ public class CustomNorOperator extends CustomOperator {
 	}
 
 	@Override
-	public AbstractCustomFilter createNew() {
-		return new CustomNorOperator();
+	public AbstractCustomFilter createNew(CCMovieList ml) {
+		return new CustomNorOperator(ml);
 	}
 }

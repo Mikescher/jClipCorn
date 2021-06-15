@@ -1,5 +1,6 @@
 package de.jClipCorn.features.table.filter.filterConfig;
 
+import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.gui.guiComponents.enumComboBox.CCEnumComboBox;
 import de.jClipCorn.util.enumextension.ContinoousEnum;
 import de.jClipCorn.util.enumextension.EnumWrapper;
@@ -15,7 +16,9 @@ public class CustomFilterEnumChooserConfig<T extends ContinoousEnum<T>> extends 
 	private final Func1to0<T> valueSetter;
 	private final EnumWrapper<T> enumWrapper;
 	
-	public CustomFilterEnumChooserConfig(Func0to1<T> get, Func1to0<T> set, EnumWrapper<T> wrap) {
+	public CustomFilterEnumChooserConfig(CCMovieList ml, Func0to1<T> get, Func1to0<T> set, EnumWrapper<T> wrap) {
+		super(ml);
+
 		valueGetter = get;
 		valueSetter = set;
 		enumWrapper = wrap;

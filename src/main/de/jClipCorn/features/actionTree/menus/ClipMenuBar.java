@@ -1,5 +1,6 @@
 package de.jClipCorn.features.actionTree.menus;
 
+import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReferenceList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCSingleOnlineReference;
 import de.jClipCorn.features.actionTree.ActionSource;
@@ -11,10 +12,10 @@ import de.jClipCorn.gui.frames.previewSeriesFrame.PreviewSeriesFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.MultiSizeIconRef;
 import de.jClipCorn.gui.resources.Resources;
-import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.http.HTTPUtilities;
 import de.jClipCorn.util.lambda.Func0to0;
 import de.jClipCorn.util.listener.ActionCallbackListener;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
@@ -28,12 +29,14 @@ public abstract class ClipMenuBar extends JMenuBar {
 
 	private final List<CCActionElement> actions = new ArrayList<>();
 
-	protected final Func0to0 _postAction;
+	private final Func0to0 _postAction;
+	private final CCMovieList _movielist;
 
-	public ClipMenuBar(Func0to0 postAction) {
+	public ClipMenuBar(CCMovieList ml, Func0to0 postAction) {
 		super();
 
 		_postAction = (postAction==null) ? Func0to0.NOOP : postAction;
+		_movielist  = ml;
 	}
 
 	protected abstract void init();
@@ -64,12 +67,12 @@ public abstract class ClipMenuBar extends JMenuBar {
 
 		node.addActionListener(e -> {
 			if (action == null) return;
-			if (readOnlyRestriction && CCProperties.getInstance().ARG_READONLY) return;
+			if (readOnlyRestriction && _movielist.isReadonly()) return;
 			action.invoke();
 			_postAction.invoke();
 		});
 
-		if (readOnlyRestriction && CCProperties.getInstance().ARG_READONLY) node.setEnabled(false);
+		if (readOnlyRestriction && _movielist.isReadonly()) node.setEnabled(false);
 
 		lastMaster.add(node);
 	}
@@ -84,12 +87,12 @@ public abstract class ClipMenuBar extends JMenuBar {
 
 		node.addActionListener(e -> {
 			if (action == null) return;
-			if (readOnlyRestriction && CCProperties.getInstance().ARG_READONLY) return;
+			if (readOnlyRestriction && _movielist.isReadonly()) return;
 			action.invoke();
 			_postAction.invoke();
 		});
 
-		if (readOnlyRestriction && CCProperties.getInstance().ARG_READONLY) node.setEnabled(false);
+		if (readOnlyRestriction && _movielist.isReadonly()) node.setEnabled(false);
 
 		lastSubMaster.add(node);
 	}

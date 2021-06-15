@@ -11,7 +11,11 @@ import de.jClipCorn.features.table.filter.filterSerialization.FilterSerializatio
 
 public class CustomExtendedViewedFilter extends AbstractCustomFilter {
 	private ExtendedViewedStateType state = ExtendedViewedStateType.NOT_VIEWED;
-	
+
+	public CustomExtendedViewedFilter(CCMovieList ml) {
+		super(ml);
+	}
+
 	@Override
 	public boolean includes(ICCDatabaseStructureElement e) {
 		return e.getExtendedViewedState().getType() == state;
@@ -39,12 +43,12 @@ public class CustomExtendedViewedFilter extends AbstractCustomFilter {
 	}
 
 	@Override
-	public AbstractCustomFilter createNew() {
-		return new CustomExtendedViewedFilter();
+	public AbstractCustomFilter createNew(CCMovieList ml) {
+		return new CustomExtendedViewedFilter(ml);
 	}
 
-	public static CustomExtendedViewedFilter create(ExtendedViewedStateType data) {
-		CustomExtendedViewedFilter f = new CustomExtendedViewedFilter();
+	public static CustomExtendedViewedFilter create(CCMovieList ml, ExtendedViewedStateType data) {
+		CustomExtendedViewedFilter f = new CustomExtendedViewedFilter(ml);
 		f.state = data;
 		return f;
 	}
@@ -53,7 +57,7 @@ public class CustomExtendedViewedFilter extends AbstractCustomFilter {
 	public CustomFilterConfig[] createConfig(CCMovieList ml) {
 		return new CustomFilterConfig[]
 		{
-			new CustomFilterEnumChooserConfig<>(() -> state, p -> state = p, ExtendedViewedStateType.getWrapper()),
+			new CustomFilterEnumChooserConfig<>(ml, () -> state, p -> state = p, ExtendedViewedStateType.getWrapper()),
 		};
 	}
 }

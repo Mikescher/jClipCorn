@@ -2,10 +2,11 @@ package de.jClipCorn.features.databaseErrors;
 
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.databaseElement.CCSeason;
+import de.jClipCorn.database.databaseElement.ICCCoveredElement;
 
 public class DatabaseCoverElement implements Comparable<DatabaseCoverElement>{
 	private final int coverid;
-	private final Object element;
+	private final ICCCoveredElement element;
 	
 	public DatabaseCoverElement(int cvr, CCDatabaseElement el) {
 		this.coverid = cvr;
@@ -26,7 +27,7 @@ public class DatabaseCoverElement implements Comparable<DatabaseCoverElement>{
 		return coverid;
 	}
 
-	public Object getElement() {
+	public ICCCoveredElement getElement() {
 		return element;
 	}
 

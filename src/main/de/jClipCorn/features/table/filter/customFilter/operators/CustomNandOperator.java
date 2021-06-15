@@ -1,10 +1,16 @@
 package de.jClipCorn.features.table.filter.customFilter.operators;
 
+import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.ICCDatabaseStructureElement;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.features.table.filter.AbstractCustomFilter;
 
 public class CustomNandOperator extends CustomOperator {
+
+	public CustomNandOperator(CCMovieList ml) {
+		super(ml);
+	}
+
 	@Override
 	public boolean includes(ICCDatabaseStructureElement e) {
 		boolean result = true;
@@ -32,7 +38,7 @@ public class CustomNandOperator extends CustomOperator {
 	}
 	
 	@Override
-	public AbstractCustomFilter createNew() {
-		return new CustomNandOperator();
+	public AbstractCustomFilter createNew(CCMovieList ml) {
+		return new CustomNandOperator(ml);
 	}
 }

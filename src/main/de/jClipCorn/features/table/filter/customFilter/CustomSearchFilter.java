@@ -20,7 +20,11 @@ import de.jClipCorn.util.datetime.YearRange;
 
 public class CustomSearchFilter extends AbstractCustomDatabaseElementFilter {
 	private String searchTerm = ""; //$NON-NLS-1$
-	
+
+	public CustomSearchFilter(CCMovieList ml) {
+		super(ml);
+	}
+
 	@Override
 	@SuppressWarnings("nls")
 	public boolean includes(CCDatabaseElement e) {
@@ -133,12 +137,12 @@ public class CustomSearchFilter extends AbstractCustomDatabaseElementFilter {
 	}
 	
 	@Override
-	public AbstractCustomFilter createNew() {
-		return new CustomSearchFilter();
+	public AbstractCustomFilter createNew(CCMovieList ml) {
+		return new CustomSearchFilter(ml);
 	}
 
-	public static CustomSearchFilter create(String data) {
-		CustomSearchFilter f = new CustomSearchFilter();
+	public static CustomSearchFilter create(CCMovieList ml, String data) {
+		CustomSearchFilter f = new CustomSearchFilter(ml);
 		f.searchTerm = data;
 		return f;
 	}
@@ -147,7 +151,7 @@ public class CustomSearchFilter extends AbstractCustomDatabaseElementFilter {
 	public CustomFilterConfig[] createConfig(CCMovieList ml) {
 		return new CustomFilterConfig[]
 		{
-			new CustomFilterStringConfig(() -> searchTerm, p -> searchTerm = p),
+			new CustomFilterStringConfig(ml, () -> searchTerm, p -> searchTerm = p),
 		};
 	}
 }

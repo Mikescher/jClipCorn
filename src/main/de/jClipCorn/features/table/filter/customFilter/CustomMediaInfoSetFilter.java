@@ -16,6 +16,10 @@ import de.jClipCorn.util.Str;
 public class CustomMediaInfoSetFilter extends AbstractCustomStructureElementFilter {
 	private boolean isset = false;
 
+	public CustomMediaInfoSetFilter(CCMovieList ml) {
+		super(ml);
+	}
+
 	@Override
 	public boolean includes(CCMovie mov) {
 		return isset == mov.mediaInfo().get().isSet();
@@ -58,12 +62,12 @@ public class CustomMediaInfoSetFilter extends AbstractCustomStructureElementFilt
 	}
 
 	@Override
-	public AbstractCustomFilter createNew() {
-		return new CustomMediaInfoSetFilter();
+	public AbstractCustomFilter createNew(CCMovieList ml) {
+		return new CustomMediaInfoSetFilter(ml);
 	}
 
-	public static AbstractCustomFilter create(boolean data) {
-		CustomMediaInfoSetFilter f = new CustomMediaInfoSetFilter();
+	public static AbstractCustomFilter create(CCMovieList ml, boolean data) {
+		CustomMediaInfoSetFilter f = new CustomMediaInfoSetFilter(ml);
 		f.isset = data;
 		return f;
 	}
@@ -72,7 +76,7 @@ public class CustomMediaInfoSetFilter extends AbstractCustomStructureElementFilt
 	public CustomFilterConfig[] createConfig(CCMovieList ml) {
 		return new CustomFilterConfig[]
 		{
-			new CustomFilterBoolConfig(() -> isset, a -> isset = a, LocaleBundle.getString("FilterTree.HasMediaInfo")), //$NON-NLS-1$
+			new CustomFilterBoolConfig(ml, () -> isset, a -> isset = a, LocaleBundle.getString("FilterTree.HasMediaInfo")), //$NON-NLS-1$
 		};
 	}
 }

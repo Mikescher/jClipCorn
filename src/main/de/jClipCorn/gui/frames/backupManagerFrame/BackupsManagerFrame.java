@@ -1,29 +1,9 @@
 package de.jClipCorn.gui.frames.backupManagerFrame;
 
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-
-import javax.swing.DefaultListModel;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.border.EtchedBorder;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.FormSpecs;
 import com.jgoodies.forms.layout.RowSpec;
-
 import de.jClipCorn.Main;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.features.backupManager.BackupManager;
@@ -37,6 +17,17 @@ import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.ApplicationHelper;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.helper.SwingUtils;
+
+import javax.swing.*;
+import javax.swing.border.EtchedBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 public class BackupsManagerFrame extends JFrame {
 	private static final long serialVersionUID = 1277211351977537864L;
@@ -352,7 +343,7 @@ public class BackupsManagerFrame extends JFrame {
 	}
 	
 	private void updateButtonStates() {
-		boolean ra = ! CCProperties.getInstance().ARG_READONLY;
+		boolean ra = ! movielist.isReadonly();
 		btnCreateBackup.setEnabled(ra);
 		btnCreatePersistentBackup.setEnabled(ra);
 		btnChangeName.setEnabled(isElementSelected() && ra);

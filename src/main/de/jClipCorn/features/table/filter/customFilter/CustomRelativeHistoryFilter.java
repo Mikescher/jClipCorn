@@ -21,7 +21,11 @@ import de.jClipCorn.util.stream.CCStream;
 public class CustomRelativeHistoryFilter extends AbstractCustomStructureElementFilter {
 	private CCIntArea Search = new CCIntArea(1, 1, DecimalSearchType.EXACT);
 	public boolean Recursive = true;
-	
+
+	public CustomRelativeHistoryFilter(CCMovieList ml) {
+		super(ml);
+	}
+
 	@Override
 	public boolean includes(CCMovie mov) {
 		return includes(mov.ViewedHistory.get().iterator());
@@ -90,15 +94,15 @@ public class CustomRelativeHistoryFilter extends AbstractCustomStructureElementF
 	}
 	
 	@Override
-	public AbstractCustomFilter createNew() {
-		return new CustomRelativeHistoryFilter();
+	public AbstractCustomFilter createNew(CCMovieList ml) {
+		return new CustomRelativeHistoryFilter(ml);
 	}
 
 	@Override
 	public CustomFilterConfig[] createConfig(CCMovieList ml) {
 		return new CustomFilterConfig[]
-		{new CustomFilterIntAreaConfig(() -> Search, a -> Search = a, null, null),
-			new CustomFilterBoolConfig(() -> Recursive, p -> Recursive = p, LocaleBundle.getString("FilterTree.Custom.Range.Recursive")), //$NON-NLS-1$
+		{new CustomFilterIntAreaConfig(ml, () -> Search, a -> Search = a, null, null),
+			new CustomFilterBoolConfig(ml, () -> Recursive, p -> Recursive = p, LocaleBundle.getString("FilterTree.Custom.Range.Recursive")), //$NON-NLS-1$
 		};
 	}
 }

@@ -1,14 +1,13 @@
 package de.jClipCorn.features.table.filter.filterConfig;
 
+import de.jClipCorn.database.CCMovieList;
+import de.jClipCorn.util.lambda.Func0to1;
+import de.jClipCorn.util.lambda.Func1to0;
+
+import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Random;
-
-import javax.swing.JCheckBox;
-import javax.swing.JComponent;
-
-import de.jClipCorn.util.lambda.Func0to1;
-import de.jClipCorn.util.lambda.Func1to0;
 
 public class CustomFilterBoolConfig extends CustomFilterConfig {
 
@@ -17,7 +16,9 @@ public class CustomFilterBoolConfig extends CustomFilterConfig {
 	
 	private final String description;
 	
-	public CustomFilterBoolConfig(Func0to1<Boolean> get, Func1to0<Boolean> set, String desc) {
+	public CustomFilterBoolConfig(CCMovieList ml, Func0to1<Boolean> get, Func1to0<Boolean> set, String desc) {
+		super(ml);
+
 		valueGetter = get;
 		valueSetter = set;
 		description = desc;

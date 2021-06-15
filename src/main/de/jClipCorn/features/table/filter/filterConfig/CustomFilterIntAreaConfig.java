@@ -1,24 +1,18 @@
 package de.jClipCorn.features.table.filter.filterConfig;
 
-import java.util.Random;
-
-import javax.swing.ButtonGroup;
-import javax.swing.JComponent;
-import javax.swing.JPanel;
-import javax.swing.JRadioButton;
-import javax.swing.JSpinner;
-import javax.swing.SpinnerNumberModel;
-
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.FormSpecs;
 import com.jgoodies.forms.layout.RowSpec;
-
+import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.util.datatypes.DecimalSearchType;
 import de.jClipCorn.util.datatypes.CCIntArea;
+import de.jClipCorn.util.datatypes.DecimalSearchType;
 import de.jClipCorn.util.lambda.Func0to1;
 import de.jClipCorn.util.lambda.Func1to0;
+
+import javax.swing.*;
+import java.util.Random;
 
 public class CustomFilterIntAreaConfig extends CustomFilterConfig {
 
@@ -43,7 +37,9 @@ public class CustomFilterIntAreaConfig extends CustomFilterConfig {
 	private final Comparable<?> minimum;
 	private final Comparable<?> maximum;
 	
-	public CustomFilterIntAreaConfig(Func0to1<CCIntArea> get, Func1to0<CCIntArea> set, Comparable<?> min, Comparable<?> max) {
+	public CustomFilterIntAreaConfig(CCMovieList ml, Func0to1<CCIntArea> get, Func1to0<CCIntArea> set, Comparable<?> min, Comparable<?> max) {
+		super(ml);
+
 		valueGetter = get;
 		valueSetter = set;
 

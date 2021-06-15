@@ -1,17 +1,10 @@
 package de.jClipCorn.features.table.filter.filterConfig;
 
-import java.util.Random;
-
-import javax.swing.ButtonGroup;
-import javax.swing.JComponent;
-import javax.swing.JPanel;
-import javax.swing.JRadioButton;
-
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.FormSpecs;
 import com.jgoodies.forms.layout.RowSpec;
-
+import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.gui.guiComponents.jCCDateSpinner.JCCDateSpinner;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.datetime.CCDate;
@@ -19,6 +12,9 @@ import de.jClipCorn.util.datetime.CCDateSearchParameter;
 import de.jClipCorn.util.datetime.CCDateSearchParameter.DateSearchType;
 import de.jClipCorn.util.lambda.Func0to1;
 import de.jClipCorn.util.lambda.Func1to0;
+
+import javax.swing.*;
+import java.util.Random;
 
 public class CustomFilterDateSearchConfig extends CustomFilterConfig {
 
@@ -44,7 +40,9 @@ public class CustomFilterDateSearchConfig extends CustomFilterConfig {
 	private final Func0to1<CCDateSearchParameter> valueGetter;
 	private final Func1to0<CCDateSearchParameter> valueSetter;
 	
-	public CustomFilterDateSearchConfig(Func0to1<CCDateSearchParameter> get, Func1to0<CCDateSearchParameter> set) {
+	public CustomFilterDateSearchConfig(CCMovieList ml, Func0to1<CCDateSearchParameter> get, Func1to0<CCDateSearchParameter> set) {
+		super(ml);
+
 		valueGetter = get;
 		valueSetter = set;
 	}

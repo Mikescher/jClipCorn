@@ -4,6 +4,7 @@ import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.FormSpecs;
 import com.jgoodies.forms.layout.RowSpec;
+import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.features.table.filter.AbstractCustomFilter;
 import de.jClipCorn.gui.frames.customFilterEditDialog.CustomFilterEditFilterComboboxRenderer;
 import de.jClipCorn.util.lambda.Func0to1;
@@ -21,7 +22,9 @@ public class CustomChildConfig extends CustomFilterConfig {
 	private final Func1to0<AbstractCustomFilter> valueSetter;
 	private final String btnText;
 
-	public CustomChildConfig(Func0to1<AbstractCustomFilter> get, Func1to0<AbstractCustomFilter> set, String buttonText) {
+	public CustomChildConfig(CCMovieList ml, Func0to1<AbstractCustomFilter> get, Func1to0<AbstractCustomFilter> set, String buttonText) {
+		super(ml);
+
 		valueGetter = get;
 		valueSetter = set;
 		btnText     = buttonText;
@@ -48,8 +51,8 @@ public class CustomChildConfig extends CustomFilterConfig {
 			}));
 
 		List<AbstractCustomFilter> acffilter = new ArrayList<>();
-		acffilter.addAll(Arrays.asList(AbstractCustomFilter.getAllOperatorFilter()));
-		acffilter.addAll(Arrays.asList(AbstractCustomFilter.getAllSimpleFilter()));
+		acffilter.addAll(Arrays.asList(AbstractCustomFilter.getAllOperatorFilter(movielist)));
+		acffilter.addAll(Arrays.asList(AbstractCustomFilter.getAllSimpleFilter(movielist)));
 		
 		JComboBox<AbstractCustomFilter> cbxFilter = new JComboBox<>();
 		AbstractCustomFilter[] arr = acffilter.toArray(new AbstractCustomFilter[0]);

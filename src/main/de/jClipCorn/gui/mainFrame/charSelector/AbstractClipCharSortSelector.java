@@ -1,10 +1,10 @@
 package de.jClipCorn.gui.mainFrame.charSelector;
 
-import javax.swing.JToolBar;
-
+import de.jClipCorn.features.table.filter.customFilter.CustomCharFilter;
 import de.jClipCorn.gui.mainFrame.MainFrame;
 import de.jClipCorn.gui.mainFrame.table.RowFilterSource;
-import de.jClipCorn.features.table.filter.customFilter.CustomCharFilter;
+
+import javax.swing.*;
 
 public class AbstractClipCharSortSelector extends JToolBar {
 	private static final long serialVersionUID = -8270219279263812975L;
@@ -20,7 +20,7 @@ public class AbstractClipCharSortSelector extends JToolBar {
 		if (search == null) {
 			owner.getClipTable().setRowFilter(null, RowFilterSource.CHARSELECTOR);
 		} else {
-			owner.getClipTable().setRowFilter(CustomCharFilter.create(search), RowFilterSource.CHARSELECTOR);
+			owner.getClipTable().setRowFilter(CustomCharFilter.create(owner.getMovielist(), search), RowFilterSource.CHARSELECTOR);
 		}
 	}
 }

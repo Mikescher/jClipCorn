@@ -12,7 +12,11 @@ import de.jClipCorn.features.table.filter.filterSerialization.FilterSerializatio
 
 public class CustomTypFilter extends AbstractCustomDatabaseElementFilter {
 	private CCDBElementTyp typ = CCDBElementTyp.MOVIE;
-	
+
+	public CustomTypFilter(CCMovieList ml) {
+		super(ml);
+	}
+
 	@Override
 	public boolean includes(CCDatabaseElement e) {
 		return e.getType() == typ;
@@ -40,12 +44,12 @@ public class CustomTypFilter extends AbstractCustomDatabaseElementFilter {
 	}
 
 	@Override
-	public AbstractCustomFilter createNew() {
-		return new CustomTypFilter();
+	public AbstractCustomFilter createNew(CCMovieList ml) {
+		return new CustomTypFilter(ml);
 	}
 
-	public static CustomTypFilter create(CCDBElementTyp data) {
-		CustomTypFilter f = new CustomTypFilter();
+	public static CustomTypFilter create(CCMovieList ml, CCDBElementTyp data) {
+		CustomTypFilter f = new CustomTypFilter(ml);
 		f.typ = data;
 		return f;
 	}
@@ -54,7 +58,7 @@ public class CustomTypFilter extends AbstractCustomDatabaseElementFilter {
 	public CustomFilterConfig[] createConfig(CCMovieList ml) {
 		return new CustomFilterConfig[]
 		{
-			new CustomFilterEnumChooserConfig<>(() -> typ, p -> typ = p, CCDBElementTyp.getWrapper()),
+			new CustomFilterEnumChooserConfig<>(ml, () -> typ, p -> typ = p, CCDBElementTyp.getWrapper()),
 		};
 	}
 }

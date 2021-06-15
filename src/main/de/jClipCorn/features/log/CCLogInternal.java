@@ -1,8 +1,8 @@
 package de.jClipCorn.features.log;
 
-import de.jClipCorn.gui.mainFrame.MainFrame;
 import de.jClipCorn.gui.guiComponents.DatabaseElementPreviewLabel;
 import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.gui.mainFrame.MainFrame;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.helper.ApplicationHelper;
@@ -18,9 +18,9 @@ import java.util.Vector;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class CCLogInternal {
-	private static List<CCLogElement> log = new Vector<>();
+	private static List<CCLogElement>         log      = new Vector<>();
 	private static List<CCLogChangedListener> listener = new Vector<>();
-	private static List<CCSQLLogElement> sqlLog = new Vector<>();
+	private static List<CCSQLLogElement>      sqlLog   = new Vector<>();
 
 	private static boolean isUnitTest = false;
 
@@ -34,10 +34,10 @@ public class CCLogInternal {
 	private static final Object _obsLock  = new Object();
 	private static final Object _sqlLock  = new Object();
 
-	private static AtomicBoolean hasUnwatchedInformation = new AtomicBoolean(false);
-	private static AtomicBoolean hasUnwatchedWarnings    = new AtomicBoolean(false);
-	private static AtomicBoolean hasUnwatchedErrors      = new AtomicBoolean(false);
-	private static AtomicBoolean hasUnwatchedUndefineds  = new AtomicBoolean(false);
+	private static final AtomicBoolean hasUnwatchedInformation = new AtomicBoolean(false);
+	private static final AtomicBoolean hasUnwatchedWarnings    = new AtomicBoolean(false);
+	private static final AtomicBoolean hasUnwatchedErrors      = new AtomicBoolean(false);
+	private static final AtomicBoolean hasUnwatchedUndefineds  = new AtomicBoolean(false);
 
 	public static void initUnitTestMode() {
 		synchronized (_dataLock) {
@@ -45,6 +45,7 @@ public class CCLogInternal {
 				isUnitTest = true;
 				log = new Vector<>();
 				listener = new Vector<>();
+				sqlLog = new Vector<>();
 				changed = false;
 			}
 		}

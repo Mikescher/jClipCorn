@@ -208,6 +208,7 @@ public class CCProperties {
 	public CCStringProperty                                 PROP_MAINFRAME_COLUMN_SIZE_CACHE;
 	public CCBoolProperty                                   PROP_MAINFRAME_FILTERTREE_RECOLLAPSE;
 
+	// do not use in most cases - use db.isReadonly() or movielist.isReadonly()
 	public boolean ARG_READONLY = false;
 	
 	public boolean firstLaunch = false;

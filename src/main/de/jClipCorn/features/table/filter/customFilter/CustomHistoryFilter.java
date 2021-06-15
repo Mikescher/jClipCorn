@@ -1,15 +1,11 @@
 package de.jClipCorn.features.table.filter.customFilter;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.database.databaseElement.columnTypes.CCDateTimeList;
-import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.features.table.filter.AbstractCustomFilter;
 import de.jClipCorn.features.table.filter.AbstractCustomStructureElementFilter;
@@ -17,13 +13,21 @@ import de.jClipCorn.features.table.filter.filterConfig.CustomFilterBoolConfig;
 import de.jClipCorn.features.table.filter.filterConfig.CustomFilterConfig;
 import de.jClipCorn.features.table.filter.filterConfig.CustomFilterDateSearchConfig;
 import de.jClipCorn.features.table.filter.filterSerialization.FilterSerializationConfig;
+import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.datetime.CCDateSearchParameter;
 import de.jClipCorn.util.datetime.CCDateTime;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class CustomHistoryFilter extends AbstractCustomStructureElementFilter {
 	public CCDateSearchParameter Search = new CCDateSearchParameter();
 	public boolean Recursive = true;
-	
+
+	public CustomHistoryFilter(CCMovieList ml) {
+		super(ml);
+	}
+
 	@Override
 	public boolean includes(CCMovie mov) {
 		return Search.includes(mov.ViewedHistory.get());
@@ -97,16 +101,16 @@ public class CustomHistoryFilter extends AbstractCustomStructureElementFilter {
 	}
 	
 	@Override
-	public AbstractCustomFilter createNew() {
-		return new CustomHistoryFilter();
+	public AbstractCustomFilter createNew(CCMovieList ml) {
+		return new CustomHistoryFilter(ml);
 	}
 
 	@Override
 	public CustomFilterConfig[] createConfig(CCMovieList ml) {
 		return new CustomFilterConfig[]
 		{
-			new CustomFilterDateSearchConfig(() -> Search, p -> Search = p),
-			new CustomFilterBoolConfig(() -> Recursive, p -> Recursive = p, LocaleBundle.getString("FilterTree.Custom.Range.Recursive")), //$NON-NLS-1$
+			new CustomFilterDateSearchConfig(ml, () -> Search, p -> Search = p),
+			new CustomFilterBoolConfig(ml, () -> Recursive, p -> Recursive = p, LocaleBundle.getString("FilterTree.Custom.Range.Recursive")), //$NON-NLS-1$
 		};
 	}
 }

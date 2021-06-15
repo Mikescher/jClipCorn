@@ -1,5 +1,6 @@
 package de.jClipCorn.database.databaseElement;
 
+import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.covertab.CCCoverData;
 import de.jClipCorn.database.elementValues.EStringProp;
 import de.jClipCorn.util.datatypes.Tuple;
@@ -16,4 +17,6 @@ public interface ICCCoveredElement {
 
 	BufferedImage getCover();
 	Tuple<Integer, Integer> getCoverDimensions();
+
+	CCMovieList getMovieList();
 }

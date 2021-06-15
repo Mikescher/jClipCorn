@@ -109,7 +109,7 @@ public class DatabaseHistoryTable extends JCCSimpleTable<CCCombinedHistoryEntry>
 			if (!Str.isInteger(element.ID)) return;
 			int cid = Integer.parseInt(element.ID);
 
-			CCCoverData data = CCMovieList.getInstance().getCoverCache().getInfoOrNull(cid);
+			CCCoverData data = _parent.getMovieList().getCoverCache().getInfoOrNull(cid);
 			if (data == null) return;
 
 			Opt<String> hash = element.getNewValue("HASH_FILE"); //$NON-NLS-1$
@@ -117,7 +117,7 @@ public class DatabaseHistoryTable extends JCCSimpleTable<CCCombinedHistoryEntry>
 			if (hash.get() == null) return;
 			if (!hash.get().equalsIgnoreCase(data.Checksum)) return;
 
-			BufferedImage bi = CCMovieList.getInstance().getCoverCache().getCover(data);
+			BufferedImage bi = _parent.getMovieList().getCoverCache().getCover(data);
 			if (bi == null) return;
 
 			new CoverPreviewFrame(_parent, bi).setVisible(true);

@@ -1,7 +1,8 @@
 package de.jClipCorn.features.databaseErrors;
 
+import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.util.lambda.Func1to1;
+import de.jClipCorn.util.lambda.Func2to1;
 
 public class DatabaseErrorType {
 	public final static DatabaseErrorType ERROR_INCONTINUOUS_GENRELIST             = new DatabaseErrorType(1, DatabaseAutofixer::fixError_Incontinous_Genrelist);
@@ -86,11 +87,11 @@ public class DatabaseErrorType {
 
 	private final int type;
 
-	private final Func1to1<DatabaseError, Boolean> autoFixFunction;
+	private final Func2to1<CCMovieList, DatabaseError, Boolean> autoFixFunction;
 
-	private DatabaseErrorType(int ptype, Func1to1<DatabaseError, Boolean> fix) {
+	private DatabaseErrorType(int ptype, Func2to1<CCMovieList, DatabaseError, Boolean> fix) {
 		super();
-		
+
 		this.type = ptype;
 		this.autoFixFunction = fix;
 	}
@@ -119,10 +120,10 @@ public class DatabaseErrorType {
 		return autoFixFunction != null;
 	}
 
-	public boolean fixError(DatabaseError e) {
+	public boolean fixError(CCMovieList ml, DatabaseError e) {
 		if (autoFixFunction == null) return false;
 		if (e.getType().type != this.type) return false;
 		
-		return autoFixFunction.invoke(e);
+		return autoFixFunction.invoke(ml, e);
 	}
 }

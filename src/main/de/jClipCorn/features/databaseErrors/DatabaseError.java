@@ -1,9 +1,7 @@
 package de.jClipCorn.features.databaseErrors;
 
-import de.jClipCorn.database.databaseElement.CCEpisode;
-import de.jClipCorn.database.databaseElement.CCMovie;
-import de.jClipCorn.database.databaseElement.CCSeason;
-import de.jClipCorn.database.databaseElement.CCSeries;
+import de.jClipCorn.database.CCMovieList;
+import de.jClipCorn.database.databaseElement.*;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGroup;
 import de.jClipCorn.gui.frames.editMovieFrame.EditMovieFrame;
 import de.jClipCorn.gui.frames.editSeriesFrame.EditSeriesFrame;
@@ -17,30 +15,37 @@ public class DatabaseError {
 	private final DatabaseErrorType errortype;
 	private final Object el1;
 	private final Object el2;
-	
+
 	private final Object additional;
-	
-	public static DatabaseError createSingle(DatabaseErrorType error, Object element) {
-		return new DatabaseError(error, element, null, null);
-	}
-	
-	public static DatabaseError createSingleAdditional(DatabaseErrorType error, Object element, Object additional) {
-		return new DatabaseError(error, element, null, additional);
-	}
-	
-	public static DatabaseError createDouble(DatabaseErrorType error, Object element1, Object element2) {
-		return new DatabaseError(error, element1, element2, null);
-	}
-	
-	public static DatabaseError createDoubleAdditional(DatabaseErrorType error, Object element1, Object element2, Object additional) {
-		return new DatabaseError(error, element1, element2, additional);
+
+	private final CCMovieList movielist;
+
+	public static DatabaseError createNone(CCMovieList ml, DatabaseErrorType error) {
+		return new DatabaseError(ml, error, null, null, null);
 	}
 
-	private DatabaseError(DatabaseErrorType error, Object element1, Object element2, Object additional) {
+	public static DatabaseError createSingle(CCMovieList ml, DatabaseErrorType error, Object element) {
+		return new DatabaseError(ml, error, element, null, null);
+	}
+
+	public static DatabaseError createSingleAdditional(CCMovieList ml, DatabaseErrorType error, Object element, Object additional) {
+		return new DatabaseError(ml, error, element, null, additional);
+	}
+
+	public static DatabaseError createDouble(CCMovieList ml, DatabaseErrorType error, Object element1, Object element2) {
+		return new DatabaseError(ml, error, element1, element2, null);
+	}
+	
+	public static DatabaseError createDoubleAdditional(CCMovieList ml, DatabaseErrorType error, Object element1, Object element2, Object additional) {
+		return new DatabaseError(ml, error, element1, element2, additional);
+	}
+
+	private DatabaseError(CCMovieList ml, DatabaseErrorType error, Object element1, Object element2, Object additional) {
 		this.errortype = error;
 		this.el1 = element1;
 		this.el2 = element2;
 		this.additional = additional;
+		this.movielist = ml;
 	}
 	
 	public String getErrorString() {
@@ -187,7 +192,7 @@ public class DatabaseError {
 	}
 	
 	public boolean autoFix() {
-		return errortype.fixError(this);
+		return errortype.fixError(movielist, this);
 	}
 
 	public boolean elementsEquals(DatabaseError e) {

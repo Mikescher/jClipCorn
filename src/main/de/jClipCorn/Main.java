@@ -60,7 +60,7 @@ public class Main {
 			}
 			Globals.TIMINGS.stop(Globals.TIMING_INIT_TESTREADONLY);
 
-			final CCMovieList mList = CCMovieList.create(true);
+			final CCMovieList mList = CCMovieList.createInstanceMovieList();
 
 			init();
 

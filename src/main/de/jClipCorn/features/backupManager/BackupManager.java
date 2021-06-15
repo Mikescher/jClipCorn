@@ -1,22 +1,11 @@
 package de.jClipCorn.features.backupManager;
 
-import java.awt.Component;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.zip.ZipOutputStream;
-
-import javax.swing.*;
-
 import de.jClipCorn.Globals;
 import de.jClipCorn.Main;
 import de.jClipCorn.database.CCMovieList;
+import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.features.serialization.ExportHelper;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.formatter.PathFormatter;
@@ -30,6 +19,16 @@ import de.jClipCorn.util.listener.ProgressCallbackListener;
 import de.jClipCorn.util.listener.ProgressCallbackProgressMonitorHelper;
 import de.jClipCorn.util.listener.ProgressCallbackSink;
 import org.apache.commons.io.FileUtils;
+
+import javax.swing.*;
+import java.awt.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.zip.ZipOutputStream;
 
 public class BackupManager {
 	private final static String BACKUPFILENAME = "jCC-Backup %s_%d." + ExportHelper.EXTENSION_BACKUP; //$NON-NLS-1$
@@ -100,7 +99,7 @@ public class BackupManager {
 	}
 
 	public void doActions(Component c) {
-		if (CCProperties.getInstance().ARG_READONLY) return;
+		if (movielist.isReadonly()) return;
 
 		if (CCProperties.getInstance().PROP_BACKUP_CREATEBACKUPS.getValue() && needsCreateBackup()) {
 			Globals.TIMINGS.start(Globals.TIMING_LOAD_CREATEBACKUP);
@@ -189,7 +188,7 @@ public class BackupManager {
 	}
 
 	private void createBackup(Component c, String name, CCDate date, boolean persistent, String jccversion, String dbversion) {
-		if (CCProperties.getInstance().ARG_READONLY) {
+		if (movielist.isReadonly()) {
 			CCLog.addInformation(LocaleBundle.getString("LogMessage.OperationFailedDueToReadOnly")); //$NON-NLS-1$
 			return;
 		}
@@ -263,7 +262,7 @@ public class BackupManager {
 	}
 
 	public boolean restoreBackupWithWait(Component c, CCBackup bkp) {
-		if (CCProperties.getInstance().ARG_READONLY) {
+		if (movielist.isReadonly()) {
 			CCLog.addInformation(LocaleBundle.getString("LogMessage.OperationFailedDueToReadOnly")); //$NON-NLS-1$
 			return false;
 		}

@@ -18,6 +18,10 @@ import de.jClipCorn.util.datatypes.CCIntArea;
 public class CustomEpisodeCountAggregator extends CustomAggregator {
 	private CCIntArea area = new CCIntArea(1, 1, DecimalSearchType.EXACT);
 
+	public CustomEpisodeCountAggregator(CCMovieList ml) {
+		super(ml);
+	}
+
 	@Override
 	public boolean includes(CCSeries series) {
 		int c = 0;
@@ -51,8 +55,8 @@ public class CustomEpisodeCountAggregator extends CustomAggregator {
 	public CustomFilterConfig[] createConfig(CCMovieList ml) {
 		return new CustomFilterConfig[]
 		{
-			new CustomFilterIntAreaConfig(() -> area, a -> area = a, 0, null),
-			new CustomChildConfig(() -> getProcessingFilter(), a -> setProcessorFilter(a), LocaleBundle.getString("FilterTree.Custom.CustomOperatorFilterDialog.ChangeFilter.text")), //$NON-NLS-1$
+			new CustomFilterIntAreaConfig(ml, () -> area, a -> area = a, 0, null),
+			new CustomChildConfig(ml, () -> getProcessingFilter(), a -> setProcessorFilter(a), LocaleBundle.getString("FilterTree.Custom.CustomOperatorFilterDialog.ChangeFilter.text")), //$NON-NLS-1$
 		};
 	}
 
@@ -87,8 +91,8 @@ public class CustomEpisodeCountAggregator extends CustomAggregator {
 	}
 
 	@Override
-	public AbstractCustomFilter createNew() {
-		return new CustomEpisodeCountAggregator();
+	public AbstractCustomFilter createNew(CCMovieList ml) {
+		return new CustomEpisodeCountAggregator(ml);
 	}
 
 	@Override

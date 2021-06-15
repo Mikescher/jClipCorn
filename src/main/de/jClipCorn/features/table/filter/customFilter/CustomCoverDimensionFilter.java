@@ -18,6 +18,10 @@ public class CustomCoverDimensionFilter extends AbstractCustomFilter {
 	private DimensionAxisType axis = DimensionAxisType.WIDTH;
 	private CCIntArea range = new CCIntArea();
 
+	public CustomCoverDimensionFilter(CCMovieList ml) {
+		super(ml);
+	}
+
 	@Override
 	public boolean includes(ICCDatabaseStructureElement e) {
 		if (e instanceof ICCCoveredElement) {
@@ -69,16 +73,16 @@ public class CustomCoverDimensionFilter extends AbstractCustomFilter {
 	}
 	
 	@Override
-	public AbstractCustomFilter createNew() {
-		return new CustomCoverDimensionFilter();
+	public AbstractCustomFilter createNew(CCMovieList ml) {
+		return new CustomCoverDimensionFilter(ml);
 	}
 
 	@Override
 	public CustomFilterConfig[] createConfig(CCMovieList ml) {
 		return new CustomFilterConfig[]
 		{
-			new CustomFilterEnumChooserConfig<>(() -> axis, p -> axis = p, DimensionAxisType.getWrapper()),
-			new CustomFilterIntAreaConfig(() -> range, a -> range = a, 0, null),
+			new CustomFilterEnumChooserConfig<>(ml, () -> axis, p -> axis = p, DimensionAxisType.getWrapper()),
+			new CustomFilterIntAreaConfig(ml, () -> range, a -> range = a, 0, null),
 		};
 	}
 }

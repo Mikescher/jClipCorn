@@ -23,7 +23,7 @@ public class PreviewMovieMenuBar extends ClipMenuBar {
 
 	public PreviewMovieMenuBar(PreviewMovieFrame f, CCMovie m, Func0to0 postAction)
 	{
-		super(postAction);
+		super(m.getMovieList(), postAction);
 		_movie = m;
 		_frame = f;
 		init();

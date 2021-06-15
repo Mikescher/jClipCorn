@@ -1,16 +1,22 @@
 package de.jClipCorn.features.table.filter.customFilter.aggregators;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import de.jClipCorn.gui.resources.Resources;
+import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.features.table.filter.AbstractCustomFilter;
 import de.jClipCorn.features.table.filter.AbstractCustomStructureElementFilter;
 import de.jClipCorn.features.table.filter.customFilter.operators.CustomAndOperator;
+import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.gui.resources.reftypes.IconRef;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public abstract class CustomAggregator extends AbstractCustomStructureElementFilter {
-	protected AbstractCustomFilter _filter = new CustomAndOperator();
+	protected AbstractCustomFilter _filter;
+
+	public CustomAggregator(CCMovieList ml) {
+		super(ml);
+		_filter = new CustomAndOperator(ml);
+	}
 
 	@Override
 	public List<AbstractCustomFilter> getList() {

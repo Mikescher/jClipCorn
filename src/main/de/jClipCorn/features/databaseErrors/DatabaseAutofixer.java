@@ -89,7 +89,7 @@ public class DatabaseAutofixer {
 		return true;
 	}
 	
-	public static boolean fixError_Invalid_Chars(DatabaseError err) {
+	public static boolean fixError_Invalid_Chars(CCMovieList ml, DatabaseError err) {
 		if (err.getElement1() instanceof CCMovie) {
 			CCMovie mov = (CCMovie) err.getElement1();
 			
@@ -129,7 +129,7 @@ public class DatabaseAutofixer {
 		return false;
 	}
 	
-	public static boolean fixError_Duplicate_Genre(DatabaseError err) {
+	public static boolean fixError_Duplicate_Genre(CCMovieList ml, DatabaseError err) {
 		if (err.getElement1() instanceof CCDatabaseElement) {
 			CCDatabaseElement elem = (CCDatabaseElement) err.getElement1();
 			CCGenreList ls = CCGenreList.EMPTY;
@@ -153,7 +153,7 @@ public class DatabaseAutofixer {
 		return false;
 	}
 	
-	public static boolean fixError_Incontinous_Genrelist(DatabaseError err) {
+	public static boolean fixError_Incontinous_Genrelist(CCMovieList ml, DatabaseError err) {
 		if (err.getElement1() instanceof CCDatabaseElement) {
 			CCDatabaseElement elem = (CCDatabaseElement) err.getElement1();
 			CCGenreList ls = CCGenreList.EMPTY;
@@ -172,7 +172,7 @@ public class DatabaseAutofixer {
 		return false;
 	}
 	
-	public static boolean fixError_Wrong_Filesize(DatabaseError err) {
+	public static boolean fixError_Wrong_Filesize(CCMovieList ml, DatabaseError err) {
 		if (err.getElement1() instanceof CCMovie) {
 			CCFileSize size = CCFileSize.ZERO;
 			for (int i = 0; i < ((CCMovie) err.getElement1()).getPartcount(); i++) {
@@ -205,7 +205,7 @@ public class DatabaseAutofixer {
 		return false;
 	}
 	
-	public static boolean fixError_Incontinous_Parts(DatabaseError err) {
+	public static boolean fixError_Incontinous_Parts(CCMovieList ml, DatabaseError err) {
 		if (err.getElement1() instanceof CCMovie) {
 			List<String> parts = new ArrayList<>();
 			
@@ -235,7 +235,7 @@ public class DatabaseAutofixer {
 		return false;
 	}
 	
-	public static boolean fixError_Format_Not_Found(DatabaseError err) {
+	public static boolean fixError_Format_Not_Found(CCMovieList ml, DatabaseError err) {
 		if (err.getElement1() instanceof CCMovie) {
 			CCFileFormat fmt = CCFileFormat.getMovieFormat(PathFormatter.getExtension(((CCMovie)err.getElement1()).getAbsolutePart(0)));
 			if (fmt != null) {
@@ -256,7 +256,7 @@ public class DatabaseAutofixer {
 		return false;
 	}
 	
-	public static boolean fixError_Not_Trimmed(DatabaseError err) {
+	public static boolean fixError_Not_Trimmed(CCMovieList ml, DatabaseError err) {
 		if (err.getElement1() instanceof CCMovie) {
 			((CCMovie)err.getElement1()).Title.set(((CCMovie)err.getElement1()).getTitle().trim());
 			((CCMovie)err.getElement1()).Zyklus.setTitle(((CCMovie)err.getElement1()).getZyklus().getTitle().trim());
@@ -275,7 +275,7 @@ public class DatabaseAutofixer {
 		return false;
 	}
 	
-	public static boolean fixError_Wrong_Filename(DatabaseError err) {
+	public static boolean fixError_Wrong_Filename(CCMovieList ml, DatabaseError err) {
 		if (err.getElement1() instanceof CCMovie) {
 			CCMovie mov = ((CCMovie)err.getElement1());
 			
@@ -308,7 +308,7 @@ public class DatabaseAutofixer {
 		return false;
 	}
 	
-	public static boolean fixError_Impossible_WatchNever(DatabaseError err) {
+	public static boolean fixError_Impossible_WatchNever(CCMovieList ml, DatabaseError err) {
 		if (err.getElement1() instanceof CCMovie) {
 			CCMovie mov = ((CCMovie)err.getElement1());
 			
@@ -330,7 +330,7 @@ public class DatabaseAutofixer {
 		return false;
 	}
 
-	public static boolean fixError_MissingHistory(DatabaseError err) {
+	public static boolean fixError_MissingHistory(CCMovieList ml, DatabaseError err) {
 		if (err.getElement1() instanceof CCMovie) {
 			CCMovie mov = ((CCMovie)err.getElement1());
 			
@@ -358,7 +358,7 @@ public class DatabaseAutofixer {
 		return false;
 	}
 
-	public static boolean fixError_CoverTooSmall(DatabaseError err) {
+	public static boolean fixError_CoverTooSmall(CCMovieList ml, DatabaseError err) {
 		if (err.getElement1() instanceof CCMovie) {
 			CCMovie mov = ((CCMovie)err.getElement1());
 			
@@ -390,7 +390,7 @@ public class DatabaseAutofixer {
 		return false;
 	}
 
-	public static boolean fixError_CoverTooBig(DatabaseError err) {
+	public static boolean fixError_CoverTooBig(CCMovieList ml, DatabaseError err) {
 		if (err.getElement1() instanceof CCMovie) {
 			CCMovie mov = ((CCMovie)err.getElement1());
 			
@@ -422,17 +422,17 @@ public class DatabaseAutofixer {
 		return false;
 	}
 
-	public static boolean fixError_UnusedGroup(DatabaseError err) {
+	public static boolean fixError_UnusedGroup(CCMovieList ml, DatabaseError err) {
 		if (err.getElement1() instanceof CCGroup) {
 
-			CCMovieList.getInstance().removeGroup((CCGroup)err.getElement1());
+			ml.removeGroup((CCGroup)err.getElement1());
 			return true;
 		}
 
 		return false;
 	}
 
-	public static boolean fixError_NonNormalizedPath(DatabaseError err) {
+	public static boolean fixError_NonNormalizedPath(CCMovieList ml, DatabaseError err) {
 		if (err.getElement1() instanceof CCEpisode) {
 
 			String pold = ((CCEpisode)err.getElement1()).getPart();
@@ -460,7 +460,7 @@ public class DatabaseAutofixer {
 		return false;
 	}
 
-	public static boolean fixError_MediaInfoFilesizeMismatch(DatabaseError err) {
+	public static boolean fixError_MediaInfoFilesizeMismatch(CCMovieList ml, DatabaseError err) {
 		if (err.getElement1() instanceof ICCPlayableElement) {
 			ICCPlayableElement elem = (ICCPlayableElement) err.getElement1();
 			CCMediaInfo mi = elem.mediaInfo().get();
@@ -482,7 +482,7 @@ public class DatabaseAutofixer {
 		return false;
 	}
 
-	public static boolean fixError_InvalidCharacters(DatabaseError err) {
+	public static boolean fixError_InvalidCharacters(CCMovieList ml, DatabaseError err) {
 		if (err.getElement1() instanceof CCMovie)
 		{
 			var elem = (CCMovie) err.getElement1();
@@ -518,7 +518,7 @@ public class DatabaseAutofixer {
 		return false;
 	}
 
-	public static boolean fixError_MediaInfoCDate(DatabaseError err) {
+	public static boolean fixError_MediaInfoCDate(CCMovieList ml, DatabaseError err) {
 		if (err.getElement1() instanceof ICCPlayableElement) {
 			ICCPlayableElement elem = (ICCPlayableElement) err.getElement1();
 			CCMediaInfo mi = elem.mediaInfo().get();
@@ -547,7 +547,7 @@ public class DatabaseAutofixer {
 		return false;
 	}
 
-	public static boolean fixError_MediaInfoMDate(DatabaseError err) {
+	public static boolean fixError_MediaInfoMDate(CCMovieList ml, DatabaseError err) {
 		if (err.getElement1() instanceof ICCPlayableElement) {
 			ICCPlayableElement elem = (ICCPlayableElement) err.getElement1();
 			CCMediaInfo mi = elem.mediaInfo().get();

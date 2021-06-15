@@ -1,17 +1,15 @@
 package de.jClipCorn.features.table.filter.filterConfig;
 
+import de.jClipCorn.database.CCMovieList;
+import de.jClipCorn.util.Str;
+import de.jClipCorn.util.lambda.Func0to1;
+import de.jClipCorn.util.lambda.Func1to0;
+
+import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 import java.util.Random;
-
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
-
-import de.jClipCorn.util.Str;
-import de.jClipCorn.util.lambda.Func0to1;
-import de.jClipCorn.util.lambda.Func1to0;
 
 public class CustomFilterStringChooserConfig extends CustomFilterConfig {
 
@@ -22,7 +20,9 @@ public class CustomFilterStringChooserConfig extends CustomFilterConfig {
 	private final boolean allowNotInList;
 	private final boolean allowEmpty;
 	
-	public CustomFilterStringChooserConfig(Func0to1<String> get, Func1to0<String> set, List<String> v, boolean nil, boolean e) {
+	public CustomFilterStringChooserConfig(CCMovieList ml, Func0to1<String> get, Func1to0<String> set, List<String> v, boolean nil, boolean e) {
+		super(ml);
+
 		valueGetter = get;
 		valueSetter = set;
 		values = v;

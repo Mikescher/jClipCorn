@@ -109,7 +109,7 @@ public class MainFrame extends JFrame implements CCDBUpdateListener, FileDrop.Li
 			builder.append(" [DEBUG]");
 		}
 
-		if (CCProperties.getInstance().ARG_READONLY) {
+		if (movielist.isReadonly()) {
 			builder.append(" [READONLY]");
 		}
 
@@ -173,7 +173,7 @@ public class MainFrame extends JFrame implements CCDBUpdateListener, FileDrop.Li
 		if (search.isEmpty()) {
 			clipTable.setRowFilter(null, RowFilterSource.TEXTFIELD);
 		} else {
-			clipTable.setRowFilter(CustomSearchFilter.create(search), RowFilterSource.TEXTFIELD);
+			clipTable.setRowFilter(CustomSearchFilter.create(movielist, search), RowFilterSource.TEXTFIELD);
 		}
 	}
 

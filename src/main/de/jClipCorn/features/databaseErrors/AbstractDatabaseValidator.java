@@ -26,13 +26,16 @@ public abstract class AbstractDatabaseValidator {
 
 	private final List<ValidationMethod> _methods = new ArrayList<>();
 
-	protected AbstractDatabaseValidator() {
+	protected final CCMovieList movielist;
+
+	protected AbstractDatabaseValidator(CCMovieList ml) {
+		movielist = ml;
 		init();
 	}
 
 	protected abstract void init();
 
-	public void validate(List<DatabaseError> e, CCMovieList ml, DatabaseValidatorOptions opt, DoubleProgressCallbackListener pcl)
+	public void validate(List<DatabaseError> e, DatabaseValidatorOptions opt, DoubleProgressCallbackListener pcl)
 	{
 		List<ValidationMethod> vmMovies  = CCStreams.iterate(_methods).filter(m->m.Target==ValidationTarget.MOVIE).filter(m->m.Precondition.invoke(opt)).enumerate();
 		List<ValidationMethod> vmSeries  = CCStreams.iterate(_methods).filter(m->m.Target==ValidationTarget.SERIES).filter(m->m.Precondition.invoke(opt)).enumerate();
@@ -53,20 +56,20 @@ public abstract class AbstractDatabaseValidator {
 
 		pcl.setMaxAndResetValueBoth(outerCount+1, 1);
 
-		if (validateElements) findElementErrors(e, ml, pcl, vmMovies, vmSeries, vmSeasons, vmEpisode); // [1]
+		if (validateElements) findElementErrors(e, pcl, vmMovies, vmSeries, vmSeasons, vmEpisode); // [1]
 
-		if (opt.ValidateCovers) findCoverErrors(e, ml, pcl); // [2]
+		if (opt.ValidateCovers) findCoverErrors(e, pcl); // [2]
 
-		if (opt.ValidateCoverFiles) findCoverFileErrors(e, ml, pcl); // [3]
+		if (opt.ValidateCoverFiles) findCoverFileErrors(e, pcl); // [3]
 
-		if (opt.ValidateAdditional) findDuplicateFilesByPath(e, ml, pcl);      // [4]
-		if (opt.ValidateAdditional) findDuplicateFilesByMediaInfo(e, ml, pcl); // [5]
+		if (opt.ValidateAdditional) findDuplicateFilesByPath(e, pcl);      // [4]
+		if (opt.ValidateAdditional) findDuplicateFilesByMediaInfo(e, pcl); // [5]
 
-		if (opt.ValidateGroups) findErrorInGroups(e, ml, pcl); // [6]
+		if (opt.ValidateGroups) findErrorInGroups(e, pcl); // [6]
 
-		if (opt.ValidateOnlineReferences) findDuplicateOnlineRef(e, ml, pcl); // [7]
+		if (opt.ValidateOnlineReferences) findDuplicateOnlineRef(e, pcl); // [7]
 
-		if (opt.ValidateDatabaseConsistence) findInternalDatabaseErrors(e, ml, pcl); // [8]
+		if (opt.ValidateDatabaseConsistence) findInternalDatabaseErrors(e, pcl); // [8]
 
 		pcl.reset();
 	}
@@ -163,7 +166,7 @@ public abstract class AbstractDatabaseValidator {
 		_methods.add(m);
 	}
 
-	private void findElementErrors(List<DatabaseError> e, CCMovieList movielist, DoubleProgressCallbackListener pcl, List<ValidationMethod> vmMovies, List<ValidationMethod> vmSeries, List<ValidationMethod> vmSeasons, List<ValidationMethod> vmEpisode)
+	private void findElementErrors(List<DatabaseError> e, DoubleProgressCallbackListener pcl, List<ValidationMethod> vmMovies, List<ValidationMethod> vmSeries, List<ValidationMethod> vmSeasons, List<ValidationMethod> vmEpisode)
 	{
 		pcl.stepRootAndResetSub("Validate database elements", movielist.getTotalDatabaseElementCount()); //$NON-NLS-1$
 
@@ -199,11 +202,11 @@ public abstract class AbstractDatabaseValidator {
 		}
 	}
 
-	protected abstract void findCoverErrors(List<DatabaseError> e, CCMovieList movielist, DoubleProgressCallbackListener pcl);
-	protected abstract void findCoverFileErrors(List<DatabaseError> e, CCMovieList movielist, DoubleProgressCallbackListener pcl);
-	protected abstract void findDuplicateFilesByPath(List<DatabaseError> e, CCMovieList movielist, DoubleProgressCallbackListener pcl);
-	protected abstract void findDuplicateFilesByMediaInfo(List<DatabaseError> e, CCMovieList movielist, DoubleProgressCallbackListener pcl);
-	protected abstract void findErrorInGroups(List<DatabaseError> e, CCMovieList movielist, DoubleProgressCallbackListener pcl);
-	protected abstract void findDuplicateOnlineRef(List<DatabaseError> e, CCMovieList movielist, DoubleProgressCallbackListener pcl);
-	protected abstract void findInternalDatabaseErrors(List<DatabaseError> e, CCMovieList movielist, DoubleProgressCallbackListener pcl);
+	protected abstract void findCoverErrors(List<DatabaseError> e, DoubleProgressCallbackListener pcl);
+	protected abstract void findCoverFileErrors(List<DatabaseError> e, DoubleProgressCallbackListener pcl);
+	protected abstract void findDuplicateFilesByPath(List<DatabaseError> e, DoubleProgressCallbackListener pcl);
+	protected abstract void findDuplicateFilesByMediaInfo(List<DatabaseError> e, DoubleProgressCallbackListener pcl);
+	protected abstract void findErrorInGroups(List<DatabaseError> e, DoubleProgressCallbackListener pcl);
+	protected abstract void findDuplicateOnlineRef(List<DatabaseError> e, DoubleProgressCallbackListener pcl);
+	protected abstract void findInternalDatabaseErrors(List<DatabaseError> e, DoubleProgressCallbackListener pcl);
 }

@@ -37,6 +37,11 @@ public class MovieListCache extends CalculationCache<CCMovieList>
 	}
 
 	@Override
+	protected CCMovieList getMovieList() {
+		return source;
+	}
+
+	@Override
 	protected ICalculationCache getOwnerCache()
 	{
 		return null;

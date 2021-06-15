@@ -22,6 +22,7 @@ import de.jClipCorn.gui.frames.initialConfigFrame.InitialConfigFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.mainFrame.MainFrame;
 import de.jClipCorn.properties.CCProperties;
+import de.jClipCorn.properties.enumerations.CCDatabaseDriver;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.comparator.CCDatabaseElementComparator;
 import de.jClipCorn.util.comparator.CCMovieComparator;
@@ -47,8 +48,6 @@ import java.util.List;
 import java.util.*;
 
 public class CCMovieList {
-	private static CCMovieList instance = null;
-	
 	private final List<CCDatabaseElement> list;
 	
 	private final List<CCDBUpdateListener> listener;
@@ -62,7 +61,7 @@ public class CCMovieList {
 	private boolean isLoading = false;
 	private boolean isLoaded  = false;
 
-	private CCMovieList(CCDatabase db, boolean setInstance) {
+	private CCMovieList(CCDatabase db) {
 		this.list     = new Vector<>();
 		this.listener = new Vector<>();
 
@@ -70,20 +69,23 @@ public class CCMovieList {
 		this.database = db;
 
 		_cache = new MovieListCache(this);
-
-		if (setInstance) instance = this;
 	}
 	
-	public static CCMovieList create(boolean setInstance) {
-		return new CCMovieList(CCDatabase.create(CCProperties.getInstance().PROP_DATABASE_NAME.getValue()), setInstance	);
+	public static CCMovieList createInstanceMovieList() {
+		var db = CCDatabase.create(CCProperties.getInstance().PROP_DATABASE_DRIVER.getValue(), CCProperties.getInstance().PROP_DATABASE_NAME.getValue(), CCProperties.getInstance().ARG_READONLY);
+		return new CCMovieList(db);
 	}
 	
 	public static CCMovieList createInMemory() {
-		return new CCMovieList(CCDatabase.createInMemory(), false);
+		return new CCMovieList(CCDatabase.createInMemory());
 	}
 	
 	public static CCMovieList createStub() {
-		return new CCMovieList(CCDatabase.createStub(), false);
+		return new CCMovieList(CCDatabase.createStub());
+	}
+
+	public static CCMovieList loadExtern(CCDatabaseDriver drv, String file, boolean readonly) {
+		return new CCMovieList(CCDatabase.create(drv, file, readonly));
 	}
 
 	public void showInitialWizard() {
@@ -94,7 +96,7 @@ public class CCMovieList {
 				ApplicationHelper.exitApplication(0, true);
 			}
 
-			database = CCDatabase.create(CCProperties.getInstance().PROP_DATABASE_NAME.getValue()); // in case db type has changed
+			database = CCDatabase.create(CCProperties.getInstance().PROP_DATABASE_DRIVER.getValue(), CCProperties.getInstance().PROP_DATABASE_NAME.getValue(), CCProperties.getInstance().ARG_READONLY); // in case db type has changed
 		}
 	}
 	
@@ -189,8 +191,8 @@ public class CCMovieList {
 		database.fillCoverCache();
 	}
 
-	public static boolean hasNoInstanceOrIsInitializingOrIsLoading() {
-		return instance == null || instance.isLoading || !instance.isLoaded;
+	public boolean isInitializingOrIsLoading() {
+		return isLoading || !isLoaded;
 	}
 
 	public CCDatabaseElement getDatabaseElementBySort(int row) { // WARNIG SORT <> MOVIEID || SORT IN DATABASE (SORTED BY MOVIEID)
@@ -414,7 +416,7 @@ public class CCMovieList {
 	}
 
 	public boolean update(CCMovie el) {
-		if (CCProperties.getInstance().ARG_READONLY) {
+		if (database.isReadonly()) {
 			CCLog.addInformation(LocaleBundle.getString("LogMessage.OperationFailedDueToReadOnly")); //$NON-NLS-1$
 			
 			el.beginUpdating();
@@ -432,7 +434,7 @@ public class CCMovieList {
 	}
 
 	public boolean update(CCEpisode ep) {
-		if (CCProperties.getInstance().ARG_READONLY) {
+		if (database.isReadonly()) {
 			CCLog.addInformation(LocaleBundle.getString("LogMessage.OperationFailedDueToReadOnly")); //$NON-NLS-1$
 						
 			ep.beginUpdating();
@@ -450,7 +452,7 @@ public class CCMovieList {
 	}
 
 	public boolean update(CCSeries se) {
-		if (CCProperties.getInstance().ARG_READONLY) {
+		if (database.isReadonly()) {
 			CCLog.addInformation(LocaleBundle.getString("LogMessage.OperationFailedDueToReadOnly")); //$NON-NLS-1$
 			
 			se.beginUpdating();
@@ -468,7 +470,7 @@ public class CCMovieList {
 	}
 
 	public boolean update(CCSeason sa) {
-		if (CCProperties.getInstance().ARG_READONLY) {
+		if (database.isReadonly()) {
 			CCLog.addInformation(LocaleBundle.getString("LogMessage.OperationFailedDueToReadOnly")); //$NON-NLS-1$
 			
 			sa.beginUpdating();
@@ -907,10 +909,6 @@ public class CCMovieList {
 	public void reconnectDatabase() {
 		database.reconnect();
 	}
-	
-	public static CCMovieList getInstance() {
-		return instance;
-	}
 
 	public CCEpisode getLastPlayedEpisode() {
 		CCEpisode max = null;
@@ -1139,5 +1137,9 @@ public class CCMovieList {
 
 	public ICalculationCache getCache() {
 		return _cache;
+	}
+
+	public boolean isReadonly() {
+		return database.isReadonly();
 	}
 }

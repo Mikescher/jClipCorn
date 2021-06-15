@@ -13,7 +13,11 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 
 public class CustomExactLanguageFilter extends AbstractCustomStructureElementFilter {
 	private CCDBLanguageList languagelist = CCDBLanguageList.EMPTY;
-	
+
+	public CustomExactLanguageFilter(CCMovieList ml) {
+		super(ml);
+	}
+
 	@Override
 	public boolean includes(CCMovie e) {
 		return e.getLanguage().equals(languagelist);
@@ -46,12 +50,12 @@ public class CustomExactLanguageFilter extends AbstractCustomStructureElementFil
 	}
 	
 	@Override
-	public AbstractCustomFilter createNew() {
-		return new CustomExactLanguageFilter();
+	public AbstractCustomFilter createNew(CCMovieList ml) {
+		return new CustomExactLanguageFilter(ml);
 	}
 
-	public static CustomExactLanguageFilter create(CCDBLanguageList data) {
-		CustomExactLanguageFilter f = new CustomExactLanguageFilter();
+	public static CustomExactLanguageFilter create(CCMovieList ml, CCDBLanguageList data) {
+		CustomExactLanguageFilter f = new CustomExactLanguageFilter(ml);
 		f.languagelist = data;
 		return f;
 	}
@@ -60,7 +64,7 @@ public class CustomExactLanguageFilter extends AbstractCustomStructureElementFil
 	public CustomFilterConfig[] createConfig(CCMovieList ml) {
 		return new CustomFilterConfig[]
 		{
-			new CustomFilterLanguageListConfig(() -> languagelist,p -> languagelist = p),
+			new CustomFilterLanguageListConfig(ml, () -> languagelist,p -> languagelist = p),
 		};
 	}
 }

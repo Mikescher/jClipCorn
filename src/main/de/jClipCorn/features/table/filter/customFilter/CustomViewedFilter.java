@@ -11,6 +11,10 @@ import de.jClipCorn.features.table.filter.filterSerialization.FilterSerializatio
 public class CustomViewedFilter extends AbstractCustomFilter {
 	private boolean viewed = false;
 
+	public CustomViewedFilter(CCMovieList ml) {
+		super(ml);
+	}
+
 	@Override
 	public boolean includes(ICCDatabaseStructureElement e) {
 		return ! viewed ^ e.getExtendedViewedState().toBool();
@@ -38,12 +42,12 @@ public class CustomViewedFilter extends AbstractCustomFilter {
 	}
 
 	@Override
-	public AbstractCustomFilter createNew() {
-		return new CustomViewedFilter();
+	public AbstractCustomFilter createNew(CCMovieList ml) {
+		return new CustomViewedFilter(ml);
 	}
 
-	public static AbstractCustomFilter create(boolean data) {
-		CustomViewedFilter f = new CustomViewedFilter();
+	public static AbstractCustomFilter create(CCMovieList ml, boolean data) {
+		CustomViewedFilter f = new CustomViewedFilter(ml);
 		f.viewed = data;
 		return f;
 	}
@@ -52,7 +56,7 @@ public class CustomViewedFilter extends AbstractCustomFilter {
 	public CustomFilterConfig[] createConfig(CCMovieList ml) {
 		return new CustomFilterConfig[]
 		{
-			new CustomFilterBoolConfig(() -> viewed, a -> viewed = a, LocaleBundle.getString("FilterTree.Viewed")), //$NON-NLS-1$
+			new CustomFilterBoolConfig(ml, () -> viewed, a -> viewed = a, LocaleBundle.getString("FilterTree.Viewed")), //$NON-NLS-1$
 		};
 	}
 }

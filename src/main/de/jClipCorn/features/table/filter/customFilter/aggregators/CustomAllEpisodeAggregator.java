@@ -11,7 +11,10 @@ import de.jClipCorn.features.table.filter.filterConfig.CustomFilterConfig;
 import de.jClipCorn.features.table.filter.filterSerialization.FilterSerializationConfig;
 
 public class CustomAllEpisodeAggregator extends CustomAggregator {
-	
+	public CustomAllEpisodeAggregator(CCMovieList ml) {
+		super(ml);
+	}
+
 	@Override
 	public boolean includes(CCSeries series) {
 		for (CCEpisode ep : series.iteratorEpisodes()) {
@@ -40,7 +43,7 @@ public class CustomAllEpisodeAggregator extends CustomAggregator {
 	public CustomFilterConfig[] createConfig(CCMovieList ml) {
 		return new CustomFilterConfig[]
 		{
-			new CustomChildConfig(this::getProcessingFilter, this::setProcessorFilter, LocaleBundle.getString("FilterTree.Custom.CustomOperatorFilterDialog.ChangeFilter.text")), //$NON-NLS-1$
+			new CustomChildConfig(ml, this::getProcessingFilter, this::setProcessorFilter, LocaleBundle.getString("FilterTree.Custom.CustomOperatorFilterDialog.ChangeFilter.text")), //$NON-NLS-1$
 		};
 	}
 
@@ -60,7 +63,7 @@ public class CustomAllEpisodeAggregator extends CustomAggregator {
 	}
 
 	@Override
-	public AbstractCustomFilter createNew() {
-		return new CustomAllEpisodeAggregator();
+	public AbstractCustomFilter createNew(CCMovieList ml) {
+		return new CustomAllEpisodeAggregator(ml);
 	}
 }

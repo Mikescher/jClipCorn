@@ -1,10 +1,15 @@
 package de.jClipCorn.features.table.filter;
 
+import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.database.databaseElement.ICCDatabaseStructureElement;
 
 public abstract class AbstractCustomDatabaseElementFilter extends AbstractCustomFilter {
+
+	public AbstractCustomDatabaseElementFilter(CCMovieList ml) {
+		super(ml);
+	}
 
 	public abstract boolean includes(CCDatabaseElement e);
 

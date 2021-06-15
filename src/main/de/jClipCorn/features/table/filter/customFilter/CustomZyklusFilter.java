@@ -17,10 +17,14 @@ import de.jClipCorn.util.datatypes.StringMatchType;
 
 public class CustomZyklusFilter extends AbstractCustomMovieOrSeriesFilter {
 	private String searchString = ""; //$NON-NLS-1$
-	
+
 	private StringMatchType stringMatch = StringMatchType.SM_INCLUDES;
 	private boolean caseSensitive = true;
-	
+
+	public CustomZyklusFilter(CCMovieList ml) {
+		super(ml);
+	}
+
 	@Override
 	public boolean includes(CCMovie m) {
 		String zyklus = m.getZyklus().getTitle();
@@ -99,20 +103,20 @@ public class CustomZyklusFilter extends AbstractCustomMovieOrSeriesFilter {
 	}
 	
 	@Override
-	public AbstractCustomFilter createNew() {
-		return new CustomZyklusFilter();
+	public AbstractCustomFilter createNew(CCMovieList ml) {
+		return new CustomZyklusFilter(ml);
 	}
 
-	public static AbstractCustomFilter create(String data) {
-		CustomZyklusFilter f = new CustomZyklusFilter();
+	public static AbstractCustomFilter create(CCMovieList ml, String data) {
+		CustomZyklusFilter f = new CustomZyklusFilter(ml);
 		f.searchString = data;
 		f.caseSensitive = true;
 		f.stringMatch = StringMatchType.SM_EQUALS;
 		return f;
 	}
 
-	public static CustomZyklusFilter create(CCMovieZyklus data) {
-		CustomZyklusFilter f = new CustomZyklusFilter();
+	public static CustomZyklusFilter create(CCMovieList ml, CCMovieZyklus data) {
+		CustomZyklusFilter f = new CustomZyklusFilter(ml);
 		f.searchString = data.getTitle();
 		f.caseSensitive = true;
 		f.stringMatch = StringMatchType.SM_EQUALS;
@@ -123,9 +127,9 @@ public class CustomZyklusFilter extends AbstractCustomMovieOrSeriesFilter {
 	public CustomFilterConfig[] createConfig(CCMovieList ml) {
 		return new CustomFilterConfig[]
 		{
-			new CustomFilterEnumOptionConfig<>(() -> stringMatch, p -> stringMatch = p, StringMatchType.getWrapper()),
-			new CustomFilterStringConfig(() -> searchString, p -> searchString = p),
-			new CustomFilterBoolConfig(() -> caseSensitive, p -> caseSensitive = p, LocaleBundle.getString("FilterTree.Custom.FilterFrames.CaseSensitive")), //$NON-NLS-1$
+			new CustomFilterEnumOptionConfig<>(ml, () -> stringMatch, p -> stringMatch = p, StringMatchType.getWrapper()),
+			new CustomFilterStringConfig(ml, () -> searchString, p -> searchString = p),
+			new CustomFilterBoolConfig(ml, () -> caseSensitive, p -> caseSensitive = p, LocaleBundle.getString("FilterTree.Custom.FilterFrames.CaseSensitive")), //$NON-NLS-1$
 		};
 	}
 }

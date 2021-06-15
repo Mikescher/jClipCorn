@@ -38,7 +38,7 @@ public class CoverPreviewFrame extends JDialog {
 		super();
 
 		_image = elem.getCover();
-		_path = new File(CCMovieList.getInstance().getCoverCache().getFilepath(elem.getCoverInfo()));
+		_path = new File(elem.getMovieList().getCoverCache().getFilepath(elem.getCoverInfo()));
 
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		initGUI(elem.getCover(), elem.title().get());
@@ -74,7 +74,7 @@ public class CoverPreviewFrame extends JDialog {
 
 		_image = img;
 		_path = null;
-		
+
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		initGUI(img, LocaleBundle.getString("CoverPreviewFrame.title")); //$NON-NLS-1$
 		setLocationRelativeTo(findWindow(owner));

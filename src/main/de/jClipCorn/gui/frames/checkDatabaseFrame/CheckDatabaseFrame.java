@@ -335,8 +335,9 @@ public class CheckDatabaseFrame extends JFrame {
 			lblProgress2.setVisible(true);
 			
 			List<DatabaseError> errors = new ArrayList<>();
-			
-			CCDatabaseValidator.Inst().validate(errors, movielist, opts, new DoubleProgressCallbackProgressBarHelper(pbProgress1, lblProgress1, pbProgress2, lblProgress2));
+
+			var validator = new CCDatabaseValidator(movielist);
+			validator.validate(errors, opts, new DoubleProgressCallbackProgressBarHelper(pbProgress1, lblProgress1, pbProgress2, lblProgress2));
 
 			errorList = errors;
 

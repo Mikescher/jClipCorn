@@ -63,7 +63,7 @@ public abstract class AbstractCustomFilter {
 	public abstract String getPrecreateName();
 	public abstract int getID();
 
-	public abstract AbstractCustomFilter createNew();
+	public abstract AbstractCustomFilter createNew(CCMovieList ml);
 	public abstract CustomFilterConfig[] createConfig(CCMovieList ml);
 	
 	public abstract boolean includes(ICCDatabaseStructureElement elem);
@@ -72,9 +72,15 @@ public abstract class AbstractCustomFilter {
 
 	private FilterSerializationConfig _cfgSerialization = null;
 
+	protected final CCMovieList movielist;
+
+	public AbstractCustomFilter(CCMovieList ml) {
+		movielist = ml;
+	}
+
 	private FilterSerializationConfig getSerializationConfig() {
 		if (_cfgSerialization == null) {
-			_cfgSerialization = new FilterSerializationConfig(getID());
+			_cfgSerialization = new FilterSerializationConfig(movielist, getID());
 			initSerialization(_cfgSerialization);
 		}
 		return _cfgSerialization;
@@ -136,97 +142,97 @@ public abstract class AbstractCustomFilter {
 		return builder.toString();
 	}
 	
-	public static AbstractCustomFilter getFilterByID(int id) {
+	public static AbstractCustomFilter getFilterByID(CCMovieList ml, int id) {
 
-		for (AbstractCustomFilter f : getAllOperatorFilter()) {
+		for (AbstractCustomFilter f : getAllOperatorFilter(ml)) {
 			if (f.getID() == id) return f;
 		}
 		
-		for (AbstractCustomFilter f : getAllSimpleFilter()) {
+		for (AbstractCustomFilter f : getAllSimpleFilter(ml)) {
 			if (f.getID() == id) return f;
 		}
 		
-		for (AbstractCustomFilter f : getAllAggregatorFilter()) {
+		for (AbstractCustomFilter f : getAllAggregatorFilter(ml)) {
 			if (f.getID() == id) return f;
 		}
 
-		for (AbstractCustomFilter f : getAllHiddenFilter()) {
+		for (AbstractCustomFilter f : getAllHiddenFilter(ml)) {
 			if (f.getID() == id) return f;
 		}
 
 		return null;
 	}
 
-	public static CCStream<AbstractCustomFilter> iterateAllSimpleFilterSorted() {
-		return CCStreams.iterate(getAllSimpleFilter()).sortByProperty(f -> f.getPrecreateName(), new StringComparator());
+	public static CCStream<AbstractCustomFilter> iterateAllSimpleFilterSorted(CCMovieList ml) {
+		return CCStreams.iterate(getAllSimpleFilter(ml)).sortByProperty(f -> f.getPrecreateName(), new StringComparator());
 	}
 	
-	public static AbstractCustomFilter[] getAllSimpleFilter() {
+	public static AbstractCustomFilter[] getAllSimpleFilter(CCMovieList ml) {
 		return new AbstractCustomFilter[] { 
-			new CustomTitleFilter(),
-			new CustomFormatFilter(),
-			new CustomFSKFilter(),
-			new CustomGenreFilter(),
-			new CustomLanguageFilter(),
-			new CustomExactLanguageFilter(),
-			new CustomOnlinescoreFilter(),
-			new CustomQualityCategoryTypeFilter(),
-			new CustomMediaInfoSetFilter(),
-			new CustomMediaInfoValueFilter(),
-			new CustomUserScoreFilter(),
-			new CustomMainReferenceFilter(),
-			new CustomAnyReferenceFilter(),
-			new CustomTagFilter(),
-			new CustomGroupFilter(),
-			new CustomTypFilter(),
-			new CustomViewedFilter(),
-			new CustomExtendedViewedFilter(),
-			new CustomHistoryFilter(),
-			new CustomYearFilter(),
-			new CustomZyklusFilter(),
-			new CustomAddDateFilter(),
-			new CustomViewcountFilter(),
-			new CustomEpisodecountFilter(),
-			new CustomCoverDimensionFilter(),
-			new CustomRelativeHistoryFilter(),
+			new CustomTitleFilter(ml),
+			new CustomFormatFilter(ml),
+			new CustomFSKFilter(ml),
+			new CustomGenreFilter(ml),
+			new CustomLanguageFilter(ml),
+			new CustomExactLanguageFilter(ml),
+			new CustomOnlinescoreFilter(ml),
+			new CustomQualityCategoryTypeFilter(ml),
+			new CustomMediaInfoSetFilter(ml),
+			new CustomMediaInfoValueFilter(ml),
+			new CustomUserScoreFilter(ml),
+			new CustomMainReferenceFilter(ml),
+			new CustomAnyReferenceFilter(ml),
+			new CustomTagFilter(ml),
+			new CustomGroupFilter(ml),
+			new CustomTypFilter(ml),
+			new CustomViewedFilter(ml),
+			new CustomExtendedViewedFilter(ml),
+			new CustomHistoryFilter(ml),
+			new CustomYearFilter(ml),
+			new CustomZyklusFilter(ml),
+			new CustomAddDateFilter(ml),
+			new CustomViewcountFilter(ml),
+			new CustomEpisodecountFilter(ml),
+			new CustomCoverDimensionFilter(ml),
+			new CustomRelativeHistoryFilter(ml),
 		};
 	}
 	
-	public static CustomOperator[] getAllOperatorFilter() {
+	public static CustomOperator[] getAllOperatorFilter(CCMovieList ml) {
 		return new CustomOperator[] {
-			new CustomAndOperator(),
-			new CustomOrOperator(),
-			new CustomNandOperator(),
-			new CustomNorOperator(),
+			new CustomAndOperator(ml),
+			new CustomOrOperator(ml),
+			new CustomNandOperator(ml),
+			new CustomNorOperator(ml),
 		};
 	}
 	
-	public static CustomAggregator[] getAllAggregatorFilter() {
+	public static CustomAggregator[] getAllAggregatorFilter(CCMovieList ml) {
 		return new CustomAggregator[] {
-			new CustomAnyEpisodeAggregator(),
-			new CustomAllEpisodeAggregator(),
+			new CustomAnyEpisodeAggregator(ml),
+			new CustomAllEpisodeAggregator(ml),
 
-			new CustomAnySeasonAggregator(),
-			new CustomAllSeasonAggregator(),
+			new CustomAnySeasonAggregator(ml),
+			new CustomAllSeasonAggregator(ml),
 
-			new CustomEpisodeCountAggregator(),
-			new CustomSeasonCountAggregator(),
+			new CustomEpisodeCountAggregator(ml),
+			new CustomSeasonCountAggregator(ml),
 		};
 	}
 
-	public static AbstractCustomFilter[] getAllHiddenFilter() {
+	public static AbstractCustomFilter[] getAllHiddenFilter(CCMovieList ml) {
 		return new AbstractCustomFilter[] {
-			new CustomSearchFilter(),
-			new CustomCharFilter(),
+			new CustomSearchFilter(ml),
+			new CustomCharFilter(ml),
 		};
 	}
 	
-	public static AbstractCustomFilter createFilterFromExport(String txt) {
+	public static AbstractCustomFilter createFilterFromExport(CCMovieList ml, String txt) {
 
 		int id = FilterSerializationConfig.getIDFromExport(txt);
 		if (id < 0) return null;
 		
-		AbstractCustomFilter f = getFilterByID(id);
+		AbstractCustomFilter f = getFilterByID(ml, id);
 		if (f == null) return null;
 		
 		if (f.importFromString(txt)) {
@@ -236,8 +242,8 @@ public abstract class AbstractCustomFilter {
 		}
 	}
 
-	public AbstractCustomFilter createCopy() {
-		AbstractCustomFilter f = createNew();
+	public AbstractCustomFilter createCopy(CCMovieList ml) {
+		AbstractCustomFilter f = createNew(ml);
 		boolean r = f.importFromString(exportToString());
 		if (!r)return null;
 		return f;
@@ -250,5 +256,9 @@ public abstract class AbstractCustomFilter {
 	@Override
 	public String toString() {
 		return getPrecreateName();
+	}
+
+	public CCMovieList getMovieList() {
+		return movielist;
 	}
 }

@@ -1,12 +1,18 @@
 package de.jClipCorn.features.table.filter.filterConfig;
 
+import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.features.table.filter.AbstractCustomFilter;
 
+import javax.swing.*;
 import java.util.Random;
 
-import javax.swing.JComponent;
-
 public abstract class CustomFilterConfig {
+
+	protected final CCMovieList movielist;
+
+	public CustomFilterConfig(CCMovieList ml) {
+		this.movielist = ml;
+	}
 
 	public abstract JComponent getComponent(Runnable onChange);
 

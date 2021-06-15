@@ -11,7 +11,6 @@ import de.jClipCorn.gui.guiComponents.CoverLabel;
 import de.jClipCorn.gui.guiComponents.ReadableTextField;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
-import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.DialogHelper;
@@ -199,7 +198,7 @@ public class CreateSeriesFolderStructureFrame extends JFrame {
 
 		lsTest.autoResize();
 
-		btnOk.setEnabled(!CCStreams.iterate(elements).any(e -> e.State== CSFSElement.CSFSState.Error) && ! CCProperties.getInstance().ARG_READONLY);
+		btnOk.setEnabled(!CCStreams.iterate(elements).any(e -> e.State== CSFSElement.CSFSState.Error) && ! series.getMovieList().isReadonly());
 	}
 	
 	private boolean startMoving() {

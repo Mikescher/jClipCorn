@@ -16,7 +16,11 @@ public class CustomOnlinescoreFilter extends AbstractCustomDatabaseElementFilter
 	private CCOnlineScore low = CCOnlineScore.STARS_0_0;
 	private CCOnlineScore high = CCOnlineScore.STARS_0_0;
 	private DecimalSearchType searchType = DecimalSearchType.EXACT;
-	
+
+	public CustomOnlinescoreFilter(CCMovieList ml) {
+		super(ml);
+	}
+
 	@Override
 	public boolean includes(CCDatabaseElement e) {
 		CCOnlineScore osco = e.getOnlinescore();
@@ -74,12 +78,12 @@ public class CustomOnlinescoreFilter extends AbstractCustomDatabaseElementFilter
 	}
 
 	@Override
-	public AbstractCustomFilter createNew() {
-		return new CustomOnlinescoreFilter();
+	public AbstractCustomFilter createNew(CCMovieList ml) {
+		return new CustomOnlinescoreFilter(ml);
 	}
 
-	public static CustomOnlinescoreFilter create(CCOnlineScore data) {
-		CustomOnlinescoreFilter f = new CustomOnlinescoreFilter();
+	public static CustomOnlinescoreFilter create(CCMovieList ml, CCOnlineScore data) {
+		CustomOnlinescoreFilter f = new CustomOnlinescoreFilter(ml);
 		f.searchType = DecimalSearchType.EXACT;
 		f.low = data;
 		return f;
@@ -101,7 +105,7 @@ public class CustomOnlinescoreFilter extends AbstractCustomDatabaseElementFilter
 	public CustomFilterConfig[] createConfig(CCMovieList ml) {
 		return new CustomFilterConfig[]
 		{
-			new CustomFilterIntAreaConfig(this::getAsIntArea, this::setAsIntArea, 0, 10),
+			new CustomFilterIntAreaConfig(ml, this::getAsIntArea, this::setAsIntArea, 0, 10),
 		};
 	}
 }

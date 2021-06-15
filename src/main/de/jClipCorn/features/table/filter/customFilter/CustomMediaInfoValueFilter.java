@@ -21,6 +21,10 @@ public class CustomMediaInfoValueFilter extends AbstractCustomStructureElementFi
 	private String value = Str.Empty;
 	private AnyMatchType match = AnyMatchType.EXACT;
 
+	public CustomMediaInfoValueFilter(CCMovieList ml) {
+		super(ml);
+	}
+
 	@Override
 	public boolean includes(CCMovie mov) {
 		return matches(mov.mediaInfo().get());
@@ -109,25 +113,24 @@ public class CustomMediaInfoValueFilter extends AbstractCustomStructureElementFi
 	}
 
 	@Override
-	public AbstractCustomFilter createNew() {
-		return new CustomMediaInfoValueFilter();
+	public AbstractCustomFilter createNew(CCMovieList ml) {
+		return new CustomMediaInfoValueFilter(ml);
 	}
 
 	@Override
 	public CustomFilterConfig[] createConfig(CCMovieList ml) {
 		return new CustomFilterConfig[]
 		{
-			new CustomFilterEnumChooserConfig<>(() -> field, a -> field = a, CCMediaInfoField.getWrapper()), 
-			new CustomFilterEnumOptionConfig<>(() -> match, a -> match = a, AnyMatchType.getWrapper()),
-			new CustomFilterStringConfig(() -> value, a -> value = a), 
-			new CustomFilterBoolConfig(() -> caseSensitive, p -> caseSensitive = p, LocaleBundle.getString("FilterTree.Custom.FilterFrames.CaseSensitive")), //$NON-NLS-1$
-			new CustomFilterPreviewListConfig(this::getPreview), 
+			new CustomFilterEnumChooserConfig<>(ml, () -> field, a -> field = a, CCMediaInfoField.getWrapper()),
+			new CustomFilterEnumOptionConfig<>(ml, () -> match, a -> match = a, AnyMatchType.getWrapper()),
+			new CustomFilterStringConfig(ml, () -> value, a -> value = a),
+			new CustomFilterBoolConfig(ml, () -> caseSensitive, p -> caseSensitive = p, LocaleBundle.getString("FilterTree.Custom.FilterFrames.CaseSensitive")), //$NON-NLS-1$
+			new CustomFilterPreviewListConfig(ml, this::getPreview),
 		};
 	}
 
 	private List<String> getPreview() {
-		return CCMovieList
-				.getInstance()
+		return movielist
 				.iteratorPlayables()
 				.map(e -> e.mediaInfo().get())
 				.filter(p -> field == CCMediaInfoField.IS_SET || p.isSet())

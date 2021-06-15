@@ -242,12 +242,12 @@ public class ClipTable extends JScrollPane implements CCDBUpdateListener, ListSe
 		
 		CCMovieZyklus zyklus = getZyklusUnderMouse(e.getPoint());
 		if (e.getButton() == MouseEvent.BUTTON1 && zyklus != null) {
-			setRowFilter(CustomZyklusFilter.create(zyklus), RowFilterSource.TABLE_CLICKED);
+			setRowFilter(CustomZyklusFilter.create(owner.getMovielist(), zyklus), RowFilterSource.TABLE_CLICKED);
 		}
 		
 		CCUserScore score = getScoreUnderMouse(e.getPoint());
 		if (e.getButton() == MouseEvent.BUTTON1 && score != null) {
-			setRowFilter(CustomUserScoreFilter.create(score), RowFilterSource.TABLE_CLICKED);
+			setRowFilter(CustomUserScoreFilter.create(owner.getMovielist(), score), RowFilterSource.TABLE_CLICKED);
 		}
 	}
 	

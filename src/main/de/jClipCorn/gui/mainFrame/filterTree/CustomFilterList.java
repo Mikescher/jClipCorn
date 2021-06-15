@@ -1,24 +1,31 @@
 package de.jClipCorn.gui.mainFrame.filterTree;
 
+import de.jClipCorn.database.CCMovieList;
+import de.jClipCorn.features.log.CCLog;
+import de.jClipCorn.features.table.filter.customFilter.operators.CustomAndOperator;
+import de.jClipCorn.features.table.filter.customFilter.operators.CustomOperator;
+import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.properties.CCProperties;
+import de.jClipCorn.util.formatter.PathFormatter;
+import de.jClipCorn.util.helper.SimpleFileUtils;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-
-import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.features.log.CCLog;
-import de.jClipCorn.properties.CCProperties;
-import de.jClipCorn.features.table.filter.customFilter.operators.CustomAndOperator;
-import de.jClipCorn.features.table.filter.customFilter.operators.CustomOperator;
-import de.jClipCorn.util.formatter.PathFormatter;
-import de.jClipCorn.util.helper.SimpleFileUtils;
 
 public class CustomFilterList extends ArrayList<CustomFilterObject> {
 	private static final long serialVersionUID = -1658394481177986689L;
 
 	public static String NAME_TEMPORARY = "{{temporary}}"; //$NON-NLS-1$
-	
+
+	private final CCMovieList _movielist;
+
+	public CustomFilterList(CCMovieList ml) {
+		_movielist = ml;
+	}
+
 	public void save() {
-		if (CCProperties.getInstance().ARG_READONLY) {
+		if (_movielist.isReadonly()) {
 			CCLog.addInformation(LocaleBundle.getString("LogMessage.OperationFailedDueToReadOnly")); //$NON-NLS-1$
 			return;
 		}
@@ -69,7 +76,7 @@ public class CustomFilterList extends ArrayList<CustomFilterObject> {
 				}
 				
 				CustomOperator op;
-				if ((op = new CustomAndOperator()).importFromString(line[1])) {
+				if ((op = new CustomAndOperator(_movielist)).importFromString(line[1])) {
 					add(new CustomFilterObject(line[0], op));
 				} else {
 					CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CouldNotParseFilterList", i+1)); //$NON-NLS-1$

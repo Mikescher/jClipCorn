@@ -15,6 +15,10 @@ import de.jClipCorn.features.table.filter.filterSerialization.FilterSerializatio
 public class CustomLanguageFilter extends AbstractCustomStructureElementFilter {
 	private CCDBLanguage language = CCDBLanguage.GERMAN;
 
+	public CustomLanguageFilter(CCMovieList ml) {
+		super(ml);
+	}
+
 	@Override
 	public boolean includes(CCMovie e) {
 		return e.getLanguage().contains(language);
@@ -52,12 +56,12 @@ public class CustomLanguageFilter extends AbstractCustomStructureElementFilter {
 	}
 	
 	@Override
-	public AbstractCustomFilter createNew() {
-		return new CustomLanguageFilter();
+	public AbstractCustomFilter createNew(CCMovieList ml) {
+		return new CustomLanguageFilter(ml);
 	}
 
-	public static CustomLanguageFilter create(CCDBLanguage data) {
-		CustomLanguageFilter f = new CustomLanguageFilter();
+	public static CustomLanguageFilter create(CCMovieList ml, CCDBLanguage data) {
+		CustomLanguageFilter f = new CustomLanguageFilter(ml);
 		f.language = data;
 		return f;
 	}
@@ -66,7 +70,7 @@ public class CustomLanguageFilter extends AbstractCustomStructureElementFilter {
 	public CustomFilterConfig[] createConfig(CCMovieList ml) {
 		return new CustomFilterConfig[]
 		{
-			new CustomFilterEnumChooserConfig<>(() -> language, p -> language = p, CCDBLanguage.getWrapper()),
+			new CustomFilterEnumChooserConfig<>(ml, () -> language, p -> language = p, CCDBLanguage.getWrapper()),
 		};
 	}
 }

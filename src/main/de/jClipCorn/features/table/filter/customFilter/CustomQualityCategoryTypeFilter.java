@@ -12,7 +12,11 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 
 public class CustomQualityCategoryTypeFilter extends AbstractCustomDatabaseElementFilter {
 	private CCQualityCategoryType value = CCQualityCategoryType.UNKOWN;
-	
+
+	public CustomQualityCategoryTypeFilter(CCMovieList ml) {
+		super(ml);
+	}
+
 	@Override
 	public boolean includes(CCDatabaseElement e) {
 		return value.equals(e.getMediaInfoCategory().getCategoryType());
@@ -43,17 +47,17 @@ public class CustomQualityCategoryTypeFilter extends AbstractCustomDatabaseEleme
 	public CustomFilterConfig[] createConfig(CCMovieList ml) {
 		return new CustomFilterConfig[]
 		{
-			new CustomFilterEnumChooserConfig<>(() -> value, f -> value = f, CCQualityCategoryType.getWrapper()),
+			new CustomFilterEnumChooserConfig<>(ml, () -> value, f -> value = f, CCQualityCategoryType.getWrapper()),
 		};
 	}
 
 	@Override
-	public AbstractCustomFilter createNew() {
-		return new CustomQualityCategoryTypeFilter();
+	public AbstractCustomFilter createNew(CCMovieList ml) {
+		return new CustomQualityCategoryTypeFilter(ml);
 	}
 
-	public static CustomQualityCategoryTypeFilter create(CCQualityCategoryType data) {
-		CustomQualityCategoryTypeFilter f = new CustomQualityCategoryTypeFilter();
+	public static CustomQualityCategoryTypeFilter create(CCMovieList ml, CCQualityCategoryType data) {
+		CustomQualityCategoryTypeFilter f = new CustomQualityCategoryTypeFilter(ml);
 		f.value = data;
 		return f;
 	}

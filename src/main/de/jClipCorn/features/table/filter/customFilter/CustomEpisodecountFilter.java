@@ -16,7 +16,11 @@ import de.jClipCorn.util.datatypes.CCIntArea;
 
 public class CustomEpisodecountFilter extends AbstractCustomStructureElementFilter {
 	private CCIntArea area = new CCIntArea(1, 1, DecimalSearchType.EXACT);
-	
+
+	public CustomEpisodecountFilter(CCMovieList ml) {
+		super(ml);
+	}
+
 	@Override
 	public boolean includes(CCMovie m) {
 		return false;
@@ -76,12 +80,12 @@ public class CustomEpisodecountFilter extends AbstractCustomStructureElementFilt
 	}
 	
 	@Override
-	public AbstractCustomFilter createNew() {
-		return new CustomEpisodecountFilter();
+	public AbstractCustomFilter createNew(CCMovieList ml) {
+		return new CustomEpisodecountFilter(ml);
 	}
 
-	public static CustomEpisodecountFilter create(Integer data) {
-		CustomEpisodecountFilter f = new CustomEpisodecountFilter();
+	public static CustomEpisodecountFilter create(CCMovieList ml, Integer data) {
+		CustomEpisodecountFilter f = new CustomEpisodecountFilter(ml);
 		f.area.setExact(data);
 		return f;
 	}
@@ -90,7 +94,7 @@ public class CustomEpisodecountFilter extends AbstractCustomStructureElementFilt
 	public CustomFilterConfig[] createConfig(CCMovieList ml) {
 		return new CustomFilterConfig[]
 		{
-			new CustomFilterIntAreaConfig(() -> area, a -> area = a, 0, null),
+			new CustomFilterIntAreaConfig(ml, () -> area, a -> area = a, 0, null),
 		};
 	}
 }

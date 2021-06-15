@@ -91,7 +91,7 @@ public class CustomFilterEditDialog extends JDialog {
 	private void onImport() {
 		String imp = DialogHelper.showPlainInputDialog(CustomFilterEditDialog.this);
 
-		AbstractCustomFilter copy = filterObject.getFilter().createCopy();
+		AbstractCustomFilter copy = filterObject.getFilter().createCopy(movielist);
 
 		if (imp != null && (copy == null || !copy.importFromString(imp))) {
 			DialogHelper.showLocalError(CustomFilterEditDialog.this, "Dialogs.CustomFilterImportFailed"); //$NON-NLS-1$
@@ -227,7 +227,7 @@ public class CustomFilterEditDialog extends JDialog {
 	private void createEditPanel_Operator(JPanel pnl, CustomOperator filter) {
 		{
 			JComboBox<AbstractCustomFilter> cbxFilter = new JComboBox<>();
-			cbxFilter.setModel(new DefaultComboBoxModel<>(AbstractCustomFilter.iterateAllSimpleFilterSorted().toArray(new AbstractCustomFilter[0])));
+			cbxFilter.setModel(new DefaultComboBoxModel<>(AbstractCustomFilter.iterateAllSimpleFilterSorted(movielist).toArray(new AbstractCustomFilter[0])));
 			cbxFilter.setRenderer(new CustomFilterEditFilterComboboxRenderer());
 			cbxFilter.setMaximumRowCount(32);
 			pnl.add(cbxFilter, "1, 2, fill, default"); //$NON-NLS-1$
@@ -236,7 +236,7 @@ public class CustomFilterEditDialog extends JDialog {
 			btnAddFilter.addActionListener(e ->
 			{
 				if (cbxFilter.getSelectedIndex() >= 0) {
-					filter.add(((AbstractCustomFilter)cbxFilter.getSelectedItem()).createNew());
+					filter.add(((AbstractCustomFilter)cbxFilter.getSelectedItem()).createNew(movielist));
 					updateTree();
 				}
 			});
@@ -245,7 +245,7 @@ public class CustomFilterEditDialog extends JDialog {
 
 		{
 			JComboBox<AbstractCustomFilter> cbxOperator = new JComboBox<>();
-			cbxOperator.setModel(new DefaultComboBoxModel<>(AbstractCustomFilter.getAllOperatorFilter()));
+			cbxOperator.setModel(new DefaultComboBoxModel<>(AbstractCustomFilter.getAllOperatorFilter(movielist)));
 			cbxOperator.setRenderer(new CustomFilterEditFilterComboboxRenderer());
 			cbxOperator.setMaximumRowCount(32);
 			pnl.add(cbxOperator, "1, 6, fill, default"); //$NON-NLS-1$
@@ -254,7 +254,7 @@ public class CustomFilterEditDialog extends JDialog {
 			btnAddOperator.addActionListener(e ->
 			{
 				if (cbxOperator.getSelectedIndex() >= 0) {
-					filter.add(((AbstractCustomFilter)cbxOperator.getSelectedItem()).createNew());
+					filter.add(((AbstractCustomFilter)cbxOperator.getSelectedItem()).createNew(movielist));
 					updateTree();
 				}
 			});
@@ -263,7 +263,7 @@ public class CustomFilterEditDialog extends JDialog {
 
 		{
 			JComboBox<AbstractCustomFilter> cbxAggregator = new JComboBox<>();
-			cbxAggregator.setModel(new DefaultComboBoxModel<>(AbstractCustomFilter.getAllAggregatorFilter()));
+			cbxAggregator.setModel(new DefaultComboBoxModel<>(AbstractCustomFilter.getAllAggregatorFilter(movielist)));
 			cbxAggregator.setRenderer(new CustomFilterEditFilterComboboxRenderer());
 			cbxAggregator.setMaximumRowCount(32);
 			pnl.add(cbxAggregator, "1, 10, fill, default"); //$NON-NLS-1$
@@ -272,7 +272,7 @@ public class CustomFilterEditDialog extends JDialog {
 			btnAddAggregator.addActionListener(e ->
 			{
 				if (cbxAggregator.getSelectedIndex() >= 0) {
-					filter.add(((AbstractCustomFilter)cbxAggregator.getSelectedItem()).createNew());
+					filter.add(((AbstractCustomFilter)cbxAggregator.getSelectedItem()).createNew(movielist));
 					updateTree();
 				}
 			});

@@ -27,7 +27,9 @@ public class CCActionElement {
 	private final MultiSizeIconRef iconRes;
 	private final boolean visible;
 	private final KeyStroke defaultKeyStroke;
-	
+
+	private final UIActionTree tree;
+
 	private boolean isProhibitedInReadOnly = false;
 	
 	private CCKeyStrokeProperty keyStrokeProperty = null;
@@ -37,7 +39,8 @@ public class CCActionElement {
 	
 	private CCActionElement parent = null;
 	
-	public CCActionElement(String name, KeyStroke stroke, String caption, MultiSizeIconRef iconRes) {
+	public CCActionElement(UIActionTree tree, String name, KeyStroke stroke, String caption, MultiSizeIconRef iconRes) {
+		this.tree = tree;
 		this.name = name;
 		this.captionIdent = caption;
 		this.iconRes = iconRes;
@@ -47,7 +50,8 @@ public class CCActionElement {
 		this.defaultKeyStroke = stroke;
 	}
 	
-	public CCActionElement(String name, KeyStroke stroke, String caption, MultiSizeIconRef iconRes, boolean vis) {
+	public CCActionElement(UIActionTree tree, String name, KeyStroke stroke, String caption, MultiSizeIconRef iconRes, boolean vis) {
+		this.tree = tree;
 		this.name = name;
 		this.captionIdent = caption;
 		this.iconRes = iconRes;
@@ -114,7 +118,7 @@ public class CCActionElement {
 	}
 
 	public void execute(Component swingsrc, ActionSource src, List<IActionSourceObject> obj, ActionCallbackListener ltnr) {
-		if (isProhibitedInReadOnly && CCProperties.getInstance().ARG_READONLY) {
+		if (isProhibitedInReadOnly && tree.isDatabaseReadonly()) {
 			CCLog.addInformation(LocaleBundle.getString("LogMessage.OperationFailedDueToReadOnly")); //$NON-NLS-1$
 			return;
 		}
@@ -230,7 +234,7 @@ public class CCActionElement {
 			@Override
 			public void actionPerformed(ActionEvent arg0)
 			{
-				if (CCMovieList.getInstance().isBlocked()) return;
+				if (tree.getMovieList().isBlocked()) return;
 
 				if (stroke.equals(CCActionElement.this.getKeyStroke())) {
 					var srcobj = f.getSelectedActionSource();
@@ -257,7 +261,7 @@ public class CCActionElement {
 			@Override
 			public void actionPerformed(ActionEvent arg0)
 			{
-				if (CCMovieList.getInstance().isBlocked()) return;
+				if (tree.getMovieList().isBlocked()) return;
 
 				List<CCActionElement> childs = root.getAllChildren();
 				childs.add(root);
@@ -276,7 +280,7 @@ public class CCActionElement {
 		// method is always called on [ROOT] node
 		// [ROOT] node has events for all shortcut of all it's children
 
-		if (CCMovieList.getInstance().isBlocked()) return;
+		if (tree.getMovieList().isBlocked()) return;
 		
 		List<CCActionElement> childs = getAllChildren();
 		childs.add(this);

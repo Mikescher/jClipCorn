@@ -388,16 +388,16 @@ public class UpdateCodecFrame extends JFrame {
 			ThreadUtils.invokeAndWaitSafe(() -> 
 			{ 
 				btnStartCollectingData.setText(LocaleBundle.getString("UpdateMetadataFrame.BtnCollect3"));  //$NON-NLS-1$
-				btnUpdateSelectedLang.setEnabled(!CCProperties.getInstance().ARG_READONLY);
-				btnUpdateSelectedLen.setEnabled(!CCProperties.getInstance().ARG_READONLY);
-				btnUpdateSelectedMediaInfo.setEnabled(!CCProperties.getInstance().ARG_READONLY);
+				btnUpdateSelectedLang.setEnabled(!movielist.isReadonly());
+				btnUpdateSelectedLen.setEnabled(!movielist.isReadonly());
+				btnUpdateSelectedMediaInfo.setEnabled(!movielist.isReadonly());
 			});
 			collThread = null;
 		}
 	}
 
 	private void updateSelectedLanguages(boolean onlySelected) {
-		if (CCProperties.getInstance().ARG_READONLY) return;
+		if (movielist.isReadonly()) return;
 
 		List<UpdateCodecTableElement> data = onlySelected ? tableMain.getSelectedDataCopy() : tableMain.getDataCopy();
 
@@ -419,7 +419,7 @@ public class UpdateCodecFrame extends JFrame {
 	}
 
 	private void updateSelectedLengths(boolean onlySelected) {
-		if (CCProperties.getInstance().ARG_READONLY) return;
+		if (movielist.isReadonly()) return;
 
 		List<UpdateCodecTableElement> data = onlySelected ? tableMain.getSelectedDataCopy() : tableMain.getDataCopy();
 
@@ -441,7 +441,7 @@ public class UpdateCodecFrame extends JFrame {
 	}
 
 	private void updateSelectedMediaInfos(boolean onlySelected) {
-		if (CCProperties.getInstance().ARG_READONLY) return;
+		if (movielist.isReadonly()) return;
 
 		List<UpdateCodecTableElement> data = onlySelected ? tableMain.getSelectedDataCopy() : tableMain.getDataCopy();
 

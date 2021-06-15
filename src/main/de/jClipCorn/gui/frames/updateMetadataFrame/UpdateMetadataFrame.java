@@ -12,7 +12,6 @@ import de.jClipCorn.features.online.metadata.Metadataparser;
 import de.jClipCorn.features.online.metadata.OnlineMetadata;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
-import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.exceptions.EnumFormatException;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.helper.ThreadUtils;
@@ -285,19 +284,19 @@ public class UpdateMetadataFrame extends JFrame {
 			ThreadUtils.invokeAndWaitSafe(() -> 
 			{ 
 				btnStartCollectingData.setText(LocaleBundle.getString("UpdateMetadataFrame.BtnCollect3"));  //$NON-NLS-1$
-				btnUpdateAllGenres.setEnabled(!CCProperties.getInstance().ARG_READONLY);
-				btnUpdateAllOnlinescore.setEnabled(!CCProperties.getInstance().ARG_READONLY);
-				btnUpdateSelectedGenres.setEnabled(!CCProperties.getInstance().ARG_READONLY);
-				btnUpdateSelectedOnlineScore.setEnabled(!CCProperties.getInstance().ARG_READONLY);
-				btnUpdateAllReferences.setEnabled(!CCProperties.getInstance().ARG_READONLY);
-				btnUpdateSelectedRefs.setEnabled(!CCProperties.getInstance().ARG_READONLY);
+				btnUpdateAllGenres.setEnabled(!movielist.isReadonly());
+				btnUpdateAllOnlinescore.setEnabled(!movielist.isReadonly());
+				btnUpdateSelectedGenres.setEnabled(!movielist.isReadonly());
+				btnUpdateSelectedOnlineScore.setEnabled(!movielist.isReadonly());
+				btnUpdateAllReferences.setEnabled(!movielist.isReadonly());
+				btnUpdateSelectedRefs.setEnabled(!movielist.isReadonly());
 			});
 			collThread = null;
 		}
 	}
 	
 	private void UpdateScoreInDatabase(ActionEvent e, boolean onlySelected) {
-		if (CCProperties.getInstance().ARG_READONLY) return;
+		if (movielist.isReadonly()) return;
 
 		List<UpdateMetadataTableElement> data = onlySelected ? tableMain.getSelectedDataCopy() : tableMain.getDataCopy();
 
@@ -322,7 +321,7 @@ public class UpdateMetadataFrame extends JFrame {
 	}
 	
 	private void UpdateGenresInDatabase(ActionEvent e, boolean onlySelected) {
-		if (CCProperties.getInstance().ARG_READONLY) return;
+		if (movielist.isReadonly()) return;
 
 		List<UpdateMetadataTableElement> data = onlySelected ? tableMain.getSelectedDataCopy() : tableMain.getDataCopy();
 
@@ -354,7 +353,7 @@ public class UpdateMetadataFrame extends JFrame {
 	}
 	
 	private void UpdateReferencesInDatabase(ActionEvent e, boolean onlySelected) {
-		if (CCProperties.getInstance().ARG_READONLY) return;
+		if (movielist.isReadonly()) return;
 
 		List<UpdateMetadataTableElement> data = onlySelected ? tableMain.getSelectedDataCopy() : tableMain.getDataCopy();
 

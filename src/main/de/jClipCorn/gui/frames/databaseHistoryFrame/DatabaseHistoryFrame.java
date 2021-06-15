@@ -11,7 +11,6 @@ import de.jClipCorn.gui.guiComponents.ReadableTextField;
 import de.jClipCorn.gui.guiComponents.jSplitButton.JSplitButton;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
-import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datatypes.RefParam;
 import de.jClipCorn.util.datetime.CCDateTime;
@@ -67,6 +66,10 @@ public class DatabaseHistoryFrame extends JFrame
 		}
 	}
 
+	public CCMovieList getMovieList() {
+		return movielist;
+	}
+
 	private void postInit()
 	{
 		setIconImage(Resources.IMG_FRAME_ICON.get());
@@ -116,8 +119,8 @@ public class DatabaseHistoryFrame extends JFrame
 					_triggerError = err.Value;
 				}
 
-				btnEnableTrigger.setEnabled(!hactive && !CCProperties.getInstance().ARG_READONLY);
-				btnDisableTrigger.setEnabled(hactive && !CCProperties.getInstance().ARG_READONLY);
+				btnEnableTrigger.setEnabled(!hactive && !movielist.isReadonly());
+				btnDisableTrigger.setEnabled(hactive && !movielist.isReadonly());
 				btnGetHistory.setEnabled(true);
 				cbxDoAgressiveMerges.setEnabled(true);
 				cbxIgnoreIDChanges.setEnabled(true);
@@ -158,6 +161,7 @@ public class DatabaseHistoryFrame extends JFrame
 				if (Str.isNullOrWhitespace(filter)) filter = null;
 
 				List<CCCombinedHistoryEntry> data = movielist.getHistory().query(
+						movielist,
 						optTrivial1,
 						optTrivial2,
 						optTrivial1,

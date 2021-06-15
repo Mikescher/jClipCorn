@@ -12,7 +12,11 @@ import de.jClipCorn.util.stream.CCStreams;
 
 public class CustomTagFilter extends AbstractCustomFilter {
 	private int tag = 0;
-	
+
+	public CustomTagFilter(CCMovieList ml) {
+		super(ml);
+	}
+
 	@Override
 	public boolean includes(ICCDatabaseStructureElement e) {
 		return e.getTags().getTag(tag);
@@ -40,12 +44,12 @@ public class CustomTagFilter extends AbstractCustomFilter {
 	}
 	
 	@Override
-	public AbstractCustomFilter createNew() {
-		return new CustomTagFilter();
+	public AbstractCustomFilter createNew(CCMovieList ml) {
+		return new CustomTagFilter(ml);
 	}
 
-	public static CustomTagFilter create(int data) {
-		CustomTagFilter f = new CustomTagFilter();
+	public static CustomTagFilter create(CCMovieList ml, int data) {
+		CustomTagFilter f = new CustomTagFilter(ml);
 		f.tag = data;
 		return f;
 	}
@@ -54,7 +58,7 @@ public class CustomTagFilter extends AbstractCustomFilter {
 	public CustomFilterConfig[] createConfig(CCMovieList ml) {
 		return new CustomFilterConfig[]
 		{
-			new CustomFilterNamedIntChooserConfig(() -> tag, p -> tag = p, CCStreams.iterate(CCTagList.getList()).enumerate()),
+			new CustomFilterNamedIntChooserConfig(ml, () -> tag, p -> tag = p, CCStreams.iterate(CCTagList.getList()).enumerate()),
 		};
 	}
 }

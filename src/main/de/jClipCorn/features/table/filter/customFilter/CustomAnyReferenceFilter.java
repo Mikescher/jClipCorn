@@ -13,7 +13,11 @@ import de.jClipCorn.features.table.filter.filterSerialization.FilterSerializatio
 
 public class CustomAnyReferenceFilter extends AbstractCustomDatabaseElementFilter {
 	private CCOnlineRefType reftype = CCOnlineRefType.NONE;
-	
+
+	public CustomAnyReferenceFilter(CCMovieList ml) {
+		super(ml);
+	}
+
 	@Override
 	public boolean includes(CCDatabaseElement e) {
 		for (CCSingleOnlineReference soref : e.getOnlineReference()) if (soref.type.equals(reftype)) return true;
@@ -42,15 +46,15 @@ public class CustomAnyReferenceFilter extends AbstractCustomDatabaseElementFilte
 	}
 	
 	@Override
-	public AbstractCustomFilter createNew() {
-		return new CustomAnyReferenceFilter();
+	public AbstractCustomFilter createNew(CCMovieList ml) {
+		return new CustomAnyReferenceFilter(ml);
 	}
 
 	@Override
 	public CustomFilterConfig[] createConfig(CCMovieList ml) {
 		return new CustomFilterConfig[]
 		{
-			new CustomFilterEnumChooserConfig<>(() -> reftype, p -> reftype = p, CCOnlineRefType.getWrapper()),
+			new CustomFilterEnumChooserConfig<>(ml, () -> reftype, p -> reftype = p, CCOnlineRefType.getWrapper()),
 		};
 	}
 }

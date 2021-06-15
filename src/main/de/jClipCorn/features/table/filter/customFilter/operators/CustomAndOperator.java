@@ -1,17 +1,19 @@
 package de.jClipCorn.features.table.filter.customFilter.operators;
 
+import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.ICCDatabaseStructureElement;
+import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.features.table.filter.AbstractCustomFilter;
 
 public class CustomAndOperator extends CustomOperator {
 
-	public CustomAndOperator() {
-		super();
+	public CustomAndOperator(CCMovieList ml) {
+		super(ml);
 	}
 	
-	public CustomAndOperator(AbstractCustomFilter inner) {
-		super();
+	public CustomAndOperator(CCMovieList ml, AbstractCustomFilter inner) {
+		super(ml);
 		
 		add(inner);
 	}
@@ -43,11 +45,17 @@ public class CustomAndOperator extends CustomOperator {
 	}
 
 	@Override
-	public AbstractCustomFilter createNew() {
-		return new CustomAndOperator();
+	public AbstractCustomFilter createNew(CCMovieList ml) {
+		return new CustomAndOperator(ml);
 	}
 
 	public void combineWith(AbstractCustomFilter other) {
+
+		if (this.movielist != other.getMovieList())
+		{
+			CCLog.addUndefinied("Cannot combine two CustomFilter from different MovieLists"); //NON-NLS
+			return;
+		}
 
 		for (AbstractCustomFilter child : list) {
 			
@@ -63,7 +71,7 @@ public class CustomAndOperator extends CustomOperator {
 				
 				if (child.getID() == other.getID()) {
 					remove(child);
-					add(new CustomOrOperator(child, other));
+					add(new CustomOrOperator(movielist, child, other));
 					return;
 				}
 				

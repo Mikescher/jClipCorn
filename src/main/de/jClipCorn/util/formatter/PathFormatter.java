@@ -435,7 +435,7 @@ public class PathFormatter {
 	}
 	
 	public static void testWritePermissions() {
-		if (! canWriteInWorkingDir() && ! CCProperties.getInstance().ARG_READONLY) {
+		if (! canWriteInWorkingDir() && !CCProperties.getInstance().ARG_READONLY) {
 			CCLog.addFatalError(LocaleBundle.getString("LogMessage.NoWritePermissions"));
 		}
 	}

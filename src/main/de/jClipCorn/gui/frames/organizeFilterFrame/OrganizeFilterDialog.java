@@ -195,7 +195,7 @@ public class OrganizeFilterDialog extends JDialog {
 		
 		if (sel == -1) return;
 		
-		final CustomFilterObject cfo = filterlist.get(sel).copy();
+		final CustomFilterObject cfo = filterlist.get(sel).copy(movielist);
 		
 		new CustomFilterEditDialog(this, movielist, cfo, () ->
 		{
@@ -215,7 +215,7 @@ public class OrganizeFilterDialog extends JDialog {
 	}
 
 	private void onActionAdd() {
-		final CustomFilterObject cfo = new CustomFilterObject("New filter", new CustomAndOperator()); //$NON-NLS-1$
+		final CustomFilterObject cfo = new CustomFilterObject("New filter", new CustomAndOperator(movielist)); //$NON-NLS-1$
 		
 		new CustomFilterEditDialog(this, movielist, cfo, () ->
 		{

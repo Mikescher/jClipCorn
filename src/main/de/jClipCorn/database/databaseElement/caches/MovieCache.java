@@ -1,5 +1,6 @@
 package de.jClipCorn.database.databaseElement.caches;
 
+import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCMovie;
 
 public class MovieCache extends CalculationCache<CCMovie>
@@ -15,6 +16,11 @@ public class MovieCache extends CalculationCache<CCMovie>
 	protected CCMovie getSource()
 	{
 		return source;
+	}
+
+	@Override
+	protected CCMovieList getMovieList() {
+		return source.getMovieList();
 	}
 
 	@Override

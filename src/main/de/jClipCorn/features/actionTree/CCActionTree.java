@@ -298,6 +298,16 @@ public class CCActionTree extends UIActionTree{
 		}
 	}
 
+	@Override
+	protected boolean isDatabaseReadonly() {
+		return movielist.isReadonly();
+	}
+
+	@Override
+	public CCMovieList getMovieList() {
+		return movielist;
+	}
+
 	public void openFile(File file) {
 		String extension = PathFormatter.getExtension(file.getAbsolutePath());
 
@@ -676,7 +686,7 @@ public class CCActionTree extends UIActionTree{
 	}
 	
 	private void onClickHelpShowLog(CCTreeActionEvent e) {
-		new LogFrame(e.SwingOwner).setVisible(true);
+		new LogFrame(e.SwingOwner, movielist).setVisible(true);
 	}
 	
 	private void onClickHelpShowRules(CCTreeActionEvent e) {

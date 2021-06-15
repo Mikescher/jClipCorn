@@ -12,7 +12,11 @@ import de.jClipCorn.features.table.filter.filterSerialization.FilterSerializatio
 
 public class CustomFSKFilter extends AbstractCustomDatabaseElementFilter {
 	private CCFSK fsk = CCFSK.RATING_0;
-	
+
+	public CustomFSKFilter(CCMovieList ml) {
+		super(ml);
+	}
+
 	@Override
 	public boolean includes(CCDatabaseElement e) {
 		return fsk.equals(e.getFSK());
@@ -43,17 +47,17 @@ public class CustomFSKFilter extends AbstractCustomDatabaseElementFilter {
 	public CustomFilterConfig[] createConfig(CCMovieList ml) {
 		return new CustomFilterConfig[]
 		{
-			new CustomFilterEnumChooserConfig<>(() -> fsk, f -> fsk = f, CCFSK.getWrapper()),
+			new CustomFilterEnumChooserConfig<>(ml, () -> fsk, f -> fsk = f, CCFSK.getWrapper()),
 		};
 	}
 
 	@Override
-	public AbstractCustomFilter createNew() {
-		return new CustomFSKFilter();
+	public AbstractCustomFilter createNew(CCMovieList ml) {
+		return new CustomFSKFilter(ml);
 	}
 
-	public static CustomFSKFilter create(CCFSK data) {
-		CustomFSKFilter f = new CustomFSKFilter();
+	public static CustomFSKFilter create(CCMovieList ml, CCFSK data) {
+		CustomFSKFilter f = new CustomFSKFilter(ml);
 		f.fsk = data;
 		return f;
 	}

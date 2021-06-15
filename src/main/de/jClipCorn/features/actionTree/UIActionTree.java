@@ -1,12 +1,12 @@
 package de.jClipCorn.features.actionTree;
 
-import javax.swing.JComponent;
-import javax.swing.KeyStroke;
-
+import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.gui.mainFrame.MainFrame;
 import de.jClipCorn.gui.resources.MultiSizeIconRef;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.property.CCBoolProperty;
+
+import javax.swing.*;
 
 public abstract class UIActionTree {
 	private static UIActionTree instance = null;
@@ -21,15 +21,15 @@ public abstract class UIActionTree {
 	}
 
 	protected void createRoot() {
-		root = new CCActionElement("ROOT", null, "", null); //$NON-NLS-1$ //$NON-NLS-2$
+		root = new CCActionElement(this, "ROOT", null, "", null); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	protected CCActionElement addMaster(String name, KeyStroke stroke, String caption, MultiSizeIconRef iconRes, boolean vis) {
-		return root.addChild(new CCActionElement(name, stroke, caption, iconRes, vis));
+		return root.addChild(new CCActionElement(this, name, stroke, caption, iconRes, vis));
 	}
 	
 	protected CCActionElement addMaster(String name, KeyStroke stroke, String caption, MultiSizeIconRef iconRes, CCBoolProperty vis) {
-		return root.addChild(new CCActionElement(name, stroke, caption, iconRes, vis.getValue()));
+		return root.addChild(new CCActionElement(this, name, stroke, caption, iconRes, vis.getValue()));
 	}
 	
 	protected CCActionElement addMaster(String name, KeyStroke stroke, String caption, MultiSizeIconRef iconRes) {
@@ -37,7 +37,7 @@ public abstract class UIActionTree {
 	}
 
 	protected CCActionElement add(CCActionElement parent, String name, KeyStroke stroke, String caption, MultiSizeIconRef iconRes, boolean readOnlyRestriction, CCActionTreeListener action) {
-		CCActionElement e = parent.addChild(new CCActionElement(name, stroke, caption, iconRes));
+		CCActionElement e = parent.addChild(new CCActionElement(this, name, stroke, caption, iconRes));
 		if (action != null) e.addListener(action);
 		if (readOnlyRestriction) e.setReadOnlyRestriction();
 		return e;
@@ -78,6 +78,10 @@ public abstract class UIActionTree {
 	public void printTree() {
 		root.printTree(0);
 	}
-	
+
 	protected abstract void createStructure();
+
+	protected abstract boolean isDatabaseReadonly();
+
+	public abstract CCMovieList getMovieList();
 }

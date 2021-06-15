@@ -1,5 +1,6 @@
 package de.jClipCorn.features.table.filter.filterConfig;
 
+import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.features.table.filter.AbstractCustomFilter;
 import de.jClipCorn.util.lambda.Func0to1;
 import javax.swing.*;
@@ -10,7 +11,9 @@ public class CustomFilterPreviewListConfig extends CustomFilterConfig {
 
 	private final Func0to1<List<String>> previewGetter;
 
-	public CustomFilterPreviewListConfig(Func0to1<List<String>> get) {
+	public CustomFilterPreviewListConfig(CCMovieList ml, Func0to1<List<String>> get) {
+		super(ml);
+
 		previewGetter = get;
 	}
 	

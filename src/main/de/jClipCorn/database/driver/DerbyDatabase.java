@@ -33,6 +33,12 @@ public class DerbyDatabase extends GenericDatabase {
 	
 	private Database structure; // XML-Template ...
 
+	private final boolean _readonly;
+
+	public DerbyDatabase(boolean ro) {
+		_readonly = ro;
+	}
+
 	//@Override
 	public String getDatabasePath(String dbPath) {
 		return PROTOCOL + dbPath;
@@ -112,6 +118,7 @@ public class DerbyDatabase extends GenericDatabase {
 		connection = DriverManager.getConnection(getDatabasePath(dbPath), getUserPasswordProperties());
 		
 		connection.setAutoCommit(true);
+		connection.setReadOnly(true);
 	}
 	
 	/**

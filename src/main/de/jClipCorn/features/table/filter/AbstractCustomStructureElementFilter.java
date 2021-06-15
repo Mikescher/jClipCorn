@@ -1,5 +1,6 @@
 package de.jClipCorn.features.table.filter;
 
+import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.CCSeason;
@@ -7,6 +8,10 @@ import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.database.databaseElement.ICCDatabaseStructureElement;
 
 public abstract class AbstractCustomStructureElementFilter extends AbstractCustomFilter {
+
+	public AbstractCustomStructureElementFilter(CCMovieList ml) {
+		super(ml);
+	}
 
 	@Override
 	public boolean includes(ICCDatabaseStructureElement e) {

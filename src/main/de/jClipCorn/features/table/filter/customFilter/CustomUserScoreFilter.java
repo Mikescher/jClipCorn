@@ -12,7 +12,11 @@ import de.jClipCorn.features.table.filter.filterSerialization.FilterSerializatio
 
 public class CustomUserScoreFilter extends AbstractCustomDatabaseElementFilter {
 	private CCUserScore score = CCUserScore.RATING_NO;
-	
+
+	public CustomUserScoreFilter(CCMovieList ml) {
+		super(ml);
+	}
+
 	@Override
 	public boolean includes(CCDatabaseElement e) {
 		return e.Score.get() == score;
@@ -40,12 +44,12 @@ public class CustomUserScoreFilter extends AbstractCustomDatabaseElementFilter {
 	}
 
 	@Override
-	public AbstractCustomFilter createNew() {
-		return new CustomUserScoreFilter();
+	public AbstractCustomFilter createNew(CCMovieList ml) {
+		return new CustomUserScoreFilter(ml);
 	}
 
-	public static CustomUserScoreFilter create(CCUserScore data) {
-		CustomUserScoreFilter f = new CustomUserScoreFilter();
+	public static CustomUserScoreFilter create(CCMovieList ml, CCUserScore data) {
+		CustomUserScoreFilter f = new CustomUserScoreFilter(ml);
 		f.score = data;
 		return f;
 	}
@@ -54,7 +58,7 @@ public class CustomUserScoreFilter extends AbstractCustomDatabaseElementFilter {
 	public CustomFilterConfig[] createConfig(CCMovieList ml) {
 		return new CustomFilterConfig[]
 		{
-			new CustomFilterEnumChooserConfig<>(() -> score, p -> score = p, CCUserScore.getWrapper()),
+			new CustomFilterEnumChooserConfig<>(ml, () -> score, p -> score = p, CCUserScore.getWrapper()),
 		};
 	}
 }

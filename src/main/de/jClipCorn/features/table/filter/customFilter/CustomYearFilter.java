@@ -16,7 +16,11 @@ import de.jClipCorn.util.datetime.YearRange;
 
 public class CustomYearFilter extends AbstractCustomMovieOrSeriesFilter {
 	private CCIntArea area = new CCIntArea(1900, 1900, DecimalSearchType.EXACT);
-	
+
+	public CustomYearFilter(CCMovieList ml) {
+		super(ml);
+	}
+
 	@Override
 	public boolean includes(CCMovie m) {
 		return area.contains(new YearRange(m.getYear()));
@@ -71,12 +75,12 @@ public class CustomYearFilter extends AbstractCustomMovieOrSeriesFilter {
 	}
 
 	@Override
-	public AbstractCustomFilter createNew() {
-		return new CustomYearFilter();
+	public AbstractCustomFilter createNew(CCMovieList ml) {
+		return new CustomYearFilter(ml);
 	}
 
-	public static CustomYearFilter create(Integer data) {
-		CustomYearFilter f = new CustomYearFilter();
+	public static CustomYearFilter create(CCMovieList ml, Integer data) {
+		CustomYearFilter f = new CustomYearFilter(ml);
 		f.area.setExact(data);
 		return f;
 	}
@@ -85,7 +89,7 @@ public class CustomYearFilter extends AbstractCustomMovieOrSeriesFilter {
 	public CustomFilterConfig[] createConfig(CCMovieList ml) {
 		return new CustomFilterConfig[]
 		{
-			new CustomFilterIntAreaConfig(() -> area, a -> area = a, 1900, null),
+			new CustomFilterIntAreaConfig(ml, () -> area, a -> area = a, 1900, null),
 		};
 	}
 }

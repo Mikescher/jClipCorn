@@ -218,11 +218,11 @@ public class CCDatabaseHistory {
 		}
 	}
 
-	public List<CCCombinedHistoryEntry> query(boolean excludeViewedOnly, boolean excludeInfoIDChanges, boolean excludeOrderingChanges, boolean mergeAggressive, CCDateTime start, ProgressCallbackListener lst) throws CCFormatException {
-		return query(excludeViewedOnly, excludeInfoIDChanges, excludeOrderingChanges, mergeAggressive, start, lst, null);
+	public List<CCCombinedHistoryEntry> query(CCMovieList ml, boolean excludeViewedOnly, boolean excludeInfoIDChanges, boolean excludeOrderingChanges, boolean mergeAggressive, CCDateTime start, ProgressCallbackListener lst) throws CCFormatException {
+		return query(ml, excludeViewedOnly, excludeInfoIDChanges, excludeOrderingChanges, mergeAggressive, start, lst, null);
 	}
 
-	public List<CCCombinedHistoryEntry> query(boolean excludeViewedOnly, boolean excludeInfoIDChanges, boolean excludeOrderingChanges, boolean mergeAggressive, CCDateTime start, ProgressCallbackListener lst, String idfilter) throws CCFormatException {
+	public List<CCCombinedHistoryEntry> query(CCMovieList ml, boolean excludeViewedOnly, boolean excludeInfoIDChanges, boolean excludeOrderingChanges, boolean mergeAggressive, CCDateTime start, ProgressCallbackListener lst, String idfilter) throws CCFormatException {
 		if (lst == null) lst = new ProgressCallbackSink();
 
 		List<CCCombinedHistoryEntry> result  = new ArrayList<>();
@@ -350,9 +350,9 @@ public class CCDatabaseHistory {
 		if (excludeOrderingChanges) result.removeIf(CCCombinedHistoryEntry::isGroupOrderingChange);
 
 		HashMap<Integer, ICCDatabaseStructureElement> elements = new HashMap<>();
-		for (CCDatabaseElement e : CCMovieList.getInstance().iteratorElements()) elements.put(e.getLocalID(), e);
-		for (CCSeason e : CCMovieList.getInstance().iteratorSeasons()) elements.put(e.getLocalID(), e);
-		for (CCEpisode e : CCMovieList.getInstance().iteratorEpisodes()) elements.put(e.getLocalID(), e);
+		for (CCDatabaseElement e : ml.iteratorElements()) elements.put(e.getLocalID(), e);
+		for (CCSeason e : ml.iteratorSeasons()) elements.put(e.getLocalID(), e);
+		for (CCEpisode e : ml.iteratorEpisodes()) elements.put(e.getLocalID(), e);
 
 		for (CCCombinedHistoryEntry e : result) e.setSourceLink(elements);
 

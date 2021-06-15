@@ -13,7 +13,11 @@ import de.jClipCorn.util.datetime.CCDateArea;
 
 public class CustomAddDateFilter extends AbstractCustomFilter {
 	private CCDateArea area = new CCDateArea();
-	
+
+	public CustomAddDateFilter(CCMovieList ml) {
+		super(ml);
+	}
+
 	@Override
 	public boolean includes(ICCDatabaseStructureElement e) {
 		return area.contains(e.getAddDate());
@@ -58,12 +62,12 @@ public class CustomAddDateFilter extends AbstractCustomFilter {
 	}
 
 	@Override
-	public AbstractCustomFilter createNew() {
-		return new CustomAddDateFilter();
+	public AbstractCustomFilter createNew(CCMovieList ml) {
+		return new CustomAddDateFilter(ml);
 	}
 
-	public static CustomAddDateFilter create(CCDate data) {
-		CustomAddDateFilter f = new CustomAddDateFilter();
+	public static CustomAddDateFilter create(CCMovieList ml, CCDate data) {
+		CustomAddDateFilter f = new CustomAddDateFilter(ml);
 		f.area.setExact(data);
 		return f;
 	}
@@ -72,7 +76,7 @@ public class CustomAddDateFilter extends AbstractCustomFilter {
 	public CustomFilterConfig[] createConfig(CCMovieList ml) {
 		return new CustomFilterConfig[]
 		{
-			new CustomFilterDateAreaConfig(() -> area, a -> area = a),
+			new CustomFilterDateAreaConfig(ml, () -> area, a -> area = a),
 		};
 	}
 }

@@ -1,24 +1,25 @@
 package de.jClipCorn.test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
-import java.util.Random;
-
-import org.junit.Test;
-
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.features.table.filter.AbstractCustomFilter;
 import de.jClipCorn.features.table.filter.customFilter.aggregators.CustomAggregator;
 import de.jClipCorn.features.table.filter.customFilter.operators.CustomAndOperator;
 import de.jClipCorn.features.table.filter.customFilter.operators.CustomOperator;
 import de.jClipCorn.features.table.filter.filterConfig.CustomFilterConfig;
+import org.junit.Test;
+
+import java.util.Random;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 @SuppressWarnings("nls")
 public class TestFilterSerialization extends ClipCornBaseTest {
 
 	@Test
 	public void testFilterSerialization() throws Exception {
+		CCMovieList ml = createEmptyDB();
+
 		String[] T1 = new String[]
 		{
 			"[0|[30|0,0,3,0],[6|0],[0|],[3|[24|[0|[0|[0|[0|[3|]],[1|[2|]]]]]]],[1|[32|1,1,3,[0|[22|2018-11-23,2018-11-23,3]]]],[2|[33|1,1,3,[0|[16|090,2,1]]]],[6|6]]",
@@ -32,11 +33,11 @@ public class TestFilterSerialization extends ClipCornBaseTest {
 		};
 		
 		for (String s : T1) {
-			AbstractCustomFilter f = new CustomAndOperator();
+			AbstractCustomFilter f = new CustomAndOperator(ml);
 			assertTrue(f.importFromString(s));
 			String s2 = f.exportToString();
 
-			AbstractCustomFilter f2 = new CustomAndOperator();
+			AbstractCustomFilter f2 = new CustomAndOperator(ml);
 			assertTrue(f2.importFromString(s2));
 			String s3 = f2.exportToString();
 			
@@ -46,6 +47,8 @@ public class TestFilterSerialization extends ClipCornBaseTest {
 
 	@Test
 	public void testFilterSerialization2() throws Exception {
+		CCMovieList ml = createEmptyDB();
+
 		String[] T1 = new String[]
 		{
 			"[0|[30|0,0,3,0],[6|0],[0],[3|[24|[0|[0|[0|[0|[3]],[1|[2]]]]]]],[1|[32|1,1,3,[0|[22|20181123,20181123,3]]]],[2|[33|1,1,3,[0|[16|090,2,1]]]],[6|6]]",
@@ -59,7 +62,7 @@ public class TestFilterSerialization extends ClipCornBaseTest {
 		};
 		
 		for (String s : T1) {
-			AbstractCustomFilter f = new CustomAndOperator();
+			AbstractCustomFilter f = new CustomAndOperator(ml);
 			assertTrue(f.importFromString(s));
 			String s2 = f.exportToString();
 			
@@ -69,34 +72,36 @@ public class TestFilterSerialization extends ClipCornBaseTest {
 
 	@Test
 	public void testFilterSerialization3() throws Exception {
-		CustomAndOperator parent = new CustomAndOperator();
+		CCMovieList ml = createEmptyDB();
+
+		CustomAndOperator parent = new CustomAndOperator(ml);
 		
-		for (AbstractCustomFilter f : AbstractCustomFilter.getAllSimpleFilter()) {
+		for (AbstractCustomFilter f : AbstractCustomFilter.getAllSimpleFilter(ml)) {
 			parent.add(f);
 		}
 
-		for (CustomOperator f : AbstractCustomFilter.getAllOperatorFilter()) {
+		for (CustomOperator f : AbstractCustomFilter.getAllOperatorFilter(ml)) {
 
-			for (AbstractCustomFilter ff : AbstractCustomFilter.getAllSimpleFilter()) {
+			for (AbstractCustomFilter ff : AbstractCustomFilter.getAllSimpleFilter(ml)) {
 				f.add(ff);
 			}
 
-			for (AbstractCustomFilter ff : AbstractCustomFilter.getAllOperatorFilter()) {
+			for (AbstractCustomFilter ff : AbstractCustomFilter.getAllOperatorFilter(ml)) {
 				f.add(ff);
 			}
 
-			for (AbstractCustomFilter ff : AbstractCustomFilter.getAllAggregatorFilter()) {
+			for (AbstractCustomFilter ff : AbstractCustomFilter.getAllAggregatorFilter(ml)) {
 				f.add(ff);
 			}
 			
 			parent.add(f);
 		}
 
-		for (CustomAggregator fx : AbstractCustomFilter.getAllAggregatorFilter()) {
+		for (CustomAggregator fx : AbstractCustomFilter.getAllAggregatorFilter(ml)) {
 
-			for (AbstractCustomFilter ff : AbstractCustomFilter.getAllSimpleFilter()) {
+			for (AbstractCustomFilter ff : AbstractCustomFilter.getAllSimpleFilter(ml)) {
 				
-				CustomAggregator f = (CustomAggregator)fx.createNew();
+				CustomAggregator f = (CustomAggregator)fx.createNew(ml);
 				
 				f.setProcessorFilter(ff);
 				parent.add(f);
@@ -106,7 +111,7 @@ public class TestFilterSerialization extends ClipCornBaseTest {
 		
 		String s1 = parent.exportToString();
 		
-		AbstractCustomFilter intermed = new CustomAndOperator();
+		AbstractCustomFilter intermed = new CustomAndOperator(ml);
 		assertTrue(intermed.importFromString(s1));
 
 		String s2 = intermed.exportToString();
@@ -122,26 +127,26 @@ public class TestFilterSerialization extends ClipCornBaseTest {
 
 			Random r = new Random(142857 + i);
 			
-			for (AbstractCustomFilter f : AbstractCustomFilter.getAllSimpleFilter()) {
+			for (AbstractCustomFilter f : AbstractCustomFilter.getAllSimpleFilter(ml)) {
 
-				CustomAndOperator op = new CustomAndOperator();
+				CustomAndOperator op = new CustomAndOperator(ml);
 				
 				for (CustomFilterConfig cfg : f.createConfig(ml)) cfg.setValueRandom(r);
 
 				op.add(f);
 				
 				String s1 = op.exportToString();
-				AbstractCustomFilter intermed = new CustomAndOperator();
+				AbstractCustomFilter intermed = new CustomAndOperator(ml);
 				assertTrue(intermed.importFromString(s1));
 				String s2 = intermed.exportToString();
 				assertEquals(s1, s2);	
 			}
 			
-			for (CustomOperator f0 : AbstractCustomFilter.getAllOperatorFilter()) {
+			for (CustomOperator f0 : AbstractCustomFilter.getAllOperatorFilter(ml)) {
 
-				for (AbstractCustomFilter f1 : AbstractCustomFilter.getAllSimpleFilter()) {
+				for (AbstractCustomFilter f1 : AbstractCustomFilter.getAllSimpleFilter(ml)) {
 
-					CustomAndOperator op = new CustomAndOperator();
+					CustomAndOperator op = new CustomAndOperator(ml);
 
 					for (CustomFilterConfig cfg : f0.createConfig(ml)) cfg.setValueRandom(r);
 					for (CustomFilterConfig cfg : f1.createConfig(ml)) cfg.setValueRandom(r);
@@ -151,7 +156,7 @@ public class TestFilterSerialization extends ClipCornBaseTest {
 					op.add(f0);
 					
 					String s1 = op.exportToString();
-					AbstractCustomFilter intermed = new CustomAndOperator();
+					AbstractCustomFilter intermed = new CustomAndOperator(ml);
 					assertTrue(intermed.importFromString(s1));
 					String s2 = intermed.exportToString();
 					assertEquals(s1, s2);	
@@ -159,11 +164,11 @@ public class TestFilterSerialization extends ClipCornBaseTest {
 				
 			}
 			
-			for (CustomOperator f0 : AbstractCustomFilter.getAllOperatorFilter()) {
+			for (CustomOperator f0 : AbstractCustomFilter.getAllOperatorFilter(ml)) {
 
-				CustomAndOperator op = new CustomAndOperator();
+				CustomAndOperator op = new CustomAndOperator(ml);
 
-				for (AbstractCustomFilter f1 : AbstractCustomFilter.getAllSimpleFilter()) {
+				for (AbstractCustomFilter f1 : AbstractCustomFilter.getAllSimpleFilter(ml)) {
 
 					for (CustomFilterConfig cfg : f0.createConfig(ml)) cfg.setValueRandom(r);
 					for (CustomFilterConfig cfg : f1.createConfig(ml)) cfg.setValueRandom(r);
@@ -174,18 +179,18 @@ public class TestFilterSerialization extends ClipCornBaseTest {
 				}
 				
 				String s1 = op.exportToString();
-				AbstractCustomFilter intermed = new CustomAndOperator();
+				AbstractCustomFilter intermed = new CustomAndOperator(ml);
 				assertTrue(intermed.importFromString(s1));
 				String s2 = intermed.exportToString();
 				assertEquals(s1, s2);	
 				
 			}
 			
-			for (CustomAggregator f0 : AbstractCustomFilter.getAllAggregatorFilter()) {
+			for (CustomAggregator f0 : AbstractCustomFilter.getAllAggregatorFilter(ml)) {
 
-				for (AbstractCustomFilter f1 : AbstractCustomFilter.getAllSimpleFilter()) {
+				for (AbstractCustomFilter f1 : AbstractCustomFilter.getAllSimpleFilter(ml)) {
 
-					CustomAndOperator op = new CustomAndOperator();
+					CustomAndOperator op = new CustomAndOperator(ml);
 
 					for (CustomFilterConfig cfg : f0.createConfig(ml)) cfg.setValueRandom(r);
 					for (CustomFilterConfig cfg : f1.createConfig(ml)) cfg.setValueRandom(r);
@@ -195,7 +200,7 @@ public class TestFilterSerialization extends ClipCornBaseTest {
 					op.add(f0);
 					
 					String s1 = op.exportToString();
-					AbstractCustomFilter intermed = new CustomAndOperator();
+					AbstractCustomFilter intermed = new CustomAndOperator(ml);
 					assertTrue(intermed.importFromString(s1));
 					String s2 = intermed.exportToString();
 					assertEquals(s1, s2);	

@@ -1,13 +1,7 @@
 package de.jClipCorn.features.table.filter.filterSerialization;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.regex.Pattern;
-
-import org.apache.commons.lang3.StringUtils;
-
 import de.jClipCorn.Main;
+import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.features.table.filter.AbstractCustomFilter;
 import de.jClipCorn.util.Str;
@@ -19,6 +13,13 @@ import de.jClipCorn.util.lambda.Func0to1;
 import de.jClipCorn.util.lambda.Func1to0;
 import de.jClipCorn.util.lambda.Func1to1;
 import de.jClipCorn.util.stream.CCStreams;
+import org.apache.commons.lang3.StringUtils;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
+import java.util.regex.Pattern;
 
 public class FilterSerializationConfig {
 
@@ -52,9 +53,11 @@ public class FilterSerializationConfig {
 	private static final Pattern REGEX_STR_DATA = Pattern.compile("^([0-2][0-9][0-9])*$"); //$NON-NLS-1$
 	
 	private final int ID;
+	private final CCMovieList movielist;
 	private final List<FSCProperty> Properties = new ArrayList<>();
 
-	public FilterSerializationConfig(int id) {
+	public FilterSerializationConfig(CCMovieList ml, int id) {
+		movielist = ml;
 		ID = id;
 	}
 
@@ -181,7 +184,7 @@ public class FilterSerializationConfig {
 	public void addChild(String pname, Func1to0<AbstractCustomFilter> setter, Func0to1<AbstractCustomFilter> getter) {
 		Func1to1<String, Boolean> s = v -> 
 		{
-			AbstractCustomFilter f = AbstractCustomFilter.createFilterFromExport(v);
+			AbstractCustomFilter f = AbstractCustomFilter.createFilterFromExport(movielist, v);
 			if (f == null) return false;
 			setter.invoke(f);
 			return true;
@@ -198,12 +201,12 @@ public class FilterSerializationConfig {
 	public void addChildren(String pname, Func1to0<List<AbstractCustomFilter>> setter, Func0to1<List<AbstractCustomFilter>> getter) {
 		Func1to1<String[], Boolean> s = v -> 
 		{
-			List<AbstractCustomFilter> l = CCStreams.iterate(v).map(p -> AbstractCustomFilter.createFilterFromExport(p)).enumerate();
-			if (CCStreams.iterate(l).any(p -> p == null)) return false;
+			List<AbstractCustomFilter> l = CCStreams.iterate(v).map(p -> AbstractCustomFilter.createFilterFromExport(movielist, p)).enumerate();
+			if (CCStreams.iterate(l).any(Objects::isNull)) return false;
 			setter.invoke(l);
 			return true;
 		};
-		Func0to1<String[]> g = () -> CCStreams.iterate(getter.invoke()).map(p -> p.exportToString()).toArray(new String[0]);
+		Func0to1<String[]> g = () -> CCStreams.iterate(getter.invoke()).map(AbstractCustomFilter::exportToString).toArray(new String[0]);
 
 		FSCProperty prop = new FSCProperty(pname, s, g, true);
 

@@ -1,5 +1,6 @@
 package de.jClipCorn.database.databaseElement.caches;
 
+import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCEpisode;
 
 public class EpisodeCache extends CalculationCache<CCEpisode>
@@ -15,6 +16,11 @@ public class EpisodeCache extends CalculationCache<CCEpisode>
 	protected CCEpisode getSource()
 	{
 		return source;
+	}
+
+	@Override
+	protected CCMovieList getMovieList() {
+		return source.getMovieList();
 	}
 
 	@Override

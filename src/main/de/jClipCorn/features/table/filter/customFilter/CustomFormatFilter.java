@@ -11,7 +11,11 @@ import de.jClipCorn.features.table.filter.filterSerialization.FilterSerializatio
 
 public class CustomFormatFilter extends AbstractCustomFilter {
 	private CCFileFormat format = CCFileFormat.AVI;
-	
+
+	public CustomFormatFilter(CCMovieList ml) {
+		super(ml);
+	}
+
 	@Override
 	public boolean includes(ICCDatabaseStructureElement e) {
 		return format.equals(e.getFormat());
@@ -39,12 +43,12 @@ public class CustomFormatFilter extends AbstractCustomFilter {
 	}
 
 	@Override
-	public AbstractCustomFilter createNew() {
-		return new CustomFormatFilter();
+	public AbstractCustomFilter createNew(CCMovieList ml) {
+		return new CustomFormatFilter(ml);
 	}
 
-	public static CustomFormatFilter create(CCFileFormat data) {
-		CustomFormatFilter f = new CustomFormatFilter();
+	public static CustomFormatFilter create(CCMovieList ml, CCFileFormat data) {
+		CustomFormatFilter f = new CustomFormatFilter(ml);
 		f.format = data;
 		return f;
 	}
@@ -53,7 +57,7 @@ public class CustomFormatFilter extends AbstractCustomFilter {
 	public CustomFilterConfig[] createConfig(CCMovieList ml) {
 		return new CustomFilterConfig[]
 		{
-			new CustomFilterEnumChooserConfig<>(() -> format, f -> format = f, CCFileFormat.getWrapper()),
+			new CustomFilterEnumChooserConfig<>(ml, () -> format, f -> format = f, CCFileFormat.getWrapper()),
 		};
 	}
 }

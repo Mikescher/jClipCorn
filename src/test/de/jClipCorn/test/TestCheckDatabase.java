@@ -40,7 +40,8 @@ public class TestCheckDatabase extends ClipCornBaseTest {
 				true,  // internal db
 				true); // Additional
 
-		CCDatabaseValidator.Inst().validate(errs, ml, opt, DoubleProgressCallbackListener.EMPTY);
+		var validator = new CCDatabaseValidator(ml);
+		validator.validate(errs, opt, DoubleProgressCallbackListener.EMPTY);
 
 		DatabaseError e1 = CCStreams.iterate(errs).singleOrNull(p -> p.isTypeOf(DatabaseErrorType.ERROR_MEDIAINFO_UNSET) && "Der Bomber".equals(p.getElement1RawName()));
 		DatabaseError e2 = CCStreams.iterate(errs).singleOrNull(p -> p.isTypeOf(DatabaseErrorType.ERROR_MEDIAINFO_UNSET) && "Forrest Gump".equals(p.getElement1RawName()));

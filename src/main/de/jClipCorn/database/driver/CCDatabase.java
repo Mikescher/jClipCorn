@@ -40,19 +40,22 @@ public class CCDatabase {
 	public  final DatabaseMigration upgrader;
 	private final ICoverCache coverCache;
 	private final CCDatabaseHistory _history;
+	private final boolean _readonly;
 
-	private CCDatabase(CCDatabaseDriver driver, String dbPath) {
+	private CCDatabase(CCDatabaseDriver driver, String dbPath, boolean readonly) {
 		super();
-		
+
+		_readonly = readonly;
+
 		databasePath = dbPath;
 		
 		switch (driver) {
 		case DERBY:
-			db = new DerbyDatabase();
+			db = new DerbyDatabase(readonly);
 			coverCache = new CCDefaultCoverCache(this);
 			break;
 		case SQLITE:
-			db = new SQLiteDatabase();
+			db = new SQLiteDatabase(readonly);
 			coverCache = new CCDefaultCoverCache(this);
 			break;
 		case STUB:
@@ -71,7 +74,11 @@ public class CCDatabase {
 		
 		_history = new CCDatabaseHistory(this);
 		
-		upgrader = new DatabaseMigration(db, databasePath);
+		upgrader = new DatabaseMigration(db, databasePath, readonly);
+	}
+
+	public boolean isReadonly() {
+		return _readonly;
 	}
 
 	public void resetForTestReload() {
@@ -79,16 +86,16 @@ public class CCDatabase {
 		((CCMemoryCoverCache)coverCache).resetForTestReload();
 	}
 	
-	public static CCDatabase create(String dbPath) {
-		return new CCDatabase(CCProperties.getInstance().PROP_DATABASE_DRIVER.getValue(), dbPath);
+	public static CCDatabase create(CCDatabaseDriver dbDriver, String dbPath, boolean dbReadonly) {
+		return new CCDatabase(dbDriver, dbPath, dbReadonly);
 	}
 	
 	public static CCDatabase createStub() {
-		return new CCDatabase(CCDatabaseDriver.STUB, ""); //$NON-NLS-1$
+		return new CCDatabase(CCDatabaseDriver.STUB, "", false); //$NON-NLS-1$
 	}
 	
 	public static CCDatabase createInMemory() {
-		return new CCDatabase(CCDatabaseDriver.INMEMORY, ""); //$NON-NLS-1$
+		return new CCDatabase(CCDatabaseDriver.INMEMORY, "", false); //$NON-NLS-1$
 	}
 	
 	public boolean exists(String path) {

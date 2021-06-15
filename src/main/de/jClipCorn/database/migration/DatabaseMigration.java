@@ -44,6 +44,7 @@ import static de.jClipCorn.database.driver.DatabaseStructure.*;
 public class DatabaseMigration {
 	private final GenericDatabase db;
 	private final String databasepath;
+	private final boolean readonly;
 
 	public interface UpgradeAction {
 		void onAfterConnect(CCMovieList ml, CCDatabase db);
@@ -51,11 +52,12 @@ public class DatabaseMigration {
 	
 	private final List<UpgradeAction> afterConnectActions = new ArrayList<>();
 	
-	public DatabaseMigration(GenericDatabase db, String dbpath) {
+	public DatabaseMigration(GenericDatabase db, String dbpath, boolean readonly) {
 		super();
 		
 		this.db = db;
 		this.databasepath = dbpath;
+		this.readonly = readonly;
 	}
 	
 	private String getDBVersion() throws SQLException {
@@ -86,7 +88,7 @@ public class DatabaseMigration {
 			
 			CCLog.addInformation(LocaleBundle.getString("LogMessage.DatabaseUpgradeStarted"));
 
-			if (CCProperties.getInstance().ARG_READONLY) {
+			if (readonly) {
 				CCLog.addInformation(LocaleBundle.getString("LogMessage.MigrationFailedDueToReadOnly")); //$NON-NLS-1$
 				return;
 			}

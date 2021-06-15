@@ -15,7 +15,11 @@ import de.jClipCorn.util.stream.CCStreams;
 public class CustomGroupFilter extends AbstractCustomDatabaseElementFilter {
 	private String group = ""; //$NON-NLS-1$
 	private boolean allowSubgroups = true;
-	
+
+	public CustomGroupFilter(CCMovieList ml) {
+		super(ml);
+	}
+
 	@Override
 	public boolean includes(CCDatabaseElement e) {
 		
@@ -66,12 +70,12 @@ public class CustomGroupFilter extends AbstractCustomDatabaseElementFilter {
 	}
 	
 	@Override
-	public AbstractCustomFilter createNew() {
-		return new CustomGroupFilter();
+	public AbstractCustomFilter createNew(CCMovieList ml) {
+		return new CustomGroupFilter(ml);
 	}
 
-	public static CustomGroupFilter create(CCGroup data, boolean subgroupmatches) {
-		CustomGroupFilter f = new CustomGroupFilter();
+	public static CustomGroupFilter create(CCMovieList ml, CCGroup data, boolean subgroupmatches) {
+		CustomGroupFilter f = new CustomGroupFilter(ml);
 		f.group = data.Name;
 		f.allowSubgroups = subgroupmatches;
 		return f;
@@ -81,8 +85,8 @@ public class CustomGroupFilter extends AbstractCustomDatabaseElementFilter {
 	public CustomFilterConfig[] createConfig(CCMovieList ml) {
 		return new CustomFilterConfig[]
 		{
-			new CustomFilterStringChooserConfig(() -> group, a -> group = a, CCStreams.iterate(ml.getGroupList()).map(g -> g.Name).enumerate(), true, true),
-			new CustomFilterBoolConfig(() -> allowSubgroups, a -> allowSubgroups = a, LocaleBundle.getString("FilterTree.Custom.AllowSubgroups")), //$NON-NLS-1$
+			new CustomFilterStringChooserConfig(ml, () -> group, a -> group = a, CCStreams.iterate(ml.getGroupList()).map(g -> g.Name).enumerate(), true, true),
+			new CustomFilterBoolConfig(ml, () -> allowSubgroups, a -> allowSubgroups = a, LocaleBundle.getString("FilterTree.Custom.AllowSubgroups")), //$NON-NLS-1$
 		};
 	}
 }

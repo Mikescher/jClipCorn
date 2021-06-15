@@ -383,16 +383,6 @@ public class JSplitButton extends JButton {
     }
 
     /**
-     * @deprecated
-     */
-    public void addSplitButtonActionListener(final SplitButtonActionListener l) {
-        listenerList.add(SplitButtonActionListener.class, l);
-    }
-    public void removeSplitButtonActionListener(final SplitButtonActionListener l) {
-        listenerList.remove(SplitButtonActionListener.class, l);
-    }
-
-    /**
      * Notifies all listeners that have registered interest for notification on
      * this event type. The event instance is lazily created using the
      * <code>event</code> parameter.

@@ -8,7 +8,6 @@ import de.jClipCorn.gui.frames.coverCropFrame.CoverCropDialog;
 import de.jClipCorn.gui.frames.findCoverFrame.FindCoverDialog;
 import de.jClipCorn.gui.guiComponents.CoverLabel;
 import de.jClipCorn.gui.guiComponents.jSplitButton.JSplitButton;
-import de.jClipCorn.gui.guiComponents.jSplitButton.action.SplitButtonActionListener;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.Str;
@@ -125,17 +124,7 @@ public class EditCoverControl extends AbstractEditCoverControl {
 		}
 
 		btnFind = new JSplitButton(LocaleBundle.getString("EditCoverControl.btnFind.text")); //$NON-NLS-1$
-		btnFind.addSplitButtonActionListener(new SplitButtonActionListener() {
-			@Override
-			public void splitButtonClicked(ActionEvent arg0) {
-				// NOP
-			}
-
-			@Override
-			public void buttonClicked(ActionEvent arg0) {
-				showFindCoverDialog();
-			}
-		});
+		btnFind.addButtonClickedActionListener(e -> showFindCoverDialog());
 		btnFind.setPopupMenu(popupMenu);
 		btnFind.setBounds(102, 0, 80, 23);
 		add(btnFind, 0);

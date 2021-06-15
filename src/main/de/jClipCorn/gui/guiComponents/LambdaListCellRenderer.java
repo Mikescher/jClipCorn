@@ -15,7 +15,7 @@ public class LambdaListCellRenderer<T> extends DefaultListCellRenderer
 	}
 
 	@Override
-	public Component getListCellRendererComponent(JList<? extends Object> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+	public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
 		JLabel label = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
 
 		//noinspection unchecked

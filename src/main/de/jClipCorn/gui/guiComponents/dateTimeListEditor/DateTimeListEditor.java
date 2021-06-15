@@ -7,14 +7,13 @@ import com.jgoodies.forms.layout.RowSpec;
 import de.jClipCorn.database.databaseElement.columnTypes.CCDateTimeList;
 import de.jClipCorn.gui.guiComponents.jCCDateSpinner.JCCDateSpinner;
 import de.jClipCorn.gui.guiComponents.jCCTimeSpinner.JCCTimeSpinner;
+import de.jClipCorn.gui.guiComponents.jSplitButton.JSplitButton;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.datetime.CCTime;
-import de.jClipCorn.gui.guiComponents.jSplitButton.JSplitButton;
-import de.jClipCorn.gui.guiComponents.jSplitButton.action.SplitButtonActionListener;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -161,15 +160,7 @@ public class DateTimeListEditor extends JPanel {
 		
 		btnAdd = new JSplitButton("+"); //$NON-NLS-1$
 		btnAdd.setHorizontalAlignment(SwingConstants.LEFT);
-		btnAdd.addSplitButtonActionListener(new SplitButtonActionListener() {
-			@Override
-			public void splitButtonClicked(ActionEvent e) { /**/ }
-
-			@Override
-			public void buttonClicked(ActionEvent e) {
-				onAdd(e);
-			}
-		});
+		btnAdd.addButtonClickedActionListener(this::onAdd);
 		btnAdd.setFont(new Font("Tahoma", Font.BOLD, 11)); //$NON-NLS-1$
 		btnAdd.setPopupMenu(splitPopup);
 		pnlInput.add(btnAdd, "5, 2, 1, 3, fill, center"); //$NON-NLS-1$

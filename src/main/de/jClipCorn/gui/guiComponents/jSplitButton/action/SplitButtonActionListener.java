@@ -21,18 +21,14 @@ package de.jClipCorn.gui.guiComponents.jSplitButton.action;
   (to fix jGoodies FormDev Errors)
  */
 
-import de.jClipCorn.gui.guiComponents.jSplitButton.JSplitButton;
-
 import java.awt.event.ActionEvent;
 import java.util.EventListener;
 
 /**
  * The listener interface for receiving action events. The class that is
  * interested in processing an action event implements this interface, and the
- * object created with that class is registered with a component, using the
- * component's
- * {@link JSplitButton#addSplitButtonActionListener(SplitButtonActionListener)}
- * method. When the action event occurs, the listening object's
+ * object created with that class is registered with a component.
+ * When the action event occurs, the listening object's
  * {@link #buttonClicked(java.awt.event.ActionEvent)} or
  * {@link #splitButtonClicked(java.awt.event.ActionEvent)} method is invoked.
  *

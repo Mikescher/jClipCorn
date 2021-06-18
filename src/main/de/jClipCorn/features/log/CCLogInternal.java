@@ -307,25 +307,17 @@ public class CCLogInternal {
 	}
 
 	private static void updateMainFrameLabel() {
-		if (! SwingUtilities.isEventDispatchThread()) {
-			try {
-				SwingUtils.invokeAndWait(() ->
-				{
-					MainFrame mf =  MainFrame.getInstance();
-					if (mf != null) {
-						DatabaseElementPreviewLabel pl =  mf.getCoverLabel();
-						if (pl != null) pl.setModeError();
-					}
-				});
-			} catch (InvocationTargetException | InterruptedException e) {
-				CCLog.addError(e);
-			}
-		} else {
-			MainFrame mf =  MainFrame.getInstance();
-			if (mf != null) {
-				DatabaseElementPreviewLabel pl =  mf.getCoverLabel();
-				if (pl != null) pl.setModeError();
-			}
+		try {
+			SwingUtils.invokeAndWaitConditionalThrow(() ->
+			{
+				MainFrame mf =  MainFrame.getInstance();
+				if (mf != null) {
+					DatabaseElementPreviewLabel pl =  mf.getCoverLabel();
+					if (pl != null) pl.setModeError();
+				}
+			});
+		} catch (InvocationTargetException | InterruptedException e) {
+			CCLog.addError(e);
 		}
 	}
 

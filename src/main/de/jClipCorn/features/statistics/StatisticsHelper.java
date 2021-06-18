@@ -452,7 +452,7 @@ public class StatisticsHelper {
 		
 		List<SortableTuple<CCDate, Integer>> dates = series
 				.iteratorEpisodes()
-				.flatten(e -> e.ViewedHistory.get().iterator().map(h -> Tuple.Create(e, h)))
+				.flatten(e -> e.ViewedHistory.get().ccstream().map(h -> Tuple.Create(e, h)))
 				.filter(t -> !t.Item2.isUnspecifiedDateTime())
 				.map(t -> new SortableTuple<>(t.Item2.date, t.Item1.getGlobalEpisodeNumber()))
 				.enumerate();
@@ -586,7 +586,7 @@ public class StatisticsHelper {
 
 		for (ICCPlayableElement e : it)
 		{
-			for (CCDateTime v : e.viewedHistory().get().iterator())
+			for (CCDateTime v : e.viewedHistory().get().ccstream())
 			{
 				if (v.time.isUnspecifiedTime()) continue;
 				if (!v.isValidDateTime()) continue;

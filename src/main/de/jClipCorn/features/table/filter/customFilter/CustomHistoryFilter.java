@@ -38,7 +38,7 @@ public class CustomHistoryFilter extends AbstractCustomStructureElementFilter {
 		if (!Recursive) return false;
 		
 		List<CCDateTime> l = new ArrayList<>();
-		for (CCEpisode epi : ser.iteratorEpisodes()) l.addAll(epi.ViewedHistory.get().iterator().enumerate());
+		for (CCEpisode epi : ser.iteratorEpisodes()) l.addAll(epi.ViewedHistory.get().ccstream().enumerate());
 
 		return Search.includes(CCDateTimeList.create(l));
 	}
@@ -48,7 +48,7 @@ public class CustomHistoryFilter extends AbstractCustomStructureElementFilter {
 		if (!Recursive) return false;
 		
 		List<CCDateTime> l = new ArrayList<>();
-		for (CCEpisode epi : sea.iteratorEpisodes()) l.addAll(epi.ViewedHistory.get().iterator().enumerate());
+		for (CCEpisode epi : sea.iteratorEpisodes()) l.addAll(epi.ViewedHistory.get().ccstream().enumerate());
 
 		return Search.includes(CCDateTimeList.create(l));
 	}

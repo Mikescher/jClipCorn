@@ -18,7 +18,7 @@ public class MemoryDatabase extends GenericDatabase {
 	
 	@Override
 	@SuppressWarnings("deprecation")
-	public boolean createNewDatabase(String xmlPath, String dbPath) {
+	public boolean createNewDatabase(String xmlPath, String dbDir, String dbName) {
 		try {
 			Class.forName(DRIVER).newInstance();
 		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
@@ -41,7 +41,7 @@ public class MemoryDatabase extends GenericDatabase {
 
 	@Override
 	@SuppressWarnings("deprecation")
-	public boolean createNewDatabasefromResourceXML(String xmlResPath, String dbPath) {
+	public boolean createNewDatabasefromResourceXML(String xmlResPath, String dbDir, String dbName) {
 		try {
 			Class.forName(DRIVER).newInstance();
 		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
@@ -63,19 +63,19 @@ public class MemoryDatabase extends GenericDatabase {
 	}
 	
 	@Override
-	public boolean databaseExists(String dbPath) {
+	public boolean databaseExists(String dbDir, String dbName) {
 		return false;
 	}
 	
 	@Override
-	public void closeDBConnection(String dbPath, boolean cleanshutdown) throws SQLException {
+	public void closeDBConnection(String dbDir, String dbName, boolean cleanshutdown) throws SQLException {
         if(connection != null) {
             connection.close();
         }
 	}
 	
 	@Override
-	public void establishDBConnection(String dbPath) throws Exception {
+	public void establishDBConnection(String dbDir, String dbName) throws Exception {
 		throw new Exception("Cannot connect to memory-only database");
 	}
 

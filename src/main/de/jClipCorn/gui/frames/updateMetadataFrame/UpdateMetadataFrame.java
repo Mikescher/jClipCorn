@@ -14,6 +14,7 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.exceptions.EnumFormatException;
 import de.jClipCorn.util.helper.DialogHelper;
+import de.jClipCorn.util.helper.SwingUtils;
 import de.jClipCorn.util.helper.ThreadUtils;
 import de.jClipCorn.util.stream.CCStreams;
 
@@ -239,7 +240,7 @@ public class UpdateMetadataFrame extends JFrame {
 		try {
 			List<UpdateMetadataTableElement> data = tableMain.getDataCopy();
 			
-			ThreadUtils.invokeAndWaitSafe(() -> 
+			SwingUtils.invokeAndWaitSafe(() ->
 			{ 
 				btnStartCollectingData.setText(LocaleBundle.getString("UpdateMetadataFrame.BtnCollect2"));  //$NON-NLS-1$
 				btnUpdateAllGenres.setEnabled(false);
@@ -268,7 +269,7 @@ public class UpdateMetadataFrame extends JFrame {
 					OnlineMetadata md = mp.getMetadata(ref, false);
 					if (md != null) {
 						elem.OnlineMeta = md;
-						ThreadUtils.invokeAndWaitSafe(() -> { tableMain.changeData(elem, elem); });
+						SwingUtils.invokeAndWaitSafe(() -> { tableMain.changeData(elem, elem); });
 					}
 					
 				} catch (Exception e) {
@@ -281,7 +282,7 @@ public class UpdateMetadataFrame extends JFrame {
 			}
 		} finally {
 			ThreadUtils.setProgressbarAndWait(progressBar, 0, 0, 1);
-			ThreadUtils.invokeAndWaitSafe(() -> 
+			SwingUtils.invokeAndWaitSafe(() -> 
 			{ 
 				btnStartCollectingData.setText(LocaleBundle.getString("UpdateMetadataFrame.BtnCollect3"));  //$NON-NLS-1$
 				btnUpdateAllGenres.setEnabled(!movielist.isReadonly());

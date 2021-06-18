@@ -51,7 +51,7 @@ public class LanguageChooser extends JPanel {
 	private void update() {
 		pnlIcons.removeAll();
 
-		for (CCDBLanguage ilang : value.iterate().autosort()) {
+		for (CCDBLanguage ilang : value.ccstream().autosort()) {
 			final CCDBLanguage lng = ilang;
 			JLabel l = new JLabel(lng.getIcon());
 			l.setToolTipText(lng.asString());
@@ -88,7 +88,7 @@ public class LanguageChooser extends JPanel {
 		if (value.isEmpty()) return;
 		if (value.isSingle())
 		{
-			setValue(CCDBLanguageList.single(value.iterate().firstOrNull().nextLanguage()));
+			setValue(CCDBLanguageList.single(value.ccstream().firstOrNull().nextLanguage()));
 			return;
 		}
 		setValue(value.getRemove(lang));

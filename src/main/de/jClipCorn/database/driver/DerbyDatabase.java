@@ -45,15 +45,15 @@ public class DerbyDatabase extends GenericDatabase {
 	}
 	
 	@Override
-	public boolean createNewDatabase(String xmlPath, String dbPath) {
+	public boolean createNewDatabase(String xmlPath, String dbDir, String dbName) {
 		try {
 			parseXML(xmlPath);
 			
 			Platform platform = PlatformFactory.createNewPlatformInstance(DB_NAME);
 			
-			platform.createDatabase(DRIVER, getDatabasePath(dbPath), database_username, database_password, getUserPasswordProperties());
+			platform.createDatabase(DRIVER, getDatabasePath(dbDir), database_username, database_password, getUserPasswordProperties());
 			
-			establishDBConnection(dbPath);
+			establishDBConnection(dbDir, dbName);
 			
 			createTables(DB_NAME);
 		} catch (Exception e) {
@@ -64,15 +64,15 @@ public class DerbyDatabase extends GenericDatabase {
 	}
 
 	@Override
-	public boolean createNewDatabasefromResourceXML(String xmlResPath, String dbPath) {
+	public boolean createNewDatabasefromResourceXML(String xmlResPath, String dbDir, String dbName) {
 		try {
 			parseXMLfromResource(xmlResPath);
 			
 			Platform platform = PlatformFactory.createNewPlatformInstance(DB_NAME);
 			
-			platform.createDatabase(DRIVER, getDatabasePath(dbPath), database_username, database_password, getUserPasswordProperties());
+			platform.createDatabase(DRIVER, getDatabasePath(dbDir), database_username, database_password, getUserPasswordProperties());
 			
-			establishDBConnection(dbPath);
+			establishDBConnection(dbDir, dbName);
 			
 			createTables(DB_NAME);
 		} catch (Exception e) {
@@ -83,13 +83,13 @@ public class DerbyDatabase extends GenericDatabase {
 	}
 	
 	@Override
-	public boolean databaseExists(String dbPath) {
-		File f = new File(dbPath);
+	public boolean databaseExists(String dbDir, String dbName) {
+		File f = new File(dbDir);
 		return f.exists() && f.isDirectory();
 	}
 	
 	@Override
-	public void closeDBConnection(String dbPath, boolean cleanshutdown) throws SQLException {
+	public void closeDBConnection(String dbDir, String dbName, boolean cleanshutdown) throws SQLException {
 		connection.close();
 
 		try {
@@ -108,14 +108,14 @@ public class DerbyDatabase extends GenericDatabase {
 
 	@Override
 	@SuppressWarnings("deprecation")
-	public void establishDBConnection(String dbPath) throws SQLException {
+	public void establishDBConnection(String dbDir, String dbName) throws SQLException {
 		try {
 			Class.forName(DRIVER).newInstance();
 		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
 			CCLog.addError(e);
 		}
 				
-		connection = DriverManager.getConnection(getDatabasePath(dbPath), getUserPasswordProperties());
+		connection = DriverManager.getConnection(getDatabasePath(dbDir), getUserPasswordProperties());
 		
 		connection.setAutoCommit(true);
 		connection.setReadOnly(true);

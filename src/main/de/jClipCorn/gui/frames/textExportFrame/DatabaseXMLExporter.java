@@ -1,20 +1,15 @@
 package de.jClipCorn.gui.frames.textExportFrame;
 
-import java.util.List;
-
+import de.jClipCorn.database.databaseElement.*;
 import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguage;
+import de.jClipCorn.features.serialization.ExportHelper;
 import org.jdom2.Attribute;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
 
-import de.jClipCorn.database.databaseElement.CCDatabaseElement;
-import de.jClipCorn.database.databaseElement.CCEpisode;
-import de.jClipCorn.database.databaseElement.CCMovie;
-import de.jClipCorn.database.databaseElement.CCSeason;
-import de.jClipCorn.database.databaseElement.CCSeries;
-import de.jClipCorn.features.serialization.ExportHelper;
+import java.util.List;
 
 public class DatabaseXMLExporter extends DatabaseTextExporter {
 
@@ -47,7 +42,7 @@ public class DatabaseXMLExporter extends DatabaseTextExporter {
 				
 				jdom_elem.setAttribute(new Attribute("title", mov.getTitle()));
 				
-				if (addLanguage) jdom_elem.setAttribute(new Attribute("languages", mov.getLanguage().iterate().stringjoin(CCDBLanguage::getLongString, ";")));
+				if (addLanguage) jdom_elem.setAttribute(new Attribute("languages", mov.getLanguage().ccstream().stringjoin(CCDBLanguage::getLongString, ";")));
 				if (addFormat) jdom_elem.setAttribute(new Attribute("format", mov.getFormat().asString()));
 				if (addYear) jdom_elem.setAttribute(new Attribute("year", mov.getYear() + ""));
 				if (addSize) jdom_elem.setAttribute(new Attribute("size", mov.getFilesize().getBytes() + " bytes"));
@@ -77,7 +72,7 @@ public class DatabaseXMLExporter extends DatabaseTextExporter {
 						jdom_elem_sea.addContent(jdom_elem_epi);
 						
 						jdom_elem_epi.setAttribute(new Attribute("title", episode.getTitle()));
-						if (addLanguage) jdom_elem_epi.setAttribute(new Attribute("language", episode.getLanguage().iterate().stringjoin(CCDBLanguage::getLongString, ";")));
+						if (addLanguage) jdom_elem_epi.setAttribute(new Attribute("language", episode.getLanguage().ccstream().stringjoin(CCDBLanguage::getLongString, ";")));
 						if (addFormat) jdom_elem_epi.setAttribute(new Attribute("format", episode.getFormat().asString()));
 						if (addSize) jdom_elem_epi.setAttribute(new Attribute("size", episode.getFilesize().getBytes() + " bytes"));
 						if (addViewed) jdom_elem_epi.setAttribute(new Attribute("viewed", episode.isViewed() ? "true" : "false"));

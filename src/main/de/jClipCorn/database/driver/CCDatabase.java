@@ -19,10 +19,12 @@ import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.datetime.CCTime;
 import de.jClipCorn.util.exceptions.CCFormatException;
+import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.ApplicationHelper;
 import de.jClipCorn.util.sqlwrapper.*;
 
 import java.awt.*;
+import java.io.File;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
@@ -35,20 +37,26 @@ public class CCDatabase {
 
 	public final static String XML_NAME = "database/ClipCornSchema.xml"; //$NON-NLS-1$
 
-	private final String databasePath;
+	private final String databaseDirectory; // = most of the time the working directory
+	private final String databaseName;      // = the PROP_DATABASE_NAME
+
 	private final GenericDatabase db;
 	public  final DatabaseMigration upgrader;
 	private final ICoverCache coverCache;
 	private final CCDatabaseHistory _history;
+
 	private final boolean _readonly;
 
-	private CCDatabase(CCDatabaseDriver driver, String dbPath, boolean readonly) {
+	private CCDatabase(CCDatabaseDriver driver, String dbDir, String dbName, boolean readonly) {
 		super();
 
 		_readonly = readonly;
 
-		databasePath = dbPath;
-		
+		databaseDirectory = dbDir;
+		databaseName = dbName;
+
+		if (driver == null) driver = autoDetermineDriver(dbDir, dbName);
+
 		switch (driver) {
 		case DERBY:
 			db = new DerbyDatabase(readonly);
@@ -74,7 +82,18 @@ public class CCDatabase {
 		
 		_history = new CCDatabaseHistory(this);
 		
-		upgrader = new DatabaseMigration(db, databasePath, readonly);
+		upgrader = new DatabaseMigration(db, databaseDirectory, databaseName, readonly);
+	}
+
+	private static CCDatabaseDriver autoDetermineDriver(String dbDir, String dbName) {
+		var sqlite = PathFormatter.combine(dbDir, dbName, dbName + ".db"); //$NON-NLS-1$
+		if (new File(sqlite).exists()) return CCDatabaseDriver.SQLITE;
+
+		var derby = PathFormatter.combine(dbDir, dbName, "seg0"); //$NON-NLS-1$
+		if (new File(derby).exists()) return CCDatabaseDriver.DERBY;
+
+		CCLog.addWarning("Could not identify DB at path: " + dbDir + " | " + dbName); //$NON-NLS-1$
+		return CCDatabaseDriver.SQLITE; // fallback
 	}
 
 	public boolean isReadonly() {
@@ -86,26 +105,26 @@ public class CCDatabase {
 		((CCMemoryCoverCache)coverCache).resetForTestReload();
 	}
 	
-	public static CCDatabase create(CCDatabaseDriver dbDriver, String dbPath, boolean dbReadonly) {
-		return new CCDatabase(dbDriver, dbPath, dbReadonly);
+	public static CCDatabase create(CCDatabaseDriver dbDriver, String dbPath, String dbName, boolean dbReadonly) {
+		return new CCDatabase(dbDriver, dbPath, dbName, dbReadonly);
 	}
 	
 	public static CCDatabase createStub() {
-		return new CCDatabase(CCDatabaseDriver.STUB, "", false); //$NON-NLS-1$
+		return new CCDatabase(CCDatabaseDriver.STUB, "", "STUB", false); //$NON-NLS-1$
 	}
 	
 	public static CCDatabase createInMemory() {
-		return new CCDatabase(CCDatabaseDriver.INMEMORY, "", false); //$NON-NLS-1$
+		return new CCDatabase(CCDatabaseDriver.INMEMORY, "", "INMEMORY", false); //$NON-NLS-1$
 	}
 	
-	public boolean exists(String path) {
-		return db.databaseExists(path);
+	public boolean exists() {
+		return db.databaseExists(databaseDirectory, databaseName);
 	}
 
 	public DatabaseConnectResult tryconnect() {
-		if (db.databaseExists(databasePath)) {
+		if (db.databaseExists(databaseDirectory, databaseName)) {
 			if (driverConnect()) {
-				CCLog.addInformation(LocaleBundle.getFormattedString("LogMessage.DBConnect", databasePath)); //$NON-NLS-1$
+				CCLog.addInformation(LocaleBundle.getFormattedString("LogMessage.DBConnect", getDBPath())); //$NON-NLS-1$
 				
 				return DatabaseConnectResult.SUCESS_CONNECTED;
 			} else {
@@ -115,7 +134,7 @@ public class CCDatabase {
 			}
 		} else {
 			if (driverCreate()) {
-				CCLog.addInformation(LocaleBundle.getFormattedString("LogMessage.DBCreated", databasePath)); //$NON-NLS-1$
+				CCLog.addInformation(LocaleBundle.getFormattedString("LogMessage.DBCreated", getDBPath())); //$NON-NLS-1$
 				
 				return DatabaseConnectResult.SUCCESS_CREATED;
 			} else {
@@ -128,9 +147,9 @@ public class CCDatabase {
 
 	private boolean driverConnect() {
 		try {
-			if (! db.databaseExists(databasePath)) return false;
+			if (! db.databaseExists(databaseDirectory, databaseName)) return false;
 			
-			db.establishDBConnection(databasePath);
+			db.establishDBConnection(databaseDirectory, databaseName);
 			
 			upgrader.tryUpgrade();
 			
@@ -155,7 +174,7 @@ public class CCDatabase {
 	}
 
 	private boolean driverCreate() {
-		boolean res = db.createNewDatabasefromResourceXML('/' + XML_NAME, databasePath);
+		boolean res = db.createNewDatabasefromResourceXML('/' + XML_NAME, databaseDirectory, databaseName);
 		if (res) {
 			Statements.intialize(this);
 
@@ -178,7 +197,7 @@ public class CCDatabase {
 		try {
 			if (db.isConnected()) {
 				shutdownStatements();
-				db.closeDBConnection(getDBPath(), cleanshutdown);
+				db.closeDBConnection(databaseDirectory, databaseName, cleanshutdown);
 			}
 		} catch (SQLException e) {
 			CCLog.addError(LocaleBundle.getString("LogMessage.CouldNotDisconnectFromDB"), e); //$NON-NLS-1$
@@ -933,10 +952,10 @@ public class CCDatabase {
 		}
 	}
 
-	public void fillCoverCache() {
+	public void fillCoverCache(boolean loadAll) {
 		try
 		{
-			if (CCProperties.getInstance().PROP_DATABASE_LOAD_ALL_COVERDATA.getValue())
+			if (loadAll)
 			{
 				CCSQLStatement stmt = selectCoversFullStatement;
 				stmt.clearParameters();
@@ -1057,7 +1076,7 @@ public class CCDatabase {
 	}
 
 	public String getDBPath() {
-		return databasePath;
+		return PathFormatter.combine(databaseDirectory, databaseName);
 	}
 
 	public void removeFromMain(int localID) {	

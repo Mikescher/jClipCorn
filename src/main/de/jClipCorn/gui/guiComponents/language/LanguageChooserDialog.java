@@ -32,7 +32,7 @@ public class LanguageChooserDialog extends JDialog {
 		initGUI(value);
 		setLocationRelativeTo(owner);
 
-		_value = new HashSet<>(value.iterate().enumerate());
+		_value = new HashSet<>(value.ccstream().enumerate());
 	}
 
 	private void initGUI(CCDBLanguageList value) {

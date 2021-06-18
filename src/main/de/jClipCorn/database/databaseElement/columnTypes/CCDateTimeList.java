@@ -3,17 +3,15 @@ package de.jClipCorn.database.databaseElement.columnTypes;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.exceptions.CCFormatException;
+import de.jClipCorn.util.stream.CCIterable;
 import de.jClipCorn.util.stream.CCStream;
 import de.jClipCorn.util.stream.IterableStream;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 @SuppressWarnings("nls")
-public class CCDateTimeList {
+public class CCDateTimeList implements CCIterable<CCDateTime> {
 	private final List<CCDateTime> list;
 	
 	private CCDateTimeList(List<CCDateTime> lst) {
@@ -166,7 +164,12 @@ public class CCDateTimeList {
 		return false;
 	}
 
-	public CCStream<CCDateTime> iterator() {
+	@Override
+	public Iterator<CCDateTime> iterator() {
+		return ccstream();
+	}
+
+	public CCStream<CCDateTime> ccstream() {
 		return new IterableStream<>(list);
 	}
 

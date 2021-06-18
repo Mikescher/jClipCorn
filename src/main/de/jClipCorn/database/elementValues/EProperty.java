@@ -58,4 +58,9 @@ public class EProperty<TType> implements IEProperty {
 	public void resetToDefault() {
 		set(DefaultValue);
 	}
+
+	@Override
+	public String toString() {
+		return "() -> " + _value;
+	}
 }

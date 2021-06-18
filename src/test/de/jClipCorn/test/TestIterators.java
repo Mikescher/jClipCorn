@@ -3,12 +3,14 @@ package de.jClipCorn.test;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.CCMovie;
+import de.jClipCorn.util.Str;
 import de.jClipCorn.util.comparator.CCMovieComparator;
 import de.jClipCorn.util.datetime.CCDate;
+import de.jClipCorn.util.stream.CCStreams;
 import de.jClipCorn.util.stream.SingleStream;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 @SuppressWarnings("nls")
 public class TestIterators extends ClipCornBaseTest {
@@ -220,5 +222,138 @@ public class TestIterators extends ClipCornBaseTest {
 
 		assertEquals(ml.iteratorEpisodes().index().firstOrNull().Index, 0);
 		assertEquals(ml.iteratorEpisodes().index().lastOrNull().Index, ml.getEpisodeCount()-1);
+	}
+
+	@Test
+	public void testEqualsElementwise() {
+		{
+			var s1 = CCStreams.iterate(new Integer[]{1, 2, 3});
+			var s2 = CCStreams.iterate(new Integer[]{1, 2, 3});
+			assertTrue(CCStreams.equalsElementwiseAuto(s1, s2));
+		}
+		{
+			var s1 = CCStreams.iterate(new Integer[]{1, 2, 3});
+			var s2 = CCStreams.iterate(new Integer[]{1, 2, 3});
+			assertTrue(CCStreams.equalsElementwise(s1, s2, Integer::equals));
+		}
+
+		{
+			var s1 = CCStreams.iterate(new Integer[]{});
+			var s2 = CCStreams.iterate(new Integer[]{});
+			assertTrue(CCStreams.equalsElementwiseAuto(s1, s2));
+		}
+		{
+			var s1 = CCStreams.iterate(new Integer[]{});
+			var s2 = CCStreams.iterate(new Integer[]{});
+			assertTrue(CCStreams.equalsElementwise(s1, s2, Integer::equals));
+		}
+
+		{
+			var s1 = CCStreams.iterate(new Integer[]{});
+			assertTrue(CCStreams.equalsElementwiseAuto(s1, s1));
+		}
+		{
+			var s1 = CCStreams.iterate(new Integer[]{});
+			assertTrue(CCStreams.equalsElementwise(s1, s1, Integer::equals));
+		}
+
+		{
+			var s1 = CCStreams.iterate(new Integer[]{1, 2, 3});
+			var s2 = CCStreams.iterate(new Integer[]{1, 2, 3, 4});
+			assertFalse(CCStreams.equalsElementwiseAuto(s1, s2));
+		}
+		{
+			var s1 = CCStreams.iterate(new Integer[]{1, 2, 3});
+			var s2 = CCStreams.iterate(new Integer[]{1, 2, 3, 4});
+			assertFalse(CCStreams.equalsElementwise(s1, s2, Integer::equals));
+		}
+
+		{
+			var s1 = CCStreams.iterate(new Integer[]{1, 2, 3, 4});
+			var s2 = CCStreams.iterate(new Integer[]{1, 2, 3});
+			assertFalse(CCStreams.equalsElementwiseAuto(s1, s2));
+		}
+		{
+			var s1 = CCStreams.iterate(new Integer[]{1, 2, 3, 4});
+			var s2 = CCStreams.iterate(new Integer[]{1, 2, 3});
+			assertFalse(CCStreams.equalsElementwise(s1, s2, Integer::equals));
+		}
+
+		{
+			var s1 = CCStreams.iterate(new Integer[]{1, 2, 3, 4});
+			var s2 = CCStreams.iterate(new Integer[]{1, 3, 3});
+			assertFalse(CCStreams.equalsElementwiseAuto(s1, s2));
+		}
+		{
+			var s1 = CCStreams.iterate(new Integer[]{1, 2, 3, 4});
+			var s2 = CCStreams.iterate(new Integer[]{1, 3, 3});
+			assertFalse(CCStreams.equalsElementwise(s1, s2, Integer::equals));
+		}
+
+		{
+			var s1 = CCStreams.iterate(new Integer[]{1, 2, 3});
+			var s2 = CCStreams.iterate(new Integer[]{1, 3, 3});
+			assertFalse(CCStreams.equalsElementwiseAuto(s1, s2));
+		}
+		{
+			var s1 = CCStreams.iterate(new Integer[]{1, 2, 3});
+			var s2 = CCStreams.iterate(new Integer[]{1, 3, 3});
+			assertFalse(CCStreams.equalsElementwise(s1, s2, Integer::equals));
+		}
+
+		{
+			var s1 = CCStreams.iterate(new Integer[]{1, 2, 3});
+			var s2 = CCStreams.iterate(new String[]{"1", "2", "3"});
+			assertFalse(CCStreams.equalsElementwiseAuto(s1, s2));
+		}
+		{
+			var s1 = CCStreams.iterate(new Integer[]{1, 2, 3});
+			var s2 = CCStreams.iterate(new String[]{"1", "2", "3"});
+			assertTrue(CCStreams.equalsElementwise(s1, s2, (a,b) -> Str.equals(a.toString(), b)));
+		}
+
+		{
+			var s1 = CCStreams.iterate(new Integer[]{1, 2, 3});
+			var s2 = CCStreams.iterate(new Integer[]{});
+			assertFalse(CCStreams.equalsElementwiseAuto(s1, s2));
+		}
+		{
+			var s1 = CCStreams.iterate(new Integer[]{1, 2, 3});
+			var s2 = CCStreams.iterate(new Integer[]{});
+			assertFalse(CCStreams.equalsElementwise(s1, s2, Integer::equals));
+		}
+
+		{
+			var s1 = CCStreams.iterate(new Integer[]{});
+			var s2 = CCStreams.iterate(new Integer[]{1, 2, 3});
+			assertFalse(CCStreams.equalsElementwiseAuto(s1, s2));
+		}
+		{
+			var s1 = CCStreams.iterate(new Integer[]{});
+			var s2 = CCStreams.iterate(new Integer[]{1, 2, 3});
+			assertFalse(CCStreams.equalsElementwise(s1, s2, Integer::equals));
+		}
+
+		{
+			var s1 = CCStreams.iterate(new String[]{"1", "2", "3"});
+			var s2 = CCStreams.iterate(new String[]{"1", "2", "3"});
+			assertTrue(CCStreams.equalsElementwiseAuto(s1, s2));
+		}
+		{
+			var s1 = CCStreams.iterate(new String[]{"1", "2", "3"});
+			var s2 = CCStreams.iterate(new String[]{"1", "2", "3"});
+			assertTrue(CCStreams.equalsElementwise(s1, s2, Str::equals));
+		}
+
+		{
+			var s1 = CCStreams.iterate(new String[]{"1", "2", "3"});
+			var s2 = CCStreams.iterate(new String[]{"1", "2", "X"});
+			assertFalse(CCStreams.equalsElementwiseAuto(s1, s2));
+		}
+		{
+			var s1 = CCStreams.iterate(new String[]{"1", "2", "3"});
+			var s2 = CCStreams.iterate(new String[]{"1", "2", "X"});
+			assertFalse(CCStreams.equalsElementwise(s1, s2, Str::equals));
+		}
 	}
 }

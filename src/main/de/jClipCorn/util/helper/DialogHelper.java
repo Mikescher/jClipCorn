@@ -1,13 +1,13 @@
 package de.jClipCorn.util.helper;
 
-import java.awt.Component;
-import java.awt.event.WindowListener;
+import de.jClipCorn.features.log.CCLog;
+import de.jClipCorn.gui.localization.LocaleBundle;
+
 import javax.accessibility.Accessible;
 import javax.accessibility.AccessibleContext;
 import javax.swing.*;
-
-import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.features.log.CCLog;
+import java.awt.*;
+import java.awt.event.WindowListener;
 
 public class DialogHelper {
 	public static boolean showYesNoDlg(Component frame, String caption, String txt) {
@@ -41,21 +41,21 @@ public class DialogHelper {
 	public static void showLocalError(Component frame, String id) {
 		String text = LocaleBundle.getString(id);
 		String caption = LocaleBundle.getString(id + "_caption"); //$NON-NLS-1$
-		ThreadUtils.invokeAndWaitConditional(() -> JOptionPane.showMessageDialog(frame==null?new JFrame():frame, text, caption, JOptionPane.ERROR_MESSAGE));
+		SwingUtils.invokeAndWaitConditional(() -> JOptionPane.showMessageDialog(frame==null?new JFrame():frame, text, caption, JOptionPane.ERROR_MESSAGE));
 	}
 
 	public static void showDispatchLocalInformation(Component frame, String id) {
 		String text = LocaleBundle.getString(id);
 		String caption = LocaleBundle.getString(id + "_caption"); //$NON-NLS-1$
-		ThreadUtils.invokeAndWaitConditional(() -> JOptionPane.showMessageDialog(frame==null?new JFrame():frame, text, caption, JOptionPane.INFORMATION_MESSAGE));
+		SwingUtils.invokeAndWaitConditional(() -> JOptionPane.showMessageDialog(frame==null?new JFrame():frame, text, caption, JOptionPane.INFORMATION_MESSAGE));
 	}
 	
 	public static void showDispatchInformation(Component frame, String caption, String text) {
-		ThreadUtils.invokeAndWaitConditional(() -> JOptionPane.showMessageDialog(frame==null?new JFrame():frame, text, caption, JOptionPane.INFORMATION_MESSAGE));
+		SwingUtils.invokeAndWaitConditional(() -> JOptionPane.showMessageDialog(frame==null?new JFrame():frame, text, caption, JOptionPane.INFORMATION_MESSAGE));
 	}
 
 	public static void showDispatchError(Component frame, final String caption, final String text) {
-		ThreadUtils.invokeAndWaitConditional(() -> JOptionPane.showMessageDialog(frame==null?new JFrame():frame, text, caption, JOptionPane.ERROR_MESSAGE));
+		SwingUtils.invokeAndWaitConditional(() -> JOptionPane.showMessageDialog(frame==null?new JFrame():frame, text, caption, JOptionPane.ERROR_MESSAGE));
 	}
 	
 	public static int showOptions(Component frame, String caption, String text, String option1, String option2, int standard) {

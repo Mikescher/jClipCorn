@@ -1,16 +1,11 @@
 package de.jClipCorn.gui.frames.textExportFrame;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import de.jClipCorn.database.databaseElement.*;
+import de.jClipCorn.features.serialization.ExportHelper;
 import org.apache.commons.lang.StringUtils;
 
-import de.jClipCorn.database.databaseElement.CCDatabaseElement;
-import de.jClipCorn.database.databaseElement.CCEpisode;
-import de.jClipCorn.database.databaseElement.CCMovie;
-import de.jClipCorn.database.databaseElement.CCSeason;
-import de.jClipCorn.database.databaseElement.CCSeries;
-import de.jClipCorn.features.serialization.ExportHelper;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DatabaseJSONExporter extends DatabaseTextExporter {
 
@@ -49,7 +44,7 @@ public class DatabaseJSONExporter extends DatabaseTextExporter {
 					attributes.add("\t\t\"zyklusNummer\": " + mov.getZyklus().getNumber());
 				}
 				attributes.add("\t\t\"titel\": \"" + simpleEscape(mov.getTitle()) + "\"");
-				if (addLanguage) attributes.add("\t\t\"languages\": [" + mov.getLanguage().iterate().stringjoin(l -> "\""+l.getLongString()+"\"", ", ") + "]");
+				if (addLanguage) attributes.add("\t\t\"languages\": [" + mov.getLanguage().ccstream().stringjoin(l -> "\""+l.getLongString()+"\"", ", ") + "]");
 				if (addFormat) attributes.add("\t\t\"format\": \"" + mov.getFormat().asString() + "\"");
 				if (addYear) attributes.add("\t\t\"year\": " + mov.getYear());
 				if (addSize) attributes.add("\t\t\"size\": " + mov.getFilesize().getBytes());
@@ -109,7 +104,7 @@ public class DatabaseJSONExporter extends DatabaseTextExporter {
 						
 						attributes.add("\t\t\t\t\t\t\"titel\": \"" + simpleEscape(episode.getTitle()) + "\"");
 
-						if (addLanguage) attributes.add("\t\t\t\t\t\t\"languages\": [" + episode.getLanguage().iterate().stringjoin(l -> "\""+l.getLongString()+"\"", ", ") + "\"");
+						if (addLanguage) attributes.add("\t\t\t\t\t\t\"languages\": [" + episode.getLanguage().ccstream().stringjoin(l -> "\""+l.getLongString()+"\"", ", ") + "\"");
 						if (addFormat) attributes.add("\t\t\t\t\t\t\"format\": \"" + episode.getFormat().asString() + "\"");
 						if (addSize) attributes.add("\t\t\t\t\t\t\"size\": " + episode.getFilesize().getBytes());
 						if (addViewed) attributes.add("\t\t\t\t\t\t\"viewed\": " + (episode.isViewed() ? "true" : "false"));

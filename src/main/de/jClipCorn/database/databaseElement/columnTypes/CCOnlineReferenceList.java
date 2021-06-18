@@ -1,15 +1,17 @@
 package de.jClipCorn.database.databaseElement.columnTypes;
 
+import de.jClipCorn.util.exceptions.OnlineRefFormatException;
+import de.jClipCorn.util.helper.ObjectUtils;
+import de.jClipCorn.util.stream.CCIterable;
+import de.jClipCorn.util.stream.CCStream;
+import de.jClipCorn.util.stream.CCStreams;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import de.jClipCorn.util.exceptions.OnlineRefFormatException;
-import de.jClipCorn.util.helper.ObjectUtils;
-import de.jClipCorn.util.stream.CCStreams;
-
-public class CCOnlineReferenceList implements Iterable<CCSingleOnlineReference> {
+public class CCOnlineReferenceList implements CCIterable<CCSingleOnlineReference> {
 	public static final CCOnlineReferenceList EMPTY = new CCOnlineReferenceList(CCSingleOnlineReference.EMPTY, new ArrayList<>());
 
 	private static final String SEPERATOR = ";"; //$NON-NLS-1$
@@ -24,6 +26,10 @@ public class CCOnlineReferenceList implements Iterable<CCSingleOnlineReference> 
 
 	@Override
 	public Iterator<CCSingleOnlineReference> iterator() {
+		return ccstream();
+	}
+
+	public CCStream<CCSingleOnlineReference> ccstream() {
 		return CCStreams.single(Main).append(Additional).filter(CCSingleOnlineReference::isSet);
 	}
 
@@ -47,6 +53,17 @@ public class CCOnlineReferenceList implements Iterable<CCSingleOnlineReference> 
 		return true;
 	}
 
+	public boolean equals(CCOnlineReferenceList gl) {
+		if (!ObjectUtils.IsEqual(gl.Main, this.Main)) return false;
+		if (gl.Additional.size() != this.Additional.size()) return false;
+
+		for (int i = 0; i < Additional.size(); i++) {
+			if (!ObjectUtils.IsEqual(gl.Additional.get(i), this.Additional.get(i))) return false;
+		}
+
+		return true;
+	}
+
 	public boolean equalsIgnoreAdditionalOrder(CCOnlineReferenceList gl) {
 		if (gl == null) return false;
 		
@@ -58,6 +75,20 @@ public class CCOnlineReferenceList implements Iterable<CCSingleOnlineReference> 
 		}
 		
 		return true;
+	}
+
+	public boolean equalsAnyOrder(CCOnlineReferenceList other) {
+		var a = this.ccstream().autosortByProperty(CCSingleOnlineReference::toSerializationString);
+		var b = other.ccstream().autosortByProperty(CCSingleOnlineReference::toSerializationString);
+
+		return CCStreams.equalsElementwise(a, b, CCSingleOnlineReference::equals);
+	}
+
+	public boolean equalsAnyNonEmptySubset(CCOnlineReferenceList other) {
+		for (var r : this.ccstream()) {
+			if (other.ccstream().contains(r, CCSingleOnlineReference::equals)) return true;
+		}
+		return false;
 	}
 
 	@Override
@@ -126,5 +157,9 @@ public class CCOnlineReferenceList implements Iterable<CCSingleOnlineReference> 
 
 	public CCOnlineReferenceList addAdditional(CCSingleOnlineReference ref) {
 		return new CCOnlineReferenceList(this.Main, CCStreams.iterate(Additional).append(ref).unique().enumerate());
+	}
+
+	public int totalCount() {
+		return (Main.isSet() ? 1 : 0) + Additional.size();
 	}
 }

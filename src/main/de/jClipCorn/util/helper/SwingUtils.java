@@ -418,12 +418,33 @@ public final class SwingUtils {
 		});
 	}
 
-	public static void invokeAndWaitSafe(Runnable fn)
-	{
-		try	{
-			invokeAndWait(fn);
-		} catch (InterruptedException | InvocationTargetException e) {
-			CCLog.addError(e);
+	public static boolean invokeAndWaitSafe(Runnable r) {
+		try {
+			SwingUtils.invokeAndWait(r);
+			return true;
+		} catch (InvocationTargetException | InterruptedException e) {
+			return false;
 		}
 	}
+
+	public static void invokeAndWaitConditional(Runnable r) {
+		if (! SwingUtilities.isEventDispatchThread()) {
+			try {
+				SwingUtils.invokeAndWait(r);
+			} catch (InvocationTargetException | InterruptedException e) {
+				CCLog.addError(e);
+			}
+		} else {
+			r.run();
+		}
+	}
+
+	public static void invokeAndWaitConditionalThrow(Runnable r) throws InterruptedException, InvocationTargetException {
+		if (! SwingUtilities.isEventDispatchThread()) {
+			SwingUtils.invokeAndWait(r);
+		} else {
+			r.run();
+		}
+	}
+
 }

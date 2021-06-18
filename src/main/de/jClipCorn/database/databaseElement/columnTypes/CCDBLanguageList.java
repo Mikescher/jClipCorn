@@ -4,6 +4,7 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.gui.resources.reftypes.IconRef;
 import de.jClipCorn.util.datatypes.Tuple;
+import de.jClipCorn.util.stream.CCIterable;
 import de.jClipCorn.util.stream.CCStream;
 import de.jClipCorn.util.stream.CCStreams;
 
@@ -13,7 +14,7 @@ import java.awt.image.BufferedImage;
 import java.util.List;
 import java.util.*;
 
-public class CCDBLanguageList implements Iterable<CCDBLanguage> {
+public class CCDBLanguageList implements CCIterable<CCDBLanguage> {
 	public static final CCDBLanguageList GERMAN = new CCDBLanguageList(CCDBLanguage.GERMAN);
 	public static final CCDBLanguageList ENGLISH = new CCDBLanguageList(CCDBLanguage.ENGLISH);
 	public static final CCDBLanguageList JAPANESE = new CCDBLanguageList(CCDBLanguage.JAPANESE);
@@ -150,17 +151,17 @@ public class CCDBLanguageList implements Iterable<CCDBLanguage> {
 		return _languages;
 	}
 
-	public CCStream<CCDBLanguage> iterate() {
-		return CCStreams.iterate(_languages);
-	}
-
 	public boolean isEmpty() {
 		return _languages.isEmpty();
 	}
 
 	@Override
 	public Iterator<CCDBLanguage> iterator() {
-		return iterate();
+		return ccstream();
+	}
+
+	public CCStream<CCDBLanguage> ccstream() {
+		return CCStreams.iterate(_languages);
 	}
 
 	public boolean contains(CCDBLanguage ignored) {
@@ -236,7 +237,7 @@ public class CCDBLanguageList implements Iterable<CCDBLanguage> {
 		{
 			final int mask = i;
 			var iter = this
-					.iterate()
+					.ccstream()
 					.index()
 					.filter(p -> ((1 << p.Index) & mask) != 0)
 					.map(p -> p.Value)

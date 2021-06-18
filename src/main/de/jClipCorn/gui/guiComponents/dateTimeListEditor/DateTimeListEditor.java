@@ -64,7 +64,7 @@ public class DateTimeListEditor extends JPanel {
 	public DateTimeListEditor(CCDateTimeList lst) {
 		initGUI();
 
-		data = lst.iterator().enumerate();
+		data = lst.ccstream().enumerate();
 		
 		updateContentList(null);
 	}
@@ -202,7 +202,7 @@ public class DateTimeListEditor extends JPanel {
 		var diff = dtlist.isEqual(getValue());
 
 		data.clear();
-		data.addAll(dtlist.iterator().enumerate());
+		data.addAll(dtlist.ccstream().enumerate());
 		
 		updateContentList(null);
 

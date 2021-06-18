@@ -45,7 +45,7 @@ public class CCDefaultCoverCache implements ICoverCache {
 		_elementsList = new ArrayList<>();
 		_cache = new CachedHashMap<>(CCProperties.getInstance().PROP_DATABASE_COVERCACHESIZE.getValue());
 
-		_coverPath = PathFormatter.combine(PathFormatter.getRealSelfDirectory(), database.getDBPath(), COVER_DIRECTORY);
+		_coverPath = PathFormatter.combine(database.getDBPath(), COVER_DIRECTORY);
 	}
 
 	@Override

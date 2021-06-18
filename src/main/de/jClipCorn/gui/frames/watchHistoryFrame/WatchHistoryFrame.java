@@ -104,13 +104,13 @@ public class WatchHistoryFrame extends JFrame {
 		data.clear();
 
 		for (CCMovie mov : movielist.iteratorMovies()) {
-			for (CCDateTime timestamp : mov.ViewedHistory.get().iterator().filter(d -> !d.isUnspecifiedDateTime())) {
+			for (CCDateTime timestamp : mov.ViewedHistory.get().ccstream().filter(d -> !d.isUnspecifiedDateTime())) {
 				data.add(new WatchHistoryMovieElement(timestamp, mov));
 			}
 		}
 
 		for (CCEpisode episode : movielist.iteratorEpisodes()) {
-			for (CCDateTime timestamp : episode.ViewedHistory.get().iterator().filter(d -> !d.isUnspecifiedDateTime())) {
+			for (CCDateTime timestamp : episode.ViewedHistory.get().ccstream().filter(d -> !d.isUnspecifiedDateTime())) {
 				data.add(new WatchHistoryEpisodeElement(timestamp, episode));
 			}
 		}
@@ -168,7 +168,7 @@ public class WatchHistoryFrame extends JFrame {
 		edName3.setText(elem.getFullNamePart3());
 
 		DefaultListModel<CCDateTime> dt = new DefaultListModel<>();
-		for (CCDateTime stamp : elem.getHistory().iterator()) dt.addElement(stamp);
+		for (CCDateTime stamp : elem.getHistory().ccstream()) dt.addElement(stamp);
 
 		listHistory.setModel(dt);
 	}

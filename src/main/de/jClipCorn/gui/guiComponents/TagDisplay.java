@@ -24,7 +24,7 @@ public class TagDisplay extends JPanel {
 	private void update() {
 		removeAll();
 
-		for (CCSingleTag tag : value.iterate()) {
+		for (CCSingleTag tag : value.ccstream()) {
 			JLabel l = new JLabel(tag.getOnIcon());
 			l.setToolTipText(value.getAsString());
 			add(l);

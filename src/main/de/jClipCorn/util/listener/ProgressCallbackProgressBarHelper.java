@@ -1,7 +1,6 @@
 package de.jClipCorn.util.listener;
 
 import de.jClipCorn.util.helper.SwingUtils;
-import de.jClipCorn.util.helper.ThreadUtils;
 
 import javax.swing.*;
 
@@ -43,13 +42,13 @@ public class ProgressCallbackProgressBarHelper implements ProgressCallbackListen
 
 	@Override
 	public void setMax(final int max) {
-		ThreadUtils.invokeAndWaitConditional(() -> progressBar.setMaximum(max));
+		SwingUtils.invokeAndWaitConditional(() -> progressBar.setMaximum(max));
 		this.max = max;
 	}
 
 	@Override
 	public void reset() {
-		ThreadUtils.invokeAndWaitConditional(() -> progressBar.setValue(0));
+		SwingUtils.invokeAndWaitConditional(() -> progressBar.setValue(0));
 		this.value = 0;
 	}
 }

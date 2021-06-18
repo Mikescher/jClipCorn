@@ -508,6 +508,17 @@ public abstract class CCStream<TType> implements Iterator<TType>, Iterable<TType
 		return false;
 	}
 
+	public boolean containsAuto(TType other) {
+		return contains(other, (a,b) -> autoCompare(a,b)==0);
+	}
+
+	public boolean contains(TType other, Func2to1<TType, TType, Boolean> cmp) {
+		for (TType t : this) {
+			if (cmp.invoke(other, t)) return true;
+		}
+		return false;
+	}
+
 	public CCStream<TType> take(int count) {
 		if (count == Integer.MAX_VALUE) return this;
 		return new LimitStream<>(this, count);

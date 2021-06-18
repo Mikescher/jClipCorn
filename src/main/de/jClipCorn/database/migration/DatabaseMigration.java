@@ -43,7 +43,8 @@ import static de.jClipCorn.database.driver.DatabaseStructure.*;
 
 public class DatabaseMigration {
 	private final GenericDatabase db;
-	private final String databasepath;
+	private final String databaseDirectory;
+	private final String databaseName;
 	private final boolean readonly;
 
 	public interface UpgradeAction {
@@ -52,12 +53,13 @@ public class DatabaseMigration {
 	
 	private final List<UpgradeAction> afterConnectActions = new ArrayList<>();
 	
-	public DatabaseMigration(GenericDatabase db, String dbpath, boolean readonly) {
+	public DatabaseMigration(GenericDatabase db, String dbpath, String dbName, boolean readonly) {
 		super();
 		
-		this.db = db;
-		this.databasepath = dbpath;
-		this.readonly = readonly;
+		this.db                = db;
+		this.databaseDirectory = dbpath;
+		this.databaseName      = dbName;
+		this.readonly          = readonly;
 	}
 	
 	private String getDBVersion() throws SQLException {
@@ -297,7 +299,7 @@ public class DatabaseMigration {
 
 		db.executeSQLThrow("CREATE TABLE COVERS(ID INTEGER PRIMARY KEY,FILENAME VARCHAR NOT NULL,WIDTH INTEGER NOT NULL,HEIGHT INTEGER NOT NULL,HASH_FILE VARCHAR(64) NOT NULL,FILESIZE BIGINT NOT NULL,PREVIEW_TYPE INTEGER NOT NULL,PREVIEW BLOB NOT NULL,CREATED VARCHAR NOT NULL)");
 
-		File cvrdir = new File(PathFormatter.combine(PathFormatter.getRealSelfDirectory(), databasepath, CCDefaultCoverCache.COVER_DIRECTORY));
+		File cvrdir = new File(PathFormatter.combine(databaseDirectory, databaseName, CCDefaultCoverCache.COVER_DIRECTORY));
 
 		final String prefix = CCProperties.getInstance().PROP_COVER_PREFIX.getValue();
 		final String suffix = "." + CCProperties.getInstance().PROP_COVER_TYPE.getValue();  //$NON-NLS-1$

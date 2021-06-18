@@ -275,7 +275,7 @@ public class UpdateCodecFrame extends JFrame {
 				tableMain.setFilter(e -> e.Processed && e.MQError != null);
 				break;
 			case ELEM_WARN:
-				tableMain.setFilter(e -> e.Processed && e.hasDiff(-1) && e.getOldLanguage().iterate().any(ol -> !e.getNewLanguage().contains(ol)) );
+				tableMain.setFilter(e -> e.Processed && e.hasDiff(-1) && e.getOldLanguage().ccstream().any(ol -> !e.getNewLanguage().contains(ol)) );
 				break;
 			}
 		}
@@ -314,7 +314,7 @@ public class UpdateCodecFrame extends JFrame {
 		try {
 			List<UpdateCodecTableElement> data = tableMain.getDataCopy();
 
-			ThreadUtils.invokeAndWaitSafe(() ->
+			SwingUtils.invokeAndWaitSafe(() ->
 			{
 				btnStartCollectingData.setText(LocaleBundle.getString("UpdateMetadataFrame.BtnCollect2"));  //$NON-NLS-1$
 				btnUpdateSelectedLang.setEnabled(false);
@@ -385,7 +385,7 @@ public class UpdateCodecFrame extends JFrame {
 			CCLog.addUndefinied(collThread, e);
 		} finally {
 			ThreadUtils.setProgressbarAndWait(progressBar, 0, 0, 1);
-			ThreadUtils.invokeAndWaitSafe(() -> 
+			SwingUtils.invokeAndWaitSafe(() -> 
 			{ 
 				btnStartCollectingData.setText(LocaleBundle.getString("UpdateMetadataFrame.BtnCollect3"));  //$NON-NLS-1$
 				btnUpdateSelectedLang.setEnabled(!movielist.isReadonly());

@@ -248,7 +248,7 @@ public class PathFormatter {
 		if (liop > 0) {
 			return path.substring(path.lastIndexOf(SEPERATOR) + 1, liop);
 		}
-		return new String(path);
+		return path.substring(path.lastIndexOf(SEPERATOR) + 1);
 	}
 	
 	public static String getWithoutExtension(String path) {

@@ -309,7 +309,7 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 					o -> o.ValidateMovies,
 					(mov, e) ->
 					{
-						for (CCSingleTag t : mov.getTags().iterate()) {
+						for (CCSingleTag t : mov.getTags().ccstream()) {
 							if (!t.IsMovieTag) {e.add(DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_TAG_NOT_VALID_ON_MOVIE, mov)); break; }
 						}
 					});
@@ -560,7 +560,7 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 					o -> o.ValidateSeries,
 					(series, e) ->
 					{
-						for (CCSingleTag t : series.getTags().iterate()) {
+						for (CCSingleTag t : series.getTags().ccstream()) {
 							if (!t.IsSeriesTag) e.add(DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_TAG_NOT_VALID_ON_SERIES, series));
 						}
 					});
@@ -827,7 +827,7 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 					o -> o.ValidateEpisodes,
 					(episode, e) ->
 					{
-						for (CCSingleTag t : episode.getTags().iterate()) {
+						for (CCSingleTag t : episode.getTags().ccstream()) {
 							if (!t.IsEpisodeTag) e.add(DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_TAG_NOT_VALID_ON_EPISODE, episode));
 						}
 					});

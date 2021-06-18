@@ -72,7 +72,12 @@ public class CCMovieList {
 	}
 	
 	public static CCMovieList createInstanceMovieList() {
-		var db = CCDatabase.create(CCProperties.getInstance().PROP_DATABASE_DRIVER.getValue(), CCProperties.getInstance().PROP_DATABASE_NAME.getValue(), CCProperties.getInstance().ARG_READONLY);
+		var db = CCDatabase.create(
+				CCProperties.getInstance().PROP_DATABASE_DRIVER.getValue(),
+				PathFormatter.getRealSelfDirectory(),
+				CCProperties.getInstance().PROP_DATABASE_NAME.getValue(),
+				CCProperties.getInstance().ARG_READONLY);
+
 		return new CCMovieList(db);
 	}
 	
@@ -84,19 +89,24 @@ public class CCMovieList {
 		return new CCMovieList(CCDatabase.createStub());
 	}
 
-	public static CCMovieList loadExtern(CCDatabaseDriver drv, String file, boolean readonly) {
-		return new CCMovieList(CCDatabase.create(drv, file, readonly));
+	public static CCMovieList loadExtern(CCDatabaseDriver drv, String directory, String dbName, boolean readonly) {
+		return new CCMovieList(CCDatabase.create(drv, directory, dbName, readonly));
 	}
 
 	public void showInitialWizard() {
-		if (!database.exists(CCProperties.getInstance().PROP_DATABASE_NAME.getValue())) {
+		if (!database.exists()) {
 			boolean cont = InitialConfigFrame.ShowWizard();
 			
 			if (! cont) {
 				ApplicationHelper.exitApplication(0, true);
 			}
 
-			database = CCDatabase.create(CCProperties.getInstance().PROP_DATABASE_DRIVER.getValue(), CCProperties.getInstance().PROP_DATABASE_NAME.getValue(), CCProperties.getInstance().ARG_READONLY); // in case db type has changed
+			// in case db type has changed
+			database = CCDatabase.create(
+					CCProperties.getInstance().PROP_DATABASE_DRIVER.getValue(),
+					PathFormatter.getRealSelfDirectory(),
+					CCProperties.getInstance().PROP_DATABASE_NAME.getValue(),
+					CCProperties.getInstance().ARG_READONLY);
 		}
 	}
 	
@@ -142,7 +152,7 @@ public class CCMovieList {
 					Globals.TIMINGS.stop(Globals.TIMING_LOAD_MOVIELIST_FILL_ELEMENTS);
 					Globals.TIMINGS.start(Globals.TIMING_LOAD_MOVIELIST_FILL_COVERS);
 					{
-						database.fillCoverCache();
+						database.fillCoverCache(CCProperties.getInstance().PROP_DATABASE_LOAD_ALL_COVERDATA.getValue());
 					}
 					Globals.TIMINGS.stop(Globals.TIMING_LOAD_MOVIELIST_FILL_COVERS);
 				}
@@ -168,11 +178,29 @@ public class CCMovieList {
 		isLoading = true;
 		isLoaded  = false;
 		{
-			database.tryconnect();
+			var r = database.tryconnect();
+			if (r != DatabaseConnectResult.SUCESS_CONNECTED && r != DatabaseConnectResult.SUCCESS_CREATED) throw new Error(String.valueOf(r));
 
 			database.fillGroups(CCMovieList.this);
 			database.fillMovieList(CCMovieList.this);
-			database.fillCoverCache();
+			database.fillCoverCache(true);
+		}
+		isLoading = false;
+		isLoaded  = true;
+	}
+
+	public void connectExternal(boolean allowCreate) throws Exception
+	{
+		isLoading = true;
+		isLoaded  = false;
+		{
+			var r = database.tryconnect();
+			if (r != DatabaseConnectResult.SUCESS_CONNECTED && r != DatabaseConnectResult.SUCCESS_CREATED) throw new Exception(String.valueOf(r));
+			if (!allowCreate && r == DatabaseConnectResult.SUCCESS_CREATED) throw new Exception(String.valueOf(r));
+
+			database.fillGroups(CCMovieList.this);
+			database.fillMovieList(CCMovieList.this);
+			database.fillCoverCache(true);
 		}
 		isLoading = false;
 		isLoaded  = true;
@@ -188,7 +216,7 @@ public class CCMovieList {
 		// refill
 		database.fillGroups(CCMovieList.this);
 		database.fillMovieList(CCMovieList.this);
-		database.fillCoverCache();
+		database.fillCoverCache(true);
 	}
 
 	public boolean isInitializingOrIsLoading() {
@@ -324,7 +352,7 @@ public class CCMovieList {
 	// Only used by CCDatabase.fillMovieList
 	public void directlyInsert(final CCDatabaseElement m) {
 		try {
-			SwingUtils.invokeAndWait(() -> {
+			SwingUtils.invokeAndWaitConditionalThrow(() -> {
 				list.add(m);
 				_cache.bust();
 				fireOnAddDatabaseElement(m);
@@ -337,7 +365,7 @@ public class CCMovieList {
 	// Only used by CCDatabase.fillMovieList
 	public void directlyInsert(final List<CCDatabaseElement> m) {
 		try {
-			SwingUtils.invokeAndWait(() ->
+			SwingUtils.invokeAndWaitConditionalThrow(() ->
 			{
 				list.addAll(m);
 				_cache.bust();
@@ -530,7 +558,7 @@ public class CCMovieList {
 	public void remove(final CCDatabaseElement el) {
 		if (!EventQueue.isDispatchThread()) {
 			try {
-				SwingUtils.invokeAndWait(() -> remove(el));
+				SwingUtils.invokeAndWaitConditionalThrow(() -> remove(el));
 			} catch (InvocationTargetException | InterruptedException e) {
 				CCLog.addError(e);
 			}
@@ -661,7 +689,7 @@ public class CCMovieList {
 	}
 
 	public File getDatabaseDirectory() {
-		return new File(PathFormatter.combineAndAppend(PathFormatter.getRealSelfDirectory(), CCProperties.getInstance().PROP_DATABASE_NAME.getValue()));
+		return new File(database.getDBPath());
 	}
 	
 	public List<File> getAbsolutePathList(boolean includeSeries) {
@@ -1141,5 +1169,9 @@ public class CCMovieList {
 
 	public boolean isReadonly() {
 		return database.isReadonly();
+	}
+
+	public boolean databaseExists() {
+		return database.exists();
 	}
 }

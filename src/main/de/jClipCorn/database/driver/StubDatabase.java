@@ -1,21 +1,21 @@
 package de.jClipCorn.database.driver;
 
+import de.jClipCorn.properties.enumerations.CCDatabaseDriver;
+import de.jClipCorn.util.datatypes.Tuple;
+
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.jClipCorn.properties.enumerations.CCDatabaseDriver;
-import de.jClipCorn.util.datatypes.Tuple;
-
 public class StubDatabase extends GenericDatabase {
 
 	@Override
-	public boolean createNewDatabase(String xmlPath, String dbPath) {
+	public boolean createNewDatabase(String xmlPath, String dbDir, String dbName) {
 		return true;
 	}
 
 	@Override
-	public boolean createNewDatabasefromResourceXML(String xmlResPath, String dbPath) {
+	public boolean createNewDatabasefromResourceXML(String xmlResPath, String dbDir, String dbName) {
 		return true;
 	}
 
@@ -25,17 +25,17 @@ public class StubDatabase extends GenericDatabase {
 	}
 
 	@Override
-	public void establishDBConnection(String dbPath) throws Exception {
+	public void establishDBConnection(String dbDir, String dbName) throws Exception {
 		// NOP
 	}
 
 	@Override
-	public void closeDBConnection(String dbPath, boolean cleanshutdown) throws SQLException {
+	public void closeDBConnection(String dbDir, String dbName, boolean cleanshutdown) throws SQLException {
 		// NOP
 	}
 
 	@Override
-	public boolean databaseExists(String dbPath) {
+	public boolean databaseExists(String dbDir, String dbName) {
 		return true;
 	}
 

@@ -1,20 +1,18 @@
 package de.jClipCorn.database.databaseElement.columnTypes;
 
-import java.awt.Graphics;
-import java.awt.Image;
-import java.awt.image.BufferedImage;
-import java.util.Iterator;
-
-import javax.swing.ImageIcon;
-
 import de.jClipCorn.database.util.iterators.TagsIterator;
-import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.exceptions.TagNotFoundException;
+import de.jClipCorn.util.stream.CCIterable;
 import de.jClipCorn.util.stream.CCStream;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-public class CCTagList implements Iterable<CCSingleTag>
+import javax.swing.*;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.util.Iterator;
+
+public class CCTagList implements CCIterable<CCSingleTag>
 {
 	public static final CCTagList EMPTY = new CCTagList();
 
@@ -24,7 +22,7 @@ public class CCTagList implements Iterable<CCSingleTag>
 	public final static int ACTIVETAGS = TAGS.length;
 
 
-	private boolean[] tags = new boolean[TAGCOUNT];
+	private final boolean[] tags = new boolean[TAGCOUNT];
 	private boolean createIcon = true;
 	private ImageIcon iconcache;
 
@@ -232,12 +230,8 @@ public class CCTagList implements Iterable<CCSingleTag>
 		return getTagCount() > 0;
 	}
 
-	public CCStream<CCSingleTag> iterate() {
-		return new TagsIterator(this);
-	}
-
 	public String serialize() {
-		return iterate().stringjoin(g -> String.valueOf(g.Index), ";"); //$NON-NLS-1$
+		return ccstream().stringjoin(g -> String.valueOf(g.Index), ";"); //$NON-NLS-1$
 	}
 
 	public static CCTagList deserialize(String v) throws TagNotFoundException {
@@ -276,7 +270,10 @@ public class CCTagList implements Iterable<CCSingleTag>
 
 	@Override
 	public Iterator<CCSingleTag> iterator() {
-		return iterate();
+		return ccstream();
 	}
 
+	public CCStream<CCSingleTag> ccstream() {
+		return new TagsIterator(this);
+	}
 }

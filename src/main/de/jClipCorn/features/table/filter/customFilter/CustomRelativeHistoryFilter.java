@@ -28,24 +28,24 @@ public class CustomRelativeHistoryFilter extends AbstractCustomStructureElementF
 
 	@Override
 	public boolean includes(CCMovie mov) {
-		return includes(mov.ViewedHistory.get().iterator());
+		return includes(mov.ViewedHistory.get().ccstream());
 	}
 
 	@Override
 	public boolean includes(CCSeries ser) {
 		if (!Recursive) return false;
-		return includes(ser.iteratorEpisodes().flatten(e -> e.ViewedHistory.get().iterator()));
+		return includes(ser.iteratorEpisodes().flatten(e -> e.ViewedHistory.get().ccstream()));
 	}
 
 	@Override
 	public boolean includes(CCSeason sea) {
 		if (!Recursive) return false;
-		return includes(sea.iteratorEpisodes().flatten(e -> e.ViewedHistory.get().iterator()));
+		return includes(sea.iteratorEpisodes().flatten(e -> e.ViewedHistory.get().ccstream()));
 	}
 
 	@Override
 	public boolean includes(CCEpisode epi) {
-		return includes(epi.ViewedHistory.get().iterator());
+		return includes(epi.ViewedHistory.get().ccstream());
 	}
 
 	private boolean includes(CCStream<CCDateTime> dl)

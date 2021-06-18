@@ -24,7 +24,7 @@ public class LanguageDisplay extends JPanel {
 	private void update() {
 		removeAll();
 
-		for (CCDBLanguage lng : value.iterate().autosort()) {
+		for (CCDBLanguage lng : value.ccstream().autosort()) {
 			JLabel l = new JLabel(lng.getIcon());
 			l.setToolTipText(value.toOutputString());
 			add(l);

@@ -1,20 +1,18 @@
 package de.jClipCorn.database.databaseElement.columnTypes;
 
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.Graphics2D;
-import java.awt.Point;
-import java.awt.image.BufferedImage;
-import java.util.*;
-
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.util.exceptions.GroupFormatException;
 import de.jClipCorn.util.helper.ImageUtilities;
+import de.jClipCorn.util.stream.CCIterable;
 import de.jClipCorn.util.stream.CCStream;
 import de.jClipCorn.util.stream.CCStreams;
 
-public class CCGroupList implements Iterable<CCGroup> {
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.util.List;
+import java.util.*;
+
+public class CCGroupList implements CCIterable<CCGroup> {
 	public static final CCGroupList EMPTY = new CCGroupList();
 
 	private static final String SEPERATOR = ";"; //$NON-NLS-1$
@@ -139,6 +137,10 @@ public class CCGroupList implements Iterable<CCGroup> {
 	@Override
 	public Iterator<CCGroup> iterator() {
 		return list.iterator();
+	}
+
+	public CCStream<CCGroup> ccstream() {
+		return CCStreams.iterate(list);
 	}
 	
 	@Override

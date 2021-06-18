@@ -1,19 +1,14 @@
 package de.jClipCorn.database.driver;
 
-import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
-
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.properties.enumerations.CCDatabaseDriver;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.lambda.Func1to1;
 import de.jClipCorn.util.sqlwrapper.StatementType;
+
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @SuppressWarnings("nls")
 public abstract class GenericDatabase implements PublicDatabaseInterface {
@@ -58,17 +53,17 @@ public abstract class GenericDatabase implements PublicDatabaseInterface {
 
 	}
 
-	public abstract boolean createNewDatabase(String xmlPath, String dbPath);
+	public abstract boolean createNewDatabase(String xmlPath, String dbDir, String dbName);
 
-	public abstract boolean createNewDatabasefromResourceXML(String xmlResPath, String dbPath);
+	public abstract boolean createNewDatabasefromResourceXML(String xmlResPath, String dbDir, String dbName);
 
 	public abstract boolean supportsDateType();
 
-	public abstract void establishDBConnection(String dbPath) throws Exception;
+	public abstract void establishDBConnection(String dbDir, String dbName) throws Exception;
 	
-	public abstract void closeDBConnection(String dbPath, boolean cleanshutdown) throws SQLException;
+	public abstract void closeDBConnection(String dbDir, String dbName, boolean cleanshutdown) throws SQLException;
 
-	public abstract boolean databaseExists(String dbPath);
+	public abstract boolean databaseExists(String dbDir, String dbName);
 
 	public List<String> getAllTables(String type) throws SQLException {
 		List<String> result = new ArrayList<>();

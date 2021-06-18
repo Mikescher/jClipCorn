@@ -137,7 +137,7 @@ public class CCSingleOnlineReference {
 
 	@Override
 	public int hashCode() {
-		return id.hashCode() ^ 13 * type.asInt();
+		return id.hashCode() ^ 13 * type.asInt() ^ 17 * description.hashCode();
 	}
 
 	@Override
@@ -147,7 +147,11 @@ public class CCSingleOnlineReference {
 		if (obj == this)
 			return true;
 
-		return ((CCSingleOnlineReference)obj).id.equals(id) && ((CCSingleOnlineReference)obj).type == type;
+		return equals((CCSingleOnlineReference)obj);
+	}
+
+	public boolean equals(CCSingleOnlineReference obj) {
+		return obj.id.equals(id) && obj.type == type && Str.equals(obj.description, description);
 	}
 
 	public Metadataparser getMetadataParser() {

@@ -1,9 +1,9 @@
 package de.jClipCorn.util.stream;
 
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.List;
-import java.util.Map;
+import de.jClipCorn.util.lambda.Func2to1;
+import org.apache.commons.lang3.ObjectUtils;
+
+import java.util.*;
 
 public final class CCStreams {
 	private CCStreams() {
@@ -60,5 +60,35 @@ public final class CCStreams {
 
 	public static <K, V> CCStream<Map.Entry<K, V>> iterate(Map<K, V> map) {
 		return new IterableStream<>(map.entrySet());
+	}
+
+	public static <V1, V2> boolean equalsElementwiseAuto(CCStream<V1> a, CCStream<V2> b) {
+		return equalsElementwise(a, b, (v1, v2) -> autoCompare(v1, v2)==0);
+	}
+
+	public static <V1, V2> boolean equalsElementwise(CCStream<V1> a, CCStream<V2> b, Func2to1<V1, V2, Boolean> cmp) {
+		if (a == b) return true;
+
+		while (true)
+		{
+			var na = a.hasNext();
+			var nb = b.hasNext();
+
+			if (!na && !nb) return true; // both finished
+
+			if (na != nb) return false; // different length
+
+			V1 va = a.next();
+			V2 vb = b.next();
+
+			if (!cmp.invoke(va, vb)) return false; // different element
+		}
+	}
+
+	@SuppressWarnings({"unchecked", "rawtypes"})
+	private static int autoCompare(Object a, Object b) {
+		if (a == null && b == null) return 0;
+		if (a instanceof Comparable && b instanceof Comparable) return ObjectUtils.compare((Comparable)a, (Comparable)b);
+		return Integer.compare(Objects.hashCode(a), Objects.hashCode(b));
 	}
 }

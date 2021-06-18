@@ -18,6 +18,7 @@ import java.nio.file.FileAlreadyExistsException;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Properties;
 
 @SuppressWarnings("nls")
 public class SQLiteDatabase extends GenericDatabase {
@@ -31,16 +32,16 @@ public class SQLiteDatabase extends GenericDatabase {
 		_readonly = ro;
 	}
 
-	public String getDatabaseFilePath(String dbPath) {
-		return PathFormatter.combine(dbPath, dbPath + ".db");
+	public String getDatabaseFilePath(String dbDir, String dbName) {
+		return PathFormatter.combine(dbDir, dbName, dbName + ".db");
 	}
 	
 	@Override
-	public boolean createNewDatabase(String xmlPath, String dbPath) {
-		String dbFilePath = getDatabaseFilePath(dbPath);
+	public boolean createNewDatabase(String xmlPath, String dbDir, String dbName) {
+		String dbFilePath = getDatabaseFilePath(dbDir, dbName);
 		
 		try {
-			if (databaseExists(dbPath)) throw new FileAlreadyExistsException(dbFilePath);
+			if (databaseExists(dbDir, dbName)) throw new FileAlreadyExistsException(dbFilePath);
 			if (FileLockManager.isLocked(dbFilePath)) throw new FileLockedException(dbFilePath);
 			
 			PathFormatter.createFolders(dbFilePath);
@@ -49,7 +50,7 @@ public class SQLiteDatabase extends GenericDatabase {
 				throw new Exception("Cannot lock databasefile");
 			}
 			
-			establishDBConnection(dbPath);
+			establishDBConnection(dbDir, dbName);
 
 			TurbineParser turb = new TurbineParser(SimpleFileUtils.readUTF8TextFile(xmlPath));
 			turb.parse();
@@ -63,8 +64,8 @@ public class SQLiteDatabase extends GenericDatabase {
 
 	@Override
 	@SuppressWarnings("deprecation")
-	public boolean createNewDatabasefromResourceXML(String xmlResPath, String dbPath) {
-		String dbFilePath = getDatabaseFilePath(dbPath);
+	public boolean createNewDatabasefromResourceXML(String xmlResPath, String dbDir, String dbName) {
+		String dbFilePath = getDatabaseFilePath(dbDir, dbName);
 		
 		try {
 			try {
@@ -73,10 +74,10 @@ public class SQLiteDatabase extends GenericDatabase {
 				CCLog.addError(e);
 			}
 			
-			if (databaseExists(dbPath)) throw new FileAlreadyExistsException(dbFilePath);
+			if (databaseExists(dbDir, dbName)) throw new FileAlreadyExistsException(dbFilePath);
 			if (FileLockManager.isLocked(dbFilePath)) throw new FileLockedException(dbFilePath);
 			
-			PathFormatter.createFolders(getDatabaseFilePath(dbPath));
+			PathFormatter.createFolders(getDatabaseFilePath(dbDir, dbName));
 			
 			if (! FileLockManager.tryLockFile(dbFilePath, true)) {
 				throw new Exception("Cannot lock databasefile");
@@ -98,15 +99,15 @@ public class SQLiteDatabase extends GenericDatabase {
 	}
 	
 	@Override
-	public boolean databaseExists(String dbPath) {
-		return new File(getDatabaseFilePath(dbPath)).exists();
+	public boolean databaseExists(String dbDir, String dbName) {
+		return new File(getDatabaseFilePath(dbDir, dbName)).exists();
 	}
 	
 	@Override
-	public void closeDBConnection(String dbPath, boolean cleanshutdown) throws SQLException {
+	public void closeDBConnection(String dbDir, String dbName, boolean cleanshutdown) throws SQLException {
 		boolean unlockresult;
 		try {
-			unlockresult = FileLockManager.unlockFile(getDatabaseFilePath(dbPath));
+			unlockresult = FileLockManager.unlockFile(getDatabaseFilePath(dbDir, dbName));
 			
 			if (! unlockresult) {
 				CCLog.addWarning("Cannot unlock database file");
@@ -122,8 +123,8 @@ public class SQLiteDatabase extends GenericDatabase {
 	
 	@Override
 	@SuppressWarnings("deprecation")
-	public void establishDBConnection(String dbPath) throws Exception {
-		String dbFilePath = getDatabaseFilePath(dbPath);
+	public void establishDBConnection(String dbDir, String dbName) throws Exception {
+		String dbFilePath = getDatabaseFilePath(dbDir, dbName);
 		
 		try {
 			Class.forName(DRIVER).newInstance();
@@ -131,17 +132,19 @@ public class SQLiteDatabase extends GenericDatabase {
 			CCLog.addError(e);
 		}
 		
-		if (!databaseExists(dbPath)) throw new FileNotFoundException(dbFilePath);
+		if (!databaseExists(dbDir, dbName)) throw new FileNotFoundException(dbFilePath);
 		if (FileLockManager.isLocked(dbFilePath)) throw new FileLockedException(dbFilePath);
 		
 		if (!FileLockManager.tryLockFile(dbFilePath, true)) {
 			throw new Exception("Cannot lock databasefile");
 		}
-		
-		connection = DriverManager.getConnection(PROTOCOL + dbFilePath);
+
+		Properties cfg = new Properties();
+		if (_readonly) cfg.setProperty("open_mode", "1");  // (1 == readonly)
+
+		connection = DriverManager.getConnection(PROTOCOL + dbFilePath, cfg);
 		
 		connection.setAutoCommit(true);
-		connection.setReadOnly(_readonly);
 
 		// Set pragmas
 		executeSQLThrow("PRAGMA recursive_triggers = true"); // otherwise "REPLACE INTO x" doesn't work with the history trigger
@@ -151,8 +154,11 @@ public class SQLiteDatabase extends GenericDatabase {
 			// Test if newly created
 			executeSQLThrow("SELECT * FROM " + DatabaseStructure.TAB_TEMP.Name + " LIMIT 1");
 
-			// Test if writeable
-			executeSQLThrow("REPLACE INTO [TEMP] (IKEY,IVALUE) VALUES ('RAND','" + Double.toString(Math.random()).substring(2) + "'),('ACCESS','"+ CCDateTime.getCurrentDateTime().toStringISO() +"')");
+			if (!_readonly)
+			{
+				// Test if writeable
+				executeSQLThrow("REPLACE INTO [TEMP] (IKEY,IVALUE) VALUES ('RAND','" + Double.toString(Math.random()).substring(2) + "'),('ACCESS','"+ CCDateTime.getCurrentDateTime().toStringISO() +"')");
+			}
 		}
 		catch (SQLiteException e)
 		{

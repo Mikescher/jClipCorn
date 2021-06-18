@@ -439,7 +439,7 @@ public class UserDataProblem {
 		
 		//################################################################################################################
 
-		for (CCDateTime lvdate : newdata.getViewedHistory().iterator().filter(d -> !d.isUnspecifiedDateTime())) {
+		for (CCDateTime lvdate : newdata.getViewedHistory().ccstream().filter(d -> !d.isUnspecifiedDateTime())) {
 			if (lvdate.isLessThan(CCDate.getMinimumDate())) {
 				ret.add(new UserDataProblem(UserDataProblem.PROBLEM_DATE_TOO_LESS));
 			}

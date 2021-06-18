@@ -65,19 +65,19 @@ public class CCDateSearchParameter {
 	public boolean includes(CCDateTimeList l) {
 		switch (Type) {
 			case CONTAINS:
-				return l.iterator().any(d -> d.date.isEqual(First));
+				return l.ccstream().any(d -> d.date.isEqual(First));
 				
 			case CONTAINS_NOT:
-				return ! l.iterator().any(d -> d.date.isEqual(First));
+				return ! l.ccstream().any(d -> d.date.isEqual(First));
 				
 			case CONTAINS_BETWEEN:
-				return l.iterator().any(d -> d.isGreaterEqualsThan(First) && d.isLessEqualsThan(Second));
+				return l.ccstream().any(d -> d.isGreaterEqualsThan(First) && d.isLessEqualsThan(Second));
 				
 			case CONTAINS_NOT_BETWEEEN:
-				return l.iterator().all(d -> !(d.isGreaterEqualsThan(First) && d.isLessEqualsThan(Second)));
+				return l.ccstream().all(d -> !(d.isGreaterEqualsThan(First) && d.isLessEqualsThan(Second)));
 				
 			case CONTAINS_ONLY_BETWEEN:
-				return l.iterator().all(d -> d.isGreaterEqualsThan(First) && d.isLessEqualsThan(Second));
+				return l.ccstream().all(d -> d.isGreaterEqualsThan(First) && d.isLessEqualsThan(Second));
 				
 			default:
 				CCLog.addDefaultSwitchError(this, Type);

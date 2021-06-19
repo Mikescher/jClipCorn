@@ -32,4 +32,26 @@ public class EEnumProp<TType extends ContinoousEnum<TType>> extends EProperty<TT
 
 		set(ev);
 	}
+
+	@Override
+	public String serializeValueToString() {
+		return String.valueOf(get().asInt());
+	}
+
+	@Override
+	public Object serializeValueToDatabaseValue() {
+		return get().asInt();
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public void deserializeValueFromString(String v) throws Exception {
+		set((TType)_wrapper.findOrException(Integer.parseInt(v)));
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public void deserializeValueFromDatabaseValue(Object v) throws Exception {
+		set((TType)_wrapper.findOrException((int)v));
+	}
 }

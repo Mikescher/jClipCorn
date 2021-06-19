@@ -27,4 +27,24 @@ public class EGenreListProp extends EProperty<CCGenreList> {
 	public CCGenre get(int idx) {
 		return get().getGenre(idx);
 	}
+
+	@Override
+	public String serializeValueToString() {
+		return get().serialize();
+	}
+
+	@Override
+	public Object serializeValueToDatabaseValue() {
+		return get().getAllGenres();
+	}
+
+	@Override
+	public void deserializeValueFromString(String v) throws Exception {
+		set(CCGenreList.deserialize(v));
+	}
+
+	@Override
+	public void deserializeValueFromDatabaseValue(Object v) throws Exception {
+		set((Long)v);
+	}
 }

@@ -5,7 +5,7 @@ import de.jClipCorn.util.Str;
 import de.jClipCorn.util.exceptions.DatabaseUpdateException;
 
 @SuppressWarnings("HardCodedStringLiteral")
-public class EProperty<TType> implements IEProperty {
+public abstract class EProperty<TType> implements IEProperty {
 
 	private TType _value;
 
@@ -60,7 +60,22 @@ public class EProperty<TType> implements IEProperty {
 	}
 
 	@Override
+	public EPropertyType getValueType() {
+		return ValueType;
+	}
+
+	@Override
+	public String getName() {
+		return Name;
+	}
+
+	@Override
 	public String toString() {
 		return "() -> " + _value;
 	}
+
+	public abstract String serializeValueToString();
+	public abstract Object serializeValueToDatabaseValue();
+	public abstract void deserializeValueFromString(String v) throws Exception;
+	public abstract void deserializeValueFromDatabaseValue(Object v) throws Exception;
 }

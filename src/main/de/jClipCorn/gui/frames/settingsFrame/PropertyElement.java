@@ -1,13 +1,14 @@
 package de.jClipCorn.gui.frames.settingsFrame;
 
-import java.awt.Component;
-
 import de.jClipCorn.properties.property.CCProperty;
+import de.jClipCorn.util.datatypes.Opt;
+
+import java.awt.*;
 
 public class PropertyElement {
-	private CCProperty<Object> property;
+	private final CCProperty<Object> property;
 	
-	private Component component;
+	private final Component component;
 	
 	public PropertyElement(CCProperty<Object> p, Component c) {
 		this.property = p;
@@ -30,7 +31,7 @@ public class PropertyElement {
 		return property.getComponentValue(component);
 	}
 
-	public void setPropertyValue() {
-		property.setValue(property.getComponentValue(component));
+	public Opt<String> setPropertyValue() {
+		return property.setValueIfDiff(property.getComponentValue(component)).map(e -> property.getIdentifier());
 	}
 }

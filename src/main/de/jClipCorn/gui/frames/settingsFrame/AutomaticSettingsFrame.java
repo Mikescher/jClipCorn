@@ -103,9 +103,9 @@ public abstract class AutomaticSettingsFrame extends JFrame {
 				DialogHelper.showDispatchInformation(AutomaticSettingsFrame.this, LocaleBundle.getString("Settingsframe.informationDlg.caption"), LocaleBundle.getString("Settingsframe.informationDlg.text")); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 
-			okValues();
+			var changes = applyValues();
 
-			SwingUtils.invokeLater(() -> MainFrame.getInstance().onSettingsChanged());
+			SwingUtils.invokeLater(() -> MainFrame.getInstance().onSettingsChanged(changes));
 
 			dispose();
 		});
@@ -195,10 +195,13 @@ public abstract class AutomaticSettingsFrame extends JFrame {
 		}
 	}
 	
-	private void okValues() {
+	private List<String> applyValues() {
+		List<String> r = new ArrayList<>();
 		for (PropertyElement pe : elements) {
-			pe.setPropertyValue();
-		}		
+			var v = pe.setPropertyValue();
+			if (v.isPresent()) r.add(v.get());
+		}
+		return r;
 	}
 	
 	protected Object getCurrentInputValue(CCProperty<?> prop) {

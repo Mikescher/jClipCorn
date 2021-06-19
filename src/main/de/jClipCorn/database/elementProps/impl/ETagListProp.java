@@ -40,4 +40,24 @@ public class ETagListProp extends EProperty<CCTagList> {
 	public boolean get(CCSingleTag t) {
 		return get().getTag(t);
 	}
+
+	@Override
+	public String serializeValueToString() {
+		return get().serialize();
+	}
+
+	@Override
+	public Object serializeValueToDatabaseValue() {
+		return get().asShort();
+	}
+
+	@Override
+	public void deserializeValueFromString(String v) throws Exception {
+		set(CCTagList.deserialize(v));
+	}
+
+	@Override
+	public void deserializeValueFromDatabaseValue(Object v) throws Exception {
+		set(CCTagList.fromShort((short)v));
+	}
 }

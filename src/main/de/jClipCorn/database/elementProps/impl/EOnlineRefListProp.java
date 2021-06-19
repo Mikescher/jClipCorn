@@ -11,4 +11,24 @@ public class EOnlineRefListProp extends EProperty<CCOnlineReferenceList> {
 	public void set(String v) throws CCFormatException {
 		set(CCOnlineReferenceList.parse(v));
 	}
+
+	@Override
+	public String serializeValueToString() {
+		return get().toSerializationString();
+	}
+
+	@Override
+	public Object serializeValueToDatabaseValue() {
+		return get().toSerializationString();
+	}
+
+	@Override
+	public void deserializeValueFromString(String v) throws Exception {
+		set(CCOnlineReferenceList.parse(v));
+	}
+
+	@Override
+	public void deserializeValueFromDatabaseValue(Object v) throws Exception {
+		set(CCOnlineReferenceList.parse((String)v));
+	}
 }

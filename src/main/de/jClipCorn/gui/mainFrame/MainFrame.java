@@ -32,6 +32,7 @@ import de.jClipCorn.gui.mainFrame.table.RowFilterSource;
 import de.jClipCorn.gui.mainFrame.toolbar.ClipToolbar;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.properties.CCProperties;
+import de.jClipCorn.util.Str;
 import de.jClipCorn.util.UpdateConnector;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.helper.SwingUtils;
@@ -320,12 +321,20 @@ public class MainFrame extends JFrame implements CCDBUpdateListener, FileDrop.Li
 		// nothing dropped
 	}
 
-	public void onSettingsChanged()
+	public void onSettingsChanged(java.util.List<String> changes)
 	{
-		clipTable.configureColumnVisibility(CCProperties.getInstance().PROP_MAINFRAME_VISIBLE_COLUMNS.getValue(), false);
-		clipTable.autoResize();
+		if (CCStreams.iterate(changes).any(c -> Str.equals(c, CCProperties.getInstance().PROP_MAINFRAME_VISIBLE_COLUMNS.getIdentifier())))
+		{
+			clipTable.configureColumnVisibility(CCProperties.getInstance().PROP_MAINFRAME_VISIBLE_COLUMNS.getValue(), false);
+			clipTable.autoResize();
+		}
 
-		//if (CCProperties.getInstance().PROP_UI_APPTHEME.getValue() != LookAndFeelManager.getCurrentTheme())
+		if (CCStreams.iterate(changes).any(c -> Str.equals(c, CCProperties.getInstance().PROP_TOOLBAR_ELEMENTS.getIdentifier())))
+		{
+			toolbar.recreate();
+		}
+
+		//if (CCStreams.iterate(changes).any(c -> Str.equals(c, CCProperties.getInstance().PROP_UI_APPTHEME.getIdentifier())))
 		//{
 		//	LookAndFeelManager.setLookAndFeel(CCProperties.getInstance().PROP_UI_APPTHEME.getValue(), true);
 		//}

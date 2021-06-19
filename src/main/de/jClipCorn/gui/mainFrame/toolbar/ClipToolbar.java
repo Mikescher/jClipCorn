@@ -25,6 +25,15 @@ public class ClipToolbar extends AbstractClipToolbar {
 		if (!dummy) create();
 	}
 
+	public void recreate()
+	{
+		removeAll();
+		create();
+
+		invalidate();
+		repaint();
+	}
+
 	private void create() {
 		for (String elem : CCProperties.getInstance().PROP_TOOLBAR_ELEMENTS.getValueAsArray()) {
 			if (elem.equals(IDENT_SEPERATOR)) {

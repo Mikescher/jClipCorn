@@ -84,6 +84,7 @@ public class DatabaseErrorType {
 	public final static DatabaseErrorType ERROR_DUPLICATE_FILE                     = new DatabaseErrorType(77, null);
 	public final static DatabaseErrorType ERROR_INVALID_HASH                       = new DatabaseErrorType(78, null);
 	public final static DatabaseErrorType ERROR_IMPOSSIBLE_HASH                    = new DatabaseErrorType(79, null);
+	public final static DatabaseErrorType ERROR_DB_TOO_LARGE_COVERID               = new DatabaseErrorType(80, null);
 
 	private final int type;
 

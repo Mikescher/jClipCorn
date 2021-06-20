@@ -1305,10 +1305,18 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 				e.add(DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_DB_DUPLICATE_ID, dup));
 			}
 
-			int last_id = db.querySingleIntSQLThrow("SELECT CAST(IVALUE AS INTEGER) FROM INFO WHERE IKEY='LAST_ID'", 0);
+			{
+				int last_id = db.querySingleIntSQLThrow("SELECT CAST(IVALUE AS INTEGER) FROM INFO WHERE IKEY='LAST_ID'", 0);
+				for (int tlid : CCStreams.iterate(ids_elm, ids_sea, ids_epi).filter(p -> p > last_id)) {
+					e.add(DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_DB_TOO_LARGE_ID, tlid));
+				}
+			}
 
-			for (int tlid : CCStreams.iterate(ids_elm, ids_sea, ids_epi).filter(p -> p > last_id)) {
-				e.add(DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_DB_TOO_LARGE_ID, tlid));
+			{
+				int last_cid = db.querySingleIntSQLThrow("SELECT CAST(IVALUE AS INTEGER) FROM INFO WHERE IKEY='LAST_COVERID'", 0);
+				for (int tlcid : CCStreams.iterate(movielist.getCoverCache().listCovers()).map(p -> p.ID).filter(p -> p > last_cid)) {
+					e.add(DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_DB_TOO_LARGE_COVERID, tlcid));
+				}
 			}
 		}
 		catch (Exception ex)

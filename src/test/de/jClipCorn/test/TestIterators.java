@@ -356,4 +356,61 @@ public class TestIterators extends ClipCornBaseTest {
 			assertFalse(CCStreams.equalsElementwise(s1, s2, Str::equals));
 		}
 	}
+
+	public void testZipStream() {
+		{
+			var s1 = CCStreams.iterate(new Integer[]{2, 3, 5});
+			var s2 = CCStreams.iterate(new Integer[]{7, 11, 13});
+			assertEquals(3, CCStreams.zip(s1, s2).count());
+			assertEquals("14:33:65", CCStreams.zip(s1, s2).map(p -> p.Item1 * p.Item2).stringjoin(Object::toString, ":"));
+		}
+
+		{
+			var s1 = CCStreams.iterate(new Integer[]{2, 3, 5});
+			var s2 = CCStreams.iterate(new Integer[]{7, 11, 13, 17});
+			assertEquals(3, CCStreams.zip(s1, s2).count());
+			assertEquals(4, CCStreams.zip(s1, s2, 0, 0).count());
+			assertEquals("14:33:65", CCStreams.zip(s1, s2).map(p -> p.Item1 * p.Item2).stringjoin(Object::toString, ":"));
+			assertEquals("14:33:65:0", CCStreams.zip(s1, s2, 0, 0).map(p -> p.Item1 * p.Item2).stringjoin(Object::toString, ":"));
+			assertEquals("14:33:65:17", CCStreams.zip(s1, s2, 1, 0).map(p -> p.Item1 * p.Item2).stringjoin(Object::toString, ":"));
+			assertEquals("14:33:65:0", CCStreams.zip(s1, s2, 0, 1).map(p -> p.Item1 * p.Item2).stringjoin(Object::toString, ":"));
+			assertEquals("14:33:65:17", CCStreams.zip(s1, s2, 1, 1).map(p -> p.Item1 * p.Item2).stringjoin(Object::toString, ":"));
+		}
+
+		{
+			var s1 = CCStreams.iterate(new Integer[]{2, 3, 5, 19});
+			var s2 = CCStreams.iterate(new Integer[]{7, 11, 13});
+			assertEquals(3, CCStreams.zip(s1, s2).count());
+			assertEquals(4, CCStreams.zip(s1, s2, 0, 0).count());
+			assertEquals("14:33:65", CCStreams.zip(s1, s2).map(p -> p.Item1 * p.Item2).stringjoin(Object::toString, ":"));
+			assertEquals("14:33:65:19", CCStreams.zip(s1, s2, 0, 0).map(p -> p.Item1 * p.Item2).stringjoin(Object::toString, ":"));
+			assertEquals("14:33:65:0", CCStreams.zip(s1, s2, 1, 0).map(p -> p.Item1 * p.Item2).stringjoin(Object::toString, ":"));
+			assertEquals("14:33:65:19", CCStreams.zip(s1, s2, 0, 1).map(p -> p.Item1 * p.Item2).stringjoin(Object::toString, ":"));
+			assertEquals("14:33:65:0", CCStreams.zip(s1, s2, 1, 1).map(p -> p.Item1 * p.Item2).stringjoin(Object::toString, ":"));
+		}
+
+		{
+			var s1 = CCStreams.iterate(new Integer[]{});
+			var s2 = CCStreams.iterate(new Integer[]{7, 11, 13});
+			assertEquals(0, CCStreams.zip(s1, s2).count());
+			assertEquals(3, CCStreams.zip(s1, s2, 0, 0).count());
+			assertEquals("", CCStreams.zip(s1, s2).map(p -> p.Item1 * p.Item2).stringjoin(Object::toString, ":"));
+			assertEquals("0:0:0", CCStreams.zip(s1, s2, 0, 0).map(p -> p.Item1 * p.Item2).stringjoin(Object::toString, ":"));
+			assertEquals("7:11:13", CCStreams.zip(s1, s2, 1, 0).map(p -> p.Item1 * p.Item2).stringjoin(Object::toString, ":"));
+			assertEquals("0:0:0", CCStreams.zip(s1, s2, 0, 1).map(p -> p.Item1 * p.Item2).stringjoin(Object::toString, ":"));
+			assertEquals("7:11:13", CCStreams.zip(s1, s2, 1, 1).map(p -> p.Item1 * p.Item2).stringjoin(Object::toString, ":"));
+		}
+
+		{
+			var s1 = CCStreams.iterate(new Integer[]{2, 3, 5});
+			var s2 = CCStreams.iterate(new Integer[]{});
+			assertEquals(0, CCStreams.zip(s1, s2).count());
+			assertEquals(3, CCStreams.zip(s1, s2, 0, 0).count());
+			assertEquals("", CCStreams.zip(s1, s2).map(p -> p.Item1 * p.Item2).stringjoin(Object::toString, ":"));
+			assertEquals("2:3:5", CCStreams.zip(s1, s2, 0, 0).map(p -> p.Item1 * p.Item2).stringjoin(Object::toString, ":"));
+			assertEquals("0:0:0", CCStreams.zip(s1, s2, 1, 0).map(p -> p.Item1 * p.Item2).stringjoin(Object::toString, ":"));
+			assertEquals("2:3:5", CCStreams.zip(s1, s2, 0, 1).map(p -> p.Item1 * p.Item2).stringjoin(Object::toString, ":"));
+			assertEquals("0:0:0", CCStreams.zip(s1, s2, 1, 1).map(p -> p.Item1 * p.Item2).stringjoin(Object::toString, ":"));
+		}
+	}
 }

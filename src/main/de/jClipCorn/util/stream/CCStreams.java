@@ -1,5 +1,6 @@
 package de.jClipCorn.util.stream;
 
+import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.lambda.Func2to1;
 import org.apache.commons.lang3.ObjectUtils;
 
@@ -83,6 +84,16 @@ public final class CCStreams {
 
 			if (!cmp.invoke(va, vb)) return false; // different element
 		}
+	}
+
+	public static <V1, V2> CCStream<Tuple<V1,V2>> zip(CCStream<V1> a, CCStream<V2> b, V1 defA, V2 defB) {
+		// iterates until both streams are empty, uses defA/defB when one runs out
+		return new ZipStream<>(a.cloneFresh(), b.cloneFresh(), defA, defB, true);
+	}
+
+	public static <V1, V2> CCStream<Tuple<V1,V2>> zip(CCStream<V1> a, CCStream<V2> b) {
+		// iterates only while both streams return data
+		return new ZipStream<>(a.cloneFresh(), b.cloneFresh(), null, null, false);
 	}
 
 	@SuppressWarnings({"unchecked", "rawtypes"})

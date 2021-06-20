@@ -1,0 +1,32 @@
+//
+// Examples:
+//    skip local:8863                // completely skip entry with id=8863 in local database (evtl matching entry in extern will be deleted)
+//    skip extern:9724               // completely skip entry with id=9724 in extern database (evtl entry will be created anew)
+//
+//    match local:8863 extern:9724   // force the two entries 8863 and 9724 to be linked (if they are seasons/episodes their parents must also be linked)
+//
+//    keep_cover extern:9724         // do not update the cover of the entry 9724
+//    keep_cover local:8863          // do not update the cover of the entry that is linked with 8863
+//    keep_cover *                   // do not update any covers (of any entry)
+//
+//    keep_files extern:9724         // do not update the video file(s) of the entry 9724
+//    keep_files local:8863          // do not update the video file(s) of the entry that is linked with 8863
+//    keep_files *                   // do not update any video file(s) (of any entry)
+//
+//    keep_meta extern:9724         // do not update the metadata of the entry 9724
+//    keep_meta local:8863          // do not update the metadata of the entry that is linked with 8863
+//    keep_meta *                   // do not update any metadata (of any entry)
+//
+//    keep_meta genres extern:9724  // do not update the metadata field [genres] of the entry 9724
+//    keep_meta genres local:8863   // do not update the metadata field [genres] of the entry that is linked with 8863
+//    keep_meta genres *            // do not update the metadata field [genres] of any entry
+//
+//    keep_entry extern:9724        // do not delete the entry 9724 from the remote db (if it is missing in local)
+//    keep_entry *                  // do not delete the any entries from the remote db
+//
+//    prevent_entry local:8863      // do not add the entry 8863 to the remote db (if it is missing in remote)
+//    prevent_entry *               // do not add the any entries to the remote db
+//
+//
+// (one line per command, comments with `//`)
+//

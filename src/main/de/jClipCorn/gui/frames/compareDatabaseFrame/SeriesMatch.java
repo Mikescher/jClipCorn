@@ -3,8 +3,10 @@ package de.jClipCorn.gui.frames.compareDatabaseFrame;
 import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.database.databaseElement.ICCDatabaseStructureElement;
+import de.jClipCorn.database.elementProps.IEProperty;
 import de.jClipCorn.database.elementProps.impl.EPropertyType;
 import de.jClipCorn.util.Str;
+import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.stream.CCStreams;
 
 import java.util.ArrayList;
@@ -23,18 +25,22 @@ public class SeriesMatch extends ComparisonMatch {
 	public final boolean NeedsCreateNew;
 	public final boolean NeedsDelete;
 
-	public SeriesMatch(CompareState state, CCSeries loc, CCSeries ext, boolean updMeta, boolean updCover, boolean copy, boolean del) {
-		State = state;
-		SeriesLocal = loc;
-		SeriesExtern = ext;
+	public final List<Tuple<IEProperty, IEProperty>> MetadataDiff;
+
+	public SeriesMatch(CompareState state, CCSeries loc, CCSeries ext, boolean updMeta, boolean updCover, boolean copy, boolean del, List<Tuple<IEProperty, IEProperty>> diff) {
+		State               = state;
+		SeriesLocal         = loc;
+		SeriesExtern        = ext;
 		NeedsUpdateMetadata = updMeta;
-		NeedsUpdateCover = updCover;
-		NeedsCreateNew = copy;
-		NeedsDelete = del;
+		NeedsUpdateCover    = updCover;
+		NeedsCreateNew      = copy;
+		NeedsDelete         = del;
+		MetadataDiff        = diff;
 	}
 
 	public SeasonMatch addSeasonLocalOnly(CCSeason loc) {
-		var match = new SeasonMatch(State, loc, null, false, false, true, false);
+		var docopy = State.Ruleset.ShouldAddLocal(loc.getLocalID());
+		var match = new SeasonMatch(State, loc, null, false, false, docopy, false, new ArrayList<>());
 		Seasons.add(match);
 		State.AllSeasons.add(match);
 		State.ProgressCallback.stepSub(1, loc.getLocalID() + "");
@@ -42,7 +48,8 @@ public class SeriesMatch extends ComparisonMatch {
 	}
 
 	public SeasonMatch addSeasonExternOnly(CCSeason ext) {
-		var match = new SeasonMatch(State, null, ext, false, false, false, true);
+		var dodel = State.Ruleset.ShouldDeleteExtern(ext.getLocalID());
+		var match = new SeasonMatch(State, null, ext, false, false, false, dodel, new ArrayList<>());
 		Seasons.add(match);
 		State.AllSeasons.add(match);
 		State.ProgressCallback.stepSub(1, ext.getLocalID() + "");
@@ -50,13 +57,16 @@ public class SeriesMatch extends ComparisonMatch {
 	}
 
 	public SeasonMatch addSeasonMatch(CCSeason loc, CCSeason ext) {
-		var updateCover = Str.equals(loc.getCoverInfo().Checksum, ext.getCoverInfo().Checksum);
+		var updateCover = State.Ruleset.ShouldUpdateCover(loc.getLocalID(), ext.getLocalID()) && Str.equals(loc.getCoverInfo().Checksum, ext.getCoverInfo().Checksum);
 
 		var propLoc = CCStreams.iterate(loc.getProperties()).filter(e -> e.getValueType() == EPropertyType.OBJECTIVE_METADATA);
 		var propExt = CCStreams.iterate(ext.getProperties()).filter(e -> e.getValueType() == EPropertyType.OBJECTIVE_METADATA);
-		var updateMeta = !CCStreams.equalsElementwise(propLoc, propExt, (a, b) -> Str.equals(a.serializeToString(), b.serializeToString()));
+		var diffMeta = CCStreams.zip(propLoc, propExt)
+				                .filter(p -> !Str.equals(p.Item1.serializeToString(), p.Item2.serializeToString()))
+				                .filter(p -> State.Ruleset.ShouldUpdateMetadata(loc.getLocalID(), ext.getLocalID(), p.Item1, p.Item2))
+				                .toList();
 
-		var match = new SeasonMatch(State, loc, ext, updateMeta, updateCover, false, false);
+		var match = new SeasonMatch(State, loc, ext, !diffMeta.isEmpty(), updateCover, false, false, diffMeta);
 		Seasons.add(match);
 		State.AllSeasons.add(match);
 		State.ProgressCallback.stepSub(2, loc.getLocalID() + "|" + ext.getLocalID());
@@ -86,6 +96,11 @@ public class SeriesMatch extends ComparisonMatch {
 	@Override
 	public ICCDatabaseStructureElement getExtern() {
 		return SeriesExtern;
+	}
+
+	@Override
+	public List<Tuple<IEProperty, IEProperty>> getMetaDiff() {
+		return MetadataDiff;
 	}
 
 	@Override

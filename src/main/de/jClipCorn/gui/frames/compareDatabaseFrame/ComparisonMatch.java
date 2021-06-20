@@ -1,12 +1,15 @@
 package de.jClipCorn.gui.frames.compareDatabaseFrame;
 
 import de.jClipCorn.database.databaseElement.ICCDatabaseStructureElement;
+import de.jClipCorn.database.elementProps.IEProperty;
 import de.jClipCorn.database.elementProps.impl.EPropertyType;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datatypes.Opt;
+import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.stream.CCStreams;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public abstract class ComparisonMatch {
 
@@ -20,6 +23,8 @@ public abstract class ComparisonMatch {
 
 	abstract ICCDatabaseStructureElement getLocal();
 	abstract ICCDatabaseStructureElement getExtern();
+
+	abstract List<Tuple<IEProperty, IEProperty>> getMetaDiff();
 
 	public String getStrAction()
 	{
@@ -66,9 +71,7 @@ public abstract class ComparisonMatch {
 		var propLoc = CCStreams.iterate(getLocal().getProperties()).filter(e -> e.getValueType() == EPropertyType.OBJECTIVE_METADATA);
 		var propExt = CCStreams.iterate(getExtern().getProperties()).filter(e -> e.getValueType() == EPropertyType.OBJECTIVE_METADATA);
 
-		return CCStreams
-				.zip(propLoc, propExt)
-				.filter(p -> !Str.equals(p.Item1.serializeToString(), p.Item2.serializeToString()))
+		return CCStreams.iterate(getMetaDiff())
 				.map(p -> Str.format("[{0}]\n  Local  := {1}\n  Extern := {2}\n", p.Item1.getName(), p.Item1.serializeToString(), p.Item2.serializeToString()))
 				.stringjoin(e -> e, "\n");
 	}

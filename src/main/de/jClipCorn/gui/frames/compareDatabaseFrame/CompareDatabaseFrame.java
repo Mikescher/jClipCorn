@@ -3,6 +3,7 @@ package de.jClipCorn.gui.frames.compareDatabaseFrame;
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 import de.jClipCorn.database.CCMovieList;
+import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.gui.guiComponents.ReadableTextField;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
@@ -10,6 +11,7 @@ import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.DialogHelper;
+import de.jClipCorn.util.helper.SimpleFileUtils;
 import de.jClipCorn.util.helper.SwingUtils;
 import de.jClipCorn.util.listener.DoubleProgressCallbackListener;
 import de.jClipCorn.util.listener.DoubleProgressCallbackProgressBarHelper;
@@ -19,6 +21,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class CompareDatabaseFrame extends JFrame
@@ -47,6 +50,12 @@ public class CompareDatabaseFrame extends JFrame
 
 		edDatabaseName.setText(CCProperties.getInstance().PROP_DATABASE_NAME.getDefault());
 
+		try {
+			edRules.setText(SimpleFileUtils.readTextResource("/compare_rules_example.txt", this.getClass())); //$NON-NLS-1$
+		} catch (IOException e) {
+			CCLog.addError(e);
+		}
+
 		updateUI();
 	}
 
@@ -57,6 +66,10 @@ public class CompareDatabaseFrame extends JFrame
 		btnCompare.setEnabled(!running && !Str.isNullOrWhitespace(edDatabasePath.getText()));
 		btnCreatePatch.setEnabled(!running && currState != null);
 		pnlTabs.setEnabled(!running);
+
+		edDatabaseName.setEnabled(!running);
+		edRules.setEnabled(!running);
+		edDatabasePath.setEnabled(!running);
 
 		if (currState != null)
 		{
@@ -132,11 +145,15 @@ public class CompareDatabaseFrame extends JFrame
 
 		var cb = new DoubleProgressCallbackProgressBarHelper(progressBar1, lblProgress1, progressBar2, lblProgress2);
 
+		var rulestr = edRules.getText();
+
 		activeThread = new Thread(() ->
 		{
 			try
 			{
-				compare(cb);
+				var ruleset = CompareDatabaseRuleset.parse(rulestr);
+
+				compare(cb, ruleset);
 			}
 			catch (Throwable e)
 			{
@@ -154,7 +171,7 @@ public class CompareDatabaseFrame extends JFrame
 		updateUI();
 	}
 
-	private void compare(DoubleProgressCallbackListener cb) throws Exception
+	private void compare(DoubleProgressCallbackListener cb, CompareDatabaseRuleset ruleset) throws Exception
 	{
 		cb.setMaxAndResetValueBoth(3, 1);
 		cb.setValueBoth(0, 0, "Connecting", "");
@@ -171,7 +188,7 @@ public class CompareDatabaseFrame extends JFrame
 			cb.setValueBoth(2, 0, "Comparing", "");
 			cb.setSubMax(mlExt.getTotalDatabaseElementCount() + movielist.getTotalDatabaseElementCount() + 1);
 
-			var state = new CompareState(cb);
+			var state = new CompareState(cb, ruleset);
 
 			compareAndMatchMovies(mlExt, movielist, state);
 			compareAndMatchSeries(mlExt, movielist, state);
@@ -188,8 +205,22 @@ public class CompareDatabaseFrame extends JFrame
 
 	private void compareAndMatchMovies(CCMovieList mlExt, CCMovieList mlLoc, CompareState state)
 	{
-		var movsLoc = mlLoc.iteratorMovies().toList();
-		var movsExt = mlExt.iteratorMovies().toList();
+		var movsLoc = mlLoc.iteratorMovies().filter(e -> !state.Ruleset.ShouldSkipLoc(e.LocalID.get())).toList();
+		var movsExt = mlExt.iteratorMovies().filter(e -> !state.Ruleset.ShouldSkipExt(e.LocalID.get())).toList();
+
+		// Force matched by Ruleset
+		for (var mloc : new ArrayList<>(movsLoc))
+		{
+			var mext = CCStreams.iterate(movsExt).singleOrDefault(m ->
+			{
+				return state.Ruleset.IsMatch(mloc.getLocalID(), m.getLocalID());
+			}, null, null);
+			if (mext == null) continue;
+
+			state.addMovieMatch(mloc, mext);
+			movsLoc.remove(mloc);
+			movsExt.remove(mext);
+		}
 
 		// Movies with the same checksum are matches
 		for (var mloc : new ArrayList<>(movsLoc))
@@ -292,8 +323,23 @@ public class CompareDatabaseFrame extends JFrame
 
 	private void compareAndMatchSeries(CCMovieList mlExt, CCMovieList mlLoc, CompareState state)
 	{
-		var serLoc = mlLoc.iteratorSeries().toList();
-		var serExt = mlExt.iteratorSeries().toList();
+		var serLoc = mlLoc.iteratorSeries().filter(e -> !state.Ruleset.ShouldSkipLoc(e.LocalID.get())).toList();
+		var serExt = mlExt.iteratorSeries().filter(e -> !state.Ruleset.ShouldSkipExt(e.LocalID.get())).toList();
+
+		// Force matched by Ruleset
+		for (var sloc : new ArrayList<>(serLoc))
+		{
+			var sext = CCStreams.iterate(serExt).singleOrDefault(s ->
+			{
+				return state.Ruleset.IsMatch(sloc.getLocalID(), s.getLocalID());
+			}, null, null);
+			if (sext == null) continue;
+
+			var match = state.addSeriesMatch(sloc, sext);
+			serLoc.remove(sloc);
+			serExt.remove(sext);
+			compareAndMatchSeasons(match);
+		}
 
 		// Series with (exactly) the same online-refs + same language
 		for (var sloc : new ArrayList<>(serLoc))
@@ -312,7 +358,7 @@ public class CompareDatabaseFrame extends JFrame
 			var match = state.addSeriesMatch(sloc, sext);
 			serLoc.remove(sloc);
 			serExt.remove(sext);
-			compareAndMatchSeries(match);
+			compareAndMatchSeasons(match);
 		}
 
 		// Series with (exactly) the same online-refs (but evtl different language)
@@ -329,7 +375,7 @@ public class CompareDatabaseFrame extends JFrame
 			var match = state.addSeriesMatch(sloc, sext);
 			serLoc.remove(sloc);
 			serExt.remove(sext);
-			compareAndMatchSeries(match);
+			compareAndMatchSeasons(match);
 		}
 
 		// Series with which contains at least 1 online ref with the same value
@@ -347,7 +393,7 @@ public class CompareDatabaseFrame extends JFrame
 			var match = state.addSeriesMatch(sloc, sext);
 			serLoc.remove(sloc);
 			serExt.remove(sext);
-			compareAndMatchSeries(match);
+			compareAndMatchSeasons(match);
 		}
 
 		// Series with the same title + lang
@@ -365,7 +411,7 @@ public class CompareDatabaseFrame extends JFrame
 			var match = state.addSeriesMatch(sloc, sext);
 			serLoc.remove(sloc);
 			serExt.remove(sext);
-			compareAndMatchSeries(match);
+			compareAndMatchSeasons(match);
 		}
 
 		for (var sloc : serLoc)
@@ -397,10 +443,25 @@ public class CompareDatabaseFrame extends JFrame
 		serExt.clear();
 	}
 
-	private void compareAndMatchSeries(SeriesMatch match)
+	private void compareAndMatchSeasons(SeriesMatch match)
 	{
-		var seaLoc = match.SeriesLocal.iteratorSeasons().toList();
-		var seaExt = match.SeriesExtern.iteratorSeasons().toList();
+		var seaLoc = match.SeriesLocal .iteratorSeasons().filter(e -> !match.State.Ruleset.ShouldSkipLoc(e.LocalID.get())).toList();
+		var seaExt = match.SeriesExtern.iteratorSeasons().filter(e -> !match.State.Ruleset.ShouldSkipExt(e.LocalID.get())).toList();
+
+		// Force matched by Ruleset
+		for (var sloc : new ArrayList<>(seaLoc))
+		{
+			var sext = CCStreams.iterate(seaExt).singleOrDefault(s ->
+			{
+				return match.State.Ruleset.IsMatch(sloc.getLocalID(), s.getLocalID());
+			}, null, null);
+			if (sext == null) continue;
+
+			var submatch = match.addSeasonMatch(sloc, sext);
+			seaLoc.remove(sloc);
+			seaExt.remove(sext);
+			compareAndMatchEpisodes(submatch);
+		}
 
 		// Seasons with same Title+Year
 		for (var sloc : new ArrayList<>(seaLoc))
@@ -415,7 +476,7 @@ public class CompareDatabaseFrame extends JFrame
 			var submatch = match.addSeasonMatch(sloc, sext);
 			seaLoc.remove(sloc);
 			seaExt.remove(sext);
-			compareAndMatchSeason(submatch);
+			compareAndMatchEpisodes(submatch);
 		}
 
 		// Seasons with same Title (evtl diff year)
@@ -430,7 +491,24 @@ public class CompareDatabaseFrame extends JFrame
 			var submatch = match.addSeasonMatch(sloc, sext);
 			seaLoc.remove(sloc);
 			seaExt.remove(sext);
-			compareAndMatchSeason(submatch);
+			compareAndMatchEpisodes(submatch);
+		}
+
+		// Seasons with same Year (must be unique) and same index+episodecount
+		for (var sloc : new ArrayList<>(seaLoc))
+		{
+			var sext = CCStreams.iterate(seaExt).singleOrDefault(s ->
+			{
+				return s.Year.get().equals(sloc.Year.get());
+			}, null, null);
+			if (sext == null) continue;
+			if (sext.getSortedSeasonNumber() != sloc.getSortedSeasonNumber()) continue;
+			if (sext.getEpisodeCount()       != sloc.getEpisodeCount())       continue;
+
+			var submatch = match.addSeasonMatch(sloc, sext);
+			seaLoc.remove(sloc);
+			seaExt.remove(sext);
+			compareAndMatchEpisodes(submatch);
 		}
 
 		for (var sloc : seaLoc)
@@ -454,10 +532,24 @@ public class CompareDatabaseFrame extends JFrame
 		seaExt.clear();
 	}
 
-	private void compareAndMatchSeason(SeasonMatch match)
+	private void compareAndMatchEpisodes(SeasonMatch match)
 	{
-		var episLoc = match.SeasonLocal.iteratorEpisodes().toList();
-		var episExt = match.SeasonExtern.iteratorEpisodes().toList();
+		var episLoc = match.SeasonLocal .iteratorEpisodes().filter(e -> !match.State.Ruleset.ShouldSkipLoc(e.LocalID.get())).toList();
+		var episExt = match.SeasonExtern.iteratorEpisodes().filter(e -> !match.State.Ruleset.ShouldSkipExt(e.LocalID.get())).toList();
+
+		// Force matched by Ruleset
+		for (var eloc : new ArrayList<>(episLoc))
+		{
+			var eext = CCStreams.iterate(episExt).singleOrDefault(e ->
+			{
+				return match.State.Ruleset.IsMatch(eloc.getLocalID(), e.getLocalID());
+			}, null, null);
+			if (eext == null) continue;
+
+			match.addEpisodeMatch(eloc, eext);
+			episLoc.remove(eloc);
+			episExt.remove(eext);
+		}
 
 		// Episodes with the same checksum are matches
 		for (var eloc : new ArrayList<>(episLoc))
@@ -562,6 +654,9 @@ public class CompareDatabaseFrame extends JFrame
 
 		//======== scrollPane1 ========
 		{
+
+			//---- edRules ----
+			edRules.setText("[from_ressources]"); //$NON-NLS-1$
 			scrollPane1.setViewportView(edRules);
 		}
 		contentPane.add(scrollPane1, CC.xywh(2, 8, 5, 1, CC.FILL, CC.FILL));

@@ -2,11 +2,12 @@ package de.jClipCorn.gui.frames.compareDatabaseFrame;
 
 import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.ICCDatabaseStructureElement;
-import de.jClipCorn.database.elementProps.impl.EPropertyType;
-import de.jClipCorn.util.Str;
+import de.jClipCorn.database.elementProps.IEProperty;
+import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.stream.CCStreams;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class EpisodeMatch extends ComparisonMatch {
 	public final CompareState State;
@@ -19,14 +20,17 @@ public class EpisodeMatch extends ComparisonMatch {
 	public final boolean NeedsCreateNew;
 	public final boolean NeedsDelete;
 
-	public EpisodeMatch(CompareState state, CCEpisode loc, CCEpisode ext, boolean updMeta, boolean updFile, boolean copy, boolean del) {
-		State = state;
-		EpisodeLocal = loc;
-		EpisodeExtern = ext;
+	public final List<Tuple<IEProperty, IEProperty>> MetadataDiff;
+
+	public EpisodeMatch(CompareState state, CCEpisode loc, CCEpisode ext, boolean updMeta, boolean updFile, boolean copy, boolean del, List<Tuple<IEProperty, IEProperty>> diff) {
+		State               = state;
+		EpisodeLocal        = loc;
+		EpisodeExtern       = ext;
 		NeedsUpdateMetadata = updMeta;
-		NeedsUpdateFile = updFile;
-		NeedsCreateNew = copy;
-		NeedsDelete = del;
+		NeedsUpdateFile     = updFile;
+		NeedsCreateNew      = copy;
+		NeedsDelete         = del;
+		MetadataDiff        = diff;
 	}
 
 	@Override
@@ -52,6 +56,11 @@ public class EpisodeMatch extends ComparisonMatch {
 	@Override
 	public ICCDatabaseStructureElement getExtern() {
 		return EpisodeExtern;
+	}
+
+	@Override
+	public List<Tuple<IEProperty, IEProperty>> getMetaDiff() {
+		return MetadataDiff;
 	}
 
 	@Override

@@ -2,11 +2,12 @@ package de.jClipCorn.gui.frames.compareDatabaseFrame;
 
 import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.ICCDatabaseStructureElement;
-import de.jClipCorn.database.elementProps.impl.EPropertyType;
-import de.jClipCorn.util.Str;
+import de.jClipCorn.database.elementProps.IEProperty;
+import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.stream.CCStreams;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MovieMatch extends ComparisonMatch {
 	public final CompareState State;
@@ -20,15 +21,18 @@ public class MovieMatch extends ComparisonMatch {
 	public final boolean NeedsCreateNew;
 	public final boolean NeedsDelete;
 
-	public MovieMatch(CompareState state, CCMovie loc, CCMovie ext, boolean updMeta, boolean updCover, boolean updFile, boolean copy, boolean del) {
-		State = state;
-		MovieLocal = loc;
-		MovieExtern = ext;
+	public final List<Tuple<IEProperty, IEProperty>> MetadataDiff;
+
+	public MovieMatch(CompareState state, CCMovie loc, CCMovie ext, boolean updMeta, boolean updCover, boolean updFile, boolean copy, boolean del, List<Tuple<IEProperty, IEProperty>> diff) {
+		State               = state;
+		MovieLocal          = loc;
+		MovieExtern         = ext;
 		NeedsUpdateMetadata = updMeta;
-		NeedsUpdateCover = updCover;
-		NeedsUpdateFile = updFile;
-		NeedsCreateNew = copy;
-		NeedsDelete = del;
+		NeedsUpdateCover    = updCover;
+		NeedsUpdateFile     = updFile;
+		NeedsCreateNew      = copy;
+		NeedsDelete         = del;
+		MetadataDiff        = diff;
 	}
 
 	@Override
@@ -55,6 +59,11 @@ public class MovieMatch extends ComparisonMatch {
 	@Override
 	public ICCDatabaseStructureElement getExtern() {
 		return MovieExtern;
+	}
+
+	@Override
+	public List<Tuple<IEProperty, IEProperty>> getMetaDiff() {
+		return MetadataDiff;
 	}
 
 	@Override
